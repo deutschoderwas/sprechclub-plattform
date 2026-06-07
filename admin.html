@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Sprechclub</title>
+<meta name="robots" content="noindex">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--primary:#DD0000;--secondary:#1A1A1A;--accent:#FFCE00;--cream:#FFFCF5;--bg:#FFF8E0;--text:#1A1A1A;--text-soft:#6B7280;--border:#F0E5D8}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--cream);color:var(--text);line-height:1.5}
+h1,h2,h3{font-family:'Space Grotesk',sans-serif}
+.wrap{max-width:920px;margin:0 auto;padding:30px 20px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:50px;font-weight:700;font-size:13px;border:none;cursor:pointer;font-family:inherit;text-decoration:none}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-ghost{background:#fff;color:var(--secondary);border:2px solid var(--border)}
+.tabs{display:flex;gap:8px;margin:20px 0}
+.tabs button{border:2px solid var(--border);background:#fff;border-radius:30px;padding:8px 18px;font-weight:700;cursor:pointer;font-family:inherit}
+.tabs button.active{background:var(--secondary);color:#fff;border-color:var(--secondary)}
+.card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:10px}
+.card b.title{display:block}
+.muted{color:var(--text-soft);font-size:13px}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--border);font-size:14px}
+th{background:var(--bg);font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+input,select{padding:10px 12px;border:2px solid var(--border);border-radius:10px;font-family:inherit;font-size:14px}
+.formrow{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.pill{font-size:11px;font-weight:800;background:var(--bg);color:var(--primary);border-radius:30px;padding:3px 9px}
+.tn{font-size:13px;margin:2px 0}
+#gate{max-width:380px;margin:80px auto;text-align:center;background:#fff;border:1px solid var(--border);border-radius:20px;padding:30px}
+</style>
+</head>
+<body>
+<div id="gate">
+  <h2>Admin-Login</h2>
+  <p class="muted" style="margin:8px 0 14px">Melde dich mit deiner Admin-E-Mail an.</p>
+  <input type="email" id="adminEmail" placeholder="deine@email.de" style="width:100%;margin-bottom:10px">
+  <button class="btn btn-primary" style="width:100%" onclick="login()">Anmelde-Link schicken</button>
+  <p class="muted" id="gateMsg" style="margin-top:10px"></p>
+</div>
+
+<div class="wrap" id="app" style="display:none">
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+    <h1>Sprechclub Admin</h1>
+    <div><a class="btn btn-ghost" href="index.html">Zur Seite</a> <button class="btn btn-ghost" onclick="logout()">Abmelden</button></div>
+  </div>
+
+  <div class="tabs">
+    <button id="tabK" class="active" onclick="show('klassen')">Stunden & Teilnehmer</button>
+    <button id="tabN" onclick="show('neu')">Stunde anlegen</button>
+    <button id="tabS" onclick="show('schueler')">Schüler & Guthaben</button>
+  </div>
+
+  <div id="klassen"></div>
+
+  <div id="neu" style="display:none">
+    <div class="card">
+      <h3 style="margin-bottom:12px">Neue Stunde</h3>
+      <div class="formrow">
+        <input id="nTitle" placeholder="Titel, z.B. B1/B2 Unterricht" style="flex:2">
+        <select id="nLevel"><option>A2</option><option>B1/B2</option><option>B2/C1</option><option>ab B1</option></select>
+      </div>
+      <div class="formrow">
+        <input id="nTopic" placeholder="Thema (optional)" style="flex:2">
+        <input id="nDate" type="datetime-local">
+        <input id="nCap" type="number" value="5" min="1" max="20" style="width:80px" title="Plätze">
+      </div>
+      <div class="formrow">
+        <input id="nZoom" placeholder="Google-Meet-Link" style="flex:1">
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px"><input type="checkbox" id="nRepeat"> 8 Wochen wiederholen</label>
+      </div>
+      <div class="formrow">
+        <input id="nPre" placeholder="Link: Übungen VOR dem Unterricht (optional)" style="flex:1">
+        <input id="nLive" placeholder="Link: Material IM Unterricht (optional)" style="flex:1">
+      </div>
+      <div class="formrow">
+        <input id="nPost" placeholder="Link: Nachbearbeitung (optional)" style="flex:1">
+      </div>
+      <div class="formrow">
+        <textarea id="nVocab" placeholder="Vokabeln (eine pro Zeile):&#10;die Beschwerde — complaint, sich beschweren&#10;der Umtausch — exchange" style="flex:1;min-height:90px;padding:10px 12px;border:2px solid var(--border);border-radius:10px;font-family:inherit;font-size:14px"></textarea>
+      </div>
+      <button class="btn btn-primary" onclick="createClass()">Anlegen</button>
+      <span class="muted" id="neuMsg"></span>
+    </div>
+  </div>
+
+  <div id="schueler" style="display:none"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script>
+const CFG = window.SPRECHCLUB_CONFIG;
+let sb=null, me=null;
+
+async function init(){
+  if (CFG.SUPABASE_URL.startsWith('HIER_')){ document.getElementById('gateMsg').textContent='Supabase noch nicht verbunden (config.js).'; return; }
+  sb = supabase.createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY);
+  const { data:{ session } } = await sb.auth.getSession();
+  if (session) await enter(session.user);
+  sb.auth.onAuthStateChange(async (_e,s)=>{ if (s && !me) await enter(s.user); });
+}
+
+async function enter(u){
+  const { data } = await sb.from('profiles').select('is_admin').eq('id', u.id).single();
+  if (!data || !data.is_admin){ document.getElementById('gateMsg').textContent='Dieses Konto hat keine Admin-Rechte.'; return; }
+  me = u;
+  document.getElementById('gate').style.display='none';
+  document.getElementById('app').style.display='block';
+  loadKlassen();
+}
+
+async function login(){
+  const email = document.getElementById('adminEmail').value.trim();
+  const { error } = await sb.auth.signInWithOtp({ email, options:{ emailRedirectTo: location.href } });
+  document.getElementById('gateMsg').textContent = error ? error.message : '✓ Link verschickt — Postfach checken.';
+}
+async function logout(){ await sb.auth.signOut(); location.reload(); }
+
+function show(id){
+  ['klassen','neu','schueler'].forEach(x=>document.getElementById(x).style.display = x===id?'block':'none');
+  document.getElementById('tabK').classList.toggle('active', id==='klassen');
+  document.getElementById('tabN').classList.toggle('active', id==='neu');
+  document.getElementById('tabS').classList.toggle('active', id==='schueler');
+  if (id==='klassen') loadKlassen();
+  if (id==='schueler') loadSchueler();
+}
+
+function fmt(d){ return d.toLocaleDateString('de-DE',{weekday:'short',day:'numeric',month:'short'})+' '+d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}); }
+
+async function loadKlassen(){
+  const from = new Date(); from.setHours(0,0,0,0);
+  const to = new Date(from); to.setDate(to.getDate()+14);
+  const { data: cls } = await sb.from('classes').select('*').gte('starts_at', from.toISOString()).lt('starts_at', to.toISOString()).eq('is_cancelled', false).order('starts_at');
+  const ids = (cls||[]).map(c=>c.id);
+  let parts = {};
+  if (ids.length){
+    const { data: bk } = await sb.from('bookings').select('class_id, status, profiles(name,email)').in('class_id', ids).eq('status','booked');
+    (bk||[]).forEach(b=>{ (parts[b.class_id]=parts[b.class_id]||[]).push(b.profiles); });
+  }
+  document.getElementById('klassen').innerHTML = (cls||[]).length ? cls.map(c=>{
+    const p = parts[c.id]||[];
+    return `<div class="card">
+      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px">
+        <div><b class="title">${fmt(new Date(c.starts_at))} — ${c.title}</b>
+        <span class="pill">${c.level}</span> <span class="muted">${c.topic||''}</span></div>
+        <div class="muted">${p.length}/${c.capacity} gebucht</div>
+      </div>
+      ${p.length?'<div style="margin-top:8px">'+p.map(x=>`<div class="tn">👤 ${x.name||''} <span class="muted">${x.email}</span></div>`).join('')+'</div>':''}
+      <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-ghost" onclick="editClass('${c.id}')">Material & Vokabeln</button>
+        <button class="btn btn-ghost" onclick="cancelClass('${c.id}')">Stunde absagen</button>
+      </div>
+      <div id="edit-${c.id}" style="display:none;margin-top:10px">
+        <div class="formrow"><input id="ePre-${c.id}" placeholder="Übungen VOR dem Unterricht (Link)" value="${c.material_pre||''}" style="flex:1"><input id="eLive-${c.id}" placeholder="Material IM Unterricht (Link)" value="${c.material_live||''}" style="flex:1"></div>
+        <div class="formrow"><input id="ePost-${c.id}" placeholder="Nachbearbeitung (Link)" value="${c.material_post||''}" style="flex:1"><input id="eZoom-${c.id}" placeholder="Google-Meet-Link" value="${c.zoom_link||''}" style="flex:1"></div>
+        <div class="formrow"><textarea id="eVocab-${c.id}" placeholder="Vokabeln (eine pro Zeile): Wort — Bedeutung" style="flex:1;min-height:80px;padding:10px 12px;border:2px solid var(--border);border-radius:10px;font-family:inherit;font-size:14px">${(c.vocab||[]).map(v=>v.de+' — '+(v.info||'')).join('\n')}</textarea></div>
+        <button class="btn btn-primary" onclick="saveClass('${c.id}')">Speichern</button> <span class="muted" id="eMsg-${c.id}"></span>
+      </div>
+    </div>`;
+  }).join('') : '<div class="card muted">Keine Stunden in den nächsten 14 Tagen.</div>';
+}
+
+async function cancelClass(id){
+  if (!confirm('Stunde absagen? Gebuchte Teilnehmer bekommen ihr Guthaben zurück.')) return;
+  const { data: bk } = await sb.from('bookings').select('user_id').eq('class_id', id).eq('status','booked');
+  await sb.from('classes').update({ is_cancelled: true }).eq('id', id);
+  for (const b of (bk||[])){
+    await sb.from('bookings').update({ status:'cancelled', cancelled_at: new Date().toISOString() }).eq('class_id', id).eq('user_id', b.user_id);
+    await sb.rpc('admin_adjust_credits', { p_user_id: b.user_id, p_amount: 1 }).catch(()=>{});
+  }
+  loadKlassen();
+}
+
+function parseVocab(text){
+  return text.split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{
+    const m = l.split(/\s+[—–-]\s+/);
+    return { de: m[0].trim(), info: (m[1]||'').trim() };
+  });
+}
+
+function editClass(id){
+  const el = document.getElementById('edit-'+id);
+  el.style.display = el.style.display==='none' ? 'block' : 'none';
+}
+
+async function saveClass(id){
+  const vocab = parseVocab(document.getElementById('eVocab-'+id).value);
+  const { error } = await sb.from('classes').update({
+    material_pre: document.getElementById('ePre-'+id).value.trim() || null,
+    material_live: document.getElementById('eLive-'+id).value.trim() || null,
+    material_post: document.getElementById('ePost-'+id).value.trim() || null,
+    zoom_link: document.getElementById('eZoom-'+id).value.trim() || null,
+    vocab: vocab.length ? vocab : null,
+  }).eq('id', id);
+  document.getElementById('eMsg-'+id).textContent = error ? 'Fehler: '+error.message : '✓ gespeichert';
+}
+
+async function createClass(){
+  const t = document.getElementById('nTitle').value.trim();
+  const dt = document.getElementById('nDate').value;
+  if (!t || !dt){ document.getElementById('neuMsg').textContent='Titel + Datum nötig.'; return; }
+  const vocab = parseVocab(document.getElementById('nVocab').value);
+  const base = {
+    title: t, level: document.getElementById('nLevel').value,
+    topic: document.getElementById('nTopic').value.trim() || null,
+    capacity: parseInt(document.getElementById('nCap').value||'5',10),
+    zoom_link: document.getElementById('nZoom').value.trim() || null,
+    material_pre: document.getElementById('nPre').value.trim() || null,
+    material_live: document.getElementById('nLive').value.trim() || null,
+    material_post: document.getElementById('nPost').value.trim() || null,
+    vocab: vocab.length ? vocab : null,
+  };
+  const weeks = document.getElementById('nRepeat').checked ? 8 : 1;
+  const rows = [];
+  for (let w=0; w<weeks; w++){
+    const d = new Date(dt); d.setDate(d.getDate()+w*7);
+    rows.push({ ...base, starts_at: d.toISOString() });
+  }
+  const { error } = await sb.from('classes').insert(rows);
+  document.getElementById('neuMsg').textContent = error ? 'Fehler: '+error.message : `✓ ${rows.length} Stunde(n) angelegt.`;
+}
+
+async function loadSchueler(){
+  const { data } = await sb.from('profiles').select('id,name,email,credits').order('created_at',{ascending:false});
+  document.getElementById('schueler').innerHTML = `<table><tr><th>Name</th><th>E-Mail</th><th>Guthaben</th><th></th></tr>` +
+    (data||[]).map(p=>`<tr><td>${p.name||'–'}</td><td>${p.email}</td><td><b>${p.credits}</b></td>
+    <td><button class="btn btn-ghost" onclick="adjust('${p.id}',1)">+1</button> <button class="btn btn-ghost" onclick="adjust('${p.id}',-1)">−1</button></td></tr>`).join('') + '</table>';
+}
+
+async function adjust(id, n){
+  await sb.rpc('admin_adjust_credits', { p_user_id: id, p_amount: n });
+  loadSchueler();
+}
+
+init();
+</script>
+</body>
+</html>

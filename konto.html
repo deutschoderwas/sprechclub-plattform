@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Schülerbereich — Sprechclub | deutschoderwas</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--primary:#DD0000;--primary-dark:#B30000;--secondary:#1A1A1A;--accent:#FFCE00;--turquoise:#2DD4BF;--turquoise-soft:#A7F3D0;--cream:#FFFCF5;--bg:#FFF8E0;--text:#1A1A1A;--text-soft:#6B7280;--border:#F0E5D8}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{overflow-x:clip;max-width:100%}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--cream);color:var(--text);line-height:1.55}
+h1,h2,h3{font-family:'Space Grotesk',sans-serif;letter-spacing:-.02em}
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,249,242,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;text-decoration:none;color:var(--secondary)}
+.logo-icon{width:38px;height:38px;border-radius:50%;object-fit:cover}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 20px;border-radius:50px;text-decoration:none;font-weight:700;font-size:14px;border:none;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-primary{background:var(--primary);color:#fff;box-shadow:0 6px 18px rgba(221,0,0,.3)}
+.btn-primary:hover{background:var(--primary-dark)}
+.btn-ghost{background:#fff;color:var(--secondary);border:2px solid var(--border)}
+.btn-sm{padding:8px 14px;font-size:13px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.wrap{max-width:860px;margin:0 auto;padding:28px 20px 60px}
+
+.topgrid{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:stretch;margin-bottom:18px}
+.guthaben{background:linear-gradient(135deg,#FFF9F2,#FFF4D6);border:2px solid var(--primary);border-radius:22px;padding:20px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.guthaben b{font-family:'Space Grotesk',sans-serif;font-size:40px;line-height:1}
+.guthaben span{color:var(--text-soft);font-size:13px;display:block}
+.next-class{background:#fff;border:1px solid var(--border);border-radius:22px;padding:20px 24px;display:flex;flex-direction:column;justify-content:center;min-width:240px}
+.next-class small{color:var(--text-soft);font-weight:700;text-transform:uppercase;font-size:11px;letter-spacing:1px}
+.next-class b{font-size:16px}
+
+.tabs{display:flex;gap:8px;margin:22px 0 18px;flex-wrap:wrap}
+.tabs button{border:2px solid var(--border);background:#fff;border-radius:30px;padding:9px 18px;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;color:var(--text-soft)}
+.tabs button.active{background:var(--secondary);color:#fff;border-color:var(--secondary)}
+
+.card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:18px;margin-bottom:12px}
+.card .head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.when{font-family:'Space Grotesk',sans-serif;font-weight:700;min-width:140px}
+.level-pill{font-size:11px;font-weight:800;background:var(--bg);color:var(--primary);border-radius:30px;padding:4px 10px;text-transform:uppercase}
+.what{flex:1;min-width:150px}
+.what b{display:block}
+.what span{font-size:13px;color:var(--text-soft)}
+.phasen{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:14px}
+.phase{border:1.5px dashed var(--border);border-radius:14px;padding:12px;text-align:center;font-size:13px}
+.phase b{display:block;font-size:13px;margin-bottom:6px}
+.phase a{color:var(--primary);font-weight:700;text-decoration:none}
+.phase .nope{color:var(--text-soft)}
+.empty{background:#fff;border:1px dashed var(--border);border-radius:16px;padding:24px;text-align:center;color:var(--text-soft)}
+h2.sec{margin:26px 0 12px;font-size:20px}
+
+/* Vokabeltrainer */
+.flashwrap{max-width:480px;margin:0 auto;text-align:center}
+.flashcard{background:#fff;border:2px solid var(--border);border-radius:24px;min-height:200px;display:flex;align-items:center;justify-content:center;padding:30px;cursor:pointer;font-size:24px;font-weight:700;font-family:'Space Grotesk',sans-serif;box-shadow:0 14px 34px rgba(0,0,0,.06);user-select:none}
+.flashcard .hint{display:block;font-size:12px;color:var(--text-soft);font-weight:500;font-family:'Inter',sans-serif;margin-top:14px}
+.flashnav{display:flex;gap:10px;justify-content:center;margin-top:16px}
+.vocab-list{margin-top:26px;text-align:left}
+.vocab-list .vrow{background:#fff;border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin-bottom:8px;font-size:14px}
+.vocab-list .vrow b{color:var(--primary)}
+
+/* Amanda */
+.amanda-box{background:linear-gradient(135deg,#E8FAF6,#D2F5EE);border:2px solid var(--turquoise);border-radius:24px;padding:26px;text-align:center}
+.amanda-box h3{font-size:22px;margin-bottom:8px}
+.amanda-box p{color:var(--text-soft);font-size:14px;max-width:480px;margin:0 auto 14px}
+.amanda-lock{background:#fff;border:1px dashed var(--border);border-radius:18px;padding:26px;text-align:center;color:var(--text-soft)}
+
+.kauf-ok{background:#E8FAF3;border:2px solid var(--turquoise);border-radius:16px;padding:14px 18px;margin-bottom:18px;font-weight:600;display:none}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--secondary);color:#fff;padding:14px 24px;border-radius:50px;font-weight:600;font-size:14px;z-index:300;display:none}
+@media(max-width:680px){.topgrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="index.html" class="logo"><img src="logo.PNG" class="logo-icon" onerror="this.style.display='none'"><span>Schülerbereich</span></a>
+  <div style="display:flex;gap:8px">
+    <a class="btn btn-ghost btn-sm" href="index.html#stundenplan">Stundenplan</a>
+    <button class="btn btn-ghost btn-sm" onclick="logout()">Abmelden</button>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="kauf-ok" id="kaufOk">🎉 Danke für deinen Kauf! Dein Guthaben wird gerade gutgeschrieben — lade die Seite gleich neu.</div>
+
+  <div class="topgrid">
+    <div class="guthaben">
+      <div><b id="credits">–</b><span>Stunden-Guthaben</span></div>
+      <a class="btn btn-primary" href="index.html#pakete">Stunden kaufen</a>
+    </div>
+    <div class="next-class" id="nextClass"><small>Nächste Stunde</small><b>–</b></div>
+  </div>
+
+  <div class="tabs">
+    <button id="tabStunden" class="active" onclick="show('stunden')">📅 Meine Stunden</button>
+    <button id="tabVokabeln" onclick="show('vokabeln')">🃏 Vokabeltrainer</button>
+    <button id="tabAmanda" onclick="show('amanda')">🎤 Amanda</button>
+  </div>
+
+  <div id="stunden"></div>
+
+  <div id="vokabeln" style="display:none"></div>
+
+  <div id="amanda" style="display:none"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script>
+const CFG = window.SPRECHCLUB_CONFIG;
+const DEMO = CFG.SUPABASE_URL.startsWith('HIER_');
+const AMANDA_AGENT_ID = 'agent_8401kt4vq157espa2msk6c448s5x';
+let sb=null, user=null, bookings=[], credits=0, hasHistory=false;
+
+if (new URLSearchParams(location.search).get('kauf')==='ok') document.getElementById('kaufOk').style.display='block';
+
+function toast(t){ const el=document.getElementById('toast'); el.textContent=t; el.style.display='block'; setTimeout(()=>el.style.display='none',3500); }
+function fmt(d){ return d.toLocaleDateString('de-DE',{weekday:'short',day:'numeric',month:'short'})+' · '+d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}); }
+
+async function init(){
+  if (DEMO){ document.getElementById('stunden').innerHTML='<div class="empty">Vorschau-Modus.</div>'; return; }
+  sb = supabase.createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY);
+  const { data:{ session } } = await sb.auth.getSession();
+  if (!session){ location.href='index.html'; return; }
+  user = session.user;
+  load();
+}
+
+async function load(){
+  const { data: prof } = await sb.from('profiles').select('credits').eq('id', user.id).single();
+  credits = prof ? prof.credits : 0;
+  document.getElementById('credits').textContent = credits;
+
+  const { data: bk } = await sb.rpc('my_bookings');
+  bookings = (bk||[]);
+  hasHistory = bookings.length > 0;
+
+  const now = new Date();
+  const up = bookings.filter(b=>b.status==='booked' && new Date(b.starts_at)>=now);
+  if (up.length){
+    const n = up[0];
+    document.getElementById('nextClass').innerHTML =
+      `<small>Nächste Stunde</small><b>${fmt(new Date(n.starts_at))}</b><span style="font-size:13px;color:var(--text-soft)">${n.title}</span>` +
+      (n.zoom_link?`<a class="btn btn-primary btn-sm" style="margin-top:8px" href="${n.zoom_link}" target="_blank">Zum Unterricht (Meet)</a>`:'');
+  } else {
+    document.getElementById('nextClass').innerHTML = `<small>Nächste Stunde</small><b>Noch nichts gebucht</b><a class="btn btn-ghost btn-sm" style="margin-top:8px" href="index.html#stundenplan">Stunde aussuchen</a>`;
+  }
+  renderStunden(); renderVokabeln(); renderAmanda();
+}
+
+function show(id){
+  ['stunden','vokabeln','amanda'].forEach(x=>document.getElementById(x).style.display = x===id?'block':'none');
+  ['Stunden','Vokabeln','Amanda'].forEach(t=>document.getElementById('tab'+t).classList.toggle('active','tab'+t==='tab'+id.charAt(0).toUpperCase()+id.slice(1)));
+}
+
+// ---------- Meine Stunden (mit Lernphasen) ----------
+function phaseBox(label, emoji, content){
+  return `<div class="phase"><b>${emoji} ${label}</b>${content}</div>`;
+}
+function matLink(url, txt){
+  if (!url) return `<span class="nope">folgt</span>`;
+  if (/^https?:\/\//.test(url)) return `<a href="${url}" target="_blank">${txt} öffnen →</a>`;
+  return `<span>${url}</span>`;
+}
+
+function renderStunden(){
+  const now = new Date();
+  const up = bookings.filter(b=>b.status==='booked' && new Date(b.starts_at)>=now);
+  const past = bookings.filter(b=>b.status==='booked' && new Date(b.starts_at)<now).reverse().slice(0,8);
+
+  let html = '<h2 class="sec">Kommende Stunden</h2>';
+  html += up.length ? up.map(b=>{
+    const start = new Date(b.starts_at);
+    const cancellable = (start - now) > 2*60*60*1000;
+    return `<div class="card">
+      <div class="head">
+        <div class="when">${fmt(start)}</div>
+        <span class="level-pill">${b.level}</span>
+        <div class="what"><b>${b.title}</b><span>${b.topic||''}</span></div>
+        ${b.zoom_link?`<a class="btn btn-primary btn-sm" href="${b.zoom_link}" target="_blank">Zum Unterricht (Meet)</a>`:''}
+        <button class="btn btn-ghost btn-sm" ${cancellable?'':'disabled title="Storno nur bis 2 h vorher"'} onclick="cancelB('${b.class_id}')">Stornieren</button>
+      </div>
+      <div class="phasen">
+        ${phaseBox('Vor dem Unterricht','📖', matLink(b.material_pre,'Übungen'))}
+        ${phaseBox('Im Unterricht','🗣️', matLink(b.material_live,'Material'))}
+        ${phaseBox('Nachbearbeitung','✍️', matLink(b.material_post,'Übungen'))}
+        ${phaseBox('Vokabeln','🃏', b.vocab&&b.vocab.length?`<a href="#" onclick="show('vokabeln');return false">${b.vocab.length} Vokabeln üben →</a>`:'<span class="nope">folgt</span>')}
+      </div>
+    </div>`;
+  }).join('') : '<div class="empty">Noch nichts gebucht — <a href="index.html#stundenplan">such dir eine Stunde aus</a>!</div>';
+
+  if (past.length){
+    html += '<h2 class="sec">Vergangene Stunden — Nachbearbeitung</h2>';
+    html += past.map(b=>`<div class="card" style="opacity:.85">
+      <div class="head"><div class="when">${fmt(new Date(b.starts_at))}</div><span class="level-pill">${b.level}</span>
+      <div class="what"><b>${b.title}</b><span>${b.topic||''}</span></div></div>
+      <div class="phasen">
+        ${phaseBox('Nachbearbeitung','✍️', matLink(b.material_post,'Übungen'))}
+        ${phaseBox('Vokabeln','🃏', b.vocab&&b.vocab.length?`<a href="#" onclick="show('vokabeln');return false">${b.vocab.length} Vokabeln üben →</a>`:'<span class="nope">—</span>')}
+      </div>
+    </div>`).join('');
+  }
+  document.getElementById('stunden').innerHTML = html;
+}
+
+async function cancelB(classId){
+  if (!confirm('Stunde wirklich stornieren? Du bekommst dein Guthaben zurück.')) return;
+  const { data, error } = await sb.rpc('cancel_booking', { p_class_id: classId });
+  if (error || !data.ok){ toast(data?.error==='too_late' ? 'Storno nicht mehr möglich (unter 2 h).' : 'Storno fehlgeschlagen.'); return; }
+  toast('Storniert — 1 Stunde zurück auf dein Guthaben.'); load();
+}
+
+// ---------- Vokabeltrainer ----------
+let deck=[], deckIdx=0, flipped=false;
+function renderVokabeln(){
+  deck = [];
+  bookings.forEach(b=>{ if (b.status==='booked' && Array.isArray(b.vocab)) b.vocab.forEach(v=>deck.push({...v, from:b.title})); });
+  const el = document.getElementById('vokabeln');
+  if (!deck.length){
+    el.innerHTML = '<div class="empty">Noch keine Vokabeln — sie erscheinen hier automatisch, sobald deine gebuchten Stunden Vokabellisten haben.</div>';
+    return;
+  }
+  deckIdx = 0; flipped = false;
+  el.innerHTML = `
+    <div class="flashwrap">
+      <p style="color:var(--text-soft);font-size:14px;margin-bottom:14px">${deck.length} Vokabeln aus deinen Stunden · Karte antippen zum Umdrehen</p>
+      <div class="flashcard" id="flashcard" onclick="flipCard()"></div>
+      <div class="flashnav">
+        <button class="btn btn-ghost" onclick="prevCard()">← Zurück</button>
+        <button class="btn btn-primary" onclick="nextCard()">Weiter →</button>
+      </div>
+    </div>
+    <div class="vocab-list">
+      <h2 class="sec">Alle Vokabeln</h2>
+      ${deck.map(v=>`<div class="vrow"><b>${v.de}</b> — ${v.info||''}</div>`).join('')}
+    </div>`;
+  showCard();
+}
+function showCard(){
+  const c = deck[deckIdx];
+  document.getElementById('flashcard').innerHTML = flipped
+    ? `<div style="font-size:18px;font-weight:500">${c.info||'—'}<span class="hint">${deckIdx+1} / ${deck.length} · tippen zum Zurückdrehen</span></div>`
+    : `<div>${c.de}<span class="hint">${deckIdx+1} / ${deck.length} · tippen für die Bedeutung</span></div>`;
+}
+function flipCard(){ flipped=!flipped; showCard(); }
+function nextCard(){ deckIdx=(deckIdx+1)%deck.length; flipped=false; showCard(); }
+function prevCard(){ deckIdx=(deckIdx-1+deck.length)%deck.length; flipped=false; showCard(); }
+
+// ---------- Amanda (gratis für Schüler mit Guthaben oder Buchungen) ----------
+function renderAmanda(){
+  const el = document.getElementById('amanda');
+  const eligible = credits > 0 || bookings.some(b=>b.status==='booked');
+  if (!eligible){
+    el.innerHTML = `<div class="amanda-lock">
+      <h3 style="margin-bottom:8px">🎤 Amanda — deine KI-Sprechpartnerin</h3>
+      <p style="margin-bottom:14px">Amanda ist <b>kostenlos für alle Sprechclub-Schüler</b> mit einem Stundenpaket. Hol dir ein Paket und sprich so oft du willst — 24/7.</p>
+      <a class="btn btn-primary" href="index.html#pakete">Paket ansehen</a>
+    </div>`;
+    return;
+  }
+  el.innerHTML = `<div class="amanda-box">
+    <h3>🎤 Sprich mit Amanda</h3>
+    <p>Dein Bonus als Sprechclub-Schüler: unbegrenzt mit Amanda üben — perfekt zum Aufwärmen vor der Stunde oder zum Nachüben danach. Klick unten auf das Mikrofon.</p>
+  </div>
+  <elevenlabs-convai agent-id="${AMANDA_AGENT_ID}"></elevenlabs-convai>`;
+  if (!document.getElementById('elevscript')){
+    const s = document.createElement('script');
+    s.id='elevscript'; s.src='https://unpkg.com/@elevenlabs/convai-widget-embed'; s.async=true;
+    document.body.appendChild(s);
+  }
+}
+
+async function logout(){ await sb.auth.signOut(); location.href='index.html'; }
+init();
+</script>
+</body>
+</html>
