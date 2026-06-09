@@ -50,9 +50,13 @@ input,select{padding:10px 12px;border:2px solid var(--border);border-radius:10px
     <button id="tabK" class="active" onclick="show('klassen')">Stunden & Teilnehmer</button>
     <button id="tabN" onclick="show('neu')">Stunde anlegen</button>
     <button id="tabS" onclick="show('schueler')">Schüler & Guthaben</button>
+    <button id="tabM" onclick="show('nachrichten')">Nachrichten</button>
+    <button id="tabB" onclick="show('bewertungen')">Bewertungen</button>
   </div>
 
   <div id="klassen"></div>
+  <div id="nachrichten" style="display:none"></div>
+  <div id="bewertungen" style="display:none"></div>
 
   <div id="neu" style="display:none">
     <div class="card">
@@ -119,12 +123,16 @@ async function login(){
 async function logout(){ await sb.auth.signOut(); location.reload(); }
 
 function show(id){
-  ['klassen','neu','schueler'].forEach(x=>document.getElementById(x).style.display = x===id?'block':'none');
+  ['klassen','neu','schueler','nachrichten','bewertungen'].forEach(x=>document.getElementById(x).style.display = x===id?'block':'none');
   document.getElementById('tabK').classList.toggle('active', id==='klassen');
   document.getElementById('tabN').classList.toggle('active', id==='neu');
   document.getElementById('tabS').classList.toggle('active', id==='schueler');
+  document.getElementById('tabM').classList.toggle('active', id==='nachrichten');
+  document.getElementById('tabB').classList.toggle('active', id==='bewertungen');
   if (id==='klassen') loadKlassen();
   if (id==='schueler') loadSchueler();
+  if (id==='nachrichten') loadNachrichten();
+  if (id==='bewertungen') loadBewertungen();
 }
 
 function fmt(d){ return d.toLocaleDateString('de-DE',{weekday:'short',day:'numeric',month:'short'})+' '+d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}); }
@@ -138,6 +146,9 @@ async function loadKlassen(){
   if (ids.length){
     const { data: bk } = await sb.from('bookings').select('class_id, status, profiles(name,email)').in('class_id', ids).eq('status','booked');
     (bk||[]).forEach(b=>{ (parts[b.class_id]=parts[b.class_id]||[]).push(b.profiles); });
+    const { data: mats } = await sb.from('class_materials').select('class_id').in('class_id', ids);
+    const matSet = new Set((mats||[]).map(m=>m.class_id));
+    (cls||[]).forEach(c=>{ c._hasMat = matSet.has(c.id); });
   }
   document.getElementById('klassen').innerHTML = (cls||[]).length ? cls.map(c=>{
     const p = parts[c.id]||[];
@@ -157,6 +168,13 @@ async function loadKlassen(){
         <div class="formrow"><input id="ePost-${c.id}" placeholder="Nachbearbeitung (Link)" value="${c.material_post||''}" style="flex:1"><input id="eZoom-${c.id}" placeholder="Google-Meet-Link" value="${c.zoom_link||''}" style="flex:1"></div>
         <div class="formrow"><textarea id="eVocab-${c.id}" placeholder="Vokabeln (eine pro Zeile): Wort — Bedeutung" style="flex:1;min-height:80px;padding:10px 12px;border:2px solid var(--border);border-radius:10px;font-family:inherit;font-size:14px">${(c.vocab||[]).map(v=>v.de+' — '+(v.info||'')).join('\n')}</textarea></div>
         <button class="btn btn-primary" onclick="saveClass('${c.id}')">Speichern</button> <span class="muted" id="eMsg-${c.id}"></span>
+        <div style="margin-top:12px;border-top:1px dashed var(--border);padding-top:12px">
+          <b style="font-size:14px">🤖 Amanda erstellt Übungen</b>
+          <p class="muted" style="margin:4px 0 8px">Generiert passend zu Niveau &amp; Thema: Lückentexte, Multiple Choice, Zuordnen, Satzbau, Schreibaufgaben, Grammatik-Tipp &amp; Vokabeln. Schüler sehen die Übungen interaktiv im Schülerbereich.</p>
+          <button class="btn btn-ghost" onclick="genMaterial('${c.id}')">${c._hasMat?'🔄 Neu generieren':'✨ KI-Material erstellen'}</button>
+          <span class="muted" id="genMsg-${c.id}">${c._hasMat?'✓ Material vorhanden':''}</span>
+          <div id="genPrev-${c.id}" style="margin-top:8px"></div>
+        </div>
       </div>
     </div>`;
   }).join('') : '<div class="card muted">Keine Stunden in den nächsten 14 Tagen.</div>';
@@ -220,6 +238,66 @@ async function createClass(){
   }
   const { error } = await sb.from('classes').insert(rows);
   document.getElementById('neuMsg').textContent = error ? 'Fehler: '+error.message : `✓ ${rows.length} Stunde(n) angelegt.`;
+}
+
+async function genMaterial(id){
+  const msg = document.getElementById('genMsg-'+id);
+  const prev = document.getElementById('genPrev-'+id);
+  msg.textContent = '⏳ Amanda denkt nach… (10–20 Sek.)';
+  const { data:{ session } } = await sb.auth.getSession();
+  try {
+    const r = await fetch('/api/generate-material', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+session.access_token },
+      body: JSON.stringify({ classId:id })
+    });
+    const j = await r.json();
+    if (!r.ok || !j.ok){
+      const map={anthropic_key_missing:'ANTHROPIC_API_KEY fehlt in Vercel.',not_admin:'Keine Admin-Rechte.',class_not_found:'Stunde nicht gefunden.'};
+      msg.textContent = '❌ '+(map[j.error]||j.error||'Fehler')+(j.detail?(' — '+j.detail):''); return;
+    }
+    msg.textContent = '✓ Material erstellt!';
+    const c=j.content;
+    prev.innerHTML = `<div style="background:var(--bg);border-radius:10px;padding:10px 12px;font-size:13px">
+      <b>Vorschau:</b> ${(c.vocab||[]).length} Vokabeln · ${(c.pre&&c.pre.exercises||[]).length} Übungen (Vorbereitung) · ${(c.post&&c.post.exercises||[]).length} Übungen (Nachbearbeitung)
+      ${c.grammar_tip?'<br>📌 Grammatik: '+ (c.grammar_tip.title||'') :''}
+      <br><span class="muted">Schüler sehen das jetzt im Schülerbereich unter „Übungen starten".</span></div>`;
+  } catch(e){ msg.textContent='❌ Netzwerkfehler: '+e.message; }
+}
+
+async function loadNachrichten(){
+  const { data } = await sb.from('messages').select('*, profiles(name,email)').order('created_at',{ascending:false});
+  // gruppieren nach Schüler
+  const byUser={};
+  (data||[]).forEach(m=>{ (byUser[m.user_id]=byUser[m.user_id]||{p:m.profiles,msgs:[]}).msgs.push(m); });
+  const ids=Object.keys(byUser);
+  document.getElementById('nachrichten').innerHTML = ids.length ? ids.map(uid=>{
+    const t=byUser[uid]; const msgs=t.msgs.slice().reverse();
+    return `<div class="card">
+      <b class="title">👤 ${t.p?.name||'–'} <span class="muted">${t.p?.email||''}</span></b>
+      <div style="margin:8px 0;display:flex;flex-direction:column;gap:6px">
+        ${msgs.map(m=>`<div style="align-self:${m.sender==='student'?'flex-start':'flex-end'};max-width:80%;background:${m.sender==='student'?'#fff':'var(--secondary)'};color:${m.sender==='student'?'var(--text)':'#fff'};border:1px solid var(--border);border-radius:14px;padding:8px 12px;font-size:14px">${esc(m.body)}<br><span style="font-size:11px;opacity:.6">${m.sender==='student'?'Schüler':'du'} · ${new Date(m.created_at).toLocaleDateString('de-DE')}</span></div>`).join('')}
+      </div>
+      <div class="formrow"><input id="reply-${uid}" placeholder="Antwort schreiben…" style="flex:1"><button class="btn btn-primary" onclick="reply('${uid}')">Senden</button></div>
+    </div>`;
+  }).join('') : '<div class="card muted">Noch keine Nachrichten von Schülern.</div>';
+}
+function esc(s){ return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+async function reply(uid){
+  const inp=document.getElementById('reply-'+uid); const body=inp.value.trim(); if(!body)return;
+  const { error }=await sb.from('messages').insert({user_id:uid,sender:'teacher',body});
+  if(error){ alert('Fehler: '+error.message); return; }
+  inp.value=''; loadNachrichten();
+}
+
+async function loadBewertungen(){
+  const { data } = await sb.from('ratings').select('*, profiles(name,email), classes(title,starts_at,level)').order('created_at',{ascending:false});
+  const rows=(data||[]);
+  const avg = rows.length ? (rows.reduce((a,r)=>a+r.stars,0)/rows.length).toFixed(1) : '–';
+  document.getElementById('bewertungen').innerHTML = `<div class="card"><b>Durchschnitt: ${avg} ★</b> <span class="muted">(${rows.length} Bewertungen)</span></div>` +
+    (rows.length ? rows.map(r=>`<div class="card"><b class="title">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)} — ${esc(r.classes?.title||'')}</b>
+      <span class="muted">${r.classes?.starts_at?new Date(r.classes.starts_at).toLocaleDateString('de-DE'):''} · ${esc(r.profiles?.name||r.profiles?.email||'')}</span>
+      ${r.comment?`<p style="margin-top:6px">„${esc(r.comment)}"</p>`:''}</div>`).join('') : '<div class="card muted">Noch keine Bewertungen.</div>');
 }
 
 async function loadSchueler(){
