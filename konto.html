@@ -193,6 +193,7 @@ h2.sec{margin:24px 0 12px;font-size:19px}
     <button class="navlink active" data-view="dashboard" onclick="go('dashboard')"><span class="ic">🏠</span>Start</button>
     <button class="navlink" data-view="lernpfad" onclick="go('lernpfad')"><span class="ic">🪜</span>Lernpfad</button>
     <button class="navlink" data-view="stunden" onclick="go('stunden')"><span class="ic">📅</span>Meine Stunden</button>
+    <button class="navlink" data-view="materialien" onclick="go('materialien')"><span class="ic">📚</span>Materialien</button>
     <button class="navlink" data-view="vokabeln" onclick="go('vokabeln')"><span class="ic">🃏</span>Vokabeln</button>
     <button class="navlink" data-view="fortschritt" onclick="go('fortschritt')"><span class="ic">🏆</span>Abzeichen</button>
     <button class="navlink" data-view="guthaben" onclick="go('guthaben')"><span class="ic">💳</span>Guthaben</button>
@@ -211,6 +212,7 @@ h2.sec{margin:24px 0 12px;font-size:19px}
     <section class="view active" id="v-dashboard"></section>
     <section class="view" id="v-lernpfad"></section>
     <section class="view" id="v-stunden"></section>
+    <section class="view" id="v-materialien"></section>
     <section class="view" id="v-vokabeln"></section>
     <section class="view" id="v-fortschritt"></section>
     <section class="view" id="v-guthaben"></section>
@@ -338,16 +340,71 @@ function collectVocab(){
 }
 
 // ---------- Router ----------
-const VIEWS=['dashboard','lernpfad','stunden','vokabeln','fortschritt','guthaben','nachrichten','amanda','profil'];
+const VIEWS=['dashboard','lernpfad','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','profil'];
 function go(v){ location.hash=v; }
 function routeFromHash(){ const v=(location.hash||'#dashboard').slice(1); show(VIEWS.includes(v)?v:'dashboard'); }
 function show(v){
   VIEWS.forEach(x=>document.getElementById('v-'+x).classList.toggle('active',x===v));
   document.querySelectorAll('.navlink[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));
-  ({dashboard:renderDashboard,lernpfad:renderLernpfad,stunden:renderStunden,vokabeln:renderVokabeln,
+  ({dashboard:renderDashboard,lernpfad:renderLernpfad,stunden:renderStunden,materialien:renderMaterialien,vokabeln:renderVokabeln,
     fortschritt:renderFortschritt,guthaben:renderGuthaben,nachrichten:renderNachrichten,
     amanda:renderAmanda,profil:renderProfil}[v])();
   window.scrollTo(0,0);
+}
+
+// ---------- Materialien (PDF-Bibliothek aus dem Unterricht) ----------
+let matLib=null;
+const MAT_ORDER=['Oktober','November','Dezember','Januar','Februar','März','April','Mai','Juni','Juli','August','September'];
+function matTopOrder(name){
+  const i=MAT_ORDER.findIndex(m=>name.includes(m));
+  const y=(name.match(/20\d\d/)||[''])[0];
+  return (y||'9999')+'-'+String(i<0?99:((i+3)%12)).padStart(2,'0');
+}
+function fmtSize(b){ return b>=1048576 ? (Math.round(b/1048576*10)/10+' MB') : (Math.max(1,Math.round(b/1024))+' KB'); }
+async function renderMaterialien(){
+  const el=document.getElementById('v-materialien');
+  el.innerHTML=`<div class="pagehead"><h1>Materialien</h1><p>Alle Arbeitsblätter & PDFs aus dem Unterricht — zum Ansehen und Herunterladen.</p></div>
+    <input id="matSearch" placeholder="🔍 Suchen… (z.B. Perfekt, Wortschatz, B1)" style="width:100%;max-width:420px;margin-bottom:14px;padding:11px 13px;border:2px solid var(--border);border-radius:12px;font-family:inherit;font-size:14px" oninput="drawMaterials(this.value.toLowerCase())">
+    <div id="matList"><div class="empty">Lade Materialien…</div></div>`;
+  if(!matLib){
+    const {data,error}=await sb.from('materials').select('storage_path,title,folder,size_bytes').order('folder').order('title');
+    if(error){ document.getElementById('matList').innerHTML='<div class="empty">Materialien konnten nicht geladen werden.</div>'; return; }
+    matLib=data||[];
+  }
+  drawMaterials('');
+}
+function drawMaterials(q){
+  const box=document.getElementById('matList'); if(!box) return;
+  const items=(matLib||[]).filter(m=>!q||(m.title+' '+m.folder).toLowerCase().includes(q));
+  if(!items.length){ box.innerHTML='<div class="empty">Nichts gefunden.</div>'; return; }
+  const groups={};
+  items.forEach(m=>{
+    const parts=m.folder.split('/');
+    const top=parts[1]||parts[0]||'Sonstiges';
+    const sub=parts.slice(2).join(' › ');
+    (groups[top]=groups[top]||{});(groups[top][sub]=groups[top][sub]||[]).push(m);
+  });
+  const tops=Object.keys(groups).sort((a,b)=>matTopOrder(b).localeCompare(matTopOrder(a))||a.localeCompare(b));
+  box.innerHTML=tops.map(top=>{
+    const subs=groups[top]; const n=Object.values(subs).reduce((s,a)=>s+a.length,0);
+    const inner=Object.keys(subs).sort().map(sub=>{
+      const files=subs[sub].map(m=>`<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0">📄</span>
+        <a href="#" onclick="openMaterial('${esc(m.storage_path)}',this);return false" style="flex:1;color:var(--ink);text-decoration:none;font-weight:600">${esc(m.title)}</a>
+        <span class="muted" style="font-size:12px;flex-shrink:0">${fmtSize(m.size_bytes||0)}</span></div>`).join('');
+      return sub?`<details style="margin:6px 0 6px 8px"><summary style="cursor:pointer;font-weight:600;padding:4px 0">📁 ${esc(sub)} <span class="muted">(${subs[sub].length})</span></summary><div style="padding-left:10px">${files}</div></details>`:`<div>${files}</div>`;
+    }).join('');
+    return `<details class="card" style="margin-bottom:10px" ${q?'open':''}><summary style="cursor:pointer;font-weight:800;font-size:16px">🗂️ ${esc(top)} <span class="muted" style="font-weight:600">(${n} Dateien)</span></summary><div style="margin-top:8px">${inner}</div></details>`;
+  }).join('');
+}
+async function openMaterial(path,a){
+  const old=a.textContent; a.textContent='Öffne…';
+  try{
+    const {data,error}=await sb.storage.from('materials').createSignedUrl(path,3600);
+    if(error||!data?.signedUrl) throw error||new Error('no url');
+    window.open(data.signedUrl,'_blank');
+  }catch(e){ alert('Datei konnte nicht geöffnet werden. Bitte neu einloggen oder Julia Bescheid geben.'); }
+  a.textContent=old;
 }
 
 // ---------- Dashboard ----------
