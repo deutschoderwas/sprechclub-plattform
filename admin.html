@@ -52,6 +52,7 @@ input,select{padding:10px 12px;border:2px solid var(--border);border-radius:10px
     <button id="tabS" onclick="show('schueler')">Schüler & Guthaben</button>
     <button id="tabM" onclick="show('nachrichten')">Nachrichten</button>
     <button id="tabB" onclick="show('bewertungen')">Bewertungen</button>
+    <button id="tabMat" onclick="show('material')">📚 Materialien</button>
   </div>
 
   <div id="klassen"></div>
@@ -90,6 +91,23 @@ input,select{padding:10px 12px;border:2px solid var(--border);border-radius:10px
   </div>
 
   <div id="schueler" style="display:none"></div>
+
+  <div id="material" style="display:none">
+    <div class="card">
+      <h3 style="margin-bottom:6px">PDFs hochladen</h3>
+      <p class="muted" style="margin-bottom:12px">Neues Material sehen nur Schüler mit Guthaben oder gebuchter Stunde — die Sperre für Inaktive passiert automatisch.</p>
+      <div class="formrow">
+        <select id="matFolderSel" style="flex:1"></select>
+        <input id="matFolderNew" placeholder="…oder neuen Ordner tippen, z.B. Juni 2026/Woche 3" style="flex:2">
+      </div>
+      <div class="formrow">
+        <input type="file" id="matFiles" accept="application/pdf" multiple style="flex:1;border-style:dashed">
+        <button class="btn btn-primary" onclick="uploadMaterials()">Hochladen</button>
+      </div>
+      <p class="muted" id="matMsg"></p>
+    </div>
+    <div id="matListAdmin"></div>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -123,16 +141,70 @@ async function login(){
 async function logout(){ await sb.auth.signOut(); location.reload(); }
 
 function show(id){
-  ['klassen','neu','schueler','nachrichten','bewertungen'].forEach(x=>document.getElementById(x).style.display = x===id?'block':'none');
+  ['klassen','neu','schueler','nachrichten','bewertungen','material'].forEach(x=>document.getElementById(x).style.display = x===id?'block':'none');
   document.getElementById('tabK').classList.toggle('active', id==='klassen');
   document.getElementById('tabN').classList.toggle('active', id==='neu');
   document.getElementById('tabS').classList.toggle('active', id==='schueler');
   document.getElementById('tabM').classList.toggle('active', id==='nachrichten');
   document.getElementById('tabB').classList.toggle('active', id==='bewertungen');
+  document.getElementById('tabMat').classList.toggle('active', id==='material');
   if (id==='klassen') loadKlassen();
   if (id==='schueler') loadSchueler();
   if (id==='nachrichten') loadNachrichten();
   if (id==='bewertungen') loadBewertungen();
+  if (id==='material') loadMaterial();
+}
+
+// ---------- Materialien (PDF-Bibliothek) ----------
+let matRows=null;
+function matSan(s){ return s.normalize('NFC').replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/Ä/g,'Ae').replace(/Ö/g,'Oe').replace(/Ü/g,'Ue').replace(/ß/g,'ss').replace(/[^a-zA-Z0-9._/-]+/g,'_').replace(/_+/g,'_'); }
+async function loadMaterial(){
+  const { data, error } = await sb.from('materials').select('storage_path,title,folder,size_bytes,created_at').order('created_at',{ascending:false});
+  if (error){ document.getElementById('matListAdmin').innerHTML='<div class="card">Fehler beim Laden.</div>'; return; }
+  matRows = data||[];
+  const folders=[...new Set(matRows.map(m=>m.folder))].sort();
+  document.getElementById('matFolderSel').innerHTML =
+    '<option value="">— Ordner wählen —</option>'+folders.map(f=>`<option>${f.replace(/</g,'&lt;')}</option>`).join('');
+  const newest=matRows.slice(0,30);
+  document.getElementById('matListAdmin').innerHTML =
+    `<div class="card"><b>Bibliothek: ${matRows.length} Dateien</b><p class="muted" style="margin-bottom:8px">Die 30 neuesten:</p>`+
+    newest.map(m=>`<div class="tn" style="display:flex;gap:8px;align-items:center;border-bottom:1px solid var(--border);padding:5px 0">
+      <span style="flex:1">📄 <b>${m.title.replace(/</g,'&lt;')}</b> <span class="muted">· ${m.folder.replace(/</g,'&lt;')} · ${new Date(m.created_at).toLocaleDateString('de-DE')}</span></span>
+      <button class="btn btn-ghost" style="padding:4px 12px;font-size:12px" onclick="viewMaterial('${m.storage_path}')">Ansehen</button>
+      <button class="btn btn-ghost" style="padding:4px 12px;font-size:12px;color:var(--primary)" onclick="deleteMaterial('${m.storage_path}')">Löschen</button>
+    </div>`).join('')+'</div>';
+}
+async function viewMaterial(path){
+  const { data } = await sb.storage.from('materials').createSignedUrl(path,600);
+  if (data?.signedUrl) window.open(data.signedUrl,'_blank');
+}
+async function uploadMaterials(){
+  const files=[...document.getElementById('matFiles').files];
+  const folder=(document.getElementById('matFolderNew').value.trim()||document.getElementById('matFolderSel').value).replace(/^\/+|\/+$/g,'');
+  const msg=document.getElementById('matMsg');
+  if (!files.length){ msg.textContent='Bitte PDF-Datei(en) auswählen.'; return; }
+  if (!folder){ msg.textContent='Bitte Ordner wählen oder neuen Ordner eintippen.'; return; }
+  let ok=0, fail=0;
+  for (const f of files){
+    msg.textContent=`Lade hoch… ${ok+fail+1}/${files.length}: ${f.name}`;
+    try{
+      const key=matSan(folder)+'/'+matSan(f.name);
+      const { error:e1 } = await sb.storage.from('materials').upload(key, f, { contentType:'application/pdf', upsert:true });
+      if (e1) throw e1;
+      const { error:e2 } = await sb.from('materials').upsert({ storage_path:key, title:f.name.replace(/\.pdf$/i,''), folder:folder, size_bytes:f.size, source:'admin' }, { onConflict:'storage_path' });
+      if (e2) throw e2;
+      ok++;
+    }catch(e){ fail++; console.error('Upload-Fehler', f.name, e); }
+  }
+  msg.textContent=`✅ ${ok} hochgeladen`+(fail?` · ⚠️ ${fail} fehlgeschlagen`:'')+'. Schüler mit Guthaben sehen sie sofort.';
+  document.getElementById('matFiles').value='';
+  loadMaterial();
+}
+async function deleteMaterial(path){
+  if (!confirm('Diese Datei wirklich aus der Bibliothek löschen?')) return;
+  await sb.storage.from('materials').remove([path]);
+  await sb.from('materials').delete().eq('storage_path', path);
+  loadMaterial();
 }
 
 function fmt(d){ return d.toLocaleDateString('de-DE',{weekday:'short',day:'numeric',month:'short'})+' '+d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}); }

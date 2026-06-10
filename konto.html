@@ -364,6 +364,7 @@ function fmtSize(b){ return b>=1048576 ? (Math.round(b/1048576*10)/10+' MB') : (
 async function renderMaterialien(){
   const el=document.getElementById('v-materialien');
   el.innerHTML=`<div class="pagehead"><h1>Materialien</h1><p>Alle Arbeitsblätter & PDFs aus dem Unterricht — zum Ansehen und Herunterladen.</p></div>
+    ${isActive()?'':`<div class="card" style="border:2px solid #f5b942;background:#fff8ec;margin-bottom:14px"><b>🔒 Hinweis:</b> <span class="muted">Du siehst dein bisheriges Material. Neues Material wird mit einem Paket wieder freigeschaltet.</span> <a href="index.html#pakete" style="font-weight:700">Pakete ansehen →</a></div>`}
     <input id="matSearch" placeholder="🔍 Suchen… (z.B. Perfekt, Wortschatz, B1)" style="width:100%;max-width:420px;margin-bottom:14px;padding:11px 13px;border:2px solid var(--border);border-radius:12px;font-family:inherit;font-size:14px" oninput="drawMaterials(this.value.toLowerCase())">
     <div id="matList"><div class="empty">Lade Materialien…</div></div>`;
   if(!matLib){
@@ -408,6 +409,13 @@ async function openMaterial(path,a){
 }
 
 // ---------- Dashboard ----------
+function isActive(){ return credits>0 || stats.upcoming.length>0; }
+function lockBanner(){
+  return `<div class="card" style="border:2px solid #f5b942;background:#fff8ec;margin-bottom:14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+    <div style="flex:1;min-width:200px"><b>🔒 Dein Guthaben ist aufgebraucht</b>
+    <p class="muted" style="margin-top:4px">Mit einem neuen Paket bekommst du wieder vollen Zugriff: Stundenplan mit Buchung, neues Material, Übungen & Quizze.</p></div>
+    <a class="btn btn-primary" href="index.html#pakete">Pakete ansehen</a></div>`;
+}
 function renderDashboard(){
   const s=stats; const name=profile.name||'';
   const greet = name?('Hallo '+esc(name.split(' ')[0])+'! 👋'):'Willkommen zurück! 👋';
@@ -428,6 +436,7 @@ function renderDashboard(){
     next=`<div class="next-hero"><div style="flex:1"><div class="when">Noch keine Stunde gebucht</div><div class="muted">Such dir im Stundenplan etwas Passendes aus.</div></div><a class="btn btn-primary" href="index.html#stundenplan">Stunde buchen</a></div>`;
   }
   document.getElementById('v-dashboard').innerHTML = `
+    ${isActive()?'':lockBanner()}
     <div class="hero-card">
       <div><h1>${greet}</h1><p class="muted">Schön, dass du übst. Bleib dran — Sprechen lernt man durch Sprechen. 💪</p></div>
       <div class="streak-chip">🔥 ${s.streak} ${s.streak===1?'Woche':'Wochen'} Streak</div>
