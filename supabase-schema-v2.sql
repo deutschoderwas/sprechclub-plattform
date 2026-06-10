@@ -14,6 +14,20 @@ alter table public.profiles add column if not exists goal            text;
 alter table public.profiles add column if not exists target_level    text;
 alter table public.profiles add column if not exists native_language text;
 
+-- WICHTIGER FIX (42P17): Die bisherige profiles-Leserechte-Policy enthielt einen
+-- Admin-Check, der wieder auf profiles zugriff -> "infinite recursion". Das blockierte
+-- ALLE Abfragen, die profiles berühren. Lösung: Admin-Check in eine SECURITY-DEFINER-
+-- Hilfsfunktion auslagern (umgeht RLS, daher keine Rekursion mehr).
+create or replace function public.is_admin() returns boolean
+  language sql security definer stable set search_path = public as $func$
+  select exists (select 1 from public.profiles where id = auth.uid() and is_admin);
+$func$;
+grant execute on function public.is_admin() to anon, authenticated;
+
+drop policy if exists "Eigenes Profil lesen" on public.profiles;
+create policy "Eigenes Profil lesen" on public.profiles
+  for select using (auth.uid() = id or public.is_admin());
+
 -- SICHERHEITS-FIX:
 -- Bisher durften eingeloggte Nutzer ihr eigenes Profil direkt ändern
 -- (with check auth.uid()=id) — damit hätte man sich selbst Guthaben
