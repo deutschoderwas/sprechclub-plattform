@@ -124,10 +124,17 @@ async function init(){
   sb.auth.onAuthStateChange(async (_e,s)=>{ if (s && !me) await enter(s.user); });
 }
 
+let isAdminUser=false;
 async function enter(u){
-  const { data } = await sb.from('profiles').select('is_admin').eq('id', u.id).single();
-  if (!data || !data.is_admin){ document.getElementById('gateMsg').textContent='Dieses Konto hat keine Admin-Rechte.'; return; }
-  me = u;
+  const { data } = await sb.from('profiles').select('is_admin,is_teacher').eq('id', u.id).single();
+  if (!data || (!data.is_admin && !data.is_teacher)){ document.getElementById('gateMsg').textContent='Dieses Konto hat keine Admin- oder Lehrer-Rechte.'; return; }
+  me = u; isAdminUser = !!data.is_admin;
+  if (!isAdminUser){
+    // Lehrer-Ansicht: keine Guthaben-Verwaltung, keine Bewertungen
+    document.getElementById('tabS').style.display='none';
+    document.getElementById('tabB').style.display='none';
+    document.querySelector('h1').textContent='Sprechclub — Lehrkraft';
+  }
   document.getElementById('gate').style.display='none';
   document.getElementById('app').style.display='block';
   loadKlassen();
@@ -254,12 +261,8 @@ async function loadKlassen(){
 
 async function cancelClass(id){
   if (!confirm('Stunde absagen? Gebuchte Teilnehmer bekommen ihr Guthaben zurück.')) return;
-  const { data: bk } = await sb.from('bookings').select('user_id').eq('class_id', id).eq('status','booked');
-  await sb.from('classes').update({ is_cancelled: true }).eq('id', id);
-  for (const b of (bk||[])){
-    await sb.from('bookings').update({ status:'cancelled', cancelled_at: new Date().toISOString() }).eq('class_id', id).eq('user_id', b.user_id);
-    await sb.rpc('admin_adjust_credits', { p_user_id: b.user_id, p_amount: 1 }).catch(()=>{});
-  }
+  const { error } = await sb.rpc('teacher_cancel_class', { p_class_id: id });
+  if (error) alert('Absagen fehlgeschlagen: '+error.message);
   loadKlassen();
 }
 
