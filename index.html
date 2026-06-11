@@ -331,6 +331,13 @@ async function book(id){
     return toast(msgs[data?.error] || 'Buchung fehlgeschlagen.');
   }
   credits--; myBooked.add(id); loadWeek(); toast('Gebucht! Den Meet-Link findest du unter „Mein Konto".');
+  // Buchungsbestätigung per E-Mail (läuft im Hintergrund)
+  try {
+    const { data:{ session } } = await sb.auth.getSession();
+    if (session) fetch('/api/notify-booking', { method:'POST',
+      headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+session.access_token },
+      body: JSON.stringify({ class_id: id }) }).catch(()=>{});
+  } catch(e){}
 }
 
 async function buy(packageId){
