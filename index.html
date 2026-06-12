@@ -176,10 +176,29 @@ footer a{color:var(--accent);text-decoration:none}
 <div class="modal-bg" id="loginModal">
   <div class="modal">
     <button class="close" onclick="closeLogin()">×</button>
-    <h3>Anmelden</h3>
-    <p>Gib deine E-Mail ein — du bekommst einen Anmelde-Link. Kein Passwort nötig.</p>
-    <input type="email" id="loginEmail" placeholder="deine@email.de">
-    <button class="btn btn-primary" style="width:100%" onclick="sendMagicLink()">Anmelde-Link schicken</button>
+    <div style="display:flex;gap:8px;margin-bottom:14px">
+      <button id="authTabL" class="btn btn-primary" style="flex:1" onclick="authTab('login')">Anmelden</button>
+      <button id="authTabR" class="btn btn-ghost" style="flex:1" onclick="authTab('register')">Registrieren</button>
+    </div>
+
+    <div id="authLogin">
+      <h3>Willkommen zurück!</h3>
+      <p>Melde dich mit E-Mail und Passwort an.</p>
+      <input type="email" id="loginEmail" placeholder="deine@email.de" style="margin-bottom:8px">
+      <input type="password" id="loginPass" placeholder="Dein Passwort" onkeydown="if(event.key==='Enter')doLogin()">
+      <button class="btn btn-primary" style="width:100%;margin-top:10px" onclick="doLogin()">Anmelden</button>
+      <p style="text-align:center;margin-top:10px;font-size:13px"><a href="#" onclick="doForgot();return false" style="color:var(--primary);font-weight:600">Passwort vergessen?</a></p>
+    </div>
+
+    <div id="authRegister" style="display:none">
+      <h3>Konto erstellen</h3>
+      <p>Schon Schülerin oder Schüler bei Julia? Registriere dich mit deiner bekannten E-Mail-Adresse — dein Stunden-Guthaben wird automatisch übernommen. 🎉</p>
+      <input type="text" id="regName" placeholder="Dein Name" style="margin-bottom:8px">
+      <input type="email" id="regEmail" placeholder="deine@email.de" style="margin-bottom:8px">
+      <input type="password" id="regPass" placeholder="Passwort wählen (mind. 8 Zeichen)" onkeydown="if(event.key==='Enter')doRegister()">
+      <button class="btn btn-primary" style="width:100%;margin-top:10px" onclick="doRegister()">Registrieren</button>
+    </div>
+
     <div class="msg" id="loginMsg"></div>
   </div>
 </div>
@@ -244,7 +263,7 @@ async function init(){
 async function onLogin(u){
   user = u;
   document.getElementById('navAuth').textContent = 'Schülerbereich';
-  document.getElementById('navAuth').onclick = ()=>{ location.href='konto.html'; };
+  document.getElementById('navAuth').onclick = ()=>{ location.href='/schuelerbereich'; };
   const { data } = await sb.from('profiles').select('credits').eq('id', u.id).single();
   credits = data ? data.credits : 0;
   const { data: bk } = await sb.rpc('my_bookings');
@@ -354,14 +373,54 @@ async function buy(packageId){
 // ---------- Login ----------
 function openLogin(e){ if(e)e.preventDefault(); document.getElementById('loginModal').classList.add('open'); }
 function closeLogin(){ document.getElementById('loginModal').classList.remove('open'); }
-async function sendMagicLink(){
+function authTab(t){
+  document.getElementById('authLogin').style.display = t==='login'?'block':'none';
+  document.getElementById('authRegister').style.display = t==='register'?'block':'none';
+  document.getElementById('authTabL').className = 'btn '+(t==='login'?'btn-primary':'btn-ghost');
+  document.getElementById('authTabR').className = 'btn '+(t==='register'?'btn-primary':'btn-ghost');
+  const m=document.getElementById('loginMsg'); m.textContent=''; m.className='msg';
+}
+function authMsg(ok, text){ const m=document.getElementById('loginMsg'); m.className='msg '+(ok?'ok':'err'); m.textContent=text; }
+
+async function doLogin(){
   const email = document.getElementById('loginEmail').value.trim();
-  const msg = document.getElementById('loginMsg');
-  if (DEMO){ msg.className='msg err'; msg.textContent='Vorschau-Modus — Login kommt bald.'; return; }
-  if (!email.includes('@')){ msg.className='msg err'; msg.textContent='Bitte gültige E-Mail eingeben.'; return; }
-  const { error } = await sb.auth.signInWithOtp({ email, options:{ emailRedirectTo: location.origin } });
-  msg.className = error ? 'msg err' : 'msg ok';
-  msg.textContent = error ? 'Fehler: '+error.message : '✓ Link verschickt! Schau in dein Postfach (auch Spam).';
+  const pass  = document.getElementById('loginPass').value;
+  if (DEMO) return authMsg(false,'Vorschau-Modus — Login kommt bald.');
+  if (!email.includes('@') || !pass) return authMsg(false,'Bitte E-Mail und Passwort eingeben.');
+  const { error } = await sb.auth.signInWithPassword({ email, password: pass });
+  if (error){
+    if (/confirm/i.test(error.message)) return authMsg(false,'Bitte bestätige zuerst deine E-Mail — schau in dein Postfach.');
+    return authMsg(false,'E-Mail oder Passwort stimmt nicht. Neu hier? Wechsle auf „Registrieren".');
+  }
+  authMsg(true,'✓ Angemeldet! Einen Moment…');
+  setTimeout(()=>location.href='/schuelerbereich', 600);
+}
+
+async function doRegister(){
+  const name  = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const pass  = document.getElementById('regPass').value;
+  if (DEMO) return authMsg(false,'Vorschau-Modus — Registrierung kommt bald.');
+  if (!name) return authMsg(false,'Bitte gib deinen Namen ein.');
+  if (!email.includes('@')) return authMsg(false,'Bitte gültige E-Mail eingeben.');
+  if (pass.length < 8) return authMsg(false,'Das Passwort braucht mindestens 8 Zeichen.');
+  const { data, error } = await sb.auth.signUp({ email, password: pass,
+    options: { data: { name }, emailRedirectTo: location.origin + '/schuelerbereich' } });
+  if (error){
+    if (/already|registered/i.test(error.message)) return authMsg(false,'Diese E-Mail hat schon ein Konto. Wechsle auf „Anmelden" — oder klicke dort „Passwort vergessen?".');
+    return authMsg(false,'Fehler: '+error.message);
+  }
+  if (data?.user && !data?.session) return authMsg(true,'✓ Fast geschafft! Wir haben dir eine Bestätigungs-Mail geschickt — bitte klicke auf den Link darin (auch im Spam schauen).');
+  authMsg(true,'✓ Konto erstellt! Einen Moment…');
+  setTimeout(()=>location.href='/schuelerbereich', 600);
+}
+
+async function doForgot(){
+  const email = document.getElementById('loginEmail').value.trim();
+  if (!email.includes('@')) return authMsg(false,'Gib oben deine E-Mail ein, dann klicke nochmal auf „Passwort vergessen?".');
+  const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + '/passwort.html' });
+  if (error) return authMsg(false,'Fehler: '+error.message);
+  authMsg(true,'✓ Wir haben dir einen Link zum Zurücksetzen geschickt — schau in dein Postfach.');
 }
 
 init();
