@@ -1,16 +1,24 @@
 // ============================================================
-// ZENTRALE KONFIGURATION — hier Supabase-Daten eintragen,
-// sobald Julias Supabase-Projekt existiert.
+// ZENTRALE KONFIGURATION
 // ============================================================
 window.SPRECHCLUB_CONFIG = {
   SUPABASE_URL: 'https://csadlwsuisbyawrgdrca.supabase.co',
   SUPABASE_ANON_KEY: 'sb_publishable_uY1pHLPyI89qxI25Lep8aA_vHgKugkB',
   WHATSAPP: 'https://wa.me/message/XBWZPNITRRUQK1',
+
+  // Flexible Preise — Einzelstunde, Pässe & All-Inclusive-Abo
   PAKETE: [
-    { id: 'paket-4',  stunden: 4,  preis: 79,  label: '4 Stunden',  hinweis: 'pro Monat' },
-    { id: 'paket-8',  stunden: 8,  preis: 139, label: '8 Stunden',  hinweis: 'pro Monat', beliebt: true },
-    { id: 'paket-12', stunden: 12, preis: 189, label: '12 Stunden', hinweis: 'pro Monat' },
-    { id: 'paket-30', stunden: 30, preis: 399, label: 'fleißig',          hinweis: '3 Monate · 24 + 6 Stunden gratis' },
-    { id: 'paket-60', stunden: 60, preis: 699, label: 'am fleißigsten',   hinweis: '6 Monate · 48 + 12 Stunden gratis' }
+    { id: 'einzelstunde', typ: 'einzel', stunden: 1,  preis: 25,  label: 'Einzelstunde',
+      hinweis: 'ganz ohne Bindung', benefits: ['1 LIVE-Stunde nach Wahl', 'Sofort buchbar', 'Keine Laufzeit'] },
+
+    { id: 'testpass', typ: 'paket', stunden: 4, preis: 79, label: 'Testpass',
+      hinweis: '4 Stunden zum Reinschnuppern', benefits: ['4 LIVE-Stunden', 'Alle Clubs & Niveaus', 'Guthaben bleibt erhalten'] },
+
+    { id: 'allinclusive', typ: 'pass', abo: true, stunden: 12, preis: 189, label: 'All-Inclusive-Pass',
+      hinweis: 'pro Monat', beliebt: true,
+      benefits: ['12 LIVE-Klassen pro Monat', 'Alle digitalen Kurse inklusive', 'Community-Zugang', 'Monatlich kündbar'] },
+
+    { id: 'sparpass', typ: 'paket', stunden: 30, preis: 399, label: 'Spar Pass',
+      hinweis: 'einmalig · längeres Lernen', benefits: ['30 LIVE-Stunden', 'Bester Stundenpreis (13,30 €)', 'Keine Laufzeit', 'Guthaben bleibt erhalten'] }
   ]
 };

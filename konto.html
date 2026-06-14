@@ -245,7 +245,10 @@ let sb=null, user=null, profile={}, bookings=[], creditLog=[], messages=[], rati
 let materials={}, progress={};   // materials[class_id]=content ; progress[class_id+'|'+phase]=row
 let credits=0, stats={};
 
-if (new URLSearchParams(location.search).get('kauf')==='ok') document.getElementById('kaufOk').style.display='block';
+const _qp = new URLSearchParams(location.search);
+if (_qp.get('kauf')==='ok') document.getElementById('kaufOk').style.display='block';
+if (_qp.get('pass')==='ok'){ const k=document.getElementById('kaufOk'); k.textContent='🎉 Willkommen im All-Inclusive-Pass! 12 LIVE-Klassen pro Monat + alle digitalen Kurse sind jetzt freigeschaltet.'; k.style.display='block'; }
+function passActive(){ return profile.pass_until && new Date(profile.pass_until) > new Date(); }
 
 function toast(t){ const el=document.getElementById('toast'); el.textContent=t; el.style.display='block'; clearTimeout(el._t); el._t=setTimeout(()=>el.style.display='none',3500); }
 function esc(s){ return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
@@ -271,7 +274,7 @@ async function init(){
 
 async function load(){
   const [{ data:prof }, { data:bk }, { data:cl }, { data:msg }, { data:rt }, { data:prog }] = await Promise.all([
-    sb.from('profiles').select('credits,name,goal,target_level,native_language').eq('id',user.id).single(),
+    sb.from('profiles').select('credits,name,goal,target_level,native_language,pass_until').eq('id',user.id).single(),
     sb.rpc('my_bookings'),
     sb.from('credit_log').select('*').order('created_at',{ascending:false}),
     sb.from('messages').select('*').order('created_at'),
@@ -411,7 +414,7 @@ async function openMaterial(path,a){
 }
 
 // ---------- Dashboard ----------
-function isActive(){ return credits>0 || stats.upcoming.length>0; }
+function isActive(){ return credits>0 || stats.upcoming.length>0 || passActive(); }
 function lockBanner(){
   return `<div class="card" style="border:2px solid #f5b942;background:#fff8ec;margin-bottom:14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
     <div style="flex:1;min-width:200px"><b>🔒 Dein Guthaben ist aufgebraucht</b>
@@ -443,6 +446,7 @@ function renderDashboard(){
       <div><h1>${greet}</h1><p class="muted">Schön, dass du übst. Bleib dran — Sprechen lernt man durch Sprechen. 💪</p></div>
       <div class="streak-chip">🔥 ${s.streak} ${s.streak===1?'Woche':'Wochen'} Streak</div>
     </div>
+    ${passActive()?`<div class="next-hero" style="background:linear-gradient(135deg,var(--turq),var(--turq-dark));color:#fff"><div style="flex:1"><div class="when" style="color:#fff">⭐ All-Inclusive-Pass aktiv</div><div style="color:rgba(255,255,255,.85);font-size:13px">12 LIVE-Klassen pro Monat + alle digitalen Kurse · verlängert sich am ${fmtShort(new Date(profile.pass_until))}</div></div><a class="btn" style="background:#fff;color:var(--turq-dark)" href="kurse.html">Zu den Kursen</a></div>`:''}
     <div class="rankbar">
       <div class="top"><span class="rank">${s.rank.name} · ${s.points} Punkte</span>
         <span class="muted">${s.next?('noch '+(s.next.min-s.points)+' bis '+s.next.name):'Höchster Rang erreicht 🎉'}</span></div>
