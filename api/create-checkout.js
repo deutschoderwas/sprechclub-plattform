@@ -7,9 +7,10 @@ import { createClient } from '@supabase/supabase-js';
 
 // Einmalzahlungen (schreiben Stundenguthaben gut)
 const PACKAGES = {
-  'einzelstunde': { name: 'deutschoderwas club — Einzelstunde',                                   amount: 2500,  credits: 1  },
-  'testpass':     { name: 'deutschoderwas club — Testpass · 4 Stunden',                            amount: 7900,  credits: 4  },
-  'sparpass':     { name: 'deutschoderwas club — Spar Pass · 30 Stunden',                          amount: 39900, credits: 30 },
+  'einzelstunde':     { name: 'deutschoderwas club — Einzelstunde',                  amount: 2500,  credits: 1  },
+  'testpass':         { name: 'deutschoderwas club — Testpass · 4 Stunden',          amount: 7900,  credits: 4  },
+  'gelegenheitspass': { name: 'deutschoderwas club — Gelegenheitspass · 8 Stunden',  amount: 13900, credits: 8  },
+  'sparpass':         { name: 'deutschoderwas club — Spar Pass · 30 Stunden',        amount: 39900, credits: 30 },
   // Alt-IDs (Abwärtskompatibilität)
   'paket-4':  { name: 'deutschoderwas club — 4 Stunden',  amount: 7900,  credits: 4 },
   'paket-8':  { name: 'deutschoderwas club — 8 Stunden',  amount: 13900, credits: 8 },
