@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kurs — deutschoderwas club</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--primary:#DD0000;--primary-dark:#B30000;--secondary:#1A1A1A;--accent:#FFCE00;--turquoise:#2DD4BF;--cream:#FFFCF5;--bg:#FFF8E0;--text:#1A1A1A;--text-soft:#6B7280;--border:#F0E5D8}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--cream);color:var(--text);line-height:1.55}
+h1,h2,h3{font-family:'Space Grotesk',sans-serif;letter-spacing:-.02em}
+a{color:inherit}
+.nav{position:sticky;top:0;z-index:50;background:rgba(255,249,242,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;justify-content:space-between;align-items:center}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;text-decoration:none;color:var(--secondary)}
+.logo-icon{width:38px;height:38px;border-radius:50%;object-fit:cover}
+.logo .club{color:var(--primary)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 20px;border-radius:50px;text-decoration:none;font-weight:700;font-size:14px;border:none;cursor:pointer;font-family:inherit}
+.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-dark)}
+.btn-ghost{background:#fff;color:var(--secondary);border:2px solid var(--border)}
+.btn-sm{padding:8px 14px;font-size:13px}
+.shell{display:grid;grid-template-columns:320px 1fr;gap:0;min-height:calc(100vh - 63px)}
+.side{background:#fff;border-right:1px solid var(--border);padding:22px 18px;overflow-y:auto}
+.side .ctitle{font-size:19px;margin-bottom:4px}
+.side .csub{font-size:13px;color:var(--text-soft);margin-bottom:16px}
+.prog{height:8px;background:var(--bg);border-radius:20px;overflow:hidden;margin-bottom:18px}
+.prog i{display:block;height:100%;background:var(--turquoise)}
+.mod{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.5px;color:var(--text-soft);margin:16px 0 8px}
+.les{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;cursor:pointer;font-size:14px;margin-bottom:4px}
+.les:hover{background:var(--bg)}
+.les.active{background:var(--bg);font-weight:700}
+.les .st{width:20px;text-align:center}
+.les.locked{color:var(--text-soft);cursor:not-allowed}
+.main{padding:30px 34px;max-width:860px}
+.crumb{font-size:13px;color:var(--text-soft);margin-bottom:14px}
+.crumb a{color:var(--primary);text-decoration:none;font-weight:700}
+.videowrap{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:16px;overflow:hidden;margin-bottom:18px}
+.videowrap iframe,.videowrap video{position:absolute;inset:0;width:100%;height:100%;border:0}
+.lcontent{font-size:16px;line-height:1.7}
+.lcontent h2{margin:18px 0 8px}.lcontent p{margin:10px 0}.lcontent ul{margin:10px 0 10px 20px}
+.bar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:24px;padding-top:18px;border-top:1px solid var(--border)}
+.lock-box{background:#fff;border:2px solid var(--accent);border-radius:20px;padding:30px;text-align:center}
+.lock-box .em{font-size:48px}
+.empty{padding:60px 20px;text-align:center;color:var(--text-soft)}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--secondary);color:#fff;padding:14px 24px;border-radius:50px;font-weight:600;font-size:14px;z-index:300;display:none}
+@media(max-width:820px){.shell{grid-template-columns:1fr}.side{border-right:0;border-bottom:1px solid var(--border)}.main{padding:22px 18px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="/" class="logo"><img src="logo.PNG" class="logo-icon" onerror="this.style.display='none'"><span>deutschoderwas <span class="club">club</span></span></a>
+  <a class="btn btn-ghost btn-sm" href="kurse.html">Alle Kurse</a>
+</nav>
+
+<div id="root"><div class="empty">Kurs wird geladen…</div></div>
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script>
+const CFG = window.SPRECHCLUB_CONFIG;
+const sb = supabase.createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY);
+const slug = new URLSearchParams(location.search).get('kurs');
+let user=null, course=null, modules=[], enrolled=false, flat=[], curId=null;
+function toast(t){ const el=document.getElementById('toast'); el.textContent=t; el.style.display='block'; setTimeout(()=>el.style.display='none',3500); }
+if (new URLSearchParams(location.search).get('kauf')==='ok') setTimeout(()=>toast('🎉 Zugang freigeschaltet — viel Spaß!'),600);
+
+function videoEmbed(url){
+  if(!url) return '';
+  let m;
+  if((m=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([\w-]{11})/)))
+    return `<div class="videowrap"><iframe src="https://www.youtube.com/embed/${m[1]}" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe></div>`;
+  if((m=url.match(/vimeo\.com\/(?:video\/)?(\d+)/)))
+    return `<div class="videowrap"><iframe src="https://player.vimeo.com/video/${m[1]}" allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe></div>`;
+  if(/\.(mp4|webm|mov)(\?|$)/i.test(url))
+    return `<div class="videowrap"><video src="${url}" controls></video></div>`;
+  return `<div class="videowrap"><iframe src="${url}" allowfullscreen></iframe></div>`;
+}
+
+async function init(){
+  const { data:{ session } } = await sb.auth.getSession();
+  if (session) user = session.user;
+  if (!slug){ document.getElementById('root').innerHTML='<div class="empty">Kein Kurs angegeben.</div>'; return; }
+  const { data } = await sb.rpc('get_course', { p_slug: slug });
+  if (!data || !data.ok){ document.getElementById('root').innerHTML='<div class="empty">Kurs nicht gefunden.</div>'; return; }
+  course = data.course; modules = data.modules || []; enrolled = data.enrolled;
+  flat = []; modules.forEach(m=> (m.lessons||[]).forEach(l=> flat.push(l)));
+  render();
+  const first = flat.find(l=>!l.locked) || flat[0];
+  if (first) openLesson(first.id);
+}
+
+function progressPct(){
+  const total = flat.length || 1;
+  const done = flat.filter(l=>l.done).length;
+  return Math.round(done/total*100);
+}
+
+function render(){
+  document.getElementById('root').innerHTML = `
+  <div class="shell">
+    <aside class="side">
+      <div class="ctitle">${course.title}</div>
+      <div class="csub">${course.level||'Alle Niveaus'} · ${flat.length} Lektionen</div>
+      <div class="prog"><i style="width:${progressPct()}%"></i></div>
+      ${modules.map(m=>`
+        <div class="mod">${m.title}</div>
+        ${(m.lessons||[]).map(l=>`
+          <div class="les ${l.locked?'locked':''}" data-id="${l.id}" onclick="${l.locked?'':`openLesson('${l.id}')`}">
+            <span class="st">${l.done?'✅':(l.locked?'🔒':(l.is_free_preview?'👁️':'▶️'))}</span>
+            <span style="flex:1">${l.title}</span>
+            ${l.duration_min?`<span style="font-size:12px;color:var(--text-soft)">${l.duration_min}′</span>`:''}
+          </div>`).join('')}
+      `).join('')}
+    </aside>
+    <main class="main" id="lessonMain"></main>
+  </div>`;
+}
+
+async function openLesson(id){
+  curId = id;
+  document.querySelectorAll('.les').forEach(e=>e.classList.toggle('active', e.dataset.id===id));
+  const meta = flat.find(l=>l.id===id);
+  const main = document.getElementById('lessonMain');
+  main.innerHTML = '<div class="empty">Lädt…</div>';
+  const { data } = await sb.rpc('get_lesson', { p_lesson_id: id });
+  if (!data || !data.ok){
+    if (data && data.error==='locked'){
+      main.innerHTML = `<div class="crumb"><a href="kurse.html">Kurse</a> › ${course.title}</div>
+        <div class="lock-box"><div class="em">🔒</div>
+        <h2 style="margin:10px 0 8px">Diese Lektion ist gesperrt</h2>
+        <p style="color:var(--text-soft);margin-bottom:16px">Schalte den ganzen Kurs frei, um alle Lektionen anzusehen.</p>
+        <button class="btn btn-primary" onclick="buy()">Kurs freischalten</button></div>`;
+    } else main.innerHTML='<div class="empty">Lektion nicht gefunden.</div>';
+    return;
+  }
+  main.innerHTML = `
+    <div class="crumb"><a href="kurse.html">Kurse</a> › <a href="kurs.html?kurs=${course.slug}">${course.title}</a> › ${data.title}</div>
+    <h1 style="font-size:26px;margin-bottom:14px">${data.title}</h1>
+    ${videoEmbed(data.video_url)}
+    <div class="lcontent">${data.content||''}</div>
+    ${data.attachment_url?`<p style="margin-top:16px"><a class="btn btn-ghost btn-sm" href="${data.attachment_url}" target="_blank">📎 Material herunterladen</a></p>`:''}
+    <div class="bar">
+      <button class="btn ${meta.done?'btn-ghost':'btn-primary'}" id="doneBtn" onclick="toggleDone('${id}')">${meta.done?'✓ Erledigt — rückgängig':'Als erledigt markieren'}</button>
+      <button class="btn btn-ghost" onclick="nextLesson('${id}')">Nächste Lektion →</button>
+    </div>`;
+}
+
+async function toggleDone(id){
+  if(!user) return toast('Bitte melde dich an, um deinen Fortschritt zu speichern.');
+  const meta = flat.find(l=>l.id===id);
+  const newDone = !meta.done;
+  const { data } = await sb.rpc('set_lesson_done', { p_lesson_id:id, p_done:newDone });
+  if (data && data.ok){ meta.done=newDone; render(); openLesson(id); }
+}
+function nextLesson(id){
+  const i = flat.findIndex(l=>l.id===id);
+  const nxt = flat.slice(i+1).find(l=>!l.locked);
+  if (nxt) openLesson(nxt.id); else toast('Das war die letzte freie Lektion. 🎉');
+}
+async function buy(){
+  if(!user) return (location.href='live.html');
+  const r = await fetch('/api/create-checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({courseId:course.id,userId:user.id,email:user.email})});
+  const j = await r.json();
+  if (j.enrolled) location.reload(); else if (j.url) location.href=j.url; else toast('Fehler beim Start der Bezahlung.');
+}
+init();
+</script>
+</body>
+</html>
