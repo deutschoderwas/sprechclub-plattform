@@ -43,8 +43,8 @@ export default async function handler(req, res) {
       await supabase.rpc('grant_enrollment', { p_user_id: userId, p_course_id: courseId, p_source: 'purchase', p_session: session.id });
     }
 
-    // All-Inclusive-Pass: aktivieren (1 Monat + 12 LIVE-Klassen) — idempotent über session.id
-    if (userId && pass === 'allinclusive') {
+    // Abo-Pass (Gelegenheitspass / All-Inclusive): aktivieren (1 Monat + Stunden) — idempotent über session.id
+    if (userId && pass) {
       await supabase.rpc('activate_pass', { p_user_id: userId, p_months: 1, p_credits: credits || 12, p_ref: session.id });
     }
 

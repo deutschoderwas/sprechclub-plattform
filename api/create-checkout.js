@@ -1,6 +1,6 @@
 // Erstellt eine Stripe-Checkout-Session.
 // POST { packageId, userId, email }   → Stundenpaket / Einzelstunde / Test- / Spar-Pass (Einmalzahlung)
-// POST { passId: 'allinclusive', ... } → All-Inclusive-Pass (monatliches Abo: 12 LIVE + alle Kurse)
+// POST { passId, userId, email }       → Abo-Pass (monatlich: Gelegenheitspass 8 Std / All-Inclusive 12 Std)
 // POST { courseId,  userId, email }    → digitaler Kurs (Gratis-Kurse werden sofort freigeschaltet)
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
@@ -9,7 +9,6 @@ import { createClient } from '@supabase/supabase-js';
 const PACKAGES = {
   'einzelstunde':     { name: 'deutschoderwas club — Einzelstunde',                  amount: 2500,  credits: 1  },
   'testpass':         { name: 'deutschoderwas club — Testpass · 4 Stunden',          amount: 7900,  credits: 4  },
-  'gelegenheitspass': { name: 'deutschoderwas club — Gelegenheitspass · 8 Stunden',  amount: 13900, credits: 8  },
   'sparpass':         { name: 'deutschoderwas club — Spar Pass · 30 Stunden',        amount: 39900, credits: 30 },
   // Alt-IDs (Abwärtskompatibilität)
   'paket-4':  { name: 'deutschoderwas club — 4 Stunden',  amount: 7900,  credits: 4 },
@@ -19,9 +18,10 @@ const PACKAGES = {
   'paket-60': { name: 'deutschoderwas club „am fleißigsten" — 60 Stunden', amount: 69900, credits: 60 },
 };
 
-// Abo-Pässe (monatliche Abbuchung, schalten Kurse frei + füllen Guthaben monatlich auf)
+// Abo-Pässe (monatliche Abbuchung, füllen Stundenguthaben monatlich auf)
 const PASSES = {
-  'allinclusive': { name: 'deutschoderwas club — All-Inclusive-Pass', amount: 18900, credits: 12 },
+  'gelegenheitspass': { name: 'deutschoderwas club — Gelegenheitspass · 8 Std/Monat', amount: 13900, credits: 8  },
+  'allinclusive':     { name: 'deutschoderwas club — All-Inclusive-Pass',             amount: 18900, credits: 12 },
 };
 
 export default async function handler(req, res) {
@@ -33,7 +33,7 @@ export default async function handler(req, res) {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
   const origin = process.env.SITE_URL || `https://${req.headers.host}`;
 
-  // ---------- ALL-INCLUSIVE-PASS (Abo) ----------
+  // ---------- ABO-PASS (Gelegenheitspass / All-Inclusive) ----------
   if (passId) {
     const pass = PASSES[passId];
     if (!pass) return res.status(400).json({ error: 'bad_request' });
