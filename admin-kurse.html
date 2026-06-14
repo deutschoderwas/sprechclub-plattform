@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kurse verwalten — deutschoderwas club Admin</title>
+<meta name="robots" content="noindex">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--primary:#DD0000;--primary-dark:#B30000;--secondary:#1A1A1A;--accent:#FFCE00;--turquoise:#2DD4BF;--cream:#FFFCF5;--bg:#FFF8E0;--text:#1A1A1A;--text-soft:#6B7280;--border:#F0E5D8}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--cream);color:var(--text);line-height:1.5}
+h1,h2,h3{font-family:'Space Grotesk',sans-serif}
+.wrap{max-width:920px;margin:0 auto;padding:26px 20px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:50px;font-weight:700;font-size:13px;border:none;cursor:pointer;font-family:inherit;text-decoration:none}
+.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-dark)}
+.btn-ghost{background:#fff;color:var(--secondary);border:2px solid var(--border)}
+.btn-danger{background:#fff;color:var(--primary);border:2px solid #F3C8C8}
+.btn-sm{padding:7px 13px;font-size:12px}
+.card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px 18px;margin-bottom:12px}
+.muted{color:var(--text-soft);font-size:13px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+label{font-size:12px;font-weight:700;color:var(--text-soft);display:block;margin:8px 0 4px}
+input,select,textarea{width:100%;padding:9px 12px;border:2px solid var(--border);border-radius:10px;font-family:inherit;font-size:14px;background:#fff}
+textarea{min-height:90px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pill{font-size:11px;font-weight:800;border-radius:30px;padding:3px 9px}
+.pill.on{background:#E8FAF3;color:#0a7a5c}.pill.off{background:var(--bg);color:var(--text-soft)}
+.mod{border:1px solid var(--border);border-radius:14px;padding:12px 14px;margin:10px 0;background:#FFFDF8}
+.les{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;font-size:14px}
+.les:hover{background:var(--bg)}
+.les .t{flex:1}
+.les .st{width:22px;text-align:center}
+.lesedit{border:1px dashed var(--border);border-radius:10px;padding:12px;margin:6px 0;background:#fff}
+#gate{max-width:380px;margin:80px auto;text-align:center;background:#fff;border:1px solid var(--border);border-radius:20px;padding:30px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--secondary);color:#fff;padding:14px 24px;border-radius:50px;font-weight:600;font-size:14px;z-index:300;display:none}
+.head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:18px}
+</style>
+</head>
+<body>
+<div id="gate">
+  <h2>Admin-Login</h2>
+  <p class="muted" style="margin:8px 0 14px">Melde dich mit deiner Admin-E-Mail an.</p>
+  <input type="email" id="gEmail" placeholder="deine@email.de" style="margin-bottom:8px">
+  <input type="password" id="gPass" placeholder="Passwort" onkeydown="if(event.key==='Enter')login()" style="margin-bottom:10px">
+  <button class="btn btn-primary" style="width:100%" onclick="login()">Anmelden</button>
+  <p class="muted" id="gMsg" style="margin-top:10px"></p>
+</div>
+
+<div class="wrap" id="app" style="display:none">
+  <div class="head">
+    <h1>🎓 Kurse verwalten</h1>
+    <div><a class="btn btn-ghost" href="admin.html">← Admin</a> <a class="btn btn-ghost" href="kurse.html" target="_blank">Katalog ansehen</a></div>
+  </div>
+  <div id="view"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script>
+const CFG = window.SPRECHCLUB_CONFIG;
+let sb=null, me=null, current=null;
+function toast(t){ const el=document.getElementById('toast'); el.textContent=t; el.style.display='block'; setTimeout(()=>el.style.display='none',3000); }
+function euro(c){ return (c/100).toFixed(2).replace('.',','); }
+function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+async function init(){
+  if (CFG.SUPABASE_URL.startsWith('HIER_')){ document.getElementById('gMsg').textContent='Supabase nicht verbunden.'; return; }
+  sb = supabase.createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY);
+  const { data:{ session } } = await sb.auth.getSession();
+  if (session) await enter(session.user);
+}
+async function login(){
+  const email=document.getElementById('gEmail').value.trim(), pass=document.getElementById('gPass').value;
+  const { error } = await sb.auth.signInWithPassword({ email, password: pass });
+  if (error) return document.getElementById('gMsg').textContent='Anmeldung fehlgeschlagen.';
+  const { data:{ session } } = await sb.auth.getSession();
+  enter(session.user);
+}
+async function enter(u){
+  const { data } = await sb.from('profiles').select('is_admin').eq('id', u.id).single();
+  if (!data || !data.is_admin){ document.getElementById('gMsg').textContent='Dieses Konto hat keine Admin-Rechte.'; return; }
+  me = u; document.getElementById('gate').style.display='none'; document.getElementById('app').style.display='block';
+  listCourses();
+}
+async function logout(){ await sb.auth.signOut(); location.reload(); }
+
+// ---------- Kursliste ----------
+async function listCourses(){
+  current=null;
+  const { data } = await sb.from('courses').select('*').order('sort_order').order('created_at');
+  const courses = data || [];
+  document.getElementById('view').innerHTML = `
+    <div class="head"><h2 style="font-size:20px">Alle Kurse (${courses.length})</h2>
+      <button class="btn btn-primary" onclick="newCourse()">+ Neuer Kurs</button></div>
+    ${courses.length ? courses.map(c=>`
+      <div class="card row" style="justify-content:space-between">
+        <div><b>${esc(c.title)}</b> <span class="pill ${c.is_published?'on':'off'}">${c.is_published?'veröffentlicht':'Entwurf'}</span>
+          <div class="muted">${esc(c.level||'Alle')} · ${c.price_cents?euro(c.price_cents)+' €':'Gratis'} · /kurs.html?kurs=${esc(c.slug)}</div></div>
+        <button class="btn btn-ghost btn-sm" onclick="editCourse('${c.id}')">Bearbeiten</button>
+      </div>`).join('') : '<div class="card muted">Noch keine Kurse. Leg deinen ersten an!</div>'}`;
+}
+
+async function newCourse(){
+  const title = prompt('Kurstitel:'); if(!title) return;
+  const slug = title.toLowerCase().replace(/[äÄ]/g,'ae').replace(/[öÖ]/g,'oe').replace(/[üÜ]/g,'ue').replace(/ß/g,'ss').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'') + '-' + Math.random().toString(36).slice(2,6);
+  const { data, error } = await sb.from('courses').insert({ title, slug, price_cents:0, is_published:false }).select().single();
+  if (error) return toast('Fehler: '+error.message);
+  editCourse(data.id);
+}
+
+// ---------- Kurs-Editor ----------
+async function editCourse(id){
+  const { data: c } = await sb.from('courses').select('*').eq('id', id).single();
+  current = c;
+  const { data: mods } = await sb.from('course_modules').select('*').eq('course_id', id).order('sort_order');
+  const modules = mods || [];
+  const lessonsByMod = {};
+  if (modules.length){
+    const { data: les } = await sb.from('course_lessons').select('*').eq('course_id', id).order('sort_order');
+    (les||[]).forEach(l=>{ (lessonsByMod[l.module_id]=lessonsByMod[l.module_id]||[]).push(l); });
+  }
+  document.getElementById('view').innerHTML = `
+    <div class="head"><button class="btn btn-ghost btn-sm" onclick="listCourses()">← Alle Kurse</button>
+      <button class="btn btn-danger btn-sm" onclick="delCourse('${c.id}')">Kurs löschen</button></div>
+    <div class="card">
+      <h2 style="font-size:18px;margin-bottom:10px">Kurs-Infos</h2>
+      <label>Titel</label><input id="c_title" value="${esc(c.title)}">
+      <label>Untertitel (kurze Beschreibung)</label><input id="c_subtitle" value="${esc(c.subtitle)}">
+      <label>Beschreibung</label><textarea id="c_desc">${esc(c.description)}</textarea>
+      <div class="grid2">
+        <div><label>Niveau</label><input id="c_level" value="${esc(c.level)}" placeholder="z.B. A2, B1, Alle"></div>
+        <div><label>Preis in € (0 = gratis)</label><input id="c_price" type="number" step="0.01" value="${(c.price_cents/100)}"></div>
+      </div>
+      <label>Vorschaubild-URL (optional)</label><input id="c_thumb" value="${esc(c.thumbnail_url)}">
+      <label class="row" style="margin-top:10px;font-weight:600;color:var(--text)"><input type="checkbox" id="c_pub" ${c.is_published?'checked':''} style="width:auto"> Kurs veröffentlicht (im Katalog sichtbar &amp; kaufbar)</label>
+      <button class="btn btn-primary" style="margin-top:12px" onclick="saveCourse('${c.id}')">Kurs speichern</button>
+      <span class="muted" id="c_msg"></span>
+    </div>
+
+    <div class="head" style="margin-top:8px"><h2 style="font-size:18px">Kapitel &amp; Lektionen</h2>
+      <button class="btn btn-primary btn-sm" onclick="addModule('${c.id}')">+ Kapitel</button></div>
+    <div id="mods">
+      ${modules.length ? modules.map(m=>moduleHtml(m, lessonsByMod[m.id]||[])).join('') : '<div class="card muted">Noch keine Kapitel. Füge das erste hinzu.</div>'}
+    </div>`;
+}
+
+function moduleHtml(m, lessons){
+  return `<div class="mod">
+    <div class="row" style="justify-content:space-between">
+      <input value="${esc(m.title)}" onchange="renameModule('${m.id}', this.value)" style="font-weight:700;max-width:60%">
+      <div><button class="btn btn-primary btn-sm" onclick="addLesson('${m.id}','${m.course_id}')">+ Lektion</button>
+        <button class="btn btn-danger btn-sm" onclick="delModule('${m.id}')">✕</button></div>
+    </div>
+    <div style="margin-top:8px">
+      ${lessons.length ? lessons.map(l=>`
+        <div class="les">
+          <span class="st">${l.is_free_preview?'👁️':'▶️'}</span>
+          <span class="t">${esc(l.title)} ${l.video_url?'':'<span class="muted">(kein Video)</span>'}</span>
+          <button class="btn btn-ghost btn-sm" onclick="editLesson('${l.id}')">Bearbeiten</button>
+          <button class="btn btn-danger btn-sm" onclick="delLesson('${l.id}')">✕</button>
+        </div>
+        <div class="lesedit" id="le-${l.id}" style="display:none"></div>`).join('') : '<div class="muted" style="padding:6px 10px">Noch keine Lektionen.</div>'}
+    </div></div>`;
+}
+
+async function saveCourse(id){
+  const price = Math.round(parseFloat(document.getElementById('c_price').value||'0')*100);
+  const { error } = await sb.from('courses').update({
+    title: document.getElementById('c_title').value.trim(),
+    subtitle: document.getElementById('c_subtitle').value.trim()||null,
+    description: document.getElementById('c_desc').value.trim()||null,
+    level: document.getElementById('c_level').value.trim()||null,
+    price_cents: isNaN(price)?0:price,
+    thumbnail_url: document.getElementById('c_thumb').value.trim()||null,
+    is_published: document.getElementById('c_pub').checked
+  }).eq('id', id);
+  document.getElementById('c_msg').textContent = error ? ' Fehler: '+error.message : ' ✓ gespeichert';
+}
+async function delCourse(id){ if(!confirm('Kurs wirklich löschen? Alle Kapitel & Lektionen gehen verloren.')) return;
+  await sb.from('courses').delete().eq('id', id); listCourses(); }
+
+async function addModule(courseId){
+  const { count } = await sb.from('course_modules').select('*',{count:'exact',head:true}).eq('course_id', courseId);
+  await sb.from('course_modules').insert({ course_id: courseId, title:'Neues Kapitel', sort_order: count||0 });
+  editCourse(courseId);
+}
+async function renameModule(id, title){ await sb.from('course_modules').update({ title }).eq('id', id); }
+async function delModule(id){ if(!confirm('Kapitel + dessen Lektionen löschen?')) return; await sb.from('course_modules').delete().eq('id', id); editCourse(current.id); }
+
+async function addLesson(moduleId, courseId){
+  const { count } = await sb.from('course_lessons').select('*',{count:'exact',head:true}).eq('module_id', moduleId);
+  const { data } = await sb.from('course_lessons').insert({ module_id:moduleId, course_id:courseId, title:'Neue Lektion', sort_order: count||0 }).select().single();
+  editCourse(courseId);
+  setTimeout(()=>editLesson(data.id), 200);
+}
+async function editLesson(id){
+  const box = document.getElementById('le-'+id);
+  if (!box) return;
+  if (box.style.display==='block'){ box.style.display='none'; return; }
+  const { data: l } = await sb.from('course_lessons').select('*').eq('id', id).single();
+  box.style.display='block';
+  box.innerHTML = `
+    <label>Titel</label><input id="l_title_${id}" value="${esc(l.title)}">
+    <label>Video-Link (YouTube, Vimeo oder MP4-URL)</label><input id="l_video_${id}" value="${esc(l.video_url)}" placeholder="https://youtu.be/...">
+    <label>Inhalt / Aufgaben (Text, HTML erlaubt)</label><textarea id="l_content_${id}">${esc(l.content)}</textarea>
+    <div class="grid2">
+      <div><label>Material-Link (PDF, optional)</label><input id="l_att_${id}" value="${esc(l.attachment_url)}"></div>
+      <div><label>Dauer (Minuten)</label><input id="l_dur_${id}" type="number" value="${l.duration_min||''}"></div>
+    </div>
+    <label class="row" style="margin-top:8px;font-weight:600;color:var(--text)"><input type="checkbox" id="l_free_${id}" ${l.is_free_preview?'checked':''} style="width:auto"> Gratis-Vorschau (ohne Kauf anschaubar)</label>
+    <button class="btn btn-primary btn-sm" style="margin-top:10px" onclick="saveLesson('${id}','${l.course_id}')">Lektion speichern</button>`;
+}
+async function saveLesson(id, courseId){
+  const dur = parseInt(document.getElementById('l_dur_'+id).value||'',10);
+  const { error } = await sb.from('course_lessons').update({
+    title: document.getElementById('l_title_'+id).value.trim(),
+    video_url: document.getElementById('l_video_'+id).value.trim()||null,
+    content: document.getElementById('l_content_'+id).value||null,
+    attachment_url: document.getElementById('l_att_'+id).value.trim()||null,
+    duration_min: isNaN(dur)?null:dur,
+    is_free_preview: document.getElementById('l_free_'+id).checked
+  }).eq('id', id);
+  if (error) return toast('Fehler: '+error.message);
+  toast('✓ Lektion gespeichert'); editCourse(courseId);
+}
+async function delLesson(id){ if(!confirm('Lektion löschen?')) return; await sb.from('course_lessons').delete().eq('id', id); editCourse(current.id); }
+
+init();
+</script>
+</body>
+</html>
