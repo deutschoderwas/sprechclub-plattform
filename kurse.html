@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digitale Kurse — deutschoderwas club</title>
+<meta name="description" content="Digitale Deutsch-Kurse zum Selbstlernen — kaufen und direkt im deutschoderwas club durcharbeiten.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--primary:#DD0000;--primary-dark:#B30000;--secondary:#1A1A1A;--accent:#FFCE00;--turquoise:#2DD4BF;--cream:#FFFCF5;--bg:#FFF8E0;--text:#1A1A1A;--text-soft:#6B7280;--border:#F0E5D8}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--cream);color:var(--text);line-height:1.55}
+h1,h2,h3{font-family:'Space Grotesk',sans-serif;letter-spacing:-.02em}
+.nav{position:sticky;top:0;z-index:50;background:rgba(255,249,242,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;justify-content:space-between;align-items:center}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;text-decoration:none;color:var(--secondary)}
+.logo-icon{width:42px;height:42px;border-radius:50%;object-fit:cover}
+.logo .club{color:var(--primary)}
+.nav-menu{display:flex;gap:18px;align-items:center}
+.nav-menu a.link{text-decoration:none;color:var(--text-soft);font-weight:600;font-size:14px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:50px;text-decoration:none;font-weight:700;font-size:14px;border:none;cursor:pointer;font-family:inherit}
+.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-dark)}
+.btn-ghost{background:#fff;color:var(--secondary);border:2px solid var(--border)}
+.btn-sm{padding:9px 16px;font-size:13px}
+.hero{max-width:900px;margin:0 auto;padding:54px 24px 10px;text-align:center}
+.hero .crumb{font-size:13px;color:var(--text-soft);margin-bottom:12px}
+.hero .crumb a{color:var(--primary);text-decoration:none;font-weight:700}
+.hero h1{font-size:clamp(30px,5vw,48px);margin-bottom:12px}
+.hero h1 .hl{color:var(--primary)}
+.hero p{font-size:17px;color:var(--text-soft);max-width:600px;margin:0 auto}
+.section{max-width:1080px;margin:0 auto;padding:36px 24px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:20px}
+.course{background:#fff;border:1.5px solid var(--border);border-radius:22px;overflow:hidden;display:flex;flex-direction:column;transition:all .2s}
+.course:hover{transform:translateY(-4px);box-shadow:0 22px 44px rgba(0,0,0,.08)}
+.course .thumb{height:150px;background:linear-gradient(135deg,#FFF4D6,var(--accent));display:flex;align-items:center;justify-content:center;font-size:46px}
+.course .thumb img{width:100%;height:100%;object-fit:cover}
+.course .body{padding:20px;display:flex;flex-direction:column;gap:8px;flex:1}
+.course .lvl{font-size:11px;font-weight:800;color:var(--primary);text-transform:uppercase;letter-spacing:.5px}
+.course h3{font-size:18px}
+.course p{font-size:14px;color:var(--text-soft);flex:1}
+.course .foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:6px}
+.course .price{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:20px}
+.course .price.free{color:var(--turquoise)}
+.meta{font-size:12px;color:var(--text-soft)}
+.empty{background:#fff;border:1.5px dashed var(--border);border-radius:22px;padding:50px 24px;text-align:center;color:var(--text-soft);max-width:620px;margin:0 auto}
+.empty .em{font-size:54px}
+footer{background:var(--secondary);color:#999;padding:40px 24px;text-align:center;font-size:13px;margin-top:50px}
+footer a{color:var(--accent);text-decoration:none}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--secondary);color:#fff;padding:14px 24px;border-radius:50px;font-weight:600;font-size:14px;z-index:300;display:none}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="/" class="logo"><img src="logo.PNG" class="logo-icon" onerror="this.style.display='none'"><span>deutschoderwas <span class="club">club</span></span></a>
+  <div class="nav-menu">
+    <a class="link" href="/">Club-Start</a>
+    <a class="link" href="live.html">LIVE-Clubs</a>
+    <a id="navAuth" class="btn btn-primary btn-sm" href="live.html">Anmelden</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="crumb"><a href="/">deutschoderwas club</a> › Digitale Kurse</div>
+  <h1>Digitale <span class="hl">Kurse</span></h1>
+  <p>Lerne in deinem Tempo: Kurse kaufen und direkt hier durcharbeiten — Videos, Material, Übungen und Fortschritt. Manche Lektionen sind gratis zum Reinschnuppern.</p>
+</header>
+
+<section class="section">
+  <div id="catalog" class="grid"></div>
+</section>
+
+<footer><p>© 2026 deutschoderwas club · <a href="https://deutschoderwas.de">deutschoderwas.de</a> · <a href="impressum.html">Impressum</a></p></footer>
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script>
+const CFG = window.SPRECHCLUB_CONFIG;
+const sb = supabase.createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY);
+let user = null;
+function toast(t){ const el=document.getElementById('toast'); el.textContent=t; el.style.display='block'; setTimeout(()=>el.style.display='none',3500); }
+function euro(c){ return (c/100).toLocaleString('de-DE',{minimumFractionDigits:(c%100?2:0),maximumFractionDigits:2}); }
+
+async function init(){
+  const { data:{ session } } = await sb.auth.getSession();
+  if (session){ user = session.user; const a=document.getElementById('navAuth'); a.textContent='Mein Bereich'; a.href='/schuelerbereich'; }
+  const { data } = await sb.rpc('course_catalog');
+  const courses = data || [];
+  const el = document.getElementById('catalog');
+  if (!courses.length){
+    el.style.display='block';
+    el.innerHTML = `<div class="empty"><div class="em">🎓</div>
+      <h3 style="margin:10px 0 8px">Die ersten Kurse kommen bald.</h3>
+      <p>Julia stellt gerade die digitalen Kurse zusammen — schau bald wieder vorbei oder starte solange im <a href="live.html" style="color:var(--primary);font-weight:700">LIVE-Unterricht</a>.</p></div>`;
+    return;
+  }
+  el.innerHTML = courses.map(c=>{
+    const free = c.price_cents===0;
+    let btn;
+    if (c.enrolled) btn = `<a class="btn btn-primary btn-sm" href="kurs.html?kurs=${c.slug}">Öffnen</a>`;
+    else if (free) btn = `<button class="btn btn-primary btn-sm" onclick="enrollFree('${c.id}','${c.slug}')">Gratis starten</button>`;
+    else btn = `<button class="btn btn-primary btn-sm" onclick="buyCourse('${c.id}')">Kaufen</button>`;
+    return `<div class="course">
+      <div class="thumb">${c.thumbnail_url?`<img src="${c.thumbnail_url}" onerror="this.replaceWith(document.createTextNode('🎓'))">`:'🎓'}</div>
+      <div class="body">
+        <div class="lvl">${c.level||'Alle Niveaus'}</div>
+        <h3>${c.title}</h3>
+        <p>${c.subtitle||''}</p>
+        <div class="foot">
+          <span class="price ${free?'free':''}">${free?'Gratis':euro(c.price_cents)+' €'}</span>
+          <span class="meta">${c.lessons} Lektionen</span>
+        </div>
+        ${btn}
+      </div></div>`;
+  }).join('');
+}
+
+async function enrollFree(courseId, slug){
+  if (!user) return toast('Bitte melde dich zuerst an.');
+  // Gratis-Kurse: serverseitig freischalten (geht über denselben Checkout-Endpunkt, Betrag 0 → direkt enrollen)
+  const r = await fetch('/api/create-checkout', { method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ courseId, userId: user.id, email: user.email }) });
+  const j = await r.json();
+  if (j.enrolled){ location.href='kurs.html?kurs='+slug; }
+  else if (j.url){ location.href=j.url; }
+  else toast('Konnte den Kurs nicht starten.');
+}
+async function buyCourse(courseId){
+  if (!user) return (location.href='live.html');
+  const r = await fetch('/api/create-checkout', { method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ courseId, userId: user.id, email: user.email }) });
+  const j = await r.json();
+  if (j.url) location.href=j.url; else toast('Fehler beim Start der Bezahlung.');
+}
+init();
+</script>
+</body>
+</html>
