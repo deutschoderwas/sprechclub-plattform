@@ -78,8 +78,6 @@ footer a{color:var(--primary);text-decoration:none;font-weight:700}
 </head>
 <body>
 <div class="bg"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="blob b4"></div></div>
-<div class="floaties" id="floaties"></div>
-
 <nav class="nav">
   <a href="/" class="logo">
     <img src="logo.PNG" alt="deutschoderwas club" class="logo-icon" onerror="this.style.display='none'">
@@ -144,19 +142,7 @@ const CLUB_ACCENT = { sprechclub:'var(--turq)', grammatikclub:'var(--red)', wort
   bindTilt();
 })();
 
-/* floating emoji */
-const EMO=['🗣️','📚','🎧','📐','🎓','💬','🎤','✨','🇩🇪','❤️'];
-const fl=document.getElementById('floaties');
-EMO.forEach((e,i)=>{ const s=document.createElement('div'); s.className='fl'; s.textContent=e;
-  s.style.left=(6+Math.random()*88)+'%'; s.style.top=(8+Math.random()*82)+'%';
-  s.style.animationDelay=(-Math.random()*7)+'s'; s.style.fontSize=(34+Math.random()*26)+'px';
-  s.dataset.depth=(0.4+Math.random()*1.1).toFixed(2); fl.appendChild(s); });
-
-/* parallax on mouse + 3D tilt on cards */
-let mx=0,my=0;
-window.addEventListener('mousemove',e=>{ mx=(e.clientX/window.innerWidth-.5); my=(e.clientY/window.innerHeight-.5);
-  document.querySelectorAll('.fl').forEach(s=>{ const d=+s.dataset.depth; s.style.marginLeft=(mx*30*d)+'px'; s.style.marginTop=(my*30*d)+'px'; }); },{passive:true});
-
+/* dezenter 3D-Tilt auf den Karten */
 function bindTilt(){
   document.querySelectorAll('.tile').forEach(t=>{
     t.addEventListener('mousemove',e=>{ const r=t.getBoundingClientRect(); const px=(e.clientX-r.left)/r.width-.5, py=(e.clientY-r.top)/r.height-.5;
