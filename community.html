@@ -83,6 +83,19 @@ async function init(){
     return;
   }
   user = session.user;
+
+  // Community-Zugang ist gratis, solange aktive Stunden vorhanden sind ODER ein Abo läuft.
+  const { data: prof } = await sb.from('profiles').select('credits,pass_until').eq('id', user.id).single();
+  const credits = prof?.credits || 0;
+  const passActive = prof?.pass_until && new Date(prof.pass_until) > new Date();
+  if (credits <= 0 && !passActive){
+    document.getElementById('root').innerHTML = `<div class="gate"><div class="em">⏳</div>
+      <h2 style="margin:12px 0 8px">Dein Stundenguthaben ist aufgebraucht</h2>
+      <p style="color:var(--text-soft);margin-bottom:18px">Der Community-Zugang ist gratis, solange du aktive Stunden hast. Kauf weitere Stunden, um deinen Zugang zu behalten.</p>
+      <a class="btn btn-primary" href="live.html#pakete">Weitere Stunden kaufen</a></div>`;
+    return;
+  }
+
   const { data } = await sb.from('community_channels').select('*').eq('is_active', true).order('sort_order');
   channels = data || [];
   cur = channels[0]?.slug;
