@@ -14,9 +14,12 @@ window.SPRECHCLUB_CONFIG = {
     { id: 'testpass', typ: 'paket', stunden: 4, preis: 79, label: 'Testpass',
       hinweis: '4 Stunden zum Reinschnuppern', benefits: ['4 LIVE-Stunden', 'Alle Clubs & Niveaus', 'Guthaben bleibt erhalten'] },
 
+    { id: 'gelegenheitspass', typ: 'paket', stunden: 8, preis: 139, label: 'Gelegenheitspass',
+      hinweis: '8 Stunden · flexibel lernen', benefits: ['8 LIVE-Stunden', 'Alle Clubs & Niveaus', 'Keine Laufzeit', 'Guthaben bleibt erhalten'] },
+
     { id: 'allinclusive', typ: 'pass', abo: true, stunden: 12, preis: 189, label: 'All-Inclusive-Pass',
       hinweis: 'pro Monat', beliebt: true,
-      benefits: ['12 LIVE-Klassen pro Monat', 'Alle digitalen Kurse inklusive', 'Community-Zugang', 'Monatlich kündbar'] },
+      benefits: ['12 LIVE-Klassen pro Monat', 'Alle Clubs & Niveaus', 'Community-Zugang', 'Monatlich kündbar'] },
 
     { id: 'sparpass', typ: 'paket', stunden: 30, preis: 399, label: 'Spar Pass',
       hinweis: 'einmalig · längeres Lernen', benefits: ['30 LIVE-Stunden', 'Bester Stundenpreis (13,30 €)', 'Keine Laufzeit', 'Guthaben bleibt erhalten'] }
