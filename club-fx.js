@@ -7,7 +7,7 @@
     document.body.appendChild(bg);
 
     var fl = document.createElement('div'); fl.className='club-floaties';
-    var EMO=['🗣️','📚','🎧','📐','🎓','💬','🎤','✨','🇩🇪','💜'];
+    var EMO=['🗣️','📚','🎧','📐','🎓','💬','🎤','✨','🇩🇪','❤️'];
     EMO.forEach(function(e){
       var s=document.createElement('div'); s.className='club-fl'; s.textContent=e;
       s.style.left=(6+Math.random()*88)+'%'; s.style.top=(8+Math.random()*82)+'%';
