@@ -29,16 +29,22 @@ export default async function handler(req, res) {
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
-    const userId = session.metadata?.user_id || session.client_reference_id;
+    const userId = session.metadata?.user_id;
+    const courseId = session.metadata?.course_id;
     const credits = parseInt(session.metadata?.credits || '0', 10);
     const packageId = session.metadata?.package_id || 'unbekannt';
 
-    if (userId && credits > 0) {
-      const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+    const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 
+    // ---- Digitaler Kurs: Zugang freischalten (idempotent über stripe_session_id) ----
+    if (userId && courseId) {
+      await supabase.rpc('grant_enrollment', { p_user_id: userId, p_course_id: courseId, p_source: 'purchase', p_session: session.id });
+    }
+
+    // ---- Stundenpaket: Guthaben gutschreiben ----
+    if (userId && credits > 0) {
       const { data: existing } = await supabase
         .from('credit_log').select('id').eq('stripe_session_id', session.id).maybeSingle();
-
       if (!existing) {
         await supabase.from('credit_log').insert({
           user_id: userId, change: credits,
