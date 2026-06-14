@@ -7,59 +7,78 @@
 <meta name="description" content="Der deutschoderwas club: LIVE-Unterricht (Sprechclub, Grammatikclub, Wortschatzclub, Ausspracheclub), digitale Kurse, Community und KI-Tutorin Amanda — alles an einem Ort.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--primary:#DD0000;--primary-dark:#B30000;--secondary:#1A1A1A;--accent:#FFCE00;--turquoise:#2DD4BF;--cream:#FFFCF5;--bg:#FFF8E0;--text:#1A1A1A;--text-soft:#6B7280;--border:#F0E5D8}
+:root{--primary:#FF2D55;--gold:#FFC400;--turq:#13D4B8;--purple:#8B5CF6;--pink:#FF6FB5;--ink:#1A1530;--soft:#6B6A86;--card:#fff}
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 html,body{overflow-x:clip;max-width:100%}
-body{font-family:'Inter','Segoe UI',system-ui,sans-serif;background:var(--cream);color:var(--text);line-height:1.55}
-h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;letter-spacing:-.02em;line-height:1.1}
-.nav{position:sticky;top:0;z-index:100;background:rgba(255,249,242,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;justify-content:space-between;align-items:center}
-.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;text-decoration:none;color:var(--secondary)}
-.logo-icon{width:44px;height:44px;border-radius:50%;object-fit:cover;box-shadow:0 2px 8px rgba(0,0,0,.08)}
-.logo small{display:block;font-weight:500;font-size:11px;color:var(--text-soft);margin-top:-2px}
-.logo .club{color:var(--primary)}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--ink);line-height:1.55;background:#FDF7FF;position:relative;min-height:100vh}
+h1,h2,h3{font-family:'Fredoka',sans-serif;font-weight:600;letter-spacing:-.01em;line-height:1.05}
+
+/* animated colorful background */
+.bg{position:fixed;inset:0;z-index:-2;overflow:hidden;background:linear-gradient(160deg,#FFF4FA 0%,#F2FBFF 55%,#FFF9EC 100%)}
+.blob{position:absolute;border-radius:50%;filter:blur(60px);opacity:.55;animation:drift 18s ease-in-out infinite}
+.b1{width:460px;height:460px;background:var(--pink);top:-120px;left:-80px}
+.b2{width:420px;height:420px;background:var(--turq);top:10%;right:-120px;animation-delay:-4s}
+.b3{width:380px;height:380px;background:var(--gold);bottom:-120px;left:20%;animation-delay:-8s}
+.b4{width:360px;height:360px;background:var(--purple);bottom:5%;right:10%;animation-delay:-12s}
+@keyframes drift{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(40px,-30px) scale(1.12)}66%{transform:translate(-30px,25px) scale(.92)}}
+
+/* floating emoji */
+.floaties{position:fixed;inset:0;z-index:-1;pointer-events:none}
+.fl{position:absolute;font-size:46px;will-change:transform;animation:bob 7s ease-in-out infinite;filter:drop-shadow(0 10px 18px rgba(0,0,0,.12))}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-26px) rotate(6deg)}}
+
+.nav{position:sticky;top:0;z-index:100;backdrop-filter:blur(14px);background:rgba(255,255,255,.6);border-bottom:1px solid rgba(0,0,0,.05);padding:14px 26px;display:flex;justify-content:space-between;align-items:center}
+.logo{display:flex;align-items:center;gap:10px;font-family:'Fredoka',sans-serif;font-weight:700;font-size:20px;text-decoration:none;color:var(--ink)}
+.logo-icon{width:46px;height:46px;border-radius:50%;object-fit:cover;box-shadow:0 6px 18px rgba(255,45,85,.3)}
+.logo .club{background:linear-gradient(90deg,var(--primary),var(--purple));-webkit-background-clip:text;background-clip:text;color:transparent}
+.logo small{display:block;font-family:'Inter';font-weight:500;font-size:11px;color:var(--soft);margin-top:-2px}
 .nav-menu{display:flex;align-items:center;gap:20px}
-.nav-menu a.link{text-decoration:none;color:var(--text-soft);font-weight:600;font-size:14px}
-.nav-menu a.link:hover{color:var(--secondary)}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:13px 24px;border-radius:50px;text-decoration:none;font-weight:700;font-size:15px;transition:all .25s;border:none;cursor:pointer;font-family:inherit}
-.btn-primary{background:var(--primary);color:#fff;box-shadow:0 8px 25px rgba(221,0,0,.35)}
-.btn-primary:hover{transform:translateY(-2px);background:var(--primary-dark)}
-.btn-ghost{background:#fff;color:var(--secondary);border:2px solid var(--border)}
-.btn-sm{padding:9px 18px;font-size:13px}
-.hero{max-width:1000px;margin:0 auto;padding:64px 24px 30px;text-align:center}
-.hero-tag{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);padding:8px 16px;border-radius:30px;font-size:13px;font-weight:700;color:var(--text-soft);margin-bottom:22px}
-.hero-tag::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--turquoise);animation:pulse 1.5s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
-.hero h1{font-size:clamp(36px,6vw,62px);margin-bottom:16px}
-.hero h1 .highlight{background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;background-clip:text;color:transparent}
-.hero p.sub{font-size:19px;color:var(--text-soft);max-width:640px;margin:0 auto 26px}
+.nav-menu a.link{text-decoration:none;color:var(--soft);font-weight:600;font-size:14px}
+.nav-menu a.link:hover{color:var(--ink)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:14px 26px;border-radius:40px;text-decoration:none;font-weight:700;font-size:15px;border:none;cursor:pointer;font-family:'Fredoka',sans-serif;transition:transform .15s,box-shadow .15s}
+.btn-primary{background:linear-gradient(135deg,var(--primary),var(--pink));color:#fff;box-shadow:0 10px 26px rgba(255,45,85,.4)}
+.btn-primary:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 16px 34px rgba(255,45,85,.5)}
+.btn-ghost{background:#fff;color:var(--ink);box-shadow:0 6px 18px rgba(0,0,0,.08)}
+.btn-ghost:hover{transform:translateY(-3px)}
+.btn-sm{padding:10px 18px;font-size:13px}
+
+.hero{max-width:980px;margin:0 auto;padding:70px 24px 26px;text-align:center;position:relative}
+.tag{display:inline-flex;align-items:center;gap:8px;background:#fff;padding:9px 18px;border-radius:30px;font-size:13px;font-weight:700;color:var(--purple);margin-bottom:24px;box-shadow:0 8px 22px rgba(139,92,246,.18)}
+.tag::before{content:'';width:9px;height:9px;border-radius:50%;background:var(--turq);animation:pulse 1.4s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+.hero h1{font-size:clamp(40px,7vw,76px);margin-bottom:18px}
+.hero h1 .grad{background:linear-gradient(100deg,var(--primary),var(--gold) 45%,var(--turq) 80%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.sub{font-size:19px;color:var(--soft);max-width:600px;margin:0 auto 30px}
 .hero-cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
-.section{max-width:1100px;margin:0 auto;padding:46px 24px}
-.section-head{text-align:center;margin-bottom:32px}
-.section-tag{display:inline-block;background:var(--bg);color:var(--primary);padding:6px 14px;border-radius:30px;font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px}
-.section-head h2{font-size:clamp(26px,4vw,40px)}
-.section-head h2 .highlight{color:var(--primary)}
-.section-head p{color:var(--text-soft);margin-top:10px}
-/* Tiles */
-.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px}
-.tile{position:relative;display:flex;flex-direction:column;gap:8px;background:#fff;border:1.5px solid var(--border);border-radius:22px;padding:26px 24px;text-decoration:none;color:inherit;transition:all .2s;overflow:hidden}
-.tile:hover{transform:translateY(-4px);box-shadow:0 22px 44px rgba(0,0,0,.08);border-color:var(--accent)}
-.tile .em{font-size:38px;line-height:1}
-.tile h3{font-size:20px}
-.tile p{font-size:14px;color:var(--text-soft)}
-.tile .go{margin-top:auto;font-weight:800;color:var(--primary);font-size:14px}
-.tile.live{background:linear-gradient(135deg,#FFF9F2,#FFF4D6)}
-.tile.feature{background:linear-gradient(135deg,#E8FAF6,#D2F5EE);border-color:var(--turquoise)}
-.tile .badge{position:absolute;top:14px;right:14px;background:var(--secondary);color:#fff;font-size:10px;font-weight:800;letter-spacing:1px;padding:4px 9px;border-radius:30px;text-transform:uppercase}
-.grp-label{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--text-soft);margin:6px 0 14px;text-align:center}
-footer{background:var(--secondary);color:#999;padding:40px 24px;text-align:center;font-size:13px;margin-top:50px}
-footer a{color:var(--accent);text-decoration:none}
-@media(max-width:700px){.nav-menu a.link{display:none}}
+
+.section{max-width:1120px;margin:0 auto;padding:54px 24px}
+.section-head{text-align:center;margin-bottom:34px}
+.pill{display:inline-block;background:#fff;color:var(--primary);padding:7px 16px;border-radius:30px;font-size:12px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:14px;box-shadow:0 6px 16px rgba(0,0,0,.06)}
+.section-head h2{font-size:clamp(30px,4.5vw,46px)}
+
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:22px;perspective:1000px}
+.tile{position:relative;display:flex;flex-direction:column;gap:8px;background:var(--card);border-radius:26px;padding:28px 24px;text-decoration:none;color:inherit;box-shadow:0 14px 34px rgba(26,21,48,.08);transition:transform .12s ease-out,box-shadow .2s;transform-style:preserve-3d;overflow:hidden}
+.tile::before{content:'';position:absolute;inset:0;border-radius:26px;opacity:.14;background:var(--accent,var(--primary));z-index:0}
+.tile>*{position:relative;z-index:1}
+.tile:hover{box-shadow:0 26px 50px rgba(26,21,48,.16)}
+.tile .em{font-size:46px;line-height:1;filter:drop-shadow(0 8px 14px rgba(0,0,0,.15));transform:translateZ(40px)}
+.tile h3{font-size:23px}
+.tile p{font-size:14px;color:var(--soft)}
+.tile .go{margin-top:auto;font-weight:800;color:var(--accent,var(--primary));font-size:14px;font-family:'Fredoka'}
+.tile .badge{position:absolute;top:16px;right:16px;background:var(--ink);color:#fff;font-size:10px;font-weight:800;letter-spacing:1px;padding:4px 10px;border-radius:30px;text-transform:uppercase;z-index:2}
+
+footer{text-align:center;font-size:13px;color:var(--soft);padding:40px 24px 60px}
+footer a{color:var(--primary);text-decoration:none;font-weight:700}
+@media(max-width:700px){.nav-menu a.link{display:none}.fl{font-size:34px}}
+@media(prefers-reduced-motion:reduce){.blob,.fl,.tag::before{animation:none}}
 </style>
 </head>
 <body>
+<div class="bg"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="blob b4"></div></div>
+<div class="floaties" id="floaties"></div>
 
 <nav class="nav">
   <a href="/" class="logo">
@@ -69,71 +88,40 @@ footer a{color:var(--accent);text-decoration:none}
   <div class="nav-menu">
     <a class="link" href="#live">LIVE-Clubs</a>
     <a class="link" href="kurse.html">Kurse</a>
-    <a class="link" href="#community">Community</a>
+    <a class="link" href="community.html">Community</a>
     <a id="navAuth" class="btn btn-primary btn-sm" href="/schuelerbereich">Mein Bereich</a>
   </div>
 </nav>
 
 <header class="hero">
-  <div class="hero-tag">Dein Deutsch-Zuhause online</div>
-  <h1>Willkommen im <span class="highlight">deutschoderwas&nbsp;club</span></h1>
-  <p class="sub">LIVE-Unterricht in mehreren Clubs, digitale Kurse zum Selbstlernen, eine Community zum Austauschen und KI-Tutorin Amanda — alles an einem Ort. Wähle deinen Bereich:</p>
+  <div class="tag">Dein Deutsch-Zuhause online</div>
+  <h1>Willkommen im<br><span class="grad">deutschoderwas&nbsp;club</span> 🎉</h1>
+  <p class="sub">LIVE-Unterricht in mehreren Clubs, digitale Kurse, eine Community zum Austauschen und KI-Tutorin Amanda — alles an einem bunten Ort. Wähle deinen Bereich:</p>
   <div class="hero-cta">
-    <a href="#live" class="btn btn-primary">LIVE-Clubs ansehen</a>
+    <a href="#live" class="btn btn-primary">LIVE-Clubs ansehen 🚀</a>
     <a href="kurse.html" class="btn btn-ghost">Digitale Kurse</a>
   </div>
 </header>
 
-<!-- LIVE CLUBS -->
 <section class="section" id="live">
   <div class="section-head">
-    <span class="section-tag">LIVE-Unterricht</span>
-    <h2>Deine <span class="highlight">Clubs</span></h2>
-    <p>Kleine Gruppen, echte Lehrerin. Stundenpaket kaufen, Stunde buchen, sprechen. Dein Guthaben gilt in allen Clubs.</p>
+    <span class="pill">LIVE-Unterricht</span>
+    <h2>Deine Clubs ✨</h2>
   </div>
-  <div class="tiles" id="clubTiles">
-    <!-- wird dynamisch aus der Datenbank geladen -->
-  </div>
+  <div class="tiles" id="clubTiles"></div>
 </section>
 
-<!-- BEREICHE -->
 <section class="section">
-  <div class="section-head">
-    <span class="section-tag">Alles im Club</span>
-    <h2>Mehr als <span class="highlight">Unterricht</span></h2>
-  </div>
+  <div class="section-head"><span class="pill">Alles im Club</span><h2>Mehr als Unterricht 💜</h2></div>
   <div class="tiles">
-    <a class="tile feature" href="kurse.html">
-      <span class="em">🎓</span>
-      <h3>Digitale Kurse</h3>
-      <p>Selbstlern-Kurse kaufen und direkt hier durcharbeiten — Videos, Material, Quiz, Fortschritt.</p>
-      <span class="go">Zu den Kursen →</span>
-    </a>
-    <a class="tile feature" id="community" href="community.html">
-      <span class="badge">bald</span>
-      <span class="em">💬</span>
-      <h3>Community</h3>
-      <p>Der Mitgliederbereich zum Austauschen, Fragen stellen und Deutsch üben — wie ein eigener Club-Chat.</p>
-      <span class="go">Zur Community →</span>
-    </a>
-    <a class="tile feature" href="https://deutschoderwas.de/amanda" target="_blank" rel="noopener">
-      <span class="em">🎤</span>
-      <h3>Amanda — KI-Tutorin</h3>
-      <p>Üb das Sprechen mit Amanda, deiner geduldigen KI-Tutorin — für Club-Mitglieder gratis.</p>
-      <span class="go">Mit Amanda sprechen →</span>
-    </a>
-    <a class="tile" href="/schuelerbereich">
-      <span class="em">🏠</span>
-      <h3>Mein Bereich</h3>
-      <p>Dein Dashboard: Guthaben, gebuchte Stunden, Kurse, Vokabeltrainer, Fortschritt &amp; Abzeichen.</p>
-      <span class="go">Zu meinem Bereich →</span>
-    </a>
+    <a class="tile" style="--accent:var(--turq)" href="kurse.html"><span class="em">🎓</span><h3>Digitale Kurse</h3><p>Kurse kaufen & direkt hier durcharbeiten — Videos, Material, Quiz, Fortschritt.</p><span class="go">Zu den Kursen →</span></a>
+    <a class="tile" style="--accent:var(--purple)" href="community.html"><span class="badge">neu</span><span class="em">💬</span><h3>Community</h3><p>Der Mitglieder-Treffpunkt: Fragen, üben, Erfolge teilen — wie dein Club-Chat.</p><span class="go">Zur Community →</span></a>
+    <a class="tile" style="--accent:var(--gold)" href="https://deutschoderwas.de/amanda" target="_blank" rel="noopener"><span class="em">🎤</span><h3>Amanda — KI-Tutorin</h3><p>Üb das Sprechen mit Amanda — für Club-Mitglieder gratis, 24/7.</p><span class="go">Mit Amanda sprechen →</span></a>
+    <a class="tile" style="--accent:var(--pink)" href="/schuelerbereich"><span class="em">🏠</span><h3>Mein Bereich</h3><p>Dein Dashboard: Guthaben, Stunden, Kurse, Vokabeln, Fortschritt & Abzeichen.</p><span class="go">Zu meinem Bereich →</span></a>
   </div>
 </section>
 
-<footer>
-  <p>© 2026 deutschoderwas club · <a href="https://deutschoderwas.de">deutschoderwas.de</a> · <a href="impressum.html">Impressum</a></p>
-</footer>
+<footer><p>© 2026 deutschoderwas club · <a href="https://deutschoderwas.de">deutschoderwas.de</a> · <a href="impressum.html">Impressum</a></p></footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="config.js"></script>
@@ -141,28 +129,41 @@ footer a{color:var(--accent);text-decoration:none}
 const CFG = window.SPRECHCLUB_CONFIG;
 const sb = supabase.createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY);
 
-// Nav: angemeldet → „Mein Bereich", sonst „Anmelden"
-(async ()=>{
-  const { data:{ session } } = await sb.auth.getSession();
-  const a = document.getElementById('navAuth');
-  if (session){ a.textContent = 'Mein Bereich'; a.href = '/schuelerbereich'; }
-  else { a.textContent = 'Anmelden'; a.href = 'live.html'; }
-})();
+(async ()=>{ const { data:{ session } } = await sb.auth.getSession(); const a=document.getElementById('navAuth');
+  if (session){ a.textContent='Mein Bereich'; a.href='/schuelerbereich'; } else { a.textContent='Anmelden'; a.href='live.html'; } })();
 
-// LIVE-Club-Kacheln aus der Datenbank
+const CLUB_ACCENT = { sprechclub:'var(--primary)', grammatikclub:'var(--purple)', wortschatzclub:'var(--turq)', ausspracheclub:'var(--gold)' };
 (async ()=>{
   const { data } = await sb.from('clubs').select('*').eq('is_active', true).order('sort_order');
   const clubs = data || [];
   const el = document.getElementById('clubTiles');
-  if (!clubs.length){ el.innerHTML = '<p style="color:var(--text-soft)">Clubs werden geladen…</p>'; return; }
   el.innerHTML = clubs.map(c=>`
-    <a class="tile live" href="live.html?club=${c.slug}">
-      <span class="em">${c.emoji||'🎯'}</span>
-      <h3>${c.name}</h3>
-      <p>${c.description||''}</p>
-      <span class="go">Stundenplan ansehen →</span>
-    </a>`).join('');
+    <a class="tile" style="--accent:${CLUB_ACCENT[c.slug]||'var(--primary)'}" href="live.html?club=${c.slug}">
+      <span class="em">${c.emoji||'🎯'}</span><h3>${c.name}</h3><p>${c.description||''}</p>
+      <span class="go">Stundenplan ansehen →</span></a>`).join('');
+  bindTilt();
 })();
+
+/* floating emoji */
+const EMO=['🗣️','📚','🎧','📐','🎓','💬','🎤','✨','🇩🇪','💜'];
+const fl=document.getElementById('floaties');
+EMO.forEach((e,i)=>{ const s=document.createElement('div'); s.className='fl'; s.textContent=e;
+  s.style.left=(6+Math.random()*88)+'%'; s.style.top=(8+Math.random()*82)+'%';
+  s.style.animationDelay=(-Math.random()*7)+'s'; s.style.fontSize=(34+Math.random()*26)+'px';
+  s.dataset.depth=(0.4+Math.random()*1.1).toFixed(2); fl.appendChild(s); });
+
+/* parallax on mouse + 3D tilt on cards */
+let mx=0,my=0;
+window.addEventListener('mousemove',e=>{ mx=(e.clientX/window.innerWidth-.5); my=(e.clientY/window.innerHeight-.5);
+  document.querySelectorAll('.fl').forEach(s=>{ const d=+s.dataset.depth; s.style.marginLeft=(mx*30*d)+'px'; s.style.marginTop=(my*30*d)+'px'; }); },{passive:true});
+
+function bindTilt(){
+  document.querySelectorAll('.tile').forEach(t=>{
+    t.addEventListener('mousemove',e=>{ const r=t.getBoundingClientRect(); const px=(e.clientX-r.left)/r.width-.5, py=(e.clientY-r.top)/r.height-.5;
+      t.style.transform=`rotateY(${px*10}deg) rotateX(${-py*10}deg) translateY(-6px)`; });
+    t.addEventListener('mouseleave',()=>{ t.style.transform=''; });
+  });
+}
 </script>
 </body>
 </html>
