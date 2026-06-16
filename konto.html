@@ -265,7 +265,7 @@ async function init(){
   if (DEMO){ document.getElementById('v-dashboard').innerHTML='<div class="empty">Vorschau-Modus — verbinde Supabase, um deinen Schülerbereich zu sehen.</div>'; return; }
   sb = supabase.createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY);
   const { data:{ session } } = await sb.auth.getSession();
-  if (!session){ location.href='index.html'; return; }
+  if (!session){ location.href='index.html?login=1'; return; }
   user = session.user;
   await load();
   window.addEventListener('hashchange', routeFromHash);
