@@ -48,8 +48,9 @@ input,select{padding:10px 12px;border:2px solid var(--border);border-radius:10px
   </div>
 
   <div class="tabs">
-    <button id="tabK" class="active" onclick="show('klassen')">Stunden & Teilnehmer</button>
+    <button id="tabK" class="active" onclick="show('klassen')">Stunden & Anwesenheit</button>
     <button id="tabN" onclick="show('neu')">Stunde anlegen</button>
+    <button id="tabL" onclick="show('lehrer')">👩‍🏫 Lehrer</button>
     <button id="tabS" onclick="show('schueler')">Schüler & Guthaben</button>
     <button id="tabM" onclick="show('nachrichten')">Nachrichten</button>
     <button id="tabB" onclick="show('bewertungen')">Bewertungen</button>
@@ -57,6 +58,7 @@ input,select{padding:10px 12px;border:2px solid var(--border);border-radius:10px
   </div>
 
   <div id="klassen"></div>
+  <div id="lehrer" style="display:none"></div>
   <div id="nachrichten" style="display:none"></div>
   <div id="bewertungen" style="display:none"></div>
 
@@ -67,6 +69,7 @@ input,select{padding:10px 12px;border:2px solid var(--border);border-radius:10px
         <input id="nTitle" placeholder="Titel, z.B. B1/B2 Unterricht" style="flex:2">
         <select id="nClub" title="Club"><option value="sprechclub">🗣️ Sprechclub</option><option value="grammatikclub">📐 Grammatikclub</option><option value="wortschatzclub">📚 Wortschatzclub</option><option value="ausspracheclub">🎧 Ausspracheclub</option></select>
         <select id="nLevel"><option>A2</option><option>B1/B2</option><option>B2/C1</option><option>ab B1</option></select>
+        <select id="nTeacher" title="Lehrer"><option value="">— Lehrer —</option></select>
       </div>
       <div class="formrow">
         <input id="nTopic" placeholder="Thema (optional)" style="flex:2">
@@ -139,6 +142,7 @@ async function enter(u){
   }
   document.getElementById('gate').style.display='none';
   document.getElementById('app').style.display='block';
+  await loadTeachers();
   loadKlassen();
 }
 
@@ -150,18 +154,82 @@ async function login(){
 async function logout(){ await sb.auth.signOut(); location.reload(); }
 
 function show(id){
-  ['klassen','neu','schueler','nachrichten','bewertungen','material'].forEach(x=>document.getElementById(x).style.display = x===id?'block':'none');
+  ['klassen','neu','lehrer','schueler','nachrichten','bewertungen','material'].forEach(x=>document.getElementById(x).style.display = x===id?'block':'none');
   document.getElementById('tabK').classList.toggle('active', id==='klassen');
   document.getElementById('tabN').classList.toggle('active', id==='neu');
+  document.getElementById('tabL').classList.toggle('active', id==='lehrer');
   document.getElementById('tabS').classList.toggle('active', id==='schueler');
   document.getElementById('tabM').classList.toggle('active', id==='nachrichten');
   document.getElementById('tabB').classList.toggle('active', id==='bewertungen');
   document.getElementById('tabMat').classList.toggle('active', id==='material');
   if (id==='klassen') loadKlassen();
+  if (id==='lehrer') loadLehrer();
   if (id==='schueler') loadSchueler();
   if (id==='nachrichten') loadNachrichten();
   if (id==='bewertungen') loadBewertungen();
   if (id==='material') loadMaterial();
+}
+
+// ---------- Lehrer ----------
+let TEACHERS=[];
+const CLUBS=[{slug:'sprechclub',name:'🗣️ Sprechclub'},{slug:'grammatikclub',name:'📐 Grammatikclub'},{slug:'wortschatzclub',name:'📚 Wortschatzclub'},{slug:'ausspracheclub',name:'🎧 Ausspracheclub'}];
+const CLUB_COLOR={sprechclub:'#2DD4BF',grammatikclub:'#DD0000',wortschatzclub:'#FFCE00',ausspracheclub:'#13A89A'};
+const CLUB_EMOJI={sprechclub:'🗣️',grammatikclub:'📐',wortschatzclub:'📚',ausspracheclub:'🎧'};
+async function loadTeachers(){
+  const { data } = await sb.from('teachers').select('*').order('sort_order');
+  TEACHERS = data || [];
+  const sel = document.getElementById('nTeacher');
+  if (sel) sel.innerHTML = teacherOptions('');
+}
+function teacherOptions(selId){
+  return '<option value="">— Lehrer —</option>' + TEACHERS.filter(t=>t.active||t.id===selId).map(t=>`<option value="${t.id}" ${t.id===selId?'selected':''}>${esc(t.name)}</option>`).join('');
+}
+function clubOptions(selSlug){
+  return CLUBS.map(c=>`<option value="${c.slug}" ${c.slug===selSlug?'selected':''}>${c.name}</option>`).join('');
+}
+function teacherName(id){ const t=TEACHERS.find(x=>x.id===id); return t?t.name:''; }
+function teacherColor(id){ const t=TEACHERS.find(x=>x.id===id); return t?t.color:'#1A1A1A'; }
+
+async function loadLehrer(){
+  await loadTeachers();
+  document.getElementById('lehrer').innerHTML =
+    `<div class="card">
+       <h3 style="margin-bottom:10px">👩‍🏫 Lehrer anlegen</h3>
+       <div class="formrow">
+         <input id="newTName" placeholder="Name, z.B. Anna" style="flex:2">
+         <input id="newTColor" type="color" value="#2DD4BF" title="Farbe (optional)" style="width:54px;padding:4px;height:42px">
+         <button class="btn btn-primary" onclick="addTeacher()">Hinzufügen</button>
+       </div>
+       <span class="muted" id="tMsg"></span>
+     </div>` +
+    (TEACHERS.length ? TEACHERS.map(t=>`
+      <div class="card" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <span style="width:16px;height:16px;border-radius:5px;background:${t.color||'#1A1A1A'};display:inline-block"></span>
+        <input id="tn-${t.id}" value="${esc(t.name)}" style="flex:1;min-width:140px">
+        <input id="tc-${t.id}" type="color" value="${t.color||'#1A1A1A'}" style="width:48px;padding:4px;height:40px">
+        ${t.active?'<span class="pill" style="background:#e8f9f5;color:#13A89A">aktiv</span>':'<span class="pill" style="background:#f1f1f1;color:#999">inaktiv</span>'}
+        <button class="btn btn-ghost" onclick="saveTeacher('${t.id}')">Speichern</button>
+        <button class="btn btn-ghost" onclick="toggleTeacher('${t.id}',${t.active?'false':'true'})">${t.active?'Deaktivieren':'Aktivieren'}</button>
+      </div>`).join('') : '<div class="card muted">Noch keine Lehrer angelegt.</div>');
+}
+async function addTeacher(){
+  const name=document.getElementById('newTName').value.trim();
+  const color=document.getElementById('newTColor').value;
+  if(!name){ document.getElementById('tMsg').textContent='Bitte Namen eingeben.'; return; }
+  const so=(TEACHERS.reduce((m,t)=>Math.max(m,t.sort_order||0),0))+1;
+  const { error }=await sb.from('teachers').insert({name,color,sort_order:so});
+  document.getElementById('tMsg').textContent = error? 'Fehler: '+error.message : '✓ angelegt';
+  if(!error){ document.getElementById('newTName').value=''; loadLehrer(); }
+}
+async function saveTeacher(id){
+  const name=document.getElementById('tn-'+id).value.trim();
+  const color=document.getElementById('tc-'+id).value;
+  const { error }=await sb.from('teachers').update({name,color}).eq('id',id);
+  if(error) alert('Fehler: '+error.message); else loadLehrer();
+}
+async function toggleTeacher(id,active){
+  const { error }=await sb.from('teachers').update({active}).eq('id',id);
+  if(error) alert('Fehler: '+error.message); else loadLehrer();
 }
 
 // ---------- Materialien (PDF-Bibliothek) ----------
@@ -233,18 +301,28 @@ async function loadKlassen(){
   }
   document.getElementById('klassen').innerHTML = (cls||[]).length ? cls.map(c=>{
     const p = parts[c.id]||[];
-    return `<div class="card">
+    const cCol = CLUB_COLOR[c.club]||'#2DD4BF';
+    return `<div class="card" style="border-left:5px solid ${cCol}">
       <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px">
         <div><b class="title">${fmt(new Date(c.starts_at))} — ${c.title}</b>
-        <span class="pill">${c.level}</span> <span class="muted">${c.topic||''}</span></div>
+        <span class="pill" style="background:${cCol};color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.25)">${CLUB_EMOJI[c.club]||''} ${c.club}</span>
+        <span class="pill">${c.level}</span>
+        ${c.teacher_id?`<span class="muted">· 👩‍🏫 ${esc(teacherName(c.teacher_id))}</span>`:'<span class="muted" style="color:#c00">· ⚠️ Lehrer fehlt</span>'}
+        <span class="muted">${c.topic||''}</span></div>
         <div class="muted">${p.length}/${c.capacity} gebucht</div>
       </div>
       ${p.length?'<div style="margin-top:8px">'+p.map(x=>`<div class="tn">👤 ${x.name||''} <span class="muted">${x.email}</span></div>`).join('')+'</div>':''}
       <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn btn-ghost" onclick="editClass('${c.id}')">Material & Vokabeln</button>
+        <button class="btn btn-ghost" onclick="toggleAtt('${c.id}')">✅ Anwesenheit</button>
+        <button class="btn btn-ghost" onclick="editClass('${c.id}')">Bearbeiten · Material</button>
         <button class="btn btn-ghost" onclick="cancelClass('${c.id}')">Stunde absagen</button>
       </div>
+      <div id="att-${c.id}" style="display:none;margin-top:10px"></div>
       <div id="edit-${c.id}" style="display:none;margin-top:10px">
+        <div class="formrow">
+          <select id="eClub-${c.id}" style="flex:1">${clubOptions(c.club)}</select>
+          <select id="eTeacher-${c.id}" style="flex:1">${teacherOptions(c.teacher_id)}</select>
+        </div>
         <div class="formrow"><input id="ePre-${c.id}" placeholder="Übungen VOR dem Unterricht (Link)" value="${c.material_pre||''}" style="flex:1"><input id="eLive-${c.id}" placeholder="Material IM Unterricht (Link)" value="${c.material_live||''}" style="flex:1"></div>
         <div class="formrow"><input id="ePost-${c.id}" placeholder="Nachbearbeitung (Link)" value="${c.material_post||''}" style="flex:1"><input id="eZoom-${c.id}" placeholder="Google-Meet-Link" value="${c.zoom_link||''}" style="flex:1"></div>
         <div class="formrow"><textarea id="eVocab-${c.id}" placeholder="Vokabeln (eine pro Zeile): Wort — Bedeutung" style="flex:1;min-height:80px;padding:10px 12px;border:2px solid var(--border);border-radius:10px;font-family:inherit;font-size:14px">${(c.vocab||[]).map(v=>v.de+' — '+(v.info||'')).join('\n')}</textarea></div>
@@ -283,6 +361,8 @@ function editClass(id){
 async function saveClass(id){
   const vocab = parseVocab(document.getElementById('eVocab-'+id).value);
   const { error } = await sb.from('classes').update({
+    club: document.getElementById('eClub-'+id).value,
+    teacher_id: document.getElementById('eTeacher-'+id).value || null,
     material_pre: document.getElementById('ePre-'+id).value.trim() || null,
     material_live: document.getElementById('eLive-'+id).value.trim() || null,
     material_post: document.getElementById('ePost-'+id).value.trim() || null,
@@ -290,6 +370,35 @@ async function saveClass(id){
     vocab: vocab.length ? vocab : null,
   }).eq('id', id);
   document.getElementById('eMsg-'+id).textContent = error ? 'Fehler: '+error.message : '✓ gespeichert';
+  if (!error) loadKlassen();
+}
+
+// ---------- Anwesenheit ----------
+async function toggleAtt(id){
+  const box = document.getElementById('att-'+id);
+  if (box.style.display==='block'){ box.style.display='none'; return; }
+  box.style.display='block';
+  box.innerHTML='<span class="muted">lädt…</span>';
+  const { data, error } = await sb.rpc('class_attendance', { p_class_id: id });
+  if (error){ box.innerHTML='<span class="muted" style="color:#c00">Fehler: '+error.message+'</span>'; return; }
+  const rows = data||[];
+  if (!rows.length){ box.innerHTML='<div class="muted" style="background:var(--bg);border-radius:10px;padding:10px 12px">Niemand für diese Stunde gebucht.</div>'; return; }
+  box.innerHTML = `<div style="background:var(--bg);border-radius:10px;padding:10px 12px">
+    <b style="font-size:13px">✅ Anwesenheit eintragen</b>
+    <p class="muted" style="margin:3px 0 8px">Nur Protokoll — das Guthaben wurde bereits bei der Buchung abgezogen.</p>
+    ${rows.map(r=>`<div class="tn" style="display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);padding:5px 0">
+      <span style="flex:1">👤 ${esc(r.name||'')} <span class="muted">${esc(r.email||'')}</span></span>
+      <button class="btn ${r.attendance==='present'?'btn-primary':'btn-ghost'}" style="padding:4px 12px;font-size:12px;${r.attendance==='present'?'background:#13A89A':''}" onclick="markAtt('${id}','${r.user_id}',true)">Da</button>
+      <button class="btn ${r.attendance==='absent'?'btn-primary':'btn-ghost'}" style="padding:4px 12px;font-size:12px" onclick="markAtt('${id}','${r.user_id}',false)">Fehlt</button>
+    </div>`).join('')}
+  </div>`;
+}
+async function markAtt(classId, userId, present){
+  const { error } = await sb.rpc('mark_attendance', { p_class_id: classId, p_user_id: userId, p_present: present });
+  if (error){ alert('Fehler: '+error.message); return; }
+  // Panel neu laden, um Status zu aktualisieren
+  const box = document.getElementById('att-'+classId);
+  box.style.display='none'; toggleAtt(classId);
 }
 
 async function createClass(){
@@ -300,6 +409,7 @@ async function createClass(){
   const base = {
     title: t, level: document.getElementById('nLevel').value,
     club: document.getElementById('nClub').value,
+    teacher_id: document.getElementById('nTeacher').value || null,
     topic: document.getElementById('nTopic').value.trim() || null,
     capacity: parseInt(document.getElementById('nCap').value||'5',10),
     zoom_link: document.getElementById('nZoom').value.trim() || null,
