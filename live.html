@@ -92,6 +92,31 @@ footer a{color:var(--accent);text-decoration:none}
 .msg.ok{color:#0a7a5c}.msg.err{color:var(--primary)}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--secondary);color:#fff;padding:14px 24px;border-radius:50px;font-weight:600;font-size:14px;z-index:300;display:none}
 @media(max-width:700px){.nav-menu a.link{display:none}}
+/* Wochen-Kalender (farbig nach Club) */
+.cal-legend{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin:0 0 18px}
+.cal-legend .lg{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--text-soft)}
+.cal-legend .dot{width:12px;height:12px;border-radius:4px;display:inline-block}
+.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(168px,1fr));gap:10px;overflow-x:auto;padding-bottom:6px}
+.cal-day{background:#fff;border:1px solid var(--border);border-radius:14px;padding:8px;display:flex;flex-direction:column;gap:8px}
+.cal-dayhead{text-align:center;padding:6px 0;border-bottom:1px solid var(--border)}
+.cal-dayhead b{display:block;font-family:'Space Grotesk',sans-serif;font-size:15px;text-transform:capitalize}
+.cal-dayhead span{font-size:12px;color:var(--text-soft)}
+.cal-dayhead.today{border-bottom:2px solid var(--primary)}
+.cal-dayhead.today b{color:var(--primary)}
+.cal-empty{color:#e3e3e3;text-align:center;font-size:18px;padding:8px 0}
+.ev{border-left:5px solid var(--c,#2DD4BF);background:var(--cream);border-radius:10px;padding:8px 10px;display:flex;flex-direction:column;gap:5px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.ev-top{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.ev-time{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px}
+.ev-club{font-size:9px;font-weight:800;letter-spacing:.3px;color:#fff;padding:2px 7px;border-radius:20px;text-transform:uppercase;white-space:nowrap;text-shadow:0 1px 1px rgba(0,0,0,.28)}
+.ev-title{font-size:13px;font-weight:700;line-height:1.2}
+.ev-meta{font-size:11.5px;color:var(--text-soft)}
+.ev-btn{margin-top:2px;border:none;border-radius:20px;padding:7px 10px;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;text-align:center;text-decoration:none;display:block}
+.ev-btn.book{background:var(--secondary);color:#fff}
+.ev-btn.book:hover{background:#000}
+.ev-btn.meet{background:var(--turquoise);color:#fff}
+.ev-btn.mine{background:#e8f9f5;color:var(--turquoise);font-weight:800}
+.ev-btn.off{background:#f1f1f1;color:#aaa}
+@media(max-width:820px){.cal-grid{grid-template-columns:1fr;overflow-x:visible}.cal-empty{display:none}.cal-day:has(.cal-empty){display:none}}
 </style>
 <link rel="stylesheet" href="club-theme.css">
 </head>
@@ -217,7 +242,10 @@ async function init(){
 async function loadClubs(){
   const { data } = await sb.from('clubs').select('*').eq('is_active', true).order('sort_order');
   clubs = data || [];
-  const cur = clubs.find(c=>c.slug===clubSlug) || clubs[0] || {slug:'sprechclub',name:'Sprechclub',emoji:'🗣️',description:'Frei sprechen in kleinen Gruppen.'};
+  const ALL = {slug:'alle', name:'Alle Clubs', emoji:'📅', description:'Alle Bereiche auf einen Blick — jede Farbe steht für einen Club. Such dir aus, woran du arbeiten willst.'};
+  let cur;
+  if (clubSlug==='alle') cur = ALL;
+  else cur = clubs.find(c=>c.slug===clubSlug) || clubs[0] || ALL;
   clubSlug = cur.slug;
   document.getElementById('clubName').textContent = cur.name;
   document.getElementById('clubNameH2').textContent = cur.name;
@@ -225,8 +253,9 @@ async function loadClubs(){
   document.getElementById('clubDesc').textContent = cur.description || '';
   document.getElementById('crumbClub').textContent = cur.name;
   document.title = cur.name + ' — deutschoderwas club';
-  document.getElementById('clubbar').innerHTML = clubs.map(c=>
-    `<a class="clubpill ${c.slug===clubSlug?'active':''}" href="live.html?club=${c.slug}"><span class="em">${c.emoji||''}</span>${c.name}</a>`).join('');
+  const pills = [`<a class="clubpill ${clubSlug==='alle'?'active':''}" href="live.html?club=alle">📅 Alle Clubs</a>`]
+    .concat(clubs.map(c=>`<a class="clubpill ${c.slug===clubSlug?'active':''}" href="live.html?club=${c.slug}"><span class="em">${c.emoji||''}</span>${c.name}</a>`));
+  document.getElementById('clubbar').innerHTML = pills.join('');
 }
 
 async function onLogin(u){
@@ -245,13 +274,11 @@ async function loadWeek(){
   document.getElementById('weekLabel').textContent =
     from.toLocaleDateString('de-DE',{day:'numeric',month:'short'}) + ' – ' +
     new Date(to-1).toLocaleDateString('de-DE',{day:'numeric',month:'short',year:'numeric'});
-  const { data } = await sb.from('classes_preview').select('*')
-    .eq('club', clubSlug).gte('starts_at', from.toISOString()).lt('starts_at', to.toISOString())
-    .eq('is_cancelled', false).order('starts_at');
-  classes = data || [];
-  const { data: av } = await sb.rpc('class_availability');
-  availability = {}; (av||[]).forEach(a=>availability[a.class_id]=a.booked);
-  renderFilter(); renderSchedule();
+  const { data } = await sb.rpc('week_classes', { p_from: from.toISOString(), p_to: to.toISOString() });
+  let all = data || [];
+  classes = (clubSlug==='alle') ? all : all.filter(c=>c.club===clubSlug);
+  myBooked = new Set(classes.filter(c=>c.mine).map(c=>c.id));
+  renderFilter(); renderSchedule(from);
 }
 function changeWeek(d){ weekOffset += d; if (weekOffset<0) weekOffset=0; loadWeek(); }
 
@@ -260,33 +287,47 @@ function renderFilter(){
   document.getElementById('levelFilter').innerHTML = levels.map(l=>
     `<button class="${l===levelSel?'active':''}" onclick="levelSel='${l}';renderFilter();renderSchedule()">${l==='alle'?'Alle Niveaus':l}</button>`).join('');
 }
-function renderSchedule(){
+function evCard(c){
+  const start = new Date(c.starts_at);
+  const free = c.capacity - (c.booked||0);
+  const past = start < new Date();
+  const color = c.club_color || '#2DD4BF';
+  let btn;
+  if (c.mine){
+    btn = c.zoom_link
+      ? `<a class="ev-btn meet" href="${c.zoom_link}" target="_blank" rel="noopener">🎥 Zum Unterricht</a>`
+      : `<span class="ev-btn mine">✓ Gebucht</span>`;
+  } else if (past){ btn = `<span class="ev-btn off">vorbei</span>`; }
+  else if (free<=0){ btn = `<span class="ev-btn off">ausgebucht</span>`; }
+  else { btn = `<button class="ev-btn book" onclick="book('${c.id}')">Buchen · ${free} frei</button>`; }
+  return `<div class="ev" style="--c:${color}">
+    <div class="ev-top"><span class="ev-time">${fmtTime(start)}</span><span class="ev-club" style="background:${color}">${c.club_name||''}</span></div>
+    <div class="ev-title">${c.title}</div>
+    <div class="ev-meta">${c.level}${c.teacher_name?' · '+c.teacher_name:''}${c.has_material?' · 📚':''}</div>
+    ${btn}</div>`;
+}
+function renderSchedule(weekStart){
   const el = document.getElementById('schedule');
   const list = classes.filter(c=> levelSel==='alle' || c.level===levelSel);
-  if (!list.length){ el.innerHTML = '<div class="empty-note">In dieser Woche sind in diesem Club (noch) keine Stunden eingetragen.</div>'; return; }
-  const days = {};
-  list.forEach(c=>{ const k = new Date(c.starts_at).toDateString(); (days[k]=days[k]||[]).push(c); });
-  el.innerHTML = Object.entries(days).map(([k,arr])=>{
-    const d = new Date(k);
-    return `<div class="day-group"><h3>${fmtDay(d)}</h3>` + arr.map(c=>{
-      const start = new Date(c.starts_at);
-      const booked = availability[c.id] ?? 0;
-      const free = c.capacity - booked;
-      const isMine = myBooked.has(c.id);
-      const past = start < new Date();
-      let btn;
-      if (past) btn = `<button class="btn btn-ghost btn-sm" disabled>Vorbei</button>`;
-      else if (isMine) btn = `<button class="btn btn-ghost btn-sm" onclick="location.href='/schuelerbereich'">✓ Gebucht</button>`;
-      else if (free<=0) btn = `<button class="btn btn-ghost btn-sm" disabled>Ausgebucht</button>`;
-      else btn = `<button class="btn btn-primary btn-sm" onclick="book('${c.id}')">Buchen</button>`;
-      return `<div class="class-card">
-        <div class="class-time">${fmtTime(start)}</div>
-        <span class="level-pill">${c.level}</span>
-        <div class="class-info"><b>${c.title}</b><span>${c.topic||''}</span></div>
-        <div class="seats ${free<=0?'full':''}">${free<=0?'voll':free+' von '+c.capacity+' frei'}</div>
-        ${btn}</div>`;
-    }).join('') + '</div>';
-  }).join('');
+  let legend = '';
+  if (clubSlug==='alle'){
+    legend = '<div class="cal-legend">' + clubs.map(c=>
+      `<span class="lg"><span class="dot" style="background:${c.color||'#2DD4BF'}"></span>${c.name}</span>`).join('') + '</div>';
+  }
+  if (!list.length){
+    el.innerHTML = legend + '<div class="empty-note">In dieser Woche sind hier (noch) keine Stunden eingetragen.</div>';
+    return;
+  }
+  const days = []; for (let i=0;i<7;i++){ const d=new Date(weekStart); d.setDate(d.getDate()+i); days.push(d); }
+  const byDay = {};
+  list.forEach(c=>{ const k=new Date(c.starts_at).toDateString(); (byDay[k]=byDay[k]||[]).push(c); });
+  const today = new Date().toDateString();
+  el.innerHTML = legend + '<div class="cal-grid">' + days.map(d=>{
+    const arr = (byDay[d.toDateString()]||[]).sort((a,b)=>new Date(a.starts_at)-new Date(b.starts_at));
+    const head = `<div class="cal-dayhead ${d.toDateString()===today?'today':''}"><b>${d.toLocaleDateString('de-DE',{weekday:'short'})}</b><span>${d.toLocaleDateString('de-DE',{day:'numeric',month:'short'})}</span></div>`;
+    const evs = arr.length ? arr.map(evCard).join('') : '<div class="cal-empty">—</div>';
+    return `<div class="cal-day">${head}${evs}</div>`;
+  }).join('') + '</div>';
 }
 function renderPakete(){
   document.getElementById('paketeGrid').innerHTML = CFG.PAKETE.map(p=>{
