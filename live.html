@@ -162,6 +162,7 @@ footer a{color:var(--accent);text-decoration:none}
     <h2>Deine Woche im <span class="highlight" id="clubNameH2">Sprechclub</span></h2>
     <p>Wähle dein Niveau und buche mit einem Klick.</p>
   </div>
+  <div style="max-width:760px;margin:0 auto 18px;background:#FFF8EC;border:2px solid #F5B942;border-radius:16px;padding:14px 18px;text-align:center;font-size:15px;color:#7a5a00">⏸️ <b>Hinweis:</b> Die Buchung über die Plattform ist gerade in der Testphase. Bitte buche deine Stunden aktuell noch wie gewohnt über <b>TutorBird</b>. Danke für deine Geduld! 🙏</div>
   <div class="week-controls">
     <button onclick="changeWeek(-1)">←</button>
     <span class="label" id="weekLabel"></span>
@@ -351,7 +352,7 @@ async function book(id){
   if (credits<1){ toast('Kein Guthaben — wähle unten ein Paket. 😊'); location.hash='#pakete'; return; }
   const { data, error } = await sb.rpc('book_class', { p_class_id: id });
   if (error || !data.ok){
-    const msgs = { class_full:'Diese Stunde ist leider voll.', no_credits:'Kein Guthaben mehr.', already_booked:'Schon gebucht!', class_in_past:'Diese Stunde ist vorbei.' };
+    const msgs = { booking_paused:'⏸️ Die Buchung läuft aktuell noch über TutorBird — bitte buche dort. Danke! 🙏', class_full:'Diese Stunde ist leider voll.', no_credits:'Kein Guthaben mehr.', already_booked:'Schon gebucht!', class_in_past:'Diese Stunde ist vorbei.' };
     return toast(msgs[data?.error] || 'Buchung fehlgeschlagen.');
   }
   credits--; myBooked.add(id); loadWeek(); toast('Gebucht! Den Meet-Link findest du in deinem Bereich.');

@@ -604,7 +604,7 @@ async function kalBook(id){
   const {data,error}=await sb.rpc('book_class',{p_class_id:id});
   if(error||!data.ok){
     if(data?.error==='no_credits'){ toast('Du brauchst zuerst ein Paket — ich bring dich hin 😊'); setTimeout(()=>{ location.href='live.html#pakete'; }, 700); return; }
-    const m={class_full:'Diese Stunde ist voll.',already_booked:'Schon gebucht!',class_in_past:'Stunde ist vorbei.'}; toast(m[data?.error]||'Buchung fehlgeschlagen.'); return;
+    const m={booking_paused:'⏸️ Buchung läuft aktuell noch über TutorBird — bitte dort buchen.',class_full:'Diese Stunde ist voll.',already_booked:'Schon gebucht!',class_in_past:'Stunde ist vorbei.'}; toast(m[data?.error]||'Buchung fehlgeschlagen.'); return;
   }
   toast('Gebucht! 🎉 Den Meet-Link findest du hier und unter „Meine Stunden".');
   await load(); loadKalender();
