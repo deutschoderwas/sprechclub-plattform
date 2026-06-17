@@ -207,6 +207,7 @@ h2.sec{margin:24px 0 12px;font-size:19px}
 .ev-btn.meet{background:var(--turquoise);color:#fff}
 .ev-btn.mine{background:var(--green-soft);color:var(--green);font-weight:800}
 .ev-btn.off{background:#f1f1f1;color:#aaa}
+.ev-btn.mat{background:var(--accent);color:#5a4a00}
 @media(max-width:820px){.cal-grid{grid-template-columns:1fr;overflow-x:visible}.cal-empty{display:none}.cal-day:has(.cal-empty){display:none}}
 </style>
 <link rel="stylesheet" href="club-theme.css">
@@ -234,7 +235,7 @@ h2.sec{margin:24px 0 12px;font-size:19px}
     <button class="navlink" data-view="amanda" onclick="go('amanda')"><span class="ic">🎤</span>Amanda</button>
     <button class="navlink" data-view="profil" onclick="go('profil')"><span class="ic">👤</span>Profil</button>
     <div class="side-foot">
-      <a class="navlink" href="#" onclick="return bucheStunde(event)"><span class="ic">➕</span>Stunde buchen</a>
+      <a class="navlink" href="live.html"><span class="ic">➕</span>Stunde buchen</a>
       <button class="navlink" onclick="logout()"><span class="ic">↩️</span>Abmelden</button>
     </div>
   </aside>
@@ -281,7 +282,6 @@ const _qp = new URLSearchParams(location.search);
 if (_qp.get('kauf')==='ok') document.getElementById('kaufOk').style.display='block';
 if (_qp.get('pass')==='ok'){ const k=document.getElementById('kaufOk'); k.textContent='🎉 Willkommen im All-Inclusive-Pass! 12 LIVE-Klassen pro Monat sind jetzt für dich freigeschaltet.'; k.style.display='block'; }
 function passActive(){ return profile.pass_until && new Date(profile.pass_until) > new Date(); }
-function bucheStunde(e){ if(e&&e.preventDefault)e.preventDefault(); if(credits>0||passActive()){ go('kalender'); } else { location.href='index.html#preise'; } return false; }
 
 function toast(t){ const el=document.getElementById('toast'); el.textContent=t; el.style.display='block'; clearTimeout(el._t); el._t=setTimeout(()=>el.style.display='none',3500); }
 function esc(s){ return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
@@ -471,7 +471,7 @@ function renderDashboard(){
       <button class="btn btn-ghost btn-sm" onclick="go('stunden')">Vorbereiten</button>
     </div>`;
   } else {
-    next=`<div class="next-hero"><div style="flex:1"><div class="when">Noch keine Stunde gebucht</div><div class="muted">Such dir im Stundenplan etwas Passendes aus.</div></div><a class="btn btn-primary" href="#" onclick="return bucheStunde(event)">Stunde buchen</a></div>`;
+    next=`<div class="next-hero"><div style="flex:1"><div class="when">Noch keine Stunde gebucht</div><div class="muted">Such dir im Stundenplan etwas Passendes aus.</div></div><a class="btn btn-primary" href="index.html#stundenplan">Stunde buchen</a></div>`;
   }
   document.getElementById('v-dashboard').innerHTML = `
     ${isActive()?'':lockBanner()}
@@ -479,7 +479,7 @@ function renderDashboard(){
       <div><h1>${greet}</h1><p class="muted">Schön, dass du übst. Bleib dran — Sprechen lernt man durch Sprechen. 💪</p></div>
       <div class="streak-chip">🔥 ${s.streak} ${s.streak===1?'Woche':'Wochen'} Streak</div>
     </div>
-    ${passActive()?`<div class="next-hero" style="background:linear-gradient(135deg,var(--turq),var(--turq-dark));color:#fff"><div style="flex:1"><div class="when" style="color:#fff">⭐ All-Inclusive-Pass aktiv</div><div style="color:rgba(255,255,255,.85);font-size:13px">12 LIVE-Klassen pro Monat · verlängert sich am ${fmtShort(new Date(profile.pass_until))}</div></div><a class="btn" style="background:#fff;color:var(--turq-dark)" href="#" onclick="return bucheStunde(event)">Stunde buchen</a></div>`:''}
+    ${passActive()?`<div class="next-hero" style="background:linear-gradient(135deg,var(--turq),var(--turq-dark));color:#fff"><div style="flex:1"><div class="when" style="color:#fff">⭐ All-Inclusive-Pass aktiv</div><div style="color:rgba(255,255,255,.85);font-size:13px">12 LIVE-Klassen pro Monat · verlängert sich am ${fmtShort(new Date(profile.pass_until))}</div></div><a class="btn" style="background:#fff;color:var(--turq-dark)" href="index.html#stundenplan">Stunde buchen</a></div>`:''}
     <div class="rankbar">
       <div class="top"><span class="rank">${s.rank.name} · ${s.points} Punkte</span>
         <span class="muted">${s.next?('noch '+(s.next.min-s.points)+' bis '+s.next.name):'Höchster Rang erreicht 🎉'}</span></div>
@@ -529,7 +529,7 @@ function renderLernpfad(){
       }).join('')}
     </div>
     <div class="card" style="margin-top:18px"><b>So funktioniert's</b><p class="muted" style="margin-top:5px">Dein aktuelles Niveau richtet sich nach den Stunden, die du buchst. Buch Stunden im nächsthöheren Niveau, wenn du dich bereit fühlst — frag Amanda oder deine Lehrerin, wenn du unsicher bist.</p>
-      <a class="btn btn-primary btn-sm" style="margin-top:10px" href="#" onclick="go('kalender');return false">Stunden ansehen</a></div>`;
+      <a class="btn btn-primary btn-sm" style="margin-top:10px" href="index.html#stundenplan">Stunden ansehen</a></div>`;
 }
 
 // ---------- Meine Stunden ----------
@@ -596,7 +596,33 @@ function kalEv(c){
   else if(past){ btn=`<span class="ev-btn off">vorbei</span>`; }
   else if(free<=0){ btn=`<span class="ev-btn off">ausgebucht</span>`; }
   else{ btn=`<button class="ev-btn book" onclick="kalBook('${c.id}')">Buchen · ${free} frei</button>`; }
-  return `<div class="ev" style="--c:${color}"><div class="ev-top"><span class="ev-time">${fmtTimeK(start)}</span><span class="ev-club" style="background:${color}">${esc(c.club_name||'')}</span></div><div class="ev-title">${esc(c.title)}</div><div class="ev-meta">${esc(c.level)}${c.teacher_name?' · '+esc(c.teacher_name):''}${c.has_material?' · 📚':''}</div>${btn}</div>`;
+  const matBtn = c.has_material ? `<button class="ev-btn mat" onclick="openClassMaterial('${c.id}')">📚 Material ansehen</button>` : '';
+  return `<div class="ev" style="--c:${color}"><div class="ev-top"><span class="ev-time">${fmtTimeK(start)}</span><span class="ev-club" style="background:${color}">${esc(c.club_name||'')}</span></div><div class="ev-title">${esc(c.title)}</div><div class="ev-meta">${esc(c.level)}${c.teacher_name?' · '+esc(c.teacher_name):''}</div>${btn}${matBtn}</div>`;
+}
+async function openClassMaterial(classId){
+  if(!isActive()){ toast('Material gibt es mit aktivem Guthaben — ich bring dich zu den Paketen 😊'); setTimeout(()=>{ location.href='live.html#pakete'; }, 900); return; }
+  let m=materials[classId];
+  if(!m){
+    const {data}=await sb.from('class_materials').select('content').eq('class_id',classId).maybeSingle();
+    if(data&&data.content){ m=data.content; materials[classId]=m; }
+  }
+  if(!m){ toast('Für diese Stunde liegt noch kein Material vor.'); return; }
+  const tip=m.grammar_tip;
+  let html=`<h3 style="margin-bottom:4px">📚 Material zur Stunde</h3>`;
+  if(m.intro) html+=`<p class="muted" style="margin-bottom:12px">${esc(m.intro)}</p>`;
+  if(tip) html+=`<div class="tip-card"><b>📌 ${esc(tip.title||'Grammatik-Tipp')}</b>${esc(tip.text||'')}</div>`;
+  if(Array.isArray(m.vocab)&&m.vocab.length){
+    html+=`<h4 style="margin:14px 0 6px">🃏 Wortschatz</h4><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px">`+
+      m.vocab.map(v=>`<div style="background:var(--bg);border-radius:10px;padding:8px 10px"><b style="display:block;font-size:14px">${esc(v.de)}</b><span class="muted" style="font-size:13px">${esc(v.info||v.en||'')}</span></div>`).join('')+`</div>`;
+  }
+  html+=`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">`;
+  if(m.pre&&Array.isArray(m.pre.exercises)&&m.pre.exercises.length) html+=`<button class="btn btn-primary" onclick="openEx('${classId}','pre')">📖 Vorbereitung starten</button>`;
+  if(m.post&&Array.isArray(m.post.exercises)&&m.post.exercises.length) html+=`<button class="btn btn-ghost" onclick="openEx('${classId}','post')">✍️ Nachbereitung</button>`;
+  html+=`</div>`;
+  if(Array.isArray(m.speak_prompts)&&m.speak_prompts.length){
+    html+=`<h4 style="margin:16px 0 6px">🎤 Sprechimpulse für Amanda</h4><ul style="margin:0 0 0 18px;color:var(--text-soft)">`+m.speak_prompts.map(s=>`<li style="margin:3px 0">${esc(s)}</li>`).join('')+`</ul>`;
+  }
+  openModal(html);
 }
 function setKalClub(s){ kalClub=s; loadKalender(); }
 function kalWeekChange(d){ kalWeek+=d; if(kalWeek<0)kalWeek=0; loadKalender(); }
@@ -605,7 +631,7 @@ async function kalBook(id){
   const {data,error}=await sb.rpc('book_class',{p_class_id:id});
   if(error||!data.ok){
     if(data?.error==='no_credits'){ toast('Du brauchst zuerst ein Paket — ich bring dich hin 😊'); setTimeout(()=>{ location.href='live.html#pakete'; }, 700); return; }
-    const m={booking_paused:'⏸️ Buchung läuft aktuell noch über TutorBird — bitte dort buchen.',class_full:'Diese Stunde ist voll.',already_booked:'Schon gebucht!',class_in_past:'Stunde ist vorbei.'}; toast(m[data?.error]||'Buchung fehlgeschlagen.'); return;
+    const m={class_full:'Diese Stunde ist voll.',already_booked:'Schon gebucht!',class_in_past:'Stunde ist vorbei.'}; toast(m[data?.error]||'Buchung fehlgeschlagen.'); return;
   }
   toast('Gebucht! 🎉 Den Meet-Link findest du hier und unter „Meine Stunden".');
   await load(); loadKalender();
