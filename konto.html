@@ -182,6 +182,8 @@ h2.sec{margin:24px 0 12px;font-size:19px}
 .kal-pills{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
 .kpill{border:2px solid var(--border);background:#fff;border-radius:50px;padding:8px 15px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;color:var(--text-soft)}
 .kpill.active{background:var(--secondary);color:#fff;border-color:var(--secondary)}
+.kal-levels{margin-top:2px}
+.kpill.lvl{font-size:12px;padding:6px 12px}
 .kal-week{display:flex;align-items:center;justify-content:center;gap:14px;margin:6px 0 16px}
 .kal-week button{background:#fff;border:2px solid var(--border);border-radius:50px;padding:6px 14px;font-weight:700;cursor:pointer;font-family:inherit}
 .kal-week span{font-weight:800;font-family:'Space Grotesk',sans-serif}
@@ -235,7 +237,7 @@ h2.sec{margin:24px 0 12px;font-size:19px}
     <button class="navlink" data-view="amanda" onclick="go('amanda')"><span class="ic">🎤</span>Amanda</button>
     <button class="navlink" data-view="profil" onclick="go('profil')"><span class="ic">👤</span>Profil</button>
     <div class="side-foot">
-      <a class="navlink" href="#" onclick="return bucheStunde(event)"><span class="ic">➕</span>Stunde buchen</a>
+      <a class="navlink" href="live.html"><span class="ic">➕</span>Stunde buchen</a>
       <button class="navlink" onclick="logout()"><span class="ic">↩️</span>Abmelden</button>
     </div>
   </aside>
@@ -282,7 +284,6 @@ const _qp = new URLSearchParams(location.search);
 if (_qp.get('kauf')==='ok') document.getElementById('kaufOk').style.display='block';
 if (_qp.get('pass')==='ok'){ const k=document.getElementById('kaufOk'); k.textContent='🎉 Willkommen im All-Inclusive-Pass! 12 LIVE-Klassen pro Monat sind jetzt für dich freigeschaltet.'; k.style.display='block'; }
 function passActive(){ return profile.pass_until && new Date(profile.pass_until) > new Date(); }
-function bucheStunde(e){ if(e&&e.preventDefault)e.preventDefault(); if(credits>0||passActive()){ go('kalender'); } else { location.href='index.html#preise'; } return false; }
 
 function toast(t){ const el=document.getElementById('toast'); el.textContent=t; el.style.display='block'; clearTimeout(el._t); el._t=setTimeout(()=>el.style.display='none',3500); }
 function esc(s){ return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
@@ -472,7 +473,7 @@ function renderDashboard(){
       <button class="btn btn-ghost btn-sm" onclick="go('stunden')">Vorbereiten</button>
     </div>`;
   } else {
-    next=`<div class="next-hero"><div style="flex:1"><div class="when">Noch keine Stunde gebucht</div><div class="muted">Such dir im Stundenplan etwas Passendes aus.</div></div><a class="btn btn-primary" href="#" onclick="return bucheStunde(event)">Stunde buchen</a></div>`;
+    next=`<div class="next-hero"><div style="flex:1"><div class="when">Noch keine Stunde gebucht</div><div class="muted">Such dir im Stundenplan etwas Passendes aus.</div></div><a class="btn btn-primary" href="index.html#stundenplan">Stunde buchen</a></div>`;
   }
   document.getElementById('v-dashboard').innerHTML = `
     ${isActive()?'':lockBanner()}
@@ -480,7 +481,7 @@ function renderDashboard(){
       <div><h1>${greet}</h1><p class="muted">Schön, dass du übst. Bleib dran — Sprechen lernt man durch Sprechen. 💪</p></div>
       <div class="streak-chip">🔥 ${s.streak} ${s.streak===1?'Woche':'Wochen'} Streak</div>
     </div>
-    ${passActive()?`<div class="next-hero" style="background:linear-gradient(135deg,var(--turq),var(--turq-dark));color:#fff"><div style="flex:1"><div class="when" style="color:#fff">⭐ All-Inclusive-Pass aktiv</div><div style="color:rgba(255,255,255,.85);font-size:13px">12 LIVE-Klassen pro Monat · verlängert sich am ${fmtShort(new Date(profile.pass_until))}</div></div><a class="btn" style="background:#fff;color:var(--turq-dark)" href="#" onclick="return bucheStunde(event)">Stunde buchen</a></div>`:''}
+    ${passActive()?`<div class="next-hero" style="background:linear-gradient(135deg,var(--turq),var(--turq-dark));color:#fff"><div style="flex:1"><div class="when" style="color:#fff">⭐ All-Inclusive-Pass aktiv</div><div style="color:rgba(255,255,255,.85);font-size:13px">12 LIVE-Klassen pro Monat · verlängert sich am ${fmtShort(new Date(profile.pass_until))}</div></div><a class="btn" style="background:#fff;color:var(--turq-dark)" href="index.html#stundenplan">Stunde buchen</a></div>`:''}
     <div class="rankbar">
       <div class="top"><span class="rank">${s.rank.name} · ${s.points} Punkte</span>
         <span class="muted">${s.next?('noch '+(s.next.min-s.points)+' bis '+s.next.name):'Höchster Rang erreicht 🎉'}</span></div>
@@ -530,7 +531,7 @@ function renderLernpfad(){
       }).join('')}
     </div>
     <div class="card" style="margin-top:18px"><b>So funktioniert's</b><p class="muted" style="margin-top:5px">Dein aktuelles Niveau richtet sich nach den Stunden, die du buchst. Buch Stunden im nächsthöheren Niveau, wenn du dich bereit fühlst — frag Amanda oder deine Lehrerin, wenn du unsicher bist.</p>
-      <a class="btn btn-primary btn-sm" style="margin-top:10px" href="#" onclick="go('kalender');return false">Stunden ansehen</a></div>`;
+      <a class="btn btn-primary btn-sm" style="margin-top:10px" href="index.html#stundenplan">Stunden ansehen</a></div>`;
 }
 
 // ---------- Meine Stunden ----------
@@ -556,7 +557,7 @@ function phaseHtml(b, phase){
 }
 
 // ---------- Kalender (alle Clubs, farbig, filterbar) ----------
-let kalClub='alle', kalWeek=0, kalClubs=[];
+let kalClub='alle', kalLevel='alle', kalWeek=0, kalClubs=[];
 function startOfWeekK(d,off=0){ const x=new Date(d); const day=(x.getDay()+6)%7; x.setDate(x.getDate()-day+off*7); x.setHours(0,0,0,0); return x; }
 function fmtTimeK(d){ return d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}); }
 function renderKalender(){
@@ -569,10 +570,13 @@ async function loadKalender(){
   const from=startOfWeekK(new Date(), kalWeek); const to=new Date(from); to.setDate(to.getDate()+7);
   const { data } = await sb.rpc('week_classes',{p_from:from.toISOString(),p_to:to.toISOString()});
   const all=data||[];
-  const list=(kalClub==='alle')?all:all.filter(c=>c.club===kalClub);
+  let list=(kalClub==='alle')?all:all.filter(c=>c.club===kalClub);
+  if(kalLevel!=='alle') list=list.filter(c=>c.level===kalLevel);
   const pills='<div class="kal-pills"><button class="kpill '+(kalClub==='alle'?'active':'')+'" onclick="setKalClub(\'alle\')">📅 Alle Clubs</button>'+
     kalClubs.map(c=>{const on=kalClub===c.slug; const col=c.color||'#2DD4BF';
       return `<button class="kpill ${on?'active':''}" style="${on?('background:'+col+';border-color:'+col+';color:#fff'):''}" onclick="setKalClub('${c.slug}')">${c.emoji||''} ${esc(c.name)}</button>`;}).join('')+'</div>';
+  const LEVELS=['alle','A2','B1/B2','B2/C1'];
+  const lvlPills='<div class="kal-pills kal-levels">'+LEVELS.map(l=>`<button class="kpill lvl ${kalLevel===l?'active':''}" onclick="setKalLevel('${l}')">${l==='alle'?'Alle Niveaus':l}</button>`).join('')+'</div>';
   let legend=''; if(kalClub==='alle'){ legend='<div class="cal-legend">'+kalClubs.map(c=>`<span class="lg"><span class="dot" style="background:${c.color||'#2DD4BF'}"></span>${esc(c.name)}</span>`).join('')+'</div>'; }
   const wc=`<div class="kal-week"><button onclick="kalWeekChange(-1)">←</button><span>${from.toLocaleDateString('de-DE',{day:'numeric',month:'short'})} – ${new Date(to-1).toLocaleDateString('de-DE',{day:'numeric',month:'short',year:'numeric'})}</span><button onclick="kalWeekChange(1)">→</button></div>`;
   let grid;
@@ -588,7 +592,7 @@ async function loadKalender(){
       return `<div class="cal-day">${head}${evs}</div>`;
     }).join('')+'</div>';
   }
-  document.getElementById('kalBody').innerHTML=pills+legend+wc+grid;
+  document.getElementById('kalBody').innerHTML=pills+lvlPills+legend+wc+grid;
 }
 function kalEv(c){
   const start=new Date(c.starts_at); const free=c.capacity-(c.booked||0); const past=start<new Date(); const color=c.club_color||'#2DD4BF';
@@ -598,7 +602,10 @@ function kalEv(c){
   else if(free<=0){ btn=`<span class="ev-btn off">ausgebucht</span>`; }
   else{ btn=`<button class="ev-btn book" onclick="kalBook('${c.id}')">Buchen · ${free} frei</button>`; }
   const matBtn = c.has_material ? `<button class="ev-btn mat" onclick="openClassMaterial('${c.id}')">📚 Material ansehen</button>` : '';
-  return `<div class="ev" style="--c:${color}"><div class="ev-top"><span class="ev-time">${fmtTimeK(start)}</span><span class="ev-club" style="background:${color}">${esc(c.club_name||'')}</span></div><div class="ev-title">${esc(c.title)}</div><div class="ev-meta">${esc(c.level)}${c.teacher_name?' · '+esc(c.teacher_name):''}</div>${btn}${matBtn}</div>`;
+  const fmt = (c.club==='sprechclub' && c.title) ? esc(c.title) : '';
+  const titleLine = esc(c.topic || c.title);
+  const meta = esc(c.level)+(fmt?' · '+fmt:'')+(c.teacher_name?' · '+esc(c.teacher_name):'');
+  return `<div class="ev" style="--c:${color}"><div class="ev-top"><span class="ev-time">${fmtTimeK(start)}</span><span class="ev-club" style="background:${color}">${esc(c.club_name||'')}</span></div><div class="ev-title">${titleLine}</div><div class="ev-meta">${meta}</div>${btn}${matBtn}</div>`;
 }
 async function openClassMaterial(classId){
   if(!isActive()){ toast('Material gibt es mit aktivem Guthaben — ich bring dich zu den Paketen 😊'); setTimeout(()=>{ location.href='live.html#pakete'; }, 900); return; }
@@ -626,6 +633,7 @@ async function openClassMaterial(classId){
   openModal(html);
 }
 function setKalClub(s){ kalClub=s; loadKalender(); }
+function setKalLevel(l){ kalLevel=l; loadKalender(); }
 function kalWeekChange(d){ kalWeek+=d; if(kalWeek<0)kalWeek=0; loadKalender(); }
 async function kalBook(id){
   if(credits<1){ toast('Du brauchst zuerst ein Paket — ich bring dich hin 😊'); setTimeout(()=>{ location.href='live.html#pakete'; }, 700); return; }
