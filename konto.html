@@ -235,7 +235,7 @@ h2.sec{margin:24px 0 12px;font-size:19px}
     <button class="navlink" data-view="amanda" onclick="go('amanda')"><span class="ic">🎤</span>Amanda</button>
     <button class="navlink" data-view="profil" onclick="go('profil')"><span class="ic">👤</span>Profil</button>
     <div class="side-foot">
-      <a class="navlink" href="live.html"><span class="ic">➕</span>Stunde buchen</a>
+      <a class="navlink" href="#" onclick="return bucheStunde(event)"><span class="ic">➕</span>Stunde buchen</a>
       <button class="navlink" onclick="logout()"><span class="ic">↩️</span>Abmelden</button>
     </div>
   </aside>
@@ -282,6 +282,7 @@ const _qp = new URLSearchParams(location.search);
 if (_qp.get('kauf')==='ok') document.getElementById('kaufOk').style.display='block';
 if (_qp.get('pass')==='ok'){ const k=document.getElementById('kaufOk'); k.textContent='🎉 Willkommen im All-Inclusive-Pass! 12 LIVE-Klassen pro Monat sind jetzt für dich freigeschaltet.'; k.style.display='block'; }
 function passActive(){ return profile.pass_until && new Date(profile.pass_until) > new Date(); }
+function bucheStunde(e){ if(e&&e.preventDefault)e.preventDefault(); if(credits>0||passActive()){ go('kalender'); } else { location.href='index.html#preise'; } return false; }
 
 function toast(t){ const el=document.getElementById('toast'); el.textContent=t; el.style.display='block'; clearTimeout(el._t); el._t=setTimeout(()=>el.style.display='none',3500); }
 function esc(s){ return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
@@ -471,7 +472,7 @@ function renderDashboard(){
       <button class="btn btn-ghost btn-sm" onclick="go('stunden')">Vorbereiten</button>
     </div>`;
   } else {
-    next=`<div class="next-hero"><div style="flex:1"><div class="when">Noch keine Stunde gebucht</div><div class="muted">Such dir im Stundenplan etwas Passendes aus.</div></div><a class="btn btn-primary" href="index.html#stundenplan">Stunde buchen</a></div>`;
+    next=`<div class="next-hero"><div style="flex:1"><div class="when">Noch keine Stunde gebucht</div><div class="muted">Such dir im Stundenplan etwas Passendes aus.</div></div><a class="btn btn-primary" href="#" onclick="return bucheStunde(event)">Stunde buchen</a></div>`;
   }
   document.getElementById('v-dashboard').innerHTML = `
     ${isActive()?'':lockBanner()}
@@ -479,7 +480,7 @@ function renderDashboard(){
       <div><h1>${greet}</h1><p class="muted">Schön, dass du übst. Bleib dran — Sprechen lernt man durch Sprechen. 💪</p></div>
       <div class="streak-chip">🔥 ${s.streak} ${s.streak===1?'Woche':'Wochen'} Streak</div>
     </div>
-    ${passActive()?`<div class="next-hero" style="background:linear-gradient(135deg,var(--turq),var(--turq-dark));color:#fff"><div style="flex:1"><div class="when" style="color:#fff">⭐ All-Inclusive-Pass aktiv</div><div style="color:rgba(255,255,255,.85);font-size:13px">12 LIVE-Klassen pro Monat · verlängert sich am ${fmtShort(new Date(profile.pass_until))}</div></div><a class="btn" style="background:#fff;color:var(--turq-dark)" href="index.html#stundenplan">Stunde buchen</a></div>`:''}
+    ${passActive()?`<div class="next-hero" style="background:linear-gradient(135deg,var(--turq),var(--turq-dark));color:#fff"><div style="flex:1"><div class="when" style="color:#fff">⭐ All-Inclusive-Pass aktiv</div><div style="color:rgba(255,255,255,.85);font-size:13px">12 LIVE-Klassen pro Monat · verlängert sich am ${fmtShort(new Date(profile.pass_until))}</div></div><a class="btn" style="background:#fff;color:var(--turq-dark)" href="#" onclick="return bucheStunde(event)">Stunde buchen</a></div>`:''}
     <div class="rankbar">
       <div class="top"><span class="rank">${s.rank.name} · ${s.points} Punkte</span>
         <span class="muted">${s.next?('noch '+(s.next.min-s.points)+' bis '+s.next.name):'Höchster Rang erreicht 🎉'}</span></div>
@@ -529,7 +530,7 @@ function renderLernpfad(){
       }).join('')}
     </div>
     <div class="card" style="margin-top:18px"><b>So funktioniert's</b><p class="muted" style="margin-top:5px">Dein aktuelles Niveau richtet sich nach den Stunden, die du buchst. Buch Stunden im nächsthöheren Niveau, wenn du dich bereit fühlst — frag Amanda oder deine Lehrerin, wenn du unsicher bist.</p>
-      <a class="btn btn-primary btn-sm" style="margin-top:10px" href="index.html#stundenplan">Stunden ansehen</a></div>`;
+      <a class="btn btn-primary btn-sm" style="margin-top:10px" href="#" onclick="go('kalender');return false">Stunden ansehen</a></div>`;
 }
 
 // ---------- Meine Stunden ----------
