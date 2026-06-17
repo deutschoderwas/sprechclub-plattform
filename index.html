@@ -173,6 +173,39 @@ footer .small{color:#9a9a9a;font-size:13px;margin-top:10px}
   .courses .c-grid{grid-template-columns:1fr;gap:26px}
   .nav-menu a.link{display:none}
 }
+
+/* === Animierter LIVE-Call-Hero === */
+.hero-call{position:relative;width:100%;max-width:520px;margin:14px auto 26px;perspective:1200px}
+.call-stage{position:relative;transform-style:preserve-3d;transition:transform .25s ease-out;will-change:transform}
+.call-frame{position:relative;border-radius:22px;overflow:hidden;border:5px solid #fff;box-shadow:0 32px 70px rgba(0,0,0,.26);background:#111;transform-style:preserve-3d;animation:callFloat 6.5s ease-in-out infinite}
+.call-frame img{display:block;width:100%;height:auto}
+@keyframes callFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+.call-live{position:absolute;top:12px;left:12px;z-index:5;display:inline-flex;align-items:center;gap:7px;background:rgba(17,17,17,.78);color:#fff;font-weight:800;font-size:12px;letter-spacing:.05em;padding:6px 12px;border-radius:30px;backdrop-filter:blur(4px)}
+.call-live .rec{width:8px;height:8px;border-radius:50%;background:#ff3b3b;animation:rec 1.4s infinite}
+@keyframes rec{0%{box-shadow:0 0 0 0 rgba(255,59,59,.55)}70%{box-shadow:0 0 0 9px rgba(255,59,59,0)}100%{box-shadow:0 0 0 0 rgba(255,59,59,0)}}
+.hero-call .sb{position:absolute;z-index:7;background:#fff;color:#1A1A1A;font-size:13px;font-weight:600;line-height:1.2;padding:8px 12px;border-radius:14px;box-shadow:0 12px 28px rgba(0,0,0,.17);white-space:nowrap;opacity:0;transform:translateZ(45px);animation:sbPop .55s ease-out forwards}
+.hero-call .sb b{color:var(--primary)}
+.hero-call .sb::after{content:'';position:absolute;width:12px;height:12px;background:inherit;transform:rotate(45deg)}
+.hero-call .sb.tl{top:-16px;left:-6px;animation-delay:.4s}
+.hero-call .sb.tc{top:-24px;left:40%;animation-delay:.9s}
+.hero-call .sb.tr{top:-12px;right:-4px;animation-delay:1.4s}
+.hero-call .sb.bc{bottom:-20px;left:42%;animation-delay:1.9s}
+.hero-call .sb.br{bottom:30px;right:-20px;animation-delay:2.4s}
+.hero-call .sb.tl::after,.hero-call .sb.tc::after,.hero-call .sb.tr::after{bottom:-5px}
+.hero-call .sb.tl::after{left:22px}.hero-call .sb.tc::after{left:28px}.hero-call .sb.tr::after{right:22px}
+.hero-call .sb.bc::after,.hero-call .sb.br::after{top:-5px}
+.hero-call .sb.bc::after{left:28px}.hero-call .sb.br::after{right:26px}
+/* Lehrerin / Host */
+.call-teacher{position:absolute;left:-22px;bottom:-30px;z-index:8;display:flex;flex-direction:column;align-items:center;transform:translateZ(80px)}
+.call-teacher img{width:94px;height:94px;border-radius:50%;object-fit:cover;object-position:50% 26%;border:4px solid #fff;box-shadow:0 16px 34px rgba(45,212,191,.5);outline:3px solid var(--turq);outline-offset:2px}
+.call-teacher .tag{margin-top:-11px;background:var(--turq);color:#fff;font-size:11px;font-weight:800;padding:3px 11px;border-radius:20px;box-shadow:0 8px 18px rgba(0,0,0,.2);white-space:nowrap}
+.hero-call .sb.teacher{left:64px;bottom:60px;background:var(--turq);color:#fff;animation-delay:.15s;font-weight:700}
+.hero-call .sb.teacher::after{background:var(--turq);bottom:auto;top:auto;left:-5px;bottom:12px}
+@keyframes sbPop{0%{opacity:0;transform:translateZ(45px) translateY(8px) scale(.7)}60%{opacity:1;transform:translateZ(45px) translateY(0) scale(1.05)}100%{opacity:1;transform:translateZ(45px) scale(1)}}
+@media(max-width:860px){.hero-call{order:-1}}
+@media(max-width:560px){.hero-call .sb.tc,.hero-call .sb.bc{display:none}.hero-call .sb{font-size:11px;padding:6px 9px}.call-teacher img{width:78px;height:78px}}
+@media(prefers-reduced-motion:reduce){.call-frame{animation:none}.hero-call .sb{animation:none;opacity:1}}
+
 </style>
 </head>
 <body>
@@ -206,16 +239,26 @@ footer .small{color:#9a9a9a;font-size:13px;margin-top:10px}
       <div class="hero-stats">
         <div class="stat"><span class="stars">★★★★★</span><small>Schüler aus 20+ Ländern</small></div>
         <div class="stat"><b>5–6</b><small>max. pro Gruppe</small></div>
-        <div class="stat"><b>A1–C2</b><small>alle Niveaus</small></div>
+        <div class="stat"><b>A2–C1</b><small>alle Niveaus</small></div>
       </div>
     </div>
-    <div class="hero-photo-wrap">
-      <img src="logo.PNG" alt="deutschoderwas club" class="hero-logo" onerror="this.style.display='none'">
-      <div class="photo-badge top"><span>👋</span> „Hallo, ich bin Julia!"</div>
-      <div class="hero-photo-frame">
-        <img src="Julia.png" alt="Julia — deine Lehrerin im deutschoderwas club">
+    <div class="hero-call" id="heroCall">
+      <div class="call-stage" id="callStage">
+        <div class="call-frame">
+          <span class="call-live"><span class="rec"></span> LIVE</span>
+          <img src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260617_091026_c2a230a8-7414-4155-8548-d6e339826c22.png" alt="LIVE-Gruppenstunde im deutschoderwas club">
+        </div>
+        <div class="sb tl">„Ich übe jeden Tag."</div>
+        <div class="sb tc">„Endlich rede ich <b>frei</b>!"</div>
+        <div class="sb tr">„Das macht Spaß!"</div>
+        <div class="sb bc">„Ich liebe den Club."</div>
+        <div class="sb br">„Ich hab eine Frage…"</div>
+        <div class="sb teacher">„Hallo, ich bin Julia!" 👋</div>
+        <div class="call-teacher">
+          <img src="Julia.png" alt="Julia — deine Lehrerin" onerror="this.src='logo.PNG'">
+          <span class="tag">Julia · Lehrerin</span>
+        </div>
       </div>
-      <div class="photo-badge bottom"><span class="dot"></span> max. 5–6 pro Gruppe</div>
     </div>
   </div>
 </header>
@@ -535,6 +578,23 @@ async function doForgot(){
   authMsg(true,'✓ Link zum Zurücksetzen verschickt — schau in dein Postfach.');
 }
 initHome();
+</script>
+
+<script>
+(function(){
+  var call=document.getElementById('heroCall'), stage=document.getElementById('callStage');
+  if(!call||!stage||window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var raf=null;
+  call.addEventListener('mousemove',function(e){
+    var r=call.getBoundingClientRect();
+    var px=(e.clientX-r.left)/r.width-0.5, py=(e.clientY-r.top)/r.height-0.5;
+    if(raf) cancelAnimationFrame(raf);
+    raf=requestAnimationFrame(function(){
+      stage.style.transform='rotateY('+(px*11).toFixed(2)+'deg) rotateX('+(-py*11).toFixed(2)+'deg)';
+    });
+  });
+  call.addEventListener('mouseleave',function(){ stage.style.transform='rotateY(0deg) rotateX(0deg)'; });
+})();
 </script>
 </body>
 </html>
