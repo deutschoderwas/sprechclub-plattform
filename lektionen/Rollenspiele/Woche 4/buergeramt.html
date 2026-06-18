@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Auf dem Bürgeramt · A2–C1 | deutschoderwas Sprechclub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#FDF6EC;--cream-warm:#FBEDD8;--paper:#FFFFFF;--ink:#262019;--ink-soft:#5C4E3E;--ink-mute:#A8957D;
+  --red:#E8302A;--red-soft:#FCE5E3;--navy:#21456E;--navy-soft:#E3EBF4;--teal:#0FB5A6;--teal-soft:#D7F0EC;--yellow:#FFD24A;--yellow-soft:#FFF1C2;--sand:#E7DEC8;
+  --radius:18px;--shadow:0 10px 30px rgba(33,38,52,.10);--font-head:'Fraunces',Georgia,serif;--font-body:'Outfit','Segoe UI',system-ui,sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:linear-gradient(180deg,#E8EEF5 0%,var(--cream) 16%,var(--cream) 100%);color:var(--ink);font-family:var(--font-body);line-height:1.55;min-height:100vh;-webkit-font-smoothing:antialiased;}
+.wrapper{max-width:820px;margin:0 auto;padding:2.4rem 1.4rem 4.5rem;}
+.eyebrow{text-align:center;font-size:.78rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--navy);margin-bottom:.9rem;}
+.title-wrap{text-align:center;margin-bottom:1rem;}
+h1.title{font-family:var(--font-head);font-weight:600;font-size:clamp(1.9rem,4.5vw,3.4rem);line-height:1.06;}
+h1.title .hl{position:relative;display:inline-block;color:var(--navy);}
+h1.title .hl::after{content:"";position:absolute;left:-2px;right:-2px;bottom:.06em;height:.26em;background:var(--navy-soft);opacity:.9;z-index:-1;border-radius:3px;}
+.subtitle{text-align:center;max-width:560px;margin:.9rem auto 1.1rem;color:var(--ink-soft);font-size:1.04rem;}
+.hero-media{display:block;width:100%;max-width:700px;margin:1.2rem auto 0;border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--sand);}
+.scene{display:block;width:100%;border-radius:14px;margin:.2rem 0 1rem;border:1px solid var(--sand);}
+.lvlbar{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;align-items:center;margin:1.3rem auto 0;}
+.lvlbar .lbl{font-size:.85rem;color:var(--ink-soft);margin-right:.2rem;}
+.lvlbtn{border:2px solid var(--sand);background:var(--paper);color:var(--ink-soft);font-weight:700;font-size:.85rem;padding:.45rem 1rem;border-radius:999px;cursor:pointer;font-family:var(--font-body);}
+.lvlbtn.active{background:var(--navy);border-color:var(--navy);color:#fff;}
+.lvl{display:none;}
+body.show-a2 .lvl-a2,body.show-b1 .lvl-b1,body.show-c1 .lvl-c1{display:block;}
+.lvl-note{display:inline-block;font-size:.7rem;font-weight:700;color:#15324f;background:var(--navy-soft);padding:2px 9px;border-radius:999px;margin-bottom:.5rem;}
+.vx-b1,.vx-c1{display:none;}
+body.show-b1 .vx-b1,body.show-c1 .vx-b1,body.show-c1 .vx-c1{display:block;}
+.lvlcount{font-size:.8rem;color:var(--ink-mute);margin-top:.5rem;}
+nav.tabs{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;padding:.7rem .5rem;margin:1.3rem 0 2rem;background:rgba(247,249,252,.93);backdrop-filter:blur(8px);border:1px solid var(--sand);border-radius:999px;}
+nav.tabs a{font-size:.82rem;font-weight:600;color:var(--ink-soft);text-decoration:none;padding:.4rem .8rem;border-radius:999px;}
+nav.tabs a:hover{background:var(--navy-soft);}
+nav.tabs a.active{background:var(--navy);color:#fff;}
+section.block{background:var(--paper);border:1px solid var(--sand);border-radius:var(--radius);padding:1.6rem;margin-bottom:1.4rem;box-shadow:var(--shadow);scroll-margin-top:5rem;}
+.block.alt{background:#F3F6FA;}
+.block-head{font-family:var(--font-head);font-weight:600;font-size:clamp(1.25rem,3vw,1.7rem);margin-bottom:.4rem;}
+.block-head .hl{color:var(--navy);font-style:italic;}
+.block-intro{color:var(--ink-soft);margin-bottom:1rem;}
+.note{border-radius:14px;padding:.85rem 1rem;margin:.9rem 0;font-size:.95rem;}
+.note.tip{background:var(--navy-soft);border-left:4px solid var(--navy);}
+.grid{display:grid;gap:.8rem;}
+.grid.g3{grid-template-columns:repeat(auto-fit,minmax(170px,1fr));}
+.vocab{background:#F7F9FC;border:1px solid var(--sand);border-radius:14px;padding:.8rem .9rem;}
+.vocab .emoji{font-size:1.4rem;display:block;margin-bottom:.2rem;}
+.vocab .term{font-weight:700;color:var(--ink);font-size:.98rem;}
+.vocab .gloss{font-size:.86rem;color:var(--ink-soft);}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.8rem;}
+.fcard{height:150px;cursor:pointer;perspective:1000px;}
+.fc-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.fcard.flip .fc-inner{transform:rotateY(180deg);}
+.fc-front,.fc-back{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border:1px solid var(--sand);border-radius:14px;padding:.9rem;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;}
+.fc-front{background:#F7F9FC;}
+.fc-back{background:var(--navy-soft);transform:rotateY(180deg);font-style:italic;color:#15324f;font-size:.92rem;line-height:1.45;}
+.fc-front b{font-size:1.1rem;}
+.fc-flip-hint{font-size:.7rem;color:var(--ink-mute);margin-top:.4rem;}
+.dialog{background:#F7F9FC;border:1px solid var(--sand);border-radius:14px;padding:1rem 1.1rem;margin:.7rem 0;}
+.dialog .turn{display:flex;gap:.55rem;margin:.45rem 0;}
+.dialog .who{font-weight:700;min-width:30px;flex-shrink:0;color:var(--teal);}
+.dialog .who.b{color:var(--navy);}
+.dialog .line{flex:1;}
+.key{background:var(--yellow-soft);border-radius:4px;padding:0 3px;font-weight:600;box-decoration-break:clone;}
+.dialog.motion .turn{opacity:0;transform:translateY(10px);}
+.dialog.motion .turn.show{opacity:1;transform:none;transition:opacity .4s ease,transform .4s ease;}
+.sitbar{display:flex;flex-wrap:wrap;gap:.4rem;margin:.2rem 0 .8rem;}
+.sitbtn{border:2px solid var(--sand);background:var(--paper);color:var(--ink-soft);font-weight:600;font-size:.82rem;padding:.35rem .85rem;border-radius:999px;cursor:pointer;font-family:var(--font-body);}
+.sitbtn.active{background:var(--navy);border-color:var(--navy);color:#fff;}
+.sit{display:none;}
+.sit.on{display:block;}
+.sit-title{font-family:var(--font-head);font-weight:600;font-size:1.05rem;margin:.1rem 0 .5rem;color:var(--ink);}
+.takeaway{background:var(--navy-soft);border-radius:12px;padding:.85rem 1rem;margin-top:.7rem;font-size:.94rem;}
+.takeaway b{color:#15324f;}
+.btn{display:inline-block;background:var(--navy);color:#fff;font-weight:700;border:none;border-radius:999px;padding:.55rem 1.2rem;cursor:pointer;font-family:var(--font-body);font-size:.95rem;}
+.btn.dark{background:var(--ink);color:var(--cream);}
+.sprechhilfe{background:var(--yellow-soft);border:1px dashed var(--yellow);border-radius:14px;padding:1rem 1.1rem;margin:.8rem 0 .2rem;}
+.sprechhilfe h4{font-family:var(--font-head);font-weight:600;margin-bottom:.4rem;font-size:1.05rem;}
+.frame{margin:.3rem 0;font-size:1rem;}
+.frame .blank{display:inline-block;min-width:90px;border-bottom:2px solid var(--navy);vertical-align:bottom;}
+.bank{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.5rem;}
+.bank .chip{background:var(--navy-soft);color:#15324f;font-size:.85rem;font-weight:600;padding:.25rem .7rem;border-radius:999px;}
+.rp{border:1px solid var(--sand);border-radius:14px;margin-bottom:.7rem;background:#F7F9FC;overflow:hidden;}
+.rp .body{padding:1rem 1.1rem;font-size:.95rem;}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem;margin:.5rem 0;}
+.chip{background:var(--navy-soft);color:#15324f;font-size:.82rem;font-weight:600;padding:.25rem .6rem;border-radius:999px;}
+.success{background:var(--yellow-soft);border-radius:10px;padding:.55rem .8rem;font-size:.88rem;margin-top:.5rem;}
+.qq{background:#F7F9FC;border:1px solid var(--sand);border-radius:14px;padding:1rem 1.1rem;margin-bottom:.8rem;}
+.qtext{font-weight:600;margin-bottom:.5rem;}
+.qopt{display:block;width:100%;text-align:left;background:var(--paper);border:1px solid var(--sand);border-radius:10px;padding:.6rem .8rem;margin:.35rem 0;cursor:pointer;font-family:var(--font-body);font-size:.95rem;}
+.qopt:hover{background:var(--navy-soft);}
+.qopt.right{background:var(--navy-soft);border-color:var(--navy);font-weight:600;color:#15324f;}
+.qopt.wrong{background:var(--red-soft);border-color:var(--red);}
+.qfb{font-size:.9rem;font-weight:600;margin-top:.4rem;color:var(--ink-soft);}
+.speak{text-align:center;}
+.speak .card{background:#F7F9FC;border:1px solid var(--sand);border-radius:16px;padding:1.4rem 1.1rem;min-height:110px;display:flex;align-items:center;justify-content:center;font-size:1.08rem;font-weight:600;font-family:var(--font-head);}
+.speak .card .ph{color:var(--ink-mute);font-family:var(--font-body);font-weight:400;}
+section.mission{background:var(--navy);color:#fff;border-radius:var(--radius);padding:1.4rem 1.5rem;}
+section.mission p{color:#fff;}
+.mission .block-head{color:#fff;}
+.mission .bonus{background:rgba(255,255,255,.10);border-radius:10px;padding:.55rem .8rem;margin-top:.5rem;font-size:.92rem;}
+footer{text-align:center;color:var(--ink-mute);font-size:.84rem;margin-top:1.8rem;}
+footer .mark{font-family:var(--font-head);font-weight:600;color:var(--ink);font-size:1rem;}
+footer .mark .t{color:var(--teal);}
+@media(max-width:560px){.grid.g3{grid-template-columns:1fr 1fr;}}
+</style>
+</head>
+<body class="show-b1">
+<div class="wrapper">
+  <div class="eyebrow">deutschoderwas · Sprechclub · Rollenspiele & Situatives Lernen</div>
+  <div class="title-wrap">
+    <h1 class="title">Auf dem <span class="hl">Bürgeramt</span></h1>
+    <p class="subtitle">Sich anmelden, Formulare verstehen und Anträge stellen — sachlich, höflich und sicher auf dem Amt, passend zu deinem Niveau.</p>
+    <div class="lvlbar">
+      <span class="lbl">Dein Niveau:</span>
+      <button class="lvlbtn" data-lvl="a2" onclick="setLevel('a2')">A2</button>
+      <button class="lvlbtn active" data-lvl="b1" onclick="setLevel('b1')">B1/B2</button>
+      <button class="lvlbtn" data-lvl="c1" onclick="setLevel('c1')">B2/C1</button>
+    </div>
+  </div>
+  <video class="hero-media" id="heroMedia" autoplay muted loop playsinline poster="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260618_102241_4e07bf26-51a5-4fe3-941f-b7faa5aa8392.png">
+    <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260618_102624_8eeb5344-5858-4607-9ef1-16cc67d767f5.mp4" type="video/mp4">
+  </video>
+
+  <nav class="tabs">
+    <a href="#aufwaermen">📋 Aufwärmen</a>
+    <a href="#wortschatz">🧠 Wortschatz</a>
+    <a href="#lernkarten">🃏 Lernkarten</a>
+    <a href="#dialog">💬 Dialog</a>
+    <a href="#check">✅ Check</a>
+    <a href="#rollenspiel">🎭 Rollenspiel</a>
+    <a href="#sprechen">🗣️ Sprechen</a>
+    <a href="#mission">🎯 Mission</a>
+  </nav>
+
+  <section class="block" id="aufwaermen">
+    <h2 class="block-head">Zum <span class="hl">Aufwärmen</span></h2>
+    <p><strong>Stell dir vor:</strong> Du bist gerade umgezogen und musst dich beim Bürgeramt anmelden. Sprich kurz: Welche Behördengänge hast du in Deutschland schon gemacht? Was war leicht, was schwierig?</p>
+    <div class="note tip"><strong>📌 Heute lernst du:</strong> einen Termin machen · dich an-/ummelden · Formulare und Anträge verstehen. Oben kannst du dein <strong>Niveau</strong> wählen.</div>
+  </section>
+
+  <section class="block" id="wortschatz">
+    <h2 class="block-head">Amts-<span class="hl">Wortschatz</span></h2>
+    <p class="block-intro">Je höher dein Niveau, desto mehr Wörter.</p>
+    <div class="grid g3">
+      <div class="vocab"><span class="emoji">🏛️</span><div class="term">das Bürgeramt</div><div class="gloss">Amt für Anmeldung & Ausweise</div></div>
+      <div class="vocab"><span class="emoji">📅</span><div class="term">der Termin</div><div class="gloss">vereinbarte Uhrzeit</div></div>
+      <div class="vocab"><span class="emoji">📄</span><div class="term">das Formular</div><div class="gloss">Vordruck zum Ausfüllen</div></div>
+      <div class="vocab"><span class="emoji">🪪</span><div class="term">der Ausweis</div><div class="gloss">Personalausweis</div></div>
+      <div class="vocab"><span class="emoji">✍️</span><div class="term">anmelden</div><div class="gloss">Adresse offiziell registrieren</div></div>
+      <div class="vocab"><span class="emoji">🖊️</span><div class="term">die Unterschrift</div><div class="gloss">mit dem Namen unterzeichnen</div></div>
+      <div class="vocab vx-b1"><span class="emoji">📑</span><div class="term">die Meldebescheinigung</div><div class="gloss">Nachweis über den Wohnort</div></div>
+      <div class="vocab vx-b1"><span class="emoji">🔁</span><div class="term">sich ummelden</div><div class="gloss">neue Adresse melden</div></div>
+      <div class="vocab vx-b1"><span class="emoji">🛂</span><div class="term">der Reisepass</div><div class="gloss">Dokument für Auslandsreisen</div></div>
+      <div class="vocab vx-b1"><span class="emoji">💶</span><div class="term">die Gebühr</div><div class="gloss">Betrag für eine Amtsleistung</div></div>
+      <div class="vocab vx-c1"><span class="emoji">🗂️</span><div class="term">der Antrag</div><div class="gloss">offizielles Gesuch („Antrag stellen")</div></div>
+      <div class="vocab vx-c1"><span class="emoji">🏷️</span><div class="term">die Aufenthaltserlaubnis</div><div class="gloss">Erlaubnis, hier zu leben</div></div>
+      <div class="vocab vx-c1"><span class="emoji">✅</span><div class="term">die Beglaubigung</div><div class="gloss">amtliche Bestätigung der Echtheit</div></div>
+      <div class="vocab vx-c1"><span class="emoji">📌</span><div class="term">zuständig sein</div><div class="gloss">verantwortlich (welche Behörde?)</div></div>
+    </div>
+    <p class="lvlcount"><span class="lvl lvl-a2" style="display:inline">A2: 6 Kernwörter.</span><span class="lvl lvl-b1" style="display:inline">B1/B2: 10 Wörter.</span><span class="lvl lvl-c1" style="display:inline">B2/C1: 14 Wörter inkl. Amtssprache.</span></p>
+  </section>
+
+  <section class="block alt" id="lernkarten">
+    <h2 class="block-head">Lern<span class="hl">karten</span></h2>
+    <p class="block-intro">Wort vorne, Beispielsatz hinten — tippe zum Umdrehen.</p>
+    <div class="cards">
+      <div class="fcard" onclick="this.classList.toggle('flip')"><div class="fc-inner"><div class="fc-front"><b>der Termin</b><span class="fc-flip-hint">umdrehen →</span></div><div class="fc-back">„Ich habe einen Termin um 10 Uhr zur Anmeldung."</div></div></div>
+      <div class="fcard" onclick="this.classList.toggle('flip')"><div class="fc-inner"><div class="fc-front"><b>das Formular</b><span class="fc-flip-hint">umdrehen →</span></div><div class="fc-back">„Bitte füllen Sie dieses Formular aus."</div></div></div>
+      <div class="fcard" onclick="this.classList.toggle('flip')"><div class="fc-inner"><div class="fc-front"><b>anmelden</b><span class="fc-flip-hint">umdrehen →</span></div><div class="fc-back">„Ich möchte mich an meiner neuen Adresse anmelden."</div></div></div>
+      <div class="fcard" onclick="this.classList.toggle('flip')"><div class="fc-inner"><div class="fc-front"><b>die Unterschrift</b><span class="fc-flip-hint">umdrehen →</span></div><div class="fc-back">„Hier brauche ich noch Ihre Unterschrift."</div></div></div>
+      <div class="fcard" onclick="this.classList.toggle('flip')"><div class="fc-inner"><div class="fc-front"><b>die Meldebescheinigung</b><span class="fc-flip-hint">umdrehen →</span></div><div class="fc-back">„Sie erhalten gleich Ihre Meldebescheinigung."</div></div></div>
+      <div class="fcard" onclick="this.classList.toggle('flip')"><div class="fc-inner"><div class="fc-front"><b>die Gebühr</b><span class="fc-flip-hint">umdrehen →</span></div><div class="fc-back">„Die Gebühr beträgt 37 Euro."</div></div></div>
+      <div class="fcard" onclick="this.classList.toggle('flip')"><div class="fc-inner"><div class="fc-front"><b>der Antrag</b><span class="fc-flip-hint">umdrehen →</span></div><div class="fc-back">„Ich möchte einen Antrag auf einen Personalausweis stellen."</div></div></div>
+      <div class="fcard" onclick="this.classList.toggle('flip')"><div class="fc-inner"><div class="fc-front"><b>zuständig sein</b><span class="fc-flip-hint">umdrehen →</span></div><div class="fc-back">„Dafür ist ein anderes Amt zuständig."</div></div></div>
+    </div>
+  </section>
+
+  <section class="block" id="dialog">
+    <h2 class="block-head">Beispiel<span class="hl">dialoge</span></h2>
+    <p class="block-intro">Klick oben eine <strong>Situation</strong> an — jede hat einen eigenen Dialog. Die <span class="key">gelben Sätze</span> sind die wichtigsten. Alles passt sich deinem Niveau an.</p>
+
+    <div class="lvl lvl-a2">
+      <span class="lvl-note">A2 · einfach & kurz</span>
+      <div class="sitbar">
+        <button class="sitbtn active" onclick="setSit(this,0)">🏠 Anmelden</button>
+        <button class="sitbtn" onclick="setSit(this,1)">🪪 Ausweis abholen</button>
+        <button class="sitbtn" onclick="setSit(this,2)">🎫 Nummer ziehen</button>
+      </div>
+      <div class="sit on" data-i="0">
+        <div class="sit-title">🏠 Neue Wohnung anmelden</div>
+        <img class="scene" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260618_102225_7547c139-a281-4cef-bfcd-f1f145df2b14.png" alt="Bürger füllt ein Formular am Schalter aus">
+        <div class="dialog">
+          <div class="turn"><span class="who">S:</span><span class="line">Guten Tag, was kann ich für Sie tun?</span></div>
+          <div class="turn"><span class="who b">B:</span><span class="line"><span class="key">Ich möchte mich anmelden.</span> Ich habe eine neue Wohnung.</span></div>
+          <div class="turn"><span class="who">S:</span><span class="line">Haben Sie das Formular?</span></div>
+          <div class="turn"><span class="who b">B:</span><span class="line"><span class="key">Ja, hier bitte.</span></span></div>
+          <div class="turn"><span class="who">S:</span><span class="line">Gut. Und Ihren Ausweis, bitte.</span></div>
+          <div class="turn"><span class="who b">B:</span><span class="line">Bitte schön.</span></div>
+          <div class="turn"><span class="who">S:</span><span class="line">Unterschreiben Sie hier. … Hier ist Ihre Meldebescheinigung.</span></div>
+          <div class="turn"><span class="who b">B:</span><span class="line">Vielen Dank!</span></div>
+        </div>
+        <div style="text-align:center;margin:.2rem 0 .6rem"><button class="btn" onclick="playDialog(this.closest('.sit').querySelector('.dialog'))">▶ Dialog abspielen</button></div>
+        <div class="takeaway"><b>Merke:</b> Anliegen nennen → Formular &amp; Ausweis vorlegen → unterschreiben.</div>
+      </div>
+      <div class="sit" data-i="1">
+        <div class="sit-title">🪪 Personalausweis abholen</div>
+        <img class="scene" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260618_102242_0ef51f63-ad58-466b-9fa0-e597d02762bf.jpeg" alt="Sachbearbeiter übergibt ein Dokument">
+        <div class="dialog">
+          <div class="turn"><span class="who">S:</span><span class="line">Guten Tag, was kann ich für Sie tun?</span></div>
+          <div class="turn"><span class="who b">B:</span><span class="line"><span class="key">Ich möchte meinen Personalausweis abholen.</span></span></div>
+          <div class="turn"><span class="who">S:</span><span class="line">Haben Sie die Abholkarte?</span></div>
+          <div class="turn"><span class="who b">B:</span><span class="line"><span class="key">Ja, hier bitte.</span></span></div>
+          <div class="turn"><span class="who">S:</span><span class="line">Und Ihren alten Ausweis, bitte.</span></div>
+          <div class="turn"><span class="who b">B:</span><span class="line">Bitte schön.</span></div>
+          <div class="turn"><span class="who">S:</span><span class="line">Danke. Hier ist Ihr neuer Ausweis.</span></div>
+          <div class="turn"><span class="who b">B:</span><span class="line">Super, vielen Dank!</span></div>
+        </div>
+        <div style="text-align:center;margin:.2rem 0 .6rem"><button class="btn" onclick="playDialog(this.closest('.sit').querySelector('.dialog'))">▶ Dialog abspielen</button></div>
+        <div class="takeaway"><b>Merke:</b> Anliegen nennen → Abholkarte &amp; alten Ausweis vorlegen → neuen Ausweis erhalten.</div>
+      </div>
+      <div class="sit" data-i="2">
+        <div class="sit-title">🎫 Nummer ziehen &amp; warten</div>
+        <img class="scene" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260618_102256_7f5d541b-defe-4c8c-8001-86688984dd72.jpeg" alt="Wartebereich im Amt mit Nummernanzeige">
+        <div class="dialog">
+          <div class="turn"><span class="who">S:</span><span class="line">Guten Tag, wie kann ich helfen?</span></div>
+          <div class="turn"><span class="who b">B:</span><span class="line"><span class="key">Ich brauche eine Meldebescheinigung. Bin ich hier richtig?</span></span></div>
+          <div class="turn"><span class="who">S:</span><span class="line">Ja, genau. Haben Sie einen Termin?</span></div>
+          <div class="turn"><span class="who b">B:</span><span class="line">Nein, leider nicht.</span></div>
+          <div class="turn"><span class="who">S:</span><span class="line">Kein Problem. Ziehen Sie bitte eine Nummer und warten Sie kurz.</span></div>
+          <div class="turn"><span class="who b">B:</span><span class="line"><span class="key">Wo ziehe ich die Nummer?</span></span></div>
+          <div class="turn"><span class="who">S:</span><span class="line">Am Automaten dort rechts.</span></div>
+          <div class="turn"><span class="who b">B:</span><span class="line">Danke schön!</span></div>
+        </div>
+        <div style="text-align:center;margin:.2rem 0 .6rem"><button class="btn" onclick="playDialog(this.closest('.sit').querySelector('.dialog'))">▶ Dialog abspielen</button></div>
+        <div class="takeaway"><b>Merke:</b> fragen, ob man richtig ist → Termin/Nummer klären → nach dem Automaten fragen.</div>
+      </div>
+    </div>
+
+    <div class="lvl lvl-b1">
+      <span class="lvl-note">B1/B2 · Anträge &amp; Unterlagen</span>
+      <div class="sitbar">
+        <button class="sitbtn active" onclick="setSit(this,0)">📦 Ummelden</button>
+        <button class="sitbtn" onclick="setSit(this,1)">🛂 Reisepass</button>
+        <button class="sitbtn" onclick="setSit(this,2)">📄 Führungszeugnis</button>
+      </div>
+      <div class="sit on" data-i="0">
+        <div class="sit-title">📦 Ummelden &amp; neuer Ausweis</div>
+        <img class="scene" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260618_102242_0ef51f63-ad58-466b-9fa0-e597d02762bf.jpeg" alt="Sachbearbeiter übergibt ein Dokument">
+        <div class="dialog">
+          <div class="turn"><span class="who">S:</span><span class="line">Guten Tag, womit kann ich Ihnen helfen?</span></div>
+          <div class="turn"><span class="who b">B:</span><span class="line"><span class="key">Ich bin umgezogen und möchte mich ummelden.</span></span></div>
+          <div class="turn"><span class="who">S:</span><span class="line">Haben Sie die Wohnungsgeberbestätigung dabei?</span></div>
+          <div class="turn"><span class="who b">B:</span><span class="line">Ja, und meinen Ausweis.</span></div>
+          <div class="turn"><span class="who">S:</span><span class="line">Sehr gut. Füllen Sie bitte dieses Formular aus und unterschreiben Sie unten.</span></div>
+          <div class="turn"><span class="who b">B:</span><span class="line"><span class="key">Brauche ich auch einen Termin für einen neuen Personalausweis?</span></span></div>
+          <div class="turn"><span class="who">S:</span><span class="line">Das können wir gleich miterledigen. Möchten Sie das?</span></div>
+          <div class="turn"><span class="who b">B:</span><span class="line">Ja, gern. <span class="key">Wie lange dauert die Bearbeitung?</span></span></div>
+          <div class="turn"><span class="who">S:</span><span class="line">Etwa zwei bis drei Wochen.</span></div>
+        </div>
+        <div style="text-align:center;margin:.2rem 0 .6rem"><button class="btn" onclick="playDialog(this.closest('.sit').querySelector('.dialog'))">▶ Dialog abspielen</button></div>
+        <div class="takeaway"><b>Merke:</b> Anliegen + Unterlagen nennen → Zusatzfrage stellen → nach der Bearbeitungsdauer fragen.</div>
+      </div>
+      <div class="sit" data-i="1">
+        <div class="sit-title">🛂 Reisepass beantragen</div>
+        <img class="scene" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260618_102225_7547c139-a281-4cef-bfcd-f1f145df2b14.png" alt="Antrag am Schalter">
+        <div class="dialog">
+          <div class="turn"><span class="who">S:</span><span class="line">Guten Tag, womit kann ich Ihnen helfen?</span></div>
+          <div class="turn"><span class="who b">B:</span><span class="line"><span class="key">Ich möchte einen Reisepass beantragen.</span></span></div>
+          <div class="turn"><span class="who">S:</span><span class="line">Bringen Sie bitte ein biometrisches Passfoto und Ihren Personalausweis.</span></div>
+          <div class="turn"><span class="who b">B:</span><span class="line">Das habe ich dabei. <span class="key">Was kostet der Pass?</span></span></div>
+          <div class="turn"><span class="who">S:</span><span class="line">Für Erwachsene 70 Euro, der Express-Pass kostet mehr.</span></div>
+          <div class="turn"><span class="who b">B:</span><span class="line"><span class="key">Wie lange dauert die Ausstellung?</span></span></div>
+          <div class="turn"><span class="who">S:</span><span class="line">Normalerweise drei bis vier Wochen.</span></div>
+          <div class="turn"><span class="who b">B:</span><span class="line">Gut, dann beantrage ich den normalen. Danke!</span></div>
+        </div>
+        <div style="text-align:center;margin:.2rem 0 .6rem"><button class="btn" onclick="playDialog(this.closest('.sit').querySelector('.dialog'))">▶ Dialog abspielen</button></div>
+        <div class="takeaway"><b>Merke:</b> Anliegen nennen → nach Unterlagen, Kosten &amp; Dauer fragen → Variante wählen.</div>
+      </div>
+      <div class="sit" data-i="2">
+        <div class="sit-title">📄 Führungszeugnis für die Bewerbung</div>
+        <img class="scene" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260618_102256_7f5d541b-defe-4c8c-8001-86688984dd72.jpeg" alt="Im Amt am Schalter">
+        <div class="dialog">
+          <div class="turn"><span class="who">S:</span><span class="line">Guten Tag, was kann ich für Sie tun?</span></div>
+          <div class="turn"><span class="who b">B:</span><span class="line"><span class="key">Ich brauche ein Führungszeugnis für eine Bewerbung.</span></span></div>
+          <div class="turn"><span class="who">S:</span><span class="line">Möchten Sie es privat oder für eine Behörde?</span></div>
+          <div class="turn"><span class="who b">B:</span><span class="line">Für den Arbeitgeber, also ein normales.</span></div>
+          <div class="turn"><span class="who">S:</span><span class="line">Dann brauche ich Ihren Ausweis. Die Gebühr beträgt 13 Euro.</span></div>
+          <div class="turn"><span class="who b">B:</span><span class="line"><span class="key">Wird es hier ausgestellt oder zugeschickt?</span></span></div>
+          <div class="turn"><span class="who">S:</span><span class="line">Es wird Ihnen in einigen Tagen per Post zugeschickt.</span></div>
+          <div class="turn"><span class="who b">B:</span><span class="line">Alles klar, vielen Dank!</span></div>
+        </div>
+        <div style="text-align:center;margin:.2rem 0 .6rem"><button class="btn" onclick="playDialog(this.closest('.sit').querySelector('.dialog'))">▶ Dialog abspielen</button></div>
+        <div class="takeaway"><b>Merke:</b> Zweck angeben → Art &amp; Gebühr klären → fragen, wie man es bekommt.</div>
+      </div>
+    </div>
+
+    <div class="lvl lvl-c1">
+      <span class="lvl-note">B2/C1 · komplexe Anliegen</span>
+      <div class="sitbar">
+        <button class="sitbtn active" onclick="setSit(this,0)">🛃 Aufenthalt verlängern</button>
+        <button class="sitbtn" onclick="setSit(this,1)">🏷️ Gewerbe &amp; Beglaubigung</button>
+        <button class="sitbtn" onclick="setSit(this,2)">⚖️ Widerspruch einlegen</button>
+      </div>
+      <div class="sit on" data-i="0">
+        <div class="sit-title">🛃 Aufenthaltserlaubnis verlängern</div>
+        <img class="scene" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260618_102227_d95cc0ab-7243-4e30-9f70-429668772e1e.png" alt="Beamter stempelt ein offizielles Dokument">
+        <div class="dialog">
+          <div class="turn"><span class="who">S:</span><span class="line">Guten Tag, wie kann ich Ihnen behilflich sein?</span></div>
+          <div class="turn"><span class="who b">B:</span><span class="line"><span class="key">Ich möchte einen Antrag auf Verlängerung meiner Aufenthaltserlaubnis stellen.</span></span></div>
+          <div class="turn"><span class="who">S:</span><span class="line">Haben Sie alle erforderlichen Unterlagen — Pass, Meldebescheinigung und Einkommensnachweis?</span></div>
+          <div class="turn"><span class="who b">B:</span><span class="line">Ja. <span class="key">Müsste ich die Kopien beglaubigen lassen?</span></span></div>
+          <div class="turn"><span class="who">S:</span><span class="line">Für den Antrag genügen die Originale zur Einsicht. Eine Beglaubigung ist nicht erforderlich.</span></div>
+          <div class="turn"><span class="who b">B:</span><span class="line"><span class="key">Und falls Unterlagen fehlen — kann ich sie nachreichen?</span></span></div>
+          <div class="turn"><span class="who">S:</span><span class="line">Selbstverständlich, innerhalb einer gesetzten Frist. Ich vermerke das im Vorgang.</span></div>
+          <div class="turn"><span class="who b">B:</span><span class="line">Vielen Dank für die ausführliche Auskunft.</span></div>
+        </div>
+        <div style="text-align:center;margin:.2rem 0 .6rem"><button class="btn" onclick="playDialog(this.closest('.sit').querySelector('.dialog'))">▶ Dialog abspielen</button></div>
+        <div class="takeaway"><b>Merke:</b> Antrag präzise formulieren → Unterlagen &amp; Beglaubigung klären → nach Fristen &amp; Nachreichen fragen.</div>
+      </div>
+      <div class="sit" data-i="1">
+        <div class="sit-title">🏷️ Gewerbe anmelden &amp; Beglaubigung</div>
+        <img class="scene" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260618_102227_d95cc0ab-7243-4e30-9f70-429668772e1e.png" alt="Dokument wird gestempelt">
+        <div class="dialog">
+          <div class="turn"><span class="who">S:</span><span class="line">Guten Tag, wie kann ich Ihnen behilflich sein?</span></div>
+          <div class="turn"><span class="who b">B:</span><span class="line"><span class="key">Ich möchte ein Kleingewerbe anmelden und hätte gern eine beglaubigte Kopie meines Abschlusses.</span></span></div>
+          <div class="turn"><span class="who">S:</span><span class="line">Die Gewerbeanmeldung nehme ich gleich auf. Für die Beglaubigung benötige ich das Originaldokument.</span></div>
+          <div class="turn"><span class="who b">B:</span><span class="line">Das habe ich dabei. <span class="key">Fallen dafür zusätzliche Gebühren an?</span></span></div>
+          <div class="turn"><span class="who">S:</span><span class="line">Ja, die Beglaubigung kostet pro Seite eine kleine Gebühr; die Gewerbeanmeldung ist separat.</span></div>
+          <div class="turn"><span class="who b">B:</span><span class="line"><span class="key">Könnten Sie mir eine Quittung über beide Vorgänge ausstellen?</span></span></div>
+          <div class="turn"><span class="who">S:</span><span class="line">Selbstverständlich, ich drucke Ihnen alles zusammen aus.</span></div>
+          <div class="turn"><span class="who b">B:</span><span class="line">Wunderbar, vielen Dank für die Auskunft.</span></div>
+        </div>
+        <div style="text-align:center;margin:.2rem 0 .6rem"><button class="btn" onclick="playDialog(this.closest('.sit').querySelector('.dialog'))">▶ Dialog abspielen</button></div>
+        <div class="takeaway"><b>Merke:</b> mehrere Anliegen bündeln → Gebühren klären → Quittung/Nachweis erbitten.</div>
+      </div>
+      <div class="sit" data-i="2">
+        <div class="sit-title">⚖️ Widerspruch gegen einen Bescheid</div>
+        <img class="scene" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260618_102225_7547c139-a281-4cef-bfcd-f1f145df2b14.png" alt="Beratung am Schalter">
+        <div class="dialog">
+          <div class="turn"><span class="who">S:</span><span class="line">Guten Tag, wie kann ich Ihnen helfen?</span></div>
+          <div class="turn"><span class="who b">B:</span><span class="line"><span class="key">Ich habe einen ablehnenden Bescheid erhalten und möchte Widerspruch einlegen.</span></span></div>
+          <div class="turn"><span class="who">S:</span><span class="line">Dazu müssen Sie den Widerspruch schriftlich und fristgerecht einreichen. Haben Sie den Bescheid dabei?</span></div>
+          <div class="turn"><span class="who b">B:</span><span class="line">Ja. <span class="key">Bis wann muss der Widerspruch eingegangen sein?</span></span></div>
+          <div class="turn"><span class="who">S:</span><span class="line">Innerhalb eines Monats nach Zustellung. Die Frist steht in der Rechtsbehelfsbelehrung.</span></div>
+          <div class="turn"><span class="who b">B:</span><span class="line"><span class="key">Sollte ich eine Begründung beifügen?</span></span></div>
+          <div class="turn"><span class="who">S:</span><span class="line">Das ist sehr zu empfehlen — je konkreter, desto besser.</span></div>
+          <div class="turn"><span class="who b">B:</span><span class="line">Vielen Dank, dann reiche ich das schriftlich ein.</span></div>
+        </div>
+        <div style="text-align:center;margin:.2rem 0 .6rem"><button class="btn" onclick="playDialog(this.closest('.sit').querySelector('.dialog'))">▶ Dialog abspielen</button></div>
+        <div class="takeaway"><b>Merke:</b> Anliegen rechtssicher formulieren → Frist erfragen → nach Form &amp; Begründung fragen.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="check">
+    <h2 class="block-head">Schnell-<span class="hl">Check</span></h2>
+    <p class="block-intro">Drei Fragen — klick die richtige Antwort an.</p>
+    <div class="qq" data-correct="0">
+      <p class="qtext">1. Was macht man, wenn man sich „anmeldet"?</p>
+      <button class="qopt" onclick="qpick(this)">Man registriert seine Adresse offiziell.</button>
+      <button class="qopt" onclick="qpick(this)">Man bezahlt eine Strafe.</button>
+      <button class="qopt" onclick="qpick(this)">Man kündigt die Wohnung.</button>
+      <div class="qfb"></div>
+    </div>
+    <div class="qq" data-correct="1">
+      <p class="qtext">2. Was ist eine „Meldebescheinigung"?</p>
+      <button class="qopt" onclick="qpick(this)">Ein Strafzettel.</button>
+      <button class="qopt" onclick="qpick(this)">Ein Nachweis über deinen Wohnort.</button>
+      <button class="qopt" onclick="qpick(this)">Ein Flugticket.</button>
+      <div class="qfb"></div>
+    </div>
+    <div class="qq" data-correct="0">
+      <p class="qtext">3. „eine Gebühr" ist …</p>
+      <button class="qopt" onclick="qpick(this)">ein Betrag, den man für eine Amtsleistung zahlt.</button>
+      <button class="qopt" onclick="qpick(this)">ein Formular.</button>
+      <button class="qopt" onclick="qpick(this)">ein Termin.</button>
+      <div class="qfb"></div>
+    </div>
+  </section>
+
+  <section class="block alt" id="rollenspiel">
+    <h2 class="block-head">Jetzt <span class="hl">du</span> — Rollenspiele</h2>
+    <p class="block-intro">Spiel die Amt-Szenen mit einem Partner — passend zu deinem Niveau. Tauscht die Rollen!</p>
+    <div class="lvl lvl-a2">
+      <div class="rp"><div class="body">
+        <p><strong>① Aufgabe (A2):</strong> Du hast eine neue Wohnung und möchtest dich anmelden. Sag dein Anliegen, leg Formular und Ausweis vor.</p>
+        <div class="success">✅ Gut: Anliegen + Formular + Ausweis + unterschreiben.</div>
+        <div class="sprechhilfe">
+          <h4>🆘 Sprechhilfe — so sprichst du frei</h4>
+          <p>Setz die Wörter unten in die Sätze ein:</p>
+          <div class="frame">„Ich möchte mich <span class="blank"></span>."</div>
+          <div class="frame">„Ich habe eine neue <span class="blank"></span>."</div>
+          <div class="frame">„Hier ist mein <span class="blank"></span>."</div>
+          <p style="margin-top:.55rem;font-weight:600">Wörter zum Einsetzen:</p>
+          <div class="bank"><span class="chip">anmelden</span><span class="chip">ummelden</span><span class="chip">Wohnung</span><span class="chip">Adresse</span><span class="chip">Ausweis</span><span class="chip">Formular</span></div>
+        </div>
+      </div></div>
+      <div class="rp"><div class="body">
+        <p><strong>② Aufgabe (A2):</strong> Ruf beim Bürgeramt an und mach einen Termin. Sag, warum du kommen willst.</p>
+        <div class="chips"><span class="chip">Ich brauche einen Termin.</span><span class="chip">zum Anmelden</span><span class="chip">Geht es am … ?</span></div>
+        <div class="success">✅ Gut: Termin erfragen + Grund nennen + Uhrzeit bestätigen.</div>
+      </div></div>
+    </div>
+    <div class="lvl lvl-b1">
+      <div class="rp"><div class="body">
+        <p><strong>① Aufgabe (B1/B2):</strong> Du bist umgezogen. Melde dich um, lass gleich einen neuen Personalausweis beantragen und frag nach Gebühr und Bearbeitungsdauer.</p>
+        <div class="chips"><span class="chip">Ich bin umgezogen.</span><span class="chip">Brauche ich …?</span><span class="chip">Wie lange dauert das?</span><span class="chip">Was kostet das?</span></div>
+        <div class="success">✅ Gut: Ummeldung + Zusatzantrag + nach Gebühr & Dauer fragen.</div>
+      </div></div>
+      <div class="rp"><div class="body">
+        <p><strong>② Aufgabe (B1/B2):</strong> Du möchtest einen neuen Reisepass beantragen. Frag, welche Unterlagen du brauchst und ob du einen Termin benötigst.</p>
+        <div class="chips"><span class="chip">Ich möchte … beantragen.</span><span class="chip">Welche Unterlagen brauche ich?</span><span class="chip">Brauche ich einen Termin?</span></div>
+        <div class="success">✅ Gut: Anliegen + nach Unterlagen & Ablauf fragen.</div>
+      </div></div>
+    </div>
+    <div class="lvl lvl-c1">
+      <div class="rp"><div class="body">
+        <p><strong>① Aufgabe (B2/C1):</strong> Du stellst einen Antrag auf Verlängerung deiner Aufenthaltserlaubnis. Kläre die erforderlichen Unterlagen, das Thema Beglaubigung und die Möglichkeit, etwas nachzureichen.</p>
+        <div class="chips"><span class="chip">Ich möchte … stellen.</span><span class="chip">Müsste ich … beglaubigen lassen?</span><span class="chip">Kann ich … nachreichen?</span><span class="chip">Welche Frist gilt?</span></div>
+        <div class="success">✅ Gut: Antrag präzise + Unterlagen, Beglaubigung & Fristen klären.</div>
+      </div></div>
+      <div class="rp"><div class="body">
+        <p><strong>② Aufgabe (B2/C1):</strong> Dein Antrag wurde abgelehnt. Frag höflich nach dem Grund, nach deinen Möglichkeiten (Widerspruch) und nach der zuständigen Stelle.</p>
+        <div class="chips"><span class="chip">Könnten Sie mir den Grund nennen?</span><span class="chip">Welche Möglichkeiten habe ich?</span><span class="chip">Wer ist dafür zuständig?</span></div>
+        <div class="success">✅ Gut: sachlich nachfragen + Optionen & Zuständigkeit klären.</div>
+      </div></div>
+    </div>
+  </section>
+
+  <section class="block" id="sprechen">
+    <h2 class="block-head">Sprechen — <span class="hl">freie Runde</span></h2>
+    <p class="block-intro"><img class="scene" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260618_102256_7f5d541b-defe-4c8c-8001-86688984dd72.jpeg" alt="Wartebereich im Amt mit Nummernanzeige">Zieh eine Karte — passend zu deinem Niveau.</p>
+    <div class="lvl lvl-a2"><div class="speak" data-speak>
+      <div class="card"><span class="ph">Tippe auf „Neue Karte" (A2)…</span></div>
+      <div style="margin-top:.9rem;"><button class="btn dark" data-draw>🎲 Neue Karte</button></div>
+      <script type="application/json" data-speak-cards>
+        ["Sag, was du beim Amt machen möchtest: Ich möchte mich …",
+         "Frag nach einem Termin.",
+         "Sag, welche Dokumente du dabei hast.",
+         "Frag: Wo muss ich unterschreiben?",
+         "Sag, dass du eine neue Wohnung hast.",
+         "Frag, was die Gebühr kostet."]
+      </script>
+    </div></div>
+    <div class="lvl lvl-b1"><div class="speak" data-speak>
+      <div class="card"><span class="ph">Tippe auf „Neue Karte" (B1/B2)…</span></div>
+      <div style="margin-top:.9rem;"><button class="btn dark" data-draw>🎲 Neue Karte</button></div>
+      <script type="application/json" data-speak-cards>
+        ["Beschreibe Schritt für Schritt, wie eine Ummeldung abläuft.",
+         "Spiel: Du beantragst einen neuen Reisepass und fragst nach den Unterlagen.",
+         "Welcher Behördengang war für dich bisher am schwierigsten? Warum?",
+         "Erkläre, was eine Meldebescheinigung ist und wofür man sie braucht.",
+         "Wie kann man in Deutschland einen Termin beim Amt bekommen?",
+         "Was würdest du einem Neuankömmling über deutsche Ämter raten?"]
+      </script>
+    </div></div>
+    <div class="lvl lvl-c1"><div class="speak" data-speak>
+      <div class="card"><span class="ph">Tippe auf „Neue Karte" (B2/C1)…</span></div>
+      <div style="margin-top:.9rem;"><button class="btn dark" data-draw>🎲 Neue Karte</button></div>
+      <script type="application/json" data-speak-cards>
+        ["Diskutiere: Sollte die Verwaltung vollständig digitalisiert werden?",
+         "Sprich über Bürokratie in Deutschland — Vor- und Nachteile.",
+         "Wie könnte man Behördengänge bürgerfreundlicher gestalten?",
+         "Erkläre den Unterschied zwischen anmelden, ummelden und abmelden.",
+         "Spiel: Dein Antrag wurde abgelehnt — kläre Gründe, Widerspruch und Fristen.",
+         "Vergleiche das Behördensystem deines Landes mit dem deutschen."]
+      </script>
+    </div></div>
+  </section>
+
+  <section class="block mission" id="mission">
+    <h2 class="block-head">🎯 Mission der Woche</h2>
+    <p>Spiel mit jemandem einen Behördengang: Melde dich an (oder mach einen Termin). Nutze mindestens drei der gelben Sätze deines Niveaus.</p>
+    <div class="bonus">🏆 <strong>Bonus:</strong> Nimm eine Sprachnachricht auf, in der du beim Amt anrufst und einen Termin zur Anmeldung machst.</div>
+  </section>
+
+  <footer>
+    <div class="mark">deutsch<span class="t">oderwas</span></div>
+    <p>Rollenspiele & Situatives Lernen · Auf dem Bürgeramt · A2–C1</p>
+  </footer>
+</div>
+<script>
+(function(){
+  const tabs=[...document.querySelectorAll('nav.tabs a')];
+  const map=tabs.map(a=>({a,sec:document.querySelector(a.getAttribute('href'))})).filter(x=>x.sec);
+  if('IntersectionObserver' in window){
+    const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){tabs.forEach(t=>t.classList.remove('active'));const m=map.find(x=>x.sec===e.target);if(m)m.a.classList.add('active');}});},{rootMargin:'-45% 0px -50% 0px'});
+    map.forEach(x=>obs.observe(x.sec));
+  }
+  document.querySelectorAll('[data-speak]').forEach(box=>{
+    let cards=[];try{cards=JSON.parse(box.querySelector('[data-speak-cards]').textContent);}catch(e){}
+    const card=box.querySelector('.card'),btn=box.querySelector('[data-draw]');
+    if(btn)btn.addEventListener('click',()=>{if(cards.length)card.innerHTML=cards[Math.floor(Math.random()*cards.length)];});
+  });
+  window.qpick=function(btn){
+    const q=btn.closest('.qq'); if(q.classList.contains('done'))return;
+    const opts=[...q.querySelectorAll('.qopt')]; const correct=+q.dataset.correct; const i=opts.indexOf(btn);
+    q.classList.add('done'); opts[correct].classList.add('right');
+    if(i!==correct) btn.classList.add('wrong');
+    q.querySelector('.qfb').textContent = i===correct ? '✓ Richtig!' : '✗ Die richtige Antwort ist markiert.';
+  };
+  window.playDialog=function(d){
+    if(!d)return; d.classList.add('motion');
+    const turns=[...d.querySelectorAll('.turn')];
+    turns.forEach(t=>t.classList.remove('show'));
+    turns.forEach((t,i)=>setTimeout(()=>t.classList.add('show'), 150 + i*450));
+  };
+  window.setSit=function(btn,i){
+    const lvl=btn.closest('.lvl');
+    lvl.querySelectorAll('.sitbar .sitbtn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const sits=[...lvl.querySelectorAll('.sit')];
+    sits.forEach(s=>s.classList.toggle('on', +s.dataset.i===i));
+    const cur=sits.find(s=>+s.dataset.i===i);
+    if(cur){const d=cur.querySelector('.dialog'); if(d) playDialog(d);}
+  };
+  window.setLevel=function(x){
+    document.body.className='show-'+x;
+    document.querySelectorAll('.lvlbtn').forEach(b=>b.classList.toggle('active', b.dataset.lvl===x));
+    document.querySelectorAll('.sit.on .dialog').forEach(d=>{ if(d.offsetParent!==null) playDialog(d); });
+  };
+  document.querySelectorAll('.dialog').forEach(d=>{
+    d.classList.add('motion');
+    let played=false;
+    const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting && d.offsetParent!==null && !played){played=true;playDialog(d);}});},{threshold:.3});
+    io.observe(d);
+  });
+})();
+</script>
+</body>
+</html>
