@@ -581,13 +581,25 @@ function renderKalender(){
     '<div class="pagehead"><h1>Kalender</h1><p>Alle LIVE-Stunden farbig nach Club. Tippe einen Club an, um nur dessen Stunden zu sehen.</p></div><div id="kalBody"><div class="empty">lädt…</div></div>';
   loadKalender();
 }
+function kalLevelMatch(classLevel,filter){
+  if(filter==='alle') return true;
+  const L=String(classLevel||'');
+  let cb;
+  if(/ab\s*A2/i.test(L)) cb=['A2','B1','B2','C1'];
+  else if(/ab\s*B1/i.test(L)) cb=['B1','B2','C1'];
+  else if(/B1\s*\/\s*B2/i.test(L)) cb=['B1','B2'];
+  else if(/B2\s*\/\s*C1/i.test(L)) cb=['B2','C1'];
+  else { const m=L.match(/[ABC][12]/); cb=m?[m[0]]:[]; }
+  const fb = filter==='A2'?['A2'] : filter==='B1/B2'?['B1','B2'] : filter==='B2/C1'?['B2','C1'] : [];
+  return fb.some(b=>cb.includes(b));
+}
 async function loadKalender(){
   if(!kalClubs.length){ const {data}=await sb.from('clubs').select('*').eq('is_active',true).order('sort_order'); kalClubs=data||[]; }
   const from=startOfWeekK(new Date(), kalWeek); const to=new Date(from); to.setDate(to.getDate()+7);
   const { data } = await sb.rpc('week_classes',{p_from:from.toISOString(),p_to:to.toISOString()});
   const all=data||[];
   let list=(kalClub==='alle')?all:all.filter(c=>c.club===kalClub);
-  if(kalLevel!=='alle') list=list.filter(c=>c.level===kalLevel);
+  if(kalLevel!=='alle') list=list.filter(c=>kalLevelMatch(c.level,kalLevel));
   const pills='<div class="kal-pills"><button class="kpill '+(kalClub==='alle'?'active':'')+'" onclick="setKalClub(\'alle\')">📅 Alle Clubs</button>'+
     kalClubs.map(c=>{const on=kalClub===c.slug; const col=c.color||'#2DD4BF';
       return `<button class="kpill ${on?'active':''}" style="${on?('background:'+col+';border-color:'+col+';color:#fff'):''}" onclick="setKalClub('${c.slug}')">${c.emoji||''} ${esc(c.name)}</button>`;}).join('')+'</div>';
