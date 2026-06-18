@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Smalltalk mit den Nachbarn · A2–C1 | deutschoderwas Sprechclub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#FDF6EC;--cream-warm:#FBEDD8;--paper:#FFFFFF;--ink:#262019;--ink-soft:#5C4E3E;--ink-mute:#A8957D;
+  --red:#E8302A;--red-soft:#FCE5E3;--teal:#0FB5A6;--teal-soft:#D7F0EC;--yellow:#FFD24A;--yellow-soft:#FFF1C2;--coral:#F2884B;--sand:#F0E2C8;
+  --wa-bg:#ECE5DD;--wa-out:#DCF8C6;--radius:18px;--shadow:0 10px 30px rgba(38,32,25,.08);--font-head:'Fraunces',Georgia,serif;--font-body:'Outfit','Segoe UI',system-ui,sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:linear-gradient(180deg,#FFE9D6 0%,var(--cream) 15%,var(--cream) 100%);color:var(--ink);font-family:var(--font-body);line-height:1.55;min-height:100vh;-webkit-font-smoothing:antialiased;}
+.wrapper{max-width:820px;margin:0 auto;padding:2.4rem 1.4rem 4.5rem;}
+.eyebrow{text-align:center;font-size:.78rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--coral);margin-bottom:.9rem;}
+.title-wrap{text-align:center;margin-bottom:1rem;}
+h1.title{font-family:var(--font-head);font-weight:600;font-size:clamp(1.8rem,4.5vw,3.2rem);line-height:1.06;}
+h1.title .hl{position:relative;display:inline-block;color:var(--coral);}
+h1.title .hl::after{content:"";position:absolute;left:-2px;right:-2px;bottom:.06em;height:.28em;background:var(--yellow);opacity:.6;z-index:-1;border-radius:3px;}
+.subtitle{text-align:center;max-width:560px;margin:.9rem auto 1.1rem;color:var(--ink-soft);font-size:1.04rem;}
+.hero-media{display:block;width:100%;max-width:700px;margin:1.2rem auto 0;border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--sand);}
+.scene{display:block;width:100%;border-radius:14px;margin:.2rem 0 1rem;border:1px solid var(--sand);}
+.lvlbar{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;align-items:center;margin:1.3rem auto 0;}
+.lvlbar .lbl{font-size:.85rem;color:var(--ink-soft);margin-right:.2rem;}
+.lvlbtn{border:2px solid var(--sand);background:var(--paper);color:var(--ink-soft);font-weight:700;font-size:.85rem;padding:.45rem 1rem;border-radius:999px;cursor:pointer;font-family:var(--font-body);}
+.lvlbtn.active{background:var(--coral);border-color:var(--coral);color:#fff;}
+.lvl{display:none;}
+body.show-a2 .lvl-a2,body.show-b1 .lvl-b1,body.show-c1 .lvl-c1{display:block;}
+.lvl-note{display:inline-block;font-size:.7rem;font-weight:700;color:#7a3d16;background:#FCE3D2;padding:2px 9px;border-radius:999px;margin-bottom:.5rem;}
+.vx-b1,.vx-c1{display:none;}
+body.show-b1 .vx-b1,body.show-c1 .vx-b1,body.show-c1 .vx-c1{display:block;}
+.lvlcount{font-size:.8rem;color:var(--ink-mute);margin-top:.5rem;}
+nav.tabs{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;padding:.7rem .5rem;margin:1.3rem 0 2rem;background:rgba(253,246,236,.92);backdrop-filter:blur(8px);border:1px solid var(--sand);border-radius:999px;}
+nav.tabs a{font-size:.82rem;font-weight:600;color:var(--ink-soft);text-decoration:none;padding:.4rem .8rem;border-radius:999px;}
+nav.tabs a:hover{background:#FCE3D2;}
+nav.tabs a.active{background:var(--ink);color:var(--cream);}
+section.block{background:var(--paper);border:1px solid var(--sand);border-radius:var(--radius);padding:1.6rem;margin-bottom:1.4rem;box-shadow:var(--shadow);scroll-margin-top:5rem;}
+.block.alt{background:var(--cream-warm);}
+.block-head{font-family:var(--font-head);font-weight:600;font-size:clamp(1.25rem,3vw,1.7rem);margin-bottom:.4rem;}
+.block-head .hl{color:var(--coral);font-style:italic;}
+.block-intro{color:var(--ink-soft);margin-bottom:1rem;}
+.note{border-radius:14px;padding:.85rem 1rem;margin:.9rem 0;font-size:.95rem;}
+.note.tip{background:#FCE3D2;border-left:4px solid var(--coral);}
+.grid{display:grid;gap:.8rem;}
+.grid.g3{grid-template-columns:repeat(auto-fit,minmax(170px,1fr));}
+.vocab{background:var(--cream);border:1px solid var(--sand);border-radius:14px;padding:.8rem .9rem;}
+.vocab .emoji{font-size:1.4rem;display:block;margin-bottom:.2rem;}
+.vocab .term{font-weight:700;color:var(--ink);font-size:.98rem;}
+.vocab .gloss{font-size:.86rem;color:var(--ink-soft);}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.8rem;}
+.fcard{height:150px;cursor:pointer;perspective:1000px;}
+.fc-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.fcard.flip .fc-inner{transform:rotateY(180deg);}
+.fc-front,.fc-back{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border:1px solid var(--sand);border-radius:14px;padding:.9rem;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;}
+.fc-front{background:var(--cream);}
+.fc-back{background:#FCE3D2;transform:rotateY(180deg);font-style:italic;color:#7a3d16;font-size:.92rem;line-height:1.45;}
+.fc-front b{font-size:1.1rem;}
+.fc-flip-hint{font-size:.7rem;color:var(--ink-mute);margin-top:.4rem;}
+.chat{background:var(--wa-bg);border-radius:16px;padding:.9rem;margin:.7rem 0;display:flex;flex-direction:column;gap:.45rem;}
+.bubble{max-width:82%;padding:.55rem .8rem;border-radius:14px;font-size:.96rem;line-height:1.4;box-shadow:0 1px 1px rgba(0,0,0,.06);}
+.bubble.in{align-self:flex-start;background:#fff;border-bottom-left-radius:4px;}
+.bubble.out{align-self:flex-end;background:var(--wa-out);border-bottom-right-radius:4px;}
+.bubble .who{display:block;font-size:.68rem;font-weight:700;color:var(--ink-mute);margin-bottom:.1rem;}
+.chat.motion .bubble{opacity:0;transform:translateY(10px);}
+.chat.motion .bubble.show{opacity:1;transform:none;transition:opacity .4s ease,transform .4s ease;}
+.sitbar{display:flex;flex-wrap:wrap;gap:.4rem;margin:.2rem 0 .8rem;}
+.sitbtn{border:2px solid var(--sand);background:var(--paper);color:var(--ink-soft);font-weight:600;font-size:.82rem;padding:.35rem .85rem;border-radius:999px;cursor:pointer;font-family:var(--font-body);}
+.sitbtn.active{background:var(--coral);border-color:var(--coral);color:#fff;}
+.sit{display:none;}
+.sit.on{display:block;}
+.sit-title{font-family:var(--font-head);font-weight:600;font-size:1.05rem;margin:.1rem 0 .5rem;color:var(--ink);}
+.key{background:var(--yellow-soft);border-radius:4px;padding:0 3px;font-weight:600;box-decoration-break:clone;}
+.takeaway{background:#FCE3D2;border-radius:12px;padding:.85rem 1rem;margin-top:.7rem;font-size:.94rem;}
+.takeaway b{color:#7a3d16;}
+.btn{display:inline-block;background:var(--coral);color:#fff;font-weight:700;border:none;border-radius:999px;padding:.55rem 1.2rem;cursor:pointer;font-family:var(--font-body);font-size:.95rem;}
+.btn.dark{background:var(--ink);color:var(--cream);}
+.sprechhilfe{background:var(--yellow-soft);border:1px dashed var(--yellow);border-radius:14px;padding:1rem 1.1rem;margin:.8rem 0 .2rem;}
+.sprechhilfe h4{font-family:var(--font-head);font-weight:600;margin-bottom:.4rem;font-size:1.05rem;}
+.frame{margin:.3rem 0;font-size:1rem;}
+.frame .blank{display:inline-block;min-width:90px;border-bottom:2px solid var(--coral);vertical-align:bottom;}
+.bank{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.5rem;}
+.bank .chip{background:#FCE3D2;color:#7a3d16;font-size:.85rem;font-weight:600;padding:.25rem .7rem;border-radius:999px;}
+.rp{border:1px solid var(--sand);border-radius:14px;margin-bottom:.7rem;background:var(--cream);overflow:hidden;}
+.rp .body{padding:1rem 1.1rem;font-size:.95rem;}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem;margin:.5rem 0;}
+.chip{background:#FCE3D2;color:#7a3d16;font-size:.82rem;font-weight:600;padding:.25rem .6rem;border-radius:999px;}
+.success{background:var(--yellow-soft);border-radius:10px;padding:.55rem .8rem;font-size:.88rem;margin-top:.5rem;}
+.qq{background:var(--cream);border:1px solid var(--sand);border-radius:14px;padding:1rem 1.1rem;margin-bottom:.8rem;}
+.qtext{font-weight:600;margin-bottom:.5rem;}
+.qopt{display:block;width:100%;text-align:left;background:var(--paper);border:1px solid var(--sand);border-radius:10px;padding:.6rem .8rem;margin:.35rem 0;cursor:pointer;font-family:var(--font-body);font-size:.95rem;}
+.qopt:hover{background:#FCE3D2;}
+.qopt.right{background:var(--teal-soft);border-color:var(--teal);font-weight:600;color:#063b35;}
+.qopt.wrong{background:var(--red-soft);border-color:var(--red);}
+.qfb{font-size:.9rem;font-weight:600;margin-top:.4rem;color:var(--ink-soft);}
+.speak{text-align:center;}
+.speak .card{background:var(--cream);border:1px solid var(--sand);border-radius:16px;padding:1.4rem 1.1rem;min-height:110px;display:flex;align-items:center;justify-content:center;font-size:1.08rem;font-weight:600;font-family:var(--font-head);}
+.speak .card .ph{color:var(--ink-mute);font-family:var(--font-body);font-weight:400;}
+section.mission{background:var(--ink);color:var(--cream);border-radius:var(--radius);padding:1.4rem 1.5rem;}
+section.mission p{color:var(--cream);}
+.mission .block-head{color:var(--cream);}
+.mission .bonus{background:rgba(255,255,255,.08);border-radius:10px;padding:.55rem .8rem;margin-top:.5rem;font-size:.92rem;}
+footer{text-align:center;color:var(--ink-mute);font-size:.84rem;margin-top:1.8rem;}
+footer .mark{font-family:var(--font-head);font-weight:600;color:var(--ink);font-size:1rem;}
+footer .mark .t{color:var(--teal);}
+@media(max-width:560px){.grid.g3{grid-template-columns:1fr 1fr;}}
+</style>
+</head>
+<body class="show-b1">
+<div class="wrapper">
+  <div class="eyebrow">deutschoderwas · Sprechclub · Rollenspiele & Situatives Lernen</div>
+  <div class="title-wrap">
+    <h1 class="title">Smalltalk mit den <span class="hl">Nachbarn</span> 👋</h1>
+    <p class="subtitle">Grüßen, plaudern und mal um einen kleinen Gefallen bitten — locker und freundlich, passend zu deinem Niveau.</p>
+    <div class="lvlbar">
+      <span class="lbl">Dein Niveau:</span>
+      <button class="lvlbtn" data-lvl="a2" onclick="setLevel('a2')">A2</button>
+      <button class="lvlbtn active" data-lvl="b1" onclick="setLevel('b1')">B1/B2</button>
+      <button class="lvlbtn" data-lvl="c1" onclick="setLevel('c1')">B2/C1</button>
+    </div>
+  </div>
+  <video class="hero-media" id="heroMedia" autoplay muted loop playsinline poster="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260618_121316_6b6bf202-b95d-41e7-acb1-cf5c33109b73.png"><source src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260618_121717_2405ad28-0057-49f9-a45c-67cfa81e73d6.mp4" type="video/mp4"></video>
+
+  <nav class="tabs">
+    <a href="#aufwaermen">📖 Aufwärmen</a>
+    <a href="#wortschatz">🧠 Wortschatz</a>
+    <a href="#lernkarten">🃏 Lernkarten</a>
+    <a href="#dialog">💬 Chat</a>
+    <a href="#check">✅ Check</a>
+    <a href="#rollenspiel">🎭 Rollenspiel</a>
+    <a href="#sprechen">🗣️ Sprechen</a>
+    <a href="#mission">🎯 Mission</a>
+  </nav>
+
+  <section class="block" id="aufwaermen">
+    <h2 class="block-head">Zum <span class="hl">Aufwärmen</span></h2>
+    <p><strong>Stell dir vor:</strong> Du triffst im Treppenhaus deine Nachbarin. Sprich kurz: Kennst du deine Nachbarn? Worüber redet man mit Nachbarn — und worüber lieber nicht?</p>
+    <div class="note tip"><strong>💡 Heute lernst du:</strong> freundlich grüßen · ein bisschen plaudern · höflich um einen Gefallen bitten. Oben kannst du dein <strong>Niveau</strong> wählen.</div>
+  </section>
+
+  <section class="block" id="wortschatz">
+    <h2 class="block-head">Nachbarschafts-<span class="hl">Wortschatz</span></h2>
+    <p class="block-intro">Je höher dein Niveau, desto mehr Wörter.</p>
+    <div class="grid g3">
+      <div class="vocab"><span class="emoji">👋</span><div class="term">der Nachbar / die Nachbarin</div><div class="gloss">wohnt nebenan</div></div>
+      <div class="vocab"><span class="emoji">☀️</span><div class="term">das Wetter</div><div class="gloss">Smalltalk-Klassiker</div></div>
+      <div class="vocab"><span class="emoji">📦</span><div class="term">einziehen</div><div class="gloss">in eine Wohnung kommen</div></div>
+      <div class="vocab"><span class="emoji">🎉</span><div class="term">willkommen</div><div class="gloss">„Herzlich willkommen!"</div></div>
+      <div class="vocab"><span class="emoji">🙂</span><div class="term">plaudern</div><div class="gloss">locker reden, Smalltalk</div></div>
+      <div class="vocab"><span class="emoji">🤝</span><div class="term">der Gefallen</div><div class="gloss">„Kannst du mir einen Gefallen tun?"</div></div>
+      <div class="vocab vx-b1"><span class="emoji">📬</span><div class="term">ein Paket annehmen</div><div class="gloss">für jemanden entgegennehmen</div></div>
+      <div class="vocab vx-b1"><span class="emoji">🔔</span><div class="term">Bescheid geben</div><div class="gloss">kurz informieren</div></div>
+      <div class="vocab vx-b1"><span class="emoji">🚪</span><div class="term">der Hausflur</div><div class="gloss">Treppenhaus / Eingang</div></div>
+      <div class="vocab vx-b1"><span class="emoji">😊</span><div class="term">sich kennenlernen</div><div class="gloss">„Schön, Sie kennenzulernen!"</div></div>
+      <div class="vocab vx-c1"><span class="emoji">🤫</span><div class="term">Rücksicht nehmen</div><div class="gloss">an andere denken (z. B. Lärm)</div></div>
+      <div class="vocab vx-c1"><span class="emoji">📋</span><div class="term">die Hausordnung</div><div class="gloss">Regeln im Haus (z. B. Ruhezeit)</div></div>
+      <div class="vocab vx-c1"><span class="emoji">😬</span><div class="term">es ist mir unangenehm</div><div class="gloss">etwas heikel ansprechen</div></div>
+      <div class="vocab vx-c1"><span class="emoji">🙏</span><div class="term">das Verständnis</div><div class="gloss">„Danke für Ihr Verständnis."</div></div>
+    </div>
+    <p class="lvlcount"><span class="lvl lvl-a2" style="display:inline">A2: 6 Kernwörter.</span><span class="lvl lvl-b1" style="display:inline">B1/B2: 10 Wörter.</span><span class="lvl lvl-c1" style="display:inline">B2/C1: 14 Wörter inkl. feiner Wendungen.</span></p>
+  </section>
+
+  <section class="block alt" id="lernkarten">
+    <h2 class="block-head">Lern<span class="hl">karten</span></h2>
+    <p class="block-intro">Wort vorne, Beispielsatz hinten — tippe zum Umdrehen.</p>
+    <div class="cards">
+      <div class="fcard" onclick="this.classList.toggle('flip')"><div class="fc-inner"><div class="fc-front"><b>einziehen</b><span class="fc-flip-hint">umdrehen →</span></div><div class="fc-back">„Ich bin letzte Woche hier eingezogen."</div></div></div>
+      <div class="fcard" onclick="this.classList.toggle('flip')"><div class="fc-inner"><div class="fc-front"><b>willkommen heißen</b><span class="fc-flip-hint">umdrehen →</span></div><div class="fc-back">„Die Nachbarn haben mich herzlich willkommen geheißen."</div></div></div>
+      <div class="fcard" onclick="this.classList.toggle('flip')"><div class="fc-inner"><div class="fc-front"><b>ein Paket annehmen</b><span class="fc-flip-hint">umdrehen →</span></div><div class="fc-back">„Könnten Sie ein Paket für mich annehmen?"</div></div></div>
+      <div class="fcard" onclick="this.classList.toggle('flip')"><div class="fc-inner"><div class="fc-front"><b>Bescheid geben</b><span class="fc-flip-hint">umdrehen →</span></div><div class="fc-back">„Ich gebe Ihnen Bescheid, wenn es da ist."</div></div></div>
+      <div class="fcard" onclick="this.classList.toggle('flip')"><div class="fc-inner"><div class="fc-front"><b>Rücksicht nehmen</b><span class="fc-flip-hint">umdrehen →</span></div><div class="fc-back">„Wir nehmen abends Rücksicht auf die Nachbarn."</div></div></div>
+      <div class="fcard" onclick="this.classList.toggle('flip')"><div class="fc-inner"><div class="fc-front"><b>die Hausordnung</b><span class="fc-flip-hint">umdrehen →</span></div><div class="fc-back">„In der Hausordnung steht die Ruhezeit ab 22 Uhr."</div></div></div>
+      <div class="fcard" onclick="this.classList.toggle('flip')"><div class="fc-inner"><div class="fc-front"><b>sich kennenlernen</b><span class="fc-flip-hint">umdrehen →</span></div><div class="fc-back">„Schön, Sie kennenzulernen!"</div></div></div>
+      <div class="fcard" onclick="this.classList.toggle('flip')"><div class="fc-inner"><div class="fc-front"><b>das Verständnis</b><span class="fc-flip-hint">umdrehen →</span></div><div class="fc-back">„Vielen Dank für Ihr Verständnis."</div></div></div>
+    </div>
+  </section>
+
+  <section class="block" id="dialog">
+    <h2 class="block-head">Beispiel-<span class="hl">Chats</span></h2>
+    <p class="block-intro">Klick oben eine <strong>Situation</strong> an — jede hat einen eigenen Chat. Die <span class="key">gelben Sätze</span> sind die wichtigsten. Alles passt sich deinem Niveau an.</p>
+
+    <div class="lvl lvl-a2">
+      <span class="lvl-note">A2 · kurz grüßen & plaudern</span>
+      <div class="sitbar">
+        <button class="sitbtn active" onclick="setSit(this,0)">👋 Kennenlernen</button>
+        <button class="sitbtn" onclick="setSit(this,1)">☀️ Übers Wetter</button>
+        <button class="sitbtn" onclick="setSit(this,2)">📦 Paket annehmen</button>
+      </div>
+      <div class="sit on" data-i="0">
+        <div class="sit-title">👋 Eine neue Nachbarin kennenlernen</div>
+        <img class="scene" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260618_121330_7b741e4f-1be8-4cb6-b986-c2cab9319b46.png" alt="Nachbarn begrüßen sich im Treppenhaus">
+        <div class="chat">
+          <div class="bubble in turn"><span class="who">Nachbarin</span>Hallo! Schönes Wetter heute, oder? ☀️</div>
+          <div class="bubble out turn"><span class="who">Du</span><span class="key">Ja, wirklich schön!</span></div>
+          <div class="bubble in turn"><span class="who">Nachbarin</span>Sind Sie neu hier?</div>
+          <div class="bubble out turn"><span class="who">Du</span><span class="key">Ja, ich bin letzte Woche eingezogen.</span></div>
+          <div class="bubble in turn"><span class="who">Nachbarin</span>Herzlich willkommen! Ich bin Frau Klein.</div>
+          <div class="bubble out turn"><span class="who">Du</span><span class="key">Freut mich! Ich heiße Ana.</span></div>
+          <div class="bubble in turn"><span class="who">Nachbarin</span>Bis bald! 🙂</div>
+        </div>
+        <div style="text-align:center;margin:.2rem 0 .6rem"><button class="btn" onclick="playDialog(this.closest('.sit').querySelector('.chat'))">▶ Chat abspielen</button></div>
+        <div class="takeaway"><b>Merke:</b> grüßen → übers Wetter plaudern → sich vorstellen.</div>
+      </div>
+      <div class="sit" data-i="1">
+        <div class="sit-title">☀️ Kurz übers Wetter plaudern</div>
+        <img class="scene" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260618_121254_f0ee2a5d-e0ef-4bc5-ad01-1dea252b03d9.png" alt="Nachbarn plaudern draußen">
+        <div class="chat">
+          <div class="bubble in turn"><span class="who">Nachbar</span>Hallo! Was für ein schöner Tag heute, oder? ☀️</div>
+          <div class="bubble out turn"><span class="who">Du</span><span class="key">Ja, endlich Sonne!</span></div>
+          <div class="bubble in turn"><span class="who">Nachbar</span>Haben Sie heute frei?</div>
+          <div class="bubble out turn"><span class="who">Du</span><span class="key">Ja, ich mache einen Spaziergang.</span></div>
+          <div class="bubble in turn"><span class="who">Nachbar</span>Schön! Viel Spaß!</div>
+          <div class="bubble out turn"><span class="who">Du</span><span class="key">Danke, Ihnen auch!</span></div>
+        </div>
+        <div style="text-align:center;margin:.2rem 0 .6rem"><button class="btn" onclick="playDialog(this.closest('.sit').querySelector('.chat'))">▶ Chat abspielen</button></div>
+        <div class="takeaway"><b>Merke:</b> grüßen → übers Wetter reden → eine kleine Frage stellen → sich verabschieden.</div>
+      </div>
+      <div class="sit" data-i="2">
+        <div class="sit-title">📦 Ein Paket annehmen</div>
+        <img class="scene" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260618_121256_ed5cd5c9-5f96-431f-a504-6a4d703f9f60.png" alt="Nachbar nimmt ein Paket an">
+        <div class="chat">
+          <div class="bubble in turn"><span class="who">Nachbar</span>Hallo! <span class="key">Können Sie ein Paket für mich annehmen?</span></div>
+          <div class="bubble out turn"><span class="who">Du</span><span class="key">Ja, klar.</span></div>
+          <div class="bubble in turn"><span class="who">Nachbar</span>Ich bin heute nicht zu Hause.</div>
+          <div class="bubble out turn"><span class="who">Du</span>Kein Problem.</div>
+          <div class="bubble in turn"><span class="who">Nachbar</span>Vielen Dank! Bis später.</div>
+          <div class="bubble out turn"><span class="who">Du</span>Tschüss!</div>
+        </div>
+        <div style="text-align:center;margin:.2rem 0 .6rem"><button class="btn" onclick="playDialog(this.closest('.sit').querySelector('.chat'))">▶ Chat abspielen</button></div>
+        <div class="takeaway"><b>Merke:</b> auf eine Bitte freundlich „Ja, klar" sagen → kurz zustimmen → verabschieden.</div>
+      </div>
+    </div>
+
+    <div class="lvl lvl-b1">
+      <span class="lvl-note">B1/B2 · plaudern & um einen Gefallen bitten</span>
+      <div class="sitbar">
+        <button class="sitbtn active" onclick="setSit(this,0)">📦 Paket-Gefallen</button>
+        <button class="sitbtn" onclick="setSit(this,1)">☕ Auf einen Kaffee</button>
+        <button class="sitbtn" onclick="setSit(this,2)">🔧 Etwas ausleihen</button>
+      </div>
+      <div class="sit on" data-i="0">
+        <div class="sit-title">📦 Um einen Gefallen bitten</div>
+        <img class="scene" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260618_121256_ed5cd5c9-5f96-431f-a504-6a4d703f9f60.png" alt="Nachbar nimmt ein Paket an">
+        <div class="chat">
+          <div class="bubble in turn"><span class="who">Nachbar</span>Hallo! Na, alles gut bei Ihnen?</div>
+          <div class="bubble out turn"><span class="who">Du</span>Ja danke, und bei Ihnen?</div>
+          <div class="bubble in turn"><span class="who">Nachbar</span>Auch gut. Sagen Sie, <span class="key">könnten Sie morgen ein Paket für mich annehmen?</span> Ich bin nicht da.</div>
+          <div class="bubble out turn"><span class="who">Du</span><span class="key">Klar, kein Problem.</span> Ich nehme es vom Boten an.</div>
+          <div class="bubble in turn"><span class="who">Nachbar</span>Super, das wäre lieb. Ich gebe Ihnen Bescheid.</div>
+          <div class="bubble out turn"><span class="who">Du</span>Mach ich gern. Bis dann!</div>
+          <div class="bubble in turn"><span class="who">Nachbar</span>Vielen Dank! 🙏</div>
+        </div>
+        <div style="text-align:center;margin:.2rem 0 .6rem"><button class="btn" onclick="playDialog(this.closest('.sit').querySelector('.chat'))">▶ Chat abspielen</button></div>
+        <div class="takeaway"><b>Merke:</b> kurz plaudern → höflich um einen Gefallen bitten → freundlich zusagen.</div>
+      </div>
+      <div class="sit" data-i="1">
+        <div class="sit-title">☕ Auf einen Kaffee einladen</div>
+        <img class="scene" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260618_121254_f0ee2a5d-e0ef-4bc5-ad01-1dea252b03d9.png" alt="Nachbarn unterhalten sich freundlich">
+        <div class="chat">
+          <div class="bubble in turn"><span class="who">Nachbarin</span>Hallo! Schön, Sie zu sehen. Wie geht's?</div>
+          <div class="bubble out turn"><span class="who">Du</span>Danke, gut! <span class="key">Haben Sie kurz Zeit für einen Kaffee?</span></div>
+          <div class="bubble in turn"><span class="who">Nachbarin</span>Oh, gern — aber jetzt muss ich leider los.</div>
+          <div class="bubble out turn"><span class="who">Du</span><span class="key">Kein Problem, vielleicht ein andermal?</span></div>
+          <div class="bubble in turn"><span class="who">Nachbarin</span>Sehr gern! Wie wäre es am Wochenende?</div>
+          <div class="bubble out turn"><span class="who">Du</span>Perfekt, dann klingele ich bei Ihnen.</div>
+          <div class="bubble in turn"><span class="who">Nachbarin</span>Abgemacht, ich freue mich! 😊</div>
+        </div>
+        <div style="text-align:center;margin:.2rem 0 .6rem"><button class="btn" onclick="playDialog(this.closest('.sit').querySelector('.chat'))">▶ Chat abspielen</button></div>
+        <div class="takeaway"><b>Merke:</b> einladen → auf eine Absage flexibel reagieren → einen neuen Termin vorschlagen.</div>
+      </div>
+      <div class="sit" data-i="2">
+        <div class="sit-title">🔧 Etwas ausleihen</div>
+        <img class="scene" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260618_121317_253217ef-21e9-42db-a58f-be2e4ea2d373.png" alt="Nachbar leiht etwas aus">
+        <div class="chat">
+          <div class="bubble in turn"><span class="who">Nachbar</span>Hallo! Darf ich Sie kurz um einen Gefallen bitten?</div>
+          <div class="bubble out turn"><span class="who">Du</span>Klar, worum geht's?</div>
+          <div class="bubble in turn"><span class="who">Nachbar</span><span class="key">Haben Sie zufällig eine Bohrmaschine, die ich kurz leihen könnte?</span></div>
+          <div class="bubble out turn"><span class="who">Du</span><span class="key">Ja, die kann ich Ihnen gern geben.</span> Wann brauchen Sie sie?</div>
+          <div class="bubble in turn"><span class="who">Nachbar</span>Heute Nachmittag würde mir reichen.</div>
+          <div class="bubble out turn"><span class="who">Du</span>Passt, ich bringe sie nachher vorbei.</div>
+          <div class="bubble in turn"><span class="who">Nachbar</span>Super lieb, vielen Dank! 🙏</div>
+        </div>
+        <div style="text-align:center;margin:.2rem 0 .6rem"><button class="btn" onclick="playDialog(this.closest('.sit').querySelector('.chat'))">▶ Chat abspielen</button></div>
+        <div class="takeaway"><b>Merke:</b> um einen Gefallen bitten → zusagen &amp; nachfragen → eine konkrete Lösung anbieten.</div>
+      </div>
+    </div>
+
+    <div class="lvl lvl-c1">
+      <span class="lvl-note">B2/C1 · diplomatisch & gemeinschaftlich</span>
+      <div class="sitbar">
+        <button class="sitbtn active" onclick="setSit(this,0)">🔇 Lärm ansprechen</button>
+        <button class="sitbtn" onclick="setSit(this,1)">🎉 Hausaktion</button>
+        <button class="sitbtn" onclick="setSit(this,2)">📦 Treppenhaus klären</button>
+      </div>
+      <div class="sit on" data-i="0">
+        <div class="sit-title">🔇 Lärm diplomatisch ansprechen</div>
+        <img class="scene" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260618_121254_f0ee2a5d-e0ef-4bc5-ad01-1dea252b03d9.png" alt="Nachbarn reden über den Gartenzaun">
+        <div class="chat">
+          <div class="bubble in turn"><span class="who">Nachbarin</span>Hallo! Haben Sie kurz Zeit?</div>
+          <div class="bubble out turn"><span class="who">Du</span>Klar, was gibt's?</div>
+          <div class="bubble in turn"><span class="who">Nachbarin</span><span class="key">Es ist mir etwas unangenehm, aber abends ist die Musik manchmal ziemlich laut.</span> Wäre es möglich, sie etwas leiser zu stellen?</div>
+          <div class="bubble out turn"><span class="who">Du</span><span class="key">Oh, das tut mir leid — das war mir gar nicht bewusst.</span> Ab wann stört es Sie?</div>
+          <div class="bubble in turn"><span class="who">Nachbarin</span>So ab zehn, da müssen die Kinder schlafen.</div>
+          <div class="bubble out turn"><span class="who">Du</span>Verstehe völlig. Ich achte ab jetzt darauf. <span class="key">Sagen Sie mir gern Bescheid, falls es wieder zu laut ist.</span></div>
+          <div class="bubble in turn"><span class="who">Nachbarin</span>Das ist sehr nett — danke für Ihr Verständnis. 🙏</div>
+        </div>
+        <div style="text-align:center;margin:.2rem 0 .6rem"><button class="btn" onclick="playDialog(this.closest('.sit').querySelector('.chat'))">▶ Chat abspielen</button></div>
+        <div class="takeaway"><b>Merke:</b> heikles Thema vorsichtig einleiten → Verständnis zeigen → eine Lösung anbieten.</div>
+      </div>
+      <div class="sit" data-i="1">
+        <div class="sit-title">🎉 Eine gemeinsame Hausaktion vorschlagen</div>
+        <img class="scene" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260618_121254_f0ee2a5d-e0ef-4bc5-ad01-1dea252b03d9.png" alt="Nachbarn planen etwas zusammen">
+        <div class="chat">
+          <div class="bubble in turn"><span class="who">Nachbarin</span>Hallo! Haben Sie kurz Zeit?</div>
+          <div class="bubble out turn"><span class="who">Du</span>Klar, was gibt's?</div>
+          <div class="bubble in turn"><span class="who">Nachbarin</span><span class="key">Ich hätte Lust, im Hof mal ein kleines Sommerfest zu organisieren.</span> Was halten Sie davon?</div>
+          <div class="bubble out turn"><span class="who">Du</span><span class="key">Tolle Idee! Da mache ich gern mit.</span></div>
+          <div class="bubble in turn"><span class="who">Nachbarin</span>Schön! Meinen Sie, die anderen Nachbarn ziehen mit?</div>
+          <div class="bubble out turn"><span class="who">Du</span>Bestimmt — wir könnten einen Aushang ins Treppenhaus hängen.</div>
+          <div class="bubble in turn"><span class="who">Nachbarin</span>Perfekt, dann kümmere ich mich um die Getränke.</div>
+          <div class="bubble out turn"><span class="who">Du</span>Und ich frage mal in den oberen Etagen herum. 😊</div>
+        </div>
+        <div style="text-align:center;margin:.2rem 0 .6rem"><button class="btn" onclick="playDialog(this.closest('.sit').querySelector('.chat'))">▶ Chat abspielen</button></div>
+        <div class="takeaway"><b>Merke:</b> einen Vorschlag machen → Begeisterung zeigen → Aufgaben gemeinsam verteilen.</div>
+      </div>
+      <div class="sit" data-i="2">
+        <div class="sit-title">📦 Kartons im Treppenhaus klären</div>
+        <img class="scene" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260618_121330_7b741e4f-1be8-4cb6-b986-c2cab9319b46.png" alt="Nachbarn im Treppenhaus">
+        <div class="chat">
+          <div class="bubble in turn"><span class="who">Nachbar</span>Hallo! <span class="key">Es ist mir etwas unangenehm, aber dürfte ich etwas ansprechen?</span></div>
+          <div class="bubble out turn"><span class="who">Du</span>Natürlich, immer gern.</div>
+          <div class="bubble in turn"><span class="who">Nachbar</span>Im Treppenhaus stehen seit Tagen ein paar Kartons — wissen Sie zufällig, von wem die sind?</div>
+          <div class="bubble out turn"><span class="who">Du</span><span class="key">Oh, die sind tatsächlich von mir. Das tut mir leid, das hatte ich ganz vergessen.</span></div>
+          <div class="bubble in turn"><span class="who">Nachbar</span>Kein Problem — könnten Sie sie bei Gelegenheit wegräumen? Sonst beschwert sich noch jemand.</div>
+          <div class="bubble out turn"><span class="who">Du</span><span class="key">Mache ich heute noch, danke für den freundlichen Hinweis.</span></div>
+          <div class="bubble in turn"><span class="who">Nachbar</span>Sehr gern, schönen Tag noch! 🙂</div>
+        </div>
+        <div style="text-align:center;margin:.2rem 0 .6rem"><button class="btn" onclick="playDialog(this.closest('.sit').querySelector('.chat'))">▶ Chat abspielen</button></div>
+        <div class="takeaway"><b>Merke:</b> Kritik annehmen → Verantwortung übernehmen → eine Lösung zusagen.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="check">
+    <h2 class="block-head">Schnell-<span class="hl">Check</span></h2>
+    <p class="block-intro">Drei Fragen — klick die richtige Antwort an.</p>
+    <div class="qq" data-correct="0">
+      <p class="qtext">1. Wie startet man freundlich Smalltalk mit einer Nachbarin?</p>
+      <button class="qopt" onclick="qpick(this)">„Hallo! Schönes Wetter heute, oder?"</button>
+      <button class="qopt" onclick="qpick(this)">„Geben Sie mir Ihren Ausweis."</button>
+      <button class="qopt" onclick="qpick(this)">„Das geht Sie nichts an."</button>
+      <div class="qfb"></div>
+    </div>
+    <div class="qq" data-correct="1">
+      <p class="qtext">2. Wie bittest du höflich um einen Gefallen?</p>
+      <button class="qopt" onclick="qpick(this)">„Nehmen Sie mein Paket an, sofort!"</button>
+      <button class="qopt" onclick="qpick(this)">„Könnten Sie vielleicht ein Paket für mich annehmen?"</button>
+      <button class="qopt" onclick="qpick(this)">„Ich brauche nichts von Ihnen."</button>
+      <div class="qfb"></div>
+    </div>
+    <div class="qq" data-correct="1">
+      <p class="qtext">3. Wie sprichst du höflich an, dass die Musik zu laut ist?</p>
+      <button class="qopt" onclick="qpick(this)">„Seien Sie sofort leise!"</button>
+      <button class="qopt" onclick="qpick(this)">„Wäre es möglich, die Musik abends etwas leiser zu stellen?"</button>
+      <button class="qopt" onclick="qpick(this)">„Mir egal, was Sie hören."</button>
+      <div class="qfb"></div>
+    </div>
+  </section>
+
+  <section class="block alt" id="rollenspiel">
+    <h2 class="block-head">Jetzt <span class="hl">du</span> — Rollenspiele</h2>
+    <p class="block-intro">Spiel die Nachbarschafts-Szenen mit einem Partner — passend zu deinem Niveau. Tauscht die Rollen!</p>
+    <div class="lvl lvl-a2">
+      <div class="rp"><div class="body">
+        <p><strong>① Aufgabe (A2):</strong> Du triffst eine neue Nachbarin. Grüße, sag, dass du neu bist, und stell dich vor.</p>
+        <div class="success">✅ Gut: grüßen + „Ich bin neu/eingezogen" + Namen sagen.</div>
+        <div class="sprechhilfe">
+          <h4>🆘 Sprechhilfe — so sprichst du frei</h4>
+          <p>Setz die Wörter unten in die Sätze ein:</p>
+          <div class="frame">„Hallo, ich heiße <span class="blank"></span>."</div>
+          <div class="frame">„Ich bin neu <span class="blank"></span>."</div>
+          <div class="frame">„Schönes <span class="blank"></span>, oder?"</div>
+          <p style="margin-top:.55rem;font-weight:600">Wörter zum Einsetzen:</p>
+          <div class="bank"><span class="chip">Ana</span><span class="chip">hier</span><span class="chip">eingezogen</span><span class="chip">Wetter</span><span class="chip">Freut mich</span></div>
+        </div>
+      </div></div>
+      <div class="rp"><div class="body">
+        <p><strong>② Aufgabe (A2):</strong> Kurzer Smalltalk im Treppenhaus übers Wetter und das Wochenende.</p>
+        <div class="chips"><span class="chip">Schönes Wetter!</span><span class="chip">Was machen Sie am Wochenende?</span><span class="chip">Schönen Tag noch!</span></div>
+        <div class="success">✅ Gut: grüßen + ein, zwei kurze Fragen + verabschieden.</div>
+      </div></div>
+    </div>
+    <div class="lvl lvl-b1">
+      <div class="rp"><div class="body">
+        <p><strong>① Aufgabe (B1/B2):</strong> Bitte deinen Nachbarn höflich, morgen ein Paket für dich anzunehmen. Erkläre kurz, warum.</p>
+        <div class="chips"><span class="chip">Könnten Sie …?</span><span class="chip">Ich bin morgen nicht da.</span><span class="chip">Ich gebe Ihnen Bescheid.</span></div>
+        <div class="success">✅ Gut: Gefallen höflich erbitten + Grund + Danke.</div>
+      </div></div>
+      <div class="rp"><div class="body">
+        <p><strong>② Aufgabe (B1/B2):</strong> Lade eine Nachbarin spontan auf einen Kaffee ein und plaudert kurz übers Haus.</p>
+        <div class="chips"><span class="chip">Haben Sie Lust auf …?</span><span class="chip">Wie gefällt es Ihnen hier?</span><span class="chip">Vielleicht ein andermal?</span></div>
+        <div class="success">✅ Gut: einladen + Smalltalk + freundlich reagieren.</div>
+      </div></div>
+    </div>
+    <div class="lvl lvl-c1">
+      <div class="rp"><div class="body">
+        <p><strong>① Aufgabe (B2/C1):</strong> Sprich diplomatisch an, dass abends die Musik zu laut ist. Bleib freundlich, zeig Verständnis und finde eine Lösung.</p>
+        <div class="chips"><span class="chip">Es ist mir etwas unangenehm, aber …</span><span class="chip">Wäre es möglich, …?</span><span class="chip">Danke für Ihr Verständnis.</span></div>
+        <div class="success">✅ Gut: heikles Thema vorsichtig + konkret + lösungsorientiert.</div>
+      </div></div>
+      <div class="rp"><div class="body">
+        <p><strong>② Aufgabe (B2/C1):</strong> Schlage eine gemeinsame Aktion im Haus vor (z. B. Hof-Treffen oder Flohmarkt) und reagiere souverän auf Bedenken eines skeptischen Nachbarn.</p>
+        <div class="chips"><span class="chip">Wie wäre es, wenn wir …?</span><span class="chip">Ich verstehe Ihren Einwand, aber …</span><span class="chip">Vielleicht finden wir einen Kompromiss.</span></div>
+        <div class="success">✅ Gut: Vorschlag machen + auf Bedenken eingehen + Kompromiss anbieten.</div>
+      </div></div>
+    </div>
+  </section>
+
+  <section class="block" id="sprechen">
+    <h2 class="block-head">Sprechen — <span class="hl">freie Runde</span></h2>
+    <p class="block-intro"><img class="scene" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260618_121317_253217ef-21e9-42db-a58f-be2e4ea2d373.png" alt="Nachbar leiht etwas aus">Zieh eine Karte — passend zu deinem Niveau.</p>
+    <div class="lvl lvl-a2"><div class="speak" data-speak>
+      <div class="card"><span class="ph">Tippe auf „Neue Karte" (A2)…</span></div>
+      <div style="margin-top:.9rem;"><button class="btn dark" data-draw>🎲 Neue Karte</button></div>
+      <script type="application/json" data-speak-cards>
+        ["Begrüße eine Nachbarin und stell dich vor.",
+         "Sag, seit wann du hier wohnst.",
+         "Mach Smalltalk übers Wetter.",
+         "Frag: Wohnen Sie schon lange hier?",
+         "Verabschiede dich freundlich.",
+         "Sag, was du am Wochenende machst."]
+      </script>
+    </div></div>
+    <div class="lvl lvl-b1"><div class="speak" data-speak>
+      <div class="card"><span class="ph">Tippe auf „Neue Karte" (B1/B2)…</span></div>
+      <div style="margin-top:.9rem;"><button class="btn dark" data-draw>🎲 Neue Karte</button></div>
+      <script type="application/json" data-speak-cards>
+        ["Bitte einen Nachbarn höflich um einen kleinen Gefallen.",
+         "Erzähl, wie das Verhältnis zu deinen Nachbarn ist.",
+         "Spiel: Du lädst eine Nachbarin auf einen Kaffee ein.",
+         "Worüber redet man mit Nachbarn — und worüber lieber nicht?",
+         "Beschreibe einen netten Moment mit einem Nachbarn.",
+         "Wie lernt man am besten neue Nachbarn kennen?"]
+      </script>
+    </div></div>
+    <div class="lvl lvl-c1"><div class="speak" data-speak>
+      <div class="card"><span class="ph">Tippe auf „Neue Karte" (B2/C1)…</span></div>
+      <div style="margin-top:.9rem;"><button class="btn dark" data-draw>🎲 Neue Karte</button></div>
+      <script type="application/json" data-speak-cards>
+        ["Diskutiere: Wie viel Nähe und Distanz braucht eine gute Nachbarschaft?",
+         "Spiel: Du sprichst diplomatisch ein Lärmproblem an.",
+         "Wie löst man Konflikte mit Nachbarn am besten?",
+         "Vergleiche Nachbarschaft in der Stadt und auf dem Land.",
+         "Welche Rolle spielt Nachbarschaft für ein gutes Zusammenleben?",
+         "Spiel: Du schlägst eine gemeinsame Hausaktion vor und überzeugst Skeptiker."]
+      </script>
+    </div></div>
+  </section>
+
+  <section class="block mission" id="mission">
+    <h2 class="block-head">🎯 Mission der Woche</h2>
+    <p>Grüße diese Woche eine Nachbarin oder einen Nachbarn und plaudere kurz (oder spiel es mit jemandem nach). Nutze mindestens drei der gelben Sätze deines Niveaus.</p>
+    <div class="bonus">🏆 <strong>Bonus:</strong> Nimm eine Sprachnachricht auf, in der du höflich um einen kleinen Gefallen bittest.</div>
+  </section>
+
+  <footer>
+    <div class="mark">deutsch<span class="t">oderwas</span></div>
+    <p>Rollenspiele & Situatives Lernen · Smalltalk mit den Nachbarn · A2–C1</p>
+  </footer>
+</div>
+<script>
+(function(){
+  const tabs=[...document.querySelectorAll('nav.tabs a')];
+  const map=tabs.map(a=>({a,sec:document.querySelector(a.getAttribute('href'))})).filter(x=>x.sec);
+  if('IntersectionObserver' in window){
+    const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){tabs.forEach(t=>t.classList.remove('active'));const m=map.find(x=>x.sec===e.target);if(m)m.a.classList.add('active');}});},{rootMargin:'-45% 0px -50% 0px'});
+    map.forEach(x=>obs.observe(x.sec));
+  }
+  document.querySelectorAll('[data-speak]').forEach(box=>{
+    let cards=[];try{cards=JSON.parse(box.querySelector('[data-speak-cards]').textContent);}catch(e){}
+    const card=box.querySelector('.card'),btn=box.querySelector('[data-draw]');
+    if(btn)btn.addEventListener('click',()=>{if(cards.length)card.innerHTML=cards[Math.floor(Math.random()*cards.length)];});
+  });
+  window.qpick=function(btn){
+    const q=btn.closest('.qq'); if(q.classList.contains('done'))return;
+    const opts=[...q.querySelectorAll('.qopt')]; const correct=+q.dataset.correct; const i=opts.indexOf(btn);
+    q.classList.add('done'); opts[correct].classList.add('right');
+    if(i!==correct) btn.classList.add('wrong');
+    q.querySelector('.qfb').textContent = i===correct ? '✓ Richtig!' : '✗ Die richtige Antwort ist markiert.';
+  };
+  window.playDialog=function(d){
+    if(!d)return; d.classList.add('motion');
+    const turns=[...d.querySelectorAll('.turn,.bubble')];
+    turns.forEach(t=>t.classList.remove('show'));
+    turns.forEach((t,i)=>setTimeout(()=>t.classList.add('show'), 150 + i*450));
+  };
+  window.setSit=function(btn,i){
+    const lvl=btn.closest('.lvl');
+    lvl.querySelectorAll('.sitbar .sitbtn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const sits=[...lvl.querySelectorAll('.sit')];
+    sits.forEach(s=>s.classList.toggle('on', +s.dataset.i===i));
+    const cur=sits.find(s=>+s.dataset.i===i);
+    if(cur){const d=cur.querySelector('.chat,.dialog'); if(d) playDialog(d);}
+  };
+  window.setLevel=function(x){
+    document.body.className='show-'+x;
+    document.querySelectorAll('.lvlbtn').forEach(b=>b.classList.toggle('active', b.dataset.lvl===x));
+    document.querySelectorAll('.sit.on .chat, .sit.on .dialog').forEach(d=>{ if(d.offsetParent!==null) playDialog(d); });
+  };
+  document.querySelectorAll('.chat,.dialog').forEach(d=>{
+    let played=false;
+    const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting && d.offsetParent!==null && !played){played=true;playDialog(d);}});},{threshold:.3});
+    io.observe(d);
+  });
+})();
+</script>
+</body>
+</html>
