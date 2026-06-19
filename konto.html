@@ -318,7 +318,7 @@ const RANKS = [
 ];
 
 let sb=null, user=null, profile={}, bookings=[], creditLog=[], messages=[], ratings=[];
-let materials={}, progress={};   // materials[class_id]=content ; progress[class_id+'|'+phase]=row
+let materials={}, progress={}, postNotes={};   // materials[class_id]=content ; progress[class_id+'|'+phase]=row ; postNotes[class_id]={notes,post_content}
 let credits=0, stats={};
 
 const _qp = new URLSearchParams(location.search);
@@ -364,10 +364,12 @@ async function load(){
 
   // KI-Material für gebuchte Stunden
   const ids = [...new Set(bookings.filter(b=>b.status==='booked').map(b=>b.class_id))];
-  materials = {};
+  materials = {}; postNotes = {};
   if (ids.length){
     const { data:mats } = await sb.from('class_materials').select('class_id,content').in('class_id', ids);
     (mats||[]).forEach(m=>materials[m.class_id]=m.content);
+    const { data:cnotes } = await sb.from('class_notes').select('class_id,notes,post_content').in('class_id', ids);
+    (cnotes||[]).forEach(n=>postNotes[n.class_id]=n);
   }
   // Vokabel-Fortschritt geräteübergreifend: DB <-> localStorage mergen
   try{
@@ -588,6 +590,22 @@ function renderLernpfad(){
 // ---------- Meine Stunden ----------
 function phaseHtml(b, phase){
   const m=materials[b.class_id];
+  if(phase==='post'){
+    const ended = Date.now() > (new Date(b.starts_at).getTime() + 75*60000);
+    const pn = postNotes[b.class_id];
+    const hasPost = pn && pn.post_content && Array.isArray(pn.post_content.exercises) && pn.post_content.exercises.length;
+    const pr = progress[b.class_id+'|post'];
+    let inner;
+    if(!ended){ inner='<span class="nope">folgt nach dem Unterricht</span>'; }
+    else if(hasPost){
+      inner = (pr&&pr.completed)
+        ? `<span class="doneflag">✓ erledigt${pr.score!=null?' · '+pr.score+'/'+pr.total:''}</span><br><a href="#" onclick="openPost('${b.class_id}');return false" style="color:var(--primary);font-weight:700;font-size:12px">nochmal üben</a>`
+        : `<button class="btn btn-turq btn-sm" onclick="openPost('${b.class_id}')">Übungen starten</button>`;
+    } else { inner='<span class="nope">folgt in Kürze</span>'; }
+    const ready = ended && hasPost && !(pr&&pr.completed);
+    const donecls = (pr&&pr.completed)?'done-ph':'';
+    return `<div class="phase ${ready?'ready':''} ${donecls}"><b>✍️ Nachbearbeitung</b>${inner}</div>`;
+  }
   const hasKi = m && m[phase] && Array.isArray(m[phase].exercises) && m[phase].exercises.length;
   const link = phase==='pre'?b.material_pre:(phase==='post'?b.material_post:b.material_live);
   const label = phase==='pre'?'Vorbereitung':(phase==='post'?'Nachbearbeitung':'Im Unterricht');
@@ -822,6 +840,24 @@ function openEx(classId, phase){
   html+=`<div id="exResult"></div><button class="btn btn-primary" style="width:100%;margin-top:6px" onclick="checkEx()">Prüfen & abschließen</button>`;
   openModal(html);
   // order-Übungen initialisieren
+  exs.forEach((e,i)=>{ if(e.type==='order') initOrder(i,e); });
+}
+
+function openPost(classId){
+  const pn=postNotes[classId]; if(!pn||!pn.post_content) return;
+  const pc=pn.post_content; const exs=pc.exercises||[];
+  const saved=progress[classId+'|post'];
+  curEx={classId,phase:'post',exs,answers:(saved&&saved.answers)||{}};
+  let html=`<h3 style="margin-bottom:4px">✍️ Nachbearbeitung</h3>`;
+  if(pc.intro) html+=`<p class="muted" style="margin-bottom:12px">${esc(pc.intro)}</p>`;
+  if(pn.notes) html+=`<div class="tip-card"><b>🗒️ Im Unterricht notiert</b>${esc(pn.notes)}</div>`;
+  if(Array.isArray(pc.vocab)&&pc.vocab.length){
+    html+=`<h4 style="margin:14px 0 6px">🃏 Neue Wörter aus der Stunde</h4><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px">`+
+    pc.vocab.map(v=>`<div style="background:var(--bg);border-radius:10px;padding:8px 10px"><b style="display:block;font-size:14px">${esc(v.de)}</b><span class="muted" style="font-size:13px">${esc(v.info||'')}</span></div>`).join('')+`</div>`;
+  }
+  html+='<div id="exList" style="margin-top:14px">'+exs.map((e,i)=>renderExercise(e,i)).join('')+'</div>';
+  html+=`<div id="exResult"></div><button class="btn btn-primary" style="width:100%;margin-top:6px" onclick="checkEx()">Prüfen & abschließen</button>`;
+  openModal(html);
   exs.forEach((e,i)=>{ if(e.type==='order') initOrder(i,e); });
 }
 
