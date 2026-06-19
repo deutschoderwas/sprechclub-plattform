@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Live-Tafel · deutschoderwas</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#FDF6EC;--paper:#fff;--ink:#262019;--ink-soft:#5C4E3E;--ink-mute:#A8957D;--teal:#0FB5A6;--teal-soft:#D7F0EC;--red:#E8302A;--yellow:#FFD24A;--sand:#F0E2C8;--radius:16px;--shadow:0 10px 30px rgba(38,32,25,.08);--fh:'Fraunces',Georgia,serif;--fb:'Outfit',system-ui,sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:linear-gradient(180deg,#E9F7F4,var(--cream) 16%,var(--cream));color:var(--ink);font-family:var(--fb);min-height:100vh;line-height:1.5;}
+.wrap{max-width:760px;margin:0 auto;padding:1.8rem 1.2rem 4rem;}
+.eyebrow{font-size:.75rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--teal);}
+h1{font-family:var(--fh);font-weight:600;font-size:clamp(1.6rem,4vw,2.4rem);margin:.3rem 0;}
+.meta{color:var(--ink-soft);margin-bottom:1.2rem;}
+.badge{display:inline-block;background:var(--teal);color:#063b35;font-weight:700;font-size:.78rem;padding:3px 11px;border-radius:999px;}
+.card{background:var(--paper);border:1px solid var(--sand);border-radius:var(--radius);padding:1.3rem;margin-bottom:1.2rem;box-shadow:var(--shadow);}
+.card h2{font-family:var(--fh);font-weight:600;font-size:1.2rem;margin-bottom:.3rem;}
+.hint{color:var(--ink-soft);font-size:.92rem;margin-bottom:.8rem;}
+textarea{width:100%;min-height:280px;border:1px solid var(--sand);border-radius:12px;padding:1rem;font-family:var(--fb);font-size:1.02rem;line-height:1.6;resize:vertical;background:#FFFDF8;}
+textarea:focus{outline:2px solid var(--teal);border-color:var(--teal);}
+.row{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:.7rem;flex-wrap:wrap;}
+.save{font-size:.86rem;color:var(--ink-mute);}.save.ok{color:#0a7d63;}
+.btn{background:var(--teal);color:#063b35;font-weight:700;border:none;border-radius:999px;padding:.7rem 1.4rem;cursor:pointer;font-family:inherit;font-size:1rem;}
+.btn:disabled{opacity:.55;cursor:default;}
+.btn.dark{background:var(--ink);color:var(--cream);}
+.status{margin-top:.8rem;font-weight:600;}
+.status.good{color:#0a7d63;}.status.bad{color:var(--red);}
+.preview{margin-top:1rem;background:var(--teal-soft);border-radius:12px;padding:1rem;display:none;}
+.preview.show{display:block;}
+.preview b{color:#063b35;}
+.tagrow{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.5rem;}
+.tag{background:#fff;border:1px solid var(--sand);border-radius:999px;padding:.25rem .7rem;font-size:.85rem;}
+.note{background:var(--yellow-soft,#FFF1C2);border-radius:10px;padding:.7rem .9rem;font-size:.9rem;color:#7a5b00;margin-bottom:1rem;}
+.center{text-align:center;padding:3rem 1rem;color:var(--ink-soft);}
+.center a{color:var(--teal);font-weight:700;}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"><div class="center">Lädt …</div></div>
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const CFG=window.SPRECHCLUB_CONFIG;
+let sb, classId, cls, saveTimer;
+function esc(s){return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+
+async function init(){
+  const app=document.getElementById('app');
+  classId=new URLSearchParams(location.search).get('id');
+  if(!classId){ app.innerHTML='<div class="center">Keine Stunde angegeben.</div>'; return; }
+  sb=supabase.createClient(CFG.SUPABASE_URL,CFG.SUPABASE_ANON_KEY);
+  const { data:{ session } }=await sb.auth.getSession();
+  if(!session){ app.innerHTML='<div class="center">Bitte zuerst einloggen.<br><a href="index.html?login=1">Zum Login →</a></div>'; return; }
+  const { data:prof }=await sb.from('profiles').select('is_admin,is_teacher').eq('id',session.user.id).single();
+  if(!prof || (!prof.is_admin && !prof.is_teacher)){ app.innerHTML='<div class="center">Diese Seite ist nur für Lehrer:innen.</div>'; return; }
+  const { data:c }=await sb.from('classes').select('title,level,topic,starts_at').eq('id',classId).maybeSingle();
+  if(!c){ app.innerHTML='<div class="center">Stunde nicht gefunden.</div>'; return; }
+  cls=c;
+  const { data:cn }=await sb.from('class_notes').select('notes,post_content,generated_at').eq('class_id',classId).maybeSingle();
+  render(cn||{});
+}
+
+function render(cn){
+  const when=new Date(cls.starts_at).toLocaleString('de-DE',{weekday:'long',day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'});
+  const pc=cn.post_content;
+  document.getElementById('app').innerHTML=`
+    <div class="eyebrow">Live-Tafel · deutschoderwas</div>
+    <h1>${esc(cls.topic||cls.title)}</h1>
+    <div class="meta"><span class="badge">${esc(cls.level)}</span> &nbsp; 🗓️ ${esc(when)} Uhr</div>
+    <div class="note">✍️ Schreib hier während des Unterrichts mit: neue Wörter, Beispielsätze, was ihr gemacht habt. Wird automatisch gespeichert. Die Schüler:innen sehen es <b>nach</b> der Stunde in ihrer Nachbearbeitung.</div>
+    <div class="card">
+      <h2>Notizen</h2>
+      <textarea id="notes" placeholder="z. B.&#10;Neue Wörter: sich beschweren, die Reklamation, kulant&#10;Wir haben das Rollenspiel 'Reklamation' gespielt.&#10;Wichtig: Konjunktiv II für höfliche Bitten (Könnten Sie ...?)">${esc(cn.notes||'')}</textarea>
+      <div class="row"><span class="save" id="saveState">Automatisch gespeichert</span></div>
+    </div>
+    <div class="card">
+      <h2>Automatische Nachbearbeitung</h2>
+      <p class="hint">Aus deinen Notizen erstellt Amanda eine Vokabelliste und passende Übungen – und legt sie als Nachbearbeitung für die Schüler:innen ab.</p>
+      <button class="btn dark" id="genBtn">✨ Nachbereitung aus Notizen erstellen</button>
+      <div class="status" id="genStatus"></div>
+      <div class="preview ${pc?'show':''}" id="preview">${pc?previewHtml(pc):''}</div>
+    </div>`;
+  const ta=document.getElementById('notes');
+  ta.addEventListener('input',()=>{ document.getElementById('saveState').textContent='Speichert …'; document.getElementById('saveState').className='save';
+    clearTimeout(saveTimer); saveTimer=setTimeout(save,800); });
+  document.getElementById('genBtn').addEventListener('click',generate);
+}
+
+function previewHtml(pc){
+  const nv=(pc.vocab||[]).length, ne=(pc.exercises||[]).length;
+  return `<b>✅ Nachbearbeitung erstellt</b> – ${nv} Vokabeln, ${ne} Übungen.`+
+    ((pc.vocab&&pc.vocab.length)?`<div class="tagrow">`+pc.vocab.slice(0,12).map(v=>`<span class="tag">${esc(v.de)}</span>`).join('')+`</div>`:'');
+}
+
+async function save(){
+  const notes=document.getElementById('notes').value;
+  const { error }=await sb.from('class_notes').upsert({ class_id:classId, notes, updated_at:new Date().toISOString() });
+  const st=document.getElementById('saveState');
+  if(error){ st.textContent='Speichern fehlgeschlagen'; st.className='save bad'; }
+  else { st.textContent='Gespeichert ✓'; st.className='save ok'; }
+}
+
+async function generate(){
+  await save();
+  const btn=document.getElementById('genBtn'), st=document.getElementById('genStatus');
+  btn.disabled=true; st.className='status'; st.textContent='Amanda erstellt die Nachbearbeitung … (kann 10–20 Sek. dauern)';
+  try{
+    const { data:{ session } }=await sb.auth.getSession();
+    const r=await fetch('/api/generate-post',{ method:'POST', headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+session.access_token }, body:JSON.stringify({ classId }) });
+    const j=await r.json();
+    if(j.ok){ st.className='status good'; st.textContent='Fertig! Die Schüler:innen sehen die Nachbearbeitung nach der Stunde.';
+      const p=document.getElementById('preview'); p.className='preview show'; p.innerHTML=previewHtml(j.content); }
+    else { st.className='status bad'; st.textContent=({no_notes:'Bitte zuerst ein paar Notizen schreiben.',not_allowed:'Keine Berechtigung.',anthropic_key_missing:'KI-Schlüssel fehlt (Vercel).'}[j.error])||('Fehler: '+(j.error||'unbekannt')); }
+  }catch(e){ st.className='status bad'; st.textContent='Netzwerkfehler – bitte erneut versuchen.'; }
+  btn.disabled=false;
+}
+init();
+</script>
+</body>
+</html>
