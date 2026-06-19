@@ -30,16 +30,23 @@ export default async function handler(req, res) {
   if (logErr) return res.status(200).json({ ok: true, already_sent: true });
 
   const [{ data: cls }, { data: prof }] = await Promise.all([
-    sb.from('classes').select('title,level,topic,starts_at,zoom_link,material_pre').eq('id', class_id).single(),
+    sb.from('classes').select('title,level,topic,starts_at,zoom_link,material_pre,club').eq('id', class_id).single(),
     sb.from('profiles').select('name,email').eq('id', user.id).single(),
   ]);
   if (!cls || !prof?.email) return res.status(404).json({ error: 'data_missing' });
+
+  // Club-Infos (Name, Emoji, Farbe) für ein klares Label in der Mail
+  let club = null;
+  if (cls.club) { const { data } = await sb.from('clubs').select('name,emoji,color').eq('slug', cls.club).maybeSingle(); club = data; }
+  const clubName = club?.name || '';
+  const clubEmoji = club?.emoji || '';
+  const clubColor = club?.color || '#2DD4BF';
 
   const site = process.env.SITE_URL || 'https://www.deutschoderwas-club.de';
   const when = FMT.format(new Date(cls.starts_at));
   const vorname = (prof.name || '').split(' ')[0] || 'du';
 
-  const html = brandedBookingEmail({ vorname, cls, when, site });
+  const html = brandedBookingEmail({ vorname, cls, when, site, clubName, clubEmoji, clubColor });
 
   const r = await fetch('https://api.brevo.com/v3/smtp/email', {
     method: 'POST',
@@ -59,10 +66,12 @@ export default async function handler(req, res) {
 }
 
 // ---- deutschoderwas-Markendesign (Rot #DD0000 · Gold #FFCE00 · Creme #FFF8E0 · Petrol #2DD4BF) ----
-function brandedBookingEmail({ vorname, cls, when, site }) {
+function brandedBookingEmail({ vorname, cls, when, site, clubName, clubEmoji, clubColor }) {
   const esc = (s) => String(s == null ? '' : s).replace(/[<>&]/g, (c) => ({ '<':'&lt;', '>':'&gt;', '&':'&amp;' }[c]));
   const topic = cls.topic ? ` · ${esc(cls.topic)}` : '';
+  const accent = clubColor || '#2DD4BF';
   const ff = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
+  const clubChip = clubName ? `<span style="display:inline-block;background:${accent};color:#ffffff;font-family:${ff};font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:4px 11px;border-radius:30px">${esc(clubEmoji)} ${esc(clubName)}</span>` : '';
   const meetBtn = cls.zoom_link ? `
             <tr><td align="center" style="padding:8px 0 4px">
               <a href="${esc(cls.zoom_link)}" style="display:inline-block;background:#DD0000;color:#ffffff;font-family:${ff};font-weight:800;font-size:15px;text-decoration:none;padding:14px 30px;border-radius:50px;box-shadow:0 6px 16px rgba(221,0,0,.28)">🎥 Zum Unterricht (Google&nbsp;Meet)</a>
@@ -100,10 +109,10 @@ function brandedBookingEmail({ vorname, cls, when, site }) {
 
         <!-- Stunden-Karte -->
         <tr><td style="padding:18px 30px 4px">
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF8E0;border:1px solid #F0E5D8;border-left:5px solid #2DD4BF;border-radius:16px">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF8E0;border:1px solid #F0E5D8;border-left:5px solid ${accent};border-radius:16px">
             <tr><td style="padding:18px 20px;font-family:${ff}">
-              <div style="font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#2DD4BF">Deine Stunde</div>
-              <div style="font-size:18px;font-weight:800;color:#1A1A1A;margin:5px 0 2px">${esc(cls.title)}</div>
+              ${clubChip ? `<div style="margin-bottom:9px">${clubChip}</div>` : ''}
+              <div style="font-size:18px;font-weight:800;color:#1A1A1A;margin:0 0 2px">${esc(cls.title)}</div>
               <div style="font-size:14px;color:#6B7280;margin-bottom:10px">${esc(cls.level)}${topic}</div>
               <div style="font-size:15px;font-weight:700;color:#1A1A1A">🗓️ ${esc(when)} Uhr</div>
             </td></tr>
