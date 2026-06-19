@@ -21,9 +21,11 @@ Erstelle daraus passendes NACHBEARBEITUNGS-Material, das genau diese Inhalte auf
 {
   "intro": "1-2 motivierende Sätze: das habt ihr heute gemacht, so vertiefst du es",
   "vocab": [ { "de": "Wort/Wendung MIT Artikel (aus den Notizen)", "info": "kurze Bedeutung + Beispielsatz" } ],
+  "corrections": [ { "falsch": "typischer Fehler zum Thema/Niveau", "richtig": "korrekte Version", "tipp": "kurze Erklärung, warum" } ],
   "exercises": [ ...Aufgaben... ]
 }
 Regeln "vocab": die wichtigsten Wörter/Wendungen aus den Notizen, 6-12 Einträge.
+Regeln "corrections": 3-6 typische Fehler zum Thema und Niveau (oder erkennbar aus den Notizen), je falsch -> richtig mit kurzem Tipp.
 Regeln "exercises": 5-7 Aufgaben, die direkt die Notizen-Inhalte üben. Mische diese Typen:
 1) { "type":"choice", "q":"Frage", "options":["...","...","..."], "answer":0, "explain":"warum" }
 2) { "type":"gap", "text":"Satz mit ___", "answer":"Lösung", "alts":["..."], "hint":"Tipp" }
@@ -62,7 +64,10 @@ export default async function handler(req, res) {
   const { data: cls } = await admin.from('classes').select('id,title,level,topic').eq('id', classId).single();
   if (!cls) return res.status(404).json({ error: 'class_not_found' });
   const { data: cn } = await admin.from('class_notes').select('notes').eq('class_id', classId).single();
-  const notes = (cn?.notes || '').trim();
+  const notes = (cn?.notes || '')
+    .replace(/<br\s*\/?>/gi, '\n').replace(/<\/(div|p|li)>/gi, '\n')
+    .replace(/<[^>]+>/g, ' ').replace(/&nbsp;/gi, ' ').replace(/&amp;/gi, '&')
+    .replace(/[ \t]+/g, ' ').replace(/\n{2,}/g, '\n').trim();
   if (notes.length < 5) return res.status(400).json({ error: 'no_notes' });
 
   let content;
