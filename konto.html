@@ -3,6 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- PWA / Als App installierbar -->
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#DD0000">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="do club">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png">
+
 <title>Mein Bereich — deutschoderwas club</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -115,6 +126,18 @@ h2.sec{margin:24px 0 12px;font-size:19px}
 .modal-bg.open{display:flex}
 .modal{background:#fff;border-radius:22px;padding:24px;max-width:640px;width:100%;position:relative;margin:auto}
 .modal .close{position:absolute;top:14px;right:16px;background:none;border:none;font-size:24px;cursor:pointer;color:var(--text-soft)}
+.cfm-bg{position:fixed;inset:0;background:rgba(26,26,26,.6);z-index:360;display:none;align-items:center;justify-content:center;padding:20px}
+.cfm-bg.open{display:flex}
+.cfm{background:#fff;border-radius:24px;padding:30px 26px;max-width:420px;width:100%;text-align:center;box-shadow:0 26px 64px rgba(0,0,0,.28);position:relative;animation:cfmIn .26s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes cfmIn{from{opacity:0;transform:translateY(14px) scale(.95)}to{opacity:1;transform:none}}
+.cfm .ico{font-size:44px;line-height:1;margin-bottom:6px}
+.cfm h3{font-size:22px;margin:0 0 4px}
+.cfm .hint{color:var(--text-soft);font-size:13.5px;margin:8px 0 0;line-height:1.5}
+.cfm .det{background:var(--bg);border-radius:14px;padding:14px 16px;margin:16px 0 4px;text-align:left}
+.cfm .det b{display:block;font-size:16px;margin-bottom:2px}
+.cfm .det span{color:var(--text-soft);font-size:13.5px}
+.cfm .acts{display:flex;gap:10px;margin-top:20px}
+.cfm .acts .btn{flex:1;justify-content:center}
 .ex{border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px}
 .ex .q{font-weight:700;margin-bottom:10px}
 .ex .opt{display:block;padding:9px 12px;border:2px solid var(--border);border-radius:10px;margin-bottom:7px;cursor:pointer;font-size:14px}
@@ -211,6 +234,21 @@ h2.sec{margin:24px 0 12px;font-size:19px}
 .ev-btn.off{background:#f1f1f1;color:#aaa}
 .ev-btn.mat{background:var(--accent);color:#5a4a00}
 @media(max-width:820px){.cal-grid{grid-template-columns:1fr;overflow-x:visible}.cal-empty{display:none}.cal-day:has(.cal-empty){display:none}}
+
+.agenda{display:flex;flex-direction:column;gap:14px}
+.ag-row{display:flex;gap:14px;align-items:stretch;background:#fff;border:1px solid var(--border);border-radius:18px;padding:12px 14px;box-shadow:0 6px 18px rgba(0,0,0,.05);animation:agIn .45s ease both}
+.ag-row:nth-child(2){animation-delay:.05s}.ag-row:nth-child(3){animation-delay:.1s}.ag-row:nth-child(4){animation-delay:.15s}.ag-row:nth-child(5){animation-delay:.2s}.ag-row:nth-child(6){animation-delay:.25s}.ag-row:nth-child(7){animation-delay:.3s}
+@keyframes agIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.ag-day{flex:0 0 104px;display:flex;flex-direction:column;justify-content:center;gap:2px;border-right:1px solid var(--border);padding-right:12px}
+.ag-day b{font-family:'Space Grotesk',sans-serif;font-size:17px;text-transform:capitalize;line-height:1.1}
+.ag-day span{font-size:12px;color:var(--text-soft)}
+.ag-day em{margin-top:4px;align-self:flex-start;font-style:normal;font-size:10px;font-weight:800;letter-spacing:.04em;background:var(--primary);color:#fff;padding:2px 8px;border-radius:20px}
+.ag-day.today b{color:var(--primary)}
+.ag-events{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 6px;flex:1}
+.ag-events .ev{flex:0 0 215px;transition:transform .2s ease,box-shadow .2s ease}
+.ag-events .ev:hover{transform:translateY(-4px);box-shadow:0 14px 28px rgba(0,0,0,.13)}
+.ev-btn{transition:filter .15s ease,transform .1s ease}.ev-btn.book:hover{filter:brightness(1.12)}.ev-btn:active{transform:scale(.97)}
+@media(max-width:820px){.ag-row{flex-direction:column;gap:8px}.ag-day{flex:none;border-right:none;border-bottom:1px solid var(--border);padding:0 0 8px;flex-direction:row;align-items:center;gap:8px}}
 </style>
 <link rel="stylesheet" href="club-theme.css">
 </head>
@@ -237,7 +275,7 @@ h2.sec{margin:24px 0 12px;font-size:19px}
     <button class="navlink" data-view="amanda" onclick="go('amanda')"><span class="ic">🎤</span>Amanda</button>
     <button class="navlink" data-view="profil" onclick="go('profil')"><span class="ic">👤</span>Profil</button>
     <div class="side-foot">
-      <a class="navlink" href="live.html"><span class="ic">➕</span>Stunde buchen</a>
+      <a class="navlink" href="#" onclick="return bucheStunde(event)"><span class="ic">➕</span>Stunde buchen</a>
       <button class="navlink" onclick="logout()"><span class="ic">↩️</span>Abmelden</button>
     </div>
   </aside>
@@ -261,6 +299,7 @@ h2.sec{margin:24px 0 12px;font-size:19px}
 
 <!-- Übungs-Runner -->
 <div class="modal-bg" id="exModal"><div class="modal"><button class="close" onclick="closeEx()">×</button><div id="exBody"></div></div></div>
+<div class="cfm-bg" id="cfmModal"><div class="cfm" id="cfmCard"></div></div>
 
 <div class="toast" id="toast"></div>
 
@@ -284,6 +323,7 @@ const _qp = new URLSearchParams(location.search);
 if (_qp.get('kauf')==='ok') document.getElementById('kaufOk').style.display='block';
 if (_qp.get('pass')==='ok'){ const k=document.getElementById('kaufOk'); k.textContent='🎉 Willkommen im All-Inclusive-Pass! 12 LIVE-Klassen pro Monat sind jetzt für dich freigeschaltet.'; k.style.display='block'; }
 function passActive(){ return profile.pass_until && new Date(profile.pass_until) > new Date(); }
+function bucheStunde(e){ if(e&&e.preventDefault)e.preventDefault(); if(credits>0||passActive()){ go('kalender'); } else { location.href='index.html#preise'; } return false; }
 
 function toast(t){ const el=document.getElementById('toast'); el.textContent=t; el.style.display='block'; clearTimeout(el._t); el._t=setTimeout(()=>el.style.display='none',3500); }
 function esc(s){ return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
@@ -473,7 +513,7 @@ function renderDashboard(){
       <button class="btn btn-ghost btn-sm" onclick="go('stunden')">Vorbereiten</button>
     </div>`;
   } else {
-    next=`<div class="next-hero"><div style="flex:1"><div class="when">Noch keine Stunde gebucht</div><div class="muted">Such dir im Stundenplan etwas Passendes aus.</div></div><a class="btn btn-primary" href="index.html#stundenplan">Stunde buchen</a></div>`;
+    next=`<div class="next-hero"><div style="flex:1"><div class="when">Noch keine Stunde gebucht</div><div class="muted">Such dir im Stundenplan etwas Passendes aus.</div></div><a class="btn btn-primary" href="#" onclick="return bucheStunde(event)">Stunde buchen</a></div>`;
   }
   document.getElementById('v-dashboard').innerHTML = `
     ${isActive()?'':lockBanner()}
@@ -481,7 +521,7 @@ function renderDashboard(){
       <div><h1>${greet}</h1><p class="muted">Schön, dass du übst. Bleib dran — Sprechen lernt man durch Sprechen. 💪</p></div>
       <div class="streak-chip">🔥 ${s.streak} ${s.streak===1?'Woche':'Wochen'} Streak</div>
     </div>
-    ${passActive()?`<div class="next-hero" style="background:linear-gradient(135deg,var(--turq),var(--turq-dark));color:#fff"><div style="flex:1"><div class="when" style="color:#fff">⭐ All-Inclusive-Pass aktiv</div><div style="color:rgba(255,255,255,.85);font-size:13px">12 LIVE-Klassen pro Monat · verlängert sich am ${fmtShort(new Date(profile.pass_until))}</div></div><a class="btn" style="background:#fff;color:var(--turq-dark)" href="index.html#stundenplan">Stunde buchen</a></div>`:''}
+    ${passActive()?`<div class="next-hero" style="background:linear-gradient(135deg,var(--turq),var(--turq-dark));color:#fff"><div style="flex:1"><div class="when" style="color:#fff">⭐ All-Inclusive-Pass aktiv</div><div style="color:rgba(255,255,255,.85);font-size:13px">12 LIVE-Klassen pro Monat · verlängert sich am ${fmtShort(new Date(profile.pass_until))}</div></div><a class="btn" style="background:#fff;color:var(--turq-dark)" href="#" onclick="return bucheStunde(event)">Stunde buchen</a></div>`:''}
     <div class="rankbar">
       <div class="top"><span class="rank">${s.rank.name} · ${s.points} Punkte</span>
         <span class="muted">${s.next?('noch '+(s.next.min-s.points)+' bis '+s.next.name):'Höchster Rang erreicht 🎉'}</span></div>
@@ -531,7 +571,7 @@ function renderLernpfad(){
       }).join('')}
     </div>
     <div class="card" style="margin-top:18px"><b>So funktioniert's</b><p class="muted" style="margin-top:5px">Dein aktuelles Niveau richtet sich nach den Stunden, die du buchst. Buch Stunden im nächsthöheren Niveau, wenn du dich bereit fühlst — frag Amanda oder deine Lehrerin, wenn du unsicher bist.</p>
-      <a class="btn btn-primary btn-sm" style="margin-top:10px" href="index.html#stundenplan">Stunden ansehen</a></div>`;
+      <a class="btn btn-primary btn-sm" style="margin-top:10px" href="#" onclick="go('kalender');return false">Stunden ansehen</a></div>`;
 }
 
 // ---------- Meine Stunden ----------
@@ -557,7 +597,7 @@ function phaseHtml(b, phase){
 }
 
 // ---------- Kalender (alle Clubs, farbig, filterbar) ----------
-let kalClub='alle', kalLevel='alle', kalWeek=0, kalClubs=[];
+let kalClub='alle', kalLevel='alle', kalWeek=(function(){var s=new Date(2026,5,29),n=new Date();function m(d){var x=new Date(d);x.setDate(x.getDate()-((x.getDay()+6)%7));x.setHours(0,0,0,0);return x;}var w=Math.round((m(s)-m(n))/6048e5);return w>0?w:0;})(), kalClubs=[], kalCache=[];
 function startOfWeekK(d,off=0){ const x=new Date(d); const day=(x.getDay()+6)%7; x.setDate(x.getDate()-day+off*7); x.setHours(0,0,0,0); return x; }
 function fmtTimeK(d){ return d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}); }
 function renderKalender(){
@@ -565,13 +605,25 @@ function renderKalender(){
     '<div class="pagehead"><h1>Kalender</h1><p>Alle LIVE-Stunden farbig nach Club. Tippe einen Club an, um nur dessen Stunden zu sehen.</p></div><div id="kalBody"><div class="empty">lädt…</div></div>';
   loadKalender();
 }
+function kalLevelMatch(classLevel,filter){
+  if(filter==='alle') return true;
+  const L=String(classLevel||'');
+  let cb;
+  if(/ab\s*A2/i.test(L)) cb=['A2','B1','B2','C1'];
+  else if(/ab\s*B1/i.test(L)) cb=['B1','B2','C1'];
+  else if(/B1\s*\/\s*B2/i.test(L)) cb=['B1','B2'];
+  else if(/B2\s*\/\s*C1/i.test(L)) cb=['B2','C1'];
+  else { const m=L.match(/[ABC][12]/); cb=m?[m[0]]:[]; }
+  const fb = filter==='A2'?['A2'] : filter==='B1/B2'?['B1','B2'] : filter==='B2/C1'?['B2','C1'] : [];
+  return fb.some(b=>cb.includes(b));
+}
 async function loadKalender(){
   if(!kalClubs.length){ const {data}=await sb.from('clubs').select('*').eq('is_active',true).order('sort_order'); kalClubs=data||[]; }
   const from=startOfWeekK(new Date(), kalWeek); const to=new Date(from); to.setDate(to.getDate()+7);
   const { data } = await sb.rpc('week_classes',{p_from:from.toISOString(),p_to:to.toISOString()});
-  const all=data||[];
+  const all=data||[]; kalCache=all;
   let list=(kalClub==='alle')?all:all.filter(c=>c.club===kalClub);
-  if(kalLevel!=='alle') list=list.filter(c=>c.level===kalLevel);
+  if(kalLevel!=='alle') list=list.filter(c=>kalLevelMatch(c.level,kalLevel));
   const pills='<div class="kal-pills"><button class="kpill '+(kalClub==='alle'?'active':'')+'" onclick="setKalClub(\'alle\')">📅 Alle Clubs</button>'+
     kalClubs.map(c=>{const on=kalClub===c.slug; const col=c.color||'#2DD4BF';
       return `<button class="kpill ${on?'active':''}" style="${on?('background:'+col+';border-color:'+col+';color:#fff'):''}" onclick="setKalClub('${c.slug}')">${c.emoji||''} ${esc(c.name)}</button>`;}).join('')+'</div>';
@@ -585,12 +637,13 @@ async function loadKalender(){
     const days=[]; for(let i=0;i<7;i++){const d=new Date(from);d.setDate(d.getDate()+i);days.push(d);}
     const byDay={}; list.forEach(c=>{const k=new Date(c.starts_at).toDateString();(byDay[k]=byDay[k]||[]).push(c);});
     const today=new Date().toDateString();
-    grid='<div class="cal-grid">'+days.map(d=>{
+    grid='<div class="agenda">'+days.map(d=>{
       const arr=(byDay[d.toDateString()]||[]).sort((a,b)=>new Date(a.starts_at)-new Date(b.starts_at));
-      const head=`<div class="cal-dayhead ${d.toDateString()===today?'today':''}"><b>${d.toLocaleDateString('de-DE',{weekday:'short'})}</b><span>${d.toLocaleDateString('de-DE',{day:'numeric',month:'short'})}</span></div>`;
-      const evs=arr.length?arr.map(kalEv).join(''):'<div class="cal-empty">—</div>';
-      return `<div class="cal-day">${head}${evs}</div>`;
-    }).join('')+'</div>';
+      if(!arr.length) return '';
+      const isT=d.toDateString()===today;
+      const label=`<div class="ag-day ${isT?'today':''}"><b>${d.toLocaleDateString('de-DE',{weekday:'long'})}</b><span>${d.toLocaleDateString('de-DE',{day:'numeric',month:'short'})}</span>${isT?'<em>heute</em>':''}</div>`;
+      return `<div class="ag-row">${label}<div class="ag-events">${arr.map(kalEv).join('')}</div></div>`;
+    }).filter(Boolean).join('')+'</div>';
   }
   document.getElementById('kalBody').innerHTML=pills+lvlPills+legend+wc+grid;
 }
@@ -618,6 +671,7 @@ async function openClassMaterial(classId){
   const tip=m.grammar_tip;
   let html=`<h3 style="margin-bottom:4px">📚 Material zur Stunde</h3>`;
   if(m.intro) html+=`<p class="muted" style="margin-bottom:12px">${esc(m.intro)}</p>`;
+  if(m.lesson_url) html+=`<a class="btn btn-primary" href="${esc(m.lesson_url)}" target="_blank" rel="noopener" style="display:inline-block;margin-bottom:12px">▶️ Interaktive Lektion öffnen</a>`;
   if(tip) html+=`<div class="tip-card"><b>📌 ${esc(tip.title||'Grammatik-Tipp')}</b>${esc(tip.text||'')}</div>`;
   if(Array.isArray(m.vocab)&&m.vocab.length){
     html+=`<h4 style="margin:14px 0 6px">🃏 Wortschatz</h4><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px">`+
@@ -635,16 +689,42 @@ async function openClassMaterial(classId){
 function setKalClub(s){ kalClub=s; loadKalender(); }
 function setKalLevel(l){ kalLevel=l; loadKalender(); }
 function kalWeekChange(d){ kalWeek+=d; if(kalWeek<0)kalWeek=0; loadKalender(); }
-async function kalBook(id){
+function kalBook(id){
   if(credits<1){ toast('Du brauchst zuerst ein Paket — ich bring dich hin 😊'); setTimeout(()=>{ location.href='live.html#pakete'; }, 700); return; }
+  const c=kalCache.find(x=>String(x.id)===String(id));
+  const start=c?new Date(c.starts_at):null;
+  const title=c?esc(c.topic||c.title||'Unterricht'):'Unterricht';
+  const sub=c?[esc(c.level),c.club_name?esc(c.club_name):'',c.teacher_name?esc(c.teacher_name):''].filter(Boolean).join(' · '):'';
+  const when=start?fmt(start):'';
+  const card=document.getElementById('cfmCard');
+  card.innerHTML=`<div class="ico">📅</div>
+    <h3>Buchung bestätigen?</h3>
+    <p class="hint">Möchtest du diese Stunde verbindlich buchen?</p>
+    <div class="det"><b>${title}</b><span>${when}${sub?' · '+sub:''}</span></div>
+    <p class="hint">Storno kostenlos bis 2 Stunden vorher. Dein Guthaben wird erst nach der Teilnahme abgezogen.</p>
+    <div class="acts"><button class="btn btn-ghost" onclick="closeCfm()">Abbrechen</button><button class="btn btn-primary" id="cfmGo">Buchung bestätigen</button></div>`;
+  document.getElementById('cfmGo').onclick=()=>doBook(id);
+  document.getElementById('cfmModal').classList.add('open');
+}
+function closeCfm(){ document.getElementById('cfmModal').classList.remove('open'); }
+async function doBook(id){
+  const go=document.getElementById('cfmGo'); if(go){ go.disabled=true; go.textContent='Buche…'; }
   const {data,error}=await sb.rpc('book_class',{p_class_id:id});
-  if(error||!data.ok){
-    if(data?.error==='no_credits'){ toast('Du brauchst zuerst ein Paket — ich bring dich hin 😊'); setTimeout(()=>{ location.href='live.html#pakete'; }, 700); return; }
-    const m={class_full:'Diese Stunde ist voll.',already_booked:'Schon gebucht!',class_in_past:'Stunde ist vorbei.'}; toast(m[data?.error]||'Buchung fehlgeschlagen.'); return;
+  if(error||!data||!data.ok){
+    const m={class_full:'Diese Stunde ist leider voll.',already_booked:'Du hast diese Stunde schon gebucht!',class_in_past:'Diese Stunde ist schon vorbei.',no_credits:'Du brauchst zuerst ein Paket.',booking_paused:'Buchung über die Plattform ist gerade pausiert.'};
+    closeCfm(); toast(m[data&&data.error]||'Buchung fehlgeschlagen.');
+    if(data&&data.error==='no_credits'){ setTimeout(()=>{ location.href='live.html#pakete'; }, 800); }
+    return;
   }
-  toast('Gebucht! 🎉 Den Meet-Link findest du hier und unter „Meine Stunden".');
-  try { const { data:{ session } } = await sb.auth.getSession();
-    if (session) fetch('/api/notify-booking', { method:'POST', headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+session.access_token }, body: JSON.stringify({ class_id: id }) }).catch(()=>{}); } catch(e){}
+  // Bestätigungs-E-Mail anstoßen (Brevo, fire-and-forget)
+  try{
+    const { data:{ session } } = await sb.auth.getSession();
+    if(session){ fetch('/api/notify-booking',{ method:'POST', headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+session.access_token }, body:JSON.stringify({ class_id:id }) }).catch(()=>{}); }
+  }catch(e){}
+  document.getElementById('cfmCard').innerHTML=`<div class="ico">✅</div>
+    <h3>Unterricht gebucht!</h3>
+    <p class="hint">Schön, dass du dabei bist! Du bekommst gleich eine Bestätigung per E-Mail. Den Meet-Link findest du jederzeit unter „Meine Stunden".</p>
+    <div class="acts"><button class="btn btn-primary" onclick="closeCfm()" style="flex:1">Super, weiter 🎉</button></div>`;
   await load(); loadKalender();
 }
 
@@ -962,5 +1042,20 @@ async function logout(){ await sb.auth.signOut(); location.href='index.html'; }
 init();
 </script>
 <script src="club-fx.js"></script>
+<script>
+if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}
+</script>
+<style>
+#pwaInstall{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:9999;display:none;align-items:center;gap:10px;background:#DD0000;color:#fff;border:none;cursor:pointer;padding:13px 22px;border-radius:40px;font:700 15px 'Inter',system-ui,sans-serif;box-shadow:0 10px 30px rgba(221,0,0,.35)}
+#pwaInstall:hover{background:#B30000}
+#pwaInstall .x{margin-left:4px;opacity:.8;font-weight:600}
+</style>
+<button id="pwaInstall" aria-label="App installieren">📲 App installieren <span class="x" data-x>✕</span></button>
+<script>
+(function(){var deferred=null,btn=document.getElementById('pwaInstall');
+window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferred=e;if(btn)btn.style.display='inline-flex';});
+if(btn){btn.addEventListener('click',function(ev){if(ev.target&&ev.target.hasAttribute('data-x')){btn.style.display='none';return;}if(!deferred)return;deferred.prompt();deferred.userChoice.finally(function(){deferred=null;btn.style.display='none';});});}
+window.addEventListener('appinstalled',function(){if(btn)btn.style.display='none';});})();
+</script>
 </body>
 </html>
