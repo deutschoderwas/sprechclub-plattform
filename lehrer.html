@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Lehrer-Bereich · deutschoderwas club</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#FDF6EC;--paper:#fff;--ink:#262019;--ink-soft:#5C4E3E;--ink-mute:#A8957D;--teal:#0FB5A6;--red:#E8302A;--yellow:#FFD24A;--sand:#F0E2C8;--radius:16px;--shadow:0 10px 30px rgba(38,32,25,.08);--fh:'Fraunces',Georgia,serif;--fb:'Outfit',system-ui,sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:linear-gradient(180deg,#E9F7F4,var(--cream) 16%,var(--cream));color:var(--ink);font-family:var(--fb);min-height:100vh;line-height:1.5;}
+.top{background:var(--paper);border-bottom:1px solid var(--sand);padding:.8rem 1.2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;}
+.brand{font-family:var(--fh);font-weight:700;font-size:1.1rem;}.brand .t{color:var(--teal);}
+.top .out{font-size:.9rem;color:var(--ink-soft);cursor:pointer;background:none;border:none;font-family:inherit;}
+.wrap{max-width:780px;margin:0 auto;padding:1.6rem 1.2rem 4rem;}
+h1{font-family:var(--fh);font-weight:600;font-size:clamp(1.6rem,4vw,2.3rem);margin-bottom:.3rem;}
+.sub{color:var(--ink-soft);margin-bottom:1.4rem;}
+.daygroup{margin-bottom:1.2rem;}
+.dayhead{font-family:var(--fh);font-weight:600;font-size:1.05rem;color:var(--ink-soft);margin:0 0 .5rem .2rem;}
+.cls{background:var(--paper);border:1px solid var(--sand);border-left:5px solid var(--c,#0FB5A6);border-radius:14px;padding:.9rem 1rem;margin-bottom:.6rem;box-shadow:var(--shadow);}
+.cls .row1{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;}
+.time{font-weight:700;font-size:1.05rem;}
+.pill{font-size:.72rem;font-weight:700;padding:2px 9px;border-radius:999px;color:#fff;background:var(--c,#0FB5A6);}
+.lvl{font-size:.72rem;font-weight:700;color:var(--ink-soft);background:#f3ece0;padding:2px 9px;border-radius:999px;}
+.topic{font-family:var(--fh);font-weight:600;font-size:1.08rem;margin:.4rem 0 .2rem;}
+.kat{color:var(--ink-mute);font-size:.9rem;}
+.acts{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.7rem;}
+.btn{border:none;border-radius:999px;padding:.5rem 1rem;cursor:pointer;font-family:inherit;font-size:.9rem;font-weight:700;text-decoration:none;display:inline-block;}
+.btn.tafel{background:var(--ink);color:var(--cream);}
+.btn.meet{background:var(--teal);color:#063b35;}
+.center{text-align:center;padding:3rem 1rem;color:var(--ink-soft);}
+.center a{color:var(--teal);font-weight:700;}
+.empty{background:var(--paper);border:1px dashed var(--sand);border-radius:14px;padding:1.4rem;text-align:center;color:var(--ink-soft);}
+</style>
+</head>
+<body>
+<div class="top"><div class="brand">deutsch<span class="t">oderwas</span> · Lehrer-Bereich</div><button class="out" id="outBtn" style="display:none">Abmelden</button></div>
+<div class="wrap" id="app"><div class="center">Lädt …</div></div>
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const CFG=window.SPRECHCLUB_CONFIG;
+const CLUB={sprechclub:{c:'#0FB5A6',n:'Sprechclub'},grammatikclub:{c:'#E8302A',n:'Grammatikclub'},wortschatzclub:{c:'#F5B301',n:'Wortschatzclub'},ausspracheclub:{c:'#2F6BFF',n:'Ausspracheclub'}};
+let sb;
+function esc(s){return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+const fDay=new Intl.DateTimeFormat('de-DE',{weekday:'long',day:'numeric',month:'long'});
+const fTime=new Intl.DateTimeFormat('de-DE',{hour:'2-digit',minute:'2-digit'});
+
+async function init(){
+  const app=document.getElementById('app');
+  sb=supabase.createClient(CFG.SUPABASE_URL,CFG.SUPABASE_ANON_KEY);
+  const { data:{ session } }=await sb.auth.getSession();
+  if(!session){ app.innerHTML='<div class="center">Bitte zuerst einloggen.<br><a href="index.html?login=1">Zum Login →</a></div>'; return; }
+  document.getElementById('outBtn').style.display='inline-block';
+  document.getElementById('outBtn').onclick=async()=>{ await sb.auth.signOut(); location.href='index.html'; };
+  const email=(session.user.email||'').toLowerCase();
+  const { data:prof }=await sb.from('profiles').select('is_admin,is_teacher,name').eq('id',session.user.id).single();
+  const { data:teachers }=await sb.from('teachers').select('id,name,email').not('email','is',null);
+  const me=(teachers||[]).find(t=>(t.email||'').toLowerCase()===email);
+  if(!me && !(prof&&prof.is_admin)){
+    app.innerHTML=`<div class="center">Hallo! Diese E-Mail ist noch nicht als Lehrkraft hinterlegt.<br>Bitte melde dich bei Julia, dann wird dein Konto freigeschaltet.</div>`; return;
+  }
+  // Admin ohne eigene Lehrer-Zeile: erste Lehrkraft als Ansicht (Fallback)
+  const teacher = me || (teachers&&teachers[0]) || null;
+  const vorname=(prof&&prof.name? prof.name.split(' ')[0] : (teacher&&teacher.name? teacher.name.split(' ')[0]:'')) || 'Hallo';
+
+  const from=new Date(Date.now()-2*3600*1000).toISOString();
+  const to=new Date(Date.now()+21*24*3600*1000).toISOString();
+  let cls=[];
+  if(teacher){
+    const { data }=await sb.from('classes').select('id,title,level,topic,club,starts_at,zoom_link')
+      .eq('teacher_id',teacher.id).gte('starts_at',from).lt('starts_at',to).eq('is_cancelled',false).order('starts_at');
+    cls=data||[];
+  }
+  render(vorname, teacher, cls, prof);
+}
+
+function render(vorname, teacher, cls, prof){
+  const app=document.getElementById('app');
+  let html=`<h1>Hallo ${esc(vorname)}! 👋</h1>
+    <p class="sub">${teacher?('Deine kommenden Stunden'+( (prof&&prof.is_admin&&!teacher.email)?'':'')+' (nächste 2 Wochen) – mit einem Klick zur Live-Tafel.'):'Wähle deine Stunden.'}</p>`;
+  if(!cls.length){
+    html+=`<div class="empty">Aktuell sind dir keine Stunden in den nächsten 2 Wochen zugewiesen.<br><span style="font-size:.9rem">Sobald Julia dich einer Stunde zuweist, erscheinen sie hier.</span></div>`;
+    app.innerHTML=html; return;
+  }
+  const byDay={};
+  cls.forEach(c=>{ const k=new Date(c.starts_at).toDateString(); (byDay[k]=byDay[k]||[]).push(c); });
+  Object.keys(byDay).forEach(k=>{
+    html+=`<div class="daygroup"><div class="dayhead">${fDay.format(new Date(k))}</div>`;
+    byDay[k].forEach(c=>{
+      const club=CLUB[c.club]||{c:'#0FB5A6',n:c.club||''};
+      const kat=(c.club==='sprechclub'&&c.title&&c.title!==c.topic)?c.title:club.n;
+      html+=`<div class="cls" style="--c:${club.c}">
+        <div class="row1"><span class="time">${fTime.format(new Date(c.starts_at))}</span>
+          <span class="pill" style="--c:${club.c}">${esc(club.n)}</span><span class="lvl">${esc(c.level)}</span></div>
+        <div class="topic">${esc(c.topic||c.title)}</div>
+        <div class="kat">${esc(kat)}</div>
+        <div class="acts">
+          <a class="btn tafel" href="tafel.html?id=${c.id}" target="_blank" rel="noopener">🖊️ Live-Tafel</a>
+          ${c.zoom_link?`<a class="btn meet" href="${esc(c.zoom_link)}" target="_blank" rel="noopener">🎥 Zum Unterricht</a>`:''}
+        </div></div>`;
+    });
+    html+=`</div>`;
+  });
+  app.innerHTML=html;
+}
+init().catch(e=>{ document.getElementById('app').innerHTML='<div class="center">Es ist ein Fehler aufgetreten. Bitte Seite neu laden.</div>'; });
+</script>
+</body>
+</html>
