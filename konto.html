@@ -157,6 +157,15 @@ h2.sec{margin:24px 0 12px;font-size:19px}
 .fb{font-size:13px;margin-top:8px;font-weight:600}
 .fb.ok{color:var(--green)}.fb.no{color:var(--primary)}
 .tip-card{background:var(--green-soft);border:1px solid var(--turquoise);border-radius:14px;padding:14px 16px;margin-bottom:14px}
+.ptabs{display:flex;gap:4px;margin-bottom:14px;border-bottom:1px solid var(--border)}
+.ptab{border:none;background:none;padding:9px 12px;font-weight:700;font-size:13px;color:var(--text-soft,#5C5C5C);cursor:pointer;border-bottom:2px solid transparent;font-family:inherit}
+.ptab.active{color:var(--primary,#DD0000);border-bottom-color:var(--primary,#DD0000)}
+.corr{background:#fff;border:1px solid var(--border);border-radius:10px;padding:9px 12px;margin-bottom:8px;font-size:14px}
+.corr-w{color:#dc2626;text-decoration:line-through}
+.corr-r{color:#16a34a;font-weight:700}
+.live-notes{white-space:pre-wrap;min-height:80px;font-size:15px;line-height:1.6}
+.live-dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#dc2626;margin-right:6px;vertical-align:middle;animation:livePulse 1.2s infinite}
+@keyframes livePulse{0%{box-shadow:0 0 0 0 rgba(220,38,38,.5)}70%{box-shadow:0 0 0 7px rgba(220,38,38,0)}100%{box-shadow:0 0 0 0 rgba(220,38,38,0)}}
 .tip-card b{display:block;margin-bottom:4px}
 .score-banner{background:var(--secondary);color:#fff;border-radius:14px;padding:16px;text-align:center;margin-bottom:14px}
 .score-banner .big{font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:700}
@@ -606,6 +615,17 @@ function phaseHtml(b, phase){
     const donecls = (pr&&pr.completed)?'done-ph':'';
     return `<div class="phase ${ready?'ready':''} ${donecls}"><b>✍️ Nachbearbeitung</b>${inner}</div>`;
   }
+  if(phase==='live'){
+    const st=new Date(b.starts_at).getTime(), now=Date.now();
+    const started = now >= st - 10*60000;   // ab 10 Min vor Beginn
+    const ended = now > st + 90*60000;      // bis 90 Min nach Beginn
+    const liveNow = started && !ended;
+    let inner;
+    if(liveNow) inner=`<button class="btn btn-turq btn-sm" onclick="openLive('${b.class_id}')"><span class="live-dot"></span>Live mitverfolgen</button>`;
+    else if(ended) inner='<span class="nope">Stunde vorbei</span>';
+    else inner='<span class="nope">startet zur Stundenzeit</span>';
+    return `<div class="phase ${liveNow?'ready':''}"><b>🗣️ Im Unterricht</b>${inner}</div>`;
+  }
   const hasKi = m && m[phase] && Array.isArray(m[phase].exercises) && m[phase].exercises.length;
   const link = phase==='pre'?b.material_pre:(phase==='post'?b.material_post:b.material_live);
   const label = phase==='pre'?'Vorbereitung':(phase==='post'?'Nachbearbeitung':'Im Unterricht');
@@ -826,7 +846,7 @@ function rateClass(classId){
 // ---------- Übungs-Runner ----------
 let curEx=null;
 function openModal(inner){ document.getElementById('exBody').innerHTML=inner; document.getElementById('exModal').classList.add('open'); }
-function closeEx(){ document.getElementById('exModal').classList.remove('open'); curEx=null; }
+function closeEx(){ document.getElementById('exModal').classList.remove('open'); curEx=null; if(typeof stopLive==='function') stopLive(); }
 function openEx(classId, phase){
   const m=materials[classId]; if(!m||!m[phase]) return;
   const exs=m[phase].exercises||[];
@@ -854,17 +874,66 @@ function openPost(classId){
   const pc=pn.post_content; const exs=pc.exercises||[];
   const saved=progress[classId+'|post'];
   curEx={classId,phase:'post',exs,answers:(saved&&saved.answers)||{}};
-  let html=`<h3 style="margin-bottom:4px">✍️ Nachbearbeitung</h3>`;
-  if(pc.intro) html+=`<p class="muted" style="margin-bottom:12px">${esc(pc.intro)}</p>`;
-  if(pn.notes) html+=`<div class="tip-card"><b>🗒️ Im Unterricht notiert</b>${esc(pn.notes)}</div>`;
+  const corr = pc.corrections||pc.fehler||pc.errors;
+  let html=`<h3 style="margin-bottom:6px">✍️ Nachbearbeitung</h3>`;
+  if(pc.intro) html+=`<p class="muted" style="margin-bottom:10px">${esc(pc.intro)}</p>`;
+  html+=`<div class="ptabs">
+    <button class="ptab active" onclick="postTab(0)">🗒️ Mitschrift</button>
+    <button class="ptab" onclick="postTab(1)">🔧 Fehlerkorrektur</button>
+    <button class="ptab" onclick="postTab(2)">✏️ Übungen</button></div>`;
+  // Tab 0: Freie Mitschrift
+  html+=`<div class="ptab-c" data-t="0">`+((pn.notes&&pn.notes.trim())
+    ?`<div class="tip-card" style="white-space:pre-wrap">${esc(pn.notes)}</div>`
+    :`<p class="muted">Für diese Stunde gibt es keine freie Mitschrift.</p>`)+`</div>`;
+  // Tab 1: Fehlerkorrektur + neue Wörter
+  let t1='';
+  if(Array.isArray(corr)&&corr.length){
+    t1+=`<h4 style="margin:4px 0 8px">🔧 Häufige Fehler aus der Stunde</h4>`+corr.map(c=>{
+      if(typeof c==='string') return `<div class="corr">${esc(c)}</div>`;
+      const w=c.falsch||c.wrong||c.from||'', r=c.richtig||c.right||c.to||'', n=c.tipp||c.note||c.hinweis||'';
+      return `<div class="corr">${w?`<span class="corr-w">${esc(w)}</span> → `:''}<span class="corr-r">${esc(r)}</span>${n?`<div class="muted" style="font-size:13px;margin-top:2px">${esc(n)}</div>`:''}</div>`;
+    }).join('');
+  }
   if(Array.isArray(pc.vocab)&&pc.vocab.length){
-    html+=`<h4 style="margin:14px 0 6px">🃏 Neue Wörter aus der Stunde</h4><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px">`+
+    t1+=`<h4 style="margin:14px 0 6px">🃏 Neue Wörter aus der Stunde</h4><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px">`+
     pc.vocab.map(v=>`<div style="background:var(--bg);border-radius:10px;padding:8px 10px"><b style="display:block;font-size:14px">${esc(v.de)}</b><span class="muted" style="font-size:13px">${esc(v.info||'')}</span></div>`).join('')+`</div>`;
   }
-  html+='<div id="exList" style="margin-top:14px">'+exs.map((e,i)=>renderExercise(e,i)).join('')+'</div>';
-  html+=`<div id="exResult"></div><button class="btn btn-primary" style="width:100%;margin-top:6px" onclick="checkEx()">Prüfen & abschließen</button>`;
+  if(!t1) t1='<p class="muted">Keine Korrekturen oder neuen Wörter erfasst.</p>';
+  html+=`<div class="ptab-c" data-t="1" style="display:none">${t1}</div>`;
+  // Tab 2: Übungen
+  html+=`<div class="ptab-c" data-t="2" style="display:none">`+(exs.length
+    ?`<div id="exList">`+exs.map((e,i)=>renderExercise(e,i)).join('')+`</div><div id="exResult"></div><button class="btn btn-primary" style="width:100%;margin-top:6px" onclick="checkEx()">Prüfen & abschließen</button>`
+    :`<p class="muted">Für diese Stunde gibt es keine Übungen.</p>`)+`</div>`;
   openModal(html);
   exs.forEach((e,i)=>{ if(e.type==='order') initOrder(i,e); });
+}
+function postTab(i){
+  document.querySelectorAll('#exBody .ptab').forEach((b,k)=>b.classList.toggle('active',k===i));
+  document.querySelectorAll('#exBody .ptab-c').forEach(c=>{ c.style.display=(+c.dataset.t===i)?'':'none'; });
+}
+
+// ---------- Im Unterricht: LIVE mitverfolgen (Realtime + Präsentation) ----------
+let liveChannel=null, livePoll=null;
+function stopLive(){ try{ if(liveChannel){ sb.removeChannel(liveChannel); liveChannel=null; } }catch(e){} if(livePoll){ clearInterval(livePoll); livePoll=null; } }
+function setLiveNotes(txt){ const el=document.getElementById('liveNotes'); if(el){ el.textContent=(txt&&txt.trim())?txt:'Noch nichts geschrieben – es geht gleich los …'; } const st=document.getElementById('liveStamp'); if(st) st.textContent='zuletzt aktualisiert '+new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit',second:'2-digit'}); }
+async function loadLiveNotes(classId){ try{ const {data}=await sb.from('class_notes').select('notes').eq('class_id',classId).maybeSingle(); setLiveNotes(data&&data.notes); }catch(e){} }
+function openLive(classId){
+  const m=materials[classId]||{};
+  let html=`<h3 style="margin-bottom:4px"><span class="live-dot"></span>Im Unterricht – live</h3>
+    <p class="muted" style="margin-bottom:12px">Die Tafel aktualisiert sich automatisch, während deine Lehrkraft mitschreibt.</p>`;
+  if(m.lesson_url) html+=`<a class="btn btn-primary" href="${esc(m.lesson_url)}" target="_blank" rel="noopener" style="display:inline-block;margin-bottom:12px">📊 Präsentation öffnen</a>`;
+  html+=`<div class="tip-card live-notes" id="liveNotes">lädt …</div><div class="muted" id="liveStamp" style="font-size:12px;margin-top:6px"></div>`;
+  openModal(html);
+  loadLiveNotes(classId);
+  stopLive();
+  try{
+    liveChannel=sb.channel('live-'+classId)
+      .on('postgres_changes',{event:'*',schema:'public',table:'class_notes',filter:'class_id=eq.'+classId},
+          payload=>{ const n=payload.new&&payload.new.notes; setLiveNotes(n); })
+      .subscribe();
+  }catch(e){}
+  // Fallback-Polling, falls Realtime mal hakt
+  livePoll=setInterval(()=>loadLiveNotes(classId), 12000);
 }
 
 function renderExercise(e,i){
