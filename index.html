@@ -5,6 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>deutschoderwas club — Endlich frei Deutsch sprechen (LIVE-Unterricht)</title>
 <meta name="description" content="Der deutschoderwas club: LIVE-Sprechunterricht in kleinen Gruppen (max. 5–6), Mo–Sa, mit Wochenplan & Material, KI-Tutorin Amanda gratis und digitalen Kursen. Buche deine Stunde und sprich endlich frei Deutsch.">
+<!-- PWA / Als App installierbar -->
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#DD0000">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="do club">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
@@ -608,6 +618,41 @@ initHome();
     });
   });
   call.addEventListener('mouseleave',function(){ stage.style.transform='rotateY(0deg) rotateX(0deg)'; });
+})();
+</script>
+
+<!-- PWA: Service Worker + "App installieren"-Button -->
+<style>
+#pwaInstall{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:9999;
+  display:none;align-items:center;gap:10px;background:#DD0000;color:#fff;border:none;cursor:pointer;
+  padding:13px 22px;border-radius:40px;font:700 15px 'Inter',system-ui,sans-serif;
+  box-shadow:0 10px 30px rgba(221,0,0,.35)}
+#pwaInstall:hover{background:#B30000}
+#pwaInstall .x{margin-left:4px;opacity:.8;font-weight:600}
+</style>
+<button id="pwaInstall" aria-label="App installieren">📲 App installieren <span class="x" data-x>✕</span></button>
+<script>
+(function(){
+  // Service Worker registrieren (macht die Seite installierbar)
+  if('serviceWorker' in navigator){
+    window.addEventListener('load',function(){
+      navigator.serviceWorker.register('/sw.js').catch(function(){});
+    });
+  }
+  // Eigener Installations-Button (Android/Chrome/Edge)
+  var deferred=null, btn=document.getElementById('pwaInstall');
+  window.addEventListener('beforeinstallprompt',function(e){
+    e.preventDefault(); deferred=e; if(btn) btn.style.display='inline-flex';
+  });
+  if(btn){
+    btn.addEventListener('click',function(ev){
+      if(ev.target&&ev.target.hasAttribute('data-x')){ btn.style.display='none'; return; }
+      if(!deferred) return;
+      deferred.prompt();
+      deferred.userChoice.finally(function(){ deferred=null; btn.style.display='none'; });
+    });
+  }
+  window.addEventListener('appinstalled',function(){ if(btn) btn.style.display='none'; });
 })();
 </script>
 </body>
