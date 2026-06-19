@@ -835,7 +835,13 @@ function openEx(classId, phase){
   const tip=m.grammar_tip;
   let html=`<h3 style="margin-bottom:4px">${phase==='pre'?'📖 Vorbereitung':'✍️ Nachbearbeitung'}</h3>`;
   if(m.intro) html+=`<p class="muted" style="margin-bottom:12px">${esc(m.intro)}</p>`;
-  if(tip&&phase==='pre') html+=`<div class="tip-card"><b>📌 ${esc(tip.title||'Grammatik-Tipp')}</b>${esc(tip.text||'')}</div>`;
+  if(phase==='pre' && Array.isArray(m.vocab) && m.vocab.length){
+    html+=`<h4 style="margin:8px 0 6px">🃏 1. Wortschatz vorlernen</h4><p class="muted" style="font-size:13px;margin-bottom:6px">Diese Wörter brauchst du heute – präg sie dir kurz ein.</p><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px">`+
+    m.vocab.map(v=>`<div style="background:var(--bg);border-radius:10px;padding:8px 10px"><b style="display:block;font-size:14px">${esc(v.de)}</b><span class="muted" style="font-size:13px">${esc(v.info||v.en||'')}</span></div>`).join('')+`</div>`;
+  }
+  if(tip&&phase==='pre') html+=`<h4 style="margin:14px 0 6px">📌 2. Sprach-Tipp</h4><div class="tip-card"><b>${esc(tip.title||'Grammatik-Tipp')}</b>${esc(tip.text||'')}</div>`;
+  else if(tip) html+=`<div class="tip-card"><b>📌 ${esc(tip.title||'Grammatik-Tipp')}</b>${esc(tip.text||'')}</div>`;
+  if(phase==='pre') html+=`<h4 style="margin:16px 0 6px">✏️ 3. Übungen</h4><p class="muted" style="font-size:13px;margin-bottom:8px">Geh gut vorbereitet in die Stunde – so kannst du im Unterricht direkt mitreden.</p>`;
   html+='<div id="exList">'+exs.map((e,i)=>renderExercise(e,i)).join('')+'</div>';
   html+=`<div id="exResult"></div><button class="btn btn-primary" style="width:100%;margin-top:6px" onclick="checkEx()">Prüfen & abschließen</button>`;
   openModal(html);
