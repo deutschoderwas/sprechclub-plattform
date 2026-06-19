@@ -883,7 +883,7 @@ function openPost(classId){
     <button class="ptab" onclick="postTab(2)">✏️ Übungen</button></div>`;
   // Tab 0: Freie Mitschrift
   html+=`<div class="ptab-c" data-t="0">`+((pn.notes&&pn.notes.trim())
-    ?`<div class="tip-card" style="white-space:pre-wrap">${esc(pn.notes)}</div>`
+    ?`<div class="tip-card" style="white-space:pre-wrap">${pn.notes}</div>`
     :`<p class="muted">Für diese Stunde gibt es keine freie Mitschrift.</p>`)+`</div>`;
   // Tab 1: Fehlerkorrektur + neue Wörter
   let t1='';
@@ -915,7 +915,7 @@ function postTab(i){
 // ---------- Im Unterricht: LIVE mitverfolgen (Realtime + Präsentation) ----------
 let liveChannel=null, livePoll=null;
 function stopLive(){ try{ if(liveChannel){ sb.removeChannel(liveChannel); liveChannel=null; } }catch(e){} if(livePoll){ clearInterval(livePoll); livePoll=null; } }
-function setLiveNotes(txt){ const el=document.getElementById('liveNotes'); if(el){ el.textContent=(txt&&txt.trim())?txt:'Noch nichts geschrieben – es geht gleich los …'; } const st=document.getElementById('liveStamp'); if(st) st.textContent='zuletzt aktualisiert '+new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit',second:'2-digit'}); }
+function setLiveNotes(txt){ const el=document.getElementById('liveNotes'); if(el){ el.innerHTML=(txt&&String(txt).trim())?txt:'<span class="muted">Noch nichts geschrieben – es geht gleich los …</span>'; } const st=document.getElementById('liveStamp'); if(st) st.textContent='zuletzt aktualisiert '+new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit',second:'2-digit'}); }
 async function loadLiveNotes(classId){ try{ const {data}=await sb.from('class_notes').select('notes').eq('class_id',classId).maybeSingle(); setLiveNotes(data&&data.notes); }catch(e){} }
 function openLive(classId){
   const m=materials[classId]||{};
