@@ -9,53 +9,85 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--cream:#FDF6EC;--cream-warm:#FBEDD8;--paper:#FFFFFF;--ink:#262019;--ink-soft:#5C4E3E;--ink-mute:#A8957D;
-  --red:#E8302A;--red-soft:#FCE5E3;--teal:#0FB5A6;--teal-soft:#D7F0EC;--yellow:#FFD24A;--yellow-soft:#FFF1C2;--sand:#F0E2C8;
-  --radius:18px;--shadow:0 10px 30px rgba(38,32,25,.08);--font-head:'Fraunces',Georgia,serif;--font-body:'Outfit','Segoe UI',system-ui,sans-serif;}
+  --red:#E8302A;--red-soft:#FCE5E3;--teal:#0FB5A6;--teal-soft:#D7F0EC;--yellow:#FFD24A;--yellow-soft:#FFF1C2;--sand:#F0E2C8;--green:#1Fae8a;
+  --accent:#0FB5A6;--radius:18px;--shadow:0 10px 30px rgba(38,32,25,.08);--font-head:'Fraunces',Georgia,serif;--font-body:'Outfit','Segoe UI',system-ui,sans-serif;}
 *{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
-body{background:linear-gradient(180deg,#FDE6E0 0%,var(--cream) 14%,var(--cream) 100%);color:var(--ink);font-family:var(--font-body);line-height:1.55;min-height:100vh;-webkit-font-smoothing:antialiased;}
-.wrapper{max-width:840px;margin:0 auto;padding:2.4rem 1.4rem 4.5rem;}
-.eyebrow{text-align:center;font-size:.78rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--accent,#E8302A);margin-bottom:.9rem;}
-h1.title{font-family:var(--font-head);font-weight:600;font-size:clamp(2rem,5vw,3.4rem);line-height:1.06;text-align:center;}
-.title-wrap{text-align:center;margin-bottom:1rem;}
-.badge{display:inline-block;background:var(--accent,#0FB5A6);color:#fff;font-weight:700;font-size:.8rem;padding:5px 14px;border-radius:999px;margin-top:.9rem;}
-.subtitle{text-align:center;max-width:600px;margin:1rem auto 0;color:var(--ink-soft);font-size:1.06rem;}
-nav.tabs{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;padding:.7rem .5rem;margin:1.5rem 0 2rem;background:rgba(253,246,236,.9);backdrop-filter:blur(8px);border:1px solid var(--sand);border-radius:999px;}
-nav.tabs a{font-size:.82rem;font-weight:600;color:var(--ink-soft);text-decoration:none;padding:.4rem .8rem;border-radius:999px;}
+body{background:linear-gradient(180deg,var(--cream-warm) 0%,var(--cream) 16%,var(--cream) 100%);color:var(--ink);font-family:var(--font-body);line-height:1.55;min-height:100vh;-webkit-font-smoothing:antialiased;}
+.wrapper{max-width:860px;margin:0 auto;padding:1.6rem 1.2rem 4.5rem;}
+/* HERO */
+.hero{position:relative;border-radius:24px;overflow:hidden;margin-bottom:1.4rem;box-shadow:var(--shadow);min-height:240px;display:flex;align-items:flex-end;
+  background:linear-gradient(135deg,var(--accent) 0%,color-mix(in srgb,var(--accent) 55%,#000) 100%);}
+.hero.hasimg{align-items:flex-end;}
+.hero img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;}
+.hero .veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.55));z-index:1;}
+.hero .blob{position:absolute;border-radius:50%;filter:blur(2px);opacity:.25;z-index:0;}
+.hero .blob.b1{width:200px;height:200px;background:#fff;top:-60px;right:-40px;}
+.hero .blob.b2{width:150px;height:150px;background:#000;bottom:-50px;left:30%;opacity:.12;}
+.hero .emoji{position:absolute;top:18px;right:22px;font-size:3.4rem;z-index:2;filter:drop-shadow(0 4px 8px rgba(0,0,0,.2));}
+.hero .htext{position:relative;z-index:3;padding:1.5rem 1.6rem 1.4rem;color:#fff;}
+.hero .eyebrow{font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;opacity:.92;margin-bottom:.5rem;}
+.hero h1{font-family:var(--font-head);font-weight:600;font-size:clamp(1.7rem,4.6vw,2.8rem);line-height:1.08;}
+.hero .badge{display:inline-block;background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.5);color:#fff;font-weight:700;font-size:.78rem;padding:4px 12px;border-radius:999px;margin-top:.7rem;}
+nav.tabs{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;padding:.6rem .5rem;margin:0 0 1.6rem;background:rgba(253,246,236,.92);backdrop-filter:blur(8px);border:1px solid var(--sand);border-radius:999px;}
+nav.tabs a{font-size:.82rem;font-weight:600;color:var(--ink-soft);text-decoration:none;padding:.38rem .8rem;border-radius:999px;}
 nav.tabs a:hover{background:var(--cream-warm);}
-section.block{background:var(--paper);border:1px solid var(--sand);border-radius:var(--radius);padding:1.6rem;margin-bottom:1.4rem;box-shadow:var(--shadow);scroll-margin-top:5rem;}
+section.block{background:var(--paper);border:1px solid var(--sand);border-radius:var(--radius);padding:1.6rem;margin-bottom:1.3rem;box-shadow:var(--shadow);scroll-margin-top:4.5rem;opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease;}
+section.block.in{opacity:1;transform:none;}
 .block.alt{background:var(--cream-warm);}
-.block-head{font-family:var(--font-head);font-weight:600;font-size:clamp(1.25rem,3vw,1.7rem);margin-bottom:.4rem;}
-.block-head .hl{color:var(--accent,#E8302A);font-style:italic;}
+.block-head{font-family:var(--font-head);font-weight:600;font-size:clamp(1.2rem,3vw,1.6rem);margin-bottom:.4rem;}
+.block-head .hl{color:var(--accent);font-style:italic;}
 .block-intro{color:var(--ink-soft);margin-bottom:1rem;}
+.intro-lead{font-size:1.08rem;color:var(--ink-soft);}
 .tip{background:var(--yellow-soft);border-left:4px solid var(--yellow);border-radius:14px;padding:1rem 1.1rem;}
 .tip b{display:block;font-family:var(--font-head);font-size:1.05rem;margin-bottom:.3rem;color:var(--ink);}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.8rem;}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.8rem;}
 .fcard{height:150px;cursor:pointer;perspective:1000px;}
 .fc-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
 .fcard.flip .fc-inner{transform:rotateY(180deg);}
 .fc-front,.fc-back{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border:1px solid var(--sand);border-radius:14px;padding:.9rem;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;}
 .fc-front{background:var(--cream);}
-.fc-back{background:var(--teal-soft);transform:rotateY(180deg);font-style:italic;color:#063b35;font-size:.95rem;line-height:1.45;}
-.fc-front b{font-size:1.12rem;}
+.fc-back{background:var(--teal-soft);transform:rotateY(180deg);font-style:italic;color:#063b35;font-size:.94rem;line-height:1.45;}
+.fc-front b{font-size:1.1rem;}
 .fc-hint{font-size:.7rem;color:var(--ink-mute);margin-top:.4rem;}
+/* EXERCISES */
+.ex{background:var(--cream);border:1px solid var(--sand);border-radius:14px;padding:1rem 1.1rem;margin-bottom:.8rem;}
+.ex .q{font-weight:600;margin-bottom:.6rem;}
+.ex .q .blank{display:inline-block;min-width:54px;border-bottom:2px solid var(--accent);}
+.opt{display:block;width:100%;text-align:left;background:var(--paper);border:1px solid var(--sand);border-radius:10px;padding:.6rem .8rem;margin:.3rem 0;cursor:pointer;font-family:inherit;font-size:.97rem;}
+.opt:hover{background:var(--cream-warm);}
+.opt.right{background:var(--teal-soft);border-color:var(--teal);font-weight:600;color:#063b35;}
+.opt.wrong{background:var(--red-soft);border-color:var(--red);}
+.gapin{border:1px solid var(--sand);border-radius:8px;padding:.35rem .5rem;font-family:inherit;font-size:.97rem;min-width:120px;}
+.gapin.ok{background:var(--teal-soft);border-color:var(--teal);}
+.gapin.no{background:var(--red-soft);border-color:var(--red);}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem;margin:.5rem 0;}
+.chip{background:var(--paper);border:1px solid var(--sand);border-radius:999px;padding:.35rem .8rem;cursor:pointer;font-size:.95rem;}
+.chip.used{opacity:.35;pointer-events:none;}
+.answerline{min-height:42px;border:1px dashed var(--sand);border-radius:10px;padding:.5rem .7rem;margin:.4rem 0;background:var(--paper);font-size:1rem;}
+.matchrow{display:flex;gap:.6rem;align-items:center;margin:.35rem 0;}
+.matchrow .l{flex:1;background:var(--paper);border:1px solid var(--sand);border-radius:8px;padding:.5rem .7rem;}
+.matchrow select{flex:1;border:1px solid var(--sand);border-radius:8px;padding:.5rem;font-family:inherit;}
+.matchrow select.ok{background:var(--teal-soft);border-color:var(--teal);}
+.matchrow select.no{background:var(--red-soft);border-color:var(--red);}
+.btn{display:inline-block;background:var(--accent);color:#fff;font-weight:700;border:none;border-radius:999px;padding:.5rem 1.1rem;cursor:pointer;font-family:inherit;font-size:.92rem;margin-top:.4rem;}
+.btn.dark{background:var(--ink);}
+.btn.ghost{background:transparent;color:var(--accent);border:2px solid var(--accent);}
+.fb{font-size:.92rem;font-weight:600;margin-top:.5rem;min-height:1.1em;}
+.fb.good{color:#0a7d63;}.fb.bad{color:var(--red);}
+.sample{background:var(--teal-soft);border-radius:10px;padding:.6rem .8rem;margin-top:.5rem;font-size:.92rem;color:#063b35;display:none;}
+.subhead{font-weight:700;color:var(--ink-soft);margin:.2rem 0 .6rem;font-size:.95rem;}
 .speak{text-align:center;}
-.speak .card{background:var(--cream);border:1px solid var(--sand);border-radius:16px;padding:1.6rem 1.2rem;min-height:120px;display:flex;align-items:center;justify-content:center;font-size:1.18rem;font-weight:600;font-family:var(--font-head);}
+.speak .card{background:var(--cream);border:1px solid var(--sand);border-radius:16px;padding:1.6rem 1.2rem;min-height:120px;display:flex;align-items:center;justify-content:center;font-size:1.16rem;font-weight:600;font-family:var(--font-head);}
 .speak .card .ph{color:var(--ink-mute);font-family:var(--font-body);font-weight:400;}
 .speak ul{list-style:none;margin:1rem 0 0;display:flex;flex-direction:column;gap:.5rem;}
 .speak li{background:var(--cream);border:1px solid var(--sand);border-radius:12px;padding:.7rem .9rem;text-align:left;color:var(--ink-soft);}
-.btn{display:inline-block;background:var(--ink);color:var(--cream);font-weight:700;border:none;border-radius:999px;padding:.6rem 1.4rem;cursor:pointer;font-family:var(--font-body);font-size:1rem;margin-top:1rem;}
-.steps{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.4rem;}
-.step{background:var(--cream);border:1px solid var(--sand);border-radius:12px;padding:.8rem 1rem;flex:1 1 200px;}
-.step .n{font-family:var(--font-head);font-weight:700;color:var(--accent,#E8302A);font-size:1.1rem;}
 section.mission{background:var(--ink);color:var(--cream);border-radius:var(--radius);padding:1.4rem 1.5rem;}
 section.mission p,.mission .block-head{color:var(--cream);}
-.center{text-align:center;}
 .loading,.error{text-align:center;color:var(--ink-soft);padding:4rem 1rem;font-size:1.1rem;}
 .error a{color:var(--red);font-weight:700;}
 footer{text-align:center;color:var(--ink-mute);font-size:.84rem;margin-top:1.8rem;}
-footer .mark{font-family:var(--font-head);font-weight:600;color:var(--ink);}
-footer .mark .t{color:var(--teal);}
+footer .mark{font-family:var(--font-head);font-weight:600;color:var(--ink);}footer .mark .t{color:var(--teal);}
 </style>
 </head>
 <body>
@@ -63,83 +95,132 @@ footer .mark .t{color:var(--teal);}
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const CFG = window.SPRECHCLUB_CONFIG;
-const CLUB = {
-  sprechclub:{c:'#0FB5A6',n:'Sprechclub'}, grammatikclub:{c:'#E8302A',n:'Grammatikclub'},
-  wortschatzclub:{c:'#F5B301',n:'Wortschatzclub'}, ausspracheclub:{c:'#2F6BFF',n:'Ausspracheclub'}
-};
-function esc(s){ return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
-function qid(){ const u=new URLSearchParams(location.search); return u.get('id'); }
+const CFG=window.SPRECHCLUB_CONFIG;
+const CLUB={sprechclub:{c:'#0FB5A6',n:'Sprechclub',e:'💬'},grammatikclub:{c:'#E8302A',n:'Grammatikclub',e:'📐'},
+  wortschatzclub:{c:'#F5B301',n:'Wortschatzclub',e:'📚'},ausspracheclub:{c:'#2F6BFF',n:'Ausspracheclub',e:'🎧'}};
+function esc(s){return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function norm(s){return (s||'').toString().trim().toLowerCase().replace(/\s+/g,' ').replace(/[.!?,;:]+$/,'');}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+let EXSEQ=0;
+
+function renderEx(ex){
+  const id='ex'+(EXSEQ++);
+  if(ex.type==='choice'){
+    return `<div class="ex" id="${id}"><p class="q">${esc(ex.q)}</p>`+
+      ex.options.map((o,i)=>`<button class="opt" onclick="pickChoice('${id}',${i},${ex.answer})">${esc(o)}</button>`).join('')+
+      `<div class="fb" data-ex>${ex.explain?'<span style="display:none" data-explain>'+esc(ex.explain)+'</span>':''}</div></div>`;
+  }
+  if(ex.type==='gap'){
+    const parts=esc(ex.text).split('___');
+    const inp=`<input class="gapin" id="${id}_i" autocomplete="off">`;
+    return `<div class="ex" id="${id}"><p class="q">${parts.join(inp)}</p>`+
+      `<button class="btn" onclick="checkGap('${id}',${JSON.stringify([ex.answer].concat(ex.alts||[])).replace(/"/g,'&quot;')})">prüfen</button>`+
+      (ex.hint?` <span style="font-size:.85rem;color:var(--ink-mute)">💡 ${esc(ex.hint)}</span>`:'')+
+      `<div class="fb" data-ex></div></div>`;
+  }
+  if(ex.type==='order'){
+    const words=esc(ex.answer).split(' ');
+    return `<div class="ex" id="${id}" data-answer="${esc(ex.answer)}"><p class="q">Bring die Wörter in die richtige Reihenfolge${ex.hint?' ('+esc(ex.hint)+')':''}:</p>`+
+      `<div class="answerline" id="${id}_a"></div>`+
+      `<div class="chips" id="${id}_c">`+shuffle(words).map((w,i)=>`<span class="chip" onclick="addWord('${id}','${i}',this)">${w}</span>`).join('')+`</div>`+
+      `<button class="btn ghost" onclick="resetOrder('${id}')">zurücksetzen</button> <button class="btn" onclick="checkOrder('${id}')">prüfen</button>`+
+      `<div class="fb" data-ex></div></div>`;
+  }
+  if(ex.type==='match'){
+    const rights=shuffle(ex.pairs.map(p=>p.r));
+    return `<div class="ex" id="${id}"><p class="q">${esc(ex.intro||'Ordne zu')}:</p>`+
+      ex.pairs.map((p,i)=>`<div class="matchrow"><div class="l">${esc(p.l)}</div>`+
+        `<select id="${id}_s${i}" data-correct="${esc(p.r)}"><option value="">– wählen –</option>`+
+        rights.map(r=>`<option value="${esc(r)}">${esc(r)}</option>`).join('')+`</select></div>`).join('')+
+      `<button class="btn" onclick="checkMatch('${id}',${ex.pairs.length})">prüfen</button><div class="fb" data-ex></div></div>`;
+  }
+  if(ex.type==='write'){
+    return `<div class="ex" id="${id}"><p class="q">✍️ ${esc(ex.prompt)}</p>`+
+      `<textarea class="gapin" style="width:100%;min-height:64px" placeholder="Schreib deine Antwort …"></textarea><br>`+
+      `<button class="btn ghost" onclick="document.getElementById('${id}_s').style.display='block'">Beispiel zeigen</button>`+
+      `<div class="sample" id="${id}_s">💡 ${esc(ex.sample||'')}</div></div>`;
+  }
+  return '';
+}
+// handlers
+window.pickChoice=function(id,i,ans){const el=document.getElementById(id);if(el.dataset.done)return;el.dataset.done='1';
+  const opts=[...el.querySelectorAll('.opt')];opts[ans].classList.add('right');if(i!==ans)opts[i].classList.add('wrong');
+  const fb=el.querySelector('[data-ex]');const ex=fb.querySelector('[data-explain]');
+  fb.className='fb '+(i===ans?'good':'bad');fb.innerHTML=(i===ans?'✓ Richtig! ':'✗ Richtige Antwort ist markiert. ')+(ex?ex.textContent:'');};
+window.checkGap=function(id,alts){const el=document.getElementById(id);const inp=document.getElementById(id+'_i');const fb=el.querySelector('[data-ex]');
+  const ok=alts.some(a=>norm(a)===norm(inp.value));inp.classList.remove('ok','no');inp.classList.add(ok?'ok':'no');
+  fb.className='fb '+(ok?'good':'bad');fb.textContent=ok?'✓ Richtig!':'✗ Richtig: '+alts[0];};
+window.addWord=function(id,i,chip){const line=document.getElementById(id+'_a');chip.classList.add('used');
+  const span=document.createElement('span');span.textContent=chip.textContent+' ';span.dataset.from=i;line.appendChild(span);};
+window.resetOrder=function(id){document.getElementById(id+'_a').innerHTML='';document.querySelectorAll('#'+id+'_c .chip').forEach(c=>c.classList.remove('used'));document.querySelector('#'+id+' [data-ex]').textContent='';};
+window.checkOrder=function(id){const el=document.getElementById(id);const got=document.getElementById(id+'_a').textContent.trim();const fb=el.querySelector('[data-ex]');
+  const ok=norm(got)===norm(el.dataset.answer);fb.className='fb '+(ok?'good':'bad');fb.textContent=ok?'✓ Perfekt!':'✗ Richtig: '+el.dataset.answer;};
+window.checkMatch=function(id,n){const el=document.getElementById(id);let ok=0;for(let i=0;i<n;i++){const s=document.getElementById(id+'_s'+i);s.classList.remove('ok','no');const good=norm(s.value)===norm(s.dataset.correct);s.classList.add(good?'ok':'no');if(good)ok++;}
+  const fb=el.querySelector('[data-ex]');fb.className='fb '+(ok===n?'good':'bad');fb.textContent=ok===n?'✓ Alles richtig!':`${ok} von ${n} richtig – schau dir die roten an.`;};
+
+function exercisesBlock(m){
+  const pre=(m.pre&&m.pre.exercises)||[], post=(m.post&&m.post.exercises)||[];
+  if(!pre.length&&!post.length) return '';
+  let h=`<section class="block" id="ueben"><h2 class="block-head">Interaktiv <span class="hl">üben</span></h2>`;
+  if(pre.length){h+=`<p class="subhead">📖 Aufwärmen</p>`+pre.map(renderEx).join('');}
+  if(post.length){h+=`<p class="subhead" style="margin-top:1rem">✍️ Vertiefen</p>`+post.map(renderEx).join('');}
+  return h+`</section>`;
+}
 
 async function run(){
   const app=document.getElementById('app');
-  const id=qid();
-  if(!id){ app.innerHTML='<div class="error">Keine Lektion angegeben.</div>'; return; }
+  const id=new URLSearchParams(location.search).get('id');
+  if(!id){app.innerHTML='<div class="error">Keine Lektion angegeben.</div>';return;}
   const sb=supabase.createClient(CFG.SUPABASE_URL,CFG.SUPABASE_ANON_KEY);
-  const { data:cls } = await sb.from('classes').select('title,level,topic,club,starts_at').eq('id',id).maybeSingle();
-  if(!cls){ app.innerHTML='<div class="error">Lektion nicht gefunden.</div>'; return; }
-  const { data:cm } = await sb.from('class_materials').select('content').eq('class_id',id).maybeSingle();
-  const m = cm && cm.content ? cm.content : null;
-  const club = CLUB[cls.club] || {c:'#0FB5A6',n:cls.club||''};
-  document.documentElement.style.setProperty('--accent', club.c);
-  const cat = (cls.club==='sprechclub' && cls.title && cls.title!==cls.topic) ? cls.title : club.n;
-  document.title = (cls.topic||cls.title||'Lektion')+' · deutschoderwas';
+  const {data:cls}=await sb.from('classes').select('title,level,topic,club').eq('id',id).maybeSingle();
+  if(!cls){app.innerHTML='<div class="error">Lektion nicht gefunden – oder du hast keinen aktiven Zugang. <br><a href="live.html#pakete">Stundenpaket ansehen →</a></div>';return;}
+  const {data:cm}=await sb.from('class_materials').select('content').eq('class_id',id).maybeSingle();
+  const m=cm&&cm.content?cm.content:null;
+  const club=CLUB[cls.club]||{c:'#0FB5A6',n:cls.club||'',e:'✨'};
+  document.documentElement.style.setProperty('--accent',club.c);
+  const cat=(cls.club==='sprechclub'&&cls.title&&cls.title!==cls.topic)?cls.title:club.n;
+  document.title=(cls.topic||cls.title||'Lektion')+' · deutschoderwas';
+  const hero=m&&m.hero?m.hero:null;
 
-  if(!m){
-    app.innerHTML = `<div class="title-wrap"><div class="eyebrow">${esc(club.n)} · ${esc(cat)}</div>
-      <h1 class="title">${esc(cls.topic||cls.title)}</h1><span class="badge">${esc(cls.level)}</span></div>
-      <div class="error">Für diese Stunde liegt das Material gerade noch nicht vor, oder du hast keinen aktiven Zugang. <br><a href="live.html#pakete">Stundenpaket ansehen →</a></div>`;
-    return;
-  }
+  let h=`<div class="hero ${hero?'hasimg':''}">`+
+    (hero?`<img class="bg" src="${esc(hero)}" alt=""><div class="veil"></div>`:`<div class="blob b1"></div><div class="blob b2"></div><div class="emoji">${club.e}</div>`)+
+    `<div class="htext"><div class="eyebrow">${esc(club.n)} · ${esc(cat)}</div>
+      <h1>${esc(cls.topic||cls.title)}</h1><span class="badge">${esc(cls.level)}</span></div></div>`;
 
-  let html = `<div class="title-wrap">
-    <div class="eyebrow">${esc(club.n)} · ${esc(cat)}</div>
-    <h1 class="title">${esc(cls.topic||cls.title)}</h1>
-    <span class="badge">${esc(cls.level)}</span>
-    ${m.intro?`<p class="subtitle">${esc(m.intro)}</p>`:''}
-  </div>
-  <nav class="tabs">
+  if(!m){app.innerHTML=h+`<div class="error">Material folgt in Kürze.</div>`;return;}
+
+  h+=`<nav class="tabs">
+    ${m.intro?'<a href="#start">📖 Start</a>':''}
     ${m.grammar_tip?'<a href="#tipp">📌 Tipp</a>':''}
     ${(m.vocab&&m.vocab.length)?'<a href="#wortschatz">🃏 Wortschatz</a>':''}
+    ${((m.pre&&m.pre.exercises&&m.pre.exercises.length)||(m.post&&m.post.exercises&&m.post.exercises.length))?'<a href="#ueben">✏️ Üben</a>':''}
     ${(m.speak_prompts&&m.speak_prompts.length)?'<a href="#sprechen">🗣️ Sprechen</a>':''}
-    <a href="#mission">🎯 Los geht’s</a>
-  </nav>`;
+    <a href="#mission">🎯 Mission</a></nav>`;
 
-  if(m.grammar_tip){
-    html += `<section class="block" id="tipp"><h2 class="block-head">Sprach-<span class="hl">Tipp</span></h2>
-      <div class="tip"><b>📌 ${esc(m.grammar_tip.title||'Tipp')}</b>${esc(m.grammar_tip.text||'')}</div></section>`;
-  }
-
+  if(m.intro){h+=`<section class="block" id="start"><p class="intro-lead">${esc(m.intro)}</p></section>`;}
+  if(m.grammar_tip){h+=`<section class="block" id="tipp"><h2 class="block-head">Sprach-<span class="hl">Tipp</span></h2><div class="tip"><b>📌 ${esc(m.grammar_tip.title||'Tipp')}</b>${esc(m.grammar_tip.text||'')}</div></section>`;}
   if(m.vocab&&m.vocab.length){
-    html += `<section class="block alt" id="wortschatz"><h2 class="block-head">Wort<span class="hl">schatz</span></h2>
-      <p class="block-intro">Tippe auf eine Karte – vorne das Wort, hinten Bedeutung &amp; Beispiel.</p><div class="cards">`+
-      m.vocab.map(v=>`<div class="fcard" onclick="this.classList.toggle('flip')"><div class="fc-inner">
-        <div class="fc-front"><b>${esc(v.de)}</b><span class="fc-hint">umdrehen →</span></div>
-        <div class="fc-back">${esc(v.info||v.en||'')}</div></div></div>`).join('')+`</div></section>`;
+    h+=`<section class="block alt" id="wortschatz"><h2 class="block-head">Wort<span class="hl">schatz</span></h2><p class="block-intro">Tippe auf eine Karte – vorne das Wort, hinten Bedeutung &amp; Beispiel.</p><div class="cards">`+
+      m.vocab.map(v=>`<div class="fcard" onclick="this.classList.toggle('flip')"><div class="fc-inner"><div class="fc-front"><b>${esc(v.de)}</b><span class="fc-hint">umdrehen →</span></div><div class="fc-back">${esc(v.info||v.en||'')}</div></div></div>`).join('')+`</div></section>`;
   }
-
+  h+=exercisesBlock(m);
   if(m.speak_prompts&&m.speak_prompts.length){
-    html += `<section class="block" id="sprechen"><h2 class="block-head">Jetzt <span class="hl">sprechen</span></h2>
-      <p class="block-intro">Das übt ihr heute live im Unterricht – zieh eine Karte oder geh die Impulse der Reihe nach durch.</p>
-      <div class="speak"><div class="card" id="speakCard"><span class="ph">Tippe auf „Neue Karte" …</span></div>
-      <button class="btn" id="drawBtn">🎲 Neue Karte</button>
+    h+=`<section class="block" id="sprechen"><h2 class="block-head">Jetzt <span class="hl">sprechen</span></h2><p class="block-intro">Das übt ihr heute live – zieh eine Karte oder geht die Impulse der Reihe nach durch.</p>
+      <div class="speak"><div class="card" id="speakCard"><span class="ph">Tippe auf „Neue Karte" …</span></div><button class="btn dark" id="drawBtn">🎲 Neue Karte</button>
       <ul>${m.speak_prompts.map(s=>`<li>${esc(s)}</li>`).join('')}</ul></div></section>`;
   }
-
-  // Mission aus erster Schreibaufgabe oder generisch
   let mission='Sprich heute so viel wie möglich – trau dich, Fehler sind erlaubt!';
-  try{ const w=((m.post&&m.post.exercises)||[]).concat((m.pre&&m.pre.exercises)||[]).find(e=>e.type==='write'); if(w&&w.prompt) mission=w.prompt; }catch(e){}
-  html += `<section class="block mission" id="mission"><h2 class="block-head">🎯 Deine Mission</h2>
-    <p>${esc(mission)}</p></section>
+  try{const w=(((m.post&&m.post.exercises)||[]).concat((m.pre&&m.pre.exercises)||[])).find(e=>e.type==='write');if(w&&w.prompt)mission=w.prompt;}catch(e){}
+  h+=`<section class="block mission" id="mission"><h2 class="block-head">🎯 Deine Mission</h2><p>${esc(mission)}</p></section>
     <footer><div class="mark">deutsch<span class="t">oderwas</span></div><p>${esc(club.n)} · ${esc(cls.topic||'')} · ${esc(cls.level)}</p></footer>`;
 
-  app.innerHTML = html;
-
-  const cards = (m.speak_prompts||[]);
-  const card=document.getElementById('speakCard'), btn=document.getElementById('drawBtn');
-  if(btn) btn.addEventListener('click',()=>{ if(cards.length) card.textContent=cards[Math.floor(Math.random()*cards.length)]; });
+  app.innerHTML=h;
+  const cards=m.speak_prompts||[],sc=document.getElementById('speakCard'),db=document.getElementById('drawBtn');
+  if(db)db.addEventListener('click',()=>{if(cards.length)sc.textContent=cards[Math.floor(Math.random()*cards.length)];});
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');}),{threshold:.08});
+  document.querySelectorAll('section.block').forEach(s=>io.observe(s));
 }
-run().catch(e=>{ document.getElementById('app').innerHTML='<div class="error">Es ist ein Fehler aufgetreten. Lade die Seite neu.</div>'; });
+run().catch(e=>{document.getElementById('app').innerHTML='<div class="error">Es ist ein Fehler aufgetreten. Bitte Seite neu laden.</div>';});
 </script>
 </body>
 </html>
