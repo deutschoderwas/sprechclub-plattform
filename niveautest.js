@@ -35,28 +35,28 @@
   };
 
   // ---- Fragen zusammenstellen ----
-  function pickQuick() {
-    // 3 Aufgaben pro Stufe (2 Sprachbausteine + 1 Lesen/Hören), A1 -> C1
+  function byLevelSkill(L, sk) { return D.ITEMS.filter(function (x) { return x.level === L && x.skill === sk; }); }
+
+  // Mini-Test: 30 Aufgaben, strikt aufsteigend A1->C1 (6 pro Stufe: Lesen, Hören, dann Sprachbausteine)
+  function pickMini() {
+    var per = (typeof D.MINI_PER_LEVEL === 'number') ? D.MINI_PER_LEVEL : 6;
     var qs = [];
-    LEVELS.forEach(function (L, idx) {
-      var pool = D.ITEMS.filter(function (x) { return x.level === L && x.quick; });
-      var bs = pool.filter(function (x) { return x.skill === 'bausteine'; }).slice(0, 2);
-      var other = pool.filter(function (x) { return x.skill !== 'bausteine'; });
-      // abwechselnd Lesen / Hören pro Stufe
-      var pickOther = other[idx % other.length] || other[0];
-      var block = bs.concat(pickOther ? [pickOther] : []);
-      qs = qs.concat(block);
+    LEVELS.forEach(function (L) {
+      var les = byLevelSkill(L, 'lesen').slice(0, 2);
+      var hoe = byLevelSkill(L, 'hoeren').slice(0, 2);
+      var bau = byLevelSkill(L, 'bausteine');
+      var block = les.concat(hoe);
+      block = block.concat(bau.slice(0, Math.max(0, per - block.length)));
+      qs = qs.concat(block.slice(0, per));
     });
     return qs;
   }
+  // Großer Test: alle Aufgaben, aufsteigend nach Stufe (innerhalb: Lesen, Hören, Sprachbausteine)
   function pickFull() {
-    // telc-Struktur: erst Leseverstehen, dann Hörverstehen, dann Sprachbausteine – je nach Stufe sortiert
     var order = ['lesen', 'hoeren', 'bausteine'];
     var qs = [];
-    order.forEach(function (sk) {
-      LEVELS.forEach(function (L) {
-        D.ITEMS.forEach(function (x) { if (x.skill === sk && x.level === L) qs.push(x); });
-      });
+    LEVELS.forEach(function (L) {
+      order.forEach(function (sk) { byLevelSkill(L, sk).forEach(function (x) { qs.push(x); }); });
     });
     return qs;
   }
@@ -84,12 +84,11 @@
             '<div class="nt-hero-badges">' +
               LEVELS.map(function (L) { return '<span class="nt-lv-badge">' + L + '</span>'; }).join('') +
             '</div>' +
-            '<button class="nt-btn nt-btn-primary nt-start" id="ntOpen">Jetzt Test starten →</button>' +
+            '<a class="nt-btn nt-btn-primary nt-start" href="niveau-test.html">Jetzt Test starten →</a>' +
           '</div>' +
           '<div class="nt-cut"><img src="' + esc(photo) + '" alt="Julia – teste dein Deutschniveau"></div>' +
         '</div>' +
       '</div>';
-    var b = document.getElementById('ntOpen'); if (b) b.addEventListener('click', openModal);
   }
 
   // ---- Modal-Steuerung (Test öffnet sich in eigenem Fenster/Overlay) ----
@@ -147,15 +146,15 @@
   function renderModeChoice() {
     return '<div class="nt-welcome">Hallo' + (S.name ? ' ' + esc(S.name) : '') + ' 👋 Du bist startklar! Wähle deinen Test:</div>' +
       '<div class="nt-modes">' +
-        '<button class="nt-mode" data-act="start:quick">' +
+        '<button class="nt-mode" data-act="start:mini">' +
           '<div class="nt-mode-ic">⚡</div>' +
-          '<div class="nt-mode-t">Schnelltest</div>' +
-          '<div class="nt-mode-d">ca. 12–15 Fragen · 5 Min · passt sich deinem Niveau an</div>' +
+          '<div class="nt-mode-t">Mini-Test</div>' +
+          '<div class="nt-mode-d">30 Aufgaben · von leicht bis schwer · ca. 7 Min</div>' +
         '</button>' +
         '<button class="nt-mode nt-mode-feat" data-act="start:full">' +
           '<div class="nt-mode-ic">📚</div>' +
           '<div class="nt-mode-t">Großer Test</div>' +
-          '<div class="nt-mode-d">alle Module · ~15 Min · ausführliche Auswertung pro Fertigkeit</div>' +
+          '<div class="nt-mode-d">alle Fertigkeiten · ausführliche Auswertung · ca. 15–20 Min</div>' +
         '</button>' +
       '</div>';
   }
@@ -165,7 +164,7 @@
     S.mode = mode;
     S.answers = {};
     S.i = 0;
-    S.qs = (mode === 'quick') ? pickQuick() : pickFull();
+    S.qs = (mode === 'mini') ? pickMini() : pickFull();
     // Antwortoptionen je Frage einmal mischen (Reihenfolge stabil halten)
     S.qs.forEach(function (q) {
       if (!q._order) {
@@ -177,6 +176,15 @@
   }
 
   function curLevelOf(i) { return S.qs[i] ? S.qs[i].level : null; }
+
+  // Visueller Niveau-Stepper A1 -> C1 (zeigt erledigte & aktuelle Stufe)
+  function levelStepper(curLevel) {
+    var ci = LEVELS.indexOf(curLevel);
+    return '<div class="nt-step">' + LEVELS.map(function (L, i) {
+      var st = i < ci ? 'done' : (i === ci ? 'cur' : '');
+      return '<span class="nt-step-i ' + st + '">' + (i < ci ? '✓' : L) + '</span>';
+    }).join('<span class="nt-step-line"></span>') + '</div>';
+  }
 
   function renderQuestion() {
     var q = S.qs[S.i];
@@ -197,16 +205,16 @@
         '><span class="nt-opt-k">' + String.fromCharCode(65 + pos) + '</span><span>' + esc(q.options[origIdx]) + '</span></button>';
     }).join('');
 
-    var media = '';
+    var scene = q.img ? '<div class="nt-scene"><img src="' + esc(q.img) + '" alt="" loading="lazy"></div>' : '';
+    var media = scene;
     if (q.skill === 'hoeren' && q.audio && D.AUDIO[q.audio]) {
-      media = '<div class="nt-audio">' +
+      media = scene + '<div class="nt-audio">' +
         '<button class="nt-play" data-act="play"><span class="nt-play-ic">▶</span> Audio abspielen</button>' +
         '<span class="nt-audio-hint">🎧 So oft du willst</span>' +
         '<audio id="ntAudio" src="' + esc(D.AUDIO[q.audio].url) + '" preload="none"></audio>' +
       '</div>';
-    }
-    if (q.skill === 'lesen' && q.context) {
-      media = '<div class="nt-readtext">' + esc(q.context) + '</div>';
+    } else if (q.skill === 'lesen' && q.context) {
+      media = scene + '<div class="nt-readtext">' + esc(q.context) + '</div>';
     }
 
     var feedback = '';
@@ -219,6 +227,7 @@
     setHTML(
       '<div class="nt-card nt-run">' +
         '<div class="nt-bar"><div class="nt-bar-fill" style="width:' + pct + '%"></div></div>' +
+        levelStepper(q.level) +
         '<div class="nt-meta">' +
           '<span class="nt-meta-l">' + sk.emoji + ' ' + esc(sk.name) + '</span>' +
           '<span class="nt-meta-r">Frage ' + (S.i + 1) + ' / ' + total + '</span>' +
@@ -362,9 +371,8 @@
         '<div class="nt-tip">💡 <b>Dein nächster Schritt:</b> ' + esc(info.tip) + '</div>' +
         '<div class="nt-mailnote" id="ntMailNote">📧 Wir schicken dir dein Ergebnis gerade per E-Mail …</div>' +
         '<div class="nt-result-cta">' +
-          '<a class="nt-btn nt-btn-primary nt-btn-lg" href="#preise" data-close>🚀 Zum passenden Sprechclub</a>' +
+          '<a class="nt-btn nt-btn-primary nt-btn-lg" href="https://www.deutschoderwas-club.de/#preise">🚀 Zum passenden Sprechclub</a>' +
           brandBtn('↺ Test wiederholen', 'restart', 'nt-btn-ghost') +
-          brandBtn('Schließen', 'nt-close', 'nt-btn-ghost') +
         '</div>' +
       '</div>'
     );
@@ -457,10 +465,8 @@
 
   // ---- Start ----
   function init() {
-    S.root = $('niveautest-app');
-    if (!S.root) return;
+    if (window.NT_PAGE) { S.root = $('niveautest-app'); if (S.root) renderIntro(); return; }
     renderTeaser();
-    setupModal();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
