@@ -10,9 +10,15 @@ const TZ = 'Europe/Berlin';
 const TIME_FMT    = new Intl.DateTimeFormat('de-DE', { timeZone: TZ, hour: '2-digit', minute: '2-digit' });
 const WHEN_FMT    = new Intl.DateTimeFormat('de-DE', { timeZone: TZ, weekday: 'long', hour: '2-digit', minute: '2-digit' });
 const DAYLABEL_FMT = new Intl.DateTimeFormat('de-DE', { timeZone: TZ, weekday: 'long', day: 'numeric', month: 'long' });
+const RANGE_FMT   = new Intl.DateTimeFormat('de-DE', { timeZone: TZ, day: 'numeric', month: 'short' });
 
 function berlinHour(d) {
   return parseInt(new Intl.DateTimeFormat('en-GB', { timeZone: TZ, hour: '2-digit', hour12: false }).format(d), 10);
+}
+function berlinWeekday(d) {
+  // 1=Mo … 7=So
+  const wd = new Intl.DateTimeFormat('en-US', { timeZone: TZ, weekday: 'short' }).format(d);
+  return { Sun: 7, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 }[wd];
 }
 function berlinDateKey(d) {
   // en-CA -> "YYYY-MM-DD" in Berliner Zeit (DST-sicher)
@@ -117,7 +123,56 @@ export default async function handler(req, res) {
     }
   }
 
-  return res.status(200).json({ ok: true, soonSent, planSent, errors });
+  // ---------- (3) Wochenüberblick (Freitag 17:00 Berlin, Plan für die kommende Woche) ----------
+  let weekSent = 0;
+  if (berlinWeekday(now) === 5 && berlinHour(now) === 17) {
+    const dow = berlinWeekday(now);
+    const daysToMon = ((1 - dow + 7) % 7) || 7;          // bis zum nächsten Montag (1..7)
+    const monday = new Date(now.getTime() + daysToMon * 24 * 3600 * 1000);
+    const sunday = new Date(now.getTime() + (daysToMon + 6) * 24 * 3600 * 1000);
+    const weekStartKey = berlinDateKey(monday);
+    const weekEndKey = berlinDateKey(new Date(now.getTime() + (daysToMon + 7) * 24 * 3600 * 1000)); // Mo der Folgewoche (exklusiv)
+    const windowEnd = new Date(now.getTime() + (daysToMon + 8) * 24 * 3600 * 1000);
+
+    const { data: cls } = await sb.from('classes')
+      .select('id,title,level,topic,starts_at,club,capacity,teacher_id')
+      .gt('starts_at', now.toISOString()).lt('starts_at', windowEnd.toISOString())
+      .eq('is_cancelled', false).not('teacher_id', 'is', null).order('starts_at');
+
+    const week = (cls || []).filter(c => {
+      const k = berlinDateKey(new Date(c.starts_at));
+      return k >= weekStartKey && k < weekEndKey;
+    });
+    const ids = week.map(c => c.id);
+    let counts = {};
+    if (ids.length) {
+      const { data: bk } = await sb.from('bookings').select('class_id').in('class_id', ids).eq('status', 'booked');
+      (bk || []).forEach(b => { counts[b.class_id] = (counts[b.class_id] || 0) + 1; });
+    }
+    const byTeacher = {};
+    week.forEach(c => { (byTeacher[c.teacher_id] = byTeacher[c.teacher_id] || []).push(c); });
+    const weekLabel = `${RANGE_FMT.format(monday)} – ${RANGE_FMT.format(sunday)}`;
+
+    for (const [tid, list] of Object.entries(byTeacher)) {
+      const t = tmap[tid];
+      if (!t?.email) continue;
+      const ref = `${tid}:${weekStartKey}`;
+      const { error: logErr } = await sb.from('email_log').insert({ kind: 'teacher_weekplan', ref, user_id: t.profile_id || null });
+      if (logErr) continue; // Wochenplan schon verschickt
+
+      const byDay = {};
+      list.forEach(c => { const k = berlinDateKey(new Date(c.starts_at)); (byDay[k] = byDay[k] || []).push(c); });
+      const days = Object.keys(byDay).sort().map(k => ({
+        dayLabel: DAYLABEL_FMT.format(new Date(byDay[k][0].starts_at)),
+        items: byDay[k].map(c => ({ time: TIME_FMT.format(new Date(c.starts_at)), cls: c, club: clubmap[c.club] || null, count: counts[c.id] || 0 })),
+      }));
+      const html = teacherWeekPlanEmail({ teacherName: (t.name || '').split(' ')[0] || 'du', weekLabel, days, site });
+      const r = await sendBrevo(t, `🗓️ Dein Plan für nächste Woche (${list.length} Stunde${list.length > 1 ? 'n' : ''})`, html);
+      if (r.ok) weekSent++; else { errors++; await sb.from('email_log').delete().eq('kind', 'teacher_weekplan').eq('ref', ref); }
+    }
+  }
+
+  return res.status(200).json({ ok: true, soonSent, planSent, weekSent, errors });
 }
 
 // ---- deutschoderwas-Markendesign (Schwarz/Rot/Gold-Streifen, Creme, Club-Akzent) ----
@@ -222,4 +277,48 @@ function teacherDayPlanEmail({ teacherName, dateLabel, items, site }) {
           Einen guten Unterrichtstag!<br><b>deutschoderwas club</b>
         </td></tr>`;
   return _shell(inner, `Dein Plan für morgen: ${items.length} Stunde(n).`);
+}
+
+function teacherWeekPlanEmail({ teacherName, weekLabel, days, site }) {
+  const total = days.reduce((n, d) => n + d.items.length, 0);
+  const dayBlocks = days.map(d => {
+    const rows = d.items.map(it => {
+      const accent = it.club?.color || '#2DD4BF';
+      const chip = it.club?.name ? `<span style="display:inline-block;background:${accent};color:#fff;font-family:${_FF};font-size:10px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;padding:3px 9px;border-radius:30px">${_esc(it.club.emoji || '')} ${_esc(it.club.name)}</span>` : '';
+      return `
+        <tr><td style="padding:6px 0">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF8E0;border:1px solid #F0E5D8;border-left:5px solid ${accent};border-radius:12px">
+            <tr><td style="padding:11px 14px;font-family:${_FF}">
+              <div style="font-size:15px;font-weight:800;color:#1A1A1A">🕒 ${_esc(it.time)} Uhr <span style="font-weight:600;color:#6B7280;font-size:13px">· ${_esc(it.cls.level)}</span></div>
+              <div style="margin:4px 0 3px">${chip}</div>
+              <div style="font-size:14px;font-weight:700;color:#1A1A1A">${_esc(it.cls.title)}${it.cls.topic ? ` <span style="color:#6B7280;font-weight:500">· ${_esc(it.cls.topic)}</span>` : ''}</div>
+              <div style="font-size:12px;color:#6B7280;margin-top:3px">👥 ${it.count}/${it.cls.capacity || 0} gebucht</div>
+            </td></tr>
+          </table>
+        </td></tr>`;
+    }).join('');
+    return `
+      <tr><td style="padding:10px 30px 0;font-family:${_FF};font-size:15px;font-weight:800;color:#1A1A1A;text-transform:capitalize">${_esc(d.dayLabel)}</td></tr>
+      <tr><td style="padding:0 30px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0">${rows}</table></td></tr>`;
+  }).join('');
+  const inner = `
+        <tr><td align="center" style="padding:26px 28px 6px">
+          <div style="font-family:${_FF};font-weight:800;font-size:15px;letter-spacing:.04em;color:#1A1A1A">deutschoderwas <span style="color:#DD0000">club</span></div>
+          <div style="font-size:46px;line-height:1;margin:14px 0 4px">🗓️</div>
+          <h1 style="margin:6px 0 0;font-family:${_FF};font-size:24px;font-weight:800;color:#1A1A1A">Dein Plan für nächste Woche</h1>
+          <div style="font-family:${_FF};font-size:14px;color:#6B7280;margin-top:4px">${_esc(weekLabel)} · ${total} Stunde${total > 1 ? 'n' : ''}</div>
+        </td></tr>
+        <tr><td style="padding:10px 30px 0;font-family:${_FF};font-size:15px;line-height:1.6;color:#1A1A1A">
+          <p style="margin:0">Hallo ${_esc(teacherName)}, hier dein Überblick für die kommende Woche:</p>
+        </td></tr>
+        ${dayBlocks}
+        <tr><td style="padding:14px 30px 4px;font-family:${_FF};font-size:13px;line-height:1.6;color:#6B7280">
+          Details &amp; wer gebucht hat: jederzeit im
+          <a href="${_esc('https://deutschoderwas-club.de/admin.html')}" style="color:#DD0000;font-weight:700;text-decoration:none">Lehrerbereich</a>.
+          Du bekommst zusätzlich am Vorabend und ~1 Std. vor jeder Stunde eine Erinnerung.
+        </td></tr>
+        <tr><td style="padding:14px 30px 4px;font-family:${_FF};font-size:15px;line-height:1.6;color:#1A1A1A">
+          Eine gute Woche!<br><b>deutschoderwas club</b>
+        </td></tr>`;
+  return _shell(inner, `Dein Plan für nächste Woche: ${total} Stunde(n).`);
 }
