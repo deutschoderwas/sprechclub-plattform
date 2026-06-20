@@ -15,7 +15,7 @@ h1,h2,h3{font-family:'Space Grotesk',sans-serif}
 .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:50px;font-weight:700;font-size:13px;border:none;cursor:pointer;font-family:inherit;text-decoration:none}
 .btn-primary{background:var(--primary);color:#fff}
 .btn-ghost{background:#fff;color:var(--secondary);border:2px solid var(--border)}
-.tabs{display:flex;gap:8px;margin:20px 0}
+.tabs{display:flex;gap:8px;margin:20px 0;flex-wrap:wrap}
 .tabs button{border:2px solid var(--border);background:#fff;border-radius:30px;padding:8px 18px;font-weight:700;cursor:pointer;font-family:inherit}
 .tabs button.active{background:var(--secondary);color:#fff;border-color:var(--secondary)}
 .card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:10px}
@@ -29,6 +29,17 @@ input,select{padding:10px 12px;border:2px solid var(--border);border-radius:10px
 .pill{font-size:11px;font-weight:800;background:var(--bg);color:var(--primary);border-radius:30px;padding:3px 9px}
 .tn{font-size:13px;margin:2px 0}
 #gate{max-width:380px;margin:80px auto;text-align:center;background:#fff;border:1px solid var(--border);border-radius:20px;padding:30px}
+/* ----- Lehrerplan (Agenda) ----- */
+.plan-day{margin:20px 0 8px;font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px;text-transform:capitalize}
+.plan-day .cnt{font-size:12px;color:var(--text-soft);font-weight:600;text-transform:none}
+.prow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#fff;border:1px solid var(--border);border-left:5px solid #ccc;border-radius:12px;padding:10px 12px;margin-bottom:7px}
+.prow .ptime{font-weight:800;font-family:'Space Grotesk',sans-serif;min-width:108px;white-space:nowrap}
+.prow.pmiss{background:#fff6f4}
+.prow select.passign{padding:7px 9px;border-radius:9px;border:2px solid var(--border);font-size:13px;font-weight:600;cursor:pointer}
+.prow select.passign.miss{border-color:#DD0000;color:#DD0000}
+.plan-ctrl{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.tchip{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;background:var(--bg);border-radius:30px;padding:4px 10px;margin:0 4px 4px 0}
+.tchip i{width:11px;height:11px;border-radius:50%;display:inline-block}
 </style>
 <link rel="stylesheet" href="club-theme.css">
 </head>
@@ -48,6 +59,7 @@ input,select{padding:10px 12px;border:2px solid var(--border);border-radius:10px
   </div>
 
   <div class="tabs">
+    <button id="tabP" onclick="show('plan')">📅 Lehrerplan</button>
     <button id="tabK" class="active" onclick="show('klassen')">Stunden & Anwesenheit</button>
     <button id="tabN" onclick="show('neu')">Stunde anlegen</button>
     <button id="tabL" onclick="show('lehrer')">👩‍🏫 Lehrer</button>
@@ -57,6 +69,7 @@ input,select{padding:10px 12px;border:2px solid var(--border);border-radius:10px
     <button id="tabMat" onclick="show('material')">📚 Materialien</button>
   </div>
 
+  <div id="plan" style="display:none"></div>
   <div id="klassen"></div>
   <div id="lehrer" style="display:none"></div>
   <div id="nachrichten" style="display:none"></div>
@@ -130,20 +143,28 @@ async function init(){
 }
 
 let isAdminUser=false;
+let myTeacherId=null;
 async function enter(u){
   const { data } = await sb.from('profiles').select('is_admin,is_teacher').eq('id', u.id).single();
   if (!data || (!data.is_admin && !data.is_teacher)){ document.getElementById('gateMsg').textContent='Dieses Konto hat keine Admin- oder Lehrer-Rechte.'; return; }
   me = u; isAdminUser = !!data.is_admin;
-  if (!isAdminUser){
-    // Lehrer-Ansicht: keine Guthaben-Verwaltung, keine Bewertungen
-    document.getElementById('tabS').style.display='none';
-    document.getElementById('tabB').style.display='none';
-    document.querySelector('h1').textContent='Sprechclub — Lehrkraft';
-  }
   document.getElementById('gate').style.display='none';
   document.getElementById('app').style.display='block';
   await loadTeachers();
-  loadKlassen();
+  const myT = TEACHERS.find(t=>t.profile_id===u.id);
+  myTeacherId = myT ? myT.id : null;
+  if (!isAdminUser){
+    // Lehrer-Ansicht: keine Guthaben-Verwaltung, keine Bewertungen, Fokus auf eigenen Plan
+    document.getElementById('tabS').style.display='none';
+    document.getElementById('tabB').style.display='none';
+    document.getElementById('tabN').style.display='none';
+    document.getElementById('tabMat').style.display='none';
+    document.getElementById('tabL').style.display='none';
+    document.querySelector('h1').textContent='deutschoderwas club · Lehrkraft';
+    show('plan');
+  } else {
+    loadKlassen();
+  }
 }
 
 async function login(){
@@ -154,7 +175,8 @@ async function login(){
 async function logout(){ await sb.auth.signOut(); location.reload(); }
 
 function show(id){
-  ['klassen','neu','lehrer','schueler','nachrichten','bewertungen','material'].forEach(x=>document.getElementById(x).style.display = x===id?'block':'none');
+  ['plan','klassen','neu','lehrer','schueler','nachrichten','bewertungen','material'].forEach(x=>document.getElementById(x).style.display = x===id?'block':'none');
+  document.getElementById('tabP').classList.toggle('active', id==='plan');
   document.getElementById('tabK').classList.toggle('active', id==='klassen');
   document.getElementById('tabN').classList.toggle('active', id==='neu');
   document.getElementById('tabL').classList.toggle('active', id==='lehrer');
@@ -162,6 +184,7 @@ function show(id){
   document.getElementById('tabM').classList.toggle('active', id==='nachrichten');
   document.getElementById('tabB').classList.toggle('active', id==='bewertungen');
   document.getElementById('tabMat').classList.toggle('active', id==='material');
+  if (id==='plan') loadPlan();
   if (id==='klassen') loadKlassen();
   if (id==='lehrer') loadLehrer();
   if (id==='schueler') loadSchueler();
@@ -285,6 +308,148 @@ async function deleteMaterial(path){
 }
 
 function fmt(d){ return d.toLocaleDateString('de-DE',{weekday:'short',day:'numeric',month:'short'})+' '+d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}); }
+
+// ---------- Lehrerplan (Agenda-Übersicht: wer unterrichtet wann mit wem) ----------
+let planWeekStart=null;
+let planTeacherFilter='';
+function mondayOf(d){ const x=new Date(d); const day=(x.getDay()+6)%7; x.setHours(0,0,0,0); x.setDate(x.getDate()-day); return x; }
+function fmtTime(d){ return d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}); }
+function fmtDayHdr(d){ return d.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'}); }
+
+async function loadPlan(){
+  const box=document.getElementById('plan');
+  const isT = !isAdminUser; // reine Lehrer-Ansicht
+  if(!planWeekStart){
+    const { data:firstC } = await sb.from('classes').select('starts_at').eq('is_cancelled',false).gte('starts_at', new Date().toISOString()).order('starts_at').limit(1);
+    planWeekStart = mondayOf(firstC && firstC[0] ? new Date(firstC[0].starts_at) : new Date());
+  }
+  const tFilter = isT ? (myTeacherId||'__self') : planTeacherFilter;
+  const from=new Date(planWeekStart);
+  const to=new Date(from); to.setDate(to.getDate()+7);
+  const { data:cls } = await sb.from('classes').select('*').gte('starts_at',from.toISOString()).lt('starts_at',to.toISOString()).eq('is_cancelled',false).order('starts_at');
+  let list=cls||[];
+  if(tFilter==='__none') list=list.filter(c=>!c.teacher_id);
+  else if(tFilter==='__self') list=[]; // Lehrer ohne verknüpften Account
+  else if(tFilter) list=list.filter(c=>c.teacher_id===tFilter);
+
+  const ids=list.map(c=>c.id);
+  let parts={};
+  if(ids.length){
+    const { data:bk } = await sb.from('bookings').select('class_id,profiles(name,email)').in('class_id',ids).eq('status','booked');
+    (bk||[]).forEach(b=>{ (parts[b.class_id]=parts[b.class_id]||[]).push(b.profiles); });
+  }
+
+  const weekLabel = from.toLocaleDateString('de-DE',{day:'numeric',month:'short'})+' – '+new Date(to.getTime()-1).toLocaleDateString('de-DE',{day:'numeric',month:'short',year:'numeric'});
+  let html='';
+  if(!isT){
+    html += `<div class="plan-ctrl">
+      <button class="btn btn-ghost" onclick="planNav(-1)">←</button>
+      <button class="btn btn-ghost" onclick="planNav(0)">Diese Woche</button>
+      <button class="btn btn-ghost" onclick="planNav(1)">→</button>
+      <b style="font-family:'Space Grotesk',sans-serif">${weekLabel}</b>
+      <select id="planFilter" onchange="planFilterChange()" style="margin-left:auto">
+        <option value="">Alle Lehrer</option>
+        <option value="__none" ${planTeacherFilter==='__none'?'selected':''}>⚠️ Ohne Lehrer</option>
+        ${TEACHERS.filter(t=>t.active||t.id===planTeacherFilter).map(t=>`<option value="${t.id}" ${t.id===planTeacherFilter?'selected':''}>${esc(t.name)}</option>`).join('')}
+      </select>
+    </div>`;
+    const counts={}; (cls||[]).forEach(c=>{ if(c.teacher_id) counts[c.teacher_id]=(counts[c.teacher_id]||0)+1; });
+    const missing=(cls||[]).filter(c=>!c.teacher_id).length;
+    const chips = TEACHERS.filter(t=>counts[t.id]).map(t=>`<span class="tchip"><i style="background:${t.color||'#888'}"></i>${esc(t.name)}: ${counts[t.id]}</span>`).join('')
+      + (missing?`<span class="tchip" style="background:#fff6f4;color:#DD0000">⚠️ Ohne Lehrer: ${missing}</span>`:'');
+    if(chips) html += `<div style="margin-bottom:6px">${chips}</div>`;
+  } else {
+    html += `<div class="plan-ctrl">
+      <button class="btn btn-ghost" onclick="planNav(-1)">←</button>
+      <button class="btn btn-ghost" onclick="planNav(0)">Diese Woche</button>
+      <button class="btn btn-ghost" onclick="planNav(1)">→</button>
+      <b style="font-family:'Space Grotesk',sans-serif">${weekLabel}</b>
+    </div>
+    <p class="muted" style="margin-bottom:8px">Dein Stundenplan — wann du welchen Unterricht mit wem hast.</p>`;
+  }
+
+  if(!list.length){
+    const why = isT && tFilter==='__self'
+      ? 'Dein Lehrer-Account ist noch nicht mit einem Stundenplan verknüpft. Julia schaltet das frei.'
+      : 'Keine Stunden in dieser Woche'+(tFilter&&tFilter!=='__none'?' für diese Auswahl':'')+'.';
+    box.innerHTML = html + `<div class="card muted">${why}</div>`;
+    return;
+  }
+
+  let curDay='';
+  list.forEach(c=>{
+    const d=new Date(c.starts_at);
+    const dayKey=d.toDateString();
+    if(dayKey!==curDay){
+      curDay=dayKey;
+      const dayCount=list.filter(x=>new Date(x.starts_at).toDateString()===dayKey).length;
+      html += `<div class="plan-day">📆 ${fmtDayHdr(d)} <span class="cnt">· ${dayCount} Stunde${dayCount>1?'n':''}</span></div>`;
+    }
+    const end=new Date(d.getTime()+(c.duration_min||60)*60000);
+    const col=CLUB_COLOR[c.club]||'#888';
+    const p=parts[c.id]||[];
+    const miss=!c.teacher_id;
+    const names=p.map(x=>esc((x&&(x.name||x.email))||'')).filter(Boolean);
+    const free=(c.capacity||0)-p.length;
+    const freeHtml = free>0 ? `· <b style="color:#13A89A">${free} frei</b>` : '· <b style="color:#DD0000">ausgebucht</b>';
+    const teacherCell = isT
+      ? `<span class="tchip"><i style="background:${teacherColor(c.teacher_id)}"></i>${esc(teacherName(c.teacher_id)||'—')}</span>`
+      : `<select class="passign ${miss?'miss':''}" onchange="assignTeacher('${c.id}',this.value)" title="Lehrer einteilen">
+           <option value="">⚠️ Ohne Lehrer</option>
+           ${TEACHERS.filter(t=>t.active||t.id===c.teacher_id).map(t=>`<option value="${t.id}" ${t.id===c.teacher_id?'selected':''}>${esc(t.name)}</option>`).join('')}
+         </select>`;
+    html += `<div style="margin-bottom:7px">
+      <div class="prow ${miss?'pmiss':''}" style="margin-bottom:0;border-left-color:${miss?'#DD0000':col}">
+        <span class="ptime">${fmtTime(d)}–${fmtTime(end)}</span>
+        <span class="pill" style="background:${col};color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.25)">${CLUB_EMOJI[c.club]||''} ${esc((c.club||'').replace('club',''))}</span>
+        <span class="pill">${esc(c.level||'')}</span>
+        <span style="flex:1;min-width:130px"><b>${esc(c.title||'')}</b>${c.topic?` <span class="muted">· ${esc(c.topic)}</span>`:''}</span>
+        ${teacherCell}
+        <span class="muted" title="${names.join(', ')}">👥 ${p.length}/${c.capacity||0} ${freeHtml}${names.length?' · '+names.slice(0,3).join(', ')+(names.length>3?' …':''):''}</span>
+        <button class="btn btn-ghost" style="padding:5px 12px;font-size:12px" onclick="planAtt('${c.id}')">✅ Anwesenheit</button>
+      </div>
+      <div id="patt-${c.id}" style="display:none;margin:4px 0 0 4px"></div>
+    </div>`;
+  });
+  box.innerHTML=html;
+}
+
+// Teilnehmer + Anwesenheit direkt in der Agenda (für Lehrer & Admin)
+async function planAtt(id){
+  const box=document.getElementById('patt-'+id);
+  if(box.style.display==='block'){ box.style.display='none'; return; }
+  box.style.display='block';
+  box.innerHTML='<span class="muted">lädt…</span>';
+  const { data, error } = await sb.rpc('class_attendance',{ p_class_id:id });
+  if(error){ box.innerHTML='<span class="muted" style="color:#c00">Fehler: '+error.message+'</span>'; return; }
+  const rows=data||[];
+  if(!rows.length){ box.innerHTML='<div class="muted" style="background:var(--bg);border-radius:10px;padding:10px 12px">Für diese Stunde hat noch niemand gebucht.</div>'; return; }
+  box.innerHTML = `<div style="background:var(--bg);border-radius:10px;padding:10px 12px">
+    <b style="font-size:13px">✅ Anwesenheit — wer war da?</b>
+    <p class="muted" style="margin:3px 0 8px">Diese Schüler haben die Stunde gebucht. Tippe „Da" oder „Fehlt".</p>
+    ${rows.map(r=>`<div class="tn" style="display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);padding:5px 0">
+      <span style="flex:1">👤 ${esc(r.name||'')} <span class="muted">${esc(r.email||'')}</span></span>
+      <button class="btn ${r.attendance==='present'?'btn-primary':'btn-ghost'}" style="padding:4px 12px;font-size:12px;${r.attendance==='present'?'background:#13A89A':''}" onclick="markAttP('${id}','${r.user_id}',true)">Da</button>
+      <button class="btn ${r.attendance==='absent'?'btn-primary':'btn-ghost'}" style="padding:4px 12px;font-size:12px" onclick="markAttP('${id}','${r.user_id}',false)">Fehlt</button>
+    </div>`).join('')}
+  </div>`;
+}
+async function markAttP(classId,userId,present){
+  const { error }=await sb.rpc('mark_attendance',{ p_class_id:classId, p_user_id:userId, p_present:present });
+  if(error){ alert('Fehler: '+error.message); return; }
+  const box=document.getElementById('patt-'+classId); box.style.display='none'; planAtt(classId);
+}
+function planNav(dir){
+  if(dir===0){ planWeekStart=mondayOf(new Date()); }
+  else { const x=new Date(planWeekStart); x.setDate(x.getDate()+dir*7); planWeekStart=x; }
+  loadPlan();
+}
+function planFilterChange(){ planTeacherFilter=document.getElementById('planFilter').value; loadPlan(); }
+async function assignTeacher(id,val){
+  const { error } = await sb.from('classes').update({ teacher_id: val||null }).eq('id',id);
+  if(error){ alert('Einteilen fehlgeschlagen: '+error.message); return; }
+  loadPlan();
+}
 
 async function loadKlassen(){
   const from = new Date(); from.setHours(0,0,0,0);
