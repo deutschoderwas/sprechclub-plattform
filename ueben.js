@@ -67,6 +67,7 @@
     .ub-hearts{font-size:18px;letter-spacing:1px;white-space:nowrap}
     .ub-body{flex:1;overflow-y:auto;padding:8px 18px 20px;max-width:680px;margin:0 auto;width:100%}
     .ub-q{font-size:21px;font-weight:800;font-family:'Space Grotesk',sans-serif;line-height:1.25;margin:10px 0 18px}
+    .ub-qimg{display:block;width:100%;max-height:230px;object-fit:cover;border-radius:14px;border:1px solid var(--border,#ECECEC);margin:6px 0 16px;box-shadow:0 8px 20px rgba(0,0,0,.08)}
     .ub-opts{display:flex;flex-direction:column;gap:10px}
     .ub-opt{border:2px solid var(--border,#ECECEC);background:#fff;border-radius:14px;padding:15px 16px;font-size:16px;text-align:left;cursor:pointer;transition:.12s;font-weight:600}
     .ub-opt:hover{border-color:var(--turq,#2DD4BF)}
@@ -177,12 +178,13 @@
     btn.className='ub-btn'; btn.textContent='Prüfen'; btn.disabled=true;
     var h='';
     if(e.type==='choice'){
+      if(e.img){ h+='<img class="ub-qimg" src="'+E(e.img)+'" alt="">'; }
       if(e.audio){ h+='<button class="ub-play" onclick="ubSpeak(\''+E(e.audio).replace(/'/g,"\\'")+'\')">🔊</button>'; }
       h+='<div class="ub-q">'+E(e.q||'Wähle die richtige Antwort:')+'</div><div class="ub-opts" id="ubOpts">'+
-         e.options.map(function(o,k){ return '<button class="ub-opt" data-k="'+k+'" onclick="ubChoose('+k+')">'+E(o)+'</button>'; }).join('')+'</div>';
+         shuf(e.options.map(function(o,k){return k;})).map(function(k){ return '<button class="ub-opt" data-k="'+k+'" onclick="ubChoose('+k+')">'+E(e.options[k])+'</button>'; }).join('')+'</div>';
       if(e.audio) setTimeout(function(){ speak(e.audio); },200);
     } else if(e.type==='gap'){
-      h+='<div class="ub-q">'+E((e.text||'').replace('___','_____'))+'</div><input class="ub-input" id="ubGap" placeholder="Antwort eintippen…" autocomplete="off" autocapitalize="off">';
+      h+=(e.img?'<img class="ub-qimg" src="'+E(e.img)+'" alt="">':'')+'<div class="ub-q">'+E((e.text||'').replace('___','_____'))+'</div><input class="ub-input" id="ubGap" placeholder="Antwort eintippen…" autocomplete="off" autocapitalize="off">';
       if(e.hint) h+='<div class="ub-tip" style="text-align:left;margin-top:8px">💡 '+E(e.hint)+'</div>';
     } else if(e.type==='match'){
       var rs=shuf(e.pairs.map(function(p){return p.r;}));
