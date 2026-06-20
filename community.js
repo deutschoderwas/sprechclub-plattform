@@ -7,8 +7,13 @@
    ============================================================ */
 (function () {
   'use strict';
-  var sbc, channels = [], cur = null, chan = null, isTeam = false, styled = false;
+  var sbc, ME, PROF, channels = [], cur = null, chan = null, isTeam = false, styled = false;
   var rec = null, recChunks = [], recStart = 0, recTimer = null, recStream = null;
+
+  // Globals robust holen: funktioniert auf konto.html (sb/user/profile) UND admin.html (sb/me)
+  function getSb() { try { return window.sb || (typeof sb !== 'undefined' ? sb : null); } catch (e) { return null; } }
+  function getUser() { try { return window.user || (typeof user !== 'undefined' ? user : null) || (typeof me !== 'undefined' ? me : null); } catch (e) { return null; } }
+  function getProfile() { try { return window.profile || (typeof profile !== 'undefined' ? profile : null) || {}; } catch (e) { return {}; } }
 
   function E(s) { return (window.esc ? window.esc(s) : String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]); })); }
   function root() { return document.getElementById('v-community'); }
@@ -73,15 +78,15 @@
   async function renderCommunity() {
     injectStyle();
     var r = root(); if (!r) return;
-    sbc = window.sb;
+    sbc = getSb(); ME = getUser(); PROF = getProfile();
     r.innerHTML = '<div class="pagehead"><h1>💬 Community</h1></div><div class="card">Lädt…</div>';
-    if (!sbc) { r.innerHTML = gateHtml(); return; }
+    if (!sbc || !ME) { r.innerHTML = gateHtml(); return; }
     // Zugang serverseitig prüfen (maßgeblich)
     var access = false;
     try { var a = await sbc.rpc('has_full_access'); access = !!a.data; } catch (e) { access = active(); }
     if (!access) { stopAll(); r.innerHTML = gateHtml(); return; }
     // eigene Rolle (für Team-Kanäle)
-    try { var pr = await sbc.from('profiles').select('is_admin,is_teacher').eq('id', window.user.id).single(); isTeam = !!(pr.data && (pr.data.is_admin || pr.data.is_teacher)); } catch (e) { isTeam = false; }
+    try { var pr = await sbc.from('profiles').select('is_admin,is_teacher').eq('id', ME.id).single(); isTeam = !!(pr.data && (pr.data.is_admin || pr.data.is_teacher)); } catch (e) { isTeam = false; }
     // Kanäle
     var ch = await sbc.from('community_channels').select('slug,name,emoji,description,team_only,sort_order').eq('is_active', true).order('sort_order');
     channels = ch.data || [];
@@ -141,7 +146,7 @@
   }
 
   function msgHtml(m) {
-    var me = m.user_id === window.user.id;
+    var me = m.user_id === ME.id;
     var body = m.kind === 'audio'
       ? '<div class="cm-audio">🎧 ' + (m._url ? '<audio controls preload="none" src="' + E(m._url) + '"></audio>' : '<span class="muted">Sprachnachricht</span>') + (m.audio_secs ? '<span class="muted">' + Math.round(m.audio_secs) + 's</span>' : '') + '</div>'
       : E(m.body || '');
@@ -170,7 +175,7 @@
     box.insertAdjacentHTML('beforeend', msgHtml(m));
     var last = box.lastElementChild;
     if (last) { var db = last.querySelector('[data-del]'); if (db) db.addEventListener('click', function () { delMsg(db.getAttribute('data-del')); }); }
-    if (near || m.user_id === window.user.id) box.scrollTop = box.scrollHeight;
+    if (near || m.user_id === ME.id) box.scrollTop = box.scrollHeight;
   }
 
   function subscribe(slug) {
@@ -178,7 +183,7 @@
     channel = sbc.channel('comm:' + slug)
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'community_messages', filter: 'channel=eq.' + slug }, function (p) {
         var m = p.new; if (!m || m.deleted_at) return;
-        if (m.user_id === window.user.id && document.querySelector('[data-id="' + m.id + '"]')) return; // schon optimistisch da
+        if (m.user_id === ME.id && document.querySelector('[data-id="' + m.id + '"]')) return; // schon optimistisch da
         if (m.kind === 'audio' && m.audio_path) { hydrateAudio([m]).then(function () { appendMsg(m); }); } else { appendMsg(m); }
       })
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'community_messages', filter: 'channel=eq.' + slug }, function (p) {
@@ -204,8 +209,8 @@
   async function sendText() {
     var inp = q('#cmInp'); if (!inp) return; var t = inp.value.trim(); if (!t) return;
     inp.value = ''; inp.style.height = 'auto';
-    var name = (window.profile && window.profile.name) || 'Mitglied';
-    var optimistic = { id: 'tmp-' + Date.now(), user_id: window.user.id, kind: 'text', body: t, author_name: name, created_at: new Date().toISOString() };
+    var name = (PROF && PROF.name) || 'Mitglied';
+    var optimistic = { id: 'tmp-' + Date.now(), user_id: ME.id, kind: 'text', body: t, author_name: name, created_at: new Date().toISOString() };
     appendMsg(optimistic);
     var res = await sbc.from('community_messages').insert({ channel: cur, kind: 'text', body: t, author_name: name }).select('id').single();
     var tmp = document.querySelector('[data-id="tmp-' + optimistic.id.slice(4) + '"]');
@@ -239,8 +244,8 @@
     var ext = type.indexOf('mp4') >= 0 ? 'mp4' : 'webm';
     var blob = new Blob(recChunks, { type: type });
     if (blob.size > 10 * 1024 * 1024) { alert('Aufnahme zu lang (max. 10 MB).'); return; }
-    var path = window.user.id + '/' + Date.now() + '.' + ext;
-    var name = (window.profile && window.profile.name) || 'Mitglied';
+    var path = ME.id + '/' + Date.now() + '.' + ext;
+    var name = (PROF && PROF.name) || 'Mitglied';
     var box = q('#cmMsgs'); var loadId = 'up-' + Date.now();
     if (box) { box.insertAdjacentHTML('beforeend', '<div class="cm-row me" data-id="' + loadId + '"><div class="cm-av">' + E(initials(name)) + '</div><div><div class="cm-meta">' + E(name) + '</div><div class="cm-bub">🎤 wird gesendet…</div></div></div>'); box.scrollTop = box.scrollHeight; }
     var up = await sbc.storage.from('community-audio').upload(path, blob, { contentType: type, upsert: false });

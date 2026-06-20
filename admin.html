@@ -67,6 +67,7 @@ input,select{padding:10px 12px;border:2px solid var(--border);border-radius:10px
     <button id="tabM" onclick="show('nachrichten')">Nachrichten</button>
     <button id="tabB" onclick="show('bewertungen')">Bewertungen</button>
     <button id="tabMat" onclick="show('material')">📚 Materialien</button>
+    <button id="tabC" onclick="show('community')">💬 Community</button>
   </div>
 
   <div id="plan" style="display:none"></div>
@@ -74,6 +75,7 @@ input,select{padding:10px 12px;border:2px solid var(--border);border-radius:10px
   <div id="lehrer" style="display:none"></div>
   <div id="nachrichten" style="display:none"></div>
   <div id="bewertungen" style="display:none"></div>
+  <div id="community" style="display:none"><div id="v-community"></div></div>
 
   <div id="neu" style="display:none">
     <div class="card">
@@ -153,6 +155,8 @@ async function enter(u){
   await loadTeachers();
   const myT = TEACHERS.find(t=>t.profile_id===u.id);
   myTeacherId = myT ? myT.id : null;
+  window.sb = sb; window.user = u;
+  window.profile = { name: (myT && myT.name) || (isAdminUser ? 'Team' : 'Lehrkraft') };
   if (!isAdminUser){
     // Lehrer-Ansicht: keine Guthaben-Verwaltung, keine Bewertungen, Fokus auf eigenen Plan
     document.getElementById('tabS').style.display='none';
@@ -175,7 +179,7 @@ async function login(){
 async function logout(){ await sb.auth.signOut(); location.reload(); }
 
 function show(id){
-  ['plan','klassen','neu','lehrer','schueler','nachrichten','bewertungen','material'].forEach(x=>document.getElementById(x).style.display = x===id?'block':'none');
+  ['plan','klassen','neu','lehrer','schueler','nachrichten','bewertungen','material','community'].forEach(x=>document.getElementById(x).style.display = x===id?'block':'none');
   document.getElementById('tabP').classList.toggle('active', id==='plan');
   document.getElementById('tabK').classList.toggle('active', id==='klassen');
   document.getElementById('tabN').classList.toggle('active', id==='neu');
@@ -184,6 +188,7 @@ function show(id){
   document.getElementById('tabM').classList.toggle('active', id==='nachrichten');
   document.getElementById('tabB').classList.toggle('active', id==='bewertungen');
   document.getElementById('tabMat').classList.toggle('active', id==='material');
+  document.getElementById('tabC').classList.toggle('active', id==='community');
   if (id==='plan') loadPlan();
   if (id==='klassen') loadKlassen();
   if (id==='lehrer') loadLehrer();
@@ -191,6 +196,7 @@ function show(id){
   if (id==='nachrichten') loadNachrichten();
   if (id==='bewertungen') loadBewertungen();
   if (id==='material') loadMaterial();
+  if (id==='community' && window.renderCommunity) window.renderCommunity();
 }
 
 // ---------- Lehrer ----------
@@ -669,5 +675,6 @@ async function adjust(id, n){
 init();
 </script>
 <script src="club-fx.js"></script>
+<script src="community.js"></script>
 </body>
 </html>
