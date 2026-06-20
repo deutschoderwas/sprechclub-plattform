@@ -162,7 +162,11 @@
   function openSession(){ injectCSS(); var o=ensureOverlay(); o.classList.add('open');
     o.querySelector('.ub-foot').innerHTML='<button class="ub-btn" id="ubBtn" disabled onclick="ubBtn()">Prüfen</button>';
     document.body.style.overflow='hidden'; renderQ(); }
-  window.ubClose=function(){ var o=document.getElementById('ubOv'); if(o)o.classList.remove('open'); document.body.style.overflow=''; try{speechSynthesis.cancel();}catch(e){} S=null; if(document.getElementById('v-ueben').classList.contains('active')) renderUeben(); };
+  window.ubClose=function(force){
+    if(!force && S && !S.ended && (S.idx>0 || S.answered)){
+      if(!confirm('Übung abbrechen?\n\nDein Fortschritt in dieser Runde geht verloren.')) return;
+    }
+    var o=document.getElementById('ubOv'); if(o)o.classList.remove('open'); document.body.style.overflow=''; try{speechSynthesis.cancel();}catch(e){} S=null; if(document.getElementById('v-ueben').classList.contains('active')) renderUeben(); };
 
   function hearts(){ var h=S.hearts,m=META().maxHearts||5,s=''; for(var i=0;i<m;i++)s+= i<h?'❤️':'🤍'; return s; }
   function setProg(){ document.getElementById('ubProg').style.width=Math.round(S.idx/S.items.length*100)+'%'; document.getElementById('ubHearts').innerHTML=hearts(); }
@@ -242,7 +246,8 @@
   }
 
   function end(outOfHearts){
-    var total=S.items.length; var pct=Math.round(S.correct/total*100);
+    S.ended=true;
+    var total=S.items.length; var pct=Math.min(100,Math.round(S.correct/total*100));
     // Themen-Fortschritt (beste Runde) speichern
     if(S.thId!=='mix'){ var st=load(); var key=themeKey(S.skId,S.thId); var prev=(st.themes[key]||{}).best||0; if(pct>prev){ st.themes[key]={best:pct}; save(st); } }
     var em = outOfHearts?'💔':(pct>=80?'🏆':(pct>=50?'💪':'🙂'));
