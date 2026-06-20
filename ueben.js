@@ -217,11 +217,14 @@
       h+='<div class="ub-q">Bring die Wörter in die richtige Reihenfolge:</div><div class="ub-build" id="ubBuild"></div><div class="ub-chips" id="ubPool"></div>';
       if(e.hint) h+='<div class="ub-tip" style="text-align:left;margin-top:10px">💡 '+E(e.hint)+'</div>';
     } else if(e.type==='speak'){
-      h+='<div class="ub-q" style="text-align:center">🗣️ Hör zu und sprich nach</div>'+
-         '<button class="ub-play" onclick="ubSpeak(\''+E(e.word).replace(/'/g,"\\'")+'\')">🔊</button>'+
-         '<div class="ub-word">'+E(e.word)+'</div>'+(e.tip?'<div class="ub-tip">'+E(e.tip)+'</div>':'');
+      if(e.img){ h+='<img class="ub-qimg" src="'+E(e.img)+'" alt="">'; }
+      h+='<div class="ub-q" style="text-align:center">🗣️ Hör zu und sprich nach</div>';
+      if(e.audioUrl){ h+='<button class="ub-play" onclick="ubPlayUrl(\''+E(e.audioUrl)+'\',this)">▶</button>'; }
+      else { h+='<button class="ub-play" onclick="ubSpeak(\''+E(e.word).replace(/'/g,"\\'")+'\')">🔊</button>'; }
+      h+='<div class="ub-word">'+E(e.word)+'</div>'+(e.tip?'<div class="ub-tip">'+E(e.tip)+'</div>':'');
       btn.disabled=false; btn.textContent='👍 Hat geklappt';
-      setTimeout(function(){ speak(e.word); },200);
+      if(e.audioUrl){ setTimeout(function(){ ubPlayUrl(e.audioUrl, document.querySelector('#ubBody .ub-play')); },300); }
+      else { setTimeout(function(){ speak(e.word); },200); }
     } else if(e.type==='listen'){
       if(e.img){ h+='<img class="ub-qimg" src="'+E(e.img)+'" alt="">'; }
       h+='<div class="ub-tip" style="margin-bottom:4px">'+E(e.label||'🎧 Hör gut zu – du kannst mehrmals hören')+'</div>'+
