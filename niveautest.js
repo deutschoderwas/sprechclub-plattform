@@ -201,6 +201,19 @@
       '</div>'
     );
     bind();
+    scrollIntoTest(answered);
+  }
+
+  // Mobile-UX: nach Antwort zum Weiter-Button, bei neuer Frage zur Frage scrollen
+  function scrollIntoTest(answered) {
+    var raf = window.requestAnimationFrame || function (c) { return setTimeout(c, 16); };
+    raf(function () {
+      try {
+        var card = S.root.querySelector('.nt-run'); if (!card) return;
+        if (answered) { (S.root.querySelector('.nt-run-foot') || card).scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+        else { card.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+      } catch (e) {}
+    });
   }
 
   function choose(origIdx) {
@@ -323,6 +336,7 @@
       '</div>'
     );
     bind();
+    try { var rc = S.root.querySelector('.nt-result'); if (rc) (window.requestAnimationFrame || function (c) { setTimeout(c, 16); })(function () { rc.scrollIntoView({ behavior: 'smooth', block: 'start' }); }); } catch (e) {}
     // Nadel-Animation
     var needle = S.root.querySelector('.nt-gauge-needle');
     var raf = window.requestAnimationFrame || function (c) { return setTimeout(c, 16); };
