@@ -66,13 +66,13 @@
   function brandBtn(label, onclick, cls) { return '<button class="nt-btn ' + (cls || '') + '" data-act="' + onclick + '">' + label + '</button>'; }
 
   // ===================== INTRO / GATE =====================
-  function renderIntro() {
-    S.finished = false;
-    var unlocked = !!S.email;
+  // ---- Teaser auf der Seite (Hero + „Jetzt Test starten") ----
+  function renderTeaser() {
+    var t = document.getElementById('niveautest-teaser'); if (!t) return;
     var photo = D.HERO_CUTOUT || D.HERO_PHOTO || D.HERO_IMG || '';
     var bubble = D.HERO_BUBBLE || 'Auf welchem Niveau bin ich eigentlich?';
-    setHTML(
-      '<div class="nt-card nt-intro">' +
+    t.innerHTML =
+      '<div class="nt-card">' +
         '<div class="nt-hero nt-hero-cut">' +
           '<span class="nt-qm nt-qm1" aria-hidden="true">?</span>' +
           '<span class="nt-qm nt-qm2" aria-hidden="true">?</span>' +
@@ -84,10 +84,42 @@
             '<div class="nt-hero-badges">' +
               LEVELS.map(function (L) { return '<span class="nt-lv-badge">' + L + '</span>'; }).join('') +
             '</div>' +
-            '<button class="nt-btn nt-btn-primary nt-start" data-act="gostart">Jetzt Test starten →</button>' +
+            '<button class="nt-btn nt-btn-primary nt-start" id="ntOpen">Jetzt Test starten →</button>' +
           '</div>' +
           '<div class="nt-cut"><img src="' + esc(photo) + '" alt="Julia – teste dein Deutschniveau"></div>' +
         '</div>' +
+      '</div>';
+    var b = document.getElementById('ntOpen'); if (b) b.addEventListener('click', openModal);
+  }
+
+  // ---- Modal-Steuerung (Test öffnet sich in eigenem Fenster/Overlay) ----
+  function openModal() {
+    var m = document.getElementById('ntModal'); if (!m) { renderIntro(); return; }
+    m.classList.add('open'); m.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    renderIntro();
+    var box = m.querySelector('.nt-modal-box'); if (box) box.scrollTop = 0;
+  }
+  function closeModal() {
+    var m = document.getElementById('ntModal'); if (!m) return;
+    m.classList.remove('open'); m.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    try { var a = $('ntAudio'); if (a) a.pause(); } catch (e) {}
+  }
+  function setupModal() {
+    var m = document.getElementById('ntModal'); if (!m) return;
+    Array.prototype.forEach.call(m.querySelectorAll('[data-act="nt-close"]'), function (el) {
+      el.addEventListener('click', closeModal);
+    });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && m.classList.contains('open')) closeModal(); });
+  }
+
+  // ---- Test-Einstieg im Modal (kompakt, ohne Hero) ----
+  function renderIntro() {
+    S.finished = false;
+    var unlocked = !!S.email;
+    setHTML(
+      '<div class="nt-card nt-intro">' +
         '<div class="nt-intro-body">' +
           '<span class="nt-eyebrow">Kostenlos · Goethe-/telc-Stil</span>' +
           '<h3 class="nt-h">Teste dein Deutschniveau 🎯</h3>' +
@@ -330,8 +362,9 @@
         '<div class="nt-tip">💡 <b>Dein nächster Schritt:</b> ' + esc(info.tip) + '</div>' +
         '<div class="nt-mailnote" id="ntMailNote">📧 Wir schicken dir dein Ergebnis gerade per E-Mail …</div>' +
         '<div class="nt-result-cta">' +
-          '<a class="nt-btn nt-btn-primary nt-btn-lg" href="#preise">🚀 Zum passenden Sprechclub</a>' +
+          '<a class="nt-btn nt-btn-primary nt-btn-lg" href="#preise" data-close>🚀 Zum passenden Sprechclub</a>' +
           brandBtn('↺ Test wiederholen', 'restart', 'nt-btn-ghost') +
+          brandBtn('Schließen', 'nt-close', 'nt-btn-ghost') +
         '</div>' +
       '</div>'
     );
@@ -401,7 +434,11 @@
         if (act === 'restart') return renderIntro();
         if (act === 'play') return playAudio();
         if (act === 'gostart') return gostart();
+        if (act === 'nt-close') return closeModal();
       });
+    });
+    Array.prototype.forEach.call(S.root.querySelectorAll('[data-close]'), function (el) {
+      el.addEventListener('click', closeModal);
     });
   }
 
@@ -422,7 +459,8 @@
   function init() {
     S.root = $('niveautest-app');
     if (!S.root) return;
-    renderIntro();
+    renderTeaser();
+    setupModal();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
