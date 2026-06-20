@@ -273,6 +273,7 @@ h2.sec{margin:24px 0 12px;font-size:19px}
     <a href="index.html" class="brand"><img src="logo.PNG" onerror="this.style.display='none'"><span>deutschoderwas&nbsp;club</span></a>
     <button class="navlink active" data-view="dashboard" onclick="go('dashboard')"><span class="ic">🏠</span>Start</button>
     <button class="navlink navlink-hl" data-view="ueben" onclick="go('ueben')"><span class="ic">🎮</span>Üben</button>
+    <button class="navlink" data-view="community" onclick="go('community')"><span class="ic">💬</span>Community</button>
     <button class="navlink" data-view="lernpfad" onclick="go('lernpfad')"><span class="ic">🪜</span>Lernpfad</button>
     <button class="navlink" data-view="kalender" onclick="go('kalender')"><span class="ic">🗓️</span>Kalender</button>
     <button class="navlink" data-view="stunden" onclick="go('stunden')"><span class="ic">📅</span>Meine Stunden</button>
@@ -295,6 +296,7 @@ h2.sec{margin:24px 0 12px;font-size:19px}
 
     <section class="view active" id="v-dashboard"></section>
     <section class="view" id="v-ueben"></section>
+    <section class="view" id="v-community"></section>
     <section class="view" id="v-lernpfad"></section>
     <section class="view" id="v-kalender"></section>
     <section class="view" id="v-stunden"></section>
@@ -442,13 +444,13 @@ function collectVocab(){
 }
 
 // ---------- Router ----------
-const VIEWS=['dashboard','ueben','lernpfad','kalender','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','profil'];
+const VIEWS=['dashboard','ueben','community','lernpfad','kalender','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','profil'];
 function go(v){ location.hash=v; }
 function routeFromHash(){ const v=(location.hash||'#dashboard').slice(1); show(VIEWS.includes(v)?v:'dashboard'); }
 function show(v){
   VIEWS.forEach(x=>document.getElementById('v-'+x).classList.toggle('active',x===v));
   document.querySelectorAll('.navlink[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));
-  ({dashboard:renderDashboard,ueben:(window.renderUeben||renderDashboard),lernpfad:renderLernpfad,kalender:renderKalender,stunden:renderStunden,materialien:renderMaterialien,vokabeln:renderVokabeln,
+  ({dashboard:renderDashboard,ueben:(window.renderUeben||renderDashboard),community:(window.renderCommunity||renderDashboard),lernpfad:renderLernpfad,kalender:renderKalender,stunden:renderStunden,materialien:renderMaterialien,vokabeln:renderVokabeln,
     fortschritt:renderFortschritt,guthaben:renderGuthaben,nachrichten:renderNachrichten,
     amanda:renderAmanda,profil:renderProfil}[v])();
   window.scrollTo(0,0);
@@ -1167,6 +1169,7 @@ init();
 <script src="club-fx.js"></script>
 <script src="uebungen.js"></script>
 <script src="ueben.js"></script>
+<script src="community.js"></script>
 <script>
 if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}
 </script>
