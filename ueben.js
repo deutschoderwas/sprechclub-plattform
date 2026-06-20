@@ -119,6 +119,24 @@
     .ub-cele{position:fixed;inset:0;z-index:5000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.35);animation:ubfade .3s}
     .ub-cele .box{background:#fff;border-radius:22px;padding:26px 30px;text-align:center;max-width:300px;box-shadow:0 20px 50px rgba(0,0,0,.3)}
     @keyframes ubfade{from{opacity:0}to{opacity:1}}
+    /* vibrante Übersicht */
+    .ub-hero{background:linear-gradient(120deg,rgba(221,0,0,.10),rgba(255,206,0,.10) 55%,rgba(45,212,191,.16));border:1px solid var(--border,#ECECEC);border-radius:24px;padding:22px 24px;margin-bottom:16px;box-shadow:0 10px 26px rgba(0,0,0,.05)}
+    .ub-hero h1{font-family:'Space Grotesk',sans-serif;font-size:30px;margin:0;line-height:1.05}
+    .ub-hero p{color:var(--soft,#5C5C5C);margin:8px 0 0;max-width:640px}
+    .ub-tcard{background:var(--card,#fff);border:1px solid var(--border,#ECECEC);border-radius:22px;overflow:hidden;box-shadow:0 10px 24px rgba(0,0,0,.06);display:flex;flex-direction:column;transition:transform .18s,box-shadow .25s}
+    .ub-tcard:hover{transform:translateY(-6px);box-shadow:0 22px 44px rgba(0,0,0,.13)}
+    .ub-band{height:92px;position:relative;display:flex;align-items:center;justify-content:center}
+    .ub-band::after{content:'';position:absolute;inset:0;background:radial-gradient(120px 80px at 80% 0,rgba(255,255,255,.35),transparent)}
+    .ub-emoji{width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,.94);display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:800;box-shadow:0 8px 18px rgba(0,0,0,.2);z-index:1}
+    .ub-lv2{position:absolute;top:10px;left:12px;background:rgba(0,0,0,.28);color:#fff;font-size:11px;font-weight:800;letter-spacing:.04em;padding:3px 9px;border-radius:20px}
+    .ub-done{position:absolute;top:10px;right:12px;background:rgba(255,255,255,.92);color:#16a34a;font-size:11px;font-weight:800;padding:3px 9px;border-radius:20px}
+    .ub-tbody{padding:14px 16px 16px;display:flex;flex-direction:column;gap:9px;flex:1}
+    .ub-tbody .tt{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:16px;line-height:1.15}
+    .ub-tbody .meta{font-size:12.5px;color:var(--soft,#5C5C5C)}
+    .ub-go2{margin-top:4px;border:none;border-radius:40px;padding:11px;font-weight:800;color:#fff;cursor:pointer;font-family:inherit;font-size:14.5px;transition:filter .15s}
+    .ub-go2:hover{filter:brightness(1.08)}
+    .ub-lesson{display:block;text-align:center;font-size:13px;font-weight:700;color:var(--soft,#5C5C5C);text-decoration:none;padding:8px;border-radius:30px;border:1.5px solid var(--border,#ECECEC);transition:.15s}
+    .ub-lesson:hover{border-color:var(--turq,#2DD4BF);color:var(--ink,#1A1A1A);background:rgba(45,212,191,.07)}
     `;
     document.head.appendChild(st);
   }
@@ -129,6 +147,15 @@
   // ---------- HOME ----------------------------------------------------------
   var curSkill=null;
   function skillById(id){ return (UEBUNGEN.skills||[]).filter(function(s){return s.id===id;})[0]; }
+  // Emoji je Thema (für vibrante Karten)
+  var UB_EMOJI={arbeit:'💼',bildung:'📚',einkaufen:'🛒',essen:'🍳',gefuehle:'😊',gesundheit:'🩺',medien:'📱',natur:'🌳',persoenlichkeit:'😎',redewendungen:'💬',reisen:'✈️',stadt:'🚉','starke-adjektive':'💪','typisch-deutsch':'🇩🇪',wohnen:'🛋️',adjektivdeklination:'🧩',genitiv:'🔑','indirekte-rede':'🗣️',konjunktiv2:'💭',konnektoren:'🔗',nebensaetze:'🧷','passiv-praesens':'🔁','passiv-vergangenheit':'🕰️','perfekt-praeteritum':'⏳',relativsaetze:'📎','temporale-nebensaetze':'⏰',wechselpraepositionen:'📍',ch:'🔤',r:'🌀','s-z-ss':'🔊',satzmelodie:'🎵',umlaute:'Ä','v-w-f':'💨',vokale:'🅰️',wortakzent:'📢'};
+  var UB_PAL=[['#DD0000','#FF7A00'],['#2563EB','#2DD4BF'],['#13A89A','#16a34a'],['#FF7A00','#FFCE00'],['#E83E8C','#7C3AED'],['#DD0000','#E83E8C'],['#2563EB','#7C3AED'],['#16a34a','#2DD4BF'],['#7C3AED','#2563EB'],['#FF7A00','#DD0000'],['#2DD4BF','#2563EB'],['#13A89A','#2563EB'],['#DD0000','#FFCE00'],['#FFCE00','#FF7A00'],['#7C3AED','#E83E8C']];
+  // Passende Lektionsseite je Übungs-Thema (1:1-Verzahnung)
+  function lessonUrl(skId,thId){ if(!skId||skId==='mix'||!thId)return null;
+    if(skId==='aussprache') return 'aussprache-'+thId+'-a2.html';
+    if(skId==='grammatik') return 'grammatik-'+thId+'-'+(thId==='indirekte-rede'?'b2':'b1')+'.html';
+    return 'wortschatz-'+thId+'-b1.html'; /* wortschatz + hoeren teilen die Themen-IDs */
+  }
   function renderUeben(){
     injectCSS();
     var el=document.getElementById('v-ueben'); if(!el)return;
@@ -137,7 +164,7 @@
     if(!curSkill) curSkill=UEBUNGEN.skills[0].id;
     var sk=skillById(curSkill)||UEBUNGEN.skills[0];
     var head=
-      '<div class="pagehead"><h1>Üben 🎮</h1><p>Üb wann du willst – Vokabeln, Grammatik, Hören und Aussprache. Sammle XP und halte deinen Streak.</p></div>'+
+      '<div class="ub-hero"><h1>Üben 🎮</h1><p>Üb wann du willst – Vokabeln, Grammatik, Hören & Aussprache. Sammle XP, halte deinen Streak und öffne zu jedem Thema die passende Lektion.</p></div>'+
       '<div class="ub-top">'+
         '<div class="ub-stat"><span class="ico">🔥</span><div><div class="big">'+(s.streak||0)+'</div><div class="lbl">Tage-Streak</div></div></div>'+
         '<div class="ub-stat"><span class="ico">⭐</span><div><div class="big">'+(s.xp||0)+'</div><div class="lbl">XP gesamt</div></div></div>'+
@@ -147,14 +174,23 @@
     var pills='<div class="ub-skills">'+UEBUNGEN.skills.map(function(x){
         var on=x.id===curSkill; return '<button class="ub-skill'+(on?' on':'')+'" style="'+(on?'background:'+(x.color||'#DD0000')+';border-color:'+(x.color||'#DD0000'):'')+'" onclick="ubSetSkill(\''+x.id+'\')">'+x.emoji+' '+E(x.name)+'</button>';
       }).join('')+'</div>';
-    var cards='<div class="ub-grid">'+sk.themes.map(function(t){
+    var cards='<div class="ub-grid">'+sk.themes.map(function(t,idx){
         var tp=(s.themes[themeKey(sk.id,t.id)]||{}).best||0;
-        return '<div class="ub-card"><span class="emj">'+(t.emoji||sk.emoji)+'</span>'+
-          (t.level?'<span class="lv">'+E(t.level)+'</span>':'')+
-          '<div class="tt">'+E(t.title)+'</div>'+
-          '<div class="lbl" style="font-size:12px;color:var(--soft,#5C5C5C)">'+t.exercises.length+' Aufgaben'+(tp?' · beste Runde '+tp+'%':'')+'</div>'+
-          '<div class="ub-pbar"><span style="width:'+tp+'%"></span></div>'+
-          '<button class="ub-go" style="background:'+(sk.color||'#DD0000')+'" onclick="ubStart(\''+sk.id+'\',\''+t.id+'\')">Üben →</button>'+
+        var g=UB_PAL[idx%UB_PAL.length]; var grad='linear-gradient(135deg,'+g[0]+','+g[1]+')';
+        var em=t.emoji||UB_EMOJI[t.id]||sk.emoji; var lu=lessonUrl(sk.id,t.id);
+        return '<div class="ub-tcard">'+
+          '<div class="ub-band" style="background:'+grad+'">'+
+            (t.level?'<span class="ub-lv2">'+E(t.level)+'</span>':'')+
+            (tp>=100?'<span class="ub-done">✓ fertig</span>':'')+
+            '<span class="ub-emoji">'+em+'</span>'+
+          '</div>'+
+          '<div class="ub-tbody">'+
+            '<div class="tt">'+E(t.title)+'</div>'+
+            '<div class="meta">'+t.exercises.length+' Aufgaben'+(tp?' · beste Runde '+tp+'%':'')+'</div>'+
+            '<div class="ub-pbar"><span style="width:'+tp+'%;background:'+grad+'"></span></div>'+
+            '<button class="ub-go2" style="background:'+grad+'" onclick="ubStart(\''+sk.id+'\',\''+t.id+'\')">Üben →</button>'+
+            (lu?'<a class="ub-lesson" href="'+lu+'" target="_blank" rel="noopener">📖 Passende Lektion</a>':'')+
+          '</div>'+
         '</div>';
       }).join('')+'</div>';
     el.innerHTML=head+pills+cards;
@@ -294,7 +330,9 @@
       '<p class="xp">+'+ (S.correct*(META().xpPerCorrect||10)) +' XP</p></div>';
     document.getElementById('ubProg').style.width='100%';
     var foot=document.querySelector('#ubOv .ub-foot');
+    var lu=lessonUrl(S.skId,S.thId);
     foot.innerHTML='<button class="ub-btn" onclick="ubAgain()">Nochmal üben</button>'+
+                   (lu?'<a class="ub-btn" href="'+lu+'" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none;background:linear-gradient(135deg,var(--primary,#DD0000),var(--accent,#FFCE00));margin-top:10px">📖 Passende Lektion ansehen</a>':'')+
                    '<button class="ub-btn" style="background:#fff;color:var(--ink,#1A1A1A);border:2px solid var(--border,#ECECEC);box-shadow:none;margin-top:10px" onclick="ubClose()">Fertig</button>';
   }
   window.ubAgain=function(){ var foot=document.querySelector('#ubOv .ub-foot'); foot.innerHTML='<button class="ub-btn" id="ubBtn" disabled onclick="ubBtn()">Prüfen</button>';
