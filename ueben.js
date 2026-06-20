@@ -187,6 +187,7 @@
       h+=(e.img?'<img class="ub-qimg" src="'+E(e.img)+'" alt="">':'')+'<div class="ub-q">'+E((e.text||'').replace('___','_____'))+'</div><input class="ub-input" id="ubGap" placeholder="Antwort eintippen…" autocomplete="off" autocapitalize="off">';
       if(e.hint) h+='<div class="ub-tip" style="text-align:left;margin-top:8px">💡 '+E(e.hint)+'</div>';
     } else if(e.type==='match'){
+      if(e.img){ h+='<img class="ub-qimg" src="'+E(e.img)+'" alt="">'; }
       var rs=shuf(e.pairs.map(function(p){return p.r;}));
       h+='<div class="ub-q">'+E(e.intro||'Ordne zu:')+'</div>'+e.pairs.map(function(p,k){
         return '<div class="ub-mrow"><b>'+E(p.l)+'</b><select id="ubM'+k+'" onchange="ubMatchChk()"><option value="">— wählen —</option>'+rs.map(function(r){return '<option>'+E(r)+'</option>';}).join('')+'</select></div>';
