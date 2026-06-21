@@ -26,7 +26,7 @@
   D.AUDIO.p_tempo      = { url: CDN + 'hf_20260621_111431_2a99cda3-5c91-49b7-969b-75a9d1593a31.mp3', script: 'In der Debatte um das Tempolimit zeigte sich der Kommentator skeptisch. Zwar seien die Umweltargumente nachvollziehbar, doch bezweifle er, dass ein generelles Limit den entscheidenden Unterschied mache. Wichtiger sei der Ausbau des öffentlichen Nahverkehrs.' };
 
   function H(id, level, audio, img, q, options, explain) {
-    return { id: id, level: level, skill: 'hoeren', audio: audio, img: img, q: q, options: options, answer: 0, explain: explain };
+    return { id: id, level: level, skill: 'hoeren', audio: audio, img: img, q: q, options: options, answer: 0, explain: explain, exam: true };
   }
 
   var more = [

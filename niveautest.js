@@ -43,7 +43,9 @@
     var qs = [];
     LEVELS.forEach(function (L) {
       var les = byLevelSkill(L, 'lesen').slice(0, 2);
-      var hoe = byLevelSkill(L, 'hoeren').slice(0, 2);
+      var allHoe = byLevelSkill(L, 'hoeren');
+      var examHoe = allHoe.filter(function (x) { return x.exam; });
+      var hoe = (examHoe.length ? examHoe : allHoe).slice(0, 2); // im Mini-Test prüfungsnahe Hörszenen bevorzugen
       var bau = byLevelSkill(L, 'bausteine');
       var block = les.concat(hoe);
       block = block.concat(bau.slice(0, Math.max(0, per - block.length)));
