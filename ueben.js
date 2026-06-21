@@ -49,6 +49,33 @@
     }catch(e){}
   };
 
+  // ---------- Shadowing: Aufnahme & Vergleich ------------------------------
+  var shRec=null, shChunks=[], shStream=null, shUrl=null;
+  function shadowReset(){ try{ if(shRec&&shRec.state==='recording')shRec.stop(); }catch(e){} try{ if(shStream)shStream.getTracks().forEach(function(t){t.stop();}); }catch(e){} shStream=null; shRec=null; if(shUrl){try{URL.revokeObjectURL(shUrl);}catch(e){}} shUrl=null; }
+  window.ubPlayMine=function(btn){ if(shUrl) window.ubPlayUrl(shUrl,btn); };
+  window.ubRecToggle=function(){
+    var b=document.getElementById('ubRecBtn'); if(!b)return;
+    if(shRec && shRec.state==='recording'){ try{shRec.stop();}catch(e){} return; }
+    if(!navigator.mediaDevices||!window.MediaRecorder){ alert('Dein Browser unterstützt leider keine Sprachaufnahme.'); return; }
+    stopAudio();
+    navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
+      shStream=stream; shChunks=[];
+      var mime=MediaRecorder.isTypeSupported('audio/webm')?'audio/webm':(MediaRecorder.isTypeSupported('audio/mp4')?'audio/mp4':'');
+      shRec=new MediaRecorder(stream, mime?{mimeType:mime}:undefined);
+      shRec.ondataavailable=function(ev){ if(ev.data&&ev.data.size)shChunks.push(ev.data); };
+      shRec.onstop=function(){ if(shStream){shStream.getTracks().forEach(function(t){t.stop();});shStream=null;}
+        if(shUrl){try{URL.revokeObjectURL(shUrl);}catch(e){}}
+        var blob=new Blob(shChunks,{type:(shRec&&shRec.mimeType)||'audio/webm'}); shUrl=URL.createObjectURL(blob);
+        b.innerHTML='🎙️ Nochmal aufnehmen'; b.classList.remove('rec'); shadowCmp(); };
+      shRec.start(); b.innerHTML='⏹ Aufnahme stoppen'; b.classList.add('rec');
+      var c=document.getElementById('ubCmp'); if(c)c.innerHTML='<div class="ub-tip" style="color:#dc2626;font-weight:700">🔴 Aufnahme läuft … sprich den Satz nach</div>';
+    }).catch(function(){ alert('Bitte erlaube den Mikrofon-Zugriff, um dich aufzunehmen.'); });
+  };
+  function shadowCmp(){ var c=document.getElementById('ubCmp'); if(!c||!S)return; var e=S.items[S.idx];
+    c.innerHTML='<div class="ub-cmp"><button class="ub-cmp-btn" onclick="ubPlayUrl(\''+E(e.audioUrl)+'\',this)">🔊 Original</button>'+
+      '<button class="ub-cmp-btn mine" onclick="ubPlayMine(this)">🎧 Deine Aufnahme</button></div>'+
+      '<div class="ub-tip">Klingt es ähnlich? Wiederhol ruhig ein paar Mal – dann unten auf „Fertig".</div>'; }
+
   // ---------- CSS -----------------------------------------------------------
   function injectCSS(){ if(document.getElementById('ubCSS'))return; var st=document.createElement('style'); st.id='ubCSS';
     st.textContent = `
@@ -137,6 +164,13 @@
     .ub-go2:hover{filter:brightness(1.08)}
     .ub-lesson{display:block;text-align:center;font-size:13px;font-weight:700;color:var(--soft,#5C5C5C);text-decoration:none;padding:8px;border-radius:30px;border:1.5px solid var(--border,#ECECEC);transition:.15s}
     .ub-lesson:hover{border-color:var(--turq,#2DD4BF);color:var(--ink,#1A1A1A);background:rgba(45,212,191,.07)}
+    .ub-recbtn{border:2px solid #7C3AED;background:#fff;color:#7C3AED;border-radius:40px;padding:13px 22px;font-weight:800;font-size:16px;cursor:pointer;font-family:inherit;transition:.15s}
+    .ub-recbtn:hover{background:rgba(124,58,237,.08)}
+    .ub-recbtn.rec{background:#dc2626;border-color:#dc2626;color:#fff;animation:ubpulse 1s infinite}
+    .ub-cmp{display:flex;gap:10px;justify-content:center;margin:14px 0 4px;flex-wrap:wrap}
+    .ub-cmp-btn{border:2px solid var(--border,#ECECEC);background:#fff;border-radius:40px;padding:11px 18px;font-weight:700;font-size:15px;cursor:pointer;font-family:inherit}
+    .ub-cmp-btn.mine{border-color:#7C3AED;color:#7C3AED}
+    .ub-cmp-btn.playing{background:var(--turq,#2DD4BF);color:#fff;border-color:var(--turq,#2DD4BF)}
     `;
     document.head.appendChild(st);
   }
@@ -151,15 +185,37 @@
   var UB_EMOJI={arbeit:'💼',bildung:'📚',einkaufen:'🛒',essen:'🍳',gefuehle:'😊',gesundheit:'🩺',medien:'📱',natur:'🌳',persoenlichkeit:'😎',redewendungen:'💬',reisen:'✈️',stadt:'🚉','starke-adjektive':'💪','typisch-deutsch':'🇩🇪',wohnen:'🛋️',adjektivdeklination:'🧩',genitiv:'🔑','indirekte-rede':'🗣️',konjunktiv2:'💭',konnektoren:'🔗',nebensaetze:'🧷','passiv-praesens':'🔁','passiv-vergangenheit':'🕰️','perfekt-praeteritum':'⏳',relativsaetze:'📎','temporale-nebensaetze':'⏰',wechselpraepositionen:'📍',ch:'🔤',r:'🌀','s-z-ss':'🔊',satzmelodie:'🎵',umlaute:'Ä','v-w-f':'💨',vokale:'🅰️',wortakzent:'📢'};
   var UB_PAL=[['#DD0000','#FF7A00'],['#2563EB','#2DD4BF'],['#13A89A','#16a34a'],['#FF7A00','#FFCE00'],['#E83E8C','#7C3AED'],['#DD0000','#E83E8C'],['#2563EB','#7C3AED'],['#16a34a','#2DD4BF'],['#7C3AED','#2563EB'],['#FF7A00','#DD0000'],['#2DD4BF','#2563EB'],['#13A89A','#2563EB'],['#DD0000','#FFCE00'],['#FFCE00','#FF7A00'],['#7C3AED','#E83E8C']];
   // Passende Lektionsseite je Übungs-Thema (1:1-Verzahnung)
-  function lessonUrl(skId,thId){ if(!skId||skId==='mix'||!thId)return null;
+  function lessonUrl(skId,thId){ if(!skId||skId==='mix'||skId==='shadowing'||!thId)return null;
     if(skId==='aussprache') return 'aussprache-'+thId+'-a2.html';
     if(skId==='grammatik') return 'grammatik-'+thId+'-'+(thId==='indirekte-rede'?'b2':'b1')+'.html';
     return 'wortschatz-'+thId+'-b1.html'; /* wortschatz + hoeren teilen die Themen-IDs */
   }
+
+  // ---------- Shadowing-Daten (native Audios, aufsteigend A1 -> C1) --------
+  var SHADOW_CDN='https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/';
+  var SHADOW_ITEMS=[
+    {type:'shadow',level:'A1',text:'Guten Morgen! Wie geht es dir heute?',audioUrl:SHADOW_CDN+'hf_20260621_105327_201627b4-0d95-4575-9fab-263b70d5b1d7.mp3',tip:'Freundlich und melodisch sprechen.'},
+    {type:'shadow',level:'A1',text:'Ich hätte gern einen Kaffee, bitte.',audioUrl:SHADOW_CDN+'hf_20260621_105329_b71adfc9-726a-45c7-9164-8e1fa702f15e.mp3',tip:'Höflicher Ton – „hätte" mit langem ä.'},
+    {type:'shadow',level:'A2',text:'Könnten Sie mir bitte kurz helfen?',audioUrl:SHADOW_CDN+'hf_20260621_105331_a4469e51-e21c-4bea-be98-a1f3b2c7f9e8.mp3',tip:'Den Umlaut „ö" in „könnten" rund aussprechen.'},
+    {type:'shadow',level:'A2',text:'Am Wochenende gehe ich gern im Park spazieren.',audioUrl:SHADOW_CDN+'hf_20260621_105332_011ce728-1080-4efc-bf68-f9e62be436b1.mp3',tip:'Gleichmäßiger Rhythmus, „sch" in „spazieren".'},
+    {type:'shadow',level:'B1',text:'Ich würde mich sehr freuen, wenn das klappt.',audioUrl:SHADOW_CDN+'hf_20260621_105333_5e392bf0-ec1f-40cd-bbcb-77180f3aa688.mp3',tip:'„würde" mit ü; Satzmelodie leicht steigend.'},
+    {type:'shadow',level:'B1',text:'Entschuldigung, ich habe Sie leider nicht ganz verstanden.',audioUrl:SHADOW_CDN+'hf_20260621_105401_2ae6c6f8-3ec1-48e2-8c60-abce50ecd085.mp3',tip:'Deutlich und nicht zu schnell.'},
+    {type:'shadow',level:'B2',text:'Meiner Meinung nach sollten wir das noch einmal in Ruhe überdenken.',audioUrl:SHADOW_CDN+'hf_20260621_105402_4221f936-78b4-4c97-a661-3498bd6e7aa6.mp3',tip:'Längerer Satz – in zwei Atemgruppen sprechen.'},
+    {type:'shadow',level:'B2',text:'Trotz des schlechten Wetters hatten wir richtig viel Spaß.',audioUrl:SHADOW_CDN+'hf_20260621_105403_6c6548d1-cf68-4911-9bc7-6128619f2cdb.mp3',tip:'„Spaß" mit langem a und scharfem ß.'},
+    {type:'shadow',level:'C1',text:'Ehrlich gesagt fällt es mir schwer, das alles nachzuvollziehen.',audioUrl:SHADOW_CDN+'hf_20260621_105405_92f3c151-fb4e-46bb-a928-d885ac2f7464.mp3',tip:'Betonung auf „schwer" und „nachzuvollziehen".'},
+    {type:'shadow',level:'C1',text:'Lassen Sie uns das Thema beim nächsten Treffen ausführlich vertiefen.',audioUrl:SHADOW_CDN+'hf_20260621_105406_da2ebb51-d4dc-481c-8af8-2bb1e353b1f2.mp3',tip:'Formell und ruhig; klare Endung bei „vertiefen".'}
+  ];
+  function ensureShadow(){ if(!window.UEBUNGEN||!UEBUNGEN.skills)return;
+    if(UEBUNGEN.skills.some(function(s){return s.id==='shadowing';}))return;
+    UEBUNGEN.skills.push({id:'shadowing',name:'Shadowing',emoji:'🗣️',color:'#7C3AED',themes:[
+      {id:'shadowing',title:'Aussprache: Nachsprechen & Aufnehmen',level:'A1–C1',emoji:'🎙️',exercises:SHADOW_ITEMS}
+    ]}); }
+
   function renderUeben(){
     injectCSS();
     var el=document.getElementById('v-ueben'); if(!el)return;
     if(!window.UEBUNGEN||!UEBUNGEN.skills||!UEBUNGEN.skills.length){ el.innerHTML='<div class="pagehead"><h1>Üben</h1></div><div class="empty">Übungen werden geladen … lade die Seite neu, falls hier länger nichts erscheint.</div>'; return; }
+    ensureShadow();
     var s=load(); var goal=META().dailyGoal||30; var pct=Math.min(100,Math.round((s.dayXP||0)/goal*100));
     if(!curSkill) curSkill=UEBUNGEN.skills[0].id;
     var sk=skillById(curSkill)||UEBUNGEN.skills[0];
@@ -211,7 +267,7 @@
   window.ubStart=function(skId,thId){ var sk=skillById(skId); if(!sk)return; var th=sk.themes.filter(function(t){return t.id===thId;})[0]; if(!th)return;
     S={skId:skId,thId:thId,items:pickItems(th.exercises,12),idx:0,correct:0,hearts:META().maxHearts||5,answered:false,sel:null,title:th.title};
     openSession(); };
-  window.ubStartMix=function(){ var all=[]; (UEBUNGEN.skills||[]).forEach(function(sk){ sk.themes.forEach(function(t){ t.exercises.forEach(function(e){ all.push(e); }); }); });
+  window.ubStartMix=function(){ var all=[]; (UEBUNGEN.skills||[]).forEach(function(sk){ if(sk.id==='shadowing')return; sk.themes.forEach(function(t){ t.exercises.forEach(function(e){ all.push(e); }); }); });
     S={skId:'mix',thId:'mix',items:pickItems(all,10),idx:0,correct:0,hearts:META().maxHearts||5,answered:false,sel:null,title:'Schnell-Mix'};
     openSession(); };
 
@@ -222,13 +278,13 @@
     if(!force && S && !S.ended && (S.idx>0 || S.answered)){
       if(!confirm('Übung abbrechen?\n\nDein Fortschritt in dieser Runde geht verloren.')) return;
     }
-    var o=document.getElementById('ubOv'); if(o)o.classList.remove('open'); document.body.style.overflow=''; stopAudio(); S=null; if(document.getElementById('v-ueben').classList.contains('active')) renderUeben(); };
+    var o=document.getElementById('ubOv'); if(o)o.classList.remove('open'); document.body.style.overflow=''; stopAudio(); shadowReset(); S=null; if(document.getElementById('v-ueben').classList.contains('active')) renderUeben(); };
 
   function hearts(){ var h=S.hearts,m=META().maxHearts||5,s=''; for(var i=0;i<m;i++)s+= i<h?'❤️':'🤍'; return s; }
   function setProg(){ document.getElementById('ubProg').style.width=Math.round(S.idx/S.items.length*100)+'%'; document.getElementById('ubHearts').innerHTML=hearts(); }
 
   function renderQ(){
-    stopAudio();
+    stopAudio(); shadowReset();
     setProg(); S.answered=false; S.sel=null; S.order=null;
     var e=S.items[S.idx]; var body=document.getElementById('ubBody'); var btn=document.getElementById('ubBtn');
     btn.className='ub-btn'; btn.textContent='Prüfen'; btn.disabled=true;
@@ -267,6 +323,14 @@
          '<button class="ub-play" onclick="ubPlayUrl(\''+E(e.audioUrl)+'\',this)">▶</button>'+
          '<div class="ub-q">'+E(e.q)+'</div><div class="ub-opts" id="ubOpts">'+
          shuf(e.options.map(function(o,k){return k;})).map(function(k){ return '<button class="ub-opt" data-k="'+k+'" onclick="ubChoose('+k+')">'+E(e.options[k])+'</button>'; }).join('')+'</div>';
+    } else if(e.type==='shadow'){
+      h+='<div class="ub-q" style="text-align:center">🗣️ Shadowing – hör zu &amp; sprich nach</div>';
+      h+='<button class="ub-play" onclick="ubPlayUrl(\''+E(e.audioUrl)+'\',this)">▶</button>';
+      h+='<div class="ub-word" style="font-size:22px;line-height:1.32">'+E(e.text)+'</div>';
+      if(e.tip) h+='<div class="ub-tip">💡 '+E(e.tip)+'</div>';
+      h+='<div style="text-align:center;margin-top:6px"><button class="ub-recbtn" id="ubRecBtn" onclick="ubRecToggle()">🎙️ Aufnehmen</button></div><div id="ubCmp"></div>';
+      btn.disabled=false; btn.textContent='Fertig 👍';
+      setTimeout(function(){ window.ubPlayUrl(e.audioUrl, document.querySelector('#ubBody .ub-play')); },300);
     }
     h+='<div class="ub-fb" id="ubFb"></div>';
     body.innerHTML=h; body.scrollTop=0;
@@ -295,20 +359,20 @@
       ok=[e.answer].concat(e.alts||[]).some(function(a){return nrm(a)===nrm(v);}); sol='Richtig: '+e.answer;
     } else if(e.type==='match'){ ok=e.pairs.every(function(p,k){ var sel=document.getElementById('ubM'+k); sel.disabled=true; var good=nrm(sel.value)===nrm(p.r); sel.style.borderColor=good?'#16a34a':'#dc2626'; return good; }); sol=ok?'':'Schau dir die richtigen Paare nochmal an.';
     } else if(e.type==='order'){ var built=S.order.build.map(function(t){return t.w;}).join(' '); ok=nrm(built)===nrm(e.answer); sol='Richtig: '+e.answer;
-    } else if(e.type==='speak'){ ok=true; }
+    } else if(e.type==='speak'||e.type==='shadow'){ ok=true; }
     else if(e.type==='listen'){ ok=(S.sel===e.answer); var lopts=document.getElementById('ubOpts');
       Array.prototype.forEach.call(lopts.children,function(b){ var k=+b.dataset.k; b.disabled=true; b.classList.remove('sel'); if(k===e.answer)b.classList.add('right'); else if(k===S.sel)b.classList.add('wrong'); });
       sol=e.explain?e.explain:'Hör nochmal genau hin.'; }
 
-    S.answered=true; var btn=document.getElementById('ubBtn');
-    if(e.type!=='speak'){
+    S.answered=true; var btn=document.getElementById('ubBtn'); var selfRated=(e.type==='speak'||e.type==='shadow');
+    if(!selfRated){
       if(ok){ S.correct++; addXP(META().xpPerCorrect||10); fb.className='ub-fb ok'; fb.innerHTML='✓ Richtig! +'+(META().xpPerCorrect||10)+' XP'; }
       else { S.hearts--; setProg(); fb.className='ub-fb no'; fb.innerHTML='✗ '+E(sol); }
     } else { S.correct++; addXP(Math.round((META().xpPerCorrect||10)/2)); fb.className='ub-fb ok'; fb.innerHTML='Klasse! Weiter so. +'+Math.round((META().xpPerCorrect||10)/2)+' XP'; }
     if(e.type==='listen'){ fb.innerHTML+='<div style="margin-top:10px;padding:11px 13px;background:#fff;border:1px solid var(--border,#ECECEC);border-radius:12px;font-weight:500;color:#333;line-height:1.5">📝 <b>Das hast du gehört:</b><br>'+E(e.transcript)+'</div>'; }
-    btn.className='ub-btn'+((!ok&&e.type!=='speak')?' no':''); btn.disabled=false;
+    btn.className='ub-btn'+((!ok&&!selfRated)?' no':''); btn.disabled=false;
     btn.textContent=(S.idx>=S.items.length-1)?'Abschließen':'Weiter';
-    if(S.hearts<=0 && e.type!=='speak' && !ok){ btn.textContent='Runde beenden'; }
+    if(S.hearts<=0 && !selfRated && !ok){ btn.textContent='Runde beenden'; }
   }
 
   function next(){ var e=S.items[S.idx];
