@@ -6,6 +6,8 @@
 <title>deutschoderwas club · Live-Raum (Prototyp)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
 <style>
   :root{
     --tuerkis:#2DD4BF; --tuerkis-dunkel:#14B8A6; --tuerkis-soft:#A7F3D0;
@@ -319,11 +321,37 @@
 
   setRolle('lehrer');
 
-  // ---- Jitsi erst auf Klick ----
-  // Eigener Server zuerst; fällt er aus, automatischer Notfall-Schalter auf den öffentlichen Jitsi.
+  // ---- Video: eigener, abgesicherter Server (Token aus der Club-Plattform) ----
   const EIGENER_SERVER = 'meet.deutschoderwas-club.de';
   const NOTFALL_SERVER = 'meet.jit.si';
-  let api=null;
+  const RAUM = 'deutschoderwas-club-' + new Date().toISOString().slice(0,10);
+  let api=null, sb=null;
+
+  function initSb(){
+    try{
+      if(window.supabase && window.SPRECHCLUB_CONFIG && !String(window.SPRECHCLUB_CONFIG.SUPABASE_URL).startsWith('HIER_')){
+        sb = supabase.createClient(window.SPRECHCLUB_CONFIG.SUPABASE_URL, window.SPRECHCLUB_CONFIG.SUPABASE_ANON_KEY);
+      }
+    }catch(e){ console.warn('Supabase init fehlgeschlagen', e); }
+  }
+
+  // Holt den "Eintrittsausweis" (JWT) aus der Plattform – nur für eingeloggte Club-Mitglieder.
+  async function holeToken(){
+    if(!sb) return null;
+    const { data:{ session } } = await sb.auth.getSession();
+    if(!session) return null;
+    const cfg = window.SPRECHCLUB_CONFIG;
+    try{
+      const res = await fetch(cfg.SUPABASE_URL + '/functions/v1/jitsi-token', {
+        method:'POST',
+        headers:{ 'Authorization':'Bearer '+session.access_token, 'apikey':cfg.SUPABASE_ANON_KEY, 'Content-Type':'application/json' },
+        body: JSON.stringify({ room: RAUM })
+      });
+      if(!res.ok) return null;
+      const j = await res.json();
+      return j.token || null;
+    }catch(e){ console.warn('Token-Abruf fehlgeschlagen', e); return null; }
+  }
 
   function ladeJitsiApi(domain, ok, fehler){
     const s=document.createElement('script');
@@ -333,30 +361,38 @@
     document.head.appendChild(s);
   }
 
-  function videoStarten(){
-    document.getElementById('video-start').style.display='none';
-    // 1. Versuch: eigener Server. Bei Fehler -> Notfall-Server. Bei dessen Fehler -> Hinweis.
-    ladeJitsiApi(EIGENER_SERVER, starteRaum, ()=>{
-      console.warn('Eigener Server nicht erreichbar – wechsle auf Notfall-Server.');
-      ladeJitsiApi(NOTFALL_SERVER, starteRaum, ()=>{
-        document.getElementById('jitsi').innerHTML =
-          '<div style="color:#fff;padding:24px;text-align:center;font-family:Inter">Video konnte nicht geladen werden. Bitte Seite neu laden.</div>';
-      });
-    });
-  }
-
-  function starteRaum(domain){
-    const raum='deutschoderwas-club-'+new Date().toISOString().slice(0,10);
-    api=new JitsiMeetExternalAPI(domain,{
-      roomName:raum, parentNode:document.getElementById('jitsi'),
+  function starteRaum(domain, jwt){
+    const opts = {
+      roomName:RAUM, parentNode:document.getElementById('jitsi'),
       userInfo:{ displayName: rolle==='lehrer' ? 'Lehrkraft' : 'Schüler:in' },
       configOverwrite:{ prejoinPageEnabled:false, startWithAudioMuted:true, disableDeepLinking:true },
       interfaceConfigOverwrite:{ TOOLBAR_BUTTONS:['microphone','camera','desktop','tileview','raisehand','chat','hangup','fullscreen'] }
-    });
+    };
+    if(jwt) opts.jwt = jwt;            // Eintrittsausweis für den eigenen Server
+    api=new JitsiMeetExternalAPI(domain, opts);
+  }
+
+  function meldung(txt){
+    document.getElementById('jitsi').innerHTML =
+      '<div style="color:#fff;padding:20px;text-align:center;font-family:Inter;font-size:.82rem;line-height:1.5">'+txt+'</div>';
+  }
+
+  async function videoStarten(){
+    document.getElementById('video-start').style.display='none';
+    const jwt = await holeToken();
+    if(jwt){
+      // Eigener, abgesicherter Server. Notfall-Schalter auf öffentlichen Jitsi, falls der Server ausfällt.
+      ladeJitsiApi(EIGENER_SERVER, ()=>starteRaum(EIGENER_SERVER, jwt),
+        ()=> ladeJitsiApi(NOTFALL_SERVER, ()=>starteRaum(NOTFALL_SERVER, null),
+          ()=> meldung('Video konnte nicht geladen werden. Bitte Seite neu laden.')));
+    } else {
+      meldung('Bitte zuerst im <b>Club einloggen</b> (konto.html) – im selben Browser – und diese Seite dann neu laden.');
+    }
   }
 
   // Automatisch beim Betreten verbinden (Lehrer & Schüler) – kein Klick nötig.
   // Einzige Rückfrage bleibt die einmalige Kamera/Mikro-Erlaubnis des Browsers.
+  initSb();
   videoStarten();
 </script>
 </body>
