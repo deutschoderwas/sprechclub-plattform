@@ -291,6 +291,7 @@
     const st=document.getElementById('status');
     st.textContent='Speichert …'; clearTimeout(window._t);
     window._t=setTimeout(()=> st.textContent='Live · gespeichert ✓',500);
+    if(window._tafelSave) window._tafelSave();   // -> in Echtzeit an die Schüler
   }
   ['notiz','korrektur'].forEach(id=>{
     const ed=document.getElementById(id);
@@ -315,7 +316,7 @@
   }
   function stiftFarbe(c){ farbe=c; eraser=false; updateStiftBtns(); }
   function stiftRadierer(){ eraser=!eraser; updateStiftBtns(); }
-  function stiftClear(){ ctx.clearRect(0,0,cv.width,cv.height); }
+  function stiftClear(){ ctx.clearRect(0,0,cv.width,cv.height); if(window._stiftClearBroadcast) window._stiftClearBroadcast(); }
   cv.addEventListener('pointerdown',e=>{ if(!pen)return; drawing=true; const r=cv.getBoundingClientRect(); ctx.beginPath(); ctx.moveTo(e.clientX-r.left,e.clientY-r.top); });
   cv.addEventListener('pointermove',e=>{
     if(!drawing)return;
@@ -325,7 +326,7 @@
     else { ctx.globalCompositeOperation='source-over'; ctx.strokeStyle=farbe; ctx.lineWidth=3.5; }
     ctx.lineCap='round'; ctx.lineJoin='round'; ctx.stroke();
   });
-  window.addEventListener('pointerup',()=> drawing=false);
+  window.addEventListener('pointerup',()=>{ const was=drawing; drawing=false; if(was && window._stiftBroadcast) window._stiftBroadcast(); });
   window.addEventListener('resize', fit);
   window.addEventListener('load', fit);
   setTimeout(fit, 400);
@@ -470,8 +471,72 @@
 
   // Automatisch beim Betreten verbinden (Lehrer & Schüler) – kein Klick nötig.
   // Einzige Rückfrage bleibt die einmalige Kamera/Mikro-Erlaubnis des Browsers.
+  // ===== LIVE-TAFEL: Lehrer schreibt → Schüler sehen es in Echtzeit =====
+  let istLehrer=false, tafelChan=null, lastSaved='';
+  function splitNotes(s){ const i=(s||'').indexOf('<!--KORR-->'); return i>=0 ? [s.slice(0,i), s.slice(i+10)] : [s||'', '']; }
+  function renderTafel(notes){
+    const [n,k]=splitNotes(notes);
+    const en=document.getElementById('notiz'), ek=document.getElementById('korrektur');
+    if(document.activeElement!==en) en.innerHTML=n;       // nicht überschreiben während getippt wird
+    if(document.activeElement!==ek) ek.innerHTML=k;
+  }
+  async function initTafelSync(){
+    if(!sb || !STUNDE) return;                              // nur im echten Stunden-Raum
+    // echte Rolle aus dem Profil
+    try{
+      const { data:{ user } } = await sb.auth.getUser();
+      if(user){
+        const { data:prof } = await sb.from('profiles').select('is_teacher,is_admin').eq('id',user.id).maybeSingle();
+        istLehrer = !!(prof && (prof.is_teacher||prof.is_admin));
+      }
+    }catch(e){ console.warn('Rolle', e); }
+    // Ansicht nach echter Rolle setzen + manuellen Umschalter ausblenden
+    setRolle(istLehrer ? 'lehrer' : 'schueler');
+    const tg=document.querySelector('.toggle'); if(tg) tg.style.display='none';
+    // aktuellen Stand laden
+    try{
+      const { data } = await sb.from('class_notes').select('notes').eq('class_id',STUNDE).maybeSingle();
+      if(data && data.notes!=null) renderTafel(data.notes);
+    }catch(e){ console.warn('Tafel laden', e); }
+    // Lehrer: Speichern (debounced) – wird aus liveFeedback() aufgerufen
+    if(istLehrer){
+      let st;
+      window._tafelSave=()=>{ clearTimeout(st); st=setTimeout(()=>{
+        const combined = document.getElementById('notiz').innerHTML + '<!--KORR-->' + document.getElementById('korrektur').innerHTML;
+        lastSaved=combined;
+        sb.from('class_notes').upsert({ class_id:STUNDE, notes:combined, updated_at:new Date().toISOString() }, { onConflict:'class_id' })
+          .then(({error})=>{ if(error) console.warn('Tafel speichern', error); });
+      }, 400); };
+    }
+    // Realtime: alle bekommen Änderungen
+    tafelChan = sb.channel('tafel-'+STUNDE)
+      .on('postgres_changes', { event:'*', schema:'public', table:'class_notes', filter:'class_id=eq.'+STUNDE }, payload=>{
+        const notes = payload.new && payload.new.notes;
+        if(notes==null) return;
+        if(istLehrer && notes===lastSaved) return;   // eigene Änderung nicht zurückspielen
+        if(!istLehrer) renderTafel(notes);            // Schüler: live aktualisieren
+      })
+      .subscribe();
+
+    // Stift-Markierungen live übertragen (Bild der Annotations-Ebene)
+    const stiftCh = sb.channel('stift-'+STUNDE);
+    stiftCh.on('broadcast', { event:'draw' }, ({payload})=>{
+        if(istLehrer) return;
+        const img=new Image();
+        img.onload=()=>{ ctx.clearRect(0,0,cv.width,cv.height); ctx.drawImage(img,0,0,cv.width,cv.height); };
+        img.src=payload.img;
+      })
+      .on('broadcast', { event:'clear' }, ()=>{ if(!istLehrer) ctx.clearRect(0,0,cv.width,cv.height); })
+      .subscribe();
+    if(istLehrer){
+      window._stiftBroadcast=()=>{ try{ stiftCh.send({ type:'broadcast', event:'draw', payload:{ img:cv.toDataURL('image/png') } }); }catch(e){} };
+      window._stiftClearBroadcast=()=>{ try{ stiftCh.send({ type:'broadcast', event:'clear' }); }catch(e){} };
+    }
+  }
+
   initSb();
   ladeLektion();
+  initTafelSync();
   videoStarten();
 </script>
 </body>
