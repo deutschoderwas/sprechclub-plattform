@@ -661,16 +661,45 @@ async function loadBewertungen(){
       ${r.comment?`<p style="margin-top:6px">„${esc(r.comment)}"</p>`:''}</div>`).join('') : '<div class="card muted">Noch keine Bewertungen.</div>');
 }
 
+let SCHUELER = [];
+function nameKey(p){ return (p.name && p.name.trim()) ? p.name.trim() : (p.email||''); }
 async function loadSchueler(){
-  const { data } = await sb.from('profiles').select('id,name,email,credits').order('created_at',{ascending:false});
-  document.getElementById('schueler').innerHTML = `<table><tr><th>Name</th><th>E-Mail</th><th>Guthaben</th><th></th></tr>` +
-    (data||[]).map(p=>`<tr><td>${p.name||'–'}</td><td>${p.email}</td><td><b>${p.credits}</b></td>
+  const { data } = await sb.from('profiles').select('id,name,email,credits').limit(2000);
+  SCHUELER = data || [];
+  document.getElementById('schueler').innerHTML = `
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px">
+      <input id="schuelerSuche" placeholder="🔎 Name oder E-Mail suchen" oninput="renderSchuelerTable()" style="flex:1;min-width:220px">
+      <select id="schuelerSort" onchange="renderSchuelerTable()">
+        <option value="name">Name A–Z</option>
+        <option value="credits">Guthaben aufsteigend</option>
+        <option value="credits-desc">Guthaben absteigend</option>
+      </select>
+      <span class="muted" id="schuelerInfo"></span>
+    </div>
+    <div id="schuelerTable"></div>`;
+  renderSchuelerTable();
+}
+function renderSchuelerTable(){
+  const q = (document.getElementById('schuelerSuche')?.value||'').toLowerCase().trim();
+  const mode = document.getElementById('schuelerSort')?.value||'name';
+  let rows = SCHUELER.filter(p => !q || (p.name||'').toLowerCase().includes(q) || (p.email||'').toLowerCase().includes(q));
+  rows = [...rows];
+  if (mode==='credits') rows.sort((a,b)=> a.credits-b.credits || nameKey(a).localeCompare(nameKey(b),'de'));
+  else if (mode==='credits-desc') rows.sort((a,b)=> b.credits-a.credits || nameKey(a).localeCompare(nameKey(b),'de'));
+  else rows.sort((a,b)=> nameKey(a).localeCompare(nameKey(b),'de',{sensitivity:'base'}));
+  const low = SCHUELER.filter(p=>p.credits<=1).length;
+  const info = document.getElementById('schuelerInfo');
+  if (info) info.textContent = `${rows.length} von ${SCHUELER.length} · ${low} mit ≤ 1 Stunde`;
+  document.getElementById('schuelerTable').innerHTML = `<table><tr><th>Name</th><th>E-Mail</th><th>Guthaben</th><th></th></tr>` +
+    rows.map(p=>`<tr${p.credits<=1?' style="background:#FFF1C2"':''}><td>${esc(p.name||'–')}</td><td>${esc(p.email)}</td>
+    <td><b>${p.credits}</b>${p.credits<=1?' <span class="pill">niedrig</span>':''}</td>
     <td><button class="btn btn-ghost" onclick="adjust('${p.id}',1)">+1</button> <button class="btn btn-ghost" onclick="adjust('${p.id}',-1)">−1</button></td></tr>`).join('') + '</table>';
 }
 
 async function adjust(id, n){
   await sb.rpc('admin_adjust_credits', { p_user_id: id, p_amount: n });
-  loadSchueler();
+  const p = SCHUELER.find(x=>x.id===id); if (p) p.credits += n;   // lokal aktualisieren (Suche/Sortierung bleibt erhalten)
+  renderSchuelerTable();
 }
 
 init();
