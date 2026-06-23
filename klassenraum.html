@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>deutschoderwas club · Live-Klassenraum</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<style>
+  :root{
+    --tuerkis:#2DD4BF; --tuerkis-dunkel:#14B8A6; --tuerkis-soft:#A7F3D0;
+    --auf-tuerkis:#06403A; --anthrazit:#1A1A1A; --rot:#DD0000; --gold:#FFCE00;
+    --creme:#FFF8E0; --creme-hell:#FFFCF5; --weich:#6B7280; --rahmen:#F0E5D8;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;}
+  body{font-family:'Inter','Segoe UI',system-ui,sans-serif; background:var(--creme); color:var(--anthrazit); display:flex; flex-direction:column; height:100vh; overflow:hidden;}
+  h1,h2,h3{font-family:'Space Grotesk','Segoe UI',sans-serif; margin:0;}
+
+  header{display:flex; align-items:center; gap:16px; padding:12px 22px; background:var(--creme-hell); border-bottom:1px solid var(--rahmen); flex:0 0 auto;}
+  .wortmarke{font-family:'Space Grotesk'; font-weight:700; font-size:1.1rem;}
+  .wortmarke .ow{color:var(--tuerkis-dunkel);}
+  .eyebrow{font-size:.65rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--rot);}
+  .lektion{font-weight:600; color:var(--weich); font-size:.88rem;}
+  .spacer{flex:1;}
+  .toggle{display:flex; background:var(--rahmen); border-radius:999px; padding:3px;}
+  .toggle button{border:none; background:transparent; cursor:pointer; padding:7px 16px; border-radius:999px; font-family:'Inter'; font-weight:600; font-size:.82rem; color:var(--weich);}
+  .toggle button.active{background:var(--tuerkis); color:var(--auf-tuerkis); box-shadow:0 1px 4px rgba(0,0,0,.12);}
+
+  main{flex:1; display:flex; padding:20px; min-height:0; --rechts:420px;}
+  .gutter{flex:0 0 20px; align-self:stretch; display:flex; align-items:center; justify-content:center; cursor:col-resize; touch-action:none;}
+  .gutter .grip{width:5px; height:52px; border-radius:999px; background:var(--rahmen); transition:background .15s;}
+  .gutter:hover .grip, .gutter.drag .grip{background:var(--tuerkis-dunkel); height:80px;}
+
+  /* Interaktive Lektion + Stift-Overlay */
+  .lektion-card{flex:1 1 auto; background:#fff; border:1px solid var(--rahmen); border-radius:20px; box-shadow:0 4px 18px rgba(0,0,0,.05); display:flex; flex-direction:column; overflow:hidden; min-width:0; min-height:0;}
+  .lekt-kopf{display:flex; align-items:center; gap:10px; padding:10px 16px; border-bottom:1px solid var(--rahmen); background:var(--creme-hell); font-size:.85rem;}
+  .lekt-kopf .tag{font-weight:700;}
+  .lekt-kopf .name{color:var(--weich); font-weight:600;}
+  .stift-tools{display:flex; align-items:center; gap:8px;}
+  .stift-tools button{border:1px solid var(--rahmen); background:#fff; cursor:pointer; border-radius:999px; padding:6px 12px; font-family:'Inter'; font-weight:600; font-size:.8rem; color:var(--anthrazit);}
+  #stift-btn.on{background:var(--anthrazit); color:#fff; border-color:var(--anthrazit);}
+  .stift-extra{display:flex; align-items:center; gap:6px;}
+  .stift-extra .farbe{width:22px; height:22px; padding:0; border-radius:50%; border:2px solid #fff; box-shadow:0 0 0 1px var(--rahmen);}
+  .stift-extra .farbe.on{box-shadow:0 0 0 2px var(--anthrazit);}
+  #rad-btn.on{background:var(--anthrazit); color:#fff; border-color:var(--anthrazit);}
+  .lekt-stage{position:relative; flex:1; min-height:0;}
+  #lektion{position:absolute; inset:0; width:100%; height:100%; border:none; background:#fff;}
+  #annot{position:absolute; inset:0; width:100%; height:100%; pointer-events:none; touch-action:none; cursor:crosshair;}
+
+  /* rechte Spalte */
+  .spalte{flex:0 0 var(--rechts,420px); width:var(--rechts,420px); display:flex; flex-direction:column; gap:16px; min-height:0; min-width:0;}
+
+  /* Video – klein & versetzt (rechts oben) */
+  .video-card{align-self:flex-end; width:270px; background:var(--creme-hell); border:1px solid var(--rahmen); border-radius:16px; overflow:hidden; box-shadow:0 4px 14px rgba(0,0,0,.08); flex:0 0 auto;}
+  .video-kopf{display:flex; align-items:center; gap:8px; padding:8px 13px; font-weight:600; font-size:.82rem; border-bottom:1px solid var(--rahmen);}
+  .video-kopf .punkt{width:8px; height:8px; border-radius:50%; background:var(--rot);}
+  .video-buehne{position:relative; height:152px; background:var(--anthrazit);}
+  #jitsi{width:100%; height:100%;}
+  .video-start{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:9px; text-align:center; color:#fff; padding:14px;}
+  .video-start p{margin:0; font-size:.73rem; color:#cfcfcf; line-height:1.35;}
+  .video-start .play{width:44px; height:44px; border-radius:50%; border:none; cursor:pointer; background:linear-gradient(135deg,var(--tuerkis),var(--tuerkis-dunkel)); color:var(--auf-tuerkis); font-size:1.1rem; box-shadow:0 4px 14px rgba(0,0,0,.4);}
+
+  /* Live-Tafel – jetzt groß */
+  .tafel{background:var(--creme-hell); border:1px solid var(--rahmen); border-radius:18px; box-shadow:0 4px 18px rgba(0,0,0,.05); display:flex; flex-direction:column; overflow:hidden; flex:1; min-height:0;}
+  .tafel-kopf{padding:11px 16px 9px; border-bottom:1px solid var(--rahmen); display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+  .tafel-kopf h3{font-size:1rem; display:flex; align-items:center; gap:8px;}
+  .live-dot{width:9px; height:9px; border-radius:50%; background:var(--rot); animation:puls 1.4s infinite;}
+  @keyframes puls{0%,100%{opacity:1;}50%{opacity:.3;}}
+  .badge{display:inline-block; font-size:.62rem; font-weight:700; padding:2px 9px; border-radius:999px; letter-spacing:.04em;}
+  .badge.live{background:var(--rot); color:#fff;}
+  .badge.du{background:var(--gold); color:var(--anthrazit);}
+  /* Format-Werkzeugleiste */
+  .tf-tools{display:flex; gap:6px; margin-left:auto;}
+  .tf-tools button{border:1px solid var(--rahmen); background:#fff; cursor:pointer; border-radius:8px; padding:5px 9px; font-family:'Inter'; font-size:.78rem; font-weight:600; color:var(--anthrazit);}
+  .tf-tools button.mark-g{background:#FFF3C2;}
+  .tf-tools button.mark-r{background:#FFE0E0;}
+  .tf-tools button.on{box-shadow:0 0 0 2px var(--anthrazit);}
+
+  .tafel-body{flex:1; overflow:auto; display:flex; flex-direction:column; gap:14px; padding:12px 14px;}
+  .block{display:flex; flex-direction:column;}
+  .block-titel{font-size:.78rem; font-weight:700; margin-bottom:6px; display:flex; align-items:center; gap:6px;}
+  .korr-titel{color:var(--rot);}
+  .rich{border-radius:12px; padding:12px 13px; font-family:'Inter'; font-size:.96rem; line-height:1.6; color:var(--anthrazit); background:#fff; overflow:auto; outline:none;}
+  #notiz{border:2px solid var(--tuerkis); flex:1; min-height:200px;}
+  #korrektur{border:2px solid var(--rot); background:#FFF7F7; min-height:110px;}
+  .rich:empty:before{content:attr(data-ph); color:#a8adb5; white-space:pre-wrap;}
+  .rich[contenteditable="false"]{opacity:.97;}
+  mark{padding:0 2px; border-radius:3px;}
+  .status{padding:8px 16px 12px; font-size:.78rem; color:var(--tuerkis-dunkel); font-weight:600; border-top:1px solid var(--rahmen);}
+  .hint{font-size:.74rem; color:var(--weich); padding:0 16px 8px; line-height:1.4;}
+
+  .info{font-size:.7rem; color:var(--weich); padding:7px 22px; background:var(--creme-hell); border-top:1px solid var(--rahmen); flex:0 0 auto;}
+  .hidden{display:none !important;}
+
+  /* ===== Handy / schmale Bildschirme: alles untereinander ===== */
+  @media (max-width:760px){
+    html,body{ height:auto; overflow:visible; }
+    body{ display:block; }
+    header{ position:sticky; top:0; z-index:30; flex-wrap:wrap; gap:8px 12px; padding:10px 14px; }
+    header .lektion{ flex-basis:100%; order:5; font-size:.8rem; }
+    .toggle button{ padding:6px 12px; font-size:.78rem; }
+    main{ display:flex; flex-direction:column; gap:12px; padding:12px; }
+    .gutter{ display:none; }
+    .spalte{ display:contents; }                 /* Video & Tafel werden eigene Blöcke */
+    .video-card{ order:1; width:100%; align-self:stretch; position:sticky; top:58px; z-index:20; }
+    .video-buehne{ height:30vh; aspect-ratio:auto; }
+    .lektion-card{ order:2; min-height:78vh; }
+    #lektion{ min-height:78vh; }
+    .tafel{ order:3; min-height:auto; }
+    .tafel-body{ min-height:42vh; }
+    .lekt-kopf{ font-size:.78rem; }
+    .lekt-kopf .name{ display:none; }            /* spart Platz */
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="eyebrow">Live-Klassenraum</div>
+    <div class="wortmarke">deutsch<span class="ow">oderwas</span> club</div>
+  </div>
+  <div class="lektion">📚 Perfekt vs. Präteritum · ab B1</div>
+  <div class="spacer"></div>
+  <div class="toggle">
+    <button id="btn-lehrer" class="active" onclick="setRolle('lehrer')">👩‍🏫 Lehrer</button>
+    <button id="btn-schueler" onclick="setRolle('schueler')">🧑‍🎓 Schüler</button>
+  </div>
+</header>
+
+<main id="main">
+  <!-- echte interaktive Lektion mit Stift-Overlay -->
+  <section class="lektion-card">
+    <div class="lekt-kopf">
+      <span class="tag">📘 Interaktive Lektion</span>
+      <span class="name">Perfekt vs. Präteritum</span>
+      <span class="spacer"></span>
+      <div class="stift-tools" id="stift-tools">
+        <button id="stift-btn" onclick="stiftToggle()">✏️ Stift</button>
+        <span class="stift-extra hidden" id="stift-extra">
+          <button class="farbe" data-c="#DD0000" style="background:#DD0000" onclick="stiftFarbe('#DD0000')" title="Rot"></button>
+          <button class="farbe" data-c="#14B8A6" style="background:#14B8A6" onclick="stiftFarbe('#14B8A6')" title="Türkis"></button>
+          <button class="farbe" data-c="#FFCE00" style="background:#FFCE00" onclick="stiftFarbe('#FFCE00')" title="Gelb"></button>
+          <button id="rad-btn" onclick="stiftRadierer()" title="Radierer – einzelne Teile">🧽</button>
+          <button onclick="stiftClear()" title="Alles löschen">🗑️</button>
+        </span>
+      </div>
+    </div>
+    <div class="lekt-stage" id="lekt-stage">
+      <iframe id="lektion" src="grammatik-perfekt-praeteritum-b1.html" title="Interaktive Lektion"></iframe>
+      <canvas id="annot"></canvas>
+    </div>
+  </section>
+
+  <div class="gutter" id="gutter" title="Ziehen: Notizen vergrößern / Präsentation verkleinern"><div class="grip"></div></div>
+
+  <aside class="spalte">
+    <div class="video-card">
+      <div class="video-kopf"><span class="punkt"></span> deutschoderwas club Klassenraum</div>
+      <div class="video-buehne">
+        <div class="video-start" id="video-start">
+          <button class="play" onclick="videoStarten()">▶</button>
+          <p>Verbinde mit dem Klassenraum…</p>
+        </div>
+        <div id="jitsi"></div>
+      </div>
+    </div>
+
+    <div class="tafel">
+      <div class="tafel-kopf">
+        <span class="badge live" id="badge">🔴 LIVE</span>
+        <h3><span class="live-dot"></span> Live-Tafel</h3>
+        <div class="tf-tools" id="tf-tools">
+          <button onmousedown="cmd(event,'bold')" title="Fett"><b>F</b></button>
+          <button id="pen-g" onmousedown="togglePen(event,'#16A34A')" title="Grüner Stift – an/aus" style="color:#16A34A"><b>A</b></button>
+          <button id="pen-r" onmousedown="togglePen(event,'#DD0000')" title="Roter Stift – an/aus" style="color:#DD0000"><b>A</b></button>
+          <button id="mk-g" class="mark-g" onmousedown="toggleMarker(event,'#FFCE00')" title="Gelb markieren – an/aus">🖊️</button>
+          <button id="mk-r" class="mark-r" onmousedown="toggleMarker(event,'#FF9B9B')" title="Rot markieren – an/aus">🔴</button>
+          <button onmousedown="unmark(event)" title="Markierung entfernen">⌫</button>
+          <button onmousedown="pfeil(event)" title="Pfeil → einfügen"><b>→</b></button>
+        </div>
+      </div>
+      <div class="hint" id="tafel-hint"></div>
+      <div class="tafel-body">
+        <div class="block">
+          <div class="block-titel">📝 Notizen &amp; Wortschatz</div>
+          <div id="notiz" class="rich" contenteditable="true" data-ph="Hier mitschreiben – wichtige Wörter markieren (🖊️) …"></div>
+        </div>
+        <div class="block">
+          <div class="block-titel korr-titel">🔴 Fehlerkorrektur</div>
+          <div id="korrektur" class="rich" contenteditable="true" data-ph="ich habe gegeht  →  ich bin gegangen"></div>
+        </div>
+      </div>
+      <div class="status" id="status">Live · gespeichert ✓</div>
+    </div>
+  </aside>
+</main>
+
+<div class="info">deutschoderwas club · Live-Klassenraum · Video über deinen eigenen, abgesicherten Server (meet.deutschoderwas-club.de, kein Google; Notfall-Schalter auf öffentlichen Jitsi, falls der Server ausfällt).</div>
+
+<script>
+  let rolle='lehrer';
+  document.execCommand('styleWithCSS', false, true);
+
+  function setRolle(r){
+    rolle=r; const lehrer = r==='lehrer';
+    document.getElementById('btn-lehrer').classList.toggle('active', lehrer);
+    document.getElementById('btn-schueler').classList.toggle('active', !lehrer);
+
+    // Tafel: Schüler lesen nur mit, Werkzeuge nur für Lehrkraft
+    document.getElementById('notiz').contentEditable = lehrer;
+    document.getElementById('korrektur').contentEditable = lehrer;
+    document.getElementById('tf-tools').classList.toggle('hidden', !lehrer);
+    document.getElementById('stift-tools').classList.toggle('hidden', !lehrer);
+    if(!lehrer && pen) stiftToggle(); // Stift aus, wenn Schüleransicht
+    if(!lehrer){ markerActive=false; penActive=false; penColor=null; if(window.updateMarkerBtns) updateMarkerBtns(); if(window.updatePenBtns) updatePenBtns(); }
+
+    const badge=document.getElementById('badge');
+    if(lehrer){
+      badge.className='badge du'; badge.textContent='✍️ DU SCHREIBST';
+      document.getElementById('tafel-hint').innerHTML='🖊️ Marker an/aus · ⌫ entfernen · → Pfeil für falsch→richtig. Schüler sehen alles live.';
+      document.getElementById('status').textContent='Live · gespeichert ✓';
+    } else {
+      badge.className='badge live'; badge.textContent='🔴 LIVE';
+      document.getElementById('tafel-hint').innerHTML='Du siehst die Notizen deiner Lehrkraft & <b>deine Fehlerkorrektur</b> in Echtzeit – inkl. Markierungen.';
+      document.getElementById('status').textContent='Live · wird mitgeschrieben';
+    }
+  }
+
+  // Format-Werkzeuge – mousedown + preventDefault hält die Auswahl/den Cursor
+  function cmd(ev,c){ ev.preventDefault(); document.execCommand(c,false,null); liveFeedback(); }
+
+  // Marker als An/Aus-Modus: an = jedes markierte Wort wird hervorgehoben
+  let markerActive=false, markerColor='#FFCE00';
+  function updateMarkerBtns(){
+    document.getElementById('mk-g').classList.toggle('on', markerActive && markerColor==='#FFCE00');
+    document.getElementById('mk-r').classList.toggle('on', markerActive && markerColor==='#FF9B9B');
+  }
+  function toggleMarker(ev,color){
+    ev.preventDefault();
+    if(markerActive && markerColor===color){ markerActive=false; }       // gleiche Farbe → aus
+    else { markerActive=true; markerColor=color; }                        // an / Farbe wechseln
+    updateMarkerBtns();
+    const sel=window.getSelection();                                      // aktuelle Auswahl gleich markieren
+    if(sel && !sel.isCollapsed){ document.execCommand('hiliteColor',false,color); liveFeedback(); }
+  }
+  function unmark(ev){ ev.preventDefault(); document.execCommand('hiliteColor',false,'transparent'); liveFeedback(); }
+  function pfeil(ev){ ev.preventDefault(); document.execCommand('insertText',false,' → '); liveFeedback(); }
+
+  // Farbige Stifte (Textfarbe) – an/aus, gleicher Knopf schaltet wieder auf normal
+  let penActive=false, penColor=null;
+  function updatePenBtns(){
+    document.getElementById('pen-g').classList.toggle('on', penActive && penColor==='#16A34A');
+    document.getElementById('pen-r').classList.toggle('on', penActive && penColor==='#DD0000');
+  }
+  function togglePen(ev,color){
+    ev.preventDefault();
+    if(penActive && penColor===color){ penActive=false; penColor=null; document.execCommand('foreColor',false,'#1A1A1A'); }
+    else { penActive=true; penColor=color; document.execCommand('foreColor',false,color); }
+    updatePenBtns(); liveFeedback();
+  }
+
+  // Wenn Marker-Modus an ist: ausgewählte Wörter automatisch hervorheben
+  function autoMark(ed){
+    const run=()=>setTimeout(()=>{
+      if(!markerActive) return;
+      const sel=window.getSelection();
+      if(sel && !sel.isCollapsed && ed.contains(sel.anchorNode)){
+        document.execCommand('hiliteColor',false,markerColor); liveFeedback();
+      }
+    },0);
+    ed.addEventListener('mouseup', run);
+    ed.addEventListener('keyup', e=>{ if(e.shiftKey) run(); });
+  }
+
+  function liveFeedback(){
+    const st=document.getElementById('status');
+    st.textContent='Speichert …'; clearTimeout(window._t);
+    window._t=setTimeout(()=> st.textContent='Live · gespeichert ✓',500);
+  }
+  ['notiz','korrektur'].forEach(id=>{
+    const ed=document.getElementById(id);
+    ed.addEventListener('input', liveFeedback);
+    autoMark(ed);
+  });
+
+  // ---- Stift auf der Präsentation ----
+  const cv=document.getElementById('annot'), ctx=cv.getContext('2d');
+  let pen=false, farbe='#DD0000', drawing=false, eraser=false;
+  function fit(){ cv.width=cv.clientWidth; cv.height=cv.clientHeight; }
+  function updateStiftBtns(){
+    document.querySelectorAll('.stift-extra .farbe').forEach(b=> b.classList.toggle('on', !eraser && b.dataset.c===farbe));
+    document.getElementById('rad-btn').classList.toggle('on', eraser);
+  }
+  function stiftToggle(){
+    pen=!pen;
+    cv.style.pointerEvents = pen?'auto':'none';
+    document.getElementById('stift-btn').classList.toggle('on',pen);
+    document.getElementById('stift-extra').classList.toggle('hidden',!pen);
+    if(pen) updateStiftBtns();
+  }
+  function stiftFarbe(c){ farbe=c; eraser=false; updateStiftBtns(); }
+  function stiftRadierer(){ eraser=!eraser; updateStiftBtns(); }
+  function stiftClear(){ ctx.clearRect(0,0,cv.width,cv.height); }
+  cv.addEventListener('pointerdown',e=>{ if(!pen)return; drawing=true; const r=cv.getBoundingClientRect(); ctx.beginPath(); ctx.moveTo(e.clientX-r.left,e.clientY-r.top); });
+  cv.addEventListener('pointermove',e=>{
+    if(!drawing)return;
+    const r=cv.getBoundingClientRect();
+    ctx.lineTo(e.clientX-r.left,e.clientY-r.top);
+    if(eraser){ ctx.globalCompositeOperation='destination-out'; ctx.lineWidth=22; }
+    else { ctx.globalCompositeOperation='source-over'; ctx.strokeStyle=farbe; ctx.lineWidth=3.5; }
+    ctx.lineCap='round'; ctx.lineJoin='round'; ctx.stroke();
+  });
+  window.addEventListener('pointerup',()=> drawing=false);
+  window.addEventListener('resize', fit);
+  window.addEventListener('load', fit);
+  setTimeout(fit, 400);
+
+  // ---- Trenner ziehen: Notizen größer / Präsentation kleiner ----
+  const main=document.getElementById('main'), gutter=document.getElementById('gutter');
+  let gDrag=false;
+  const gespeichert = parseInt(localStorage.getItem('club_rechts')||'0',10);
+  if(gespeichert) main.style.setProperty('--rechts', gespeichert+'px');
+  gutter.addEventListener('pointerdown', e=>{ gDrag=true; gutter.classList.add('drag'); gutter.setPointerCapture(e.pointerId); });
+  gutter.addEventListener('pointermove', e=>{
+    if(!gDrag) return;
+    const rect=main.getBoundingClientRect();
+    let w = rect.right - 20 - e.clientX;                 // Breite der rechten Spalte
+    w = Math.max(320, Math.min(rect.width-360, w));      // Grenzen: rechts ≥320, links ≥360
+    main.style.setProperty('--rechts', w+'px');
+  });
+  gutter.addEventListener('pointerup', e=>{
+    gDrag=false; gutter.classList.remove('drag');
+    fit();                                               // Stift-Fläche neu einpassen
+    const cur=getComputedStyle(main).getPropertyValue('--rechts').trim();
+    localStorage.setItem('club_rechts', parseInt(cur,10)||420);
+  });
+
+  setRolle('lehrer');
+
+  // ---- Video: eigener, abgesicherter Server (Token aus der Club-Plattform) ----
+  const EIGENER_SERVER = 'meet.deutschoderwas-club.de';
+  const NOTFALL_SERVER = 'meet.jit.si';
+  // Stunde aus der Adresse: ?stunde=<Klassen-ID>  (+ optionale Fallback-Anzeige)
+  const _p = new URLSearchParams(location.search);
+  const STUNDE = _p.get('stunde') || _p.get('room') || '';
+  const RAUM = STUNDE ? ('dow-stunde-'+STUNDE) : ('deutschoderwas-club-'+new Date().toISOString().slice(0,10));
+  let _titel = _p.get('titel') || 'Klassenraum';
+  let _niveau = _p.get('niveau') || '';
+  let _lektion = _p.get('lektion') || 'grammatik-perfekt-praeteritum-b1.html';
+  let api=null, sb=null;
+
+  // Kopfzeile + Lektion anzeigen (lädt iframe nur neu, wenn sich die URL ändert)
+  function zeigeKopf(){
+    document.querySelector('.lektion').textContent = '📚 ' + _titel + (_niveau ? ' · ' + _niveau : '');
+    const nm = document.querySelector('.lekt-kopf .name'); if(nm) nm.textContent = _titel;
+    const ifr = document.getElementById('lektion');
+    if(ifr.getAttribute('src') !== _lektion) ifr.src = _lektion;
+  }
+
+  // Lektion IMMER aktuell aus der Datenbank holen – so sieht die Lehrkraft auch
+  // kurzfristige Material-Änderungen automatisch.
+  async function ladeLektion(){
+    zeigeKopf();                       // sofort: Fallback/aktuelle Anzeige
+    if(!sb || !STUNDE) return;
+    try{
+      const { data: kl } = await sb.from('classes').select('title,level').eq('id', STUNDE).maybeSingle();
+      if(kl){ if(kl.title) _titel = kl.title; if(kl.level) _niveau = kl.level; }
+      const { data: mat } = await sb.from('class_materials').select('content').eq('class_id', STUNDE).maybeSingle();
+      const url = mat && mat.content && mat.content.lesson_url;
+      if(url) _lektion = url;
+    }catch(e){ console.warn('Lektion-Abruf fehlgeschlagen', e); }
+    zeigeKopf();                       // aktualisierte Live-Version
+  }
+
+  function initSb(){
+    try{
+      if(window.supabase && window.SPRECHCLUB_CONFIG && !String(window.SPRECHCLUB_CONFIG.SUPABASE_URL).startsWith('HIER_')){
+        sb = supabase.createClient(window.SPRECHCLUB_CONFIG.SUPABASE_URL, window.SPRECHCLUB_CONFIG.SUPABASE_ANON_KEY);
+      }
+    }catch(e){ console.warn('Supabase init fehlgeschlagen', e); }
+  }
+
+  // Holt den "Eintrittsausweis" (JWT) aus der Plattform – nur für eingeloggte Club-Mitglieder.
+  async function holeToken(){
+    if(!sb) return null;
+    const { data:{ session } } = await sb.auth.getSession();
+    if(!session) return null;
+    const cfg = window.SPRECHCLUB_CONFIG;
+    try{
+      const res = await fetch(cfg.SUPABASE_URL + '/functions/v1/jitsi-token', {
+        method:'POST',
+        headers:{ 'Authorization':'Bearer '+session.access_token, 'apikey':cfg.SUPABASE_ANON_KEY, 'Content-Type':'application/json' },
+        body: JSON.stringify({ room: RAUM })
+      });
+      if(!res.ok) return null;
+      const j = await res.json();
+      return j.token || null;
+    }catch(e){ console.warn('Token-Abruf fehlgeschlagen', e); return null; }
+  }
+
+  function ladeJitsiApi(domain, ok, fehler){
+    const s=document.createElement('script');
+    s.src='https://'+domain+'/external_api.js';
+    s.onload=()=>ok(domain);
+    s.onerror=fehler;
+    document.head.appendChild(s);
+  }
+
+  function starteRaum(domain, jwt){
+    const opts = {
+      roomName:RAUM, parentNode:document.getElementById('jitsi'),
+      userInfo:{ displayName: rolle==='lehrer' ? 'Lehrkraft' : 'Schüler:in' },
+      configOverwrite:{ prejoinPageEnabled:false, prejoinConfig:{ enabled:false }, startWithAudioMuted:true, disableDeepLinking:true },
+      interfaceConfigOverwrite:{
+        TOOLBAR_BUTTONS:['microphone','camera','desktop','tileview','raisehand','chat','hangup','fullscreen'],
+        SHOW_JITSI_WATERMARK:false, SHOW_WATERMARK_FOR_GUESTS:false, SHOW_BRAND_WATERMARK:false,
+        SHOW_POWERED_BY:false, DEFAULT_LOGO_URL:'', DEFAULT_WELCOME_PAGE_LOGO_URL:'', JITSI_WATERMARK_LINK:''
+      }
+    };
+    if(jwt) opts.jwt = jwt;            // Eintrittsausweis für den eigenen Server
+    api=new JitsiMeetExternalAPI(domain, opts);
+  }
+
+  function meldung(txt){
+    document.getElementById('jitsi').innerHTML =
+      '<div style="color:#fff;padding:20px;text-align:center;font-family:Inter;font-size:.82rem;line-height:1.5">'+txt+'</div>';
+  }
+
+  async function videoStarten(){
+    document.getElementById('video-start').style.display='none';
+    const jwt = await holeToken();
+    if(jwt){
+      // Eigener, abgesicherter Server. Notfall-Schalter auf öffentlichen Jitsi, falls der Server ausfällt.
+      ladeJitsiApi(EIGENER_SERVER, ()=>starteRaum(EIGENER_SERVER, jwt),
+        ()=> ladeJitsiApi(NOTFALL_SERVER, ()=>starteRaum(NOTFALL_SERVER, null),
+          ()=> meldung('Video konnte nicht geladen werden. Bitte Seite neu laden.')));
+    } else {
+      meldung('Bitte zuerst im <b>Club einloggen</b> (konto.html) – im selben Browser – und diese Seite dann neu laden.');
+    }
+  }
+
+  // Automatisch beim Betreten verbinden (Lehrer & Schüler) – kein Klick nötig.
+  // Einzige Rückfrage bleibt die einmalige Kamera/Mikro-Erlaubnis des Browsers.
+  initSb();
+  ladeLektion();
+  videoStarten();
+</script>
+</body>
+</html>
