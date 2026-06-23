@@ -94,6 +94,26 @@
 
   .info{font-size:.7rem; color:var(--weich); padding:7px 22px; background:var(--creme-hell); border-top:1px solid var(--rahmen); flex:0 0 auto;}
   .hidden{display:none !important;}
+
+  /* ===== Handy / schmale Bildschirme: alles untereinander ===== */
+  @media (max-width:760px){
+    html,body{ height:auto; overflow:visible; }
+    body{ display:block; }
+    header{ position:sticky; top:0; z-index:30; flex-wrap:wrap; gap:8px 12px; padding:10px 14px; }
+    header .lektion{ flex-basis:100%; order:5; font-size:.8rem; }
+    .toggle button{ padding:6px 12px; font-size:.78rem; }
+    main{ display:flex; flex-direction:column; gap:12px; padding:12px; }
+    .gutter{ display:none; }
+    .spalte{ display:contents; }                 /* Video & Tafel werden eigene Blöcke */
+    .video-card{ order:1; width:100%; align-self:stretch; position:sticky; top:58px; z-index:20; }
+    .video-buehne{ height:30vh; aspect-ratio:auto; }
+    .lektion-card{ order:2; min-height:78vh; }
+    #lektion{ min-height:78vh; }
+    .tafel{ order:3; min-height:auto; }
+    .tafel-body{ min-height:42vh; }
+    .lekt-kopf{ font-size:.78rem; }
+    .lekt-kopf .name{ display:none; }            /* spart Platz */
+  }
 </style>
 </head>
 <body>
@@ -366,7 +386,11 @@
       roomName:RAUM, parentNode:document.getElementById('jitsi'),
       userInfo:{ displayName: rolle==='lehrer' ? 'Lehrkraft' : 'Schüler:in' },
       configOverwrite:{ prejoinPageEnabled:false, prejoinConfig:{ enabled:false }, startWithAudioMuted:true, disableDeepLinking:true },
-      interfaceConfigOverwrite:{ TOOLBAR_BUTTONS:['microphone','camera','desktop','tileview','raisehand','chat','hangup','fullscreen'] }
+      interfaceConfigOverwrite:{
+        TOOLBAR_BUTTONS:['microphone','camera','desktop','tileview','raisehand','chat','hangup','fullscreen'],
+        SHOW_JITSI_WATERMARK:false, SHOW_WATERMARK_FOR_GUESTS:false, SHOW_BRAND_WATERMARK:false,
+        SHOW_POWERED_BY:false, DEFAULT_LOGO_URL:'', DEFAULT_WELCOME_PAGE_LOGO_URL:'', JITSI_WATERMARK_LINK:''
+      }
     };
     if(jwt) opts.jwt = jwt;            // Eintrittsausweis für den eigenen Server
     api=new JitsiMeetExternalAPI(domain, opts);
