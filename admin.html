@@ -204,6 +204,8 @@ let TEACHERS=[];
 const CLUBS=[{slug:'sprechclub',name:'🗣️ Sprechclub'},{slug:'grammatikclub',name:'📐 Grammatikclub'},{slug:'wortschatzclub',name:'📚 Wortschatzclub'},{slug:'ausspracheclub',name:'🎧 Ausspracheclub'}];
 const CLUB_COLOR={sprechclub:'#2DD4BF',grammatikclub:'#DD0000',wortschatzclub:'#FFCE00',ausspracheclub:'#13A89A'};
 const CLUB_EMOJI={sprechclub:'🗣️',grammatikclub:'📐',wortschatzclub:'📚',ausspracheclub:'🎧'};
+// Niveau-Farben (Bänder klar unterscheidbar)
+const LEVEL_COLOR={'A2/B1':'#15803D','B1/B2':'#1D4ED8','B2/C1':'#7C3AED','ab A2':'#B45309','ab B1':'#BE185D','ab A2/B1':'#15803D'};
 async function loadTeachers(){
   const { data } = await sb.from('teachers').select('*').order('sort_order');
   TEACHERS = data || [];
@@ -471,19 +473,26 @@ async function loadKlassen(){
     const matSet = new Set((mats||[]).map(m=>m.class_id));
     (cls||[]).forEach(c=>{ c._hasMat = matSet.has(c.id); });
   }
-  document.getElementById('klassen').innerHTML = (cls||[]).length ? cls.map(c=>{
+  // Nach Tag gruppieren (Kalender-Gefühl, lokale Zeit Europe/Berlin)
+  const keyFmt = new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Berlin'});
+  const dayFmt = new Intl.DateTimeFormat('de-DE',{timeZone:'Europe/Berlin',weekday:'long',day:'numeric',month:'long'});
+  const timeFmt = new Intl.DateTimeFormat('de-DE',{timeZone:'Europe/Berlin',hour:'2-digit',minute:'2-digit'});
+  const byDay = {};
+  (cls||[]).forEach(c=>{ const k=keyFmt.format(new Date(c.starts_at)); (byDay[k]=byDay[k]||[]).push(c); });
+  const dayKeys = Object.keys(byDay).sort();
+  const cardHtml = (c)=>{
     const p = parts[c.id]||[];
-    const cCol = CLUB_COLOR[c.club]||'#2DD4BF';
-    return `<div class="card" style="border-left:5px solid ${cCol}">
-      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px">
-        <div><b class="title">${fmt(new Date(c.starts_at))} — ${c.title}</b>
-        <span class="pill" style="background:${cCol};color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.25)">${CLUB_EMOJI[c.club]||''} ${c.club}</span>
-        <span class="pill">${c.level}</span>
-        ${c.teacher_id?`<span class="muted">· 👩‍🏫 ${esc(teacherName(c.teacher_id))}</span>`:'<span class="muted" style="color:#c00">· ⚠️ Lehrer fehlt</span>'}
-        <span class="muted">${c.topic||''}</span></div>
-        <div class="muted">${p.length}/${c.capacity} gebucht</div>
+    const lc = LEVEL_COLOR[c.level]||'#6B7280';
+    const full = p.length >= c.capacity;
+    return `<div class="card" style="border-left:5px solid ${lc}">
+      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:flex-start">
+        <div><b class="title">${timeFmt.format(new Date(c.starts_at))} — ${esc(c.title)}</b>
+        <span class="pill" style="background:${lc};color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.25)">${esc(c.level)}</span>
+        ${c.teacher_id?`<span class="tchip"><i style="background:${teacherColor(c.teacher_id)}"></i>👩‍🏫 ${esc(teacherName(c.teacher_id))}</span>`:'<span class="pill" style="background:#FCE5E3;color:#c00">⚠️ Lehrer fehlt</span>'}
+        ${c.topic?`<div class="muted" style="margin-top:3px">${esc(c.topic)}</div>`:''}</div>
+        ${full?'<span class="pill" style="background:#DD0000;color:#fff">🔒 Ausgebucht</span>':`<span class="muted" style="white-space:nowrap">👥 ${p.length} gebucht</span>`}
       </div>
-      ${p.length?'<div style="margin-top:8px">'+p.map(x=>`<div class="tn">👤 ${x.name||''} <span class="muted">${x.email}</span></div>`).join('')+'</div>':''}
+      ${p.length?'<div style="margin-top:8px">'+p.map(x=>`<div class="tn">👤 ${esc(x.name||'')} <span class="muted">${esc(x.email)}</span></div>`).join('')+'</div>':''}
       <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
         <button class="btn btn-ghost" onclick="toggleAtt('${c.id}')">✅ Anwesenheit</button>
         <a class="btn btn-ghost" href="tafel.html?id=${c.id}" target="_blank" rel="noopener">🖊️ Live-Tafel</a>
@@ -509,7 +518,11 @@ async function loadKlassen(){
         </div>
       </div>
     </div>`;
-  }).join('') : '<div class="card muted">Keine Stunden in den nächsten 14 Tagen.</div>';
+  };
+  document.getElementById('klassen').innerHTML = dayKeys.length
+    ? dayKeys.map(k=>`<h3 style="margin:20px 0 8px;font-family:'Space Grotesk',sans-serif;font-size:17px">📅 ${dayFmt.format(new Date(byDay[k][0].starts_at))}</h3>`
+        + byDay[k].map(cardHtml).join('')).join('')
+    : '<div class="card muted">Keine Stunden in den nächsten 14 Tagen.</div>';
 }
 
 async function cancelClass(id){
