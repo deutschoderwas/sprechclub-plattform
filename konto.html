@@ -258,6 +258,24 @@ h2.sec{margin:24px 0 12px;font-size:19px}
 .ag-events .ev:hover{transform:translateY(-4px);box-shadow:0 14px 28px rgba(0,0,0,.13)}
 .ev-btn{transition:filter .15s ease,transform .1s ease}.ev-btn.book:hover{filter:brightness(1.12)}.ev-btn:active{transform:scale(.97)}
 @media(max-width:820px){.ag-row{flex-direction:column;gap:8px}.ag-day{flex:none;border-right:none;border-bottom:1px solid var(--border);padding:0 0 8px;flex-direction:row;align-items:center;gap:8px}}
+
+/* Wochenübersicht Mo–Sa (Spalten, volle Breite) */
+.main:has(#v-kalender.active){max-width:1280px}
+.calweek{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;align-items:start;animation:fade .3s}
+.calcol{background:#fff;border:1px solid var(--border);border-radius:16px;padding:8px;display:flex;flex-direction:column;gap:8px;min-width:0;box-shadow:0 4px 14px rgba(0,0,0,.05);animation:agIn .4s ease both}
+.calcol:nth-child(2){animation-delay:.04s}.calcol:nth-child(3){animation-delay:.08s}.calcol:nth-child(4){animation-delay:.12s}.calcol:nth-child(5){animation-delay:.16s}.calcol:nth-child(6){animation-delay:.2s}
+.calcol.today{border-color:var(--primary);box-shadow:0 6px 20px rgba(45,212,191,.2)}
+.calcol-head{text-align:center;padding:4px 2px 9px;border-bottom:1px solid var(--border)}
+.calcol-head b{display:block;font-family:'Space Grotesk',sans-serif;font-size:15px;text-transform:capitalize;line-height:1.1}
+.calcol-head span{font-size:12px;color:var(--text-soft)}
+.calcol-head em{display:inline-block;margin-top:4px;font-style:normal;font-size:10px;font-weight:800;letter-spacing:.04em;background:var(--primary);color:#fff;padding:1px 8px;border-radius:20px}
+.calcol-head.today b{color:var(--primary)}
+.calcol .ev{transition:transform .15s ease,box-shadow .15s ease}
+.calcol .ev:hover{transform:translateY(-3px);box-shadow:0 12px 24px rgba(0,0,0,.12)}
+.calcol-empty{color:#dcdcdc;text-align:center;font-size:20px;padding:8px 0}
+@media(max-width:1100px){.calweek{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:680px){.calweek{grid-template-columns:repeat(2,1fr);gap:8px}}
+@media(max-width:400px){.calweek{grid-template-columns:1fr}.calcol-empty{display:none}.calcol:not(:has(.ev)){display:none}}
 </style>
 <link rel="stylesheet" href="club-theme.css">
 </head>
@@ -623,7 +641,7 @@ function phaseHtml(b, phase){
     const ended = now > st + 90*60000;      // bis 90 Min nach Beginn
     const liveNow = started && !ended;
     let inner;
-    if(liveNow) inner=`<button class="btn btn-turq btn-sm" onclick="openLive('${b.class_id}')"><span class="live-dot"></span>Live mitverfolgen</button>`;
+    if(liveNow) inner=`<a class="btn btn-turq btn-sm" href="klassenraum.html?stunde=${b.class_id}&titel=${encodeURIComponent(b.title||'')}&niveau=${encodeURIComponent(b.level||'')}" target="_blank" rel="noopener" style="text-decoration:none"><span class="live-dot"></span>🔴 Beitreten</a>`;
     else if(ended) inner='<span class="nope">Stunde vorbei</span>';
     else inner='<span class="nope">startet zur Stundenzeit</span>';
     return `<div class="phase ${liveNow?'ready':''}"><b>🗣️ Im Unterricht</b>${inner}</div>`;
@@ -662,11 +680,11 @@ function kalLevelMatch(classLevel,filter){
   let cb;
   if(/ab\s*A2/i.test(L)) cb=['A2','B1','B2','C1'];
   else if(/ab\s*B1/i.test(L)) cb=['B1','B2','C1'];
+  else if(/A2\s*\/\s*B1/i.test(L)) cb=['A2','B1'];
   else if(/B1\s*\/\s*B2/i.test(L)) cb=['B1','B2'];
   else if(/B2\s*\/\s*C1/i.test(L)) cb=['B2','C1'];
   else { const m=L.match(/[ABC][12]/); cb=m?[m[0]]:[]; }
-  const fb = filter==='A2'?['A2'] : filter==='B1/B2'?['B1','B2'] : filter==='B2/C1'?['B2','C1'] : [];
-  return fb.some(b=>cb.includes(b));
+  return cb.includes(filter);
 }
 async function loadKalender(){
   if(!kalClubs.length){ const {data}=await sb.from('clubs').select('*').eq('is_active',true).order('sort_order'); kalClubs=data||[]; }
@@ -678,23 +696,24 @@ async function loadKalender(){
   const pills='<div class="kal-pills"><button class="kpill '+(kalClub==='alle'?'active':'')+'" onclick="setKalClub(\'alle\')">📅 Alle Clubs</button>'+
     kalClubs.map(c=>{const on=kalClub===c.slug; const col=c.color||'#2DD4BF';
       return `<button class="kpill ${on?'active':''}" style="${on?('background:'+col+';border-color:'+col+';color:#fff'):''}" onclick="setKalClub('${c.slug}')">${c.emoji||''} ${esc(c.name)}</button>`;}).join('')+'</div>';
-  const LEVELS=['alle','A2','B1/B2','B2/C1'];
+  const LEVELS=['alle','A2','B1','B2','C1'];
   const lvlPills='<div class="kal-pills kal-levels">'+LEVELS.map(l=>`<button class="kpill lvl ${kalLevel===l?'active':''}" onclick="setKalLevel('${l}')">${l==='alle'?'Alle Niveaus':l}</button>`).join('')+'</div>';
   let legend=''; if(kalClub==='alle'){ legend='<div class="cal-legend">'+kalClubs.map(c=>`<span class="lg"><span class="dot" style="background:${c.color||'#2DD4BF'}"></span>${esc(c.name)}</span>`).join('')+'</div>'; }
-  const wc=`<div class="kal-week"><button onclick="kalWeekChange(-1)">←</button><span>${from.toLocaleDateString('de-DE',{day:'numeric',month:'short'})} – ${new Date(to-1).toLocaleDateString('de-DE',{day:'numeric',month:'short',year:'numeric'})}</span><button onclick="kalWeekChange(1)">→</button></div>`;
+  const satEnd=new Date(from); satEnd.setDate(satEnd.getDate()+5);
+  const wc=`<div class="kal-week"><button onclick="kalWeekChange(-1)">←</button><span>${from.toLocaleDateString('de-DE',{day:'numeric',month:'short'})} – ${satEnd.toLocaleDateString('de-DE',{day:'numeric',month:'short',year:'numeric'})}</span><button onclick="kalWeekChange(1)">→</button></div>`;
   let grid;
   if(!list.length){ grid='<div class="empty">In dieser Woche sind hier (noch) keine Stunden eingetragen.</div>'; }
   else{
-    const days=[]; for(let i=0;i<7;i++){const d=new Date(from);d.setDate(d.getDate()+i);days.push(d);}
+    const days=[]; for(let i=0;i<6;i++){const d=new Date(from);d.setDate(d.getDate()+i);days.push(d);} // Mo–Sa
     const byDay={}; list.forEach(c=>{const k=new Date(c.starts_at).toDateString();(byDay[k]=byDay[k]||[]).push(c);});
     const today=new Date().toDateString();
-    grid='<div class="agenda">'+days.map(d=>{
+    grid='<div class="calweek">'+days.map(d=>{
       const arr=(byDay[d.toDateString()]||[]).sort((a,b)=>new Date(a.starts_at)-new Date(b.starts_at));
-      if(!arr.length) return '';
       const isT=d.toDateString()===today;
-      const label=`<div class="ag-day ${isT?'today':''}"><b>${d.toLocaleDateString('de-DE',{weekday:'long'})}</b><span>${d.toLocaleDateString('de-DE',{day:'numeric',month:'short'})}</span>${isT?'<em>heute</em>':''}</div>`;
-      return `<div class="ag-row">${label}<div class="ag-events">${arr.map(kalEv).join('')}</div></div>`;
-    }).filter(Boolean).join('')+'</div>';
+      const head=`<div class="calcol-head ${isT?'today':''}"><b>${d.toLocaleDateString('de-DE',{weekday:'long'})}</b><span>${d.toLocaleDateString('de-DE',{day:'numeric',month:'short'})}</span>${isT?'<em>heute</em>':''}</div>`;
+      const body=arr.length?arr.map(kalEv).join(''):'<div class="calcol-empty">–</div>';
+      return `<div class="calcol ${isT?'today':''}">${head}${body}</div>`;
+    }).join('')+'</div>';
   }
   document.getElementById('kalBody').innerHTML=pills+lvlPills+legend+wc+grid;
 }
