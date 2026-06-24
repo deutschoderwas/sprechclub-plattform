@@ -391,7 +391,7 @@ async function load(){
     sb.from('exercise_progress').select('*')
   ]);
   profile = prof||{}; credits = profile.credits||0;
-  bookings = (bk||[]); creditLog = (cl||[]); messages = (msg||[]); ratings = (rt||[]);
+  bookings = (bk||[]).map(b=>{ if(b&&b.starts_at){ const s=String(b.starts_at).replace(' ','T'); b.starts_at=s.replace(/([+-]\d{2})$/,'$1:00'); } return b; }); creditLog = (cl||[]); messages = (msg||[]); ratings = (rt||[]);
   progress = {}; (prog||[]).forEach(p=>progress[p.class_id+'|'+p.phase]=p);
 
   // KI-Material für gebuchte Stunden
@@ -693,7 +693,7 @@ async function loadKalender(){
   if(!kalClubs.length){ const {data}=await sb.from('clubs').select('*').eq('is_active',true).order('sort_order'); kalClubs=data||[]; }
   const from=startOfWeekK(new Date(), kalWeek); const to=new Date(from); to.setDate(to.getDate()+7);
   const { data } = await sb.rpc('week_classes',{p_from:from.toISOString(),p_to:to.toISOString()});
-  const all=data||[]; kalCache=all;
+  const all=(data||[]).map(c=>{ if(c&&c.starts_at){ const s=String(c.starts_at).replace(' ','T'); c.starts_at=s.replace(/([+-]\d{2})$/,'$1:00'); } return c; }); kalCache=all;
   let list=(kalClub==='alle')?all:all.filter(c=>c.club===kalClub);
   if(kalLevel!=='alle') list=list.filter(c=>kalLevelMatch(c.level,kalLevel));
   const pills='<div class="kal-pills"><button class="kpill '+(kalClub==='alle'?'active':'')+'" onclick="setKalClub(\'alle\')">📅 Alle Clubs</button>'+
