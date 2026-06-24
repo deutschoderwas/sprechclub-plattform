@@ -101,27 +101,33 @@
 
   .m-tabs{display:none;}   /* Umschalt-Reiter nur auf dem Handy */
 
-  /* ===== Handy: Video oben + Tabs (Lektion / Tafel), je ein Bereich scrollt sauber ===== */
+  /* ===== Handy: kleines Video, große scrollbare Präsentation + Tafel-Reiter ===== */
   @media (max-width:760px){
-    html,body{ height:100%; overflow:hidden; }
-    body{ display:flex; flex-direction:column; }
-    header{ flex:0 0 auto; flex-wrap:wrap; gap:6px 12px; padding:9px 14px; }
-    header .lektion{ flex-basis:100%; order:5; font-size:.78rem; }
+    html,body{ height:auto; overflow:visible; -webkit-overflow-scrolling:touch; }
+    body{ display:block; }
+    header{ flex-wrap:wrap; gap:5px 10px; padding:8px 13px; }
+    header .lektion{ flex-basis:100%; order:5; font-size:.76rem; }
     .toggle{ display:none; }
-    main{ flex:1 1 auto; display:flex; flex-direction:column; gap:8px; padding:8px; min-height:0; overflow:hidden; }
+    main{ display:flex; flex-direction:column; gap:8px; padding:8px; }
     .gutter{ display:none; }
     .spalte{ display:contents; }
-    .video-card{ order:1; flex:0 0 auto; width:100%; align-self:stretch; }
-    .video-buehne{ height:25vh; aspect-ratio:auto; }
-    .vid-controls{ padding:6px 8px; }
-    .m-tabs{ display:flex; order:2; flex:0 0 auto; gap:8px; }
-    .m-tabs button{ flex:1; border:1px solid var(--rahmen); background:#fff; border-radius:10px; padding:9px; font-family:'Inter'; font-weight:700; font-size:.85rem; color:var(--anthrazit); cursor:pointer; }
+    .video-card{ order:1; width:100%; align-self:stretch; }
+    .video-buehne{ height:15vh; aspect-ratio:auto; }       /* Video klein */
+    .vid-controls{ padding:5px 7px; gap:5px; flex-wrap:nowrap; }
+    .vid-controls button{ min-width:0; flex:1 1 0; padding:7px 2px; font-size:.68rem; }
+    .vid-controls button.leave{ flex-basis:0; }
+    /* Reiter bleiben oben kleben, damit man immer umschalten kann */
+    .m-tabs{ display:flex; order:2; gap:8px; position:sticky; top:0; z-index:18; background:var(--creme); padding:4px 0; }
+    .m-tabs button{ flex:1; border:1px solid var(--rahmen); background:#fff; border-radius:10px; padding:11px; font-family:'Inter'; font-weight:700; font-size:.88rem; color:var(--anthrazit); cursor:pointer; }
     .m-tabs button.active{ background:var(--tuerkis); color:var(--auf-tuerkis); border-color:var(--tuerkis); }
-    .lektion-card{ order:3; flex:1 1 auto; min-height:0; }
-    #lektion{ min-height:0; height:100%; }
-    .tafel{ order:3; flex:1 1 auto; min-height:0; }
+    .lektion-card{ order:3; }
     .lekt-kopf{ font-size:.78rem; }
     .lekt-kopf .name{ display:none; }
+    /* Präsentation: volle Seitenhöhe, die GANZE Seite scrollt (keine iframe-Falle) */
+    .lekt-stage{ position:relative; flex:none; min-height:0; }
+    #lektion{ position:static; width:100%; height:1500px; display:block; }   /* Höhe per JS = Inhaltshöhe */
+    .tafel{ order:3; }
+    .tafel-body{ min-height:55vh; }
     .m-hide{ display:none !important; }
   }
 </style>
@@ -380,9 +386,21 @@
   function zeigeKopf(){
     document.querySelector('.lektion').textContent = '📚 ' + _titel + (_niveau ? ' · ' + _niveau : '');
     const nm = document.querySelector('.lekt-kopf .name'); if(nm) nm.textContent = _titel;
+    // Lektion auf dieselbe Domain normalisieren (www/ohne-www) → gleiche Herkunft, Höhe lesbar
+    try{ const u=new URL(_lektion, location.href); _lektion = location.origin + u.pathname + u.search; }catch(e){}
     const ifr = document.getElementById('lektion');
-    if(ifr.getAttribute('src') !== _lektion) ifr.src = _lektion;
+    if(ifr.getAttribute('src') !== _lektion){ ifr.src = _lektion; ifr.addEventListener('load', ()=>setTimeout(fitLektion,250), {once:true}); }
   }
+
+  // Auf dem Handy: iframe so hoch wie sein Inhalt → die GANZE Seite scrollt flüssig (keine iframe-Falle)
+  function fitLektion(){
+    const ifr=document.getElementById('lektion'); if(!ifr) return;
+    if(!window.matchMedia('(max-width:760px)').matches){ ifr.style.height=''; setTimeout(fit,100); return; }
+    try{ const h=ifr.contentWindow.document.documentElement.scrollHeight; if(h>200) ifr.style.height=h+'px'; }
+    catch(e){ ifr.style.height='2200px'; }   // Fallback, falls Inhalt nicht lesbar
+    setTimeout(fit,100);                      // Stift-Fläche an neue Höhe anpassen
+  }
+  window.addEventListener('resize', ()=> setTimeout(fitLektion,200));
 
   // Lektion IMMER aktuell aus der Datenbank holen – so sieht die Lehrkraft auch
   // kurzfristige Material-Änderungen automatisch.
@@ -439,7 +457,7 @@
       userInfo:{ displayName: rolle==='lehrer' ? 'Lehrkraft' : 'Schüler:in' },
       configOverwrite:{ prejoinPageEnabled:false, prejoinConfig:{ enabled:false }, startWithAudioMuted:false, startWithVideoMuted:false, disableDeepLinking:true },
       interfaceConfigOverwrite:{
-        TOOLBAR_BUTTONS:['microphone','camera','desktop','tileview','raisehand','chat','hangup','fullscreen'],
+        TOOLBAR_BUTTONS:[],
         SHOW_JITSI_WATERMARK:false, SHOW_WATERMARK_FOR_GUESTS:false, SHOW_BRAND_WATERMARK:false,
         SHOW_POWERED_BY:false, DEFAULT_LOGO_URL:'', DEFAULT_WELCOME_PAGE_LOGO_URL:'', JITSI_WATERMARK_LINK:''
       }
@@ -551,7 +569,8 @@
     document.getElementById('mt-tafel').classList.toggle('active', which==='tafel');
     document.querySelector('.lektion-card').classList.toggle('m-hide', which!=='lekt');
     document.querySelector('.tafel').classList.toggle('m-hide', which!=='tafel');
-    setTimeout(fit, 120);
+    if(which==='lekt') setTimeout(fitLektion, 120); else setTimeout(fit, 120);
+    window.scrollTo(0,0);
   }
   mTab('lekt');
 
