@@ -261,9 +261,9 @@ h2.sec{margin:24px 0 12px;font-size:19px}
 
 /* Wochenübersicht Mo–Sa (Spalten, volle Breite) */
 .main:has(#v-kalender.active){max-width:1280px}
-.calweek{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;align-items:start;animation:fade .3s}
+.calweek{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;align-items:start;animation:fade .3s}
 .calcol{background:#fff;border:1px solid var(--border);border-radius:16px;padding:8px;display:flex;flex-direction:column;gap:8px;min-width:0;box-shadow:0 4px 14px rgba(0,0,0,.05);animation:agIn .4s ease both}
-.calcol:nth-child(2){animation-delay:.04s}.calcol:nth-child(3){animation-delay:.08s}.calcol:nth-child(4){animation-delay:.12s}.calcol:nth-child(5){animation-delay:.16s}.calcol:nth-child(6){animation-delay:.2s}
+.calcol:nth-child(2){animation-delay:.04s}.calcol:nth-child(3){animation-delay:.08s}.calcol:nth-child(4){animation-delay:.12s}.calcol:nth-child(5){animation-delay:.16s}.calcol:nth-child(6){animation-delay:.2s}.calcol:nth-child(7){animation-delay:.24s}
 .calcol.today{border-color:var(--primary);box-shadow:0 6px 20px rgba(45,212,191,.2)}
 .calcol-head{text-align:center;padding:4px 2px 9px;border-bottom:1px solid var(--border)}
 .calcol-head b{display:block;font-family:'Space Grotesk',sans-serif;font-size:15px;text-transform:capitalize;line-height:1.1}
@@ -376,11 +376,12 @@ async function init(){
   await load();
   window.addEventListener('hashchange', routeFromHash);
   routeFromHash();
+  requireBirthday();   // Pflicht: Geburtsdatum abfragen, falls noch nicht gesetzt
 }
 
 async function load(){
   const [{ data:prof }, { data:bk }, { data:cl }, { data:msg }, { data:rt }, { data:prog }] = await Promise.all([
-    sb.from('profiles').select('credits,name,goal,target_level,native_language,pass_until').eq('id',user.id).single(),
+    sb.from('profiles').select('credits,name,goal,target_level,native_language,pass_until,birthday').eq('id',user.id).single(),
     sb.rpc('my_bookings'),
     sb.from('credit_log').select('*').order('created_at',{ascending:false}),
     sb.from('messages').select('*').order('created_at'),
@@ -704,7 +705,7 @@ async function loadKalender(){
   let grid;
   if(!list.length){ grid='<div class="empty">In dieser Woche sind hier (noch) keine Stunden eingetragen.</div>'; }
   else{
-    const days=[]; for(let i=0;i<6;i++){const d=new Date(from);d.setDate(d.getDate()+i);days.push(d);} // Mo–Sa
+    const days=[]; for(let i=0;i<7;i++){const d=new Date(from);d.setDate(d.getDate()+i);days.push(d);} // Mo–So
     const byDay={}; list.forEach(c=>{const k=new Date(c.starts_at).toDateString();(byDay[k]=byDay[k]||[]).push(c);});
     const today=new Date().toDateString();
     grid='<div class="calweek">'+days.map(d=>{
@@ -723,7 +724,7 @@ function kalEv(c){
   if(c.mine){ btn=c.zoom_link?`<a class="ev-btn meet" href="${esc(c.zoom_link)}" target="_blank" rel="noopener">🎥 Zum Unterricht</a>`:`<span class="ev-btn mine">✓ Gebucht</span>`; }
   else if(past){ btn=`<span class="ev-btn off">vorbei</span>`; }
   else if(free<=0){ btn=`<span class="ev-btn off">ausgebucht</span>`; }
-  else{ btn=`<button class="ev-btn book" onclick="kalBook('${c.id}')">Buchen · ${free} frei</button>`; }
+  else{ btn=`<button class="ev-btn book" onclick="kalBook('${c.id}')">Buchen</button>`; }
   const matBtn = (c.has_material && c.mine) ? `<button class="ev-btn mat" onclick="openClassMaterial('${c.id}')">📚 Material ansehen</button>` : '';
   const fmt = (c.club==='sprechclub' && c.title) ? esc(c.title) : '';
   const titleLine = esc(c.topic || c.title);
@@ -1163,23 +1164,57 @@ function renderProfil(){
       <div class="field"><label>Mein Lernziel</label><textarea id="pGoal" placeholder="z.B. Ich will fließend im Job sprechen / die B2-Prüfung schaffen">${esc(profile.goal||'')}</textarea></div>
       <div class="field"><label>Mein Zielniveau 🎯</label><select id="pTarget"><option value="">— wählen —</option>${LEVELS.map(l=>`<option ${profile.target_level===l?'selected':''}>${l}</option>`).join('')}</select></div>
       <div class="field"><label>Meine Muttersprache</label><input id="pNative" value="${esc(profile.native_language||'')}" placeholder="z.B. Englisch, Arabisch, Ukrainisch"></div>
+      <div class="field"><label>Mein Geburtstag 🎂</label><input id="pBday" type="date" value="${esc(profile.birthday||'')}"></div>
       <button class="btn btn-primary" onclick="saveProfil()">Speichern</button>
       <div class="field" style="margin-top:18px;border-top:1px solid var(--border);padding-top:14px"><label>E-Mail</label><div class="muted">${esc(user.email)}</div></div>
     </div>`;
 }
 async function saveProfil(){
+  const bday=document.getElementById('pBday').value||null;
   const { error }=await sb.rpc('update_my_profile',{
     p_name:document.getElementById('pName').value.trim(),
     p_goal:document.getElementById('pGoal').value.trim()||null,
     p_target_level:document.getElementById('pTarget').value||null,
-    p_native_language:document.getElementById('pNative').value.trim()||null
+    p_native_language:document.getElementById('pNative').value.trim()||null,
+    p_birthday:bday
   });
   if(error){ toast('Konnte nicht speichern.'); return; }
   profile.name=document.getElementById('pName').value.trim();
   profile.goal=document.getElementById('pGoal').value.trim()||null;
   profile.target_level=document.getElementById('pTarget').value||null;
   profile.native_language=document.getElementById('pNative').value.trim()||null;
+  profile.birthday=bday;
   computeStats(); toast('Profil gespeichert ✓');
+}
+
+// ---------- Geburtstag: Pflichtabfrage beim ersten Login ----------
+function requireBirthday(){
+  if(profile && profile.birthday) return;            // schon vorhanden -> nichts tun
+  if(document.getElementById('bdayGate')) return;     // schon offen
+  const ov=document.createElement('div');
+  ov.id='bdayGate';
+  ov.style.cssText='position:fixed;inset:0;z-index:9999;background:rgba(26,26,26,.55);display:flex;align-items:center;justify-content:center;padding:18px';
+  ov.innerHTML=`
+    <div style="background:#fff;border-radius:22px;max-width:380px;width:100%;padding:26px 24px;box-shadow:0 20px 50px rgba(0,0,0,.25);text-align:center;font-family:inherit">
+      <div style="font-size:46px;line-height:1;margin-bottom:6px">🎂</div>
+      <h2 style="margin:0 0 6px;font-size:21px;font-weight:800;color:#1A1A1A">Wann hast du Geburtstag?</h2>
+      <p style="margin:0 0 16px;font-size:14px;color:#5C4E3E;line-height:1.5">Bitte trag dein Geburtsdatum ein – dann können wir dir an deinem Tag gratulieren. 💛</p>
+      <input id="bdayGateInput" type="date" style="width:100%;padding:12px;border:1px solid var(--border);border-radius:12px;font-size:16px;margin-bottom:6px">
+      <div id="bdayGateErr" style="color:#DD0000;font-size:13px;min-height:18px;margin-bottom:8px"></div>
+      <button class="btn btn-primary" style="width:100%" onclick="saveBirthdayGate()">Speichern & weiter</button>
+    </div>`;
+  document.body.appendChild(ov);
+}
+async function saveBirthdayGate(){
+  const val=document.getElementById('bdayGateInput').value;
+  const err=document.getElementById('bdayGateErr');
+  if(!val){ if(err) err.textContent='Bitte wähle ein Datum.'; return; }
+  if(new Date(val) > new Date()){ if(err) err.textContent='Das Datum liegt in der Zukunft.'; return; }
+  const { error }=await sb.rpc('set_my_birthday',{ p_birthday:val });
+  if(error){ if(err) err.textContent='Konnte nicht speichern – bitte erneut versuchen.'; return; }
+  profile.birthday=val;
+  const ov=document.getElementById('bdayGate'); if(ov) ov.remove();
+  toast('Danke! 🎂');
 }
 
 async function logout(){ await sb.auth.signOut(); location.href='index.html'; }

@@ -676,16 +676,42 @@ async function loadBewertungen(){
 
 let SCHUELER = [];
 function nameKey(p){ return (p.name && p.name.trim()) ? p.name.trim() : (p.email||''); }
+const STATUS_OPT = [['aktiv','🟢 Aktiv'],['pause','⏸️ Pause'],['urlaub','🏖️ Urlaub'],['beendet','⚪ Beendet']];
+const STATUS_BG = { aktiv:'#DCFCE7', pause:'#FEF3C7', urlaub:'#DBEAFE', beendet:'#F1F1F1' };
+function todayMMDD(){ const p=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Berlin',month:'2-digit',day:'2-digit'}).formatToParts(new Date()).reduce((a,x)=>(a[x.type]=x.value,a),{}); return `${p.month}-${p.day}`; }
+function bdayLabel(p){ if(!p.birthday) return '<span class="muted">–</span>'; const [y,m,d]=p.birthday.split('-'); const isToday=p.birthday.slice(5)===todayMMDD(); return `${d}.${m}.${y}${isToday?' 🎂':''}`; }
+async function authToken(){ const { data } = await sb.auth.getSession(); return data?.session?.access_token || ''; }
+
 async function loadSchueler(){
-  const { data } = await sb.from('profiles').select('id,name,email,credits').limit(2000);
+  const { data } = await sb.from('profiles').select('id,name,email,credits,status,birthday,inactive_until,is_admin,is_teacher').limit(2000);
   SCHUELER = data || [];
   document.getElementById('schueler').innerHTML = `
+    <div class="card" style="margin-bottom:16px;background:#FFFCF5">
+      <b>➕ Neuen Schüler anlegen</b>
+      <p class="muted" style="margin:4px 0 10px">Der Schüler bekommt automatisch eine Einladungs-Mail und setzt sein Passwort selbst.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:end">
+        <div class="field" style="margin:0"><label>Name</label><input id="newName" placeholder="Vor- und Nachname"></div>
+        <div class="field" style="margin:0"><label>E-Mail *</label><input id="newEmail" type="email" placeholder="mail@beispiel.de"></div>
+        <div class="field" style="margin:0;max-width:120px"><label>Guthaben</label><input id="newCredits" type="number" min="0" value="0"></div>
+        <div class="field" style="margin:0"><label>Geburtstag</label><input id="newBday" type="date"></div>
+        <button class="btn" id="btnCreate" onclick="createStudent()" style="background:#2DD4BF;color:#062;font-weight:800">Anlegen & einladen</button>
+      </div>
+      <div class="muted" id="createMsg" style="margin-top:8px"></div>
+    </div>
     <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px">
       <input id="schuelerSuche" placeholder="🔎 Name oder E-Mail suchen" oninput="renderSchuelerTable()" style="flex:1;min-width:220px">
       <select id="schuelerSort" onchange="renderSchuelerTable()">
         <option value="name">Name A–Z</option>
         <option value="credits">Guthaben aufsteigend</option>
         <option value="credits-desc">Guthaben absteigend</option>
+        <option value="bday">Geburtstag (Monat/Tag)</option>
+      </select>
+      <select id="schuelerStatus" onchange="renderSchuelerTable()">
+        <option value="">Alle Status</option>
+        <option value="aktiv">nur Aktiv</option>
+        <option value="pause">nur Pause</option>
+        <option value="urlaub">nur Urlaub</option>
+        <option value="beendet">nur Beendet</option>
       </select>
       <label class="muted" style="display:flex;align-items:center;gap:6px;cursor:pointer">
         <input type="checkbox" id="schuelerLowOnly" onchange="renderSchuelerTable()"> nur ≤ 1 Stunde
@@ -702,29 +728,84 @@ async function loadSchueler(){
 function renderSchuelerTable(){
   const q = (document.getElementById('schuelerSuche')?.value||'').toLowerCase().trim();
   const mode = document.getElementById('schuelerSort')?.value||'name';
+  const stf = document.getElementById('schuelerStatus')?.value||'';
   const lowOnly = document.getElementById('schuelerLowOnly')?.checked;
   let rows = SCHUELER.filter(p => !q || (p.name||'').toLowerCase().includes(q) || (p.email||'').toLowerCase().includes(q));
+  if (stf) rows = rows.filter(p => (p.status||'aktiv')===stf);
   if (lowOnly) rows = rows.filter(p => p.credits<=1);
   rows = [...rows];
   if (mode==='credits') rows.sort((a,b)=> a.credits-b.credits || nameKey(a).localeCompare(nameKey(b),'de'));
   else if (mode==='credits-desc') rows.sort((a,b)=> b.credits-a.credits || nameKey(a).localeCompare(nameKey(b),'de'));
+  else if (mode==='bday') rows.sort((a,b)=> (a.birthday?a.birthday.slice(5):'zz').localeCompare(b.birthday?b.birthday.slice(5):'zz') || nameKey(a).localeCompare(nameKey(b),'de'));
   else rows.sort((a,b)=> nameKey(a).localeCompare(nameKey(b),'de',{sensitivity:'base'}));
   const low = SCHUELER.filter(p=>p.credits<=1).length;
+  const bdayToday = SCHUELER.filter(p=>p.birthday && p.birthday.slice(5)===todayMMDD()).length;
   const info = document.getElementById('schuelerInfo');
-  if (info) info.textContent = `${rows.length} von ${SCHUELER.length} · ${low} mit ≤ 1 Stunde`;
+  if (info) info.textContent = `${rows.length} von ${SCHUELER.length} · ${low} mit ≤ 1 Stunde${bdayToday?` · 🎂 ${bdayToday} heute Geburtstag`:''}`;
   const byName = (mode==='name');
   let lastLetter = '';
   const rowsHtml = rows.map(p=>{
+    const st = p.status||'aktiv';
+    const staff = p.is_admin||p.is_teacher;
     let head = '';
     if (byName){
       const L = (nameKey(p)[0]||'#').toUpperCase();
-      if (L !== lastLetter){ lastLetter = L; head = `<tr class="alpha"><td colspan="4" style="background:#FFF8E0;font-weight:800;color:#DD0000;letter-spacing:.05em;padding:8px 10px">${esc(L)}</td></tr>`; }
+      if (L !== lastLetter){ lastLetter = L; head = `<tr class="alpha"><td colspan="6" style="background:#FFF8E0;font-weight:800;color:#DD0000;letter-spacing:.05em;padding:8px 10px">${esc(L)}</td></tr>`; }
     }
-    return head + `<tr${p.credits<=1?' style="background:#FFF1C2"':''}><td>${esc(p.name||'–')}</td><td>${esc(p.email)}</td>
-    <td><b>${p.credits}</b>${p.credits<=1?' <span class="pill">niedrig</span>':''}</td>
-    <td><button class="btn btn-ghost" onclick="adjust('${p.id}',1)">+1</button> <button class="btn btn-ghost" onclick="adjust('${p.id}',-1)">−1</button></td></tr>`;
+    const stSel = `<select onchange="setStatus('${p.id}',this.value)" style="background:${STATUS_BG[st]||'#fff'};border-radius:8px;padding:4px 6px;font-size:13px">`+
+      STATUS_OPT.map(([v,l])=>`<option value="${v}"${v===st?' selected':''}>${l}</option>`).join('')+`</select>`+
+      ((st==='pause'||st==='urlaub')&&p.inactive_until?`<div class="muted" style="font-size:11px">bis ${p.inactive_until.split('-').reverse().join('.')}</div>`:'');
+    return head + `<tr${p.credits<=1?' style="background:#FFF1C2"':''}>
+      <td>${esc(p.name||'–')}${staff?' <span class="pill">Team</span>':''}</td>
+      <td>${esc(p.email)}</td>
+      <td>${bdayLabel(p)}</td>
+      <td>${stSel}</td>
+      <td><b>${p.credits}</b>${p.credits<=1?' <span class="pill">niedrig</span>':''} <button class="btn btn-ghost" onclick="adjust('${p.id}',1)">+1</button> <button class="btn btn-ghost" onclick="adjust('${p.id}',-1)">−1</button></td>
+      <td>${staff?'':`<button class="btn btn-ghost" title="Schüler löschen" onclick="deleteStudent('${p.id}',${JSON.stringify(p.name||p.email)})" style="color:#DD0000">🗑</button>`}</td></tr>`;
   }).join('');
-  document.getElementById('schuelerTable').innerHTML = `<table><tr><th>Name</th><th>E-Mail</th><th>Guthaben</th><th></th></tr>` + rowsHtml + '</table>';
+  document.getElementById('schuelerTable').innerHTML = `<table><tr><th>Name</th><th>E-Mail</th><th>Geburtstag</th><th>Status</th><th>Guthaben</th><th></th></tr>` + rowsHtml + '</table>';
+}
+
+async function createStudent(){
+  const name=(document.getElementById('newName').value||'').trim();
+  const email=(document.getElementById('newEmail').value||'').trim();
+  const credits=parseInt(document.getElementById('newCredits').value||'0',10)||0;
+  const birthday=document.getElementById('newBday').value||null;
+  const msg=document.getElementById('createMsg');
+  if(!email||!email.includes('@')){ if(msg) msg.textContent='⚠️ Bitte eine gültige E-Mail eingeben.'; return; }
+  const btn=document.getElementById('btnCreate'); if(btn){ btn.disabled=true; btn.textContent='⏳ Lege an …'; }
+  try{
+    const r=await fetch('/api/admin-create-student',{ method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+await authToken()}, body:JSON.stringify({name,email,credits,birthday}) });
+    const j=await r.json().catch(()=>({}));
+    if(j&&j.ok){
+      if(msg) msg.innerHTML = `✅ ${esc(name||email)} angelegt.${j.existed?' (E-Mail existierte schon – Profil aktualisiert)':''} ${j.mailed?'📧 Einladungs-Mail verschickt.':'⚠️ Mail nicht verschickt (Brevo prüfen).'}`;
+      document.getElementById('newName').value=''; document.getElementById('newEmail').value=''; document.getElementById('newCredits').value='0'; document.getElementById('newBday').value='';
+      await loadSchueler();
+    } else { if(msg) msg.textContent='⚠️ Fehler: '+((j&&(j.detail||j.error))||'unbekannt'); }
+  }catch(e){ if(msg) msg.textContent='⚠️ Konnte nicht anlegen (ist die Seite live deployt?)'; }
+  finally{ if(btn){ btn.disabled=false; btn.textContent='Anlegen & einladen'; } }
+}
+
+async function setStatus(id, status){
+  const p = SCHUELER.find(x=>x.id===id);
+  let until = null;
+  if(status==='pause'||status==='urlaub'){
+    const cur = p&&p.inactive_until ? p.inactive_until : '';
+    const inp = prompt(`${status==='pause'?'Pause':'Urlaub'} bis welches Datum? (JJJJ-MM-TT, leer = offen)`, cur);
+    if(inp===null){ renderSchuelerTable(); return; } // abgebrochen
+    until = inp.trim() || null;
+  }
+  await sb.rpc('admin_update_student', { p_user_id:id, p_status:status, p_inactive_until:until });
+  if(p){ p.status=status; p.inactive_until=until; }
+  renderSchuelerTable();
+}
+
+async function deleteStudent(id, label){
+  if(!confirm(`Schüler „${label}" wirklich löschen?\n\nDamit werden Konto, Buchungen, Guthaben-Verlauf und Community-Beiträge unwiderruflich entfernt.`)) return;
+  const r=await fetch('/api/admin-delete-student',{ method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+await authToken()}, body:JSON.stringify({user_id:id}) });
+  const j=await r.json().catch(()=>({}));
+  if(j&&j.ok){ SCHUELER=SCHUELER.filter(x=>x.id!==id); renderSchuelerTable(); }
+  else alert('⚠️ Konnte nicht löschen: '+((j&&(j.detail||j.error))||'unbekannt'));
 }
 
 async function sendCreditOffer(){
