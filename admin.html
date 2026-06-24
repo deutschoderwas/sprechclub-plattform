@@ -687,7 +687,14 @@ async function loadSchueler(){
         <option value="credits">Guthaben aufsteigend</option>
         <option value="credits-desc">Guthaben absteigend</option>
       </select>
+      <label class="muted" style="display:flex;align-items:center;gap:6px;cursor:pointer">
+        <input type="checkbox" id="schuelerLowOnly" onchange="renderSchuelerTable()"> nur ≤ 1 Stunde
+      </label>
       <span class="muted" id="schuelerInfo"></span>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px">
+      <button class="btn" id="btnCreditOffer" onclick="sendCreditOffer()" style="background:#DD0000;color:#fff">💛 Angebots-Mail an Schüler mit ≤ 1 Stunde senden</button>
+      <span class="muted" id="creditOfferMsg"></span>
     </div>
     <div id="schuelerTable"></div>`;
   renderSchuelerTable();
@@ -695,7 +702,9 @@ async function loadSchueler(){
 function renderSchuelerTable(){
   const q = (document.getElementById('schuelerSuche')?.value||'').toLowerCase().trim();
   const mode = document.getElementById('schuelerSort')?.value||'name';
+  const lowOnly = document.getElementById('schuelerLowOnly')?.checked;
   let rows = SCHUELER.filter(p => !q || (p.name||'').toLowerCase().includes(q) || (p.email||'').toLowerCase().includes(q));
+  if (lowOnly) rows = rows.filter(p => p.credits<=1);
   rows = [...rows];
   if (mode==='credits') rows.sort((a,b)=> a.credits-b.credits || nameKey(a).localeCompare(nameKey(b),'de'));
   else if (mode==='credits-desc') rows.sort((a,b)=> b.credits-a.credits || nameKey(a).localeCompare(nameKey(b),'de'));
@@ -703,10 +712,36 @@ function renderSchuelerTable(){
   const low = SCHUELER.filter(p=>p.credits<=1).length;
   const info = document.getElementById('schuelerInfo');
   if (info) info.textContent = `${rows.length} von ${SCHUELER.length} · ${low} mit ≤ 1 Stunde`;
-  document.getElementById('schuelerTable').innerHTML = `<table><tr><th>Name</th><th>E-Mail</th><th>Guthaben</th><th></th></tr>` +
-    rows.map(p=>`<tr${p.credits<=1?' style="background:#FFF1C2"':''}><td>${esc(p.name||'–')}</td><td>${esc(p.email)}</td>
+  const byName = (mode==='name');
+  let lastLetter = '';
+  const rowsHtml = rows.map(p=>{
+    let head = '';
+    if (byName){
+      const L = (nameKey(p)[0]||'#').toUpperCase();
+      if (L !== lastLetter){ lastLetter = L; head = `<tr class="alpha"><td colspan="4" style="background:#FFF8E0;font-weight:800;color:#DD0000;letter-spacing:.05em;padding:8px 10px">${esc(L)}</td></tr>`; }
+    }
+    return head + `<tr${p.credits<=1?' style="background:#FFF1C2"':''}><td>${esc(p.name||'–')}</td><td>${esc(p.email)}</td>
     <td><b>${p.credits}</b>${p.credits<=1?' <span class="pill">niedrig</span>':''}</td>
-    <td><button class="btn btn-ghost" onclick="adjust('${p.id}',1)">+1</button> <button class="btn btn-ghost" onclick="adjust('${p.id}',-1)">−1</button></td></tr>`).join('') + '</table>';
+    <td><button class="btn btn-ghost" onclick="adjust('${p.id}',1)">+1</button> <button class="btn btn-ghost" onclick="adjust('${p.id}',-1)">−1</button></td></tr>`;
+  }).join('');
+  document.getElementById('schuelerTable').innerHTML = `<table><tr><th>Name</th><th>E-Mail</th><th>Guthaben</th><th></th></tr>` + rowsHtml + '</table>';
+}
+
+async function sendCreditOffer(){
+  const low = SCHUELER.filter(p=>p.credits<=1).length;
+  if (!confirm(`Angebots-Mail an Schüler mit nur noch ≤ 1 Stunde senden?\n\nEs werden nur Schüler mit genau 1 Stunde angeschrieben, die in den letzten 30 Tagen noch keine bekommen haben. Aktuell ≤ 1 Stunde: ${low}.`)) return;
+  const btn = document.getElementById('btnCreditOffer');
+  const msg = document.getElementById('creditOfferMsg');
+  if (btn){ btn.disabled = true; btn.textContent = '⏳ Sende …'; }
+  try {
+    const r = await fetch('/api/send-credit-offer', { method:'POST', headers:{'Content-Type':'application/json'}, body:'{}' });
+    const j = await r.json().catch(()=>({}));
+    if (msg) msg.textContent = j && j.ok ? `✅ ${j.sent||0} Mail(s) verschickt${j.errors?` · ⚠️ ${j.errors} Fehler`:''}.` : `⚠️ ${j && j.skipped ? j.skipped : 'Fehler beim Senden'}`;
+  } catch(e){
+    if (msg) msg.textContent = '⚠️ Konnte nicht senden (ist die Seite live deployt?)';
+  } finally {
+    if (btn){ btn.disabled = false; btn.textContent = '💛 Angebots-Mail an Schüler mit ≤ 1 Stunde senden'; }
+  }
 }
 
 async function adjust(id, n){
