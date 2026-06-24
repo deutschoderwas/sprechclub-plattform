@@ -80,6 +80,10 @@ function brandedReminderEmail({ vorname, cls, when, site, clubName, clubEmoji, c
             <tr><td align="center" style="padding:6px 0 0;font-family:${ff};font-size:14px;color:#6B7280">
               📚 <a href="${esc(cls.material_pre)}" style="color:#0a7a5c;font-weight:700;text-decoration:none">Noch kurz vorbereiten?</a>
             </td></tr>` : '';
+  const schuelerBtn = `
+            <tr><td align="center" style="padding:8px 0 4px">
+              <a href="${esc(site)}/schuelerbereich" style="display:inline-block;background:#1A1A1A;color:#ffffff;font-family:${ff};font-weight:800;font-size:15px;text-decoration:none;padding:14px 30px;border-radius:50px;box-shadow:0 6px 16px rgba(26,26,26,.22)">📋 Zu deinem Schülerbereich</a>
+            </td></tr>`;
 
   return `<!DOCTYPE html>
 <html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"></head>
@@ -116,12 +120,12 @@ function brandedReminderEmail({ vorname, cls, when, site, clubName, clubEmoji, c
         </td></tr>
 
         <tr><td style="padding:14px 30px 6px">
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${meetBtn}${matLine}</table>
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${meetBtn}${schuelerBtn}${matLine}</table>
         </td></tr>
 
         <tr><td style="padding:14px 30px 4px;font-family:${ff};font-size:13px;line-height:1.6;color:#6B7280">
           Klappt es doch nicht? Bis 2 Stunden vor Beginn kannst du in deinem
-          <a href="${esc(site)}/konto.html" style="color:#DD0000;font-weight:700;text-decoration:none">Schülerbereich</a> stornieren.
+          <a href="${esc(site)}/schuelerbereich" style="color:#DD0000;font-weight:700;text-decoration:none">Schülerbereich</a> stornieren.
         </td></tr>
 
         <tr><td style="padding:16px 30px 4px;font-family:${ff};font-size:15px;line-height:1.6;color:#1A1A1A">
