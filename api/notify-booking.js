@@ -62,7 +62,64 @@ export default async function handler(req, res) {
     await sb.from('email_log').delete().eq('kind', 'booking').eq('ref', `${class_id}:${user.id}`);
     return res.status(200).json({ ok: false, brevo: r.status });
   }
+
+  // ---- Admin-Benachrichtigung an Julia (eigener Log-Eintrag, blockiert die Schüler-Mail nie) ----
+  try { await notifyAdmin(sb, { type:'booking', prof:{ ...prof, id:user.id }, cls:{ ...cls, id:class_id }, when, clubName }); } catch (e) {}
+
   return res.status(200).json({ ok: true });
+}
+
+// Schickt Julia eine kurze Info-Mail über Buchung/Storno. Dedupe via email_log.
+export async function notifyAdmin(sb, { type, prof, cls, when, clubName }) {
+  if (!process.env.BREVO_API_KEY) return;
+  const adminEmail = process.env.ADMIN_EMAIL || 'deutschoderwas@gmail.com';
+  const kind = type === 'cancel' ? 'cancel_admin' : 'booking_admin';
+  const ref = `${cls?.id || cls?.class_id || 'x'}:${prof?.id || ''}:${type}`;
+  // Dedupe: gleiche Buchung/Storno nicht doppelt melden
+  const { error: logErr } = await sb.from('email_log').insert({ kind, ref, user_id: prof?.id || null });
+  if (logErr) return; // schon gemeldet
+  const isCancel = type === 'cancel';
+  const emoji = isCancel ? '⚠️' : '✅';
+  const head = isCancel ? 'Stornierung' : 'Neue Buchung';
+  const verb = isCancel ? 'hat storniert' : 'hat gebucht';
+  const ff = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
+  const esc = (s) => String(s == null ? '' : s).replace(/[<>&]/g, (c) => ({ '<':'&lt;','>':'&gt;','&':'&amp;' }[c]));
+  const accent = isCancel ? '#DD0000' : '#0a7a5c';
+  const html = `<!DOCTYPE html><html lang="de"><head><meta charset="utf-8"></head>
+<body style="margin:0;background:#FFF8E0;font-family:${ff}">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="padding:24px 14px"><tr><td align="center">
+    <table role="presentation" width="100%" style="max-width:520px;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 8px 26px rgba(0,0,0,.08)">
+      <tr><td style="height:5px;background:${accent}"></td></tr>
+      <tr><td style="padding:22px 26px 6px">
+        <div style="font-size:13px;font-weight:800;letter-spacing:.04em;color:#9CA3AF;text-transform:uppercase">Admin-Info · deutschoderwas club</div>
+        <h1 style="margin:8px 0 0;font-size:22px;color:#1A1A1A">${emoji} ${head}</h1>
+      </td></tr>
+      <tr><td style="padding:10px 26px 0;font-size:15px;line-height:1.6;color:#1A1A1A">
+        <b>${esc(prof?.name || 'Ein:e Schüler:in')}</b> ${verb}${prof?.email ? ` <span style="color:#6B7280">(${esc(prof.email)})</span>` : ''}:
+      </td></tr>
+      <tr><td style="padding:14px 26px 4px">
+        <table role="presentation" width="100%" style="background:#FFF8E0;border:1px solid #F0E5D8;border-left:4px solid ${accent};border-radius:14px"><tr><td style="padding:14px 16px">
+          ${clubName ? `<div style="font-size:12px;font-weight:800;color:${accent};text-transform:uppercase;letter-spacing:.03em;margin-bottom:5px">${esc(clubName)}</div>` : ''}
+          <div style="font-size:17px;font-weight:800;color:#1A1A1A">${esc(cls?.title || '')}</div>
+          <div style="font-size:13px;color:#6B7280;margin:2px 0 8px">${esc(cls?.level || '')}</div>
+          <div style="font-size:14px;font-weight:700;color:#1A1A1A">🗓️ ${esc(when)} Uhr</div>
+        </td></tr></table>
+      </td></tr>
+      <tr><td style="padding:18px 26px 26px;font-size:12px;color:#9CA3AF;text-align:center">Automatische Benachrichtigung · deutschoderwas-club.de</td></tr>
+    </table>
+  </td></tr></table>
+</body></html>`;
+  const r = await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      sender: { name: 'deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'info@deutschoderwas.de' },
+      to: [{ email: adminEmail, name: 'Julia' }],
+      subject: `${emoji} ${head}: ${cls?.title || ''} — ${prof?.name || ''}`,
+      htmlContent: html,
+    }),
+  });
+  if (!r.ok) { await sb.from('email_log').delete().eq('kind', kind).eq('ref', ref); }
 }
 
 // ---- deutschoderwas-Markendesign (Rot #DD0000 · Gold #FFCE00 · Creme #FFF8E0 · Petrol #2DD4BF) ----
