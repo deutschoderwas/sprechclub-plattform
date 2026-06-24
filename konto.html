@@ -681,8 +681,8 @@ function kalLevelMatch(classLevel,filter){
   if(filter==='alle') return true;
   const L=String(classLevel||'');
   let cb;
-  if(/ab\s*A2/i.test(L)) cb=['A2','B1','B2','C1'];
-  else if(/ab\s*B1/i.test(L)) cb=['B1','B2','C1'];
+  const _ab=L.match(/ab\s*([ABC][12])/i);
+  if(_ab){ const _o=['A2','B1','B2','C1']; const _i=_o.indexOf(_ab[1].toUpperCase()); cb=_i>=0?_o.slice(_i):[]; }
   else if(/A2\s*\/\s*B1/i.test(L)) cb=['A2','B1'];
   else if(/B1\s*\/\s*B2/i.test(L)) cb=['B1','B2'];
   else if(/B2\s*\/\s*C1/i.test(L)) cb=['B2','C1'];
@@ -765,7 +765,7 @@ async function openClassMaterial(classId){
 }
 function setKalClub(s){ kalClub=s; loadKalender(); }
 function setKalLevel(l){ kalLevel=l; loadKalender(); }
-function kalWeekChange(d){ kalWeek+=d; if(kalWeek<0)kalWeek=0; loadKalender(); }
+function kalWeekChange(d){ var s=new Date(2026,5,29),n=new Date(); function m(x){x=new Date(x);x.setDate(x.getDate()-((x.getDay()+6)%7));x.setHours(0,0,0,0);return x;} var min=Math.round((m(s)-m(n))/6048e5); if(min<0)min=0; kalWeek+=d; if(kalWeek<min)kalWeek=min; loadKalender(); }
 function kalBook(id){
   if(credits<1){ toast('Du brauchst zuerst ein Paket — ich bring dich hin 😊'); setTimeout(()=>{ location.href='live.html#pakete'; }, 700); return; }
   const c=kalCache.find(x=>String(x.id)===String(id));
