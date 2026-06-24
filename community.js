@@ -206,6 +206,16 @@
     mic.addEventListener('click', toggleRec);
   }
 
+  // Admin (Julia) über neue Nachrichten informieren – serverseitig gebündelt (max. 1 Mail/Kanal/Stunde).
+  async function notifyAdminNewMsg(channel) {
+    try {
+      var s = await sbc.auth.getSession();
+      var tok = s && s.data && s.data.session && s.data.session.access_token;
+      if (!tok) return;
+      fetch('/api/notify-community', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tok }, body: JSON.stringify({ channel: channel }) }).catch(function () {});
+    } catch (e) {}
+  }
+
   async function sendText() {
     var inp = q('#cmInp'); if (!inp) return; var t = inp.value.trim(); if (!t) return;
     inp.value = ''; inp.style.height = 'auto';
@@ -217,6 +227,7 @@
     if (res.error) { if (tmp) tmp.querySelector('.cm-bub').insertAdjacentHTML('beforeend', ' <span style="color:#DD0000;font-size:12px">⚠︎ nicht gesendet</span>'); return; }
     // tmp-Id durch echte Id ersetzen, damit Realtime-Echo nicht dupliziert
     var node = document.querySelector('[data-id="' + optimistic.id + '"]'); if (node && res.data) node.setAttribute('data-id', res.data.id);
+    notifyAdminNewMsg(cur);
   }
 
   // ---- Audio-Aufnahme ----
@@ -255,6 +266,7 @@
     if (res.error) { if (ln) ln.querySelector('.cm-bub').innerHTML = '⚠︎ nicht gesendet'; return; }
     var sg = await sbc.storage.from('community-audio').createSignedUrl(path, 3600);
     if (ln) { ln.setAttribute('data-id', res.data.id); ln.querySelector('.cm-bub').innerHTML = '<div class="cm-audio">🎧 <audio controls preload="none" src="' + E(sg.data ? sg.data.signedUrl : '') + '"></audio><span class="muted">' + secs + 's</span></div>'; }
+    notifyAdminNewMsg(cur);
   }
 
   async function delMsg(id) {

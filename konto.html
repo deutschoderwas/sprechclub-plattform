@@ -293,7 +293,7 @@ h2.sec{margin:24px 0 12px;font-size:19px}
     <a href="index.html" class="brand"><img src="logo.PNG" onerror="this.style.display='none'"><span>deutschoderwas&nbsp;club</span></a>
     <button class="navlink active" data-view="dashboard" onclick="go('dashboard')"><span class="ic">🏠</span>Start</button>
     <button class="navlink navlink-hl" data-view="ueben" onclick="go('ueben')"><span class="ic">🎮</span>Üben</button>
-    <button class="navlink" data-view="community" onclick="go('community')"><span class="ic">💬</span>Community</button>
+    <button class="navlink" data-view="community" onclick="go('community')"><span class="ic">💬</span>Community<span class="badge" id="commBadge" style="display:none">0</span></button>
     <button class="navlink" data-view="lernpfad" onclick="go('lernpfad')"><span class="ic">🪜</span>Lernpfad</button>
     <button class="navlink" data-view="kalender" onclick="go('kalender')"><span class="ic">🗓️</span>Kalender</button>
     <button class="navlink" data-view="stunden" onclick="go('stunden')"><span class="ic">📅</span>Meine Stunden</button>
@@ -414,6 +414,19 @@ async function load(){
   }catch(e){}
   computeStats();
   renderMsgBadge();
+  renderCommBadge();
+}
+
+// Community-Badge: Anzahl der heute geschriebenen Community-Nachrichten
+async function renderCommBadge(){
+  const b=document.getElementById('commBadge'); if(!b) return;
+  try{
+    const start=new Date(); start.setHours(0,0,0,0);
+    const { count }=await sb.from('community_messages')
+      .select('id',{count:'exact',head:true})
+      .is('deleted_at',null).gte('created_at',start.toISOString());
+    if(count>0){ b.style.display='inline-block'; b.textContent=count; } else b.style.display='none';
+  }catch(e){ b.style.display='none'; }
 }
 
 // ---------- Statistik / Gamification ----------
@@ -865,6 +878,11 @@ async function cancelB(classId){
   if(!confirm('Stunde wirklich stornieren? Du bekommst dein Guthaben zurück.')) return;
   const { data,error }=await sb.rpc('cancel_booking',{p_class_id:classId});
   if(error||!data.ok){ toast(data?.error==='too_late'?'Storno nicht mehr möglich (unter 2 h).':'Storno fehlgeschlagen.'); return; }
+  // Admin-Benachrichtigung an Julia (Brevo, fire-and-forget)
+  try{
+    const { data:{ session } } = await sb.auth.getSession();
+    if(session){ fetch('/api/notify-cancel',{ method:'POST', headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+session.access_token }, body:JSON.stringify({ class_id:classId }) }).catch(()=>{}); }
+  }catch(e){}
   toast('Storniert — 1 Stunde zurück aufs Guthaben.'); await load(); show('stunden');
 }
 
