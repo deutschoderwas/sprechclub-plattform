@@ -643,10 +643,15 @@ function phaseHtml(b, phase){
     const started = now >= st - 10*60000;   // ab 10 Min vor Beginn
     const ended = now > st + 90*60000;      // bis 90 Min nach Beginn
     const liveNow = started && !ended;
+    const href = `klassenraum.html?stunde=${b.class_id}&titel=${encodeURIComponent(b.title||'')}&niveau=${encodeURIComponent(b.level||'')}`;
+    // Klassenzimmer-Button ist immer sichtbar – live rot hervorgehoben, sonst dezent.
     let inner;
-    if(liveNow) inner=`<a class="btn btn-turq btn-sm" href="klassenraum.html?stunde=${b.class_id}&titel=${encodeURIComponent(b.title||'')}&niveau=${encodeURIComponent(b.level||'')}" target="_blank" rel="noopener" style="text-decoration:none"><span class="live-dot"></span>🔴 Beitreten</a>`;
-    else if(ended) inner='<span class="nope">Stunde vorbei</span>';
-    else inner='<span class="nope">startet zur Stundenzeit</span>';
+    if(liveNow){
+      inner=`<a class="btn btn-turq btn-sm" href="${href}" target="_blank" rel="noopener" style="text-decoration:none"><span class="live-dot"></span>🔴 Beitreten</a>`;
+    } else {
+      inner=`<a class="btn btn-sm" href="${href}" target="_blank" rel="noopener" style="text-decoration:none;background:#eef0f4;color:#333;font-weight:700">🚪 Klassenzimmer</a>`
+        + `<br><span class="nope" style="font-size:11px">${ended?'Stunde vorbei':'startet zur Stundenzeit'}</span>`;
+    }
     return `<div class="phase ${liveNow?'ready':''}"><b>🗣️ Im Unterricht</b>${inner}</div>`;
   }
   const hasKi = m && m[phase] && Array.isArray(m[phase].exercises) && m[phase].exercises.length;
@@ -695,6 +700,7 @@ async function loadKalender(){
   const { data } = await sb.rpc('week_classes',{p_from:from.toISOString(),p_to:to.toISOString()});
   const all=(data||[]).map(c=>{ if(c&&c.starts_at){ const s=String(c.starts_at).replace(' ','T'); c.starts_at=s.replace(/([+-]\d{2})$/,'$1:00'); } return c; }); kalCache=all;
   let list=(kalClub==='alle')?all:all.filter(c=>c.club===kalClub);
+  const clubCount=list.length;
   if(kalLevel!=='alle') list=list.filter(c=>kalLevelMatch(c.level,kalLevel));
   const pills='<div class="kal-pills"><button class="kpill '+(kalClub==='alle'?'active':'')+'" onclick="setKalClub(\'alle\')">📅 Alle Clubs</button>'+
     kalClubs.map(c=>{const on=kalClub===c.slug; const col=c.color||'#2DD4BF';
@@ -705,7 +711,16 @@ async function loadKalender(){
   const satEnd=new Date(from); satEnd.setDate(satEnd.getDate()+5);
   const wc=`<div class="kal-week"><button onclick="kalWeekChange(-1)">←</button><span>${from.toLocaleDateString('de-DE',{day:'numeric',month:'short'})} – ${satEnd.toLocaleDateString('de-DE',{day:'numeric',month:'short',year:'numeric'})}</span><button onclick="kalWeekChange(1)">→</button></div>`;
   let grid;
-  if(!list.length){ grid='<div class="empty">In dieser Woche sind hier (noch) keine Stunden eingetragen.</div>'; }
+  if(!list.length){
+    const clubName=(kalClub==='alle')?'allen Clubs':((kalClubs.find(c=>c.slug===kalClub)||{}).name||'diesem Club');
+    if(kalLevel!=='alle' && clubCount>0){
+      grid=`<div class="empty">In <b>${esc(clubName)}</b> gibt es diese Woche keine Stunden auf Niveau <b>${kalLevel}</b>.<br><button class="kpill lvl" style="margin-top:10px" onclick="setKalLevel('alle')">Alle Niveaus anzeigen</button>${kalClub!=='alle'?` <button class="kpill" style="margin-top:10px" onclick="setKalClub('alle')">Alle Clubs anzeigen</button>`:''}</div>`;
+    } else if(kalClub!=='alle'){
+      grid=`<div class="empty">In <b>${esc(clubName)}</b> sind diese Woche keine Stunden eingetragen.<br><button class="kpill" style="margin-top:10px" onclick="setKalClub('alle')">Alle Clubs anzeigen</button></div>`;
+    } else {
+      grid='<div class="empty">In dieser Woche sind hier (noch) keine Stunden eingetragen.</div>';
+    }
+  }
   else{
     const days=[]; for(let i=0;i<7;i++){const d=new Date(from);d.setDate(d.getDate()+i);days.push(d);} // Mo–So
     const byDay={}; list.forEach(c=>{const k=new Date(c.starts_at).toDateString();(byDay[k]=byDay[k]||[]).push(c);});
@@ -730,12 +745,9 @@ function kalEv(c){
   else if(past){ btn=`<span class="ev-btn off">vorbei</span>`; }
   else if(free<=0){ btn=`<span class="ev-btn off">ausgebucht</span>`; }
   else{ btn=`<button class="ev-btn book" onclick="kalBook('${c.id}')">Buchen</button>`; }
-  const matBtn = (c.has_material && c.mine) ? `<button class="ev-btn mat" onclick="openClassMaterial('${c.id}')">📚 Material ansehen</button>` : '';
-  const fmt = (c.club==='sprechclub' && c.title) ? esc(c.title) : '';
   const titleLine = esc(c.topic || c.title);
   const lvlBadge = `<span class="ev-lvl" style="border:1.5px solid ${lc};color:${lc}">${esc(c.level)}</span>`;
-  const meta = (fmt?fmt+(c.teacher_name?' · ':''):'')+(c.teacher_name?esc(c.teacher_name):'');
-  return `<div class="ev" style="--c:${color};background:${color}14"><div class="ev-top"><span class="ev-time">${fmtTimeK(start)}</span><span class="ev-club" style="background:${color}">${esc(c.club_name||'')}</span></div><div class="ev-title">${titleLine}</div><div class="ev-lvlrow">${lvlBadge}${meta?`<span class="ev-meta">${meta}</span>`:''}</div>${btn}${matBtn}</div>`;
+  return `<div class="ev" style="--c:${color};background:${color}14"><div class="ev-top"><span class="ev-time">${fmtTimeK(start)}</span><span class="ev-club" style="background:${color}">${esc(c.club_name||'')}</span></div><div class="ev-title">${titleLine}</div><div class="ev-lvlrow">${lvlBadge}</div>${btn}</div>`;
 }
 async function openClassMaterial(classId){
   if(!isActive()){ toast('Material gibt es mit aktivem Guthaben — ich bring dich zu den Paketen 😊'); setTimeout(()=>{ location.href='live.html#pakete'; }, 900); return; }
@@ -800,7 +812,7 @@ async function doBook(id){
   }catch(e){}
   document.getElementById('cfmCard').innerHTML=`<div class="ico">✅</div>
     <h3>Unterricht gebucht!</h3>
-    <p class="hint">Schön, dass du dabei bist! Du bekommst gleich eine Bestätigung per E-Mail. Den Meet-Link findest du jederzeit unter „Meine Stunden".</p>
+    <p class="hint">Schön, dass du dabei bist! Du bekommst gleich eine Bestätigung per E-Mail. Den Link zum Klassenzimmer findest du unter „Meine Stunden" direkt bei der Buchung deines Unterrichts.</p>
     <div class="acts"><button class="btn btn-primary" onclick="closeCfm()" style="flex:1">Super, weiter 🎉</button></div>`;
   await load(); loadKalender();
 }

@@ -350,8 +350,8 @@ function evCard(c){
   else { btn = `<button class="ev-btn book" onclick="book('${c.id}')">Buchen · ${free} frei</button>`; }
   return `<div class="ev" style="--c:${color};background:${color}14">
     <div class="ev-top"><span class="ev-time">${fmtTime(start)}</span><span class="ev-club" style="background:${color}">${c.club_name||''}</span></div>
-    <div class="ev-title">${c.title}</div>
-    <div class="ev-lvlrow"><span class="ev-lvl" style="border:1.5px solid ${lc};color:${lc}">${c.level}</span><span class="ev-meta">${c.teacher_name?c.teacher_name:''}${c.has_material?' · 📚':''}</span></div>
+    <div class="ev-title">${c.topic || c.title}</div>
+    <div class="ev-lvlrow"><span class="ev-lvl" style="border:1.5px solid ${lc};color:${lc}">${c.level}</span></div>
     ${btn}</div>`;
 }
 function renderSchedule(weekStart){
@@ -416,7 +416,7 @@ async function book(id){
     const msgs = { booking_paused:'⏸️ Die Buchung läuft aktuell noch über TutorBird — bitte buche dort. Danke! 🙏', class_full:'Diese Stunde ist leider voll.', no_credits:'Kein Guthaben mehr.', already_booked:'Schon gebucht!', class_in_past:'Diese Stunde ist vorbei.' };
     return toast(msgs[data?.error] || 'Buchung fehlgeschlagen.');
   }
-  credits--; myBooked.add(id); loadWeek(); toast('Gebucht! Den Meet-Link findest du in deinem Bereich.');
+  credits--; myBooked.add(id); loadWeek(); toast('Gebucht! Den Link zum Klassenzimmer findest du unter „Meine Stunden" direkt bei deiner Buchung.');
   try { const { data:{ session } } = await sb.auth.getSession();
     if (session) fetch('/api/notify-booking', { method:'POST', headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+session.access_token }, body: JSON.stringify({ class_id: id }) }).catch(()=>{}); } catch(e){}
 }
