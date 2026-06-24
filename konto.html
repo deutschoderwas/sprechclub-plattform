@@ -747,7 +747,9 @@ function kalEv(c){
   else{ btn=`<button class="ev-btn book" onclick="kalBook('${c.id}')">Buchen</button>`; }
   const titleLine = esc(c.topic || c.title);
   const lvlBadge = `<span class="ev-lvl" style="border:1.5px solid ${lc};color:${lc}">${esc(c.level)}</span>`;
-  return `<div class="ev" style="--c:${color};background:${color}14"><div class="ev-top"><span class="ev-time">${fmtTimeK(start)}</span><span class="ev-club" style="background:${color}">${esc(c.club_name||'')}</span></div><div class="ev-title">${titleLine}</div><div class="ev-lvlrow">${lvlBadge}</div>${btn}</div>`;
+  // Nur für gebuchte Stunden: Material/Präsentation des Unterrichts (erscheint, sobald Material hinterlegt ist)
+  const matBtn = (c.mine && c.has_material) ? `<button class="ev-btn mat" onclick="openClassMaterial('${c.id}')">📚 Material des Unterrichts</button>` : '';
+  return `<div class="ev" style="--c:${color};background:${color}14"><div class="ev-top"><span class="ev-time">${fmtTimeK(start)}</span><span class="ev-club" style="background:${color}">${esc(c.club_name||'')}</span></div><div class="ev-title">${titleLine}</div><div class="ev-lvlrow">${lvlBadge}</div>${btn}${matBtn}</div>`;
 }
 async function openClassMaterial(classId){
   if(!isActive()){ toast('Material gibt es mit aktivem Guthaben — ich bring dich zu den Paketen 😊'); setTimeout(()=>{ location.href='live.html#pakete'; }, 900); return; }
