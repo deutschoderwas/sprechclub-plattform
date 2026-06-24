@@ -107,8 +107,9 @@ footer a{color:var(--accent);text-decoration:none}
 .cal-legend{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin:0 0 18px}
 .cal-legend .lg{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--text-soft)}
 .cal-legend .dot{width:12px;height:12px;border-radius:4px;display:inline-block}
-.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(168px,1fr));gap:10px;overflow-x:auto;padding-bottom:6px}
-.cal-day{background:#fff;border:1px solid var(--border);border-radius:14px;padding:8px;display:flex;flex-direction:column;gap:8px}
+#stundenplan{max-width:1240px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;align-items:start;padding-bottom:6px}
+.cal-day{background:#fff;border:1px solid var(--border);border-radius:14px;padding:8px;display:flex;flex-direction:column;gap:8px;min-width:0;box-shadow:0 4px 14px rgba(0,0,0,.05)}
 .cal-dayhead{text-align:center;padding:6px 0;border-bottom:1px solid var(--border)}
 .cal-dayhead b{display:block;font-family:'Space Grotesk',sans-serif;font-size:15px;text-transform:capitalize}
 .cal-dayhead span{font-size:12px;color:var(--text-soft)}
@@ -121,13 +122,17 @@ footer a{color:var(--accent);text-decoration:none}
 .ev-club{font-size:9px;font-weight:800;letter-spacing:.3px;color:#fff;padding:2px 7px;border-radius:20px;text-transform:uppercase;white-space:nowrap;text-shadow:0 1px 1px rgba(0,0,0,.28)}
 .ev-title{font-size:13px;font-weight:700;line-height:1.2}
 .ev-meta{font-size:11.5px;color:var(--text-soft)}
+.ev-lvlrow{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.ev-lvl{font-size:10px;font-weight:800;letter-spacing:.3px;padding:1px 7px;border-radius:20px;background:#fff;white-space:nowrap}
 .ev-btn{margin-top:2px;border:none;border-radius:20px;padding:7px 10px;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;text-align:center;text-decoration:none;display:block}
 .ev-btn.book{background:var(--secondary);color:#fff}
 .ev-btn.book:hover{background:#000}
 .ev-btn.meet{background:var(--turquoise);color:#fff}
 .ev-btn.mine{background:#e8f9f5;color:var(--turquoise);font-weight:800}
 .ev-btn.off{background:#f1f1f1;color:#aaa}
-@media(max-width:820px){.cal-grid{grid-template-columns:1fr;overflow-x:visible}.cal-empty{display:none}.cal-day:has(.cal-empty){display:none}}
+@media(max-width:1100px){.cal-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:680px){.cal-grid{grid-template-columns:repeat(2,1fr);gap:8px}}
+@media(max-width:400px){.cal-grid{grid-template-columns:1fr}.cal-empty{display:none}.cal-day:not(:has(.ev)){display:none}}
 </style>
 <link rel="stylesheet" href="club-theme.css">
 </head>
@@ -231,7 +236,7 @@ footer a{color:var(--accent);text-decoration:none}
 <script>
 const CFG = window.SPRECHCLUB_CONFIG;
 let sb = null, user = null, credits = 0, weekOffset = 0, levelSel = 'alle';
-let classes = [], availability = {}, myBooked = new Set();
+let classes = [], availability = {}, myBooked = new Set(), curWeekStart = null;
 let clubSlug = (new URLSearchParams(location.search).get('club') || 'sprechclub').toLowerCase();
 let clubs = [];
 
@@ -265,6 +270,17 @@ async function loadClubs(){
   document.getElementById('clubDesc').textContent = cur.description || '';
   document.getElementById('crumbClub').textContent = cur.name;
   document.title = cur.name + ' — deutschoderwas club';
+  // Pro Bereich ein eigenes Hero-Bild (Videokonferenz-Szene)
+  const HERO_IMG = {
+    alle: 'https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260615_065650_76f1adf9-3fc1-4556-99ff-0170aa06fbf5.png',
+    sprechclub: 'https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260624_065003_b1905aea-da19-4cda-8f7e-b3b4f29c53de.png',
+    grammatikclub: 'https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260624_065005_91566839-cc3f-4daf-b2d5-2f889cee50e3.png',
+    wortschatzclub: 'https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260624_065007_a1f289c9-31ff-430f-9700-30eb053321e1.png',
+    ausspracheclub: 'https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260624_065530_4759946b-cd3b-4589-af9d-6c85775a6531.png',
+    sprachspielclub: 'https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260624_065011_9b236eba-a167-4eeb-83fa-aa490129943b.png'
+  };
+  const heroEl = document.querySelector('.hero-img');
+  if (heroEl) heroEl.src = HERO_IMG[clubSlug] || HERO_IMG.alle;
   const pills = [`<a class="clubpill ${clubSlug==='alle'?'active':''}" href="live.html?club=alle">📅 Alle Clubs</a>`]
     .concat(clubs.map(c=>`<a class="clubpill ${c.slug===clubSlug?'active':''}" href="live.html?club=${c.slug}"><span class="em">${c.emoji||''}</span>${c.name}</a>`));
   document.getElementById('clubbar').innerHTML = pills.join('');
@@ -282,10 +298,12 @@ async function onLogin(u){
 
 async function loadWeek(){
   const from = startOfWeek(new Date(), weekOffset);
+  curWeekStart = from;
   const to = new Date(from); to.setDate(to.getDate()+7);
+  const satEnd = new Date(from); satEnd.setDate(satEnd.getDate()+5);
   document.getElementById('weekLabel').textContent =
     from.toLocaleDateString('de-DE',{day:'numeric',month:'short'}) + ' – ' +
-    new Date(to-1).toLocaleDateString('de-DE',{day:'numeric',month:'short',year:'numeric'});
+    satEnd.toLocaleDateString('de-DE',{day:'numeric',month:'short',year:'numeric'});
   const { data } = await sb.rpc('week_classes', { p_from: from.toISOString(), p_to: to.toISOString() });
   let all = data || [];
   classes = (clubSlug==='alle') ? all : all.filter(c=>c.club===clubSlug);
@@ -295,15 +313,30 @@ async function loadWeek(){
 function changeWeek(d){ weekOffset += d; if (weekOffset<0) weekOffset=0; loadWeek(); }
 
 function renderFilter(){
-  const levels = ['alle', ...new Set(classes.map(c=>c.level))];
+  const levels = ['alle','A2','B1','B2','C1'];
   document.getElementById('levelFilter').innerHTML = levels.map(l=>
     `<button class="${l===levelSel?'active':''}" onclick="levelSel='${l}';renderFilter();renderSchedule()">${l==='alle'?'Alle Niveaus':l}</button>`).join('');
 }
+function levelMatch(classLevel,filter){
+  if(filter==='alle') return true;
+  const L=String(classLevel||'');
+  let cb;
+  if(/ab\s*A2/i.test(L)) cb=['A2','B1','B2','C1'];
+  else if(/ab\s*B1/i.test(L)) cb=['B1','B2','C1'];
+  else if(/A2\s*\/\s*B1/i.test(L)) cb=['A2','B1'];
+  else if(/B1\s*\/\s*B2/i.test(L)) cb=['B1','B2'];
+  else if(/B2\s*\/\s*C1/i.test(L)) cb=['B2','C1'];
+  else { const m=L.match(/[ABC][12]/); cb=m?[m[0]]:[]; }
+  return cb.includes(filter);
+}
+const LVLC={'A2':'#B45309','A2/B1':'#15803D','B1':'#1D4ED8','B1/B2':'#1D4ED8','B2':'#7C3AED','B2/C1':'#7C3AED','C1':'#BE185D','ab A2':'#B45309','ab B1':'#BE185D','ab B2':'#7C3AED'};
+function lvlColor(l){ return LVLC[l]||'#6B7280'; }
 function evCard(c){
   const start = new Date(c.starts_at);
   const free = c.capacity - (c.booked||0);
   const past = start < new Date();
   const color = c.club_color || '#2DD4BF';
+  const lc = lvlColor(c.level);
   let btn;
   if (c.mine){
     btn = c.zoom_link
@@ -312,15 +345,16 @@ function evCard(c){
   } else if (past){ btn = `<span class="ev-btn off">vorbei</span>`; }
   else if (free<=0){ btn = `<span class="ev-btn off">ausgebucht</span>`; }
   else { btn = `<button class="ev-btn book" onclick="book('${c.id}')">Buchen · ${free} frei</button>`; }
-  return `<div class="ev" style="--c:${color}">
+  return `<div class="ev" style="--c:${color};background:${color}14">
     <div class="ev-top"><span class="ev-time">${fmtTime(start)}</span><span class="ev-club" style="background:${color}">${c.club_name||''}</span></div>
     <div class="ev-title">${c.title}</div>
-    <div class="ev-meta">${c.level}${c.teacher_name?' · '+c.teacher_name:''}${c.has_material?' · 📚':''}</div>
+    <div class="ev-lvlrow"><span class="ev-lvl" style="border:1.5px solid ${lc};color:${lc}">${c.level}</span><span class="ev-meta">${c.teacher_name?c.teacher_name:''}${c.has_material?' · 📚':''}</span></div>
     ${btn}</div>`;
 }
 function renderSchedule(weekStart){
+  weekStart = weekStart || curWeekStart || startOfWeek(new Date(), weekOffset);
   const el = document.getElementById('schedule');
-  const list = classes.filter(c=> levelSel==='alle' || c.level===levelSel);
+  const list = classes.filter(c=> levelSel==='alle' || levelMatch(c.level,levelSel));
   let legend = '';
   if (clubSlug==='alle'){
     legend = '<div class="cal-legend">' + clubs.map(c=>
@@ -330,7 +364,7 @@ function renderSchedule(weekStart){
     el.innerHTML = legend + '<div class="empty-note">In dieser Woche sind hier (noch) keine Stunden eingetragen.</div>';
     return;
   }
-  const days = []; for (let i=0;i<7;i++){ const d=new Date(weekStart); d.setDate(d.getDate()+i); days.push(d); }
+  const days = []; for (let i=0;i<7;i++){ const d=new Date(weekStart); d.setDate(d.getDate()+i); days.push(d); } // Mo–So
   const byDay = {};
   list.forEach(c=>{ const k=new Date(c.starts_at).toDateString(); (byDay[k]=byDay[k]||[]).push(c); });
   const today = new Date().toDateString();
