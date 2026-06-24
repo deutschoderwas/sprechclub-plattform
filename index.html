@@ -275,6 +275,7 @@ footer .small{color:#9a9a9a;font-size:13px;margin-top:10px}
     <a class="link" href="#niveautest">Niveau-Test</a>
     <a class="link" href="#clubs">Clubs</a>
     <a class="link" href="#challenge">Challenge</a>
+    <a class="link" href="#stundenplan">Stundenplan</a>
     <a class="link" href="#preise">Preise</a>
     <a class="link" href="#kurse">Kurse</a>
     <a class="link" href="https://deutschoderwas.de" target="_blank" rel="noopener">Hauptseite</a>
@@ -576,6 +577,43 @@ footer .small{color:#9a9a9a;font-size:13px;margin-top:10px}
 </section>
 
 <!-- PREISE -->
+<!-- ===== ÖFFENTLICHER STUNDENPLAN ===== -->
+<section id="stundenplan" style="max-width:1180px;margin:0 auto;padding:56px 18px 8px">
+  <style>
+    #stundenplan .sp-head{text-align:center}
+    #stundenplan h2{font-size:clamp(26px,4vw,38px);font-weight:800;color:#1A1A1A;margin:0}
+    #stundenplan .sp-sub{color:#6B7280;max-width:600px;margin:8px auto 18px}
+    #stundenplan .sp-filters{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-bottom:8px}
+    #stundenplan .sp-pill{border:2px solid #F0E5D8;background:#fff;border-radius:30px;padding:7px 14px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;color:#1A1A1A}
+    #stundenplan .sp-pill.active{background:#1A1A1A;color:#fff;border-color:#1A1A1A}
+    #stundenplan .sp-week{display:flex;align-items:center;justify-content:center;gap:14px;margin:14px 0;font-weight:700;color:#1A1A1A}
+    #stundenplan .sp-week button{border:2px solid #F0E5D8;background:#fff;border-radius:50%;width:38px;height:38px;font-size:16px;cursor:pointer}
+    #stundenplan .sp-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;align-items:start}
+    #stundenplan .sp-col{background:#fff;border:1px solid #F0E5D8;border-radius:16px;padding:8px;min-width:0}
+    #stundenplan .sp-colhead{text-align:center;padding:4px 2px 8px;border-bottom:1px solid #F0E5D8;margin-bottom:6px}
+    #stundenplan .sp-colhead b{display:block;font-size:14px;text-transform:capitalize;color:#1A1A1A}
+    #stundenplan .sp-colhead span{font-size:12px;color:#6B7280}
+    #stundenplan .sp-ev{border:1px solid #F0E5D8;border-left:4px solid var(--c,#2DD4BF);background:#FFFCF5;border-radius:12px;padding:8px 9px;margin-bottom:7px}
+    #stundenplan .sp-time{font-weight:800;font-size:13px;color:#1A1A1A}
+    #stundenplan .sp-title{font-weight:700;font-size:14px;margin:3px 0 5px;color:#1A1A1A;line-height:1.25}
+    #stundenplan .sp-lvl{display:inline-block;font-size:11px;font-weight:800;color:#fff;border-radius:20px;padding:2px 8px}
+    #stundenplan .sp-book{display:block;width:100%;margin-top:8px;background:#DD0000;color:#fff;border:none;border-radius:30px;padding:8px;font-weight:800;font-size:13px;cursor:pointer;font-family:inherit;text-align:center;text-decoration:none;box-sizing:border-box}
+    #stundenplan .sp-full{display:block;text-align:center;margin-top:8px;color:#9CA3AF;font-weight:800;font-size:13px}
+    #stundenplan .sp-empty{font-size:12px;color:#C9BCA9;text-align:center;padding:6px}
+    @media(max-width:1000px){#stundenplan .sp-grid{grid-template-columns:repeat(3,1fr)}}
+    @media(max-width:640px){#stundenplan .sp-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:420px){#stundenplan .sp-grid{grid-template-columns:1fr}}
+  </style>
+  <div class="sp-head">
+    <h2>Unser <span style="color:#DD0000">Stundenplan</span></h2>
+    <p class="sp-sub">Sprechen, Grammatik, Wortschatz, Aussprache & freies Sprechen – von A2 bis C1. Wähl dein Niveau und finde deine Stunde.</p>
+  </div>
+  <div id="sp-bereich" class="sp-filters"></div>
+  <div id="sp-niveau" class="sp-filters"></div>
+  <div id="sp-week" class="sp-week"></div>
+  <div id="sp-grid"></div>
+</section>
+
 <section class="pricing" id="preise">
   <div class="wrap">
     <div class="section-head">
@@ -764,6 +802,36 @@ footer .small{color:#9a9a9a;font-size:13px;margin-top:10px}
 </div>
 <div class="toast" id="toast"></div>
 
+<!-- ===== POPUP: 8-Wochen-Sprech-Challenge ===== -->
+<div id="challPopupBg" style="position:fixed;inset:0;z-index:4000;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(20,15,8,.6)">
+  <div role="dialog" aria-label="8-Wochen-Sprech-Challenge" style="position:relative;width:100%;max-width:440px;background:#FFFCF5;border-radius:24px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.35);font-family:inherit">
+    <button onclick="closeChallPopup()" aria-label="Schließen" style="position:absolute;top:10px;right:10px;width:36px;height:36px;border:none;border-radius:50%;background:#fff;box-shadow:0 4px 12px rgba(0,0,0,.18);font-size:18px;cursor:pointer;color:#1A1A1A;z-index:2">✕</button>
+    <div style="height:6px;background:#1A1A1A"></div><div style="height:6px;background:#DD0000"></div><div style="height:6px;background:#FFCE00"></div>
+    <div style="padding:30px 28px 26px;text-align:center">
+      <div style="font-size:46px;line-height:1">🔥</div>
+      <div style="font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#DD0000;margin-top:6px">Nur 25 Plätze</div>
+      <h3 style="font-size:24px;font-weight:800;color:#1A1A1A;margin:8px 0 6px;line-height:1.15">Die 8-Wochen-<br>Sprech-Challenge</h3>
+      <p style="font-size:15px;line-height:1.6;color:#5C4E3E;margin:0 auto 16px;max-width:330px">8 Wochen · 30 Live-Stunden in kleinen Gruppen · und am Ende sprichst du endlich <b>frei – ohne Angst</b>.</p>
+      <div style="background:#FFF1C2;border-radius:14px;padding:12px 14px;font-size:14px;font-weight:700;color:#1A1A1A;margin-bottom:18px">🎉 Durchgezogen? <span style="color:#DD0000">8 Gratisstunden oder 100 € Cashback</span></div>
+      <a href="https://8-wochen-sprech-challenge.deutschoderwas-lernen.de/" target="_blank" rel="noopener" onclick="closeChallPopup()" style="display:block;background:#DD0000;color:#fff;font-weight:800;font-size:16px;text-decoration:none;padding:15px 22px;border-radius:50px;box-shadow:0 8px 20px rgba(221,0,0,.3)">Jetzt Platz sichern →</a>
+      <button onclick="closeChallPopup()" style="margin-top:12px;background:none;border:none;color:#A8957D;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">Vielleicht später</button>
+    </div>
+  </div>
+</div>
+<script>
+  function closeChallPopup(){ var el=document.getElementById('challPopupBg'); if(el) el.style.display='none'; }
+  (function(){
+    try{ if(sessionStorage.getItem('dow_chall_popup')) return; }catch(e){}
+    function open(){ var el=document.getElementById('challPopupBg'); if(!el) return; el.style.display='flex';
+      try{ sessionStorage.setItem('dow_chall_popup','1'); }catch(e){}
+      el.addEventListener('click', function(ev){ if(ev.target===el) closeChallPopup(); });
+      document.addEventListener('keydown', function(ev){ if(ev.key==='Escape') closeChallPopup(); });
+    }
+    if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', function(){ setTimeout(open,1400); });
+    else setTimeout(open,1400);
+  })();
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="config.js"></script>
 <script>
@@ -911,5 +979,55 @@ initHome();
 <!-- Teste dein Deutschniveau -->
 <script src="niveautest-data.js"></script>
 <script src="niveautest.js"></script>
+
+<!-- ===== Öffentlicher Stundenplan (Kalender) ===== -->
+<script>
+(function(){
+  var CFG=window.SPRECHCLUB_CONFIG; if(!CFG||!window.supabase) return;
+  var sbp=window.supabase.createClient(CFG.SUPABASE_URL,CFG.SUPABASE_ANON_KEY);
+  var LVLC={'A2/B1':'#15803D','B1/B2':'#0891B2','B2/C1':'#7C3AED','ab A2':'#B45309','ab B1':'#BE185D','ab B2':'#9333EA'};
+  var CLUBS={sprechclub:'Sprechclub',grammatikclub:'Grammatik',wortschatzclub:'Wortschatzboost',ausspracheclub:'Aussprache',sprachspielclub:'Sprachspiele'};
+  var fB='alle', fN='alle', week=0, cache=null;
+  function esc(s){return String(s==null?'':s).replace(/[<>&]/g,function(c){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[c];});}
+  function sow(off){var x=new Date();var day=(x.getDay()+6)%7;x.setDate(x.getDate()-day+off*7);x.setHours(0,0,0,0);return x;}
+  function ev(c){
+    var t=new Date(c.starts_at); var lc=LVLC[c.level]||'#6B7280'; var full=(c.booked||0)>=c.capacity;
+    var time=t.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
+    var action= full ? '<span class="sp-full">🔒 Ausgebucht</span>' : '<a class="sp-book" href="#preise" onclick="window.__spBook&&window.__spBook()">Buchen</a>';
+    return '<div class="sp-ev" style="--c:'+lc+'"><span class="sp-time">'+time+'</span><div class="sp-title">'+esc(c.title)+'</div><span class="sp-lvl" style="background:'+lc+'">'+esc(c.level)+'</span>'+action+'</div>';
+  }
+  function render(){
+    var from=sow(week), to=new Date(from); to.setDate(to.getDate()+7);
+    var list=(cache||[]).filter(function(c){var t=new Date(c.starts_at);return t>=from&&t<to;});
+    if(fB!=='alle') list=list.filter(function(c){return c.club===fB;});
+    if(fN!=='alle') list=list.filter(function(c){return (c.level||'').indexOf(fN)>=0;});
+    var bh='<button class="sp-pill '+(fB==='alle'?'active':'')+'" onclick="window.__spB(\'alle\')">Alle Bereiche</button>';
+    Object.keys(CLUBS).forEach(function(k){bh+='<button class="sp-pill '+(fB===k?'active':'')+'" onclick="window.__spB(\''+k+'\')">'+CLUBS[k]+'</button>';});
+    document.getElementById('sp-bereich').innerHTML=bh;
+    var NIV=['alle','A2','B1','B2','C1'];
+    document.getElementById('sp-niveau').innerHTML=NIV.map(function(l){return '<button class="sp-pill '+(fN===l?'active':'')+'" onclick="window.__spN(\''+l+'\')">'+(l==='alle'?'Alle Niveaus':l)+'</button>';}).join('');
+    var sE=new Date(from); sE.setDate(sE.getDate()+6);
+    document.getElementById('sp-week').innerHTML='<button onclick="window.__spW(-1)" aria-label="vorige Woche">←</button><span>'+from.toLocaleDateString('de-DE',{day:'numeric',month:'short'})+' – '+sE.toLocaleDateString('de-DE',{day:'numeric',month:'short',year:'numeric'})+'</span><button onclick="window.__spW(1)" aria-label="nächste Woche">→</button>';
+    var grid;
+    if(!list.length){ grid='<div class="sp-empty" style="padding:30px">In dieser Woche gibt es hier keine Stunden – wähl eine andere Woche oder einen anderen Filter.</div>'; }
+    else{
+      var days=[];for(var i=0;i<7;i++){var d=new Date(from);d.setDate(d.getDate()+i);days.push(d);}
+      var byDay={}; list.forEach(function(c){var k=new Date(c.starts_at).toDateString();(byDay[k]=byDay[k]||[]).push(c);});
+      grid='<div class="sp-grid">'+days.map(function(d){
+        var arr=(byDay[d.toDateString()]||[]).sort(function(a,b){return new Date(a.starts_at)-new Date(b.starts_at);});
+        var head='<div class="sp-colhead"><b>'+d.toLocaleDateString('de-DE',{weekday:'long'})+'</b><span>'+d.toLocaleDateString('de-DE',{day:'numeric',month:'short'})+'</span></div>';
+        return '<div class="sp-col">'+head+(arr.length?arr.map(ev).join(''):'<div class="sp-empty">–</div>')+'</div>';
+      }).join('')+'</div>';
+    }
+    document.getElementById('sp-grid').innerHTML=grid;
+  }
+  window.__spB=function(k){fB=k;render();};
+  window.__spN=function(l){fN=l;render();};
+  window.__spW=function(n){week+=n;render();};
+  window.__spBook=function(){ try{ if(typeof toast==='function') toast('Wähle zuerst dein Stundenpaket – danach buchst du im Schülerbereich. 😊'); }catch(e){} };
+  async function load(){ try{ var r=await sbp.from('public_schedule').select('*'); cache=r.data||[]; }catch(e){ cache=[]; } render(); }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',load); else load();
+})();
+</script>
 </body>
 </html>
