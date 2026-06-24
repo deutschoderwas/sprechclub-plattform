@@ -460,6 +460,11 @@ async function assignTeacher(id,val){
   loadPlan();
 }
 
+let KL_ALL=[], KL_PARTS={}, klTeacher=null, klClub='', klLevel='';
+function clubLabel(slug){ const m={sprechclub:'🗣️ Sprechclub',grammatikclub:'📐 Grammatikclub',wortschatzclub:'📚 Wortschatzclub',ausspracheclub:'🎧 Ausspracheclub',sprachspielclub:'🎲 Sprachspiele'}; return m[slug]||slug; }
+function klFilterChange(){ klTeacher=document.getElementById('klTeacher').value; klClub=document.getElementById('klClub').value; klLevel=document.getElementById('klLevel').value; renderKlassen(); }
+function klReset(){ klTeacher=''; klClub=''; klLevel=''; renderKlassen(); }
+
 async function loadKlassen(){
   const from = new Date(); from.setHours(0,0,0,0);
   const to = new Date(from); to.setDate(to.getDate()+14);
@@ -473,24 +478,65 @@ async function loadKlassen(){
     const matSet = new Set((mats||[]).map(m=>m.class_id));
     (cls||[]).forEach(c=>{ c._hasMat = matSet.has(c.id); });
   }
-  // Nach Tag gruppieren (Kalender-Gefühl, lokale Zeit Europe/Berlin)
+  KL_ALL = cls||[]; KL_PARTS = parts;
+  // Standard: Lehrkräfte sehen sofort NUR ihre eigenen Stunden
+  if (klTeacher===null) klTeacher = (!isAdminUser && myTeacherId) ? myTeacherId : '';
+  renderKlassen();
+}
+
+function renderKlassen(){
+  const cls = KL_ALL, parts = KL_PARTS;
+  // Filter anwenden
+  let view = cls.filter(c=>{
+    if (klTeacher==='__none__'){ if (c.teacher_id) return false; }
+    else if (klTeacher){ if (c.teacher_id!==klTeacher) return false; }
+    if (klClub && c.club!==klClub) return false;
+    if (klLevel && c.level!==klLevel) return false;
+    return true;
+  });
+  // Filter-Leiste aufbauen
+  const levels = [...new Set(cls.map(c=>c.level))].sort();
+  const clubs = [...new Set(cls.map(c=>c.club))];
+  const teacherOpts = `<option value="">Alle Lehrer</option>`
+    + TEACHERS.filter(t=>t.active||t.id===klTeacher).map(t=>`<option value="${t.id}" ${t.id===klTeacher?'selected':''}>${esc(t.name)}</option>`).join('')
+    + `<option value="__none__" ${klTeacher==='__none__'?'selected':''}>⚠️ Ohne Lehrer</option>`;
+  const clubOpts = `<option value="">Alle Bereiche</option>` + clubs.map(s=>`<option value="${s}" ${s===klClub?'selected':''}>${clubLabel(s)}</option>`).join('');
+  const levelOpts = `<option value="">Alle Niveaus</option>` + levels.map(l=>`<option value="${l}" ${l===klLevel?'selected':''}>${esc(l)}</option>`).join('');
+  const noTeach = cls.filter(c=>!c.teacher_id).length;
+  const filterBar = `<div class="card" style="background:#FFFCF5;display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px">
+    <b style="white-space:nowrap">📅 Wer hat wann Unterricht?</b>
+    <select id="klTeacher" onchange="klFilterChange()" style="min-width:150px">${teacherOpts}</select>
+    <select id="klClub" onchange="klFilterChange()">${clubOpts}</select>
+    <select id="klLevel" onchange="klFilterChange()">${levelOpts}</select>
+    <button class="btn btn-ghost" onclick="klReset()">↺ Alle anzeigen</button>
+    <span class="muted" style="margin-left:auto">${view.length} Stunde${view.length===1?'':'n'}${noTeach?` · ⚠️ ${noTeach} ohne Lehrer`:''}</span>
+  </div>`;
+
   const keyFmt = new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Berlin'});
   const dayFmt = new Intl.DateTimeFormat('de-DE',{timeZone:'Europe/Berlin',weekday:'long',day:'numeric',month:'long'});
   const timeFmt = new Intl.DateTimeFormat('de-DE',{timeZone:'Europe/Berlin',hour:'2-digit',minute:'2-digit'});
   const byDay = {};
-  (cls||[]).forEach(c=>{ const k=keyFmt.format(new Date(c.starts_at)); (byDay[k]=byDay[k]||[]).push(c); });
+  view.forEach(c=>{ const k=keyFmt.format(new Date(c.starts_at)); (byDay[k]=byDay[k]||[]).push(c); });
   const dayKeys = Object.keys(byDay).sort();
   const cardHtml = (c)=>{
     const p = parts[c.id]||[];
     const lc = LEVEL_COLOR[c.level]||'#6B7280';
     const full = p.length >= c.capacity;
     return `<div class="card" style="border-left:5px solid ${lc}">
-      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:flex-start">
-        <div><b class="title">${timeFmt.format(new Date(c.starts_at))} — ${esc(c.title)}</b>
-        <span class="pill" style="background:${lc};color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.25)">${esc(c.level)}</span>
-        ${c.teacher_id?`<span class="tchip"><i style="background:${teacherColor(c.teacher_id)}"></i>👩‍🏫 ${esc(teacherName(c.teacher_id))}</span>`:'<span class="pill" style="background:#FCE5E3;color:#c00">⚠️ Lehrer fehlt</span>'}
-        ${c.topic?`<div class="muted" style="margin-top:3px">${esc(c.topic)}</div>`:''}</div>
-        ${full?'<span class="pill" style="background:#DD0000;color:#fff">🔒 Ausgebucht</span>':`<span class="muted" style="white-space:nowrap">👥 ${p.length} gebucht</span>`}
+      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;align-items:flex-start">
+        <div style="min-width:200px">
+          <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+            <b class="title" style="font-size:19px">${timeFmt.format(new Date(c.starts_at))}</b>
+            <span style="font-size:16px;font-weight:700">${esc(c.title)}</span>
+          </div>
+          <div style="margin-top:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            ${c.teacher_id?`<span class="tchip" style="font-weight:700"><i style="background:${teacherColor(c.teacher_id)}"></i>👩‍🏫 ${esc(teacherName(c.teacher_id))}</span>`:'<span class="pill" style="background:#FCE5E3;color:#c00;font-weight:700">⚠️ Lehrer fehlt</span>'}
+            <span class="pill" style="background:#fff;border:1.5px solid ${lc};color:${lc};font-weight:700">${esc(c.level)}</span>
+            <span class="pill" style="background:var(--bg);color:#555">${clubLabel(c.club)}</span>
+          </div>
+          ${c.topic?`<div class="muted" style="margin-top:5px">📖 ${esc(c.topic)}</div>`:''}
+        </div>
+        ${full?'<span class="pill" style="background:#DD0000;color:#fff;white-space:nowrap">🔒 Ausgebucht</span>':`<span class="muted" style="white-space:nowrap">👥 ${p.length} gebucht</span>`}
       </div>
       ${p.length?'<div style="margin-top:8px">'+p.map(x=>`<div class="tn">👤 ${esc(x.name||'')} <span class="muted">${esc(x.email)}</span></div>`).join('')+'</div>':''}
       <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
@@ -519,10 +565,11 @@ async function loadKlassen(){
       </div>
     </div>`;
   };
-  document.getElementById('klassen').innerHTML = dayKeys.length
+  const list = dayKeys.length
     ? dayKeys.map(k=>`<h3 style="margin:20px 0 8px;font-family:'Space Grotesk',sans-serif;font-size:17px">📅 ${dayFmt.format(new Date(byDay[k][0].starts_at))}</h3>`
         + byDay[k].map(cardHtml).join('')).join('')
-    : '<div class="card muted">Keine Stunden in den nächsten 14 Tagen.</div>';
+    : `<div class="card muted">Keine Stunden für diese Auswahl in den nächsten 14 Tagen.${(klTeacher||klClub||klLevel)?' <a href="#" onclick="klReset();return false" style="color:var(--primary)">Filter zurücksetzen</a>':''}</div>`;
+  document.getElementById('klassen').innerHTML = filterBar + list;
 }
 
 async function cancelClass(id){
@@ -683,7 +730,7 @@ function bdayLabel(p){ if(!p.birthday) return '<span class="muted">–</span>'; 
 async function authToken(){ const { data } = await sb.auth.getSession(); return data?.session?.access_token || ''; }
 
 async function loadSchueler(){
-  const { data } = await sb.from('profiles').select('id,name,email,credits,status,birthday,inactive_until,is_admin,is_teacher').limit(2000);
+  const { data } = await sb.from('profiles').select('id,name,email,credits,status,birthday,inactive_until,level,notes,started_at,target_level,native_language,goal,is_admin,is_teacher').limit(2000);
   SCHUELER = data || [];
   document.getElementById('schueler').innerHTML = `
     <div class="card" style="margin-bottom:16px;background:#FFFCF5">
@@ -744,26 +791,114 @@ function renderSchuelerTable(){
   if (info) info.textContent = `${rows.length} von ${SCHUELER.length} · ${low} mit ≤ 1 Stunde${bdayToday?` · 🎂 ${bdayToday} heute Geburtstag`:''}`;
   const byName = (mode==='name');
   let lastLetter = '';
+  const statusLabel = (st)=>{ const o=STATUS_OPT.find(x=>x[0]===st)||STATUS_OPT[0]; return `<span class="pill" style="background:${STATUS_BG[st]||'#eee'};color:#1A1A1A;font-weight:700">${o[1]}</span>`; };
   const rowsHtml = rows.map(p=>{
     const st = p.status||'aktiv';
     const staff = p.is_admin||p.is_teacher;
     let head = '';
     if (byName){
       const L = (nameKey(p)[0]||'#').toUpperCase();
-      if (L !== lastLetter){ lastLetter = L; head = `<tr class="alpha"><td colspan="6" style="background:#FFF8E0;font-weight:800;color:#DD0000;letter-spacing:.05em;padding:8px 10px">${esc(L)}</td></tr>`; }
+      if (L !== lastLetter){ lastLetter = L; head = `<tr class="alpha"><td colspan="5" style="background:#FFF8E0;font-weight:800;color:#DD0000;letter-spacing:.05em;padding:8px 10px">${esc(L)}</td></tr>`; }
     }
-    const stSel = `<select onchange="setStatus('${p.id}',this.value)" style="background:${STATUS_BG[st]||'#fff'};border-radius:8px;padding:4px 6px;font-size:13px">`+
-      STATUS_OPT.map(([v,l])=>`<option value="${v}"${v===st?' selected':''}>${l}</option>`).join('')+`</select>`+
-      ((st==='pause'||st==='urlaub')&&p.inactive_until?`<div class="muted" style="font-size:11px">bis ${p.inactive_until.split('-').reverse().join('.')}</div>`:'');
-    return head + `<tr${p.credits<=1?' style="background:#FFF1C2"':''}>
-      <td>${esc(p.name||'–')}${staff?' <span class="pill">Team</span>':''}</td>
-      <td>${esc(p.email)}</td>
-      <td>${bdayLabel(p)}</td>
-      <td>${stSel}</td>
-      <td><b>${p.credits}</b>${p.credits<=1?' <span class="pill">niedrig</span>':''} <button class="btn btn-ghost" onclick="adjust('${p.id}',1)">+1</button> <button class="btn btn-ghost" onclick="adjust('${p.id}',-1)">−1</button></td>
-      <td>${staff?'':`<button class="btn btn-ghost" title="Schüler löschen" onclick="deleteStudent('${p.id}',${JSON.stringify(p.name||p.email)})" style="color:#DD0000">🗑</button>`}</td></tr>`;
+    const nivo = p.level || p.target_level || '';
+    return head + `<tr onclick="openStudentCard('${p.id}')" style="cursor:pointer${p.credits<=1?';background:#FFF1C2':''}" onmouseover="this.style.outline='2px solid #2DD4BF'" onmouseout="this.style.outline='none'">
+      <td><b>${esc(p.name||'–')}</b>${staff?' <span class="pill">Team</span>':''}</td>
+      <td class="muted">${esc(p.email)}</td>
+      <td>${nivo?`<span class="pill" style="background:#Eef;color:#2563EB;font-weight:700">${esc(nivo)}</span>`:'<span class="muted">–</span>'}</td>
+      <td>${statusLabel(st)}${((st==='pause'||st==='urlaub')&&p.inactive_until)?` <span class="muted" style="font-size:11px">bis ${p.inactive_until.split('-').reverse().join('.')}</span>`:''}</td>
+      <td><b style="font-size:16px">${p.credits}</b> <span class="muted" style="font-size:12px">Std.</span>${p.credits<=1?' <span class="pill">niedrig</span>':''}</td></tr>`;
   }).join('');
-  document.getElementById('schuelerTable').innerHTML = `<table><tr><th>Name</th><th>E-Mail</th><th>Geburtstag</th><th>Status</th><th>Guthaben</th><th></th></tr>` + rowsHtml + '</table>';
+  document.getElementById('schuelerTable').innerHTML = `<p class="muted" style="margin:0 0 6px">Tipp: Auf einen Schüler klicken, um die Schülerkarte zu öffnen.</p><table><tr><th>Name</th><th>E-Mail</th><th>Niveau</th><th>Status</th><th>Guthaben</th></tr>` + rowsHtml + '</table>';
+}
+
+// ---------- Schülerkarte (Tutorbird-Stil) ----------
+function closeStudentCard(){ const o=document.getElementById('cardOverlay'); if(o) o.remove(); }
+async function openStudentCard(id){
+  const p = SCHUELER.find(x=>x.id===id); if(!p) return;
+  const st = p.status||'aktiv';
+  const ov=document.createElement('div'); ov.id='cardOverlay';
+  ov.style.cssText='position:fixed;inset:0;z-index:9998;background:rgba(26,26,26,.5);display:flex;align-items:flex-start;justify-content:center;padding:24px 14px;overflow:auto';
+  ov.onclick=(e)=>{ if(e.target===ov) closeStudentCard(); };
+  ov.innerHTML=`<div style="background:#fff;border-radius:22px;max-width:640px;width:100%;box-shadow:0 24px 60px rgba(0,0,0,.3);overflow:hidden;font-family:inherit">
+    <div style="background:#1A1A1A;color:#fff;padding:18px 22px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
+      <div><div style="font-size:20px;font-weight:800">${esc(p.name||'Ohne Name')}</div>
+        <div style="opacity:.8;font-size:13px">${esc(p.email)}</div></div>
+      <button onclick="closeStudentCard()" style="background:none;border:none;color:#fff;font-size:22px;cursor:pointer;line-height:1">✕</button>
+    </div>
+    <div style="padding:18px 22px;max-height:70vh;overflow:auto">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="field" style="margin:0"><label>Niveau (aktuell)</label><input id="cLevel" value="${esc(p.level||'')}" placeholder="z.B. B1" list="levellist"></div>
+        <div class="field" style="margin:0"><label>Unterricht seit</label><input id="cStarted" type="date" value="${esc(p.started_at||'')}"></div>
+        <div class="field" style="margin:0"><label>Status</label><select id="cStatus" onchange="document.getElementById('cInactiveWrap').style.display=(this.value==='pause'||this.value==='urlaub')?'block':'none'">${STATUS_OPT.map(([v,l])=>`<option value="${v}"${v===st?' selected':''}>${l}</option>`).join('')}</select></div>
+        <div class="field" id="cInactiveWrap" style="margin:0;display:${(st==='pause'||st==='urlaub')?'block':'none'}"><label>Pause/Urlaub bis</label><input id="cInactive" type="date" value="${esc(p.inactive_until||'')}"></div>
+      </div>
+      <datalist id="levellist"><option>A1</option><option>A2</option><option>B1</option><option>B2</option><option>C1</option><option>C2</option></datalist>
+      <div class="muted" style="margin:8px 0 14px;font-size:13px">🎂 Geburtstag: ${bdayLabel(p)} · 🎯 Ziel: ${esc(p.target_level||'—')} · 🗣️ Muttersprache: ${esc(p.native_language||'—')}</div>
+
+      <div style="background:#FFF8E0;border-radius:14px;padding:14px 16px;margin-bottom:14px">
+        <b>🎟️ Guthaben</b>
+        <div style="display:flex;gap:8px;align-items:end;flex-wrap:wrap;margin-top:8px">
+          <div class="field" style="margin:0;max-width:140px"><label>Guthaben setzen</label><input id="cCredits" type="number" min="0" value="${p.credits}"></div>
+          <button class="btn btn-primary" onclick="saveCardCredits('${p.id}')">Guthaben speichern</button>
+          <span class="muted" id="cCreditMsg" style="margin-bottom:8px"></span>
+        </div>
+        <div id="cCreditLog" class="muted" style="margin-top:8px;font-size:12px">Verlauf lädt…</div>
+      </div>
+
+      <div class="field" style="margin:0 0 14px"><label>Notizen / Vermerke zum Schüler</label><textarea id="cNotes" style="min-height:90px" placeholder="z.B. Lernziele, Besonderheiten, Vereinbarungen …">${esc(p.notes||'')}</textarea></div>
+
+      <div style="margin-bottom:8px"><b>✅ Erledigte Übungen</b><div id="cExercises" class="muted" style="margin-top:6px">lädt…</div></div>
+    </div>
+    <div style="padding:14px 22px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
+      <button class="btn ${(p.is_admin||p.is_teacher)?'':'btn-ghost'}" ${(p.is_admin||p.is_teacher)?'disabled style="opacity:.4"':'style="color:#DD0000"'} onclick="deleteStudent('${p.id}',${JSON.stringify(p.name||p.email)})">🗑 Schüler löschen</button>
+      <div><span class="muted" id="cSaveMsg" style="margin-right:8px"></span><button class="btn btn-primary" onclick="saveStudentCard('${p.id}')">Speichern</button></div>
+    </div>
+  </div>`;
+  document.body.appendChild(ov);
+
+  // Guthaben-Verlauf laden
+  sb.from('credit_log').select('change,reason,created_at').eq('user_id',id).order('created_at',{ascending:false}).limit(12).then(({data})=>{
+    const el=document.getElementById('cCreditLog'); if(!el) return;
+    if(!data||!data.length){ el.textContent='Noch keine Guthaben-Buchungen.'; return; }
+    el.innerHTML = data.map(r=>`<div>${r.change>0?'➕':'➖'} ${Math.abs(r.change)} · ${esc(r.reason||'')} · ${new Date(r.created_at).toLocaleDateString('de-DE')}</div>`).join('');
+  });
+  // Erledigte Übungen laden
+  sb.from('exercise_progress').select('phase,score,total,completed,updated_at,classes(title,level,starts_at)').eq('user_id',id).order('updated_at',{ascending:false}).then(({data})=>{
+    const el=document.getElementById('cExercises'); if(!el) return;
+    const done=(data||[]).filter(r=>r.completed);
+    if(!done.length){ el.textContent='Noch keine Übungen erledigt.'; return; }
+    el.innerHTML = `<div style="font-weight:700;color:#1A1A1A;margin-bottom:4px">${done.length} erledigt</div>` + done.map(r=>{
+      const phaseLbl={pre:'Vorbereitung',live:'im Unterricht',post:'Nachbereitung'}[r.phase]||r.phase||'';
+      const t=r.classes?.title||'Übung';
+      return `<div style="border-bottom:1px solid var(--border);padding:4px 0">📘 ${esc(t)} <span class="muted">· ${esc(phaseLbl)}${(r.score!=null&&r.total!=null)?` · ${r.score}/${r.total}`:''} · ${new Date(r.updated_at).toLocaleDateString('de-DE')}</span></div>`;
+    }).join('');
+  });
+}
+async function saveStudentCard(id){
+  const msg=document.getElementById('cSaveMsg'); if(msg) msg.textContent='⏳ …';
+  const level=document.getElementById('cLevel').value.trim()||null;
+  const started=document.getElementById('cStarted').value||null;
+  const notes=document.getElementById('cNotes').value.trim()||null;
+  const status=document.getElementById('cStatus').value;
+  const inactive=(status==='pause'||status==='urlaub')?(document.getElementById('cInactive').value||null):null;
+  const e1=(await sb.rpc('admin_set_student_card',{ p_user_id:id, p_level:level, p_notes:notes, p_started_at:started })).error;
+  const e2=(await sb.rpc('admin_update_student',{ p_user_id:id, p_status:status, p_inactive_until:inactive })).error;
+  const p=SCHUELER.find(x=>x.id===id); if(p){ p.level=level; p.started_at=started; p.notes=notes; p.status=status; p.inactive_until=inactive; }
+  renderSchuelerTable();
+  if(msg) msg.textContent=(e1||e2)?('⚠️ '+((e1||e2).message)):'✓ gespeichert';
+}
+async function saveCardCredits(id){
+  const val=parseInt(document.getElementById('cCredits').value,10);
+  const msg=document.getElementById('cCreditMsg');
+  if(!Number.isFinite(val)||val<0){ if(msg) msg.textContent='⚠️ Zahl ≥ 0'; return; }
+  const { error }=await sb.rpc('admin_set_credits',{ p_user_id:id, p_new_total:val, p_reason:'admin_set' });
+  if(error){ if(msg) msg.textContent='⚠️ '+error.message; return; }
+  const p=SCHUELER.find(x=>x.id===id); if(p) p.credits=val;
+  if(msg) msg.textContent='✓ gespeichert';
+  renderSchuelerTable();
+  sb.from('credit_log').select('change,reason,created_at').eq('user_id',id).order('created_at',{ascending:false}).limit(12).then(({data})=>{
+    const el=document.getElementById('cCreditLog'); if(el&&data) el.innerHTML=data.map(r=>`<div>${r.change>0?'➕':'➖'} ${Math.abs(r.change)} · ${esc(r.reason||'')} · ${new Date(r.created_at).toLocaleDateString('de-DE')}</div>`).join('');
+  });
 }
 
 async function createStudent(){
@@ -804,7 +939,7 @@ async function deleteStudent(id, label){
   if(!confirm(`Schüler „${label}" wirklich löschen?\n\nDamit werden Konto, Buchungen, Guthaben-Verlauf und Community-Beiträge unwiderruflich entfernt.`)) return;
   const r=await fetch('/api/admin-delete-student',{ method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+await authToken()}, body:JSON.stringify({user_id:id}) });
   const j=await r.json().catch(()=>({}));
-  if(j&&j.ok){ SCHUELER=SCHUELER.filter(x=>x.id!==id); renderSchuelerTable(); }
+  if(j&&j.ok){ SCHUELER=SCHUELER.filter(x=>x.id!==id); closeStudentCard(); renderSchuelerTable(); }
   else alert('⚠️ Konnte nicht löschen: '+((j&&(j.detail||j.error))||'unbekannt'));
 }
 
