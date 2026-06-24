@@ -99,24 +99,30 @@
   .info{font-size:.7rem; color:var(--weich); padding:7px 22px; background:var(--creme-hell); border-top:1px solid var(--rahmen); flex:0 0 auto;}
   .hidden{display:none !important;}
 
-  /* ===== Handy / schmale Bildschirme: alles untereinander ===== */
+  .m-tabs{display:none;}   /* Umschalt-Reiter nur auf dem Handy */
+
+  /* ===== Handy: Video oben + Tabs (Lektion / Tafel), je ein Bereich scrollt sauber ===== */
   @media (max-width:760px){
-    html,body{ height:auto; overflow:visible; }
-    body{ display:block; }
-    header{ position:sticky; top:0; z-index:30; flex-wrap:wrap; gap:8px 12px; padding:10px 14px; }
-    header .lektion{ flex-basis:100%; order:5; font-size:.8rem; }
-    .toggle button{ padding:6px 12px; font-size:.78rem; }
-    main{ display:flex; flex-direction:column; gap:12px; padding:12px; }
+    html,body{ height:100%; overflow:hidden; }
+    body{ display:flex; flex-direction:column; }
+    header{ flex:0 0 auto; flex-wrap:wrap; gap:6px 12px; padding:9px 14px; }
+    header .lektion{ flex-basis:100%; order:5; font-size:.78rem; }
+    .toggle{ display:none; }
+    main{ flex:1 1 auto; display:flex; flex-direction:column; gap:8px; padding:8px; min-height:0; overflow:hidden; }
     .gutter{ display:none; }
-    .spalte{ display:contents; }                 /* Video & Tafel werden eigene Blöcke */
-    .video-card{ order:1; width:100%; align-self:stretch; position:sticky; top:58px; z-index:20; }
-    .video-buehne{ height:30vh; aspect-ratio:auto; }
-    .lektion-card{ order:2; min-height:78vh; }
-    #lektion{ min-height:78vh; }
-    .tafel{ order:3; min-height:auto; }
-    .tafel-body{ min-height:42vh; }
+    .spalte{ display:contents; }
+    .video-card{ order:1; flex:0 0 auto; width:100%; align-self:stretch; }
+    .video-buehne{ height:25vh; aspect-ratio:auto; }
+    .vid-controls{ padding:6px 8px; }
+    .m-tabs{ display:flex; order:2; flex:0 0 auto; gap:8px; }
+    .m-tabs button{ flex:1; border:1px solid var(--rahmen); background:#fff; border-radius:10px; padding:9px; font-family:'Inter'; font-weight:700; font-size:.85rem; color:var(--anthrazit); cursor:pointer; }
+    .m-tabs button.active{ background:var(--tuerkis); color:var(--auf-tuerkis); border-color:var(--tuerkis); }
+    .lektion-card{ order:3; flex:1 1 auto; min-height:0; }
+    #lektion{ min-height:0; height:100%; }
+    .tafel{ order:3; flex:1 1 auto; min-height:0; }
     .lekt-kopf{ font-size:.78rem; }
-    .lekt-kopf .name{ display:none; }            /* spart Platz */
+    .lekt-kopf .name{ display:none; }
+    .m-hide{ display:none !important; }
   }
 </style>
 </head>
@@ -160,6 +166,11 @@
   </section>
 
   <div class="gutter" id="gutter" title="Ziehen: Notizen vergrößern / Präsentation verkleinern"><div class="grip"></div></div>
+
+  <div class="m-tabs" id="m-tabs">
+    <button id="mt-lekt" class="active" onclick="mTab('lekt')">📘 Lektion</button>
+    <button id="mt-tafel" onclick="mTab('tafel')">📝 Tafel</button>
+  </div>
 
   <aside class="spalte">
     <div class="video-card">
@@ -533,6 +544,16 @@
       window._stiftClearBroadcast=()=>{ try{ stiftCh.send({ type:'broadcast', event:'clear' }); }catch(e){} };
     }
   }
+
+  // Handy-Tabs: zwischen Lektion und Tafel umschalten (nur auf dem Handy sichtbar)
+  function mTab(which){
+    document.getElementById('mt-lekt').classList.toggle('active', which==='lekt');
+    document.getElementById('mt-tafel').classList.toggle('active', which==='tafel');
+    document.querySelector('.lektion-card').classList.toggle('m-hide', which!=='lekt');
+    document.querySelector('.tafel').classList.toggle('m-hide', which!=='tafel');
+    setTimeout(fit, 120);
+  }
+  mTab('lekt');
 
   initSb();
   ladeLektion();
