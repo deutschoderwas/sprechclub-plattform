@@ -118,7 +118,7 @@ footer a{color:var(--accent);text-decoration:none}
 .cal-empty{color:#e3e3e3;text-align:center;font-size:18px;padding:8px 0}
 .ev{border-left:5px solid var(--c,#2DD4BF);background:var(--cream);border-radius:10px;padding:8px 10px;display:flex;flex-direction:column;gap:5px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
 .ev-top{display:flex;align-items:center;justify-content:space-between;gap:6px}
-.ev-time{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px}
+.ev-time{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;white-space:nowrap}
 .ev-club{font-size:9px;font-weight:800;letter-spacing:.3px;color:#fff;padding:2px 7px;border-radius:20px;text-transform:uppercase;white-space:nowrap;text-shadow:0 1px 1px rgba(0,0,0,.28)}
 .ev-title{font-size:13px;font-weight:700;line-height:1.2}
 .ev-meta{font-size:11.5px;color:var(--text-soft)}
@@ -336,6 +336,7 @@ const LVLC={'A2':'#B45309','A2/B1':'#15803D','B1':'#1D4ED8','B1/B2':'#0891B2','B
 function lvlColor(l){ return LVLC[l]||'#6B7280'; }
 function evCard(c){
   const start = new Date(c.starts_at);
+  const end = new Date(start.getTime()+((c.duration_min||60)*60000));
   const free = c.capacity - (c.booked||0);
   const past = start < new Date();
   const color = c.club_color || '#2DD4BF';
@@ -349,7 +350,7 @@ function evCard(c){
   else if (free<=0){ btn = `<span class="ev-btn off">ausgebucht</span>`; }
   else { btn = `<button class="ev-btn book" onclick="book('${c.id}')">Buchen · ${free} frei</button>`; }
   return `<div class="ev" style="--c:${color};background:${color}14">
-    <div class="ev-top"><span class="ev-time">${fmtTime(start)}</span><span class="ev-club" style="background:${color}">${c.club_name||''}</span></div>
+    <div class="ev-top"><span class="ev-time">${fmtTime(start)}–${fmtTime(end)}</span><span class="ev-club" style="background:${color}">${c.club_name||''}</span></div>
     <div class="ev-title">${c.topic || c.title}</div>
     <div class="ev-lvlrow"><span class="ev-lvl" style="border:1.5px solid ${lc};color:${lc}">${c.level}</span></div>
     ${btn}</div>`;
