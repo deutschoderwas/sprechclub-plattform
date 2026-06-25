@@ -460,14 +460,15 @@ async function assignTeacher(id,val){
   loadPlan();
 }
 
-let KL_ALL=[], KL_PARTS={}, klTeacher=null, klClub='', klLevel='';
+let KL_ALL=[], KL_PARTS={}, klTeacher=null, klClub='', klLevel='', klWeekStart=null, klOpenId=null;
 function clubLabel(slug){ const m={sprechclub:'🗣️ Sprechclub',grammatikclub:'📐 Grammatikclub',wortschatzclub:'📚 Wortschatzclub',ausspracheclub:'🎧 Ausspracheclub',sprachspielclub:'🎲 Sprachspiele'}; return m[slug]||slug; }
 function klFilterChange(){ klTeacher=document.getElementById('klTeacher').value; klClub=document.getElementById('klClub').value; klLevel=document.getElementById('klLevel').value; renderKlassen(); }
 function klReset(){ klTeacher=''; klClub=''; klLevel=''; renderKlassen(); }
 
 async function loadKlassen(){
-  const from = new Date(); from.setHours(0,0,0,0);
-  const to = new Date(from); to.setDate(to.getDate()+14);
+  if(!klWeekStart) klWeekStart = mondayOf(new Date());
+  const from = new Date(klWeekStart);
+  const to = new Date(from); to.setDate(to.getDate()+7);
   const { data: cls } = await sb.from('classes').select('*').gte('starts_at', from.toISOString()).lt('starts_at', to.toISOString()).eq('is_cancelled', false).order('starts_at');
   const ids = (cls||[]).map(c=>c.id);
   let parts = {};
@@ -513,11 +514,7 @@ function renderKlassen(){
   </div>`;
 
   const keyFmt = new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Berlin'});
-  const dayFmt = new Intl.DateTimeFormat('de-DE',{timeZone:'Europe/Berlin',weekday:'long',day:'numeric',month:'long'});
   const timeFmt = new Intl.DateTimeFormat('de-DE',{timeZone:'Europe/Berlin',hour:'2-digit',minute:'2-digit'});
-  const byDay = {};
-  view.forEach(c=>{ const k=keyFmt.format(new Date(c.starts_at)); (byDay[k]=byDay[k]||[]).push(c); });
-  const dayKeys = Object.keys(byDay).sort();
   const cardHtml = (c)=>{
     const p = parts[c.id]||[];
     const lc = LEVEL_COLOR[c.level]||'#6B7280';
@@ -565,11 +562,75 @@ function renderKlassen(){
       </div>
     </div>`;
   };
-  const list = dayKeys.length
-    ? dayKeys.map(k=>`<h3 style="margin:20px 0 8px;font-family:'Space Grotesk',sans-serif;font-size:17px">📅 ${dayFmt.format(new Date(byDay[k][0].starts_at))}</h3>`
-        + byDay[k].map(cardHtml).join('')).join('')
-    : `<div class="card muted">Keine Stunden für diese Auswahl in den nächsten 14 Tagen.${(klTeacher||klClub||klLevel)?' <a href="#" onclick="klReset();return false" style="color:var(--primary)">Filter zurücksetzen</a>':''}</div>`;
-  document.getElementById('klassen').innerHTML = filterBar + list;
+  // ===== Wochen-Navigation =====
+  const ws = klWeekStart || mondayOf(new Date());
+  const wEnd = new Date(ws); wEnd.setDate(wEnd.getDate()+6);
+  const rngFmt = new Intl.DateTimeFormat('de-DE',{day:'numeric',month:'short'});
+  const weekNav = `<div class="card" style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:12px;flex-wrap:wrap">
+    <button class="btn btn-ghost" onclick="klWeekNav(-1)">◀ Vorige</button>
+    <b style="font-family:'Space Grotesk',sans-serif;font-size:16px">${rngFmt.format(ws)} – ${rngFmt.format(wEnd)}</b>
+    <button class="btn btn-ghost" onclick="klWeekNav(1)">Nächste ▶</button>
+    <button class="btn btn-primary" onclick="klWeekNav(0)" style="padding:7px 14px">📅 Heute</button>
+  </div>`;
+
+  // ===== Wochen-Raster (Mo–So) =====
+  const todayKey = keyFmt.format(new Date());
+  const wd = ['Mo','Di','Mi','Do','Fr','Sa','So'];
+  const dnFmt = new Intl.DateTimeFormat('de-DE',{timeZone:'Europe/Berlin',day:'numeric',month:'numeric'});
+  const byDay = {};
+  view.forEach(c=>{ const k=keyFmt.format(new Date(c.starts_at)); (byDay[k]=byDay[k]||[]).push(c); });
+  let cols='';
+  for(let i=0;i<7;i++){
+    const d=new Date(ws); d.setDate(d.getDate()+i);
+    const k=keyFmt.format(d);
+    const isToday=(k===todayKey);
+    const dayCards=(byDay[k]||[]).map(c=>{
+      const p=parts[c.id]||[]; const lc=LEVEL_COLOR[c.level]||'#6B7280'; const full=p.length>=c.capacity;
+      const tch=c.teacher_id?`<div class="klc-t" style="color:${teacherColor(c.teacher_id)}">👩‍🏫 ${esc(teacherName(c.teacher_id))}</div>`:`<div class="klc-t miss">⚠️ Lehrer fehlt</div>`;
+      return `<button class="klcard ${klOpenId===c.id?'open':''}" style="border-left-color:${lc}" onclick="openKl('${c.id}')">
+        <div class="klc-time">${timeFmt.format(new Date(c.starts_at))}</div>
+        <div class="klc-title">${esc(c.title)}</div>
+        <div class="klc-lvl" style="color:${lc}">${esc(c.level)}</div>
+        ${tch}
+        <div class="klc-b ${full?'full':''}">${full?'🔒 Ausgebucht':'👥 '+p.length}</div>
+      </button>`;
+    }).join('') || '<div class="klc-empty">—</div>';
+    cols += `<div class="klcol ${isToday?'today':''}"><h4>${wd[i]}<span class="d">${dnFmt.format(d)}${isToday?' · heute':''}</span></h4>${dayCards}</div>`;
+  }
+  const grid = `<div class="klgrid">${cols}</div>`;
+
+  // ===== Detailbereich (volle Verwaltung der angeklickten Stunde) =====
+  const openC = view.find(c=>c.id===klOpenId);
+  const detail = `<div id="klDetail" style="margin-top:14px">${openC?cardHtml(openC):'<div class="card muted">👆 Tippe oben auf eine Stunde, um Anwesenheit, Material, Lehrer & Co. zu verwalten.</div>'}</div>`;
+
+  const style = `<style>
+    .klgrid{display:grid;grid-template-columns:repeat(7,minmax(140px,1fr));gap:8px;overflow-x:auto;padding-bottom:6px}
+    .klcol{background:#fff;border:1px solid var(--border);border-radius:14px;padding:8px;min-width:140px}
+    .klcol.today{border-color:#13A89A;box-shadow:0 0 0 2px rgba(19,168,154,.25);background:#F2FBFA}
+    .klcol h4{font-size:13px;margin:2px 0 8px;text-align:center;font-family:'Space Grotesk',sans-serif}
+    .klcol h4 .d{display:block;font-size:11px;color:#888;font-weight:600}
+    .klcard{display:block;width:100%;text-align:left;border:1px solid var(--border);border-left:4px solid #ccc;background:#FFFCF5;border-radius:10px;padding:7px 9px;margin-bottom:7px;cursor:pointer;font-family:inherit}
+    .klcard:hover{background:#FFF4D6}
+    .klcard.open{outline:2px solid #13A89A;background:#FFF4D6}
+    .klc-time{font-weight:800;font-size:13px}
+    .klc-title{font-size:13px;font-weight:700;margin:2px 0;line-height:1.2}
+    .klc-lvl{font-size:11px;font-weight:800}
+    .klc-t{font-size:11px;font-weight:600;margin-top:2px}
+    .klc-t.miss{color:#DD0000}
+    .klc-b{font-size:11px;color:#666;margin-top:3px}
+    .klc-b.full{color:#DD0000;font-weight:700}
+    .klc-empty{color:#ccc;text-align:center;font-size:12px;padding:6px 0}
+  </style>`;
+
+  document.getElementById('klassen').innerHTML = style + filterBar + weekNav + grid + detail;
+  if(openC){ const el=document.getElementById('klDetail'); if(el) el.scrollIntoView({behavior:'smooth',block:'nearest'}); }
+}
+
+function openKl(id){ klOpenId = (klOpenId===id ? null : id); renderKlassen(); }
+function klWeekNav(dir){
+  if(dir===0){ klWeekStart = mondayOf(new Date()); }
+  else { const d=new Date(klWeekStart||mondayOf(new Date())); d.setDate(d.getDate()+dir*7); klWeekStart=d; }
+  klOpenId=null; loadKlassen();
 }
 
 async function cancelClass(id){
