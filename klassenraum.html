@@ -139,7 +139,7 @@
     <div class="eyebrow">Live-Klassenraum</div>
     <div class="wortmarke">deutsch<span class="ow">oderwas</span> club</div>
   </div>
-  <div class="lektion">📚 Perfekt vs. Präteritum · ab B1</div>
+  <div class="lektion">📚 Lektion</div>
   <div class="spacer"></div>
   <div class="toggle">
     <button id="btn-lehrer" class="active" onclick="setRolle('lehrer')">👩‍🏫 Lehrer</button>
@@ -152,7 +152,7 @@
   <section class="lektion-card">
     <div class="lekt-kopf">
       <span class="tag">📘 Interaktive Lektion</span>
-      <span class="name">Perfekt vs. Präteritum</span>
+      <span class="name">Lektion</span>
       <span class="spacer"></span>
       <div class="stift-tools" id="stift-tools">
         <button id="stift-btn" onclick="stiftToggle()">✏️ Stift</button>
@@ -166,7 +166,7 @@
       </div>
     </div>
     <div class="lekt-stage" id="lekt-stage">
-      <iframe id="lektion" src="grammatik-perfekt-praeteritum-b1.html" title="Interaktive Lektion"></iframe>
+      <iframe id="lektion" title="Interaktive Lektion"></iframe>
       <canvas id="annot"></canvas>
     </div>
   </section>
@@ -379,16 +379,26 @@
   const RAUM = STUNDE ? ('dow-stunde-'+STUNDE) : ('deutschoderwas-club-'+new Date().toISOString().slice(0,10));
   let _titel = _p.get('titel') || 'Klassenraum';
   let _niveau = _p.get('niveau') || '';
-  let _lektion = _p.get('lektion') || 'grammatik-perfekt-praeteritum-b1.html';
+  let _lektion = _p.get('lektion') || '';
   let api=null, sb=null;
 
   // Kopfzeile + Lektion anzeigen (lädt iframe nur neu, wenn sich die URL ändert)
   function zeigeKopf(){
     document.querySelector('.lektion').textContent = '📚 ' + _titel + (_niveau ? ' · ' + _niveau : '');
     const nm = document.querySelector('.lekt-kopf .name'); if(nm) nm.textContent = _titel;
-    // Lektion auf dieselbe Domain normalisieren (www/ohne-www) → gleiche Herkunft, Höhe lesbar
-    try{ const u=new URL(_lektion, location.href); _lektion = location.origin + u.pathname + u.search; }catch(e){}
     const ifr = document.getElementById('lektion');
+    // Keine Lektion hinterlegt → sauberer Platzhalter (statt einer fremden Standard-Lektion)
+    if(!_lektion){
+      ifr.removeAttribute('src');
+      ifr.srcdoc = '<!doctype html><meta charset="utf-8"><div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#6B7280;padding:48px 24px"><div style="font-size:46px">📊</div><h2 style="color:#1A1A1A;margin:12px 0 6px">Noch keine Präsentation hinterlegt</h2><p style="max-width:440px;line-height:1.6">Für diese Stunde ist noch keine interaktive Lektion verknüpft. Sobald du im Admin unter „Bearbeiten · Material" → „Material IM Unterricht" eine Lektion einträgst, erscheint sie hier automatisch.</p></div>';
+      return;
+    }
+    ifr.removeAttribute('srcdoc');
+    // Same-Domain-Lektion normalisieren (www/ohne-www) → Höhe lesbar; externe Links unverändert lassen
+    try{ const u=new URL(_lektion, location.href);
+      if(u.origin===location.origin || /(^|\.)deutschoderwas-club\.de$/.test(u.hostname)){ _lektion = location.origin + u.pathname + u.search; }
+      else { _lektion = u.href; }
+    }catch(e){}
     if(ifr.getAttribute('src') !== _lektion){ ifr.src = _lektion; ifr.addEventListener('load', ()=>setTimeout(fitLektion,250), {once:true}); }
   }
 
@@ -408,10 +418,11 @@
     zeigeKopf();                       // sofort: Fallback/aktuelle Anzeige
     if(!sb || !STUNDE) return;
     try{
-      const { data: kl } = await sb.from('classes').select('title,level').eq('id', STUNDE).maybeSingle();
+      const { data: kl } = await sb.from('classes').select('title,level,material_live').eq('id', STUNDE).maybeSingle();
       if(kl){ if(kl.title) _titel = kl.title; if(kl.level) _niveau = kl.level; }
       const { data: mat } = await sb.from('class_materials').select('content').eq('class_id', STUNDE).maybeSingle();
-      const url = mat && mat.content && mat.content.lesson_url;
+      // Präsentation: zuerst die verknüpfte interaktive Lektion, sonst der Admin-Link „Material IM Unterricht"
+      const url = (mat && mat.content && mat.content.lesson_url) || (kl && kl.material_live) || '';
       if(url) _lektion = url;
     }catch(e){ console.warn('Lektion-Abruf fehlgeschlagen', e); }
     zeigeKopf();                       // aktualisierte Live-Version
