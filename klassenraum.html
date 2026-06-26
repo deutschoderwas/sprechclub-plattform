@@ -601,22 +601,47 @@
       try{ const ifr=document.getElementById('lektion'); const w=ifr&&ifr.contentWindow; if(!w) return null; void w.document.documentElement.scrollHeight; return w; }
       catch(e){ return null; } // fremde Domain → kein Zugriff
     }
+    // Wie weit ist der Leser durch die Lektion (0..1)? Funktioniert für Desktop
+    // (inneres iframe-Scrollen) UND Handy (ganze Seite scrollt, iframe in voller Höhe).
+    function readFrac(){
+      const ifr=document.getElementById('lektion'); if(!ifr) return null;
+      const w=lektWin();
+      if(w){ // gleiche Domain → inneres Scrollen versuchen (Desktop)
+        const doc=w.document.documentElement;
+        const innerMax=Math.max(0, doc.scrollHeight - w.innerHeight);
+        if(innerMax>4) return Math.min(1, Math.max(0, w.scrollY/innerMax));
+      }
+      // Handy: iframe ist voll ausgeklappt → die Seite scrollt
+      const top = ifr.getBoundingClientRect().top + window.scrollY;
+      const pageMax = Math.max(0, ifr.offsetHeight - window.innerHeight);
+      if(pageMax<=4) return 0;
+      return Math.min(1, Math.max(0, (window.scrollY - top)/pageMax));
+    }
+    function applyFrac(frac){
+      const ifr=document.getElementById('lektion'); if(!ifr) return;
+      const w=lektWin();
+      if(w){
+        const doc=w.document.documentElement;
+        const innerMax=Math.max(0, doc.scrollHeight - w.innerHeight);
+        if(innerMax>4){ w.scrollTo(0, frac*innerMax); return; }   // Desktop
+      }
+      // Handy: die ganze Seite zur passenden Stelle scrollen
+      const top = ifr.getBoundingClientRect().top + window.scrollY;
+      const pageMax = Math.max(0, ifr.offsetHeight - window.innerHeight);
+      window.scrollTo({ top: top + frac*pageMax, behavior:'auto' });
+    }
+    let _ignoreScrollUntil=0;
     const scrollCh = sb.channel('scroll-'+STUNDE);
     scrollCh.on('broadcast', { event:'pos' }, ({payload})=>{
         if(istLehrer || !payload) return;                 // nur Schüler folgen
-        const w=lektWin(); if(!w) return;
-        const doc=w.document.documentElement;
-        const max=Math.max(0, doc.scrollHeight - w.innerHeight);
-        w.scrollTo(0, (payload.frac||0)*max);
+        _ignoreScrollUntil = Date.now()+400;              // eigenes Auto-Scrollen nicht zurückmelden
+        applyFrac(payload.frac||0);
       })
       .subscribe();
     if(istLehrer){
       let lastFrac=-1, tick=0;
       setInterval(()=>{
-        const w=lektWin(); if(!w) return;
-        const doc=w.document.documentElement;
-        const max=Math.max(0, doc.scrollHeight - w.innerHeight);
-        const frac = max>0 ? (w.scrollY/max) : 0;
+        const frac=readFrac(); if(frac==null) return;
         tick++;
         // bei Änderung sofort senden, sonst alle ~2 s einmal (für später dazukommende Schüler)
         if(Math.abs(frac-lastFrac)>0.003 || tick%10===0){
