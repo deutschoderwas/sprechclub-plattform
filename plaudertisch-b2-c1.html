@@ -1,0 +1,244 @@
+<!DOCTYPE html><html lang="de"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Plaudertisch · Sprechclub B2/C1 | deutschoderwas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FDF6EC; --cream-warm:#FBEDD8; --paper:#FFFFFF;
+  --ink:#262019; --ink-soft:#5C4E3E; --ink-mute:#A8957D;
+  --red:#E8302A; --red-soft:#FCE5E3;
+  --teal:#0FB5A6; --teal-soft:#D7F0EC;
+  --yellow:#FFD24A; --yellow-soft:#FFF1C2;
+  --pink:#E69CB3;
+  --sand:#F0E2C8;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:linear-gradient(180deg,#FDE6E0 0%,var(--cream) 14%,var(--cream) 100%);color:var(--ink);font-family:'Outfit',sans-serif;line-height:1.55;min-height:100vh;}
+.wrapper{max-width:1100px;margin:0 auto;padding:2.5rem 1.6rem 5rem;}
+.eyebrow{text-align:center;font-size:.78rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--red);margin-bottom:.9rem;}
+.title-wrap{text-align:center;margin-bottom:1rem;}
+h1.title{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(2.2rem,5.5vw,4.4rem);line-height:1.05;color:var(--ink);letter-spacing:-.01em;}
+h1.title .hl{position:relative;display:inline-block;font-style:italic;font-weight:600;padding:.05em .35em;}
+h1.title .hl::before{content:'';position:absolute;inset:0;background:var(--yellow);border-radius:14px;transform:rotate(-2deg);z-index:-1;}
+.subtitle{text-align:center;max-width:660px;margin:.9rem auto 0;font-size:1.08rem;color:var(--ink-soft);}
+.hero-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;margin:1.2rem auto 0;}
+.hero-tag{background:var(--paper);border:1.5px solid var(--sand);border-radius:999px;padding:.35rem .9rem;font-size:.85rem;font-weight:600;color:var(--ink);}
+.hero-tag b{color:var(--red);}
+.tabs{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;justify-content:center;gap:.55rem;background:rgba(253,246,236,.92);backdrop-filter:blur(8px);border-radius:999px;padding:.5rem;margin:2rem auto;max-width:fit-content;}
+.tab{font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;border:2px solid transparent;background:var(--paper);color:var(--ink);padding:.55rem 1.1rem;border-radius:999px;cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:.4rem;}
+.tab:hover{border-color:var(--ink);transform:translateY(-1px);}
+.tab.active{background:var(--red);color:white;border-color:var(--red);}
+.section{display:none;animation:fade .35s ease;}
+.section.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+h2.section-title{font-family:'Fraunces',serif;font-weight:700;font-size:clamp(1.8rem,3.5vw,2.5rem);text-align:center;color:var(--ink);margin:2rem 0 .6rem;}
+.section-sub{text-align:center;color:var(--ink-soft);font-size:1rem;margin-bottom:1.5rem;}
+.tip{background:var(--yellow-soft);border:2px dashed var(--yellow);border-radius:18px;padding:1rem 1.4rem;font-size:.96rem;color:var(--ink);margin:1.2rem 0;line-height:1.7;}
+.tip strong{color:var(--red);font-weight:700;}
+.tip u{text-decoration:underline;text-decoration-color:var(--red);text-underline-offset:3px;}
+.speak-card{background:linear-gradient(135deg,var(--paper),var(--cream-warm));border:2px solid var(--sand);border-radius:24px;padding:2.4rem 1.8rem;text-align:center;min-height:240px;display:flex;flex-direction:column;justify-content:center;margin:1.5rem auto;max-width:640px;box-shadow:0 8px 24px rgba(38,32,25,.07);transition:opacity .2s;}
+.speak-emoji{font-size:3rem;margin-bottom:.7rem;}
+.speak-cat{font-size:.72rem;font-weight:700;color:var(--red);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.6rem;}
+.speak-q{font-family:'Fraunces',serif;font-size:1.5rem;color:var(--ink);font-style:italic;line-height:1.4;}
+.speak-hint{font-size:.9rem;color:var(--ink-soft);margin-top:1rem;}
+.speak-controls{text-align:center;margin-top:1rem;}
+.btn-primary{background:var(--red);color:white;border:2px solid var(--red);font-family:'Outfit',sans-serif;font-weight:700;padding:.6rem 1.6rem;border-radius:999px;cursor:pointer;font-size:1rem;}
+.btn-primary:hover{background:#C8211D;border-color:#C8211D;}
+.flip{perspective:1000px;width:100%;max-width:480px;height:340px;margin:1.5rem auto;cursor:pointer;}
+.flip-inner{position:relative;width:100%;height:100%;transition:transform .6s;transform-style:preserve-3d;}
+.flip.flipped .flip-inner{transform:rotateY(180deg);}
+.flip-side{position:absolute;inset:0;backface-visibility:hidden;background:var(--paper);border:2px solid var(--sand);border-radius:24px;padding:2rem 1.8rem;display:flex;flex-direction:column;justify-content:center;text-align:center;box-shadow:0 8px 24px rgba(38,32,25,.08);}
+.flip-side.back{transform:rotateY(180deg);background:linear-gradient(135deg,var(--cream-warm),var(--yellow-soft));border-color:var(--yellow);}
+.flip-emoji{font-size:2.4rem;margin-bottom:.5rem;}
+.flip-cat{font-size:.7rem;font-weight:700;color:var(--red);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.5rem;}
+.flip-q{font-family:'Fraunces',serif;font-weight:600;font-style:italic;font-size:1.25rem;color:var(--ink);line-height:1.4;}
+.flip-back-t{font-size:.72rem;font-weight:700;color:#B66809;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.6rem;}
+.flip-f{font-family:'Fraunces',serif;font-size:1.15rem;color:var(--ink);line-height:1.5;}
+.flip-prompt{font-size:.8rem;color:var(--ink-mute);font-style:italic;margin-top:.7rem;}
+.lk-nav{display:flex;align-items:center;justify-content:center;gap:1rem;margin-top:1rem;}
+.lk-btn{font-size:1.4rem;background:var(--paper);border:2px solid var(--ink);width:44px;height:44px;border-radius:50%;cursor:pointer;color:var(--ink);}
+.lk-btn:hover{background:var(--ink);color:white;}
+.lk-counter{font-family:'Fraunces',serif;font-weight:600;font-size:1.05rem;color:var(--ink);}
+.lk-shuffle{display:block;margin:1rem auto 0;background:var(--paper);border:2px solid var(--ink);color:var(--ink);font-family:'Outfit',sans-serif;font-weight:600;padding:.55rem 1.2rem;border-radius:999px;cursor:pointer;font-size:.95rem;}
+.lk-shuffle:hover{background:var(--ink);color:white;}
+.catblock{margin:1.6rem 0;}
+.cathead{font-family:'Fraunces',serif;font-weight:700;font-size:1.25rem;color:var(--ink);display:flex;align-items:center;gap:.5rem;margin-bottom:.7rem;}
+.qrow{background:var(--paper);border:1.5px solid var(--sand);border-left:4px solid var(--teal);border-radius:12px;padding:.7rem 1rem;margin-bottom:.5rem;font-size:.98rem;color:var(--ink);font-family:'Fraunces',serif;font-style:italic;}
+.rm{background:var(--paper);border:1.5px solid var(--sand);border-radius:16px;padding:1.2rem 1.4rem;margin:1rem 0;}
+.rm h4{font-family:'Fraunces',serif;font-weight:700;color:var(--ink);font-size:1.1rem;margin-bottom:.5rem;}
+.rm ul{list-style:none;display:flex;flex-wrap:wrap;gap:.5rem;}
+.rm li{background:var(--teal-soft);color:#06564e;border-radius:999px;padding:.4rem .9rem;font-size:.92rem;font-weight:600;}
+.rm.red li{background:var(--red-soft);color:#8a1410;}
+.rm.yellow li{background:var(--yellow-soft);color:#7A6300;}
+footer{text-align:center;color:var(--ink-mute);font-size:.85rem;padding:3rem 1rem 1.5rem;margin-top:3rem;}
+footer strong{color:var(--ink);}
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+<div class="eyebrow">deutschoderwas · Sprechclub · Plaudertisch · B2/C1</div>
+<div class="title-wrap">
+<h1 class="title">Der <span class="hl">Plaudertisch</span></h1>
+</div>
+<p class="subtitle">Locker ins Gespräch kommen: zieh eine Frage, sprich frei, hör zu, frag nach. Viele kurze Fragen für richtig gute Gespräche auf B2/C1-Niveau. ☕</p>
+
+<div class="hero-tags">
+<span class="hero-tag">🎲 <b>Zufallsfrage</b></span>
+<span class="hero-tag">🃏 <b>Lernkarten</b></span>
+<span class="hero-tag">💬 <b>Frei sprechen</b></span>
+<span class="hero-tag">🗝️ <b>Redemittel</b></span>
+</div>
+
+<nav class="tabs">
+<button class="tab active" data-tab="0">🎲 Zufallsfrage</button>
+<button class="tab" data-tab="1">🃏 Lernkarten</button>
+<button class="tab" data-tab="2">📚 Alle Fragen</button>
+<button class="tab" data-tab="3">🗝️ Redemittel</button>
+</nav>
+
+<!-- ZUFALLSFRAGE -->
+<section class="section active" data-section="0">
+<h2 class="section-title">Zieh eine <em>Frage</em></h2>
+<p class="section-sub">Tippe auf „Neue Frage" — wer dran ist, antwortet frei. Die anderen fragen nach!</p>
+<div class="speak-card" id="speakCard"><div class="speak-emoji">☕</div><div class="speak-cat">Plaudertisch</div><div class="speak-q">Tippe unten auf „Neue Frage" und legt los!</div></div>
+<div class="speak-controls"><button class="btn-primary" id="speakNew">🎲 Neue Frage</button></div>
+<div class="tip">💬 <strong>So läuft's:</strong> Eine Person antwortet ~1 Minute frei. Dann stellen die anderen mindestens <u>eine Nachfrage</u> („Warum?", „Erzähl ein Beispiel", „Wie war das für dich?"). So entsteht ein echtes Gespräch — nicht nur Frage-Antwort.</div>
+</section>
+
+<!-- LERNKARTEN -->
+<section class="section" data-section="1">
+<h2 class="section-title">Lernkarten · <em>Fragen &amp; Nachfragen</em></h2>
+<p class="section-sub">Vorne die Frage — umdrehen für Nachfrage-Ideen, die das Gespräch vertiefen.</p>
+<div class="flip" id="flip"><div class="flip-inner">
+<div class="flip-side front"><div class="flip-emoji" id="flipEmoji">☕</div><div class="flip-cat" id="flipCat">Plaudertisch</div><div class="flip-q" id="flipQ">Tippe auf „Weiter"</div></div>
+<div class="flip-side back"><div class="flip-back-t">💡 Weiterfragen</div><div class="flip-f" id="flipF"></div><div class="flip-prompt">Nutze diese Nachfragen, um länger zu reden.</div></div>
+</div></div>
+<div class="lk-nav"><button class="lk-btn" id="lkPrev">←</button><span class="lk-counter"><span id="lkCur">1</span> / <span id="lkTot">54</span></span><button class="lk-btn" id="lkNext">→</button></div>
+<button class="lk-shuffle" id="lkShuffle">🔀 Mischen</button>
+</section>
+
+<!-- ALLE FRAGEN -->
+<section class="section" data-section="2">
+<h2 class="section-title">Alle <em>Fragen</em> auf einen Blick</h2>
+<p class="section-sub">54 Fragen in 6 Kategorien — perfekt zum Aussuchen.</p>
+<div id="allList"></div>
+</section>
+
+<!-- REDEMITTEL -->
+<section class="section" data-section="3">
+<h2 class="section-title">Redemittel für <em>gute Gespräche</em></h2>
+<p class="section-sub">Mit diesen Bausteinen klingt dein Beitrag flüssig und nuanciert (B2/C1).</p>
+<div class="rm"><h4>🗣️ Meinung &amp; Position</h4><ul>
+<li>Ich bin der festen Überzeugung, dass …</li><li>Aus meiner Sicht …</li><li>Da muss ich differenzieren …</li><li>Im Grunde genommen …</li><li>Ehrlich gesagt …</li><li>Wenn ich ehrlich bin, …</li></ul></div>
+<div class="rm yellow"><h4>🤔 Abwägen &amp; relativieren</h4><ul>
+<li>Einerseits … andererseits …</li><li>Das kommt ganz darauf an, ob …</li><li>Es hängt davon ab, …</li><li>In gewisser Weise schon, aber …</li><li>Das lässt sich nicht pauschal sagen.</li></ul></div>
+<div class="rm"><h4>🙋 Nachfragen &amp; Interesse zeigen</h4><ul>
+<li>Wie meinst du das genau?</li><li>Kannst du ein Beispiel geben?</li><li>Und wie war das für dich?</li><li>Was hat dich dazu gebracht?</li><li>Interessant — und warum?</li></ul></div>
+<div class="rm red"><h4>↔️ Zustimmen &amp; widersprechen</h4><ul>
+<li>Da stimme ich dir voll zu.</li><li>Genau das sehe ich auch so.</li><li>Da bin ich anderer Meinung, weil …</li><li>Das sehe ich etwas anders.</li><li>Verstehe ich, aber …</li></ul></div>
+<div class="tip">🗝️ <strong>Tipp:</strong> Antworte nie nur mit einem Satz. Sag deine Meinung, <u>begründe</u> sie und gib ein <u>Beispiel</u> — dann läuft das Gespräch von selbst.</div>
+</section>
+
+</div>
+
+<footer><strong>deutschoderwas</strong> — authentisches Deutsch für den Alltag<br>Erstellt mit ❤️ für meine Sprechclub-Lernenden · Plaudertisch · B2/C1</footer>
+
+<script>
+document.querySelectorAll('.tab').forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    document.querySelector('[data-section="'+b.dataset.tab+'"]').classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+});
+const Q=[
+  {e:"✨",c:"Alltag & Erfahrung",q:"Was war das Schönste, das dir diese Woche passiert ist?",f:"Wie hast du dich dabei gefühlt? Würdest du es wieder so machen?"},
+  {e:"🔁",c:"Alltag & Erfahrung",q:"Auf welche Alltagsgewohnheit könntest du nie verzichten?",f:"Seit wann machst du das? Was passiert, wenn sie mal ausfällt?"},
+  {e:"🆕",c:"Alltag & Erfahrung",q:"Was hast du zuletzt zum ersten Mal gemacht?",f:"War es so, wie du es erwartet hast?"},
+  {e:"☀️",c:"Alltag & Erfahrung",q:"Welche kleine Sache verbessert deinen Tag sofort?",f:"Warum gerade das? Empfiehlst du es weiter?"},
+  {e:"😤",c:"Alltag & Erfahrung",q:"Worüber hast du dich zuletzt richtig geärgert — und warum?",f:"Wie bist du damit umgegangen?"},
+  {e:"🎯",c:"Alltag & Erfahrung",q:"Was kannst du richtig gut, fast ohne nachzudenken?",f:"Wie hast du das gelernt?"},
+  {e:"📍",c:"Alltag & Erfahrung",q:"Welcher Ort in deiner Stadt ist dein Geheimtipp?",f:"Was macht ihn so besonders?"},
+  {e:"😂",c:"Alltag & Erfahrung",q:"Wann hast du das letzte Mal richtig herzhaft gelacht?",f:"Worüber? Erzähl die Situation."},
+  {e:"🆓",c:"Alltag & Erfahrung",q:"Was würdest du tun, wenn du heute spontan freihättest?",f:"Allein oder mit anderen? Warum?"},
+
+  {e:"⚖️",c:"Meinung & Gesellschaft",q:"Was wird in der heutigen Gesellschaft überbewertet?",f:"Und was wird unterschätzt?"},
+  {e:"🤥",c:"Meinung & Gesellschaft",q:"Sollte man immer ehrlich sein — oder sind kleine Notlügen okay?",f:"Wo ziehst du die Grenze?"},
+  {e:"💶",c:"Meinung & Gesellschaft",q:"Macht Geld glücklich? Wo liegt für dich die Grenze?",f:"Was würdest du mit sehr viel Geld machen?"},
+  {e:"📱",c:"Meinung & Gesellschaft",q:"Sind soziale Medien eher Fluch oder Segen?",f:"Wie nutzt du sie selbst?"},
+  {e:"🚫",c:"Meinung & Gesellschaft",q:"Welche Regel würdest du sofort abschaffen?",f:"Was wären die Folgen?"},
+  {e:"🙂",c:"Meinung & Gesellschaft",q:"Ist es wichtiger, recht zu haben oder höflich zu bleiben?",f:"Hast du ein Beispiel erlebt?"},
+  {e:"🗣️",c:"Meinung & Gesellschaft",q:"Welches Thema wird deiner Meinung nach zu wenig diskutiert?",f:"Warum ist es dir wichtig?"},
+  {e:"🌐",c:"Meinung & Gesellschaft",q:"Kann man jemandem vertrauen, den man nur online kennt?",f:"Was müsste passieren, damit du vertraust?"},
+  {e:"✈️",c:"Meinung & Gesellschaft",q:"Sollte jeder ein Jahr im Ausland leben? Warum (nicht)?",f:"Was würde man dabei lernen?"},
+
+  {e:"👻",c:"Was wäre, wenn …",q:"Wenn du einen Tag unsichtbar wärst — was würdest du tun?",f:"Würdest du es jemandem erzählen?"},
+  {e:"🗣️",c:"Was wäre, wenn …",q:"Wenn du eine Sprache sofort perfekt könntest — welche?",f:"Was würdest du als Erstes damit machen?"},
+  {e:"⏳",c:"Was wäre, wenn …",q:"Wenn du in einer anderen Zeit leben könntest — wann?",f:"Was würde dir dort fehlen?"},
+  {e:"🌦️",c:"Was wäre, wenn …",q:"Wenn du das Wetter kontrollieren könntest — Segen oder Chaos?",f:"Wie würdest du es nutzen?"},
+  {e:"🎬",c:"Was wäre, wenn …",q:"Wenn dein Leben ein Film wäre — welches Genre?",f:"Und der Titel?"},
+  {e:"🧪",c:"Was wäre, wenn …",q:"Wenn du einen Beruf risikofrei ausprobieren dürftest — welchen?",f:"Was reizt dich daran?"},
+  {e:"🌍",c:"Was wäre, wenn …",q:"Wenn du eine Sache an der Welt ändern könntest — welche?",f:"Wo würdest du anfangen?"},
+  {e:"🍽️",c:"Was wäre, wenn …",q:"Wenn du mit einer berühmten Person essen gehen könntest — mit wem?",f:"Was würdest du fragen?"},
+  {e:"🏝️",c:"Was wäre, wenn …",q:"Wenn du nie mehr arbeiten müsstest — wie sähe dein Tag aus?",f:"Würde dir etwas fehlen?"},
+
+  {e:"💎",c:"Persönlich & Werte",q:"Welche Eigenschaft schätzt du an Menschen am meisten?",f:"Warum gerade die?"},
+  {e:"🗒️",c:"Persönlich & Werte",q:"Was war der beste Rat, den du je bekommen hast?",f:"Von wem? Hast du ihn befolgt?"},
+  {e:"🏅",c:"Persönlich & Werte",q:"Worauf bist du wirklich stolz?",f:"Wie hast du das erreicht?"},
+  {e:"🔄",c:"Persönlich & Werte",q:"Welche Meinung hattest du früher, die du heute nicht mehr teilst?",f:"Was hat dich umgestimmt?"},
+  {e:"🏆",c:"Persönlich & Werte",q:"Was bedeutet Erfolg für dich persönlich?",f:"Hat sich das mit der Zeit verändert?"},
+  {e:"🌱",c:"Persönlich & Werte",q:"Wer hat dich am meisten geprägt — und wie?",f:"Was hast du von dieser Person gelernt?"},
+  {e:"⌛",c:"Persönlich & Werte",q:"Wofür würdest du dir mehr Zeit nehmen, wenn du könntest?",f:"Was hält dich gerade davon ab?"},
+  {e:"🌊",c:"Persönlich & Werte",q:"Was bringt dich zuverlässig aus der Ruhe?",f:"Wie beruhigst du dich wieder?"},
+  {e:"🎁",c:"Persönlich & Werte",q:"Welches Kompliment hat dich besonders gefreut?",f:"Warum ist es dir im Gedächtnis geblieben?"},
+
+  {e:"🍫",c:"Locker & Spaß",q:"Süß oder salzig — und gibt es da überhaupt eine Diskussion?",f:"Nenne dein Lieblingsbeispiel."},
+  {e:"🎶",c:"Locker & Spaß",q:"Welches Lied geht dir gerade nicht aus dem Kopf?",f:"Magst du es — oder nervt es dich?"},
+  {e:"🤹",c:"Locker & Spaß",q:"Was ist dein ungewöhnlichstes Talent?",f:"Wann kommt es dir zugute?"},
+  {e:"📺",c:"Locker & Spaß",q:"Welche Serie hast du viel zu schnell durchgeschaut?",f:"Würdest du sie weiterempfehlen?"},
+  {e:"🍕",c:"Locker & Spaß",q:"Pizza, Pasta oder Pommes — was gewinnt?",f:"Und der ultimative Belag/die Soße?"},
+  {e:"😅",c:"Locker & Spaß",q:"Welches Emoji benutzt du eindeutig zu oft?",f:"Was sagt das über dich aus?"},
+  {e:"🌧️",c:"Locker & Spaß",q:"Was machst du an einem Regentag am liebsten?",f:"Allein oder mit anderen?"},
+  {e:"👖",c:"Locker & Spaß",q:"Welche Mode von früher sollte bitte nicht zurückkommen?",f:"Hast du sie selbst getragen?"},
+  {e:"🐶",c:"Locker & Spaß",q:"Hund oder Katze — und warum hast du recht?",f:"Überzeug die Runde!"},
+
+  {e:"🔭",c:"Zukunft & Träume",q:"Wo siehst du dich in fünf Jahren — ganz ehrlich?",f:"Was müsstest du dafür heute tun?"},
+  {e:"🌟",c:"Zukunft & Träume",q:"Welchen Traum möchtest du dir unbedingt noch erfüllen?",f:"Was ist der erste Schritt?"},
+  {e:"📖",c:"Zukunft & Träume",q:"Was möchtest du unbedingt noch lernen?",f:"Warum gerade das?"},
+  {e:"🏖️",c:"Zukunft & Träume",q:"Wenn du ein Sabbatjahr hättest — was würdest du machen?",f:"Wo würdest du es verbringen?"},
+  {e:"🗺️",c:"Zukunft & Träume",q:"Welche Reise steht ganz oben auf deiner Liste?",f:"Was reizt dich an diesem Ort?"},
+  {e:"🧒",c:"Zukunft & Träume",q:"Was würdest du deinem 18-jährigen Ich raten?",f:"Hättest du damals zugehört?"},
+  {e:"🛋️",c:"Zukunft & Träume",q:"Wie sieht dein perfektes Wochenende in 10 Jahren aus?",f:"Was davon ginge auch heute schon?"},
+  {e:"🤖",c:"Zukunft & Träume",q:"Welche Technologie erhoffst du dir für die Zukunft?",f:"Welche macht dir eher Sorgen?"},
+  {e:"🌅",c:"Zukunft & Träume",q:"Was möchtest du erreicht haben, wenn du zurückblickst?",f:"Was wäre dir am wichtigsten?"}
+];
+// Zufallsfrage
+let last=-1;
+document.getElementById('speakNew').onclick=()=>{let i;do{i=Math.floor(Math.random()*Q.length);}while(i===last&&Q.length>1);last=i;const k=Q[i];const c=document.getElementById('speakCard');c.style.opacity='0';setTimeout(()=>{c.innerHTML='<div class="speak-emoji">'+k.e+'</div><div class="speak-cat">'+k.c+'</div><div class="speak-q">'+k.q+'</div><div class="speak-hint">💡 Nachfrage: '+k.f+'</div>';c.style.opacity='1';},180);};
+// Lernkarten
+let order=Q.map((_,i)=>i);let idx=0;const flipEl=document.getElementById('flip');
+function show(){const k=Q[order[idx]];document.getElementById('flipEmoji').textContent=k.e;document.getElementById('flipCat').textContent=k.c;document.getElementById('flipQ').textContent=k.q;document.getElementById('flipF').textContent=k.f;document.getElementById('lkCur').textContent=idx+1;document.getElementById('lkTot').textContent=Q.length;flipEl.classList.remove('flipped');}
+flipEl.onclick=()=>flipEl.classList.toggle('flipped');
+document.getElementById('lkPrev').onclick=()=>{idx=(idx-1+Q.length)%Q.length;show();};
+document.getElementById('lkNext').onclick=()=>{idx=(idx+1)%Q.length;show();};
+document.getElementById('lkShuffle').onclick=()=>{order=order.sort(()=>Math.random()-.5);idx=0;show();};
+show();
+// Alle Fragen nach Kategorie
+(function(){
+  const cats=[];const map={};
+  Q.forEach(k=>{if(!map[k.c]){map[k.c]=[];cats.push(k.c);}map[k.c].push(k);});
+  const wrap=document.getElementById('allList');
+  cats.forEach(c=>{
+    const block=document.createElement('div');block.className='catblock';
+    block.innerHTML='<div class="cathead">'+map[c][0].e+' '+c+'</div>'+map[c].map(k=>'<div class="qrow">'+k.q+'</div>').join('');
+    wrap.appendChild(block);
+  });
+})();
+</script>
+</body></html>
