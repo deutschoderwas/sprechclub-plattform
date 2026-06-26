@@ -192,6 +192,9 @@ h2.section-title{font-family:'Fraunces',serif;font-weight:700;font-size:clamp(1.
 .dlg .line strong{color:var(--red);background:var(--yellow-soft);padding:.03em .25em;border-radius:4px;font-style:normal;font-family:'Outfit',sans-serif;font-weight:700;}
 .dlg .line .blank{color:var(--teal);font-weight:700;border-bottom:2px dotted var(--teal);padding:0 .3em;}
 .dlg .line .hint{color:var(--ink-mute);font-size:.85rem;font-style:italic;}
+.dlg .rb{display:inline-block;color:var(--teal);font-family:'Outfit',sans-serif;font-weight:700;background:var(--teal-soft);border:1.5px dashed var(--teal);border-radius:8px;padding:.1em .6em;cursor:pointer;font-size:.95rem;}
+.dlg .rb:hover{background:#cdeee9;}
+.dlg .rb.shown{color:var(--ink);background:var(--yellow-soft);border-style:solid;border-color:var(--yellow);font-family:'Fraunces',serif;font-style:italic;}
 .debate-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.7rem;margin:1rem 0;}
 @media(max-width:600px){.debate-grid{grid-template-columns:1fr;}}
 .debate{background:var(--paper);border:1.5px solid var(--sand);border-radius:14px;padding:.95rem 1.15rem;border-left:5px solid var(--red);}
@@ -421,6 +424,22 @@ footer strong{color:var(--ink);}
 </div>
 <div class="tip">💡 <strong>Tipp:</strong> Macht den Dialog danach <u>noch einmal</u> — diesmal mit einem anderen Grund (z.B. Kontrolle, abgebrochener Zahn) und einer anderen Uhrzeit.</div>
 
+<h2 class="section-title">🩺 Der Arzt fragt — <em>du antwortest</em></h2>
+<p class="section-sub">Die Zahnärztin spricht — <strong>du</strong> bist die Patientin. Antworte zuerst selbst laut, dann tippe auf die <span style="color:var(--teal);font-weight:700">grüne Lücke</span> für einen Vorschlag.</p>
+<div class="dlg">
+<div class="turn"><span class="who">🧑‍⚕️ Zahnärztin</span><span class="line">Guten Tag! Bitte setzen Sie sich. Was kann ich für Sie tun?</span></div>
+<div class="turn a"><span class="who">🙋 Du</span><span class="line"><span class="rb" data-ans="Guten Tag. Ich habe seit zwei Tagen Zahnschmerzen.">??? — tippen für Vorschlag</span></span></div>
+<div class="turn"><span class="who">🧑‍⚕️ Zahnärztin</span><span class="line">Das tut mir leid. Wo genau tut es weh?</span></div>
+<div class="turn a"><span class="who">🙋 Du</span><span class="line"><span class="rb" data-ans="Hier oben rechts — besonders, wenn ich etwas Kaltes trinke.">??? — tippen für Vorschlag</span></span></div>
+<div class="turn"><span class="who">🧑‍⚕️ Zahnärztin</span><span class="line">Ich schaue mir das an. … Sie haben ein kleines Loch. Sie bekommen eine Füllung.</span></div>
+<div class="turn a"><span class="who">🙋 Du</span><span class="line"><span class="rb" data-ans="Tut das weh? Muss ich Angst haben?">??? — tippen für Vorschlag</span></span></div>
+<div class="turn"><span class="who">🧑‍⚕️ Zahnärztin</span><span class="line">Keine Sorge — Sie bekommen eine Betäubung. Danach dürfen Sie zwei Stunden nichts essen.</span></div>
+<div class="turn a"><span class="who">🙋 Du</span><span class="line"><span class="rb" data-ans="Alles klar. Und wie pflege ich meine Zähne am besten?">??? — tippen für Vorschlag</span></span></div>
+<div class="turn"><span class="who">🧑‍⚕️ Zahnärztin</span><span class="line">Putzen Sie zweimal täglich, benutzen Sie Zahnseide und kommen Sie zweimal im Jahr zur Kontrolle.</span></div>
+<div class="turn a"><span class="who">🙋 Du</span><span class="line"><span class="rb" data-ans="Vielen Dank für die Tipps! Auf Wiedersehen.">??? — tippen für Vorschlag</span></span></div>
+</div>
+<div class="tip">🗣️ <strong>So übt ihr:</strong> Eine Person liest die Zahnärztin, die andere antwortet frei als Patientin. Erst <u>ohne</u> Vorschläge versuchen — dann mit. Danach Rollen tauschen.</div>
+
 <h2 class="section-title">Sprechen — <em>los geht's!</em></h2>
 <p class="section-sub">Zieh eine Karte und sprich frei — nutze Modalverben!</p>
 <div class="speak-card" id="speakCard"><div class="speak-emoji">🎲</div><div class="speak-cat">Sprechclub-Karte</div><div class="speak-q">Tippe unten auf „Neue Karte" und leg los!</div></div>
@@ -541,5 +560,6 @@ const SPEAK=[
 ];
 let lastSpeak=-1;
 document.getElementById('speakNew').onclick=()=>{let i;do{i=Math.floor(Math.random()*SPEAK.length);}while(i===lastSpeak&&SPEAK.length>1);lastSpeak=i;const k=SPEAK[i];const c=document.getElementById('speakCard');c.style.opacity='0';setTimeout(()=>{c.innerHTML='<div class="speak-emoji">'+k.emoji+'</div><div class="speak-cat">'+k.cat+'</div><div class="speak-q">'+k.q+'</div><div class="speak-hint">Sprich frei — 60–90 Sekunden!</div>';c.style.opacity='1';},200);};
+document.querySelectorAll('.dlg .rb').forEach(b=>{const orig=b.textContent;b.onclick=()=>{if(b.classList.contains('shown')){b.textContent=orig;b.classList.remove('shown');}else{b.textContent=b.dataset.ans;b.classList.add('shown');}};});
 </script>
 </body></html>
