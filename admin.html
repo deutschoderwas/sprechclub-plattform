@@ -968,7 +968,7 @@ async function openStudentCard(id){
       <div style="margin-bottom:8px"><b>✅ Erledigte Übungen</b><div id="cExercises" class="muted" style="margin-top:6px">lädt…</div></div>
     </div>
     <div style="padding:14px 22px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
-      <button class="btn ${(p.is_admin||p.is_teacher)?'':'btn-ghost'}" ${(p.is_admin||p.is_teacher)?'disabled style="opacity:.4"':'style="color:#DD0000"'} onclick="deleteStudent('${p.id}',${JSON.stringify(p.name||p.email)})">🗑 Schüler löschen</button>
+      <button class="btn ${(p.is_admin||p.is_teacher)?'':'btn-ghost'}" ${(p.is_admin||p.is_teacher)?'disabled style="opacity:.4"':'style="color:#DD0000"'} onclick="deleteStudent('${p.id}')">🗑 Schüler löschen</button>
       <div><span class="muted" id="cSaveMsg" style="margin-right:8px"></span><button class="btn btn-primary" onclick="saveStudentCard('${p.id}')">Speichern</button></div>
     </div>
   </div>`;
@@ -1053,7 +1053,8 @@ async function setStatus(id, status){
   renderSchuelerTable();
 }
 
-async function deleteStudent(id, label){
+async function deleteStudent(id){
+  const _p=SCHUELER.find(x=>x.id===id); const label=_p?(_p.name||_p.email):'';
   if(!confirm(`Schüler „${label}" wirklich löschen?\n\nDamit werden Konto, Buchungen, Guthaben-Verlauf und Community-Beiträge unwiderruflich entfernt.`)) return;
   const r=await fetch('/api/admin-delete-student',{ method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+await authToken()}, body:JSON.stringify({user_id:id}) });
   const j=await r.json().catch(()=>({}));
