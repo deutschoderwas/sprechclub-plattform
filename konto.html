@@ -523,6 +523,29 @@ function matTopOrder(name){
 }
 function fmtSize(b){ return b>=1048576 ? (Math.round(b/1048576*10)/10+' MB') : (Math.max(1,Math.round(b/1024))+' KB'); }
 let matMode='thema';
+let matOpenTheme=null;
+const MAT_META={
+  'Beruf & Büro':{e:'💼',c:'#E3F0FC,#FBEDD8',img:'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=320&q=60'},
+  'Gesundheit, Arzt & Pflege':{e:'🩺',c:'#D7F0EC,#FCE5E3',img:'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=320&q=60'},
+  'Alltag & Leben in Deutschland':{e:'🏘️',c:'#FBEDD8,#FFF1C2',img:'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=320&q=60'},
+  'Essen, Kochen & Café':{e:'🍽️',c:'#FFF1C2,#FCE5E3',img:'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=320&q=60'},
+  'Reisen, Urlaub & Verkehr':{e:'✈️',c:'#D7F0EC,#FFF1C2',img:'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=320&q=60'},
+  'Familie, Beziehungen & Dates':{e:'❤️',c:'#FAE0EA,#FFF1C2',img:'https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=320&q=60'},
+  'Einkaufen & Konsum':{e:'🛒',c:'#E2EBC9,#FBEDD8',img:'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=320&q=60'},
+  'Medien & Digitales':{e:'📱',c:'#E5D8F2,#D7F0EC',img:'https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=320&q=60'},
+  'Feste & Jahreszeiten':{e:'🎉',c:'#FCE5E3,#FFF1C2',img:'https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=320&q=60'},
+  'Sport, Freizeit & Hobbys':{e:'⚽',c:'#E2EBC9,#D7F0EC',img:'https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=320&q=60'},
+  'Bildung & Schule':{e:'🎓',c:'#D7F0EC,#FBEDD8',img:'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=320&q=60'},
+  'Identität, Charakter & Ziele':{e:'🌟',c:'#FFF1C2,#FAE0EA',img:'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&w=320&q=60'},
+  'Leben im Ausland & Kultur':{e:'🌍',c:'#E5D8F2,#FCE5E3',img:'https://images.unsplash.com/photo-1526481280693-3bfa7568e0f3?auto=format&fit=crop&w=320&q=60'},
+  'Grammatik':{e:'📐',c:'#FCE5E3,#D7F0EC',img:'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=320&q=60'},
+  'Wortschatzboost':{e:'🧠',c:'#FFF1C2,#E2EBC9',img:'https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&w=320&q=60'},
+  'Freies Sprechen, Dialoge & Spiele':{e:'💬',c:'#D7F0EC,#FAE0EA',img:'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=320&q=60'},
+  'Weitere Mitschriften':{e:'🗂️',c:'#ECE5DD,#FBEDD8',img:''}
+};
+function matMeta(t){ return MAT_META[t]||{e:'📄',c:'#FBEDD8,#FDF6EC',img:''}; }
+function setMatTheme(t){ matOpenTheme=t; drawMaterials((document.getElementById('matSearch')?.value||'').toLowerCase()); window.scrollTo({top:0,behavior:'smooth'}); }
+function matBack(){ matOpenTheme=null; drawMaterials((document.getElementById('matSearch')?.value||'').toLowerCase()); }
 const MAT_THEMES=[
   ['Wortschatzboost', /wortschatzboost/],
   ['Grammatik', /konjunktiv|relativs|konjunktion|präposition|prapos|modalverb|adjektiv|nomen[ -]?verb|passiv|n-deklination|\d+ verben|temporale|lokale präp/],
@@ -543,7 +566,7 @@ const MAT_THEMES=[
 ];
 function matTheme(m){ const s=((m.folder||'')+' '+(m.title||'')).toLowerCase(); for(const r of MAT_THEMES){ if(r[1].test(s)) return r[0]; } return 'Weitere Mitschriften'; }
 function matDate(m){ const f=m.folder||''; const y=(f.match(/20\d\d/)||['2026'])[0]; const dm=f.match(/(\d{1,2})\.(\d{1,2})(?!\d)/g); let dd='',mm=''; if(dm&&dm.length){ const p=dm[dm.length-1].split('.'); dd=p[0].padStart(2,'0'); mm=p[1].padStart(2,'0'); } return { key:y+'-'+(mm||'00')+'-'+(dd||'00'), label:(dd&&mm)?(dd+'.'+mm+'.'+y):'' }; }
-function setMatMode(m){ matMode=m; document.querySelectorAll('.matmode').forEach(b=>{ const on=b.dataset.m===m; b.style.background=on?'var(--primary,#DD0000)':'#fff'; b.style.color=on?'#fff':'var(--text-soft,#5C5C5C)'; }); drawMaterials((document.getElementById('matSearch')?.value||'').toLowerCase()); }
+function setMatMode(m){ matMode=m; matOpenTheme=null; document.querySelectorAll('.matmode').forEach(b=>{ const on=b.dataset.m===m; b.style.background=on?'var(--primary,#DD0000)':'#fff'; b.style.color=on?'#fff':'var(--text-soft,#5C5C5C)'; }); drawMaterials((document.getElementById('matSearch')?.value||'').toLowerCase()); }
 async function renderMaterialien(){
   const el=document.getElementById('v-materialien');
   const mb='padding:9px 14px;border:none;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit';
@@ -580,11 +603,35 @@ function drawByTheme(items,q){
   const g={};
   items.forEach(m=>{ const t=matTheme(m); (g[t]=g[t]||[]).push(m); });
   const order=Object.keys(g).sort((a,b)=>{ if(a==='Weitere Mitschriften')return 1; if(b==='Weitere Mitschriften')return -1; return g[b].length-g[a].length || a.localeCompare(b); });
-  box.innerHTML=order.map(t=>{
-    const files=g[t].map(m=>({m,d:matDate(m)})).sort((x,y)=>y.d.key.localeCompare(x.d.key));
-    const rows=files.map(({m,d})=>matRow(m,d.label)).join('');
-    return `<details class="card" style="margin-bottom:10px" ${q?'open':''}><summary style="cursor:pointer;font-weight:800;font-size:16px">🗂️ ${esc(t)} <span class="muted" style="font-weight:600">(${g[t].length})</span></summary><div style="margin-top:8px">${rows}</div></details>`;
-  }).join('');
+  if(q){
+    box.innerHTML=order.map(t=>{
+      const files=g[t].map(m=>({m,d:matDate(m)})).sort((x,y)=>y.d.key.localeCompare(x.d.key));
+      return `<div class="card" style="margin-bottom:10px"><div style="font-weight:800;font-size:15px;margin-bottom:6px">${matMeta(t).e} ${esc(t)} <span class="muted">(${g[t].length})</span></div>${files.map(({m,d})=>matRow(m,d.label)).join('')}</div>`;
+    }).join('');
+    return;
+  }
+  if(matOpenTheme && g[matOpenTheme]){
+    const mt=matMeta(matOpenTheme);
+    const files=g[matOpenTheme].map(m=>({m,d:matDate(m)})).sort((x,y)=>y.d.key.localeCompare(x.d.key));
+    box.innerHTML=`<button class="btn btn-ghost btn-sm" onclick="matBack()" style="margin-bottom:12px">← Alle Themen</button>
+      <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><span style="font-size:1.8rem">${mt.e}</span><div style="font-weight:800;font-size:18px">${esc(matOpenTheme)} <span class="muted" style="font-weight:600">(${files.length})</span></div></div>${files.map(({m,d})=>matRow(m,d.label)).join('')}</div>`;
+    return;
+  }
+  box.innerHTML='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px">'+order.map(t=>{
+    const mt=matMeta(t);
+    return `<div class="matcard" data-theme="${esc(t)}" style="cursor:pointer;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 2px 10px rgba(38,32,25,.07);transition:transform .15s">
+      <div style="position:relative;height:92px;background:linear-gradient(135deg,${mt.c});display:flex;align-items:center;justify-content:center">
+        <span style="position:relative;font-size:2.3rem;filter:drop-shadow(0 1px 2px rgba(0,0,0,.15))">${mt.e}</span>
+        ${mt.img?`<img src="${mt.img}" loading="lazy" alt="" onerror="this.remove()" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">`:''}
+      </div>
+      <div style="padding:9px 11px"><div style="font-weight:700;font-size:13px;line-height:1.25">${esc(t)}</div><div class="muted" style="font-size:12px;margin-top:2px">${g[t].length} Mitschriften</div></div>
+    </div>`;
+  }).join('')+'</div>';
+  box.querySelectorAll('.matcard').forEach(c=>{
+    c.addEventListener('click',()=>setMatTheme(c.dataset.theme));
+    c.addEventListener('mouseover',()=>{c.style.transform='translateY(-3px)';});
+    c.addEventListener('mouseout',()=>{c.style.transform='';});
+  });
 }
 function drawByDate(items,q){
   const box=document.getElementById('matList');
