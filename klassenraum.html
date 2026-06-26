@@ -191,6 +191,7 @@
       <div class="vid-controls" id="vid-controls">
         <button id="vc-mic" onclick="vcAudio()" title="Mikrofon an/aus">🎤 Mikro</button>
         <button id="vc-cam" onclick="vcVideo()" title="Kamera an/aus">📷 Kamera</button>
+        <button id="vc-share" onclick="vcShare()" title="Bildschirm / Präsentation teilen">🖥️ Teilen</button>
         <button onclick="vcTiles()" title="Alle Teilnehmer sehen">👥 Alle</button>
         <button onclick="vcFull()" title="Großansicht">⛶ Groß</button>
         <button class="leave" onclick="vcLeave()" title="Unterricht verlassen">🚪 Verlassen</button>
@@ -466,7 +467,12 @@
     const opts = {
       roomName:RAUM, parentNode:document.getElementById('jitsi'),
       userInfo:{ displayName: rolle==='lehrer' ? 'Lehrkraft' : 'Schüler:in' },
-      configOverwrite:{ prejoinPageEnabled:false, prejoinConfig:{ enabled:false }, startWithAudioMuted:false, startWithVideoMuted:false, disableDeepLinking:true },
+      configOverwrite:{
+        prejoinPageEnabled:false, prejoinConfig:{ enabled:false }, startWithAudioMuted:false, startWithVideoMuted:false, disableDeepLinking:true,
+        // Audio gegen Echo/Rauschen (auch bei 5–6 Personen): Echo-Cancellation, Rausch- & Gain-Unterdrückung sicher AN
+        disableAEC:false, disableNS:false, disableAGC:false, disableHPF:false,
+        enableNoisyMicDetection:true, enableTalkWhileMuted:true
+      },
       interfaceConfigOverwrite:{
         TOOLBAR_BUTTONS:[],
         SHOW_JITSI_WATERMARK:false, SHOW_WATERMARK_FOR_GUESTS:false, SHOW_BRAND_WATERMARK:false,
@@ -478,12 +484,14 @@
     // eigene Knöpfe mit dem aktuellen Status synchron halten
     api.addEventListener('audioMuteStatusChanged', e=>{ const b=document.getElementById('vc-mic'); if(b){ b.textContent = e.muted ? '🔇 Mikro aus' : '🎤 Mikro an'; b.classList.toggle('muted', e.muted); } });
     api.addEventListener('videoMuteStatusChanged', e=>{ const b=document.getElementById('vc-cam'); if(b){ b.textContent = e.muted ? '🚫 Kamera aus' : '📷 Kamera an'; b.classList.toggle('muted', e.muted); } });
+    api.addEventListener('screenSharingStatusChanged', e=>{ const b=document.getElementById('vc-share'); if(b){ b.textContent = e.on ? '🟢 Teilen beenden' : '🖥️ Teilen'; b.classList.toggle('on', e.on); } });
     api.addEventListener('readyToClose', ()=>{ document.getElementById('jitsi').innerHTML='<div style="color:#fff;padding:24px;text-align:center;font-family:Inter;font-size:.9rem">Du hast den Unterricht verlassen.<br><a href="konto.html" style="color:#2DD4BF;font-weight:700">Zurück zu Meine Stunden</a></div>'; });
   }
 
   // ---- Eigene Video-Knöpfe (klar sichtbar, statt versteckter Jitsi-Leiste) ----
   function vcAudio(){ if(api) api.executeCommand('toggleAudio'); }
   function vcVideo(){ if(api) api.executeCommand('toggleVideo'); }
+  function vcShare(){ if(api) api.executeCommand('toggleShareScreen'); }
   function vcTiles(){ if(api) api.executeCommand('toggleTileView'); }
   function vcFull(){ const el=document.querySelector('.video-buehne'); if(el && el.requestFullscreen){ el.requestFullscreen(); } else if(api){ api.executeCommand('toggleFullScreen'); } }
   function vcLeave(){
