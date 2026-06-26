@@ -797,7 +797,7 @@ function setKalClub(s){ kalClub=s; loadKalender(); }
 function setKalLevel(l){ kalLevel=l; loadKalender(); }
 function kalWeekChange(d){ var s=new Date(2026,5,29),n=new Date(); function m(x){x=new Date(x);x.setDate(x.getDate()-((x.getDay()+6)%7));x.setHours(0,0,0,0);return x;} var min=Math.round((m(s)-m(n))/6048e5); if(min<0)min=0; kalWeek+=d; if(kalWeek<min)kalWeek=min; loadKalender(); }
 function kalBook(id){
-  if(credits<1){ toast('Du brauchst zuerst ein Paket — ich bring dich hin 😊'); setTimeout(()=>{ location.href='live.html#pakete'; }, 700); return; }
+  if(credits<1){ showNoCredit(); return; }
   const c=kalCache.find(x=>String(x.id)===String(id));
   const start=c?new Date(c.starts_at):null;
   const title=c?esc(c.topic||c.title||'Unterricht'):'Unterricht';
@@ -814,13 +814,21 @@ function kalBook(id){
   document.getElementById('cfmModal').classList.add('open');
 }
 function closeCfm(){ document.getElementById('cfmModal').classList.remove('open'); }
+function showNoCredit(){
+  const card=document.getElementById('cfmCard');
+  card.innerHTML=`<div class="ico">🎟️</div>
+    <h3>Nicht genug Stunden</h3>
+    <p class="hint">Du hast aktuell keine freien Stunden mehr. Buche ein neues Stundenpaket, um weiter Unterricht zu buchen. 😊</p>
+    <div class="acts"><button class="btn btn-ghost" onclick="closeCfm()">Schließen</button><a class="btn btn-primary" href="index.html#preise" style="flex:1;text-decoration:none">Stundenpaket buchen →</a></div>`;
+  document.getElementById('cfmModal').classList.add('open');
+}
 async function doBook(id){
   const go=document.getElementById('cfmGo'); if(go){ go.disabled=true; go.textContent='Buche…'; }
   const {data,error}=await sb.rpc('book_class',{p_class_id:id});
   if(error||!data||!data.ok){
-    const m={class_full:'Diese Stunde ist leider voll.',already_booked:'Du hast diese Stunde schon gebucht!',class_in_past:'Diese Stunde ist schon vorbei.',no_credits:'Du brauchst zuerst ein Paket.',booking_paused:'Buchung über die Plattform ist gerade pausiert.'};
+    if(data&&data.error==='no_credits'){ showNoCredit(); return; }
+    const m={class_full:'Diese Stunde ist leider voll.',already_booked:'Du hast diese Stunde schon gebucht!',class_in_past:'Diese Stunde ist schon vorbei.',booking_paused:'Buchung über die Plattform ist gerade pausiert.'};
     closeCfm(); toast(m[data&&data.error]||'Buchung fehlgeschlagen.');
-    if(data&&data.error==='no_credits'){ setTimeout(()=>{ location.href='live.html#pakete'; }, 800); }
     return;
   }
   // Bestätigungs-E-Mail anstoßen (Brevo, fire-and-forget)
