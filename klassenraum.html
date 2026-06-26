@@ -67,6 +67,14 @@
   .video-start p{margin:0; font-size:.73rem; color:#cfcfcf; line-height:1.35;}
   .video-start .play{width:44px; height:44px; border-radius:50%; border:none; cursor:pointer; background:linear-gradient(135deg,var(--tuerkis),var(--tuerkis-dunkel)); color:var(--auf-tuerkis); font-size:1.1rem; box-shadow:0 4px 14px rgba(0,0,0,.4);}
 
+  /* ===== Teilen-Modus: Geteiltes Bild groß im Präsentations-Fenster ===== */
+  body.sharing .lektion-card{ display:none; }
+  body.sharing #gutter{ display:none; }
+  body.sharing .tafel{ display:none; }
+  body.sharing .spalte{ flex:1 1 auto; width:auto; }
+  body.sharing .video-card{ width:100%; align-self:stretch; flex:1 1 auto; display:flex; flex-direction:column; }
+  body.sharing .video-buehne{ height:auto; flex:1 1 auto; min-height:0; }
+
   /* Live-Tafel – jetzt groß */
   .tafel{background:var(--creme-hell); border:1px solid var(--rahmen); border-radius:18px; box-shadow:0 4px 18px rgba(0,0,0,.05); display:flex; flex-direction:column; overflow:hidden; flex:1; min-height:0;}
   .tafel-kopf{padding:11px 16px 9px; border-bottom:1px solid var(--rahmen); display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
@@ -484,7 +492,7 @@
     // eigene Knöpfe mit dem aktuellen Status synchron halten
     api.addEventListener('audioMuteStatusChanged', e=>{ const b=document.getElementById('vc-mic'); if(b){ b.textContent = e.muted ? '🔇 Mikro aus' : '🎤 Mikro an'; b.classList.toggle('muted', e.muted); } });
     api.addEventListener('videoMuteStatusChanged', e=>{ const b=document.getElementById('vc-cam'); if(b){ b.textContent = e.muted ? '🚫 Kamera aus' : '📷 Kamera an'; b.classList.toggle('muted', e.muted); } });
-    api.addEventListener('screenSharingStatusChanged', e=>{ const b=document.getElementById('vc-share'); if(b){ b.textContent = e.on ? '🟢 Teilen beenden' : '🖥️ Teilen'; b.classList.toggle('on', e.on); } });
+    api.addEventListener('screenSharingStatusChanged', e=>{ const b=document.getElementById('vc-share'); if(b){ b.textContent = e.on ? '🟢 Teilen beenden' : '🖥️ Teilen'; b.classList.toggle('on', e.on); } if(window._onShareChange) window._onShareChange(e.on); });
     api.addEventListener('readyToClose', ()=>{ document.getElementById('jitsi').innerHTML='<div style="color:#fff;padding:24px;text-align:center;font-family:Inter;font-size:.9rem">Du hast den Unterricht verlassen.<br><a href="konto.html" style="color:#2DD4BF;font-weight:700">Zurück zu Meine Stunden</a></div>'; });
     // Immer Kachelansicht – man sieht sich selbst und alle Teilnehmer
     api.addEventListener('videoConferenceJoined', ()=>{ setTimeout(()=>{ try{ api.executeCommand('setTileView', true); }catch(e){} }, 800); });
@@ -585,6 +593,50 @@
       window._stiftBroadcast=()=>{ try{ stiftCh.send({ type:'broadcast', event:'draw', payload:{ img:cv.toDataURL('image/png') } }); }catch(e){} };
       window._stiftClearBroadcast=()=>{ try{ stiftCh.send({ type:'broadcast', event:'clear' }); }catch(e){} };
     }
+
+    // ===== PRÄSENTATION mitscrollen: Lehrer scrollt → Schüler folgen live =====
+    // Funktioniert, wenn die Lektion von derselben Domain (deutschoderwas-club.de) kommt.
+    // Liegt sie auf einer fremden Domain, liefert lektWin() null und der Sync wird sauber übersprungen.
+    function lektWin(){
+      try{ const ifr=document.getElementById('lektion'); const w=ifr&&ifr.contentWindow; if(!w) return null; void w.document.documentElement.scrollHeight; return w; }
+      catch(e){ return null; } // fremde Domain → kein Zugriff
+    }
+    const scrollCh = sb.channel('scroll-'+STUNDE);
+    scrollCh.on('broadcast', { event:'pos' }, ({payload})=>{
+        if(istLehrer || !payload) return;                 // nur Schüler folgen
+        const w=lektWin(); if(!w) return;
+        const doc=w.document.documentElement;
+        const max=Math.max(0, doc.scrollHeight - w.innerHeight);
+        w.scrollTo(0, (payload.frac||0)*max);
+      })
+      .subscribe();
+    if(istLehrer){
+      let lastFrac=-1, tick=0;
+      setInterval(()=>{
+        const w=lektWin(); if(!w) return;
+        const doc=w.document.documentElement;
+        const max=Math.max(0, doc.scrollHeight - w.innerHeight);
+        const frac = max>0 ? (w.scrollY/max) : 0;
+        tick++;
+        // bei Änderung sofort senden, sonst alle ~2 s einmal (für später dazukommende Schüler)
+        if(Math.abs(frac-lastFrac)>0.003 || tick%10===0){
+          lastFrac=frac;
+          try{ scrollCh.send({ type:'broadcast', event:'pos', payload:{ frac } }); }catch(e){}
+        }
+      }, 200);
+    }
+
+    // ===== TEILEN-MODUS: Lehrer teilt → groß im Präsentations-Fenster, auch bei den Schülern =====
+    function applyShareMode(on){
+      document.body.classList.toggle('sharing', !!on);       // CSS macht das Video groß, Lektion aus
+      if(api){ try{ api.executeCommand('setTileView', !on); }catch(e){} } // Geteiltes/große Ansicht statt Kacheln
+    }
+    const shareChan = sb.channel('share-'+STUNDE);
+    shareChan.on('broadcast', { event:'share' }, ({payload})=>{ if(!istLehrer) applyShareMode(payload && payload.on); }).subscribe();
+    window._onShareChange = (on)=>{
+      applyShareMode(on);                                    // sofort lokal umschalten
+      if(istLehrer){ try{ shareChan.send({ type:'broadcast', event:'share', payload:{ on:!!on } }); }catch(e){} }
+    };
   }
 
   // Handy-Tabs: zwischen Lektion und Tafel umschalten (nur auf dem Handy sichtbar)
