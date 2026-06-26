@@ -486,6 +486,8 @@
     api.addEventListener('videoMuteStatusChanged', e=>{ const b=document.getElementById('vc-cam'); if(b){ b.textContent = e.muted ? '🚫 Kamera aus' : '📷 Kamera an'; b.classList.toggle('muted', e.muted); } });
     api.addEventListener('screenSharingStatusChanged', e=>{ const b=document.getElementById('vc-share'); if(b){ b.textContent = e.on ? '🟢 Teilen beenden' : '🖥️ Teilen'; b.classList.toggle('on', e.on); } });
     api.addEventListener('readyToClose', ()=>{ document.getElementById('jitsi').innerHTML='<div style="color:#fff;padding:24px;text-align:center;font-family:Inter;font-size:.9rem">Du hast den Unterricht verlassen.<br><a href="konto.html" style="color:#2DD4BF;font-weight:700">Zurück zu Meine Stunden</a></div>'; });
+    // Immer Kachelansicht – man sieht sich selbst und alle Teilnehmer
+    api.addEventListener('videoConferenceJoined', ()=>{ setTimeout(()=>{ try{ api.executeCommand('setTileView', true); }catch(e){} }, 800); });
   }
 
   // ---- Eigene Video-Knöpfe (klar sichtbar, statt versteckter Jitsi-Leiste) ----
@@ -538,6 +540,9 @@
         istLehrer = !!(prof && (prof.is_teacher||prof.is_admin));
       }
     }catch(e){ console.warn('Rolle', e); }
+    // WICHTIG: Realtime mit dem Login-Token authentifizieren, sonst blockiert RLS
+    // die Live-Updates für Schüler (sie würden die Tafel nicht sehen).
+    try{ const { data:{ session } } = await sb.auth.getSession(); if(session && sb.realtime && sb.realtime.setAuth) sb.realtime.setAuth(session.access_token); }catch(e){ console.warn('Realtime-Auth', e); }
     // Ansicht nach echter Rolle setzen + manuellen Umschalter ausblenden
     setRolle(istLehrer ? 'lehrer' : 'schueler');
     const tg=document.querySelector('.toggle'); if(tg) tg.style.display='none';
