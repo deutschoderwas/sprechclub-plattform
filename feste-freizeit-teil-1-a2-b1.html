@@ -209,6 +209,15 @@ h2.section-title{font-family:'Fraunces',serif;font-weight:700;font-size:clamp(1.
 .rule td strong{color:var(--red);}
 .ex-good{color:var(--teal);font-weight:600;}
 .ex-bad{color:var(--red);text-decoration:line-through;}
+.dlg{background:var(--paper);border:2px solid var(--sand);border-radius:18px;padding:1.3rem 1.5rem;margin:1.2rem auto;max-width:860px;}
+.dlg .turn{display:flex;gap:.7rem;margin:.55rem 0;align-items:flex-start;}
+.dlg .who{flex:0 0 auto;font-family:'Outfit',sans-serif;font-weight:700;font-size:.78rem;color:#fff;background:var(--teal);border-radius:999px;padding:.25rem .7rem;min-width:104px;text-align:center;}
+.dlg .turn.a .who{background:var(--red);}
+.dlg .line{font-family:'Fraunces',serif;font-size:1.02rem;color:var(--ink);line-height:1.55;padding-top:.1rem;}
+.dlg .line strong{color:var(--red);background:var(--yellow-soft);padding:.03em .25em;border-radius:4px;font-style:normal;font-family:'Outfit',sans-serif;font-weight:700;}
+.dlg .rb{display:inline-block;color:var(--teal);font-family:'Outfit',sans-serif;font-weight:700;background:var(--teal-soft);border:1.5px dashed var(--teal);border-radius:8px;padding:.1em .6em;cursor:pointer;font-size:.95rem;}
+.dlg .rb:hover{background:#cdeee9;}
+.dlg .rb.shown{color:var(--ink);background:var(--yellow-soft);border-style:solid;border-color:var(--yellow);font-family:'Fraunces',serif;font-style:italic;}
 footer{text-align:center;color:var(--ink-mute);font-size:.85rem;padding:3rem 1rem 1.5rem;margin-top:3rem;}
 footer strong{color:var(--ink);}
 </style>
@@ -374,6 +383,22 @@ footer strong{color:var(--ink);}
 
 <!-- SPRECHEN -->
 <section class="section" data-section="7">
+<h2 class="section-title">🎉 Ein Freund lädt ein — <em>du antwortest</em></h2>
+<p class="section-sub">Ein Freund lädt dich zu einer Party ein. Antworte erst selbst, dann tippe auf die grüne Lücke für eine Idee.</p>
+<div class="dlg">
+<div class="turn"><span class="who">😎 Freund</span><span class="line">Hey! Ich mache am Samstag eine kleine Party. Hättest du Lust zu kommen?</span></div>
+<div class="turn a"><span class="who">🙋 Du</span><span class="line"><span class="rb" data-ans="Ja, super gern! Um wie viel Uhr?">??? — tippen für Vorschlag</span></span></div>
+<div class="turn"><span class="who">😎 Freund</span><span class="line">So ab 19 Uhr. Bring gern jemanden mit!</span></div>
+<div class="turn a"><span class="who">🙋 Du</span><span class="line"><span class="rb" data-ans="Cool, kann ich eine Freundin mitbringen?">??? — tippen für Vorschlag</span></span></div>
+<div class="turn"><span class="who">😎 Freund</span><span class="line">Klar! Soll ich etwas vorbereiten oder bringt jeder was mit?</span></div>
+<div class="turn a"><span class="who">🙋 Du</span><span class="line"><span class="rb" data-ans="Ich bringe einen Salat und Getränke mit.">??? — tippen für Vorschlag</span></span></div>
+<div class="turn"><span class="who">😎 Freund</span><span class="line">Magst du die Musik aussuchen?</span></div>
+<div class="turn a"><span class="who">🙋 Du</span><span class="line"><span class="rb" data-ans="Gern! Ich mache eine Playlist.">??? — tippen für Vorschlag</span></span></div>
+<div class="turn"><span class="who">😎 Freund</span><span class="line">Perfekt, ich freu mich!</span></div>
+<div class="turn a"><span class="who">🙋 Du</span><span class="line"><span class="rb" data-ans="Ich mich auch — bis Samstag!">??? — tippen für Vorschlag</span></span></div>
+</div>
+<div class="tip">🗣️ <strong>So übt ihr:</strong> Eine Person liest die Fragen, die andere antwortet frei. Erst <u>ohne</u> Vorschläge — dann tippen für eine Idee. Danach Rollen tauschen.</div>
+
 <h2 class="section-title">Sprechen — <em>los geht's!</em></h2>
 <p class="section-sub">Zieh eine Karte und sprich frei — lad höflich ein (Konjunktiv II)!</p>
 <div class="speak-card" id="speakCard"><div class="speak-emoji">🎲</div><div class="speak-cat">Sprechclub-Karte</div><div class="speak-q">Tippe unten auf „Neue Karte" und leg los!</div></div>
@@ -501,5 +526,6 @@ const SPEAK=[
 ];
 let lastSpeak=-1;
 document.getElementById('speakNew').onclick=()=>{let i;do{i=Math.floor(Math.random()*SPEAK.length);}while(i===lastSpeak&&SPEAK.length>1);lastSpeak=i;const k=SPEAK[i];const c=document.getElementById('speakCard');c.style.opacity='0';setTimeout(()=>{c.innerHTML='<div class="speak-emoji">'+k.emoji+'</div><div class="speak-cat">'+k.cat+'</div><div class="speak-q">'+k.q+'</div><div class="speak-hint">Sprich frei — 60–90 Sekunden!</div>';c.style.opacity='1';},200);};
+document.querySelectorAll('.dlg .rb').forEach(b=>{const o=b.textContent;b.onclick=()=>{if(b.classList.contains('shown')){b.textContent=o;b.classList.remove('shown');}else{b.textContent=b.dataset.ans;b.classList.add('shown');}};});
 </script>
 </body></html>
