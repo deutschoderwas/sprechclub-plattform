@@ -481,13 +481,36 @@ function collectVocab(){
 const VIEWS=['dashboard','ueben','community','lernpfad','kalender','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','profil'];
 function go(v){ location.hash=v; }
 function routeFromHash(){ const v=(location.hash||'#dashboard').slice(1); show(VIEWS.includes(v)?v:'dashboard'); }
+const LOCKED_VIEWS=['ueben','community','amanda','materialien'];
 function show(v){
   VIEWS.forEach(x=>document.getElementById('v-'+x).classList.toggle('active',x===v));
   document.querySelectorAll('.navlink[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));
+  if(LOCKED_VIEWS.includes(v) && !isActive()){ renderLocked(v); window.scrollTo(0,0); return; }
   ({dashboard:renderDashboard,ueben:(window.renderUeben||renderDashboard),community:(window.renderCommunity||renderDashboard),lernpfad:renderLernpfad,kalender:renderKalender,stunden:renderStunden,materialien:renderMaterialien,vokabeln:renderVokabeln,
     fortschritt:renderFortschritt,guthaben:renderGuthaben,nachrichten:renderNachrichten,
     amanda:renderAmanda,profil:renderProfil}[v])();
   window.scrollTo(0,0);
+}
+const LOCK_LABELS={ueben:'Üben',community:'Community',amanda:'Amanda',materialien:'Material'};
+function renderLocked(v){
+  const label=LOCK_LABELS[v]||'Dieser Bereich';
+  document.getElementById('v-'+v).innerHTML=
+    `<div class="pagehead"><h1>${label} 🔒</h1></div>
+     <div class="card" style="text-align:center;border:2px solid #f5b942;background:#fff8ec;max-width:560px;margin:0 auto">
+       <div style="font-size:46px;line-height:1;margin-bottom:8px">🎟️</div>
+       <h3 style="margin-bottom:8px">Noch kein Stundenpaket</h3>
+       <p class="muted" style="margin-bottom:16px">Such dir gerne dein Stundenpaket aus, um aktiv am Unterricht teilzunehmen und die ganze Plattform aktiv zu nutzen — Üben, Community, Amanda &amp; Material.</p>
+       <a class="btn btn-primary" href="index.html#pakete" style="text-decoration:none">Stundenpaket aussuchen →</a>
+     </div>`;
+  showLockPopup();
+}
+function showLockPopup(){
+  const card=document.getElementById('cfmCard');
+  card.innerHTML=`<div class="ico">🎟️</div>
+    <h3>Werde aktiv im Club</h3>
+    <p class="hint">Such dir gerne dein Stundenpaket aus, um aktiv am Unterricht teilzunehmen und die ganze Plattform aktiv zu nutzen.</p>
+    <div class="acts"><button class="btn btn-ghost" onclick="closeCfm()">Schließen</button><a class="btn btn-primary" href="index.html#pakete" style="flex:1;text-decoration:none">Stundenpaket aussuchen →</a></div>`;
+  document.getElementById('cfmModal').classList.add('open');
 }
 
 // ---------- Materialien (PDF-Bibliothek aus dem Unterricht) ----------
@@ -499,11 +522,40 @@ function matTopOrder(name){
   return (y||'9999')+'-'+String(i<0?99:((i+3)%12)).padStart(2,'0');
 }
 function fmtSize(b){ return b>=1048576 ? (Math.round(b/1048576*10)/10+' MB') : (Math.max(1,Math.round(b/1024))+' KB'); }
+let matMode='thema';
+const MAT_THEMES=[
+  ['Wortschatzboost', /wortschatzboost/],
+  ['Grammatik', /konjunktiv|relativs|konjunktion|präposition|prapos|modalverb|adjektiv|nomen[ -]?verb|passiv|n-deklination|\d+ verben|temporale|lokale präp/],
+  ['Beruf & Büro', /büro|buero|beruf|vorstellungsg|bewerbung|homeoffice|home office|work ?life|hierarchie|überstunden|arbeitsplatz|tagesablauf|anweisung/],
+  ['Gesundheit, Arzt & Pflege', /arzt|ärzt|pflege|zahnarzt|beschwerd|anatomie|gesundheit|ernährung|schlafmangel|krank|apotheke/],
+  ['Essen, Kochen & Café', /koch|rezept|backen|bäcker|baecker|café|cafe|restaurant|essen|trinken|essgewohn|küche/],
+  ['Reisen, Urlaub & Verkehr', /reise|urlaub|abenteuer|verkehr|flughafen/],
+  ['Familie, Beziehungen & Dates', /familie|beziehung|\bdate|partner|geburt|muttersein|generationskonflikt|freunde|freundschaft/],
+  ['Einkaufen & Konsum', /einkauf|shopping|reklamation|werbung|konsum|handel/],
+  ['Medien & Digitales', /social media|medien|\bfilm|serie|handy|digital|video|internet|smartphone/],
+  ['Feste & Jahreszeiten', /weihnacht|silvester|neujahr|winter|wetter|jahreszeit|vorsätz|vorsatz|rückblick|feiertag|ostern|karneval/],
+  ['Sport, Freizeit & Hobbys', /sport|aktivität|hobby|freizeit|wochenende|humor/],
+  ['Bildung & Schule', /schule|schulzeit|bildung|elterngespräch|studium/],
+  ['Identität, Charakter & Ziele', /identität|charakter|träume|ziele|eigenschaft|persönlichk/],
+  ['Leben im Ausland & Kultur', /ausland|kulturschock|kultur|integration|heimat/],
+  ['Alltag & Leben in Deutschland', /alltag|nachbar|haushalt|wohnen|smalltalk|leben in deutschland|dtz|stress|ordnung|chaos|konflikt|friseur|bank/],
+  ['Freies Sprechen, Dialoge & Spiele', /freies sprechen|freie dialog|dialog|rollenspiel|bildbeschreib|alias|plaudertisch|minidialog|zungenbrecher|spiel|quiz|gespräch/],
+];
+function matTheme(m){ const s=((m.folder||'')+' '+(m.title||'')).toLowerCase(); for(const r of MAT_THEMES){ if(r[1].test(s)) return r[0]; } return 'Weitere Mitschriften'; }
+function matDate(m){ const f=m.folder||''; const y=(f.match(/20\d\d/)||['2026'])[0]; const dm=f.match(/(\d{1,2})\.(\d{1,2})(?!\d)/g); let dd='',mm=''; if(dm&&dm.length){ const p=dm[dm.length-1].split('.'); dd=p[0].padStart(2,'0'); mm=p[1].padStart(2,'0'); } return { key:y+'-'+(mm||'00')+'-'+(dd||'00'), label:(dd&&mm)?(dd+'.'+mm+'.'+y):'' }; }
+function setMatMode(m){ matMode=m; document.querySelectorAll('.matmode').forEach(b=>{ const on=b.dataset.m===m; b.style.background=on?'var(--primary,#DD0000)':'#fff'; b.style.color=on?'#fff':'var(--text-soft,#5C5C5C)'; }); drawMaterials((document.getElementById('matSearch')?.value||'').toLowerCase()); }
 async function renderMaterialien(){
   const el=document.getElementById('v-materialien');
-  el.innerHTML=`<div class="pagehead"><h1>Materialien</h1><p>Alle Arbeitsblätter & PDFs aus dem Unterricht — zum Ansehen und Herunterladen.</p></div>
+  const mb='padding:9px 14px;border:none;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit';
+  el.innerHTML=`<div class="pagehead"><h1>Materialien</h1><p>Alle Arbeitsblätter, Mitschriften & PDFs aus dem Unterricht — sortiert nach Thema oder Datum.</p></div>
     ${isActive()?'':`<div class="card" style="border:2px solid #f5b942;background:#fff8ec;margin-bottom:14px"><b>🔒 Hinweis:</b> <span class="muted">Du siehst dein bisheriges Material. Neues Material wird mit einem Paket wieder freigeschaltet.</span> <a href="index.html#pakete" style="font-weight:700">Pakete ansehen →</a></div>`}
-    <input id="matSearch" placeholder="🔍 Suchen… (z.B. Perfekt, Wortschatz, B1)" style="width:100%;max-width:420px;margin-bottom:14px;padding:11px 13px;border:2px solid var(--border);border-radius:12px;font-family:inherit;font-size:14px" oninput="drawMaterials(this.value.toLowerCase())">
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px">
+      <div style="display:inline-flex;border:2px solid var(--border);border-radius:12px;overflow:hidden">
+        <button class="matmode" data-m="thema" onclick="setMatMode('thema')" style="${mb};background:var(--primary,#DD0000);color:#fff">🗂️ Nach Thema</button>
+        <button class="matmode" data-m="datum" onclick="setMatMode('datum')" style="${mb};background:#fff;color:var(--text-soft,#5C5C5C)">📅 Nach Datum</button>
+      </div>
+      <input id="matSearch" placeholder="🔍 Suchen… (z.B. Pflege, Grammatik, Reisen)" style="flex:1;min-width:200px;max-width:420px;padding:11px 13px;border:2px solid var(--border);border-radius:12px;font-family:inherit;font-size:14px" oninput="drawMaterials(this.value.toLowerCase())">
+    </div>
     <div id="matList"><div class="empty">Lade Materialien…</div></div>`;
   if(!matLib){
     const {data,error}=await sb.from('materials').select('storage_path,title,folder,size_bytes').order('folder').order('title');
@@ -512,13 +564,33 @@ async function renderMaterialien(){
   }
   drawMaterials('');
 }
+function matRow(m,dateLabel){ return `<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0">📄</span>
+        <a href="#" onclick="openMaterial('${esc(m.storage_path)}',this);return false" style="flex:1;color:var(--ink);text-decoration:none;font-weight:600">${esc(m.title)}</a>
+        ${dateLabel?`<span class="muted" style="font-size:12px;flex-shrink:0">${dateLabel}</span>`:''}
+        <span class="muted" style="font-size:12px;flex-shrink:0">${fmtSize(m.size_bytes||0)}</span></div>`; }
 function drawMaterials(q){
   const box=document.getElementById('matList'); if(!box) return;
-  const items=(matLib||[]).filter(m=>!q||(m.title+' '+m.folder).toLowerCase().includes(q));
+  const items=(matLib||[]).filter(m=>!q||((m.title||'')+' '+(m.folder||'')+' '+matTheme(m)).toLowerCase().includes(q));
   if(!items.length){ box.innerHTML='<div class="empty">Nichts gefunden.</div>'; return; }
+  if(matMode==='thema') drawByTheme(items,q); else drawByDate(items,q);
+}
+function drawByTheme(items,q){
+  const box=document.getElementById('matList');
+  const g={};
+  items.forEach(m=>{ const t=matTheme(m); (g[t]=g[t]||[]).push(m); });
+  const order=Object.keys(g).sort((a,b)=>{ if(a==='Weitere Mitschriften')return 1; if(b==='Weitere Mitschriften')return -1; return g[b].length-g[a].length || a.localeCompare(b); });
+  box.innerHTML=order.map(t=>{
+    const files=g[t].map(m=>({m,d:matDate(m)})).sort((x,y)=>y.d.key.localeCompare(x.d.key));
+    const rows=files.map(({m,d})=>matRow(m,d.label)).join('');
+    return `<details class="card" style="margin-bottom:10px" ${q?'open':''}><summary style="cursor:pointer;font-weight:800;font-size:16px">🗂️ ${esc(t)} <span class="muted" style="font-weight:600">(${g[t].length})</span></summary><div style="margin-top:8px">${rows}</div></details>`;
+  }).join('');
+}
+function drawByDate(items,q){
+  const box=document.getElementById('matList');
   const groups={};
   items.forEach(m=>{
-    const parts=m.folder.split('/');
+    const parts=(m.folder||'').split('/');
     const top=parts[1]||parts[0]||'Sonstiges';
     const sub=parts.slice(2).join(' › ');
     (groups[top]=groups[top]||{});(groups[top][sub]=groups[top][sub]||[]).push(m);
@@ -527,10 +599,7 @@ function drawMaterials(q){
   box.innerHTML=tops.map(top=>{
     const subs=groups[top]; const n=Object.values(subs).reduce((s,a)=>s+a.length,0);
     const inner=Object.keys(subs).sort().map(sub=>{
-      const files=subs[sub].map(m=>`<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)">
-        <span style="flex-shrink:0">📄</span>
-        <a href="#" onclick="openMaterial('${esc(m.storage_path)}',this);return false" style="flex:1;color:var(--ink);text-decoration:none;font-weight:600">${esc(m.title)}</a>
-        <span class="muted" style="font-size:12px;flex-shrink:0">${fmtSize(m.size_bytes||0)}</span></div>`).join('');
+      const files=subs[sub].map(m=>matRow(m,'')).join('');
       return sub?`<details style="margin:6px 0 6px 8px"><summary style="cursor:pointer;font-weight:600;padding:4px 0">📁 ${esc(sub)} <span class="muted">(${subs[sub].length})</span></summary><div style="padding-left:10px">${files}</div></details>`:`<div>${files}</div>`;
     }).join('');
     return `<details class="card" style="margin-bottom:10px" ${q?'open':''}><summary style="cursor:pointer;font-weight:800;font-size:16px">🗂️ ${esc(top)} <span class="muted" style="font-weight:600">(${n} Dateien)</span></summary><div style="margin-top:8px">${inner}</div></details>`;
@@ -657,13 +726,14 @@ function phaseHtml(b, phase){
     const ended = now > st + 90*60000;      // bis 90 Min nach Beginn
     const liveNow = started && !ended;
     const href = `klassenraum.html?stunde=${b.class_id}&titel=${encodeURIComponent(b.title||'')}&niveau=${encodeURIComponent(b.level||'')}`;
-    // Klassenzimmer-Button ist immer sichtbar – live rot hervorgehoben, sonst dezent.
+    // Beitreten erst ab 10 Min vor Beginn (rot) – vorher KEIN Link, der Raum ist gesperrt.
     let inner;
     if(liveNow){
       inner=`<a class="btn btn-turq btn-sm" href="${href}" target="_blank" rel="noopener" style="text-decoration:none"><span class="live-dot"></span>🔴 Beitreten</a>`;
+    } else if(ended){
+      inner='<span class="nope">Stunde vorbei</span>';
     } else {
-      inner=`<a class="btn btn-sm" href="${href}" target="_blank" rel="noopener" style="text-decoration:none;background:#eef0f4;color:#333;font-weight:700">🚪 Klassenzimmer</a>`
-        + `<br><span class="nope" style="font-size:11px">${ended?'Stunde vorbei':'startet zur Stundenzeit'}</span>`;
+      inner='<span class="nope">öffnet 10 Min vor Beginn</span>';
     }
     return `<div class="phase ${liveNow?'ready':''}"><b>🗣️ Im Unterricht</b>${inner}</div>`;
   }

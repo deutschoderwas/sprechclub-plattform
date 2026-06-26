@@ -652,8 +652,33 @@
 
   initSb();
   ladeLektion();
-  initTafelSync();
-  videoStarten();
+  gateAndStart();
+
+  // Zutritt: Schüler dürfen nur 10 Min vor bis 90 Min nach Beginn rein. Lehrer/Admin jederzeit.
+  async function gateAndStart(){
+    let allow=true, msg='';
+    if(sb && STUNDE){
+      try{
+        const { data:{ user } } = await sb.auth.getUser();
+        let isStaff=false;
+        if(user){ const { data:prof } = await sb.from('profiles').select('is_teacher,is_admin').eq('id',user.id).maybeSingle(); isStaff=!!(prof&&(prof.is_teacher||prof.is_admin)); }
+        if(!isStaff){
+          const { data:cls } = await sb.from('classes').select('starts_at').eq('id',STUNDE).maybeSingle();
+          if(cls && cls.starts_at){
+            const st=new Date(cls.starts_at).getTime(), now=Date.now();
+            if(now < st - 10*60000){ allow=false; msg='Dieser Raum öffnet erst <b>10 Minuten vor Stundenbeginn</b>. Komm kurz vorher wieder. 😊'; }
+            else if(now > st + 90*60000){ allow=false; msg='Diese Stunde ist bereits vorbei.'; }
+          }
+        }
+      }catch(e){ console.warn('Zutritts-Check', e); }
+    }
+    if(!allow){ showRoomClosed(msg); return; }
+    initTafelSync();
+    videoStarten();
+  }
+  function showRoomClosed(msg){
+    document.body.innerHTML='<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;font-family:Inter,system-ui,sans-serif;background:#FFF8E0;padding:24px"><div style="background:#fff;border-radius:22px;max-width:440px;padding:36px 28px;box-shadow:0 16px 40px rgba(0,0,0,.10)"><div style="font-size:48px">⏰</div><h2 style="margin:12px 0 8px;color:#1A1A1A;font-family:\'Space Grotesk\',Inter,sans-serif">Raum noch geschlossen</h2><p style="color:#6B7280;line-height:1.6;margin:0 0 18px">'+msg+'</p><a href="konto.html" style="display:inline-block;background:#2DD4BF;color:#06403A;font-weight:800;text-decoration:none;padding:13px 26px;border-radius:50px">← Zu „Meine Stunden"</a></div></div>';
+  }
 </script>
 </body>
 </html>
