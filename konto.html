@@ -1169,6 +1169,15 @@ function renderMsgBadge(){
 }
 function renderNachrichten(){
   lsSet('msgSeen', Date.now()); renderMsgBadge();
+  // Lehrer-Nachrichten als gelesen markieren (Lesebestätigung für Julia)
+  try{
+    const unread = messages.some(m=>m.sender==='teacher' && !m.read_at);
+    if(unread){
+      const now=new Date().toISOString();
+      messages.forEach(m=>{ if(m.sender==='teacher' && !m.read_at) m.read_at=now; });
+      sb.from('messages').update({read_at:now}).eq('user_id',user.id).eq('sender','teacher').is('read_at',null).then(()=>{});
+    }
+  }catch(e){}
   document.getElementById('v-nachrichten').innerHTML=`
     <div class="pagehead"><h1>Nachrichten</h1><p>Schreib deiner Lehrerin — Fragen, Wünsche, Feedback.</p></div>
     <div class="thread" id="thread">${messages.length?messages.map(m=>`<div class="msg ${m.sender}">${esc(m.body)}<small>${m.sender==='teacher'?'Lehrerin · ':''}${fmtShort(new Date(m.created_at))}</small></div>`).join(''):'<div class="empty">Noch keine Nachrichten. Schreib gern die erste! 😊</div>'}</div>
