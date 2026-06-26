@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Führerschein – Theorie &amp; Prüfung · B2/C1 | deutschoderwas Sprechclub</title>
+<!--
+  ============================================================
+  deutschoderwas · Sprechclub-Lektion (interaktiver Baukasten)
+  ============================================================
+  EINE in sich geschlossene HTML-Datei (Design + Inhalt + JS).
+  So baust du eine neue Lektion:
+    1. Titel, Eyebrow, Niveau-Badge und Journey-Emojis im HERO anpassen.
+    2. Die Nav-Tabs auf die Bausteine kürzen, die du nutzt.
+    3. Pro Baustein das passende <section class="block"> kopieren/füllen.
+    4. CSS (<style>) und JS (<script>) NICHT ändern – die powern alle Widgets.
+  Bausteine werden über CSS-Klassen + data-Attribute automatisch interaktiv.
+  Farben & Schriften = deutschoderwas-Lernmaterial-Design (nicht ändern).
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FDF6EC;--cream-warm:#FBEDD8;--paper:#FFFFFF;
+  --ink:#262019;--ink-soft:#5C4E3E;--ink-mute:#A8957D;
+  --red:#E8302A;--red-soft:#FCE5E3;
+  --teal:#0FB5A6;--teal-soft:#D7F0EC;
+  --yellow:#FFD24A;--yellow-soft:#FFF1C2;
+  --pink:#E69CB3;--sand:#F0E2C8;
+  --wa-bg:#ECE5DD;--wa-out:#DCF8C6;--wa-in:#FFFFFF;
+  --radius:18px;--shadow:0 10px 30px rgba(38,32,25,.08);
+  --font-head:'Fraunces',Georgia,serif;
+  --font-body:'Outfit','Segoe UI',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  background:linear-gradient(180deg,#FDE6E0 0%,var(--cream) 14%,var(--cream) 100%);
+  color:var(--ink);font-family:var(--font-body);line-height:1.55;min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+.wrapper{max-width:1320px;margin:0 auto;padding:2.5rem 2rem 5rem;}
+
+/* ---------- Hero ---------- */
+.eyebrow{text-align:center;font-size:.78rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--red);margin-bottom:.9rem;}
+.title-wrap{text-align:center;margin-bottom:1rem;}
+h1.title{font-family:var(--font-head);font-weight:600;font-size:clamp(1.9rem,4.5vw,3.6rem);line-height:1.06;letter-spacing:-.01em;}
+h1.title .hl{position:relative;display:inline-block;color:var(--red);}
+h1.title .hl::after{content:"";position:absolute;left:-2px;right:-2px;bottom:.06em;height:.28em;background:var(--yellow);opacity:.55;z-index:-1;border-radius:3px;}
+.subtitle{text-align:center;max-width:620px;margin:.9rem auto 1.3rem;color:var(--ink-soft);font-size:1.06rem;}
+.level-badge{display:inline-block;background:var(--teal);color:#063b35;font-weight:700;font-size:.8rem;padding:5px 14px;border-radius:999px;}
+.journey{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem 1.1rem;margin:1.1rem auto 0;color:var(--ink-soft);font-size:.9rem;font-weight:600;}
+.journey span{display:inline-flex;align-items:center;gap:.3rem;}
+
+/* ---------- Sticky Nav ---------- */
+nav.tabs{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;
+  padding:.7rem .5rem;margin:1.6rem 0 2.2rem;background:rgba(253,246,236,.86);backdrop-filter:blur(8px);
+  border:1px solid var(--sand);border-radius:999px;}
+nav.tabs a{font-size:.82rem;font-weight:600;color:var(--ink-soft);text-decoration:none;padding:.4rem .8rem;border-radius:999px;transition:.15s;}
+nav.tabs a:hover{background:var(--cream-warm);}
+nav.tabs a.active{background:var(--ink);color:var(--cream);}
+
+/* ---------- Blocks ---------- */
+section.block{background:var(--paper);border:1px solid var(--sand);border-radius:var(--radius);
+  padding:1.8rem 1.7rem;margin-bottom:1.6rem;box-shadow:var(--shadow);scroll-margin-top:5rem;}
+.block-head{font-family:var(--font-head);font-weight:600;font-size:clamp(1.3rem,3vw,1.9rem);margin-bottom:.5rem;}
+.block-head .hl{color:var(--red);font-style:italic;}
+.block-intro{color:var(--ink-soft);margin-bottom:1.2rem;}
+.block.alt{background:var(--cream-warm);}
+
+/* Info boxes */
+.note{border-radius:14px;padding:.9rem 1.1rem;margin:1rem 0;font-size:.96rem;}
+.note.tip{background:var(--teal-soft);border-left:4px solid var(--teal);}
+.note.warn{background:var(--red-soft);border-left:4px solid var(--red);}
+.note.info{background:var(--yellow-soft);border-left:4px solid var(--yellow);}
+.note strong{color:var(--ink);}
+
+/* Generic grids */
+.grid{display:grid;gap:.9rem;}
+.grid.g2{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));}
+.grid.g3{grid-template-columns:repeat(auto-fit,minmax(180px,1fr));}
+
+/* Vocab card */
+.vocab{background:var(--cream);border:1px solid var(--sand);border-radius:14px;padding:1rem;}
+.vocab .emoji{font-size:1.6rem;display:block;margin-bottom:.3rem;}
+.vocab .term{font-weight:700;color:var(--ink);}
+.vocab .gloss{font-size:.9rem;color:var(--ink-soft);}
+
+/* Concept-contrast card */
+.concept{background:var(--cream);border:1px solid var(--sand);border-top:4px solid var(--teal);border-radius:14px;padding:1.1rem;}
+.concept.red{border-top-color:var(--red);}
+.concept.yellow{border-top-color:var(--yellow);}
+.concept .label{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-mute);}
+.concept .term{font-family:var(--font-head);font-weight:600;font-size:1.2rem;margin:.2rem 0 .4rem;}
+.concept .desc{font-size:.92rem;color:var(--ink-soft);}
+
+/* Template box (email etc.) */
+.doc{background:var(--cream);border:1px dashed var(--ink-mute);border-radius:14px;padding:1.2rem;font-size:.96rem;}
+.doc .meta{color:var(--ink-mute);font-size:.85rem;}
+.doc strong{color:var(--red);}
+
+/* Discussion question card */
+.qcard{background:var(--cream);border:1px solid var(--sand);border-radius:14px;padding:1.1rem;}
+.qcard .tag{display:inline-block;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;
+  color:#063b35;background:var(--teal-soft);padding:3px 9px;border-radius:999px;margin-bottom:.5rem;}
+.qcard .hint{font-size:.85rem;color:var(--ink-mute);margin-top:.5rem;font-style:italic;}
+
+/* ---------- Flashcards ---------- */
+.flashbox{text-align:center;}
+.flashcard{max-width:380px;margin:0 auto;aspect-ratio:3/2;perspective:1200px;cursor:pointer;}
+.flashcard .inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.flashcard.flipped .inner{transform:rotateY(180deg);}
+.flashcard .face{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4rem;padding:1.2rem;border:1px solid var(--sand);}
+.flashcard .front{background:var(--cream);}
+.flashcard .front .big{font-size:2rem;}
+.flashcard .front .term{font-family:var(--font-head);font-weight:600;font-size:1.5rem;}
+.flashcard .front .tagword{font-size:.8rem;color:var(--ink-mute);}
+.flashcard .back{background:var(--teal-soft);transform:rotateY(180deg);}
+.flashcard .back .answer{font-weight:700;font-size:1.3rem;color:#063b35;}
+.flashcard .back .ex{font-size:.9rem;color:var(--ink-soft);font-style:italic;}
+.flash-ctrl{display:flex;align-items:center;justify-content:center;gap:1rem;margin-top:1rem;}
+.flash-ctrl button{background:var(--ink);color:var(--cream);border:none;border-radius:999px;padding:.5rem 1rem;font-weight:600;cursor:pointer;font-family:var(--font-body);}
+.flash-ctrl .count{font-weight:700;color:var(--ink-soft);}
+
+/* ---------- Quiz ---------- */
+.quiz-q{border-top:1px solid var(--sand);padding-top:1.1rem;margin-top:1.1rem;}
+.quiz-q:first-child{border-top:none;margin-top:0;padding-top:0;}
+.quiz-q .qtext{font-weight:600;margin-bottom:.6rem;}
+.quiz-opts{display:flex;flex-direction:column;gap:.5rem;}
+.quiz-opt{text-align:left;background:var(--cream);border:1px solid var(--sand);border-radius:12px;
+  padding:.6rem .9rem;cursor:pointer;font-family:var(--font-body);font-size:.96rem;transition:.12s;}
+.quiz-opt:hover{background:var(--cream-warm);}
+.quiz-opt.correct{background:var(--teal-soft);border-color:var(--teal);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-soft);border-color:var(--red);}
+.quiz-exp{display:none;margin-top:.6rem;font-size:.9rem;color:var(--ink-soft);background:var(--yellow-soft);border-radius:10px;padding:.6rem .8rem;}
+.quiz-q.answered .quiz-exp{display:block;}
+
+/* ---------- Lückentext (fill-in) ---------- */
+.gap-item{margin:.7rem 0;line-height:2;}
+.gap-item select{font-family:var(--font-body);font-size:.95rem;border:1px solid var(--ink-mute);
+  background:var(--paper);border-radius:8px;padding:.2rem .4rem;color:var(--ink);}
+.gap-item select.ok{border-color:var(--teal);background:var(--teal-soft);}
+.gap-item select.no{border-color:var(--red);background:var(--red-soft);}
+.btn{display:inline-block;background:var(--teal);color:#063b35;font-weight:700;border:none;
+  border-radius:999px;padding:.6rem 1.3rem;cursor:pointer;font-family:var(--font-body);font-size:.95rem;}
+.btn.dark{background:var(--ink);color:var(--cream);}
+.btn.ghost{background:transparent;border:1.5px solid var(--ink-mute);color:var(--ink);}
+.score{font-weight:700;margin-left:.8rem;}
+
+/* ---------- Zuordnen (matching) ---------- */
+.match{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;}
+.match h4{font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-mute);margin-bottom:.3rem;}
+.match-item{background:var(--cream);border:1px solid var(--sand);border-radius:10px;padding:.55rem .8rem;
+  margin-bottom:.5rem;cursor:pointer;font-size:.93rem;transition:.12s;}
+.match-item.sel{border-color:var(--ink);background:var(--cream-warm);}
+.match-item.done{background:var(--teal-soft);border-color:var(--teal);cursor:default;opacity:.75;}
+
+/* ---------- Sprechkarten (random) ---------- */
+.speak{text-align:center;}
+.speak .card{background:var(--cream);border:1px solid var(--sand);border-radius:16px;padding:1.6rem 1.2rem;min-height:130px;
+  display:flex;align-items:center;justify-content:center;font-size:1.12rem;font-weight:600;font-family:var(--font-head);}
+.speak .card .ph{color:var(--ink-mute);font-family:var(--font-body);font-weight:400;}
+
+/* ---------- Rollenspiel / Debatte (accordion) ---------- */
+.rp{border:1px solid var(--sand);border-radius:14px;margin-bottom:.8rem;overflow:hidden;background:var(--cream);}
+.rp summary{list-style:none;cursor:pointer;padding:1rem 1.2rem;font-weight:600;display:flex;justify-content:space-between;align-items:center;gap:1rem;}
+.rp summary::-webkit-details-marker{display:none;}
+.rp summary .badge{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-mute);}
+.rp summary::after{content:"+";font-size:1.3rem;color:var(--ink-mute);}
+.rp[open] summary::after{content:"–";}
+.rp .body{padding:0 1.2rem 1.2rem;font-size:.96rem;}
+.rp .body p{margin:.5rem 0;}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem;margin:.6rem 0;}
+.chip{background:var(--teal-soft);color:#063b35;font-size:.82rem;font-weight:600;padding:.25rem .6rem;border-radius:999px;}
+.chip.red{background:var(--red-soft);color:#8a1410;}
+.phrases{margin:.5rem 0 .2rem;padding-left:1.1rem;}
+.phrases li{margin:.25rem 0;}
+.success{background:var(--yellow-soft);border-radius:10px;padding:.6rem .8rem;font-size:.9rem;margin-top:.6rem;}
+
+/* Debate columns */
+.debate{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;}
+.debate .col{border-radius:14px;padding:1rem;}
+.debate .pro{background:var(--teal-soft);}
+.debate .con{background:var(--red-soft);}
+.debate h4{font-family:var(--font-head);font-weight:600;margin-bottom:.4rem;}
+.debate ul{padding-left:1.1rem;font-size:.93rem;}
+
+/* Grammar */
+.rule{background:var(--cream);border:1px solid var(--sand);border-radius:14px;padding:1.1rem;}
+.rule table{width:100%;border-collapse:collapse;margin-top:.5rem;font-size:.93rem;}
+.rule td,.rule th{border:1px solid var(--sand);padding:.4rem .6rem;text-align:left;}
+.rule th{background:var(--cream-warm);}
+.ex-good{color:#0a7d72;}.ex-bad{color:var(--red);text-decoration:line-through;}
+
+/* Pronunciation */
+.pair{display:flex;gap:.8rem;align-items:center;background:var(--cream);border:1px solid var(--sand);
+  border-radius:12px;padding:.7rem 1rem;margin-bottom:.5rem;font-size:1.05rem;}
+.pair .ipa{color:var(--teal);font-weight:700;}
+.twister{font-family:var(--font-head);font-size:1.15rem;font-style:italic;color:var(--ink);background:var(--yellow-soft);border-radius:12px;padding:1rem;}
+
+/* ---------- WhatsApp chat ---------- */
+.chat{background:var(--wa-bg);border-radius:16px;padding:1rem;max-width:480px;margin:0 auto 1rem;}
+.chat .head{font-weight:700;font-size:.9rem;color:var(--ink-soft);margin-bottom:.6rem;display:flex;gap:.5rem;align-items:center;}
+.bubble{max-width:80%;padding:.5rem .75rem;border-radius:12px;margin:.35rem 0;font-size:.93rem;clear:both;box-shadow:0 1px 1px rgba(0,0,0,.06);}
+.bubble.in{background:var(--wa-in);float:left;border-top-left-radius:3px;}
+.bubble.out{background:var(--wa-out);float:right;border-top-right-radius:3px;}
+.chat::after{content:"";display:block;clear:both;}
+.gloss{font-size:.85rem;color:var(--ink-soft);background:var(--cream);border-radius:10px;padding:.6rem .8rem;margin-top:.4rem;}
+.gloss b{color:var(--ink);}
+
+/* Phrase card */
+.phrase{background:var(--cream);border:1px solid var(--sand);border-radius:12px;padding:.9rem;}
+.phrase .emoji{font-size:1.3rem;}
+.phrase .de{font-weight:600;margin:.2rem 0;}
+.phrase .use{font-size:.85rem;color:var(--ink-mute);}
+
+/* Mission */
+.mission{background:var(--ink);color:var(--cream);border-radius:var(--radius);padding:1.6rem;}
+.mission .block-head{color:var(--cream);}
+.mission .bonus{background:rgba(255,255,255,.08);border-radius:10px;padding:.6rem .8rem;margin-top:.6rem;font-size:.93rem;}
+
+/* Footer */
+footer{text-align:center;color:var(--ink-mute);font-size:.85rem;margin-top:2rem;}
+footer .mark{font-family:var(--font-head);font-weight:600;color:var(--ink);font-size:1rem;}
+footer .mark .t{color:var(--teal);}
+
+@media(max-width:560px){.match,.debate{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- ============ HERO ============ -->
+  <div class="eyebrow">deutschoderwas · Sprechclub · Debatte &amp; Diskussion</div>
+  <div class="title-wrap">
+    <h1 class="title">Führerschein – <span class="hl">Theorie &amp; Prüfung</span></h1>
+    <p class="subtitle">Den Weg zum Führerschein erklären, Verkehrsregeln verstehen und über Mobilität diskutieren – sicher und nuanciert auf Deutsch. 🚗</p>
+    <span class="level-badge">B2/C1</span>
+    <img src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260624_114110_beb6b852-af7e-4af4-a429-dbbf1f13ff34.jpeg" alt="Führerschein &amp; Fahrschule" style="display:block;width:100%;max-width:100%;margin:1.3rem auto 0;border-radius:22px;box-shadow:var(--shadow);">
+    <div class="journey">
+      <span>🚦 Wortschatz</span><span>📋 Theorie</span><span>🎭 Rollenspiel</span><span>⚖️ Debatte</span>
+    </div>
+  </div>
+
+  <!-- ============ NAV (nur genutzte Bausteine verlinken) ============ -->
+  <nav class="tabs">
+    <a href="#aufwaermen">📖 Aufwärmen</a>
+    <a href="#wortschatz">🧠 Wortschatz</a>
+    <a href="#vorlage">📋 Der Weg</a>
+    <a href="#lernkarten">🃏 Lernkarten</a>
+    <a href="#quiz">✅ Theorie-Quiz</a>
+    <a href="#lueckentext">✍️ Lückentext</a>
+    <a href="#zuordnen">🧩 Zuordnen</a>
+    <a href="#rollenspiele">🎭 Rollenspiele</a>
+    <a href="#debatte">⚖️ Debatte</a>
+    <a href="#sprechen">🗣️ Sprechen</a>
+  </nav>
+
+  <!-- ============ AUFWÄRMEN ============ -->
+  <section class="block" id="aufwaermen">
+    <h2 class="block-head">Zum <span class="hl">Aufwärmen</span></h2>
+    <p class="block-intro">Bevor wir loslegen — eine kleine Situation aus dem Alltag.</p>
+    <p><strong>Stell dir vor:</strong> Du sitzt im Prüfungsraum vor dem Computer — gleich beginnt deine Theorieprüfung für den Führerschein.</p>
+    <p style="margin-top:.6rem;">Sprich kurz darüber:</p>
+    <ul style="margin:.4rem 0 0 1.1rem;">
+      <li>Hast du einen Führerschein? Wie war (oder wäre) die Prüfung für dich?</li>
+      <li>Ist Autofahren in der Stadt heute noch wirklich nötig?</li>
+      <li>Was ist schwieriger: die Theorie oder die praktische Prüfung?</li>
+    </ul>
+    <div class="note tip"><strong>💡 Heute lernst du:</strong> den Weg zum Führerschein und die Theorie auf Deutsch erklären, Verkehrsregeln beschreiben und über Mobilität diskutieren — nuanciert und sicher.</div>
+  </section>
+
+  <!-- ============ WORTSCHATZ-GRID ============ -->
+  <section class="block" id="wortschatz">
+    <h2 class="block-head">Der <span class="hl">Führerschein-Wortschatz</span></h2>
+    <p class="block-intro">Diese Begriffe brauchst du, um über Theorie und Prüfung zu sprechen.</p>
+    <img src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260624_140220_b2e6b9c6-4c0a-4011-a31c-6513ff59def7.png" alt="Verkehrszeichen" style="display:block;width:100%;margin:0 0 1.3rem;border-radius:14px;box-shadow:var(--shadow);">
+    <div class="grid g3">
+      <div class="vocab"><span class="emoji">🏫</span><div class="term">die Fahrschule</div><div class="gloss">hier meldest du dich an &amp; lernst</div></div>
+      <div class="vocab"><span class="emoji">👨‍🏫</span><div class="term">der Fahrlehrer / die Fahrlehrerin</div><div class="gloss">begleitet dich in den Fahrstunden</div></div>
+      <div class="vocab"><span class="emoji">💻</span><div class="term">die Theorieprüfung</div><div class="gloss">Fragen am Computer</div></div>
+      <div class="vocab"><span class="emoji">🚗</span><div class="term">die praktische Prüfung</div><div class="gloss">Fahren mit dem Prüfer</div></div>
+      <div class="vocab"><span class="emoji">🛣️</span><div class="term">die Sonderfahrten</div><div class="gloss">Autobahn, Überland, Nachtfahrt</div></div>
+      <div class="vocab"><span class="emoji">⚠️</span><div class="term">die Vorfahrt</div><div class="gloss">wer zuerst fahren darf</div></div>
+      <div class="vocab"><span class="emoji">🍺</span><div class="term">die Promillegrenze</div><div class="gloss">0,5 ‰ – in der Probezeit 0,0</div></div>
+      <div class="vocab"><span class="emoji">⏳</span><div class="term">die Probezeit</div><div class="gloss">2 Jahre nach der Prüfung</div></div>
+      <div class="vocab"><span class="emoji">📍</span><div class="term">der Punkt in Flensburg</div><div class="gloss">Strafpunkt bei Verstößen</div></div>
+    </div>
+    <div class="note info"><strong>Gut zu wissen:</strong> In Deutschland gilt in der <strong>Probezeit</strong> (2 Jahre) <strong>0,0 ‰ Alkohol</strong>. Bei Verstößen drohen <strong>Punkte in Flensburg</strong> und ein Aufbauseminar.</div>
+  </section>
+
+  <!-- ============ KONZEPT-KONTRAST (z. B. leicht verwechselbar) ============ -->
+  <section class="block alt" id="konzepte">
+    <h2 class="block-head">3 Begriffe, die du <span class="hl">unterscheiden</span> musst</h2>
+    <div class="grid g3">
+      <div class="concept"><div class="label">Das Dokument</div><div class="term">der Führerschein</div><div class="desc">Die Plastikkarte, die du dabeihast.</div></div>
+      <div class="concept red"><div class="label">Das Recht</div><div class="term">die Fahrerlaubnis</div><div class="desc">Die Erlaubnis, ein Fahrzeug zu führen (kann entzogen werden).</div></div>
+      <div class="concept yellow"><div class="label">Das Auto-Papier</div><div class="term">der Fahrzeugschein</div><div class="desc">Gehört zum Auto, nicht zur Person.</div></div>
+    </div>
+  </section>
+
+  <!-- ============ VORLAGE (Dialog / E-Mail / Brief) ============ -->
+  <section class="block" id="vorlage">
+    <h2 class="block-head">Der <span class="hl">Weg zum Führerschein</span></h2>
+    <p class="block-intro">So läuft es in Deutschland — Schritt für Schritt. Kannst du die Reihenfolge erklären?</p>
+    <div class="doc">
+      <p class="meta">Von der Anmeldung bis zum Führerschein</p>
+      <p style="margin-top:.6rem;">1. <strong>Anmeldung</strong> in der Fahrschule + Führerscheinantrag stellen.</p>
+      <p>2. <strong>Sehtest</strong> und <strong>Erste-Hilfe-Kurs</strong> machen.</p>
+      <p>3. <strong>Theoriestunden</strong> besuchen und für die <strong>Theorieprüfung</strong> lernen.</p>
+      <p>4. <strong>Theorieprüfung</strong> am Computer bestehen.</p>
+      <p>5. <strong>Fahrstunden</strong> nehmen, inklusive <strong>Sonderfahrten</strong> (Autobahn, Überland, Nachtfahrt).</p>
+      <p>6. <strong>Praktische Prüfung</strong> mit dem Prüfer bestehen — und los! 🎉</p>
+      <p>7. Danach: <strong>Probezeit</strong> (2 Jahre), <strong>0,0 ‰</strong> Alkohol.</p>
+    </div>
+  </section>
+
+  <!-- ============ FRAGEN ZWISCHENDURCH ============ -->
+  <section class="block" id="fragen">
+    <h2 class="block-head">Eine Frage <span class="hl">zwischendurch</span></h2>
+    <div class="grid g2">
+      <div class="qcard"><span class="tag">Erklären</span><div>Kannst du die Regel „rechts vor links" einer Person erklären, die gerade Deutsch lernt — in einfachen, klaren Sätzen?</div><div class="hint">💭 Übe, eine Regel verständlich zu formulieren.</div></div>
+      <div class="qcard"><span class="tag">Meinung</span><div>Selbstfahrende Autos: Würdest du einem Computer das Steuer überlassen? Begründe deine Position mit zwei Argumenten.</div><div class="hint">💭 „Einerseits … andererseits …"</div></div>
+    </div>
+  </section>
+
+  <!-- ============ LERNKARTEN (Flashcards) ============ -->
+  <section class="block" id="lernkarten">
+    <h2 class="block-head">Wortschatz-<span class="hl">Karten</span></h2>
+    <p class="block-intro">Erst denken — dann umdrehen. Tippe auf die Karte.</p>
+    <div class="flashbox" data-flashcards>
+      <!-- Jede Karte: data-card mit front (Wort) und back (Übersetzung+Beispiel) -->
+      <div class="flashcard" data-card>
+        <div class="inner">
+          <div class="face front"><span class="big">⚠️</span><span class="term">die Vorfahrt</span><span class="tagword">Tippen zum Umdrehen</span></div>
+          <div class="face back"><span class="answer">right of way</span><span class="ex">„Hier hat der Verkehr von rechts Vorfahrt."</span></div>
+        </div>
+      </div>
+      <div class="flashcard" data-card>
+        <div class="inner">
+          <div class="face front"><span class="big">💻</span><span class="term">die Theorieprüfung</span><span class="tagword">Tippen zum Umdrehen</span></div>
+          <div class="face back"><span class="answer">theory test</span><span class="ex">„Ich habe die Theorieprüfung bestanden!"</span></div>
+        </div>
+      </div>
+      <div class="flashcard" data-card>
+        <div class="inner">
+          <div class="face front"><span class="big">⏳</span><span class="term">die Probezeit</span><span class="tagword">Tippen zum Umdrehen</span></div>
+          <div class="face back"><span class="answer">probationary period</span><span class="ex">„In der Probezeit gilt 0,0 Promille."</span></div>
+        </div>
+      </div>
+      <div class="flashcard" data-card>
+        <div class="inner">
+          <div class="face front"><span class="big">📍</span><span class="term">der Punkt in Flensburg</span><span class="tagword">Tippen zum Umdrehen</span></div>
+          <div class="face back"><span class="answer">penalty point</span><span class="ex">„Dafür gibt es einen Punkt in Flensburg."</span></div>
+        </div>
+      </div>
+      <div class="flashcard" data-card>
+        <div class="inner">
+          <div class="face front"><span class="big">🛣️</span><span class="term">die Sonderfahrten</span><span class="tagword">Tippen zum Umdrehen</span></div>
+          <div class="face back"><span class="answer">special drives (motorway etc.)</span><span class="ex">„Heute habe ich meine erste Autobahnfahrt."</span></div>
+        </div>
+      </div>
+      <div class="flash-ctrl">
+        <button data-prev>← Zurück</button>
+        <span class="count" data-count>1 / 3</span>
+        <button data-next>Weiter →</button>
+        <button data-shuffle>🔀 Mischen</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ QUIZ ============ -->
+  <section class="block alt" id="quiz">
+    <h2 class="block-head">Quiz: <span class="hl">Was passt?</span></h2>
+    <p class="block-intro">Tippe die richtige Antwort an.</p>
+    <div data-quiz>
+      <div class="quiz-q">
+        <div class="qtext">An einer Kreuzung ohne Schilder und Ampel gilt…</div>
+        <div class="quiz-opts">
+          <button class="quiz-opt">links vor rechts</button>
+          <button class="quiz-opt" data-correct>rechts vor links</button>
+          <button class="quiz-opt">wer zuerst hupt</button>
+        </div>
+        <div class="quiz-exp">„Rechts vor links" — der Verkehr von rechts hat Vorfahrt.</div>
+      </div>
+      <div class="quiz-q">
+        <div class="qtext">Welche Promillegrenze gilt in der Probezeit?</div>
+        <div class="quiz-opts">
+          <button class="quiz-opt">0,5 ‰</button>
+          <button class="quiz-opt" data-correct>0,0 ‰</button>
+          <button class="quiz-opt">0,3 ‰</button>
+        </div>
+        <div class="quiz-exp">In der Probezeit (und unter 21) gilt absolutes Alkoholverbot: 0,0 ‰.</div>
+      </div>
+      <div class="quiz-q">
+        <div class="qtext">Wo werden Strafpunkte gespeichert?</div>
+        <div class="quiz-opts">
+          <button class="quiz-opt">in München</button>
+          <button class="quiz-opt" data-correct>in Flensburg</button>
+          <button class="quiz-opt">in Berlin</button>
+        </div>
+        <div class="quiz-exp">Beim Kraftfahrt-Bundesamt in Flensburg — daher „Punkte in Flensburg".</div>
+      </div>
+      <div class="quiz-q">
+        <div class="qtext">Was gehört NICHT zu den Sonderfahrten?</div>
+        <div class="quiz-opts">
+          <button class="quiz-opt">Autobahnfahrt</button>
+          <button class="quiz-opt">Nachtfahrt</button>
+          <button class="quiz-opt" data-correct>Parkhaus-Fahrt</button>
+        </div>
+        <div class="quiz-exp">Sonderfahrten = Autobahn, Überland und Nacht. Parken übt man normal.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ LÜCKENTEXT ============ -->
+  <section class="block" id="lueckentext">
+    <h2 class="block-head">Lückentext: <span class="hl">Rund um die Prüfung</span></h2>
+    <p class="block-intro">Wähle aus jeder Liste das passende Wort.</p>
+    <div data-fillgap>
+      <div class="gap-item">1. Zuerst muss ich mich in der
+        <select data-answer="Fahrschule"><option></option><option>Fahrschule</option><option>Apotheke</option><option>Bibliothek</option></select> anmelden.
+      </div>
+      <div class="gap-item">2. Am Computer mache ich die
+        <select data-answer="Theorieprüfung"><option></option><option>Theorieprüfung</option><option>Hausaufgabe</option><option>Überweisung</option></select>.
+      </div>
+      <div class="gap-item">3. An der Kreuzung gilt rechts vor
+        <select data-answer="links"><option></option><option>oben</option><option>links</option><option>hinten</option></select>.
+      </div>
+      <div class="gap-item">4. In der Probezeit darf ich keinen
+        <select data-answer="Alkohol"><option></option><option>Kaffee</option><option>Alkohol</option><option>Sport</option></select> trinken.
+      </div>
+      <div style="margin-top:1rem;"><button class="btn" data-check>Überprüfen</button><span class="score" data-score></span></div>
+    </div>
+  </section>
+
+  <!-- ============ ZUORDNEN (Matching) ============ -->
+  <section class="block alt" id="zuordnen">
+    <h2 class="block-head">Begriff ↔ <span class="hl">Erklärung</span> zuordnen</h2>
+    <p class="block-intro">Tippe links einen Begriff an, dann rechts die passende Erklärung.</p>
+    <div class="match" data-match>
+      <div>
+        <h4>Begriff</h4>
+        <div class="match-item" data-left="1">die Probezeit</div>
+        <div class="match-item" data-left="2">die Sonderfahrten</div>
+        <div class="match-item" data-left="3">der Sehtest</div>
+        <div class="match-item" data-left="4">die Vorfahrt</div>
+      </div>
+      <div>
+        <h4>Erklärung</h4>
+        <div class="match-item" data-right="4">Wer an der Kreuzung zuerst fahren darf.</div>
+        <div class="match-item" data-right="1">2 Jahre nach der Prüfung — mit 0,0 ‰.</div>
+        <div class="match-item" data-right="3">Prüfung, ob du gut genug siehst.</div>
+        <div class="match-item" data-right="2">Pflichtfahrten: Autobahn, Überland, Nacht.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SPRECHKARTEN (random) ============ -->
+  <section class="block" id="sprechen">
+    <h2 class="block-head">Sprechen — <span class="hl">los geht's!</span></h2>
+    <p class="block-intro">Tippe auf „Neue Karte" und sprich frei.</p>
+    <div class="speak" data-speak>
+      <div class="card"><span class="ph">Tippe unten auf „Neue Karte"…</span></div>
+      <div style="margin-top:1rem;"><button class="btn dark" data-draw>🎲 Neue Karte</button></div>
+      <script type="application/json" data-speak-cards>
+        ["Erkläre die Regel 'rechts vor links', als würdest du sie einem Anfänger beibringen.",
+         "Beschreibe Schritt für Schritt den Weg zum Führerschein in Deutschland.",
+         "Nenne drei Dinge, die in der Probezeit besonders wichtig sind.",
+         "Argumentiere für ODER gegen ein Tempolimit auf der Autobahn.",
+         "Brauchst du in deiner Stadt ein eigenes Auto? Begründe deine Meinung.",
+         "Erzähle von deiner (echten oder erfundenen) Fahrprüfung — was ist passiert?"]
+      </script>
+    </div>
+  </section>
+
+  <!-- ============ ROLLENSPIELE (accordion) ============ -->
+  <section class="block alt" id="rollenspiele">
+    <h2 class="block-head">2 <span class="hl">Rollenspiele</span></h2>
+    <img src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260624_140225_ac1ee5f5-2948-4aad-a68e-b4b001b03051.png" alt="Anmeldung in der Fahrschule" style="display:block;width:100%;margin:0 0 1.3rem;border-radius:14px;box-shadow:var(--shadow);">
+    <details class="rp">
+      <summary><span>🏫 Anmeldegespräch in der Fahrschule</span><span class="badge">Beratung</span></summary>
+      <div class="body">
+        <p><strong>Situation:</strong> Du möchtest den Führerschein machen und lässt dich in einer Fahrschule beraten.</p>
+        <p><strong>Deine Rolle:</strong> Frage nach Kosten, Dauer, Terminen und dem Ablauf.</p>
+        <p style="font-weight:600;margin-top:.6rem;">🔑 Schlüssel-Vokabular</p>
+        <div class="chips"><span class="chip">sich anmelden</span><span class="chip">die Kosten</span><span class="chip">wie lange dauert …?</span><span class="chip">die Theoriestunden</span><span class="chip">die Fahrstunden</span></div>
+        <p style="font-weight:600;">💬 Beispiel-Phrasen</p>
+        <ul class="phrases">
+          <li>„Ich würde gerne den Führerschein machen — wie läuft das ab?"</li>
+          <li>„Mit welchen Kosten muss ich ungefähr rechnen?"</li>
+          <li>„Wie viele Fahrstunden brauche ich im Schnitt?"</li>
+        </ul>
+        <div class="success"><strong>✅ Eine gute Antwort enthält:</strong> Begrüßung + konkrete Fragen (Kosten/Dauer/Ablauf) + höfliche Nachfrage.</div>
+      </div>
+    </details>
+    <details class="rp">
+      <summary><span>🚗 In der Fahrstunde</span><span class="badge">Anweisungen</span></summary>
+      <div class="body">
+        <p><strong>Situation:</strong> Dein Fahrlehrer gibt Anweisungen. Du reagierst und fragst nach, wenn etwas unklar ist.</p>
+        <p><strong>Deine Rolle:</strong> Verstehe die Anweisungen und bestätige bzw. frage höflich nach.</p>
+        <div class="chips"><span class="chip">an der Kreuzung links abbiegen</span><span class="chip">den Spiegel kontrollieren</span><span class="chip">die Vorfahrt beachten</span><span class="chip">langsamer fahren</span></div>
+        <p style="font-weight:600;">💬 Beispiel-Phrasen</p>
+        <ul class="phrases">
+          <li>„Soll ich hier rechts oder links abbiegen?"</li>
+          <li>„Entschuldigung, können Sie das noch einmal sagen?"</li>
+          <li>„Habe ich hier Vorfahrt?"</li>
+        </ul>
+        <div class="success"><strong>✅ Eine gute Antwort enthält:</strong> Verständnis zeigen + nachfragen + Verkehrswortschatz korrekt nutzen.</div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ DEBATTE (für Debatten-Lektionen) ============ -->
+  <section class="block" id="debatte">
+    <h2 class="block-head">Debatte: <span class="hl">Tempolimit &amp; Auto</span></h2>
+    <p class="block-intro">Wähle eine Seite, sammle Argumente und nutze die Redemittel. Danach Seiten tauschen!</p>
+    <img src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260624_140223_d99de3b1-ea54-4798-894b-2ddb6f955053.png" alt="Auto vs. Stadt" style="display:block;width:100%;margin:0 0 1.3rem;border-radius:14px;box-shadow:var(--shadow);">
+    <p style="font-weight:600;margin-bottom:.5rem;">⚖️ Frage 1: Sollte es ein generelles Tempolimit auf deutschen Autobahnen geben?</p>
+    <div class="debate">
+      <div class="col pro"><h4>👍 Dafür</h4><ul><li>weniger Unfälle und Tote</li><li>weniger CO₂ und Lärm</li><li>gleichmäßiger Verkehrsfluss</li></ul></div>
+      <div class="col con"><h4>👎 Dagegen</h4><ul><li>persönliche Freiheit</li><li>kaum Zeitverlust auf vollen Strecken</li><li>moderne Autos sind sehr sicher</li></ul></div>
+    </div>
+    <p style="font-weight:600;margin:1rem 0 .5rem;">⚖️ Frage 2: Brauchen wir in der Stadt überhaupt noch ein eigenes Auto?</p>
+    <div class="debate">
+      <div class="col pro"><h4>👍 Dafür (Auto behalten)</h4><ul><li>flexibel &amp; unabhängig</li><li>praktisch mit Familie/Einkäufen</li></ul></div>
+      <div class="col con"><h4>👎 Dagegen (kein Auto)</h4><ul><li>teuer (Versicherung, Parken)</li><li>guter ÖPNV, Carsharing, Fahrrad</li></ul></div>
+    </div>
+    <div class="note tip"><strong>Redemittel:</strong> „Ich bin der Meinung, dass…", „Einerseits… andererseits…", „Das sehe ich anders, weil…", „Da muss ich widersprechen.", „Ein starkes Argument dafür ist…"</div>
+  </section>
+
+  <!-- ============ UMGANGSSPRACHE / WHATSAPP-CHATS ============ -->
+  <section class="block alt" id="chats">
+    <h2 class="block-head">So reden Deutsche <span class="hl">wirklich</span></h2>
+    <p class="block-intro">Echte WhatsApp-Chats — locker und kurz.</p>
+    <div class="chat">
+      <div class="head">🚗 Jonas · Prüfung überstanden</div>
+      <div class="bubble out">ALTER ich hab bestanden!! 🎉🚗</div>
+      <div class="bubble in">Nice!! War die Theorie schwer?</div>
+      <div class="bubble out">Ging so, hatte voll Schiss aber lief 👍 Jetzt erstmal Probezeit, also null Alk</div>
+      <div class="bubble in">Glückwunsch! Dann fahr mal vorsichtig 😄</div>
+    </div>
+    <div class="gloss"><b>„Alter!"</b> = umgangssprachlicher Ausruf (Erstaunen) · <b>„voll Schiss haben"</b> = große Angst haben · <b>„null Alk"</b> = kein Alkohol (Probezeit: 0,0 ‰)</div>
+  </section>
+
+
+  <!-- ============ PHRASEN ============ -->
+  <section class="block" id="phrasen">
+    <h2 class="block-head">Wichtige <span class="hl">Führerschein-Phrasen</span></h2>
+    <div class="grid g2">
+      <div class="phrase"><span class="emoji">🏫</span><div class="de">„Ich möchte den Führerschein machen."</div><div class="use">in der Fahrschule</div></div>
+      <div class="phrase"><span class="emoji">⚠️</span><div class="de">„Hier gilt rechts vor links."</div><div class="use">eine Regel erklären</div></div>
+      <div class="phrase"><span class="emoji">⚖️</span><div class="de">„Ich bin der Meinung, dass…"</div><div class="use">in der Debatte argumentieren</div></div>
+      <div class="phrase"><span class="emoji">🙋</span><div class="de">„Können Sie das noch einmal erklären?"</div><div class="use">höflich nachfragen</div></div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="mark">deutsch<span class="t">oderwas</span></div>
+    <p>Authentisches Deutsch für den Alltag · Erstellt mit ♥ für meine Sprechclub-Lernenden</p>
+    <p>Führerschein – Theorie &amp; Prüfung · B2/C1 · Juni 2026</p>
+  </footer>
+
+</div><!-- /wrapper -->
+
+<script>
+(function(){
+  /* ---- Sticky-Nav: aktiven Tab beim Scrollen markieren ---- */
+  const tabs=[...document.querySelectorAll('nav.tabs a')];
+  const map=tabs.map(a=>({a,sec:document.querySelector(a.getAttribute('href'))})).filter(x=>x.sec);
+  if('IntersectionObserver' in window){
+    const obs=new IntersectionObserver(es=>{
+      es.forEach(e=>{ if(e.isIntersecting){ tabs.forEach(t=>t.classList.remove('active'));
+        const m=map.find(x=>x.sec===e.target); if(m) m.a.classList.add('active'); } });
+    },{rootMargin:'-45% 0px -50% 0px'});
+    map.forEach(x=>obs.observe(x.sec));
+  }
+
+  /* ---- Flashcards ---- */
+  document.querySelectorAll('[data-flashcards]').forEach(box=>{
+    let cards=[...box.querySelectorAll('[data-card]')];
+    let i=0;
+    const count=box.querySelector('[data-count]');
+    function show(){ cards.forEach((c,n)=>{c.style.display=n===i?'block':'none';c.classList.remove('flipped');});
+      if(count) count.textContent=(i+1)+' / '+cards.length; }
+    box.querySelectorAll('[data-card]').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('flipped')));
+    const nx=box.querySelector('[data-next]'),pv=box.querySelector('[data-prev]'),sh=box.querySelector('[data-shuffle]');
+    if(nx)nx.addEventListener('click',()=>{i=(i+1)%cards.length;show();});
+    if(pv)pv.addEventListener('click',()=>{i=(i-1+cards.length)%cards.length;show();});
+    if(sh)sh.addEventListener('click',()=>{for(let k=cards.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[cards[k],cards[j]]=[cards[j],cards[k]];}i=0;show();});
+    show();
+  });
+
+  /* ---- Quiz ---- */
+  document.querySelectorAll('[data-quiz] .quiz-q').forEach(q=>{
+    q.querySelectorAll('.quiz-opt').forEach(opt=>{
+      opt.addEventListener('click',()=>{
+        if(q.classList.contains('answered'))return;
+        q.classList.add('answered');
+        const correct=q.querySelector('.quiz-opt[data-correct]');
+        if(opt.hasAttribute('data-correct')) opt.classList.add('correct');
+        else { opt.classList.add('wrong'); if(correct) correct.classList.add('correct'); }
+      });
+    });
+  });
+
+  /* ---- Lückentext ---- */
+  document.querySelectorAll('[data-fillgap]').forEach(box=>{
+    const btn=box.querySelector('[data-check]'),score=box.querySelector('[data-score]');
+    if(!btn)return;
+    btn.addEventListener('click',()=>{
+      let ok=0;const sels=box.querySelectorAll('select[data-answer]');
+      sels.forEach(s=>{ s.classList.remove('ok','no');
+        if(s.value===s.getAttribute('data-answer')){s.classList.add('ok');ok++;}
+        else s.classList.add('no'); });
+      if(score) score.textContent=ok+' / '+sels.length+' richtig'+(ok===sels.length?' 🎉':'');
+    });
+  });
+
+  /* ---- Zuordnen (Matching) ---- */
+  document.querySelectorAll('[data-match]').forEach(box=>{
+    let selLeft=null;
+    box.querySelectorAll('.match-item').forEach(item=>{
+      item.addEventListener('click',()=>{
+        if(item.classList.contains('done'))return;
+        const isLeft=item.hasAttribute('data-left');
+        if(isLeft){ box.querySelectorAll('.match-item.sel').forEach(s=>s.classList.remove('sel'));
+          item.classList.add('sel'); selLeft=item; return; }
+        if(!selLeft)return;
+        if(item.getAttribute('data-right')===selLeft.getAttribute('data-left')){
+          item.classList.add('done');selLeft.classList.add('done');selLeft.classList.remove('sel');selLeft=null;
+        } else { item.classList.add('no');setTimeout(()=>item.classList.remove('no'),500); }
+      });
+    });
+  });
+
+  /* ---- Sprechkarten (random) ---- */
+  document.querySelectorAll('[data-speak]').forEach(box=>{
+    let cards=[];
+    const data=box.querySelector('[data-speak-cards]');
+    try{cards=JSON.parse(data.textContent);}catch(e){}
+    const card=box.querySelector('.card'),btn=box.querySelector('[data-draw]');
+    if(btn)btn.addEventListener('click',()=>{ if(!cards.length)return;
+      card.innerHTML=cards[Math.floor(Math.random()*cards.length)]; });
+  });
+})();
+</script>
+</body>
+</html>
