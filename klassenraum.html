@@ -119,13 +119,14 @@
     main{ display:flex; flex-direction:column; gap:8px; padding:8px; }
     .gutter{ display:none; }
     .spalte{ display:contents; }
-    .video-card{ order:1; width:100%; align-self:stretch; }
-    .video-buehne{ height:15vh; aspect-ratio:auto; }       /* Video klein */
+    /* Video bleibt OBEN angeheftet: Teilnehmer + Selbstbild immer sichtbar, Präsi scrollt darunter */
+    .video-card{ order:1; width:100%; align-self:stretch; position:sticky; top:0; z-index:20; box-shadow:0 6px 16px rgba(0,0,0,.14); }
+    .video-buehne{ height:23vh; aspect-ratio:auto; }       /* etwas größer: man sieht alle + sich selbst */
     .vid-controls{ padding:5px 7px; gap:5px; flex-wrap:nowrap; }
     .vid-controls button{ min-width:0; flex:1 1 0; padding:7px 2px; font-size:.68rem; }
     .vid-controls button.leave{ flex-basis:0; }
-    /* Reiter bleiben oben kleben, damit man immer umschalten kann */
-    .m-tabs{ display:flex; order:2; gap:8px; position:sticky; top:0; z-index:18; background:var(--creme); padding:4px 0; }
+    /* Umschalt-Reiter direkt unter dem Video, scrollen mit dem Inhalt */
+    .m-tabs{ display:flex; order:2; gap:8px; background:var(--creme); padding:4px 0; }
     .m-tabs button{ flex:1; border:1px solid var(--rahmen); background:#fff; border-radius:10px; padding:11px; font-family:'Inter'; font-weight:700; font-size:.88rem; color:var(--anthrazit); cursor:pointer; }
     .m-tabs button.active{ background:var(--tuerkis); color:var(--auf-tuerkis); border-color:var(--tuerkis); }
     .lektion-card{ order:3; }
@@ -335,6 +336,7 @@
   }
   function stiftToggle(){
     pen=!pen;
+    if(pen && (cv.width!==cv.clientWidth || cv.height!==cv.clientHeight)) fit(); // nur bei Größenänderung neu einpassen
     cv.style.pointerEvents = pen?'auto':'none';
     document.getElementById('stift-btn').classList.toggle('on',pen);
     document.getElementById('stift-extra').classList.toggle('hidden',!pen);
@@ -584,7 +586,14 @@
     stiftCh.on('broadcast', { event:'draw' }, ({payload})=>{
         if(istLehrer) return;
         const img=new Image();
-        img.onload=()=>{ ctx.clearRect(0,0,cv.width,cv.height); ctx.drawImage(img,0,0,cv.width,cv.height); };
+        img.onload=()=>{
+          // Zeichenfläche an die aktuelle Anzeigegröße anpassen (sonst auf dem Handy 0 → unsichtbar)
+          if(cv.clientWidth && cv.clientHeight && (cv.width!==cv.clientWidth || cv.height!==cv.clientHeight)){
+            cv.width=cv.clientWidth; cv.height=cv.clientHeight;
+          }
+          ctx.clearRect(0,0,cv.width,cv.height);
+          ctx.drawImage(img,0,0,cv.width,cv.height);
+        };
         img.src=payload.img;
       })
       .on('broadcast', { event:'clear' }, ()=>{ if(!istLehrer) ctx.clearRect(0,0,cv.width,cv.height); })
