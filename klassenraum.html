@@ -127,8 +127,10 @@
     .vid-controls button.leave{ flex-basis:0; }
     /* Umschalt-Reiter direkt unter dem Video, scrollen mit dem Inhalt */
     .m-tabs{ display:flex; order:2; gap:8px; background:var(--creme); padding:4px 0; }
-    .m-tabs button{ flex:1; border:1px solid var(--rahmen); background:#fff; border-radius:10px; padding:11px; font-family:'Inter'; font-weight:700; font-size:.88rem; color:var(--anthrazit); cursor:pointer; }
+    .m-tabs button{ position:relative; flex:1; border:1px solid var(--rahmen); background:#fff; border-radius:10px; padding:11px; font-family:'Inter'; font-weight:700; font-size:.88rem; color:var(--anthrazit); cursor:pointer; }
     .m-tabs button.active{ background:var(--tuerkis); color:var(--auf-tuerkis); border-color:var(--tuerkis); }
+    .m-tabs button.hat-neu::after{ content:''; position:absolute; top:7px; right:12px; width:11px; height:11px; border-radius:50%; background:#DD0000; box-shadow:0 0 0 2px #fff; animation:blinkdot 1s infinite; }
+    @keyframes blinkdot{ 50%{ opacity:.3; } }
     .lektion-card{ order:3; }
     .lekt-kopf{ font-size:.78rem; }
     .lekt-kopf .name{ display:none; }
@@ -577,7 +579,7 @@
         const notes = payload.new && payload.new.notes;
         if(notes==null) return;
         if(istLehrer && notes===lastSaved) return;   // eigene Änderung nicht zurückspielen
-        if(!istLehrer) renderTafel(notes);            // Schüler: live aktualisieren
+        if(!istLehrer){ renderTafel(notes); flashTafelTab(); }  // Schüler: live aktualisieren + Hinweis am Reiter
       })
       .subscribe();
 
@@ -585,6 +587,7 @@
     const stiftCh = sb.channel('stift-'+STUNDE);
     stiftCh.on('broadcast', { event:'draw' }, ({payload})=>{
         if(istLehrer) return;
+        if(window.matchMedia && window.matchMedia('(max-width:760px)').matches) return; // Stift-Overlay nur am Computer – am Handy nicht deckungsgleich, daher aus
         const img=new Image();
         img.onload=()=>{
           // Zeichenfläche an die aktuelle Anzeigegröße anpassen (sonst auf dem Handy 0 → unsichtbar)
@@ -634,7 +637,9 @@
         const innerMax=Math.max(0, doc.scrollHeight - w.innerHeight);
         if(innerMax>4){ w.scrollTo(0, frac*innerMax); return; }   // Desktop
       }
-      // Handy: die ganze Seite zur passenden Stelle scrollen
+      // Auf dem Handy NICHT automatisch scrollen – sonst verschwindet die Tafel. Schüler scrollt selbst.
+      if(window.matchMedia && window.matchMedia('(max-width:760px)').matches) return;
+      // (nur Desktop ohne inneres Scrollen) die ganze Seite zur passenden Stelle scrollen
       const top = ifr.getBoundingClientRect().top + window.scrollY;
       const pageMax = Math.max(0, ifr.offsetHeight - window.innerHeight);
       window.scrollTo({ top: top + frac*pageMax, behavior:'auto' });
@@ -674,11 +679,16 @@
   }
 
   // Handy-Tabs: zwischen Lektion und Tafel umschalten (nur auf dem Handy sichtbar)
+  function flashTafelTab(){   // roter Punkt am Tafel-Reiter, wenn die Lehrerin schreibt (nur wenn man nicht eh auf der Tafel ist)
+    const t=document.getElementById('mt-tafel');
+    if(t && !t.classList.contains('active')) t.classList.add('hat-neu');
+  }
   function mTab(which){
     document.getElementById('mt-lekt').classList.toggle('active', which==='lekt');
     document.getElementById('mt-tafel').classList.toggle('active', which==='tafel');
     document.querySelector('.lektion-card').classList.toggle('m-hide', which!=='lekt');
     document.querySelector('.tafel').classList.toggle('m-hide', which!=='tafel');
+    if(which==='tafel'){ const t=document.getElementById('mt-tafel'); if(t) t.classList.remove('hat-neu'); }  // Hinweis weg
     if(which==='lekt') setTimeout(fitLektion, 120); else setTimeout(fit, 120);
     window.scrollTo(0,0);
   }
