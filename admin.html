@@ -467,11 +467,11 @@ function klReset(){ klTeacher=''; klClub=''; klLevel=''; renderKlassen(); }
 
 async function loadKlassen(){
   if(!klWeekStart){
-    // Standard: Woche der ersten kommenden Stunde (= ab 29.06.), nicht die evtl. leere aktuelle Woche
-    try{
-      const { data:firstC } = await sb.from('classes').select('starts_at').eq('is_cancelled',false).gte('starts_at', new Date().toISOString()).order('starts_at').limit(1);
-      klWeekStart = mondayOf(firstC && firstC[0] ? new Date(firstC[0].starts_at) : new Date());
-    }catch(e){ klWeekStart = mondayOf(new Date()); }
+    // Standard: Woche ab dem Start (29.06.2026). Vorher NIE eine frühere Woche zeigen;
+    // ab dem Start immer die laufende Woche (mit Heute-Markierung).
+    const LAUNCH = new Date(2026,5,29); // 29.06.2026 (Monatsindex 5 = Juni)
+    const now = new Date();
+    klWeekStart = mondayOf(now > LAUNCH ? now : LAUNCH);
   }
   const from = new Date(klWeekStart);
   const to = new Date(from); to.setDate(to.getDate()+7);
