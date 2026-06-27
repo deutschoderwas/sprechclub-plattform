@@ -123,9 +123,9 @@ export default async function handler(req, res) {
     }
   }
 
-  // ---------- (3) Wochenüberblick (Freitag 17:00 Berlin, Plan für die kommende Woche) ----------
+  // ---------- (3) Wochenüberblick (Sonntag 18:00 Berlin, Plan für die kommende Woche) ----------
   let weekSent = 0;
-  if (berlinWeekday(now) === 5 && berlinHour(now) === 17) {
+  if (berlinWeekday(now) === 7 && berlinHour(now) === 18) {
     const dow = berlinWeekday(now);
     const daysToMon = ((1 - dow + 7) % 7) || 7;          // bis zum nächsten Montag (1..7)
     const monday = new Date(now.getTime() + daysToMon * 24 * 3600 * 1000);
