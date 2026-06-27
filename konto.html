@@ -768,21 +768,10 @@ function phaseHtml(b, phase){
     return `<div class="phase ${ready?'ready':''} ${donecls}"><b>✍️ Nachbearbeitung</b>${inner}</div>`;
   }
   if(phase==='live'){
-    const st=new Date(b.starts_at).getTime(), now=Date.now();
-    const started = now >= st - 10*60000;   // ab 10 Min vor Beginn
-    const ended = now > st + 90*60000;      // bis 90 Min nach Beginn
-    const liveNow = started && !ended;
     const href = `klassenraum.html?stunde=${b.class_id}&titel=${encodeURIComponent(b.title||'')}&niveau=${encodeURIComponent(b.level||'')}`;
-    // Beitreten erst ab 10 Min vor Beginn (rot) – vorher KEIN Link, der Raum ist gesperrt.
-    let inner;
-    if(liveNow){
-      inner=`<a class="btn btn-turq btn-sm" href="${href}" target="_blank" rel="noopener" style="text-decoration:none"><span class="live-dot"></span>🔴 Beitreten</a>`;
-    } else if(ended){
-      inner='<span class="nope">Stunde vorbei</span>';
-    } else {
-      inner='<span class="nope">Klassenraum öffnet 10 Min vor Beginn</span>';
-    }
-    return `<div class="phase ${liveNow?'ready':''}"><b>🗣️ Im Unterricht</b>${inner}</div>`;
+    // Keine Zeitsperre: der Klassenraum ist jederzeit betretbar.
+    const inner=`<a class="btn btn-turq btn-sm" href="${href}" target="_blank" rel="noopener" style="text-decoration:none"><span class="live-dot"></span>🔴 Beitreten</a>`;
+    return `<div class="phase ready"><b>🗣️ Im Unterricht</b>${inner}</div>`;
   }
   const hasKi = m && m[phase] && Array.isArray(m[phase].exercises) && m[phase].exercises.length;
   const link = phase==='pre'?b.material_pre:(phase==='post'?b.material_post:b.material_live);
