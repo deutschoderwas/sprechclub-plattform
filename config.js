@@ -11,7 +11,7 @@ window.SPRECHCLUB_CONFIG = {
   // kostenlos kündbar, danach automatisch monatliches Abo. (trial = Tage Testphase)
   // Immer gratis dabei: Üben rund um die Uhr, Amanda (KI-Tutorin 24/7) & Community.
   PAKETE: [
-    { id: 'testpass', typ: 'pass', abo: true, trial: 7, stunden: 4, preis: 79, label: 'Testpass',
+    { id: 'testpass', typ: 'pass', abo: true, trial: 7, stunden: 4, preis: 79, label: 'Ab und zu Pass',
       hinweis: 'pro Monat · 4 Stunden',
       benefits: ['4 LIVE-Stunden pro Monat', 'Alle Clubs & Niveaus', '🎮 Üben rund um die Uhr – gratis', '🎤 Amanda – deine KI-Tutorin 24/7', '💬 Community', '✅ 1 LIVE-Stunde gratis testen – innerhalb 7 Tagen, jederzeit kündbar'] },
 
