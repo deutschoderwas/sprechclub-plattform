@@ -13,15 +13,15 @@ window.SPRECHCLUB_CONFIG = {
   PAKETE: [
     { id: 'testpass', typ: 'pass', abo: true, trial: 7, stunden: 4, preis: 79, label: 'Testpass',
       hinweis: 'pro Monat · 4 Stunden',
-      benefits: ['4 LIVE-Stunden pro Monat', 'Alle Clubs & Niveaus', '🎮 Üben rund um die Uhr – gratis', '🎤 Amanda – deine KI-Tutorin 24/7', '💬 Community', '✅ 7 Tage gratis testen · jederzeit kündbar'] },
+      benefits: ['4 LIVE-Stunden pro Monat', 'Alle Clubs & Niveaus', '🎮 Üben rund um die Uhr – gratis', '🎤 Amanda – deine KI-Tutorin 24/7', '💬 Community', '✅ 1 LIVE-Stunde gratis testen – innerhalb 7 Tagen, jederzeit kündbar'] },
 
     { id: 'gelegenheitspass', typ: 'pass', abo: true, trial: 7, stunden: 8, preis: 139, label: 'Gelegenheitspass',
       hinweis: 'pro Monat · 8 Stunden',
-      benefits: ['8 LIVE-Stunden pro Monat', 'Alle Clubs & Niveaus', '🎮 Üben rund um die Uhr – gratis', '🎤 Amanda – deine KI-Tutorin 24/7', '💬 Community', '✅ 7 Tage gratis testen · jederzeit kündbar'] },
+      benefits: ['8 LIVE-Stunden pro Monat', 'Alle Clubs & Niveaus', '🎮 Üben rund um die Uhr – gratis', '🎤 Amanda – deine KI-Tutorin 24/7', '💬 Community', '✅ 1 LIVE-Stunde gratis testen – innerhalb 7 Tagen, jederzeit kündbar'] },
 
     { id: 'allinclusive', typ: 'pass', abo: true, trial: 7, stunden: 12, preis: 189, label: 'Profi-Pass',
       hinweis: 'pro Monat · 12 Stunden', beliebt: true,
-      benefits: ['12 LIVE-Klassen pro Monat', 'Alle Clubs & Niveaus', '🎮 Üben rund um die Uhr – gratis', '🎤 Amanda – deine KI-Tutorin 24/7', '💬 Community', '✅ 7 Tage gratis testen · jederzeit kündbar'] },
+      benefits: ['12 LIVE-Klassen pro Monat', 'Alle Clubs & Niveaus', '🎮 Üben rund um die Uhr – gratis', '🎤 Amanda – deine KI-Tutorin 24/7', '💬 Community', '✅ 1 LIVE-Stunde gratis testen – innerhalb 7 Tagen, jederzeit kündbar'] },
 
     { id: 'sparpass', typ: 'paket', stunden: 30, preis: 399, label: 'Spar Pass',
       hinweis: 'einmalig · 30 Stunden',
