@@ -227,11 +227,11 @@
       <div class="tafel-body">
         <div class="block">
           <div class="block-titel">📝 Notizen &amp; Wortschatz</div>
-          <div id="notiz" class="rich" contenteditable="true" data-ph="Hier mitschreiben – wichtige Wörter markieren (🖊️) …"></div>
+          <div id="notiz" class="rich" contenteditable="true" spellcheck="true" lang="de" autocapitalize="sentences" autocorrect="on" data-ph="Hier mitschreiben – wichtige Wörter markieren (🖊️) …"></div>
         </div>
         <div class="block">
           <div class="block-titel korr-titel">🔴 Fehlerkorrektur</div>
-          <div id="korrektur" class="rich" contenteditable="true" data-ph="ich habe gegeht  →  ich bin gegangen"></div>
+          <div id="korrektur" class="rich" contenteditable="true" spellcheck="true" lang="de" autocapitalize="sentences" data-ph="ich habe gegeht  →  ich bin gegangen"></div>
         </div>
       </div>
       <div class="status" id="status">Live · gespeichert ✓</div>
@@ -327,6 +327,51 @@
     ed.addEventListener('input', liveFeedback);
     autoMark(ed);
   });
+
+  // ---- Auto-Korrektur häufiger deutscher Tippfehler (nur Mitschrift „notiz") ----
+  const TYPOS = {
+    'udn':'und','nud':'und','adn':'und',
+    'dei':'die','nciht':'nicht','nihct':'nicht','nict':'nicht','niht':'nicht',
+    'nähmlich':'nämlich','naemlich':'nämlich','seperat':'separat','standart':'Standard',
+    'wiederspiegeln':'widerspiegeln','villeicht':'vielleicht','vileicht':'vielleicht','vielleict':'vielleicht','vlt':'vielleicht',
+    'wirklcih':'wirklich','wiklich':'wirklich','zumindestens':'zumindest',
+    'aufjedenfall':'auf jeden Fall','einbisschen':'ein bisschen','garnicht':'gar nicht','garnichts':'gar nichts',
+    'heisst':'heißt','weisst':'weißt','strasse':'Straße','fuer':'für','ueber':'über','schoen':'schön','koennen':'können','muessen':'müssen',
+    'zb':'z. B.','dh':'d. h.','iwie':'irgendwie','iwann':'irgendwann',
+    'waehrend':'während','natuerlich':'natürlich','moeglich':'möglich','waere':'wäre','haetten':'hätten',
+    'dnke':'danke','sehrgut':'sehr gut'
+  };
+  function autoKorrektur(ed){
+    ed.addEventListener('input', (e)=>{
+      // nur wenn gerade ein Wort-Trenner getippt wurde
+      const ch = e.data;
+      if(!ch || !/[\s.,!?;:]/.test(ch)) return;
+      const sel=window.getSelection(); if(!sel.rangeCount) return;
+      const r=sel.getRangeAt(0); if(!r.collapsed) return;
+      const node=r.startContainer; if(node.nodeType!==3) return; // nur einfacher Text
+      const off=r.startOffset; const text=node.nodeValue;
+      if(off<2 || !/[\s.,!?;:]/.test(text[off-1]||'')) return;
+      let i=off-2; while(i>=0 && /[A-Za-zÄÖÜäöüß]/.test(text[i])) i--;
+      const wStart=i+1, wEnd=off-1, word=text.slice(wStart,wEnd);
+      if(word.length<2) return;
+      const fix=TYPOS[word.toLowerCase()]; if(!fix) return;
+      const corrected = (word[0]===word[0].toUpperCase()) ? fix.charAt(0).toUpperCase()+fix.slice(1) : fix;
+      if(corrected===word) return;
+      // Wort auswählen und ersetzen (behält Undo)
+      const rr=document.createRange(); rr.setStart(node,wStart); rr.setEnd(node,wEnd);
+      sel.removeAllRanges(); sel.addRange(rr);
+      document.execCommand('insertText', false, corrected);
+      // Cursor hinter das Trennzeichen setzen, damit normal weitergetippt wird
+      const s2=window.getSelection();
+      if(s2.rangeCount){ const fr=s2.getRangeAt(0); const tn=fr.startContainer;
+        const newOff=Math.min(fr.startOffset+1, (tn.nodeValue||'').length);
+        const nr=document.createRange(); nr.setStart(tn,newOff); nr.collapse(true);
+        s2.removeAllRanges(); s2.addRange(nr);
+      }
+      if(window._tafelSave) window._tafelSave();
+    });
+  }
+  autoKorrektur(document.getElementById('notiz'));
 
   // ---- Stift auf der Präsentation ----
   const cv=document.getElementById('annot'), ctx=cv.getContext('2d');
