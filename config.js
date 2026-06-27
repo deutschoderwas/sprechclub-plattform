@@ -1,28 +1,30 @@
-// ============================================================
+// ============================================
 // ZENTRALE KONFIGURATION
-// ============================================================
+// ============================================
 window.SPRECHCLUB_CONFIG = {
   SUPABASE_URL: 'https://csadlwsuisbyawrgdrca.supabase.co',
   SUPABASE_ANON_KEY: 'sb_publishable_uY1pHLPyI89qxI25Lep8aA_vHgKugkB',
   WHATSAPP: 'https://wa.me/message/XBWZPNITRRUQK1',
 
-  // Flexible Preise — Einzelstunde, Einmal-Pässe & Abo-Pässe.
-  // Community-Zugang ist bei allen Varianten gratis, solange aktive Stunden vorhanden sind.
+  // Flexible Preise — Abo-Pässe mit 7 Tagen gratis testen & ein Einmalkauf.
+  // Jedes Paket: 7 Tage kostenlos testen (mit Probestunde), in den 7 Tagen jederzeit
+  // kostenlos kündbar, danach automatisch monatliches Abo. (trial = Tage Testphase)
+  // Immer gratis dabei: Üben rund um die Uhr, Amanda (KI-Tutorin 24/7) & Community.
   PAKETE: [
-    { id: 'einzelstunde', typ: 'einzel', stunden: 1,  preis: 25,  label: 'Einzelstunde',
-      hinweis: 'ganz ohne Bindung', benefits: ['1 LIVE-Stunde nach Wahl', 'Sofort buchbar', 'Community-Zugang', 'Keine Laufzeit'] },
+    { id: 'testpass', typ: 'pass', abo: true, trial: 7, stunden: 4, preis: 79, label: 'Testpass',
+      hinweis: 'pro Monat · 4 Stunden',
+      benefits: ['4 LIVE-Stunden pro Monat', 'Alle Clubs & Niveaus', '🎮 Üben rund um die Uhr – gratis', '🎤 Amanda – deine KI-Tutorin 24/7', '💬 Community', '✅ 7 Tage gratis testen · jederzeit kündbar'] },
 
-    { id: 'testpass', typ: 'paket', stunden: 4, preis: 79, label: 'Testpass',
-      hinweis: '4 Stunden zum Reinschnuppern', benefits: ['4 LIVE-Stunden', 'Alle Clubs & Niveaus', 'Community-Zugang', 'Guthaben bleibt erhalten'] },
+    { id: 'gelegenheitspass', typ: 'pass', abo: true, trial: 7, stunden: 8, preis: 139, label: 'Gelegenheitspass',
+      hinweis: 'pro Monat · 8 Stunden',
+      benefits: ['8 LIVE-Stunden pro Monat', 'Alle Clubs & Niveaus', '🎮 Üben rund um die Uhr – gratis', '🎤 Amanda – deine KI-Tutorin 24/7', '💬 Community', '✅ 7 Tage gratis testen · jederzeit kündbar'] },
 
-    { id: 'gelegenheitspass', typ: 'pass', abo: true, stunden: 8, preis: 139, label: 'Gelegenheitspass',
-      hinweis: 'pro Monat', benefits: ['8 LIVE-Stunden pro Monat', 'Alle Clubs & Niveaus', 'Community-Zugang', 'Monatlich kündbar'] },
-
-    { id: 'allinclusive', typ: 'pass', abo: true, stunden: 12, preis: 189, label: 'All-Inclusive-Pass',
-      hinweis: 'pro Monat', beliebt: true,
-      benefits: ['12 LIVE-Klassen pro Monat', 'Alle Clubs & Niveaus', 'Community-Zugang', 'Monatlich kündbar'] },
+    { id: 'allinclusive', typ: 'pass', abo: true, trial: 7, stunden: 12, preis: 189, label: 'All-Inclusive-Pass',
+      hinweis: 'pro Monat · 12 Stunden', beliebt: true,
+      benefits: ['12 LIVE-Klassen pro Monat', 'Alle Clubs & Niveaus', '🎮 Üben rund um die Uhr – gratis', '🎤 Amanda – deine KI-Tutorin 24/7', '💬 Community', '✅ 7 Tage gratis testen · jederzeit kündbar'] },
 
     { id: 'sparpass', typ: 'paket', stunden: 30, preis: 399, label: 'Spar Pass',
-      hinweis: 'einmalig · längeres Lernen', benefits: ['30 LIVE-Stunden', 'Bester Stundenpreis (13,30 €)', 'Community-Zugang', 'Guthaben bleibt erhalten'] }
+      hinweis: 'einmalig · 30 Stunden',
+      benefits: ['30 LIVE-Stunden', 'Bester Stundenpreis (13,30 €)', '🎮 Üben rund um die Uhr – gratis', '🎤 Amanda – deine KI-Tutorin 24/7', '💬 Community', 'Einmalkauf · kein Abo'] }
   ]
 };
