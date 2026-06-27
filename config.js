@@ -19,7 +19,7 @@ window.SPRECHCLUB_CONFIG = {
       hinweis: 'pro Monat · 8 Stunden',
       benefits: ['8 LIVE-Stunden pro Monat', 'Alle Clubs & Niveaus', '🎮 Üben rund um die Uhr – gratis', '🎤 Amanda – deine KI-Tutorin 24/7', '💬 Community', '✅ 7 Tage gratis testen · jederzeit kündbar'] },
 
-    { id: 'allinclusive', typ: 'pass', abo: true, trial: 7, stunden: 12, preis: 189, label: 'All-Inclusive-Pass',
+    { id: 'allinclusive', typ: 'pass', abo: true, trial: 7, stunden: 12, preis: 189, label: 'Profi-Pass',
       hinweis: 'pro Monat · 12 Stunden', beliebt: true,
       benefits: ['12 LIVE-Klassen pro Monat', 'Alle Clubs & Niveaus', '🎮 Üben rund um die Uhr – gratis', '🎤 Amanda – deine KI-Tutorin 24/7', '💬 Community', '✅ 7 Tage gratis testen · jederzeit kündbar'] },
 

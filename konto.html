@@ -354,7 +354,7 @@ let credits=0, stats={};
 
 const _qp = new URLSearchParams(location.search);
 if (_qp.get('kauf')==='ok') document.getElementById('kaufOk').style.display='block';
-if (_qp.get('pass')==='ok'){ const k=document.getElementById('kaufOk'); k.textContent='🎉 Willkommen im All-Inclusive-Pass! 12 LIVE-Klassen pro Monat sind jetzt für dich freigeschaltet.'; k.style.display='block'; }
+if (_qp.get('pass')==='ok'){ const k=document.getElementById('kaufOk'); k.textContent='🎉 Willkommen im Profi-Pass! 12 LIVE-Klassen pro Monat sind jetzt für dich freigeschaltet.'; k.style.display='block'; }
 function passActive(){ return profile.pass_until && new Date(profile.pass_until) > new Date(); }
 function bucheStunde(e){ if(e&&e.preventDefault)e.preventDefault(); if(credits>0||passActive()){ go('kalender'); } else { location.href='index.html#preise'; } return false; }
 
@@ -419,17 +419,24 @@ async function load(){
   renderCommBadge();
 }
 
-// Community-Badge: Anzahl der heute geschriebenen Community-Nachrichten
+// Community-Badge: Anzahl der UNGELESENEN Nachrichten (seit dem letzten Öffnen der Community).
+// Eigene Nachrichten zählen nicht mit. Verschwindet, sobald man die Community öffnet.
 async function renderCommBadge(){
   const b=document.getElementById('commBadge'); if(!b) return;
   try{
-    const start=new Date(); start.setHours(0,0,0,0);
-    const { count }=await sb.from('community_messages')
+    let seen=lsGet('commSeen',null);
+    if(seen===null){ seen=Date.now(); lsSet('commSeen',seen); }   // erstes Mal: ab jetzt zählen, keine alte Historie
+    const since=new Date(seen).toISOString();
+    let q=sb.from('community_messages')
       .select('id',{count:'exact',head:true})
-      .is('deleted_at',null).gte('created_at',start.toISOString());
+      .is('deleted_at',null).gt('created_at',since);
+    if(user&&user.id) q=q.neq('user_id',user.id);   // eigene Nachrichten nicht zählen
+    const { count }=await q;
     if(count>0){ b.style.display='inline-block'; b.textContent=count; } else b.style.display='none';
   }catch(e){ b.style.display='none'; }
 }
+// Community als gelesen markieren -> Badge weg
+function markCommRead(){ lsSet('commSeen', Date.now()); renderCommBadge(); }
 
 // ---------- Statistik / Gamification ----------
 function isoWeekIndex(d){ const ref=new Date(Date.UTC(1970,0,5)); return Math.floor((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())-ref)/(7*86400000)); }
@@ -491,6 +498,7 @@ function show(v){
   ({dashboard:renderDashboard,ueben:(window.renderUeben||renderDashboard),community:(window.renderCommunity||renderDashboard),lernpfad:renderLernpfad,kalender:renderKalender,stunden:renderStunden,materialien:renderMaterialien,vokabeln:renderVokabeln,
     fortschritt:renderFortschritt,guthaben:renderGuthaben,nachrichten:renderNachrichten,
     amanda:renderAmanda,profil:renderProfil}[v])();
+  if(v==='community') markCommRead();   // Community geöffnet -> Nachrichten gelesen, Badge weg
   window.scrollTo(0,0);
 }
 const LOCK_LABELS={ueben:'Üben',community:'Community',amanda:'Amanda',materialien:'Material'};
@@ -697,7 +705,7 @@ function renderDashboard(){
       <div><h1>${greet}</h1><p class="muted">Schön, dass du übst. Bleib dran — Sprechen lernt man durch Sprechen. 💪</p></div>
       <div class="streak-chip">🔥 ${s.streak} ${s.streak===1?'Woche':'Wochen'} Streak</div>
     </div>
-    ${passActive()?`<div class="next-hero" style="background:linear-gradient(135deg,var(--turq),var(--turq-dark));color:#fff"><div style="flex:1"><div class="when" style="color:#fff">⭐ All-Inclusive-Pass aktiv</div><div style="color:rgba(255,255,255,.85);font-size:13px">12 LIVE-Klassen pro Monat · verlängert sich am ${fmtShort(new Date(profile.pass_until))}</div></div><a class="btn" style="background:#fff;color:var(--turq-dark)" href="#" onclick="return bucheStunde(event)">Stunde buchen</a></div>`:''}
+    ${passActive()?`<div class="next-hero" style="background:linear-gradient(135deg,var(--turq),var(--turq-dark));color:#fff"><div style="flex:1"><div class="when" style="color:#fff">⭐ Profi-Pass aktiv</div><div style="color:rgba(255,255,255,.85);font-size:13px">12 LIVE-Klassen pro Monat · verlängert sich am ${fmtShort(new Date(profile.pass_until))}</div></div><a class="btn" style="background:#fff;color:var(--turq-dark)" href="#" onclick="return bucheStunde(event)">Stunde buchen</a></div>`:''}
     <div class="rankbar">
       <div class="top"><span class="rank">${s.rank.name} · ${s.points} Punkte</span>
         <span class="muted">${s.next?('noch '+(s.next.min-s.points)+' bis '+s.next.name):'Höchster Rang erreicht 🎉'}</span></div>
