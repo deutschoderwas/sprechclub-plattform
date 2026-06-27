@@ -561,9 +561,33 @@ function renderKlassen(){
         </div>
         ${full?'<span class="pill" style="background:#DD0000;color:#fff;white-space:nowrap">🔒 Ausgebucht</span>':`<span class="muted" style="white-space:nowrap">👥 ${p.length} gebucht</span>`}
       </div>
-      ${p.length?'<div style="margin-top:8px">'+p.map(x=>`<div class="tn">👤 ${esc(x.name||'')} <span class="muted">${esc(x.email)}</span></div>`).join('')+'</div>':''}
-      <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn btn-ghost" onclick="toggleAtt('${c.id}')">✅ Anwesenheit</button>
+
+      <div style="margin-top:12px">
+        <div class="kl-sec">📚 Material für den Unterricht</div>
+        ${(c.material_pre||c.material_live||c.material_post)?`<div style="display:flex;gap:6px;flex-wrap:wrap">
+          ${c.material_pre?`<a class="btn btn-ghost" href="${esc(c.material_pre)}" target="_blank" rel="noopener" style="padding:6px 13px;font-size:12px">📖 Vorbereitung</a>`:''}
+          ${c.material_live?`<a class="btn btn-ghost" href="${esc(c.material_live)}" target="_blank" rel="noopener" style="padding:6px 13px;font-size:12px">🗣️ Im Unterricht</a>`:''}
+          ${c.material_post?`<a class="btn btn-ghost" href="${esc(c.material_post)}" target="_blank" rel="noopener" style="padding:6px 13px;font-size:12px">✍️ Nachbereitung</a>`:''}
+        </div>`:'<div class="muted" style="font-size:12px">Noch kein Material hinterlegt — unten über „Bearbeiten · Material" eintragen.</div>'}
+      </div>
+
+      <div style="margin-top:14px">
+        <div class="kl-sec">👥 Gebuchte Schüler (${p.length})</div>
+        ${p.length?'<div>'+p.map(x=>`<div class="tn">👤 ${esc(x.name||'')} <span class="muted">${esc(x.email)}</span></div>`).join('')+'</div>':'<div class="muted" style="font-size:12px">Noch niemand gebucht.</div>'}
+      </div>
+
+      <div style="margin-top:14px;background:#FFF8E0;border:1px solid #F0E5D8;border-radius:12px;padding:12px 14px">
+        <div class="kl-sec" style="color:#1A1A1A">📝 Notiz fürs Team</div>
+        <p class="muted" style="margin:2px 0 8px;font-size:12px">Was lief gut/schlecht? Tipps für Julia &amp; die anderen Lehrer — für das ganze Team sichtbar.</p>
+        <textarea id="log-${c.id}" placeholder="z. B. Thema kam super an · Übung 3 war zu schwer · Tom braucht mehr Sprechzeit …" style="width:100%;box-sizing:border-box;min-height:84px;padding:10px 12px;border:2px solid var(--border);border-radius:10px;font-family:inherit;font-size:14px"></textarea>
+        <div style="margin-top:7px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-primary" style="padding:7px 16px" onclick="saveClassLog('${c.id}')">Notiz speichern</button>
+          <span class="muted" id="logMeta-${c.id}" style="font-size:12px">lädt …</span>
+        </div>
+      </div>
+
+      <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-ghost" onclick="toggleAtt('${c.id}')">✅ Anwesenheit eintragen</button>
         <a class="btn btn-ghost" href="tafel.html?id=${c.id}" target="_blank" rel="noopener">🖊️ Live-Tafel</a>
         <button class="btn btn-ghost" onclick="editClass('${c.id}')">Bearbeiten · Material</button>
         <button class="btn btn-ghost" onclick="cancelClass('${c.id}')">Stunde absagen</button>
@@ -646,13 +670,38 @@ function renderKlassen(){
     .klc-b{font-size:11px;color:#666;margin-top:3px}
     .klc-b.full{color:#DD0000;font-weight:700}
     .klc-empty{color:#ccc;text-align:center;font-size:12px;padding:6px 0}
+    .kl-sec{font-size:12px;font-weight:800;color:#888;text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px}
   </style>`;
 
   document.getElementById('klassen').innerHTML = style + filterBar + weekNav + grid + detail;
-  if(openC){ const el=document.getElementById('klDetail'); if(el) el.scrollIntoView({behavior:'smooth',block:'nearest'}); }
+  if(openC){ const el=document.getElementById('klDetail'); if(el) el.scrollIntoView({behavior:'smooth',block:'nearest'}); loadClassLog(openC.id); }
 }
 
 function openKl(id){ klOpenId = (klOpenId===id ? null : id); renderKlassen(); }
+
+// ---------- Team-Notiz pro Stunde (nur Lehrer/Admin) ----------
+async function loadClassLog(id){
+  const ta=document.getElementById('log-'+id); if(!ta) return;
+  const meta=document.getElementById('logMeta-'+id);
+  const { data, error } = await sb.from('class_log').select('note,updated_at, author:updated_by(name,email)').eq('class_id',id).maybeSingle();
+  if(error){ if(meta) meta.textContent=''; return; }
+  if(data){
+    ta.value=data.note||'';
+    if(meta){
+      const who = data.author ? (data.author.name||data.author.email||'') : '';
+      const when = data.updated_at ? new Date(data.updated_at).toLocaleString('de-DE',{timeZone:'Europe/Berlin',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : '';
+      meta.textContent = (data.note&&data.note.trim()) ? ('zuletzt'+(who?' von '+who:'')+(when?' · '+when:'')) : 'Noch keine Notiz.';
+    }
+  } else { ta.value=''; if(meta) meta.textContent='Noch keine Notiz.'; }
+}
+async function saveClassLog(id){
+  const ta=document.getElementById('log-'+id); if(!ta) return;
+  const meta=document.getElementById('logMeta-'+id);
+  if(meta) meta.textContent='Speichert …';
+  const { data:{ user } } = await sb.auth.getUser();
+  const { error } = await sb.from('class_log').upsert({ class_id:id, note:ta.value, updated_by:user?user.id:null, updated_at:new Date().toISOString() }, { onConflict:'class_id' });
+  if(meta) meta.textContent = error ? ('Fehler: '+error.message) : ('✓ gespeichert · '+new Date().toLocaleTimeString('de-DE',{timeZone:'Europe/Berlin',hour:'2-digit',minute:'2-digit'}));
+}
 function klWeekNav(dir){
   if(dir===0){ klWeekStart = mondayOf(new Date()); }
   else { const d=new Date(klWeekStart||mondayOf(new Date())); d.setDate(d.getDate()+dir*7); klWeekStart=d; }
