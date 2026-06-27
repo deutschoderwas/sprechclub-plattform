@@ -917,7 +917,7 @@ function kalBook(id){
     <h3>Buchung bestätigen?</h3>
     <p class="hint">Möchtest du diese Stunde verbindlich buchen?</p>
     <div class="det"><b>${title}</b><span>${when}${sub?' · '+sub:''}</span></div>
-    <p class="hint">Storno kostenlos bis 2 Stunden vorher. Dein Guthaben wird erst nach der Teilnahme abgezogen.</p>
+    <p class="hint">Storno kostenlos bis 6 Stunden vorher. Dein Guthaben wird erst nach der Teilnahme abgezogen.</p>
     <div class="acts"><button class="btn btn-ghost" onclick="closeCfm()">Abbrechen</button><button class="btn btn-primary" id="cfmGo">Buchung bestätigen</button></div>`;
   document.getElementById('cfmGo').onclick=()=>doBook(id);
   document.getElementById('cfmModal').classList.add('open');
@@ -957,7 +957,7 @@ function renderStunden(){
   let html='<div class="pagehead"><h1>Meine Stunden</h1><p>Vorbereiten, teilnehmen, nachüben — alles an einem Ort.</p></div>';
   html+='<h2 class="sec">Kommende Stunden</h2>';
   html += s.upcoming.length ? s.upcoming.map(b=>{
-    const start=new Date(b.starts_at); const cancellable=(start-s.now)>2*3600000;
+    const start=new Date(b.starts_at); const cancellable=(start-s.now)>6*3600000;
     const m=materials[b.class_id];
     return `<div class="card">
       <div class="head">
@@ -966,7 +966,7 @@ function renderStunden(){
         ${b.zoom_link?`<a class="btn btn-primary btn-sm" href="${esc(b.zoom_link)}" target="_blank">Zum Unterricht</a>`:''}
         ${(m&&(m.lesson_url||m.intro||m.pre||(m.vocab&&m.vocab.length)))?`<button class="btn btn-ghost btn-sm" onclick="openClassMaterial('${b.class_id}',1)">📚 Material</button>`:''}
         ${/Sprachspiele/i.test(b.title||'')?`<span class="btn btn-ghost btn-sm" style="pointer-events:none;opacity:.8">✨ Keine Vorbereitung nötig</span>`:''}
-        <button class="btn btn-ghost btn-sm" ${cancellable?'':'disabled title="Storno nur bis 2 h vorher"'} onclick="cancelB('${b.class_id}')">Stornieren</button>
+        <button class="btn btn-ghost btn-sm" ${cancellable?'':'disabled title="Storno nur bis 6 h vorher"'} onclick="cancelB('${b.class_id}')">Stornieren</button>
       </div>
       <p style="margin-top:10px;color:#DD0000;font-weight:700;font-size:13px;background:#FFF0F0;border:1px solid #ffd0d0;border-radius:10px;padding:8px 11px">⚠️ Tipp: Logge dich für den Live-Unterricht am besten am <u>Computer/Laptop</u> ein und mach die Stunde dort – Video, Präsentation &amp; Live-Tafel laufen am Computer am stabilsten.</p>
       ${m&&m.intro?`<p class="muted" style="margin-top:10px">💡 ${esc(m.intro)}</p>`:''}
@@ -998,7 +998,7 @@ function renderStunden(){
 async function cancelB(classId){
   if(!confirm('Stunde wirklich stornieren? Du bekommst dein Guthaben zurück.')) return;
   const { data,error }=await sb.rpc('cancel_booking',{p_class_id:classId});
-  if(error||!data.ok){ toast(data?.error==='too_late'?'Storno nicht mehr möglich (unter 2 h).':'Storno fehlgeschlagen.'); return; }
+  if(error||!data.ok){ toast(data?.error==='too_late'?'Storno nicht mehr möglich (unter 6 h).':'Storno fehlgeschlagen.'); return; }
   // Admin-Benachrichtigung an Julia (Brevo, fire-and-forget)
   try{
     const { data:{ session } } = await sb.auth.getSession();
