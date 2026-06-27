@@ -321,8 +321,13 @@ function fmt(d){ return d.toLocaleDateString('de-DE',{weekday:'short',day:'numer
 let planWeekStart=null;
 let planTeacherFilter='';
 function mondayOf(d){ const x=new Date(d); const day=(x.getDay()+6)%7; x.setHours(0,0,0,0); x.setDate(x.getDate()-day); return x; }
-function fmtTime(d){ return d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}); }
-function fmtDayHdr(d){ return d.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'}); }
+// Immer feste Berlin-Zeit anzeigen – sonst sehen Lehrer im Ausland verschobene Zeiten/Wochentage.
+const _planTimeFmt = new Intl.DateTimeFormat('de-DE',{timeZone:'Europe/Berlin',hour:'2-digit',minute:'2-digit'});
+const _planDayFmt  = new Intl.DateTimeFormat('de-DE',{timeZone:'Europe/Berlin',weekday:'long',day:'numeric',month:'long'});
+const _planKeyFmt  = new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Berlin',year:'numeric',month:'2-digit',day:'2-digit'});
+function fmtTime(d){ return _planTimeFmt.format(d); }
+function fmtDayHdr(d){ return _planDayFmt.format(d); }
+function berlinDayKey(d){ return _planKeyFmt.format(d); }
 
 async function loadPlan(){
   const box=document.getElementById('plan');
@@ -373,7 +378,7 @@ async function loadPlan(){
       <button class="btn btn-ghost" onclick="planNav(1)">→</button>
       <b style="font-family:'Space Grotesk',sans-serif">${weekLabel}</b>
     </div>
-    <p class="muted" style="margin-bottom:8px">Dein Stundenplan — wann du welchen Unterricht mit wem hast.</p>`;
+    <p class="muted" style="margin-bottom:8px">Dein Stundenplan — wann du welchen Unterricht mit wem hast. <b>🕒 Alle Zeiten in deutscher Zeit (Berlin).</b></p>`;
   }
 
   if(!list.length){
@@ -387,10 +392,10 @@ async function loadPlan(){
   let curDay='';
   list.forEach(c=>{
     const d=new Date(c.starts_at);
-    const dayKey=d.toDateString();
+    const dayKey=berlinDayKey(d);
     if(dayKey!==curDay){
       curDay=dayKey;
-      const dayCount=list.filter(x=>new Date(x.starts_at).toDateString()===dayKey).length;
+      const dayCount=list.filter(x=>berlinDayKey(new Date(x.starts_at))===dayKey).length;
       html += `<div class="plan-day">📆 ${fmtDayHdr(d)} <span class="cnt">· ${dayCount} Stunde${dayCount>1?'n':''}</span></div>`;
     }
     const end=new Date(d.getTime()+(c.duration_min||60)*60000);

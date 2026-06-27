@@ -360,7 +360,9 @@ function bucheStunde(e){ if(e&&e.preventDefault)e.preventDefault(); if(credits>0
 
 function toast(t){ const el=document.getElementById('toast'); el.textContent=t; el.style.display='block'; clearTimeout(el._t); el._t=setTimeout(()=>el.style.display='none',3500); }
 function esc(s){ return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
-function fmt(d){ return d.toLocaleDateString('de-DE',{weekday:'short',day:'numeric',month:'short'})+' · '+d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}); }
+// Stunden-Uhrzeiten IMMER in deutscher Zeit (Berlin) – sonst sehen Schüler im Ausland verschobene Zeiten.
+const _berlinT = new Intl.DateTimeFormat('de-DE',{timeZone:'Europe/Berlin',hour:'2-digit',minute:'2-digit'});
+function fmt(d){ return d.toLocaleDateString('de-DE',{weekday:'short',day:'numeric',month:'short'})+' · '+_berlinT.format(d); }
 function fmtShort(d){ return d.toLocaleDateString('de-DE',{day:'numeric',month:'short',year:'numeric'}); }
 
 // localStorage helpers (echte Website -> erlaubt)
@@ -795,7 +797,7 @@ function phaseHtml(b, phase){
 // ---------- Kalender (alle Clubs, farbig, filterbar) ----------
 let kalClub='alle', kalLevel='alle', kalWeek=(function(){var s=new Date(2026,5,29),n=new Date();function m(d){var x=new Date(d);x.setDate(x.getDate()-((x.getDay()+6)%7));x.setHours(0,0,0,0);return x;}var w=Math.round((m(s)-m(n))/6048e5);return w>0?w:0;})(), kalClubs=[], kalCache=[];
 function startOfWeekK(d,off=0){ const x=new Date(d); const day=(x.getDay()+6)%7; x.setDate(x.getDate()-day+off*7); x.setHours(0,0,0,0); return x; }
-function fmtTimeK(d){ return d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}); }
+function fmtTimeK(d){ return _berlinT.format(d); }
 function renderKalender(){
   document.getElementById('v-kalender').innerHTML =
     '<div class="pagehead"><h1>Kalender</h1><p>Alle LIVE-Stunden farbig nach Club. Tippe einen Club an, um nur dessen Stunden zu sehen.</p></div><div id="kalBody"><div class="empty">lädt…</div></div>';
@@ -852,7 +854,8 @@ async function loadKalender(){
       return `<div class="calcol ${isT?'today':''}">${head}${body}</div>`;
     }).join('')+'</div>';
   }
-  document.getElementById('kalBody').innerHTML=pills+lvlPills+legend+wc+grid;
+  const tzHint='<div class="muted" style="text-align:center;font-size:12px;font-weight:600;margin:2px 0 8px">🕒 Alle Zeiten in deutscher Zeit (Berlin)</div>';
+  document.getElementById('kalBody').innerHTML=pills+lvlPills+legend+wc+tzHint+grid;
 }
 const KAL_LVL_COLOR={'A2':'#B45309','A2/B1':'#15803D','B1':'#1D4ED8','B1/B2':'#0891B2','B2':'#7C3AED','B2/C1':'#7C3AED','C1':'#BE185D','ab A2':'#B45309','ab B1':'#BE185D','ab B2':'#7C3AED'};
 function kalLvlColor(l){ return KAL_LVL_COLOR[l]||'#6B7280'; }

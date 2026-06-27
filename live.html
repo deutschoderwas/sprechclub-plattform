@@ -184,6 +184,7 @@ footer a{color:var(--accent);text-decoration:none}
     <button onclick="changeWeek(1)">→</button>
   </div>
   <div class="level-filter" id="levelFilter"></div>
+  <div style="text-align:center;font-size:13px;font-weight:600;color:var(--text-soft);margin:4px 0 10px">🕒 Alle Zeiten in deutscher Zeit (Berlin)</div>
   <div id="schedule"></div>
 </section>
 
@@ -246,7 +247,9 @@ function startOfWeek(d, offset=0){ const x=new Date(d); const day=(x.getDay()+6)
 const LAUNCH_DATE = new Date(2026,5,29);
 function baseWeekStart(){ const tw=startOfWeek(new Date(),0); const lw=startOfWeek(LAUNCH_DATE,0); return (lw>tw)?lw:tw; }
 function fmtDay(d){ return d.toLocaleDateString('de-DE',{weekday:'long', day:'numeric', month:'long'}); }
-function fmtTime(d){ return d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}); }
+// Stunden-Uhrzeiten IMMER in deutscher Zeit (Berlin) – egal in welcher Zeitzone der Besucher ist.
+const _berlinT = new Intl.DateTimeFormat('de-DE',{timeZone:'Europe/Berlin',hour:'2-digit',minute:'2-digit'});
+function fmtTime(d){ return _berlinT.format(d); }
 function toast(t){ const el=document.getElementById('toast'); el.textContent=t; el.style.display='block'; setTimeout(()=>el.style.display='none',3500); }
 
 async function init(){
