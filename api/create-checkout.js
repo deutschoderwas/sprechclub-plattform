@@ -6,9 +6,9 @@ import Stripe from 'stripe';
 
 // Server-seitige Paket-Definition (Quelle der Wahrheit für Preise – nie dem Client vertrauen).
 const PLANS = {
-  testpass:         { abo: true,  stunden: 4,  preis: 79,  label: 'Testpass' },
+  testpass:         { abo: true,  stunden: 4,  preis: 79,  label: 'Ab und zu Pass' },
   gelegenheitspass: { abo: true,  stunden: 8,  preis: 139, label: 'Gelegenheitspass' },
-  allinclusive:     { abo: true,  stunden: 12, preis: 189, label: 'All-Inclusive-Pass' },
+  allinclusive:     { abo: true,  stunden: 12, preis: 189, label: 'Profi-Pass' },
   sparpass:         { abo: false, stunden: 30, preis: 399, label: 'Spar Pass' },
 };
 
