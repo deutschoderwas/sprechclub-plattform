@@ -1,86 +1,83 @@
-// Stripe-Webhook: schaltet nach erfolgreicher Zahlung Guthaben/Kurse/Pass frei.
-// In Stripe als Webhook-Endpoint eintragen: https://<domain>/api/stripe-webhook
-// Events: checkout.session.completed, invoice.payment_succeeded (Abo-Verlängerung)
+// Stripe Webhook — schreibt nach erfolgreicher Zahlung Stunden/Pass gut.
+// In Stripe als Endpoint anlegen: https://www.deutschoderwas-club.de/api/stripe-webhook
+// Events: checkout.session.completed, invoice.paid, customer.subscription.deleted
+// Benötigt ENV: STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 
+// Roh-Body für die Signaturprüfung (kein JSON-Parsing durch Vercel)
 export const config = { api: { bodyParser: false } };
 
-async function rawBody(req) {
-  const chunks = [];
-  for await (const chunk of req) chunks.push(chunk);
-  return Buffer.concat(chunks);
+function rawBody(req) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    req.on('data', (c) => chunks.push(c));
+    req.on('end', () => resolve(Buffer.concat(chunks)));
+    req.on('error', reject);
+  });
 }
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
-
+  if (!process.env.STRIPE_SECRET_KEY || !process.env.STRIPE_WEBHOOK_SECRET) {
+    return res.status(500).json({ error: 'stripe_not_configured' });
+  }
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
   let event;
   try {
-    event = stripe.webhooks.constructEvent(
-      await rawBody(req),
-      req.headers['stripe-signature'],
-      process.env.STRIPE_WEBHOOK_SECRET
-    );
-  } catch (err) {
-    return res.status(400).json({ error: `signature: ${err.message}` });
+    const raw = await rawBody(req);
+    event = stripe.webhooks.constructEvent(raw, req.headers['stripe-signature'], process.env.STRIPE_WEBHOOK_SECRET);
+  } catch (e) {
+    console.error('webhook signature', e.message);
+    return res.status(400).send(`Webhook Error: ${e.message}`);
   }
 
-  const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+  const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 
-  // ---- Kauf abgeschlossen ----
-  if (event.type === 'checkout.session.completed') {
-    const session = event.data.object;
-    const userId = session.metadata?.user_id;
-    const courseId = session.metadata?.course_id;
-    const pass = session.metadata?.pass;
-    const credits = parseInt(session.metadata?.credits || '0', 10);
-    const packageId = session.metadata?.package_id || 'unbekannt';
-
-    // Digitaler Kurs freischalten (idempotent)
-    if (userId && courseId) {
-      await supabase.rpc('grant_enrollment', { p_user_id: userId, p_course_id: courseId, p_source: 'purchase', p_session: session.id });
+  // Stunden gutschreiben — idempotent über credit_log.stripe_session_id (dedupeKey).
+  async function grant(userId, change, reason, dedupeKey, passDays) {
+    if (!userId || !change) return;
+    const { data: exists } = await sb.from('credit_log').select('id').eq('stripe_session_id', dedupeKey).maybeSingle();
+    if (exists) return; // schon verbucht
+    await sb.from('credit_log').insert({ user_id: userId, change, reason, stripe_session_id: dedupeKey });
+    const { data: p } = await sb.from('profiles').select('credits,pass_until').eq('id', userId).maybeSingle();
+    const patch = { credits: (p?.credits || 0) + change };
+    if (passDays) {
+      const base = (p?.pass_until && new Date(p.pass_until) > new Date()) ? new Date(p.pass_until) : new Date();
+      base.setDate(base.getDate() + passDays);
+      patch.pass_until = base.toISOString();
     }
-
-    // Abo-Pass (Gelegenheitspass / All-Inclusive): aktivieren (1 Monat + Stunden) — idempotent über session.id
-    if (userId && pass) {
-      await supabase.rpc('activate_pass', { p_user_id: userId, p_months: 1, p_credits: credits || 12, p_ref: session.id });
-    }
-
-    // Stundenpaket / Einzelstunde / Test- / Spar-Pass: Guthaben gutschreiben (idempotent)
-    else if (userId && credits > 0) {
-      const { data: existing } = await supabase
-        .from('credit_log').select('id').eq('stripe_session_id', session.id).maybeSingle();
-      if (!existing) {
-        await supabase.from('credit_log').insert({
-          user_id: userId, change: credits,
-          reason: `purchase:${packageId}`, stripe_session_id: session.id,
-        });
-        await supabase.rpc('add_credits', { p_user_id: userId, p_amount: credits });
-      }
-    }
+    await sb.from('profiles').update(patch).eq('id', userId);
   }
 
-  // ---- Abo-Verlängerung (monatliche Abbuchung des All-Inclusive-Pass) ----
-  if (event.type === 'invoice.payment_succeeded') {
-    const invoice = event.data.object;
-    // Erste Rechnung wird schon über checkout.session.completed abgehandelt → hier nur Verlängerungen
-    if (invoice.billing_reason && invoice.billing_reason !== 'subscription_create') {
-      let userId = invoice.subscription_details?.metadata?.user_id;
-      let credits = parseInt(invoice.subscription_details?.metadata?.credits || '12', 10);
-      // Fallback: Metadaten direkt am Abo nachladen
-      if (!userId && invoice.subscription) {
-        try {
-          const sub = await stripe.subscriptions.retrieve(invoice.subscription);
-          userId = sub.metadata?.user_id;
-          credits = parseInt(sub.metadata?.credits || '12', 10);
-        } catch (_) {}
+  try {
+    if (event.type === 'checkout.session.completed') {
+      const s = event.data.object;
+      const userId = s.client_reference_id || s.metadata?.userId;
+      if (s.mode === 'payment') {
+        // Einmalkauf (Spar Pass): volle Stunden sofort
+        const credits = parseInt(s.metadata?.credits || '0', 10);
+        await grant(userId, credits, 'kauf:' + (s.metadata?.plan || 'paket'), 'cs_' + s.id, null);
+      } else if (s.mode === 'subscription') {
+        // Abo-Start mit Testphase: 1 gratis Probestunde + 7 Tage aktiv
+        await grant(userId, 1, 'trial:' + (s.metadata?.plan || 'abo'), 'trial_' + s.id, 7);
       }
-      if (userId) {
-        await supabase.rpc('activate_pass', { p_user_id: userId, p_months: 1, p_credits: credits || 12, p_ref: invoice.id });
+    } else if (event.type === 'invoice.paid') {
+      const inv = event.data.object;
+      // Nur echte Zahlungen (die 0-€-Rechnung der Testphase überspringen)
+      if ((inv.amount_paid || 0) > 0 && inv.subscription) {
+        const sub = await stripe.subscriptions.retrieve(inv.subscription);
+        const stunden = parseInt(sub.metadata?.stunden || '0', 10);
+        const userId = sub.metadata?.userId;
+        const plan = sub.metadata?.plan || 'abo';
+        await grant(userId, stunden, 'abo:' + plan, 'inv_' + inv.id, 31);
       }
     }
+    // customer.subscription.deleted: nichts nötig — pass_until läuft von selbst aus.
+  } catch (e) {
+    console.error('webhook handler', e);
+    return res.status(500).json({ error: String(e.message || e) }); // Stripe wiederholt dann
   }
 
   return res.status(200).json({ received: true });
