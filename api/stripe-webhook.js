@@ -76,6 +76,65 @@ async function sendAmandaAccess(s) {
   } catch (e) { console.error('amanda mail err', e); }
 }
 
+// --- Abschieds-/Feedback-Mail bei Abo-Kündigung (deutschoderwas-Design) ---
+async function sendGoodbyeMail(email, name) {
+  try {
+    if (!email || !process.env.BREVO_API_KEY) return;
+    const esc = (s) => String(s == null ? '' : s).replace(/[<>&]/g, (c) => ({ '<':'&lt;','>':'&gt;','&':'&amp;' }[c]));
+    const ff = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
+    const vorname = (name || '').trim().split(' ')[0] || 'du';
+    const html = `<!DOCTYPE html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"></head>
+<body style="margin:0;padding:0;background:#FFF8E0">
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0">Schade, dass du gehst – ich hoffe, wir sehen uns bald wieder im Sprechclub. 💛</div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF8E0;padding:28px 14px"><tr><td align="center">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 12px 36px rgba(26,26,26,.10)">
+      <tr><td style="height:6px;line-height:6px;font-size:0;background:#1A1A1A">&nbsp;</td></tr>
+      <tr><td style="height:6px;line-height:6px;font-size:0;background:#DD0000">&nbsp;</td></tr>
+      <tr><td style="height:6px;line-height:6px;font-size:0;background:#FFCE00">&nbsp;</td></tr>
+      <tr><td align="center" style="padding:26px 28px 4px">
+        <div style="font-family:${ff};font-weight:800;font-size:15px;letter-spacing:.04em;color:#1A1A1A">deutschoderwas <span style="color:#DD0000">club</span></div>
+        <div style="font-size:46px;line-height:1;margin:14px 0 4px">💛</div>
+        <h1 style="margin:6px 0 0;font-family:${ff};font-size:25px;font-weight:800;color:#1A1A1A">Schade, dass du gehst</h1>
+      </td></tr>
+      <tr><td style="padding:10px 30px 0;font-family:${ff};font-size:15px;line-height:1.6;color:#1A1A1A">
+        <p style="margin:0 0 10px">Hallo ${esc(vorname)},</p>
+        <p style="margin:0 0 10px">oh schade, dass du gehst! Dein Abo ist beendet. Ich hoffe sehr, dass wir uns <b>bald wieder im Sprechclub</b> sehen. 💛</p>
+        <p style="margin:0 0 10px">Du bist jederzeit herzlich willkommen zurück — die Tür steht dir immer offen.</p>
+      </td></tr>
+      <tr><td style="padding:8px 30px 4px">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF8E0;border:1px solid #F0E5D8;border-left:5px solid #2DD4BF;border-radius:16px">
+          <tr><td style="padding:16px 20px;font-family:${ff};font-size:15px;line-height:1.6;color:#1A1A1A">
+            <b>Magst du mir kurz Feedback geben?</b><br>
+            Was hat dir gefallen, was können wir besser machen? <b>Antworte einfach auf diese E-Mail</b> — dein Feedback hilft mir riesig. 🙏
+          </td></tr>
+        </table>
+      </td></tr>
+      <tr><td style="padding:18px 30px 6px;font-family:${ff};font-size:15px;line-height:1.6;color:#1A1A1A">
+        Bis hoffentlich bald,<br><b>Julia</b> &amp; das deutschoderwas-Team
+      </td></tr>
+      <tr><td style="padding:18px 30px 26px">
+        <div style="border-top:1px solid #F0E5D8;padding-top:14px;font-family:${ff};font-size:12px;color:#9CA3AF;text-align:center">
+          <a href="https://www.deutschoderwas-club.de" style="color:#9CA3AF;text-decoration:none">deutschoderwas-club.de</a> · Deutsch lernen, das Spaß macht 🇩🇪
+        </div>
+      </td></tr>
+    </table>
+  </td></tr></table>
+</body></html>`;
+    const r = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sender: { name: 'Julia | deutschoderwas', email: process.env.BREVO_SENDER_EMAIL || 'info@deutschoderwas.de' },
+        replyTo: { name: 'Julia', email: process.env.BREVO_SENDER_EMAIL || 'info@deutschoderwas.de' },
+        to: [{ email, name: name || undefined }],
+        subject: 'Schade, dass du gehst 💛',
+        htmlContent: html,
+      }),
+    });
+    if (!r.ok) console.error('goodbye brevo fail', r.status, await r.text());
+  } catch (e) { console.error('goodbye mail err', e); }
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
   if (!process.env.STRIPE_SECRET_KEY || !process.env.STRIPE_WEBHOOK_SECRET) {
@@ -161,13 +220,15 @@ export default async function handler(req, res) {
         const dk = 'subdel_' + sub.id;
         const { data: already } = await sb.from('credit_log').select('id').eq('stripe_session_id', dk).maybeSingle();
         if (!already) {
-          const { data: p } = await sb.from('profiles').select('credits').eq('id', userId).maybeSingle();
+          const { data: p } = await sb.from('profiles').select('credits,email,name').eq('id', userId).maybeSingle();
           const cur = p?.credits || 0;
           if (cur > 0) {
             await sb.from('credit_log').insert({ user_id: userId, change: -cur, reason: 'abo_gekuendigt_verfall', stripe_session_id: dk });
           }
           // Guthaben auf 0, Mitgliedschaft beenden
           await sb.from('profiles').update({ credits: 0, pass_until: new Date().toISOString() }).eq('id', userId);
+          // „Schade, dass du gehst" – Abschieds-/Feedback-Mail
+          if (p?.email) await sendGoodbyeMail(p.email, p.name);
         }
       }
     }
