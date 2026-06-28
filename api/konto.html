@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- PWA / Als App installierbar -->
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#DD0000">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="do club">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png">
+
+<title>Mein Bereich — deutschoderwas club</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--primary:#DD0000;--primary-dark:#B30000;--secondary:#1A1A1A;--accent:#FFCE00;--turquoise:#2DD4BF;--turquoise-soft:#A7F3D0;--cream:#FFFCF5;--bg:#FFF8E0;--text:#1A1A1A;--text-soft:#6B7280;--border:#F0E5D8;--green:#0a7a5c;--green-soft:#E8FAF3}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{overflow-x:clip;max-width:100%}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--cream);color:var(--text);line-height:1.55}
+h1,h2,h3{font-family:'Space Grotesk',sans-serif;letter-spacing:-.02em}
+a{color:inherit}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 18px;border-radius:50px;text-decoration:none;font-weight:700;font-size:14px;border:none;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-primary{background:var(--primary);color:#fff;box-shadow:0 6px 18px rgba(221,0,0,.28)}
+.btn-primary:hover{background:var(--primary-dark)}
+.btn-ghost{background:#fff;color:var(--secondary);border:2px solid var(--border)}
+.btn-ghost:hover{background:var(--bg)}
+.btn-turq{background:var(--turquoise);color:#063}
+.btn-sm{padding:8px 14px;font-size:13px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+
+/* ---------- Shell / Sidebar ---------- */
+.shell{display:flex;min-height:100vh}
+.sidebar{width:236px;flex-shrink:0;background:#fff;border-right:1px solid var(--border);padding:18px 14px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:4px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:16px;text-decoration:none;color:var(--secondary);padding:6px 8px 16px}
+.brand img{width:36px;height:36px;border-radius:50%;object-fit:cover}
+.navlink{display:flex;align-items:center;gap:11px;padding:11px 13px;border-radius:12px;text-decoration:none;color:var(--text-soft);font-weight:600;font-size:14px;cursor:pointer;border:none;background:none;width:100%;text-align:left;font-family:inherit}
+.navlink .ic{font-size:17px;width:22px;text-align:center}
+.navlink:hover{background:var(--bg);color:var(--secondary)}
+.navlink.active{background:var(--secondary);color:#fff}
+.navlink .badge{margin-left:auto;background:var(--primary);color:#fff;font-size:11px;font-weight:800;border-radius:20px;padding:1px 7px}
+.navlink.active .badge{background:var(--accent);color:var(--secondary)}
+.side-foot{margin-top:auto;padding-top:10px;border-top:1px solid var(--border)}
+
+.main{flex:1;min-width:0;padding:26px 30px 70px;max-width:920px;margin:0 auto;width:100%}
+.view{display:none}
+.view.active{display:block;animation:fade .25s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.pagehead{margin-bottom:18px}
+.pagehead h1{font-size:26px}
+.pagehead p{color:var(--text-soft);font-size:14px;margin-top:2px}
+
+/* ---------- Cards / generic ---------- */
+.card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:18px;margin-bottom:14px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.stat{background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px;text-align:center}
+.stat .big{font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:700;line-height:1}
+.stat .lbl{font-size:12px;color:var(--text-soft);margin-top:4px;font-weight:600}
+.level-pill{font-size:11px;font-weight:800;background:var(--bg);color:var(--primary);border-radius:30px;padding:4px 10px;text-transform:uppercase;letter-spacing:.4px}
+.empty{background:#fff;border:1px dashed var(--border);border-radius:16px;padding:24px;text-align:center;color:var(--text-soft)}
+h2.sec{margin:24px 0 12px;font-size:19px}
+.muted{color:var(--text-soft);font-size:13px}
+
+/* ---------- Dashboard hero ---------- */
+.hero-card{background:linear-gradient(135deg,#FFF9F2,#FFF4D6);border:2px solid var(--accent);border-radius:22px;padding:22px 24px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.hero-card h1{font-size:24px}
+.streak-chip{display:inline-flex;align-items:center;gap:8px;background:#fff;border:2px solid var(--primary);border-radius:50px;padding:8px 16px;font-weight:800;font-family:'Space Grotesk',sans-serif}
+.rankbar{background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px 18px;margin-bottom:14px}
+.rankbar .top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;flex-wrap:wrap;gap:6px}
+.rankbar .rank{font-weight:800;font-family:'Space Grotesk',sans-serif}
+.bar{height:12px;background:var(--bg);border-radius:20px;overflow:hidden}
+.bar>span{display:block;height:100%;background:linear-gradient(90deg,var(--primary),var(--accent));border-radius:20px;transition:width .6s}
+.next-hero{background:#fff;border:1px solid var(--border);border-radius:18px;padding:18px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.next-hero .when{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px}
+.cd{display:inline-flex;gap:6px;font-size:12px;color:var(--text-soft);font-weight:700}
+
+/* ---------- Lernpfad ---------- */
+.path{position:relative;padding-left:8px}
+.pstep{display:flex;gap:16px;align-items:flex-start;position:relative;padding-bottom:6px}
+.pdot{width:46px;height:46px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;border:3px solid var(--border);background:#fff;color:var(--text-soft);z-index:2}
+.pstep.done .pdot{background:var(--turquoise);border-color:var(--turquoise);color:#053}
+.pstep.current .pdot{background:var(--primary);border-color:var(--primary);color:#fff;box-shadow:0 0 0 5px rgba(221,0,0,.15)}
+.pline{position:absolute;left:22px;top:46px;bottom:-6px;width:3px;background:var(--border);z-index:1}
+.pstep.done .pline{background:var(--turquoise)}
+.pstep:last-child .pline{display:none}
+.pbody{flex:1;background:#fff;border:1px solid var(--border);border-radius:14px;padding:13px 16px;margin-bottom:12px}
+.pbody b{font-size:15px}
+.pbody .goal{font-size:11px;font-weight:800;color:var(--primary)}
+
+/* ---------- Abzeichen ---------- */
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.badge-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px 12px;text-align:center;position:relative}
+.badge-card.locked{opacity:.45;filter:grayscale(.7)}
+.badge-card .em{font-size:34px;line-height:1}
+.badge-card b{display:block;font-size:13px;margin-top:8px}
+.badge-card span{font-size:11px;color:var(--text-soft)}
+
+/* ---------- Stunden / Phasen ---------- */
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.when{font-family:'Space Grotesk',sans-serif;font-weight:700;min-width:140px}
+.what{flex:1;min-width:150px}.what b{display:block}.what span{font-size:13px;color:var(--text-soft)}
+.phasen{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:10px;margin-top:14px}
+.phase{border:1.5px solid var(--border);border-radius:14px;padding:12px;text-align:center;font-size:13px;background:#fff}
+.phase b{display:block;font-size:12px;margin-bottom:8px}
+.phase.ready{border-color:var(--turquoise);background:var(--green-soft)}
+.phase.done-ph{border-color:var(--turquoise)}
+.phase .nope{color:var(--text-soft)}
+.phase .doneflag{color:var(--green);font-weight:700;font-size:12px}
+
+/* ---------- Flashcards ---------- */
+.flashwrap{max-width:480px;margin:0 auto;text-align:center}
+.flashcard{background:#fff;border:2px solid var(--border);border-radius:24px;min-height:190px;display:flex;align-items:center;justify-content:center;padding:28px;cursor:pointer;font-size:23px;font-weight:700;font-family:'Space Grotesk',sans-serif;box-shadow:0 14px 34px rgba(0,0,0,.06);user-select:none}
+.flashcard .hint{display:block;font-size:12px;color:var(--text-soft);font-weight:500;font-family:'Inter',sans-serif;margin-top:14px}
+.flashnav{display:flex;gap:10px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.vocab-list{margin-top:24px;text-align:left}
+.vrow{background:#fff;border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin-bottom:8px;font-size:14px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+.vrow b{color:var(--primary)}
+.vrow .known{font-size:12px;color:var(--green);font-weight:700}
+
+/* ---------- Übungs-Runner (Modal) ---------- */
+.modal-bg{position:fixed;inset:0;background:rgba(26,26,26,.55);z-index:300;display:none;align-items:flex-start;justify-content:center;padding:24px;overflow-y:auto}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:22px;padding:24px;max-width:640px;width:100%;position:relative;margin:auto}
+.modal .close{position:absolute;top:14px;right:16px;background:none;border:none;font-size:24px;cursor:pointer;color:var(--text-soft)}
+.cfm-bg{position:fixed;inset:0;background:rgba(26,26,26,.6);z-index:360;display:none;align-items:center;justify-content:center;padding:20px}
+.cfm-bg.open{display:flex}
+.cfm{background:#fff;border-radius:24px;padding:30px 26px;max-width:420px;width:100%;text-align:center;box-shadow:0 26px 64px rgba(0,0,0,.28);position:relative;animation:cfmIn .26s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes cfmIn{from{opacity:0;transform:translateY(14px) scale(.95)}to{opacity:1;transform:none}}
+.cfm .ico{font-size:44px;line-height:1;margin-bottom:6px}
+.cfm h3{font-size:22px;margin:0 0 4px}
+.cfm .hint{color:var(--text-soft);font-size:13.5px;margin:8px 0 0;line-height:1.5}
+.cfm .det{background:var(--bg);border-radius:14px;padding:14px 16px;margin:16px 0 4px;text-align:left}
+.cfm .det b{display:block;font-size:16px;margin-bottom:2px}
+.cfm .det span{color:var(--text-soft);font-size:13.5px}
+.cfm .acts{display:flex;gap:10px;margin-top:20px}
+.cfm .acts .btn{flex:1;justify-content:center}
+.ex{border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px}
+.ex .q{font-weight:700;margin-bottom:10px}
+.ex .opt{display:block;padding:9px 12px;border:2px solid var(--border);border-radius:10px;margin-bottom:7px;cursor:pointer;font-size:14px}
+.ex .opt:hover{border-color:var(--secondary)}
+.ex .opt.sel{border-color:var(--secondary);background:var(--bg)}
+.ex .opt.right{border-color:var(--green);background:var(--green-soft)}
+.ex .opt.wrong{border-color:var(--primary);background:#FDECEC}
+.ex input.gap,.ex textarea{width:100%;padding:10px 12px;border:2px solid var(--border);border-radius:10px;font-family:inherit;font-size:14px}
+.ex textarea{min-height:70px}
+.ex select{padding:8px 10px;border:2px solid var(--border);border-radius:10px;font-family:inherit;font-size:14px}
+.matchrow{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:14px}
+.matchrow b{min-width:130px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.chip{background:var(--bg);border:2px solid var(--border);border-radius:30px;padding:7px 13px;font-size:14px;cursor:pointer;font-family:inherit}
+.chip:hover{border-color:var(--secondary)}
+.buildarea{min-height:42px;border:1.5px dashed var(--border);border-radius:10px;padding:8px;margin-bottom:6px;display:flex;flex-wrap:wrap;gap:6px}
+.fb{font-size:13px;margin-top:8px;font-weight:600}
+.fb.ok{color:var(--green)}.fb.no{color:var(--primary)}
+.tip-card{background:var(--green-soft);border:1px solid var(--turquoise);border-radius:14px;padding:14px 16px;margin-bottom:14px}
+.ptabs{display:flex;gap:4px;margin-bottom:14px;border-bottom:1px solid var(--border)}
+.ptab{border:none;background:none;padding:9px 12px;font-weight:700;font-size:13px;color:var(--text-soft,#5C5C5C);cursor:pointer;border-bottom:2px solid transparent;font-family:inherit}
+.ptab.active{color:var(--primary,#DD0000);border-bottom-color:var(--primary,#DD0000)}
+.corr{background:#fff;border:1px solid var(--border);border-radius:10px;padding:9px 12px;margin-bottom:8px;font-size:14px}
+.corr-w{color:#dc2626;text-decoration:line-through}
+.corr-r{color:#16a34a;font-weight:700}
+.live-notes{white-space:pre-wrap;min-height:80px;font-size:15px;line-height:1.6}
+.live-dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#dc2626;margin-right:6px;vertical-align:middle;animation:livePulse 1.2s infinite}
+@keyframes livePulse{0%{box-shadow:0 0 0 0 rgba(220,38,38,.5)}70%{box-shadow:0 0 0 7px rgba(220,38,38,0)}100%{box-shadow:0 0 0 0 rgba(220,38,38,0)}}
+.tip-card b{display:block;margin-bottom:4px}
+.score-banner{background:var(--secondary);color:#fff;border-radius:14px;padding:16px;text-align:center;margin-bottom:14px}
+.score-banner .big{font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:700}
+
+/* ---------- Nachrichten ---------- */
+.thread{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+.msg{max-width:78%;padding:11px 14px;border-radius:16px;font-size:14px}
+.msg.student{align-self:flex-end;background:var(--secondary);color:#fff;border-bottom-right-radius:4px}
+.msg.teacher{align-self:flex-start;background:#fff;border:1px solid var(--border);border-bottom-left-radius:4px}
+.msg small{display:block;opacity:.6;font-size:11px;margin-top:3px}
+.composer{display:flex;gap:8px}
+.composer input{flex:1;padding:12px 14px;border:2px solid var(--border);border-radius:14px;font-family:inherit;font-size:14px}
+
+/* ---------- Profil ---------- */
+.field{margin-bottom:14px}
+.field label{display:block;font-weight:700;font-size:13px;margin-bottom:5px}
+.field input,.field select,.field textarea{width:100%;padding:11px 13px;border:2px solid var(--border);border-radius:12px;font-family:inherit;font-size:14px}
+.field textarea{min-height:70px}
+
+/* ---------- Verlauf ---------- */
+.log{background:#fff;border:1px solid var(--border);border-radius:12px;padding:11px 15px;margin-bottom:7px;display:flex;justify-content:space-between;align-items:center;font-size:14px;gap:10px}
+.log .delta{font-family:'Space Grotesk',sans-serif;font-weight:700}
+.log .delta.plus{color:var(--green)}.log .delta.minus{color:var(--primary)}
+
+.stars{font-size:22px;cursor:pointer;letter-spacing:2px;color:#d8d8d8}
+.stars .on{color:var(--accent)}
+
+.kauf-ok{background:var(--green-soft);border:2px solid var(--turquoise);border-radius:16px;padding:14px 18px;margin-bottom:16px;font-weight:600;display:none}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--secondary);color:#fff;padding:14px 24px;border-radius:50px;font-weight:600;font-size:14px;z-index:400;display:none}
+.mobtop{display:none}
+
+@media(max-width:860px){
+  .shell{flex-direction:column}
+  .sidebar{width:100%;height:auto;position:sticky;top:0;z-index:90;flex-direction:row;overflow-x:auto;gap:6px;padding:10px;border-right:none;border-bottom:1px solid var(--border)}
+  .brand{display:none}
+  .navlink{flex-direction:column;gap:3px;min-width:66px;padding:8px 6px;font-size:11px;text-align:center;border-radius:12px}
+  .navlink .ic{font-size:18px}
+  .navlink .badge{position:absolute;margin:0;top:2px;right:8px}
+  .navlink{position:relative}
+  .side-foot{display:none}
+  .main{padding:18px 16px 80px}
+  .grid2,.grid3{grid-template-columns:1fr}
+  .mobtop{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-bottom:1px solid var(--border);background:#fff}
+}
+/* Kalender im Schülerbereich */
+.kal-pills{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+.kpill{border:2px solid var(--border);background:#fff;border-radius:50px;padding:8px 15px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;color:var(--text-soft)}
+.kpill.active{background:var(--secondary);color:#fff;border-color:var(--secondary)}
+.kal-levels{margin-top:2px}
+.kpill.lvl{font-size:12px;padding:6px 12px}
+.kal-week{display:flex;align-items:center;justify-content:center;gap:14px;margin:6px 0 16px}
+.kal-week button{background:#fff;border:2px solid var(--border);border-radius:50px;padding:6px 14px;font-weight:700;cursor:pointer;font-family:inherit}
+.kal-week span{font-weight:800;font-family:'Space Grotesk',sans-serif}
+.cal-legend{display:flex;gap:14px;flex-wrap:wrap;margin:0 0 16px}
+.cal-legend .lg{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--text-soft)}
+.cal-legend .dot{width:12px;height:12px;border-radius:4px;display:inline-block}
+.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(160px,1fr));gap:10px;overflow-x:auto;padding-bottom:6px}
+.cal-day{background:#fff;border:1px solid var(--border);border-radius:14px;padding:8px;display:flex;flex-direction:column;gap:8px}
+.cal-dayhead{text-align:center;padding:6px 0;border-bottom:1px solid var(--border)}
+.cal-dayhead b{display:block;font-family:'Space Grotesk',sans-serif;font-size:15px;text-transform:capitalize}
+.cal-dayhead span{font-size:12px;color:var(--text-soft)}
+.cal-dayhead.today{border-bottom:2px solid var(--primary)}
+.cal-dayhead.today b{color:var(--primary)}
+.cal-empty{color:#e3e3e3;text-align:center;font-size:18px;padding:8px 0}
+.ev{border-left:5px solid var(--c,#2DD4BF);background:var(--cream);border-radius:10px;padding:8px 10px;display:flex;flex-direction:column;gap:5px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.ev-top{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.ev-time{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;white-space:nowrap}
+.ev-club{font-size:9px;font-weight:800;letter-spacing:.3px;color:#fff;padding:2px 7px;border-radius:20px;text-transform:uppercase;white-space:nowrap;text-shadow:0 1px 1px rgba(0,0,0,.28)}
+.ev-title{font-size:13px;font-weight:700;line-height:1.2}
+.ev-meta{font-size:11.5px;color:var(--text-soft)}
+.ev-lvlrow{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.ev-lvl{font-size:10px;font-weight:800;letter-spacing:.3px;padding:1px 7px;border-radius:20px;background:#fff;white-space:nowrap}
+.ev-btn{margin-top:2px;border:none;border-radius:20px;padding:7px 10px;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;text-align:center;text-decoration:none;display:block}
+.ev-btn.book{background:var(--secondary);color:#fff}
+.ev-btn.meet{background:var(--turquoise);color:#fff}
+.ev-btn.mine{background:var(--green-soft);color:var(--green);font-weight:800}
+.ev-btn.off{background:#f1f1f1;color:#aaa}
+.ev-btn.mat{background:var(--accent);color:#5a4a00}
+@media(max-width:820px){.cal-grid{grid-template-columns:1fr;overflow-x:visible}.cal-empty{display:none}.cal-day:has(.cal-empty){display:none}}
+
+.agenda{display:flex;flex-direction:column;gap:14px}
+.ag-row{display:flex;gap:14px;align-items:stretch;background:#fff;border:1px solid var(--border);border-radius:18px;padding:12px 14px;box-shadow:0 6px 18px rgba(0,0,0,.05);animation:agIn .45s ease both}
+.ag-row:nth-child(2){animation-delay:.05s}.ag-row:nth-child(3){animation-delay:.1s}.ag-row:nth-child(4){animation-delay:.15s}.ag-row:nth-child(5){animation-delay:.2s}.ag-row:nth-child(6){animation-delay:.25s}.ag-row:nth-child(7){animation-delay:.3s}
+@keyframes agIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.ag-day{flex:0 0 104px;display:flex;flex-direction:column;justify-content:center;gap:2px;border-right:1px solid var(--border);padding-right:12px}
+.ag-day b{font-family:'Space Grotesk',sans-serif;font-size:17px;text-transform:capitalize;line-height:1.1}
+.ag-day span{font-size:12px;color:var(--text-soft)}
+.ag-day em{margin-top:4px;align-self:flex-start;font-style:normal;font-size:10px;font-weight:800;letter-spacing:.04em;background:var(--primary);color:#fff;padding:2px 8px;border-radius:20px}
+.ag-day.today b{color:var(--primary)}
+.ag-events{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 6px;flex:1}
+.ag-events .ev{flex:0 0 215px;transition:transform .2s ease,box-shadow .2s ease}
+.ag-events .ev:hover{transform:translateY(-4px);box-shadow:0 14px 28px rgba(0,0,0,.13)}
+.ev-btn{transition:filter .15s ease,transform .1s ease}.ev-btn.book:hover{filter:brightness(1.12)}.ev-btn:active{transform:scale(.97)}
+@media(max-width:820px){.ag-row{flex-direction:column;gap:8px}.ag-day{flex:none;border-right:none;border-bottom:1px solid var(--border);padding:0 0 8px;flex-direction:row;align-items:center;gap:8px}}
+
+/* Wochenübersicht Mo–Sa (Spalten, volle Breite) */
+.main:has(#v-kalender.active){max-width:1280px}
+.calweek{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;align-items:start;animation:fade .3s}
+.calcol{background:#fff;border:1px solid var(--border);border-radius:16px;padding:8px;display:flex;flex-direction:column;gap:8px;min-width:0;box-shadow:0 4px 14px rgba(0,0,0,.05);animation:agIn .4s ease both}
+.calcol:nth-child(2){animation-delay:.04s}.calcol:nth-child(3){animation-delay:.08s}.calcol:nth-child(4){animation-delay:.12s}.calcol:nth-child(5){animation-delay:.16s}.calcol:nth-child(6){animation-delay:.2s}.calcol:nth-child(7){animation-delay:.24s}
+.calcol.today{border-color:var(--primary);box-shadow:0 6px 20px rgba(45,212,191,.2)}
+.calcol-head{text-align:center;padding:4px 2px 9px;border-bottom:1px solid var(--border)}
+.calcol-head b{display:block;font-family:'Space Grotesk',sans-serif;font-size:15px;text-transform:capitalize;line-height:1.1}
+.calcol-head span{font-size:12px;color:var(--text-soft)}
+.calcol-head em{display:inline-block;margin-top:4px;font-style:normal;font-size:10px;font-weight:800;letter-spacing:.04em;background:var(--primary);color:#fff;padding:1px 8px;border-radius:20px}
+.calcol-head.today b{color:var(--primary)}
+.calcol .ev{transition:transform .15s ease,box-shadow .15s ease}
+.calcol .ev:hover{transform:translateY(-3px);box-shadow:0 12px 24px rgba(0,0,0,.12)}
+.calcol-empty{color:#dcdcdc;text-align:center;font-size:20px;padding:8px 0}
+@media(max-width:1100px){.calweek{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:680px){.calweek{grid-template-columns:repeat(2,1fr);gap:8px}}
+@media(max-width:400px){.calweek{grid-template-columns:1fr}.calcol-empty{display:none}.calcol:not(:has(.ev)){display:none}}
+</style>
+<link rel="stylesheet" href="club-theme.css">
+</head>
+<body>
+
+<div class="mobtop">
+  <a href="index.html" style="display:flex;gap:8px;align-items:center;font-weight:800;text-decoration:none"><img src="logo.PNG" style="width:30px;height:30px;border-radius:50%" onerror="this.style.display='none'">Schülerbereich</a>
+  <button class="btn btn-ghost btn-sm" onclick="logout()">Abmelden</button>
+</div>
+
+<div class="shell">
+  <aside class="sidebar">
+    <a href="index.html" class="brand"><img src="logo.PNG" onerror="this.style.display='none'"><span>deutschoderwas&nbsp;club</span></a>
+    <button class="navlink active" data-view="dashboard" onclick="go('dashboard')"><span class="ic">🏠</span>Start</button>
+    <button class="navlink navlink-hl" data-view="ueben" onclick="go('ueben')"><span class="ic">🎮</span>Üben</button>
+    <button class="navlink" data-view="community" onclick="go('community')"><span class="ic">💬</span>Community<span class="badge" id="commBadge" style="display:none">0</span></button>
+    <button class="navlink" data-view="lernpfad" onclick="go('lernpfad')"><span class="ic">🪜</span>Lernpfad</button>
+    <button class="navlink" data-view="kalender" onclick="go('kalender')"><span class="ic">🗓️</span>Kalender</button>
+    <button class="navlink" data-view="stunden" onclick="go('stunden')"><span class="ic">📅</span>Meine Stunden</button>
+    <a class="navlink" href="kurse.html"><span class="ic">🎓</span>Kurse</a>
+    <button class="navlink" data-view="materialien" onclick="go('materialien')"><span class="ic">📚</span>Materialien</button>
+    <button class="navlink" data-view="vokabeln" onclick="go('vokabeln')"><span class="ic">🃏</span>Vokabeln</button>
+    <button class="navlink" data-view="fortschritt" onclick="go('fortschritt')"><span class="ic">🏆</span>Abzeichen</button>
+    <button class="navlink" data-view="guthaben" onclick="go('guthaben')"><span class="ic">💳</span>Guthaben</button>
+    <button class="navlink" data-view="nachrichten" onclick="go('nachrichten')"><span class="ic">✉️</span>Nachrichten<span class="badge" id="msgBadge" style="display:none">0</span></button>
+    <button class="navlink" data-view="amanda" onclick="go('amanda')"><span class="ic">🎤</span>Amanda</button>
+    <button class="navlink" data-view="profil" onclick="go('profil')"><span class="ic">👤</span>Profil</button>
+    <div class="side-foot">
+      <a class="navlink" href="#" onclick="return bucheStunde(event)"><span class="ic">➕</span>Stunde buchen</a>
+      <button class="navlink" onclick="logout()"><span class="ic">↩️</span>Abmelden</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="kauf-ok" id="kaufOk">🎉 Danke für deinen Kauf! Dein Guthaben wird gerade gutgeschrieben — lade die Seite gleich neu.</div>
+
+    <section class="view active" id="v-dashboard"></section>
+    <section class="view" id="v-ueben"></section>
+    <section class="view" id="v-community"></section>
+    <section class="view" id="v-lernpfad"></section>
+    <section class="view" id="v-kalender"></section>
+    <section class="view" id="v-stunden"></section>
+    <section class="view" id="v-materialien"></section>
+    <section class="view" id="v-vokabeln"></section>
+    <section class="view" id="v-fortschritt"></section>
+    <section class="view" id="v-guthaben"></section>
+    <section class="view" id="v-nachrichten"></section>
+    <section class="view" id="v-amanda"></section>
+    <section class="view" id="v-profil"></section>
+  </main>
+</div>
+
+<!-- Übungs-Runner -->
+<div class="modal-bg" id="exModal"><div class="modal"><button class="close" onclick="closeEx()">×</button><div id="exBody"></div></div></div>
+<div class="cfm-bg" id="cfmModal"><div class="cfm" id="cfmCard"></div></div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script>
+const CFG = window.SPRECHCLUB_CONFIG;
+const DEMO = CFG.SUPABASE_URL.startsWith('HIER_');
+const AMANDA_AGENT_ID = 'agent_8401kt4vq157espa2msk6c448s5x';
+const LEVELS = ['A1','A2','B1','B2','C1','C2'];
+const RANKS = [
+  {min:0,name:'Starter'},{min:200,name:'Sprachschüler'},{min:500,name:'Vielsprecher'},
+  {min:1000,name:'Sprachprofi'},{min:2000,name:'Sprach-Held'},{min:3500,name:'Legende'}
+];
+
+let sb=null, user=null, profile={}, bookings=[], creditLog=[], messages=[], ratings=[];
+let materials={}, progress={}, postNotes={};   // materials[class_id]=content ; progress[class_id+'|'+phase]=row ; postNotes[class_id]={notes,post_content}
+let credits=0, stats={};
+
+const _qp = new URLSearchParams(location.search);
+if (_qp.get('kauf')==='ok') document.getElementById('kaufOk').style.display='block';
+if (_qp.get('pass')==='ok'){ const k=document.getElementById('kaufOk'); k.textContent='🎉 Willkommen im Profi-Pass! 12 LIVE-Stunden pro Monat sind jetzt für dich freigeschaltet.'; k.style.display='block'; }
+function passActive(){ return profile.pass_until && new Date(profile.pass_until) > new Date(); }
+function bucheStunde(e){ if(e&&e.preventDefault)e.preventDefault(); if(credits>0||passActive()){ go('kalender'); } else { location.href='index.html#preise'; } return false; }
+// Stripe-Kundenportal öffnen — Abo verwalten / kündigen (Kündigung zum Periodenende; danach verfallen die Stunden).
+async function openPortal(){
+  try{
+    const { data:{ session } }=await sb.auth.getSession();
+    if(!session){ toast('Bitte melde dich neu an.'); return; }
+    toast('Portal wird geöffnet …');
+    const r=await fetch('/api/create-portal',{ method:'POST', headers:{ 'Authorization':'Bearer '+session.access_token } });
+    const d=await r.json().catch(()=>({}));
+    if(d&&d.url){ location.href=d.url; }
+    else if(d&&d.error==='no_subscription'){ toast('Kein aktives Abo gefunden.'); }
+    else { toast('Konnte das Abo-Portal gerade nicht öffnen.'); }
+  }catch(e){ toast('Konnte das Abo-Portal gerade nicht öffnen.'); }
+}
+
+function toast(t){ const el=document.getElementById('toast'); el.textContent=t; el.style.display='block'; clearTimeout(el._t); el._t=setTimeout(()=>el.style.display='none',3500); }
+function esc(s){ return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+// Stunden-Uhrzeiten IMMER in deutscher Zeit (Berlin) – sonst sehen Schüler im Ausland verschobene Zeiten.
+const _berlinT = new Intl.DateTimeFormat('de-DE',{timeZone:'Europe/Berlin',hour:'2-digit',minute:'2-digit'});
+function fmt(d){ return d.toLocaleDateString('de-DE',{weekday:'short',day:'numeric',month:'short'})+' · '+_berlinT.format(d); }
+function fmtShort(d){ return d.toLocaleDateString('de-DE',{day:'numeric',month:'short',year:'numeric'}); }
+
+// localStorage helpers (echte Website -> erlaubt)
+const lsKey = k => 'sc_'+(user?user.id:'anon')+'_'+k;
+function lsGet(k,def){ try{ return JSON.parse(localStorage.getItem(lsKey(k))) ?? def; }catch(e){ return def; } }
+function lsSet(k,v){ try{ localStorage.setItem(lsKey(k), JSON.stringify(v)); }catch(e){} }
+
+// ---------- Init ----------
+async function init(){
+  if (DEMO){ document.getElementById('v-dashboard').innerHTML='<div class="empty">Vorschau-Modus — verbinde Supabase, um deinen Schülerbereich zu sehen.</div>'; return; }
+  sb = supabase.createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY);
+  const { data:{ session } } = await sb.auth.getSession();
+  if (!session){ location.href='index.html?login=1'; return; }
+  user = session.user;
+  await load();
+  window.addEventListener('hashchange', routeFromHash);
+  routeFromHash();
+  requireBirthday();   // Pflicht: Geburtsdatum abfragen, falls noch nicht gesetzt
+}
+
+async function load(){
+  const [{ data:prof }, { data:bk }, { data:cl }, { data:msg }, { data:rt }, { data:prog }] = await Promise.all([
+    sb.from('profiles').select('credits,name,goal,target_level,native_language,pass_until,birthday').eq('id',user.id).single(),
+    sb.rpc('my_bookings'),
+    sb.from('credit_log').select('*').order('created_at',{ascending:false}),
+    sb.from('messages').select('*').order('created_at'),
+    sb.from('ratings').select('class_id,stars'),
+    sb.from('exercise_progress').select('*')
+  ]);
+  profile = prof||{}; credits = profile.credits||0;
+  bookings = (bk||[]).map(b=>{ if(b&&b.starts_at){ const s=String(b.starts_at).replace(' ','T'); b.starts_at=s.replace(/([+-]\d{2})$/,'$1:00'); } return b; }); creditLog = (cl||[]); messages = (msg||[]); ratings = (rt||[]);
+  progress = {}; (prog||[]).forEach(p=>progress[p.class_id+'|'+p.phase]=p);
+
+  // KI-Material für gebuchte Stunden
+  const ids = [...new Set(bookings.filter(b=>b.status==='booked').map(b=>b.class_id))];
+  materials = {}; postNotes = {};
+  if (ids.length){
+    const { data:mats } = await sb.from('class_materials').select('class_id,content').in('class_id', ids);
+    (mats||[]).forEach(m=>materials[m.class_id]=m.content);
+    const { data:cnotes } = await sb.from('class_notes').select('class_id,notes,post_content').in('class_id', ids);
+    (cnotes||[]).forEach(n=>postNotes[n.class_id]=n);
+  }
+  // Vokabel-Fortschritt geräteübergreifend: DB <-> localStorage mergen
+  try{
+    const { data:vk } = await sb.from('vocab_known').select('term').eq('user_id', user.id);
+    const dbTerms = (vk||[]).map(r=>r.term);
+    const localTerms = lsGet('known',[]);
+    lsSet('known', [...new Set([...dbTerms, ...localTerms])]);
+    const missing = localTerms.filter(t=>!dbTerms.includes(t));
+    if(missing.length) sb.from('vocab_known').upsert(missing.map(t=>({ user_id:user.id, term:t })), { onConflict:'user_id,term', ignoreDuplicates:true }).then(()=>{});
+  }catch(e){}
+  computeStats();
+  renderMsgBadge();
+  renderCommBadge();
+}
+
+// Community-Badge: Anzahl der UNGELESENEN Nachrichten (seit dem letzten Öffnen der Community).
+// Eigene Nachrichten zählen nicht mit. Verschwindet, sobald man die Community öffnet.
+async function renderCommBadge(){
+  const b=document.getElementById('commBadge'); if(!b) return;
+  try{
+    let seen=lsGet('commSeen',null);
+    if(seen===null){ seen=Date.now(); lsSet('commSeen',seen); }   // erstes Mal: ab jetzt zählen, keine alte Historie
+    const since=new Date(seen).toISOString();
+    let q=sb.from('community_messages')
+      .select('id',{count:'exact',head:true})
+      .is('deleted_at',null).gt('created_at',since);
+    if(user&&user.id) q=q.neq('user_id',user.id);   // eigene Nachrichten nicht zählen
+    const { count }=await q;
+    if(count>0){ b.style.display='inline-block'; b.textContent=count; } else b.style.display='none';
+  }catch(e){ b.style.display='none'; }
+}
+// Community als gelesen markieren -> Badge weg
+function markCommRead(){ lsSet('commSeen', Date.now()); renderCommBadge(); }
+
+// ---------- Statistik / Gamification ----------
+function isoWeekIndex(d){ const ref=new Date(Date.UTC(1970,0,5)); return Math.floor((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())-ref)/(7*86400000)); }
+function levelBucket(lvl){ const m=String(lvl||'').match(/[ABC][12]/); return m?m[0]:null; }
+
+function computeStats(){
+  const now = new Date();
+  const booked = bookings.filter(b=>b.status==='booked');
+  const past = booked.filter(b=>new Date(b.starts_at)<now);
+  const upcoming = booked.filter(b=>new Date(b.starts_at)>=now).sort((a,b)=>new Date(a.starts_at)-new Date(b.starts_at));
+
+  // Streak: aufeinanderfolgende Wochen mit Stunde (rückwärts ab dieser Woche)
+  const weeks = new Set(booked.map(b=>isoWeekIndex(new Date(b.starts_at))));
+  const cw = isoWeekIndex(now);
+  // finde jüngste Woche <= aktuelle Woche, dann zähle zusammenhängend rückwärts
+  let start = cw; if(!weeks.has(cw)){ start = Math.max(...[...weeks].filter(w=>w<=cw), -1); }
+  let streak = 0; if(start>=0){ let w=start; while(weeks.has(w)){ streak++; w--; } }
+
+  const completedPhases = Object.values(progress).filter(p=>p.completed).length;
+  const known = lsGet('known',[]).length;
+  const points = past.length*50 + completedPhases*20 + ratings.length*10 + known*2;
+
+  let rank=RANKS[0], next=null;
+  for(let i=0;i<RANKS.length;i++){ if(points>=RANKS[i].min){ rank=RANKS[i]; next=RANKS[i+1]||null; } }
+  const rankProg = next ? Math.round((points-rank.min)/(next.min-rank.min)*100) : 100;
+
+  // Lernpfad-Daten
+  const perLevel={}; LEVELS.forEach(l=>perLevel[l]=0);
+  booked.forEach(b=>{ const lb=levelBucket(b.level); if(lb) perLevel[lb]++; });
+  // aktuelles Niveau = höchstes mit gebuchten Stunden; sonst Zielniveau als Startpunkt
+  let currentLevel = null;
+  for(let i=LEVELS.length-1;i>=0;i--){ if(perLevel[LEVELS[i]]>0){ currentLevel = LEVELS[i]; break; } }
+  if(!currentLevel) currentLevel = profile.target_level || null;
+
+  stats = { now, booked, past, upcoming, streak, points, rank, next, rankProg,
+            completedPhases, known, perLevel, currentLevel,
+            vocabTotal: collectVocab().length };
+}
+
+function collectVocab(){
+  const seen=new Set(), out=[];
+  bookings.filter(b=>b.status==='booked').forEach(b=>{
+    (Array.isArray(b.vocab)?b.vocab:[]).forEach(v=>{ const k=v.de; if(v.de&&!seen.has(k)){seen.add(k);out.push({...v,from:b.title});} });
+    const m=materials[b.class_id];
+    if(m&&Array.isArray(m.vocab)) m.vocab.forEach(v=>{ const k=v.de; if(v.de&&!seen.has(k)){seen.add(k);out.push({...v,from:b.title});} });
+  });
+  return out;
+}
+
+// ---------- Router ----------
+const VIEWS=['dashboard','ueben','community','lernpfad','kalender','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','profil'];
+function go(v){ location.hash=v; }
+function routeFromHash(){ const v=(location.hash||'#dashboard').slice(1); show(VIEWS.includes(v)?v:'dashboard'); }
+const LOCKED_VIEWS=['ueben','community','amanda','materialien'];
+function show(v){
+  VIEWS.forEach(x=>document.getElementById('v-'+x).classList.toggle('active',x===v));
+  document.querySelectorAll('.navlink[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));
+  if(LOCKED_VIEWS.includes(v) && !isActive()){ renderLocked(v); window.scrollTo(0,0); return; }
+  ({dashboard:renderDashboard,ueben:(window.renderUeben||renderDashboard),community:(window.renderCommunity||renderDashboard),lernpfad:renderLernpfad,kalender:renderKalender,stunden:renderStunden,materialien:renderMaterialien,vokabeln:renderVokabeln,
+    fortschritt:renderFortschritt,guthaben:renderGuthaben,nachrichten:renderNachrichten,
+    amanda:renderAmanda,profil:renderProfil}[v])();
+  if(v==='community') markCommRead();   // Community geöffnet -> Nachrichten gelesen, Badge weg
+  window.scrollTo(0,0);
+}
+const LOCK_LABELS={ueben:'Üben',community:'Community',amanda:'Amanda',materialien:'Material'};
+function renderLocked(v){
+  const label=LOCK_LABELS[v]||'Dieser Bereich';
+  document.getElementById('v-'+v).innerHTML=
+    `<div class="pagehead"><h1>${label} 🔒</h1></div>
+     <div class="card" style="text-align:center;border:2px solid #f5b942;background:#fff8ec;max-width:560px;margin:0 auto">
+       <div style="font-size:46px;line-height:1;margin-bottom:8px">🎟️</div>
+       <h3 style="margin-bottom:8px">Noch kein Stundenpaket</h3>
+       <p class="muted" style="margin-bottom:16px">Such dir gerne dein Stundenpaket aus, um aktiv am Unterricht teilzunehmen und die ganze Plattform aktiv zu nutzen — Üben, Community, Amanda &amp; Material.</p>
+       <a class="btn btn-primary" href="index.html#pakete" style="text-decoration:none">Stundenpaket aussuchen →</a>
+     </div>`;
+  showLockPopup();
+}
+function showLockPopup(){
+  const card=document.getElementById('cfmCard');
+  card.innerHTML=`<div class="ico">🎟️</div>
+    <h3>Werde aktiv im Club</h3>
+    <p class="hint">Such dir gerne dein Stundenpaket aus, um aktiv am Unterricht teilzunehmen und die ganze Plattform aktiv zu nutzen.</p>
+    <div class="acts"><button class="btn btn-ghost" onclick="closeCfm()">Schließen</button><a class="btn btn-primary" href="index.html#pakete" style="flex:1;text-decoration:none">Stundenpaket aussuchen →</a></div>`;
+  document.getElementById('cfmModal').classList.add('open');
+}
+
+// ---------- Materialien (PDF-Bibliothek aus dem Unterricht) ----------
+let matLib=null;
+const MAT_ORDER=['Oktober','November','Dezember','Januar','Februar','März','April','Mai','Juni','Juli','August','September'];
+function matTopOrder(name){
+  const i=MAT_ORDER.findIndex(m=>name.includes(m));
+  const y=(name.match(/20\d\d/)||[''])[0];
+  return (y||'9999')+'-'+String(i<0?99:((i+3)%12)).padStart(2,'0');
+}
+function fmtSize(b){ return b>=1048576 ? (Math.round(b/1048576*10)/10+' MB') : (Math.max(1,Math.round(b/1024))+' KB'); }
+let matMode='thema';
+let matOpenTheme=null;
+const MAT_META={
+  'Beruf & Büro':{e:'💼',c:'#E3F0FC,#FBEDD8',img:'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=320&q=60'},
+  'Gesundheit, Arzt & Pflege':{e:'🩺',c:'#D7F0EC,#FCE5E3',img:'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=320&q=60'},
+  'Alltag & Leben in Deutschland':{e:'🏘️',c:'#FBEDD8,#FFF1C2',img:'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=320&q=60'},
+  'Essen, Kochen & Café':{e:'🍽️',c:'#FFF1C2,#FCE5E3',img:'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=320&q=60'},
+  'Reisen, Urlaub & Verkehr':{e:'✈️',c:'#D7F0EC,#FFF1C2',img:'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=320&q=60'},
+  'Familie, Beziehungen & Dates':{e:'❤️',c:'#FAE0EA,#FFF1C2',img:'https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=320&q=60'},
+  'Einkaufen & Konsum':{e:'🛒',c:'#E2EBC9,#FBEDD8',img:'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=320&q=60'},
+  'Medien & Digitales':{e:'📱',c:'#E5D8F2,#D7F0EC',img:'https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=320&q=60'},
+  'Feste & Jahreszeiten':{e:'🎉',c:'#FCE5E3,#FFF1C2',img:'https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=320&q=60'},
+  'Sport, Freizeit & Hobbys':{e:'⚽',c:'#E2EBC9,#D7F0EC',img:'https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=320&q=60'},
+  'Bildung & Schule':{e:'🎓',c:'#D7F0EC,#FBEDD8',img:'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=320&q=60'},
+  'Identität, Charakter & Ziele':{e:'🌟',c:'#FFF1C2,#FAE0EA',img:'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&w=320&q=60'},
+  'Leben im Ausland & Kultur':{e:'🌍',c:'#E5D8F2,#FCE5E3',img:'https://images.unsplash.com/photo-1526481280693-3bfa7568e0f3?auto=format&fit=crop&w=320&q=60'},
+  'Grammatik':{e:'📐',c:'#FCE5E3,#D7F0EC',img:'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=320&q=60'},
+  'Wortschatzboost':{e:'🧠',c:'#FFF1C2,#E2EBC9',img:'https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&w=320&q=60'},
+  'Freies Sprechen, Dialoge & Spiele':{e:'💬',c:'#D7F0EC,#FAE0EA',img:'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=320&q=60'},
+  'Weitere Mitschriften':{e:'🗂️',c:'#ECE5DD,#FBEDD8',img:''}
+};
+function matMeta(t){ return MAT_META[t]||{e:'📄',c:'#FBEDD8,#FDF6EC',img:''}; }
+function setMatTheme(t){ matOpenTheme=t; drawMaterials((document.getElementById('matSearch')?.value||'').toLowerCase()); window.scrollTo({top:0,behavior:'smooth'}); }
+function matBack(){ matOpenTheme=null; drawMaterials((document.getElementById('matSearch')?.value||'').toLowerCase()); }
+const MAT_THEMES=[
+  ['Wortschatzboost', /wortschatzboost/],
+  ['Grammatik', /konjunktiv|relativs|konjunktion|präposition|prapos|modalverb|adjektiv|nomen[ -]?verb|passiv|n-deklination|\d+ verben|temporale|lokale präp/],
+  ['Beruf & Büro', /büro|buero|beruf|vorstellungsg|bewerbung|homeoffice|home office|work ?life|hierarchie|überstunden|arbeitsplatz|tagesablauf|anweisung/],
+  ['Gesundheit, Arzt & Pflege', /arzt|ärzt|pflege|zahnarzt|beschwerd|anatomie|gesundheit|ernährung|schlafmangel|krank|apotheke/],
+  ['Essen, Kochen & Café', /koch|rezept|backen|bäcker|baecker|café|cafe|restaurant|essen|trinken|essgewohn|küche/],
+  ['Reisen, Urlaub & Verkehr', /reise|urlaub|abenteuer|verkehr|flughafen/],
+  ['Familie, Beziehungen & Dates', /familie|beziehung|\bdate|partner|geburt|muttersein|generationskonflikt|freunde|freundschaft/],
+  ['Einkaufen & Konsum', /einkauf|shopping|reklamation|werbung|konsum|handel/],
+  ['Medien & Digitales', /social media|medien|\bfilm|serie|handy|digital|video|internet|smartphone/],
+  ['Feste & Jahreszeiten', /weihnacht|silvester|neujahr|winter|wetter|jahreszeit|vorsätz|vorsatz|rückblick|feiertag|ostern|karneval/],
+  ['Sport, Freizeit & Hobbys', /sport|aktivität|hobby|freizeit|wochenende|humor/],
+  ['Bildung & Schule', /schule|schulzeit|bildung|elterngespräch|studium/],
+  ['Identität, Charakter & Ziele', /identität|charakter|träume|ziele|eigenschaft|persönlichk/],
+  ['Leben im Ausland & Kultur', /ausland|kulturschock|kultur|integration|heimat/],
+  ['Alltag & Leben in Deutschland', /alltag|nachbar|haushalt|wohnen|smalltalk|leben in deutschland|dtz|stress|ordnung|chaos|konflikt|friseur|bank/],
+  ['Freies Sprechen, Dialoge & Spiele', /freies sprechen|freie dialog|dialog|rollenspiel|bildbeschreib|alias|plaudertisch|minidialog|zungenbrecher|spiel|quiz|gespräch/],
+];
+function matTheme(m){ const s=((m.folder||'')+' '+(m.title||'')).toLowerCase(); for(const r of MAT_THEMES){ if(r[1].test(s)) return r[0]; } return 'Weitere Mitschriften'; }
+function matDate(m){ const f=m.folder||''; const y=(f.match(/20\d\d/)||['2026'])[0]; const dm=f.match(/(\d{1,2})\.(\d{1,2})(?!\d)/g); let dd='',mm=''; if(dm&&dm.length){ const p=dm[dm.length-1].split('.'); dd=p[0].padStart(2,'0'); mm=p[1].padStart(2,'0'); } return { key:y+'-'+(mm||'00')+'-'+(dd||'00'), label:(dd&&mm)?(dd+'.'+mm+'.'+y):'' }; }
+function setMatMode(m){ matMode=m; matOpenTheme=null; document.querySelectorAll('.matmode').forEach(b=>{ const on=b.dataset.m===m; b.style.background=on?'var(--primary,#DD0000)':'#fff'; b.style.color=on?'#fff':'var(--text-soft,#5C5C5C)'; }); drawMaterials((document.getElementById('matSearch')?.value||'').toLowerCase()); }
+async function renderMaterialien(){
+  const el=document.getElementById('v-materialien');
+  const mb='padding:9px 14px;border:none;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit';
+  el.innerHTML=`<div class="pagehead"><h1>Materialien</h1><p>Alle Arbeitsblätter, Mitschriften & PDFs aus dem Unterricht — sortiert nach Thema oder Datum.</p></div>
+    ${isActive()?'':`<div class="card" style="border:2px solid #f5b942;background:#fff8ec;margin-bottom:14px"><b>🔒 Hinweis:</b> <span class="muted">Du siehst dein bisheriges Material. Neues Material wird mit einem Paket wieder freigeschaltet.</span> <a href="index.html#pakete" style="font-weight:700">Pakete ansehen →</a></div>`}
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px">
+      <div style="display:inline-flex;border:2px solid var(--border);border-radius:12px;overflow:hidden">
+        <button class="matmode" data-m="thema" onclick="setMatMode('thema')" style="${mb};background:var(--primary,#DD0000);color:#fff">🗂️ Nach Thema</button>
+        <button class="matmode" data-m="datum" onclick="setMatMode('datum')" style="${mb};background:#fff;color:var(--text-soft,#5C5C5C)">📅 Nach Datum</button>
+      </div>
+      <input id="matSearch" placeholder="🔍 Suchen… (z.B. Pflege, Grammatik, Reisen)" style="flex:1;min-width:200px;max-width:420px;padding:11px 13px;border:2px solid var(--border);border-radius:12px;font-family:inherit;font-size:14px" oninput="drawMaterials(this.value.toLowerCase())">
+    </div>
+    <div id="matList"><div class="empty">Lade Materialien…</div></div>`;
+  if(!matLib){
+    const {data,error}=await sb.from('materials').select('storage_path,title,folder,size_bytes').order('folder').order('title');
+    if(error){ document.getElementById('matList').innerHTML='<div class="empty">Materialien konnten nicht geladen werden.</div>'; return; }
+    matLib=data||[];
+  }
+  drawMaterials('');
+}
+function matRow(m,dateLabel){ return `<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0">📄</span>
+        <a href="#" onclick="openMaterial('${esc(m.storage_path)}',this);return false" style="flex:1;color:var(--ink);text-decoration:none;font-weight:600">${esc(m.title)}</a>
+        ${dateLabel?`<span class="muted" style="font-size:12px;flex-shrink:0">${dateLabel}</span>`:''}
+        <span class="muted" style="font-size:12px;flex-shrink:0">${fmtSize(m.size_bytes||0)}</span></div>`; }
+function drawMaterials(q){
+  const box=document.getElementById('matList'); if(!box) return;
+  const items=(matLib||[]).filter(m=>!q||((m.title||'')+' '+(m.folder||'')+' '+matTheme(m)).toLowerCase().includes(q));
+  if(!items.length){ box.innerHTML='<div class="empty">Nichts gefunden.</div>'; return; }
+  if(matMode==='thema') drawByTheme(items,q); else drawByDate(items,q);
+}
+function drawByTheme(items,q){
+  const box=document.getElementById('matList');
+  const g={};
+  items.forEach(m=>{ const t=matTheme(m); (g[t]=g[t]||[]).push(m); });
+  const order=Object.keys(g).sort((a,b)=>{ if(a==='Weitere Mitschriften')return 1; if(b==='Weitere Mitschriften')return -1; return g[b].length-g[a].length || a.localeCompare(b); });
+  if(q){
+    box.innerHTML=order.map(t=>{
+      const files=g[t].map(m=>({m,d:matDate(m)})).sort((x,y)=>y.d.key.localeCompare(x.d.key));
+      return `<div class="card" style="margin-bottom:10px"><div style="font-weight:800;font-size:15px;margin-bottom:6px">${matMeta(t).e} ${esc(t)} <span class="muted">(${g[t].length})</span></div>${files.map(({m,d})=>matRow(m,d.label)).join('')}</div>`;
+    }).join('');
+    return;
+  }
+  if(matOpenTheme && g[matOpenTheme]){
+    const mt=matMeta(matOpenTheme);
+    const files=g[matOpenTheme].map(m=>({m,d:matDate(m)})).sort((x,y)=>y.d.key.localeCompare(x.d.key));
+    box.innerHTML=`<button class="btn btn-ghost btn-sm" onclick="matBack()" style="margin-bottom:12px">← Alle Themen</button>
+      <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><span style="font-size:1.8rem">${mt.e}</span><div style="font-weight:800;font-size:18px">${esc(matOpenTheme)} <span class="muted" style="font-weight:600">(${files.length})</span></div></div>${files.map(({m,d})=>matRow(m,d.label)).join('')}</div>`;
+    return;
+  }
+  box.innerHTML='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px">'+order.map(t=>{
+    const mt=matMeta(t);
+    return `<div class="matcard" data-theme="${esc(t)}" style="cursor:pointer;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 2px 10px rgba(38,32,25,.07);transition:transform .15s">
+      <div style="position:relative;height:92px;background:linear-gradient(135deg,${mt.c});display:flex;align-items:center;justify-content:center">
+        <span style="position:relative;font-size:2.3rem;filter:drop-shadow(0 1px 2px rgba(0,0,0,.15))">${mt.e}</span>
+        ${mt.img?`<img src="${mt.img}" loading="lazy" alt="" onerror="this.remove()" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">`:''}
+      </div>
+      <div style="padding:9px 11px"><div style="font-weight:700;font-size:13px;line-height:1.25">${esc(t)}</div><div class="muted" style="font-size:12px;margin-top:2px">${g[t].length} Mitschriften</div></div>
+    </div>`;
+  }).join('')+'</div>';
+  box.querySelectorAll('.matcard').forEach(c=>{
+    c.addEventListener('click',()=>setMatTheme(c.dataset.theme));
+    c.addEventListener('mouseover',()=>{c.style.transform='translateY(-3px)';});
+    c.addEventListener('mouseout',()=>{c.style.transform='';});
+  });
+}
+function drawByDate(items,q){
+  const box=document.getElementById('matList');
+  const groups={};
+  items.forEach(m=>{
+    const parts=(m.folder||'').split('/');
+    const top=parts[1]||parts[0]||'Sonstiges';
+    const sub=parts.slice(2).join(' › ');
+    (groups[top]=groups[top]||{});(groups[top][sub]=groups[top][sub]||[]).push(m);
+  });
+  const tops=Object.keys(groups).sort((a,b)=>matTopOrder(b).localeCompare(matTopOrder(a))||a.localeCompare(b));
+  box.innerHTML=tops.map(top=>{
+    const subs=groups[top]; const n=Object.values(subs).reduce((s,a)=>s+a.length,0);
+    const inner=Object.keys(subs).sort().map(sub=>{
+      const files=subs[sub].map(m=>matRow(m,'')).join('');
+      return sub?`<details style="margin:6px 0 6px 8px"><summary style="cursor:pointer;font-weight:600;padding:4px 0">📁 ${esc(sub)} <span class="muted">(${subs[sub].length})</span></summary><div style="padding-left:10px">${files}</div></details>`:`<div>${files}</div>`;
+    }).join('');
+    return `<details class="card" style="margin-bottom:10px" ${q?'open':''}><summary style="cursor:pointer;font-weight:800;font-size:16px">🗂️ ${esc(top)} <span class="muted" style="font-weight:600">(${n} Dateien)</span></summary><div style="margin-top:8px">${inner}</div></details>`;
+  }).join('');
+}
+async function openMaterial(path,a){
+  const old=a.textContent; a.textContent='Öffne…';
+  try{
+    const {data,error}=await sb.storage.from('materials').createSignedUrl(path,3600);
+    if(error||!data?.signedUrl) throw error||new Error('no url');
+    window.open(data.signedUrl,'_blank');
+  }catch(e){ alert('Datei konnte nicht geöffnet werden. Bitte neu einloggen oder Julia Bescheid geben.'); }
+  a.textContent=old;
+}
+
+// ---------- Dashboard ----------
+function isActive(){ return credits>0 || stats.upcoming.length>0 || passActive(); }
+function lockBanner(){
+  return `<div class="card" style="border:2px solid #f5b942;background:#fff8ec;margin-bottom:14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+    <div style="flex:1;min-width:200px"><b>🔒 Dein Guthaben ist aufgebraucht</b>
+    <p class="muted" style="margin-top:4px">Mit einem neuen Paket bekommst du wieder vollen Zugriff: Stundenplan mit Buchung, neues Material, Übungen & Quizze.</p></div>
+    <a class="btn btn-primary" href="index.html#pakete">Pakete ansehen</a></div>`;
+}
+function renderDashboard(){
+  const s=stats; const name=profile.name||'';
+  const greet = name?('Hallo '+esc(name.split(' ')[0])+'! 👋'):'Willkommen zurück! 👋';
+  let next='';
+  if(s.upcoming.length){ const n=s.upcoming[0]; const d=new Date(n.starts_at);
+    const diffH=Math.round((d-s.now)/3600000);
+    const cd = diffH<24 ? ('in '+Math.max(1,Math.round((d-s.now)/3600000))+' h') : ('in '+Math.ceil((d-s.now)/86400000)+' Tagen');
+    next=`<div class="next-hero">
+      <div style="flex:1;min-width:180px">
+        <div class="muted" style="font-weight:700;text-transform:uppercase;font-size:11px;letter-spacing:1px">Nächste Stunde</div>
+        <div class="when">${fmt(d)} <span class="cd">· ${cd}</span></div>
+        <div class="muted">${esc(n.title)} · ${esc(n.level)}${n.topic?' · '+esc(n.topic):''}</div>
+      </div>
+      ${n.zoom_link?`<a class="btn btn-primary" href="${esc(n.zoom_link)}" target="_blank">Zum Unterricht (Meet)</a>`:''}
+      <button class="btn btn-ghost btn-sm" onclick="go('stunden')">Vorbereiten</button>
+    </div>`;
+  } else {
+    next=`<div class="next-hero"><div style="flex:1"><div class="when">Noch keine Stunde gebucht</div><div class="muted">Such dir im Stundenplan etwas Passendes aus.</div></div><a class="btn btn-primary" href="#" onclick="return bucheStunde(event)">Stunde buchen</a></div>`;
+  }
+  document.getElementById('v-dashboard').innerHTML = `
+    ${isActive()?'':lockBanner()}
+    <div class="hero-card">
+      <div><h1>${greet}</h1><p class="muted">Schön, dass du übst. Bleib dran — Sprechen lernt man durch Sprechen. 💪</p></div>
+      <div class="streak-chip">🔥 ${s.streak} ${s.streak===1?'Woche':'Wochen'} Streak</div>
+    </div>
+    ${passActive()?`<div class="next-hero" style="background:linear-gradient(135deg,var(--turq),var(--turq-dark));color:#fff"><div style="flex:1"><div class="when" style="color:#fff">⭐ Profi-Pass aktiv</div><div style="color:rgba(255,255,255,.85);font-size:13px">12 LIVE-Stunden pro Monat · verlängert sich am ${fmtShort(new Date(profile.pass_until))} · <a href="#" onclick="openPortal();return false" style="color:#fff;text-decoration:underline;font-weight:600">Abo verwalten / kündigen</a></div></div><a class="btn" style="background:#fff;color:var(--turq-dark)" href="#" onclick="return bucheStunde(event)">Stunde buchen</a></div>`:''}
+    <div class="rankbar">
+      <div class="top"><span class="rank">${s.rank.name} · ${s.points} Punkte</span>
+        <span class="muted">${s.next?('noch '+(s.next.min-s.points)+' bis '+s.next.name):'Höchster Rang erreicht 🎉'}</span></div>
+      <div class="bar"><span style="width:${s.rankProg}%"></span></div>
+    </div>
+    ${next}
+    <div class="grid3" style="margin-top:14px">
+      <div class="stat"><div class="big">${credits}</div><div class="lbl">Stunden-Guthaben</div></div>
+      <div class="stat"><div class="big">${s.past.length}</div><div class="lbl">Stunden besucht</div></div>
+      <div class="stat"><div class="big">${s.completedPhases}</div><div class="lbl">Übungen gelöst</div></div>
+    </div>
+    <div class="grid3" style="margin-top:12px">
+      <div class="stat"><div class="big">${s.currentLevel||'–'}</div><div class="lbl">Aktuelles Niveau</div></div>
+      <div class="stat"><div class="big">${s.known}/${s.vocabTotal}</div><div class="lbl">Vokabeln gelernt</div></div>
+      <div class="stat"><div class="big">${s.upcoming.length}</div><div class="lbl">Gebuchte Stunden</div></div>
+    </div>
+    <h2 class="sec">Weitermachen</h2>
+    <div class="grid2">
+      <div class="card" style="cursor:pointer" onclick="go('stunden')"><b>📅 Stunden vorbereiten</b><p class="muted" style="margin-top:4px">Übungen & Material zu deinen gebuchten Stunden.</p></div>
+      <div class="card" style="cursor:pointer" onclick="go('vokabeln')"><b>🃏 Vokabeln üben</b><p class="muted" style="margin-top:4px">${s.vocabTotal} Vokabeln aus deinen Stunden.</p></div>
+      <div class="card" style="cursor:pointer" onclick="go('amanda')"><b>🎤 Mit Amanda sprechen</b><p class="muted" style="margin-top:4px">Jederzeit frei Deutsch üben — gratis für dich.</p></div>
+      <div class="card" style="cursor:pointer" onclick="go('lernpfad')"><b>🪜 Dein Lernpfad</b><p class="muted" style="margin-top:4px">Sieh, wo du stehst — von A1 bis C2.</p></div>
+    </div>`;
+}
+
+// ---------- Lernpfad ----------
+function renderLernpfad(){
+  const s=stats;
+  const curIdx = LEVELS.indexOf(s.currentLevel);
+  const tgtIdx = LEVELS.indexOf(profile.target_level);
+  const desc={A1:'Erste Wörter & Sätze',A2:'Alltag & einfache Gespräche',B1:'Selbstständig im Alltag',B2:'Fließend diskutieren',C1:'Differenziert & sicher',C2:'Muttersprachliches Niveau'};
+  document.getElementById('v-lernpfad').innerHTML = `
+    <div class="pagehead"><h1>Dein Lernpfad</h1><p>Von A1 bis C2 — jede gebuchte Stunde bringt dich weiter.${profile.target_level?' Dein Ziel: <b>'+esc(profile.target_level)+'</b> 🎯':' <a href="#profil" style="color:var(--primary);cursor:pointer;font-weight:700">Setz dir ein Ziel →</a>'}</p></div>
+    <div class="path">
+      ${LEVELS.map((l,i)=>{
+        const n=s.perLevel[l]||0;
+        const done = curIdx>=0 && i<curIdx;
+        const current = i===curIdx;
+        const cls = current?'current':(done||n>0?'done':'');
+        return `<div class="pstep ${cls}">
+          <div class="pdot">${l}</div><div class="pline"></div>
+          <div class="pbody">
+            <b>${l} — ${desc[l]}</b>
+            ${i===tgtIdx?'<span class="goal"> · 🎯 dein Ziel</span>':''}
+            <div class="muted">${n>0?(n+' Stunde'+(n>1?'n':'')+' gebucht'):(current?'Du bist hier':'noch keine Stunden')}</div>
+          </div></div>`;
+      }).join('')}
+    </div>
+    <div class="card" style="margin-top:18px"><b>So funktioniert's</b><p class="muted" style="margin-top:5px">Dein aktuelles Niveau richtet sich nach den Stunden, die du buchst. Buch Stunden im nächsthöheren Niveau, wenn du dich bereit fühlst — frag Amanda oder deine Lehrerin, wenn du unsicher bist.</p>
+      <a class="btn btn-primary btn-sm" style="margin-top:10px" href="#" onclick="go('kalender');return false">Stunden ansehen</a></div>`;
+}
+
+// ---------- Meine Stunden ----------
+function phaseHtml(b, phase){
+  const m=materials[b.class_id];
+  if(phase==='post'){
+    const ended = Date.now() > (new Date(b.starts_at).getTime() + 75*60000);
+    const pn = postNotes[b.class_id];
+    const hasPost = pn && pn.post_content && Array.isArray(pn.post_content.exercises) && pn.post_content.exercises.length;
+    const pr = progress[b.class_id+'|post'];
+    let inner;
+    if(!ended){ inner='<span class="nope">folgt nach dem Unterricht</span>'; }
+    else if(hasPost){
+      inner = (pr&&pr.completed)
+        ? `<span class="doneflag">✓ erledigt${pr.score!=null?' · '+pr.score+'/'+pr.total:''}</span><br><a href="#" onclick="openPost('${b.class_id}');return false" style="color:var(--primary);font-weight:700;font-size:12px">nochmal üben</a>`
+        : `<button class="btn btn-turq btn-sm" onclick="openPost('${b.class_id}')">Übungen starten</button>`;
+    } else { inner='<span class="nope">folgt in Kürze</span>'; }
+    const ready = ended && hasPost && !(pr&&pr.completed);
+    const donecls = (pr&&pr.completed)?'done-ph':'';
+    return `<div class="phase ${ready?'ready':''} ${donecls}"><b>✍️ Nachbearbeitung</b>${inner}</div>`;
+  }
+  if(phase==='live'){
+    const href = `klassenraum.html?stunde=${b.class_id}&titel=${encodeURIComponent(b.title||'')}&niveau=${encodeURIComponent(b.level||'')}`;
+    // Keine Zeitsperre: der Klassenraum ist jederzeit betretbar.
+    const inner=`<a class="btn btn-turq btn-sm" href="${href}" target="_blank" rel="noopener" style="text-decoration:none"><span class="live-dot"></span>🔴 Beitreten</a>`;
+    return `<div class="phase ready"><b>🗣️ Im Unterricht</b>${inner}</div>`;
+  }
+  const hasKi = m && m[phase] && Array.isArray(m[phase].exercises) && m[phase].exercises.length;
+  const link = phase==='pre'?b.material_pre:(phase==='post'?b.material_post:b.material_live);
+  const label = phase==='pre'?'Vorbereitung':(phase==='post'?'Nachbearbeitung':'Im Unterricht');
+  const emoji = phase==='pre'?'📖':(phase==='post'?'✍️':'🗣️');
+  const pr = progress[b.class_id+'|'+phase];
+  let inner;
+  if (phase!=='live' && hasKi){
+    if (pr && pr.completed) inner=`<span class="doneflag">✓ erledigt${pr.score!=null?' · '+pr.score+'/'+pr.total:''}</span><br><a href="#" onclick="openEx('${b.class_id}','${phase}');return false" style="color:var(--primary);font-weight:700;font-size:12px">nochmal üben</a>`;
+    else inner=`<button class="btn btn-turq btn-sm" onclick="openEx('${b.class_id}','${phase}')">Übungen starten</button>`;
+  } else if (link){
+    inner = /^https?:\/\//.test(link) ? `<a href="${esc(link)}" target="_blank" style="color:var(--primary);font-weight:700">öffnen →</a>` : `<span>${esc(link)}</span>`;
+  } else {
+    inner = `<span class="nope">folgt</span>`;
+  }
+  const ready = phase!=='live' && hasKi && !(pr&&pr.completed);
+  const donecls = pr&&pr.completed?'done-ph':'';
+  return `<div class="phase ${ready?'ready':''} ${donecls}"><b>${emoji} ${label}</b>${inner}</div>`;
+}
+
+// ---------- Kalender (alle Clubs, farbig, filterbar) ----------
+let kalClub='alle', kalLevel='alle', kalWeek=(function(){var s=new Date(2026,5,29),n=new Date();function m(d){var x=new Date(d);x.setDate(x.getDate()-((x.getDay()+6)%7));x.setHours(0,0,0,0);return x;}var w=Math.round((m(s)-m(n))/6048e5);return w>0?w:0;})(), kalClubs=[], kalCache=[];
+function startOfWeekK(d,off=0){ const x=new Date(d); const day=(x.getDay()+6)%7; x.setDate(x.getDate()-day+off*7); x.setHours(0,0,0,0); return x; }
+function fmtTimeK(d){ return _berlinT.format(d); }
+function renderKalender(){
+  document.getElementById('v-kalender').innerHTML =
+    '<div class="pagehead"><h1>Kalender</h1><p>Alle LIVE-Stunden farbig nach Club. Tippe einen Club an, um nur dessen Stunden zu sehen.</p></div><div id="kalBody"><div class="empty">lädt…</div></div>';
+  loadKalender();
+}
+function kalLevelMatch(classLevel,filter){
+  if(filter==='alle') return true;
+  const L=String(classLevel||'');
+  let cb;
+  const _ab=L.match(/ab\s*([ABC][12])/i);
+  if(_ab){ const _o=['A2','B1','B2','C1']; const _i=_o.indexOf(_ab[1].toUpperCase()); cb=_i>=0?_o.slice(_i):[]; }
+  else if(/A2\s*\/\s*B1/i.test(L)) cb=['A2','B1'];
+  else if(/B1\s*\/\s*B2/i.test(L)) cb=['B1','B2'];
+  else if(/B2\s*\/\s*C1/i.test(L)) cb=['B2','C1'];
+  else { const m=L.match(/[ABC][12]/); cb=m?[m[0]]:[]; }
+  return cb.includes(filter);
+}
+async function loadKalender(){
+  if(!kalClubs.length){ const {data}=await sb.from('clubs').select('*').eq('is_active',true).order('sort_order'); kalClubs=data||[]; }
+  const from=startOfWeekK(new Date(), kalWeek); const to=new Date(from); to.setDate(to.getDate()+7);
+  const { data } = await sb.rpc('week_classes',{p_from:from.toISOString(),p_to:to.toISOString()});
+  const all=(data||[]).map(c=>{ if(c&&c.starts_at){ const s=String(c.starts_at).replace(' ','T'); c.starts_at=s.replace(/([+-]\d{2})$/,'$1:00'); } return c; }); kalCache=all;
+  let list=(kalClub==='alle')?all:all.filter(c=>c.club===kalClub);
+  const clubCount=list.length;
+  if(kalLevel!=='alle') list=list.filter(c=>kalLevelMatch(c.level,kalLevel));
+  const pills='<div class="kal-pills"><button class="kpill '+(kalClub==='alle'?'active':'')+'" onclick="setKalClub(\'alle\')">📅 Alle Clubs</button>'+
+    kalClubs.map(c=>{const on=kalClub===c.slug; const col=c.color||'#2DD4BF';
+      return `<button class="kpill ${on?'active':''}" style="${on?('background:'+col+';border-color:'+col+';color:#fff'):''}" onclick="setKalClub('${c.slug}')">${c.emoji||''} ${esc(c.name)}</button>`;}).join('')+'</div>';
+  const LEVELS=['alle','A2','B1','B2','C1'];
+  const lvlPills='<div class="kal-pills kal-levels">'+LEVELS.map(l=>`<button class="kpill lvl ${kalLevel===l?'active':''}" onclick="setKalLevel('${l}')">${l==='alle'?'Alle Niveaus':l}</button>`).join('')+'</div>';
+  let legend=''; if(kalClub==='alle'){ legend='<div class="cal-legend">'+kalClubs.map(c=>`<span class="lg"><span class="dot" style="background:${c.color||'#2DD4BF'}"></span>${esc(c.name)}</span>`).join('')+'</div>'; }
+  const satEnd=new Date(from); satEnd.setDate(satEnd.getDate()+5);
+  const wc=`<div class="kal-week"><button onclick="kalWeekChange(-1)">←</button><span>${from.toLocaleDateString('de-DE',{day:'numeric',month:'short'})} – ${satEnd.toLocaleDateString('de-DE',{day:'numeric',month:'short',year:'numeric'})}</span><button onclick="kalWeekChange(1)">→</button></div>`;
+  let grid;
+  if(!list.length){
+    const clubName=(kalClub==='alle')?'allen Clubs':((kalClubs.find(c=>c.slug===kalClub)||{}).name||'diesem Club');
+    if(kalLevel!=='alle' && clubCount>0){
+      grid=`<div class="empty">In <b>${esc(clubName)}</b> gibt es diese Woche keine Stunden auf Niveau <b>${kalLevel}</b>.<br><button class="kpill lvl" style="margin-top:10px" onclick="setKalLevel('alle')">Alle Niveaus anzeigen</button>${kalClub!=='alle'?` <button class="kpill" style="margin-top:10px" onclick="setKalClub('alle')">Alle Clubs anzeigen</button>`:''}</div>`;
+    } else if(kalClub!=='alle'){
+      grid=`<div class="empty">In <b>${esc(clubName)}</b> sind diese Woche keine Stunden eingetragen.<br><button class="kpill" style="margin-top:10px" onclick="setKalClub('alle')">Alle Clubs anzeigen</button></div>`;
+    } else {
+      grid='<div class="empty">In dieser Woche sind hier (noch) keine Stunden eingetragen.</div>';
+    }
+  }
+  else{
+    const days=[]; for(let i=0;i<7;i++){const d=new Date(from);d.setDate(d.getDate()+i);days.push(d);} // Mo–So
+    const byDay={}; list.forEach(c=>{const k=new Date(c.starts_at).toDateString();(byDay[k]=byDay[k]||[]).push(c);});
+    const today=new Date().toDateString();
+    grid='<div class="calweek">'+days.map(d=>{
+      const arr=(byDay[d.toDateString()]||[]).sort((a,b)=>new Date(a.starts_at)-new Date(b.starts_at));
+      const isT=d.toDateString()===today;
+      const head=`<div class="calcol-head ${isT?'today':''}"><b>${d.toLocaleDateString('de-DE',{weekday:'long'})}</b><span>${d.toLocaleDateString('de-DE',{day:'numeric',month:'short'})}</span>${isT?'<em>heute</em>':''}</div>`;
+      const body=arr.length?arr.map(kalEv).join(''):'<div class="calcol-empty">–</div>';
+      return `<div class="calcol ${isT?'today':''}">${head}${body}</div>`;
+    }).join('')+'</div>';
+  }
+  const tzHint='<div class="muted" style="text-align:center;font-size:12px;font-weight:600;margin:2px 0 8px">🕒 Alle Zeiten in deutscher Zeit (Berlin)</div>';
+  document.getElementById('kalBody').innerHTML=pills+lvlPills+legend+wc+tzHint+grid;
+}
+const KAL_LVL_COLOR={'A2':'#B45309','A2/B1':'#15803D','B1':'#1D4ED8','B1/B2':'#0891B2','B2':'#7C3AED','B2/C1':'#7C3AED','C1':'#BE185D','ab A2':'#B45309','ab B1':'#BE185D','ab B2':'#7C3AED'};
+function kalLvlColor(l){ return KAL_LVL_COLOR[l]||'#6B7280'; }
+function kalEv(c){
+  const start=new Date(c.starts_at); const end=new Date(start.getTime()+((c.duration_min||60)*60000)); const free=c.capacity-(c.booked||0); const past=start<new Date(); const color=c.club_color||'#2DD4BF';
+  const lc=kalLvlColor(c.level);
+  let btn;
+  if(c.mine){ btn=c.zoom_link?`<a class="ev-btn meet" href="${esc(c.zoom_link)}" target="_blank" rel="noopener">🎥 Zum Unterricht</a>`:`<span class="ev-btn mine">✓ Gebucht</span>`; }
+  else if(past){ btn=`<span class="ev-btn off">vorbei</span>`; }
+  else if(free<=0){ btn=`<span class="ev-btn off">ausgebucht</span>`; }
+  else{ btn=`<button class="ev-btn book" onclick="kalBook('${c.id}')">Buchen</button>`; }
+  const titleLine = esc(c.topic || c.title);
+  const lvlBadge = `<span class="ev-lvl" style="border:1.5px solid ${lc};color:${lc}">${esc(c.level)}</span>`;
+  // Nur für gebuchte Stunden: Material/Präsentation des Unterrichts (erscheint, sobald Material hinterlegt ist)
+  const matBtn = (c.has_material && isActive()) ? `<button class="ev-btn mat" onclick="openClassMaterial('${c.id}',${c.mine?1:0})">📚 Material des Unterrichts</button>` : '';
+  const noPrep = (c.club==='sprachspielclub') ? `<div class="ev-note" style="margin-top:6px;font-size:12px;color:var(--text-soft);font-weight:600">✨ Keine Vorbereitung nötig</div>` : '';
+  return `<div class="ev" style="--c:${color};background:${color}14"><div class="ev-top"><span class="ev-time">${fmtTimeK(start)}–${fmtTimeK(end)}</span><span class="ev-club" style="background:${color}">${esc(c.club_name||'')}</span></div><div class="ev-title">${titleLine}</div><div class="ev-lvlrow">${lvlBadge}</div>${c.teacher_name?`<div style="font-size:12px;color:#555;font-weight:600;margin-top:3px">👩‍🏫 ${esc(c.teacher_name)}</div>`:''}${btn}${matBtn}${noPrep}</div>`;
+}
+async function openClassMaterial(classId, booked){
+  if(!isActive()){ toast('Material gibt es mit aktivem Guthaben — ich bring dich zu den Paketen 😊'); setTimeout(()=>{ location.href='live.html#pakete'; }, 900); return; }
+  let m=materials[classId];
+  if(!m){
+    const {data}=await sb.from('class_materials').select('content').eq('class_id',classId).maybeSingle();
+    if(data&&data.content){ m=data.content; materials[classId]=m; }
+  }
+  if(!m){ toast('Für diese Stunde liegt noch kein Material vor.'); return; }
+  const tip=m.grammar_tip;
+  let html=`<h3 style="margin-bottom:4px">📚 Material zur Stunde</h3>`;
+  if(m.intro) html+=`<p class="muted" style="margin-bottom:12px">${esc(m.intro)}</p>`;
+  if(m.lesson_url) html+=`<a class="btn btn-primary" href="${esc(m.lesson_url)}" target="_blank" rel="noopener" style="display:inline-block;margin-bottom:12px">▶️ Interaktive Lektion öffnen</a>`;
+  if(booked && m.prep_url) html+=`<a class="btn btn-ghost" href="${esc(m.prep_url)}" target="_blank" rel="noopener" style="display:inline-block;margin:0 0 12px 8px">📝 Vorbereitung öffnen (Handout)</a>`;
+  else if(!booked && m.prep_url) html+=`<p class="muted" style="font-size:13px;margin:0 0 12px">📝 Die Vorbereitungs-Datei siehst du nach der Buchung.</p>`;
+  if(tip) html+=`<div class="tip-card"><b>📌 ${esc(tip.title||'Grammatik-Tipp')}</b>${esc(tip.text||'')}</div>`;
+  if(Array.isArray(m.vocab)&&m.vocab.length){
+    html+=`<h4 style="margin:14px 0 6px">🃏 Wortschatz</h4><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px">`+
+      m.vocab.map(v=>`<div style="background:var(--bg);border-radius:10px;padding:8px 10px"><b style="display:block;font-size:14px">${esc(v.de)}</b><span class="muted" style="font-size:13px">${esc(v.info||v.en||'')}</span></div>`).join('')+`</div>`;
+  }
+  html+=`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">`;
+  if(m.pre&&Array.isArray(m.pre.exercises)&&m.pre.exercises.length) html+=`<button class="btn btn-primary" onclick="openEx('${classId}','pre')">📖 Vorbereitung starten</button>`;
+  if(m.post&&Array.isArray(m.post.exercises)&&m.post.exercises.length) html+=`<button class="btn btn-ghost" onclick="openEx('${classId}','post')">✍️ Nachbereitung</button>`;
+  html+=`</div>`;
+  if(Array.isArray(m.speak_prompts)&&m.speak_prompts.length){
+    html+=`<h4 style="margin:16px 0 6px">🎤 Sprechimpulse für Amanda</h4><ul style="margin:0 0 0 18px;color:var(--text-soft)">`+m.speak_prompts.map(s=>`<li style="margin:3px 0">${esc(s)}</li>`).join('')+`</ul>`;
+  }
+  openModal(html);
+}
+function setKalClub(s){ kalClub=s; loadKalender(); }
+function setKalLevel(l){ kalLevel=l; loadKalender(); }
+function kalWeekChange(d){ var s=new Date(2026,5,29),n=new Date(); function m(x){x=new Date(x);x.setDate(x.getDate()-((x.getDay()+6)%7));x.setHours(0,0,0,0);return x;} var min=Math.round((m(s)-m(n))/6048e5); if(min<0)min=0; kalWeek+=d; if(kalWeek<min)kalWeek=min; loadKalender(); }
+function kalBook(id){
+  if(credits<1){ showNoCredit(); return; }
+  const c=kalCache.find(x=>String(x.id)===String(id));
+  const start=c?new Date(c.starts_at):null;
+  const title=c?esc(c.topic||c.title||'Unterricht'):'Unterricht';
+  const sub=c?[esc(c.level),c.club_name?esc(c.club_name):'',c.teacher_name?esc(c.teacher_name):''].filter(Boolean).join(' · '):'';
+  const when=start?fmt(start):'';
+  const card=document.getElementById('cfmCard');
+  card.innerHTML=`<div class="ico">📅</div>
+    <h3>Buchung bestätigen?</h3>
+    <p class="hint">Möchtest du diese Stunde verbindlich buchen?</p>
+    <div class="det"><b>${title}</b><span>${when}${sub?' · '+sub:''}</span></div>
+    <p class="hint">Storno kostenlos bis 6 Stunden vorher. Dein Guthaben wird erst nach der Teilnahme abgezogen.</p>
+    <div class="acts"><button class="btn btn-ghost" onclick="closeCfm()">Abbrechen</button><button class="btn btn-primary" id="cfmGo">Buchung bestätigen</button></div>`;
+  document.getElementById('cfmGo').onclick=()=>doBook(id);
+  document.getElementById('cfmModal').classList.add('open');
+}
+function closeCfm(){ document.getElementById('cfmModal').classList.remove('open'); }
+function showNoCredit(){
+  const card=document.getElementById('cfmCard');
+  card.innerHTML=`<div class="ico">🎟️</div>
+    <h3>Nicht genug Stunden</h3>
+    <p class="hint">Du hast aktuell keine freien Stunden mehr. Buche ein neues Stundenpaket, um weiter Unterricht zu buchen. 😊</p>
+    <div class="acts"><button class="btn btn-ghost" onclick="closeCfm()">Schließen</button><a class="btn btn-primary" href="index.html#preise" style="flex:1;text-decoration:none">Stundenpaket buchen →</a></div>`;
+  document.getElementById('cfmModal').classList.add('open');
+}
+async function doBook(id){
+  const go=document.getElementById('cfmGo'); if(go){ go.disabled=true; go.textContent='Buche…'; }
+  const {data,error}=await sb.rpc('book_class',{p_class_id:id});
+  if(error||!data||!data.ok){
+    if(data&&data.error==='no_credits'){ showNoCredit(); return; }
+    const m={class_full:'Diese Stunde ist leider voll.',already_booked:'Du hast diese Stunde schon gebucht!',class_in_past:'Diese Stunde ist schon vorbei.',booking_paused:'Buchung über die Plattform ist gerade pausiert.'};
+    closeCfm(); toast(m[data&&data.error]||'Buchung fehlgeschlagen.');
+    return;
+  }
+  // Bestätigungs-E-Mail anstoßen (Brevo, fire-and-forget)
+  try{
+    const { data:{ session } } = await sb.auth.getSession();
+    if(session){ fetch('/api/notify-booking',{ method:'POST', headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+session.access_token }, body:JSON.stringify({ class_id:id }) }).catch(()=>{}); }
+  }catch(e){}
+  document.getElementById('cfmCard').innerHTML=`<div class="ico">✅</div>
+    <h3>Unterricht gebucht!</h3>
+    <p class="hint">Schön, dass du dabei bist! Du bekommst gleich eine Bestätigung per E-Mail. Den Link zum Klassenzimmer findest du unter „Meine Stunden" direkt bei der Buchung deines Unterrichts.</p>
+    <div class="acts"><button class="btn btn-primary" onclick="closeCfm()" style="flex:1">Super, weiter 🎉</button></div>`;
+  await load(); loadKalender();
+}
+
+function renderStunden(){
+  const s=stats;
+  let html='<div class="pagehead"><h1>Meine Stunden</h1><p>Vorbereiten, teilnehmen, nachüben — alles an einem Ort.</p></div>';
+  html+='<h2 class="sec">Kommende Stunden</h2>';
+  html += s.upcoming.length ? s.upcoming.map(b=>{
+    const start=new Date(b.starts_at); const cancellable=(start-s.now)>6*3600000;
+    const m=materials[b.class_id];
+    return `<div class="card">
+      <div class="head">
+        <div class="when">${fmt(start)}</div><span class="level-pill">${esc(b.level)}</span>
+        <div class="what"><b>${esc(b.title)}</b><span>${esc(b.topic||'')}</span></div>
+        ${b.zoom_link?`<a class="btn btn-primary btn-sm" href="${esc(b.zoom_link)}" target="_blank">Zum Unterricht</a>`:''}
+        ${(m&&(m.lesson_url||m.intro||m.pre||(m.vocab&&m.vocab.length)))?`<button class="btn btn-ghost btn-sm" onclick="openClassMaterial('${b.class_id}',1)">📚 Material</button>`:''}
+        ${/Sprachspiele/i.test(b.title||'')?`<span class="btn btn-ghost btn-sm" style="pointer-events:none;opacity:.8">✨ Keine Vorbereitung nötig</span>`:''}
+        <button class="btn btn-ghost btn-sm" ${cancellable?'':'disabled title="Storno nur bis 6 h vorher"'} onclick="cancelB('${b.class_id}')">Stornieren</button>
+      </div>
+      <p style="margin-top:10px;color:#DD0000;font-weight:700;font-size:13px;background:#FFF0F0;border:1px solid #ffd0d0;border-radius:10px;padding:8px 11px">⚠️ Tipp: Logge dich für den Live-Unterricht am besten am <u>Computer/Laptop</u> ein und mach die Stunde dort – Video, Präsentation &amp; Live-Tafel laufen am Computer am stabilsten.</p>
+      ${m&&m.intro?`<p class="muted" style="margin-top:10px">💡 ${esc(m.intro)}</p>`:''}
+      <div class="phasen">
+        ${phaseHtml(b,'pre')}${phaseHtml(b,'live')}${phaseHtml(b,'post')}
+        <div class="phase"><b>🃏 Vokabeln</b>${(m&&m.vocab&&m.vocab.length)||(b.vocab&&b.vocab.length)?`<a href="#" onclick="go('vokabeln');return false" style="color:var(--primary);font-weight:700">üben →</a>`:'<span class="nope">folgt</span>'}</div>
+      </div>
+    </div>`;
+  }).join('') : '<div class="empty">Noch nichts gebucht — <a href="#" onclick="go(\'kalender\');return false" style="color:var(--primary);font-weight:700">geh zum Kalender</a> und such dir eine Stunde aus!</div>';
+
+  const past=s.past.slice().reverse().slice(0,10);
+  if(past.length){
+    html+='<h2 class="sec">Vergangene Stunden</h2>';
+    html+=past.map(b=>{
+      const rated=ratings.find(r=>r.class_id===b.class_id);
+      return `<div class="card" style="opacity:.92">
+        <div class="head"><div class="when">${fmt(new Date(b.starts_at))}</div><span class="level-pill">${esc(b.level)}</span>
+          <div class="what"><b>${esc(b.title)}</b><span>${esc(b.topic||'')}</span></div>
+          ${rated?`<span class="muted">${'★'.repeat(rated.stars)}${'☆'.repeat(5-rated.stars)}</span>`:`<button class="btn btn-ghost btn-sm" onclick="rateClass('${b.class_id}')">Bewerten</button>`}
+        </div>
+        <div class="phasen">${phaseHtml(b,'post')}
+          <div class="phase"><b>🃏 Vokabeln</b><a href="#" onclick="go('vokabeln');return false" style="color:var(--primary);font-weight:700">wiederholen →</a></div>
+        </div></div>`;
+    }).join('');
+  }
+  document.getElementById('v-stunden').innerHTML=html;
+}
+
+async function cancelB(classId){
+  if(!confirm('Stunde wirklich stornieren? Du bekommst dein Guthaben zurück.')) return;
+  const { data,error }=await sb.rpc('cancel_booking',{p_class_id:classId});
+  if(error||!data.ok){ toast(data?.error==='too_late'?'Storno nicht mehr möglich (unter 6 h).':'Storno fehlgeschlagen.'); return; }
+  // Admin-Benachrichtigung an Julia (Brevo, fire-and-forget)
+  try{
+    const { data:{ session } } = await sb.auth.getSession();
+    if(session){ fetch('/api/notify-cancel',{ method:'POST', headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+session.access_token }, body:JSON.stringify({ class_id:classId }) }).catch(()=>{}); }
+  }catch(e){}
+  toast('Storniert — 1 Stunde zurück aufs Guthaben.'); await load(); show('stunden');
+}
+
+// ---------- Bewertung ----------
+function rateClass(classId){
+  let sel=0;
+  const html=`<h3 style="margin-bottom:6px">Wie war die Stunde?</h3><p class="muted" style="margin-bottom:12px">Dein Feedback hilft deiner Lehrerin.</p>
+    <div class="stars" id="rateStars">${[1,2,3,4,5].map(i=>`<span data-i="${i}" onclick="setStars(${i})">☆</span>`).join('')}</div>
+    <textarea id="rateComment" placeholder="Kommentar (optional)" style="width:100%;margin-top:12px;min-height:70px;padding:11px;border:2px solid var(--border);border-radius:12px;font-family:inherit"></textarea>
+    <button class="btn btn-primary" style="margin-top:12px;width:100%" onclick="submitRating('${classId}')">Bewertung senden</button>`;
+  openModal(html);
+  window.setStars=i=>{ sel=i; document.querySelectorAll('#rateStars span').forEach(s=>s.textContent=(+s.dataset.i<=i?'★':'☆')); document.querySelectorAll('#rateStars span').forEach(s=>s.classList.toggle('on',+s.dataset.i<=i)); window._rateSel=i; };
+  window.submitRating=async(cid)=>{
+    const stars=window._rateSel||0; if(!stars){ toast('Bitte Sterne wählen.'); return; }
+    const comment=document.getElementById('rateComment').value.trim()||null;
+    const { error }=await sb.from('ratings').upsert({user_id:user.id,class_id:cid,stars,comment},{onConflict:'user_id,class_id'});
+    if(error){ toast('Konnte nicht speichern.'); return; }
+    closeEx(); toast('Danke für dein Feedback! ⭐ +10 Punkte'); await load(); show('stunden');
+  };
+}
+
+// ---------- Übungs-Runner ----------
+let curEx=null;
+function openModal(inner){ document.getElementById('exBody').innerHTML=inner; document.getElementById('exModal').classList.add('open'); }
+function closeEx(){ document.getElementById('exModal').classList.remove('open'); curEx=null; if(typeof stopLive==='function') stopLive(); }
+function openEx(classId, phase){
+  const m=materials[classId]; if(!m||!m[phase]) return;
+  const exs=m[phase].exercises||[];
+  const saved=progress[classId+'|'+phase];
+  curEx={classId,phase,exs,answers:(saved&&saved.answers)||{}};
+  const tip=m.grammar_tip;
+  let html=`<h3 style="margin-bottom:4px">${phase==='pre'?'📖 Vorbereitung':'✍️ Nachbearbeitung'}</h3>`;
+  if(m.intro) html+=`<p class="muted" style="margin-bottom:12px">${esc(m.intro)}</p>`;
+  if(phase==='pre' && Array.isArray(m.vocab) && m.vocab.length){
+    html+=`<h4 style="margin:8px 0 6px">🃏 1. Wortschatz vorlernen</h4><p class="muted" style="font-size:13px;margin-bottom:6px">Diese Wörter brauchst du heute – präg sie dir kurz ein.</p><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px">`+
+    m.vocab.map(v=>`<div style="background:var(--bg);border-radius:10px;padding:8px 10px"><b style="display:block;font-size:14px">${esc(v.de)}</b><span class="muted" style="font-size:13px">${esc(v.info||v.en||'')}</span></div>`).join('')+`</div>`;
+  }
+  if(tip&&phase==='pre') html+=`<h4 style="margin:14px 0 6px">📌 2. Sprach-Tipp</h4><div class="tip-card"><b>${esc(tip.title||'Grammatik-Tipp')}</b>${esc(tip.text||'')}</div>`;
+  else if(tip) html+=`<div class="tip-card"><b>📌 ${esc(tip.title||'Grammatik-Tipp')}</b>${esc(tip.text||'')}</div>`;
+  if(phase==='pre') html+=`<h4 style="margin:16px 0 6px">✏️ 3. Übungen</h4><p class="muted" style="font-size:13px;margin-bottom:8px">Geh gut vorbereitet in die Stunde – so kannst du im Unterricht direkt mitreden.</p>`;
+  html+='<div id="exList">'+exs.map((e,i)=>renderExercise(e,i)).join('')+'</div>';
+  html+=`<div id="exResult"></div><button class="btn btn-primary" style="width:100%;margin-top:6px" onclick="checkEx()">Prüfen & abschließen</button>`;
+  openModal(html);
+  // order-Übungen initialisieren
+  exs.forEach((e,i)=>{ if(e.type==='order') initOrder(i,e); });
+}
+
+function openPost(classId){
+  const pn=postNotes[classId]; if(!pn||!pn.post_content) return;
+  const pc=pn.post_content; const exs=pc.exercises||[];
+  const saved=progress[classId+'|post'];
+  curEx={classId,phase:'post',exs,answers:(saved&&saved.answers)||{}};
+  const corr = pc.corrections||pc.fehler||pc.errors;
+  let html=`<h3 style="margin-bottom:6px">✍️ Nachbearbeitung</h3>`;
+  if(pc.intro) html+=`<p class="muted" style="margin-bottom:10px">${esc(pc.intro)}</p>`;
+  html+=`<div class="ptabs">
+    <button class="ptab active" onclick="postTab(0)">🗒️ Mitschrift</button>
+    <button class="ptab" onclick="postTab(1)">🔧 Fehlerkorrektur</button>
+    <button class="ptab" onclick="postTab(2)">✏️ Übungen</button></div>`;
+  // Tab 0: Freie Mitschrift
+  html+=`<div class="ptab-c" data-t="0">`+((pn.notes&&pn.notes.trim())
+    ?`<div class="tip-card" style="white-space:pre-wrap">${pn.notes}</div>`
+    :`<p class="muted">Für diese Stunde gibt es keine freie Mitschrift.</p>`)+`</div>`;
+  // Tab 1: Fehlerkorrektur + neue Wörter
+  let t1='';
+  if(Array.isArray(corr)&&corr.length){
+    t1+=`<h4 style="margin:4px 0 8px">🔧 Häufige Fehler aus der Stunde</h4>`+corr.map(c=>{
+      if(typeof c==='string') return `<div class="corr">${esc(c)}</div>`;
+      const w=c.falsch||c.wrong||c.from||'', r=c.richtig||c.right||c.to||'', n=c.tipp||c.note||c.hinweis||'';
+      return `<div class="corr">${w?`<span class="corr-w">${esc(w)}</span> → `:''}<span class="corr-r">${esc(r)}</span>${n?`<div class="muted" style="font-size:13px;margin-top:2px">${esc(n)}</div>`:''}</div>`;
+    }).join('');
+  }
+  if(Array.isArray(pc.vocab)&&pc.vocab.length){
+    t1+=`<h4 style="margin:14px 0 6px">🃏 Neue Wörter aus der Stunde</h4><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px">`+
+    pc.vocab.map(v=>`<div style="background:var(--bg);border-radius:10px;padding:8px 10px"><b style="display:block;font-size:14px">${esc(v.de)}</b><span class="muted" style="font-size:13px">${esc(v.info||'')}</span></div>`).join('')+`</div>`;
+  }
+  if(!t1) t1='<p class="muted">Keine Korrekturen oder neuen Wörter erfasst.</p>';
+  html+=`<div class="ptab-c" data-t="1" style="display:none">${t1}</div>`;
+  // Tab 2: Übungen
+  html+=`<div class="ptab-c" data-t="2" style="display:none">`+(exs.length
+    ?`<div id="exList">`+exs.map((e,i)=>renderExercise(e,i)).join('')+`</div><div id="exResult"></div><button class="btn btn-primary" style="width:100%;margin-top:6px" onclick="checkEx()">Prüfen & abschließen</button>`
+    :`<p class="muted">Für diese Stunde gibt es keine Übungen.</p>`)+`</div>`;
+  openModal(html);
+  exs.forEach((e,i)=>{ if(e.type==='order') initOrder(i,e); });
+}
+function postTab(i){
+  document.querySelectorAll('#exBody .ptab').forEach((b,k)=>b.classList.toggle('active',k===i));
+  document.querySelectorAll('#exBody .ptab-c').forEach(c=>{ c.style.display=(+c.dataset.t===i)?'':'none'; });
+}
+
+// ---------- Im Unterricht: LIVE mitverfolgen (Realtime + Präsentation) ----------
+let liveChannel=null, livePoll=null;
+function stopLive(){ try{ if(liveChannel){ sb.removeChannel(liveChannel); liveChannel=null; } }catch(e){} if(livePoll){ clearInterval(livePoll); livePoll=null; } }
+function setLiveNotes(txt){ const el=document.getElementById('liveNotes'); if(el){ el.innerHTML=(txt&&String(txt).trim())?txt:'<span class="muted">Noch nichts geschrieben – es geht gleich los …</span>'; } const st=document.getElementById('liveStamp'); if(st) st.textContent='zuletzt aktualisiert '+new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit',second:'2-digit'}); }
+async function loadLiveNotes(classId){ try{ const {data}=await sb.from('class_notes').select('notes').eq('class_id',classId).maybeSingle(); setLiveNotes(data&&data.notes); }catch(e){} }
+function openLive(classId){
+  const m=materials[classId]||{};
+  let html=`<h3 style="margin-bottom:4px"><span class="live-dot"></span>Im Unterricht – live</h3>
+    <p class="muted" style="margin-bottom:12px">Die Tafel aktualisiert sich automatisch, während deine Lehrkraft mitschreibt.</p>`;
+  if(m.lesson_url) html+=`<a class="btn btn-primary" href="${esc(m.lesson_url)}" target="_blank" rel="noopener" style="display:inline-block;margin-bottom:12px">📊 Präsentation öffnen</a>`;
+  html+=`<div class="tip-card live-notes" id="liveNotes">lädt …</div><div class="muted" id="liveStamp" style="font-size:12px;margin-top:6px"></div>`;
+  openModal(html);
+  loadLiveNotes(classId);
+  stopLive();
+  try{
+    liveChannel=sb.channel('live-'+classId)
+      .on('postgres_changes',{event:'*',schema:'public',table:'class_notes',filter:'class_id=eq.'+classId},
+          payload=>{ const n=payload.new&&payload.new.notes; setLiveNotes(n); })
+      .subscribe();
+  }catch(e){}
+  // Fallback-Polling, falls Realtime mal hakt
+  livePoll=setInterval(()=>loadLiveNotes(classId), 12000);
+}
+
+function renderExercise(e,i){
+  const head=`<div class="q">${i+1}. ${exQ(e)}</div>`;
+  if(e.type==='choice'){
+    return `<div class="ex" data-i="${i}" data-type="choice">${head}${(e.options||[]).map((o,k)=>`<label class="opt" data-k="${k}" onclick="pickOpt(${i},${k})">${esc(o)}</label>`).join('')}<div class="fb" id="fb-${i}"></div></div>`;
+  }
+  if(e.type==='gap'){
+    return `<div class="ex" data-i="${i}" data-type="gap">${head}<input class="gap" id="gap-${i}" placeholder="Antwort eintippen…" value="${esc((curEx.answers[i])||'')}">${e.hint?`<div class="muted" style="margin-top:6px">💡 ${esc(e.hint)}</div>`:''}<div class="fb" id="fb-${i}"></div></div>`;
+  }
+  if(e.type==='match'){
+    const rights=(e.pairs||[]).map(p=>p.r); const shuffled=shuffle(rights.slice());
+    return `<div class="ex" data-i="${i}" data-type="match">${head}${(e.pairs||[]).map((p,k)=>`<div class="matchrow"><b>${esc(p.l)}</b><select id="m-${i}-${k}"><option value="">— wählen —</option>${shuffled.map(r=>`<option value="${esc(r)}">${esc(r)}</option>`).join('')}</select></div>`).join('')}<div class="fb" id="fb-${i}"></div></div>`;
+  }
+  if(e.type==='order'){
+    return `<div class="ex" data-i="${i}" data-type="order">${head}<div class="buildarea" id="build-${i}"></div><div class="chips" id="chips-${i}"></div><button class="btn btn-ghost btn-sm" onclick="resetOrder(${i})">Zurücksetzen</button>${e.hint?`<div class="muted" style="margin-top:6px">💡 ${esc(e.hint)}</div>`:''}<div class="fb" id="fb-${i}"></div></div>`;
+  }
+  if(e.type==='write'){
+    return `<div class="ex" data-i="${i}" data-type="write">${head}<textarea id="wr-${i}" placeholder="Schreib hier…">${esc((curEx.answers[i])||'')}</textarea>${e.sample?`<button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="document.getElementById('sample-${i}').style.display='block'">Beispiel zeigen</button><div id="sample-${i}" class="muted" style="display:none;margin-top:8px">✏️ <i>${esc(e.sample)}</i></div>`:''}</div>`;
+  }
+  return '';
+}
+function exQ(e){
+  if(e.type==='choice') return esc(e.q||'Wähle die richtige Antwort:');
+  if(e.type==='gap') return esc((e.text||'').replace('___','______'));
+  if(e.type==='match') return esc(e.intro||'Ordne zu:');
+  if(e.type==='order') return esc(e.hint?'Bring die Wörter in die richtige Reihenfolge:':'Satz bauen:');
+  if(e.type==='write') return esc(e.prompt||'Schreibaufgabe:');
+  return '';
+}
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+// choice
+function pickOpt(i,k){ const ex=document.querySelector('.ex[data-i="'+i+'"]'); ex.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel')); ex.querySelector('.opt[data-k="'+k+'"]').classList.add('sel'); curEx.answers[i]=k; }
+// order
+const orderState={};
+function initOrder(i,e){ const words=String(e.answer||'').split(/\s+/).filter(Boolean); orderState[i]={words,built:[],pool:shuffle(words.map((w,idx)=>({w,idx})))}; drawOrder(i); }
+function drawOrder(i){ const st=orderState[i]; const build=document.getElementById('build-'+i), chips=document.getElementById('chips-'+i); if(!build)return;
+  build.innerHTML=st.built.map((t,p)=>`<span class="chip" onclick="unpick(${i},${p})">${esc(t.w)}</span>`).join('')||'<span class="muted" style="font-size:13px">Wörter unten antippen…</span>';
+  chips.innerHTML=st.pool.map(t=>`<span class="chip" onclick="pick(${i},${t.idx})">${esc(t.w)}</span>`).join('');
+  curEx.answers[i]=st.built.map(t=>t.w).join(' ');
+}
+function pick(i,idx){ const st=orderState[i]; const p=st.pool.findIndex(t=>t.idx===idx); if(p<0)return; st.built.push(st.pool[p]); st.pool.splice(p,1); drawOrder(i); }
+function unpick(i,p){ const st=orderState[i]; st.pool.push(st.built[p]); st.built.splice(p,1); drawOrder(i); }
+function resetOrder(i){ const st=orderState[i]; st.pool=shuffle(st.words.map((w,idx)=>({w,idx}))); st.built=[]; drawOrder(i); }
+
+function norm(s){ return String(s||'').trim().toLowerCase().replace(/\s+/g,' ').replace(/[.!?,;]+$/,''); }
+function checkEx(){
+  let auto=0, correct=0;
+  curEx.exs.forEach((e,i)=>{
+    const fb=document.getElementById('fb-'+i);
+    if(e.type==='choice'){ auto++; const a=curEx.answers[i]; const ok=a===e.answer;
+      const ex=document.querySelector('.ex[data-i="'+i+'"]'); ex.querySelectorAll('.opt').forEach(o=>{const k=+o.dataset.k; o.classList.remove('sel'); if(k===e.answer)o.classList.add('right'); else if(k===a)o.classList.add('wrong');});
+      if(ok)correct++; if(fb)fb.innerHTML=`<span class="${ok?'ok':'no'}">${ok?'✓ Richtig!':'✗ '+(e.explain?esc(e.explain):'Richtig: '+esc(e.options[e.answer]))}</span>`;
+    }
+    else if(e.type==='gap'){ auto++; const v=document.getElementById('gap-'+i).value; curEx.answers[i]=v;
+      const ok=[e.answer,...(e.alts||[])].some(a=>norm(a)===norm(v)); if(ok)correct++;
+      if(fb)fb.innerHTML=`<span class="${ok?'ok':'no'}">${ok?'✓ Richtig!':'✗ Richtig: '+esc(e.answer)}</span>`;
+    }
+    else if(e.type==='match'){ auto++; let all=true; (e.pairs||[]).forEach((p,k)=>{ const sel=document.getElementById('m-'+i+'-'+k); if(norm(sel.value)!==norm(p.r)) all=false; }); if(all)correct++;
+      if(fb)fb.innerHTML=`<span class="${all?'ok':'no'}">${all?'✓ Alles richtig zugeordnet!':'✗ Schau nochmal — einige Paare stimmen noch nicht.'}</span>`;
+    }
+    else if(e.type==='order'){ auto++; const built=(orderState[i].built||[]).map(t=>t.w).join(' '); const ok=norm(built)===norm(e.answer); if(ok)correct++;
+      if(fb)fb.innerHTML=`<span class="${ok?'ok':'no'}">${ok?'✓ Perfekt!':'✗ Richtig: '+esc(e.answer)}</span>`;
+    }
+    else if(e.type==='write'){ const v=document.getElementById('wr-'+i).value; curEx.answers[i]=v; }
+  });
+  const res=document.getElementById('exResult');
+  res.innerHTML=`<div class="score-banner"><div class="big">${correct} / ${auto}</div><div>${correct===auto?'Top gemacht! 🎉':(correct>=auto*0.6?'Stark — kleine Lücken noch. 💪':'Übung macht den Meister. Schau dir die Lösungen an. 🙂')}</div></div>`;
+  saveProgress(correct,auto);
+}
+async function saveProgress(score,total){
+  if(!curEx) return;
+  const classId=curEx.classId, phase=curEx.phase, answers=curEx.answers;  // Werte sichern (Modal könnte schließen)
+  const { error }=await sb.from('exercise_progress').upsert({
+    user_id:user.id, class_id:classId, phase, answers, score, total, completed:true, updated_at:new Date().toISOString()
+  },{onConflict:'user_id,class_id,phase'});
+  if(!error){ progress[classId+'|'+phase]={class_id:classId,phase,score,total,completed:true,answers}; computeStats(); toast('Gespeichert! +20 Punkte ⭐'); }
+}
+
+// ---------- Vokabeltrainer ----------
+let deck=[],deckIdx=0,flipped=false;
+function renderVokabeln(){
+  deck=collectVocab();
+  const known=new Set(lsGet('known',[]));
+  const el=document.getElementById('v-vokabeln');
+  if(!deck.length){ el.innerHTML='<div class="pagehead"><h1>Vokabeltrainer</h1></div><div class="empty">Noch keine Vokabeln — sie erscheinen automatisch, sobald deine gebuchten Stunden Vokabeln haben (oder Amanda Material erstellt hat).</div>'; return; }
+  deckIdx=0;flipped=false;
+  el.innerHTML=`<div class="pagehead"><h1>Vokabeltrainer</h1><p>${deck.length} Vokabeln aus deinen Stunden · ${known.size} schon gelernt</p></div>
+    <div class="flashwrap">
+      <div class="flashcard" id="flashcard" onclick="flipCard()"></div>
+      <div class="flashnav">
+        <button class="btn btn-ghost" onclick="prevCard()">← Zurück</button>
+        <button class="btn btn-turq" onclick="markKnown()">✓ Kann ich</button>
+        <button class="btn btn-primary" onclick="nextCard()">Weiter →</button>
+      </div>
+    </div>
+    <div class="vocab-list"><h2 class="sec">Alle Vokabeln</h2>
+      ${deck.map(v=>`<div class="vrow"><span><b>${esc(v.de)}</b> — ${esc(v.info||'')}</span>${known.has(v.de)?'<span class="known">✓ gelernt</span>':''}</div>`).join('')}</div>`;
+  showCard();
+}
+function showCard(){ const c=deck[deckIdx]; const known=new Set(lsGet('known',[]));
+  document.getElementById('flashcard').innerHTML=flipped
+    ?`<div style="font-size:18px;font-weight:500">${esc(c.info||'—')}<span class="hint">${deckIdx+1} / ${deck.length} · tippen zum Zurückdrehen</span></div>`
+    :`<div>${esc(c.de)}${known.has(c.de)?' <span style="color:var(--turquoise);font-size:16px">✓</span>':''}<span class="hint">${deckIdx+1} / ${deck.length} · tippen für die Bedeutung</span></div>`;
+}
+function flipCard(){ flipped=!flipped; showCard(); }
+function nextCard(){ deckIdx=(deckIdx+1)%deck.length; flipped=false; showCard(); }
+function prevCard(){ deckIdx=(deckIdx-1+deck.length)%deck.length; flipped=false; showCard(); }
+function markKnown(){ const k=lsGet('known',[]); const w=deck[deckIdx].de; if(!k.includes(w)){ k.push(w); lsSet('known',k); if(sb&&user) sb.from('vocab_known').upsert({ user_id:user.id, term:w }, { onConflict:'user_id,term', ignoreDuplicates:true }).then(()=>{}); } computeStats(); toast('Gelernt! 🧠 +2 Punkte'); nextCard(); }
+
+// ---------- Abzeichen ----------
+function renderFortschritt(){
+  const s=stats;
+  const defs=[
+    {id:'first',em:'🎬',name:'Erste Stunde',cond:s.past.length>=1,need:'1 Stunde besucht'},
+    {id:'busy',em:'🔥',name:'Fleißig',cond:s.past.length>=5,need:'5 Stunden besucht'},
+    {id:'pro',em:'⭐',name:'Sprechprofi',cond:s.past.length>=20,need:'20 Stunden besucht'},
+    {id:'marathon',em:'🏅',name:'Marathon',cond:s.past.length>=50,need:'50 Stunden besucht'},
+    {id:'streak2',em:'📅',name:'Dranbleiber',cond:s.streak>=2,need:'2 Wochen Streak'},
+    {id:'streak4',em:'🚀',name:'Durchstarter',cond:s.streak>=4,need:'4 Wochen Streak'},
+    {id:'streak8',em:'💎',name:'Unaufhaltbar',cond:s.streak>=8,need:'8 Wochen Streak'},
+    {id:'ex1',em:'✍️',name:'Erste Aufgabe',cond:s.completedPhases>=1,need:'1 Übung gelöst'},
+    {id:'ex10',em:'📚',name:'Übungs-Fuchs',cond:s.completedPhases>=10,need:'10 Übungen gelöst'},
+    {id:'vocab',em:'🧠',name:'Wortschatz-Sammler',cond:s.known>=50,need:'50 Vokabeln gelernt'},
+    {id:'fb',em:'💬',name:'Feedback-Geber',cond:ratings.length>=1,need:'1 Stunde bewertet'},
+    {id:'levelup',em:'🪜',name:'Aufgestiegen',cond:LEVELS.indexOf(s.currentLevel)>=2,need:'Niveau B1 erreicht'},
+  ];
+  const got=defs.filter(d=>d.cond).length;
+  document.getElementById('v-fortschritt').innerHTML=`
+    <div class="pagehead"><h1>Abzeichen & Fortschritt</h1><p>${got} von ${defs.length} Abzeichen freigeschaltet · Rang: <b>${s.rank.name}</b> · ${s.points} Punkte</p></div>
+    <div class="rankbar"><div class="top"><span class="rank">${s.rank.name}</span><span class="muted">${s.next?('noch '+(s.next.min-s.points)+' Punkte bis '+s.next.name):'Maximaler Rang 🎉'}</span></div><div class="bar"><span style="width:${s.rankProg}%"></span></div></div>
+    <div class="grid3" style="margin:14px 0">
+      <div class="stat"><div class="big">${s.past.length}</div><div class="lbl">Stunden besucht</div></div>
+      <div class="stat"><div class="big">${s.streak}</div><div class="lbl">Wochen-Streak 🔥</div></div>
+      <div class="stat"><div class="big">${s.known}</div><div class="lbl">Vokabeln gelernt</div></div>
+    </div>
+    <div class="badges">
+      ${defs.map(d=>`<div class="badge-card ${d.cond?'':'locked'}"><div class="em">${d.em}</div><b>${d.name}</b><span>${d.cond?'freigeschaltet ✓':d.need}</span></div>`).join('')}
+    </div>`;
+}
+
+// ---------- Guthaben & Verlauf ----------
+function renderGuthaben(){
+  const reasonTxt=r=>{ if(r.startsWith('purchase:'))return'💳 Paket gekauft'; if(r.startsWith('booking:'))return'📅 Stunde gebucht'; if(r.startsWith('cancel:'))return'↩️ Storniert'; if(r==='admin_adjust')return'🛠️ Anpassung'; return r; };
+  document.getElementById('v-guthaben').innerHTML=`
+    <div class="pagehead"><h1>Guthaben & Verlauf</h1></div>
+    <div class="hero-card"><div><div class="muted" style="font-weight:700;text-transform:uppercase;font-size:11px;letter-spacing:1px">Aktuelles Guthaben</div><h1 style="font-size:40px">${credits} <span style="font-size:18px;font-weight:600">Stunden</span></h1></div>
+      <a class="btn btn-primary" href="index.html#pakete">Stunden nachkaufen</a></div>
+    <h2 class="sec">Verlauf</h2>
+    ${creditLog.length?creditLog.map(l=>`<div class="log"><span>${reasonTxt(l.reason)}<br><span class="muted">${fmtShort(new Date(l.created_at))}</span></span><span class="delta ${l.change>0?'plus':'minus'}">${l.change>0?'+':''}${l.change}</span></div>`).join(''):'<div class="empty">Noch keine Bewegungen.</div>'}`;
+}
+
+// ---------- Nachrichten ----------
+function renderMsgBadge(){
+  const lastSeen=lsGet('msgSeen',0);
+  const unread=messages.filter(m=>m.sender==='teacher' && new Date(m.created_at).getTime()>lastSeen).length;
+  const b=document.getElementById('msgBadge');
+  if(unread>0){ b.style.display='inline-block'; b.textContent=unread; } else b.style.display='none';
+}
+function renderNachrichten(){
+  lsSet('msgSeen', Date.now()); renderMsgBadge();
+  // Lehrer-Nachrichten als gelesen markieren (Lesebestätigung für Julia)
+  try{
+    const unread = messages.some(m=>m.sender==='teacher' && !m.read_at);
+    if(unread){
+      const now=new Date().toISOString();
+      messages.forEach(m=>{ if(m.sender==='teacher' && !m.read_at) m.read_at=now; });
+      sb.from('messages').update({read_at:now}).eq('user_id',user.id).eq('sender','teacher').is('read_at',null).then(()=>{});
+    }
+  }catch(e){}
+  document.getElementById('v-nachrichten').innerHTML=`
+    <div class="pagehead"><h1>Nachrichten</h1><p>Schreib deiner Lehrerin — Fragen, Wünsche, Feedback.</p></div>
+    <div class="thread" id="thread">${messages.length?messages.map(m=>`<div class="msg ${m.sender}">${esc(m.body)}<small>${m.sender==='teacher'?'Lehrerin · ':''}${fmtShort(new Date(m.created_at))}</small></div>`).join(''):'<div class="empty">Noch keine Nachrichten. Schreib gern die erste! 😊</div>'}</div>
+    <div class="composer"><input id="msgInput" placeholder="Nachricht schreiben…" onkeydown="if(event.key==='Enter')sendMsg()"><button class="btn btn-primary" onclick="sendMsg()">Senden</button></div>`;
+  const t=document.getElementById('thread'); t.scrollTop=t.scrollHeight;
+}
+async function sendMsg(){
+  const inp=document.getElementById('msgInput'); const body=inp.value.trim(); if(!body)return;
+  inp.value='';
+  const { error }=await sb.from('messages').insert({user_id:user.id,sender:'student',body});
+  if(error){ toast('Konnte nicht senden.'); return; }
+  messages.push({sender:'student',body,created_at:new Date().toISOString()}); renderNachrichten();
+}
+
+// ---------- Amanda ----------
+function renderAmanda(){
+  const eligible=credits>0 || bookings.some(b=>b.status==='booked');
+  const el=document.getElementById('v-amanda');
+  if(!eligible){
+    el.innerHTML=`<div class="pagehead"><h1>Amanda</h1></div>
+      <div class="empty"><img src="amanda.png" alt="Amanda" style="width:120px;height:120px;border-radius:50%;object-fit:cover;object-position:top center;margin:0 auto 12px;display:block" onerror="this.style.display='none'"><h3 style="margin-bottom:8px">🎤 Amanda — deine KI-Sprechpartnerin</h3>
+      <p style="max-width:460px;margin:0 auto 14px">Amanda ist <b>kostenlos für alle Club-Mitglieder</b> mit Stundenpaket. Hol dir ein Paket und sprich so oft du willst — 24/7.</p>
+      <a class="btn btn-primary" href="index.html#pakete">Paket ansehen</a></div>`;
+    return;
+  }
+  let prompts='';
+  const withPrompts=bookings.filter(b=>materials[b.class_id]&&Array.isArray(materials[b.class_id].speak_prompts)&&materials[b.class_id].speak_prompts.length);
+  if(withPrompts.length){
+    const sp=materials[withPrompts[0].class_id].speak_prompts;
+    prompts=`<div class="card" style="margin-top:14px"><b>💬 Sprechimpulse zu „${esc(withPrompts[0].title)}"</b><ul style="margin:8px 0 0 18px;color:var(--text-soft);font-size:14px">${sp.map(p=>`<li style="margin-bottom:4px">${esc(p)}</li>`).join('')}</ul><p class="muted" style="margin-top:8px">Sag Amanda einfach, du willst über eines dieser Themen sprechen.</p></div>`;
+  }
+  el.innerHTML=`<div class="pagehead"><h1>Sprich mit Amanda</h1><p>Dein Bonus als Schüler: unbegrenzt üben — zum Aufwärmen vor der Stunde oder zum Nachüben danach.</p></div>
+    <div class="card" style="display:flex;gap:16px;align-items:center;background:linear-gradient(135deg,#E8FAF6,#D2F5EE);border-color:var(--turquoise)"><img src="amanda.png" alt="Amanda" style="width:96px;height:96px;border-radius:16px;object-fit:cover;object-position:top center;flex:none" onerror="this.style.display='none'"><p style="font-size:14px;color:#0a5;margin:0">Klick unten auf das Mikrofon und leg los. Amanda hört zu, korrigiert sanft und plaudert mit dir auf Deutsch. 🎤</p></div>
+    <elevenlabs-convai agent-id="${AMANDA_AGENT_ID}"></elevenlabs-convai>${prompts}`;
+  if(!document.getElementById('elevscript')){ const s=document.createElement('script'); s.id='elevscript'; s.src='https://unpkg.com/@elevenlabs/convai-widget-embed'; s.async=true; document.body.appendChild(s); }
+}
+
+// ---------- Profil ----------
+function renderProfil(){
+  document.getElementById('v-profil').innerHTML=`
+    <div class="pagehead"><h1>Dein Profil</h1><p>Damit Amanda und deine Lehrerin dich besser unterstützen können.</p></div>
+    <div class="card">
+      <div class="field"><label>Name</label><input id="pName" value="${esc(profile.name||'')}" placeholder="Wie heißt du?"></div>
+      <div class="field"><label>Mein Lernziel</label><textarea id="pGoal" placeholder="z.B. Ich will fließend im Job sprechen / die B2-Prüfung schaffen">${esc(profile.goal||'')}</textarea></div>
+      <div class="field"><label>Mein Zielniveau 🎯</label><select id="pTarget"><option value="">— wählen —</option>${LEVELS.map(l=>`<option ${profile.target_level===l?'selected':''}>${l}</option>`).join('')}</select></div>
+      <div class="field"><label>Meine Muttersprache</label><input id="pNative" value="${esc(profile.native_language||'')}" placeholder="z.B. Englisch, Arabisch, Ukrainisch"></div>
+      <div class="field"><label>Mein Geburtstag 🎂</label><input id="pBday" type="date" value="${esc(profile.birthday||'')}"></div>
+      <button class="btn btn-primary" onclick="saveProfil()">Speichern</button>
+      <div class="field" style="margin-top:18px;border-top:1px solid var(--border);padding-top:14px"><label>E-Mail</label><div class="muted">${esc(user.email)}</div></div>
+    </div>`;
+}
+async function saveProfil(){
+  const bday=document.getElementById('pBday').value||null;
+  const { error }=await sb.rpc('update_my_profile',{
+    p_name:document.getElementById('pName').value.trim(),
+    p_goal:document.getElementById('pGoal').value.trim()||null,
+    p_target_level:document.getElementById('pTarget').value||null,
+    p_native_language:document.getElementById('pNative').value.trim()||null,
+    p_birthday:bday
+  });
+  if(error){ toast('Konnte nicht speichern.'); return; }
+  profile.name=document.getElementById('pName').value.trim();
+  profile.goal=document.getElementById('pGoal').value.trim()||null;
+  profile.target_level=document.getElementById('pTarget').value||null;
+  profile.native_language=document.getElementById('pNative').value.trim()||null;
+  profile.birthday=bday;
+  computeStats(); toast('Profil gespeichert ✓');
+}
+
+// ---------- Geburtstag: Pflichtabfrage beim ersten Login ----------
+function requireBirthday(){
+  if(profile && profile.birthday) return;            // schon vorhanden -> nichts tun
+  if(document.getElementById('bdayGate')) return;     // schon offen
+  const ov=document.createElement('div');
+  ov.id='bdayGate';
+  ov.style.cssText='position:fixed;inset:0;z-index:9999;background:rgba(26,26,26,.55);display:flex;align-items:center;justify-content:center;padding:18px';
+  ov.innerHTML=`
+    <div style="background:#fff;border-radius:22px;max-width:380px;width:100%;padding:26px 24px;box-shadow:0 20px 50px rgba(0,0,0,.25);text-align:center;font-family:inherit">
+      <div style="font-size:46px;line-height:1;margin-bottom:6px">🎂</div>
+      <h2 style="margin:0 0 6px;font-size:21px;font-weight:800;color:#1A1A1A">Wann hast du Geburtstag?</h2>
+      <p style="margin:0 0 16px;font-size:14px;color:#5C4E3E;line-height:1.5">Bitte trag dein Geburtsdatum ein – dann können wir dir an deinem Tag gratulieren. 💛</p>
+      <input id="bdayGateInput" type="date" style="width:100%;padding:12px;border:1px solid var(--border);border-radius:12px;font-size:16px;margin-bottom:6px">
+      <div id="bdayGateErr" style="color:#DD0000;font-size:13px;min-height:18px;margin-bottom:8px"></div>
+      <button class="btn btn-primary" style="width:100%" onclick="saveBirthdayGate()">Speichern & weiter</button>
+    </div>`;
+  document.body.appendChild(ov);
+}
+async function saveBirthdayGate(){
+  const val=document.getElementById('bdayGateInput').value;
+  const err=document.getElementById('bdayGateErr');
+  if(!val){ if(err) err.textContent='Bitte wähle ein Datum.'; return; }
+  if(new Date(val) > new Date()){ if(err) err.textContent='Das Datum liegt in der Zukunft.'; return; }
+  const { error }=await sb.rpc('set_my_birthday',{ p_birthday:val });
+  if(error){ if(err) err.textContent='Konnte nicht speichern – bitte erneut versuchen.'; return; }
+  profile.birthday=val;
+  const ov=document.getElementById('bdayGate'); if(ov) ov.remove();
+  toast('Danke! 🎂');
+}
+
+async function logout(){ await sb.auth.signOut(); location.href='index.html'; }
+init();
+</script>
+<script src="club-fx.js"></script>
+<script src="uebungen.js"></script>
+<script src="ueben.js"></script>
+<script src="community.js"></script>
+<script>
+if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}
+</script>
+<style>
+#pwaInstall{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:9999;display:none;align-items:center;gap:10px;background:#DD0000;color:#fff;border:none;cursor:pointer;padding:13px 22px;border-radius:40px;font:700 15px 'Inter',system-ui,sans-serif;box-shadow:0 10px 30px rgba(221,0,0,.35)}
+#pwaInstall:hover{background:#B30000}
+#pwaInstall .x{margin-left:4px;opacity:.8;font-weight:600}
+</style>
+<button id="pwaInstall" aria-label="App installieren">📲 App installieren <span class="x" data-x>✕</span></button>
+<script>
+(function(){var deferred=null,btn=document.getElementById('pwaInstall');
+window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferred=e;if(btn)btn.style.display='inline-flex';});
+if(btn){btn.addEventListener('click',function(ev){if(ev.target&&ev.target.hasAttribute('data-x')){btn.style.display='none';return;}if(!deferred)return;deferred.prompt();deferred.userChoice.finally(function(){deferred=null;btn.style.display='none';});});}
+window.addEventListener('appinstalled',function(){if(btn)btn.style.display='none';});})();
+</script>
+</body>
+</html>

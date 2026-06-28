@@ -19,6 +19,7 @@ function rawBody(req) {
 
 // --- Amanda Plus: Zugangs-Mail mit Freischalt-Link (kein Club-Konto nötig) ---
 const AMANDA_UNLOCK = 'https://deutschoderwas.de/amanda-plus.html?code=AMANDA-SPRECHEN-658BA4';
+const AMANDA_PORTAL = 'https://billing.stripe.com/p/login/cNi8wP2DQcez5av6Yd5Rm00';
 
 async function sendAmandaAccess(s) {
   try {
@@ -46,7 +47,7 @@ async function sendAmandaAccess(s) {
           <a href="${AMANDA_UNLOCK}" style="display:inline-block;background:linear-gradient(135deg,#2DD4BF,#14B8A6);color:#06403A;font-weight:700;font-size:16px;text-decoration:none;padding:15px 34px;border-radius:999px">🔓 Amanda jetzt öffnen</a>
         </td></tr>
         <tr><td style="padding:8px 32px 4px">
-          <p style="font-size:13px;line-height:1.6;color:#6B7280;margin:0 0 6px">Tipp: <strong>Speichere dir diese E-Mail.</strong> Über den Button kommst du <strong>jederzeit wieder</strong> zu Amanda. Monatlich kündbar.</p>
+          <p style="font-size:13px;line-height:1.6;color:#6B7280;margin:0 0 6px">Tipp: <strong>Speichere dir diese E-Mail.</strong> Über den Button kommst du <strong>jederzeit wieder</strong> zu Amanda. Monatlich kündbar — <a href="${AMANDA_PORTAL}" style="color:#14B8A6">Abo verwalten/kündigen</a>.</p>
           <p style="font-size:12px;line-height:1.5;color:#6B7280;margin:0;word-break:break-all">Falls der Button nicht geht: <a href="${AMANDA_UNLOCK}" style="color:#14B8A6">${AMANDA_UNLOCK}</a></p>
         </td></tr>
         <tr><td style="padding:16px 32px 22px">
@@ -109,6 +110,13 @@ export default async function handler(req, res) {
     await sb.from('profiles').update(patch).eq('id', userId);
   }
 
+  // Stripe-Kundennummer am Profil merken — wird fürs Kündigungs-Portal gebraucht.
+  async function saveCustomer(userId, customerId) {
+    if (!userId || !customerId) return;
+    try { await sb.from('profiles').update({ stripe_customer_id: customerId }).eq('id', userId); }
+    catch (e) { console.error('saveCustomer', e); }
+  }
+
   try {
     if (event.type === 'checkout.session.completed') {
       const s = event.data.object;
@@ -127,6 +135,7 @@ export default async function handler(req, res) {
         const credits = parseInt(s.metadata?.credits || '0', 10);
         await grant(userId, credits, 'kauf:' + (s.metadata?.plan || 'paket'), 'cs_' + s.id, null);
       } else if (s.mode === 'subscription') {
+        await saveCustomer(userId, s.customer);   // Kundennummer fürs Kündigungs-Portal merken
         // Probestunde nur EINMAL pro Person: nur gutschreiben, wenn dieser Checkout eine Testphase hatte.
         if (s.metadata?.trial === '1') {
           await grant(userId, 1, 'trial:' + (s.metadata?.plan || 'abo'), 'trial_' + s.id, 7);
@@ -141,10 +150,27 @@ export default async function handler(req, res) {
         const stunden = parseInt(sub.metadata?.stunden || '0', 10);
         const userId = sub.metadata?.userId;
         const plan = sub.metadata?.plan || 'abo';
+        await saveCustomer(userId, inv.customer);   // Kundennummer merken
         await grant(userId, stunden, 'abo:' + plan, 'inv_' + inv.id, 31);
       }
+    } else if (event.type === 'customer.subscription.deleted') {
+      // Abo ist tatsächlich beendet (zum Periodenende): ALLE gesammelten Stunden verfallen -> 0.
+      const sub = event.data.object;
+      const userId = sub.metadata?.userId;
+      if (userId) {
+        const dk = 'subdel_' + sub.id;
+        const { data: already } = await sb.from('credit_log').select('id').eq('stripe_session_id', dk).maybeSingle();
+        if (!already) {
+          const { data: p } = await sb.from('profiles').select('credits').eq('id', userId).maybeSingle();
+          const cur = p?.credits || 0;
+          if (cur > 0) {
+            await sb.from('credit_log').insert({ user_id: userId, change: -cur, reason: 'abo_gekuendigt_verfall', stripe_session_id: dk });
+          }
+          // Guthaben auf 0, Mitgliedschaft beenden
+          await sb.from('profiles').update({ credits: 0, pass_until: new Date().toISOString() }).eq('id', userId);
+        }
+      }
     }
-    // customer.subscription.deleted: nichts nötig — pass_until läuft von selbst aus.
   } catch (e) {
     console.error('webhook handler', e);
     return res.status(500).json({ error: String(e.message || e) }); // Stripe wiederholt dann
