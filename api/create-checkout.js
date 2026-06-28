@@ -3,6 +3,7 @@
 // Gibt { url } der Stripe-Checkout-Seite zurück. Nach Zahlung schreibt api/stripe-webhook.js gut.
 // Benötigt ENV: STRIPE_SECRET_KEY, (optional) SITE_URL.
 import Stripe from 'stripe';
+import { createClient } from '@supabase/supabase-js';
 
 // Server-seitige Paket-Definition (Quelle der Wahrheit für Preise – nie dem Client vertrauen).
 const PLANS = {
@@ -36,7 +37,20 @@ export default async function handler(req, res) {
 
     let session;
     if (plan.abo) {
-      // Abo mit 7 Tagen kostenloser Testphase (in den 7 Tagen jederzeit kündbar)
+      // Probestunde nur EINMAL pro Person: prüfen, ob diese:r Schüler:in schon je eine Testphase hatte.
+      // Wer schon getestet hat, zahlt sofort (keine zweite Gratis-Probestunde, kein erneutes 7-Tage-Trial).
+      let trialDays = 7;
+      try {
+        if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
+          const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+          const { data: prev } = await sb.from('credit_log').select('id').eq('user_id', userId).like('reason', 'trial:%').limit(1);
+          if (prev && prev.length) trialDays = 0; // hatte schon eine Probestunde
+        }
+      } catch (e) { console.error('trial-check', e); }
+
+      const subData = { metadata: { userId, plan: id, stunden: String(plan.stunden) } };
+      if (trialDays > 0) subData.trial_period_days = 7; // nur Neukund:innen bekommen die Gratis-Probestunde
+
       session = await stripe.checkout.sessions.create({
         ...common,
         mode: 'subscription',
@@ -49,11 +63,8 @@ export default async function handler(req, res) {
             product_data: { name: `deutschoderwas Club – ${plan.label}`, description: `${plan.stunden} LIVE-Stunden pro Monat · Üben 24/7, Amanda & Community inklusive` },
           },
         }],
-        subscription_data: {
-          trial_period_days: 7,
-          metadata: { userId, plan: id, stunden: String(plan.stunden) },
-        },
-        metadata: { userId, plan: id, stunden: String(plan.stunden), kind: 'abo' },
+        subscription_data: subData,
+        metadata: { userId, plan: id, stunden: String(plan.stunden), kind: 'abo', trial: trialDays > 0 ? '1' : '0' },
       });
     } else {
       // Einmalkauf (Spar Pass)

@@ -60,8 +60,11 @@ export default async function handler(req, res) {
         const credits = parseInt(s.metadata?.credits || '0', 10);
         await grant(userId, credits, 'kauf:' + (s.metadata?.plan || 'paket'), 'cs_' + s.id, null);
       } else if (s.mode === 'subscription') {
-        // Abo-Start mit Testphase: 1 gratis Probestunde + 7 Tage aktiv
-        await grant(userId, 1, 'trial:' + (s.metadata?.plan || 'abo'), 'trial_' + s.id, 7);
+        // Probestunde nur EINMAL pro Person: nur gutschreiben, wenn dieser Checkout eine Testphase hatte.
+        if (s.metadata?.trial === '1') {
+          await grant(userId, 1, 'trial:' + (s.metadata?.plan || 'abo'), 'trial_' + s.id, 7);
+        }
+        // Ohne Trial (Rückkehrer:in): keine Gratis-Probestunde — die Monatsstunden kommen über invoice.paid.
       }
     } else if (event.type === 'invoice.paid') {
       const inv = event.data.object;
