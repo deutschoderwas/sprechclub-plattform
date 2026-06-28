@@ -54,10 +54,10 @@
   .spalte{flex:0 0 var(--rechts,420px); width:var(--rechts,420px); display:flex; flex-direction:column; gap:16px; min-height:0; min-width:0;}
 
   /* Video – klein & versetzt (rechts oben) */
-  .video-card{align-self:flex-end; width:270px; background:var(--creme-hell); border:1px solid var(--rahmen); border-radius:16px; overflow:hidden; box-shadow:0 4px 14px rgba(0,0,0,.08); flex:0 0 auto;}
+  .video-card{align-self:stretch; width:100%; background:var(--creme-hell); border:1px solid var(--rahmen); border-radius:16px; overflow:hidden; box-shadow:0 4px 14px rgba(0,0,0,.08); flex:0 0 auto;}
   .video-kopf{display:flex; align-items:center; gap:8px; padding:8px 13px; font-weight:600; font-size:.82rem; border-bottom:1px solid var(--rahmen);}
   .video-kopf .punkt{width:8px; height:8px; border-radius:50%; background:var(--rot);}
-  .video-buehne{position:relative; height:152px; background:var(--anthrazit);}
+  .video-buehne{position:relative; height:300px; background:var(--anthrazit);}
   .vid-controls{display:flex; flex-wrap:wrap; gap:6px; padding:8px 10px; border-top:1px solid var(--rahmen); background:var(--creme-hell);}
   .vid-controls button{flex:1 1 auto; min-width:62px; border:1px solid var(--rahmen); background:#fff; cursor:pointer; border-radius:9px; padding:8px 6px; font-family:'Inter'; font-weight:600; font-size:.8rem; color:var(--anthrazit);}
   .vid-controls button.leave{background:var(--rot); color:#fff; border-color:var(--rot); flex-basis:100%;}
@@ -544,7 +544,11 @@
     api.addEventListener('screenSharingStatusChanged', e=>{ const b=document.getElementById('vc-share'); if(b){ b.textContent = e.on ? '🟢 Teilen beenden' : '🖥️ Teilen'; b.classList.toggle('on', e.on); } if(window._onShareChange) window._onShareChange(e.on); });
     api.addEventListener('readyToClose', ()=>{ document.getElementById('jitsi').innerHTML='<div style="color:#fff;padding:24px;text-align:center;font-family:Inter;font-size:.9rem">Du hast den Unterricht verlassen.<br><a href="konto.html" style="color:#2DD4BF;font-weight:700">Zurück zu Meine Stunden</a></div>'; });
     // Immer Kachelansicht – man sieht sich selbst und alle Teilnehmer
-    api.addEventListener('videoConferenceJoined', ()=>{ setTimeout(()=>{ try{ api.executeCommand('setTileView', true); }catch(e){} }, 800); });
+    // Immer Kachelansicht (Meet-Stil): man sieht sich selbst UND alle Teilnehmer.
+    const forceTile=()=>{ if(document.body.classList.contains('sharing')) return; try{ api.executeCommand('setTileView', true); }catch(e){} };
+    api.addEventListener('videoConferenceJoined', ()=>{ [500,1500,3000].forEach(t=>setTimeout(forceTile,t)); });
+    api.addEventListener('participantJoined', ()=>{ setTimeout(forceTile,500); });
+    api.addEventListener('participantLeft', ()=>{ setTimeout(forceTile,500); });
   }
 
   // ---- Eigene Video-Knöpfe (klar sichtbar, statt versteckter Jitsi-Leiste) ----
