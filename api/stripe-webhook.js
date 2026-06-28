@@ -27,20 +27,38 @@ async function sendAmandaAccess(s) {
     if (!process.env.BREVO_API_KEY) { console.error('amanda: BREVO_API_KEY fehlt'); return; }
     const name = ((s.customer_details?.name || '').trim().split(' ')[0]) || '';
     const hallo = name ? `Hallo ${name},` : 'Hallo,';
-    const html = `<!DOCTYPE html><html lang="de"><body style="margin:0;background:#FFF8F0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#1A1A1A">
-  <div style="max-width:560px;margin:0 auto;padding:28px 20px">
-    <div style="background:#fff;border-radius:18px;padding:32px 28px;box-shadow:0 8px 30px rgba(0,0,0,.06)">
-      <p style="font-size:13px;letter-spacing:.5px;color:#DD0000;font-weight:800;margin:0 0 8px">DEUTSCHODERWAS · AMANDA PLUS</p>
-      <h1 style="font-size:24px;margin:0 0 14px;line-height:1.25">🎉 Dein Zugang ist da!</h1>
-      <p style="font-size:16px;line-height:1.6;margin:0 0 18px">${hallo} vielen Dank für dein Abo! Ab jetzt kannst du <b>rund um die Uhr mit Amanda</b>, deiner KI-Deutschtutorin, sprechen.</p>
-      <p style="text-align:center;margin:26px 0">
-        <a href="${AMANDA_UNLOCK}" style="display:inline-block;background:#DD0000;color:#fff;text-decoration:none;font-weight:800;font-size:17px;padding:15px 30px;border-radius:50px">🚀 Amanda jetzt freischalten</a>
-      </p>
-      <p style="font-size:14px;line-height:1.6;color:#555;margin:0 0 6px">Falls der Button nicht geht, kopiere diesen Link in deinen Browser:</p>
-      <p style="font-size:13px;line-height:1.5;word-break:break-all;margin:0 0 20px"><a href="${AMANDA_UNLOCK}" style="color:#DD0000">${AMANDA_UNLOCK}</a></p>
-      <p style="font-size:13px;line-height:1.6;color:#888;margin:0">Tipp: Speichere dir diese Mail – über den Link kommst du jederzeit wieder rein. Monatlich kündbar. Bei Fragen einfach auf diese Mail antworten. 💛<br>Julia</p>
-    </div>
-  </div></body></html>`;
+    const html = `<!DOCTYPE html><html lang="de"><body style="margin:0;padding:0;background:#FFF8E0;font-family:'Inter','Segoe UI',system-ui,sans-serif;color:#1A1A1A">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF8E0;padding:24px 12px">
+    <tr><td align="center">
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#FFFCF5;border:1px solid #F0E5D8;border-radius:20px;overflow:hidden">
+        <tr><td style="padding:24px 32px 8px">
+          <span style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:22px;color:#1A1A1A">deutsch<span style="color:#14B8A6">oderwas</span></span>
+          <span style="display:block;font-size:12px;color:#6B7280;margin-top:2px">Deutsch lernen mit Spaß &amp; Leichtigkeit</span>
+        </td></tr>
+        <tr><td style="padding:0 32px"><div style="height:3px;background:linear-gradient(135deg,#2DD4BF,#14B8A6);border-radius:999px"></div></td></tr>
+        <tr><td style="padding:22px 32px 4px">
+          <span style="font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#DD0000">Dein Zugang ist da</span>
+          <h1 style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:26px;line-height:1.2;margin:8px 0 14px;color:#1A1A1A">Zeit, mit <span style="color:#DD0000">Amanda</span> zu sprechen 🎉</h1>
+          <p style="font-size:16px;line-height:1.6;margin:0 0 14px">${hallo}</p>
+          <p style="font-size:16px;line-height:1.6;margin:0 0 16px">vielen Dank für dein Abo! 💛 Ab jetzt kannst du <strong>rund um die Uhr &amp; ohne Zeitlimit</strong> mit Amanda, deiner KI-Deutschtutorin, sprechen — so lange und so oft du willst.</p>
+        </td></tr>
+        <tr><td align="center" style="padding:6px 32px 10px">
+          <a href="${AMANDA_UNLOCK}" style="display:inline-block;background:linear-gradient(135deg,#2DD4BF,#14B8A6);color:#06403A;font-weight:700;font-size:16px;text-decoration:none;padding:15px 34px;border-radius:999px">🔓 Amanda jetzt öffnen</a>
+        </td></tr>
+        <tr><td style="padding:8px 32px 4px">
+          <p style="font-size:13px;line-height:1.6;color:#6B7280;margin:0 0 6px">Tipp: <strong>Speichere dir diese E-Mail.</strong> Über den Button kommst du <strong>jederzeit wieder</strong> zu Amanda. Monatlich kündbar.</p>
+          <p style="font-size:12px;line-height:1.5;color:#6B7280;margin:0;word-break:break-all">Falls der Button nicht geht: <a href="${AMANDA_UNLOCK}" style="color:#14B8A6">${AMANDA_UNLOCK}</a></p>
+        </td></tr>
+        <tr><td style="padding:16px 32px 22px">
+          <p style="font-size:16px;line-height:1.6;margin:0">Viel Spaß beim Sprechen,<br><strong>Julia</strong> 💛</p>
+        </td></tr>
+        <tr><td style="background:#1A1A1A;padding:18px 32px;text-align:center">
+          <p style="font-size:12px;line-height:1.6;color:#b9b9b9;margin:0">deutschoderwas · <a href="https://deutschoderwas.de/#impressum" style="color:#FFCE00;text-decoration:none">Impressum</a></p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body></html>`;
     const r = await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST',
       headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
@@ -109,12 +127,15 @@ export default async function handler(req, res) {
         const credits = parseInt(s.metadata?.credits || '0', 10);
         await grant(userId, credits, 'kauf:' + (s.metadata?.plan || 'paket'), 'cs_' + s.id, null);
       } else if (s.mode === 'subscription') {
+        // Probestunde nur EINMAL pro Person: nur gutschreiben, wenn dieser Checkout eine Testphase hatte.
         if (s.metadata?.trial === '1') {
           await grant(userId, 1, 'trial:' + (s.metadata?.plan || 'abo'), 'trial_' + s.id, 7);
         }
+        // Ohne Trial (Rückkehrer:in): keine Gratis-Probestunde — die Monatsstunden kommen über invoice.paid.
       }
     } else if (event.type === 'invoice.paid') {
       const inv = event.data.object;
+      // Nur echte Zahlungen (die 0-€-Rechnung der Testphase überspringen)
       if ((inv.amount_paid || 0) > 0 && inv.subscription) {
         const sub = await stripe.subscriptions.retrieve(inv.subscription);
         const stunden = parseInt(sub.metadata?.stunden || '0', 10);
@@ -123,9 +144,10 @@ export default async function handler(req, res) {
         await grant(userId, stunden, 'abo:' + plan, 'inv_' + inv.id, 31);
       }
     }
+    // customer.subscription.deleted: nichts nötig — pass_until läuft von selbst aus.
   } catch (e) {
     console.error('webhook handler', e);
-    return res.status(500).json({ error: String(e.message || e) });
+    return res.status(500).json({ error: String(e.message || e) }); // Stripe wiederholt dann
   }
 
   return res.status(200).json({ received: true });
