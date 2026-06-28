@@ -494,14 +494,14 @@ document.querySelectorAll('.quiz-opts').forEach(opts=>{const c=parseInt(opts.dat
 document.getElementById('gapCheck').onclick=()=>{const sels=document.querySelectorAll('[data-quiz="gap"] select');let right=0,total=sels.length;sels.forEach(s=>{s.classList.remove('right','wrong');if(s.value===s.dataset.sol){s.classList.add('right');right++;}else s.classList.add('wrong');});const score=document.getElementById('gapScore');score.style.display='block';score.innerHTML='Ergebnis: <strong>'+right+' von '+total+'</strong> richtig! '+(right===total?'🎉 Perfekt!':right>=6?'👏 Sehr gut!':right>=4?'👍 Auf gutem Weg!':'💪 Weiter üben!');};
 document.getElementById('gapReset').onclick=()=>{document.querySelectorAll('[data-quiz="gap"] select').forEach(s=>{s.value='';s.classList.remove('right','wrong');});document.getElementById('gapScore').style.display='none';};
 const PAIRS=[
-  {l:"sich verabreden",r:"einen Termin ausmachen"},
-  {l:"unternehmen",r:"etwas zusammen machen"},
-  {l:"Lust haben",r:"etwas machen wollen"},
-  {l:"freihaben",r:"keine Termine haben"},
-  {l:"entspannen",r:"zur Ruhe kommen"},
-  {l:"wandern",r:"in der Natur laufen"},
-  {l:"die Eintrittskarte",r:"Ticket fürs Kino/Konzert"},
-  {l:"ein Instrument spielen",r:"z.B. Gitarre, Klavier"}
+  {l:"📅 sich verabreden",r:"einen Termin ausmachen"},
+  {l:"🎉 unternehmen",r:"etwas zusammen machen"},
+  {l:"😃 Lust haben",r:"etwas machen wollen"},
+  {l:"🏖️ freihaben",r:"keine Termine haben"},
+  {l:"🧘 entspannen",r:"zur Ruhe kommen"},
+  {l:"🥾 wandern",r:"in der Natur laufen"},
+  {l:"🎟️ die Eintrittskarte",r:"Ticket fürs Kino/Konzert"},
+  {l:"🎸 ein Instrument spielen",r:"z.B. Gitarre, Klavier"}
 ];
 function buildMatch(){const left=PAIRS.map((p,i)=>({...p,i})).sort(()=>Math.random()-.5);const right=PAIRS.map((p,i)=>({...p,i})).sort(()=>Math.random()-.5);const L=document.getElementById('leftCol');const R=document.getElementById('rightCol');L.innerHTML='';R.innerHTML='';left.forEach(p=>{const d=document.createElement('div');d.className='match-item';d.dataset.i=p.i;d.innerHTML=p.l;L.appendChild(d);});right.forEach(p=>{const d=document.createElement('div');d.className='match-item';d.dataset.i=p.i;d.innerHTML=p.r;R.appendChild(d);});let pick=null;document.querySelectorAll('.match-item').forEach(item=>{item.onclick=()=>{if(item.classList.contains('done'))return;if(!pick){pick=item;item.classList.add('selected');return;}if(pick===item){item.classList.remove('selected');pick=null;return;}const pc=pick.parentElement.id,ic=item.parentElement.id;if(pc===ic){pick.classList.remove('selected');pick=item;item.classList.add('selected');return;}if(pick.dataset.i===item.dataset.i){pick.classList.add('done');item.classList.add('done');pick.classList.remove('selected');pick=null;}else{const a=pick,b=item;a.classList.add('wrong');b.classList.add('wrong');setTimeout(()=>{a.classList.remove('wrong','selected');b.classList.remove('wrong');},700);pick=null;}};});}
 buildMatch();document.getElementById('matchRestart').onclick=buildMatch;
