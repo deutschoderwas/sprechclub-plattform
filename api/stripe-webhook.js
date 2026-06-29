@@ -135,6 +135,68 @@ async function sendGoodbyeMail(email, name) {
   } catch (e) { console.error('goodbye mail err', e); }
 }
 
+// --- Trial-Willkommens-Mail: Wahl zwischen 7 Tagen testen ODER sofort voll starten ---
+const PLAN_INFO = { testpass: { h: 4, p: 79 }, gelegenheitspass: { h: 8, p: 139 }, allinclusive: { h: 12, p: 189 } };
+const START_NOW_URL = 'https://www.deutschoderwas-club.de/konto.html?start=now';
+
+async function sendTrialWelcome(s) {
+  try {
+    const email = s.customer_details?.email || s.customer_email;
+    if (!email) { console.error('trial: keine E-Mail', s.id); return; }
+    if (!process.env.BREVO_API_KEY) { console.error('trial: BREVO_API_KEY fehlt'); return; }
+    const name = ((s.customer_details?.name || '').trim().split(' ')[0]) || '';
+    const hallo = name ? `Hallo ${name},` : 'Hallo,';
+    const plan = s.metadata?.plan || '';
+    const info = PLAN_INFO[plan] || { h: parseInt(s.metadata?.stunden || '0', 10), p: 0 };
+    const preisTxt = info.p ? `${info.p} €/Monat` : 'dein Monatsbeitrag';
+    const html = `<!DOCTYPE html><html lang="de"><body style="margin:0;padding:0;background:#FFF8E0;font-family:'Inter','Segoe UI',system-ui,sans-serif;color:#1A1A1A">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF8E0;padding:24px 12px"><tr><td align="center">
+    <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#FFFCF5;border:1px solid #F0E5D8;border-radius:20px;overflow:hidden">
+      <tr><td style="padding:24px 32px 8px">
+        <span style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:22px;color:#1A1A1A">deutsch<span style="color:#14B8A6">oderwas</span></span>
+        <span style="display:block;font-size:12px;color:#6B7280;margin-top:2px">Deutsch lernen mit Spaß &amp; Leichtigkeit</span>
+      </td></tr>
+      <tr><td style="padding:0 32px"><div style="height:3px;background:linear-gradient(135deg,#2DD4BF,#14B8A6);border-radius:999px"></div></td></tr>
+      <tr><td style="padding:22px 32px 4px">
+        <span style="font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#DD0000">Deine Probestunde ist da</span>
+        <h1 style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:26px;line-height:1.2;margin:8px 0 14px;color:#1A1A1A">Willkommen im Club 🎉</h1>
+        <p style="font-size:16px;line-height:1.6;margin:0 0 12px">${hallo}</p>
+        <p style="font-size:16px;line-height:1.6;margin:0 0 14px">schön, dass du dabei bist! Du hast jetzt <b>7 Tage Zeit, in Ruhe zu testen</b> – mit deiner <b>1 Gratis-Probestunde</b>. Du musst nichts weiter tun: Nach 7 Tagen startet dein Abo automatisch (${preisTxt}). Innerhalb der 7 Tage jederzeit kündbar.</p>
+      </td></tr>
+      <tr><td style="padding:4px 32px 4px">
+        <div style="background:#F2FBFA;border:1px solid #CFEFEA;border-radius:14px;padding:16px 18px">
+          <div style="font-weight:700;font-size:15px;color:#0F766E">⚡ Du willst sofort mehr als die Probestunde?</div>
+          <p style="font-size:14px;line-height:1.6;margin:8px 0 14px;color:#1A1A1A">Kein Problem – starte dein Abo <b>sofort voll</b>. Die Zahlung wird dann gleich fällig und du bekommst deine <b>${info.h} Stunden + die Gratis-Probestunde sofort</b> gutgeschrieben. So kannst du direkt mehrere Stunden in dieser Woche nutzen.</p>
+          <p style="text-align:center;margin:0">
+            <a href="${START_NOW_URL}" style="display:inline-block;background:linear-gradient(135deg,#2DD4BF,#14B8A6);color:#06403A;font-weight:700;font-size:16px;text-decoration:none;padding:14px 30px;border-radius:999px">🚀 Jetzt voll starten</a>
+          </p>
+        </div>
+      </td></tr>
+      <tr><td style="padding:16px 32px 22px">
+        <p style="font-size:15px;line-height:1.6;margin:0">Bis bald im Club &amp; viel Spaß beim Sprechen,<br><strong>Julia</strong> 💛</p>
+      </td></tr>
+      <tr><td style="background:#1A1A1A;padding:18px 32px;text-align:center">
+        <p style="font-size:12px;line-height:1.6;color:#b9b9b9;margin:0">deutschoderwas · <a href="https://deutschoderwas.de/#impressum" style="color:#FFCE00;text-decoration:none">Impressum</a></p>
+      </td></tr>
+    </table>
+  </td></tr></table>
+</body></html>`;
+    const r = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sender: { name: 'Julia | deutschoderwas', email: process.env.BREVO_SENDER_EMAIL || 'info@deutschoderwas.de' },
+        replyTo: { name: 'Julia', email: process.env.BREVO_SENDER_EMAIL || 'info@deutschoderwas.de' },
+        to: [{ email, name }],
+        subject: 'Deine Gratis-Probestunde ist da 🎉',
+        htmlContent: html,
+      }),
+    });
+    if (!r.ok) console.error('trial brevo fail', r.status, await r.text());
+  } catch (e) { console.error('trial mail err', e); }
+}
+
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
   if (!process.env.STRIPE_SECRET_KEY || !process.env.STRIPE_WEBHOOK_SECRET) {
@@ -198,6 +260,7 @@ export default async function handler(req, res) {
         // Probestunde nur EINMAL pro Person: nur gutschreiben, wenn dieser Checkout eine Testphase hatte.
         if (s.metadata?.trial === '1') {
           await grant(userId, 1, 'trial:' + (s.metadata?.plan || 'abo'), 'trial_' + s.id, 7);
+          await sendTrialWelcome(s);
           // Probeschüler markieren + Vermerk: woher (Stripe-Probestunde) & welches Paket er möchte
           if (userId) {
             const PLAN_LABEL = { testpass:'Ab und zu Pass (4 Std/Monat)', gelegenheitspass:'Gelegenheitspass (8 Std/Monat)', allinclusive:'Profi-Pass (12 Std/Monat)' };
