@@ -34,6 +34,16 @@ textarea:focus{outline:2px solid var(--teal);border-color:var(--teal);}
 .note{background:var(--yellow-soft,#FFF1C2);border-radius:10px;padding:.7rem .9rem;font-size:.9rem;color:#7a5b00;margin-bottom:1rem;}
 .center{text-align:center;padding:3rem 1rem;color:var(--ink-soft);}
 .center a{color:var(--teal);font-weight:700;}
+.tools{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.6rem;align-items:center;}
+.tbtn{background:#fff;border:1px solid var(--sand);border-radius:10px;padding:.42rem .62rem;cursor:pointer;font-size:1rem;font-family:inherit;line-height:1;display:inline-flex;align-items:center;gap:.25rem;}
+.tbtn:hover{border-color:var(--teal);}
+.tbtn.on{background:var(--teal-soft);border-color:var(--teal);box-shadow:0 0 0 2px var(--teal-soft);}
+.tbtn .dot{width:13px;height:13px;border-radius:50%;display:inline-block;border:1px solid rgba(0,0,0,.18);}
+.sep{width:1px;height:22px;background:var(--sand);margin:0 .25rem;}
+.rich{width:100%;min-height:280px;border:1px solid var(--sand);border-radius:12px;padding:1rem;font-family:var(--fb);font-size:1.02rem;line-height:1.7;background:#FFFDF8;overflow:auto;}
+.rich:focus{outline:2px solid var(--teal);border-color:var(--teal);}
+.rich:empty:before{content:attr(data-ph);color:var(--ink-mute);}
+.toolhint{color:var(--ink-soft);font-size:.82rem;margin:.55rem 0 0;}
 </style>
 </head>
 <body>
@@ -71,7 +81,19 @@ function render(cn){
     <div class="note">✍️ Schreib hier während des Unterrichts mit: neue Wörter, Beispielsätze, was ihr gemacht habt. Wird automatisch gespeichert. Die Schüler:innen sehen es <b>nach</b> der Stunde in ihrer Nachbearbeitung.</div>
     <div class="card">
       <h2>Notizen</h2>
-      <textarea id="notes" placeholder="z. B.&#10;Neue Wörter: sich beschweren, die Reklamation, kulant&#10;Wir haben das Rollenspiel 'Reklamation' gespielt.&#10;Wichtig: Konjunktiv II für höfliche Bitten (Könnten Sie ...?)">${esc(cn.notes||'')}</textarea>
+      <div class="tools" id="tools">
+        <button type="button" class="tbtn" id="mk-y" onmousedown="toggleMarker(event,'#FFE08A')" title="Gelb markieren"><span class="dot" style="background:#FFE08A"></span>Marker</button>
+        <button type="button" class="tbtn" id="mk-r" onmousedown="toggleMarker(event,'#FCA5A5')" title="Rot markieren"><span class="dot" style="background:#FCA5A5"></span>Marker</button>
+        <button type="button" class="tbtn" id="mk-g" onmousedown="toggleMarker(event,'#A7F3D0')" title="Grün markieren"><span class="dot" style="background:#A7F3D0"></span>Marker</button>
+        <button type="button" class="tbtn" onmousedown="unmark(event)" title="Markierung entfernen">⌫</button>
+        <span class="sep"></span>
+        <button type="button" class="tbtn" id="pen-r" onmousedown="togglePen(event,'#DD0000')" title="Roter Stift">🖊️<span class="dot" style="background:#DD0000"></span></button>
+        <button type="button" class="tbtn" id="pen-g" onmousedown="togglePen(event,'#16A34A')" title="Grüner Stift">🖊️<span class="dot" style="background:#16A34A"></span></button>
+        <span class="sep"></span>
+        <button type="button" class="tbtn" onmousedown="pfeil(event)" title="Pfeil: falsch → richtig">→</button>
+      </div>
+      <div id="notes" class="rich" contenteditable="true" spellcheck="true" lang="de" autocapitalize="sentences" data-ph="z. B. Neue Wörter: sich beschweren, die Reklamation …  ·  Korrekturen markieren 🟡🔴🟢, falsch → richtig">${toEditorHtml(cn.notes||'')}</div>
+      <p class="toolhint">🟡🔴🟢 markieren · 🖊️ farbig schreiben · → falsch→richtig · wird automatisch gespeichert.</p>
       <div class="row"><span class="save" id="saveState">Automatisch gespeichert</span></div>
     </div>
     <div class="card">
@@ -81,10 +103,49 @@ function render(cn){
       <div class="status" id="genStatus"></div>
       <div class="preview ${pc?'show':''}" id="preview">${pc?previewHtml(pc):''}</div>
     </div>`;
-  const ta=document.getElementById('notes');
-  ta.addEventListener('input',()=>{ document.getElementById('saveState').textContent='Speichert …'; document.getElementById('saveState').className='save';
+  const ed=document.getElementById('notes');
+  try{ document.execCommand('styleWithCSS',false,true); }catch(e){}
+  ed.addEventListener('input',()=>{ const s=document.getElementById('saveState'); s.textContent='Speichert …'; s.className='save';
     clearTimeout(saveTimer); saveTimer=setTimeout(save,800); });
+  autoMark(ed);
   document.getElementById('genBtn').addEventListener('click',generate);
+}
+
+// Legacy-Notizen (reiner Text) -> HTML; bereits formatierte Notizen unverändert lassen
+function toEditorHtml(s){ s=s||''; return /<[a-z!/]/i.test(s) ? s : esc(s).replace(/\n/g,'<br>'); }
+
+// ---- Werkzeuge: Marker (Hervorhebung), farbige Stifte, Pfeil ----
+let markerActive=false, markerColor='#FFE08A', penActive=false, penColor=null;
+function updateToolBtns(){
+  const map={'#FFE08A':'mk-y','#FCA5A5':'mk-r','#A7F3D0':'mk-g'};
+  ['mk-y','mk-r','mk-g'].forEach(id=>document.getElementById(id) && document.getElementById(id).classList.toggle('on', markerActive && map[markerColor]===id));
+  const pmap={'#DD0000':'pen-r','#16A34A':'pen-g'};
+  ['pen-r','pen-g'].forEach(id=>document.getElementById(id) && document.getElementById(id).classList.toggle('on', penActive && pmap[penColor]===id));
+}
+function afterFormat(){ const s=document.getElementById('saveState'); if(s){ s.textContent='Speichert …'; s.className='save'; } clearTimeout(saveTimer); saveTimer=setTimeout(save,800); }
+function toggleMarker(ev,color){
+  ev.preventDefault();
+  if(markerActive && markerColor===color){ markerActive=false; } else { markerActive=true; markerColor=color; }
+  updateToolBtns();
+  const sel=window.getSelection();
+  if(sel && !sel.isCollapsed){ document.execCommand('hiliteColor',false,color); afterFormat(); }
+}
+function unmark(ev){ ev.preventDefault(); document.execCommand('hiliteColor',false,'transparent'); afterFormat(); }
+function togglePen(ev,color){
+  ev.preventDefault();
+  if(penActive && penColor===color){ penActive=false; penColor=null; document.execCommand('foreColor',false,'#262019'); }
+  else { penActive=true; penColor=color; document.execCommand('foreColor',false,color); }
+  updateToolBtns(); afterFormat();
+}
+function pfeil(ev){ ev.preventDefault(); document.execCommand('insertText',false,' → '); afterFormat(); }
+function autoMark(ed){
+  const run=()=>setTimeout(()=>{
+    if(!markerActive) return;
+    const sel=window.getSelection();
+    if(sel && !sel.isCollapsed && ed.contains(sel.anchorNode)){ document.execCommand('hiliteColor',false,markerColor); afterFormat(); }
+  },0);
+  ed.addEventListener('mouseup',run);
+  ed.addEventListener('keyup',e=>{ if(e.shiftKey) run(); });
 }
 
 function previewHtml(pc){
@@ -94,7 +155,8 @@ function previewHtml(pc){
 }
 
 async function save(){
-  const notes=document.getElementById('notes').value;
+  const el=document.getElementById('notes'); if(!el) return;
+  const notes=el.innerHTML;
   const { error }=await sb.from('class_notes').upsert({ class_id:classId, notes, updated_at:new Date().toISOString() });
   const st=document.getElementById('saveState');
   if(error){ st.textContent='Speichern fehlgeschlagen'; st.className='save bad'; }
@@ -107,11 +169,11 @@ async function generate(){
   btn.disabled=true; st.className='status'; st.textContent='Amanda erstellt die Nachbearbeitung … (kann 10–20 Sek. dauern)';
   try{
     const { data:{ session } }=await sb.auth.getSession();
-    const r=await fetch('/api/generate-post',{ method:'POST', headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+session.access_token }, body:JSON.stringify({ classId }) });
+    const r=await fetch('/api/generate-nachbereitung',{ method:'POST', headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+session.access_token }, body:JSON.stringify({ classId, source:'tafel' }) });
     const j=await r.json();
-    if(j.ok){ st.className='status good'; st.textContent='Fertig! Die Schüler:innen sehen die Nachbearbeitung nach der Stunde.';
+    if(j.ok){ st.className='status good'; st.textContent='Fertig! Die Vokabeln sind im Vokabeltrainer, die Nachbearbeitung sehen die Schüler:innen nach der Stunde.';
       const p=document.getElementById('preview'); p.className='preview show'; p.innerHTML=previewHtml(j.content); }
-    else { st.className='status bad'; st.textContent=({no_notes:'Bitte zuerst ein paar Notizen schreiben.',not_allowed:'Keine Berechtigung.',anthropic_key_missing:'KI-Schlüssel fehlt (Vercel).'}[j.error])||('Fehler: '+(j.error||'unbekannt')); }
+    else { st.className='status bad'; st.textContent=({no_tafel:'Bitte zuerst ein paar Notizen schreiben.',no_pdf_text:'Kein Text gefunden.',not_admin:'Keine Berechtigung.',anthropic_key_missing:'KI-Schlüssel fehlt (Vercel).',parse_failed:'KI-Antwort unlesbar – bitte erneut.',empty_result:'Zu wenig Inhalt – schreib etwas mehr.'}[j.error])||('Fehler: '+(j.error||'unbekannt')); }
   }catch(e){ st.className='status bad'; st.textContent='Netzwerkfehler – bitte erneut versuchen.'; }
   btn.disabled=false;
 }
