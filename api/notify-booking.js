@@ -187,8 +187,8 @@ function brandedBookingEmail({ vorname, cls, when, site, clubName, clubEmoji, cl
 
         <!-- Hinweis -->
         <tr><td style="padding:14px 30px 4px;font-family:${ff};font-size:13px;line-height:1.6;color:#6B7280">
-          Du kannst kostenlos bis 2 Stunden vor Beginn in deinem
-          <a href="${esc(site)}/schuelerbereich" style="color:#DD0000;font-weight:700;text-decoration:none">Schülerbereich</a> stornieren – dein Guthaben wird erst nach der Teilnahme abgezogen.
+          Du kannst kostenlos bis 6 Stunden vor Beginn in deinem
+          <a href="${esc(site)}/schuelerbereich" style="color:#DD0000;font-weight:700;text-decoration:none">Schülerbereich</a> stornieren – Dein Guthaben wird sofort bei der Buchung abgezogen und bei rechtzeitiger Stornierung wieder gutgeschrieben.
         </td></tr>
 
         <!-- Gruß -->
