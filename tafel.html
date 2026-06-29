@@ -89,8 +89,10 @@ function render(cn){
         <span class="sep"></span>
         <button type="button" class="tbtn" id="pen-r" onmousedown="togglePen(event,'#DD0000')" title="Roter Stift">🖊️<span class="dot" style="background:#DD0000"></span></button>
         <button type="button" class="tbtn" id="pen-g" onmousedown="togglePen(event,'#16A34A')" title="Grüner Stift">🖊️<span class="dot" style="background:#16A34A"></span></button>
+        <button type="button" class="tbtn" id="pen-b" onmousedown="togglePen(event,'#262019')" title="Schwarzer Stift">🖊️<span class="dot" style="background:#262019"></span></button>
         <span class="sep"></span>
         <button type="button" class="tbtn" onmousedown="pfeil(event)" title="Pfeil: falsch → richtig">→</button>
+        <button type="button" class="tbtn" onmousedown="clearFormat(event)" title="Marker & Farbe entfernen">🧽 löschen</button>
       </div>
       <div id="notes" class="rich" contenteditable="true" spellcheck="true" lang="de" autocapitalize="sentences" data-ph="z. B. Neue Wörter: sich beschweren, die Reklamation …  ·  Korrekturen markieren 🟡🔴🟢, falsch → richtig">${toEditorHtml(cn.notes||'')}</div>
       <p class="toolhint">🟡🔴🟢 markieren · 🖊️ farbig schreiben · → falsch→richtig · wird automatisch gespeichert.</p>
@@ -119,8 +121,13 @@ let markerActive=false, markerColor='#FFE08A', penActive=false, penColor=null;
 function updateToolBtns(){
   const map={'#FFE08A':'mk-y','#FCA5A5':'mk-r','#A7F3D0':'mk-g'};
   ['mk-y','mk-r','mk-g'].forEach(id=>document.getElementById(id) && document.getElementById(id).classList.toggle('on', markerActive && map[markerColor]===id));
-  const pmap={'#DD0000':'pen-r','#16A34A':'pen-g'};
-  ['pen-r','pen-g'].forEach(id=>document.getElementById(id) && document.getElementById(id).classList.toggle('on', penActive && pmap[penColor]===id));
+  const pmap={'#DD0000':'pen-r','#16A34A':'pen-g','#262019':'pen-b'};
+  ['pen-r','pen-g','pen-b'].forEach(id=>document.getElementById(id) && document.getElementById(id).classList.toggle('on', penActive && pmap[penColor]===id));
+}
+function clearFormat(ev){ ev.preventDefault();
+  document.execCommand('hiliteColor',false,'transparent');
+  document.execCommand('foreColor',false,'#262019');
+  markerActive=false; penActive=false; penColor=null; updateToolBtns(); afterFormat();
 }
 function afterFormat(){ const s=document.getElementById('saveState'); if(s){ s.textContent='Speichert …'; s.className='save'; } clearTimeout(saveTimer); saveTimer=setTimeout(save,800); }
 function toggleMarker(ev,color){
