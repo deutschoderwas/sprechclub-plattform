@@ -1,4 +1,4 @@
-// Automatische Nachbereitung nach Unterrichtsende (Cron, stündlich Minute 20).
+// Automatische Nachbereitung nach Unterrichtsende (Cron, alle 15 Minuten).
 // Findet beendete Stunden mit gespeicherter Live-Tafel (Jitsi ODER eigenständige tafel.html –
 // beide schreiben class_notes.notes) und noch KEINER Nachbereitung, und erstellt sie.
 // Eigenständig (keine externen lib-Imports), damit Vercel sicher bündelt.
@@ -39,21 +39,23 @@ export default async function handler(req, res) {
   });
   if (!eligible.length) return res.status(200).json({ ok: true, processed: 0, reason: 'nichts Offenes' });
 
-  // Pro Lauf nur 1 Stunde verarbeiten (Anthropic-Aufruf dauert ~15-25 s) – der stündliche Cron
-  // (plus jede Knopf-Auslösung) arbeitet einen evtl. Rückstand nach und nach ab.
-  const c = eligible[0];
-  let result;
-  try {
-    const r = await runNachbereitung(sb, { classId: c.id, source: 'tafel' });
-    result = { classId: c.id, title: c.title, ok: r.ok, error: r.error, counts: r.counts };
-  } catch (e) {
-    result = { classId: c.id, title: c.title, ok: false, error: e.message };
+  // Bis zu 2 Stunden pro Lauf (Anthropic dauert ~15-25 s) mit Zeitbudget – Rest holt der nächste Lauf (alle 15 Min).
+  const results = [];
+  const t0 = Date.now();
+  for (const c of eligible.slice(0, 2)) {
+    if (results.length && Date.now() - t0 > 40000) break;
+    try {
+      const r = await runNachbereitung(sb, { classId: c.id, source: 'tafel' });
+      results.push({ classId: c.id, title: c.title, ok: r.ok, error: r.error, counts: r.counts });
+    } catch (e) {
+      results.push({ classId: c.id, title: c.title, ok: false, error: e.message });
+    }
   }
 
-  return res.status(200).json({ ok: true, processed: result.ok ? 1 : 0, eligible: eligible.length, result });
+  return res.status(200).json({ ok: true, processed: results.filter(r => r.ok).length, eligible: eligible.length, results });
 }
 
-// ===== gemeinsame Logik (identisch zu api/generate-nachbereitung.js) =====
+// ===== gemeinsame Logik (identisch in api/generate-nachbereitung.js) =====
 async function runNachbereitung(sb, { classId, source = 'tafel', pdfText } = {}) {
   if (!process.env.ANTHROPIC_API_KEY) return { ok: false, error: 'anthropic_key_missing' };
   if (!classId) return { ok: false, error: 'bad_request' };
@@ -76,19 +78,27 @@ async function runNachbereitung(sb, { classId, source = 'tafel', pdfText } = {})
   }
   if (srcText.length > 14000) srcText = srcText.slice(0, 14000);
 
-  const existing = [];
-  const seen = new Set();
-  const pushV = (v) => { const de = (v && v.de || '').trim(); if (de && !seen.has(de.toLowerCase())) { seen.add(de.toLowerCase()); existing.push({ de, info: (v.info || v.en || '').trim() }); } };
-  if (mat && mat.content && Array.isArray(mat.content.vocab)) mat.content.vocab.forEach(pushV);
-  if (Array.isArray(cls.vocab)) cls.vocab.forEach(pushV);
+  const vmap = new Map();
+  const addV = (v) => {
+    const de = (v && v.de || '').trim(); if (!de) return;
+    const k = de.toLowerCase();
+    const info = (v.info || v.meaning || v.en || '').trim();
+    const ex = (v.example || '').trim();
+    const cur = vmap.get(k) || { de, info: '', example: '' };
+    if (info && !cur.info) cur.info = info;
+    if (ex && !cur.example) cur.example = ex;
+    cur.de = de; vmap.set(k, cur);
+  };
+  if (mat && mat.content && Array.isArray(mat.content.vocab)) mat.content.vocab.forEach(addV);
+  if (Array.isArray(cls.vocab)) cls.vocab.forEach(addV);
 
-  const prompt = buildPrompt(cls, srcText, existing, source);
+  const prompt = buildPrompt(cls, srcText, [...vmap.values()], source);
   let aiText = '';
   try {
     const r = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'x-api-key': process.env.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
-      body: JSON.stringify({ model: MODEL, max_tokens: 4000, messages: [{ role: 'user', content: prompt }] }),
+      body: JSON.stringify({ model: MODEL, max_tokens: 5000, messages: [{ role: 'user', content: prompt }] }),
     });
     const j = await r.json();
     if (!r.ok) return { ok: false, error: 'anthropic_error', detail: (j && j.error && j.error.message) || ('HTTP ' + r.status) };
@@ -102,25 +112,102 @@ async function runNachbereitung(sb, { classId, source = 'tafel', pdfText } = {})
   catch (e) { const m = aiText.match(/\{[\s\S]*\}/); if (m) { try { parsed = JSON.parse(m[0]); } catch (e2) {} } }
   if (!parsed) return { ok: false, error: 'parse_failed', detail: aiText.slice(0, 300) };
 
+  (Array.isArray(parsed.vocab) ? parsed.vocab : []).forEach(addV);
+  const vocab = [...vmap.values()];
   const exercises = normExercises(parsed.exercises || []);
-  const grammar = (parsed.grammar_tip && parsed.grammar_tip.title) ? { title: String(parsed.grammar_tip.title), text: String(parsed.grammar_tip.text || '') } : null;
-  (Array.isArray(parsed.vocab) ? parsed.vocab : []).forEach(pushV);
-  const vocab = existing;
 
-  if (!exercises.length && !vocab.length) return { ok: false, error: 'empty_result' };
+  const post_content = {
+    thema: clip(parsed.thema, 700),
+    saetze: strList(parsed.saetze, 12),
+    vocab,
+    grammar: normGrammar(parsed.grammar),
+    exercises,
+    speaking: normSpeaking(parsed.speaking),
+    errors: normErrors(parsed.errors),
+    source,
+    generated_at: new Date().toISOString(),
+  };
+  if (!vocab.length && !exercises.length && !post_content.thema) return { ok: false, error: 'empty_result' };
 
-  const nowISO = new Date().toISOString();
-  const post_content = { exercises, vocab, grammar_tip: grammar, source, generated_at: nowISO };
-  const { error: nErr } = await sb.from('class_notes').upsert({ class_id: classId, post_content, generated_at: nowISO }, { onConflict: 'class_id' });
+  const nowISO2 = post_content.generated_at;
+  const { error: nErr } = await sb.from('class_notes').upsert({ class_id: classId, post_content, generated_at: nowISO2 }, { onConflict: 'class_id' });
   if (nErr) return { ok: false, error: 'save_notes_failed', detail: nErr.message };
 
   const content = (mat && mat.content && typeof mat.content === 'object') ? mat.content : {};
   content.vocab = vocab;
-  if (grammar && !content.grammar_tip) content.grammar_tip = grammar;
-  await sb.from('class_materials').upsert({ class_id: classId, content, model: MODEL, generated_at: nowISO }, { onConflict: 'class_id' });
+  await sb.from('class_materials').upsert({ class_id: classId, content, model: MODEL, generated_at: nowISO2 }, { onConflict: 'class_id' });
 
-  return { ok: true, content: { vocab, exercises, grammar_tip: grammar }, counts: { vocab: vocab.length, exercises: exercises.length }, source };
+  // Erst wenn fertig: Schüler der Stunde per E-Mail benachrichtigen (einmal pro Schüler/Stunde).
+  let mailed = 0;
+  try { mailed = await sendNachbereitungMails(sb, classId, cls, post_content); } catch (e) {}
+
+  return { ok: true, content: post_content, counts: { vocab: vocab.length, exercises: exercises.length, errors: post_content.errors.length }, mailed, source };
 }
+
+async function sendNachbereitungMails(sb, classId, cls, pc) {
+  if (!process.env.BREVO_API_KEY) return 0;
+  const site = process.env.SITE_URL || 'https://www.deutschoderwas-club.de';
+  const { data: bks } = await sb.from('bookings').select('user_id').eq('class_id', classId).eq('status', 'booked');
+  if (!bks || !bks.length) return 0;
+  const ids = [...new Set(bks.map(b => b.user_id))];
+  const { data: profs } = await sb.from('profiles').select('id,name,email,email_optout').in('id', ids);
+  const thema = cls.topic || cls.title || 'deine Stunde';
+  const nVok = (pc.vocab || []).length, nUb = (pc.exercises || []).length, nErr = (pc.errors || []).length;
+  let sent = 0;
+  for (const p of (profs || [])) {
+    if (!p.email || p.email_optout) continue;
+    const ref = `${classId}:${p.id}`;
+    const { error: logErr } = await sb.from('email_log').insert({ kind: 'nachbereitung', ref, user_id: p.id });
+    if (logErr) continue; // schon verschickt
+    const vorname = (p.name || '').split(' ')[0] || 'du';
+    const html = nachbereitungEmail({ vorname, thema, level: cls.level || '', nVok, nUb, nErr, link: `${site}/nachbereitung.html?id=${classId}` });
+    const r = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sender: { name: 'Julia | deutschoderwas', email: process.env.BREVO_SENDER_EMAIL || 'info@deutschoderwas.de' },
+        to: [{ email: p.email, name: p.name || undefined }],
+        subject: `📖 Deine Nachbereitung: ${thema}`,
+        htmlContent: html,
+      }),
+    });
+    if (r.ok) sent++; else await sb.from('email_log').delete().eq('kind', 'nachbereitung').eq('ref', ref);
+  }
+  return sent;
+}
+
+function nachbereitungEmail({ vorname, thema, level, nVok, nUb, nErr, link }) {
+  const esc = (s) => String(s == null ? '' : s).replace(/[<>&]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c]));
+  const ff = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
+  const bits = [];
+  if (nVok) bits.push(`📖 ${nVok} Vokabeln`);
+  if (nUb) bits.push(`✏️ ${nUb} Übungen`);
+  if (nErr) bits.push(`🔴 ${nErr} Fehlerkorrekturen`);
+  const list = bits.join(' · ');
+  return `<!DOCTYPE html><html lang="de"><head><meta charset="utf-8"></head>
+<body style="margin:0;background:#FDF8F1;font-family:${ff}">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="padding:24px 14px"><tr><td align="center">
+    <table role="presentation" width="100%" style="max-width:520px;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 8px 26px rgba(0,0,0,.08)">
+      <tr><td style="height:6px;background:linear-gradient(135deg,#DD0000,#FFCE00)"></td></tr>
+      <tr><td style="padding:24px 28px 6px">
+        <div style="font-size:13px;font-weight:800;letter-spacing:.04em;color:#9CA3AF;text-transform:uppercase">deutschoderwas</div>
+        <h1 style="margin:8px 0 0;font-size:22px;color:#1a1a1a">📖 Deine Nachbereitung ist da!</h1>
+      </td></tr>
+      <tr><td style="padding:12px 28px 0;font-size:15px;line-height:1.6;color:#1a1a1a">
+        Hallo ${esc(vorname)},<br><br>
+        deine Nachbereitung zu <b>${esc(thema)}</b>${level ? ` (${esc(level)})` : ''} ist fertig.${list ? `<br><span style="color:#6f6a62;font-size:14px">${esc(list)}</span>` : ''}
+      </td></tr>
+      <tr><td align="center" style="padding:22px 28px 6px">
+        <a href="${esc(link)}" style="display:inline-block;background:linear-gradient(135deg,#2bbfbf,#138a8a);color:#063b35;font-weight:800;font-size:15px;text-decoration:none;padding:14px 30px;border-radius:50px">📖 Zur Nachbereitung</a>
+      </td></tr>
+      <tr><td style="padding:18px 28px 26px;font-size:12px;color:#9CA3AF;text-align:center">Üb die neuen Vokabeln gleich im Trainer · deutschoderwas-club.de</td></tr>
+    </table>
+  </td></tr></table>
+</body></html>`;
+}
+
+function clip(s, n) { s = String(s == null ? '' : s).trim(); return s ? s.slice(0, n) : null; }
+function strList(a, max) { return (Array.isArray(a) ? a : []).map(x => String(x || '').trim()).filter(Boolean).slice(0, max); }
 
 function htmlToText(html) {
   return String(html || '')
@@ -134,47 +221,21 @@ function htmlToText(html) {
     .trim();
 }
 
-function buildPrompt(cls, srcText, existing, source) {
-  const vocabList = existing.length ? existing.map(v => `- ${v.de}${v.info ? ' = ' + v.info : ''}`).join('\n') : '(noch keine)';
-  const quelle = source === 'pdf' ? 'die hochgeladene Mitschrift (PDF)' : 'die Live-Tafel aus dem Unterricht';
-  return `Du bist Amanda, eine erfahrene Deutschlehrerin. Du erstellst die NACHBEREITUNG für eine Deutsch-Unterrichtsstunde.
-
-STUNDE:
-- Titel: ${cls.title || '—'}
-- Niveau: ${cls.level || '—'}
-- Thema: ${cls.topic || cls.title || '—'}
-
-QUELLE (${quelle}) – das wurde im Unterricht behandelt:
-"""
-${srcText}
-"""
-
-BEREITS ERFASSTE VOKABELN DER STUNDE:
-${vocabList}
-
-AUFGABE:
-Erstelle passende, abwechslungsreiche Nachbereitungs-Übungen, die GENAU zu dem oben Behandelten passen (gleiche Wörter, Grammatik, Beispiele). Niveau-gerecht für ${cls.level || 'das Niveau'}.
-
-Antworte AUSSCHLIESSLICH mit gültigem JSON (kein Text davor/danach), exakt in diesem Format:
-{
-  "vocab": [ { "de": "das Wort", "info": "Bedeutung/Erklärung auf Deutsch (einfach)" } ],
-  "grammar_tip": { "title": "kurzer Titel", "text": "1-3 Sätze Erklärung des wichtigsten Grammatikpunkts der Stunde" },
-  "exercises": [
-    { "type": "choice", "q": "Frage?", "options": ["A","B","C"], "answer": 0 },
-    { "type": "gap", "text": "Ich ___ nach Hause.", "answer": "gehe", "hint": "gehen, 1. Person" },
-    { "type": "match", "intro": "Ordne zu:", "pairs": [ { "l": "Hund", "r": "dog" } ] },
-    { "type": "order", "answer": "Ich gehe heute ins Kino.", "hint": "Zeitangabe vor Ort" },
-    { "type": "listen", "q": "Was hörst du?", "options": ["A","B","C"], "answer": 1 }
-  ]
+function normGrammar(g) {
+  if (!g || typeof g !== 'object') return null;
+  const title = clip(g.title, 120);
+  const headers = strList(g.headers, 6);
+  const rows = (Array.isArray(g.rows) ? g.rows : []).map(r => (Array.isArray(r) ? r.map(c => String(c == null ? '' : c)) : [])).filter(r => r.length).slice(0, 20);
+  const tips = (Array.isArray(g.tips) ? g.tips : []).map(t => ({ label: clip(t.label, 80) || '', text: clip(t.text, 400) || '' })).filter(t => t.text).slice(0, 6);
+  if (!title && !rows.length && !tips.length) return null;
+  return { title: title || 'Grammatik', headers, rows, tips };
 }
-
-REGELN:
-- "vocab": ergänze 3-10 wichtige Vokabeln aus der Quelle (auch die bereits erfassten dürfen erneut vorkommen).
-- "exercises": 6-9 Übungen, gemischte Typen (choice, gap, match, order, listen).
-- Bei "choice" und "listen" ist "answer" der Index (0-basiert) der richtigen Option.
-- Alles auf Deutsch, freundlich, klar. Keine Markdown-Codeblöcke, nur reines JSON.`;
+function normSpeaking(a) {
+  return (Array.isArray(a) ? a : []).map(s => ({ task: clip(s.task || s.q, 300) || '', example: clip(s.example || s.answer, 500) || '' })).filter(s => s.task).slice(0, 8);
 }
-
+function normErrors(a) {
+  return (Array.isArray(a) ? a : []).map(e => ({ falsch: clip(e.falsch, 200) || '', richtig: clip(e.richtig, 200) || '', erklaerung: clip(e.erklaerung || e.erklarung, 400) || '' })).filter(e => e.falsch && e.richtig).slice(0, 10);
+}
 function normExercises(arr) {
   const out = [];
   (Array.isArray(arr) ? arr : []).forEach(e => {
@@ -200,4 +261,51 @@ function normExercises(arr) {
     }
   });
   return out;
+}
+
+function buildPrompt(cls, srcText, existing, source) {
+  const vocabList = existing.length ? existing.map(v => `- ${v.de}${v.info ? ' = ' + v.info : ''}`).join('\n') : '(noch keine)';
+  const quelle = source === 'pdf' ? 'die hochgeladene Mitschrift (PDF)' : 'die Live-Tafel aus dem Unterricht';
+  return `Du bist Amanda, eine erfahrene Deutschlehrerin. Erstelle ein vollständiges, schönes NACHBEREITUNGS-HANDOUT für eine Deutsch-Unterrichtsstunde – streng auf Basis dessen, was unten in der Quelle steht.
+
+STUNDE:
+- Titel: ${cls.title || '—'}
+- Niveau: ${cls.level || '—'}
+- Thema: ${cls.topic || cls.title || '—'}
+
+QUELLE (${quelle}) – das wurde im Unterricht behandelt:
+"""
+${srcText}
+"""
+
+BEREITS ERFASSTE VOKABELN:
+${vocabList}
+
+Antworte AUSSCHLIESSLICH mit gültigem JSON (kein Text, keine Codeblöcke) in GENAU diesem Format:
+{
+  "thema": "1-3 Sätze: worum ging es in der Stunde (für die Zusammenfassung).",
+  "saetze": ["wichtiger Beispielsatz aus der Stunde", "noch einer", "..."],
+  "vocab": [ { "de": "das Wort", "info": "Bedeutung auf Deutsch oder Englisch", "example": "kurzer Beispielsatz" } ],
+  "grammar": {
+    "title": "Grammatik-Schwerpunkt der Stunde",
+    "headers": ["Spalte 1","Spalte 2","..."],
+    "rows": [["Zelle","Zelle","..."]],
+    "tips": [ { "label": "Merkpunkt", "text": "kurze Erklärung" } ]
+  },
+  "exercises": [
+    { "type": "choice", "q": "Satz mit ___ Lücke?", "options": ["A","B","C"], "answer": 0 },
+    { "type": "gap", "text": "Ich ___ nach Hause.", "answer": "gehe", "hint": "gehen" }
+  ],
+  "speaking": [ { "task": "Sprech-/Schreibaufgabe", "example": "Beispielantwort" } ],
+  "errors": [ { "falsch": "typischer Fehler aus der Stunde", "richtig": "korrigierte Version", "erklaerung": "warum" } ]
+}
+
+REGELN:
+- ALLES muss zum oben Behandelten passen (gleiche Wörter, Grammatik, Beispiele). Nichts erfinden, was nicht zum Thema passt.
+- "vocab": 6-14 Vokabeln mit Bedeutung UND Beispielsatz (die bereits erfassten gern erneut).
+- "grammar": nur ausfüllen, wenn es einen klaren Grammatikpunkt gibt; sonst "tips" mit 1-2 Merkpunkten, "rows":[] lassen.
+- "exercises": 6-9 Lückenübungen (type "choice" mit 3 Optionen, "answer" = Index 0-basiert; oder "gap").
+- "speaking": 2-4 freie Sprech-/Schreibaufgaben mit Beispielantwort.
+- "errors": 2-5 echte Fehlerkorrekturen, wenn die Quelle Fehler/Korrekturen zeigt; sonst [].
+- Deutsch, freundlich, klar. Nur reines JSON.`;
 }
