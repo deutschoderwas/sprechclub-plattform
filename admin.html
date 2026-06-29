@@ -614,12 +614,26 @@ function renderKlassen(){
         <button class="btn btn-ghost" onclick="toggleAtt('${c.id}')">✅ Anwesenheit eintragen</button>
         <a class="btn btn-ghost" href="tafel.html?id=${c.id}" target="_blank" rel="noopener">🖊️ Live-Tafel</a>
         <button class="btn btn-ghost" onclick="genMaterial('${c.id}')">${c._hasMat?'🔄 KI-Übungen neu':'✨ KI-Übungen erstellen'}</button>
+        <button class="btn btn-ghost" onclick="toggleNb('${c.id}')">🤖 Auto-Nachbereitung</button>
         <button class="btn btn-ghost" onclick="previewInteractive('${c.id}')">👁️ Schüler-Vorschau</button>
         <button class="btn btn-ghost" onclick="editClass('${c.id}')">Bearbeiten · Material</button>
         <button class="btn btn-ghost" onclick="cancelClass('${c.id}')">Stunde absagen</button>
       </div>
       <span class="muted" id="genMsg-${c.id}" style="display:block;margin-top:8px">${c._hasMat?'✓ KI-Material vorhanden':''}</span>
       <div id="genPrev-${c.id}" style="margin-top:6px"></div>
+      <div id="nb-${c.id}" style="display:none;margin-top:10px;background:#F2FBFA;border:1px solid #CDEEEA;border-radius:12px;padding:12px 14px">
+        <div style="font-weight:800;font-size:13px;margin-bottom:4px">🤖 Automatische Nachbereitung</div>
+        <p class="muted" style="font-size:12px;margin:0 0 10px">Quelle wählen → die KI erstellt Übungen, Grammatik-Tipp &amp; Vokabeln. Die Vokabeln fließen automatisch in den Vokabeltrainer; die Schüler sehen die Nachbereitung im Schülerbereich.</p>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px"><input type="radio" name="nbsrc-${c.id}" value="tafel" checked onchange="nbSetSrc('${c.id}','tafel')"> 🖊️ Aus der Live-Tafel übernehmen</label>
+          <label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;font-size:14px"><input type="radio" name="nbsrc-${c.id}" value="pdf" onchange="nbSetSrc('${c.id}','pdf')"> <span>📄 Mitschrift-PDF hochladen<br><input type="file" accept="application/pdf" id="nbFile-${c.id}" onchange="nbPdf('${c.id}',this)" style="margin-top:6px;font-size:12px"><span class="muted" id="nbPdfMsg-${c.id}" style="display:block;font-size:12px;margin-top:4px"></span></span></label>
+        </div>
+        <div style="margin-top:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-primary" style="padding:8px 16px" onclick="genNachbereitung('${c.id}')">✨ Nachbereitung erstellen</button>
+          <span class="muted" id="nbMsg-${c.id}" style="font-weight:700;font-size:13px"></span>
+        </div>
+        <div id="nbPrev-${c.id}" style="margin-top:8px"></div>
+      </div>
       <div id="att-${c.id}" style="display:none;margin-top:10px"></div>
       <div id="edit-${c.id}" style="display:none;margin-top:10px">
         <div class="formrow">
@@ -994,6 +1008,56 @@ async function genMaterial(id){
       ${c.grammar_tip?'<br>📌 Grammatik: '+ (c.grammar_tip.title||'') :''}
       <br><span class="muted">Schüler sehen das jetzt im Schülerbereich unter „Übungen starten".</span></div>`;
   } catch(e){ msg.textContent='❌ Netzwerkfehler: '+e.message; }
+}
+
+// ===== Automatische Nachbereitung (PDF-Mitschrift ODER Live-Tafel) =====
+let nbState={}, _pdfjs=null;
+function toggleNb(id){ const el=document.getElementById('nb-'+id); if(el) el.style.display = el.style.display==='none'?'block':'none'; }
+function nbSetSrc(id,src){ nbState[id]=Object.assign(nbState[id]||{},{source:src}); }
+async function ensurePdfjs(){
+  if(_pdfjs) return _pdfjs;
+  await new Promise((res,rej)=>{ const s=document.createElement('script'); s.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js'; s.onload=res; s.onerror=()=>rej(new Error('pdf.js lädt nicht')); document.head.appendChild(s); });
+  _pdfjs=window.pdfjsLib;
+  _pdfjs.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  return _pdfjs;
+}
+async function nbPdf(id, input){
+  const f=input.files&&input.files[0]; const msg=document.getElementById('nbPdfMsg-'+id);
+  if(!f) return;
+  msg.textContent='⏳ PDF wird gelesen…';
+  try{
+    const pdfjs=await ensurePdfjs();
+    const buf=await f.arrayBuffer();
+    const pdf=await pdfjs.getDocument({data:buf}).promise;
+    let text='';
+    for(let p=1;p<=pdf.numPages;p++){ const page=await pdf.getPage(p); const c=await page.getTextContent(); text+=c.items.map(i=>i.str).join(' ')+'\n'; }
+    text=text.trim();
+    nbState[id]=Object.assign(nbState[id]||{},{ pdfText:text, source:'pdf' });
+    const r=document.querySelector('input[name="nbsrc-'+id+'"][value="pdf"]'); if(r) r.checked=true;
+    msg.textContent = text.length>=20 ? ('✓ PDF gelesen ('+text.length+' Zeichen)') : '⚠️ Kein Text gefunden (gescanntes PDF?). Bitte Live-Tafel nutzen.';
+  }catch(e){ msg.textContent='❌ PDF konnte nicht gelesen werden: '+e.message; }
+}
+async function genNachbereitung(id){
+  const st=nbState[id]||{source:'tafel'}; const src=st.source||'tafel';
+  const msg=document.getElementById('nbMsg-'+id), prev=document.getElementById('nbPrev-'+id);
+  if(src==='pdf' && (!st.pdfText || st.pdfText.length<20)){ msg.textContent='Bitte zuerst ein PDF mit Text hochladen.'; return; }
+  msg.textContent='⏳ Amanda erstellt die Nachbereitung… (10–25 Sek.)'; prev.innerHTML='';
+  const { data:{ session } } = await sb.auth.getSession();
+  try{
+    const r=await fetch('/api/generate-nachbereitung',{ method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token}, body: JSON.stringify({ classId:id, source:src, pdfText: src==='pdf'?st.pdfText:undefined }) });
+    const j=await r.json();
+    if(!r.ok || !j.ok){
+      const map={anthropic_key_missing:'ANTHROPIC_API_KEY fehlt in Vercel.',not_admin:'Keine Rechte.',class_not_found:'Stunde nicht gefunden.',no_pdf_text:'Das PDF enthielt keinen lesbaren Text.',no_tafel:'Die Live-Tafel ist noch leer – erst etwas auf der Tafel notieren.',parse_failed:'KI-Antwort unlesbar – bitte nochmal.',empty_result:'Kein Ergebnis – Quelle zu kurz?',anthropic_error:'KI-Fehler'};
+      msg.textContent='❌ '+(map[j.error]||j.error||'Fehler')+(j.detail?(' — '+j.detail):''); return;
+    }
+    msg.textContent='✓ Nachbereitung erstellt!';
+    const c=j.content||{};
+    prev.innerHTML=`<div style="background:#fff;border-radius:10px;padding:10px 12px;font-size:13px">
+      <b>Ergebnis:</b> ${j.counts.vocab} Vokabeln · ${j.counts.exercises} Übungen${c.grammar_tip?' · 📌 '+esc(c.grammar_tip.title):''}<br>
+      <span class="muted">Vokabeln sind jetzt im Vokabeltrainer · Schüler sehen die Nachbereitung im Schülerbereich.</span>
+      <div style="margin-top:6px"><button class="btn btn-ghost" style="padding:4px 12px;font-size:12px" onclick="previewInteractive('${id}')">👁️ So sehen es die Schüler</button></div>
+    </div>`;
+  }catch(e){ msg.textContent='❌ Netzwerkfehler: '+e.message; }
 }
 
 let NACHR_STUDENTS=[];
