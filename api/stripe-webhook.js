@@ -198,6 +198,18 @@ export default async function handler(req, res) {
         // Probestunde nur EINMAL pro Person: nur gutschreiben, wenn dieser Checkout eine Testphase hatte.
         if (s.metadata?.trial === '1') {
           await grant(userId, 1, 'trial:' + (s.metadata?.plan || 'abo'), 'trial_' + s.id, 7);
+          // Probeschüler markieren + Vermerk: woher (Stripe-Probestunde) & welches Paket er möchte
+          if (userId) {
+            const PLAN_LABEL = { testpass:'Ab und zu Pass (4 Std/Monat)', gelegenheitspass:'Gelegenheitspass (8 Std/Monat)', allinclusive:'Profi-Pass (12 Std/Monat)' };
+            const planLbl = PLAN_LABEL[s.metadata?.plan] || (s.metadata?.plan || 'Abo');
+            const note = '🎟️ Probeschüler · interessiert an: ' + planLbl + ' · Probestunde über Stripe gestartet (Karte hinterlegt) · ' + new Date().toLocaleDateString('de-DE');
+            const { data: pr } = await sb.from('profiles').select('notes').eq('id', userId).maybeSingle();
+            const patch = { status: 'probeschuler' };
+            if (!pr || !(pr.notes || '').includes('Probeschüler')) {
+              patch.notes = ((pr && pr.notes) ? pr.notes + '\n' : '') + note;
+            }
+            await sb.from('profiles').update(patch).eq('id', userId);
+          }
         }
         // Ohne Trial (Rückkehrer:in): keine Gratis-Probestunde — die Monatsstunden kommen über invoice.paid.
       }
@@ -211,6 +223,13 @@ export default async function handler(req, res) {
         const plan = sub.metadata?.plan || 'abo';
         await saveCustomer(userId, inv.customer);   // Kundennummer merken
         await grant(userId, stunden, 'abo:' + plan, 'inv_' + inv.id, 31);
+        // Aus Probeschüler wird zahlendes Mitglied -> Status auf aktiv (nur wenn vorher Probeschüler)
+        if (userId) {
+          const { data: pr } = await sb.from('profiles').select('status').eq('id', userId).maybeSingle();
+          if (pr && pr.status === 'probeschuler') {
+            await sb.from('profiles').update({ status: 'aktiv' }).eq('id', userId);
+          }
+        }
       }
     } else if (event.type === 'customer.subscription.deleted') {
       // Abo ist tatsächlich beendet (zum Periodenende): ALLE gesammelten Stunden verfallen -> 0.
