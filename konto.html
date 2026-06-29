@@ -354,8 +354,9 @@ let credits=0, stats={};
 
 const _qp = new URLSearchParams(location.search);
 if (_qp.get('kauf')==='ok') document.getElementById('kaufOk').style.display='block';
-if (_qp.get('pass')==='ok'){ const k=document.getElementById('kaufOk'); k.textContent='🎉 Willkommen im Profi-Pass! 12 LIVE-Stunden pro Monat sind jetzt für dich freigeschaltet.'; k.style.display='block'; }
+if (_qp.get('pass')==='ok'){ const k=document.getElementById('kaufOk'); k.textContent='🎉 Willkommen im Club! Deine Mitgliedschaft ist jetzt aktiv.'; k.style.display='block'; }
 function passActive(){ return profile.pass_until && new Date(profile.pass_until) > new Date(); }
+function currentPlan(){ const m={testpass:['Ab und zu Pass',4],gelegenheitspass:['Gelegenheitspass',8],allinclusive:['Profi-Pass',12],sparpass:['Spar Pass',30]}; for(const r of (creditLog||[])){ const x=/^(?:abo|trial|kauf):(\w+)/.exec(r.reason||''); if(x&&m[x[1]]) return {label:m[x[1]][0],h:m[x[1]][1]}; } return {label:'Mitgliedschaft',h:null}; }
 function bucheStunde(e){ if(e&&e.preventDefault)e.preventDefault(); if(credits>0||passActive()){ go('kalender'); } else { location.href='index.html#preise'; } return false; }
 // Stripe-Kundenportal öffnen — Abo verwalten / kündigen (Kündigung zum Periodenende; danach verfallen die Stunden).
 async function openPortal(){
@@ -733,7 +734,7 @@ function renderDashboard(){
       <div><h1>${greet}</h1><p class="muted">Schön, dass du übst. Bleib dran — Sprechen lernt man durch Sprechen. 💪</p></div>
       <div class="streak-chip">🔥 ${s.streak} ${s.streak===1?'Woche':'Wochen'} Streak</div>
     </div>
-    ${passActive()?`<div class="next-hero" style="background:linear-gradient(135deg,var(--turq),var(--turq-dark));color:#fff"><div style="flex:1"><div class="when" style="color:#fff">⭐ Profi-Pass aktiv</div><div style="color:rgba(255,255,255,.85);font-size:13px">12 LIVE-Stunden pro Monat · verlängert sich am ${fmtShort(new Date(profile.pass_until))} · <a href="#" onclick="openPortal();return false" style="color:#fff;text-decoration:underline;font-weight:600">Abo verwalten / kündigen</a></div></div><a class="btn" style="background:#fff;color:var(--turq-dark)" href="#" onclick="return bucheStunde(event)">Stunde buchen</a></div>`:''}
+    ${passActive()?`<div class="next-hero" style="background:linear-gradient(135deg,var(--turq),var(--turq-dark));color:#fff"><div style="flex:1"><div class="when" style="color:#fff">⭐ ${currentPlan().label} aktiv</div><div style="color:rgba(255,255,255,.85);font-size:13px">${currentPlan().h} LIVE-Stunden pro Monat · verlängert sich am ${fmtShort(new Date(profile.pass_until))} · <a href="#" onclick="openPortal();return false" style="color:#fff;text-decoration:underline;font-weight:600">Abo verwalten / kündigen</a></div></div><a class="btn" style="background:#fff;color:var(--turq-dark)" href="#" onclick="return bucheStunde(event)">Stunde buchen</a></div>`:''}
     <div class="rankbar">
       <div class="top"><span class="rank">${s.rank.name} · ${s.points} Punkte</span>
         <span class="muted">${s.next?('noch '+(s.next.min-s.points)+' bis '+s.next.name):'Höchster Rang erreicht 🎉'}</span></div>
