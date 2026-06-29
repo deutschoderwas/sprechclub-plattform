@@ -867,6 +867,7 @@ async function doRegister(){
   if (!email.includes('@')) return authMsg(false,'Bitte gültige E-Mail eingeben.');
   if (pass.length<8) return authMsg(false,'Das Passwort braucht mindestens 8 Zeichen.');
   const { data, error } = await sb.auth.signUp({ email, password: pass, options: { data:{name}, emailRedirectTo: location.origin + '/schuelerbereich' } });
+  if(!error){ try{ fetch('/api/welcome',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,name})}); }catch(e){} }
   if (error){ if (/already|registered/i.test(error.message)) return authMsg(false,'Diese E-Mail hat schon ein Konto. Wechsle auf „Anmelden".'); return authMsg(false,'Fehler: '+error.message); }
   if (data?.user && !data?.session) return authMsg(true,'✓ Fast geschafft! Bestätige bitte den Link in deiner Mail (auch Spam prüfen).');
   authMsg(true,'✓ Konto erstellt!'); afterAuth(data.user);
