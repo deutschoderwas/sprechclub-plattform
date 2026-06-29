@@ -1156,7 +1156,7 @@ function bdayLabel(p){ if(!p.birthday) return '<span class="muted">–</span>'; 
 async function authToken(){ const { data } = await sb.auth.getSession(); return data?.session?.access_token || ''; }
 
 async function loadSchueler(){
-  const { data } = await sb.from('profiles').select('id,name,email,credits,status,birthday,inactive_until,level,notes,started_at,target_level,native_language,goal,is_admin,is_teacher,created_at,pass_until').limit(2000);
+  const { data } = await sb.from('profiles').select('id,name,email,credits,status,birthday,inactive_until,level,notes,started_at,target_level,native_language,goal,is_admin,is_teacher,created_at,pass_until,email_optout').limit(2000);
   SCHUELER = data || [];
   try{ const { data:_cl } = await sb.from('credit_log').select('user_id,reason'); const { data:_bk } = await sb.from('bookings').select('user_id'); window.BOOKED_SET=new Set((_bk||[]).map(x=>x.user_id)); window.PAID_SET=new Set(); window.TRIAL_SET=new Set(); (_cl||[]).forEach(c=>{ const rs=c.reason||''; if(/^(abo|kauf):/.test(rs)) PAID_SET.add(c.user_id); else if(/^trial:/.test(rs)) TRIAL_SET.add(c.user_id); }); }catch(e){ window.PAID_SET=window.PAID_SET||new Set(); window.TRIAL_SET=window.TRIAL_SET||new Set(); window.BOOKED_SET=window.BOOKED_SET||new Set(); }
   document.getElementById('schueler').innerHTML = `
@@ -1310,7 +1310,7 @@ async function openStudentCard(id){
       <div style="background:#F7F4FF;border:1px solid #E5DEFB;border-radius:14px;padding:14px 16px;margin-bottom:14px">
         <b>📋 Kontakt-Historie</b>
         <div class="muted" style="margin-top:6px;font-size:13px">📆 Registriert (Konto erstellt): <b style="color:#1A1A1A">${p.created_at?new Date(p.created_at).toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric'}):'—'}</b>${p.started_at?` &nbsp;·&nbsp; Unterricht seit ${p.started_at.split('-').reverse().join('.')}`:''}</div>
-        <div style="margin-top:10px;font-weight:700;font-size:13px;color:#1A1A1A">🎫 Abo / Mitgliedschaft</div><div id="cSubInfo" class="muted" style="margin-top:4px;font-size:13px">lädt…</div><div style="margin-top:10px;font-weight:700;font-size:13px;color:#1A1A1A">✉️ E-Mail-Verlauf</div>
+        ${(p.status&&p.status!=='aktiv')||p.email_optout?`<div style="margin-top:8px;font-size:13px">${p.status==='pause'?'⏸️ <b style="color:#92400E">Pausiert</b> &nbsp;':''}${p.status==='beendet'?'🚪 <b style="color:#9A3412">Teilnahme beendet</b> &nbsp;':''}${p.email_optout?'🔕 <b style="color:#9A3412">Möchte keine E-Mails</b>':''}</div>`:''}<div style="margin-top:10px;font-weight:700;font-size:13px;color:#1A1A1A">🎫 Abo / Mitgliedschaft</div><div id="cSubInfo" class="muted" style="margin-top:4px;font-size:13px">lädt…</div><div style="margin-top:10px;font-weight:700;font-size:13px;color:#1A1A1A">✉️ E-Mail-Verlauf</div>
         <div id="cEmailLog" class="muted" style="margin-top:4px;font-size:13px">lädt…</div>
         <div class="muted" style="margin-top:9px;font-size:11.5px;line-height:1.5;border-top:1px dashed #E5DEFB;padding-top:8px">⚙️ <b>Läuft automatisch:</b> Buchungs-Bestätigung, Erinnerung vor der Stunde, Geburtstags-Gruß, Guthaben-Angebot bei ≤ 1 Stunde, „Wir vermissen dich"-Mail. Die Willkommens-Mail geht automatisch raus, wenn du den Schüler anlegst.</div>
       </div>
