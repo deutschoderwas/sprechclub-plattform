@@ -76,5 +76,62 @@ export default async function handler(req, res) {
     await sb.from('email_log').delete().eq('kind', 'community').eq('ref', ref);
     return res.status(200).json({ ok: false, brevo: r.status });
   }
-  return res.status(200).json({ ok: true });
+
+  // --- Auch ALLE aktiven Mitglieder benachrichtigen (außer dem Autor) ---
+  // Aktiv = Guthaben > 0 ODER aktiver Pass. Kein Opt-out, keine Lehrer/Admins.
+  // Läuft im selben Drossel-Fenster -> jedes Mitglied bekommt max. 1 Mail pro Kanal/Stunde.
+  let membersNotified = 0;
+  try {
+    const nowISO = new Date().toISOString();
+    const { data: members } = await sb.from('profiles')
+      .select('email,name')
+      .eq('email_optout', false).eq('is_admin', false).eq('is_teacher', false)
+      .neq('id', user.id)
+      .or('credits.gt.0,pass_until.gt.' + nowISO);
+    const recips = (members || []).filter(m => m.email);
+    if (recips.length) {
+      const memberHtml = communityMemberMail(chName, who, site, ff, esc);
+      const versions = recips.map(m => ({ to: [{ email: m.email, name: m.name || undefined }] }));
+      for (let i = 0; i < versions.length; i += 500) {
+        const rr = await fetch('https://api.brevo.com/v3/smtp/email', {
+          method: 'POST',
+          headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            sender: { name: 'deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'info@deutschoderwas.de' },
+            subject: `💬 Neue Nachricht in der Community (${chName})`,
+            htmlContent: memberHtml,
+            messageVersions: versions.slice(i, i + 500),
+          }),
+        });
+        if (rr.ok) membersNotified += Math.min(500, versions.length - i);
+      }
+    }
+  } catch (e) { console.error('community members notify', e); }
+
+  return res.status(200).json({ ok: true, membersNotified });
+}
+
+// Mitglieder-Mail (Schüler-Sicht) im deutschoderwas-Look
+function communityMemberMail(chName, who, site, ff, esc) {
+  return `<!DOCTYPE html><html lang="de"><head><meta charset="utf-8"></head>
+<body style="margin:0;background:#FFF8E0;font-family:${ff}">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="padding:24px 14px"><tr><td align="center">
+    <table role="presentation" width="100%" style="max-width:520px;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 8px 26px rgba(0,0,0,.08)">
+      <tr><td style="height:6px;background:#1A1A1A"></td></tr>
+      <tr><td style="height:4px;background:#DD0000"></td></tr>
+      <tr><td style="height:4px;background:#FFCE00"></td></tr>
+      <tr><td style="padding:22px 26px 6px">
+        <div style="font-size:13px;font-weight:800;letter-spacing:.04em;color:#9CA3AF;text-transform:uppercase">deutschoderwas club</div>
+        <h1 style="margin:8px 0 0;font-size:22px;color:#1A1A1A">💬 Neues in der Community</h1>
+      </td></tr>
+      <tr><td style="padding:12px 26px 0;font-size:15px;line-height:1.6;color:#1A1A1A">
+        Im Kanal <b>${esc(chName)}</b> gibt es eine neue Nachricht (zuletzt von <b>${esc(who)}</b>). Schau vorbei und misch mit! 🎉
+      </td></tr>
+      <tr><td align="center" style="padding:20px 26px 6px">
+        <a href="${esc(site)}/schuelerbereich#community" style="display:inline-block;background:linear-gradient(135deg,#2DD4BF,#14B8A6);color:#06403A;font-weight:800;font-size:15px;text-decoration:none;padding:13px 28px;border-radius:50px">💬 Zur Community</a>
+      </td></tr>
+      <tr><td style="padding:18px 26px 26px;font-size:12px;color:#9CA3AF;text-align:center">Du bekommst höchstens eine solche Mail pro Kanal und Stunde · deutschoderwas-club.de</td></tr>
+    </table>
+  </td></tr></table>
+</body></html>`;
 }
