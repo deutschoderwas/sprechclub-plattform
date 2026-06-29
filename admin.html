@@ -614,7 +614,7 @@ function renderKlassen(){
         <button class="btn btn-ghost" onclick="toggleAtt('${c.id}')">✅ Anwesenheit eintragen</button>
         <a class="btn btn-ghost" href="tafel.html?id=${c.id}" target="_blank" rel="noopener">🖊️ Live-Tafel</a>
         <button class="btn btn-ghost" onclick="genMaterial('${c.id}')">${c._hasMat?'🔄 KI-Übungen neu':'✨ KI-Übungen erstellen'}</button>
-        <button class="btn btn-ghost" onclick="previewMaterial('${c.id}')">👁️ Material prüfen</button>
+        <button class="btn btn-ghost" onclick="previewInteractive('${c.id}')">👁️ Schüler-Vorschau</button>
         <button class="btn btn-ghost" onclick="editClass('${c.id}')">Bearbeiten · Material</button>
         <button class="btn btn-ghost" onclick="cancelClass('${c.id}')">Stunde absagen</button>
       </div>
@@ -851,6 +851,91 @@ async function createClass(){
   const { error } = await sb.from('classes').insert(rows);
   document.getElementById('neuMsg').textContent = error ? 'Fehler: '+error.message : `✓ ${rows.length} Stunde(n) angelegt.`;
 }
+
+// ===== Interaktive Schüler-Vorschau (durchklicken wie ein Schüler; Lösung erst nach „Prüfen") =====
+let PV = null;
+function pvShuf(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+function pvNorm(s){ return String(s==null?'':s).toLowerCase().replace(/[.,!?;:„"»«]/g,'').replace(/\s+/g,' ').trim(); }
+async function previewInteractive(id){
+  const [{ data:cls }, { data:mat }, { data:cn }] = await Promise.all([
+    sb.from('classes').select('title,topic,level,starts_at').eq('id', id).maybeSingle(),
+    sb.from('class_materials').select('content').eq('class_id', id).maybeSingle(),
+    sb.from('class_notes').select('post_content').eq('class_id', id).maybeSingle(),
+  ]);
+  const c = mat && mat.content;
+  const post = (c && c.post) || (cn && cn.post_content) || null;
+  const items = [];
+  if(c && c.pre && Array.isArray(c.pre.exercises)) c.pre.exercises.forEach(e=>items.push(Object.assign({_phase:'Vorbereitung'}, e)));
+  if(post && Array.isArray(post.exercises)) post.exercises.forEach(e=>items.push(Object.assign({_phase:'Nachbereitung'}, e)));
+  if(!items.length){ alert('Für diese Stunde gibt es noch keine KI-Übungen. Erst „✨ KI-Übungen erstellen".'); return; }
+  const fmt = new Intl.DateTimeFormat('de-DE',{ timeZone:'Europe/Berlin', weekday:'long', day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
+  const head = cls ? `📅 ${cls.starts_at?fmt.format(new Date(cls.starts_at)):''} · ${cls.title||''}${cls.topic?' · '+cls.topic:''}` : '';
+  PV = { items, idx:0, head, answered:false, sel:null, order:null };
+  let ov = document.getElementById('pvOverlay');
+  if(!ov){ ov=document.createElement('div'); ov.id='pvOverlay'; ov.style.cssText='position:fixed;inset:0;z-index:10000;background:rgba(26,26,26,.55);display:flex;align-items:flex-start;justify-content:center;padding:24px 14px;overflow:auto'; ov.onclick=(e)=>{ if(e.target===ov) pvClose(); }; document.body.appendChild(ov); }
+  ov.style.display='flex';
+  pvRender();
+}
+function pvClose(){ const ov=document.getElementById('pvOverlay'); if(ov) ov.style.display='none'; PV=null; }
+function pvRender(){
+  const ov=document.getElementById('pvOverlay'); if(!ov||!PV) return;
+  const e=PV.items[PV.idx]; PV.answered=false; PV.sel=null; PV.order=null;
+  const typeLbl={choice:'Multiple Choice',gap:'Lückentext',match:'Zuordnen',order:'Satzbau',listen:'Hören'}[e.type]||e.type;
+  let body='';
+  if(e.type==='choice'||e.type==='listen'){
+    body+=`<div style="font-weight:700;margin-bottom:10px;font-size:16px">${esc(e.q||'Wähle die richtige Antwort:')}</div><div id="pvOpts">`+
+      (e.options||[]).map((o,k)=>`<button type="button" class="pvopt" data-k="${k}" onclick="pvPick(${k})" style="display:block;width:100%;text-align:left;margin-bottom:8px;padding:11px 14px;border:2px solid var(--border);border-radius:12px;background:#fff;cursor:pointer;font-size:15px">${esc(o)}</button>`).join('')+`</div>`;
+  } else if(e.type==='gap'){
+    body+=`<div style="font-weight:700;margin-bottom:10px;font-size:16px">${esc((e.text||'').replace('___','_____'))}</div>`+
+      `<input id="pvGap" placeholder="Antwort eintippen…" autocomplete="off" style="width:100%;box-sizing:border-box;padding:11px 14px;border:2px solid var(--border);border-radius:12px;font-size:15px" oninput="document.getElementById('pvCheckBtn').disabled=!this.value.trim()">`+
+      (e.hint?`<div class="muted" style="margin-top:8px">💡 ${esc(e.hint)}</div>`:'');
+  } else if(e.type==='match'){
+    const rs=pvShuf((e.pairs||[]).map(p=>p.r));
+    body+=`<div style="font-weight:700;margin-bottom:10px;font-size:16px">${esc(e.intro||'Ordne zu:')}</div>`+
+      (e.pairs||[]).map((p,k)=>`<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><b style="flex:1">${esc(p.l)}</b><select id="pvM${k}" onchange="pvMatchChk()" style="flex:1;padding:9px"><option value="">— wählen —</option>${rs.map(r=>`<option>${esc(r)}</option>`).join('')}</select></div>`).join('');
+  } else if(e.type==='order'){
+    PV.order={ build:[], pool:pvShuf(String(e.answer||'').split(/\s+/).filter(Boolean).map((w,i)=>({w,i}))) };
+    body+=`<div style="font-weight:700;margin-bottom:10px;font-size:16px">Bring die Wörter in die richtige Reihenfolge:</div><div id="pvBuild" style="min-height:46px;border:2px dashed var(--border);border-radius:12px;padding:8px;margin-bottom:8px"></div><div id="pvPool"></div>`+
+      (e.hint?`<div class="muted" style="margin-top:8px">💡 ${esc(e.hint)}</div>`:'');
+  } else { body+=`<div class="muted">Übungstyp „${esc(e.type||'')}" — Vorschau nicht verfügbar.</div>`; }
+  const disabled = (e.type==='gap'||e.type==='order') ? 'disabled' : (e.type==='match' ? 'disabled' : 'disabled');
+  ov.innerHTML=`<div style="background:#fff;border-radius:20px;max-width:560px;width:100%;box-shadow:0 24px 60px rgba(0,0,0,.3);overflow:hidden">
+    <div style="background:#1A1A1A;color:#fff;padding:14px 20px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
+      <div><div style="font-size:12px;opacity:.85">${esc(PV.head)}</div><div style="font-weight:800;margin-top:2px">Schüler-Vorschau · ${PV.idx+1}/${PV.items.length} · ${typeLbl} <span style="opacity:.7;font-weight:600">(${esc(e._phase)})</span></div></div>
+      <button onclick="pvClose()" style="background:none;border:none;color:#fff;font-size:22px;cursor:pointer;line-height:1">✕</button>
+    </div>
+    <div style="padding:20px">${body}
+      <div id="pvFb" style="margin-top:12px;font-weight:700"></div>
+      <div style="margin-top:16px;display:flex;justify-content:space-between;gap:10px">
+        <button class="btn btn-ghost" onclick="pvClose()">Schließen</button>
+        <button class="btn btn-primary" id="pvCheckBtn" onclick="pvCheck()" ${disabled}>Prüfen</button>
+      </div>
+    </div></div>`;
+  if(e.type==='order') pvDrawOrder();
+}
+function pvPick(k){ if(PV.answered) return; PV.sel=k; document.querySelectorAll('#pvOpts .pvopt').forEach(b=>{ const on=(+b.dataset.k===k); b.style.borderColor=on?'#13A89A':'var(--border)'; b.style.background=on?'#F2FBFA':'#fff'; }); document.getElementById('pvCheckBtn').disabled=false; }
+function pvMatchChk(){ const e=PV.items[PV.idx]; const all=(e.pairs||[]).every((p,k)=>document.getElementById('pvM'+k).value); document.getElementById('pvCheckBtn').disabled=!all; }
+function pvDrawOrder(){
+  const b=document.getElementById('pvBuild'), pool=document.getElementById('pvPool'); if(!b||!pool) return;
+  b.innerHTML = PV.order.build.length ? PV.order.build.map((x,i)=>`<button type="button" onclick="pvOrderBack(${i})" style="margin:3px;padding:7px 11px;border:1px solid #13A89A;background:#F2FBFA;border-radius:10px;cursor:pointer">${esc(x.w)}</button>`).join('') : '<span class="muted">Tippe die Wörter unten an…</span>';
+  pool.innerHTML = PV.order.pool.map((x,i)=>`<button type="button" onclick="pvOrderAdd(${i})" style="margin:3px;padding:7px 11px;border:1px solid var(--border);background:#fff;border-radius:10px;cursor:pointer">${esc(x.w)}</button>`).join('');
+  document.getElementById('pvCheckBtn').disabled = PV.order.pool.length>0;
+}
+function pvOrderAdd(i){ const x=PV.order.pool.splice(i,1)[0]; PV.order.build.push(x); pvDrawOrder(); }
+function pvOrderBack(i){ const x=PV.order.build.splice(i,1)[0]; PV.order.pool.push(x); pvDrawOrder(); }
+function pvCheck(){
+  if(!PV) return; const e=PV.items[PV.idx]; const fb=document.getElementById('pvFb'); let ok=false, correctTxt='';
+  if(e.type==='choice'||e.type==='listen'){
+    const opts=e.options||[]; const correct=(typeof e.answer==='number')?opts[e.answer]:e.answer; ok=opts[PV.sel]===correct; correctTxt=correct;
+    document.querySelectorAll('#pvOpts .pvopt').forEach(b=>{ const v=opts[+b.dataset.k]; if(v===correct){ b.style.borderColor='#13A89A'; b.style.background='#DCFCE7'; } else if(+b.dataset.k===PV.sel){ b.style.borderColor='#DD0000'; b.style.background='#FCE5E3'; } });
+  } else if(e.type==='gap'){ ok=pvNorm(document.getElementById('pvGap').value)===pvNorm(e.answer); correctTxt=e.answer; }
+  else if(e.type==='match'){ ok=(e.pairs||[]).every((p,k)=>document.getElementById('pvM'+k).value===p.r); correctTxt=(e.pairs||[]).map(p=>p.l+' → '+p.r).join(' · '); }
+  else if(e.type==='order'){ ok=pvNorm(PV.order.build.map(x=>x.w).join(' '))===pvNorm(e.answer); correctTxt=e.answer; }
+  PV.answered=true;
+  fb.innerHTML = ok ? '<span style="color:#13A89A">✅ Richtig!</span>' : `<span style="color:#DD0000">❌ Nicht ganz.</span> <span class="muted">Richtig: <b>${esc(correctTxt)}</b></span>`;
+  const btn=document.getElementById('pvCheckBtn'); btn.textContent=(PV.idx+1<PV.items.length)?'Weiter →':'Fertig ✓'; btn.onclick=pvNext; btn.disabled=false;
+}
+function pvNext(){ if(!PV) return; if(PV.idx+1<PV.items.length){ PV.idx++; pvRender(); } else { pvClose(); } }
 
 // Vorschau: zeigt der Lehrkraft genau, was die Schüler an Übungen/Nachbereitung bekommen.
 async function previewMaterial(id){
