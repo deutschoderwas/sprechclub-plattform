@@ -354,9 +354,8 @@ let credits=0, stats={};
 
 const _qp = new URLSearchParams(location.search);
 if (_qp.get('kauf')==='ok') document.getElementById('kaufOk').style.display='block';
-if (_qp.get('pass')==='ok'){ const k=document.getElementById('kaufOk'); k.textContent='🎉 Willkommen im Club! Deine Mitgliedschaft ist jetzt aktiv.'; k.style.display='block'; }
+if (_qp.get('pass')==='ok'){ const k=document.getElementById('kaufOk'); k.textContent='🎉 Willkommen im Profi-Pass! 12 LIVE-Stunden pro Monat sind jetzt für dich freigeschaltet.'; k.style.display='block'; }
 function passActive(){ return profile.pass_until && new Date(profile.pass_until) > new Date(); }
-function currentPlan(){ const m={testpass:['Ab und zu Pass',4],gelegenheitspass:['Gelegenheitspass',8],allinclusive:['Profi-Pass',12],sparpass:['Spar Pass',30]}; for(const r of (creditLog||[])){ const x=/^(?:abo|trial|kauf):(\w+)/.exec(r.reason||''); if(x&&m[x[1]]) return {label:m[x[1]][0],h:m[x[1]][1]}; } return {label:'Mitgliedschaft',h:null}; }
 function bucheStunde(e){ if(e&&e.preventDefault)e.preventDefault(); if(credits>0||passActive()){ go('kalender'); } else { location.href='index.html#preise'; } return false; }
 // Stripe-Kundenportal öffnen — Abo verwalten / kündigen (Kündigung zum Periodenende; danach verfallen die Stunden).
 async function openPortal(){
@@ -734,7 +733,7 @@ function renderDashboard(){
       <div><h1>${greet}</h1><p class="muted">Schön, dass du übst. Bleib dran — Sprechen lernt man durch Sprechen. 💪</p></div>
       <div class="streak-chip">🔥 ${s.streak} ${s.streak===1?'Woche':'Wochen'} Streak</div>
     </div>
-    ${passActive()?`<div class="next-hero" style="background:linear-gradient(135deg,var(--turq),var(--turq-dark));color:#fff"><div style="flex:1"><div class="when" style="color:#fff">⭐ ${currentPlan().label} aktiv</div><div style="color:rgba(255,255,255,.85);font-size:13px">${currentPlan().h} LIVE-Stunden pro Monat · verlängert sich am ${fmtShort(new Date(profile.pass_until))} · <a href="#" onclick="openPortal();return false" style="color:#fff;text-decoration:underline;font-weight:600">Abo verwalten / kündigen</a></div></div><a class="btn" style="background:#fff;color:var(--turq-dark)" href="#" onclick="return bucheStunde(event)">Stunde buchen</a></div>`:''}
+    ${passActive()?`<div class="next-hero" style="background:linear-gradient(135deg,var(--turq),var(--turq-dark));color:#fff"><div style="flex:1"><div class="when" style="color:#fff">⭐ Profi-Pass aktiv</div><div style="color:rgba(255,255,255,.85);font-size:13px">12 LIVE-Stunden pro Monat · verlängert sich am ${fmtShort(new Date(profile.pass_until))} · <a href="#" onclick="openPortal();return false" style="color:#fff;text-decoration:underline;font-weight:600">Abo verwalten / kündigen</a></div></div><a class="btn" style="background:#fff;color:var(--turq-dark)" href="#" onclick="return bucheStunde(event)">Stunde buchen</a></div>`:''}
     <div class="rankbar">
       <div class="top"><span class="rank">${s.rank.name} · ${s.points} Punkte</span>
         <span class="muted">${s.next?('noch '+(s.next.min-s.points)+' bis '+s.next.name):'Höchster Rang erreicht 🎉'}</span></div>
@@ -954,7 +953,7 @@ function kalBook(id){
     <h3>Buchung bestätigen?</h3>
     <p class="hint">Möchtest du diese Stunde verbindlich buchen?</p>
     <div class="det"><b>${title}</b><span>${when}${sub?' · '+sub:''}</span></div>
-    <p class="hint">Storno kostenlos bis 6 Stunden vorher. Dein Guthaben wird sofort bei der Buchung abgezogen und bei rechtzeitiger Stornierung wieder gutgeschrieben.</p>
+    <p class="hint">Storno kostenlos bis 6 Stunden vorher. Dein Guthaben wird erst nach der Teilnahme abgezogen.</p>
     <div class="acts"><button class="btn btn-ghost" onclick="closeCfm()">Abbrechen</button><button class="btn btn-primary" id="cfmGo">Buchung bestätigen</button></div>`;
   document.getElementById('cfmGo').onclick=()=>doBook(id);
   document.getElementById('cfmModal').classList.add('open');
@@ -1242,6 +1241,7 @@ function renderVokabeln(){
   if(!deck.length){ el.innerHTML='<div class="pagehead"><h1>Vokabeltrainer</h1></div><div class="empty">Noch keine Vokabeln — sie erscheinen automatisch, sobald deine gebuchten Stunden Vokabeln haben (oder Amanda Material erstellt hat).</div>'; return; }
   deckIdx=0;flipped=false;
   el.innerHTML=`<div class="pagehead"><h1>Vokabeltrainer</h1><p>${deck.length} Vokabeln aus deinen Stunden · ${known.size} schon gelernt</p></div>
+    <div style="text-align:center;margin:4px 0 20px"><button class="btn btn-primary" style="font-size:17px;padding:14px 34px;border-radius:16px" onclick="vbStart()">🎯 Üben starten</button><div class="muted" style="font-size:12px;margin-top:6px">Gemischte Übungen · Hören · kluges Wiederholen</div></div>
     <div class="flashwrap">
       <div class="flashcard" id="flashcard" onclick="flipCard()"></div>
       <div class="flashnav">
@@ -1263,6 +1263,155 @@ function flipCard(){ flipped=!flipped; showCard(); }
 function nextCard(){ deckIdx=(deckIdx+1)%deck.length; flipped=false; showCard(); }
 function prevCard(){ deckIdx=(deckIdx-1+deck.length)%deck.length; flipped=false; showCard(); }
 function markKnown(){ const k=lsGet('known',[]); const w=deck[deckIdx].de; if(!k.includes(w)){ k.push(w); lsSet('known',k); if(sb&&user) sb.from('vocab_known').upsert({ user_id:user.id, term:w }, { onConflict:'user_id,term', ignoreDuplicates:true }).then(()=>{}); } computeStats(); toast('Gelernt! 🧠 +2 Punkte'); nextCard(); }
+
+// ============================================================
+//  Duolingo-Style Vokabeltrainer v1
+//  Gemischte Übungen (4 Typen) · Hören (TTS) · Sound-Effekte ·
+//  Spaced Repetition (Leitner-Boxen in vocab_known) · spielerisch.
+//  Individuell: nutzt collectVocab() = nur Vokabeln der besuchten Stunden.
+// ============================================================
+let VB=null, _vbAC=null;
+function vbMeaning(v){ return (v&&(v.info||v.en))||''; }
+function vbShuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=a[i];a[i]=a[j];a[j]=t; } return a; }
+function vbNorm(s){ return String(s==null?'':s).toLowerCase().replace(/[.,!?;:„"»«()\-]/g,'').replace(/\s+/g,' ').trim(); }
+function vbBeep(ok){ try{ _vbAC=_vbAC||new (window.AudioContext||window.webkitAudioContext)(); const ac=_vbAC, t=ac.currentTime; const o=ac.createOscillator(), g=ac.createGain(); o.connect(g); g.connect(ac.destination); o.type='sine'; g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.14,t+0.02); g.gain.exponentialRampToValueAtTime(0.0001,t+0.28); if(ok){ o.frequency.setValueAtTime(660,t); o.frequency.setValueAtTime(990,t+0.09);} else { o.frequency.setValueAtTime(220,t); o.frequency.setValueAtTime(150,t+0.13);} o.start(t); o.stop(t+0.3);}catch(e){} }
+function vbSay(text){ try{ if(!('speechSynthesis' in window))return; const u=new SpeechSynthesisUtterance(String(text||'')); u.lang='de-DE'; u.rate=0.92; const v=(speechSynthesis.getVoices()||[]).find(x=>/de(-|_)/i.test(x.lang)); if(v)u.voice=v; speechSynthesis.cancel(); speechSynthesis.speak(u);}catch(e){} }
+function vbSayCur(){ if(VB&&VB.terms[VB.idx]) vbSay(VB.terms[VB.idx].de); }
+try{ if('speechSynthesis' in window) speechSynthesis.onvoiceschanged=function(){}; }catch(e){}
+
+async function vbStart(){
+  const all=collectVocab().filter(v=>v.de && vbMeaning(v));
+  if(all.length<4){ toast('Du brauchst mindestens 4 Vokabeln zum Üben.'); return; }
+  let srs={};
+  try{ const {data}=await sb.from('vocab_known').select('term,box,due_at,correct,wrong').eq('user_id',user.id); (data||[]).forEach(r=>srs[r.term]={box:r.box||0,due:r.due_at?new Date(r.due_at).getTime():0,correct:r.correct||0,wrong:r.wrong||0}); }catch(e){}
+  const now=Date.now();
+  const scored=all.map(v=>{ const s=srs[v.de]; const isNew=!s; const isDue=isNew||s.due<=now; const box=s?s.box:0; return {v,isDue,box,due:s?s.due:0}; });
+  scored.sort((a,b)=>{ if(a.isDue!==b.isDue) return a.isDue?-1:1; if(a.box!==b.box) return a.box-b.box; return a.due-b.due; });
+  const terms=vbShuffle(scored.slice(0,Math.min(12,scored.length)).map(x=>x.v));
+  const canSpeak=!!(window.SpeechRecognition||window.webkitSpeechRecognition);
+  VB={ all, terms, idx:0, correct:0, hearts:5, xp:0, srs, answered:false, sel:null, type:null, canSpeak, heard:null };
+  let ov=document.getElementById('vbOverlay');
+  if(!ov){ ov=document.createElement('div'); ov.id='vbOverlay'; ov.style.cssText='position:fixed;inset:0;z-index:10000;background:linear-gradient(160deg,#FFF8E0,#FFFCF5);display:flex;flex-direction:column;align-items:center;overflow:auto'; document.body.appendChild(ov); }
+  ov.style.display='flex'; vbSay(' ');
+  vbRender();
+}
+function vbClose(){ const ov=document.getElementById('vbOverlay'); if(ov) ov.style.display='none'; try{speechSynthesis.cancel();}catch(e){} VB=null; computeStats(); if(typeof renderVokabeln==='function') renderVokabeln(); }
+function vbDistract(term, key){
+  const out=[], used=new Set([key==='de'?term.de:vbMeaning(term)]);
+  const pool=vbShuffle(VB.all.filter(v=>v.de!==term.de));
+  for(const v of pool){ if(out.length>=3) break; const val=key==='de'?v.de:vbMeaning(v); if(val&&!used.has(val)){ used.add(val); out.push(val); } }
+  return out;
+}
+function vbRender(){
+  const ov=document.getElementById('vbOverlay'); if(!ov||!VB) return;
+  if(VB.idx>=VB.terms.length || VB.hearts<=0) return vbEnd();
+  const term=VB.terms[VB.idx]; VB.answered=false; VB.sel=null; VB.heard=null;
+  const types=['c_de2m','c_m2de','type','listen']; if(VB.canSpeak) types.push('speak','speak');
+  VB.type=types[Math.floor(Math.random()*types.length)];
+  const t=VB.type, prog=Math.round(VB.idx/VB.terms.length*100);
+  let q='', inputArea='';
+  if(t==='c_de2m'){
+    q=`<div class="vbq">Was bedeutet?</div><div class="vbword">${esc(term.de)} <button class="vbspk" onclick="vbSayCur()">🔊</button></div>`;
+    inputArea=vbOpts(vbShuffle([vbMeaning(term),...vbDistract(term,'m')]));
+  } else if(t==='c_m2de'){
+    q=`<div class="vbq">Welches Wort passt?</div><div class="vbword" style="font-size:24px">${esc(vbMeaning(term))}</div>`;
+    inputArea=vbOpts(vbShuffle([term.de,...vbDistract(term,'de')]));
+  } else if(t==='type'){
+    q=`<div class="vbq">Schreib das deutsche Wort</div><div class="vbword" style="font-size:24px">${esc(vbMeaning(term))}</div>`;
+    inputArea=`<input id="vbType" placeholder="Tippen…" autocomplete="off" autocapitalize="off" spellcheck="false" style="width:100%;box-sizing:border-box;padding:14px 16px;border:2px solid #F0E5D8;border-radius:14px;font-size:18px" oninput="document.getElementById('vbCheckBtn').disabled=!this.value.trim()" onkeydown="if(event.key==='Enter'&&!document.getElementById('vbCheckBtn').disabled)vbCheck()">`;
+  } else if(t==='listen'){
+    q=`<div class="vbq">Hör zu – was bedeutet es?</div><div style="margin:14px 0"><button class="vblisten" onclick="vbSayCur()">🔊 Anhören</button></div>`;
+    inputArea=vbOpts(vbShuffle([vbMeaning(term),...vbDistract(term,'m')]));
+    setTimeout(vbSayCur,400);
+  } else {
+    q=`<div class="vbq">🗣️ Sprich das Wort nach</div><div class="vbword">${esc(term.de)} <button class="vbspk" onclick="vbSayCur()">🔊</button></div><div style="font-size:14px;color:#6B7280;margin-top:2px">${esc(vbMeaning(term))}</div>`;
+    inputArea=`<div style="text-align:center"><button class="vblisten" id="vbMicBtn" onclick="vbMic()">🎤 Sprechen</button><div id="vbHeard" style="margin-top:12px;font-size:15px;color:#6B7280;min-height:22px"></div></div>`;
+    setTimeout(vbSayCur,400);
+  }
+  ov.innerHTML=`<style>
+    #vbOverlay .vbq{font-size:13px;color:#6B7280;font-weight:800;letter-spacing:.03em;text-transform:uppercase}
+    #vbOverlay .vbword{font-size:30px;font-weight:800;margin:8px 0;color:#1A1A1A;line-height:1.2}
+    #vbOverlay .vbspk{border:none;background:#F2FBFA;border-radius:10px;padding:4px 12px;cursor:pointer;font-size:18px;vertical-align:middle}
+    #vbOverlay .vblisten{border:none;background:linear-gradient(135deg,#2DD4BF,#14B8A6);color:#06403A;border-radius:16px;padding:15px 26px;font-size:18px;font-weight:800;cursor:pointer;box-shadow:0 6px 16px rgba(45,212,191,.35)}
+    #vbOverlay .vbopt{display:block;width:100%;text-align:left;margin:0 0 10px;padding:14px 16px;border:2px solid #F0E5D8;border-radius:14px;background:#fff;cursor:pointer;font-size:17px;font-weight:600;transition:transform .06s,border-color .15s,background .15s}
+    #vbOverlay .vbopt:hover{transform:translateY(-1px)}
+    #vbOverlay .vbopt.sel{border-color:#2DD4BF;background:#F2FBFA}
+    #vbOverlay .vbopt.ok{border-color:#13A89A;background:#DCFCE7}
+    #vbOverlay .vbopt.no{border-color:#DD0000;background:#FCE5E3}
+    #vbOverlay .vbopt:disabled{cursor:default}
+    @keyframes vbpop{0%{transform:scale(.97);opacity:.6}100%{transform:scale(1);opacity:1}}
+    @keyframes vbshake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+  </style>
+  <div style="width:100%;max-width:520px;padding:16px 16px 30px;margin:0 auto">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+      <button onclick="vbClose()" style="border:none;background:none;font-size:24px;cursor:pointer;color:#9CA3AF;line-height:1">✕</button>
+      <div style="flex:1;height:14px;background:#F0E5D8;border-radius:999px;overflow:hidden"><div style="height:100%;width:${prog}%;background:linear-gradient(90deg,#2DD4BF,#14B8A6);transition:width .35s"></div></div>
+      <div style="font-size:16px;letter-spacing:1px">${'❤️'.repeat(VB.hearts)}${'🤍'.repeat(Math.max(0,5-VB.hearts))}</div>
+    </div>
+    <div id="vbCard" style="background:#fff;border:1px solid #F0E5D8;border-radius:24px;padding:24px;box-shadow:0 12px 34px rgba(0,0,0,.07);animation:vbpop .25s">
+      ${q}
+      <div style="margin-top:18px">${inputArea}</div>
+      <div id="vbFb" style="margin-top:14px;font-weight:800;min-height:26px;font-size:15px"></div>
+    </div>
+    <div style="margin-top:18px;text-align:center">
+      <button class="btn btn-primary" id="vbCheckBtn" style="font-size:17px;padding:14px 40px;border-radius:16px" onclick="vbCheck()" disabled>Prüfen</button>
+    </div>
+    <div style="text-align:center;color:#9CA3AF;font-size:12px;margin-top:12px">${VB.idx+1} / ${VB.terms.length} · ⭐ ${VB.xp} XP</div>
+  </div>`;
+  if(t==='type') setTimeout(()=>{ const i=document.getElementById('vbType'); if(i)i.focus(); },80);
+}
+function vbOpts(opts){ return `<div id="vbOpts">`+opts.map(o=>`<button class="vbopt" data-v="${esc(o)}" onclick="vbPick(this)">${esc(o)}</button>`).join('')+`</div>`; }
+function vbPick(btn){ if(VB.answered)return; VB.sel=btn.getAttribute('data-v'); document.querySelectorAll('#vbOpts .vbopt').forEach(b=>b.classList.toggle('sel', b===btn)); document.getElementById('vbCheckBtn').disabled=false; }
+function vbMic(){
+  if(!VB||VB.answered)return;
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition; const btn=document.getElementById('vbMicBtn'), heard=document.getElementById('vbHeard');
+  if(!SR){ heard.textContent='Spracherkennung geht in diesem Browser nicht.'; document.getElementById('vbCheckBtn').disabled=false; return; }
+  try{ speechSynthesis.cancel(); }catch(e){}
+  const r=new SR(); r.lang='de-DE'; r.interimResults=false; r.maxAlternatives=4;
+  btn.textContent='🎙️ … sprich jetzt'; btn.disabled=true; heard.textContent='';
+  r.onresult=(e)=>{ const alts=[]; for(let i=0;i<e.results[0].length;i++) alts.push(e.results[0][i].transcript); VB.heard=alts; heard.innerHTML='Gehört: <b>'+esc(alts[0]||'—')+'</b>'; };
+  r.onerror=()=>{ heard.textContent='Ich konnte dich nicht hören – nochmal?'; };
+  r.onend=()=>{ btn.textContent='🎤 Nochmal'; btn.disabled=false; document.getElementById('vbCheckBtn').disabled=false; };
+  try{ r.start(); }catch(e){ btn.textContent='🎤 Nochmal'; btn.disabled=false; document.getElementById('vbCheckBtn').disabled=false; }
+}
+async function vbCheck(){
+  if(!VB||VB.answered)return; const term=VB.terms[VB.idx], t=VB.type; let ok=false, correct='';
+  if(t==='type'){ correct=term.de; ok=vbNorm(document.getElementById('vbType').value)===vbNorm(term.de); }
+  else if(t==='speak'){ correct=term.de; const tgt=vbNorm(term.de); ok=(VB.heard||[]).some(h=>{ const n=vbNorm(h); return n===tgt || n.split(' ').includes(tgt) || n.includes(tgt); }); }
+  else { correct=(t==='c_m2de')?term.de:vbMeaning(term); ok=VB.sel===correct;
+    document.querySelectorAll('#vbOpts .vbopt').forEach(b=>{ const v=b.getAttribute('data-v'); b.disabled=true; if(v===correct) b.classList.add('ok'); else if(v===VB.sel) b.classList.add('no'); }); }
+  VB.answered=true; vbBeep(ok);
+  const fb=document.getElementById('vbFb');
+  if(ok){ VB.correct++; VB.xp+=10; fb.innerHTML='<span style="color:#13A89A">✅ Richtig! +10 XP</span>'; }
+  else { VB.hearts=Math.max(0,VB.hearts-1); const card=document.getElementById('vbCard'); if(card){card.style.animation='vbshake .3s';} fb.innerHTML=`<span style="color:#DD0000">❌ Richtig: <b>${esc(correct)}</b></span> <button class="vbspk" onclick="vbSayCur()" style="margin-left:6px">🔊</button>`; }
+  if(t==='type'){ const i=document.getElementById('vbType'); if(i){ i.disabled=true; i.style.borderColor=ok?'#13A89A':'#DD0000'; i.style.background=ok?'#DCFCE7':'#FCE5E3'; } }
+  vbSayCur();
+  vbSaveSrs(term.de, ok);
+  const btn=document.getElementById('vbCheckBtn'); btn.disabled=false; btn.textContent=(VB.idx+1<VB.terms.length && VB.hearts>0)?'Weiter →':'Fertig'; btn.onclick=vbNext;
+}
+function vbSaveSrs(term, ok){
+  const s=VB.srs[term]||{box:0,correct:0,wrong:0};
+  const box=ok?Math.min(5,(s.box||0)+1):0;
+  const DAYS=[0,1,3,7,14,30], ms=ok?(DAYS[box]||30)*86400000:10*60000;
+  const due=new Date(Date.now()+ms).toISOString();
+  s.box=box; s.correct=(s.correct||0)+(ok?1:0); s.wrong=(s.wrong||0)+(ok?0:1); VB.srs[term]=s;
+  if(sb&&user){ sb.from('vocab_known').upsert({ user_id:user.id, term, box, due_at:due, correct:s.correct, wrong:s.wrong, updated_at:new Date().toISOString() }, { onConflict:'user_id,term' }).then(()=>{}); }
+  if(ok&&box>=3){ const k=lsGet('known',[]); if(!k.includes(term)){ k.push(term); lsSet('known',k); } }
+}
+function vbNext(){ if(!VB)return; VB.idx++; (VB.idx>=VB.terms.length||VB.hearts<=0)?vbEnd():vbRender(); }
+function vbEnd(){
+  const ov=document.getElementById('vbOverlay'); if(!ov||!VB)return; computeStats();
+  const done=VB.hearts>0, c=VB.correct, xp=VB.xp;
+  ov.innerHTML=`<div style="width:100%;max-width:460px;padding:48px 22px;text-align:center;margin:auto">
+    <div style="font-size:68px">${done?'🎉':'💪'}</div>
+    <h1 style="font-size:26px;margin:12px 0 4px;color:#1A1A1A">${done?'Super gemacht!':'Gleich nochmal!'}</h1>
+    <p style="color:#6B7280;font-size:16px;margin:0">${c} richtig · ⭐ ${xp} XP gesammelt</p>
+    <div style="margin-top:28px;display:flex;flex-direction:column;gap:10px">
+      <button class="btn btn-primary" style="font-size:17px;padding:15px;border-radius:16px" onclick="vbStart()">🎯 Weiter üben</button>
+      <button class="btn btn-ghost" onclick="vbClose()">Fertig</button>
+    </div>
+  </div>`;
+}
 
 // ---------- Abzeichen ----------
 function renderFortschritt(){
