@@ -390,10 +390,24 @@ async function init(){
   const { data:{ session } } = await sb.auth.getSession();
   if (!session){ location.href='index.html?login=1'; return; }
   user = session.user;
+  maybeStartNow(session);
   await load();
   window.addEventListener('hashchange', routeFromHash);
   routeFromHash();
   requireBirthday();   // Pflicht: Geburtsdatum abfragen, falls noch nicht gesetzt
+}
+
+// Sofort voll starten (aus Trial-Mail: konto.html?start=now) — Testphase beenden, sofort abbuchen
+async function maybeStartNow(session){
+  try{
+    if(new URLSearchParams(location.search).get('start')!=='now') return;
+    history.replaceState(null,'',location.pathname+location.hash);
+    if(!confirm('Jetzt voll starten?\n\nDeine 7-Tage-Testphase endet sofort, die Zahlung wird jetzt fällig und du bekommst deine vollen Monatsstunden + deine Gratis-Probestunde sofort gutgeschrieben.')) return;
+    const r = await fetch('/api/start-now', { method:'POST', headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+session.access_token } });
+    let j={}; try{ j=await r.json(); }catch(e){}
+    if(r.ok && j.ok){ alert('Super! 🎉 Dein Abo ist jetzt aktiv. Deine Stunden werden in wenigen Sekunden gutgeschrieben.'); setTimeout(()=>location.reload(), 3500); }
+    else { alert('Das hat leider nicht geklappt'+(j.error?(' ('+j.error+')'):'')+'. Vielleicht läuft schon keine Testphase mehr. Melde dich gern bei Julia. 💛'); }
+  }catch(e){ console.error('start-now', e); }
 }
 
 async function load(){
