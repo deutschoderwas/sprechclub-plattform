@@ -1,24 +1,13 @@
-// Automatische Nachbereitung aus Mitschrift (PDF-Text) ODER Live-Tafel.
+// Manuelle Nachbereitung per Knopf (Admin/Lehrer).
 // POST { classId, source:'pdf'|'tafel', pdfText? } + Authorization: Bearer <Admin/Lehrer-Token>
-//
-// Ablauf:
-//  1) Auth: Aufrufer muss Admin ODER Lehrer sein.
-//  2) Quelle bestimmen: PDF-Text (vom Browser, via pdf.js ausgelesen) ODER class_notes.notes (Live-Tafel).
-//  3) Bestehende Vokabeln der Stunde sammeln (class_materials.content.vocab ∪ classes.vocab).
-//  4) Claude erstellt: Nachbereitungs-Übungen + Grammatik-Tipp + (ergänzte) Vokabeln.
-//  5) Schreiben:
-//       - class_notes.post_content  = { exercises, vocab, grammar_tip, source, generated_at }  → Schüler-Nachbereitung
-//       - class_materials.content.vocab = zusammengeführte Vokabeln                              → Vokabeltrainer
-//
-// Individuell pro Schüler entsteht automatisch: jeder Schüler sieht nur Stunden, die er gebucht hat
-// (collectVocab in konto.html zieht Vokabeln aus den gebuchten Stunden).
+// Eigenständig (keine externen lib-Imports), damit Vercel sicher bündelt.
 import { createClient } from '@supabase/supabase-js';
 
+export const config = { maxDuration: 60 };
 const MODEL = process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-6';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ ok: false, error: 'method_not_allowed' });
-  if (!process.env.ANTHROPIC_API_KEY) return res.status(200).json({ ok: false, error: 'anthropic_key_missing' });
 
   const token = (req.headers.authorization || '').replace('Bearer ', '');
   const { classId, source = 'tafel', pdfText } = req.body || {};
@@ -26,41 +15,44 @@ export default async function handler(req, res) {
 
   const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 
-  // 1) Auth – Admin oder Lehrer
   const { data: { user: caller } = {}, error: uerr } = await sb.auth.getUser(token);
   if (uerr || !caller) return res.status(401).json({ ok: false, error: 'unauthorized' });
   const { data: me } = await sb.from('profiles').select('is_admin,is_teacher').eq('id', caller.id).maybeSingle();
   if (!me || !(me.is_admin || me.is_teacher)) return res.status(403).json({ ok: false, error: 'not_admin' });
 
-  // 2) Stunde laden
-  const { data: cls } = await sb.from('classes')
-    .select('id,title,level,topic,vocab').eq('id', classId).maybeSingle();
-  if (!cls) return res.status(200).json({ ok: false, error: 'class_not_found' });
+  const result = await runNachbereitung(sb, { classId, source, pdfText });
+  return res.status(200).json(result);
+}
+
+// ===== gemeinsame Logik (auch in api/auto-nachbereitung.js identisch) =====
+async function runNachbereitung(sb, { classId, source = 'tafel', pdfText } = {}) {
+  if (!process.env.ANTHROPIC_API_KEY) return { ok: false, error: 'anthropic_key_missing' };
+  if (!classId) return { ok: false, error: 'bad_request' };
+
+  const { data: cls } = await sb.from('classes').select('id,title,level,topic,vocab').eq('id', classId).maybeSingle();
+  if (!cls) return { ok: false, error: 'class_not_found' };
 
   const [{ data: mat }, { data: note }] = await Promise.all([
     sb.from('class_materials').select('content').eq('class_id', classId).maybeSingle(),
     sb.from('class_notes').select('notes,post_content').eq('class_id', classId).maybeSingle(),
   ]);
 
-  // Quelle bestimmen
   let srcText = '';
   if (source === 'pdf') {
     srcText = String(pdfText || '').trim();
-    if (srcText.length < 20) return res.status(200).json({ ok: false, error: 'no_pdf_text' });
+    if (srcText.length < 20) return { ok: false, error: 'no_pdf_text' };
   } else {
     srcText = htmlToText(String((note && note.notes) || ''));
-    if (srcText.length < 20) return res.status(200).json({ ok: false, error: 'no_tafel' });
+    if (srcText.length < 20) return { ok: false, error: 'no_tafel' };
   }
   if (srcText.length > 14000) srcText = srcText.slice(0, 14000);
 
-  // 3) Bestehende Vokabeln
   const existing = [];
   const seen = new Set();
   const pushV = (v) => { const de = (v && v.de || '').trim(); if (de && !seen.has(de.toLowerCase())) { seen.add(de.toLowerCase()); existing.push({ de, info: (v.info || v.en || '').trim() }); } };
   if (mat && mat.content && Array.isArray(mat.content.vocab)) mat.content.vocab.forEach(pushV);
   if (Array.isArray(cls.vocab)) cls.vocab.forEach(pushV);
 
-  // 4) Claude
   const prompt = buildPrompt(cls, srcText, existing, source);
   let aiText = '';
   try {
@@ -70,51 +62,37 @@ export default async function handler(req, res) {
       body: JSON.stringify({ model: MODEL, max_tokens: 4000, messages: [{ role: 'user', content: prompt }] }),
     });
     const j = await r.json();
-    if (!r.ok) return res.status(200).json({ ok: false, error: 'anthropic_error', detail: (j && j.error && j.error.message) || ('HTTP ' + r.status) });
+    if (!r.ok) return { ok: false, error: 'anthropic_error', detail: (j && j.error && j.error.message) || ('HTTP ' + r.status) };
     aiText = (j.content || []).map(b => b.text || '').join('').trim();
   } catch (e) {
-    return res.status(200).json({ ok: false, error: 'anthropic_fetch', detail: e.message });
+    return { ok: false, error: 'anthropic_fetch', detail: e.message };
   }
 
-  // JSON aus der Antwort holen
   let parsed = null;
   try { parsed = JSON.parse(aiText); }
   catch (e) { const m = aiText.match(/\{[\s\S]*\}/); if (m) { try { parsed = JSON.parse(m[0]); } catch (e2) {} } }
-  if (!parsed) return res.status(200).json({ ok: false, error: 'parse_failed', detail: aiText.slice(0, 300) });
+  if (!parsed) return { ok: false, error: 'parse_failed', detail: aiText.slice(0, 300) };
 
-  // 5) Normalisieren
   const exercises = normExercises(parsed.exercises || []);
   const grammar = (parsed.grammar_tip && parsed.grammar_tip.title) ? { title: String(parsed.grammar_tip.title), text: String(parsed.grammar_tip.text || '') } : null;
-  // Vokabeln zusammenführen (bestehende + neue)
   (Array.isArray(parsed.vocab) ? parsed.vocab : []).forEach(pushV);
   const vocab = existing;
 
-  if (!exercises.length && !vocab.length) return res.status(200).json({ ok: false, error: 'empty_result' });
+  if (!exercises.length && !vocab.length) return { ok: false, error: 'empty_result' };
 
   const nowISO = new Date().toISOString();
-
-  // a) Nachbereitung -> class_notes.post_content (notes bleibt erhalten)
   const post_content = { exercises, vocab, grammar_tip: grammar, source, generated_at: nowISO };
-  const { error: nErr } = await sb.from('class_notes')
-    .upsert({ class_id: classId, post_content, generated_at: nowISO }, { onConflict: 'class_id' });
-  if (nErr) return res.status(200).json({ ok: false, error: 'save_notes_failed', detail: nErr.message });
+  const { error: nErr } = await sb.from('class_notes').upsert({ class_id: classId, post_content, generated_at: nowISO }, { onConflict: 'class_id' });
+  if (nErr) return { ok: false, error: 'save_notes_failed', detail: nErr.message };
 
-  // b) Vokabeln in den Trainer -> class_materials.content.vocab
   const content = (mat && mat.content && typeof mat.content === 'object') ? mat.content : {};
   content.vocab = vocab;
   if (grammar && !content.grammar_tip) content.grammar_tip = grammar;
-  await sb.from('class_materials')
-    .upsert({ class_id: classId, content, model: MODEL, generated_at: nowISO }, { onConflict: 'class_id' });
+  await sb.from('class_materials').upsert({ class_id: classId, content, model: MODEL, generated_at: nowISO }, { onConflict: 'class_id' });
 
-  return res.status(200).json({
-    ok: true,
-    content: { vocab, exercises, grammar_tip: grammar },
-    counts: { vocab: vocab.length, exercises: exercises.length },
-    source,
-  });
+  return { ok: true, content: { vocab, exercises, grammar_tip: grammar }, counts: { vocab: vocab.length, exercises: exercises.length }, source };
 }
 
-// Live-Tafel wird als HTML gespeichert (notiz + '<!--KORR-->' + korrektur) -> sauberer Text für die KI
 function htmlToText(html) {
   return String(html || '')
     .replace(/<!--KORR-->/g, '\n\n--- Korrekturen / Tafel-Notizen ---\n')
