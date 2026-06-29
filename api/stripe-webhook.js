@@ -197,6 +197,66 @@ async function sendTrialWelcome(s) {
 }
 
 
+// Zahlungsbestätigung bei echter Abbuchung (invoice.paid): erkennt den ECHTEN Tarif aus den Abo-Metadaten.
+async function sendPaymentMail(sub, inv) {
+  try {
+    const userId = sub.metadata?.userId;
+    const stunden = parseInt(sub.metadata?.stunden || '0', 10);
+    if (!userId || !stunden) return; // kein Club-Abo (z. B. Amanda) -> keine Stunden-Mail
+    const email = inv.customer_email; if (!email) return;
+    if (!process.env.BREVO_API_KEY) return;
+    const name = ((inv.customer_name || '').trim().split(' ')[0]) || '';
+    const hallo = name ? `Hallo ${name},` : 'Hallo,';
+    const plan = sub.metadata?.plan || '';
+    const PL = { testpass: 'Ab und zu Pass', gelegenheitspass: 'Gelegenheitspass', allinclusive: 'Profi-Pass' };
+    const label = PL[plan] || 'Mitgliedschaft';
+    const PORTAL = 'https://billing.stripe.com/p/login/cNi8wP2DQcez5av6Yd5Rm00';
+    const BOOK = 'https://www.deutschoderwas-club.de/schuelerbereich#kalender';
+    const html = `<!DOCTYPE html><html lang="de"><body style="margin:0;padding:0;background:#FFF8E0;font-family:'Inter','Segoe UI',system-ui,sans-serif;color:#1A1A1A">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF8E0;padding:24px 12px"><tr><td align="center">
+    <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#FFFCF5;border:1px solid #F0E5D8;border-radius:20px;overflow:hidden">
+      <tr><td style="padding:24px 32px 8px">
+        <span style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:22px;color:#1A1A1A">deutsch<span style="color:#14B8A6">oderwas</span></span>
+        <span style="display:block;font-size:12px;color:#6B7280;margin-top:2px">Deutsch lernen mit Spaß &amp; Leichtigkeit</span>
+      </td></tr>
+      <tr><td style="padding:0 32px"><div style="height:3px;background:linear-gradient(135deg,#2DD4BF,#14B8A6);border-radius:999px"></div></td></tr>
+      <tr><td style="padding:22px 32px 4px">
+        <span style="font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#DD0000">Zahlung erfolgreich</span>
+        <h1 style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:26px;line-height:1.2;margin:8px 0 14px;color:#1A1A1A">Deine Stunden sind da! 🎉</h1>
+        <p style="font-size:16px;line-height:1.6;margin:0 0 12px">${hallo}</p>
+        <p style="font-size:16px;line-height:1.6;margin:0 0 14px">wie schön, dass du dabei bist! 💛 Deine Zahlung ist angekommen und ich hab dir gerade deine <b>${stunden} LIVE-Stunden</b> gutgeschrieben. Jetzt kann's losgehen – such dir im Stundenplan aus, worauf du Lust hast, und buch deine erste Stunde.</p>
+        <div style="background:#fff;border-left:4px solid #2DD4BF;border-radius:10px;padding:10px 14px;margin:6px 0 4px;font-size:14px"><b>Dein Tarif:</b> ${label} · ${stunden} LIVE-Stunden / Monat</div>
+      </td></tr>
+      <tr><td align="center" style="padding:14px 32px 4px">
+        <a href="${BOOK}" style="display:inline-block;background:linear-gradient(135deg,#2DD4BF,#14B8A6);color:#06403A;font-weight:700;font-size:16px;text-decoration:none;padding:14px 30px;border-radius:999px">📅 Jetzt Stunde buchen</a>
+      </td></tr>
+      <tr><td style="padding:12px 32px 4px">
+        <p style="font-size:13px;line-height:1.6;color:#6B7280;margin:0">Dein Abo verlängert sich automatisch monatlich – jederzeit kündbar. <a href="${PORTAL}" style="color:#14B8A6">Abo verwalten / kündigen</a></p>
+      </td></tr>
+      <tr><td style="padding:14px 32px 22px">
+        <p style="font-size:16px;line-height:1.6;margin:0">Ich freue mich riesig, dich bei uns im Club zu sehen!<br><strong>Julia</strong> 💛</p>
+      </td></tr>
+      <tr><td style="background:#1A1A1A;padding:18px 32px;text-align:center">
+        <p style="font-size:12px;line-height:1.6;color:#b9b9b9;margin:0">deutschoderwas · <a href="https://deutschoderwas.de/#impressum" style="color:#FFCE00;text-decoration:none">Impressum</a></p>
+      </td></tr>
+    </table>
+  </td></tr></table>
+</body></html>`;
+    const r = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sender: { name: 'Julia | deutschoderwas', email: process.env.BREVO_SENDER_EMAIL || 'info@deutschoderwas.de' },
+        replyTo: { name: 'Julia', email: process.env.BREVO_SENDER_EMAIL || 'info@deutschoderwas.de' },
+        to: [{ email, name: name || undefined }],
+        subject: 'Zahlung erfolgreich 🎉 – deine Stunden sind da!',
+        htmlContent: html,
+      }),
+    });
+    if (!r.ok) console.error('payment brevo', r.status, await r.text());
+  } catch (e) { console.error('payment mail', e); }
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
   if (!process.env.STRIPE_SECRET_KEY || !process.env.STRIPE_WEBHOOK_SECRET) {
@@ -286,6 +346,7 @@ export default async function handler(req, res) {
         const plan = sub.metadata?.plan || 'abo';
         await saveCustomer(userId, inv.customer);   // Kundennummer merken
         await grant(userId, stunden, 'abo:' + plan, 'inv_' + inv.id, 31);
+        await sendPaymentMail(sub, inv);
         // Aus Probeschüler wird zahlendes Mitglied -> Status auf aktiv (nur wenn vorher Probeschüler)
         if (userId) {
           const { data: pr } = await sb.from('profiles').select('status').eq('id', userId).maybeSingle();
