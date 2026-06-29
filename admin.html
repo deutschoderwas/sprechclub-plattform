@@ -975,7 +975,7 @@ function bdayLabel(p){ if(!p.birthday) return '<span class="muted">–</span>'; 
 async function authToken(){ const { data } = await sb.auth.getSession(); return data?.session?.access_token || ''; }
 
 async function loadSchueler(){
-  const { data } = await sb.from('profiles').select('id,name,email,credits,status,birthday,inactive_until,level,notes,started_at,target_level,native_language,goal,is_admin,is_teacher').limit(2000);
+  const { data } = await sb.from('profiles').select('id,name,email,credits,status,birthday,inactive_until,level,notes,started_at,target_level,native_language,goal,is_admin,is_teacher,created_at').limit(2000);
   SCHUELER = data || [];
   document.getElementById('schueler').innerHTML = `
     <div class="card" style="margin-bottom:16px;background:#FFFCF5">
@@ -1095,6 +1095,15 @@ async function openStudentCard(id){
         <div id="cBookings" class="muted" style="margin-top:6px;font-size:13px">lädt…</div>
       </div>
 
+      <div style="background:#F7F4FF;border:1px solid #E5DEFB;border-radius:14px;padding:14px 16px;margin-bottom:14px">
+        <b>📋 Kontakt-Historie</b>
+        <div class="muted" style="margin-top:6px;font-size:13px">📆 Registriert (Konto erstellt): <b style="color:#1A1A1A">${p.created_at?new Date(p.created_at).toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric'}):'—'}</b>${p.started_at?` &nbsp;·&nbsp; Unterricht seit ${p.started_at.split('-').reverse().join('.')}`:''}</div>
+        <div style="margin-top:10px;font-weight:700;font-size:13px;color:#1A1A1A">✉️ E-Mail-Verlauf</div>
+        <div id="cEmailLog" class="muted" style="margin-top:4px;font-size:13px">lädt…</div>
+        <div class="muted" style="margin-top:9px;font-size:11.5px;line-height:1.5;border-top:1px dashed #E5DEFB;padding-top:8px">⚙️ <b>Läuft automatisch:</b> Buchungs-Bestätigung, Erinnerung vor der Stunde, Geburtstags-Gruß, Guthaben-Angebot bei ≤ 1 Stunde, „Wir vermissen dich"-Mail. Die Willkommens-Mail geht automatisch raus, wenn du den Schüler anlegst.</div>
+      </div>
+
+
       <div class="field" style="margin:0 0 14px"><label>Notizen / Vermerke zum Schüler</label><textarea id="cNotes" style="min-height:90px" placeholder="z.B. Lernziele, Besonderheiten, Vereinbarungen …">${esc(p.notes||'')}</textarea></div>
 
       <div style="margin-bottom:8px"><b>✅ Erledigte Übungen</b><div id="cExercises" class="muted" style="margin-top:6px">lädt…</div></div>
@@ -1111,6 +1120,16 @@ async function openStudentCard(id){
     const el=document.getElementById('cCreditLog'); if(!el) return;
     if(!data||!data.length){ el.textContent='Noch keine Guthaben-Buchungen.'; return; }
     el.innerHTML = data.map(r=>`<div>${r.change>0?'➕':'➖'} ${Math.abs(r.change)} · ${esc(r.reason||'')} · ${new Date(r.created_at).toLocaleDateString('de-DE')}</div>`).join('');
+  });
+  // E-Mail-Verlauf laden (Kontakt-Historie)
+  sb.from('email_log').select('kind,sent_at').eq('user_id',id).order('sent_at',{ascending:false}).limit(60).then(({data,error})=>{
+    const el=document.getElementById('cEmailLog'); if(!el) return;
+    if(error){ el.innerHTML='<span style="color:#B45309">E-Mail-Verlauf nicht lesbar (Rechte). Bitte neu laden.</span>'; return; }
+    if(!data||!data.length){ el.innerHTML='<span style="color:#B45309">📭 Noch keine E-Mail an diesen Kontakt verschickt.</span>'; return; }
+    const L={booking:'📅 Buchungsbestätigung',booking_admin:'📅 Buchung (von dir angelegt)',cancel_admin:'↩️ Absage (von dir)',cancel_student:'↩️ Stornierung (Schüler)',reminder:'⏰ Erinnerung vor der Stunde',credit_offer:'💛 Guthaben-Angebot',credit_offer_zero:'💛 Angebot (kein Guthaben mehr)',miss_you:'💌 „Wir vermissen dich"',birthday:'🎂 Geburtstags-Gruß',welcome:'👋 Willkommens-Mail',community:'💬 Community-Hinweis',weekly:'🗓️ Wochenübersicht'};
+    const f=new Intl.DateTimeFormat('de-DE',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    el.innerHTML='<div style="font-weight:700;color:#1A1A1A;margin-bottom:5px">✅ '+data.length+' E-Mail'+(data.length===1?'':'s')+' verschickt</div>'
+      + data.map(r=>`<div style="border-bottom:1px solid #E5DEFB;padding:4px 0">${L[r.kind]||('✉️ '+esc(r.kind))} <span class="muted">· ${f.format(new Date(r.sent_at))}</span></div>`).join('');
   });
   // Gebuchte Stunden laden (wann ist die Stunde + wann wurde gebucht + Status)
   sb.from('bookings').select('status,created_at,classes(title,level,starts_at)').eq('user_id',id).then(({data})=>{
