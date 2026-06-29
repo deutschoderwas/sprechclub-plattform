@@ -630,6 +630,7 @@ function renderKlassen(){
           <b style="font-size:14px">🤖 Amanda erstellt Übungen</b>
           <p class="muted" style="margin:4px 0 8px">Generiert passend zu Niveau &amp; Thema: Lückentexte, Multiple Choice, Zuordnen, Satzbau, Schreibaufgaben, Grammatik-Tipp &amp; Vokabeln. Schüler sehen die Übungen interaktiv im Schülerbereich.</p>
           <button class="btn btn-ghost" onclick="genMaterial('${c.id}')">${c._hasMat?'🔄 Neu generieren':'✨ KI-Material erstellen'}</button>
+          <button class="btn btn-ghost" onclick="previewMaterial('${c.id}')">👁️ Material prüfen</button>
           <span class="muted" id="genMsg-${c.id}">${c._hasMat?'✓ Material vorhanden':''}</span>
           <div id="genPrev-${c.id}" style="margin-top:8px"></div>
         </div>
@@ -855,6 +856,40 @@ async function createClass(){
   document.getElementById('neuMsg').textContent = error ? 'Fehler: '+error.message : `✓ ${rows.length} Stunde(n) angelegt.`;
 }
 
+// Vorschau: zeigt der Lehrkraft genau, was die Schüler an Übungen/Nachbereitung bekommen.
+async function previewMaterial(id){
+  const prev = document.getElementById('genPrev-'+id);
+  prev.innerHTML = '<span class="muted">Lade Vorschau…</span>';
+  const [{ data:cls }, { data:mat }, { data:cn }] = await Promise.all([
+    sb.from('classes').select('title,topic,level,starts_at').eq('id', id).maybeSingle(),
+    sb.from('class_materials').select('content').eq('class_id', id).maybeSingle(),
+    sb.from('class_notes').select('post_content').eq('class_id', id).maybeSingle(),
+  ]);
+  const fmt = new Intl.DateTimeFormat('de-DE',{ timeZone:'Europe/Berlin', weekday:'long', day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
+  const head = cls ? `<div style="font-weight:800;color:#1A1A1A;margin-bottom:8px">📅 ${cls.starts_at?fmt.format(new Date(cls.starts_at)):''} · ${esc(cls.title||'')}${cls.topic?' · '+esc(cls.topic):''} <span class="muted">(${esc(cls.level||'')})</span></div>` : '';
+  const c = mat && mat.content;
+  const post = (c && c.post) || (cn && cn.post_content) || null;
+  const postEx = post && Array.isArray(post.exercises) ? post.exercises : null;
+  if(!c && !postEx){ prev.innerHTML = head + '<div class="muted">Für diese Stunde wurde noch kein KI-Material erstellt. Klick auf „✨ KI-Material erstellen".</div>'; return; }
+  const sec = (title, body) => `<div style="margin-top:10px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:10px 12px"><div style="font-weight:800;font-size:13px;margin-bottom:6px">${title}</div><div style="font-size:13px;line-height:1.6;color:#333">${body}</div></div>`;
+  const exPrev = (e) => {
+    if(e.type==='choice' || e.type==='listen'){
+      const opts = e.options||[];
+      const correct = (typeof e.answer==='number') ? opts[e.answer] : e.answer;
+      return `<div style="margin-bottom:8px"><b>❓ ${esc(e.q||'')}</b>${opts.map(o=>`<div style="margin-left:10px">${o===correct?'✅':'▫️'} ${esc(o)}</div>`).join('')}</div>`;
+    }
+    if(e.type==='gap') return `<div style="margin-bottom:8px"><b>🧩 Lücke:</b> ${esc(e.text||'')}<br><span style="color:#13A89A">✅ ${esc(e.answer||'')}</span>${e.hint?` <span class="muted">· 💡 ${esc(e.hint)}</span>`:''}</div>`;
+    if(e.type==='match') return `<div style="margin-bottom:8px"><b>🔗 Zuordnen:</b> ${esc(e.intro||'')}${(e.pairs||[]).map(p=>`<div style="margin-left:10px">${esc(p.l)} → ${esc(p.r)}</div>`).join('')}</div>`;
+    if(e.type==='order') return `<div style="margin-bottom:8px"><b>🔀 Satzbau:</b> <span style="color:#13A89A">✅ ${esc(e.answer||'')}</span>${e.hint?` <span class="muted">· 💡 ${esc(e.hint)}</span>`:''}</div>`;
+    return `<div style="margin-bottom:8px"><b>${esc(e.type||'Übung')}:</b> ${esc(e.q||e.text||e.word||'')}</div>`;
+  };
+  let html = head;
+  if(c && Array.isArray(c.vocab) && c.vocab.length) html += sec('🃏 Vokabeln ('+c.vocab.length+')', c.vocab.map(v=>`<div>• <b>${esc(v.de)}</b> — ${esc(v.info||v.en||'')}</div>`).join(''));
+  if(c && c.grammar_tip) html += sec('📌 Grammatik-Tipp', '<b>'+esc(c.grammar_tip.title||'')+'</b><br>'+esc(c.grammar_tip.text||''));
+  if(c && c.pre && Array.isArray(c.pre.exercises) && c.pre.exercises.length) html += sec('📖 Vorbereitung ('+c.pre.exercises.length+' Übungen)', c.pre.exercises.map(exPrev).join(''));
+  if(postEx && postEx.length) html += sec('✍️ Nachbereitung ('+postEx.length+' Übungen)', postEx.map(exPrev).join(''));
+  prev.innerHTML = html;
+}
 async function genMaterial(id){
   const msg = document.getElementById('genMsg-'+id);
   const prev = document.getElementById('genPrev-'+id);
@@ -1102,7 +1137,6 @@ async function openStudentCard(id){
         <div id="cEmailLog" class="muted" style="margin-top:4px;font-size:13px">lädt…</div>
         <div class="muted" style="margin-top:9px;font-size:11.5px;line-height:1.5;border-top:1px dashed #E5DEFB;padding-top:8px">⚙️ <b>Läuft automatisch:</b> Buchungs-Bestätigung, Erinnerung vor der Stunde, Geburtstags-Gruß, Guthaben-Angebot bei ≤ 1 Stunde, „Wir vermissen dich"-Mail. Die Willkommens-Mail geht automatisch raus, wenn du den Schüler anlegst.</div>
       </div>
-
 
       <div class="field" style="margin:0 0 14px"><label>Notizen / Vermerke zum Schüler</label><textarea id="cNotes" style="min-height:90px" placeholder="z.B. Lernziele, Besonderheiten, Vereinbarungen …">${esc(p.notes||'')}</textarea></div>
 
