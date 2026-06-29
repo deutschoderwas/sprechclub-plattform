@@ -1156,7 +1156,7 @@ function bdayLabel(p){ if(!p.birthday) return '<span class="muted">–</span>'; 
 async function authToken(){ const { data } = await sb.auth.getSession(); return data?.session?.access_token || ''; }
 
 async function loadSchueler(){
-  const { data } = await sb.from('profiles').select('id,name,email,credits,status,birthday,inactive_until,level,notes,started_at,target_level,native_language,goal,is_admin,is_teacher,created_at').limit(2000);
+  const { data } = await sb.from('profiles').select('id,name,email,credits,status,birthday,inactive_until,level,notes,started_at,target_level,native_language,goal,is_admin,is_teacher,created_at,pass_until').limit(2000);
   SCHUELER = data || [];
   try{ const { data:_cl } = await sb.from('credit_log').select('user_id,reason'); const { data:_bk } = await sb.from('bookings').select('user_id'); window.BOOKED_SET=new Set((_bk||[]).map(x=>x.user_id)); window.PAID_SET=new Set(); window.TRIAL_SET=new Set(); (_cl||[]).forEach(c=>{ const rs=c.reason||''; if(/^(abo|kauf):/.test(rs)) PAID_SET.add(c.user_id); else if(/^trial:/.test(rs)) TRIAL_SET.add(c.user_id); }); }catch(e){ window.PAID_SET=window.PAID_SET||new Set(); window.TRIAL_SET=window.TRIAL_SET||new Set(); window.BOOKED_SET=window.BOOKED_SET||new Set(); }
   document.getElementById('schueler').innerHTML = `
