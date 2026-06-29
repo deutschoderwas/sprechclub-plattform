@@ -62,7 +62,7 @@ export default async function handler(req, res) {
           method: 'POST',
           headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            sender: { name: 'Julia | deutschoderwas', email: process.env.BREVO_SENDER_EMAIL || 'info@deutschoderwas.de' },
+            sender: { name: 'deutschoderwas', email: process.env.BREVO_SENDER_EMAIL || 'info@deutschoderwas.de' },
             replyTo: { name: 'Julia', email: process.env.BREVO_SENDER_EMAIL || 'info@deutschoderwas.de' },
             to: [{ email, name: name || undefined }],
             subject: 'Willkommen im deutschoderwas Club – richte dein Passwort ein 💛',

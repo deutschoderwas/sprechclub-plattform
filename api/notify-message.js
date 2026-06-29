@@ -25,7 +25,7 @@ export default async function handler(req, res) {
   if (!list.length) return res.status(200).json({ ok:true, sent:0 });
 
   const site = process.env.SITE_URL || 'https://www.deutschoderwas-club.de';
-  const sender = { name: 'Julia | deutschoderwas', email: process.env.BREVO_SENDER_EMAIL || 'info@deutschoderwas.de' };
+  const sender = { name: 'deutschoderwas', email: process.env.BREVO_SENDER_EMAIL || 'info@deutschoderwas.de' };
 
   const results = await Promise.all(list.map(r => {
     const vorname = (r.name || '').split(' ')[0] || 'du';
