@@ -412,7 +412,7 @@ async function maybeStartNow(session){
 
 async function load(){
   const [{ data:prof }, { data:bk }, { data:cl }, { data:msg }, { data:rt }, { data:prog }] = await Promise.all([
-    sb.from('profiles').select('credits,name,goal,target_level,native_language,pass_until,birthday,status,email_optout').eq('id',user.id).single(),
+    sb.from('profiles').select('credits,name,goal,target_level,native_language,pass_until,birthday').eq('id',user.id).single(),
     sb.rpc('my_bookings'),
     sb.from('credit_log').select('*').order('created_at',{ascending:false}),
     sb.from('messages').select('*').order('created_at'),
@@ -517,15 +517,12 @@ function collectVocab(){
 const VIEWS=['dashboard','ueben','community','lernpfad','kalender','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','profil'];
 function go(v){ location.hash=v; }
 function routeFromHash(){ const v=(location.hash||'#dashboard').slice(1); show(VIEWS.includes(v)?v:'dashboard'); }
-// Zugriffs-Stufen (automatisch): 'active'=alles frei; 'expired'=hatte schon Stunden, jetzt abgelaufen (alles ausser Üben/Amanda/Material-Archiv; eigene fruehere Stunden bleiben); 'none'=nie gekauft (nur Kalender).
-const BLOCK_EXPIRED=['ueben','amanda','materialien'];
-const ALLOW_NONE=['kalender','profil','guthaben'];
-function accessTier(){ if(isActive()) return 'active'; const had=(creditLog||[]).some(r=>/^(abo|kauf|trial):/.test(r.reason||'')) || (typeof bookings!=='undefined' && bookings && bookings.length>0); return had?'expired':'none'; }
-function viewLocked(v){ const tg=accessTier(); if(tg==='active') return false; if(tg==='expired') return BLOCK_EXPIRED.includes(v); return !ALLOW_NONE.includes(v); }
+// Ohne Guthaben/Probestunde/Pass: ALLES gesperrt außer Kalender (und Profil für Konto/Logout).
+const LOCKED_VIEWS=['dashboard','ueben','community','lernpfad','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda'];
 function show(v){
   VIEWS.forEach(x=>document.getElementById('v-'+x).classList.toggle('active',x===v));
   document.querySelectorAll('.navlink[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));
-  if(viewLocked(v)){ renderLocked(v, accessTier()); window.scrollTo(0,0); return; }
+  if(LOCKED_VIEWS.includes(v) && !isActive()){ renderLocked(v); window.scrollTo(0,0); return; }
   ({dashboard:renderDashboard,ueben:(window.renderUeben||renderDashboard),community:(window.renderCommunity||renderDashboard),lernpfad:renderLernpfad,kalender:renderKalender,stunden:renderStunden,materialien:renderMaterialien,vokabeln:renderVokabeln,
     fortschritt:renderFortschritt,guthaben:renderGuthaben,nachrichten:renderNachrichten,
     amanda:renderAmanda,profil:renderProfil}[v])();
@@ -533,21 +530,17 @@ function show(v){
   window.scrollTo(0,0);
 }
 const LOCK_LABELS={dashboard:'Start',ueben:'Üben',community:'Community',lernpfad:'Lernpfad',stunden:'Meine Stunden',materialien:'Material',vokabeln:'Vokabeln',fortschritt:'Fortschritt',guthaben:'Guthaben',nachrichten:'Nachrichten',amanda:'Amanda'};
-function renderLocked(v, tier){
+function renderLocked(v){
   const label=LOCK_LABELS[v]||'Dieser Bereich';
-  const expired = tier==='expired';
-  const head = expired ? 'Dein Paket ist abgelaufen' : 'Such dir ein Stundenpaket aus';
-  const msg = expired
-    ? 'Bitte aktualisiere dein Abo oder erwirb ein neues Stundenpaket, um wieder vollen Zugriff zu bekommen. Deine früheren Stunden, deren Material und deine Notizen bleiben unter „Meine Stunden" erhalten.'
-    : 'Mit einem Stundenpaket oder einer Probestunde schaltest du die ganze Plattform frei — Üben, Community, Amanda &amp; Material.';
   document.getElementById('v-'+v).innerHTML=
     `<div class="pagehead"><h1>${label} 🔒</h1></div>
      <div class="card" style="text-align:center;border:2px solid #f5b942;background:#fff8ec;max-width:560px;margin:0 auto">
        <div style="font-size:46px;line-height:1;margin-bottom:8px">🎟️</div>
-       <h3 style="margin-bottom:8px">${head}</h3>
-       <p class="muted" style="margin-bottom:16px">${msg}</p>
+       <h3 style="margin-bottom:8px">Such dir ein Stundenpaket aus</h3>
+       <p class="muted" style="margin-bottom:16px">Mit einem Stundenpaket oder einer Probestunde schaltest du die ganze Plattform frei — Üben, Community, Amanda &amp; Material.</p>
        <a class="btn btn-primary" href="index.html#preise" style="text-decoration:none">Zu den Preisen →</a>
      </div>`;
+  showLockPopup();
 }
 function showLockPopup(){
   const card=document.getElementById('cfmCard');
@@ -799,14 +792,16 @@ function phaseHtml(b, phase){
   if(phase==='post'){
     const ended = Date.now() > (new Date(b.starts_at).getTime() + 75*60000);
     const pn = postNotes[b.class_id];
-    const hasPost = pn && pn.post_content && Array.isArray(pn.post_content.exercises) && pn.post_content.exercises.length;
+    const pc = pn && pn.post_content;
+    const hasPost = pc && ((Array.isArray(pc.exercises) && pc.exercises.length) || (Array.isArray(pc.vocab) && pc.vocab.length) || pc.thema);
     const pr = progress[b.class_id+'|post'];
     let inner;
     if(!ended){ inner='<span class="nope">folgt nach dem Unterricht</span>'; }
     else if(hasPost){
+      const handout = `<a class="btn btn-turq btn-sm" href="nachbereitung.html?id=${b.class_id}" target="_blank" rel="noopener" style="text-decoration:none">📖 Nachbereitung öffnen</a>`;
       inner = (pr&&pr.completed)
-        ? `<span class="doneflag">✓ erledigt${pr.score!=null?' · '+pr.score+'/'+pr.total:''}</span><br><a href="#" onclick="openPost('${b.class_id}');return false" style="color:var(--primary);font-weight:700;font-size:12px">nochmal üben</a>`
-        : `<button class="btn btn-turq btn-sm" onclick="openPost('${b.class_id}')">Übungen starten</button>`;
+        ? `<span class="doneflag">✓ angesehen</span><br>${handout}`
+        : handout;
     } else { inner='<span class="nope">folgt in Kürze</span>'; }
     const ready = ended && hasPost && !(pr&&pr.completed);
     const donecls = (pr&&pr.completed)?'done-ph':'';
@@ -913,12 +908,12 @@ function kalEv(c){
   const titleLine = esc(c.topic || c.title);
   const lvlBadge = `<span class="ev-lvl" style="border:1.5px solid ${lc};color:${lc}">${esc(c.level)}</span>`;
   // Nur für gebuchte Stunden: Material/Präsentation des Unterrichts (erscheint, sobald Material hinterlegt ist)
-  const matBtn = (c.has_material && (isActive() || (accessTier()==='expired' && c.mine))) ? `<button class="ev-btn mat" onclick="openClassMaterial('${c.id}',${c.mine?1:0})">📚 Material des Unterrichts</button>` : '';
+  const matBtn = (c.has_material && isActive()) ? `<button class="ev-btn mat" onclick="openClassMaterial('${c.id}',${c.mine?1:0})">📚 Material des Unterrichts</button>` : '';
   const noPrep = (c.club==='sprachspielclub') ? `<div class="ev-note" style="margin-top:6px;font-size:12px;color:var(--text-soft);font-weight:600">✨ Keine Vorbereitung nötig</div>` : '';
   return `<div class="ev" style="--c:${color};background:${color}14"><div class="ev-top"><span class="ev-time">${fmtTimeK(start)}–${fmtTimeK(end)}</span><span class="ev-club" style="background:${color}">${esc(c.club_name||'')}</span></div><div class="ev-title">${titleLine}</div><div class="ev-lvlrow">${lvlBadge}</div>${c.teacher_name?`<div style="font-size:12px;color:#555;font-weight:600;margin-top:3px">👩‍🏫 ${esc(c.teacher_name)}</div>`:''}${btn}${matBtn}${noPrep}</div>`;
 }
 async function openClassMaterial(classId, booked){
-  if(!isActive() && accessTier()!=='expired'){ toast('Material gibt es mit aktivem Guthaben — ich bring dich zu den Paketen 😊'); setTimeout(()=>{ location.href='live.html#pakete'; }, 900); return; }
+  if(!isActive()){ toast('Material gibt es mit aktivem Guthaben — ich bring dich zu den Paketen 😊'); setTimeout(()=>{ location.href='live.html#pakete'; }, 900); return; }
   let m=materials[classId];
   if(!m){
     const {data}=await sb.from('class_materials').select('content').eq('class_id',classId).maybeSingle();
@@ -1356,6 +1351,7 @@ function vbRender(){
       <div style="font-size:16px;letter-spacing:1px">${'❤️'.repeat(VB.hearts)}${'🤍'.repeat(Math.max(0,5-VB.hearts))}</div>
     </div>
     <div id="vbCard" style="background:#fff;border:1px solid #F0E5D8;border-radius:24px;padding:24px;box-shadow:0 12px 34px rgba(0,0,0,.07);animation:vbpop .25s">
+      ${vbImgTag(term,t)}
       ${q}
       <div style="margin-top:18px">${inputArea}</div>
       <div id="vbFb" style="margin-top:14px;font-weight:800;min-height:26px;font-size:15px"></div>
@@ -1368,6 +1364,8 @@ function vbRender(){
   if(t==='type') setTimeout(()=>{ const i=document.getElementById('vbType'); if(i)i.focus(); },80);
 }
 function vbOpts(opts){ return `<div id="vbOpts">`+opts.map(o=>`<button class="vbopt" data-v="${esc(o)}" onclick="vbPick(this)">${esc(o)}</button>`).join('')+`</div>`; }
+// Echtes Foto zur Vokabel – nur bei Übungen, wo es die Antwort nicht verrät (Bedeutung→Wort, Tippen, Sprechen)
+function vbImgTag(term,t){ if(!term||!term.img||!['c_m2de','type','speak'].includes(t)) return ''; return `<div style="text-align:center;margin-bottom:14px"><img src="${esc(term.img)}" alt="" loading="lazy" style="width:100%;max-width:240px;height:160px;object-fit:cover;border-radius:16px;border:1px solid #F0E5D8"></div>`; }
 function vbPick(btn){ if(VB.answered)return; VB.sel=btn.getAttribute('data-v'); document.querySelectorAll('#vbOpts .vbopt').forEach(b=>b.classList.toggle('sel', b===btn)); document.getElementById('vbCheckBtn').disabled=false; }
 function vbMic(){
   if(!VB||VB.answered)return;
@@ -1529,24 +1527,8 @@ function renderProfil(){
       <div class="field"><label>Mein Geburtstag 🎂</label><input id="pBday" type="date" value="${esc(profile.birthday||'')}"></div>
       <button class="btn btn-primary" onclick="saveProfil()">Speichern</button>
       <div class="field" style="margin-top:18px;border-top:1px solid var(--border);padding-top:14px"><label>E-Mail</label><div class="muted">${esc(user.email)}</div></div>
-    </div>
-    <div class="card" style="margin-top:14px">
-      <b>⚙️ Einstellungen & Mitgliedschaft</b>
-      <p class="muted" style="margin:6px 0 12px;font-size:13px">Du bestimmst selbst — wir wollen dich nicht nerven. 💛</p>
-      <div style="display:flex;flex-direction:column;gap:8px;max-width:380px">
-        ${profile.status==='pause'
-          ? `<button class="btn btn-ghost" onclick="prefSet('aktiv')">▶️ Pause beenden – wieder aktiv</button>`
-          : `<button class="btn btn-ghost" onclick="prefSet('pause')">⏸️ Ich möchte pausieren</button>`}
-        ${profile.email_optout
-          ? `<button class="btn btn-ghost" onclick="prefMails(false)">🔔 E-Mails wieder erhalten</button>`
-          : `<button class="btn btn-ghost" onclick="prefMails(true)">🔕 Keine E-Mails mehr erhalten</button>`}
-        <button class="btn btn-ghost" style="color:#DD0000" onclick="prefEnd()">🚪 Teilnahme beenden</button>
-      </div>
     </div>`;
 }
-async function prefSet(st){ const { error }=await sb.rpc('update_my_prefs',{p_status:st}); if(error){ toast('Hat leider nicht geklappt.'); return; } profile.status=st; toast(st==='pause'?'Du bist jetzt pausiert. ⏸️':'Willkommen zurück – du bist wieder aktiv! ▶️'); renderProfil(); }
-async function prefMails(off){ const { error }=await sb.rpc('update_my_prefs',{p_email_optout:off}); if(error){ toast('Hat leider nicht geklappt.'); return; } profile.email_optout=off; toast(off?'Alles klar – du bekommst keine E-Mails mehr. 🔕':'E-Mails sind wieder aktiviert. 🔔'); renderProfil(); }
-async function prefEnd(){ if(!confirm('Möchtest du deine Teilnahme wirklich beenden? Du kannst jederzeit wiederkommen.')) return; const { error }=await sb.rpc('update_my_prefs',{p_status:'beendet'}); if(error){ toast('Hat leider nicht geklappt.'); return; } profile.status='beendet'; toast('Schade, dass du gehst – du bist jederzeit willkommen zurück. 💛'); renderProfil(); }
 async function saveProfil(){
   const bday=document.getElementById('pBday').value||null;
   const { error }=await sb.rpc('update_my_profile',{
