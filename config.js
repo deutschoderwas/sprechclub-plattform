@@ -25,6 +25,7 @@ window.SPRECHCLUB_CONFIG = {
 
     { id: 'sparpass', typ: 'paket', stunden: 30, preis: 399, label: 'Spar Pass',
       hinweis: 'einmalig · 30 Stunden',
-      benefits: ['<b>30 LIVE-Stunden mit echter Lehrkraft</b> · flexibel einlösbar', 'Bester Stundenpreis (13,30 €)', '📚 Lernplattform A2–C1 – üben rund um die Uhr', '🤖 Amanda – deine KI-Tutorin rund um die Uhr', '👥 Lern-Community – Austausch & Motivation', 'Einmalkauf · kein Abo'] }
+      benefits: ['<b>30 LIVE-Stunden mit echter Lehrkraft</b> · flexibel einlösbar', 'Bester Stundenpreis (13,30 €)', '📚 Lernplattform A2–C1 – üben rund um die Uhr', '🤖 Amanda – deine KI-Tutorin rund um die Uhr', '👥 Lern-Community – Austausch & Motivation', 'Einmalkauf · kein Abo'],
+      fussnote: '* Die 30 Stunden müssen innerhalb von 4 Monaten ab Kauf eingelöst werden, danach verfallen sie.' }
   ]
 };
