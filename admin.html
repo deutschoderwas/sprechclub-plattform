@@ -45,11 +45,16 @@ input,select{padding:10px 12px;border:2px solid var(--border);border-radius:10px
 </head>
 <body>
 <div id="gate">
-  <h2>Admin-Login</h2>
-  <p class="muted" style="margin:8px 0 14px">Melde dich mit deiner Admin-E-Mail an.</p>
-  <input type="email" id="adminEmail" placeholder="deine@email.de" style="width:100%;margin-bottom:10px">
-  <button class="btn btn-primary" style="width:100%" onclick="login()">Anmelde-Link schicken</button>
+  <h2>Lehrer-/Admin-Login</h2>
+  <p class="muted" style="margin:8px 0 14px">Melde dich mit E-Mail &amp; Passwort an — dann bleibst du angemeldet (auch in der App).</p>
+  <input type="email" id="adminEmail" placeholder="deine@email.de" style="width:100%;margin-bottom:8px">
+  <input type="password" id="adminPass" placeholder="Passwort" style="width:100%;margin-bottom:10px" onkeydown="if(event.key==='Enter')loginPw()">
+  <button class="btn btn-primary" style="width:100%" onclick="loginPw()">Anmelden</button>
   <p class="muted" id="gateMsg" style="margin-top:10px"></p>
+  <p class="muted" style="margin-top:10px;font-size:13px;line-height:1.6">
+    <a href="#" onclick="resetPw();return false" style="font-weight:600;color:var(--primary)">Passwort vergessen / zum ersten Mal?</a><br>
+    <a href="#" onclick="login();return false" style="font-weight:600;color:var(--primary)">Lieber per E-Mail-Link anmelden</a>
+  </p>
 </div>
 
 <div class="wrap" id="app" style="display:none">
@@ -171,6 +176,25 @@ async function enter(u){
   }
 }
 
+// Login mit E-Mail + Passwort (bleibt in der App gespeichert)
+async function loginPw(){
+  const email = document.getElementById('adminEmail').value.trim();
+  const pass = document.getElementById('adminPass').value;
+  const msg = document.getElementById('gateMsg');
+  if(!email || !pass){ msg.textContent='Bitte E-Mail und Passwort eingeben.'; return; }
+  msg.textContent='Melde an …';
+  const { error } = await sb.auth.signInWithPassword({ email, password: pass });
+  if(error){ msg.textContent = /invalid/i.test(error.message) ? 'E-Mail oder Passwort falsch. Falls du noch kein Passwort hast: „Passwort vergessen / zum ersten Mal?".' : error.message; }
+  else { msg.textContent='✓ Angemeldet …'; }   // onAuthStateChange ruft enter() auf
+}
+// Passwort setzen/zurücksetzen (auch für das allererste Passwort)
+async function resetPw(){
+  const email = document.getElementById('adminEmail').value.trim();
+  const msg = document.getElementById('gateMsg');
+  if(!email){ msg.textContent='Gib oben deine E-Mail ein, dann nochmal klicken.'; return; }
+  const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + '/passwort.html' });
+  msg.textContent = error ? error.message : '✓ Link zum Passwort-Setzen verschickt — schau in dein Postfach (auch Spam).';
+}
 async function login(){
   const email = document.getElementById('adminEmail').value.trim();
   const { error } = await sb.auth.signInWithOtp({ email, options:{ emailRedirectTo: location.href } });
