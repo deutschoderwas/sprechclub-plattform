@@ -499,8 +499,8 @@ async function loadKlassen(){
   const ids = (cls||[]).map(c=>c.id);
   let parts = {};
   if (ids.length){
-    const { data: bk } = await sb.from('bookings').select('class_id, status, profiles(name,email)').in('class_id', ids).eq('status','booked');
-    (bk||[]).forEach(b=>{ (parts[b.class_id]=parts[b.class_id]||[]).push(b.profiles); });
+    const { data: bk } = await sb.from('bookings').select('class_id, status, user_id, profiles(name,email)').in('class_id', ids).eq('status','booked');
+    (bk||[]).forEach(b=>{ (parts[b.class_id]=parts[b.class_id]||[]).push({ ...(b.profiles||{}), user_id:b.user_id }); });
     const { data: mats } = await sb.from('class_materials').select('class_id').in('class_id', ids);
     const matSet = new Set((mats||[]).map(m=>m.class_id));
     (cls||[]).forEach(c=>{ c._hasMat = matSet.has(c.id); });
@@ -573,7 +573,7 @@ function renderKlassen(){
 
       <div style="margin-top:14px">
         <div class="kl-sec">👥 Gebuchte Schüler (${p.length})</div>
-        ${p.length?'<div>'+p.map(x=>`<div class="tn">👤 ${esc(x.name||'')} <span class="muted">${esc(x.email)}</span></div>`).join('')+'</div>':'<div class="muted" style="font-size:12px">Noch niemand gebucht.</div>'}
+        ${p.length?'<div>'+p.map(x=>`<div class="tn" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">👤 ${esc(x.name||'')} <span class="muted">${esc(x.email)}</span>${(isAdminUser&&x.user_id)?`<button class="btn btn-ghost" style="padding:3px 11px;font-size:12px;margin-left:auto" onclick="rebookStudent('${x.user_id}','${c.id}')">🔁 umbuchen</button>`:''}</div>`).join('')+'</div>':'<div class="muted" style="font-size:12px">Noch niemand gebucht.</div>'}
       </div>
 
       <div style="margin-top:14px;background:#FFF8E0;border:1px solid #F0E5D8;border-radius:12px;padding:12px 14px">
@@ -678,6 +678,40 @@ function renderKlassen(){
 }
 
 function openKl(id){ klOpenId = (klOpenId===id ? null : id); renderKlassen(); }
+
+// Schüler umbuchen (nur Admin): alte Stunde stornieren, neue buchen — Guthaben bleibt gleich.
+async function rebookStudent(userId, fromClassId){
+  const me = (KL_PARTS[fromClassId]||[]).find(s=>s.user_id===userId);
+  const name = me ? (me.name || me.email) : 'Schüler';
+  const opts = (KL_ALL||[]).filter(c=>c.id!==fromClassId).slice().sort((a,b)=>new Date(a.starts_at)-new Date(b.starts_at));
+  if(!opts.length){ alert('Keine andere Stunde in dieser Woche. Wechsle ggf. oben die Woche und versuche es erneut.'); return; }
+  const tf = new Intl.DateTimeFormat('de-DE',{timeZone:'Europe/Berlin',weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+  const sel = opts.map(c=>{ const n=(KL_PARTS[c.id]||[]).length; const voll=n>=c.capacity; return `<option value="${c.id}">${tf.format(new Date(c.starts_at))} · ${esc(c.title)} (${esc(c.level)}) · ${n}/${c.capacity}${voll?' VOLL':''}</option>`; }).join('');
+  const ov=document.createElement('div');
+  ov.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:18px';
+  ov.innerHTML=`<div class="card" style="max-width:460px;width:100%;background:#fff">
+    <b style="font-size:17px">🔁 ${esc(name)} umbuchen</b>
+    <p class="muted" style="margin:6px 0 12px;font-size:13px">Die aktuelle Stunde wird storniert und die gewählte neue Stunde gebucht. Das Guthaben bleibt unverändert.</p>
+    <label class="muted" style="font-size:12px">Neue Stunde wählen</label>
+    <select id="rbTarget" style="width:100%;margin-top:4px;padding:10px 12px;border:2px solid var(--border);border-radius:10px;font-size:14px">${sel}</select>
+    <div style="display:flex;gap:8px;margin-top:14px;justify-content:flex-end">
+      <button class="btn btn-ghost" id="rbCancel">Abbrechen</button>
+      <button class="btn btn-primary" id="rbGo">Umbuchen</button>
+    </div>
+    <div class="muted" id="rbMsg" style="margin-top:8px;font-size:13px"></div>
+  </div>`;
+  document.body.appendChild(ov);
+  const close=()=>ov.remove();
+  ov.addEventListener('click',e=>{ if(e.target===ov) close(); });
+  ov.querySelector('#rbCancel').onclick=close;
+  ov.querySelector('#rbGo').onclick=async()=>{
+    const to=ov.querySelector('#rbTarget').value;
+    const msg=ov.querySelector('#rbMsg'); msg.textContent='Buche um …';
+    const { error } = await sb.rpc('admin_rebook',{ p_user_id:userId, p_from_class:fromClassId, p_to_class:to });
+    if(error){ msg.textContent='Fehler: '+error.message; return; }
+    close(); await loadKlassen();
+  };
+}
 
 // ---------- Team-Notiz pro Stunde (nur Lehrer/Admin) ----------
 async function loadClassLog(id){
@@ -910,8 +944,8 @@ async function loadBewertungen(){
 
 let SCHUELER = [];
 function nameKey(p){ return (p.name && p.name.trim()) ? p.name.trim() : (p.email||''); }
-const STATUS_OPT = [['aktiv','🟢 Aktiv'],['pause','⏸️ Pause'],['urlaub','🏖️ Urlaub'],['beendet','⚪ Beendet']];
-const STATUS_BG = { aktiv:'#DCFCE7', pause:'#FEF3C7', urlaub:'#DBEAFE', beendet:'#F1F1F1' };
+const STATUS_OPT = [['aktiv','🟢 Aktiv'],['probeschuler','🎟️ Probeschüler'],['pause','⏸️ Pause'],['urlaub','🏖️ Urlaub'],['beendet','⚪ Beendet']];
+const STATUS_BG = { aktiv:'#DCFCE7', probeschuler:'#FCE7F3', pause:'#FEF3C7', urlaub:'#DBEAFE', beendet:'#F1F1F1' };
 function todayMMDD(){ const p=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Berlin',month:'2-digit',day:'2-digit'}).formatToParts(new Date()).reduce((a,x)=>(a[x.type]=x.value,a),{}); return `${p.month}-${p.day}`; }
 function bdayLabel(p){ if(!p.birthday) return '<span class="muted">–</span>'; const [y,m,d]=p.birthday.split('-'); const isToday=p.birthday.slice(5)===todayMMDD(); return `${d}.${m}.${y}${isToday?' 🎂':''}`; }
 async function authToken(){ const { data } = await sb.auth.getSession(); return data?.session?.access_token || ''; }
@@ -943,6 +977,7 @@ async function loadSchueler(){
       <select id="schuelerStatus" onchange="renderSchuelerTable()">
         <option value="">Alle Status</option>
         <option value="aktiv">nur Aktiv</option>
+        <option value="probeschuler">nur Probeschüler</option>
         <option value="pause">nur Pause</option>
         <option value="urlaub">nur Urlaub</option>
         <option value="beendet">nur Beendet</option>

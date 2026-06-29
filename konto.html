@@ -503,7 +503,8 @@ function collectVocab(){
 const VIEWS=['dashboard','ueben','community','lernpfad','kalender','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','profil'];
 function go(v){ location.hash=v; }
 function routeFromHash(){ const v=(location.hash||'#dashboard').slice(1); show(VIEWS.includes(v)?v:'dashboard'); }
-const LOCKED_VIEWS=['ueben','community','amanda','materialien'];
+// Ohne Guthaben/Probestunde/Pass: ALLES gesperrt außer Kalender (und Profil für Konto/Logout).
+const LOCKED_VIEWS=['dashboard','ueben','community','lernpfad','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda'];
 function show(v){
   VIEWS.forEach(x=>document.getElementById('v-'+x).classList.toggle('active',x===v));
   document.querySelectorAll('.navlink[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));
@@ -514,25 +515,25 @@ function show(v){
   if(v==='community') markCommRead();   // Community geöffnet -> Nachrichten gelesen, Badge weg
   window.scrollTo(0,0);
 }
-const LOCK_LABELS={ueben:'Üben',community:'Community',amanda:'Amanda',materialien:'Material'};
+const LOCK_LABELS={dashboard:'Start',ueben:'Üben',community:'Community',lernpfad:'Lernpfad',stunden:'Meine Stunden',materialien:'Material',vokabeln:'Vokabeln',fortschritt:'Fortschritt',guthaben:'Guthaben',nachrichten:'Nachrichten',amanda:'Amanda'};
 function renderLocked(v){
   const label=LOCK_LABELS[v]||'Dieser Bereich';
   document.getElementById('v-'+v).innerHTML=
     `<div class="pagehead"><h1>${label} 🔒</h1></div>
      <div class="card" style="text-align:center;border:2px solid #f5b942;background:#fff8ec;max-width:560px;margin:0 auto">
        <div style="font-size:46px;line-height:1;margin-bottom:8px">🎟️</div>
-       <h3 style="margin-bottom:8px">Noch kein Stundenpaket</h3>
-       <p class="muted" style="margin-bottom:16px">Such dir gerne dein Stundenpaket aus, um aktiv am Unterricht teilzunehmen und die ganze Plattform aktiv zu nutzen — Üben, Community, Amanda &amp; Material.</p>
-       <a class="btn btn-primary" href="index.html#pakete" style="text-decoration:none">Stundenpaket aussuchen →</a>
+       <h3 style="margin-bottom:8px">Such dir ein Stundenpaket aus</h3>
+       <p class="muted" style="margin-bottom:16px">Mit einem Stundenpaket oder einer Probestunde schaltest du die ganze Plattform frei — Üben, Community, Amanda &amp; Material.</p>
+       <a class="btn btn-primary" href="index.html#preise" style="text-decoration:none">Zu den Preisen →</a>
      </div>`;
   showLockPopup();
 }
 function showLockPopup(){
   const card=document.getElementById('cfmCard');
   card.innerHTML=`<div class="ico">🎟️</div>
-    <h3>Werde aktiv im Club</h3>
-    <p class="hint">Such dir gerne dein Stundenpaket aus, um aktiv am Unterricht teilzunehmen und die ganze Plattform aktiv zu nutzen.</p>
-    <div class="acts"><button class="btn btn-ghost" onclick="closeCfm()">Schließen</button><a class="btn btn-primary" href="index.html#pakete" style="flex:1;text-decoration:none">Stundenpaket aussuchen →</a></div>`;
+    <h3>Such dir ein Stundenpaket aus</h3>
+    <p class="hint">Mit einem Stundenpaket oder einer Probestunde schaltest du die ganze Plattform frei. Den Kalender kannst du dir natürlich frei anschauen. 😊</p>
+    <div class="acts"><button class="btn btn-ghost" onclick="closeCfm()">Schließen</button><a class="btn btn-primary" href="index.html#preise" style="flex:1;text-decoration:none">Zu den Preisen →</a></div>`;
   document.getElementById('cfmModal').classList.add('open');
 }
 
@@ -686,7 +687,7 @@ async function openMaterial(path,a){
 }
 
 // ---------- Dashboard ----------
-function isActive(){ return credits>0 || stats.upcoming.length>0 || passActive(); }
+function isActive(){ return credits>0 || (stats && stats.upcoming && stats.upcoming.length>0) || passActive(); }
 function lockBanner(){
   return `<div class="card" style="border:2px solid #f5b942;background:#fff8ec;margin-bottom:14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
     <div style="flex:1;min-width:200px"><b>🔒 Dein Guthaben ist aufgebraucht</b>
