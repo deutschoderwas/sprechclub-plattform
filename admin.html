@@ -613,9 +613,13 @@ function renderKlassen(){
       <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
         <button class="btn btn-ghost" onclick="toggleAtt('${c.id}')">✅ Anwesenheit eintragen</button>
         <a class="btn btn-ghost" href="tafel.html?id=${c.id}" target="_blank" rel="noopener">🖊️ Live-Tafel</a>
+        <button class="btn btn-ghost" onclick="genMaterial('${c.id}')">${c._hasMat?'🔄 KI-Übungen neu':'✨ KI-Übungen erstellen'}</button>
+        <button class="btn btn-ghost" onclick="previewMaterial('${c.id}')">👁️ Material prüfen</button>
         <button class="btn btn-ghost" onclick="editClass('${c.id}')">Bearbeiten · Material</button>
         <button class="btn btn-ghost" onclick="cancelClass('${c.id}')">Stunde absagen</button>
       </div>
+      <span class="muted" id="genMsg-${c.id}" style="display:block;margin-top:8px">${c._hasMat?'✓ KI-Material vorhanden':''}</span>
+      <div id="genPrev-${c.id}" style="margin-top:6px"></div>
       <div id="att-${c.id}" style="display:none;margin-top:10px"></div>
       <div id="edit-${c.id}" style="display:none;margin-top:10px">
         <div class="formrow">
@@ -626,14 +630,6 @@ function renderKlassen(){
         <div class="formrow"><input id="ePost-${c.id}" placeholder="Nachbearbeitung (Link)" value="${c.material_post||''}" style="flex:1"><input id="eZoom-${c.id}" placeholder="Google-Meet-Link" value="${c.zoom_link||''}" style="flex:1"></div>
         <div class="formrow"><textarea id="eVocab-${c.id}" placeholder="Vokabeln (eine pro Zeile): Wort — Bedeutung" style="flex:1;min-height:80px;padding:10px 12px;border:2px solid var(--border);border-radius:10px;font-family:inherit;font-size:14px">${(c.vocab||[]).map(v=>v.de+' — '+(v.info||'')).join('\n')}</textarea></div>
         <button class="btn btn-primary" onclick="saveClass('${c.id}')">Speichern</button> <span class="muted" id="eMsg-${c.id}"></span>
-        <div style="margin-top:12px;border-top:1px dashed var(--border);padding-top:12px">
-          <b style="font-size:14px">🤖 Amanda erstellt Übungen</b>
-          <p class="muted" style="margin:4px 0 8px">Generiert passend zu Niveau &amp; Thema: Lückentexte, Multiple Choice, Zuordnen, Satzbau, Schreibaufgaben, Grammatik-Tipp &amp; Vokabeln. Schüler sehen die Übungen interaktiv im Schülerbereich.</p>
-          <button class="btn btn-ghost" onclick="genMaterial('${c.id}')">${c._hasMat?'🔄 Neu generieren':'✨ KI-Material erstellen'}</button>
-          <button class="btn btn-ghost" onclick="previewMaterial('${c.id}')">👁️ Material prüfen</button>
-          <span class="muted" id="genMsg-${c.id}">${c._hasMat?'✓ Material vorhanden':''}</span>
-          <div id="genPrev-${c.id}" style="margin-top:8px"></div>
-        </div>
       </div>
     </div>`;
   };
