@@ -1147,6 +1147,7 @@ async function loadBewertungen(){
 }
 
 let SCHUELER = [];
+function memberBadge(p){ const active=p.pass_until&&new Date(p.pass_until)>new Date(); const paid=window.PAID_SET&&PAID_SET.has(p.id); const trial=window.TRIAL_SET&&TRIAL_SET.has(p.id); const A='<span class="pill" style="background:#D1FAE5;color:#065F46;font-weight:700">🟢 Aktiv</span>'; const T='<span class="pill" style="background:#FEF3C7;color:#92400E;font-weight:700">🧪 Probestunde</span>'; const K='<span class="pill" style="background:#F3F4F6;color:#6B7280;font-weight:700">⚪ Noch kein Paket</span>'; if(active) return (!paid&&trial)?T:A; if((p.credits||0)>0) return A; return K; }
 function nameKey(p){ return (p.name && p.name.trim()) ? p.name.trim() : (p.email||''); }
 const STATUS_OPT = [['aktiv','🟢 Aktiv'],['probeschuler','🎟️ Probeschüler'],['pause','⏸️ Pause'],['urlaub','🏖️ Urlaub'],['beendet','⚪ Beendet']];
 const STATUS_BG = { aktiv:'#DCFCE7', probeschuler:'#FCE7F3', pause:'#FEF3C7', urlaub:'#DBEAFE', beendet:'#F1F1F1' };
@@ -1157,6 +1158,7 @@ async function authToken(){ const { data } = await sb.auth.getSession(); return 
 async function loadSchueler(){
   const { data } = await sb.from('profiles').select('id,name,email,credits,status,birthday,inactive_until,level,notes,started_at,target_level,native_language,goal,is_admin,is_teacher,created_at').limit(2000);
   SCHUELER = data || [];
+  try{ const { data:_cl } = await sb.from('credit_log').select('user_id,reason'); window.PAID_SET=new Set(); window.TRIAL_SET=new Set(); (_cl||[]).forEach(c=>{ const rs=c.reason||''; if(/^(abo|kauf):/.test(rs)) PAID_SET.add(c.user_id); else if(/^trial:/.test(rs)) TRIAL_SET.add(c.user_id); }); }catch(e){ window.PAID_SET=window.PAID_SET||new Set(); window.TRIAL_SET=window.TRIAL_SET||new Set(); }
   document.getElementById('schueler').innerHTML = `
     <div class="card" style="margin-bottom:16px;background:#FFFCF5">
       <b>➕ Neuen Schüler anlegen</b>
@@ -1231,7 +1233,7 @@ function renderSchuelerTable(){
       <td><b>${esc(p.name||'–')}</b>${staff?' <span class="pill">Team</span>':''}</td>
       <td class="muted">${esc(p.email)}</td>
       <td>${nivo?`<span class="pill" style="background:#Eef;color:#2563EB;font-weight:700">${esc(nivo)}</span>`:'<span class="muted">–</span>'}</td>
-      <td>${statusLabel(st)}${((st==='pause'||st==='urlaub')&&p.inactive_until)?` <span class="muted" style="font-size:11px">bis ${p.inactive_until.split('-').reverse().join('.')}</span>`:''}</td>
+      <td>${memberBadge(p)}${st!=='aktiv'?(' '+statusLabel(st)):''}${((st==='pause'||st==='urlaub')&&p.inactive_until)?` <span class="muted" style="font-size:11px">bis ${p.inactive_until.split('-').reverse().join('.')}</span>`:''}</td>
       <td><b style="font-size:16px">${p.credits}</b> <span class="muted" style="font-size:12px">Std.</span>${p.credits<=1?' <span class="pill">niedrig</span>':''}</td></tr>`;
   }).join('');
   document.getElementById('schuelerTable').innerHTML = `<p class="muted" style="margin:0 0 6px">Tipp: Auf einen Schüler klicken, um die Schülerkarte zu öffnen.</p><table><tr><th>Name</th><th>E-Mail</th><th>Niveau</th><th>Status</th><th>Guthaben</th></tr>` + rowsHtml + '</table>';
