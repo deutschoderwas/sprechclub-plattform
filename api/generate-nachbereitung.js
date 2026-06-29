@@ -57,6 +57,7 @@ async function runNachbereitung(sb, { classId, source = 'tafel', pdfText } = {})
     const cur = vmap.get(k) || { de, info: '', example: '' };
     if (info && !cur.info) cur.info = info;
     if (ex && !cur.example) cur.example = ex;
+    if (v.img && !cur.img) cur.img = v.img;
     cur.de = de; vmap.set(k, cur);
   };
   if (mat && mat.content && Array.isArray(mat.content.vocab)) mat.content.vocab.forEach(addV);
@@ -84,6 +85,7 @@ async function runNachbereitung(sb, { classId, source = 'tafel', pdfText } = {})
 
   (Array.isArray(parsed.vocab) ? parsed.vocab : []).forEach(addV);
   const vocab = [...vmap.values()];
+  await addVocabImages(vocab); // echte Fotos pro Wort (Unsplash), gecacht in der Vokabel
   const exercises = normExercises(parsed.exercises || []);
 
   const post_content = {
@@ -231,6 +233,30 @@ function normExercises(arr) {
     }
   });
   return out;
+}
+
+// Pro Vokabel ein echtes Foto von Unsplash holen (nur wenn UNSPLASH_ACCESS_KEY gesetzt).
+async function addVocabImages(vocab) {
+  const key = process.env.UNSPLASH_ACCESS_KEY;
+  if (!key || !vocab || !vocab.length) return;
+  await Promise.all(vocab.map(async (v) => {
+    if (v.img) return;
+    const q = imgQuery(v);
+    if (!q) return;
+    try {
+      const r = await fetch('https://api.unsplash.com/search/photos?per_page=1&orientation=squarish&content_filter=high&query=' + encodeURIComponent(q), { headers: { Authorization: 'Client-ID ' + key } });
+      if (!r.ok) return;
+      const j = await r.json();
+      const u = j && j.results && j.results[0] && j.results[0].urls;
+      if (u) v.img = u.small || u.regular || u.thumb || null;
+    } catch (e) {}
+  }));
+}
+function imgQuery(v) {
+  let q = (v.info || '').trim();
+  if (!q || q.length > 40 || /[äöüß]/i.test(q)) q = String(v.de || '').replace(/^(der|die|das|den|dem|ein|eine)\s+/i, '').replace(/\(.*?\)/g, '').trim();
+  q = q.split(/[;,/]/)[0].trim();
+  return q.split(/\s+/).slice(0, 3).join(' ');
 }
 
 function buildPrompt(cls, srcText, existing, source) {
