@@ -345,8 +345,9 @@ function evCard(c){
   const lc = lvlColor(c.level);
   let btn;
   if (c.mine){
-    btn = c.zoom_link
-      ? `<a class="ev-btn meet" href="${c.zoom_link}" target="_blank" rel="noopener">🎥 Zum Unterricht</a>`
+    const _st=new Date(c.starts_at).getTime(), _now=Date.now();
+    btn = (_now>=_st-10*60000 && _now<=_st+90*60000)
+      ? `<a class="ev-btn meet" href="klassenraum.html?stunde=${c.id}&titel=${encodeURIComponent(c.topic||c.title||'')}&niveau=${encodeURIComponent(c.level||'')}" target="_blank" rel="noopener">🔴 Beitreten</a>`
       : `<span class="ev-btn mine">✓ Gebucht</span>`;
   } else if (past){ btn = `<span class="ev-btn off">vorbei</span>`; }
   else if (free<=0){ btn = `<span class="ev-btn off">ausgebucht</span>`; }
@@ -407,6 +408,7 @@ function renderPakete(){
       <div class="hinweis">${p.hinweis}</div>
       <ul style="list-style:none;padding:0;margin:6px 0 4px;display:flex;flex-direction:column;gap:7px">${benefits}</ul>
       <button class="btn btn-primary" style="margin-top:auto" onclick="${action}">${cta}</button>
+      ${p.fussnote?`<div style="font-size:10px;line-height:1.4;color:var(--text-soft);opacity:.85;margin-top:8px;text-align:left">${p.fussnote}</div>`:''}
     </div>`;
   }).join('');
 }
@@ -470,7 +472,6 @@ async function doRegister(){
   if (!email.includes('@')) return authMsg(false,'Bitte gültige E-Mail eingeben.');
   if (pass.length<8) return authMsg(false,'Das Passwort braucht mindestens 8 Zeichen.');
   const { data, error } = await sb.auth.signUp({ email, password: pass, options: { data:{name}, emailRedirectTo: location.origin + '/schuelerbereich' } });
-  if(!error){ try{ fetch('/api/welcome',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,name})}); }catch(e){} }
   if (error){ if (/already|registered/i.test(error.message)) return authMsg(false,'Diese E-Mail hat schon ein Konto. Wechsle auf „Anmelden".'); return authMsg(false,'Fehler: '+error.message); }
   if (data?.user && !data?.session) return authMsg(true,'✓ Fast geschafft! Bestätige bitte den Link in deiner Mail (auch Spam prüfen).');
   authMsg(true,'✓ Konto erstellt! Einen Moment…'); setTimeout(()=>location.href='/schuelerbereich', 600);

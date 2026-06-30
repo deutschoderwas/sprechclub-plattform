@@ -57,7 +57,10 @@
   .video-card{align-self:stretch; width:100%; background:var(--creme-hell); border:1px solid var(--rahmen); border-radius:16px; overflow:hidden; box-shadow:0 4px 14px rgba(0,0,0,.08); flex:0 0 auto;}
   .video-kopf{display:flex; align-items:center; gap:8px; padding:8px 13px; font-weight:600; font-size:.82rem; border-bottom:1px solid var(--rahmen);}
   .video-kopf .punkt{width:8px; height:8px; border-radius:50%; background:var(--rot);}
-  .video-buehne{position:relative; height:300px; background:var(--anthrazit);}
+  .video-buehne{position:relative; height:var(--vidH,300px); background:var(--anthrazit);}
+  .vgutter{flex:0 0 14px; display:flex; align-items:center; justify-content:center; cursor:row-resize; touch-action:none; margin:-6px 0;}
+  .vgutter .vgrip{width:46px; height:4px; border-radius:3px; background:var(--rahmen);}
+  .vgutter:hover .vgrip{background:var(--tuerkis-dunkel);}
   .vid-controls{display:flex; flex-wrap:wrap; gap:6px; padding:8px 10px; border-top:1px solid var(--rahmen); background:var(--creme-hell);}
   .vid-controls button{flex:1 1 auto; min-width:62px; border:1px solid var(--rahmen); background:#fff; cursor:pointer; border-radius:9px; padding:8px 6px; font-family:'Inter'; font-weight:600; font-size:.8rem; color:var(--anthrazit);}
   .vid-controls button.leave{background:var(--rot); color:#fff; border-color:var(--rot); flex-basis:100%;}
@@ -118,6 +121,7 @@
     .toggle{ display:none; }
     main{ display:flex; flex-direction:column; gap:8px; padding:8px; }
     .gutter{ display:none; }
+    .vgutter{ display:none; }
     .spalte{ display:contents; }
     /* Video bleibt OBEN angeheftet: Teilnehmer + Selbstbild immer sichtbar, Präsi scrollt darunter */
     .video-card{ order:1; width:100%; align-self:stretch; position:sticky; top:0; z-index:20; box-shadow:0 6px 16px rgba(0,0,0,.14); }
@@ -208,6 +212,8 @@
         <button class="leave" onclick="vcLeave()" title="Unterricht verlassen">🚪 Verlassen</button>
       </div>
     </div>
+
+    <div class="vgutter" id="vgutter" title="Ziehen: Video kleiner/größer, Live-Tafel größer/kleiner"><div class="vgrip"></div></div>
 
     <div class="tafel">
       <div class="tafel-kopf">
@@ -425,6 +431,18 @@
     const cur=getComputedStyle(main).getPropertyValue('--rechts').trim();
     localStorage.setItem('club_rechts', parseInt(cur,10)||420);
   });
+
+  // ---- Vertikaler Schieber: Video-Höhe vs. Live-Tafel (Desktop) ----
+  (function(){
+    const vg=document.getElementById('vgutter'), sp=document.querySelector('.spalte'), bu=document.querySelector('.video-buehne');
+    if(!vg||!sp||!bu) return;
+    const sv=parseInt(localStorage.getItem('club_vidH')||'0',10);
+    if(sv) sp.style.setProperty('--vidH', sv+'px');
+    let vd=false, sy=0, sh=0;
+    vg.addEventListener('pointerdown', e=>{ vd=true; sy=e.clientY; sh=parseInt(getComputedStyle(bu).height,10)||300; vg.setPointerCapture(e.pointerId); e.preventDefault(); });
+    vg.addEventListener('pointermove', e=>{ if(!vd) return; let h=sh+(e.clientY-sy); h=Math.max(120, Math.min(720, h)); sp.style.setProperty('--vidH', h+'px'); if(typeof fit==='function') fit(); });
+    vg.addEventListener('pointerup', ()=>{ if(!vd) return; vd=false; localStorage.setItem('club_vidH', parseInt(getComputedStyle(bu).height,10)||300); });
+  })();
 
   setRolle('lehrer');
 
