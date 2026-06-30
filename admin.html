@@ -69,7 +69,7 @@ input,select{padding:10px 12px;border:2px solid var(--border);border-radius:10px
     <button id="tabN" onclick="show('neu')">Stunde anlegen</button>
     <button id="tabL" onclick="show('lehrer')">👩‍🏫 Lehrer</button>
     <button id="tabS" onclick="show('schueler')">Schüler & Guthaben</button>
-    <button id="tabM" onclick="show('nachrichten')">Nachrichten</button>
+    <button id="tabM" onclick="show('nachrichten')">Nachrichten <span id="msgDot" style="display:none;background:#DD0000;color:#fff;border-radius:999px;padding:1px 7px;font-size:11px;font-weight:700;vertical-align:middle">0</span></button>
     <button id="tabB" onclick="show('bewertungen')">Bewertungen</button>
     <button id="tabMat" onclick="show('material')">📚 Materialien</button>
     <button id="tabC" onclick="show('community')">💬 Community</button>
@@ -173,6 +173,7 @@ async function enter(u){
     show('plan');
   } else {
     loadKlassen();
+    refreshMsgBadge();
   }
 }
 
@@ -1084,7 +1085,7 @@ async function loadNachrichten(){
   const { data } = await sb.from('messages').select('*, profiles(name,email)').order('created_at',{ascending:false});
   const byUser={};
   (data||[]).forEach(m=>{ (byUser[m.user_id]=byUser[m.user_id]||{p:m.profiles,msgs:[]}).msgs.push(m); });
-  const ids=Object.keys(byUser);
+  window.NACHR_BYUSER=byUser; const ids=Object.keys(byUser).sort((a,b)=>new Date(byUser[b].msgs[0].created_at)-new Date(byUser[a].msgs[0].created_at));
 
   const composer = `<div class="card" style="background:#FFFCF5">
     <b class="title">✉️ Neue Nachricht senden</b>
@@ -1115,7 +1116,7 @@ async function loadNachrichten(){
     </div>`;
   }).join('') : '<div class="card muted">Noch keine Verläufe mit Schülern.</div>';
 
-  document.getElementById('nachrichten').innerHTML = composer + '<h3 style="margin:18px 0 8px;font-family:\'Space Grotesk\',sans-serif;font-size:17px">💬 Verläufe</h3>' + threads;
+  document.getElementById('nachrichten').innerHTML = composer + '<h3 style="margin:18px 0 8px;font-family:\'Space Grotesk\',sans-serif;font-size:17px">💬 Posteingang</h3>' + renderInbox(ids); refreshMsgBadge();
 }
 function nachrMode(m){ document.getElementById('nachrPick').style.display = m==='some'?'block':'none'; if(m==='some') renderNachrPick(); }
 function renderNachrPick(){
@@ -1144,11 +1145,45 @@ async function sendNachricht(){
   setTimeout(loadNachrichten, 1200);
 }
 function esc(s){ return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+function renderInbox(ids){
+  if(!ids.length) return '<div class="card muted">Noch keine Nachrichten von Schülern.</div>';
+  const by = window.NACHR_BYUSER || {};
+  return '<div class="card" style="padding:0;overflow:hidden">' + ids.map(uid=>{
+    const t = by[uid]; if(!t) return '';
+    const last = t.msgs[0];
+    const unread = t.msgs.filter(m=>m.sender==='student' && !m.read).length;
+    const snip = esc((last.body||'').slice(0,60));
+    const who = last.sender==='student' ? '' : 'Du: ';
+    return `<div onclick="openChat('${uid}')" style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--border);cursor:pointer;background:${unread?'#FFFBEC':'#fff'}">
+      <div style="width:38px;height:38px;border-radius:50%;background:var(--secondary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;flex:0 0 auto">${esc((t.p?.name||'?').trim().charAt(0).toUpperCase()||'?')}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:700;font-size:14px">${esc(t.p?.name||'–')} ${unread?`<span style="background:#DD0000;color:#fff;border-radius:999px;padding:1px 7px;font-size:11px;margin-left:4px">${unread}</span>`:''}</div>
+        <div class="muted" style="font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${who}${snip}</div>
+      </div>
+      <div class="muted" style="font-size:12px;white-space:nowrap;flex:0 0 auto">${new Date(last.created_at).toLocaleDateString('de-DE')}</div>
+    </div>`;
+  }).join('') + '</div>';
+}
+async function openChat(uid){
+  const { data: msgs } = await sb.from('messages').select('*, profiles(name,email)').eq('user_id',uid).order('created_at',{ascending:true});
+  const by = window.NACHR_BYUSER || {};
+  const p = (msgs && msgs.length && msgs[0].profiles) || (by[uid] && by[uid].p) || {};
+  try{ const un=(msgs||[]).filter(m=>m.sender==='student' && !m.read).map(m=>m.id); if(un.length) await sb.from('messages').update({read:true}).in('id',un); }catch(e){}
+  const bubbles = (msgs||[]).map(m=>`<div style="align-self:${m.sender==='student'?'flex-start':'flex-end'};max-width:80%;background:${m.sender==='student'?'#fff':'var(--secondary)'};color:${m.sender==='student'?'var(--text)':'#fff'};border:1px solid var(--border);border-radius:14px;padding:8px 12px;font-size:14px">${esc(m.body)}<br><span style="font-size:11px;opacity:.6">${m.sender==='student'?'Schüler':'du'} · ${new Date(m.created_at).toLocaleDateString('de-DE')}${m.sender==='teacher'?(m.read_at?' · ✓✓ gelesen':' · ✓ gesendet'):''}</span></div>`).join('');
+  document.getElementById('nachrichten').innerHTML = `<button class="btn btn-ghost" onclick="loadNachrichten()" style="margin-bottom:10px">← Alle Chats</button>
+    <div class="card"><b class="title">👤 ${esc(p.name||'–')} <span class="muted" style="font-weight:400">${esc(p.email||'')}</span></b>
+    <div style="margin:10px 0;display:flex;flex-direction:column;gap:6px">${bubbles||'<span class="muted">Noch keine Nachrichten.</span>'}</div>
+    <div class="formrow"><input id="reply-${uid}" placeholder="Antwort schreiben…" style="flex:1" onkeydown="if(event.key==='Enter')reply('${uid}')"><button class="btn btn-primary" onclick="reply('${uid}')">Senden</button></div></div>`;
+  refreshMsgBadge();
+}
+
 async function reply(uid){
   const inp=document.getElementById('reply-'+uid); const body=inp.value.trim(); if(!body)return;
   const { error }=await sb.from('messages').insert({user_id:uid,sender:'teacher',body});
   if(error){ alert('Fehler: '+error.message); return; }
-  inp.value=''; loadNachrichten();
+  try{ const { data:{ session } }=await sb.auth.getSession(); if(session) fetch('/api/notify-message',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},body:JSON.stringify({user_ids:[uid],preview:body})}).catch(()=>{}); }catch(e){}
+  inp.value=''; openChat(uid);
 }
 
 async function loadBewertungen(){
@@ -1168,6 +1203,7 @@ const STATUS_BG = { registriert:'#E5E7EB', aktiv:'#DCFCE7', probeschuler:'#FCE7F
 function todayMMDD(){ const p=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Berlin',month:'2-digit',day:'2-digit'}).formatToParts(new Date()).reduce((a,x)=>(a[x.type]=x.value,a),{}); return `${p.month}-${p.day}`; }
 function bdayLabel(p){ if(!p.birthday) return '<span class="muted">–</span>'; const [y,m,d]=p.birthday.split('-'); const isToday=p.birthday.slice(5)===todayMMDD(); return `${d}.${m}.${y}${isToday?' 🎂':''}`; }
 async function authToken(){ const { data } = await sb.auth.getSession(); return data?.session?.access_token || ''; }
+async function refreshMsgBadge(){ try{ const { count }=await sb.from('messages').select('id',{count:'exact',head:true}).eq('sender','student').eq('read',false); const d=document.getElementById('msgDot'); if(!d)return; if(count&&count>0){ d.textContent=count; d.style.display='inline-block'; } else { d.style.display='none'; } }catch(e){} }
 
 async function loadSchueler(){
   const { data } = await sb.from('profiles').select('id,name,email,credits,status,birthday,inactive_until,level,notes,started_at,target_level,native_language,goal,is_admin,is_teacher,created_at').limit(2000);
