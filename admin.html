@@ -69,7 +69,7 @@ input,select{padding:10px 12px;border:2px solid var(--border);border-radius:10px
     <button id="tabN" onclick="show('neu')">Stunde anlegen</button>
     <button id="tabL" onclick="show('lehrer')">👩‍🏫 Lehrer</button>
     <button id="tabS" onclick="show('schueler')">Schüler & Guthaben</button>
-    <button id="tabM" onclick="show('nachrichten')">Nachrichten <span id="msgDot" style="display:none;background:#DD0000;color:#fff;border-radius:999px;padding:1px 7px;font-size:11px;font-weight:700;vertical-align:middle">0</span></button>
+    <button id="tabM" onclick="show('nachrichten')">Nachrichten</button>
     <button id="tabB" onclick="show('bewertungen')">Bewertungen</button>
     <button id="tabMat" onclick="show('material')">📚 Materialien</button>
     <button id="tabC" onclick="show('community')">💬 Community</button>
@@ -173,7 +173,6 @@ async function enter(u){
     show('plan');
   } else {
     loadKlassen();
-    refreshMsgBadge();
   }
 }
 
@@ -616,11 +615,13 @@ function renderKlassen(){
         <a class="btn btn-ghost" href="tafel.html?id=${c.id}" target="_blank" rel="noopener">🖊️ Live-Tafel</a>
         <button class="btn btn-ghost" onclick="genMaterial('${c.id}')">${c._hasMat?'🔄 KI-Übungen neu':'✨ KI-Übungen erstellen'}</button>
         <button class="btn btn-ghost" onclick="toggleNb('${c.id}')">🤖 Auto-Nachbereitung</button>
+        ${c.material_post?`<button class="btn btn-ghost" onclick="sendNachbLink('${c.id}')">📧 Nachbereitung-Mail an Schüler</button>`:''}
         <button class="btn btn-ghost" onclick="previewInteractive('${c.id}')">👁️ Schüler-Vorschau</button>
         <button class="btn btn-ghost" onclick="editClass('${c.id}')">Bearbeiten · Material</button>
         <button class="btn btn-ghost" onclick="cancelClass('${c.id}')">Stunde absagen</button>
       </div>
       <span class="muted" id="genMsg-${c.id}" style="display:block;margin-top:8px">${c._hasMat?'✓ KI-Material vorhanden':''}</span>
+      <span class="muted" id="nbmailMsg-${c.id}" style="display:block;margin-top:4px;font-weight:700;font-size:12px"></span>
       <div id="genPrev-${c.id}" style="margin-top:6px"></div>
       <div id="nb-${c.id}" style="display:none;margin-top:10px;background:#F2FBFA;border:1px solid #CDEEEA;border-radius:12px;padding:12px 14px">
         <div style="font-weight:800;font-size:13px;margin-bottom:4px">🤖 Automatische Nachbereitung</div>
@@ -1061,6 +1062,19 @@ async function genNachbereitung(id){
   }catch(e){ msg.textContent='❌ Netzwerkfehler: '+e.message; }
 }
 
+// Nachbereitungs-Link per Mail an die gebuchten Schüler (Admin löst selbst aus)
+async function sendNachbLink(id){
+  if(!confirm('Wirklich allen gebuchten Schülern dieser Stunde die Nachbereitungs-Mail (mit deinem Handout-Link) schicken?')) return;
+  const el=document.getElementById('nbmailMsg-'+id); if(el) el.textContent='⏳ Sende…';
+  const { data:{ session } } = await sb.auth.getSession();
+  try{
+    const r=await fetch('/api/send-nachbereitung-link',{ method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token}, body: JSON.stringify({ classId:id }) });
+    const j=await r.json();
+    if(!r.ok || !j.ok){ const map={no_link:'Kein Nachbereitungs-Link (Material nach dem Unterricht) hinterlegt.',not_admin:'Keine Rechte.',brevo_missing:'Brevo-Key fehlt in Vercel.',class_not_found:'Stunde nicht gefunden.'}; if(el) el.textContent='❌ '+(map[j.error]||j.error||'Fehler'); return; }
+    if(el) el.textContent=`✓ ${j.sent} Mail(s) gesendet${j.skipped?` · ${j.skipped} übersprungen (schon gesendet/abgemeldet)`:''}`;
+  }catch(e){ if(el) el.textContent='❌ Netzwerkfehler'; }
+}
+
 let NACHR_STUDENTS=[];
 async function loadNachrichten(){
   // Alle Schüler (für Empfängerauswahl) laden
@@ -1068,7 +1082,6 @@ async function loadNachrichten(){
   NACHR_STUDENTS = (profs||[]).filter(p=>!p.is_admin && !p.is_teacher && p.email);
 
   const { data } = await sb.from('messages').select('*, profiles(name,email)').order('created_at',{ascending:false});
-  try{ const _un=(data||[]).filter(m=>m.sender==='student' && !m.read).map(m=>m.id); if(_un.length){ await sb.from('messages').update({read:true}).in('id',_un); } }catch(e){}
   const byUser={};
   (data||[]).forEach(m=>{ (byUser[m.user_id]=byUser[m.user_id]||{p:m.profiles,msgs:[]}).msgs.push(m); });
   const ids=Object.keys(byUser);
@@ -1103,7 +1116,6 @@ async function loadNachrichten(){
   }).join('') : '<div class="card muted">Noch keine Verläufe mit Schülern.</div>';
 
   document.getElementById('nachrichten').innerHTML = composer + '<h3 style="margin:18px 0 8px;font-family:\'Space Grotesk\',sans-serif;font-size:17px">💬 Verläufe</h3>' + threads;
-  refreshMsgBadge();
 }
 function nachrMode(m){ document.getElementById('nachrPick').style.display = m==='some'?'block':'none'; if(m==='some') renderNachrPick(); }
 function renderNachrPick(){
@@ -1136,7 +1148,6 @@ async function reply(uid){
   const inp=document.getElementById('reply-'+uid); const body=inp.value.trim(); if(!body)return;
   const { error }=await sb.from('messages').insert({user_id:uid,sender:'teacher',body});
   if(error){ alert('Fehler: '+error.message); return; }
-  try{ const { data:{ session } }=await sb.auth.getSession(); if(session) fetch('/api/notify-message',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},body:JSON.stringify({user_ids:[uid],preview:body})}).catch(()=>{}); }catch(e){}
   inp.value=''; loadNachrichten();
 }
 
@@ -1157,7 +1168,6 @@ const STATUS_BG = { registriert:'#E5E7EB', aktiv:'#DCFCE7', probeschuler:'#FCE7F
 function todayMMDD(){ const p=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Berlin',month:'2-digit',day:'2-digit'}).formatToParts(new Date()).reduce((a,x)=>(a[x.type]=x.value,a),{}); return `${p.month}-${p.day}`; }
 function bdayLabel(p){ if(!p.birthday) return '<span class="muted">–</span>'; const [y,m,d]=p.birthday.split('-'); const isToday=p.birthday.slice(5)===todayMMDD(); return `${d}.${m}.${y}${isToday?' 🎂':''}`; }
 async function authToken(){ const { data } = await sb.auth.getSession(); return data?.session?.access_token || ''; }
-async function refreshMsgBadge(){ try{ const { count }=await sb.from('messages').select('id',{count:'exact',head:true}).eq('sender','student').eq('read',false); const d=document.getElementById('msgDot'); if(!d)return; if(count&&count>0){ d.textContent=count; d.style.display='inline-block'; } else { d.style.display='none'; } }catch(e){} }
 
 async function loadSchueler(){
   const { data } = await sb.from('profiles').select('id,name,email,credits,status,birthday,inactive_until,level,notes,started_at,target_level,native_language,goal,is_admin,is_teacher,created_at').limit(2000);
