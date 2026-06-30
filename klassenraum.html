@@ -765,16 +765,8 @@
   ladeLektion();
   gateAndStart();
 
-  // Zutritt: KEINE Zeitsperre mehr – der Klassenraum ist jederzeit für alle betretbar.
+  // Immer der eigene Jitsi-Klassenraum – KEINE Weiterleitung zu Google Meet mehr.
   async function gateAndStart(){
-    // Meet-Weiche: Hat die Stunde einen Google-Meet-Link hinterlegt, geht es direkt zu Meet
-    // (kein Jitsi-Raum) – für Lehrer UND Schüler. Stunden ohne Meet-Link bleiben im Jitsi-Klassenraum.
-    if(sb && STUNDE){
-      try{
-        const { data:cz } = await sb.from('classes').select('zoom_link').eq('id',STUNDE).maybeSingle();
-        if(cz && cz.zoom_link){ location.replace(cz.zoom_link); return; }
-      }catch(e){ console.warn('Meet-Weiche', e); }
-    }
     initTafelSync();
     videoStarten();
   }
