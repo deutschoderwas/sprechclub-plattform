@@ -84,10 +84,11 @@ async function runNachbereitung(sb, { classId, source = 'tafel', pdfText } = {})
     const k = de.toLowerCase();
     const info = (v.info || v.meaning || v.en || '').trim();
     const ex = (v.example || '').trim();
-    const cur = vmap.get(k) || { de, info: '', example: '' };
+    const cur = vmap.get(k) || { de, info: '', example: '', related: [] };
     if (info && !cur.info) cur.info = info;
     if (ex && !cur.example) cur.example = ex;
     if (v.img && !cur.img) cur.img = v.img;
+    if (Array.isArray(v.related) && v.related.length && !(cur.related && cur.related.length)) cur.related = v.related.map(String).slice(0, 5);
     cur.de = de; vmap.set(k, cur);
   };
   if (mat && mat.content && Array.isArray(mat.content.vocab)) mat.content.vocab.forEach(addV);
@@ -311,7 +312,7 @@ Antworte AUSSCHLIESSLICH mit gültigem JSON (kein Text, keine Codeblöcke) in GE
 {
   "thema": "1-3 Sätze: worum ging es in der Stunde (für die Zusammenfassung).",
   "saetze": ["wichtiger Beispielsatz aus der Stunde", "noch einer", "..."],
-  "vocab": [ { "de": "das Wort", "info": "Bedeutung auf Deutsch oder Englisch", "example": "kurzer Beispielsatz" } ],
+  "vocab": [ { "de": "das Wort", "info": "einfache Erklärung AUF DEUTSCH (kein Englisch!)", "example": "lebensnaher Beispielsatz aus dem Alltag", "related": ["verwandtes Wort", "noch eins"] } ],
   "grammar": {
     "title": "Grammatik-Schwerpunkt der Stunde",
     "headers": ["Spalte 1","Spalte 2","..."],
@@ -328,7 +329,7 @@ Antworte AUSSCHLIESSLICH mit gültigem JSON (kein Text, keine Codeblöcke) in GE
 
 REGELN:
 - ALLES muss zum oben Behandelten passen (gleiche Wörter, Grammatik, Beispiele). Nichts erfinden, was nicht zum Thema passt.
-- "vocab": 6-14 Vokabeln mit Bedeutung UND Beispielsatz (die bereits erfassten gern erneut).
+- "vocab": 6-14 Vokabeln. "info" = einfache, kurze Erklärung AUF DEUTSCH (NIEMALS englische Übersetzung!). "example" = lebensnaher Beispielsatz aus dem echten Alltag. "related" = 2-4 verwandte Wörter aus derselben Wortfamilie (Adjektive/Verben/Nomen, z. B. zu "Zufriedenheit": zufrieden, zufriedenstellen).
 - "grammar": nur ausfüllen, wenn es einen klaren Grammatikpunkt gibt; sonst "tips" mit 1-2 Merkpunkten, "rows":[] lassen.
 - "exercises": 6-9 Lückenübungen (type "choice" mit 3 Optionen, "answer" = Index 0-basiert; oder "gap").
 - "speaking": 2-4 freie Sprech-/Schreibaufgaben mit Beispielantwort.
