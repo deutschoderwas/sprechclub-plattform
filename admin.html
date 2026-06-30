@@ -1053,9 +1053,9 @@ async function genNachbereitung(id){
     msg.textContent='✓ Nachbereitung erstellt!';
     const c=j.content||{};
     prev.innerHTML=`<div style="background:#fff;border-radius:10px;padding:10px 12px;font-size:13px">
-      <b>Ergebnis:</b> ${j.counts.vocab} Vokabeln · ${j.counts.exercises} Übungen${c.grammar_tip?' · 📌 '+esc(c.grammar_tip.title):''}<br>
+      <b>Ergebnis:</b> ${j.counts.vocab} Vokabeln · ${j.counts.exercises} Übungen${(c.grammar&&c.grammar.title)?' · 📌 '+esc(c.grammar.title):''}${(c.errors&&c.errors.length)?' · 🔴 '+c.errors.length+' Fehler':''}<br>
       <span class="muted">Vokabeln sind jetzt im Vokabeltrainer · Schüler sehen die Nachbereitung im Schülerbereich.</span>
-      <div style="margin-top:6px"><button class="btn btn-ghost" style="padding:4px 12px;font-size:12px" onclick="previewInteractive('${id}')">👁️ So sehen es die Schüler</button></div>
+      <div style="margin-top:6px;display:flex;gap:8px;flex-wrap:wrap"><a class="btn btn-ghost" style="padding:4px 12px;font-size:12px;text-decoration:none" href="nachbereitung.html?id=${id}" target="_blank" rel="noopener">📖 Handout öffnen</a><button class="btn btn-ghost" style="padding:4px 12px;font-size:12px" onclick="previewInteractive('${id}')">👁️ Interaktive Vorschau</button></div>
     </div>`;
   }catch(e){ msg.textContent='❌ Netzwerkfehler: '+e.message; }
 }
@@ -1147,18 +1147,16 @@ async function loadBewertungen(){
 }
 
 let SCHUELER = [];
-function memberBadge(p){ const active=p.pass_until&&new Date(p.pass_until)>new Date(); const paid=window.PAID_SET&&PAID_SET.has(p.id); const trial=window.TRIAL_SET&&TRIAL_SET.has(p.id); const A='<span class="pill" style="background:#D1FAE5;color:#065F46;font-weight:700">🟢 Aktiv</span>'; const T='<span class="pill" style="background:#FEF3C7;color:#92400E;font-weight:700">🧪 Probestunde</span>'; const K='<span class="pill" style="background:#F3F4F6;color:#6B7280;font-weight:700">⚪ Noch kein Paket</span>'; if(active) return (!paid&&trial)?T:A; if((p.credits||0)>0) return A; if(paid||trial||(window.BOOKED_SET&&BOOKED_SET.has(p.id))) return '<span class="pill" style="background:#FFEDD5;color:#9A3412;font-weight:700">🟠 Paket abgelaufen</span>'; return K; }
 function nameKey(p){ return (p.name && p.name.trim()) ? p.name.trim() : (p.email||''); }
-const STATUS_OPT = [['aktiv','🟢 Aktiv'],['probeschuler','🎟️ Probeschüler'],['pause','⏸️ Pause'],['urlaub','🏖️ Urlaub'],['beendet','⚪ Beendet']];
-const STATUS_BG = { aktiv:'#DCFCE7', probeschuler:'#FCE7F3', pause:'#FEF3C7', urlaub:'#DBEAFE', beendet:'#F1F1F1' };
+const STATUS_OPT = [['registriert','🆕 Registriert (kein Paket)'],['aktiv','🟢 Aktiv'],['probeschuler','🎟️ Probeschüler'],['pause','⏸️ Pause'],['urlaub','🏖️ Urlaub'],['beendet','⚪ Beendet']];
+const STATUS_BG = { registriert:'#E5E7EB', aktiv:'#DCFCE7', probeschuler:'#FCE7F3', pause:'#FEF3C7', urlaub:'#DBEAFE', beendet:'#F1F1F1' };
 function todayMMDD(){ const p=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Berlin',month:'2-digit',day:'2-digit'}).formatToParts(new Date()).reduce((a,x)=>(a[x.type]=x.value,a),{}); return `${p.month}-${p.day}`; }
 function bdayLabel(p){ if(!p.birthday) return '<span class="muted">–</span>'; const [y,m,d]=p.birthday.split('-'); const isToday=p.birthday.slice(5)===todayMMDD(); return `${d}.${m}.${y}${isToday?' 🎂':''}`; }
 async function authToken(){ const { data } = await sb.auth.getSession(); return data?.session?.access_token || ''; }
 
 async function loadSchueler(){
-  const { data } = await sb.from('profiles').select('id,name,email,credits,status,birthday,inactive_until,level,notes,started_at,target_level,native_language,goal,is_admin,is_teacher,created_at,pass_until,email_optout').limit(2000);
+  const { data } = await sb.from('profiles').select('id,name,email,credits,status,birthday,inactive_until,level,notes,started_at,target_level,native_language,goal,is_admin,is_teacher,created_at').limit(2000);
   SCHUELER = data || [];
-  try{ const { data:_cl } = await sb.from('credit_log').select('user_id,reason'); const { data:_bk } = await sb.from('bookings').select('user_id'); window.BOOKED_SET=new Set((_bk||[]).map(x=>x.user_id)); window.PAID_SET=new Set(); window.TRIAL_SET=new Set(); (_cl||[]).forEach(c=>{ const rs=c.reason||''; if(/^(abo|kauf):/.test(rs)) PAID_SET.add(c.user_id); else if(/^trial:/.test(rs)) TRIAL_SET.add(c.user_id); }); }catch(e){ window.PAID_SET=window.PAID_SET||new Set(); window.TRIAL_SET=window.TRIAL_SET||new Set(); window.BOOKED_SET=window.BOOKED_SET||new Set(); }
   document.getElementById('schueler').innerHTML = `
     <div class="card" style="margin-bottom:16px;background:#FFFCF5">
       <b>➕ Neuen Schüler anlegen</b>
@@ -1182,6 +1180,7 @@ async function loadSchueler(){
       </select>
       <select id="schuelerStatus" onchange="renderSchuelerTable()">
         <option value="">Alle Status</option>
+        <option value="registriert">nur Registriert (kein Paket)</option>
         <option value="aktiv">nur Aktiv</option>
         <option value="probeschuler">nur Probeschüler</option>
         <option value="pause">nur Pause</option>
@@ -1233,7 +1232,7 @@ function renderSchuelerTable(){
       <td><b>${esc(p.name||'–')}</b>${staff?' <span class="pill">Team</span>':''}</td>
       <td class="muted">${esc(p.email)}</td>
       <td>${nivo?`<span class="pill" style="background:#Eef;color:#2563EB;font-weight:700">${esc(nivo)}</span>`:'<span class="muted">–</span>'}</td>
-      <td>${memberBadge(p)}${st!=='aktiv'?(' '+statusLabel(st)):''}${((st==='pause'||st==='urlaub')&&p.inactive_until)?` <span class="muted" style="font-size:11px">bis ${p.inactive_until.split('-').reverse().join('.')}</span>`:''}</td>
+      <td>${statusLabel(st)}${((st==='pause'||st==='urlaub')&&p.inactive_until)?` <span class="muted" style="font-size:11px">bis ${p.inactive_until.split('-').reverse().join('.')}</span>`:''}</td>
       <td><b style="font-size:16px">${p.credits}</b> <span class="muted" style="font-size:12px">Std.</span>${p.credits<=1?' <span class="pill">niedrig</span>':''}</td></tr>`;
   }).join('');
   document.getElementById('schuelerTable').innerHTML = `<p class="muted" style="margin:0 0 6px">Tipp: Auf einen Schüler klicken, um die Schülerkarte zu öffnen.</p><table><tr><th>Name</th><th>E-Mail</th><th>Niveau</th><th>Status</th><th>Guthaben</th></tr>` + rowsHtml + '</table>';
@@ -1241,36 +1240,6 @@ function renderSchuelerTable(){
 
 // ---------- Schülerkarte (Tutorbird-Stil) ----------
 function closeStudentCard(){ const o=document.getElementById('cardOverlay'); if(o) o.remove(); }
-const MAIL_PREVIEWS = {
-  booking: { t:'📅 Buchungsbestätigung', h:`<div style="background:#FFF8E0;border-radius:14px;padding:14px 16px"><div style="font-weight:800;font-size:17px">Buchung bestätigt! ✅</div><p style="margin:8px 0">Hallo [Name], schön, dass du dabei bist – deine Stunde ist fest für dich reserviert. 💛</p><div style="background:#fff;border-left:4px solid #2DD4BF;border-radius:10px;padding:10px 12px;margin:8px 0"><b>[Kurs · Niveau]</b><br>📔 [Wochentag, Datum] um [Uhrzeit]</div><div style="background:#DD0000;color:#fff;text-align:center;border-radius:50px;padding:10px;font-weight:700;margin:6px 0">🎥 Zum Unterricht (Google Meet)</div><div style="background:#1A1A1A;color:#fff;text-align:center;border-radius:50px;padding:10px;font-weight:700">📋 Zu deinem Schülerbereich</div><p style="font-size:12px;color:#6B7280;margin-top:10px">Du kannst kostenlos bis 6 Stunden vor Beginn stornieren. Dein Guthaben wird sofort bei der Buchung abgezogen und bei rechtzeitiger Stornierung wieder gutgeschrieben.</p><p style="margin-top:8px">Bis bald im Sprechclub!<br><b>Julia</b></p></div>` },
-  reminder: { t:'⏰ Erinnerung vor der Stunde', h:`<div style="background:#FFF8E0;border-radius:14px;padding:14px 16px"><div style="font-weight:800;font-size:17px">Gleich geht's los! ⏰</div><p style="margin:8px 0">Hallo [Name], deine Stunde <b>[Kurs]</b> beginnt bald: 📔 [Datum] um [Uhrzeit].</p><div style="background:#DD0000;color:#fff;text-align:center;border-radius:50px;padding:10px;font-weight:700">🎥 Zum Unterricht (Google Meet)</div><p style="font-size:12px;color:#6B7280;margin-top:10px">Klappt es doch nicht? Bis 6 Stunden vor Beginn kannst du in deinem Schülerbereich stornieren.</p></div>` },
-  credit_offer_zero: { t:'💛 Angebot (kein Guthaben mehr)', h:`<div style="background:#FFF8E0;border-radius:14px;padding:14px 16px"><div style="font-weight:800;font-size:17px">Schön, dass du dranbleibst! 💛</div><p style="margin:8px 0">Hallo [Name], dein Guthaben ist aufgebraucht. Mit einem neuen Paket geht's direkt weiter – sichere dir wieder LIVE-Stunden im Club.</p><div style="background:#2DD4BF;color:#06403A;text-align:center;border-radius:50px;padding:10px;font-weight:700">Paket ansehen</div></div>` },
-  credit_offer: { t:'💛 Guthaben-Angebot', h:`<div style="background:#FFF8E0;border-radius:14px;padding:14px 16px"><div style="font-weight:800;font-size:17px">Dein Guthaben geht zur Neige 💛</div><p style="margin:8px 0">Hallo [Name], du hast nur noch wenig Guthaben. Lade rechtzeitig nach, damit du keine Stunde verpasst.</p><div style="background:#2DD4BF;color:#06403A;text-align:center;border-radius:50px;padding:10px;font-weight:700">Paket ansehen</div></div>` },
-  welcome: { t:'👋 Willkommens-Mail (Konto angelegt)', h:`<div style="background:#FFF8E0;border-radius:14px;padding:14px 16px"><div style="font-weight:800;font-size:17px">Willkommen, [Name]! 🎉</div><p style="margin:8px 0">Julia hat dir einen Zugang zum deutschoderwas Club eingerichtet. Richte jetzt in einem Schritt dein Passwort ein.</p><div style="background:#DD0000;color:#fff;text-align:center;border-radius:50px;padding:10px;font-weight:700">🔐 Passwort einrichten & loslegen</div></div>` },
-  trial: { t:'🎉 Trial-Willkommen (7 Tage / sofort starten)', h:`<div style="background:#FFF8E0;border-radius:14px;padding:14px 16px"><div style="font-weight:800;font-size:17px">Willkommen im Club 🎉</div><p style="margin:8px 0">Hallo [Name], du hast 7 Tage Zeit zum Testen mit deiner Gratis-Probestunde. Nach 7 Tagen startet dein Abo automatisch.</p><div style="background:#F2FBFA;border:1px solid #CFEFEA;border-radius:10px;padding:10px 12px;margin:8px 0"><b style="color:#0F766E">⚡ Sofort mehr nutzen?</b><br>Starte dein Abo sofort voll – du bekommst deine Stunden + die Probestunde sofort.<div style="background:#2DD4BF;color:#06403A;text-align:center;border-radius:50px;padding:9px;font-weight:700;margin-top:8px">🚀 Jetzt voll starten</div></div></div>` },
-  birthday: { t:'🎂 Geburtstags-Gruß', h:`<div style="background:#FFF8E0;border-radius:14px;padding:14px 16px"><div style="font-weight:800;font-size:17px">Alles Gute zum Geburtstag, [Name]! 🎂</div><p style="margin:8px 0">Das ganze deutschoderwas-Team wünscht dir einen wunderschönen Tag. 💛</p></div>` },
-  miss_you: { t:'💌 „Wir vermissen dich"', h:`<div style="background:#FFF8E0;border-radius:14px;padding:14px 16px"><div style="font-weight:800;font-size:17px">Wir vermissen dich! 💌</div><p style="margin:8px 0">Hallo [Name], wir haben dich länger nicht im Club gesehen. Komm zurück – wir freuen uns auf dich!</p><div style="background:#2DD4BF;color:#06403A;text-align:center;border-radius:50px;padding:10px;font-weight:700">Stunde buchen</div></div>` },
-  cancel_student: { t:'↩️ Stornierung bestätigt', h:`<div style="background:#FFF8E0;border-radius:14px;padding:14px 16px"><div style="font-weight:800;font-size:17px">Stornierung bestätigt</div><p style="margin:8px 0">Hallo [Name], deine Buchung wurde storniert und deine Stunde wieder gutgeschrieben. 💛</p></div>` },
-  community: { t:'💬 Community-Hinweis', h:`<div style="background:#FFF8E0;border-radius:14px;padding:14px 16px"><p style="margin:0">Es gibt eine neue Nachricht in der Community im Club. Schau vorbei und misch mit! 💬</p></div>` },
-  weekly: { t:'🗓️ Wochenübersicht', h:`<div style="background:#FFF8E0;border-radius:14px;padding:14px 16px"><p style="margin:0">Deine Woche im Club: ein Überblick über deine gebuchten Stunden und neue Themen. 🗓️</p></div>` }
-};
-const MAIL_ALIAS = { booking_admin:'booking', cancel_admin:'cancel_student' };
-function showMailPreview(kind){
-  const k = MAIL_ALIAS[kind] || kind;
-  const p = MAIL_PREVIEWS[k] || { t:'✉️ '+kind, h:'<p>Für diese E-Mail liegt noch keine Vorschau vor.</p>' };
-  const ov=document.createElement('div');
-  ov.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.5);display:flex;align-items:flex-start;justify-content:center;padding:24px 14px;overflow:auto';
-  ov.addEventListener('click',e=>{ if(e.target===ov) ov.remove(); });
-  ov.innerHTML=`<div style="background:#fff;border-radius:18px;max-width:560px;width:100%;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.3)">
-    <div style="background:#1A1A1A;color:#fff;padding:14px 18px;display:flex;justify-content:space-between;align-items:center">
-      <b style="font-size:15px">Vorschau: ${esc(p.t)}</b><button class="mpx" style="background:none;border:none;color:#fff;font-size:20px;cursor:pointer">✕</button></div>
-    <div style="padding:16px 18px;max-height:74vh;overflow:auto;font-size:14px;line-height:1.6">${p.h}
-      <p style="font-size:11px;color:#9CA3AF;margin-top:14px;border-top:1px dashed #eee;padding-top:8px">Beispiel-Ansicht dieser Mail. Persönliche Inhalte (Name, Termin, Kurs) werden beim echten Versand automatisch eingesetzt.</p></div>
-  </div>`;
-  document.body.appendChild(ov);
-  ov.querySelector('.mpx').onclick=()=>ov.remove();
-}
-
 async function openStudentCard(id){
   const p = SCHUELER.find(x=>x.id===id); if(!p) return;
   const st = p.status||'aktiv';
@@ -1310,7 +1279,7 @@ async function openStudentCard(id){
       <div style="background:#F7F4FF;border:1px solid #E5DEFB;border-radius:14px;padding:14px 16px;margin-bottom:14px">
         <b>📋 Kontakt-Historie</b>
         <div class="muted" style="margin-top:6px;font-size:13px">📆 Registriert (Konto erstellt): <b style="color:#1A1A1A">${p.created_at?new Date(p.created_at).toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric'}):'—'}</b>${p.started_at?` &nbsp;·&nbsp; Unterricht seit ${p.started_at.split('-').reverse().join('.')}`:''}</div>
-        ${(p.status&&p.status!=='aktiv')||p.email_optout?`<div style="margin-top:8px;font-size:13px">${p.status==='pause'?'⏸️ <b style="color:#92400E">Pausiert</b> &nbsp;':''}${p.status==='beendet'?'🚪 <b style="color:#9A3412">Teilnahme beendet</b> &nbsp;':''}${p.email_optout?'🔕 <b style="color:#9A3412">Möchte keine E-Mails</b>':''}</div>`:''}<div style="margin-top:10px;font-weight:700;font-size:13px;color:#1A1A1A">🎫 Abo / Mitgliedschaft</div><div id="cSubInfo" class="muted" style="margin-top:4px;font-size:13px">lädt…</div><div style="margin-top:10px;font-weight:700;font-size:13px;color:#1A1A1A">✉️ E-Mail-Verlauf</div>
+        <div style="margin-top:10px;font-weight:700;font-size:13px;color:#1A1A1A">✉️ E-Mail-Verlauf</div>
         <div id="cEmailLog" class="muted" style="margin-top:4px;font-size:13px">lädt…</div>
         <div class="muted" style="margin-top:9px;font-size:11.5px;line-height:1.5;border-top:1px dashed #E5DEFB;padding-top:8px">⚙️ <b>Läuft automatisch:</b> Buchungs-Bestätigung, Erinnerung vor der Stunde, Geburtstags-Gruß, Guthaben-Angebot bei ≤ 1 Stunde, „Wir vermissen dich"-Mail. Die Willkommens-Mail geht automatisch raus, wenn du den Schüler anlegst.</div>
       </div>
@@ -1332,24 +1301,6 @@ async function openStudentCard(id){
     if(!data||!data.length){ el.textContent='Noch keine Guthaben-Buchungen.'; return; }
     el.innerHTML = data.map(r=>`<div>${r.change>0?'➕':'➖'} ${Math.abs(r.change)} · ${esc(r.reason||'')} · ${new Date(r.created_at).toLocaleDateString('de-DE')}</div>`).join('');
   });
-  // Abo-Daten aus Stripe laden (Tarif / gekündigt / Probestunde)
-  sb.auth.getSession().then(({data})=>{ const session=data&&data.session; if(!session) return;
-    fetch('/api/admin-sub',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},body:JSON.stringify({user_id:id})})
-      .then(r=>r.json()).then(j=>{ const el=document.getElementById('cSubInfo'); if(!el) return;
-        if(!j||!j.ok){ el.textContent='Konnte Abo nicht laden.'; return; }
-        if(!j.hasStripe||!j.sub){ el.innerHTML='<span style="color:#9A3412">Kein Stripe-Abo hinterlegt (evtl. über andere Plattform / Einmalkauf).</span>'; return; }
-        const s=j.sub; const PL={testpass:'Ab und zu Pass (4 Std)',gelegenheitspass:'Gelegenheitspass (8 Std)',allinclusive:'Profi-Pass (12 Std)'};
-        const plan=PL[s.plan]||(s.plan?s.plan:'—');
-        const d=u=>u?new Date(u*1000).toLocaleDateString('de-DE'):'—';
-        const gek=(s.cancel_at_period_end||s.status==='canceled')?'Ja':'Nein'; let status;
-        if(s.status==='trialing') status='🧪 Testphase – läuft bis '+d(s.trial_end);
-        else if(s.status==='active'&&s.cancel_at_period_end) status='🟠 Gekündigt – noch aktiv bis '+d(s.current_period_end);
-        else if(s.status==='active') status='🟢 Aktiv – verlängert sich am '+d(s.current_period_end);
-        else if(s.status==='canceled') status='⚪ Beendet'+(s.canceled_at?(' am '+d(s.canceled_at)):'');
-        else status=s.status;
-        el.innerHTML='<b style="color:#1A1A1A">Tarif:</b> '+plan+'<br><b style="color:#1A1A1A">Status:</b> '+status+'<br><b style="color:#1A1A1A">Gekündigt:</b> '+gek+(s.trial_start?('<br><b style="color:#1A1A1A">Probestunde gebucht:</b> '+d(s.trial_start)):'');
-      }).catch(()=>{ const el=document.getElementById('cSubInfo'); if(el) el.textContent='Abo konnte nicht geladen werden.'; });
-  });
   // E-Mail-Verlauf laden (Kontakt-Historie)
   sb.from('email_log').select('kind,sent_at').eq('user_id',id).order('sent_at',{ascending:false}).limit(60).then(({data,error})=>{
     const el=document.getElementById('cEmailLog'); if(!el) return;
@@ -1358,7 +1309,7 @@ async function openStudentCard(id){
     const L={booking:'📅 Buchungsbestätigung',booking_admin:'📅 Buchung (von dir angelegt)',cancel_admin:'↩️ Absage (von dir)',cancel_student:'↩️ Stornierung (Schüler)',reminder:'⏰ Erinnerung vor der Stunde',credit_offer:'💛 Guthaben-Angebot',credit_offer_zero:'💛 Angebot (kein Guthaben mehr)',miss_you:'💌 „Wir vermissen dich"',birthday:'🎂 Geburtstags-Gruß',welcome:'👋 Willkommens-Mail',community:'💬 Community-Hinweis',weekly:'🗓️ Wochenübersicht'};
     const f=new Intl.DateTimeFormat('de-DE',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
     el.innerHTML='<div style="font-weight:700;color:#1A1A1A;margin-bottom:5px">✅ '+data.length+' E-Mail'+(data.length===1?'':'s')+' verschickt</div>'
-      + data.map(r=>`<div onclick="showMailPreview('${r.kind}')" style="border-bottom:1px solid #E5DEFB;padding:6px 0;cursor:pointer" onmouseover="this.style.background='#F0EBFF'" onmouseout="this.style.background='none'">${L[r.kind]||('✉️ '+esc(r.kind))} <span class="muted">· ${f.format(new Date(r.sent_at))}</span> <span style="color:#7C3AED;font-size:11px">› ansehen</span></div>`).join('');
+      + data.map(r=>`<div style="border-bottom:1px solid #E5DEFB;padding:4px 0">${L[r.kind]||('✉️ '+esc(r.kind))} <span class="muted">· ${f.format(new Date(r.sent_at))}</span></div>`).join('');
   });
   // Gebuchte Stunden laden (wann ist die Stunde + wann wurde gebucht + Status)
   sb.from('bookings').select('status,created_at,classes(title,level,starts_at)').eq('user_id',id).then(({data})=>{

@@ -412,7 +412,7 @@ async function maybeStartNow(session){
 
 async function load(){
   const [{ data:prof }, { data:bk }, { data:cl }, { data:msg }, { data:rt }, { data:prog }] = await Promise.all([
-    sb.from('profiles').select('credits,name,goal,target_level,native_language,pass_until,birthday').eq('id',user.id).single(),
+    sb.from('profiles').select('credits,name,goal,target_level,native_language,pass_until,birthday,status').eq('id',user.id).single(),
     sb.rpc('my_bookings'),
     sb.from('credit_log').select('*').order('created_at',{ascending:false}),
     sb.from('messages').select('*').order('created_at'),
@@ -701,7 +701,8 @@ async function openMaterial(path,a){
 }
 
 // ---------- Dashboard ----------
-function isActive(){ return credits>0 || (stats && stats.upcoming && stats.upcoming.length>0) || passActive(); }
+// Vollzugriff: Status aktiv/urlaub (echte Mitglieder, auch mit 0 Stunden) ODER Guthaben/Pass/kommende Buchung.
+function isActive(){ const s=(profile&&profile.status)||''; return s==='aktiv' || s==='urlaub' || credits>0 || (stats && stats.upcoming && stats.upcoming.length>0) || passActive(); }
 function lockBanner(){
   return `<div class="card" style="border:2px solid #f5b942;background:#fff8ec;margin-bottom:14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
     <div style="flex:1;min-width:200px"><b>🔒 Dein Guthaben ist aufgebraucht</b>
@@ -721,7 +722,7 @@ function renderDashboard(){
         <div class="when">${fmt(d)} <span class="cd">· ${cd}</span></div>
         <div class="muted">${esc(n.title)} · ${esc(n.level)}${n.topic?' · '+esc(n.topic):''}</div>
       </div>
-      ${n.zoom_link?`<a class="btn btn-primary" href="${esc(n.zoom_link)}" target="_blank">Zum Unterricht (Meet)</a>`:''}
+      ${dowJoinBtn({class_id:n.class_id||n.id,starts_at:n.starts_at,title:n.title,level:n.level},'btn btn-primary')}
       <button class="btn btn-ghost btn-sm" onclick="go('stunden')">Vorbereiten</button>
     </div>`;
   } else {
@@ -787,6 +788,15 @@ function renderLernpfad(){
 }
 
 // ---------- Meine Stunden ----------
+// Einheitlicher „Beitreten"-Knopf: führt zum Klassenraum, nur im Zeitfenster (10 Min vor bis 90 Min nach Beginn). Kein Meet mehr.
+function dowJoinUrl(b){ return `klassenraum.html?stunde=${b.class_id||b.id}&titel=${encodeURIComponent(b.title||'')}&niveau=${encodeURIComponent(b.level||'')}`; }
+function dowJoinBtn(b, cls){
+  const st=new Date(b.starts_at).getTime(), now=Date.now();
+  if(now>=st-10*60000 && now<=st+90*60000){
+    return `<a class="${cls||'btn btn-primary'}" href="${dowJoinUrl(b)}" target="_blank" rel="noopener" style="text-decoration:none"><span class="live-dot"></span>🔴 Beitreten</a>`;
+  }
+  return '';
+}
 function phaseHtml(b, phase){
   const m=materials[b.class_id];
   if(phase==='post'){
@@ -901,7 +911,7 @@ function kalEv(c){
   const start=new Date(c.starts_at); const end=new Date(start.getTime()+((c.duration_min||60)*60000)); const free=c.capacity-(c.booked||0); const past=start<new Date(); const color=c.club_color||'#2DD4BF';
   const lc=kalLvlColor(c.level);
   let btn;
-  if(c.mine){ btn=c.zoom_link?`<a class="ev-btn meet" href="${esc(c.zoom_link)}" target="_blank" rel="noopener">🎥 Zum Unterricht</a>`:`<span class="ev-btn mine">✓ Gebucht</span>`; }
+  if(c.mine){ btn=dowJoinBtn({class_id:c.id,starts_at:c.starts_at,title:c.title,level:c.level},'ev-btn meet')||`<span class="ev-btn mine">✓ Gebucht</span>`; }
   else if(past){ btn=`<span class="ev-btn off">vorbei</span>`; }
   else if(free<=0){ btn=`<span class="ev-btn off">ausgebucht</span>`; }
   else{ btn=`<button class="ev-btn book" onclick="kalBook('${c.id}')">Buchen</button>`; }
@@ -1001,7 +1011,7 @@ function renderStunden(){
       <div class="head">
         <div class="when">${fmt(start)}</div><span class="level-pill">${esc(b.level)}</span>
         <div class="what"><b>${esc(b.title)}</b><span>${esc(b.topic||'')}</span></div>
-        ${b.zoom_link?`<a class="btn btn-primary btn-sm" href="${esc(b.zoom_link)}" target="_blank">Zum Unterricht</a>`:''}
+        ${dowJoinBtn(b,'btn btn-primary btn-sm')}
         ${(m&&(m.lesson_url||m.intro||m.pre||(m.vocab&&m.vocab.length)))?`<button class="btn btn-ghost btn-sm" onclick="openClassMaterial('${b.class_id}',1)">📚 Material</button>`:''}
         ${/Sprachspiele/i.test(b.title||'')?`<span class="btn btn-ghost btn-sm" style="pointer-events:none;opacity:.8">✨ Keine Vorbereitung nötig</span>`:''}
         <button class="btn btn-ghost btn-sm" ${cancellable?'':'disabled title="Storno nur bis 6 h vorher"'} onclick="cancelB('${b.class_id}')">Stornieren</button>
