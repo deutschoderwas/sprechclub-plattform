@@ -1,7 +1,7 @@
 // deutschoderwas club — Service Worker
 // Zweck: App installierbar machen (PWA). Bewusst KEIN aggressives Caching von
 // HTML/API, damit Buchung, Guthaben & Material immer aktuell aus dem Netz kommen.
-const VERSION = 'doc-v3';
+const VERSION = 'doc-v4';
 const APP_SHELL = [
   '/icons/icon-192.png',
   '/icons/icon-512.png',
