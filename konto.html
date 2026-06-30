@@ -1267,9 +1267,10 @@ function renderVokabeln(){
   showCard();
 }
 function showCard(){ const c=deck[deckIdx]; const known=new Set(lsGet('known',[]));
+  const img=c.img?`<img src="${esc(c.img)}" alt="" loading="lazy" style="width:100%;max-width:240px;height:150px;object-fit:cover;border-radius:14px;margin-bottom:10px;display:block;margin-left:auto;margin-right:auto">`:'';
   document.getElementById('flashcard').innerHTML=flipped
-    ?`<div style="font-size:18px;font-weight:500">${esc(c.info||'—')}<span class="hint">${deckIdx+1} / ${deck.length} · tippen zum Zurückdrehen</span></div>`
-    :`<div>${esc(c.de)}${known.has(c.de)?' <span style="color:var(--turquoise);font-size:16px">✓</span>':''}<span class="hint">${deckIdx+1} / ${deck.length} · tippen für die Bedeutung</span></div>`;
+    ?`<div style="font-size:17px;font-weight:500">${esc(c.info||'—')}${c.example?`<div style="font-style:italic;color:#555;font-size:14px;margin-top:8px">„${esc(c.example)}"</div>`:''}${(Array.isArray(c.related)&&c.related.length)?`<div style="font-size:13px;color:#888;margin-top:8px">🔗 ${esc(c.related.join(', '))}</div>`:''}<span class="hint">${deckIdx+1} / ${deck.length} · tippen zum Zurückdrehen</span></div>`
+    :`<div>${img}<div style="font-size:22px;font-weight:700">${esc(c.de)}${known.has(c.de)?' <span style="color:var(--turquoise);font-size:16px">✓</span>':''}</div><span class="hint">${deckIdx+1} / ${deck.length} · tippen für die Bedeutung</span></div>`;
 }
 function flipCard(){ flipped=!flipped; showCard(); }
 function nextCard(){ deckIdx=(deckIdx+1)%deck.length; flipped=false; showCard(); }
@@ -1318,7 +1319,7 @@ function vbRender(){
   const ov=document.getElementById('vbOverlay'); if(!ov||!VB) return;
   if(VB.idx>=VB.terms.length || VB.hearts<=0) return vbEnd();
   const term=VB.terms[VB.idx]; VB.answered=false; VB.sel=null; VB.heard=null;
-  const types=['c_de2m','c_m2de','type','listen']; if(VB.canSpeak) types.push('speak','speak');
+  const types=['c_de2m','c_m2de','type','listen']; if(VB.canSpeak) types.push('speak','speak'); if(term.img) types.push('bild2wort','bild2wort');
   VB.type=types[Math.floor(Math.random()*types.length)];
   const t=VB.type, prog=Math.round(VB.idx/VB.terms.length*100);
   let q='', inputArea='';
@@ -1335,6 +1336,9 @@ function vbRender(){
     q=`<div class="vbq">Hör zu – was bedeutet es?</div><div style="margin:14px 0"><button class="vblisten" onclick="vbSayCur()">🔊 Anhören</button></div>`;
     inputArea=vbOpts(vbShuffle([vbMeaning(term),...vbDistract(term,'m')]));
     setTimeout(vbSayCur,400);
+  } else if(t==='bild2wort'){
+    q=`<div class="vbq">Welches Wort passt zum Bild?</div>`;
+    inputArea=vbOpts(vbShuffle([term.de,...vbDistract(term,'de')]));
   } else {
     q=`<div class="vbq">🗣️ Sprich das Wort nach</div><div class="vbword">${esc(term.de)} <button class="vbspk" onclick="vbSayCur()">🔊</button></div><div style="font-size:14px;color:#6B7280;margin-top:2px">${esc(vbMeaning(term))}</div>`;
     inputArea=`<div style="text-align:center"><button class="vblisten" id="vbMicBtn" onclick="vbMic()">🎤 Sprechen</button><div id="vbHeard" style="margin-top:12px;font-size:15px;color:#6B7280;min-height:22px"></div></div>`;
@@ -1375,7 +1379,9 @@ function vbRender(){
 }
 function vbOpts(opts){ return `<div id="vbOpts">`+opts.map(o=>`<button class="vbopt" data-v="${esc(o)}" onclick="vbPick(this)">${esc(o)}</button>`).join('')+`</div>`; }
 // Echtes Foto zur Vokabel – nur bei Übungen, wo es die Antwort nicht verrät (Bedeutung→Wort, Tippen, Sprechen)
-function vbImgTag(term,t){ if(!term||!term.img||!['c_m2de','type','speak'].includes(t)) return ''; return `<div style="text-align:center;margin-bottom:14px"><img src="${esc(term.img)}" alt="" loading="lazy" style="width:100%;max-width:240px;height:160px;object-fit:cover;border-radius:16px;border:1px solid #F0E5D8"></div>`; }
+function vbImgTag(term,t){ if(!term||!term.img||!['c_m2de','type','speak','bild2wort'].includes(t)) return ''; const big=t==='bild2wort'; return `<div style="text-align:center;margin-bottom:14px"><img src="${esc(term.img)}" alt="" loading="lazy" style="width:100%;max-width:${big?'340':'260'}px;height:${big?'220':'180'}px;object-fit:cover;border-radius:18px;border:1px solid #F0E5D8"></div>`; }
+// Lern-Häppchen nach richtiger Antwort: Beispielsatz + verwandte Wörter
+function vbTidbit(term){ const b=[]; if(term&&term.example) b.push('📝 '+esc(term.example)); if(term&&Array.isArray(term.related)&&term.related.length) b.push('🔗 Verwandt: '+esc(term.related.join(', '))); return b.length?`<div style="margin-top:8px;font-weight:500;color:#555;font-size:13.5px;line-height:1.5">${b.join('<br>')}</div>`:''; }
 function vbPick(btn){ if(VB.answered)return; VB.sel=btn.getAttribute('data-v'); document.querySelectorAll('#vbOpts .vbopt').forEach(b=>b.classList.toggle('sel', b===btn)); document.getElementById('vbCheckBtn').disabled=false; }
 function vbMic(){
   if(!VB||VB.answered)return;
@@ -1393,11 +1399,11 @@ async function vbCheck(){
   if(!VB||VB.answered)return; const term=VB.terms[VB.idx], t=VB.type; let ok=false, correct='';
   if(t==='type'){ correct=term.de; ok=vbNorm(document.getElementById('vbType').value)===vbNorm(term.de); }
   else if(t==='speak'){ correct=term.de; const tgt=vbNorm(term.de); ok=(VB.heard||[]).some(h=>{ const n=vbNorm(h); return n===tgt || n.split(' ').includes(tgt) || n.includes(tgt); }); }
-  else { correct=(t==='c_m2de')?term.de:vbMeaning(term); ok=VB.sel===correct;
+  else { correct=(t==='c_m2de'||t==='bild2wort')?term.de:vbMeaning(term); ok=VB.sel===correct;
     document.querySelectorAll('#vbOpts .vbopt').forEach(b=>{ const v=b.getAttribute('data-v'); b.disabled=true; if(v===correct) b.classList.add('ok'); else if(v===VB.sel) b.classList.add('no'); }); }
   VB.answered=true; vbBeep(ok);
   const fb=document.getElementById('vbFb');
-  if(ok){ VB.correct++; VB.xp+=10; fb.innerHTML='<span style="color:#13A89A">✅ Richtig! +10 XP</span>'; }
+  if(ok){ VB.correct++; VB.xp+=10; fb.innerHTML='<span style="color:#13A89A">✅ Richtig! +10 XP</span>'+vbTidbit(term); }
   else { VB.hearts=Math.max(0,VB.hearts-1); const card=document.getElementById('vbCard'); if(card){card.style.animation='vbshake .3s';} fb.innerHTML=`<span style="color:#DD0000">❌ Richtig: <b>${esc(correct)}</b></span> <button class="vbspk" onclick="vbSayCur()" style="margin-left:6px">🔊</button>`; }
   if(t==='type'){ const i=document.getElementById('vbType'); if(i){ i.disabled=true; i.style.borderColor=ok?'#13A89A':'#DD0000'; i.style.background=ok?'#DCFCE7':'#FCE5E3'; } }
   vbSayCur();
