@@ -206,10 +206,10 @@ function teacherSoonEmail({ teacherName, cls, when, site, clubName, clubEmoji, c
   const accent = clubColor || '#2DD4BF';
   const topic = cls.topic ? ` · ${_esc(cls.topic)}` : '';
   const clubChip = clubName ? `<span style="display:inline-block;background:${accent};color:#ffffff;font-family:${_FF};font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:4px 11px;border-radius:30px">${_esc(clubEmoji)} ${_esc(clubName)}</span>` : '';
-  const meetBtn = cls.zoom_link ? `
+  const meetBtn = `
         <tr><td style="padding:14px 30px 6px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:6px 0 2px">
-          <a href="${_esc(cls.zoom_link)}" style="display:inline-block;background:#DD0000;color:#ffffff;font-family:${_FF};font-weight:800;font-size:15px;text-decoration:none;padding:14px 30px;border-radius:50px;box-shadow:0 6px 16px rgba(221,0,0,.28)">🎥 Zum Unterricht (Google&nbsp;Meet)</a>
-        </td></tr></table></td></tr>` : '';
+          <a href="${_esc(site)}/klassenraum.html?stunde=${cls.id}" style="display:inline-block;background:#DD0000;color:#ffffff;font-family:${_FF};font-weight:800;font-size:15px;text-decoration:none;padding:14px 30px;border-radius:50px;box-shadow:0 6px 16px rgba(221,0,0,.28)">🔴 Zum Klassenraum starten</a>
+        </td></tr></table></td></tr>`;
   const studentLines = count
     ? `<div style="font-size:14px;color:#1A1A1A;margin-top:10px"><b>${count}</b> gebucht: <span style="color:#6B7280">${_esc(students.slice(0, 8).join(', '))}${count > 8 ? ' …' : ''}</span></div>`
     : `<div style="font-size:14px;color:#6B7280;margin-top:10px">Noch keine Buchung für diese Stunde.</div>`;
