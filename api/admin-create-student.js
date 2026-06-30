@@ -42,10 +42,23 @@ export default async function handler(req, res) {
   }
 
   // 3) Profil schreiben/aktualisieren
-  const prof = { id: userId, email, name: name || null, credits, status: 'aktiv' };
-  if (birthday) prof.birthday = birthday;
-  const { error: pErr } = await sb.from('profiles').upsert(prof, { onConflict: 'id' });
-  if (pErr) return res.status(500).json({ error: 'profile_failed', detail: pErr.message });
+  if (!existed) {
+    // NEUER Schüler: voll anlegen (Status aktiv, Guthaben wie eingegeben)
+    const prof = { id: userId, email, name: name || null, credits, status: 'aktiv' };
+    if (birthday) prof.birthday = birthday;
+    const { error: pErr } = await sb.from('profiles').upsert(prof, { onConflict: 'id' });
+    if (pErr) return res.status(500).json({ error: 'profile_failed', detail: pErr.message });
+  } else {
+    // BESTEHENDER Schüler: NICHTS überschreiben! Status & Guthaben bleiben unangetastet.
+    // Nur einen noch fehlenden Namen / Geburtstag ergänzen.
+    const patch = {};
+    if (name) patch.name = name;
+    if (birthday) patch.birthday = birthday;
+    if (Object.keys(patch).length) {
+      const { error: pErr } = await sb.from('profiles').update(patch).eq('id', userId);
+      if (pErr) return res.status(500).json({ error: 'profile_failed', detail: pErr.message });
+    }
+  }
 
   // 4) Passwort-Setzen-Link erzeugen + Einladungs-Mail
   let mailed = false;
@@ -62,7 +75,7 @@ export default async function handler(req, res) {
           method: 'POST',
           headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            sender: { name: 'deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'info@deutschoderwas.de' },
+            sender: { name: 'Julia | deutschoderwas', email: process.env.BREVO_SENDER_EMAIL || 'info@deutschoderwas.de' },
             replyTo: { name: 'Julia', email: process.env.BREVO_SENDER_EMAIL || 'info@deutschoderwas.de' },
             to: [{ email, name: name || undefined }],
             subject: 'Willkommen im deutschoderwas Club – richte dein Passwort ein 💛',
