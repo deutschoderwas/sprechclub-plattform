@@ -54,7 +54,7 @@ export default async function handler(req, res) {
       method: 'POST',
       headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        sender: { name: 'deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'info@deutschoderwas.de' },
+        sender: { name: 'Julia | deutschoderwas', email: process.env.BREVO_SENDER_EMAIL || 'info@deutschoderwas.de' },
         to: [{ email: p.email, name: p.name || undefined }],
         subject: `⏰ Gleich geht's los: ${c.title} – ${when} Uhr`,
         htmlContent: html,
@@ -72,10 +72,10 @@ function brandedReminderEmail({ vorname, cls, when, site, clubName, clubEmoji, c
   const accent = clubColor || '#2DD4BF';
   const ff = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
   const clubChip = clubName ? `<span style="display:inline-block;background:${accent};color:#ffffff;font-family:${ff};font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:4px 11px;border-radius:30px">${esc(clubEmoji)} ${esc(clubName)}</span>` : '';
-  const meetBtn = cls.zoom_link ? `
+  const meetBtn = `
             <tr><td align="center" style="padding:8px 0 4px">
-              <a href="${esc(cls.zoom_link)}" style="display:inline-block;background:#DD0000;color:#ffffff;font-family:${ff};font-weight:800;font-size:15px;text-decoration:none;padding:14px 30px;border-radius:50px;box-shadow:0 6px 16px rgba(221,0,0,.28)">🎥 Jetzt zum Unterricht (Google&nbsp;Meet)</a>
-            </td></tr>` : '';
+              <a href="${esc(process.env.SITE_URL || 'https://www.deutschoderwas-club.de')}/schuelerbereich" style="display:inline-block;background:#DD0000;color:#ffffff;font-family:${ff};font-weight:800;font-size:15px;text-decoration:none;padding:14px 30px;border-radius:50px;box-shadow:0 6px 16px rgba(221,0,0,.28)">🔴 Jetzt zum Klassenraum</a>
+            </td></tr>`;
   const matLine = cls.material_pre ? `
             <tr><td align="center" style="padding:6px 0 0;font-family:${ff};font-size:14px;color:#6B7280">
               📚 <a href="${esc(cls.material_pre)}" style="color:#0a7a5c;font-weight:700;text-decoration:none">Noch kurz vorbereiten?</a>
@@ -124,7 +124,7 @@ function brandedReminderEmail({ vorname, cls, when, site, clubName, clubEmoji, c
         </td></tr>
 
         <tr><td style="padding:14px 30px 4px;font-family:${ff};font-size:13px;line-height:1.6;color:#6B7280">
-          Klappt es doch nicht? Bis 6 Stunden vor Beginn kannst du in deinem
+          Klappt es doch nicht? Bis 2 Stunden vor Beginn kannst du in deinem
           <a href="${esc(site)}/schuelerbereich" style="color:#DD0000;font-weight:700;text-decoration:none">Schülerbereich</a> stornieren.
         </td></tr>
 
