@@ -472,8 +472,11 @@ function levelBucket(lvl){ const m=String(lvl||'').match(/[ABC][12]/); return m?
 function computeStats(){
   const now = new Date();
   const booked = bookings.filter(b=>b.status==='booked');
-  const past = booked.filter(b=>new Date(b.starts_at)<now);
-  const upcoming = booked.filter(b=>new Date(b.starts_at)>=now).sort((a,b)=>new Date(a.starts_at)-new Date(b.starts_at));
+  // „Vergangen" erst NACH Unterrichtsende (Start + Dauer), nicht schon beim Start –
+  // so können Schüler während der laufenden Stunde noch beitreten.
+  const endMs = b => new Date(b.starts_at).getTime() + ((b.duration_min||60)*60000);
+  const past = booked.filter(b=>endMs(b)<now.getTime());
+  const upcoming = booked.filter(b=>endMs(b)>=now.getTime()).sort((a,b)=>new Date(a.starts_at)-new Date(b.starts_at));
 
   // Streak: aufeinanderfolgende Wochen mit Stunde (rückwärts ab dieser Woche)
   const weeks = new Set(booked.map(b=>isoWeekIndex(new Date(b.starts_at))));
@@ -1037,6 +1040,7 @@ function renderStunden(){
         </div>
         <div class="phasen">${phaseHtml(b,'post')}
           <div class="phase"><b>🃏 Vokabeln</b><a href="#" onclick="go('vokabeln');return false" style="color:var(--primary);font-weight:700">wiederholen →</a></div>
+          ${b.material_live?`<div class="phase"><b>📊 Präsentation</b><a href="${esc(b.material_live)}" target="_blank" rel="noopener" style="color:var(--primary);font-weight:700">ansehen →</a></div>`:''}
         </div></div>`;
     }).join('');
   }
@@ -1326,8 +1330,11 @@ function vbRender(){
   if(t==='c_de2m'){
     q=`<div class="vbq">Was bedeutet?</div><div class="vbword">${esc(term.de)} <button class="vbspk" onclick="vbSayCur()">🔊</button></div>`;
     inputArea=vbOpts(vbShuffle([vbMeaning(term),...vbDistract(term,'m')]));
+  } else if(t==='bild2wort'){
+    q=`<div class="vbq">Welches Wort passt zum Bild?</div>`;
+    inputArea=vbOpts(vbShuffle([term.de,...vbDistract(term,'de')]));
   } else if(t==='c_m2de'){
-    q=`<div class="vbq">Welches Wort passt?</div><div class="vbword" style="font-size:24px">${esc(vbMeaning(term))}</div>`;
+    q=`<div class="vbq">Welches Wort passt?</div><div class="vbword" style="font-size:22px">${esc(vbMeaning(term))}</div>`;
     inputArea=vbOpts(vbShuffle([term.de,...vbDistract(term,'de')]));
   } else if(t==='type'){
     q=`<div class="vbq">Schreib das deutsche Wort</div><div class="vbword" style="font-size:24px">${esc(vbMeaning(term))}</div>`;
@@ -1506,7 +1513,6 @@ async function sendMsg(){
   const { error }=await sb.from('messages').insert({user_id:user.id,sender:'student',body});
   if(error){ toast('Konnte nicht senden.'); return; }
   messages.push({sender:'student',body,created_at:new Date().toISOString()}); renderNachrichten();
-  try{ const { data:{ session } }=await sb.auth.getSession(); if(session) fetch('/api/notify-incoming',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},body:JSON.stringify({user_id:user.id,body})}).catch(()=>{}); }catch(e){}
 }
 
 // ---------- Amanda ----------
