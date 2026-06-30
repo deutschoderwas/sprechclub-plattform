@@ -1506,6 +1506,7 @@ async function sendMsg(){
   const { error }=await sb.from('messages').insert({user_id:user.id,sender:'student',body});
   if(error){ toast('Konnte nicht senden.'); return; }
   messages.push({sender:'student',body,created_at:new Date().toISOString()}); renderNachrichten();
+  try{ const { data:{ session } }=await sb.auth.getSession(); if(session) fetch('/api/notify-incoming',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},body:JSON.stringify({user_id:user.id,body})}).catch(()=>{}); }catch(e){}
 }
 
 // ---------- Amanda ----------
