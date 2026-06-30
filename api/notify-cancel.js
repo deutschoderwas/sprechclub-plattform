@@ -39,7 +39,7 @@ export default async function handler(req, res) {
         method: 'POST',
         headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          sender: { name: 'deutschoderwas', email: process.env.BREVO_SENDER_EMAIL || 'info@deutschoderwas.de' },
+          sender: { name: 'deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'info@deutschoderwas.de' },
           to: [{ email: prof.email, name: prof.name || undefined }],
           subject: `↩️ Storniert: ${cls.title} am ${when}`,
           htmlContent: studentCancelEmail({ vorname:(prof.name||'').split(' ')[0]||'du', cls, when, clubName, site:(process.env.SITE_URL||'https://www.deutschoderwas-club.de') }),
