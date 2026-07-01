@@ -69,6 +69,25 @@
   .mic-hint{display:flex; gap:10px; align-items:flex-start; padding:10px 13px; background:#FFF3C2; border-bottom:1px solid #F0D98A; color:#7a5b00; font-size:.8rem; line-height:1.45;}
   .mic-hint b{color:#5c4400;}
   .mic-hint .x{margin-left:auto; border:none; background:transparent; font-size:.95rem; cursor:pointer; color:#7a5b00; flex:0 0 auto; padding:0 2px;}
+  /* Reaktionen + Handmeldung */
+  .react-bar{display:flex; align-items:center; gap:6px; flex-wrap:wrap; padding:6px 10px; border-top:1px solid var(--rahmen); background:var(--creme-hell);}
+  .react-bar .rx{border:1px solid var(--rahmen); background:#fff; border-radius:9px; padding:5px 9px; font-size:1.05rem; line-height:1; cursor:pointer;}
+  .react-bar .rx:active{transform:scale(.88);}
+  .hand-queue{display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-left:auto;}
+  .hand-queue .hq{display:inline-flex; align-items:center; gap:6px; background:#FFF3C2; border:1px solid #F0D98A; color:#7a5b00; border-radius:999px; padding:3px 5px 3px 10px; font-size:.78rem; font-weight:700;}
+  .hand-queue .hq button{border:none; background:#fff; border-radius:999px; width:20px; height:20px; cursor:pointer; color:#16A34A; font-weight:800; line-height:1;}
+  #vc-hand.on{background:#FFE0A3; border-color:#E0A83A; color:#7a5b00;}
+  .rx-layer{position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:6;}
+  .rx-fly{position:absolute; bottom:6%; font-size:2rem; will-change:transform,opacity; animation:rxfly 2.4s ease-out forwards;}
+  @keyframes rxfly{0%{opacity:0; transform:translateY(0) scale(.6);}15%{opacity:1;}100%{opacity:0; transform:translateY(-170px) scale(1.25);}}
+  /* Sprechhilfen (Redemittel) */
+  .sh-btn{position:fixed; left:14px; bottom:14px; z-index:60; background:var(--tuerkis); color:var(--auf-tuerkis); border:none; border-radius:999px; padding:11px 16px; font-family:'Inter'; font-weight:800; font-size:.85rem; box-shadow:0 6px 18px rgba(0,0,0,.18); cursor:pointer;}
+  .sh-panel{position:fixed; left:14px; bottom:64px; z-index:60; width:min(370px,92vw); max-height:64vh; overflow:auto; background:#fff; border:1px solid var(--rahmen); border-radius:16px; box-shadow:0 16px 44px rgba(0,0,0,.20); padding:14px 16px; display:none;}
+  .sh-panel.open{display:block;}
+  .sh-panel h4{font-family:'Space Grotesk'; font-size:1rem; margin:0;}
+  .sh-close{float:right; border:none; background:transparent; cursor:pointer; font-size:1.1rem; color:var(--weich); line-height:1;}
+  .sh-cat{font-size:.72rem; font-weight:800; text-transform:uppercase; letter-spacing:.04em; color:var(--rot); margin:13px 0 6px;}
+  .sh-chip{display:inline-block; background:var(--creme); border:1px solid var(--rahmen); border-radius:10px; padding:7px 10px; margin:0 6px 6px 0; font-size:.88rem; color:var(--anthrazit);}
   #jitsi{width:100%; height:100%;}
   .video-start{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:9px; text-align:center; color:#fff; padding:14px;}
   .video-start p{margin:0; font-size:.73rem; color:#cfcfcf; line-height:1.35;}
@@ -207,15 +226,26 @@
           <p>Verbinde mit dem Klassenraum…</p>
         </div>
         <div id="jitsi"></div>
+        <div class="rx-layer" id="rx-layer"></div>
       </div>
       <div class="vid-controls" id="vid-controls">
         <button id="vc-mic" onclick="vcAudio()" title="Mikrofon an/aus">🎤 Mikro</button>
         <button id="vc-cam" onclick="vcVideo()" title="Kamera an/aus">📷 Kamera</button>
+        <button id="vc-hand" onclick="vcHand()" title="Melden – ich möchte sprechen" style="display:none">✋ Melden</button>
         <button id="vc-share" onclick="vcShare()" title="Bildschirm / Präsentation teilen">🖥️ Teilen</button>
         <button id="vc-muteall" onclick="vcMuteAll()" title="Alle Schüler stummschalten (bei Hintergrundgeräuschen)" style="display:none">🔇 Alle stumm</button>
         <button onclick="vcTiles()" title="Alle Teilnehmer sehen">👥 Alle</button>
         <button onclick="vcFull()" title="Großansicht">⛶ Groß</button>
         <button class="leave" onclick="vcLeave()" title="Unterricht verlassen">🚪 Verlassen</button>
+      </div>
+      <div class="react-bar" id="react-bar">
+        <button class="rx" onclick="reaction('👍')" title="Daumen hoch">👍</button>
+        <button class="rx" onclick="reaction('👏')" title="Applaus">👏</button>
+        <button class="rx" onclick="reaction('❤️')" title="Herz">❤️</button>
+        <button class="rx" onclick="reaction('😂')" title="Lachen">😂</button>
+        <button class="rx" onclick="reaction('🎉')" title="Super">🎉</button>
+        <button class="rx" onclick="reaction('❓')" title="Frage">❓</button>
+        <div class="hand-queue" id="hand-queue"></div>
       </div>
     </div>
 
@@ -259,7 +289,10 @@
 
   function setRolle(r){
     rolle=r; const lehrer = r==='lehrer';
+    window._meIsLehrer = lehrer;
     const mb=document.getElementById('vc-muteall'); if(mb) mb.style.display = lehrer ? '' : 'none';
+    const hb=document.getElementById('vc-hand'); if(hb) hb.style.display = lehrer ? 'none' : '';
+    if(typeof renderHands==='function') renderHands();
     document.getElementById('btn-lehrer').classList.toggle('active', lehrer);
     document.getElementById('btn-schueler').classList.toggle('active', !lehrer);
 
@@ -633,6 +666,59 @@
     const b=document.getElementById('vc-muteall');
     if(b){ const t=b.textContent; b.textContent='✅ stummgeschaltet'; setTimeout(()=>{ b.textContent=t; }, 1600); }
   }
+
+  // ---- Reaktionen (alle) + Handmeldung (Schüler → Lehrer sieht die Reihenfolge) ----
+  function handsMap(){ return window._handsMap || (window._handsMap = new Map()); }
+  function floatReaction(emoji){
+    const layer=document.getElementById('rx-layer'); if(!layer) return;
+    const el=document.createElement('div'); el.className='rx-fly'; el.textContent=emoji;
+    el.style.left=(8+Math.random()*84)+'%';
+    layer.appendChild(el); setTimeout(()=>el.remove(), 2500);
+  }
+  function reaction(emoji){
+    floatReaction(emoji);
+    try{ if(window._reactCh) window._reactCh.send({ type:'broadcast', event:'rx', payload:{ emoji } }); }catch(e){}
+  }
+  function vcHand(){
+    const b=document.getElementById('vc-hand'); if(!b) return;
+    const on=!b.classList.contains('on');
+    b.classList.toggle('on', on); b.textContent = on ? '✋ gemeldet' : '✋ Melden';
+    try{ if(window._handCh) window._handCh.send({ type:'broadcast', event:'hand', payload:{ id:window._meId, name:window._meName, on } }); }catch(e){}
+  }
+  function renderHands(){
+    const box=document.getElementById('hand-queue'); if(!box) return;
+    if(!window._meIsLehrer){ box.innerHTML=''; return; }
+    const esc=(s)=>String(s==null?'':s).replace(/[<>&]/g,'');
+    const items=[...handsMap().entries()];
+    box.innerHTML = items.length
+      ? items.map(([id,name])=>`<span class="hq">✋ ${esc(name)} <button title="dran / Meldung löschen" onclick="lowerHand('${esc(id)}')">✓</button></span>`).join('')
+      : '';
+  }
+  function lowerHand(id){
+    handsMap().delete(id); renderHands();
+    try{ if(window._handCh) window._handCh.send({ type:'broadcast', event:'hand', payload:{ id, on:false } }); }catch(e){}
+  }
+
+  // ---- Sprechhilfen (Redemittel) ----
+  const SPRECHHILFEN = [
+    ['Meine Meinung sagen', ['Ich denke, dass …','Meiner Meinung nach …','Ich finde, dass …','Ich bin der Meinung, dass …','Für mich ist wichtig, dass …']],
+    ['Zustimmen', ['Das stimmt.','Da hast du recht.','Das sehe ich auch so.','Genau!','Das finde ich auch.']],
+    ['Höflich widersprechen', ['Das sehe ich anders.','Das stimmt, aber …','Ich verstehe dich, trotzdem …','Kann sein, aber ich denke …']],
+    ['Nachfragen', ['Wie bitte?','Kannst du das wiederholen?','Was bedeutet …?','Wie meinst du das?','Kannst du ein Beispiel geben?']],
+    ['Ein Beispiel geben', ['Zum Beispiel …','Ein Beispiel dafür ist …','So wie …','Bei mir ist das so: …']],
+    ['Wenn mir ein Wort fehlt', ['Wie sagt man …?','Es ist ein Ding, das man zum … benutzt.','Das Gegenteil von …','Es ist so ähnlich wie …']],
+    ['Zeit gewinnen', ['Moment, ich überlege …','Gute Frage …','Also, …','Wie soll ich sagen …']]
+  ];
+  function renderSprechhilfen(){
+    const body=document.getElementById('sh-body'); if(!body || body.dataset.done) return;
+    const esc=(s)=>String(s).replace(/[<>&]/g,'');
+    body.innerHTML = SPRECHHILFEN.map(([cat,arr])=>`<div class="sh-cat">${esc(cat)}</div>`+arr.map(p=>`<span class="sh-chip">${esc(p)}</span>`).join('')).join('');
+    body.dataset.done='1';
+  }
+  function toggleSprechhilfen(){
+    const p=document.getElementById('sh-panel'); if(!p) return;
+    renderSprechhilfen(); p.classList.toggle('open');
+  }
   function vcFull(){ const el=document.querySelector('.video-buehne'); if(el && el.requestFullscreen){ el.requestFullscreen(); } else if(api){ api.executeCommand('toggleFullScreen'); } }
   function vcLeave(){
     if(api){ try{ api.executeCommand('hangup'); }catch(e){} setTimeout(()=>{ try{ api.dispose(); }catch(e){} }, 400); }
@@ -675,8 +761,10 @@
     try{
       const { data:{ user } } = await sb.auth.getUser();
       if(user){
-        const { data:prof } = await sb.from('profiles').select('is_teacher,is_admin').eq('id',user.id).maybeSingle();
+        window._meId = user.id;
+        const { data:prof } = await sb.from('profiles').select('is_teacher,is_admin,name').eq('id',user.id).maybeSingle();
         istLehrer = !!(prof && (prof.is_teacher||prof.is_admin));
+        window._meName = (prof && prof.name && String(prof.name).trim()) || 'Schüler:in';
       }
     }catch(e){ console.warn('Rolle', e); }
     // WICHTIG: Realtime mit dem Login-Token authentifizieren, sonst blockiert RLS
@@ -817,6 +905,23 @@
       applyShareMode(on);                                    // sofort lokal umschalten
       if(istLehrer){ try{ shareChan.send({ type:'broadcast', event:'share', payload:{ on:!!on } }); }catch(e){} }
     };
+
+    // ===== Reaktionen (alle sehen sie schweben) + Handmeldung (Lehrer sieht Reihenfolge) =====
+    window._reactCh = sb.channel('react-'+STUNDE)
+      .on('broadcast', { event:'rx' }, ({payload})=>{ if(payload && payload.emoji) floatReaction(payload.emoji); })
+      .subscribe();
+    window._handCh = sb.channel('hand-'+STUNDE)
+      .on('broadcast', { event:'hand' }, ({payload})=>{
+        if(!payload) return;
+        if(payload.on){ handsMap().set(payload.id, payload.name||'Schüler:in'); }
+        else {
+          handsMap().delete(payload.id);
+          if(payload.id===window._meId){ const b=document.getElementById('vc-hand'); if(b){ b.classList.remove('on'); b.textContent='✋ Melden'; } }
+        }
+        renderHands();
+      })
+      .subscribe();
+    renderHands();
   }
 
   // Handy-Tabs: zwischen Lektion und Tafel umschalten (nur auf dem Handy sichtbar)
@@ -850,5 +955,13 @@
     document.body.innerHTML='<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;font-family:Inter,system-ui,sans-serif;background:#FFF8E0;padding:24px"><div style="background:#fff;border-radius:22px;max-width:440px;padding:36px 28px;box-shadow:0 16px 40px rgba(0,0,0,.10)"><div style="font-size:48px">⏰</div><h2 style="margin:12px 0 8px;color:#1A1A1A;font-family:\'Space Grotesk\',Inter,sans-serif">Raum noch geschlossen</h2><p style="color:#6B7280;line-height:1.6;margin:0 0 18px">'+msg+'</p><a href="konto.html" style="display:inline-block;background:#2DD4BF;color:#06403A;font-weight:800;text-decoration:none;padding:13px 26px;border-radius:50px">← Zu „Meine Stunden"</a></div></div>';
   }
 </script>
+
+<!-- Sprechhilfen (Redemittel) – für alle einblendbar -->
+<button id="sh-btn" class="sh-btn" onclick="toggleSprechhilfen()" title="Nützliche Sätze zum Sprechen">💬 Sprechhilfen</button>
+<div id="sh-panel" class="sh-panel">
+  <button class="sh-close" onclick="toggleSprechhilfen()" title="Schließen">✕</button>
+  <h4>💬 Sprechhilfen</h4>
+  <div id="sh-body"></div>
+</div>
 </body>
 </html>
