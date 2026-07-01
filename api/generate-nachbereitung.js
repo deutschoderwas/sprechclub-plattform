@@ -75,11 +75,14 @@ async function runNachbereitung(sb, { classId, source = 'tafel', pdfText } = {})
   const prompt = buildPrompt(cls, srcText, [...vmap.values()], source);
   let aiText = '';
   try {
+    const _ac = new AbortController(); const _to = setTimeout(() => _ac.abort(), 45000);
     const r = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'x-api-key': process.env.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
-      body: JSON.stringify({ model: MODEL, max_tokens: 5000, messages: [{ role: 'user', content: prompt }] }),
+      body: JSON.stringify({ model: MODEL, max_tokens: 4000, messages: [{ role: 'user', content: prompt }] }),
+      signal: _ac.signal,
     });
+    clearTimeout(_to);
     const j = await r.json();
     if (!r.ok) return { ok: false, error: 'anthropic_error', detail: (j && j.error && j.error.message) || ('HTTP ' + r.status) };
     aiText = (j.content || []).map(b => b.text || '').join('').trim();
