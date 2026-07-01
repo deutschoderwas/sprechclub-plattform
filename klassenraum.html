@@ -113,7 +113,7 @@
   .m-tabs{display:none;}   /* Umschalt-Reiter nur auf dem Handy */
 
   /* ===== Handy: kleines Video, große scrollbare Präsentation + Tafel-Reiter ===== */
-  @media (max-width:760px){
+  @media (max-width:1024px){
     html,body{ height:auto; overflow:visible; -webkit-overflow-scrolling:touch; }
     body{ display:block; }
     header{ flex-wrap:wrap; gap:5px 10px; padding:8px 13px; }
@@ -481,7 +481,7 @@
   // Auf dem Handy: iframe so hoch wie sein Inhalt → die GANZE Seite scrollt flüssig (keine iframe-Falle)
   function fitLektion(){
     const ifr=document.getElementById('lektion'); if(!ifr) return;
-    if(!window.matchMedia('(max-width:760px)').matches){ ifr.style.height=''; setTimeout(fit,100); return; }
+    if(!window.matchMedia('(max-width:1024px)').matches){ ifr.style.height=''; setTimeout(fit,100); return; }
     try{ const h=ifr.contentWindow.document.documentElement.scrollHeight; if(h>200) ifr.style.height=h+'px'; }
     catch(e){ ifr.style.height='2200px'; }   // Fallback, falls Inhalt nicht lesbar
     setTimeout(fit,100);                      // Stift-Fläche an neue Höhe anpassen
@@ -654,7 +654,7 @@
     const stiftCh = sb.channel('stift-'+STUNDE);
     stiftCh.on('broadcast', { event:'draw' }, ({payload})=>{
         if(istLehrer) return;
-        if(window.matchMedia && window.matchMedia('(max-width:760px)').matches) return; // Stift-Overlay nur am Computer – am Handy nicht deckungsgleich, daher aus
+        if(window.matchMedia && window.matchMedia('(max-width:1024px)').matches) return; // Stift-Overlay nur am Computer – am Handy nicht deckungsgleich, daher aus
         const img=new Image();
         img.onload=()=>{
           // Zeichenfläche an die aktuelle Anzeigegröße anpassen (sonst auf dem Handy 0 → unsichtbar)
@@ -705,7 +705,7 @@
         if(innerMax>4){ w.scrollTo(0, frac*innerMax); return; }   // Desktop
       }
       // Auf dem Handy NICHT automatisch scrollen – sonst verschwindet die Tafel. Schüler scrollt selbst.
-      if(window.matchMedia && window.matchMedia('(max-width:760px)').matches) return;
+      if(window.matchMedia && window.matchMedia('(max-width:1024px)').matches) return;
       // (nur Desktop ohne inneres Scrollen) die ganze Seite zur passenden Stelle scrollen
       const top = ifr.getBoundingClientRect().top + window.scrollY;
       const pageMax = Math.max(0, ifr.offsetHeight - window.innerHeight);
