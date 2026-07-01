@@ -212,6 +212,7 @@
         <button id="vc-mic" onclick="vcAudio()" title="Mikrofon an/aus">🎤 Mikro</button>
         <button id="vc-cam" onclick="vcVideo()" title="Kamera an/aus">📷 Kamera</button>
         <button id="vc-share" onclick="vcShare()" title="Bildschirm / Präsentation teilen">🖥️ Teilen</button>
+        <button id="vc-muteall" onclick="vcMuteAll()" title="Alle Schüler stummschalten (bei Hintergrundgeräuschen)" style="display:none">🔇 Alle stumm</button>
         <button onclick="vcTiles()" title="Alle Teilnehmer sehen">👥 Alle</button>
         <button onclick="vcFull()" title="Großansicht">⛶ Groß</button>
         <button class="leave" onclick="vcLeave()" title="Unterricht verlassen">🚪 Verlassen</button>
@@ -258,6 +259,7 @@
 
   function setRolle(r){
     rolle=r; const lehrer = r==='lehrer';
+    const mb=document.getElementById('vc-muteall'); if(mb) mb.style.display = lehrer ? '' : 'none';
     document.getElementById('btn-lehrer').classList.toggle('active', lehrer);
     document.getElementById('btn-schueler').classList.toggle('active', !lehrer);
 
@@ -622,6 +624,15 @@
   function vcVideo(){ if(api) api.executeCommand('toggleVideo'); }
   function vcShare(){ if(api) api.executeCommand('toggleShareScreen'); }
   function vcTiles(){ if(api) api.executeCommand('toggleTileView'); }
+  // Nur Lehrkraft/Moderator: alle Schüler stummschalten (z. B. bei lauten Hintergrundgeräuschen).
+  // Jede/r Schüler:in kann sich zum Sprechen jederzeit selbst wieder anschalten.
+  function vcMuteAll(){
+    if(!api) return;
+    try{ api.executeCommand('muteEveryone', 'audio'); }
+    catch(e){ try{ api.executeCommand('muteEveryone'); }catch(_){} }
+    const b=document.getElementById('vc-muteall');
+    if(b){ const t=b.textContent; b.textContent='✅ stummgeschaltet'; setTimeout(()=>{ b.textContent=t; }, 1600); }
+  }
   function vcFull(){ const el=document.querySelector('.video-buehne'); if(el && el.requestFullscreen){ el.requestFullscreen(); } else if(api){ api.executeCommand('toggleFullScreen'); } }
   function vcLeave(){
     if(api){ try{ api.executeCommand('hangup'); }catch(e){} setTimeout(()=>{ try{ api.dispose(); }catch(e){} }, 400); }
