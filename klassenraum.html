@@ -65,6 +65,10 @@
   .vid-controls button{flex:1 1 auto; min-width:62px; border:1px solid var(--rahmen); background:#fff; cursor:pointer; border-radius:9px; padding:8px 6px; font-family:'Inter'; font-weight:600; font-size:.8rem; color:var(--anthrazit);}
   .vid-controls button.leave{background:var(--rot); color:#fff; border-color:var(--rot); flex-basis:100%;}
   .vid-controls button.muted{background:#FFE0E0; border-color:var(--rot); color:var(--rot);}
+  /* Hinweis, wenn das Mikrofon vom Browser/App blockiert ist */
+  .mic-hint{display:flex; gap:10px; align-items:flex-start; padding:10px 13px; background:#FFF3C2; border-bottom:1px solid #F0D98A; color:#7a5b00; font-size:.8rem; line-height:1.45;}
+  .mic-hint b{color:#5c4400;}
+  .mic-hint .x{margin-left:auto; border:none; background:transparent; font-size:.95rem; cursor:pointer; color:#7a5b00; flex:0 0 auto; padding:0 2px;}
   #jitsi{width:100%; height:100%;}
   .video-start{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:9px; text-align:center; color:#fff; padding:14px;}
   .video-start p{margin:0; font-size:.73rem; color:#cfcfcf; line-height:1.35;}
@@ -196,6 +200,7 @@
   <aside class="spalte">
     <div class="video-card">
       <div class="video-kopf"><span class="punkt"></span> deutschoderwas club Klassenraum</div>
+      <div class="mic-hint" id="mic-hint" style="display:none"><span id="mic-hint-txt"></span><button class="x" onclick="document.getElementById('mic-hint').style.display='none'" title="Schließen">✕</button></div>
       <div class="video-buehne">
         <div class="video-start" id="video-start">
           <button class="play" onclick="videoStarten()">▶</button>
@@ -566,13 +571,38 @@
     // Immer Kachelansicht – man sieht sich selbst und alle Teilnehmer
     // Immer Kachelansicht (Meet-Stil): man sieht sich selbst UND alle Teilnehmer.
     const forceTile=()=>{ if(document.body.classList.contains('sharing')) return; try{ api.executeCommand('setTileView', true); }catch(e){} };
-    api.addEventListener('videoConferenceJoined', ()=>{ [500,1500,3000].forEach(t=>setTimeout(forceTile,t)); });
+    api.addEventListener('videoConferenceJoined', ()=>{ [500,1500,3000].forEach(t=>setTimeout(forceTile,t)); setTimeout(checkMic, 2500); });
     api.addEventListener('participantJoined', ()=>{ setTimeout(forceTile,500); });
     api.addEventListener('participantLeft', ()=>{ setTimeout(forceTile,500); });
   }
 
   // ---- Eigene Video-Knöpfe (klar sichtbar, statt versteckter Jitsi-Leiste) ----
-  function vcAudio(){ if(api) api.executeCommand('toggleAudio'); }
+  function vcAudio(){ if(api){ api.executeCommand('toggleAudio'); setTimeout(checkMic, 900); } }
+
+  // ---- Mikrofon-Hilfe: Hinweis, wenn Browser/App das Mikro sperrt ----
+  function showMicHint(html){
+    const box=document.getElementById('mic-hint'), t=document.getElementById('mic-hint-txt');
+    if(!box||!t) return; t.innerHTML=html; box.style.display='flex';
+  }
+  function isInAppBrowser(){
+    const ua=navigator.userAgent||'';
+    return /Instagram|FBAN|FBAV|FB_IAB|FBIOS|Line\/|Snapchat|TikTok|musical_ly|Pinterest|WhatsApp|Telegram/i.test(ua) || /; wv\)/.test(ua);
+  }
+  let _micHintShown=false;
+  async function checkMic(){
+    try{
+      if(isInAppBrowser()){
+        if(_micHintShown) return; _micHintShown=true;
+        showMicHint('🎤 <b>Kein Mikrofon?</b> Du bist gerade über eine App (z. B. Instagram, TikTok oder Mail) hier – dort sperrt das Handy oft das Mikrofon. Tippe oben auf <b>⋯</b> bzw. das Teilen-Symbol und wähle <b>„In Safari/Chrome öffnen"</b>, dann beim Beitreten <b>Mikrofon erlauben</b>.');
+        return;
+      }
+      let denied=false, hasMic=true;
+      try{ const st=await navigator.permissions.query({name:'microphone'}); if(st&&st.state==='denied') denied=true; }catch(e){}
+      try{ const ds=await navigator.mediaDevices.enumerateDevices(); hasMic=ds.some(d=>d.kind==='audioinput'); }catch(e){}
+      if(denied){ showMicHint('🎤 <b>Mikrofon ist blockiert.</b> Bitte im Browser die Mikrofon-Erlaubnis für diese Seite auf <b>„Erlauben"</b> stellen und den Raum einmal verlassen und neu beitreten.'); }
+      else if(!hasMic){ showMicHint('🎤 <b>Kein Mikrofon gefunden.</b> Prüfe, ob dein Gerät ein Mikrofon hat bzw. es freigegeben ist – dann neu beitreten.'); }
+    }catch(e){}
+  }
   function vcVideo(){ if(api) api.executeCommand('toggleVideo'); }
   function vcShare(){ if(api) api.executeCommand('toggleShareScreen'); }
   function vcTiles(){ if(api) api.executeCommand('toggleTileView'); }
@@ -589,6 +619,7 @@
 
   async function videoStarten(){
     document.getElementById('video-start').style.display='none';
+    if(isInAppBrowser()) checkMic();   // In-App-Browser sofort warnen (Mikro dort meist gesperrt)
     const jwt = await holeToken();
     if(jwt){
       // Eigener, abgesicherter Server. Notfall-Schalter auf öffentlichen Jitsi, falls der Server ausfällt.
