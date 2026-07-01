@@ -133,6 +133,7 @@ async function runNachbereitung(sb, { classId, source = 'tafel', pdfText } = {})
   const post_content = {
     thema: clip(parsed.thema, 700),
     saetze: strList(parsed.saetze, 12),
+    dialoge: normDialoge(parsed.dialoge),
     vocab,
     grammar: normGrammar(parsed.grammar),
     exercises,
@@ -255,6 +256,12 @@ function normGrammar(g) {
   if (!title && !rows.length && !tips.length) return null;
   return { title: title || 'Grammatik', headers, rows, tips };
 }
+function normDialoge(a) {
+  return (Array.isArray(a) ? a : []).map(d => ({
+    titel: clip(d.titel || d.title || d.situation, 120) || 'Dialog',
+    zeilen: (Array.isArray(d.zeilen || d.lines) ? (d.zeilen || d.lines) : []).map(z => ({ sprecher: clip(z.sprecher || z.speaker || z.name, 40) || '', text: clip(z.text || z.line, 400) || '' })).filter(z => z.text).slice(0, 12),
+  })).filter(d => d.zeilen.length).slice(0, 4);
+}
 function normSpeaking(a) {
   return (Array.isArray(a) ? a : []).map(s => ({ task: clip(s.task || s.q, 300) || '', example: clip(s.example || s.answer, 500) || '' })).filter(s => s.task).slice(0, 8);
 }
@@ -334,6 +341,7 @@ Antworte AUSSCHLIESSLICH mit gültigem JSON (kein Text, keine Codeblöcke) in GE
 {
   "thema": "1-3 Sätze: worum ging es in der Stunde (für die Zusammenfassung).",
   "saetze": ["wichtiger Beispielsatz aus der Stunde", "noch einer", "..."],
+  "dialoge": [ { "titel": "kurze Alltagssituation (z. B. Im Café)", "zeilen": [ { "sprecher": "A", "text": "..." }, { "sprecher": "B", "text": "..." } ] } ],
   "vocab": [ { "de": "das Wort", "info": "einfache Erklärung AUF DEUTSCH (kein Englisch!)", "example": "lebensnaher Beispielsatz aus dem Alltag", "related": ["verwandtes Wort", "noch eins"] } ],
   "grammar": {
     "title": "Grammatik-Schwerpunkt der Stunde",
@@ -352,6 +360,7 @@ Antworte AUSSCHLIESSLICH mit gültigem JSON (kein Text, keine Codeblöcke) in GE
 REGELN:
 - ALLES muss zum oben Behandelten passen (gleiche Wörter, Grammatik, Beispiele). Nichts erfinden, was nicht zum Thema passt.
 - "vocab": 6-14 Vokabeln. "info" = einfache, kurze Erklärung AUF DEUTSCH (NIEMALS englische Übersetzung!). "example" = lebensnaher Beispielsatz aus dem echten Alltag. "related" = 2-4 verwandte Wörter aus derselben Wortfamilie (Adjektive/Verben/Nomen, z. B. zu "Zufriedenheit": zufrieden, zufriedenstellen).
+- "dialoge": 2-3 kurze, realistische ALLTAGS-DIALOGE (je 4-8 Zeilen), die möglichst viele der neuen Vokabeln UND die wichtigen Inhalte der Stunde/Präsentation natürlich verwenden. Jede Zeile: { "sprecher": "Name/A/B", "text": "..." }. Lebensnah, typisch deutsch, passend zum Niveau.
 - "grammar": nur ausfüllen, wenn es einen klaren Grammatikpunkt gibt; sonst "tips" mit 1-2 Merkpunkten, "rows":[] lassen.
 - "exercises": 6-9 Lückenübungen (type "choice" mit 3 Optionen, "answer" = Index 0-basiert; oder "gap").
 - "speaking": 2-4 freie Sprech-/Schreibaufgaben mit Beispielantwort.
