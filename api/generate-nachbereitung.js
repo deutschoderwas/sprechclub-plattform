@@ -29,7 +29,7 @@ async function runNachbereitung(sb, { classId, source = 'tafel', pdfText } = {})
   if (!process.env.ANTHROPIC_API_KEY) return { ok: false, error: 'anthropic_key_missing' };
   if (!classId) return { ok: false, error: 'bad_request' };
 
-  const { data: cls } = await sb.from('classes').select('id,title,level,topic,vocab').eq('id', classId).maybeSingle();
+  const { data: cls } = await sb.from('classes').select('id,title,level,topic,vocab,material_live,material_pre').eq('id', classId).maybeSingle();
   if (!cls) return { ok: false, error: 'class_not_found' };
 
   const [{ data: mat }, { data: note }] = await Promise.all([
@@ -38,12 +38,20 @@ async function runNachbereitung(sb, { classId, source = 'tafel', pdfText } = {})
   ]);
 
   let srcText = '';
+  let quelle = 'tafel';
+  let mitschrift = '';
   if (source === 'pdf') {
     srcText = String(pdfText || '').trim();
     if (srcText.length < 20) return { ok: false, error: 'no_pdf_text' };
+    quelle = 'pdf';
   } else {
-    srcText = htmlToText(String((note && note.notes) || ''));
-    if (srcText.length < 20) return { ok: false, error: 'no_tafel' };
+    mitschrift = htmlToText(String((note && note.notes) || ''));
+    srcText = mitschrift;
+    if (srcText.length < 20) {
+      const presText = await fetchPresentationText(cls.material_live || cls.material_pre);
+      if (presText && presText.length >= 40) { srcText = presText; quelle = 'praesentation'; mitschrift = ''; }
+      else return { ok: false, error: 'no_source' };
+    }
   }
   if (srcText.length > 14000) srcText = srcText.slice(0, 14000);
 
@@ -98,9 +106,11 @@ async function runNachbereitung(sb, { classId, source = 'tafel', pdfText } = {})
     speaking: normSpeaking(parsed.speaking),
     errors: normErrors(parsed.errors),
     source,
+    quelle,
+    mitschrift: mitschrift ? mitschrift.slice(0, 8000) : '',
     generated_at: new Date().toISOString(),
   };
-  if (!vocab.length && !exercises.length && !post_content.thema) return { ok: false, error: 'empty_result' };
+  if (!vocab.length && !exercises.length && !post_content.thema && !post_content.mitschrift) return { ok: false, error: 'empty_result' };
 
   const nowISO = post_content.generated_at;
   const { error: nErr } = await sb.from('class_notes').upsert({ class_id: classId, post_content, generated_at: nowISO }, { onConflict: 'class_id' });
@@ -138,7 +148,7 @@ async function sendNachbereitungMails(sb, classId, cls, pc) {
       method: 'POST',
       headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        sender: { name: 'Julia | deutschoderwas', email: process.env.BREVO_SENDER_EMAIL || 'info@deutschoderwas.de' },
+        sender: { name: 'deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'info@deutschoderwas.de' },
         to: [{ email: p.email, name: p.name || undefined }],
         subject: `📖 Deine Nachbereitung: ${thema}`,
         htmlContent: html,
@@ -179,6 +189,15 @@ function nachbereitungEmail({ vorname, thema, level, nVok, nUb, nErr, link }) {
 </body></html>`;
 }
 
+async function fetchPresentationText(url) {
+  try {
+    if (!url || !/^https?:\/\//.test(url)) return '';
+    const r = await fetch(url, { headers: { 'user-agent': 'dow-nachbereitung' } });
+    if (!r.ok) return '';
+    const t = htmlToText(await r.text());
+    return t.length > 14000 ? t.slice(0, 14000) : t;
+  } catch (e) { return ''; }
+}
 function clip(s, n) { s = String(s == null ? '' : s).trim(); return s ? s.slice(0, n) : null; }
 function strList(a, max) { return (Array.isArray(a) ? a : []).map(x => String(x || '').trim()).filter(Boolean).slice(0, max); }
 
