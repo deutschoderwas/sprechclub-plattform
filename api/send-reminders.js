@@ -123,6 +123,14 @@ function brandedReminderEmail({ vorname, cls, when, site, clubName, clubEmoji, c
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${meetBtn}${schuelerBtn}${matLine}</table>
         </td></tr>
 
+        <tr><td style="padding:8px 30px 0">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF3C2;border-radius:12px">
+            <tr><td style="padding:11px 14px;font-family:${ff};font-size:13px;line-height:1.5;color:#7a5b00">
+              📱 <b>Kurz-Tipp fürs Mikrofon:</b> Öffne den Unterricht in <b>Safari</b> oder <b>Chrome</b> (nicht über einen Link in Instagram, TikTok oder deiner Mail-App) und <b>erlaube Mikrofon + Kamera</b>, wenn dein Browser fragt. Dann klappt das Sprechen sofort.
+            </td></tr>
+          </table>
+        </td></tr>
+
         <tr><td style="padding:14px 30px 4px;font-family:${ff};font-size:13px;line-height:1.6;color:#6B7280">
           Klappt es doch nicht? Bis 2 Stunden vor Beginn kannst du in deinem
           <a href="${esc(site)}/schuelerbereich" style="color:#DD0000;font-weight:700;text-decoration:none">Schülerbereich</a> stornieren.
