@@ -112,6 +112,10 @@ function render(id, c, pc){
     if(pc.saetze && pc.saetze.length) h += `<div class="card a-teal"><h2>🗣️ Wichtige Sätze</h2><ul class="satz-list">`+pc.saetze.map(s=>`<li>${esc(s)}</li>`).join('')+`</ul></div>`;
     tabs.push({ label:'📋 Zusammenfassung', html:h });
   }
+  // 1b · Mitschrift aus der Stunde
+  if(pc.mitschrift){
+    tabs.push({ label:'📝 Mitschrift', html:`<div class="card a-red"><h2>📝 Mitschrift aus der Stunde</h2><p style="white-space:pre-wrap;line-height:1.6">${esc(pc.mitschrift)}</p></div>` });
+  }
   // 2 · Vokabeln
   if(pc.vocab && pc.vocab.length){
     const rows = pc.vocab.map(v=>`<tr><td><strong>${esc(v.de)}</strong></td><td>${esc(v.info||v.en||'')}</td><td>${esc(v.example||'')}</td></tr>`).join('');
