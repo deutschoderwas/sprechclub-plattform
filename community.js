@@ -23,8 +23,7 @@
   function injectStyle() {
     if (styled) return; styled = true;
     var css = `
-    #v-community{width:100vw;position:relative;left:50%;right:50%;margin-left:-50vw;margin-right:-50vw;padding:0 24px;box-sizing:border-box}
-    #v-community .cm{display:grid;grid-template-columns:250px 1fr;gap:0;border:1px solid var(--border,#F0E5D8);border-radius:18px;overflow:hidden;background:#fff;height:calc(100vh - 190px);min-height:460px}
+    #v-community .cm{display:grid;grid-template-columns:250px 1fr;gap:0;border:1px solid var(--border,#F0E5D8);border-radius:18px;overflow:hidden;background:#fff;height:calc(100vh - 210px);min-height:460px;width:100%}
     #v-community .cm-side{background:var(--bg,#FFF8E0);border-right:1px solid var(--border,#F0E5D8);padding:14px 10px;overflow-y:auto}
     #v-community .cm-side h4{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-soft,#6B7280);margin:4px 8px 10px}
     #v-community .cm-ch{display:flex;align-items:center;gap:9px;width:100%;border:none;background:none;text-align:left;padding:10px 11px;border-radius:11px;cursor:pointer;font-family:inherit;font-size:14.5px;font-weight:600;color:var(--secondary,#1A1A1A)}
