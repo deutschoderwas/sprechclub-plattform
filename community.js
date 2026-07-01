@@ -30,7 +30,11 @@
     #v-community .cm-ch:hover{background:#fff}
     #v-community .cm-ch.on{background:var(--secondary,#1A1A1A);color:#fff}
     #v-community .cm-ch .e{font-size:17px}
-    #v-community .cm-ch .lock{margin-left:auto;font-size:12px;opacity:.6}
+    #v-community .cm-ch .lock{margin-left:6px;font-size:12px;opacity:.6}
+    #v-community .cm-ch .cm-nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    #v-community .cm-ch .cm-unread{flex:0 0 auto;background:var(--primary,#DD0000);color:#fff;font-size:11px;font-weight:800;min-width:19px;height:19px;border-radius:10px;padding:0 5px;display:inline-flex;align-items:center;justify-content:center;margin-left:auto}
+    #v-community .cm-ch .cm-nm ~ .lock{margin-left:6px}
+    #v-community .cm-ch.on .cm-unread{background:#fff;color:var(--secondary,#1A1A1A)}
     #v-community .cm-main{display:flex;flex-direction:column;min-width:0;min-height:0}
     #v-community .cm-head{padding:13px 18px;border-bottom:1px solid var(--border,#F0E5D8)}
     #v-community .cm-head b{font-size:16px}
@@ -86,6 +90,42 @@
   function initials(n) { n = (n || 'Mitglied').trim(); var p = n.split(/\s+/); return ((p[0] || '?')[0] + (p[1] ? p[1][0] : '')).toUpperCase(); }
   function timeStr(t) { var d = new Date(t); return d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }); }
 
+  // ---- Ungelesen-Zähler pro Kanal (individuell pro Mitglied, gespeichert im Browser) ----
+  var unread = {}, badgeChan = null;
+  function seenKey() { return 'cm_seen_' + (ME && ME.id ? ME.id : 'x'); }
+  function loadSeen() { try { return JSON.parse(localStorage.getItem(seenKey()) || '{}') || {}; } catch (e) { return {}; } }
+  function saveSeen(o) { try { localStorage.setItem(seenKey(), JSON.stringify(o)); } catch (e) {} }
+  function markSeen(slug) { var o = loadSeen(); o[slug] = Date.now(); saveSeen(o); unread[slug] = 0; }
+  async function computeUnread() {
+    unread = {};
+    try {
+      var since = new Date(Date.now() - 45 * 24 * 3600 * 1000).toISOString();
+      var res = await sbc.from('community_messages').select('channel,created_at,user_id').is('deleted_at', null).gte('created_at', since).order('created_at', { ascending: false }).limit(800);
+      var rows = res.data || [], seen = loadSeen();
+      rows.forEach(function (m) {
+        if (m.user_id === ME.id) return;
+        if (new Date(m.created_at).getTime() > (seen[m.channel] || 0)) unread[m.channel] = (unread[m.channel] || 0) + 1;
+      });
+    } catch (e) {}
+  }
+  function badgeHtml(slug) { var n = unread[slug] || 0; return n > 0 ? '<span class="cm-unread">' + (n > 99 ? '99+' : n) + '</span>' : ''; }
+  function updateBadge(slug) {
+    var btn = root() && root().querySelector('.cm-ch[data-ch="' + slug + '"]'); if (!btn) return;
+    var b = btn.querySelector('.cm-unread'), n = unread[slug] || 0;
+    if (n <= 0) { if (b) b.remove(); return; }
+    if (!b) { b = document.createElement('span'); b.className = 'cm-unread'; btn.insertBefore(b, btn.querySelector('.lock')); }
+    b.textContent = n > 99 ? '99+' : n;
+  }
+  function subscribeBadges() {
+    if (badgeChan) return;
+    badgeChan = sbc.channel('comm-badges')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'community_messages' }, function (p) {
+        var m = p.new; if (!m || m.deleted_at || m.user_id === ME.id || m.channel === cur) return;
+        unread[m.channel] = (unread[m.channel] || 0) + 1; updateBadge(m.channel);
+      })
+      .subscribe();
+  }
+
   async function renderCommunity() {
     injectStyle();
     var r = root(); if (!r) return;
@@ -103,8 +143,10 @@
     channels = ch.data || [];
     if (!channels.length) { r.innerHTML = '<div class="pagehead"><h1>💬 Community</h1></div><div class="card">Noch keine Kanäle.</div>'; return; }
     if (!cur || !channels.some(function (c) { return c.slug === cur; })) cur = channels[0].slug;
+    await computeUnread();
     r.innerHTML = shellHtml();
     bindShell();
+    subscribeBadges();
     await openChannel(cur);
   }
 
@@ -114,7 +156,8 @@
         '<div class="cm-side"><h4>Kanäle</h4>' +
           channels.map(function (c) {
             return '<button class="cm-ch' + (c.slug === cur ? ' on' : '') + '" data-ch="' + E(c.slug) + '">' +
-              '<span class="e">' + E(c.emoji || '#') + '</span><span>' + E(c.name) + '</span>' +
+              '<span class="e">' + E(c.emoji || '#') + '</span><span class="cm-nm">' + E(c.name) + '</span>' +
+              badgeHtml(c.slug) +
               (c.team_only ? '<span class="lock" title="Nur Team postet">📣</span>' : '') + '</button>';
           }).join('') +
         '</div>' +
@@ -135,6 +178,7 @@
   var channel = null;
   async function openChannel(slug) {
     var c = channels.filter(function (x) { return x.slug === slug; })[0]; if (!c) return;
+    markSeen(slug); updateBadge(slug);
     var head = q('#cmHead'); if (head) head.innerHTML = '<b>' + E(c.emoji || '') + ' ' + E(c.name) + '</b><span>' + E(c.description || '') + '</span>';
     renderFoot(c);
     var box = q('#cmMsgs'); if (box) box.innerHTML = '<div class="cm-empty">Lädt…</div>';
@@ -345,7 +389,7 @@
     if (!res.error) { var n = document.querySelector('[data-id="' + id + '"]'); if (n) n.remove(); }
   }
 
-  function stopAll() { if (channel) { try { sbc.removeChannel(channel); } catch (e) {} channel = null; } if (rec && rec.state === 'recording') stopRec(); }
+  function stopAll() { if (channel) { try { sbc.removeChannel(channel); } catch (e) {} channel = null; } if (badgeChan) { try { sbc.removeChannel(badgeChan); } catch (e) {} badgeChan = null; } if (rec && rec.state === 'recording') stopRec(); }
 
   window.renderCommunity = renderCommunity;
   window.addEventListener('hashchange', function () { if ((location.hash || '').slice(1) !== 'community') stopAll(); });
