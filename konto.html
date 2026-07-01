@@ -509,9 +509,9 @@ function computeStats(){
 function collectVocab(){
   const seen=new Set(), out=[];
   bookings.filter(b=>b.status==='booked').forEach(b=>{
-    (Array.isArray(b.vocab)?b.vocab:[]).forEach(v=>{ const k=v.de; if(v.de&&!seen.has(k)){seen.add(k);out.push({...v,from:b.title});} });
+    (Array.isArray(b.vocab)?b.vocab:[]).forEach(v=>{ const k=v.de; if(v.de&&!seen.has(k)){seen.add(k);out.push({...v,from:(b.topic||b.title||'Sonstige')});} });
     const m=materials[b.class_id];
-    if(m&&Array.isArray(m.vocab)) m.vocab.forEach(v=>{ const k=v.de; if(v.de&&!seen.has(k)){seen.add(k);out.push({...v,from:b.title});} });
+    if(m&&Array.isArray(m.vocab)) m.vocab.forEach(v=>{ const k=v.de; if(v.de&&!seen.has(k)){seen.add(k);out.push({...v,from:(b.topic||b.title||'Sonstige')});} });
   });
   return out;
 }
@@ -1282,6 +1282,9 @@ function renderVokabeln(){
   const el=document.getElementById('v-vokabeln');
   if(!deck.length){ el.innerHTML='<div class="pagehead"><h1>Vokabeltrainer</h1></div><div class="empty">Noch keine Vokabeln — sie erscheinen automatisch, sobald deine gebuchten Stunden Vokabeln haben (oder Amanda Material erstellt hat).</div>'; return; }
   deckIdx=0;flipped=false;
+  const _catEmoji=(t)=>{ t=(t||'').toLowerCase(); if(/famili|beziehung|eltern|kind/.test(t))return '👨‍👩‍👧'; if(/beruf|arbeit|job|lernen|studi/.test(t))return '💼'; if(/reise|urlaub/.test(t))return '✈️'; if(/essen|küche|koch|lebensmittel|restaurant/.test(t))return '🍽️'; if(/glück|gefühl|emotion|zufrieden/.test(t))return '😊'; if(/führerschein|verkehr|auto|straße/.test(t))return '🚗'; if(/gesundheit|arzt|körper|krank/.test(t))return '🩺'; if(/wohn|haus|zuhause|stadt/.test(t))return '🏠'; if(/kultur|tradition|fest/.test(t))return '🎭'; if(/natur|umwelt|wetter|tier/.test(t))return '🌿'; if(/technik|computer|medien|internet/.test(t))return '💻'; if(/sprech|umgangs|smalltalk|alltag/.test(t))return '💬'; return '📗'; };
+  const _groups={}; deck.forEach(v=>{ const g=v.from||'Sonstige'; (_groups[g]=_groups[g]||[]).push(v); });
+  const _catHtml=Object.keys(_groups).sort().map(g=>`<h2 class="sec">${_catEmoji(g)} ${esc(g)} <span class="muted" style="font-weight:400;font-size:13px">(${_groups[g].length})</span></h2>`+_groups[g].map(v=>`<div class="vrow"><span>${v.img?`<img src="${esc(v.img)}" alt="" loading="lazy" style="width:34px;height:34px;object-fit:cover;border-radius:8px;vertical-align:middle;margin-right:8px">`:''}<b>${esc(v.de)}</b> — ${esc(v.info||'')}</span>${known.has(v.de)?'<span class="known">✓ gelernt</span>':''}</div>`).join('')).join('');
   el.innerHTML=`<div class="pagehead"><h1>Vokabeltrainer</h1><p>${deck.length} Vokabeln aus deinen Stunden · ${known.size} schon gelernt</p></div>
     <div style="text-align:center;margin:4px 0 20px"><button class="btn btn-primary" style="font-size:17px;padding:14px 34px;border-radius:16px" onclick="vbStart()">🎯 Üben starten</button><div class="muted" style="font-size:12px;margin-top:6px">Gemischte Übungen · Hören · kluges Wiederholen</div></div>
     <div class="flashwrap">
@@ -1292,8 +1295,7 @@ function renderVokabeln(){
         <button class="btn btn-primary" onclick="nextCard()">Weiter →</button>
       </div>
     </div>
-    <div class="vocab-list"><h2 class="sec">Alle Vokabeln</h2>
-      ${deck.map(v=>`<div class="vrow"><span><b>${esc(v.de)}</b> — ${esc(v.info||'')}</span>${known.has(v.de)?'<span class="known">✓ gelernt</span>':''}</div>`).join('')}</div>`;
+    <div class="vocab-list">${_catHtml}</div>`;
   showCard();
 }
 function showCard(){ const c=deck[deckIdx]; const known=new Set(lsGet('known',[]));
