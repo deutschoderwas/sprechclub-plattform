@@ -529,6 +529,11 @@ async function loadKlassen(){
     const { data: mats } = await sb.from('class_materials').select('class_id').in('class_id', ids);
     const matSet = new Set((mats||[]).map(m=>m.class_id));
     (cls||[]).forEach(c=>{ c._hasMat = matSet.has(c.id); });
+    const { data: _nbn } = await sb.from('class_notes').select('class_id,post_content').in('class_id', ids);
+    const _nbMap={}; (_nbn||[]).forEach(n=>{ _nbMap[n.class_id]=n.post_content||null; });
+    let _nbm=[]; try{ const r=await sb.from('email_log').select('ref').eq('kind','nachbereitung').or(ids.map(x=>`ref.like.${x}%`).join(',')); _nbm=r.data||[]; }catch(e){}
+    const _mc={}; _nbm.forEach(m=>{ const cid=(m.ref||'').split(':')[0]; _mc[cid]=(_mc[cid]||0)+1; });
+    (cls||[]).forEach(c=>{ const pc=_nbMap[c.id]; c._nbDone=!!(pc&&String(pc.thema||'').trim()); c._nbQuelle=(pc&&pc.quelle)||''; c._nbMails=_mc[c.id]||0; c._booked=(parts[c.id]||[]).length; });
   }
   KL_ALL = cls||[]; KL_PARTS = parts;
   // Standard: Lehrkräfte sehen sofort NUR ihre eigenen Stunden
@@ -624,6 +629,7 @@ function renderKlassen(){
       </div>
       <span class="muted" id="genMsg-${c.id}" style="display:block;margin-top:8px">${c._hasMat?'✓ KI-Material vorhanden':''}</span>
       <span class="muted" id="nbmailMsg-${c.id}" style="display:block;margin-top:4px;font-weight:700;font-size:12px"></span>
+      <span class="muted" style="display:block;margin-top:6px;font-size:12px;font-weight:700">${c._nbDone?`📖 Nachbereitung erstellt${c._nbQuelle==='praesentation'?' (aus Präsentation)':c._nbQuelle==='pdf'?' (aus PDF)':' (aus Live-Tafel)'} · ✉️ an ${c._nbMails}${c._booked?'/'+c._booked:''} Schüler gesendet`:`📖 Nachbereitung: <span style="color:#DD0000">noch nicht erstellt</span>`}</span>
       <div id="genPrev-${c.id}" style="margin-top:6px"></div>
       <div id="nb-${c.id}" style="display:none;margin-top:10px;background:#F2FBFA;border:1px solid #CDEEEA;border-radius:12px;padding:12px 14px">
         <div style="font-weight:800;font-size:13px;margin-bottom:4px">🤖 Automatische Nachbereitung</div>
