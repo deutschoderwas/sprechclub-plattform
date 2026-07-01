@@ -23,7 +23,8 @@
   function injectStyle() {
     if (styled) return; styled = true;
     var css = `
-    #v-community .cm{display:grid;grid-template-columns:230px 1fr;gap:0;border:1px solid var(--border,#F0E5D8);border-radius:18px;overflow:hidden;background:#fff;height:72vh;min-height:460px}
+    #v-community{width:100vw;position:relative;left:50%;right:50%;margin-left:-50vw;margin-right:-50vw;padding:0 24px;box-sizing:border-box}
+    #v-community .cm{display:grid;grid-template-columns:250px 1fr;gap:0;border:1px solid var(--border,#F0E5D8);border-radius:18px;overflow:hidden;background:#fff;height:calc(100vh - 190px);min-height:460px}
     #v-community .cm-side{background:var(--bg,#FFF8E0);border-right:1px solid var(--border,#F0E5D8);padding:14px 10px;overflow-y:auto}
     #v-community .cm-side h4{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-soft,#6B7280);margin:4px 8px 10px}
     #v-community .cm-ch{display:flex;align-items:center;gap:9px;width:100%;border:none;background:none;text-align:left;padding:10px 11px;border-radius:11px;cursor:pointer;font-family:inherit;font-size:14.5px;font-weight:600;color:var(--secondary,#1A1A1A)}
@@ -31,11 +32,11 @@
     #v-community .cm-ch.on{background:var(--secondary,#1A1A1A);color:#fff}
     #v-community .cm-ch .e{font-size:17px}
     #v-community .cm-ch .lock{margin-left:auto;font-size:12px;opacity:.6}
-    #v-community .cm-main{display:flex;flex-direction:column;min-width:0}
+    #v-community .cm-main{display:flex;flex-direction:column;min-width:0;min-height:0}
     #v-community .cm-head{padding:13px 18px;border-bottom:1px solid var(--border,#F0E5D8)}
     #v-community .cm-head b{font-size:16px}
     #v-community .cm-head span{display:block;font-size:12.5px;color:var(--text-soft,#6B7280)}
-    #v-community .cm-msgs{flex:1;overflow-y:auto;padding:16px 18px;display:flex;flex-direction:column;gap:12px;background:linear-gradient(#fff,#fffdf7)}
+    #v-community .cm-msgs{flex:1;min-height:0;overflow-y:auto;padding:16px 18px;display:flex;flex-direction:column;gap:12px;background:linear-gradient(#fff,#fffdf7)}
     #v-community .cm-row{display:flex;gap:10px;max-width:78%}
     #v-community .cm-row.me{align-self:flex-end;flex-direction:row-reverse}
     #v-community .cm-av{flex:0 0 34px;width:34px;height:34px;border-radius:50%;background:var(--turquoise,#2DD4BF);color:#06403A;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
