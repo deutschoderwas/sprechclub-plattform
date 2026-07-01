@@ -121,6 +121,10 @@ function render(id, c, pc){
     const rows = pc.vocab.map(v=>`<tr><td><strong>${esc(v.de)}</strong></td><td>${esc(v.info||v.en||'')}</td><td>${esc(v.example||'')}</td></tr>`).join('');
     tabs.push({ label:'📖 Vokabeln', html:`<div class="card a-teal"><h2>📖 Wortschatz der Stunde</h2><table><thead><tr><th>Wort</th><th>Bedeutung</th><th>Beispiel</th></tr></thead><tbody>${rows}</tbody></table></div>` });
   }
+  if(pc.dialoge && pc.dialoge.length){
+    const dh = pc.dialoge.map(d=>`<div class="card a-teal"><h2>💬 ${esc(d.titel)}</h2><div style="display:flex;flex-direction:column;gap:8px">${d.zeilen.map((z,i)=>`<div style="align-self:${i%2?'flex-end':'flex-start'};max-width:85%;background:${i%2?'#E7F7F3':'#FFF3E6'};border-radius:14px;padding:9px 13px"><b style="font-size:12px;color:#0F766E">${esc(z.sprecher||(i%2?'B':'A'))}</b><br>${esc(z.text)}</div>`).join('')}</div></div>`).join('');
+    tabs.push({ label:'💬 Dialoge', html:dh });
+  }
   // 3 · Grammatik
   if(pc.grammar && (pc.grammar.title || (pc.grammar.rows&&pc.grammar.rows.length) || (pc.grammar.tips&&pc.grammar.tips.length))){
     const g = pc.grammar; let h = '';
