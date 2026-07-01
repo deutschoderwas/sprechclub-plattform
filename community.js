@@ -46,6 +46,17 @@
     #v-community .cm-time{font-weight:400;opacity:.7;margin-left:6px}
     #v-community .cm-audio{display:flex;align-items:center;gap:8px}
     #v-community .cm-audio audio{height:34px}
+    #v-community .cm-col{min-width:0}
+    #v-community button.cm-img{background:var(--bg,#FFF8E0);color:var(--secondary,#1A1A1A)}
+    #v-community .cm-bub img.cm-img{max-width:260px;max-height:260px;width:auto;border-radius:12px;display:block;cursor:zoom-in}
+    #v-community .cm-cap{margin-top:6px;font-size:14px;line-height:1.4}
+    #v-community .cm-av{box-shadow:0 1px 3px rgba(38,32,25,.12)}
+    #v-community .cm-bub{box-shadow:0 1px 2px rgba(38,32,25,.05)}
+    #v-community .cm-foot{position:relative}
+    #v-community button.cm-emo{background:var(--bg,#FFF8E0)}
+    #v-community .cm-emopick{position:absolute;bottom:62px;left:12px;right:12px;background:#fff;border:1px solid var(--border,#F0E5D8);border-radius:14px;box-shadow:0 10px 26px rgba(0,0,0,.14);padding:8px;display:flex;flex-wrap:wrap;gap:2px;max-height:190px;overflow-y:auto;z-index:30}
+    #v-community .cm-emoi{border:none;background:none;cursor:pointer;font-size:22px;line-height:1;padding:5px 6px;border-radius:8px}
+    #v-community .cm-emoi:hover{background:var(--bg,#FFF8E0)}
     #v-community .cm-foot{padding:12px 14px;border-top:1px solid var(--border,#F0E5D8);display:flex;gap:9px;align-items:center;background:#fff}
     #v-community .cm-inp{flex:1;border:1.5px solid var(--border,#F0E5D8);border-radius:22px;padding:11px 16px;font-size:14.5px;font-family:inherit;outline:none;resize:none;max-height:120px}
     #v-community .cm-inp:focus{border-color:var(--turquoise,#2DD4BF)}
@@ -128,7 +139,7 @@
     renderFoot(c);
     var box = q('#cmMsgs'); if (box) box.innerHTML = '<div class="cm-empty">Lädt…</div>';
     // Nachrichten laden
-    var res = await sbc.from('community_messages').select('id,user_id,kind,body,audio_path,audio_secs,author_name,created_at').eq('channel', slug).is('deleted_at', null).order('created_at').limit(200);
+    var res = await sbc.from('community_messages').select('id,user_id,kind,body,audio_path,audio_secs,image_path,author_name,created_at').eq('channel', slug).is('deleted_at', null).order('created_at').limit(200);
     var rows = res.data || [];
     await hydrateAudio(rows);
     renderMsgs(rows);
@@ -136,24 +147,41 @@
   }
 
   async function hydrateAudio(rows) {
-    var paths = rows.filter(function (m) { return m.kind === 'audio' && m.audio_path; }).map(function (m) { return m.audio_path; });
-    if (!paths.length) return;
-    try {
-      var s = await sbc.storage.from('community-audio').createSignedUrls(paths, 3600);
-      var map = {}; (s.data || []).forEach(function (x) { if (x.path && x.signedUrl) map[x.path] = x.signedUrl; });
-      rows.forEach(function (m) { if (m.kind === 'audio' && map[m.audio_path]) m._url = map[m.audio_path]; });
-    } catch (e) {}
+    // Audio-URLs
+    var apaths = rows.filter(function (m) { return m.kind === 'audio' && m.audio_path; }).map(function (m) { return m.audio_path; });
+    if (apaths.length) {
+      try {
+        var s = await sbc.storage.from('community-audio').createSignedUrls(apaths, 3600);
+        var map = {}; (s.data || []).forEach(function (x) { if (x.path && x.signedUrl) map[x.path] = x.signedUrl; });
+        rows.forEach(function (m) { if (m.kind === 'audio' && map[m.audio_path]) m._url = map[m.audio_path]; });
+      } catch (e) {}
+    }
+    // Bild-URLs
+    var ipaths = rows.filter(function (m) { return m.kind === 'image' && m.image_path; }).map(function (m) { return m.image_path; });
+    if (ipaths.length) {
+      try {
+        var si = await sbc.storage.from('community-image').createSignedUrls(ipaths, 3600);
+        var mi = {}; (si.data || []).forEach(function (x) { if (x.path && x.signedUrl) mi[x.path] = x.signedUrl; });
+        rows.forEach(function (m) { if (m.kind === 'image' && mi[m.image_path]) m._url = mi[m.image_path]; });
+      } catch (e) {}
+    }
   }
 
+  function avColor(name) { var s = String(name || '?'), h = 0; for (var i = 0; i < s.length; i++) { h = (h * 31 + s.charCodeAt(i)) >>> 0; } return 'hsl(' + (h % 360) + ',52%,72%)'; }
   function msgHtml(m) {
     var me = m.user_id === ME.id;
-    var body = m.kind === 'audio'
-      ? '<div class="cm-audio">🎧 ' + (m._url ? '<audio controls preload="none" src="' + E(m._url) + '"></audio>' : '<span class="muted">Sprachnachricht</span>') + (m.audio_secs ? '<span class="muted">' + Math.round(m.audio_secs) + 's</span>' : '') + '</div>'
-      : E(m.body || '');
+    var body;
+    if (m.kind === 'audio') {
+      body = '<div class="cm-audio">🎧 ' + (m._url ? '<audio controls preload="none" src="' + E(m._url) + '"></audio>' : '<span class="muted">Sprachnachricht</span>') + (m.audio_secs ? '<span class="muted">' + Math.round(m.audio_secs) + 's</span>' : '') + '</div>';
+    } else if (m.kind === 'image') {
+      body = (m._url ? '<a href="' + E(m._url) + '" target="_blank" rel="noopener"><img class="cm-img" src="' + E(m._url) + '" alt="Bild" loading="lazy"></a>' : '<span class="muted">📷 Bild</span>') + (m.body ? '<div class="cm-cap">' + E(m.body) + '</div>' : '');
+    } else {
+      body = E(m.body || '');
+    }
     var canDel = me; // (Admin-Löschung via DB)
     return '<div class="cm-row' + (me ? ' me' : '') + '" data-id="' + E(m.id) + '">' +
-      '<div class="cm-av">' + E(initials(m.author_name)) + '</div>' +
-      '<div><div class="cm-meta">' + E(m.author_name || 'Mitglied') + '<span class="cm-time">' + timeStr(m.created_at) + '</span>' +
+      '<div class="cm-av" style="background:' + avColor(m.author_name) + '">' + E(initials(m.author_name)) + '</div>' +
+      '<div class="cm-col"><div class="cm-meta">' + E(m.author_name || 'Mitglied') + '<span class="cm-time">' + timeStr(m.created_at) + '</span>' +
       (canDel ? '<button class="cm-del" data-del="' + E(m.id) + '" title="Löschen">✕</button>' : '') + '</div>' +
       '<div class="cm-bub">' + body + '</div></div></div>';
   }
@@ -184,7 +212,7 @@
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'community_messages', filter: 'channel=eq.' + slug }, function (p) {
         var m = p.new; if (!m || m.deleted_at) return;
         if (m.user_id === ME.id && document.querySelector('[data-id="' + m.id + '"]')) return; // schon optimistisch da
-        if (m.kind === 'audio' && m.audio_path) { hydrateAudio([m]).then(function () { appendMsg(m); }); } else { appendMsg(m); }
+        if ((m.kind === 'audio' && m.audio_path) || (m.kind === 'image' && m.image_path)) { hydrateAudio([m]).then(function () { appendMsg(m); }); } else { appendMsg(m); }
       })
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'community_messages', filter: 'channel=eq.' + slug }, function (p) {
         if (p.new && p.new.deleted_at) { var n = document.querySelector('[data-id="' + p.new.id + '"]'); if (n) n.remove(); }
@@ -192,18 +220,39 @@
       .subscribe();
   }
 
+  function insertEmoji(ch) {
+    var inp = q('#cmInp'); if (!inp) return;
+    var s = inp.selectionStart, e = inp.selectionEnd;
+    if (s == null) { s = e = inp.value.length; }
+    inp.value = inp.value.slice(0, s) + ch + inp.value.slice(e);
+    var pos = s + ch.length; try { inp.selectionStart = inp.selectionEnd = pos; } catch (x) {}
+    inp.focus();
+    try { inp.dispatchEvent(new Event('input')); } catch (x) {}
+  }
+
   function renderFoot(c) {
     var foot = q('#cmFoot'); if (!foot) return;
     if (c.team_only && !isTeam) { foot.innerHTML = '<div class="cm-readonly">📣 Nur das Team postet hier — du bekommst alle Neuigkeiten mit.</div>'; return; }
     foot.innerHTML = '<button class="cm-btn cm-mic" id="cmMic" title="Sprachnachricht aufnehmen">🎤</button>' +
+      '<button class="cm-btn cm-img" id="cmImg" title="Bild senden">📷</button>' +
+      '<button class="cm-btn cm-emo" id="cmEmo" title="Emoji">😊</button>' +
+      '<input type="file" id="cmFile" accept="image/*" style="display:none">' +
+      '<div class="cm-emopick" id="cmEmoPick" style="display:none"></div>' +
       '<textarea class="cm-inp" id="cmInp" rows="1" placeholder="Nachricht schreiben…"></textarea>' +
       '<button class="cm-btn cm-send" id="cmSend" title="Senden">➤</button>';
-    var inp = q('#cmInp'), send = q('#cmSend'), mic = q('#cmMic');
+    var inp = q('#cmInp'), send = q('#cmSend'), mic = q('#cmMic'), imgBtn = q('#cmImg'), file = q('#cmFile'), emo = q('#cmEmo'), pick = q('#cmEmoPick');
     function autoGrow() { inp.style.height = 'auto'; inp.style.height = Math.min(120, inp.scrollHeight) + 'px'; }
     inp.addEventListener('input', autoGrow);
     inp.addEventListener('keydown', function (e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendText(); } });
     send.addEventListener('click', sendText);
     mic.addEventListener('click', toggleRec);
+    if (imgBtn && file) { imgBtn.addEventListener('click', function () { file.click(); }); file.addEventListener('change', function () { if (file.files && file.files[0]) uploadImage(file.files[0]); file.value = ''; }); }
+    if (emo && pick) {
+      pick.innerHTML = '😀 😃 😄 😁 😆 😅 😂 🤣 🙂 😉 😊 😍 🥰 😘 😗 😜 🤪 🤗 🤔 😎 🥳 😴 🙄 😮 😳 🥺 😢 😭 😤 😡 👍 👎 👏 🙏 💪 🙌 👋 🤝 ✌️ 🔥 🎉 ⭐ 💯 ❤️ 🧡 💛 💚 💙 💜 ✅ ❌'.split(' ').map(function (x) { return '<button type="button" class="cm-emoi">' + x + '</button>'; }).join('');
+      emo.addEventListener('click', function (ev) { ev.stopPropagation(); pick.style.display = (pick.style.display === 'none' ? 'flex' : 'none'); });
+      pick.addEventListener('click', function (ev) { ev.stopPropagation(); var t = ev.target; if (t && t.classList && t.classList.contains('cm-emoi')) insertEmoji(t.textContent); });
+      if (!window.__cmEmoDoc) { window.__cmEmoDoc = true; document.addEventListener('click', function () { var p = document.getElementById('cmEmoPick'); if (p) p.style.display = 'none'; }); }
+    }
   }
 
   // Admin (Julia) über neue Nachrichten informieren – serverseitig gebündelt (max. 1 Mail/Kanal/Stunde).
@@ -266,6 +315,26 @@
     if (res.error) { if (ln) ln.querySelector('.cm-bub').innerHTML = '⚠︎ nicht gesendet'; return; }
     var sg = await sbc.storage.from('community-audio').createSignedUrl(path, 3600);
     if (ln) { ln.setAttribute('data-id', res.data.id); ln.querySelector('.cm-bub').innerHTML = '<div class="cm-audio">🎧 <audio controls preload="none" src="' + E(sg.data ? sg.data.signedUrl : '') + '"></audio><span class="muted">' + secs + 's</span></div>'; }
+    notifyAdminNewMsg(cur);
+  }
+
+  // ---- Bild senden ----
+  async function uploadImage(fileObj) {
+    if (!fileObj) return;
+    if (!/^image\//.test(fileObj.type || '')) { alert('Bitte ein Bild auswählen.'); return; }
+    if (fileObj.size > 6 * 1024 * 1024) { alert('Bild zu groß (max. 6 MB).'); return; }
+    var ext = ((fileObj.name || '').split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '') || 'jpg';
+    var path = ME.id + '/' + Date.now() + '.' + ext;
+    var name = (PROF && PROF.name) || 'Mitglied';
+    var box = q('#cmMsgs'); var loadId = 'up-' + Date.now();
+    if (box) { box.insertAdjacentHTML('beforeend', '<div class="cm-row me" data-id="' + loadId + '"><div class="cm-av" style="background:' + avColor(name) + '">' + E(initials(name)) + '</div><div class="cm-col"><div class="cm-meta">' + E(name) + '</div><div class="cm-bub">📷 wird gesendet…</div></div></div>'); box.scrollTop = box.scrollHeight; }
+    var up = await sbc.storage.from('community-image').upload(path, fileObj, { contentType: fileObj.type, upsert: false });
+    var ln = document.querySelector('[data-id="' + loadId + '"]');
+    if (up.error) { if (ln) ln.querySelector('.cm-bub').innerHTML = '⚠︎ Bild nicht gesendet'; return; }
+    var res = await sbc.from('community_messages').insert({ channel: cur, kind: 'image', image_path: path, author_name: name }).select('id').single();
+    if (res.error) { if (ln) ln.querySelector('.cm-bub').innerHTML = '⚠︎ nicht gesendet'; return; }
+    var sg = await sbc.storage.from('community-image').createSignedUrl(path, 3600);
+    if (ln) { ln.setAttribute('data-id', res.data.id); ln.querySelector('.cm-bub').innerHTML = (sg.data ? '<a href="' + E(sg.data.signedUrl) + '" target="_blank" rel="noopener"><img class="cm-img" src="' + E(sg.data.signedUrl) + '" alt="Bild"></a>' : '📷 Bild'); }
     notifyAdminNewMsg(cur);
   }
 
