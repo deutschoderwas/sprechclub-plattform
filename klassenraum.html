@@ -553,7 +553,19 @@
         prejoinPageEnabled:false, prejoinConfig:{ enabled:false }, startWithAudioMuted:false, startWithVideoMuted:false, disableDeepLinking:true,
         // Audio gegen Echo/Rauschen (auch bei 5–6 Personen): Echo-Cancellation, Rausch- & Gain-Unterdrückung sicher AN
         disableAEC:false, disableNS:false, disableAGC:false, disableHPF:false,
-        enableNoisyMicDetection:true, enableTalkWhileMuted:true
+        enableNoisyMicDetection:true, enableTalkWhileMuted:true,
+        // ---- Video-Qualität: scharfes 720p + adaptive Stufen (statt Standard-Grieß) ----
+        resolution:720,
+        constraints:{ video:{ height:{ ideal:720, max:720, min:240 } } },
+        disableSimulcast:false, enableLayerSuspension:true, channelLastN:-1,
+        p2p:{ enabled:true },                 // Zweier-Situation (Lehrer + 1) = beste Qualität
+        videoQuality:{ maxBitratesVideo:{ low:200000, standard:700000, high:2500000 } },
+        desktopSharingFrameRate:{ min:5, max:30 },
+        // ---- Sauberer, professioneller Look (kein roher Raumname, keine Moderations-Popups) ----
+        subject:'deutschoderwas club',
+        hideConferenceTimer:true,
+        disableModeratorIndicator:true,
+        notifications:[]
       },
       interfaceConfigOverwrite:{
         TOOLBAR_BUTTONS:[],
