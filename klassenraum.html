@@ -475,7 +475,7 @@
       if(u.origin===location.origin || /(^|\.)deutschoderwas-club\.de$/.test(u.hostname)){ _lektion = location.origin + u.pathname + u.search; }
       else { _lektion = u.href; }
     }catch(e){}
-    if(ifr.getAttribute('src') !== _lektion){ ifr.src = _lektion; ifr.addEventListener('load', ()=>setTimeout(fitLektion,250), {once:true}); }
+    if(ifr.getAttribute('src') !== _lektion){ ifr.src = _lektion; ifr.addEventListener('load', ()=>fitLektionSoon(), {once:true}); }
   }
 
   // Auf dem Handy: iframe so hoch wie sein Inhalt → die GANZE Seite scrollt flüssig (keine iframe-Falle)
@@ -483,9 +483,11 @@
     const ifr=document.getElementById('lektion'); if(!ifr) return;
     if(!window.matchMedia('(max-width:1024px)').matches){ ifr.style.height=''; setTimeout(fit,100); return; }
     try{ const h=ifr.contentWindow.document.documentElement.scrollHeight; if(h>200) ifr.style.height=h+'px'; }
-    catch(e){ ifr.style.height='2200px'; }   // Fallback, falls Inhalt nicht lesbar
+    catch(e){ if(!ifr.style.height || parseInt(ifr.style.height,10)<400) ifr.style.height='2600px'; }   // Fallback, falls Inhalt nicht lesbar
     setTimeout(fit,100);                      // Stift-Fläche an neue Höhe anpassen
   }
+  // Inhalt (Bilder/Audio) lädt oft verzögert → mehrfach nachmessen, damit unten nichts abgeschnitten wird
+  function fitLektionSoon(){ [150,500,1200,2500,4000].forEach(t=>setTimeout(fitLektion,t)); }
   window.addEventListener('resize', ()=> setTimeout(fitLektion,200));
 
   // Lektion IMMER aktuell aus der Datenbank holen – so sieht die Lehrkraft auch
@@ -698,23 +700,37 @@
     }
     function applyFrac(frac){
       const ifr=document.getElementById('lektion'); if(!ifr) return;
+      const mob = !!(window.matchMedia && window.matchMedia('(max-width:1024px)').matches);
       const w=lektWin();
-      if(w){
+      if(w && !mob){
         const doc=w.document.documentElement;
         const innerMax=Math.max(0, doc.scrollHeight - w.innerHeight);
-        if(innerMax>4){ w.scrollTo(0, frac*innerMax); return; }   // Desktop
+        if(innerMax>4){ w.scrollTo(0, frac*innerMax); return; }   // Desktop: im iframe scrollen
       }
-      // Auf dem Handy NICHT automatisch scrollen – sonst verschwindet die Tafel. Schüler scrollt selbst.
-      if(window.matchMedia && window.matchMedia('(max-width:1024px)').matches) return;
-      // (nur Desktop ohne inneres Scrollen) die ganze Seite zur passenden Stelle scrollen
+      if(mob){
+        // Handy/Tablet: die GANZE Seite folgt der Lehrkraft – aber nur, wenn die Präsentation
+        // gerade sichtbar ist (auf dem Tafel-Reiter würde Scrollen nur stören).
+        const lektTab=document.getElementById('mt-lekt');
+        if(lektTab && !lektTab.classList.contains('active')) return;
+        fitLektion();                                   // iframe muss voll ausgeklappt sein
+        const vc=document.querySelector('.video-card');
+        const stick=(vc?vc.offsetHeight:0)+8;           // Platz für das oben angeheftete Video
+        const top = ifr.getBoundingClientRect().top + window.scrollY;
+        const pageMax = Math.max(0, ifr.offsetHeight - (window.innerHeight - stick));
+        window.scrollTo({ top: Math.max(0, top - stick + frac*pageMax), behavior:'smooth' });
+        return;
+      }
+      // Desktop-Fallback (fremde Domain, kein inneres Scrollen): ganze Seite scrollen
       const top = ifr.getBoundingClientRect().top + window.scrollY;
       const pageMax = Math.max(0, ifr.offsetHeight - window.innerHeight);
       window.scrollTo({ top: top + frac*pageMax, behavior:'auto' });
     }
     let _ignoreScrollUntil=0;
+    window._applyFrac = applyFrac;                        // für Tab-Wechsel am Handy erreichbar
     const scrollCh = sb.channel('scroll-'+STUNDE);
     scrollCh.on('broadcast', { event:'pos' }, ({payload})=>{
         if(istLehrer || !payload) return;                 // nur Schüler folgen
+        window._lastTeacherFrac = payload.frac||0;        // Position merken (für Reiter-Wechsel)
         _ignoreScrollUntil = Date.now()+400;              // eigenes Auto-Scrollen nicht zurückmelden
         applyFrac(payload.frac||0);
       })
@@ -756,8 +772,10 @@
     document.querySelector('.lektion-card').classList.toggle('m-hide', which!=='lekt');
     document.querySelector('.tafel').classList.toggle('m-hide', which!=='tafel');
     if(which==='tafel'){ const t=document.getElementById('mt-tafel'); if(t) t.classList.remove('hat-neu'); }  // Hinweis weg
-    if(which==='lekt') setTimeout(fitLektion, 120); else setTimeout(fit, 120);
-    window.scrollTo(0,0);
+    if(which==='lekt'){
+      // Präsentation zeigen → voll ausklappen und sofort zur aktuellen Stelle der Lehrkraft springen
+      setTimeout(()=>{ fitLektion(); if(!istLehrer && window._applyFrac && window._lastTeacherFrac!=null) window._applyFrac(window._lastTeacherFrac); }, 160);
+    } else { setTimeout(fit, 120); window.scrollTo(0,0); }
   }
   mTab('lekt');
 
