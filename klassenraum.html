@@ -662,11 +662,11 @@
     api.addEventListener('audioMuteStatusChanged', e=>{ const b=document.getElementById('vc-mic'); if(b){ b.textContent = e.muted ? '🔇 Mikro aus' : '🎤 Mikro an'; b.classList.toggle('muted', e.muted); } });
     api.addEventListener('videoMuteStatusChanged', e=>{ const b=document.getElementById('vc-cam'); if(b){ b.textContent = e.muted ? '🚫 Kamera aus' : '📷 Kamera an'; b.classList.toggle('muted', e.muted); } });
     api.addEventListener('screenSharingStatusChanged', e=>{ const b=document.getElementById('vc-share'); if(b){ b.textContent = e.on ? '🟢 Teilen beenden' : '🖥️ Teilen'; b.classList.toggle('on', e.on); } if(window._onShareChange) window._onShareChange(e.on); });
-    api.addEventListener('readyToClose', ()=>{ document.getElementById('jitsi').innerHTML='<div style="color:#fff;padding:24px;text-align:center;font-family:Inter;font-size:.9rem">Du hast den Unterricht verlassen.<br><a href="konto.html" style="color:#2DD4BF;font-weight:700">Zurück zu Meine Stunden</a></div>'; });
+    api.addEventListener('readyToClose', ()=>{ window._inCall=false; document.getElementById('jitsi').innerHTML='<div style="color:#fff;padding:24px;text-align:center;font-family:Inter;font-size:.9rem">Du hast den Unterricht verlassen.<br><a href="konto.html" style="color:#2DD4BF;font-weight:700">Zurück zu Meine Stunden</a></div>'; });
     // Immer Kachelansicht – man sieht sich selbst und alle Teilnehmer
     // Immer Kachelansicht (Meet-Stil): man sieht sich selbst UND alle Teilnehmer.
     const forceTile=()=>{ if(document.body.classList.contains('sharing')) return; try{ api.executeCommand('setTileView', true); }catch(e){} };
-    api.addEventListener('videoConferenceJoined', ()=>{ [500,1500,3000].forEach(t=>setTimeout(forceTile,t)); setTimeout(checkMic, 2500); });
+    api.addEventListener('videoConferenceJoined', ()=>{ window._inCall=true; [500,1500,3000].forEach(t=>setTimeout(forceTile,t)); setTimeout(checkMic, 2500); });
     api.addEventListener('participantJoined', ()=>{ setTimeout(forceTile,500); });
     api.addEventListener('participantLeft', ()=>{ setTimeout(forceTile,500); });
   }
@@ -808,6 +808,7 @@
     doLeave();
   }
   function doLeave(){
+    window._inCall=false;
     if(api){ try{ api.executeCommand('hangup'); }catch(e){} setTimeout(()=>{ try{ api.dispose(); }catch(e){} }, 400); }
     const o=document.getElementById('fb-overlay'); if(o) o.classList.remove('open');
     document.getElementById('jitsi').innerHTML='<div style="color:#fff;padding:24px;text-align:center;font-family:Inter;font-size:.9rem">Du hast den Unterricht verlassen.<br><a href="konto.html" style="color:#2DD4BF;font-weight:700">Zurück zu Meine Stunden</a></div>';
@@ -1070,6 +1071,20 @@
   initSb();
   ladeLektion();
   gateAndStart();
+
+  // ===== Automatisches Update: neue Version wird von selbst nachgeladen =====
+  // Prüft jede Minute, ob eine neuere Version live ist, und lädt sie automatisch –
+  // ABER niemals während man im Video-Call ist (sonst würde man rausfliegen).
+  // So muss niemand jemals „neu laden" drücken.
+  window._inCall = false;
+  const _KR_VERSION = 'doc-v15';
+  setInterval(async ()=>{
+    try{
+      const t = await fetch('/sw.js', { cache:'no-store' }).then(r=>r.text());
+      const m = t.match(/const VERSION = '([^']+)'/);
+      if(m && m[1] !== _KR_VERSION && !window._inCall){ location.reload(); }
+    }catch(e){}
+  }, 60000);
 
   // Immer der eigene Jitsi-Klassenraum – KEINE Weiterleitung zu Google Meet mehr.
   async function gateAndStart(){
