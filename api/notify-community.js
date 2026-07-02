@@ -77,38 +77,10 @@ export default async function handler(req, res) {
     return res.status(200).json({ ok: false, brevo: r.status });
   }
 
-  // --- Auch ALLE aktiven Mitglieder benachrichtigen (außer dem Autor) ---
-  // Aktiv = Guthaben > 0 ODER aktiver Pass. Kein Opt-out, keine Lehrer/Admins.
-  // Läuft im selben Drossel-Fenster -> jedes Mitglied bekommt max. 1 Mail pro Kanal/Stunde.
-  let membersNotified = 0;
-  try {
-    const nowISO = new Date().toISOString();
-    const { data: members } = await sb.from('profiles')
-      .select('email,name')
-      .eq('email_optout', false).eq('is_admin', false).eq('is_teacher', false)
-      .neq('id', user.id)
-      .or('credits.gt.0,pass_until.gt.' + nowISO);
-    const recips = (members || []).filter(m => m.email);
-    if (recips.length) {
-      const memberHtml = communityMemberMail(chName, who, site, ff, esc);
-      const versions = recips.map(m => ({ to: [{ email: m.email, name: m.name || undefined }] }));
-      for (let i = 0; i < versions.length; i += 500) {
-        const rr = await fetch('https://api.brevo.com/v3/smtp/email', {
-          method: 'POST',
-          headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            sender: { name: 'deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'info@deutschoderwas.de' },
-            subject: `💬 Neue Nachricht in der Community (${chName})`,
-            htmlContent: memberHtml,
-            messageVersions: versions.slice(i, i + 500),
-          }),
-        });
-        if (rr.ok) membersNotified += Math.min(500, versions.length - i);
-      }
-    }
-  } catch (e) { console.error('community members notify', e); }
-
-  return res.status(200).json({ ok: true, membersNotified });
+  // Mitglieder-E-Mails bei neuen Community-Nachrichten sind DEAKTIVIERT (auf Wunsch):
+  // Schüler bekommen KEINE E-Mail mehr, wenn jemand etwas in die Community schreibt.
+  // (Nur der Admin/Julia wird oben weiterhin benachrichtigt.)
+  return res.status(200).json({ ok: true, membersNotified: 0 });
 }
 
 // Mitglieder-Mail (Schüler-Sicht) im deutschoderwas-Look
