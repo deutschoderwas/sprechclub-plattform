@@ -354,8 +354,15 @@ let credits=0, stats={};
 
 const _qp = new URLSearchParams(location.search);
 if (_qp.get('kauf')==='ok') document.getElementById('kaufOk').style.display='block';
-if (_qp.get('pass')==='ok'){ const k=document.getElementById('kaufOk'); k.textContent='🎉 Willkommen im Profi-Pass! 12 LIVE-Stunden pro Monat sind jetzt für dich freigeschaltet.'; k.style.display='block'; }
+if (_qp.get('pass')==='ok'){ const k=document.getElementById('kaufOk'); k.textContent='🎉 Willkommen! Dein Abo ist aktiv — deine LIVE-Stunden sind jetzt für dich freigeschaltet.'; k.style.display='block'; }
 function passActive(){ return profile.pass_until && new Date(profile.pass_until) > new Date(); }
+// Echtes Abo-Paket aus dem credit_log lesen (abo:/trial:/kauf: + Plan-Kürzel) -> korrektes Label + Monatsstunden.
+function planInfo(){
+  const MAP={ testpass:{label:'Ab und zu Pass',stunden:4}, gelegenheitspass:{label:'Gelegenheitspass',stunden:8}, allinclusive:{label:'Profi-Pass',stunden:12}, sparpass:{label:'Spar Pass',stunden:30} };
+  const log=(typeof creditLog!=='undefined'&&creditLog)?creditLog:[];
+  for(const e of log){ const m=/^(?:abo|trial|kauf):(.+)$/.exec((e&&e.reason)||''); if(m&&MAP[m[1]]) return MAP[m[1]]; }
+  return { label:'Abo', stunden:null };
+}
 function bucheStunde(e){ if(e&&e.preventDefault)e.preventDefault(); if(credits>0||passActive()){ go('kalender'); } else { location.href='index.html#preise'; } return false; }
 // Stripe-Kundenportal öffnen — Abo verwalten / kündigen (Kündigung zum Periodenende; danach verfallen die Stunden).
 async function openPortal(){
@@ -509,9 +516,9 @@ function computeStats(){
 function collectVocab(){
   const seen=new Set(), out=[];
   bookings.filter(b=>b.status==='booked').forEach(b=>{
-    (Array.isArray(b.vocab)?b.vocab:[]).forEach(v=>{ const k=v.de; if(v.de&&!seen.has(k)){seen.add(k);out.push({...v,from:(b.topic||b.title||'Sonstige')});} });
+    (Array.isArray(b.vocab)?b.vocab:[]).forEach(v=>{ const k=v.de; if(v.de&&!seen.has(k)){seen.add(k);out.push({...v,from:b.title});} });
     const m=materials[b.class_id];
-    if(m&&Array.isArray(m.vocab)) m.vocab.forEach(v=>{ const k=v.de; if(v.de&&!seen.has(k)){seen.add(k);out.push({...v,from:(b.topic||b.title||'Sonstige')});} });
+    if(m&&Array.isArray(m.vocab)) m.vocab.forEach(v=>{ const k=v.de; if(v.de&&!seen.has(k)){seen.add(k);out.push({...v,from:b.title});} });
   });
   return out;
 }
@@ -737,7 +744,7 @@ function renderDashboard(){
       <div><h1>${greet}</h1><p class="muted">Schön, dass du übst. Bleib dran — Sprechen lernt man durch Sprechen. 💪</p></div>
       <div class="streak-chip">🔥 ${s.streak} ${s.streak===1?'Woche':'Wochen'} Streak</div>
     </div>
-    ${passActive()?`<div class="next-hero" style="background:linear-gradient(135deg,var(--turq),var(--turq-dark));color:#fff"><div style="flex:1"><div class="when" style="color:#fff">⭐ Profi-Pass aktiv</div><div style="color:rgba(255,255,255,.85);font-size:13px">12 LIVE-Stunden pro Monat · verlängert sich am ${fmtShort(new Date(profile.pass_until))} · <a href="#" onclick="openPortal();return false" style="color:#fff;text-decoration:underline;font-weight:600">Abo verwalten / kündigen</a></div></div><a class="btn" style="background:#fff;color:var(--turq-dark)" href="#" onclick="return bucheStunde(event)">Stunde buchen</a></div>`:''}
+    ${passActive()?(pi=>`<div class="next-hero" style="background:linear-gradient(135deg,var(--turq),var(--turq-dark));color:#fff"><div style="flex:1"><div class="when" style="color:#fff">⭐ ${pi.label} aktiv</div><div style="color:rgba(255,255,255,.85);font-size:13px">${pi.stunden?pi.stunden+' LIVE-Stunden pro Monat · ':''}verlängert sich am ${fmtShort(new Date(profile.pass_until))} · <a href="#" onclick="openPortal();return false" style="color:#fff;text-decoration:underline;font-weight:600">Abo verwalten / kündigen</a></div></div><a class="btn" style="background:#fff;color:var(--turq-dark)" href="#" onclick="return bucheStunde(event)">Stunde buchen</a></div>`)(planInfo()):''}
     <div class="rankbar">
       <div class="top"><span class="rank">${s.rank.name} · ${s.points} Punkte</span>
         <span class="muted">${s.next?('noch '+(s.next.min-s.points)+' bis '+s.next.name):'Höchster Rang erreicht 🎉'}</span></div>
@@ -1003,31 +1010,6 @@ async function doBook(id){
   await load(); loadKalender();
 }
 
-async function openRebook(fromId){
-  const from=new Date(); from.setHours(0,0,0,0);
-  const to=new Date(from); to.setDate(to.getDate()+21);
-  const { data } = await sb.rpc('week_classes',{p_from:from.toISOString(),p_to:to.toISOString()});
-  const now=new Date();
-  const opts=(data||[]).map(c=>{ if(c&&c.starts_at){const s=String(c.starts_at).replace(' ','T'); c.starts_at=s.replace(/([+-]\d{2})$/,'$1:00');} return c; })
-    .filter(c=> c.id!==fromId && !c.mine && new Date(c.starts_at)>now && (c.capacity-(c.booked||0))>0 )
-    .sort((a,b)=>new Date(a.starts_at)-new Date(b.starts_at));
-  const body = opts.length ? opts.map(c=>`<button onclick="doRebook('${fromId}','${c.id}')" style="display:block;width:100%;text-align:left;background:#fff;border:1px solid #ece7de;border-radius:12px;padding:11px 13px;margin-bottom:8px;cursor:pointer;font-family:inherit"><b>${esc(c.topic||c.title)}</b> <span style="font-size:12px;color:#14B8A6;font-weight:700">${esc(c.level)}</span><br><span style="font-size:13px;color:#666">${fmt(new Date(c.starts_at))} · ${esc(c.club_name||'')}</span></button>`).join('') : '<div class="empty" style="padding:14px;color:#666">Zurzeit keine freien Stunden zum Umbuchen. Schau später nochmal.</div>';
-  const ov=document.createElement('div'); ov.id='rbOverlay';
-  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:9999;padding:16px';
-  ov.innerHTML=`<div style="background:#FFFCF5;border-radius:18px;max-width:460px;width:100%;max-height:80vh;overflow:auto;padding:18px 18px 10px;box-shadow:0 20px 60px rgba(0,0,0,.25)"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><b style="font-size:17px">🔁 Stunde umbuchen</b><button onclick="closeRebook()" style="background:none;border:none;font-size:20px;cursor:pointer;color:#888">✕</button></div><p style="margin:0 0 12px;color:#666;font-size:14px">Wähle deine neue Stunde — kostenlos, dein Guthaben bleibt gleich.</p>${body}</div>`;
-  ov.onclick=(e)=>{ if(e.target===ov) closeRebook(); };
-  document.body.appendChild(ov);
-}
-function closeRebook(){ const o=document.getElementById('rbOverlay'); if(o) o.remove(); }
-async function doRebook(fromId,toId){
-  const { data, error } = await sb.rpc('rebook_my_class',{p_from_class:fromId,p_to_class:toId});
-  if(error){ toast('Umbuchen fehlgeschlagen. Versuch es nochmal.'); return; }
-  const res=data||{};
-  if(!res.ok){ const m={too_late:'Umbuchen nur bis 6 Std. vorher möglich.',to_full:'Die Zielstunde ist leider schon voll.',already_booked:'In der Zielstunde bist du schon gebucht.',to_in_past:'Diese Stunde liegt in der Vergangenheit.',not_booked:'Du bist in der ursprünglichen Stunde nicht gebucht.',same_class:'Das ist dieselbe Stunde.'}[res.error]||'Umbuchen war nicht möglich.'; toast(m); return; }
-  closeRebook(); toast('✅ Erfolgreich umgebucht!'); await load(); go('stunden');
-}
-
-
 function renderStunden(){
   const s=stats;
   let html='<div class="pagehead"><h1>Meine Stunden</h1><p>Vorbereiten, teilnehmen, nachüben — alles an einem Ort.</p></div>';
@@ -1042,7 +1024,6 @@ function renderStunden(){
         ${dowJoinBtn(b,'btn btn-primary btn-sm')}
         ${(m&&(m.lesson_url||m.intro||m.pre||(m.vocab&&m.vocab.length)))?`<button class="btn btn-ghost btn-sm" onclick="openClassMaterial('${b.class_id}',1)">📚 Material</button>`:''}
         ${/Sprachspiele/i.test(b.title||'')?`<span class="btn btn-ghost btn-sm" style="pointer-events:none;opacity:.8">✨ Keine Vorbereitung nötig</span>`:''}
-        <button class="btn btn-ghost btn-sm" ${(start>s.now)?'':'disabled title="Diese Stunde hat schon begonnen"'} onclick="openRebook('${b.class_id}')">🔁 Umbuchen</button>
         <button class="btn btn-ghost btn-sm" ${cancellable?'':'disabled title="Storno nur bis 6 h vorher"'} onclick="cancelB('${b.class_id}')">Stornieren</button>
       </div>
       <p style="margin-top:10px;color:#DD0000;font-weight:700;font-size:13px;background:#FFF0F0;border:1px solid #ffd0d0;border-radius:10px;padding:8px 11px">⚠️ Tipp: Logge dich für den Live-Unterricht am besten am <u>Computer/Laptop</u> ein und mach die Stunde dort – Video, Präsentation &amp; Live-Tafel laufen am Computer am stabilsten.</p>
@@ -1282,9 +1263,6 @@ function renderVokabeln(){
   const el=document.getElementById('v-vokabeln');
   if(!deck.length){ el.innerHTML='<div class="pagehead"><h1>Vokabeltrainer</h1></div><div class="empty">Noch keine Vokabeln — sie erscheinen automatisch, sobald deine gebuchten Stunden Vokabeln haben (oder Amanda Material erstellt hat).</div>'; return; }
   deckIdx=0;flipped=false;
-  const _catEmoji=(t)=>{ t=(t||'').toLowerCase(); if(/famili|beziehung|eltern|kind/.test(t))return '👨‍👩‍👧'; if(/beruf|arbeit|job|lernen|studi/.test(t))return '💼'; if(/reise|urlaub/.test(t))return '✈️'; if(/essen|küche|koch|lebensmittel|restaurant/.test(t))return '🍽️'; if(/glück|gefühl|emotion|zufrieden/.test(t))return '😊'; if(/führerschein|verkehr|auto|straße/.test(t))return '🚗'; if(/gesundheit|arzt|körper|krank/.test(t))return '🩺'; if(/wohn|haus|zuhause|stadt/.test(t))return '🏠'; if(/kultur|tradition|fest/.test(t))return '🎭'; if(/natur|umwelt|wetter|tier/.test(t))return '🌿'; if(/technik|computer|medien|internet/.test(t))return '💻'; if(/sprech|umgangs|smalltalk|alltag/.test(t))return '💬'; return '📗'; };
-  const _groups={}; deck.forEach(v=>{ const g=v.from||'Sonstige'; (_groups[g]=_groups[g]||[]).push(v); });
-  const _catHtml=Object.keys(_groups).sort().map(g=>`<h2 class="sec">${_catEmoji(g)} ${esc(g)} <span class="muted" style="font-weight:400;font-size:13px">(${_groups[g].length})</span></h2>`+_groups[g].map(v=>`<div class="vrow"><span>${v.img?`<img src="${esc(v.img)}" alt="" loading="lazy" style="width:34px;height:34px;object-fit:cover;border-radius:8px;vertical-align:middle;margin-right:8px">`:''}<b>${esc(v.de)}</b> — ${esc(v.info||'')}</span>${known.has(v.de)?'<span class="known">✓ gelernt</span>':''}</div>`).join('')).join('');
   el.innerHTML=`<div class="pagehead"><h1>Vokabeltrainer</h1><p>${deck.length} Vokabeln aus deinen Stunden · ${known.size} schon gelernt</p></div>
     <div style="text-align:center;margin:4px 0 20px"><button class="btn btn-primary" style="font-size:17px;padding:14px 34px;border-radius:16px" onclick="vbStart()">🎯 Üben starten</button><div class="muted" style="font-size:12px;margin-top:6px">Gemischte Übungen · Hören · kluges Wiederholen</div></div>
     <div class="flashwrap">
@@ -1295,7 +1273,8 @@ function renderVokabeln(){
         <button class="btn btn-primary" onclick="nextCard()">Weiter →</button>
       </div>
     </div>
-    <div class="vocab-list">${_catHtml}</div>`;
+    <div class="vocab-list"><h2 class="sec">Alle Vokabeln</h2>
+      ${deck.map(v=>`<div class="vrow"><span><b>${esc(v.de)}</b> — ${esc(v.info||'')}</span>${known.has(v.de)?'<span class="known">✓ gelernt</span>':''}</div>`).join('')}</div>`;
   showCard();
 }
 function showCard(){ const c=deck[deckIdx]; const known=new Set(lsGet('known',[]));
@@ -1541,7 +1520,6 @@ async function sendMsg(){
   const { error }=await sb.from('messages').insert({user_id:user.id,sender:'student',body});
   if(error){ toast('Konnte nicht senden.'); return; }
   messages.push({sender:'student',body,created_at:new Date().toISOString()}); renderNachrichten();
-  try{ const { data:{ session } }=await sb.auth.getSession(); if(session) fetch('/api/notify-incoming',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},body:JSON.stringify({user_id:user.id,body})}).catch(()=>{}); }catch(e){}
 }
 
 // ---------- Amanda ----------
