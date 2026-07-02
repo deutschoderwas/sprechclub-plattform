@@ -3,7 +3,7 @@
 // Eigenständig (keine externen lib-Imports), damit Vercel sicher bündelt.
 import { createClient } from '@supabase/supabase-js';
 
-export const config = { maxDuration: 60 };
+export const maxDuration = 60;
 const MODEL = process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-6';
 
 export default async function handler(req, res) {
@@ -29,7 +29,7 @@ async function runNachbereitung(sb, { classId, source = 'tafel', pdfText } = {})
   if (!process.env.ANTHROPIC_API_KEY) return { ok: false, error: 'anthropic_key_missing' };
   if (!classId) return { ok: false, error: 'bad_request' };
 
-  const { data: cls } = await sb.from('classes').select('id,title,level,topic,vocab,material_live,material_pre').eq('id', classId).maybeSingle();
+  const { data: cls } = await sb.from('classes').select('id,title,level,topic,vocab').eq('id', classId).maybeSingle();
   if (!cls) return { ok: false, error: 'class_not_found' };
 
   const [{ data: mat }, { data: note }] = await Promise.all([
@@ -38,20 +38,12 @@ async function runNachbereitung(sb, { classId, source = 'tafel', pdfText } = {})
   ]);
 
   let srcText = '';
-  let quelle = 'tafel';
-  let mitschrift = '';
   if (source === 'pdf') {
     srcText = String(pdfText || '').trim();
     if (srcText.length < 20) return { ok: false, error: 'no_pdf_text' };
-    quelle = 'pdf';
   } else {
-    mitschrift = htmlToText(String((note && note.notes) || ''));
-    srcText = mitschrift;
-    if (srcText.length < 20) {
-      const presText = await fetchPresentationText(cls.material_live || cls.material_pre);
-      if (presText && presText.length >= 40) { srcText = presText; quelle = 'praesentation'; mitschrift = ''; }
-      else return { ok: false, error: 'no_source' };
-    }
+    srcText = htmlToText(String((note && note.notes) || ''));
+    if (srcText.length < 20) return { ok: false, error: 'no_tafel' };
   }
   if (srcText.length > 14000) srcText = srcText.slice(0, 14000);
 
@@ -75,14 +67,11 @@ async function runNachbereitung(sb, { classId, source = 'tafel', pdfText } = {})
   const prompt = buildPrompt(cls, srcText, [...vmap.values()], source);
   let aiText = '';
   try {
-    const _ac = new AbortController(); const _to = setTimeout(() => _ac.abort(), 45000);
     const r = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'x-api-key': process.env.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
       body: JSON.stringify({ model: MODEL, max_tokens: 4000, messages: [{ role: 'user', content: prompt }] }),
-      signal: _ac.signal,
     });
-    clearTimeout(_to);
     const j = await r.json();
     if (!r.ok) return { ok: false, error: 'anthropic_error', detail: (j && j.error && j.error.message) || ('HTTP ' + r.status) };
     aiText = (j.content || []).map(b => b.text || '').join('').trim();
@@ -103,18 +92,15 @@ async function runNachbereitung(sb, { classId, source = 'tafel', pdfText } = {})
   const post_content = {
     thema: clip(parsed.thema, 700),
     saetze: strList(parsed.saetze, 12),
-    dialoge: normDialoge(parsed.dialoge),
     vocab,
     grammar: normGrammar(parsed.grammar),
     exercises,
     speaking: normSpeaking(parsed.speaking),
     errors: normErrors(parsed.errors),
     source,
-    quelle,
-    mitschrift: mitschrift ? mitschrift.slice(0, 8000) : '',
     generated_at: new Date().toISOString(),
   };
-  if (!vocab.length && !exercises.length && !post_content.thema && !post_content.mitschrift) return { ok: false, error: 'empty_result' };
+  if (!vocab.length && !exercises.length && !post_content.thema) return { ok: false, error: 'empty_result' };
 
   const nowISO = post_content.generated_at;
   const { error: nErr } = await sb.from('class_notes').upsert({ class_id: classId, post_content, generated_at: nowISO }, { onConflict: 'class_id' });
@@ -152,7 +138,7 @@ async function sendNachbereitungMails(sb, classId, cls, pc) {
       method: 'POST',
       headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        sender: { name: 'deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'info@deutschoderwas.de' },
+        sender: { name: 'Julia | deutschoderwas', email: process.env.BREVO_SENDER_EMAIL || 'info@deutschoderwas.de' },
         to: [{ email: p.email, name: p.name || undefined }],
         subject: `📖 Deine Nachbereitung: ${thema}`,
         htmlContent: html,
@@ -193,15 +179,6 @@ function nachbereitungEmail({ vorname, thema, level, nVok, nUb, nErr, link }) {
 </body></html>`;
 }
 
-async function fetchPresentationText(url) {
-  try {
-    if (!url || !/^https?:\/\//.test(url)) return '';
-    const r = await fetch(url, { headers: { 'user-agent': 'dow-nachbereitung' } });
-    if (!r.ok) return '';
-    const t = htmlToText(await r.text());
-    return t.length > 14000 ? t.slice(0, 14000) : t;
-  } catch (e) { return ''; }
-}
 function clip(s, n) { s = String(s == null ? '' : s).trim(); return s ? s.slice(0, n) : null; }
 function strList(a, max) { return (Array.isArray(a) ? a : []).map(x => String(x || '').trim()).filter(Boolean).slice(0, max); }
 
@@ -225,12 +202,6 @@ function normGrammar(g) {
   const tips = (Array.isArray(g.tips) ? g.tips : []).map(t => ({ label: clip(t.label, 80) || '', text: clip(t.text, 400) || '' })).filter(t => t.text).slice(0, 6);
   if (!title && !rows.length && !tips.length) return null;
   return { title: title || 'Grammatik', headers, rows, tips };
-}
-function normDialoge(a) {
-  return (Array.isArray(a) ? a : []).map(d => ({
-    titel: clip(d.titel || d.title || d.situation, 120) || 'Dialog',
-    zeilen: (Array.isArray(d.zeilen || d.lines) ? (d.zeilen || d.lines) : []).map(z => ({ sprecher: clip(z.sprecher || z.speaker || z.name, 40) || '', text: clip(z.text || z.line, 400) || '' })).filter(z => z.text).slice(0, 12),
-  })).filter(d => d.zeilen.length).slice(0, 4);
 }
 function normSpeaking(a) {
   return (Array.isArray(a) ? a : []).map(s => ({ task: clip(s.task || s.q, 300) || '', example: clip(s.example || s.answer, 500) || '' })).filter(s => s.task).slice(0, 8);
@@ -311,7 +282,6 @@ Antworte AUSSCHLIESSLICH mit gültigem JSON (kein Text, keine Codeblöcke) in GE
 {
   "thema": "1-3 Sätze: worum ging es in der Stunde (für die Zusammenfassung).",
   "saetze": ["wichtiger Beispielsatz aus der Stunde", "noch einer", "..."],
-  "dialoge": [ { "titel": "kurze Alltagssituation (z. B. Im Café)", "zeilen": [ { "sprecher": "A", "text": "..." }, { "sprecher": "B", "text": "..." } ] } ],
   "vocab": [ { "de": "das Wort", "info": "einfache Erklärung AUF DEUTSCH (kein Englisch!)", "example": "lebensnaher Beispielsatz aus dem Alltag", "related": ["verwandtes Wort", "noch eins"] } ],
   "grammar": {
     "title": "Grammatik-Schwerpunkt der Stunde",
@@ -330,7 +300,6 @@ Antworte AUSSCHLIESSLICH mit gültigem JSON (kein Text, keine Codeblöcke) in GE
 REGELN:
 - ALLES muss zum oben Behandelten passen (gleiche Wörter, Grammatik, Beispiele). Nichts erfinden, was nicht zum Thema passt.
 - "vocab": 6-14 Vokabeln. "info" = einfache, kurze Erklärung AUF DEUTSCH (NIEMALS englische Übersetzung!). "example" = lebensnaher Beispielsatz aus dem echten Alltag. "related" = 2-4 verwandte Wörter aus derselben Wortfamilie (Adjektive/Verben/Nomen, z. B. zu "Zufriedenheit": zufrieden, zufriedenstellen).
-- "dialoge": 2-3 kurze, realistische ALLTAGS-DIALOGE (je 4-8 Zeilen), die möglichst viele der neuen Vokabeln UND die wichtigen Inhalte der Stunde/Präsentation natürlich verwenden. Jede Zeile: { "sprecher": "Name/A/B", "text": "..." }. Lebensnah, typisch deutsch, passend zum Niveau.
 - "grammar": nur ausfüllen, wenn es einen klaren Grammatikpunkt gibt; sonst "tips" mit 1-2 Merkpunkten, "rows":[] lassen.
 - "exercises": 6-9 Lückenübungen (type "choice" mit 3 Optionen, "answer" = Index 0-basiert; oder "gap").
 - "speaking": 2-4 freie Sprech-/Schreibaufgaben mit Beispielantwort.
