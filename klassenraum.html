@@ -88,6 +88,19 @@
   .sh-close{float:right; border:none; background:transparent; cursor:pointer; font-size:1.1rem; color:var(--weich); line-height:1;}
   .sh-cat{font-size:.72rem; font-weight:800; text-transform:uppercase; letter-spacing:.04em; color:var(--rot); margin:13px 0 6px;}
   .sh-chip{display:inline-block; background:var(--creme); border:1px solid var(--rahmen); border-radius:10px; padding:7px 10px; margin:0 6px 6px 0; font-size:.88rem; color:var(--anthrazit);}
+  /* Mini-Feedback beim Verlassen */
+  .fb-overlay{position:fixed; inset:0; z-index:80; background:rgba(26,26,26,.55); display:none; align-items:center; justify-content:center; padding:20px;}
+  .fb-overlay.open{display:flex;}
+  .fb-card{background:#fff; border-radius:20px; max-width:400px; width:100%; padding:26px 24px; box-shadow:0 20px 50px rgba(0,0,0,.25); text-align:center;}
+  .fb-card h3{font-family:'Space Grotesk'; font-size:1.2rem; margin:0 0 4px; color:var(--anthrazit);}
+  .fb-card p{color:var(--weich); font-size:.9rem; margin:0 0 6px;}
+  .fb-stars{display:flex; justify-content:center; gap:6px; font-size:2rem; margin:10px 0 14px;}
+  .fb-stars span{cursor:pointer; filter:grayscale(1); opacity:.45; transition:.12s;}
+  .fb-stars span.on{filter:none; opacity:1; transform:scale(1.08);}
+  .fb-card textarea{width:100%; box-sizing:border-box; border:1px solid var(--rahmen); border-radius:12px; padding:10px; font-family:'Inter'; font-size:.9rem; resize:vertical; min-height:56px;}
+  .fb-actions{display:flex; gap:8px; margin-top:14px;}
+  .fb-actions button{flex:1; border-radius:999px; padding:12px; font-family:'Inter'; font-weight:800; font-size:.9rem; cursor:pointer; border:1px solid var(--rahmen); background:#fff; color:var(--weich);}
+  .fb-actions .send{background:var(--tuerkis); color:var(--auf-tuerkis); border-color:var(--tuerkis);}
   #jitsi{width:100%; height:100%;}
   .video-start{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:9px; text-align:center; color:#fff; padding:14px;}
   .video-start p{margin:0; font-size:.73rem; color:#cfcfcf; line-height:1.35;}
@@ -721,8 +734,29 @@
   }
   function vcFull(){ const el=document.querySelector('.video-buehne'); if(el && el.requestFullscreen){ el.requestFullscreen(); } else if(api){ api.executeCommand('toggleFullScreen'); } }
   function vcLeave(){
+    // Schüler:innen vor dem Verlassen kurz nach Feedback fragen (einmal pro Sitzung)
+    if(window._meIsLehrer===false && STUNDE && !window._fbDone){ showFeedback(); return; }
+    doLeave();
+  }
+  function doLeave(){
     if(api){ try{ api.executeCommand('hangup'); }catch(e){} setTimeout(()=>{ try{ api.dispose(); }catch(e){} }, 400); }
+    const o=document.getElementById('fb-overlay'); if(o) o.classList.remove('open');
     document.getElementById('jitsi').innerHTML='<div style="color:#fff;padding:24px;text-align:center;font-family:Inter;font-size:.9rem">Du hast den Unterricht verlassen.<br><a href="konto.html" style="color:#2DD4BF;font-weight:700">Zurück zu Meine Stunden</a></div>';
+  }
+  // ---- Mini-Feedback beim Verlassen ----
+  let _fbStars=0;
+  function fbSet(n){ _fbStars=n; document.querySelectorAll('#fb-stars span').forEach((el,i)=>el.classList.toggle('on', i<n)); }
+  function showFeedback(){ const o=document.getElementById('fb-overlay'); if(o) o.classList.add('open'); }
+  function fbSkip(){ window._fbDone=true; doLeave(); }
+  async function fbSubmit(){
+    window._fbDone=true;
+    try{
+      if(sb && STUNDE && _fbStars>0 && window._meId){
+        const c=(document.getElementById('fb-comment').value||'').slice(0,500);
+        await sb.from('class_feedback').upsert({ user_id:window._meId, class_id:STUNDE, stars:_fbStars, comment:c }, { onConflict:'user_id,class_id' });
+      }
+    }catch(e){ console.warn('Feedback', e); }
+    doLeave();
   }
 
   function meldung(txt){
@@ -962,6 +996,22 @@
   <button class="sh-close" onclick="toggleSprechhilfen()" title="Schließen">✕</button>
   <h4>💬 Sprechhilfen</h4>
   <div id="sh-body"></div>
+</div>
+
+<!-- Mini-Feedback beim Verlassen -->
+<div class="fb-overlay" id="fb-overlay">
+  <div class="fb-card">
+    <h3>Wie war die Stunde? 💛</h3>
+    <p>Dein Feedback hilft uns, besser zu werden.</p>
+    <div class="fb-stars" id="fb-stars">
+      <span onclick="fbSet(1)">⭐</span><span onclick="fbSet(2)">⭐</span><span onclick="fbSet(3)">⭐</span><span onclick="fbSet(4)">⭐</span><span onclick="fbSet(5)">⭐</span>
+    </div>
+    <textarea id="fb-comment" placeholder="Möchtest du noch etwas sagen? (optional)"></textarea>
+    <div class="fb-actions">
+      <button onclick="fbSkip()">Überspringen</button>
+      <button class="send" onclick="fbSubmit()">Absenden</button>
+    </div>
+  </div>
 </div>
 </body>
 </html>
