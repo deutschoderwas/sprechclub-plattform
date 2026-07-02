@@ -239,7 +239,7 @@
     return '<div class="cm-row' + (me ? ' me' : '') + '" data-id="' + E(m.id) + '">' +
       '<div class="cm-av" style="background:' + avColor(m.author_name) + '">' + E(initials(m.author_name)) + '</div>' +
       '<div class="cm-col"><div class="cm-meta">' + E(m.author_name || 'Mitglied') + '<span class="cm-time">' + timeStr(m.created_at) + '</span>' +
-      '<button class="cm-radd" data-radd="' + E(m.id) + '" title="Reagieren">☺</button>' +
+      '<button class="cm-radd" data-radd="' + E(m.id) + '" title="Reagieren">😊</button>' +
       (canDel ? '<button class="cm-del" data-del="' + E(m.id) + '" title="Löschen">✕</button>' : '') + '</div>' +
       '<div class="cm-bub">' + body + '</div>' +
       '<div class="cm-react" data-rc="' + E(m.id) + '">' + reactionsHtml(m.id) + '</div></div></div>';
