@@ -57,7 +57,7 @@
   .video-card{align-self:stretch; width:100%; background:var(--creme-hell); border:1px solid var(--rahmen); border-radius:16px; overflow:hidden; box-shadow:0 4px 14px rgba(0,0,0,.08); flex:0 0 auto;}
   .video-kopf{display:flex; align-items:center; gap:8px; padding:8px 13px; font-weight:600; font-size:.82rem; border-bottom:1px solid var(--rahmen);}
   .video-kopf .punkt{width:8px; height:8px; border-radius:50%; background:var(--rot);}
-  .video-buehne{position:relative; height:var(--vidH,300px); background:var(--anthrazit);}
+  .video-buehne{position:relative; height:var(--vidH,220px); background:var(--anthrazit);}
   .vgutter{flex:0 0 14px; display:flex; align-items:center; justify-content:center; cursor:row-resize; touch-action:none; margin:-6px 0;}
   .vgutter .vgrip{width:46px; height:4px; border-radius:3px; background:var(--rahmen);}
   .vgutter:hover .vgrip{background:var(--tuerkis-dunkel);}
@@ -1066,19 +1066,11 @@
   ladeLektion();
   gateAndStart();
 
-  // ===== Automatisches Update: neue Version wird von selbst nachgeladen =====
-  // Prüft jede Minute, ob eine neuere Version live ist, und lädt sie automatisch –
-  // ABER niemals während man im Video-Call ist (sonst würde man rausfliegen).
-  // So muss niemand jemals „neu laden" drücken.
+  // Hinweis: Ein automatisches Neuladen im Klassenraum wurde bewusst ENTFERNT –
+  // es könnte mitten in der Stunde neu laden (kurz „alles weg"). Die neueste Version
+  // kommt ohnehin bei JEDEM Öffnen automatisch (HTML wird immer frisch geladen,
+  // must-revalidate + kein HTML-Cache). Niemand muss „neu laden" drücken.
   window._inCall = false;
-  const _KR_VERSION = 'doc-v16';
-  setInterval(async ()=>{
-    try{
-      const t = await fetch('/sw.js', { cache:'no-store' }).then(r=>r.text());
-      const m = t.match(/const VERSION = '([^']+)'/);
-      if(m && m[1] !== _KR_VERSION && !window._inCall){ location.reload(); }
-    }catch(e){}
-  }, 60000);
 
   // Immer der eigene Jitsi-Klassenraum – KEINE Weiterleitung zu Google Meet mehr.
   async function gateAndStart(){
