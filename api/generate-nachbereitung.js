@@ -4,7 +4,8 @@
 import { createClient } from '@supabase/supabase-js';
 
 export const maxDuration = 60;
-const MODEL = process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-6';
+// Schnelles Modell, damit die Generierung sicher im Zeitlimit bleibt (Sonnet war zu langsam -> Abbruch).
+const MODEL = process.env.ANTHROPIC_MODEL || 'claude-haiku-4-5-20251001';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ ok: false, error: 'method_not_allowed' });
@@ -79,9 +80,10 @@ async function runNachbereitung(sb, { classId, source = 'tafel', pdfText } = {})
     return { ok: false, error: 'anthropic_fetch', detail: e.message };
   }
 
+  let clean = aiText.replace(/^\s*```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '').trim();
   let parsed = null;
-  try { parsed = JSON.parse(aiText); }
-  catch (e) { const m = aiText.match(/\{[\s\S]*\}/); if (m) { try { parsed = JSON.parse(m[0]); } catch (e2) {} } }
+  try { parsed = JSON.parse(clean); }
+  catch (e) { const m = clean.match(/\{[\s\S]*\}/); if (m) { try { parsed = JSON.parse(m[0]); } catch (e2) {} } }
   if (!parsed) return { ok: false, error: 'parse_failed', detail: aiText.slice(0, 300) };
 
   (Array.isArray(parsed.vocab) ? parsed.vocab : []).forEach(addV);
