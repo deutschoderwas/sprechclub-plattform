@@ -14,7 +14,7 @@ export default async function handler(req, res) {
 
   // Schüler mit 0 oder 1 Stunde Guthaben (keine Lehrer/Admins, kein Opt-out,
   // keine pausierten/beendeten Mitglieder)
-  const INACTIVE_STATUS = ['pause', 'urlaub', 'beendet'];
+  const INACTIVE_STATUS = ['pause', 'urlaub', 'beendet', 'probeschuler'];
   const { data: low } = await sb.from('profiles')
     .select('id,name,email,credits,email_optout,is_admin,is_teacher,status')
     .in('credits', [0, 1]);
