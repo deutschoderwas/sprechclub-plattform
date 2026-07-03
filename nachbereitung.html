@@ -73,6 +73,23 @@
   .center a{color:var(--teal-dark); font-weight:700;}
   .vtrainer{display:block; text-align:center; margin:4px auto 0; max-width:720px; padding:0 16px;}
   .vtrainer a{display:inline-block; background:linear-gradient(135deg,var(--teal),var(--teal-dark)); color:#063b35; font-weight:800; text-decoration:none; padding:12px 22px; border-radius:50px; font-size:.92rem;}
+  /* ===== Präsi-Stil: goldene Markierungen für Kernwörter ===== */
+  .hl{background:linear-gradient(180deg,transparent 58%,#ffe38a 58%); padding:0 2px; font-weight:700;}
+  .handout-title .hl{background:var(--gold); padding:2px 12px; border-radius:9px; -webkit-box-decoration-break:clone; box-decoration-break:clone;}
+  .kern{background:linear-gradient(135deg,#fff,#fffaf0); border:1.6px solid var(--gold); border-radius:18px; padding:18px 20px; margin-bottom:16px; box-shadow:0 6px 20px rgba(255,206,0,.10);}
+  .kern p{font-size:.96rem;}
+  .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:12px;}
+  .chip{background:var(--gold-soft); border:1px solid #f3e4b0; border-radius:50px; padding:6px 13px; font-size:.85rem; font-weight:700; color:#8a6400;}
+  .chip.teal{background:var(--teal-soft); border-color:#cdeae5; color:var(--teal-dark);}
+  .satz-list li .hl{background:linear-gradient(180deg,transparent 58%,#ffe38a 58%);}
+  /* interaktive Lücken */
+  .gapline{display:flex; flex-wrap:wrap; align-items:center; gap:8px;}
+  .gapline input{font-family:'Inter',sans-serif; font-size:.95rem; padding:7px 10px; border:1.5px solid #d8d2c6; border-radius:9px; width:150px; font-weight:700; color:var(--ink);}
+  .gapline input.correct{border-color:var(--green); background:#eafaf1;}
+  .gapline input.wrong{border-color:var(--red); background:#fdeaea;}
+  .gapline button{font-family:inherit; font-weight:700; font-size:.82rem; background:var(--teal); color:#063b35; border:none; padding:8px 14px; border-radius:50px; cursor:pointer;}
+  .ex-hint{font-size:.8rem; color:var(--muted); font-weight:700;}
+  .ex-intro{font-size:.86rem; color:var(--muted); margin-bottom:14px;}
 </style>
 </head>
 <body>
@@ -84,6 +101,20 @@
 const CFG = window.SPRECHCLUB_CONFIG;
 let sb;
 function esc(s){return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+// Kernwörter (Vokabeln) im Text gold markieren – wie in den Präsentationen.
+function hlText(text, words){
+  var s = String(text==null?'':text);
+  var used = {};
+  (words||[]).forEach(function(w){
+    var clean = String(w||'').replace(/^(der|die|das|den|dem|ein|eine|zu|sich)\s+/i,'').replace(/[().]/g,'').trim();
+    if(clean.length<4 || used[clean.toLowerCase()]) return;
+    used[clean.toLowerCase()]=1;
+    var re = new RegExp('('+clean.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','i');
+    s = s.replace(re, '@@HL@@$1@@_HL@@');
+  });
+  return esc(s).split('@@HL@@').join('<span class="hl">').split('@@_HL@@').join('</span>');
+}
+function checkGap(btn){ const inp=btn.parentElement.querySelector('input'); if(!inp) return; const ans=(inp.dataset.answer||'').trim().toLowerCase(); const val=(inp.value||'').trim().toLowerCase(); inp.className = val ? (val===ans?'correct':'wrong') : ''; }
 
 async function init(){
   const app = document.getElementById('app');
@@ -105,16 +136,23 @@ function render(id, c, pc){
   const when = c.starts_at ? new Date(c.starts_at).toLocaleString('de-DE',{weekday:'long',day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'})+' Uhr' : '';
   const tabs = [];
 
-  // 1 · Zusammenfassung
-  if(pc.thema || (pc.saetze && pc.saetze.length)){
+  // Kernwörter für die Markierungen
+  const vocabWords = (pc.vocab||[]).map(v=>v.de).filter(Boolean);
+
+  // 1 · Zusammenfassung — mit „Das Wichtigste auf einen Blick"
+  if(pc.thema || (pc.saetze && pc.saetze.length) || (pc.vocab && pc.vocab.length)){
     let h = '';
-    if(pc.thema) h += `<div class="card a-red"><h2>⚡ Thema der Stunde</h2><p>${esc(pc.thema)}</p></div>`;
-    if(pc.saetze && pc.saetze.length) h += `<div class="card a-teal"><h2>🗣️ Wichtige Sätze</h2><ul class="satz-list">`+pc.saetze.map(s=>`<li>${esc(s)}</li>`).join('')+`</ul></div>`;
+    const topVok = (pc.vocab||[]).slice(0,6).map(v=>`<span class="chip teal">${esc(v.de)}</span>`).join('');
+    const gramChip = (pc.grammar && pc.grammar.title) ? `<span class="chip">⚡ ${esc(pc.grammar.title)}</span>` : '';
+    if(pc.thema || topVok || gramChip){
+      h += `<div class="kern"><h2>⭐ Das Wichtigste auf einen Blick</h2>${pc.thema?`<p>${hlText(pc.thema, vocabWords)}</p>`:''}${(gramChip||topVok)?`<div class="chips">${gramChip}${topVok}</div>`:''}</div>`;
+    }
+    if(pc.saetze && pc.saetze.length) h += `<div class="card a-teal"><h2>🗣️ Wichtige Sätze</h2><ul class="satz-list">`+pc.saetze.map(s=>`<li>${hlText(s, vocabWords)}</li>`).join('')+`</ul></div>`;
     tabs.push({ label:'📋 Zusammenfassung', html:h });
   }
-  // 2 · Vokabeln
+  // 2 · Vokabeln (Kernwort gold markiert, Beispiel mit Markierung)
   if(pc.vocab && pc.vocab.length){
-    const rows = pc.vocab.map(v=>`<tr><td><strong>${esc(v.de)}</strong></td><td>${esc(v.info||v.en||'')}</td><td>${esc(v.example||'')}</td></tr>`).join('');
+    const rows = pc.vocab.map(v=>`<tr><td><strong class="hl">${esc(v.de)}</strong></td><td>${esc(v.info||v.en||'')}</td><td>${hlText(v.example||'', [v.de])}</td></tr>`).join('');
     tabs.push({ label:'📖 Vokabeln', html:`<div class="card a-teal"><h2>📖 Wortschatz der Stunde</h2><table><thead><tr><th>Wort</th><th>Bedeutung</th><th>Beispiel</th></tr></thead><tbody>${rows}</tbody></table></div>` });
   }
   // Dialoge
@@ -145,7 +183,9 @@ function render(id, c, pc){
         return `<div class="exercise"><p>${i+1}. ${esc(e.q)}</p><select onchange="checkSelect(this,'${esc(correct).replace(/'/g,"&#39;")}')">${opts}</select></div>`;
       }
       if(e.type==='gap'){
-        return `<div class="exercise"><p>${i+1}. ${esc(e.text)}</p><details><summary>Lösung${e.hint?' · 💡 '+esc(e.hint):''}</summary><div class="answer">✅ ${esc(e.answer)}</div></details></div>`;
+        const parts = esc(e.text).split('___');
+        const before = parts[0]||'', after = parts.slice(1).join('___')||'';
+        return `<div class="exercise"><p>${i+1}.</p><div class="gapline"><span>${before}</span><input data-answer="${esc(e.answer).replace(/"/g,'&quot;')}" placeholder="…" onkeydown="if(event.key==='Enter'){checkGap(this.nextElementSibling);}"><span>${after}</span><button onclick="checkGap(this)">prüfen</button>${e.hint?`<span class="ex-hint">💡 ${esc(e.hint)}</span>`:''}</div><details style="margin-top:8px"><summary>Lösung</summary><div class="answer">✅ ${esc(e.answer)}</div></details></div>`;
       }
       if(e.type==='order'){
         return `<div class="exercise"><p>${i+1}. Bring in die richtige Reihenfolge${e.hint?' · 💡 '+esc(e.hint):''}:</p><details><summary>Lösung</summary><div class="answer">✅ ${esc(e.answer)}</div></details></div>`;
@@ -156,7 +196,7 @@ function render(id, c, pc){
       }
       return '';
     }).join('');
-    tabs.push({ label:'✏️ Übungen', html:`<div class="card a-teal"><h2>✏️ Übungen</h2>${ex}</div>` });
+    tabs.push({ label:'✏️ Übungen', html:`<div class="card a-teal"><h2>✏️ Übungen zu den wichtigsten Punkten</h2><p class="ex-intro">${pc.exercises.length} Aufgaben — tippe in die Lücken und drück „prüfen" oder öffne die Lösung. 💪</p>${ex}</div>` });
   }
   // 5 · Sprechen
   if(pc.speaking && pc.speaking.length){
@@ -183,7 +223,7 @@ function render(id, c, pc){
         <div><div class="brand-name">deutschoderwas</div><div class="brand-tag">Deutsch lernen mit Spaß</div></div>
         <a class="back" href="konto.html#stunden">← Meine Stunden</a>
       </div>
-      <h1 class="handout-title">Nachbereitung · ${esc(c.topic||c.title||'')}</h1>
+      <h1 class="handout-title">Nachbereitung: <span class="hl">${esc(c.topic||c.title||'')}</span></h1>
       <p class="handout-sub">${esc(c.level||'')}${when?' · '+esc(when):''}</p>
     </header>
     <nav>${navHtml}</nav>
