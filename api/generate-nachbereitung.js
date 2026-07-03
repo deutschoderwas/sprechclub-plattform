@@ -85,7 +85,7 @@ async function runNachbereitung(sb, { classId, source = 'tafel', pdfText } = {})
     const r = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'x-api-key': process.env.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
-      body: JSON.stringify({ model: MODEL, max_tokens: 4000, messages: [{ role: 'user', content: prompt }] }),
+      body: JSON.stringify({ model: MODEL, max_tokens: 8000, messages: [{ role: 'user', content: prompt }] }),
     });
     const j = await r.json();
     if (!r.ok) return { ok: false, error: 'anthropic_error', detail: (j && j.error && j.error.message) || ('HTTP ' + r.status) };
@@ -135,7 +135,10 @@ async function runNachbereitung(sb, { classId, source = 'tafel', pdfText } = {})
 
   // Erst wenn fertig: Schüler der Stunde per E-Mail benachrichtigen (einmal pro Schüler/Stunde).
   let mailed = 0;
-  try { mailed = await sendNachbereitungMails(sb, classId, cls, post_content); } catch (e) {}
+  try {
+    mailed = await sendNachbereitungMails(sb, classId, cls, post_content);
+    if (mailed > 0) await sb.from('classes').update({ nachb_sent_at: new Date().toISOString(), nachb_sent_count: mailed }).eq('id', classId);
+  } catch (e) {}
 
   return { ok: true, content: post_content, counts: { vocab: vocab.length, exercises: exercises.length, errors: post_content.errors.length }, mailed, source };
 }
