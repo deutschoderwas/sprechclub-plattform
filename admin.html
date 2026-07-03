@@ -527,7 +527,9 @@ async function loadKlassen(){
     (bk||[]).forEach(b=>{ (parts[b.class_id]=parts[b.class_id]||[]).push({ ...(b.profiles||{}), user_id:b.user_id }); });
     const { data: mats } = await sb.from('class_materials').select('class_id').in('class_id', ids);
     const matSet = new Set((mats||[]).map(m=>m.class_id));
-    (cls||[]).forEach(c=>{ c._hasMat = matSet.has(c.id); });
+    const { data: notesRows } = await sb.from('class_notes').select('class_id, post_content').in('class_id', ids);
+    const nachbSet = new Set((notesRows||[]).filter(n=>n.post_content).map(n=>n.class_id));
+    (cls||[]).forEach(c=>{ c._hasMat = matSet.has(c.id); c._hasNachb = nachbSet.has(c.id); });
   }
   KL_ALL = cls||[]; KL_PARTS = parts;
   // Standard: Lehrkräfte sehen sofort NUR ihre eigenen Stunden
@@ -627,6 +629,7 @@ function renderKlassen(){
         <button class="btn btn-ghost" onclick="cancelClass('${c.id}')">Stunde absagen</button>
       </div>
       <span class="muted" id="genMsg-${c.id}" style="display:block;margin-top:8px">${c._hasMat?'✓ KI-Material vorhanden':''}</span>
+      <span style="display:block;margin-top:4px;font-size:12px;font-weight:800;color:${c._hasNachb?'#13A89A':'#c07000'}">${c._hasNachb?'✅ Nachbereitung erstellt':'⚠️ Noch keine Nachbereitung — unten „🤖 Auto-Nachbereitung" klicken'}</span>
       <span id="nbmailMsg-${c.id}" style="display:block;margin-top:6px;font-weight:700;font-size:13px;color:${c.nachb_sent_at?'#13A89A':'#9a6b00'}">${c.nachb_sent_at?`✅ Nachbereitung verschickt${c.nachb_sent_count?` an ${c.nachb_sent_count} Schüler`:''} · ${new Date(c.nachb_sent_at).toLocaleString('de-DE',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}`:'✉️ Nachbereitung noch nicht verschickt'}</span>
       <div id="genPrev-${c.id}" style="margin-top:6px"></div>
       <div id="nb-${c.id}" style="display:none;margin-top:10px;background:#F2FBFA;border:1px solid #CDEEEA;border-radius:12px;padding:12px 14px">
@@ -1065,7 +1068,7 @@ async function genNachbereitung(id){
     const r=await fetch('/api/generate-nachbereitung',{ method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token}, body: JSON.stringify({ classId:id, source:src, pdfText: src==='pdf'?st.pdfText:undefined }) });
     const j=await r.json();
     if(!r.ok || !j.ok){
-      const map={anthropic_key_missing:'ANTHROPIC_API_KEY fehlt in Vercel.',not_admin:'Keine Rechte.',class_not_found:'Stunde nicht gefunden.',no_pdf_text:'Das PDF enthielt keinen lesbaren Text.',no_tafel:'Die Live-Tafel ist noch leer – erst etwas auf der Tafel notieren.',parse_failed:'KI-Antwort unlesbar – bitte nochmal.',empty_result:'Kein Ergebnis – Quelle zu kurz?',anthropic_error:'KI-Fehler'};
+      const map={anthropic_key_missing:'ANTHROPIC_API_KEY fehlt in Vercel.',not_admin:'Keine Rechte.',class_not_found:'Stunde nicht gefunden.',no_pdf_text:'Das PDF enthielt keinen lesbaren Text.',no_tafel:'Die Live-Tafel ist noch leer – erst etwas auf der Tafel notieren.',no_source:'Weder eine Live-Mitschrift noch eine lesbare Präsentation gefunden – bitte im Unterricht eine Präsentation („Material IM Unterricht") hinterlegen oder etwas auf die Tafel schreiben.',parse_failed:'KI-Antwort unlesbar – bitte nochmal.',empty_result:'Kein Ergebnis – Quelle zu kurz?',anthropic_error:'KI-Fehler'};
       msg.textContent='❌ '+(map[j.error]||j.error||'Fehler')+(j.detail?(' — '+j.detail):''); return;
     }
     msg.textContent='✓ Nachbereitung erstellt!';
