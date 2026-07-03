@@ -621,13 +621,13 @@ function renderKlassen(){
         <a class="btn btn-ghost" href="tafel.html?id=${c.id}" target="_blank" rel="noopener">🖊️ Live-Tafel</a>
         <button class="btn btn-ghost" onclick="genMaterial('${c.id}')">${c._hasMat?'🔄 KI-Übungen neu':'✨ KI-Übungen erstellen'}</button>
         <button class="btn btn-ghost" onclick="toggleNb('${c.id}')">🤖 Auto-Nachbereitung</button>
-        ${c.material_post?`<button class="btn btn-ghost" onclick="sendNachbLink('${c.id}')">📧 Nachbereitung-Mail an Schüler</button>`:''}
+        <button class="btn" onclick="sendNachbLink('${c.id}')" style="background:#13A89A;color:#fff;font-weight:800;border:none">📧 Nachbereitung an Schüler senden</button>
         <button class="btn btn-ghost" onclick="previewInteractive('${c.id}')">👁️ Schüler-Vorschau</button>
         <button class="btn btn-ghost" onclick="editClass('${c.id}')">Bearbeiten · Material</button>
         <button class="btn btn-ghost" onclick="cancelClass('${c.id}')">Stunde absagen</button>
       </div>
       <span class="muted" id="genMsg-${c.id}" style="display:block;margin-top:8px">${c._hasMat?'✓ KI-Material vorhanden':''}</span>
-      <span class="muted" id="nbmailMsg-${c.id}" style="display:block;margin-top:4px;font-weight:700;font-size:12px"></span>
+      <span id="nbmailMsg-${c.id}" style="display:block;margin-top:6px;font-weight:700;font-size:13px;color:${c.nachb_sent_at?'#13A89A':'#9a6b00'}">${c.nachb_sent_at?`✅ Nachbereitung verschickt${c.nachb_sent_count?` an ${c.nachb_sent_count} Schüler`:''} · ${new Date(c.nachb_sent_at).toLocaleString('de-DE',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}`:'✉️ Nachbereitung noch nicht verschickt'}</span>
       <div id="genPrev-${c.id}" style="margin-top:6px"></div>
       <div id="nb-${c.id}" style="display:none;margin-top:10px;background:#F2FBFA;border:1px solid #CDEEEA;border-radius:12px;padding:12px 14px">
         <div style="font-weight:800;font-size:13px;margin-bottom:4px">🤖 Automatische Nachbereitung</div>
@@ -1073,7 +1073,8 @@ async function genNachbereitung(id){
     prev.innerHTML=`<div style="background:#fff;border-radius:10px;padding:10px 12px;font-size:13px">
       <b>Ergebnis:</b> ${j.counts.vocab} Vokabeln · ${j.counts.exercises} Übungen${(c.grammar&&c.grammar.title)?' · 📌 '+esc(c.grammar.title):''}${(c.errors&&c.errors.length)?' · 🔴 '+c.errors.length+' Fehler':''}<br>
       <span class="muted">Vokabeln sind jetzt im Vokabeltrainer · Schüler sehen die Nachbereitung im Schülerbereich.</span>
-      <div style="margin-top:6px;display:flex;gap:8px;flex-wrap:wrap"><a class="btn btn-ghost" style="padding:4px 12px;font-size:12px;text-decoration:none" href="nachbereitung.html?id=${id}" target="_blank" rel="noopener">📖 Handout öffnen</a><button class="btn btn-ghost" style="padding:4px 12px;font-size:12px" onclick="previewInteractive('${id}')">👁️ Interaktive Vorschau</button></div>
+      <div style="margin-top:6px;display:flex;gap:8px;flex-wrap:wrap"><a class="btn btn-ghost" style="padding:4px 12px;font-size:12px;text-decoration:none" href="nachbereitung.html?id=${id}" target="_blank" rel="noopener">📖 Handout öffnen</a><button class="btn btn-ghost" style="padding:4px 12px;font-size:12px" onclick="previewInteractive('${id}')">👁️ Interaktive Vorschau</button><button class="btn" style="padding:4px 12px;font-size:12px;background:#13A89A;color:#fff;font-weight:800;border:none" onclick="sendNachbLink('${id}')">📧 An Schüler senden</button></div>
+      <div style="margin-top:6px;font-size:12px;color:#6B7280">Nach dem Senden erscheint oben bei „✉️ Nachbereitung …" der Status.</div>
     </div>`;
   }catch(e){ msg.textContent='❌ Netzwerkfehler: '+e.message; }
 }
@@ -1086,9 +1087,9 @@ async function sendNachbLink(id){
   try{
     const r=await fetch('/api/send-nachbereitung-link',{ method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token}, body: JSON.stringify({ classId:id }) });
     const j=await r.json();
-    if(!r.ok || !j.ok){ const map={no_link:'Kein Nachbereitungs-Link (Material nach dem Unterricht) hinterlegt.',not_admin:'Keine Rechte.',brevo_missing:'Brevo-Key fehlt in Vercel.',class_not_found:'Stunde nicht gefunden.'}; if(el) el.textContent='❌ '+(map[j.error]||j.error||'Fehler'); return; }
-    if(el) el.textContent=`✓ ${j.sent} Mail(s) gesendet${j.skipped?` · ${j.skipped} übersprungen (schon gesendet/abgemeldet)`:''}`;
-  }catch(e){ if(el) el.textContent='❌ Netzwerkfehler'; }
+    if(!r.ok || !j.ok){ const map={not_admin:'Keine Rechte.',brevo_missing:'Brevo-Key fehlt in Vercel.',class_not_found:'Stunde nicht gefunden.'}; if(el){ el.style.color='#c00'; el.textContent='❌ '+(map[j.error]||j.error||'Fehler'); } return; }
+    if(el){ el.style.color='#13A89A'; el.textContent = j.sent>0 ? `✅ Nachbereitung an ${j.sent} Schüler verschickt${j.skipped?` · ${j.skipped} übersprungen (schon verschickt/abgemeldet)`:''}` : `Alle Schüler hatten die Nachbereitung schon (${j.skipped} übersprungen).`; }
+  }catch(e){ if(el){ el.style.color='#c00'; el.textContent='❌ Netzwerkfehler'; } }
 }
 
 let NACHR_STUDENTS=[];
