@@ -515,12 +515,17 @@
   (function(){
     const vg=document.getElementById('vgutter'), sp=document.querySelector('.spalte'), bu=document.querySelector('.video-buehne');
     if(!vg||!sp||!bu) return;
-    const sv=parseInt(localStorage.getItem('club_vidH')||'0',10);
-    if(sv) sp.style.setProperty('--vidH', sv+'px');
+    // Kamera bleibt normal groß (wie bei Meet) – die Live-Mitschrift bekommt IMMER viel Platz.
+    // Obergrenze hart begrenzt; zu groß gespeicherte Werte werden automatisch korrigiert.
+    const vmax = ()=> Math.max(150, Math.min(280, Math.round(window.innerHeight*0.35)));
+    let sv=parseInt(localStorage.getItem('club_vidH')||'0',10);
+    sv = sv ? Math.max(120, Math.min(vmax(), sv)) : Math.min(200, vmax());
+    sp.style.setProperty('--vidH', sv+'px');
+    localStorage.setItem('club_vidH', String(sv));
     let vd=false, sy=0, sh=0;
-    vg.addEventListener('pointerdown', e=>{ vd=true; sy=e.clientY; sh=parseInt(getComputedStyle(bu).height,10)||300; vg.setPointerCapture(e.pointerId); e.preventDefault(); });
-    vg.addEventListener('pointermove', e=>{ if(!vd) return; let h=sh+(e.clientY-sy); h=Math.max(120, Math.min(720, h)); sp.style.setProperty('--vidH', h+'px'); if(typeof fit==='function') fit(); });
-    vg.addEventListener('pointerup', ()=>{ if(!vd) return; vd=false; localStorage.setItem('club_vidH', parseInt(getComputedStyle(bu).height,10)||300); });
+    vg.addEventListener('pointerdown', e=>{ vd=true; sy=e.clientY; sh=parseInt(getComputedStyle(bu).height,10)||200; vg.setPointerCapture(e.pointerId); e.preventDefault(); });
+    vg.addEventListener('pointermove', e=>{ if(!vd) return; let h=sh+(e.clientY-sy); h=Math.max(120, Math.min(vmax(), h)); sp.style.setProperty('--vidH', h+'px'); if(typeof fit==='function') fit(); });
+    vg.addEventListener('pointerup', ()=>{ if(!vd) return; vd=false; localStorage.setItem('club_vidH', String(parseInt(getComputedStyle(bu).height,10)||200)); });
   })();
 
   setRolle('lehrer');
