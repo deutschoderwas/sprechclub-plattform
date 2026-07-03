@@ -30,7 +30,7 @@ async function runNachbereitung(sb, { classId, source = 'tafel', pdfText } = {})
   if (!process.env.ANTHROPIC_API_KEY) return { ok: false, error: 'anthropic_key_missing' };
   if (!classId) return { ok: false, error: 'bad_request' };
 
-  const { data: cls } = await sb.from('classes').select('id,title,level,topic,vocab').eq('id', classId).maybeSingle();
+  const { data: cls } = await sb.from('classes').select('id,title,level,topic,vocab,material_live').eq('id', classId).maybeSingle();
   if (!cls) return { ok: false, error: 'class_not_found' };
 
   const [{ data: mat }, { data: note }] = await Promise.all([
@@ -38,13 +38,27 @@ async function runNachbereitung(sb, { classId, source = 'tafel', pdfText } = {})
     sb.from('class_notes').select('notes,post_content').eq('class_id', classId).maybeSingle(),
   ]);
 
-  let srcText = '';
+  const tafelText = htmlToText(String((note && note.notes) || ''));
+  const presUrl = (cls.material_live && String(cls.material_live).trim()) || (mat && mat.content && mat.content.lesson_url) || '';
+  let srcText = '', mode = source;
   if (source === 'pdf') {
     srcText = String(pdfText || '').trim();
     if (srcText.length < 20) return { ok: false, error: 'no_pdf_text' };
+    mode = 'pdf';
   } else {
-    srcText = htmlToText(String((note && note.notes) || ''));
-    if (srcText.length < 20) return { ok: false, error: 'no_tafel' };
+    const presText = await fetchPresentation(presUrl);
+    if (tafelText.length >= 20) {
+      // Live-Mitschrift als Hauptquelle + wichtige Inhalte aus der Präsentation
+      mode = presText ? 'tafel+praesi' : 'tafel';
+      srcText = 'LIVE-MITSCHRIFT AUS DEM UNTERRICHT (Hauptquelle):\n' + tafelText
+        + (presText ? '\n\n=== WICHTIGE INHALTE AUS DER PRÄSENTATION ===\n' + presText.slice(0, 6000) : '');
+    } else if (presText.length >= 40) {
+      // keine Mitschrift -> komplett aus der Präsentation
+      mode = 'praesi';
+      srcText = 'PRÄSENTATION / LEKTION AUS DEM UNTERRICHT (es gibt KEINE Live-Mitschrift):\n' + presText;
+    } else {
+      return { ok: false, error: 'no_source' };
+    }
   }
   if (srcText.length > 14000) srcText = srcText.slice(0, 14000);
 
@@ -65,7 +79,7 @@ async function runNachbereitung(sb, { classId, source = 'tafel', pdfText } = {})
   if (mat && mat.content && Array.isArray(mat.content.vocab)) mat.content.vocab.forEach(addV);
   if (Array.isArray(cls.vocab)) cls.vocab.forEach(addV);
 
-  const prompt = buildPrompt(cls, srcText, [...vmap.values()], source);
+  const prompt = buildPrompt(cls, srcText, [...vmap.values()], mode);
   let aiText = '';
   try {
     const r = await fetch('https://api.anthropic.com/v1/messages', {
@@ -97,9 +111,10 @@ async function runNachbereitung(sb, { classId, source = 'tafel', pdfText } = {})
     vocab,
     grammar: normGrammar(parsed.grammar),
     exercises,
+    dialoge: normDialoge(parsed.dialoge),
     speaking: normSpeaking(parsed.speaking),
     errors: normErrors(parsed.errors),
-    source,
+    source: mode,
     generated_at: new Date().toISOString(),
   };
   if (!vocab.length && !exercises.length && !post_content.thema) return { ok: false, error: 'empty_result' };
@@ -107,6 +122,12 @@ async function runNachbereitung(sb, { classId, source = 'tafel', pdfText } = {})
   const nowISO = post_content.generated_at;
   const { error: nErr } = await sb.from('class_notes').upsert({ class_id: classId, post_content, generated_at: nowISO }, { onConflict: 'class_id' });
   if (nErr) return { ok: false, error: 'save_notes_failed', detail: nErr.message };
+
+  // Nachbereitungs-Link automatisch auf der Stunde setzen (= „Material nach dem Unterricht").
+  try {
+    const site = process.env.SITE_URL || 'https://www.deutschoderwas-club.de';
+    await sb.from('classes').update({ material_post: `${site}/nachbereitung.html?id=${classId}` }).eq('id', classId);
+  } catch (e) {}
 
   const content = (mat && mat.content && typeof mat.content === 'object') ? mat.content : {};
   content.vocab = vocab;
@@ -183,6 +204,21 @@ function nachbereitungEmail({ vorname, thema, level, nVok, nUb, nErr, link }) {
 
 function clip(s, n) { s = String(s == null ? '' : s).trim(); return s ? s.slice(0, n) : null; }
 function strList(a, max) { return (Array.isArray(a) ? a : []).map(x => String(x || '').trim()).filter(Boolean).slice(0, max); }
+
+// Präsentations-/Lektionsseite serverseitig laden und in Text umwandeln (Skripte/Styles raus).
+async function fetchPresentation(url) {
+  if (!url) return '';
+  try {
+    const r = await fetch(url, { headers: { 'user-agent': 'dow-nachbereitung' } });
+    if (!r.ok) return '';
+    const t = await r.text();
+    const noScript = String(t).replace(/<script[\s\S]*?<\/script>/gi, ' ').replace(/<style[\s\S]*?<\/style>/gi, ' ');
+    return htmlToText(noScript);
+  } catch (e) { return ''; }
+}
+function normDialoge(a) {
+  return (Array.isArray(a) ? a : []).map(d => ({ titel: clip(d.titel || d.title, 120) || 'Dialog', zeilen: strList(d.zeilen || d.lines, 14) })).filter(d => d.zeilen.length >= 2).slice(0, 4);
+}
 
 function htmlToText(html) {
   return String(html || '')
@@ -262,17 +298,30 @@ function imgQuery(v) {
   return q.split(/\s+/).slice(0, 3).join(' ');
 }
 
-function buildPrompt(cls, srcText, existing, source) {
+function buildPrompt(cls, srcText, existing, mode) {
   const vocabList = existing.length ? existing.map(v => `- ${v.de}${v.info ? ' = ' + v.info : ''}`).join('\n') : '(noch keine)';
-  const quelle = source === 'pdf' ? 'die hochgeladene Mitschrift (PDF)' : 'die Live-Tafel aus dem Unterricht';
-  return `Du bist Amanda, eine erfahrene Deutschlehrerin. Erstelle ein vollständiges, schönes NACHBEREITUNGS-HANDOUT für eine Deutsch-Unterrichtsstunde – streng auf Basis dessen, was unten in der Quelle steht.
+  const quelleMap = {
+    pdf: 'die hochgeladene Mitschrift (PDF)',
+    tafel: 'die Live-Mitschrift aus dem Unterricht',
+    'tafel+praesi': 'die Live-Mitschrift aus dem Unterricht PLUS wichtige Inhalte aus der Präsentation',
+    praesi: 'die Präsentation/Lektion aus dem Unterricht (es gibt KEINE Live-Mitschrift)',
+  };
+  const quelle = quelleMap[mode] || 'die Quelle aus dem Unterricht';
+  const modeHinweis = mode === 'praesi'
+    ? 'WICHTIG: Es gibt KEINE Live-Mitschrift. Erstelle eine vollständige, eigenständige Nachbereitung AUS DER PRÄSENTATION: viele Übungen/Tests, alle wichtigen Vokabeln aus der Präsentation (für den Vokabeltrainer) und passende Dialoge zum Thema.'
+    : (mode === 'tafel+praesi'
+      ? 'WICHTIG: Nutze die Live-Mitschrift als Hauptquelle und ERGÄNZE sie mit den wichtigsten Inhalten aus der Präsentation. Baue daraus ein rundes Handout mit Dialogen und vielen Übungen.'
+      : 'Baue ein rundes Handout mit Dialogen und vielen Übungen auf Basis der Quelle.');
+  return `Du bist Amanda, eine erfahrene Deutschlehrerin. Erstelle ein vollständiges, schönes NACHBEREITUNGS-HANDOUT für eine Deutsch-Unterrichtsstunde – auf Basis dessen, was unten in der Quelle steht.
 
 STUNDE:
 - Titel: ${cls.title || '—'}
 - Niveau: ${cls.level || '—'}
 - Thema: ${cls.topic || cls.title || '—'}
 
-QUELLE (${quelle}) – das wurde im Unterricht behandelt:
+${modeHinweis}
+
+QUELLE (${quelle}):
 """
 ${srcText}
 """
@@ -283,8 +332,9 @@ ${vocabList}
 Antworte AUSSCHLIESSLICH mit gültigem JSON (kein Text, keine Codeblöcke) in GENAU diesem Format:
 {
   "thema": "1-3 Sätze: worum ging es in der Stunde (für die Zusammenfassung).",
-  "saetze": ["wichtiger Beispielsatz aus der Stunde", "noch einer", "..."],
+  "saetze": ["wichtiger Beispielsatz zum Thema", "noch einer", "..."],
   "vocab": [ { "de": "das Wort", "info": "einfache Erklärung AUF DEUTSCH (kein Englisch!)", "example": "lebensnaher Beispielsatz aus dem Alltag", "related": ["verwandtes Wort", "noch eins"] } ],
+  "dialoge": [ { "titel": "kurzer Titel", "zeilen": ["A: …", "B: …", "A: …", "B: …"] } ],
   "grammar": {
     "title": "Grammatik-Schwerpunkt der Stunde",
     "headers": ["Spalte 1","Spalte 2","..."],
@@ -296,15 +346,16 @@ Antworte AUSSCHLIESSLICH mit gültigem JSON (kein Text, keine Codeblöcke) in GE
     { "type": "gap", "text": "Ich ___ nach Hause.", "answer": "gehe", "hint": "gehen" }
   ],
   "speaking": [ { "task": "Sprech-/Schreibaufgabe", "example": "Beispielantwort" } ],
-  "errors": [ { "falsch": "typischer Fehler aus der Stunde", "richtig": "korrigierte Version", "erklaerung": "warum" } ]
+  "errors": [ { "falsch": "typischer Fehler", "richtig": "korrigierte Version", "erklaerung": "warum" } ]
 }
 
 REGELN:
-- ALLES muss zum oben Behandelten passen (gleiche Wörter, Grammatik, Beispiele). Nichts erfinden, was nicht zum Thema passt.
-- "vocab": 6-14 Vokabeln. "info" = einfache, kurze Erklärung AUF DEUTSCH (NIEMALS englische Übersetzung!). "example" = lebensnaher Beispielsatz aus dem echten Alltag. "related" = 2-4 verwandte Wörter aus derselben Wortfamilie (Adjektive/Verben/Nomen, z. B. zu "Zufriedenheit": zufrieden, zufriedenstellen).
+- ALLES muss zum Thema der Stunde passen (gleiche Wörter, Grammatik, Beispiele). Nichts erfinden, was nicht zum Thema passt.
+- "vocab": 8-14 Vokabeln. "info" = einfache, kurze Erklärung AUF DEUTSCH (NIEMALS englische Übersetzung!). "example" = lebensnaher Beispielsatz. "related" = 2-4 verwandte Wörter derselben Wortfamilie.
+- "dialoge": 1-3 kurze, alltagsnahe Dialoge zum Thema (je 4-8 Zeilen, mit "A:"/"B:").
 - "grammar": nur ausfüllen, wenn es einen klaren Grammatikpunkt gibt; sonst "tips" mit 1-2 Merkpunkten, "rows":[] lassen.
-- "exercises": 6-9 Lückenübungen (type "choice" mit 3 Optionen, "answer" = Index 0-basiert; oder "gap").
+- "exercises": 8-12 abwechslungsreiche Übungen/Tests (type "choice" mit 3 Optionen, "answer"=Index 0-basiert; und "gap"). Viele Tests!
 - "speaking": 2-4 freie Sprech-/Schreibaufgaben mit Beispielantwort.
-- "errors": 2-5 echte Fehlerkorrekturen, wenn die Quelle Fehler/Korrekturen zeigt; sonst [].
+- "errors": 2-5 echte Fehlerkorrekturen, wenn die Quelle Fehler zeigt; sonst [].
 - Deutsch, freundlich, klar. Nur reines JSON.`;
 }
