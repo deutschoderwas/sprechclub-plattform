@@ -21,8 +21,9 @@ export default async function handler(req, res) {
 
   const { data: cls } = await sb.from('classes').select('id,title,topic,level,material_post').eq('id', classId).maybeSingle();
   if (!cls) return res.status(200).json({ ok: false, error: 'class_not_found' });
-  const link = cls.material_post;
-  if (!link) return res.status(200).json({ ok: false, error: 'no_link' });
+  // Link: eigener „Material nach dem Unterricht"-Link, sonst automatisch die interaktive Nachbereitung.
+  const site = process.env.SITE_URL || 'https://www.deutschoderwas-club.de';
+  const link = cls.material_post || `${site}/nachbereitung.html?id=${classId}`;
 
   const { data: bks } = await sb.from('bookings').select('user_id').eq('class_id', classId).eq('status', 'booked');
   if (!bks || !bks.length) return res.status(200).json({ ok: true, sent: 0, reason: 'keine Schüler gebucht' });
@@ -50,6 +51,12 @@ export default async function handler(req, res) {
     });
     if (r.ok) sent++; else { await sb.from('email_log').delete().eq('kind', 'nachb_link').eq('ref', ref); skipped++; }
   }
+  // „Verschickt"-Status auf der Stunde festhalten (für die Anzeige im Admin).
+  try {
+    const { count: total } = await sb.from('email_log').select('*', { count: 'exact', head: true })
+      .eq('kind', 'nachb_link').like('ref', `${classId}:%`);
+    await sb.from('classes').update({ nachb_sent_at: new Date().toISOString(), nachb_sent_count: total || sent }).eq('id', classId);
+  } catch (_) { /* Status ist nice-to-have */ }
   return res.status(200).json({ ok: true, sent, skipped });
 }
 
