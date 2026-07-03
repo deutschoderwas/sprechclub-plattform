@@ -168,6 +168,13 @@
   .hidden{display:none !important;}
 
   .m-tabs{display:none;}   /* Umschalt-Reiter nur auf dem Handy */
+  /* „Tafel groß": Live-Tafel als breite Seiten-Spalte neben der Präsentation (nur Desktop) */
+  @media (min-width:1025px){
+    body.tafelbig main{ --rechts:44vw; }
+    body.tafelbig .video-buehne{ height:150px !important; }
+    body.tafelbig #notiz{ min-height:58vh; font-size:1.12rem; line-height:1.8; }
+    #vc-tafelbig.on{ background:var(--tuerkis); border-color:var(--tuerkis); color:var(--auf-tuerkis); }
+  }
 
   /* ===== Handy: kleines Video, große scrollbare Präsentation + Tafel-Reiter ===== */
   @media (max-width:1024px){
@@ -270,6 +277,7 @@
         <button id="vc-muteall" onclick="vcMuteAll()" title="Alle Schüler stummschalten (bei Hintergrundgeräuschen)" style="display:none">🔇 Alle stumm</button>
         <button onclick="vcTiles()" title="Alle Teilnehmer sehen">👥 Alle</button>
         <button onclick="vcFull()" title="Großansicht">⛶ Groß</button>
+        <button id="vc-tafelbig" onclick="toggleTafelBig()" title="Live-Tafel groß neben der Präsentation (nur am Computer)">🔳 Tafel groß</button>
         <button class="leave" onclick="vcLeave()" title="Unterricht verlassen">🚪 Verlassen</button>
       </div>
       <div class="react-bar" id="react-bar">
@@ -701,6 +709,17 @@
   function vcVideo(){ if(api) api.executeCommand('toggleVideo'); }
   function vcShare(){ if(api) api.executeCommand('toggleShareScreen'); }
   function vcTiles(){ if(api) api.executeCommand('toggleTileView'); }
+  // Live-Tafel groß: breite Tafel neben der Präsentation (nur Desktop). Merkt sich die Wahl.
+  function setTafelBig(on){
+    document.body.classList.toggle('tafelbig', !!on);
+    const b=document.getElementById('vc-tafelbig');
+    if(b){ b.classList.toggle('on', !!on); b.textContent = on ? '🔳 Tafel normal' : '🔳 Tafel groß'; }
+    try{ localStorage.setItem('club_tafelbig', on?'1':'0'); }catch(e){}
+    if(typeof fit==='function') setTimeout(fit,60);
+    setTimeout(()=>{ if(typeof fitLektion==='function') fitLektion(); }, 80);
+  }
+  function toggleTafelBig(){ setTafelBig(!document.body.classList.contains('tafelbig')); }
+  try{ if(localStorage.getItem('club_tafelbig')==='1') setTafelBig(true); }catch(e){}
   // Nur Lehrkraft/Moderator: alle Schüler stummschalten (z. B. bei lauten Hintergrundgeräuschen).
   // Jede/r Schüler:in kann sich zum Sprechen jederzeit selbst wieder anschalten.
   function vcMuteAll(){
