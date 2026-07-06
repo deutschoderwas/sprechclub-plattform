@@ -292,6 +292,16 @@ export default async function handler(req, res) {
   }
 
   // Stripe-Kundennummer am Profil merken — wird fürs Kündigungs-Portal gebraucht.
+  // Kauf per E-Mail parken, wenn (noch) kein Konto existiert -> wird bei Registrierung gutgeschrieben.
+  async function addPending(sb2, email, stunden, plan, makeStatus, isTrial, ref) {
+    if (!email || !stunden) return;
+    try {
+      const { data: ex } = await sb2.from('pending_purchases').select('id').eq('stripe_ref', ref).maybeSingle();
+      if (ex) return;
+      await sb2.from('pending_purchases').insert({ email, stunden, plan: plan || null, make_status: makeStatus || null, is_trial: !!isTrial, stripe_ref: ref });
+    } catch (e) { console.error('addPending', e); }
+  }
+
   async function saveCustomer(userId, customerId) {
     if (!userId || !customerId) return;
     try { await sb.from('profiles').update({ stripe_customer_id: customerId }).eq('id', userId); }
@@ -301,7 +311,7 @@ export default async function handler(req, res) {
   try {
     if (event.type === 'checkout.session.completed') {
       const s = event.data.object;
-      const userId = s.client_reference_id || s.metadata?.userId;
+      let userId = s.client_reference_id || s.metadata?.userId;
 
       // Amanda Plus (über Stripe-Payment-Link, kein Club-Konto): Zugangs-Mail senden & fertig.
       const isAmanda = s.metadata?.product === 'amanda'
@@ -309,6 +319,22 @@ export default async function handler(req, res) {
       if (isAmanda) {
         await sendAmandaAccess(s);
         return res.status(200).json({ received: true, amanda: true });
+      }
+
+      // E-Mail-basierte Zuordnung: die Zahlung gehoert zu der E-Mail aus dem Checkout (nicht zwingend die eingeloggte Person).
+      const buyerEmail = (s.customer_details?.email || s.customer_email || '').trim().toLowerCase();
+      if (buyerEmail) {
+        const { data: bp } = await sb.from('profiles').select('id').ilike('email', buyerEmail).maybeSingle();
+        if (bp) {
+          userId = bp.id;
+        } else {
+          if (s.mode === 'payment') {
+            await addPending(sb, buyerEmail, parseInt(s.metadata?.credits || '0', 10), s.metadata?.plan, 'aktiv', false, 'cs_' + s.id);
+          } else if (s.mode === 'subscription' && s.metadata?.trial === '1') {
+            await addPending(sb, buyerEmail, 1, s.metadata?.plan, 'probeschuler', true, 'trial_' + s.id);
+          }
+          return res.status(200).json({ received: true, pending: buyerEmail });
+        }
       }
 
       if (s.mode === 'payment') {
@@ -342,8 +368,15 @@ export default async function handler(req, res) {
       if ((inv.amount_paid || 0) > 0 && inv.subscription) {
         const sub = await stripe.subscriptions.retrieve(inv.subscription);
         const stunden = parseInt(sub.metadata?.stunden || '0', 10);
-        const userId = sub.metadata?.userId;
+        let userId = sub.metadata?.userId;
         const plan = sub.metadata?.plan || 'abo';
+        let invEmail = (inv.customer_email || '').trim().toLowerCase();
+        if (!invEmail && inv.customer) { try { const c = await stripe.customers.retrieve(inv.customer); invEmail = (c.email || '').trim().toLowerCase(); } catch (e) {} }
+        if (invEmail) {
+          const { data: ip } = await sb.from('profiles').select('id').ilike('email', invEmail).maybeSingle();
+          if (ip) { userId = ip.id; }
+          else { await addPending(sb, invEmail, stunden, plan, 'aktiv', false, 'inv_' + inv.id); return res.status(200).json({ received: true, pending: invEmail }); }
+        }
         await saveCustomer(userId, inv.customer);   // Kundennummer merken
         await grant(userId, stunden, 'abo:' + plan, 'inv_' + inv.id, 31);
         await sendPaymentMail(sub, inv);
