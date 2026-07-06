@@ -25,11 +25,11 @@ export default async function handler(req, res) {
     const id = passId || packageId;
     const plan = PLANS[id];
     if (!plan) return res.status(400).json({ error: 'unknown_plan' });
-    if (!userId) return res.status(400).json({ error: 'no_user' });
+    // userId optional: "erst zahlen, dann anmelden" wird per E-Mail zugeordnet (webhook + pending_purchases).
 
     const common = {
       customer_email: email || undefined,
-      client_reference_id: userId,
+      client_reference_id: userId || undefined,
       success_url: `${site}/konto.html?bezahlt=1`,
       cancel_url: `${site}/#preise`,
       allow_promotion_codes: true,
@@ -44,11 +44,13 @@ export default async function handler(req, res) {
         if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
           const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
           // 1) Schon mal eine Probestunde gehabt? (schnelle Prüfung über credit_log)
-          const { data: prev } = await sb.from('credit_log').select('id').eq('user_id', userId).like('reason', 'trial:%').limit(1);
-          if (prev && prev.length) trialDays = 0;
+          if (userId) {
+            const { data: prev } = await sb.from('credit_log').select('id').eq('user_id', userId).like('reason', 'trial:%').limit(1);
+            if (prev && prev.length) trialDays = 0;
+          }
           // 2) Schon mal IRGENDEIN Abo bei Stripe gehabt – auch ein gekündigtes? -> keine neue Probestunde
           if (trialDays > 0) {
-            const { data: prof } = await sb.from('profiles').select('stripe_customer_id').eq('id', userId).maybeSingle();
+            const { data: prof } = userId ? await sb.from('profiles').select('stripe_customer_id').eq('id', userId).maybeSingle() : { data: null };
             const custIds = [];
             if (prof && prof.stripe_customer_id) custIds.push(prof.stripe_customer_id);
             if (!custIds.length && email) {
