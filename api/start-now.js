@@ -30,7 +30,7 @@ export default async function handler(req, res) {
   if (!sub) return res.status(400).json({ error: 'keine_testphase' });
 
   // Testphase sofort beenden -> sofortige Abbuchung -> invoice.paid bucht Stunden
-  await stripe.subscriptions.update(sub.id, { trial_end: 'now', proration_behavior: 'none' });
+  await stripe.subscriptions.update(sub.id, { trial_end: 'now' });
 
   return res.status(200).json({ ok: true });
 }
