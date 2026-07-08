@@ -32,7 +32,6 @@ async function ensureRoom(name) {
         enable_chat: false,
         start_video_off: false,
         start_audio_off: false,
-        max_participants: 25,
         lang: 'de',
       },
     }),
