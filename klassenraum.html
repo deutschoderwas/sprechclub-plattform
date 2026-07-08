@@ -341,7 +341,7 @@
   </aside>
 </main>
 
-<div class="info">deutschoderwas club · Live-Klassenraum · Video über deinen eigenen, abgesicherten Server (meet.deutschoderwas-club.de, kein Google; Notfall-Schalter auf öffentlichen Jitsi, falls der Server ausfällt).</div>
+<div class="info">deutschoderwas club · Live-Klassenraum · HD-Video über eine abgesicherte, private Verbindung (kein Google; automatischer Notfall-Server, falls nötig).</div>
 
 <script>
   let rolle='lehrer';
@@ -646,7 +646,72 @@
     document.head.appendChild(s);
   }
 
+  // ================= DAILY.CO (primärer Video-Anbieter) =================
+  // Zuverlässiger als der eigene Jitsi-Server (kein Schwarzbild), TURN inklusive.
+  // Fällt bei Problemen automatisch auf Jitsi zurück.
+  let dframe=null;                 // das Daily-Fenster
+  window._provider=null;           // 'daily' | 'jitsi'
+  function ladeDailyApi(ok, fehler){
+    if(window.DailyIframe){ ok(); return; }
+    const s=document.createElement('script');
+    s.src='https://unpkg.com/@daily-co/daily-js';
+    s.onload=()=>ok();
+    s.onerror=fehler;
+    document.head.appendChild(s);
+  }
+  // Beitritts-Token + Raum-URL aus der Plattform holen (nur eingeloggte Club-Mitglieder).
+  async function holeDailyRaum(){
+    if(!sb || !STUNDE) return null;
+    const { data:{ session } } = await sb.auth.getSession();
+    if(!session) return null;
+    try{
+      const res = await fetch('/api/daily-room', {
+        method:'POST',
+        headers:{ 'Authorization':'Bearer '+session.access_token, 'Content-Type':'application/json' },
+        body: JSON.stringify({ classId: STUNDE })
+      });
+      if(!res.ok) return null;
+      const j = await res.json();
+      if(!j || !j.ok || !j.url || !j.token) return null;
+      return j;                    // { url, token, owner, name }
+    }catch(e){ console.warn('Daily-Raum fehlgeschlagen', e); return null; }
+  }
+  function starteDaily(url, token, owner){
+    window._provider='daily';
+    const parent=document.getElementById('jitsi'); if(parent) parent.innerHTML='';
+    dframe = window.DailyIframe.createFrame(parent, {
+      showLeaveButton:true, showFullscreenButton:true, showParticipantsBar:true,
+      activeSpeakerMode:false,
+      iframeStyle:{ width:'100%', height:'100%', border:'0', borderRadius:'0' }
+    });
+    // Video-Knöpfe (unsere eigenen) synchron halten
+    dframe.on('participant-updated', (ev)=>{ if(ev && ev.participant && ev.participant.local) dailySyncButtons(ev.participant); });
+    dframe.on('joined-meeting', (ev)=>{ window._inCall=true; if(ev&&ev.participants&&ev.participants.local) dailySyncButtons(ev.participants.local); setTimeout(checkMic,2500); });
+    dframe.on('left-meeting', ()=>{ window._inCall=false; dailyLeftMsg(); });
+    dframe.on('error', (e)=>{ console.warn('Daily-Fehler', e); });
+    dframe.join({ url, token }).catch(e=>{ console.warn('Daily join fehlgeschlagen → Jitsi', e); dailyFallbackJitsi(); });
+  }
+  function dailySyncButtons(p){
+    const mic=document.getElementById('vc-mic'); if(mic){ const on=!!p.audio; mic.textContent=on?'🎤 Mikro an':'🔇 Mikro aus'; mic.classList.toggle('muted', !on); }
+    const cam=document.getElementById('vc-cam'); if(cam){ const on=!!p.video; cam.textContent=on?'📷 Kamera an':'🚫 Kamera aus'; cam.classList.toggle('muted', !on); }
+    const sh=document.getElementById('vc-share'); if(sh){ const on=!!p.screen; sh.textContent=on?'🟢 Teilen beenden':'🖥️ Teilen'; sh.classList.toggle('on', on); if(window._onShareChange) window._onShareChange(on); }
+  }
+  function dailyLeftMsg(){
+    const el=document.getElementById('jitsi'); if(el) el.innerHTML='<div style="color:#fff;padding:24px;text-align:center;font-family:Inter;font-size:.9rem">Du hast den Unterricht verlassen.<br><a href="konto.html" style="color:#2DD4BF;font-weight:700">Zurück zu Meine Stunden</a></div>';
+  }
+  // Falls Daily nicht startet: sauber auf den eigenen Jitsi-Server zurückfallen.
+  async function dailyFallbackJitsi(){
+    try{ if(dframe){ dframe.destroy(); dframe=null; } }catch(e){}
+    window._provider=null;
+    const parent=document.getElementById('jitsi'); if(parent) parent.innerHTML='';
+    const jwt = await holeToken();
+    ladeJitsiApi(EIGENER_SERVER, ()=>starteRaum(EIGENER_SERVER, jwt),
+      ()=> ladeJitsiApi(NOTFALL_SERVER, ()=>starteRaum(NOTFALL_SERVER, null),
+        ()=> meldung('Video konnte nicht geladen werden. Bitte Seite neu laden.')));
+  }
+
   function starteRaum(domain, jwt){
+    window._provider='jitsi';
     const opts = {
       roomName:RAUM, parentNode:document.getElementById('jitsi'),
       userInfo:{ displayName: rolle==='lehrer' ? 'Lehrkraft' : 'Schüler:in' },
@@ -694,8 +759,12 @@
     api.addEventListener('videoMuteStatusChanged', ()=>{ setTimeout(forceTile,400); });
   }
 
-  // ---- Eigene Video-Knöpfe (klar sichtbar, statt versteckter Jitsi-Leiste) ----
-  function vcAudio(){ if(api){ api.executeCommand('toggleAudio'); setTimeout(checkMic, 900); } }
+  // ---- Eigene Video-Knöpfe (klar sichtbar) – funktionieren für Daily UND Jitsi ----
+  function dLocal(){ try{ return dframe.participants().local; }catch(e){ return null; } }
+  function vcAudio(){
+    if(window._provider==='daily' && dframe){ const p=dLocal(); dframe.setLocalAudio(!(p&&p.audio)); setTimeout(checkMic,900); return; }
+    if(api){ api.executeCommand('toggleAudio'); setTimeout(checkMic, 900); }
+  }
 
   // ---- Mikrofon-Hilfe: Hinweis, wenn Browser/App das Mikro sperrt ----
   function showMicHint(html){
@@ -721,9 +790,18 @@
       else if(!hasMic){ showMicHint('🎤 <b>Kein Mikrofon gefunden.</b> Prüfe, ob dein Gerät ein Mikrofon hat bzw. es freigegeben ist – dann neu beitreten.'); }
     }catch(e){}
   }
-  function vcVideo(){ if(api) api.executeCommand('toggleVideo'); }
-  function vcShare(){ if(api) api.executeCommand('toggleShareScreen'); }
-  function vcTiles(){ if(api) api.executeCommand('toggleTileView'); }
+  function vcVideo(){
+    if(window._provider==='daily' && dframe){ const p=dLocal(); dframe.setLocalVideo(!(p&&p.video)); return; }
+    if(api) api.executeCommand('toggleVideo');
+  }
+  function vcShare(){
+    if(window._provider==='daily' && dframe){ const p=dLocal(); if(p&&p.screen){ dframe.stopScreenShare(); } else { try{ dframe.startScreenShare(); }catch(e){} } return; }
+    if(api) api.executeCommand('toggleShareScreen');
+  }
+  function vcTiles(){
+    if(window._provider==='daily'){ return; }   // Daily ordnet die Kacheln selbst
+    if(api) api.executeCommand('toggleTileView');
+  }
   // Live-Tafel groß: breite Tafel neben der Präsentation (nur Desktop). Merkt sich die Wahl.
   function setTafelBig(on){
     document.body.classList.toggle('tafelbig', !!on);
@@ -738,9 +816,12 @@
   // Nur Lehrkraft/Moderator: alle Schüler stummschalten (z. B. bei lauten Hintergrundgeräuschen).
   // Jede/r Schüler:in kann sich zum Sprechen jederzeit selbst wieder anschalten.
   function vcMuteAll(){
-    if(!api) return;
-    try{ api.executeCommand('muteEveryone', 'audio'); }
-    catch(e){ try{ api.executeCommand('muteEveryone'); }catch(_){} }
+    if(window._provider==='daily' && dframe){
+      try{ const ps=dframe.participants(); const upd={}; Object.keys(ps).forEach(id=>{ if(id!=='local') upd[id]={ setAudio:false }; }); dframe.updateParticipants(upd); }catch(e){ console.warn('muteAll', e); }
+    } else if(api){
+      try{ api.executeCommand('muteEveryone', 'audio'); }
+      catch(e){ try{ api.executeCommand('muteEveryone'); }catch(_){} }
+    } else { return; }
     const b=document.getElementById('vc-muteall');
     if(b){ const t=b.textContent; b.textContent='✅ stummgeschaltet'; setTimeout(()=>{ b.textContent=t; }, 1600); }
   }
@@ -843,6 +924,7 @@
   }
   function doLeave(){
     window._inCall=false;
+    if(window._provider==='daily' && dframe){ try{ dframe.leave(); }catch(e){} setTimeout(()=>{ try{ dframe.destroy(); dframe=null; }catch(e){} }, 400); }
     if(api){ try{ api.executeCommand('hangup'); }catch(e){} setTimeout(()=>{ try{ api.dispose(); }catch(e){} }, 400); }
     const o=document.getElementById('fb-overlay'); if(o) o.classList.remove('open');
     document.getElementById('jitsi').innerHTML='<div style="color:#fff;padding:24px;text-align:center;font-family:Inter;font-size:.9rem">Du hast den Unterricht verlassen.<br><a href="konto.html" style="color:#2DD4BF;font-weight:700">Zurück zu Meine Stunden</a></div>';
@@ -871,9 +953,23 @@
   async function videoStarten(){
     document.getElementById('video-start').style.display='none';
     if(isInAppBrowser()) checkMic();   // In-App-Browser sofort warnen (Mikro dort meist gesperrt)
+
+    // 1) BESTE QUALITÄT: Daily.co (zuverlässig, kein Schwarzbild, TURN inklusive)
+    const daily = await holeDailyRaum();
+    if(daily){
+      ladeDailyApi(
+        ()=> starteDaily(daily.url, daily.token, daily.owner),
+        ()=> jitsiStarten()   // Daily-Skript blockiert? → Jitsi
+      );
+      return;
+    }
+
+    // 2) BACKUP: eigener Jitsi-Server (falls Daily noch nicht eingerichtet / nicht erreichbar)
+    jitsiStarten();
+  }
+  async function jitsiStarten(){
     const jwt = await holeToken();
     if(jwt){
-      // Eigener, abgesicherter Server. Notfall-Schalter auf öffentlichen Jitsi, falls der Server ausfällt.
       ladeJitsiApi(EIGENER_SERVER, ()=>starteRaum(EIGENER_SERVER, jwt),
         ()=> ladeJitsiApi(NOTFALL_SERVER, ()=>starteRaum(NOTFALL_SERVER, null),
           ()=> meldung('Video konnte nicht geladen werden. Bitte Seite neu laden.')));
