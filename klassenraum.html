@@ -181,8 +181,9 @@
   @media (min-width:1025px){
     /* Video als kleine Webcam-Box wie bei Zoom/Meet: klein & mittig, heller Rand statt
        breiter schwarzer Streifen. Bedienung kompakt in EINER Zeile → viel Platz für die Notizen. */
-    .video-buehne{ height:auto !important; background:var(--creme-hell); padding:6px 0; display:flex; align-items:center; justify-content:center; }
-    #jitsi{ height:var(--vidH,120px); aspect-ratio:16/9; width:auto; max-width:96%; border-radius:12px; overflow:hidden; background:var(--anthrazit); }
+    .video-kopf{ padding:6px 13px; }
+    .video-buehne{ height:auto !important; background:var(--creme-hell); padding:4px 0; display:flex; align-items:center; justify-content:center; }
+    #jitsi{ height:var(--vidH,104px); aspect-ratio:16/9; width:auto; max-width:96%; border-radius:12px; overflow:hidden; background:var(--anthrazit); }
     .video-start{ border-radius:12px; }
     /* kompakte Steuerleiste: alle Knöpfe klein, „Verlassen" NICHT mehr als eigene große Zeile */
     .vid-controls{ padding:5px 8px; gap:5px; }
@@ -211,7 +212,7 @@
     .spalte{ display:contents; }
     /* Video bleibt OBEN angeheftet: Teilnehmer + Selbstbild immer sichtbar, Präsi scrollt darunter */
     .video-card{ order:1; width:100%; align-self:stretch; position:sticky; top:0; z-index:20; box-shadow:0 6px 16px rgba(0,0,0,.14); }
-    .video-buehne{ height:15vh; min-height:96px; max-height:150px; aspect-ratio:auto; }   /* kleinere Kamera-Box */
+    .video-buehne{ height:11vh; min-height:76px; max-height:110px; aspect-ratio:auto; }   /* kleine Kamera-Box – Fokus auf Notizen */
     .mnotes-btn{ display:flex; align-items:center; gap:9px; position:fixed; right:14px; bottom:14px; z-index:70; background:var(--rot); color:#fff; border:none; border-radius:999px; padding:13px 18px; font-family:'Inter'; font-weight:800; font-size:.92rem; box-shadow:0 8px 22px rgba(221,0,0,.32); cursor:pointer; }
     .mnotes-btn .dot{ width:10px; height:10px; border-radius:50%; background:#fff; opacity:0; }
     .mnotes-btn.hat-neu{ animation:mnpulse 1.1s infinite; }
@@ -233,7 +234,8 @@
     .lekt-stage{ position:relative; flex:none; min-height:0; }
     #lektion{ position:static; width:100%; height:1500px; display:block; }   /* Höhe per JS = Inhaltshöhe */
     .tafel{ order:3; }
-    .tafel-body{ min-height:55vh; }
+    .tafel-body{ min-height:64vh; }
+    #notiz{ min-height:60vh; font-size:1.15rem; }   /* Live-Notizen groß auf Handy/iPad */
     .m-hide{ display:none !important; }
   }
 </style>
@@ -559,9 +561,12 @@
     if(!vg||!sp||!bu) return;
     // Kamera bleibt normal groß (wie bei Meet) – die Live-Mitschrift bekommt IMMER viel Platz.
     // Obergrenze hart begrenzt; zu groß gespeicherte Werte werden automatisch korrigiert.
-    const vmax = ()=> Math.max(120, Math.min(190, Math.round(window.innerHeight*0.28)));
+    // Video bleibt IMMER klein (kleine Webcam-Box wie bei Zoom). Auch früher groß gespeicherte
+    // Werte werden hart nach unten begrenzt – der Fokus liegt auf Präsentation + Live-Notizen.
+    const vmax = ()=> Math.max(90, Math.min(128, Math.round(window.innerHeight*0.15)));
     let sv=parseInt(localStorage.getItem('club_vidH')||'0',10);
-    sv = sv ? Math.max(90, Math.min(vmax(), sv)) : Math.min(120, vmax());   // kleine Webcam-Box als Standard
+    sv = sv ? Math.max(80, Math.min(vmax(), sv)) : Math.min(104, vmax());
+    localStorage.setItem('club_vidH', String(sv));
     sp.style.setProperty('--vidH', sv+'px');
     localStorage.setItem('club_vidH', String(sv));
     let vd=false, sy=0, sh=0;
