@@ -179,11 +179,20 @@
   .mnotes-body mark{ padding:0 3px; border-radius:4px; }
   /* „Tafel groß": Live-Tafel als breite Seiten-Spalte neben der Präsentation (nur Desktop) */
   @media (min-width:1025px){
-    /* Video als kompakte Webcam-Box wie bei Zoom/Meet: klein & mittig, heller Rand statt
-       breiter schwarzer Streifen. So bleibt viel Platz für Präsentation + Live-Notizen. */
-    .video-buehne{ height:auto !important; background:var(--creme-hell); padding:8px 0; display:flex; align-items:center; justify-content:center; }
-    #jitsi{ height:var(--vidH,150px); aspect-ratio:16/9; width:auto; max-width:96%; border-radius:12px; overflow:hidden; background:var(--anthrazit); }
+    /* Video als kleine Webcam-Box wie bei Zoom/Meet: klein & mittig, heller Rand statt
+       breiter schwarzer Streifen. Bedienung kompakt in EINER Zeile → viel Platz für die Notizen. */
+    .video-buehne{ height:auto !important; background:var(--creme-hell); padding:6px 0; display:flex; align-items:center; justify-content:center; }
+    #jitsi{ height:var(--vidH,120px); aspect-ratio:16/9; width:auto; max-width:96%; border-radius:12px; overflow:hidden; background:var(--anthrazit); }
     .video-start{ border-radius:12px; }
+    /* kompakte Steuerleiste: alle Knöpfe klein, „Verlassen" NICHT mehr als eigene große Zeile */
+    .vid-controls{ padding:5px 8px; gap:5px; }
+    .vid-controls button{ min-width:0; padding:6px 7px; font-size:.74rem; }
+    .vid-controls button.leave{ flex-basis:auto; order:9; background:var(--rot); }
+    .react-bar{ padding:4px 8px; gap:5px; }
+    .react-bar .rx{ padding:4px 7px; font-size:.95rem; }
+    .tools-row{ padding:4px 8px; }
+    /* Notizen dürfen groß sein, aber nie über den Bildschirm hinaus (füllen den Rest per flex) */
+    #notiz{ min-height:150px; }
     body.tafelbig main{ --rechts:44vw; }
     body.tafelbig #notiz{ min-height:58vh; font-size:1.12rem; line-height:1.8; }
     #vc-tafelbig.on{ background:var(--tuerkis); border-color:var(--tuerkis); color:var(--auf-tuerkis); }
@@ -552,7 +561,7 @@
     // Obergrenze hart begrenzt; zu groß gespeicherte Werte werden automatisch korrigiert.
     const vmax = ()=> Math.max(120, Math.min(190, Math.round(window.innerHeight*0.28)));
     let sv=parseInt(localStorage.getItem('club_vidH')||'0',10);
-    sv = sv ? Math.max(105, Math.min(vmax(), sv)) : Math.min(150, vmax());
+    sv = sv ? Math.max(90, Math.min(vmax(), sv)) : Math.min(120, vmax());   // kleine Webcam-Box als Standard
     sp.style.setProperty('--vidH', sv+'px');
     localStorage.setItem('club_vidH', String(sv));
     let vd=false, sy=0, sh=0;
