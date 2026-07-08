@@ -30,8 +30,6 @@ async function ensureRoom(name) {
         enable_prejoin_ui: false, // ohne Klick direkt rein (nur Browser-Erlaubnis)
         enable_screenshare: true,
         enable_chat: false,
-        enable_people_ui: true,
-        enable_network_ui: true,
         start_video_off: false,
         start_audio_off: false,
         max_participants: 25,
@@ -40,13 +38,13 @@ async function ensureRoom(name) {
     }),
   });
   if (r.ok) return r.json();
+  const createErr = await r.text().catch(() => '');
 
   // Falls parallel schon angelegt: erneut holen
-  r = await fetch(DAILY + '/rooms/' + name, { headers: H });
-  if (r.ok) return r.json();
+  const r2 = await fetch(DAILY + '/rooms/' + name, { headers: H });
+  if (r2.ok) return r2.json();
 
-  const detail = await r.text().catch(() => '');
-  throw new Error('room_failed: ' + detail.slice(0, 200));
+  throw new Error('create_failed(' + r.status + '): ' + createErr.slice(0, 240));
 }
 
 async function meetingToken({ room, isOwner, userName }) {
