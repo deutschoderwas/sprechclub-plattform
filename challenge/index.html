@@ -262,5 +262,47 @@ document.addEventListener('DOMContentLoaded', async function() {
   setTimeout(function () { clearInterval(t); }, 20000);
 })();
 </script>
+
+<script>
+/* deutschoderwas – Mobil-Fix für die Challenge-Landingpage (Design-Export ist Desktop-only) */
+(function () {
+  var CSS =
+    '@media (max-width:720px){' +
+    '  html,body,#dc-root{overflow-x:hidden !important;max-width:100% !important;}' +
+    '  #dc-root [style*="grid-template-columns"]{grid-template-columns:1fr !important;}' +
+    '  #dc-root [style*="display:flex"]{flex-wrap:wrap !important;}' +
+    '  #dc-root img{max-width:100% !important;height:auto !important;}' +
+    '  #dc-root h1{font-size:2.15rem !important;line-height:1.12 !important;word-break:break-word;}' +
+    '  #dc-root h2{font-size:1.55rem !important;line-height:1.15 !important;}' +
+    '  #dc-root h3{font-size:1.25rem !important;}' +
+    '  #dc-root [style*="font-size:72"],#dc-root [style*="font-size:64"],#dc-root [style*="font-size:60"],#dc-root [style*="font-size:56"],#dc-root [style*="font-size:52"],#dc-root [style*="font-size:48"]{font-size:2.15rem !important;line-height:1.14 !important;}' +
+    '  #dc-root [style*="font-size:44"],#dc-root [style*="font-size:40"],#dc-root [style*="font-size:36"]{font-size:1.55rem !important;line-height:1.2 !important;}' +
+    '  #dc-root [style*="max-width:1160"],#dc-root [style*="max-width:1120"],#dc-root [style*="max-width:1080"],#dc-root [style*="max-width:1000"],#dc-root [style*="max-width:960"]{max-width:100% !important;}' +
+    '  #dc-root section,#dc-root header{padding-left:18px !important;padding-right:18px !important;}' +
+    '  #dc-root [style*="padding:88"],#dc-root [style*="padding:96"],#dc-root [style*="padding:80"],#dc-root [style*="padding:72"],#dc-root [style*="padding:64"]{padding:34px 18px !important;}' +
+    '  #dc-root [style*="margin:88"],#dc-root [style*="margin:96"],#dc-root [style*="margin:80"]{margin-top:40px !important;margin-bottom:0 !important;}' +
+    '  #dc-root [style*="position:absolute"][style*="white-space"]{white-space:normal !important;}' +
+    '  #dc-root [style*="gap:48"],#dc-root [style*="gap:40"],#dc-root [style*="gap:32"]{gap:16px !important;}' +
+    /* Formular: volle Breite, angenehme Abstände */
+    '  #anmelden > div{max-width:100% !important;padding:26px 18px !important;}' +
+    '}';
+
+  function inject() {
+    if (document.getElementById('dow-mobile-fix')) return true;
+    if (!document.getElementById('dc-root')) return false;
+    var st = document.createElement('style');
+    st.id = 'dow-mobile-fix';
+    st.textContent = CSS;
+    document.head.appendChild(st);
+    // Sicherheits-Meta: device-width erzwingen, falls Export etwas anderes gesetzt hat
+    var vp = document.querySelector('meta[name=viewport]');
+    if (!vp) { vp = document.createElement('meta'); vp.name = 'viewport'; document.head.appendChild(vp); }
+    vp.setAttribute('content', 'width=device-width, initial-scale=1, viewport-fit=cover');
+    return true;
+  }
+  var t = setInterval(function () { try { if (inject()) clearInterval(t); } catch (e) {} }, 150);
+  setTimeout(function () { clearInterval(t); }, 20000);
+})();
+</script>
 </body>
 </html>
