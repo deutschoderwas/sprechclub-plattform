@@ -168,6 +168,15 @@
   .hidden{display:none !important;}
 
   .m-tabs{display:none;}   /* Umschalt-Reiter nur auf dem Handy */
+  /* Handy: großer Live-Notizen-Knopf + Vollbild-Overlay (Notizen immer erreichbar & groß) */
+  .mnotes-btn{ display:none; }
+  .mnotes-overlay{ position:fixed; inset:0; z-index:90; background:var(--creme); display:none; flex-direction:column; }
+  .mnotes-overlay.open{ display:flex; }
+  .mnotes-overlay .mnh{ display:flex; align-items:center; gap:10px; padding:14px 16px; border-bottom:1px solid var(--rahmen); background:var(--creme-hell); flex:0 0 auto; }
+  .mnotes-overlay .mnh h3{ font-family:'Space Grotesk',sans-serif; font-size:1.1rem; }
+  .mnotes-overlay .mnh .close{ margin-left:auto; border:none; background:var(--anthrazit); color:#fff; border-radius:999px; padding:9px 16px; font-weight:800; font-size:.85rem; cursor:pointer; }
+  .mnotes-body{ flex:1; overflow:auto; padding:16px 18px 40px; font-size:1.3rem; line-height:1.9; color:var(--anthrazit); -webkit-overflow-scrolling:touch; }
+  .mnotes-body mark{ padding:0 3px; border-radius:4px; }
   /* „Tafel groß": Live-Tafel als breite Seiten-Spalte neben der Präsentation (nur Desktop) */
   @media (min-width:1025px){
     body.tafelbig main{ --rechts:44vw; }
@@ -189,7 +198,12 @@
     .spalte{ display:contents; }
     /* Video bleibt OBEN angeheftet: Teilnehmer + Selbstbild immer sichtbar, Präsi scrollt darunter */
     .video-card{ order:1; width:100%; align-self:stretch; position:sticky; top:0; z-index:20; box-shadow:0 6px 16px rgba(0,0,0,.14); }
-    .video-buehne{ height:19vh; min-height:110px; max-height:180px; aspect-ratio:auto; }   /* kompakter: kleinere Kamera-Box */
+    .video-buehne{ height:15vh; min-height:96px; max-height:150px; aspect-ratio:auto; }   /* kleinere Kamera-Box */
+    .mnotes-btn{ display:flex; align-items:center; gap:9px; position:fixed; right:14px; bottom:14px; z-index:70; background:var(--rot); color:#fff; border:none; border-radius:999px; padding:13px 18px; font-family:'Inter'; font-weight:800; font-size:.92rem; box-shadow:0 8px 22px rgba(221,0,0,.32); cursor:pointer; }
+    .mnotes-btn .dot{ width:10px; height:10px; border-radius:50%; background:#fff; opacity:0; }
+    .mnotes-btn.hat-neu{ animation:mnpulse 1.1s infinite; }
+    .mnotes-btn.hat-neu .dot{ opacity:1; }
+    @keyframes mnpulse{ 50%{ box-shadow:0 8px 28px rgba(221,0,0,.6); } }
     .vid-controls{ padding:5px 7px; gap:5px; flex-wrap:nowrap; }
     .vid-controls button{ min-width:0; flex:1 1 0; padding:7px 2px; font-size:.68rem; }
     .vid-controls button.leave{ flex-basis:0; }
@@ -877,7 +891,13 @@
   function renderTafel(notes){
     const en=document.getElementById('notiz');
     if(en && document.activeElement!==en) en.innerHTML=mergeNotes(notes);   // nicht überschreiben, während getippt wird
+    if(typeof syncMNotesIfOpen==='function') syncMNotesIfOpen();            // Handy-Vollbild-Notizen live mitziehen
   }
+  // ===== Handy: Live-Notizen als großes, immer erreichbares Vollbild =====
+  function syncMNotes(){ const src=document.getElementById('notiz'), dst=document.getElementById('mnotes-body'); if(!src||!dst) return; const html=(src.innerHTML||'').trim(); dst.innerHTML = html || '<span style="color:#a8adb5">Die Lehrkraft schreibt gleich mit … ✍️</span>'; }
+  function syncMNotesIfOpen(){ const ov=document.getElementById('mnotes-overlay'); if(ov && ov.classList.contains('open')) syncMNotes(); }
+  function openMNotes(){ syncMNotes(); const ov=document.getElementById('mnotes-overlay'); if(ov) ov.classList.add('open'); const b=document.getElementById('mnotes-btn'); if(b) b.classList.remove('hat-neu'); }
+  function closeMNotes(){ const ov=document.getElementById('mnotes-overlay'); if(ov) ov.classList.remove('open'); }
   async function initTafelSync(){
     if(!sb || !STUNDE) return;                              // nur im echten Stunden-Raum
     // echte Rolle aus dem Profil
@@ -1070,9 +1090,12 @@
   }
 
   // Handy-Tabs: zwischen Lektion und Tafel umschalten (nur auf dem Handy sichtbar)
-  function flashTafelTab(){   // roter Punkt am Tafel-Reiter, wenn die Lehrerin schreibt (nur wenn man nicht eh auf der Tafel ist)
+  function flashTafelTab(){   // roter Punkt am Tafel-Reiter + am Handy-Notizen-Knopf, wenn die Lehrerin schreibt
     const t=document.getElementById('mt-tafel');
     if(t && !t.classList.contains('active')) t.classList.add('hat-neu');
+    const ov=document.getElementById('mnotes-overlay'); const mb=document.getElementById('mnotes-btn');
+    if(ov && ov.classList.contains('open')){ syncMNotes(); }
+    else if(mb){ mb.classList.add('hat-neu'); }
   }
   function mTab(which){
     document.getElementById('mt-lekt').classList.toggle('active', which==='lekt');
@@ -1106,6 +1129,13 @@
     document.body.innerHTML='<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;font-family:Inter,system-ui,sans-serif;background:#FFF8E0;padding:24px"><div style="background:#fff;border-radius:22px;max-width:440px;padding:36px 28px;box-shadow:0 16px 40px rgba(0,0,0,.10)"><div style="font-size:48px">⏰</div><h2 style="margin:12px 0 8px;color:#1A1A1A;font-family:\'Space Grotesk\',Inter,sans-serif">Raum noch geschlossen</h2><p style="color:#6B7280;line-height:1.6;margin:0 0 18px">'+msg+'</p><a href="konto.html" style="display:inline-block;background:#2DD4BF;color:#06403A;font-weight:800;text-decoration:none;padding:13px 26px;border-radius:50px">← Zu „Meine Stunden"</a></div></div>';
   }
 </script>
+
+<!-- Handy: großer Live-Notizen-Knopf + Vollbild-Overlay -->
+<button class="mnotes-btn" id="mnotes-btn" onclick="openMNotes()"><span class="dot"></span>📝 Live-Notizen</button>
+<div class="mnotes-overlay" id="mnotes-overlay">
+  <div class="mnh"><span class="live-dot"></span><h3>📝 Live-Notizen</h3><button class="close" onclick="closeMNotes()">✕ Schließen</button></div>
+  <div class="mnotes-body" id="mnotes-body"></div>
+</div>
 
 <!-- Sprechhilfen (Redemittel) – für alle einblendbar -->
 <button id="sh-btn" class="sh-btn" onclick="toggleSprechhilfen()" title="Nützliche Sätze zum Sprechen">💬 Sprechhilfen</button>
