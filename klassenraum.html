@@ -179,8 +179,12 @@
   .mnotes-body mark{ padding:0 3px; border-radius:4px; }
   /* „Tafel groß": Live-Tafel als breite Seiten-Spalte neben der Präsentation (nur Desktop) */
   @media (min-width:1025px){
+    /* Video als kompakte Webcam-Box wie bei Zoom/Meet: klein & mittig, heller Rand statt
+       breiter schwarzer Streifen. So bleibt viel Platz für Präsentation + Live-Notizen. */
+    .video-buehne{ height:auto !important; background:var(--creme-hell); padding:8px 0; display:flex; align-items:center; justify-content:center; }
+    #jitsi{ height:var(--vidH,150px); aspect-ratio:16/9; width:auto; max-width:96%; border-radius:12px; overflow:hidden; background:var(--anthrazit); }
+    .video-start{ border-radius:12px; }
     body.tafelbig main{ --rechts:44vw; }
-    body.tafelbig .video-buehne{ height:118px !important; }
     body.tafelbig #notiz{ min-height:58vh; font-size:1.12rem; line-height:1.8; }
     #vc-tafelbig.on{ background:var(--tuerkis); border-color:var(--tuerkis); color:var(--auf-tuerkis); }
   }
@@ -516,8 +520,15 @@
   // ---- Trenner ziehen: Notizen größer / Präsentation kleiner ----
   const main=document.getElementById('main'), gutter=document.getElementById('gutter');
   let gDrag=false;
-  const gespeichert = parseInt(localStorage.getItem('club_rechts')||'0',10);
-  if(gespeichert) main.style.setProperty('--rechts', gespeichert+'px');
+  // Gespeicherte Spaltenbreite begrenzen: Präsentation UND Notizen sollen beide groß bleiben
+  // (früher konnte die rechte Spalte extrem breit gezogen werden → Video wurde ein breiter Streifen).
+  let gespeichert = parseInt(localStorage.getItem('club_rechts')||'0',10);
+  if(gespeichert){
+    const cap = Math.round(window.innerWidth*0.52);   // rechte Spalte höchstens ~halbe Breite
+    gespeichert = Math.max(360, Math.min(cap, gespeichert));
+    main.style.setProperty('--rechts', gespeichert+'px');
+    localStorage.setItem('club_rechts', String(gespeichert));
+  }
   gutter.addEventListener('pointerdown', e=>{ gDrag=true; gutter.classList.add('drag'); gutter.setPointerCapture(e.pointerId); });
   gutter.addEventListener('pointermove', e=>{
     if(!gDrag) return;
