@@ -195,8 +195,9 @@
     /* Video als kleine Webcam-Box wie bei Zoom/Meet: klein & mittig, heller Rand statt
        breiter schwarzer Streifen. Bedienung kompakt in EINER Zeile → viel Platz für die Notizen. */
     .video-kopf{ padding:6px 13px; }
-    /* Video-Raster: alle Teilnehmer gleichzeitig, füllt die Breite; Höhe moderat, Notizen bleiben groß */
-    .video-buehne{ height:26vh !important; min-height:180px; max-height:34vh; background:var(--anthrazit); padding:0; display:block; }
+    /* Video-Raster: alle Teilnehmer gleichzeitig, füllt die Breite. Höhe per Schieber verstellbar
+       (--vidH) → Standard kompakt, Notizen groß; bei Bedarf größer ziehen um alle groß zu sehen. */
+    .video-buehne{ height:var(--vidH,180px) !important; min-height:130px; background:var(--anthrazit); padding:0; display:block; }
     #jitsi{ height:100%; width:100%; }
     .video-start{ border-radius:0; }
     /* kompakte Steuerleiste: alle Knöpfe klein, „Verlassen" NICHT mehr als eigene große Zeile */
@@ -575,18 +576,17 @@
     if(!vg||!sp||!bu) return;
     // Kamera bleibt normal groß (wie bei Meet) – die Live-Mitschrift bekommt IMMER viel Platz.
     // Obergrenze hart begrenzt; zu groß gespeicherte Werte werden automatisch korrigiert.
-    // Video bleibt IMMER klein (kleine Webcam-Box wie bei Zoom). Auch früher groß gespeicherte
-    // Werte werden hart nach unten begrenzt – der Fokus liegt auf Präsentation + Live-Notizen.
-    const vmax = ()=> Math.max(90, Math.min(128, Math.round(window.innerHeight*0.15)));
+    // Video-Raster: Standard kompakt (Notizen groß), aber per Schieber frei verstellbar –
+    // größer ziehen, wenn man alle Teilnehmer groß sehen will (bis ~halbe Fensterhöhe).
+    const vmin=130, vmax = ()=> Math.max(vmin, Math.min(Math.round(window.innerHeight*0.5), 480));
     let sv=parseInt(localStorage.getItem('club_vidH')||'0',10);
-    sv = sv ? Math.max(80, Math.min(vmax(), sv)) : Math.min(104, vmax());
-    localStorage.setItem('club_vidH', String(sv));
+    sv = sv ? Math.max(vmin, Math.min(vmax(), sv)) : Math.min(180, vmax());   // kompakter Standard
     sp.style.setProperty('--vidH', sv+'px');
     localStorage.setItem('club_vidH', String(sv));
     let vd=false, sy=0, sh=0;
     vg.addEventListener('pointerdown', e=>{ vd=true; sy=e.clientY; sh=parseInt(getComputedStyle(bu).height,10)||200; vg.setPointerCapture(e.pointerId); e.preventDefault(); });
-    vg.addEventListener('pointermove', e=>{ if(!vd) return; let h=sh+(e.clientY-sy); h=Math.max(120, Math.min(vmax(), h)); sp.style.setProperty('--vidH', h+'px'); if(typeof fit==='function') fit(); });
-    vg.addEventListener('pointerup', ()=>{ if(!vd) return; vd=false; localStorage.setItem('club_vidH', String(parseInt(getComputedStyle(bu).height,10)||200)); });
+    vg.addEventListener('pointermove', e=>{ if(!vd) return; let h=sh+(e.clientY-sy); h=Math.max(vmin, Math.min(vmax(), h)); sp.style.setProperty('--vidH', h+'px'); if(typeof fit==='function') fit(); });
+    vg.addEventListener('pointerup', ()=>{ if(!vd) return; vd=false; localStorage.setItem('club_vidH', String(parseInt(getComputedStyle(bu).height,10)||180)); });
   })();
 
   setRolle('lehrer');
