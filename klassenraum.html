@@ -954,15 +954,36 @@
     ['Wenn mir ein Wort fehlt', ['Wie sagt man …?','Es ist ein Ding, das man zum … benutzt.','Das Gegenteil von …','Es ist so ähnlich wie …']],
     ['Zeit gewinnen', ['Moment, ich überlege …','Gute Frage …','Also, …','Wie soll ich sagen …']]
   ];
+  // Wichtige Wörter/Redemittel automatisch aus der AKTUELLEN Lektion ziehen (gleiche Domain → lesbar).
+  function lektionsWortschatz(){
+    try{
+      const doc=document.getElementById('lektion').contentWindow.document;
+      const seen=new Set(), items=[];
+      const push=(w,m)=>{ w=(w||'').replace(/\s+/g,' ').trim(); m=(m||'').replace(/\s+/g,' ').trim();
+        if(!w || w.length>60 || /^[✏_\s]+$/.test(w) || seen.has(w.toLowerCase())) return; seen.add(w.toLowerCase()); items.push({w,m}); };
+      // Wortschatz-Karten: Wort + einfache Bedeutung
+      doc.querySelectorAll('.use-name').forEach(n=>{ const box=n.closest('.use, .use-body')||n.parentElement; const m=box&&box.querySelector('.use-meaning'); push(n.textContent, m&&m.textContent); });
+      // Schlüsselwörter/Wendungen: idiom-de + Bedeutung
+      doc.querySelectorAll('.idiom-de').forEach(n=>{ const box=n.closest('.idiom'); const m=box&&box.querySelector('.idiom-meaning'); push(n.textContent, m&&m.textContent); });
+      return items.slice(0,40);
+    }catch(e){ return []; }
+  }
   function renderSprechhilfen(){
-    const body=document.getElementById('sh-body'); if(!body || body.dataset.done) return;
+    const body=document.getElementById('sh-body'); if(!body) return;
     const esc=(s)=>String(s).replace(/[<>&]/g,'');
-    body.innerHTML = SPRECHHILFEN.map(([cat,arr])=>`<div class="sh-cat">${esc(cat)}</div>`+arr.map(p=>`<span class="sh-chip">${esc(p)}</span>`).join('')).join('');
-    body.dataset.done='1';
+    const voc=lektionsWortschatz();
+    let html='';
+    if(voc.length){
+      html += `<div class="sh-cat">📚 Wichtige Wörter dieser Stunde</div>`;
+      html += voc.map(x=>`<span class="sh-chip"><b>${esc(x.w)}</b>${x.m? ' – '+esc(x.m):''}</span>`).join('');
+    }
+    // Allgemeine Redemittel bleiben als Sprechgerüst immer dabei
+    html += SPRECHHILFEN.map(([cat,arr])=>`<div class="sh-cat">${esc(cat)}</div>`+arr.map(p=>`<span class="sh-chip">${esc(p)}</span>`).join('')).join('');
+    body.innerHTML = html;
   }
   function toggleSprechhilfen(){
     const p=document.getElementById('sh-panel'); if(!p) return;
-    renderSprechhilfen(); p.classList.toggle('open');
+    renderSprechhilfen(); p.classList.toggle('open');   // bei jedem Öffnen frisch aus der Lektion lesen
   }
 
   // ---- Sprech-Timer (Lehrer startet, alle sehen den Countdown) ----
