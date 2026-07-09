@@ -701,7 +701,10 @@
   // Beitritts-Token + Raum-URL aus der Plattform holen (nur eingeloggte Club-Mitglieder).
   async function holeDailyRaum(){
     if(!sb || !STUNDE) return null;
-    const { data:{ session } } = await sb.auth.getSession();
+    // Beim frischen Laden ist die Login-Sitzung evtl. noch nicht hydriert → kurz warten/retry,
+    // damit IMMER Daily (bestes Video) gewählt wird und nicht fälschlich auf Jitsi zurückgefallen wird.
+    let session=null;
+    for(let i=0;i<12;i++){ try{ const r=await sb.auth.getSession(); session=r&&r.data&&r.data.session; }catch(e){} if(session) break; await new Promise(res=>setTimeout(res,150)); }
     if(!session) return null;
     try{
       const res = await fetch('/api/daily-room', {
