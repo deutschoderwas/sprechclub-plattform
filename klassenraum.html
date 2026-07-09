@@ -124,6 +124,19 @@
   .imp-panel .row button{flex:1; border-radius:999px; padding:10px; font-weight:800; font-size:.85rem; cursor:pointer; border:1px solid var(--rahmen); background:#fff; color:var(--weich);}
   .imp-panel .row .send{background:var(--tuerkis); color:var(--auf-tuerkis); border-color:var(--tuerkis);}
   #jitsi{width:100%; height:100%;}
+  /* Eigenes Teilnehmer-Raster (alle gleichzeitig, Kacheln füllen ohne Schwarzrand) */
+  #dgrid{ display:grid; gap:5px; width:100%; height:100%; padding:5px; box-sizing:border-box; background:var(--anthrazit); place-content:stretch; grid-template-columns:repeat(auto-fit, minmax(120px,1fr)); grid-auto-rows:1fr; }
+  #dgrid:has(.dtile:nth-child(2)){ grid-template-columns:repeat(2,1fr); }        /* 2 Personen → 2 nebeneinander */
+  #dgrid:has(.dtile:nth-child(3)){ grid-template-columns:repeat(2,1fr); }        /* 3–4 → 2×2 */
+  #dgrid:has(.dtile:nth-child(5)){ grid-template-columns:repeat(3,1fr); }        /* 5+ → 3 Spalten */
+  #dgrid:has(.dtile:nth-child(10)){ grid-template-columns:repeat(4,1fr); }       /* 10+ → 4 Spalten */
+  .dtile{ position:relative; background:#111; border-radius:10px; overflow:hidden; min-height:0; min-width:0; }
+  .dtile video{ width:100%; height:100%; object-fit:cover; display:block; }
+  .dtile.self video{ transform:scaleX(-1); }                                     /* Selbstbild gespiegelt (wie im Spiegel) */
+  .dtile .nm{ position:absolute; left:5px; bottom:5px; background:rgba(0,0,0,.62); color:#fff; font-size:.7rem; font-weight:600; padding:1px 7px; border-radius:6px; max-width:80%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .dtile .camoff{ position:absolute; inset:0; display:none; align-items:center; justify-content:center; font-size:1.4rem; color:#94a3b8; background:#1f2937; }
+  .dtile.nocam .camoff{ display:flex; }
+  .dtile.nocam video{ visibility:hidden; }
   .video-start{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:9px; text-align:center; color:#fff; padding:14px;}
   .video-start p{margin:0; font-size:.73rem; color:#cfcfcf; line-height:1.35;}
   .video-start .play{width:44px; height:44px; border-radius:50%; border:none; cursor:pointer; background:linear-gradient(135deg,var(--tuerkis),var(--tuerkis-dunkel)); color:var(--auf-tuerkis); font-size:1.1rem; box-shadow:0 4px 14px rgba(0,0,0,.4);}
@@ -182,9 +195,10 @@
     /* Video als kleine Webcam-Box wie bei Zoom/Meet: klein & mittig, heller Rand statt
        breiter schwarzer Streifen. Bedienung kompakt in EINER Zeile → viel Platz für die Notizen. */
     .video-kopf{ padding:6px 13px; }
-    .video-buehne{ height:auto !important; background:var(--creme-hell); padding:4px 0; display:flex; align-items:center; justify-content:center; }
-    #jitsi{ height:var(--vidH,104px); aspect-ratio:16/9; width:auto; max-width:96%; border-radius:12px; overflow:hidden; background:var(--anthrazit); }
-    .video-start{ border-radius:12px; }
+    /* Video-Raster: alle Teilnehmer gleichzeitig, füllt die Breite; Höhe moderat, Notizen bleiben groß */
+    .video-buehne{ height:26vh !important; min-height:180px; max-height:34vh; background:var(--anthrazit); padding:0; display:block; }
+    #jitsi{ height:100%; width:100%; }
+    .video-start{ border-radius:0; }
     /* kompakte Steuerleiste: alle Knöpfe klein, „Verlassen" NICHT mehr als eigene große Zeile */
     .vid-controls{ padding:5px 8px; gap:5px; }
     .vid-controls button{ min-width:0; padding:6px 7px; font-size:.74rem; }
@@ -212,7 +226,7 @@
     .spalte{ display:contents; }
     /* Video bleibt OBEN angeheftet: Teilnehmer + Selbstbild immer sichtbar, Präsi scrollt darunter */
     .video-card{ order:1; width:100%; align-self:stretch; position:sticky; top:0; z-index:20; box-shadow:0 6px 16px rgba(0,0,0,.14); }
-    .video-buehne{ height:11vh; min-height:76px; max-height:110px; aspect-ratio:auto; }   /* kleine Kamera-Box – Fokus auf Notizen */
+    .video-buehne{ height:20vh; min-height:150px; max-height:26vh; aspect-ratio:auto; }   /* Raster: alle Teilnehmer sichtbar; Notizen über den 📝-Knopf groß */
     .mnotes-btn{ display:flex; align-items:center; gap:9px; position:fixed; right:14px; bottom:14px; z-index:70; background:var(--rot); color:#fff; border:none; border-radius:999px; padding:13px 18px; font-family:'Inter'; font-weight:800; font-size:.92rem; box-shadow:0 8px 22px rgba(221,0,0,.32); cursor:pointer; }
     .mnotes-btn .dot{ width:10px; height:10px; border-radius:50%; background:#fff; opacity:0; }
     .mnotes-btn.hat-neu{ animation:mnpulse 1.1s infinite; }
@@ -703,18 +717,62 @@
   }
   function starteDaily(url, token, owner){
     window._provider='daily';
-    const parent=document.getElementById('jitsi'); if(parent) parent.innerHTML='';
-    dframe = window.DailyIframe.createFrame(parent, {
-      showLeaveButton:true, showFullscreenButton:true, showParticipantsBar:true,
-      activeSpeakerMode:false,
-      iframeStyle:{ width:'100%', height:'100%', border:'0', borderRadius:'0' }
-    });
-    // Video-Knöpfe (unsere eigenen) synchron halten
-    dframe.on('participant-updated', (ev)=>{ if(ev && ev.participant && ev.participant.local) dailySyncButtons(ev.participant); });
-    dframe.on('joined-meeting', (ev)=>{ window._inCall=true; if(ev&&ev.participants&&ev.participants.local) dailySyncButtons(ev.participants.local); setTimeout(checkMic,2500); });
+    const parent=document.getElementById('jitsi'); if(parent){ parent.innerHTML='<div class="dgrid" id="dgrid"></div>'; }
+    // Eigenes Raster statt Standard-UI → wir können IMMER alle Teilnehmer (inkl. sich selbst) zeigen.
+    dframe = window.DailyIframe.createCallObject({ subscribeToTracksAutomatically:true });
+    dframe.on('joined-meeting', (ev)=>{ window._inCall=true; renderGrid(); if(ev&&ev.participants&&ev.participants.local) dailySyncButtons(ev.participants.local); setTimeout(checkMic,2500); });
+    dframe.on('participant-joined', renderGrid);
+    dframe.on('participant-updated', (ev)=>{ renderGrid(); if(ev&&ev.participant&&ev.participant.local) dailySyncButtons(ev.participant); });
+    dframe.on('participant-left', renderGrid);
+    dframe.on('track-started', renderGrid);
+    dframe.on('track-stopped', renderGrid);
     dframe.on('left-meeting', ()=>{ window._inCall=false; dailyLeftMsg(); });
     dframe.on('error', (e)=>{ console.warn('Daily-Fehler', e); });
+    dailyAudioUnlock();
     dframe.join({ url, token }).catch(e=>{ console.warn('Daily join fehlgeschlagen → Jitsi', e); dailyFallbackJitsi(); });
+  }
+  // Falls der Browser Auto-Ton blockiert: beim ersten Klick/Tipp alle Audiospuren starten.
+  function dailyAudioUnlock(){
+    const go=()=>{ document.querySelectorAll('#dgrid audio').forEach(a=>{ a.play&&a.play().catch(()=>{}); }); };
+    window.addEventListener('click', go, { once:false });
+    window.addEventListener('touchstart', go, { once:false });
+  }
+  // ===== Eigenes Kachel-Raster: ALLE Teilnehmer gleichzeitig, formatfüllend (kein Schwarzrand) =====
+  function renderGrid(){
+    if(!dframe || window._provider!=='daily') return;
+    const grid=document.getElementById('dgrid'); if(!grid) return;
+    let ps; try{ ps=dframe.participants(); }catch(e){ return; }
+    const ids=Object.keys(ps);
+    grid.style.setProperty('--n', ids.length);   // Anzahl → CSS passt Spalten an
+    // weg-Teilnehmer entfernen
+    Array.from(grid.children).forEach(t=>{ if(!ids.includes(t.dataset.id)) t.remove(); });
+    ids.forEach(id=>{
+      const p=ps[id];
+      let tile=grid.querySelector('.dtile[data-id="'+id+'"]');
+      if(!tile){
+        tile=document.createElement('div'); tile.className='dtile'+(p.local?' self':''); tile.dataset.id=id;
+        const v=document.createElement('video'); v.autoplay=true; v.playsInline=true; v.muted=true;
+        const off=document.createElement('div'); off.className='camoff'; off.textContent='📷';
+        const nm=document.createElement('div'); nm.className='nm';
+        tile.appendChild(v); tile.appendChild(off); tile.appendChild(nm);
+        if(!p.local){ const a=document.createElement('audio'); a.autoplay=true; tile.appendChild(a); }
+        grid.appendChild(tile);
+      }
+      const v=tile.querySelector('video'), nm=tile.querySelector('.nm');
+      nm.textContent = (p.user_name && String(p.user_name).trim()) || (p.local?'Ich':'Teilnehmer:in');
+      const vt=p.tracks && p.tracks.video;
+      const vtrack = vt && (vt.state==='playable'||vt.state==='loading'||vt.state==='sendable') ? (vt.persistentTrack||vt.track) : null;
+      if(vtrack){
+        if(v.dataset.tid!==vtrack.id){ try{ v.srcObject=new MediaStream([vtrack]); }catch(e){} v.dataset.tid=vtrack.id; v.play&&v.play().catch(()=>{}); }
+        tile.classList.remove('nocam');
+      } else { if(v.srcObject){ v.srcObject=null; } v.dataset.tid=''; tile.classList.add('nocam'); }
+      if(!p.local){
+        const a=tile.querySelector('audio'), at=p.tracks && p.tracks.audio;
+        const atrack = at && at.state==='playable' ? (at.persistentTrack||at.track) : null;
+        if(a && atrack){ if(a.dataset.tid!==atrack.id){ try{ a.srcObject=new MediaStream([atrack]); }catch(e){} a.dataset.tid=atrack.id; a.play&&a.play().catch(()=>{}); } }
+        else if(a && a.srcObject){ a.srcObject=null; a.dataset.tid=''; }
+      }
+    });
   }
   function dailySyncButtons(p){
     const mic=document.getElementById('vc-mic'); if(mic){ const on=!!p.audio; mic.textContent=on?'🎤 Mikro an':'🔇 Mikro aus'; mic.classList.toggle('muted', !on); }
