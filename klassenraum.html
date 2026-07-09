@@ -960,7 +960,10 @@
       const doc=document.getElementById('lektion').contentWindow.document;
       const seen=new Set(), items=[];
       const push=(w,m)=>{ w=(w||'').replace(/\s+/g,' ').trim(); m=(m||'').replace(/\s+/g,' ').trim();
-        if(!w || w.length>60 || /^[✏_\s]+$/.test(w) || seen.has(w.toLowerCase())) return; seen.add(w.toLowerCase()); items.push({w,m}); };
+        if(!w || w.length>60 || /^[✏_\s]+$/.test(w) || seen.has(w.toLowerCase())) return;
+        // „Bedeutung" nur übernehmen, wenn es eine kurze Erklärung ist – keine Gesprächsfrage/Prompt
+        if(m && (m.includes('💬') || m.includes('?') || m.length>70)) m='';
+        seen.add(w.toLowerCase()); items.push({w,m}); };
       // Wortschatz-Karten: Wort + einfache Bedeutung
       doc.querySelectorAll('.use-name').forEach(n=>{ const box=n.closest('.use, .use-body')||n.parentElement; const m=box&&box.querySelector('.use-meaning'); push(n.textContent, m&&m.textContent); });
       // Schlüsselwörter/Wendungen: idiom-de + Bedeutung
