@@ -137,6 +137,10 @@
   .dtile .camoff{ position:absolute; inset:0; display:none; align-items:center; justify-content:center; font-size:1.4rem; color:#94a3b8; background:#1f2937; }
   .dtile.nocam .camoff{ display:flex; }
   .dtile.nocam video{ visibility:hidden; }
+  /* Stummschalt-Knopf pro Schüler (nur Lehrkraft) */
+  .dtile .dmute{ position:absolute; top:5px; right:5px; display:none; align-items:center; justify-content:center; width:30px; height:30px; border:none; border-radius:50%; background:rgba(0,0,0,.55); color:#fff; font-size:.9rem; cursor:pointer; line-height:1; padding:0; box-shadow:0 2px 6px rgba(0,0,0,.3); }
+  .dtile .dmute:hover{ background:rgba(0,0,0,.8); }
+  .dtile .dmute.ismuted{ background:var(--rot); }
   .video-start{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:9px; text-align:center; color:#fff; padding:14px;}
   .video-start p{margin:0; font-size:.73rem; color:#cfcfcf; line-height:1.35;}
   .video-start .play{width:44px; height:44px; border-radius:50%; border:none; cursor:pointer; background:linear-gradient(135deg,var(--tuerkis),var(--tuerkis-dunkel)); color:var(--auf-tuerkis); font-size:1.1rem; box-shadow:0 4px 14px rgba(0,0,0,.4);}
@@ -384,6 +388,7 @@
     const hb=document.getElementById('vc-hand'); if(hb) hb.style.display = lehrer ? 'none' : '';
     const tr=document.getElementById('tools-row'); if(tr) tr.classList.toggle('on', lehrer);
     if(typeof renderHands==='function') renderHands();
+    if(window._provider==='daily' && typeof renderGrid==='function') renderGrid();   // Stummschalt-Knöpfe je nach Rolle zeigen/verbergen
     document.getElementById('btn-lehrer').classList.toggle('active', lehrer);
     document.getElementById('btn-schueler').classList.toggle('active', !lehrer);
 
@@ -758,11 +763,29 @@
         const off=document.createElement('div'); off.className='camoff'; off.textContent='📷';
         const nm=document.createElement('div'); nm.className='nm';
         tile.appendChild(v); tile.appendChild(off); tile.appendChild(nm);
-        if(!p.local){ const a=document.createElement('audio'); a.autoplay=true; tile.appendChild(a); }
+        if(!p.local){
+          const a=document.createElement('audio'); a.autoplay=true; tile.appendChild(a);
+          // Stummschalt-Knopf pro Schüler – nur für die Lehrkraft sichtbar
+          const mb=document.createElement('button'); mb.className='dmute'; mb.dataset.id=id;
+          mb.title='Diese/n Schüler:in stummschalten';
+          mb.onclick=(e)=>{ e.stopPropagation(); muteOne(id); };
+          tile.appendChild(mb);
+        }
         grid.appendChild(tile);
       }
       const v=tile.querySelector('video'), nm=tile.querySelector('.nm');
       nm.textContent = (p.user_name && String(p.user_name).trim()) || (p.local?'Ich':'Teilnehmer:in');
+      // Lehrer-Stummschalter: Sichtbarkeit + Zustand (stumm = rot)
+      if(!p.local){
+        const mb=tile.querySelector('.dmute');
+        if(mb){
+          mb.style.display = window._meIsLehrer ? 'flex' : 'none';
+          const muted = !p.audio;
+          mb.classList.toggle('ismuted', muted);
+          mb.textContent = muted ? '🔇' : '🎤';
+          mb.title = muted ? 'ist stummgeschaltet' : 'Diese/n Schüler:in stummschalten';
+        }
+      }
       const vt=p.tracks && p.tracks.video;
       const vtrack = vt && (vt.state==='playable'||vt.state==='loading'||vt.state==='sendable') ? (vt.persistentTrack||vt.track) : null;
       if(vtrack){
@@ -776,6 +799,13 @@
         else if(a && a.srcObject){ a.srcObject=null; a.dataset.tid=''; }
       }
     });
+  }
+  // Lehrkraft schaltet eine einzelne Person stumm (Daily: nur Moderator/owner darf das).
+  // Wieder-Anschalten kann aus Datenschutzgründen nur die Person selbst.
+  function muteOne(id){
+    if(window._provider!=='daily' || !dframe) return;
+    try{ const o={}; o[id]={ setAudio:false }; dframe.updateParticipants(o); }
+    catch(e){ console.warn('muteOne', e); }
   }
   function dailySyncButtons(p){
     const mic=document.getElementById('vc-mic'); if(mic){ const on=!!p.audio; mic.textContent=on?'🎤 Mikro an':'🔇 Mikro aus'; mic.classList.toggle('muted', !on); }
