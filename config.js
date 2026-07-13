@@ -6,6 +6,9 @@ window.SPRECHCLUB_CONFIG = {
   SUPABASE_ANON_KEY: 'sb_publishable_uY1pHLPyI89qxI25Lep8aA_vHgKugkB',
   WHATSAPP: 'https://wa.me/message/XBWZPNITRRUQK1',
 
+  // Stripe – veröffentlichbarer Schlüssel (öffentlich, gehört ins Frontend). Für eingebettete Bezahlung.
+  STRIPE_PK: 'pk_live_51PSvrbFGUsccpNS8F2KLIUnponenkTZTVS6plNaMyhIgcqpzs4CdLMGkvCpiEyOUeZ0hJekqg219Gf11ufNtnFdD00ZmZWuqzQ',
+
   // Flexible Preise — Abo-Pässe mit 7 Tagen gratis testen & ein Einmalkauf.
   // Jedes Paket: 7 Tage kostenlos testen (mit Probestunde), in den 7 Tagen jederzeit
   // kostenlos kündbar, danach automatisch monatliches Abo. (trial = Tage Testphase)
