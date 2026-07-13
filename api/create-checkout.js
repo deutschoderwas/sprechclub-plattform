@@ -21,7 +21,7 @@ export default async function handler(req, res) {
   const site = process.env.SITE_URL || 'https://www.deutschoderwas-club.de';
 
   try {
-    const { packageId, passId, userId, email, embedded } = (req.body || {});
+    const { packageId, passId, userId, email, embedded, trial } = (req.body || {});
     const id = passId || packageId;
     const plan = PLANS[id];
     if (!plan) return res.status(400).json({ error: 'unknown_plan' });
@@ -45,7 +45,7 @@ export default async function handler(req, res) {
     if (plan.abo) {
       // Probestunde nur EINMAL pro Person. Wer schon je eine Testphase ODER (auch gekündigt)
       // schon irgendein Abo bei Stripe hatte, zahlt sofort – kein erneutes 7-Tage-Trial.
-      let trialDays = 7;
+      let trialDays = (trial === false) ? 0 : 7; // "Sofort starten" => sofort zahlen, kein Test
       try {
         if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
           const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
