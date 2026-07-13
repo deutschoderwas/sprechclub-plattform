@@ -74,6 +74,18 @@
     #v-community .cm-del{background:none;border:none;cursor:pointer;color:#bbb;font-size:12px;margin-left:6px}
     #v-community .cm-del:hover{color:var(--primary,#DD0000)}
     @media(max-width:640px){#v-community .cm{grid-template-columns:1fr;height:auto}#v-community .cm-side{display:flex;gap:6px;overflow-x:auto;border-right:none;border-bottom:1px solid var(--border,#F0E5D8)}#v-community .cm-side h4{display:none}#v-community .cm-ch{white-space:nowrap}#v-community .cm-msgs{height:54vh}}
+    #v-community .cm-reax{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px;align-items:center;position:relative}
+    #v-community .cm-row.me .cm-reax{justify-content:flex-end}
+    #v-community .cm-reax-chip{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--border,#F0E5D8);background:#fff;border-radius:20px;padding:2px 8px;font-size:13px;cursor:pointer;font-family:inherit;line-height:1.4}
+    #v-community .cm-reax-chip span{font-weight:700;font-size:12px;color:var(--text-soft,#6B7280)}
+    #v-community .cm-reax-chip.mine{background:#E8FBF5;border-color:var(--turquoise,#2DD4BF)}
+    #v-community .cm-reax-chip.mine span{color:#06403A}
+    #v-community .cm-reax-add{border:none;background:none;cursor:pointer;font-size:15px;line-height:1;padding:2px 6px;border-radius:20px;opacity:.5}
+    #v-community .cm-reax-add:hover{opacity:1;background:var(--bg,#FFF8E0)}
+    #v-community .cm-reax-pop{position:absolute;bottom:26px;left:0;background:#fff;border:1px solid var(--border,#F0E5D8);border-radius:22px;box-shadow:0 8px 22px rgba(0,0,0,.16);padding:4px 6px;display:flex;gap:2px;z-index:40}
+    #v-community .cm-row.me .cm-reax-pop{left:auto;right:0}
+    #v-community .cm-reax-q{border:none;background:none;cursor:pointer;font-size:20px;line-height:1;padding:3px 4px;border-radius:8px;transition:transform .1s}
+    #v-community .cm-reax-q:hover{background:var(--bg,#FFF8E0);transform:scale(1.15)}
     `;
     var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
   }
@@ -186,6 +198,8 @@
     var res = await sbc.from('community_messages').select('id,user_id,kind,body,audio_path,audio_secs,image_path,author_name,created_at').eq('channel', slug).is('deleted_at', null).order('created_at').limit(200);
     var rows = res.data || [];
     await hydrateAudio(rows);
+    reax = {};
+    await loadReactions(rows.map(function (m) { return m.id; }));
     renderMsgs(rows);
     subscribe(slug);
   }
@@ -212,6 +226,83 @@
   }
 
   function avColor(name) { var s = String(name || '?'), h = 0; for (var i = 0; i < s.length; i++) { h = (h * 31 + s.charCodeAt(i)) >>> 0; } return 'hsl(' + (h % 360) + ',52%,72%)'; }
+  // ---- Reaktionen (WhatsApp-Stil) ----
+  var QUICK = ['👍','❤️','😂','😮','😢','🙏','🎉','🔥'];
+  var reax = {};
+  function isRealId(id){ return !!id && String(id).indexOf('tmp-') !== 0 && String(id).indexOf('up-') !== 0; }
+  async function loadReactions(ids){
+    ids = (ids || []).filter(isRealId);
+    if (!ids.length) return;
+    try {
+      var res = await sbc.from('community_reactions').select('message_id,emoji,user_id').in('message_id', ids);
+      var map = {}; ids.forEach(function(id){ map[id] = {}; });
+      (res.data || []).forEach(function(r){
+        var mm = map[r.message_id] || (map[r.message_id] = {});
+        var e = mm[r.emoji] || (mm[r.emoji] = { count:0, mine:false });
+        e.count++; if (r.user_id === ME.id) e.mine = true;
+      });
+      ids.forEach(function(id){ reax[id] = map[id] || {}; });
+    } catch (e) {}
+  }
+  function reaxBarHtml(id){
+    if (!isRealId(id)) return '';
+    var r = reax[id] || {};
+    var chips = Object.keys(r).map(function(em){
+      var d = r[em];
+      return '<button type="button" class="cm-reax-chip' + (d.mine ? ' mine' : '') + '" data-reax="' + E(id) + '" data-emoji="' + E(em) + '">' + em + '<span>' + d.count + '</span></button>';
+    }).join('');
+    return '<div class="cm-reax" data-reaxbar="' + E(id) + '">' + chips +
+      '<button type="button" class="cm-reax-add" data-reaxadd="' + E(id) + '" title="Reagieren">🙂</button>' +
+      '<span class="cm-reax-pop" data-reaxpop="' + E(id) + '" style="display:none">' +
+        QUICK.map(function(em){ return '<button type="button" class="cm-reax-q" data-reax="' + E(id) + '" data-emoji="' + em + '">' + em + '</button>'; }).join('') +
+      '</span></div>';
+  }
+  function updateReaxBar(id){
+    var bar = root() && root().querySelector('[data-reaxbar="' + id + '"]'); if (!bar) return;
+    var tmp = document.createElement('div'); tmp.innerHTML = reaxBarHtml(id);
+    var nb = tmp.firstChild; if (nb && bar.parentNode) bar.parentNode.replaceChild(nb, bar);
+  }
+  function ensureReaxBar(node, id){
+    if (!node || !isRealId(id)) return;
+    var col = node.querySelector('.cm-col'); if (!col) return;
+    if (col.querySelector('.cm-reax')) return;
+    reax[id] = reax[id] || {};
+    col.insertAdjacentHTML('beforeend', reaxBarHtml(id));
+  }
+  async function toggleReaction(id, emoji){
+    if (!isRealId(id) || !emoji) return;
+    var cur0 = reax[id] && reax[id][emoji];
+    var mine = cur0 && cur0.mine;
+    try {
+      if (mine) { await sbc.from('community_reactions').delete().eq('message_id', id).eq('user_id', ME.id).eq('emoji', emoji); }
+      else { await sbc.from('community_reactions').insert({ message_id: id, emoji: emoji }); }
+    } catch (e) {}
+    await loadReactions([id]); updateReaxBar(id);
+  }
+  var reaxRefreshT = null;
+  function refreshVisibleReactions(){
+    if (reaxRefreshT) clearTimeout(reaxRefreshT);
+    reaxRefreshT = setTimeout(async function(){
+      var box = q('#cmMsgs'); if (!box) return;
+      var ids = [];
+      Array.prototype.forEach.call(box.querySelectorAll('.cm-row'), function(rw){ var id = rw.getAttribute('data-id'); if (isRealId(id)) ids.push(id); });
+      if (!ids.length) return;
+      await loadReactions(ids); ids.forEach(updateReaxBar);
+    }, 180);
+  }
+  function onReaxClick(ev){
+    var t = ev.target; if (!t || !t.closest) return;
+    var add = t.closest('[data-reaxadd]');
+    if (add) { ev.stopPropagation(); var id = add.getAttribute('data-reaxadd'); var pop = root().querySelector('[data-reaxpop="' + id + '"]');
+      var show = pop && pop.style.display === 'none';
+      Array.prototype.forEach.call(root().querySelectorAll('.cm-reax-pop'), function(p){ p.style.display = 'none'; });
+      if (pop) pop.style.display = show ? 'flex' : 'none'; return; }
+    var re = t.closest('[data-reax]');
+    if (re) { ev.stopPropagation(); var mid = re.getAttribute('data-reax'), em = re.getAttribute('data-emoji');
+      var pop2 = root().querySelector('[data-reaxpop="' + mid + '"]'); if (pop2) pop2.style.display = 'none';
+      toggleReaction(mid, em); return; }
+  }
+
   function msgHtml(m) {
     var me = m.user_id === ME.id;
     var body;
@@ -227,7 +318,7 @@
       '<div class="cm-av" style="background:' + avColor(m.author_name) + '">' + E(initials(m.author_name)) + '</div>' +
       '<div class="cm-col"><div class="cm-meta">' + E(m.author_name || 'Mitglied') + '<span class="cm-time">' + timeStr(m.created_at) + '</span>' +
       (canDel ? '<button class="cm-del" data-del="' + E(m.id) + '" title="Löschen">✕</button>' : '') + '</div>' +
-      '<div class="cm-bub">' + body + '</div></div></div>';
+      '<div class="cm-bub">' + body + '</div>' + reaxBarHtml(m.id) + '</div></div>';
   }
 
   function renderMsgs(rows) {
@@ -238,6 +329,9 @@
     Array.prototype.forEach.call(box.querySelectorAll('[data-del]'), function (b) {
       b.addEventListener('click', function () { delMsg(b.getAttribute('data-del')); });
     });
+    if (!box.__reaxBound) { box.__reaxBound = true; box.addEventListener('click', onReaxClick);
+      if (!window.__cmReaxDoc) { window.__cmReaxDoc = true; document.addEventListener('click', function () { Array.prototype.forEach.call(document.querySelectorAll('#v-community .cm-reax-pop'), function (p) { p.style.display = 'none'; }); }); }
+    }
   }
 
   function appendMsg(m) {
@@ -261,6 +355,11 @@
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'community_messages', filter: 'channel=eq.' + slug }, function (p) {
         if (p.new && p.new.deleted_at) { var n = document.querySelector('[data-id="' + p.new.id + '"]'); if (n) n.remove(); }
       })
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'community_reactions' }, function (p) {
+        var m = p.new; if (!m || !m.message_id) return;
+        if (document.querySelector('[data-id="' + m.message_id + '"]')) { loadReactions([m.message_id]).then(function () { updateReaxBar(m.message_id); }); }
+      })
+      .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'community_reactions' }, function () { refreshVisibleReactions(); })
       .subscribe();
   }
 
@@ -319,7 +418,7 @@
     var tmp = document.querySelector('[data-id="tmp-' + optimistic.id.slice(4) + '"]');
     if (res.error) { if (tmp) tmp.querySelector('.cm-bub').insertAdjacentHTML('beforeend', ' <span style="color:#DD0000;font-size:12px">⚠︎ nicht gesendet</span>'); return; }
     // tmp-Id durch echte Id ersetzen, damit Realtime-Echo nicht dupliziert
-    var node = document.querySelector('[data-id="' + optimistic.id + '"]'); if (node && res.data) node.setAttribute('data-id', res.data.id);
+    var node = document.querySelector('[data-id="' + optimistic.id + '"]'); if (node && res.data) { node.setAttribute('data-id', res.data.id); ensureReaxBar(node, res.data.id); }
     notifyAdminNewMsg(cur);
   }
 
@@ -358,7 +457,7 @@
     var res = await sbc.from('community_messages').insert({ channel: cur, kind: 'audio', audio_path: path, audio_secs: secs, author_name: name }).select('id').single();
     if (res.error) { if (ln) ln.querySelector('.cm-bub').innerHTML = '⚠︎ nicht gesendet'; return; }
     var sg = await sbc.storage.from('community-audio').createSignedUrl(path, 3600);
-    if (ln) { ln.setAttribute('data-id', res.data.id); ln.querySelector('.cm-bub').innerHTML = '<div class="cm-audio">🎧 <audio controls preload="none" src="' + E(sg.data ? sg.data.signedUrl : '') + '"></audio><span class="muted">' + secs + 's</span></div>'; }
+    if (ln) { ln.setAttribute('data-id', res.data.id); ln.querySelector('.cm-bub').innerHTML = '<div class="cm-audio">🎧 <audio controls preload="none" src="' + E(sg.data ? sg.data.signedUrl : '') + '"></audio><span class="muted">' + secs + 's</span></div>'; ensureReaxBar(ln, res.data.id); }
     notifyAdminNewMsg(cur);
   }
 
@@ -378,7 +477,7 @@
     var res = await sbc.from('community_messages').insert({ channel: cur, kind: 'image', image_path: path, author_name: name }).select('id').single();
     if (res.error) { if (ln) ln.querySelector('.cm-bub').innerHTML = '⚠︎ nicht gesendet'; return; }
     var sg = await sbc.storage.from('community-image').createSignedUrl(path, 3600);
-    if (ln) { ln.setAttribute('data-id', res.data.id); ln.querySelector('.cm-bub').innerHTML = (sg.data ? '<a href="' + E(sg.data.signedUrl) + '" target="_blank" rel="noopener"><img class="cm-img" src="' + E(sg.data.signedUrl) + '" alt="Bild"></a>' : '📷 Bild'); }
+    if (ln) { ln.setAttribute('data-id', res.data.id); ln.querySelector('.cm-bub').innerHTML = (sg.data ? '<a href="' + E(sg.data.signedUrl) + '" target="_blank" rel="noopener"><img class="cm-img" src="' + E(sg.data.signedUrl) + '" alt="Bild"></a>' : '📷 Bild'); ensureReaxBar(ln, res.data.id); }
     notifyAdminNewMsg(cur);
   }
 
