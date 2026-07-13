@@ -599,7 +599,8 @@ function renderKlassen(){
 
       <div style="margin-top:14px">
         <div class="kl-sec">👥 Gebuchte Schüler (${p.length})</div>
-        ${p.length?'<div>'+p.map(x=>`<div class="tn" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">👤 ${esc(x.name||'')} <span class="muted">${esc(x.email)}</span>${(isAdminUser&&x.user_id)?`<button class="btn btn-ghost" style="padding:3px 11px;font-size:12px;margin-left:auto" onclick="rebookStudent('${x.user_id}','${c.id}')">🔁 umbuchen</button>`:''}</div>`).join('')+'</div>':'<div class="muted" style="font-size:12px">Noch niemand gebucht.</div>'}
+        ${p.length?'<div>'+p.map(x=>`<div class="tn" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">👤 ${esc(x.name||'')} <span class="muted">${esc(x.email)}</span>${(isAdminUser&&x.user_id)?`<span style="margin-left:auto;display:flex;gap:6px;flex-wrap:wrap"><button class="btn btn-ghost" style="padding:3px 11px;font-size:12px" onclick="rebookStudent('${x.user_id}','${c.id}')">🔁 umbuchen</button><button class="btn btn-ghost" style="padding:3px 11px;font-size:12px;color:#DD0000;border-color:#f3b0b0" onclick="cancelStudent('${x.user_id}','${c.id}')">✕ stornieren</button></span>`:''}</div>`).join('')+'</div>':'<div class="muted" style="font-size:12px">Noch niemand gebucht.</div>'}
+        ${isAdminUser?`<div style="margin-top:10px"><button class="btn btn-primary" style="padding:6px 14px;font-size:13px" onclick="addStudentToClass('${c.id}')">➕ Schüler hinzufügen</button></div>`:''}
       </div>
 
       <div style="margin-top:14px;background:#FFF8E0;border:1px solid #F0E5D8;border-radius:12px;padding:12px 14px">
@@ -767,6 +768,67 @@ async function rebookStudent(userId, fromClassId){
     if(error){ msg.textContent='Fehler: '+error.message; return; }
     close(); await loadKlassen();
   };
+}
+
+// Fehlermeldungen für Admin-Buchung
+function bookErr(e){
+  const m={ no_credits:'Kein Guthaben mehr — bitte zuerst Guthaben aufladen.', class_full:'Diese Stunde ist bereits voll.', already_booked:'Schüler ist schon gebucht.', class_in_past:'Diese Stunde liegt in der Vergangenheit.', class_not_found:'Stunde nicht gefunden.', not_admin:'Keine Admin-Rechte.', no_booking:'Keine aktive Buchung gefunden.' };
+  return m[e] || ('Fehler: '+e);
+}
+
+// Schüler zu einer Stunde hinzufügen (nur Admin) — 1 Std Guthaben wird abgezogen
+async function addStudentToClass(classId){
+  let studs = [];
+  try { studs = (typeof realStudents==='function' ? realStudents() : (typeof SCHUELER!=='undefined'?SCHUELER:[])) || []; } catch(e){ studs = []; }
+  if(!studs.length){
+    const { data } = await sb.from('profiles').select('id,name,email,credits,level,is_teacher,is_admin').limit(2000);
+    studs = (data||[]).filter(s=>!s.is_teacher && !s.is_admin);
+  }
+  studs = studs.slice().sort((a,b)=>(a.name||a.email||'').localeCompare(b.name||b.email||'','de'));
+  const already = new Set((KL_PARTS[classId]||[]).map(x=>x.user_id));
+  const free = studs.filter(s=>!already.has(s.id));
+  const opts = free.map(s=>`<option value="${s.id}">${esc(s.name||s.email)} · ${s.credits||0} Std${s.level?' · '+esc(s.level):''}</option>`).join('');
+  const cInfo = (KL_ALL||[]).find(c=>c.id===classId);
+  const tf = new Intl.DateTimeFormat('de-DE',{timeZone:'Europe/Berlin',weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+  const title = cInfo ? `${tf.format(new Date(cInfo.starts_at))} · ${esc(cInfo.title)}${cInfo.level?' ('+esc(cInfo.level)+')':''}` : 'Stunde';
+  const ov=document.createElement('div');
+  ov.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:18px';
+  ov.innerHTML=`<div class="card" style="max-width:460px;width:100%;background:#fff">
+    <b style="font-size:17px">➕ Schüler hinzufügen</b>
+    <p class="muted" style="margin:6px 0 12px;font-size:13px">${title} — es wird <b>1 Stunde</b> vom Guthaben abgezogen (wie beim normalen Buchen). Beim Stornieren gibt es die Stunde wieder zurück.</p>
+    <label class="muted" style="font-size:12px">Schüler wählen</label>
+    <select id="asTarget" style="width:100%;margin-top:4px;padding:10px 12px;border:2px solid var(--border);border-radius:10px;font-size:14px">${opts||'<option value="">Alle sind bereits gebucht</option>'}</select>
+    <div style="display:flex;gap:8px;margin-top:14px;justify-content:flex-end">
+      <button class="btn btn-ghost" id="asCancel">Abbrechen</button>
+      <button class="btn btn-primary" id="asGo">Hinzufügen</button>
+    </div>
+    <div class="muted" id="asMsg" style="margin-top:8px;font-size:13px"></div>
+  </div>`;
+  document.body.appendChild(ov);
+  const close=()=>ov.remove();
+  ov.addEventListener('click',e=>{ if(e.target===ov) close(); });
+  ov.querySelector('#asCancel').onclick=close;
+  ov.querySelector('#asGo').onclick=async()=>{
+    const uid=ov.querySelector('#asTarget').value;
+    const msg=ov.querySelector('#asMsg');
+    if(!uid){ msg.textContent='Bitte einen Schüler wählen.'; return; }
+    msg.textContent='Bucht …';
+    const { data, error } = await sb.rpc('admin_book',{ p_user_id:uid, p_class_id:classId });
+    if(error){ msg.textContent='Fehler: '+error.message; return; }
+    if(data && data.ok===false){ msg.textContent='⚠️ '+bookErr(data.error); return; }
+    close(); await loadKlassen();
+  };
+}
+
+// Buchung eines Schülers stornieren (nur Admin) — Stunde kommt zurück aufs Guthaben
+async function cancelStudent(userId, classId){
+  const me=(KL_PARTS[classId]||[]).find(s=>s.user_id===userId);
+  const name=me?(me.name||me.email):'diesen Schüler';
+  if(!confirm(`Buchung von ${name} stornieren?\nDie Stunde wird dem Schüler wieder gutgeschrieben.`)) return;
+  const { data, error } = await sb.rpc('admin_cancel_booking',{ p_user_id:userId, p_class_id:classId });
+  if(error){ alert('Storno fehlgeschlagen: '+error.message); return; }
+  if(data && data.ok===false){ alert('⚠️ '+bookErr(data.error)); return; }
+  await loadKlassen();
 }
 
 // ---------- Team-Notiz pro Stunde (nur Lehrer/Admin) ----------
