@@ -1,6 +1,6 @@
 // Stripe Checkout starten — Abo-Pässe (7 Tage gratis testen) & Einmalkauf (Spar Pass).
 // Wird von live.html / index.html aufgerufen: POST { packageId|passId, userId, email }.
-// Gibt { url } der Stripe-Checkout-Seite zurück. Nach Zahlung schreibt api/stripe-webhook.js gut.
+// Gibt { url } (hosted) ODER { clientSecret, publishableKey } (embedded) zurück. Nach Zahlung schreibt api/stripe-webhook.js gut.
 // Benötigt ENV: STRIPE_SECRET_KEY, (optional) SITE_URL.
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
@@ -21,7 +21,7 @@ export default async function handler(req, res) {
   const site = process.env.SITE_URL || 'https://www.deutschoderwas-club.de';
 
   try {
-    const { packageId, passId, userId, email } = (req.body || {});
+    const { packageId, passId, userId, email, embedded } = (req.body || {});
     const id = passId || packageId;
     const plan = PLANS[id];
     if (!plan) return res.status(400).json({ error: 'unknown_plan' });
@@ -30,10 +30,16 @@ export default async function handler(req, res) {
     const common = {
       customer_email: email || undefined,
       client_reference_id: userId || undefined,
-      success_url: `${site}/konto.html?bezahlt=1`,
-      cancel_url: `${site}/#preise`,
       allow_promotion_codes: true,
     };
+    if (embedded) {
+      // Eingebettete Bezahlung direkt auf deutschoderwas-club.de (Stripe Embedded Checkout)
+      common.ui_mode = 'embedded';
+      common.return_url = `${site}/konto.html?bezahlt=1&session_id={CHECKOUT_SESSION_ID}`;
+    } else {
+      common.success_url = `${site}/konto.html?bezahlt=1`;
+      common.cancel_url = `${site}/#preise`;
+    }
 
     let session;
     if (plan.abo) {
@@ -102,6 +108,12 @@ export default async function handler(req, res) {
       });
     }
 
+    if (embedded) {
+      return res.status(200).json({
+        clientSecret: session.client_secret,
+        publishableKey: process.env.STRIPE_PUBLISHABLE_KEY || ''
+      });
+    }
     return res.status(200).json({ url: session.url });
   } catch (e) {
     console.error('create-checkout', e);
