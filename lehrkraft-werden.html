@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lehrkraft werden · deutschoderwas club</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#161616;--turq:#2DD4BF;--teal-ink:#06403A;--cream:#FFF8E0}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--cream);color:var(--ink);line-height:1.5}
+.top{display:flex;align-items:center;justify-content:space-between;padding:15px 22px;background:rgba(255,248,224,.94);border-bottom:1px solid #EADFC6;position:sticky;top:0;z-index:5}
+.brand{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:19px;color:#161616;text-decoration:none}
+.brand span{color:var(--turq)}
+.home{font-weight:700;font-size:14px;text-decoration:none;color:#161616;border:1.5px solid #E9DEC9;background:#fff;padding:8px 14px;border-radius:10px}
+.home:hover{border-color:var(--turq)}
+.mark{background:linear-gradient(transparent 55%,#FFE08A 55%);padding:0 4px;border-radius:3px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;font-weight:800;font-size:16px;padding:14px 22px;border-radius:12px;border:none;cursor:pointer;text-decoration:none}
+.btn-primary{background:var(--turq);color:var(--teal-ink);box-shadow:0 4px 0 #14B8A6}
+.btn-primary:hover{filter:brightness(1.03)}
+.wrap{max-width:640px;margin:0 auto}
+.lehrer-club{background:linear-gradient(135deg,#FFF9F2,#FFF4D6);padding:64px 20px}.lehrer-club .wrap{max-width:640px}.lc-head{text-align:center;margin-bottom:26px}.lc-head h2{font-family:'Space Grotesk',sans-serif;font-size:clamp(26px,4vw,38px);color:#161616;margin:0 0 8px}.lc-head p{color:#5b5b5b;font-size:16px;margin:0}.lcf{background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:22px;padding:28px 26px;box-shadow:0 16px 40px rgba(0,0,0,.08)}.lcf .r{display:grid;grid-template-columns:1fr 1fr;gap:14px}.lcf .f{margin-bottom:14px}.lcf label{display:block;font-weight:700;font-size:13.5px;margin-bottom:5px;color:#161616}.lcf input,.lcf textarea{width:100%;box-sizing:border-box;padding:11px 13px;border:2px solid rgba(0,0,0,.1);border-radius:11px;font-family:inherit;font-size:15px}.lcf input:focus,.lcf textarea:focus{outline:none;border-color:#2DD4BF}.lcf textarea{min-height:84px;resize:vertical}.lcf .btn{width:100%;justify-content:center;margin-top:4px}.lcf-note{text-align:center;font-size:13px;color:#777;margin-top:10px}.lcf-ok{display:none;background:#E8FBF5;border:2px solid #2DD4BF;border-radius:18px;padding:30px;text-align:center;font-weight:700;color:#06403A}.lcf-ok.show{display:block}@media(max-width:560px){.lcf .r{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="top"><a class="brand" href="/">deutschoderwas <span>club</span></a><a class="home" href="/">← Startseite</a></div>
+<section class="lehrer-club">
+<div class="wrap">
+<div class="lc-head">
+<h2>Werde <span class="mark">Lehrkraft</span> bei uns</h2>
+<p>Du bist DaF-/DaZ-Lehrkraft und moechtest in kleinen Gruppen unterrichten? Bewirb dich!</p>
+</div>
+<form class="lcf" id="lehrerForm" novalidate>
+<div class="r">
+<div class="f"><label>Name *</label><input name="name" required/></div>
+<div class="f"><label>E-Mail *</label><input name="email" type="email" required/></div>
+</div>
+<div class="f"><label>Telefon (optional)</label><input name="phone"/></div>
+<div class="f"><label>Erfahrung &amp; Qualifikation *</label><textarea name="experience" required placeholder="z. B. DaF-Zertifikat, Jahre Erfahrung, Niveaus A1-C1 ..."></textarea></div>
+<div class="f"><label>Verfuegbarkeit</label><textarea name="availability" placeholder="Wochentage &amp; Uhrzeiten? Stunden pro Woche?"></textarea></div>
+<div class="f"><label>Nachricht (optional)</label><textarea name="message"></textarea></div>
+<button type="submit" class="btn btn-primary" id="lehrerSubmit">Bewerbung absenden &rarr;</button>
+<p class="lcf-note" id="lehrerNote">Deine Bewerbung geht direkt an Julia &mdash; wir melden uns per E-Mail.</p>
+</form>
+<div class="lcf-ok" id="lehrerSuccess">🎉 Danke fuer deine Bewerbung! Wir melden uns bald per E-Mail.</div>
+</div>
+</section>
+<script>
+(function(){
+  var lf=document.getElementById('lehrerForm'); if(!lf) return;
+  lf.addEventListener('submit',async function(e){
+    e.preventDefault();
+    if(!lf.checkValidity()){ lf.reportValidity(); return; }
+    var btn=document.getElementById('lehrerSubmit'), note=document.getElementById('lehrerNote');
+    var data={}; new FormData(lf).forEach(function(v,k){ data[k]=v; });
+    btn.disabled=true; var old=btn.textContent; btn.textContent='Wird gesendet ...';
+    try{
+      var r=await fetch('https://www.deutschoderwas-club.de/api/teacher-application',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+      var j={}; try{ j=await r.json(); }catch(_){}
+      if(j&&j.ok){ lf.style.display='none'; var ok=document.getElementById('lehrerSuccess'); ok.classList.add('show'); ok.scrollIntoView({behavior:'smooth',block:'center'}); }
+      else { btn.disabled=false; btn.textContent=old; note.textContent='Das hat leider nicht geklappt. Bitte spaeter erneut oder an info@deutschoderwas.de schreiben.'; }
+    }catch(err){ btn.disabled=false; btn.textContent=old; note.textContent='Netzwerkfehler - bitte spaeter erneut versuchen.'; }
+  });
+})();
+</script>
+</body>
+</html>
