@@ -78,6 +78,7 @@ export default async function handler(req, res) {
       session = await stripe.checkout.sessions.create({
         ...common,
         mode: 'subscription',
+        payment_method_types: ['card'], // nur Karte (inkl. Apple/Google Pay) - kein Stripe Link, keine Handynummer-Bestaetigung
         line_items: [{
           quantity: 1,
           price_data: {
@@ -95,6 +96,7 @@ export default async function handler(req, res) {
       session = await stripe.checkout.sessions.create({
         ...common,
         mode: 'payment',
+        payment_method_types: ['card', 'klarna'], // Karte (inkl. Apple/Google Pay) + Klarna Ratenzahlung - kein Stripe Link
         line_items: [{
           quantity: 1,
           price_data: {
