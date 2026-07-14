@@ -18,8 +18,16 @@ export default async function handler(req, res) {
   const { data: low } = await sb.from('profiles')
     .select('id,name,email,credits,email_optout,is_admin,is_teacher,status')
     .in('credits', [0, 1]);
-  const targets = (low || []).filter(p => p.email && !p.email_optout && !p.is_admin && !p.is_teacher
-    && !INACTIVE_STATUS.includes(p.status));
+  const targets = (low || []).filter(p => {
+    if (!(p.email && !p.email_optout && !p.is_admin && !p.is_teacher)) return false;
+    // 'beendet' (gekündigt) bekommt NIE eine Erinnerung.
+    if (p.status === 'beendet') return false;
+    const isZero = (p.credits || 0) <= 0;
+    // 0 Stunden: alle übrigen Status bekommen die Erinnerung (aktiv, pause, urlaub, probeschuler …).
+    // 1 Stunde:  pausierte Mitglieder weiterhin ausnehmen (sanftes Feedback-Angebot).
+    if (!isZero && INACTIVE_STATUS.includes(p.status)) return false;
+    return true;
+  });
   if (!targets.length) return res.status(200).json({ ok:true, sent:0 });
 
   // Anti-Spam-Fenster:
