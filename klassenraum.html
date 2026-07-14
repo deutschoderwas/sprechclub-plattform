@@ -137,6 +137,11 @@
   .dtile .camoff{ position:absolute; inset:0; display:none; align-items:center; justify-content:center; font-size:1.4rem; color:#94a3b8; background:#1f2937; }
   .dtile.nocam .camoff{ display:flex; }
   .dtile.nocam video{ visibility:hidden; }
+  /* Bildschirm-Teilen: geteilter Bildschirm GROSS, Kameras als kleine Leiste darunter (alle Geräte) */
+  .dtile.screen video{ object-fit:contain; background:#000; }
+  #dgrid.has-screen{ display:block; overflow:auto; }
+  #dgrid.has-screen .dtile.screen{ display:block; width:100%; aspect-ratio:16/9; margin:0 0 6px 0; }
+  #dgrid.has-screen .dtile:not(.screen){ display:inline-block; width:104px; height:74px; margin:0 6px 6px 0; vertical-align:top; }
   /* Stummschalt-Knopf pro Schüler (nur Lehrkraft) */
   .dtile .dmute{ position:absolute; top:5px; right:5px; display:none; align-items:center; justify-content:center; width:30px; height:30px; border:none; border-radius:50%; background:rgba(0,0,0,.55); color:#fff; font-size:.9rem; cursor:pointer; line-height:1; padding:0; box-shadow:0 2px 6px rgba(0,0,0,.3); }
   .dtile .dmute:hover{ background:rgba(0,0,0,.8); }
@@ -147,11 +152,12 @@
 
   /* ===== Teilen-Modus: Geteiltes Bild groß im Präsentations-Fenster ===== */
   body.sharing .lektion-card{ display:none; }
+  body.sharing .m-tabs{ display:none; }
   body.sharing #gutter{ display:none; }
   body.sharing .tafel{ display:none; }
   body.sharing .spalte{ flex:1 1 auto; width:auto; }
   body.sharing .video-card{ width:100%; align-self:stretch; flex:1 1 auto; display:flex; flex-direction:column; }
-  body.sharing .video-buehne{ height:auto; flex:1 1 auto; min-height:0; }
+  body.sharing .video-buehne{ height:auto !important; flex:1 1 auto; min-height:40vh; }
 
   /* Live-Tafel – jetzt groß */
   .tafel{background:var(--creme-hell); border:1px solid var(--rahmen); border-radius:18px; box-shadow:0 4px 18px rgba(0,0,0,.05); display:flex; flex-direction:column; overflow:hidden; flex:1; min-height:0;}
@@ -645,6 +651,9 @@
   async function ladeLektion(){
     zeigeKopf();                       // sofort: Fallback/aktuelle Anzeige
     if(!sb || !STUNDE) return;
+    // WICHTIG (v.a. Handy): auf die Login-Sitzung warten, sonst blockiert RLS den Präsentations-Abruf
+    // und die Schüler:innen sehen nur den Platzhalter „Noch keine Präsentation".
+    try{ for(let i=0;i<20;i++){ const r=await sb.auth.getSession(); if(r&&r.data&&r.data.session) break; await new Promise(res=>setTimeout(res,150)); } }catch(e){}
     try{
       const { data: kl } = await sb.from('classes').select('title,level,material_live').eq('id', STUNDE).maybeSingle();
       if(kl){ if(kl.title) _titel = kl.title; if(kl.level) _niveau = kl.level; }
@@ -660,6 +669,8 @@
     try{
       if(window.supabase && window.SPRECHCLUB_CONFIG && !String(window.SPRECHCLUB_CONFIG.SUPABASE_URL).startsWith('HIER_')){
         sb = supabase.createClient(window.SPRECHCLUB_CONFIG.SUPABASE_URL, window.SPRECHCLUB_CONFIG.SUPABASE_ANON_KEY);
+        // Sobald der Login bereit ist (v.a. Handy, verzögert): Präsentation erneut laden (RLS braucht Sitzung)
+        try{ sb.auth.onAuthStateChange((ev, sess)=>{ if(sess && (ev==='SIGNED_IN'||ev==='INITIAL_SESSION'||ev==='TOKEN_REFRESHED')){ if(typeof ladeLektion==='function') ladeLektion(); } }); }catch(e){}
       }
     }catch(e){ console.warn('Supabase init fehlgeschlagen', e); }
   }
@@ -752,8 +763,28 @@
     let ps; try{ ps=dframe.participants(); }catch(e){ return; }
     const ids=Object.keys(ps);
     grid.style.setProperty('--n', ids.length);   // Anzahl → CSS passt Spalten an
-    // weg-Teilnehmer entfernen
-    Array.from(grid.children).forEach(t=>{ if(!ids.includes(t.dataset.id)) t.remove(); });
+    // Bildschirm-Freigaben (Teilen) erkennen – werden als große Kachel oben angezeigt
+    const screenIds = ids.filter(id=>{ const st=ps[id].tracks && ps[id].tracks.screenVideo; return st && (st.state==='playable'||st.state==='loading'||st.state==='sendable'); });
+    grid.classList.toggle('has-screen', screenIds.length>0);
+    // gültige Kacheln = Kameras + Bildschirme; alles andere entfernen
+    const valid = ids.concat(screenIds.map(id=>'screen-'+id));
+    Array.from(grid.children).forEach(t=>{ if(!valid.includes(t.dataset.id)) t.remove(); });
+    // Bildschirm-Kacheln (groß, ganz oben) – zeigen den geteilten Bildschirm für ALLE
+    screenIds.forEach(id=>{
+      const tid='screen-'+id, p=ps[id];
+      let tile=grid.querySelector('.dtile[data-id="'+tid+'"]');
+      if(!tile){
+        tile=document.createElement('div'); tile.className='dtile screen'; tile.dataset.id=tid;
+        const v=document.createElement('video'); v.autoplay=true; v.playsInline=true; v.muted=true;
+        const nm=document.createElement('div'); nm.className='nm';
+        tile.appendChild(v); tile.appendChild(nm);
+        grid.insertBefore(tile, grid.firstChild);
+      }
+      const v=tile.querySelector('video'), nm=tile.querySelector('.nm');
+      nm.textContent='🖥️ '+(((p.user_name&&String(p.user_name).trim()))||'Bildschirm');
+      const st=p.tracks.screenVideo, tr=st&&(st.persistentTrack||st.track);
+      if(tr){ if(v.dataset.tid!==tr.id){ try{ v.srcObject=new MediaStream([tr]); }catch(e){} v.dataset.tid=tr.id; v.play&&v.play().catch(()=>{}); } }
+    });
     ids.forEach(id=>{
       const p=ps[id];
       let tile=grid.querySelector('.dtile[data-id="'+id+'"]');
