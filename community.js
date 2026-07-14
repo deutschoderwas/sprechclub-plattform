@@ -23,12 +23,12 @@
   function injectStyle() {
     if (styled) return; styled = true;
     var css = `
-    #v-community .cm{display:grid;grid-template-columns:250px 1fr;gap:0;border:1px solid var(--border,#F0E5D8);border-radius:18px;overflow:hidden;background:#fff;height:calc(100vh - 210px);min-height:460px;width:100%}
-    #v-community .cm-side{background:var(--bg,#FFF8E0);border-right:1px solid var(--border,#F0E5D8);padding:14px 10px;overflow-y:auto}
-    #v-community .cm-side h4{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-soft,#6B7280);margin:4px 8px 10px}
-    #v-community .cm-ch{display:flex;align-items:center;gap:9px;width:100%;border:none;background:none;text-align:left;padding:10px 11px;border-radius:11px;cursor:pointer;font-family:inherit;font-size:14.5px;font-weight:600;color:var(--secondary,#1A1A1A)}
-    #v-community .cm-ch:hover{background:#fff}
-    #v-community .cm-ch.on{background:var(--secondary,#1A1A1A);color:#fff}
+    #v-community .cm{display:grid;grid-template-columns:270px 1fr;gap:0;border:1px solid #26221c;border-radius:18px;overflow:hidden;background:#fff;height:calc(100vh - 150px);min-height:560px;width:100%;box-shadow:0 18px 50px rgba(0,0,0,.10)}
+    #v-community .cm-side{background:#161616;border-right:1px solid #262626;padding:16px 11px;overflow-y:auto}
+    #v-community .cm-side h4{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:#8A8781;margin:4px 8px 12px;font-weight:800}
+    #v-community .cm-ch{display:flex;align-items:center;gap:10px;width:100%;border:none;background:none;text-align:left;padding:10px 12px;border-radius:11px;cursor:pointer;font-family:inherit;font-size:14.5px;font-weight:600;color:#C9C6C0;margin-bottom:2px;transition:background .12s,color .12s}
+    #v-community .cm-ch:hover{background:#2A2A2A;color:#fff}
+    #v-community .cm-ch.on{background:#2DD4BF;color:#053b34;font-weight:800}
     #v-community .cm-ch .e{font-size:17px}
     #v-community .cm-ch .lock{margin-left:6px;font-size:12px;opacity:.6}
     #v-community .cm-ch .cm-nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}

@@ -5,6 +5,7 @@
 // Wird z. B. täglich getriggert (Supabase pg_cron -> pg_net POST auf diese Route).
 // email_log (kind:'credit_offer') verhindert Spam: max. 1 Mail pro Schüler in 30 Tagen.
 import { createClient } from '@supabase/supabase-js';
+import Stripe from 'stripe';
 
 export default async function handler(req, res) {
   if (!process.env.BREVO_API_KEY) return res.status(200).json({ ok:false, skipped:'BREVO_API_KEY fehlt' });
@@ -12,22 +13,32 @@ export default async function handler(req, res) {
   const site = process.env.SITE_URL || 'https://www.deutschoderwas-club.de';
   const paketeUrl = `${site}/#preise`;
 
-  // Schüler mit 0 oder 1 Stunde Guthaben (keine Lehrer/Admins, kein Opt-out,
-  // keine pausierten/beendeten Mitglieder)
-  const INACTIVE_STATUS = ['pause', 'urlaub', 'beendet', 'probeschuler'];
+  // Zielgruppe (Wunsch Julia): NUR aktive Schüler mit 0 oder 1 Stunde Guthaben,
+  // die KEIN laufendes Abo haben. Abo-Mitglieder bekommen automatisch neue Stunden
+  // und daher keine Kauf-Erinnerung. Status 'registriert', 'pause', 'urlaub',
+  // 'beendet', 'probeschuler' erhalten ebenfalls KEINE Erinnerung.
   const { data: low } = await sb.from('profiles')
-    .select('id,name,email,credits,email_optout,is_admin,is_teacher,status')
+    .select('id,name,email,credits,email_optout,is_admin,is_teacher,status,stripe_customer_id')
     .in('credits', [0, 1]);
-  const targets = (low || []).filter(p => {
-    if (!(p.email && !p.email_optout && !p.is_admin && !p.is_teacher)) return false;
-    // 'beendet' (gekündigt) bekommt NIE eine Erinnerung.
-    if (p.status === 'beendet') return false;
-    const isZero = (p.credits || 0) <= 0;
-    // 0 Stunden: alle übrigen Status bekommen die Erinnerung (aktiv, pause, urlaub, probeschuler …).
-    // 1 Stunde:  pausierte Mitglieder weiterhin ausnehmen (sanftes Feedback-Angebot).
-    if (!isZero && INACTIVE_STATUS.includes(p.status)) return false;
-    return true;
-  });
+  const candidates = (low || []).filter(p =>
+    p.status === 'aktiv' && p.email && !p.email_optout && !p.is_admin && !p.is_teacher
+  );
+
+  // Laufendes Abo? -> aussortieren (live bei Stripe geprüft; bei Stripe-Fehler
+  // vorsichtshalber NICHT anschreiben, um kein zahlendes Abo-Mitglied zu nerven).
+  const stripe = process.env.STRIPE_SECRET_KEY ? new Stripe(process.env.STRIPE_SECRET_KEY) : null;
+  const ABO_STATUS = ['active', 'trialing', 'past_due', 'unpaid'];
+  const targets = [];
+  for (const p of candidates) {
+    if (p.stripe_customer_id) {
+      if (!stripe) continue; // ohne Stripe-Key können wir Abo nicht ausschließen -> lieber nicht senden
+      try {
+        const subs = await stripe.subscriptions.list({ customer: p.stripe_customer_id, status: 'all', limit: 10 });
+        if ((subs.data || []).some(s => ABO_STATUS.includes(s.status))) continue; // laufendes Abo -> überspringen
+      } catch (e) { continue; }
+    }
+    targets.push(p);
+  }
   if (!targets.length) return res.status(200).json({ ok:true, sent:0 });
 
   // Anti-Spam-Fenster:
