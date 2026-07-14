@@ -627,6 +627,7 @@ function renderKlassen(){
         <button class="btn" onclick="sendNachbLink('${c.id}')" style="background:#13A89A;color:#fff;font-weight:800;border:none">📧 Nachbereitung an Schüler senden</button>
         <button class="btn btn-ghost" onclick="previewInteractive('${c.id}')">👁️ Schüler-Vorschau</button>
         <button class="btn btn-ghost" onclick="editClass('${c.id}')">Bearbeiten · Material</button>
+        <button class="btn btn-ghost" onclick="rescheduleClass('${c.id}')">📅 Verlegen (Tag &amp; Zeit)</button>
         <button class="btn btn-ghost" onclick="cancelClass('${c.id}')">Stunde absagen</button>
       </div>
       <span class="muted" id="genMsg-${c.id}" style="display:block;margin-top:8px">${c._hasMat?'✓ KI-Material vorhanden':''}</span>
@@ -646,7 +647,7 @@ function renderKlassen(){
         </div>
         <div id="nbPrev-${c.id}" style="margin-top:8px"></div>
       </div>
-      <div id="att-${c.id}" style="display:none;margin-top:10px"></div>
+      <div id="att-${c.id}" style="display:none;margin-top:10px"></div><div id="resch-${c.id}" style="display:none;margin-top:10px;background:#FFF7E6;border:1px solid #F0D9A8;border-radius:12px;padding:12px 14px"><div style="font-weight:800;font-size:13px;margin-bottom:8px">📅 Stunde verlegen — neuer Tag &amp; neue Uhrzeit (Berlin-Zeit)</div><div class="formrow"><input type="date" id="rDate-${c.id}" value="${berlinDateVal(c.starts_at)}" style="flex:1"><input type="time" id="rTime-${c.id}" value="${berlinTimeVal(c.starts_at)}" style="flex:1"></div><div style="margin-top:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap"><button class="btn btn-primary" style="padding:7px 16px" onclick="doReschedule('${c.id}')">Verschieben</button><span class="muted" id="rMsg-${c.id}" style="font-weight:700;font-size:13px"></span></div><p class="muted" style="font-size:12px;margin:8px 0 0">Gebuchte Schüler behalten ihren Platz — die Stunde erscheint bei ihnen automatisch zur neuen Zeit.</p></div>
       <div id="edit-${c.id}" style="display:none;margin-top:10px">
         <div class="formrow">
           <select id="eClub-${c.id}" style="flex:1">${clubOptions(c.club)}</select>
@@ -892,6 +893,39 @@ async function saveClass(id){
   }).eq('id', id);
   document.getElementById('eMsg-'+id).textContent = error ? 'Fehler: '+error.message : '✓ gespeichert';
   if (!error) loadKlassen();
+}
+
+// ---------- Stunde verlegen (Tag & Zeit, Berlin-Zeitzone) ----------
+function rescheduleClass(id){ const el=document.getElementById('resch-'+id); if(el) el.style.display = el.style.display==='none' ? 'block' : 'none'; }
+function _tzOffMs(date, tz){
+  const p=new Intl.DateTimeFormat('en-US',{timeZone:tz,hour12:false,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'}).formatToParts(date).reduce((a,x)=>{a[x.type]=x.value;return a;},{});
+  const H=(p.hour==='24'?'0':p.hour);
+  const asUTC=Date.UTC(+p.year,+p.month-1,+p.day,+H,+p.minute,+p.second);
+  return asUTC - date.getTime();
+}
+function berlinToUTCISO(dateStr, timeStr){
+  const [Y,M,D]=dateStr.split('-').map(Number); const [h,mi]=timeStr.split(':').map(Number);
+  const ts=Date.UTC(Y,M-1,D,h,mi);
+  const off=_tzOffMs(new Date(ts),'Europe/Berlin');
+  return new Date(ts-off).toISOString();
+}
+function _berlinParts(iso){
+  const p=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Berlin',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date(iso)).reduce((a,x)=>{a[x.type]=x.value;return a;},{});
+  const H=(p.hour==='24'?'00':p.hour);
+  return { date:`${p.year}-${p.month}-${p.day}`, time:`${H}:${p.minute}` };
+}
+function berlinDateVal(iso){ try{return _berlinParts(iso).date;}catch(e){return '';} }
+function berlinTimeVal(iso){ try{return _berlinParts(iso).time;}catch(e){return '';} }
+async function doReschedule(id){
+  const dv=(document.getElementById('rDate-'+id)||{}).value, tv=(document.getElementById('rTime-'+id)||{}).value;
+  const msg=document.getElementById('rMsg-'+id);
+  if(!dv||!tv){ if(msg) msg.textContent='Bitte Tag und Uhrzeit wählen.'; return; }
+  const iso=berlinToUTCISO(dv,tv);
+  if(msg) msg.textContent='Wird verlegt…';
+  const { error } = await sb.from('classes').update({ starts_at: iso }).eq('id', id);
+  if(error){ if(msg) msg.textContent='Fehler: '+error.message; return; }
+  if(msg) msg.textContent='✓ verlegt';
+  loadKlassen();
 }
 
 // ---------- Anwesenheit ----------
