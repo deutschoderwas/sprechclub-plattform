@@ -645,6 +645,9 @@
   async function ladeLektion(){
     zeigeKopf();                       // sofort: Fallback/aktuelle Anzeige
     if(!sb || !STUNDE) return;
+    // WICHTIG (v.a. Handy): auf die Login-Sitzung warten, sonst blockiert RLS den Präsentations-Abruf
+    // und die Schüler:innen sehen nur den Platzhalter „Noch keine Präsentation".
+    try{ for(let i=0;i<20;i++){ const r=await sb.auth.getSession(); if(r&&r.data&&r.data.session) break; await new Promise(res=>setTimeout(res,150)); } }catch(e){}
     try{
       const { data: kl } = await sb.from('classes').select('title,level,material_live').eq('id', STUNDE).maybeSingle();
       if(kl){ if(kl.title) _titel = kl.title; if(kl.level) _niveau = kl.level; }
@@ -660,6 +663,8 @@
     try{
       if(window.supabase && window.SPRECHCLUB_CONFIG && !String(window.SPRECHCLUB_CONFIG.SUPABASE_URL).startsWith('HIER_')){
         sb = supabase.createClient(window.SPRECHCLUB_CONFIG.SUPABASE_URL, window.SPRECHCLUB_CONFIG.SUPABASE_ANON_KEY);
+        // Sobald der Login bereit ist (v.a. Handy, verzögert): Präsentation erneut laden (RLS braucht Sitzung)
+        try{ sb.auth.onAuthStateChange((ev, sess)=>{ if(sess && (ev==='SIGNED_IN'||ev==='INITIAL_SESSION'||ev==='TOKEN_REFRESHED')){ if(typeof ladeLektion==='function') ladeLektion(); } }); }catch(e){}
       }
     }catch(e){ console.warn('Supabase init fehlgeschlagen', e); }
   }
