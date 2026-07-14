@@ -18,6 +18,16 @@ export default async function handler(req, res) {
   if (!process.env.STRIPE_SECRET_KEY) return res.status(500).json({ error: 'stripe_not_configured' });
 
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+  async function createSafe(params){
+    try { return await stripe.checkout.sessions.create(params); }
+    catch(e){
+      if (params.payment_method_types && params.payment_method_types.includes('paypal')){
+        const p2 = Object.assign({}, params, { payment_method_types: params.payment_method_types.filter(m=>m!=='paypal') });
+        return await stripe.checkout.sessions.create(p2);
+      }
+      throw e;
+    }
+  }
   const site = process.env.SITE_URL || 'https://www.deutschoderwas-club.de';
 
   try {
@@ -75,10 +85,10 @@ export default async function handler(req, res) {
       const subData = { metadata: { userId, plan: id, stunden: String(plan.stunden) } };
       if (trialDays > 0) subData.trial_period_days = 7; // nur Neukund:innen bekommen die Gratis-Probestunde
 
-      session = await stripe.checkout.sessions.create({
+      session = await createSafe({
         ...common,
         mode: 'subscription',
-        payment_method_types: ['card'], // nur Karte (inkl. Apple/Google Pay) - kein Stripe Link, keine Handynummer-Bestaetigung
+        payment_method_types: ['card', 'paypal'], // Karte (inkl. Apple/Google Pay) + PayPal - kein Stripe Link
         line_items: [{
           quantity: 1,
           price_data: {
@@ -93,10 +103,10 @@ export default async function handler(req, res) {
       });
     } else {
       // Einmalkauf (Spar Pass)
-      session = await stripe.checkout.sessions.create({
+      session = await createSafe({
         ...common,
         mode: 'payment',
-        payment_method_types: ['card', 'klarna'], // Karte (inkl. Apple/Google Pay) + Klarna Ratenzahlung - kein Stripe Link
+        payment_method_types: ['card', 'klarna', 'paypal'], // Karte + Klarna + PayPal - kein Stripe Link
         line_items: [{
           quantity: 1,
           price_data: {

@@ -686,14 +686,8 @@ async function initHome(){
 }
 function setLoggedIn(u){ user = u; const nav = document.getElementById('navAuth'); if (nav){ nav.textContent='Schülerbereich'; } }
 function goBereich(e){ if (user) return; e.preventDefault(); pendingAction = ()=>{ location.href='/schuelerbereich'; }; openLogin(); }
-async function buy(packageId){
-  if (!user){ pendingAction = ()=>buy(packageId); openLogin(true); return; }
-  openEmbeddedCheckout({ packageId });
-}
-async function buyPass(passId, trial){
-  if (!user){ pendingAction = ()=>buyPass(passId, trial); openLogin(true); return; }
-  openEmbeddedCheckout({ passId, trial });
-}
+async function buy(packageId){ openEmbeddedCheckout({ packageId }); }
+async function buyPass(passId, trial){ openEmbeddedCheckout({ passId, trial }); }
 var _sel = { id:'allinclusive', abo:true };
 function selectPass(el, id, abo){
   var cards=document.querySelectorAll('#preiseWin .np-card');
@@ -736,7 +730,7 @@ function authTab(t){
   const m=document.getElementById('loginMsg'); m.textContent=''; m.className='msg';
 }
 function authMsg(ok, text){ const m=document.getElementById('loginMsg'); m.className='msg '+(ok?'ok':'err'); m.textContent=text; }
-function afterAuth(u){ setLoggedIn(u); closeLogin(); if (pendingAction){ const a=pendingAction; pendingAction=null; a(); } else location.href='/schuelerbereich'; }
+function afterAuth(u, regDest){ setLoggedIn(u); closeLogin(); if (regDest){ pendingAction=null; location.href=regDest; return; } if (pendingAction){ const a=pendingAction; pendingAction=null; a(); } else location.href='/schuelerbereich'; }
 async function doLogin(){
   if(!sb) return authMsg(false,'ℹ️ Vorschau: Login & Zahlung laufen erst auf der Live-Seite (deutschoderwas-club.de).');
   const email=document.getElementById('loginEmail').value.trim(), pass=document.getElementById('loginPass').value;
@@ -751,10 +745,10 @@ async function doRegister(){
   if (!name) return authMsg(false,'Bitte gib deinen Namen ein.');
   if (!email.includes('@')) return authMsg(false,'Bitte gültige E-Mail eingeben.');
   if (pass.length<8) return authMsg(false,'Das Passwort braucht mindestens 8 Zeichen.');
-  const { data, error } = await sb.auth.signUp({ email, password: pass, options: { data:{name}, emailRedirectTo: location.origin + '/schuelerbereich' } });
+  const { data, error } = await sb.auth.signUp({ email, password: pass, options: { data:{name}, emailRedirectTo: location.origin + '/preise' } });
   if (error){ if (/already|registered/i.test(error.message)) return authMsg(false,'Diese E-Mail hat schon ein Konto. Wechsle auf „Anmelden“.'); return authMsg(false,'Fehler: '+error.message); }
   if (data?.user && !data?.session) return authMsg(true,'✓ Fast geschafft! Bestätige bitte den Link in deiner Mail (auch Spam prüfen).');
-  authMsg(true,'✓ Konto erstellt!'); afterAuth(data.user);
+  authMsg(true,'✓ Konto erstellt!'); afterAuth(data.user, '/preise');
 }
 async function doForgot(){
   if(!sb) return authMsg(false,'ℹ️ Vorschau: Login & Zahlung laufen erst auf der Live-Seite (deutschoderwas-club.de).');
