@@ -7,7 +7,7 @@
    ============================================================ */
 (function () {
   'use strict';
-  var sbc, ME, PROF, channels = [], cur = null, chan = null, isTeam = false, styled = false;
+  var sbc, ME, PROF, channels = [], cur = null, chan = null, isTeam = false, isChallenger = false, styled = false;
   var rec = null, recChunks = [], recStart = 0, recTimer = null, recStream = null;
 
   // Globals robust holen: funktioniert auf konto.html (sb/user/profile) UND admin.html (sb/me)
@@ -149,10 +149,10 @@
     try { var a = await sbc.rpc('has_full_access'); access = !!a.data; } catch (e) { access = active(); }
     if (!access) { stopAll(); r.innerHTML = gateHtml(); return; }
     // eigene Rolle (für Team-Kanäle)
-    try { var pr = await sbc.from('profiles').select('is_admin,is_teacher').eq('id', ME.id).single(); isTeam = !!(pr.data && (pr.data.is_admin || pr.data.is_teacher)); } catch (e) { isTeam = false; }
-    // Kanäle
-    var ch = await sbc.from('community_channels').select('slug,name,emoji,description,team_only,sort_order').eq('is_active', true).order('sort_order');
-    channels = ch.data || [];
+    try { var pr = await sbc.from('profiles').select('is_admin,is_teacher,is_challenger').eq('id', ME.id).single(); isTeam = !!(pr.data && (pr.data.is_admin || pr.data.is_teacher)); isChallenger = !!(pr.data && pr.data.is_challenger); } catch (e) { isTeam = false; isChallenger = false; }
+    // Kanäle (Challenge-Kanal nur für Challenger/Team sichtbar)
+    var ch = await sbc.from('community_channels').select('slug,name,emoji,description,team_only,challenge_only,sort_order').eq('is_active', true).order('sort_order');
+    channels = (ch.data || []).filter(function (c) { return (!c.challenge_only) || isChallenger || isTeam; });
     if (!channels.length) { r.innerHTML = '<div class="pagehead"><h1>💬 Community</h1></div><div class="card">Noch keine Kanäle.</div>'; return; }
     if (!cur || !channels.some(function (c) { return c.slug === cur; })) cur = channels[0].slug;
     await computeUnread();
