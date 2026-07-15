@@ -388,8 +388,38 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFF6E6 0%,#FAF8F2 60%)
 /* ---- Community: randlos & bildschirmfuellend (Skool/Discord-Look) ---- */
 .main:has(#v-community.active){max-width:none;padding:0}
 #v-community .pagehead{display:none}
-#v-community .comm{height:calc(100vh - 6px)!important;min-height:0!important;border:none!important;border-radius:0!important;box-shadow:none!important}
-#v-community .cm{height:calc(100vh - 6px)!important;min-height:0!important;border:none!important;border-radius:0!important;box-shadow:none!important}
+#v-community .comm{height:calc(100vh - 68px)!important;min-height:0!important;border:none!important;border-radius:0!important;box-shadow:none!important}
+#v-community .cm{height:calc(100vh - 68px)!important;min-height:0!important;border:none!important;border-radius:0!important;box-shadow:none!important}
+
+/* ===== v2 Kopfleiste + Layout (nur Optik) ===== */
+.main{max-width:none!important;padding:0!important}
+.topbar{position:sticky;top:6px;z-index:60;display:flex;align-items:center;gap:16px;padding:11px 26px;min-height:62px;background:rgba(250,248,242,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+.tb-bc{display:flex;flex-direction:column;line-height:1.12;min-width:118px}
+.tb-bc .s{font-size:11px;color:var(--text-soft);font-weight:600}
+.tb-bc .t{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:var(--text)}
+.tb-search{flex:1;max-width:560px;display:flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:9px 13px;color:var(--text-soft);font-size:13px}
+.tb-search input{border:none;outline:none;flex:1;font-family:inherit;font-size:13px;background:transparent;color:var(--text)}
+.tb-kbd{font-size:11px;color:#b9b2a4;border:1px solid var(--border);border-radius:6px;padding:1px 6px}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:15px}
+.tb-bell{font-size:18px;color:var(--text-soft);cursor:pointer;position:relative}
+.tb-bell::after{content:"";position:absolute;top:-1px;right:-1px;width:7px;height:7px;background:var(--primary);border-radius:50%;border:1.5px solid #FAF8F2}
+.tb-live{background:var(--turq);color:#fff;border:none;border-radius:11px;padding:9px 16px;font-weight:700;font-size:13.5px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;box-shadow:0 4px 0 #0d8073;font-family:inherit}
+.tb-live:hover{background:#149e8d}
+.content-inner{max-width:1120px;margin:0 auto;padding:24px 34px 82px}
+.content-inner:has(#v-kalender.active){max-width:1340px}
+.content-inner:has(#v-community.active){max-width:none;padding:0}
+/* Kalender: schwebende Karten wie in der Vorschau (Spalten transparent) */
+.calcol{background:transparent!important;border:none!important;box-shadow:none!important;padding:2px 4px!important;animation:none!important}
+.calcol.today{background:#EAF8F5!important;border:1px solid #BFE9E2!important;border-radius:14px!important}
+.calcol-head{border-bottom:none!important;padding:2px 2px 10px!important}
+.calcol-head.today em{background:var(--turq)}
+.ev{background:#fff!important;border:1px solid #EFEAE0!important;border-left:3px solid var(--c,#12A594)!important;box-shadow:0 1px 3px rgba(20,20,20,.05)!important}
+@media(max-width:860px){.topbar{display:none}.content-inner{padding:18px 16px 90px}}
+
+/* Kalender-Etiketten sauber umbrechen statt abschneiden */
+.calcol .ev-top{flex-wrap:wrap;gap:4px 6px}
+.calcol .ev-club{font-size:8.5px;letter-spacing:.02em;padding:2px 6px;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.calcol .ev{overflow:visible!important}
 </style>
 <link rel="stylesheet" href="club-theme.css">
 </head>
@@ -426,6 +456,12 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFF6E6 0%,#FAF8F2 60%)
   </aside>
 
   <main class="main">
+  <div class="topbar">
+    <div class="tb-bc"><span class="s" id="tbS">Schülerbereich</span><span class="t" id="tbT">Startseite</span></div>
+    <div class="tb-search"><span>🔍</span><input type="text" placeholder="Suchen …" aria-label="Suchen"><span class="tb-kbd">⌘K</span></div>
+    <div class="tb-right"><span class="tb-bell" title="Benachrichtigungen">🔔</span><button class="tb-live" onclick="go('kalender')">📹 Live beitreten</button></div>
+  </div>
+  <div class="content-inner">
     <div class="kauf-ok" id="kaufOk">🎉 Danke für deinen Kauf! Dein Guthaben wird gerade gutgeschrieben — lade die Seite gleich neu.</div>
 
     <section class="view active" id="v-dashboard"></section>
@@ -442,6 +478,7 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFF6E6 0%,#FAF8F2 60%)
     <section class="view" id="v-amanda"></section>
     <section class="view" id="v-profil"></section>
     <section class="view" id="v-videokurse"></section>
+  </div>
   </main>
 </div>
 
@@ -641,12 +678,15 @@ function collectVocab(){
 // ---------- Router ----------
 const VIEWS=['dashboard','ueben','community','lernpfad','kalender','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','profil','videokurse'];
 function go(v){ location.hash=v; }
+const VIEW_TITLES={dashboard:['Schülerbereich','Startseite'],kalender:['Live Unterricht','Diese Woche'],stunden:['Live Unterricht','Meine Stunden'],community:['Community','Austausch'],videokurse:['Videokurse','Bald verfügbar'],ueben:['Lernen','Üben'],vokabeln:['Lernen','Vokabeltrainer'],materialien:['Lernen','Materialien'],fortschritt:['Lernen','Fortschritt'],nachrichten:['Nachrichten','Team'],amanda:['Amanda','KI-Sprechpartnerin'],lernpfad:['Lernen','Lernpfad'],guthaben:['Konto','Guthaben'],profil:['Konto','Profil']};
+function updateTopbar(v){var t=VIEW_TITLES[v]||['Schülerbereich','']; var s=document.getElementById('tbS'),b=document.getElementById('tbT'); if(s)s.textContent=t[0]; if(b)b.textContent=t[1];}
 function routeFromHash(){ const v=(location.hash||'#dashboard').slice(1); show(VIEWS.includes(v)?v:'dashboard'); }
 // Ohne Guthaben/Probestunde/Pass: ALLES gesperrt außer Kalender (und Profil für Konto/Logout).
 const LOCKED_VIEWS=['dashboard','ueben','community','lernpfad','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda'];
 function show(v){
   VIEWS.forEach(x=>document.getElementById('v-'+x).classList.toggle('active',x===v));
   document.querySelectorAll('.navlink[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));
+  try{updateTopbar(v);}catch(e){}
   if(LOCKED_VIEWS.includes(v) && !isActive()){ renderLocked(v); window.scrollTo(0,0); return; }
   ({dashboard:renderDashboard,ueben:(window.renderUeben||renderDashboard),community:(window.renderCommunity||renderDashboard),lernpfad:renderLernpfad,kalender:renderKalender,stunden:renderStunden,materialien:renderMaterialien,vokabeln:renderVokabeln,
     fortschritt:renderFortschritt,guthaben:renderGuthaben,nachrichten:renderNachrichten,
