@@ -246,8 +246,9 @@
     var onl=roster.filter(function(m){return !m.is_team&&m.is_online;});
     var off=roster.filter(function(m){return !m.is_team&&!m.is_online;});
     function row(m,cls){
-      return '<div class="mem'+(cls==='off'?' off':'')+'"><div class="mw"><div class="ava '+avClass(m.name)+'">'+E(initials(m.name))+'</div><span class="pr'+(cls==='off'?' of':'')+'"></span></div>'+
-        '<div><div class="mn">'+E(m.name)+'</div><div class="msb">'+(m.is_team?'Team':(m.level?E(m.level):'Mitglied'))+'</div></div></div>';
+      var fn=String(m.name||'Mitglied').trim().split(/\s+/)[0];
+      return '<div class="mem'+(cls==='off'?' off':'')+'"><div class="mw"><div class="ava '+avClass(m.name)+'">'+E(initials(fn))+'</div><span class="pr'+(cls==='off'?' of':'')+'"></span></div>'+
+        '<div><div class="mn">'+E(fn)+'</div><div class="msb">'+(m.is_team?'Team':(m.level?E(m.level):'Mitglied'))+'</div></div></div>';
     }
     var h='';
     if(team.length){ h+='<h4>Team</h4>'+team.map(function(m){return row(m,'on');}).join(''); }
@@ -331,6 +332,7 @@
     var re=t.closest('[data-reax]');
     if(re){ ev.stopPropagation(); toggleReaction(re.getAttribute('data-reax'),re.getAttribute('data-emoji')); return; }
     var cb=t.closest('[data-corrbtn]'); if(cb){ ev.stopPropagation(); openCorrectForm(cb.getAttribute('data-corrbtn')); return; }
+    var kb=t.closest('[data-kibtn]'); if(kb){ ev.stopPropagation(); aiCorrect(kb.getAttribute('data-kibtn')); return; }
     var sv=t.closest('[data-savecorr]'); if(sv){ ev.stopPropagation(); saveTrainer(sv.getAttribute('data-savecorr')); return; }
     var vp=t.closest('[data-play]'); if(vp){ ev.stopPropagation(); togglePlay(vp); return; }
     var dl=t.closest('[data-del]'); if(dl){ ev.stopPropagation(); delMsg(dl.getAttribute('data-del')); return; }
@@ -366,7 +368,8 @@
   function corrsFor(mid){ return (corr[mid]||[]).map(corrCardHtml).join(''); }
   function correctBtnHtml(m){
     if(!isTeam||!ME||m.user_id===ME.id||m.kind!=='text'||!isRealId(m.id)) return '';
-    return '<span class="corrbtn" data-corrbtn="'+E(m.id)+'">'+svg(IC.pencil,'ico-sm')+'korrigieren</span>';
+    return '<span class="corrbtn" data-corrbtn="'+E(m.id)+'">'+svg(IC.pencil,'ico-sm')+'korrigieren</span>'+
+      '<span class="corrbtn kibtn" data-kibtn="'+E(m.id)+'" style="color:#8B5CF6">✨ KI-Vorschlag</span>';
   }
   function openCorrectForm(mid){
     var row=q('[data-id="'+mid+'"]'); if(!row) return; if(row.querySelector('[data-corrform]')) return;
@@ -383,6 +386,31 @@
     try{ var res=await sbc.from('community_corrections').insert({message_id:mid,channel:cur,corrector_name:myName,corrected:corrected,note:note||null}).select('id,message_id,corrector_name,corrected,note,created_at').single();
       if(res.data){ (corr[mid]||(corr[mid]=[])).push(res.data); f.remove(); var row=q('[data-id="'+mid+'"]'); var slot=row&&row.querySelector('[data-corrslot]'); if(slot) slot.innerHTML=corrsFor(mid); }
     }catch(e){}
+  }
+  async function aiCorrect(mid){
+    openCorrectForm(mid);
+    var f=q('[data-corrform="'+mid+'"]'); if(!f) return;
+    var ta=f.querySelector('[data-cin="corrected"]'); var nt=f.querySelector('[data-cin="note"]');
+    var row=q('[data-id="'+mid+'"]'); var mt=row&&row.querySelector('.mt'); var orig=mt?mt.textContent:'';
+    var oldh=f.querySelector('.ki-hint'); if(oldh)oldh.remove();
+    if(ta){ ta.value='KI denkt nach …'; ta.disabled=true; } if(nt){ nt.disabled=true; }
+    try{
+      var s=await sbc.auth.getSession(); var tok=s&&s.data&&s.data.session&&s.data.session.access_token;
+      var r=await fetch('/api/ai-correct',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok},body:JSON.stringify({message_id:mid})});
+      var j=await r.json();
+      if(ta)ta.disabled=false; if(nt)nt.disabled=false;
+      var h=document.createElement('div'); h.className='ki-hint'; h.style.cssText='font-size:12px;font-weight:600;margin-bottom:6px';
+      if(j&&j.ok){
+        if(j.has_error===false){
+          if(ta)ta.value=orig; if(nt)nt.value='';
+          h.style.color='#0E8577'; h.textContent='✨ KI: Der Satz ist korrekt 👍 — du kannst trotzdem etwas anmerken.';
+        } else {
+          if(ta)ta.value=j.corrected||''; if(nt)nt.value=(j.topic?('['+j.topic+'] '):'')+(j.note||'');
+          h.style.color='#8B5CF6'; h.textContent='✨ KI-Vorschlag — bitte prüfen und dann „Korrektur senden".';
+        }
+        f.insertBefore(h,f.firstChild);
+      } else { if(ta)ta.value=orig; if(nt)nt.value=''; }
+    }catch(e){ if(ta){ta.disabled=false;ta.value=orig;} if(nt)nt.disabled=false; }
   }
   async function saveTrainer(cid){
     if(savedCorr[cid]) return;

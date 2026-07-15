@@ -426,6 +426,38 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFF6E6 0%,#FAF8F2 60%)
 .ev-seats.ok{background:#EAF8F5;color:#0A7A5C}
 .ev-seats.low{background:#FFF4D6;color:#9A6B00}
 .ev-seats.full{background:#FDECEC;color:#C0392B}
+
+/* ===== Startseite (Dashboard) im Vorschau-Stil ===== */
+#v-dashboard .dsh-hello{margin-bottom:16px}
+#v-dashboard .dsh-hello h1{font-size:24px}
+#v-dashboard .dash-top{display:grid;grid-template-columns:1.35fr 1fr;gap:16px;margin-bottom:16px}
+@media(max-width:820px){#v-dashboard .dash-top{grid-template-columns:1fr}}
+#v-dashboard .dsh-card{background:#fff;border:1px solid var(--border);border-radius:18px;box-shadow:0 4px 16px rgba(20,20,20,.05);overflow:hidden}
+#v-dashboard .dsh-resume{display:flex;flex-direction:column}
+#v-dashboard .dsh-resume .cover{background:linear-gradient(135deg,#0E1012,#23282C);min-height:118px;position:relative;display:flex;align-items:center;justify-content:center}
+#v-dashboard .dsh-resume .cover::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:linear-gradient(#161616 0 25%,#DD0000 25% 50%,#FFCE00 50% 75%,#12A594 75% 100%)}
+#v-dashboard .dsh-resume .cover .play{width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff}
+#v-dashboard .dsh-resume .rb{padding:16px 18px}
+#v-dashboard .dsh-resume .eyebrow{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#12A594}
+#v-dashboard .dsh-resume h3{font-size:18px;margin:4px 0 2px}
+#v-dashboard .dsh-resume .meta{font-size:13px;color:var(--text-soft);margin-top:8px;line-height:1.5}
+#v-dashboard .dsh-live{padding:16px 18px;display:flex;flex-direction:column;gap:7px;border:1px solid #F0DFA0;background:linear-gradient(135deg,#FFFCF5,#FFF7DE)}
+#v-dashboard .dsh-live .hd{display:flex;justify-content:space-between;align-items:center}
+#v-dashboard .dsh-live .live-b{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#DD0000}
+#v-dashboard .dsh-live .live-b .dot{width:8px;height:8px;border-radius:50%;background:#DD0000;animation:livePulse 1.2s infinite}
+#v-dashboard .dsh-live .tm{font-family:'Space Grotesk',sans-serif;font-weight:700}
+#v-dashboard .dsh-live h4{font-size:16px;margin:2px 0;line-height:1.25}
+#v-dashboard .dsh-live .sub{font-size:13px;color:var(--text-soft)}
+#v-dashboard .dsh-live-act{margin-top:auto;padding-top:10px;display:flex;gap:8px;flex-wrap:wrap}
+#v-dashboard .dsh-kpis{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border:1px solid var(--border);border-radius:16px;box-shadow:0 4px 14px rgba(20,20,20,.05);overflow:hidden;margin-bottom:22px}
+@media(max-width:820px){#v-dashboard .dsh-kpis{grid-template-columns:repeat(2,1fr)}}
+#v-dashboard .dsh-kpi{padding:15px 17px;border-right:1px solid #EFEEEA;border-bottom:1px solid #EFEEEA}
+#v-dashboard .dsh-kpi:nth-child(4n){border-right:none}
+#v-dashboard .dsh-kpi .kl{font-size:12px;color:var(--text-soft);font-weight:600}
+#v-dashboard .dsh-kpi .kv{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;margin-top:6px;color:var(--ink)}
+#v-dashboard .dsh-kpi .kd{font-size:11.5px;font-weight:600;margin-top:3px;color:#0E8577}
+#v-dashboard .dsh-sec{display:flex;justify-content:space-between;align-items:center;margin:4px 0 12px}
+#v-dashboard .dsh-sec h2{font-size:18px}
 </style>
 <link rel="stylesheet" href="club-theme.css">
 </head>
@@ -897,54 +929,56 @@ function lockBanner(){
 function renderDashboard(){
   const s=stats; const name=profile.name||'';
   const greet = name?('Hallo '+esc(name.split(' ')[0])+'! 👋'):'Willkommen zurück! 👋';
-  let next='';
-  if(s.upcoming.length){ const n=s.upcoming[0]; const d=new Date(n.starts_at);
-    const diffH=Math.round((d-s.now)/3600000);
-    const cd = diffH<24 ? ('in '+Math.max(1,Math.round((d-s.now)/3600000))+' h') : ('in '+Math.ceil((d-s.now)/86400000)+' Tagen');
-    next=`<div class="next-hero">
-      <div style="flex:1;min-width:180px">
-        <div class="muted" style="font-weight:700;text-transform:uppercase;font-size:11px;letter-spacing:1px">Nächste Stunde</div>
-        <div class="when">${fmt(d)} <span class="cd">· ${cd}</span></div>
-        <div class="muted">${esc(n.title)} · ${esc(n.level)}${n.topic?' · '+esc(n.topic):''}</div>
-      </div>
-      ${dowJoinBtn({class_id:n.class_id||n.id,starts_at:n.starts_at,title:n.title,level:n.level},'btn btn-primary')}
-      <button class="btn btn-ghost btn-sm" onclick="go('stunden')">Vorbereiten</button>
+  let liveCard;
+  if(s.upcoming.length){
+    const n=s.upcoming[0]; const d=new Date(n.starts_at);
+    const today=(new Date(s.now)).toDateString()===d.toDateString();
+    const tm=(typeof fmtTimeK==='function')?fmtTimeK(d):d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
+    const join=dowJoinBtn({class_id:n.class_id||n.id,starts_at:n.starts_at,title:n.title,level:n.level},'btn btn-primary btn-sm')||`<button class="btn btn-ghost btn-sm" onclick="go('stunden')">Zur Stunde</button>`;
+    liveCard=`<div class="dsh-card dsh-live">
+      <div class="hd"><span class="live-b"><span class="dot"></span>${today?'Live heute':'Nächste Stunde'}</span><span class="tm">${tm}</span></div>
+      <h4>${esc(n.title)}</h4>
+      <div class="sub">${esc(n.level)}${n.topic?' · '+esc(n.topic):''}</div>
+      <div class="dsh-live-act">${join}<button class="btn btn-ghost btn-sm" onclick="go('stunden')">Vorbereiten</button></div>
     </div>`;
   } else {
-    next=`<div class="next-hero"><div style="flex:1"><div class="when">Noch keine Stunde gebucht</div><div class="muted">Such dir im Stundenplan etwas Passendes aus.</div></div><a class="btn btn-primary" href="#" onclick="return bucheStunde(event)">Stunde buchen</a></div>`;
+    liveCard=`<div class="dsh-card dsh-live">
+      <div class="hd"><span class="live-b"><span class="dot"></span>Live-Unterricht</span></div>
+      <h4>Noch keine Stunde gebucht</h4>
+      <div class="sub">Such dir im Live-Unterricht etwas Passendes aus.</div>
+      <div class="dsh-live-act"><a class="btn btn-primary btn-sm" href="#" onclick="return bucheStunde(event)">Stunde buchen</a></div>
+    </div>`;
   }
   document.getElementById('v-dashboard').innerHTML = `
     ${isActive()?'':lockBanner()}
-    <div class="hero-card">
-      <div><h1>${greet}</h1><p class="muted">Schön, dass du übst. Bleib dran — Sprechen lernt man durch Sprechen. 💪</p></div>
-      <div class="streak-chip">🔥 ${s.streak} ${s.streak===1?'Woche':'Wochen'} Streak</div>
+    <div class="dsh-hello"><h1>${greet}</h1><p class="muted">Schön, dass du übst — Sprechen lernt man durch Sprechen. 💪</p></div>
+    ${passActive()?(pi=>`<div class="dsh-card" style="padding:13px 16px;margin-bottom:16px;background:linear-gradient(135deg,#EAFBF6,#FFF7DE);border:1px solid #2DD4BF"><b>⭐ ${pi.label} aktiv</b> <span class="muted">${pi.stunden?pi.stunden+' LIVE-Stunden/Monat · ':''}verlängert am ${fmtShort(new Date(profile.pass_until))} · <a href="#" onclick="openPortal();return false" style="color:#12A594;font-weight:600">Abo verwalten</a></span></div>`)(planInfo()):''}
+    <div class="dash-top">
+      <div class="dsh-card dsh-resume">
+        <div class="cover"><span class="play">▶</span></div>
+        <div class="rb">
+          <div class="eyebrow">Weiter üben</div>
+          <h3>Deine Übungssession</h3>
+          <div class="meta">Vokabeln · Grammatik · Hören · Aussprache — mit Bild &amp; echter Stimme.</div>
+          <div style="margin-top:12px"><button class="btn btn-primary" onclick="go('ueben')">▶ Üben starten</button></div>
+        </div>
+      </div>
+      ${liveCard}
     </div>
-    ${passActive()?(pi=>`<div class="next-hero" style="background:linear-gradient(135deg,var(--turq),var(--turq-dark));color:#fff"><div style="flex:1"><div class="when" style="color:#fff">⭐ ${pi.label} aktiv</div><div style="color:rgba(255,255,255,.85);font-size:13px">${pi.stunden?pi.stunden+' LIVE-Stunden pro Monat · ':''}verlängert sich am ${fmtShort(new Date(profile.pass_until))} · <a href="#" onclick="openPortal();return false" style="color:#fff;text-decoration:underline;font-weight:600">Abo verwalten / kündigen</a></div></div><a class="btn" style="background:#fff;color:var(--turq-dark)" href="#" onclick="return bucheStunde(event)">Stunde buchen</a></div>`)(planInfo()):''}
-    <div class="rankbar">
-      <div class="top"><span class="rank">${s.rank.name} · ${s.points} Punkte</span>
-        <span class="muted">${s.next?('noch '+(s.next.min-s.points)+' bis '+s.next.name):'Höchster Rang erreicht 🎉'}</span></div>
-      <div class="bar"><span style="width:${s.rankProg}%"></span></div>
+    <div class="dsh-kpis">
+      <div class="dsh-kpi"><div class="kl">🎟️ Guthaben</div><div class="kv">${credits}</div><div class="kd">Stunden frei</div></div>
+      <div class="dsh-kpi"><div class="kl">🔥 Lernserie</div><div class="kv">${s.streak}</div><div class="kd">${s.streak===1?'Woche':'Wochen'} am Stück</div></div>
+      <div class="dsh-kpi"><div class="kl">🎧 Live-Stunden</div><div class="kv">${s.past.length}</div><div class="kd">besucht</div></div>
+      <div class="dsh-kpi"><div class="kl">🃏 Vokabeln</div><div class="kv">${s.known}</div><div class="kd">gelernt</div></div>
     </div>
-    ${next}
-    <div class="grid3" style="margin-top:14px">
-      <div class="stat"><div class="big">${credits}</div><div class="lbl">Stunden-Guthaben</div></div>
-      <div class="stat"><div class="big">${s.past.length}</div><div class="lbl">Stunden besucht</div></div>
-      <div class="stat"><div class="big">${s.completedPhases}</div><div class="lbl">Übungen gelöst</div></div>
-    </div>
-    <div class="grid3" style="margin-top:12px">
-      <div class="stat"><div class="big">${s.currentLevel||'–'}</div><div class="lbl">Aktuelles Niveau</div></div>
-      <div class="stat"><div class="big">${s.known}/${s.vocabTotal}</div><div class="lbl">Vokabeln gelernt</div></div>
-      <div class="stat"><div class="big">${s.upcoming.length}</div><div class="lbl">Gebuchte Stunden</div></div>
-    </div>
-    <h2 class="sec">Weitermachen</h2>
+    <div class="dsh-sec"><h2>Weitermachen</h2></div>
     <div class="grid2">
-      <div class="card" style="cursor:pointer" onclick="go('stunden')"><b>📅 Stunden vorbereiten</b><p class="muted" style="margin-top:4px">Übungen & Material zu deinen gebuchten Stunden.</p></div>
+      <div class="card" style="cursor:pointer" onclick="go('stunden')"><b>📅 Stunden vorbereiten</b><p class="muted" style="margin-top:4px">Übungen &amp; Material zu deinen gebuchten Stunden.</p></div>
       <div class="card" style="cursor:pointer" onclick="go('vokabeln')"><b>🃏 Vokabeln üben</b><p class="muted" style="margin-top:4px">${s.vocabTotal} Vokabeln aus deinen Stunden.</p></div>
       <div class="card" style="cursor:pointer" onclick="go('amanda')"><b>🎤 Mit Amanda sprechen</b><p class="muted" style="margin-top:4px">Jederzeit frei Deutsch üben — gratis für dich.</p></div>
-      <div class="card" style="cursor:pointer" onclick="go('lernpfad')"><b>🪜 Dein Lernpfad</b><p class="muted" style="margin-top:4px">Sieh, wo du stehst — von A1 bis C2.</p></div>
+      <div class="card" style="cursor:pointer" onclick="go('fortschritt')"><b>🏆 Dein Fortschritt</b><p class="muted" style="margin-top:4px">Abzeichen &amp; wie weit du bist.</p></div>
     </div>`;
 }
-
 // ---------- Lernpfad ----------
 function renderLernpfad(){
   const s=stats;
