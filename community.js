@@ -171,6 +171,18 @@
 #v-community .mh .pinbtn{cursor:pointer;font-size:13px;opacity:.5;margin-left:2px}
 #v-community .mh .pinbtn:hover{opacity:1}
 #v-community .m.pinned .pinbtn{opacity:1}
+.cm-confirm-ov{position:fixed;inset:0;background:rgba(20,20,20,.45);z-index:99999;display:flex;align-items:center;justify-content:center;padding:22px;animation:ccfade .14s ease}
+@keyframes ccfade{from{opacity:0}to{opacity:1}}
+.cm-confirm{background:#fff;border-radius:18px;max-width:340px;width:100%;padding:20px 20px 15px;box-shadow:0 24px 64px rgba(0,0,0,.32);animation:ccpop .18s cubic-bezier(.2,.9,.3,1.2);font-family:'Inter',system-ui,sans-serif}
+@keyframes ccpop{from{opacity:0;transform:scale(.93)}to{opacity:1;transform:none}}
+.cm-confirm .cc-t{font-family:'Space Grotesk',Inter,sans-serif;font-weight:700;font-size:17px;color:#191B1C;margin-bottom:6px}
+.cm-confirm .cc-m{font-size:14px;color:#5A6169;line-height:1.5;margin-bottom:18px}
+.cm-confirm .cc-a{display:flex;gap:8px;justify-content:flex-end}
+.cm-confirm .cc-a button{border:none;border-radius:10px;padding:10px 18px;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;transition:.12s}
+.cm-confirm .cc-cancel{background:#F1EEE8;color:#5A5346}
+.cm-confirm .cc-cancel:hover{background:#E7E2D8}
+.cm-confirm .cc-ok{background:#DD0000;color:#fff}
+.cm-confirm .cc-ok:hover{background:#B80000}
 `; document.head.appendChild(st);
   }
 
@@ -510,9 +522,22 @@
     var a=new Audio(src); btn.__a=a; a.play(); btn.innerHTML=svg(IC.pause,'ico-sm');
     a.addEventListener('ended',function(){ btn.innerHTML=svg(IC.play,'ico-sm'); });
   }
-  async function delMsg(id){
+  function cmConfirm(title,msg,okLabel,onOk){
+    var ov=document.createElement('div'); ov.className='cm-confirm-ov';
+    ov.innerHTML='<div class="cm-confirm"><div class="cc-t">'+E(title)+'</div><div class="cc-m">'+E(msg)+'</div><div class="cc-a"><button class="cc-cancel" type="button">Abbrechen</button><button class="cc-ok" type="button">'+E(okLabel)+'</button></div></div>';
+    document.body.appendChild(ov);
+    function close(){ if(ov.parentNode) ov.parentNode.removeChild(ov); document.removeEventListener('keydown',onKey); }
+    function onKey(e){ if(e.key==='Escape') close(); }
+    document.addEventListener('keydown',onKey);
+    ov.addEventListener('click',function(e){ if(e.target===ov) close(); });
+    ov.querySelector('.cc-cancel').addEventListener('click',close);
+    ov.querySelector('.cc-ok').addEventListener('click',function(){ close(); try{ onOk(); }catch(e){} });
+  }
+  function delMsg(id){
     if(!isRealId(id)) return;
-    try{ await sbc.from('community_messages').update({deleted_at:new Date().toISOString()}).eq('id',id); var n=q('[data-id="'+id+'"]'); if(n)n.remove(); }catch(e){}
+    cmConfirm('Nachricht löschen?','Diese Nachricht wird für alle entfernt. Das kann nicht rückgängig gemacht werden.','Löschen',async function(){
+      try{ await sbc.from('community_messages').update({deleted_at:new Date().toISOString()}).eq('id',id); var n=q('[data-id="'+id+'"]'); if(n)n.remove(); }catch(e){}
+    });
   }
 
   // ---------- Composer ----------

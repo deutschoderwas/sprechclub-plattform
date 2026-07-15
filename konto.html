@@ -575,7 +575,7 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFF6E6 0%,#FAF8F2 60%)
     <button class="tb-burger" onclick="toggleNav()" aria-label="Menü">☰</button>
     <div class="tb-bc"><span class="s" id="tbS">Schülerbereich</span><span class="t" id="tbT">Startseite</span></div>
     <div class="tb-search"><span>🔍</span><input type="text" placeholder="Suchen …" aria-label="Suchen"><span class="tb-kbd">⌘K</span></div>
-    <div class="tb-right"><span class="tb-bell" title="Benachrichtigungen">🔔</span><button class="tb-live" onclick="go('kalender')">📹 Live beitreten</button></div>
+    <div class="tb-right"><span class="tb-bell" title="Benachrichtigungen">🔔</span><button class="tb-live" onclick="go('kalender')">📅 Unterricht buchen</button></div>
   </div>
   <div class="content-inner">
     <div class="kauf-ok" id="kaufOk">🎉 Danke für deinen Kauf! Dein Guthaben wird gerade gutgeschrieben — lade die Seite gleich neu.</div>
@@ -663,7 +663,9 @@ function lsSet(k,v){ try{ localStorage.setItem(lsKey(k), JSON.stringify(v)); }ca
 // ---------- Init ----------
 async function init(){
   if (DEMO){ document.getElementById('v-dashboard').innerHTML='<div class="empty">Vorschau-Modus — verbinde Supabase, um deinen Schülerbereich zu sehen.</div>'; return; }
-  sb = supabase.createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY);
+  sb = supabase.createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY, {
+    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+  });
   const { data:{ session } } = await sb.auth.getSession();
   if (!session){ location.href='index.html?login=1'; return; }
   user = session.user;
@@ -1204,6 +1206,7 @@ async function loadKalender(){
 }
 const KAL_LVL_COLOR={'A2':'#B45309','A2/B1':'#15803D','B1':'#1D4ED8','B1/B2':'#0891B2','B2':'#7C3AED','B2/C1':'#7C3AED','C1':'#BE185D','ab A2':'#B45309','ab B1':'#BE185D','ab B2':'#7C3AED'};
 function kalLvlColor(l){ return KAL_LVL_COLOR[l]||'#6B7280'; }
+function lvlBadge(l){ var c=kalLvlColor(l); return '<span class="level-pill" style="background:'+c+'14;color:'+c+';border:1.5px solid '+c+'66;font-weight:800">'+esc(l||'')+'</span>'; }
 function kalEv(c){
   const start=new Date(c.starts_at); const end=new Date(start.getTime()+((c.duration_min||60)*60000)); const free=c.capacity-(c.booked||0); const past=start<new Date(); const color=c.club_color||'#2DD4BF';
   const lc=kalLvlColor(c.level);
@@ -1309,7 +1312,7 @@ function renderStunden(){
     const m=materials[b.class_id];
     return `<div class="card">
       <div class="head">
-        <div class="when">${fmt(start)}</div><span class="level-pill">${esc(b.level)}</span>
+        <div class="when">${fmt(start)}</div>${lvlBadge(b.level)}
         <div class="what"><b>${esc(b.title)}</b><span>${esc(b.topic||'')}</span></div>
         ${dowJoinBtn(b,'btn btn-primary btn-sm')}
         ${(m&&(m.lesson_url||m.intro||m.pre||(m.vocab&&m.vocab.length)))?`<button class="btn btn-ghost btn-sm" onclick="openClassMaterial('${b.class_id}',1)">📚 Material</button>`:''}
@@ -1331,7 +1334,7 @@ function renderStunden(){
     html+=past.map(b=>{
       const rated=ratings.find(r=>r.class_id===b.class_id);
       return `<div class="card" style="opacity:.92">
-        <div class="head"><div class="when">${fmt(new Date(b.starts_at))}</div><span class="level-pill">${esc(b.level)}</span>
+        <div class="head"><div class="when">${fmt(new Date(b.starts_at))}</div>${lvlBadge(b.level)}
           <div class="what"><b>${esc(b.title)}</b><span>${esc(b.topic||'')}</span></div>
           ${rated?`<span class="muted">${'★'.repeat(rated.stars)}${'☆'.repeat(5-rated.stars)}</span>`:`<button class="btn btn-ghost btn-sm" onclick="rateClass('${b.class_id}')">Bewerten</button>`}
         </div>
