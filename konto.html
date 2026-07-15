@@ -323,6 +323,12 @@ body{background:radial-gradient(1100px 460px at 82% -12%,#FFF6E6 0%,#FFFDFB 58%)
     <button class="navlink active" data-view="dashboard" onclick="go('dashboard')"><span class="ic">🏠</span>Start</button>
     <button class="navlink navlink-hl" data-view="ueben" onclick="go('ueben')"><span class="ic">🎮</span>Üben</button>
     <button class="navlink" data-view="community" onclick="go('community')"><span class="ic">💬</span>Community<span class="badge" id="commBadge" style="display:none">0</span></button>
+    <button class="navlink" data-view="dm" onclick="go('dm')"><span class="ic">📨</span>Direkt-Chats<span class="badge" id="dmBadge" style="display:none">0</span></button>
+    <button class="navlink" data-view="sprech" onclick="go('sprech')"><span class="ic">🎙️</span>Sprech-Challenge</button>
+    <button class="navlink" data-view="buddy" onclick="go('buddy')"><span class="ic">🤝</span>Sprech-Buddy</button>
+    <button class="navlink" data-view="level" onclick="go('level')"><span class="ic">🎯</span>Level</button>
+    <button class="navlink" data-view="fehler" onclick="go('fehler')"><span class="ic">📝</span>Fehler-Trainer</button>
+    <button class="navlink" id="navChallenge" data-view="challenge" onclick="go('challenge')" style="display:none"><span class="ic">🔥</span>Challenge</button>
     <button class="navlink" data-view="lernpfad" onclick="go('lernpfad')"><span class="ic">🪜</span>Lernpfad</button>
     <button class="navlink" data-view="kalender" onclick="go('kalender')"><span class="ic">🗓️</span>Kalender</button>
     <button class="navlink" data-view="stunden" onclick="go('stunden')"><span class="ic">📅</span>Meine Stunden</button>
@@ -346,6 +352,12 @@ body{background:radial-gradient(1100px 460px at 82% -12%,#FFF6E6 0%,#FFFDFB 58%)
     <section class="view active" id="v-dashboard"></section>
     <section class="view" id="v-ueben"></section>
     <section class="view" id="v-community"></section>
+    <section class="view" id="v-dm"></section>
+    <section class="view" id="v-level"></section>
+    <section class="view" id="v-fehler"></section>
+    <section class="view" id="v-challenge"></section>
+    <section class="view" id="v-sprech"></section>
+    <section class="view" id="v-buddy"></section>
     <section class="view" id="v-lernpfad"></section>
     <section class="view" id="v-kalender"></section>
     <section class="view" id="v-stunden"></section>
@@ -553,22 +565,26 @@ function collectVocab(){
 }
 
 // ---------- Router ----------
-const VIEWS=['dashboard','ueben','community','lernpfad','kalender','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','profil'];
+const VIEWS=['dashboard','ueben','community','dm','level','fehler','challenge','sprech','buddy','lernpfad','kalender','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','profil'];
 function go(v){ location.hash=v; }
 function routeFromHash(){ const v=(location.hash||'#dashboard').slice(1); show(VIEWS.includes(v)?v:'dashboard'); }
 // Ohne Guthaben/Probestunde/Pass: ALLES gesperrt außer Kalender (und Profil für Konto/Logout).
-const LOCKED_VIEWS=['dashboard','ueben','community','lernpfad','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda'];
+const LOCKED_VIEWS=['dashboard','ueben','community','dm','level','fehler','challenge','sprech','buddy','lernpfad','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda'];
 function show(v){
+  window.sb=sb; window.user=user; window.profile=profile;   // Bridge für die Community-Module
   VIEWS.forEach(x=>document.getElementById('v-'+x).classList.toggle('active',x===v));
   document.querySelectorAll('.navlink[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));
   if(LOCKED_VIEWS.includes(v) && !isActive()){ renderLocked(v); window.scrollTo(0,0); return; }
-  ({dashboard:renderDashboard,ueben:(window.renderUeben||renderDashboard),community:(window.renderCommunity||renderDashboard),lernpfad:renderLernpfad,kalender:renderKalender,stunden:renderStunden,materialien:renderMaterialien,vokabeln:renderVokabeln,
+  ({dashboard:renderDashboard,ueben:(window.renderUeben||renderDashboard),community:(window.renderCommunity||renderDashboard),
+    dm:(window.renderDM||renderDashboard),level:(window.renderLevel||renderDashboard),fehler:(window.renderFehlerTrainer||renderDashboard),
+    challenge:(window.renderChallenge||renderDashboard),sprech:(window.renderSprech||renderDashboard),buddy:(window.renderBuddy||renderDashboard),
+    lernpfad:renderLernpfad,kalender:renderKalender,stunden:renderStunden,materialien:renderMaterialien,vokabeln:renderVokabeln,
     fortschritt:renderFortschritt,guthaben:renderGuthaben,nachrichten:renderNachrichten,
     amanda:renderAmanda,profil:renderProfil}[v])();
   if(v==='community') markCommRead();   // Community geöffnet -> Nachrichten gelesen, Badge weg
   window.scrollTo(0,0);
 }
-const LOCK_LABELS={dashboard:'Start',ueben:'Üben',community:'Community',lernpfad:'Lernpfad',stunden:'Meine Stunden',materialien:'Material',vokabeln:'Vokabeln',fortschritt:'Fortschritt',guthaben:'Guthaben',nachrichten:'Nachrichten',amanda:'Amanda'};
+const LOCK_LABELS={dashboard:'Start',ueben:'Üben',community:'Community',dm:'Direkt-Chats',level:'Level',fehler:'Fehler-Trainer',challenge:'Challenge',sprech:'Sprech-Challenge',buddy:'Sprech-Buddy',lernpfad:'Lernpfad',stunden:'Meine Stunden',materialien:'Material',vokabeln:'Vokabeln',fortschritt:'Fortschritt',guthaben:'Guthaben',nachrichten:'Nachrichten',amanda:'Amanda'};
 function renderLocked(v){
   const label=LOCK_LABELS[v]||'Dieser Bereich';
   document.getElementById('v-'+v).innerHTML=
@@ -1643,6 +1659,12 @@ init();
 <script src="uebungen.js"></script>
 <script src="ueben.js"></script>
 <script src="community.js"></script>
+<script src="fehler-trainer.js"></script>
+<script src="challenge.js"></script>
+<script src="level.js"></script>
+<script src="sprech-challenge.js"></script>
+<script src="sprech-buddy.js"></script>
+<script src="direct-messages.js"></script>
 <script>
 if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}
 </script>
