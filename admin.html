@@ -1324,7 +1324,7 @@ function bdayLabel(p){ if(!p.birthday) return '<span class="muted">–</span>'; 
 async function authToken(){ const { data } = await sb.auth.getSession(); return data?.session?.access_token || ''; }
 
 async function loadSchueler(){
-  const { data } = await sb.from('profiles').select('id,name,email,credits,status,birthday,inactive_until,level,notes,started_at,target_level,native_language,goal,is_admin,is_teacher,created_at').limit(2000);
+  const { data } = await sb.from('profiles').select('id,name,email,credits,status,birthday,inactive_until,level,notes,started_at,target_level,native_language,goal,is_admin,is_teacher,is_challenger,challenge_start,created_at').limit(2000);
   SCHUELER = data || [];
   document.getElementById('schueler').innerHTML = `
     <div class="card" style="margin-bottom:16px;background:#FFFCF5">
@@ -1401,7 +1401,7 @@ function renderSchuelerTable(){
       <td><b>${esc(p.name||'–')}</b>${staff?' <span class="pill">Team</span>':''}</td>
       <td class="muted">${esc(p.email)}</td>
       <td>${nivo?`<span class="pill" style="background:#Eef;color:#2563EB;font-weight:700">${esc(nivo)}</span>`:'<span class="muted">–</span>'}</td>
-      <td>${statusLabel(st)}${((st==='pause'||st==='urlaub')&&p.inactive_until)?` <span class="muted" style="font-size:11px">bis ${p.inactive_until.split('-').reverse().join('.')}</span>`:''}</td>
+      <td>${statusLabel(st)}${p.is_challenger?' <span class="pill" style="background:#FFF6DC;color:#C79600;font-weight:800">🏆 Challenger</span>':''}${((st==='pause'||st==='urlaub')&&p.inactive_until)?` <span class="muted" style="font-size:11px">bis ${p.inactive_until.split('-').reverse().join('.')}</span>`:''}</td>
       <td><b style="font-size:16px">${p.credits}</b> <span class="muted" style="font-size:12px">Std.</span>${p.credits<=1?' <span class="pill">niedrig</span>':''}</td></tr>`;
   }).join('');
   document.getElementById('schuelerTable').innerHTML = `<p class="muted" style="margin:0 0 6px">Tipp: Auf einen Schüler klicken, um die Schülerkarte zu öffnen.</p><table><tr><th>Name</th><th>E-Mail</th><th>Niveau</th><th>Status</th><th>Guthaben</th></tr>` + rowsHtml + '</table>';
@@ -1429,6 +1429,7 @@ async function openStudentCard(id){
         <div class="field" id="cInactiveWrap" style="margin:0;display:${(st==='pause'||st==='urlaub')?'block':'none'}"><label>Pause/Urlaub bis</label><input id="cInactive" type="date" value="${esc(p.inactive_until||'')}"></div>
       </div>
       <datalist id="levellist"><option>A1</option><option>A2</option><option>B1</option><option>B2</option><option>C1</option><option>C2</option></datalist>
+      <label style="display:flex;align-items:center;gap:10px;margin:4px 0 12px;padding:11px 14px;background:#FFF6DC;border:1px solid #F0DFA0;border-radius:12px;cursor:pointer;font-weight:700"><input type="checkbox" id="cChallenger" ${p.is_challenger?'checked':''} style="width:18px;height:18px;accent-color:#C79600">🏆 Challenger<span class="muted" style="font-weight:500;font-size:12.5px">— nimmt an der 8-Wochen-Challenge teil${p.challenge_start?` · Start ${String(p.challenge_start).split('-').reverse().join('.')}`:''}</span></label>
       <div class="muted" style="margin:8px 0 14px;font-size:13px">🎂 Geburtstag: ${bdayLabel(p)} · 🎯 Ziel: ${esc(p.target_level||'—')} · 🗣️ Muttersprache: ${esc(p.native_language||'—')}</div>
 
       <div style="background:#FFF8E0;border-radius:14px;padding:14px 16px;margin-bottom:14px">
@@ -1521,9 +1522,14 @@ async function saveStudentCard(id){
   const inactive=(status==='pause'||status==='urlaub')?(document.getElementById('cInactive').value||null):null;
   const e1=(await sb.rpc('admin_set_student_card',{ p_user_id:id, p_level:level, p_notes:notes, p_started_at:started })).error;
   const e2=(await sb.rpc('admin_update_student',{ p_user_id:id, p_status:status, p_inactive_until:inactive })).error;
-  const p=SCHUELER.find(x=>x.id===id); if(p){ p.level=level; p.started_at=started; p.notes=notes; p.status=status; p.inactive_until=inactive; }
+  const isChall=!!(document.getElementById('cChallenger')&&document.getElementById('cChallenger').checked);
+  const pOld=SCHUELER.find(x=>x.id===id);
+  const berlinToday=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Berlin',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+  const chStart=isChall?((pOld&&pOld.challenge_start)||berlinToday):(pOld?pOld.challenge_start:null);
+  const e3=(await sb.from('profiles').update({ is_challenger:isChall, challenge_start:chStart }).eq('id',id)).error;
+  const p=SCHUELER.find(x=>x.id===id); if(p){ p.level=level; p.started_at=started; p.notes=notes; p.status=status; p.inactive_until=inactive; p.is_challenger=isChall; p.challenge_start=chStart; }
   renderSchuelerTable();
-  if(msg) msg.textContent=(e1||e2)?('⚠️ '+((e1||e2).message)):'✓ gespeichert';
+  if(msg) msg.textContent=(e1||e2||e3)?('⚠️ '+((e1||e2||e3).message)):'✓ gespeichert';
 }
 async function saveCardCredits(id){
   const val=parseInt(document.getElementById('cCredits').value,10);

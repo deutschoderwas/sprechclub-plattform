@@ -9,7 +9,7 @@
   'use strict';
   var styled = false, sbc = null, ME = null, PROF = null;
   var channels = [], roster = [], dmThreads = [], cur = null, mode = 'channel', dmActive = null;
-  var isTeam = false, isChallenger = false, myName = 'Mitglied';
+  var isTeam = false, isAdmin = false, isChallenger = false, myName = 'Mitglied';
   var reax = {}, corr = {}, savedCorr = {};
   var chan = null, badgeChan = null;
   var rec = null, recStream = null, recChunks = [], recStart = 0;
@@ -189,7 +189,7 @@
     var access=false;
     try{ var a=await sbc.rpc('has_full_access'); access=!!a.data; }catch(e){ access=active(); }
     if(!access){ stopAll(); r.innerHTML=gateHtml(); return; }
-    try{ var pr=await sbc.from('profiles').select('is_admin,is_teacher,is_challenger').eq('id',ME.id).single(); isTeam=!!(pr.data&&(pr.data.is_admin||pr.data.is_teacher)); isChallenger=!!(pr.data&&pr.data.is_challenger); }catch(e){}
+    try{ var pr=await sbc.from('profiles').select('is_admin,is_teacher,is_challenger').eq('id',ME.id).single(); isTeam=!!(pr.data&&(pr.data.is_admin||pr.data.is_teacher)); isAdmin=!!(pr.data&&pr.data.is_admin); isChallenger=!!(pr.data&&pr.data.is_challenger); }catch(e){}
     var ch=await sbc.from('community_channels').select('slug,name,emoji,description,team_only,challenge_only,grp,sort_order').eq('is_active',true).order('sort_order');
     channels=(ch.data||[]).filter(function(c){ return (!c.challenge_only)||isChallenger||isTeam; });
     try{ var rs=await sbc.rpc('community_roster'); roster=(rs&&rs.data)||[]; }catch(e){ roster=[]; }
@@ -413,7 +413,7 @@
     var role = ''; // Team/level badge best-effort from author (unknown here) — team shown via correction ability
     return '<div class="m" data-id="'+E(m.id)+'"><div class="ava '+avClass(m.author_name)+'">'+E(initials(m.author_name))+'</div>'+
       '<div class="mb"><div class="mh"><span class="w">'+E(m.author_name||'Mitglied')+'</span><time>'+timeStr(m.created_at)+'</time>'+correctBtnHtml(m)+
-      (me?'<span class="del" data-del="'+E(m.id)+'" title="Löschen">'+svg(IC.close,'ico-sm')+'</span>':'')+'</div>'+
+      ((me||isAdmin)?'<span class="del" data-del="'+E(m.id)+'" title="Löschen">'+svg(IC.close,'ico-sm')+'</span>':'')+'</div>'+
       bodyHtml(m)+rcHtml(m.id)+'<div data-corrslot="'+E(m.id)+'">'+corrsFor(m.id)+'</div></div></div>';
   }
   function renderFeed(rows){
