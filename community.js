@@ -250,6 +250,7 @@
     r.innerHTML=shellHtml();
     bindSidebar();
     subscribeBadges();
+    if(!window.__cmPresence){ window.__cmPresence=true; window.addEventListener('club-presence',function(){ try{paintPresence();}catch(e){} }); }
     await openChannel(cur);
   }
 
@@ -288,7 +289,7 @@
     var online = roster.filter(function(m){return m.is_online;}).length;
     return '<div class="pagehead"><h1>Community</h1><p>Chatte mit anderen Mitgliedern — Text &amp; Sprachnachrichten, in Echtzeit.</p></div>'+
       '<div class="comm">'+
-        '<div class="cs"><div class="cs-h"><b>Community</b><div class="st"><i></i>'+roster.length+' Mitglieder · '+online+' online</div></div>'+
+        '<div class="cs"><div class="cs-h"><b>Community</b><div class="st"><i></i>'+roster.length+' Mitglieder · <span id="cmOnline">'+countOnline()+'</span> online</div></div>'+
           '<div class="cs-srch"><input type="search" id="cmSearch" placeholder="Suchen \u2026" autocomplete="off"></div>'+
           '<div class="cs-l">'+newsHtml+sideChannels+dmHtml+'</div></div>'+
         '<div class="chat" id="cmChat"></div>'+
@@ -296,16 +297,17 @@
       '</div>';
   }
   function rosterHtml(){
+    var ON=window.CLUB_ONLINE||{};
     var team=roster.filter(function(m){return m.is_team;});
-    var onl=roster.filter(function(m){return !m.is_team&&m.is_online;});
-    var off=roster.filter(function(m){return !m.is_team&&!m.is_online;});
+    var onl=roster.filter(function(m){return !m.is_team&&ON[m.id];});
+    var off=roster.filter(function(m){return !m.is_team&&!ON[m.id];});
     function row(m,cls){
       var fn=String(m.name||'Mitglied').trim().split(/\s+/)[0];
       return '<div class="mem'+(cls==='off'?' off':'')+'"><div class="mw"><div class="ava '+avClass(m.name)+'">'+E(initials(fn))+'</div><span class="pr'+(cls==='off'?' of':'')+'"></span></div>'+
         '<div><div class="mn">'+E(fn)+'</div><div class="msb">'+(m.is_team?'Team':(m.level?E(m.level):'Mitglied'))+'</div></div></div>';
     }
     var h='';
-    if(team.length){ h+='<h4>Team</h4>'+team.map(function(m){return row(m,'on');}).join(''); }
+    if(team.length){ h+='<h4>Team</h4>'+team.map(function(m){return row(m,ON[m.id]?'on':'off');}).join(''); }
     if(onl.length){ h+='<h4 style="margin-top:6px">Online — '+onl.length+'</h4>'+onl.map(function(m){return row(m,'on');}).join(''); }
     if(off.length){ h+='<h4 style="margin-top:6px">Mitglieder — '+off.length+'</h4>'+off.slice(0,40).map(function(m){return row(m,'off');}).join(''); }
     if(!h) h='<div class="cm-empty">Noch keine Mitglieder.</div>';
@@ -727,6 +729,8 @@
       .on('postgres_changes',{event:'INSERT',schema:'public',table:'community_corrections',filter:'channel=eq.'+slug},function(p){ var c=p.new; if(!c||c.deleted_at) return; (corr[c.message_id]||(corr[c.message_id]=[])).push(c); var row=q('[data-id="'+c.message_id+'"]'); var slot=row&&row.querySelector('[data-corrslot]'); if(slot) slot.innerHTML=corrsFor(c.message_id); })
       .subscribe();
   }
+  function countOnline(){ var ON=window.CLUB_ONLINE||{}; return roster.filter(function(m){return ON[m.id];}).length; }
+  function paintPresence(){ if(mode!=='channel'&&mode!=='dm'&&mode!=='search'){} var rEl=q('#cmRoster'); if(rEl) rEl.innerHTML=rosterHtml(); var o=q('#cmOnline'); if(o) o.textContent=countOnline(); }
   function stopAll(){ try{ if(chan)sbc.removeChannel(chan); if(badgeChan)sbc.removeChannel(badgeChan); }catch(e){} chan=null; badgeChan=null; }
 
   window.renderCommunity=renderCommunity;

@@ -661,6 +661,22 @@ function lsGet(k,def){ try{ return JSON.parse(localStorage.getItem(lsKey(k))) ??
 function lsSet(k,v){ try{ localStorage.setItem(lsKey(k), JSON.stringify(v)); }catch(e){} }
 
 // ---------- Init ----------
+window.CLUB_ONLINE = {};
+let clubPresence = null;
+function startPresence(){
+  try{
+    if(clubPresence || !sb || !user) return;
+    clubPresence = sb.channel('club-presence', { config:{ presence:{ key: user.id } } });
+    clubPresence.on('presence', { event:'sync' }, function(){
+      const st = clubPresence.presenceState() || {};
+      const set = {}; Object.keys(st).forEach(function(id){ set[id]=true; });
+      window.CLUB_ONLINE = set;
+      window.dispatchEvent(new CustomEvent('club-presence'));
+    }).subscribe(function(status){
+      if(status==='SUBSCRIBED'){ try{ clubPresence.track({ name:(profile&&profile.name)||'', at:Date.now() }); }catch(e){} }
+    });
+  }catch(e){}
+}
 async function init(){
   if (DEMO){ document.getElementById('v-dashboard').innerHTML='<div class="empty">Vorschau-Modus — verbinde Supabase, um deinen Schülerbereich zu sehen.</div>'; return; }
   sb = supabase.createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY, {
@@ -671,6 +687,7 @@ async function init(){
   user = session.user;
   maybeStartNow(session);
   await load();
+  startPresence();
   window.addEventListener('hashchange', routeFromHash);
   routeFromHash();
   requireBirthday();   // Pflicht: Geburtsdatum abfragen, falls noch nicht gesetzt
