@@ -123,6 +123,19 @@
   .imp-panel .row{display:flex; gap:8px;}
   .imp-panel .row button{flex:1; border-radius:999px; padding:10px; font-weight:800; font-size:.85rem; cursor:pointer; border:1px solid var(--rahmen); background:#fff; color:var(--weich);}
   .imp-panel .row .send{background:var(--tuerkis); color:var(--auf-tuerkis); border-color:var(--tuerkis);}
+  /* Präsentation ändern (Admin-Modal) */
+  .pres-overlay{ position:fixed; inset:0; z-index:85; background:rgba(26,26,26,.55); display:none; align-items:center; justify-content:center; padding:20px; }
+  .pres-overlay.open{ display:flex; }
+  .pres-card{ background:#fff; border-radius:20px; max-width:460px; width:100%; padding:24px; box-shadow:0 20px 50px rgba(0,0,0,.25); }
+  .pres-card h3{ font-family:'Space Grotesk',sans-serif; font-size:1.2rem; margin:0 0 6px; color:var(--anthrazit); }
+  .pres-card p{ color:var(--weich); font-size:.86rem; line-height:1.5; margin:0 0 12px; }
+  .pres-card input{ width:100%; box-sizing:border-box; border:1px solid var(--rahmen); border-radius:12px; padding:11px 12px; font-family:'Inter'; font-size:.92rem; }
+  .pres-msg{ font-size:.82rem; margin:8px 2px 0; min-height:1.1em; }
+  .pres-msg.ok{ color:var(--tuerkis-dunkel); font-weight:700; }
+  .pres-msg.err{ color:var(--rot); font-weight:700; }
+  .pres-actions{ display:flex; gap:8px; margin-top:14px; }
+  .pres-actions button{ flex:1; border-radius:999px; padding:12px; font-family:'Inter'; font-weight:800; font-size:.9rem; cursor:pointer; border:1px solid var(--rahmen); background:#fff; color:var(--weich); }
+  .pres-actions .send{ background:var(--tuerkis); color:var(--auf-tuerkis); border-color:var(--tuerkis); }
   #jitsi{width:100%; height:100%;}
   /* Eigenes Teilnehmer-Raster (alle gleichzeitig, Kacheln füllen ohne Schwarzrand) */
   #dgrid{ display:grid; gap:5px; width:100%; height:100%; padding:5px; box-sizing:border-box; background:var(--anthrazit); place-content:stretch; grid-template-columns:repeat(auto-fit, minmax(120px,1fr)); grid-auto-rows:1fr; }
@@ -288,6 +301,7 @@
       <span class="name">Lektion</span>
       <span class="spacer"></span>
       <div class="stift-tools" id="stift-tools">
+        <button id="pres-btn" class="hidden" onclick="openPresEdit()" title="Präsentation dieser Stunde ändern (nur du)">🔁 Präsentation</button>
         <button id="stift-btn" onclick="stiftToggle()">✏️ Stift</button>
         <span class="stift-extra hidden" id="stift-extra">
           <button class="farbe" data-c="#DD0000" style="background:#DD0000" onclick="stiftFarbe('#DD0000')" title="Rot"></button>
@@ -663,6 +677,41 @@
       if(url) _lektion = url;
     }catch(e){ console.warn('Lektion-Abruf fehlgeschlagen', e); }
     zeigeKopf();                       // aktualisierte Live-Version
+  }
+
+  // ===== Präsentation live selbst ändern (nur Admin) – erscheint sofort bei allen =====
+  function openPresEdit(){
+    const ov=document.getElementById('pres-overlay'), inp=document.getElementById('pres-url'), msg=document.getElementById('pres-msg');
+    if(!ov) return;
+    if(inp) inp.value = _lektion || '';
+    if(msg){ msg.textContent=''; msg.className='pres-msg'; }
+    ov.classList.add('open');
+    if(inp) setTimeout(()=>{ inp.focus(); inp.select(); }, 60);
+  }
+  function closePresEdit(){ const ov=document.getElementById('pres-overlay'); if(ov) ov.classList.remove('open'); }
+  function normPresUrl(v){
+    v=(v||'').trim(); if(!v) return '';
+    if(/^https?:\/\//i.test(v)) return v;                 // ganzer Link
+    v=v.replace(/^\/+/,'').replace(/\.html$/i,'');        // nur Dateiname
+    return 'https://www.deutschoderwas-club.de/'+v+'.html';
+  }
+  async function applyPresEdit(){
+    const inp=document.getElementById('pres-url'), msg=document.getElementById('pres-msg');
+    const url=normPresUrl(inp && inp.value);
+    if(!url){ if(msg){ msg.textContent='Bitte einen Link oder Dateinamen eingeben.'; msg.className='pres-msg err'; } return; }
+    if(msg){ msg.textContent='Wird gespeichert …'; msg.className='pres-msg'; }
+    try{
+      const { error:e1 } = await sb.from('classes').update({ material_live:url }).eq('id', STUNDE);
+      if(e1) throw e1;
+      const { data:cm } = await sb.from('class_materials').select('content').eq('class_id', STUNDE).maybeSingle();
+      const content = Object.assign({}, (cm && cm.content) || {}, { lesson_url:url });
+      const { error:e2 } = await sb.from('class_materials').upsert({ class_id:STUNDE, content }, { onConflict:'class_id' });
+      if(e2) throw e2;
+      _lektion=url; zeigeKopf();                                   // sofort lokal neu laden
+      try{ if(window._lessonCh) window._lessonCh.send({ type:'broadcast', event:'lesson', payload:{ url } }); }catch(e){}  // an alle Schüler
+      if(msg){ msg.textContent='✅ Geändert – alle sehen jetzt die neue Präsentation.'; msg.className='pres-msg ok'; }
+      setTimeout(closePresEdit, 1300);
+    }catch(e){ console.warn('Präsentation ändern', e); if(msg){ msg.textContent='Konnte nicht gespeichert werden ('+((e&&e.message)||'Fehler')+'). Nur Admin darf ändern.'; msg.className='pres-msg err'; } }
   }
 
   function initSb(){
@@ -1174,9 +1223,18 @@
         window._meId = user.id;
         const { data:prof } = await sb.from('profiles').select('is_teacher,is_admin,name').eq('id',user.id).maybeSingle();
         istLehrer = !!(prof && (prof.is_teacher||prof.is_admin));
+        window._meIsAdmin = !!(prof && prof.is_admin);
         window._meName = (prof && prof.name && String(prof.name).trim()) || 'Schüler:in';
       }
     }catch(e){ console.warn('Rolle', e); }
+    // Admin: Knopf „Präsentation ändern" zeigen
+    if(window._meIsAdmin){ const pb=document.getElementById('pres-btn'); if(pb) pb.classList.remove('hidden'); }
+    // Live-Kanal: Präsentationswechsel sofort bei ALLEN anwenden
+    try{
+      window._lessonCh = sb.channel('lesson-'+STUNDE)
+        .on('broadcast', { event:'lesson' }, ({payload})=>{ if(payload && payload.url){ _lektion=payload.url; zeigeKopf(); } })
+        .subscribe();
+    }catch(e){ console.warn('Lesson-Kanal', e); }
     // WICHTIG: Realtime mit dem Login-Token authentifizieren, sonst blockiert RLS
     // die Live-Updates für Schüler (sie würden die Tafel nicht sehen).
     try{ const { data:{ session } } = await sb.auth.getSession(); if(session && sb.realtime && sb.realtime.setAuth) sb.realtime.setAuth(session.access_token); }catch(e){ console.warn('Realtime-Auth', e); }
@@ -1446,6 +1504,20 @@
   <div class="row">
     <button onclick="clearImpuls(true)">Ausblenden</button>
     <button class="send" onclick="sendImpuls()">Senden</button>
+  </div>
+</div>
+
+<!-- Präsentation ändern (nur Admin) – live für alle -->
+<div class="pres-overlay" id="pres-overlay">
+  <div class="pres-card">
+    <h3>🔁 Präsentation ändern</h3>
+    <p>Trage die richtige Lektion für diese Stunde ein. Du kannst den <b>ganzen Link</b> oder nur den <b>Dateinamen</b> eingeben. Die Änderung erscheint sofort bei allen Schüler:innen.</p>
+    <input id="pres-url" placeholder="z. B. integration-heimat-teil-2-b2-c1" autocapitalize="off" autocorrect="off" spellcheck="false">
+    <div class="pres-msg" id="pres-msg"></div>
+    <div class="pres-actions">
+      <button onclick="closePresEdit()">Abbrechen</button>
+      <button class="send" onclick="applyPresEdit()">Übernehmen</button>
+    </div>
   </div>
 </div>
 </body>
