@@ -135,6 +135,25 @@
   .bg-grid button:hover{ background:var(--creme); }
   .bg-grid button.on{ background:var(--tuerkis); color:var(--auf-tuerkis); border-color:var(--tuerkis); }
   .bg-hint{ font-size:.75rem; color:var(--weich); margin-top:9px; line-height:1.4; }
+  /* Breakout-Räume */
+  .bo-panel{ position:fixed; right:14px; bottom:70px; z-index:62; width:min(340px,94vw); max-height:70vh; overflow:auto; background:#fff; border:1px solid var(--rahmen); border-radius:16px; box-shadow:0 16px 44px rgba(0,0,0,.22); padding:14px; display:none; }
+  .bo-panel.open{ display:block; }
+  .bo-panel h4{ font-family:'Space Grotesk',sans-serif; font-size:1rem; margin:0 0 10px; }
+  .bo-row{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:10px 0; }
+  .bo-row label{ font-size:.8rem; color:var(--weich); font-weight:700; }
+  .bo-panel input[type=number]{ width:52px; border:1px solid var(--rahmen); border-radius:8px; padding:6px; font-family:'Inter'; font-size:.85rem; text-align:center; }
+  .bo-panel button{ border:1px solid var(--rahmen); background:var(--creme-hell); border-radius:9px; padding:8px 11px; font-family:'Inter'; font-weight:700; font-size:.8rem; cursor:pointer; color:var(--anthrazit); }
+  .bo-panel button:hover{ background:var(--creme); }
+  .bo-start{ background:var(--tuerkis) !important; color:var(--auf-tuerkis) !important; border-color:var(--tuerkis) !important; flex:1; }
+  .bo-end{ background:var(--rot) !important; color:#fff !important; border-color:var(--rot) !important; }
+  .bo-p{ display:flex; align-items:center; justify-content:space-between; gap:8px; padding:6px 2px; border-bottom:1px solid var(--rahmen); font-size:.86rem; }
+  .bo-active{ font-weight:800; color:var(--tuerkis-dunkel); margin-bottom:8px; }
+  .bo-grp{ background:var(--creme-hell); border:1px solid var(--rahmen); border-radius:10px; padding:8px 10px; margin-bottom:8px; }
+  .bo-grp-h{ display:flex; align-items:center; justify-content:space-between; }
+  .bo-mem{ font-size:.8rem; color:var(--weich); margin-top:3px; }
+  .bo-hint{ font-size:.78rem; color:var(--weich); }
+  .bo-banner{ position:fixed; top:12px; left:50%; transform:translateX(-50%); z-index:72; background:var(--tuerkis); color:var(--auf-tuerkis); font-family:'Inter'; font-weight:800; font-size:.9rem; padding:9px 18px; border-radius:999px; box-shadow:0 6px 18px rgba(0,0,0,.2); display:none; }
+  .bo-banner.show{ display:block; }
   /* Präsentation ändern (Admin-Modal) */
   .pres-overlay{ position:fixed; inset:0; z-index:85; background:rgba(26,26,26,.55); display:none; align-items:center; justify-content:center; padding:20px; }
   .pres-overlay.open{ display:flex; }
@@ -357,6 +376,7 @@
         <button id="vc-hand" onclick="vcHand()" title="Melden – ich möchte sprechen" style="display:none">✋ Melden</button>
         <button id="vc-share" onclick="vcShare()" title="Bildschirm / Präsentation teilen">🖥️ Teilen</button>
         <button id="vc-muteall" onclick="vcMuteAll()" title="Alle Schüler stummschalten (bei Hintergrundgeräuschen)" style="display:none">🔇 Alle stumm</button>
+        <button id="vc-bo" onclick="toggleBoPanel()" title="Kleingruppen (Breakout-Räume) bilden" style="display:none">👥 Gruppen</button>
         <button onclick="vcTiles()" title="Alle Teilnehmer sehen">👥 Alle</button>
         <button onclick="vcFull()" title="Großansicht">⛶ Groß</button>
         <button id="vc-tafelbig" onclick="toggleTafelBig()" title="Live-Tafel groß neben der Präsentation (nur am Computer)">🔳 Tafel groß</button>
@@ -420,6 +440,7 @@
     rolle=r; const lehrer = r==='lehrer';
     window._meIsLehrer = lehrer;
     const mb=document.getElementById('vc-muteall'); if(mb) mb.style.display = lehrer ? '' : 'none';
+    const bob=document.getElementById('vc-bo'); if(bob) bob.style.display = lehrer ? '' : 'none';
     const hb=document.getElementById('vc-hand'); if(hb) hb.style.display = lehrer ? 'none' : '';
     const tr=document.getElementById('tools-row'); if(tr) tr.classList.toggle('on', lehrer);
     if(typeof renderHands==='function') renderHands();
@@ -779,7 +800,7 @@
     document.head.appendChild(s);
   }
   // Beitritts-Token + Raum-URL aus der Plattform holen (nur eingeloggte Club-Mitglieder).
-  async function holeDailyRaum(){
+  async function holeDailyRaum(group){
     if(!sb || !STUNDE) return null;
     // Beim frischen Laden ist die Login-Sitzung evtl. noch nicht hydriert → kurz warten/retry,
     // damit IMMER Daily (bestes Video) gewählt wird und nicht fälschlich auf Jitsi zurückgefallen wird.
@@ -790,7 +811,7 @@
       const res = await fetch('/api/daily-room', {
         method:'POST',
         headers:{ 'Authorization':'Bearer '+session.access_token, 'Content-Type':'application/json' },
-        body: JSON.stringify({ classId: STUNDE })
+        body: JSON.stringify({ classId: STUNDE, group: group||null })
       });
       if(!res.ok) return null;
       const j = await res.json();
@@ -809,7 +830,7 @@
     dframe.on('participant-left', renderGrid);
     dframe.on('track-started', renderGrid);
     dframe.on('track-stopped', renderGrid);
-    dframe.on('left-meeting', ()=>{ window._inCall=false; dailyLeftMsg(); });
+    dframe.on('left-meeting', ()=>{ if(window._switching) return; window._inCall=false; dailyLeftMsg(); });
     dframe.on('error', (e)=>{ console.warn('Daily-Fehler', e); });
     dailyAudioUnlock();
     dframe.join({ url, token }).catch(e=>{ console.warn('Daily join fehlgeschlagen → Jitsi', e); dailyFallbackJitsi(); });
@@ -902,6 +923,83 @@
     try{ const o={}; o[id]={ setAudio:false }; dframe.updateParticipants(o); }
     catch(e){ console.warn('muteOne', e); }
   }
+  // ===== BREAKOUT-RÄUME: Lehrer teilt in Kleingruppen; Schüler werden automatisch verschoben =====
+  window._currentGroup = 0; window._boAssign = {}; window._breakoutGroups = {}; window._breakoutActive=false;
+  async function wechsleRaum(group){
+    if(window._provider!=='daily' || !dframe) return;
+    const daily = await holeDailyRaum(group||null);
+    if(!daily) return;
+    window._switching = true;
+    try{ await dframe.leave(); }catch(e){}
+    const grid=document.getElementById('dgrid'); if(grid) grid.innerHTML='';
+    try{ await dframe.join({ url:daily.url, token:daily.token }); window._currentGroup = group||0; }
+    catch(e){ console.warn('Raumwechsel', e); }
+    window._switching = false;
+    setTimeout(()=>{ renderGrid(); if(typeof applySavedBg==='function') applySavedBg(); }, 250);
+  }
+  function handleBreakout(p){
+    if(!p) return;
+    if(p.active){
+      window._breakoutActive=true; window._breakoutGroups=p.groups||{};
+      if(!istLehrer){
+        const g = (p.groups && p.groups[window._meId]) || 0;
+        showBoBanner(g);
+        if(g && g!==window._currentGroup) wechsleRaum(g);
+      }
+    } else {
+      window._breakoutActive=false; hideBoBanner();
+      if(window._currentGroup) wechsleRaum(0);
+    }
+    if(istLehrer) boRenderTeacher();
+  }
+  function toggleBoPanel(){ const p=document.getElementById('bo-panel'); if(p){ boRenderTeacher(); p.classList.toggle('open'); } }
+  function boParticipants(){ try{ const ps=dframe.participants(); return Object.values(ps).filter(x=>!x.local).map(x=>({ id:x.user_id||x.session_id, name:(x.user_name&&String(x.user_name).trim())||'Teilnehmer:in' })); }catch(e){ return []; } }
+  function boZufall(){
+    const el=document.getElementById('bo-size'); const size=Math.max(2, parseInt((el&&el.value)||'2',10));
+    const ppl=boParticipants();
+    for(let i=ppl.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=ppl[i]; ppl[i]=ppl[j]; ppl[j]=t; }
+    window._boAssign={}; let g=1,c=0;
+    ppl.forEach(pp=>{ window._boAssign[pp.id]=g; c++; if(c>=size){ g++; c=0; } });
+    boRenderTeacher();
+  }
+  function boSet(id,g){ const n=parseInt(g,10); if(n>0) window._boAssign[id]=n; else delete window._boAssign[id]; boRenderTeacher(); }
+  function boRenderTeacher(){
+    const body=document.getElementById('bo-body'); if(!body) return;
+    const esc=(s)=>String(s==null?'':s).replace(/[<>&"']/g,'');
+    const ppl=boParticipants();
+    if(window._breakoutActive){
+      const groups={}; Object.entries(window._breakoutGroups||{}).forEach(([id,g])=>{ (groups[g]=groups[g]||[]).push(id); });
+      const nameOf=(id)=>{ const f=ppl.find(x=>x.id===id); return f?f.name:'…'; };
+      let html='<div class="bo-active">🟢 Gruppen laufen</div>';
+      Object.keys(groups).sort((a,b)=>a-b).forEach(g=>{
+        html+=`<div class="bo-grp"><div class="bo-grp-h"><b>Gruppe ${esc(g)}</b><button onclick="boHop(${esc(g)})">👀 ansehen</button></div><div class="bo-mem">${groups[g].map(id=>esc(nameOf(id))).join(', ')}</div></div>`;
+      });
+      html+=`<div class="bo-row"><button onclick="boHop(0)">🏠 Hauptraum</button><button class="bo-end" onclick="boEnd()">⏹️ Alle zurückholen</button></div>`;
+      body.innerHTML=html; return;
+    }
+    let html=`<div class="bo-row"><label>Gruppengröße</label><input id="bo-size" type="number" min="2" max="8" value="2"><button onclick="boZufall()">🎲 Zufällig</button></div>`;
+    if(!ppl.length) html+='<div class="bo-hint">Noch keine Schüler im Raum.</div>';
+    ppl.forEach(pp=>{ const cur=window._boAssign[pp.id]||''; html+=`<div class="bo-p"><span>${esc(pp.name)}</span><input type="number" min="1" max="12" value="${esc(cur)}" placeholder="–" onchange="boSet('${esc(pp.id)}',this.value)"></div>`; });
+    html+=`<div class="bo-row"><button class="bo-start" onclick="boStart()">▶️ Gruppen starten</button></div>`;
+    body.innerHTML=html;
+  }
+  function boStart(){
+    const groups={}; Object.entries(window._boAssign).forEach(([id,g])=>{ if(g>0) groups[id]=g; });
+    if(!Object.keys(groups).length) return;
+    window._breakoutActive=true; window._breakoutGroups=groups;
+    try{ if(window._boCh) window._boCh.send({ type:'broadcast', event:'bo', payload:{ active:true, groups } }); }catch(e){}
+    boRenderTeacher();
+  }
+  function boEnd(){
+    window._breakoutActive=false;
+    try{ if(window._boCh) window._boCh.send({ type:'broadcast', event:'bo', payload:{ active:false } }); }catch(e){}
+    if(window._currentGroup) wechsleRaum(0);
+    boRenderTeacher();
+  }
+  function boHop(g){ wechsleRaum(g||0); }
+  function showBoBanner(g){ const b=document.getElementById('bo-banner'); if(!b) return; const t=b.querySelector('.bo-txt'); if(t) t.textContent = g ? ('👥 Gruppenarbeit – du bist in Gruppe '+g) : '👥 Gruppenarbeit läuft – du bleibst im Hauptraum'; b.classList.add('show'); }
+  function hideBoBanner(){ const b=document.getElementById('bo-banner'); if(b) b.classList.remove('show'); }
+
   function dailySyncButtons(p){
     const mic=document.getElementById('vc-mic'); if(mic){ const on=!!p.audio; mic.textContent=on?'🎤 Mikro an':'🔇 Mikro aus'; mic.classList.toggle('muted', !on); }
     const cam=document.getElementById('vc-cam'); if(cam){ const on=!!p.video; cam.textContent=on?'📷 Kamera an':'🚫 Kamera aus'; cam.classList.toggle('muted', !on); }
@@ -1465,6 +1563,10 @@
     window._reactCh = sb.channel('react-'+STUNDE)
       .on('broadcast', { event:'rx' }, ({payload})=>{ if(payload && payload.emoji) floatReaction(payload.emoji); })
       .subscribe();
+    // Breakout-Räume: Start/Ende + Gruppenzuordnung
+    window._boCh = sb.channel('breakout-'+STUNDE)
+      .on('broadcast', { event:'bo' }, ({payload})=>{ if(typeof handleBreakout==='function') handleBreakout(payload); })
+      .subscribe();
     window._handCh = sb.channel('hand-'+STUNDE)
       .on('broadcast', { event:'hand' }, ({payload})=>{
         if(!payload) return;
@@ -1603,5 +1705,13 @@
   </div>
   <div class="bg-hint" id="bg-hint"></div>
 </div>
+
+<!-- Breakout-Räume: Lehrer-Panel -->
+<div class="bo-panel" id="bo-panel">
+  <h4>👥 Kleingruppen</h4>
+  <div class="bo-body" id="bo-body"></div>
+</div>
+<!-- Breakout-Banner für Schüler -->
+<div class="bo-banner" id="bo-banner"><span class="bo-txt"></span></div>
 </body>
 </html>
