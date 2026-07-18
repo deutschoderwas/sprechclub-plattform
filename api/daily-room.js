@@ -46,7 +46,7 @@ async function ensureRoom(name) {
   throw new Error('create_failed(' + r.status + '): ' + createErr.slice(0, 240));
 }
 
-async function meetingToken({ room, isOwner, userName }) {
+async function meetingToken({ room, isOwner, userName, userId }) {
   const exp = Math.floor(Date.now() / 1000) + 6 * 3600; // 6 Stunden gültig
   const r = await fetch(DAILY + '/meeting-tokens', {
     method: 'POST',
@@ -56,6 +56,7 @@ async function meetingToken({ room, isOwner, userName }) {
         room_name: room,
         is_owner: !!isOwner,
         user_name: userName || (isOwner ? 'Lehrkraft' : 'Schüler:in'),
+        user_id: userId || undefined,   // = Supabase-User-ID (für Breakout-Zuordnung)
         exp,
         start_video_off: false,
         start_audio_off: false,
@@ -75,7 +76,7 @@ export default async function handler(req, res) {
   if (!process.env.DAILY_API_KEY) return res.status(200).json({ ok: false, error: 'daily_not_configured' });
 
   const token = (req.headers.authorization || '').replace('Bearer ', '');
-  const { classId } = req.body || {};
+  const { classId, group } = req.body || {};
   if (!token || !classId) return res.status(400).json({ ok: false, error: 'bad_request' });
 
   const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
@@ -93,12 +94,14 @@ export default async function handler(req, res) {
   const isOwner = !!(prof && (prof.is_teacher || prof.is_admin));
   const userName = (prof && prof.name && String(prof.name).trim()) || (isOwner ? 'Lehrkraft' : 'Schüler:in');
 
-  // 3) Raumname aus der Klassen-ID (nur erlaubte Zeichen)
-  const room = ('dow-' + String(classId)).replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 60);
+  // 3) Raumname aus der Klassen-ID (+ optionale Breakout-Gruppe, nur erlaubte Zeichen)
+  const g = group != null ? String(group).replace(/[^a-zA-Z0-9]/g, '') : '';
+  const base = ('dow-' + String(classId)).replace(/[^a-zA-Z0-9_-]/g, '');
+  const room = (g ? (base + '-g' + g) : base).slice(0, 60);
 
   try {
     const roomObj = await ensureRoom(room);
-    const mtoken = await meetingToken({ room, isOwner, userName });
+    const mtoken = await meetingToken({ room, isOwner, userName, userId: user.id });
     return res.status(200).json({ ok: true, url: roomObj.url, token: mtoken, owner: isOwner, name: userName });
   } catch (e) {
     return res.status(200).json({ ok: false, error: 'daily_error', detail: String((e && e.message) || e).slice(0, 300) });
