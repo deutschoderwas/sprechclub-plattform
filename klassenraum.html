@@ -40,6 +40,9 @@
   .lekt-kopf .tag{font-weight:700;}
   .lekt-kopf .name{color:var(--weich); font-weight:600;}
   .stift-tools{display:flex; align-items:center; gap:8px;}
+  /* „Live folgen"-Knopf (Schüler): erscheint nur, wenn sie sich zum eigenen Blättern gelöst haben */
+  .follow-btn{ display:none; align-items:center; gap:6px; border:none; background:var(--tuerkis); color:var(--auf-tuerkis); border-radius:999px; padding:6px 13px; font-family:'Inter'; font-weight:800; font-size:.8rem; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,.15); white-space:nowrap; }
+  .follow-btn.show{ display:inline-flex; }
   .stift-tools button{border:1px solid var(--rahmen); background:#fff; cursor:pointer; border-radius:999px; padding:6px 12px; font-family:'Inter'; font-weight:600; font-size:.8rem; color:var(--anthrazit);}
   #stift-btn.on{background:var(--anthrazit); color:#fff; border-color:var(--anthrazit);}
   .stift-extra{display:flex; align-items:center; gap:6px;}
@@ -300,6 +303,7 @@
       <span class="tag">📘 Interaktive Lektion</span>
       <span class="name">Lektion</span>
       <span class="spacer"></span>
+      <button id="follow-btn" class="follow-btn" onclick="reFollow()" title="Zurück zur Stelle der Lehrkraft springen">🔗 Live folgen</button>
       <div class="stift-tools" id="stift-tools">
         <button id="pres-btn" class="hidden" onclick="openPresEdit()" title="Präsentation dieser Stunde ändern (nur du)">🔁 Präsentation</button>
         <button id="stift-btn" onclick="stiftToggle()">✏️ Stift</button>
@@ -1344,7 +1348,8 @@
     const scrollCh = sb.channel('scroll-'+STUNDE);
     scrollCh.on('broadcast', { event:'pos' }, ({payload})=>{
         if(istLehrer || !payload) return;                 // nur Schüler folgen
-        window._lastTeacherFrac = payload.frac||0;        // Position merken (für Reiter-Wechsel)
+        window._lastTeacherFrac = payload.frac||0;        // Position immer merken (auch wenn gerade selbst geblättert)
+        if(!window._followTeacher) return;                // Schüler blättert gerade selbst → nicht zurückspringen
         _ignoreScrollUntil = Date.now()+400;              // eigenes Auto-Scrollen nicht zurückmelden
         applyFrac(payload.frac||0);
       })
@@ -1358,8 +1363,35 @@
     }
     window._applyTab = applyTab;
     const tabCh = sb.channel('tab-'+STUNDE)
-      .on('broadcast', { event:'tab' }, ({payload})=>{ if(!istLehrer && payload && payload.tab!=null){ window._lastTeacherTab=payload.tab; applyTab(payload.tab); } })
+      .on('broadcast', { event:'tab' }, ({payload})=>{ if(!istLehrer && payload && payload.tab!=null){ window._lastTeacherTab=payload.tab; if(window._followTeacher) applyTab(payload.tab); } })
       .subscribe();
+
+    // ===== Schüler dürfen die Präsentation SELBST bedienen =====
+    // Standard: sie folgen der Lehrkraft. Sobald sie selbst scrollen oder einen Reiter wechseln,
+    // lösen sie sich → freies Blättern. Mit „🔗 Live folgen" springen sie zurück zur Lehrkraft.
+    window._followTeacher = true;
+    function setFollow(on){
+      window._followTeacher = !!on;
+      const b=document.getElementById('follow-btn'); if(b) b.classList.toggle('show', !istLehrer && !on);
+      if(on){
+        if(window._lastTeacherTab!=null) applyTab(window._lastTeacherTab);
+        if(window._lastTeacherFrac!=null){ _ignoreScrollUntil=Date.now()+700; setTimeout(()=>applyFrac(window._lastTeacherFrac), 150); }
+      }
+    }
+    function detachFollow(){ if(!istLehrer && window._followTeacher) setFollow(false); }
+    window.reFollow = ()=> setFollow(true);
+    if(!istLehrer){
+      // Scrollen/Wischen der Seite = Schüler will selbst schauen → lösen
+      ['wheel','touchmove'].forEach(ev=>window.addEventListener(ev, detachFollow, {passive:true}));
+      // Interaktion IN der Lektion (gleiche Domain): Scrollen oder Reiter-Klick löst ebenfalls
+      const hookIframe=()=>{ try{ const d=lektWin().document;
+        d.addEventListener('wheel', detachFollow, {passive:true});
+        d.addEventListener('touchmove', detachFollow, {passive:true});
+        d.addEventListener('click', (e)=>{ if(e.target && e.target.closest && e.target.closest('.tab')) detachFollow(); }, true);
+      }catch(e){} };
+      const ifr0=document.getElementById('lektion'); if(ifr0){ ifr0.addEventListener('load', ()=>setTimeout(hookIframe,150)); }
+      setTimeout(hookIframe, 600);
+    }
 
     if(istLehrer){
       let lastFrac=-1, lastTab=null, tick=0;
@@ -1430,7 +1462,7 @@
     if(which==='tafel'){ const t=document.getElementById('mt-tafel'); if(t) t.classList.remove('hat-neu'); }  // Hinweis weg
     if(which==='lekt'){
       // Präsentation zeigen → voll ausklappen und sofort zur aktuellen Stelle der Lehrkraft springen
-      setTimeout(()=>{ fitLektion(); if(!istLehrer && window._applyFrac && window._lastTeacherFrac!=null) window._applyFrac(window._lastTeacherFrac); }, 160);
+      setTimeout(()=>{ fitLektion(); if(!istLehrer && window._followTeacher && window._applyFrac && window._lastTeacherFrac!=null) window._applyFrac(window._lastTeacherFrac); }, 160);
     } else { setTimeout(fit, 120); window.scrollTo(0,0); }
   }
   mTab('lekt');
