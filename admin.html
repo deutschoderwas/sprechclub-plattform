@@ -637,7 +637,7 @@ function renderKlassen(){
 
       <div style="margin-top:14px">
         <div class="kl-sec">👥 Gebuchte Schüler (${p.length})</div>
-        ${p.length?'<div>'+p.map(x=>`<div class="tn" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">👤 ${esc(x.name||'')} <span class="muted">${esc(x.email)}</span>${(isAdminUser&&x.user_id)?`<span style="margin-left:auto;display:flex;gap:6px;flex-wrap:wrap"><button class="btn btn-ghost" style="padding:3px 11px;font-size:12px" onclick="rebookStudent('${x.user_id}','${c.id}')">🔁 umbuchen</button><button class="btn btn-ghost" style="padding:3px 11px;font-size:12px;color:#DD0000;border-color:#f3b0b0" onclick="cancelStudent('${x.user_id}','${c.id}')">✕ stornieren</button></span>`:''}</div>`).join('')+'</div>':'<div class="muted" style="font-size:12px">Noch niemand gebucht.</div>'}
+        ${p.length?'<div>'+p.map(x=>`<div class="tn" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">👤 ${esc(x.name||'')} <span class="muted">${esc(x.email)}</span>${(isAdminUser&&x.user_id)?`<span style="margin-left:auto;display:flex;gap:6px;flex-wrap:wrap"><button class="btn btn-ghost" style="padding:3px 11px;font-size:12px;color:#1657c8;border-color:#bcd0f5" onclick="jkMailClass('${c.id}','${encodeURIComponent(c.title||'')}','${x.user_id}')">✉️ Mail</button><button class="btn btn-ghost" style="padding:3px 11px;font-size:12px" onclick="rebookStudent('${x.user_id}','${c.id}')">🔁 umbuchen</button><button class="btn btn-ghost" style="padding:3px 11px;font-size:12px;color:#DD0000;border-color:#f3b0b0" onclick="cancelStudent('${x.user_id}','${c.id}')">✕ stornieren</button></span>`:''}</div>`).join('')+'</div>':'<div class="muted" style="font-size:12px">Noch niemand gebucht.</div>'}
         ${isAdminUser?`<div style="margin-top:10px"><button class="btn btn-primary" style="padding:6px 14px;font-size:13px" onclick="addStudentToClass('${c.id}')">➕ Schüler hinzufügen</button></div>`:''}
       </div>
 
@@ -663,6 +663,7 @@ function renderKlassen(){
         <button class="btn btn-ghost" onclick="genMaterial('${c.id}')">${c._hasMat?'🔄 KI-Übungen neu':'✨ KI-Übungen erstellen'}</button>
         <button class="btn btn-ghost" onclick="toggleNb('${c.id}')">🤖 Auto-Nachbereitung</button>
         <button class="btn" onclick="sendNachbLink('${c.id}')" style="background:#13A89A;color:#fff;font-weight:800;border:none">📧 Nachbereitung an Schüler senden</button>
+        ${(isAdminUser&&p.length)?`<button class="btn" onclick="jkMailClass('${c.id}','${encodeURIComponent(c.title||'')}')" style="background:#1657c8;color:#fff;font-weight:800;border:none">✉️ E-Mail an Gebuchte (${p.length})</button>`:''}
         <button class="btn btn-ghost" onclick="previewInteractive('${c.id}')">👁️ Schüler-Vorschau</button>
         <button class="btn btn-ghost" onclick="editClass('${c.id}')">Bearbeiten · Material</button>
         <button class="btn btn-ghost" onclick="rescheduleClass('${c.id}')">📅 Verlegen (Tag &amp; Zeit)</button>
@@ -1634,6 +1635,35 @@ function renderMyList(){var tbl=document.getElementById('schuelerTable');if(!tbl
 function applyView(){if(QF==='alle'&&!NF)showAll();else renderMyList();}
 window.jkSetQF=function(v){QF=v;var bs=document.querySelectorAll('.jkqf');for(var i=0;i<bs.length;i++){var on=bs[i].getAttribute('data-v')===v;bs[i].style.background=on?'#DD0000':'#fff';bs[i].style.color=on?'#fff':'#333';}applyView();};
 window.jkSetNiv=function(v){NF=v;applyView();};window.jkMailGroup=async function(){var arr=realStudents().filter(matchFilter);if(!arr.length)return alert('Keine Schueler in dieser Auswahl.');var ov=document.createElement('div');ov.id='jkGrpOv';ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:10001;display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:40px 12px';ov.onclick=function(e){if(e.target===ov)ov.remove();};ov.innerHTML='<div style=\'background:#fff;max-width:560px;width:100%;border-radius:14px;padding:18px\'><b style=\'font-size:17px\'>✉️ Mail an '+arr.length+' Schueler</b><p class=\'muted\' style=\'margin:6px 0\'>Die Nachricht geht an ALLE in der aktuellen Auswahl (Branded-Mail).</p><textarea id=\'jkGrpMsg\' placeholder=\'Deine Nachricht...\' style=\'width:100%;min-height:120px;padding:10px;border:1px solid #ccc;border-radius:8px;font-size:14px\'></textarea><div style=\'display:flex;gap:8px;justify-content:flex-end;margin-top:10px\'><button onclick=\'document.getElementById(&#39;jkGrpOv&#39;).remove()\' style=\'border:1px solid #ccc;background:#fff;border-radius:8px;padding:8px 14px;cursor:pointer\'>Abbrechen</button><button id=\'jkGrpSend\' style=\'border:none;background:#DD0000;color:#fff;border-radius:8px;padding:8px 16px;cursor:pointer;font-weight:700\'>Senden</button></div></div>';document.body.appendChild(ov);document.getElementById('jkGrpSend').onclick=async function(){var txt=(document.getElementById('jkGrpMsg').value||'').trim();if(!txt)return alert('Bitte eine Nachricht schreiben.');this.disabled=true;this.textContent='Senden...';try{var s=await sb.auth.getSession();var tok=s&&s.data&&s.data.session?s.data.session.access_token:'';try{await sb.from('messages').insert(arr.map(function(x){return {user_id:x.id,sender:'teacher',body:txt};}));}catch(e){}var r=await fetch('/api/notify-message',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+tok},body:JSON.stringify({user_ids:arr.map(function(x){return x.id;}),preview:txt})});var jj=await r.json().catch(function(){return{};});alert('Gesendet an '+((jj&&jj.sent)||0)+' von '+arr.length+' Schueler.');ov.remove();}catch(e){alert('Fehler: '+e.message);this.disabled=false;this.textContent='Senden';}};};
+window.jkMailClass=async function(classId,titleEnc,singleUid){
+  var title=''; try{title=decodeURIComponent(titleEnc||'');}catch(e){title=titleEnc||'';}
+  var rows=[];
+  try{var res=await sb.rpc('class_attendance',{p_class_id:classId});rows=(res&&res.data)||[];}
+  catch(e){return alert('Konnte die Teilnehmer nicht laden: '+e.message);}
+  rows=rows.filter(function(r){return r.user_id;});
+  if(singleUid)rows=rows.filter(function(r){return r.user_id===singleUid;});
+  if(!rows.length)return alert(singleUid?'Für diesen Schüler ist keine Mail-Adresse hinterlegt.':'Für diese Stunde hat noch niemand gebucht.');
+  var ov=document.createElement('div');ov.id='jkClsOv';
+  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:10001;display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:40px 12px';
+  ov.onclick=function(e){if(e.target===ov)ov.remove();};
+  var listHtml=rows.map(function(r){return '<label style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #eee;font-size:14px;cursor:pointer"><input type="checkbox" class="jkClsChk" data-uid="'+esc3(r.user_id)+'" checked><span style="font-weight:600">'+esc3(r.name||'–')+'</span> <span class="muted" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc3(r.email||'')+'</span></label>';}).join('');
+  var head=singleUid?('✉️ E-Mail an '+esc3(rows[0].name||rows[0].email||'Schüler')):('✉️ E-Mail an Gebuchte ('+rows.length+')');
+  ov.innerHTML='<div style="background:#fff;max-width:560px;width:100%;border-radius:14px;padding:18px"><b style="font-size:17px">'+head+'</b>'+(title?'<div class="muted" style="margin:4px 0 2px">📘 '+esc3(title)+'</div>':'')+'<p class="muted" style="margin:6px 0">Die E-Mail geht als Branded-Mail an die ausgewählten Schüler und erscheint auch in ihrem Nachrichten-Postfach.</p><div style="max-height:170px;overflow:auto;margin:8px 0;border:1px solid #eee;border-radius:8px;padding:6px 10px">'+listHtml+'</div><textarea id="jkClsMsg" placeholder="Deine Nachricht zum Unterricht…" style="width:100%;min-height:120px;padding:10px;border:1px solid #ccc;border-radius:8px;font-size:14px;box-sizing:border-box"></textarea><div style="display:flex;gap:8px;justify-content:flex-end;margin-top:10px"><button onclick="document.getElementById(&#39;jkClsOv&#39;).remove()" style="border:1px solid #ccc;background:#fff;border-radius:8px;padding:8px 14px;cursor:pointer">Abbrechen</button><button id="jkClsSend" style="border:none;background:#DD0000;color:#fff;border-radius:8px;padding:8px 16px;cursor:pointer;font-weight:700">Senden</button></div></div>';
+  document.body.appendChild(ov);
+  document.getElementById('jkClsSend').onclick=async function(){
+    var txt=(document.getElementById('jkClsMsg').value||'').trim();if(!txt)return alert('Bitte eine Nachricht schreiben.');
+    var uids=Array.prototype.slice.call(document.querySelectorAll('.jkClsChk')).filter(function(c){return c.checked;}).map(function(c){return c.getAttribute('data-uid');});
+    if(!uids.length)return alert('Bitte mindestens einen Schüler auswählen.');
+    this.disabled=true;this.textContent='Senden…';
+    try{
+      var s=await sb.auth.getSession();var tok=s&&s.data&&s.data.session?s.data.session.access_token:'';
+      try{await sb.from('messages').insert(uids.map(function(u){return {user_id:u,sender:'teacher',body:txt};}));}catch(e){}
+      var r=await fetch('/api/notify-message',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+tok},body:JSON.stringify({user_ids:uids,preview:txt})});
+      var jj=await r.json().catch(function(){return{};});
+      alert('Gesendet an '+((jj&&jj.sent)||0)+' von '+uids.length+' Schüler.');ov.remove();
+    }catch(e){alert('Fehler: '+e.message);this.disabled=false;this.textContent='Senden';}
+  };
+};
 window.jkMail=function(){var sel=document.getElementById('jkStud');if(!sel||!sel.value)return alert('Bitte einen Schueler waehlen.');var s=getList().find(function(x){return x.id===sel.value;});if(s&&s.email)window.location.href='mailto:'+s.email;};
 window.jkSetStatus=async function(){var sel=document.getElementById('jkStud');var st=document.getElementById('jkStatus');if(!sel||!sel.value)return alert('Bitte Schueler waehlen.');var v=st.value;try{await sb.from('profiles').update({status:v}).eq('id',sel.value);var s=getList().find(function(x){return x.id===sel.value;});if(s)s.status=v;alert('Status gesetzt: '+(v||'kein paket'));applyView();}catch(e){alert('Fehler: '+e.message);}};
 function studOptions(){return realStudents().slice().sort(function(a,b){return (a.name||'').localeCompare(b.name||'');}).map(function(s){return '<option value="'+s.id+'">'+esc3(s.name||s.email)+' ('+(s.credits||0)+'h'+(s.level?', '+s.level:'')+')</option>';}).join('');}
