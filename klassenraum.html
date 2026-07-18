@@ -126,6 +126,15 @@
   .imp-panel .row{display:flex; gap:8px;}
   .imp-panel .row button{flex:1; border-radius:999px; padding:10px; font-weight:800; font-size:.85rem; cursor:pointer; border:1px solid var(--rahmen); background:#fff; color:var(--weich);}
   .imp-panel .row .send{background:var(--tuerkis); color:var(--auf-tuerkis); border-color:var(--tuerkis);}
+  /* Hintergrund wählen */
+  .bg-panel{ position:fixed; right:14px; bottom:70px; z-index:60; width:min(320px,92vw); background:#fff; border:1px solid var(--rahmen); border-radius:16px; box-shadow:0 16px 44px rgba(0,0,0,.2); padding:14px; display:none; }
+  .bg-panel.open{ display:block; }
+  .bg-panel h4{ font-family:'Space Grotesk',sans-serif; font-size:.95rem; margin:0 0 10px; }
+  .bg-grid{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
+  .bg-grid button{ border:1px solid var(--rahmen); background:var(--creme-hell); border-radius:10px; padding:10px 6px; font-family:'Inter'; font-weight:700; font-size:.78rem; cursor:pointer; color:var(--anthrazit); }
+  .bg-grid button:hover{ background:var(--creme); }
+  .bg-grid button.on{ background:var(--tuerkis); color:var(--auf-tuerkis); border-color:var(--tuerkis); }
+  .bg-hint{ font-size:.75rem; color:var(--weich); margin-top:9px; line-height:1.4; }
   /* Präsentation ändern (Admin-Modal) */
   .pres-overlay{ position:fixed; inset:0; z-index:85; background:rgba(26,26,26,.55); display:none; align-items:center; justify-content:center; padding:20px; }
   .pres-overlay.open{ display:flex; }
@@ -262,6 +271,7 @@
     .vid-controls{ padding:5px 7px; gap:5px; flex-wrap:nowrap; }
     .vid-controls button{ min-width:0; flex:1 1 0; padding:7px 2px; font-size:.68rem; }
     .vid-controls button.leave{ flex-basis:0; }
+    #vc-bg{ display:none; }   /* Hintergründe gehen nur am Computer, nicht am Handy/iPad */
     /* Umschalt-Reiter direkt unter dem Video, scrollen mit dem Inhalt */
     .m-tabs{ display:flex; order:2; gap:8px; background:var(--creme); padding:4px 0; }
     .m-tabs button{ position:relative; flex:1; border:1px solid var(--rahmen); background:#fff; border-radius:10px; padding:11px; font-family:'Inter'; font-weight:700; font-size:.88rem; color:var(--anthrazit); cursor:pointer; }
@@ -350,6 +360,7 @@
         <button onclick="vcTiles()" title="Alle Teilnehmer sehen">👥 Alle</button>
         <button onclick="vcFull()" title="Großansicht">⛶ Groß</button>
         <button id="vc-tafelbig" onclick="toggleTafelBig()" title="Live-Tafel groß neben der Präsentation (nur am Computer)">🔳 Tafel groß</button>
+        <button id="vc-bg" onclick="toggleBgPanel()" title="Eigenen Hintergrund wählen (weichzeichnen oder Bild)">🖼️ Hintergrund</button>
         <button class="leave" onclick="vcLeave()" title="Unterricht verlassen">🚪 Verlassen</button>
       </div>
       <div class="react-bar" id="react-bar">
@@ -792,7 +803,7 @@
     const parent=document.getElementById('jitsi'); if(parent){ parent.innerHTML='<div class="dgrid" id="dgrid"></div>'; }
     // Eigenes Raster statt Standard-UI → wir können IMMER alle Teilnehmer (inkl. sich selbst) zeigen.
     dframe = window.DailyIframe.createCallObject({ subscribeToTracksAutomatically:true });
-    dframe.on('joined-meeting', (ev)=>{ window._inCall=true; renderGrid(); if(ev&&ev.participants&&ev.participants.local) dailySyncButtons(ev.participants.local); setTimeout(checkMic,2500); });
+    dframe.on('joined-meeting', (ev)=>{ window._inCall=true; renderGrid(); if(ev&&ev.participants&&ev.participants.local) dailySyncButtons(ev.participants.local); setTimeout(checkMic,2500); setTimeout(()=>{ if(typeof applySavedBg==='function') applySavedBg(); }, 1800); });
     dframe.on('participant-joined', renderGrid);
     dframe.on('participant-updated', (ev)=>{ renderGrid(); if(ev&&ev.participant&&ev.participant.local) dailySyncButtons(ev.participant); });
     dframe.on('participant-left', renderGrid);
@@ -993,6 +1004,35 @@
   function vcVideo(){
     if(window._provider==='daily' && dframe){ const p=dLocal(); dframe.setLocalVideo(!(p&&p.video)); return; }
     if(api) api.executeCommand('toggleVideo');
+  }
+  // ---- Eigener Hintergrund (jeder für sich; nur Daily am Computer) ----
+  function toggleBgPanel(){
+    const p=document.getElementById('bg-panel'); if(!p) return;
+    const h=document.getElementById('bg-hint');
+    if(h){
+      if(window._provider!=='daily') h.textContent='Hintergründe gibt es nur beim HD-Video.';
+      else if(window.matchMedia('(max-width:1024px)').matches) h.textContent='Hinweis: Hintergründe funktionieren nur am Computer.';
+      else h.textContent='Tipp: „Weich" verschwimmt dein Zimmer – dein Gesicht bleibt scharf.';
+    }
+    p.classList.toggle('open');
+  }
+  function _bgMark(key){ document.querySelectorAll('#bg-grid button').forEach(b=>b.classList.toggle('on', b.dataset.bg===key)); }
+  function setBg(type, val){
+    const h=document.getElementById('bg-hint');
+    if(window._provider!=='daily' || !dframe){ if(h) h.textContent='Hintergründe gibt es nur beim HD-Video (Computer).'; return; }
+    let proc, key;
+    if(type==='blur'){ proc={ type:'background-blur', config:{ strength: val||0.5 } }; key='blur-'+(val||0.5); }
+    else if(type==='image'){ proc={ type:'background-image', config:{ source: val } }; key='img'; }
+    else { proc={ type:'none' }; key='none'; }
+    try{
+      dframe.updateInputSettings({ video:{ processor: proc } });
+      try{ localStorage.setItem('club_bg', JSON.stringify({type, val})); }catch(e){}
+      _bgMark(key);
+      if(h && !window.matchMedia('(max-width:1024px)').matches) h.textContent = type==='none' ? 'Hintergrund aus.' : '✅ Hintergrund gesetzt.';
+    }catch(e){ console.warn('Hintergrund', e); if(h) h.textContent='Klappt auf diesem Gerät leider nicht (nur Computer/Chrome).'; }
+  }
+  function applySavedBg(){
+    try{ const s=JSON.parse(localStorage.getItem('club_bg')||'null'); if(s && s.type && s.type!=='none'){ setBg(s.type, s.val); } }catch(e){}
   }
   function vcShare(){
     if(window._provider==='daily' && dframe){ const p=dLocal(); if(p&&p.screen){ dframe.stopScreenShare(); } else { try{ dframe.startScreenShare(); }catch(e){} } return; }
@@ -1551,6 +1591,17 @@
       <button class="send" onclick="applyPresEdit()">Übernehmen</button>
     </div>
   </div>
+</div>
+
+<!-- Hintergrund wählen (jeder für sich, nur am Computer) -->
+<div class="bg-panel" id="bg-panel">
+  <h4>🖼️ Dein Hintergrund</h4>
+  <div class="bg-grid" id="bg-grid">
+    <button data-bg="none" onclick="setBg('none')">🚫 Kein</button>
+    <button data-bg="blur-0.4" onclick="setBg('blur',0.4)">🌫️ Weich leicht</button>
+    <button data-bg="blur-0.8" onclick="setBg('blur',0.8)">🌫️ Weich stark</button>
+  </div>
+  <div class="bg-hint" id="bg-hint"></div>
 </div>
 </body>
 </html>
