@@ -168,6 +168,11 @@
   .pres-actions button{ flex:1; border-radius:999px; padding:12px; font-family:'Inter'; font-weight:800; font-size:.9rem; cursor:pointer; border:1px solid var(--rahmen); background:#fff; color:var(--weich); }
   .pres-actions .send{ background:var(--tuerkis); color:var(--auf-tuerkis); border-color:var(--tuerkis); }
   #jitsi{width:100%; height:100%;}
+  /* Gruppen-Notiz: nur in Breakout-Gruppen; ersetzt dort die Klassen-Tafel */
+  .gnotes-card{ display:none; }
+  body.ingroup .gnotes-card{ display:flex; }
+  body.ingroup .tafel:not(.gnotes-card){ display:none; }
+  #gnotes{ border:2px solid var(--tuerkis); flex:1; min-height:260px; font-size:1.05rem; line-height:1.7; }
   /* Eigenes Teilnehmer-Raster (alle gleichzeitig, Kacheln füllen ohne Schwarzrand) */
   #dgrid{ display:grid; gap:5px; width:100%; height:100%; padding:5px; box-sizing:border-box; background:var(--anthrazit); place-content:stretch; grid-template-columns:repeat(auto-fit, minmax(120px,1fr)); grid-auto-rows:1fr; }
   #dgrid:has(.dtile:nth-child(2)){ grid-template-columns:repeat(2,1fr); }        /* 2 Personen → 2 nebeneinander */
@@ -426,6 +431,19 @@
         </div>
       </div>
       <div class="status" id="status">Live · gespeichert ✓</div>
+    </div>
+    <!-- Gruppen-Notiz: erscheint nur in Breakout-Gruppen; ALLE dürfen schreiben -->
+    <div class="tafel gnotes-card" id="gnotes-card">
+      <div class="tafel-kopf">
+        <span class="badge" style="background:var(--tuerkis);color:var(--auf-tuerkis)">👥 GRUPPE</span>
+        <h3 id="gnotes-title">📝 Gruppen-Notiz</h3>
+      </div>
+      <div class="tafel-body">
+        <div class="block" style="flex:1">
+          <div class="block-titel">✍️ Alle in der Gruppe dürfen hier schreiben</div>
+          <div id="gnotes" class="rich" contenteditable="true" spellcheck="true" lang="de" data-ph="Hier gemeinsam schreiben – jede/r in der Gruppe kann tippen …"></div>
+        </div>
+      </div>
     </div>
   </aside>
 </main>
@@ -935,7 +953,7 @@
     try{ await dframe.join({ url:daily.url, token:daily.token }); window._currentGroup = group||0; }
     catch(e){ console.warn('Raumwechsel', e); }
     window._switching = false;
-    setTimeout(()=>{ renderGrid(); if(typeof applySavedBg==='function') applySavedBg(); }, 250);
+    setTimeout(()=>{ renderGrid(); if(typeof applySavedBg==='function') applySavedBg(); if(typeof updateGroupNotes==='function') updateGroupNotes(); }, 250);
   }
   function handleBreakout(p){
     if(!p) return;
@@ -999,6 +1017,29 @@
   function boHop(g){ wechsleRaum(g||0); }
   function showBoBanner(g){ const b=document.getElementById('bo-banner'); if(!b) return; const t=b.querySelector('.bo-txt'); if(t) t.textContent = g ? ('👥 Gruppenarbeit – du bist in Gruppe '+g) : '👥 Gruppenarbeit läuft – du bleibst im Hauptraum'; b.classList.add('show'); }
   function hideBoBanner(){ const b=document.getElementById('bo-banner'); if(b) b.classList.remove('show'); }
+
+  // ===== Gruppen-Notiz (kollaborativ – alle in der Gruppe dürfen schreiben) =====
+  window._gnGroup=0; window._gnCh=null;
+  function updateGroupNotes(){ const g=window._currentGroup||0; if(g>0) gnotesEnter(g); else gnotesLeave(); }
+  async function gnotesEnter(g){
+    document.body.classList.add('ingroup');
+    const el=document.getElementById('gnotes'); if(!el || !sb) return;
+    const title=document.getElementById('gnotes-title'); if(title) title.textContent='📝 Gruppen-Notiz · Gruppe '+g;
+    if(window._gnGroup===g && window._gnCh) return;
+    gnotesUnsub(); window._gnGroup=g;
+    try{ const { data } = await sb.from('group_notes').select('notes').eq('class_id',STUNDE).eq('grp',g).maybeSingle(); if(document.activeElement!==el) el.innerHTML=(data&&data.notes)||''; }catch(e){}
+    window._gnCh = sb.channel('gnotes-'+STUNDE+'-'+g)
+      .on('broadcast',{event:'gn'},({payload})=>{ if(payload && payload.notes!=null && document.activeElement!==el) el.innerHTML=payload.notes; })
+      .subscribe();
+  }
+  function gnotesUnsub(){ if(window._gnCh){ try{ sb.removeChannel(window._gnCh); }catch(e){} window._gnCh=null; } }
+  function gnotesLeave(){ document.body.classList.remove('ingroup'); gnotesUnsub(); window._gnGroup=0; }
+  (function(){ const el=document.getElementById('gnotes'); if(!el) return; let t;
+    el.addEventListener('input', ()=>{ const g=window._gnGroup; if(!g||g<=0||!sb) return; clearTimeout(t); t=setTimeout(()=>{ const notes=el.innerHTML;
+      try{ sb.from('group_notes').upsert({ class_id:STUNDE, grp:g, notes, updated_at:new Date().toISOString() },{ onConflict:'class_id,grp' }).then(()=>{}); }catch(e){}
+      try{ if(window._gnCh) window._gnCh.send({ type:'broadcast', event:'gn', payload:{ notes } }); }catch(e){}
+    }, 350); });
+  })();
 
   function dailySyncButtons(p){
     const mic=document.getElementById('vc-mic'); if(mic){ const on=!!p.audio; mic.textContent=on?'🎤 Mikro an':'🔇 Mikro aus'; mic.classList.toggle('muted', !on); }
@@ -1120,7 +1161,7 @@
     if(window._provider!=='daily' || !dframe){ if(h) h.textContent='Hintergründe gibt es nur beim HD-Video (Computer).'; return; }
     let proc, key;
     if(type==='blur'){ proc={ type:'background-blur', config:{ strength: val||0.5 } }; key='blur-'+(val||0.5); }
-    else if(type==='image'){ proc={ type:'background-image', config:{ source: val } }; key='img'; }
+    else if(type==='image'){ proc={ type:'background-image', config:{ source: val } }; key=val; }
     else { proc={ type:'none' }; key='none'; }
     try{
       dframe.updateInputSettings({ video:{ processor: proc } });
@@ -1702,6 +1743,9 @@
     <button data-bg="none" onclick="setBg('none')">🚫 Kein</button>
     <button data-bg="blur-0.4" onclick="setBg('blur',0.4)">🌫️ Weich leicht</button>
     <button data-bg="blur-0.8" onclick="setBg('blur',0.8)">🌫️ Weich stark</button>
+    <button data-bg="https://www.deutschoderwas-club.de/backgrounds/hg-brand.jpg" onclick="setBg('image','https://www.deutschoderwas-club.de/backgrounds/hg-brand.jpg')">🎨 Marke</button>
+    <button data-bg="https://www.deutschoderwas-club.de/backgrounds/hg-hell.jpg" onclick="setBg('image','https://www.deutschoderwas-club.de/backgrounds/hg-hell.jpg')">⬜ Hell</button>
+    <button data-bg="https://www.deutschoderwas-club.de/backgrounds/hg-gruen.jpg" onclick="setBg('image','https://www.deutschoderwas-club.de/backgrounds/hg-gruen.jpg')">🌿 Grün</button>
   </div>
   <div class="bg-hint" id="bg-hint"></div>
 </div>
