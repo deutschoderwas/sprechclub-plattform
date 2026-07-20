@@ -1020,26 +1020,32 @@
   function hideBoBanner(){ const b=document.getElementById('bo-banner'); if(b) b.classList.remove('show'); }
 
   // ===== Gruppen-Notiz (kollaborativ – alle in der Gruppe dürfen schreiben) =====
-  window._gnGroup=0; window._gnCh=null;
+  window._gnGroup=0; window._gnCh=null; window._gnLast='';
   function updateGroupNotes(){ const g=window._currentGroup||0; if(g>0) gnotesEnter(g); else gnotesLeave(); }
   async function gnotesEnter(g){
     document.body.classList.add('ingroup');
     const el=document.getElementById('gnotes'); if(!el || !sb) return;
     const title=document.getElementById('gnotes-title'); if(title) title.textContent='📝 Gruppen-Notiz · Gruppe '+g;
     if(window._gnGroup===g && window._gnCh) return;
-    gnotesUnsub(); window._gnGroup=g;
-    try{ const { data } = await sb.from('group_notes').select('notes').eq('class_id',STUNDE).eq('grp',g).maybeSingle(); if(document.activeElement!==el) el.innerHTML=(data&&data.notes)||''; }catch(e){}
+    gnotesUnsub(); window._gnGroup=g; window._gnLast='';
+    // aktuellen Stand laden
+    try{ const { data } = await sb.from('group_notes').select('notes').eq('class_id',STUNDE).eq('grp',g).maybeSingle(); const v=(data&&data.notes)||''; window._gnLast=v; if(document.activeElement!==el) el.innerHTML=v; }catch(e){}
+    // Live-Sync über die Datenbank (zuverlässig wie die Live-Tafel) – alle in der Gruppe sehen Änderungen
     window._gnCh = sb.channel('gnotes-'+STUNDE+'-'+g)
-      .on('broadcast',{event:'gn'},({payload})=>{ if(payload && payload.notes!=null && document.activeElement!==el) el.innerHTML=payload.notes; })
+      .on('postgres_changes', { event:'*', schema:'public', table:'group_notes', filter:'class_id=eq.'+STUNDE }, (payload)=>{
+        const n=payload && payload.new; if(!n || String(n.grp)!==String(window._gnGroup)) return;
+        if(n.notes===window._gnLast) return;                 // eigene Änderung nicht zurückspielen
+        window._gnLast=n.notes||'';
+        if(document.activeElement!==el) el.innerHTML = n.notes||'';
+      })
       .subscribe();
   }
   function gnotesUnsub(){ if(window._gnCh){ try{ sb.removeChannel(window._gnCh); }catch(e){} window._gnCh=null; } }
   function gnotesLeave(){ document.body.classList.remove('ingroup'); gnotesUnsub(); window._gnGroup=0; }
   (function(){ const el=document.getElementById('gnotes'); if(!el) return; let t;
-    el.addEventListener('input', ()=>{ const g=window._gnGroup; if(!g||g<=0||!sb) return; clearTimeout(t); t=setTimeout(()=>{ const notes=el.innerHTML;
-      try{ sb.from('group_notes').upsert({ class_id:STUNDE, grp:g, notes, updated_at:new Date().toISOString() },{ onConflict:'class_id,grp' }).then(()=>{}); }catch(e){}
-      try{ if(window._gnCh) window._gnCh.send({ type:'broadcast', event:'gn', payload:{ notes } }); }catch(e){}
-    }, 350); });
+    el.addEventListener('input', ()=>{ const g=window._gnGroup; if(!g||g<=0||!sb) return; clearTimeout(t); t=setTimeout(()=>{ const notes=el.innerHTML; window._gnLast=notes;
+      try{ sb.from('group_notes').upsert({ class_id:STUNDE, grp:g, notes, updated_at:new Date().toISOString() },{ onConflict:'class_id,grp' }).then(({error})=>{ if(error) console.warn('Gruppen-Notiz speichern', error); }); }catch(e){}
+    }, 300); });
   })();
 
   function dailySyncButtons(p){
