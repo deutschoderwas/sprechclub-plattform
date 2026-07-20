@@ -29,7 +29,7 @@
   .toggle button{border:none; background:transparent; cursor:pointer; padding:7px 16px; border-radius:999px; font-family:'Inter'; font-weight:600; font-size:.82rem; color:var(--weich);}
   .toggle button.active{background:var(--tuerkis); color:var(--auf-tuerkis); box-shadow:0 1px 4px rgba(0,0,0,.12);}
 
-  main{flex:1; display:flex; padding:20px; min-height:0; --rechts:420px;}
+  main{flex:1; display:flex; padding:20px; min-height:0; --mid:380px; --rechts:340px;}
   .gutter{flex:0 0 20px; align-self:stretch; display:flex; align-items:center; justify-content:center; cursor:col-resize; touch-action:none;}
   .gutter .grip{width:5px; height:52px; border-radius:999px; background:var(--rahmen); transition:background .15s;}
   .gutter:hover .grip, .gutter.drag .grip{background:var(--tuerkis-dunkel); height:80px;}
@@ -53,8 +53,10 @@
   #lektion{position:absolute; inset:0; width:100%; height:100%; border:none; background:#fff;}
   #annot{position:absolute; inset:0; width:100%; height:100%; pointer-events:none; touch-action:none; cursor:crosshair;}
 
-  /* rechte Spalte */
-  .spalte{flex:0 0 var(--rechts,420px); width:var(--rechts,420px); display:flex; flex-direction:column; gap:16px; min-height:0; min-width:0;}
+  /* Mitte: Live-Tafel */
+  .mittelspalte{flex:0 0 var(--mid,380px); width:var(--mid,380px); display:flex; flex-direction:column; gap:16px; min-height:0; min-width:0;}
+  /* rechts: Kameras */
+  .spalte{flex:0 0 var(--rechts,340px); width:var(--rechts,340px); display:flex; flex-direction:column; gap:16px; min-height:0; min-width:0;}
 
   /* Video – klein & versetzt (rechts oben) */
   .video-card{align-self:stretch; width:100%; background:var(--creme-hell); border:1px solid var(--rahmen); border-radius:16px; overflow:hidden; box-shadow:0 4px 14px rgba(0,0,0,.08); flex:0 0 auto;}
@@ -203,7 +205,8 @@
   body.sharing .lektion-card{ display:none; }
   body.sharing .m-tabs{ display:none; }
   body.sharing #gutter{ display:none; }
-  body.sharing .tafel{ display:none; }
+  body.sharing #gutter2{ display:none; }
+  body.sharing .mittelspalte{ display:none; }
   body.sharing .spalte{ flex:1 1 auto; width:auto; }
   body.sharing .video-card{ width:100%; align-self:stretch; flex:1 1 auto; display:flex; flex-direction:column; }
   body.sharing .video-buehne{ height:auto !important; flex:1 1 auto; min-height:40vh; }
@@ -256,7 +259,8 @@
     .video-kopf{ padding:6px 13px; }
     /* Video-Raster: alle Teilnehmer gleichzeitig, füllt die Breite. Höhe per Schieber verstellbar
        (--vidH) → Standard kompakt, Notizen groß; bei Bedarf größer ziehen um alle groß zu sehen. */
-    .video-buehne{ height:var(--vidH,180px) !important; min-height:130px; background:var(--anthrazit); padding:0; display:block; }
+    .video-card{ flex:1 1 auto; display:flex; flex-direction:column; }
+    .video-buehne{ height:auto !important; flex:1 1 auto; min-height:180px; background:var(--anthrazit); padding:0; display:block; }   /* Kameras füllen die rechte Spalte */
     #jitsi{ height:100%; width:100%; }
     .video-start{ border-radius:0; }
     /* kompakte Steuerleiste: alle Knöpfe klein, „Verlassen" NICHT mehr als eigene große Zeile */
@@ -268,7 +272,7 @@
     .tools-row{ padding:4px 8px; }
     /* Notizen dürfen groß sein, aber nie über den Bildschirm hinaus (füllen den Rest per flex) */
     #notiz{ min-height:150px; }
-    body.tafelbig main{ --rechts:44vw; }
+    body.tafelbig main{ --mid:48vw; }
     body.tafelbig #notiz{ min-height:58vh; font-size:1.12rem; line-height:1.8; }
     #vc-tafelbig.on{ background:var(--tuerkis); border-color:var(--tuerkis); color:var(--auf-tuerkis); }
   }
@@ -284,6 +288,7 @@
     .gutter{ display:none; }
     .vgutter{ display:none; }
     .spalte{ display:contents; }
+    .mittelspalte{ display:contents; }   /* Handy: Tafel reiht sich in die Stapel-Reihenfolge ein */
     /* Video bleibt OBEN angeheftet: Teilnehmer + Selbstbild immer sichtbar, Präsi scrollt darunter */
     .video-card{ order:1; width:100%; align-self:stretch; position:sticky; top:0; z-index:20; box-shadow:0 6px 16px rgba(0,0,0,.14); }
     .video-buehne{ height:20vh; min-height:150px; max-height:26vh; aspect-ratio:auto; }   /* Raster: alle Teilnehmer sichtbar; Notizen über den 📝-Knopf groß */
@@ -363,7 +368,48 @@
     <button id="mt-tafel" onclick="mTab('tafel')">📝 Tafel</button>
   </div>
 
-  <aside class="spalte">
+  <aside class="mittelspalte" id="mittelspalte">
+    <div class="tafel">
+      <div class="tafel-kopf">
+        <span class="badge live" id="badge">🔴 LIVE</span>
+        <h3><span class="live-dot"></span> Live-Tafel</h3>
+        <div class="tf-tools" id="tf-tools">
+          <button onmousedown="cmd(event,'bold')" title="Fett"><b>F</b></button>
+          <button id="pen-g" onmousedown="togglePen(event,'#16A34A')" title="Grüner Stift – an/aus" style="color:#16A34A"><b>A</b></button>
+          <button id="pen-r" onmousedown="togglePen(event,'#DD0000')" title="Roter Stift – an/aus" style="color:#DD0000"><b>A</b></button>
+          <button id="mk-g" class="mark-g" onmousedown="toggleMarker(event,'#FFCE00')" title="Gelb markieren – an/aus">🖊️</button>
+          <button id="mk-r" class="mark-r" onmousedown="toggleMarker(event,'#FF9B9B')" title="Rot markieren – an/aus">🔴</button>
+          <button onmousedown="unmark(event)" title="Markierung entfernen">⌫</button>
+          <button onmousedown="pfeil(event)" title="Pfeil → einfügen"><b>→</b></button>
+        </div>
+      </div>
+      <div class="hint" id="tafel-hint"></div>
+      <div class="tafel-body">
+        <div class="block" style="flex:1">
+          <div class="block-titel">📝 Live-Mitschrift &amp; Fehlerkorrektur</div>
+          <div id="notiz" class="rich" contenteditable="true" spellcheck="true" lang="de" autocapitalize="sentences" autocorrect="on" data-ph="Hier mitschreiben – wichtige Wörter gelb markieren (🖊️), Fehler rot korrigieren (🔴), Pfeil für falsch → richtig …"></div>
+        </div>
+      </div>
+      <div class="status" id="status">Live · gespeichert ✓</div>
+    </div>
+    <!-- Gruppen-Notiz: erscheint nur in Breakout-Gruppen; ALLE dürfen schreiben -->
+    <div class="tafel gnotes-card" id="gnotes-card">
+      <div class="tafel-kopf">
+        <span class="badge" style="background:var(--tuerkis);color:var(--auf-tuerkis)">👥 GRUPPE</span>
+        <h3 id="gnotes-title">📝 Gruppen-Notiz</h3>
+      </div>
+      <div class="tafel-body">
+        <div class="block" style="flex:1">
+          <div class="block-titel">✍️ Alle in der Gruppe dürfen hier schreiben</div>
+          <div id="gnotes" class="rich" contenteditable="true" spellcheck="true" lang="de" data-ph="Hier gemeinsam schreiben – jede/r in der Gruppe kann tippen …"></div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="gutter" id="gutter2" title="Ziehen: Kameras / Tafel breiter"><div class="grip"></div></div>
+
+  <aside class="spalte" id="spalte">
     <div class="video-card">
       <div class="video-kopf"><span class="punkt"></span> deutschoderwas club Klassenraum</div>
       <div class="mic-hint" id="mic-hint" style="display:none"><span id="mic-hint-txt"></span><button class="x" onclick="document.getElementById('mic-hint').style.display='none'" title="Schließen">✕</button></div>
@@ -404,45 +450,6 @@
         <button onclick="startTimer(90)">90s</button>
         <button onclick="stopTimer()" title="Timer stoppen">⏹</button>
         <button onclick="toggleImpuls()" style="margin-left:auto" title="Wort oder Bild an alle senden">🖼 Impuls</button>
-      </div>
-    </div>
-
-    <div class="vgutter" id="vgutter" title="Ziehen: Video kleiner/größer, Live-Tafel größer/kleiner"><div class="vgrip"></div></div>
-
-    <div class="tafel">
-      <div class="tafel-kopf">
-        <span class="badge live" id="badge">🔴 LIVE</span>
-        <h3><span class="live-dot"></span> Live-Tafel</h3>
-        <div class="tf-tools" id="tf-tools">
-          <button onmousedown="cmd(event,'bold')" title="Fett"><b>F</b></button>
-          <button id="pen-g" onmousedown="togglePen(event,'#16A34A')" title="Grüner Stift – an/aus" style="color:#16A34A"><b>A</b></button>
-          <button id="pen-r" onmousedown="togglePen(event,'#DD0000')" title="Roter Stift – an/aus" style="color:#DD0000"><b>A</b></button>
-          <button id="mk-g" class="mark-g" onmousedown="toggleMarker(event,'#FFCE00')" title="Gelb markieren – an/aus">🖊️</button>
-          <button id="mk-r" class="mark-r" onmousedown="toggleMarker(event,'#FF9B9B')" title="Rot markieren – an/aus">🔴</button>
-          <button onmousedown="unmark(event)" title="Markierung entfernen">⌫</button>
-          <button onmousedown="pfeil(event)" title="Pfeil → einfügen"><b>→</b></button>
-        </div>
-      </div>
-      <div class="hint" id="tafel-hint"></div>
-      <div class="tafel-body">
-        <div class="block" style="flex:1">
-          <div class="block-titel">📝 Live-Mitschrift &amp; Fehlerkorrektur</div>
-          <div id="notiz" class="rich" contenteditable="true" spellcheck="true" lang="de" autocapitalize="sentences" autocorrect="on" data-ph="Hier mitschreiben – wichtige Wörter gelb markieren (🖊️), Fehler rot korrigieren (🔴), Pfeil für falsch → richtig …"></div>
-        </div>
-      </div>
-      <div class="status" id="status">Live · gespeichert ✓</div>
-    </div>
-    <!-- Gruppen-Notiz: erscheint nur in Breakout-Gruppen; ALLE dürfen schreiben -->
-    <div class="tafel gnotes-card" id="gnotes-card">
-      <div class="tafel-kopf">
-        <span class="badge" style="background:var(--tuerkis);color:var(--auf-tuerkis)">👥 GRUPPE</span>
-        <h3 id="gnotes-title">📝 Gruppen-Notiz</h3>
-      </div>
-      <div class="tafel-body">
-        <div class="block" style="flex:1">
-          <div class="block-titel">✍️ Alle in der Gruppe dürfen hier schreiben</div>
-          <div id="gnotes" class="rich" contenteditable="true" spellcheck="true" lang="de" data-ph="Hier gemeinsam schreiben – jede/r in der Gruppe kann tippen …"></div>
-        </div>
       </div>
     </div>
   </aside>
@@ -622,32 +629,27 @@
   window.addEventListener('load', fit);
   setTimeout(fit, 400);
 
-  // ---- Trenner ziehen: Notizen größer / Präsentation kleiner ----
-  const main=document.getElementById('main'), gutter=document.getElementById('gutter');
-  let gDrag=false;
-  // Gespeicherte Spaltenbreite begrenzen: Präsentation UND Notizen sollen beide groß bleiben
-  // (früher konnte die rechte Spalte extrem breit gezogen werden → Video wurde ein breiter Streifen).
-  let gespeichert = parseInt(localStorage.getItem('club_rechts')||'0',10);
-  if(gespeichert){
-    const cap = Math.round(window.innerWidth*0.52);   // rechte Spalte höchstens ~halbe Breite
-    gespeichert = Math.max(360, Math.min(cap, gespeichert));
-    main.style.setProperty('--rechts', gespeichert+'px');
-    localStorage.setItem('club_rechts', String(gespeichert));
+  // ---- Zwei Trenner: links|Mitte (Tafelbreite) und Mitte|rechts (Kamerabreite) ----
+  const main=document.getElementById('main');
+  const mainR=()=>main.getBoundingClientRect();
+  function pxv(v){ return parseInt(getComputedStyle(main).getPropertyValue(v),10)||0; }
+  (function(){   // gespeicherte Breiten laden (begrenzt, damit nichts extrem wird)
+    const capW=Math.round(window.innerWidth*0.5);
+    let m=parseInt(localStorage.getItem('club_mid')||'0',10);
+    let r=parseInt(localStorage.getItem('club_rechts')||'0',10);
+    if(m){ main.style.setProperty('--mid', Math.max(260, Math.min(capW, m))+'px'); }
+    if(r){ main.style.setProperty('--rechts', Math.max(240, Math.min(capW, r))+'px'); }
+  })();
+  function makeGutter(id, apply, cssVar, storeKey){
+    const g=document.getElementById(id); if(!g) return; let d=false;
+    g.addEventListener('pointerdown', e=>{ d=true; g.classList.add('drag'); g.setPointerCapture(e.pointerId); });
+    g.addEventListener('pointermove', e=>{ if(!d) return; apply(e); });
+    g.addEventListener('pointerup', ()=>{ if(!d) return; d=false; g.classList.remove('drag'); if(typeof fit==='function') fit(); try{ localStorage.setItem(storeKey, String(pxv(cssVar))); }catch(e){} });
   }
-  gutter.addEventListener('pointerdown', e=>{ gDrag=true; gutter.classList.add('drag'); gutter.setPointerCapture(e.pointerId); });
-  gutter.addEventListener('pointermove', e=>{
-    if(!gDrag) return;
-    const rect=main.getBoundingClientRect();
-    let w = rect.right - 20 - e.clientX;                 // Breite der rechten Spalte
-    w = Math.max(320, Math.min(rect.width-360, w));      // Grenzen: rechts ≥320, links ≥360
-    main.style.setProperty('--rechts', w+'px');
-  });
-  gutter.addEventListener('pointerup', e=>{
-    gDrag=false; gutter.classList.remove('drag');
-    fit();                                               // Stift-Fläche neu einpassen
-    const cur=getComputedStyle(main).getPropertyValue('--rechts').trim();
-    localStorage.setItem('club_rechts', parseInt(cur,10)||420);
-  });
+  // Mitte|rechts: Kamera-Spalte breiter/schmaler
+  makeGutter('gutter2', e=>{ let w=mainR().right-20-e.clientX; w=Math.max(240, Math.min(Math.round(window.innerWidth*0.5), w)); main.style.setProperty('--rechts', w+'px'); }, '--rechts', 'club_rechts');
+  // links|Mitte: Tafel-Spalte breiter/schmaler (Präsentation passt sich an)
+  makeGutter('gutter', e=>{ let w=mainR().right-pxv('--rechts')-40-e.clientX; w=Math.max(260, Math.min(Math.round(window.innerWidth*0.55), w)); main.style.setProperty('--mid', w+'px'); }, '--mid', 'club_mid');
 
   // ---- Vertikaler Schieber: Video-Höhe vs. Live-Tafel (Desktop) ----
   (function(){
@@ -842,7 +844,9 @@
     const parent=document.getElementById('jitsi'); if(parent){ parent.innerHTML='<div class="dgrid" id="dgrid"></div>'; }
     // Eigenes Raster statt Standard-UI → wir können IMMER alle Teilnehmer (inkl. sich selbst) zeigen.
     dframe = window.DailyIframe.createCallObject({ subscribeToTracksAutomatically:true });
-    dframe.on('joined-meeting', (ev)=>{ window._inCall=true; renderGrid(); if(ev&&ev.participants&&ev.participants.local) dailySyncButtons(ev.participants.local); setTimeout(checkMic,2500); setTimeout(()=>{ if(typeof applySavedBg==='function') applySavedBg(); }, 1800); });
+    dframe.on('joined-meeting', (ev)=>{ window._inCall=true; renderGrid(); if(ev&&ev.participants&&ev.participants.local) dailySyncButtons(ev.participants.local); setTimeout(checkMic,2500); setTimeout(()=>{ if(typeof applySavedBg==='function') applySavedBg(); }, 1800);
+      // Bessere Bildqualität: Videos der anderen in höchster Stufe empfangen
+      setTimeout(()=>{ try{ dframe.updateReceiveSettings({ '*':{ video:{ quality:'high' } } }); }catch(e){} }, 1500); });
     dframe.on('participant-joined', renderGrid);
     dframe.on('participant-updated', (ev)=>{ renderGrid(); if(ev&&ev.participant&&ev.participant.local) dailySyncButtons(ev.participant); });
     dframe.on('participant-left', renderGrid);
