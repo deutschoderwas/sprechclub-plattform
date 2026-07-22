@@ -103,11 +103,45 @@
     document.head.appendChild(st);
   }
 
+  /* ---- Üben-Bereich: echte Fotos statt Gaming-Gradient/Emoji ----
+     Ändert NUR die Darstellung: fügt pro Themen-Karte ein echtes Foto ein.
+     Die ueben.js-Logik/Daten bleiben unberührt. */
+  var UB_PHOTO = {
+    arbeit:3184298, bildung:289737, einkaufen:3962285, essen:1267320, gefuehle:1024311,
+    gesundheit:4173251, medien:607812, natur:414612, persoenlichkeit:3775087, redewendungen:7516363,
+    reisen:2007401, stadt:2246476, 'starke-adjektive':1181533, 'typisch-deutsch':2506923, wohnen:1648776,
+    adjektivdeklination:4145153, genitiv:256541, 'indirekte-rede':7516363, konjunktiv2:3182812, konnektoren:4009401,
+    nebensaetze:3183197, 'passiv-praesens':4145153, 'passiv-vergangenheit':256541, 'perfekt-praeteritum':3182812,
+    relativsaetze:4009401, 'temporale-nebensaetze':3183197, wechselpraepositionen:4145153,
+    ch:3771089, r:1181524, 's-z-ss':3775087, satzmelodie:1571459, umlaute:7516363, 'v-w-f':3771089,
+    vokale:1181524, wortakzent:3775087, shadowing:3771089
+  };
+  var UB_FB = [3184360,3184291,1181524,958545,264636,4586708,338936,346885,466685,774909,1648776,2007401];
+  function ubImg(id){ return 'https://images.pexels.com/photos/'+id+'/pexels-photo-'+id+'.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=520&h=300'; }
+  var ubI = 0;
+  function ubPhotos(){
+    var cards = document.querySelectorAll('.ub-tcard');
+    cards.forEach(function(card){
+      var band = card.querySelector('.ub-band');
+      if(!band || band.dataset.ph) return; band.dataset.ph = '1';
+      var btn = card.querySelector('.ub-go2');
+      var m = btn && (btn.getAttribute('onclick')||'').match(/ubStart\(\s*'([^']*)'\s*,\s*'([^']*)'/);
+      var id = m ? m[2] : null;
+      var ph = (id && UB_PHOTO[id]) || UB_FB[ubI % UB_FB.length]; ubI++;
+      var img = document.createElement('img');
+      img.className = 'ub-photo'; img.loading = 'lazy'; img.alt = '';
+      img.src = ubImg(ph);
+      img.onerror = function(){ this.style.display='none'; };
+      band.insertBefore(img, band.firstChild);
+    });
+  }
+
   var scheduled = false, obs = null;
   function run(){
     scheduled = false;
     if(obs) obs.disconnect();
     try{ walk(document.body); }catch(e){}
+    try{ ubPhotos(); }catch(e){}
     if(obs) obs.observe(document.body, {childList:true, subtree:true});
   }
   function schedule(){ if(!scheduled){ scheduled = true; (window.requestAnimationFrame||setTimeout)(run); } }
