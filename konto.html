@@ -534,6 +534,26 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFF6E6 0%,#FAF8F2 60%)
 }
 </style>
 <link rel="stylesheet" href="club-theme.css">
+<style id="kalMonthCss">
+.kal-viewtog{display:flex;gap:8px;justify-content:center;margin:10px 0 4px}
+.kal-viewtog button{font-size:13px;font-weight:700;padding:6px 18px;border-radius:999px;border:1.5px solid #e5e5e5;background:#fff;color:#666;cursor:pointer}
+.kal-viewtog button.active{background:#2DD4BF;border-color:#2DD4BF;color:#fff}
+.kmo-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:8px 0 16px}
+.kmo-wd{text-align:center;font-size:11px;font-weight:700;color:#999;padding:2px 0}
+.kmo-cell{min-height:54px;border:1px solid #eee;border-radius:10px;padding:4px 4px 5px;display:flex;flex-direction:column;gap:4px;background:#fff}
+.kmo-cell.out{opacity:.32}
+.kmo-cell.has{cursor:pointer}
+.kmo-cell.has:hover{border-color:#2DD4BF}
+.kmo-cell.today{border-color:#9FE1CB}
+.kmo-cell.today .kmo-num{color:#0F6E56}
+.kmo-cell.sel{border-color:#2DD4BF;box-shadow:0 0 0 2px rgba(45,212,191,.35)}
+.kmo-num{font-size:12px;font-weight:800;color:#333;line-height:1}
+.kmo-dots{display:flex;flex-wrap:wrap;gap:3px;align-items:center}
+.kmo-dot{width:7px;height:7px;border-radius:50%}
+.kmo-more{font-size:10px;font-weight:700;color:#999}
+.kmo-daytitle{font-weight:800;font-size:15px;margin:12px 0 8px;text-transform:capitalize}
+.ev-btn.ics{background:#fff;border:1.5px solid rgba(45,212,191,.5);color:#0F6E56}
+</style>
 </head>
 <body>
 <div class="dow-flagbar"></div>
@@ -1159,13 +1179,13 @@ function phaseHtml(b, phase){
 }
 
 // ---------- Kalender (alle Clubs, farbig, filterbar) ----------
-let kalClub='alle', kalLevel='alle', kalWeek=(function(){var s=new Date(2026,5,29),n=new Date();function m(d){var x=new Date(d);x.setDate(x.getDate()-((x.getDay()+6)%7));x.setHours(0,0,0,0);return x;}var w=Math.round((m(s)-m(n))/6048e5);return w>0?w:0;})(), kalClubs=[], kalCache=[];
+let kalClub='alle', kalLevel='alle', kalWeek=(function(){var s=new Date(2026,5,29),n=new Date();function m(d){var x=new Date(d);x.setDate(x.getDate()-((x.getDay()+6)%7));x.setHours(0,0,0,0);return x;}var w=Math.round((m(s)-m(n))/6048e5);return w>0?w:0;})(), kalClubs=[], kalCache=[]; let kalView='woche', kalMonth=0, kalSelDay=null;
 function startOfWeekK(d,off=0){ const x=new Date(d); const day=(x.getDay()+6)%7; x.setDate(x.getDate()-day+off*7); x.setHours(0,0,0,0); return x; }
 function fmtTimeK(d){ return _berlinT.format(d); }
 function renderKalender(){
   document.getElementById('v-kalender').innerHTML =
-    '<div class="pagehead"><h1>Kalender</h1><p>Alle LIVE-Stunden farbig nach Club. Tippe einen Club an, um nur dessen Stunden zu sehen.</p></div><div id="kalBody"><div class="empty">lädt…</div></div>';
-  loadKalender();
+    '<div class="pagehead"><h1>Kalender</h1><p>Alle LIVE-Stunden farbig nach Club. Tippe einen Club an, um nur dessen Stunden zu sehen.</p></div>'+KAL_VIEWTOG()+'<div id="kalBody"><div class="empty">lädt…</div></div>';
+  kalRefresh();
 }
 function kalLevelMatch(classLevel,filter){
   if(filter==='alle') return true;
@@ -1240,8 +1260,68 @@ function kalEv(c){
   const _cap=Number(c.capacity)||0, _free=Math.max(0,_cap-(Number(c.booked)||0));
   let seats='';
   if(_cap>0 && !past){ const _cls=_free<=0?'full':(_free<=2?'low':'ok'); const _lbl=_free<=0?'ausgebucht':(_free===1?'noch 1 Platz frei':('noch '+_free+' von '+_cap+' Plätzen frei')); seats=`<div class="ev-seats ${_cls}">🎟️ ${_lbl}</div>`; }
-  return `<div class="ev" style="--c:${color};background:${color}14"><div class="ev-top"><span class="ev-time">${fmtTimeK(start)}–${fmtTimeK(end)}</span><span class="ev-club" style="background:${color}">${esc(c.club_name||'')}</span></div><div class="ev-title">${titleLine}</div><div class="ev-lvlrow">${lvlBadge}</div>${c.teacher_name?`<div style="font-size:12px;color:#555;font-weight:600;margin-top:3px">👩‍🏫 ${esc(c.teacher_name)}</div>`:''}${seats}${btn}${matBtn}${noPrep}</div>`;
+  return `<div class="ev" style="--c:${color};background:${color}14"><div class="ev-top"><span class="ev-time">${fmtTimeK(start)}–${fmtTimeK(end)}</span><span class="ev-club" style="background:${color}">${esc(c.club_name||'')}</span></div><div class="ev-title">${titleLine}</div><div class="ev-lvlrow">${lvlBadge}</div>${c.teacher_name?`<div style="font-size:12px;color:#555;font-weight:600;margin-top:3px">👩‍🏫 ${esc(c.teacher_name)}</div>`:''}${seats}${btn}${matBtn}${kalIcsBtn(c,past)}${noPrep}</div>`;
 }
+/* ===== Kalender: Monatsansicht + .ics-Export (deutschoderwas) ===== */
+function kalPad(n){return String(n).padStart(2,'0');}
+function kalDtUtc(d){return ''+d.getUTCFullYear()+kalPad(d.getUTCMonth()+1)+kalPad(d.getUTCDate())+'T'+kalPad(d.getUTCHours())+kalPad(d.getUTCMinutes())+'00Z';}
+function kalFixTs(s){s=String(s||'').replace(' ','T');var t3=s.slice(-3);if(t3.charAt(0)==='+'||t3.charAt(0)==='-'){s=s+':00';}return s;}
+function kalIcsEsc(s){s=String(s==null?'':s);var o='';for(var i=0;i<s.length;i++){var ch=s.charAt(i);if(ch===','||ch===';'||ch==='\\'){o+='\\'+ch;}else if(ch==='\n'){o+='\\n';}else if(ch==='\r'){}else{o+=ch;}}return o;}
+function kalIcs(id){
+ var c=(kalCache||[]).find(function(x){return String(x.id)===String(id);});
+ if(!c){if(typeof toast==='function')toast('Stunde nicht gefunden.');return;}
+ var st=new Date(kalFixTs(c.starts_at));var en=new Date(st.getTime()+((c.duration_min||60)*60000));
+ var title=(c.title||'Live-Unterricht');if(c.topic&&c.topic!==c.title){title=title+' – '+c.topic;}
+ var loc=c.zoom_link||'Online – deutschoderwas Club';
+ var desc='deutschoderwas Club'+(c.club_name?(' · '+c.club_name):'')+(c.topic?(' · '+c.topic):'')+(c.zoom_link?('\n'+c.zoom_link):'');
+ var L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//deutschoderwas//club//DE','CALSCALE:GREGORIAN','METHOD:PUBLISH','BEGIN:VEVENT','UID:'+id+'@deutschoderwas.club','DTSTAMP:'+kalDtUtc(new Date()),'DTSTART:'+kalDtUtc(st),'DTEND:'+kalDtUtc(en),'SUMMARY:'+kalIcsEsc(title),'DESCRIPTION:'+kalIcsEsc(desc),'LOCATION:'+kalIcsEsc(loc),'BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:'+kalIcsEsc(title),'TRIGGER:-PT30M','END:VALARM','END:VEVENT','END:VCALENDAR'];
+ var blob=new Blob([L.join('\r\n')],{type:'text/calendar;charset=utf-8'});
+ var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download='deutschoderwas-'+kalDtUtc(st).slice(0,8)+'.ics';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(url);a.remove();},600);
+ if(typeof toast==='function')toast('Termin heruntergeladen – zu deinem Kalender hinzufügen 📅');
+}
+function kalIcsBtn(c,past){if(past)return '';return '<button class="ev-btn ics" onclick="kalIcs(\''+c.id+'\')">📅 Zu meinem Kalender</button>';}
+function KAL_VIEWTOG(){return '<div class="kal-viewtog"><button class="'+(kalView==='woche'?'active':'')+'" onclick="setKalView(\'woche\')">Woche</button><button class="'+(kalView==='monat'?'active':'')+'" onclick="setKalView(\'monat\')">Monat</button></div>';}
+function setKalView(v){kalView=v;if(v==='monat')kalSelDay=null;renderKalender();}
+function kalRefresh(){return kalView==='monat'?loadKalMonth():loadKalender();}
+function kalMonthChange(d){kalMonth=Math.max(0,kalMonth+d);kalSelDay=null;loadKalMonth();}
+function kalClubPills(){return '<div class="kal-pills"><button class="kpill '+(kalClub==='alle'?'active':'')+'" onclick="setKalClub(\'alle\')">📅 Alle Clubs</button>'+kalClubs.map(function(c){var on=kalClub===c.slug;var col=c.color||'#2DD4BF';return '<button class="kpill '+(on?'active':'')+'" style="'+(on?('background:'+col+';border-color:'+col+';color:#fff'):'')+'" onclick="setKalClub(\''+c.slug+'\')">'+(c.emoji||'')+' '+esc(c.name)+'</button>';}).join('')+'</div>';}
+function kalLevelPills(){return '<div class="kal-levels">'+['alle','A2','B1','B2','C1'].map(function(l){var on=kalLevel===l;return '<button class="kpill lvl '+(on?'active':'')+'" onclick="setKalLevel(\''+l+'\')">'+(l==='alle'?'Alle Niveaus':l)+'</button>';}).join('')+'</div>';}
+function kalLegend(){if(kalClub!=='alle')return '';return '<div class="cal-legend">'+kalClubs.map(function(c){return '<span class="lg"><span class="dot" style="background:'+(c.color||'#2DD4BF')+'"></span>'+esc(c.name)+'</span>';}).join('')+'</div>';}
+function kalDayKey(d){return d.getFullYear()+'-'+kalPad(d.getMonth()+1)+'-'+kalPad(d.getDate());}
+async function loadKalMonth(){
+ if(!kalClubs.length){var r=await sb.from('clubs').select('*').eq('is_active',true).order('sort_order');kalClubs=r.data||[];}
+ var base=new Date();base=new Date(base.getFullYear(),base.getMonth()+kalMonth,1);
+ var from=new Date(base.getFullYear(),base.getMonth(),1);var to=new Date(base.getFullYear(),base.getMonth()+1,1);
+ var res=await sb.rpc('week_classes',{p_from:from.toISOString(),p_to:to.toISOString()});
+ kalCache=(res.data||[]).map(function(c){if(c&&c.starts_at){c.starts_at=kalFixTs(c.starts_at);}return c;});
+ kalRenderMonth();
+}
+function kalRenderMonth(){
+ var base=new Date();base=new Date(base.getFullYear(),base.getMonth()+kalMonth,1);
+ var y=base.getFullYear(),mo=base.getMonth();
+ var all=kalCache||[];
+ var list=(kalClub==='alle')?all:all.filter(function(c){return c.club===kalClub;});
+ if(kalLevel!=='alle')list=list.filter(function(c){return kalLevelMatch(c.level,kalLevel);});
+ var byday={};list.forEach(function(c){var k=kalDayKey(new Date(c.starts_at));(byday[k]=byday[k]||[]).push(c);});
+ var todayK=kalDayKey(new Date());var keys=Object.keys(byday).sort();
+ if(!kalSelDay||!byday[kalSelDay]){kalSelDay=(kalMonth===0&&byday[todayK])?todayK:(keys[0]||todayK);}
+ var first=new Date(y,mo,1);var startDow=(first.getDay()+6)%7;var gs=new Date(y,mo,1-startDow);
+ var wd=['Mo','Di','Mi','Do','Fr','Sa','So'];var cells=wd.map(function(w){return '<div class="kmo-wd">'+w+'</div>';}).join('');
+ for(var i=0;i<42;i++){var d=new Date(gs.getFullYear(),gs.getMonth(),gs.getDate()+i);var k=kalDayKey(d);var inM=d.getMonth()===mo;var evs=byday[k]||[];
+  var dots=evs.slice(0,4).map(function(c){return '<span class="kmo-dot" style="background:'+(c.club_color||'#2DD4BF')+'"></span>';}).join('');
+  var more=evs.length>4?('<span class="kmo-more">+'+(evs.length-4)+'</span>'):'';
+  var cls='kmo-cell'+(inM?'':' out')+(k===todayK?' today':'')+(k===kalSelDay?' sel':'')+(evs.length?' has':'');
+  cells+='<div class="'+cls+'"'+(evs.length?(' onclick="selectKalDay(\''+k+'\')"'):'')+'><span class="kmo-num">'+d.getDate()+'</span><span class="kmo-dots">'+dots+more+'</span></div>';}
+ var grid='<div class="kmo-grid">'+cells+'</div>';
+ var nav='<div class="kal-week"><button onclick="kalMonthChange(-1)">←</button><span>'+base.toLocaleDateString('de-DE',{month:'long',year:'numeric'})+'</span><button onclick="kalMonthChange(1)">→</button></div>';
+ var sel=byday[kalSelDay]||[];var selD=new Date(kalSelDay+'T00:00:00');
+ var dayHead='<div class="kmo-daytitle">'+selD.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})+'</div>';
+ var dayList='<div id="kalMonthDay">'+dayHead+(sel.length?sel.map(kalEv).join(''):'<div class="empty">Keine Live-Stunden an diesem Tag.</div>')+'</div>';
+ var tz='<div class="muted" style="text-align:center;font-size:12px;font-weight:600;margin:2px 0 8px">🕒 Alle Zeiten in deutscher Zeit (Berlin)</div>';
+ document.getElementById('kalBody').innerHTML=kalClubPills()+kalLevelPills()+kalLegend()+nav+tz+grid+dayList;
+}
+function selectKalDay(k){kalSelDay=k;kalRenderMonth();}
+
 async function openClassMaterial(classId, booked){
   if(!isActive()){ toast('Material gibt es mit aktivem Guthaben — ich bring dich zu den Paketen 😊'); setTimeout(()=>{ location.href='live.html#pakete'; }, 900); return; }
   let m=materials[classId];
@@ -1270,8 +1350,8 @@ async function openClassMaterial(classId, booked){
   }
   openModal(html);
 }
-function setKalClub(s){ kalClub=s; loadKalender(); }
-function setKalLevel(l){ kalLevel=l; loadKalender(); }
+function setKalClub(s){ kalClub=s; kalRefresh(); }
+function setKalLevel(l){ kalLevel=l; kalRefresh(); }
 function kalWeekChange(d){ var s=new Date(2026,5,29),n=new Date(); function m(x){x=new Date(x);x.setDate(x.getDate()-((x.getDay()+6)%7));x.setHours(0,0,0,0);return x;} var min=Math.round((m(s)-m(n))/6048e5); if(min<0)min=0; kalWeek+=d; if(kalWeek<min)kalWeek=min; loadKalender(); }
 function kalBook(id){
   if(credits<1){ showNoCredit(); return; }
