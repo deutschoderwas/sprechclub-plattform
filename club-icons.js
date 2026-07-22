@@ -136,12 +136,62 @@
     });
   }
 
+  /* ---- Podcast-Bereich (neuer Menüpunkt + Ansicht) ----
+     Fügt einen „Podcast"-Eintrag in die Sidebar + eine eigene Ansicht ein,
+     ohne die konto.html-Logik anzufassen. Inhalt kommt, sobald Folgen da sind. */
+  var PODCAST_HTML =
+    '<div class="pagehead"><h1>Julias 5-Minuten-Podcast <span style="color:#0A6E7A">für tägliches Deutsch</span></h1>'+
+    '<p>Kurze Folgen für jeden Tag — Wortschatz, Redewendungen &amp; Alltag zum Mithören.</p></div>'+
+    '<div class="card" style="text-align:center;max-width:640px;margin:0 auto;padding:44px 28px">'+
+      '<div style="font-size:44px;line-height:1;margin-bottom:12px">🎙️</div>'+
+      '<h2 style="margin:0 0 8px">Die ersten Folgen kommen in Kürze</h2>'+
+      '<p style="color:#5A6B72;max-width:470px;margin:0 auto">Sobald die Episoden da sind, kannst du sie hier direkt anhören — Folge für Folge, jeden Tag ein bisschen Deutsch.</p>'+
+    '</div>';
+
+  function setupPodcast(){
+    var vk = document.querySelector('.navlink[data-view="videokurse"]');
+    if(!vk || !vk.parentNode) return;
+    var b = document.querySelector('.navlink[data-view="podcast"]');
+    if(!b){
+      b = document.createElement('button');
+      b.className = 'navlink'; b.setAttribute('data-view','podcast');
+      b.innerHTML = '<span class="ic">🎙️</span>Podcast<span class="neu">NEU</span>';
+      vk.parentNode.insertBefore(b, vk.nextSibling);
+    }
+    var sec = document.getElementById('v-podcast');
+    if(!sec){
+      var anchor = document.getElementById('v-dashboard');
+      if(anchor && anchor.parentNode){
+        sec = document.createElement('section');
+        sec.className = 'view'; sec.id = 'v-podcast';
+        sec.innerHTML = PODCAST_HTML;
+        anchor.parentNode.appendChild(sec);
+      }
+    }
+    if(b && sec && !b.dataset.wired){
+      b.dataset.wired = '1';
+      b.addEventListener('click', function(e){
+        e.preventDefault();
+        document.querySelectorAll('.view.active').forEach(function(v){ v.classList.remove('active'); });
+        sec.classList.add('active');
+        document.querySelectorAll('.navlink[data-view]').forEach(function(n){ n.classList.toggle('active', n===b); });
+        window.scrollTo(0,0);
+      });
+    }
+    // Andere Nav-Klicks: Podcast-Ansicht wieder ausblenden (Router kennt sie nicht)
+    document.querySelectorAll('.navlink[data-view]').forEach(function(n){
+      if(n===b || n.dataset.pcw) return; n.dataset.pcw = '1';
+      n.addEventListener('click', function(){ var s=document.getElementById('v-podcast'); if(s) s.classList.remove('active'); if(b) b.classList.remove('active'); });
+    });
+  }
+
   var scheduled = false, obs = null;
   function run(){
     scheduled = false;
     if(obs) obs.disconnect();
     try{ walk(document.body); }catch(e){}
     try{ ubPhotos(); }catch(e){}
+    try{ setupPodcast(); }catch(e){}
     if(obs) obs.observe(document.body, {childList:true, subtree:true});
   }
   function schedule(){ if(!scheduled){ scheduled = true; (window.requestAnimationFrame||setTimeout)(run); } }
