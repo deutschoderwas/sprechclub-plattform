@@ -141,21 +141,22 @@
      ohne die konto.html-Logik anzufassen. Inhalt kommt, sobald Folgen da sind. */
   // Podcast-Folgen — einfach hier ergänzen (nach Niveau). file/cover liegen unter /podcast/.
   var PODCAST_EPISODES = [
-    { level:'A2', day:'Montag', title:'Die Sommerferien sind da', file:'/podcast/a2-montag-sommerferien.m4a', cover:'/podcast/covers/a2-sommerferien.jpg', dauer:'ca. 5 Min' }
+    { level:'A2', day:'Montag', title:'Die Sommerferien sind da', file:'/podcast/a2-montag-sommerferien.m4a', cover:'/podcast/covers/a2-sommerferien.jpg', dauer:'ca. 5 Min', transcript: "<p>Die Sommerferien sind da. Sechs Wochen keine Schule. Okay, kannst du dir das vorstellen? Kein Wecker am Morgen, keine Hausaufgaben, keine Prüfungen – nur Sonne, Freizeit und Eis. Für viele Kinder in Deutschland beginnt genau jetzt diese schöne Zeit: die Sommerferien. Heute reden wir zusammen darüber.</p><p>Es ist Juli. In vielen Bundesländern beginnen jetzt die Sommerferien. Die Schule ist zu Ende. Die Kinder haben frei, sechs Wochen lang. Das ist eine lange Zeit. Die Kinder freuen sich sehr. Und die Eltern? Die Eltern freuen sich auch. Aber manchmal fragen sie: Was machen wir sechs Wochen lang?</p><p>Was machen die Menschen in den Ferien? Viele Familien fahren in den Urlaub. Manche fahren ans Meer, zum Beispiel an die Nordsee oder an die Ostsee. Dort ist es schön. Man kann schwimmen, man kann eine Sandburg bauen, man kann am Strand liegen. Andere Familien fahren in die Berge. In den Bergen ist die Luft frisch. Man kann wandern und die Natur sehen. Manche fahren ins Ausland – nach Italien, nach Spanien oder nach Kroatien.</p><p>Was nimmt man mit in den Urlaub? Man packt einen Koffer. In den Koffer kommen T-Shirts, eine kurze Hose, die Badehose und natürlich die Sonnencreme. Sonnencreme ist sehr wichtig. Die Sonne ist im Sommer stark. Vergiss die Sonnencreme nicht!</p><p>Aber nicht alle fahren weg. Viele Menschen bleiben zu Hause. Das ist auch schön. Man sagt dazu ein lustiges Wort: „Urlaub auf Balkonien“. Das ist ein Witz. Balkonien ist kein echtes Land. Es bedeutet: Ich mache Urlaub auf meinem Balkon.</p><p>Warum bleiben die Menschen zu Hause? Na ja, Reisen ist oft teuer, und zu Hause ist es auch gemütlich. Was kann man zu Hause machen? Sehr viel! Man kann ins Schwimmbad gehen, man kann ein Eis essen – Schokolade oder Vanille, was magst du? Man kann im Park grillen, man kann Freunde treffen oder man kann einfach lange schlafen. Ausschlafen ist auch ein bisschen wie Urlaub, oder?</p><p>Ich mache jetzt mit dir eine kleine Übung. Ich sage einen Satz und du wiederholst ihn langsam. Bist du bereit? – Ich fahre ans Meer. Sehr gut. – Ich fahre in die Berge. – Ich bleibe zu Hause. Toll, das machst du prima!</p><p>Jetzt habe ich eine Frage an dich: Was machst du diesen Sommer? Fährst du weg oder bleibst du zu Hause? Und wenn du reist – wohin? Schreib mir gerne unten in die Kommentare. Ich lese alles.</p><p>Hör dir zum Schluss noch einmal die wichtigen Wörter an: die Ferien … die Ferien. Der Urlaub … der Urlaub. Das Meer … das Meer. Die Berge … die Berge. Der Koffer … der Koffer. Die Sonnencreme … die Sonnencreme. Diese Wörter brauchst du im Sommer sehr, sehr oft.</p><p>Danke fürs Zuhören! Genieß den Sommer, trink genug Wasser – und bis zum nächsten Mal. Tschüssi!</p><p style=\"margin-top:12px\"><b>Wörter des Tages:</b> Die Sommerferien · der Urlaub · der Koffer · die Sonnencreme · ausschlafen</p>" }
   ];
+  var LVL_COLORS = { A2:'#2DD4BF', B1:'#E0A500', B2:'#DD0000', C1:'#7A3E8F' };
   function podcastHTML(){
     var head = '<div class="pagehead"><h1>Julias 5-Minuten-Podcast <span style="color:#0A6E7A">für tägliches Deutsch</span></h1>'+
       '<p>Kurze Folgen für jeden Tag — echte Julia, keine KI. Wähl dein Niveau:</p></div>';
     var levels = ['A2','B1','B2','C1'];
     var pills = '<div class="pc-filter"><button class="pc-pill active" data-lvl="all">Alle</button>'+
-      levels.map(function(l){ return '<button class="pc-pill" data-lvl="'+l+'">'+l+'</button>'; }).join('')+'</div>';
+      levels.map(function(l){ return '<button class="pc-pill" data-lvl="'+l+'"><span class="pc-dot" style="background:'+(LVL_COLORS[l]||'#2DD4BF')+'"></span>'+l+'</button>'; }).join('')+'</div>';
     var esc = function(t){ return String(t==null?'':t).replace(/[<>&"]/g,function(c){return ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]);}); };
     var items = PODCAST_EPISODES.map(function(e){
       return '<div class="pc-ep" data-lvl="'+esc(e.level)+'">'+
         '<div class="pc-cover" style="background-image:url(\''+e.cover+'\')"><span class="pc-lv">'+esc(e.level)+'</span></div>'+
-        '<div class="pc-body"><div class="pc-day">'+esc(e.day)+(e.dauer?' · '+esc(e.dauer):'')+'</div>'+
+        '<div class="pc-body"><div class="pc-day"><span class="pc-lvtag" style="background:'+(LVL_COLORS[e.level]||'#2DD4BF')+'">'+esc(e.level)+'</span>'+esc(e.day)+(e.dauer?' · '+esc(e.dauer):'')+'</div>'+
         '<h3 class="pc-title">'+esc(e.title)+'</h3>'+
-        '<audio controls preload="none" src="'+e.file+'"></audio></div></div>';
+        '<audio controls preload="none" src="'+e.file+'"></audio>'+(e.transcript ? '<button class="pc-tbtn" type="button">📄 Mitlesen</button><div class="pc-transcript" hidden>'+e.transcript+'</div>' : '<div class="pc-tnote">📄 Transkript folgt</div>')+'</div></div>';
     }).join('');
     var soon = '<div class="pc-soon" data-lvl="soon">🎙️ Jeden Tag kommt eine neue Folge dazu — bald auch für B1, B2 &amp; C1.</div>';
     return head + pills + '<div class="pc-list">' + items + soon + '</div>';
@@ -170,6 +171,13 @@
           ep.style.display = (lvl==='all' || ep.getAttribute('data-lvl')===lvl) ? '' : 'none';
         });
         var soon = sec.querySelector('.pc-soon'); if(soon) soon.style.display = (lvl==='all') ? '' : 'none';
+      });
+    });
+    sec.querySelectorAll('.pc-tbtn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var panel = btn.nextElementSibling;
+        if(panel.hasAttribute('hidden')){ panel.removeAttribute('hidden'); btn.textContent = '📄 Transkript ausblenden'; }
+        else { panel.setAttribute('hidden',''); btn.textContent = '📄 Mitlesen'; }
       });
     });
   }
