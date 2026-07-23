@@ -139,14 +139,40 @@
   /* ---- Podcast-Bereich (neuer Menüpunkt + Ansicht) ----
      Fügt einen „Podcast"-Eintrag in die Sidebar + eine eigene Ansicht ein,
      ohne die konto.html-Logik anzufassen. Inhalt kommt, sobald Folgen da sind. */
-  var PODCAST_HTML =
-    '<div class="pagehead"><h1>Julias 5-Minuten-Podcast <span style="color:#0A6E7A">für tägliches Deutsch</span></h1>'+
-    '<p>Kurze Folgen für jeden Tag — Wortschatz, Redewendungen &amp; Alltag zum Mithören.</p></div>'+
-    '<div class="card" style="text-align:center;max-width:640px;margin:0 auto;padding:44px 28px">'+
-      '<div style="font-size:44px;line-height:1;margin-bottom:12px">🎙️</div>'+
-      '<h2 style="margin:0 0 8px">Die ersten Folgen kommen in Kürze</h2>'+
-      '<p style="color:#5A6B72;max-width:470px;margin:0 auto">Sobald die Episoden da sind, kannst du sie hier direkt anhören — Folge für Folge, jeden Tag ein bisschen Deutsch.</p>'+
-    '</div>';
+  // Podcast-Folgen — einfach hier ergänzen (nach Niveau). file/cover liegen unter /podcast/.
+  var PODCAST_EPISODES = [
+    { level:'A2', day:'Montag', title:'Die Sommerferien sind da', file:'/podcast/a2-montag-sommerferien.m4a', cover:'/podcast/covers/a2-sommerferien.jpg', dauer:'ca. 5 Min' }
+  ];
+  function podcastHTML(){
+    var head = '<div class="pagehead"><h1>Julias 5-Minuten-Podcast <span style="color:#0A6E7A">für tägliches Deutsch</span></h1>'+
+      '<p>Kurze Folgen für jeden Tag — echte Julia, keine KI. Wähl dein Niveau:</p></div>';
+    var levels = ['A2','B1','B2','C1'];
+    var pills = '<div class="pc-filter"><button class="pc-pill active" data-lvl="all">Alle</button>'+
+      levels.map(function(l){ return '<button class="pc-pill" data-lvl="'+l+'">'+l+'</button>'; }).join('')+'</div>';
+    var esc = function(t){ return String(t==null?'':t).replace(/[<>&"]/g,function(c){return ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]);}); };
+    var items = PODCAST_EPISODES.map(function(e){
+      return '<div class="pc-ep" data-lvl="'+esc(e.level)+'">'+
+        '<div class="pc-cover" style="background-image:url(\''+e.cover+'\')"><span class="pc-lv">'+esc(e.level)+'</span></div>'+
+        '<div class="pc-body"><div class="pc-day">'+esc(e.day)+(e.dauer?' · '+esc(e.dauer):'')+'</div>'+
+        '<h3 class="pc-title">'+esc(e.title)+'</h3>'+
+        '<audio controls preload="none" src="'+e.file+'"></audio></div></div>';
+    }).join('');
+    var soon = '<div class="pc-soon" data-lvl="soon">🎙️ Jeden Tag kommt eine neue Folge dazu — bald auch für B1, B2 &amp; C1.</div>';
+    return head + pills + '<div class="pc-list">' + items + soon + '</div>';
+  }
+  function wirePodcastFilter(sec){
+    var pills = sec.querySelectorAll('.pc-pill');
+    pills.forEach(function(pl){
+      pl.addEventListener('click', function(){
+        pills.forEach(function(x){ x.classList.remove('active'); }); pl.classList.add('active');
+        var lvl = pl.getAttribute('data-lvl');
+        sec.querySelectorAll('.pc-ep').forEach(function(ep){
+          ep.style.display = (lvl==='all' || ep.getAttribute('data-lvl')===lvl) ? '' : 'none';
+        });
+        var soon = sec.querySelector('.pc-soon'); if(soon) soon.style.display = (lvl==='all') ? '' : 'none';
+      });
+    });
+  }
 
   function setupPodcast(){
     var vk = document.querySelector('.navlink[data-view="videokurse"]');
@@ -164,7 +190,7 @@
       if(anchor && anchor.parentNode){
         sec = document.createElement('section');
         sec.className = 'view'; sec.id = 'v-podcast';
-        sec.innerHTML = PODCAST_HTML;
+        sec.innerHTML = podcastHTML(); wirePodcastFilter(sec);
         anchor.parentNode.appendChild(sec);
       }
     }

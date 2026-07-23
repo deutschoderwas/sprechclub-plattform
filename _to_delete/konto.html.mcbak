@@ -554,15 +554,6 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFF6E6 0%,#FAF8F2 60%)
 .kmo-daytitle{font-weight:800;font-size:15px;margin:12px 0 8px;text-transform:capitalize}
 .ev-btn.ics{background:#fff;border:1.5px solid rgba(45,212,191,.5);color:#0F6E56}
 </style>
-<style id="mc-css">
-.mc-card{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;padding:16px 20px;margin-bottom:16px;background:linear-gradient(135deg,#F2FBFA,#FFF7DE);border:1px solid #CFEFEA !important}
-.mc-card .mc-badge{font-size:12px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:#0F766E}
-.mc-card .mc-date{font-size:16px;margin-top:5px;color:var(--ink)}
-.mc-card .mc-topic{font-size:14px;color:var(--text-soft);margin-top:2px}
-.mc-card .mc-r{text-align:right;min-width:210px}
-.mc-card .mc-hint{font-size:12px;color:var(--text-soft);margin-top:6px;max-width:230px;margin-left:auto}
-@media(max-width:640px){.mc-card{flex-direction:column;align-items:flex-start}.mc-card .mc-r{text-align:left;min-width:0;width:100%}.mc-card #mcBtn{width:100%}.mc-card .mc-hint{margin-left:0;max-width:none}}
-</style>
 </head>
 <body>
 <div class="dow-flagbar"></div>
@@ -859,8 +850,7 @@ function show(v){
   ({dashboard:renderDashboard,ueben:(window.renderUeben||renderDashboard),community:(window.renderCommunity||renderDashboard),lernpfad:renderLernpfad,kalender:renderKalender,stunden:renderStunden,materialien:renderMaterialien,vokabeln:renderVokabeln,
     fortschritt:renderFortschritt,guthaben:renderGuthaben,nachrichten:renderNachrichten,
     amanda:renderAmanda,profil:renderProfil,videokurse:renderVideokurse,fehler:(window.renderFehlerTrainer||renderDashboard),buddy:(window.renderBuddy||renderDashboard)}[v])();
-  if(v==='community') markCommRead();
-  if(v==='dashboard') setTimeout(mcStatus,60);   // Community geöffnet -> Nachrichten gelesen, Badge weg
+  if(v==='community') markCommRead();   // Community geöffnet -> Nachrichten gelesen, Badge weg
   window.scrollTo(0,0);
 }
 const LOCK_LABELS={dashboard:'Start',ueben:'Üben',community:'Community',lernpfad:'Lernpfad',stunden:'Meine Stunden',materialien:'Material',vokabeln:'Vokabeln',fortschritt:'Fortschritt',guthaben:'Guthaben',nachrichten:'Nachrichten',amanda:'Amanda'};
@@ -1053,66 +1043,6 @@ function lockBanner(){
     <p class="muted" style="margin-top:4px">Mit einem neuen Paket bekommst du wieder vollen Zugriff: Stundenplan mit Buchung, neues Material, Übungen & Quizze.</p></div>
     <a class="btn btn-primary" href="index.html#pakete">Pakete ansehen</a></div>`;
 }
-// ---- Live-Masterclass (1. Donnerstag im Monat, ab 01.09.2026) ----
-const MC_START = new Date('2026-09-01T00:00:00');
-const MC_THEMEN = {
-  '2026-09':'Smalltalk & Kennenlernen – locker ins Gespräch',
-  '2026-10':'Deine Meinung sagen – auf Deutsch diskutieren',
-  '2026-11':'Im Job überzeugen – Bewerbung & Vorstellungsgespräch',
-  '2026-12':'Feste & Feiern – typisch deutsche Traditionen',
-  '2027-01':'Gute Vorsätze – über Ziele & Gewohnheiten sprechen',
-  '2027-02':'Wie geht’s dir wirklich? – Gefühle ausdrücken'
-};
-function mcFirstThu(y,m){ const d=new Date(y,m,1); const off=(4-d.getDay()+7)%7; return new Date(y,m,1+off,19,0,0); }
-function mcNext(){
-  const now=new Date(); const floor=Math.max(now.getTime(), MC_START.getTime());
-  const from=new Date(floor); let y=from.getFullYear(), m=from.getMonth();
-  for(let i=0;i<24;i++){ const mc=mcFirstThu(y,m); if(mc.getTime()>=floor) return mc; m++; if(m>11){m=0;y++;} }
-  return mcFirstThu(2026,8);
-}
-function mcISO(dt){ return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0'); }
-function mcThema(dt){ const k=dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0'); return MC_THEMEN[k]||'Thema folgt in Kürze'; }
-function mcCard(){
-  const dt=mcNext(); const iso=mcISO(dt);
-  const wt=['So','Mo','Di','Mi','Do','Fr','Sa'][dt.getDay()];
-  const mo=['Jan.','Feb.','März','Apr.','Mai','Juni','Juli','Aug.','Sep.','Okt.','Nov.','Dez.'][dt.getMonth()];
-  const datum=wt+', '+dt.getDate()+'. '+mo+' '+dt.getFullYear();
-  return `<div class="dsh-card mc-card" data-mc="${iso}">
-    <div class="mc-l">
-      <div class="mc-badge">🎓 Live-Masterclass · 1× im Monat</div>
-      <div class="mc-date">Nächste am <b>${datum}</b> · 19:00 Uhr</div>
-      <div class="mc-topic">Thema: <b>${mcThema(dt).replace(/</g,'&lt;')}</b></div>
-    </div>
-    <div class="mc-r">
-      <button class="btn btn-primary btn-sm" id="mcBtn" onclick="mcRemind('${iso}')">🔔 Erinnerung erhalten</button>
-      <div class="mc-hint" id="mcHint">Wir erinnern dich rechtzeitig – per Mail & Kalender.</div>
-    </div>
-  </div>`;
-}
-function mcMarkDone(){
-  const b=document.getElementById('mcBtn'), h=document.getElementById('mcHint');
-  if(b){ b.textContent='✓ Erinnerung aktiv'; b.classList.remove('btn-primary'); b.classList.add('btn-ghost'); b.disabled=true; b.style.opacity=.9; }
-  if(h){ h.textContent='Du bekommst Mail + Kalender-Erinnerung. 💛'; }
-}
-async function mcStatus(){
-  try{ const el=document.querySelector('.mc-card'); if(!el||typeof sb==='undefined'||!user) return;
-    const iso=el.getAttribute('data-mc');
-    const { data }=await sb.from('masterclass_reminders').select('id').eq('user_id',user.id).eq('mc_date',iso).maybeSingle();
-    if(data) mcMarkDone();
-  }catch(e){}
-}
-async function mcRemind(iso){
-  const b=document.getElementById('mcBtn'); const reset=()=>{ if(b){b.disabled=false;b.textContent='🔔 Erinnerung erhalten';} };
-  if(b){ b.disabled=true; b.textContent='…'; }
-  try{
-    const { data:{ session } }=await sb.auth.getSession();
-    if(!session){ toast('Bitte melde dich neu an.'); reset(); return; }
-    const el=document.querySelector('.mc-card'); const tb=el&&el.querySelector('.mc-topic b'); const topic=tb?tb.textContent:'';
-    const r=await fetch('/api/masterclass-remind',{ method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token}, body: JSON.stringify({ mc_date:iso, topic }) });
-    const j=await r.json();
-    if(j&&j.ok){ mcMarkDone(); toast('Erledigt! Deine Erinnerung ist gesichert. 🔔'); } else { toast('Hat nicht geklappt – bitte nochmal.'); reset(); }
-  }catch(e){ toast('Hat nicht geklappt – bitte nochmal.'); reset(); }
-}
 function renderDashboard(){
   const s=stats; const name=profile.name||'';
   const greet = name?('Hallo '+esc(name.split(' ')[0])+'! 👋'):'Willkommen zurück! 👋';
@@ -1152,7 +1082,6 @@ function renderDashboard(){
       </div>
       ${liveCard}
     </div>
-    ${mcCard()}
     <div class="dsh-kpis">
       <div class="dsh-kpi"><div class="kl">🎟️ Guthaben</div><div class="kv">${credits}</div><div class="kd">Stunden frei</div></div>
       <div class="dsh-kpi"><div class="kl">🔥 Lernserie</div><div class="kv">${s.streak}</div><div class="kd">${s.streak===1?'Woche':'Wochen'} am Stück</div></div>
