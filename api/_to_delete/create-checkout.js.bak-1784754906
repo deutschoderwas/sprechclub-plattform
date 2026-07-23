@@ -7,18 +7,10 @@ import { createClient } from '@supabase/supabase-js';
 
 // Server-seitige Paket-Definition (Quelle der Wahrheit für Preise – nie dem Client vertrauen).
 const PLANS = {
-  // --- Bestandskunden: alte LIVE-Stundenpaesse (bleiben aktiv, neu nicht mehr buchbar) ---
-  testpass:         { abo: true,  interval:'month', stunden: 4,  preis: 79,  label: 'Ab und zu Pass' },
-  gelegenheitspass: { abo: true,  interval:'month', stunden: 8,  preis: 139, label: 'Gelegenheitspass' },
-  allinclusive:     { abo: true,  interval:'month', stunden: 12, preis: 189, label: 'Profi-Pass' },
+  testpass:         { abo: true,  stunden: 4,  preis: 79,  label: 'Ab und zu Pass' },
+  gelegenheitspass: { abo: true,  stunden: 8,  preis: 139, label: 'Gelegenheitspass' },
+  allinclusive:     { abo: true,  stunden: 12, preis: 189, label: 'Profi-Pass' },
   sparpass:         { abo: false, stunden: 30, preis: 399, label: 'Spar Pass' },
-  // --- Neues Modell: Community (ohne Live-Buchung) + Premium (mit 8 Live-Stunden) ---
-  community_year:  { abo: true, interval:'year',  stunden: 0, preis: 144, tier:'community', label: 'Community',
-    desc: 'Ganze Lernplattform, Community, taeglicher Podcast & monatliche Live-Masterclass. Jahresmitgliedschaft (12 Monate).' },
-  community_month: { abo: true, interval:'month', stunden: 0, preis: 16,  tier:'community', label: 'Community',
-    desc: 'Ganze Lernplattform, Community, taeglicher Podcast & monatliche Live-Masterclass. Monatlich kuendbar.' },
-  premium:         { abo: true, interval:'month', stunden: 8, preis: 149, tier:'premium',  label: 'Premium',
-    desc: 'Alles aus Community + 8 LIVE-Stunden/Monat in kleiner Gruppe (bis 6 Personen).' },
 };
 
 export default async function handler(req, res) {
@@ -64,7 +56,6 @@ export default async function handler(req, res) {
       // Probestunde nur EINMAL pro Person. Wer schon je eine Testphase ODER (auch gekündigt)
       // schon irgendein Abo bei Stripe hatte, zahlt sofort – kein erneutes 7-Tage-Trial.
       let trialDays = (trial === false) ? 0 : 7; // "Sofort starten" => sofort zahlen, kein Test
-      if (plan.tier) trialDays = 0; // Community/Premium: keine Testphase
       try {
         if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
           const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
@@ -91,10 +82,9 @@ export default async function handler(req, res) {
         }
       } catch (e) { console.error('trial-check', e); }
 
-      const subData = { metadata: { userId, plan: id, stunden: String(plan.stunden), tier: plan.tier || '' } };
+      const subData = { metadata: { userId, plan: id, stunden: String(plan.stunden) } };
       if (trialDays > 0) subData.trial_period_days = 7; // nur Neukund:innen bekommen die Gratis-Probestunde
 
-      const abodesc = plan.desc || `${plan.stunden} LIVE-Stunden pro Monat · Üben 24/7, Amanda & Community inklusive`;
       session = await createSafe({
         ...common,
         mode: 'subscription',
@@ -104,12 +94,12 @@ export default async function handler(req, res) {
           price_data: {
             currency: 'eur',
             unit_amount: plan.preis * 100,
-            recurring: { interval: plan.interval || 'month' },
-            product_data: { name: `deutschoderwas Club – ${plan.label}`, description: abodesc },
+            recurring: { interval: 'month' },
+            product_data: { name: `deutschoderwas Club – ${plan.label}`, description: `${plan.stunden} LIVE-Stunden pro Monat · Üben 24/7, Amanda & Community inklusive` },
           },
         }],
         subscription_data: subData,
-        metadata: { userId, plan: id, stunden: String(plan.stunden), tier: plan.tier || '', kind: 'abo', trial: trialDays > 0 ? '1' : '0' },
+        metadata: { userId, plan: id, stunden: String(plan.stunden), kind: 'abo', trial: trialDays > 0 ? '1' : '0' },
       });
     } else {
       // Einmalkauf (Spar Pass)

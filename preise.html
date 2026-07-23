@@ -745,6 +745,7 @@ async function doRegister(){
   if (!name) return authMsg(false,'Bitte gib deinen Namen ein.');
   if (!email.includes('@')) return authMsg(false,'Bitte gültige E-Mail eingeben.');
   if (pass.length<8) return authMsg(false,'Das Passwort braucht mindestens 8 Zeichen.');
+    try{ const _chk=await fetch('/api/can-register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})}); const _cj=await _chk.json(); if(_cj && _cj.eligible===false){ authMsg(false,'Für den Schülerbereich brauchst du zuerst eine Mitgliedschaft. Wähle unten deinen Zugang (ab 12 €/Monat) — danach kannst du dich mit dieser E-Mail registrieren. 💛'); try{ if(typeof closeLogin==="function") closeLogin(); }catch(e){} var _p=document.getElementById('preise')||document.getElementById('pakete'); if(_p){ _p.scrollIntoView({behavior:'smooth'}); } else { location.hash='#preise'; } return; } }catch(e){}
   const { data, error } = await sb.auth.signUp({ email, password: pass, options: { data:{name}, emailRedirectTo: location.origin + '/preise' } });
   if (error){ if (/already|registered/i.test(error.message)) return authMsg(false,'Diese E-Mail hat schon ein Konto. Wechsle auf „Anmelden“.'); return authMsg(false,'Fehler: '+error.message); }
   if (data?.user && !data?.session) return authMsg(true,'✓ Fast geschafft! Bestätige bitte den Link in deiner Mail (auch Spam prüfen).');

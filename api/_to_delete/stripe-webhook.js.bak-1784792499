@@ -294,7 +294,7 @@ export default async function handler(req, res) {
   // Stripe-Kundennummer am Profil merken — wird fürs Kündigungs-Portal gebraucht.
   // Kauf per E-Mail parken, wenn (noch) kein Konto existiert -> wird bei Registrierung gutgeschrieben.
   async function addPending(sb2, email, stunden, plan, makeStatus, isTrial, ref) {
-    if (!email || (!stunden && !makeStatus)) return; // Community: stunden=0, aber makeStatus vorhanden -> trotzdem parken
+    if (!email || !stunden) return;
     try {
       const { data: ex } = await sb2.from('pending_purchases').select('id').eq('stripe_ref', ref).maybeSingle();
       if (ex) return;
@@ -378,25 +378,13 @@ export default async function handler(req, res) {
           else { await addPending(sb, invEmail, stunden, plan, 'aktiv', false, 'inv_' + inv.id); return res.status(200).json({ received: true, pending: invEmail }); }
         }
         await saveCustomer(userId, inv.customer);   // Kundennummer merken
-        const tier = sub.metadata?.tier || '';
-        if (tier === 'community') {
-          // Community: ganze Plattform frei (status=aktiv), ABER keine Live-Stunden & kein pass_until (kein Buchen).
-          const dk = 'inv_' + inv.id;
-          const { data: cex } = await sb.from('credit_log').select('id').eq('stripe_session_id', dk).maybeSingle();
-          if (!cex) await sb.from('credit_log').insert({ user_id: userId, change: 0, reason: 'abo:' + plan, stripe_session_id: dk });
-          await sb.from('profiles').update({ status: 'aktiv' }).eq('id', userId);
-        } else {
-          // Premium + alte Pässe: Stunden gutschreiben (grant setzt auch pass_until fürs Buchen).
-          await grant(userId, stunden, 'abo:' + plan, 'inv_' + inv.id, 31);
-          await sendPaymentMail(sub, inv);
-          if (tier === 'premium') {
+        await grant(userId, stunden, 'abo:' + plan, 'inv_' + inv.id, 31);
+        await sendPaymentMail(sub, inv);
+        // Aus Probeschüler wird zahlendes Mitglied -> Status auf aktiv (nur wenn vorher Probeschüler)
+        if (userId) {
+          const { data: pr } = await sb.from('profiles').select('status').eq('id', userId).maybeSingle();
+          if (pr && pr.status === 'probeschuler') {
             await sb.from('profiles').update({ status: 'aktiv' }).eq('id', userId);
-          } else if (userId) {
-            // Aus Probeschüler wird zahlendes Mitglied -> Status auf aktiv (nur wenn vorher Probeschüler)
-            const { data: pr } = await sb.from('profiles').select('status').eq('id', userId).maybeSingle();
-            if (pr && pr.status === 'probeschuler') {
-              await sb.from('profiles').update({ status: 'aktiv' }).eq('id', userId);
-            }
           }
         }
       }
@@ -414,11 +402,7 @@ export default async function handler(req, res) {
             await sb.from('credit_log').insert({ user_id: userId, change: -cur, reason: 'abo_gekuendigt_verfall', stripe_session_id: dk });
           }
           // Guthaben auf 0, Mitgliedschaft beenden
-          const delTier = sub.metadata?.tier || '';
-          const endPatch = { credits: 0, pass_until: new Date().toISOString() };
-          // Neues Modell (Community/Premium): Mitgliedschaft endet -> Plattform-Zugang schliessen.
-          if (delTier === 'community' || delTier === 'premium') endPatch.status = 'inaktiv';
-          await sb.from('profiles').update(endPatch).eq('id', userId);
+          await sb.from('profiles').update({ credits: 0, pass_until: new Date().toISOString() }).eq('id', userId);
           // „Schade, dass du gehst" – Abschieds-/Feedback-Mail
           if (p?.email) await sendGoodbyeMail(p.email, p.name);
         }
