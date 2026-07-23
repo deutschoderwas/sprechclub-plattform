@@ -384,13 +384,13 @@ export default async function handler(req, res) {
           const dk = 'inv_' + inv.id;
           const { data: cex } = await sb.from('credit_log').select('id').eq('stripe_session_id', dk).maybeSingle();
           if (!cex) await sb.from('credit_log').insert({ user_id: userId, change: 0, reason: 'abo:' + plan, stripe_session_id: dk });
-          await sb.from('profiles').update({ status: 'aktiv' }).eq('id', userId);
+          await sb.from('profiles').update({ status: 'aktiv', tier: 'community' }).eq('id', userId);
         } else {
           // Premium + alte Pässe: Stunden gutschreiben (grant setzt auch pass_until fürs Buchen).
           await grant(userId, stunden, 'abo:' + plan, 'inv_' + inv.id, 31);
           await sendPaymentMail(sub, inv);
           if (tier === 'premium') {
-            await sb.from('profiles').update({ status: 'aktiv' }).eq('id', userId);
+            await sb.from('profiles').update({ status: 'aktiv', tier: 'premium' }).eq('id', userId);
           } else if (userId) {
             // Aus Probeschüler wird zahlendes Mitglied -> Status auf aktiv (nur wenn vorher Probeschüler)
             const { data: pr } = await sb.from('profiles').select('status').eq('id', userId).maybeSingle();

@@ -598,7 +598,7 @@ html[dir=rtl] .und::after{left:-2px;right:-2px}
 <p data-i18n="t181" style="margin-top:10px;font-size:13px"><a href="#" onclick="doForgot();return false" style="color:var(--red);font-weight:700">Passwort vergessen?</a></p>
 </div>
 <div id="authRegister" style="display:none">
-<p id="regPaidMsg" style="display:none;background:#EAFBF6;border:1px solid #2DD4BF;border-radius:12px;padding:10px 12px;font-size:14px;color:#0F766E;margin-bottom:10px">🎉 Zahlung erhalten! Registrier dich jetzt mit deiner Zahlungs-E-Mail — dann schalten wir deine Plattform frei.</p><h3 data-i18n="t179">Konto erstellen</h3>
+<h3 data-i18n="t179">Konto erstellen</h3>
 <p data-i18n="t182">Bist du schon Schüler im deutschoderwas club? Wenn nicht, dann registriere dich hier.</p>
 <input id="regName" placeholder="Dein Name" style="margin-bottom:8px" type="text"/>
 <input id="regEmail" placeholder="deine@email.de" style="margin-bottom:8px" type="email"/>
@@ -662,7 +662,7 @@ async function initHome(){
   const { data:{ session } } = await sb.auth.getSession();
   if (session) setLoggedIn(session.user);
   sb.auth.onAuthStateChange((_e,s)=>{ if (s && !user) setLoggedIn(s.user); });
-  if (new URLSearchParams(location.search).get('login')==='1') openLogin(); var _rp=new URLSearchParams(location.search); if(_rp.get('register')==='1'){ openLogin(); try{authTab('register');}catch(e){} var _pm=document.getElementById('regPaidMsg'); if(_pm)_pm.style.display='block'; var _sid=_rp.get('sid'); if(_sid){ fetch('/api/checkout-email?sid='+encodeURIComponent(_sid)).then(function(r){return r.json();}).then(function(j){ if(j&&j.email){ var e=document.getElementById('regEmail'); if(e){ e.value=j.email; e.setAttribute('readonly','readonly'); } } }).catch(function(){}); } }
+  if (new URLSearchParams(location.search).get('login')==='1') openLogin();
 }
 function setLoggedIn(u){ user = u; const nav = document.getElementById('navAuth'); if (nav){ nav.textContent='Schülerbereich'; } }
 function goBereich(e){ if (user) return; e.preventDefault(); pendingAction = ()=>{ location.href='/schuelerbereich'; }; openLogin(); }

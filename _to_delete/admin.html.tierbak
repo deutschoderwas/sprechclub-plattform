@@ -1325,7 +1325,7 @@ function bdayLabel(p){ if(!p.birthday) return '<span class="muted">–</span>'; 
 async function authToken(){ const { data } = await sb.auth.getSession(); return data?.session?.access_token || ''; }
 
 async function loadSchueler(){
-  const { data } = await sb.from('profiles').select('id,name,email,credits,status,tier,birthday,inactive_until,level,notes,started_at,target_level,native_language,goal,is_admin,is_teacher,is_challenger,challenge_start,created_at').limit(2000);
+  const { data } = await sb.from('profiles').select('id,name,email,credits,status,birthday,inactive_until,level,notes,started_at,target_level,native_language,goal,is_admin,is_teacher,is_challenger,challenge_start,created_at').limit(2000);
   SCHUELER = data || [];
   document.getElementById('schueler').innerHTML = `
     <div class="card" style="margin-bottom:16px;background:#FFFCF5">
@@ -1352,8 +1352,6 @@ async function loadSchueler(){
         <option value="">Alle Status</option>
         <option value="registriert">nur Registriert (kein Paket)</option>
         <option value="aktiv">nur Aktiv</option>
-        <option value="tier_community">nur Community</option>
-        <option value="tier_premium">nur Premium</option>
         <option value="probeschuler">nur Probeschüler</option>
         <option value="pause">nur Pause</option>
         <option value="urlaub">nur Urlaub</option>
@@ -1371,14 +1369,13 @@ async function loadSchueler(){
     <div id="schuelerTable"></div>`;
   renderSchuelerTable();
 }
-function tierBadge(p){if(p.tier==='community')return ' <span class="pill" style="background:#DFF6F8;color:#0F766E;font-weight:800">Community</span>';if(p.tier==='premium')return ' <span class="pill" style="background:#FFF0CC;color:#8A6608;font-weight:800">⭐ Premium</span>';return '';}
 function renderSchuelerTable(){
   const q = (document.getElementById('schuelerSuche')?.value||'').toLowerCase().trim();
   const mode = document.getElementById('schuelerSort')?.value||'name';
   const stf = document.getElementById('schuelerStatus')?.value||'';
   const lowOnly = document.getElementById('schuelerLowOnly')?.checked;
   let rows = SCHUELER.filter(p => !q || (p.name||'').toLowerCase().includes(q) || (p.email||'').toLowerCase().includes(q));
-  if (stf){ if(stf==='tier_community') rows=rows.filter(p=>p.tier==='community'); else if(stf==='tier_premium') rows=rows.filter(p=>p.tier==='premium'); else rows = rows.filter(p => (p.status||'aktiv')===stf); }
+  if (stf) rows = rows.filter(p => (p.status||'aktiv')===stf);
   if (lowOnly) rows = rows.filter(p => p.credits<=1);
   rows = [...rows];
   if (mode==='credits') rows.sort((a,b)=> a.credits-b.credits || nameKey(a).localeCompare(nameKey(b),'de'));
@@ -1402,7 +1399,7 @@ function renderSchuelerTable(){
     }
     const nivo = p.level || p.target_level || '';
     return head + `<tr onclick="openStudentCard('${p.id}')" style="cursor:pointer${p.credits<=1?';background:#FFF1C2':''}" onmouseover="this.style.outline='2px solid #2DD4BF'" onmouseout="this.style.outline='none'">
-      <td><b>${esc(p.name||'–')}</b>${staff?' <span class="pill">Team</span>':''}${tierBadge(p)}</td>
+      <td><b>${esc(p.name||'–')}</b>${staff?' <span class="pill">Team</span>':''}</td>
       <td class="muted">${esc(p.email)}</td>
       <td>${nivo?`<span class="pill" style="background:#Eef;color:#2563EB;font-weight:700">${esc(nivo)}</span>`:'<span class="muted">–</span>'}</td>
       <td>${statusLabel(st)}${p.is_challenger?' <span class="pill" style="background:#FFF6DC;color:#C79600;font-weight:800">🏆 Challenger</span>':''}${((st==='pause'||st==='urlaub')&&p.inactive_until)?` <span class="muted" style="font-size:11px">bis ${p.inactive_until.split('-').reverse().join('.')}</span>`:''}</td>
