@@ -118,7 +118,7 @@
   // ---- Test-Einstieg im Modal (kompakt, ohne Hero) ----
   function renderIntro() {
     S.finished = false;
-    var unlocked = !!S.email;
+    var unlocked = !!S.email || !!window.NIVEAUTEST_SKIP_GATE;
     setHTML(
       '<div class="nt-card nt-intro">' +
         '<div class="nt-intro-body">' +
