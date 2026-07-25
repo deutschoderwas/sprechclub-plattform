@@ -98,7 +98,7 @@
     #v-community .mh time{font-size:11px;color:var(--t3)}
     #v-community .mh .del{margin-left:auto;opacity:0;color:var(--t3);cursor:pointer;padding:2px;border-radius:5px}
     #v-community .m:hover .mh .del{opacity:1}
-    #v-community .mt{font-size:13.5px;color:#2b2f33;margin-top:2px;line-height:1.55;word-wrap:break-word;white-space:pre-wrap}
+    #v-community .mt{font-size:13.5px;color:#2b2f33;margin-top:2px;line-height:1.5;word-wrap:break-word}
     #v-community .mt .men{color:var(--brand-2);font-weight:600}
     #v-community .rc{display:inline-flex;gap:5px;margin-top:6px;flex-wrap:wrap;align-items:center}
     #v-community .rc span{display:inline-flex;align-items:center;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:1px 8px;font-size:12px;font-weight:600;color:var(--t2);cursor:pointer}
@@ -135,9 +135,7 @@
     #v-community .cmp-box{border:1px solid var(--line);border-radius:11px;background:var(--surface);padding:5px;position:relative}
     #v-community .cmp-box:focus-within{border-color:var(--brand)}
     #v-community .cmp-in{display:flex;align-items:center;gap:4px}
-    #v-community .cmp-in input,#v-community .cmp-in textarea{flex:1;min-width:0;border:none;outline:none;background:none;font-family:inherit;font-size:13.5px;padding:9px 6px;color:var(--t1);line-height:1.5}
-    #v-community .cmp-in textarea{resize:none;max-height:150px;overflow-y:auto;display:block}
-    #v-community .cmp-in{align-items:flex-end}
+    #v-community .cmp-in input{flex:1;min-width:0;border:none;outline:none;background:none;font-family:inherit;font-size:13.5px;padding:9px 6px;color:var(--t1)}
     #v-community .ct{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--t3);flex-shrink:0;border:none;background:none;cursor:pointer}
     #v-community .ct:hover{background:var(--surface-2);color:var(--t1)}
     #v-community .ct.rec{color:var(--red)}
@@ -172,7 +170,7 @@
 #v-community .pinrow{display:flex;align-items:flex-start;gap:10px;padding:4px 16px 8px;font-size:13.5px}
 #v-community .pinrow .pc{flex:1;min-width:0}
 #v-community .pinrow .pa{font-weight:700;font-size:12px;color:#6B6154}
-#v-community .pinrow .pt{color:#22201B;line-height:1.4;word-break:break-word;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+#v-community .pinrow .pt{color:#22201B;line-height:1.4;word-break:break-word}
 #v-community .pinrow .punp{border:none;background:none;cursor:pointer;color:#c7a24a;font-size:12px;font-weight:700;font-family:inherit;flex:0 0 auto}
 #v-community .pinrow .punp:hover{color:#DD0000}
 #v-community .mh .pinbtn{cursor:pointer;font-size:13px;opacity:.5;margin-left:2px}
@@ -782,17 +780,14 @@
     var ph = mode==='dm' ? ('Nachricht an '+E((dmActive&&dmActive.name)||'')+' …') : ('Nachricht an #'+E(cur)+' …');
     foot.innerHTML='<div class="cmp-box"><div id="cmReply"></div><div class="emopick" id="cmEmo2"></div><div class="cmp-in">'+
       '<button class="ct" id="cImg" title="Bild">'+svg(IC.img)+'</button>'+
-      '<textarea id="cInp" rows="1" placeholder="'+ph+'"></textarea>'+
+      '<input id="cInp" placeholder="'+ph+'">'+
       '<button class="ct" id="cEmo" title="Emoji">'+svg(IC.emoji)+'</button>'+
       '<button class="ct" id="cMic" title="Sprachnachricht">'+svg(IC.mic)+'</button>'+
       '<input type="file" id="cFile" accept="image/*" style="display:none">'+
       '<button class="cse" id="cSend" title="Senden">'+svg(IC.send,'ico-sm')+'</button>'+
-      '</div></div><div class="chint">'+svg(IC.mic,'ico-sm')+'Sprachnachricht aufnehmen · <b style="color:var(--t2)">Enter</b> senden · <b style="color:var(--t2)">Shift+Enter</b> neue Zeile</div>';
+      '</div></div><div class="chint">'+svg(IC.mic,'ico-sm')+'Sprachnachricht aufnehmen · <b style="color:var(--t2)">Enter</b> zum Senden</div>';
     var inp=q('#cInp'),send=q('#cSend'),mic=q('#cMic'),img=q('#cImg'),file=q('#cFile'),emo=q('#cEmo'),pick=q('#cmEmo2');
-    if(inp){
-      inp.addEventListener('keydown',function(e){ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); doSend(); } });
-      inp.addEventListener('input',function(){ inp.style.height='auto'; inp.style.height=Math.min(150,inp.scrollHeight)+'px'; });
-    }
+    if(inp){ inp.addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); doSend(); } }); }
     if(send) send.addEventListener('click',doSend);
     if(mic) mic.addEventListener('click',toggleRec);
     if(img&&file){ img.addEventListener('click',function(){file.click();}); file.addEventListener('change',function(){ if(file.files&&file.files[0]) uploadImage(file.files[0]); file.value=''; }); }
@@ -823,7 +818,7 @@
   var sending=false;
   async function doSend(){
     if(sending) return; var inp=q('#cInp'); if(!inp) return; var t=inp.value.trim(); if(!t) return;
-    sending=true; inp.value=''; try{ inp.style.height='auto'; }catch(e){}
+    sending=true; inp.value='';
     if(mode==='dm'){ await dmSend(t); sending=false; return; }
     var tmp='tmp-'+Date.now();
     var aw=replyTo?replyTo.id:null;
