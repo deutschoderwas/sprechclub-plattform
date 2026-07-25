@@ -586,6 +586,7 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFF6E6 0%,#FAF8F2 60%)
     <button class="navlink" data-view="vokabeln" onclick="go('vokabeln')"><span class="ic">🃏</span><span data-i18n="k_vocab">Vokabeltrainer</span></button>
     <button class="navlink" data-view="fehler" onclick="go('fehler')"><span class="ic">📘</span><span data-i18n="k_mist">Fehler-Trainer</span></button>
     <button class="navlink" data-view="buddy" onclick="go('buddy')"><span class="ic">🤝</span><span data-i18n="k_buddy">Sprech-Buddy</span></button>
+    <a class="navlink" href="korrektur.html"><span class="ic">✍️</span>Julia korrigiert</a>
     <button class="navlink" data-view="materialien" onclick="go('materialien')"><span class="ic">📚</span><span data-i18n="k_mat">Materialien</span></button>
     <button class="navlink" data-view="fortschritt" onclick="go('fortschritt')"><span class="ic">🏆</span><span data-i18n="k_prog">Fortschritt</span></button>
     <button class="navlink" data-view="nachrichten" onclick="go('nachrichten')"><span class="ic">✉️</span><span data-i18n="k_msg">Nachrichten</span><span class="badge" id="msgBadge" style="display:none">0</span></button>
@@ -629,6 +630,13 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFF6E6 0%,#FAF8F2 60%)
 .mh-cont .track i{display:block;height:100%;border-radius:7px;background:#12A594}
 .mh-cont .pct{display:block;font-size:14px;font-weight:700;color:#0F766E;flex:none}
 .mh-cont .go{display:flex;width:46px;height:46px;border-radius:50%;background:#12A594;color:#fff;display:flex;align-items:center;justify-content:center;flex:none;box-shadow:0 6px 16px -6px rgba(18,165,148,.7)}
+.mh-jul{display:flex;align-items:center;gap:13px;background:#fff;border:1px solid #EBE7DF;border-radius:18px;padding:13px 15px;text-decoration:none;margin-bottom:12px;box-shadow:0 1px 2px rgba(23,23,23,.04),0 10px 26px -20px rgba(23,23,23,.4)}
+.mh-jul .jv{display:block;width:46px;height:46px;border-radius:50%;overflow:hidden;flex:none;background:#EAF7F4;border:2px solid #CFEBE5}
+.mh-jul .jv img{display:block;width:100%;height:100%;object-fit:cover;object-position:top center}
+.mh-jul .jt{display:block;flex:1;min-width:0}
+.mh-jul .jt b{display:block;font-family:'Space Grotesk',sans-serif;font-size:15.5px;font-weight:700;letter-spacing:-.01em;color:#171717;margin-bottom:2px}
+.mh-jul .jt span{display:block;font-size:13px;color:#6E6A63;line-height:1.45}
+.mh-jul .ar{display:flex;color:#12A594;flex:none}
 .mh-cta{display:flex;align-items:center;gap:13px;background:#12A594;border-radius:18px;padding:15px 16px;text-decoration:none;margin-bottom:22px;box-shadow:0 8px 22px -12px rgba(18,165,148,.8)}
 .mh-cta .tl{display:flex;width:44px;height:44px;border-radius:13px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;color:#fff;flex:none}
 .mh-cta .tx{display:block;flex:1;min-width:0;color:#fff}
@@ -1345,6 +1353,7 @@ function renderDashboard(){
       <div class="card" style="cursor:pointer" onclick="go('stunden')"><b data-i18n="d_c1t">📅 Stunden vorbereiten</b><p class="muted" style="margin-top:4px" data-i18n="d_c1b">Übungen &amp; Material zu deinen gebuchten Stunden.</p></div>
       <div class="card" style="cursor:pointer" onclick="go('vokabeln')"><b data-i18n="d_c2t">🃏 Vokabeln üben</b><p class="muted" style="margin-top:4px">${s.vocabTotal} <span data-i18n="d_c2b">Vokabeln aus deinen Stunden.</span></p></div>
       <div class="card" style="cursor:pointer" onclick="go('amanda')"><b data-i18n="d_c3t">🎤 Mit Amanda sprechen</b><p class="muted" style="margin-top:4px" data-i18n="d_c3b">Jederzeit frei Deutsch üben — gratis für dich.</p></div>
+      <div class="card" style="cursor:pointer" onclick="location.href='korrektur.html'"><b>✍️ Julia korrigiert deinen Text</b><p class="muted" style="margin-top:4px">Schreib etwas auf Deutsch — ich lese es persönlich und sage dir, woran wir arbeiten.</p></div>
       <div class="card" style="cursor:pointer" onclick="go('fortschritt')"><b data-i18n="d_c4t">🏆 Dein Fortschritt</b><p class="muted" style="margin-top:4px" data-i18n="d_c4b">Abzeichen &amp; wie weit du bist.</p></div>
     </div></div>`;
   try{ renderMobileHome(); }catch(e){}
@@ -2484,6 +2493,8 @@ function renderMobileHome(){
     +'<span class="avs" id="mhAvs"></span>'
     +'<span class="msgs" id="mhMsgs"><span class="m"><span class="ma" style="background:#C9C4B8">·</span><span class="mt"><span class="mx">Nachrichten werden geladen …</span></span></span></span>'
     +'<span class="cf">'+I('chat',16)+'<span>Zur Community</span><span class="ar">'+I('arrowR',17)+'</span></span></a>'
+    +'<a class="mh-jul" href="korrektur.html"><span class="jv"><img src="Julia.png" alt="" onerror="this.parentNode.style.display=\'none\'"></span>'
+    +'<span class="jt"><b>Julia korrigiert deinen Text</b><span>Schreib etwas auf Deutsch — ich lese es persönlich.</span></span><span class="ar">'+I('arrowR',18)+'</span></a>'
     +'<a class="mh-cta" href="sprechen.html"><span class="tl">'+I('mic',21)+'</span>'
     +'<span class="tx"><b>Sprechen üben</b><span>Ernstfall-Szenarien &amp; Nachsprechen</span></span><span class="ar">'+I('arrowR',19)+'</span></a>'
     +(karten?'<h2 class="mh-h2">Für deinen Beruf</h2><div class="mh-two">'+karten+'</div>':'')
