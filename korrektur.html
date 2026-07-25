@@ -87,7 +87,9 @@ h2 .ic{color:var(--acc-d)}
 .ein .dt{font-size:12.5px;color:var(--ink3);margin-left:auto;font-weight:500}
 .ein .auf{font-size:12.5px;color:var(--ink3);font-weight:600;margin-bottom:5px}
 .ein .tx{font-size:14.5px;line-height:1.6;color:var(--ink2);white-space:pre-wrap;max-height:88px;overflow:hidden;position:relative}
+.ein .tx.lang::after{content:'';position:absolute;left:0;right:0;bottom:0;height:34px;background:linear-gradient(to bottom,rgba(255,255,255,0),var(--surface))}
 .ein .tx.auf-zu{max-height:none}
+.ein .tx.auf-zu::after{display:none}
 .ein .mehr{background:none;border:none;color:var(--acc-d);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;padding:6px 0 0}
 .fb{margin-top:13px;padding-top:13px;border-top:1px solid var(--line2)}
 .fb .fh{display:flex;align-items:center;gap:9px;margin-bottom:8px;font-size:12.5px;font-weight:700;color:var(--acc-d)}
@@ -243,7 +245,7 @@ async function laden(){
         +'<div class="eh"><span class="st '+(fertig?'fertig':'offen')+'">'+I(fertig?'check':'clock',13)+(fertig?'korrigiert':'bei Julia')+'</span>'
         +'<span class="dt">'+dat(k.created_at)+'</span></div>'
         +(k.aufgabe?'<div class="auf">'+esc(k.aufgabe)+'</div>':'')
-        +'<div class="tx" id="tx'+i+'">'+esc(k.inhalt)+'</div>'
+        +'<div class="tx'+(k.inhalt.length>240?' lang':'')+'" id="tx'+i+'">'+esc(k.inhalt)+'</div>'
         +(k.inhalt.length>240?'<button class="mehr" onclick="__mehr('+i+',this)">Ganzen Text zeigen</button>':'')
         +(fertig&&(k.feedback||k.feedback_audio||k.korrigiert_html)
           ? '<div class="fb"><div class="fh"><img src="Julia.png" alt="" onerror="this.style.display=\'none\'">Julias Rückmeldung</div>'

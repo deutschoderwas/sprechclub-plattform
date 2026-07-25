@@ -111,7 +111,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--turq)}
     <button id="tabB" onclick="show('bewertungen')">Bewertungen</button>
     <button id="tabMat" onclick="show('material')">📚 Materialien</button>
     <button id="tabC" onclick="show('community')">💬 Community</button>
-    <a class="btn btn-primary" href="admin-korrektur.html" style="padding:8px 18px;font-size:13px">✍️ Korrekturen</a>
+    <a class="btn btn-primary" href="admin-korrektur.html" style="padding:8px 18px;font-size:13px">✍️ Korrekturen<span id="korrBdg" style="display:none;background:#fff;color:#DD0000;border-radius:20px;padding:1px 7px;font-size:11px;margin-left:2px">0</span></a>
   </div>
 
   <div id="plan" style="display:none"></div>
@@ -200,6 +200,10 @@ async function enter(u){
   const myT = TEACHERS.find(t=>t.profile_id===u.id);
   myTeacherId = myT ? myT.id : null;
   window.sb = sb; window.user = u;
+  sb.from('korrekturen').select('id').eq('status','offen').limit(200).then(function(r){
+    var n=(r&&r.data)?r.data.length:0, b=document.getElementById('korrBdg');
+    if(b&&n){ b.textContent=n; b.style.display='inline-block'; }
+  }).catch(function(){});
   window.profile = { name: (myT && myT.name) || (isAdminUser ? 'Team' : 'Lehrkraft') };
   if (!isAdminUser){
     // Lehrer-Ansicht: keine Guthaben-Verwaltung, keine Bewertungen, Fokus auf eigenen Plan
