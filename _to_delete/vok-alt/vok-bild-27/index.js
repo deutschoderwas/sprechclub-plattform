@@ -1,0 +1,2 @@
+/* Welche Vokabeln haben ein echtes Foto. Erzeugt — nicht von Hand ändern. */
+window.VOK_BILD = {"bis-spaeter":1,"das-kind-die-kinder":1,"der-bruder":1,"der-euro":1,"der-mann-die-frau":1,"der-vater":1,"die-eltern":1,"die-familie":1,"die-geschwister":1,"die-mutter":1,"die-oma-der-opa":1,"die-schwester":1,"die-telefonnummer":1,"dreiundzwanzig":1,"guten-abend":1,"guten-morgen":1,"guten-tag":1,"hallo":1,"hundert":1,"ich-bin":1,"ich-bin-jahre-alt":1,"ich-heisse":1,"tschuess":1,"was-kostet-das":1,"wie-alt-bist-du":1,"wie-heisst-du":1,"zwanzig":1};

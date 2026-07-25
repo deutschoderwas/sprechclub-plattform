@@ -108,16 +108,8 @@
       + '<span class="vt-em" style="display:none">' + (v.em || '🔤') + '</span></span>';
   }
   function bildEmoji(v, gr) {
-    if (hatBild(v)) return bild(v, gr);
     if (!v.em) return wortKarte(v, gr);
     return '<span class="vt-bild ' + (gr || '') + '"><span class="vt-em" style="display:flex">' + v.em + '</span></span>';
-  }
-
-  // Zu welchen Wörtern gibt es ein echtes Bild? (vok-bild/index.js)
-  function hatBild(v) {
-    var m = window.VOK_BILD;
-    if (!m) return false;
-    return !!(m[v.id] || (v.zwilling && m[v.zwilling]));
   }
 
   /* ================= Wortquellen ================= */
@@ -251,7 +243,7 @@
   function leichterTyp(v) {
     var m = [];
     if (trWort(v)) m.push('uebersetzung');
-    if (hatBild(v)) m.push('bild');
+    if (v.em) m.push('bild');
     m.push('hoeren');
     return zufall(m);
   }
@@ -295,7 +287,7 @@
     var lang = /\s/.test((v.wort || v.de).trim());
     var kannL = !!luecken(v);
     var m = [];
-    if (st <= 1) { m = hatTr ? ['uebersetzung'] : []; if (hatBild(v)) m.push('bild'); if (!m.length) m = ['hoeren']; }
+    if (st <= 1) { m = hatTr ? ['uebersetzung', 'bild'] : ['bild']; }
     else if (st === 2) {
       m = ['rueckwaerts', 'hoeren'];
       if (v.artikel) m.push('artikel');
@@ -704,10 +696,7 @@
         }).join('') + '</div>';
 
     } else if (typ === 'bild') {
-      var mitBild = POOL.filter(function (x) { return x.id !== v.id && hatBild(x); });
-      var nah = mitBild.filter(function (x) { return x.niveau === v.niveau; });
-      var kand = mische((nah.length >= 3 ? nah : mitBild).slice(0, 60)).slice(0, 3).concat([v]);
-      kand = mische(kand);
+      var kand = mische(ablenker(v, 3, 'em').concat([v]));
       h += '<h2 class="vt-gross mitte">' + artikelChip(v.artikel) + esc(v.wort || v.de) + lauts(v.de) + '</h2>'
         + '<div class="vt-opt bilder">' + kand.map(function (x, i) {
           return '<button class="vt-o bildo" onclick="__vtWahl(this,' + (x.id === v.id) + ')">' + tasteN(i) + bildEmoji(x) + '</button>';
@@ -1063,7 +1052,7 @@
   function ladePool() {
     if (window.VOK_POOL && window.VOK_POOL.length) return Promise.resolve(true);
     if (poolLauf) return poolLauf;
-    poolLauf = Promise.all([ladeSkript('vokabeln-pool.js'), ladeSkript('vok-bild/index.js')]);
+    poolLauf = ladeSkript('vokabeln-pool.js');
     return poolLauf;
   }
   function ladeSprache() {

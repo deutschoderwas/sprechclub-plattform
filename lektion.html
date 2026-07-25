@@ -298,20 +298,58 @@ function bild(id,w){ if(!id) return '';
   return 'illu/'+id+((w&&w<=400)?'-s':'')+'.jpg'; }
 
 /* ---------- Audio ---------- */
-var voice=null;
-function pv(){ try{ var v=speechSynthesis.getVoices().filter(function(x){return x.lang&&x.lang.indexOf('de')===0;}); voice=v.find(function(x){return /female|anna|petra|katja|vicki/i.test(x.name);})||v[0]||null; }catch(e){} }
+var voice=null, STIMMEN=[], STIMME_VON={};
+/* Deutsche Stimmen sammeln und nach Qualität sortieren.
+   Systemstimmen (Anna, Petra, Markus, Yannick, Google) klingen deutlich natürlicher
+   als die Standard-Roboterstimme, deshalb kommen sie zuerst. */
+function pv(){
+  try{
+    var v=speechSynthesis.getVoices().filter(function(x){return x.lang&&x.lang.indexOf('de')===0;});
+    function rang(x){
+      var n=(x.name||'').toLowerCase();
+      if(/premium|enhanced|natural|neural|siri/.test(n)) return 0;
+      if(/google/.test(n)) return 1;
+      if(/anna|petra|markus|yannick|helena|viktor|katja|conrad|amala/.test(n)) return 2;
+      if(x.localService) return 3;
+      return 4;
+    }
+    v.sort(function(a,b){ return rang(a)-rang(b); });
+    STIMMEN=v; voice=v[0]||null; STIMME_VON={};
+  }catch(e){}
+}
 if(window.speechSynthesis){ pv(); speechSynthesis.onvoiceschanged=pv; }
+/* Weiblich/männlich grob erkennen, damit zwei Gesprächspartner verschieden klingen */
+function weiblich(x){ return /anna|petra|katja|helena|amala|vicki|female|frau|marlene/i.test(x.name||''); }
+function maennlich(x){ return /markus|yannick|conrad|viktor|hans|male|mann|stefan|daniel/i.test(x.name||''); }
+/* Feste Zuordnung: jeder Sprecher behält seine Stimme für die ganze Lektion */
+function stimmeFuer(sprecher){
+  if(!sprecher) return {v:voice, pitch:1, rate:.93};
+  if(STIMME_VON[sprecher]) return STIMME_VON[sprecher];
+  var vergeben=Object.keys(STIMME_VON).map(function(k){return STIMME_VON[k].v;});
+  function frei(liste){ return liste.filter(function(x){ return vergeben.indexOf(x)<0; }); }
+  var w=frei(STIMMEN.filter(weiblich)), m=frei(STIMMEN.filter(maennlich)), rest=frei(STIMMEN);
+  var nr=Object.keys(STIMME_VON).length;
+  var gewaehlt = (nr%2===0 ? (w[0]||rest[0]) : (m[0]||rest[0])) || voice;
+  /* Wenn nur eine Stimme da ist: über Tonhöhe und Tempo unterscheiden */
+  var nurEine = STIMMEN.length<2;
+  STIMME_VON[sprecher] = { v:gewaehlt,
+    pitch: nurEine ? (nr%2===0 ? 1.14 : 0.86) : (nr%2===0 ? 1.04 : 0.94),
+    rate:  nurEine ? (nr%2===0 ? 0.95 : 0.89) : (nr%2===0 ? 0.95 : 0.91) };
+  return STIMME_VON[sprecher];
+}
 var live=null;
-function speak(t,el,cb){
+function speak(t,el,cb,sprecher){
   if(!window.speechSynthesis){ if(cb)cb(); return; }
   try{ speechSynthesis.cancel(); }catch(e){}
   if(live)live.classList.remove('on');
-  var u=new SpeechSynthesisUtterance(t); u.lang='de-DE'; u.rate=.93; if(voice)u.voice=voice;
+  var st=stimmeFuer(sprecher);
+  var u=new SpeechSynthesisUtterance(t); u.lang='de-DE';
+  u.rate=st.rate||.93; u.pitch=st.pitch||1; if(st.v)u.voice=st.v; else if(voice)u.voice=voice;
   if(el){ el.classList.add('on'); live=el; }
   u.onend=function(){ if(el)el.classList.remove('on'); if(live===el)live=null; if(cb)cb(); };
   speechSynthesis.speak(u);
 }
-window.__say=function(el,t,ev){ if(ev)ev.stopPropagation(); speak(t,el); };
+window.__say=function(el,t,ev,sp){ if(ev)ev.stopPropagation(); speak(t,el,null,sp); };
 
 /* ---------- Engine ---------- */
 var D=null,steps=[],cur=0,st=[],first=0,total=0;
@@ -387,7 +425,7 @@ function vDlg(){
     return '<div class="turn '+(i%2?'b':'a')+'" id="t'+i+'" style="animation-delay:'+(i*70)+'ms">'
       +'<span class="who">'+esc(l.sp[0])+'</span>'
       +'<div class="txt"><div class="nm">'+esc(l.sp)+'</div><div class="ln">'+esc(l.txt)+'</div>'+trZ(l.txt)+'</div>'
-      +'<button class="sp" onclick="__say(this,\''+qo(l.txt)+'\',event)" aria-label="Anhören">'+I('speaker',15)+'</button></div>';
+      +'<button class="sp" onclick="__say(this,\''+qo(l.txt)+'\',event,\''+qo(l.sp[0])+'\')" aria-label="Anhören">'+I('speaker',15)+'</button></div>';
   }).join('');
   var im=bild(D.dialog.bild||D.meta.bild,900);
   return '<div class="card"><h2>'+I('headset',19)+'Dialog</h2><p class="sub">Hör zu und lies mit. Tippe eine Zeile an, um sie einzeln zu hören.</p>'
@@ -401,8 +439,8 @@ window.__playAll=function(){
     var pr=document.getElementById('t'+(i-1)); if(pr)pr.classList.remove('live');
     if(i>=D.dialog.lines.length){ pb.classList.remove('on'); return; }
     var e=document.getElementById('t'+i); if(e){ e.classList.add('live'); e.scrollIntoView({behavior:'smooth',block:'center'}); }
-    var t=D.dialog.lines[i].txt; i++;
-    speak(t,null,function(){ setTimeout(nx,260); });
+    var zeile=D.dialog.lines[i]; var t=zeile.txt; var sp=(zeile.sp&&zeile.sp[0])||''; i++;
+    speak(t,null,function(){ setTimeout(nx,300); }, sp);
   })();
 };
 function vWords(){
@@ -550,6 +588,5 @@ function saveDone(){
 }
 })();
 </script>
-<script src="chat-knopf.js"></script>
 </body>
 </html>
