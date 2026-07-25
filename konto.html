@@ -906,6 +906,8 @@ async function init(){
   window.addEventListener('hashchange', routeFromHash);
   routeFromHash();
   requireBirthday();   // Pflicht: Geburtsdatum abfragen, falls noch nicht gesetzt
+  window.sb = sb; window.user = user;
+  try{ if(window.LZ) LZ.pruefe(); }catch(e){}
 }
 
 // Sofort voll starten (aus Trial-Mail: konto.html?start=now) — Testphase beenden, sofort abbuchen
@@ -1329,6 +1331,7 @@ function renderDashboard(){
     <div class="dsh-desktop">
     <div class="dsh-hello"><h1>${greet}</h1><p class="muted" data-i18n="d_sub">Schön, dass du übst — Sprechen lernt man durch Sprechen. 💪</p></div>
     ${passActive()?(pi=>`<div class="dsh-card" style="padding:13px 16px;margin-bottom:16px;background:linear-gradient(135deg,#EAFBF6,#FFF7DE);border:1px solid #2DD4BF"><b>⭐ ${pi.label} aktiv</b> <span class="muted">${pi.stunden?pi.stunden+' LIVE-Stunden/Monat · ':''}verlängert am ${fmtShort(new Date(profile.pass_until))} · <a href="#" onclick="openPortal();return false" style="color:#12A594;font-weight:600">Abo verwalten</a></span></div>`)(planInfo()):''}
+    <div id="lzSlot"></div>
     <div class="dash-top">
       <div class="dsh-card dsh-resume">
         <div class="cover"><span class="play">▶</span></div>
@@ -1357,6 +1360,7 @@ function renderDashboard(){
       <div class="card" style="cursor:pointer" onclick="go('fortschritt')"><b data-i18n="d_c4t">🏆 Dein Fortschritt</b><p class="muted" style="margin-top:4px" data-i18n="d_c4b">Abzeichen &amp; wie weit du bist.</p></div>
     </div></div>`;
   try{ renderMobileHome(); }catch(e){}
+  try{ if(window.LZ) LZ.zeichneKarte(); }catch(e){}
 }
 // ---------- Lernpfad ----------
 function renderLernpfad(){
@@ -2208,7 +2212,10 @@ function renderProfil(){
       <div class="field"><label>Meine Muttersprache</label><input id="pNative" value="${esc(profile.native_language||'')}" placeholder="z.B. Englisch, Arabisch, Ukrainisch"></div>
       <div class="field"><label>Mein Geburtstag 🎂</label><input id="pBday" type="date" value="${esc(profile.birthday||'')}"></div>
       <button class="btn btn-primary" onclick="saveProfil()"><span data-i18n="pr_save">Speichern</span></button>
-      <div class="field" style="margin-top:18px;border-top:1px solid var(--border);padding-top:14px"><label>E-Mail</label><div class="muted">${esc(user.email)}</div></div>
+      <div class="field" style="margin-top:18px;border-top:1px solid var(--border);padding-top:14px"><label>Mein Weg 🎯</label>
+        <p class="muted" style="margin:0 0 9px">Ziel, Termin und Tempo — daraus baut sich dein Lernpfad.</p>
+        <button class="btn btn-ghost" onclick="if(window.LZ)LZ.starten(true)">Meinen Weg neu festlegen</button></div>
+      <div class="field" style="margin-top:14px;border-top:1px solid var(--border);padding-top:14px"><label>E-Mail</label><div class="muted">${esc(user.email)}</div></div>
     </div>`;
 }
 async function saveProfil(){
@@ -2268,6 +2275,7 @@ init();
 <script src="community.js"></script>
 <script src="fehler-trainer.js"></script>
 <script src="sprech-buddy.js"></script>
+<script src="lernziel.js"></script>
 <script>
 if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}
 </script>
@@ -2483,6 +2491,7 @@ function renderMobileHome(){
      '<div class="mh-top"><h1 class="mh-hi">Hey '+(vorname||'du')+'!</h1>'
     +'<div class="mh-tools"><span class="mh-streak">'+I('spark',16)+serie+'</span>'
     +'<button class="mh-ic" onclick="go(\'profil\')">'+I('user',19)+'</button></div></div>'
+    +'<div id="lzSlotM"></div>'
     +'<div class="mh-row"><span class="tile'+(serie>0?' hot':'')+'">'+I('spark',22)+'</span>'
     +'<span class="rt">'+(serie>0?('Serie: '+serie+' '+(serie===1?'Woche':'Wochen')+' am Stück'):'Starte eine Serie!')+'</span></div>'
     +(cont?'<h2 class="mh-h2">Weiterlernen</h2>'+cont:'')
