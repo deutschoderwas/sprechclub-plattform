@@ -65,12 +65,12 @@ window.LEKTION = {
   },
   uebungen: [
     { typ: 'listen', audio: 'Meier Logistik, Yilmaz am Apparat. Was kann ich für Sie tun?', frage: 'Hör zu: Wie meldet sie sich?', optionen: ['Firma, Name, Angebot zu helfen', 'nur mit dem Namen', 'nur mit der Firma'], richtig: 0, hinweis: 'Die professionelle Meldung hat immer drei Teile.' },
-    { typ: 'mc', frage: 'Der Kunde spricht zu schnell. Was sagst du?', optionen: ['Könnten Sie bitte etwas langsamer sprechen?', 'Ich verstehe nichts.', 'Sprechen Sie langsam!'], richtig: 0, hinweis: 'Höflich mit „Könnten Sie …?"' },
+    { typ: 'mc', frage: 'Der Kunde spricht zu schnell. Was sagst du?', optionen: ['Sie müssen jetzt wirklich langsamer sprechen.', 'Könnten Sie bitte etwas langsamer sprechen?', 'Ich habe leider gar kein Wort verstanden.'], richtig: 1, hinweis: 'Höflich mit „Könnten Sie …?"' },
     { typ: 'mc', frage: 'Wie sagst du höflich, dass Freitag besser passt?', optionen: ['Freitag wäre besser für mich.', 'Ich will Freitag.', 'Freitag, nicht Donnerstag.'], richtig: 0, hinweis: 'wäre = höfliche Form von „ist"' },
     { typ: 'gapbank', frage: 'Setz die höflichen Formen ein.', text: '___ Sie die Nummer bitte wiederholen? Donnerstag ___ leider schwierig.', bank: ['Könnten', 'wäre', 'Können'], loesung: ['Könnten', 'wäre'], hinweis: 'Könnten (Bitte) · wäre (höfliche Einschätzung)' },
     { typ: 'match', frage: 'Situation und passender Satz — was gehört zusammen?', paare: [['Zeit gewinnen', '⏳ Einen Moment bitte.'], ['Rückruf zusagen', '📞 Ich rufe Sie zurück.'], ['Thema nennen', '📋 Es geht um …'], ['Gespräch beenden', '👋 Auf Wiederhören!']] },
     { typ: 'order', frage: 'Bau die höfliche Frage!', woerter: ['Sie', 'wiederholen', 'Könnten', 'das', 'bitte'], loesung: 'Könnten Sie das bitte wiederholen', hinweis: 'Könnten + Sie + Objekt + bitte + Verb am Ende.' },
-    { typ: 'mc', frage: 'Der Kunde nennt Auftragsnummer 472. Wie sicherst du dich ab?', optionen: ['Ich wiederhole zur Sicherheit: vier – sieben – zwei.', 'Okay, alles klar.', 'Ja, habe ich.'], richtig: 0, hinweis: 'Zahlen immer einzeln wiederholen — das verhindert teure Fehler.' },
+    { typ: 'mc', frage: 'Der Kunde nennt Auftragsnummer 472. Wie sicherst du dich ab?', optionen: ['Alles klar, ich habe die Nummer schon notiert.', 'Können Sie mir die Nummer bitte per Mail schicken?', 'Ich wiederhole zur Sicherheit: vier – sieben – zwei.'], richtig: 2, hinweis: 'Zahlen immer einzeln wiederholen — das verhindert teure Fehler.' },
     { typ: 'type', frage: 'Melde dich am Telefon: Du heißt Kaya und arbeitest bei Nordfracht.', muster: 'Nordfracht, Kaya am Apparat. Was kann ich für Sie tun?', akzeptiert: ['am apparat', 'mein name ist', 'guten tag.*kaya'], hinweis: 'Firma + Name + „am Apparat" + Angebot zu helfen.' }
   ],
   zusammenfassung: {

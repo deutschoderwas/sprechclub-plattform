@@ -146,7 +146,7 @@
   var LVL_COLORS = { A2:'#2DD4BF', B1:'#E0A500', B2:'#DD0000', C1:'#7A3E8F' };
   function podcastHTML(){
     var head = '<div class="pagehead"><h1>Julias 5-Minuten-Podcast <span style="color:#0A6E7A">für tägliches Deutsch</span></h1>'+
-      '<p>Kurze Folgen für jeden Tag — echte Julia, keine KI. Wähl dein Niveau:</p></div>';
+      '<p>Kurze Folgen zum Mitnehmen. Wähl dein Niveau:</p></div>';
     var levels = ['A2','B1','B2','C1'];
     var pills = '<div class="pc-filter"><button class="pc-pill active" data-lvl="all">Alle</button>'+
       levels.map(function(l){ return '<button class="pc-pill" data-lvl="'+l+'"><span class="pc-dot" style="background:'+(LVL_COLORS[l]||'#2DD4BF')+'"></span>'+l+'</button>'; }).join('')+'</div>';
@@ -158,8 +158,7 @@
         '<h3 class="pc-title">'+esc(e.title)+'</h3>'+
         '<audio controls preload="none" src="'+e.file+'"></audio>'+(e.transcript ? '<button class="pc-tbtn" type="button">📄 Mitlesen</button><div class="pc-transcript" hidden>'+e.transcript+'</div>' : '<div class="pc-tnote">📄 Transkript folgt</div>')+'</div></div>';
     }).join('');
-    var soon = '<div class="pc-soon" data-lvl="soon">🎙️ Jeden Tag kommt eine neue Folge dazu — bald auch für B1, B2 &amp; C1.</div>';
-    return head + pills + '<div class="pc-list">' + items + soon + '</div>';
+    return head + pills + '<div class="pc-list">' + items + '</div>';
   }
   function wirePodcastFilter(sec){
     var pills = sec.querySelectorAll('.pc-pill');
