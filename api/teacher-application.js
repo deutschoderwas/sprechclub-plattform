@@ -54,7 +54,7 @@ function applicationMail({ name, email, phone, experience, availability, message
 <body style="margin:0;background:#FFF8E0;font-family:${ff}">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="padding:24px 14px"><tr><td align="center">
     <table role="presentation" width="100%" style="max-width:560px;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 8px 26px rgba(0,0,0,.08)">
-      <tr><td style="height:6px;background:linear-gradient(90deg,#161616 0 25%,#DD0000 25% 50%,#FFCE00 50% 75%,#2DD4BF 75% 100%)"></td></tr>
+      <tr><td style="height:6px;background:linear-gradient(90deg,#161616 0 25%,#DD0000 25% 50%,#FFCE00 50% 75%,#7ED8EA 75% 100%)"></td></tr>
       <tr><td style="padding:24px 28px 6px">
         <div style="font-size:13px;font-weight:800;letter-spacing:.04em;color:#9CA3AF;text-transform:uppercase">deutschoderwas · Lehrer-Bewerbung</div>
         <h1 style="margin:8px 0 0;font-size:22px;color:#1a1a1a">👩‍🏫 Neue Bewerbung von ${esc(name)}</h1>

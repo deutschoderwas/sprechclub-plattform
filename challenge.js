@@ -32,7 +32,7 @@
     #v-challenge .ch-card{border:1px solid #EEE7D8;border-radius:16px;background:#fff;padding:20px;box-shadow:0 1px 2px rgba(30,25,15,.05);max-width:760px}
     #v-challenge .ch-dots{display:grid;grid-template-columns:repeat(10,1fr);gap:9px;max-width:520px}
     #v-challenge .ch-dots .d{aspect-ratio:1;border-radius:9px;background:#F1EEE8;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',inherit;font-weight:700;font-size:12px;color:#B9B36A;border:1px solid #ECE6D6}
-    #v-challenge .ch-dots .d.on{background:linear-gradient(135deg,#2DD4BF,#14B8A6);color:#06403A;border-color:#14B8A6;box-shadow:0 3px 10px rgba(18,165,148,.25)}
+    #v-challenge .ch-dots .d.on{background:linear-gradient(135deg,#7ED8EA,#35AFD0);color:#10627A;border-color:#35AFD0;box-shadow:0 3px 10px rgba(27,155,192,.25)}
     #v-challenge .ch-dots .d.goal{background:#FFF7DA;border:1.5px solid #FFCE00;color:#8a6a00}
     #v-challenge .ch-dots .d.goal.on{background:linear-gradient(135deg,#FFD84D,#FFCE00);color:#7a5c00;border-color:#FFCE00}
     #v-challenge .ch-note{font-size:12.5px;color:#8B8F96;margin:16px 0 0;line-height:1.5}
@@ -40,7 +40,7 @@
     #v-challenge .ch-stat{flex:1;min-width:150px;border:1px solid #EEE7D8;border-radius:14px;background:#fff;padding:15px 16px;box-shadow:0 1px 2px rgba(30,25,15,.05)}
     #v-challenge .ch-stat .k{font-family:'Space Grotesk',inherit;font-weight:700;font-size:26px;color:#22201B;line-height:1}
     #v-challenge .ch-stat .l{font-size:12.5px;color:#8B8F96;margin-top:5px}
-    #v-challenge .ch-stat.hl .k{color:#0E8577}
+    #v-challenge .ch-stat.hl .k{color:#14708B}
     #v-challenge .ch-stat.warn .k{color:#B30000}
     #v-challenge .ch-lock{text-align:center;padding:40px 22px;border:2px solid #f5b942;background:#fff8ec;border-radius:16px;max-width:520px;margin:8px auto}
     #v-challenge .ch-lock .ic{font-size:44px;margin-bottom:8px}

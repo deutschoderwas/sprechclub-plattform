@@ -197,7 +197,7 @@ function nachbereitungEmail({ vorname, thema, level, nVok, nUb, nErr, link }) {
         deine Nachbereitung zu <b>${esc(thema)}</b>${level ? ` (${esc(level)})` : ''} ist fertig.${list ? `<br><span style="color:#6f6a62;font-size:14px">${esc(list)}</span>` : ''}
       </td></tr>
       <tr><td align="center" style="padding:22px 28px 6px">
-        <a href="${esc(link)}" style="display:inline-block;background:linear-gradient(135deg,#2bbfbf,#138a8a);color:#063b35;font-weight:800;font-size:15px;text-decoration:none;padding:14px 30px;border-radius:50px">📖 Zur Nachbereitung</a>
+        <a href="${esc(link)}" style="display:inline-block;background:linear-gradient(135deg,#35AFD0,#138a8a);color:#063b35;font-weight:800;font-size:15px;text-decoration:none;padding:14px 30px;border-radius:50px">📖 Zur Nachbereitung</a>
       </td></tr>
       <tr><td style="padding:18px 28px 26px;font-size:12px;color:#9CA3AF;text-align:center">Üb die neuen Vokabeln gleich im Trainer · deutschoderwas-club.de</td></tr>
     </table>

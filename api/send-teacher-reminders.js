@@ -78,7 +78,7 @@ export default async function handler(req, res) {
       const html = teacherSoonEmail({
         teacherName: (t.name || '').split(' ')[0] || 'du',
         cls: c, when, site,
-        clubName: club?.name || '', clubEmoji: club?.emoji || '', clubColor: club?.color || '#2DD4BF',
+        clubName: club?.name || '', clubEmoji: club?.emoji || '', clubColor: club?.color || '#7ED8EA',
         students, count: students.length,
       });
       const r = await sendBrevo(t, `⏰ Gleich unterrichtest du: ${c.title} – ${TIME_FMT.format(new Date(c.starts_at))} Uhr`, html);
@@ -203,7 +203,7 @@ function _shell(inner, preview) {
 }
 
 function teacherSoonEmail({ teacherName, cls, when, site, clubName, clubEmoji, clubColor, students, count }) {
-  const accent = clubColor || '#2DD4BF';
+  const accent = clubColor || '#7ED8EA';
   const topic = cls.topic ? ` · ${_esc(cls.topic)}` : '';
   const clubChip = clubName ? `<span style="display:inline-block;background:${accent};color:#ffffff;font-family:${_FF};font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:4px 11px;border-radius:30px">${_esc(clubEmoji)} ${_esc(clubName)}</span>` : '';
   const meetBtn = `
@@ -243,7 +243,7 @@ function teacherSoonEmail({ teacherName, cls, when, site, clubName, clubEmoji, c
 
 function teacherDayPlanEmail({ teacherName, dateLabel, items, site }) {
   const rows = items.map(it => {
-    const accent = it.club?.color || '#2DD4BF';
+    const accent = it.club?.color || '#7ED8EA';
     const chip = it.club?.name ? `<span style="display:inline-block;background:${accent};color:#fff;font-family:${_FF};font-size:10px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;padding:3px 9px;border-radius:30px">${_esc(it.club.emoji || '')} ${_esc(it.club.name)}</span>` : '';
     return `
       <tr><td style="padding:8px 0">
@@ -283,7 +283,7 @@ function teacherWeekPlanEmail({ teacherName, weekLabel, days, site }) {
   const total = days.reduce((n, d) => n + d.items.length, 0);
   const dayBlocks = days.map(d => {
     const rows = d.items.map(it => {
-      const accent = it.club?.color || '#2DD4BF';
+      const accent = it.club?.color || '#7ED8EA';
       const chip = it.club?.name ? `<span style="display:inline-block;background:${accent};color:#fff;font-family:${_FF};font-size:10px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;padding:3px 9px;border-radius:30px">${_esc(it.club.emoji || '')} ${_esc(it.club.name)}</span>` : '';
       return `
         <tr><td style="padding:6px 0">

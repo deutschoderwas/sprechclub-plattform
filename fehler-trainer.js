@@ -21,25 +21,25 @@
     #v-fehler .ft-stat{background:#fff;border:1px solid #EEE7D8;border-radius:14px;padding:15px 18px;box-shadow:0 1px 2px rgba(30,25,15,.05)}
     #v-fehler .ft-stat .l{font-size:12.5px;color:#5A6169;margin-bottom:7px}
     #v-fehler .ft-stat .v{font-family:'Space Grotesk',inherit;font-size:24px;font-weight:700;line-height:1}
-    #v-fehler .ft-stat .v.t{color:#0E8577}
+    #v-fehler .ft-stat .v.t{color:#14708B}
     #v-fehler .ft-list{display:flex;flex-direction:column;gap:12px;max-width:760px}
-    #v-fehler .ft-card{border:1px solid #C3EBE3;border-left:3px solid #2DD4BF;border-radius:13px;background:#F1FBF9;padding:14px 16px;transition:opacity .2s}
+    #v-fehler .ft-card{border:1px solid #BCE4F0;border-left:3px solid #7ED8EA;border-radius:13px;background:#F1FBF9;padding:14px 16px;transition:opacity .2s}
     #v-fehler .ft-card.done{background:#F7F6F3;border-color:#EEE7D8;border-left-color:#c7c6bf}
     #v-fehler .ft-top{display:flex;align-items:center;gap:8px;margin-bottom:7px}
-    #v-fehler .ft-topic{font-size:11px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:#0E8577;background:#ECFBF7;border:1px solid #C3EBE3;padding:2px 8px;border-radius:6px}
+    #v-fehler .ft-topic{font-size:11px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:#14708B;background:#ECFBF7;border:1px solid #BCE4F0;padding:2px 8px;border-radius:6px}
     #v-fehler .ft-card.done .ft-topic{color:#8B8F96;background:#F1EEE8;border-color:#EEE7D8}
     #v-fehler .ft-date{margin-left:auto;font-size:11.5px;color:#8B8F96}
-    #v-fehler .ft-txt{font-size:15px;font-weight:700;color:#06403A;line-height:1.5}
+    #v-fehler .ft-txt{font-size:15px;font-weight:700;color:#10627A;line-height:1.5}
     #v-fehler .ft-card.done .ft-txt{color:#5A6169}
-    #v-fehler .ft-note{font-size:13px;color:#5A6169;margin-top:7px;padding-top:7px;border-top:1px dashed #C3EBE3;line-height:1.5}
+    #v-fehler .ft-note{font-size:13px;color:#5A6169;margin-top:7px;padding-top:7px;border-top:1px dashed #BCE4F0;line-height:1.5}
     #v-fehler .ft-card.done .ft-note{border-top-color:#EEE7D8}
     #v-fehler .ft-act{margin-top:11px;display:flex;gap:8px;align-items:center}
-    #v-fehler .ft-master{font-size:12.5px;font-weight:700;border:1px solid #C3EBE3;background:#fff;color:#06403A;border-radius:9px;padding:7px 13px;cursor:pointer;font-family:inherit}
+    #v-fehler .ft-master{font-size:12.5px;font-weight:700;border:1px solid #BCE4F0;background:#fff;color:#10627A;border-radius:9px;padding:7px 13px;cursor:pointer;font-family:inherit}
     #v-fehler .ft-master:hover{background:#ECFBF7}
-    #v-fehler .ft-master.on{background:linear-gradient(135deg,#2DD4BF,#14B8A6);color:#06403A;border-color:transparent}
+    #v-fehler .ft-master.on{background:linear-gradient(135deg,#7ED8EA,#35AFD0);color:#10627A;border-color:transparent}
     #v-fehler .ft-del{margin-left:auto;font-size:12px;color:#c7c6bf;background:none;border:none;cursor:pointer;font-family:inherit}
     #v-fehler .ft-del:hover{color:#DD0000}
-    #v-fehler .ft-empty{text-align:center;padding:36px 22px;border:1px dashed #C3EBE3;border-radius:16px;background:#F1FBF9;max-width:520px;margin:8px auto}
+    #v-fehler .ft-empty{text-align:center;padding:36px 22px;border:1px dashed #BCE4F0;border-radius:16px;background:#F1FBF9;max-width:520px;margin:8px auto}
     #v-fehler .ft-empty .ic{font-size:40px;margin-bottom:8px}
     #v-fehler .ft-empty h3{margin:0 0 6px}
     #v-fehler .ft-empty p{color:#5A6169;font-size:14px;max-width:400px;margin:0 auto}

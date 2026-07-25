@@ -42,7 +42,7 @@
     #v-community .cm-msgs{flex:1;min-height:0;overflow-y:auto;padding:16px 18px;display:flex;flex-direction:column;gap:12px;background:linear-gradient(#fff,#fffdf7)}
     #v-community .cm-row{display:flex;gap:10px;max-width:78%}
     #v-community .cm-row.me{align-self:flex-end;flex-direction:row-reverse}
-    #v-community .cm-av{flex:0 0 34px;width:34px;height:34px;border-radius:50%;background:var(--turquoise,#2DD4BF);color:#06403A;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+    #v-community .cm-av{flex:0 0 34px;width:34px;height:34px;border-radius:50%;background:var(--turquoise,#7ED8EA);color:#10627A;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
     #v-community .cm-bub{background:#fff;border:1px solid var(--border,#F0E5D8);border-radius:14px;padding:9px 13px;font-size:14.5px;line-height:1.45;word-break:break-word}
     #v-community .cm-row.me .cm-bub{background:#E8FBF5;border-color:#bdeee2}
     #v-community .cm-meta{font-size:11.5px;color:var(--text-soft,#6B7280);margin-bottom:3px;font-weight:700}
@@ -63,9 +63,9 @@
     #v-community .cm-emoi:hover{background:var(--bg,#FFF8E0)}
     #v-community .cm-foot{padding:12px 14px;border-top:1px solid var(--border,#F0E5D8);display:flex;gap:9px;align-items:center;background:#fff}
     #v-community .cm-inp{flex:1;border:1.5px solid var(--border,#F0E5D8);border-radius:22px;padding:11px 16px;font-size:14.5px;font-family:inherit;outline:none;resize:none;max-height:120px}
-    #v-community .cm-inp:focus{border-color:var(--turquoise,#2DD4BF)}
+    #v-community .cm-inp:focus{border-color:var(--turquoise,#7ED8EA)}
     #v-community .cm-btn{flex:0 0 auto;border:none;cursor:pointer;width:44px;height:44px;border-radius:50%;font-size:19px;display:flex;align-items:center;justify-content:center;font-family:inherit}
-    #v-community .cm-send{background:var(--turquoise,#2DD4BF);color:#06403A}
+    #v-community .cm-send{background:var(--turquoise,#7ED8EA);color:#10627A}
     #v-community .cm-mic{background:var(--bg,#FFF8E0);color:var(--secondary,#1A1A1A)}
     #v-community .cm-mic.rec{background:var(--primary,#DD0000);color:#fff;animation:cmPulse 1s infinite}
     @keyframes cmPulse{0%,100%{box-shadow:0 0 0 0 rgba(221,0,0,.5)}50%{box-shadow:0 0 0 10px rgba(221,0,0,0)}}
@@ -74,12 +74,12 @@
     #v-community .cm-del{background:none;border:none;cursor:pointer;color:#bbb;font-size:12px;margin-left:6px}
     #v-community .cm-del:hover{color:var(--primary,#DD0000)}
     #v-community .cm-radd{background:none;border:none;cursor:pointer;color:#bbb;font-size:14px;margin-left:4px;line-height:1}
-    #v-community .cm-radd:hover{color:var(--turquoise,#2DD4BF)}
+    #v-community .cm-radd:hover{color:var(--turquoise,#7ED8EA)}
     #v-community .cm-react{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
     #v-community .cm-react:empty{display:none}
     #v-community .cm-rchip{border:1px solid var(--border,#F0E5D8);background:#fff;border-radius:999px;padding:1px 8px;font-size:12.5px;font-weight:600;cursor:pointer;line-height:1.7;font-family:inherit}
     #v-community .cm-rchip.mine{background:#E8FBF5;border-color:#8fe0cc}
-    #v-community .cm-rchip:hover{border-color:var(--turquoise,#2DD4BF)}
+    #v-community .cm-rchip:hover{border-color:var(--turquoise,#7ED8EA)}
     #v-community .cm-row.me .cm-react{justify-content:flex-end}
     .cm-rpick{position:fixed;z-index:10001;display:none;gap:2px;background:#fff;border:1px solid #F0E5D8;border-radius:999px;padding:5px 8px;box-shadow:0 8px 24px rgba(0,0,0,.16)}
     .cm-rpick .cm-rpe{border:none;background:none;cursor:pointer;font-size:22px;line-height:1;padding:3px 4px;border-radius:8px}

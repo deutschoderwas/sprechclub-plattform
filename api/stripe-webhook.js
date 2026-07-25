@@ -33,10 +33,10 @@ async function sendAmandaAccess(s) {
     <tr><td align="center">
       <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#FFFCF5;border:1px solid #F0E5D8;border-radius:20px;overflow:hidden">
         <tr><td style="padding:24px 32px 8px">
-          <span style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:22px;color:#1A1A1A">deutsch<span style="color:#14B8A6">oderwas</span></span>
+          <span style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:22px;color:#1A1A1A">deutsch<span style="color:#35AFD0">oderwas</span></span>
           <span style="display:block;font-size:12px;color:#6B7280;margin-top:2px">Deutsch lernen mit Spaß &amp; Leichtigkeit</span>
         </td></tr>
-        <tr><td style="padding:0 32px"><div style="height:3px;background:linear-gradient(135deg,#2DD4BF,#14B8A6);border-radius:999px"></div></td></tr>
+        <tr><td style="padding:0 32px"><div style="height:3px;background:linear-gradient(135deg,#7ED8EA,#35AFD0);border-radius:999px"></div></td></tr>
         <tr><td style="padding:22px 32px 4px">
           <span style="font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#DD0000">Dein Zugang ist da</span>
           <h1 style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:26px;line-height:1.2;margin:8px 0 14px;color:#1A1A1A">Zeit, mit <span style="color:#DD0000">Amanda</span> zu sprechen 🎉</h1>
@@ -44,11 +44,11 @@ async function sendAmandaAccess(s) {
           <p style="font-size:16px;line-height:1.6;margin:0 0 16px">vielen Dank für dein Abo! 💛 Ab jetzt kannst du <strong>rund um die Uhr &amp; ohne Zeitlimit</strong> mit Amanda, deiner KI-Deutschtutorin, sprechen — so lange und so oft du willst.</p>
         </td></tr>
         <tr><td align="center" style="padding:6px 32px 10px">
-          <a href="${AMANDA_UNLOCK}" style="display:inline-block;background:linear-gradient(135deg,#2DD4BF,#14B8A6);color:#06403A;font-weight:700;font-size:16px;text-decoration:none;padding:15px 34px;border-radius:999px">🔓 Amanda jetzt öffnen</a>
+          <a href="${AMANDA_UNLOCK}" style="display:inline-block;background:linear-gradient(135deg,#7ED8EA,#35AFD0);color:#10627A;font-weight:700;font-size:16px;text-decoration:none;padding:15px 34px;border-radius:999px">🔓 Amanda jetzt öffnen</a>
         </td></tr>
         <tr><td style="padding:8px 32px 4px">
-          <p style="font-size:13px;line-height:1.6;color:#6B7280;margin:0 0 6px">Tipp: <strong>Speichere dir diese E-Mail.</strong> Über den Button kommst du <strong>jederzeit wieder</strong> zu Amanda. Monatlich kündbar — <a href="${AMANDA_PORTAL}" style="color:#14B8A6">Abo verwalten/kündigen</a>.</p>
-          <p style="font-size:12px;line-height:1.5;color:#6B7280;margin:0;word-break:break-all">Falls der Button nicht geht: <a href="${AMANDA_UNLOCK}" style="color:#14B8A6">${AMANDA_UNLOCK}</a></p>
+          <p style="font-size:13px;line-height:1.6;color:#6B7280;margin:0 0 6px">Tipp: <strong>Speichere dir diese E-Mail.</strong> Über den Button kommst du <strong>jederzeit wieder</strong> zu Amanda. Monatlich kündbar — <a href="${AMANDA_PORTAL}" style="color:#35AFD0">Abo verwalten/kündigen</a>.</p>
+          <p style="font-size:12px;line-height:1.5;color:#6B7280;margin:0;word-break:break-all">Falls der Button nicht geht: <a href="${AMANDA_UNLOCK}" style="color:#35AFD0">${AMANDA_UNLOCK}</a></p>
         </td></tr>
         <tr><td style="padding:16px 32px 22px">
           <p style="font-size:16px;line-height:1.6;margin:0">Viel Spaß beim Sprechen,<br><strong>Julia</strong> 💛</p>
@@ -102,7 +102,7 @@ async function sendGoodbyeMail(email, name) {
         <p style="margin:0 0 10px">Du bist jederzeit herzlich willkommen zurück — die Tür steht dir immer offen.</p>
       </td></tr>
       <tr><td style="padding:8px 30px 4px">
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF8E0;border:1px solid #F0E5D8;border-left:5px solid #2DD4BF;border-radius:16px">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF8E0;border:1px solid #F0E5D8;border-left:5px solid #7ED8EA;border-radius:16px">
           <tr><td style="padding:16px 20px;font-family:${ff};font-size:15px;line-height:1.6;color:#1A1A1A">
             <b>Magst du mir kurz Feedback geben?</b><br>
             Was hat dir gefallen, was können wir besser machen? <b>Antworte einfach auf diese E-Mail</b> — dein Feedback hilft mir riesig. 🙏
@@ -153,10 +153,10 @@ async function sendTrialWelcome(s) {
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF8E0;padding:24px 12px"><tr><td align="center">
     <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#FFFCF5;border:1px solid #F0E5D8;border-radius:20px;overflow:hidden">
       <tr><td style="padding:24px 32px 8px">
-        <span style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:22px;color:#1A1A1A">deutsch<span style="color:#14B8A6">oderwas</span></span>
+        <span style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:22px;color:#1A1A1A">deutsch<span style="color:#35AFD0">oderwas</span></span>
         <span style="display:block;font-size:12px;color:#6B7280;margin-top:2px">Deutsch lernen mit Spaß &amp; Leichtigkeit</span>
       </td></tr>
-      <tr><td style="padding:0 32px"><div style="height:3px;background:linear-gradient(135deg,#2DD4BF,#14B8A6);border-radius:999px"></div></td></tr>
+      <tr><td style="padding:0 32px"><div style="height:3px;background:linear-gradient(135deg,#7ED8EA,#35AFD0);border-radius:999px"></div></td></tr>
       <tr><td style="padding:22px 32px 4px">
         <span style="font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#DD0000">Deine Probestunde ist da</span>
         <h1 style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:26px;line-height:1.2;margin:8px 0 14px;color:#1A1A1A">Willkommen im Club 🎉</h1>
@@ -168,7 +168,7 @@ async function sendTrialWelcome(s) {
           <div style="font-weight:700;font-size:15px;color:#0F766E">⚡ Du willst sofort mehr als die Probestunde?</div>
           <p style="font-size:14px;line-height:1.6;margin:8px 0 14px;color:#1A1A1A">Kein Problem – starte dein Abo <b>sofort voll</b>. Die Zahlung wird dann gleich fällig und du bekommst deine <b>${info.h} Stunden + die Gratis-Probestunde sofort</b> gutgeschrieben. So kannst du direkt mehrere Stunden in dieser Woche nutzen.</p>
           <p style="text-align:center;margin:0">
-            <a href="${START_NOW_URL}" style="display:inline-block;background:linear-gradient(135deg,#2DD4BF,#14B8A6);color:#06403A;font-weight:700;font-size:16px;text-decoration:none;padding:14px 30px;border-radius:999px">🚀 Jetzt voll starten</a>
+            <a href="${START_NOW_URL}" style="display:inline-block;background:linear-gradient(135deg,#7ED8EA,#35AFD0);color:#10627A;font-weight:700;font-size:16px;text-decoration:none;padding:14px 30px;border-radius:999px">🚀 Jetzt voll starten</a>
           </p>
         </div>
       </td></tr>
@@ -216,22 +216,22 @@ async function sendPaymentMail(sub, inv) {
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF8E0;padding:24px 12px"><tr><td align="center">
     <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#FFFCF5;border:1px solid #F0E5D8;border-radius:20px;overflow:hidden">
       <tr><td style="padding:24px 32px 8px">
-        <span style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:22px;color:#1A1A1A">deutsch<span style="color:#14B8A6">oderwas</span></span>
+        <span style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:22px;color:#1A1A1A">deutsch<span style="color:#35AFD0">oderwas</span></span>
         <span style="display:block;font-size:12px;color:#6B7280;margin-top:2px">Deutsch lernen mit Spaß &amp; Leichtigkeit</span>
       </td></tr>
-      <tr><td style="padding:0 32px"><div style="height:3px;background:linear-gradient(135deg,#2DD4BF,#14B8A6);border-radius:999px"></div></td></tr>
+      <tr><td style="padding:0 32px"><div style="height:3px;background:linear-gradient(135deg,#7ED8EA,#35AFD0);border-radius:999px"></div></td></tr>
       <tr><td style="padding:22px 32px 4px">
         <span style="font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#DD0000">Zahlung erfolgreich</span>
         <h1 style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:26px;line-height:1.2;margin:8px 0 14px;color:#1A1A1A">Deine Stunden sind da! 🎉</h1>
         <p style="font-size:16px;line-height:1.6;margin:0 0 12px">${hallo}</p>
         <p style="font-size:16px;line-height:1.6;margin:0 0 14px">wie schön, dass du dabei bist! 💛 Deine Zahlung ist angekommen und ich hab dir gerade deine <b>${stunden} LIVE-Stunden</b> gutgeschrieben. Jetzt kann's losgehen – such dir im Stundenplan aus, worauf du Lust hast, und buch deine erste Stunde.</p>
-        <div style="background:#fff;border-left:4px solid #2DD4BF;border-radius:10px;padding:10px 14px;margin:6px 0 4px;font-size:14px"><b>Dein Tarif:</b> ${label} · ${stunden} LIVE-Stunden / Monat</div>
+        <div style="background:#fff;border-left:4px solid #7ED8EA;border-radius:10px;padding:10px 14px;margin:6px 0 4px;font-size:14px"><b>Dein Tarif:</b> ${label} · ${stunden} LIVE-Stunden / Monat</div>
       </td></tr>
       <tr><td align="center" style="padding:14px 32px 4px">
-        <a href="${BOOK}" style="display:inline-block;background:linear-gradient(135deg,#2DD4BF,#14B8A6);color:#06403A;font-weight:700;font-size:16px;text-decoration:none;padding:14px 30px;border-radius:999px">📅 Jetzt Stunde buchen</a>
+        <a href="${BOOK}" style="display:inline-block;background:linear-gradient(135deg,#7ED8EA,#35AFD0);color:#10627A;font-weight:700;font-size:16px;text-decoration:none;padding:14px 30px;border-radius:999px">📅 Jetzt Stunde buchen</a>
       </td></tr>
       <tr><td style="padding:12px 32px 4px">
-        <p style="font-size:13px;line-height:1.6;color:#6B7280;margin:0">Dein Abo verlängert sich automatisch monatlich – jederzeit kündbar. <a href="${PORTAL}" style="color:#14B8A6">Abo verwalten / kündigen</a></p>
+        <p style="font-size:13px;line-height:1.6;color:#6B7280;margin:0">Dein Abo verlängert sich automatisch monatlich – jederzeit kündbar. <a href="${PORTAL}" style="color:#35AFD0">Abo verwalten / kündigen</a></p>
       </td></tr>
       <tr><td style="padding:14px 32px 22px">
         <p style="font-size:16px;line-height:1.6;margin:0">Ich freue mich riesig, dich bei uns im Club zu sehen!<br><strong>Julia</strong> 💛</p>

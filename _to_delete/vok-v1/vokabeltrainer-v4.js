@@ -94,7 +94,7 @@
   /* ================= Bild ================= */
   // Wortkarte, wenn es kein Bild und kein Emoji gibt: Anfangsbuchstabe in Artikelfarbe
   function wortKarte(v, gr) {
-    var f = (v.artikel && ART_FARBE[v.artikel]) || '#12A594';
+    var f = (v.artikel && ART_FARBE[v.artikel]) || '#1B9BC0';
     var buch = (v.wort || v.de || '?').trim().charAt(0).toUpperCase();
     return '<span class="vt-bild ' + (gr || '') + ' vt-typo" style="--tk:' + f + '">'
       + '<span class="vt-typo-b">' + esc(buch) + '</span></span>';
@@ -276,14 +276,14 @@
     return (re && re.test(v.bsp)) ? re : null;
   }
   var TYP_INFO = {
-    kennenlernen: { f: 'Neues Wort', farbe: '#12A594', ic: '✨' },
-    uebersetzung: { f: 'Was heißt das?', farbe: '#12A594', ic: '💬' },
+    kennenlernen: { f: 'Neues Wort', farbe: '#1B9BC0', ic: '✨' },
+    uebersetzung: { f: 'Was heißt das?', farbe: '#1B9BC0', ic: '💬' },
     rueckwaerts: { f: 'Welches deutsche Wort ist das?', farbe: '#2F6FD0', ic: '🔁' },
     bild: { f: 'Welches Bild passt?', farbe: '#E0A020', ic: '🖼️' },
     artikel: { f: 'der, die oder das?', farbe: '#8B4FC7', ic: '🎯' },
     luecke: { f: 'Welches Wort fehlt im Satz?', farbe: '#E07B39', ic: '🧩' },
     hoeren: { f: 'Hör genau hin', farbe: '#3E5FCC', ic: '🎧' },
-    tippen: { f: 'Schreib das Wort auf Deutsch', farbe: '#0E8577', ic: '⌨️' },
+    tippen: { f: 'Schreib das Wort auf Deutsch', farbe: '#14708B', ic: '⌨️' },
     satzbau: { f: 'Bau den Satz', farbe: '#C7457F', ic: '🧱' },
     satzhoeren: { f: 'Hör den Satz — welches Wort fehlt?', farbe: '#3E5FCC', ic: '👂' }
   };
@@ -337,7 +337,7 @@
     st.textContent = `
 /* ---------- Startseite im Schülerbereich ---------- */
 .vt-hero{position:relative;overflow:hidden;border-radius:26px;padding:34px 32px;margin-bottom:22px;color:#fff;
-  background:linear-gradient(135deg,#0B6157 0%,#0E8577 42%,#2CC0AE 100%)}
+  background:linear-gradient(135deg,#0B6157 0%,#14708B 42%,#2CC0AE 100%)}
 .vt-hero::after{content:'';position:absolute;right:-70px;top:-70px;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.08)}
 .vt-hero::before{content:'';position:absolute;right:60px;bottom:-110px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.06)}
 .vt-hero-in{position:relative;z-index:1;display:flex;gap:28px;align-items:center;flex-wrap:wrap}
@@ -360,11 +360,11 @@
 .vt-kpi .v{font-size:38px;font-weight:800;color:#141414;line-height:1.1;margin-top:4px;font-family:'Space Grotesk',system-ui,sans-serif}
 .vt-kpi .d{font-size:13px;color:#8A857C;margin-top:2px}
 .vt-kpi .balken{height:7px;border-radius:99px;background:#EFEADF;margin-top:12px;overflow:hidden}
-.vt-kpi .balken>i{position:static;display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#12A594,#2CC0AE);font-size:0}
+.vt-kpi .balken>i{position:static;display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#1B9BC0,#2CC0AE);font-size:0}
 .vt-zeile{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:14px;color:#6A655C;margin-bottom:10px;font-weight:600}
 .vt-zb{border:2px solid var(--border,#ECE7DC);background:#fff;border-radius:999px;padding:9px 18px;font-family:inherit;font-size:14px;font-weight:800;color:#4A4740;cursor:pointer;transition:all .15s}
-.vt-zb:hover{border-color:#12A594}
-.vt-zb.on{background:#0E7C70;border-color:#0E7C70;color:#fff}
+.vt-zb:hover{border-color:#1B9BC0}
+.vt-zb.on{background:#14708B;border-color:#14708B;color:#fff}
 .vt-hinweis{background:#FFF8E4;border:1px solid #F0DFA8;border-radius:16px;padding:16px 20px;font-size:14.5px;color:#6B5A22;line-height:1.6}
 
 /* ---------- Vollbild-Runde ---------- */
@@ -376,7 +376,7 @@
 .vt-x{border:none;background:none;font-size:30px;line-height:1;color:#B4AEA4;cursor:pointer;padding:2px 10px;border-radius:11px;flex:none}
 .vt-x:hover{background:#F3F0E9;color:#5A5750}
 .vt-bar{flex:1;height:16px;border-radius:999px;background:#EDE8DC;overflow:hidden;position:relative}
-.vt-bar>i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#12A594,#2CC0AE);
+.vt-bar>i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#1B9BC0,#2CC0AE);
   transition:width .4s cubic-bezier(.3,.9,.3,1);position:relative}
 .vt-bar>i::after{content:'';position:absolute;inset:0 0 50% 0;border-radius:999px;background:rgba(255,255,255,.25)}
 .vt-top .n{font-size:16px;font-weight:800;color:#6A655C;flex:none;min-width:66px;text-align:right;font-variant-numeric:tabular-nums}
@@ -384,14 +384,14 @@
 
 .vt-buehne{flex:1;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:34px 24px 210px}
 .vt-karte{width:100%;max-width:860px}
-.vt-etikett{display:inline-flex;align-items:center;gap:9px;background:var(--tf,#12A594);color:#fff;border-radius:999px;
+.vt-etikett{display:inline-flex;align-items:center;gap:9px;background:var(--tf,#1B9BC0);color:#fff;border-radius:999px;
   padding:9px 20px;font-size:14px;font-weight:800;margin-bottom:26px}
 .vt-etikett .ic{font-size:16px}
 
 .vt-gross{font-family:'Space Grotesk',system-ui,sans-serif;font-size:clamp(34px,5.4vw,58px);font-weight:700;
   line-height:1.12;color:#141414;margin:0 0 14px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
 .vt-gross.mitte{justify-content:center;text-align:center}
-.vt-lauts{border:none;background:#EAF8F5;color:#0E7C70;width:60px;height:60px;border-radius:19px;font-size:27px;cursor:pointer;
+.vt-lauts{border:none;background:#EAF8F5;color:#14708B;width:60px;height:60px;border-radius:19px;font-size:27px;cursor:pointer;
   flex:none;display:inline-flex;align-items:center;justify-content:center;transition:transform .16s,background .2s;vertical-align:middle}
 .vt-lauts:hover{background:#D3F0EA;transform:scale(1.05)}
 .vt-lauts.klein{width:46px;height:46px;font-size:21px;border-radius:14px}
@@ -427,10 +427,10 @@
 .vt-o{position:relative;border:3px solid #E7E1D4;background:#fff;border-radius:20px;padding:22px 26px;font-family:inherit;
   font-size:clamp(17px,2.1vw,21px);font-weight:700;color:#20221F;cursor:pointer;text-align:left;line-height:1.35;
   transition:border-color .16s,background .16s,transform .12s,box-shadow .16s;box-shadow:0 3px 0 #E7E1D4}
-.vt-o:hover:not(:disabled){border-color:#12A594;transform:translateY(-2px);box-shadow:0 6px 0 #B9E4DC}
+.vt-o:hover:not(:disabled){border-color:#1B9BC0;transform:translateY(-2px);box-shadow:0 6px 0 #B9E4DC}
 .vt-o:disabled{cursor:default}
 .vt-o .taste{position:absolute;left:13px;top:11px;font-size:11px;font-weight:800;color:#B4AEA4;border:1px solid #E7E1D4;border-radius:6px;padding:0 6px}
-.vt-o.richtig{border-color:#12A594;background:#E9F9F5;color:#07463E;box-shadow:0 3px 0 #9EDCD0}
+.vt-o.richtig{border-color:#1B9BC0;background:#E9F9F5;color:#07463E;box-shadow:0 3px 0 #9EDCD0}
 .vt-o.falsch{border-color:#E05B5B;background:#FDEFEF;color:#8E2222;box-shadow:0 3px 0 #F2B5B5}
 .vt-o.vt-rtl{direction:rtl;text-align:right}
 .vt-o.bildo{display:flex;flex-direction:column;align-items:center;gap:12px;padding:20px 14px}
@@ -442,8 +442,8 @@
 
 .vt-eingabe{width:100%;border:3px solid #E7E1D4;border-radius:20px;padding:24px 26px;font-family:inherit;
   font-size:clamp(20px,2.6vw,26px);font-weight:700;color:#20221F;outline:none;background:#fff;box-shadow:0 3px 0 #E7E1D4}
-.vt-eingabe:focus{border-color:#12A594;box-shadow:0 3px 0 #B9E4DC}
-.vt-eingabe.richtig{border-color:#12A594;background:#E9F9F5}
+.vt-eingabe:focus{border-color:#1B9BC0;box-shadow:0 3px 0 #B9E4DC}
+.vt-eingabe.richtig{border-color:#1B9BC0;background:#E9F9F5}
 .vt-eingabe.falsch{border-color:#E05B5B;background:#FDEFEF}
 
 .vt-bau{display:flex;flex-wrap:wrap;gap:11px;min-height:88px;border:3px dashed #DCD5C5;border-radius:20px;
@@ -451,7 +451,7 @@
 .vt-teile{display:flex;flex-wrap:wrap;gap:11px}
 .vt-teil{border:3px solid #E7E1D4;background:#fff;border-radius:15px;padding:13px 20px;font-family:inherit;
   font-size:clamp(16px,2vw,21px);font-weight:700;color:#20221F;cursor:pointer;box-shadow:0 3px 0 #E7E1D4;transition:transform .12s}
-.vt-teil:hover{border-color:#12A594;transform:translateY(-2px)}
+.vt-teil:hover{border-color:#1B9BC0;transform:translateY(-2px)}
 
 .vt-hoerknopf{width:150px;height:150px;border-radius:44px;border:none;background:linear-gradient(135deg,#3E5FCC,#6B84E0);
   color:#fff;font-size:60px;cursor:pointer;margin:0 auto 18px;display:flex;align-items:center;justify-content:center;
@@ -479,11 +479,11 @@
 .vt-fuss .bspz i.vt-rtl{direction:rtl;text-align:right}
 .vt-fuss .wieder{margin-top:8px;font-size:13.5px;color:#8A857C;font-weight:600}
 .vt-weiter{flex:none;border:none;border-radius:17px;padding:20px 44px;font-family:inherit;font-size:18px;font-weight:800;
-  color:#fff;cursor:pointer;background:linear-gradient(135deg,#0E7C70,#12A594);box-shadow:0 8px 22px rgba(14,124,112,.34);transition:transform .15s}
+  color:#fff;cursor:pointer;background:linear-gradient(135deg,#14708B,#1B9BC0);box-shadow:0 8px 22px rgba(14,124,112,.34);transition:transform .15s}
 .vt-weiter:hover{transform:translateY(-2px)}
 .vt-weiter.rot{background:linear-gradient(135deg,#C24141,#E05B5B);box-shadow:0 8px 22px rgba(194,65,65,.32)}
 .vt-pruefen{width:100%;margin-top:22px;border:none;border-radius:17px;padding:20px;font-family:inherit;font-size:18px;
-  font-weight:800;color:#fff;cursor:pointer;background:linear-gradient(135deg,#0E7C70,#12A594);box-shadow:0 8px 22px rgba(14,124,112,.3)}
+  font-weight:800;color:#fff;cursor:pointer;background:linear-gradient(135deg,#14708B,#1B9BC0);box-shadow:0 8px 22px rgba(14,124,112,.3)}
 
 .vt-ende{max-width:640px;margin:0 auto;text-align:center;padding-top:20px}
 .vt-ende .gr{font-size:96px;line-height:1;margin-bottom:14px;animation:vtHuepf .6s cubic-bezier(.3,1.6,.5,1)}
@@ -528,7 +528,7 @@
 .vt-pk.gewaehlt{border-color:#C7457F;background:#FDF0F6;box-shadow:0 3px 0 #F0B9D4}
 .vt-pk.daneben{border-color:#E05B5B;background:#FDEFEF;animation:vtWackel .3s}
 @keyframes vtWackel{0%,100%{transform:none}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
-.vt-pk.fertig{border-color:#12A594;background:#E9F9F5;color:#0A6157;box-shadow:0 3px 0 #9EDCD0;cursor:default;opacity:.75}
+.vt-pk.fertig{border-color:#1B9BC0;background:#E9F9F5;color:#0A6157;box-shadow:0 3px 0 #9EDCD0;cursor:default;opacity:.75}
 .vt-pk.vt-rtl{direction:rtl;text-align:right}
 @media(max-width:760px){
   .vt-paare{gap:10px}
@@ -881,7 +881,7 @@
     var v = RUNDE[POS].v, bau = document.getElementById('vtBau');
     var ist = qa('#vtBau .vt-teil').map(function (b) { return b.textContent; }).join('');
     var richtig = normal(ist) === normal(v.wort || v.de);
-    bau.style.borderColor = richtig ? '#12A594' : '#E05B5B';
+    bau.style.borderColor = richtig ? '#1B9BC0' : '#E05B5B';
     bau.style.background = richtig ? '#E9F9F5' : '#FDEFEF';
     rueck(richtig);
   };
@@ -890,7 +890,7 @@
     var v = RUNDE[POS].v, bau = document.getElementById('vtBau');
     var ist = qa('#vtBau .vt-teil').map(function (b) { return b.textContent; }).join(' ');
     var richtig = normal(ist) === normal(v.bsp);
-    bau.style.borderColor = richtig ? '#12A594' : '#E05B5B';
+    bau.style.borderColor = richtig ? '#1B9BC0' : '#E05B5B';
     bau.style.background = richtig ? '#E9F9F5' : '#FDEFEF';
     rueck(richtig);
   };
@@ -969,7 +969,7 @@
 
   /* ================= Abschluss ================= */
   function konfetti() {
-    var farben = ['#12A594', '#2CC0AE', '#E0A020', '#C7457F', '#3E5FCC', '#8B4FC7'];
+    var farben = ['#1B9BC0', '#2CC0AE', '#E0A020', '#C7457F', '#3E5FCC', '#8B4FC7'];
     var d = document.createElement('div'); d.className = 'vt-konfetti';
     var h = '';
     for (var i = 0; i < 70; i++) {
@@ -1013,7 +1013,7 @@
       + '<div><b>' + schlecht + '</b><span>zum Üben</span></div>'
       + '<div><b>' + quote + '%</b><span>Trefferquote</span></div></div>'
       + '<div class="vt-liste">' + liste + '</div>'
-      + '<button class="vt-los" style="background:linear-gradient(135deg,#0E7C70,#12A594);color:#fff" onclick="__vtStart()">Noch eine Runde →</button>'
+      + '<button class="vt-los" style="background:linear-gradient(135deg,#14708B,#1B9BC0);color:#fff" onclick="__vtStart()">Noch eine Runde →</button>'
       + '<div style="margin-top:14px"><button class="vt-langsam" style="display:inline-block" onclick="__vtAbbruch()">Für heute reicht\'s</button></div>'
       + '</div>';
     if (quote >= 70) konfetti();

@@ -48,7 +48,7 @@ export default async function handler(req, res) {
 function messageEmail({ vorname, preview, site }) {
   const ff = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
   const esc = (s) => String(s == null ? '' : s).replace(/[<>&]/g, (c) => ({ '<':'&lt;','>':'&gt;','&':'&amp;' }[c]));
-  const snip = preview ? `<tr><td style="padding:6px 30px 0"><table role="presentation" width="100%" style="background:#FFF8E0;border:1px solid #F0E5D8;border-left:5px solid #2DD4BF;border-radius:14px"><tr><td style="padding:14px 18px;font-family:${ff};font-size:15px;line-height:1.6;color:#1A1A1A">${esc(preview).slice(0,300)}</td></tr></table></td></tr>` : '';
+  const snip = preview ? `<tr><td style="padding:6px 30px 0"><table role="presentation" width="100%" style="background:#FFF8E0;border:1px solid #F0E5D8;border-left:5px solid #7ED8EA;border-radius:14px"><tr><td style="padding:14px 18px;font-family:${ff};font-size:15px;line-height:1.6;color:#1A1A1A">${esc(preview).slice(0,300)}</td></tr></table></td></tr>` : '';
   return `<!DOCTYPE html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="margin:0;background:#FFF8E0;font-family:${ff}">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="padding:28px 14px"><tr><td align="center">

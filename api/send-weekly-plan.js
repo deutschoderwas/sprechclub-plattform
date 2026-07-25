@@ -100,9 +100,9 @@ async function sendPlan(teacher, mine, counts, startUTC, endUTC) {
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF8E0;padding:24px 12px"><tr><td align="center">
     <table role="presentation" width="620" cellpadding="0" cellspacing="0" style="max-width:620px;width:100%;background:#FFFCF5;border:1px solid #F0E5D8;border-radius:20px;overflow:hidden">
       <tr><td style="padding:24px 32px 8px">
-        <span style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:22px;color:#1A1A1A">deutsch<span style="color:#14B8A6">oderwas</span> <span style="font-size:13px;color:#6B7280">club</span></span>
+        <span style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:22px;color:#1A1A1A">deutsch<span style="color:#35AFD0">oderwas</span> <span style="font-size:13px;color:#6B7280">club</span></span>
       </td></tr>
-      <tr><td style="padding:0 32px"><div style="height:3px;background:linear-gradient(135deg,#2DD4BF,#14B8A6);border-radius:999px"></div></td></tr>
+      <tr><td style="padding:0 32px"><div style="height:3px;background:linear-gradient(135deg,#7ED8EA,#35AFD0);border-radius:999px"></div></td></tr>
       <tr><td style="padding:22px 32px 4px">
         <span style="font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#DD0000">Dein Wochenplan</span>
         <h1 style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:24px;line-height:1.2;margin:8px 0 6px;color:#1A1A1A">Deine Stunden vom ${range} &#128197;</h1>

@@ -34,10 +34,10 @@ async function sendWelcome(email, name) {
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF8E0;padding:24px 12px"><tr><td align="center">
     <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#FFFCF5;border:1px solid #F0E5D8;border-radius:20px;overflow:hidden">
       <tr><td style="padding:24px 32px 8px">
-        <span style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:22px;color:#1A1A1A">deutsch<span style="color:#14B8A6">oderwas</span></span>
+        <span style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:22px;color:#1A1A1A">deutsch<span style="color:#35AFD0">oderwas</span></span>
         <span style="display:block;font-size:12px;color:#6B7280;margin-top:2px">Deutsch lernen mit Spaß &amp; Leichtigkeit</span>
       </td></tr>
-      <tr><td style="padding:0 32px"><div style="height:3px;background:linear-gradient(135deg,#2DD4BF,#14B8A6);border-radius:999px"></div></td></tr>
+      <tr><td style="padding:0 32px"><div style="height:3px;background:linear-gradient(135deg,#7ED8EA,#35AFD0);border-radius:999px"></div></td></tr>
       <tr><td style="padding:22px 32px 4px">
         <span style="font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#DD0000">Willkommen im Club</span>
         <h1 style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:26px;line-height:1.2;margin:8px 0 14px;color:#1A1A1A">Schön, dass du da bist! 🎉</h1>
@@ -54,7 +54,7 @@ async function sendWelcome(email, name) {
           <div style="font-weight:700;font-size:15px;color:#0F766E">⚡ So startest du</div>
           <p style="font-size:14px;line-height:1.6;margin:8px 0 14px;color:#1A1A1A">Sichere dir deine <b>Gratis-Probestunde</b> oder wähle dein Stundenpaket – danach kannst du sofort deine erste LIVE-Stunde buchen.</p>
           <p style="text-align:center;margin:0">
-            <a href="https://www.deutschoderwas-club.de/#preise" style="display:inline-block;background:linear-gradient(135deg,#2DD4BF,#14B8A6);color:#06403A;font-weight:700;font-size:16px;text-decoration:none;padding:14px 30px;border-radius:999px">🚀 Jetzt Probestunde sichern</a>
+            <a href="https://www.deutschoderwas-club.de/#preise" style="display:inline-block;background:linear-gradient(135deg,#7ED8EA,#35AFD0);color:#10627A;font-weight:700;font-size:16px;text-decoration:none;padding:14px 30px;border-radius:999px">🚀 Jetzt Probestunde sichern</a>
           </p>
         </div>
       </td></tr>

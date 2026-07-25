@@ -40,13 +40,13 @@ async function sendToTeam({ to, name, studentEmail, body, site }) {
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF8E0;padding:24px 12px"><tr><td align="center">
     <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#FFFCF5;border:1px solid #F0E5D8;border-radius:20px;overflow:hidden">
       <tr><td style="padding:22px 30px 6px">
-        <span style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:21px;color:#1A1A1A">deutsch<span style="color:#14B8A6">oderwas</span> <span style="font-size:12px;color:#6B7280">club</span></span>
+        <span style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:21px;color:#1A1A1A">deutsch<span style="color:#35AFD0">oderwas</span> <span style="font-size:12px;color:#6B7280">club</span></span>
       </td></tr>
-      <tr><td style="padding:0 30px"><div style="height:3px;background:linear-gradient(135deg,#2DD4BF,#14B8A6);border-radius:999px"></div></td></tr>
+      <tr><td style="padding:0 30px"><div style="height:3px;background:linear-gradient(135deg,#7ED8EA,#35AFD0);border-radius:999px"></div></td></tr>
       <tr><td style="padding:20px 30px 4px">
         <span style="font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#DD0000">Neue Nachricht</span>
         <h1 style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:23px;line-height:1.25;margin:8px 0 12px;color:#1A1A1A">${esc(name)} hat dir geschrieben &#9993;&#65039;</h1>
-        <table role="presentation" width="100%" style="background:#FFF8E0;border:1px solid #F0E5D8;border-left:5px solid #2DD4BF;border-radius:14px">
+        <table role="presentation" width="100%" style="background:#FFF8E0;border:1px solid #F0E5D8;border-left:5px solid #7ED8EA;border-radius:14px">
           <tr><td style="padding:14px 18px;font-size:15px;line-height:1.6;color:#1A1A1A">${esc(body).slice(0, 1500)}</td></tr>
         </table>
         ${studentEmail ? `<p style="font-size:13px;color:#6B7280;margin:12px 0 0">Von: <b>${esc(name)}</b> &middot; ${esc(studentEmail)}</p>` : ''}
@@ -55,7 +55,7 @@ async function sendToTeam({ to, name, studentEmail, body, site }) {
         <div style="background:#F2FBFA;border:1px solid #CFEFEA;border-radius:14px;padding:14px 16px">
           <p style="font-size:14px;line-height:1.6;margin:0 0 12px;color:#0F766E"><b>Du kannst direkt auf diese E-Mail antworten</b> &ndash; deine Antwort geht dann an ${esc(name)}. Oder antworte im Club:</p>
           <p style="text-align:center;margin:0">
-            <a href="${esc(site)}/admin.html" style="display:inline-block;background:linear-gradient(135deg,#2DD4BF,#14B8A6);color:#06403A;font-weight:700;font-size:15px;text-decoration:none;padding:12px 26px;border-radius:999px">&#128172; Im Admin antworten</a>
+            <a href="${esc(site)}/admin.html" style="display:inline-block;background:linear-gradient(135deg,#7ED8EA,#35AFD0);color:#10627A;font-weight:700;font-size:15px;text-decoration:none;padding:12px 26px;border-radius:999px">&#128172; Im Admin antworten</a>
           </p>
         </div>
       </td></tr>

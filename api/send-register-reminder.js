@@ -45,7 +45,7 @@ function mail(site, email) {
   return `<!DOCTYPE html><html lang="de"><body style="margin:0;background:#FFF8E0;font-family:${ff}">
   <table role="presentation" width="100%" style="padding:24px 14px"><tr><td align="center">
     <table role="presentation" width="100%" style="max-width:560px;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 8px 26px rgba(0,0,0,.08)">
-      <tr><td style="height:6px;background:linear-gradient(90deg,#DD0000 0 33%,#FFCE00 33% 66%,#2DD4BF 66% 100%)"></td></tr>
+      <tr><td style="height:6px;background:linear-gradient(90deg,#DD0000 0 33%,#FFCE00 33% 66%,#7ED8EA 66% 100%)"></td></tr>
       <tr><td style="padding:26px 30px 6px">
         <div style="font-size:13px;font-weight:800;letter-spacing:.04em;color:#0F766E;text-transform:uppercase">Willkommen im Club</div>
         <h1 style="margin:8px 0 6px;font-size:23px;color:#1A1A1A">Nur noch 1 Schritt 🔓</h1>
@@ -53,7 +53,7 @@ function mail(site, email) {
         <p style="font-size:15px;line-height:1.6;color:#5B6A70;margin:8px 0 0">Wichtig: Registrier dich mit <b>genau dieser E-Mail-Adresse</b> (${String(email).replace(/[<>&]/g,'')}) – dann wird deine Mitgliedschaft automatisch erkannt und freigeschaltet.</p>
       </td></tr>
       <tr><td style="padding:14px 30px 8px" align="center">
-        <a href="${url}" style="display:inline-block;background:linear-gradient(135deg,#2DD4BF,#14B8A6);color:#06403A;font-weight:800;font-size:16px;text-decoration:none;padding:14px 30px;border-radius:999px">Jetzt registrieren &amp; loslegen</a>
+        <a href="${url}" style="display:inline-block;background:linear-gradient(135deg,#7ED8EA,#35AFD0);color:#10627A;font-weight:800;font-size:16px;text-decoration:none;padding:14px 30px;border-radius:999px">Jetzt registrieren &amp; loslegen</a>
       </td></tr>
       <tr><td style="padding:12px 30px 26px;font-size:12px;color:#9CA3AF">Schon registriert? Dann ignorier diese Mail einfach. 💛 · deutschoderwas club</td></tr>
     </table>

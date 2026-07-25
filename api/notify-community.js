@@ -45,7 +45,7 @@ export default async function handler(req, res) {
 <body style="margin:0;background:#FFF8E0;font-family:${ff}">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="padding:24px 14px"><tr><td align="center">
     <table role="presentation" width="100%" style="max-width:520px;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 8px 26px rgba(0,0,0,.08)">
-      <tr><td style="height:5px;background:#2DD4BF"></td></tr>
+      <tr><td style="height:5px;background:#7ED8EA"></td></tr>
       <tr><td style="padding:22px 26px 6px">
         <div style="font-size:13px;font-weight:800;letter-spacing:.04em;color:#9CA3AF;text-transform:uppercase">Admin-Info · deutschoderwas club</div>
         <h1 style="margin:8px 0 0;font-size:22px;color:#1A1A1A">💬 Neues in der Community</h1>
@@ -100,7 +100,7 @@ function communityMemberMail(chName, who, site, ff, esc) {
         Im Kanal <b>${esc(chName)}</b> gibt es eine neue Nachricht (zuletzt von <b>${esc(who)}</b>). Schau vorbei und misch mit! 🎉
       </td></tr>
       <tr><td align="center" style="padding:20px 26px 6px">
-        <a href="${esc(site)}/schuelerbereich#community" style="display:inline-block;background:linear-gradient(135deg,#2DD4BF,#14B8A6);color:#06403A;font-weight:800;font-size:15px;text-decoration:none;padding:13px 28px;border-radius:50px">💬 Zur Community</a>
+        <a href="${esc(site)}/schuelerbereich#community" style="display:inline-block;background:linear-gradient(135deg,#7ED8EA,#35AFD0);color:#10627A;font-weight:800;font-size:15px;text-decoration:none;padding:13px 28px;border-radius:50px">💬 Zur Community</a>
       </td></tr>
       <tr><td style="padding:18px 26px 26px;font-size:12px;color:#9CA3AF;text-align:center">Du bekommst höchstens eine solche Mail pro Kanal und Stunde · deutschoderwas-club.de</td></tr>
     </table>

@@ -70,7 +70,7 @@ export default async function handler(req, res) {
   return res.status(200).json({ ok:true, sent, errors });
 }
 
-// ---- deutschoderwas-Markendesign (Rot #DD0000 · Gold #FFCE00 · Creme #FFF8E0 · Petrol #2DD4BF) ----
+// ---- deutschoderwas-Markendesign (Rot #DD0000 · Gold #FFCE00 · Creme #FFF8E0 · Petrol #7ED8EA) ----
 function brandedMissYouEmail({ vorname, site, planUrl }) {
   const esc = (s) => String(s == null ? '' : s).replace(/[<>&]/g, (c) => ({ '<':'&lt;','>':'&gt;','&':'&amp;' }[c]));
   const ff = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
@@ -98,7 +98,7 @@ function brandedMissYouEmail({ vorname, site, planUrl }) {
         </td></tr>
 
         <tr><td style="padding:8px 30px 4px">
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF8E0;border:1px solid #F0E5D8;border-left:5px solid #2DD4BF;border-radius:16px">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF8E0;border:1px solid #F0E5D8;border-left:5px solid #7ED8EA;border-radius:16px">
             <tr><td style="padding:16px 20px;font-family:${ff};font-size:15px;line-height:1.6;color:#1A1A1A">
               <b>Das wartet auf dich:</b><br>
               🗣️ Sprechclub · 📝 Grammatik · 🧠 Wortschatz · 🔊 Aussprache – such dir einfach eine Stunde aus, die zu dir passt.

@@ -20,11 +20,11 @@
     if (styled) return; styled = true;
     var css = `
     .sq-card{position:relative;border:1px solid #ECE4D3;border-radius:18px;background:linear-gradient(180deg,#FFFDF8,#FFF9EE);box-shadow:0 10px 30px rgba(30,25,15,.06);overflow:hidden}
-    .sq-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(180deg,#2DD4BF,#12A594)}
+    .sq-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(180deg,#7ED8EA,#1B9BC0)}
     .sq-in{display:flex;gap:22px;align-items:center;padding:20px 24px 20px 26px;flex-wrap:wrap}
     .sq-main{flex:1;min-width:240px}
     .sq-toprow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
-    .sq-pill{font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:#0E8577;background:#E7FBF6;border:1px solid #C3EBE3;border-radius:999px;padding:4px 11px}
+    .sq-pill{font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:#14708B;background:#E6F8FC;border:1px solid #BCE4F0;border-radius:999px;padding:4px 11px}
     .sq-streak{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:800;color:#8a5a00;background:#FFF4D6;border:1px solid #F3E2A0;border-radius:999px;padding:4px 11px}
     .sq-q{font-family:'Space Grotesk',Inter,sans-serif;font-weight:700;font-size:21px;line-height:1.28;color:#211E18;margin:0 0 6px}
     .sq-hint{font-size:13.5px;color:#6B6154;line-height:1.5;margin:0;max-width:560px}
@@ -36,19 +36,19 @@
     .sq-count{font-size:13px;color:#6B6154}
     .sq-count b{color:#211E18;font-weight:800;font-family:'Space Grotesk',inherit}
     .sq-side{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:8px;min-width:96px}
-    .sq-mic{width:66px;height:66px;border-radius:50%;border:none;cursor:pointer;background:radial-gradient(120% 120% at 30% 25%,#3DE0CC,#12A594);box-shadow:0 10px 24px rgba(18,165,148,.35),inset 0 1px 0 rgba(255,255,255,.4);color:#06403A;font-size:26px;display:flex;align-items:center;justify-content:center;transition:transform .12s,box-shadow .12s;font-family:inherit}
-    .sq-mic:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(18,165,148,.42)}
+    .sq-mic{width:66px;height:66px;border-radius:50%;border:none;cursor:pointer;background:radial-gradient(120% 120% at 30% 25%,#3DE0CC,#1B9BC0);box-shadow:0 10px 24px rgba(27,155,192,.35),inset 0 1px 0 rgba(255,255,255,.4);color:#10627A;font-size:26px;display:flex;align-items:center;justify-content:center;transition:transform .12s,box-shadow .12s;font-family:inherit}
+    .sq-mic:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(27,155,192,.42)}
     .sq-mic:active{transform:translateY(0)}
-    .sq-side .lbl{font-size:12.5px;font-weight:700;color:#0E8577}
-    .sq-card.done .sq-mic{background:#EAF6F3;color:#0E8577;box-shadow:inset 0 0 0 1.5px #C3EBE3;cursor:default}
-    .sq-card.done .sq-mic:hover{transform:none;box-shadow:inset 0 0 0 1.5px #C3EBE3}
-    .sq-card.done .sq-side .lbl{color:#0E8577}
+    .sq-side .lbl{font-size:12.5px;font-weight:700;color:#14708B}
+    .sq-card.done .sq-mic{background:#EAF6F3;color:#14708B;box-shadow:inset 0 0 0 1.5px #BCE4F0;cursor:default}
+    .sq-card.done .sq-mic:hover{transform:none;box-shadow:inset 0 0 0 1.5px #BCE4F0}
+    .sq-card.done .sq-side .lbl{color:#14708B}
     .sq-done-note{font-size:11.5px;color:#8B8F96;text-align:center;max-width:110px;line-height:1.35}
     /* eigene Ansicht */
     #v-sprech .sq-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:20px}
     @media(max-width:720px){#v-sprech .sq-steps{grid-template-columns:1fr}}
     #v-sprech .sq-step{border:1px solid #EEE7D8;border-radius:14px;background:#fff;padding:16px 17px;box-shadow:0 1px 2px rgba(30,25,15,.05)}
-    #v-sprech .sq-step .n{width:28px;height:28px;border-radius:9px;background:#ECFBF7;color:#0E8577;font-family:'Space Grotesk',inherit;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;margin-bottom:9px}
+    #v-sprech .sq-step .n{width:28px;height:28px;border-radius:9px;background:#ECFBF7;color:#14708B;font-family:'Space Grotesk',inherit;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;margin-bottom:9px}
     #v-sprech .sq-step h4{margin:0 0 4px;font-size:15px}
     #v-sprech .sq-step p{margin:0;font-size:13px;color:#6B6154;line-height:1.5}
     #v-sprech .sq-week{display:flex;gap:8px;margin-top:6px}

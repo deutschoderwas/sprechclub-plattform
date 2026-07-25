@@ -39,7 +39,7 @@
   function injectStyle() {
     if (styled) return; styled = true;
     var css = `
-    #v-level .lv-hero{border-radius:18px;padding:24px 26px;position:relative;overflow:hidden;background:linear-gradient(135deg,#0E5C52,#12A594 60%,#2DD4BF 130%);box-shadow:0 14px 40px rgba(18,165,148,.24);margin-bottom:20px;display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+    #v-level .lv-hero{border-radius:18px;padding:24px 26px;position:relative;overflow:hidden;background:linear-gradient(135deg,#0E5C52,#1B9BC0 60%,#7ED8EA 130%);box-shadow:0 14px 40px rgba(27,155,192,.24);margin-bottom:20px;display:flex;gap:22px;align-items:center;flex-wrap:wrap}
     #v-level .lv-hero::after{content:"";position:absolute;right:-40px;bottom:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(255,206,0,.30),transparent 70%)}
     #v-level .lv-badge{flex:0 0 92px;width:92px;height:92px;border-radius:22px;background:rgba(255,255,255,.16);border:2px solid rgba(255,255,255,.5);display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;backdrop-filter:blur(2px)}
     #v-level .lv-badge .em{font-size:30px;line-height:1}
@@ -61,24 +61,24 @@
     #v-level .lb-row+.lb-row{border-top:1px solid #F2ECDF}
     #v-level .lb-row .rk{flex:0 0 30px;width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',inherit;font-weight:700;font-size:14px;background:#F1EEE8;color:#8B8F96}
     #v-level .lb-row .nm{flex:1;min-width:0;font-weight:600;font-size:14.5px;color:#22201B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    #v-level .lb-row .pt{font-family:'Space Grotesk',inherit;font-weight:700;font-size:14px;color:#0E8577;white-space:nowrap}
+    #v-level .lb-row .pt{font-family:'Space Grotesk',inherit;font-weight:700;font-size:14px;color:#14708B;white-space:nowrap}
     #v-level .lb-row.top1 .rk{background:linear-gradient(135deg,#FFE27A,#FFCE00);color:#7a5c00}
     #v-level .lb-row.top2 .rk{background:#E7E9EC;color:#5A6169}
     #v-level .lb-row.top3 .rk{background:#F6DDBE;color:#8a5a1e}
-    #v-level .lb-row.me{background:#F1FBF9;box-shadow:inset 0 0 0 1.5px #C3EBE3}
-    #v-level .lb-row.me .nm::after{content:"· du";color:#0E8577;font-weight:700;margin-left:6px;font-size:12.5px}
+    #v-level .lb-row.me{background:#F1FBF9;box-shadow:inset 0 0 0 1.5px #BCE4F0}
+    #v-level .lb-row.me .nm::after{content:"· du";color:#14708B;font-weight:700;margin-left:6px;font-size:12.5px}
     #v-level .lb-empty{color:#8B8F96;font-size:13.5px;text-align:center;padding:18px 8px}
-    #v-level .lv-week{background:#F1FBF9;border:1px solid #C3EBE3;border-radius:11px;padding:11px 14px;margin-bottom:14px;font-size:13.5px;color:#06403A}
+    #v-level .lv-week{background:#F1FBF9;border:1px solid #BCE4F0;border-radius:11px;padding:11px 14px;margin-bottom:14px;font-size:13.5px;color:#10627A}
     #v-level .lv-week b{font-family:'Space Grotesk',inherit;font-weight:700}
     #v-level .earn{display:flex;flex-direction:column;gap:9px}
     #v-level .earn .row{display:flex;align-items:center;gap:11px;font-size:13.5px;color:#3A3A3A}
     #v-level .earn .row .ic{flex:0 0 32px;width:32px;height:32px;border-radius:10px;background:#F1EEE8;display:flex;align-items:center;justify-content:center;font-size:16px}
-    #v-level .earn .row .pv{margin-left:auto;font-family:'Space Grotesk',inherit;font-weight:700;font-size:13.5px;color:#0E8577;background:#ECFBF7;border:1px solid #C3EBE3;border-radius:7px;padding:2px 9px}
+    #v-level .earn .row .pv{margin-left:auto;font-family:'Space Grotesk',inherit;font-weight:700;font-size:13.5px;color:#14708B;background:#ECFBF7;border:1px solid #BCE4F0;border-radius:7px;padding:2px 9px}
     #v-level .earn .row.gold .pv{color:#8a6a00;background:#FFF7DA;border-color:#F3E2A0}
     #v-level .lv-ladder{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
     #v-level .lv-ladder .st{font-size:11.5px;padding:4px 9px;border-radius:7px;background:#F5F1E8;color:#8B8F96;font-weight:600}
-    #v-level .lv-ladder .st.on{background:#ECFBF7;color:#0E8577;border:1px solid #C3EBE3}
-    #v-level .lv-ladder .st.cur{background:linear-gradient(135deg,#2DD4BF,#14B8A6);color:#06403A;font-weight:800}
+    #v-level .lv-ladder .st.on{background:#ECFBF7;color:#14708B;border:1px solid #BCE4F0}
+    #v-level .lv-ladder .st.cur{background:linear-gradient(135deg,#7ED8EA,#35AFD0);color:#10627A;font-weight:800}
     `;
     var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
   }

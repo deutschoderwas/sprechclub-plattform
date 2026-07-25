@@ -42,7 +42,7 @@ function mail(name, topic) {
   return `<!DOCTYPE html><html lang="de"><body style="margin:0;background:#FFF8E0;font-family:${ff}">
   <table role="presentation" width="100%" style="padding:24px 14px"><tr><td align="center">
     <table role="presentation" width="100%" style="max-width:560px;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 8px 26px rgba(0,0,0,.08)">
-      <tr><td style="height:6px;background:linear-gradient(90deg,#DD0000 0 33%,#FFCE00 33% 66%,#2DD4BF 66% 100%)"></td></tr>
+      <tr><td style="height:6px;background:linear-gradient(90deg,#DD0000 0 33%,#FFCE00 33% 66%,#7ED8EA 66% 100%)"></td></tr>
       <tr><td style="padding:26px 30px 10px">
         <div style="font-size:13px;font-weight:800;letter-spacing:.04em;color:#0F766E;text-transform:uppercase">Live-Masterclass · morgen</div>
         <h1 style="margin:8px 0 4px;font-size:23px;color:#1A1A1A">Morgen ist es so weit! ⏰</h1>

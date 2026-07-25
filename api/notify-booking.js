@@ -40,7 +40,7 @@ export default async function handler(req, res) {
   if (cls.club) { const { data } = await sb.from('clubs').select('name,emoji,color').eq('slug', cls.club).maybeSingle(); club = data; }
   const clubName = club?.name || '';
   const clubEmoji = club?.emoji || '';
-  const clubColor = club?.color || '#2DD4BF';
+  const clubColor = club?.color || '#7ED8EA';
 
   const site = process.env.SITE_URL || 'https://www.deutschoderwas-club.de';
   const when = FMT.format(new Date(cls.starts_at));
@@ -122,11 +122,11 @@ export async function notifyAdmin(sb, { type, prof, cls, when, clubName }) {
   if (!r.ok) { await sb.from('email_log').delete().eq('kind', kind).eq('ref', ref); }
 }
 
-// ---- deutschoderwas-Markendesign (Rot #DD0000 · Gold #FFCE00 · Creme #FFF8E0 · Petrol #2DD4BF) ----
+// ---- deutschoderwas-Markendesign (Rot #DD0000 · Gold #FFCE00 · Creme #FFF8E0 · Petrol #7ED8EA) ----
 function brandedBookingEmail({ vorname, cls, when, site, clubName, clubEmoji, clubColor }) {
   const esc = (s) => String(s == null ? '' : s).replace(/[<>&]/g, (c) => ({ '<':'&lt;', '>':'&gt;', '&':'&amp;' }[c]));
   const topic = cls.topic ? ` · ${esc(cls.topic)}` : '';
-  const accent = clubColor || '#2DD4BF';
+  const accent = clubColor || '#7ED8EA';
   const ff = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
   const clubChip = clubName ? `<span style="display:inline-block;background:${accent};color:#ffffff;font-family:${ff};font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:4px 11px;border-radius:30px">${esc(clubEmoji)} ${esc(clubName)}</span>` : '';
   const meetBtn = '';  // Kein Google Meet mehr – der Unterricht läuft im Klassenraum (über den Schülerbereich erreichbar).

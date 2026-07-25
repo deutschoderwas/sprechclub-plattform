@@ -245,14 +245,14 @@
     var st = document.createElement('style'); st.id = 'vt-stil';
     st.textContent = `
 .vt-wrap{max-width:720px;margin:0 auto}
-.vt-start{background:linear-gradient(135deg,#0E7C70 0%,#12A594 55%,#2CC0AE 100%);color:#fff;border-radius:22px;padding:26px 24px;margin-bottom:18px;position:relative;overflow:hidden}
+.vt-start{background:linear-gradient(135deg,#14708B 0%,#1B9BC0 55%,#2CC0AE 100%);color:#fff;border-radius:22px;padding:26px 24px;margin-bottom:18px;position:relative;overflow:hidden}
 .vt-start h2{font-family:'Space Grotesk',system-ui,sans-serif;font-size:24px;margin:0 0 6px;color:#fff}
 .vt-start p{margin:0 0 18px;opacity:.93;font-size:14px;line-height:1.55;max-width:460px}
 .vt-ring{position:absolute;right:22px;top:22px;width:96px;height:96px}
 .vt-ring svg{transform:rotate(-90deg)}
 .vt-ring .zahl{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:19px;line-height:1}
 .vt-ring .zahl small{font-size:10px;font-weight:600;opacity:.85;margin-top:2px}
-.vt-los{border:none;border-radius:13px;background:#fff;color:#0E7C70;font-family:inherit;font-size:15px;font-weight:800;padding:14px 26px;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,.16);transition:transform .15s}
+.vt-los{border:none;border-radius:13px;background:#fff;color:#14708B;font-family:inherit;font-size:15px;font-weight:800;padding:14px 26px;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,.16);transition:transform .15s}
 .vt-los:hover{transform:translateY(-2px)}
 .vt-serie{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.18);border-radius:999px;padding:5px 12px;font-size:12.5px;font-weight:700;margin-bottom:12px}
 .vt-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:18px}
@@ -262,19 +262,19 @@
 .vt-kpi .d{font-size:12px;color:#8A857C}
 .vt-zielwahl{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;color:#6A655C;margin-bottom:8px}
 .vt-zb{border:1px solid var(--border,#ECE7DC);background:#fff;border-radius:999px;padding:6px 13px;font-family:inherit;font-size:13px;font-weight:700;color:#4A4740;cursor:pointer}
-.vt-zb.on{background:#0E7C70;border-color:#0E7C70;color:#fff}
+.vt-zb.on{background:#14708B;border-color:#14708B;color:#fff}
 
 .vt-lauf{background:#fff;border:1px solid var(--border,#ECE7DC);border-radius:20px;padding:22px 22px 18px;box-shadow:0 4px 18px rgba(0,0,0,.04)}
 .vt-kopf{display:flex;align-items:center;gap:13px;margin-bottom:20px}
 .vt-x{border:none;background:none;font-size:24px;color:#B4AEA4;cursor:pointer;line-height:1;padding:2px 6px;border-radius:8px}
 .vt-x:hover{background:#F3F0E9;color:#5A5750}
 .vt-bar{flex:1;height:11px;border-radius:999px;background:#EDE8DC;overflow:hidden}
-.vt-bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#12A594,#2CC0AE);transition:width .35s cubic-bezier(.3,.8,.3,1)}
+.vt-bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#1B9BC0,#2CC0AE);transition:width .35s cubic-bezier(.3,.8,.3,1)}
 .vt-zaehler{font-size:13px;font-weight:700;color:#8A857C;min-width:44px;text-align:right}
 
-.vt-frage{font-size:13px;font-weight:700;color:#0E8577;letter-spacing:.04em;text-transform:uppercase;margin-bottom:14px}
+.vt-frage{font-size:13px;font-weight:700;color:#14708B;letter-spacing:.04em;text-transform:uppercase;margin-bottom:14px}
 .vt-wort{font-family:'Space Grotesk',system-ui,sans-serif;font-size:32px;font-weight:700;line-height:1.2;color:#141414;margin:0 0 6px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.vt-wort .lauts{border:none;background:#EAF8F5;color:#0E7C70;width:40px;height:40px;border-radius:12px;font-size:19px;cursor:pointer;flex:none;display:flex;align-items:center;justify-content:center;transition:transform .15s,background .2s}
+.vt-wort .lauts{border:none;background:#EAF8F5;color:#14708B;width:40px;height:40px;border-radius:12px;font-size:19px;cursor:pointer;flex:none;display:flex;align-items:center;justify-content:center;transition:transform .15s,background .2s}
 .vt-wort .lauts:hover{background:#D3F0EA}
 .vt-tont{transform:scale(1.12)}
 .vt-hilf{font-size:14px;color:#6A655C;margin:0 0 18px;line-height:1.55}
@@ -290,9 +290,9 @@
 .vt-opt.zwei{grid-template-columns:1fr 1fr}
 .vt-opt.bilder{grid-template-columns:1fr 1fr;gap:12px}
 .vt-o{border:2px solid var(--border,#ECE7DC);background:#fff;border-radius:14px;padding:15px 17px;font-family:inherit;font-size:15.5px;font-weight:600;color:#2A2721;cursor:pointer;text-align:left;transition:border-color .16s,background .16s,transform .12s;line-height:1.4}
-.vt-o:hover:not(:disabled){border-color:#12A594;transform:translateY(-1px)}
+.vt-o:hover:not(:disabled){border-color:#1B9BC0;transform:translateY(-1px)}
 .vt-o:disabled{cursor:default}
-.vt-o.richtig{border-color:#12A594;background:#EAF8F5;color:#08453D}
+.vt-o.richtig{border-color:#1B9BC0;background:#EAF8F5;color:#08453D}
 .vt-o.falsch{border-color:#DD5555;background:#FDEEEE;color:#8E2222}
 .vt-o.vt-rtl{direction:rtl;text-align:right}
 .vt-o.bildo{display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px}
@@ -303,16 +303,16 @@
 .vt-art .vt-o{text-align:center;font-size:19px;font-weight:800;padding:17px 8px}
 
 .vt-eingabe{width:100%;border:2px solid var(--border,#ECE7DC);border-radius:14px;padding:15px 17px;font-family:inherit;font-size:17px;font-weight:600;color:#2A2721;outline:none;box-sizing:border-box}
-.vt-eingabe:focus{border-color:#12A594}
-.vt-eingabe.richtig{border-color:#12A594;background:#EAF8F5}
+.vt-eingabe:focus{border-color:#1B9BC0}
+.vt-eingabe.richtig{border-color:#1B9BC0;background:#EAF8F5}
 .vt-eingabe.falsch{border-color:#DD5555;background:#FDEEEE}
 
 .vt-satz{font-size:19px;line-height:1.7;color:#2A2721;margin-bottom:18px;font-weight:600}
-.vt-luecke{display:inline-block;min-width:96px;border-bottom:3px solid #12A594;text-align:center;font-weight:800;color:#0E7C70;padding:0 6px}
+.vt-luecke{display:inline-block;min-width:96px;border-bottom:3px solid #1B9BC0;text-align:center;font-weight:800;color:#14708B;padding:0 6px}
 .vt-bau{display:flex;flex-wrap:wrap;gap:8px;min-height:56px;border:2px dashed var(--border,#ECE7DC);border-radius:14px;padding:12px;margin-bottom:12px;align-content:flex-start}
 .vt-teile{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
 .vt-teil{border:2px solid var(--border,#ECE7DC);background:#fff;border-radius:11px;padding:9px 14px;font-family:inherit;font-size:15px;font-weight:700;color:#2A2721;cursor:pointer}
-.vt-teil:hover{border-color:#12A594}
+.vt-teil:hover{border-color:#1B9BC0}
 
 .vt-fuss{margin-top:16px;border-radius:16px;padding:16px 18px;display:none}
 .vt-fuss.an{display:block;animation:vtIn .2s ease}
@@ -323,11 +323,11 @@
 .vt-fuss.gut b{color:#0A6157}
 .vt-fuss.schlecht b{color:#9E2626}
 .vt-fuss .lsg{font-size:14.5px;color:#3A3730;line-height:1.55}
-.vt-fuss .lsg em{font-style:normal;font-weight:800;color:#0E7C70}
+.vt-fuss .lsg em{font-style:normal;font-weight:800;color:#14708B}
 .vt-fuss .bspz{margin-top:8px;font-size:13.5px;color:#5A5750;line-height:1.55;border-top:1px solid rgba(0,0,0,.07);padding-top:8px}
 .vt-fuss .bspz i{font-style:normal;color:#8A857C;display:block}
 .vt-fuss .bspz i.vt-rtl{direction:rtl;text-align:right}
-.vt-weiter{margin-top:14px;width:100%;border:none;border-radius:13px;padding:14px;font-family:inherit;font-size:15px;font-weight:800;color:#fff;cursor:pointer;background:linear-gradient(135deg,#0E7C70,#12A594)}
+.vt-weiter{margin-top:14px;width:100%;border:none;border-radius:13px;padding:14px;font-family:inherit;font-size:15px;font-weight:800;color:#fff;cursor:pointer;background:linear-gradient(135deg,#14708B,#1B9BC0)}
 .vt-weiter.rot{background:linear-gradient(135deg,#C24141,#DD5555)}
 
 .vt-ende{text-align:center;padding:14px 6px}
@@ -486,7 +486,7 @@
       var opt4 = mische(ablenker(v, 3, 'de').map(function (x) { return x.de; }).concat([v.de]));
       inhalt = '<div class="vt-frage">Hör zu — welches Wort ist es?</div>'
         + '<div style="text-align:center;margin-bottom:20px">'
-        + '<button class="vt-los" style="background:#EAF8F5;color:#0E7C70;box-shadow:none;font-size:30px;width:82px;height:82px;border-radius:24px" '
+        + '<button class="vt-los" style="background:#EAF8F5;color:#14708B;box-shadow:none;font-size:30px;width:82px;height:82px;border-radius:24px" '
         + 'onclick="__vtSprich(\'' + esc(v.de).replace(/'/g, "\\'") + '\',0.9,this)">🔊</button>'
         + '<div style="margin-top:8px"><button class="vt-teil" onclick="__vtSprich(\'' + esc(v.de).replace(/'/g, "\\'") + '\',0.55,this)">🐢 langsamer</button></div>'
         + '</div>'
@@ -573,7 +573,7 @@
     var bau = document.getElementById('vtBau');
     var ist = [].slice.call(bau.querySelectorAll('.vt-teil')).map(function (b) { return b.textContent; }).join(' ');
     var richtig = normal(ist) === normal(v.bsp);
-    bau.style.borderColor = richtig ? '#12A594' : '#DD5555';
+    bau.style.borderColor = richtig ? '#1B9BC0' : '#DD5555';
     bau.style.background = richtig ? '#EAF8F5' : '#FDEEEE';
     rueckmeldung(richtig, v);
   };
@@ -651,7 +651,7 @@
       + '<div><b>' + quote + '%</b><span>Trefferquote</span></div>'
       + '</div>'
       + '<div class="vt-liste">' + liste + '</div>'
-      + '<button class="vt-los" style="background:linear-gradient(135deg,#0E7C70,#12A594);color:#fff" onclick="__vtStart()">Noch eine Runde</button>'
+      + '<button class="vt-los" style="background:linear-gradient(135deg,#14708B,#1B9BC0);color:#fff" onclick="__vtStart()">Noch eine Runde</button>'
       + '<div style="margin-top:10px"><button class="vt-teil" onclick="__vtAbbruch()">Für heute reicht\'s</button></div>'
       + '</div></div></div>';
     window.scrollTo(0, 0);

@@ -48,7 +48,7 @@
   function injectStyle(){
     if(styled) return; styled=true;
     var css = `
-    #v-community{--brand:#12A594;--brand-2:#0E8577;--brand-ink:#0A3F39;--brand-wash:#F1FAF8;--brand-line:#CDEBE5;--red:#D23B3B;--gold:#C79600;--ink:#191B1C;--t1:#191B1C;--t2:#5A6169;--t3:#8B929A;--surface:#FFFFFF;--surface-2:#FAFAF8;--line:#E6E5E0;--line-2:#EFEEEA;--fh:'Space Grotesk','Inter',sans-serif}
+    #v-community{--brand:#1B9BC0;--brand-2:#14708B;--brand-ink:#0A3F39;--brand-wash:#F1FAF8;--brand-line:#CDEBE5;--red:#D23B3B;--gold:#C79600;--ink:#191B1C;--t1:#191B1C;--t2:#5A6169;--t3:#8B929A;--surface:#FFFFFF;--surface-2:#FAFAF8;--line:#E6E5E0;--line-2:#EFEEEA;--fh:'Space Grotesk','Inter',sans-serif}
     #v-community{font-size:14px;color:var(--t1)}
     #v-community .ico{width:19px;height:19px;stroke:currentColor;stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round;display:block}
     #v-community .ico-sm{width:15px;height:15px}
@@ -207,7 +207,7 @@
     return '<div class="pagehead"><h1>Community</h1></div>'+
       '<div class="gate"><div style="font-size:34px">🔒</div><h3 style="margin:8px 0 6px">Nur für aktive Mitglieder</h3>'+
       '<p style="color:#5A6169;max-width:400px;margin:0 auto 14px">Die Community ist exklusiv für Mitglieder mit aktivem Guthaben oder Pass.</p>'+
-      '<a href="index.html#preise" style="display:inline-block;background:#12A594;color:#fff;font-weight:600;padding:9px 15px;border-radius:9px">Pakete ansehen →</a></div>';
+      '<a href="index.html#preise" style="display:inline-block;background:#1B9BC0;color:#fff;font-weight:600;padding:9px 15px;border-radius:9px">Pakete ansehen →</a></div>';
   }
 
   var GRP_LABEL={willkommen:'Willkommen',allgemein:'Allgemein',themen:'Themen'};

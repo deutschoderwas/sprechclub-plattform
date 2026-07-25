@@ -79,7 +79,7 @@ export default async function handler(req, res) {
   return res.status(200).json({ ok: true, brevo: brevoStatus });
 }
 
-// ---- deutschoderwas-Markendesign (Türkis #2DD4BF · Rot #DD0000 · Gold #FFCE00 · Creme #FFF8E0) ----
+// ---- deutschoderwas-Markendesign (Türkis #7ED8EA · Rot #DD0000 · Gold #FFCE00 · Creme #FFF8E0) ----
 function brandedResultEmail({ vorname, level, overall, modules, site }) {
   const esc = (s) => String(s == null ? '' : s).replace(/[<>&]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c]));
   const ff = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
@@ -99,7 +99,7 @@ function brandedResultEmail({ vorname, level, overall, modules, site }) {
           </tr>
         </table>
         <div style="margin-top:5px;height:8px;background:#F0E5D8;border-radius:20px">
-          <div style="height:8px;width:${pct}%;border-radius:20px;background:${ok ? '#2DD4BF' : '#DD0000'}"></div>
+          <div style="height:8px;width:${pct}%;border-radius:20px;background:${ok ? '#7ED8EA' : '#DD0000'}"></div>
         </div>
       </td></tr>`;
   }).join('');
@@ -125,9 +125,9 @@ function brandedResultEmail({ vorname, level, overall, modules, site }) {
 
         <!-- Niveau-Badge -->
         <tr><td align="center" style="padding:14px 28px 2px">
-          <div style="display:inline-block;background:#FFF8E0;border:2px solid #2DD4BF;border-radius:20px;padding:16px 34px">
+          <div style="display:inline-block;background:#FFF8E0;border:2px solid #7ED8EA;border-radius:20px;padding:16px 34px">
             <div style="font-family:${ff};font-size:13px;color:#6B7280;text-transform:uppercase;letter-spacing:.08em;font-weight:700">Dein Niveau</div>
-            <div style="font-family:${ff};font-size:46px;font-weight:800;color:#14B8A6;line-height:1.05">${esc(level)}</div>
+            <div style="font-family:${ff};font-size:46px;font-weight:800;color:#35AFD0;line-height:1.05">${esc(level)}</div>
           </div>
         </td></tr>
 
@@ -157,7 +157,7 @@ function brandedResultEmail({ vorname, level, overall, modules, site }) {
 
         <!-- CTA -->
         <tr><td align="center" style="padding:20px 30px 6px">
-          <a href="${esc(site)}/#preise" style="display:inline-block;background:linear-gradient(135deg,#2DD4BF,#14B8A6);color:#06403A;font-family:${ff};font-weight:800;font-size:15px;text-decoration:none;padding:14px 30px;border-radius:50px;box-shadow:0 6px 16px rgba(45,212,191,.32)">🚀 Zum passenden Sprechclub</a>
+          <a href="${esc(site)}/#preise" style="display:inline-block;background:linear-gradient(135deg,#7ED8EA,#35AFD0);color:#10627A;font-family:${ff};font-weight:800;font-size:15px;text-decoration:none;padding:14px 30px;border-radius:50px;box-shadow:0 6px 16px rgba(126,216,234,.32)">🚀 Zum passenden Sprechclub</a>
         </td></tr>
 
         <!-- Gruß -->

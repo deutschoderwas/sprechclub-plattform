@@ -51,7 +51,7 @@
   function injectStyle(){
     if(styled) return; styled=true;
     var css = `
-    #v-community{--brand:#12A594;--brand-2:#0E8577;--brand-ink:#0A3F39;--brand-wash:#F1FAF8;--brand-line:#CDEBE5;--red:#D23B3B;--gold:#C79600;--ink:#191B1C;--t1:#191B1C;--t2:#5A6169;--t3:#8B929A;--surface:#FFFFFF;--surface-2:#FAFAF8;--line:#E6E5E0;--line-2:#EFEEEA;--fh:'Space Grotesk','Inter',sans-serif}
+    #v-community{--brand:#1B9BC0;--brand-2:#14708B;--brand-ink:#0A3F39;--brand-wash:#F1FAF8;--brand-line:#CDEBE5;--red:#D23B3B;--gold:#C79600;--ink:#191B1C;--t1:#191B1C;--t2:#5A6169;--t3:#8B929A;--surface:#FFFFFF;--surface-2:#FAFAF8;--line:#E6E5E0;--line-2:#EFEEEA;--fh:'Space Grotesk','Inter',sans-serif}
     #v-community{font-size:14px;color:var(--t1)}
     #v-community .ico{width:19px;height:19px;stroke:currentColor;stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round;display:block}
     #v-community .ico-sm{width:15px;height:15px}
@@ -203,13 +203,13 @@
 .cm-confirm .cc-ok:hover{background:#B80000}
 #v-community .cs-srch{padding:8px 10px 4px}
 #v-community .cs-srch input{width:100%;border:1px solid var(--line,#E6E5E0);border-radius:9px;padding:8px 11px;font-family:inherit;font-size:13px;background:#fff;outline:none;-webkit-appearance:none}
-#v-community .cs-srch input:focus{border-color:var(--brand,#12A594)}
+#v-community .cs-srch input:focus{border-color:var(--brand,#1B9BC0)}
 #v-community .srch-sec{font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#8B929A;padding:13px 16px 6px}
 #v-community .srch-mem{display:flex;align-items:center;gap:10px;padding:6px 16px}
 #v-community .srch-res{display:block;width:100%;text-align:left;border:none;background:none;cursor:pointer;padding:9px 16px;font-family:inherit}
 #v-community .srch-res:hover{background:#F6F3EC}
 #v-community .srch-res .sr-top{display:flex;align-items:center;gap:8px;font-size:12px;margin-bottom:2px}
-#v-community .srch-res .sr-ch{font-weight:700;color:var(--brand-2,#0E8577)}
+#v-community .srch-res .sr-ch{font-weight:700;color:var(--brand-2,#14708B)}
 #v-community .srch-res .sr-au{font-weight:600;color:#5A6169}
 #v-community .srch-res .sr-top time{margin-left:auto;color:#8B929A}
 #v-community .srch-res .sr-body{font-size:14px;color:#22201B;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -245,8 +245,8 @@
 .kb-r .kb-t b{font-size:14px;display:block;color:#191B1C}
 .kb-r .kb-t small{font-size:12.5px;color:#5A6169;display:block;line-height:1.45}
 .kb-r .kb-t .kb-meta{font-size:11.5px;color:#8B929A;margin-top:2px}
-.kb-r .kb-btn{border:1px solid #CDEBE5;background:#F1FAF8;color:#0E8577;border-radius:9px;padding:7px 14px;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;flex:none;min-width:86px}
-.kb-r .kb-btn.on{background:#0E8577;border-color:#0E8577;color:#fff}
+.kb-r .kb-btn{border:1px solid #CDEBE5;background:#F1FAF8;color:#14708B;border-radius:9px;padding:7px 14px;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;flex:none;min-width:86px}
+.kb-r .kb-btn.on{background:#14708B;border-color:#14708B;color:#fff}
 .kb-r .kb-btn:hover{filter:brightness(.96)}
 /* Antworten */
 #v-community .quote{border-left:3px solid var(--brand-line);background:var(--surface-2);border-radius:0 8px 8px 0;padding:5px 10px;margin:1px 0 5px;font-size:12.5px;color:var(--t2);cursor:pointer;max-width:440px}
@@ -333,7 +333,7 @@
     return '<div class="pagehead"><h1>Community-Chat</h1></div>'+
       '<div class="gate"><div style="font-size:34px">🔒</div><h3 style="margin:8px 0 6px">Nur für aktive Mitglieder</h3>'+
       '<p style="color:#5A6169;max-width:400px;margin:0 auto 14px">Die Community ist exklusiv für Mitglieder mit aktivem Guthaben oder Pass.</p>'+
-      '<a href="index.html#preise" style="display:inline-block;background:#12A594;color:#fff;font-weight:600;padding:9px 15px;border-radius:9px">Pakete ansehen →</a></div>';
+      '<a href="index.html#preise" style="display:inline-block;background:#1B9BC0;color:#fff;font-weight:600;padding:9px 15px;border-radius:9px">Pakete ansehen →</a></div>';
   }
 
   var GRP={
@@ -654,7 +654,7 @@
       if(j&&j.ok){
         if(j.has_error===false){
           if(ta)ta.value=orig; if(nt)nt.value='';
-          h.style.color='#0E8577'; h.textContent='✨ KI: Der Satz ist korrekt 👍 — du kannst trotzdem etwas anmerken.';
+          h.style.color='#14708B'; h.textContent='✨ KI: Der Satz ist korrekt 👍 — du kannst trotzdem etwas anmerken.';
         } else {
           if(ta)ta.value=j.corrected||''; if(nt)nt.value=(j.topic?('['+j.topic+'] '):'')+(j.note||'');
           h.style.color='#8B5CF6'; h.textContent='✨ KI-Vorschlag — bitte prüfen und dann „Korrektur senden".';

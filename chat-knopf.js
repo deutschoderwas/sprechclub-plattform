@@ -23,7 +23,7 @@
     st.id = 'dowChatStil';
     st.textContent = `
 #dowChatFab{position:fixed;right:20px;bottom:22px;z-index:300;display:flex;align-items:center;gap:9px;
-  background:linear-gradient(135deg,#12A594,#0E8577);color:#fff;border:none;border-radius:999px;
+  background:linear-gradient(135deg,#1B9BC0,#14708B);color:#fff;border:none;border-radius:999px;
   padding:13px 19px 13px 16px;font-family:'Inter',system-ui,-apple-system,sans-serif;font-size:14px;font-weight:700;
   cursor:pointer;box-shadow:0 8px 26px rgba(14,133,119,.34),0 2px 6px rgba(0,0,0,.08);
   transition:transform .16s ease,box-shadow .16s ease,opacity .2s ease;text-decoration:none;line-height:1}
@@ -35,9 +35,9 @@
   border:2px solid #fff;box-sizing:border-box}
 #dowChatFab .cf-n.da{display:flex}
 #dowChatFab.weg{display:none}
-@keyframes dowChatPuls{0%{box-shadow:0 8px 26px rgba(14,133,119,.34),0 0 0 0 rgba(18,165,148,.5)}
-  70%{box-shadow:0 8px 26px rgba(14,133,119,.34),0 0 0 14px rgba(18,165,148,0)}
-  100%{box-shadow:0 8px 26px rgba(14,133,119,.34),0 0 0 0 rgba(18,165,148,0)}}
+@keyframes dowChatPuls{0%{box-shadow:0 8px 26px rgba(14,133,119,.34),0 0 0 0 rgba(27,155,192,.5)}
+  70%{box-shadow:0 8px 26px rgba(14,133,119,.34),0 0 0 14px rgba(27,155,192,0)}
+  100%{box-shadow:0 8px 26px rgba(14,133,119,.34),0 0 0 0 rgba(27,155,192,0)}}
 #dowChatFab.puls{animation:dowChatPuls 2s ease-out 2}
 @media(max-width:900px){
   #dowChatFab{right:14px;bottom:84px;padding:12px 16px 12px 14px;font-size:13.5px}
