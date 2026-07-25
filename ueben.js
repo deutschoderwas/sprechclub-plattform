@@ -203,7 +203,17 @@
     {type:'shadow',level:'B2',text:'Meiner Meinung nach sollten wir das noch einmal in Ruhe überdenken.',audioUrl:SHADOW_CDN+'hf_20260621_105402_4221f936-78b4-4c97-a661-3498bd6e7aa6.mp3',tip:'Längerer Satz – in zwei Atemgruppen sprechen.'},
     {type:'shadow',level:'B2',text:'Trotz des schlechten Wetters hatten wir richtig viel Spaß.',audioUrl:SHADOW_CDN+'hf_20260621_105403_6c6548d1-cf68-4911-9bc7-6128619f2cdb.mp3',tip:'„Spaß" mit langem a und scharfem ß.'},
     {type:'shadow',level:'C1',text:'Ehrlich gesagt fällt es mir schwer, das alles nachzuvollziehen.',audioUrl:SHADOW_CDN+'hf_20260621_105405_92f3c151-fb4e-46bb-a928-d885ac2f7464.mp3',tip:'Betonung auf „schwer" und „nachzuvollziehen".'},
-    {type:'shadow',level:'C1',text:'Lassen Sie uns das Thema beim nächsten Treffen ausführlich vertiefen.',audioUrl:SHADOW_CDN+'hf_20260621_105406_da2ebb51-d4dc-481c-8af8-2bb1e353b1f2.mp3',tip:'Formell und ruhig; klare Endung bei „vertiefen".'}
+    {type:'shadow',level:'C1',text:'Lassen Sie uns das Thema beim nächsten Treffen ausführlich vertiefen.',audioUrl:SHADOW_CDN+'hf_20260621_105406_da2ebb51-d4dc-481c-8af8-2bb1e353b1f2.mp3',tip:'Formell und ruhig; klare Endung bei „vertiefen".'},
+    {type:'shadow',level:'A1',text:'Schön, dich zu sehen!',audioUrl:SHADOW_CDN+'hf_20260725_084608_f8bf2825-0a40-4800-8f4c-dd87a48d0453.mp3',tip:'„sch" vorne am Mund, „ö" mit runden Lippen.'},
+    {type:'shadow',level:'A1',text:'Ich möchte fünf frische Brötchen.',audioUrl:SHADOW_CDN+'hf_20260725_084609_0207a746-58ea-4de3-a917-b57d953fbb32.mp3',tip:'„ö" und „ü" mit runden Lippen; „fr" locker sprechen.'},
+    {type:'shadow',level:'A2',text:'Natürlich räume ich mein Zimmer später auf.',audioUrl:SHADOW_CDN+'hf_20260725_084627_d1c3baa3-ef4a-4c81-85be-5d69a3f8c10d.mp3',tip:'„ü" in „natürlich", „äu" in „räume", „z" wie ein scharfes ts.'},
+    {type:'shadow',level:'A2',text:'Die Kirche steht gleich neben der Küche.',audioUrl:SHADOW_CDN+'hf_20260725_084628_cc698382-01d6-4335-b8a6-6af39e674438.mp3',tip:'„Kirche" mit i, „Küche" mit ü – klar trennen; „ch" weich.'},
+    {type:'shadow',level:'B1',text:'Eigentlich wollte ich früher zurückfahren.',audioUrl:SHADOW_CDN+'hf_20260725_084658_587d105b-40a3-49dc-bc04-4d1f26d8c843.mp3',tip:'„ei" wie ai; „ü" in „früher/zurück"; „r" hinten, nicht rollen.'},
+    {type:'shadow',level:'B1',text:'Zwischen zwölf und zwei ist das Geschäft geschlossen.',audioUrl:SHADOW_CDN+'hf_20260725_084659_e16aa753-843a-4dab-90b0-d46848bd4c57.mp3',tip:'„zw" und „z" als ts; „ö" in „zwölf"; „sch" in „Geschäft".'},
+    {type:'shadow',level:'B2',text:'Ursprünglich hätte ich das nicht für möglich gehalten.',audioUrl:SHADOW_CDN+'hf_20260725_084716_e98d3475-6f69-4094-add5-f49587f42251.mp3',tip:'„ü", „ä", „ö" sauber halten; „ch" in „möglich" weich.'},
+    {type:'shadow',level:'B2',text:'Die Öffentlichkeit reagierte überrascht und verärgert.',audioUrl:SHADOW_CDN+'hf_20260725_084718_78c66007-22c7-476f-a145-ccc18e32af9b.mp3',tip:'Langes Wort in Silben: Öf-fent-lich-keit; „ü" und „ä" klar.'},
+    {type:'shadow',level:'C1',text:'Nichtsdestotrotz rechtfertigt das sein Verhalten keineswegs.',audioUrl:SHADOW_CDN+'hf_20260725_084737_a524c2b6-870c-4a97-9216-28816646d448.mp3',tip:'„chts", „cht" und „tz" deutlich; ruhig und betont sprechen.'},
+    {type:'shadow',level:'C1',text:'Die gründliche Überprüfung ermöglichte klare Rückschlüsse.',audioUrl:SHADOW_CDN+'hf_20260725_084738_c4cb31e0-df78-4af8-95b0-688c950a8275.mp3',tip:'Viele „ü" und „ö"; „ch" weich; in zwei Atemgruppen sprechen.'}
   ];
   function ensureShadow(){ if(!window.UEBUNGEN||!UEBUNGEN.skills)return;
     if(UEBUNGEN.skills.some(function(s){return s.id==='shadowing';}))return;
