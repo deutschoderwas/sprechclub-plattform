@@ -9,7 +9,7 @@
   'use strict';
 
   var POOL = [], BEKANNT = {}, STAND = {};
-  var RUNDE = [], POS = 0, ERG = [], LAEUFT = false, GEPRUEFT = false, SERIE = {};
+  var RUNDE = [], POS = 0, ERG = [], LAEUFT = false, GEPRUEFT = false;
   var ZIEL_VORGABE = [10, 15, 25, 40];
 
   /* ================= Grundlagen ================= */
@@ -19,17 +19,8 @@
       .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
   function l1() { try { return localStorage.getItem('dow_l1') || ''; } catch (e) { return ''; } }
-  function trRoh(id) { var m = (window.VOK_TR || {})[l1()]; return (m && m[id]) || null; }
-  function trWort(v) {
-    var a = trRoh(v.id); if (a && a[0]) return a[0];
-    if (v.zwilling) { var b = trRoh(v.zwilling); if (b && b[0]) return b[0]; }
-    return v.trDirekt || '';
-  }
-  function trSatz(v) {
-    var a = trRoh(v.id); if (a && a[1]) return a[1];
-    if (v.zwilling) { var b = trRoh(v.zwilling); if (b && b[1]) return b[1]; }
-    return '';
-  }
+  function trWort(v) { var m = (window.VOK_TR || {})[l1()]; return (m && m[v.id] && m[v.id][0]) || v.trDirekt || ''; }
+  function trSatz(v) { var m = (window.VOK_TR || {})[l1()]; return (m && m[v.id] && m[v.id][1]) || ''; }
   var RTL = { fa: 1, ar: 1, ur: 1, he: 1 };
   function rtl() { return !!RTL[l1()]; }
   function rtlK() { return rtl() ? ' vt-rtl' : ''; }
@@ -92,24 +83,14 @@
   }
 
   /* ================= Bild ================= */
-  // Wortkarte, wenn es kein Bild und kein Emoji gibt: Anfangsbuchstabe in Artikelfarbe
-  function wortKarte(v, gr) {
-    var f = (v.artikel && ART_FARBE[v.artikel]) || '#12A594';
-    var buch = (v.wort || v.de || '?').trim().charAt(0).toUpperCase();
-    return '<span class="vt-bild ' + (gr || '') + ' vt-typo" style="--tk:' + f + '">'
-      + '<span class="vt-typo-b">' + esc(buch) + '</span></span>';
-  }
   function bild(v, gr) {
-    var id = v.zwilling || v.id;
-    if (!v.em && !v.zwilling && v.quelle === 'live') return wortKarte(v, gr);
     return '<span class="vt-bild ' + (gr || '') + '">'
-      + '<img src="vok-bild/' + encodeURIComponent(id) + '.webp" alt="" loading="lazy" '
+      + '<img src="vok-bild/' + encodeURIComponent(v.id) + '.webp" alt="" loading="lazy" '
       + 'onerror="this.style.display=\'none\';this.nextSibling.style.display=\'flex\'">'
       + '<span class="vt-em" style="display:none">' + (v.em || '🔤') + '</span></span>';
   }
   function bildEmoji(v, gr) {
-    if (!v.em) return wortKarte(v, gr);
-    return '<span class="vt-bild ' + (gr || '') + '"><span class="vt-em" style="display:flex">' + v.em + '</span></span>';
+    return '<span class="vt-bild ' + (gr || '') + '"><span class="vt-em" style="display:flex">' + (v.em || '🔤') + '</span></span>';
   }
 
   /* ================= Wortquellen ================= */
@@ -133,41 +114,21 @@
     return String(s).toLowerCase().replace(/ä/g, 'ae').replace(/ö/g, 'oe')
       .replace(/ü/g, 'ue').replace(/ß/g, 'ss').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 48);
   }
-  // Kern eines Eintrags fuer den Abgleich: ohne Artikel, ohne Zusaetze in Klammern
-  function kernWort(s) {
-    return String(s || '').replace(/^(der|die|das)\s+/i, '')
-      .replace(/\s*\(.*?\)\s*/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
-  }
-  var POOL_IDX = null;
-  function poolIndex() {
-    if (POOL_IDX) return POOL_IDX;
-    POOL_IDX = {};
-    POOL.forEach(function (v) {
-      var k = kernWort(v.de);
-      if (k && !POOL_IDX[k]) POOL_IDX[k] = v;
-    });
-    return POOL_IDX;
-  }
   function ausLive() {
-    var out = [], idx = poolIndex();
+    var out = [];
     try {
       if (typeof collectVocab !== 'function') return out;
       collectVocab().forEach(function (v) {
         if (!v || !v.de) return;
         var a = (/^(der|die|das)\s/i.exec(v.de) || [])[1];
-        var zwilling = idx[kernWort(v.de)] || null;   // gibt es das Wort auch im Kurs?
         out.push({
           id: 'live-' + slug(v.de), de: v.de,
           wort: v.de.replace(/^(der|die|das)\s+/i, ''),
-          artikel: (a ? a.toLowerCase() : null) || (zwilling && zwilling.artikel) || null,
-          art: a ? 'nomen' : (zwilling ? zwilling.art : 'wort'),
-          em: v.em || (zwilling && zwilling.em) || '',
-          bsp: v.bsp || v.beispiel || (zwilling && zwilling.bsp) || '',
-          niveau: (zwilling && zwilling.niveau) || meinNiveau(),
+          artikel: a ? a.toLowerCase() : null,
+          art: a ? 'nomen' : 'wort', em: v.em || '🎧',
+          bsp: v.bsp || v.beispiel || '', niveau: meinNiveau(),
           kurs: 'Live-Unterricht', thema: v.from || 'Deine Stunde',
-          quelle: 'live',
-          zwilling: zwilling ? zwilling.id : null,       // fuer Bild und Uebersetzung
-          trDirekt: v.uebersetzung || v.tr || ''
+          quelle: 'live', trDirekt: v.uebersetzung || v.tr || ''
         });
       });
     } catch (e) {}
@@ -206,57 +167,12 @@
 
     var maxNeu = Math.max(3, Math.round(ziel * 0.45));
     var neu = kand.slice(0, maxNeu);
-    var woerter = faellig.slice(0, Math.max(0, ziel - neu.length)).concat(neu).slice(0, ziel);
-    if (woerter.length < ziel) {
-      var drin = {}; woerter.forEach(function (v) { drin[v.id] = 1; });
-      woerter = woerter.concat(kand.filter(function (v) { return !drin[v.id]; }).slice(0, ziel - woerter.length));
+    var runde = faellig.slice(0, Math.max(0, ziel - neu.length)).concat(neu).slice(0, ziel);
+    if (runde.length < ziel) {
+      var drin = {}; runde.forEach(function (v) { drin[v.id] = 1; });
+      runde = runde.concat(kand.filter(function (v) { return !drin[v.id]; }).slice(0, ziel - runde.length));
     }
-    return baueAufgaben(mische(woerter));
-  }
-
-  // Aus Wörtern werden Aufgaben. Neue Wörter bekommen eine kleine Serie:
-  // kennenlernen -> wiedererkennen -> selbst produzieren.
-  function baueAufgaben(woerter) {
-    var erste = [], spaeter = [];
-    woerter.forEach(function (v) {
-      if (!BEKANNT[v.id]) {
-        var a = leichterTyp(v), b = schwererTyp(v, a);
-        erste.push({ v: v, typ: 'kennenlernen', letzte: false });
-        erste.push({ v: v, typ: a, letzte: false });
-        spaeter.push({ v: v, typ: b, letzte: true });
-      } else {
-        erste.push({ v: v, typ: typFuer(v), letzte: true });
-      }
-    });
-    var alle = erste.concat(mische(spaeter));
-
-    // Ein Spiel in die Mitte, wenn genug Wörter mit Übersetzung da sind
-    var mitTr = woerter.filter(function (v) { return !!trWort(v); });
-    if (mitTr.length >= 5) {
-      var pos = Math.min(alle.length, Math.max(3, Math.round(alle.length / 3)));
-      alle.splice(pos, 0, { spiel: 'paare', woerter: mische(mitTr).slice(0, 5) });
-    }
-    return alle;
-  }
-
-  // Leichte erste Übung nach dem Kennenlernen
-  function leichterTyp(v) {
-    var m = [];
-    if (trWort(v)) m.push('uebersetzung');
-    if (v.em) m.push('bild');
-    m.push('hoeren');
-    return zufall(m);
-  }
-  // Zweite, schwerere Übung — möglichst eine andere Form
-  function schwererTyp(v, nicht) {
-    var m = [];
-    if (v.artikel) m.push('artikel');
-    if (luecken(v)) m.push('luecke');
-    if (!/\s/.test((v.wort || v.de).trim())) m.push('buchstaben');
-    if (trWort(v)) m.push('rueckwaerts');
-    m.push('hoeren');
-    m = m.filter(function (t) { return t !== nicht; });
-    return m.length ? zufall(m) : 'hoeren';
+    return mische(runde);
   }
 
   /* ================= Aufgabentypen ================= */
@@ -498,36 +414,6 @@
 .vt-konf{position:absolute;width:11px;height:16px;border-radius:2px;animation:vtFall linear forwards}
 @keyframes vtFall{to{transform:translateY(105vh) rotate(720deg);opacity:.15}}
 
-/* Wortkarte statt Bild, wenn nichts da ist */
-.vt-bild.vt-typo{background:linear-gradient(135deg,color-mix(in srgb,var(--tk) 12%,#fff),color-mix(in srgb,var(--tk) 26%,#fff));
-  box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--tk) 30%,transparent)}
-.vt-typo-b{font-family:'Space Grotesk',system-ui,sans-serif;font-size:64px;font-weight:700;color:var(--tk);line-height:1}
-.vt-bild.gr .vt-typo-b{font-size:92px}
-.vt-bild.mini .vt-typo-b{font-size:26px}
-
-/* Buchstabensalat */
-.vt-bau.vt-buch{gap:8px;min-height:82px;align-items:center}
-.vt-teil.vt-bt{min-width:56px;text-align:center;font-size:clamp(20px,2.6vw,28px);padding:12px 10px;font-weight:800}
-
-/* Spiel: Paare finden */
-.vt-paare{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.vt-sp{display:flex;flex-direction:column;gap:11px}
-.vt-pk{display:flex;align-items:center;gap:11px;border:3px solid #E7E1D4;background:#fff;border-radius:16px;
-  padding:16px 18px;font-family:inherit;font-size:clamp(15px,1.9vw,19px);font-weight:700;color:#20221F;
-  cursor:pointer;text-align:left;box-shadow:0 3px 0 #E7E1D4;transition:all .15s;min-height:62px}
-.vt-pk:hover{border-color:#C7457F;transform:translateY(-2px)}
-.vt-pk .e{font-size:23px;flex:none}
-.vt-pk.gewaehlt{border-color:#C7457F;background:#FDF0F6;box-shadow:0 3px 0 #F0B9D4}
-.vt-pk.daneben{border-color:#E05B5B;background:#FDEFEF;animation:vtWackel .3s}
-@keyframes vtWackel{0%,100%{transform:none}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
-.vt-pk.fertig{border-color:#12A594;background:#E9F9F5;color:#0A6157;box-shadow:0 3px 0 #9EDCD0;cursor:default;opacity:.75}
-.vt-pk.vt-rtl{direction:rtl;text-align:right}
-@media(max-width:760px){
-  .vt-paare{gap:10px}
-  .vt-pk{padding:13px 13px;min-height:54px;border-radius:13px;font-size:14.5px;gap:8px}
-  .vt-pk .e{font-size:19px}
-}
-
 .vt-leer{background:#fff;border:2px dashed #E7E1D4;border-radius:22px;padding:40px;text-align:center;color:#6A655C;font-size:16px;line-height:1.65}
 
 @media(max-width:760px){
@@ -659,12 +545,11 @@
 
   /* ================= Aufgaben ================= */
   function zeichne() {
-    var a = RUNDE[POS];
-    if (!a) return abschluss();
+    var v = RUNDE[POS];
+    if (!v) return abschluss();
     GEPRUEFT = false;
-    if (a.spiel === 'paare') return zeichnePaare(a);
-    var v = a.v;
-    var typ = a.typ;
+    var typ = v.__typ || (v.__typ = typFuer(v));
+    if (v.__wieder && !v.__typ2) { v.__typ2 = 1; }
     voll(); kopf();
     var f = document.getElementById('vtFuss');
     f.className = 'vt-fuss'; f.innerHTML = '';
@@ -747,17 +632,6 @@
         + 'placeholder="' + (v.artikel ? 'mit Artikel, z. B. der Tisch' : 'auf Deutsch schreiben …') + '">'
         + '<button class="vt-pruefen" onclick="__vtTippen()">Prüfen</button>';
 
-    } else if (typ === 'buchstaben') {
-      var ziel = (v.wort || v.de).trim();
-      var buchst = mische(ziel.split(''));
-      h += bild(v, '')
-        + (trWort(v) ? '<h2 class="vt-gross mitte' + rtlK() + '" style="font-size:clamp(22px,3vw,32px)">' + esc(trWort(v)) + '</h2>' : '')
-        + '<div class="vt-bau vt-buch" id="vtBau"></div>'
-        + '<div class="vt-teile" id="vtTeile">' + buchst.map(function (c) {
-          return '<button class="vt-teil vt-bt" onclick="__vtBau(this)">' + esc(c) + '</button>';
-        }).join('') + '</div>'
-        + '<button class="vt-pruefen" onclick="__vtBuchPruefen()">Prüfen</button>';
-
     } else if (typ === 'satzbau') {
       var teile = mische(v.bsp.replace(/\s+/g, ' ').trim().split(' '));
       h += (trSatz(v) ? '<p class="vt-unter' + rtlK() + '">' + esc(trSatz(v)) + '</p>' : '')
@@ -772,69 +646,6 @@
     var inp = document.getElementById('vtIn');
     if (inp) { inp.focus(); inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') window.__vtTippen(); }); }
     var b = q('#vtVoll .vt-buehne'); if (b) b.scrollTop = 0;
-  }
-
-  /* ================= Spiel: Paare finden ================= */
-  var PAAR = { offen: null, fertig: 0, gesamt: 0, fehler: 0 };
-  function zeichnePaare(a) {
-    voll(); kopf();
-    var f = document.getElementById('vtFuss'); f.className = 'vt-fuss'; f.innerHTML = '';
-    PAAR = { offen: null, fertig: 0, gesamt: a.woerter.length, fehler: 0, woerter: a.woerter };
-    var links = mische(a.woerter.slice());
-    var rechts = mische(a.woerter.slice());
-    document.getElementById('vtKarte').innerHTML =
-      '<div class="vt-etikett" style="--tf:#C7457F"><span class="ic">🎴</span>Finde die Paare</div>'
-      + '<p class="vt-unter">Tippe ein deutsches Wort an und dann seine Übersetzung.</p>'
-      + '<div class="vt-paare">'
-      + '<div class="vt-sp">' + links.map(function (v) {
-        return '<button class="vt-pk" data-id="' + esc(v.id) + '" data-seite="l" onclick="__vtPaar(this)">'
-          + (v.em ? '<span class="e">' + v.em + '</span>' : '') + '<span>' + esc(v.de) + '</span></button>';
-      }).join('') + '</div>'
-      + '<div class="vt-sp">' + rechts.map(function (v) {
-        return '<button class="vt-pk' + rtlK() + '" data-id="' + esc(v.id) + '" data-seite="r" onclick="__vtPaar(this)">'
-          + '<span>' + esc(trWort(v)) + '</span></button>';
-      }).join('') + '</div>'
-      + '</div>';
-    var b = q('#vtVoll .vt-buehne'); if (b) b.scrollTop = 0;
-  }
-  window.__vtPaar = function (el) {
-    if (el.classList.contains('fertig')) return;
-    var offen = PAAR.offen;
-    if (!offen) {
-      qa('.vt-pk.gewaehlt').forEach(function (x) { x.classList.remove('gewaehlt'); });
-      el.classList.add('gewaehlt'); PAAR.offen = el; return;
-    }
-    if (offen === el) { el.classList.remove('gewaehlt'); PAAR.offen = null; return; }
-    if (offen.dataset.seite === el.dataset.seite) {
-      offen.classList.remove('gewaehlt'); el.classList.add('gewaehlt'); PAAR.offen = el; return;
-    }
-    var treffer = offen.dataset.id === el.dataset.id;
-    if (treffer) {
-      offen.classList.remove('gewaehlt'); offen.classList.add('fertig');
-      el.classList.add('fertig');
-      PAAR.offen = null; PAAR.fertig++;
-      var wort = null;
-      PAAR.woerter.forEach(function (v) { if (v.id === el.dataset.id) wort = v; });
-      if (wort) sprich(wort.de, 0.95);
-      if (PAAR.fertig >= PAAR.gesamt) setTimeout(paareFertig, 420);
-    } else {
-      PAAR.fehler++;
-      var a1 = offen, b1 = el;
-      a1.classList.add('daneben'); b1.classList.add('daneben');
-      setTimeout(function () {
-        a1.classList.remove('daneben', 'gewaehlt'); b1.classList.remove('daneben');
-      }, 480);
-      PAAR.offen = null;
-    }
-  };
-  function paareFertig() {
-    var f = document.getElementById('vtFuss');
-    var gut = PAAR.fehler === 0;
-    f.className = 'vt-fuss an ' + (gut ? 'gut' : 'schlecht');
-    f.innerHTML = '<div class="vt-fuss-in"><div class="vt-fuss-tx">'
-      + '<b>' + (gut ? '<span>🎴</span>Alle Paare auf Anhieb!' : '<span>🎴</span>Geschafft — mit ' + PAAR.fehler + ' Fehlversuch' + (PAAR.fehler === 1 ? '' : 'en')) + '</b>'
-      + '<div class="lsg">' + PAAR.gesamt + ' Wörter zugeordnet.</div></div>'
-      + '<button class="vt-weiter" onclick="__vtAntwort()">Weiter →</button></div>';
   }
 
   /* ================= Antworten ================= */
@@ -852,7 +663,7 @@
   };
   window.__vtTippen = function () {
     if (GEPRUEFT) return;
-    var v = RUNDE[POS].v, inp = document.getElementById('vtIn');
+    var v = RUNDE[POS], inp = document.getElementById('vtIn');
     if (!inp) return;
     var ist = normal(inp.value); if (!ist) { inp.focus(); return; }
     GEPRUEFT = true;
@@ -865,25 +676,16 @@
     if (el.parentNode.id === 'vtTeile') bau.appendChild(el);
     else document.getElementById('vtTeile').appendChild(el);
   };
-  window.__vtBuchPruefen = function () {
-    if (GEPRUEFT) return; GEPRUEFT = true;
-    var v = RUNDE[POS].v, bau = document.getElementById('vtBau');
-    var ist = qa('#vtBau .vt-teil').map(function (b) { return b.textContent; }).join('');
-    var richtig = normal(ist) === normal(v.wort || v.de);
-    bau.style.borderColor = richtig ? '#12A594' : '#E05B5B';
-    bau.style.background = richtig ? '#E9F9F5' : '#FDEFEF';
-    rueck(richtig);
-  };
   window.__vtSatzPruefen = function () {
     if (GEPRUEFT) return; GEPRUEFT = true;
-    var v = RUNDE[POS].v, bau = document.getElementById('vtBau');
+    var v = RUNDE[POS], bau = document.getElementById('vtBau');
     var ist = qa('#vtBau .vt-teil').map(function (b) { return b.textContent; }).join(' ');
     var richtig = normal(ist) === normal(v.bsp);
     bau.style.borderColor = richtig ? '#12A594' : '#E05B5B';
     bau.style.background = richtig ? '#E9F9F5' : '#FDEFEF';
     rueck(richtig);
   };
-  window.__vtWeiterNeu = function () { weiter(); };
+  window.__vtWeiterNeu = function () { window.__vtAntwort(true, true); };
 
   function naechsterAbstand(stufe) {
     var t = [0, 1, 3, 7, 16, 35, 75][Math.min(stufe, 6)];
@@ -894,15 +696,13 @@
   }
 
   function rueck(richtig) {
-    var a = RUNDE[POS], v = a.v;
-    if (!richtig) SERIE[v.id] = true;                 // Fehler in der Serie merken
-    if (a.letzte) ERG.push({ v: v, richtig: !SERIE[v.id] });
+    var v = RUNDE[POS];
+    ERG.push({ v: v, richtig: richtig });
     qa('#vtKarte .vt-pruefen').forEach(function (b) { b.style.display = 'none'; });
     qa('#vtTeile .vt-teil, #vtBau .vt-teil').forEach(function (b) { b.style.pointerEvents = 'none'; b.style.opacity = '.7'; });
 
     var st = (BEKANNT[v.id] && BEKANNT[v.id].stufe) || 0;
-    var zaehlt = !SERIE[v.id] && richtig;
-    var neuStufe = zaehlt ? Math.min(st + 1, 6) : (st <= 1 ? 0 : 1);
+    var neuStufe = richtig ? Math.min(st + 1, 6) : (st <= 1 ? 0 : 1);
     var ue = trWort(v);
     var f = document.getElementById('vtFuss');
     f.className = 'vt-fuss an ' + (richtig ? 'gut' : 'schlecht');
@@ -913,15 +713,15 @@
       + (ue ? ' — ' + esc(ue) : '') + ' ' + lauts(v.de, 1) + '</div>'
       + (v.bsp ? '<div class="bspz">' + satzMarkiert(v.bsp, v.wort || v.de, richtig ? 'gruen' : 'rot')
         + (trSatz(v) ? '<i class="' + (rtl() ? 'vt-rtl' : '') + '">' + esc(trSatz(v)) + '</i>' : '') + '</div>' : '')
-      + (a.letzte ? '<div class="wieder">🔁 Dieses Wort kommt ' + naechsterAbstand(neuStufe) + '.</div>'
-                  : '<div class="wieder">➡️ Gleich noch eine Übung zu diesem Wort.</div>')
+      + '<div class="wieder">🔁 Dieses Wort kommt ' + naechsterAbstand(neuStufe) + '.</div>'
       + '</div>'
-      + '<button class="vt-weiter' + (richtig ? '' : ' rot') + '" onclick="__vtAntwort()">'
+      + '<button class="vt-weiter' + (richtig ? '' : ' rot') + '" onclick="__vtAntwort(' + richtig + ')">'
       + (POS + 1 >= RUNDE.length ? 'Runde abschließen' : 'Weiter') + ' →</button></div>';
   }
 
-  // Lernstand nur am Ende einer Wortserie schreiben
-  async function buchen(v, richtig) {
+  window.__vtAntwort = async function (richtig, ohneWertung) {
+    var v = RUNDE[POS];
+    if (ohneWertung) ERG.push({ v: v, richtig: true });
     try {
       var c = sb();
       if (c && v) {
@@ -932,23 +732,14 @@
       }
     } catch (e) {}
     STAND.heute = (STAND.heute || 0) + 1;
-  }
-  function weiter() {
+    // Falsch beantwortet? Dann taucht das Wort am Ende der Runde noch einmal auf.
+    if (!richtig && !ohneWertung && v && !v.__wieder && RUNDE.length < 40) {
+      var kopie = {}; for (var kk in v) kopie[kk] = v[kk];
+      kopie.__wieder = 1; kopie.__typ = null;
+      RUNDE.push(kopie);
+    }
     POS++;
     if (POS >= RUNDE.length) abschluss(); else zeichne();
-  }
-  window.__vtAntwort = async function () {
-    var a = RUNDE[POS];
-    if (a && a.letzte && a.v) {
-      var ok = !SERIE[a.v.id];
-      await buchen(a.v, ok);
-      // Nicht gekonnt? Dann kommt das Wort am Ende der Runde noch einmal.
-      if (!ok && !a.wieder && RUNDE.length < 42) {
-        SERIE[a.v.id] = false;
-        RUNDE.push({ v: a.v, typ: leichterTyp(a.v), letzte: true, wieder: true });
-      }
-    }
-    weiter();
   };
 
   window.__vtAbbruch = function () {
@@ -1011,7 +802,7 @@
 
   /* ================= Steuerung ================= */
   window.__vtStart = function () {
-    SERIE = {}; RUNDE = baueRunde(STAND.ziel || 15); POS = 0; ERG = []; LAEUFT = true;
+    RUNDE = baueRunde(STAND.ziel || 15); POS = 0; ERG = []; LAEUFT = true;
     if (!RUNDE.length) {
       vollZu();
       document.getElementById('v-vokabeln').innerHTML =

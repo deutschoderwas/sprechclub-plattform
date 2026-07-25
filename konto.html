@@ -262,7 +262,7 @@ h2.sec{margin:24px 0 12px;font-size:19px}
 @media(max-width:820px){.ag-row{flex-direction:column;gap:8px}.ag-day{flex:none;border-right:none;border-bottom:1px solid var(--border);padding:0 0 8px;flex-direction:row;align-items:center;gap:8px}}
 
 /* Wochenübersicht Mo–Sa (Spalten, volle Breite) */
-.main:has(#v-kalender.active){max-width:1280px}
+.main:has(#v-kalender.active){max-width:1480px}
 .calweek{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;align-items:start;animation:fade .3s}
 .calcol{background:#fff;border:1px solid var(--border);border-radius:16px;padding:8px;display:flex;flex-direction:column;gap:8px;min-width:0;box-shadow:0 4px 14px rgba(0,0,0,.05);animation:agIn .4s ease both}
 .calcol:nth-child(2){animation-delay:.04s}.calcol:nth-child(3){animation-delay:.08s}.calcol:nth-child(4){animation-delay:.12s}.calcol:nth-child(5){animation-delay:.16s}.calcol:nth-child(6){animation-delay:.2s}.calcol:nth-child(7){animation-delay:.24s}
@@ -330,7 +330,7 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFF6E6 0%,#FAF8F2 60%)
 .side-foot{border-top:1px solid var(--border);padding-top:8px;margin-top:12px}
 
 /* ---- Inhalt ---- */
-.main{max-width:1120px;padding:26px 34px 82px}
+.main{max-width:1480px;padding:26px 40px 82px}
 .pagehead h1{font-size:25px;font-weight:700}
 .pagehead p{color:var(--text-soft)}
 
@@ -405,7 +405,7 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFF6E6 0%,#FAF8F2 60%)
 .tb-bell::after{content:"";position:absolute;top:-1px;right:-1px;width:7px;height:7px;background:var(--primary);border-radius:50%;border:1.5px solid #FAF8F2}
 .tb-live{background:var(--turq);color:#fff;border:none;border-radius:11px;padding:9px 16px;font-weight:700;font-size:13.5px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;box-shadow:0 4px 0 #0d8073;font-family:inherit}
 .tb-live:hover{background:#149e8d}
-.content-inner{max-width:1120px;margin:0 auto;padding:24px 34px 82px}
+.content-inner{max-width:1480px;margin:0 auto;padding:26px 40px 82px}
 .content-inner:has(#v-kalender.active){max-width:1340px}
 .content-inner:has(#v-community.active){max-width:none;padding:0}
 /* Kalender: schwebende Karten wie in der Vorschau (Spalten transparent) */
@@ -434,9 +434,12 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFF6E6 0%,#FAF8F2 60%)
 @media(max-width:820px){#v-dashboard .dash-top{grid-template-columns:1fr}}
 #v-dashboard .dsh-card{background:#fff;border:1px solid var(--border);border-radius:18px;box-shadow:0 4px 16px rgba(20,20,20,.05);overflow:hidden}
 #v-dashboard .dsh-resume{display:flex;flex-direction:column}
-#v-dashboard .dsh-resume .cover{background:linear-gradient(135deg,#0E1012,#23282C);min-height:118px;position:relative;display:flex;align-items:center;justify-content:center}
+#v-dashboard .dsh-resume .cover{background:linear-gradient(135deg,#0E1012,#23282C);min-height:150px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+#v-dashboard .dsh-resume .cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.62}
+#v-dashboard .dsh-resume .cover::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,12,14,.15),rgba(10,12,14,.62))}
+#v-dashboard .dsh-resume .cover .play{position:relative;z-index:1}
 #v-dashboard .dsh-resume .cover::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:linear-gradient(#161616 0 25%,#DD0000 25% 50%,#FFCE00 50% 75%,#12A594 75% 100%)}
-#v-dashboard .dsh-resume .cover .play{width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff}
+#v-dashboard .dsh-resume .cover .play{width:62px;height:62px;border-radius:50%;background:rgba(255,255,255,.22);backdrop-filter:blur(6px);border:2px solid rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff;box-shadow:0 8px 24px rgba(0,0,0,.3)}
 #v-dashboard .dsh-resume .rb{padding:16px 18px}
 #v-dashboard .dsh-resume .eyebrow{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#12A594}
 #v-dashboard .dsh-resume h3{font-size:18px;margin:4px 0 2px}
@@ -600,6 +603,35 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFF6E6 0%,#FAF8F2 60%)
     </div>
   </aside>
   <div class="nav-backdrop" onclick="toggleNav()"></div>
+<style id="breit-style">
+/* Volle Breite auf großen Bildschirmen */
+@media(min-width:1200px){
+  .grid2{grid-template-columns:1fr 1fr}
+  .dsh-kpis{grid-template-columns:repeat(4,1fr)}
+  .wm-grid{grid-template-columns:repeat(3,1fr)}
+}
+@media(min-width:1600px){
+  .content-inner{padding-left:56px;padding-right:56px}
+}
+</style>
+<style id="wm-style">
+.wm-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:16px}
+.wm{position:relative;display:flex;align-items:center;gap:16px;text-align:left;width:100%;
+  background:#fff;border:1px solid var(--border,#ECE7DC);border-radius:20px;padding:18px 20px;cursor:pointer;
+  font-family:inherit;overflow:hidden;transition:transform .17s cubic-bezier(.3,.8,.3,1),box-shadow .17s,border-color .17s}
+.wm::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(180deg,var(--wf),var(--wf2))}
+.wm:hover{transform:translateY(-3px);border-color:transparent;box-shadow:0 14px 32px color-mix(in srgb,var(--wf) 24%,transparent)}
+.wm-ic{flex:none;width:58px;height:58px;border-radius:17px;display:flex;align-items:center;justify-content:center;font-size:27px;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--wf) 16%,#fff),color-mix(in srgb,var(--wf2) 22%,#fff));
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--wf) 22%,transparent)}
+.wm-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.wm-tx b{font-size:16.5px;font-weight:800;color:#191B1C;letter-spacing:-.01em;line-height:1.25}
+.wm-tx span{font-size:13.5px;color:#77726A;line-height:1.45}
+.wm-go{flex:none;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:17px;font-weight:800;color:var(--wf);background:color-mix(in srgb,var(--wf) 11%,#fff);transition:transform .17s,background .17s}
+.wm:hover .wm-go{transform:translateX(3px);background:var(--wf);color:#fff}
+@media(max-width:640px){.wm-grid{grid-template-columns:1fr}.wm{padding:15px 16px;gap:13px}.wm-ic{width:50px;height:50px;font-size:23px;border-radius:15px}}
+</style>
 <style id="lup-style">
 .lup-back{position:fixed;inset:0;z-index:400;background:rgba(14,16,18,.55);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px;animation:lupIn .18s ease}
 @keyframes lupIn{from{opacity:0}to{opacity:1}}
@@ -1454,7 +1486,7 @@ function renderDashboard(){
     </div>
     <div class="dash-top">
       <div class="dsh-card dsh-resume">
-        <div class="cover"><span class="play">▶</span></div>
+        <div class="cover"><img src="illu/kat-skills.jpg" alt="" loading="lazy" onerror="this.style.display='none'"><span class="play">▶</span></div>
         <div class="rb">
           <div class="eyebrow" data-i18n="d_resume">Weiter üben</div>
           <h3 data-i18n="d_session">Deine Übungssession</h3>
@@ -1464,7 +1496,6 @@ function renderDashboard(){
       </div>
       ${liveCard}
     </div>
-    ${mcCard()}
     <div class="dsh-kpis">
       <div class="dsh-kpi"><div class="kl" data-i18n="d_kguth">🎟️ Guthaben</div><div class="kv">${credits}</div><div class="kd" data-i18n="d_kfree">Stunden frei</div></div>
       <div class="dsh-kpi"><div class="kl" data-i18n="d_kstreak">🔥 Lernserie</div><div class="kv">${s.streak}</div><div class="kd">${s.streak===1?'<span data-i18n="d_week">Woche</span>':'<span data-i18n="d_weeks">Wochen</span>'} <span data-i18n="d_inrow">am Stück</span></div></div>
@@ -1472,12 +1503,37 @@ function renderDashboard(){
       <div class="dsh-kpi"><div class="kl" data-i18n="d_kvoc">🃏 Vokabeln</div><div class="kv">${s.known}</div><div class="kd" data-i18n="d_klearned">gelernt</div></div>
     </div>
     <div class="dsh-sec"><h2 data-i18n="d_continue">Weitermachen</h2></div>
-    <div class="grid2">
-      <div class="card" style="cursor:pointer" onclick="go('stunden')"><b data-i18n="d_c1t">📅 Stunden vorbereiten</b><p class="muted" style="margin-top:4px" data-i18n="d_c1b">Übungen &amp; Material zu deinen gebuchten Stunden.</p></div>
-      <div class="card" style="cursor:pointer" onclick="go('vokabeln')"><b data-i18n="d_c2t">🃏 Vokabeln üben</b><p class="muted" style="margin-top:4px">${s.vocabTotal} <span data-i18n="d_c2b">Vokabeln aus deinen Stunden.</span></p></div>
-      <div class="card" style="cursor:pointer" onclick="go('amanda')"><b data-i18n="d_c3t">🎤 Mit Amanda sprechen</b><p class="muted" style="margin-top:4px" data-i18n="d_c3b">Jederzeit frei Deutsch üben — gratis für dich.</p></div>
-      <div class="card" style="cursor:pointer" onclick="location.href='korrektur.html'"><b>✍️ Julia korrigiert deinen Text</b><p class="muted" style="margin-top:4px">Schreib etwas auf Deutsch — ich lese es persönlich und sage dir, woran wir arbeiten.</p></div>
-      <div class="card" style="cursor:pointer" onclick="go('fortschritt')"><b data-i18n="d_c4t">🏆 Dein Fortschritt</b><p class="muted" style="margin-top:4px" data-i18n="d_c4b">Abzeichen &amp; wie weit du bist.</p></div>
+    <div class="wm-grid">
+      <button class="wm" style="--wf:#12A594;--wf2:#2CC0AE" onclick="go('vokabeln')">
+        <span class="wm-ic">🃏</span>
+        <span class="wm-tx"><b data-i18n="d_c2t">Vokabeln üben</b>
+          <span>${s.vocabTotal>0?s.vocabTotal+' Wörter warten auf dich — mit Bild, Ton und Beispielsatz.':'Täglich eine Runde — mit Bild, Ton und Beispielsatz.'}</span></span>
+        <span class="wm-go">→</span></button>
+      <button class="wm" style="--wf:#8B4FC7;--wf2:#B478E8" onclick="go('amanda')">
+        <span class="wm-ic">🎤</span>
+        <span class="wm-tx"><b data-i18n="d_c3t">Mit Amanda sprechen</b>
+          <span data-i18n="d_c3b">Jederzeit frei Deutsch üben — gratis für dich.</span></span>
+        <span class="wm-go">→</span></button>
+      <button class="wm" style="--wf:#E0A020;--wf2:#F3C258" onclick="location.href='korrektur.html'">
+        <span class="wm-ic">✍️</span>
+        <span class="wm-tx"><b>Julia korrigiert deinen Text</b>
+          <span>Schreib etwas auf Deutsch — ich lese es persönlich.</span></span>
+        <span class="wm-go">→</span></button>
+      <button class="wm" style="--wf:#2F6FD0;--wf2:#6B9BE8" onclick="go('stunden')">
+        <span class="wm-ic">📅</span>
+        <span class="wm-tx"><b data-i18n="d_c1t">Stunden vorbereiten</b>
+          <span data-i18n="d_c1b">Übungen &amp; Material zu deinen gebuchten Stunden.</span></span>
+        <span class="wm-go">→</span></button>
+      <button class="wm" style="--wf:#C7457F;--wf2:#E87BAA" onclick="location.href='aussprache.html'">
+        <span class="wm-ic">🗣️</span>
+        <span class="wm-tx"><b>Aussprache trainieren</b>
+          <span>Laute hören, nachsprechen und prüfen lassen.</span></span>
+        <span class="wm-go">→</span></button>
+      <button class="wm" style="--wf:#1E9E63;--wf2:#5CC998" onclick="go('fortschritt')">
+        <span class="wm-ic">🏆</span>
+        <span class="wm-tx"><b data-i18n="d_c4t">Dein Fortschritt</b>
+          <span data-i18n="d_c4b">Abzeichen &amp; wie weit du bist.</span></span>
+        <span class="wm-go">→</span></button>
     </div></div>`;
   try{ renderMobileHome(); }catch(e){}
   try{ if(window.LZ) LZ.zeichneKarte(); }catch(e){}

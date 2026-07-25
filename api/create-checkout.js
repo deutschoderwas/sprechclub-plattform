@@ -14,9 +14,9 @@ const PLANS = {
   sparpass:         { abo: false, stunden: 30, preis: 399, label: 'Spar Pass' },
   // --- Neues Modell: Community (ohne Live-Buchung) + Premium (mit 8 Live-Stunden) ---
   community_year:  { abo: true, interval:'year',  stunden: 0, preis: 144, tier:'community', label: 'Community',
-    desc: 'Ganze Lernplattform, Community, taeglicher Podcast & monatliche Live-Masterclass. Jahresmitgliedschaft (12 Monate).' },
+    desc: 'Ganze Lernplattform, Community, Kursbibliothek A1-C2, Vokabeltrainer & taeglicher Podcast. Jahresmitgliedschaft (12 Monate).' },
   community_month: { abo: true, interval:'month', stunden: 0, preis: 16,  tier:'community', label: 'Community',
-    desc: 'Ganze Lernplattform, Community, taeglicher Podcast & monatliche Live-Masterclass. Monatlich kuendbar.' },
+    desc: 'Ganze Lernplattform, Community, Kursbibliothek A1-C2, Vokabeltrainer & taeglicher Podcast. Monatlich kuendbar.' },
   premium:         { abo: true, interval:'month', stunden: 8, preis: 149, tier:'premium',  label: 'Premium',
     desc: 'Alles aus Community + 8 LIVE-Stunden/Monat in kleiner Gruppe (bis 6 Personen).' },
 };
