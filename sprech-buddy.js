@@ -1,163 +1,301 @@
 /* ============================================================
-   deutschoderwas club · Sprech-Buddy-Matching
-   Erwartet Globals aus konto.html: sb, user, profile, esc, go
-   - window.renderBuddyWidget(hostEl)  -> kompaktes Widget (rechte Spalte)
-   - window.renderBuddy()              -> eigene Ansicht #v-buddy
-   Anschreiben-Hook: window.openDM(userId, name) (von Direktnachrichten gestellt);
-   Fallback: go('community').
+   deutschoderwas club · Sprech-Tandem
+   Erwartet aus konto.html: sb, user, profile, esc, go
+   - window.renderBuddyWidget(hostEl)  -> kompaktes Widget
+   - window.renderBuddy()              -> Ansicht #v-buddy
+   Anschreiben: window.openDM(userId, name); Fallback go('community').
+   Missionen aus tandem-missionen.js (window.TANDEM).
    ============================================================ */
 (function () {
   'use strict';
   var styled = false;
-  function getSb() { try { return window.sb || (typeof sb !== 'undefined' ? sb : null); } catch (e) { return null; } }
-  function getProfile() { try { return window.profile || (typeof profile !== 'undefined' ? profile : null); } catch (e) { return null; } }
-  function E(s) { return (window.esc ? window.esc(s) : String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]); })); }
-  function initials(n) { n = String(n || 'M').trim(); var p = n.split(/\s+/); return ((p[0] || '?')[0] + (p[1] ? p[1][0] : '')).toUpperCase(); }
-  function avColor(name) { var s = String(name || '?'), h = 0; for (var i = 0; i < s.length; i++) { h = (h * 31 + s.charCodeAt(i)) >>> 0; } return 'hsl(' + (h % 360) + ',48%,68%)'; }
+  var NIVEAUS = ['A1','A2','B1','B2','C1','C2'];
+  function I(n,s,c){ return window.ICON ? window.ICON(n,s,c) : ''; }
+  function getSb(){ try{ return window.sb || (typeof sb!=='undefined'?sb:null); }catch(e){ return null; } }
+  function getProfile(){ try{ return window.profile || (typeof profile!=='undefined'?profile:null); }catch(e){ return null; } }
+  function E(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]);}); }
+  function initials(n){ n=String(n||'M').trim(); var p=n.split(/\s+/); return ((p[0]||'?')[0]+(p[1]?p[1][0]:'')).toUpperCase(); }
+  function avColor(name){ var s=String(name||'?'),h=0; for(var i=0;i<s.length;i++){h=(h*31+s.charCodeAt(i))>>>0;} return 'hsl('+(h%360)+',42%,72%)'; }
 
-  function injectStyle() {
-    if (styled) return; styled = true;
-    var css = `
-    .bd-card{border:1px solid #ECE4D3;border-radius:16px;background:linear-gradient(180deg,#FFFDF8,#FFF9EE);box-shadow:0 8px 24px rgba(30,25,15,.06);padding:18px 18px 16px;position:relative;overflow:hidden}
-    .bd-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-    .bd-ic{flex:0 0 34px;width:34px;height:34px;border-radius:10px;background:#E7FBF6;border:1px solid #C3EBE3;display:flex;align-items:center;justify-content:center;font-size:17px}
-    .bd-head h4{margin:0;font-size:15px;font-family:'Space Grotesk',inherit;font-weight:700;color:#211E18}
-    .bd-blurb{font-size:13px;color:#6B6154;line-height:1.5;margin:0 0 14px}
-    .bd-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;border:none;border-radius:11px;padding:11px 14px;font-family:inherit;font-weight:800;font-size:14px;cursor:pointer;background:radial-gradient(120% 120% at 30% 25%,#3DE0CC,#12A594);color:#06403A;box-shadow:0 6px 16px rgba(18,165,148,.28);transition:transform .12s,box-shadow .12s}
-    .bd-btn:hover{transform:translateY(-1px);box-shadow:0 10px 22px rgba(18,165,148,.36)}
-    .bd-btn.sub{background:#F5F1E8;color:#5A5346;box-shadow:none;font-weight:700}
-    .bd-btn.sub:hover{background:#EFEADF;transform:none;box-shadow:none}
-    .bd-row{display:flex;gap:8px;margin-top:10px}
-    .bd-row .bd-btn{width:auto;flex:1}
-    .bd-wait{display:flex;align-items:center;gap:11px;background:#FFF7DA;border:1px solid #F3E2A0;border-radius:12px;padding:12px 14px;margin-bottom:12px}
-    .bd-wait .sp{flex:0 0 18px;width:18px;height:18px;border-radius:50%;border:2.5px solid #E7CE7A;border-top-color:#B98900;animation:bd-spin 1s linear infinite}
-    @keyframes bd-spin{to{transform:rotate(360deg)}}
-    .bd-wait .t{font-size:13px;color:#7a5c00;line-height:1.4}
-    .bd-wait .t b{font-weight:800}
-    .bd-buddy{display:flex;align-items:center;gap:13px;background:#fff;border:1px solid #EEE7D8;border-radius:13px;padding:13px 14px;margin-bottom:12px}
-    .bd-buddy .av{flex:0 0 46px;width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:#3a3a3a;box-shadow:0 2px 6px rgba(0,0,0,.08)}
-    .bd-buddy .nm{font-weight:800;font-size:15px;color:#211E18}
-    .bd-buddy .meta{font-size:12.5px;color:#8B8F96;margin-top:2px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
-    .bd-lv{font-size:11px;font-weight:800;color:#0E8577;background:#ECFBF7;border:1px solid #C3EBE3;border-radius:6px;padding:1px 7px}
-    .bd-online{display:inline-flex;align-items:center;gap:5px}
-    .bd-online .dot{width:7px;height:7px;border-radius:50%;background:#2BC48A;display:inline-block}
-    .bd-mini{font-size:11.5px;color:#8B8F96;margin:2px 0 0;text-align:center}
-    /* eigene Ansicht */
-    #v-buddy .bd-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:18px;align-items:start}
-    @media(max-width:820px){#v-buddy .bd-grid{grid-template-columns:1fr}}
-    #v-buddy .bd-sec{font-size:13px;font-weight:800;color:#8B8F96;text-transform:uppercase;letter-spacing:.05em;margin:2px 2px 12px}
-    #v-buddy .bd-steps{display:flex;flex-direction:column;gap:11px}
-    #v-buddy .bd-step{display:flex;gap:12px;border:1px solid #EEE7D8;border-radius:13px;background:#fff;padding:14px 15px;box-shadow:0 1px 2px rgba(30,25,15,.05)}
-    #v-buddy .bd-step .n{flex:0 0 28px;width:28px;height:28px;border-radius:9px;background:#ECFBF7;color:#0E8577;font-family:'Space Grotesk',inherit;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center}
-    #v-buddy .bd-step h4{margin:0 0 3px;font-size:14.5px}
-    #v-buddy .bd-step p{margin:0;font-size:13px;color:#6B6154;line-height:1.5}
-    #v-buddy .bd-safe{font-size:12px;color:#8B8F96;line-height:1.5;margin:14px 2px 0}
-    `;
-    var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
+  /* ---------- Stil (neue Designsprache) ---------- */
+  function injectStyle(){
+    if(styled) return; styled=true;
+    var css = [
+'.td{--ink:#171717;--ink2:#6E6A63;--ink3:#9A958C;--line:#EBE7DF;--line2:#F4F1EA;--acc:#12A594;--acc-d:#0E7C70;--acc-soft:#EAF7F4;--acc-line:#CFEBE5;--surf:#fff;font-family:Inter,system-ui,-apple-system,sans-serif;color:var(--ink)}',
+'.td *{box-sizing:border-box}',
+'@keyframes td-up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}',
+'.td-card{background:var(--surf);border:1px solid var(--line);border-radius:20px;padding:19px;box-shadow:0 1px 2px rgba(23,23,23,.04),0 12px 30px -26px rgba(23,23,23,.6);animation:td-up .4s cubic-bezier(.16,1,.3,1) both}',
+'.td-h{display:flex;align-items:center;gap:10px;margin-bottom:12px}',
+'.td-h .ic{width:36px;height:36px;border-radius:11px;background:var(--acc-soft);border:1px solid var(--acc-line);color:var(--acc-d);display:flex;align-items:center;justify-content:center;flex:none}',
+'.td-h h4{margin:0;font-family:"Space Grotesk",Inter,sans-serif;font-size:16.5px;font-weight:600;letter-spacing:-.02em;color:var(--ink)}',
+'.td-h .sub{font-size:12.5px;color:var(--ink3);margin-top:1px}',
+'.td-p{font-size:14px;color:var(--ink2);line-height:1.6;margin:0 0 15px}',
+'.td-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:99px;padding:12px 22px;font-family:inherit;font-weight:600;font-size:14.5px;cursor:pointer;text-decoration:none;transition:.2s}',
+'.td-btn.p{background:var(--acc);color:#fff;box-shadow:0 9px 22px -14px rgba(18,165,148,.95)}',
+'.td-btn.p:hover{background:var(--acc-d)}',
+'.td-btn.p:disabled{background:var(--line);color:var(--ink3);cursor:not-allowed;box-shadow:none}',
+'.td-btn.s{background:var(--surf);border:1px solid var(--line);color:var(--ink2)}',
+'.td-btn.s:hover{border-color:var(--ink3);color:var(--ink)}',
+'.td-btn.w{width:100%}',
+'.td-row{display:flex;gap:8px;margin-top:9px;flex-wrap:wrap}',
+'.td-row .td-btn{flex:1;min-width:120px}',
+/* Partner */
+'.td-b{display:flex;align-items:center;gap:13px;background:var(--acc-soft);border:1px solid var(--acc-line);border-radius:16px;padding:13px 14px;margin-bottom:13px}',
+'.td-b .av{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:#fff;flex:none;text-shadow:0 1px 2px rgba(0,0,0,.15)}',
+'.td-b .nm{font-family:"Space Grotesk",Inter,sans-serif;font-weight:600;font-size:16px;letter-spacing:-.015em}',
+'.td-b .mt{font-size:12.5px;color:var(--ink2);margin-top:2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}',
+'.td-lv{font-size:11px;font-weight:700;color:var(--acc-d);background:#fff;border:1px solid var(--acc-line);border-radius:6px;padding:2px 7px}',
+/* Warten */
+'.td-w{display:flex;align-items:center;gap:12px;background:#FDF8EA;border:1px solid #F0E2BD;border-radius:16px;padding:14px;margin-bottom:13px}',
+'.td-w .sp{width:18px;height:18px;border-radius:50%;border:2.5px solid #EDDDA8;border-top-color:#B8931A;animation:td-spin 1s linear infinite;flex:none}',
+'@keyframes td-spin{to{transform:rotate(360deg)}}',
+'.td-w .t{font-size:13.5px;color:#6B5518;line-height:1.5}',
+'.td-w .t b{font-weight:700;display:block}',
+/* Mission */
+'.td-m{background:var(--surf);border:1px solid var(--line);border-radius:20px;overflow:hidden;margin-bottom:13px;box-shadow:0 1px 2px rgba(23,23,23,.04),0 12px 30px -26px rgba(23,23,23,.6)}',
+'.td-m .mh{background:linear-gradient(135deg,#0E7C70,#12A594);color:#fff;padding:17px 19px}',
+'.td-m .mh .kk{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;opacity:.84;margin-bottom:5px}',
+'.td-m .mh h3{margin:0 0 6px;font-family:"Space Grotesk",Inter,sans-serif;font-size:20px;font-weight:700;letter-spacing:-.025em}',
+'.td-m .mh p{margin:0;font-size:13.5px;line-height:1.55;opacity:.94}',
+'.td-m .mh .mm{display:flex;gap:8px;margin-top:11px;flex-wrap:wrap}',
+'.td-m .mh .mm span{font-size:11.5px;font-weight:600;background:rgba(255,255,255,.18);border-radius:99px;padding:4px 10px}',
+'.td-m .mb{padding:17px 19px}',
+'.td-s{margin-bottom:17px}',
+'.td-s:last-child{margin-bottom:0}',
+'.td-s .sl{display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);margin-bottom:9px}',
+'.td-s .sl .ic{color:var(--acc-d)}',
+'.td-s ol,.td-s ul{margin:0;padding:0;list-style:none;display:grid;gap:7px}',
+'.td-s li{font-size:14.5px;line-height:1.55;color:var(--ink);display:flex;gap:9px}',
+'.td-s li::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--acc-line);flex:none;margin-top:8px}',
+'.td-s.rm li{background:var(--acc-soft);border:1px solid var(--acc-line);border-radius:11px;padding:9px 12px;color:var(--acc-d);font-weight:500}',
+'.td-s.rm li::before{display:none}',
+'.td-auf{background:#FDF8EA;border:1px solid #F0E2BD;border-radius:14px;padding:13px 15px;font-size:14.5px;line-height:1.6;color:#6B5518}',
+'.td-auf b{display:block;font-size:11.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#B8931A;margin-bottom:5px}',
+'.td-wo{display:flex;flex-wrap:wrap;gap:7px}',
+'.td-wo span{font-size:13px;font-weight:500;color:var(--ink2);background:var(--line2);border:1px solid var(--line);border-radius:99px;padding:6px 12px}',
+'.td-fin{display:flex;align-items:center;gap:11px;border-top:1px solid var(--line2);margin-top:16px;padding-top:15px;flex-wrap:wrap}',
+'.td-fin .ok{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600;color:var(--acc-d)}',
+/* Missionsliste */
+'.td-list{display:grid;gap:9px}',
+'.td-li{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:1px solid var(--line);background:var(--surf);border-radius:15px;padding:12px 14px;cursor:pointer;font-family:inherit;transition:.18s}',
+'.td-li:hover{border-color:var(--ink3);transform:translateY(-1px)}',
+'.td-li.on{border-color:var(--acc);background:var(--acc-soft)}',
+'.td-li .n{width:30px;height:30px;border-radius:10px;background:var(--line2);color:var(--ink2);font-family:"Space Grotesk",Inter,sans-serif;font-weight:700;font-size:13.5px;display:flex;align-items:center;justify-content:center;flex:none}',
+'.td-li.done .n{background:var(--acc);color:#fff}',
+'.td-li .tx{flex:1;min-width:0}',
+'.td-li .tx b{display:block;font-size:14.5px;font-weight:600;letter-spacing:-.01em}',
+'.td-li .tx span{display:block;font-size:12.5px;color:var(--ink2);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+'.td-li .ar{color:var(--ink3);display:flex;flex:none}',
+'.td-tabs{display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap}',
+'.td-tb{border:1px solid var(--line);background:var(--surf);border-radius:99px;padding:7px 15px;font-family:inherit;font-size:13.5px;font-weight:600;color:var(--ink2);cursor:pointer;transition:.18s}',
+'.td-tb:hover{border-color:var(--ink3)}',
+'.td-tb.on{background:var(--ink);border-color:var(--ink);color:#fff}',
+'.td-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:18px;align-items:start}',
+'@media(max-width:900px){.td-grid{grid-template-columns:1fr}}',
+'.td-sec{font-size:11.5px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.07em;margin:0 2px 11px}',
+'.td-safe{font-size:12.5px;color:var(--ink3);line-height:1.6;margin:13px 2px 0;display:flex;gap:8px}',
+'.td-safe .ic{flex:none;margin-top:1px}',
+'@media(prefers-reduced-motion:reduce){.td *{animation:none!important;transition:none!important}}'
+    ].join('\n');
+    var st=document.createElement('style'); st.id='td-style'; st.textContent=css; document.head.appendChild(st);
   }
 
-  var busy = false;
-  async function call(fn, arg) {
-    var sb = getSb(); if (!sb) return { state: 'off' };
-    try { var r = await sb.rpc(fn, arg || {}); return (r && r.data) || { state: 'off' }; } catch (e) { return { state: 'off' }; }
-  }
-  async function loadStatus() { return call('buddy_status'); }
-
-  function sinceStr(iso) {
-    if (!iso) return '';
-    var days = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000);
-    if (days <= 0) return 'seit heute';
-    if (days === 1) return 'seit gestern';
-    return 'seit ' + days + ' Tagen';
+  /* ---------- Fortschritt ---------- */
+  function doneMap(){ try{ return JSON.parse(localStorage.getItem('dow_tandem')||'{}'); }catch(e){ return {}; } }
+  function setDone(id,v){
+    var m=doneMap(); if(v) m[id]=Date.now(); else delete m[id];
+    try{ localStorage.setItem('dow_tandem',JSON.stringify(m)); }catch(e){}
   }
 
-  function widgetHtml(st) {
-    var head = '<div class="bd-head"><span class="bd-ic">🤝</span><h4>Dein Sprech-Buddy</h4></div>';
-    if (st.state === 'matched' && st.buddy) {
-      var b = st.buddy;
-      return head +
-        '<div class="bd-buddy"><span class="av" style="background:' + avColor(b.name) + '">' + E(initials(b.name)) + '</span>' +
-        '<div><div class="nm">' + E(b.name) + '</div><div class="meta">' +
-        (b.level ? '<span class="bd-lv">' + E(b.level) + '</span>' : '') +
-        '<span>' + E(sinceStr(b.since)) + '</span></div></div></div>' +
-        '<button type="button" class="bd-btn" data-act="dm">💬 Anschreiben</button>' +
-        '<div class="bd-row"><button type="button" class="bd-btn sub" data-act="new">Neuer Buddy</button>' +
-        '<button type="button" class="bd-btn sub" data-act="leave">Pause</button></div>';
+  /* ---------- Missionen ---------- */
+  function niveau(){
+    var p=getProfile()||{};
+    var lv=p.level||p.target_level;
+    if(window.LZ&&LZ.data&&LZ.data.start_niveau) lv=LZ.data.start_niveau;
+    return NIVEAUS.indexOf(lv)>=0?lv:'B1';
+  }
+  function missionen(lv){ return (window.TANDEM&&window.TANDEM[lv])||[]; }
+  /* Mission der Woche: stabil pro Kalenderwoche, damit beide dieselbe sehen */
+  function wocheIdx(len){
+    if(!len) return 0;
+    var d=new Date(), start=new Date(d.getFullYear(),0,1);
+    var w=Math.floor(((d-start)/86400000+start.getDay()+1)/7);
+    return w%len;
+  }
+
+  function missionHtml(m,lv){
+    if(!m) return '';
+    var fertig=!!doneMap()[m.id];
+    return '<div class="td-m" id="tdM">'
+     +'<div class="mh"><div class="kk">Eure Mission</div><h3>'+E(m.t)+'</h3><p>'+E(m.ziel)+'</p>'
+     +'<div class="mm"><span>'+E(lv)+'</span><span>'+E(m.dauer)+'</span><span>zu zweit</span></div></div>'
+     +'<div class="mb">'
+     +'<div class="td-s"><div class="sl">'+I('chat',14)+'Womit ihr anfangt</div><ol>'
+     + m.fragen.map(function(f){ return '<li>'+E(f)+'</li>'; }).join('')+'</ol></div>'
+     +'<div class="td-s rm"><div class="sl">'+I('bookmark',14)+'Diese Sätze benutzt ihr wirklich</div><ul>'
+     + m.redemittel.map(function(r){ return '<li>'+E(r)+'</li>'; }).join('')+'</ul></div>'
+     +'<div class="td-s"><div class="td-auf"><b>Eure Aufgabe</b>'+E(m.aufgabe)+'</div></div>'
+     +'<div class="td-s"><div class="sl">'+I('cards',14)+'Wörter, die ihr braucht</div>'
+     +'<div class="td-wo">'+m.woerter.map(function(w){ return '<span>'+E(w)+'</span>'; }).join('')+'</div></div>'
+     +'<div class="td-fin">'
+     +(fertig
+       ? '<span class="ok">'+I('check',16)+'Geschafft</span><button class="td-btn s" data-mdone="'+E(m.id)+'" data-v="0">Doch nicht</button>'
+       : '<button class="td-btn p" data-mdone="'+E(m.id)+'" data-v="1">'+I('check',16)+'<span>Haben wir gemacht</span></button>')
+     +'</div></div></div>';
+  }
+
+  /* ---------- Supabase ---------- */
+  var busy=false;
+  async function call(fn,arg){
+    var sb=getSb(); if(!sb) return {state:'off'};
+    try{ var r=await sb.rpc(fn,arg||{}); return (r&&r.data)||{state:'off'}; }catch(e){ return {state:'off'}; }
+  }
+  function seit(iso){
+    if(!iso) return '';
+    var d=Math.floor((Date.now()-new Date(iso).getTime())/86400000);
+    if(d<=0) return 'seit heute';
+    if(d===1) return 'seit gestern';
+    return 'seit '+d+' Tagen';
+  }
+
+  function widgetHtml(s){
+    var head='<div class="td-h"><span class="ic">'+I('chat',18)+'</span>'
+      +'<div><h4>Dein Sprech-Tandem</h4><div class="sub">Ein echter Mensch, kein Bot</div></div></div>';
+    if(s.state==='matched'&&s.buddy){
+      var b=s.buddy;
+      return head
+       +'<div class="td-b"><span class="av" style="background:'+avColor(b.name)+'">'+E(initials(b.name))+'</span>'
+       +'<div><div class="nm">'+E(b.name)+'</div><div class="mt">'
+       +(b.level?'<span class="td-lv">'+E(b.level)+'</span>':'')+'<span>'+E(seit(b.since))+'</span></div></div></div>'
+       +'<button type="button" class="td-btn p w" data-act="dm">'+I('chat',16)+'<span>Anschreiben</span></button>'
+       +'<div class="td-row"><button type="button" class="td-btn s" data-act="new">Anderer Partner</button>'
+       +'<button type="button" class="td-btn s" data-act="leave">Pause</button></div>';
     }
-    if (st.state === 'waiting') {
-      var n = st.pool_waiting || 0;
-      return head +
-        '<div class="bd-wait"><span class="sp"></span><span class="t"><b>Wir suchen einen Partner…</b><br>' +
-        (n > 0 ? 'Sobald sich jemand auf deinem Niveau anmeldet, matchen wir euch.' : 'Du bist gerade allein im Pool — sei bereit, wir melden dich sofort.') +
-        '</span></div>' +
-        '<button type="button" class="bd-btn sub" data-act="leave">Aus dem Pool nehmen</button>';
+    if(s.state==='waiting'){
+      var n=s.pool_waiting||0;
+      return head
+       +'<div class="td-w"><span class="sp"></span><span class="t"><b>Wir suchen jemanden für dich</b>'
+       +(n>0?'Sobald sich jemand auf deinem Niveau meldet, seid ihr verbunden.'
+            :'Gerade ist niemand im Pool. Sobald sich jemand meldet, bist du dran.')+'</span></div>'
+       +'<button type="button" class="td-btn s w" data-act="leave">Doch nicht — raus aus dem Pool</button>';
     }
-    return head +
-      '<p class="bd-blurb">Wir matchen dich mit einem Lernpartner auf deinem Niveau — für <b>10 Minuten Sprechen pro Tag</b>. Gemeinsam übt es sich leichter.</p>' +
-      '<button type="button" class="bd-btn" data-act="join">🔎 Buddy finden</button>';
+    return head
+     +'<p class="td-p">Zehn Minuten sprechen am Tag verändern mehr als eine Stunde lesen. Wir verbinden dich mit jemandem auf deinem Niveau — und geben euch jede Woche eine Aufgabe, damit ihr nicht nach „Hallo" verstummt.</p>'
+     +'<button type="button" class="td-btn p w" data-act="join">'+I('user',16)+'<span>Partner finden</span></button>';
   }
 
-  function bind(host, rerender) {
-    Array.prototype.forEach.call(host.querySelectorAll('[data-act]'), function (b) {
-      b.addEventListener('click', async function () {
-        if (busy) return;
-        var act = b.getAttribute('data-act');
-        if (act === 'dm') {
-          var st = host.__st;
-          if (st && st.buddy && typeof window.openDM === 'function') window.openDM(st.buddy.id, st.buddy.name);
-          else if (typeof window.go === 'function') window.go('community');
-          else location.hash = 'community';
+  function bind(host,rerender){
+    Array.prototype.forEach.call(host.querySelectorAll('[data-act]'),function(b){
+      b.addEventListener('click',async function(){
+        if(busy) return;
+        var act=b.getAttribute('data-act');
+        if(act==='dm'){
+          var s=host.__s;
+          if(s&&s.buddy&&typeof window.openDM==='function') window.openDM(s.buddy.id,s.buddy.name);
+          else if(typeof window.go==='function') window.go('community');
+          else location.hash='community';
           return;
         }
-        busy = true; b.disabled = true;
-        var lv = (getProfile() && getProfile().level) || null;
+        busy=true; b.disabled=true;
+        var p=getProfile()||{};
+        var lv=(window.LZ&&LZ.data&&LZ.data.start_niveau)||p.level||null;
         var res;
-        if (act === 'join') res = await call('buddy_join', { p_level: lv });
-        else if (act === 'new') res = await call('buddy_new');
-        else if (act === 'leave') res = await call('buddy_leave');
-        busy = false;
-        if (res) rerender(res);
+        if(act==='join') res=await call('buddy_join',{p_level:lv});
+        else if(act==='new') res=await call('buddy_new');
+        else if(act==='leave') res=await call('buddy_leave');
+        busy=false;
+        if(res) rerender(res);
       });
     });
   }
-
-  async function renderBuddyWidget(host) {
-    injectStyle();
-    if (typeof host === 'string') host = document.getElementById(host);
-    if (!host) return;
-    host.innerHTML = '<div class="bd-card"><div class="bd-head"><span class="bd-ic">🤝</span><h4>Dein Sprech-Buddy</h4></div><p class="bd-blurb">Lädt…</p></div>';
-    var st = await loadStatus();
-    var paint = function (s) {
-      host.innerHTML = '<div class="bd-card">' + widgetHtml(s) + '</div>';
-      host.__st = s;
-      bind(host, paint);
-    };
-    paint(st);
-    return st;
+  function bindMission(root,repaint){
+    Array.prototype.forEach.call(root.querySelectorAll('[data-mdone]'),function(b){
+      b.addEventListener('click',function(){
+        setDone(b.getAttribute('data-mdone'), b.getAttribute('data-v')==='1');
+        repaint();
+      });
+    });
+    Array.prototype.forEach.call(root.querySelectorAll('[data-mpick]'),function(b){
+      b.addEventListener('click',function(){ repaint(b.getAttribute('data-mpick')); });
+    });
+    Array.prototype.forEach.call(root.querySelectorAll('[data-mlv]'),function(b){
+      b.addEventListener('click',function(){ repaint(null,b.getAttribute('data-mlv')); });
+    });
   }
 
-  async function renderBuddy() {
+  /* ---------- Widget ---------- */
+  async function renderBuddyWidget(host){
     injectStyle();
-    var r = document.getElementById('v-buddy'); if (!r) return;
-    r.innerHTML = '<div class="pagehead"><h1>🤝 Sprech-Buddy</h1></div><div class="bd-card"><p class="bd-blurb">Lädt…</p></div>';
-    var st = await loadStatus();
-    var paint = function (s) {
-      r.innerHTML =
-        '<div class="pagehead"><h1>🤝 Sprech-Buddy</h1><p>Finde einen Lernpartner auf deinem Niveau — 10 Minuten Sprechen pro Tag machen den Unterschied.</p></div>' +
-        '<div class="bd-grid">' +
-          '<div><div class="bd-sec">Dein Match</div><div class="bd-card" id="bdW">' + widgetHtml(s) + '</div></div>' +
-          '<div><div class="bd-sec">So funktioniert\'s</div><div class="bd-steps">' +
-            '<div class="bd-step"><div class="n">1</div><div><h4>Anmelden</h4><p>Tippe auf „Buddy finden" — du kommst in den Pool deines Niveaus.</p></div></div>' +
-            '<div class="bd-step"><div class="n">2</div><div><h4>Match</h4><p>Wir verbinden dich mit einem passenden Lernpartner aus der Community.</p></div></div>' +
-            '<div class="bd-step"><div class="n">3</div><div><h4>Sprechen</h4><p>Schreibt euch, verabredet euch und übt jeden Tag 10 Minuten zusammen.</p></div></div>' +
-          '</div><p class="bd-safe">🔒 Deine Kontaktdaten bleiben privat — geschrieben wird nur hier in der Community. Du kannst jederzeit „Pause" machen oder einen neuen Buddy wählen.</p></div>' +
-        '</div>';
-      var w = document.getElementById('bdW');
-      if (w) { w.__st = s; bind(w, function (s2) { paint(s2); }); }
+    if(typeof host==='string') host=document.getElementById(host);
+    if(!host) return;
+    host.classList.add('td');
+    host.innerHTML='<div class="td-card"><div class="td-h"><span class="ic">'+I('chat',18)+'</span><div><h4>Dein Sprech-Tandem</h4></div></div><p class="td-p">Wird geladen …</p></div>';
+    var s=await call('buddy_status');
+    var paint=function(x){
+      host.innerHTML='<div class="td-card">'+widgetHtml(x)+'</div>';
+      host.__s=x; bind(host,paint);
     };
-    paint(st);
+    paint(s); return s;
   }
 
-  window.renderBuddyWidget = renderBuddyWidget;
-  window.renderBuddy = renderBuddy;
+  /* ---------- Vollansicht ---------- */
+  async function renderBuddy(){
+    injectStyle();
+    var r=document.getElementById('v-buddy'); if(!r) return;
+    r.classList.add('td');
+    r.innerHTML='<div class="pagehead"><h1>Sprech-Tandem</h1></div><div class="td-card"><p class="td-p">Wird geladen …</p></div>';
+    var s=await call('buddy_status');
+    var lvAkt=niveau(), mAkt=null;
+
+    var paint=function(pickId,pickLv){
+      if(pickLv){ lvAkt=pickLv; mAkt=null; }
+      if(pickId) mAkt=pickId;
+      var liste=missionen(lvAkt);
+      var m = mAkt ? (liste.filter(function(x){return x.id===mAkt;})[0]||liste[wocheIdx(liste.length)])
+                   : liste[wocheIdx(liste.length)];
+      var dm=doneMap();
+      var geschafft=liste.filter(function(x){return dm[x.id];}).length;
+
+      r.innerHTML=
+        '<div class="pagehead"><h1>Sprech-Tandem</h1>'
+        +'<p>Ein Mensch aus dem Club auf deinem Niveau — und jede Woche eine Aufgabe, die euch wirklich ins Sprechen bringt.</p></div>'
+        +'<div class="td-grid">'
+        +'<div>'
+          +'<div class="td-sec">Eure Mission diese Woche</div>'
+          + missionHtml(m,lvAkt)
+          +'<div class="td-sec" style="margin-top:22px">Alle Missionen '+E(lvAkt)+' · '+geschafft+' von '+liste.length+' geschafft</div>'
+          +'<div class="td-tabs">'+NIVEAUS.map(function(n){
+              return '<button class="td-tb'+(n===lvAkt?' on':'')+'" data-mlv="'+n+'">'+n+'</button>';
+            }).join('')+'</div>'
+          +'<div class="td-list">'+liste.map(function(x,i){
+              return '<button class="td-li'+(dm[x.id]?' done':'')+(m&&x.id===m.id?' on':'')+'" data-mpick="'+E(x.id)+'">'
+                +'<span class="n">'+(dm[x.id]?I('check',15):(i+1))+'</span>'
+                +'<span class="tx"><b>'+E(x.t)+'</b><span>'+E(x.ziel)+'</span></span>'
+                +'<span class="ar">'+I('arrowR',16)+'</span></button>';
+            }).join('')+'</div>'
+        +'</div>'
+        +'<div>'
+          +'<div class="td-sec">Dein Partner</div>'
+          +'<div class="td-card" id="tdW">'+widgetHtml(s)+'</div>'
+          +'<div class="td-sec" style="margin-top:22px">So läuft es ab</div>'
+          +'<div class="td-card">'
+            +'<div class="td-s"><ol style="gap:11px">'
+            +'<li><span><b>Partner finden.</b> Du kommst in den Pool deines Niveaus — wir verbinden euch, sobald es passt.</span></li>'
+            +'<li><span><b>Termin machen.</b> Schreibt euch hier im Club und einigt euch auf eine feste Zeit in der Woche.</span></li>'
+            +'<li><span><b>Mission durchziehen.</b> Öffnet beide diese Seite, arbeitet die Punkte von oben nach unten ab.</span></li>'
+            +'<li><span><b>Abhaken.</b> Jede Woche eine neue — nach einem Jahr habt ihr 50 Gespräche geführt.</span></li>'
+            +'</ol></div>'
+            +'<p class="td-safe">'+I('lock',14)+'<span>Deine Kontaktdaten bleiben privat. Geschrieben wird nur hier im Club, und du kannst jederzeit Pause machen oder einen anderen Partner wählen.</span></p>'
+          +'</div>'
+        +'</div></div>';
+
+      var w=document.getElementById('tdW');
+      if(w){ w.__s=s; bind(w,function(x){ s=x; paint(m?m.id:null); }); }
+      bindMission(r,paint);
+    };
+    paint();
+  }
+
+  window.renderBuddyWidget=renderBuddyWidget;
+  window.renderBuddy=renderBuddy;
 })();

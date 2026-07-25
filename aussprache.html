@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Aussprachetraining – deutschoderwas club</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#FBF9F5">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FBF9F5; --surface:#FFFFFF; --ink:#171717; --ink2:#6E6A63; --ink3:#9A958C;
+  --line:#EBE7DF; --line2:#F4F1EA;
+  --acc:#12A594; --acc-d:#0E7C70; --acc-soft:#EAF7F4; --acc-line:#CFEBE5;
+  --gold:#E8B923; --gold-soft:#FDF8EA; --gold-line:#F0E2BD;
+  --err:#C9453D; --err-soft:#FBEFEE; --err-line:#F0D5D3;
+  --r2:16px; --r3:22px;
+  --sh:0 1px 2px rgba(23,23,23,.04), 0 10px 28px -22px rgba(23,23,23,.55);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:'Inter',system-ui,-apple-system,sans-serif;color:var(--ink);background:var(--bg);min-height:100vh;-webkit-font-smoothing:antialiased}
+.ic{flex:none;vertical-align:-.15em}
+@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes puls{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.14);opacity:.75}}
+
+.top{position:sticky;top:0;z-index:30;background:rgba(251,249,245,.93);backdrop-filter:saturate(1.4) blur(14px);border-bottom:1px solid var(--line2)}
+.top-in{max-width:780px;margin:0 auto;padding:11px 18px;display:flex;align-items:center;gap:13px}
+.icb{width:38px;height:38px;border-radius:11px;border:1px solid var(--line);background:var(--surface);color:var(--ink2);display:flex;align-items:center;justify-content:center;text-decoration:none;cursor:pointer;flex:none;transition:.2s}
+.icb:hover{color:var(--ink);border-color:var(--ink3)}
+.tt{flex:1;min-width:0}
+.tt .k{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--acc-d)}
+.tt .t{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:16px;letter-spacing:-.02em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.wrap{max-width:780px;margin:0 auto;padding:22px 18px calc(50px + env(safe-area-inset-bottom))}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(25px,5.4vw,32px);font-weight:700;letter-spacing:-.03em;line-height:1.13;margin:0 0 10px}
+.lead{color:var(--ink2);font-size:15px;line-height:1.65;margin:0 0 22px;max-width:580px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r3);padding:20px;box-shadow:var(--sh);margin-bottom:14px;animation:up .4s cubic-bezier(.16,1,.3,1) both}
+.sec{font-size:11.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);margin:0 2px 11px;display:flex;align-items:center;gap:8px}
+.sec .ic{color:var(--acc-d)}
+
+/* Übersicht */
+.tabs{display:flex;gap:7px;margin-bottom:16px;flex-wrap:wrap}
+.tb{border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:8px 16px;font-family:inherit;font-size:13.5px;font-weight:600;color:var(--ink2);cursor:pointer;transition:.18s}
+.tb:hover{border-color:var(--ink3)}
+.tb.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.list{display:grid;gap:10px}
+.li{display:flex;align-items:center;gap:13px;width:100%;text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:17px;padding:13px 15px;cursor:pointer;font-family:inherit;transition:.18s;box-shadow:0 1px 2px rgba(23,23,23,.03)}
+.li:hover{border-color:var(--ink3);transform:translateY(-1px)}
+.li .lv{width:38px;height:38px;border-radius:12px;background:var(--acc-soft);border:1px solid var(--acc-line);color:var(--acc-d);font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex:none}
+.li.done .lv{background:var(--acc);border-color:var(--acc);color:#fff}
+.li .tx{flex:1;min-width:0}
+.li .tx b{display:block;font-family:'Space Grotesk',sans-serif;font-size:15.5px;font-weight:600;letter-spacing:-.015em}
+.li .tx span{display:block;font-size:13px;color:var(--ink2);margin-top:2px;line-height:1.45}
+.li .ar{color:var(--ink3);display:flex;flex:none}
+
+/* Detail */
+.hero{background:linear-gradient(135deg,#0E7C70,#12A594);border-radius:var(--r3);padding:22px;color:#fff;margin-bottom:14px;box-shadow:0 16px 38px -22px rgba(18,165,148,1)}
+.hero .kk{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;opacity:.85;margin-bottom:6px}
+.hero h2{margin:0 0 7px;font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;letter-spacing:-.025em;line-height:1.18}
+.hero p{margin:0;font-size:14.5px;line-height:1.55;opacity:.95}
+.hero .warn{margin-top:13px;background:rgba(255,255,255,.16);border-radius:12px;padding:10px 13px;font-size:13px;line-height:1.5}
+.txt{font-size:15px;line-height:1.72;color:var(--ink);margin:0 0 14px}
+.mund{display:flex;gap:11px;background:var(--gold-soft);border:1px solid var(--gold-line);border-radius:var(--r2);padding:13px 15px;font-size:14.5px;line-height:1.6;color:#6B5518}
+.mund .ic{color:#B8931A;flex:none;margin-top:2px}
+.regel{display:flex;gap:11px;background:var(--acc-soft);border:1px solid var(--acc-line);border-radius:var(--r2);padding:14px 16px;font-size:15px;line-height:1.65;color:var(--acc-d);font-weight:500}
+.regel .ic{flex:none;margin-top:2px}
+
+/* Minimalpaare */
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:9px}
+.pw{border:1.5px solid var(--line);background:var(--surface);border-radius:14px;padding:13px 12px;cursor:pointer;font-family:inherit;text-align:center;transition:.18s}
+.pw:hover{border-color:var(--acc);background:var(--acc-soft)}
+.pw.play{border-color:var(--acc);background:var(--acc-soft)}
+.pw b{display:block;font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:600;letter-spacing:-.02em;color:var(--ink)}
+.pw span{display:block;font-size:11.5px;color:var(--ink3);margin-top:3px}
+.ph{font-size:12.5px;color:var(--ink3);margin:-3px 0 13px;padding-left:2px;line-height:1.5}
+.hoertest{margin-top:4px}
+.ht-q{background:var(--line2);border-radius:var(--r2);padding:15px;text-align:center;margin-bottom:10px}
+.ht-q .fr{font-size:14px;color:var(--ink2);margin-bottom:11px}
+.ht-res{font-size:14px;font-weight:600;margin-top:10px;display:none}
+.ht-res.ok{display:block;color:var(--acc-d)}
+.ht-res.no{display:block;color:var(--err)}
+
+/* Wörter & Sätze */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:9px 15px;font-family:inherit;font-size:14.5px;font-weight:500;color:var(--ink);cursor:pointer;transition:.18s;display:inline-flex;align-items:center;gap:7px}
+.chip:hover{border-color:var(--acc);color:var(--acc-d)}
+.chip.play{border-color:var(--acc);background:var(--acc-soft);color:var(--acc-d)}
+.chip .ic{color:var(--ink3)}
+.chip:hover .ic,.chip.play .ic{color:var(--acc-d)}
+.satz{border:1px solid var(--line);border-radius:var(--r2);padding:14px 15px;margin-bottom:10px;background:var(--surface)}
+.satz .s{font-size:15.5px;line-height:1.65;margin-bottom:11px}
+.satz .s .w-ok{color:var(--acc-d);font-weight:600}
+.satz .s .w-no{color:var(--err);text-decoration:underline;text-decoration-style:wavy;text-underline-offset:3px}
+.tools{display:flex;gap:7px;flex-wrap:wrap}
+.tl{border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:8px 14px;font-family:inherit;font-size:13px;font-weight:600;color:var(--ink2);cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:.18s}
+.tl:hover{border-color:var(--ink3);color:var(--ink)}
+.tl.on{border-color:var(--err);background:var(--err-soft);color:var(--err)}
+.tl.on .dot{width:8px;height:8px;border-radius:50%;background:var(--err);animation:puls 1s infinite}
+.tl:disabled{opacity:.45;cursor:not-allowed}
+.tl.acc{border-color:var(--acc-line);background:var(--acc-soft);color:var(--acc-d)}
+.erg{font-size:13.5px;line-height:1.55;margin-top:10px;padding:10px 13px;border-radius:12px;display:none}
+.erg.on{display:block}
+.erg.gut{background:var(--acc-soft);border:1px solid var(--acc-line);color:var(--acc-d)}
+.erg.mittel{background:var(--gold-soft);border:1px solid var(--gold-line);color:#6B5518}
+.erg.schlecht{background:var(--err-soft);border:1px solid var(--err-line);color:var(--err)}
+.erg b{font-weight:700}
+audio{width:100%;margin-top:9px;height:38px}
+
+.zunge{background:linear-gradient(135deg,#FDF8EA,#FBF9F5);border:1px solid var(--gold-line);border-radius:var(--r2);padding:16px 17px}
+.zunge .zt{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:600;letter-spacing:-.02em;line-height:1.45;margin-bottom:12px}
+.fin{display:flex;gap:9px;align-items:center;flex-wrap:wrap;border-top:1px solid var(--line2);margin-top:16px;padding-top:15px}
+.btn{border:none;cursor:pointer;font-family:inherit;font-weight:600;font-size:14.5px;border-radius:99px;padding:12px 22px;display:inline-flex;align-items:center;gap:8px;text-decoration:none;transition:.2s}
+.btn-p{background:var(--acc);color:#fff}
+.btn-p:hover{background:var(--acc-d)}
+.btn-s{background:var(--surface);border:1px solid var(--line);color:var(--ink2)}
+.btn-s:hover{border-color:var(--ink3);color:var(--ink)}
+.ok-lab{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--acc-d)}
+.hint{font-size:12.5px;color:var(--ink3);line-height:1.55;margin-top:12px;display:flex;gap:8px}
+.hint .ic{flex:none;margin-top:1px}
+@media(max-width:560px){.wrap{padding:16px 14px 60px}.card{padding:16px 15px}.pair{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-in">
+    <a class="icb" id="back" href="konto.html#ueben" aria-label="Zurück"></a>
+    <div class="tt"><div class="k">Dein Club</div><div class="t" id="ttl">Aussprachetraining</div></div>
+  </div>
+</header>
+<main class="wrap"><div id="stage"></div></main>
+
+<script src="ui-icons.js"></script>
+<script src="aussprache-daten.js"></script>
+<script>
+(function(){
+'use strict';
+var I=window.ICON||function(){return'';};
+var A=window.AUSSPRACHE||[];
+var NIV=['A1','A2','B1','B2','C1'];
+var filter='alle', akt=null;
+var stimme=null, rec=null, chunks=[], recTarget=null;
+
+function esc(x){return String(x==null?'':x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function done(){ try{ return JSON.parse(localStorage.getItem('dow_ausspr')||'{}'); }catch(e){ return {}; } }
+function setDone(id,v){ var m=done(); if(v)m[id]=Date.now(); else delete m[id];
+  try{ localStorage.setItem('dow_ausspr',JSON.stringify(m)); }catch(e){} }
+
+/* ---------- Sprachausgabe ---------- */
+function stimmeWaehlen(){
+  if(stimme) return stimme;
+  try{
+    var v=speechSynthesis.getVoices().filter(function(x){return /^de/i.test(x.lang);});
+    stimme=v.filter(function(x){return /google|siri|premium|natural|enhanced/i.test(x.name);})[0]||v[0]||null;
+  }catch(e){}
+  return stimme;
+}
+try{ speechSynthesis.onvoiceschanged=function(){ stimme=null; stimmeWaehlen(); }; stimmeWaehlen(); }catch(e){}
+function sprich(text,tempo,el){
+  if(!('speechSynthesis' in window)) return;
+  try{
+    speechSynthesis.cancel();
+    var u=new SpeechSynthesisUtterance(String(text).replace(/[↘↗|]/g,''));
+    u.lang='de-DE'; u.rate=tempo||0.92; u.pitch=1;
+    var v=stimmeWaehlen(); if(v) u.voice=v;
+    if(el){ el.classList.add('play'); u.onend=u.onerror=function(){ el.classList.remove('play'); }; }
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+window.__spr=function(t,tempo,el){ sprich(t,tempo,el); };
+
+/* ---------- Aufnahme ---------- */
+window.__rec=async function(btn,id){
+  var box=document.getElementById('au_'+id);
+  if(rec&&rec.state==='recording'&&recTarget===id){ rec.stop(); return; }
+  if(rec&&rec.state==='recording'){ try{ rec.stop(); }catch(e){} }
+  if(!navigator.mediaDevices||!window.MediaRecorder){ alert('Dein Browser kann leider nicht aufnehmen. Probier es in Chrome oder Safari.'); return; }
+  try{
+    var s=await navigator.mediaDevices.getUserMedia({audio:true});
+    chunks=[]; recTarget=id;
+    rec=new MediaRecorder(s);
+    rec.ondataavailable=function(e){ if(e.data.size) chunks.push(e.data); };
+    rec.onstop=function(){
+      try{ s.getTracks().forEach(function(t){t.stop();}); }catch(e){}
+      btn.classList.remove('on'); btn.innerHTML=I('mic',15)+'<span>Nochmal aufnehmen</span>';
+      var b=new Blob(chunks,{type:rec.mimeType||'audio/webm'});
+      if(box){ box.innerHTML='<audio controls src="'+URL.createObjectURL(b)+'"></audio>'; }
+    };
+    rec.start();
+    btn.classList.add('on'); btn.innerHTML='<span class="dot"></span><span>Aufnahme stoppen</span>';
+  }catch(e){ alert('Ich komme nicht ans Mikrofon. Erlaub den Zugriff in deinem Browser.'); }
+};
+
+/* ---------- Ausspracheprüfung ---------- */
+function woerter(s){
+  return String(s).toLowerCase().replace(/[^a-zäöüß\s]/g,' ').split(/\s+/).filter(Boolean);
+}
+window.__pruef=function(btn,id,ziel){
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  var out=document.getElementById('erg_'+id);
+  var sat=document.getElementById('sat_'+id);
+  if(!SR){ out.className='erg on mittel'; out.innerHTML='Dein Browser kann die Aussprache leider nicht prüfen. In Chrome funktioniert es. Nimm dich solange auf und vergleiche selbst.'; return; }
+  var r=new SR(); r.lang='de-DE'; r.interimResults=false; r.maxAlternatives=3;
+  btn.disabled=true; btn.innerHTML='<span class="dot" style="width:8px;height:8px;border-radius:50%;background:currentColor;display:inline-block"></span><span>Sprich jetzt …</span>';
+  r.onresult=function(e){
+    var beste='', bestp=-1;
+    for(var i=0;i<e.results[0].length;i++){
+      var t=e.results[0][i].transcript;
+      var p=vergleich(ziel,t).pct;
+      if(p>bestp){ bestp=p; beste=t; }
+    }
+    var v=vergleich(ziel,beste);
+    if(sat) sat.innerHTML=v.html;
+    out.className='erg on '+(v.pct>=85?'gut':v.pct>=60?'mittel':'schlecht');
+    out.innerHTML='<b>'+v.pct+'% erkannt.</b> '+(v.pct>=85
+        ? 'Das sitzt. Nimm den nächsten Satz.'
+        : v.pct>=60
+          ? 'Fast. Die unterstrichenen Wörter noch einmal langsam anhören und nachsprechen.'
+          : 'Hör dir den Satz zuerst langsam an und sprich ihn Wort für Wort mit.')
+      +'<br><span style="opacity:.8;font-weight:400">Verstanden wurde: „'+esc(beste)+'"</span>';
+    schliess();
+  };
+  r.onerror=function(){ out.className='erg on schlecht'; out.innerHTML='Ich habe nichts gehört. Prüf das Mikrofon und versuch es nochmal.'; schliess(); };
+  r.onend=function(){ schliess(); };
+  function schliess(){ btn.disabled=false; btn.innerHTML=I('target',15)+'<span>Aussprache prüfen</span>'; }
+  try{ r.start(); }catch(e){ schliess(); }
+};
+function vergleich(ziel,ist){
+  var z=woerter(ziel), i=woerter(ist), rest=i.slice(), treffer=0;
+  var html=z.map(function(w){
+    var k=rest.indexOf(w);
+    if(k>=0){ rest.splice(k,1); treffer++; return '<span class="w-ok">'+esc(w)+'</span>'; }
+    return '<span class="w-no">'+esc(w)+'</span>';
+  }).join(' ');
+  return { pct: z.length?Math.round(treffer/z.length*100):0, html: html };
+}
+
+/* ---------- Hörtest ---------- */
+window.__ht=function(id,ai){
+  var e=A.filter(function(x){return x.id===id;})[0]; if(!e) return;
+  var p=e.paare[ai]; if(!p) return;
+  var w=Math.random()<0.5?0:1;
+  document.getElementById('htw_'+id+'_'+ai).value=w;
+  sprich(p[w],0.85);
+  var r=document.getElementById('htr_'+id+'_'+ai); r.className='ht-res';
+};
+window.__htA=function(id,ai,gew){
+  var e=A.filter(function(x){return x.id===id;})[0]; if(!e) return;
+  var w=parseInt(document.getElementById('htw_'+id+'_'+ai).value,10);
+  var r=document.getElementById('htr_'+id+'_'+ai);
+  if(isNaN(w)){ r.className='ht-res no'; r.textContent='Hör dir erst den Laut an.'; return; }
+  var p=e.paare[ai];
+  if(gew===w){ r.className='ht-res ok'; r.textContent='Richtig — das war „'+p[w]+'".'; }
+  else { r.className='ht-res no'; r.textContent='Nein, das war „'+p[w]+'". Hör noch einmal hin.'; }
+};
+
+/* ---------- Übersicht ---------- */
+function uebersicht(){
+  akt=null;
+  document.getElementById('ttl').textContent='Aussprachetraining';
+  var d=done();
+  var liste=A.filter(function(e){ return filter==='alle'||e.lvl===filter; });
+  var fertig=A.filter(function(e){ return d[e.id]; }).length;
+  document.getElementById('stage').innerHTML=
+     '<h1>Deine Aussprache</h1>'
+    +'<p class="lead">Sechzehn Lauteinheiten von A1 bis C1. Zu jeder gibt es Minimalpaare zum Hören, Wörter und Sätze zum Nachsprechen — und eine Prüfung, die dir sagt, welches Wort noch nicht sitzt. '
+    +(fertig?('Du hast schon <b>'+fertig+' von '+A.length+'</b> geschafft.'):'')+'</p>'
+    +'<div class="tabs"><button class="tb'+(filter==='alle'?' on':'')+'" onclick="__flt(\'alle\')">Alle</button>'
+    + NIV.map(function(n){ return '<button class="tb'+(filter===n?' on':'')+'" onclick="__flt(\''+n+'\')">'+n+'</button>'; }).join('')
+    +'</div>'
+    +'<div class="list">'+liste.map(function(e){
+        return '<button class="li'+(d[e.id]?' done':'')+'" onclick="__open(\''+e.id+'\')">'
+         +'<span class="lv">'+(d[e.id]?I('check',16):esc(e.lvl))+'</span>'
+         +'<span class="tx"><b>'+esc(e.t)+'</b><span>'+esc(e.kurz)+'</span></span>'
+         +'<span class="ar">'+I('arrowR',17)+'</span></button>';
+      }).join('')+'</div>'
+    +'<p class="hint">'+I('spark',15)+'<span>Nimm dir eine Einheit pro Woche vor und sprich sie an drei Tagen laut nach. Aussprache ändert sich durch Wiederholung, nicht durch Verstehen.</span></p>';
+  window.scrollTo(0,0);
+}
+window.__flt=function(f){ filter=f; uebersicht(); };
+
+/* ---------- Detail ---------- */
+window.__open=function(id){
+  var e=A.filter(function(x){return x.id===id;})[0]; if(!e) return uebersicht();
+  akt=e;
+  document.getElementById('ttl').textContent=e.t;
+  var fertig=!!done()[e.id];
+
+  var paare=e.paare.map(function(p,i){
+    return '<div class="pair">'
+     +'<button class="pw" onclick="__spr(\''+esc(p[0]).replace(/'/g,"\\'")+'\',0.9,this)"><b>'+esc(p[0])+'</b><span>anhören</span></button>'
+     +'<button class="pw" onclick="__spr(\''+esc(p[1]).replace(/'/g,"\\'")+'\',0.9,this)"><b>'+esc(p[1])+'</b><span>anhören</span></button>'
+     +'</div>'
+     +(p[2]?'<div class="ph">'+esc(p[2])+'</div>':'')
+     +'<div class="hoertest"><div class="ht-q">'
+       +'<div class="fr">Hörtest: Welches Wort hörst du?</div>'
+       +'<input type="hidden" id="htw_'+e.id+'_'+i+'">'
+       +'<div class="tools" style="justify-content:center">'
+         +'<button class="tl acc" onclick="__ht(\''+e.id+'\','+i+')">'+I('speaker',15)+'<span>Abspielen</span></button>'
+         +'<button class="tl" onclick="__htA(\''+e.id+'\','+i+',0)">'+esc(p[0])+'</button>'
+         +'<button class="tl" onclick="__htA(\''+e.id+'\','+i+',1)">'+esc(p[1])+'</button>'
+       +'</div>'
+       +'<div class="ht-res" id="htr_'+e.id+'_'+i+'"></div>'
+     +'</div></div>';
+  }).join('');
+
+  var woerterHtml=e.woerter.map(function(w){
+    return '<button class="chip" onclick="__spr(\''+esc(w).replace(/'/g,"\\'")+'\',0.88,this)">'+I('speaker',14)+esc(w)+'</button>';
+  }).join('');
+
+  var saetze=e.saetze.map(function(s,i){
+    var sid=e.id+'_'+i;
+    var roh=String(s).replace(/'/g,"\\'");
+    return '<div class="satz">'
+     +'<div class="s" id="sat_'+sid+'">'+esc(s)+'</div>'
+     +'<div class="tools">'
+       +'<button class="tl acc" onclick="__spr(\''+roh+'\',0.9,this)">'+I('speaker',15)+'<span>Anhören</span></button>'
+       +'<button class="tl" onclick="__spr(\''+roh+'\',0.6,this)">'+I('clock',15)+'<span>Langsam</span></button>'
+       +'<button class="tl" onclick="__rec(this,\''+sid+'\')">'+I('mic',15)+'<span>Aufnehmen</span></button>'
+       +'<button class="tl" onclick="__pruef(this,\''+sid+'\',\''+roh+'\')">'+I('target',15)+'<span>Aussprache prüfen</span></button>'
+     +'</div>'
+     +'<div id="au_'+sid+'"></div>'
+     +'<div class="erg" id="erg_'+sid+'"></div>'
+     +'</div>';
+  }).join('');
+
+  var zid=e.id+'_zunge';
+  document.getElementById('stage').innerHTML=
+     '<button class="btn btn-s" style="margin-bottom:14px" onclick="__zur()">'+I('arrowL',16)+'<span>Alle Einheiten</span></button>'
+    +'<div class="hero"><div class="kk">Niveau '+esc(e.lvl)+'</div><h2>'+esc(e.t)+'</h2>'
+    +'<p>'+esc(e.kurz)+'</p>'
+    +'<div class="warn">'+esc(e.problem)+'</div></div>'
+
+    +'<div class="card"><div class="sec">'+I('book',14)+'Worum es geht</div>'
+    +'<p class="txt">'+esc(e.erklaerung)+'</p>'
+    +'<div class="mund">'+I('mic',17)+'<span><b>So machst du es mit dem Mund:</b> '+esc(e.mund)+'</span></div></div>'
+
+    +'<div class="card"><div class="sec">'+I('layers',14)+'Minimalpaare — hörst du den Unterschied?</div>'
+    + paare +'</div>'
+
+    +'<div class="card"><div class="sec">'+I('cards',14)+'Wörter zum Nachsprechen</div>'
+    +'<div class="chips">'+woerterHtml+'</div>'
+    +'<p class="hint">'+I('spark',15)+'<span>Tipp auf ein Wort, hör es dir an und sprich es sofort nach — im selben Tempo, mit derselben Melodie.</span></p></div>'
+
+    +'<div class="card"><div class="sec">'+I('chat',14)+'Sätze — mit Ausspracheprüfung</div>'
+    + saetze +'</div>'
+
+    +'<div class="card"><div class="sec">'+I('flag',14)+'Zungenbrecher</div>'
+    +'<div class="zunge"><div class="zt" id="sat_'+zid+'">'+esc(e.zunge)+'</div>'
+    +'<div class="tools">'
+      +'<button class="tl acc" onclick="__spr(\''+String(e.zunge).replace(/'/g,"\\'")+'\',0.85,this)">'+I('speaker',15)+'<span>Anhören</span></button>'
+      +'<button class="tl" onclick="__spr(\''+String(e.zunge).replace(/'/g,"\\'")+'\',0.55,this)">'+I('clock',15)+'<span>Ganz langsam</span></button>'
+      +'<button class="tl" onclick="__spr(\''+String(e.zunge).replace(/'/g,"\\'")+'\',1.25,this)">'+I('spark',15)+'<span>Schnell</span></button>'
+      +'<button class="tl" onclick="__rec(this,\''+zid+'\')">'+I('mic',15)+'<span>Aufnehmen</span></button>'
+      +'<button class="tl" onclick="__pruef(this,\''+zid+'\',\''+String(e.zunge).replace(/'/g,"\\'")+'\')">'+I('target',15)+'<span>Aussprache prüfen</span></button>'
+    +'</div>'
+    +'<div id="au_'+zid+'"></div><div class="erg" id="erg_'+zid+'"></div></div></div>'
+
+    +'<div class="card"><div class="sec">'+I('bookmark',14)+'Die Regel zum Mitnehmen</div>'
+    +'<div class="regel">'+I('check',18)+'<span>'+esc(e.regel)+'</span></div>'
+    +'<div class="fin">'
+    +(fertig
+      ? '<span class="ok-lab">'+I('check',16)+'Geschafft</span><button class="btn btn-s" onclick="__fertig(\''+e.id+'\',0)">Doch noch üben</button>'
+      : '<button class="btn btn-p" onclick="__fertig(\''+e.id+'\',1)">'+I('check',16)+'<span>Sitzt — abhaken</span></button>')
+    +'<button class="btn btn-s" onclick="__zur()">Zurück zur Übersicht</button>'
+    +'</div></div>';
+  window.scrollTo(0,0);
+};
+window.__zur=function(){ try{ speechSynthesis.cancel(); }catch(e){} uebersicht(); };
+window.__fertig=function(id,v){ setDone(id,!!v); __open(id); };
+
+document.getElementById('back').innerHTML=I('arrowL',19);
+uebersicht();
+})();
+</script>
+</body>
+</html>
