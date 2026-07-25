@@ -374,7 +374,14 @@ window.__zur=function(){ try{ speechSynthesis.cancel(); }catch(e){} uebersicht()
 window.__fertig=function(id,v){ setDone(id,!!v); __open(id); };
 
 document.getElementById('back').innerHTML=I('arrowL',19);
-uebersicht();
+(function(){
+  var qs=new URLSearchParams(location.search);
+  var e=(qs.get('e')||'').replace(/[^a-z0-9-]/g,'');
+  var lv=(qs.get('lv')||'').toUpperCase().replace(/[^A-C12]/g,'');
+  if(lv && ['A1','A2','B1','B2','C1'].indexOf(lv)>=0){ filter=lv; }
+  uebersicht();
+  if(e && A.some(function(x){return x.id===e;})) window.__open(e);
+})();
 })();
 </script>
 <script src="chat-knopf.js"></script>
