@@ -32,8 +32,19 @@ var TEMPO=[
  {id:60,t:'1 Stunde am Tag',  s:'Du hast es eilig — rund 7 Stunden pro Woche'}
 ];
 var LEVELPFAD={A1:'a1',A2:'a2',B1:'b1',B2:'b2',C1:'c1',C2:'c2'};
+/* Muttersprachen — dieselben Codes wie die Oberflächen-Übersetzung */
+var SPRACHEN=[
+ {id:'en', t:'English',    s:'Englisch'},
+ {id:'tr', t:'Türkçe',     s:'Türkisch'},
+ {id:'ru', t:'Русский',    s:'Russisch'},
+ {id:'uk', t:'Українська', s:'Ukrainisch'},
+ {id:'es', t:'Español',    s:'Spanisch'},
+ {id:'it', t:'Italiano',   s:'Italienisch'},
+ {id:'fa', t:'فارسی',      s:'Persisch'},
+ {id:'de', t:'Deutsch',    s:'ich brauche keine Übersetzung'}
+];
 
-var LZ = window.LZ = { data:null, offen:false };
+var LZ = window.LZ = { data:null, offen:false, SPRACHEN:SPRACHEN };
 var st={};   /* Zwischenstand im Assistenten */
 var schritt=0;
 
@@ -132,6 +143,7 @@ LZ.laden=async function(){
 /* Nach dem Login: nur beim allerersten Mal von selbst aufpoppen */
 LZ.pruefe=async function(){
   await LZ.laden();
+  LZ.spracheSetzen();
   if(!LZ.data){
     var g=null; try{ g=localStorage.getItem('dow_lz_skip'); }catch(e){}
     if(!g) LZ.starten();
@@ -140,12 +152,22 @@ LZ.pruefe=async function(){
   }
 };
 
+/* Muttersprache global verfügbar machen — Lektionen zeigen darunter die Übersetzung */
+LZ.spracheSetzen=function(){
+  var l=(LZ.data&&LZ.data.muttersprache)||null;
+  if(!l){ try{ l=localStorage.getItem('dow_l1'); }catch(e){} }
+  window.DOW_L1 = (l&&l!=='de') ? l : null;
+  try{ if(l) localStorage.setItem('dow_l1',l); }catch(e){}
+  return window.DOW_L1;
+};
+
 /* ---------- Assistent ---------- */
 LZ.starten=function(neu){
   styles();
   st = LZ.data ? {
     ziel:LZ.data.ziel, pruefung:LZ.data.pruefung, start:LZ.data.start_niveau,
-    ziel_niveau:LZ.data.ziel_niveau, termin:LZ.data.termin, minuten:LZ.data.minuten_woche
+    ziel_niveau:LZ.data.ziel_niveau, termin:LZ.data.termin, minuten:LZ.data.minuten_woche,
+    sprache:LZ.data.muttersprache
   } : { minuten:30 };
   schritt=0; LZ.offen=true;
   var ov=document.getElementById('lzov');
@@ -177,7 +199,7 @@ LZ.schliessen=function(){
 };
 
 function panes(){
-  var p=[pZiel];
+  var p=[pSprache, pZiel];
   if(st.ziel==='pruefung') p.push(pPruefung);
   p.push(pNiveau, pTermin, pTempo, pFertig);
   return p;
@@ -196,6 +218,23 @@ LZ.weiter =function(){ schritt++; mal(); };
 
 function bild(id){ return 'illu/'+id+'-s.jpg'; }
 function esc(x){ return String(x==null?'':x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+/* Schritt 0 — Muttersprache */
+function pSprache(){
+  return '<div class="lz-k">Deine Sprache</div>'
+   +'<h1 class="lz-h">Welche Sprache sprichst du am besten?</h1>'
+   +'<p class="lz-p">In den Lektionen steht dann unter jedem neuen Wort und unter jedem Dialogsatz eine kleine Übersetzung. Du musst nie raten, was etwas heißt — und nie das Handy zum Nachschlagen aus der Hand legen.</p>'
+   +'<div class="lz-chips">'+SPRACHEN.map(function(l){
+      return '<button class="lz-c'+(st.sprache===l.id?' on':'')+'" onclick="LZ.setSprache(\''+l.id+'\')">'
+        +'<span style="font-weight:700">'+l.t+'</span>'
+        +'<span style="opacity:.7;font-weight:400"> · '+l.s+'</span></button>';
+     }).join('')+'</div>'
+   +'<div class="lz-row"><button class="lz-btn p" onclick="LZ.weiter()"'+(st.sprache?'':' disabled')+'>'
+   +'<span>Weiter</span>'+I('arrowR',17)+'</button>'
+   +'<button class="lz-btn g" onclick="LZ.ohneSprache()">Meine Sprache ist nicht dabei</button></div>';
+}
+LZ.setSprache=function(id){ st.sprache=id; setTimeout(LZ.weiter,180); mal(); };
+LZ.ohneSprache=function(){ st.sprache='de'; LZ.weiter(); };
 
 /* Schritt 1 — Ziel */
 function pZiel(){
@@ -323,6 +362,9 @@ function pFertig(){
    +(t!==null?'<li>'+I('clock',17)+'<span><b>'+t+' Tage</b> bis zum '+new Date(st.termin).toLocaleDateString('de-DE',{day:'numeric',month:'long',year:'numeric'})+'</span></li>'
              :'<li>'+I('clock',17)+'<span>In deinem Tempo — ohne Termin</span></li>')
    +'<li>'+I('spark',17)+'<span><b>'+st.minuten+' Minuten</b> am Tag · rund '+proWoche+' Stunden pro Woche</span></li>'
+   +(st.sprache&&st.sprache!=='de'
+      ? '<li>'+I('book',17)+'<span>Übersetzungen auf <b>'+esc((SPRACHEN.filter(function(x){return x.id===st.sprache;})[0]||{}).t||'')+'</b> unter jedem neuen Wort</span></li>'
+      : '')
    +'<li>'+I('chat',17)+'<span>Julia liest deine Texte persönlich — und die Community ist immer da</span></li>'
    +'</ul></div>'
    +'<div class="lz-row"><button class="lz-btn p" id="lzSave" onclick="LZ.speichern()">'
@@ -336,11 +378,13 @@ LZ.speichern=async function(){
   if(b){ b.disabled=true; b.innerHTML='<span>Wird gespeichert …</span>'; }
   var row={ user_id:window.user.id, ziel:st.ziel, pruefung:st.pruefung||null,
             start_niveau:st.start||null, ziel_niveau:st.ziel_niveau||null,
-            termin:st.termin||null, minuten_woche:st.minuten||30, pfad:pfadVon() };
+            termin:st.termin||null, minuten_woche:st.minuten||30, pfad:pfadVon(),
+            muttersprache:st.sprache||null };
   try{
     var r=await window.sb.from('lernziel').upsert(row,{onConflict:'user_id'});
     if(r.error) throw r.error;
     LZ.data=row;
+    LZ.spracheSetzen();
     try{ localStorage.setItem('dow_lz_skip','1'); }catch(e){}
     LZ.schliessen();
     LZ.zeichneKarte();

@@ -53,7 +53,34 @@
 '.td-w .t b{font-weight:700;display:block}',
 /* Mission */
 '.td-m{background:var(--surf);border:1px solid var(--line);border-radius:20px;overflow:hidden;margin-bottom:13px;box-shadow:0 1px 2px rgba(23,23,23,.04),0 12px 30px -26px rgba(23,23,23,.6)}',
+'.td-m .mim{position:relative;display:block;width:100%;aspect-ratio:16/7;overflow:hidden;background:var(--line2)}',
+'.td-m .mim img{display:block;width:100%;height:100%;object-fit:cover}',
 '.td-m .mh{background:linear-gradient(135deg,#0E7C70,#12A594);color:#fff;padding:17px 19px}',
+/* Termin & Raum */
+'.td-t{background:var(--surf);border:1px solid var(--line);border-radius:20px;overflow:hidden;margin-bottom:13px;box-shadow:0 1px 2px rgba(23,23,23,.04),0 12px 30px -26px rgba(23,23,23,.6)}',
+'.td-t .th{display:flex;align-items:center;gap:10px;padding:15px 17px 0}',
+'.td-t .th .ic{color:var(--acc-d)}',
+'.td-t .th b{font-family:"Space Grotesk",Inter,sans-serif;font-size:15.5px;font-weight:600;letter-spacing:-.02em}',
+'.td-t .tb{padding:13px 17px 17px}',
+'.td-next{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,#0E7C70,#12A594);color:#fff;border-radius:16px;padding:15px 16px;margin-bottom:12px}',
+'.td-next .dt{flex:none;text-align:center;background:rgba(255,255,255,.18);border-radius:12px;padding:8px 12px;min-width:62px}',
+'.td-next .dt .d{font-family:"Space Grotesk",Inter,sans-serif;font-size:22px;font-weight:700;line-height:1}',
+'.td-next .dt .m{font-size:11px;opacity:.9;margin-top:2px;text-transform:uppercase;letter-spacing:.05em}',
+'.td-next .nx{flex:1;min-width:0}',
+'.td-next .nx b{display:block;font-family:"Space Grotesk",Inter,sans-serif;font-size:16px;font-weight:600;letter-spacing:-.015em}',
+'.td-next .nx span{display:block;font-size:13px;opacity:.92;margin-top:2px}',
+'.td-vor{display:flex;align-items:flex-start;gap:11px;background:#FDF8EA;border:1px solid #F0E2BD;border-radius:14px;padding:13px 15px;margin-bottom:12px;font-size:14px;line-height:1.55;color:#6B5518}',
+'.td-vor .ic{color:#B8931A;flex:none;margin-top:2px}',
+'.td-form{display:flex;gap:8px;flex-wrap:wrap;align-items:center}',
+'.td-form input{border:1.5px solid var(--line);border-radius:13px;padding:10px 13px;font-family:inherit;font-size:14.5px;color:var(--ink);background:var(--surf);outline:none;transition:border-color .2s}',
+'.td-form input:focus{border-color:var(--acc)}',
+'.td-raum{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;border:none;border-radius:99px;padding:14px 22px;font-family:inherit;font-weight:600;font-size:15px;cursor:pointer;text-decoration:none;transition:.2s;background:var(--line2);color:var(--ink3)}',
+'.td-raum.live{background:var(--acc);color:#fff;box-shadow:0 10px 26px -14px rgba(18,165,148,1)}',
+'.td-raum.live:hover{background:var(--acc-d)}',
+'.td-raum.bereit{background:var(--surf);border:1.5px solid var(--acc);color:var(--acc-d)}',
+'.td-raum .pt{width:9px;height:9px;border-radius:50%;background:#fff;animation:td-blink 1.4s infinite}',
+'@keyframes td-blink{0%,100%{opacity:1}50%{opacity:.35}}',
+'.td-hist{font-size:12.5px;color:var(--ink3);margin-top:11px;line-height:1.55}',
 '.td-m .mh .kk{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;opacity:.84;margin-bottom:5px}',
 '.td-m .mh h3{margin:0 0 6px;font-family:"Space Grotesk",Inter,sans-serif;font-size:20px;font-weight:700;letter-spacing:-.025em}',
 '.td-m .mh p{margin:0;font-size:13.5px;line-height:1.55;opacity:.94}',
@@ -127,6 +154,7 @@
     if(!m) return '';
     var fertig=!!doneMap()[m.id];
     return '<div class="td-m" id="tdM">'
+     +(m.bild?'<span class="mim"><img src="illu/'+E(m.bild)+'.jpg" alt="" onerror="this.parentNode.style.display=\'none\'"></span>':'')
      +'<div class="mh"><div class="kk">Eure Mission</div><h3>'+E(m.t)+'</h3><p>'+E(m.ziel)+'</p>'
      +'<div class="mm"><span>'+E(lv)+'</span><span>'+E(m.dauer)+'</span><span>zu zweit</span></div></div>'
      +'<div class="mb">'
@@ -156,6 +184,122 @@
     if(d<=0) return 'seit heute';
     if(d===1) return 'seit gestern';
     return 'seit '+d+' Tagen';
+  }
+
+  /* ---------- Termin & Raum ---------- */
+  var RAUM=null, TERMINE=[];
+  async function ladeRaum(){
+    var sb=getSb(); RAUM=null; TERMINE=[];
+    if(!sb) return null;
+    try{ var r=await sb.rpc('buddy_raum'); RAUM=(r&&r.data&&r.data[0])||null; }catch(e){}
+    if(RAUM){
+      try{
+        var t=await sb.from('buddy_termine').select('*')
+          .eq('match_id',RAUM.match_id).neq('status','abgesagt')
+          .order('wann',{ascending:true});
+        TERMINE=(t&&t.data)||[];
+      }catch(e){}
+    }
+    return RAUM;
+  }
+  function meineId(){ try{ return (window.user&&window.user.id)||null; }catch(e){ return null; } }
+  var WT=['So','Mo','Di','Mi','Do','Fr','Sa'];
+  var MO=['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+  function uhr(d){ return d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}); }
+  function inTagen(d){
+    var h=new Date(); h.setHours(0,0,0,0);
+    var z=new Date(d); z.setHours(0,0,0,0);
+    var n=Math.round((z-h)/86400000);
+    if(n===0) return 'heute';
+    if(n===1) return 'morgen';
+    if(n<0) return 'vorbei';
+    if(n<7) return 'in '+n+' Tagen';
+    return 'am '+z.getDate()+'. '+MO[z.getMonth()];
+  }
+  function raumHref(name){
+    if(!RAUM) return '#';
+    return 'tandem-raum.html?raum='+encodeURIComponent(RAUM.raum)+'&mit='+encodeURIComponent(name||'');
+  }
+  function terminHtml(partnerName){
+    if(!RAUM) return '';
+    var jetzt=Date.now(), ich=meineId();
+    var best=null, offen=null;
+    TERMINE.forEach(function(t){
+      var w=new Date(t.wann).getTime();
+      var ende=w+(t.dauer_min||20)*60000;
+      if(t.status==='bestaetigt'&&ende>jetzt-0&&!best) best=t;
+      if(t.status==='vorgeschlagen'&&w>jetzt&&!offen) offen=t;
+    });
+    var kopf='<div class="th">'+I('clock',17)+'<b>Euer Termin</b></div>';
+    var body='';
+
+    if(best){
+      var d=new Date(best.wann), w=d.getTime(), ende=w+(best.dauer_min||20)*60000;
+      var live = jetzt>=w-10*60000 && jetzt<=ende;
+      body+='<div class="td-next"><span class="dt"><span class="d">'+d.getDate()+'</span><span class="m">'+MO[d.getMonth()]+'</span></span>'
+        +'<span class="nx"><b>'+WT[d.getDay()]+', '+uhr(d)+' Uhr</b>'
+        +'<span>'+(live?'Jetzt — dein Partner wartet vielleicht schon.':inTagen(d)+' · '+(best.dauer_min||20)+' Minuten')+'</span></span></div>'
+        +'<a class="td-raum '+(live?'live':'bereit')+'" href="'+raumHref(partnerName)+'" target="_blank" rel="noopener">'
+        +(live?'<span class="pt"></span>':I('play',16))
+        +'<span>'+(live?'Jetzt in euren Raum':'Euer Raum — jederzeit betreten')+'</span></a>'
+        +'<div class="td-form" style="margin-top:10px"><button class="td-btn s" style="flex:1" data-tabsage="'+best.id+'">Termin absagen</button></div>';
+    } else if(offen){
+      var od=new Date(offen.wann);
+      if(offen.von===ich){
+        body+='<div class="td-vor">'+I('clock',17)+'<span><b>Du hast '+WT[od.getDay()]+', '+od.getDate()+'. '+MO[od.getMonth()]+' um '+uhr(od)+' Uhr vorgeschlagen.</b><br>'
+          +E(partnerName||'Dein Partner')+' muss nur noch bestätigen.</span></div>'
+          +'<div class="td-form"><button class="td-btn s" style="flex:1" data-tabsage="'+offen.id+'">Vorschlag zurücknehmen</button></div>';
+      } else {
+        body+='<div class="td-vor">'+I('spark',17)+'<span><b>'+E(partnerName||'Dein Partner')+' schlägt '+WT[od.getDay()]+', '+od.getDate()+'. '+MO[od.getMonth()]+' um '+uhr(od)+' Uhr vor.</b><br>Passt dir das?</span></div>'
+          +'<div class="td-form"><button class="td-btn p" style="flex:1" data-tja="'+offen.id+'">'+I('check',15)+'<span>Passt — abgemacht</span></button>'
+          +'<button class="td-btn s" data-tabsage="'+offen.id+'">Passt nicht</button></div>';
+      }
+      body+='<a class="td-raum bereit" style="margin-top:11px" href="'+raumHref(partnerName)+'" target="_blank" rel="noopener">'+I('play',16)+'<span>Raum jetzt schon öffnen</span></a>';
+    } else {
+      var m=new Date(Date.now()+86400000);
+      var iso=m.getFullYear()+'-'+String(m.getMonth()+1).padStart(2,'0')+'-'+String(m.getDate()).padStart(2,'0');
+      body+='<p class="td-p" style="margin-bottom:11px">Ihr habt noch keinen Termin. Schlag einen vor — dein Partner muss nur noch tippen.</p>'
+        +'<div class="td-form">'
+        +'<input type="date" id="tdDat" value="'+iso+'" min="'+iso+'">'
+        +'<input type="time" id="tdZeit" value="19:00" step="900">'
+        +'<button class="td-btn p" data-tneu="1">'+I('check',15)+'<span>Vorschlagen</span></button>'
+        +'</div>'
+        +'<a class="td-raum bereit" style="margin-top:12px" href="'+raumHref(partnerName)+'" target="_blank" rel="noopener">'+I('play',16)+'<span>Oder einfach jetzt in den Raum</span></a>';
+    }
+    var vergangen=TERMINE.filter(function(t){ return t.status==='bestaetigt'&&new Date(t.wann).getTime()<jetzt-3600000; }).length;
+    if(vergangen) body+='<div class="td-hist">'+vergangen+' gemeinsame '+(vergangen===1?'Sitzung':'Sitzungen')+' bisher. Weiter so.</div>';
+    return '<div class="td-t">'+kopf+'<div class="tb">'+body+'</div></div>';
+  }
+  function bindTermin(root,neu){
+    var sb=getSb(), ich=meineId();
+    Array.prototype.forEach.call(root.querySelectorAll('[data-tneu]'),function(b){
+      b.addEventListener('click',async function(){
+        var d=root.querySelector('#tdDat'), z=root.querySelector('#tdZeit');
+        if(!d||!d.value||!z||!z.value) return;
+        var wann=new Date(d.value+'T'+z.value+':00');
+        if(isNaN(wann.getTime())||wann.getTime()<Date.now()){ alert('Bitte einen Termin in der Zukunft wählen.'); return; }
+        b.disabled=true;
+        try{
+          var r=await sb.from('buddy_termine').insert({ match_id:RAUM.match_id, wann:wann.toISOString(), von:ich });
+          if(r.error) throw r.error;
+        }catch(e){ alert('Das hat nicht geklappt: '+(e.message||'unbekannt')); b.disabled=false; return; }
+        await ladeRaum(); neu();
+      });
+    });
+    Array.prototype.forEach.call(root.querySelectorAll('[data-tja]'),function(b){
+      b.addEventListener('click',async function(){
+        b.disabled=true;
+        try{ await sb.from('buddy_termine').update({status:'bestaetigt'}).eq('id',b.getAttribute('data-tja')); }catch(e){}
+        await ladeRaum(); neu();
+      });
+    });
+    Array.prototype.forEach.call(root.querySelectorAll('[data-tabsage]'),function(b){
+      b.addEventListener('click',async function(){
+        b.disabled=true;
+        try{ await sb.from('buddy_termine').update({status:'abgesagt'}).eq('id',b.getAttribute('data-tabsage')); }catch(e){}
+        await ladeRaum(); neu();
+      });
+    });
   }
 
   function widgetHtml(s){
@@ -245,6 +389,7 @@
     r.classList.add('td');
     r.innerHTML='<div class="pagehead"><h1>Sprech-Tandem</h1></div><div class="td-card"><p class="td-p">Wird geladen …</p></div>';
     var s=await call('buddy_status');
+    if(s&&s.state==='matched') await ladeRaum();
     var lvAkt=niveau(), mAkt=null;
 
     var paint=function(pickId,pickLv){
@@ -277,6 +422,9 @@
         +'<div>'
           +'<div class="td-sec">Dein Partner</div>'
           +'<div class="td-card" id="tdW">'+widgetHtml(s)+'</div>'
+          + ((s&&s.state==='matched'&&RAUM)
+              ? '<div class="td-sec" style="margin-top:22px">Termin & Raum</div>'+terminHtml(s.buddy&&s.buddy.name)
+              : '')
           +'<div class="td-sec" style="margin-top:22px">So läuft es ab</div>'
           +'<div class="td-card">'
             +'<div class="td-s"><ol style="gap:11px">'
@@ -290,8 +438,9 @@
         +'</div></div>';
 
       var w=document.getElementById('tdW');
-      if(w){ w.__s=s; bind(w,function(x){ s=x; paint(m?m.id:null); }); }
+      if(w){ w.__s=s; bind(w,async function(x){ s=x; if(x&&x.state==='matched') await ladeRaum(); paint(m?m.id:null); }); }
       bindMission(r,paint);
+      bindTermin(r,function(){ paint(m?m.id:null); });
     };
     paint();
   }

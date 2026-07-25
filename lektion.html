@@ -233,11 +233,47 @@ var LID=K+'-'+L;
 document.getElementById('backBtn').innerHTML=I('arrowL',19);
 function fail(m){ document.getElementById('stage').innerHTML='<div class="card err"><div style="color:var(--ink3);margin-bottom:14px">'+I('book',40)+'</div><h1>Nicht gefunden</h1><p class="lead" style="max-width:340px;margin:0 auto 22px">'+m+'</p><a class="btn btn-p" style="text-decoration:none" href="konto.html#kurse">Zur Kursbibliothek</a></div>'; }
 if(!K||!L){ fail('Diese Lektion existiert nicht.'); return; }
+/* Muttersprache des Mitglieds — dafuer laden wir die Uebersetzungen */
+var L1=null;
+try{ L1=window.DOW_L1||localStorage.getItem('dow_l1')||null; }catch(e){}
+if(L1==='de') L1=null;
+function tr(de){
+  if(!L1||!window.LEKTION_TR) return '';
+  var e=window.LEKTION_TR[String(de)];
+  return (e&&e[L1])||'';
+}
+function trZ(de,cls){
+  var t=tr(de);
+  if(!t) return '';
+  var r=(L1==='fa'||L1==='ar')?' rtl':'';
+  return '<div class="tr'+r+(cls?' '+cls:'')+'">'+esc(t)+'</div>';
+}
+
 var sc=document.createElement('script');
 sc.src='kurse/'+K+'-l'+L+'.js';
-sc.onload=function(){ window.LEKTION?boot(window.LEKTION):fail('Diese Lektion ist noch nicht verfügbar.'); };
+sc.onload=function(){
+  if(!window.LEKTION){ fail('Diese Lektion ist noch nicht verfügbar.'); return; }
+  if(!L1){ boot(window.LEKTION); return; }
+  var tc=document.createElement('script');
+  tc.src='kurse/tr/'+K+'-l'+L+'.js';
+  tc.onload=tc.onerror=function(){ boot(window.LEKTION); };
+  document.head.appendChild(tc);
+};
 sc.onerror=function(){ fail('Diese Lektion wird gerade erstellt — sie kommt bald.'); };
 document.head.appendChild(sc);
+
+(function(){
+  var st=document.createElement('style'); st.id='tr-style';
+  st.textContent=[
+   '.tr{font-size:13.5px;line-height:1.5;color:var(--ink3);margin-top:3px}',
+   '.tr::before{content:"";display:inline-block;width:12px;height:1.5px;background:var(--line);vertical-align:.35em;margin-right:7px;border-radius:2px}',
+   '.w .tr{font-size:12.5px;margin-top:2px}',
+   '.goals .tr{margin-top:1px}',
+   '.tr.rtl{direction:rtl;text-align:right}',
+   '.tr.rtl::before{margin:0 0 0 7px}'
+  ].join('\n');
+  document.head.appendChild(st);
+})();
 
 function bild(id,w){ if(!id) return '';
   if(id.indexOf('photo-')===0) return 'https://images.unsplash.com/'+id+'?auto=format&fit=crop&w='+(w||900)+'&q=62';
@@ -314,7 +350,7 @@ function draw(){
 }
 /* ---------- Ansichten ---------- */
 function vIntro(){
-  var g=(D.intro.du_lernst||[]).map(function(x){return '<li>'+esc(x)+'</li>';}).join('');
+  var g=(D.intro.du_lernst||[]).map(function(x){return '<li>'+esc(x)+trZ(x)+'</li>';}).join('');
   var im=bild(D.meta.bild,1000);
   return '<div class="card flush">'
     +(im?'<div class="hero"><img src="'+im+'" alt=""></div>':'')
@@ -324,6 +360,7 @@ function vIntro(){
     +'<div class="facts"><span>'+I('chart',14)+esc(D.meta.level)+'</span><span>'+I('clock',14)+esc(D.meta.dauer||'ca. 15 Min')+'</span>'
     +(total?'<span>'+I('puzzle',14)+total+' Übungen</span>':'')+'</div>'
     +'<p class="lead" style="margin-top:16px">'+esc(D.intro.text)+'</p>'
+    +trZ(D.intro.text)
     +'<div class="rlabel" style="margin:22px 0 2px">'+I('target',15)+'Das lernst du</div>'
     +'<ul class="goals">'+g+'</ul></div></div>';
 }
@@ -331,12 +368,12 @@ function vDlg(){
   var t=D.dialog.lines.map(function(l,i){
     return '<div class="turn '+(i%2?'b':'a')+'" id="t'+i+'" style="animation-delay:'+(i*70)+'ms">'
       +'<span class="who">'+esc(l.sp[0])+'</span>'
-      +'<div class="txt"><div class="nm">'+esc(l.sp)+'</div><div class="ln">'+esc(l.txt)+'</div></div>'
+      +'<div class="txt"><div class="nm">'+esc(l.sp)+'</div><div class="ln">'+esc(l.txt)+'</div>'+trZ(l.txt)+'</div>'
       +'<button class="sp" onclick="__say(this,\''+qo(l.txt)+'\',event)" aria-label="Anhören">'+I('speaker',15)+'</button></div>';
   }).join('');
   var im=bild(D.dialog.bild||D.meta.bild,900);
   return '<div class="card"><h2>'+I('headset',19)+'Dialog</h2><p class="sub">Hör zu und lies mit. Tippe eine Zeile an, um sie einzeln zu hören.</p>'
-    +(im?'<div class="scene"><img src="'+im+'" alt=""></div><p class="scap">'+esc(D.dialog.situation||'')+'</p>':'<p class="scap">'+esc(D.dialog.situation||'')+'</p>')
+    +(im?'<div class="scene"><img src="'+im+'" alt=""></div><p class="scap">'+esc(D.dialog.situation||'')+trZ(D.dialog.situation||'')+'</p>':'<p class="scap">'+esc(D.dialog.situation||'')+trZ(D.dialog.situation||'')+'</p>')
     +'<div class="playbar"><button class="playbtn" id="pb" onclick="__playAll()">'+I('play',17)+'</button><span class="pl">Ganzen Dialog anhören</span></div>'
     +'<div class="turns">'+t+'</div></div>';
 }
@@ -355,6 +392,7 @@ function vWords(){
     var tile=v.bild?'<img src="'+bild(v.bild,160)+'" alt="">':(v.em||'');
     return '<div class="w" style="animation-delay:'+(i*30)+'ms" onclick="__say(this.querySelector(\'.sp\'),\''+qo(v.de)+'\')">'
       +'<span class="tile">'+tile+'</span><div class="wt"><div class="de">'+esc(v.de)+'</div>'
+      +trZ(v.de)
       +(v.bsp?'<div class="ex">'+esc(v.bsp)+'</div>':'')+'</div>'
       +'<span class="sp">'+I('speaker',15)+'</span></div>';
   }).join('');
