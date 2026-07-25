@@ -1,226 +1,465 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Lektion · deutschoderwas Sprechclub</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lektion – deutschoderwas club</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--cream:#FDF6EC;--cream-warm:#FBEDD8;--paper:#FFFFFF;--ink:#262019;--ink-soft:#5C4E3E;--ink-mute:#A8957D;
-  --red:#E8302A;--red-soft:#FCE5E3;--teal:#0FB5A6;--teal-soft:#D7F0EC;--yellow:#FFD24A;--yellow-soft:#FFF1C2;--sand:#F0E2C8;--green:#1Fae8a;
-  --accent:#0FB5A6;--radius:18px;--shadow:0 10px 30px rgba(38,32,25,.08);--font-head:'Fraunces',Georgia,serif;--font-body:'Outfit','Segoe UI',system-ui,sans-serif;}
-*{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;}
-body{background:linear-gradient(180deg,var(--cream-warm) 0%,var(--cream) 16%,var(--cream) 100%);color:var(--ink);font-family:var(--font-body);line-height:1.55;min-height:100vh;-webkit-font-smoothing:antialiased;}
-.wrapper{max-width:860px;margin:0 auto;padding:1.6rem 1.2rem 4.5rem;}
-/* HERO */
-.hero{position:relative;border-radius:24px;overflow:hidden;margin-bottom:1.4rem;box-shadow:var(--shadow);min-height:240px;display:flex;align-items:flex-end;
-  background:linear-gradient(135deg,var(--accent) 0%,color-mix(in srgb,var(--accent) 55%,#000) 100%);}
-.hero.hasimg{align-items:flex-end;}
-.hero img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;}
-.hero .veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.55));z-index:1;}
-.hero .blob{position:absolute;border-radius:50%;filter:blur(2px);opacity:.25;z-index:0;}
-.hero .blob.b1{width:200px;height:200px;background:#fff;top:-60px;right:-40px;}
-.hero .blob.b2{width:150px;height:150px;background:#000;bottom:-50px;left:30%;opacity:.12;}
-.hero .emoji{position:absolute;top:18px;right:22px;font-size:3.4rem;z-index:2;filter:drop-shadow(0 4px 8px rgba(0,0,0,.2));}
-.hero .htext{position:relative;z-index:3;padding:1.5rem 1.6rem 1.4rem;color:#fff;}
-.hero .eyebrow{font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;opacity:.92;margin-bottom:.5rem;}
-.hero h1{font-family:var(--font-head);font-weight:600;font-size:clamp(1.7rem,4.6vw,2.8rem);line-height:1.08;}
-.hero .badge{display:inline-block;background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.5);color:#fff;font-weight:700;font-size:.78rem;padding:4px 12px;border-radius:999px;margin-top:.7rem;}
-nav.tabs{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;padding:.6rem .5rem;margin:0 0 1.6rem;background:rgba(253,246,236,.92);backdrop-filter:blur(8px);border:1px solid var(--sand);border-radius:999px;}
-nav.tabs a{font-size:.82rem;font-weight:600;color:var(--ink-soft);text-decoration:none;padding:.38rem .8rem;border-radius:999px;}
-nav.tabs a:hover{background:var(--cream-warm);}
-section.block{background:var(--paper);border:1px solid var(--sand);border-radius:var(--radius);padding:1.6rem;margin-bottom:1.3rem;box-shadow:var(--shadow);scroll-margin-top:4.5rem;opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease;}
-section.block.in{opacity:1;transform:none;}
-.block.alt{background:var(--cream-warm);}
-.block-head{font-family:var(--font-head);font-weight:600;font-size:clamp(1.2rem,3vw,1.6rem);margin-bottom:.4rem;}
-.block-head .hl{color:var(--accent);font-style:italic;}
-.block-intro{color:var(--ink-soft);margin-bottom:1rem;}
-.intro-lead{font-size:1.08rem;color:var(--ink-soft);}
-.tip{background:var(--yellow-soft);border-left:4px solid var(--yellow);border-radius:14px;padding:1rem 1.1rem;}
-.tip b{display:block;font-family:var(--font-head);font-size:1.05rem;margin-bottom:.3rem;color:var(--ink);}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.8rem;}
-.fcard{height:150px;cursor:pointer;perspective:1000px;}
-.fc-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
-.fcard.flip .fc-inner{transform:rotateY(180deg);}
-.fc-front,.fc-back{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border:1px solid var(--sand);border-radius:14px;padding:.9rem;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;}
-.fc-front{background:var(--cream);}
-.fc-back{background:var(--teal-soft);transform:rotateY(180deg);font-style:italic;color:#063b35;font-size:.94rem;line-height:1.45;}
-.fc-front b{font-size:1.1rem;}
-.fc-hint{font-size:.7rem;color:var(--ink-mute);margin-top:.4rem;}
-/* EXERCISES */
-.ex{background:var(--cream);border:1px solid var(--sand);border-radius:14px;padding:1rem 1.1rem;margin-bottom:.8rem;}
-.ex .q{font-weight:600;margin-bottom:.6rem;}
-.ex .q .blank{display:inline-block;min-width:54px;border-bottom:2px solid var(--accent);}
-.opt{display:block;width:100%;text-align:left;background:var(--paper);border:1px solid var(--sand);border-radius:10px;padding:.6rem .8rem;margin:.3rem 0;cursor:pointer;font-family:inherit;font-size:.97rem;}
-.opt:hover{background:var(--cream-warm);}
-.opt.right{background:var(--teal-soft);border-color:var(--teal);font-weight:600;color:#063b35;}
-.opt.wrong{background:var(--red-soft);border-color:var(--red);}
-.gapin{border:1px solid var(--sand);border-radius:8px;padding:.35rem .5rem;font-family:inherit;font-size:.97rem;min-width:120px;}
-.gapin.ok{background:var(--teal-soft);border-color:var(--teal);}
-.gapin.no{background:var(--red-soft);border-color:var(--red);}
-.chips{display:flex;flex-wrap:wrap;gap:.4rem;margin:.5rem 0;}
-.chip{background:var(--paper);border:1px solid var(--sand);border-radius:999px;padding:.35rem .8rem;cursor:pointer;font-size:.95rem;}
-.chip.used{opacity:.35;pointer-events:none;}
-.answerline{min-height:42px;border:1px dashed var(--sand);border-radius:10px;padding:.5rem .7rem;margin:.4rem 0;background:var(--paper);font-size:1rem;}
-.matchrow{display:flex;gap:.6rem;align-items:center;margin:.35rem 0;}
-.matchrow .l{flex:1;background:var(--paper);border:1px solid var(--sand);border-radius:8px;padding:.5rem .7rem;}
-.matchrow select{flex:1;border:1px solid var(--sand);border-radius:8px;padding:.5rem;font-family:inherit;}
-.matchrow select.ok{background:var(--teal-soft);border-color:var(--teal);}
-.matchrow select.no{background:var(--red-soft);border-color:var(--red);}
-.btn{display:inline-block;background:var(--accent);color:#fff;font-weight:700;border:none;border-radius:999px;padding:.5rem 1.1rem;cursor:pointer;font-family:inherit;font-size:.92rem;margin-top:.4rem;}
-.btn.dark{background:var(--ink);}
-.btn.ghost{background:transparent;color:var(--accent);border:2px solid var(--accent);}
-.fb{font-size:.92rem;font-weight:600;margin-top:.5rem;min-height:1.1em;}
-.fb.good{color:#0a7d63;}.fb.bad{color:var(--red);}
-.sample{background:var(--teal-soft);border-radius:10px;padding:.6rem .8rem;margin-top:.5rem;font-size:.92rem;color:#063b35;display:none;}
-.subhead{font-weight:700;color:var(--ink-soft);margin:.2rem 0 .6rem;font-size:.95rem;}
-.speak{text-align:center;}
-.speak .card{background:var(--cream);border:1px solid var(--sand);border-radius:16px;padding:1.6rem 1.2rem;min-height:120px;display:flex;align-items:center;justify-content:center;font-size:1.16rem;font-weight:600;font-family:var(--font-head);}
-.speak .card .ph{color:var(--ink-mute);font-family:var(--font-body);font-weight:400;}
-.speak ul{list-style:none;margin:1rem 0 0;display:flex;flex-direction:column;gap:.5rem;}
-.speak li{background:var(--cream);border:1px solid var(--sand);border-radius:12px;padding:.7rem .9rem;text-align:left;color:var(--ink-soft);}
-section.mission{background:var(--ink);color:var(--cream);border-radius:var(--radius);padding:1.4rem 1.5rem;}
-section.mission p,.mission .block-head{color:var(--cream);}
-.loading,.error{text-align:center;color:var(--ink-soft);padding:4rem 1rem;font-size:1.1rem;}
-.error a{color:var(--red);font-weight:700;}
-footer{text-align:center;color:var(--ink-mute);font-size:.84rem;margin-top:1.8rem;}
-footer .mark{font-family:var(--font-head);font-weight:600;color:var(--ink);}footer .mark .t{color:var(--teal);}
+:root{--turq:#2DD4BF;--turq-d:#14B8A6;--turq-ink:#0F766E;--btn-ink:#06403A;--ink:#1A1A1A;--soft:#6B7280;--line:#F0E5D8;--red:#DD0000;--gold:#FFCE00;--ok:#12A594;--bad:#D93A3A}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:'Inter',system-ui,sans-serif;color:var(--ink);background:linear-gradient(160deg,#FFFCF5,#FFF4D6);min-height:100vh}
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{transform:scale(.94)}60%{transform:scale(1.03)}100%{transform:scale(1)}}
+.bar{background:rgba(255,252,245,.94);backdrop-filter:blur(10px);border-bottom:1px solid #ECECEC;position:sticky;top:0;z-index:20}
+.bar-in{max-width:780px;margin:0 auto;padding:11px 16px;display:flex;align-items:center;gap:12px}
+.bk{text-decoration:none;color:var(--soft);font-weight:700;font-size:14px;padding:7px 13px;border-radius:30px;border:1.5px solid #ECECEC;background:#fff;white-space:nowrap;transition:transform .2s,color .2s}
+.bk:hover{color:var(--ink);transform:translateX(-2px)}
+.bt{flex:1;min-width:0}
+.bt .k{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--turq-ink)}
+.bt .t{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lvl{background:var(--gold);color:#3a2f00;font-weight:800;font-size:12px;padding:4px 11px;border-radius:999px;flex:none}
+.prog{height:4px;background:#F1EADF}
+.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--turq),var(--turq-d));border-radius:0 4px 4px 0;transition:width .45s cubic-bezier(.16,1,.3,1)}
+.wrap{max-width:780px;margin:0 auto;padding:20px 16px 96px}
+.steps{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 18px}
+.stp{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--soft);background:#fff;border:1px solid #ECECEC;border-radius:999px;padding:6px 12px;transition:.25s}
+.stp.on{background:var(--btn-ink);border-color:var(--btn-ink);color:#fff}
+.stp.done{color:var(--turq-ink);border-color:#C4F0E6;background:#E6FAF5}
+.card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px 20px;box-shadow:0 1px 2px rgba(20,20,20,.04),0 10px 30px -14px rgba(20,20,20,.12);animation:up .5s cubic-bezier(.16,1,.3,1) both;margin-bottom:14px;overflow:hidden}
+.card.flush{padding:0}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11.5px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--red);margin:0 0 8px}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(23px,5vw,29px);font-weight:700;letter-spacing:-.02em;line-height:1.15;margin:0 0 8px}
+h2{font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:700;letter-spacing:-.01em;margin:0 0 12px}
+.muted{color:var(--soft);font-size:14.5px;line-height:1.6}
+/* ---------- Hero ---------- */
+.hero{position:relative;min-height:210px;display:flex;align-items:flex-end;overflow:hidden}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero .ov{position:absolute;inset:0;background:linear-gradient(180deg,rgba(26,26,26,.15) 0%,rgba(26,26,26,.55) 55%,rgba(26,26,26,.82) 100%)}
+.hero .hx{position:relative;z-index:2;padding:24px 22px;width:100%}
+.hero .hb{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.94);color:#1A1A1A;font-weight:800;font-size:11px;letter-spacing:.1em;text-transform:uppercase;border-radius:999px;padding:4px 11px;margin-bottom:9px}
+.hero h1{color:#fff;margin:0 0 4px;text-shadow:0 2px 14px rgba(0,0,0,.4)}
+.hero .hs{color:rgba(255,255,255,.93);font-size:14px;font-weight:600;text-shadow:0 1px 8px rgba(0,0,0,.35)}
+.introbody{padding:20px}
+.lz{list-style:none;margin:10px 0 0;padding:0;counter-reset:lz}
+.lz li{counter-increment:lz;position:relative;padding:10px 0 10px 42px;font-size:15px;font-weight:600;border-bottom:1px solid #F6F1E8}
+.lz li:last-child{border-bottom:none}
+.lz li::before{content:counter(lz);position:absolute;left:0;top:8px;width:27px;height:27px;border-radius:50%;background:#E6FAF5;color:var(--turq-ink);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+.meta{display:flex;gap:14px;flex-wrap:wrap;margin-top:16px;color:var(--soft);font-size:13px;font-weight:600;border-top:1px solid #F6F1E8;padding-top:14px}
+/* ---------- Audio / Dialog ---------- */
+.spk{border:none;background:#E6FAF5;color:var(--turq-ink);width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:15px;display:inline-flex;align-items:center;justify-content:center;flex:none;transition:transform .2s,background .2s}
+.spk:hover{transform:scale(1.08);background:#C4F0E6}
+.spk.playing{background:var(--turq);color:var(--btn-ink);animation:pop .4s}
+.scene{position:relative;border-radius:16px;overflow:hidden;margin:0 0 14px;height:150px}
+.scene img{width:100%;height:100%;object-fit:cover}
+.scene .sc-ov{position:absolute;inset:0;background:linear-gradient(180deg,rgba(26,26,26,.05),rgba(26,26,26,.6))}
+.scene .sc-tx{position:absolute;left:0;right:0;bottom:0;padding:12px 15px;color:#fff;font-size:13.5px;font-weight:600;text-shadow:0 1px 8px rgba(0,0,0,.4)}
+.dlg{display:flex;flex-direction:column;gap:10px;margin-top:6px}
+.dl{display:flex;gap:10px;align-items:flex-start;animation:up .45s cubic-bezier(.16,1,.3,1) both}
+.dl .av{width:38px;height:38px;border-radius:50%;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;flex:none;color:#fff}
+.dl.a .av{background:linear-gradient(135deg,#2DD4BF,#14B8A6)}
+.dl.b .av{background:linear-gradient(135deg,#DD0000,#B30000)}
+.dl .bb{background:#FFFCF5;border:1px solid var(--line);border-radius:4px 16px 16px 16px;padding:10px 14px;font-size:15.5px;line-height:1.55;flex:1}
+.dl.b .bb{border-radius:16px 4px 16px 16px}
+.dl .nm{font-size:11px;font-weight:800;color:var(--soft);margin-bottom:2px;text-transform:uppercase;letter-spacing:.06em}
+.dl.hl .bb{border-color:var(--turq);box-shadow:0 0 0 3px rgba(45,212,191,.18)}
+/* ---------- Vokabeln ---------- */
+.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin-top:6px}
+.vc{border:1px solid var(--line);background:#FFFCF5;border-radius:14px;padding:11px 13px;display:flex;gap:11px;align-items:center;cursor:pointer;transition:transform .22s cubic-bezier(.16,1,.3,1),border-color .22s,box-shadow .22s;animation:up .45s cubic-bezier(.16,1,.3,1) both}
+.vc:hover{transform:translateY(-2px);border-color:#C4F0E6;box-shadow:0 8px 18px -8px rgba(20,20,20,.12)}
+.vc .em{font-size:21px;flex:none;width:26px;text-align:center}
+.vc .th{width:46px;height:46px;border-radius:11px;object-fit:cover;flex:none}
+.vc b{font-size:14.5px;display:block;line-height:1.3}
+.vc .bsp{font-size:12.5px;color:var(--soft);margin-top:2px}
+/* ---------- Grammatik ---------- */
+.gt{width:100%;border-collapse:collapse;margin:8px 0 4px;font-size:14.5px}
+.gt td,.gt th{border:1px solid var(--line);padding:8px 12px;text-align:left}
+.gt th{background:#FFF7DE;font-family:'Space Grotesk',sans-serif;font-size:13px}
+.gt td:first-child{font-weight:700;color:var(--turq-ink)}
+.gnote{background:#E6FAF5;border:1px solid #C4F0E6;border-radius:12px;padding:11px 14px;font-size:13.5px;color:#0E5A50;line-height:1.55;margin-top:10px}
+.gblock{margin-bottom:18px;padding-bottom:16px;border-bottom:1px dashed #F1EADF}
+.gblock:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.gh{display:flex;align-items:center;gap:9px;margin-bottom:7px}
+.gh .gn{width:24px;height:24px;border-radius:7px;background:#FFF7DE;color:#8a6d00;font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center;flex:none}
+.gh h3{font-family:'Space Grotesk',sans-serif;font-size:16.5px;font-weight:700;margin:0}
+/* ---------- Übungen ---------- */
+.ex-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:4px}
+.ex-num{font-size:12px;font-weight:800;color:var(--soft);letter-spacing:.04em}
+.frage{font-size:16.5px;font-weight:700;line-height:1.45;margin:8px 0 14px}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{text-align:left;border:1.5px solid #ECECEC;background:#fff;border-radius:13px;padding:12px 15px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;transition:border-color .2s,background .2s,transform .15s}
+.opt:hover{border-color:var(--turq)}
+.opt:active{transform:scale(.99)}
+.opt.ok{border-color:var(--ok);background:#E6FAF5}
+.opt.no{border-color:var(--bad);background:#FDECEC;animation:pop .3s}
+.bwimg{width:100%;max-width:360px;height:200px;object-fit:cover;border-radius:16px;margin:0 auto 14px;display:block;box-shadow:0 8px 22px -12px rgba(20,20,20,.35)}
+.optrow{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.bank,.built{display:flex;flex-wrap:wrap;gap:8px;min-height:44px;margin:8px 0}
+.built{background:#FFFCF5;border:1.5px dashed var(--line);border-radius:13px;padding:9px}
+.wchip{border:1.5px solid #ECECEC;background:#fff;border-radius:11px;padding:8px 13px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:.18s;animation:up .3s both}
+.wchip:hover{border-color:var(--turq);transform:translateY(-1px)}
+.wchip.used{opacity:.28;pointer-events:none}
+.gaptxt{font-size:16.5px;line-height:2.1}
+.gap{display:inline-block;min-width:86px;border-bottom:2.5px solid var(--turq);text-align:center;font-weight:800;color:var(--turq-ink);cursor:pointer;padding:0 6px}
+.gap:empty::after{content:"…";color:#C9C4B8}
+.mrow{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.mi{border:1.5px solid #ECECEC;background:#fff;border-radius:12px;padding:11px 13px;font-size:14.5px;font-weight:600;cursor:pointer;font-family:inherit;text-align:left;transition:.18s}
+.mi:hover{border-color:var(--turq)}
+.mi.sel{border-color:var(--btn-ink);background:#F4FBF9}
+.mi.done{border-color:var(--ok);background:#E6FAF5;color:#0E5A50;pointer-events:none}
+.mi.no{border-color:var(--bad);background:#FDECEC;animation:pop .3s}
+.tin{width:100%;border:1.5px solid #ECECEC;border-radius:13px;padding:13px 15px;font-size:16px;font-family:inherit;outline:none;transition:border-color .2s}
+.tin:focus{border-color:var(--turq)}
+.fb{margin-top:13px;border-radius:13px;padding:12px 15px;font-weight:700;font-size:14.5px;display:none;animation:up .35s both}
+.fb.ok{display:block;background:#E6FAF5;border:1px solid #C4F0E6;color:#0E5A50}
+.fb.no{display:block;background:#FDECEC;border:1px solid #F5C6C6;color:#8f1f1f}
+/* ---------- Zusammenfassung ---------- */
+.rc-h{display:flex;align-items:center;gap:9px;margin:18px 0 10px}
+.rc-h .ic{width:28px;height:28px;border-radius:8px;background:#E6FAF5;color:var(--turq-ink);display:flex;align-items:center;justify-content:center;font-size:14px;flex:none}
+.rc-h h3{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;margin:0}
+.rc-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+.rc-list li{background:#FFFCF5;border:1px solid var(--line);border-radius:12px;padding:11px 14px;font-size:15px;display:flex;gap:10px;align-items:flex-start}
+.rc-list li .b{color:var(--turq-ink);font-weight:800;flex:none}
+.rc-tipp{background:linear-gradient(135deg,#FFF7DE,#FFFCF5);border:1px solid #F0DFA0;border-radius:14px;padding:14px 16px;font-size:14.5px;line-height:1.6;margin-top:16px}
+/* ---------- Rest ---------- */
+.btnrow{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.btn{border:none;cursor:pointer;font-family:inherit;font-weight:800;font-size:15px;border-radius:999px;padding:13px 26px;transition:transform .2s,box-shadow .2s,filter .2s}
+.btn:active{transform:scale(.98)}
+.btn-p{background:linear-gradient(135deg,var(--turq),var(--turq-d));color:var(--btn-ink);box-shadow:0 8px 20px -8px rgba(20,184,166,.55)}
+.btn-p:hover{filter:brightness(1.04);transform:translateY(-1px)}
+.btn-p:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-g{background:#fff;border:1.5px solid #ECECEC;color:var(--ink)}
+.btn-g:hover{border-color:var(--turq)}
+.navr{position:fixed;left:0;right:0;bottom:0;background:rgba(255,252,245,.95);backdrop-filter:blur(10px);border-top:1px solid #ECECEC;z-index:20}
+.navr-in{max-width:780px;margin:0 auto;padding:11px 16px;display:flex;gap:10px;justify-content:space-between;align-items:center}
+.score{font-size:13px;font-weight:700;color:var(--soft)}
+.done-card{text-align:center;padding:36px 22px}
+.done-card .big{font-size:56px;animation:pop .6s}
+.done-card h1{margin:10px 0 6px}
+.statrow{display:flex;gap:12px;justify-content:center;margin:18px 0;flex-wrap:wrap}
+.stat{background:#FFFCF5;border:1px solid var(--line);border-radius:14px;padding:12px 20px;min-width:110px}
+.stat .v{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;color:var(--turq-ink)}
+.stat .l{font-size:12px;color:var(--soft);font-weight:600;margin-top:2px}
+.sprech-task{background:linear-gradient(135deg,#E8FAF6,#D2F5EE);border:1px solid var(--turq);border-radius:16px;padding:16px 18px;margin-top:10px;font-size:15px;line-height:1.6}
+.tipps{margin:12px 0 0;padding:0 0 0 4px;list-style:none}
+.tipps li{padding:5px 0 5px 26px;position:relative;font-size:14.5px;color:var(--ink)}
+.tipps li::before{content:"💬";position:absolute;left:0}
+.errbox{text-align:center;padding:50px 20px}
+@media(max-width:560px){.vgrid{grid-template-columns:1fr}.card{padding:18px 15px}.card.flush{padding:0}.mrow,.optrow{grid-template-columns:1fr}.introbody{padding:17px}.hero{min-height:180px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
-<div class="wrapper" id="app"><div class="loading">Lektion wird geladen …</div></div>
-<script src="config.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<header class="bar">
+  <div class="bar-in">
+    <a class="bk" href="konto.html#kurse">←</a>
+    <div class="bt"><div class="k" id="hKurs">Kurs</div><div class="t" id="hTitel">Lektion</div></div>
+    <span class="lvl" id="hLvl">A1</span>
+  </div>
+  <div class="prog"><i id="progI" style="width:0%"></i></div>
+</header>
+<main class="wrap">
+  <div class="steps" id="stepChips"></div>
+  <div id="stage"><div class="errbox muted">Lektion wird geladen …</div></div>
+</main>
+<div class="navr" id="navr" style="display:none">
+  <div class="navr-in">
+    <button class="btn btn-g" id="btnPrev">← Zurück</button>
+    <span class="score" id="scoreTxt"></span>
+    <button class="btn btn-p" id="btnNext">Weiter →</button>
+  </div>
+</div>
 <script>
-const CFG=window.SPRECHCLUB_CONFIG;
-const CLUB={sprechclub:{c:'#0FB5A6',n:'Sprechclub',e:'💬'},grammatikclub:{c:'#E8302A',n:'Grammatikclub',e:'📐'},
-  wortschatzclub:{c:'#F5B301',n:'Wortschatzclub',e:'📚'},ausspracheclub:{c:'#2F6BFF',n:'Ausspracheclub',e:'🎧'}};
-function esc(s){return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
-function norm(s){return (s||'').toString().trim().toLowerCase().replace(/\s+/g,' ').replace(/[.!?,;:]+$/,'');}
-function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-let EXSEQ=0;
+(function(){
+'use strict';
+var qs=new URLSearchParams(location.search);
+var K=(qs.get('k')||'').replace(/[^a-z0-9_]/g,''), L=(qs.get('l')||'').replace(/[^0-9]/g,'');
+var LID=K+'-'+L;
+function fail(msg){ document.getElementById('stage').innerHTML='<div class="card errbox"><div style="font-size:44px">📚</div><h1>Ups!</h1><p class="muted">'+msg+'</p><div class="btnrow" style="justify-content:center"><a class="btn btn-p" style="text-decoration:none" href="konto.html#kurse">Zur Kursbibliothek</a></div></div>'; }
+if(!K||!L){ fail('Diese Lektion wurde nicht gefunden.'); return; }
+var sc=document.createElement('script');
+sc.src='kurse/'+K+'-l'+L+'.js';
+sc.onload=function(){ if(window.LEKTION) boot(window.LEKTION); else fail('Diese Lektion ist noch nicht verfügbar.'); };
+sc.onerror=function(){ fail('Diese Lektion ist noch nicht verfügbar — sie kommt bald! 💛'); };
+document.head.appendChild(sc);
 
-function renderEx(ex){
-  const id='ex'+(EXSEQ++);
-  if(ex.type==='choice'){
-    return `<div class="ex" id="${id}"><p class="q">${esc(ex.q)}</p>`+
-      ex.options.map((o,i)=>`<button class="opt" onclick="pickChoice('${id}',${i},${ex.answer})">${esc(o)}</button>`).join('')+
-      `<div class="fb" data-ex>${ex.explain?'<span style="display:none" data-explain>'+esc(ex.explain)+'</span>':''}</div></div>`;
-  }
-  if(ex.type==='gap'){
-    const parts=esc(ex.text).split('___');
-    const inp=`<input class="gapin" id="${id}_i" autocomplete="off">`;
-    return `<div class="ex" id="${id}"><p class="q">${parts.join(inp)}</p>`+
-      `<button class="btn" onclick="checkGap('${id}',${JSON.stringify([ex.answer].concat(ex.alts||[])).replace(/"/g,'&quot;')})">prüfen</button>`+
-      (ex.hint?` <span style="font-size:.85rem;color:var(--ink-mute)">💡 ${esc(ex.hint)}</span>`:'')+
-      `<div class="fb" data-ex></div></div>`;
-  }
-  if(ex.type==='order'){
-    const words=esc(ex.answer).split(' ');
-    return `<div class="ex" id="${id}" data-answer="${esc(ex.answer)}"><p class="q">Bring die Wörter in die richtige Reihenfolge${ex.hint?' ('+esc(ex.hint)+')':''}:</p>`+
-      `<div class="answerline" id="${id}_a"></div>`+
-      `<div class="chips" id="${id}_c">`+shuffle(words).map((w,i)=>`<span class="chip" onclick="addWord('${id}','${i}',this)">${w}</span>`).join('')+`</div>`+
-      `<button class="btn ghost" onclick="resetOrder('${id}')">zurücksetzen</button> <button class="btn" onclick="checkOrder('${id}')">prüfen</button>`+
-      `<div class="fb" data-ex></div></div>`;
-  }
-  if(ex.type==='match'){
-    const rights=shuffle(ex.pairs.map(p=>p.r));
-    return `<div class="ex" id="${id}"><p class="q">${esc(ex.intro||'Ordne zu')}:</p>`+
-      ex.pairs.map((p,i)=>`<div class="matchrow"><div class="l">${esc(p.l)}</div>`+
-        `<select id="${id}_s${i}" data-correct="${esc(p.r)}"><option value="">– wählen –</option>`+
-        rights.map(r=>`<option value="${esc(r)}">${esc(r)}</option>`).join('')+`</select></div>`).join('')+
-      `<button class="btn" onclick="checkMatch('${id}',${ex.pairs.length})">prüfen</button><div class="fb" data-ex></div></div>`;
-  }
-  if(ex.type==='write'){
-    return `<div class="ex" id="${id}"><p class="q">✍️ ${esc(ex.prompt)}</p>`+
-      `<textarea class="gapin" style="width:100%;min-height:64px" placeholder="Schreib deine Antwort …"></textarea><br>`+
-      `<button class="btn ghost" onclick="document.getElementById('${id}_s').style.display='block'">Beispiel zeigen</button>`+
-      `<div class="sample" id="${id}_s">💡 ${esc(ex.sample||'')}</div></div>`;
-  }
-  return '';
+// ---------- Bilder ----------
+function bild(id,w){ return id?('https://images.unsplash.com/'+id+'?auto=format&fit=crop&w='+(w||800)+'&q=60'):''; }
+
+// ---------- Audio ----------
+var voice=null;
+function pickVoice(){ try{ var vs=speechSynthesis.getVoices().filter(function(v){return v.lang&&v.lang.indexOf('de')===0;}); voice=vs.find(function(v){return /female|anna|petra|katja|vicki/i.test(v.name);})||vs[0]||null; }catch(e){} }
+if(window.speechSynthesis){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }
+var curBtn=null;
+function speak(txt,btn,cb){
+  if(!window.speechSynthesis){ if(cb)cb(); return; }
+  try{ speechSynthesis.cancel(); }catch(e){}
+  if(curBtn)curBtn.classList.remove('playing');
+  var u=new SpeechSynthesisUtterance(txt); u.lang='de-DE'; u.rate=.92; if(voice)u.voice=voice;
+  if(btn){ btn.classList.add('playing'); curBtn=btn; }
+  u.onend=function(){ if(btn)btn.classList.remove('playing'); if(curBtn===btn)curBtn=null; if(cb)cb(); };
+  speechSynthesis.speak(u);
 }
-// handlers
-window.pickChoice=function(id,i,ans){const el=document.getElementById(id);if(el.dataset.done)return;el.dataset.done='1';
-  const opts=[...el.querySelectorAll('.opt')];opts[ans].classList.add('right');if(i!==ans)opts[i].classList.add('wrong');
-  const fb=el.querySelector('[data-ex]');const ex=fb.querySelector('[data-explain]');
-  fb.className='fb '+(i===ans?'good':'bad');fb.innerHTML=(i===ans?'✓ Richtig! ':'✗ Richtige Antwort ist markiert. ')+(ex?ex.textContent:'');};
-window.checkGap=function(id,alts){const el=document.getElementById(id);const inp=document.getElementById(id+'_i');const fb=el.querySelector('[data-ex]');
-  const ok=alts.some(a=>norm(a)===norm(inp.value));inp.classList.remove('ok','no');inp.classList.add(ok?'ok':'no');
-  fb.className='fb '+(ok?'good':'bad');fb.textContent=ok?'✓ Richtig!':'✗ Richtig: '+alts[0];};
-window.addWord=function(id,i,chip){const line=document.getElementById(id+'_a');chip.classList.add('used');
-  const span=document.createElement('span');span.textContent=chip.textContent+' ';span.dataset.from=i;line.appendChild(span);};
-window.resetOrder=function(id){document.getElementById(id+'_a').innerHTML='';document.querySelectorAll('#'+id+'_c .chip').forEach(c=>c.classList.remove('used'));document.querySelector('#'+id+' [data-ex]').textContent='';};
-window.checkOrder=function(id){const el=document.getElementById(id);const got=document.getElementById(id+'_a').textContent.trim();const fb=el.querySelector('[data-ex]');
-  const ok=norm(got)===norm(el.dataset.answer);fb.className='fb '+(ok?'good':'bad');fb.textContent=ok?'✓ Perfekt!':'✗ Richtig: '+el.dataset.answer;};
-window.checkMatch=function(id,n){const el=document.getElementById(id);let ok=0;for(let i=0;i<n;i++){const s=document.getElementById(id+'_s'+i);s.classList.remove('ok','no');const good=norm(s.value)===norm(s.dataset.correct);s.classList.add(good?'ok':'no');if(good)ok++;}
-  const fb=el.querySelector('[data-ex]');fb.className='fb '+(ok===n?'good':'bad');fb.textContent=ok===n?'✓ Alles richtig!':`${ok} von ${n} richtig – schau dir die roten an.`;};
+window.__spk=function(el,txt){ speak(txt,el); };
 
-function exercisesBlock(m){
-  const pre=(m.pre&&m.pre.exercises)||[], post=(m.post&&m.post.exercises)||[];
-  if(!pre.length&&!post.length) return '';
-  let h=`<section class="block" id="ueben"><h2 class="block-head">Interaktiv <span class="hl">üben</span></h2>`;
-  if(pre.length){h+=`<p class="subhead">📖 Aufwärmen</p>`+pre.map(renderEx).join('');}
-  if(post.length){h+=`<p class="subhead" style="margin-top:1rem">✍️ Vertiefen</p>`+post.map(renderEx).join('');}
-  return h+`</section>`;
+// ---------- Engine ----------
+var D=null, steps=[], cur=0, exState=[], firstTry=0, total=0;
+function esc(x){ return String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function q(x){ return esc(x).replace(/'/g,"\\'"); }
+function boot(data){
+  D=data;
+  document.title=D.meta.titel+' – deutschoderwas club';
+  document.getElementById('hKurs').textContent=D.meta.kurs+' · Lektion '+D.meta.nr;
+  document.getElementById('hTitel').textContent=D.meta.titel;
+  document.getElementById('hLvl').textContent=D.meta.level;
+  steps=[{id:'intro',ic:'👋',nm:'Start'}];
+  if(D.dialog) steps.push({id:'dialog',ic:'🎧',nm:'Dialog'});
+  if(D.vokabeln&&D.vokabeln.length) steps.push({id:'vokabeln',ic:'🃏',nm:'Wörter'});
+  if(D.grammatik) steps.push({id:'grammatik',ic:'📐',nm:'Grammatik'});
+  if(D.uebungen&&D.uebungen.length){ total=D.uebungen.length; D.uebungen.forEach(function(u,i){ steps.push({id:'ex',ic:'🧩',nm:'Übung '+(i+1),ex:i}); exState.push({done:false,fails:0}); }); }
+  if(D.zusammenfassung) steps.push({id:'recap',ic:'📌',nm:'Merkblatt'});
+  if(D.sprechen) steps.push({id:'sprechen',ic:'🗣️',nm:'Sprechen'});
+  steps.push({id:'done',ic:'🏁',nm:'Fertig'});
+  document.getElementById('navr').style.display='';
+  document.getElementById('btnPrev').onclick=function(){ if(cur>0){cur--;render();} };
+  document.getElementById('btnNext').onclick=function(){ if(cur<steps.length-1){cur++;render();} };
+  render();
 }
-
-async function run(){
-  const app=document.getElementById('app');
-  const id=new URLSearchParams(location.search).get('id');
-  if(!id){app.innerHTML='<div class="error">Keine Lektion angegeben.</div>';return;}
-  const sb=supabase.createClient(CFG.SUPABASE_URL,CFG.SUPABASE_ANON_KEY);
-  const {data:cls}=await sb.from('classes').select('title,level,topic,club').eq('id',id).maybeSingle();
-  if(!cls){app.innerHTML='<div class="error">Lektion nicht gefunden – oder du hast keinen aktiven Zugang. <br><a href="live.html#pakete">Stundenpaket ansehen →</a></div>';return;}
-  const {data:cm}=await sb.from('class_materials').select('content').eq('class_id',id).maybeSingle();
-  const m=cm&&cm.content?cm.content:null;
-  const club=CLUB[cls.club]||{c:'#0FB5A6',n:cls.club||'',e:'✨'};
-  document.documentElement.style.setProperty('--accent',club.c);
-  const cat=(cls.club==='sprechclub'&&cls.title&&cls.title!==cls.topic)?cls.title:club.n;
-  document.title=(cls.topic||cls.title||'Lektion')+' · deutschoderwas';
-  const hero=m&&m.hero?m.hero:null;
-
-  let h=`<div class="hero ${hero?'hasimg':''}">`+
-    (hero?`<img class="bg" src="${esc(hero)}" alt=""><div class="veil"></div>`:`<div class="blob b1"></div><div class="blob b2"></div><div class="emoji">${club.e}</div>`)+
-    `<div class="htext"><div class="eyebrow">${esc(club.n)} · ${esc(cat)}</div>
-      <h1>${esc(cls.topic||cls.title)}</h1><span class="badge">${esc(cls.level)}</span></div></div>`;
-
-  if(!m){app.innerHTML=h+`<div class="error">Material folgt in Kürze.</div>`;return;}
-
-  h+=`<nav class="tabs">
-    ${m.intro?'<a href="#start">📖 Start</a>':''}
-    ${m.grammar_tip?'<a href="#tipp">📌 Tipp</a>':''}
-    ${(m.vocab&&m.vocab.length)?'<a href="#wortschatz">🃏 Wortschatz</a>':''}
-    ${((m.pre&&m.pre.exercises&&m.pre.exercises.length)||(m.post&&m.post.exercises&&m.post.exercises.length))?'<a href="#ueben">✏️ Üben</a>':''}
-    ${(m.speak_prompts&&m.speak_prompts.length)?'<a href="#sprechen">🗣️ Sprechen</a>':''}
-    <a href="#mission">🎯 Mission</a></nav>`;
-
-  if(m.intro){h+=`<section class="block" id="start"><p class="intro-lead">${esc(m.intro)}</p></section>`;}
-  if(m.grammar_tip){h+=`<section class="block" id="tipp"><h2 class="block-head">Sprach-<span class="hl">Tipp</span></h2><div class="tip"><b>📌 ${esc(m.grammar_tip.title||'Tipp')}</b>${esc(m.grammar_tip.text||'')}</div></section>`;}
-  if(m.vocab&&m.vocab.length){
-    h+=`<section class="block alt" id="wortschatz"><h2 class="block-head">Wort<span class="hl">schatz</span></h2><p class="block-intro">Tippe auf eine Karte – vorne das Wort, hinten Bedeutung &amp; Beispiel.</p><div class="cards">`+
-      m.vocab.map(v=>`<div class="fcard" onclick="this.classList.toggle('flip')"><div class="fc-inner"><div class="fc-front"><b>${esc(v.de)}</b><span class="fc-hint">umdrehen →</span></div><div class="fc-back">${esc(v.info||v.en||'')}</div></div></div>`).join('')+`</div></section>`;
-  }
-  h+=exercisesBlock(m);
-  if(m.speak_prompts&&m.speak_prompts.length){
-    h+=`<section class="block" id="sprechen"><h2 class="block-head">Jetzt <span class="hl">sprechen</span></h2><p class="block-intro">Das übt ihr heute live – zieh eine Karte oder geht die Impulse der Reihe nach durch.</p>
-      <div class="speak"><div class="card" id="speakCard"><span class="ph">Tippe auf „Neue Karte" …</span></div><button class="btn dark" id="drawBtn">🎲 Neue Karte</button>
-      <ul>${m.speak_prompts.map(s=>`<li>${esc(s)}</li>`).join('')}</ul></div></section>`;
-  }
-  let mission='Sprich heute so viel wie möglich – trau dich, Fehler sind erlaubt!';
-  try{const w=(((m.post&&m.post.exercises)||[]).concat((m.pre&&m.pre.exercises)||[])).find(e=>e.type==='write');if(w&&w.prompt)mission=w.prompt;}catch(e){}
-  h+=`<section class="block mission" id="mission"><h2 class="block-head">🎯 Deine Mission</h2><p>${esc(mission)}</p></section>
-    <footer><div class="mark">deutsch<span class="t">oderwas</span></div><p>${esc(club.n)} · ${esc(cls.topic||'')} · ${esc(cls.level)}</p></footer>`;
-
-  app.innerHTML=h;
-  const cards=m.speak_prompts||[],sc=document.getElementById('speakCard'),db=document.getElementById('drawBtn');
-  if(db)db.addEventListener('click',()=>{if(cards.length)sc.textContent=cards[Math.floor(Math.random()*cards.length)];});
-  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');}),{threshold:.08});
-  document.querySelectorAll('section.block').forEach(s=>io.observe(s));
+function chips(){
+  var exDone=exState.filter(function(x){return x.done;}).length;
+  var h=steps.map(function(s,i){
+    if(s.id==='ex'&&s.ex>0) return '';
+    var label=s.id==='ex'?('🧩 Üben '+exDone+'/'+total):(s.ic+' '+s.nm);
+    var cls=(cur===i||(s.id==='ex'&&steps[cur]&&steps[cur].id==='ex'))?'on':(i<cur?'done':'');
+    return '<span class="stp '+cls+'">'+label+'</span>';
+  }).join('');
+  document.getElementById('stepChips').innerHTML=h;
 }
-run().catch(e=>{document.getElementById('app').innerHTML='<div class="error">Es ist ein Fehler aufgetreten. Bitte Seite neu laden.</div>';});
+function render(){
+  try{ speechSynthesis.cancel(); }catch(e){}
+  var s=steps[cur];
+  document.getElementById('progI').style.width=Math.round(cur/(steps.length-1)*100)+'%';
+  chips();
+  var el=document.getElementById('stage');
+  if(s.id==='intro') el.innerHTML=vIntro();
+  else if(s.id==='dialog') el.innerHTML=vDialog();
+  else if(s.id==='vokabeln') el.innerHTML=vVokabeln();
+  else if(s.id==='grammatik') el.innerHTML=vGrammatik();
+  else if(s.id==='ex') el.innerHTML=vEx(s.ex);
+  else if(s.id==='recap') el.innerHTML=vRecap();
+  else if(s.id==='sprechen') el.innerHTML=vSprechen();
+  else if(s.id==='done'){ el.innerHTML=vDone(); saveDone(); }
+  var prev=document.getElementById('btnPrev'), next=document.getElementById('btnNext');
+  prev.style.visibility=cur===0?'hidden':'visible';
+  next.style.display=s.id==='done'?'none':'';
+  next.disabled=(s.id==='ex'&&!exState[s.ex].done);
+  next.textContent=(cur===steps.length-2)?'Abschließen ✓':'Weiter →';
+  document.getElementById('scoreTxt').textContent=total?('🧩 '+exState.filter(function(x){return x.done;}).length+' / '+total):'';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+// ---------- Ansichten ----------
+function vIntro(){
+  var lz=(D.intro.du_lernst||[]).map(function(x){return '<li>'+esc(x)+'</li>';}).join('');
+  var img=bild(D.meta.bild,900);
+  return '<div class="card flush">'
+    +'<div class="hero">'+(img?'<img src="'+img+'" alt="">':'<div style="position:absolute;inset:0;background:linear-gradient(135deg,#2DD4BF,#0E6F63)"></div>')
+    +'<div class="ov"></div><div class="hx">'
+    +'<span class="hb">'+esc(D.meta.kurs)+' · Lektion '+D.meta.nr+'</span>'
+    +'<h1>'+esc(D.meta.titel)+'</h1>'
+    +'<div class="hs">'+esc(D.meta.level)+' · '+esc(D.meta.dauer||'ca. 15 Min')+(total?' · '+total+' Übungen':'')+'</div>'
+    +'</div></div>'
+    +'<div class="introbody"><p class="muted" style="margin:0">'+esc(D.intro.text)+'</p>'
+    +'<h2 style="font-size:16px;margin:18px 0 2px">Das lernst du in dieser Lektion</h2>'
+    +'<ul class="lz">'+lz+'</ul>'
+    +'<div class="meta"><span>⏱️ '+esc(D.meta.dauer||'ca. 15 Min')+'</span><span>📊 '+esc(D.meta.level)+'</span>'+(D.vokabeln?'<span>🃏 '+D.vokabeln.length+' neue Wörter</span>':'')+'</div>'
+    +'</div></div>';
+}
+function vDialog(){
+  var lines=D.dialog.lines.map(function(l,i){
+    var side=i%2===0?'a':'b';
+    return '<div class="dl '+side+'" id="dl'+i+'" style="animation-delay:'+(i*90)+'ms"><span class="av">'+esc(l.sp[0])+'</span>'
+      +'<div class="bb"><div class="nm">'+esc(l.sp)+'</div>'+esc(l.txt)+'</div>'
+      +'<button class="spk" onclick="__spk(this,\''+q(l.txt)+'\')" title="Anhören">🔊</button></div>';
+  }).join('');
+  var img=bild(D.dialog.bild||D.meta.bild,800);
+  return '<div class="card"><h2>🎧 Hör zu &amp; lies mit</h2>'
+    +(img?'<div class="scene"><img src="'+img+'" alt=""><div class="sc-ov"></div><div class="sc-tx">'+esc(D.dialog.situation||'')+'</div></div>'
+        :'<p class="muted">'+esc(D.dialog.situation||'')+'</p>')
+    +'<div class="btnrow" style="margin:0 0 14px"><button class="btn btn-p" onclick="__dlgAll(this)">▶ Ganzen Dialog anhören</button></div>'
+    +'<div class="dlg">'+lines+'</div></div>';
+}
+window.__dlgAll=function(btn){
+  var i=0;
+  function nx(){
+    var prevEl=document.getElementById('dl'+(i-1)); if(prevEl)prevEl.classList.remove('hl');
+    if(i>=D.dialog.lines.length){ return; }
+    var el=document.getElementById('dl'+i); if(el){ el.classList.add('hl'); el.scrollIntoView({behavior:'smooth',block:'center'}); }
+    var t=D.dialog.lines[i].txt; i++;
+    speak(t,null,function(){ setTimeout(nx,280); });
+  }
+  nx();
+};
+function vVokabeln(){
+  var cards=D.vokabeln.map(function(v,i){
+    var vis=v.bild?('<img class="th" src="'+bild(v.bild,200)+'" alt="">'):('<span class="em">'+(v.em||'💬')+'</span>');
+    return '<div class="vc" style="animation-delay:'+(i*45)+'ms" onclick="__spk(this.querySelector(\'.spk\'),\''+q(v.de)+'\')">'
+      +vis+'<div style="flex:1;min-width:0"><b>'+esc(v.de)+'</b>'
+      +(v.bsp?'<div class="bsp">'+esc(v.bsp)+'</div>':'')+'</div><button class="spk">🔊</button></div>';
+  }).join('');
+  return '<div class="card"><h2>🃏 Wortschatz dieser Lektion</h2><p class="muted">Tippe auf eine Karte und hör dir die Aussprache an. Sprich laut nach — das bleibt am besten hängen. 🗣️</p>'
+    +'<div class="vgrid">'+cards+'</div></div>';
+}
+function vGrammatik(){
+  var blocks=(D.grammatik.blocks||[]).map(function(b,bi){
+    var t='';
+    if(b.table){ t='<table class="gt">'+b.table.map(function(row,ri){ return '<tr>'+row.map(function(c){return (ri===0?'<th>':'<td>')+c+(ri===0?'</th>':'</td>');}).join('')+'</tr>'; }).join('')+'</table>'; }
+    return '<div class="gblock"><div class="gh"><span class="gn">'+(bi+1)+'</span><h3>'+b.h+'</h3></div>'
+      +(b.txt?'<p class="muted" style="margin:0 0 6px">'+b.txt+'</p>':'')+t+(b.note?'<div class="gnote">💡 '+b.note+'</div>':'')+'</div>';
+  }).join('');
+  return '<div class="card"><h2>📐 '+esc(D.grammatik.title||'Grammatik im Kontext')+'</h2>'+blocks+'</div>';
+}
+// ---------- Übungen ----------
+var EX={order:[],gaps:[],mLeft:null,mDone:0};
+function vEx(i){
+  EX={order:[],gaps:[],mLeft:null,mDone:0};
+  var u=D.uebungen[i], st=exState[i];
+  var inner='';
+  var head='<div class="ex-head"><span class="ex-num">ÜBUNG '+(i+1)+' VON '+total+'</span>'+(st.done?'<span class="stp done">✓ geschafft</span>':'')+'</div>';
+  if(u.typ==='mc'||u.typ==='listen'||u.typ==='bild'){
+    var extra='';
+    if(u.typ==='listen') extra='<div class="btnrow" style="margin:0 0 12px"><button class="btn btn-p" onclick="__spk(null,\''+q(u.audio)+'\')">🔊 Anhören</button></div>';
+    if(u.typ==='bild') extra='<img class="bwimg" src="'+bild(u.bild,600)+'" alt="">';
+    var cls=u.typ==='bild'?'optrow':'opts';
+    inner='<p class="frage">'+esc(u.frage)+'</p>'+extra
+      +'<div class="'+cls+'">'+u.optionen.map(function(o,oi){return '<button class="opt" data-oi="'+oi+'" onclick="__pick(this,'+i+')">'+esc(o)+'</button>';}).join('')+'</div>';
+  } else if(u.typ==='gapbank'){
+    var parts=u.text.split('___'); var gi=0; var txt='';
+    parts.forEach(function(pp,pi){ txt+=esc(pp); if(pi<parts.length-1){ txt+='<span class="gap" data-g="'+gi+'" onclick="__gapClear(this,'+i+')"></span>'; gi++; } });
+    EX.gaps=new Array(gi).fill(null);
+    inner='<p class="frage">'+esc(u.frage||'Füll die Lücken.')+'</p><div class="gaptxt">'+txt+'</div>'
+      +'<div class="bank">'+u.bank.map(function(w,wi){return '<button class="wchip" data-wi="'+wi+'" onclick="__bank(this,'+i+')">'+esc(w)+'</button>';}).join('')+'</div>';
+  } else if(u.typ==='order'){
+    inner='<p class="frage">'+esc(u.frage||'Bring die Wörter in die richtige Reihenfolge.')+'</p>'
+      +'<div class="built" id="built"></div>'
+      +'<div class="bank">'+u.woerter.map(function(w,wi){return '<button class="wchip" data-wi="'+wi+'" onclick="__ord(this,'+i+')">'+esc(w)+'</button>';}).join('')+'</div>';
+  } else if(u.typ==='match'){
+    var Lx=u.paare.map(function(p,pi){return '<button class="mi" data-side="l" data-pi="'+pi+'" onclick="__match(this,'+i+')">'+esc(p[0])+'</button>';});
+    var order=u.paare.map(function(_,pi){return pi;}); order.sort(function(a,b){return (a*7919+13)%17-(b*7919+13)%17;});
+    var R=order.map(function(pi){return '<button class="mi" data-side="r" data-pi="'+pi+'" onclick="__match(this,'+i+')">'+esc(u.paare[pi][1])+'</button>';});
+    inner='<p class="frage">'+esc(u.frage||'Was passt zusammen? Tippe links, dann rechts.')+'</p>'
+      +'<div class="mrow"><div style="display:flex;flex-direction:column;gap:9px">'+Lx.join('')+'</div><div style="display:flex;flex-direction:column;gap:9px">'+R.join('')+'</div></div>';
+  } else if(u.typ==='type'){
+    inner='<p class="frage">'+esc(u.frage)+'</p>'
+      +(u.muster?'<p class="muted" style="margin:0 0 10px">✍️ Zum Beispiel: <b>'+esc(u.muster)+'</b></p>':'')
+      +'<input class="tin" id="tin" autocomplete="off" placeholder="Schreib deine Antwort …" onkeydown="if(event.key===\'Enter\')__check('+i+')">';
+  }
+  var check=(u.typ==='mc'||u.typ==='listen'||u.typ==='bild'||u.typ==='match')?'':'<div class="btnrow"><button class="btn btn-p" onclick="__check('+i+')">Prüfen</button></div>';
+  return '<div class="card">'+head+inner+check+'<div class="fb" id="fb"></div></div>';
+}
+function fb(ok,msg){ var f=document.getElementById('fb'); f.className='fb '+(ok?'ok':'no'); f.innerHTML=msg; }
+function pass(i,extra){
+  var st=exState[i];
+  if(!st.done){ st.done=true; if(st.fails===0)firstTry++; }
+  fb(true,['Richtig! 🎉','Super! ⭐','Sehr gut! 💪','Perfekt! 🙌'][i%4]+(extra?' '+extra:''));
+  document.getElementById('btnNext').disabled=false;
+  document.getElementById('scoreTxt').textContent='🧩 '+exState.filter(function(x){return x.done;}).length+' / '+total;
+  chips();
+}
+function miss(i,hint){
+  exState[i].fails++;
+  fb(false,'Fast! Versuch es nochmal. 💛'+(exState[i].fails>=2&&hint?'<br>💡 Tipp: '+hint:''));
+}
+window.__pick=function(el,i){
+  var u=D.uebungen[i];
+  var oi=+el.getAttribute('data-oi');
+  if(oi===u.richtig){ el.classList.add('ok'); document.querySelectorAll('.opt').forEach(function(o){o.disabled=true;}); pass(i); }
+  else{ el.classList.add('no'); setTimeout(function(){el.classList.remove('no');},700); miss(i,u.hinweis); }
+};
+window.__bank=function(el,i){
+  var slot=EX.gaps.indexOf(null); if(slot<0)return;
+  EX.gaps[slot]={w:el.textContent,el:el};
+  el.classList.add('used');
+  document.querySelector('.gap[data-g="'+slot+'"]').textContent=el.textContent;
+};
+window.__gapClear=function(g,i){
+  var gi=+g.getAttribute('data-g'); var cell=EX.gaps[gi]; if(!cell)return;
+  cell.el.classList.remove('used'); EX.gaps[gi]=null; g.textContent='';
+};
+window.__ord=function(el,i){
+  if(el.classList.contains('used')) return;
+  el.classList.add('used'); EX.order.push({w:el.textContent,el:el});
+  var b=document.getElementById('built');
+  var c=document.createElement('button'); c.className='wchip'; c.textContent=el.textContent;
+  c.onclick=function(){ el.classList.remove('used'); EX.order=EX.order.filter(function(x){return x.el!==el;}); c.remove(); };
+  b.appendChild(c);
+};
+window.__match=function(el,i){
+  var u=D.uebungen[i];
+  if(el.getAttribute('data-side')==='l'){ document.querySelectorAll('.mi[data-side="l"]').forEach(function(m){m.classList.remove('sel');}); el.classList.add('sel'); EX.mLeft=el; return; }
+  if(!EX.mLeft)return;
+  if(EX.mLeft.getAttribute('data-pi')===el.getAttribute('data-pi')){
+    EX.mLeft.classList.remove('sel'); EX.mLeft.classList.add('done'); el.classList.add('done'); EX.mLeft=null; EX.mDone++;
+    if(EX.mDone>=u.paare.length) pass(i);
+  } else { el.classList.add('no'); setTimeout(function(){el.classList.remove('no');},600); miss(i,u.hinweis); }
+};
+function norm(x){ return x.toLowerCase().replace(/\s+/g,' ').replace(/[.!?,]/g,'').trim(); }
+window.__check=function(i){
+  var u=D.uebungen[i];
+  if(u.typ==='gapbank'){
+    if(EX.gaps.some(function(g){return !g;})){ fb(false,'Füll erst alle Lücken. 😊'); return; }
+    var vals=EX.gaps.map(function(g){return norm(g.w);});
+    if(vals.join('|')===u.loesung.map(norm).join('|')) pass(i);
+    else miss(i,u.hinweis);
+  } else if(u.typ==='order'){
+    var sent=EX.order.map(function(x){return x.w;}).join(' ');
+    if(norm(sent)===norm(u.loesung)) pass(i,'„'+esc(u.loesung)+'"');
+    else miss(i,u.hinweis||'Achte auf die Wortstellung.');
+  } else if(u.typ==='type'){
+    var val=norm(document.getElementById('tin').value||'');
+    if(!val){ fb(false,'Schreib zuerst eine Antwort. 😊'); return; }
+    var okk=(u.akzeptiert||[]).some(function(rx){ try{ return new RegExp(rx,'i').test(val); }catch(e){ return false; } });
+    if(okk) pass(i); else miss(i,u.hinweis||u.muster);
+  }
+};
+function vRecap(){
+  var Z=D.zusammenfassung;
+  var s=(Z.kernsaetze||[]).map(function(x){return '<li><span class="b">💬</span><span>'+esc(x)+'</span></li>';}).join('');
+  var m=(Z.merke||[]).map(function(x){return '<li><span class="b">📐</span><span>'+x+'</span></li>';}).join('');
+  return '<div class="card"><h2>📌 Dein Merkblatt</h2><p class="muted">Das Wichtigste aus dieser Lektion — auf einen Blick. Schau hier vor der nächsten Stunde nochmal rein.</p>'
+    +(s?'<div class="rc-h"><span class="ic">🗣️</span><h3>Diese Sätze kannst du jetzt</h3></div><ul class="rc-list">'+s+'</ul>':'')
+    +(m?'<div class="rc-h"><span class="ic">📐</span><h3>Das musst du dir merken</h3></div><ul class="rc-list">'+m+'</ul>':'')
+    +(Z.tipp?'<div class="rc-tipp"><b>💛 Julias Tipp:</b> '+esc(Z.tipp)+'</div>':'')
+    +'</div>';
+}
+function vSprechen(){
+  var tipps=(D.sprechen.tipps||[]).map(function(t){return '<li>'+esc(t)+'</li>';}).join('');
+  return '<div class="card"><h2>🗣️ Jetzt sprichst du!</h2>'
+    +'<div class="sprech-task"><b>Deine Aufgabe:</b><br>'+esc(D.sprechen.task)+'</div>'
+    +(tipps?'<ul class="tipps">'+tipps+'</ul>':'')
+    +'<p class="muted" style="margin-top:14px">Sprich laut — allein, mit deinem Sprech-Buddy oder mit Amanda. Sie hört zu und korrigiert dich sanft. 🎤</p>'
+    +'<div class="btnrow"><a class="btn btn-p" style="text-decoration:none" href="konto.html#amanda">🎤 Mit Amanda üben</a></div></div>';
+}
+function vDone(){
+  return '<div class="card done-card"><div class="big">🎉</div><h1>Lektion geschafft!</h1>'
+    +'<p class="muted">Stark, dass du drangeblieben bist — genau so lernt man Deutsch.</p>'
+    +'<div class="statrow"><div class="stat"><div class="v">'+firstTry+'/'+total+'</div><div class="l">beim 1. Versuch</div></div>'
+    +'<div class="stat"><div class="v">'+(D.vokabeln?D.vokabeln.length:0)+'</div><div class="l">neue Wörter</div></div></div>'
+    +'<div class="btnrow" style="justify-content:center"><a class="btn btn-g" style="text-decoration:none" href="konto.html#kurse">Zur Bibliothek</a>'
+    +'<a class="btn btn-p" style="text-decoration:none" href="konto.html#amanda">🎤 Jetzt sprechen üben</a></div></div>';
+}
+function saveDone(){
+  try{
+    var all=JSON.parse(localStorage.getItem('dow_lek')||'{}');
+    all[LID]={done:true,first:firstTry,total:total,ts:Date.now()};
+    localStorage.setItem('dow_lek',JSON.stringify(all));
+  }catch(e){}
+}
+})();
 </script>
 </body>
 </html>

@@ -601,60 +601,87 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFF6E6 0%,#FAF8F2 60%)
   <div class="nav-backdrop" onclick="toggleNav()"></div>
 <style id="kb-style">
 #v-kurse{max-width:1180px;margin:0 auto}
-.kb-hero{margin:2px 0 18px}
-.kb-hero h1{font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:700;letter-spacing:-.02em;margin:0 0 6px;color:var(--ink,#141414)}
-.kb-lead{font-size:15.5px;color:var(--text-soft,#5C5C5C);max-width:640px;line-height:1.55;margin:0 0 16px}
+@keyframes kbUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes kbIn{from{opacity:0}to{opacity:1}}
+.kb-hero{margin:2px 0 20px;animation:kbUp .55s cubic-bezier(.16,1,.3,1) both}
+.kb-eyebrow{display:inline-flex;align-items:center;gap:9px;font-size:11.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#0F766E;margin:0 0 10px}
+.kb-eyebrow::before{content:"";width:22px;height:2px;border-radius:2px;background:linear-gradient(90deg,#2DD4BF,#14B8A6)}
+.kb-hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(26px,4vw,34px);font-weight:700;letter-spacing:-.03em;line-height:1.12;margin:0 0 8px;color:var(--ink,#1A1A1A)}
+.kb-lead{font-size:15.5px;color:var(--text-soft,#5C5C5C);max-width:620px;line-height:1.6;margin:0 0 18px}
+.kb-nivtest{display:flex;align-items:center;gap:14px;text-decoration:none;background:#fff;border:1px solid #CBEDE6;border-radius:18px;padding:13px 18px;margin:0 0 18px;box-shadow:0 1px 2px rgba(20,20,20,.04),0 8px 24px -14px rgba(18,165,148,.35);transition:transform .28s cubic-bezier(.16,1,.3,1),box-shadow .28s,border-color .28s}
+.kb-nivtest:hover{transform:translateY(-2px);border-color:#2DD4BF;box-shadow:0 2px 4px rgba(20,20,20,.05),0 16px 34px -14px rgba(18,165,148,.45)}
+.kb-nivtest .ntic{width:44px;height:44px;border-radius:13px;background:linear-gradient(135deg,#2DD4BF,#14B8A6);display:flex;align-items:center;justify-content:center;font-size:21px;flex:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.35)}
+.kb-nivtest .nttx{display:flex;flex-direction:column;flex:1;gap:1px;min-width:0}
+.kb-nivtest .nttx b{font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--ink,#1A1A1A)}
+.kb-nivtest .nttx span{font-size:13px;color:var(--text-soft,#5C5C5C)}
+.kb-nivtest .ntgo{font-size:19px;color:#0F766E;font-weight:800;flex:none;transition:transform .28s cubic-bezier(.16,1,.3,1)}
+.kb-nivtest:hover .ntgo{transform:translateX(4px)}
 .kb-filters{display:flex;gap:8px;flex-wrap:wrap}
-.kb-chip{border:1px solid var(--border,#ECECEC);background:#fff;color:var(--text-soft,#5C5C5C);font-weight:700;font-size:13px;padding:7px 14px;border-radius:999px;cursor:pointer;font-family:inherit;transition:.15s}
-.kb-chip:hover{border-color:#2DD4BF;color:#0E8577}
-.kb-chip.on{background:#06403A;border-color:#06403A;color:#fff}
-.kb-nivtest{display:flex;align-items:center;gap:14px;text-decoration:none;background:linear-gradient(135deg,#EAFBF6,#D2F5EE);border:1px solid #B6E9E0;border-radius:16px;padding:14px 18px;margin:0 0 18px;transition:transform .16s,box-shadow .16s;box-shadow:0 4px 14px rgba(18,165,148,.08)}
-.kb-nivtest:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(18,165,148,.16)}
-.kb-nivtest .ntic{font-size:26px;flex:none}
-.kb-nivtest .nttx{display:flex;flex-direction:column;flex:1;gap:1px}
-.kb-nivtest .nttx b{font-family:'Space Grotesk',sans-serif;font-size:16px;color:#0E5A50}
-.kb-nivtest .nttx span{font-size:13px;color:#0E8577}
-.kb-nivtest .ntgo{font-size:20px;color:#12A594;font-weight:800;flex:none}
-.kb-row{margin:26px 0}
-.kb-rowhead{display:flex;gap:12px;align-items:flex-start;margin:0 0 12px}
-.kb-rowhead .ic{font-size:24px;line-height:1.1}
-.kb-rowhead h2{font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:700;margin:0;color:var(--ink,#141414)}
+.kb-chip{border:1px solid var(--border,#ECECEC);background:#fff;color:var(--text-soft,#5C5C5C);font-weight:700;font-size:13px;padding:7px 15px;border-radius:999px;cursor:pointer;font-family:inherit;transition:border-color .2s,color .2s,background .2s,transform .2s,box-shadow .2s}
+.kb-chip:hover{border-color:#2DD4BF;color:#0F766E;transform:translateY(-1px)}
+.kb-chip:active{transform:translateY(0) scale(.97)}
+.kb-chip.on{background:#06403A;border-color:#06403A;color:#fff;box-shadow:0 6px 16px -6px rgba(6,64,58,.5)}
+.kb-row{margin:30px 0;animation:kbUp .6s cubic-bezier(.16,1,.3,1) both;animation-delay:var(--rd,0ms)}
+.kb-rowhead{display:flex;gap:13px;align-items:center;margin:0 0 13px}
+.kb-rowhead .ic{width:40px;height:40px;border-radius:13px;background:#fff;border:1px solid var(--border,#ECECEC);box-shadow:0 2px 6px rgba(20,20,20,.05);display:flex;align-items:center;justify-content:center;font-size:19px;flex:none}
+.kb-rowhead h2{font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:700;letter-spacing:-.01em;margin:0;color:var(--ink,#1A1A1A);display:flex;align-items:center;gap:9px}
+.kb-count{font-family:'Inter',sans-serif;font-size:11.5px;font-weight:800;color:#0F766E;background:#E6FAF5;border:1px solid #C4F0E6;border-radius:999px;padding:2px 9px;letter-spacing:0}
 .kb-rowhead p{font-size:13.5px;color:var(--text-soft,#5C5C5C);margin:2px 0 0}
-.kb-track{display:grid;grid-auto-flow:column;grid-auto-columns:200px;gap:14px;overflow-x:auto;padding:4px 2px 12px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
-.kb-track::-webkit-scrollbar{height:8px}
+.kb-track{display:grid;grid-auto-flow:column;grid-auto-columns:206px;gap:14px;overflow-x:auto;padding:6px 2px 14px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:#E3E2DC transparent}
+.kb-track::-webkit-scrollbar{height:7px}
 .kb-track::-webkit-scrollbar-thumb{background:#E3E2DC;border-radius:8px}
-.kb-card{scroll-snap-align:start;text-align:left;border:1px solid var(--border,#ECECEC);background:#fff;border-radius:18px;overflow:hidden;cursor:pointer;font-family:inherit;padding:0;display:flex;flex-direction:column;box-shadow:0 4px 14px rgba(20,20,20,.05);transition:transform .16s,box-shadow .16s}
-.kb-card:hover{transform:translateY(-4px);box-shadow:0 12px 26px rgba(20,20,20,.12)}
-.kb-card .cov{position:relative;height:120px}
-
-.kb-badge{position:absolute;top:9px;left:9px;background:rgba(255,255,255,.92);color:#141414;font-weight:800;font-size:11px;padding:3px 9px;border-radius:999px}
-.kb-soon{position:absolute;top:9px;right:9px;background:#FFCE00;color:#3a2f00;font-weight:800;font-size:10.5px;padding:3px 8px;border-radius:999px}
-.kb-card .cbody{padding:12px 14px 14px;display:flex;flex-direction:column;gap:9px;flex:1}
-.kb-card .cbody b{font-size:14.5px;line-height:1.3;color:var(--ink,#141414)}
-.kb-meta{font-size:12px;color:var(--text-soft,#5C5C5C);font-weight:600;margin-top:auto}
-.kb-prog{height:5px;border-radius:5px;background:#EFEEEA;overflow:hidden}
-.kb-prog i{display:block;height:100%;background:linear-gradient(90deg,#2DD4BF,#12A594)}
-.kb-foot{text-align:center;color:var(--text-soft,#5C5C5C);font-size:13.5px;margin:26px 0 6px}
-.kb-back{border:none;background:none;color:#12A594;font-weight:800;font-size:14px;cursor:pointer;font-family:inherit;padding:6px 0;margin-bottom:10px;display:inline-flex;gap:6px;align-items:center}
-.kb-dhero{border-radius:22px;padding:30px 26px;min-height:150px;color:#fff;display:flex;gap:18px;align-items:flex-end;box-shadow:0 12px 30px rgba(20,20,20,.16)}
-
-.kb-dhero h1{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;margin:8px 0 4px;color:#fff}
-.kb-dhero p{font-size:14.5px;opacity:.92;margin:0;max-width:560px;color:#fff}
-.kb-dhero .kb-badge{position:static;background:rgba(255,255,255,.9);display:inline-block}
-.kb-note{background:linear-gradient(135deg,#EAFBF6,#FFF7DE);border:1px solid #CDEFE8;border-radius:16px;padding:14px 16px;font-size:14px;color:#0E5A50;margin:16px 0;line-height:1.5}
-.kb-h3{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;margin:22px 0 12px;color:var(--ink,#141414)}
+.kb-track::-webkit-scrollbar-track{background:transparent}
+.kb-card{scroll-snap-align:start;text-align:left;border:1px solid var(--border,#ECECEC);background:#fff;border-radius:18px;overflow:hidden;cursor:pointer;font-family:inherit;padding:0;display:flex;flex-direction:column;box-shadow:0 1px 2px rgba(20,20,20,.04),0 6px 18px -8px rgba(20,20,20,.1);transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s,border-color .3s;animation:kbUp .55s cubic-bezier(.16,1,.3,1) both;animation-delay:var(--d,0ms)}
+.kb-card:hover{transform:translateY(-5px);border-color:#CBEDE6;box-shadow:0 2px 4px rgba(20,20,20,.05),0 22px 44px -16px rgba(20,20,20,.22)}
+.kb-card:focus-visible{outline:3px solid #2DD4BF;outline-offset:2px}
+.kb-card:active{transform:translateY(-2px)}
+.kb-card .cov{position:relative;height:122px;overflow:hidden;background:#EFEEEA}
+.kb-card .cim{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.02);transition:transform .7s cubic-bezier(.16,1,.3,1)}
+.kb-card:hover .cim{transform:scale(1.08)}
+.kb-card .ovl{position:absolute;inset:0}
+.kb-badge{position:absolute;top:10px;left:10px;background:rgba(255,255,255,.94);backdrop-filter:blur(4px);color:#1A1A1A;font-weight:800;font-size:11px;padding:3px 9px;border-radius:999px;box-shadow:0 2px 6px rgba(0,0,0,.14)}
+.kb-soon{position:absolute;top:10px;right:10px;background:#FFCE00;color:#3a2f00;font-weight:800;font-size:10.5px;padding:3px 9px;border-radius:999px;box-shadow:0 2px 6px rgba(0,0,0,.14)}
+.kb-card .cbody{padding:13px 15px 14px;display:flex;flex-direction:column;gap:9px;flex:1}
+.kb-card .cbody b{font-size:14.5px;line-height:1.32;letter-spacing:-.01em;color:var(--ink,#1A1A1A);transition:color .25s}
+.kb-card:hover .cbody b{color:#0F766E}
+.kb-meta{font-size:12px;color:var(--text-soft,#5C5C5C);font-weight:600;margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.kb-meta .go{opacity:0;transform:translateX(-5px);transition:opacity .25s,transform .25s;color:#0F766E;font-weight:800;font-size:14px}
+.kb-card:hover .kb-meta .go{opacity:1;transform:none}
+.kb-prog{height:4px;border-radius:4px;background:#EFEEEA;overflow:hidden}
+.kb-prog i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,#2DD4BF,#14B8A6)}
+.kb-foot{text-align:center;color:var(--text-soft,#5C5C5C);font-size:13.5px;margin:28px 0 6px;animation:kbIn .8s .2s both}
+.kb-back{border:none;background:none;color:#0F766E;font-weight:800;font-size:14px;cursor:pointer;font-family:inherit;padding:6px 0;margin-bottom:12px;display:inline-flex;gap:7px;align-items:center;transition:transform .25s}
+.kb-back:hover{transform:translateX(-3px)}
+.kb-dhero{position:relative;border-radius:22px;padding:30px 26px;min-height:170px;color:#fff;display:flex;align-items:flex-end;overflow:hidden;box-shadow:0 2px 4px rgba(20,20,20,.06),0 20px 44px -16px rgba(20,20,20,.3);animation:kbUp .55s cubic-bezier(.16,1,.3,1) both}
+.kb-dhero .dim{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.kb-dhero .dovl{position:absolute;inset:0}
+.kb-dhero .dtx{position:relative;z-index:2}
+.kb-dhero .kb-badge{position:static;display:inline-block;margin-bottom:10px}
+.kb-dhero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(22px,3.4vw,28px);font-weight:700;letter-spacing:-.02em;margin:0 0 5px;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.25)}
+.kb-dhero p{font-size:14.5px;opacity:.94;margin:0;max-width:560px;color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.25)}
+.kb-note{background:linear-gradient(135deg,#EAFBF6,#FFF7DE);border:1px solid #CDEFE8;border-radius:16px;padding:14px 17px;font-size:14px;color:#0E5A50;margin:16px 0;line-height:1.55;animation:kbUp .55s .08s cubic-bezier(.16,1,.3,1) both}
+.kb-h3{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;letter-spacing:-.01em;margin:24px 0 12px;color:var(--ink,#1A1A1A)}
 .kb-skills{display:flex;flex-wrap:wrap;gap:10px}
-.kb-skill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border,#ECECEC);background:#fff;border-radius:14px;padding:10px 14px;font-weight:700;font-size:13.5px;color:var(--ink,#141414)}
+.kb-skill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border,#ECECEC);background:#fff;border-radius:14px;padding:10px 15px;font-weight:700;font-size:13.5px;color:var(--ink,#1A1A1A);box-shadow:0 1px 2px rgba(20,20,20,.04);transition:transform .25s cubic-bezier(.16,1,.3,1),border-color .25s,box-shadow .25s;animation:kbUp .5s cubic-bezier(.16,1,.3,1) both;animation-delay:var(--d,0ms)}
+.kb-skill:hover{transform:translateY(-2px);border-color:#CBEDE6;box-shadow:0 8px 18px -8px rgba(20,20,20,.15)}
 .kb-skill .e{font-size:18px}
 .kb-mods{display:flex;flex-direction:column;gap:10px}
-.kb-mod{display:flex;align-items:center;gap:14px;border:1px solid var(--border,#ECECEC);background:#fff;border-radius:14px;padding:13px 16px}
-.kb-mod .n{width:30px;height:30px;border-radius:50%;background:#EAFBF6;color:#12A594;font-weight:800;display:flex;align-items:center;justify-content:center;flex:none;font-size:14px}
-.kb-mod .mi{flex:1;display:flex;flex-direction:column}
-.kb-mod .mi b{font-size:14px;color:var(--ink,#141414)}
+.kb-mod{position:relative;display:flex;align-items:center;gap:14px;border:1px solid var(--border,#ECECEC);background:#fff;border-radius:14px;padding:13px 16px;overflow:hidden;box-shadow:0 1px 2px rgba(20,20,20,.04);transition:border-color .25s,transform .25s,box-shadow .25s;animation:kbUp .5s cubic-bezier(.16,1,.3,1) both;animation-delay:var(--d,0ms)}
+.kb-mod::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(#2DD4BF,#14B8A6);transform:scaleY(0);transform-origin:top;transition:transform .3s cubic-bezier(.16,1,.3,1)}
+.kb-mod:hover{border-color:#CBEDE6;transform:translateX(3px);box-shadow:0 8px 20px -10px rgba(20,20,20,.14)}
+.kb-mod:hover::before{transform:scaleY(1)}
+.kb-mod .n{width:31px;height:31px;border-radius:50%;background:#E6FAF5;color:#0F766E;font-weight:800;display:flex;align-items:center;justify-content:center;flex:none;font-size:14px}
+.kb-mod .mi{flex:1;display:flex;flex-direction:column;min-width:0}
+.kb-mod .mi b{font-size:14px;color:var(--ink,#1A1A1A)}
 .kb-mod .ms{font-size:12px;color:var(--text-soft,#5C5C5C)}
-.kb-mod .lk{opacity:.4}
-.kb-mod.soon{opacity:.9}
-@media(max-width:640px){.kb-hero h1{font-size:24px}.kb-track{grid-auto-columns:158px}.kb-dhero{flex-direction:column;text-align:center}}
+.kb-mod .lk{opacity:.35}
+.kb-mod-open{cursor:pointer}
+.kb-mod-open .n{background:linear-gradient(135deg,#2DD4BF,#14B8A6);color:#06403A}
+.kb-mod-open .mi b{color:#0F766E}
+.kb-mod-open .golek{font-size:18px;color:#0F766E;font-weight:800;opacity:0;transform:translateX(-4px);transition:.25s;flex:none}
+.kb-mod-open:hover .golek{opacity:1;transform:none}
+@media(max-width:640px){.kb-track{grid-auto-columns:164px}.kb-card .cov{height:100px}.kb-dhero{padding:22px 18px;min-height:140px}.kb-nivtest{padding:12px 14px}}
+@media(prefers-reduced-motion:reduce){.kb-hero,.kb-row,.kb-card,.kb-skill,.kb-mod,.kb-note,.kb-dhero,.kb-foot{animation:none}.kb-card,.kb-chip,.kb-nivtest,.kb-mod,.kb-skill,.kb-back,.kb-card .cim{transition:none}}
 </style>
 
 
@@ -2198,36 +2225,46 @@ var KB_IMG={
  goethetelc:'photo-1503676260728-1c00da094a0b',telcmed:'photo-1505751172876-fa1923c5c528',dtz:'photo-1526481280693-3bfa7568e0f3',
  medizin:'photo-1505751172876-fa1923c5c528',pflege:'photo-1511895426328-dc8714191300',buero:'photo-1486312338219-ce68d2c6f44d',
  a1:'photo-1502672260266-1c1ef2d93688',a2:'photo-1504674900247-0877df9cc836',b1:'photo-1488646953014-85cb44e25828',b2:'photo-1521737604893-d14cc237f11d',c1:'photo-1499209974431-9dddcece7f88',c2:'photo-1513151233558-d860c5398176',
- sk_lesen:'photo-1503676260728-1c00da094a0b',sk_schreiben:'photo-1456513080510-7bf3a84b82f8',sk_grammatik:'photo-1457369804613-52c61a468e7d',sk_hoeren:'photo-1611162617474-5b21e879e113',sk_bausteine:'photo-1486312338219-ce68d2c6f44d',sk_sprechen:'photo-1521737604893-d14cc237f11d',
- v_grammatik:'photo-1456513080510-7bf3a84b82f8',v_aussprache:'photo-1521737604893-d14cc237f11d',v_alltag:'photo-1502672260266-1c1ef2d93688'
+ sk_lesen:'photo-1503676260728-1c00da094a0b',sk_schreiben:'photo-1456513080510-7bf3a84b82f8',sk_grammatik:'photo-1457369804613-52c61a468e7d',sk_hoeren:'photo-1484704849700-f032a568e944',sk_bausteine:'photo-1434030216411-0b793f4b4173',sk_sprechen:'photo-1521737604893-d14cc237f11d',
+ v_grammatik:'photo-1456513080510-7bf3a84b82f8',v_aussprache:'photo-1484704849700-f032a568e944',v_alltag:'photo-1502672260266-1c1ef2d93688'
 };
-var KB_OV={pruefung:'linear-gradient(135deg,rgba(221,0,0,.40),rgba(125,17,32,.66))',beruf:'linear-gradient(135deg,rgba(18,165,148,.44),rgba(14,111,99,.68))',alltag:'linear-gradient(135deg,rgba(224,165,0,.40),rgba(184,122,0,.64))',skills:'linear-gradient(135deg,rgba(122,62,143,.48),rgba(78,42,92,.68))',video:'linear-gradient(135deg,rgba(14,16,18,.5),rgba(58,63,69,.72))'};
+var KB_OV={pruefung:'linear-gradient(135deg,rgba(221,0,0,.42),rgba(125,17,32,.68))',beruf:'linear-gradient(135deg,rgba(18,165,148,.44),rgba(14,111,99,.7))',alltag:'linear-gradient(135deg,rgba(224,165,0,.4),rgba(184,122,0,.66))',skills:'linear-gradient(135deg,rgba(122,62,143,.48),rgba(78,42,92,.7))',video:'linear-gradient(135deg,rgba(14,16,18,.52),rgba(58,63,69,.74))'};
+var KB_LESSONS={
+ a1:[{n:1,t:'Hallo! Ich bin \u2026'},{n:2,t:'Zahlen, Alter & Telefonnummer'},{n:3,t:'Meine Familie'}],
+ pflege:[{n:1,t:'Die Schicht\u00fcbergabe'}],
+ medizin:[{n:1,t:'Die Anamnese \u2013 das Erstgespr\u00e4ch'}],
+ buero:[{n:1,t:'Am Telefon \u2013 professionell reagieren'}]
+};
+function kbLekDone(){ try{ return JSON.parse(localStorage.getItem('dow_lek')||'{}'); }catch(e){ return {}; } }
 function kbimg(id){return KB_IMG[id]?('https://images.unsplash.com/'+KB_IMG[id]+'?auto=format&fit=crop&w=460&q=60'):'';}
 function kbMatch(c){ if(kbLevel==='alle')return true; var i=KB_LV.indexOf(kbLevel); return i>=c.lv[0]&&i<=c.lv[1]; }
 function kbTitle(c){ return c.tk?('<span data-i18n="'+c.tk+'">'+c.t+'</span>'):c.t; }
-function kbCard(cat,c){
-  var _img=kbimg(c.id),_ov=KB_OV[cat.id]||'';
-  var _cs=_img?('background:'+_ov+',url('+_img+');background-size:cover;background-position:center'):('background:'+cat.g);
-  return '<button class="kb-card" onclick="kbOpen(\''+c.id+'\')">'
-    +'<span class="cov" style="'+_cs+'">'
+function kbCard(cat,c,i){
+  var _img=kbimg(c.id);
+  return '<button class="kb-card" style="--d:'+(i*60)+'ms" onclick="kbOpen(\''+c.id+'\')">'
+    +'<span class="cov">'
+    +(_img?'<img class="cim" src="'+_img+'" alt="" loading="lazy">':'')
+    +'<span class="ovl" style="background:'+(_img?(KB_OV[cat.id]||''):cat.g)+'"></span>'
     +(c.badge?'<span class="kb-badge">'+c.badge+'</span>':'')
-    +(cat.soon?'<span class="kb-soon" data-i18n="kb_from">ab 01.10</span>':'')+'</span>'
+    +(cat.soon?'<span class="kb-soon" data-i18n="kb_from">ab 01.10</span>':'')
+    +'</span>'
     +'<span class="cbody"><b>'+kbTitle(c)+'</b>'
-    +'<span class="kb-meta">'+(cat.soon?'<span data-i18n="kb_soon">Bald</span>':'<span data-i18n="kb_build">Wird aufgebaut</span>')+'</span>'
+    +'<span class="kb-meta"><span>'+(cat.soon?'<span data-i18n="kb_soon">Bald</span>':'<span data-i18n="kb_build">Wird aufgebaut</span>')+'</span><span class="go">→</span></span>'
     +'<span class="kb-prog"><i style="width:0%"></i></span></span></button>';
 }
-function kbRow(cat){
+function kbRow(cat,ri){
   var cs=cat.courses.filter(kbMatch); if(!cs.length)return '';
-  return '<section class="kb-row"><div class="kb-rowhead"><span class="ic">'+cat.icon+'</span>'
-    +'<div><h2 data-i18n="'+cat.ck+'">'+cat.cat+'</h2><p data-i18n="'+cat.dk+'">'+cat.desc+'</p></div></div>'
-    +'<div class="kb-track">'+cs.map(function(c){return kbCard(cat,c);}).join('')+'</div></section>';
+  return '<section class="kb-row" style="--rd:'+(ri*70)+'ms"><div class="kb-rowhead"><span class="ic">'+cat.icon+'</span>'
+    +'<div><h2><span data-i18n="'+cat.ck+'">'+cat.cat+'</span><span class="kb-count">'+cs.length+'</span></h2><p data-i18n="'+cat.dk+'">'+cat.desc+'</p></div></div>'
+    +'<div class="kb-track">'+cs.map(function(c,i){return kbCard(cat,c,i);}).join('')+'</div></section>';
 }
 function kbReapply(){ var l; try{l=localStorage.getItem('dow_lang');}catch(e){} if(l&&l!=='de'&&window.setLang)window.setLang(l); }
 window.renderKurse=function(){
   var chips='<button class="kb-chip '+(kbLevel==='alle'?'on':'')+'" onclick="kbSetLevel(\'alle\')" data-i18n="kb_all">Alle Niveaus</button>'
     +KB_LV.map(function(l){return '<button class="kb-chip '+(kbLevel===l?'on':'')+'" onclick="kbSetLevel(\''+l+'\')">'+l+'</button>';}).join('');
   document.getElementById('v-kurse').innerHTML=
-    '<div class="kb-hero"><h1 data-i18n="kb_title">Deine Kursbibliothek</h1>'
+    '<div class="kb-hero"><span class="kb-eyebrow" data-i18n="kb_eyebrow">Dein Lernbereich</span>'
+    +'<h1 data-i18n="kb_title">Deine Kursbibliothek</h1>'
     +'<p class="kb-lead" data-i18n="kb_lead">Alles, was du brauchst, um endlich flüssig Deutsch zu sprechen — an einem Ort.</p>'
     +'<a class="kb-nivtest" href="niveau-test-club.html" target="_blank" rel="noopener"><span class="ntic">📊</span><span class="nttx"><b data-i18n="kb_nt_t">Teste dein Deutsch</b><span data-i18n="kb_nt_s">Finde in wenigen Minuten dein Niveau – im Goethe-/telc-Stil.</span></span><span class="ntgo">→</span></a>'
     +'<div class="kb-filters">'+chips+'</div></div>'
@@ -2248,18 +2285,31 @@ window.kbOpen=function(id){
    video:[['🎬','Video-Lektionen','kb_cp_videolekt'],['🧩','Übungen','kb_cp_uebungen'],['📄','Handouts','kb_cp_handouts']]
   };
   var comps=COMP[cat.id]||COMP.alltag;
-  var skills=comps.map(function(x){return '<span class="kb-skill"><span class="e">'+x[0]+'</span><span data-i18n="'+x[2]+'">'+x[1]+'</span></span>';}).join('');
+  var skills=comps.map(function(x,i){return '<span class="kb-skill" style="--d:'+(i*45)+'ms"><span class="e">'+x[0]+'</span><span data-i18n="'+x[2]+'">'+x[1]+'</span></span>';}).join('');
   var soon=cat.soon;
-  var _dimg=kbimg(found.id),_dov=KB_OV[cat.id]||'';
-  var _ds=_dimg?('background:'+_dov+',url('+_dimg+');background-size:cover;background-position:center'):('background:'+cat.g);
-  var mods=[1,2,3,4,5].map(function(n){
-    return '<div class="kb-mod'+(soon?' soon':'')+'"><span class="n">'+n+'</span><div class="mi"><b><span data-i18n="kb_lesson">Lektion</span> '+n+'</b>'
-      +'<span class="ms" data-i18n="'+(soon?'kb_from':'kb_build')+'">'+(soon?'ab 01.10':'Wird aufgebaut')+'</span></div><span class="lk">🔒</span></div>';
-  }).join('');
+  var _dimg=kbimg(found.id);
+  var reg=KB_LESSONS[found.id]||[]; var doneMap=kbLekDone();
+  var rows=Math.max(5,reg.length);
+  var mods=[];
+  for(var n=1;n<=rows;n++){
+    var i=n-1, lek=null;
+    reg.forEach(function(r){ if(r.n===n) lek=r; });
+    if(lek){
+      var did=doneMap[found.id+'-'+n]&&doneMap[found.id+'-'+n].done;
+      mods.push('<a class="kb-mod kb-mod-open" style="--d:'+(i*55)+'ms;text-decoration:none" href="lektion.html?k='+found.id+'&l='+n+'"><span class="n">'+(did?'✓':n)+'</span><div class="mi"><b>'+lek.t+'</b>'
+        +'<span class="ms">'+(did?'<span data-i18n="kb_done">✓ abgeschlossen — nochmal üben?</span>':'<span data-i18n="kb_start">Jetzt lernen</span>')+'</span></div><span class="golek">→</span></a>');
+    } else {
+      mods.push('<div class="kb-mod'+(soon?' soon':'')+'" style="--d:'+(i*55)+'ms"><span class="n">'+n+'</span><div class="mi"><b><span data-i18n="kb_lesson">Lektion</span> '+n+'</b>'
+        +'<span class="ms" data-i18n="'+(soon?'kb_from':'kb_build')+'">'+(soon?'ab 01.10':'Wird aufgebaut')+'</span></div><span class="lk">🔒</span></div>');
+    }
+  }
+  mods=mods.join('');
   document.getElementById('v-kurse').innerHTML=
     '<button class="kb-back" onclick="window.renderKurse()"><span>←</span> <span data-i18n="kb_back">Zurück zur Bibliothek</span></button>'
-    +'<div class="kb-dhero" style="'+_ds+'">'
-    +'<div><span class="kb-badge">'+(found.badge||cat.cat)+'</span><h1>'+found.t+'</h1><p data-i18n="'+cat.dk+'">'+cat.desc+'</p></div></div>'
+    +'<div class="kb-dhero">'
+    +(_dimg?'<img class="dim" src="'+_dimg+'" alt="">':'')
+    +'<span class="dovl" style="background:'+(_dimg?(KB_OV[cat.id]||''):cat.g)+'"></span>'
+    +'<div class="dtx"><span class="kb-badge">'+(found.badge||cat.cat)+'</span><h1>'+found.t+'</h1><p data-i18n="'+cat.dk+'">'+cat.desc+'</p></div></div>'
     +(soon?'<div class="kb-note" data-i18n="kb_incl">🎬 Ab 1. Oktober — in deiner Community-Mitgliedschaft enthalten.</div>'
           :'<div class="kb-note" data-i18n="kb_note">Dieser Kurs wird gerade mit Inhalten gefüllt. Neue Lektionen erscheinen hier automatisch. 💛</div>')
     +'<h3 class="kb-h3" data-i18n="kb_expect">Das erwartet dich</h3><div class="kb-skills">'+skills+'</div>'
@@ -2271,6 +2321,8 @@ window.kbOpen=function(id){
 <script>window.__I18N__=Object.assign(window.__I18N__||{},{"k_courses": {"en": "Course library", "es": "Biblioteca de cursos", "ru": "Библиотека курсов", "uk": "Бібліотека курсів", "tr": "Kurs kütüphanesi", "it": "Libreria corsi", "fa": "کتابخانه دوره‌ها"}, "kb_title": {"en": "Your course library", "es": "Tu biblioteca de cursos", "ru": "Твоя библиотека курсов", "uk": "Твоя бібліотека курсів", "tr": "Kurs kütüphanen", "it": "La tua libreria di corsi", "fa": "کتابخانه دوره‌های تو"}, "kb_lead": {"en": "Everything you need to finally speak German fluently — in one place.", "es": "Todo lo que necesitas para hablar alemán con fluidez — en un solo lugar.", "ru": "Всё, что нужно, чтобы наконец свободно говорить по-немецки — в одном месте.", "uk": "Усе, що потрібно, щоб нарешті вільно говорити німецькою — в одному місці.", "tr": "Sonunda akıcı Almanca konuşmak için ihtiyacın olan her şey — tek yerde.", "it": "Tutto ciò che ti serve per parlare finalmente tedesco in modo fluente — in un unico posto.", "fa": "هر آنچه لازم داری تا بالاخره روان آلمانی صحبت کنی — در یک مکان."}, "kb_all": {"en": "All levels", "es": "Todos los niveles", "ru": "Все уровни", "uk": "Усі рівні", "tr": "Tüm seviyeler", "it": "Tutti i livelli", "fa": "همه سطوح"}, "kb_footnote": {"en": "New content is added regularly. 💛", "es": "Añadimos contenido nuevo con regularidad. 💛", "ru": "Новый контент добавляется регулярно. 💛", "uk": "Новий контент додається регулярно. 💛", "tr": "Düzenli olarak yeni içerik ekleniyor. 💛", "it": "Nuovi contenuti si aggiungono regolarmente. 💛", "fa": "محتوای جدید مرتب اضافه می‌شود. 💛"}, "kb_c_pruefung": {"en": "Exam preparation", "es": "Preparación de exámenes", "ru": "Подготовка к экзаменам", "uk": "Підготовка до іспитів", "tr": "Sınav hazırlığı", "it": "Preparazione agli esami", "fa": "آمادگی آزمون"}, "kb_d_pruefung": {"en": "Goethe & telc — confident through every exam", "es": "Goethe y telc — seguro en cada examen", "ru": "Goethe и telc — уверенно на каждом экзамене", "uk": "Goethe та telc — впевнено на кожному іспиті", "tr": "Goethe & telc — her sınavda emin adımlarla", "it": "Goethe & telc — sicuro in ogni esame", "fa": "گوته و telc — با اطمینان در هر آزمون"}, "kb_c_beruf": {"en": "German for work", "es": "Alemán para el trabajo", "ru": "Немецкий для работы", "uk": "Німецька для роботи", "tr": "İş için Almanca", "it": "Tedesco per il lavoro", "fa": "آلمانی برای کار"}, "kb_d_beruf": {"en": "Professional language that moves your career forward", "es": "Lenguaje técnico que impulsa tu carrera", "ru": "Профессиональный язык, который двигает карьеру вперёд", "uk": "Фахова мова, що просуває твою кар'єру", "tr": "Kariyerini ileri taşıyan meslek dili", "it": "Linguaggio tecnico che fa crescere la tua carriera", "fa": "زبان تخصصی که شغلت را جلو می‌برد"}, "kb_c_alltag": {"en": "Everyday German", "es": "Alemán cotidiano", "ru": "Немецкий для повседневной жизни", "uk": "Німецька для повсякдення", "tr": "Günlük Almanca", "it": "Tedesco quotidiano", "fa": "آلمانی روزمره"}, "kb_d_alltag": {"en": "From your first words to fluent — step by step", "es": "De las primeras palabras a la fluidez — paso a paso", "ru": "От первых слов до свободной речи — шаг за шагом", "uk": "Від перших слів до вільної мови — крок за кроком", "tr": "İlk kelimelerden akıcılığa — adım adım", "it": "Dalle prime parole alla fluidità — passo dopo passo", "fa": "از نخستین کلمه‌ها تا روان‌شدن — قدم‌به‌قدم"}, "kb_c_skills": {"en": "Train specific skills", "es": "Entrena destrezas concretas", "ru": "Тренируй конкретные навыки", "uk": "Тренуй конкретні навички", "tr": "Belirli becerileri çalış", "it": "Allena competenze mirate", "fa": "تمرین مهارت‌های مشخص"}, "kb_d_skills": {"en": "Reading · Writing · Grammar · Listening · Language elements · Speaking", "es": "Leer · Escribir · Gramática · Escuchar · Estructuras · Hablar", "ru": "Чтение · Письмо · Грамматика · Аудирование · Языковые конструкции · Говорение", "uk": "Читання · Письмо · Граматика · Аудіювання · Мовні конструкції · Говоріння", "tr": "Okuma · Yazma · Dilbilgisi · Dinleme · Dil yapıları · Konuşma", "it": "Lettura · Scrittura · Grammatica · Ascolto · Strutture linguistiche · Parlato", "fa": "خواندن · نوشتن · دستور · شنیدن · ساختارهای زبانی · صحبت‌کردن"}, "kb_c_video": {"en": "Video courses", "es": "Videocursos", "ru": "Видеокурсы", "uk": "Відеокурси", "tr": "Video kurslar", "it": "Videocorsi", "fa": "دوره‌های ویدیویی"}, "kb_d_video": {"en": "From 1 October — included in your community membership", "es": "Desde el 1 de octubre — incluido en tu membresía community", "ru": "С 1 октября — включено в твоё членство community", "uk": "З 1 жовтня — входить у твоє членство community", "tr": "1 Ekim'den itibaren — community üyeliğine dahil", "it": "Dal 1° ottobre — incluso nella tua iscrizione community", "fa": "از ۱ اکتبر — شامل عضویت community تو"}, "kb_soon": {"en": "Soon", "es": "Pronto", "ru": "Скоро", "uk": "Незабаром", "tr": "Yakında", "it": "Presto", "fa": "به‌زودی"}, "kb_from": {"en": "from 01/10", "es": "desde 01/10", "ru": "с 01.10", "uk": "з 01.10", "tr": "01.10'dan", "it": "dal 01/10", "fa": "از ۰۱.۱۰"}, "kb_build": {"en": "Being built", "es": "En construcción", "ru": "В разработке", "uk": "У розробці", "tr": "Hazırlanıyor", "it": "In costruzione", "fa": "در حال ساخت"}, "kb_incl": {"en": "🎬 From 1 October — included in your community membership.", "es": "🎬 Desde el 1 de octubre — incluido en tu membresía community.", "ru": "🎬 С 1 октября — включено в твоё членство community.", "uk": "🎬 З 1 жовтня — входить у твоє членство community.", "tr": "🎬 1 Ekim'den itibaren — community üyeliğine dahil.", "it": "🎬 Dal 1° ottobre — incluso nella tua iscrizione community.", "fa": "🎬 از ۱ اکتبر — شامل عضویت community تو."}, "kb_note": {"en": "This course is being filled with content right now. New lessons appear here automatically. 💛", "es": "Este curso se está llenando de contenido ahora mismo. Las nuevas lecciones aparecen aquí automáticamente. 💛", "ru": "Этот курс сейчас наполняется материалами. Новые уроки появятся здесь автоматически. 💛", "uk": "Цей курс зараз наповнюється матеріалами. Нові уроки з'являться тут автоматично. 💛", "tr": "Bu kurs şu anda içerikle dolduruluyor. Yeni dersler burada otomatik görünür. 💛", "it": "Questo corso si sta riempiendo di contenuti proprio ora. Le nuove lezioni appaiono qui automaticamente. 💛", "fa": "این دوره همین حالا در حال پرشدن با محتواست. درس‌های جدید به‌طور خودکار اینجا ظاهر می‌شوند. 💛"}, "kb_back": {"en": "Back to library", "es": "Volver a la biblioteca", "ru": "Назад в библиотеку", "uk": "Назад до бібліотеки", "tr": "Kütüphaneye dön", "it": "Torna alla libreria", "fa": "بازگشت به کتابخانه"}, "kb_expect": {"en": "What to expect", "es": "Qué te espera", "ru": "Что тебя ждёт", "uk": "Що на тебе чекає", "tr": "Seni ne bekliyor", "it": "Cosa ti aspetta", "fa": "چه چیزی در انتظار توست"}, "kb_mods": {"en": "Lessons & modules", "es": "Lecciones y módulos", "ru": "Уроки и модули", "uk": "Уроки та модулі", "tr": "Dersler ve modüller", "it": "Lezioni e moduli", "fa": "درس‌ها و ماژول‌ها"}, "kb_lesson": {"en": "Lesson", "es": "Lección", "ru": "Урок", "uk": "Урок", "tr": "Ders", "it": "Lezione", "fa": "درس"}, "kb_sk_lesen": {"en": "Reading", "es": "Leer", "ru": "Чтение", "uk": "Читання", "tr": "Okuma", "it": "Lettura", "fa": "خواندن"}, "kb_sk_schreiben": {"en": "Writing", "es": "Escribir", "ru": "Письмо", "uk": "Письмо", "tr": "Yazma", "it": "Scrittura", "fa": "نوشتن"}, "kb_sk_grammatik": {"en": "Grammar", "es": "Gramática", "ru": "Грамматика", "uk": "Граматика", "tr": "Dilbilgisi", "it": "Grammatica", "fa": "دستور"}, "kb_sk_hoeren": {"en": "Listening", "es": "Escuchar", "ru": "Аудирование", "uk": "Аудіювання", "tr": "Dinleme", "it": "Ascolto", "fa": "شنیدن"}, "kb_sk_bausteine": {"en": "Language elements", "es": "Estructuras lingüísticas", "ru": "Языковые конструкции", "uk": "Мовні конструкції", "tr": "Dil yapıları", "it": "Strutture linguistiche", "fa": "ساختارهای زبانی"}, "kb_sk_sprechen": {"en": "Speaking", "es": "Hablar", "ru": "Говорение", "uk": "Говоріння", "tr": "Konuşma", "it": "Parlato", "fa": "صحبت‌کردن"}});</script>
 <script>window.__I18N__=Object.assign(window.__I18N__||{},{"kb_cp_simul": {"en": "Exam simulation", "es": "Simulacro de examen", "ru": "Симуляция экзамена", "uk": "Симуляція іспиту", "tr": "Sınav simülasyonu", "it": "Simulazione d'esame", "fa": "شبیه‌سازی آزمون"}, "kb_cp_fachvok": {"en": "Technical vocabulary", "es": "Vocabulario técnico", "ru": "Профессиональная лексика", "uk": "Фахова лексика", "tr": "Meslek sözlüğü", "it": "Lessico specialistico", "fa": "واژگان تخصصی"}, "kb_cp_dialoge": {"en": "Dialogues & phrases", "es": "Diálogos y expresiones", "ru": "Диалоги и речевые обороты", "uk": "Діалоги та мовні звороти", "tr": "Diyaloglar & kalıplar", "it": "Dialoghi ed espressioni", "fa": "گفتگوها و عبارات کاربردی"}, "kb_cp_berufssit": {"en": "Workplace scenarios", "es": "Situaciones laborales", "ru": "Рабочие ситуации", "uk": "Робочі ситуації", "tr": "İş durumları", "it": "Situazioni lavorative", "fa": "موقعیت‌های شغلی"}, "kb_cp_aussprache": {"en": "Pronunciation", "es": "Pronunciación", "ru": "Произношение", "uk": "Вимова", "tr": "Telaffuz", "it": "Pronuncia", "fa": "تلفظ"}, "kb_cp_rollenspiel": {"en": "Speaking & role-plays", "es": "Hablar y juegos de rol", "ru": "Говорение и ролевые игры", "uk": "Говоріння та рольові ігри", "tr": "Konuşma & rol yapma", "it": "Parlato e giochi di ruolo", "fa": "صحبت و ایفای نقش"}, "kb_cp_wortschatz": {"en": "Vocabulary", "es": "Vocabulario", "ru": "Словарный запас", "uk": "Словниковий запас", "tr": "Kelime hazinesi", "it": "Lessico", "fa": "واژگان"}, "kb_cp_uebungen": {"en": "Exercises", "es": "Ejercicios", "ru": "Упражнения", "uk": "Вправи", "tr": "Alıştırmalar", "it": "Esercizi", "fa": "تمرین‌ها"}, "kb_cp_erklaer": {"en": "Explanations", "es": "Explicaciones", "ru": "Объяснения", "uk": "Пояснення", "tr": "Açıklamalar", "it": "Spiegazioni", "fa": "توضیحات"}, "kb_cp_beispiele": {"en": "Examples", "es": "Ejemplos", "ru": "Примеры", "uk": "Приклади", "tr": "Örnekler", "it": "Esempi", "fa": "مثال‌ها"}, "kb_cp_selbsttest": {"en": "Self-test", "es": "Autoevaluación", "ru": "Самопроверка", "uk": "Самоперевірка", "tr": "Öz test", "it": "Autotest", "fa": "خودآزمایی"}, "kb_cp_videolekt": {"en": "Video lessons", "es": "Videolecciones", "ru": "Видеоуроки", "uk": "Відеоуроки", "tr": "Video dersler", "it": "Videolezioni", "fa": "درس‌های ویدیویی"}, "kb_cp_handouts": {"en": "Handouts", "es": "Materiales", "ru": "Раздаточные материалы", "uk": "Роздаткові матеріали", "tr": "Ders notları", "it": "Dispense", "fa": "جزوه‌ها"}});</script>
 <script>window.__I18N__=Object.assign(window.__I18N__||{},{"kb_nt_t": {"en": "Test your German", "es": "Evalúa tu alemán", "ru": "Проверь свой немецкий", "uk": "Перевір свою німецьку", "tr": "Almancanı test et", "it": "Metti alla prova il tuo tedesco", "fa": "آلمانی‌ات را بسنج"}, "kb_nt_s": {"en": "Find your level in a few minutes – in Goethe/telc style.", "es": "Descubre tu nivel en pocos minutos, al estilo Goethe/telc.", "ru": "Узнай свой уровень за несколько минут — в стиле Goethe/telc.", "uk": "Дізнайся свій рівень за кілька хвилин — у стилі Goethe/telc.", "tr": "Seviyeni birkaç dakikada öğren – Goethe/telc tarzında.", "it": "Scopri il tuo livello in pochi minuti, in stile Goethe/telc.", "fa": "سطحت را در چند دقیقه بفهم – به سبک گوته/telc."}});</script>
+<script>window.__I18N__=Object.assign(window.__I18N__||{},{"kb_eyebrow": {"en": "Your learning space", "es": "Tu espacio de aprendizaje", "ru": "Твоё пространство для учёбы", "uk": "Твій простір для навчання", "tr": "Öğrenme alanın", "it": "Il tuo spazio di apprendimento", "fa": "فضای یادگیری تو"}});</script>
+<script>window.__I18N__=Object.assign(window.__I18N__||{},{"kb_start": {"en": "Start learning", "es": "Empezar a aprender", "ru": "Начать урок", "uk": "Почати урок", "tr": "Öğrenmeye başla", "it": "Inizia a imparare", "fa": "شروع یادگیری"}, "kb_done": {"en": "✓ completed — practise again?", "es": "✓ completada — ¿repasar otra vez?", "ru": "✓ пройдено — повторить ещё раз?", "uk": "✓ пройдено — повторити ще раз?", "tr": "✓ tamamlandı — tekrar çalışalım mı?", "it": "✓ completata — ripassare di nuovo?", "fa": "✓ تمام شد — دوباره تمرین کنیم؟"}});</script>
 <script>(function(){var T=window.__I18N__||{};var LANG="de";function ca(el){if(!el.getAttribute("data-de"))el.setAttribute("data-de",el.innerHTML);if(LANG==="de"){el.innerHTML=el.getAttribute("data-de");return;}var k=el.getAttribute("data-i18n");el.innerHTML=(T[k]&&T[k][LANG]!=null)?T[k][LANG]:el.getAttribute("data-de");}window.setLang=function(lang){LANG=lang;document.documentElement.lang=lang;document.documentElement.dir=(lang==="fa")?"rtl":"ltr";document.querySelectorAll("[data-i18n]").forEach(ca);var sel=document.getElementById("langSel");if(sel)sel.value=lang;try{localStorage.setItem("dow_lang",lang);}catch(e){}};var obs=new MutationObserver(function(m){if(LANG==="de")return;m.forEach(function(x){x.addedNodes&&Array.prototype.forEach.call(x.addedNodes,function(nd){if(nd.nodeType!==1)return;if(nd.hasAttribute&&nd.hasAttribute("data-i18n"))ca(nd);if(nd.querySelectorAll)nd.querySelectorAll("[data-i18n]").forEach(ca);});});});function boot(){var sv=null;try{sv=localStorage.getItem("dow_lang");}catch(e){}var sup=["de","en","es","ru","uk","tr","it","fa"];var l=sv;if(!l){var b=(navigator.language||"de").slice(0,2).toLowerCase();l=sup.indexOf(b)>=0?b:"de";}setLang(l);obs.observe(document.body,{childList:true,subtree:true});}if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();})();</script>
 </body>
 </html>
