@@ -3,7 +3,7 @@
 window.LEKTION = {
   meta: { kurs: 'Alltagsdeutsch A2', nr: 3, titel: 'Eine Wohnung suchen', level: 'A2', bild: 'th-wohnung', dauer: 'ca. 18 Min' },
   intro: {
-    text: 'Eine Wohnungsbesichtigung dauert oft nur zwanzig Minuten — und in dieser Zeit musst du fragen, was wirklich zählt: Miete, Nebenkosten, Kaution. Hier bekommst du die Wörter dafür. Und du lernst den Unterschied zwischen „Der Schrank steht im Flur" und „Ich stelle den Schrank in den Flur".',
+    text: 'Eine Wohnungsbesichtigung dauert oft nur zwanzig Minuten. In dieser Zeit musst du das Wichtigste fragen: Miete, Nebenkosten, Kaution. Hier bekommst du die Wörter dafür. Und du lernst den Unterschied: „Der Schrank steht im Flur" oder „Ich stelle den Schrank in den Flur".',
     du_lernst: ['Bei der Besichtigung fragen', 'Miete, Nebenkosten, Kaution', 'Wo? mit Dativ – Wohin? mit Akkusativ', 'stehen/stellen · liegen/legen']
   },
   dialog: {
@@ -64,7 +64,7 @@ window.LEKTION = {
           ['hängen – Das Bild hängt an der Wand.', 'hängen – Ich hänge das Bild an die Wand.'],
           ['sitzen – Wir sitzen auf dem Balkon.', 'setzen – Wir setzen uns auf den Balkon.']
         ],
-        note: 'Merkhilfe: Die Verben mit <b>-e-</b> in der Mitte (st<b>e</b>llen, l<b>e</b>gen, s<b>e</b>tzen) bringen etwas irgendwohin — sie brauchen den Akkusativ.'
+        note: 'Merkhilfe: Verben mit <b>-e-</b> in der Mitte (st<b>e</b>llen, l<b>e</b>gen, s<b>e</b>tzen) bringen etwas irgendwohin. Sie brauchen den Akkusativ.'
       }
     ]
   },

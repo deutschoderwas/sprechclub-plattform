@@ -3,7 +3,7 @@
 window.LEKTION = {
   meta: { kurs: 'Alltagsdeutsch B1', nr: 2, titel: 'Der erste Tag im neuen Job', level: 'B1', bild: 'th-arbeit', dauer: 'ca. 20 Min' },
   intro: {
-    text: 'Die Bewerbung hat geklappt — jetzt stehst du am ersten Tag zwischen fremden Gesichtern, Spindschlüsseln und Passwörtern. Heute lernst du, wie du dich im Team vorstellst und wie du Menschen und Dinge genau benennst: der Kollege, der die Technik betreut, das Formular, das du noch unterschreiben musst.',
+    text: 'Die Bewerbung hat geklappt — jetzt stehst du am ersten Tag zwischen fremden Gesichtern, Spindschlüsseln und Passwörtern. Heute lernst du, wie du dich im Team vorstellst. Und wie du Menschen und Dinge genau benennst: der Kollege, der die Technik betreut. Das Formular, das du noch unterschreiben musst.',
     du_lernst: ['Sich im Team vorstellen', 'Nach Abläufen und Zuständigkeiten fragen', 'Relativsätze im Nominativ und Akkusativ', 'Wortschatz Arbeitsplatz und Einarbeitung']
   },
   dialog: {

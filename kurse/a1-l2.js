@@ -2,7 +2,7 @@
 window.LEKTION = {
   meta: { kurs: 'Alltagsdeutsch A1', nr: 2, titel: 'Zahlen, Alter & Telefonnummer', level: 'A1', bild: 'a1-l2', dauer: 'ca. 15 Min' },
   intro: {
-    text: 'Zahlen brauchst du überall: beim Einkaufen, beim Arzt, beim Amt. Heute lernst du die Zahlen von 0 bis 100, wie du dein Alter sagst und wie du deine Telefonnummer angibst.',
+    text: 'Zahlen brauchst du überall: beim Einkaufen, beim Arzt, beim Amt. Heute lernst du die Zahlen von 0 bis 100. Du sagst dein Alter. Du sagst deine Telefonnummer.',
     du_lernst: ['Zahlen 0–100', 'Wie alt bist du?', 'Telefonnummer sagen', 'sein: ich bin / du bist']
   },
   dialog: {
@@ -49,7 +49,7 @@ window.LEKTION = {
       },
       {
         h: 'Zahlen: rückwärts denken!',
-        txt: 'Ab 21 sagt man im Deutschen erst die kleine Zahl, dann die große:',
+        txt: 'Ab 21 kommt zuerst die kleine Zahl. Dann kommt die große Zahl:',
         table: [
           ['Zahl', 'Deutsch', 'Logik'],
           ['21', 'einundzwanzig', '1 + und + 20'],

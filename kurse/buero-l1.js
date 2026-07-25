@@ -1,6 +1,6 @@
 // Deutsch für Büro & Logistik – Lektion 1: Das Telefonat
 window.LEKTION = {
-  meta: { kurs: 'Deutsch für Büro & Logistik', nr: 1, titel: 'Am Telefon – professionell reagieren', level: 'A2', bild: 'buero-l1', dauer: 'ca. 18 Min' },
+  meta: { kurs: 'Deutsch für Büro & Logistik', nr: 1, titel: 'Am Telefon – professionell reagieren', level: 'A2–B2', bild: 'buero-l1', dauer: 'ca. 18 Min' },
   intro: {
     text: 'Telefonieren ist für viele das Schwerste: Man sieht den anderen nicht und muss trotzdem sofort reagieren. Mit den festen Bausteinen aus dieser Lektion klingst du ab dem ersten Anruf sicher und professionell.',
     du_lernst: ['Sich am Telefon melden', 'Nachfragen ohne Angst', 'Termine verschieben', 'Höflich mit „würde/könnte"']

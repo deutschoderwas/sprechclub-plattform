@@ -3,7 +3,7 @@
 window.LEKTION = {
   meta: { kurs: 'Alltagsdeutsch A2', nr: 4, titel: 'Reisen und Urlaub', level: 'A2', bild: 'th-reise', dauer: 'ca. 18 Min' },
   intro: {
-    text: 'Über Urlaub redet man in Deutschland ständig — im Büro, in der Kantine, beim Kaffee. Und fast jeder Urlaubssatz braucht eine Begründung oder eine Meinung. Genau darum geht es hier: weil und dass, die zwei Wörter, die dein Deutsch sofort erwachsener klingen lassen.',
+    text: 'Über Urlaub redet man in Deutschland ständig — im Büro, in der Kantine, beim Kaffee. Und fast jeder Urlaubssatz braucht eine Begründung oder eine Meinung. Genau darum geht es hier: weil und dass. Diese zwei Wörter lassen dein Deutsch sofort erwachsener klingen.',
     du_lernst: ['Über Reisepläne sprechen', 'Wortschatz Zug, Unterkunft, Gepäck', 'Nebensatz mit weil', 'Nebensatz mit dass']
   },
   dialog: {

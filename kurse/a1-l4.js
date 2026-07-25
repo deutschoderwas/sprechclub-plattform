@@ -3,12 +3,12 @@
 window.LEKTION = {
   meta: { kurs: 'Alltagsdeutsch A1', nr: 4, titel: 'Essen & Trinken', level: 'A1', bild: 'th-essen', dauer: 'ca. 15 Min' },
   intro: {
-    text: 'Heute bestellst du zum ersten Mal etwas auf Deutsch — im Café, am Imbiss, in der Kantine. Du lernst die zwei Sätze, mit denen du in Deutschland überall durchkommst: „Ich möchte …" und „Ich hätte gern …". Und du merkst: Nach diesen Sätzen wird aus „der" plötzlich „den".',
+    text: 'Heute bestellst du etwas auf Deutsch. Im Café, am Imbiss oder in der Kantine. Du lernst zwei wichtige Sätze: „Ich möchte …" und „Ich hätte gern …". Und du merkst: Nach diesen Sätzen wird aus „der" plötzlich „den".',
     du_lernst: ['Essen und Getränke benennen', 'Höflich bestellen', 'Akkusativ: der wird den', 'Ich möchte / Ich hätte gern']
   },
   dialog: {
     bild: 'th-essen',
-    situation: 'Mittagspause im Café Lindner. Mehmet und Sofia setzen sich an einen Tisch, Kellner Tobias kommt an den Tisch.',
+    situation: 'Mittagspause im Café Lindner. Mehmet und Sofia sitzen im Café. Der Kellner Tobias kommt.',
     lines: [
       { sp: 'Tobias', txt: 'Guten Tag! Was möchten Sie bestellen?' },
       { sp: 'Sofia', txt: 'Ich hätte gern eine Suppe und einen Tee, bitte.' },
@@ -73,10 +73,10 @@ window.LEKTION = {
     { typ: 'mc', frage: 'Welcher Satz klingt im Café am höflichsten?', optionen: ['Ich hätte gern eine Suppe, bitte.', 'Ich will eine Suppe.', 'Suppe!'], richtig: 0, hinweis: '„Ich hätte gern …" ist die höflichste Bestellform. „Ich will" wirkt fordernd.' },
     { typ: 'gapbank', frage: 'Welcher Artikel passt?', text: 'Ich möchte ___ Kaffee und ___ Suppe.', bank: ['einen', 'eine', 'ein'], loesung: ['einen', 'eine'], hinweis: 'der Kaffee → einen · die Suppe → eine. Nur maskulin bekommt -en.' },
     { typ: 'match', frage: 'Was gehört im Café zusammen?', paare: [['der Kaffee', '☕ Getränk am Morgen'], ['das Brot', '🍞 schmeckt mit Käse'], ['die Rechnung', '🧾 kommt am Ende'], ['Guten Appetit!', '😋 sagt man vor dem Essen']] },
-    { typ: 'order', frage: 'Bring die Bestellung in die richtige Reihenfolge!', woerter: ['gern', 'Ich', 'hätte', 'Suppe', 'die'], loesung: 'Ich hätte gern die Suppe', hinweis: 'Erst die Person, dann hätte, dann gern — und zum Schluss die Bestellung.' },
+    { typ: 'order', frage: 'Bring die Bestellung in die richtige Reihenfolge!', woerter: ['gern', 'Ich', 'hätte', 'Suppe', 'die'], loesung: 'Ich hätte gern die Suppe', hinweis: 'Die Reihenfolge: Ich · hätte · gern · die Bestellung.' },
     { typ: 'bild', bild: 'th-essen', frage: 'Wo sitzen die Leute auf dem Bild?', optionen: ['in einem Café', 'in einem Supermarkt', 'in einem Bus', 'in einer Arztpraxis'], richtig: 0, hinweis: 'Achte auf Tische, Tassen und Teller.' },
     { typ: 'mc', frage: 'Der Kellner fragt: „Möchten Sie einen Kaffee?" Du willst nur Wasser. Was sagst du?', optionen: ['Nein danke, ich möchte nur ein Wasser.', 'Ja, kein Kaffee bitte.', 'Nein, ich hätte gern einen Kaffee.'], richtig: 0, hinweis: 'Erst höflich ablehnen („Nein danke"), dann sagen, was du wirklich willst.' },
-    { typ: 'type', frage: 'Du sitzt im Café. Bestelle etwas zu essen und zu trinken.', muster: 'Ich hätte gern eine Suppe und einen Tee, bitte.', akzeptiert: ['^ich hätte gern .+', '^ich möchte .+', '^ich nehme .+'], hinweis: 'Beginne mit „Ich hätte gern …", „Ich möchte …" oder „Ich nehme …" und denk an den Akkusativ.' }
+    { typ: 'type', frage: 'Du sitzt im Café. Bestelle etwas zu essen und zu trinken.', muster: 'Ich hätte gern eine Suppe und einen Tee, bitte.', akzeptiert: ['^ich hätte gern .+', '^ich möchte .+', '^ich nehme .+'], hinweis: 'Beginne mit „Ich hätte gern …" oder „Ich möchte …". Denk an den Akkusativ.' }
   ],
   zusammenfassung: {
     kernsaetze: [

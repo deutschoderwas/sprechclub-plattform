@@ -2,7 +2,7 @@
 window.LEKTION = {
   meta: { kurs: 'Alltagsdeutsch A1', nr: 3, titel: 'Meine Familie', level: 'A1', bild: 'a1-l3', dauer: 'ca. 15 Min' },
   intro: {
-    text: 'Über die Familie zu sprechen ist eines der ersten Themen in jedem Gespräch. Heute lernst du die Familienwörter, „mein/meine" und wie du über deine Liebsten erzählst.',
+    text: 'Über die Familie spricht man oft. Das ist ein Thema für den Anfang. Heute lernst du die Wörter für die Familie. Und du lernst „mein" und „meine".',
     du_lernst: ['Familienwörter', 'mein / meine', 'haben: ich habe / du hast', 'Über Personen erzählen']
   },
   dialog: {
@@ -48,7 +48,7 @@ window.LEKTION = {
       },
       {
         h: 'mein oder meine?',
-        txt: 'Das hängt vom Artikel des Wortes ab:',
+        txt: 'Der Artikel entscheidet: der, die oder das?',
         table: [
           ['Artikel', 'Possessiv', 'Beispiel'],
           ['der Bruder', 'mein', 'mein Bruder'],

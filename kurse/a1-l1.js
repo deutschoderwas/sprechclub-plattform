@@ -3,7 +3,7 @@
 window.LEKTION = {
   meta: { kurs: 'Alltagsdeutsch A1', nr: 1, titel: 'Hallo! Ich bin …', level: 'A1', bild: 'a1-l1', dauer: 'ca. 15 Min' },
   intro: {
-    text: 'Willkommen zu deiner ersten Lektion! Heute lernst du, wie du dich auf Deutsch vorstellst: dein Name, dein Land, deine Stadt. Am Ende sprichst du deine ersten eigenen Sätze — versprochen!',
+    text: 'Willkommen zu deiner ersten Lektion! Heute stellst du dich auf Deutsch vor. Du sagst deinen Namen, dein Land und deine Stadt. Am Ende sprichst du deine ersten eigenen Sätze — versprochen!',
     du_lernst: ['Begrüßen & verabschieden', 'Sich vorstellen', 'Fragen: Wie? Woher? Wo?', 'heißen · kommen · wohnen']
   },
   dialog: {

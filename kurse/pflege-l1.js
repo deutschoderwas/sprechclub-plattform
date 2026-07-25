@@ -1,6 +1,6 @@
 // Deutsch für die Pflege – Lektion 1: Die Schichtübergabe
 window.LEKTION = {
-  meta: { kurs: 'Deutsch für die Pflege', nr: 1, titel: 'Die Schichtübergabe', level: 'B1', bild: 'pflege-l1', dauer: 'ca. 20 Min' },
+  meta: { kurs: 'Deutsch für die Pflege', nr: 1, titel: 'Die Schichtübergabe', level: 'B1–B2', bild: 'pflege-l1', dauer: 'ca. 20 Min' },
   intro: {
     text: 'Die Übergabe ist der wichtigste Moment deiner Schicht: In wenigen Minuten musst du alles Wesentliche weitergeben — klar, strukturiert und ohne Missverständnisse. Hier lernst du die Sätze, die du dafür jeden Tag brauchst.',
     du_lernst: ['Struktur einer Übergabe', 'Fachwortschatz Pflege', 'Zustand beschreiben', 'Passiv & Perfekt im Bericht']

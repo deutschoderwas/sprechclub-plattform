@@ -3,7 +3,7 @@
 window.LEKTION = {
   meta: { kurs: 'Alltagsdeutsch A2', nr: 1, titel: 'Termine machen und absagen', level: 'A2', bild: 'th-tag', dauer: 'ca. 18 Min' },
   intro: {
-    text: 'Ein Termin in Deutschland ist eine feste Verabredung — und wer nicht kommt, sagt vorher ab. Hier lernst du, wie du am Telefon einen Termin bekommst, wie du höflich absagst und wie du einen Tag findest, der beiden passt. Danach bist du am Telefon nicht mehr sprachlos.',
+    text: 'Ein Termin in Deutschland ist eine feste Verabredung — und wer nicht kommt, sagt vorher ab. Hier lernst du drei Dinge. Einen Termin am Telefon bekommen. Höflich absagen. Und einen Tag finden, der beiden passt. Danach bist du am Telefon nicht mehr sprachlos.',
     du_lernst: ['Am Telefon einen Termin vereinbaren', 'Höflich absagen und verschieben', 'können · müssen · wollen', 'Das Verb auf Position 2']
   },
   dialog: {
@@ -63,7 +63,7 @@ window.LEKTION = {
           ['Den Termin am Freitag', 'muss', 'ich leider', 'absagen.'],
           ['Wann', 'können', 'Sie', 'kommen?']
         ],
-        note: 'Wenn etwas anderes vorne steht, rutscht das Subjekt hinter das Verb: <b>Am Dienstag kann ich</b> — nicht „Am Dienstag ich kann".'
+        note: 'Steht etwas anderes vorne, rutscht das Subjekt hinter das Verb. Also: <b>Am Dienstag kann ich</b> — nicht „Am Dienstag ich kann".'
       }
     ]
   },

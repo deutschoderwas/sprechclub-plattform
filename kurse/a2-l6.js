@@ -3,7 +3,7 @@
 window.LEKTION = {
   meta: { kurs: 'Alltagsdeutsch A2', nr: 6, titel: 'Den Weg finden', level: 'A2', bild: 'th-weg', dauer: 'ca. 18 Min' },
   intro: {
-    text: 'Du stehst an einer Kreuzung, der Termin beginnt in zehn Minuten und das Handy hat keinen Empfang. Jetzt hilft nur fragen — und die Antwort verstehen. Hier lernst du, wie man Wege erklärt bekommt und selbst erklärt: mit Imperativ, Ordnungszahlen und ein paar klaren Richtungswörtern.',
+    text: 'Du stehst an einer Kreuzung. Der Termin beginnt in zehn Minuten. Das Handy hat keinen Empfang. Jetzt hilft nur fragen — und die Antwort verstehen. Hier lernst du, wie man Wege erklärt — und wie du selbst erklärst. Mit Imperativ, Ordnungszahlen und klaren Richtungswörtern.',
     du_lernst: ['Nach dem Weg fragen', 'Wege erklären', 'Imperativ mit du und Sie', 'Ordnungszahlen und Richtungen']
   },
   dialog: {

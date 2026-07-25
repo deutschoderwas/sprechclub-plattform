@@ -3,7 +3,7 @@
 window.LEKTION = {
   meta: { kurs: 'Alltagsdeutsch A1', nr: 5, titel: 'Mein Tag und die Uhrzeit', level: 'A1', bild: 'th-tag', dauer: 'ca. 15 Min' },
   intro: {
-    text: 'Wann stehst du auf, wann fängt dein Kurs an, wann rufst du deine Familie an? Heute erzählst du deinen Tag auf Deutsch. Dabei lernst du Verben kennen, die sich mitten im Satz teilen — und warum „halb sechs" nicht 6:30 heißt.',
+    text: 'Wann stehst du auf? Wann fängt dein Kurs an? Heute erzählst du deinen Tag auf Deutsch. Du lernst Verben, die sich im Satz teilen. Und du lernst: „halb sechs" ist 5:30 Uhr.',
     du_lernst: ['Den Tagesablauf erzählen', 'Trennbare Verben: aufstehen, anfangen', 'Uhrzeit offiziell und umgangssprachlich', 'Nach der Uhrzeit fragen']
   },
   dialog: {
@@ -55,7 +55,7 @@ window.LEKTION = {
       },
       {
         h: 'Uhrzeit: offiziell und umgangssprachlich',
-        txt: 'Am Bahnhof und im Radio hörst du die offizielle Zeit, im Gespräch die umgangssprachliche:',
+        txt: 'Am Bahnhof hörst du die offizielle Zeit. Im Gespräch sagt man es einfacher:',
         table: [
           ['Uhr', 'Offiziell', 'Umgangssprachlich'],
           ['7:00', 'sieben Uhr', 'um sieben'],
@@ -64,21 +64,21 @@ window.LEKTION = {
           ['19:45', 'neunzehn Uhr fünfundvierzig', 'Viertel vor acht'],
           ['18:00', 'achtzehn Uhr', 'um sechs']
         ],
-        note: 'Achtung bei „halb": halb sechs ist 5:30, nicht 6:30. Deutsche zählen zur nächsten vollen Stunde hin — die Stunde ist erst halb voll.'
+        note: 'Achtung bei „halb": halb sechs ist 5:30, nicht 6:30. Deutsche zählen zur nächsten Stunde hin. „halb sechs" heißt also 5:30 Uhr.'
       }
     ]
   },
   uebungen: [
     { typ: 'listen', audio: 'Mein Kurs fängt um Viertel nach neun an.', frage: 'Hör zu: Wann fängt der Kurs an?', optionen: ['9:15', '9:45', '8:45'], richtig: 0 },
-    { typ: 'mc', frage: 'Welcher Satz ist richtig?', optionen: ['Ich stehe um sechs auf.', 'Ich aufstehe um sechs.', 'Ich auf stehe um sechs.'], richtig: 0, hinweis: 'Bei trennbaren Verben steht die Vorsilbe ganz am Satzende, nicht vorne am Verb.' },
+    { typ: 'mc', frage: 'Welcher Satz ist richtig?', optionen: ['Ich stehe um sechs auf.', 'Ich aufstehe um sechs.', 'Ich auf stehe um sechs.'], richtig: 0, hinweis: 'Die Vorsilbe steht am Satzende. Nicht vorne beim Verb.' },
     { typ: 'mc', frage: '„halb sieben" — wie spät ist das?', optionen: ['6:30', '7:30', '7:00'], richtig: 0, hinweis: '„halb" + Stunde bedeutet 30 Minuten VOR dieser Stunde.' },
     { typ: 'gapbank', frage: 'Setz die Vorsilben ans Satzende!', text: 'Mein Kurs fängt um acht ___. Danach rufe ich meine Mutter ___.', bank: ['an', 'an', 'auf'], loesung: ['an', 'an'], hinweis: 'anfangen und anrufen haben beide die Vorsilbe an-. Sie steht immer hinten.' },
     { typ: 'match', frage: 'Welche Uhrzeit passt?', paare: [['7:45', '🕢 Viertel vor acht'], ['12:15', '🕛 Viertel nach zwölf'], ['20:30', '🕣 halb neun'], ['6:00', '🕕 sechs Uhr']] },
     { typ: 'order', frage: 'Sortiere die Wörter — wohin gehört die Vorsilbe?', woerter: ['auf', 'Ich', 'sechs', 'stehe', 'um'], loesung: 'Ich stehe um sechs auf', hinweis: 'Das Verb steht auf Position 2, die Vorsilbe ganz am Ende.' },
-    { typ: 'bild', bild: 'th-tag', frage: 'Worum geht es auf dem Bild?', optionen: ['um einen ganz normalen Tagesablauf', 'um ein Fußballspiel', 'um eine Hochzeit', 'um einen Urlaub am Meer'], richtig: 0, hinweis: 'Achte auf Uhr, Wecker und die Stationen eines Tages.' },
+    { typ: 'bild', bild: 'th-tag', frage: 'Worum geht es auf dem Bild?', optionen: ['um einen ganz normalen Tagesablauf', 'um ein Fußballspiel', 'um eine Hochzeit', 'um einen Urlaub am Meer'], richtig: 0, hinweis: 'Achte auf Uhr, Wecker und den Tagesablauf.' },
     { typ: 'mc', frage: 'Der Zug fährt um neunzehn Uhr dreißig. Im Gespräch sagt man:', optionen: ['halb acht', 'halb sieben', 'neunzehn halb'], richtig: 0, hinweis: '19:30 = 30 Minuten vor 20 Uhr, also vor acht — deshalb halb acht.' },
     { typ: 'order', frage: 'Bau die Frage nach dem Kursbeginn!', woerter: ['du', 'Wann', 'an', 'fängst'], loesung: 'Wann fängst du an', hinweis: 'W-Wort, dann das Verb, dann die Person — die Vorsilbe bleibt hinten.' },
-    { typ: 'type', frage: 'Und du? Wann stehst du auf?', muster: 'Ich stehe um halb sieben auf.', akzeptiert: ['^ich stehe um .+ auf', '^um .+ auf', '^ich stehe .+ auf'], hinweis: 'Vergiss das „auf" am Satzende nicht — ohne die Vorsilbe fehlt dem Satz die Hälfte.' }
+    { typ: 'type', frage: 'Und du? Wann stehst du auf?', muster: 'Ich stehe um halb sieben auf.', akzeptiert: ['^ich stehe um .+ auf', '^um .+ auf', '^ich stehe .+ auf'], hinweis: 'Vergiss das „auf" am Satzende nicht. Ohne die Vorsilbe fehlt etwas.' }
   ],
   zusammenfassung: {
     kernsaetze: [

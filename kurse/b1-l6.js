@@ -3,7 +3,7 @@
 window.LEKTION = {
   meta: { kurs: 'Alltagsdeutsch B1', nr: 6, titel: 'Auf dem Amt', level: 'B1', bild: 'th-amt', dauer: 'ca. 20 Min' },
   intro: {
-    text: 'Auf dem Amt wird anders gesprochen als im Treppenhaus: Dort heißt es nicht „Ich will Kindergeld", sondern „Ich möchte einen Antrag auf Kindergeld stellen". Heute lernst du diese festen Wendungen — und den Genitiv, der in jedem zweiten Formular steckt: die Kopie des Ausweises, wegen des Umzugs, die Bearbeitung des Antrags.',
+    text: 'Auf dem Amt spricht man anders als im Treppenhaus. Dort heißt es nicht „Ich will Kindergeld", sondern „Ich möchte einen Antrag auf Kindergeld stellen". Heute lernst du diese festen Wendungen. Dazu den Genitiv, der in jedem zweiten Formular steckt: die Kopie des Ausweises, wegen des Umzugs, die Bearbeitung des Antrags.',
     du_lernst: ['Anliegen auf dem Amt formulieren', 'Nomen-Verb-Verbindungen wie einen Antrag stellen', 'Genitiv bei Nomen und Präpositionen', 'Nach Unterlagen und Fristen fragen']
   },
   dialog: {

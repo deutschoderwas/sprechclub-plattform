@@ -3,7 +3,7 @@
 window.LEKTION = {
   meta: { kurs: 'Alltagsdeutsch A2', nr: 2, titel: 'Beim Arzt', level: 'A2', bild: 'th-arzt', dauer: 'ca. 18 Min' },
   intro: {
-    text: 'Den Termin hast du — jetzt sitzt du im Sprechzimmer und der Arzt fragt: „Was fehlt Ihnen?" Hier lernst du, wie du sagst, wo es wehtut, und wie du erzählst, was passiert ist. Das Wichtigste dabei ist die Vergangenheit: das Perfekt.',
+    text: 'Den Termin hast du. Jetzt sitzt du im Sprechzimmer. Der Arzt fragt: „Was fehlt Ihnen?" Hier lernst du zu sagen, wo es wehtut und was passiert ist. Das Wichtigste dabei ist die Vergangenheit: das Perfekt.',
     du_lernst: ['Beschwerden beschreiben', 'Körperteile benennen', 'Perfekt mit haben und sein', 'mir tut … weh']
   },
   dialog: {
@@ -43,7 +43,7 @@ window.LEKTION = {
     blocks: [
       {
         h: 'Perfekt mit haben und sein',
-        txt: 'Beim Arzt erzählst du fast alles in der Vergangenheit. Im Gespräch benutzt man dafür das Perfekt: haben oder sein auf Position 2, Partizip II am Satzende.',
+        txt: 'Beim Arzt erzählst du fast alles in der Vergangenheit. Im Gespräch benutzt man dafür das Perfekt. haben oder sein auf Position 2, Partizip II am Satzende.',
         table: [
           ['Infinitiv', 'Perfekt', 'Beispiel'],
           ['tragen', 'hat getragen', 'Ich habe einen Schrank getragen.'],
@@ -53,7 +53,7 @@ window.LEKTION = {
           ['werden', 'ist geworden', 'Es ist schlimmer geworden.'],
           ['passieren', 'ist passiert', 'Was ist passiert?']
         ],
-        note: '<b>sein</b> nimmst du bei Bewegung von A nach B (gehen, fahren, kommen, stürzen) und bei Veränderung (werden, passieren, aufwachen). Sonst immer <b>haben</b>.'
+        note: '<b>sein</b> nimmst du bei Bewegung von A nach B: gehen, fahren, kommen, stürzen. Und bei Veränderung: werden, passieren, aufwachen. Sonst immer <b>haben</b>.'
       },
       {
         h: 'Körperteile mit Dativ: mir tut … weh',

@@ -3,7 +3,7 @@
 window.LEKTION = {
   meta: { kurs: 'Alltagsdeutsch A2', nr: 5, titel: 'Kleidung kaufen und umtauschen', level: 'A2', bild: 'th-einkauf', dauer: 'ca. 18 Min' },
   intro: {
-    text: 'Der Mantel ist zu klein, der Kassenbon liegt noch in der Tasche — jetzt musst du im Laden erklären, was du willst. Hier lernst du die Sätze für Umtausch und Beratung. Und du hörst zwei Dinge, die im Geschäft ständig vorkommen: der blaue Mantel und der ist teurer als der graue.',
+    text: 'Der Mantel ist zu klein. Der Kassenbon liegt noch in der Tasche. Jetzt erklärst du im Laden, was du willst. Hier lernst du die Sätze für Umtausch und Beratung. Zwei Dinge hörst du im Geschäft ständig: „der blaue Mantel" und „teurer als der graue".',
     du_lernst: ['Umtauschen und reklamieren', 'Größe, Farbe, Passform', 'Adjektive nach der / das / die', 'Komparativ und Vergleich mit als']
   },
   dialog: {

@@ -1,6 +1,6 @@
 // Deutsch für Mediziner – Lektion 1: Die Anamnese
 window.LEKTION = {
-  meta: { kurs: 'Deutsch für Mediziner', nr: 1, titel: 'Die Anamnese – das Erstgespräch', level: 'B2', bild: 'medizin-l1', dauer: 'ca. 20 Min' },
+  meta: { kurs: 'Deutsch für Mediziner', nr: 1, titel: 'Die Anamnese – das Erstgespräch', level: 'B2–C1', bild: 'medizin-l1', dauer: 'ca. 20 Min' },
   intro: {
     text: 'Die Anamnese entscheidet über alles Weitere. Du musst offene Fragen stellen, aktiv zuhören und die Beschwerden des Patienten in Fachsprache übersetzen — genau das trainiert diese Lektion, so wie es auch in der Fachsprachprüfung verlangt wird.',
     du_lernst: ['Anamnese strukturiert führen', 'Laiensprache → Fachsprache', 'Schmerzen erfragen', 'Konjunktiv II für höfliche Fragen']

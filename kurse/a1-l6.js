@@ -3,7 +3,7 @@
 window.LEKTION = {
   meta: { kurs: 'Alltagsdeutsch A1', nr: 6, titel: 'Einkaufen im Supermarkt', level: 'A1', bild: 'th-einkauf', dauer: 'ca. 15 Min' },
   intro: {
-    text: 'Im Supermarkt brauchst du zwei Dinge: Du musst sagen können, wie viel du willst, und du musst fragen können, wo etwas steht. Heute lernst du beides. Und du siehst, warum es „ein Ei" heißt, aber „zehn Eier" — der Plural hat im Deutschen mehrere Endungen.',
+    text: 'Im Supermarkt brauchst du zwei Dinge. Erstens: die Menge sagen. Zweitens: nach dem Regal fragen. Heute lernst du beides. Und du lernst den Plural: ein Ei, aber zehn Eier.',
     du_lernst: ['Lebensmittel im Supermarkt', 'Plural: die Eier, die Tomaten, die Brötchen', 'Mengen: ein Kilo, eine Packung', 'Fragen, wo etwas steht']
   },
   dialog: {
@@ -51,7 +51,7 @@ window.LEKTION = {
           ['keine Endung', 'das Brötchen', 'die Brötchen'],
           ['-s', 'der Joghurt', 'die Joghurts']
         ],
-        note: 'Die gute Nachricht: Im Plural ist der Artikel immer „die" — bei jedem Wort. Die schlechte: Die Endung musst du gleich mit dem Wort zusammen lernen.'
+        note: 'Gute Nachricht: Im Plural heißt der Artikel immer „die". Die schlechte: Die Endung musst du gleich mit dem Wort zusammen lernen.'
       },
       {
         h: 'Mengenangaben – wie viel willst du?',
@@ -70,7 +70,7 @@ window.LEKTION = {
   uebungen: [
     { typ: 'listen', audio: 'Ich hätte gern ein Kilo Tomaten und zwei Packungen Nudeln.', frage: 'Hör zu: Was kauft sie?', optionen: ['1 Kilo Tomaten und 2 Packungen Nudeln', '2 Kilo Tomaten und 1 Packung Nudeln', '1 Kilo Nudeln und 2 Packungen Tomaten'], richtig: 0 },
     { typ: 'mc', frage: 'Wie heißt der Plural von „das Ei"?', optionen: ['die Eier', 'die Eien', 'die Eis'], richtig: 0, hinweis: 'Manche kurzen Nomen bekommen im Plural die Endung -er.' },
-    { typ: 'mc', frage: 'Der Artikel im Plural ist …', optionen: ['immer die', 'immer der', 'immer das'], richtig: 0, hinweis: 'Egal ob der, die oder das im Singular — im Plural steht immer „die".' },
+    { typ: 'mc', frage: 'Der Artikel im Plural ist …', optionen: ['immer die', 'immer der', 'immer das'], richtig: 0, hinweis: 'Im Singular: der, die oder das. Im Plural immer „die".' },
     { typ: 'gapbank', frage: 'Welche Menge passt?', text: 'Ich nehme ein ___ Tomaten, eine ___ Öl und zwei ___ Nudeln.', bank: ['Kilo', 'Flasche', 'Packungen', 'Liter'], loesung: ['Kilo', 'Flasche', 'Packungen'], hinweis: 'Gewicht in Kilo, Flüssigkeit in der Flasche, trockene Ware in der Packung. Ab zwei steht der Behälter im Plural.' },
     { typ: 'match', frage: 'Welche Menge passt zu welcher Ware?', paare: [['ein Kilo', '⚖️ Tomaten'], ['ein Liter', '🥛 Milch'], ['eine Packung', '📦 Nudeln'], ['eine Flasche', '🍾 Öl'], ['im Angebot', '🏷️ heute billiger']] },
     { typ: 'order', frage: 'Stell die Mengenangabe an die richtige Stelle!', woerter: ['Kilo', 'hätte', 'Ich', 'ein', 'gern', 'Tomaten'], loesung: 'Ich hätte gern ein Kilo Tomaten', hinweis: 'Erst der Bestellsatz, dann die Menge, dann die Ware.' },
