@@ -183,14 +183,17 @@
   }
 
   function setupPodcast(){
-    var vk = document.querySelector('.navlink[data-view="videokurse"]');
-    if(!vk || !vk.parentNode) return;
+    // Ankerpunkt: vor „Julia korrigiert"; Rueckfall auf „Sprech-Tandem" bzw. ans Ende des Lernen-Blocks
+    var anker = document.querySelector('.navlink[href="korrektur.html"]')
+             || document.querySelector('.navlink[data-view="buddy"]')
+             || document.querySelector('.navlink[data-view="materialien"]');
+    if(!anker || !anker.parentNode) return;
     var b = document.querySelector('.navlink[data-view="podcast"]');
     if(!b){
       b = document.createElement('button');
       b.className = 'navlink'; b.setAttribute('data-view','podcast');
       b.innerHTML = '<span class="ic">🎙️</span>Podcast<span class="neu">NEU</span>';
-      vk.parentNode.insertBefore(b, vk.nextSibling);
+      anker.parentNode.insertBefore(b, anker);
     }
     var sec = document.getElementById('v-podcast');
     if(!sec){

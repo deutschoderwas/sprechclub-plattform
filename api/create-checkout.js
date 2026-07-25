@@ -56,7 +56,9 @@ export default async function handler(req, res) {
       common.return_url = `${site}/konto.html?bezahlt=1&session_id={CHECKOUT_SESSION_ID}`;
     } else {
       // Community/Premium (tier): nach Zahlung direkt zur Registrierung mit der bezahlten E-Mail.
-      common.success_url = plan.tier
+      // Neu-Kaeufer ohne Konto -> Registrierung. Wer schon eingeloggt ist
+      // (z. B. Community-Mitglied beim Upgrade auf Premium) -> zurueck in den Schuelerbereich.
+      common.success_url = (plan.tier && !userId)
         ? `${site}/index.html?register=1&sid={CHECKOUT_SESSION_ID}`
         : `${site}/konto.html?bezahlt=1`;
       common.cancel_url = `${site}/#preise`;
