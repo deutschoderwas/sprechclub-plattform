@@ -1,13 +1,13 @@
 // Alltagsdeutsch A1 – Lektion 1: Hallo! Ich bin …
 // deutschoderwas club · Kursmaterial
 window.LEKTION = {
-  meta: { kurs: 'Alltagsdeutsch A1', nr: 1, titel: 'Hallo! Ich bin …', level: 'A1', bild: 'photo-1543269865-cbf427effbad', dauer: 'ca. 15 Min' },
+  meta: { kurs: 'Alltagsdeutsch A1', nr: 1, titel: 'Hallo! Ich bin …', level: 'A1', bild: 'a1-l1', dauer: 'ca. 15 Min' },
   intro: {
     text: 'Willkommen zu deiner ersten Lektion! Heute lernst du, wie du dich auf Deutsch vorstellst: dein Name, dein Land, deine Stadt. Am Ende sprichst du deine ersten eigenen Sätze — versprochen!',
     du_lernst: ['Begrüßen & verabschieden', 'Sich vorstellen', 'Fragen: Wie? Woher? Wo?', 'heißen · kommen · wohnen']
   },
   dialog: {
-    bild: 'photo-1543269865-cbf427effbad',
+    bild: 'a1-l1',
     situation: 'Lena und Omar treffen sich im Deutschkurs. Es ist ihr erster Tag.',
     lines: [
       { sp: 'Lena', txt: 'Hallo! Ich heiße Lena. Wie heißt du?' },
@@ -67,7 +67,7 @@ window.LEKTION = {
     { typ: 'order', frage: 'Bau den Satz!', woerter: ['heiße', 'Ich', 'Anna'], loesung: 'Ich heiße Anna', hinweis: 'Das Verb steht auf Position 2.' },
     { typ: 'order', frage: 'Bau die Frage!', woerter: ['kommst', 'Woher', 'du'], loesung: 'Woher kommst du', hinweis: 'W-Wort zuerst, dann das Verb.' },
     { typ: 'mc', frage: 'Ich komme ___ Italien und wohne ___ Berlin.', optionen: ['aus · in', 'in · aus', 'aus · aus'], richtig: 0, hinweis: 'aus + Land · in + Stadt' },
-    { typ: 'bild', bild: 'photo-1543269865-cbf427effbad', frage: 'Diese Menschen lernen sich gerade kennen. Was sagen sie zuerst?', optionen: ['Freut mich!', 'Auf Wiedersehen!', 'Guten Appetit!', 'Gute Nacht!'], richtig: 0, hinweis: 'Beim Kennenlernen sagt man „Freut mich!"' },
+    { typ: 'bild', bild: 'a1-l1', frage: 'Diese Menschen lernen sich gerade kennen. Was sagen sie zuerst?', optionen: ['Freut mich!', 'Auf Wiedersehen!', 'Guten Appetit!', 'Gute Nacht!'], richtig: 0, hinweis: 'Beim Kennenlernen sagt man „Freut mich!"' },
     { typ: 'type', frage: 'Und du? Antworte: Wie heißt du?', muster: 'Ich heiße Maria.', akzeptiert: ['^ich hei(ß|ss)e .+', '^ich bin .+'], hinweis: 'Beginne mit „Ich heiße …" oder „Ich bin …"' }
   ],
   zusammenfassung: {

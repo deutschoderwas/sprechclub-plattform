@@ -1,12 +1,12 @@
 // Alltagsdeutsch A1 – Lektion 2: Zahlen, Alter & Telefonnummer
 window.LEKTION = {
-  meta: { kurs: 'Alltagsdeutsch A1', nr: 2, titel: 'Zahlen, Alter & Telefonnummer', level: 'A1', bild: 'photo-1554224155-6726b3ff858f', dauer: 'ca. 15 Min' },
+  meta: { kurs: 'Alltagsdeutsch A1', nr: 2, titel: 'Zahlen, Alter & Telefonnummer', level: 'A1', bild: 'a1-l2', dauer: 'ca. 15 Min' },
   intro: {
     text: 'Zahlen brauchst du überall: beim Einkaufen, beim Arzt, beim Amt. Heute lernst du die Zahlen von 0 bis 100, wie du dein Alter sagst und wie du deine Telefonnummer angibst.',
     du_lernst: ['Zahlen 0–100', 'Wie alt bist du?', 'Telefonnummer sagen', 'sein: ich bin / du bist']
   },
   dialog: {
-    bild: 'photo-1554224155-6726b3ff858f',
+    bild: 'a1-l2',
     situation: 'Omar meldet sich im Sprachkurs an. Frau Weber vom Büro fragt nach seinen Daten.',
     lines: [
       { sp: 'Frau Weber', txt: 'Guten Tag! Wie alt sind Sie?' },

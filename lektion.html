@@ -242,7 +242,9 @@ sc.onload=function(){ window.LEKTION?boot(window.LEKTION):fail('Diese Lektion is
 sc.onerror=function(){ fail('Diese Lektion wird gerade erstellt — sie kommt bald.'); };
 document.head.appendChild(sc);
 
-function bild(id,w){ return id?('https://images.unsplash.com/'+id+'?auto=format&fit=crop&w='+(w||900)+'&q=62'):''; }
+function bild(id,w){ if(!id) return '';
+  if(id.indexOf('photo-')===0) return 'https://images.unsplash.com/'+id+'?auto=format&fit=crop&w='+(w||900)+'&q=62';
+  return 'illu/'+id+((w&&w<=400)?'-s':'')+'.jpg'; }
 
 /* ---------- Audio ---------- */
 var voice=null;

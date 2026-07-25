@@ -1,12 +1,12 @@
 // Alltagsdeutsch A1 – Lektion 3: Meine Familie
 window.LEKTION = {
-  meta: { kurs: 'Alltagsdeutsch A1', nr: 3, titel: 'Meine Familie', level: 'A1', bild: 'photo-1511895426328-dc8714191300', dauer: 'ca. 15 Min' },
+  meta: { kurs: 'Alltagsdeutsch A1', nr: 3, titel: 'Meine Familie', level: 'A1', bild: 'a1-l3', dauer: 'ca. 15 Min' },
   intro: {
     text: 'Über die Familie zu sprechen ist eines der ersten Themen in jedem Gespräch. Heute lernst du die Familienwörter, „mein/meine" und wie du über deine Liebsten erzählst.',
     du_lernst: ['Familienwörter', 'mein / meine', 'haben: ich habe / du hast', 'Über Personen erzählen']
   },
   dialog: {
-    bild: 'photo-1511895426328-dc8714191300',
+    bild: 'a1-l3',
     situation: 'Lena zeigt Omar ein Foto auf ihrem Handy.',
     lines: [
       { sp: 'Lena', txt: 'Schau mal, das ist meine Familie.' },
@@ -68,7 +68,7 @@ window.LEKTION = {
     { typ: 'match', frage: 'Was passt zusammen?', paare: [['die Mutter', '👩 Mama'], ['der Bruder', '🧑 Sohn der Eltern'], ['die Oma', '👵 Mutter der Mutter'], ['die Kinder', '🧒 Sohn & Tochter']] },
     { typ: 'order', frage: 'Bau den Satz!', woerter: ['habe', 'Ich', 'Kinder', 'zwei'], loesung: 'Ich habe zwei Kinder', hinweis: 'Verb auf Position 2.' },
     { typ: 'mc', frage: 'Ich bin Einzelkind. Also: Ich habe ___ Geschwister.', optionen: ['keine', 'nicht', 'kein'], richtig: 0, hinweis: 'die Geschwister (Plural) → keine' },
-    { typ: 'bild', bild: 'photo-1511895426328-dc8714191300', frage: 'Was siehst du auf dem Bild?', optionen: ['eine Familie', 'ein Büro', 'eine Schule', 'ein Krankenhaus'], richtig: 0, hinweis: 'Mehrere Personen, die zusammengehören.' },
+    { typ: 'bild', bild: 'a1-l3', frage: 'Was siehst du auf dem Bild?', optionen: ['eine Familie', 'ein Büro', 'eine Schule', 'ein Krankenhaus'], richtig: 0, hinweis: 'Mehrere Personen, die zusammengehören.' },
     { typ: 'type', frage: 'Erzähl von deiner Familie: Hast du Geschwister?', muster: 'Ich habe eine Schwester.', akzeptiert: ['^ich habe .+', '^ich bin einzelkind'], hinweis: 'Beginne mit „Ich habe …" oder „Ich habe keine …"' }
   ],
   zusammenfassung: {

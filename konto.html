@@ -2317,13 +2317,13 @@ const KURSBIB=[
  ]}
 ];
 var KB_IMG={
- goethetelc:'photo-1503676260728-1c00da094a0b',telcmed:'photo-1505751172876-fa1923c5c528',dtz:'photo-1526481280693-3bfa7568e0f3',
- medizin:'photo-1505751172876-fa1923c5c528',pflege:'photo-1511895426328-dc8714191300',buero:'photo-1486312338219-ce68d2c6f44d',
- a1:'photo-1502672260266-1c1ef2d93688',a2:'photo-1504674900247-0877df9cc836',b1:'photo-1488646953014-85cb44e25828',b2:'photo-1521737604893-d14cc237f11d',c1:'photo-1499209974431-9dddcece7f88',c2:'photo-1513151233558-d860c5398176',
- sk_lesen:'photo-1503676260728-1c00da094a0b',sk_schreiben:'photo-1456513080510-7bf3a84b82f8',sk_grammatik:'photo-1457369804613-52c61a468e7d',sk_hoeren:'photo-1484704849700-f032a568e944',sk_bausteine:'photo-1434030216411-0b793f4b4173',sk_sprechen:'photo-1521737604893-d14cc237f11d',
- v_grammatik:'photo-1456513080510-7bf3a84b82f8',v_aussprache:'photo-1484704849700-f032a568e944',v_alltag:'photo-1502672260266-1c1ef2d93688'
+ goethetelc:'kat-pruefung',telcmed:'kat-pruefung',dtz:'kat-pruefung',
+ medizin:'medizin-l1',pflege:'pflege-l1',buero:'buero-l1',
+ a1:'a1-l1',a2:'kat-alltag',b1:'kat-alltag',b2:'a1-l3',c1:'kat-alltag',c2:'kat-alltag',
+ sk_lesen:'kat-skills',sk_schreiben:'kat-skills',sk_grammatik:'kat-skills',sk_hoeren:'kat-skills',sk_bausteine:'kat-skills',sk_sprechen:'kat-skills',
+ v_grammatik:'kat-video',v_aussprache:'kat-video',v_alltag:'kat-video'
 };
-var KB_SHADE='linear-gradient(to top,rgba(14,14,14,.62) 0%,rgba(14,14,14,.16) 52%,rgba(14,14,14,0) 100%)';
+var KB_SHADE='linear-gradient(to top,rgba(14,14,14,.42) 0%,rgba(14,14,14,.06) 55%,rgba(14,14,14,0) 100%)';
 var KB_OV={pruefung:KB_SHADE,beruf:KB_SHADE,alltag:KB_SHADE,skills:KB_SHADE,video:'linear-gradient(to top,rgba(14,14,14,.72),rgba(14,14,14,.3))'};
 var KB_IC={pruefung:'target',beruf:'briefcase',alltag:'house',skills:'layers',video:'film'};
 var KB_LESSONS={
@@ -2333,7 +2333,7 @@ var KB_LESSONS={
  buero:[{n:1,t:'Am Telefon \u2013 professionell reagieren'}]
 };
 function kbLekDone(){ try{ return JSON.parse(localStorage.getItem('dow_lek')||'{}'); }catch(e){ return {}; } }
-function kbimg(id){return KB_IMG[id]?('https://images.unsplash.com/'+KB_IMG[id]+'?auto=format&fit=crop&w=460&q=60'):'';}
+function kbimg(id,big){return KB_IMG[id]?('illu/'+KB_IMG[id]+(big?'':'-s')+'.jpg'):'';}
 function kbMatch(c){ if(kbLevel==='alle')return true; var i=KB_LV.indexOf(kbLevel); return i>=c.lv[0]&&i<=c.lv[1]; }
 function kbTitle(c){ return c.tk?('<span data-i18n="'+c.tk+'">'+c.t+'</span>'):c.t; }
 function kbCard(cat,c,i){
@@ -2385,7 +2385,7 @@ window.kbOpen=function(id){
   var comps=COMP[cat.id]||COMP.alltag;
   var skills=comps.map(function(x,i){return '<span class="kb-skill" style="--d:'+(i*45)+'ms"><span class="e">'+x[0]+'</span><span data-i18n="'+x[2]+'">'+x[1]+'</span></span>';}).join('');
   var soon=cat.soon;
-  var _dimg=kbimg(found.id);
+  var _dimg=kbimg(found.id,1);
   var reg=KB_LESSONS[found.id]||[]; var doneMap=kbLekDone();
   var rows=Math.max(5,reg.length);
   var mods=[];
@@ -2431,10 +2431,10 @@ function renderMobileHome(){
   if(window.innerWidth>900){ el.innerHTML=''; return; }
   var I=window.ICON||function(){return'';};
   var KURSE=(typeof KB_LESSONS!=='undefined')?KB_LESSONS:{};
-  var IMG={a1:'photo-1543269865-cbf427effbad',pflege:'photo-1519494026892-80bbd2d6fd0d',medizin:'photo-1576091160550-2173dba999ef',buero:'photo-1557804506-669a67965ba0'};
+  var IMG={a1:'a1-l1',pflege:'pflege-l1',medizin:'medizin-l1',buero:'buero-l1'};
   var NAME={a1:'Alltagsdeutsch A1',pflege:'Schichtübergabe',medizin:'Die Anamnese',buero:'Am Telefon'};
   var KAT={a1:['Alltag','#12A594','house'],pflege:['Pflege','#3E7BC9','briefcase'],medizin:['Medizin','#C25A4E','briefcase'],buero:['Büro','#8A6DB5','briefcase']};
-  function im(id,w){ return 'https://images.unsplash.com/'+id+'?auto=format&fit=crop&w='+(w||700)+'&q=62'; }
+  function im(id,w){ return 'illu/'+id+((w&&w<=500)?'-s':'')+'.jpg'; }
   var done={}; try{ done=JSON.parse(localStorage.getItem('dow_lek')||'{}'); }catch(e){}
 
   /* nächste offene Lektion finden */
@@ -2457,7 +2457,7 @@ function renderMobileHome(){
 
   var cont = next
     ? '<a class="mh-cont" href="lektion.html?k='+next.k+'&l='+next.l.n+'">'
-      +'<span class="im"><img src="'+im(IMG[next.k]||IMG.a1,800)+'" alt=""><span class="sh"></span>'
+      +'<span class="im"><img src="'+im((next.k==='a1'?('a1-l'+next.l.n):(IMG[next.k]||IMG.a1)),800)+'" alt=""><span class="sh"></span>'
       +'<span class="chip">Lektion '+next.l.n+'</span><span class="ti">'+next.l.t+'</span></span>'
       +'<span class="bar"><span class="track"><i style="width:'+pct+'%"></i></span><span class="pct">'+pct+'%</span>'
       +'<span class="go">'+I('play',18)+'</span></span></a>'
