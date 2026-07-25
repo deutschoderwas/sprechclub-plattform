@@ -809,8 +809,10 @@ async function rebookStudent(userId, fromClassId){
   ov.querySelector('#rbGo').onclick=async()=>{
     const to=ov.querySelector('#rbTarget').value;
     const msg=ov.querySelector('#rbMsg'); msg.textContent='Buche um …';
-    const { error } = await sb.rpc('admin_rebook',{ p_user_id:userId, p_from_class:fromClassId, p_to_class:to });
+    const { data, error } = await sb.rpc('admin_rebook',{ p_user_id:userId, p_from_class:fromClassId, p_to_class:to });
     if(error){ msg.textContent='Fehler: '+error.message; return; }
+    if(data && data.ok===false){ msg.textContent='Nicht möglich: '+bookErr(data.error); return; }
+    if(data && data.abgezogen){ msg.textContent='Umgebucht — 1 Stunde abgezogen (es gab keine alte Buchung).'; }
     close(); await loadKlassen();
   };
 }
@@ -1354,6 +1356,7 @@ async function loadSchueler(){
         <option value="bday">Geburtstag (Monat/Tag)</option>
       </select>
       <select id="schuelerStatus" onchange="renderSchuelerTable()">
+        <option value="laufend" selected>🟢 Aktiv &amp; Urlaub (Voreinstellung)</option>
         <option value="">Alle Status</option>
         <option value="registriert">nur Registriert (kein Paket)</option>
         <option value="aktiv">nur Aktiv</option>
@@ -1383,7 +1386,8 @@ function renderSchuelerTable(){
   const stf = document.getElementById('schuelerStatus')?.value||'';
   const lowOnly = document.getElementById('schuelerLowOnly')?.checked;
   let rows = SCHUELER.filter(p => !q || (p.name||'').toLowerCase().includes(q) || (p.email||'').toLowerCase().includes(q));
-  if (stf){ if(stf==='tier_community') rows=rows.filter(p=>p.tier==='community'); else if(stf==='tier_premium') rows=rows.filter(p=>p.tier==='premium'); else rows = rows.filter(p => (p.status||'aktiv')===stf); }
+  if (stf==='laufend'){ rows = rows.filter(p => ['aktiv','urlaub'].includes(p.status||'aktiv')); }
+  else if (stf){ if(stf==='tier_community') rows=rows.filter(p=>p.tier==='community'); else if(stf==='tier_premium') rows=rows.filter(p=>p.tier==='premium'); else rows = rows.filter(p => (p.status||'aktiv')===stf); }
   if (lowOnly) rows = rows.filter(p => p.credits<=1);
   rows = [...rows];
   if (mode==='credits') rows.sort((a,b)=> a.credits-b.credits || nameKey(a).localeCompare(nameKey(b),'de'));
