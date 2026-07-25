@@ -575,10 +575,11 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFF6E6 0%,#FAF8F2 60%)
 <div class="shell">
   <aside class="sidebar">
     <a href="index.html" class="brand"><img src="logo.PNG" onerror="this.style.display='none'"><span>deutschoderwas&nbsp;club</span></a>
+    <button class="navlink navlink-chat" data-view="community" onclick="go('community')"><span class="ic">💬</span><span class="nl-t"><b>Community-Chat</b><i>Austausch nach Themen</i></span><span class="badge" id="commBadge" style="display:none">0</span></button>
+    <div class="nav-trenner"></div>
     <button class="navlink active" data-view="dashboard" onclick="go('dashboard')"><span class="ic">🏠</span><span data-i18n="k_start">Startseite</span></button>
     <button class="navlink" data-view="kalender" onclick="go('kalender')"><span class="ic">🗓️</span><span data-i18n="k_live">Live Unterricht</span></button>
     <button class="navlink" data-view="stunden" onclick="go('stunden')"><span class="ic">📅</span><span data-i18n="k_myl">Meine Stunden</span></button>
-    <button class="navlink" data-view="community" onclick="go('community')"><span class="ic">💬</span>Community<span class="badge" id="commBadge" style="display:none">0</span></button>
     <button class="navlink locknav" data-view="videokurse" onclick="go('videokurse')"><span class="ic">🎬</span><span data-i18n="k_video">Videokurse</span><span class="lockic">🔒</span></button>
     <div class="nav-sec" data-i18n="k_learn">Lernen</div>
     <button class="navlink navlink-hl" data-view="kurse" onclick="go('kurse')"><span class="ic">📚</span><span data-i18n="k_courses">Kursbibliothek</span></button>
@@ -601,6 +602,36 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFF6E6 0%,#FAF8F2 60%)
     </div>
   </aside>
   <div class="nav-backdrop" onclick="toggleNav()"></div>
+<style id="chat-style">
+.navlink-chat{background:linear-gradient(135deg,#12A594,#0E8577)!important;color:#fff!important;border-radius:13px!important;padding:11px 13px!important;margin-bottom:2px;box-shadow:0 5px 16px rgba(14,133,119,.26);align-items:center}
+.navlink-chat:hover{filter:brightness(1.07);color:#fff!important}
+.navlink-chat.active{background:linear-gradient(135deg,#0E8577,#0B6157)!important;color:#fff!important;box-shadow:0 5px 16px rgba(11,97,87,.34)!important;outline:2px solid rgba(255,255,255,.5);outline-offset:-4px}
+.navlink-chat .ic{font-size:18px;flex:none}
+.navlink-chat .nl-t{display:flex;flex-direction:column;line-height:1.2;min-width:0}
+.navlink-chat .nl-t b{font-size:14px;font-weight:700;letter-spacing:-.01em}
+.navlink-chat .nl-t i{font-style:normal;font-size:11px;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.navlink-chat .badge,.navlink-chat.active .badge{background:#fff!important;color:#0E8577!important;margin-left:auto}
+.nav-trenner{height:1px;background:var(--border,#ECECEC);margin:9px 4px 7px}
+@media(max-width:1024px){.navlink-chat{flex-direction:row!important;text-align:left!important;min-width:0}.navlink-chat .nl-t i{display:none}.navlink-chat .nl-t b{font-size:13.5px}}
+.navlink-chat{flex-direction:row!important}
+
+.dsh-chat{display:flex;align-items:center;gap:17px;background:linear-gradient(135deg,#0E7C70 0%,#12A594 58%,#2CC0AE 100%);color:#fff;border-radius:18px;padding:18px 20px;margin-bottom:16px;cursor:pointer;box-shadow:0 10px 30px rgba(14,124,112,.24);transition:transform .16s,box-shadow .16s}
+.dsh-chat:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(14,124,112,.32)}
+.dsh-chat .dc-ic{font-size:29px;flex:none;width:58px;height:58px;border-radius:16px;background:rgba(255,255,255,.17);display:flex;align-items:center;justify-content:center}
+.dsh-chat .dc-b{flex:1;min-width:0}
+.dsh-chat .dc-e{font-size:11px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;opacity:.93;display:flex;align-items:center;gap:9px}
+.dsh-chat .dc-live{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.18);border-radius:999px;padding:2px 9px;letter-spacing:0;text-transform:none;font-weight:700;font-size:10.5px}
+.dsh-chat .dc-live i{width:6px;height:6px;border-radius:50%;background:#8FF0C8;display:inline-block;animation:dcPuls 2s infinite}
+@keyframes dcPuls{0%,100%{opacity:1}50%{opacity:.35}}
+.dsh-chat h3{font-size:18px;margin:6px 0 3px;color:#fff;line-height:1.25;font-weight:700}
+.dsh-chat p{font-size:13px;opacity:.93;margin:0;line-height:1.5;max-width:640px}
+.dsh-chat .dc-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}
+.dsh-chat .dc-tags span{background:rgba(255,255,255,.16);border-radius:999px;padding:3px 10px;font-size:11.5px;font-weight:600}
+.dsh-chat .dc-tags .mehr{background:none;border:1px dashed rgba(255,255,255,.45)}
+.dsh-chat .dc-go{flex:none;background:#fff;color:#0E7C70;border-radius:999px;padding:10px 18px;font-size:13.5px;font-weight:800;white-space:nowrap}
+@media(max-width:1100px){.dsh-chat .dc-go{display:none}}
+@media(max-width:900px){.dsh-chat{display:none}}
+</style>
 <style id="mh-style">
 .mh-wrap{display:none}
 @media(max-width:900px){
@@ -915,6 +946,7 @@ async function init(){
   window.sb = sb; window.user = user;
   try{ if(window.LZ) LZ.pruefe(); }catch(e){}
   try{ if(window.NB) NB.start(); }catch(e){}
+  try{ if(window.ChatKnopf) ChatKnopf.start(); }catch(e){}
 }
 
 // Sofort voll starten (aus Trial-Mail: konto.html?start=now) — Testphase beenden, sofort abbuchen
@@ -970,18 +1002,23 @@ async function load(){
 // Eigene Nachrichten zählen nicht mit. Verschwindet, sobald man die Community öffnet.
 async function renderCommBadge(){
   const b=document.getElementById('commBadge'); if(!b) return;
-  try{
-    let seen=lsGet('commSeen',null);
-    if(seen===null){ seen=Date.now(); lsSet('commSeen',seen); }   // erstes Mal: ab jetzt zählen, keine alte Historie
-    const since=new Date(seen).toISOString();
-    let q=sb.from('community_messages')
-      .select('id',{count:'exact',head:true})
-      .is('deleted_at',null).gt('created_at',since);
-    if(user&&user.id) q=q.neq('user_id',user.id);   // eigene Nachrichten nicht zählen
-    const { count }=await q;
-    if(count>0){ b.style.display='inline-block'; b.textContent=count; } else b.style.display='none';
-    var mb=document.getElementById('mtabBdg'); if(mb){ if(count>0){ mb.style.display='flex'; mb.textContent=count>99?'99+':count; } else mb.style.display='none'; }
-  }catch(e){ b.style.display='none'; }
+  let count=null;
+  try{ const r=await sb.rpc('community_ungelesen_gesamt'); if(r&&typeof r.data==='number') count=r.data; }catch(e){}
+  if(count===null){
+    try{
+      let seen=lsGet('commSeen',null);
+      if(seen===null){ seen=Date.now(); lsSet('commSeen',seen); }
+      const since=new Date(seen).toISOString();
+      let q=sb.from('community_messages')
+        .select('id',{count:'exact',head:true})
+        .is('deleted_at',null).gt('created_at',since);
+      if(user&&user.id) q=q.neq('user_id',user.id);
+      const r2=await q; count=r2.count||0;
+    }catch(e){ b.style.display='none'; return; }
+  }
+  if(count>0){ b.style.display='inline-block'; b.textContent=count>99?'99+':count; } else b.style.display='none';
+  var mb=document.getElementById('mtabBdg'); if(mb){ if(count>0){ mb.style.display='flex'; mb.textContent=count>99?'99+':count; } else mb.style.display='none'; }
+  try{ if(window.ChatKnopf) ChatKnopf.setzen(count); }catch(e){}
 }
 // Community als gelesen markieren -> Badge weg
 function markCommRead(){ lsSet('commSeen', Date.now()); renderCommBadge(); }
@@ -1041,7 +1078,7 @@ function collectVocab(){
 const VIEWS=['dashboard','kurse','ueben','community','lernpfad','kalender','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','profil','videokurse','fehler','buddy'];
 function go(v){ location.hash=v; }
 function toggleNav(){ document.body.classList.toggle('nav-open'); }
-const VIEW_TITLES={dashboard:['Schülerbereich','Startseite'],kurse:['Lernen','Kursbibliothek'],kalender:['Live Unterricht','Diese Woche'],stunden:['Live Unterricht','Meine Stunden'],community:['Community','Austausch'],videokurse:['Videokurse','Bald verfügbar'],ueben:['Lernen','Üben'],vokabeln:['Lernen','Vokabeltrainer'],materialien:['Lernen','Materialien'],fortschritt:['Lernen','Fortschritt'],nachrichten:['Nachrichten','Team'],amanda:['Amanda','KI-Sprechpartnerin'],lernpfad:['Lernen','Lernpfad'],fehler:['Lernen','Fehler-Trainer'],buddy:['Lernen','Sprech-Buddy'],guthaben:['Konto','Guthaben'],profil:['Konto','Profil']};
+const VIEW_TITLES={dashboard:['Schülerbereich','Startseite'],kurse:['Lernen','Kursbibliothek'],kalender:['Live Unterricht','Diese Woche'],stunden:['Live Unterricht','Meine Stunden'],community:['Community-Chat','Alle Themen'],videokurse:['Videokurse','Bald verfügbar'],ueben:['Lernen','Üben'],vokabeln:['Lernen','Vokabeltrainer'],materialien:['Lernen','Materialien'],fortschritt:['Lernen','Fortschritt'],nachrichten:['Nachrichten','Team'],amanda:['Amanda','KI-Sprechpartnerin'],lernpfad:['Lernen','Lernpfad'],fehler:['Lernen','Fehler-Trainer'],buddy:['Lernen','Sprech-Buddy'],guthaben:['Konto','Guthaben'],profil:['Konto','Profil']};
 function updateTopbar(v){var t=VIEW_TITLES[v]||['Schülerbereich','']; var s=document.getElementById('tbS'),b=document.getElementById('tbT'); var lang='de'; try{lang=localStorage.getItem('dow_lang')||'de';}catch(e){} var TT=window.__I18N__||{}; function tr(x){var o=TT[x]; return (o&&o[lang]!=null)?o[lang]:x;} if(s){s.setAttribute('data-de',t[0]);s.setAttribute('data-i18n',t[0]);s.textContent=tr(t[0]);} if(b){b.setAttribute('data-de',t[1]);b.setAttribute('data-i18n',t[1]);b.textContent=tr(t[1]);}}
 function routeFromHash(){ const v=(location.hash||'#dashboard').slice(1); show(VIEWS.includes(v)?v:'dashboard'); }
 // Ohne Guthaben/Probestunde/Pass: ALLES gesperrt außer Kalender (und Profil für Konto/Logout).
@@ -1059,7 +1096,7 @@ function show(v){
   if(v==='dashboard') setTimeout(mcStatus,60);   // Community geöffnet -> Nachrichten gelesen, Badge weg
   window.scrollTo(0,0);
 }
-const LOCK_LABELS={dashboard:'Start',kurse:'Kursbibliothek',ueben:'Üben',community:'Community',lernpfad:'Lernpfad',stunden:'Meine Stunden',materialien:'Material',vokabeln:'Vokabeln',fortschritt:'Fortschritt',guthaben:'Guthaben',nachrichten:'Nachrichten',amanda:'Amanda'};
+const LOCK_LABELS={dashboard:'Start',kurse:'Kursbibliothek',ueben:'Üben',community:'Community-Chat',lernpfad:'Lernpfad',stunden:'Meine Stunden',materialien:'Material',vokabeln:'Vokabeln',fortschritt:'Fortschritt',guthaben:'Guthaben',nachrichten:'Nachrichten',amanda:'Amanda'};
 function renderVideokurse(){
   document.getElementById('v-videokurse').innerHTML=
     `<div class="pagehead"><h1 data-i18n="vk_h1">Videokurse</h1><p data-i18n="vk_sub">Kurse zum Anschauen in deinem Tempo — mit Modulen, Übungen &amp; Handouts.</p></div>
@@ -1339,6 +1376,16 @@ function renderDashboard(){
     <div class="dsh-hello"><h1>${greet}</h1><p class="muted" data-i18n="d_sub">Schön, dass du übst — Sprechen lernt man durch Sprechen. 💪</p></div>
     ${passActive()?(pi=>`<div class="dsh-card" style="padding:13px 16px;margin-bottom:16px;background:linear-gradient(135deg,#EAFBF6,#FFF7DE);border:1px solid #2DD4BF"><b>⭐ ${pi.label} aktiv</b> <span class="muted">${pi.stunden?pi.stunden+' LIVE-Stunden/Monat · ':''}verlängert am ${fmtShort(new Date(profile.pass_until))} · <a href="#" onclick="openPortal();return false" style="color:#12A594;font-weight:600">Abo verwalten</a></span></div>`)(planInfo()):''}
     <div id="lzSlot"></div>
+    <div class="dsh-chat" onclick="go('community')" role="button" tabindex="0">
+      <span class="dc-ic">💬</span>
+      <div class="dc-b">
+        <div class="dc-e">Community-Chat <span class="dc-live"><i></i><span id="dcOnline">live</span></span></div>
+        <h3>Schreib mit anderen — zu jedem Thema</h3>
+        <p>Nach Stufe von A1 bis C2, nach Ziel wie Beruf, Pflege oder Prüfung — und einfach zum Plaudern. Julia liest täglich mit.</p>
+        <div class="dc-tags"><span>👋 Vorstellen</span><span>📚 Grammatik</span><span>🩺 Pflege &amp; Medizin</span><span>📝 Prüfungen</span><span>🏆 Erfolge</span><span class="mehr">und 24 weitere</span></div>
+      </div>
+      <span class="dc-go">Chat öffnen →</span>
+    </div>
     <div class="dash-top">
       <div class="dsh-card dsh-resume">
         <div class="cover"><span class="play">▶</span></div>
@@ -1368,7 +1415,15 @@ function renderDashboard(){
     </div></div>`;
   try{ renderMobileHome(); }catch(e){}
   try{ if(window.LZ) LZ.zeichneKarte(); }catch(e){}
+  try{ dcOnlinePaint(); }catch(e){}
 }
+function dcOnlinePaint(){
+  var el=document.getElementById('dcOnline'); if(!el) return;
+  var n=Object.keys(window.CLUB_ONLINE||{}).length;
+  el.textContent = n>1 ? (n+' gerade online') : 'jetzt mitschreiben';
+}
+window.addEventListener('club-presence',function(){ try{ dcOnlinePaint(); }catch(e){} });
+
 // ---------- Lernpfad ----------
 function renderLernpfad(){
   const s=stats;
@@ -2285,6 +2340,7 @@ init();
 <script src="sprech-buddy.js"></script>
 <script src="lernziel.js"></script>
 <script src="benachrichtigungen.js"></script>
+<script src="chat-knopf.js"></script>
 <script>
 if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}
 </script>
@@ -2597,7 +2653,7 @@ window.addEventListener('resize',function(){ clearTimeout(_mhT); _mhT=setTimeout
 </div></nav>
 <script>
 (function(){
-  var M=[['dashboard','home','Start'],['kurse','book','Lernen'],['sprechen','mic','Sprechen'],['community','chat','Julia'],['profil','user','Meins']];
+  var M=[['dashboard','home','Start'],['kurse','book','Lernen'],['sprechen','mic','Sprechen'],['community','chat','Chat'],['profil','user','Meins']];
   function paint(){
     var v=(location.hash||'#dashboard').slice(1);
     M.forEach(function(m){

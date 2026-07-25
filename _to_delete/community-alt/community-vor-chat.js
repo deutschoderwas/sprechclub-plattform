@@ -282,7 +282,6 @@
     var c=chanBy(slug); if(c) c.ungelesen=0;
     updateBadge(slug); updateGroupCounts();
     try{ await sbc.rpc('community_gelesen',{p_channel:slug}); }catch(e){}
-    try{ if(window.ChatKnopf) ChatKnopf.zaehlen(); }catch(e){}
   }
 
   async function folgen(slug,ja){
@@ -305,7 +304,7 @@
     var r=root(); if(!r) return;
     sbc=getSb(); ME=getUser(); PROF=getProfile();
     myName=(PROF&&PROF.name)||'Mitglied';
-    r.innerHTML='<div class="pagehead"><h1>Community-Chat</h1></div><div class="cm-empty">Lädt…</div>';
+    r.innerHTML='<div class="pagehead"><h1>Community</h1></div><div class="cm-empty">Lädt…</div>';
     if(!sbc||!ME){ r.innerHTML=gateHtml(); return; }
     var access=false;
     try{ var a=await sbc.rpc('has_full_access'); access=!!a.data; }catch(e){ access=active(); }
@@ -315,7 +314,7 @@
     await ladeKanaele();
     try{ var rs=await sbc.rpc('community_roster'); roster=(rs&&rs.data)||[]; }catch(e){ roster=[]; }
     try{ var dt=await sbc.rpc('dm_threads'); dmThreads=(dt&&dt.data)||[]; }catch(e){ dmThreads=[]; }
-    if(!channels.length){ r.innerHTML='<div class="pagehead"><h1>Community-Chat</h1></div><div class="cm-empty">Noch keine Kanäle.</div>'; return; }
+    if(!channels.length){ r.innerHTML='<div class="pagehead"><h1>Community</h1></div><div class="cm-empty">Noch keine Kanäle.</div>'; return; }
     grpZu=ladeZu();
     if(zielSlug&&chanBy(zielSlug)){ var zc=chanBy(zielSlug); if(!zc.gefolgt){ zc.gefolgt=true; try{ sbc.rpc('community_folgen',{p_channel:zielSlug,p_gefolgt:true,p_stumm:null}); }catch(e){} } cur=zielSlug; zielSlug=null; }
     var meine=channels.filter(function(c){ return c.gefolgt; });
@@ -330,7 +329,7 @@
   }
 
   function gateHtml(){
-    return '<div class="pagehead"><h1>Community-Chat</h1></div>'+
+    return '<div class="pagehead"><h1>Community</h1></div>'+
       '<div class="gate"><div style="font-size:34px">🔒</div><h3 style="margin:8px 0 6px">Nur für aktive Mitglieder</h3>'+
       '<p style="color:#5A6169;max-width:400px;margin:0 auto 14px">Die Community ist exklusiv für Mitglieder mit aktivem Guthaben oder Pass.</p>'+
       '<a href="index.html#preise" style="display:inline-block;background:#12A594;color:#fff;font-weight:600;padding:9px 15px;border-radius:9px">Pakete ansehen →</a></div>';
@@ -402,7 +401,7 @@
   }
 
   function shellHtml(){
-    return '<div class="pagehead"><h1>Community-Chat</h1><p>Schreib mit anderen Mitgliedern — nach Stufe, Thema und Ziel sortiert.</p></div>'+
+    return '<div class="pagehead"><h1>Community</h1><p>Dein Ort zum Üben — nach Stufe, Thema und Ziel sortiert.</p></div>'+
       '<div class="comm">'+
         '<div class="cs"><div class="cs-h"><b>Community</b><div class="st"><i></i>'+roster.length+' Mitglieder · <span id="cmOnline">'+countOnline()+'</span> online</div></div>'+
           '<div class="cs-srch"><input type="search" id="cmSearch" placeholder="Suchen …" autocomplete="off"></div>'+
