@@ -59,16 +59,14 @@ h2 .ic{color:var(--acc-d)}
 .lead{color:var(--ink2);font-size:15px;line-height:1.68;margin:0}
 
 /* ---------- Titelbild ---------- */
-.hero{position:relative;aspect-ratio:16/9;max-height:250px;display:flex;align-items:flex-end;overflow:hidden;background:#EDE9E1}
-.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.hero .shade{position:absolute;inset:0;background:linear-gradient(to top,rgba(12,12,12,.86) 0%,rgba(12,12,12,.45) 38%,rgba(12,12,12,.08) 70%,transparent 100%)}
-.hero .hx{position:relative;z-index:2;padding:22px;width:100%}
-.hero .kicker{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.82);margin-bottom:7px}
-.hero h1{color:#fff;margin:0}
-.hero .facts{display:flex;gap:16px;margin-top:9px;color:rgba(255,255,255,.86);font-size:13px;font-weight:500}
-.hero .facts span{display:inline-flex;align-items:center;gap:5px}
-.hero .facts .ic{width:14px;height:14px}
+.hero{position:relative;aspect-ratio:16/9;max-height:230px;overflow:hidden;background:#FAF4E6}
+.hero img{display:block;width:100%;height:100%;object-fit:cover}
+.kicker{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--acc-d);margin-bottom:8px}
+.facts{display:flex;gap:15px;flex-wrap:wrap;margin:11px 0 0;color:var(--ink2);font-size:13px;font-weight:500}
+.facts span{display:inline-flex;align-items:center;gap:5px}
+.facts .ic{width:14px;height:14px;color:var(--ink3)}
 .body{padding:22px}
+.body h1{margin:0}
 
 /* ---------- Lernziele ---------- */
 .goals{list-style:none;margin:16px 0 0;padding:0;counter-reset:g}
@@ -76,10 +74,9 @@ h2 .ic{color:var(--acc-d)}
 .goals li::before{content:counter(g);position:absolute;left:0;top:11px;width:25px;height:25px;border-radius:8px;background:var(--acc-soft);color:var(--acc-d);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
 
 /* ---------- Dialog ---------- */
-.scene{position:relative;aspect-ratio:21/9;border-radius:var(--r2);overflow:hidden;margin:0 0 18px;background:#EDE9E1}
-.scene img{width:100%;height:100%;object-fit:cover}
-.scene .shade{position:absolute;inset:0;background:linear-gradient(to top,rgba(12,12,12,.8),transparent 68%)}
-.scene .cap{position:absolute;left:0;right:0;bottom:0;padding:14px 16px;color:#fff;font-size:13.5px;font-weight:500;line-height:1.5}
+.scene{border-radius:var(--r2);overflow:hidden;margin:0 0 8px;background:#FAF4E6;aspect-ratio:2/1}
+.scene img{display:block;width:100%;height:100%;object-fit:cover}
+.scap{font-size:13.5px;color:var(--ink2);line-height:1.55;margin:0 0 18px;padding:0 2px}
 .playbar{display:flex;align-items:center;gap:12px;background:var(--acc-soft);border:1px solid var(--acc-line);border-radius:var(--r2);padding:11px 14px;margin-bottom:18px}
 .playbtn{width:40px;height:40px;border-radius:50%;border:none;background:var(--acc);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none;transition:transform .2s,background .2s}
 .playbtn:hover{background:var(--acc-d);transform:scale(1.05)}
@@ -319,12 +316,14 @@ function draw(){
 function vIntro(){
   var g=(D.intro.du_lernst||[]).map(function(x){return '<li>'+esc(x)+'</li>';}).join('');
   var im=bild(D.meta.bild,1000);
-  return '<div class="card flush"><div class="hero">'
-    +(im?'<img src="'+im+'" alt="">':'')+'<div class="shade"></div><div class="hx">'
-    +'<div class="kicker">'+esc(D.meta.kurs)+' · Lektion '+D.meta.nr+'</div><h1>'+esc(D.meta.titel)+'</h1>'
+  return '<div class="card flush">'
+    +(im?'<div class="hero"><img src="'+im+'" alt=""></div>':'')
+    +'<div class="body">'
+    +'<div class="kicker">'+esc(D.meta.kurs)+' · Lektion '+D.meta.nr+'</div>'
+    +'<h1>'+esc(D.meta.titel)+'</h1>'
     +'<div class="facts"><span>'+I('chart',14)+esc(D.meta.level)+'</span><span>'+I('clock',14)+esc(D.meta.dauer||'ca. 15 Min')+'</span>'
-    +(total?'<span>'+I('puzzle',14)+total+' Übungen</span>':'')+'</div></div></div>'
-    +'<div class="body"><p class="lead">'+esc(D.intro.text)+'</p>'
+    +(total?'<span>'+I('puzzle',14)+total+' Übungen</span>':'')+'</div>'
+    +'<p class="lead" style="margin-top:16px">'+esc(D.intro.text)+'</p>'
     +'<div class="rlabel" style="margin:22px 0 2px">'+I('target',15)+'Das lernst du</div>'
     +'<ul class="goals">'+g+'</ul></div></div>';
 }
@@ -337,7 +336,7 @@ function vDlg(){
   }).join('');
   var im=bild(D.dialog.bild||D.meta.bild,900);
   return '<div class="card"><h2>'+I('headset',19)+'Dialog</h2><p class="sub">Hör zu und lies mit. Tippe eine Zeile an, um sie einzeln zu hören.</p>'
-    +(im?'<div class="scene"><img src="'+im+'" alt=""><div class="shade"></div><div class="cap">'+esc(D.dialog.situation||'')+'</div></div>':'')
+    +(im?'<div class="scene"><img src="'+im+'" alt=""></div><p class="scap">'+esc(D.dialog.situation||'')+'</p>':'<p class="scap">'+esc(D.dialog.situation||'')+'</p>')
     +'<div class="playbar"><button class="playbtn" id="pb" onclick="__playAll()">'+I('play',17)+'</button><span class="pl">Ganzen Dialog anhören</span></div>'
     +'<div class="turns">'+t+'</div></div>';
 }
