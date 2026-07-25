@@ -1156,6 +1156,10 @@ function routeFromHash(){ const v=(location.hash||'#dashboard').slice(1); show(V
 // Ohne Guthaben/Probestunde/Pass: ALLES gesperrt außer Kalender (und Profil für Konto/Logout).
 const LOCKED_VIEWS=['dashboard','kurse','ueben','community','lernpfad','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','fehler','buddy'];
 function show(v){
+  if(v==='kalender' && typeof nurCommunity==='function' && nurCommunity()){
+    zeigeLiveUpgrade(); v='dashboard';
+    if((location.hash||'').slice(1)!=='dashboard'){ location.hash='dashboard'; return; }
+  }
   VIEWS.forEach(x=>document.getElementById('v-'+x).classList.toggle('active',x===v));
   document.querySelectorAll('.navlink[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));
   try{updateTopbar(v);}catch(e){}
@@ -1164,7 +1168,6 @@ function show(v){
   ({dashboard:renderDashboard,kurse:(window.renderKurse||renderDashboard),ueben:(window.renderUeben||renderDashboard),community:(window.renderCommunity||renderDashboard),lernpfad:renderLernpfad,kalender:renderKalender,stunden:renderStunden,materialien:renderMaterialien,vokabeln:renderVokabeln,
     fortschritt:renderFortschritt,guthaben:renderGuthaben,nachrichten:renderNachrichten,
     amanda:renderAmanda,profil:renderProfil,fehler:(window.renderFehlerTrainer||renderDashboard),buddy:(window.renderBuddy||renderDashboard)}[v])();
-  if(v==='kalender' && typeof nurCommunity==='function' && nurCommunity()){ zeigeLiveUpgrade(); v='dashboard'; }
   if(v==='community') markCommRead();
   if(v==='dashboard') setTimeout(mcStatus,60);   // Community geöffnet -> Nachrichten gelesen, Badge weg
   window.scrollTo(0,0);
@@ -2404,6 +2407,7 @@ init();
 <script src="lernziel.js"></script>
 <script src="benachrichtigungen.js"></script>
 <script src="chat-knopf.js"></script>
+<script src="vokabeltrainer.js"></script>
 <script>
 if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}
 </script>
