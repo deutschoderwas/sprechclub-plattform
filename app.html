@@ -598,6 +598,7 @@ mark.m{background:linear-gradient(180deg,transparent 52%,#FFE59A 52%);color:inhe
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="config.js"></script>
+<script src="stimmen.js"></script>
 <script src="klang.js"></script>
 <script src="stimme.js"></script>
 <script>
@@ -627,27 +628,10 @@ function lese(k,f){ try{ var v=localStorage.getItem('dow_app_'+k); return v==nul
 function schreib(k,v){ try{ localStorage.setItem('dow_app_'+k, JSON.stringify(v)); }catch(e){} }
 
 /* ---------- Stimme ---------- */
-var STIMMEN=[], STIMME=null;
-function stimmenLaden(){
-  try{ STIMMEN = speechSynthesis.getVoices()||[]; }catch(e){ STIMMEN=[]; }
-  var de = STIMMEN.filter(function(v){ return /^de/i.test(v.lang); });
-  var rang = ['Anna','Petra','Markus','Google Deutsch','Helena','Katja','Yannick','Conrad'];
-  de.sort(function(a,b){
-    function w(v){ var i=rang.findIndex(function(n){ return v.name.indexOf(n)>=0; }); return i<0?99:i; }
-    return w(a)-w(b);
-  });
-  STIMME = de[0] || null;
-}
-if('speechSynthesis' in window){ stimmenLaden(); speechSynthesis.onvoiceschanged = stimmenLaden; }
-function sprich(t, langsam){
-  if(!('speechSynthesis' in window)) return;
-  try{
-    speechSynthesis.cancel();
-    var u = new SpeechSynthesisUtterance(String(t));
-    u.lang='de-DE'; u.rate = langsam?0.62:0.94; u.pitch=1.0;
-    if(STIMME) u.voice=STIMME;
-    speechSynthesis.speak(u);
-  }catch(e){}
+/* Die Stimmen kommen aus stimmen.js — dort ist geregelt,
+   welche Rolle wie klingt und dass zwei Sprecher verschieden sind. */
+function sprich(t, langsam, rolle){
+  if(window.sagen) window.sagen(t, { langsam:!!langsam, rolle: rolle || 'julia' });
 }
 
 /* ============================================================
@@ -1384,21 +1368,10 @@ function amandaSVG(groesse, id){
     +  '<path d="M44.8 60.4q5.2-2.4 10.4 0" stroke="#B03A4A" stroke-width="1" fill="none"/>'
     +'</g></svg>';
 }
-var AMSPRICHT = null;
 function amandaSpricht(text, svgId){
   var e = svgId && document.getElementById(svgId);
-  if(e) e.classList.add('spricht');
-  AMSPRICHT = e;
-  if(!('speechSynthesis' in window)){ setTimeout(function(){ if(e) e.classList.remove('spricht'); }, 1400); return; }
-  try{
-    speechSynthesis.cancel();
-    var u=new SpeechSynthesisUtterance(String(text));
-    u.lang='de-DE'; u.rate=0.93; u.pitch=1.06;
-    if(STIMME) u.voice=STIMME;
-    u.onend=function(){ if(e) e.classList.remove('spricht'); };
-    u.onerror=function(){ if(e) e.classList.remove('spricht'); };
-    speechSynthesis.speak(u);
-  }catch(err){ if(e) e.classList.remove('spricht'); }
+  if(!window.sagen){ if(e){ e.classList.add('spricht'); setTimeout(function(){ e.classList.remove('spricht'); }, 1400); } return; }
+  window.sagen(text, { rolle:'amanda', aufElement:e });
 }
 
 /* ---------- Dialoge mit Amanda ---------- */
@@ -1567,6 +1540,7 @@ function malDialog(){
       +'<h2 style="font-size:22px">Geschafft!</h2>'
       +'<p>Du hast die Situation „'+esc(d.titel)+'" komplett durchgesprochen.</p>'
       +'<div style="display:flex;flex-direction:column;gap:10px">'
+      +'<button class="knopf bl" id="hoerAlles" onclick="gespraechAnhoeren()">🔊 Das ganze Gespräch anhören</button>'
       +'<button class="knopf" onclick="dialogNochmal()">Noch einmal üben</button>'
       +'<button class="knopf go" onclick="dialogZurueck()">Nächste Situation</button>'
       +'<a class="knopf" style="display:block;text-align:center;text-decoration:none;background:#E4E0D7;color:#5A5750;box-shadow:0 4px 0 #D3CEC4" href="konto.html#amanda">Jetzt frei mit Amanda sprechen</a>'
@@ -1582,7 +1556,7 @@ function malDialog(){
             +'<div class="s">'+esc(s.beispiel)+'</div>'
             +'<button class="nimm" onclick="mustersatzNehmen()">Diesen Satz benutzen</button>'
             +'<button class="nimm" style="background:#fff;color:var(--gold-d);box-shadow:0 3px 0 #E4D9B4;margin-left:8px" '
-            +'onclick="sprich(\''+esc(s.beispiel).replace(/'/g,"\\'")+'\')">🔊 Anhören</button></div>'
+            +'onclick="sprich(\''+esc(s.beispiel).replace(/'/g,"\\'")+'\',0,\'du\')">🔊 Anhören</button></div>'
           : '')
       + (s.redemittel && s.redemittel.length
           ? '<div class="rm">'+s.redemittel.map(function(r){
@@ -1700,6 +1674,37 @@ async function satzPruefen(eintrag, schritt){
   }catch(e){ eintrag.pruef=null; malDialog(); }
 }
 function dialogNochmal(){ dialogStart(D.offen.id); }
+
+/* Das fertige Gespräch am Stück hören — Amanda und du als zwei Stimmen.
+   Genau so soll es klingen: zwei Menschen, nicht eine Maschine. */
+var HOERT = false;
+function gespraechAnhoeren(){
+  var b = $('hoerAlles');
+  if(HOERT){ window.sagenStopp && window.sagenStopp(); HOERT=false; if(b) b.textContent='🔊 Das ganze Gespräch anhören'; return; }
+  if(!window.dialogSprechen || !D.verlauf.length) return;
+  HOERT = true;
+  if(b) b.textContent='⏹ Anhalten';
+
+  var zeilen = D.verlauf.map(function(m){
+    return { wer: m.wer==='am' ? 'amanda' : 'du',
+             text: (m.wer==='am' ? m.text : (m.korrigiert || m.text)) };
+  });
+
+  // die Blasen leuchten mit, während sie gesprochen werden
+  window.dialogSprechen(zeilen, {
+    beiZeile: function(z, i){
+      document.querySelectorAll('.dlg .bb').forEach(function(x,k){
+        x.style.outline = (k===i) ? '2px solid var(--tq)' : '';
+        if(k===i && x.scrollIntoView) x.scrollIntoView({block:'center', behavior:'smooth'});
+      });
+    },
+    fertig: function(){
+      HOERT=false;
+      if($('hoerAlles')) $('hoerAlles').textContent='🔊 Noch einmal anhören';
+      document.querySelectorAll('.dlg .bb').forEach(function(x){ x.style.outline=''; });
+    }
+  });
+}
 function challengeHeute(){
   var fragen = [
     'Was hast du heute zum Frühstück gegessen — und warum genau das?',

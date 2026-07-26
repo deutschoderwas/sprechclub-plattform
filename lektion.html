@@ -240,6 +240,7 @@ h2 .ic{color:var(--acc-d)}
     <button class="btn btn-p" id="bNext"></button>
   </div>
 </div>
+<script src="stimmen.js"></script>
 <script src="klang.js"></script>
 <script src="stimme.js"></script>
 <script src="ui-icons.js"></script>
@@ -341,6 +342,15 @@ function stimmeFuer(sprecher){
 }
 var live=null;
 function speak(t,el,cb,sprecher){
+  /* Wenn stimmen.js geladen ist, sprechen wir darüber — dort ist geregelt,
+     dass zwei Gesprächspartner wirklich verschieden klingen. */
+  if(window.sagen){
+    if(live)live.classList.remove('on');
+    if(el){ el.classList.add('on'); live=el; }
+    window.sagen(t, { rolle: sprecher || 'julia', fertig: function(){
+      if(el)el.classList.remove('on'); if(live===el)live=null; if(cb)cb(); } });
+    return;
+  }
   if(!window.speechSynthesis){ if(cb)cb(); return; }
   try{ speechSynthesis.cancel(); }catch(e){}
   if(live)live.classList.remove('on');
