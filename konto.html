@@ -1183,14 +1183,14 @@ function collectVocab(){
 }
 
 // ---------- Router ----------
-const VIEWS=['dashboard','kurse','ueben','community','lernpfad','kalender','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','profil','fehler','buddy'];
+const VIEWS=['dashboard','lernen','kurs','schreiben','kurse','ueben','community','lernpfad','kalender','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','profil','fehler','buddy'];
 function go(v){ location.hash=v; }
 function toggleNav(){ document.body.classList.toggle('nav-open'); }
-const VIEW_TITLES={dashboard:['Schülerbereich','Startseite'],kurse:['Lernen','Kursbibliothek'],kalender:['Live Unterricht','Diese Woche'],stunden:['Live Unterricht','Meine Stunden'],community:['Community-Chat','Alle Themen'],ueben:['Lernen','Üben'],vokabeln:['Lernen','Vokabeltrainer'],materialien:['Lernen','Materialien'],fortschritt:['Lernen','Fortschritt'],nachrichten:['Nachrichten','Team'],amanda:['Amanda','KI-Sprechpartnerin'],lernpfad:['Lernen','Lernpfad'],fehler:['Lernen','Fehler-Trainer'],buddy:['Lernen','Sprech-Buddy'],guthaben:['Konto','Guthaben'],profil:['Konto','Profil']};
+const VIEW_TITLES={dashboard:['Schülerbereich','Startseite'],lernen:['Lernen','Lernbereich'],kurs:['Lernen','Mein Kurs'],schreiben:['Lernen','Schreibtrainer'],kurse:['Lernen','Kursbibliothek'],kalender:['Live Unterricht','Diese Woche'],stunden:['Live Unterricht','Meine Stunden'],community:['Community-Chat','Alle Themen'],ueben:['Lernen','Üben'],vokabeln:['Lernen','Vokabeltrainer'],materialien:['Lernen','Materialien'],fortschritt:['Lernen','Fortschritt'],nachrichten:['Nachrichten','Team'],amanda:['Amanda','KI-Sprechpartnerin'],lernpfad:['Lernen','Lernpfad'],fehler:['Lernen','Fehler-Trainer'],buddy:['Lernen','Sprech-Buddy'],guthaben:['Konto','Guthaben'],profil:['Konto','Profil']};
 function updateTopbar(v){var t=VIEW_TITLES[v]||['Schülerbereich','']; var s=document.getElementById('tbS'),b=document.getElementById('tbT'); var lang='de'; try{lang=localStorage.getItem('dow_lang')||'de';}catch(e){} var TT=window.__I18N__||{}; function tr(x){var o=TT[x]; return (o&&o[lang]!=null)?o[lang]:x;} if(s){s.setAttribute('data-de',t[0]);s.setAttribute('data-i18n',t[0]);s.textContent=tr(t[0]);} if(b){b.setAttribute('data-de',t[1]);b.setAttribute('data-i18n',t[1]);b.textContent=tr(t[1]);}}
 function routeFromHash(){ const v=(location.hash||'#dashboard').slice(1); show(VIEWS.includes(v)?v:'dashboard'); }
 // Ohne Guthaben/Probestunde/Pass: ALLES gesperrt außer Kalender (und Profil für Konto/Logout).
-const LOCKED_VIEWS=['dashboard','kurse','ueben','community','lernpfad','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','fehler','buddy'];
+const LOCKED_VIEWS=['dashboard','lernen','kurs','schreiben','kurse','ueben','community','lernpfad','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','fehler','buddy'];
 function show(v){
   if(v==='kalender' && typeof nurCommunity==='function' && nurCommunity()){
     zeigeLiveUpgrade(); v='dashboard';
