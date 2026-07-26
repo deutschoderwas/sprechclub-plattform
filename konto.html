@@ -584,8 +584,8 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFF6E6 0%,#FAF8F2 60%)
     <button class="navlink" data-view="kalender" onclick="go('kalender')"><span class="ic">🗓️</span><span data-i18n="k_live">Live Unterricht</span></button>
     <button class="navlink" data-view="stunden" onclick="go('stunden')"><span class="ic">📅</span><span data-i18n="k_myl">Meine Stunden</span></button>
     <div class="nav-sec" data-i18n="k_learn">Lernen</div>
-    <button class="navlink navlink-hl" data-view="kurse" onclick="go('kurse')"><span class="ic">📚</span><span data-i18n="k_courses">Kursbibliothek</span></button>
-    <button class="navlink" data-view="ueben" onclick="go('ueben')"><span class="ic">🎮</span><span data-i18n="k_prac">Üben</span></button>
+    <button class="navlink navlink-hl" data-view="kurs" onclick="go('kurs')"><span class="ic">🎓</span><span data-i18n="k_course">Mein Kurs</span></button>
+    <button class="navlink" data-view="lernen" onclick="go('lernen')"><span class="ic">🧭</span><span data-i18n="k_learn">Lernbereich</span></button>
     <button class="navlink" data-view="vokabeln" onclick="go('vokabeln')"><span class="ic">🃏</span><span data-i18n="k_vocab">Vokabeltrainer</span></button>
     <button class="navlink" data-view="fehler" onclick="go('fehler')"><span class="ic">📘</span><span data-i18n="k_mist">Fehler-Trainer</span></button>
     <button class="navlink" data-view="buddy" onclick="go('buddy')"><span class="ic">🤝</span><span data-i18n="k_buddy">Sprech-Tandem</span></button>
@@ -886,6 +886,9 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFF6E6 0%,#FAF8F2 60%)
     <section class="view active" id="v-dashboard"></section>
     <section class="view" id="v-kurse"></section>
     <section class="view" id="v-ueben"></section>
+    <section class="view" id="v-lernen"></section>
+    <section class="view" id="v-kurs"></section>
+    <section class="view" id="v-schreiben"></section>
     <section class="view" id="v-community"></section>
     <section class="view" id="v-lernpfad"></section>
     <section class="view" id="v-kalender"></section>
@@ -1181,32 +1184,32 @@ function collectVocab(){
 }
 
 // ---------- Router ----------
-const VIEWS=['dashboard','kurse','ueben','community','lernpfad','kalender','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','profil','fehler','buddy'];
+const VIEWS=['dashboard','lernen','kurs','schreiben','kurse','ueben','community','lernpfad','kalender','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','profil','fehler','buddy'];
 function go(v){ location.hash=v; }
 function toggleNav(){ document.body.classList.toggle('nav-open'); }
-const VIEW_TITLES={dashboard:['Schülerbereich','Startseite'],kurse:['Lernen','Kursbibliothek'],kalender:['Live Unterricht','Diese Woche'],stunden:['Live Unterricht','Meine Stunden'],community:['Community-Chat','Alle Themen'],ueben:['Lernen','Üben'],vokabeln:['Lernen','Vokabeltrainer'],materialien:['Lernen','Materialien'],fortschritt:['Lernen','Fortschritt'],nachrichten:['Nachrichten','Team'],amanda:['Amanda','KI-Sprechpartnerin'],lernpfad:['Lernen','Lernpfad'],fehler:['Lernen','Fehler-Trainer'],buddy:['Lernen','Sprech-Buddy'],guthaben:['Konto','Guthaben'],profil:['Konto','Profil']};
+const VIEW_TITLES={dashboard:['Schülerbereich','Startseite'],lernen:['Lernen','Lernbereich'],kurs:['Lernen','Mein Kurs'],schreiben:['Lernen','Schreibtrainer'],kurse:['Lernen','Kursbibliothek'],kalender:['Live Unterricht','Diese Woche'],stunden:['Live Unterricht','Meine Stunden'],community:['Community-Chat','Alle Themen'],ueben:['Lernen','Üben'],vokabeln:['Lernen','Vokabeltrainer'],materialien:['Lernen','Materialien'],fortschritt:['Lernen','Fortschritt'],nachrichten:['Nachrichten','Team'],amanda:['Amanda','KI-Sprechpartnerin'],lernpfad:['Lernen','Lernpfad'],fehler:['Lernen','Fehler-Trainer'],buddy:['Lernen','Sprech-Buddy'],guthaben:['Konto','Guthaben'],profil:['Konto','Profil']};
 function updateTopbar(v){var t=VIEW_TITLES[v]||['Schülerbereich','']; var s=document.getElementById('tbS'),b=document.getElementById('tbT'); var lang='de'; try{lang=localStorage.getItem('dow_lang')||'de';}catch(e){} var TT=window.__I18N__||{}; function tr(x){var o=TT[x]; return (o&&o[lang]!=null)?o[lang]:x;} if(s){s.setAttribute('data-de',t[0]);s.setAttribute('data-i18n',t[0]);s.textContent=tr(t[0]);} if(b){b.setAttribute('data-de',t[1]);b.setAttribute('data-i18n',t[1]);b.textContent=tr(t[1]);}}
 function routeFromHash(){ const v=(location.hash||'#dashboard').slice(1); show(VIEWS.includes(v)?v:'dashboard'); }
 // Ohne Guthaben/Probestunde/Pass: ALLES gesperrt außer Kalender (und Profil für Konto/Logout).
-const LOCKED_VIEWS=['dashboard','kurse','ueben','community','lernpfad','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','fehler','buddy'];
+const LOCKED_VIEWS=['dashboard','lernen','kurs','schreiben','kurse','ueben','community','lernpfad','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','fehler','buddy'];
 function show(v){
   if(v==='kalender' && typeof nurCommunity==='function' && nurCommunity()){
     zeigeLiveUpgrade(); v='dashboard';
     if((location.hash||'').slice(1)!=='dashboard'){ location.hash='dashboard'; return; }
   }
-  VIEWS.forEach(x=>document.getElementById('v-'+x).classList.toggle('active',x===v));
+  VIEWS.forEach(x=>{var _e=document.getElementById('v-'+x); if(_e) _e.classList.toggle('active',x===v);});
   document.querySelectorAll('.navlink[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));
   try{updateTopbar(v);}catch(e){}
   document.body.classList.remove('nav-open');
   if(LOCKED_VIEWS.includes(v) && !isActive()){ renderLocked(v); window.scrollTo(0,0); return; }
-  ({dashboard:renderDashboard,kurse:(window.renderKurse||renderDashboard),ueben:(window.renderUeben||renderDashboard),community:(window.renderCommunity||renderDashboard),lernpfad:renderLernpfad,kalender:renderKalender,stunden:renderStunden,materialien:renderMaterialien,vokabeln:renderVokabeln,
+  ({dashboard:renderDashboard,kurse:(window.renderKurse||renderDashboard),ueben:(window.renderUeben||renderDashboard),lernen:(window.renderLernen||renderDashboard),kurs:(window.renderNiveau||renderDashboard),schreiben:(window.renderSchreiben||renderDashboard),community:(window.renderCommunity||renderDashboard),lernpfad:renderLernpfad,kalender:renderKalender,stunden:renderStunden,materialien:renderMaterialien,vokabeln:renderVokabeln,
     fortschritt:renderFortschritt,guthaben:renderGuthaben,nachrichten:renderNachrichten,
     amanda:renderAmanda,profil:renderProfil,fehler:(window.renderFehlerTrainer||renderDashboard),buddy:(window.renderBuddy||renderDashboard)}[v])();
   if(v==='community') markCommRead();
   if(v==='dashboard') setTimeout(mcStatus,60);   // Community geöffnet -> Nachrichten gelesen, Badge weg
   window.scrollTo(0,0);
 }
-const LOCK_LABELS={dashboard:'Start',kurse:'Kursbibliothek',ueben:'Üben',community:'Community-Chat',lernpfad:'Lernpfad',stunden:'Meine Stunden',materialien:'Material',vokabeln:'Vokabeln',fortschritt:'Fortschritt',guthaben:'Guthaben',nachrichten:'Nachrichten',amanda:'Amanda'};
+const LOCK_LABELS={dashboard:'Start',lernen:'Lernbereich',kurs:'Mein Kurs',schreiben:'Schreibtrainer',kurse:'Kursbibliothek',ueben:'Üben',community:'Community-Chat',lernpfad:'Lernpfad',stunden:'Meine Stunden',materialien:'Material',vokabeln:'Vokabeln',fortschritt:'Fortschritt',guthaben:'Guthaben',nachrichten:'Nachrichten',amanda:'Amanda'};
 function renderLocked(v){
   const label=LOCK_LABELS[v]||'Dieser Bereich';
   document.getElementById('v-'+v).innerHTML=
@@ -1493,7 +1496,7 @@ function renderDashboard(){
           <div class="eyebrow" data-i18n="d_resume">Weiter üben</div>
           <h3 data-i18n="d_session">Deine Übungssession</h3>
           <div class="meta" data-i18n="d_sessmeta">Vokabeln · Grammatik · Hören · Aussprache — mit Bild &amp; echter Stimme.</div>
-          <div style="margin-top:12px"><button class="btn btn-primary" onclick="go('ueben')"><span data-i18n="d_startprac">▶ Üben starten</span></button></div>
+          <div style="margin-top:12px"><button class="btn btn-primary" onclick="go('lernen')"><span data-i18n="d_startprac">▶ Üben starten</span></button></div>
         </div>
       </div>
       ${liveCard}
@@ -2662,7 +2665,7 @@ window.kbOpen=function(id){
   }
   mods=mods.join('');
   document.getElementById('v-kurse').innerHTML=
-    '<button class="kb-back" onclick="window.renderKurse()"><span>←</span> <span data-i18n="kb_back">Zurück zur Bibliothek</span></button>'
+    '<button class="kb-back" onclick="go(&#39;lernen&#39;)"><span>←</span> <span data-i18n="kb_back">Zurück zur Bibliothek</span></button>'
     +'<div class="kb-dhero">'
     +(_dimg?'<img class="dim" src="'+_dimg+'" alt="">':'')
     +'<span class="dovl" style="background:'+(_dimg?(KB_OV[cat.id]||''):cat.g)+'"></span>'
@@ -2800,7 +2803,7 @@ window.addEventListener('resize',function(){ clearTimeout(_mhT); _mhT=setTimeout
 </script>
 <nav class="mtabs" id="mtabs"><div class="mtabs-in">
   <button class="mtab" data-t="dashboard" onclick="go('dashboard')"></button>
-  <button class="mtab" data-t="kurse" onclick="go('kurse')"></button>
+  <button class="mtab" data-t="kurse" onclick="go('lernen')"></button>
   <a class="mtab" data-t="sprechen" href="sprechen.html"></a>
   <button class="mtab" data-t="community" onclick="go('community')"></button>
   <button class="mtab" data-t="profil" onclick="go('profil')"></button>
@@ -2822,5 +2825,13 @@ window.addEventListener('resize',function(){ clearTimeout(_mhT); _mhT=setTimeout
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',paint); else paint();
 })();
 </script>
+<script src="dialoge.js"></script>
+<script src="themen.js"></script>
+<script src="lernen.js"></script>
+<script src="niveau.js"></script>
+<script src="a1.js"></script>
+<script src="schreiben.js"></script>
+<script src="berufe.js"></script>
+<script src="kurs.js"></script>
 </body>
 </html>

@@ -128,3 +128,20 @@ for muss, was in [('id="v-lernen"', 'Ansicht Lernbereich'),
 print('')
 print('Wenn alles OK ist: konto.html im Browser öffnen, anmelden, auf „Mein Kurs" klicken.')
 print('Erst danach committen und pushen.')
+
+
+# --------------------------------------------------- 7  Der wichtigste Test
+# Jede Ansicht in VIEWS braucht einen <section id="v-...">.
+# Fehlt einer, stuerzt show() bei JEDEM Klick ab und die Seite ist tot.
+import re as _re
+_s = io.open(P, encoding='utf-8').read()
+_m = _re.search(r"const VIEWS=\[(.*?)\];", _s, _re.S)
+if _m:
+    _v = _re.findall(r"'([^']+)'", _m.group(1))
+    _f = [x for x in _v if ('id="v-%s"' % x) not in _s]
+    print('')
+    if _f:
+        print('!!! ABSCHNITT FEHLT fuer: ' + ', '.join(_f))
+        print('!!! NICHT PUSHEN — sonst reagiert kein einziger Klick mehr.')
+    else:
+        print('Alle %d Ansichten haben ihren Abschnitt. Sicher zum Pushen.' % len(_v))
