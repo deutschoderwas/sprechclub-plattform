@@ -25,6 +25,36 @@
   function lese(k, f) { try { var v = localStorage.getItem('dow_app_' + k); return v == null ? f : JSON.parse(v); } catch (e) { return f; } }
   function schreib(k, v) { try { localStorage.setItem('dow_app_' + k, JSON.stringify(v)); } catch (e) { } }
 
+  /* ---------- Die App erneuert sich selbst ----------
+     Beim Start prüft sie, ob auf dem Server eine neuere Fassung liegt,
+     lädt sie im Hintergrund und benutzt sie beim nächsten Öffnen.
+     Wichtig ist der Ruf „notifyAppReady": Bleibt er aus, geht die App
+     automatisch auf die vorige Fassung zurück — so kann ein kaputtes
+     Update niemanden aussperren. */
+  (function () {
+    var U = P.CapacitorUpdater;
+    if (!U) return;
+    // Sobald die Oberfläche steht, melden wir: alles in Ordnung.
+    function bereit() {
+      try { U.notifyAppReady(); } catch (e) { }
+    }
+    if (document.readyState === 'complete') setTimeout(bereit, 800);
+    else window.addEventListener('load', function () { setTimeout(bereit, 800); });
+
+    try {
+      U.addListener('updateAvailable', function (i) {
+        console.log('Neue Fassung gefunden: ' + (i && i.bundle && i.bundle.version));
+      });
+      U.addListener('downloadComplete', function () {
+        // Kein Pop-up mitten im Lernen — beim nächsten Öffnen ist es da.
+        console.log('Update geladen, wird beim nächsten Start benutzt.');
+      });
+      U.addListener('updateFailed', function () {
+        console.log('Update fehlgeschlagen — die App läuft mit der bisherigen Fassung weiter.');
+      });
+    } catch (e) { }
+  })();
+
   /* ---------- Statusleiste und Startbild ---------- */
   try { P.StatusBar && P.StatusBar.setStyle({ style: 'LIGHT' }); } catch (e) { }
   try { P.StatusBar && P.StatusBar.setBackgroundColor({ color: '#FBF9F5' }); } catch (e) { }

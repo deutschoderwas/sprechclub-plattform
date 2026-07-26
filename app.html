@@ -747,7 +747,7 @@ async function einstiegFertig(uebersprungen){
       }catch(e){}
       try{ await sb.rpc('vok_ziel', { p_ziel: EIN.tagesziel }); }catch(e){}
       if(EIN.l1){
-        var sc=document.createElement('script'); sc.src='vok-tr/'+EIN.l1+'.js'; document.head.appendChild(sc);
+        inhaltLaden('vok-tr/'+EIN.l1+'.js', function(){ return window.VOK_TR && window.VOK_TR[EIN.l1]; });
       }
     }
   }
@@ -835,22 +835,65 @@ function ausHash(){
   if(['lernen','sprechen','foto','club','ich'].indexOf(h)>=0) zeige(h, true);
 }
 
-async function poolLaden(){
-  await new Promise(function(fertig){
-    var s=document.createElement('script'); s.src='vokabeln-pool.js';
-    s.onload=fertig; s.onerror=fertig; document.head.appendChild(s);
+/* ============================================================
+   Inhalte laden — erst vom Server, sonst aus der eingebauten Kopie.
+
+   In der App liegen Dialoge, Prüfungen und Wortschatz auf dem Gerät,
+   damit alles ohne Netz läuft. Beim Start schaut die App aber nach,
+   ob auf dem Server eine neuere Fassung liegt. Julia ändert etwas,
+   pusht wie immer — und alle haben es beim nächsten Öffnen.
+   Kein Store, keine Prüfung, kein Warten.
+   ============================================================ */
+var STAENDE = null;
+
+async function staendeHolen(){
+  if(STAENDE) return STAENDE;
+  var basis = window.__API__ || '';
+  try{
+    var r = await fetch(basis + '/inhalt.json?t=' + Math.floor(Date.now()/3600000), { cache:'no-cache' });
+    if(r.ok){
+      var j = await r.json();
+      STAENDE = (j && j.dateien) || {};
+      schreib('staende', STAENDE);
+      return STAENDE;
+    }
+  }catch(e){}
+  STAENDE = lese('staende', {}) || {};      // offline: der zuletzt bekannte Stand
+  return STAENDE;
+}
+
+/* Lädt eine Skriptdatei und meldet, ob es geklappt hat. */
+function skript(url){
+  return new Promise(function(fertig){
+    var s = document.createElement('script');
+    s.src = url;
+    s.onload = function(){ fertig(true); };
+    s.onerror = function(){ fertig(false); };
+    document.head.appendChild(s);
   });
-  POOL = (window.VOK_POOL||[]).slice();
-  if(L1){
-    await new Promise(function(fertig){
-      var s=document.createElement('script'); s.src='vok-tr/'+L1+'.js';
-      s.onload=fertig; s.onerror=fertig; document.head.appendChild(s);
-    });
+}
+
+/* Erst vom Server (mit Versionsnummer), sonst lokal. `da` prüft,
+   ob die Datei wirklich angekommen ist. */
+async function inhaltLaden(datei, da){
+  if(da && da()) return true;
+  var staende = await staendeHolen();
+  var v = staende[datei] || 1;
+  var basis = window.__API__;
+
+  if(basis){                                   // in der App: Server zuerst
+    if(await skript(basis + '/' + datei + '?v=' + v) && (!da || da())) return true;
   }
-  await new Promise(function(fertig){
-    var s=document.createElement('script'); s.src='vok-bild/index.js';
-    s.onload=fertig; s.onerror=fertig; document.head.appendChild(s);
-  });
+  // Webseite, oder der Server war nicht erreichbar
+  if(await skript(datei + '?v=' + v) && (!da || da())) return true;
+  return false;
+}
+
+async function poolLaden(){
+  await inhaltLaden('vokabeln-pool.js', function(){ return Array.isArray(window.VOK_POOL) && window.VOK_POOL.length; });
+  POOL = (window.VOK_POOL||[]).slice();
+  if(L1) await inhaltLaden('vok-tr/'+L1+'.js', function(){ return window.VOK_TR && window.VOK_TR[L1]; });
+  await inhaltLaden('vok-bild/index.js', function(){ return !!window.VOK_BILD; });
   if(!POOL.length) POOL = NOTPOOL.slice();     // Vorschau ohne Plattformdateien
 }
 function uebersetzung(v){
@@ -1390,10 +1433,11 @@ function dlgFertig(){ return lese('dlgFertig', {}); }
 function malSprechen(){
   if(D.offen){ malDialog(); return; }
   if(!dialogeGeladen()){
-    var s=document.createElement('script'); s.src='dialoge.js';
-    s.onload=function(){ malSprechen(); }; s.onerror=function(){ window.DIALOGE=[]; malSprechen(); };
-    document.head.appendChild(s);
     $('s-sprechen').innerHTML='<h1 class="t">Sprechen 🎤</h1><div class="leer"><div class="em">💬</div>Lädt …</div>';
+    inhaltLaden('dialoge.js', dialogeGeladen).then(function(ok){
+      if(!ok) window.DIALOGE = window.DIALOGE || [];
+      malSprechen();
+    });
     return;
   }
   var f = dlgFertig();
@@ -2166,10 +2210,11 @@ function pruefBestes(){
 }
 function pruefStart(){
   if(!window.PRUEFUNG){
-    var s=document.createElement('script'); s.src='pruefung.js';
-    s.onload=function(){ pruefStart(); };
-    s.onerror=function(){ toast('Die Prüfungsaufgaben konnten nicht geladen werden.'); };
-    document.head.appendChild(s); return;
+    inhaltLaden('pruefung.js', function(){ return !!window.PRUEFUNG; }).then(function(ok){
+      if(ok) pruefStart();
+      else toast('Die Prüfungsaufgaben konnten nicht geladen werden.');
+    });
+    return;
   }
   pruefWahl();
 }
@@ -2363,8 +2408,8 @@ function korrekturUm(){
 function setzeL1(l){
   L1=l; schreib('l1', l);
   try{ localStorage.setItem('dow_l1', l); }catch(e){}
-  var s=document.createElement('script'); s.src='vok-tr/'+l+'.js'; s.onload=function(){ malIch(); toast('Sprache geändert ✓'); };
-  s.onerror=function(){ malIch(); }; document.head.appendChild(s);
+  inhaltLaden('vok-tr/'+l+'.js', function(){ return window.VOK_TR && window.VOK_TR[l]; })
+    .then(function(){ malIch(); toast('Sprache geändert ✓'); });
 }
 
 /* ============================================================

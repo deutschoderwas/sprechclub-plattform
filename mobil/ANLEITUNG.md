@@ -111,3 +111,52 @@ Die Bildschirmfotos kann ich automatisch aus der App erzeugen, sobald du sagst, 
 ## Mein Vorschlag in einem Satz
 
 Am **01.08. mit der Web-App starten**, in derselben Woche die beiden Entwicklerkonten anlegen, dann **Android Mitte August** und **iPhone Ende August** nachlegen. Deine Mitglieder merken den Unterschied kaum — die Web-App liegt bei ihnen ohnehin schon als Symbol auf dem Startbildschirm.
+
+---
+
+## Änderungen, wenn die App schon im Store ist
+
+Das war die Frage, die alles entscheidet — deshalb ist es jetzt so gebaut, dass du fast nie auf einen Store warten musst.
+
+### Sofort live, ohne alles
+
+Alles vom Server: LIVE-Termine, Chat, Punkte, Kursbibliothek, Preise, deine Webseite. Änderung hochladen, fertig.
+
+**Neu auch:** Dialoge, Prüfungsaufgaben, Wortschatz und Übersetzungen. Die liegen zwar auf dem Gerät, damit die App ohne Netz läuft — aber beim Start schaut sie in `inhalt.json` nach, ob auf dem Server etwas Neueres liegt.
+
+So gehst du vor, wenn du eine Situation ergänzt:
+
+1. `dialoge.js` ändern
+2. In `inhalt.json` die Zahl bei `"dialoge.js"` um eins hochzählen
+3. Pushen
+
+Beim nächsten Öffnen hat es jede. Wer offline ist, arbeitet mit der letzten Fassung weiter und bekommt das Neue, sobald wieder Netz da ist.
+
+### Innerhalb von Minuten, ohne Store
+
+Änderungen an der App selbst — Aussehen, neue Übungsarten, neue Bildschirme. Dafür ist `@capgo/capacitor-updater` eingebaut. Im Ordner `mobil/`:
+
+```
+npm run paket
+```
+
+Das sammelt die App-Dateien, packt sie als ZIP nach `app-pakete/`, schreibt `app-version.json` und zählt die Version hoch. Danach pushen — mehr nicht. Jede App fragt beim Start bei `/api/app-update` nach und holt sich die neue Fassung im Hintergrund. Beim nächsten Öffnen ist sie da.
+
+Beide Stores erlauben das ausdrücklich, solange sich der Zweck der App nicht ändert; bei Apple steht es in Punkt 3.3.2 der Richtlinien.
+
+**Zwei Sicherungen sind eingebaut.** Startet die App mit einer neuen Fassung nicht sauber, geht sie von allein auf die vorige zurück — ein kaputtes Update kann niemanden aussperren. Und wenn du merkst, dass etwas nicht stimmt, setzt du in `app-version.json` `"aus": true` und pushst: dann bekommt niemand mehr ein Update.
+
+Vorsichtig ausrollen geht auch. `"anteil": 0.2` heißt, nur jede fünfte App bekommt es. Wenn nach einem Tag nichts schiefging, auf `1` setzen.
+
+### Nur dafür brauchst du noch den Store
+
+Ein neues App-Symbol, ein anderer Name, eine zusätzliche Berechtigung wie Standort oder Kalender, ein neuer nativer Baustein, oder größere Systemwechsel bei Apple und Google. Das kommt zwei- bis dreimal im Jahr vor. Prüfung bei Apple ein bis drei Tage, bei Google meist ein paar Stunden.
+
+### Kurz gefasst
+
+| Was du änderst | Wie lange bis es bei allen ist |
+|---|---|
+| Termine, Chat, Preise, Webseite | sofort |
+| Dialoge, Prüfungen, Wortschatz | beim nächsten Öffnen |
+| App-Aussehen, neue Funktionen | `npm run paket` + pushen, dann beim nächsten Öffnen |
+| Symbol, Name, Berechtigungen | neue Einreichung, ein bis drei Tage |
