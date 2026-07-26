@@ -186,6 +186,11 @@ function pv(){ try{ var v=speechSynthesis.getVoices().filter(function(x){return 
   voice=v.find(function(x){return /female|anna|petra|katja|vicki/i.test(x.name);})||v[0]||null; }catch(e){} }
 if(window.speechSynthesis){ pv(); speechSynthesis.onvoiceschanged=pv; }
 window.__hoer=function(btn,txt,slow){
+  if(window.sagen){
+    if(btn) btn.classList.add('live');
+    window.sagen(txt,{ langsam:!!slow, rolle:'julia', fertig:function(){ if(btn) btn.classList.remove('live'); } });
+    return;
+  }
   if(!window.speechSynthesis) return;
   try{ speechSynthesis.cancel(); }catch(e){}
   var u=new SpeechSynthesisUtterance(txt); u.lang='de-DE'; u.rate=slow?0.62:0.92; if(voice)u.voice=voice;

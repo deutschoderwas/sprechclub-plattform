@@ -149,6 +149,7 @@ h2 .ic{color:var(--acc-d)}
 <audio id="au" preload="metadata"></audio>
 <script src="ui-icons.js"></script>
 <script src="podcasts.js"></script>
+<script src="stimmen.js"></script>
 <script>
 (function(){
 'use strict';
@@ -164,7 +165,7 @@ var voice=null;
 function pv(){ try{ var v=speechSynthesis.getVoices().filter(function(x){return x.lang&&x.lang.indexOf('de')===0;});
   voice=v.find(function(x){return /female|anna|petra|katja|vicki/i.test(x.name);})||v[0]||null; }catch(e){} }
 if(window.speechSynthesis){ pv(); speechSynthesis.onvoiceschanged=pv; }
-window.__sag=function(t){ if(!window.speechSynthesis)return; try{speechSynthesis.cancel();}catch(e){}
+window.__sag=function(t){ if(window.sagen){ window.sagen(t,{rolle:'julia'}); return; } if(!window.speechSynthesis)return; try{speechSynthesis.cancel();}catch(e){}
   var u=new SpeechSynthesisUtterance(t); u.lang='de-DE'; u.rate=.85; if(voice)u.voice=voice; speechSynthesis.speak(u); };
 
 /* ---------- Liste ---------- */

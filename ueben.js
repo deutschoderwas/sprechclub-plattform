@@ -29,13 +29,15 @@
   var curAudio=null, curBtn=null;
   function stopAudio(){ try{ if(curAudio){ curAudio.pause(); curAudio.currentTime=0; } }catch(e){}
     if(curBtn){ try{ curBtn.innerHTML='▶'; curBtn.classList.remove('playing'); }catch(e){} }
-    curAudio=null; curBtn=null; try{ if(window.speechSynthesis)speechSynthesis.cancel(); }catch(e){} }
+    curAudio=null; curBtn=null; try{ if(window.speechSynthesis)speechSynthesis.cancel(); }catch(e){} try{ if(window.sagenStopp)window.sagenStopp(); }catch(e){} }
   window.ubStopAudio=stopAudio;
-  function speak(text){ try{ stopAudio(); if(!window.speechSynthesis)return;
-    var u=new SpeechSynthesisUtterance(text); u.lang='de-DE'; u.rate=0.92;
-    var vs=(speechSynthesis.getVoices()||[]).filter(function(v){return /^de/i.test(v.lang);}); if(vs.length)u.voice=vs[0];
-    speechSynthesis.speak(u);
-  }catch(e){} }
+  function speak(text){ stopAudio(); if(!text)return;
+    if(window.sagen){ window.sagen(text,{rolle:'julia'}); return; }
+    try{ if(!window.speechSynthesis)return;
+      var u=new SpeechSynthesisUtterance(text); u.lang='de-DE'; u.rate=0.92;
+      var vs=(speechSynthesis.getVoices()||[]).filter(function(v){return /^de/i.test(v.lang);}); if(vs.length)u.voice=vs[0];
+      speechSynthesis.speak(u);
+    }catch(e){} }
   window.ubSpeak=speak;
   // Natürliche Stimme (echtes mp3) – Start/Stop-Umschalter
   window.ubPlayUrl=function(url,btn){

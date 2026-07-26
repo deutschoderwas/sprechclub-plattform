@@ -158,7 +158,41 @@
     return 190;
   }
 
+  var ttsAudio = null;
+  function ttsAus() { return !!(window.SPRECHCLUB_CONFIG && window.SPRECHCLUB_CONFIG.TTS === false); }
+
+  /* Echte Stimme (ElevenLabs) — mit sauberem Rückfall auf die Gerätestimme,
+     falls kein Schlüssel gesetzt ist, kein Netz da ist oder etwas schiefgeht. */
+  function ttsSagen(text, opt) {
+    abbrechen = false; laeuft = true;
+    if (opt.aufElement) opt.aufElement.classList.add('spricht');
+    function fertig() { laeuft = false; if (opt.aufElement) opt.aufElement.classList.remove('spricht'); if (opt.fertig) opt.fertig(); }
+    fetch('/api/tts', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ text: String(text), rolle: opt.rolle || '', langsam: !!opt.langsam })
+    })
+      .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+      .then(function (j) {
+        if (abbrechen) { fertig(); return; }
+        if (!j || !j.url) { geraetSagen(text, opt); return; }
+        var a = new Audio(j.url); ttsAudio = a;
+        a.onended = function () { if (ttsAudio === a) ttsAudio = null; fertig(); };
+        a.onerror = function () { if (ttsAudio === a) ttsAudio = null; geraetSagen(text, opt); };
+        var p = a.play(); if (p && p.catch) p.catch(function () { if (ttsAudio === a) ttsAudio = null; geraetSagen(text, opt); });
+      })
+      .catch(function () { if (abbrechen) { fertig(); return; } geraetSagen(text, opt); });
+  }
+
   window.sagen = function (text, opt) {
+    opt = opt || {};
+    if (!text) { if (opt.fertig) opt.fertig(); return; }
+    window.sagenStopp();
+    if (!ttsAus() && typeof fetch === 'function' && navigator.onLine !== false) { ttsSagen(text, opt); return; }
+    geraetSagen(text, opt);
+  };
+
+  function geraetSagen(text, opt) {
     opt = opt || {};
     if (!('speechSynthesis' in window) || !text) { if (opt.fertig) opt.fertig(); return; }
 
@@ -198,10 +232,12 @@
     // kurz warten, damit cancel() auf dem Handy wirklich durch ist
     if (bereit) setTimeout(los, 60);
     else window.stimmenBereit(function () { setTimeout(los, 60); });
-  };
+  }
 
   window.sagenStopp = function () {
     abbrechen = true; laeuft = false;
+    try { if (ttsAudio) { ttsAudio.pause(); ttsAudio.currentTime = 0; } } catch (e) { }
+    ttsAudio = null;
     try { window.speechSynthesis.cancel(); } catch (e) { }
   };
   window.sagenLaeuft = function () { return laeuft; };

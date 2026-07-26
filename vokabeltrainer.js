@@ -63,6 +63,7 @@
   }
   try { speechSynthesis.onvoiceschanged = function () { STIMME = null; stimme(); }; } catch (e) {}
   function sprich(text, tempo) {
+    if (window.sagen) { window.sagen(String(text), { rolle: 'julia', langsam: !!(tempo && tempo < 0.85) }); return; }
     try {
       speechSynthesis.cancel();
       var u = new SpeechSynthesisUtterance(String(text));
