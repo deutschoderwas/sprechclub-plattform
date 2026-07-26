@@ -439,6 +439,86 @@ mark.m{background:linear-gradient(180deg,transparent 52%,#FFE59A 52%);color:inhe
   display:flex;align-items:center;justify-content:center;box-shadow:0 3px 0 var(--tq-d)}
 .eingabe .ab[disabled]{background:#E4E0D7;color:#A9A399;box-shadow:0 3px 0 #D3CEC4}
 
+
+/* ============================================================
+   Echte Chat-Bildschirme: Kopf steht, Liste scrollt, Eingabe bleibt unten.
+   Kein Springen mehr, auch nicht wenn die Tastatur aufgeht.
+   ============================================================ */
+/* Für den Chat braucht die Kette eine feste Höhe, sonst wächst die Liste
+   über den Bildschirm hinaus und die Eingabe rutscht nach unten weg. */
+.app.chatmodus{height:100vh;height:100dvh;min-height:0;overflow:hidden}
+.app.chatmodus .inhalt{overflow:hidden;padding:0;min-height:0}
+.app.chatmodus .schirm.an{height:100%;display:flex;flex-direction:column;padding:0;animation:none}
+.ch-kopf{flex:none;display:flex;align-items:center;gap:11px;padding:12px 16px;
+  background:rgba(251,249,245,.94);backdrop-filter:saturate(1.4) blur(14px);
+  border-bottom:1px solid var(--line2);z-index:5}
+.ch-kopf .zur{flex:none;width:38px;height:38px;border-radius:12px;border:1px solid var(--line);
+  background:var(--card);display:flex;align-items:center;justify-content:center;font-size:19px}
+.ch-kopf .av{flex:none;width:40px;height:40px;border-radius:50%;overflow:hidden;background:#fff;border:1px solid var(--line)}
+.ch-kopf .t{flex:1;min-width:0}
+.ch-kopf .t b{display:block;font-size:15.5px;font-weight:800;letter-spacing:-.01em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ch-kopf .t span{display:block;font-size:12px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ch-kopf .t span.lebt{color:var(--gruen);font-weight:700}
+
+.ch-liste{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;padding:16px;display:flex;flex-direction:column;gap:13px}
+.ch-liste::-webkit-scrollbar{width:0}
+
+.ch-fuss{flex:none;padding:10px 12px calc(10px + env(safe-area-inset-bottom));
+  background:var(--card);border-top:1px solid var(--line)}
+.ch-ein{display:flex;gap:9px;align-items:flex-end}
+.ch-ein textarea{flex:1;border:1px solid var(--line);border-radius:20px;background:var(--bg);
+  padding:11px 15px;font-family:inherit;font-size:16px;line-height:1.4;resize:none;
+  max-height:110px;outline:none;-webkit-appearance:none}
+.ch-ein textarea:focus{border-color:var(--tq);background:#fff}
+.ch-rund{flex:none;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:19px;transition:transform .12s}
+.ch-rund:active{transform:scale(.92)}
+.ch-mi{background:var(--pink-soft);color:var(--pink);border:1px solid #F5CFE0}
+.ch-mi.laeuft{background:var(--pink);color:#fff;animation:pul 1.15s ease-in-out infinite}
+.ch-ab{background:var(--tq);color:#fff;box-shadow:0 3px 0 var(--tq-d)}
+.ch-ab:active{transform:translateY(2px);box-shadow:0 1px 0 var(--tq-d)}
+.ch-ab[disabled]{background:#E4E0D7;color:#A9A399;box-shadow:0 3px 0 #D3CEC4}
+.ch-hin{font-size:11.5px;color:var(--ink3);text-align:center;margin-top:7px;line-height:1.4}
+
+/* Blasen */
+.bl{display:flex;gap:9px;align-items:flex-end;max-width:100%}
+.bl.ich{flex-direction:row-reverse}
+.bl .av{flex:none;width:32px;height:32px;border-radius:50%;overflow:hidden;background:#fff;
+  border:1px solid var(--line);display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:800;color:#fff}
+.bl .sp{max-width:78%;min-width:0}
+.bl .nm{font-size:11.5px;font-weight:800;color:var(--ink2);margin:0 0 4px 3px}
+.bl.ich .nm{text-align:right;margin:0 3px 4px 0}
+.bl .bb{border-radius:17px 17px 17px 5px;padding:11px 14px;font-size:15px;line-height:1.5;
+  word-wrap:break-word;overflow-wrap:anywhere;white-space:pre-wrap;
+  background:var(--card);border:1px solid var(--line)}
+.bl.ich .bb{border-radius:17px 17px 5px 17px;background:var(--tq-soft);border-color:#C9EAE4}
+.bl.am .bb{background:var(--lila-soft);border-color:#E0CDF5}
+.bl .zeit{font-size:10.5px;color:var(--ink3);margin:4px 0 0 3px}
+.bl.ich .zeit{text-align:right;margin:4px 3px 0 0}
+.bl .knopfchen{display:inline-flex;align-items:center;gap:5px;margin-top:8px;font-size:11.5px;
+  font-weight:700;color:var(--lila);background:#fff;border:1px solid #E0CDF5;
+  border-radius:999px;padding:4px 10px}
+
+.ch-tippt{display:flex;gap:5px;padding:13px 16px;background:var(--lila-soft);
+  border:1px solid #E0CDF5;border-radius:17px 17px 17px 5px;width:fit-content;margin-left:41px}
+.ch-tippt i{width:7px;height:7px;border-radius:50%;background:#B478E8;animation:tip 1.2s infinite}
+.ch-tippt i:nth-child(2){animation-delay:.18s} .ch-tippt i:nth-child(3){animation-delay:.36s}
+
+.ch-leer{margin:auto;text-align:center;color:var(--ink2);padding:30px 20px}
+.ch-leer .em{font-size:46px;margin-bottom:12px}
+.ch-tag{align-self:center;background:var(--line2);color:var(--ink2);border-radius:999px;
+  padding:4px 13px;font-size:11.5px;font-weight:700;margin:4px 0}
+/* Der „nach unten"-Knopf klebt am unteren Rand der LISTE, nicht am Bildschirm —
+   sonst legt er sich über das Eingabefeld. */
+.ch-runter{position:sticky;bottom:2px;align-self:flex-end;flex:none;width:38px;height:38px;
+  border-radius:50%;background:var(--card);border:1px solid var(--line);
+  box-shadow:0 6px 18px -6px rgba(0,0,0,.28);display:none;align-items:center;
+  justify-content:center;font-size:17px;margin-top:-38px;z-index:4}
+.ch-runter.da{display:flex}
+
 .leer{text-align:center;padding:34px 16px;color:var(--ink2)}
 .leer .em{font-size:44px;margin-bottom:10px}
 .hin{font-size:12.5px;color:var(--ink3);line-height:1.5;margin-top:12px}
@@ -519,6 +599,7 @@ mark.m{background:linear-gradient(180deg,transparent 52%,#FFE59A 52%);color:inhe
   background:var(--lila-soft);border-radius:11px;margin-bottom:7px}
 .amfrei .hin{margin-top:12px;font-size:12px;color:var(--ink3)}
 
+.app.chatmodus .instban,.app.chatmodus #stimmHinweis{display:none!important}
 .instban{position:absolute;left:12px;right:12px;bottom:calc(78px + env(safe-area-inset-bottom));z-index:60;
   display:flex;align-items:center;gap:11px;background:var(--card);border:1px solid var(--line);border-radius:18px;
   padding:12px 13px;box-shadow:0 12px 32px -10px rgba(23,23,23,.4);animation:auf .34s cubic-bezier(.16,1,.3,1)}
@@ -599,6 +680,7 @@ mark.m{background:linear-gradient(180deg,transparent 52%,#FFE59A 52%);color:inhe
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="config.js"></script>
 <script src="stimmen.js"></script>
+<script src="chat-engine.js"></script>
 <script src="klang.js"></script>
 <script src="stimme.js"></script>
 <script>
@@ -764,6 +846,7 @@ window.addEventListener('beforeinstallprompt', function(e){
 });
 function installBanner(){
   if(!INSTALL || $('instBan')) return;
+  if(document.getElementById('app').classList.contains('chatmodus')) return;
   var d=document.createElement('div'); d.id='instBan'; d.className='instban';
   d.innerHTML = '<span class="ic">📲</span>'
     +'<span class="tx"><b>Auf den Startbildschirm legen</b><span>Dann öffnest du die App mit einem Tipp — wie jede andere App.</span></span>'
@@ -787,6 +870,7 @@ function iosHinweis(){
   if(!ios || drin || lese('installWeg', false)) return;
   setTimeout(function(){
     if($('instBan')) return;
+    if(document.getElementById('app').classList.contains('chatmodus')) return;
     var d=document.createElement('div'); d.id='instBan'; d.className='instban';
     d.innerHTML='<span class="ic">📲</span>'
       +'<span class="tx"><b>Auf den Startbildschirm legen</b>'
@@ -824,6 +908,8 @@ function iosHinweis(){
   if(einstiegNoetig()) einstiegZeigen();
   else if(window.julia && lese('halloTag','') !== heute()){ schreib('halloTag', heute());
     setTimeout(function(){ window.julia('hallo'); }, 1400); }
+  // Wenn nur die einfache Systemstimme da ist, einmal den Weg zur guten zeigen
+  setTimeout(function(){ if(window.stimmenHinweis) window.stimmenHinweis(); }, 6000);
   // In der App: Mitteilungen vom Club anmelden
   if(window.__pushAnmelden && angemeldet) window.__pushAnmelden(sb, user.id);
   window.addEventListener('hashchange', ausHash);
@@ -950,13 +1036,17 @@ function kopfMalen(){
   $('kStufe').textContent = S.stufe;
 }
 function zeige(s, stumm){
+  if(s !== 'club' && CHAT.offen){ CHAT.offen=null; clearInterval(CHAT.takt); CHAT.takt=null; }
+  if(s !== 'sprechen' && D.offen){ D.offen=null; }
+  window.chatModus(false);
+  var band=$('instBan'); if(band) band.remove();
   ['lernen','sprechen','foto','club','ich'].forEach(function(x){
     $('s-'+x).classList.toggle('an', x===s);
   });
   document.querySelectorAll('.nb').forEach(function(b){ b.classList.toggle('an', b.dataset.s===s); });
   if(!stumm) location.hash = s;
   ({lernen:malLernen, sprechen:malSprechen, foto:malFoto, club:malClub, ich:malIch})[s]();
-  $('inhalt').scrollTop = 0;
+  if(!document.getElementById('app').classList.contains('chatmodus')) $('inhalt').scrollTop = 0;
 }
 
 /* ============================================================
@@ -1498,34 +1588,125 @@ function malSprechen(){
     +'<a href="konto.html#kalender">LIVE-Stunde buchen →</a></div>';
 }
 
-/* ---------- Frei sprechen: Amandas echte Stimme ---------- */
-var AMANDA_AGENT = 'agent_8401kt4vq157espa2msk6c448s5x';
-function amandaFrei(){
+/* ============================================================
+   Frei mit Amanda reden — als Chatfenster
+   Amanda schreibt und spricht. Du tippst oder sprichst.
+   Alles steht als Text da, wie in einem echten Gespräch.
+   ============================================================ */
+var AM = { verlauf:[], laeuft:false, thema:null, vorschlaege:[] };
+
+function amandaFrei(thema){
+  AM = { verlauf:[], laeuft:false, thema:thema||null, vorschlaege:[] };
+  D.offen = null;
   if(!angemeldet){ toast('Dafür musst du angemeldet sein.'); return; }
-  var alt=$('amFrei'); if(alt){ alt.remove(); return; }
-  var d=document.createElement('div'); d.id='amFrei'; d.className='amfrei';
-  d.innerHTML =
-     '<div class="in">'
-    +'<button class="x" onclick="amandaFreiZu()">✕</button>'
-    +'<div class="por">'+amandaSVG(120,'amFreiBild')+'</div>'
-    +'<h3>Sprich einfach los</h3>'
-    +'<p>Amanda hört zu und antwortet mit ihrer echten Stimme. Über alles, was du willst — auf Deutsch, so lange du magst.</p>'
-    +'<div class="wid"><elevenlabs-convai agent-id="'+AMANDA_AGENT+'"></elevenlabs-convai></div>'
-    +'<div class="ideen"><b>Keine Idee? Frag sie das:</b>'
-    + ['Kannst du mit mir über meinen Tag sprechen?','Stell mir Fragen zu meinem Beruf.',
-       'Lass uns ein Vorstellungsgespräch üben.','Erklär mir den Unterschied zwischen „seit" und „vor".']
-      .map(function(t){ return '<span>'+esc(t)+'</span>'; }).join('')
-    +'</div>'
-    +'<p class="hin">Mikrofon erlauben, dann geht es los. Deine Punkte laufen normal weiter.</p>'
-    +'</div>';
-  document.getElementById('app').appendChild(d);
-  if(!document.getElementById('elevScript')){
-    var s=document.createElement('script'); s.id='elevScript';
-    s.src='https://unpkg.com/@elevenlabs/convai-widget-embed'; s.async=true;
-    document.body.appendChild(s);
-  }
+  window.chatModus(true);
+
+  $('s-sprechen').innerHTML =
+     '<div class="ch-kopf"><button class="zur" onclick="amandaFreiZu()">‹</button>'
+    +'<span class="av">'+amandaSVG(40,'amKopf')+'</span>'
+    +'<span class="t"><b>Amanda</b><span class="lebt" id="amStatus">ist da</span></span>'
+    +'<button class="zur" onclick="amandaNeu()" title="Neues Gespräch">↺</button></div>'
+    +'<div class="ch-liste" id="chListe" onscroll="chatKnopfPruefen()">'
+    +'<button class="ch-runter" id="chRunter" onclick="chatNachUnten()">↓</button></div>'
+    +'<div class="ch-fuss"><div id="amVor" class="chips" style="margin-bottom:9px;display:none"></div>'
+    +'<div class="ch-ein">'
+    +'<button class="ch-rund ch-mi" id="amMi" onclick="chatSprechen(this,$(\'amEin\'),amandaSenden)">🎤</button>'
+    +'<textarea id="amEin" rows="1" placeholder="Schreib oder sprich auf Deutsch …"></textarea>'
+    +'<button class="ch-rund ch-ab" id="amAb" disabled onclick="amandaSenden()">➤</button></div>'
+    +'<p class="ch-hin">Tipp aufs Mikrofon und sprich.</p></div>';
+
+  window.chatEingabe($('amEin'), $('amAb'), amandaSenden);
+  amandaAntwortHolen();      // Amanda macht den ersten Schritt
 }
-function amandaFreiZu(){ var d=$('amFrei'); if(d) d.remove(); }
+
+function amandaFreiZu(){
+  window.chatModus(false);
+  AM.verlauf = [];
+  malSprechen();
+}
+function amandaNeu(){ amandaFrei(AM.thema); }
+
+function amandaBlaseAn(text, extra){
+  window.chatAnhaengen(window.chatBlase({
+    wer:'am', avatarHTML: amandaSVG(32, 'am'+Date.now()),
+    html: esc(text)
+      + '<div><button class="knopfchen" onclick="sprich(\''+esc(text).replace(/'/g,"\\'")+'\',0,\'amanda\')">🔊 hören</button></div>',
+    zeit: window.chatZeit()
+  }));
+  if(extra) window.chatAnhaengen(extra);
+}
+
+function amandaVorschlaege(liste){
+  var e = $('amVor'); if(!e) return;
+  AM.vorschlaege = liste || [];
+  if(!AM.vorschlaege.length){ e.style.display='none'; e.innerHTML=''; return; }
+  e.style.display='flex';
+  e.innerHTML = AM.vorschlaege.map(function(v){
+    return '<button class="chip" onclick="amandaVorschlagNehmen(\''+esc(v).replace(/'/g,"\\'")+'\')">'+esc(v)+'</button>';
+  }).join('');
+}
+function amandaVorschlagNehmen(t){
+  var e = $('amEin'); if(!e) return;
+  e.value = t; e.dispatchEvent(new Event('input')); e.focus();
+}
+
+async function amandaSenden(){
+  var e = $('amEin'); if(!e) return;
+  var t = (e.value||'').trim();
+  if(!t || AM.laeuft) return;
+  window.chatLeeren(e, $('amAb'));
+  amandaVorschlaege([]);
+
+  AM.verlauf.push({ wer:'du', text:t });
+  window.chatAnhaengen(window.chatBlase({ wer:'ich', text:t, zeit:window.chatZeit() }), true);
+  punkte(6,'app');
+  amandaAntwortHolen();
+}
+
+async function amandaAntwortHolen(){
+  if(AM.laeuft) return;
+  AM.laeuft = true;
+  var st = $('amStatus'); if(st) st.textContent = 'schreibt …';
+  window.chatTippt(true);
+
+  try{
+    var sess = await sb.auth.getSession();
+    var r = await fetch((window.__API__||'') + '/api/amanda-chat', {
+      method:'POST',
+      headers:{ 'content-type':'application/json', authorization:'Bearer '+sess.data.session.access_token },
+      body: JSON.stringify({ verlauf:AM.verlauf, level:S.stufe, l1:L1, thema:AM.thema })
+    });
+    var j = await r.json();
+    window.chatTippt(false);
+    if(!r.ok || !j.ok){
+      amandaBlaseAn('Entschuldige, ich war kurz weg. Sag das noch einmal?');
+      AM.laeuft = false; if(st) st.textContent='ist da'; return;
+    }
+
+    var extra = null;
+    if(j.korrektur && korrekturAn()){
+      extra = document.createElement('div');
+      extra.className = 'kor fehler';
+      extra.style.cssText = 'margin:2px 0 0 41px;max-width:78%';
+      extra.innerHTML = '<div class="l">Kleiner Hinweis</div>'
+        + '<div class="s">'+korDiff(AM.verlauf[AM.verlauf.length-1].text, j.korrektur.korrigiert)+'</div>'
+        + (j.korrektur.hinweis?'<div class="h">'+esc(j.korrektur.hinweis)+'</div>':'')
+        + '<div class="akt"><button onclick="sprich(\''+esc(j.korrektur.korrigiert).replace(/'/g,"\\'")+'\',0,\'du\')">🔊 Anhören</button>'
+        + (j.korrektur.thema?'<span class="th">'+esc(j.korrektur.thema)+'</span>':'')+'</div>';
+      try{ sb.from('fehler_trainer').insert({ corrected:j.korrektur.korrigiert, note:j.korrektur.hinweis||null, topic:j.korrektur.thema||null }); }catch(e){}
+    }
+
+    AM.verlauf.push({ wer:'am', text:j.text });
+    amandaBlaseAn(j.text, extra);
+    amandaSpricht(j.text, 'amKopf');
+    amandaVorschlaege(j.vorschlaege);
+  }catch(err){
+    window.chatTippt(false);
+    amandaBlaseAn('Ich habe gerade keine Verbindung. Versuch es gleich noch einmal.');
+  }
+  AM.laeuft = false;
+  if(st) st.textContent = 'ist da';
+}
 
 function dialogStart(id){
   var d = (window.DIALOGE||[]).filter(function(x){ return x.id===id; })[0];
@@ -2027,7 +2208,9 @@ async function chatOeffnen(slug){
   CHAT.takt = setInterval(function(){ if(CHAT.offen) nachrichtenLaden(true); }, 15000);
 }
 function chatZurueck(){
-  CHAT.offen=null; clearInterval(CHAT.takt); CHAT.takt=null;
+  CHAT.offen=null; CHAT.gezeigt={}; CHAT.letzterTag='';
+  clearInterval(CHAT.takt); CHAT.takt=null;
+  window.chatModus(false);
   malClub(); kanaeleLaden();
 }
 
@@ -2040,61 +2223,107 @@ async function nachrichtenLaden(leise){
     CHAT.nachrichten = (r.data||[]).reverse();
   }catch(e){ CHAT.nachrichten = CHAT.nachrichten||[]; }
   CHAT.laedt = false;
-  if(!leise || document.getElementById('feed')) malChatRaum(leise);
+  if(!$('chListe')) malChatRaum();
+  else chatListeFuellen();
 }
 
-function malChatRaum(leise){
+function malChatRaum(){
   var k = CHAT.offen;
-  var alt = leise && $('feed');
-  var feed = CHAT.laedt
-    ? '<div class="leer"><div class="em">💬</div>Lädt …</div>'
-    : (CHAT.nachrichten.length
-        ? CHAT.nachrichten.map(function(m){
-            var meins = user && m.user_id===user.id;
-            var txt = m.kind==='text' ? esc(m.body||'')
-                    : (m.kind==='audio' ? '🎧 Sprachnachricht — am Computer anhören'
-                    : (m.kind==='image' ? '📷 Bild — am Computer ansehen' : ''));
-            var nm = m.author_name||'Mitglied';
-            return '<div class="msg'+(meins?' ich':'')+'">'
-              +'<span class="av" style="background:'+avFarbe(nm)+'">'+esc(initialen(nm))+'</span>'
-              +'<span class="bl"><span class="kn3"><b>'+esc(nm)+'</b><time>'+uhrzeit(m.created_at)+'</time></span>'
-              +'<div class="tx">'+txt+'</div></span></div>';
-          }).join('')
-        : '<div class="leer"><div class="em">✍️</div>Noch nichts geschrieben. Fang du an!</div>');
-
-  if(alt){ alt.innerHTML = feed; alt.scrollIntoView(false); return; }
+  window.chatModus(true);
 
   $('s-club').innerHTML =
-     '<div class="chatkopf"><button class="zur" onclick="chatZurueck()">‹</button>'
-    +'<span class="t"><b>'+(k.emoji||'💬')+' '+esc(k.name)+'</b>'
-    +'<span>'+esc(k.description||'Community-Chat')+'</span></span></div>'
-    +'<div class="feed" id="feed">'+feed+'</div>'
-    +'<div class="senden">'
-    +'<textarea id="chatEin" rows="1" placeholder="Schreib etwas auf Deutsch …" '
-    +'oninput="this.style.height=\'auto\';this.style.height=Math.min(this.scrollHeight,110)+\'px\';'
-    +'document.getElementById(\'chatAb\').disabled=!this.value.trim()"></textarea>'
-    +'<button class="ab" id="chatAb" disabled onclick="chatSenden()">➤</button></div>'
-    +'<p class="hin">Deine Lehrerin liest mit und korrigiert freundlich. Sprachnachrichten und Bilder gibt es in der vollen Version.</p>';
-  var f=$('feed'); if(f) f.scrollIntoView(false);
+     '<div class="ch-kopf"><button class="zur" onclick="chatZurueck()">‹</button>'
+    +'<span class="av" style="background:var(--tq-soft);font-size:18px;color:var(--tq-d)">'+(k.emoji||'💬')+'</span>'
+    +'<span class="t"><b>'+esc(k.name)+'</b><span>'+esc(k.description||'Community-Chat')+'</span></span></div>'
+    +'<div class="ch-liste" id="chListe" onscroll="chatKnopfPruefen()">'
+    +'<button class="ch-runter" id="chRunter" onclick="chatNachUnten()">↓</button></div>'
+    +'<div class="ch-fuss"><div class="ch-ein">'
+    +'<button class="ch-rund ch-mi" id="chMi" onclick="chatSprechen(this,$(\'chEin\'),chatSenden)">🎤</button>'
+    +'<textarea id="chEin" rows="1" placeholder="Schreib etwas auf Deutsch …"></textarea>'
+    +'<button class="ch-rund ch-ab" id="chAb" disabled onclick="chatSenden()">➤</button></div>'
+    +'<p class="ch-hin">Deine Lehrerin liest mit.</p></div>';
+
+  window.chatEingabe($('chEin'), $('chAb'), chatSenden);
+  CHAT.gezeigt = {}; CHAT.ersteFuellung = true;
+  chatListeFuellen();
+}
+
+/* Zeichnet nur, was noch nicht da ist — dadurch springt nichts mehr. */
+function chatListeFuellen(){
+  var l = $('chListe'); if(!l) return;
+  var knopf = document.getElementById('chRunter');
+  function leerZeigen(html){
+    l.innerHTML = html;
+    if(knopf) l.appendChild(knopf);
+  }
+  if(CHAT.laedt){ leerZeigen('<div class="ch-leer"><div class="em">💬</div>Lädt …</div>'); return; }
+  if(!CHAT.nachrichten.length){
+    leerZeigen('<div class="ch-leer"><div class="em">✍️</div>Noch nichts geschrieben.<br>Fang du an!</div>');
+    return;
+  }
+  var leer = l.querySelector('.ch-leer'); if(leer) leer.remove();
+
+  var letzterTag = CHAT.letzterTag || '';
+  CHAT.nachrichten.forEach(function(m){
+    if(CHAT.gezeigt[m.id]) return;
+    CHAT.gezeigt[m.id] = true;
+
+    var tag = new Date(m.created_at).toDateString();
+    if(tag !== letzterTag){
+      letzterTag = tag;
+      var heute = new Date().toDateString();
+      var d = document.createElement('div');
+      d.className = 'ch-tag';
+      d.textContent = (tag === heute) ? 'Heute'
+        : new Date(m.created_at).toLocaleDateString('de-DE',{weekday:'long', day:'2-digit', month:'long'});
+      l.appendChild(d);
+    }
+
+    var meins = user && m.user_id === user.id;
+    var txt = m.kind === 'text' ? esc(m.body||'')
+            : (m.kind === 'audio' ? '🎧 Sprachnachricht — am Computer anhören'
+            : (m.kind === 'image' ? '📷 Bild — am Computer ansehen' : ''));
+    window.chatAnhaengen(window.chatBlase({
+      id: m.id, wer: meins ? 'ich' : '', name: meins ? null : (m.author_name||'Mitglied'),
+      html: txt, zeit: window.chatZeit(m.created_at)
+    }));
+  });
+  CHAT.letzterTag = letzterTag;
+  if(CHAT.ersteFuellung !== false){ CHAT.ersteFuellung = false; window.chatNachUnten(true); }
+  window.chatKnopfPruefen();
 }
 
 async function chatSenden(){
-  var e=$('chatEin'), t=(e.value||'').trim();
+  var e = $('chEin'); if(!e) return;
+  var t = (e.value||'').trim();
   if(!t) return;
-  e.value=''; e.style.height='auto'; $('chatAb').disabled=true;
+  window.chatLeeren(e, $('chAb'));
+
   var name = profil.name || (user && user.email ? user.email.split('@')[0] : 'Mitglied');
-  CHAT.nachrichten.push({ id:'tmp'+Date.now(), user_id:user.id, kind:'text', body:t,
-                          author_name:name, created_at:new Date().toISOString() });
-  malChatRaum();
+  var vorlaeufig = { id:'tmp'+Date.now(), user_id:user.id, kind:'text', body:t,
+                     author_name:name, created_at:new Date().toISOString() };
+  CHAT.nachrichten.push(vorlaeufig);
+  chatListeFuellen();
+  window.chatNachUnten(true);
+
   try{
     var r = await sb.from('community_messages')
       .insert({ channel:CHAT.offen.slug, kind:'text', body:t, author_name:name }).select('id').single();
     if(r.error) throw r.error;
+    // vorläufige gegen die echte Kennung tauschen, damit sie beim Nachladen nicht doppelt kommt
+    var neueId = r.data && r.data.id;
+    if(neueId){
+      CHAT.gezeigt[neueId] = true;
+      var el = document.querySelector('.bl[data-id="'+vorlaeufig.id+'"]');
+      if(el) el.dataset.id = neueId;
+      vorlaeufig.id = neueId;
+    }
     punkte(5,'community');
   }catch(err){
     toast('Konnte nicht senden — bist du in diesem Kanal dabei?');
-    CHAT.nachrichten = CHAT.nachrichten.filter(function(m){ return String(m.id).indexOf('tmp')!==0; });
-    malChatRaum();
+    CHAT.nachrichten = CHAT.nachrichten.filter(function(m){ return m !== vorlaeufig; });
+    var weg = document.querySelector('.bl[data-id="'+vorlaeufig.id+'"]');
+    if(weg) weg.remove();
   }
 }
 
