@@ -183,6 +183,11 @@ function stimmeWaehlen(){
 }
 try{ speechSynthesis.onvoiceschanged=function(){ stimme=null; stimmeWaehlen(); }; stimmeWaehlen(); }catch(e){}
 function sprich(text,tempo,el){
+  if(window.sagen){
+    if(el) el.classList.add('play');
+    window.sagen(String(text).replace(/[↘↗|]/g,''), { rolle:'julia', langsam: !!(tempo && tempo<0.85), fertig:function(){ if(el) el.classList.remove('play'); } });
+    return;
+  }
   if(!('speechSynthesis' in window)) return;
   try{
     speechSynthesis.cancel();
