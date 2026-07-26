@@ -9,7 +9,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="deutschoderwas">
-<link rel="manifest" href="manifest.webmanifest">
+<link rel="manifest" href="app.webmanifest">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -352,6 +353,12 @@ mark.m{background:linear-gradient(180deg,transparent 52%,#FFE59A 52%);color:inhe
 .modus{display:grid;grid-template-columns:1fr 1fr;gap:8px;background:#EFEBE2;border-radius:15px;padding:4px;margin-bottom:16px}
 .modus button{border-radius:12px;padding:11px;font-size:14px;font-weight:800;color:var(--ink2);transition:.15s}
 .modus button.an{background:var(--card);color:var(--ink);box-shadow:0 2px 6px rgba(23,23,23,.1)}
+.katleiste{display:flex;gap:7px;overflow-x:auto;padding:0 16px 14px;margin:0 -16px;-webkit-overflow-scrolling:touch;
+  scrollbar-width:none}
+.katleiste::-webkit-scrollbar{display:none}
+.katchip{flex:none;white-space:nowrap;border:1px solid var(--line);background:var(--card);color:var(--ink2);
+  border-radius:999px;padding:8px 14px;font-size:13px;font-weight:700;transition:.15s}
+.katchip.an{background:var(--tq);border-color:var(--tq);color:#fff}
 .sit{display:flex;align-items:center;gap:13px;width:100%;text-align:left;background:var(--card);
   border:1px solid var(--line);border-radius:var(--r2);padding:13px 14px;margin-bottom:9px;transition:transform .12s}
 .sit:active{transform:translateY(2px)}
@@ -435,6 +442,95 @@ mark.m{background:linear-gradient(180deg,transparent 52%,#FFE59A 52%);color:inhe
 .leer{text-align:center;padding:34px 16px;color:var(--ink2)}
 .leer .em{font-size:44px;margin-bottom:10px}
 .hin{font-size:12.5px;color:var(--ink3);line-height:1.5;margin-top:12px}
+/* ---------- Prüfungssimulation ---------- */
+.uhr{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;font-variant-numeric:tabular-nums;
+  color:var(--ink2);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:5px 12px}
+.uhr.bald{color:var(--gold-d);border-color:#F2E3B4;background:var(--gold-soft)}
+.uhr.knapp{color:#fff;background:var(--rot);border-color:var(--rot);animation:pul 1s ease-in-out infinite}
+.ptext{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px 16px;margin-bottom:16px;
+  font-size:15px;line-height:1.65}
+.ptext.klein{font-size:13.5px;color:var(--ink2);max-height:110px;overflow-y:auto}
+.ptext .l,.phoer .l{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px}
+.phoer{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px 16px;margin-bottom:16px;text-align:center}
+.pmarke{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:12px}
+.pauf{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--rot);border-radius:12px;
+  padding:12px 14px;margin-bottom:10px}
+.pauf.ok{border-left-color:var(--gruen)}
+.pauf .q{display:flex;gap:9px;font-size:14px;font-weight:700;line-height:1.45;margin-bottom:8px}
+.pauf .nr{flex:none;width:22px;height:22px;border-radius:7px;background:var(--line2);color:var(--ink2);
+  display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:800}
+.pauf .r{font-size:13.5px;line-height:1.5;margin-bottom:3px}
+.pauf .r.g{color:#106B41} .pauf .r.f{color:#9E2A24}
+.pauf .e{font-size:12.5px;color:var(--ink2);line-height:1.5;margin-top:7px;padding-top:7px;border-top:1px solid var(--line2)}
+
+/* ---------- Erster Start ---------- */
+.einstieg{position:fixed;inset:0;z-index:950;background:var(--bg);display:flex;flex-direction:column;
+  overflow-y:auto;padding:calc(24px + env(safe-area-inset-top)) 20px calc(24px + env(safe-area-inset-bottom))}
+@media(min-width:1000px){.einstieg{max-width:460px;left:50%;transform:translateX(-50%);border-radius:34px;
+  top:26px;bottom:26px;box-shadow:0 30px 80px -30px rgba(23,23,23,.45)}}
+.ein-punkte{display:flex;gap:6px;justify-content:center;margin-bottom:26px;flex:none}
+.ein-punkte i{width:26px;height:5px;border-radius:999px;background:#E4E0D7;transition:.3s}
+.ein-punkte i.an{background:var(--tq);width:34px}
+.ein-in{flex:1;display:flex;flex-direction:column;animation:auf .3s cubic-bezier(.16,1,.3,1)}
+.ein-in.ein-mitte{justify-content:center;text-align:center}
+.ein-por{width:128px;height:128px;margin:0 auto 18px;border-radius:50%;overflow:hidden;background:#F6EDFF;
+  box-shadow:0 14px 34px rgba(109,58,168,.24)}
+.einstieg h2{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;letter-spacing:-.03em;
+  line-height:1.2;margin:0 0 8px}
+.einstieg p{font-size:15px;color:var(--ink2);line-height:1.55;margin:0 0 22px}
+.ein-liste{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+.ein-w{display:flex;align-items:center;gap:14px;text-align:left;background:var(--card);border:2px solid var(--line);
+  border-bottom-width:4px;border-radius:18px;padding:14px 15px;transition:.14s}
+.ein-w:active{transform:translateY(2px)}
+.ein-w.an{border-color:var(--tq);background:var(--tq-soft)}
+.ein-w .e{flex:none;width:46px;height:46px;border-radius:15px;background:var(--line2);display:flex;
+  align-items:center;justify-content:center;font-size:22px;font-weight:800;color:var(--ink2)}
+.ein-w.an .e{background:#fff;color:var(--tq-d)}
+.ein-w .e.stufe{font-size:16px;font-family:'Space Grotesk',sans-serif}
+.ein-w .t{flex:1;min-width:0}
+.ein-w .t b{display:block;font-size:15.5px;font-weight:800;margin-bottom:2px}
+.ein-w .t span{display:block;font-size:13px;color:var(--ink2);line-height:1.4}
+.ein-gitter{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:20px}
+.ein-sp{background:var(--card);border:2px solid var(--line);border-bottom-width:4px;border-radius:14px;
+  padding:13px 8px;font-size:14.5px;font-weight:700;transition:.14s}
+.ein-sp:active{transform:translateY(2px)}
+.ein-sp.an{border-color:var(--tq);background:var(--tq-soft);color:var(--tq-d)}
+.ein-ueber{width:100%;margin-top:11px;font-size:14px;font-weight:700;color:var(--ink3);padding:10px}
+.einstieg .knopf{margin-top:auto}
+.ein-mitte .knopf{margin-top:14px}
+
+.amfrei{position:absolute;inset:0;z-index:80;background:rgba(20,16,28,.62);backdrop-filter:blur(6px);
+  display:flex;align-items:flex-end;animation:auf .26s ease}
+@media(min-width:1000px){.amfrei{border-radius:34px;align-items:center;justify-content:center;padding:20px}}
+.amfrei .in{position:relative;width:100%;background:var(--bg);border-radius:28px 28px 0 0;padding:26px 20px
+  calc(26px + env(safe-area-inset-bottom));text-align:center;max-height:92%;overflow-y:auto;
+  animation:hoch .32s cubic-bezier(.16,1,.3,1)}
+@media(min-width:1000px){.amfrei .in{border-radius:26px;max-width:400px}}
+@keyframes hoch{from{transform:translateY(30px)}to{transform:none}}
+.amfrei .x{position:absolute;top:14px;right:16px;font-size:22px;color:var(--ink3);padding:4px 8px}
+.amfrei .por{width:120px;height:120px;margin:0 auto 14px;border-radius:50%;overflow:hidden;background:#fff;
+  box-shadow:0 10px 28px rgba(109,58,168,.28)}
+.amfrei h3{font-family:'Space Grotesk',sans-serif;font-size:22px;margin:0 0 7px;letter-spacing:-.02em}
+.amfrei p{font-size:14px;color:var(--ink2);line-height:1.55;margin:0 auto 18px;max-width:300px}
+.amfrei .wid{min-height:96px;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.amfrei .ideen{text-align:left;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:13px 14px}
+.amfrei .ideen b{display:block;font-size:12.5px;font-weight:800;color:var(--ink2);margin-bottom:9px}
+.amfrei .ideen span{display:block;font-size:13.5px;line-height:1.45;color:var(--ink);padding:8px 11px;
+  background:var(--lila-soft);border-radius:11px;margin-bottom:7px}
+.amfrei .hin{margin-top:12px;font-size:12px;color:var(--ink3)}
+
+.instban{position:absolute;left:12px;right:12px;bottom:calc(78px + env(safe-area-inset-bottom));z-index:60;
+  display:flex;align-items:center;gap:11px;background:var(--card);border:1px solid var(--line);border-radius:18px;
+  padding:12px 13px;box-shadow:0 12px 32px -10px rgba(23,23,23,.4);animation:auf .34s cubic-bezier(.16,1,.3,1)}
+.instban .ic{flex:none;width:40px;height:40px;border-radius:13px;background:var(--tq-soft);display:flex;
+  align-items:center;justify-content:center;font-size:20px}
+.instban .tx{flex:1;min-width:0}
+.instban .tx b{display:block;font-size:14px;font-weight:800;margin-bottom:2px}
+.instban .tx span{display:block;font-size:12px;color:var(--ink2);line-height:1.4}
+.instban .ja{flex:none;background:var(--akt);color:#fff;border-radius:11px;padding:9px 14px;font-size:13px;
+  font-weight:800;box-shadow:0 3px 0 var(--akt-d)}
+.instban .nein{flex:none;color:var(--ink3);font-size:18px;padding:4px 6px}
+
 .toast{position:fixed;left:50%;bottom:88px;transform:translateX(-50%);background:var(--ink);color:#fff;
   padding:12px 20px;border-radius:999px;font-size:14px;font-weight:700;z-index:999;opacity:0;transition:.25s;pointer-events:none}
 .toast.an{opacity:1;transform:translateX(-50%) translateY(-6px)}
@@ -552,8 +648,172 @@ function sprich(t, langsam){
   }catch(e){}
 }
 
+/* ============================================================
+   Erster Start — vier kurze Fragen, dann geht es los
+   ============================================================ */
+var EIN = { schritt:0, ziel:null, stufe:null, l1:null, tagesziel:5 };
+
+var EIN_ZIELE = [
+  { id:'alltag',  em:'🏘️', t:'Im Alltag zurechtkommen',  s:'Einkaufen, Arzt, Ämter, Nachbarn' },
+  { id:'beruf',   em:'💼', t:'Im Beruf sicher sein',      s:'Kollegen, Kunden, Bewerbung' },
+  { id:'pruefung',em:'📝', t:'Eine Prüfung schaffen',     s:'telc oder Goethe, A2 bis C1' },
+  { id:'menschen',em:'💛', t:'Menschen kennenlernen',     s:'Freunde finden, mitreden können' }
+];
+var EIN_STUFEN = [
+  { id:'A1', t:'Ganz am Anfang',       s:'Einzelne Wörter, einfache Sätze' },
+  { id:'A2', t:'Einfache Gespräche',   s:'Einkaufen, sich vorstellen' },
+  { id:'B1', t:'Alltag geht schon',    s:'Ich komme meistens zurecht' },
+  { id:'B2', t:'Ziemlich sicher',      s:'Auch im Beruf und bei Diskussionen' },
+  { id:'C1', t:'Fast fließend',        s:'Ich will den Feinschliff' }
+];
+var EIN_SPRACHEN = [['en','English'],['es','Español'],['ru','Русский'],['uk','Українська'],
+                    ['tr','Türkçe'],['it','Italiano'],['fa','فارسی'],['ar','العربية'],
+                    ['pl','Polski'],['ro','Română'],['pt','Português'],['fr','Français']];
+
+function einstiegNoetig(){ return !lese('einstieg', false); }
+
+function einstiegZeigen(){
+  var d = document.createElement('div');
+  d.id='einstieg'; d.className='einstieg';
+  document.body.appendChild(d);
+  einstiegMalen();
+}
+function einstiegMalen(){
+  var d = $('einstieg'); if(!d) return;
+  var i = EIN.schritt, h = '';
+  var punkte = '<div class="ein-punkte">'
+    + [0,1,2,3,4].map(function(k){ return '<i class="'+(k<=i?'an':'')+'"></i>'; }).join('') + '</div>';
+
+  if(i===0){
+    h = '<div class="ein-in ein-mitte">'
+      + '<div class="ein-por">'+amandaSVG(128,'amEin')+'</div>'
+      + '<h2>Hallo, ich bin Amanda 👋</h2>'
+      + '<p>Ich übe mit dir Deutsch — jeden Tag ein paar Minuten. Vier kurze Fragen, dann fangen wir an.</p>'
+      + '<button class="knopf" onclick="einstiegWeiter()">Los geht\'s</button>'
+      + '<button class="ein-ueber" onclick="einstiegFertig(true)">Überspringen</button></div>';
+  } else if(i===1){
+    h = punkte + '<div class="ein-in">'
+      + '<h2>Wofür lernst du Deutsch?</h2>'
+      + '<p>Damit ich dir die passenden Situationen zeige.</p>'
+      + '<div class="ein-liste">' + EIN_ZIELE.map(function(z){
+          return '<button class="ein-w'+(EIN.ziel===z.id?' an':'')+'" onclick="EIN.ziel=\''+z.id+'\';einstiegMalen()">'
+            + '<span class="e">'+z.em+'</span><span class="t"><b>'+esc(z.t)+'</b><span>'+esc(z.s)+'</span></span></button>';
+        }).join('') + '</div>'
+      + '<button class="knopf" '+(EIN.ziel?'':'disabled')+' onclick="einstiegWeiter()">Weiter</button></div>';
+  } else if(i===2){
+    h = punkte + '<div class="ein-in">'
+      + '<h2>Wie gut sprichst du schon?</h2>'
+      + '<p>Ganz ehrlich — es ist kein Test.</p>'
+      + '<div class="ein-liste">' + EIN_STUFEN.map(function(z){
+          return '<button class="ein-w'+(EIN.stufe===z.id?' an':'')+'" onclick="EIN.stufe=\''+z.id+'\';einstiegMalen()">'
+            + '<span class="e stufe">'+z.id+'</span><span class="t"><b>'+esc(z.t)+'</b><span>'+esc(z.s)+'</span></span></button>';
+        }).join('') + '</div>'
+      + '<a class="ein-ueber" style="display:block;text-align:center;text-decoration:none" href="niveau-test-club.html">Ich weiß es nicht — Test machen</a>'
+      + '<button class="knopf" '+(EIN.stufe?'':'disabled')+' onclick="einstiegWeiter()">Weiter</button></div>';
+  } else if(i===3){
+    h = punkte + '<div class="ein-in">'
+      + '<h2>Welche Sprache sprichst du?</h2>'
+      + '<p>Übersetzungen zeige ich dir dann in dieser Sprache.</p>'
+      + '<div class="ein-gitter">' + EIN_SPRACHEN.map(function(s){
+          return '<button class="ein-sp'+(EIN.l1===s[0]?' an':'')+'" onclick="EIN.l1=\''+s[0]+'\';einstiegMalen()">'+s[1]+'</button>';
+        }).join('') + '</div>'
+      + '<button class="knopf" '+(EIN.l1?'':'disabled')+' onclick="einstiegWeiter()">Weiter</button></div>';
+  } else {
+    h = punkte + '<div class="ein-in">'
+      + '<h2>Wie viel schaffst du am Tag?</h2>'
+      + '<p>Lieber wenig und jeden Tag als viel und einmal die Woche.</p>'
+      + '<div class="ein-liste">' + [
+          {n:3,  t:'3 Übungen',  s:'Etwa 3 Minuten — geht immer'},
+          {n:5,  t:'5 Übungen',  s:'Etwa 5 Minuten — gut für den Anfang'},
+          {n:10, t:'10 Übungen', s:'Etwa 10 Minuten — du kommst voran'},
+          {n:15, t:'15 Übungen', s:'Etwa 15 Minuten — richtig ernst'}
+        ].map(function(z){
+          return '<button class="ein-w'+(EIN.tagesziel===z.n?' an':'')+'" onclick="EIN.tagesziel='+z.n+';einstiegMalen()">'
+            + '<span class="e">'+z.n+'</span><span class="t"><b>'+esc(z.t)+'</b><span>'+esc(z.s)+'</span></span></button>';
+        }).join('') + '</div>'
+      + '<button class="knopf" onclick="einstiegFertig()">Fertig — jetzt lernen</button></div>';
+  }
+  d.innerHTML = h;
+  if(i===0) setTimeout(function(){ amandaSpricht('Hallo! Ich bin Amanda. Schön, dass du da bist.', 'amEin'); }, 700);
+}
+function einstiegWeiter(){ EIN.schritt++; einstiegMalen(); }
+
+async function einstiegFertig(uebersprungen){
+  schreib('einstieg', true);
+  if(!uebersprungen){
+    if(EIN.stufe){ S.stufe = EIN.stufe; }
+    if(EIN.tagesziel){ S.ziel = EIN.tagesziel; }
+    if(EIN.l1){ L1 = EIN.l1; schreib('l1', EIN.l1); try{ localStorage.setItem('dow_l1', EIN.l1); }catch(e){} }
+    schreib('stand', S);
+    schreib('lernziel', EIN.ziel);
+    if(angemeldet){
+      var zielText = ({alltag:'Ich will im Alltag sicher zurechtkommen.',
+                       beruf:'Ich will im Beruf sicher Deutsch sprechen.',
+                       pruefung:'Ich will eine Sprachprüfung bestehen.',
+                       menschen:'Ich will Menschen kennenlernen und mitreden können.'})[EIN.ziel] || null;
+      var sprache = (EIN_SPRACHEN.filter(function(x){ return x[0]===EIN.l1; })[0]||[])[1] || null;
+      try{
+        await sb.rpc('update_my_profile', {
+          p_name: profil.name || null, p_goal: zielText,
+          p_target_level: profil.target_level || null,
+          p_native_language: sprache, p_birthday: profil.birthday || null
+        });
+      }catch(e){}
+      try{ await sb.rpc('vok_ziel', { p_ziel: EIN.tagesziel }); }catch(e){}
+      if(EIN.l1){
+        var sc=document.createElement('script'); sc.src='vok-tr/'+EIN.l1+'.js'; document.head.appendChild(sc);
+      }
+    }
+  }
+  var d=$('einstieg'); if(d) d.remove();
+  kopfMalen(); malLernen();
+  if(!uebersprungen) toast('Alles klar — viel Freude! 🎉');
+}
+
+/* ---------- Auf den Startbildschirm legen ---------- */
+var INSTALL = null;
+window.addEventListener('beforeinstallprompt', function(e){
+  e.preventDefault(); INSTALL = e;
+  if(!lese('installWeg', false)) setTimeout(installBanner, 4000);
+});
+function installBanner(){
+  if(!INSTALL || $('instBan')) return;
+  var d=document.createElement('div'); d.id='instBan'; d.className='instban';
+  d.innerHTML = '<span class="ic">📲</span>'
+    +'<span class="tx"><b>Auf den Startbildschirm legen</b><span>Dann öffnest du die App mit einem Tipp — wie jede andere App.</span></span>'
+    +'<button class="ja" onclick="installJetzt()">Hinzufügen</button>'
+    +'<button class="nein" onclick="installWeg()">✕</button>';
+  document.getElementById('app').appendChild(d);
+}
+async function installJetzt(){
+  if(!INSTALL) return;
+  INSTALL.prompt();
+  try{ await INSTALL.userChoice; }catch(e){}
+  INSTALL=null; installWeg();
+}
+function installWeg(){ schreib('installWeg', true); var d=$('instBan'); if(d) d.remove(); }
+
+/* iPhone kann das nicht von selbst — dort ein kurzer Hinweis */
+function iosHinweis(){
+  var ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  var drin = window.navigator.standalone === true ||
+             (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
+  if(!ios || drin || lese('installWeg', false)) return;
+  setTimeout(function(){
+    if($('instBan')) return;
+    var d=document.createElement('div'); d.id='instBan'; d.className='instban';
+    d.innerHTML='<span class="ic">📲</span>'
+      +'<span class="tx"><b>Auf den Startbildschirm legen</b>'
+      +'<span>Tippe unten auf <b>Teilen</b> und dann auf <b>Zum Home-Bildschirm</b>.</span></span>'
+      +'<button class="nein" onclick="installWeg()">✕</button>';
+    document.getElementById('app').appendChild(d);
+  }, 5000);
+}
+
 /* ---------- Start ---------- */
 (async function start(){
+  if('serviceWorker' in navigator){ try{ navigator.serviceWorker.register('/sw.js'); }catch(e){} }
+  iosHinweis();
   L1 = lese('l1', null) || (function(){ try{ return localStorage.getItem('dow_l1')||'en'; }catch(e){ return 'en'; } })();
   S = Object.assign(S, lese('stand', {}));
   if(lese('tag','') !== heute()){ S.heute = 0; S.herzen = 5; schreib('tag', heute()); }
@@ -575,6 +835,7 @@ function sprich(t, langsam){
   kopfMalen();
   malLernen();
   if(angemeldet) kanaeleLaden().then(function(){ if($('s-lernen').classList.contains('an')) malLernen(); });
+  if(einstiegNoetig()) einstiegZeigen();
   window.addEventListener('hashchange', ausHash);
   ausHash();
 })();
@@ -621,8 +882,31 @@ async function standLaden(){
     EIGENE = e.data||[];
     var st = await sb.rpc('vok_stand');
     if(st.data){ S.heute = st.data.heute||0; S.ziel = st.data.ziel||5; S.serie = st.data.serie||S.serie; }
+    // Punkte kommen aus derselben Tabelle wie am Computer
+    var xp = await sb.rpc('xp_mein_stand');
+    var z = xp.data && (Array.isArray(xp.data)? xp.data[0] : xp.data);
+    if(z && typeof z.gesamt === 'number'){ S.xp = z.gesamt; schreib('stand', S); }
   }catch(e){}
 }
+
+/* ---------- Punkte: laufen in dieselbe Tabelle wie auf der Plattform ---------- */
+var XP_OFFEN = 0, XP_TAKT = null;
+function punkte(n, art){
+  if(!n || n<=0) return;
+  S.xp += n; kopfMalen(); schreib('stand', S);
+  if(!angemeldet) return;
+  XP_OFFEN += n;
+  clearTimeout(XP_TAKT);
+  XP_TAKT = setTimeout(xpSenden, 4000);     // gebündelt, nicht bei jedem Klick
+}
+async function xpSenden(){
+  if(!angemeldet || XP_OFFEN<=0) return;
+  var n = XP_OFFEN; XP_OFFEN = 0;
+  try{ await sb.rpc('xp_app_add', { p_punkte:n, p_art:'app' }); }
+  catch(e){ XP_OFFEN += n; }               // beim nächsten Mal noch einmal versuchen
+}
+window.addEventListener('pagehide', xpSenden);
+document.addEventListener('visibilitychange', function(){ if(document.hidden) xpSenden(); });
 
 /* ---------- Kopf & Navigation ---------- */
 function kopfMalen(){
@@ -964,7 +1248,7 @@ function auswerten(ok){
     else if(x===U.antwort) x.classList.add('schlecht');
   });
 
-  if(ok){ U.richtig++; S.xp += 10; S.heute++; }
+  if(ok){ U.richtig++; punkte(10,'app'); S.heute++; }
   else { U.falsch++; S.herzen = Math.max(0, S.herzen-1); }
   kopfMalen(); $('uHerz').textContent = S.herzen;
 
@@ -1031,7 +1315,7 @@ function uebAbschluss(){
     +'<a class="knopf go" style="display:block;text-align:center;text-decoration:none" href="konto.html#vokabeln">Diese Wörter am Computer vertiefen</a>'
     +'</div>'
     +'<p class="hin">Dein Fortschritt ist gespeichert — auch am Computer.</p></div>';
-  S.xp += (quote===100?20:0); kopfMalen();
+  if(quote===100) punkte(20,'app');
 }
 
 function uebEnde(abbruch){
@@ -1104,7 +1388,15 @@ function amandaSpricht(text, svgId){
 }
 
 /* ---------- Dialoge mit Amanda ---------- */
-var D = { modus:'alltag', offen:null, schritt:0, verlauf:[], musterAuf:false };
+var D = { modus:'alltag', kat:'alle', offen:null, schritt:0, verlauf:[], musterAuf:false };
+var KAT_NAME = {
+  einkaufen:'🛒 Einkaufen & Geld', wohnen:'🏠 Wohnen & Nachbarn', unterwegs:'🚉 Unterwegs',
+  essen:'🍽️ Essen & Ausgehen', gesundheit:'🩺 Gesundheit', amt:'🏛️ Ämter', vertrag:'📄 Verträge',
+  notfall:'🚨 Notfall', menschen:'💛 Menschen', gefuehle:'💬 Gefühle & Konflikte',
+  familie:'👨‍👩‍👧 Familie', bildung:'🎓 Schule & Kurse',
+  bewerbung:'💼 Bewerbung', buero:'🖥️ Büroalltag', kunden:'🤝 Kunden', team:'👥 Team',
+  pflege:'🧑‍⚕️ Pflege', handwerk:'🔧 Handwerk & Bau'
+};
 function dialogeGeladen(){ return Array.isArray(window.DIALOGE) && window.DIALOGE.length; }
 function dlgFertig(){ return lese('dlgFertig', {}); }
 
@@ -1118,18 +1410,33 @@ function malSprechen(){
     return;
   }
   var f = dlgFertig();
-  var liste = (window.DIALOGE||[]).filter(function(x){ return x.modus===D.modus; });
+  var imModus = (window.DIALOGE||[]).filter(function(x){ return x.modus===D.modus; });
+  var kats = [];
+  imModus.forEach(function(x){ if(kats.indexOf(x.kat)<0) kats.push(x.kat); });
+  if(kats.indexOf(D.kat)<0) D.kat='alle';
+  var liste = D.kat==='alle' ? imModus : imModus.filter(function(x){ return x.kat===D.kat; });
+  var gemacht = imModus.filter(function(x){ return f[x.id]; }).length;
 
   $('s-sprechen').innerHTML =
      '<h1 class="t">Sprechen 🎤</h1>'
     +'<p class="u">Amanda spielt die andere Person. Du antwortest — und wenn du nicht weiterweißt, zeigt sie dir eine Beispielantwort.</p>'
 
     +'<div class="amkopf"><span class="av">'+amandaSVG(62,'amListe')+'</span>'
-    +'<span class="t"><b>Amanda</b><span>Deine Gesprächspartnerin — sie hat Zeit, immer. Such dir eine Situation aus.</span></span></div>'
+    +'<span class="t"><b>Amanda</b><span>'
+    + (gemacht ? gemacht+' von '+imModus.length+' Situationen geschafft. Weiter so!' : imModus.length+' Situationen warten auf dich. Such dir eine aus.')
+    +'</span></span></div>'
 
     +'<div class="modus">'
-    +'<button class="'+(D.modus==='alltag'?'an':'')+'" onclick="D.modus=\'alltag\';malSprechen()">🌤️ Alltag &amp; Freizeit</button>'
-    +'<button class="'+(D.modus==='business'?'an':'')+'" onclick="D.modus=\'business\';malSprechen()">💼 Business-Deutsch</button>'
+    +'<button class="'+(D.modus==='alltag'?'an':'')+'" onclick="D.modus=\'alltag\';D.kat=\'alle\';malSprechen()">🌤️ Alltag &amp; Freizeit</button>'
+    +'<button class="'+(D.modus==='business'?'an':'')+'" onclick="D.modus=\'business\';D.kat=\'alle\';malSprechen()">💼 Business-Deutsch</button>'
+    +'</div>'
+
+    +'<div class="katleiste">'
+    +'<button class="katchip'+(D.kat==='alle'?' an':'')+'" onclick="D.kat=\'alle\';malSprechen()">Alle '+imModus.length+'</button>'
+    + kats.map(function(k){
+        var n = imModus.filter(function(x){ return x.kat===k; }).length;
+        return '<button class="katchip'+(D.kat===k?' an':'')+'" onclick="D.kat=\''+k+'\';malSprechen()">'+esc(KAT_NAME[k]||k)+' '+n+'</button>';
+      }).join('')
     +'</div>'
 
     + (liste.length ? liste.map(function(x){
@@ -1141,7 +1448,7 @@ function malSprechen(){
       }).join('') : '<div class="leer"><div class="em">💬</div>Situationen werden geladen …</div>')
 
     +'<h2 class="a">🎙️ Frei sprechen</h2>'
-    +'<button class="gross g-li" onclick="location.href=\'konto.html#amanda\'">'
+    +'<button class="gross g-li" onclick="amandaFrei()">'
     +'<h3>Ohne Skript mit Amanda reden</h3><p>Wenn du dich sicher fühlst: einfach loslegen, über alles, rund um die Uhr — mit ihrer echten Stimme.</p>'
     +'<span class="em">🎙️</span></button>'
 
@@ -1159,6 +1466,35 @@ function malSprechen(){
     +'<p>Die App hält dich warm. Richtig sprechen lernst du im LIVE-Unterricht mit echten Lehrerinnen.</p>'
     +'<a href="konto.html#kalender">LIVE-Stunde buchen →</a></div>';
 }
+
+/* ---------- Frei sprechen: Amandas echte Stimme ---------- */
+var AMANDA_AGENT = 'agent_8401kt4vq157espa2msk6c448s5x';
+function amandaFrei(){
+  if(!angemeldet){ toast('Dafür musst du angemeldet sein.'); return; }
+  var alt=$('amFrei'); if(alt){ alt.remove(); return; }
+  var d=document.createElement('div'); d.id='amFrei'; d.className='amfrei';
+  d.innerHTML =
+     '<div class="in">'
+    +'<button class="x" onclick="amandaFreiZu()">✕</button>'
+    +'<div class="por">'+amandaSVG(120,'amFreiBild')+'</div>'
+    +'<h3>Sprich einfach los</h3>'
+    +'<p>Amanda hört zu und antwortet mit ihrer echten Stimme. Über alles, was du willst — auf Deutsch, so lange du magst.</p>'
+    +'<div class="wid"><elevenlabs-convai agent-id="'+AMANDA_AGENT+'"></elevenlabs-convai></div>'
+    +'<div class="ideen"><b>Keine Idee? Frag sie das:</b>'
+    + ['Kannst du mit mir über meinen Tag sprechen?','Stell mir Fragen zu meinem Beruf.',
+       'Lass uns ein Vorstellungsgespräch üben.','Erklär mir den Unterschied zwischen „seit" und „vor".']
+      .map(function(t){ return '<span>'+esc(t)+'</span>'; }).join('')
+    +'</div>'
+    +'<p class="hin">Mikrofon erlauben, dann geht es los. Deine Punkte laufen normal weiter.</p>'
+    +'</div>';
+  document.getElementById('app').appendChild(d);
+  if(!document.getElementById('elevScript')){
+    var s=document.createElement('script'); s.id='elevScript';
+    s.src='https://unpkg.com/@elevenlabs/convai-widget-embed'; s.async=true;
+    document.body.appendChild(s);
+  }
+}
+function amandaFreiZu(){ var d=$('amFrei'); if(d) d.remove(); }
 
 function dialogStart(id){
   var d = (window.DIALOGE||[]).filter(function(x){ return x.id===id; })[0];
@@ -1307,7 +1643,7 @@ function dlgAntworten(){
   var eintrag = { wer:'du', text:t, pruef: (angemeldet && korrekturAn()) ? 'laeuft' : null };
   D.verlauf.push(eintrag);
   D.schritt++;
-  S.xp += 8; kopfMalen(); schreib('stand', S);
+  punkte(8,'app');
   malDialog();
 
   if(eintrag.pruef==='laeuft') satzPruefen(eintrag, s);
@@ -1320,7 +1656,7 @@ function dlgAntworten(){
     setTimeout(function(){ var x=$('tippt'); if(x) x.remove(); amandaRedet(); }, 1150);
   } else {
     var f=dlgFertig(); f[D.offen.id]=1; schreib('dlgFertig', f);
-    S.xp += 20; kopfMalen(); schreib('stand', S);
+    punkte(20,'app');
     setTimeout(function(){ malDialog(); }, 1150);
   }
 }
@@ -1339,7 +1675,7 @@ async function satzPruefen(eintrag, schritt){
     if(!r.ok || !j.ok){ eintrag.pruef=null; malDialog(); return; }
     if(j.gut){
       eintrag.pruef='gut'; eintrag.lob=j.lob;
-      S.xp += 4; kopfMalen(); schreib('stand', S);
+      punkte(4,'app');
     } else {
       eintrag.pruef='fehler'; eintrag.korrigiert=j.korrigiert; eintrag.hinweis=j.hinweis; eintrag.thema=j.thema;
       // in den Fehler-Trainer, damit es gezielt wiederkommt
@@ -1676,7 +2012,7 @@ async function chatSenden(){
     var r = await sb.from('community_messages')
       .insert({ channel:CHAT.offen.slug, kind:'text', body:t, author_name:name }).select('id').single();
     if(r.error) throw r.error;
-    S.xp += 5; kopfMalen(); schreib('stand', S);
+    punkte(5,'community');
   }catch(err){
     toast('Konnte nicht senden — bist du in diesem Kanal dabei?');
     CHAT.nachrichten = CHAT.nachrichten.filter(function(m){ return String(m.id).indexOf('tmp')!==0; });
@@ -1710,6 +2046,12 @@ function malIch(){
     +  '<div class="wert"><div class="z">'+Object.keys(lese('fertig',{})).length+'</div><div class="l">Lektionen</div></div>'
     +  '<div class="wert"><div class="z">'+EIGENE.length+'</div><div class="l">Fotowörter</div></div>'
     +'</div>'
+
+    +'<h2 class="a">📝 Prüfung üben</h2>'
+    +'<button class="gross g-go" onclick="pruefStart()">'
+    +'<h3>Prüfungssimulation</h3><p>Lesen, Sprachbausteine und Hören unter echter Zeit — mit Countdown und Auswertung. A2 bis C1.</p>'
+    +'<span class="em">⏱️</span></button>'
+    + (pruefBestes() ? '<p class="hin" style="text-align:center;margin-top:9px">Dein bestes Ergebnis: <b>'+pruefBestes()+'</b></p>' : '')
 
     +'<h2 class="a">🎯 Dein Lernplan</h2>'
     +'<button class="k" onclick="location.href=\'konto.html#lernpfad\'"><span class="kz">'
@@ -1751,6 +2093,165 @@ function malIch(){
                    +'<span class="kt"><b>Anmelden</b><span>Damit dein Fortschritt gespeichert wird.</span></span>'
                    +'<span class="kp">›</span></span></button>');
 }
+/* ============================================================
+   Prüfungssimulation — Lesen, Sprachbausteine, Hören unter Zeit
+   ============================================================ */
+var P = null;   // {niveau, aufgaben, i, antworten, ende, takt}
+
+function pruefBestes(){
+  var b = lese('pruefBest', null);
+  return b ? (b.niveau+' · '+b.proz+' %') : null;
+}
+function pruefStart(){
+  if(!window.PRUEFUNG){
+    var s=document.createElement('script'); s.src='pruefung.js';
+    s.onload=function(){ pruefStart(); };
+    s.onerror=function(){ toast('Die Prüfungsaufgaben konnten nicht geladen werden.'); };
+    document.head.appendChild(s); return;
+  }
+  pruefWahl();
+}
+function pruefWahl(){
+  var d=document.createElement('div'); d.id='pruefWahl'; d.className='amfrei';
+  d.innerHTML='<div class="in"><button class="x" onclick="document.getElementById(\'pruefWahl\').remove()">✕</button>'
+    +'<div style="font-size:46px;margin-bottom:8px">📝</div>'
+    +'<h3>Welche Prüfung?</h3>'
+    +'<p>15 Aufgaben unter Zeit — so, wie es in der echten Prüfung läuft. Danach siehst du zu jeder Aufgabe die Erklärung.</p>'
+    +'<div style="display:flex;flex-direction:column;gap:9px">'
+    + ['A2','B1','B2','C1'].map(function(n){
+        var p=window.PRUEFUNG[n]; if(!p) return '';
+        return '<button class="k" style="text-align:left" onclick="pruefLos(\''+n+'\')"><span class="kz">'
+          +'<span class="ki" style="background:var(--gold-soft)">'+n+'</span>'
+          +'<span class="kt"><b>'+esc(p.titel)+'</b><span>15 Aufgaben · '+p.minuten+' Minuten</span></span>'
+          +'<span class="kp">›</span></span></button>';
+      }).join('')
+    +'</div><p class="hin">Du kannst jederzeit abbrechen — dein Ergebnis zählt dann nicht.</p></div>';
+  document.getElementById('app').appendChild(d);
+}
+
+function pruefLos(niveau){
+  var w=$('pruefWahl'); if(w) w.remove();
+  var p = window.PRUEFUNG[niveau]; if(!p) return;
+  var flach = [];
+  (p.teile||[]).forEach(function(t){
+    (t.aufgaben||[]).forEach(function(a, i){
+      flach.push({ art:t.art, name:t.name, text:t.text, hoertext:t.hoertext, erster:i===0,
+                   frage:a.frage, opt:a.opt, loesung:a.loesung, erklaerung:a.erklaerung });
+    });
+  });
+  P = { niveau:niveau, titel:p.titel, aufgaben:flach, i:0, antworten:[], ende:Date.now()+p.minuten*60000 };
+  $('ueb').classList.add('an');
+  $('uebFuss').style.display='';
+  clearInterval(P.takt);
+  P.takt = setInterval(pruefUhr, 1000);
+  pruefMalen();
+}
+function pruefUhr(){
+  if(!P) return;
+  var rest = Math.max(0, Math.round((P.ende-Date.now())/1000));
+  var e=$('pUhr');
+  if(e){
+    var m=Math.floor(rest/60), s=rest%60;
+    e.textContent = m+':'+(s<10?'0':'')+s;
+    e.className = 'uhr'+(rest<=60?' knapp':(rest<=300?' bald':''));
+  }
+  if(rest<=0){ clearInterval(P.takt); pruefAuswertung(true); }
+}
+function pruefMalen(){
+  if(!P) return;
+  if(P.i >= P.aufgaben.length){ pruefAuswertung(); return; }
+  var a = P.aufgaben[P.i];
+  $('uBalken').style.width = Math.round(P.i/P.aufgaben.length*100)+'%';
+  var kopfR = document.querySelector('.ueb-kopf .herzen');
+  if(kopfR) kopfR.outerHTML = '<span class="uhr" id="pUhr">–:––</span>';
+  document.querySelector('.ueb-x').setAttribute('onclick','pruefAbbrechen()');
+
+  var kopf = '';
+  if(a.art==='lesen' && a.text && a.erster) kopf = '<div class="ptext"><div class="l">📖 '+esc(a.name)+'</div>'+esc(a.text)+'</div>';
+  if(a.art==='lesen' && a.text && !a.erster) kopf = '<div class="ptext klein"><div class="l">📖 Text</div>'+esc(a.text)+'</div>';
+  if(a.art==='hoeren' && a.hoertext){
+    kopf = '<div class="phoer"><div class="l">🎧 '+esc(a.name)+'</div>'
+      +'<button class="gross-hoer" style="width:78px;height:78px;font-size:32px;margin:6px auto 10px" '
+      +'onclick="sprich(\''+esc(a.hoertext).replace(/'/g,"\\'")+'\')">🔊</button>'
+      +'<button class="hoer" onclick="sprich(\''+esc(a.hoertext).replace(/'/g,"\\'")+'\',1)">🐢 Langsam</button>'
+      +'<p class="hin" style="margin-top:9px">In der echten Prüfung hörst du den Text zweimal.</p></div>';
+  }
+  if(a.art==='grammatik') kopf = '<div class="pmarke">✏️ '+esc(a.name)+'</div>';
+
+  $('uebIn').innerHTML = kopf
+    + '<div class="frage">'+esc(a.frage)+'</div>'
+    + '<div class="opt">'+a.opt.map(function(o,i){
+        return '<button class="o" data-i="'+i+'" onclick="pruefWaehle(this)"><span class="n">'+'ABC'[i]+'</span>'+esc(o)+'</button>';
+      }).join('')+'</div>'
+    + '<p class="hin" style="text-align:center;margin-top:16px">Aufgabe '+(P.i+1)+' von '+P.aufgaben.length+'</p>';
+
+  $('uebFuss').className='ueb-fuss';
+  $('uebFuss').innerHTML='<button class="knopf" id="uKnopf" disabled onclick="pruefWeiter()">'
+    + (P.i===P.aufgaben.length-1 ? 'Abgeben' : 'Weiter') + '</button>';
+  $('uebIn').scrollTop=0;
+  pruefUhr();
+}
+function pruefWaehle(b){
+  document.querySelectorAll('.opt .o').forEach(function(x){ x.classList.remove('wahl'); });
+  b.classList.add('wahl');
+  P.wahl = parseInt(b.dataset.i,10);
+  $('uKnopf').disabled=false;
+}
+function pruefWeiter(){
+  P.antworten[P.i] = (P.wahl==null? -1 : P.wahl);
+  P.wahl = null;
+  P.i++;
+  pruefMalen();
+}
+function pruefAbbrechen(){
+  clearInterval(P&&P.takt);
+  P=null;
+  $('ueb').classList.remove('an');
+  var h=document.querySelector('.ueb-kopf .uhr');
+  if(h) h.outerHTML='<span class="herzen">❤️<span id="uHerz">5</span></span>';
+  document.querySelector('.ueb-x').setAttribute('onclick','uebEnde(true)');
+  malIch();
+}
+function pruefAuswertung(zeitAus){
+  clearInterval(P.takt);
+  var richtig=0;
+  P.aufgaben.forEach(function(a,i){ if(P.antworten[i]===a.loesung) richtig++; });
+  var proz = Math.round(richtig/P.aufgaben.length*100);
+  var best = lese('pruefBest', null);
+  if(!best || proz > best.proz) schreib('pruefBest', {niveau:P.niveau, proz:proz});
+  punkte(richtig*5 + (proz>=80?30:0), 'pruefung');
+
+  var urteil = proz>=80 ? 'Das würde in der echten Prüfung reichen.'
+             : proz>=60 ? 'Knapp — mit etwas Übung schaffst du das.'
+             : 'Noch nicht bestanden. Schau dir unten an, woran es lag.';
+
+  $('uBalken').style.width='100%';
+  $('uebFuss').style.display='none';
+  $('uebIn').innerHTML =
+     '<div class="fertig" style="padding-bottom:6px"><div class="pokal">'+(proz>=80?'🏆':proz>=60?'💪':'📚')+'</div>'
+    +'<h2>'+richtig+' von '+P.aufgaben.length+' richtig</h2>'
+    +'<p>'+(zeitAus?'Die Zeit ist abgelaufen. ':'')+esc(urteil)+'</p>'
+    +'<div class="werte"><div class="wert"><div class="z">'+proz+'%</div><div class="l">Ergebnis</div></div>'
+    +'<div class="wert"><div class="z">'+P.niveau+'</div><div class="l">Niveau</div></div>'
+    +'<div class="wert"><div class="z">+'+(richtig*5+(proz>=80?30:0))+'</div><div class="l">Punkte</div></div></div>'
+    +'</div>'
+    +'<h2 class="a" style="margin-top:6px">Deine Antworten</h2>'
+    + P.aufgaben.map(function(a,i){
+        var ok = P.antworten[i]===a.loesung;
+        return '<div class="pauf'+(ok?' ok':'')+'">'
+          +'<div class="q"><span class="nr">'+(i+1)+'</span>'+esc(a.frage)+'</div>'
+          +'<div class="r'+(ok?' g':' f')+'">'+(ok?'✓ ':'✕ ')
+          + (P.antworten[i]>=0 ? esc(a.opt[P.antworten[i]]) : 'nicht beantwortet')+'</div>'
+          + (ok?'':'<div class="r g">✓ Richtig: '+esc(a.opt[a.loesung])+'</div>')
+          +'<div class="e">'+esc(a.erklaerung||'')+'</div></div>';
+      }).join('')
+    +'<div style="display:flex;flex-direction:column;gap:10px;margin-top:18px">'
+    +'<button class="knopf" onclick="pruefAbbrechen()">Fertig</button>'
+    +'<a class="knopf bl" style="display:block;text-align:center;text-decoration:none" href="konto.html#kalender">Mit einer echten Lehrerin durchgehen</a>'
+    +'</div>';
+  $('uebIn').scrollTop=0;
+}
+
 function korrekturUm(){
   schreib('korrektur', !korrekturAn());
   malIch();

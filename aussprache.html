@@ -153,6 +153,8 @@ audio{width:100%;margin-top:9px;height:38px}
 
 <script src="ui-icons.js"></script>
 <script src="aussprache-daten.js"></script>
+<script src="mundbild.js"></script>
+<script>if(window.mundStil)window.mundStil();</script>
 <script>
 (function(){
 'use strict';
@@ -354,7 +356,11 @@ window.__open=function(id){
 
     +'<div class="card"><div class="sec">'+I('book',14)+'Worum es geht</div>'
     +'<p class="txt">'+esc(e.erklaerung)+'</p>'
-    +'<div class="mund">'+I('mic',17)+'<span><b>So machst du es mit dem Mund:</b> '+esc(e.mund)+'</span></div></div>'
+    +'<div class="mund">'+I('mic',17)+'<span><b>So machst du es mit dem Mund:</b> '+esc(e.mund)+'</span></div>'
+    + (window.mundBlock ? ('<div class="sec" style="margin-top:18px">'+I('target',14)+'So sieht es von innen aus</div>'
+        + '<p class="txt" style="margin-bottom:0">Ein Schnitt durch Mund und Rachen — du siehst, wo die Zunge liegt und wie die Lippen stehen.</p>'
+        + window.mundBlock(e.id, esc) + window.mundLegende()) : '')
+    +'</div>'
 
     +'<div class="card"><div class="sec">'+I('layers',14)+'Minimalpaare — hörst du den Unterschied?</div>'
     + paare +'</div>'
