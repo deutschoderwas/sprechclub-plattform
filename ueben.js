@@ -174,7 +174,7 @@
     `;
     document.head.appendChild(st);
   }
-  function celebrate(t,sub){ injectCSS(); var d=document.createElement('div'); d.className='ub-cele';
+  function celebrate(t,sub){ injectCSS(); if(window.klang)window.klang('fertig'); if(window.julia)setTimeout(function(){window.julia('fertig');},800); var d=document.createElement('div'); d.className='ub-cele';
     d.innerHTML='<div class="box"><div style="font-size:54px">🎉</div><h3 style="font-family:Space Grotesk,sans-serif;margin:6px 0">'+E(t)+'</h3><p style="color:#5C5C5C">'+E(sub||'')+'</p></div>';
     d.onclick=function(){ d.remove(); }; document.body.appendChild(d); setTimeout(function(){ if(d.parentNode)d.remove(); },2200); }
 
@@ -376,9 +376,9 @@
 
     S.answered=true; var btn=document.getElementById('ubBtn'); var selfRated=(e.type==='speak'||e.type==='shadow');
     if(!selfRated){
-      if(ok){ S.correct++; addXP(META().xpPerCorrect||10); fb.className='ub-fb ok'; fb.innerHTML='✓ Richtig! +'+(META().xpPerCorrect||10)+' XP'; }
-      else { S.hearts--; setProg(); fb.className='ub-fb no'; fb.innerHTML='✗ '+E(sol); }
-    } else { S.correct++; addXP(Math.round((META().xpPerCorrect||10)/2)); fb.className='ub-fb ok'; fb.innerHTML='Klasse! Weiter so. +'+Math.round((META().xpPerCorrect||10)/2)+' XP'; }
+      if(ok){ S.correct++; addXP(META().xpPerCorrect||10); if(window.klang)window.klang('richtig'); if(window.julia)setTimeout(function(){window.julia('lob');},300); fb.className='ub-fb ok'; fb.innerHTML='✓ Richtig! +'+(META().xpPerCorrect||10)+' XP'; }
+      else { S.hearts--; setProg(); if(window.klang){window.klang('falsch'); setTimeout(function(){window.klang('herz');},260);} if(window.julia)setTimeout(function(){window.julia('trost');},340); fb.className='ub-fb no'; fb.innerHTML='✗ '+E(sol); }
+    } else { S.correct++; addXP(Math.round((META().xpPerCorrect||10)/2)); if(window.klang)window.klang('richtig'); fb.className='ub-fb ok'; fb.innerHTML='Klasse! Weiter so. +'+Math.round((META().xpPerCorrect||10)/2)+' XP'; }
     if(e.type==='listen'){ fb.innerHTML+='<div style="margin-top:10px;padding:11px 13px;background:#fff;border:1px solid var(--border,#ECECEC);border-radius:12px;font-weight:500;color:#333;line-height:1.5">📝 <b>Das hast du gehört:</b><br>'+E(e.transcript)+'</div>'; }
     btn.className='ub-btn'+((!ok&&!selfRated)?' no':''); btn.disabled=false;
     btn.textContent=(S.idx>=S.items.length-1)?'Abschließen':'Weiter';

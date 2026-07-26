@@ -598,6 +598,8 @@ mark.m{background:linear-gradient(180deg,transparent 52%,#FFE59A 52%);color:inhe
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="config.js"></script>
+<script src="klang.js"></script>
+<script src="stimme.js"></script>
 <script>
 /* ============================================================
    deutschoderwas — App
@@ -812,7 +814,7 @@ function iosHinweis(){
 
 /* ---------- Start ---------- */
 (async function start(){
-  if('serviceWorker' in navigator){ try{ navigator.serviceWorker.register('/sw.js'); }catch(e){} }
+  if('serviceWorker' in navigator){ try{ navigator.serviceWorker.register('/sw.js').catch(function(){}); }catch(e){} }
   iosHinweis();
   L1 = lese('l1', null) || (function(){ try{ return localStorage.getItem('dow_l1')||'en'; }catch(e){ return 'en'; } })();
   S = Object.assign(S, lese('stand', {}));
@@ -836,6 +838,10 @@ function iosHinweis(){
   malLernen();
   if(angemeldet) kanaeleLaden().then(function(){ if($('s-lernen').classList.contains('an')) malLernen(); });
   if(einstiegNoetig()) einstiegZeigen();
+  else if(window.julia && lese('halloTag','') !== heute()){ schreib('halloTag', heute());
+    setTimeout(function(){ window.julia('hallo'); }, 1400); }
+  // In der App: Mitteilungen vom Club anmelden
+  if(window.__pushAnmelden && angemeldet) window.__pushAnmelden(sb, user.id);
   window.addEventListener('hashchange', ausHash);
   ausHash();
 })();
@@ -894,6 +900,7 @@ var XP_OFFEN = 0, XP_TAKT = null;
 function punkte(n, art){
   if(!n || n<=0) return;
   S.xp += n; kopfMalen(); schreib('stand', S);
+  if(n>=20 && window.klang) window.klang('punkt');
   if(!angemeldet) return;
   XP_OFFEN += n;
   clearTimeout(XP_TAKT);
@@ -1032,6 +1039,7 @@ function uebStart(kid){
   U = { lektion:k, aufgaben: baueAufgaben(k.woerter), i:0, richtig:0, falsch:0, offen:false, start:Date.now() };
   S.herzen = Math.max(S.herzen, 1);
   $('ueb').classList.add('an');
+  if(window.klang) window.klang('start');
   uebMalen();
 }
 
@@ -1250,6 +1258,10 @@ function auswerten(ok){
 
   if(ok){ U.richtig++; punkte(10,'app'); S.heute++; }
   else { U.falsch++; S.herzen = Math.max(0, S.herzen-1); }
+  if(window.__spuere) window.__spuere(ok?'gut':'schlecht');
+  if(window.klang) window.klang(ok?'richtig':'falsch');
+  if(window.julia) setTimeout(function(){ window.julia(ok?'lob':'trost'); }, ok?300:340);
+  if(!ok && window.klang) setTimeout(function(){ window.klang('herz'); }, 260);
   kopfMalen(); $('uHerz').textContent = S.herzen;
 
   if(v && angemeldet){
@@ -1301,6 +1313,8 @@ function uebAbschluss(){
 
   $('uBalken').style.width='100%';
   $('uebFuss').style.display='none';
+  if(window.klang) window.klang(quote>=60?'fertig':'serie');
+  if(window.julia) setTimeout(function(){ window.julia('fertig'); }, 800);
   $('uebIn').innerHTML =
      '<div class="fertig"><div class="pokal">'+(quote>=90?'🏆':quote>=60?'🎉':'💪')+'</div>'
     +'<h2>'+(quote>=90?'Makellos!':quote>=60?'Gut gemacht!':'Geschafft!')+'</h2>'
@@ -1675,6 +1689,7 @@ async function satzPruefen(eintrag, schritt){
     if(!r.ok || !j.ok){ eintrag.pruef=null; malDialog(); return; }
     if(j.gut){
       eintrag.pruef='gut'; eintrag.lob=j.lob;
+      if(window.klang) window.klang('richtig');
       punkte(4,'app');
     } else {
       eintrag.pruef='fehler'; eintrag.korrigiert=j.korrigiert; eintrag.hinweis=j.hinweis; eintrag.thema=j.thema;
@@ -1719,7 +1734,7 @@ function malFoto(){
     +'<div class="fotofeld">'
     +  '<div class="em">📷</div><b>Mach ein Foto</b>'
     +  '<span>Oder wähle ein Bild aus deiner Galerie. Es wird nur einmal angeschaut und nicht gespeichert.</span>'
-    +  '<button class="knopf" onclick="$(\'fotoEin\').click()">Kamera öffnen</button>'
+    +  '<button class="knopf" onclick="kameraAuf()">Kamera öffnen</button>'
     +  '<input type="file" id="fotoEin" accept="image/*" capture="environment" style="display:none" onchange="fotoGewaehlt(this)">'
     +'</div>'
     +'<h2 class="a">💡 Gute Ideen</h2>'
@@ -1740,6 +1755,20 @@ function ladeTexte(){
   var i=0;
   clearInterval(window._lt);
   window._lt = setInterval(function(){ i++; var e=$('ladeText'); if(!e){ clearInterval(window._lt); return; } e.textContent=t[i%t.length]; }, 2300);
+}
+
+/* In der App öffnet sich die echte Kamera, im Browser die Dateiauswahl */
+async function kameraAuf(){
+  if(window.__fotoAufnehmen){
+    var f = await window.__fotoAufnehmen();
+    if(!f || !f.base64) return;
+    FOTO.vorschau = 'data:'+f.mime+';base64,'+f.base64;
+    FOTO.bild = f.base64;
+    FOTO.mime = f.mime;
+    fotoSenden();
+    return;
+  }
+  $('fotoEin').click();
 }
 
 function fotoGewaehlt(inp){
@@ -2071,10 +2100,37 @@ function malIch(){
     +'<span class="kp">›</span></span></button>'
 
     +'<h2 class="a">⚙️ Einstellungen</h2>'
+    +'<div class="k"><div class="kz"><span class="ki" style="background:var(--tq-soft)">🔊</span>'
+    +'<span class="kt"><b>Töne</b><span>Kleine Klänge, wenn etwas richtig oder falsch ist.</span></span>'
+    +'<button class="schalter'+((!window.klangLaeuft||window.klangLaeuft())?' an':'')+'" onclick="toeneUm()"><i></i></button></div></div>'
+    +'<div class="k" id="juliaSchalter" style="display:none"><div class="kz">'
+    +'<span class="ki" style="background:var(--akt-soft)">🎙️</span>'
+    +'<span class="kt"><b>Julias Stimme</b><span>Julia lobt dich und spricht dir Mut zu — mit ihrer echten Stimme.</span></span>'
+    +'<button class="schalter'+((!window.juliaLaeuft||window.juliaLaeuft())?' an':'')+'" onclick="juliaUm()"><i></i></button></div></div>'
     +'<div class="k"><div class="kz"><span class="ki" style="background:var(--gold-soft)">✏️</span>'
     +'<span class="kt"><b>Amanda korrigiert mich</b>'
     +'<span>Nach jeder Antwort im Dialog sagt sie kurz, ob alles richtig war.</span></span>'
     +'<button class="schalter'+(korrekturAn()?' an':'')+'" onclick="korrekturUm()"><i></i></button></div></div>'
+
+    + (window.__NATIV__ ? ('<div class="k"><div class="kz">'
+        +'<span class="ki" style="background:#FFF3E9">🔔</span>'
+        +'<span class="kt"><b>Tägliche Erinnerung</b>'
+        +'<span>'+(window.__erinnerungStand && window.__erinnerungStand()
+             ? 'Jeden Tag um '+String(window.__erinnerungStand().stunde).padStart(2,'0')+':'
+               +String(window.__erinnerungStand().minute).padStart(2,'0')+' Uhr.'
+             : 'Ein kurzer Anstupser, damit deine Serie nicht abreißt.')+'</span></span>'
+        +'<button class="schalter'+(window.__erinnerungStand && window.__erinnerungStand()?' an':'')+'" '
+        +'onclick="erinnerungUm()"><i></i></button></div>'
+        + (window.__erinnerungStand && window.__erinnerungStand()
+            ? '<div class="chips" style="margin-top:12px">'
+              + [['17',0],['19',0],['20',30],['21',0]].map(function(z){
+                  var st=window.__erinnerungStand();
+                  var an = st && st.stunde==+z[0] && st.minute==z[1];
+                  return '<button class="chip" style="'+(an?'border-color:var(--tq);background:var(--tq-soft);color:var(--tq-d)':'')
+                    +'" onclick="erinnerungZeit('+z[0]+','+z[1]+')">'+z[0]+':'+String(z[1]).padStart(2,'0')+' Uhr</button>';
+                }).join('')
+              +'</div>' : '')
+        +'</div>') : '')
 
     +'<div class="k"><div class="kt"><b>Meine Muttersprache</b>'
     +'<span>Übersetzungen erscheinen in dieser Sprache.</span></div>'
@@ -2092,6 +2148,7 @@ function malIch(){
                    +'<span class="ki" style="background:var(--line2)">🔑</span>'
                    +'<span class="kt"><b>Anmelden</b><span>Damit dein Fortschritt gespeichert wird.</span></span>'
                    +'<span class="kp">›</span></span></button>');
+  juliaSchalterPruefen();
 }
 /* ============================================================
    Prüfungssimulation — Lesen, Sprachbausteine, Hören unter Zeit
@@ -2227,6 +2284,7 @@ function pruefAuswertung(zeitAus){
 
   $('uBalken').style.width='100%';
   $('uebFuss').style.display='none';
+  if(window.klang) window.klang(proz>=60?'fertig':'serie');
   $('uebIn').innerHTML =
      '<div class="fertig" style="padding-bottom:6px"><div class="pokal">'+(proz>=80?'🏆':proz>=60?'💪':'📚')+'</div>'
     +'<h2>'+richtig+' von '+P.aufgaben.length+' richtig</h2>'
@@ -2250,6 +2308,46 @@ function pruefAuswertung(zeitAus){
     +'<a class="knopf bl" style="display:block;text-align:center;text-decoration:none" href="konto.html#kalender">Mit einer echten Lehrerin durchgehen</a>'
     +'</div>';
   $('uebIn').scrollTop=0;
+}
+
+function juliaUm(){
+  if(!window.juliaAn) return;
+  var an = !window.juliaLaeuft();
+  window.juliaAn(an);
+  malIch();
+  toast(an ? 'Julias Stimme an 🎙️' : 'Julias Stimme aus');
+}
+/* Den Schalter nur zeigen, wenn es auch Aufnahmen gibt */
+function juliaSchalterPruefen(){
+  if(!window.juliaVorhanden) return;
+  window.juliaVorhanden().then(function(da){
+    var e = $('juliaSchalter');
+    if(e) e.style.display = da ? '' : 'none';
+  });
+}
+
+function toeneUm(){
+  if(!window.klangAn) return;
+  var an = !window.klangLaeuft();
+  window.klangAn(an);
+  malIch();
+  toast(an ? 'Töne an 🔊' : 'Töne aus');
+}
+
+async function erinnerungUm(){
+  if(!window.__erinnerungAn) return;
+  if(window.__erinnerungStand()){ await window.__erinnerungAus(); toast('Erinnerung aus'); }
+  else {
+    var ok = await window.__erinnerungAn(19, 0);
+    toast(ok ? 'Erinnerung an — jeden Abend um 19 Uhr' : 'Dafür brauche ich die Erlaubnis für Mitteilungen.');
+  }
+  malIch();
+}
+async function erinnerungZeit(st, mi){
+  if(!window.__erinnerungAn) return;
+  await window.__erinnerungAn(st, mi);
+  malIch();
+  toast('Erinnerung um '+String(st).padStart(2,'0')+':'+String(mi).padStart(2,'0')+' Uhr');
 }
 
 function korrekturUm(){
