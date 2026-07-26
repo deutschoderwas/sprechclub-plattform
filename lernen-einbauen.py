@@ -83,8 +83,10 @@ s = s.replace("go('lernen');kbOpen(", "go('kurse');kbOpen(")
 s = s.replace("go('lernen'); kbOpen(", "go('kurse'); kbOpen(")
 
 # Der Zurück-Knopf in der Kursansicht führt nach Lernen
+# Achtung: diese Zeile steht INNERHALB eines JS-Strings mit einfachen
+# Anfuehrungszeichen — deshalb die HTML-Entitaet, sonst bricht das Skript.
 s = s.replace('class="kb-back" onclick="window.renderKurse()"',
-              'class="kb-back" onclick="go(\'lernen\')"')
+              'class="kb-back" onclick="go(&#39;lernen&#39;)"')
 
 # ---------------------------------------------------------------- fertig
 if s == orig:
