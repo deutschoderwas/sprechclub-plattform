@@ -38,12 +38,15 @@ Korrektur:
 Du gibst AUSSCHLIESSLICH gueltiges JSON zurueck, kein Text davor oder danach:
 {
   "text": "deine Antwort auf Deutsch",
+  "tr": "dieselbe Antwort uebersetzt",
   "korrektur": null,
   "vorschlaege": ["kurze Antwortmoeglichkeit", "noch eine"]
 }
 
 "korrektur" ist null, wenn der letzte Satz der Person in Ordnung war. Sonst:
 { "korrigiert": "der richtige Satz", "hinweis": "ein kurzer freundlicher Satz, warum", "thema": "Stichwort wie Wortstellung oder Artikel" }
+
+"tr" ist deine Antwort in der Muttersprache der Person — sie wird erst gezeigt, wenn sie auf „Übersetzen" tippt. Ohne bekannte Muttersprache lass sie leer.
 
 "vorschlaege" sind zwei sehr kurze Dinge, die die Person jetzt sagen koennte — als Starthilfe, passend zum Niveau. Bei ganz freien Fragen darf die Liste leer sein.`;
 }
@@ -127,6 +130,7 @@ export default async function handler(req, res) {
   return res.status(200).json({
     ok: true,
     text: String(out.text || '').trim(),
+    tr: String(out.tr || '').trim(),
     korrektur: echteKorrektur
       ? { korrigiert: String(k.korrigiert), hinweis: String(k.hinweis || ''), thema: String(k.thema || '') }
       : null,

@@ -328,6 +328,31 @@ mark.m{background:linear-gradient(180deg,transparent 52%,#FFE59A 52%);color:inhe
 .senden .ab:active{transform:translateY(2px);box-shadow:0 1px 0 var(--tq-d)}
 .senden .ab[disabled]{background:#E4E0D7;color:#A9A399;box-shadow:0 3px 0 #D3CEC4}
 
+
+/* ---------- Amanda groß: Gesicht oben, Gespräch darunter ---------- */
+.am-buehne{flex:none;position:relative;background:linear-gradient(180deg,#F6EDFF 0%,#F1E6FB 62%,var(--bg) 100%);
+  display:flex;flex-direction:column;align-items:center;padding:6px 0 14px;transition:padding .3s}
+.am-buehne .kopf-zeile{width:100%;display:flex;align-items:center;gap:10px;padding:8px 14px 0}
+.am-buehne .kopf-zeile .zur{flex:none;width:36px;height:36px;border-radius:12px;border:1px solid #E0CDF5;
+  background:rgba(255,255,255,.8);display:flex;align-items:center;justify-content:center;font-size:18px;color:#6D3AA8}
+.am-buehne .kopf-zeile .luecke{flex:1}
+.am-gesicht{width:168px;height:168px;transition:width .34s cubic-bezier(.16,1,.3,1),height .34s cubic-bezier(.16,1,.3,1)}
+.am-buehne.klein .am-gesicht{width:84px;height:84px}
+.am-buehne.klein{padding-bottom:8px}
+.am-name{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;margin-top:6px;color:#3C2455}
+.am-buehne.klein .am-name{font-size:14px;margin-top:2px}
+.am-zustand{font-size:12.5px;font-weight:700;color:#7C5CA0}
+.am-zustand.hoert{color:var(--pink)}
+.am-gesicht svg{width:100%;height:100%}
+
+/* Übersetzen-Knopf an Amandas Blase */
+.bb-akt{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap}
+.bb-akt button{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;
+  color:var(--lila);background:#fff;border:1px solid #E0CDF5;border-radius:999px;padding:5px 11px}
+.bb-akt button:active{transform:translateY(1px)}
+.bb-tr{margin-top:9px;padding-top:9px;border-top:1px dashed #D9C4F0;font-size:13.5px;
+  line-height:1.5;color:#6B5A80;font-style:italic}
+
 /* ---------- Amanda als Cartoon ---------- */
 .am{display:block}
 .am .mund{transition:d .12s, transform .12s;transform-origin:center}
@@ -496,6 +521,8 @@ mark.m{background:linear-gradient(180deg,transparent 52%,#FFE59A 52%);color:inhe
   background:var(--card);border:1px solid var(--line)}
 .bl.ich .bb{border-radius:17px 17px 5px 17px;background:var(--tq-soft);border-color:#C9EAE4}
 .bl.am .bb{background:var(--lila-soft);border-color:#E0CDF5}
+.bl.am>.av{display:none}
+.bl.am{padding-left:2px}
 .bl .zeit{font-size:10.5px;color:var(--ink3);margin:4px 0 0 3px}
 .bl.ich .zeit{text-align:right;margin:4px 3px 0 0}
 .bl .knopfchen{display:inline-flex;align-items:center;gap:5px;margin-top:8px;font-size:11.5px;
@@ -1602,21 +1629,43 @@ function amandaFrei(thema){
   window.chatModus(true);
 
   $('s-sprechen').innerHTML =
-     '<div class="ch-kopf"><button class="zur" onclick="amandaFreiZu()">‹</button>'
-    +'<span class="av">'+amandaSVG(40,'amKopf')+'</span>'
-    +'<span class="t"><b>Amanda</b><span class="lebt" id="amStatus">ist da</span></span>'
+     '<div class="am-buehne" id="amBuehne">'
+    +'<div class="kopf-zeile"><button class="zur" onclick="amandaFreiZu()">‹</button>'
+    +'<span class="luecke"></span>'
     +'<button class="zur" onclick="amandaNeu()" title="Neues Gespräch">↺</button></div>'
+    +'<div class="am-gesicht" id="amGesicht">'+amandaSVG(168,'amKopf')+'</div>'
+    +'<div class="am-name">Amanda</div>'
+    +'<div class="am-zustand" id="amStatus">ist da</div></div>'
+
     +'<div class="ch-liste" id="chListe" onscroll="chatKnopfPruefen()">'
     +'<button class="ch-runter" id="chRunter" onclick="chatNachUnten()">↓</button></div>'
+
     +'<div class="ch-fuss"><div id="amVor" class="chips" style="margin-bottom:9px;display:none"></div>'
     +'<div class="ch-ein">'
-    +'<button class="ch-rund ch-mi" id="amMi" onclick="chatSprechen(this,$(\'amEin\'),amandaSenden)">🎤</button>'
+    +'<button class="ch-rund ch-mi" id="amMi" onclick="amandaMikro(this)">🎤</button>'
     +'<textarea id="amEin" rows="1" placeholder="Schreib oder sprich auf Deutsch …"></textarea>'
-    +'<button class="ch-rund ch-ab" id="amAb" disabled onclick="amandaSenden()">➤</button></div>'
-    +'<p class="ch-hin">Tipp aufs Mikrofon und sprich.</p></div>';
+    +'<button class="ch-rund ch-ab" id="amAb" disabled onclick="amandaSenden()">➤</button></div></div>';
 
   window.chatEingabe($('amEin'), $('amAb'), amandaSenden);
-  amandaAntwortHolen();      // Amanda macht den ersten Schritt
+  amandaAntwortHolen();
+}
+
+/* Sobald das Gespräch läuft, wird Amandas Gesicht kleiner —
+   dann ist mehr Platz für die Nachrichten. */
+function amandaBuehneKlein(){
+  var b = $('amBuehne');
+  if(b && AM.verlauf.length >= 2) b.classList.add('klein');
+}
+
+function amandaMikro(k){
+  var st = $('amStatus');
+  if(st && !k._laeuft){ st.textContent='hört zu …'; st.className='am-zustand hoert'; }
+  window.chatSprechen(k, $('amEin'), function(){
+    if(st){ st.textContent='ist da'; st.className='am-zustand'; }
+    amandaSenden();
+  });
+  // Falls nichts erkannt wurde, den Zustand zurücksetzen
+  setTimeout(function(){ if(!k._laeuft && st){ st.textContent='ist da'; st.className='am-zustand'; } }, 9000);
 }
 
 function amandaFreiZu(){
@@ -1626,14 +1675,27 @@ function amandaFreiZu(){
 }
 function amandaNeu(){ amandaFrei(AM.thema); }
 
-function amandaBlaseAn(text, extra){
+var AM_NR = 0;
+function amandaBlaseAn(text, extra, uebersetzung){
+  var nr = ++AM_NR;
+  var sicher = esc(text).replace(/'/g,"\\'");
   window.chatAnhaengen(window.chatBlase({
-    wer:'am', avatarHTML: amandaSVG(32, 'am'+Date.now()),
+    wer:'am',
     html: esc(text)
-      + '<div><button class="knopfchen" onclick="sprich(\''+esc(text).replace(/'/g,"\\'")+'\',0,\'amanda\')">🔊 hören</button></div>',
+      + '<div class="bb-akt">'
+      + '<button onclick="sprich(\''+sicher+'\',0,\'amanda\')">🔊 hören</button>'
+      + '<button onclick="sprich(\''+sicher+'\',1,\'amanda\')">🐢 langsam</button>'
+      + (uebersetzung ? '<button onclick="amandaUebersetzen('+nr+')">🌐 übersetzen</button>' : '')
+      + '</div>'
+      + (uebersetzung ? '<div class="bb-tr" id="amTr'+nr+'" style="display:none">'+esc(uebersetzung)+'</div>' : ''),
     zeit: window.chatZeit()
   }));
   if(extra) window.chatAnhaengen(extra);
+  amandaBuehneKlein();
+}
+function amandaUebersetzen(nr){
+  var e = $('amTr'+nr); if(!e) return;
+  e.style.display = e.style.display === 'none' ? 'block' : 'none';
 }
 
 function amandaVorschlaege(liste){
@@ -1679,7 +1741,7 @@ async function amandaAntwortHolen(){
     var j = await r.json();
     window.chatTippt(false);
     if(!r.ok || !j.ok){
-      amandaBlaseAn('Entschuldige, ich war kurz weg. Sag das noch einmal?');
+      amandaBlaseAn('Entschuldige, ich war kurz weg. Sag das noch einmal?', null, '');
       AM.laeuft = false; if(st) st.textContent='ist da'; return;
     }
 
@@ -1697,12 +1759,12 @@ async function amandaAntwortHolen(){
     }
 
     AM.verlauf.push({ wer:'am', text:j.text });
-    amandaBlaseAn(j.text, extra);
+    amandaBlaseAn(j.text, extra, j.tr||'');
     amandaSpricht(j.text, 'amKopf');
     amandaVorschlaege(j.vorschlaege);
   }catch(err){
     window.chatTippt(false);
-    amandaBlaseAn('Ich habe gerade keine Verbindung. Versuch es gleich noch einmal.');
+    amandaBlaseAn('Ich habe gerade keine Verbindung. Versuch es gleich noch einmal.', null, '');
   }
   AM.laeuft = false;
   if(st) st.textContent = 'ist da';
