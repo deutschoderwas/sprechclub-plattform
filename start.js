@@ -432,6 +432,12 @@
 
   window.STARTSEITE = STARTSEITE;
 
+  /* Das Aussehen sofort einhängen, nicht erst beim Zeichnen der Startseite.
+     Die Karte „Meine Stunden" im Live-Unterricht benutzt dieselben Klassen —
+     wer direkt auf #kalender kommt, soll sie fertig gestaltet sehen. */
+  if(document.head) stil();
+  else document.addEventListener('DOMContentLoaded', stil);
+
   /* Diese Datei wird weit unten in der Seite geladen. Wenn die Startseite
      schon gezeichnet werden wollte, bevor es sie gab, holen wir das jetzt nach. */
   try{
