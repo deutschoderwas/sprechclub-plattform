@@ -455,6 +455,42 @@
     hoch();
   };
 
+  /* ---------- Auskunft für die Startseite ----------
+     Sagt, wo die Schülerin im Kurs gerade steht: welches Niveau,
+     welche Lektion als Nächstes dran ist und wie weit sie insgesamt ist. */
+  window.kursStand=function(niveau){
+    var g = niveau || niveauGemerkt() || 'A1';
+    if(!hatKurs(g)) g = hatKurs('A1') ? 'A1' : g;
+    var d = kursDaten(g), L = (d&&d.lektionen)||[];
+    if(!L.length) return null;
+    var st = J('kurs',null)||{}, buch = st[fach(g)]||{};
+    function proz(nr){
+      var x=buch[nr]||{}, t=[x.woerter?100:0, x.gram?100:0,
+        Math.max(0,Math.min(100,x.ueb||0)), x.dialog?100:0, x.schreiben?100:0, x.aus?100:0];
+      var sum=0,i; for(i=0;i<t.length;i++) sum+=t[i];
+      return Math.round(sum/t.length);
+    }
+    var fertig=0, offen=null, gesamt=0, i, p;
+    for(i=0;i<L.length;i++){
+      p=proz(L[i].nr); gesamt+=p;
+      if(p>=100) fertig++; else if(!offen) offen=L[i];
+    }
+    var lek = offen || L[L.length-1];
+    return {
+      niveau: g,
+      titel: (d&&d.titel)||g,
+      nr: lek.nr,
+      id: lek.id,
+      lektion: lek.t,
+      ziel: lek.ziel||'',
+      lekProzent: proz(lek.nr),
+      prozent: Math.round(gesamt/L.length),
+      fertig: fertig,
+      anzahl: L.length,
+      angefangen: gesamt>0
+    };
+  };
+
   window.niveauWaehlen=function(id){
     S('niveau',id);
     if(hatKurs(id)){ AKT=id; return window.renderKursA1(); }

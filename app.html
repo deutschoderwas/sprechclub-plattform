@@ -663,7 +663,6 @@ mark.m{background:linear-gradient(180deg,transparent 52%,#FFE59A 52%);color:inhe
     <section class="schirm" id="s-sprechen"></section>
     <section class="schirm" id="s-foto"></section>
     <section class="schirm" id="s-ich"></section>
-    <section class="schirm" id="s-kurs"></section>
   </div>
 
   <!-- Fussnavigation -->
@@ -709,11 +708,7 @@ mark.m{background:linear-gradient(180deg,transparent 52%,#FFE59A 52%);color:inhe
 <script src="config.js"></script>
 <script src="stimme-dateien.js"></script>
 <script src="stimmen.js"></script>
-<script src="niveau.js"></script>
-<script src="a1.js"></script>
-<script src="a2.js"></script>
 <script src="lernen.js"></script>
-<script src="kurs.js"></script>
 <script src="chat-engine.js"></script>
 <script src="klang.js"></script>
 <script src="stimme.js"></script>
@@ -1074,15 +1069,12 @@ function zeige(s, stumm){
   if(s !== 'sprechen' && D.offen){ D.offen=null; }
   window.chatModus(false);
   var band=$('instBan'); if(band) band.remove();
-  ['lernen','sprechen','foto','club','ich','kurs'].forEach(function(x){
+  ['lernen','sprechen','foto','club','ich'].forEach(function(x){
     $('s-'+x).classList.toggle('an', x===s);
   });
-  /* Der Kurs gehoert zu Lernen — dort bleibt der Knopf hell */
-  var nav = (s==='kurs') ? 'lernen' : s;
-  document.querySelectorAll('.nb').forEach(function(b){ b.classList.toggle('an', b.dataset.s===nav); });
+  document.querySelectorAll('.nb').forEach(function(b){ b.classList.toggle('an', b.dataset.s===s); });
   if(!stumm) location.hash = s;
-  ({lernen:malLernen, sprechen:malSprechen, foto:malFoto, club:malClub, ich:malIch,
-    kurs:malKurs})[s]();
+  ({lernen:malLernen, sprechen:malSprechen, foto:malFoto, club:malClub, ich:malIch})[s]();
   if(!document.getElementById('app').classList.contains('chatmodus')) $('inhalt').scrollTop = 0;
 }
 
@@ -1166,12 +1158,6 @@ function malLernen(){
     +  (S.heute>=S.ziel?' — geschafft! 🎉':'')+'</span></div>'
     +'</div>'
 
-    +'<button class="gross g-tq" onclick="zeige(\'kurs\')" style="margin-bottom:14px">'
-    +'<h3>Der A1-Kurs</h3>'
-    +'<p>Vierzehn Lektionen von ganz vorn — Wörter, Grammatik, Gespräche und Schreiben, '
-    +'so wie im Integrationskurs.</p>'
-    +'<span class="em">🎓</span></button>'
-
     +'<h2 class="a">🪜 Dein Lernpfad</h2>'
     +'<div class="pfad">'+(pfad||'<div class="leer"><div class="em">📚</div>Der Wortschatz wird geladen …</div>')+'</div>'
 
@@ -1181,28 +1167,6 @@ function malLernen(){
     +'<a href="konto.html">Am Computer weitermachen →</a></div>';
   kopfMalen();
 }
-
-/* ------------------------------------------------------------
-   Der A1-Kurs in der App
-
-   Gezeichnet wird er von kurs.js — genau wie in der vollen
-   Version. Die App gibt nur den Platz dafür und den Weg zurück.
-   ------------------------------------------------------------ */
-function malKurs(){
-  var k = $('s-kurs'); if(!k) return;
-  if(!window.renderNiveau){
-    k.innerHTML = '<div class="leer"><div class="em">📚</div>Der Kurs wird geladen — '
-      + 'lade die App bitte einmal neu.</div>';
-    return;
-  }
-  /* Beim ersten Öffnen die Niveau-Auswahl, danach da weiter, wo man war */
-  if(!k.dataset.gemalt){ k.dataset.gemalt = '1'; window.renderNiveau(); }
-  else if(window.A1 && window.renderKursA1 && lese('kurs',{}).niveau === 'A1'){ window.renderKursA1(); }
-  else window.renderNiveau();
-}
-
-/* Der Zurück-Weg aus dem Kurs in die App */
-window.kursZurueckZurApp = function(){ zeige('lernen'); };
 
 /* ============================================================
    2 · ÜBUNGSMASCHINE
