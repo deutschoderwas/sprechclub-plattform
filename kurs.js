@@ -71,15 +71,27 @@
     }catch(e){}
   }
 
+  /* ---------- Welches Niveau gerade offen ist ---------- */
+  /* Der Kurs ist nicht mehr an A1 gebunden: Es zählt, welches Niveau
+     gerade geöffnet ist. Die Lektionen dazu liegen in window.A1,
+     window.A2 und so weiter. */
+  var AKT = 'A1';
+  function kursDaten(id){ try{ return window[id||AKT]||null; }catch(e){ return null; } }
+  function fach(id){ return String(id||AKT).toLowerCase(); }
+
   /* ---------- Speicher und Fortschritt ---------- */
-  /* Alles unter einem Schlüssel „kurs": {a1:{1:{...},2:{...}}, niveau:'A1'} */
-  function stand(){ var s=J('kurs',null)||{}; s.a1=s.a1||{}; return s; }
+  /* Alles unter einem Schlüssel „kurs": {a1:{1:{...}}, a2:{1:{...}}, niveau:'A1'} */
+  function stand(){
+    var s=J('kurs',null)||{};
+    if(!s[fach()]) s[fach()]={};
+    return s;
+  }
   function standSpeichern(s){ S('kurs',s); }
-  function lekStand(nr){ return stand().a1[nr]||{}; }
+  function lekStand(nr){ return stand()[fach()][nr]||{}; }
   function lekMerken(nr,neu){
-    var s=stand(), x=s.a1[nr]||{}, k;
+    var s=stand(), x=s[fach()][nr]||{}, k;
     for(k in neu) if(neu.hasOwnProperty(k)) x[k]=neu[k];
-    s.a1[nr]=x; standSpeichern(s);
+    s[fach()][nr]=x; standSpeichern(s);
   }
   /* Eine Lektion hat sechs Teile. Üben zählt in Prozent, der Rest ganz oder gar nicht. */
   function lekProzent(nr){
@@ -90,9 +102,17 @@
     return Math.round(sum/t.length);
   }
   function niveauProzent(id){
-    if(id!=='A1') return 0;
-    var L=lektionen(); if(!L.length) return 0;
-    var sum=0,i; for(i=0;i<L.length;i++) sum+=lekProzent(L[i].nr);
+    var d=kursDaten(id), L=(d&&d.lektionen)||[];
+    if(!L.length) return 0;
+    var st=J('kurs',null)||{}, buch=st[fach(id)]||{};
+    var sum=0,i;
+    for(i=0;i<L.length;i++){
+      var x=buch[L[i].nr]||{}, t=[];
+      t.push(x.woerter?100:0); t.push(x.gram?100:0); t.push(Math.max(0,Math.min(100,x.ueb||0)));
+      t.push(x.dialog?100:0); t.push(x.schreiben?100:0); t.push(x.aus?100:0);
+      var teil=0,k; for(k=0;k<t.length;k++) teil+=t[k];
+      sum+=Math.round(teil/t.length);
+    }
     return Math.round(sum/L.length);
   }
   function niveauGemerkt(){ return J('niveau','A1')||'A1'; }
@@ -100,9 +120,9 @@
   /* ---------- Daten ---------- */
   function niveaus(){ return window.NIVEAUS||[]; }
   function niveauVon(id){ var a=niveaus(),i; for(i=0;i<a.length;i++) if(a[i].id===id) return a[i]; return null; }
-  function lektionen(){ return (window.A1&&window.A1.lektionen)||[]; }
+  function lektionen(){ var d=kursDaten(); return (d&&d.lektionen)||[]; }
   function lektionVon(nr){ var a=lektionen(),i; for(i=0;i<a.length;i++) if(a[i].nr===Number(nr)) return a[i]; return null; }
-  function hatKurs(id){ return id==='A1' && lektionen().length>0; }
+  function hatKurs(id){ var d=kursDaten(id); return !!(d && (d.lektionen||[]).length); }
   function aufgaben(){ return window.SCHREIBEN||[]; }
 
   /* ============================================================
@@ -437,7 +457,7 @@
 
   window.niveauWaehlen=function(id){
     S('niveau',id);
-    if(hatKurs(id)) return window.renderKursA1();
+    if(hatKurs(id)){ AKT=id; return window.renderKursA1(); }
     if(window.go){ try{ window.go('lernen'); return; }catch(e){} }
     note('Für ' + id + ' liegen die Lektionen noch nicht bereit — im Lernbereich findest du schon Übungen dazu.');
     window.renderNiveau();
@@ -447,25 +467,27 @@
      2 — Der A1-Kurs
      ============================================================ */
 
-  window.renderKursA1=function(){
+  window.renderKursA1=function(niveau){
+    if(niveau && hatKurs(niveau)) AKT=niveau;
+    else if(!hatKurs(AKT)){ var g=niveauGemerkt(); if(hatKurs(g)) AKT=g; }
     stil();
     var v=flaeche(); if(!v) return;
     var L=lektionen();
     v.classList.add('ku');
     if(!L.length){
       v.innerHTML='<button class="ku-zurueck" onclick="renderNiveau()">← Alle Niveaus</button>'
-        +'<div class="ku-leer">Der A1-Kurs wird geladen. Lade die Seite bitte neu.</div>';
+        +'<div class="ku-leer">Der '+E(AKT)+'-Kurs wird geladen. Lade die Seite bitte neu.</div>';
       return;
     }
-    var A=window.A1, p=niveauProzent('A1');
+    var A=kursDaten()||{}, p=niveauProzent(AKT);
     var fertig=0,i; for(i=0;i<L.length;i++) if(lekProzent(L[i].nr)>=100) fertig++;
 
-    var kopf='<div class="ku-kopf"><h1>'+E(A.titel||'A1 — Der Anfang')+'</h1>'
+    var kopf='<div class="ku-kopf"><h1>'+E(A.titel||(AKT+' — Der Kurs'))+'</h1>'
       +'<p>'+E(A.unter||'')+'</p>'
       +'<div class="ku-zahlen">'
       +'<div class="ku-z"><b>'+fertig+'/'+L.length+'</b><span>Lektionen fertig</span></div>'
       +'<div class="ku-z"><b>'+p+' %</b><span>vom ganzen Kurs</span></div>'
-      +'<div class="ku-z"><b>Start Deutsch 1</b><span>dein Ziel</span></div>'
+      +'<div class="ku-z"><b>'+E(A.ziel||'Start Deutsch 1')+'</b><span>dein Ziel</span></div>'
       +'</div></div>';
 
     var weg='<div class="ku-weg">'+L.map(function(l){
@@ -664,7 +686,7 @@
     var d={
       id:'a1-'+l.id,
       titel:'Lektion '+zahl(l.nr)+' — '+l.t,
-      lvl:'A1',
+      lvl:AKT,
       dauer:(l.dialog.schritte||[]).length+' Schritte',
       em:'💬',
       ort:l.dialog.ort||'',
@@ -689,7 +711,7 @@
     var l=K.lek; if(!l||!l.schreiben) return;
     window.schreibTrainer({
       id:'a1-'+l.id,
-      lvl:'A1',
+      lvl:AKT,
       art:'mitteilung',
       pruef:'frei',
       t:'Lektion '+zahl(l.nr)+' — Schreiben',
