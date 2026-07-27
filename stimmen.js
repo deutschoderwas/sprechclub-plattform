@@ -158,46 +158,65 @@
     return 190;
   }
 
-  var ttsAudio = null;
-  function ttsAus() { return !!(window.SPRECHCLUB_CONFIG && window.SPRECHCLUB_CONFIG.TTS === false); }
+  /* ============================================================
+     Julias echte Stimme
 
-  /* Echte Stimme (ElevenLabs) — mit sauberem Rückfall auf die Gerätestimme,
-     falls kein Schlüssel gesetzt ist, kein Netz da ist oder etwas schiefgeht. */
-  function ttsSagen(text, opt) {
-    abbrechen = false; laeuft = true;
-    if (opt.aufElement) opt.aufElement.classList.add('spricht');
-    function fertig() { laeuft = false; if (opt.aufElement) opt.aufElement.classList.remove('spricht'); if (opt.fertig) opt.fertig(); }
-    fetch('/api/tts', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ text: String(text), rolle: opt.rolle || '', langsam: !!opt.langsam })
-    })
-      .then(function (r) { if (!r.ok) throw 0; return r.json(); })
-      .then(function (j) {
-        if (abbrechen) { fertig(); return; }
-        if (!j || !j.url) { geraetSagen(text, opt); return; }
-        var a = new Audio(j.url); ttsAudio = a;
-        a.onended = function () { if (ttsAudio === a) ttsAudio = null; fertig(); };
-        a.onerror = function () { if (ttsAudio === a) ttsAudio = null; geraetSagen(text, opt); };
-        var p = a.play(); if (p && p.catch) p.catch(function () { if (ttsAudio === a) ttsAudio = null; geraetSagen(text, opt); });
-      })
-      .catch(function () { if (abbrechen) { fertig(); return; } geraetSagen(text, opt); });
+     Für die feststehenden Sätze der Plattform gibt es Aufnahmen.
+     Findet sich zu einem Text eine Datei, spielen wir die ab —
+     das ist ein Mensch und keine Maschine. Für alles andere
+     (zum Beispiel Amandas freie Antworten) spricht wie bisher
+     die Stimme des Browsers.
+     ============================================================ */
+  var tonElement = null;
+
+  function tonSchluessel(t){
+    return String(t == null ? '' : t).toLowerCase().replace(/\s+/g, ' ').replace(/^ | $/g, '');
+  }
+  function tonDatei(t){
+    try {
+      var v = window.STIMME_DATEIEN; if (!v) return null;
+      var id = v[tonSchluessel(t)];
+      return id ? ('ton/' + id + '.mp3') : null;
+    } catch (e) { return null; }
+  }
+  function tonStopp(){
+    if (!tonElement) return;
+    try { tonElement.pause(); tonElement.currentTime = 0; } catch (e) {}
+  }
+  /* true, wenn die Aufnahme läuft — dann macht der Browser nichts mehr */
+  function tonSpielen(datei, opt){
+    try {
+      tonStopp();
+      if (!tonElement) { tonElement = new Audio(); tonElement.preload = 'none'; }
+      tonElement.src = datei;
+      tonElement.playbackRate = opt.langsam ? 0.8 : 1;
+      laeuft = true;
+      if (opt.aufElement) opt.aufElement.classList.add('spricht');
+      var fertig = function(){
+        laeuft = false;
+        if (opt.aufElement) opt.aufElement.classList.remove('spricht');
+        if (opt.fertig) opt.fertig();
+      };
+      tonElement.onended = fertig;
+      tonElement.onerror = function(){ fertig(); };
+      var p = tonElement.play();
+      if (p && p.catch) p.catch(function(){ fertig(); });
+      return true;
+    } catch (e) { return false; }
   }
 
   window.sagen = function (text, opt) {
     opt = opt || {};
     if (!text) { if (opt.fertig) opt.fertig(); return; }
-    window.sagenStopp();
-    if (!ttsAus() && typeof fetch === 'function' && navigator.onLine !== false) { ttsSagen(text, opt); return; }
-    geraetSagen(text, opt);
-  };
-
-  function geraetSagen(text, opt) {
-    opt = opt || {};
-    if (!('speechSynthesis' in window) || !text) { if (opt.fertig) opt.fertig(); return; }
 
     abbrechen = true;
-    try { window.speechSynthesis.cancel(); } catch (e) { }
+    try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch (e) { }
+    tonStopp();
+
+    var datei = tonDatei(text);
+    if (datei && tonSpielen(datei, opt)) return;
+
+    if (!('speechSynthesis' in window)) { if (opt.fertig) opt.fertig(); return; }
 
     function los() {
       abbrechen = false; laeuft = true;
@@ -232,14 +251,15 @@
     // kurz warten, damit cancel() auf dem Handy wirklich durch ist
     if (bereit) setTimeout(los, 60);
     else window.stimmenBereit(function () { setTimeout(los, 60); });
-  }
+  };
 
   window.sagenStopp = function () {
     abbrechen = true; laeuft = false;
-    try { if (ttsAudio) { ttsAudio.pause(); ttsAudio.currentTime = 0; } } catch (e) { }
-    ttsAudio = null;
+    tonStopp();
     try { window.speechSynthesis.cancel(); } catch (e) { }
   };
+  /* Für die Anzeige: gibt es zu diesem Satz eine echte Aufnahme? */
+  window.echteStimme = function (t) { return !!tonDatei(t); };
   window.sagenLaeuft = function () { return laeuft; };
 
   /* Zwei Menschen im Wechsel */
