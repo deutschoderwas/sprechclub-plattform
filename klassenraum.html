@@ -10,8 +10,8 @@
 <script src="config.js"></script>
 <style>
   :root{
-    --tuerkis:#7ED8EA; --tuerkis-dunkel:#35AFD0; --tuerkis-soft:#BFE9F4;
-    --auf-tuerkis:#10627A; --anthrazit:#1A1A1A; --rot:#DD0000; --gold:#FFCE00;
+    --tuerkis:#2DD4BF; --tuerkis-dunkel:#14B8A6; --tuerkis-soft:#A7F3D0;
+    --auf-tuerkis:#06403A; --anthrazit:#1A1A1A; --rot:#DD0000; --gold:#FFCE00;
     --creme:#FFF8E0; --creme-hell:#FFFCF5; --weich:#6B7280; --rahmen:#F0E5D8;
   }
   *{box-sizing:border-box;}
@@ -29,7 +29,7 @@
   .toggle button{border:none; background:transparent; cursor:pointer; padding:7px 16px; border-radius:999px; font-family:'Inter'; font-weight:600; font-size:.82rem; color:var(--weich);}
   .toggle button.active{background:var(--tuerkis); color:var(--auf-tuerkis); box-shadow:0 1px 4px rgba(0,0,0,.12);}
 
-  main{flex:1; display:flex; padding:20px; min-height:0; --mid:380px; --rechts:340px;}
+  main{flex:1; display:flex; padding:20px; min-height:0; --mid:300px; --rechts:240px;}
   .gutter{flex:0 0 20px; align-self:stretch; display:flex; align-items:center; justify-content:center; cursor:col-resize; touch-action:none;}
   .gutter .grip{width:5px; height:52px; border-radius:999px; background:var(--rahmen); transition:background .15s;}
   .gutter:hover .grip, .gutter.drag .grip{background:var(--tuerkis-dunkel); height:80px;}
@@ -50,13 +50,19 @@
   .stift-extra .farbe.on{box-shadow:0 0 0 2px var(--anthrazit);}
   #rad-btn.on{background:var(--anthrazit); color:#fff; border-color:var(--anthrazit);}
   .lekt-stage{position:relative; flex:1; min-height:0;}
+  /* Desktop: Präsi-Karte schrumpft auf 16:9 (oben angedockt) → die Folie füllt die Karte randlos aus,
+     kein Creme-Rand oben/unten mehr. Karte wird so breit wie die Spalte, Höhe = Breite × 9/16. */
+  @media (min-width:1025px){
+    .lektion-card{ align-self:flex-start; max-height:100%; }
+    .lekt-stage{ flex:0 0 auto; width:100%; aspect-ratio:16/9; min-height:0; }
+  }
   #lektion{position:absolute; inset:0; width:100%; height:100%; border:none; background:#fff;}
   #annot{position:absolute; inset:0; width:100%; height:100%; pointer-events:none; touch-action:none; cursor:crosshair;}
 
   /* Mitte: Live-Tafel */
-  .mittelspalte{flex:0 0 var(--mid,380px); width:var(--mid,380px); display:flex; flex-direction:column; gap:16px; min-height:0; min-width:0;}
+  .mittelspalte{flex:0 1 var(--mid,320px); width:var(--mid,320px); display:flex; flex-direction:column; gap:16px; min-height:0; min-width:0;}
   /* rechts: Kameras */
-  .spalte{flex:0 0 var(--rechts,340px); width:var(--rechts,340px); display:flex; flex-direction:column; gap:16px; min-height:0; min-width:0;}
+  .spalte{flex:0 1 var(--rechts,300px); width:var(--rechts,300px); display:flex; flex-direction:column; gap:16px; min-height:0; min-width:0;}
 
   /* Video – klein & versetzt (rechts oben) */
   .video-card{align-self:stretch; width:100%; background:var(--creme-hell); border:1px solid var(--rahmen); border-radius:16px; overflow:hidden; box-shadow:0 4px 14px rgba(0,0,0,.08); flex:0 0 auto;}
@@ -254,6 +260,11 @@
   .mnotes-body mark{ padding:0 3px; border-radius:4px; }
   /* „Tafel groß": Live-Tafel als breite Seiten-Spalte neben der Präsentation (nur Desktop) */
   @media (min-width:1025px){
+    /* Präsentation ist die wichtigste Spalte → nie zu schmal, damit die Folie groß bleibt.
+       Tafel + Kameras müssen zuerst nachgeben. */
+    .lektion-card{ min-width:480px; }
+    .mittelspalte{ min-width:0; }
+    .spalte{ min-width:0; }
     /* Video als kleine Webcam-Box wie bei Zoom/Meet: klein & mittig, heller Rand statt
        breiter schwarzer Streifen. Bedienung kompakt in EINER Zeile → viel Platz für die Notizen. */
     .video-kopf{ padding:6px 13px; }
@@ -275,6 +286,12 @@
     body.tafelbig main{ --mid:48vw; }
     body.tafelbig #notiz{ min-height:58vh; font-size:1.12rem; line-height:1.8; }
     #vc-tafelbig.on{ background:var(--tuerkis); border-color:var(--tuerkis); color:var(--auf-tuerkis); }
+    /* Präsentation groß: Kameras ausblenden + Tafel schmal → Folie fast volle Breite */
+    body.praesbig .spalte{ display:none; }
+    body.praesbig #gutter2{ display:none; }
+    body.praesbig main{ --mid:300px; }
+    body.praesbig .lektion-card{ min-width:0; }
+    #vc-praesbig.on{ background:var(--tuerkis); border-color:var(--tuerkis); color:var(--auf-tuerkis); }
   }
 
   /* ===== Handy: kleines Video, große scrollbare Präsentation + Tafel-Reiter ===== */
@@ -348,7 +365,7 @@
         <button id="stift-btn" onclick="stiftToggle()">✏️ Stift</button>
         <span class="stift-extra hidden" id="stift-extra">
           <button class="farbe" data-c="#DD0000" style="background:#DD0000" onclick="stiftFarbe('#DD0000')" title="Rot"></button>
-          <button class="farbe" data-c="#35AFD0" style="background:#35AFD0" onclick="stiftFarbe('#35AFD0')" title="Türkis"></button>
+          <button class="farbe" data-c="#14B8A6" style="background:#14B8A6" onclick="stiftFarbe('#14B8A6')" title="Türkis"></button>
           <button class="farbe" data-c="#FFCE00" style="background:#FFCE00" onclick="stiftFarbe('#FFCE00')" title="Gelb"></button>
           <button id="rad-btn" onclick="stiftRadierer()" title="Radierer – einzelne Teile">🧽</button>
           <button onclick="stiftClear()" title="Alles löschen">🗑️</button>
@@ -431,6 +448,7 @@
         <button onclick="vcTiles()" title="Alle Teilnehmer sehen">👥 Alle</button>
         <button onclick="vcFull()" title="Großansicht">⛶ Groß</button>
         <button id="vc-tafelbig" onclick="toggleTafelBig()" title="Live-Tafel groß neben der Präsentation (nur am Computer)">🔳 Tafel groß</button>
+        <button id="vc-praesbig" onclick="togglePraesBig()" title="Präsentation groß – Kameras ausblenden, Folie fast volle Breite (nur am Computer)">🔎 Präsi groß</button>
         <button id="vc-bg" onclick="toggleBgPanel()" title="Eigenen Hintergrund wählen (weichzeichnen oder Bild)">🖼️ Hintergrund</button>
         <button class="leave" onclick="vcLeave()" title="Unterricht verlassen">🚪 Verlassen</button>
       </div>
@@ -633,12 +651,12 @@
   const main=document.getElementById('main');
   const mainR=()=>main.getBoundingClientRect();
   function pxv(v){ return parseInt(getComputedStyle(main).getPropertyValue(v),10)||0; }
-  (function(){   // gespeicherte Breiten laden (begrenzt, damit nichts extrem wird)
-    const capW=Math.round(window.innerWidth*0.5);
-    let m=parseInt(localStorage.getItem('club_mid')||'0',10);
-    let r=parseInt(localStorage.getItem('club_rechts')||'0',10);
-    if(m){ main.style.setProperty('--mid', Math.max(260, Math.min(capW, m))+'px'); }
-    if(r){ main.style.setProperty('--rechts', Math.max(240, Math.min(capW, r))+'px'); }
+  (function(){   // gespeicherte Breiten laden (begrenzt, damit die Präsentation groß bleibt)
+    const capW=Math.round(window.innerWidth*0.33);   // Tafel/Kameras nie mehr als 1/3 – Präsi bleibt breit
+    let m=parseInt(localStorage.getItem('club_mid3')||'0',10);
+    let r=parseInt(localStorage.getItem('club_rechts3')||'0',10);
+    if(m){ main.style.setProperty('--mid', Math.max(240, Math.min(capW, m))+'px'); }
+    if(r){ main.style.setProperty('--rechts', Math.max(220, Math.min(capW, r))+'px'); }
   })();
   function makeGutter(id, apply, cssVar, storeKey){
     const g=document.getElementById(id); if(!g) return; let d=false;
@@ -647,9 +665,9 @@
     g.addEventListener('pointerup', ()=>{ if(!d) return; d=false; g.classList.remove('drag'); if(typeof fit==='function') fit(); try{ localStorage.setItem(storeKey, String(pxv(cssVar))); }catch(e){} });
   }
   // Mitte|rechts: Kamera-Spalte breiter/schmaler
-  makeGutter('gutter2', e=>{ let w=mainR().right-20-e.clientX; w=Math.max(240, Math.min(Math.round(window.innerWidth*0.5), w)); main.style.setProperty('--rechts', w+'px'); }, '--rechts', 'club_rechts');
+  makeGutter('gutter2', e=>{ let w=mainR().right-20-e.clientX; w=Math.max(220, Math.min(Math.round(window.innerWidth*0.33), w)); main.style.setProperty('--rechts', w+'px'); }, '--rechts', 'club_rechts3');
   // links|Mitte: Tafel-Spalte breiter/schmaler (Präsentation passt sich an)
-  makeGutter('gutter', e=>{ let w=mainR().right-pxv('--rechts')-40-e.clientX; w=Math.max(260, Math.min(Math.round(window.innerWidth*0.55), w)); main.style.setProperty('--mid', w+'px'); }, '--mid', 'club_mid');
+  makeGutter('gutter', e=>{ let w=mainR().right-pxv('--rechts')-40-e.clientX; w=Math.max(240, Math.min(Math.round(window.innerWidth*0.33), w)); main.style.setProperty('--mid', w+'px'); }, '--mid', 'club_mid3');
 
   // ---- Vertikaler Schieber: Video-Höhe vs. Live-Tafel (Desktop) ----
   (function(){
@@ -701,7 +719,26 @@
       if(u.origin===location.origin || /(^|\.)deutschoderwas-club\.de$/.test(u.hostname)){ _lektion = location.origin + u.pathname + u.search; }
       else { _lektion = u.href; }
     }catch(e){}
-    if(ifr.getAttribute('src') !== _lektion){ ifr.src = _lektion; ifr.addEventListener('load', ()=>fitLektionSoon(), {once:true}); }
+    if(ifr.getAttribute('src') !== _lektion){ ifr.src = _lektion; ifr.addEventListener('load', ()=>{ fixDeckStage(ifr); fitLektionSoon(); }, {once:true}); }
+  }
+
+  // Präsentations-Decks (#stage 1280×720) werden vom Flex-Container #app auf die schmale iframe-Breite
+  // GESCHRUMPFT und dann nochmal per transform:scale verkleinert → Folie viel zu klein. Fix zentral hier
+  // injizieren (gleiche Domain): #stage darf nicht schrumpfen, nur der Scale bestimmt die Größe.
+  function fixDeckStage(ifr){
+    try{
+      const d = ifr.contentDocument, w = ifr.contentWindow; if(!d || !w) return;
+      if(!d.getElementById('dow-stagefix')){
+        const st=d.createElement('style'); st.id='dow-stagefix';
+        st.textContent='#stage{flex:0 0 auto !important;}';
+        (d.head||d.documentElement).appendChild(st);
+      }
+      const stage=d.getElementById('stage'); if(!stage) return;
+      // Folie so groß wie möglich – füllt den Halter fast randlos (nur 6px Sicherheitsrand statt Deck-Standard 52px)
+      const big=()=>{ try{ const s=Math.min((w.innerWidth-6)/1280,(w.innerHeight-6)/720); stage.style.setProperty('transform','scale('+s+')','important'); }catch(e){} };
+      if(!w.__dowBig){ w.__dowBig=big; w.addEventListener('resize', ()=>{ try{ requestAnimationFrame(big); }catch(e){ big(); } }); }
+      big();
+    }catch(e){}
   }
 
   // Auf dem Handy: iframe so hoch wie sein Inhalt → die GANZE Seite scrollt flüssig (keine iframe-Falle)
@@ -713,7 +750,7 @@
     setTimeout(fit,100);                      // Stift-Fläche an neue Höhe anpassen
   }
   // Inhalt (Bilder/Audio) lädt oft verzögert → mehrfach nachmessen, damit unten nichts abgeschnitten wird
-  function fitLektionSoon(){ [150,500,1200,2500,4000].forEach(t=>setTimeout(fitLektion,t)); }
+  function fitLektionSoon(){ const ifr=document.getElementById('lektion'); [150,500,1200,2500,4000].forEach(t=>setTimeout(()=>{ if(ifr) fixDeckStage(ifr); fitLektion(); },t)); }
   window.addEventListener('resize', ()=> setTimeout(fitLektion,200));
 
   // Lektion IMMER aktuell aus der Datenbank holen – so sieht die Lehrkraft auch
@@ -1062,7 +1099,7 @@
     const sh=document.getElementById('vc-share'); if(sh){ const on=!!p.screen; sh.textContent=on?'🟢 Teilen beenden':'🖥️ Teilen'; sh.classList.toggle('on', on); if(window._onShareChange) window._onShareChange(on); }
   }
   function dailyLeftMsg(){
-    const el=document.getElementById('jitsi'); if(el) el.innerHTML='<div style="color:#fff;padding:24px;text-align:center;font-family:Inter;font-size:.9rem">Du hast den Unterricht verlassen.<br><a href="konto.html" style="color:#7ED8EA;font-weight:700">Zurück zu Meine Stunden</a></div>';
+    const el=document.getElementById('jitsi'); if(el) el.innerHTML='<div style="color:#fff;padding:24px;text-align:center;font-family:Inter;font-size:.9rem">Du hast den Unterricht verlassen.<br><a href="konto.html" style="color:#2DD4BF;font-weight:700">Zurück zu Meine Stunden</a></div>';
   }
   // Falls Daily nicht startet: sauber auf den eigenen Jitsi-Server zurückfallen.
   async function dailyFallbackJitsi(){
@@ -1114,7 +1151,7 @@
     api.addEventListener('audioMuteStatusChanged', e=>{ const b=document.getElementById('vc-mic'); if(b){ b.textContent = e.muted ? '🔇 Mikro aus' : '🎤 Mikro an'; b.classList.toggle('muted', e.muted); } });
     api.addEventListener('videoMuteStatusChanged', e=>{ const b=document.getElementById('vc-cam'); if(b){ b.textContent = e.muted ? '🚫 Kamera aus' : '📷 Kamera an'; b.classList.toggle('muted', e.muted); } });
     api.addEventListener('screenSharingStatusChanged', e=>{ const b=document.getElementById('vc-share'); if(b){ b.textContent = e.on ? '🟢 Teilen beenden' : '🖥️ Teilen'; b.classList.toggle('on', e.on); } if(window._onShareChange) window._onShareChange(e.on); });
-    api.addEventListener('readyToClose', ()=>{ window._inCall=false; document.getElementById('jitsi').innerHTML='<div style="color:#fff;padding:24px;text-align:center;font-family:Inter;font-size:.9rem">Du hast den Unterricht verlassen.<br><a href="konto.html" style="color:#7ED8EA;font-weight:700">Zurück zu Meine Stunden</a></div>'; });
+    api.addEventListener('readyToClose', ()=>{ window._inCall=false; document.getElementById('jitsi').innerHTML='<div style="color:#fff;padding:24px;text-align:center;font-family:Inter;font-size:.9rem">Du hast den Unterricht verlassen.<br><a href="konto.html" style="color:#2DD4BF;font-weight:700">Zurück zu Meine Stunden</a></div>'; });
     // Immer Kachelansicht – man sieht sich selbst und alle Teilnehmer
     // Immer Kachelansicht (Meet-Stil): man sieht sich selbst UND alle Teilnehmer.
     const forceTile=()=>{ if(document.body.classList.contains('sharing')) return; try{ api.executeCommand('setTileView', true); }catch(e){} };
@@ -1207,6 +1244,17 @@
   }
   function toggleTafelBig(){ setTafelBig(!document.body.classList.contains('tafelbig')); }
   try{ if(localStorage.getItem('club_tafelbig')==='1') setTafelBig(true); }catch(e){}
+  // Präsentation groß: Kameras ausblenden → Folie fast volle Breite (nur Desktop). Merkt sich die Wahl.
+  function setPraesBig(on){
+    if(on && document.body.classList.contains('tafelbig')) setTafelBig(false);   // schließt sich mit „Tafel groß" aus
+    document.body.classList.toggle('praesbig', !!on);
+    const b=document.getElementById('vc-praesbig');
+    if(b){ b.classList.toggle('on', !!on); b.textContent = on ? '🔎 Präsi normal' : '🔎 Präsi groß'; }
+    try{ localStorage.setItem('club_praesbig', on?'1':'0'); }catch(e){}
+    setTimeout(()=>{ if(typeof renderGrid==='function') renderGrid(); const ifr=document.getElementById('lektion'); if(ifr) fixDeckStage(ifr); if(typeof fitLektion==='function') fitLektion(); }, 100);
+  }
+  function togglePraesBig(){ setPraesBig(!document.body.classList.contains('praesbig')); }
+  try{ if(localStorage.getItem('club_praesbig')==='1') setPraesBig(true); }catch(e){}
   // Nur Lehrkraft/Moderator: alle Schüler stummschalten (z. B. bei lauten Hintergrundgeräuschen).
   // Jede/r Schüler:in kann sich zum Sprechen jederzeit selbst wieder anschalten.
   function vcMuteAll(){
@@ -1345,7 +1393,7 @@
     if(window._provider==='daily' && dframe){ try{ dframe.leave(); }catch(e){} setTimeout(()=>{ try{ dframe.destroy(); dframe=null; }catch(e){} }, 400); }
     if(api){ try{ api.executeCommand('hangup'); }catch(e){} setTimeout(()=>{ try{ api.dispose(); }catch(e){} }, 400); }
     const o=document.getElementById('fb-overlay'); if(o) o.classList.remove('open');
-    document.getElementById('jitsi').innerHTML='<div style="color:#fff;padding:24px;text-align:center;font-family:Inter;font-size:.9rem">Du hast den Unterricht verlassen.<br><a href="konto.html" style="color:#7ED8EA;font-weight:700">Zurück zu Meine Stunden</a></div>';
+    document.getElementById('jitsi').innerHTML='<div style="color:#fff;padding:24px;text-align:center;font-family:Inter;font-size:.9rem">Du hast den Unterricht verlassen.<br><a href="konto.html" style="color:#2DD4BF;font-weight:700">Zurück zu Meine Stunden</a></div>';
   }
   // ---- Mini-Feedback beim Verlassen ----
   let _fbStars=0;
@@ -1681,7 +1729,7 @@
     videoStarten();
   }
   function showRoomClosed(msg){
-    document.body.innerHTML='<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;font-family:Inter,system-ui,sans-serif;background:#FFF8E0;padding:24px"><div style="background:#fff;border-radius:22px;max-width:440px;padding:36px 28px;box-shadow:0 16px 40px rgba(0,0,0,.10)"><div style="font-size:48px">⏰</div><h2 style="margin:12px 0 8px;color:#1A1A1A;font-family:\'Space Grotesk\',Inter,sans-serif">Raum noch geschlossen</h2><p style="color:#6B7280;line-height:1.6;margin:0 0 18px">'+msg+'</p><a href="konto.html" style="display:inline-block;background:#7ED8EA;color:#10627A;font-weight:800;text-decoration:none;padding:13px 26px;border-radius:50px">← Zu „Meine Stunden"</a></div></div>';
+    document.body.innerHTML='<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;font-family:Inter,system-ui,sans-serif;background:#FFF8E0;padding:24px"><div style="background:#fff;border-radius:22px;max-width:440px;padding:36px 28px;box-shadow:0 16px 40px rgba(0,0,0,.10)"><div style="font-size:48px">⏰</div><h2 style="margin:12px 0 8px;color:#1A1A1A;font-family:\'Space Grotesk\',Inter,sans-serif">Raum noch geschlossen</h2><p style="color:#6B7280;line-height:1.6;margin:0 0 18px">'+msg+'</p><a href="konto.html" style="display:inline-block;background:#2DD4BF;color:#06403A;font-weight:800;text-decoration:none;padding:13px 26px;border-radius:50px">← Zu „Meine Stunden"</a></div></div>';
   }
 </script>
 
