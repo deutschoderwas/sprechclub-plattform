@@ -96,6 +96,49 @@
                {id:'kunden',n:'Kundengespräch',m:'ca. 20'} ] }
   ];
 
+  /* ---------- Welche Lektion gehört zu welchem Modul ----------
+     Die 36 Lektionen aus kurse/ liegen schon fertig da. Hier steht,
+     welche zu welchem Prüfungsteil gehört — sonst landet jeder Klick
+     auf Lektion 1. */
+  var LEKTIONEN = {
+    goethetelc: {
+      lesen:    [ [1,'Lesen — die Aufgabentypen und ihre Fallen'], [4,'Sprachbausteine — die Muster, die immer kommen'] ],
+      hoeren:   [ [2,'Hören — was wirklich gefragt wird'] ],
+      schreiben:[ [3,'Schreiben — der Brief, der Punkte holt'] ],
+      sprechen: [ [5,'Sprechen — ein Thema präsentieren'], [6,'Sprechen — gemeinsam etwas planen'] ]
+    },
+    dtz: {
+      hoeren:   [ [1,'Hören — Ansagen, Gespräche, Nachrichten'] ],
+      lesen:    [ [2,'Lesen — Anzeigen, Formulare, Briefe'] ],
+      schreiben:[ [3,'Schreiben — die halbformelle Nachricht'] ],
+      sprechen: [ [4,'Teil 1 — über sich erzählen'], [5,'Teil 2 — ein Bild beschreiben'], [6,'Teil 3 — gemeinsam planen'] ]
+    },
+    telcmed: {
+      anamnese: [ [1,'Teil 1 — das Anamnesegespräch'], [4,'Vom Laienwort zum Fachbegriff'], [5,'Das Aufklärungsgespräch'] ],
+      doku:     [ [2,'Teil 2 — die schriftliche Dokumentation'] ],
+      fall:     [ [3,'Teil 3 — das Arzt-Arzt-Gespräch'], [6,'Die komplette Prüfungssimulation'] ]
+    },
+    pflege: {
+      uebergabe:   [ [1,'Die Schichtübergabe'], [5,'Notfall im Dienst'] ],
+      angehoerige: [ [2,'Die Körperpflege — mit dem Bewohner sprechen'], [3,'Angehörige informieren'], [6,'Konflikt im Team ansprechen'] ],
+      doku:        [ [4,'Die Pflegedokumentation'] ]
+    },
+    buero: {
+      telefon: [ [1,'Am Telefon — professionell reagieren'], [5,'Termine koordinieren'] ],
+      mail:    [ [2,'E-Mails, die man gern liest'], [6,'Der kurze Bericht'] ],
+      kunden:  [ [3,'Im Meeting das Wort ergreifen'], [4,'Lieferung und Reklamation'] ]
+    }
+  };
+
+  /* Zusätzliche Lektionen, die zur Prüfung passen, aber aus einem
+     anderen Kurs kommen. */
+  var ZUSATZ = {
+    telcmed: { kurs:'medizin', name:'Deutsch für Mediziner', lektionen:[
+      [1,'Die Anamnese — das Erstgespräch'], [2,'Die körperliche Untersuchung'],
+      [3,'Aufklärung vor dem Eingriff'], [4,'Die Patientenvorstellung'],
+      [5,'Telefonat mit der Kollegin'], [6,'Das schwierige Gespräch'] ] }
+  };
+
   function pruefungVon(id){ for(var i=0;i<PRUEFUNGEN.length;i++) if(PRUEFUNGEN[i].id===id) return PRUEFUNGEN[i]; return null; }
 
   /* ---------- Termin und Fortschritt ---------- */
@@ -148,6 +191,14 @@
     try{ window.scrollTo(0,0); }catch(e){}
   };
 
+  function lektionZahl(p){
+    var n=0, m=LEKTIONEN[p.kurs]||{};
+    for(var k in m) if(m.hasOwnProperty(k)) n+=m[k].length;
+    if(ZUSATZ[p.id]) n+=ZUSATZ[p.id].lektionen.length;
+    if(!n && p.stufe && window.kursStand){ try{ var st=window.kursStand(p.stufe); if(st) n=st.anzahl; }catch(e){} }
+    return n ? (n+' Lektionen') : 'im Aufbau';
+  }
+
   function kachel(p){
     var t=terminVon(p.id), tage=tageBis(t);
     var rechts = (tage!=null)
@@ -161,7 +212,8 @@
       +   '<span class="pf-k-a">'+E(p.anbieter)+'</span>'
       +   '<span class="pf-k-f">'+E(p.fuer)+'</span>'
       + '</span>'
-      + '<span class="pf-k-r">'+rechts+'<span class="pf-k-go">Öffnen →</span></span>'
+      + '<span class="pf-k-r">'+rechts+'<span class="pf-k-anz">'+lektionZahl(p)+'</span>'
+      +   '<span class="pf-k-go">Öffnen →</span></span>'
       + '</button>';
   }
 
@@ -223,25 +275,62 @@
     var hinweis = p.modular
       ? '<p class="pf-hinw">Diese Prüfung ist modular: Du kannst die vier Teile einzeln ablegen und '
         +'einzeln wiederholen. Deshalb steht jedes Modul hier für sich.</p>' : '';
+
     var karten = p.module.map(function(m){
-      var pr=modulProzent(p,m);
+      var pr = modulProzent(p,m);
+      var lek = (LEKTIONEN[p.kurs]||{})[m.id] || [];
+      var inhalt;
+
+      if(lek.length){
+        inhalt = '<div class="pf-m-lek">' + lek.map(function(l){
+          return '<button class="pf-lek" onclick="pruefLektion(\''+p.kurs+'\','+l[0]+')">'
+            + '<span class="pf-lek-nr">'+l[0]+'</span>'
+            + '<span class="pf-lek-t">'+E(l[1])+'</span>'
+            + '<span class="pf-lek-go">→</span></button>';
+        }).join('') + '</div>';
+      } else if(p.stufe){
+        inhalt = '<div class="pf-m-liste">'
+          + '<span class="pf-m-z">Die Grundlagen kommen aus deinem '+E(p.stufe)+'-Kurs</span>'
+          + '<span class="pf-m-z">Eigene Prüfungslektionen für diesen Teil fehlen noch</span>'
+          + '</div>'
+          + '<button class="pf-b2 pf-b-s" onclick="kursUebersicht(\''+p.stufe+'\')">Zum '+E(p.stufe)+'-Kurs →</button>';
+      } else {
+        inhalt = '<div class="pf-m-liste">'
+          + '<span class="pf-m-z">So läuft dieser Teil ab</span>'
+          + '<span class="pf-m-z">Die Aufgabentypen einzeln</span>'
+          + '<span class="pf-m-z">Durchgang unter Zeit</span>'
+          + '</div><span class="pf-bald">kommt noch</span>';
+      }
+
       return '<div class="pf-m">'
         +'<div class="pf-m-kopf"><b>'+E(m.n)+'</b><span>'+E(m.m)+' Min</span></div>'
-        +'<div class="pf-m-liste">'
-        +  '<span class="pf-m-z">So läuft dieser Teil ab</span>'
-        +  '<span class="pf-m-z">Die Aufgabentypen einzeln</span>'
-        +  '<span class="pf-m-z">Die typischen Fallen</span>'
-        +  '<span class="pf-m-z">Durchgang unter Zeit</span>'
-        +'</div>'
+        + inhalt
         +'<div class="pf-m-fuss"><span class="pf-bar"><i style="width:'+Math.max(2,pr)+'%"></i></span>'
         +'<span class="pf-proz">'+pr+' %</span></div>'
-        + (p.kurs ? '<button class="pf-b2 pf-b-s" onclick="pruefLektionen(\''+p.kurs+'\')">Zu den Lektionen →</button>'
-                  : (p.stufe ? '<button class="pf-b2 pf-b-s" onclick="kursUebersicht(\''+p.stufe+'\')">Zum Kurs '+E(p.stufe)+' →</button>'
-                             : '<span class="pf-bald">kommt noch</span>'))
         +'</div>';
     }).join('');
-    return block('2', 'Die vier Module', hinweis+'<div class="pf-module">'+karten+'</div>', 'pf-mod');
+
+    var zu = ZUSATZ[p.id] ? zusatzBlock(ZUSATZ[p.id]) : '';
+    var titel = p.module.length===4 ? 'Die vier Module' : 'Die Prüfungsteile';
+    return block('2', titel, hinweis+'<div class="pf-module">'+karten+'</div>'+zu, 'pf-mod');
   }
+
+  function zusatzBlock(z){
+    return '<div class="pf-zusatz">'
+      + '<b>Dazu passt: '+E(z.name)+'</b>'
+      + '<span>Sechs Lektionen Fachsprache, die auf dieselbe Prüfung einzahlen.</span>'
+      + '<div class="pf-zusatz-l">' + z.lektionen.map(function(l){
+          return '<button class="pf-lek" onclick="pruefLektion(\''+z.kurs+'\','+l[0]+')">'
+            + '<span class="pf-lek-nr">'+l[0]+'</span>'
+            + '<span class="pf-lek-t">'+E(l[1])+'</span>'
+            + '<span class="pf-lek-go">→</span></button>';
+        }).join('') + '</div></div>';
+  }
+
+  window.pruefLektion=function(kurs, nr){
+    try{ location.href='lektion.html?k='+encodeURIComponent(kurs)+'&l='+nr; }catch(e){}
+  };
+
   window.pruefLektionen=function(kursId){
     try{ location.href='lektion.html?k='+encodeURIComponent(kursId)+'&l=1'; }catch(e){}
   };
@@ -251,19 +340,26 @@
     var inhalt;
     if(p.muster && window.PRUEFUNG && window.PRUEFUNG[p.muster]){
       var m=window.PRUEFUNG[p.muster];
+      var teile = m.teile.map(function(t){
+        var n=(t.aufgaben||[]).length;
+        return '<span class="pf-teil"><b>'+E(t.name||t.art)+'</b><span>'+n+' Aufgaben</span></span>';
+      }).join('');
       inhalt='<div class="pf-muster">'
         +'<div class="pf-muster-tx"><b>'+E(m.titel)+'</b>'
-        +'<span>'+m.teile.map(function(t){ return E(t.name||t.art); }).join(' · ')+' — '+m.minuten+' Minuten</span>'
-        +'<span class="pf-hinw2">Schreiben und Sprechen fehlen in dieser Musterprüfung noch. '
-        +'Sie kommen in Schritt 4 dazu, zusammen mit der Uhr und der Punktebewertung.</span></div>'
-        +'<button class="pf-b1" onclick="pruefMusterStarten(\''+p.muster+'\')">Musterprüfung starten →</button>'
+        +'<span>'+m.minuten+' Minuten · '
+        + m.teile.reduce(function(a,t){ return a+(t.aufgaben||[]).length; },0)+' Aufgaben</span>'
+        +'<div class="pf-teile">'+teile+'</div>'
+        +'<span class="pf-hinw2">Schreiben und Sprechen fehlen hier noch, ebenso die Uhr und die '
+        +'Punktebewertung. Das ist Schritt 4.</span></div>'
+        +'<button class="pf-b1" onclick="pruefMusterStarten(\''+p.muster+'\')">Aufgaben ansehen →</button>'
         +'</div>';
     } else {
       inhalt='<div class="pf-leer">Für diese Prüfung gibt es noch keine Musterprüfung. '
-        +'Sie ist der nächste Schritt.</div>';
+        +'Vorhanden sind bisher A2, B1, B2 und C1.</div>';
     }
     return block('3', 'Musterprüfung', inhalt, 'pf-must');
   }
+
   window.pruefMusterStarten=function(k){
     try{ if(window.toast) toast('Die Musterprüfung wird in Schritt 4 eingebaut — die Aufgaben liegen schon bereit ('+k+').'); }catch(e){}
   };
