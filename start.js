@@ -260,12 +260,9 @@
       +   '<div class="st-titel"><h2>' + T('sn_weiter','Weitermachen') + '</h2></div>'
       +   kacheln(k, s)
       +   chatBand()
-      +   '<a class="st-app" href="app.html">'
-      +     '<span class="ic">📱</span>'
-      +     '<span><b>' + T('sn_appt','Die App fürs Handy') + '</b>'
-      +     '<span>' + T('sn_appb','Sprechen mit Amanda, Fotowörter und der Chat — für zwischendurch. Auf dem Handy öffnen und auf den Startbildschirm legen.') + '</span></span>'
-      +     '<span class="go">' + T('sn_appg','Öffnen →') + '</span>'
-      +   '</a>'
+      /* Die Handy-App ist vorübergehend ausgeblendet — sie kommt zurück,
+         wenn die Plattform fertig ist. Zum Wiedereinschalten den Streifen
+         unten in appStreifen() wieder einhängen. */
       + '</div>';
   };
 
@@ -385,6 +382,16 @@
         + '<span class="kt"><b>' + x[3] + '</b><span>' + x[4] + '</span></span>'
         + '</button>';
     }).join('') + '</div>';
+  }
+
+  /* Ausgeblendet, bis die App wieder dran ist. Dann in zeichne() einhängen. */
+  function appStreifen(){
+    return '<a class="st-app" href="app.html">'
+      + '<span class="ic">📱</span>'
+      + '<span><b>' + T('sn_appt','Die App fürs Handy') + '</b>'
+      + '<span>' + T('sn_appb','Sprechen mit Amanda, Fotowörter und der Chat — für zwischendurch. Auf dem Handy öffnen und auf den Startbildschirm legen.') + '</span></span>'
+      + '<span class="go">' + T('sn_appg','Öffnen →') + '</span>'
+      + '</a>';
   }
 
   function chatBand(){
