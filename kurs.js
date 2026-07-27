@@ -59,10 +59,17 @@
   /* Die Fläche, in die gerendert wird. Auf der Plattform ist das
      die Ansicht „Kurs"; im Test reicht irgendein Kasten. */
   function flaeche(){
-    return el('v-kurs') || el('v-niveau') || el('v-lernen')
+    return el('v-kurs') || el('s-kurs') || el('v-niveau') || el('v-lernen')
       || document.querySelector('.view.active') || document.body;
   }
-  function hoch(){ try{ window.scrollTo(0,0); }catch(e){} }
+  /* In der App wird nicht das Fenster gescrollt, sondern der Inhaltskasten */
+  function hoch(){
+    try{
+      var k=el('inhalt');
+      if(k && k.scrollHeight>k.clientHeight){ k.scrollTop=0; return; }
+      window.scrollTo(0,0);
+    }catch(e){}
+  }
 
   /* ---------- Speicher und Fortschritt ---------- */
   /* Alles unter einem Schlüssel „kurs": {a1:{1:{...},2:{...}}, niveau:'A1'} */
@@ -636,8 +643,19 @@
       var alt=(lekStand(nr).ueb)||0;
       var neu=erg&&erg.ges?Math.round(erg.richtig/erg.ges*100):alt;
       lekMerken(nr,{ueb:Math.max(alt,neu)});
-      if(el('v-kurs')||el('v-lernen')) window.kursA1(nr);
+      if(el('v-kurs')||el('s-kurs')||el('v-lernen')) window.kursA1(nr);
     });
+  };
+
+  /* Zu jeder A1-Lektion ein passendes Szenenfoto aus dem Bestand.
+     Die Lektionsgespräche haben keine eigenen Bilder — sie borgen sich
+     das Bild des Gesprächs, das an demselben Ort spielt. */
+  var A1_BILD={
+    vorstellen:'nicht-verstanden', familie:'party',        einkaufen:'baeckerei',
+    wohnung:'wohnung',            tag:'kaffee-einladen',   freizeit:'restaurant',
+    schule:'elterngespraech-schule', beruf:'jobcenter-weiterbewilligung',
+    amt:'amt',                    gesundheit:'beschwerden', unterwegs:'bahnhof',
+    kundenservice:'rechnung-reklamieren', kleidung:'umtausch', feste:'kaffee-einladen'
   };
 
   /* --- Sprechen: das Dialogfenster aus lernen.js, mit Daten statt ID --- */
@@ -651,6 +669,7 @@
       em:'💬',
       ort:l.dialog.ort||'',
       kat:'a1',
+      bild:A1_BILD[l.id]||'',
       schritte:l.dialog.schritte||[]
     };
     lekMerken(l.nr,{dialog:true});
@@ -1368,7 +1387,7 @@
     var o=el('swOv'); if(o){ o.classList.remove('auf'); o.style.paddingBottom=''; }
     document.body.style.overflow='';
     W=null;
-    if(zurueck){ lekMerken(zurueck,{schreiben:true}); if(el('v-kurs')||el('v-lernen')) window.kursA1(zurueck); }
+    if(zurueck){ lekMerken(zurueck,{schreiben:true}); if(el('v-kurs')||el('s-kurs')||el('v-lernen')) window.kursA1(zurueck); }
   };
 
   /* --- die Übersicht über alle Schreibaufgaben --- */

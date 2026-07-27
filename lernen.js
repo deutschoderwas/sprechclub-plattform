@@ -704,14 +704,21 @@
   }
 
   window.lernDialog=function(id){
-    stil();
     var D=window.DIALOGE||[], d=null;
     for(var i=0;i<D.length;i++) if(D[i].id===id) d=D[i];
     if(!d){ note('Diesen Dialog finde ich gerade nicht.'); return; }
+    return window.lernDialogDaten(d);
+  };
 
+  /* Ein Gespräch direkt aus Daten öffnen — dafür braucht es dialoge.js nicht.
+     So kann auch die App die Gespräche aus dem A1-Kurs zeigen. */
+  window.lernDialogDaten=function(d){
+    if(!d) return;
+    stil();
     ovBauen();
     G={id:d.id, titel:d.titel, em:(d.em||'💬'), ort:(d.ort||''), lvl:(d.lvl||''),
-       rolle:rolleVon(d.id), foto:dlgFoto(d.id,true), gross:dlgFoto(d.id,false),
+       rolle:d.rolle||rolleVon(d.id),
+       foto:dlgFoto(d.bild||d.id,true), gross:dlgFoto(d.bild||d.id,false),
        schritte:d.schritte||[], i:0, richtig:0, laeuft:false, ende:false,
        verlauf:[], live:true, zeigtZiel:-1};
 
