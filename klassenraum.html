@@ -652,9 +652,9 @@
   const mainR=()=>main.getBoundingClientRect();
   function pxv(v){ return parseInt(getComputedStyle(main).getPropertyValue(v),10)||0; }
   (function(){   // gespeicherte Breiten laden (begrenzt, damit die Präsentation groß bleibt)
-    const capW=Math.round(window.innerWidth*0.33);   // Tafel/Kameras nie mehr als 1/3 – Präsi bleibt breit
-    let m=parseInt(localStorage.getItem('club_mid3')||'0',10);
-    let r=parseInt(localStorage.getItem('club_rechts3')||'0',10);
+    const capW=Math.round(window.innerWidth*0.28);   // Tafel/Kameras nie breiter als 28% – Präsi bleibt dominant
+    let m=parseInt(localStorage.getItem('club_mid4')||'0',10);
+    let r=parseInt(localStorage.getItem('club_rechts4')||'0',10);
     if(m){ main.style.setProperty('--mid', Math.max(240, Math.min(capW, m))+'px'); }
     if(r){ main.style.setProperty('--rechts', Math.max(220, Math.min(capW, r))+'px'); }
   })();
@@ -665,9 +665,9 @@
     g.addEventListener('pointerup', ()=>{ if(!d) return; d=false; g.classList.remove('drag'); if(typeof fit==='function') fit(); try{ localStorage.setItem(storeKey, String(pxv(cssVar))); }catch(e){} });
   }
   // Mitte|rechts: Kamera-Spalte breiter/schmaler
-  makeGutter('gutter2', e=>{ let w=mainR().right-20-e.clientX; w=Math.max(220, Math.min(Math.round(window.innerWidth*0.33), w)); main.style.setProperty('--rechts', w+'px'); }, '--rechts', 'club_rechts3');
+  makeGutter('gutter2', e=>{ let w=mainR().right-20-e.clientX; w=Math.max(200, Math.min(Math.round(window.innerWidth*0.28), w)); main.style.setProperty('--rechts', w+'px'); }, '--rechts', 'club_rechts4');
   // links|Mitte: Tafel-Spalte breiter/schmaler (Präsentation passt sich an)
-  makeGutter('gutter', e=>{ let w=mainR().right-pxv('--rechts')-40-e.clientX; w=Math.max(240, Math.min(Math.round(window.innerWidth*0.33), w)); main.style.setProperty('--mid', w+'px'); }, '--mid', 'club_mid3');
+  makeGutter('gutter', e=>{ let w=mainR().right-pxv('--rechts')-40-e.clientX; w=Math.max(220, Math.min(Math.round(window.innerWidth*0.28), w)); main.style.setProperty('--mid', w+'px'); }, '--mid', 'club_mid4');
 
   // ---- Vertikaler Schieber: Video-Höhe vs. Live-Tafel (Desktop) ----
   (function(){
