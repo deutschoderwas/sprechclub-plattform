@@ -712,7 +712,23 @@
       if(u.origin===location.origin || /(^|\.)deutschoderwas-club\.de$/.test(u.hostname)){ _lektion = location.origin + u.pathname + u.search; }
       else { _lektion = u.href; }
     }catch(e){}
-    if(ifr.getAttribute('src') !== _lektion){ ifr.src = _lektion; ifr.addEventListener('load', ()=>fitLektionSoon(), {once:true}); }
+    if(ifr.getAttribute('src') !== _lektion){ ifr.src = _lektion; ifr.addEventListener('load', ()=>{ fixDeckStage(ifr); fitLektionSoon(); }, {once:true}); }
+  }
+
+  // Präsentations-Decks (#stage 1280×720) werden vom Flex-Container #app auf die schmale iframe-Breite
+  // GESCHRUMPFT und dann nochmal per transform:scale verkleinert → Folie viel zu klein. Fix zentral hier
+  // injizieren (gleiche Domain): #stage darf nicht schrumpfen, nur der Scale bestimmt die Größe.
+  function fixDeckStage(ifr){
+    try{
+      const d = ifr.contentDocument; if(!d) return;
+      if(!d.getElementById('dow-stagefix')){
+        const st=d.createElement('style'); st.id='dow-stagefix';
+        st.textContent='#stage{flex:0 0 auto !important;}';
+        (d.head||d.documentElement).appendChild(st);
+      }
+      // Deck neu skalieren lassen, damit die Folie die Breite füllt
+      if(ifr.contentWindow && ifr.contentWindow.dispatchEvent) ifr.contentWindow.dispatchEvent(new Event('resize'));
+    }catch(e){}
   }
 
   // Auf dem Handy: iframe so hoch wie sein Inhalt → die GANZE Seite scrollt flüssig (keine iframe-Falle)
@@ -724,7 +740,7 @@
     setTimeout(fit,100);                      // Stift-Fläche an neue Höhe anpassen
   }
   // Inhalt (Bilder/Audio) lädt oft verzögert → mehrfach nachmessen, damit unten nichts abgeschnitten wird
-  function fitLektionSoon(){ [150,500,1200,2500,4000].forEach(t=>setTimeout(fitLektion,t)); }
+  function fitLektionSoon(){ const ifr=document.getElementById('lektion'); [150,500,1200,2500,4000].forEach(t=>setTimeout(()=>{ if(ifr) fixDeckStage(ifr); fitLektion(); },t)); }
   window.addEventListener('resize', ()=> setTimeout(fitLektion,200));
 
   // Lektion IMMER aktuell aus der Datenbank holen – so sieht die Lehrkraft auch
