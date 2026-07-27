@@ -408,30 +408,48 @@
      1 — Die Niveau-Auswahl
      ============================================================ */
 
+  /* Welches Foto zu welcher Stufe — echte Bilder aus dem Kurs */
+  var NIVEAUBILD = {
+    A1:'umgangssprache', A2:'wohnen', B1:'buero', B2:'bewerbung', C1:'typisch-deutsch', C2:'kultur'
+  };
+
+  /* Eine Stufe als Karte: Foto, Stufe, was du danach kannst, Fortschritt.
+     Die ganze Karte ist anklickbar. */
   function niveauKarte(n){
     var da=hatKurs(n.id), p=niveauProzent(n.id), jetzt=(niveauGemerkt()===n.id);
-    var kann=(n.kann||[]).slice(0,7).map(function(k){ return '<li>'+E(k)+'</li>'; }).join('');
-    var out='<div class="ku-nv'+(da?'':' bald')+(jetzt&&da?' jetzt':'')+'">'
-      +'<div class="oben"><div class="stufe">'+E(n.id)+'</div>'
-        +'<div><h2>'+E(n.t)+'</h2><p class="u">'+E(n.u)+'</p></div></div>'
-      +'<ul class="kann">'+kann+'</ul>'
-      +'<div class="pillen">'
-        +'<span class="ku-pill gelb">Ziel: '+E(n.ziel||'')+'</span>'
-        +'<span class="ku-pill grau">'+E(n.dauer||'')+'</span>'
-        +(n.lekt?'<span class="ku-pill">'+n.lekt+' Lektionen</span>':'')
-      +'</div>';
+    var kann=(n.kann||[]).slice(0,4).map(function(k){ return '<li>'+E(k)+'</li>'; }).join('');
+    var bild='bilder/thema/'+(NIVEAUBILD[n.id]||'menschen')+'.jpg';
+    var klick=da ? 'niveauWaehlen(\''+E(n.id)+'\')' : 'niveauWaehlen(\''+E(n.id)+'\')';
+
+    var out='<button type="button" class="nv'+(da?'':' nv-bald')+(jetzt&&da?' nv-jetzt':'')+'" onclick="'+klick+'">'
+      +'<span class="nv-bild">'
+      +  '<img src="'+bild+'" alt="" loading="lazy" onerror="this.remove()">'
+      +  '<span class="nv-stufe">'+E(n.id)+'</span>'
+      +  (jetzt&&da?'<span class="nv-jetzt-marke">dein Niveau</span>':'')
+      +  '<span class="nv-streifen"></span>'
+      +'</span>'
+      +'<span class="nv-txt">'
+      +  '<span class="nv-kopf"><b>'+E(n.t)+'</b><span class="nv-u">'+E(n.u)+'</span></span>'
+      +  '<ul class="nv-kann">'+kann+'</ul>'
+      +  '<span class="nv-pillen">'
+      +    '<span class="nv-pill nv-pill-gold">'+E(n.ziel||'')+'</span>'
+      +    (n.dauer?'<span class="nv-pill">'+E(n.dauer)+'</span>':'')
+      +    (n.lekt?'<span class="nv-pill">'+n.lekt+' Lektionen</span>':'')
+      +  '</span>';
+
     if(da){
-      out+='<div class="fuss"><span class="ku-bar'+(p>=100?' voll':'')+'"><i style="width:'+p+'%"></i></span>'
-        +'<span style="font-size:12.5px;color:#5E6A78;font-weight:700">'+p+' %</span>'
-        +'<button class="ku-btn blau klein" onclick="niveauWaehlen(\''+E(n.id)+'\')">'
-        +(p>0?'Weiter →':'Kurs öffnen →')+'</button></div>';
+      out+='<span class="nv-fuss">'
+        +  '<span class="nv-bar'+(p>=100?' voll':'')+'"><i style="width:'+Math.max(2,p)+'%"></i></span>'
+        +  '<span class="nv-proz">'+p+' %</span>'
+        +  '<span class="nv-knopf">'+(p>0?'Weiter':'Kurs öffnen')+' →</span>'
+        +'</span>';
     } else {
-      out+='<div class="hinweis">Die Lektionen kommen als Nächstes — Wortschatz, Dialoge und Übungen '
-        +'zu diesem Niveau findest du schon im Lernbereich.</div>'
-        +'<div class="fuss"><button class="ku-btn hell klein" onclick="niveauWaehlen(\''+E(n.id)+'\')">'
-        +'Zum Lernbereich →</button></div>';
+      out+='<span class="nv-fuss nv-fuss-bald">'
+        +  '<span class="nv-bald-tx">Die Lektionen kommen bald — Wortschatz und Übungen dazu gibt es schon.</span>'
+        +  '<span class="nv-knopf nv-knopf-hell">Zum Lernbereich →</span>'
+        +'</span>';
     }
-    return out+'</div>';
+    return out+'</span></button>';
   }
 
   window.renderNiveau=function(){
@@ -442,16 +460,18 @@
       v.classList.add('ku'); v.innerHTML='<div class="ku-leer">Die Niveaus werden geladen …</div>'; return;
     }
     var jetzt=niveauGemerkt(), n=niveauVon(jetzt), p=niveauProzent(jetzt);
-    var kopf='<div class="ku-kopf"><h1>Wo stehst du?</h1>'
-      +'<p>Wähl dein Niveau. Das ist kein Filter, sondern ein Eingang: Wer A1 wählt, sieht eine A1-Welt — '
+    var kopf='<div class="nv-kopf-block">'
+      +'<span class="nv-kicker">Dein Kurs</span>'
+      +'<h1>Wo stehst du?</h1>'
+      +'<p>Wähl deine Stufe. Das ist kein Filter, sondern ein Eingang: Wer A1 wählt, sieht eine A1-Welt — '
       +'Wörter, Gespräche, Grammatik und Schreiben genau auf dieser Stufe.</p>'
-      +'<div class="ku-zahlen">'
-      +'<div class="ku-z"><b>'+E(jetzt)+'</b><span>dein Niveau</span></div>'
-      +'<div class="ku-z"><b>'+p+' %</b><span>geschafft</span></div>'
-      +'<div class="ku-z"><b>'+(n&&n.ziel?E(n.ziel.split('·')[0].replace(/\s+$/,'')):'—')+'</b><span>dein Ziel</span></div>'
+      +'<div class="nv-zahlen">'
+      +'<div class="nv-z"><b>'+E(jetzt)+'</b><span>dein Niveau</span></div>'
+      +'<div class="nv-z"><b>'+p+' %</b><span>geschafft</span></div>'
+      +'<div class="nv-z"><b>'+(n&&n.ziel?E(n.ziel.split('·')[0].replace(/\s+$/,'')):'—')+'</b><span>dein Ziel</span></div>'
       +'</div></div>';
     v.classList.add('ku');
-    v.innerHTML=kopf+'<div class="ku-nvliste">'+alle.map(niveauKarte).join('')+'</div>';
+    v.innerHTML=kopf+'<div class="nv-liste">'+alle.map(niveauKarte).join('')+'</div>';
     hoch();
   };
 
