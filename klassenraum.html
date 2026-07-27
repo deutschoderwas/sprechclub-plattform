@@ -29,7 +29,7 @@
   .toggle button{border:none; background:transparent; cursor:pointer; padding:7px 16px; border-radius:999px; font-family:'Inter'; font-weight:600; font-size:.82rem; color:var(--weich);}
   .toggle button.active{background:var(--tuerkis); color:var(--auf-tuerkis); box-shadow:0 1px 4px rgba(0,0,0,.12);}
 
-  main{flex:1; display:flex; padding:20px; min-height:0; --mid:300px; --rechts:280px;}
+  main{flex:1; display:flex; padding:20px; min-height:0; --mid:300px; --rechts:240px;}
   .gutter{flex:0 0 20px; align-self:stretch; display:flex; align-items:center; justify-content:center; cursor:col-resize; touch-action:none;}
   .gutter .grip{width:5px; height:52px; border-radius:999px; background:var(--rahmen); transition:background .15s;}
   .gutter:hover .grip, .gutter.drag .grip{background:var(--tuerkis-dunkel); height:80px;}
@@ -286,6 +286,12 @@
     body.tafelbig main{ --mid:48vw; }
     body.tafelbig #notiz{ min-height:58vh; font-size:1.12rem; line-height:1.8; }
     #vc-tafelbig.on{ background:var(--tuerkis); border-color:var(--tuerkis); color:var(--auf-tuerkis); }
+    /* Präsentation groß: Kameras ausblenden + Tafel schmal → Folie fast volle Breite */
+    body.praesbig .spalte{ display:none; }
+    body.praesbig #gutter2{ display:none; }
+    body.praesbig main{ --mid:300px; }
+    body.praesbig .lektion-card{ min-width:0; }
+    #vc-praesbig.on{ background:var(--tuerkis); border-color:var(--tuerkis); color:var(--auf-tuerkis); }
   }
 
   /* ===== Handy: kleines Video, große scrollbare Präsentation + Tafel-Reiter ===== */
@@ -442,6 +448,7 @@
         <button onclick="vcTiles()" title="Alle Teilnehmer sehen">👥 Alle</button>
         <button onclick="vcFull()" title="Großansicht">⛶ Groß</button>
         <button id="vc-tafelbig" onclick="toggleTafelBig()" title="Live-Tafel groß neben der Präsentation (nur am Computer)">🔳 Tafel groß</button>
+        <button id="vc-praesbig" onclick="togglePraesBig()" title="Präsentation groß – Kameras ausblenden, Folie fast volle Breite (nur am Computer)">🔎 Präsi groß</button>
         <button id="vc-bg" onclick="toggleBgPanel()" title="Eigenen Hintergrund wählen (weichzeichnen oder Bild)">🖼️ Hintergrund</button>
         <button class="leave" onclick="vcLeave()" title="Unterricht verlassen">🚪 Verlassen</button>
       </div>
@@ -720,14 +727,17 @@
   // injizieren (gleiche Domain): #stage darf nicht schrumpfen, nur der Scale bestimmt die Größe.
   function fixDeckStage(ifr){
     try{
-      const d = ifr.contentDocument; if(!d) return;
+      const d = ifr.contentDocument, w = ifr.contentWindow; if(!d || !w) return;
       if(!d.getElementById('dow-stagefix')){
         const st=d.createElement('style'); st.id='dow-stagefix';
         st.textContent='#stage{flex:0 0 auto !important;}';
         (d.head||d.documentElement).appendChild(st);
       }
-      // Deck neu skalieren lassen, damit die Folie die Breite füllt
-      if(ifr.contentWindow && ifr.contentWindow.dispatchEvent) ifr.contentWindow.dispatchEvent(new Event('resize'));
+      const stage=d.getElementById('stage'); if(!stage) return;
+      // Folie so groß wie möglich – füllt den Halter fast randlos (nur 6px Sicherheitsrand statt Deck-Standard 52px)
+      const big=()=>{ try{ const s=Math.min((w.innerWidth-6)/1280,(w.innerHeight-6)/720); stage.style.setProperty('transform','scale('+s+')','important'); }catch(e){} };
+      if(!w.__dowBig){ w.__dowBig=big; w.addEventListener('resize', ()=>{ try{ requestAnimationFrame(big); }catch(e){ big(); } }); }
+      big();
     }catch(e){}
   }
 
@@ -1234,6 +1244,17 @@
   }
   function toggleTafelBig(){ setTafelBig(!document.body.classList.contains('tafelbig')); }
   try{ if(localStorage.getItem('club_tafelbig')==='1') setTafelBig(true); }catch(e){}
+  // Präsentation groß: Kameras ausblenden → Folie fast volle Breite (nur Desktop). Merkt sich die Wahl.
+  function setPraesBig(on){
+    if(on && document.body.classList.contains('tafelbig')) setTafelBig(false);   // schließt sich mit „Tafel groß" aus
+    document.body.classList.toggle('praesbig', !!on);
+    const b=document.getElementById('vc-praesbig');
+    if(b){ b.classList.toggle('on', !!on); b.textContent = on ? '🔎 Präsi normal' : '🔎 Präsi groß'; }
+    try{ localStorage.setItem('club_praesbig', on?'1':'0'); }catch(e){}
+    setTimeout(()=>{ if(typeof renderGrid==='function') renderGrid(); const ifr=document.getElementById('lektion'); if(ifr) fixDeckStage(ifr); if(typeof fitLektion==='function') fitLektion(); }, 100);
+  }
+  function togglePraesBig(){ setPraesBig(!document.body.classList.contains('praesbig')); }
+  try{ if(localStorage.getItem('club_praesbig')==='1') setPraesBig(true); }catch(e){}
   // Nur Lehrkraft/Moderator: alle Schüler stummschalten (z. B. bei lauten Hintergrundgeräuschen).
   // Jede/r Schüler:in kann sich zum Sprechen jederzeit selbst wieder anschalten.
   function vcMuteAll(){
