@@ -31,12 +31,14 @@
     plus:      '<circle cx="12" cy="12" r="8.6"/><path d="M12 8.2v7.6M8.2 12h7.6"/>',
     tuer:      '<path d="M14.4 3.6H6.6a2 2 0 0 0-2 2v12.8a2 2 0 0 0 2 2h7.8"/><path d="M17.8 15.4 21.2 12l-3.4-3.4M9.6 12h11.6"/>',
     chat:      '<path d="M20.8 11.4a7.4 7.4 0 0 1-7.4 7.4H8.2l-4 2.8v-3.5a7.4 7.4 0 0 1 9.2-13 7.4 7.4 0 0 1 7.4 6.3z"/>',
-    welle:     '<path d="M4 12h2.6l2-6 3 13 3-9.4 1.8 2.4H20"/>'
+    welle:     '<path d="M4 12h2.6l2-6 3 13 3-9.4 1.8 2.4H20"/>',
+    ziel:      '<circle cx="12" cy="12" r="8.4"/><circle cx="12" cy="12" r="4.2"/><circle cx="12" cy="12" r="1"/>'
   };
 
   /* Welches Symbol gehört zu welchem Eintrag */
   var ZU_ANSICHT = {
     dashboard:'haus', kalender:'kalender', stunden:'kalender', kurs:'hut',
+    pruefung:'ziel', ueben:'leiter',
     lernen:'kompass', vokabeln:'karten', fehler:'buch', buddy:'zweipersonen',
     materialien:'ordner', fortschritt:'pokal', nachrichten:'brief',
     amanda:'mikro', lernpfad:'leiter', guthaben:'karte', profil:'person',

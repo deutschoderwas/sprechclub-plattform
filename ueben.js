@@ -274,6 +274,23 @@
     S={skId:'mix',thId:'mix',items:pickItems(all,10),idx:0,correct:0,hearts:META().maxHearts||5,answered:false,sel:null,title:'Schnell-Mix',gewertet:[]};
     openSession(); };
 
+  /* Ein Mix aus ausgewählten Themen — der Lernbereich baut damit die
+     „Gemischten Übungen" für Freizeit oder Beruf auf einem Niveau.
+     paare: [['wortschatz','essen'], ['hoeren','essen'], …]           */
+  window.ubMixAuswahl=function(titel, paare, anzahl){
+    var all=[];
+    (paare||[]).forEach(function(p){
+      var sk=skillById(p[0]); if(!sk) return;
+      var th=(sk.themes||[]).filter(function(t){ return t.id===p[1]; })[0];
+      if(th && th.exercises) th.exercises.forEach(function(e){ all.push(e); });
+    });
+    if(!all.length) return false;
+    S={skId:'mix',thId:'mix',items:pickItems(all,anzahl||12),idx:0,correct:0,
+       hearts:META().maxHearts||5,answered:false,sel:null,title:titel||'Gemischte Übungen',gewertet:[]};
+    openSession();
+    return true;
+  };
+
   function themenBild(){
     if(!S) return '';
     var sk=skillById(S.skId); if(!sk) return '';

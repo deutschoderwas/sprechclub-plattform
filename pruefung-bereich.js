@@ -6,8 +6,12 @@
    Das Gerüst, Schritt 2 von 7. Zwei Ebenen:
 
      1. Welche Prüfung?   — neun Kacheln, eine Seite
-     2. Die Prüfungsseite — Termin, vier Module, Musterprüfung,
-                            Wortschatz, Videokurs, Bereitschaft
+     2. Die Prüfungsseite — die Module, Musterprüfung, Wortschatz,
+                            Videokurs, Bereitschaft
+
+   Kein Prüfungstermin: deutschoderwas bereitet auf die Prüfung vor,
+   nimmt sie aber nicht ab. Ein Countdown auf einen Termin, den es
+   hier nicht gibt, wäre irreführend.
 
    Was hier schon echt ist: die Auswahl, der Aufbau, die Verbindung
    zu den 36 vorhandenen Lektionen, zu den vier Musterprüfungen und
@@ -141,22 +145,8 @@
 
   function pruefungVon(id){ for(var i=0;i<PRUEFUNGEN.length;i++) if(PRUEFUNGEN[i].id===id) return PRUEFUNGEN[i]; return null; }
 
-  /* ---------- Termin und Fortschritt ---------- */
-  function termine(){ return J('pruefTermin',{})||{}; }
-  function terminVon(id){ return termine()[id]||null; }
-  function tageBis(iso){
-    if(!iso) return null;
-    var d=new Date(iso+'T00:00:00'), h=new Date(); h.setHours(0,0,0,0);
-    return Math.round((d-h)/86400000);
-  }
-  window.pruefTerminSetzen=function(id){
-    var el=document.getElementById('pfTermin'); if(!el) return;
-    var t=termine(); if(el.value) t[id]=el.value; else delete t[id];
-    S('pruefTermin',t);
-    window.pruefungOeffnen(id);
-  };
-
-  /* Fortschritt je Modul — bis die Module echte Inhalte haben, zählt
+  /* ---------- Fortschritt ----------
+ — bis die Module echte Inhalte haben, zählt
      der Fortschritt der dahinterliegenden Lektionen. */
   function modulProzent(p, mod){
     try{
@@ -200,10 +190,6 @@
   }
 
   function kachel(p){
-    var t=terminVon(p.id), tage=tageBis(t);
-    var rechts = (tage!=null)
-      ? '<span class="pf-tage'+(tage<0?' vorbei':'')+'">'+(tage<0?'vorbei':(tage===0?'heute!':'noch '+tage+' Tage'))+'</span>'
-      : '<span class="pf-kein-termin">kein Termin</span>';
     return '<button type="button" class="pf-k" onclick="pruefungOeffnen(\'' + p.id + '\')">'
       + '<span class="pf-k-bild"><img src="bilder/thema/'+p.bild+'-s.jpg" alt="" loading="lazy" onerror="this.remove()">'
       +   '<span class="pf-k-niv">'+E(p.niveau)+'</span></span>'
@@ -212,7 +198,7 @@
       +   '<span class="pf-k-a">'+E(p.anbieter)+'</span>'
       +   '<span class="pf-k-f">'+E(p.fuer)+'</span>'
       + '</span>'
-      + '<span class="pf-k-r">'+rechts+'<span class="pf-k-anz">'+lektionZahl(p)+'</span>'
+      + '<span class="pf-k-r"><span class="pf-k-anz">'+lektionZahl(p)+'</span>'
       +   '<span class="pf-k-go">Öffnen →</span></span>'
       + '</button>';
   }
@@ -234,7 +220,6 @@
       +     '<p>'+E(p.fuer)+'</p>'
       +   '</div>'
       + '</div>'
-      + terminBlock(p)
       + moduleBlock(p)
       + musterBlock(p)
       + materialBlock(p)
@@ -243,34 +228,7 @@
     try{ window.scrollTo(0,0); }catch(e){}
   };
 
-  /* 1 — Dein Prüfungstermin */
-  function terminBlock(p){
-    var t=terminVon(p.id), tage=tageBis(t);
-    var inhalt;
-    if(tage!=null && tage>=0){
-      var wochen=Math.max(1,Math.ceil(tage/7));
-      inhalt='<div class="pf-termin-an">'
-        +'<div class="pf-gross"><b>'+tage+'</b><span>'+(tage===1?'Tag':'Tage')+' bis zur Prüfung</span></div>'
-        +'<div class="pf-plan">Das sind <b>'+wochen+'</b> '+(wochen===1?'Woche':'Wochen')+'. '
-        +'Bei vier Modulen heißt das etwa '+Math.max(1,Math.floor(wochen/ (p.module.length||4)))
-        +' Woche pro Modul und Zeit für zwei Musterprüfungen am Ende.</div>'
-        +'<button class="pf-b2 pf-b-s" onclick="pruefTerminLoeschen(\''+p.id+'\')">Termin ändern</button>'
-        +'</div>';
-    } else {
-      inhalt='<div class="pf-termin-aus">'
-        +'<p>Trag deinen Termin ein. Ab dann steht hier, wie viele Tage bleiben und was diese Woche dran ist.</p>'
-        +'<div class="pf-termin-eingabe">'
-        +'<input type="date" id="pfTermin" value="'+(t||'')+'">'
-        +'<button class="pf-b1" onclick="pruefTerminSetzen(\''+p.id+'\')">Termin setzen</button>'
-        +'</div></div>';
-    }
-    return block('1', 'Dein Prüfungstermin', inhalt, 'pf-termin');
-  }
-  window.pruefTerminLoeschen=function(id){
-    var t=termine(); delete t[id]; S('pruefTermin',t); window.pruefungOeffnen(id);
-  };
-
-  /* 2 — Die Module */
+  /* 1 — Die Module */
   function moduleBlock(p){
     var hinweis = p.modular
       ? '<p class="pf-hinw">Diese Prüfung ist modular: Du kannst die vier Teile einzeln ablegen und '
@@ -312,7 +270,7 @@
 
     var zu = ZUSATZ[p.id] ? zusatzBlock(ZUSATZ[p.id]) : '';
     var titel = p.module.length===4 ? 'Die vier Module' : 'Die Prüfungsteile';
-    return block('2', titel, hinweis+'<div class="pf-module">'+karten+'</div>'+zu, 'pf-mod');
+    return block('1', titel, hinweis+'<div class="pf-module">'+karten+'</div>'+zu, 'pf-mod');
   }
 
   function zusatzBlock(z){
@@ -335,7 +293,7 @@
     try{ location.href='lektion.html?k='+encodeURIComponent(kursId)+'&l=1'; }catch(e){}
   };
 
-  /* 3 — Musterprüfung */
+  /* 2 — Musterprüfung */
   function musterBlock(p){
     var inhalt;
     if(p.muster && window.PRUEFUNG && window.PRUEFUNG[p.muster]){
@@ -357,14 +315,14 @@
       inhalt='<div class="pf-leer">Für diese Prüfung gibt es noch keine Musterprüfung. '
         +'Vorhanden sind bisher A2, B1, B2 und C1.</div>';
     }
-    return block('3', 'Musterprüfung', inhalt, 'pf-must');
+    return block('2', 'Musterprüfung', inhalt, 'pf-must');
   }
 
   window.pruefMusterStarten=function(k){
     try{ if(window.toast) toast('Die Musterprüfung wird in Schritt 4 eingebaut — die Aufgaben liegen schon bereit ('+k+').'); }catch(e){}
   };
 
-  /* 4 — Wortschatz und Grammatik */
+  /* 3 — Wortschatz und Grammatik */
   function materialBlock(p){
     var inhalt='<div class="pf-mat">'
       +'<p>Nicht irgendein Wortschatz, sondern der, der in dieser Prüfung vorkommt. '
@@ -374,10 +332,10 @@
       +'<button class="pf-b2 pf-b-s" onclick="go(\'lernen\')">Zum Lernbereich →</button>'
       +'<button class="pf-b2 pf-b-s" onclick="go(\'vokabeln\')">Vokabeltrainer →</button>'
       +'</div></div>';
-    return block('4', 'Wortschatz & Grammatik für diese Prüfung', inhalt, 'pf-mat-b');
+    return block('3', 'Wortschatz & Grammatik für diese Prüfung', inhalt, 'pf-mat-b');
   }
 
-  /* 5 — Videokurs */
+  /* 4 — Videokurs */
   function videoBlock(p){
     var inhalt='<div class="pf-video">'
       +'<div class="pf-video-platz"><span>▶</span></div>'
@@ -385,10 +343,10 @@
       +'<span>Ein Video pro Thema, direkt im Modul, zu dem es gehört — nicht in einer eigenen '
       +'Videothek. Wer beim Schreiben hängt, findet das Schreiben-Video im Schreiben-Modul.</span></div>'
       +'</div>';
-    return block('5', 'Videokurs', inhalt, 'pf-vid');
+    return block('4', 'Videokurs', inhalt, 'pf-vid');
   }
 
-  /* 6 — Bist du bereit? */
+  /* 5 — Bist du bereit? */
   function bereitBlock(p){
     var inhalt='<div class="pf-bereit">'
       +'<p>Am Ende steht hier eine ehrliche Einschätzung: Punkteprognose aus deinen '
@@ -396,7 +354,7 @@
       +'<div class="pf-bereit-m">'
       + p.module.map(function(m){ return '<span class="pf-bereit-z"><b>'+E(m.n)+'</b><span>noch kein Ergebnis</span></span>'; }).join('')
       +'</div></div>';
-    return block('6', 'Bist du bereit?', inhalt, 'pf-ber');
+    return block('5', 'Bist du bereit?', inhalt, 'pf-ber');
   }
 
   function block(nr, titel, inhalt, kls){

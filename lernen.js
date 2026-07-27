@@ -499,6 +499,16 @@
       +'</div>';
   }
 
+  /* Wohin führt der Zurück-Knopf über einem Thema?
+     Der Lernbereich (lernbereich.js) beantwortet das genauer — er weiß,
+     aus welchem Niveau und welchem Bereich man gekommen ist. Ohne ihn
+     landet man wie früher auf der Themenübersicht. */
+  function zurueckText(th){
+    try{ if(window.lernZurueckText) return window.lernZurueckText(th); }catch(e){}
+    return 'Alle Themen';
+  }
+  if(!window.lernZurueck) window.lernZurueck=function(){ window.renderLernen(); };
+
   window.lernThema=function(id){
     stil();
     var th=themaVon(id); var v=el('v-lernen'); if(!th||!v) return;
@@ -561,7 +571,7 @@
         }).join('')+'</div>';
     }
 
-    v.innerHTML='<button class="ln-zurueck" onclick="renderLernen()">← Alle Themen</button>'
+    v.innerHTML='<button class="ln-zurueck" onclick="lernZurueck()">← '+E(zurueckText(th))+'</button>'
       +'<div class="ln-hero"><img src="'+foto(id)+'" alt="" onerror="this.style.display=\'none\'"><span class="schl"></span>'
       +'<div class="tx"><div class="meta"><span class="pill">'+E(bereichName(th))+'</span>'
       +'<span class="pill">'+E(th.lvl||'')+'</span><span>'+p+' % geschafft</span></div>'
@@ -965,5 +975,33 @@
   document.addEventListener('keydown',function(e){
     if(e.key==='Escape'){ var o=el('dgOv'); if(o&&o.classList.contains('auf')) window.dgSchliessen(); }
   });
+
+  /* ============================================================
+     Was der Lernbereich von hier braucht
+
+     lernbereich.js baut die Übersicht neu (Niveau → Bereich → Thema).
+     Die Themenseite, die Dialoge und die Fortschrittsrechnung bleiben
+     hier. Damit beides dieselben Zahlen zeigt, gibt es diese Tür:
+     ============================================================ */
+  window.LERNTEILE = {
+    fortschritt:   fortschritt,
+    teileVon:      teileVon,
+    foto:          foto,
+    baustein:      baustein,
+    karte:         karte,
+    themaVon:      themaVon,
+    istThema:      istThema,
+    dialogeVon:    dialogeVon,
+    aufgabenZahl:  aufgabenZahl,
+    themenStand:   themenStand,
+    tagesziel:     tagesziel,
+    lernStand:     lernStand,
+    stil:          stil,
+    /* Nach einer Übung springt die Seite normalerweise zurück auf das
+       zuletzt geöffnete Thema. Wer aus dem Lernbereich heraus einen
+       gemischten Satz startet, war aber in keinem Thema — dann bitte
+       nicht zurückspringen. */
+    vergiss:       function(){ offenesThema=null; }
+  };
 
 })();

@@ -454,10 +454,6 @@ h2.sec{ font-family:'Space Grotesk', sans-serif !important; font-weight:800 !imp
 .pf-k-a{ display:block; font-size:12.5px; font-weight:700; color:var(--m-turq-ink); margin-top:2px }
 .pf-k-f{ display:block; font-size:13.5px; color:var(--m-muted); line-height:1.45; margin-top:4px }
 .pf-k-r{ display:flex; align-items:center; gap:14px; flex:none }
-.pf-tage{ font-size:12.5px; font-weight:800; color:var(--m-red); background:var(--m-red-soft);
-  border-radius:999px; padding:5px 12px; white-space:nowrap }
-.pf-tage.vorbei{ color:var(--m-muted); background:#F1EEE7 }
-.pf-kein-termin{ font-size:12.5px; font-weight:700; color:var(--m-faint); white-space:nowrap }
 .pf-k-go{ background:var(--m-red); color:#fff; font-weight:800; font-size:14px;
   border-radius:12px; padding:10px 18px; white-space:nowrap; box-shadow:0 4px 0 var(--m-red-dark) }
 
@@ -487,14 +483,7 @@ h2.sec{ font-family:'Space Grotesk', sans-serif !important; font-weight:800 !imp
 .pf-block-kopf h2{ font-family:'Space Grotesk',sans-serif; font-size:20px; font-weight:800;
   letter-spacing:-.02em; margin:0; color:var(--m-ink) }
 
-.pf-termin-aus p, .pf-mat p, .pf-bereit p, .pf-hinw{ font-size:14.5px; color:var(--m-muted); line-height:1.6; margin:0 0 14px }
-.pf-termin-eingabe{ display:flex; gap:10px; flex-wrap:wrap }
-.pf-termin-eingabe input{ font-family:inherit; font-size:15px; padding:11px 14px;
-  border:1.5px solid var(--m-line); border-radius:12px; background:#FFFCF5 }
-.pf-termin-an{ display:flex; align-items:center; gap:22px; flex-wrap:wrap }
-.pf-gross b{ font-family:'Space Grotesk',sans-serif; font-size:42px; font-weight:800; color:var(--m-red); line-height:1 }
-.pf-gross span{ display:block; font-size:13px; color:var(--m-muted); font-weight:600; margin-top:4px }
-.pf-plan{ flex:1; min-width:220px; font-size:14.5px; color:var(--m-muted); line-height:1.6 }
+.pf-mat p, .pf-bereit p, .pf-hinw{ font-size:14.5px; color:var(--m-muted); line-height:1.6; margin:0 0 14px }
 
 .pf-module{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px }
 @media(max-width:1100px){ .pf-module{ grid-template-columns:repeat(2,minmax(0,1fr)) } }
@@ -605,3 +594,362 @@ h2.sec{ font-family:'Space Grotesk', sans-serif !important; font-weight:800 !imp
 .nb-btn{ border-radius:12px !important; border-color:var(--m-line) !important }
 .nb-btn:hover{ background:var(--m-cream2) !important }
 .nb-btn.auf{ background:var(--m-ink) !important; border-color:var(--m-ink) !important }
+
+/* ============================================================
+   DER LERNBEREICH  (lernbereich.js)
+
+   Drei Ebenen, ein Aussehen:
+     1. Niveau   — Zeilen mit Foto, links die Stufe, rechts der Weg
+     2. Bereich  — zwei große Karten, Freizeit und Beruf getrennt
+     3. Themen   — Fotokarten im Raster, wie draußen auf der Seite
+
+   Regeln wie überall: Rot ist die Handlung, Türkis die Ruhe,
+   Creme statt Weiß, Knöpfe sinken beim Drücken ein.
+   Auf dem Handy stehen die Themenkarten zu zweit nebeneinander —
+   so sieht man mehr als eine Karte auf einmal.
+   ============================================================ */
+
+.lz{ max-width:1180px; margin:0 auto; padding-bottom:80px; color:var(--m-ink) }
+.lz *{ box-sizing:border-box }
+
+/* ---------- Kopf ---------- */
+.lz-kopf{ margin:0 0 24px }
+.lz-kopf h1{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:clamp(27px,3.4vw,40px); line-height:1.1; letter-spacing:-.6px;
+  margin:12px 0 10px; color:var(--m-ink);
+}
+.lz-kopf p{ margin:0; font-size:15.5px; line-height:1.6; color:var(--m-muted); max-width:62ch }
+.lz-kopf-klein h1{ font-size:clamp(24px,2.6vw,31px); margin:4px 0 8px }
+.lz-kopf-klein p{ font-size:14.5px }
+
+.lz-kicker{
+  display:inline-block; color:var(--m-turq-ink); font-weight:900; font-size:12px;
+  letter-spacing:.1em; text-transform:uppercase;
+  background:var(--m-turq-soft); padding:6px 14px; border-radius:999px;
+}
+.lz-kicker-hell{ background:rgba(255,255,255,.9); color:var(--m-turq-ink) }
+
+/* ---------- Knöpfe ---------- */
+.lz-btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  border:none; cursor:pointer; font-family:inherit; font-weight:800; font-size:14.5px;
+  padding:12px 20px; border-radius:14px; text-decoration:none;
+  background:var(--m-red); color:#fff; box-shadow:0 5px 0 var(--m-red-dark);
+  transition:transform .09s, box-shadow .09s;
+}
+.lz-btn:hover{ transform:translateY(-2px); box-shadow:0 7px 0 var(--m-red-dark); color:#fff }
+.lz-btn:active{ transform:translateY(3px); box-shadow:0 2px 0 var(--m-red-dark) }
+.lz-btn-hell{
+  background:#fff; color:var(--m-ink); box-shadow:0 3px 0 var(--m-line);
+  border:1px solid var(--m-line);
+}
+.lz-btn-hell:hover{ background:var(--m-cream2); color:var(--m-ink); box-shadow:0 5px 0 var(--m-line) }
+.lz-btn-hell:active{ box-shadow:0 1px 0 var(--m-line) }
+
+/* ---------- Fortschrittsbalken ---------- */
+.lz-bar{ display:block; height:7px; border-radius:7px; background:#EFEAE0; overflow:hidden }
+.lz-bar i{ display:block; height:100%; border-radius:7px;
+  background:linear-gradient(90deg,var(--m-turq-dark),var(--m-turq)) }
+.lz-bar.voll i{ background:linear-gradient(90deg,#16A34A,#5BD08A) }
+
+/* ---------- Brotkrumen ---------- */
+.lz-weg{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:0 0 16px }
+.lz-weg-b{
+  border:1px solid var(--m-line); background:#fff; color:var(--m-ink);
+  font:inherit; font-weight:800; font-size:13.5px; padding:8px 14px;
+  border-radius:999px; cursor:pointer; transition:.14s;
+}
+.lz-weg-b:hover{ background:var(--m-cream2); border-color:var(--m-gold-deep) }
+.lz-weg-jetzt{
+  background:var(--m-ink); color:#fff; font-weight:900; font-size:13px;
+  padding:7px 14px; border-radius:999px; letter-spacing:.04em;
+}
+.lz-weg-ziel{ font-size:13px; color:var(--m-faint) }
+
+/* ============================================================
+   Ebene 1 — die Stufen
+   ============================================================ */
+.lz-stufen{ display:flex; flex-direction:column; gap:12px; margin:0 0 26px }
+
+.lz-st{
+  display:grid; grid-template-columns:150px 1fr auto; align-items:center; gap:18px;
+  width:100%; text-align:left; font-family:inherit; cursor:pointer;
+  background:var(--m-cream); border:1px solid var(--m-line); border-radius:var(--m-r);
+  padding:0 20px 0 0; overflow:hidden; transition:transform .14s, box-shadow .14s, border-color .14s;
+}
+.lz-st:hover{ transform:translateY(-2px); border-color:var(--m-turq-dark);
+  box-shadow:0 10px 26px rgba(26,26,26,.08) }
+.lz-st-jetzt{ border-color:var(--m-gold-deep); background:var(--m-cream2) }
+
+.lz-st-bild{ position:relative; display:block; height:104px; background:#E8E2D6 }
+.lz-st-bild img{ width:100%; height:100%; object-fit:cover; display:block }
+.lz-st-schl{ position:absolute; inset:0;
+  background:linear-gradient(90deg,rgba(20,26,30,.42),rgba(20,26,30,0) 70%) }
+.lz-st-stufe{
+  position:absolute; left:12px; top:12px; background:#fff; color:var(--m-ink);
+  font-weight:900; font-size:15px; letter-spacing:.03em; padding:4px 11px; border-radius:10px;
+}
+.lz-st-marke{
+  position:absolute; left:12px; bottom:12px; background:var(--m-gold); color:#3A2B00;
+  font-weight:800; font-size:10.5px; padding:3px 9px; border-radius:999px; white-space:nowrap;
+}
+.lz-st-txt{ display:block; min-width:0; padding:16px 0 }
+.lz-st-t{ display:block; font-family:'Space Grotesk',sans-serif; font-size:18px;
+  font-weight:700; color:var(--m-ink); line-height:1.2 }
+.lz-st-s{ display:block; font-size:14px; color:var(--m-muted); margin:3px 0 9px }
+.lz-st-meta{ display:block; font-size:12px; font-weight:700; color:var(--m-faint); margin:0 0 7px }
+.lz-st-bald-tx{ display:inline-block; font-size:12px; font-weight:800; color:var(--m-gold-deep);
+  background:var(--m-gold-soft); padding:4px 10px; border-radius:999px }
+.lz-st .lz-bar{ max-width:320px }
+.lz-st-go{ font-weight:800; font-size:14px; color:var(--m-red); white-space:nowrap }
+.lz-st-bald{ opacity:.72 }
+.lz-st-bald .lz-st-go{ color:var(--m-muted) }
+
+@media(max-width:820px){
+  .lz-st{ grid-template-columns:104px 1fr; padding:0 16px 0 0; gap:14px }
+  .lz-st-go{ display:none }
+  .lz-st-bild{ height:100%; min-height:118px }
+  .lz-st .lz-bar{ max-width:none }
+}
+@media(max-width:520px){
+  .lz-st{ grid-template-columns:88px 1fr; gap:12px }
+  .lz-st-t{ font-size:16.5px }
+  .lz-st-s{ font-size:13px }
+  .lz-st-stufe{ font-size:13px; padding:3px 8px; left:8px; top:8px }
+  .lz-st-marke{ left:8px; bottom:8px; font-size:9.5px }
+}
+
+/* ---------- Hinweiszeile (Einstufungstest, Prüfung) ---------- */
+.lz-hinweis{
+  display:flex; align-items:center; justify-content:space-between; gap:18px; flex-wrap:wrap;
+  background:var(--m-turq-soft); border-radius:var(--m-r); padding:18px 22px; margin:26px 0 0;
+}
+.lz-hinweis-t > b{ display:block; font-family:'Space Grotesk',sans-serif; font-size:16px; color:var(--m-ink) }
+.lz-hinweis-t > span{ display:block; font-size:13.5px; color:var(--m-muted); margin-top:3px }
+@media(max-width:640px){ .lz-hinweis{ padding:16px } .lz-hinweis .lz-btn{ width:100% } }
+
+/* ============================================================
+   Ebene 2 — der geführte Kurs und die zwei Bereiche
+   ============================================================ */
+.lz-weiter{
+  display:flex; align-items:center; gap:14px; width:100%; text-align:left; cursor:pointer;
+  font-family:inherit; background:#fff; border:1px solid var(--m-line);
+  border-radius:16px; padding:10px 16px 10px 10px; margin:0 0 16px; transition:.14s;
+}
+.lz-weiter:hover{ border-color:var(--m-turq-dark); transform:translateY(-2px) }
+.lz-weiter-b{ width:56px; height:44px; flex:0 0 56px; border-radius:12px; overflow:hidden; background:#E8E2D6 }
+.lz-weiter-b img{ width:100%; height:100%; object-fit:cover; display:block }
+.lz-weiter-t{ flex:1; min-width:0 }
+.lz-weiter-t b{ display:block; font-size:14.5px; color:var(--m-ink) }
+.lz-weiter-t small{ display:block; font-size:12.5px; color:var(--m-muted) }
+.lz-weiter-go{ font-weight:800; font-size:13.5px; color:var(--m-red); white-space:nowrap }
+@media(max-width:520px){ .lz-weiter-go{ display:none } }
+
+.lz-kurs{
+  display:grid; grid-template-columns:270px 1fr; gap:0; overflow:hidden;
+  background:var(--m-dunkel); color:#fff; border-radius:24px; margin:0 0 22px;
+}
+.lz-kurs-bild{ background:var(--lz-kb) center/cover no-repeat; min-height:210px; position:relative }
+.lz-kurs-bild::after{ content:""; position:absolute; inset:0;
+  background:linear-gradient(90deg,rgba(40,53,59,0) 40%,rgba(40,53,59,.95) 100%) }
+.lz-kurs-txt{ padding:24px 26px }
+.lz-kurs-txt h2{ font-family:'Space Grotesk',sans-serif; font-size:24px; line-height:1.15;
+  margin:10px 0 8px; color:#fff; letter-spacing:-.3px }
+.lz-kurs-txt p{ margin:0 0 14px; font-size:14px; line-height:1.55; color:rgba(255,255,255,.78); max-width:56ch }
+.lz-kurs-fort{ display:flex; align-items:center; gap:12px; margin:0 0 16px; max-width:420px }
+.lz-kurs-fort .lz-bar{ flex:1; background:rgba(255,255,255,.18) }
+.lz-kurs-proz{ font-size:13px; font-weight:800; color:rgba(255,255,255,.85) }
+.lz-kurs-kn{ display:flex; gap:10px; flex-wrap:wrap }
+.lz-kurs .lz-btn-hell{ background:rgba(255,255,255,.12); color:#fff;
+  border-color:rgba(255,255,255,.28); box-shadow:0 3px 0 rgba(0,0,0,.25) }
+.lz-kurs .lz-btn-hell:hover{ background:rgba(255,255,255,.2); color:#fff }
+@media(max-width:860px){
+  .lz-kurs{ grid-template-columns:1fr }
+  .lz-kurs-bild{ min-height:130px }
+  .lz-kurs-bild::after{ background:linear-gradient(180deg,rgba(40,53,59,0) 30%,rgba(40,53,59,.95) 100%) }
+  .lz-kurs-txt{ padding:18px 18px 22px }
+  .lz-kurs-txt h2{ font-size:21px }
+  .lz-kurs-kn .lz-btn{ flex:1 }
+}
+
+.lz-bs{ display:grid; grid-template-columns:1fr 1fr; gap:20px }
+@media(max-width:860px){ .lz-bs{ grid-template-columns:1fr; gap:16px } }
+
+.lz-b{
+  display:block; width:100%; text-align:left; font-family:inherit; cursor:pointer; padding:0;
+  background:var(--m-cream); border:1px solid var(--m-line); border-radius:24px; overflow:hidden;
+  transition:transform .16s, box-shadow .16s, border-color .16s;
+}
+.lz-b:hover{ transform:translateY(-4px); border-color:var(--m-red);
+  box-shadow:0 14px 32px rgba(26,26,26,.12) }
+.lz-b-leer{ cursor:default; opacity:.85 }
+.lz-b-leer:hover{ transform:none; border-color:var(--m-line); box-shadow:none }
+
+.lz-mos{ display:grid; grid-template-columns:1fr 1fr; grid-auto-rows:82px; gap:3px; background:#E8E2D6 }
+.lz-mos span{ display:block; overflow:hidden }
+.lz-mos img{ width:100%; height:100%; object-fit:cover; display:block; transition:transform .5s }
+.lz-b:hover .lz-mos img{ transform:scale(1.05) }
+.lz-mos-1{ grid-template-columns:1fr; grid-auto-rows:164px }
+.lz-mos-2{ grid-auto-rows:164px }
+.lz-mos-3 span:first-child{ grid-row:span 2 }
+.lz-mos-leer{ height:164px }
+
+.lz-b-txt{ display:block; padding:18px 20px 20px }
+.lz-b-kurz{
+  display:inline-block; background:var(--m-gold-soft); color:#8A6608;
+  font-weight:900; font-size:11px; letter-spacing:.1em; text-transform:uppercase;
+  padding:5px 11px; border-radius:999px;
+}
+.lz-b-h, .lz-b-txt h3{
+  display:block; font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:700;
+  color:var(--m-ink); line-height:1.2; margin:10px 0 6px; letter-spacing:-.2px;
+}
+.lz-b-p, .lz-b-txt p{ display:block; font-size:13.5px; line-height:1.5; color:var(--m-muted); margin:0 0 12px }
+.lz-b-zahl{ display:block; font-size:12.5px; font-weight:800; color:var(--m-turq-ink); margin:0 0 7px }
+.lz-b-go{ display:block; margin-top:12px; font-weight:800; font-size:14px; color:var(--m-red) }
+.lz-b-bald{ display:block; font-size:13px; color:var(--m-muted);
+  background:var(--m-gold-soft); border-radius:12px; padding:10px 12px; margin:0 0 12px }
+
+/* ============================================================
+   Ebene 3 — die Themen
+   ============================================================ */
+.lz-suche{ position:relative; margin:0 0 22px; max-width:360px }
+.lz-suche input{
+  width:100%; border:1px solid var(--m-line); border-radius:999px;
+  padding:11px 16px 11px 38px; font:inherit; font-size:14px; background:#fff; color:var(--m-ink);
+}
+.lz-suche input:focus{ outline:none; border-color:var(--m-turq-dark) }
+.lz-suche em{ position:absolute; left:14px; top:50%; transform:translateY(-50%);
+  font-style:normal; opacity:.4; font-size:14px }
+@media(max-width:640px){ .lz-suche{ max-width:none } }
+
+.lz-gruppe{ margin:0 0 34px }
+.lz-gh{ display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; margin:0 0 14px }
+.lz-gh h2{ font-family:'Space Grotesk',sans-serif; font-size:20px; margin:0;
+  color:var(--m-ink); letter-spacing:-.2px }
+.lz-gh span{ font-size:13px; color:var(--m-faint) }
+.lz-gruppe-still .lz-gh h2{ color:var(--m-muted) }
+
+.lz-raster{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px }
+@media(max-width:1280px){ .lz-raster{ grid-template-columns:repeat(3,minmax(0,1fr)) } }
+@media(max-width:1000px){ .lz-raster{ grid-template-columns:repeat(2,minmax(0,1fr)) } }
+@media(max-width:640px){ .lz-raster{ gap:11px } }
+
+.lz-k{
+  position:relative; display:block; width:100%; padding:0; text-align:left; font-family:inherit;
+  cursor:pointer; background:var(--m-cream); border:1px solid var(--m-line);
+  border-radius:18px; overflow:hidden; transition:transform .16s, box-shadow .16s, border-color .16s;
+}
+.lz-k:hover{ transform:translateY(-4px); border-color:var(--m-red);
+  box-shadow:0 12px 28px rgba(26,26,26,.13) }
+.lz-k-bild{ display:block; position:relative; aspect-ratio:16/10; overflow:hidden; background:#E8E2D6 }
+.lz-k-bild img{ width:100%; height:100%; object-fit:cover; display:block; transition:transform .5s }
+.lz-k:hover .lz-k-bild img{ transform:scale(1.06) }
+.lz-k-schl{ position:absolute; inset:0;
+  background:linear-gradient(to top,rgba(12,16,20,.8) 0%,rgba(12,16,20,.15) 48%,rgba(12,16,20,0) 74%) }
+.lz-k-lv{
+  position:absolute; top:10px; left:10px; background:rgba(255,255,255,.94); color:var(--m-ink);
+  font-size:11px; font-weight:800; padding:4px 9px; border-radius:999px; white-space:nowrap;
+}
+.lz-k-fertig{
+  position:absolute; top:10px; right:10px; background:var(--m-gold); color:#3A2B00;
+  font-size:11px; font-weight:800; padding:4px 9px; border-radius:999px; white-space:nowrap;
+}
+.lz-k-t{
+  position:absolute; left:13px; right:13px; bottom:11px; color:#fff;
+  font-family:'Space Grotesk',sans-serif; font-size:16px; font-weight:700; line-height:1.22;
+  text-shadow:0 1px 10px rgba(0,0,0,.45);
+}
+.lz-k-fuss{ display:block; padding:11px 13px 13px }
+.lz-k-teile{ display:flex; gap:6px; flex-wrap:wrap; margin:0 0 9px; min-height:22px }
+.lz-k-teile span{ font-size:11px; font-weight:700; color:var(--m-muted);
+  background:var(--m-cream2); border-radius:8px; padding:3px 8px; white-space:nowrap }
+.lz-k-spaeter{ background:#FBF8F1 }
+.lz-k-spaeter .lz-k-bild img{ filter:grayscale(.45) }
+.lz-k-spaeter:hover .lz-k-bild img{ filter:none }
+@media(max-width:640px){
+  .lz-k-t{ font-size:14px; left:10px; right:10px; bottom:9px }
+  .lz-k-fuss{ padding:9px 10px 11px }
+  .lz-k-teile span{ font-size:10px; padding:2px 6px }
+  .lz-k-teile{ min-height:0; margin-bottom:7px; flex-wrap:nowrap; overflow:hidden }
+}
+
+/* ---------- Grammatik & Aussprache unter den Themen ---------- */
+.lz-bausteine{ background:var(--m-cream2); border:1px solid var(--m-line);
+  border-radius:20px; padding:18px 20px 20px; margin:8px 0 0 }
+.lz-bk{ display:flex; align-items:baseline; gap:9px; flex-wrap:wrap; margin:0 0 11px }
+.lz-bk b{ font-family:'Space Grotesk',sans-serif; font-size:15px; color:var(--m-ink) }
+.lz-bk span{ font-size:12.5px; color:var(--m-muted) }
+.lz-bausteine .ln-bsliste + .lz-bk{ margin-top:20px }
+@media(max-width:640px){ .lz-bausteine{ padding:14px 14px 16px; border-radius:16px } }
+
+.lz-leer{ background:var(--m-cream); border:1px dashed var(--m-line); border-radius:18px;
+  padding:26px 22px; color:var(--m-muted); font-size:14.5px; text-align:center }
+
+/* ---------- Aussprache & Klang ----------
+   Eine kleine eigene Kategorie unter Freizeit und Beruf. Türkis
+   statt Creme, damit sie sich absetzt, ohne mit den zwei großen
+   Karten zu konkurrieren. Die runden Bilder sind die Lautthemen. */
+.lz-extra{
+  display:grid; grid-template-columns:auto 1fr; gap:22px; align-items:start;
+  background:var(--m-turq-soft); border:1px solid #CDEDF2; border-radius:24px;
+  padding:22px 24px; margin:20px 0 0;
+}
+.lz-extra-bilder{ display:grid; grid-template-columns:1fr 1fr; gap:8px; width:132px; flex:none }
+.lz-extra-bilder span{ display:block; width:62px; height:62px; border-radius:16px;
+  overflow:hidden; background:#fff; box-shadow:0 3px 10px rgba(15,118,110,.14) }
+.lz-extra-bilder img{ width:100%; height:100%; object-fit:cover; display:block }
+.lz-extra-txt h3{ font-family:'Space Grotesk',sans-serif; font-size:21px; margin:10px 0 6px;
+  color:var(--m-ink); letter-spacing:-.2px }
+.lz-extra-txt p{ margin:0 0 10px; font-size:13.5px; line-height:1.55; color:var(--m-muted); max-width:60ch }
+.lz-extra-meta{ display:block; font-size:12.5px; font-weight:800; color:var(--m-turq-ink); margin:0 0 14px }
+.lz-extra-kn{ display:flex; gap:10px; flex-wrap:wrap }
+.lz-extra-chips{ display:flex; gap:7px; flex-wrap:wrap; margin:14px 0 0 }
+.lz-extra-chips button{
+  border:1px solid #CDEDF2; background:#fff; color:var(--m-turq-ink); cursor:pointer;
+  font:inherit; font-size:12.5px; font-weight:700; padding:6px 12px; border-radius:999px; transition:.14s;
+}
+.lz-extra-chips button:hover{ background:var(--m-turq); color:#0B4B47; border-color:var(--m-turq) }
+@media(max-width:860px){
+  .lz-extra{ grid-template-columns:1fr; gap:16px; padding:18px }
+  .lz-extra-bilder{ display:flex; width:auto }
+  .lz-extra-bilder span{ width:52px; height:52px }
+  .lz-extra-kn .lz-btn{ flex:1 }
+}
+
+/* ---------- Gemischte Übungen ----------
+   Der Übungsteil hatte keinen Eingang mehr. Jetzt steht er oben im
+   Bereich: eine Runde aus genau den Themen, die hier drunter liegen. */
+.lz-mix{
+  display:grid; grid-template-columns:1fr auto; gap:14px 20px; align-items:center;
+  background:var(--m-dunkel); color:#fff; border-radius:20px; padding:18px 22px; margin:0 0 22px;
+}
+.lz-mix-t > b{ display:block; font-family:'Space Grotesk',sans-serif; font-size:18px; color:#fff }
+.lz-mix-t > span{ display:block; font-size:13px; color:rgba(255,255,255,.72); margin-top:3px; max-width:56ch }
+.lz-mix-kn{ display:flex; gap:9px; flex-wrap:wrap }
+.lz-mix-kn .lz-btn{ padding:11px 17px; font-size:14px }
+.lz-mix-kn .lz-btn-hell{ background:rgba(255,255,255,.12); color:#fff;
+  border-color:rgba(255,255,255,.26); box-shadow:0 3px 0 rgba(0,0,0,.3) }
+.lz-mix-kn .lz-btn-hell:hover{ background:rgba(255,255,255,.2); color:#fff }
+.lz-mix-kn .lz-btn i{ font-style:normal; opacity:.62; font-weight:700; font-size:12.5px }
+.lz-mix-alle{
+  grid-column:1/-1; justify-self:start; border:none; background:none; cursor:pointer;
+  font:inherit; font-weight:800; font-size:13px; color:var(--m-turq); padding:0;
+}
+.lz-mix-alle:hover{ color:#fff }
+@media(max-width:820px){
+  .lz-mix{ grid-template-columns:1fr; padding:16px 18px }
+  .lz-mix-kn .lz-btn{ flex:1 }
+}
+
+/* Die Bausteinliste kommt aus lernen.js. Ihre Spuren sind „auto"
+   breit — auf dem Handy schiebt ein langer Beispielsatz die ganze
+   Seite nach rechts. minmax(0,…) macht Schluss damit. */
+.lz-bausteine .ln-bsliste{ grid-template-columns:repeat(4,minmax(0,1fr)) }
+@media(max-width:1100px){ .lz-bausteine .ln-bsliste{ grid-template-columns:repeat(3,minmax(0,1fr)) } }
+@media(max-width:820px){ .lz-bausteine .ln-bsliste{ grid-template-columns:repeat(2,minmax(0,1fr)) } }
+@media(max-width:460px){ .lz-bausteine .ln-bsliste{ grid-template-columns:minmax(0,1fr) } }
+.lz-bausteine .ln-bs{ min-width:0 }
+.lz-bausteine .ln-bs .tx{ min-width:0; overflow:hidden }
+.lz-bausteine .ln-bs b{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
