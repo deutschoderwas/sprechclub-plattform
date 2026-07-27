@@ -29,15 +29,13 @@
   var curAudio=null, curBtn=null;
   function stopAudio(){ try{ if(curAudio){ curAudio.pause(); curAudio.currentTime=0; } }catch(e){}
     if(curBtn){ try{ curBtn.innerHTML='▶'; curBtn.classList.remove('playing'); }catch(e){} }
-    curAudio=null; curBtn=null; try{ if(window.speechSynthesis)speechSynthesis.cancel(); }catch(e){} try{ if(window.sagenStopp)window.sagenStopp(); }catch(e){} }
+    curAudio=null; curBtn=null; try{ if(window.speechSynthesis)speechSynthesis.cancel(); }catch(e){} }
   window.ubStopAudio=stopAudio;
-  function speak(text){ stopAudio(); if(!text)return;
-    if(window.sagen){ window.sagen(text,{rolle:'julia'}); return; }
-    try{ if(!window.speechSynthesis)return;
-      var u=new SpeechSynthesisUtterance(text); u.lang='de-DE'; u.rate=0.92;
-      var vs=(speechSynthesis.getVoices()||[]).filter(function(v){return /^de/i.test(v.lang);}); if(vs.length)u.voice=vs[0];
-      speechSynthesis.speak(u);
-    }catch(e){} }
+  function speak(text){ try{ stopAudio(); if(!window.speechSynthesis)return;
+    var u=new SpeechSynthesisUtterance(text); u.lang='de-DE'; u.rate=0.92;
+    var vs=(speechSynthesis.getVoices()||[]).filter(function(v){return /^de/i.test(v.lang);}); if(vs.length)u.voice=vs[0];
+    speechSynthesis.speak(u);
+  }catch(e){} }
   window.ubSpeak=speak;
   // Natürliche Stimme (echtes mp3) – Start/Stop-Umschalter
   window.ubPlayUrl=function(url,btn){
@@ -81,13 +79,13 @@
   // ---------- CSS -----------------------------------------------------------
   function injectCSS(){ if(document.getElementById('ubCSS'))return; var st=document.createElement('style'); st.id='ubCSS';
     st.textContent = `
-    .navlink-hl{background:linear-gradient(90deg,rgba(221,0,0,.10),rgba(126,216,234,.12));font-weight:800}
+    .navlink-hl{background:linear-gradient(90deg,rgba(221,0,0,.10),rgba(45,212,191,.12));font-weight:800}
     .ub-top{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px}
     .ub-stat{flex:1;min-width:120px;background:var(--card,#fff);border:1px solid var(--border,#ECECEC);border-radius:18px;padding:14px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 6px 18px rgba(0,0,0,.05)}
     .ub-stat .ico{font-size:26px}
     .ub-stat .big{font-size:22px;font-weight:800;font-family:'Space Grotesk',sans-serif;line-height:1}
     .ub-stat .lbl{font-size:12px;color:var(--soft,#5C5C5C)}
-    .ub-ring{--p:0;width:54px;height:54px;border-radius:50%;background:conic-gradient(var(--turq,#7ED8EA) calc(var(--p)*1%),#eee 0);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+    .ub-ring{--p:0;width:54px;height:54px;border-radius:50%;background:conic-gradient(var(--turq,#2DD4BF) calc(var(--p)*1%),#eee 0);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
     .ub-ring span{width:42px;height:42px;border-radius:50%;background:var(--card,#fff);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px}
     .ub-skills{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 16px}
     .ub-skill{border:1.5px solid var(--border,#ECECEC);background:#fff;border-radius:40px;padding:9px 16px;font-weight:700;font-size:14px;cursor:pointer;display:flex;gap:7px;align-items:center;transition:.15s}
@@ -99,7 +97,7 @@
     .ub-card .tt{font-weight:800;font-family:'Space Grotesk',sans-serif;line-height:1.15}
     .ub-card .lv{font-size:11px;font-weight:800;letter-spacing:.04em;background:var(--bg,#FFF7E6);color:var(--soft,#5C5C5C);padding:2px 8px;border-radius:20px;align-self:flex-start}
     .ub-pbar{height:8px;border-radius:6px;background:#eee;overflow:hidden}
-    .ub-pbar span{display:block;height:100%;background:var(--turq,#7ED8EA)}
+    .ub-pbar span{display:block;height:100%;background:var(--turq,#2DD4BF)}
     .ub-go{margin-top:4px;border:none;border-radius:40px;padding:10px;font-weight:800;color:#fff;cursor:pointer;background:var(--primary,#DD0000)}
     .ub-mix{background:linear-gradient(135deg,var(--primary,#DD0000),var(--accent,#FFCE00));color:#fff;border:none;border-radius:18px;padding:16px 20px;font-weight:800;font-size:16px;cursor:pointer;width:100%;margin-bottom:18px;box-shadow:0 10px 24px rgba(221,0,0,.25)}
     /* Session overlay */
@@ -108,27 +106,30 @@
     .ub-head{display:flex;align-items:center;gap:14px;padding:14px 18px;max-width:680px;margin:0 auto;width:100%}
     .ub-x{border:none;background:none;font-size:26px;cursor:pointer;color:var(--soft,#5C5C5C);line-height:1}
     .ub-prog{flex:1;height:14px;border-radius:10px;background:#e9e4d8;overflow:hidden}
-    .ub-prog span{display:block;height:100%;background:var(--turq,#7ED8EA);transition:width .3s}
+    .ub-prog span{display:block;height:100%;background:var(--turq,#2DD4BF);transition:width .3s}
     .ub-hearts{font-size:18px;letter-spacing:1px;white-space:nowrap}
     .ub-body{flex:1;overflow-y:auto;padding:8px 18px 20px;max-width:680px;margin:0 auto;width:100%}
     .ub-q{font-size:21px;font-weight:800;font-family:'Space Grotesk',sans-serif;line-height:1.25;margin:10px 0 18px}
+    .ub-thbild{position:relative;border-radius:14px;overflow:hidden;margin:0 0 16px;background:#ECECEC}
+    .ub-thbild img{display:block;width:100%;height:110px;object-fit:cover;opacity:.92}
+    .ub-thbild span{position:absolute;left:0;right:0;bottom:0;padding:20px 13px 9px;color:#fff;font-weight:800;font-size:14px;background:linear-gradient(to top,rgba(9,14,20,.85),rgba(9,14,20,0))}
     .ub-qimg{display:block;width:100%;max-height:230px;object-fit:cover;border-radius:14px;border:1px solid var(--border,#ECECEC);margin:6px 0 16px;box-shadow:0 8px 20px rgba(0,0,0,.08)}
     .ub-opts{display:flex;flex-direction:column;gap:10px}
     .ub-opt{border:2px solid var(--border,#ECECEC);background:#fff;border-radius:14px;padding:15px 16px;font-size:16px;text-align:left;cursor:pointer;transition:.12s;font-weight:600}
-    .ub-opt:hover{border-color:var(--turq,#7ED8EA)}
-    .ub-opt.sel{border-color:var(--turq,#7ED8EA);background:rgba(126,216,234,.08)}
+    .ub-opt:hover{border-color:var(--turq,#2DD4BF)}
+    .ub-opt.sel{border-color:var(--turq,#2DD4BF);background:rgba(45,212,191,.08)}
     .ub-opt.right{border-color:#16a34a;background:#dcfce7}
     .ub-opt.wrong{border-color:#dc2626;background:#fee2e2}
     .ub-opt[disabled]{cursor:default}
     .ub-input{width:100%;border:2px solid var(--border,#ECECEC);border-radius:14px;padding:15px 16px;font-size:17px;font-family:inherit}
-    .ub-input:focus{outline:none;border-color:var(--turq,#7ED8EA)}
+    .ub-input:focus{outline:none;border-color:var(--turq,#2DD4BF)}
     .ub-mrow{display:flex;gap:10px;align-items:center;margin-bottom:10px}
     .ub-mrow b{flex:0 0 42%;font-weight:700}
     .ub-mrow select{flex:1;padding:11px;border-radius:12px;border:2px solid var(--border,#ECECEC);font-size:15px;font-family:inherit}
     .ub-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
     .ub-chip{border:2px solid var(--border,#ECECEC);background:#fff;border-radius:12px;padding:9px 13px;font-size:16px;cursor:pointer;font-weight:600}
     .ub-build{min-height:54px;border-bottom:2px dashed var(--border,#ECECEC);padding:8px 0;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-    .ub-play{border:none;background:var(--turq,#7ED8EA);color:#fff;border-radius:50%;width:74px;height:74px;font-size:30px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin:6px auto 18px;box-shadow:0 8px 20px rgba(126,216,234,.4);transition:.15s}
+    .ub-play{border:none;background:var(--turq,#2DD4BF);color:#fff;border-radius:50%;width:74px;height:74px;font-size:30px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin:6px auto 18px;box-shadow:0 8px 20px rgba(45,212,191,.4);transition:.15s}
     .ub-play:hover{transform:scale(1.06)}
     .ub-play.playing{background:var(--primary,#DD0000);box-shadow:0 8px 22px rgba(221,0,0,.4);animation:ubpulse 1s infinite}
     @keyframes ubpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
@@ -138,7 +139,7 @@
     .ub-fb.ok{background:#dcfce7;color:#166534;display:block}
     .ub-fb.no{background:#fee2e2;color:#991b1b;display:block}
     .ub-foot{padding:14px 18px;max-width:680px;margin:0 auto;width:100%}
-    .ub-btn{width:100%;border:none;border-radius:40px;padding:16px;font-size:16px;font-weight:800;color:#fff;cursor:pointer;background:var(--turq,#7ED8EA);box-shadow:0 8px 20px rgba(126,216,234,.35)}
+    .ub-btn{width:100%;border:none;border-radius:40px;padding:16px;font-size:16px;font-weight:800;color:#fff;cursor:pointer;background:var(--turq,#2DD4BF);box-shadow:0 8px 20px rgba(45,212,191,.35)}
     .ub-btn[disabled]{opacity:.4;cursor:default;box-shadow:none}
     .ub-btn.no{background:#dc2626}
     .ub-end{text-align:center;padding:30px 10px}
@@ -149,7 +150,7 @@
     .ub-cele .box{background:#fff;border-radius:22px;padding:26px 30px;text-align:center;max-width:300px;box-shadow:0 20px 50px rgba(0,0,0,.3)}
     @keyframes ubfade{from{opacity:0}to{opacity:1}}
     /* vibrante Übersicht */
-    .ub-hero{background:linear-gradient(120deg,rgba(221,0,0,.10),rgba(255,206,0,.10) 55%,rgba(126,216,234,.16));border:1px solid var(--border,#ECECEC);border-radius:24px;padding:22px 24px;margin-bottom:16px;box-shadow:0 10px 26px rgba(0,0,0,.05)}
+    .ub-hero{background:linear-gradient(120deg,rgba(221,0,0,.10),rgba(255,206,0,.10) 55%,rgba(45,212,191,.16));border:1px solid var(--border,#ECECEC);border-radius:24px;padding:22px 24px;margin-bottom:16px;box-shadow:0 10px 26px rgba(0,0,0,.05)}
     .ub-hero h1{font-family:'Space Grotesk',sans-serif;font-size:30px;margin:0;line-height:1.05}
     .ub-hero p{color:var(--soft,#5C5C5C);margin:8px 0 0;max-width:640px}
     .ub-tcard{background:var(--card,#fff);border:1px solid var(--border,#ECECEC);border-radius:22px;overflow:hidden;box-shadow:0 10px 24px rgba(0,0,0,.06);display:flex;flex-direction:column;transition:transform .18s,box-shadow .25s}
@@ -165,18 +166,18 @@
     .ub-go2{margin-top:4px;border:none;border-radius:40px;padding:11px;font-weight:800;color:#fff;cursor:pointer;font-family:inherit;font-size:14.5px;transition:filter .15s}
     .ub-go2:hover{filter:brightness(1.08)}
     .ub-lesson{display:block;text-align:center;font-size:13px;font-weight:700;color:var(--soft,#5C5C5C);text-decoration:none;padding:8px;border-radius:30px;border:1.5px solid var(--border,#ECECEC);transition:.15s}
-    .ub-lesson:hover{border-color:var(--turq,#7ED8EA);color:var(--ink,#1A1A1A);background:rgba(126,216,234,.07)}
+    .ub-lesson:hover{border-color:var(--turq,#2DD4BF);color:var(--ink,#1A1A1A);background:rgba(45,212,191,.07)}
     .ub-recbtn{border:2px solid #7C3AED;background:#fff;color:#7C3AED;border-radius:40px;padding:13px 22px;font-weight:800;font-size:16px;cursor:pointer;font-family:inherit;transition:.15s}
     .ub-recbtn:hover{background:rgba(124,58,237,.08)}
     .ub-recbtn.rec{background:#dc2626;border-color:#dc2626;color:#fff;animation:ubpulse 1s infinite}
     .ub-cmp{display:flex;gap:10px;justify-content:center;margin:14px 0 4px;flex-wrap:wrap}
     .ub-cmp-btn{border:2px solid var(--border,#ECECEC);background:#fff;border-radius:40px;padding:11px 18px;font-weight:700;font-size:15px;cursor:pointer;font-family:inherit}
     .ub-cmp-btn.mine{border-color:#7C3AED;color:#7C3AED}
-    .ub-cmp-btn.playing{background:var(--turq,#7ED8EA);color:#fff;border-color:var(--turq,#7ED8EA)}
+    .ub-cmp-btn.playing{background:var(--turq,#2DD4BF);color:#fff;border-color:var(--turq,#2DD4BF)}
     `;
     document.head.appendChild(st);
   }
-  function celebrate(t,sub){ injectCSS(); if(window.klang)window.klang('fertig'); if(window.julia)setTimeout(function(){window.julia('fertig');},800); var d=document.createElement('div'); d.className='ub-cele';
+  function celebrate(t,sub){ injectCSS(); var d=document.createElement('div'); d.className='ub-cele';
     d.innerHTML='<div class="box"><div style="font-size:54px">🎉</div><h3 style="font-family:Space Grotesk,sans-serif;margin:6px 0">'+E(t)+'</h3><p style="color:#5C5C5C">'+E(sub||'')+'</p></div>';
     d.onclick=function(){ d.remove(); }; document.body.appendChild(d); setTimeout(function(){ if(d.parentNode)d.remove(); },2200); }
 
@@ -185,7 +186,7 @@
   function skillById(id){ return (UEBUNGEN.skills||[]).filter(function(s){return s.id===id;})[0]; }
   // Emoji je Thema (für vibrante Karten)
   var UB_EMOJI={arbeit:'💼',bildung:'📚',einkaufen:'🛒',essen:'🍳',gefuehle:'😊',gesundheit:'🩺',medien:'📱',natur:'🌳',persoenlichkeit:'😎',redewendungen:'💬',reisen:'✈️',stadt:'🚉','starke-adjektive':'💪','typisch-deutsch':'🇩🇪',wohnen:'🛋️',adjektivdeklination:'🧩',genitiv:'🔑','indirekte-rede':'🗣️',konjunktiv2:'💭',konnektoren:'🔗',nebensaetze:'🧷','passiv-praesens':'🔁','passiv-vergangenheit':'🕰️','perfekt-praeteritum':'⏳',relativsaetze:'📎','temporale-nebensaetze':'⏰',wechselpraepositionen:'📍',ch:'🔤',r:'🌀','s-z-ss':'🔊',satzmelodie:'🎵',umlaute:'Ä','v-w-f':'💨',vokale:'🅰️',wortakzent:'📢'};
-  var UB_PAL=[['#DD0000','#FF7A00'],['#2563EB','#7ED8EA'],['#13A89A','#16a34a'],['#FF7A00','#FFCE00'],['#E83E8C','#7C3AED'],['#DD0000','#E83E8C'],['#2563EB','#7C3AED'],['#16a34a','#7ED8EA'],['#7C3AED','#2563EB'],['#FF7A00','#DD0000'],['#7ED8EA','#2563EB'],['#13A89A','#2563EB'],['#DD0000','#FFCE00'],['#FFCE00','#FF7A00'],['#7C3AED','#E83E8C']];
+  var UB_PAL=[['#DD0000','#FF7A00'],['#2563EB','#2DD4BF'],['#13A89A','#16a34a'],['#FF7A00','#FFCE00'],['#E83E8C','#7C3AED'],['#DD0000','#E83E8C'],['#2563EB','#7C3AED'],['#16a34a','#2DD4BF'],['#7C3AED','#2563EB'],['#FF7A00','#DD0000'],['#2DD4BF','#2563EB'],['#13A89A','#2563EB'],['#DD0000','#FFCE00'],['#FFCE00','#FF7A00'],['#7C3AED','#E83E8C']];
   // Passende Lektionsseite je Übungs-Thema (1:1-Verzahnung)
   function lessonUrl(skId,thId){ if(!skId||skId==='mix'||skId==='shadowing'||!thId)return null;
     if(skId==='aussprache') return 'aussprache-'+thId+'-a2.html';
@@ -205,17 +206,7 @@
     {type:'shadow',level:'B2',text:'Meiner Meinung nach sollten wir das noch einmal in Ruhe überdenken.',audioUrl:SHADOW_CDN+'hf_20260621_105402_4221f936-78b4-4c97-a661-3498bd6e7aa6.mp3',tip:'Längerer Satz – in zwei Atemgruppen sprechen.'},
     {type:'shadow',level:'B2',text:'Trotz des schlechten Wetters hatten wir richtig viel Spaß.',audioUrl:SHADOW_CDN+'hf_20260621_105403_6c6548d1-cf68-4911-9bc7-6128619f2cdb.mp3',tip:'„Spaß" mit langem a und scharfem ß.'},
     {type:'shadow',level:'C1',text:'Ehrlich gesagt fällt es mir schwer, das alles nachzuvollziehen.',audioUrl:SHADOW_CDN+'hf_20260621_105405_92f3c151-fb4e-46bb-a928-d885ac2f7464.mp3',tip:'Betonung auf „schwer" und „nachzuvollziehen".'},
-    {type:'shadow',level:'C1',text:'Lassen Sie uns das Thema beim nächsten Treffen ausführlich vertiefen.',audioUrl:SHADOW_CDN+'hf_20260621_105406_da2ebb51-d4dc-481c-8af8-2bb1e353b1f2.mp3',tip:'Formell und ruhig; klare Endung bei „vertiefen".'},
-    {type:'shadow',level:'A1',text:'Schön, dich zu sehen!',audioUrl:SHADOW_CDN+'hf_20260725_084608_f8bf2825-0a40-4800-8f4c-dd87a48d0453.mp3',tip:'„sch" vorne am Mund, „ö" mit runden Lippen.'},
-    {type:'shadow',level:'A1',text:'Ich möchte fünf frische Brötchen.',audioUrl:SHADOW_CDN+'hf_20260725_084609_0207a746-58ea-4de3-a917-b57d953fbb32.mp3',tip:'„ö" und „ü" mit runden Lippen; „fr" locker sprechen.'},
-    {type:'shadow',level:'A2',text:'Natürlich räume ich mein Zimmer später auf.',audioUrl:SHADOW_CDN+'hf_20260725_084627_d1c3baa3-ef4a-4c81-85be-5d69a3f8c10d.mp3',tip:'„ü" in „natürlich", „äu" in „räume", „z" wie ein scharfes ts.'},
-    {type:'shadow',level:'A2',text:'Die Kirche steht gleich neben der Küche.',audioUrl:SHADOW_CDN+'hf_20260725_084628_cc698382-01d6-4335-b8a6-6af39e674438.mp3',tip:'„Kirche" mit i, „Küche" mit ü – klar trennen; „ch" weich.'},
-    {type:'shadow',level:'B1',text:'Eigentlich wollte ich früher zurückfahren.',audioUrl:SHADOW_CDN+'hf_20260725_084658_587d105b-40a3-49dc-bc04-4d1f26d8c843.mp3',tip:'„ei" wie ai; „ü" in „früher/zurück"; „r" hinten, nicht rollen.'},
-    {type:'shadow',level:'B1',text:'Zwischen zwölf und zwei ist das Geschäft geschlossen.',audioUrl:SHADOW_CDN+'hf_20260725_084659_e16aa753-843a-4dab-90b0-d46848bd4c57.mp3',tip:'„zw" und „z" als ts; „ö" in „zwölf"; „sch" in „Geschäft".'},
-    {type:'shadow',level:'B2',text:'Ursprünglich hätte ich das nicht für möglich gehalten.',audioUrl:SHADOW_CDN+'hf_20260725_084716_e98d3475-6f69-4094-add5-f49587f42251.mp3',tip:'„ü", „ä", „ö" sauber halten; „ch" in „möglich" weich.'},
-    {type:'shadow',level:'B2',text:'Die Öffentlichkeit reagierte überrascht und verärgert.',audioUrl:SHADOW_CDN+'hf_20260725_084718_78c66007-22c7-476f-a145-ccc18e32af9b.mp3',tip:'Langes Wort in Silben: Öf-fent-lich-keit; „ü" und „ä" klar.'},
-    {type:'shadow',level:'C1',text:'Nichtsdestotrotz rechtfertigt das sein Verhalten keineswegs.',audioUrl:SHADOW_CDN+'hf_20260725_084737_a524c2b6-870c-4a97-9216-28816646d448.mp3',tip:'„chts", „cht" und „tz" deutlich; ruhig und betont sprechen.'},
-    {type:'shadow',level:'C1',text:'Die gründliche Überprüfung ermöglichte klare Rückschlüsse.',audioUrl:SHADOW_CDN+'hf_20260725_084738_c4cb31e0-df78-4af8-95b0-688c950a8275.mp3',tip:'Viele „ü" und „ö"; „ch" weich; in zwei Atemgruppen sprechen.'}
+    {type:'shadow',level:'C1',text:'Lassen Sie uns das Thema beim nächsten Treffen ausführlich vertiefen.',audioUrl:SHADOW_CDN+'hf_20260621_105406_da2ebb51-d4dc-481c-8af8-2bb1e353b1f2.mp3',tip:'Formell und ruhig; klare Endung bei „vertiefen".'}
   ];
   function ensureShadow(){ if(!window.UEBUNGEN||!UEBUNGEN.skills)return;
     if(UEBUNGEN.skills.some(function(s){return s.id==='shadowing';}))return;
@@ -270,18 +261,27 @@
   var S=null; // session state
   function ensureOverlay(){ var o=document.getElementById('ubOv'); if(o)return o;
     o=document.createElement('div'); o.className='ub-ov'; o.id='ubOv';
-    o.innerHTML='<div class="ub-head"><button class="ub-x" onclick="ubClose()">×</button><div class="ub-prog"><span id="ubProg" style="width:0"></span></div><div class="ub-hearts" id="ubHearts"></div></div>'+
+    o.innerHTML='<div class="ub-head"><button class="ub-x" id="ubZur" onclick="ubZurueck()" aria-label="Eine Aufgabe zurück">←</button><div class="ub-prog"><span id="ubProg" style="width:0"></span></div><div class="ub-hearts" id="ubHearts"></div></div>'+
                 '<div class="ub-body" id="ubBody"></div>'+
                 '<div class="ub-foot"><button class="ub-btn" id="ubBtn" disabled onclick="ubBtn()">Prüfen</button></div>';
     document.body.appendChild(o); return o; }
   function pickItems(list,n){ return shuf(list).slice(0,Math.min(n,list.length)); }
 
   window.ubStart=function(skId,thId){ var sk=skillById(skId); if(!sk)return; var th=sk.themes.filter(function(t){return t.id===thId;})[0]; if(!th)return;
-    S={skId:skId,thId:thId,items:pickItems(th.exercises,12),idx:0,correct:0,hearts:META().maxHearts||5,answered:false,sel:null,title:th.title};
+    S={skId:skId,thId:thId,items:pickItems(th.exercises,12),idx:0,correct:0,hearts:META().maxHearts||5,answered:false,sel:null,title:th.title,gewertet:[]};
     openSession(); };
   window.ubStartMix=function(){ var all=[]; (UEBUNGEN.skills||[]).forEach(function(sk){ if(sk.id==='shadowing')return; sk.themes.forEach(function(t){ t.exercises.forEach(function(e){ all.push(e); }); }); });
-    S={skId:'mix',thId:'mix',items:pickItems(all,10),idx:0,correct:0,hearts:META().maxHearts||5,answered:false,sel:null,title:'Schnell-Mix'};
+    S={skId:'mix',thId:'mix',items:pickItems(all,10),idx:0,correct:0,hearts:META().maxHearts||5,answered:false,sel:null,title:'Schnell-Mix',gewertet:[]};
     openSession(); };
+
+  function themenBild(){
+    if(!S) return '';
+    var sk=skillById(S.skId); if(!sk) return '';
+    var th=(sk.themes||[]).filter(function(t){return t.id===S.thId;})[0];
+    if(!th||!th.bild) return '';
+    return '<div class="ub-thbild"><img src="'+E(th.bild)+'" alt="" onerror="this.parentNode.remove()">'
+      +'<span>'+E(th.title||'')+'</span></div>';
+  }
 
   function openSession(){ injectCSS(); var o=ensureOverlay(); o.classList.add('open');
     o.querySelector('.ub-foot').innerHTML='<button class="ub-btn" id="ubBtn" disabled onclick="ubBtn()">Prüfen</button>';
@@ -298,20 +298,23 @@
   function renderQ(){
     stopAudio(); shadowReset();
     setProg(); S.answered=false; S.sel=null; S.order=null;
+    var zr=document.getElementById('ubZur');
+    if(zr){ zr.textContent = S.idx>0 ? '←' : '×';
+            zr.setAttribute('aria-label', S.idx>0 ? 'Eine Aufgabe zurück' : 'Übung beenden'); }
     var e=S.items[S.idx]; var body=document.getElementById('ubBody'); var btn=document.getElementById('ubBtn');
     btn.className='ub-btn'; btn.textContent='Prüfen'; btn.disabled=true;
-    var h='';
+    var h=(S.idx===0?themenBild():'');
     if(e.type==='choice'){
-      if(e.img){ h+='<img class="ub-qimg" src="'+E(e.img)+'" alt="">'; }
+      if(e.img){ h+='<img class="ub-qimg" src="'+E(e.img)+'" alt="" onerror="this.remove()">'; }
       if(e.audio){ h+='<button class="ub-play" onclick="ubSpeak(\''+E(e.audio).replace(/'/g,"\\'")+'\')">🔊</button>'; }
       h+='<div class="ub-q">'+E(e.q||'Wähle die richtige Antwort:')+'</div><div class="ub-opts" id="ubOpts">'+
          shuf(e.options.map(function(o,k){return k;})).map(function(k){ return '<button class="ub-opt" data-k="'+k+'" onclick="ubChoose('+k+')">'+E(e.options[k])+'</button>'; }).join('')+'</div>';
       if(e.audio) setTimeout(function(){ speak(e.audio); },200);
     } else if(e.type==='gap'){
-      h+=(e.img?'<img class="ub-qimg" src="'+E(e.img)+'" alt="">':'')+'<div class="ub-q">'+E((e.text||'').replace('___','_____'))+'</div><input class="ub-input" id="ubGap" placeholder="Antwort eintippen…" autocomplete="off" autocapitalize="off">';
+      h+=(e.img?'<img class="ub-qimg" src="'+E(e.img)+'" alt="" onerror="this.remove()">':'')+'<div class="ub-q">'+E((e.text||'').replace('___','_____'))+'</div><input class="ub-input" id="ubGap" placeholder="Antwort eintippen…" autocomplete="off" autocapitalize="off">';
       if(e.hint) h+='<div class="ub-tip" style="text-align:left;margin-top:8px">💡 '+E(e.hint)+'</div>';
     } else if(e.type==='match'){
-      if(e.img){ h+='<img class="ub-qimg" src="'+E(e.img)+'" alt="">'; }
+      if(e.img){ h+='<img class="ub-qimg" src="'+E(e.img)+'" alt="" onerror="this.remove()">'; }
       var rs=shuf(e.pairs.map(function(p){return p.r;}));
       h+='<div class="ub-q">'+E(e.intro||'Ordne zu:')+'</div>'+e.pairs.map(function(p,k){
         return '<div class="ub-mrow"><b>'+E(p.l)+'</b><select id="ubM'+k+'" onchange="ubMatchChk()"><option value="">— wählen —</option>'+rs.map(function(r){return '<option>'+E(r)+'</option>';}).join('')+'</select></div>';
@@ -321,7 +324,7 @@
       h+='<div class="ub-q">Bring die Wörter in die richtige Reihenfolge:</div><div class="ub-build" id="ubBuild"></div><div class="ub-chips" id="ubPool"></div>';
       if(e.hint) h+='<div class="ub-tip" style="text-align:left;margin-top:10px">💡 '+E(e.hint)+'</div>';
     } else if(e.type==='speak'){
-      if(e.img){ h+='<img class="ub-qimg" src="'+E(e.img)+'" alt="">'; }
+      if(e.img){ h+='<img class="ub-qimg" src="'+E(e.img)+'" alt="" onerror="this.remove()">'; }
       h+='<div class="ub-q" style="text-align:center">🗣️ Hör zu und sprich nach</div>';
       if(e.audioUrl){ h+='<button class="ub-play" onclick="ubPlayUrl(\''+E(e.audioUrl)+'\',this)">▶</button>'; }
       else { h+='<button class="ub-play" onclick="ubSpeak(\''+E(e.word).replace(/'/g,"\\'")+'\')">🔊</button>'; }
@@ -330,7 +333,7 @@
       if(e.audioUrl){ setTimeout(function(){ ubPlayUrl(e.audioUrl, document.querySelector('#ubBody .ub-play')); },300); }
       else { setTimeout(function(){ speak(e.word); },200); }
     } else if(e.type==='listen'){
-      if(e.img){ h+='<img class="ub-qimg" src="'+E(e.img)+'" alt="">'; }
+      if(e.img){ h+='<img class="ub-qimg" src="'+E(e.img)+'" alt="" onerror="this.remove()">'; }
       h+='<div class="ub-tip" style="margin-bottom:4px">'+E(e.label||'🎧 Hör gut zu – du kannst mehrmals hören')+'</div>'+
          '<button class="ub-play" onclick="ubPlayUrl(\''+E(e.audioUrl)+'\',this)">▶</button>'+
          '<div class="ub-q">'+E(e.q)+'</div><div class="ub-opts" id="ubOpts">'+
@@ -377,15 +380,26 @@
       sol=e.explain?e.explain:'Hör nochmal genau hin.'; }
 
     S.answered=true; var btn=document.getElementById('ubBtn'); var selfRated=(e.type==='speak'||e.type==='shadow');
-    if(!selfRated){
-      if(ok){ S.correct++; addXP(META().xpPerCorrect||10); if(window.klang)window.klang('richtig'); if(window.julia)setTimeout(function(){window.julia('lob');},300); fb.className='ub-fb ok'; fb.innerHTML='✓ Richtig! +'+(META().xpPerCorrect||10)+' XP'; }
-      else { S.hearts--; setProg(); if(window.klang){window.klang('falsch'); setTimeout(function(){window.klang('herz');},260);} if(window.julia)setTimeout(function(){window.julia('trost');},340); fb.className='ub-fb no'; fb.innerHTML='✗ '+E(sol); }
-    } else { S.correct++; addXP(Math.round((META().xpPerCorrect||10)/2)); if(window.klang)window.klang('richtig'); fb.className='ub-fb ok'; fb.innerHTML='Klasse! Weiter so. +'+Math.round((META().xpPerCorrect||10)/2)+' XP'; }
+    /* Wer zurückgeht und dieselbe Aufgabe nochmal löst, verliert kein zweites Herz
+       und bekommt keine zweiten Punkte. */
+    var schonGewertet=!!S.gewertet[S.idx]; S.gewertet[S.idx]=true;
+    if(schonGewertet){
+      if(ok){ fb.className='ub-fb ok'; fb.innerHTML='✓ Richtig!'; }
+      else { fb.className='ub-fb no'; fb.innerHTML='✗ '+E(sol); }
+    }
+    else if(!selfRated){
+      if(ok){ S.correct++; addXP(META().xpPerCorrect||10); fb.className='ub-fb ok'; fb.innerHTML='✓ Richtig! +'+(META().xpPerCorrect||10)+' XP'; }
+      else { S.hearts--; setProg(); fb.className='ub-fb no'; fb.innerHTML='✗ '+E(sol); }
+    } else { S.correct++; addXP(Math.round((META().xpPerCorrect||10)/2)); fb.className='ub-fb ok'; fb.innerHTML='Klasse! Weiter so. +'+Math.round((META().xpPerCorrect||10)/2)+' XP'; }
     if(e.type==='listen'){ fb.innerHTML+='<div style="margin-top:10px;padding:11px 13px;background:#fff;border:1px solid var(--border,#ECECEC);border-radius:12px;font-weight:500;color:#333;line-height:1.5">📝 <b>Das hast du gehört:</b><br>'+E(e.transcript)+'</div>'; }
     btn.className='ub-btn'+((!ok&&!selfRated)?' no':''); btn.disabled=false;
     btn.textContent=(S.idx>=S.items.length-1)?'Abschließen':'Weiter';
     if(S.hearts<=0 && !selfRated && !ok){ btn.textContent='Runde beenden'; }
   }
+
+  window.ubZurueck=function(){ if(!S) return;
+    if(S.ended||S.idx<=0) return window.ubClose();
+    S.idx--; renderQ(); };
 
   function next(){ var e=S.items[S.idx];
     if(S.hearts<=0){ return end(true); }

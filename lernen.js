@@ -215,6 +215,8 @@
 '.ln-d{display:flex;align-items:center;gap:11px;text-align:left;border:1px solid var(--ll);background:#fff;border-radius:15px;padding:12px 13px;cursor:pointer;font-family:inherit;transition:.14s}',
 '.ln-d:hover{border-color:var(--lb);transform:translateY(-2px)}',
 '.ln-d .em{font-size:22px;width:38px;height:38px;flex:0 0 38px;border-radius:11px;background:#F2F6FC;display:grid;place-items:center}',
+'.ln-d .db{width:54px;height:54px;flex:0 0 54px;border-radius:12px;overflow:hidden;background:#F2F6FC;position:relative;display:grid;place-items:center;font-size:21px}',
+'.ln-d .db img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}',
 '.ln-d .dt{min-width:0;flex:1}',
 '.ln-d b{display:block;font-size:14px;color:var(--lt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}',
 '.ln-d small{font-size:11.5px;color:var(--lm)}',
@@ -223,7 +225,7 @@
 '.ln-leer{text-align:center;color:var(--lm);padding:36px 20px;background:#fff;border:1px dashed var(--ll);border-radius:18px}',
 
 /* ---------- Gesprächsfenster ---------- */
-'.dg-ov{position:fixed;inset:0;z-index:9000;background:#F4F6F9;display:none;flex-direction:column}',
+'.dg-ov{--lb:#1F5FD1;--lb2:#12408F;--lr:#DD0000;--lg:#FFCE00;--lt:#12181F;--lm:#5E6A78;--lc:#fff;--ll:#E7EBF0;position:fixed;inset:0;z-index:9000;background:#F4F6F9;display:none;flex-direction:column}',
 '.dg-ov.auf{display:flex}',
 '.dg-kopf{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:12px 16px;background:#fff;border-bottom:1px solid #E7EBF0}',
 '.dg-kopf .zu{border:none;background:#F1F4F8;width:36px;height:36px;border-radius:11px;font-size:20px;cursor:pointer;color:#5E6A78;line-height:1}',
@@ -234,7 +236,11 @@
 '.dg-punkte{display:flex;gap:5px}',
 '.dg-punkte i{width:22px;height:5px;border-radius:5px;background:#E2E7EE;display:block}',
 '.dg-punkte i.an{background:#1F5FD1}',
-'.dg-ort{flex:0 0 auto;padding:11px 18px;background:#FFF8E1;color:#6B5600;font-size:13px;border-bottom:1px solid #F3E6B8}',
+'.dg-szene{position:relative;border-radius:16px;overflow:hidden;margin:0 0 15px;background:#E7EBF0;box-shadow:0 2px 10px rgba(18,24,31,.09)}',
+'.dg-szene.ohne{display:none}',
+'.dg-szene img{display:block;width:100%;height:auto;max-height:230px;object-fit:cover}',
+'.dg-szene .ort{position:absolute;left:0;right:0;bottom:0;padding:22px 14px 11px;font-size:13.5px;line-height:1.4;color:#fff;background:linear-gradient(to top,rgba(9,14,20,.86),rgba(9,14,20,0))}',
+'@media(max-width:520px){.dg-szene img{max-height:170px}.dg-szene .ort{font-size:12.5px}}',
 '.dg-liste{flex:1 1 auto;overflow-y:auto;overflow-x:hidden;padding:16px 14px 8px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;display:flex;flex-direction:column}',
 '.dg-innen{margin-top:auto;width:100%}',
 '.dg-b{display:flex;gap:9px;margin:0 0 13px;align-items:flex-end;max-width:660px}',
@@ -548,7 +554,7 @@
         +dl.map(function(d){
           var ok=dialogFertig(d.id);
           return '<button class="ln-d" onclick="lernDialog(\''+d.id+'\')">'
-            +'<span class="em">'+(d.em||'💬')+'</span>'
+            +'<span class="db">'+(d.em||'💬')+'<img src="bilder/dialog/'+d.id+'-s.jpg" alt="" loading="lazy" onerror="this.remove()"></span>'
             +'<span class="dt"><b>'+E(d.titel)+'</b><small>'+E(d.lvl)+' · '+E(d.dauer||'')+'</small></span>'
             +(ok?'<span class="ok">✓</span>':'<span style="color:#B9C3D0">→</span>')
             +'</button>';
@@ -587,20 +593,44 @@
 
   /* ============================================================
      3 — Das Gesprächsfenster
+
+     Neu und der eigentliche Unterschied: Amanda liest, was die
+     Person WIRKLICH geschrieben hat, und antwortet darauf.
+     Das Skript ist nur noch der Plan — Ort, Rolle und das Ziel
+     jedes Schritts. Fällt die Verbindung aus, läuft das alte
+     Skript weiter, damit niemand vor einem toten Fenster sitzt.
      ============================================================ */
   var G=null; /* laufendes Gespräch */
+
+  function dlgFoto(id,klein){ return 'bilder/dialog/'+id+(klein?'-s':'')+'.jpg'; }
+  function rolleVon(id){ try{ return (window.DIALOG_ROLLEN||{})[id]||''; }catch(e){ return ''; } }
+
+  /* Das Zugangstoken — je nachdem, wie die Seite eingerichtet ist */
+  function mitToken(cb){
+    var t=null;
+    try{ t=(window.SB&&window.SB.session&&window.SB.session.access_token)||window.__TOKEN__||null; }catch(e){}
+    if(t) return cb(t);
+    var c=null;
+    try{ c=window.sb||window.SBCLIENT||null; }catch(e){}
+    if(c&&c.auth&&c.auth.getSession){
+      c.auth.getSession().then(function(r){
+        cb((r&&r.data&&r.data.session&&r.data.session.access_token)||null);
+      }).catch(function(){ cb(null); });
+      return;
+    }
+    cb(null);
+  }
 
   function ovBauen(){
     var o=el('dgOv'); if(o) return o;
     o=document.createElement('div'); o.className='dg-ov'; o.id='dgOv';
     o.innerHTML=
       '<div class="dg-kopf">'
-       +'<button class="zu" onclick="dgSchliessen()" aria-label="Schließen">×</button>'
+       +'<button class="zu" onclick="dgSchliessen()" aria-label="Zurück">←</button>'
        +'<span class="dg-av" id="dgAv">A</span>'
        +'<span class="who"><b id="dgTitel"></b><small id="dgUnter"></small></span>'
        +'<span class="dg-punkte" id="dgPunkte"></span>'
       +'</div>'
-      +'<div class="dg-ort" id="dgOrt"></div>'
       +'<div class="dg-liste" id="dgListe"><div class="dg-innen" id="dgInnen"></div></div>'
       +'<div class="dg-fuss" id="dgFuss">'
         +'<div class="dg-hilfen" id="dgHilfen"></div>'
@@ -664,6 +694,14 @@
     var s=''; for(var i=0;i<G.schritte.length;i++) s+='<i class="'+(i<=G.i?'an':'')+'"></i>';
     p.innerHTML=s;
   }
+  function amandaSagt(text){
+    if(!G) return;
+    anhaengen('<div class="dg-b"><span class="dg-av">'
+      +(G.foto?'<img src="'+E(G.foto)+'" alt="" onerror="this.parentNode.textContent=\''+E(G.em||'A')+'\'">':E(G.em||'A'))
+      +'</span><span class="dg-bb">'+E(text)+'</span></div>');
+    sprich(text,{rolle:'amanda'});
+    runter();
+  }
 
   window.lernDialog=function(id){
     stil();
@@ -672,53 +710,95 @@
     if(!d){ note('Diesen Dialog finde ich gerade nicht.'); return; }
 
     ovBauen();
-    G={id:d.id, titel:d.titel, em:(d.em||'💬'), schritte:d.schritte||[], i:-1, richtig:0, laeuft:false, ende:false};
+    G={id:d.id, titel:d.titel, em:(d.em||'💬'), ort:(d.ort||''), lvl:(d.lvl||''),
+       rolle:rolleVon(d.id), foto:dlgFoto(d.id,true), gross:dlgFoto(d.id,false),
+       schritte:d.schritte||[], i:0, richtig:0, laeuft:false, ende:false,
+       verlauf:[], live:true, zeigtZiel:-1};
+
     el('dgOv').classList.add('auf');
     document.body.style.overflow='hidden';
     el('dgTitel').textContent=d.titel;
-    el('dgUnter').textContent=d.lvl+' · '+(d.dauer||'') + ' · mit Amanda';
-    el('dgAv').textContent=(d.em||'A');
-    var ort=el('dgOrt');
-    if(d.ort){ ort.style.display=''; ort.textContent=d.ort; } else ort.style.display='none';
+    el('dgUnter').textContent=(d.lvl||'')+(d.dauer?' · '+d.dauer:'');
+    var av=el('dgAv');
+    av.innerHTML='<img src="'+E(G.foto)+'" alt="" onerror="this.parentNode.textContent=\''+E(G.em)+'\'">';
+
     el('dgListe').innerHTML='<div class="dg-innen" id="dgInnen"></div>';
     el('dgFuss').style.display='';
     el('dgHilfen').innerHTML='';
-    window.chatLeeren && 0;
     var f=el('dgFeld'); f.value=''; f.style.height='auto'; el('dgSend').disabled=true;
     punkte();
-    setTimeout(naechsterSchritt,320);
+
+    /* Die Szene: das Foto zuerst, damit man sieht, wo man ist */
+    anhaengen('<div class="dg-szene"><img src="'+E(G.gross)+'" alt="" '
+      +'onerror="this.parentNode.classList.add(\'ohne\')">'
+      +(G.ort?'<span class="ort">'+E(G.ort)+'</span>':'')+'</div>');
+
+    tippt(true);
+    dialogRuf('', function(j){
+      tippt(false);
+      if(!G) return;
+      if(j && j.text){ amandaSagt(j.text); zielZeigen(); hilfenAus(j.vorschlaege); }
+      else { G.live=false; skriptSchritt(); }
+    });
   };
 
-  function naechsterSchritt(){
+  /* Das Ziel dieses Schritts einmal zeigen — nicht bei jeder Antwort neu */
+  function zielZeigen(){
     if(!G) return;
-    G.i++;
-    if(G.i>=G.schritte.length) return fertig();
-    punkte();
-    var s=G.schritte[G.i];
-    tippt(true);
-    setTimeout(function(){
-      if(!G) return;
-      tippt(false);
-      anhaengen('<div class="dg-b"><span class="dg-av">'+E(G.em||'💬')+'</span>'
-        +'<span class="dg-bb">'+E(s.amanda)+'</span></div>');
-      sprich(s.amanda,{rolle:'amanda'});
-      if(s.hinweis) anhaengen('<div class="dg-aufg">'+E(s.hinweis)+'</div>');
-      hilfenZeigen(s);
-      runter();
-      var f=el('dgFeld'); if(f && window.innerWidth>900) try{ f.focus(); }catch(e){}
-    }, Math.min(1400, 420+String(s.amanda).length*16));
+    var s=G.schritte[G.i]; if(!s||G.zeigtZiel===G.i) return;
+    G.zeigtZiel=G.i;
+    if(s.hinweis) anhaengen('<div class="dg-aufg">'+E(s.hinweis)+'</div>');
+    hilfenZeigen(s);
   }
 
-  function hilfenZeigen(s){
-    var h=el('dgHilfen'); if(!h) return;
+  /* Notlauf ohne Verbindung: das alte Skript */
+  function skriptSchritt(){
+    if(!G) return;
+    var s=G.schritte[G.i]; if(!s) return fertig();
+    punkte();
+    amandaSagt(s.amanda);
+    zielZeigen();
+  }
+
+  function dialogRuf(satz, fertigCB){
+    if(!G) return fertigCB(null);
+    var daten={
+      titel:G.titel, ort:G.ort, rolle:G.rolle, level:G.lvl,
+      schritte:G.schritte.map(function(s){
+        return {amanda:s.amanda, hinweis:s.hinweis, beispiel:s.beispiel};
+      }),
+      i:G.i, verlauf:G.verlauf.slice(-16), satz:satz,
+      l1:(function(){ try{ return (window.profile&&window.profile.native_language)||''; }catch(e){ return ''; } })()
+    };
+    var abgebrochen=false;
+    var wecker=setTimeout(function(){ abgebrochen=true; fertigCB(null); }, 22000);
+    mitToken(function(t){
+      if(!t){ clearTimeout(wecker); if(!abgebrochen) fertigCB(null); return; }
+      fetch('/api/dialog',{method:'POST',
+        headers:{'content-type':'application/json','authorization':'Bearer '+t},
+        body:JSON.stringify(daten)
+      }).then(function(r){ return r.ok?r.json():null; })
+        .then(function(j){ clearTimeout(wecker); if(!abgebrochen) fertigCB(j&&j.ok?j:null); })
+        .catch(function(){ clearTimeout(wecker); if(!abgebrochen) fertigCB(null); });
+    });
+  }
+
+  function hilfenAus(vorschlaege){
+    var h=el('dgHilfen'); if(!h||!G) return;
+    var s=G.schritte[G.i]||{};
     var teile=[];
-    (s.redemittel||[]).forEach(function(r){
+    (vorschlaege||[]).forEach(function(r){
+      teile.push('<button class="dg-hilf" onclick="dgEinsetzen('+JSON.stringify(r).replace(/"/g,'&quot;')+')">'+E(r)+'</button>');
+    });
+    if(!teile.length) (s.redemittel||[]).forEach(function(r){
       teile.push('<button class="dg-hilf" onclick="dgEinsetzen('+JSON.stringify(r).replace(/"/g,'&quot;')+')">'+E(r)+'</button>');
     });
     if(s.beispiel) teile.unshift('<button class="dg-hilf tipp" onclick="dgBeispiel()">💡 Beispielantwort</button>');
     teile.push('<button class="dg-hilf" onclick="dgNochmal()">🔁 Nochmal hören</button>');
     h.innerHTML=teile.join('');
   }
+
+  function hilfenZeigen(s){ hilfenAus(null); }
 
   window.dgEinsetzen=function(t){
     var f=el('dgFeld'); if(!f) return;
@@ -733,7 +813,11 @@
     runter();
   };
   window.dgNochmal=function(){
-    if(!G) return; var s=G.schritte[G.i]; if(!s) return; sprich(s.amanda,{rolle:'amanda'});
+    if(!G) return;
+    var letzte=null, i;
+    for(i=G.verlauf.length-1;i>=0;i--) if(G.verlauf[i].wer==='am'){ letzte=G.verlauf[i].text; break; }
+    var s=G.schritte[G.i];
+    sprich(letzte||(s&&s.amanda)||'',{rolle:'amanda'});
   };
 
   window.dgSprechen=function(){
@@ -760,18 +844,60 @@
   };
 
   window.dgSenden=function(){
-    if(!G||G.laeuft) return;
+    if(!G||G.laeuft||G.ende) return;
     var f=el('dgFeld'); var t=(f.value||'').trim(); if(!t) return;
-    var s=G.schritte[G.i];
+    var s=G.schritte[G.i]||{};
     G.laeuft=true;
     f.value=''; f.style.height='auto'; el('dgSend').disabled=true;
     anhaengen('<div class="dg-b ich"><span class="dg-bb">'+E(t)+'</span></div>');
     el('dgHilfen').innerHTML='';
     runter(true);
+    tippt(true);
 
-    korrigieren(t,s,function(erg){
-      G.laeuft=false;
+    if(!G.live) return altModus(t,s);
+
+    dialogRuf(t, function(j){
+      tippt(false);
       if(!G) return;
+      if(!j){ G.live=false; return altModus(t,s); }
+
+      G.verlauf.push({wer:'du',text:t});
+      G.verlauf.push({wer:'am',text:j.text||''});
+
+      if(j.text) amandaSagt(j.text);
+
+      /* Die Korrektur kommt NACH Amandas Antwort — sie unterbricht das
+         Gespräch nicht, sondern steht daneben. */
+      if(j.korrektur && j.korrektur.korrigiert){
+        anhaengen('<div class="dg-korr"><b>'+E(j.korrektur.korrigiert)+'</b>'
+          +E(j.korrektur.hinweis||'')+'</div>');
+        klang('tipp');
+        try{ if(window.fehlerMerken) window.fehlerMerken({satz:t,richtig:j.korrektur.korrigiert,
+          hinweis:j.korrektur.hinweis||'',thema:j.korrektur.thema||''}); }catch(e){}
+      } else if(j.weiter){
+        G.richtig++;
+        klang('richtig');
+      }
+
+      if(j.weiter){
+        G.i++;
+        punkte();
+        if(j.fertig || G.i>=G.schritte.length){ G.laeuft=false; return setTimeout(fertig,600); }
+        setTimeout(function(){ if(G){ zielZeigen(); hilfenAus(j.vorschlaege); } },300);
+      } else {
+        hilfenAus(j.vorschlaege);
+      }
+      G.laeuft=false;
+      runter();
+    });
+  };
+
+  /* Ohne Verbindung: korrigieren wie früher, dann ein Schritt weiter */
+  function altModus(t,s){
+    korrigieren(t,s,function(erg){
+      tippt(false);
+      if(!G) return;
+      G.laeuft=false;
       if(erg && erg.gut===false && erg.korrigiert){
         anhaengen('<div class="dg-korr"><b>'+E(erg.korrigiert)+'</b>'+E(erg.hinweis||'')+'</div>');
         klang('tipp');
@@ -781,36 +907,26 @@
         klang('richtig');
       }
       runter();
-      setTimeout(naechsterSchritt,700);
+      G.i++; punkte();
+      if(G.i>=G.schritte.length) return setTimeout(fertig,600);
+      setTimeout(function(){ if(G) skriptSchritt(); },700);
     });
-  };
+  }
 
   function korrigieren(satz,schritt,fertigCB){
-    var tok=null;
-    try{ tok=(window.SB&&window.SB.session&&window.SB.session.access_token)||window.__TOKEN__||null; }catch(e){}
-    if(!tok && window.supabase && window.supabase.auth && window.supabase.auth.getSession){
-      window.supabase.auth.getSession().then(function(r){
-        var t=r&&r.data&&r.data.session&&r.data.session.access_token;
-        if(!t) return fertigCB(null);
-        ruf(t);
-      }).catch(function(){ fertigCB(null); });
-      return;
-    }
-    if(!tok) return fertigCB(null);
-    ruf(tok);
-
-    function ruf(t){
+    mitToken(function(t){
+      if(!t) return fertigCB(null);
       fetch('/api/ai-satz',{method:'POST',
         headers:{'content-type':'application/json','authorization':'Bearer '+t},
         body:JSON.stringify({satz:satz,frage:schritt.amanda,aufgabe:schritt.hinweis})
       }).then(function(r){ return r.ok?r.json():null; })
         .then(function(j){ fertigCB(j&&j.ok?j:null); })
         .catch(function(){ fertigCB(null); });
-    }
+    });
   }
 
   function fertig(){
-    if(!G) return;
+    if(!G||G.ende) return;
     G.ende=true;
     dialogMerken(G.id);
     klang('fertig');

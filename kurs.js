@@ -412,7 +412,7 @@
     var v=flaeche(); if(!v) return;
     var alle=niveaus();
     if(!alle.length){
-      v.className='ku'; v.innerHTML='<div class="ku-leer">Die Niveaus werden geladen …</div>'; return;
+      v.classList.add('ku'); v.innerHTML='<div class="ku-leer">Die Niveaus werden geladen …</div>'; return;
     }
     var jetzt=niveauGemerkt(), n=niveauVon(jetzt), p=niveauProzent(jetzt);
     var kopf='<div class="ku-kopf"><h1>Wo stehst du?</h1>'
@@ -423,7 +423,7 @@
       +'<div class="ku-z"><b>'+p+' %</b><span>geschafft</span></div>'
       +'<div class="ku-z"><b>'+(n&&n.ziel?E(n.ziel.split('·')[0].replace(/\s+$/,'')):'—')+'</b><span>dein Ziel</span></div>'
       +'</div></div>';
-    v.className='ku';
+    v.classList.add('ku');
     v.innerHTML=kopf+'<div class="ku-nvliste">'+alle.map(niveauKarte).join('')+'</div>';
     hoch();
   };
@@ -444,7 +444,7 @@
     stil();
     var v=flaeche(); if(!v) return;
     var L=lektionen();
-    v.className='ku';
+    v.classList.add('ku');
     if(!L.length){
       v.innerHTML='<button class="ku-zurueck" onclick="renderNiveau()">← Alle Niveaus</button>'
         +'<div class="ku-leer">Der A1-Kurs wird geladen. Lade die Seite bitte neu.</div>';
@@ -569,7 +569,7 @@
     }
 
     var vor=lektionVon(l.nr+1);
-    v.className='ku';
+    v.classList.add('ku');
     v.innerHTML='<button class="ku-zurueck" onclick="renderKursA1()">← Alle Lektionen</button>'
       +kopf+teile.join('')
       +(vor?'<div style="text-align:center;margin:22px 0 0">'
@@ -694,9 +694,10 @@
     var o=el('ku2Ov'); if(o) return o;
     o=document.createElement('div'); o.className='ku2-ov'; o.id='ku2Ov';
     o.innerHTML='<div class="ku2-kopf">'
-        +'<button class="zu" onclick="kursUebenZu()" aria-label="Schließen">×</button>'
+        +'<button class="zu" id="ku2Zurueck" onclick="ku2Zurueck()" aria-label="Eine Aufgabe zurück">←</button>'
         +'<span class="mitte"><b id="ku2Titel"></b><span class="ku-bar"><i id="ku2Bar" style="width:0%"></i></span></span>'
         +'<span class="zaehler" id="ku2Zahl"></span>'
+        +'<button class="zu" onclick="kursUebenZu()" aria-label="Übung beenden">×</button>'
       +'</div>'
       +'<div class="ku2-koerper" id="ku2Koerper"><div class="ku2-innen" id="ku2Innen"></div></div>'
       +'<div class="ku2-fuss" id="ku2Fuss"><div class="innen" id="ku2FussInnen"></div></div>';
@@ -715,7 +716,7 @@
     if(!liste.length){ note('Für diese Runde habe ich noch keine Aufgaben.'); return; }
     ovUeben();
     U={liste:liste, titel:titel||'Üben', i:0, richtig:0, falsch:[], cb:fertigCB||null,
-       beantwortet:false, hilf:null, ende:false};
+       beantwortet:false, hilf:null, ende:false, bewertet:[]};
     el('ku2Ov').classList.add('auf');
     document.body.style.overflow='hidden';
     el('ku2Titel').textContent=U.titel;
@@ -733,6 +734,9 @@
     var a=U.liste[U.i];
     var bar=el('ku2Bar'); if(bar) bar.style.width=Math.round(U.i/U.liste.length*100)+'%';
     var z=el('ku2Zahl'); if(z) z.textContent=(U.i+1)+'/'+U.liste.length;
+    var zr=el('ku2Zurueck');
+    if(zr){ zr.textContent = U.i>0 ? '←' : '×';
+            zr.setAttribute('aria-label', U.i>0 ? 'Eine Aufgabe zurück' : 'Übung beenden'); }
 
     var kopf='<div class="ku2-art">'+E(artName[a.typ]||'Aufgabe')+'</div>';
     var h='', f='';
@@ -830,7 +834,16 @@
     if(!U||U.beantwortet) return;
     U.beantwortet=true;
     var a=U.liste[U.i];
-    if(ok){ U.richtig++; klang('richtig'); } else { U.falsch.push(a); klang('falsch'); }
+    /* Wer zurückgeht und dieselbe Aufgabe nochmal löst, zählt nicht doppelt. */
+    var vorher=U.bewertet[U.i];
+    if(vorher===undefined){
+      if(ok) U.richtig++; else U.falsch.push(a);
+    } else if(vorher!==ok){
+      if(ok){ U.richtig++; var w=U.falsch.indexOf(a); if(w>=0) U.falsch.splice(w,1); }
+      else { U.richtig--; if(U.falsch.indexOf(a)<0) U.falsch.push(a); }
+    }
+    U.bewertet[U.i]=ok;
+    if(ok) klang('richtig'); else klang('falsch');
     var los=ok?'':loesungText(a);
     fuss('<div class="ku2-rueck '+(ok?'gut':'schlecht')+'">'
       +'<b class="kopf">'+(ok?'✓ Richtig':'✗ Noch nicht')+'</b>'
@@ -1031,6 +1044,15 @@
   window.ku2Weiter=function(){
     if(!U) return;
     U.i++; aufgabeZeigen();
+  };
+
+  /* Eine Aufgabe zurück. Auf der ersten Aufgabe beendet der Pfeil die Runde —
+     so führt der Knopf oben links immer dorthin zurück, wo man herkam. */
+  window.ku2Zurueck=function(){
+    if(!U) return;
+    if(U.ende || U.i<=0) return window.kursUebenZu();
+    stille();
+    U.i--; aufgabeZeigen();
   };
 
   function rundeEnde(){
@@ -1355,7 +1377,7 @@
   window.renderSchreiben=function(){
     stil();
     var v=flaeche(); if(!v) return;
-    v.className='ku';
+    v.classList.add('ku');
     var alle=aufgaben();
     if(!alle.length){
       v.innerHTML='<div class="ku-leer">Der Schreibtrainer wird geladen …</div>'; return;
