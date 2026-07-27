@@ -583,7 +583,8 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFF6E6 0%,#FAF8F2 60%)
     <button class="navlink active" data-view="dashboard" onclick="go('dashboard')"><span class="ic">🏠</span><span data-i18n="k_start">Startseite</span></button>
     <button class="navlink" data-view="kalender" onclick="go('kalender')"><span class="ic">🗓️</span><span data-i18n="k_live">Live Unterricht</span></button>
     <div class="nav-sec" data-i18n="k_learn">Lernen</div>
-    <button class="navlink navlink-hl" data-view="kurs" onclick="go('kurs')"><span class="ic">🎓</span><span data-i18n="k_course">Mein Kurs</span></button>
+    <button class="navlink navlink-hl" data-view="pruefung" onclick="go('pruefung')"><span class="ic">🎯</span><span data-i18n="k_pruef">Prüfungsvorbereitung</span></button>
+    <button class="navlink" data-view="kurs" onclick="go('kurs')"><span class="ic">🎓</span><span data-i18n="k_course">Dein Deutsch-Zuhause</span></button>
     <button class="navlink" data-view="lernen" onclick="go('lernen')"><span class="ic">🧭</span><span data-i18n="k_learn">Lernbereich</span></button>
     <button class="navlink" data-view="vokabeln" onclick="go('vokabeln')"><span class="ic">🃏</span><span data-i18n="k_vocab">Vokabeltrainer</span></button>
     <button class="navlink" data-view="fehler" onclick="go('fehler')"><span class="ic">📘</span><span data-i18n="k_mist">Fehler-Trainer</span></button>
@@ -886,6 +887,7 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFF6E6 0%,#FAF8F2 60%)
     <section class="view" id="v-ueben"></section>
     <section class="view" id="v-lernen"></section>
     <section class="view" id="v-kurs"></section>
+    <section class="view" id="v-pruefung"></section>
     <section class="view" id="v-schreiben"></section>
     <section class="view" id="v-community"></section>
     <section class="view" id="v-lernpfad"></section>
@@ -1183,10 +1185,10 @@ function collectVocab(){
 }
 
 // ---------- Router ----------
-const VIEWS=['dashboard','lernen','kurs','schreiben','kurse','ueben','community','lernpfad','kalender','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','profil','fehler','buddy'];
+const VIEWS=['dashboard','lernen','kurs','pruefung','schreiben','kurse','ueben','community','lernpfad','kalender','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','profil','fehler','buddy'];
 function go(v){ location.hash=v; }
 function toggleNav(){ document.body.classList.toggle('nav-open'); }
-const VIEW_TITLES={dashboard:['Schülerbereich','Startseite'],lernen:['Lernen','Lernbereich'],kurs:['Lernen','Mein Kurs'],schreiben:['Lernen','Schreibtrainer'],kurse:['Lernen','Kursbibliothek'],kalender:['Live Unterricht','Kalender'],stunden:['Live Unterricht','Meine Stunden'],community:['Community-Chat','Alle Themen'],ueben:['Lernen','Üben'],vokabeln:['Lernen','Vokabeltrainer'],materialien:['Lernen','Materialien'],fortschritt:['Lernen','Fortschritt'],nachrichten:['Nachrichten','Team'],amanda:['Amanda','KI-Sprechpartnerin'],lernpfad:['Lernen','Lernpfad'],fehler:['Lernen','Fehler-Trainer'],buddy:['Lernen','Sprech-Buddy'],guthaben:['Konto','Guthaben'],profil:['Konto','Profil']};
+const VIEW_TITLES={dashboard:['Schülerbereich','Startseite'],lernen:['Lernen','Lernbereich'],kurs:['Lernen','Dein Deutsch-Zuhause'],pruefung:['Prüfung','Prüfungsvorbereitung'],schreiben:['Lernen','Schreibtrainer'],kurse:['Lernen','Kursbibliothek'],kalender:['Live Unterricht','Kalender'],stunden:['Live Unterricht','Meine Stunden'],community:['Community-Chat','Alle Themen'],ueben:['Lernen','Üben'],vokabeln:['Lernen','Vokabeltrainer'],materialien:['Lernen','Materialien'],fortschritt:['Lernen','Fortschritt'],nachrichten:['Nachrichten','Team'],amanda:['Amanda','KI-Sprechpartnerin'],lernpfad:['Lernen','Lernpfad'],fehler:['Lernen','Fehler-Trainer'],buddy:['Lernen','Sprech-Buddy'],guthaben:['Konto','Guthaben'],profil:['Konto','Profil']};
 function updateTopbar(v){var t=VIEW_TITLES[v]||['Schülerbereich','']; var s=document.getElementById('tbS'),b=document.getElementById('tbT'); var lang='de'; try{lang=localStorage.getItem('dow_lang')||'de';}catch(e){} var TT=window.__I18N__||{}; function tr(x){var o=TT[x]; return (o&&o[lang]!=null)?o[lang]:x;} if(s){s.setAttribute('data-de',t[0]);s.setAttribute('data-i18n',t[0]);s.textContent=tr(t[0]);} if(b){b.setAttribute('data-de',t[1]);b.setAttribute('data-i18n',t[1]);b.textContent=tr(t[1]);}}
 function routeFromHash(){ const v=(location.hash||'#dashboard').slice(1); show(VIEWS.includes(v)?v:'dashboard'); }
 // Ohne Guthaben/Probestunde/Pass: ALLES gesperrt außer Kalender (und Profil für Konto/Logout).
@@ -1201,7 +1203,7 @@ function show(v){
   try{updateTopbar(v);}catch(e){}
   document.body.classList.remove('nav-open');
   if(LOCKED_VIEWS.includes(v) && !isActive()){ renderLocked(v); window.scrollTo(0,0); return; }
-  ({dashboard:renderDashboard,kurse:(window.renderKurse||renderDashboard),ueben:(window.renderUeben||renderDashboard),lernen:(window.renderLernen||renderDashboard),kurs:(window.renderNiveau||renderDashboard),schreiben:(window.renderSchreiben||renderDashboard),community:(window.renderCommunity||renderDashboard),lernpfad:renderLernpfad,kalender:renderKalender,stunden:renderStunden,materialien:renderMaterialien,vokabeln:renderVokabeln,
+  ({dashboard:renderDashboard,kurse:(window.renderKurse||renderDashboard),ueben:(window.renderUeben||renderDashboard),lernen:(window.renderLernen||renderDashboard),kurs:(window.renderNiveau||renderDashboard),schreiben:(window.renderSchreiben||renderDashboard),community:(window.renderCommunity||renderDashboard),lernpfad:renderLernpfad,kalender:renderKalender,stunden:renderStunden,pruefung:(window.renderPruefungen||renderDashboard),materialien:renderMaterialien,vokabeln:renderVokabeln,
     fortschritt:renderFortschritt,guthaben:renderGuthaben,nachrichten:renderNachrichten,
     amanda:renderAmanda,profil:renderProfil,fehler:(window.renderFehlerTrainer||renderDashboard),buddy:(window.renderBuddy||renderDashboard)}[v])();
   if(v==='community') markCommRead();
@@ -2846,6 +2848,8 @@ window.addEventListener('resize',function(){ clearTimeout(_mhT); _mhT=setTimeout
 <script src="schreiben.js"></script>
 <script src="berufe.js"></script>
 <script src="kurs.js"></script>
+<script src="pruefung.js"></script>
+<script src="pruefung-bereich.js"></script>
 <style id="kalRueckblick">
 /* Hinweis, wenn man in einer vergangenen Woche blättert */
 .kal-rueckblick{text-align:center;font-size:13px;font-weight:600;color:#8A6B2F;

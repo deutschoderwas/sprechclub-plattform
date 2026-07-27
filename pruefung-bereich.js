@@ -1,0 +1,313 @@
+/* ============================================================
+   deutschoderwas club — PRÜFUNGSVORBEREITUNG
+
+   „Keine Angst mehr vor der Prüfung."
+
+   Das Gerüst, Schritt 2 von 7. Zwei Ebenen:
+
+     1. Welche Prüfung?   — neun Kacheln, eine Seite
+     2. Die Prüfungsseite — Termin, vier Module, Musterprüfung,
+                            Wortschatz, Videokurs, Bereitschaft
+
+   Was hier schon echt ist: die Auswahl, der Aufbau, die Verbindung
+   zu den 36 vorhandenen Lektionen, zu den vier Musterprüfungen und
+   zum Einstufungstest. Was noch fehlt, steht als „kommt noch" da —
+   ehrlich statt als leere Kachel.
+
+   Die Minutenangaben sind die veröffentlichten Werte. Geprüft am
+   27.07.2026 sind B2 (Goethe) und DTZ; die übrigen tragen „ca." und
+   werden in Schritt 4 einzeln gegengeprüft.
+   ============================================================ */
+(function(){
+  'use strict';
+
+  function E(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){
+    return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]; }); }
+  function J(k,d){ try{ if(window.lsGet) return lsGet(k,d);
+    var v=JSON.parse(localStorage.getItem('ub_'+k)); return v==null?d:v; }catch(e){ return d; } }
+  function S(k,v){ try{ if(window.lsSet) return lsSet(k,v);
+    localStorage.setItem('ub_'+k,JSON.stringify(v)); }catch(e){} }
+
+  /* ---------- Die Prüfungen ----------
+     kurs  = die sechs vorhandenen Lektionen in kurse/ (über lektion.html)
+     stufe = der Stufenkurs aus a1.js / a2.js (über kursOeffnen)
+     muster= Schlüssel in pruefung.js für die Musterprüfung          */
+  var PRUEFUNGEN = [
+    { id:'sd1', name:'Start Deutsch 1', anbieter:'Goethe · telc', niveau:'A1',
+      bild:'menschen', stufe:'A1',
+      fuer:'Ehegattennachzug und der erste Nachweis, dass du Deutsch kannst.',
+      module:[ {id:'hoeren',n:'Hören',m:'ca. 20'}, {id:'lesen',n:'Lesen',m:'ca. 25'},
+               {id:'schreiben',n:'Schreiben',m:'ca. 20'}, {id:'sprechen',n:'Sprechen',m:'ca. 15'} ] },
+
+    { id:'sd2', name:'Start Deutsch 2', anbieter:'Goethe · telc', niveau:'A2',
+      bild:'wohnen', stufe:'A2', muster:'A2',
+      fuer:'Aufenthaltstitel, erste Arbeit, der Schritt nach dem Anfang.',
+      module:[ {id:'hoeren',n:'Hören',m:'ca. 30'}, {id:'lesen',n:'Lesen',m:'ca. 30'},
+               {id:'schreiben',n:'Schreiben',m:'ca. 30'}, {id:'sprechen',n:'Sprechen',m:'ca. 15'} ] },
+
+    { id:'dtz', name:'DTZ', anbieter:'Deutsch-Test für Zuwanderer', niveau:'A2–B1',
+      bild:'amt', kurs:'dtz', muster:'B1', geprueft:true,
+      fuer:'Der Abschluss des Integrationskurses. Zählt für Niederlassung und Einbürgerung.',
+      module:[ {id:'hoeren',n:'Hören',m:'25'}, {id:'lesen',n:'Lesen',m:'45'},
+               {id:'schreiben',n:'Schreiben',m:'30'}, {id:'sprechen',n:'Sprechen',m:'ca. 15'} ],
+      punkte:'Hören und Lesen zusammen 45 Punkte — ab 33 ist es B1, ab 20 A2. '
+            +'Schreiben 20 Punkte, ab 15 B1. Sprechen 100 Punkte, ab 40 B1.' },
+
+    { id:'b1', name:'Zertifikat B1', anbieter:'Goethe · telc · ÖSD', niveau:'B1',
+      bild:'buero', kurs:'goethetelc', muster:'B1',
+      fuer:'Einbürgerung, Ausbildung, viele Arbeitgeber. Die wichtigste Hürde.',
+      module:[ {id:'lesen',n:'Lesen',m:'ca. 65'}, {id:'hoeren',n:'Hören',m:'ca. 40'},
+               {id:'schreiben',n:'Schreiben',m:'ca. 60'}, {id:'sprechen',n:'Sprechen',m:'ca. 15'} ],
+      modular:true },
+
+    { id:'b2', name:'Goethe-Zertifikat B2', anbieter:'Goethe · telc', niveau:'B2',
+      bild:'bewerbung', kurs:'goethetelc', muster:'B2', geprueft:true,
+      fuer:'Studium, Anerkennung im Beruf, qualifizierte Arbeit.',
+      module:[ {id:'lesen',n:'Lesen',m:'65'}, {id:'hoeren',n:'Hören',m:'40'},
+               {id:'schreiben',n:'Schreiben',m:'75'}, {id:'sprechen',n:'Sprechen',m:'15'} ],
+      modular:true },
+
+    { id:'c1', name:'Goethe-Zertifikat C1', anbieter:'Goethe · telc Hochschule', niveau:'C1',
+      bild:'typisch-deutsch', kurs:'goethetelc', muster:'C1',
+      fuer:'Universität, Führungsposition, anspruchsvolle Fachberufe.',
+      module:[ {id:'lesen',n:'Lesen',m:'ca. 70'}, {id:'hoeren',n:'Hören',m:'ca. 40'},
+               {id:'schreiben',n:'Schreiben',m:'ca. 75'}, {id:'sprechen',n:'Sprechen',m:'ca. 15'} ],
+      modular:true },
+
+    { id:'telcmed', name:'telc Medizin', anbieter:'Fachsprachprüfung', niveau:'B2–C1',
+      bild:'gesundheit', kurs:'telcmed', fach:true,
+      fuer:'Die Fachsprachprüfung auf dem Weg zur Approbation.',
+      module:[ {id:'anamnese',n:'Anamnesegespräch',m:'ca. 20'},
+               {id:'doku',n:'Dokumentation',m:'ca. 20'},
+               {id:'fall',n:'Fallvorstellung',m:'ca. 20'} ] },
+
+    { id:'pflege', name:'Deutsch für die Pflege', anbieter:'telc B1·B2 Pflege', niveau:'B1–B2',
+      bild:'pflege', kurs:'pflege', fach:true,
+      fuer:'Anerkennung als Pflegefachkraft — Übergabe, Angehörige, Dokumentation.',
+      module:[ {id:'uebergabe',n:'Schichtübergabe',m:'ca. 20'},
+               {id:'angehoerige',n:'Mit Angehörigen sprechen',m:'ca. 20'},
+               {id:'doku',n:'Dokumentation',m:'ca. 20'} ] },
+
+    { id:'buero', name:'Deutsch für Büro & Logistik', anbieter:'ohne Prüfung', niveau:'A2–B2',
+      bild:'kunden', kurs:'buero', fach:true, ohnePruefung:true,
+      fuer:'Telefon, E-Mail, Kundengespräch — für den Arbeitsalltag, nicht für ein Zertifikat.',
+      module:[ {id:'telefon',n:'Am Telefon',m:'ca. 20'},
+               {id:'mail',n:'E-Mail und Schriftverkehr',m:'ca. 20'},
+               {id:'kunden',n:'Kundengespräch',m:'ca. 20'} ] }
+  ];
+
+  function pruefungVon(id){ for(var i=0;i<PRUEFUNGEN.length;i++) if(PRUEFUNGEN[i].id===id) return PRUEFUNGEN[i]; return null; }
+
+  /* ---------- Termin und Fortschritt ---------- */
+  function termine(){ return J('pruefTermin',{})||{}; }
+  function terminVon(id){ return termine()[id]||null; }
+  function tageBis(iso){
+    if(!iso) return null;
+    var d=new Date(iso+'T00:00:00'), h=new Date(); h.setHours(0,0,0,0);
+    return Math.round((d-h)/86400000);
+  }
+  window.pruefTerminSetzen=function(id){
+    var el=document.getElementById('pfTermin'); if(!el) return;
+    var t=termine(); if(el.value) t[id]=el.value; else delete t[id];
+    S('pruefTermin',t);
+    window.pruefungOeffnen(id);
+  };
+
+  /* Fortschritt je Modul — bis die Module echte Inhalte haben, zählt
+     der Fortschritt der dahinterliegenden Lektionen. */
+  function modulProzent(p, mod){
+    try{
+      if(p.stufe && window.kursStand){
+        var st=window.kursStand(p.stufe);
+        if(st) return st.prozent;
+      }
+    }catch(e){}
+    return 0;
+  }
+
+  /* ---------- Ebene 1: Welche Prüfung? ---------- */
+  window.renderPruefungen=function(){
+    var v=document.getElementById('v-pruefung'); if(!v) return;
+    v.innerHTML =
+        '<div class="pf-kopf">'
+      +   '<span class="pf-kicker">Prüfungsvorbereitung</span>'
+      +   '<h1>Keine Angst mehr vor der Prüfung.</h1>'
+      +   '<p>Du weißt vorher, was drankommt, wie lange du hast und wie bewertet wird. '
+      +   'Und du hast es geübt, bevor es zählt.</p>'
+      +   '<a class="pf-test" href="niveau-test-club.html" target="_blank" rel="noopener">'
+      +     '<span class="pf-test-ic">🎯</span>'
+      +     '<span class="pf-test-tx"><b>Du weißt nicht, welche Prüfung?</b>'
+      +     '<span>Der Einstufungstest sagt es dir in 15 Minuten — 112 Aufgaben, mit Auswertung.</span></span>'
+      +     '<span class="pf-test-go">Test starten →</span>'
+      +   '</a>'
+      + '</div>'
+      + '<div class="pf-gruppe"><span class="pf-gr-t">Die Sprachprüfungen</span></div>'
+      + '<div class="pf-liste">' + PRUEFUNGEN.filter(function(p){ return !p.fach; }).map(kachel).join('') + '</div>'
+      + '<div class="pf-gruppe"><span class="pf-gr-t">Für deinen Beruf</span></div>'
+      + '<div class="pf-liste">' + PRUEFUNGEN.filter(function(p){ return p.fach; }).map(kachel).join('') + '</div>';
+    try{ window.scrollTo(0,0); }catch(e){}
+  };
+
+  function kachel(p){
+    var t=terminVon(p.id), tage=tageBis(t);
+    var rechts = (tage!=null)
+      ? '<span class="pf-tage'+(tage<0?' vorbei':'')+'">'+(tage<0?'vorbei':(tage===0?'heute!':'noch '+tage+' Tage'))+'</span>'
+      : '<span class="pf-kein-termin">kein Termin</span>';
+    return '<button type="button" class="pf-k" onclick="pruefungOeffnen(\'' + p.id + '\')">'
+      + '<span class="pf-k-bild"><img src="bilder/thema/'+p.bild+'-s.jpg" alt="" loading="lazy" onerror="this.remove()">'
+      +   '<span class="pf-k-niv">'+E(p.niveau)+'</span></span>'
+      + '<span class="pf-k-tx">'
+      +   '<span class="pf-k-n">'+E(p.name)+'</span>'
+      +   '<span class="pf-k-a">'+E(p.anbieter)+'</span>'
+      +   '<span class="pf-k-f">'+E(p.fuer)+'</span>'
+      + '</span>'
+      + '<span class="pf-k-r">'+rechts+'<span class="pf-k-go">Öffnen →</span></span>'
+      + '</button>';
+  }
+
+  /* ---------- Ebene 2: Die Prüfungsseite ---------- */
+  window.pruefungOeffnen=function(id){
+    var p=pruefungVon(id); if(!p) return;
+    var v=document.getElementById('v-pruefung'); if(!v) return;
+    S('pruefLetzte', id);
+
+    v.innerHTML =
+        '<button class="pf-zurueck" onclick="renderPruefungen()">← Alle Prüfungen</button>'
+      + '<div class="pf-hero">'
+      +   '<div class="pf-hero-bild"><img src="bilder/thema/'+p.bild+'.jpg" alt="" loading="lazy" onerror="this.remove()">'
+      +     '<span class="pf-streifen"></span></div>'
+      +   '<div class="pf-hero-tx">'
+      +     '<span class="pf-kicker">'+E(p.niveau)+' · '+E(p.anbieter)+'</span>'
+      +     '<h1>'+E(p.name)+'</h1>'
+      +     '<p>'+E(p.fuer)+'</p>'
+      +   '</div>'
+      + '</div>'
+      + terminBlock(p)
+      + moduleBlock(p)
+      + musterBlock(p)
+      + materialBlock(p)
+      + videoBlock(p)
+      + bereitBlock(p);
+    try{ window.scrollTo(0,0); }catch(e){}
+  };
+
+  /* 1 — Dein Prüfungstermin */
+  function terminBlock(p){
+    var t=terminVon(p.id), tage=tageBis(t);
+    var inhalt;
+    if(tage!=null && tage>=0){
+      var wochen=Math.max(1,Math.ceil(tage/7));
+      inhalt='<div class="pf-termin-an">'
+        +'<div class="pf-gross"><b>'+tage+'</b><span>'+(tage===1?'Tag':'Tage')+' bis zur Prüfung</span></div>'
+        +'<div class="pf-plan">Das sind <b>'+wochen+'</b> '+(wochen===1?'Woche':'Wochen')+'. '
+        +'Bei vier Modulen heißt das etwa '+Math.max(1,Math.floor(wochen/ (p.module.length||4)))
+        +' Woche pro Modul und Zeit für zwei Musterprüfungen am Ende.</div>'
+        +'<button class="pf-b2 pf-b-s" onclick="pruefTerminLoeschen(\''+p.id+'\')">Termin ändern</button>'
+        +'</div>';
+    } else {
+      inhalt='<div class="pf-termin-aus">'
+        +'<p>Trag deinen Termin ein. Ab dann steht hier, wie viele Tage bleiben und was diese Woche dran ist.</p>'
+        +'<div class="pf-termin-eingabe">'
+        +'<input type="date" id="pfTermin" value="'+(t||'')+'">'
+        +'<button class="pf-b1" onclick="pruefTerminSetzen(\''+p.id+'\')">Termin setzen</button>'
+        +'</div></div>';
+    }
+    return block('1', 'Dein Prüfungstermin', inhalt, 'pf-termin');
+  }
+  window.pruefTerminLoeschen=function(id){
+    var t=termine(); delete t[id]; S('pruefTermin',t); window.pruefungOeffnen(id);
+  };
+
+  /* 2 — Die Module */
+  function moduleBlock(p){
+    var hinweis = p.modular
+      ? '<p class="pf-hinw">Diese Prüfung ist modular: Du kannst die vier Teile einzeln ablegen und '
+        +'einzeln wiederholen. Deshalb steht jedes Modul hier für sich.</p>' : '';
+    var karten = p.module.map(function(m){
+      var pr=modulProzent(p,m);
+      return '<div class="pf-m">'
+        +'<div class="pf-m-kopf"><b>'+E(m.n)+'</b><span>'+E(m.m)+' Min</span></div>'
+        +'<div class="pf-m-liste">'
+        +  '<span class="pf-m-z">So läuft dieser Teil ab</span>'
+        +  '<span class="pf-m-z">Die Aufgabentypen einzeln</span>'
+        +  '<span class="pf-m-z">Die typischen Fallen</span>'
+        +  '<span class="pf-m-z">Durchgang unter Zeit</span>'
+        +'</div>'
+        +'<div class="pf-m-fuss"><span class="pf-bar"><i style="width:'+Math.max(2,pr)+'%"></i></span>'
+        +'<span class="pf-proz">'+pr+' %</span></div>'
+        + (p.kurs ? '<button class="pf-b2 pf-b-s" onclick="pruefLektionen(\''+p.kurs+'\')">Zu den Lektionen →</button>'
+                  : (p.stufe ? '<button class="pf-b2 pf-b-s" onclick="kursUebersicht(\''+p.stufe+'\')">Zum Kurs '+E(p.stufe)+' →</button>'
+                             : '<span class="pf-bald">kommt noch</span>'))
+        +'</div>';
+    }).join('');
+    return block('2', 'Die vier Module', hinweis+'<div class="pf-module">'+karten+'</div>', 'pf-mod');
+  }
+  window.pruefLektionen=function(kursId){
+    try{ location.href='lektion.html?k='+encodeURIComponent(kursId)+'&l=1'; }catch(e){}
+  };
+
+  /* 3 — Musterprüfung */
+  function musterBlock(p){
+    var inhalt;
+    if(p.muster && window.PRUEFUNG && window.PRUEFUNG[p.muster]){
+      var m=window.PRUEFUNG[p.muster];
+      inhalt='<div class="pf-muster">'
+        +'<div class="pf-muster-tx"><b>'+E(m.titel)+'</b>'
+        +'<span>'+m.teile.map(function(t){ return E(t.name||t.art); }).join(' · ')+' — '+m.minuten+' Minuten</span>'
+        +'<span class="pf-hinw2">Schreiben und Sprechen fehlen in dieser Musterprüfung noch. '
+        +'Sie kommen in Schritt 4 dazu, zusammen mit der Uhr und der Punktebewertung.</span></div>'
+        +'<button class="pf-b1" onclick="pruefMusterStarten(\''+p.muster+'\')">Musterprüfung starten →</button>'
+        +'</div>';
+    } else {
+      inhalt='<div class="pf-leer">Für diese Prüfung gibt es noch keine Musterprüfung. '
+        +'Sie ist der nächste Schritt.</div>';
+    }
+    return block('3', 'Musterprüfung', inhalt, 'pf-must');
+  }
+  window.pruefMusterStarten=function(k){
+    try{ if(window.toast) toast('Die Musterprüfung wird in Schritt 4 eingebaut — die Aufgaben liegen schon bereit ('+k+').'); }catch(e){}
+  };
+
+  /* 4 — Wortschatz und Grammatik */
+  function materialBlock(p){
+    var inhalt='<div class="pf-mat">'
+      +'<p>Nicht irgendein Wortschatz, sondern der, der in dieser Prüfung vorkommt. '
+      +'Die vorhandenen Grammatik- und Wortschatzseiten werden in Schritt 3 hier eingehängt: '
+      +'17 Grammatikkapitel, 34 Wortschatzseiten, 8 Aussprachekapitel.</p>'
+      +'<div class="pf-mat-knoepfe">'
+      +'<button class="pf-b2 pf-b-s" onclick="go(\'lernen\')">Zum Lernbereich →</button>'
+      +'<button class="pf-b2 pf-b-s" onclick="go(\'vokabeln\')">Vokabeltrainer →</button>'
+      +'</div></div>';
+    return block('4', 'Wortschatz & Grammatik für diese Prüfung', inhalt, 'pf-mat-b');
+  }
+
+  /* 5 — Videokurs */
+  function videoBlock(p){
+    var inhalt='<div class="pf-video">'
+      +'<div class="pf-video-platz"><span>▶</span></div>'
+      +'<div class="pf-video-tx"><b>Deine Videos kommen hierher</b>'
+      +'<span>Ein Video pro Thema, direkt im Modul, zu dem es gehört — nicht in einer eigenen '
+      +'Videothek. Wer beim Schreiben hängt, findet das Schreiben-Video im Schreiben-Modul.</span></div>'
+      +'</div>';
+    return block('5', 'Videokurs', inhalt, 'pf-vid');
+  }
+
+  /* 6 — Bist du bereit? */
+  function bereitBlock(p){
+    var inhalt='<div class="pf-bereit">'
+      +'<p>Am Ende steht hier eine ehrliche Einschätzung: Punkteprognose aus deinen '
+      +'Trainingsergebnissen, Modul für Modul — und die klare Ansage, wenn eines noch nicht reicht.</p>'
+      +'<div class="pf-bereit-m">'
+      + p.module.map(function(m){ return '<span class="pf-bereit-z"><b>'+E(m.n)+'</b><span>noch kein Ergebnis</span></span>'; }).join('')
+      +'</div></div>';
+    return block('6', 'Bist du bereit?', inhalt, 'pf-ber');
+  }
+
+  function block(nr, titel, inhalt, kls){
+    return '<section class="pf-block '+(kls||'')+'">'
+      + '<div class="pf-block-kopf"><span class="pf-nr">'+nr+'</span><h2>'+E(titel)+'</h2></div>'
+      + inhalt + '</section>';
+  }
+
+  window.PRUEFUNGEN_DATEN = PRUEFUNGEN;
+})();
