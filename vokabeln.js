@@ -52,14 +52,28 @@
   }
   function mix(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t; } return a; }
   function klang(n){ try{ if(window.klang) window.klang(n); }catch(e){} }
-  function sprich(text){
+  function sprich(text, fertig){
     try{
-      if(window.sagen) return window.sagen(text,{});
-      if(!window.speechSynthesis) return;
+      if(window.sagen) return window.sagen(text,{ fertig:fertig||null });
+      if(!window.speechSynthesis){ if(fertig) fertig(); return; }
       speechSynthesis.cancel();
       var u=new SpeechSynthesisUtterance(text); u.lang='de-DE'; u.rate=.95;
+      if(fertig){ u.onend=fertig; u.onerror=fertig; }
       speechSynthesis.speak(u);
-    }catch(e){}
+    }catch(e){ if(fertig) fertig(); }
+  }
+  /* Auf der Wortkarte: erst das Stichwort, kurze Pause, dann der
+     Beispielsatz. Ohne Beispielsatz bleibt es beim Stichwort. */
+  function sprichKarte(w){
+    if(!w) return;
+    var de=String(w.de||'').trim(), bsp=String(w.bsp||'').trim();
+    if(!de) return;
+    if(!bsp || bsp===de) return sprich(de);
+    var weiter=false;
+    sprich(de, function(){
+      if(weiter) return; weiter=true;
+      setTimeout(function(){ sprich(bsp); },420);
+    });
   }
   /* Fester Text — die Übersetzung von konto.html tauscht ihn aus */
   function W(k,de){ return '<span data-i18n="'+k+'">'+de+'</span>'; }
@@ -129,6 +143,7 @@
             info:  w.info||'',
             emoji: w.emoji||'',
             bild:  bilder[w.de]||null,
+            deko:  'bilder/thema/'+t.id+'-s.jpg',
             bsp:   null
           };
         })
@@ -160,6 +175,7 @@
     var K=window[niveau];
     if(!K || !K.lektionen) return [];
     return K.lektionen.map(function(L){
+      var lbild='bilder/thema/'+(L.bild||LEKTIONSBILD[L.id]||L.id)+'-s.jpg';
       return {
         id:      niveau.toLowerCase()+'-'+L.id,
         quelle:  'kurs',
@@ -168,7 +184,7 @@
         t:       L.t,
         niveau:  niveau,
         emoji:   '🎓',
-        bild:    'bilder/thema/'+(L.bild||LEKTIONSBILD[L.id]||L.id)+'-s.jpg',
+        bild:    lbild,
         woerter: (L.chunks||[]).map(function(c){
           return {
             k:     niveau.toLowerCase()+'|'+L.id+'|'+c.de,
@@ -176,6 +192,7 @@
             info:  c.hi||'',
             emoji: '',
             bild:  null,
+            deko:  lbild,
             bsp:   c.bsp||null
           };
         })
@@ -192,7 +209,8 @@
       id:'stunden', quelle:'stunde', t:'Aus deinen Live-Stunden', niveau:'', emoji:'🎧',
       bild:'bilder/thema/live-unterricht-s.jpg',
       woerter: liste.map(function(v){
-        return { k:'st|'+v.de, de:v.de, info:v.info||v.from||'', emoji:'', bild:null, bsp:null };
+        return { k:'st|'+v.de, de:v.de, info:v.info||v.from||'', emoji:'',
+                 bild:null, deko:'bilder/thema/live-unterricht-s.jpg', bsp:null };
       })
     }];
   }
@@ -584,8 +602,12 @@
     if(z) z.textContent=Math.min(R.i+1,ges)+' / '+ges;
   }
 
-  function bildOderZeichen(w, klasse){
+  function bildOderZeichen(w, klasse, schmuck){
     if(w.bild) return '<span class="'+klasse+'"><img src="'+E(w.bild)+'" alt="" '
+      + 'onerror="this.parentNode.classList.add(\'leer\');this.remove()"></span>';
+    /* Wendungen haben kein eigenes Foto. Auf reinen Schaubildern zeigen wir
+       dann das Foto ihrer Lektion — nie dort, wo das Bild die Frage ist. */
+    if(schmuck && w.deko) return '<span class="'+klasse+' vk-deko"><img src="'+E(w.deko)+'" alt="" '
       + 'onerror="this.parentNode.classList.add(\'leer\');this.remove()"></span>';
     if(w.emoji) return '<span class="'+klasse+' zeichen">'+E(w.emoji)+'</span>';
     return '';
@@ -612,7 +634,7 @@
     if(a.typ==='karte'){
       kopf='<span class="vk-frage">'+W('vk_neu','Neues Wort')+'</span>';
       koerper='<div class="vk-karte">'
-        + bildOderZeichen(w,'vk-karte-bild')
+        + bildOderZeichen(w,'vk-karte-bild',true)
         + '<div class="vk-karte-tx">'
         +   '<button class="vk-hoer" onclick="vokSprich()" aria-label="Anhören">🔊</button>'
         +   '<b>'+E(w.de)+'</b>'
@@ -620,7 +642,7 @@
         +   (w.bsp?'<span class="vk-bsp">'+E(w.bsp)+'</span>':'')
         + '</div></div>';
       fuss=knopf(W('vk_verstanden','Verstanden')+' →','vokWeiter()','vk-btn-rot');
-      setTimeout(function(){ sprich(w.de); },180);
+      setTimeout(function(){ sprichKarte(w); },180);
     }
 
     else if(a.typ==='bild'){
@@ -631,7 +653,7 @@
 
     else if(a.typ==='bedeutung'){
       kopf='<span class="vk-frage">'+W('vk_f_bed','Was bedeutet dieses Wort?')+'</span>';
-      koerper='<div class="vk-wortgross">'+bildOderZeichen(w,'vk-mini')
+      koerper='<div class="vk-wortgross">'+bildOderZeichen(w,'vk-mini',true)
         + '<b>'+E(w.de)+'</b>'
         + '<button class="vk-hoer" onclick="vokSprich()" aria-label="Anhören">🔊</button></div>'
         + optionen(a, function(o){ return E(o.info||o.de); });
@@ -715,7 +737,9 @@
   /* ---------- Antworten ---------- */
 
   window.vokSprich=function(){
-    if(R && R.aktuell && R.aktuell.w) sprich(R.aktuell.w.de);
+    if(!R || !R.aktuell || !R.aktuell.w) return;
+    if(R.aktuell.typ==='karte') return sprichKarte(R.aktuell.w);
+    sprich(R.aktuell.w.de);
   };
 
   window.vokWaehle=function(i){
@@ -1020,8 +1044,6 @@
     var kopf='<div class="vk-kopf">'
       + '<span class="vk-kicker">'+W('vk_kicker','Deine Wörter')+'</span>'
       + '<h1>'+W('vok_h1','Alles, was du gelernt hast — an <span class="mk-mark">einem Ort</span>.')+'</h1>'
-      + '<p>'+W('vk_p1','Jedes Wort aus deinen Kursen und Stunden sammelt sich hier. Geübt wird in '
-      +   'Achtergruppen aus einem Thema — mit Bild, Ton, Beispielsatz und immer wieder anders.')+'</p>'
       + '</div>';
 
     var zahlen='<div class="vk-zahlen">'
