@@ -413,15 +413,15 @@ LZ.kartenHTML=function(){
     : ((ZIELE.filter(function(x){return x.id===d.ziel;})[0]||{}).t||'Dein Weg');
   var href, sub, go;
   if(!lek.length){
-    href='#kurse';
-    sub='Dein Kursbereich ist eingerichtet — schau dir an, was dort auf dich wartet.';
-    go='Kurs öffnen';
+    href='#lernen';
+    sub='Dein Lernbereich ist eingerichtet — schau dir an, was dort auf dich wartet.';
+    go='Lernbereich öffnen';
   } else if(naechste){
     href='lektion.html?k='+encodeURIComponent(pfad)+'&l='+naechste.n;
     sub='Als Nächstes: Lektion '+naechste.n+' — '+esc(naechste.t);
     go=fertig?('Weiter — '+fertig+' von '+lek.length+' geschafft'):'Jetzt anfangen';
   } else {
-    href='#kurse';
+    href='#lernen';
     sub='Alle '+lek.length+' Lektionen geschafft. Stark. Such dir den nächsten Bereich aus.';
     go='Weitermachen';
   }

@@ -5,6 +5,10 @@ window.PODCASTS = [
   titel: 'Die Sommerferien sind da',
   level: 'A2',
   tag: 'Montag',
+  /* datum: wann die Folge online ging. Danach sortiert der Schülerbereich,
+     und daran erkennt er, was für eine Schülerin noch neu ist.
+     Format JJJJ-MM-TT. Bei einer neuen Folge einfach mitgeben. */
+  datum: '2026-07-20',
   dauer: '4:52',
   datei: 'podcast/a2-montag-sommerferien.m4a',
   bild: 'kat-alltag',

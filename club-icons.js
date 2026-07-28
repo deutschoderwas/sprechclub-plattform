@@ -139,27 +139,170 @@
   /* ---- Podcast-Bereich (neuer Menüpunkt + Ansicht) ----
      Fügt einen „Podcast"-Eintrag in die Sidebar + eine eigene Ansicht ein,
      ohne die konto.html-Logik anzufassen. Inhalt kommt, sobald Folgen da sind. */
-  // Podcast-Folgen — einfach hier ergänzen (nach Niveau). file/cover liegen unter /podcast/.
-  var PODCAST_EPISODES = [
-    { level:'A2', day:'Montag', title:'Die Sommerferien sind da', file:'/podcast/a2-montag-sommerferien.m4a', cover:'/podcast/covers/a2-sommerferien.jpg', dauer:'ca. 5 Min', transcript: "<p>Die Sommerferien sind da. Sechs Wochen keine Schule. Okay, kannst du dir das vorstellen? Kein Wecker am Morgen, keine Hausaufgaben, keine Prüfungen – nur Sonne, Freizeit und Eis. Für viele Kinder in Deutschland beginnt genau jetzt diese schöne Zeit: die Sommerferien. Heute reden wir zusammen darüber.</p><p>Es ist Juli. In vielen Bundesländern beginnen jetzt die Sommerferien. Die Schule ist zu Ende. Die Kinder haben frei, sechs Wochen lang. Das ist eine lange Zeit. Die Kinder freuen sich sehr. Und die Eltern? Die Eltern freuen sich auch. Aber manchmal fragen sie: Was machen wir sechs Wochen lang?</p><p>Was machen die Menschen in den Ferien? Viele Familien fahren in den Urlaub. Manche fahren ans Meer, zum Beispiel an die Nordsee oder an die Ostsee. Dort ist es schön. Man kann schwimmen, man kann eine Sandburg bauen, man kann am Strand liegen. Andere Familien fahren in die Berge. In den Bergen ist die Luft frisch. Man kann wandern und die Natur sehen. Manche fahren ins Ausland – nach Italien, nach Spanien oder nach Kroatien.</p><p>Was nimmt man mit in den Urlaub? Man packt einen Koffer. In den Koffer kommen T-Shirts, eine kurze Hose, die Badehose und natürlich die Sonnencreme. Sonnencreme ist sehr wichtig. Die Sonne ist im Sommer stark. Vergiss die Sonnencreme nicht!</p><p>Aber nicht alle fahren weg. Viele Menschen bleiben zu Hause. Das ist auch schön. Man sagt dazu ein lustiges Wort: „Urlaub auf Balkonien“. Das ist ein Witz. Balkonien ist kein echtes Land. Es bedeutet: Ich mache Urlaub auf meinem Balkon.</p><p>Warum bleiben die Menschen zu Hause? Na ja, Reisen ist oft teuer, und zu Hause ist es auch gemütlich. Was kann man zu Hause machen? Sehr viel! Man kann ins Schwimmbad gehen, man kann ein Eis essen – Schokolade oder Vanille, was magst du? Man kann im Park grillen, man kann Freunde treffen oder man kann einfach lange schlafen. Ausschlafen ist auch ein bisschen wie Urlaub, oder?</p><p>Ich mache jetzt mit dir eine kleine Übung. Ich sage einen Satz und du wiederholst ihn langsam. Bist du bereit? – Ich fahre ans Meer. Sehr gut. – Ich fahre in die Berge. – Ich bleibe zu Hause. Toll, das machst du prima!</p><p>Jetzt habe ich eine Frage an dich: Was machst du diesen Sommer? Fährst du weg oder bleibst du zu Hause? Und wenn du reist – wohin? Schreib mir gerne unten in die Kommentare. Ich lese alles.</p><p>Hör dir zum Schluss noch einmal die wichtigen Wörter an: die Ferien … die Ferien. Der Urlaub … der Urlaub. Das Meer … das Meer. Die Berge … die Berge. Der Koffer … der Koffer. Die Sonnencreme … die Sonnencreme. Diese Wörter brauchst du im Sommer sehr, sehr oft.</p><p>Danke fürs Zuhören! Genieß den Sommer, trink genug Wasser – und bis zum nächsten Mal. Tschüssi!</p><p style=\"margin-top:12px\"><b>Wörter des Tages:</b> Die Sommerferien · der Urlaub · der Koffer · die Sonnencreme · ausschlafen</p>" }
-  ];
-  var LVL_COLORS = { A2:'#7ED8EA', B1:'#E0A500', B2:'#DD0000', C1:'#7A3E8F' };
+  /* ------------------------------------------------------------
+     Die Folgen stehen ab jetzt nur noch an EINER Stelle: in
+     podcasts.js (window.PODCASTS). Von dort holt sie sowohl die
+     eigene Podcast-Seite als auch dieser Bereich im Schülerbereich.
+     Neue Folge = ein Eintrag in podcasts.js, sonst nichts.
+     ------------------------------------------------------------ */
+  var LVL_COLORS = { A1:'#8BC34A', A2:'#7ED8EA', B1:'#E0A500', B2:'#DD0000', C1:'#7A3E8F' };
+
+  function pcEsc(t){ return String(t==null?'':t).replace(/[<>&"]/g,function(c){
+    return ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]); }); }
+
+  /* Aus dem zeitgenauen Transkript wird hier einfach Fließtext */
+  function pcTranskript(f){
+    if(typeof f.transkript === 'string') return f.transkript;
+    if(!f.transkript || !f.transkript.length) return '';
+    var text = f.transkript.map(function(z){ return z.x; }).join(' ');
+    var saetze = text.split(/(?<=[.!?])\s+/);
+    var abs = [], puffer = '';
+    saetze.forEach(function(x){
+      puffer += (puffer?' ':'') + x;
+      if(puffer.length > 320){ abs.push(puffer); puffer=''; }
+    });
+    if(puffer) abs.push(puffer);
+    var html = abs.map(function(x){ return '<p>'+pcEsc(x)+'</p>'; }).join('');
+    if(f.woerter && f.woerter.length){
+      html += '<p style="margin-top:12px"><b>Wörter der Folge:</b> '
+            + f.woerter.map(pcEsc).join(' · ') + '</p>';
+    }
+    return html;
+  }
+
+  /* Alle Folgen, neueste zuerst */
+  function pcFolgen(){
+    var roh = (window.PODCASTS && window.PODCASTS.length) ? window.PODCASTS : [];
+    var liste = roh.map(function(f){
+      return {
+        id:     f.id || (f.titel||'').toLowerCase().replace(/\s+/g,'-'),
+        level:  f.level || 'A2',
+        titel:  f.titel || f.title || '',
+        datei:  f.datei || f.file || '',
+        cover:  f.cover || ('podcast/covers/' + (f.id||'') + '.jpg'),
+        dauer:  f.dauer || '',
+        kurz:   f.kurz || '',
+        datum:  f.datum || '',
+        transkript: pcTranskript(f)
+      };
+    }).filter(function(f){ return f.datei; });
+    liste.sort(function(x,y){ return String(y.datum||'').localeCompare(String(x.datum||'')); });
+    return liste;
+  }
+
+  /* ---- Wo jemand stehengeblieben ist ---- */
+  var POS_KEY = 'dow_pod_pos', GESEHEN_KEY = 'dow_pod_gesehen';
+  function posLesen(){ try{ return JSON.parse(localStorage.getItem(POS_KEY)||'{}'); }catch(e){ return {}; } }
+  function posSchreiben(o){ try{ localStorage.setItem(POS_KEY, JSON.stringify(o)); }catch(e){} }
+  function posVon(id){ var o=posLesen()[id]; return o && typeof o.t==='number' ? o : null; }
+  function zeit(sek){
+    sek = Math.max(0, Math.floor(sek||0));
+    var m = Math.floor(sek/60), r = sek%60;
+    return m + ':' + (r<10?'0':'') + r;
+  }
+
+  /* ---- Was ist neu? ---- */
+  function pcNeueste(){ var l=pcFolgen(); return l.length ? l[0] : null; }
+  function pcIstNeu(f){
+    if(!f || !f.datum) return false;
+    var gesehen = '';
+    try{ gesehen = localStorage.getItem(GESEHEN_KEY) || ''; }catch(e){}
+    return String(f.datum) > gesehen;
+  }
+  function pcGesehen(){
+    var f = pcNeueste(); if(!f || !f.datum) return;
+    try{ localStorage.setItem(GESEHEN_KEY, String(f.datum)); }catch(e){}
+    var punkt = document.querySelector('.navlink[data-view="podcast"] .pc-punkt');
+    if(punkt) punkt.remove();
+    try{ if(window.startseiteNeuZeichnen) window.startseiteNeuZeichnen(); }catch(e){}
+  }
+
+  /* Für die Startseite: was sollte dort stehen? */
+  window.podcastStand = function(){
+    var liste = pcFolgen();
+    if(!liste.length) return null;
+    var pos = posLesen();
+    /* Angefangen und nicht zu Ende gehört? Dann hat das Vorrang. */
+    var offen = null, jung = 0;
+    liste.forEach(function(f){
+      var p = pos[f.id];
+      if(p && p.t > 15 && !p.fertig && (p.wann||0) > jung){ offen = f; jung = p.wann||0; }
+    });
+    var neueste = liste[0];
+    var f = offen || neueste;
+    var p = pos[f.id];
+    return {
+      folge: f,
+      weiterAb: (p && p.t > 15 && !p.fertig) ? p.t : 0,
+      neu: pcIstNeu(neueste),
+      neueste: neueste,
+      anzahl: liste.length
+    };
+  };
+
   function podcastHTML(){
+    var liste = pcFolgen();
     var head = '<div class="pagehead"><h1>Julias 5-Minuten-Podcast <span style="color:#10627A">für tägliches Deutsch</span></h1>'+
       '<p>Kurze Folgen zum Mitnehmen. Wähl dein Niveau:</p></div>';
     var levels = ['A2','B1','B2','C1'];
     var pills = '<div class="pc-filter"><button class="pc-pill active" data-lvl="all">Alle</button>'+
       levels.map(function(l){ return '<button class="pc-pill" data-lvl="'+l+'"><span class="pc-dot" style="background:'+(LVL_COLORS[l]||'#7ED8EA')+'"></span>'+l+'</button>'; }).join('')+'</div>';
-    var esc = function(t){ return String(t==null?'':t).replace(/[<>&"]/g,function(c){return ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]);}); };
-    var items = PODCAST_EPISODES.map(function(e){
-      return '<div class="pc-ep" data-lvl="'+esc(e.level)+'">'+
-        '<div class="pc-cover" style="background-image:url(\''+e.cover+'\')"><span class="pc-lv">'+esc(e.level)+'</span></div>'+
-        '<div class="pc-body"><div class="pc-day"><span class="pc-lvtag" style="background:'+(LVL_COLORS[e.level]||'#7ED8EA')+'">'+esc(e.level)+'</span>'+esc(e.day)+(e.dauer?' · '+esc(e.dauer):'')+'</div>'+
-        '<h3 class="pc-title">'+esc(e.title)+'</h3>'+
-        '<audio controls preload="none" src="'+e.file+'"></audio>'+(e.transcript ? '<button class="pc-tbtn" type="button">📄 Mitlesen</button><div class="pc-transcript" hidden>'+e.transcript+'</div>' : '<div class="pc-tnote">📄 Transkript folgt</div>')+'</div></div>';
+    var pos = posLesen();
+    var items = liste.map(function(f){
+      var p = pos[f.id];
+      var stand = '';
+      if(p && p.fertig) stand = '<span class="pc-stand fertig">✓ gehört</span>';
+      else if(p && p.t > 15) stand = '<span class="pc-stand">▸ weiterhören ab '+zeit(p.t)+'</span>';
+      return '<div class="pc-ep" data-lvl="'+pcEsc(f.level)+'" data-id="'+pcEsc(f.id)+'">'+
+        '<div class="pc-cover" style="background-image:url(\''+pcEsc(f.cover)+'\')"><span class="pc-lv">'+pcEsc(f.level)+'</span></div>'+
+        '<div class="pc-body">'+
+        '<div class="pc-day"><span class="pc-lvtag" style="background:'+(LVL_COLORS[f.level]||'#7ED8EA')+'">'+pcEsc(f.level)+'</span>'+
+          (f.dauer?pcEsc(f.dauer):'')+(pcIstNeu(f)?'<span class="pc-neu">neu</span>':'')+'</div>'+
+        '<h3 class="pc-title">'+pcEsc(f.titel)+'</h3>'+
+        (f.kurz?'<p class="pc-kurz">'+pcEsc(f.kurz)+'</p>':'')+
+        '<audio controls preload="metadata" src="'+pcEsc(f.datei)+'"></audio>'+
+        stand+
+        (f.transkript ? '<button class="pc-tbtn" type="button">📄 Mitlesen</button><div class="pc-transcript" hidden>'+f.transkript+'</div>' : '<div class="pc-tnote">📄 Transkript folgt</div>')+
+        '</div></div>';
     }).join('');
-    return head + pills + '<div class="pc-list">' + items + '</div>';
+    return head + pills + '<div class="pc-list">' + (items || '<div class="pc-tnote">Die erste Folge kommt bald.</div>') + '</div>';
   }
+
+  /* Merkt sich beim Hören, wo jemand steht — und setzt beim nächsten
+     Mal genau dort wieder an. */
+  function wirePodcastAudio(sec){
+    sec.querySelectorAll('.pc-ep').forEach(function(ep){
+      var au = ep.querySelector('audio'); if(!au || au.dataset.pos==='1') return;
+      au.dataset.pos = '1';
+      var id = ep.getAttribute('data-id');
+      var gesetzt = false, zuletzt = 0;
+
+      au.addEventListener('loadedmetadata', function(){
+        if(gesetzt) return; gesetzt = true;
+        var p = posVon(id);
+        if(p && !p.fertig && p.t > 15 && au.duration && p.t < au.duration - 10){
+          try{ au.currentTime = p.t; }catch(e){}
+        }
+      });
+      au.addEventListener('timeupdate', function(){
+        var jetzt = Date.now();
+        if(jetzt - zuletzt < 4000) return;
+        zuletzt = jetzt;
+        var o = posLesen();
+        o[id] = { t: au.currentTime, wann: jetzt, fertig: false };
+        posSchreiben(o);
+      });
+      au.addEventListener('ended', function(){
+        var o = posLesen();
+        o[id] = { t: 0, wann: Date.now(), fertig: true };
+        posSchreiben(o);
+        var st = ep.querySelector('.pc-stand');
+        if(st){ st.className = 'pc-stand fertig'; st.textContent = '✓ gehört'; }
+      });
+      au.addEventListener('play', pcGesehen);
+    });
+  }
+
   function wirePodcastFilter(sec){
     var pills = sec.querySelectorAll('.pc-pill');
     pills.forEach(function(pl){
@@ -179,7 +322,22 @@
         else { panel.setAttribute('hidden',''); btn.textContent = '📄 Mitlesen'; }
       });
     });
+    wirePodcastAudio(sec);
   }
+
+  /* Von der Startseite aus: Podcast öffnen und ggf. gleich abspielen */
+  window.podcastOeffnen = function(id, abspielen){
+    var b = document.querySelector('.navlink[data-view="podcast"]');
+    if(b) b.click();
+    if(!id) return false;
+    setTimeout(function(){
+      var ep = document.querySelector('.pc-ep[data-id="'+id+'"]');
+      if(!ep) return;
+      ep.scrollIntoView({behavior:'smooth', block:'center'});
+      if(abspielen){ var au=ep.querySelector('audio'); if(au){ try{ au.play(); }catch(e){} } }
+    }, 120);
+    return false;
+  };
 
   function setupPodcast(){
     // Ankerpunkt: vor „Julia korrigiert"; Rueckfall auf „Sprech-Tandem" bzw. ans Ende des Lernen-Blocks
@@ -191,7 +349,13 @@
     if(!b){
       b = document.createElement('button');
       b.className = 'navlink'; b.setAttribute('data-view','podcast');
-      b.innerHTML = '<span class="ic">🎙️</span>Podcast<span class="neu">NEU</span>';
+      b.innerHTML = '<span class="ic">🎙️</span>Podcast';
+    }
+    /* Ein stiller Punkt, solange die neueste Folge noch ungehört ist */
+    if(b && !b.querySelector('.pc-punkt') && pcIstNeu(pcNeueste())){
+      var pt = document.createElement('span');
+      pt.className = 'pc-punkt'; pt.title = 'Neue Folge';
+      b.appendChild(pt);
       anker.parentNode.insertBefore(b, anker);
     }
     var sec = document.getElementById('v-podcast');

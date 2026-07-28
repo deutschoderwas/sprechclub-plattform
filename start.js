@@ -227,9 +227,32 @@
   +     'display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}'
   + '}';
 
+  var CSS_POD = ''
+    + '.st-pod{display:flex;align-items:center;gap:16px;width:100%;text-align:left;cursor:pointer;'
+    +   'font:inherit;background:#fff;border:1px solid var(--m-line,#EEE7D8);border-radius:20px;'
+    +   'padding:12px 18px 12px 12px;margin:0 0 18px;transition:.16s;'
+    +   'box-shadow:0 6px 18px rgba(40,53,59,.06)}'
+    + '.st-pod:hover{transform:translateY(-2px);box-shadow:0 14px 30px -12px rgba(40,53,59,.3);'
+    +   'border-color:#35AFD0}'
+    + '.st-pod-bild{position:relative;width:78px;height:78px;flex:none;border-radius:16px;'
+    +   'background:#DFF6F8 center/cover no-repeat;overflow:hidden}'
+    + '.st-pod-play{position:absolute;inset:0;display:grid;place-items:center;font-size:22px;'
+    +   'color:#fff;background:rgba(26,26,26,.34)}'
+    + '.st-pod-tx{flex:1;min-width:0}'
+    + '.st-pod-kicker{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:800;'
+    +   'letter-spacing:.14em;text-transform:uppercase;color:#12718C;margin-bottom:3px}'
+    + '.st-pod-neu{background:#D83636;color:#fff;border-radius:999px;padding:2px 8px;'
+    +   'letter-spacing:.06em}'
+    + '.st-pod-tx > b{display:block;font-family:\'Space Grotesk\',sans-serif;font-size:19px;'
+    +   'letter-spacing:-.02em;color:#1A1A1A;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
+    + '.st-pod-u{display:block;font-size:13px;color:#5B6A70;margin-top:2px}'
+    + '.st-pod-pfeil{flex:none;font-size:19px;color:#8A97A0}'
+    + '.st-pod:hover .st-pod-pfeil{color:#1A1A1A;transform:translateX(3px)}'
+    + '@media(max-width:560px){.st-pod-pfeil{display:none}.st-pod-bild{width:64px;height:64px}}';
+
   function stil(){
     if(document.getElementById('startStil')) return;
-    var s=document.createElement('style'); s.id='startStil'; s.textContent=CSS;
+    var s=document.createElement('style'); s.id='startStil'; s.textContent=CSS+CSS_POD;
     document.head.appendChild(s);
   }
 
@@ -256,6 +279,7 @@
       +   vokabelBand()
       +   '<div id="lzSlot"></div>'
       +   '<div class="st-oben">' + kursKarte(k) + '<div class="st-rechts">' + liveKarte(k) + '</div></div>'
+      +   podcastKarte()
       +   zahlen(k, s)
       +   '<div class="st-titel"><span class="tag">' + T('sn_tag','Dein Übungsplatz') + '</span>'
       +   '<h2>' + T('sn_weiter','Weitermachen') + '</h2></div>'
@@ -266,6 +290,32 @@
          unten in appStreifen() wieder einhängen. */
       + '</div>';
   };
+
+  /* Julias Podcast. Zeigt die angefangene Folge zum Weiterhören,
+     sonst die neueste. Ist die neueste noch ungehört, sagt die Karte das
+     mit einem kleinen Schild — mehr Aufhebens braucht es nicht. */
+  function podcastKarte(){
+    var st = null;
+    try{ if(window.podcastStand) st = window.podcastStand(); }catch(e){}
+    if(!st || !st.folge) return '';
+    var f = st.folge;
+    var weiter = st.weiterAb > 15;
+    var m = Math.floor(st.weiterAb/60), r = Math.floor(st.weiterAb%60);
+    var zeit = m + ':' + (r<10?'0':'') + r;
+
+    return '<button class="st-pod" onclick="podcastOeffnen(\'' + E(f.id) + '\',true)">'
+      + '<span class="st-pod-bild" style="background-image:url(\'' + E(f.cover) + '\')">'
+      +   '<span class="st-pod-play">▶</span></span>'
+      + '<span class="st-pod-tx">'
+      +   '<span class="st-pod-kicker">' + T('sn_pod','Julias 5-Minuten-Podcast') + ''
+      +     (st.neu ? '<span class="st-pod-neu">' + T('sn_pod_neu','neue Folge') + '</span>' : '') + '</span>'
+      +   '<b>' + E(f.titel) + '</b>'
+      +   '<span class="st-pod-u">' + E(f.level) + (f.dauer ? ' · ' + E(f.dauer) : '') + ' · '
+      +     (weiter ? T('sn_pod_w','weiterhören ab') + ' ' + zeit
+                    : T('sn_pod_a','jetzt anhören')) + '</span>'
+      + '</span>'
+      + '<span class="st-pod-pfeil">→</span></button>';
+  }
 
   /* Die Erinnerung aus dem Vokabeltrainer.
      Wer einen Tag aussetzt, sieht es hier zuerst — noch bevor eine
