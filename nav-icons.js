@@ -5,9 +5,13 @@
    Stil, andere Farben, andere Strichstärke — je nach Gerät sahen sie
    auch noch unterschiedlich aus. Zusammen wirkte das unruhig.
 
-   Jetzt: ein Satz Linien-Symbole, alle 24×24, alle Strichstärke 1.75,
-   alle in derselben Farbe. Sie sitzen auf einem weichen Plättchen,
-   wie die Symbole auf der Landingpage.
+   Dann wurden daraus einheitliche Linien-Symbole, alle in derselben
+   Farbe. Ruhig, aber auch flach: eine graue Liste.
+
+   Jetzt sitzt jedes Symbol auf einem weichen farbigen Plättchen aus
+   der Marke — Türkis fürs Lernen, Rot für Prüfung und Live-Unterricht,
+   Gold für Fortschritt und Konto. Gleiche Strichstärke wie vorher,
+   gleiche Größe, nur eben mit Farbe und einem Körper.
    ============================================================ */
 (function(){
   'use strict';
@@ -50,9 +54,23 @@
     'index.html':'haus'
   };
 
+  /* Welche Farbe das Plättchen bekommt. Nicht bunt um der Farbe willen:
+     Rot ist alles, was drängt — Termin, Prüfung, Fehler, Korrektur.
+     Türkis ist das ruhige Lernen, Gold das Sammeln und Erreichen,
+     Grau der Verwaltungskram. Nebeneinander ergibt das von selbst
+     einen Wechsel und keine türkise Wand. */
+  var ZU_FARBE = {
+    dashboard:'gold',  kalender:'rot',    stunden:'rot',    kurs:'turq',
+    pruefung:'rot',    ueben:'turq',      lernen:'turq',    vokabeln:'gold',
+    fehler:'rot',      buddy:'turq',      materialien:'grau', fortschritt:'gold',
+    nachrichten:'grau',amanda:'turq',     lernpfad:'gold',  guthaben:'gold',
+    profil:'grau',     community:'rot',   podcast:'turq',   schreiben:'turq',
+    kurse:'turq'
+  };
+
   function svg(name, groesse){
     var d = P[name]; if(!d) return '';
-    return '<svg viewBox="0 0 24 24" width="'+(groesse||20)+'" height="'+(groesse||20)+'" fill="none" '
+    return '<svg viewBox="0 0 24 24" width="'+(groesse||19)+'" height="'+(groesse||19)+'" fill="none" '
       + 'stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" '
       + 'aria-hidden="true">' + d + '</svg>';
   }
@@ -69,8 +87,52 @@
     if(t.indexOf('podcast')>=0) return 'welle';
     return null;
   }
+  function farbe(el){
+    var v = el.getAttribute('data-view');
+    if(v && ZU_FARBE[v]) return ZU_FARBE[v];
+    var t = (el.textContent||'').toLowerCase();
+    if(t.indexOf('julia')>=0) return 'rot';
+    if(t.indexOf('buchen')>=0 || t.indexOf('book')>=0) return 'rot';
+    if(t.indexOf('abmelden')>=0 || t.indexOf('log out')>=0) return 'grau';
+    return 'turq';
+  }
+
+  /* Die Plättchen. Steht hier statt im Stylesheet, damit das Aussehen
+     der Symbole an einer Stelle liegt — Form und Farbe zusammen. */
+  var CSS = ''
+    + '.sidebar .navlink .ic{display:inline-flex;align-items:center;justify-content:center;'
+    +   'width:32px;height:32px;flex:none;border-radius:11px;font-size:0;'
+    +   'transition:transform .16s cubic-bezier(.34,1.4,.5,1),box-shadow .16s,background .16s}'
+    + '.sidebar .navlink .ic svg{display:block}'
+    + '.sidebar .navlink .ic.f-turq{background:#DFF6F8;color:#12718C}'
+    + '.sidebar .navlink .ic.f-rot {background:#FBE3E3;color:#C33030}'
+    + '.sidebar .navlink .ic.f-gold{background:#FFF1C9;color:#B57900}'
+    + '.sidebar .navlink .ic.f-grau{background:#EFEBE2;color:#5B6A70}'
+    + '.sidebar .navlink:hover .ic{transform:translateY(-2px) rotate(-4deg);'
+    +   'box-shadow:0 6px 14px -6px rgba(40,53,59,.5)}'
+    /* Der aktive Eintrag: das Plättchen wird kräftig und bekommt einen Ring */
+    + '.sidebar .navlink.active .ic{color:#fff;box-shadow:0 4px 12px -4px rgba(40,53,59,.55)}'
+    + '.sidebar .navlink.active .ic.f-turq{background:#35AFD0}'
+    + '.sidebar .navlink.active .ic.f-rot {background:#D83636}'
+    + '.sidebar .navlink.active .ic.f-gold{background:#E39A00}'
+    + '.sidebar .navlink.active .ic.f-grau{background:#28353B}'
+    + '.sidebar .navlink{gap:11px}'
+    /* In der Fußzeile etwas kleiner, damit sie nicht laut wird */
+    + '.sidebar .side-foot .navlink .ic{width:29px;height:29px;border-radius:10px}'
+    /* Handy: Leiste unten, Plättchen mittig über der Beschriftung */
+    + '@media(max-width:860px){.sidebar .navlink .ic{width:30px;height:30px;border-radius:10px}'
+    +   '.sidebar .navlink:hover .ic{transform:none;box-shadow:none}}';
+
+  function stilSetzen(){
+    if(document.getElementById('navIcStil')) return;
+    var s = document.createElement('style');
+    s.id = 'navIcStil';
+    s.textContent = CSS;
+    document.head.appendChild(s);
+  }
 
   function malen(){
+    stilSetzen();
     var n = document.querySelectorAll('.sidebar .navlink, nav.sidebar .navlink');
     if(!n.length) n = document.querySelectorAll('.navlink');
     Array.prototype.forEach.call(n, function(el){
@@ -79,7 +141,8 @@
       var s = name(el);
       if(!s) return;
       ic.dataset.dow = '1';
-      ic.innerHTML = svg(s, el.classList.contains('navlink-chat') ? 21 : 20);
+      ic.classList.add('f-' + farbe(el));
+      ic.innerHTML = svg(s, el.classList.contains('navlink-chat') ? 20 : 19);
     });
   }
 
