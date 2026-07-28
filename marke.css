@@ -953,3 +953,275 @@ h2.sec{ font-family:'Space Grotesk', sans-serif !important; font-weight:800 !imp
 .lz-bausteine .ln-bs{ min-width:0 }
 .lz-bausteine .ln-bs .tx{ min-width:0; overflow:hidden }
 .lz-bausteine .ln-bs b{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
+
+/* ============================================================
+   DER VOKABELTRAINER  (vokabeln.js)
+
+   Zwei Teile:
+     · die Übersicht — Sammlung, Zahlen, Themengruppen mit
+       Achterrunden als kleine Balken
+     · die Runde — Vollbild, eine Aufgabe nach der anderen,
+       oben ein Fortschrittsbalken wie bei einer Sprachapp
+
+   Farben wie überall: Rot ist die Handlung, Türkis die Ruhe,
+   Grün nur für „richtig", Rot-Weich nur für „daneben".
+   ============================================================ */
+
+.vk{ max-width:1180px; margin:0 auto; padding-bottom:80px; color:var(--m-ink) }
+.vk *{ box-sizing:border-box }
+
+.vk-kopf{ margin:0 0 22px }
+.vk-kopf h1{ font-family:'Space Grotesk',sans-serif; font-size:clamp(25px,3vw,36px);
+  line-height:1.12; letter-spacing:-.5px; margin:12px 0 10px }
+.vk-kopf p{ margin:0; font-size:15px; line-height:1.6; color:var(--m-muted); max-width:64ch }
+.vk-kicker{ display:inline-block; color:var(--m-turq-ink); font-weight:900; font-size:12px;
+  letter-spacing:.1em; text-transform:uppercase; background:var(--m-turq-soft);
+  padding:6px 14px; border-radius:999px }
+.vk-kicker-hell{ background:rgba(255,255,255,.9) }
+
+/* ---------- Knöpfe ---------- */
+.vk-btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; border:none;
+  cursor:pointer; font-family:inherit; font-weight:800; font-size:14.5px; padding:12px 20px;
+  border-radius:14px; background:#fff; color:var(--m-ink); border:1px solid var(--m-line);
+  box-shadow:0 3px 0 var(--m-line); transition:transform .09s, box-shadow .09s, opacity .12s }
+.vk-btn:hover{ transform:translateY(-2px); box-shadow:0 5px 0 var(--m-line) }
+.vk-btn:active{ transform:translateY(2px); box-shadow:0 1px 0 var(--m-line) }
+.vk-btn-rot{ background:var(--m-red); color:#fff; border-color:var(--m-red);
+  box-shadow:0 5px 0 var(--m-red-dark) }
+.vk-btn-rot:hover{ box-shadow:0 7px 0 var(--m-red-dark); color:#fff }
+.vk-btn-rot:active{ box-shadow:0 2px 0 var(--m-red-dark) }
+.vk-btn-hell{ background:#fff }
+.vk-btn.vk-aus{ opacity:.4; pointer-events:none }
+.vk-gross-btn{ font-size:16px; padding:14px 26px }
+
+/* ---------- Zahlenband ---------- */
+.vk-zahlen{ display:flex; gap:10px; flex-wrap:wrap; margin:0 0 20px }
+.vk-z{ display:flex; align-items:center; gap:11px; background:var(--m-cream);
+  border:1px solid var(--m-line); border-radius:16px; padding:11px 16px }
+.vk-z > b, .vk-z > div > b{ display:block; font-family:'Space Grotesk',sans-serif; font-size:18px; line-height:1.1 }
+.vk-z > span, .vk-z > div > span{ display:block; font-size:11.5px; color:var(--m-muted); margin-top:2px }
+.vk-ring{ width:42px; height:42px; border-radius:50%; display:grid; place-items:center; flex:none;
+  background:conic-gradient(var(--m-turq-dark) calc(var(--p)*1%), #EFEAE0 0) }
+.vk-ring i{ width:32px; height:32px; border-radius:50%; background:var(--m-cream);
+  display:grid; place-items:center; font-style:normal; font-size:12px; font-weight:800 }
+@media(max-width:640px){
+  .vk-zahlen{ flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; padding-bottom:2px }
+  .vk-zahlen::-webkit-scrollbar{ display:none }
+  .vk-z{ flex:0 0 auto }
+}
+
+/* ---------- Erinnerung ---------- */
+.vk-erinnerung{ display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+  background:var(--m-red-soft); border:1px solid #F3C9C9; border-radius:20px;
+  padding:16px 20px; margin:0 0 18px }
+.vk-erinnerung-z{ width:46px; height:46px; flex:none; border-radius:14px; background:var(--m-red);
+  color:#fff; display:grid; place-items:center; font-family:'Space Grotesk',sans-serif;
+  font-size:20px; font-weight:700 }
+.vk-erinnerung-t{ flex:1; min-width:200px }
+.vk-erinnerung-t > b{ display:block; font-size:15.5px; font-family:'Space Grotesk',sans-serif }
+.vk-erinnerung-t > span{ display:block; font-size:13px; color:var(--m-muted); margin-top:2px }
+@media(max-width:600px){ .vk-erinnerung .vk-btn{ width:100% } }
+
+/* ---------- Heute dran ---------- */
+.vk-heute{ display:flex; align-items:center; justify-content:space-between; gap:18px; flex-wrap:wrap;
+  background:var(--m-dunkel); color:#fff; border-radius:22px; padding:20px 24px; margin:0 0 22px }
+.vk-heute-t > b{ display:block; font-family:'Space Grotesk',sans-serif; font-size:24px; margin:10px 0 4px }
+.vk-heute-t > span:not(.vk-kicker){ display:block; font-size:13.5px; color:rgba(255,255,255,.75); max-width:52ch }
+@media(max-width:600px){ .vk-heute{ padding:18px } .vk-heute .vk-btn{ width:100% } }
+
+/* ---------- Umschalter ---------- */
+.vk-schalter{ display:flex; gap:8px; margin:0 0 18px; flex-wrap:wrap }
+.vk-s{ border:1px solid var(--m-line); background:#fff; color:var(--m-muted); font:inherit;
+  font-weight:800; font-size:13.5px; padding:9px 16px; border-radius:999px; cursor:pointer; transition:.14s }
+.vk-s i{ font-style:normal; opacity:.55; margin-left:4px }
+.vk-s:hover{ border-color:var(--m-turq-dark); color:var(--m-ink) }
+.vk-s.an{ background:var(--m-ink); border-color:var(--m-ink); color:#fff }
+.vk-s.an i{ opacity:.7 }
+
+/* ---------- Gruppen ---------- */
+.vk-liste{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px }
+@media(max-width:1180px){ .vk-liste{ grid-template-columns:repeat(2,minmax(0,1fr)) } }
+@media(max-width:720px){ .vk-liste{ grid-template-columns:minmax(0,1fr) } }
+
+.vk-g{ background:var(--m-cream); border:1px solid var(--m-line); border-radius:18px;
+  padding:14px 16px 16px; transition:border-color .14s, box-shadow .14s }
+.vk-g:hover{ border-color:var(--m-turq-dark); box-shadow:0 8px 20px rgba(26,26,26,.07) }
+.vk-g-neu{ background:#FFFDF8 }
+.vk-g-kopf{ display:flex; align-items:center; gap:12px }
+.vk-g-bild{ width:52px; height:52px; flex:none; border-radius:14px; overflow:hidden;
+  background:#E8E2D6; display:grid; place-items:center; font-size:22px }
+.vk-g-bild img{ width:100%; height:100%; object-fit:cover; display:block }
+.vk-g-tx{ flex:1; min-width:0 }
+.vk-g-tx > b{ display:block; font-size:14.5px; line-height:1.25; color:var(--m-ink);
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
+.vk-g-tx > span{ display:block; font-size:12px; color:var(--m-muted); margin-top:2px }
+.vk-g-proz{ font-size:12.5px; font-weight:800; color:var(--m-turq-ink); white-space:nowrap }
+.vk-g-dazu{ width:100%; margin-top:12px; font-size:13.5px; padding:10px 14px }
+
+.vk-runden{ display:flex; gap:6px; flex-wrap:wrap; margin-top:13px }
+.vk-runde{ flex:1 1 54px; min-width:54px; border:1px solid var(--m-line); background:#fff;
+  border-radius:11px; padding:7px 6px 6px; cursor:pointer; font:inherit; transition:.14s }
+.vk-runde:hover{ border-color:var(--m-red); transform:translateY(-2px) }
+.vk-runde-n{ display:block; font-size:12px; font-weight:800; color:var(--m-muted); margin-bottom:5px }
+.vk-runde-b{ display:block; height:5px; border-radius:5px; background:#EFEAE0; overflow:hidden }
+.vk-runde-b i{ display:block; height:100%; border-radius:5px;
+  background:linear-gradient(90deg,var(--m-turq-dark),var(--m-turq)) }
+.vk-runde.voll{ background:#F3FBF6; border-color:#CDEBD9 }
+.vk-runde.voll .vk-runde-b i{ background:linear-gradient(90deg,#16A34A,#5BD08A) }
+.vk-runde.voll .vk-runde-n{ color:#16A34A }
+
+.vk-leer{ background:var(--m-cream); border:1px dashed var(--m-line); border-radius:18px;
+  padding:26px 22px; color:var(--m-muted); font-size:14.5px; text-align:center; line-height:1.6 }
+
+/* ============================================================
+   Die Runde — Vollbild
+   ============================================================ */
+.vk-ov-kopf{ display:flex; align-items:center; gap:14px; padding:14px 20px;
+  border-bottom:1px solid var(--m-line); background:#fff; flex:none }
+.vk-x{ width:34px; height:34px; flex:none; border:1px solid var(--m-line); background:#fff;
+  border-radius:11px; cursor:pointer; font-size:15px; color:var(--m-muted); line-height:1 }
+.vk-x:hover{ background:var(--m-cream2); color:var(--m-ink) }
+.vk-fort{ flex:1; height:12px; border-radius:12px; background:#EFEAE0; overflow:hidden }
+.vk-fort i{ display:block; height:100%; border-radius:12px; width:0;
+  background:linear-gradient(90deg,var(--m-turq-dark),var(--m-turq)); transition:width .3s }
+.vk-zaehler{ font-size:12.5px; font-weight:800; color:var(--m-faint); white-space:nowrap }
+
+.vk-ov-mitte{ flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch;
+  display:flex; align-items:flex-start; justify-content:center; padding:26px 20px 20px }
+.vk-block{ width:100%; max-width:620px; margin:auto }
+.vk-frage{ display:block; font-family:'Space Grotesk',sans-serif; font-size:20px;
+  font-weight:700; color:var(--m-ink); margin:0 0 20px; letter-spacing:-.2px }
+
+/* Wortkarte */
+.vk-karte{ background:var(--m-cream); border:1px solid var(--m-line); border-radius:22px;
+  overflow:hidden; text-align:center }
+.vk-karte-bild{ display:block; height:230px; background:#E8E2D6 }
+.vk-karte-bild img{ width:100%; height:100%; object-fit:cover; display:block }
+.vk-karte-bild.zeichen{ display:grid; place-items:center; font-size:76px; height:170px;
+  background:var(--m-gold-soft) }
+.vk-karte-bild.leer{ display:none }
+.vk-karte-tx{ padding:20px 22px 24px; position:relative }
+.vk-karte-tx > b{ display:block; font-family:'Space Grotesk',sans-serif; font-size:27px;
+  color:var(--m-ink); letter-spacing:-.4px }
+.vk-bed{ display:block; font-size:15px; color:var(--m-muted); margin-top:6px }
+.vk-bsp{ display:block; font-size:14px; color:var(--m-turq-ink); background:var(--m-turq-soft);
+  border-radius:12px; padding:9px 14px; margin:14px auto 0; max-width:32em }
+.vk-hoer{ position:absolute; right:16px; top:-22px; width:44px; height:44px; border-radius:50%;
+  border:1px solid var(--m-line); background:#fff; cursor:pointer; font-size:18px;
+  box-shadow:0 3px 10px rgba(26,26,26,.1) }
+.vk-hoer:hover{ background:var(--m-turq-soft) }
+
+/* Bildaufgabe */
+.vk-gross{ text-align:center; margin:0 0 18px }
+.vk-gross-bild{ display:inline-block; width:100%; max-width:340px; height:210px; border-radius:20px;
+  overflow:hidden; background:#E8E2D6 }
+.vk-gross-bild img{ width:100%; height:100%; object-fit:cover; display:block }
+.vk-gross-bild.zeichen{ display:grid; place-items:center; font-size:80px; background:var(--m-gold-soft) }
+.vk-gross.klein .vk-gross-bild{ max-width:220px; height:140px }
+
+.vk-wortgross{ display:flex; align-items:center; justify-content:center; gap:12px; margin:0 0 20px;
+  position:relative; flex-wrap:wrap }
+.vk-wortgross > b{ font-family:'Space Grotesk',sans-serif; font-size:30px; letter-spacing:-.5px }
+.vk-wortgross .vk-hoer{ position:static; width:40px; height:40px; font-size:16px }
+.vk-mini{ width:56px; height:56px; border-radius:16px; overflow:hidden; background:#E8E2D6; flex:none }
+.vk-mini img{ width:100%; height:100%; object-fit:cover; display:block }
+.vk-mini.zeichen{ display:grid; place-items:center; font-size:28px; background:var(--m-gold-soft) }
+.vk-mini.leer{ display:none }
+
+.vk-erkl{ font-size:19px; line-height:1.45; color:var(--m-ink); background:var(--m-cream);
+  border:1px solid var(--m-line); border-radius:18px; padding:18px 20px; margin:0 0 18px; text-align:center }
+.vk-satz{ font-size:20px; line-height:1.6; color:var(--m-ink); background:var(--m-cream);
+  border:1px solid var(--m-line); border-radius:18px; padding:20px; margin:0 0 18px; text-align:center }
+.vk-luecke{ display:inline-block; min-width:70px; border-bottom:3px solid var(--m-red);
+  font-style:normal; color:var(--m-red); font-weight:800 }
+.vk-hoergross{ text-align:center; margin:0 0 22px }
+.vk-hoer-gross{ position:static; width:96px; height:96px; font-size:38px; border-radius:50%;
+  background:var(--m-turq-soft); border-color:var(--m-turq) }
+
+/* Antwortknöpfe */
+.vk-opt{ display:grid; grid-template-columns:1fr 1fr; gap:10px }
+.vk-opt-drei{ grid-template-columns:repeat(3,1fr) }
+@media(max-width:560px){ .vk-opt{ grid-template-columns:1fr } .vk-opt-drei{ grid-template-columns:repeat(3,1fr) } }
+.vk-o{ border:1px solid var(--m-line); background:#fff; color:var(--m-ink); font:inherit;
+  font-size:15px; font-weight:700; text-align:left; padding:14px 16px; border-radius:15px;
+  cursor:pointer; box-shadow:0 3px 0 var(--m-line); transition:.1s; line-height:1.35 }
+.vk-o:hover:not(:disabled){ border-color:var(--m-turq-dark); background:var(--m-cream2) }
+.vk-o-an{ border-color:var(--m-turq-dark) !important; background:var(--m-turq-soft) !important }
+.vk-o-gut{ border-color:#16A34A !important; background:#EAF9F0 !important; color:#14532D !important;
+  box-shadow:0 3px 0 #BFE6CD !important }
+.vk-o-schlecht{ border-color:var(--m-red) !important; background:var(--m-red-soft) !important;
+  color:var(--m-red-dark) !important; box-shadow:0 3px 0 #EFC4C4 !important }
+.vk-o:disabled{ cursor:default }
+.vk-opt-drei .vk-o{ text-align:center; font-size:17px; font-weight:800 }
+
+/* Tippen */
+.vk-tipp input{ width:100%; border:1px solid var(--m-line); border-radius:16px; padding:16px 18px;
+  font:inherit; font-size:19px; background:#fff; color:var(--m-ink); text-align:center }
+.vk-tipp input:focus{ outline:none; border-color:var(--m-turq-dark) }
+.vk-tipp input.gut{ border-color:#16A34A; background:#EAF9F0 }
+.vk-tipp input.schlecht{ border-color:var(--m-red); background:var(--m-red-soft) }
+
+/* Paare */
+.vk-paare{ display:grid; grid-template-columns:1fr 1fr; gap:10px }
+.vk-paare-s{ display:flex; flex-direction:column; gap:10px }
+.vk-p{ border:1px solid var(--m-line); background:#fff; color:var(--m-ink); font:inherit;
+  font-size:14px; font-weight:700; text-align:left; padding:13px 14px; border-radius:14px;
+  cursor:pointer; box-shadow:0 3px 0 var(--m-line); transition:.12s; line-height:1.3; flex:1 }
+.vk-p:hover:not(:disabled){ border-color:var(--m-turq-dark) }
+.vk-p-an{ border-color:var(--m-turq-dark); background:var(--m-turq-soft) }
+.vk-p-weg{ opacity:.35; background:#EAF9F0; border-color:#BFE6CD; box-shadow:none }
+.vk-p-nein{ border-color:var(--m-red); background:var(--m-red-soft); animation:vkWackel .32s }
+@keyframes vkWackel{ 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+
+/* Fuß mit Rückmeldung */
+.vk-ov-fuss{ flex:none; border-top:1px solid var(--m-line); background:#fff;
+  padding:14px 20px calc(14px + env(safe-area-inset-bottom));
+  display:flex; align-items:center; justify-content:flex-end; gap:12px; flex-wrap:wrap }
+.vk-ov-fuss .vk-btn{ min-width:150px }
+.vk-echo{ flex:1; min-width:200px; font-size:14px; line-height:1.4 }
+.vk-echo-t{ display:block; font-family:'Space Grotesk',sans-serif; font-size:16px; font-weight:700 }
+.vk-echo.gut .vk-echo-t{ color:#16A34A }
+.vk-echo.schlecht .vk-echo-t{ color:var(--m-red) }
+.vk-loesung{ display:block; color:var(--m-muted); margin-top:2px }
+@media(max-width:560px){
+  .vk-ov-fuss{ justify-content:stretch }
+  .vk-ov-fuss .vk-btn{ flex:1; min-width:0 }
+  .vk-echo{ flex:1 1 100% }
+  .vk-frage{ font-size:18px; margin-bottom:16px }
+  .vk-wortgross > b{ font-size:25px }
+  .vk-karte-bild{ height:180px }
+}
+
+/* Ende einer Runde */
+.vk-ende{ text-align:center }
+.vk-ende-ring{ width:120px; height:120px; margin:0 auto 18px; border-radius:50%; display:grid;
+  place-items:center; background:conic-gradient(#16A34A calc(var(--p)*1%), #EFEAE0 0) }
+.vk-ende-ring > b{ width:96px; height:96px; border-radius:50%; background:#FFFCF5; display:grid;
+  place-items:center; font-family:'Space Grotesk',sans-serif; font-size:24px }
+.vk-ende > h2{ font-family:'Space Grotesk',sans-serif; font-size:26px; margin:0 0 6px }
+.vk-ende > p{ margin:0 0 18px; font-size:14px; color:var(--m-muted) }
+.vk-ende-liste{ display:flex; gap:7px; flex-wrap:wrap; justify-content:center; margin:0 0 18px }
+.vk-ende-w{ font-size:13px; font-weight:700; background:#EAF9F0; color:#14532D;
+  border-radius:999px; padding:6px 12px }
+.vk-ende-w.schlecht{ background:var(--m-red-soft); color:var(--m-red-dark) }
+.vk-ende-tag{ font-size:13px; font-weight:800; color:var(--m-faint) }
+
+/* Die Vokabel-Erinnerung auf der Startseite */
+.st-vok{ display:flex; align-items:center; gap:14px; width:100%; text-align:left; cursor:pointer;
+  font-family:inherit; background:var(--m-red-soft); border:1px solid #F3C9C9;
+  border-radius:18px; padding:12px 18px 12px 12px; margin:0 0 18px; transition:.14s }
+.st-vok:hover{ transform:translateY(-2px); box-shadow:0 8px 20px rgba(216,54,54,.12) }
+.st-vok-z{ width:44px; height:44px; flex:none; border-radius:14px; background:var(--m-red); color:#fff;
+  display:grid; place-items:center; font-family:'Space Grotesk',sans-serif; font-size:19px; font-weight:700 }
+.st-vok-t{ flex:1; min-width:0 }
+.st-vok-t > b{ display:block; font-size:14.5px; color:var(--m-ink) }
+.st-vok-t > small{ display:block; font-size:12.5px; color:var(--m-muted) }
+.st-vok-go{ font-weight:800; font-size:13.5px; color:var(--m-red); white-space:nowrap }
+@media(max-width:520px){ .st-vok-go{ display:none } }
+
+/* Zwei Abschnitte statt Umschalter: was begegnet ist, steht oben */
+.vk-abschnitt{ margin:0 0 30px }
+.vk-ah{ display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; margin:0 0 14px }
+.vk-ah h2{ font-family:'Space Grotesk',sans-serif; font-size:19px; margin:0; color:var(--m-ink);
+  letter-spacing:-.2px }
+.vk-ah span{ font-size:12.5px; color:var(--m-faint) }

@@ -253,6 +253,7 @@
       + '<div class="st">'
       +   gruss(name)
       +   (k.abo ? '<div class="st-abo">' + k.abo + '</div>' : '')
+      +   vokabelBand()
       +   '<div id="lzSlot"></div>'
       +   '<div class="st-oben">' + kursKarte(k) + '<div class="st-rechts">' + liveKarte(k) + '</div></div>'
       +   zahlen(k, s)
@@ -265,6 +266,24 @@
          unten in appStreifen() wieder einhängen. */
       + '</div>';
   };
+
+  /* Die Erinnerung aus dem Vokabeltrainer.
+     Wer einen Tag aussetzt, sieht es hier zuerst — noch bevor eine
+     E-Mail nötig wird. Die Zahlen kommen aus window.vokabelStand(). */
+  function vokabelBand(){
+    var v = null;
+    try{ if(window.vokabelStand) v = window.vokabelStand(); }catch(e){}
+    if(!v || !v.erinnern || !v.gesamt) return '';
+    return '<button type="button" class="st-vok" onclick="go(\'vokabeln\')">'
+      + '<span class="st-vok-z">' + v.pauseTage + '</span>'
+      + '<span class="st-vok-t">'
+      +   '<b>' + T('sn_vok_t','Tage ohne Vokabeln') + '</b>'
+      +   '<small>' + (v.faellig || v.neu) + ' '
+      +     T('sn_vok_u','Wörter warten auf dich. Zehn Minuten reichen.') + '</small>'
+      + '</span>'
+      + '<span class="st-vok-go">' + T('sn_vok_b','Wiederholen') + ' →</span>'
+      + '</button>';
+  }
 
   function gruss(name){
     var h = new Date().getHours();
