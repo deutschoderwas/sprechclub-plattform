@@ -286,10 +286,12 @@
     body.tafelbig main{ --mid:48vw; }
     body.tafelbig #notiz{ min-height:58vh; font-size:1.12rem; line-height:1.8; }
     #vc-tafelbig.on{ background:var(--tuerkis); border-color:var(--tuerkis); color:var(--auf-tuerkis); }
-    /* Präsentation groß: Kameras ausblenden + Tafel schmal → Folie fast volle Breite */
-    body.praesbig .spalte{ display:none; }
+    /* Vollmodus: Präsentation fast über die ganze Seite. Tafel aus, rechts nur eine SCHMALE Leiste
+       mit kleinen Kameras + Bedienung – die Knöpfe (Verlassen/Mikro/…) bleiben IMMER erreichbar. */
+    body.praesbig .mittelspalte{ display:none; }
+    body.praesbig #gutter{ display:none; }
     body.praesbig #gutter2{ display:none; }
-    body.praesbig main{ --mid:300px; }
+    body.praesbig .spalte{ flex:0 0 200px; width:200px; }
     body.praesbig .lektion-card{ min-width:0; }
     #vc-praesbig.on{ background:var(--tuerkis); border-color:var(--tuerkis); color:var(--auf-tuerkis); }
   }
@@ -1257,7 +1259,8 @@
     setTimeout(()=>{ if(typeof renderGrid==='function') renderGrid(); const ifr=document.getElementById('lektion'); if(ifr) fixDeckStage(ifr); if(typeof fitLektion==='function') fitLektion(); }, 100);
   }
   function togglePraesBig(){ setPraesBig(!document.body.classList.contains('praesbig')); }
-  try{ if(localStorage.getItem('club_praesbig')==='1') setPraesBig(true); }catch(e){}
+  // Standard: Präsentation groß / Vollmodus (wie früher) – außer man hat es bewusst ausgeschaltet.
+  try{ const _pb=localStorage.getItem('club_praesbig'); if(_pb===null || _pb==='1') setPraesBig(true); }catch(e){}
   // Nur Lehrkraft/Moderator: alle Schüler stummschalten (z. B. bei lauten Hintergrundgeräuschen).
   // Jede/r Schüler:in kann sich zum Sprechen jederzeit selbst wieder anschalten.
   function vcMuteAll(){
