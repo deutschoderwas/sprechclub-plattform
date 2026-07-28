@@ -75,6 +75,63 @@
       setTimeout(function(){ sprich(bsp); },420);
     });
   }
+  /* Artikel und Wort trennen, damit der Artikel leiser stehen kann */
+  function artikelTeilen(de){
+    var m=String(de||'').match(/^(der|die|das)\s+(.+)$/i);
+    return m ? {art:m[1], rest:m[2]} : {art:'', rest:String(de||'')};
+  }
+  function wortGross(de){
+    var t=artikelTeilen(de);
+    return (t.art?'<span class="art">'+E(t.art)+'</span> ':'')+E(t.rest);
+  }
+
+  /* Der Beispielsatz mit dem gelben Textmarker.
+     Die Wortschatzsätze bringen die Markierung als §…§ mit.
+     Die Wendungen aus dem Kurs nicht — dort suchen wir das Stichwort
+     selbst im Satz. Findet sich nichts, bleibt der Satz eben ohne Marker. */
+  function satzMitMarker(w){
+    var roh=String((w&&w.bsp)||'').trim();
+    if(!roh) return '';
+    if(roh.indexOf('§')>=0){
+      return E(roh).replace(/§([^§]*)§/g, function(_,x){ return '<mark>'+x+'</mark>'; });
+    }
+    var stich=String(w.de||'').trim().replace(/[.!?]+$/,'');
+    if(stich){
+      var i=roh.toLowerCase().indexOf(stich.toLowerCase());
+      if(i>=0){
+        return E(roh.slice(0,i))+'<mark>'+E(roh.substr(i,stich.length))+'</mark>'+E(roh.slice(i+stich.length));
+      }
+    }
+    return E(roh);
+  }
+  function beispielKasten(w){
+    var satz=satzMitMarker(w);
+    if(!satz) return '';
+    return '<span class="vk-bsp"><span class="vk-bsp-l">'
+      + W('vk_bsp_l','Beispiel aus dem Alltag')+'</span>'
+      + '<span class="vk-bsp-s">'+satz+'</span></span>';
+  }
+
+  /* Jedes Thema bekommt eine feste Farbe aus der Marke — immer dieselbe,
+     damit man ein Thema an seiner Farbe wiedererkennt. */
+  var FARBEN=[
+    {a:'#35AFD0', w:'#DFF6F8'},
+    {a:'#D83636', w:'#FBE3E3'},
+    {a:'#E39A00', w:'#FFF3CC'},
+    {a:'#0F766E', w:'#DFF6F8'}
+  ];
+  function farbeVon(id){
+    var x=String(id||''), sum=0;
+    for(var i=0;i<x.length;i++) sum=(sum*31+x.charCodeAt(i))>>>0;
+    return FARBEN[sum%FARBEN.length];
+  }
+  function farbeSetzen(g){
+    var o=el('vkOv'); if(!o||!g) return;
+    var f=farbeVon(g.id);
+    o.style.setProperty('--vk-akzent',f.a);
+    o.style.setProperty('--vk-weich',f.w);
+  }
+
   /* Fester Text — die Übersetzung von konto.html tauscht ihn aus */
   function W(k,de){ return '<span data-i18n="'+k+'">'+de+'</span>'; }
   function WX(k,de){
@@ -144,7 +201,7 @@
             emoji: w.emoji||'',
             bild:  bilder[w.de]||null,
             deko:  'bilder/thema/'+t.id+'-s.jpg',
-            bsp:   null
+            bsp:   (window.VOKABEL_SAETZE||{})[w.de]||null
           };
         })
       };
@@ -584,6 +641,7 @@
     o.innerHTML=
       '<div class="vk-ov-kopf">'
       + '<button class="vk-x" onclick="vokRundeZu()" aria-label="Schließen">✕</button>'
+      + '<span class="vk-marke">deutsch<i>oderwas</i></span>'
       + '<div class="vk-fort"><i id="vkFort"></i></div>'
       + '<span class="vk-zaehler" id="vkZahl"></span>'
       + '</div>'
@@ -613,6 +671,16 @@
     return '';
   }
 
+  /* Oben auf der Wortkarte: das echte Foto, sonst das Foto der Lektion,
+     sonst eine Kachel mit dem Zeichen des Wortes. Nie eine leere Fläche. */
+  function kartenBild(w){
+    if(w.bild) return '<span class="vk-karte-bild"><img src="'+E(w.bild)+'" alt="" '
+      + 'onerror="this.parentNode.className=\'vk-karte-bild leer\';this.remove()"></span>';
+    if(w.deko) return '<span class="vk-karte-bild vk-deko"><img src="'+E(w.deko)+'" alt="" '
+      + 'onerror="this.parentNode.className=\'vk-karte-bild leer\';this.remove()"></span>';
+    return '<span class="vk-kachel">'+E(w.emoji||'🃏')+'</span>';
+  }
+
   function knopf(text, fn, art){
     return '<button class="vk-btn'+(art?' '+art:'')+'" onclick="'+fn+'">'+text+'</button>';
   }
@@ -627,21 +695,26 @@
     var a=R.aufgaben[R.i] || R.nachschlag[R.i-R.aufgaben.length];
     if(!a){ R.fertig=true; return endeMalen(); }
     R.aktuell=a; R.beantwortet=false; R.gewaehlt=null;
+    farbeSetzen(R.gruppe);
 
     var w=a.w, tw=w?teileWort(w.de):null;
     var kopf='', koerper='', fuss='';
 
     if(a.typ==='karte'){
-      kopf='<span class="vk-frage">'+W('vk_neu','Neues Wort')+'</span>';
+      kopf='<span class="vk-kicker2">'+E(R.gruppe?R.gruppe.t:'')+'</span>'
+        + '<span class="vk-frage">'+W('vk_neu_a','Ein')+' <span class="hl">'
+        +   W('vk_neu_b','neues Wort')+'</span></span>';
       koerper='<div class="vk-karte">'
-        + bildOderZeichen(w,'vk-karte-bild',true)
+        + '<button class="vk-hoer" onclick="vokSprich()" aria-label="Anhören">🔊</button>'
+        + kartenBild(w)
         + '<div class="vk-karte-tx">'
-        +   '<button class="vk-hoer" onclick="vokSprich()" aria-label="Anhören">🔊</button>'
-        +   '<b>'+E(w.de)+'</b>'
+        +   '<span class="vk-pille">'+E(R.gruppe?R.gruppe.t:'')+'</span>'
+        +   '<b>'+wortGross(w.de)+'</b>'
         +   (w.info?'<span class="vk-bed">'+E(w.info)+'</span>':'')
-        +   (w.bsp?'<span class="vk-bsp">'+E(w.bsp)+'</span>':'')
+        +   beispielKasten(w)
         + '</div></div>';
-      fuss=knopf(W('vk_verstanden','Verstanden')+' →','vokWeiter()','vk-btn-rot');
+      fuss=knopf('🔊 '+W('vk_nochhoeren','Nochmal hören'),'vokSprich()','vk-btn-still')
+        +  knopf(W('vk_verstanden','Verstanden')+' →','vokWeiter()','vk-btn-rot');
       setTimeout(function(){ sprichKarte(w); },180);
     }
 
@@ -951,13 +1024,15 @@
 
   window.vokRundeZu=function(){
     var o=el('vkOv');
-    if(R && !R.fertig && R.i>0){
+    if(K){ /* Karteikarten laufen ohne Punkte — einfach zu */ }
+    else if(R && !R.fertig && R.i>0){
       if(!confirm(WX('vk_abbrechen','Runde abbrechen?\n\nDeine Antworten in dieser Runde gehen verloren.'))) return;
     }
     if(o) o.classList.remove('auf');
     document.body.style.overflow='';
+    try{ if(window.sagenStopp) window.sagenStopp(); }catch(e){}
     try{ if(window.speechSynthesis) speechSynthesis.cancel(); }catch(e){}
-    R=null;
+    R=null; K=null;
     zeichne();
   };
 
@@ -1027,6 +1102,8 @@
       +   (dabei?'<span class="vk-g-proz">'+p+' %</span>':'')
       + '</div>'
       + '<div class="vk-runden">'+runden+'</div>'
+      + '<button class="vk-g-karten" onclick="vokKarten(\''+E(g.id)+'\')">🃏 '
+      +   W('vk_k_knopf','Karteikarten')+'</button>'
       + '</div>';
   }
 
@@ -1110,12 +1187,133 @@
     if(el('vokCSS')) return;
     var s=document.createElement('style'); s.id='vokCSS';
     s.textContent=[
-      '#vkOv{position:fixed;inset:0;z-index:9000;background:#FFFCF5;display:none;',
-      'flex-direction:column;overscroll-behavior:contain}',
+      '#vkOv{position:fixed;inset:0;z-index:9000;display:none;',
+      'flex-direction:column;overscroll-behavior:contain;',
+      'background:',
+      'radial-gradient(900px 420px at 8% -10%, var(--m-red-soft) 0%, transparent 62%),',
+      'radial-gradient(820px 420px at 104% 4%, var(--m-turq-soft) 0%, transparent 58%),',
+      'radial-gradient(700px 380px at 50% 118%, var(--m-gold-soft) 0%, transparent 60%),',
+      'var(--m-cream2)}',
       '#vkOv.auf{display:flex}'
     ].join('');
     document.head.appendChild(s);
   }
+
+  /* ============================================================
+     6b — Karteikarten
+     Kein Abfragen, nur Durchgehen: vorn das Wort, hinten die
+     Bedeutung und der Beispielsatz. Wer wendet, hat schon gelernt.
+     ============================================================ */
+
+  var K = null;   /* der Karteikarten-Stapel, solange er offen ist */
+
+  function kartenMalen(){
+    var m=el('vkMitte'), f=el('vkFuss');
+    if(!m||!f||!K) return;
+
+    var b=el('vkFort'), z=el('vkZahl');
+    if(b) b.style.width=Math.round((K.i+1)/K.woerter.length*100)+'%';
+    if(z) z.textContent=(K.i+1)+' / '+K.woerter.length;
+
+    if(K.i>=K.woerter.length) return kartenEnde();
+
+    var w=K.woerter[K.i];
+    var vorn='<button class="vk-hoer" onclick="event.stopPropagation();vokKartenHoer()" '
+      +   'aria-label="Anhören">🔊</button>'
+      + '<div class="innen">'
+      +   (w.bild||w.deko
+          ? '<span class="vk-flip-bild"><img src="'+E(w.bild||w.deko)+'" alt="" '
+            + 'onerror="this.parentNode.className=\'vk-kachel\';this.parentNode.textContent=\''
+            + E(w.emoji||'🃏')+'\'"></span>'
+          : '<span class="vk-kachel" style="margin:0 0 18px">'+E(w.emoji||'🃏')+'</span>')
+      +   '<span class="vk-pille">'+E(K.gruppe.t)+'</span>'
+      +   '<b>'+wortGross(w.de)+'</b>'
+      +   '<span class="vk-wink">'+W('vk_k_frage','Was heißt das?')+' <b>'
+      +     W('vk_k_tipp','Tippen zum Umdrehen')+'</b> ↻</span>'
+      + '</div>';
+
+    var hinten='<div class="innen">'
+      + '<span class="vk-hinten-l">'+W('vk_k_bed','Bedeutung')+'</span>'
+      + '<span class="vk-hinten-w">'+wortGross(w.de)+'</span>'
+      + '<span class="vk-hinten-b">'+E(w.info||'—')+'</span>'
+      + beispielKasten(w)
+      + '<span class="vk-wink">↻ '+W('vk_k_zurueck','Zurück zum Wort — oder unten bewerten')+'</span>'
+      + '</div>';
+
+    m.innerHTML='<div class="vk-block">'
+      + '<span class="vk-kicker2">'+W('vk_k_kicker','Karteikarten')+' · '+E(K.gruppe.t)+'</span>'
+      + '<div class="vk-flip'+(K.um?' um':'')+'" id="vkFlip" onclick="vokKartenWenden()">'
+      +   '<div class="vk-flip-in">'
+      +     '<div class="vk-seite">'+vorn+'</div>'
+      +     '<div class="vk-seite hinten">'+hinten+'</div>'
+      +   '</div>'
+      + '</div></div>';
+
+    f.innerHTML='<button class="vk-btn vk-btn-still" onclick="vokKartenZurueck()"'
+      + (K.i===0?' disabled style="opacity:.4"':'')+'>‹ '+W('vk_k_prev','Zurück')+'</button>'
+      + '<span style="flex:1"></span>'
+      + '<button class="vk-btn vk-btn-still" onclick="vokKartenWeiter(false)">↻ '
+      +   W('vk_k_nochmal','Nochmal')+'</button>'
+      + '<button class="vk-btn vk-btn-tuerkis" onclick="vokKartenWeiter(true)">✓ '
+      +   W('vk_k_kann','Kann ich')+'</button>';
+
+    if(!K.um) setTimeout(function(){ sprich(w.de); },200);
+  }
+
+  function kartenEnde(){
+    var m=el('vkMitte'), f=el('vkFuss');
+    if(m) m.innerHTML='<div class="vk-block"><div class="vk-ende">'
+      + '<div style="font-size:56px;line-height:1;margin-bottom:12px">🎉</div>'
+      + '<h2>'+W('vk_k_fertig','Durch!')+'</h2>'
+      + '<p>'+K.woerter.length+' '+W('vk_woerter','Wörter')+' · '
+      +   K.kann.length+' '+W('vk_k_sicher','sicher')+' · '
+      +   K.wieder.length+' '+W('vk_k_wieder','zum Wiederholen')+'</p>'
+      + '</div></div>';
+    if(f) f.innerHTML=
+        (K.wieder.length
+         ? '<button class="vk-btn vk-btn-still" onclick="vokKartenWiederholen()">↻ '
+           + W('vk_k_nurwieder','Nur die Wackligen')+'</button>' : '')
+      + '<button class="vk-btn vk-btn-rot" onclick="vokRundeZu()">'
+      +   W('vk_k_schluss','Fertig')+'</button>';
+  }
+
+  window.vokKartenWenden=function(){ if(!K) return; K.um=!K.um;
+    var f=el('vkFlip'); if(f) f.classList.toggle('um', K.um);
+    if(K.um){ var w=K.woerter[K.i]; if(w && w.bsp) setTimeout(function(){ sprichKarte(w); },260); }
+  };
+  window.vokKartenHoer=function(){ if(!K) return; var w=K.woerter[K.i]; if(w) sprichKarte(w); };
+  window.vokKartenZurueck=function(){ if(!K||K.i===0) return; K.i--; K.um=false; kartenMalen(); };
+  window.vokKartenWeiter=function(sicher){
+    if(!K) return;
+    var w=K.woerter[K.i]; if(!w) return;
+    var liste=sicher?K.kann:K.wieder, gegen=sicher?K.wieder:K.kann;
+    if(liste.indexOf(w.k)<0) liste.push(w.k);
+    var j=gegen.indexOf(w.k); if(j>=0) gegen.splice(j,1);
+    K.i++; K.um=false; kartenMalen();
+  };
+  window.vokKartenWiederholen=function(){
+    if(!K) return;
+    var offen=K.woerter.filter(function(w){ return K.wieder.indexOf(w.k)>=0; });
+    if(!offen.length) return;
+    K.woerter=offen; K.i=0; K.um=false; K.kann=[]; K.wieder=[];
+    kartenMalen();
+  };
+
+  /* Von außen: den Stapel eines Themas öffnen */
+  window.vokKarten=function(gruppeId, paketNr){
+    var g=gruppeVon(gruppeId); if(!g) return false;
+    var liste=g.woerter;
+    if(paketNr!=null){ var ps=pakete(g); if(ps[paketNr]) liste=ps[paketNr]; }
+    if(!liste.length) return false;
+    K={ gruppe:g, woerter:liste.slice(), i:0, um:false, kann:[], wieder:[] };
+    R=null;
+    stil();
+    var o=ovBauen(); o.classList.add('auf');
+    farbeSetzen(g);
+    document.body.style.overflow='hidden';
+    kartenMalen();
+    return false;
+  };
 
   /* ============================================================
      7 — Eingang

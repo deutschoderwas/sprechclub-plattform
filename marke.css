@@ -1057,6 +1057,10 @@ h2.sec{ font-family:'Space Grotesk', sans-serif !important; font-weight:800 !imp
 .vk-g-tx > span{ display:block; font-size:12px; color:var(--m-muted); margin-top:2px }
 .vk-g-proz{ font-size:12.5px; font-weight:800; color:var(--m-turq-ink); white-space:nowrap }
 .vk-g-dazu{ width:100%; margin-top:12px; font-size:13.5px; padding:10px 14px }
+.vk-g-karten{ width:100%; margin-top:9px; border:1.5px solid var(--m-line); background:#fff;
+  color:var(--m-muted); font:inherit; font-weight:800; font-size:13px; padding:9px 14px;
+  border-radius:12px; cursor:pointer; transition:.14s }
+.vk-g-karten:hover{ border-color:var(--m-turq-dark); color:var(--m-ink); background:var(--m-cream) }
 
 .vk-runden{ display:flex; gap:6px; flex-wrap:wrap; margin-top:13px }
 .vk-runde{ flex:1 1 54px; min-width:54px; border:1px solid var(--m-line); background:#fff;
@@ -1075,81 +1079,148 @@ h2.sec{ font-family:'Space Grotesk', sans-serif !important; font-weight:800 !imp
 
 /* ============================================================
    Die Runde — Vollbild
+   Helle Bühne mit weichen Verläufen, die Karte liegt darauf.
+   Farben und Schriften unverändert aus dieser Datei.
    ============================================================ */
-.vk-ov-kopf{ display:flex; align-items:center; gap:14px; padding:14px 20px;
-  border-bottom:1px solid var(--m-line); background:#fff; flex:none }
-.vk-x{ width:34px; height:34px; flex:none; border:1px solid var(--m-line); background:#fff;
-  border-radius:11px; cursor:pointer; font-size:15px; color:var(--m-muted); line-height:1 }
-.vk-x:hover{ background:var(--m-cream2); color:var(--m-ink) }
-.vk-fort{ flex:1; height:12px; border-radius:12px; background:#EFEAE0; overflow:hidden }
-.vk-fort i{ display:block; height:100%; border-radius:12px; width:0;
-  background:linear-gradient(90deg,var(--m-turq-dark),var(--m-turq)); transition:width .3s }
-.vk-zaehler{ font-size:12.5px; font-weight:800; color:var(--m-faint); white-space:nowrap }
+.vk-ov-kopf{ display:flex; align-items:center; gap:16px; padding:16px 22px; flex:none }
+.vk-x{ width:38px; height:38px; flex:none; border:1.5px solid var(--m-line); background:#fff;
+  border-radius:13px; cursor:pointer; font-size:15px; color:var(--m-muted); line-height:1;
+  transition:.15s; box-shadow:0 2px 6px rgba(40,53,59,.06) }
+.vk-x:hover{ background:var(--m-ink); color:#fff; border-color:var(--m-ink) }
+.vk-marke{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:15px;
+  color:var(--m-ink); white-space:nowrap; letter-spacing:-.02em }
+.vk-marke i{ font-style:normal; color:var(--m-turq-dark) }
+.vk-fort{ flex:1; height:11px; border-radius:11px; background:#00000010; overflow:hidden; min-width:60px }
+.vk-fort i{ display:block; height:100%; border-radius:11px; width:0;
+  background:linear-gradient(90deg,var(--m-turq-dark),var(--m-turq));
+  transition:width .45s cubic-bezier(.4,0,.2,1) }
+.vk-zaehler{ font-size:13px; font-weight:800; color:var(--m-muted);
+  font-variant-numeric:tabular-nums; white-space:nowrap }
 
 .vk-ov-mitte{ flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch;
-  display:flex; align-items:flex-start; justify-content:center; padding:26px 20px 20px }
+  display:flex; align-items:center; justify-content:center; padding:18px 20px 26px }
 .vk-block{ width:100%; max-width:620px; margin:auto }
-.vk-frage{ display:block; font-family:'Space Grotesk',sans-serif; font-size:20px;
-  font-weight:700; color:var(--m-ink); margin:0 0 20px; letter-spacing:-.2px }
+.vk-kicker2{ display:block; text-align:center; font-size:11px; font-weight:700; letter-spacing:.22em;
+  text-transform:uppercase; color:var(--m-red); margin:0 0 7px }
+.vk-frage{ display:block; font-family:'Space Grotesk',sans-serif; font-size:clamp(20px,2.6vw,27px);
+  font-weight:700; color:var(--m-ink); margin:0 0 20px; letter-spacing:-.02em; text-align:center;
+  line-height:1.15 }
+.vk-frage .hl{ position:relative; white-space:nowrap; z-index:0 }
+.vk-frage .hl::after{ content:""; position:absolute; left:-3px; right:-3px; bottom:.06em;
+  height:.4em; background:var(--m-gold); opacity:.55; border-radius:4px; z-index:-1 }
 
-/* Wortkarte */
-.vk-karte{ background:var(--m-cream); border:1px solid var(--m-line); border-radius:22px;
-  overflow:hidden; text-align:center }
-.vk-karte-bild{ display:block; height:230px; background:#E8E2D6 }
+/* ---------- Die Wortkarte ---------- */
+.vk-karte{ position:relative; background:#fff; border:1.5px solid var(--m-line); border-radius:30px;
+  overflow:hidden; box-shadow:0 26px 60px -24px rgba(40,53,59,.42), 0 4px 14px rgba(40,53,59,.05) }
+.vk-karte::before{ content:""; position:absolute; left:0; right:0; top:0; height:7px;
+  background:var(--vk-akzent,var(--m-turq-dark)); z-index:2 }
+.vk-karte-bild{ display:block; height:220px; background:#EFE8DA; position:relative }
 .vk-karte-bild img{ width:100%; height:100%; object-fit:cover; display:block }
-.vk-karte-bild.zeichen{ display:grid; place-items:center; font-size:76px; height:170px;
-  background:var(--m-gold-soft) }
 .vk-karte-bild.leer{ display:none }
-/* Wendungen haben kein eigenes Foto. Dann steht das Foto ihrer Lektion da —
-   etwas zurueckgenommen, damit es als Stimmung liest und nicht als Antwort. */
-.vk-deko img{ opacity:.82; filter:saturate(.92) }
-.vk-karte-bild.vk-deko{ height:184px }
-.vk-karte-tx{ padding:20px 22px 24px; position:relative }
-.vk-karte-tx > b{ display:block; font-family:'Space Grotesk',sans-serif; font-size:27px;
-  color:var(--m-ink); letter-spacing:-.4px }
-.vk-bed{ display:block; font-size:15px; color:var(--m-muted); margin-top:6px }
-.vk-bsp{ display:block; font-size:14px; color:var(--m-turq-ink); background:var(--m-turq-soft);
-  border-radius:12px; padding:9px 14px; margin:14px auto 0; max-width:32em }
-.vk-hoer{ position:absolute; right:16px; top:-22px; width:44px; height:44px; border-radius:50%;
-  border:1px solid var(--m-line); background:#fff; cursor:pointer; font-size:18px;
-  box-shadow:0 3px 10px rgba(26,26,26,.1) }
-.vk-hoer:hover{ background:var(--m-turq-soft) }
+.vk-deko img{ opacity:.9 }
+.vk-kachel{ width:104px; height:104px; margin:34px auto 0; border-radius:28px; display:grid;
+  place-items:center; font-size:50px; background:var(--vk-weich,var(--m-turq-soft));
+  box-shadow:inset 0 0 0 2px #fff, 0 10px 24px -12px rgba(40,53,59,.45) }
 
-/* Bildaufgabe */
-.vk-gross{ text-align:center; margin:0 0 18px }
-.vk-gross-bild{ display:inline-block; width:100%; max-width:340px; height:210px; border-radius:20px;
-  overflow:hidden; background:#E8E2D6 }
+.vk-karte-tx{ padding:22px 30px 28px; position:relative; text-align:center }
+.vk-pille{ display:inline-block; font-size:10.5px; font-weight:700; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--vk-akzent,var(--m-turq-ink));
+  background:var(--vk-weich,var(--m-turq-soft)); padding:5px 13px; border-radius:999px;
+  margin-bottom:13px }
+.vk-karte-tx > b{ display:block; font-family:'Space Grotesk',sans-serif;
+  font-size:clamp(26px,4.4vw,38px); font-weight:700; color:var(--m-ink); letter-spacing:-.03em;
+  line-height:1.1 }
+.vk-karte-tx > b .art{ color:var(--m-faint); font-weight:500 }
+.vk-bed{ display:block; font-size:16px; line-height:1.5; color:var(--m-muted); margin:10px auto 0;
+  max-width:36em }
+
+/* Der Beispielsatz mit dem Textmarker */
+.vk-bsp{ display:block; margin:20px auto 0; background:var(--m-cream); border:1.5px solid var(--m-line);
+  border-radius:19px; padding:14px 18px 16px; text-align:left; max-width:34em }
+.vk-bsp-l{ display:block; font-size:10.5px; font-weight:700; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--m-faint); margin-bottom:6px }
+.vk-bsp-s{ display:block; font-size:17px; line-height:1.55; color:var(--m-ink); font-style:italic }
+.vk-bsp-s mark{ background:linear-gradient(180deg, transparent 56%, var(--m-gold) 56%);
+  color:var(--m-ink); font-style:normal; font-weight:700; padding:0 .12em; border-radius:3px }
+
+.vk-hoer{ position:absolute; right:16px; top:20px; width:48px; height:48px; border-radius:50%;
+  border:1.5px solid var(--m-line); background:#fff; cursor:pointer; font-size:19px; z-index:4;
+  color:var(--m-ink); box-shadow:0 5px 14px rgba(40,53,59,.14); transition:.15s }
+.vk-hoer:hover{ background:var(--m-ink); color:#fff; transform:scale(1.06) }
+
+/* ---------- Karteikarte zum Wenden ---------- */
+.vk-flip{ perspective:1700px }
+.vk-flip-in{ position:relative; width:100%; min-height:430px; transform-style:preserve-3d;
+  transition:transform .62s cubic-bezier(.34,1.3,.5,1); cursor:pointer }
+.vk-flip.um .vk-flip-in{ transform:rotateY(180deg) }
+.vk-seite{ position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden;
+  border-radius:30px; background:#fff; border:1.5px solid var(--m-line); overflow:hidden;
+  box-shadow:0 26px 60px -24px rgba(40,53,59,.42), 0 4px 14px rgba(40,53,59,.05);
+  display:flex; flex-direction:column }
+.vk-seite::before{ content:""; position:absolute; left:0; right:0; top:0; height:7px;
+  background:var(--vk-akzent,var(--m-turq-dark)); z-index:2 }
+.vk-seite.hinten{ transform:rotateY(180deg);
+  background:linear-gradient(158deg,#fff 0%, var(--m-cream) 55%, var(--vk-weich,var(--m-turq-soft)) 100%) }
+.vk-seite .innen{ flex:1; display:flex; flex-direction:column; align-items:center;
+  justify-content:center; padding:34px 30px 24px; text-align:center; overflow-y:auto }
+.vk-seite.hinten .innen{ text-align:left; align-items:stretch; justify-content:flex-start }
+.vk-seite .innen > b{ font-family:'Space Grotesk',sans-serif; font-size:clamp(25px,4vw,34px);
+  font-weight:700; letter-spacing:-.03em; line-height:1.12; max-width:100% }
+.vk-seite .innen > b .art{ color:var(--m-faint); font-weight:500 }
+.vk-flip-bild{ width:150px; height:150px; border-radius:34px; overflow:hidden; margin:0 auto 18px;
+  background:#EFE8DA; box-shadow:0 12px 28px -14px rgba(40,53,59,.5) }
+.vk-flip-bild img{ width:100%; height:100%; object-fit:cover; display:block }
+.vk-wink{ margin-top:26px; text-align:center; color:var(--m-faint); font-size:13px }
+.vk-wink b{ color:var(--m-muted) }
+.vk-seite.hinten .vk-wink{ margin-top:auto; padding-top:18px }
+.vk-hinten-l{ font-size:10.5px; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--vk-akzent,var(--m-turq-ink)); margin:2px 0 7px }
+.vk-hinten-w{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:24px;
+  letter-spacing:-.02em; margin-bottom:12px }
+.vk-hinten-w .art{ color:var(--m-faint); font-weight:500 }
+.vk-hinten-b{ font-size:17px; line-height:1.55; color:var(--m-ink) }
+
+/* ---------- Bild- und Satzaufgaben ---------- */
+.vk-gross{ text-align:center; margin:0 0 20px }
+.vk-gross-bild{ display:inline-block; width:100%; max-width:360px; height:220px; border-radius:24px;
+  overflow:hidden; background:#EFE8DA; box-shadow:0 18px 40px -20px rgba(40,53,59,.42) }
 .vk-gross-bild img{ width:100%; height:100%; object-fit:cover; display:block }
-.vk-gross-bild.zeichen{ display:grid; place-items:center; font-size:80px; background:var(--m-gold-soft) }
-.vk-gross.klein .vk-gross-bild{ max-width:220px; height:140px }
+.vk-gross-bild.zeichen{ display:grid; place-items:center; font-size:80px;
+  background:var(--vk-weich,var(--m-gold-soft)); box-shadow:none }
+.vk-gross.klein .vk-gross-bild{ max-width:220px; height:150px }
 
-.vk-wortgross{ display:flex; align-items:center; justify-content:center; gap:12px; margin:0 0 20px;
+.vk-wortgross{ display:flex; align-items:center; justify-content:center; gap:14px; margin:0 0 20px;
   position:relative; flex-wrap:wrap }
-.vk-wortgross > b{ font-family:'Space Grotesk',sans-serif; font-size:30px; letter-spacing:-.5px }
-.vk-wortgross .vk-hoer{ position:static; width:40px; height:40px; font-size:16px }
-.vk-mini{ width:56px; height:56px; border-radius:16px; overflow:hidden; background:#E8E2D6; flex:none }
+.vk-wortgross > b{ font-family:'Space Grotesk',sans-serif; font-size:clamp(24px,3.4vw,32px);
+  font-weight:700; letter-spacing:-.03em }
+.vk-wortgross .vk-hoer{ position:static; width:44px; height:44px; font-size:17px }
+.vk-mini{ width:62px; height:62px; border-radius:18px; overflow:hidden; background:#EFE8DA; flex:none }
 .vk-mini img{ width:100%; height:100%; object-fit:cover; display:block }
-.vk-mini.zeichen{ display:grid; place-items:center; font-size:28px; background:var(--m-gold-soft) }
+.vk-mini.zeichen{ display:grid; place-items:center; font-size:30px; background:var(--m-gold-soft) }
 .vk-mini.leer{ display:none }
 
-.vk-erkl{ font-size:19px; line-height:1.45; color:var(--m-ink); background:var(--m-cream);
-  border:1px solid var(--m-line); border-radius:18px; padding:18px 20px; margin:0 0 18px; text-align:center }
-.vk-satz{ font-size:20px; line-height:1.6; color:var(--m-ink); background:var(--m-cream);
-  border:1px solid var(--m-line); border-radius:18px; padding:20px; margin:0 0 18px; text-align:center }
-.vk-luecke{ display:inline-block; min-width:70px; border-bottom:3px solid var(--m-red);
+.vk-erkl{ font-size:20px; line-height:1.5; color:var(--m-ink); background:#fff;
+  border:1.5px solid var(--m-line); border-radius:22px; padding:22px 24px; margin:0 0 20px;
+  text-align:center; box-shadow:0 18px 40px -24px rgba(40,53,59,.35) }
+.vk-satz{ font-size:21px; line-height:1.65; color:var(--m-ink); background:#fff;
+  border:1.5px solid var(--m-line); border-radius:22px; padding:24px 26px; margin:0 0 20px;
+  text-align:center; box-shadow:0 18px 40px -24px rgba(40,53,59,.35) }
+.vk-luecke{ display:inline-block; min-width:78px; border-bottom:3px solid var(--m-red);
   font-style:normal; color:var(--m-red); font-weight:800 }
-.vk-hoergross{ text-align:center; margin:0 0 22px }
-.vk-hoer-gross{ position:static; width:96px; height:96px; font-size:38px; border-radius:50%;
-  background:var(--m-turq-soft); border-color:var(--m-turq) }
+.vk-hoergross{ text-align:center; margin:0 0 24px }
+.vk-hoer-gross{ position:static; width:104px; height:104px; font-size:40px; border-radius:50%;
+  background:var(--m-turq-soft); border-color:var(--m-turq);
+  box-shadow:0 14px 30px -14px rgba(53,175,208,.7) }
 
-/* Antwortknöpfe */
-.vk-opt{ display:grid; grid-template-columns:1fr 1fr; gap:10px }
+/* ---------- Antwortknöpfe ---------- */
+.vk-opt{ display:grid; grid-template-columns:1fr 1fr; gap:11px }
 .vk-opt-drei{ grid-template-columns:repeat(3,1fr) }
 @media(max-width:560px){ .vk-opt{ grid-template-columns:1fr } .vk-opt-drei{ grid-template-columns:repeat(3,1fr) } }
-.vk-o{ border:1px solid var(--m-line); background:#fff; color:var(--m-ink); font:inherit;
-  font-size:15px; font-weight:700; text-align:left; padding:14px 16px; border-radius:15px;
-  cursor:pointer; box-shadow:0 3px 0 var(--m-line); transition:.1s; line-height:1.35 }
-.vk-o:hover:not(:disabled){ border-color:var(--m-turq-dark); background:var(--m-cream2) }
+.vk-o{ border:1.5px solid var(--m-line); background:#fff; color:var(--m-ink); font:inherit;
+  font-size:15.5px; font-weight:700; text-align:left; padding:15px 17px; border-radius:17px;
+  cursor:pointer; box-shadow:0 3px 0 var(--m-line); transition:.12s; line-height:1.35 }
+.vk-o:hover:not(:disabled){ border-color:var(--m-turq-dark); background:var(--m-cream);
+  transform:translateY(-1px) }
 .vk-o-an{ border-color:var(--m-turq-dark) !important; background:var(--m-turq-soft) !important }
 .vk-o-gut{ border-color:#16A34A !important; background:#EAF9F0 !important; color:#14532D !important;
   box-shadow:0 3px 0 #BFE6CD !important }
@@ -1158,18 +1229,16 @@ h2.sec{ font-family:'Space Grotesk', sans-serif !important; font-weight:800 !imp
 .vk-o:disabled{ cursor:default }
 .vk-opt-drei .vk-o{ text-align:center; font-size:17px; font-weight:800 }
 
-/* Tippen */
-.vk-tipp input{ width:100%; border:1px solid var(--m-line); border-radius:16px; padding:16px 18px;
-  font:inherit; font-size:19px; background:#fff; color:var(--m-ink); text-align:center }
+.vk-tipp input{ width:100%; border:1.5px solid var(--m-line); border-radius:18px; padding:17px 19px;
+  font:inherit; font-size:20px; background:#fff; color:var(--m-ink); text-align:center }
 .vk-tipp input:focus{ outline:none; border-color:var(--m-turq-dark) }
 .vk-tipp input.gut{ border-color:#16A34A; background:#EAF9F0 }
 .vk-tipp input.schlecht{ border-color:var(--m-red); background:var(--m-red-soft) }
 
-/* Paare */
-.vk-paare{ display:grid; grid-template-columns:1fr 1fr; gap:10px }
-.vk-paare-s{ display:flex; flex-direction:column; gap:10px }
-.vk-p{ border:1px solid var(--m-line); background:#fff; color:var(--m-ink); font:inherit;
-  font-size:14px; font-weight:700; text-align:left; padding:13px 14px; border-radius:14px;
+.vk-paare{ display:grid; grid-template-columns:1fr 1fr; gap:11px }
+.vk-paare-s{ display:flex; flex-direction:column; gap:11px }
+.vk-p{ border:1.5px solid var(--m-line); background:#fff; color:var(--m-ink); font:inherit;
+  font-size:14.5px; font-weight:700; text-align:left; padding:14px 15px; border-radius:16px;
   cursor:pointer; box-shadow:0 3px 0 var(--m-line); transition:.12s; line-height:1.3; flex:1 }
 .vk-p:hover:not(:disabled){ border-color:var(--m-turq-dark) }
 .vk-p-an{ border-color:var(--m-turq-dark); background:var(--m-turq-soft) }
@@ -1177,38 +1246,52 @@ h2.sec{ font-family:'Space Grotesk', sans-serif !important; font-weight:800 !imp
 .vk-p-nein{ border-color:var(--m-red); background:var(--m-red-soft); animation:vkWackel .32s }
 @keyframes vkWackel{ 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
 
-/* Fuß mit Rückmeldung */
-.vk-ov-fuss{ flex:none; border-top:1px solid var(--m-line); background:#fff;
-  padding:14px 20px calc(14px + env(safe-area-inset-bottom));
+/* ---------- Fuß ---------- */
+.vk-ov-fuss{ flex:none; padding:14px 22px calc(18px + env(safe-area-inset-bottom));
   display:flex; align-items:center; justify-content:flex-end; gap:12px; flex-wrap:wrap }
 .vk-ov-fuss .vk-btn{ min-width:150px }
-.vk-echo{ flex:1; min-width:200px; font-size:14px; line-height:1.4 }
-.vk-echo-t{ display:block; font-family:'Space Grotesk',sans-serif; font-size:16px; font-weight:700 }
+.vk-echo{ flex:1; min-width:200px; font-size:14.5px; line-height:1.45 }
+.vk-echo-t{ display:block; font-family:'Space Grotesk',sans-serif; font-size:17px; font-weight:700 }
 .vk-echo.gut .vk-echo-t{ color:#16A34A }
 .vk-echo.schlecht .vk-echo-t{ color:var(--m-red) }
 .vk-loesung{ display:block; color:var(--m-muted); margin-top:2px }
-@media(max-width:560px){
-  .vk-ov-fuss{ justify-content:stretch }
-  .vk-ov-fuss .vk-btn{ flex:1; min-width:0 }
-  .vk-echo{ flex:1 1 100% }
-  .vk-frage{ font-size:18px; margin-bottom:16px }
-  .vk-wortgross > b{ font-size:25px }
-  .vk-karte-bild{ height:180px }
-}
+.vk-btn-still{ background:#fff; color:var(--m-ink); border:1.5px solid var(--m-line);
+  box-shadow:0 3px 0 var(--m-line) }
+.vk-btn-still:hover{ border-color:var(--m-ink); background:#fff }
+.vk-btn-tuerkis{ background:var(--m-turq-dark); color:#fff; box-shadow:0 4px 0 #2589A3 }
+.vk-btn-tuerkis:hover{ background:#2589A3 }
 
-/* Ende einer Runde */
-.vk-ende{ text-align:center }
+/* ---------- Ende einer Runde ---------- */
+.vk-ende{ text-align:center; background:#fff; border:1.5px solid var(--m-line); border-radius:30px;
+  padding:42px 32px; box-shadow:0 26px 60px -24px rgba(40,53,59,.42) }
 .vk-ende-ring{ width:120px; height:120px; margin:0 auto 18px; border-radius:50%; display:grid;
   place-items:center; background:conic-gradient(#16A34A calc(var(--p)*1%), #EFEAE0 0) }
-.vk-ende-ring > b{ width:96px; height:96px; border-radius:50%; background:#FFFCF5; display:grid;
+.vk-ende-ring > b{ width:96px; height:96px; border-radius:50%; background:#fff; display:grid;
   place-items:center; font-family:'Space Grotesk',sans-serif; font-size:24px }
-.vk-ende > h2{ font-family:'Space Grotesk',sans-serif; font-size:26px; margin:0 0 6px }
-.vk-ende > p{ margin:0 0 18px; font-size:14px; color:var(--m-muted) }
+.vk-ende > h2{ font-family:'Space Grotesk',sans-serif; font-size:27px; margin:0 0 6px;
+  letter-spacing:-.02em }
+.vk-ende > p{ margin:0 0 18px; font-size:14.5px; color:var(--m-muted) }
 .vk-ende-liste{ display:flex; gap:7px; flex-wrap:wrap; justify-content:center; margin:0 0 18px }
 .vk-ende-w{ font-size:13px; font-weight:700; background:#EAF9F0; color:#14532D;
   border-radius:999px; padding:6px 12px }
 .vk-ende-w.schlecht{ background:var(--m-red-soft); color:var(--m-red-dark) }
 .vk-ende-tag{ font-size:13px; font-weight:800; color:var(--m-faint) }
+
+@media(max-width:560px){
+  .vk-ov-kopf{ padding:12px 14px; gap:11px }
+  .vk-marke{ display:none }
+  .vk-ov-mitte{ padding:14px 14px 20px; align-items:flex-start }
+  .vk-karte-tx{ padding:20px 20px 24px }
+  .vk-karte-bild{ height:180px }
+  .vk-kachel{ width:88px; height:88px; font-size:42px; margin-top:28px }
+  .vk-frage{ font-size:19px; margin-bottom:16px }
+  .vk-ov-fuss{ padding:12px 14px calc(14px + env(safe-area-inset-bottom)); justify-content:stretch }
+  .vk-ov-fuss .vk-btn{ flex:1; min-width:0 }
+  .vk-echo{ flex:1 1 100% }
+  .vk-seite .innen{ padding:26px 20px 20px }
+  .vk-flip-in{ min-height:400px }
+  .vk-flip-bild{ width:120px; height:120px; border-radius:28px }
+}
 
 /* Die Vokabel-Erinnerung auf der Startseite */
 .st-vok{ display:flex; align-items:center; gap:14px; width:100%; text-align:left; cursor:pointer;
