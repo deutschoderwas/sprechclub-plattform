@@ -212,20 +212,137 @@
     v.innerHTML =
         '<button class="pf-zurueck" onclick="renderPruefungen()">← Alle Prüfungen</button>'
       + '<div class="pf-hero">'
-      +   '<div class="pf-hero-bild"><img src="bilder/thema/'+p.bild+'.jpg" alt="" loading="lazy" onerror="this.remove()">'
-      +     '<span class="pf-streifen"></span></div>'
+      +   '<img class="pf-hero-foto" src="bilder/thema/'+p.bild+'.jpg" alt="" loading="lazy" onerror="this.remove()">'
+      +   '<span class="pf-hero-schleier"></span>'
+      +   '<span class="pf-streifen"></span>'
       +   '<div class="pf-hero-tx">'
       +     '<span class="pf-kicker">'+E(p.niveau)+' · '+E(p.anbieter)+'</span>'
       +     '<h1>'+E(p.name)+'</h1>'
       +     '<p>'+E(p.fuer)+'</p>'
       +   '</div>'
       + '</div>'
-      + moduleBlock(p)
-      + musterBlock(p)
-      + materialBlock(p)
-      + videoBlock(p)
-      + bereitBlock(p);
+      + faktenLeiste(p)
+      + kachelMenue(p);
     try{ window.scrollTo(0,0); }catch(e){}
+  };
+
+  /* ---------- Ebene 3: ein einzelner Bereich ----------
+     Jeder der fünf Bereiche ist eine eigene Seite. Oben ein Weg zurück,
+     darunter nur dieser eine Bereich — statt einer Seite, die nie endet. */
+  var BEREICHE = [
+    { id:'module',  nr:'1', z:'🧩', f:'turq',   t:'Die Prüfungsteile',
+      k:'Jeden Teil einzeln üben — mit den Lektionen, die dazugehören.' },
+    { id:'muster',  nr:'2', z:'📝', f:'rot',    t:'Musterprüfung',
+      k:'Ein kompletter Durchgang, so wie am Prüfungstag.' },
+    { id:'material',nr:'3', z:'📚', f:'gold',   t:'Wortschatz & Grammatik',
+      k:'Nicht irgendein Wortschatz — der, der in dieser Prüfung vorkommt.' },
+    { id:'video',   nr:'4', z:'🎬', f:'dunkel', t:'Videokurs',
+      k:'Erklärungen zum Anschauen, direkt beim passenden Teil.' },
+    { id:'bereit',  nr:'5', z:'🎯', f:'turq',   t:'Bist du bereit?',
+      k:'Eine ehrliche Einschätzung, bevor du dich anmeldest.' }
+  ];
+
+  function bereichInhalt(p, id){
+    if(id==='module')   return moduleBlock(p);
+    if(id==='muster')   return musterBlock(p);
+    if(id==='material') return materialBlock(p);
+    if(id==='video')    return videoBlock(p);
+    if(id==='bereit')   return bereitBlock(p);
+    return '';
+  }
+
+  /* Was auf der Kachel als Stand steht */
+  function bereichStand(p, b){
+    if(b.id==='module'){
+      var g=0; p.module.forEach(function(m){ g+=modulProzent(p,m); });
+      var pr=Math.round(g/Math.max(1,p.module.length));
+      return { text: pr+' % geübt', bar: pr };
+    }
+    if(b.id==='muster'){
+      var da = p.muster && window.PRUEFUNG && window.PRUEFUNG[p.muster];
+      return { text: da ? 'bereit zum Ansehen' : 'kommt noch', leer: !da };
+    }
+    if(b.id==='bereit') return { text:'noch kein Ergebnis', leer:true };
+    if(b.id==='video')  return { text:'kommt noch', leer:true };
+    return { text:'Lernbereich & Vokabeln' };
+  }
+
+  function kachelMenue(p){
+    var kacheln = BEREICHE.map(function(b){
+      var st = bereichStand(p, b);
+      return '<button class="pf-k pf-f-'+b.f+(st.leer?' pf-k-leer':'')+'" '
+        + 'onclick="pruefBereich(\''+p.id+'\',\''+b.id+'\')">'
+        + '<span class="pf-k-ic">'+b.z+'</span>'
+        + '<span class="pf-k-tx">'
+        +   '<span class="pf-k-nr">Bereich '+b.nr+'</span>'
+        +   '<b>'+E(b.t)+'</b>'
+        +   '<span class="pf-k-k">'+E(b.k)+'</span>'
+        + '</span>'
+        + (st.bar!=null ? '<span class="pf-bar"><i style="width:'+Math.max(2,st.bar)+'%"></i></span>' : '')
+        + '<span class="pf-k-fuss">'
+        +   '<span class="pf-k-st">'+E(st.text)+'</span>'
+        +   '<span class="pf-k-go">→</span>'
+        + '</span></button>';
+    }).join('');
+    return '<div class="pf-mtitel"><h2>Das bekommst du hier</h2>'
+      + '<p>Fünf Bereiche. Such dir aus, woran du heute arbeitest.</p></div>'
+      + '<div class="pf-kacheln">' + kacheln + '</div>';
+  }
+
+  window.pruefBereich=function(pid, bid){
+    var p=pruefungVon(pid); if(!p) return;
+    var b=null; for(var i=0;i<BEREICHE.length;i++) if(BEREICHE[i].id===bid) b=BEREICHE[i];
+    if(!b) return;
+    var v=document.getElementById('v-pruefung'); if(!v) return;
+
+    var andere = BEREICHE.filter(function(x){ return x.id!==bid; }).map(function(x){
+      return '<button class="pf-weiter-k pf-f-'+x.f+'" onclick="pruefBereich(\''+p.id+'\',\''+x.id+'\')">'
+        + '<span>'+x.z+'</span>'+E(x.t)+'</button>';
+    }).join('');
+
+    v.innerHTML =
+        '<button class="pf-zurueck" onclick="pruefungOeffnen(\''+p.id+'\')">← '+E(p.name)+'</button>'
+      + '<div class="pf-bkopf pf-f-'+b.f+'">'
+      +   '<span class="pf-bkopf-ic">'+b.z+'</span>'
+      +   '<div><span class="pf-bkopf-k">'+E(p.name)+' · '+E(p.niveau)+' · Bereich '+b.nr+'</span>'
+      +   '<h1>'+E(b.t)+'</h1><p>'+E(b.k)+'</p></div>'
+      + '</div>'
+      + bereichInhalt(p, bid)
+      + '<div class="pf-weiter"><span class="pf-weiter-t">Weiter zu einem anderen Bereich</span>'
+      +   '<div class="pf-weiter-l">'+andere+'</div></div>';
+    try{ window.scrollTo(0,0); }catch(e){}
+  };
+
+  /* Die Prüfung auf einen Blick — vier harte Zahlen statt Fließtext */
+  function faktenLeiste(p){
+    var min = 0, unklar = false;
+    p.module.forEach(function(m){
+      var z = String(m.m).match(/\d+/);
+      if(z) min += parseInt(z[0],10);
+      if(String(m.m).indexOf('ca.')>=0) unklar = true;
+    });
+    var dauer = min ? ((unklar?'ca. ':'') + (min>=60 ? Math.floor(min/60)+' Std ' + (min%60?(min%60)+' Min':'') : min+' Min')) : '—';
+    var f = [
+      ['Niveau',   E(p.niveau)],
+      ['Teile',    p.module.length + (p.module.length===4?' Module':' Teile')],
+      ['Dauer',    dauer.trim()],
+      ['Abschluss', p.ohnePruefung ? 'ohne Zertifikat' : (p.modular ? 'einzeln möglich' : 'ein Termin')]
+    ];
+    return '<div class="pf-fakten">' + f.map(function(x){
+      return '<div class="pf-fakt"><span>'+x[0]+'</span><b>'+x[1]+'</b></div>';
+    }).join('') + '</div>';
+  }
+
+  /* Jeder Prüfungsteil hat sein eigenes Zeichen und seine eigene Farbe —
+     so erkennt man Hören, Lesen, Schreiben und Sprechen sofort wieder. */
+  var MODUL_STIL = {
+    hoeren:     { z:'🎧', f:'turq' }, lesen:  { z:'📖', f:'gold' },
+    schreiben:  { z:'✍️', f:'rot'  }, sprechen:{ z:'💬', f:'dunkel' },
+    anamnese:   { z:'🩺', f:'turq' }, doku:   { z:'📋', f:'gold' },
+    fall:       { z:'🧑‍⚕️', f:'rot' },
+    uebergabe:  { z:'🔁', f:'turq' }, angehoerige:{ z:'👪', f:'rot' },
+    telefon:    { z:'📞', f:'turq' }, mail:   { z:'✉️', f:'gold' },
+    kunden:     { z:'🤝', f:'rot'  }
   };
 
   /* 1 — Die Module */
@@ -247,21 +364,21 @@
             + '<span class="pf-lek-go">→</span></button>';
         }).join('') + '</div>';
       } else if(p.stufe){
-        inhalt = '<div class="pf-m-liste">'
-          + '<span class="pf-m-z">Die Grundlagen kommen aus deinem '+E(p.stufe)+'-Kurs</span>'
-          + '<span class="pf-m-z">Eigene Prüfungslektionen für diesen Teil fehlen noch</span>'
-          + '</div>'
+        inhalt = '<p class="pf-m-text">Für diesen Teil üben wir vorerst im '+E(p.stufe)+'-Kurs. '
+          + 'Eigene Prüfungslektionen kommen noch.</p>'
           + '<button class="pf-b2 pf-b-s" onclick="kursUebersicht(\''+p.stufe+'\')">Zum '+E(p.stufe)+'-Kurs →</button>';
       } else {
-        inhalt = '<div class="pf-m-liste">'
-          + '<span class="pf-m-z">So läuft dieser Teil ab</span>'
-          + '<span class="pf-m-z">Die Aufgabentypen einzeln</span>'
-          + '<span class="pf-m-z">Durchgang unter Zeit</span>'
-          + '</div><span class="pf-bald">kommt noch</span>';
+        inhalt = '<p class="pf-m-text">Ablauf, Aufgabentypen und ein Durchgang unter Zeit — '
+          + 'dieser Teil wird gerade gebaut.</p>'
+          + '<span class="pf-bald">kommt noch</span>';
       }
 
-      return '<div class="pf-m">'
-        +'<div class="pf-m-kopf"><b>'+E(m.n)+'</b><span>'+E(m.m)+' Min</span></div>'
+      var st = MODUL_STIL[m.id] || { z:'📝', f:'turq' };
+      return '<div class="pf-m pf-f-'+st.f+'">'
+        +'<div class="pf-m-kopf">'
+        +  '<span class="pf-m-ic">'+st.z+'</span>'
+        +  '<span class="pf-m-tx"><b>'+E(m.n)+'</b><span>'+E(m.m)+' Min</span></span>'
+        +'</div>'
         + inhalt
         +'<div class="pf-m-fuss"><span class="pf-bar"><i style="width:'+Math.max(2,pr)+'%"></i></span>'
         +'<span class="pf-proz">'+pr+' %</span></div>'
@@ -357,9 +474,10 @@
     return block('5', 'Bist du bereit?', inhalt, 'pf-ber');
   }
 
+  /* Auf einer Unterseite steht der Titel schon oben im Kopf —
+     der Abschnitt darunter braucht dann keine zweite Überschrift. */
   function block(nr, titel, inhalt, kls){
-    return '<section class="pf-block '+(kls||'')+'">'
-      + '<div class="pf-block-kopf"><span class="pf-nr">'+nr+'</span><h2>'+E(titel)+'</h2></div>'
+    return '<section class="pf-block pf-block-solo '+(kls||'')+'" data-nr="'+nr+'">'
       + inhalt + '</section>';
   }
 
