@@ -266,8 +266,11 @@
       id:'stunden', quelle:'stunde', t:'Aus deinen Live-Stunden', niveau:'', emoji:'🎧',
       bild:'bilder/thema/live-unterricht-s.jpg',
       woerter: liste.map(function(v){
-        return { k:'st|'+v.de, de:v.de, info:v.info||v.from||'', emoji:'',
-                 bild:null, deko:'bilder/thema/live-unterricht-s.jpg', bsp:null };
+        /* Wörter aus den Live-Stunden kommen quer durch alle Themen.
+           Ein Foto der Stunde würde hier nur zufällig danebenliegen —
+           deshalb bekommen sie eine Kachel statt eines Bildes. */
+        return { k:'st|'+v.de, de:v.de, info:v.info||v.from||'', emoji:'🎧',
+                 bild:null, deko:null, bsp:null };
       })
     }];
   }
@@ -681,6 +684,20 @@
     return '<span class="vk-kachel">'+E(w.emoji||'🃏')+'</span>';
   }
 
+  /* Zurück zur vorherigen Karte — steht links im Fuß, sobald es
+     etwas zum Zurückgehen gibt. */
+  function zurueckKnopf(){
+    if(!R || R.i<=0) return '';
+    return '<button class="vk-zurueck" onclick="vokZurueck()" '
+      + 'aria-label="'+E(WX('vk_zurueck','Eine Karte zurück'))+'" '
+      + 'title="'+E(WX('vk_zurueck','Eine Karte zurück'))+'">‹</button>';
+  }
+  window.vokZurueck=function(){
+    if(!R || R.i<=0) return;
+    R.i--;
+    aufgabeMalen();
+  };
+
   function knopf(text, fn, art){
     return '<button class="vk-btn'+(art?' '+art:'')+'" onclick="'+fn+'">'+text+'</button>';
   }
@@ -781,7 +798,7 @@
     if(!fuss && a.typ!=='paare') fuss=knopf(W('vk_pruefen','Prüfen'),'vokPruefen()','vk-btn-rot vk-aus');
 
     m.innerHTML='<div class="vk-block">'+kopf+koerper+'</div>';
-    f.innerHTML=fuss;
+    f.innerHTML=zurueckKnopf()+fuss;
   }
 
   function optionen(a, text){
@@ -854,8 +871,11 @@
   function antwortZeigen(ok){
     var a=R.aktuell;
     R.beantwortet=true;
-    if(ok){ R.richtig++; klang('richtig'); }
-    else  { R.falsch++;  klang('falsch');
+    /* Wer zurückblättert und noch einmal antwortet, soll nicht doppelt
+       gezählt werden. Es zählt immer nur die erste Antwort. */
+    var zaehlt=!a.gezaehlt; a.gezaehlt=true;
+    if(ok){ if(zaehlt) R.richtig++; klang('richtig'); }
+    else  { if(zaehlt) R.falsch++;  klang('falsch');
             if(a.w) R.fehler[a.w.k]=true;
             /* Was danebenging, kommt am Ende noch einmal — aber nur
                einmal. Sonst hört die Runde nie auf. */
@@ -880,7 +900,8 @@
         + (a.w.info?' — '+E(a.w.info):'')+'</span>';
     }
     var f=el('vkFuss');
-    if(f) f.innerHTML='<div class="vk-echo '+(ok?'gut':'schlecht')+'">'
+    if(f) f.innerHTML=zurueckKnopf()
+      + '<div class="vk-echo '+(ok?'gut':'schlecht')+'">'
       + '<span class="vk-echo-t">'+(ok?('✓ '+W('vk_gut','Richtig!')):('✕ '+W('vk_daneben','Daneben')))+'</span>'
       + loesung + '</div>'
       + knopf(W('vk_weiter','Weiter')+' →','vokWeiter()','vk-btn-rot');
