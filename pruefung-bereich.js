@@ -157,6 +157,10 @@
         var lp = window.lesenProzent(p.niveau);
         if(lp!=null) return lp;
       }
+      if(mod && mod.id==='hoeren' && window.hoerenVorhanden && window.hoerenVorhanden(p.niveau)){
+        var hp = window.hoerenProzent(p.niveau);
+        if(hp!=null) return hp;
+      }
       if(p.stufe && window.kursStand){
         var st=window.kursStand(p.stufe);
         if(st) return st.prozent;
@@ -166,17 +170,27 @@
   }
 
   /* Gibt es fuer dieses Modul ein eigenes Training? */
+  /* Wie viele Aufgaben stecken in so einem Trainingsdatensatz? */
+  function aufgabenZahl(d){
+    var n = 0; if(!d) return 0;
+    (d.bloecke||[]).forEach(function(b){ n += b.aufgaben.length; });
+    (d.teile||[]).forEach(function(t){ t.runden.forEach(function(r){ n += r.aufgaben.length; }); });
+    (d.laeufe||[]).forEach(function(l){ l.teile.forEach(function(t){ n += t.aufgaben.length; }); });
+    return n;
+  }
+
   function trainingVon(p, m){
     if(m.id==='lesen' && window.lesenVorhanden && window.lesenVorhanden(p.niveau)){
-      var d = window.LESEN_A1, n = 0;
-      if(d){
-        (d.bloecke||[]).forEach(function(b){ n += b.aufgaben.length; });
-        (d.teile||[]).forEach(function(t){ t.runden.forEach(function(r){ n += r.aufgaben.length; }); });
-        (d.laeufe||[]).forEach(function(l){ l.teile.forEach(function(t){ n += t.aufgaben.length; }); });
-      }
       return { klick:"lesenStart('"+E(p.niveau)+"')", knopf:'Lesen trainieren',
-               anzahl:n, was:'Vier Stufen: erst der Wortschatz, dann die Strategie, '
+               anzahl:aufgabenZahl(window.LESEN_A1),
+               was:'Vier Stufen: erst der Wortschatz, dann die Strategie, '
                  + 'dann die Aufgabentypen, zuletzt die ganze Prüfung mit Uhr.' };
+    }
+    if(m.id==='hoeren' && window.hoerenVorhanden && window.hoerenVorhanden(p.niveau)){
+      return { klick:"hoerenStart('"+E(p.niveau)+"')", knopf:'Hören trainieren',
+               anzahl:aufgabenZahl(window.HOEREN_A1),
+               was:'Vier Stufen: erst Zahlen und Zeiten, dann die Signalwörter, '
+                 + 'dann Gespräche, Durchsagen und Ansagen, zuletzt die ganze Prüfung.' };
     }
     return null;
   }
@@ -392,12 +406,13 @@
     for(var t=0;t<p.module.length;t++){
       var tr0 = trainingVon(p, p.module[t]);
       if(tr0){
-        var lp0 = window.lesenProzent(p.niveau);
+        var lp0 = modulProzent(p, p.module[t]);
         if(lp0!=null && lp0 < 100){
-          return '<div class="pf-jetzt"><span class="pf-jetzt-z">📖</span>'
+          var z0 = (MODUL_STIL[p.module[t].id]||{}).z || '👉';
+          return '<div class="pf-jetzt"><span class="pf-jetzt-z">'+z0+'</span>'
             + '<div class="pf-jetzt-t"><span>Als Nächstes dran</span>'
             +   '<b>'+E(tr0.knopf)+'</b>'
-            +   '<em>'+(lp0>0 ? 'Lesen: '+lp0+' % geschafft — weiter geht\'s' : tr0.anzahl+' echte Prüfungsaufgaben warten')+'</em></div>'
+            +   '<em>'+(lp0>0 ? E(p.module[t].n)+': '+lp0+' % geschafft — weiter geht\'s' : tr0.anzahl+' echte Prüfungsaufgaben warten')+'</em></div>'
             + '<button class="pf-jetzt-b" onclick="'+tr0.klick+'">Los geht\'s →</button></div>';
         }
       }

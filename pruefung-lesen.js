@@ -748,6 +748,9 @@
     if(gestylt) return; gestylt = true;
     var s = document.createElement('style'); s.textContent = CSS; document.head.appendChild(s);
   }
+  /* Der Hörtrainer nutzt dasselbe Grundgerüst (Klassen pl-) und
+     holt es sich hierüber, damit es nur einmal im Dokument steht. */
+  window.trainerStil = stil;
 
   var CSS = [
 '#plOv{ display:none; position:fixed; inset:0; z-index:9000; overflow:auto;',
