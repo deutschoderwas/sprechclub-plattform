@@ -190,7 +190,8 @@
   }
 
   function kachel(p){
-    return '<button type="button" class="pf-k" onclick="pruefungOeffnen(\'' + p.id + '\')">'
+    /* Die Farbwelt steigt mit dem Niveau — dieselbe wie auf der Prüfungsseite. */
+    return '<button type="button" class="pf-k pf-w-'+farbwelt(p)+'" onclick="pruefungOeffnen(\'' + p.id + '\')">'
       + '<span class="pf-k-bild"><img src="bilder/thema/'+p.bild+'-s.jpg" alt="" loading="lazy" onerror="this.remove()">'
       +   '<span class="pf-k-niv">'+E(p.niveau)+'</span></span>'
       + '<span class="pf-k-tx">'
@@ -203,44 +204,180 @@
       + '</button>';
   }
 
-  /* ---------- Ebene 2: Die Prüfungsseite ---------- */
-  window.pruefungOeffnen=function(id){
+  /* ============================================================
+     Ebene 2 — Die Prüfungsseite
+
+     Farbiger Kopf, links die Schrittleiste, rechts der offene Bereich.
+     Die Farbwelt richtet sich nach dem Niveau: A1 und A2 türkis,
+     B1 gold, B2 rot, C1 violett. Man sieht am Kopf, wie weit oben
+     man gerade ist.
+     ============================================================ */
+
+  var NIVEAUFARBE = {
+    'A1':'a', 'A2':'a', 'A2–B1':'b1', 'B1':'b1', 'A2–B2':'b1',
+    'B1–B2':'b2', 'B2':'b2', 'B2–C1':'c1', 'C1':'c1'
+  };
+  function farbwelt(p){ return NIVEAUFARBE[p.niveau] || 'a'; }
+
+  /* Der aufmunternde Halbsatz hinter dem Namen — bekommt den Marker */
+  var MUTMACHER = {
+    'a':'du schaffst das', 'b1':'Schritt für Schritt',
+    'b2':'du bist fast da', 'c1':'die Königsklasse'
+  };
+
+  var MODUL_STIL = {
+    hoeren:{z:'🎧',f:'turq'}, lesen:{z:'📖',f:'gold'},
+    schreiben:{z:'✍️',f:'rot'}, sprechen:{z:'💬',f:'gruen'},
+    anamnese:{z:'🩺',f:'turq'}, doku:{z:'📋',f:'gold'}, fall:{z:'🧑‍⚕️',f:'rot'},
+    uebergabe:{z:'🔁',f:'turq'}, angehoerige:{z:'👪',f:'rot'},
+    telefon:{z:'📞',f:'turq'}, mail:{z:'✉️',f:'gold'}, kunden:{z:'🤝',f:'gruen'}
+  };
+  /* Ein Satz, der sagt, was in diesem Teil wirklich passiert */
+  var MODUL_TEXT = {
+    hoeren:'Ansagen, Gespräche, Durchsagen — du hörst jeden Text zweimal.',
+    lesen:'Anzeigen, Schilder, Texte — verstehen, was wirklich gemeint ist.',
+    schreiben:'Punkte gibt es für Vollständigkeit, nicht für schöne Sätze.',
+    sprechen:'Sich vorstellen, fragen, bitten — meist in einer kleinen Gruppe.',
+    anamnese:'Das Erstgespräch mit dem Patienten, in Alltagssprache.',
+    doku:'Das Gehörte schriftlich festhalten — knapp und korrekt.',
+    fall:'Den Fall der Kollegin vorstellen, in Fachsprache.',
+    uebergabe:'Die Schichtübergabe: knapp, vollständig, in der richtigen Reihenfolge.',
+    angehoerige:'Mit Bewohnern und Angehörigen sprechen — freundlich und klar.',
+    telefon:'Anrufe annehmen, weiterleiten, Notizen machen.',
+    mail:'E-Mails, die man gern liest — Anrede, Anliegen, Schluss.',
+    kunden:'Das Kundengespräch: zuhören, nachfragen, eine Lösung anbieten.'
+  };
+
+  var BEREICHE = [
+    { id:'module',  z:'🧩', f:'turq',  t:'Die Prüfungsteile',
+      k:'Jeden Teil einzeln üben — mit den Lektionen, die dazugehören.' },
+    { id:'muster',  z:'📝', f:'rot',   t:'Musterprüfung',
+      k:'Ein kompletter Durchgang, so wie am Prüfungstag.' },
+    { id:'material',z:'📚', f:'gold',  t:'Wortschatz & Grammatik',
+      k:'Nicht irgendein Wortschatz — der, der in dieser Prüfung vorkommt.' },
+    { id:'video',   z:'🎬', f:'lila',  t:'Videokurs',
+      k:'Erklärungen zum Anschauen, direkt beim passenden Teil.' },
+    { id:'bereit',  z:'🎯', f:'gruen', t:'Bist du bereit?',
+      k:'Eine ehrliche Einschätzung, bevor du dich anmeldest.' }
+  ];
+
+  function gesamtProzent(p){
+    var g=0; p.module.forEach(function(m){ g+=modulProzent(p,m); });
+    return Math.round(g/Math.max(1,p.module.length));
+  }
+  function gesamtDauer(p){
+    var min=0, ca=false;
+    p.module.forEach(function(m){
+      var z=String(m.m).match(/\d+/); if(z) min+=parseInt(z[0],10);
+      if(String(m.m).indexOf('ca.')>=0) ca=true;
+    });
+    if(!min) return '—';
+    var t = min>=60 ? (Math.floor(min/60)+' Std'+(min%60?' '+(min%60)+' Min':'')) : (min+' Min');
+    return (ca?'ca. ':'')+t;
+  }
+  function lektionZahlP(p){
+    var n=0, L=LEKTIONEN[p.kurs]||{};
+    for(var k in L) n+=L[k].length;
+    if(!n && p.stufe) return '14 im '+p.stufe+'-Kurs';
+    return n ? (n+' Lektionen') : '—';
+  }
+  function bereichStand(p, b){
+    if(b.id==='module'){
+      var pr=gesamtProzent(p);
+      return { text:p.module.length+' Teile · '+pr+' %', bar:pr };
+    }
+    if(b.id==='muster'){
+      var da = p.muster && window.PRUEFUNG && window.PRUEFUNG[p.muster];
+      return { text: da ? 'bereit zum Ansehen' : 'in Vorbereitung', leer:!da };
+    }
+    if(b.id==='material') return { text:'Lernbereich & Vokabeln' };
+    if(b.id==='video')    return { text:'in Vorbereitung', leer:true };
+    return { text:'noch kein Ergebnis', leer:true };
+  }
+
+  window.pruefungOeffnen=function(id, bereich){
     var p=pruefungVon(id); if(!p) return;
     var v=document.getElementById('v-pruefung'); if(!v) return;
     S('pruefLetzte', id);
+    var offen = bereich || 'module';
+    var welt = farbwelt(p), pr = gesamtProzent(p);
+
+    var schritte = BEREICHE.map(function(b){
+      var st=bereichStand(p,b);
+      return '<button class="pf-st pf-f-'+b.f+(b.id===offen?' an':'')+(st.leer?' leer':'')+'" '
+        + 'onclick="pruefungOeffnen(\'' + E(p.id) + '\',\'' + b.id + '\')">'
+        + '<span class="pf-st-z">'+b.z+'</span>'
+        + '<span class="pf-st-t"><b>'+E(b.t)+'</b><span>'+E(st.text)+'</span>'
+        +   (st.bar!=null ? '<span class="pf-st-bar"><i style="width:'+Math.max(3,st.bar)+'%"></i></span>' : '')
+        + '</span></button>';
+    }).join('');
+
+    var b=null;
+    for(var i=0;i<BEREICHE.length;i++) if(BEREICHE[i].id===offen) b=BEREICHE[i];
 
     v.innerHTML =
-        '<button class="pf-zurueck" onclick="renderPruefungen()">← Alle Prüfungen</button>'
-      + '<div class="pf-hero">'
-      +   '<img class="pf-hero-foto" src="bilder/thema/'+p.bild+'.jpg" alt="" loading="lazy" onerror="this.remove()">'
-      +   '<span class="pf-hero-schleier"></span>'
-      +   '<span class="pf-streifen"></span>'
-      +   '<div class="pf-hero-tx">'
-      +     '<span class="pf-kicker">'+E(p.niveau)+' · '+E(p.anbieter)+'</span>'
-      +     '<h1>'+E(p.name)+'</h1>'
-      +     '<p>'+E(p.fuer)+'</p>'
+        '<div class="pf-hero pf-n-'+welt+'">'
+      +   '<span class="pf-punkte"></span>'
+      +   '<span class="pf-blob pf-blob1"></span><span class="pf-blob pf-blob2"></span>'
+      +   '<span class="pf-blob pf-blob3"></span>'
+      +   '<img class="pf-hero-foto" src="bilder/thema/'+E(p.bild)+'.jpg" alt="" loading="lazy" onerror="this.remove()">'
+      +   '<div class="pf-hero-in">'
+      +     '<div class="pf-krumen"><button onclick="renderPruefungen()">Prüfungsvorbereitung</button>'
+      +       '<span>›</span><b>'+E(p.name)+'</b></div>'
+      +     '<div class="pf-hero-oben"><div>'
+      +       '<div class="pf-pillen">'
+      +         '<span class="pf-p pf-p-gold">'+E(p.niveau)+'</span>'
+      +         '<span class="pf-p pf-p-weiss">'+E(p.anbieter)+'</span>'
+      +         (pr>0 ? '<span class="pf-p pf-p-rot">🔥 '+pr+' % geschafft</span>' : '')
+      +       '</div>'
+      +       '<h1>'+E(p.name)+' — <span class="pf-mark">'+E(MUTMACHER[welt]||'du schaffst das')+'</span></h1>'
+      +       '<p class="pf-lead">'+E(p.fuer)+'</p>'
+      +     '</div>'
+      +     '<div class="pf-ring" style="--p:'+pr+'"><i><b>'+pr+'%</b><span>vorbereitet</span></i></div>'
+      +     '</div>'
+      +     '<div class="pf-hfak">'
+      +       '<div class="pf-hf"><span>Niveau</span><b>'+E(p.niveau)+'</b></div>'
+      +       '<div class="pf-hf"><span>'+(p.module.length===4?'Module':'Teile')+'</span><b>'+p.module.length+'</b></div>'
+      +       '<div class="pf-hf"><span>Prüfungsdauer</span><b>'+E(gesamtDauer(p))+'</b></div>'
+      +       '<div class="pf-hf"><span>Abschluss</span><b>'
+      +         (p.ohnePruefung?'ohne Zertifikat':(p.modular?'einzeln möglich':'ein Termin'))+'</b></div>'
+      +       '<div class="pf-hf"><span>Lektionen</span><b>'+E(lektionZahlP(p))+'</b></div>'
+      +     '</div>'
       +   '</div>'
       + '</div>'
-      + faktenLeiste(p)
-      + kachelMenue(p);
+      + '<div class="pf-body">'
+      +   '<nav class="pf-rail"><h3>Deine Vorbereitung</h3>'
+      +     '<div class="pf-rail-l">'+schritte+'</div>'
+      +     '<div class="pf-termin"><span>⏳ Dein Termin</span><b>Noch nicht eingetragen</b>'
+      +       '<em>Trag ihn ein — dann rechne ich dir aus, was pro Woche dran ist.</em>'
+      +       '<button onclick="go(\'lernpfad\')">Termin eintragen</button></div>'
+      +   '</nav>'
+      +   '<div class="pf-inhalt">'
+      +     '<div class="pf-kopfzeile"><h2>'+E(b?b.t:'')+'</h2><p>'+E(b?b.k:'')+'</p></div>'
+      +     naechsterSchritt(p, offen)
+      +     bereichInhalt(p, offen)
+      +   '</div>'
+      + '</div>';
     try{ window.scrollTo(0,0); }catch(e){}
   };
 
-  /* ---------- Ebene 3: ein einzelner Bereich ----------
-     Jeder der fünf Bereiche ist eine eigene Seite. Oben ein Weg zurück,
-     darunter nur dieser eine Bereich — statt einer Seite, die nie endet. */
-  var BEREICHE = [
-    { id:'module',  nr:'1', z:'🧩', f:'turq',   t:'Die Prüfungsteile',
-      k:'Jeden Teil einzeln üben — mit den Lektionen, die dazugehören.' },
-    { id:'muster',  nr:'2', z:'📝', f:'rot',    t:'Musterprüfung',
-      k:'Ein kompletter Durchgang, so wie am Prüfungstag.' },
-    { id:'material',nr:'3', z:'📚', f:'gold',   t:'Wortschatz & Grammatik',
-      k:'Nicht irgendein Wortschatz — der, der in dieser Prüfung vorkommt.' },
-    { id:'video',   nr:'4', z:'🎬', f:'dunkel', t:'Videokurs',
-      k:'Erklärungen zum Anschauen, direkt beim passenden Teil.' },
-    { id:'bereit',  nr:'5', z:'🎯', f:'turq',   t:'Bist du bereit?',
-      k:'Eine ehrliche Einschätzung, bevor du dich anmeldest.' }
-  ];
+  /* Die goldene Zeile: was jetzt dran ist */
+  function naechsterSchritt(p, bid){
+    if(bid!=='module') return '';
+    var L=LEKTIONEN[p.kurs]||{}, erste=null;
+    for(var i=0;i<p.module.length && !erste;i++){
+      var l=L[p.module[i].id];
+      if(l && l.length) erste={ kurs:p.kurs, nr:l[0][0], t:l[0][1], modul:p.module[i].n };
+    }
+    if(!erste && p.stufe) erste={ stufe:p.stufe, t:'Lektion 1 — der Anfang', modul:p.module[0].n };
+    if(!erste) return '';
+    var klick = erste.kurs ? 'pruefLektion(\''+E(erste.kurs)+'\','+erste.nr+')'
+                           : 'kursUebersicht(\''+E(erste.stufe)+'\')';
+    return '<div class="pf-jetzt"><span class="pf-jetzt-z">👋</span>'
+      + '<div class="pf-jetzt-t"><span>Als Nächstes dran</span><b>'+E(erste.t)+'</b>'
+      +   '<em>zahlt auf '+E(erste.modul)+' ein</em></div>'
+      + '<button class="pf-jetzt-b" onclick="'+klick+'">Los geht\'s →</button></div>';
+  }
 
   function bereichInhalt(p, id){
     if(id==='module')   return moduleBlock(p);
@@ -251,143 +388,42 @@
     return '';
   }
 
-  /* Was auf der Kachel als Stand steht */
-  function bereichStand(p, b){
-    if(b.id==='module'){
-      var g=0; p.module.forEach(function(m){ g+=modulProzent(p,m); });
-      var pr=Math.round(g/Math.max(1,p.module.length));
-      return { text: pr+' % geübt', bar: pr };
-    }
-    if(b.id==='muster'){
-      var da = p.muster && window.PRUEFUNG && window.PRUEFUNG[p.muster];
-      return { text: da ? 'bereit zum Ansehen' : 'kommt noch', leer: !da };
-    }
-    if(b.id==='bereit') return { text:'noch kein Ergebnis', leer:true };
-    if(b.id==='video')  return { text:'kommt noch', leer:true };
-    return { text:'Lernbereich & Vokabeln' };
-  }
-
-  function kachelMenue(p){
-    var kacheln = BEREICHE.map(function(b){
-      var st = bereichStand(p, b);
-      return '<button class="pf-k pf-f-'+b.f+(st.leer?' pf-k-leer':'')+'" '
-        + 'onclick="pruefBereich(\''+p.id+'\',\''+b.id+'\')">'
-        + '<span class="pf-k-ic">'+b.z+'</span>'
-        + '<span class="pf-k-tx">'
-        +   '<span class="pf-k-nr">Bereich '+b.nr+'</span>'
-        +   '<b>'+E(b.t)+'</b>'
-        +   '<span class="pf-k-k">'+E(b.k)+'</span>'
-        + '</span>'
-        + (st.bar!=null ? '<span class="pf-bar"><i style="width:'+Math.max(2,st.bar)+'%"></i></span>' : '')
-        + '<span class="pf-k-fuss">'
-        +   '<span class="pf-k-st">'+E(st.text)+'</span>'
-        +   '<span class="pf-k-go">→</span>'
-        + '</span></button>';
-    }).join('');
-    return '<div class="pf-mtitel"><h2>Das bekommst du hier</h2>'
-      + '<p>Fünf Bereiche. Such dir aus, woran du heute arbeitest.</p></div>'
-      + '<div class="pf-kacheln">' + kacheln + '</div>';
-  }
-
-  window.pruefBereich=function(pid, bid){
-    var p=pruefungVon(pid); if(!p) return;
-    var b=null; for(var i=0;i<BEREICHE.length;i++) if(BEREICHE[i].id===bid) b=BEREICHE[i];
-    if(!b) return;
-    var v=document.getElementById('v-pruefung'); if(!v) return;
-
-    var andere = BEREICHE.filter(function(x){ return x.id!==bid; }).map(function(x){
-      return '<button class="pf-weiter-k pf-f-'+x.f+'" onclick="pruefBereich(\''+p.id+'\',\''+x.id+'\')">'
-        + '<span>'+x.z+'</span>'+E(x.t)+'</button>';
-    }).join('');
-
-    v.innerHTML =
-        '<button class="pf-zurueck" onclick="pruefungOeffnen(\''+p.id+'\')">← '+E(p.name)+'</button>'
-      + '<div class="pf-bkopf pf-f-'+b.f+'">'
-      +   '<span class="pf-bkopf-ic">'+b.z+'</span>'
-      +   '<div><span class="pf-bkopf-k">'+E(p.name)+' · '+E(p.niveau)+' · Bereich '+b.nr+'</span>'
-      +   '<h1>'+E(b.t)+'</h1><p>'+E(b.k)+'</p></div>'
-      + '</div>'
-      + bereichInhalt(p, bid)
-      + '<div class="pf-weiter"><span class="pf-weiter-t">Weiter zu einem anderen Bereich</span>'
-      +   '<div class="pf-weiter-l">'+andere+'</div></div>';
-    try{ window.scrollTo(0,0); }catch(e){}
-  };
-
-  /* Die Prüfung auf einen Blick — vier harte Zahlen statt Fließtext */
-  function faktenLeiste(p){
-    var min = 0, unklar = false;
-    p.module.forEach(function(m){
-      var z = String(m.m).match(/\d+/);
-      if(z) min += parseInt(z[0],10);
-      if(String(m.m).indexOf('ca.')>=0) unklar = true;
-    });
-    var dauer = min ? ((unklar?'ca. ':'') + (min>=60 ? Math.floor(min/60)+' Std ' + (min%60?(min%60)+' Min':'') : min+' Min')) : '—';
-    var f = [
-      ['Niveau',   E(p.niveau)],
-      ['Teile',    p.module.length + (p.module.length===4?' Module':' Teile')],
-      ['Dauer',    dauer.trim()],
-      ['Abschluss', p.ohnePruefung ? 'ohne Zertifikat' : (p.modular ? 'einzeln möglich' : 'ein Termin')]
-    ];
-    return '<div class="pf-fakten">' + f.map(function(x){
-      return '<div class="pf-fakt"><span>'+x[0]+'</span><b>'+x[1]+'</b></div>';
-    }).join('') + '</div>';
-  }
-
-  /* Jeder Prüfungsteil hat sein eigenes Zeichen und seine eigene Farbe —
-     so erkennt man Hören, Lesen, Schreiben und Sprechen sofort wieder. */
-  var MODUL_STIL = {
-    hoeren:     { z:'🎧', f:'turq' }, lesen:  { z:'📖', f:'gold' },
-    schreiben:  { z:'✍️', f:'rot'  }, sprechen:{ z:'💬', f:'dunkel' },
-    anamnese:   { z:'🩺', f:'turq' }, doku:   { z:'📋', f:'gold' },
-    fall:       { z:'🧑‍⚕️', f:'rot' },
-    uebergabe:  { z:'🔁', f:'turq' }, angehoerige:{ z:'👪', f:'rot' },
-    telefon:    { z:'📞', f:'turq' }, mail:   { z:'✉️', f:'gold' },
-    kunden:     { z:'🤝', f:'rot'  }
-  };
-
-  /* 1 — Die Module */
+  /* 1 — Die Prüfungsteile als farbige Karten */
   function moduleBlock(p){
-    var hinweis = p.modular
-      ? '<p class="pf-hinw">Diese Prüfung ist modular: Du kannst die vier Teile einzeln ablegen und '
-        +'einzeln wiederholen. Deshalb steht jedes Modul hier für sich.</p>' : '';
-
     var karten = p.module.map(function(m){
-      var pr = modulProzent(p,m);
+      var pr  = modulProzent(p,m);
       var lek = (LEKTIONEN[p.kurs]||{})[m.id] || [];
+      var st  = MODUL_STIL[m.id] || { z:'📝', f:'turq' };
+      var txt = MODUL_TEXT[m.id] || '';
       var inhalt;
 
       if(lek.length){
         inhalt = '<div class="pf-m-lek">' + lek.map(function(l){
-          return '<button class="pf-lek" onclick="pruefLektion(\''+p.kurs+'\','+l[0]+')">'
-            + '<span class="pf-lek-nr">'+l[0]+'</span>'
-            + '<span class="pf-lek-t">'+E(l[1])+'</span>'
-            + '<span class="pf-lek-go">→</span></button>';
+          return '<button class="pf-m-l" onclick="pruefLektion(\''+E(p.kurs)+'\','+l[0]+')">'
+            + '<i>'+l[0]+'</i>'+E(l[1])+'<span>→</span></button>';
         }).join('') + '</div>';
       } else if(p.stufe){
-        inhalt = '<p class="pf-m-text">Für diesen Teil üben wir vorerst im '+E(p.stufe)+'-Kurs. '
-          + 'Eigene Prüfungslektionen kommen noch.</p>'
-          + '<button class="pf-b2 pf-b-s" onclick="kursUebersicht(\''+p.stufe+'\')">Zum '+E(p.stufe)+'-Kurs →</button>';
+        inhalt = '<button class="pf-m-b" onclick="kursUebersicht(\''+E(p.stufe)+'\')">Zum '
+          + E(p.stufe)+'-Kurs →</button>';
       } else {
-        inhalt = '<p class="pf-m-text">Ablauf, Aufgabentypen und ein Durchgang unter Zeit — '
-          + 'dieser Teil wird gerade gebaut.</p>'
-          + '<span class="pf-bald">kommt noch</span>';
+        inhalt = '<span class="pf-m-bald">Eigene Lektionen kommen noch</span>';
       }
 
-      var st = MODUL_STIL[m.id] || { z:'📝', f:'turq' };
       return '<div class="pf-m pf-f-'+st.f+'">'
-        +'<div class="pf-m-kopf">'
-        +  '<span class="pf-m-ic">'+st.z+'</span>'
-        +  '<span class="pf-m-tx"><b>'+E(m.n)+'</b><span>'+E(m.m)+' Min</span></span>'
-        +'</div>'
+        + '<div class="pf-m-kopf"><span class="pf-m-z">'+st.z+'</span><b>'+E(m.n)+'</b>'
+        +   '<span class="pf-m-min">'+E(m.m)+' Min</span></div>'
+        + (txt ? '<p>'+E(txt)+'</p>' : '')
         + inhalt
-        +'<div class="pf-m-fuss"><span class="pf-bar"><i style="width:'+Math.max(2,pr)+'%"></i></span>'
-        +'<span class="pf-proz">'+pr+' %</span></div>'
-        +'</div>';
+        + '<div class="pf-m-f"><span class="pf-m-bar"><i style="width:'+Math.max(3,pr)+'%"></i></span>'
+        +   '<span class="pf-m-pz">'+pr+' %</span></div>'
+        + '</div>';
     }).join('');
 
+    var hinweis = p.modular
+      ? '<p class="pf-hinw">Diese Prüfung ist modular: Du kannst die Teile einzeln ablegen '
+        + 'und einzeln wiederholen.</p>' : '';
     var zu = ZUSATZ[p.id] ? zusatzBlock(ZUSATZ[p.id]) : '';
-    var titel = p.module.length===4 ? 'Die vier Module' : 'Die Prüfungsteile';
-    return block('1', titel, hinweis+'<div class="pf-module">'+karten+'</div>'+zu, 'pf-mod');
+    return hinweis + '<div class="pf-mods">'+karten+'</div>' + zu;
   }
 
   function zusatzBlock(z){
@@ -442,8 +478,7 @@
   /* 3 — Wortschatz und Grammatik */
   function materialBlock(p){
     var inhalt='<div class="pf-mat">'
-      +'<p>Nicht irgendein Wortschatz, sondern der, der in dieser Prüfung vorkommt. '
-      +'Die vorhandenen Grammatik- und Wortschatzseiten werden in Schritt 3 hier eingehängt: '
+      +'<p>Die vorhandenen Grammatik- und Wortschatzseiten werden hier eingehängt: '
       +'17 Grammatikkapitel, 34 Wortschatzseiten, 8 Aussprachekapitel.</p>'
       +'<div class="pf-mat-knoepfe">'
       +'<button class="pf-b2 pf-b-s" onclick="go(\'lernen\')">Zum Lernbereich →</button>'
@@ -476,9 +511,9 @@
 
   /* Auf einer Unterseite steht der Titel schon oben im Kopf —
      der Abschnitt darunter braucht dann keine zweite Überschrift. */
+  /* Der Titel steht schon oben in der Kopfzeile — hier nur der Inhalt. */
   function block(nr, titel, inhalt, kls){
-    return '<section class="pf-block pf-block-solo '+(kls||'')+'" data-nr="'+nr+'">'
-      + inhalt + '</section>';
+    return '<section class="pf-block '+(kls||'')+'" data-nr="'+nr+'">' + inhalt + '</section>';
   }
 
   window.PRUEFUNGEN_DATEN = PRUEFUNGEN;
