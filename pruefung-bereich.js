@@ -161,6 +161,10 @@
         var hp = window.hoerenProzent(p.niveau);
         if(hp!=null) return hp;
       }
+      if(mod && mod.id==='schreiben' && window.schreibenVorhanden && window.schreibenVorhanden(p.niveau)){
+        var sp = window.schreibenProzent(p.niveau);
+        if(sp!=null) return sp;
+      }
       if(p.stufe && window.kursStand){
         var st=window.kursStand(p.stufe);
         if(st) return st.prozent;
@@ -173,9 +177,18 @@
   /* Wie viele Aufgaben stecken in so einem Trainingsdatensatz? */
   function aufgabenZahl(d){
     var n = 0; if(!d) return 0;
-    (d.bloecke||[]).forEach(function(b){ n += b.aufgaben.length; });
-    (d.teile||[]).forEach(function(t){ t.runden.forEach(function(r){ n += r.aufgaben.length; }); });
-    (d.laeufe||[]).forEach(function(l){ l.teile.forEach(function(t){ n += t.aufgaben.length; }); });
+    (d.bloecke||[]).forEach(function(b){ n += (b.aufgaben||[]).length; });
+    (d.teile||[]).forEach(function(t){
+      (t.runden||[]).forEach(function(r){
+        /* Beim Schreiben ist eine Runde entweder ein ganzes Formular
+           oder eine Handvoll Mitteilungen — beides zaehlt hier mit. */
+        n += r.aufgaben ? r.aufgaben.length : 1;
+      });
+    });
+    (d.laeufe||[]).forEach(function(l){
+      if(l.teile) l.teile.forEach(function(t){ n += (t.aufgaben||[]).length; });
+      else n += 1;
+    });
     return n;
   }
 
@@ -191,6 +204,13 @@
                anzahl:aufgabenZahl(window.HOEREN_A1),
                was:'Vier Stufen: erst Zahlen und Zeiten, dann die Signalwörter, '
                  + 'dann Gespräche, Durchsagen und Ansagen, zuletzt die ganze Prüfung.' };
+    }
+    if(m.id==='schreiben' && window.schreibenVorhanden && window.schreibenVorhanden(p.niveau)){
+      return { klick:"schreibenStart('"+E(p.niveau)+"')", knopf:'Schreiben trainieren',
+               anzahl:aufgabenZahl(window.SCHREIBEN_A1),
+               was:'Vier Stufen: erst die Wörter im Formular, dann die Bausteine einer '
+                 + 'Mitteilung, dann echte Formulare und Nachrichten mit Korrektur, '
+                 + 'zuletzt beides zusammen mit Uhr.' };
     }
     return null;
   }
