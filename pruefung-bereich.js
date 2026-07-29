@@ -168,11 +168,15 @@
   /* Gibt es fuer dieses Modul ein eigenes Training? */
   function trainingVon(p, m){
     if(m.id==='lesen' && window.lesenVorhanden && window.lesenVorhanden(p.niveau)){
-      var d = window.LESEN_A1;
-      var n = d ? d.teile.reduce(function(a,t){
-        return a + t.runden.reduce(function(b,r){ return b + r.aufgaben.length; },0); },0) : 0;
+      var d = window.LESEN_A1, n = 0;
+      if(d){
+        (d.bloecke||[]).forEach(function(b){ n += b.aufgaben.length; });
+        (d.teile||[]).forEach(function(t){ t.runden.forEach(function(r){ n += r.aufgaben.length; }); });
+        (d.laeufe||[]).forEach(function(l){ l.teile.forEach(function(t){ n += t.aufgaben.length; }); });
+      }
       return { klick:"lesenStart('"+E(p.niveau)+"')", knopf:'Lesen trainieren',
-               anzahl:n, was:'Die drei Prüfungsteile als echte Aufgaben — mit Auswertung.' };
+               anzahl:n, was:'Vier Stufen: erst der Wortschatz, dann die Strategie, '
+                 + 'dann die Aufgabentypen, zuletzt die ganze Prüfung mit Uhr.' };
     }
     return null;
   }
