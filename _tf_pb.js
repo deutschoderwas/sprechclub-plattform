@@ -393,7 +393,7 @@
           return '<div class="pf-jetzt"><span class="pf-jetzt-z">📖</span>'
             + '<div class="pf-jetzt-t"><span>Als Nächstes dran</span>'
             +   '<b>'+E(tr0.knopf)+'</b>'
-            +   '<em>'+(lp0>0 ? 'Lesen: '+lp0+' % geschafft — weiter geht\'s' : tr0.anzahl+' echte Prüfungsaufgaben warten')+'</em></div>'
+            +   '<em>'+(lp0>0 ? lp0+' % geschafft — weiter geht\'s' : tr0.anzahl+' echte Prüfungsaufgaben warten')+'</em></div>'
             + '<button class="pf-jetzt-b" onclick="'+tr0.klick+'">Los geht\'s →</button></div>';
         }
       }
@@ -441,10 +441,6 @@
             return '<button class="pf-m-l" onclick="pruefLektion(\''+E(p.kurs)+'\','+l[0]+')">'
               + '<i>'+l[0]+'</i>'+E(l[1])+'<span>→</span></button>';
           }).join('') + '</div>';
-        } else if(p.stufe){
-          /* Der Kurs bleibt erreichbar — das Training ersetzt ihn nicht, es kommt dazu. */
-          inhalt += '<button class="pf-m-nb" onclick="kursUebersicht(\''+E(p.stufe)+'\')">'
-            + 'oder im '+E(p.stufe)+'-Kurs weiterlernen →</button>';
         }
       } else if(lek.length){
         inhalt = '<div class="pf-m-lek">' + lek.map(function(l){
