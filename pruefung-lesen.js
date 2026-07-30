@@ -191,10 +191,83 @@
   var SORTE_KOPF = { email:{z:'✉️',t:'E-Mail'}, zettel:{z:'📝',t:'Zettel'},
                      sms:{z:'💬',t:'Nachricht'}, aushang:{z:'📌',t:'Aushang'} };
 
+  /* ---------- Symbolbilder ----------
+     Ein Motiv pro Text. Die Bilder liegen in bilder/lesen/<schluessel>.webp.
+     Fehlt eine Datei, zeigt die Karte still das Ersatzzeichen — nie ein
+     kaputtes Bild. So kann die Bildersammlung nach und nach wachsen.        */
+
+  var MOTIVE = [
+    ['zahnarzt',   /zahnarzt|zahnärzt|zahn/,                         '🦷'],
+    ['praxis',     /praxis|arztpraxis|hausarzt|ärzt|doktor|dr\./,     '🩺'],
+    ['apotheke',   /apotheke/,                                       '💊'],
+    ['kita',       /kita|kinderg|krippe|tagesmutter|tagesvater|elternabend/, '🧸'],
+    ['schule',     /schulsekretariat|grundschule|schule(?!.*sprach)/, '🎒'],
+    ['sprachschule',/sprachschule|volkshochschule|vhs|deutschkurs|lernstudio|lernhaus|nachhilfe/, '📚'],
+    ['bibliothek', /bibliothek|bücherei/,                            '📖'],
+    ['amt',        /bürgeramt|rathaus|stadtverwaltung|marktamt|amt\b|behörde/, '🏛️'],
+    ['paket',      /paket|päckchen|sendung|dhl|packstation/,          '📦'],
+    ['nachbar',    /nachbar|haustür|wohnung \d|hausflur|treppenhaus/,  '🚪'],
+    ['hausmeister',/hausmeister|keller|abstellraum/,                 '🧰'],
+    ['aufzug',     /aufzug|fahrstuhl/,                               '🛗'],
+    ['muell',      /mülltonne|müll|abfall|papiertonne/,              '🗑️'],
+    ['wohnung',    /hausverwaltung|wohnung|zimmer, |qm|miete|warm\b/,  '🏠'],
+    ['umzug',      /umzug|umziehen|kisten tragen|möbel/,             '📦'],
+    ['handwerker', /handwerker|reparatur|maler|elektrik|klempner/,   '🔧'],
+    ['reinigung',  /reinigung|putz|wäscherei|waschsalon/,            '🧽'],
+    ['fahrrad',    /fahrrad|damenrad|herrenrad|radhaus|zoll/,        '🚲'],
+    ['werkstatt',  /autowerkstatt|werkstatt|reifen|inspektion/,      '🔩'],
+    ['auto',       /autohaus|auto|wagen|führerschein/,               '🚗'],
+    ['bahn',       /bahnsteig|bahnhof|gleis|zug\b|fahrkarte|db\b/,    '🚉'],
+    ['bus',        /bushaltestelle|bus\b|straßenbahn|haltestelle/,    '🚌'],
+    ['reise',      /reisebüro|urlaub|reise|flug/,                    '🧳'],
+    ['schwimmbad', /schwimmbad|freibad|hallenbad|schwimm/,           '🏊'],
+    ['sport',      /sv |fc |sportverein|fußball|training/,           '⚽'],
+    ['fitness',    /fitness|studio aktiv|vital/,                     '🏋️'],
+    ['yoga',       /yoga|pilates|meditation/,                        '🧘'],
+    ['musik',      /musikschule|gitarre|klavier|geige|musik/,        '🎸'],
+    ['baeckerei',  /bäckerei|brötchen|brot|konditorei/,              '🥐'],
+    ['cafe',       /café|cafe|kaffee|kuchen/,                        '☕'],
+    ['supermarkt', /supermarkt|pfandautomat|einkauf|kasse/,          '🛒'],
+    ['friseur',    /salon|friseur|haare schneiden/,                  '💇'],
+    ['tier',       /hund|katze|tierfreund|gassi|haustier/,           '🐕'],
+    ['kino',       /kino|film|vorstellung/,                          '🎬'],
+    ['spielplatz', /spielplatz|schaukel|sandkasten/,                 '🛝'],
+    ['buero',      /bürogebäude|büro|sekretariat|firma/,             '🏢'],
+    ['strasse',    /baustelle|gehweg|straße|zentrum/,                '🚧'],
+    ['nachbarschaft',/nachbarschaftshilfe|helfen|ehrenamt/,          '🤝'],
+    ['familie',    /familie|oma|opa|mama|papa|schwester|bruder/,     '👪']
+  ];
+
+  var SORTE_MOTIV = { email:'mail', sms:'handy', aushang:'aushang', zettel:'zettel' };
+
+  function motivVon(heu, ersatz){
+    var h = String(heu||'').toLowerCase();
+    for(var i=0;i<MOTIVE.length;i++) if(MOTIVE[i][1].test(h)) return MOTIVE[i];
+    return [ersatz||'allgemein', null, ''];
+  }
+
+  function heuhaufen(){
+    var t=[];
+    for(var i=0;i<arguments.length;i++){
+      var a=arguments[i];
+      if(a==null) continue;
+      t.push(Array.isArray(a) ? a.join(' ') : String(a));
+    }
+    return t.join(' ');
+  }
+
+  function motivHTML(m, zeichen, klasse){
+    return '<span class="pl-motiv '+(klasse||'')+'">'
+      + '<img src="bilder/lesen/'+E(m[0])+'.webp" alt="" loading="lazy" decoding="async"'
+      +   ' onerror="this.parentNode.className+=\' leer\'; this.remove()">'
+      + '<em>'+(m[2]||zeichen||'')+'</em></span>';
+  }
+
   function textKarte(t, stelle){
     var k = SORTE_KOPF[t.sorte] || SORTE_KOPF.zettel;
+    var m = motivVon(heuhaufen(t.von, t.betreff, t.zeilen), SORTE_MOTIV[t.sorte]||'zettel');
     return '<div class="pl-text pl-s-'+E(t.sorte)+'">'
-      + '<div class="pl-text-kopf"><span class="pl-text-z">'+k.z+'</span>'
+      + '<div class="pl-text-kopf">'+motivHTML(m, k.z)
       +   '<span class="pl-text-m"><b>'+E(t.von)+'</b><span>'+E(t.betreff||k.t)+'</span></span></div>'
       + '<div class="pl-text-k">'
       +   t.zeilen.map(function(z){ return '<span>'+markiert(z,stelle)+'</span>'; }).join('')
@@ -205,7 +278,9 @@
     return '<button type="button" class="pl-anz '+(klasse||'')+'" '
       + (klick ? 'onclick="'+klick+'"' : 'disabled')+'>'
       + '<span class="pl-anz-b">'+buchstabe+'</span>'
-      + '<span class="pl-anz-q">'+E(a.quelle)+'</span>'
+      + '<span class="pl-anz-kopf">'
+      +   motivHTML(motivVon(heuhaufen(a.quelle, a.zeilen), 'anzeige'), '📰', 'klein')
+      +   '<span class="pl-anz-q">'+E(a.quelle)+'</span></span>'
       + '<span class="pl-anz-z">'+a.zeilen.map(function(z){ return '<span>'+E(z)+'</span>'; }).join('')
       + '</span></button>';
   }
@@ -292,7 +367,9 @@
          + '</div>';
 
     } else if(art==='schild'){
-      h += '<div class="pl-schild-wrap"><span class="pl-schild-ort">'+E(a.ort)+'</span>'
+      h += '<div class="pl-schild-wrap">'
+         + motivHTML(motivVon(heuhaufen(a.ort, a.zeilen), 'schild'), '🪧', 'ort')
+         + '<span class="pl-schild-ort">'+E(a.ort)+'</span>'
          + '<div class="pl-schild">'
          + a.zeilen.map(function(z){ return '<span>'+markiert(z, zeigen?a.stelle:null)+'</span>'; }).join('')
          + '</div></div>';
@@ -747,6 +824,14 @@
   function stil(){
     if(gestylt) return; gestylt = true;
     var s = document.createElement('style'); s.textContent = CSS; document.head.appendChild(s);
+    /* Handschrift für Zettel. Fehlt die Verbindung, greift die Ersatzschrift
+       aus der font-family — die Karte sieht dann nur etwas nüchterner aus. */
+    if(!document.getElementById('plSchrift')){
+      var l = document.createElement('link');
+      l.id = 'plSchrift'; l.rel = 'stylesheet';
+      l.href = 'https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&display=swap';
+      document.head.appendChild(l);
+    }
   }
   /* Der Hörtrainer nutzt dasselbe Grundgerüst (Klassen pl-) und
      holt es sich hierüber, damit es nur einmal im Dokument steht. */
@@ -930,7 +1015,41 @@
 '.pl-text-k mark{ background:linear-gradient(180deg,transparent 52%,#FFE066 52%);',
 '  color:inherit; padding:0 2px; border-radius:3px }',
 
+/* Symbolbilder — fehlt die Datei, rückt das Ersatzzeichen nach */
+'.pl-motiv{ position:relative; flex:0 0 auto; width:46px; height:46px; border-radius:14px;',
+'  overflow:hidden; background:#FFF6E3; border:1.5px solid #EEE7D8; display:grid;',
+'  place-items:center }',
+'.pl-motiv img{ width:100%; height:100%; object-fit:cover; display:block }',
+'.pl-motiv em{ display:none; font-style:normal; font-size:22px; line-height:1 }',
+'.pl-motiv.leer em{ display:block }',
+'.pl-motiv.klein{ width:34px; height:34px; border-radius:11px }',
+'.pl-motiv.klein em{ font-size:17px }',
+'.pl-motiv.ort{ width:96px; height:96px; border-radius:28px; margin:0 auto 11px;',
+'  box-shadow:0 16px 32px -22px rgba(40,53,59,.75) }',
+'.pl-motiv.ort em{ font-size:44px }',
+
+/* Textsorten sehen aus wie das, was sie sind */
+'.pl-s-aushang{ transform:rotate(-.65deg); background:#FFFDF6 }',
+'.pl-s-aushang .pl-text-kopf{ background:#FFF6E3; position:relative }',
+'.pl-s-aushang .pl-text-kopf::after{ content:""; position:absolute; right:15px; top:50%;',
+'  width:13px; height:13px; margin-top:-7px; border-radius:50%; background:#D83636;',
+'  box-shadow:0 3px 7px -1px rgba(40,53,59,.55), inset 0 -2px 3px rgba(0,0,0,.2) }',
+'.pl-s-zettel{ transform:rotate(.55deg) }',
+'.pl-s-zettel .pl-text-k{ padding-top:10px;',
+'  background-image:repeating-linear-gradient(#fff 0 27px, #E7F0F4 27px 28px) }',
+'.pl-s-zettel .pl-text-k span{ font-family:"Caveat","Bradley Hand",cursive;',
+'  font-size:21px; line-height:28px; color:#22384A }',
+'.pl-s-sms .pl-text-k{ background:#F4FBFC; padding:14px 14px 8px }',
+'.pl-s-sms .pl-text-k span{ display:inline-block; max-width:93%; background:#fff;',
+'  border:1px solid #DCEDF2; border-radius:16px 16px 16px 5px; padding:8px 13px;',
+'  margin-bottom:7px; font-size:14.5px; line-height:1.5;',
+'  box-shadow:0 5px 13px -9px rgba(40,53,59,.6) }',
+'.pl-s-email .pl-text-kopf{ background:#F1F7FA }',
+'.pl-s-email .pl-text-m span{ color:#35719A }',
+
 /* Anzeigen */
+'.pl-anz-kopf{ display:flex; align-items:center; gap:9px; margin-bottom:9px; padding-right:34px }',
+'.pl-anz-kopf .pl-anz-q{ margin:0; padding:0 }',
 '.pl-sit{ background:#fff; border:1.5px solid #EEE7D8; border-left:5px solid #E39A00;',
 '  border-radius:16px; padding:15px 18px; margin-bottom:16px }',
 '.pl-sit span{ display:block; font-size:10.5px; font-weight:800; letter-spacing:.13em;',

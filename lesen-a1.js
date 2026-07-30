@@ -351,7 +351,7 @@ window.LESEN_A1 = {
       ]
      },
      "frage": "Wann hat das Bürgeramt offen? Ergänze den Text.",
-     "text": "Das Amt öffnet ___ 8 Uhr und schließt ___ 12 Uhr. Am Donnerstag ist es auch ___ offen.",
+     "text": "Das Amt öffnet ___ 8 Uhr und bleibt ___ 12 Uhr offen. Am Donnerstag ist es auch ___ geöffnet.",
      "bank": [
       "bis",
       "nachmittags",
@@ -363,7 +363,7 @@ window.LESEN_A1 = {
       "bis",
       "nachmittags"
      ],
-     "erklaerung": "Ab sagt, wann etwas anfängt, bis sagt, wann es aufhört. 14 bis 18 Uhr liegt nach 12 Uhr, also nachmittags."
+     "erklaerung": "Ab sagt, wann etwas anfängt, bis sagt, wann es aufhört. 14 bis 18 Uhr liegt nach 12 Uhr, also nachmittags. Merke: Man schließt um 12 Uhr, aber man bleibt bis 12 Uhr offen."
     },
     {
      "art": "zuordnen",
