@@ -268,23 +268,91 @@
 
   /* --- formular --- */
 
+  /* ---------- Visuelles Beiwerk ----------
+     Motive liegen in bilder/schreiben/<schluessel>.webp. Fehlt eine Datei,
+     rückt still das Zeichen nach — nie ein kaputtes Bild.               */
+
+  var SMOTIVE = [
+    ['kurs',     /deutschkurs|volkshochschule|sprachkurs|lehrerin|lehrer|kurs/, '📚'],
+    ['praxis',   /praxis|zahnarzt|arzt|ärzt|termin bei/,         '🩺'],
+    ['bahn',     /zug|bahn|verspätung|gleis|bahnhof/,            '🚉'],
+    ['wohnung',  /wohnung|vermieter|hausverwaltung|miete|nachbar/, '🏠'],
+    ['amt',      /bürgeramt|rathaus|amt\b|behörde/,               '🏛️'],
+    ['arbeit',   /arbeit|chef|firma|büro|kollege/,               '💼'],
+    ['fest',     /geburtstag|party|feier|einladung|grillen/,     '🎉'],
+    ['sport',    /sport|verein|training|schwimm|fußball/,        '⚽'],
+    ['kita',     /kita|kindergarten|kind\b|schule/,               '🧸'],
+    ['freund',   /freund|freundin|besuch|abholen/,               '🤝']
+  ];
+
+  function sitMotiv(t){
+    var h = String(t||'').toLowerCase();
+    for(var i=0;i<SMOTIVE.length;i++) if(SMOTIVE[i][1].test(h)) return SMOTIVE[i];
+    return ['allgemein', null, '✉️'];
+  }
+
+  function sitHTML(situation, ersatz){
+    var m = sitMotiv(situation);
+    return '<div class="pw-sit">'
+      + '<div class="pw-sit-b"><img src="bilder/schreiben/'+E(m[0])+'.webp" alt=""'
+      +   ' loading="lazy" decoding="async"'
+      +   ' onerror="this.parentNode.className+=\' leer\'; this.remove()">'
+      +   '<em>'+(m[2]||ersatz||'')+'</em></div>'
+      + '<div class="pw-sit-tx"><span>Die Situation</span><p>'+E(situation)+'</p></div></div>';
+  }
+
+  /* Formatwinke — verraten die Form, nicht die Antwort. */
+  var FELD_WINK = [
+    [/geburtsdatum|geburtstag/i, 'TT.MM.JJJJ'],
+    [/^plz|plz,/i,               '00000 Ort'],
+    [/telefon|handy/i,           '0…']
+  ];
+  function feldWink(name){
+    for(var i=0;i<FELD_WINK.length;i++) if(FELD_WINK[i][0].test(name)) return FELD_WINK[i][1];
+    return '';
+  }
+
+  /* Wortlos gezeichnet: auf einem Formular soll nichts Erfundenes stehen. */
+  function amtZeichen(){
+    return '<svg class="pw-amt-z" viewBox="0 0 40 40" aria-hidden="true">'
+      + '<path d="M20 5l13 8H7z" fill="#28353B"/>'
+      + '<rect x="8" y="15" width="24" height="20" rx="2" fill="#fff" stroke="#28353B" stroke-width="2"/>'
+      + '<line x1="13" y1="22" x2="27" y2="22" stroke="#28353B" stroke-width="2" stroke-linecap="round"/>'
+      + '<line x1="13" y1="28" x2="23" y2="28" stroke="#28353B" stroke-width="2" stroke-linecap="round"/></svg>';
+  }
+  function stempel(){
+    return '<svg class="pw-stempel" viewBox="0 0 100 100" aria-hidden="true">'
+      + '<circle cx="50" cy="50" r="43" fill="none" stroke="#A9BCC6" stroke-width="4"/>'
+      + '<circle cx="50" cy="50" r="33" fill="none" stroke="#A9BCC6" stroke-width="2" stroke-dasharray="6 5"/>'
+      + '<path d="M31 51l13 13 25-27" fill="none" stroke="#A9BCC6" stroke-width="7"'
+      +   ' stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  }
+
   function formularHTML(a, zeigen){
     var g = W.gewaehlt[W.i] || {};
-    var nr = 0;
-    var h = '<div class="pw-sit"><span>Die Situation</span><p>'+E(a.situation)+'</p></div>';
-    h += '<div class="pw-quelle"><span class="pw-quelle-t">Das steht im Text</span><p>'+E(a.text)+'</p></div>';
-    h += '<div class="pw-form"><b class="pw-form-t">'+E(a.formular.titel)+'</b><div class="pw-form-z">';
+    var nr = 0, zeile = 0;
+    var h = sitHTML(a.situation, '📋');
+    h += '<div class="pw-quelle"><span class="pw-klammer" aria-hidden="true">📎</span>'
+      +  '<span class="pw-quelle-t">Das steht im Text</span><p>'+E(a.text)+'</p></div>';
+    h += '<div class="pw-blatt"><span class="pw-loch" aria-hidden="true"></span>'
+      +  '<div class="pw-amt">'+amtZeichen()
+      +    '<div class="pw-amt-tx"><b>'+E(a.formular.titel)+'</b>'
+      +      '<span>Bitte in Druckbuchstaben ausfüllen</span></div></div>'
+      +  '<div class="pw-form-z">';
     a.formular.zeilen.forEach(function(z){
+      var n = '<i class="pw-fz-n">'+(++zeile)+'</i>';
       if(z.wert!=null){
-        h += '<div class="pw-fz"><span class="pw-fz-f">'+E(z.feld)+'</span>'
+        h += '<div class="pw-fz"><span class="pw-fz-f">'+n+E(z.feld)+'</span>'
           +  '<span class="pw-fz-w fest">'+E(z.wert)+'</span></div>';
       } else {
         var k = nr++;
         var wert = g[k]!=null ? g[k] : '';
         var kl = '';
         if(zeigen) kl = passt(wert, z.loesung) ? ' gut' : ' schlecht';
-        h += '<div class="pw-fz"><span class="pw-fz-f">'+E(z.feld)+'</span>'
+        var wink = feldWink(z.feld);
+        h += '<div class="pw-fz offen"><span class="pw-fz-f">'+n+E(z.feld)+'</span>'
           +  '<input class="pw-fz-i'+kl+'" id="pwF'+k+'" value="'+E(wert)+'" '
+          +    (wink?'placeholder="'+E(wink)+'" ':'')
           +    (zeigen?'disabled':'oninput="schreibenFeld('+k+',this.value)"')
           +    ' autocomplete="off" spellcheck="false">'
           +  (zeigen && kl===' schlecht'
@@ -292,7 +360,10 @@
           +  '</div>';
       }
     });
-    h += '</div></div>';
+    h += '</div>'
+      +  '<div class="pw-unter"><div class="pw-unter-l">Datum, Unterschrift</div>'
+      +    stempel()+'</div>'
+      +  '</div>';
     if(!zeigen) h += '<div class="pl-weiter-w"><button class="pl-weiter" onclick="schreibenFormPruefen()">Formular abgeben →</button></div>';
     return h;
   }
@@ -315,20 +386,45 @@
 
   function mitteilungHTML(a, zeigen){
     var text = W.gewaehlt[W.i] || '';
-    var h = '<div class="pw-sit"><span>Die Situation</span><p>'+E(a.situation)+'</p></div>';
+    var srt = a.sorte || 'zettel';
+    var h = sitHTML(a.situation, srt==='sms' ? '💬' : (srt==='email' ? '✉️' : '📝'));
     h += '<div class="pw-punkte"><span class="pw-punkte-t">Diese drei Punkte müssen vorkommen</span>'
+      + '<div class="pw-pk-r">'
       + a.punkte.map(function(p){
-          return '<div class="pw-pk"><i>'+p.nr+'</i><div><b>'+E(p.was)+'</b>'
-            + (p.hinweis?'<span>'+E(p.hinweis)+'</span>':'')+'</div></div>'; }).join('')
-      + '</div>';
+          return '<div class="pw-pk"><i>'+p.nr+'</i><b>'+E(p.was)+'</b>'
+            + (p.hinweis?'<span>'+E(p.hinweis)+'</span>':'')+'</div>'; }).join('')
+      + '</div></div>';
 
     if(!zeigen){
-      h += '<div class="pw-schreib">'
-        + (a.an ? '<div class="pw-an">An: <b>'+E(a.an)+'</b>'
-            + (a.betreff?' · Betreff: <b>'+E(a.betreff)+'</b>':'')+'</div>' : '')
-        + '<textarea id="pwText" class="pw-ta" rows="7" placeholder="Schreib hier deine Nachricht …">'+E(text)+'</textarea>'
-        + '<div class="pw-fuss"><span id="pwZaehler" class="pw-zaehler"></span>'
-        +   '<span id="pwForm" class="pw-formcheck"></span></div>'
+      h += '<div class="pw-medium pw-m-'+E(srt)+'">';
+      if(srt==='sms'){
+        h += '<div class="pw-tel-kopf">'
+          +    '<span class="pw-tel-av">'+E(String(a.an||'?').charAt(0))+'</span>'
+          +    '<b>'+E(a.an||'Nachricht')+'</b></div>'
+          +  '<div class="pw-tel-raum">'
+          +    '<textarea id="pwText" class="pw-ta" rows="6"'
+          +      ' placeholder="Tippe deine Nachricht …">'+E(text)+'</textarea></div>';
+      } else if(srt==='email'){
+        h += '<div class="pw-mail-bar"><i></i><i></i><i></i><span>Neue E-Mail</span></div>'
+          +  '<div class="pw-mail-kopf">'
+          +    '<div><span>An</span><b>'+E(a.an||'')+'</b></div>'
+          +    (a.betreff?'<div><span>Betreff</span><b>'+E(a.betreff)+'</b></div>':'')
+          +  '</div>'
+          +  '<textarea id="pwText" class="pw-ta" rows="7"'
+          +    ' placeholder="Schreib hier deine E-Mail …">'+E(text)+'</textarea>';
+      } else {
+        h += (a.an ? '<div class="pw-zet-an">Für <b>'+E(a.an)+'</b></div>' : '')
+          +  '<textarea id="pwText" class="pw-ta" rows="7"'
+          +    ' placeholder="Schreib hier deinen Zettel …">'+E(text)+'</textarea>';
+      }
+      h += '<div class="pw-fuss">'
+        +    '<span class="pw-ring" id="pwZaehler">'
+        +      '<svg viewBox="0 0 44 44" aria-hidden="true">'
+        +        '<circle class="pw-ring-b" cx="22" cy="22" r="18"/>'
+        +        '<circle class="pw-ring-v" id="pwRingV" cx="22" cy="22" r="18"/></svg>'
+        +      '<b id="pwRingN">0</b></span>'
+        +    '<span class="pw-ring-l">Wörter<em id="pwRingZ"></em></span>'
+        +    '<span id="pwForm" class="pw-formcheck"></span></div>'
         + '</div>';
       h += '<div class="pw-hilfen"><span>Antippen und weiterschreiben</span>'
         + a.hilfen.map(function(x,k){
@@ -509,10 +605,22 @@
     function auf(){
       W.gewaehlt[W.i] = ta.value;
       var n = woerter(ta.value);
+      var af = W.folge[W.i] && W.folge[W.i].a;
+      var ziel = (af && af.woerter) || 30;
       var z = document.getElementById('pwZaehler');
       var f = document.getElementById('pwForm');
-      if(z){ z.textContent = n+' Wörter';
-        z.className = 'pw-zaehler' + (n>=25 ? ' gut' : (n>=15 ? ' fast' : '')); }
+      var nEl = document.getElementById('pwRingN');
+      var vEl = document.getElementById('pwRingV');
+      var zEl = document.getElementById('pwRingZ');
+      if(nEl) nEl.textContent = n;
+      if(zEl) zEl.textContent = 'Ziel: etwa '+ziel;
+      if(vEl){
+        var U = 2*Math.PI*18, p = Math.min(1, n/ziel);
+        vEl.style.strokeDasharray = U.toFixed(1);
+        vEl.style.strokeDashoffset = (U*(1-p)).toFixed(1);
+      }
+      if(z) z.className = 'pw-ring'
+        + (n>=ziel ? ' gut' : (n>=ziel*0.5 ? ' fast' : ''));
       if(f){
         var an = hatAnrede(ta.value), gr = hatGruss(ta.value);
         f.innerHTML = '<span class="'+(an?'ja':'nein')+'">'+(an?'✓':'○')+' Anrede</span>'
@@ -888,6 +996,14 @@
   function stil(){
     if(gestylt) return; gestylt = true;
     var s = document.createElement('style'); s.textContent = CSS; document.head.appendChild(s);
+    /* Handschrift für die Zettel-Fläche. Fehlt die Verbindung, greift die
+       Ersatzschrift aus der font-family. */
+    if(!document.getElementById('plSchrift')){
+      var l = document.createElement('link');
+      l.id = 'plSchrift'; l.rel = 'stylesheet';
+      l.href = 'https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&display=swap';
+      document.head.appendChild(l);
+    }
   }
 
   var CSS = [
@@ -943,6 +1059,139 @@
 '  font-family:"Space Grotesk",sans-serif; font-weight:800; font-size:13px }',
 '.pw-pk b{ display:block; font-size:15px; font-weight:800 }',
 '.pw-pk span{ display:block; font-size:13px; color:#5B6A70; margin-top:1px }',
+
+/* ---- Situation mit Motiv ---- */
+'.pw-sit{ display:flex; gap:13px; align-items:flex-start }',
+'.pw-sit-b{ position:relative; flex:0 0 auto; width:52px; height:52px; border-radius:16px;',
+'  overflow:hidden; background:#E4F7FA; border:1.5px solid #CDEAF1; display:grid;',
+'  place-items:center }',
+'.pw-sit-b img{ width:100%; height:100%; object-fit:cover; display:block }',
+'.pw-sit-b em{ display:none; font-style:normal; font-size:25px; line-height:1 }',
+'.pw-sit-b.leer em{ display:block }',
+'.pw-sit-tx{ min-width:0 }',
+
+/* ---- Der Text als Notizzettel mit Klammer ---- */
+'.pw-quelle{ position:relative; transform:rotate(-.4deg) }',
+'.pw-klammer{ position:absolute; right:16px; top:-13px; font-size:24px; line-height:1;',
+'  transform:rotate(14deg); filter:drop-shadow(0 3px 4px rgba(40,53,59,.3)) }',
+
+/* ---- Formular als Blatt Papier ---- */
+'.pw-blatt{ position:relative; background:#fff; border:1px solid #D8DEE2; border-radius:6px;',
+'  padding:0 26px 22px 42px; margin-bottom:14px;',
+'  box-shadow:0 20px 40px -26px rgba(40,53,59,.75), 0 1px 0 #EDF1F3 inset }',
+'.pw-loch{ position:absolute; left:24px; top:104px; bottom:26px; width:1px;',
+'  background:#F0C9C9 }',
+'.pw-amt{ display:flex; align-items:center; gap:13px; margin:0 -26px 18px -42px;',
+'  padding:15px 24px 15px 42px; background:#F4F7F9; border-bottom:2.5px solid #28353B;',
+'  border-radius:5px 5px 0 0 }',
+'.pw-amt-z{ flex:none; width:36px; height:36px }',
+'.pw-amt-tx b{ display:block; font-family:"Space Grotesk",sans-serif; font-size:16px;',
+'  font-weight:800; line-height:1.3 }',
+'.pw-amt-tx span{ display:block; font-size:10.5px; font-weight:800; letter-spacing:.11em;',
+'  text-transform:uppercase; color:#7C8C95; margin-top:3px }',
+'.pw-fz{ grid-template-columns:190px 1fr; align-items:center; padding:5px 0;',
+'  border-bottom:1px dotted #DDE4E8 }',
+'.pw-fz:last-child{ border-bottom:0 }',
+'.pw-fz-f{ display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700;',
+'  color:#5B6A70 }',
+'.pw-fz-n{ flex:none; width:19px; height:19px; border-radius:5px; background:#EDF2F5;',
+'  color:#7C8C95; font-style:normal; font-size:10.5px; font-weight:800;',
+'  display:grid; place-items:center }',
+'.pw-fz-w.fest{ font-family:"Courier New",monospace; font-size:15px; font-weight:700;',
+'  color:#46707F; letter-spacing:.02em }',
+'.pw-fz-i{ border-radius:3px !important; border:1.5px solid #B9C6CD !important;',
+'  background:#FCFDFE !important; padding:8px 11px !important }',
+'.pw-fz-i::placeholder{ color:#B9C6CD; font-weight:600; letter-spacing:.04em }',
+'.pw-fz-i:focus{ border-color:#35AFD0 !important; background:#fff !important;',
+'  box-shadow:0 0 0 3px rgba(53,175,208,.16) }',
+'.pw-unter{ display:flex; align-items:flex-end; justify-content:space-between;',
+'  gap:20px; margin-top:22px; padding-top:6px }',
+'.pw-unter-l{ flex:1; max-width:300px; border-top:1.5px solid #28353B; padding-top:5px;',
+'  font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase;',
+'  color:#7C8C95 }',
+'.pw-stempel{ flex:none; width:74px; height:74px; opacity:.5;',
+'  transform:rotate(-13deg); margin-bottom:-6px }',
+'@media(max-width:600px){ .pw-blatt{ padding-left:20px }',
+'  .pw-loch{ display:none } .pw-amt{ margin-left:-20px; padding-left:20px }',
+'  .pw-stempel{ width:56px; height:56px } }',
+
+/* ---- Die drei Punkte als Klebezettel ---- */
+'.pw-pk-r{ display:grid; gap:11px; align-items:start }',
+'@media(min-width:660px){ .pw-pk-r{ grid-template-columns:repeat(3,1fr) } }',
+'.pw-pk{ display:block; position:relative; background:#FFF3C4; border-radius:3px;',
+'  padding:14px 14px 15px; margin:0;',
+'  box-shadow:0 10px 20px -14px rgba(40,53,59,.7) }',
+'.pw-pk:nth-child(1){ transform:rotate(-1.1deg) }',
+'.pw-pk:nth-child(2){ transform:rotate(.7deg); background:#FFECB3 }',
+'.pw-pk:nth-child(3){ transform:rotate(-.5deg) }',
+'.pw-pk i{ display:grid; width:22px; height:22px; border-radius:50%; background:#28353B;',
+'  color:#FFF3C4; font-style:normal; font-size:12px; font-weight:800;',
+'  place-items:center; margin-bottom:8px }',
+'.pw-pk b{ font-size:15.5px; color:#3A2E00 }',
+'.pw-pk span{ color:#6B5714 !important }',
+
+/* ---- Schreibfläche im jeweiligen Medium ---- */
+'.pw-medium{ margin-bottom:12px }',
+'.pw-m-email{ background:#fff; border:1px solid #D8DEE2; border-radius:12px;',
+'  overflow:hidden; box-shadow:0 18px 38px -26px rgba(40,53,59,.7) }',
+'.pw-mail-bar{ display:flex; align-items:center; gap:7px; padding:11px 15px;',
+'  background:#EEF3F6; border-bottom:1px solid #DEE5E9 }',
+'.pw-mail-bar i{ width:11px; height:11px; border-radius:50%; background:#CBD5DA }',
+'.pw-mail-bar i:first-child{ background:#E88A82 }',
+'.pw-mail-bar i:nth-child(2){ background:#EFC66B }',
+'.pw-mail-bar i:nth-child(3){ background:#8FCF9B }',
+'.pw-mail-bar span{ margin-left:8px; font-size:12px; font-weight:800;',
+'  letter-spacing:.06em; text-transform:uppercase; color:#7C8C95 }',
+'.pw-mail-kopf{ padding:2px 17px }',
+'.pw-mail-kopf div{ display:flex; align-items:baseline; gap:12px; padding:9px 0;',
+'  border-bottom:1px solid #EDF1F3 }',
+'.pw-mail-kopf span{ flex:none; width:78px; font-size:11.5px; font-weight:800;',
+'  letter-spacing:.09em; text-transform:uppercase; color:#9BAAB2 }',
+'.pw-mail-kopf b{ font-size:15px; font-weight:700 }',
+'.pw-m-email .pw-ta{ padding:15px 17px 0 }',
+'.pw-m-email .pw-fuss{ margin:0 17px; padding:12px 0 14px }',
+
+'.pw-m-sms{ background:#28353B; border-radius:26px; padding:8px;',
+'  box-shadow:0 22px 44px -26px rgba(40,53,59,.85) }',
+'.pw-tel-kopf{ display:flex; align-items:center; gap:11px; padding:11px 14px 13px }',
+'.pw-tel-av{ width:34px; height:34px; border-radius:50%; background:#35AFD0;',
+'  color:#062A33; font-size:15px; font-weight:800; display:grid; place-items:center }',
+'.pw-tel-kopf b{ color:#fff; font-size:15px; font-weight:700 }',
+'.pw-tel-raum{ background:#fff; border-radius:20px; padding:16px 14px 6px;',
+'  min-height:190px; display:flex; flex-direction:column;',
+'  justify-content:flex-end }',
+'.pw-m-sms .pw-ta{ background:#CFEDF5; border:1px solid #A6DAE7;',
+'  border-radius:18px 18px 5px 18px; padding:13px 15px; min-height:120px;',
+'  font-size:16px; margin-left:auto; width:88%; box-shadow:0 5px 14px -10px rgba(40,53,59,.7) }',
+'.pw-m-sms .pw-fuss{ border-top:0; margin:2px 6px 4px; padding-top:6px }',
+'.pw-m-sms .pw-ring-l, .pw-m-sms .pw-formcheck{ color:#DCEAEF }',
+
+'.pw-m-zettel{ background:#fff; border:1px solid #E3E9EC; border-radius:4px;',
+'  padding:16px 20px 14px; transform:rotate(-.3deg);',
+'  box-shadow:0 18px 36px -24px rgba(40,53,59,.75) }',
+'.pw-zet-an{ font-size:13px; color:#7C8C95; font-weight:700; margin-bottom:10px;',
+'  padding-bottom:9px; border-bottom:1px solid #EDF1F3 }',
+'.pw-m-zettel .pw-ta{ font-family:"Caveat","Bradley Hand",cursive; font-size:23px;',
+'  line-height:31px; color:#22384A;',
+'  background-image:repeating-linear-gradient(#fff 0 30px,#E7F0F4 30px 31px) }',
+
+/* ---- Wörterzähler als Ring ---- */
+'.pw-ring{ position:relative; flex:none; width:44px; height:44px; display:grid;',
+'  place-items:center }',
+'.pw-ring svg{ position:absolute; inset:0; width:44px; height:44px;',
+'  transform:rotate(-90deg) }',
+'.pw-ring-b{ fill:none; stroke:#EDF1F3; stroke-width:4 }',
+'.pw-ring-v{ fill:none; stroke:#9BAAB2; stroke-width:4; stroke-linecap:round;',
+'  transition:stroke-dashoffset .25s, stroke .25s }',
+'.pw-ring b{ font-size:14px; font-weight:800; color:#5B6A70; z-index:1 }',
+'.pw-ring.fast .pw-ring-v{ stroke:#E39A00 }',
+'.pw-ring.fast b{ color:#B37A00 }',
+'.pw-ring.gut .pw-ring-v{ stroke:#16A34A }',
+'.pw-ring.gut b{ color:#14803C }',
+'.pw-ring-l{ font-size:12.5px; font-weight:800; color:#8A97A0; line-height:1.35 }',
+'.pw-ring-l em{ display:block; font-style:normal; font-size:11px; font-weight:600;',
+'  color:#A8B4BB }',
+'.pw-m-sms .pw-ring-b{ stroke:#4A5B63 }',
 
 '.pw-schreib{ background:#fff; border:1.5px solid #EEE7D8; border-radius:18px;',
 '  padding:15px 17px; margin-bottom:12px }',
