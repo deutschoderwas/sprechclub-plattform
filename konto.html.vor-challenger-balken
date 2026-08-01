@@ -1076,16 +1076,14 @@ async function maybeStartNow(session){
 }
 
 async function load(){
-  const [{ data:prof }, { data:bk }, { data:cl }, { data:msg }, { data:rt }, { data:prog }, { data:chs }] = await Promise.all([
-    sb.from('profiles').select('credits,name,goal,target_level,native_language,pass_until,birthday,status,is_challenger,challenge_start').eq('id',user.id).single(),
+  const [{ data:prof }, { data:bk }, { data:cl }, { data:msg }, { data:rt }, { data:prog }] = await Promise.all([
+    sb.from('profiles').select('credits,name,goal,target_level,native_language,pass_until,birthday,status').eq('id',user.id).single(),
     sb.rpc('my_bookings'),
     sb.from('credit_log').select('*').order('created_at',{ascending:false}),
     sb.from('messages').select('*').order('created_at'),
     sb.from('ratings').select('class_id,stars'),
-    sb.from('exercise_progress').select('*'),
-    sb.from('challenge_settings').select('start_date,weeks,title').maybeSingle()
+    sb.from('exercise_progress').select('*')
   ]);
-  challengeSet = chs || null;
   profile = prof||{}; credits = profile.credits||0;
   bookings = (bk||[]).map(b=>{ if(b&&b.starts_at){ const s=String(b.starts_at).replace(' ','T'); b.starts_at=s.replace(/([+-]\d{2})$/,'$1:00'); } return b; }); creditLog = (cl||[]); messages = (msg||[]); ratings = (rt||[]);
   progress = {}; (prog||[]).forEach(p=>progress[p.class_id+'|'+p.phase]=p);
@@ -1458,74 +1456,10 @@ async function mcRemind(iso){
     if(j&&j.ok){ mcMarkDone(); toast('Erledigt! Deine Erinnerung ist gesichert. 🔔'); } else { toast('Hat nicht geklappt – bitte nochmal.'); reset(); }
   }catch(e){ toast('Hat nicht geklappt – bitte nochmal.'); reset(); }
 }
-var challengeSet = null;
-
-/* Der Challenger-Balken oben im Schuelerbereich.
-   Zeigt: du bist dabei, wie viele Tage noch bleiben, und einen Strahl,
-   der sich ueber die acht Wochen fuellt. Erscheint nur bei Challengern. */
-function challengerBalken(){
-  try{
-    if(!profile || !profile.is_challenger) return '';
-    var startTxt = profile.challenge_start || (challengeSet && challengeSet.start_date);
-    if(!startTxt) return '';
-    var wochen = (challengeSet && challengeSet.weeks) || 8;
-    var start  = new Date(String(startTxt)+'T00:00:00');
-    var ende   = new Date(start.getTime() + wochen*7*86400000);
-    var heute  = new Date(); heute.setHours(0,0,0,0);
-    var tag    = 86400000;
-    var gesamt = Math.round((ende-start)/tag);
-    var offen  = Math.ceil((ende-heute)/tag);
-    var bisStart = Math.ceil((start-heute)/tag);
-
-    var kopf, gross, klein, proz;
-    if(bisStart > 0){
-      proz  = 0;
-      kopf  = 'Gleich geht es los';
-      gross = bisStart;
-      klein = bisStart === 1 ? 'Tag bis zum Start' : 'Tage bis zum Start';
-    } else if(offen > 0){
-      proz  = Math.max(2, Math.min(100, Math.round((gesamt-offen)/gesamt*100)));
-      kopf  = 'Du bist mittendrin';
-      gross = offen;
-      klein = offen === 1 ? 'Tag bis zum Ziel' : 'Tage bis zum Ziel';
-    } else {
-      proz  = 100;
-      kopf  = 'Geschafft!';
-      gross = '🎉';
-      klein = 'Du hast die acht Wochen durchgezogen';
-    }
-
-    var fmt = function(d){ return d.toLocaleDateString('de-DE',{day:'numeric',month:'short'}); };
-    return '<div style="background:#1A1A1A;border-radius:22px;overflow:hidden;margin:0 0 16px;'
-      + 'box-shadow:0 14px 34px -18px rgba(26,26,26,.65)">'
-      +   '<div style="height:4px;background:linear-gradient(90deg,#1A1A1A 0 33%,#DD0000 33% 66%,#FFCE00 66% 100%)"></div>'
-      +   '<div style="padding:18px 22px 20px">'
-      +     '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">'
-      +       '<span style="background:#FFCE00;color:#1A1A1A;font-size:11px;font-weight:800;letter-spacing:.06em;'
-      +         'text-transform:uppercase;padding:5px 12px;border-radius:30px">🏆 Challenger</span>'
-      +       '<span style="color:#fff;font-size:15px;font-weight:700">'+kopf+'</span>'
-      +     '</div>'
-      +     '<div style="display:flex;align-items:baseline;gap:10px;margin:14px 0 10px">'
-      +       '<b style="color:#FFCE00;font-size:40px;line-height:1;font-weight:800">'+gross+'</b>'
-      +       '<span style="color:#D7D2C6;font-size:14px;font-weight:600">'+klein+'</span>'
-      +     '</div>'
-      +     '<div style="height:12px;background:#33383B;border-radius:30px;overflow:hidden">'
-      +       '<div style="height:100%;width:'+proz+'%;border-radius:30px;'
-      +         'background:linear-gradient(90deg,#DD0000,#FFCE00);transition:width .6s ease"></div>'
-      +     '</div>'
-      +     '<div style="display:flex;justify-content:space-between;margin-top:7px;color:#9A9384;font-size:11.5px;font-weight:700">'
-      +       '<span>Start '+fmt(start)+'</span><span>Ende '+fmt(ende)+'</span>'
-      +     '</div>'
-      +   '</div>'
-      + '</div>';
-  }catch(e){ return ''; }
-}
-
 function renderDashboard(){
   const s=stats;
   document.getElementById('v-dashboard').innerHTML =
     `${isActive()?'':lockBanner()}
-     ${challengerBalken()}
      <div id="startNeu"></div>`;
   let abo='';
   if(passActive()){
