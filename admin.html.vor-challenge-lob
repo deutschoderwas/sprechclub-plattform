@@ -532,12 +532,6 @@ async function planAtt(id){
 }
 async function markAttP(classId,userId,present){
   const { error }=await sb.rpc('mark_attendance',{ p_class_id:classId, p_user_id:userId, p_present:present });
-  // Challenger, die da waren, bekommen direkt ihr Lob (Mail + Postfach).
-  if(present && !error){ try{ const _s=await sb.auth.getSession();
-    const _t=_s&&_s.data&&_s.data.session?_s.data.session.access_token:'';
-    fetch('/api/challenge-lob',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+_t},
-      body:JSON.stringify({class_id:classId,user_id:userId})}).catch(function(){});
-  }catch(e){} }
   if(error){ alert('Fehler: '+error.message); return; }
   const box=document.getElementById('patt-'+classId); box.style.display='none'; planAtt(classId);
 }
@@ -1002,12 +996,6 @@ async function toggleAtt(id){
 }
 async function markAtt(classId, userId, present){
   const { error } = await sb.rpc('mark_attendance', { p_class_id: classId, p_user_id: userId, p_present: present });
-  // Challenger, die da waren, bekommen direkt ihr Lob (Mail + Postfach).
-  if(present && !error){ try{ const _s=await sb.auth.getSession();
-    const _t=_s&&_s.data&&_s.data.session?_s.data.session.access_token:'';
-    fetch('/api/challenge-lob',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+_t},
-      body:JSON.stringify({class_id:classId,user_id:userId})}).catch(function(){});
-  }catch(e){} }
   if (error){ alert('Fehler: '+error.message); return; }
   // Panel neu laden, um Status zu aktualisieren
   const box = document.getElementById('att-'+classId);
