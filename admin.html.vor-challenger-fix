@@ -1539,7 +1539,7 @@ async function saveStudentCard(id){
   const pOld=SCHUELER.find(x=>x.id===id);
   const berlinToday=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Berlin',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
   const chStart=isChall?((pOld&&pOld.challenge_start)||berlinToday):(pOld?pOld.challenge_start:null);
-  const e3=(await sb.rpc('admin_set_challenger',{ p_user_id:id, p_is_challenger:isChall, p_challenge_start:chStart })).error;
+  const e3=(await sb.from('profiles').update({ is_challenger:isChall, challenge_start:chStart }).eq('id',id)).error;
   const p=SCHUELER.find(x=>x.id===id); if(p){ p.level=level; p.started_at=started; p.notes=notes; p.status=status; p.inactive_until=inactive; p.is_challenger=isChall; p.challenge_start=chStart; }
   renderSchuelerTable();
   if(msg) msg.textContent=(e1||e2||e3)?('⚠️ '+((e1||e2||e3).message)):'✓ gespeichert';
