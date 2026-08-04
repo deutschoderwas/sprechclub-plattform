@@ -54,7 +54,7 @@
 
   /* ---------- Datenzugriff ---------- */
 
-  var QUELLEN = { 'A1':'LESEN_A1', 'A2':'LESEN_A2' };
+  var QUELLEN = { 'A1':'LESEN_A1' };
   function datenVon(niveau){ var n=QUELLEN[niveau]; return n ? (window[n]||null) : null; }
   window.lesenVorhanden = function(niveau){ return !!datenVon(niveau); };
 
@@ -332,7 +332,12 @@
     if(art==='wahl'){
       h += bildHTML(a.bild);
       h += frageHTML(a.frage);
-      h += optHTML(a, zeigen);
+      h += '<div class="pl-opts">' + a.opt.map(function(o,k){
+        var kl = '';
+        if(zeigen){ kl = k===a.loesung ? ' gut' : (k===L.gewaehlt[L.i] ? ' schlecht' : ' blass'); }
+        return '<button class="pl-opt'+kl+'" '+(L.offen[L.i]!=null?'disabled':'onclick="lesenWahl('+k+')"')+'>'
+          + '<span class="pl-opt-b">'+String.fromCharCode(97+k)+'</span>'+E(o)+'</button>';
+      }).join('') + '</div>';
 
     } else if(art==='zuordnen'){
       h += frageHTML(a.frage);
@@ -360,34 +365,6 @@
          + anzeigeKarte(a.a,'a', anzKlasse(a,'a',zeigen), L.offen[L.i]!=null?null:"lesenAnz('a')")
          + anzeigeKarte(a.b,'b', anzKlasse(a,'b',zeigen), L.offen[L.i]!=null?null:"lesenAnz('b')")
          + '</div>';
-
-    } else if(art==='textwahl'){
-      /* A2 Teil 1 und 3: ein längerer Text, dazu fünf Fragen mit drei Antworten. */
-      h += langtextHTML(e.text, zeigen?a.stelle:null);
-      h += frageHTML(a.frage, L.i+1);
-      h += optHTML(a, zeigen);
-
-    } else if(art==='uebersicht'){
-      /* A2 Teil 2: eine Übersicht (Etagenplan, Programm, Fahrplan) und Situationen. */
-      h += tafelHTML(e.tafel, zeigen?a.stelle:null);
-      h += '<div class="pl-sit"><span>Ihre Situation</span><p>'+E(a.situation)+'</p></div>';
-      h += optHTML(a, zeigen);
-
-    } else if(art==='anzeigenX'){
-      /* A2 Teil 4: sechs Anzeigen a–f, dazu Situationen. Eine passt nie: x. */
-      h += '<div class="pl-sit"><span>Ihre Situation</span><p>'+E(a.situation)+'</p></div>';
-      h += '<div class="pl-anzeigen pl-anz-6">'
-         + e.anzeigen.map(function(an){
-             return anzeigeKarte(an, an.b, anzKlasse(a, an.b, zeigen),
-                                 L.offen[L.i]!=null?null:"lesenAnz('"+an.b+"')");
-           }).join('')
-         + '</div>';
-      h += '<div class="pl-xzeile">'
-         + '<button class="pl-x'+(zeigen ? (a.loesung==='x' ? ' gut'
-             : (L.gewaehlt[L.i]==='x' ? ' schlecht' : ' blass'))
-             : (L.gewaehlt[L.i]==='x' ? ' wahl' : ''))+'" '
-         + (L.offen[L.i]!=null?'disabled':'onclick="lesenAnz(\'x\')"')+'>'
-         + '<b>x</b> Keine Anzeige passt</button></div>';
 
     } else if(art==='schild'){
       h += '<div class="pl-schild-wrap">'
@@ -430,55 +407,6 @@
       +   '<span>✓</span>Richtig</button>'
       + '<button class="pl-rf-b'+kl(false)+gew(false)+'" '+(aus?'disabled':'onclick="lesenRF(false)"')+'>'
       +   '<span>✕</span>Falsch</button></div>';
-  }
-
-  /* --- A2: Antwortknöpfe a/b/c, auch wenn der Text darüber steht --- */
-  function optHTML(a, zeigen){
-    var reihe = L.mix[L.i] || a.opt.map(function(_,i){ return i; });
-    return '<div class="pl-opts">' + reihe.map(function(k, pos){
-      var kl = '';
-      if(zeigen){ kl = k===a.loesung ? ' gut' : (k===L.gewaehlt[L.i] ? ' schlecht' : ' blass'); }
-      else if(L.gewaehlt[L.i]===k) kl = ' wahl';
-      return '<button class="pl-opt'+kl+'" '
-        + (L.offen[L.i]!=null?'disabled':'onclick="lesenWahl('+k+')"')+'>'
-        + '<span class="pl-opt-b">'+String.fromCharCode(97+pos)+'</span>'+E(a.opt[k])+'</button>';
-    }).join('') + '</div>';
-  }
-
-  /* --- A2: ein längerer Text (Zeitung, Blog, E-Mail) --- */
-  var LANG_KOPF = {
-    zeitung: { z:'📰', t:'Aus der Zeitung' },
-    blog:    { z:'💻', t:'Aus einem Blog' },
-    email:   { z:'✉️', t:'E-Mail' },
-    brief:   { z:'📄', t:'Brief' },
-    seite:   { z:'🌐', t:'Von einer Internetseite' }
-  };
-
-  function langtextHTML(t, stelle){
-    if(!t) return '';
-    var k = LANG_KOPF[t.sorte] || LANG_KOPF.zeitung;
-    var m = motivVon(heuhaufen(t.quelle, t.titel, t.zeilen), 'allgemein');
-    return '<div class="pl-lang pl-s-'+E(t.sorte)+'">'
-      + '<div class="pl-lang-kopf">'+motivHTML(m, k.z)
-      +   '<span class="pl-text-m"><b>'+E(t.titel||t.quelle)+'</b>'
-      +   '<span>'+E(t.quelle && t.titel ? t.quelle : k.t)+'</span></span></div>'
-      + '<div class="pl-lang-k">'
-      +   t.zeilen.map(function(z){ return '<p>'+markiert(z, stelle)+'</p>'; }).join('')
-      + '</div></div>';
-  }
-
-  /* --- A2: eine Übersicht, z. B. ein Etagenplan --- */
-  function tafelHTML(t, stelle){
-    if(!t) return '';
-    var m = motivVon(heuhaufen(t.titel, t.zeilen && t.zeilen.map(function(r){ return r.k+' '+r.v; })), 'schild');
-    return '<div class="pl-tafel">'
-      + '<div class="pl-tafel-kopf">'+motivHTML(m, '🗂️', 'klein')
-      +   '<span>'+E(t.titel)+'</span></div>'
-      + '<div class="pl-tafel-k">'
-      + t.zeilen.map(function(r){
-          return '<div class="pl-tafel-z"><b>'+E(r.k)+'</b><span>'+markiert(r.v, stelle)+'</span></div>';
-        }).join('')
-      + '</div></div>';
   }
 
   function anzKlasse(a, welche, zeigen){
@@ -719,9 +647,6 @@
       if(e.art==='zuordnen') return mischen(e.a.paare.length);
       if(e.art==='luecke'){ var b=e.a.bank.slice();
         return mischen(b.length).map(function(i){ return b[i]; }); }
-      /* A2: die drei Antworten mischen, damit die Position nichts verrät. */
-      if((e.art==='wahl' || e.art==='textwahl' || e.art==='uebersicht') && e.a.opt)
-        return mischen(e.a.opt.length);
       return null;
     });
   }
@@ -745,9 +670,7 @@
     var r = null; t.runden.forEach(function(x){ if(x.id===rundeId) r=x; });
     if(!r) return;
     oeffnen();
-    var folge = r.aufgaben.map(function(a){
-      return { a:a, art:t.art, texte:r.texte||null,
-               text:r.text||null, tafel:r.tafel||null, anzeigen:r.anzeigen||null }; });
+    var folge = r.aufgaben.map(function(a){ return { a:a, art:t.art, texte:r.texte||null }; });
     var nr = t.runden.indexOf(r)+1;
     L = { niveau:niveau, daten:d, modus:'runde', topf:teilNr, id:rundeId,
           titel:'Teil '+t.nr+' — '+t.name, unter:'Runde '+nr+' von '+t.runden.length,
@@ -763,8 +686,7 @@
     oeffnen();
     var folge = [];
     Lf.teile.forEach(function(t){
-      t.aufgaben.forEach(function(a){ folge.push({ a:a, art:t.art, texte:t.texte||null,
-        text:t.text||null, tafel:t.tafel||null, anzeigen:t.anzeigen||null, teilNr:t.nr }); });
+      t.aufgaben.forEach(function(a){ folge.push({ a:a, art:t.art, texte:t.texte||null, teilNr:t.nr }); });
     });
     L = { niveau:niveau, daten:d, modus:'lauf', topf:'l', id:id,
           titel:Lf.titel, unter:folge.length+' Aufgaben · keine Hilfe zwischendurch',
@@ -1128,50 +1050,6 @@
 /* Anzeigen */
 '.pl-anz-kopf{ display:flex; align-items:center; gap:9px; margin-bottom:9px; padding-right:34px }',
 '.pl-anz-kopf .pl-anz-q{ margin:0; padding:0 }',
-/* --- A2: langer Text --- */
-'.pl-lang{ background:#fff; border:1.5px solid #EEE7D8; border-radius:18px; overflow:hidden;',
-'  margin-bottom:18px; box-shadow:0 2px 0 rgba(26,26,26,.04) }',
-'.pl-lang-kopf{ display:flex; align-items:center; gap:11px; padding:14px 18px;',
-'  background:#FFFCF5; border-bottom:1.5px solid #EEE7D8 }',
-'.pl-lang-k{ padding:16px 20px 18px }',
-'.pl-lang-k p{ font-size:16px; line-height:1.75; margin:0 0 11px; color:#1A1A1A }',
-'.pl-lang-k p:last-child{ margin-bottom:0 }',
-'.pl-lang.pl-s-zeitung .pl-lang-kopf b, .pl-lang.pl-s-blog .pl-lang-kopf b{ font-size:18px;',
-'  line-height:1.3; letter-spacing:-.025em }',
-'.pl-lang.pl-s-zeitung .pl-lang-kopf, .pl-lang.pl-s-blog .pl-lang-kopf{ align-items:flex-start }',
-'.pl-lang.pl-s-email .pl-lang-kopf{ background:#EEF6F8 }',
-'.pl-lang.pl-s-blog .pl-lang-kopf{ background:#F4F1FA }',
-
-/* --- A2: Übersicht / Etagenplan --- */
-'.pl-tafel{ background:#fff; border:2px solid #28353B; border-radius:16px; overflow:hidden;',
-'  margin-bottom:18px }',
-'.pl-tafel-kopf{ display:flex; align-items:center; gap:10px; padding:12px 16px;',
-'  background:#28353B; color:#fff }',
-'.pl-tafel-kopf span{ font-family:"Space Grotesk",sans-serif; font-weight:800; font-size:15px;',
-'  letter-spacing:.02em }',
-'.pl-tafel-z{ display:grid; grid-template-columns:minmax(88px,auto) 1fr; gap:14px;',
-'  padding:11px 16px; border-top:1px solid #EEE7D8; align-items:baseline }',
-'.pl-tafel-z:first-child{ border-top:0 }',
-'.pl-tafel-z b{ font-family:"Space Grotesk",sans-serif; font-weight:800; font-size:14px;',
-'  color:#0F5468 }',
-'.pl-tafel-z span{ font-size:15.5px; line-height:1.55 }',
-
-/* --- A2: sechs Anzeigen und das x --- */
-'@media(min-width:680px){ .pl-anz-6{ grid-template-columns:1fr 1fr } }',
-'@media(min-width:940px){ .pl-anz-6{ grid-template-columns:1fr 1fr 1fr } }',
-'.pl-xzeile{ margin-top:13px }',
-'.pl-x{ width:100%; background:#fff; border:2px dashed #DFD3BE; border-radius:14px;',
-'  padding:13px 16px; font-size:15px; font-weight:700; color:#5B6A70; cursor:pointer;',
-'  display:flex; align-items:center; gap:11px }',
-'.pl-x b{ width:26px; height:26px; border-radius:9px; background:#F3EDE0; color:#5B6A70;',
-'  display:grid; place-items:center; font-size:13px; flex:none }',
-'.pl-x:not([disabled]):hover{ border-color:#28353B; color:#1A1A1A }',
-'.pl-x.wahl{ border-style:solid; border-color:#28353B; color:#1A1A1A }',
-'.pl-x.gut{ border-style:solid; border-color:#16A34A; background:#E8F8EE; color:#0F7A38 }',
-'.pl-x.gut b{ background:#16A34A; color:#fff }',
-'.pl-x.schlecht{ border-style:solid; border-color:#D83636; background:#FDECEC; color:#B02B24 }',
-'.pl-x.blass{ opacity:.45 }',
-
 '.pl-sit{ background:#fff; border:1.5px solid #EEE7D8; border-left:5px solid #E39A00;',
 '  border-radius:16px; padding:15px 18px; margin-bottom:16px }',
 '.pl-sit span{ display:block; font-size:10.5px; font-weight:800; letter-spacing:.13em;',
