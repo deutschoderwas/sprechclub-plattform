@@ -205,6 +205,13 @@
                was:'Vier Stufen: erst Zahlen und Zeiten, dann die Signalwörter, '
                  + 'dann Gespräche, Durchsagen und Ansagen, zuletzt die ganze Prüfung.' };
     }
+    if(m.id==='sprechen' && window.sprechenVorhanden && window.sprechenVorhanden(p.niveau)){
+      return { klick:"sprechenStart('"+E(p.niveau)+"')", knopf:'Sprechen trainieren',
+               anzahl:aufgabenZahl(window.SPRECHEN_A1),
+               was:'Vier Stufen: erst die Sätze über dich, dann Fragen und Bitten bauen, '
+                 + 'dann die echten Prüfungskarten mit Aufnahme und Musterlösung, '
+                 + 'zuletzt alle drei Teile mit Uhr.' };
+    }
     if(m.id==='schreiben' && window.schreibenVorhanden && window.schreibenVorhanden(p.niveau)){
       return { klick:"schreibenStart('"+E(p.niveau)+"')", knopf:'Schreiben trainieren',
                anzahl:aufgabenZahl(window.SCHREIBEN_A1),
