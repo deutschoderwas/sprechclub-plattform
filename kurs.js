@@ -59,39 +59,20 @@
   /* Die Fläche, in die gerendert wird. Auf der Plattform ist das
      die Ansicht „Kurs"; im Test reicht irgendein Kasten. */
   function flaeche(){
-    return el('v-kurs') || el('s-kurs') || el('v-niveau') || el('v-lernen')
+    return el('v-kurs') || el('v-niveau') || el('v-lernen')
       || document.querySelector('.view.active') || document.body;
   }
-  /* In der App wird nicht das Fenster gescrollt, sondern der Inhaltskasten */
-  function hoch(){
-    try{
-      var k=el('inhalt');
-      if(k && k.scrollHeight>k.clientHeight){ k.scrollTop=0; return; }
-      window.scrollTo(0,0);
-    }catch(e){}
-  }
-
-  /* ---------- Welches Niveau gerade offen ist ---------- */
-  /* Der Kurs ist nicht mehr an A1 gebunden: Es zählt, welches Niveau
-     gerade geöffnet ist. Die Lektionen dazu liegen in window.A1,
-     window.A2 und so weiter. */
-  var AKT = 'A1';
-  function kursDaten(id){ try{ return window[id||AKT]||null; }catch(e){ return null; } }
-  function fach(id){ return String(id||AKT).toLowerCase(); }
+  function hoch(){ try{ window.scrollTo(0,0); }catch(e){} }
 
   /* ---------- Speicher und Fortschritt ---------- */
-  /* Alles unter einem Schlüssel „kurs": {a1:{1:{...}}, a2:{1:{...}}, niveau:'A1'} */
-  function stand(){
-    var s=J('kurs',null)||{};
-    if(!s[fach()]) s[fach()]={};
-    return s;
-  }
+  /* Alles unter einem Schlüssel „kurs": {a1:{1:{...},2:{...}}, niveau:'A1'} */
+  function stand(){ var s=J('kurs',null)||{}; s.a1=s.a1||{}; return s; }
   function standSpeichern(s){ S('kurs',s); }
-  function lekStand(nr){ return stand()[fach()][nr]||{}; }
+  function lekStand(nr){ return stand().a1[nr]||{}; }
   function lekMerken(nr,neu){
-    var s=stand(), x=s[fach()][nr]||{}, k;
+    var s=stand(), x=s.a1[nr]||{}, k;
     for(k in neu) if(neu.hasOwnProperty(k)) x[k]=neu[k];
-    s[fach()][nr]=x; standSpeichern(s);
+    s.a1[nr]=x; standSpeichern(s);
   }
   /* Eine Lektion hat sechs Teile. Üben zählt in Prozent, der Rest ganz oder gar nicht. */
   function lekProzent(nr){
@@ -102,17 +83,9 @@
     return Math.round(sum/t.length);
   }
   function niveauProzent(id){
-    var d=kursDaten(id), L=(d&&d.lektionen)||[];
-    if(!L.length) return 0;
-    var st=J('kurs',null)||{}, buch=st[fach(id)]||{};
-    var sum=0,i;
-    for(i=0;i<L.length;i++){
-      var x=buch[L[i].nr]||{}, t=[];
-      t.push(x.woerter?100:0); t.push(x.gram?100:0); t.push(Math.max(0,Math.min(100,x.ueb||0)));
-      t.push(x.dialog?100:0); t.push(x.schreiben?100:0); t.push(x.aus?100:0);
-      var teil=0,k; for(k=0;k<t.length;k++) teil+=t[k];
-      sum+=Math.round(teil/t.length);
-    }
+    if(id!=='A1') return 0;
+    var L=lektionen(); if(!L.length) return 0;
+    var sum=0,i; for(i=0;i<L.length;i++) sum+=lekProzent(L[i].nr);
     return Math.round(sum/L.length);
   }
   function niveauGemerkt(){ return J('niveau','A1')||'A1'; }
@@ -120,14 +93,99 @@
   /* ---------- Daten ---------- */
   function niveaus(){ return window.NIVEAUS||[]; }
   function niveauVon(id){ var a=niveaus(),i; for(i=0;i<a.length;i++) if(a[i].id===id) return a[i]; return null; }
-  function lektionen(){ var d=kursDaten(); return (d&&d.lektionen)||[]; }
+  function lektionen(){ return (window.A1&&window.A1.lektionen)||[]; }
   function lektionVon(nr){ var a=lektionen(),i; for(i=0;i<a.length;i++) if(a[i].nr===Number(nr)) return a[i]; return null; }
-  function hatKurs(id){ var d=kursDaten(id); return !!(d && (d.lektionen||[]).length); }
+  function hatKurs(id){ return id==='A1' && lektionen().length>0; }
   function aufgaben(){ return window.SCHREIBEN||[]; }
 
   /* ============================================================
      Aussehen
      ============================================================ */
+  /* ---- Bilder: Lektion -> Illustration ------------------------- */
+  var LEKBILD = {
+    vorstellen:'a1-l1',      familie:'a1-familie',   einkaufen:'th-einkauf',
+    wohnung:'th-wohnung',    tag:'th-tag',           freizeit:'a1-freizeit',
+    schule:'th-bildung',     beruf:'th-arbeit',      amt:'th-amt',
+    gesundheit:'th-arzt',    unterwegs:'th-weg',     kundenservice:'a1-service',
+    kleidung:'a1-kleidung',  feste:'a1-feste'
+  };
+  var ERSATZBILD = {
+    'a1-familie':'th-migration', 'a1-freizeit':'th-ironie',
+    'a1-service':'th-gespraech', 'a1-kleidung':'th-einkauf', 'a1-feste':'th-essen'
+  };
+  function lekBild(l, klein){
+    var b = LEKBILD[l && l.id] || 'a1-l1';
+    return 'illu/' + b + (klein ? '-s' : '') + '.jpg';
+  }
+  function lekBildErsatz(l, klein){
+    var b = LEKBILD[l && l.id] || 'a1-l1';
+    var e = ERSATZBILD[b]; if(!e) return '';
+    return 'illu/' + e + (klein ? '-s' : '') + '.jpg';
+  }
+  /* faellt ein Bild aus, springt der Ersatz ein statt eines kaputten Symbols */
+  function bildTag(pfad, ersatz, klasse){
+    return '<img src="' + pfad + '" alt=""' + (klasse?' class="'+klasse+'"':'') + ' loading="lazy"'
+      + (ersatz ? ' onerror="this.onerror=null;this.src=\'' + ersatz + '\'"'
+                : ' onerror="this.onerror=null;this.style.visibility=\'hidden\'"') + '>';
+  }
+
+  /* ---- Motive fuer die Woerter-Karten (nutzt die vorhandenen Bilder) ---- */
+  /* Reihenfolge = Genauigkeit: das Besondere zuerst, das Allgemeine zuletzt.
+     Gesucht wird nur in der Wendung selbst — sonst zieht der Hinweistext
+     falsche Bilder herbei (»Guten Tag, Frau Berger« ist keine Familie). */
+  var KMOTIV = [
+    ['zahnarzt',   /zahn|zahnarzt|zahnschmerz/],
+    ['apotheke',   /apotheke|medikament|tablette|rezept|schmerzmittel/],
+    ['praxis',     /arzt|ärzt|praxis|sprechstunde|krankenschein|erkältet|husten|fieber|weh\b|schmerzen|krankgeschrieben|gesundheitskarte/],
+    ['kita',       /kita|kindergarten|krippe/],
+    ['schule',     /schule|klassenlehrer|hausaufgabe|zeugnis|elternabend|grundschule|schulhof/],
+    ['sprachschule',/deutschkurs|sprachkurs|volkshochschule|\bvhs\b|deutsch lern|buchstabier|welche sprache|sprichst du|ich spreche/],
+    ['bibliothek', /bibliothek|bücherei|ausleih/],
+    ['amt',        /\bamt\b|ämter|behörde|rathaus|formular|anmelde|anmelden|ausweis|antrag|bürgeramt|termin beim amt|bescheinigung/],
+    ['paket',      /paket|päckchen|lieferung|sendung|bestellung|geliefert|zusteller/],
+    ['hausmeister',/hausmeister|hausverwaltung/],
+    ['aufzug',     /aufzug|fahrstuhl/],
+    ['muell',      /müll|mülltonne|abfall|entsorg|nebenkosten/],
+    ['umzug',      /umzug|umziehen|einzug|kartons|ausziehen aus/],
+    ['nachbar',    /nachbar/],
+    ['handwerker', /handwerker|reparier|installateur|heizung|kaputt/],
+    ['reinigung',  /putzen|sauber mach|wäsche|waschmaschine|staubsaug/],
+    ['wohnung',    /wohnung|zimmer|küche|badezimmer|miete|vermieter|balkon|möbel|schrank|wohne in|wohnst du/],
+    ['fahrrad',    /fahrrad|rad fahr/],
+    ['werkstatt',  /werkstatt|reparatur/],
+    ['auto',       /\bauto\b|parken|führerschein|tanken|mit dem wagen/],
+    ['bahn',       /\bzug\b|\bbahn\b|gleis|bahnhof|s-bahn|u-bahn|fahrkarte|\bticket\b|abfahrt/],
+    ['bus',        /\bbus\b|haltestelle|straßenbahn|\blinie \d/],
+    ['reise',      /reise|urlaub|koffer|flughafen|fliege nach|ferien/],
+    ['schwimmbad', /schwimm|hallenbad|freibad|baden geh/],
+    ['fitness',    /fitnessstudio|fitness/],
+    ['yoga',       /yoga|meditat/],
+    ['sport',      /sport|fußball|verein|joggen|trainier/],
+    ['musik',      /musik|\blied\b|singen|konzert|gitarre|klavier/],
+    ['kino',       /\bkino\b|\bfilm\b|fernseh|serie\b/],
+    ['baeckerei',  /bäcker|brötchen|\bbrot\b|kuchen|torte/],
+    ['cafe',       /\bcafé\b|\bcafe\b|kaffee|frühstück/],
+    ['supermarkt', /supermarkt|einkauf|lebensmittel|\bkasse\b|gemüse|\bobst\b|milch|\bkilo\b|was kostet|was kosten|packung|flasche|tüte/],
+    ['friseur',    /friseur|haare schneid|haarschnitt/],
+    ['tier',       /\bhund\b|\bkatze\b|haustier/],
+    ['spielplatz', /spielplatz|schaukel/],
+    ['familie',    /familie|meine frau|mein mann|ehefrau|ehemann|kinder|mein kind|\bsohn\b|tochter|bruder|schwester|eltern|mutter|vater|\boma\b|\bopa\b|großeltern|verheiratet|\bledig\b|geschwister/],
+    ['buero',      /\bbüro\b|arbeite|arbeit\b|beruf|\bchef\b|kolleg|firma|\bjob\b|bewerbung|besprechung|feierabend|überstunde|stelle gefunden|vollzeit|teilzeit/],
+    ['strasse',    /geradeaus|links abbieg|rechts abbieg|\bkreuzung\b|\bampel\b|wie komme ich/],
+    ['nachbarschaft',/\bviertel\b(?! nach| vor)|nachbarschaft|in der gegend/],
+    ['handy',      /\bhandy\b|telefonnummer|anrufen|rufe .* an|zurückrufen|\bsms\b/],
+    ['mail',       /e-mail|\bemail\b|\bmail\b|betreff/],
+    ['zettel',     /zettel|einkaufszettel|notiz/],
+    ['aushang',    /aushang|schwarzes brett/],
+    ['schild',     /\bschild\b|verboten|achtung/],
+    ['anzeige',    /anzeige|inserat|zeitung/]
+  ];
+  function kMotiv(c){
+    var h = String((c&&c.de)||'').toLowerCase(), i;
+    for(i=0;i<KMOTIV.length;i++) if(KMOTIV[i][1].test(h)) return 'bilder/lesen/'+KMOTIV[i][0]+'.webp';
+    return '';
+  }
+
   function stil(){
     if(el('kursCSS')) return;
     var s=document.createElement('style'); s.id='kursCSS';
@@ -214,6 +272,65 @@
 '@media(max-width:640px){.ku-lkopf{padding:18px 16px;border-radius:19px}.ku-lkopf h1{font-size:21px}.ku-lkopf p{font-size:13px}}',
 
 '.ku-ab{background:#fff;border:1px solid #E7EBF0;border-radius:20px;padding:18px 20px;margin:0 0 14px}',
+/* ---- Lektions-Hero mit Bild ---- */
+'.ku-hero{position:relative;display:grid;grid-template-columns:1fr 330px;background:linear-gradient(118deg,#12408F 0%,#1F5FD1 60%,#2E86D8 100%);color:#fff;border-radius:24px;overflow:hidden;margin:0 0 14px}',
+'.ku-hero-tx{padding:26px 28px;position:relative;z-index:2;min-width:0}',
+'.ku-hero .nr{display:inline-block;background:rgba(255,255,255,.17);border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:5px 13px;font-size:11.5px;font-weight:800;letter-spacing:.35px}',
+'.ku-hero h1{margin:11px 0 8px;font-size:28px;line-height:1.13;letter-spacing:-.5px}',
+'.ku-hero p{margin:0;font-size:14px;line-height:1.55;opacity:.93;max-width:52ch}',
+'.ku-chips{display:flex;gap:7px;flex-wrap:wrap;margin:16px 0 0}',
+'.ku-chip{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.26);border-radius:999px;padding:6px 12px;font-size:12px;font-weight:700;letter-spacing:.1px}',
+'.ku-hero-bild{position:relative;background:#FDF7EC;overflow:hidden}',
+'.ku-hero-bild img{width:100%;height:100%;object-fit:cover;display:block}',
+'.ku-hero-bild::before{content:"";position:absolute;inset:0;left:-1px;width:56px;background:linear-gradient(90deg,rgba(31,95,209,.95),rgba(31,95,209,0));z-index:2}',
+'.ku-ring{position:absolute;right:13px;bottom:13px;z-index:3;width:60px;height:60px;border-radius:50%;background:conic-gradient(#FFCE00 var(--p,0%),rgba(255,255,255,.55) 0);display:grid;place-items:center;box-shadow:0 3px 10px rgba(0,0,0,.16)}',
+'.ku-ring i{width:46px;height:46px;border-radius:50%;background:#fff;color:#12408F;display:grid;place-items:center;font-size:12.5px;font-weight:800;font-style:normal;letter-spacing:-.3px}',
+'@media(max-width:820px){.ku-hero{grid-template-columns:1fr}.ku-hero-bild{height:172px;order:-1}.ku-hero-bild::before{inset:auto 0 -1px 0;width:auto;height:60px;background:linear-gradient(0deg,rgba(31,95,209,.9),rgba(31,95,209,0))}.ku-ring{bottom:auto;top:12px}.ku-hero-tx{padding:20px 18px}.ku-hero h1{font-size:22px}.ku-hero p{font-size:13.5px}}',
+
+/* ---- Kapitel-Sprungleiste ---- */
+'.ku-kap{display:flex;gap:8px;overflow-x:auto;padding:3px 3px 12px;margin:0 0 4px;scrollbar-width:none;-webkit-overflow-scrolling:touch}',
+'.ku-kap::-webkit-scrollbar{display:none}',
+'.ku-kap button{flex:0 0 auto;display:inline-flex;align-items:center;gap:7px;border:1px solid #E7EBF0;background:#fff;border-radius:999px;padding:8px 15px;font-family:inherit;font-size:13px;font-weight:800;color:#12408F;cursor:pointer;transition:.14s}',
+'.ku-kap button:hover{border-color:#C7D5E9;transform:translateY(-1px)}',
+'.ku-kap button .pu{width:8px;height:8px;border-radius:50%;background:#D6DEE8}',
+'.ku-kap button.fertig{background:#EAF7EF;border-color:#BCE6CC;color:#0F7738}',
+'.ku-kap button.fertig .pu{background:#16a34a}',
+
+/* ---- Abschnittskopf: farbige Kachel ---- */
+'.ku-abkopf .em{color:#12408F}',
+'.ku-abkopf .zahl{margin-left:auto;font-size:12px;font-weight:800;color:#8A96A5;letter-spacing:.2px}',
+'.ku-abkopf .ok{margin-left:8px}',
+
+/* ---- Wörter-Karte mit Bild ---- */
+'.ku-kw{display:grid;grid-template-columns:200px 1fr;max-width:600px;margin:0 auto;background:#fff;border:1px solid #E7EBF0;border-radius:20px;overflow:hidden;box-shadow:0 8px 26px rgba(18,24,31,.09)}',
+'.ku-kw-bild{position:relative;background:#FDF7EC;display:grid;place-items:center;padding:16px;border-right:1px solid #F0E7D6}',
+'.ku-kw-bild img{width:100%;max-width:172px;border-radius:15px;display:block}',
+'.ku-kw-tx{border:none;background:none;font-family:inherit;text-align:left;cursor:pointer;padding:22px 24px;display:flex;flex-direction:column;justify-content:center;gap:10px;min-height:192px;color:#12181F}',
+'.ku-kw .de{font-size:23px;font-weight:800;line-height:1.22;letter-spacing:-.3px}',
+'.ku-kw .hi{font-size:14px;color:#5E6A78;line-height:1.5}',
+'.ku-kw .bsp{background:#F2F6FD;border-left:3px solid #1F5FD1;border-radius:0 11px 11px 0;padding:10px 14px;font-size:14.5px;color:#12408F;line-height:1.45;font-weight:600}',
+'.ku-kw .tipp{font-size:11px;letter-spacing:.5px;text-transform:uppercase;font-weight:800;color:#9AA6B4;display:flex;align-items:center;gap:6px}',
+'@media(max-width:640px){.ku-kw{grid-template-columns:1fr}.ku-kw-bild{border-right:none;border-bottom:1px solid #F0E7D6;padding:18px}.ku-kw-bild img{max-width:126px}.ku-kw-tx{min-height:0;padding:18px 16px}.ku-kw .de{font-size:20px}}',
+'.ku-punkte{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;max-width:600px;margin:14px auto 0}',
+'.ku-punkte i{width:7px;height:7px;border-radius:50%;background:#DCE3EC;display:block;transition:.15s}',
+'.ku-punkte i.durch{background:#9EC0F0}',
+'.ku-punkte i.jetzt{background:#1F5FD1;transform:scale(1.4)}',
+
+/* ---- Lektionsliste mit Vorschaubild ---- */
+'.ku-lek .bild{position:relative;width:84px;height:56px;flex:0 0 84px;border-radius:13px;overflow:hidden;background:#FDF7EC}',
+'.ku-lek .bild img{width:100%;height:100%;object-fit:cover;display:block}',
+'.ku-lek .bild .marke{position:absolute;left:5px;top:5px;min-width:22px;height:22px;padding:0 5px;border-radius:8px;background:rgba(18,64,143,.92);color:#fff;font-size:11.5px;font-weight:800;display:grid;place-items:center;letter-spacing:-.2px}',
+'.ku-lek.fertig .bild .marke{background:#16a34a}',
+'@media(max-width:640px){.ku-lek .bild{width:64px;height:46px;flex:0 0 64px;border-radius:11px}}',
+
+/* ---- Abschnitt mit Randbild (Sprechen/Schreiben) ---- */
+'.ku-mitbild{display:flex;gap:16px;align-items:center}',
+'.ku-mitbild .txt{flex:1;min-width:0}',
+'.ku-mitbild .bd{width:118px;height:88px;flex:0 0 118px;border-radius:15px;overflow:hidden;background:#FDF7EC}',
+'.ku-mitbild .bd img{width:100%;height:100%;object-fit:cover;display:block}',
+'@media(max-width:640px){.ku-mitbild .bd{display:none}}',
+
+
 '.ku-abkopf{display:flex;align-items:center;gap:11px;margin:0 0 13px}',
 '.ku-abkopf .em{width:40px;height:40px;flex:0 0 40px;border-radius:13px;background:#EEF3FA;display:grid;place-items:center;font-size:19px}',
 '.ku-abkopf b{display:block;font-size:16.5px;color:#12181F}',
@@ -228,7 +345,7 @@
 '.ku-karte .bsp{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.26);border-radius:12px;padding:8px 13px;font-size:14.5px;line-height:1.4}',
 '.ku-karte .tipp{font-size:11.5px;opacity:.72;letter-spacing:.3px;text-transform:uppercase;font-weight:800}',
 '@media(max-width:640px){.ku-karte{padding:22px 15px;min-height:158px}.ku-karte .de{font-size:19px}}',
-'.ku-ksteuer{display:flex;align-items:center;gap:10px;margin:12px auto 0;max-width:660px}',
+'.ku-ksteuer{display:flex;align-items:center;gap:10px;margin:12px auto 0;max-width:600px}',
 '.ku-ksteuer .zaehler{flex:1;text-align:center;font-size:13px;color:#5E6A78;font-weight:700}',
 '.ku-rund{width:44px;height:44px;flex:0 0 44px;border-radius:14px;border:1px solid #E7EBF0;background:#fff;color:#12408F;font-size:19px;cursor:pointer;display:grid;place-items:center;font-family:inherit}',
 '.ku-rund[disabled]{opacity:.4;cursor:default}',
@@ -408,49 +525,30 @@
      1 — Die Niveau-Auswahl
      ============================================================ */
 
-  /* Welches Foto zu welcher Stufe — echte Bilder aus dem Kurs */
-  var NIVEAUBILD = {
-    A1:'umgangssprache', A2:'wohnen', B1:'buero', B2:'bewerbung', C1:'typisch-deutsch', C2:'kultur'
-  };
-  /* Was einen auf dieser Stufe erwartet — ein Satz, kein Lehrplan */
-  var NIVEAUSATZ = {
-    A1:'Die ersten Sätze, die wirklich sitzen.',
-    A2:'Der Alltag geht dir von der Hand.',
-    B1:'Du regelst dein Leben allein.',
-    B2:'Du redest mit, auch wenn es schwierig wird.',
-    C1:'Du hörst, was jemand nicht sagt.',
-    C2:'Deutsch wie zu Hause.'
-  };
-
-  /* Eine Stufe als kompakte Zeile: Bild, Stufe, ein Satz, Fortschritt.
-     Fünf Stufen passen so auf einen Blick, ohne Scrollen. */
   function niveauKarte(n){
     var da=hatKurs(n.id), p=niveauProzent(n.id), jetzt=(niveauGemerkt()===n.id);
-    var bild='bilder/thema/'+(NIVEAUBILD[n.id]||'menschen')+'-s.jpg';
-    var satz=NIVEAUSATZ[n.id]||n.u||'';
-
-    var rechts;
+    var kann=(n.kann||[]).slice(0,7).map(function(k){ return '<li>'+E(k)+'</li>'; }).join('');
+    var out='<div class="ku-nv'+(da?'':' bald')+(jetzt&&da?' jetzt':'')+'">'
+      +'<div class="oben"><div class="stufe">'+E(n.id)+'</div>'
+        +'<div><h2>'+E(n.t)+'</h2><p class="u">'+E(n.u)+'</p></div></div>'
+      +'<ul class="kann">'+kann+'</ul>'
+      +'<div class="pillen">'
+        +'<span class="ku-pill gelb">Ziel: '+E(n.ziel||'')+'</span>'
+        +'<span class="ku-pill grau">'+E(n.dauer||'')+'</span>'
+        +(n.lekt?'<span class="ku-pill">'+n.lekt+' Lektionen</span>':'')
+      +'</div>';
     if(da){
-      rechts='<span class="nvz-fort">'
-        +'<span class="nvz-bar'+(p>=100?' voll':'')+'"><i style="width:'+Math.max(3,p)+'%"></i></span>'
-        +'<span class="nvz-proz">'+p+' %</span></span>'
-        +'<span class="nvz-knopf">'+(p>0?'Weiter':'Anfangen')+' →</span>';
+      out+='<div class="fuss"><span class="ku-bar'+(p>=100?' voll':'')+'"><i style="width:'+p+'%"></i></span>'
+        +'<span style="font-size:12.5px;color:#5E6A78;font-weight:700">'+p+' %</span>'
+        +'<button class="ku-btn blau klein" onclick="niveauWaehlen(\''+E(n.id)+'\')">'
+        +(p>0?'Weiter →':'Kurs öffnen →')+'</button></div>';
     } else {
-      rechts='<span class="nvz-bald-tx">kommt bald</span>'
-        +'<span class="nvz-knopf nvz-knopf-hell">Reinschauen →</span>';
+      out+='<div class="hinweis">Die Lektionen kommen als Nächstes — Wortschatz, Dialoge und Übungen '
+        +'zu diesem Niveau findest du schon im Lernbereich.</div>'
+        +'<div class="fuss"><button class="ku-btn hell klein" onclick="niveauWaehlen(\''+E(n.id)+'\')">'
+        +'Zum Lernbereich →</button></div>';
     }
-
-    return '<button type="button" class="nvz'+(da?'':' nvz-bald')+(jetzt&&da?' nvz-jetzt':'')+'" '
-      +'onclick="niveauWaehlen(\''+E(n.id)+'\')">'
-      +'<span class="nvz-bild"><img src="'+bild+'" alt="" loading="lazy" onerror="this.remove()">'
-      +  '<span class="nvz-stufe">'+E(n.id)+'</span></span>'
-      +'<span class="nvz-txt">'
-      +  '<span class="nvz-t">'+E((n.t||'').replace(/^[A-C][12]\s*—\s*/,''))
-      +    (jetzt&&da?'<span class="nvz-marke">hier bist du</span>':'')+'</span>'
-      +  '<span class="nvz-s">'+E(satz)+'</span>'
-      +'</span>'
-      +'<span class="nvz-rechts">'+rechts+'</span>'
-      +'</button>';
+    return out+'</div>';
   }
 
   window.renderNiveau=function(){
@@ -458,63 +556,25 @@
     var v=flaeche(); if(!v) return;
     var alle=niveaus();
     if(!alle.length){
-      v.classList.add('ku'); v.innerHTML='<div class="ku-leer">Die Niveaus werden geladen …</div>'; return;
+      v.className='ku'; v.innerHTML='<div class="ku-leer">Die Niveaus werden geladen …</div>'; return;
     }
     var jetzt=niveauGemerkt(), n=niveauVon(jetzt), p=niveauProzent(jetzt);
-    var kopf='<div class="nv-kopf-block">'
-      +'<span class="nv-kicker">Dein Deutsch-Zuhause</span>'
-      +'<h1>Such dir dein Zimmer aus.</h1>'
-      +'<p>Fünf Stufen, jede mit allem drin: Wörter, Grammatik, Übungen, Gespräche und Schreiben. '
-      +'Du kannst jederzeit wechseln — es ist deins.</p>'
-      +'<div class="nv-zahlen">'
-      +'<div class="nv-z"><b>'+E(jetzt)+'</b><span>hier bist du</span></div>'
-      +'<div class="nv-z"><b>'+p+' %</b><span>geschafft</span></div>'
-      +'<div class="nv-z"><b>'+(n&&n.ziel?E(n.ziel.split('·')[0].replace(/\s+$/,'')):'—')+'</b><span>dein Ziel</span></div>'
+    var kopf='<div class="ku-kopf"><h1>Wo stehst du?</h1>'
+      +'<p>Wähl dein Niveau. Das ist kein Filter, sondern ein Eingang: Wer A1 wählt, sieht eine A1-Welt — '
+      +'Wörter, Gespräche, Grammatik und Schreiben genau auf dieser Stufe.</p>'
+      +'<div class="ku-zahlen">'
+      +'<div class="ku-z"><b>'+E(jetzt)+'</b><span>dein Niveau</span></div>'
+      +'<div class="ku-z"><b>'+p+' %</b><span>geschafft</span></div>'
+      +'<div class="ku-z"><b>'+(n&&n.ziel?E(n.ziel.split('·')[0].replace(/\s+$/,'')):'—')+'</b><span>dein Ziel</span></div>'
       +'</div></div>';
-    v.classList.add('ku');
-    v.innerHTML=kopf+'<div class="nvz-liste">'+alle.map(niveauKarte).join('')+'</div>';
+    v.className='ku';
+    v.innerHTML=kopf+'<div class="ku-nvliste">'+alle.map(niveauKarte).join('')+'</div>';
     hoch();
-  };
-
-  /* ---------- Auskunft für die Startseite ----------
-     Sagt, wo die Schülerin im Kurs gerade steht: welches Niveau,
-     welche Lektion als Nächstes dran ist und wie weit sie insgesamt ist. */
-  window.kursStand=function(niveau){
-    var g = niveau || niveauGemerkt() || 'A1';
-    if(!hatKurs(g)) g = hatKurs('A1') ? 'A1' : g;
-    var d = kursDaten(g), L = (d&&d.lektionen)||[];
-    if(!L.length) return null;
-    var st = J('kurs',null)||{}, buch = st[fach(g)]||{};
-    function proz(nr){
-      var x=buch[nr]||{}, t=[x.woerter?100:0, x.gram?100:0,
-        Math.max(0,Math.min(100,x.ueb||0)), x.dialog?100:0, x.schreiben?100:0, x.aus?100:0];
-      var sum=0,i; for(i=0;i<t.length;i++) sum+=t[i];
-      return Math.round(sum/t.length);
-    }
-    var fertig=0, offen=null, gesamt=0, i, p;
-    for(i=0;i<L.length;i++){
-      p=proz(L[i].nr); gesamt+=p;
-      if(p>=100) fertig++; else if(!offen) offen=L[i];
-    }
-    var lek = offen || L[L.length-1];
-    return {
-      niveau: g,
-      titel: (d&&d.titel)||g,
-      nr: lek.nr,
-      id: lek.id,
-      lektion: lek.t,
-      ziel: lek.ziel||'',
-      lekProzent: proz(lek.nr),
-      prozent: Math.round(gesamt/L.length),
-      fertig: fertig,
-      anzahl: L.length,
-      angefangen: gesamt>0
-    };
   };
 
   window.niveauWaehlen=function(id){
     S('niveau',id);
-    if(hatKurs(id)){ AKT=id; return window.renderKursA1(); }
+    if(hatKurs(id)) return window.renderKursA1();
     if(window.go){ try{ window.go('lernen'); return; }catch(e){} }
     note('Für ' + id + ' liegen die Lektionen noch nicht bereit — im Lernbereich findest du schon Übungen dazu.');
     window.renderNiveau();
@@ -524,27 +584,25 @@
      2 — Der A1-Kurs
      ============================================================ */
 
-  window.renderKursA1=function(niveau){
-    if(niveau && hatKurs(niveau)) AKT=niveau;
-    else if(!hatKurs(AKT)){ var g=niveauGemerkt(); if(hatKurs(g)) AKT=g; }
+  window.renderKursA1=function(){
     stil();
     var v=flaeche(); if(!v) return;
     var L=lektionen();
-    v.classList.add('ku');
+    v.className='ku';
     if(!L.length){
       v.innerHTML='<button class="ku-zurueck" onclick="renderNiveau()">← Alle Niveaus</button>'
-        +'<div class="ku-leer">Der '+E(AKT)+'-Kurs wird geladen. Lade die Seite bitte neu.</div>';
+        +'<div class="ku-leer">Der A1-Kurs wird geladen. Lade die Seite bitte neu.</div>';
       return;
     }
-    var A=kursDaten()||{}, p=niveauProzent(AKT);
+    var A=window.A1, p=niveauProzent('A1');
     var fertig=0,i; for(i=0;i<L.length;i++) if(lekProzent(L[i].nr)>=100) fertig++;
 
-    var kopf='<div class="ku-kopf"><h1>'+E(A.titel||(AKT+' — Der Kurs'))+'</h1>'
+    var kopf='<div class="ku-kopf"><h1>'+E(A.titel||'A1 — Der Anfang')+'</h1>'
       +'<p>'+E(A.unter||'')+'</p>'
       +'<div class="ku-zahlen">'
       +'<div class="ku-z"><b>'+fertig+'/'+L.length+'</b><span>Lektionen fertig</span></div>'
       +'<div class="ku-z"><b>'+p+' %</b><span>vom ganzen Kurs</span></div>'
-      +'<div class="ku-z"><b>'+E(A.ziel||'Start Deutsch 1')+'</b><span>dein Ziel</span></div>'
+      +'<div class="ku-z"><b>Start Deutsch 1</b><span>dein Ziel</span></div>'
       +'</div></div>';
 
     var weg='<div class="ku-weg">'+L.map(function(l){
@@ -553,7 +611,8 @@
       if((l.ueb||[]).length)    teile.push((l.ueb||[]).length+' Übungen');
       if(l.dialog)              teile.push('1 Gespräch');
       return '<button class="ku-lek'+(lp>=100?' fertig':'')+'" onclick="kursA1('+l.nr+')">'
-        +'<span class="nr">'+(lp>=100?'✓':zahl(l.nr))+'</span>'
+        +'<span class="bild">'+bildTag(lekBild(l,true),lekBildErsatz(l,true))
+        +'<span class="marke">'+(lp>=100?'✓':zahl(l.nr))+'</span></span>'
         +'<span class="tx"><b>'+E(l.t)+'</b><small>'+E(teile.join(' · '))+'</small></span>'
         +'<span class="ba"><span class="ku-bar'+(lp>=100?' voll':'')+'"><i style="width:'+lp+'%"></i></span></span>'
         +'<span class="pf">→</span>'
@@ -580,18 +639,47 @@
     K.lek=l; K.ki=0; K.gedreht=false;
     var st=lekStand(l.nr), lp=lekProzent(l.nr);
 
-    var kopf='<div class="ku-lkopf">'
-      +'<span class="nr">Lektion '+zahl(l.nr)+' von '+lektionen().length+' · '+lp+' % geschafft</span>'
-      +'<h1>'+E(l.t)+'</h1>'
-      +'<p>'+E(l.ziel||'')+'</p></div>';
+    var mess=[];
+    if((l.chunks||[]).length) mess.push('🧠 '+l.chunks.length+' Wendungen');
+    if((l.gram||[]).length)   mess.push('🧩 '+l.gram.length+' Regeln');
+    if((l.ueb||[]).length)    mess.push('✏️ '+l.ueb.length+' Aufgaben');
+    if(l.dialog&&(l.dialog.schritte||[]).length) mess.push('💬 Gespräch');
+    if(l.schreiben)           mess.push('✉️ Schreiben');
+    mess.push('⏱ etwa 25 Minuten');
+
+    var kopf='<div class="ku-hero">'
+      +'<div class="ku-hero-tx">'
+        +'<span class="nr">Lektion '+zahl(l.nr)+' von '+lektionen().length+'</span>'
+        +'<h1>'+E(l.t)+'</h1>'
+        +'<p>'+E(l.ziel||'')+'</p>'
+        +'<div class="ku-chips">'+mess.map(function(m){return '<span class="ku-chip">'+m+'</span>';}).join('')+'</div>'
+      +'</div>'
+      +'<div class="ku-hero-bild">'+bildTag(lekBild(l),lekBildErsatz(l))
+        +'<span class="ku-ring" style="--p:'+lp+'%"><i>'+lp+'%</i></span>'
+      +'</div>'
+    +'</div>';
+
+    /* Sprungleiste über die Abschnitte */
+    var kap=[];
+    if((l.chunks||[]).length) kap.push(['kuAbWoerter','Wörter',!!st.woerter]);
+    if((l.gram||[]).length)   kap.push(['kuAbGram','Grammatik',!!st.gram]);
+    if((l.ueb||[]).length)    kap.push(['kuAbUeben','Üben',(st.ueb||0)>=100]);
+    if(l.dialog&&(l.dialog.schritte||[]).length) kap.push(['kuAbSprechen','Sprechen',!!st.dialog]);
+    if(l.schreiben)           kap.push(['kuAbSchreiben','Schreiben',!!st.schreiben]);
+    if(l.aus)                 kap.push(['kuAbAus','Aussprache',!!st.aus]);
+    var leiste='<nav class="ku-kap">'+kap.map(function(k){
+      return '<button class="'+(k[2]?'fertig':'')+'" onclick="kuSpringe(\''+k[0]+'\')">'
+        +'<span class="pu"></span>'+k[1]+'</button>';
+    }).join('')+'</nav>';
 
     var teile=[];
 
     /* 1 — Wörter */
     if((l.chunks||[]).length){
-      teile.push('<section class="ku-ab" id="kuWoerter">'
-        +abKopf('🧠','Wörter',(l.chunks.length)+' Wendungen — nicht einzelne Wörter, sondern ganze Sätze zum Mitnehmen',st.woerter)
+      teile.push('<section class="ku-ab" id="kuAbWoerter">'
+        +abKopf('🧠','Wörter',(l.chunks.length)+' Wendungen — nicht einzelne Wörter, sondern ganze Sätze zum Mitnehmen',st.woerter,'#EEF3FA')
         +'<div id="kuKarte"></div>'
+        +'<div class="ku-punkte" id="kuPunkte"></div>'
         +'<div class="ku-ksteuer">'
           +'<button class="ku-rund" id="kuZurueck" onclick="kuKarteZurueck()">←</button>'
           +'<span class="zaehler" id="kuZaehler"></span>'
@@ -602,8 +690,8 @@
 
     /* 2 — Grammatik */
     if((l.gram||[]).length){
-      teile.push('<section class="ku-ab">'
-        +abKopf('🧩','Grammatik',l.gram.length+' Regeln, die genau hier gebraucht werden',st.gram)
+      teile.push('<section class="ku-ab" id="kuAbGram">'
+        +abKopf('🧩','Grammatik',l.gram.length+' Regeln, die genau hier gebraucht werden',st.gram,'#F3F0FB')
         +l.gram.map(function(g,i){
           return '<div class="ku-gr" id="kuGr'+i+'">'
             +'<button onclick="kuGram('+i+')">'+E(g.t)+'<span class="pf">›</span></button>'
@@ -619,8 +707,8 @@
 
     /* 3 — Üben */
     if((l.ueb||[]).length){
-      teile.push('<section class="ku-ab">'
-        +abKopf('✏️','Üben',l.ueb.length+' Aufgaben, gemischt — genau das hält am längsten',(st.ueb||0)>=100)
+      teile.push('<section class="ku-ab" id="kuAbUeben">'
+        +abKopf('✏️','Üben',l.ueb.length+' Aufgaben, gemischt — genau das hält am längsten',(st.ueb||0)>=100,'#FFF6E0')
         +'<span class="ku-bar'+((st.ueb||0)>=100?' voll':'')+'" style="margin:0 0 13px"><i style="width:'+(st.ueb||0)+'%"></i></span>'
         +'<button class="ku-btn blau breit" onclick="kuUebenStarten()">'
         +((st.ueb||0)>0?'Weiter üben →':'Übungsrunde starten →')+'</button>'
@@ -629,35 +717,39 @@
 
     /* 4 — Sprechen */
     if(l.dialog && (l.dialog.schritte||[]).length){
-      teile.push('<section class="ku-ab">'
-        +abKopf('💬','Sprechen',l.dialog.schritte.length+' Schritte mit Amanda — du antwortest getippt oder gesprochen',st.dialog)
+      teile.push('<section class="ku-ab" id="kuAbSprechen">'
+        +abKopf('💬','Sprechen',l.dialog.schritte.length+' Schritte mit Amanda — du antwortest getippt oder gesprochen',st.dialog,'#E9F6F1')
+        +'<div class="ku-mitbild"><div class="txt">'
         +(l.dialog.ort?'<p style="margin:0 0 13px;font-size:14px;line-height:1.55;color:#3C4756">'+E(l.dialog.ort)+'</p>':'')
         +'<button class="ku-btn breit" onclick="kuDialogStarten()">Gespräch anfangen →</button>'
+        +'</div><div class="bd">'+bildTag('illu/th-gespraech-s.jpg','')+'</div></div>'
         +'</section>');
     }
 
     /* 5 — Schreiben */
     if(l.schreiben){
-      teile.push('<section class="ku-ab">'
-        +abKopf('✉️','Schreiben',(l.schreiben.punkte||[]).length+' Leitpunkte — genau so läuft es in der Prüfung',st.schreiben)
+      teile.push('<section class="ku-ab" id="kuAbSchreiben">'
+        +abKopf('✉️','Schreiben',(l.schreiben.punkte||[]).length+' Leitpunkte — genau so läuft es in der Prüfung',st.schreiben,'#FDECEC')
+        +'<div class="ku-mitbild"><div class="txt">'
         +'<p style="margin:0 0 13px;font-size:14px;line-height:1.55;color:#3C4756">'+E(l.schreiben.auf||'')+'</p>'
         +'<button class="ku-btn blau breit" onclick="kuSchreibenStarten()">Schreibtrainer öffnen →</button>'
+        +'</div><div class="bd">'+bildTag('bilder/schreiben/kurs.webp','bilder/lesen/mail.webp')+'</div></div>'
         +'</section>');
     }
 
     /* 6 — Aussprache */
     if(l.aus){
-      teile.push('<section class="ku-ab">'
-        +abKopf('🗣️','Aussprache','der Schwerpunkt dieser Lektion',st.aus)
+      teile.push('<section class="ku-ab" id="kuAbAus">'
+        +abKopf('🗣️','Aussprache','der Schwerpunkt dieser Lektion',st.aus,'#EAF4FB')
         +'<div class="ku-aus">'+E(l.aus)+'</div>'
         +'<div style="margin:13px 0 0"><button class="ku-btn hell" onclick="kuAusSagen()">🔊 Vorlesen</button></div>'
         +'</section>');
     }
 
     var vor=lektionVon(l.nr+1);
-    v.classList.add('ku');
+    v.className='ku';
     v.innerHTML='<button class="ku-zurueck" onclick="renderKursA1()">← Alle Lektionen</button>'
-      +kopf+teile.join('')
+      +kopf+leiste+teile.join('')
       +(vor?'<div style="text-align:center;margin:22px 0 0">'
         +'<button class="ku-btn blau" onclick="kursA1('+vor.nr+')">Lektion '+zahl(vor.nr)+': '+E(vor.t)+' →</button></div>':
         '<div class="ku-leer" style="margin-top:22px">Das war die letzte Lektion von A1. Respekt — das ist ein ganzes Jahr Alltag auf Deutsch. 💛</div>');
@@ -665,22 +757,35 @@
     hoch();
   };
 
-  function abKopf(em,titel,unter,fertig){
-    return '<div class="ku-abkopf"><span class="em">'+em+'</span>'
+  function abKopf(em,titel,unter,fertig,farbe){
+    return '<div class="ku-abkopf">'
+      +'<span class="em"'+(farbe?' style="background:'+farbe+'"':'')+'>'+em+'</span>'
       +'<span><b>'+E(titel)+'</b><small>'+E(unter)+'</small></span>'
       +(fertig?'<span class="ok">✓</span>':'')+'</div>';
   }
+  window.kuSpringe=function(id){
+    var d=document.getElementById(id); if(!d) return;
+    try{ d.scrollIntoView({behavior:'smooth',block:'start'}); }catch(e){ d.scrollIntoView(); }
+  };
 
   /* --- Chunk-Karten --- */
   function karteZeichnen(){
     var l=K.lek; if(!l) return;
     var c=(l.chunks||[])[K.ki]; var kasten=el('kuKarte'); if(!c||!kasten) return;
-    kasten.innerHTML='<button class="ku-karte" onclick="kuKarteDrehen()">'
-      +'<span class="de">'+E(c.de)+'</span>'
-      +(K.gedreht
-        ? '<span class="hi">'+E(c.hi||'')+'</span>'+(c.bsp?'<span class="bsp">'+E(c.bsp)+'</span>':'')
-        : '<span class="tipp">antippen für den Hinweis</span>')
-      +'</button>';
+    var mot = kMotiv(c);
+    var bild = mot || lekBild(l,true);
+    kasten.innerHTML='<div class="ku-kw">'
+      +'<div class="ku-kw-bild">'+bildTag(bild, mot?lekBild(l,true):lekBildErsatz(l,true))+'</div>'
+      +'<button class="ku-kw-tx" onclick="kuKarteDrehen()">'
+        +'<span class="de">'+E(c.de)+'</span>'
+        +(K.gedreht
+          ? '<span class="hi">'+E(c.hi||'')+'</span>'+(c.bsp?'<span class="bsp">'+E(c.bsp)+'</span>':'')
+          : '<span class="tipp">👆 antippen für den Hinweis</span>')
+      +'</button></div>';
+    var pu=el('kuPunkte');
+    if(pu){ var o='',n; for(n=0;n<l.chunks.length;n++)
+      o+='<i class="'+(n===K.ki?'jetzt':(n<K.ki?'durch':''))+'"></i>';
+      pu.innerHTML=o; }
     var z=el('kuZaehler'); if(z) z.textContent=(K.ki+1)+' von '+l.chunks.length;
     var a=el('kuZurueck'); if(a) a.disabled=(K.ki<=0);
     var b=el('kuVor'); if(b) b.disabled=(K.ki>=l.chunks.length-1);
@@ -722,19 +827,8 @@
       var alt=(lekStand(nr).ueb)||0;
       var neu=erg&&erg.ges?Math.round(erg.richtig/erg.ges*100):alt;
       lekMerken(nr,{ueb:Math.max(alt,neu)});
-      if(el('v-kurs')||el('s-kurs')||el('v-lernen')) window.kursA1(nr);
+      if(el('v-kurs')||el('v-lernen')) window.kursA1(nr);
     });
-  };
-
-  /* Zu jeder A1-Lektion ein passendes Szenenfoto aus dem Bestand.
-     Die Lektionsgespräche haben keine eigenen Bilder — sie borgen sich
-     das Bild des Gesprächs, das an demselben Ort spielt. */
-  var A1_BILD={
-    vorstellen:'nicht-verstanden', familie:'party',        einkaufen:'baeckerei',
-    wohnung:'wohnung',            tag:'kaffee-einladen',   freizeit:'restaurant',
-    schule:'elterngespraech-schule', beruf:'jobcenter-weiterbewilligung',
-    amt:'amt',                    gesundheit:'beschwerden', unterwegs:'bahnhof',
-    kundenservice:'rechnung-reklamieren', kleidung:'umtausch', feste:'kaffee-einladen'
   };
 
   /* --- Sprechen: das Dialogfenster aus lernen.js, mit Daten statt ID --- */
@@ -743,12 +837,11 @@
     var d={
       id:'a1-'+l.id,
       titel:'Lektion '+zahl(l.nr)+' — '+l.t,
-      lvl:AKT,
+      lvl:'A1',
       dauer:(l.dialog.schritte||[]).length+' Schritte',
       em:'💬',
       ort:l.dialog.ort||'',
       kat:'a1',
-      bild:A1_BILD[l.id]||'',
       schritte:l.dialog.schritte||[]
     };
     lekMerken(l.nr,{dialog:true});
@@ -768,7 +861,7 @@
     var l=K.lek; if(!l||!l.schreiben) return;
     window.schreibTrainer({
       id:'a1-'+l.id,
-      lvl:AKT,
+      lvl:'A1',
       art:'mitteilung',
       pruef:'frei',
       t:'Lektion '+zahl(l.nr)+' — Schreiben',
@@ -792,10 +885,9 @@
     var o=el('ku2Ov'); if(o) return o;
     o=document.createElement('div'); o.className='ku2-ov'; o.id='ku2Ov';
     o.innerHTML='<div class="ku2-kopf">'
-        +'<button class="zu" id="ku2Zurueck" onclick="ku2Zurueck()" aria-label="Eine Aufgabe zurück">←</button>'
+        +'<button class="zu" onclick="kursUebenZu()" aria-label="Schließen">×</button>'
         +'<span class="mitte"><b id="ku2Titel"></b><span class="ku-bar"><i id="ku2Bar" style="width:0%"></i></span></span>'
         +'<span class="zaehler" id="ku2Zahl"></span>'
-        +'<button class="zu" onclick="kursUebenZu()" aria-label="Übung beenden">×</button>'
       +'</div>'
       +'<div class="ku2-koerper" id="ku2Koerper"><div class="ku2-innen" id="ku2Innen"></div></div>'
       +'<div class="ku2-fuss" id="ku2Fuss"><div class="innen" id="ku2FussInnen"></div></div>';
@@ -814,7 +906,7 @@
     if(!liste.length){ note('Für diese Runde habe ich noch keine Aufgaben.'); return; }
     ovUeben();
     U={liste:liste, titel:titel||'Üben', i:0, richtig:0, falsch:[], cb:fertigCB||null,
-       beantwortet:false, hilf:null, ende:false, bewertet:[]};
+       beantwortet:false, hilf:null, ende:false};
     el('ku2Ov').classList.add('auf');
     document.body.style.overflow='hidden';
     el('ku2Titel').textContent=U.titel;
@@ -832,9 +924,6 @@
     var a=U.liste[U.i];
     var bar=el('ku2Bar'); if(bar) bar.style.width=Math.round(U.i/U.liste.length*100)+'%';
     var z=el('ku2Zahl'); if(z) z.textContent=(U.i+1)+'/'+U.liste.length;
-    var zr=el('ku2Zurueck');
-    if(zr){ zr.textContent = U.i>0 ? '←' : '×';
-            zr.setAttribute('aria-label', U.i>0 ? 'Eine Aufgabe zurück' : 'Übung beenden'); }
 
     var kopf='<div class="ku2-art">'+E(artName[a.typ]||'Aufgabe')+'</div>';
     var h='', f='';
@@ -932,16 +1021,7 @@
     if(!U||U.beantwortet) return;
     U.beantwortet=true;
     var a=U.liste[U.i];
-    /* Wer zurückgeht und dieselbe Aufgabe nochmal löst, zählt nicht doppelt. */
-    var vorher=U.bewertet[U.i];
-    if(vorher===undefined){
-      if(ok) U.richtig++; else U.falsch.push(a);
-    } else if(vorher!==ok){
-      if(ok){ U.richtig++; var w=U.falsch.indexOf(a); if(w>=0) U.falsch.splice(w,1); }
-      else { U.richtig--; if(U.falsch.indexOf(a)<0) U.falsch.push(a); }
-    }
-    U.bewertet[U.i]=ok;
-    if(ok) klang('richtig'); else klang('falsch');
+    if(ok){ U.richtig++; klang('richtig'); } else { U.falsch.push(a); klang('falsch'); }
     var los=ok?'':loesungText(a);
     fuss('<div class="ku2-rueck '+(ok?'gut':'schlecht')+'">'
       +'<b class="kopf">'+(ok?'✓ Richtig':'✗ Noch nicht')+'</b>'
@@ -1142,15 +1222,6 @@
   window.ku2Weiter=function(){
     if(!U) return;
     U.i++; aufgabeZeigen();
-  };
-
-  /* Eine Aufgabe zurück. Auf der ersten Aufgabe beendet der Pfeil die Runde —
-     so führt der Knopf oben links immer dorthin zurück, wo man herkam. */
-  window.ku2Zurueck=function(){
-    if(!U) return;
-    if(U.ende || U.i<=0) return window.kursUebenZu();
-    stille();
-    U.i--; aufgabeZeigen();
   };
 
   function rundeEnde(){
@@ -1466,7 +1537,7 @@
     var o=el('swOv'); if(o){ o.classList.remove('auf'); o.style.paddingBottom=''; }
     document.body.style.overflow='';
     W=null;
-    if(zurueck){ lekMerken(zurueck,{schreiben:true}); if(el('v-kurs')||el('s-kurs')||el('v-lernen')) window.kursA1(zurueck); }
+    if(zurueck){ lekMerken(zurueck,{schreiben:true}); if(el('v-kurs')||el('v-lernen')) window.kursA1(zurueck); }
   };
 
   /* --- die Übersicht über alle Schreibaufgaben --- */
@@ -1475,7 +1546,7 @@
   window.renderSchreiben=function(){
     stil();
     var v=flaeche(); if(!v) return;
-    v.classList.add('ku');
+    v.className='ku';
     var alle=aufgaben();
     if(!alle.length){
       v.innerHTML='<div class="ku-leer">Der Schreibtrainer wird geladen …</div>'; return;
