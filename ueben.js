@@ -295,6 +295,17 @@
     return true;
   };
 
+  /* Eine Runde aus fertig übergebenen Aufgaben — damit die Nachbereitung einer
+     Live-Stunde ihre eigene Mischung starten kann. */
+  window.ubStartListe=function(titel, items, anzahl){
+    var l=(items||[]).filter(function(e){ return e && e.type; });
+    if(!l.length) return false;
+    S={skId:'stunde',thId:'stunde',items:pickItems(l,anzahl||l.length),idx:0,correct:0,
+       hearts:META().maxHearts||5,answered:false,sel:null,title:titel||'Nachbereitung',gewertet:[]};
+    openSession();
+    return true;
+  };
+
   /* Themen ohne eigenes Foto in bilder/thema/ bekommen ein passendes geliehen. */
   var THFOTO = {
     arbeit:'buero', persoenlichkeit:'gefuehle', integration:'menschen',

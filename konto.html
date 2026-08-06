@@ -1666,6 +1666,17 @@ function buchbarHinweis(){
     + '</div>';
 }
 
+/* Die Nachbereitung braucht die Stunde und ihre Wörter — nachueben.js
+   holt sich beides über diese Funktion. */
+window.nachDaten=function(classId){
+  const s=stats||{past:[],upcoming:[]};
+  const b=(s.past||[]).concat(s.upcoming||[]).find(x=>x.class_id===classId);
+  if(!b) return null;
+  const m=materials[classId]||{};
+  const vok=(m.vocab&&m.vocab.length)?m.vocab:(b.vocab||[]);
+  return { stunde:b, vokabeln:vok };
+};
+
 /* Die große Karte oben: Bild, Titel und ein Knopf zu den eigenen Stunden */
 function meineStundenKarte(){
   const s=stats||{upcoming:[],past:[]};
@@ -1962,7 +1973,9 @@ function meineStundenHtml(){
         <div class="phasen">${phaseHtml(b,'post')}
           <div class="phase"><b>🃏 Vokabeln</b><a href="#" onclick="go('vokabeln');return false" style="color:var(--primary);font-weight:700">wiederholen →</a></div>
           ${b.material_live?`<div class="phase"><b>📊 Präsentation</b><a href="${esc(b.material_live)}" target="_blank" rel="noopener" style="color:var(--primary);font-weight:700">ansehen →</a></div>`:''}
-        </div></div>`;
+        </div>
+        ${typeof nachKarte==='function'?nachKarte(b,((materials[b.class_id]||{}).vocab)||b.vocab||[]):''}
+        </div>`;
     }).join('');
   }
   return html;
@@ -2540,6 +2553,7 @@ init();
 <script src="club-fx.js"></script>
 <script src="uebungen.js"></script>
 <script src="ueben.js"></script>
+<script src="nachueben.js"></script>
 <script src="community.js"></script>
 <script src="fehler-trainer.js"></script>
 <script src="tandem-missionen.js"></script>
