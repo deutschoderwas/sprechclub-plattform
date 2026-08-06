@@ -79,10 +79,6 @@
   // ---------- CSS -----------------------------------------------------------
   function injectCSS(){ if(document.getElementById('ubCSS'))return; var st=document.createElement('style'); st.id='ubCSS';
     st.textContent = `
-    /* Alles, was zu Üben gehört, rechnet Polster und Rahmen in die Breite ein.
-       Ohne diese Zeile ragten Kopfzeile, Eingabefeld und Knöpfe auf dem Handy
-       bis zu 36 px rechts aus dem Bild. */
-    [class^="ub-"],[class*=" ub-"],#ubOv,#ubOv *{box-sizing:border-box}
     .navlink-hl{background:linear-gradient(90deg,rgba(221,0,0,.10),rgba(45,212,191,.12));font-weight:800}
     .ub-top{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px}
     .ub-stat{flex:1;min-width:120px;background:var(--card,#fff);border:1px solid var(--border,#ECECEC);border-radius:18px;padding:14px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 6px 18px rgba(0,0,0,.05)}
@@ -295,29 +291,12 @@
     return true;
   };
 
-  /* Themen ohne eigenes Foto in bilder/thema/ bekommen ein passendes geliehen. */
-  var THFOTO = {
-    arbeit:'buero', persoenlichkeit:'gefuehle', integration:'menschen',
-    feste:'kultur', zahnarzt:'gesundheit'
-  };
-  /* Erst das eigene Foto, dann - falls es fehlt - das alte Netzbild, sonst weg.
-     Vorher kam jedes Kopfbild von unsplash.com: fremde Adresse, oft unpassend
-     und mehrfach vergeben (dasselbe Buch bei Genitiv wie bei Perfekt). */
-  window.ubBildErsatz = function(img){
-    img.onerror = null;
-    var e = img.getAttribute('data-ersatz');
-    if(e){ img.setAttribute('data-ersatz',''); img.src = e; return; }
-    if(img.parentNode) img.parentNode.remove();
-  };
   function themenBild(){
     if(!S) return '';
     var sk=skillById(S.skId); if(!sk) return '';
     var th=(sk.themes||[]).filter(function(t){return t.id===S.thId;})[0];
-    if(!th) return '';
-    var eigen = 'bilder/thema/' + (THFOTO[th.id] || th.id) + '.jpg';
-    return '<div class="ub-thbild"><img src="'+E(eigen)+'" alt="" '
-      + (th.bild ? 'data-ersatz="'+E(th.bild)+'" ' : '')
-      + 'onerror="ubBildErsatz(this)">'
+    if(!th||!th.bild) return '';
+    return '<div class="ub-thbild"><img src="'+E(th.bild)+'" alt="" onerror="this.parentNode.remove()">'
       +'<span>'+E(th.title||'')+'</span></div>';
   }
 
@@ -409,9 +388,7 @@
       sol=e.explain?e.explain:'Richtig: '+e.options[e.answer];
       if(ok&&e.w) markKnown(e.w);
     } else if(e.type==='gap'){ var v=document.getElementById('ubGap').value; document.getElementById('ubGap').disabled=true;
-      ok=[e.answer].concat(e.alts||[]).some(function(a){return nrm(a)===nrm(v);});
-      /* Die Erklärung mitgeben — sonst sieht man nur die Lösung, nicht das Warum. */
-      sol='Richtig: '+e.answer+(e.explain?' — '+e.explain:'');
+      ok=[e.answer].concat(e.alts||[]).some(function(a){return nrm(a)===nrm(v);}); sol='Richtig: '+e.answer;
     } else if(e.type==='match'){ ok=e.pairs.every(function(p,k){ var sel=document.getElementById('ubM'+k); sel.disabled=true; var good=nrm(sel.value)===nrm(p.r); sel.style.borderColor=good?'#16a34a':'#dc2626'; return good; }); sol=ok?'':'Schau dir die richtigen Paare nochmal an.';
     } else if(e.type==='order'){ var built=S.order.build.map(function(t){return t.w;}).join(' '); ok=nrm(built)===nrm(e.answer); sol='Richtig: '+e.answer;
     } else if(e.type==='speak'||e.type==='shadow'){ ok=true; }
