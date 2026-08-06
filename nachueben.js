@@ -45,8 +45,8 @@
     ['grammatik','perfekt-praeteritum',    /perfekt|präteritum|vergangenheit/i,                'Perfekt und Präteritum'],
     ['grammatik','nominalisierung',        /nominalisierung|nomen-verb/i,                      'Nominalisierung'],
     /* Wortfelder */
+    ['wortschatz','zahnarzt',     /zahnarzt|zähne|\bzahn/i,                                   'Beim Zahnarzt'],
     ['wortschatz','gesundheit',   /gesundheit|arzt|ärzt|krank|apotheke|schmerz|termin beim arzt/i, 'Gesundheit'],
-    ['wortschatz','zahnarzt',     /zahnarzt|zähne|zahn/i,                                    'Beim Zahnarzt'],
     ['wortschatz','wohnen',       /wohnen|wohnung|miete|nachbar|umzug|hausmeister|mietvertrag/i,'Wohnen'],
     ['wortschatz','arbeit',       /arbeit|beruf|büro|chef|kolleg|bewerbung|vorstellungsgespräch|job|homeoffice|teilzeit|überstunde|netzwerk|vier-tage-woche|work.?life/i,'Arbeit und Beruf'],
     ['wortschatz','einkaufen',    /einkauf|supermarkt|shopping|kleidung|preis|rabatt/i,       'Einkaufen'],
@@ -149,6 +149,32 @@
              gesamt: vok.length + Math.min(thema.length, 10) };
   };
 
+  /* Das Bild: das Foto des erkannten Themas. Ohne Treffer nimmt die Karte
+     das Foto vom Live-Unterricht — die Runde gehört ja zu einer Stunde.
+     Fehlt eine Datei, springt das Ersatzbild ein statt eines leeren Kastens.
+     Fünf Themen haben kein eigenes Foto und leihen sich eins. */
+  var THFOTO = { arbeit:'buero', persoenlichkeit:'gefuehle', integration:'menschen',
+                 feste:'kultur', zahnarzt:'gesundheit' };
+  function fotoFuer(treffer){
+    if(!treffer || !treffer.paare || !treffer.paare.length) return 'live-unterricht';
+    var id = treffer.paare[0][1];
+    return THFOTO[id] || id;
+  }
+  function bildTag(name){
+    var klein = 'bilder/thema/' + name + '-s.jpg';
+    var gross = 'bilder/thema/' + name + '.jpg';
+    return '<span class="nachueb-bild">'
+      + '<img src="' + E(klein) + '" alt="" loading="lazy" data-ersatz="' + E(gross) + '" '
+      + 'onerror="nachBildErsatz(this)"></span>';
+  }
+  /* erst das kleine Foto, dann das große, sonst verschwindet der Kasten */
+  window.nachBildErsatz = function(img){
+    img.onerror = null;
+    var e = img.getAttribute('data-ersatz');
+    if(e){ img.setAttribute('data-ersatz',''); img.onerror=function(){ nachBildErsatz(img); }; img.src = e; return; }
+    if(img.parentNode) img.parentNode.style.display='none';
+  };
+
   window.nachKarte = function(stunde, vokabeln){
     var r = window.nachRunde(stunde, vokabeln);
     if(!r.gesamt) return '';
@@ -157,6 +183,7 @@
     if(r.vokabelAufgaben.length) teile.push(r.vokabelAufgaben.length+' Aufgaben zu den Wörtern der Stunde');
     if(r.themenAufgaben.length)  teile.push('Übungen zum Thema '+r.treffer.name);
     return '<div class="nachueb">'
+      + bildTag(fotoFuer(r.treffer))
       + '<div class="nachueb-kopf"><b>🔁 Nachüben</b>'
       + '<span>' + E(teile.join(' · ')) + '</span></div>'
       + '<button class="nachueb-btn" onclick="nachStart(\''+E(id)+'\')">Runde starten →</button>'
@@ -183,14 +210,18 @@
       '.nachueb{box-sizing:border-box;display:flex;align-items:center;gap:12px;flex-wrap:wrap;',
         'margin-top:10px;padding:12px 14px;border:1px solid #CDEBD9;background:#F1FAF4;border-radius:14px}',
       '.nachueb *{box-sizing:border-box}',
-      '.nachueb-kopf{flex:1;min-width:180px;line-height:1.35}',
+      '.nachueb-bild{flex:0 0 84px;width:84px;height:60px;border-radius:11px;overflow:hidden;',
+        'background:#DDE7DF;display:block}',
+      '.nachueb-bild img{width:100%;height:100%;object-fit:cover;display:block}',
+      '.nachueb-kopf{flex:1;min-width:150px;line-height:1.35}',
       '.nachueb-kopf b{display:block;font-size:14.5px;color:#0F7738}',
       '.nachueb-kopf span{display:block;font-size:12.5px;color:#3C4756}',
       '.nachueb-btn{flex:0 0 auto;border:none;cursor:pointer;font-family:inherit;font-weight:800;',
         'font-size:13.5px;padding:10px 16px;border-radius:11px;background:#16a34a;color:#fff;',
         'box-shadow:0 3px 0 #0F7738}',
       '.nachueb-btn:active{transform:translateY(2px);box-shadow:0 1px 0 #0F7738}',
-      '@media(max-width:520px){.nachueb{padding:11px 12px}.nachueb-btn{width:100%}}'
+      '@media(max-width:520px){.nachueb{padding:11px 12px;gap:10px}.nachueb-btn{width:100%}',
+        '.nachueb-bild{flex:0 0 62px;width:62px;height:46px;border-radius:9px}}'
     ].join('');
     document.head.appendChild(s);
   })();
