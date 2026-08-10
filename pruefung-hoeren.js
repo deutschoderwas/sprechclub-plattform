@@ -41,9 +41,11 @@
   function S(k,v){ try{ if(window.lsSet) return lsSet(k,v);
     localStorage.setItem('ub_'+k,JSON.stringify(v)); }catch(e){} }
 
-  var QUELLEN = { 'A1':'HOEREN_A1' };
+  var QUELLEN = { 'A1':'HOEREN_A1', 'A2':'HOEREN_A2' };
   function datenVon(n){ var k=QUELLEN[n]; return k ? (window[k]||null) : null; }
   window.hoerenVorhanden = function(n){ return !!datenVon(n); };
+  /* Damit die Uebersicht die Aufgabenzahl des richtigen Niveaus zeigt. */
+  window.hoerenDaten = function(n){ return datenVon(n); };
 
   function blockVon(d,id){ for(var i=0;i<d.bloecke.length;i++) if(d.bloecke[i].id===id) return d.bloecke[i]; return null; }
   function teilVon(d,nr){ for(var i=0;i<d.teile.length;i++) if(d.teile[i].nr===nr) return d.teile[i]; return null; }

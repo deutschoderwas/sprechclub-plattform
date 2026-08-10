@@ -201,7 +201,7 @@
     }
     if(m.id==='hoeren' && window.hoerenVorhanden && window.hoerenVorhanden(p.niveau)){
       return { klick:"hoerenStart('"+E(p.niveau)+"')", knopf:'Hören trainieren',
-               anzahl:aufgabenZahl(window.HOEREN_A1),
+               anzahl:aufgabenZahl((window.hoerenDaten && window.hoerenDaten(p.niveau)) || window.HOEREN_A1),
                was:'Vier Stufen: erst Zahlen und Zeiten, dann die Signalwörter, '
                  + 'dann Gespräche, Durchsagen und Ansagen, zuletzt die ganze Prüfung.' };
     }
