@@ -39,9 +39,12 @@
   function S(k,v){ try{ if(window.lsSet) return lsSet(k,v);
     localStorage.setItem('ub_'+k, JSON.stringify(v)); }catch(e){} }
 
-  var QUELLEN = { 'A1':'SPRECHEN_A1' };
+  var QUELLEN = { 'A1':'SPRECHEN_A1', 'A2':'SPRECHEN_A2' };
+  /* Alle Aufgabenarten, bei denen wirklich gesprochen wird. */
+  var SPRECHARTEN = { vorstellen:1, fragen:1, bitten:1, erzaehlen:1, planen:1 };
   function datenVon(n){ var k=QUELLEN[n]; return k ? (window[k]||null) : null; }
   window.sprechenVorhanden = function(n){ return !!datenVon(n); };
+  window.sprechenDaten = function(n){ return datenVon(n); };
 
   function blockVon(d,id){ for(var i=0;i<d.bloecke.length;i++) if(d.bloecke[i].id===id) return d.bloecke[i]; return null; }
   function teilVon(d,nr){ for(var i=0;i<d.teile.length;i++) if(d.teile[i].nr===nr) return d.teile[i]; return null; }
@@ -74,11 +77,17 @@
     t.runden.forEach(function(r){ var x=holen(n,t.nr,r.id); if(x!=null) p+=x; max+=maxVon(t,r); });
     return { punkte:p, max:max, prozent:max?Math.round((p/max)*100):0 };
   }
-  function laufMax(){ return 15; }
-  function laufZiel(){ return 9; }
-  function laufStand(n,L){ var p=holen(n,'l',L.id);
-    return { gemacht:p!=null, punkte:p||0, max:laufMax(),
-             geschafft:(p||0)>=laufZiel(), prozent:Math.round(((p||0)/laufMax())*100) }; }
+  /* Ein Lauf ist so viel wert wie seine Teile zusammen — bei A1 sind das
+     genau die bekannten 15 Punkte, bei A2 rechnet es sich von selbst. */
+  function laufMax(L){
+    if(!L || !L.teile) return 15;
+    return L.teile.reduce(function(n,t){
+      return n + (t.art==='vorstellen' ? 3 : (t.karten ? t.karten.length : 2) * 3); }, 0);
+  }
+  function laufZiel(L){ return Math.ceil(laufMax(L) * 0.6); }
+  function laufStand(n,L){ var p=holen(n,'l',L.id), m=laufMax(L);
+    return { gemacht:p!=null, punkte:p||0, max:m,
+             geschafft:(p||0)>=laufZiel(L), prozent:m?Math.round(((p||0)/m)*100):0 }; }
 
   window.sprechenProzent = function(niveau){
     var d = datenVon(niveau); if(!d) return 0;
@@ -164,12 +173,20 @@
     } else if(art==='bitten'){
       h += karteBittenHTML(e.karte);
       h += sprechFlaeche(e.karte, zeigen, 'bitten');
+
+    } else if(art==='erzaehlen'){
+      h += karteErzaehlenHTML(e.karte, e.thema);
+      h += sprechFlaeche(e.karte, zeigen, 'erzaehlen');
+
+    } else if(art==='planen'){
+      h += kartePlanenHTML(e.karte, e.thema);
+      h += sprechFlaeche(e.karte, zeigen, 'planen');
     }
 
     if(zeigen) h += rueckmeldung(e);
     b.innerHTML = h;
     kopfMalen();
-    if(art==='vorstellen'||art==='fragen'||art==='bitten') aufnahmeBinden();
+    if(SPRECHARTEN[art]) aufnahmeBinden();
     try{ document.getElementById('psOv').scrollTop = 0; }catch(e2){}
   }
 
@@ -234,7 +251,7 @@
 
   function karteVorstellenHTML(a){
     return '<div class="sp-karte sp-k-vor">'
-      + '<div class="sp-karte-kopf"><span>Start Deutsch 1</span><b>Teil 1 · Sich vorstellen</b></div>'
+      + '<div class="sp-karte-kopf"><span>'+E((W.daten&&W.daten.pruefung)||'Start Deutsch 1')+'</span><b>Teil 1 · Sich vorstellen</b></div>'
       + '<div class="sp-stich">' + a.stichwoerter.map(function(w){
           return '<span class="sp-stich-w">'+E(w)+'</span>'; }).join('') + '</div>'
       + '<div class="sp-extra">'
@@ -259,6 +276,25 @@
       + '</div>';
   }
 
+  function karteErzaehlenHTML(k, thema){
+    return '<div class="sp-karte sp-k-frage">'
+      + '<div class="sp-karte-kopf"><span>Teil 2 · Von sich erzählen</span><b>Themenkarte</b></div>'
+      + '<div class="sp-thema">'+E(thema||k.thema||'')+'</div>'
+      + '<div class="sp-stich">' + (k.punkte||[]).map(function(w){
+          return '<span class="sp-stich-w">'+E(w)+'</span>'; }).join('') + '</div>'
+      + '</div>';
+  }
+
+  function kartePlanenHTML(k, thema){
+    return '<div class="sp-karte sp-k-bitte">'
+      + '<div class="sp-karte-kopf"><span>Teil 3 · Gemeinsam planen</span><b>Aufgabenkarte</b></div>'
+      + '<div class="sp-thema">'+E(thema||k.thema||'')+'</div>'
+      + '<div class="sp-gegenstand">'+E(k.aufgabe||'')+'</div>'
+      + '<div class="sp-stich">' + (k.punkte||[]).map(function(w){
+          return '<span class="sp-stich-w">'+E(w)+'</span>'; }).join('') + '</div>'
+      + '</div>';
+  }
+
   /* ---------- Sprechen, aufnehmen, vergleichen ---------- */
 
   var AUFTRAG = {
@@ -268,7 +304,11 @@
     fragen:     ['Stell zum Stichwort eine ganze Frage.',
                  'Beantworte die Frage deiner Partnerin.'],
     bitten:     ['Formuliere eine höfliche Bitte mit „bitte".',
-                 'Reagiere auf die Bitte der anderen.']
+                 'Reagiere auf die Bitte der anderen.'],
+    erzaehlen:  ['Erzähl zusammenhängend von dir — alle Stichpunkte der Karte.',
+                 'Beantworte eine Nachfrage in ein bis zwei Sätzen.'],
+    planen:     ['Mach einen Vorschlag und begründe ihn kurz.',
+                 'Reagiere auf den Gegenvorschlag und einigt euch.']
   };
 
   /* Was bei dieser Karte bewertet wird — Text und Höchstpunktzahl. */
@@ -280,6 +320,12 @@
     if(art==='fragen') return [
       { t:'Deine Frage', max:2, muster:function(k){ return k.musterfrage; } },
       { t:'Deine Antwort', max:1, muster:function(k){ return k.musterantwort; } } ];
+    if(art==='erzaehlen') return [
+      { t:'Dein Vortrag', max:2, muster:function(k){ return k.mustervortrag; } },
+      { t:'Deine Antwort auf die Nachfrage', max:1, muster:function(k){ return k.musterantwort; } } ];
+    if(art==='planen') return [
+      { t:'Dein Vorschlag', max:2, muster:function(k){ return k.mustervorschlag; } },
+      { t:'Eure Einigung', max:1, muster:function(k){ return k.mustereinigung; } } ];
     return [
       { t:'Deine Bitte', max:2, muster:function(k){ return k.musterbitte; } },
       { t:'Deine Reaktion', max:1, muster:function(k){ return k.musterreaktion; } } ];
@@ -352,7 +398,7 @@
 
   window.sprechenHoeren = function(k){
     var e = W.folge[W.i];
-    var quelle = e.art==='vorstellen' ? e.a : e.karte;
+    var quelle = e.karte || e.a;
     var m = schritte(e.art)[k].muster(quelle);
     if(!m) return;
     try{
@@ -424,9 +470,9 @@
   }
 
   function rueckmeldung(e){
-    var a = e.art==='fragen'||e.art==='bitten' ? e.runde : e.a;
+    var a = e.karte ? e.runde : e.a;
     var gut = W.offen[W.i]===true;
-    var sprech = (e.art==='vorstellen'||e.art==='fragen'||e.art==='bitten');
+    var sprech = !!SPRECHARTEN[e.art];
     var fertig = !sprech || selbstFertig();
     var txt = a && a.erklaerung ? a.erklaerung : '';
 
@@ -548,7 +594,7 @@
     });
     starten({ niveau:niveau, daten:d, modus:'lauf', topf:'l', id:id,
       titel:Lf.titel, unter:'Alle drei Teile · '+(Lf.minuten||d.minuten)+' Minuten',
-      folge:folge, max:laufMax() });
+      folge:folge, max:laufMax(Lf) });
     uhrStarten(Lf.minuten || d.minuten);
     kopfMalen();
   };

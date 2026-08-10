@@ -57,6 +57,7 @@
   var QUELLEN = { 'A1':'LESEN_A1', 'A2':'LESEN_A2' };
   function datenVon(niveau){ var n=QUELLEN[niveau]; return n ? (window[n]||null) : null; }
   window.lesenVorhanden = function(niveau){ return !!datenVon(niveau); };
+  window.lesenDaten = function(niveau){ return datenVon(niveau); };
 
   function blockVon(d, id){ for(var i=0;i<d.bloecke.length;i++) if(d.bloecke[i].id===id) return d.bloecke[i]; return null; }
   function teilVon(d, nr){ for(var i=0;i<d.teile.length;i++) if(d.teile[i].nr===nr) return d.teile[i]; return null; }

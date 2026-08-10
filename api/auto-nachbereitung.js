@@ -28,15 +28,25 @@ export default async function handler(req, res) {
   if (!ended.length) return res.status(200).json({ ok: true, processed: 0, reason: 'keine beendeten Stunden' });
 
   const ids = ended.map(c => c.id);
-  const { data: notes } = await sb.from('class_notes').select('class_id,notes,post_content').in('class_id', ids);
+  const [{ data: notes }, { data: gnotes }] = await Promise.all([
+    sb.from('class_notes').select('class_id,notes,post_content').in('class_id', ids),
+    sb.from('group_notes').select('class_id,notes').in('class_id', ids),
+  ]);
   const byId = {};
   (notes || []).forEach(n => { byId[n.class_id] = n; });
+  const grpLen = {};
+  (gnotes || []).forEach(g => {
+    const plain = String(g.notes || '').replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').trim();
+    grpLen[g.class_id] = (grpLen[g.class_id] || 0) + plain.length;
+  });
 
+  // Auslöser: Live-Tafel-Mitschrift ODER Gruppenchats vorhanden (mind. 20 Zeichen) und noch keine Nachbereitung.
   const eligible = ended.filter(c => {
     const n = byId[c.id];
-    if (!n || n.post_content) return false;
-    const plain = String(n.notes || '').replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').trim();
-    return plain.length >= 20;
+    if (n && n.post_content) return false;
+    const tafelLen = String((n && n.notes) || '').replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').trim().length;
+    const gLen = grpLen[c.id] || 0;
+    return tafelLen >= 20 || gLen >= 20;
   });
   if (!eligible.length) return res.status(200).json({ ok: true, processed: 0, reason: 'nichts Offenes' });
 
@@ -70,6 +80,7 @@ async function runNachbereitung(sb, { classId, source = 'tafel', pdfText } = {})
   ]);
 
   const tafelText = htmlToText(String((note && note.notes) || ''));
+  const gruppenText = await fetchGruppenChats(sb, classId);
   const presUrl = (cls.material_live && String(cls.material_live).trim()) || (mat && mat.content && mat.content.lesson_url) || '';
   let srcText = '', mode = source;
   if (source === 'pdf') {
@@ -78,13 +89,18 @@ async function runNachbereitung(sb, { classId, source = 'tafel', pdfText } = {})
     mode = 'pdf';
   } else {
     const presText = await fetchPresentation(presUrl);
-    if (tafelText.length >= 20) {
-      // Live-Mitschrift als Hauptquelle + wichtige Inhalte aus der Präsentation
-      mode = presText ? 'tafel+praesi' : 'tafel';
-      srcText = 'LIVE-MITSCHRIFT AUS DEM UNTERRICHT (Hauptquelle):\n' + tafelText
-        + (presText ? '\n\n=== WICHTIGE INHALTE AUS DER PRÄSENTATION ===\n' + presText.slice(0, 6000) : '');
+    const hasTafel = tafelText.length >= 20;
+    const hasGruppen = gruppenText.length >= 20;
+    if (hasTafel || hasGruppen) {
+      // IMMER übertragen: Live-Tafel-Mitschrift + Gruppenchats sind die Hauptquelle; Präsentation nur zur Ergänzung.
+      const parts = [];
+      if (hasTafel) parts.push('LIVE-MITSCHRIFT VON DER TAFEL (Hauptquelle – das hat die Lehrerin während der Stunde live aufgeschrieben):\n' + tafelText);
+      if (hasGruppen) parts.push('GRUPPENCHATS AUS DEN KLEINGRUPPEN (das haben die Schüler in ihren Gruppen aufgeschrieben – UNBEDINGT mit übernehmen):\n' + gruppenText);
+      if (presText) parts.push('=== WICHTIGE INHALTE AUS DER PRÄSENTATION (nur zur Ergänzung) ===\n' + presText.slice(0, 6000));
+      srcText = parts.join('\n\n');
+      mode = (hasTafel ? 'tafel' : '') + (hasGruppen ? (hasTafel ? '+gruppen' : 'gruppen') : '') + (presText ? '+praesi' : '');
     } else if (presText.length >= 40) {
-      // keine Mitschrift -> komplett aus der Präsentation
+      // keine Mitschrift und keine Gruppenchats -> komplett aus der Präsentation
       mode = 'praesi';
       srcText = 'PRÄSENTATION / LEKTION AUS DEM UNTERRICHT (es gibt KEINE Live-Mitschrift):\n' + presText;
     } else {
@@ -239,6 +255,20 @@ function nachbereitungEmail({ vorname, thema, level, nVok, nUb, nErr, link }) {
 function clip(s, n) { s = String(s == null ? '' : s).trim(); return s ? s.slice(0, n) : null; }
 function strList(a, max) { return (Array.isArray(a) ? a : []).map(x => String(x || '').trim()).filter(Boolean).slice(0, max); }
 
+// Alle Gruppenchats (Kleingruppen) der Stunde laden und als Text zusammenfassen.
+async function fetchGruppenChats(sb, classId) {
+  try {
+    const { data } = await sb.from('group_notes').select('grp,notes').eq('class_id', classId);
+    if (!data || !data.length) return '';
+    return data
+      .slice()
+      .sort((a, b) => (Number(a.grp) || 0) - (Number(b.grp) || 0))
+      .map(g => { const t = htmlToText(String(g.notes || '')); return t ? ('Gruppe ' + g.grp + ':\n' + t) : ''; })
+      .filter(Boolean)
+      .join('\n\n');
+  } catch (e) { return ''; }
+}
+
 // Präsentations-/Lektionsseite serverseitig laden und in Text umwandeln (Skripte/Styles raus).
 async function fetchPresentation(url) {
   if (!url) return '';
@@ -334,18 +364,29 @@ function imgQuery(v) {
 
 function buildPrompt(cls, srcText, existing, mode) {
   const vocabList = existing.length ? existing.map(v => `- ${v.de}${v.info ? ' = ' + v.info : ''}`).join('\n') : '(noch keine)';
-  const quelleMap = {
-    pdf: 'die hochgeladene Mitschrift (PDF)',
-    tafel: 'die Live-Mitschrift aus dem Unterricht',
-    'tafel+praesi': 'die Live-Mitschrift aus dem Unterricht PLUS wichtige Inhalte aus der Präsentation',
-    praesi: 'die Präsentation/Lektion aus dem Unterricht (es gibt KEINE Live-Mitschrift)',
-  };
-  const quelle = quelleMap[mode] || 'die Quelle aus dem Unterricht';
-  const modeHinweis = mode === 'praesi'
-    ? 'WICHTIG: Es gibt KEINE Live-Mitschrift. Erstelle eine vollständige, eigenständige Nachbereitung AUS DER PRÄSENTATION: viele Übungen/Tests, alle wichtigen Vokabeln aus der Präsentation (für den Vokabeltrainer) und passende Dialoge zum Thema.'
-    : (mode === 'tafel+praesi'
-      ? 'WICHTIG: Nutze die Live-Mitschrift als Hauptquelle und ERGÄNZE sie mit den wichtigsten Inhalten aus der Präsentation. Baue daraus ein rundes Handout mit Dialogen und vielen Übungen.'
-      : 'Baue ein rundes Handout mit Dialogen und vielen Übungen auf Basis der Quelle.');
+  const hasT = /tafel/.test(mode);
+  const hasG = /gruppen/.test(mode);
+  const hasP = /praesi/.test(mode);
+  let quelle, modeHinweis;
+  if (mode === 'pdf') {
+    quelle = 'die hochgeladene Mitschrift (PDF)';
+    modeHinweis = 'Baue ein rundes Handout mit Dialogen und vielen Übungen auf Basis der Quelle.';
+  } else if (mode === 'praesi') {
+    quelle = 'die Präsentation/Lektion aus dem Unterricht (es gibt KEINE Live-Mitschrift)';
+    modeHinweis = 'WICHTIG: Es gibt KEINE Live-Mitschrift. Erstelle eine vollständige, eigenständige Nachbereitung AUS DER PRÄSENTATION: viele Übungen/Tests, alle wichtigen Vokabeln aus der Präsentation (für den Vokabeltrainer) und passende Dialoge zum Thema.';
+  } else {
+    const teile = [];
+    if (hasT) teile.push('die Live-Mitschrift von der Tafel');
+    if (hasG) teile.push('die Gruppenchats aus den Kleingruppen');
+    if (hasP) teile.push('wichtige Inhalte aus der Präsentation');
+    quelle = teile.join(' + ') || 'die Quelle aus dem Unterricht';
+    const wasSteht = (hasT && hasG) ? 'in der Live-Mitschrift von der Tafel UND in den Gruppenchats'
+      : hasT ? 'in der Live-Mitschrift von der Tafel'
+      : 'in den Gruppenchats der Kleingruppen';
+    modeHinweis = 'SEHR WICHTIG: Übernimm ALLES, was ' + wasSteht + ' steht – jedes Wort, jeder Ausdruck und jede Korrektur, die dort notiert wurde, muss als Vokabel MIT einem Beispielsatz in der Nachbereitung landen, damit die Schüler genau das wiederfinden, was im Unterricht aufgeschrieben wurde.'
+      + (hasP ? ' Ergänze das danach mit den wichtigsten Inhalten aus der Präsentation.' : '')
+      + ' Baue daraus ein rundes Handout mit Dialogen und vielen Übungen.';
+  }
   return `Du bist Amanda, eine erfahrene Deutschlehrerin. Erstelle ein vollständiges, schönes NACHBEREITUNGS-HANDOUT für eine Deutsch-Unterrichtsstunde – auf Basis dessen, was unten in der Quelle steht.
 
 STUNDE:
@@ -384,8 +425,9 @@ Antworte AUSSCHLIESSLICH mit gültigem JSON (kein Text, keine Codeblöcke) in GE
 }
 
 REGELN:
+- ÜBERTRAGE ZUERST ALLES aus der Live-Mitschrift und den Gruppenchats: Jedes dort notierte Wort, jeder Ausdruck und jede Korrektur wird zu einer Vokabel MIT Beispielsatz (das ist das Wichtigste – die Schüler sollen genau das wiederfinden, was im Unterricht aufgeschrieben wurde). Danach ergänze passende weitere Vokabeln zum Thema.
 - ALLES muss zum Thema der Stunde passen (gleiche Wörter, Grammatik, Beispiele). Nichts erfinden, was nicht zum Thema passt.
-- "vocab": 8-14 Vokabeln. "info" = einfache, kurze Erklärung AUF DEUTSCH (NIEMALS englische Übersetzung!). "example" = lebensnaher Beispielsatz. "related" = 2-4 verwandte Wörter derselben Wortfamilie.
+- "vocab": 10-20 Vokabeln (lieber mehr, wenn viel aufgeschrieben wurde – alle Wörter aus Tafel & Gruppenchats zuerst). "info" = einfache, kurze Erklärung AUF DEUTSCH (NIEMALS englische Übersetzung!). "example" = lebensnaher Beispielsatz. "related" = 2-4 verwandte Wörter derselben Wortfamilie.
 - "dialoge": 1-3 kurze, alltagsnahe Dialoge zum Thema (je 4-8 Zeilen, mit "A:"/"B:").
 - "grammar": nur ausfüllen, wenn es einen klaren Grammatikpunkt gibt; sonst "tips" mit 1-2 Merkpunkten, "rows":[] lassen.
 - "exercises": 8-12 abwechslungsreiche Übungen/Tests (type "choice" mit 3 Optionen, "answer"=Index 0-basiert; und "gap"). Viele Tests!

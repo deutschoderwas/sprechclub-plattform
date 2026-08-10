@@ -195,7 +195,7 @@
   function trainingVon(p, m){
     if(m.id==='lesen' && window.lesenVorhanden && window.lesenVorhanden(p.niveau)){
       return { klick:"lesenStart('"+E(p.niveau)+"')", knopf:'Lesen trainieren',
-               anzahl:aufgabenZahl(window.LESEN_A1),
+               anzahl:aufgabenZahl((window.lesenDaten && window.lesenDaten(p.niveau)) || window.LESEN_A1),
                was:'Vier Stufen: erst der Wortschatz, dann die Strategie, '
                  + 'dann die Aufgabentypen, zuletzt die ganze Prüfung mit Uhr.' };
     }
@@ -207,7 +207,7 @@
     }
     if(m.id==='sprechen' && window.sprechenVorhanden && window.sprechenVorhanden(p.niveau)){
       return { klick:"sprechenStart('"+E(p.niveau)+"')", knopf:'Sprechen trainieren',
-               anzahl:aufgabenZahl(window.SPRECHEN_A1),
+               anzahl:aufgabenZahl((window.sprechenDaten && window.sprechenDaten(p.niveau)) || window.SPRECHEN_A1),
                was:'Vier Stufen: erst die Sätze über dich, dann Fragen und Bitten bauen, '
                  + 'dann die echten Prüfungskarten mit Aufnahme und Musterlösung, '
                  + 'zuletzt alle drei Teile mit Uhr.' };
