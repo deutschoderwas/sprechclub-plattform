@@ -41,7 +41,7 @@
   function S(k,v){ try{ if(window.lsSet) return lsSet(k,v);
     localStorage.setItem('ub_'+k,JSON.stringify(v)); }catch(e){} }
 
-  var QUELLEN = { 'A1':'HOEREN_A1', 'A2':'HOEREN_A2' };
+  var QUELLEN = { 'A1':'HOEREN_A1', 'A2':'HOEREN_A2', 'B1':'HOEREN_B1' };
   function datenVon(n){ var k=QUELLEN[n]; return k ? (window[k]||null) : null; }
   window.hoerenVorhanden = function(n){ return !!datenVon(n); };
   /* Damit die Uebersicht die Aufgabenzahl des richtigen Niveaus zeigt. */
@@ -215,7 +215,8 @@
 
   /* ---------- Malen ---------- */
 
-  var ORT_Z = { gespraech:'💬', durchsage:'📢', ansage:'📞', hoerwahl:'🎧' };
+  var ORT_Z = { gespraech:'💬', durchsage:'📢', ansage:'📞', hoerwahl:'🎧',
+                vortrag:'🎙️', diskussion:'🗣️', interview:'🎤' };
 
   function malen(){
     var b = document.getElementById('phBody'); if(!b) return;
@@ -235,7 +236,7 @@
 
     h += spielerHTML();
 
-    if(art==='durchsage'){
+    if(!a.opt){
       h += rfHTML(a, zeigen);
     } else {
       h += '<div class="pl-opts">' + a.opt.map(function(o,k){
