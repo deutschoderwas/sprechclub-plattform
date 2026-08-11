@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>deutschoderwas club — Lernplattform + täglicher Sprechclub</title>
+<meta content="Du lernst auf der Plattform. Du sprichst im Sprechclub. Jeden Abend um 19 Uhr, Montag bis Sonntag, mit Lehrer. Ab 12 € im Monat." name="description"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#161616; --soft:#5B6470; --line:#EAE6DE;
+  --turq:#7ED8EA; --turq-d:#1B9BC0; --teal-ink:#10627A; --mint:#EFFBF8;
+  --red:#DD0000; --red-d:#B30000; --gold:#FFCE00; --gold-mark:#FFD84D; --gold-d:#E0A500;
+  --bg:#FFFFFF; --warm:#FFF8E8; --pink:#FFF1EE;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+html,body{max-width:100%;overflow-x:clip}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.65;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:'Space Grotesk',sans-serif;font-weight:700;letter-spacing:-.02em;line-height:1.08}
+a{text-decoration:none;color:inherit}
+.wrap{max-width:1160px;margin:0 auto;padding:0 24px}
+.flagbar{height:5px;background:linear-gradient(90deg,#161616 0 25%,var(--red) 25% 50%,var(--gold) 50% 75%,var(--turq) 75% 100%)}
+.mark{background:var(--gold-mark);border-radius:7px;padding:.02em .26em;font-style:italic;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.markde{background:var(--red);color:#fff;border-radius:7px;padding:.02em .26em;font-style:italic;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.und{position:relative;white-space:nowrap}
+.und::after{content:'';position:absolute;left:-2px;right:-2px;bottom:2px;height:.32em;background:rgba(126,216,234,.35);border-radius:4px;z-index:-1}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;background:var(--mint);color:var(--teal-ink);font-weight:700;font-size:13px;padding:7px 15px;border-radius:999px;border:1px solid rgba(126,216,234,.25)}
+.eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--red);animation:pulse2 1.6s infinite}
+.sec-tag{display:inline-flex;align-items:center;gap:8px;color:var(--red);font-weight:800;font-size:13px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px}
+.sec-tag::before{content:'';width:18px;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--red),var(--gold),var(--turq))}
+.sec-head{max-width:730px;margin:0 auto 52px;text-align:center}
+.sec-head h2{font-size:clamp(30px,4.2vw,46px);margin-bottom:14px}
+.sec-head p{color:var(--soft);font-size:17.5px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border:none;cursor:pointer;font-family:'Inter';font-weight:700;font-size:15px;border-radius:12px;padding:14px 24px;transition:transform .16s,box-shadow .2s,background .2s}
+.btn-primary{background:var(--turq);color:var(--teal-ink);box-shadow:0 4px 0 var(--turq-d)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 0 var(--turq-d)}
+.btn-red{background:var(--red);color:#fff;box-shadow:0 4px 0 var(--red-d)}
+.btn-red:hover{transform:translateY(-2px);box-shadow:0 6px 0 var(--red-d)}
+.btn-ghost{background:#fff;color:var(--ink);border:1.5px solid var(--line)}
+.btn-ghost:hover{border-color:var(--turq);color:var(--turq-d);transform:translateY(-2px)}
+.btn-lg{padding:17px 32px;font-size:16.5px}
+
+/* Promo */
+.promo{background:#161616;color:#fff;text-align:center;font-size:14px;font-weight:600;padding:11px 24px;border-bottom:2px solid var(--gold)}
+.promo b{color:var(--gold)}
+@media(max-width:600px){.promo{font-size:12.5px;padding:9px 16px}}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.93);backdrop-filter:blur(12px);border-bottom:1px solid transparent;transition:.3s}
+.nav.sc{border-bottom:1px solid var(--line);box-shadow:0 4px 20px rgba(0,0,0,.04)}
+.nav-in{display:flex;justify-content:space-between;align-items:center;padding:14px 24px;max-width:1160px;margin:0 auto}
+.brand{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk';font-weight:700;font-size:20px}
+.brand .logo{width:46px;height:46px;object-fit:contain;display:block}
+.brand .c2{color:var(--turq-d)}
+.nav-links{display:flex;align-items:center;gap:26px}
+.nav-links a.l{font-weight:600;font-size:14.5px;color:var(--soft)}
+.nav-links a.l:hover{color:var(--ink)}
+
+/* HERO */
+.hero{padding:64px 0 68px}
+.hero-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:56px;align-items:center}
+.hero h1{font-size:clamp(38px,5vw,60px);margin:22px 0 20px}
+.hero .sub{font-size:clamp(16.5px,1.4vw,19.5px);color:var(--soft);max-width:520px;margin-bottom:26px}
+.hero .sub b{color:var(--ink);font-weight:700}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.hero-note{font-size:13.5px;color:var(--soft)}
+.hero-note b{color:var(--ink)}
+.shot{position:relative;border-radius:18px;overflow:hidden;border:1px solid var(--line);box-shadow:0 30px 70px rgba(30,25,15,.16)}
+.shot img{display:block;width:100%}
+.livebadge{position:absolute;top:14px;left:14px;z-index:6;display:inline-flex;align-items:center;gap:8px;background:rgba(22,22,22,.86);color:#fff;font-weight:800;font-size:12px;letter-spacing:.03em;padding:7px 13px;border-radius:999px}
+.livebadge .d{width:8px;height:8px;border-radius:50%;background:#ff3b3b;animation:pulse2 1.4s infinite}
+@keyframes pulse2{0%,100%{opacity:1}50%{opacity:.3}}
+.shot-cap{margin-top:13px;font-size:13px;color:var(--soft);text-align:center}
+
+/* Proof */
+.proof{background:var(--warm);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.proof-in{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:12px 40px;padding:24px;max-width:1160px;margin:0 auto}
+.proof .it{display:inline-flex;align-items:baseline;gap:9px;font-weight:600;color:var(--soft);font-size:15px}
+.proof .it b{font-family:'Space Grotesk';color:var(--ink);font-size:21px}
+.proof .sep{width:1px;height:26px;background:var(--line)}
+
+section{padding:92px 0}
+.warm-sec{background:var(--warm)}
+.mint-sec{background:var(--mint)}
+
+/* Feature-Reihen */
+.frow{display:grid;grid-template-columns:1fr 1.08fr;gap:56px;align-items:center;max-width:1080px;margin:0 auto 78px}
+.frow:last-child{margin-bottom:0}
+.frow.rev .ftext{order:2}
+.ftext .num{font-family:'Space Grotesk';font-weight:700;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--red);margin-bottom:10px}
+.ftext h3{font-size:clamp(25px,3vw,35px);margin-bottom:14px}
+.ftext>p{color:var(--soft);font-size:16.5px;margin-bottom:20px}
+.ftext .claim{font-family:'Space Grotesk';font-weight:700;font-size:17px;color:var(--ink);margin-bottom:18px}
+.ftext .claim .mark{font-style:italic}
+.flist{list-style:none;display:flex;flex-direction:column;gap:12px}
+.flist li{position:relative;padding-left:27px;font-size:15.5px;color:#3b4149}
+.flist li::before{content:'';position:absolute;left:0;top:9px;width:12px;height:12px;border-radius:4px;background:var(--turq)}
+.frow.rev .flist li::before{background:var(--red)}
+.flist li b{color:var(--ink)}
+
+/* Manifest */
+.mani{max-width:920px;margin:0 auto;text-align:center}
+.mani .q{font-family:'Space Grotesk';font-weight:700;font-size:clamp(25px,3.5vw,39px);line-height:1.24;letter-spacing:-.02em}
+.mani .q>span{display:block}
+.mani .q .l2{margin-top:15px}
+.mani p{color:var(--soft);font-size:17.5px;margin-top:24px}
+.sig{display:inline-flex;align-items:center;gap:14px;margin-top:32px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:9px 24px 9px 9px}
+.sig img{width:52px;height:52px;border-radius:50%;object-fit:cover;object-position:50% 18%}
+.sig b{display:block;font-family:'Space Grotesk';font-size:15px}
+.sig small{color:var(--soft);font-size:13px}
+
+/* Community-Streifen */
+.strip{display:grid;grid-template-columns:1.3fr 1fr;grid-template-rows:auto auto;gap:14px;max-width:1080px;margin:0 auto}
+.strip figure{border-radius:16px;overflow:hidden;border:1px solid var(--line);box-shadow:0 16px 40px rgba(30,25,15,.1);background:#fff;margin:0}
+.strip img{width:100%;height:100%;object-fit:cover;display:block}
+.strip .s1{grid-row:span 2}
+.strip .s1 img{aspect-ratio:16/11}
+.strip .s2 img,.strip .s3 img{aspect-ratio:16/8}
+.striptext{max-width:760px;margin:34px auto 0;text-align:center;font-size:18px;color:#3b4149}
+.striptext b{font-family:'Space Grotesk';color:var(--ink)}
+
+/* Kein Druck */
+.fit{display:grid;grid-template-columns:repeat(3,1fr);gap:44px;max-width:980px;margin:0 auto}
+.fitcard h3{font-size:19.5px;margin-bottom:10px}
+.fitcard p{color:var(--soft);font-size:15px}
+.fitcard .ln{width:36px;height:3px;border-radius:3px;background:var(--red);margin-bottom:15px}
+.fitcard:nth-child(2) .ln{background:var(--gold)}
+.fitcard:nth-child(3) .ln{background:var(--turq)}
+.pizza{max-width:680px;margin:46px auto 0;text-align:center;font-size:18.5px;color:#3b4149;border-top:1px solid var(--line);padding-top:28px}
+.pizza b{font-family:'Space Grotesk';color:var(--ink)}
+
+/* Stimmen */
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.tc{background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px 24px}
+.tc .st{color:var(--gold);font-size:15px;letter-spacing:1px;margin-bottom:12px;-webkit-text-stroke:.4px var(--gold-d)}
+.tc p{font-size:15.5px;color:#3b4149;font-style:italic;margin-bottom:16px}
+.tc .who{display:flex;align-items:center;gap:11px}
+.tc .av{width:40px;height:40px;border-radius:50%;color:#fff;font-weight:800;display:grid;place-items:center}
+.tc .who b{display:block;font-size:14px}.tc .who small{color:var(--soft);font-size:12.5px}
+
+/* Preise */
+.ptoggle{display:flex;justify-content:center;margin:0 auto 34px}
+.ptoggle .tg{display:inline-flex;background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:5px;gap:4px}
+.ptoggle button{border:none;background:none;cursor:pointer;font-family:'Inter';font-weight:700;font-size:14px;padding:10px 20px;border-radius:999px;color:var(--soft);transition:.2s}
+.ptoggle button.on{background:var(--turq);color:var(--teal-ink)}
+.ptoggle .save{background:var(--gold);color:var(--ink);font-size:11px;font-weight:800;padding:2px 8px;border-radius:999px;margin-left:7px}
+.pgrid{display:grid;grid-template-columns:1fr 1.14fr;gap:22px;align-items:stretch;max-width:920px;margin:0 auto}
+.price{display:flex;flex-direction:column;background:#fff;border:1.5px solid var(--line);border-radius:20px;padding:32px 28px;position:relative}
+.price.feat{border:2.5px solid var(--red);box-shadow:0 24px 56px rgba(221,0,0,.13)}
+.price .pop{position:absolute;top:-15px;left:28px;background:var(--red);color:#fff;font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:6px 14px;border-radius:999px}
+.price h3{font-size:23px;margin-bottom:5px}
+.price .ph{color:var(--soft);font-size:14px;margin-bottom:18px}
+.price .ph b{color:var(--ink)}
+.price .amt{font-family:'Space Grotesk';font-size:46px;font-weight:700;line-height:1}
+.price .per{color:var(--soft);font-size:13.5px;font-weight:600}
+.price .alt{color:var(--turq-d);font-size:13px;font-weight:700;margin:6px 0 20px;min-height:20px}
+.price ul{list-style:none;display:flex;flex-direction:column;gap:10px;margin:0 0 24px}
+.price li{font-size:14.5px;color:#3b4149;position:relative;padding-left:25px;line-height:1.5}
+.price li::before{content:'✓';position:absolute;left:0;top:0;color:var(--turq-d);font-weight:800}
+.price li b{color:var(--ink)}
+.price .btn{margin-top:auto;width:100%}
+.plusbox{background:#FFF4F4;border:1.5px solid rgba(221,0,0,.2);border-radius:14px;padding:18px 20px;margin:0 0 22px}
+.plusbox .lb{font-size:11.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--red);margin-bottom:10px}
+.plusbox ul{margin:0}
+.plusbox li{padding-left:25px;font-size:14.5px}
+.plusbox li::before{content:'★';color:var(--red);font-weight:800}
+
+/* Unterschied */
+.diff{max-width:920px;margin:48px auto 0;border:1px solid var(--line);border-radius:20px;overflow:hidden;background:#fff}
+.diff .dh{background:var(--ink);color:#fff;padding:18px 24px;font-family:'Space Grotesk';font-weight:700;font-size:17px;text-align:center}
+.diff table{width:100%;border-collapse:collapse;font-size:15px}
+.diff th,.diff td{padding:15px 22px;text-align:left;border-bottom:1px solid var(--line)}
+.diff th{font-family:'Space Grotesk';font-size:14.5px;background:var(--warm)}
+.diff td.c,.diff th.c{text-align:center;width:140px}
+.diff tr:last-child td{border-bottom:none}
+.diff .yes{color:var(--turq-d);font-weight:800;font-size:17px}
+.diff .no{color:#cfcfcf;font-weight:800;font-size:17px}
+.diff tr.hi td{background:#FFF4F4;font-weight:700}
+.diff tr.hi td:first-child{box-shadow:inset 4px 0 0 var(--red)}
+.diff tr.hi .yes{color:var(--red);font-size:19px}
+.diff tr.hi .no{color:#e0bcbc}
+.diffnote{text-align:center;color:var(--soft);font-size:16px;margin-top:26px}
+.diffnote b{color:var(--ink)}
+.pnote{text-align:center;color:var(--soft);font-size:14px;margin-top:16px}
+
+/* FAQ */
+.faq-list{max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.faq details{background:#fff;border:1px solid var(--line);border-radius:14px;padding:2px 24px}
+.faq summary{cursor:pointer;list-style:none;padding:19px 0;font-family:'Space Grotesk';font-weight:600;font-size:16.5px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:'+';color:var(--turq-d);font-size:22px;font-weight:700}
+.faq details[open] summary::after{content:'–'}
+.faq details p{color:var(--soft);font-size:15px;padding:0 0 19px}
+
+/* Final */
+.final-in{display:grid;grid-template-columns:1.05fr .95fr;align-items:stretch;max-width:1080px;margin:0 auto;border:1px solid var(--line);border-radius:24px;overflow:hidden;background:#fff}
+.final-txt{padding:58px 46px}
+.final-txt h2{font-size:clamp(28px,3.6vw,42px);margin-bottom:14px}
+.final-txt p{color:var(--soft);font-size:17px;max-width:430px;margin:0 0 24px}
+.final-img{position:relative;min-height:340px}
+.final-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 30%}
+
+footer{background:var(--ink);color:#cfcfcf;text-align:center;padding:44px 24px;font-size:14px}
+footer a{color:var(--turq)}
+footer .sm{color:#8a8a8a;font-size:13px;margin-top:8px}
+
+.sticky{display:none;position:fixed;left:0;right:0;bottom:0;z-index:70;background:rgba(255,255,255,.97);border-top:1px solid var(--line);padding:10px 14px;box-shadow:0 -6px 24px rgba(0,0,0,.08)}
+.sticky .btn{width:100%}
+.reveal{opacity:0;transform:translateY(24px)}
+
+@media(max-width:900px){
+  .hero-grid,.frow{grid-template-columns:1fr;gap:36px}
+  .frow.rev .ftext{order:0}
+  .nav-links a.l{display:none}
+  .tgrid,.fit,.pgrid{grid-template-columns:1fr 1fr}
+  .fit{gap:30px}
+  .strip{grid-template-columns:1fr}.strip .s1{grid-row:auto}
+  .final-in{grid-template-columns:1fr}.final-img{min-height:260px;order:-1}
+  .proof .sep{display:none}
+  section{padding:70px 0}
+}
+@media(max-width:600px){
+  .tgrid,.fit,.pgrid{grid-template-columns:1fr}
+  section{padding:56px 0}
+  .final-txt{padding:38px 26px}
+  .sticky{display:block}
+  body{padding-bottom:72px}
+  .brand{font-size:16px}.brand .logo{width:38px;height:38px}
+  .nav-in{padding:10px 16px}
+  .diff th,.diff td{padding:12px 11px;font-size:13.5px}
+  .diff td.c,.diff th.c{width:80px}
+}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="flagbar"></div>
+
+<div class="promo">Ab <b>1. September</b> neu: die Lernplattform und jeden Abend unser Sprechclub — schon ab 12 € im Monat</div>
+
+<nav class="nav" id="nav">
+<div class="nav-in">
+<a class="brand" href="#"><img alt="deutschoderwas Logo" class="logo" src="club-logo.png"/><span>deutschoderwas <span class="c2">club</span></span></a>
+<div class="nav-links">
+<a class="l" href="#club">Der Club</a>
+<a class="l" href="#sprechclub">Sprechclub</a>
+<a class="l" href="#stimmen">Stimmen</a>
+<a class="l" href="#preise">Preise</a>
+<a class="btn btn-primary" href="#preise" style="padding:11px 20px;font-size:14px">Mitglied werden</a>
+</div>
+</div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+<div class="wrap hero-grid">
+<div class="hero-text">
+<span class="eyebrow"><span class="dot"></span> Neu ab 1. September · jeden Abend um 19 Uhr</span>
+<h1>Du lernst auf der <span class="mark">Plattform</span>.<br/>Du sprichst im <span class="markde">Sprechclub</span>.</h1>
+<p class="sub">Lerne neue Menschen kennen und trainiere jeden Abend deinen Sprechmuskel. <b>Du brauchst keinen weiteren Kurs mehr.</b></p>
+<div class="hero-cta">
+<a class="btn btn-primary btn-lg" href="#preise">Mitglied werden</a>
+<a class="btn btn-ghost btn-lg" href="#club">So läuft es</a>
+</div>
+<div class="hero-note"><b>Ab 12 € im Monat.</b> Kein Druck, keine Mindestlaufzeit, monatlich kündbar.</div>
+</div>
+<div class="hero-media">
+<div class="shot"><span class="livebadge"><span class="d"></span> SPRECHCLUB · heute 19:00 Uhr</span><img alt="Abend im Sprechclub des deutschoderwas club" src="club-hero.jpg"/></div>
+<div class="shot-cap">Ein echter Abend bei uns — „Gesundheit &amp; Ernährung", Niveau B1/B2</div>
+</div>
+</div>
+</header>
+
+<div class="proof">
+<div class="proof-in">
+<span class="it"><b>7</b> Abende pro Woche</span>
+<span class="sep"></span>
+<span class="it"><b>19:00</b> Uhr, jeden Tag</span>
+<span class="sep"></span>
+<span class="it"><b>A1–C1</b> alle Niveaus</span>
+<span class="sep"></span>
+<span class="it">Lernende aus über <b>20</b> Ländern</span>
+</div>
+</div>
+
+<!-- MANIFEST -->
+<section>
+<div class="wrap">
+<div class="mani">
+<span class="sec-tag" style="justify-content:center">Unsere Einladung</span>
+<div class="q">
+<span>Unsere Türen sind für <span class="und">jeden</span> Deutschlerner offen.</span>
+<span class="l2">Je mehr wir werden, desto mehr Inhalte und mehr Unterricht wird es geben.</span>
+</div>
+<p>Lass uns zusammen wachsen — und dein Deutsch flüssiger machen.</p>
+<div class="sig"><img alt="Julia" src="Julia.png"/><div style="text-align:left"><b>Julia</b><small>Gründerin · deutschoderwas club</small></div></div>
+</div>
+</div>
+</section>
+
+<!-- DER CLUB -->
+<section class="warm-sec" id="club">
+<div class="wrap">
+<div class="sec-head">
+<span class="sec-tag">Zwei Dinge, mehr nicht</span>
+<h2>Am Tag lernen. Am Abend <span class="und">sprechen</span>.</h2>
+<p>Kein Chaos aus zehn Apps und drei Büchern. Eine Plattform und ein Club — und du weißt jeden Tag, was zu tun ist.</p>
+</div>
+
+<div class="frow">
+<div class="ftext">
+<div class="num">Am Tag</div>
+<h3>Deine Lernplattform</h3>
+<p>Alles an einem Ort, sortiert nach deinem Niveau. Du öffnest sie und legst los — in der Bahn auf dem Handy oder abends am Laptop.</p>
+<div class="claim">Vokabeltrainer: <span class="mark">Duolingo war gestern.</span></div>
+<ul class="flist">
+<li><b>Üben für Beruf und Alltag</b> — Arbeit, Bewerbung, Amt, Arzt, Wohnen und mehr</li>
+<li><b>Prüfungsvorbereitung</b> — Hören, Lesen, Schreiben, Sprechen mit echter Auswertung</li>
+<li><b>Vokabeltrainer</b> — mit Bedeutung, Beispielsatz und Bild statt stumpfem Abfragen</li>
+<li><b>Amanda, deine KI-Sprachpartnerin</b> — rund um die Uhr für dich da</li>
+</ul>
+</div>
+<div class="shot reveal"><img alt="Lernen auf der Plattform" src="club-plattform.jpg"/></div>
+</div>
+
+<div class="frow rev" id="sprechclub">
+<div class="ftext">
+<div class="num">Am Abend</div>
+<h3>Der Sprechclub</h3>
+<p>Lernen allein macht dich nicht sicher — reden macht dich sicher. Deshalb ist unser Sprechclub jeden Abend geöffnet. Du meldest dich an, kommst dazu und sprichst.</p>
+<div class="claim">Lerne neue Menschen kennen und <span class="mark">trainiere deinen Sprechmuskel.</span></div>
+<ul class="flist">
+<li><b>Montag bis Sonntag um 19 Uhr</b> — digital, von zu Hause</li>
+<li><b>Spannende Diskussionsthemen</b> statt trockener Übungen</li>
+<li><b>Interessante Menschen</b>, die auch Deutsch lernen</li>
+<li><b>Immer ein Lehrer dabei</b>, der deine Fragen beantwortet</li>
+</ul>
+</div>
+<div class="shot reveal"><img alt="Diskussionsthemen im Sprechclub" src="club-sprechclub.jpg"/></div>
+</div>
+</div>
+</section>
+
+<!-- COMMUNITY -->
+<section>
+<div class="wrap">
+<div class="sec-head">
+<span class="sec-tag">Die Community</span>
+<h2>Du lernst <span class="mark">nicht mehr allein</span></h2>
+<p>Das Schwerste am Deutschlernen ist nicht die Grammatik. Es ist, dranzubleiben, wenn niemand mitmacht. Bei uns sitzt jeden Abend jemand mit dir am Tisch.</p>
+</div>
+<div class="strip">
+<figure class="s1 reveal"><img alt="Eine Runde im Sprechclub" src="club-community.jpg"/></figure>
+<figure class="s2 reveal"><img alt="Diskussion im Sprechclub" src="club-sprechclub.jpg"/></figure>
+<figure class="s3 reveal"><img alt="Gemeinsam üben" src="club-hero.jpg"/></figure>
+</div>
+<p class="striptext">Keine anonyme App, keine Videos, die niemand zu Ende schaut. <b>Echte Menschen, echte Gespräche, jeden Abend.</b></p>
+</div>
+</section>
+
+<!-- KEIN DRUCK -->
+<section class="warm-sec">
+<div class="wrap">
+<div class="sec-head">
+<span class="sec-tag">Kein Druck</span>
+<h2>Du <span class="markde">musst</span> nichts. Du <span class="mark">kannst</span> alles.</h2>
+<p>Keine Anwesenheitspflicht, keine Kontrolle, kein schlechtes Gewissen. Und wenn du eine Woche lang nicht kannst — auch gut. Wir sind trotzdem da.</p>
+</div>
+<div class="fit">
+<div class="fitcard reveal"><div class="ln"></div><h3>Wie ein Fitnessstudio</h3><p>Du zahlst einen kleinen Beitrag im Monat, und die Tür steht dir jeden Tag offen. Ob du täglich kommst oder einmal die Woche, entscheidest du.</p></div>
+<div class="fitcard reveal"><div class="ln"></div><h3>Du investierst in dich</h3><p>Der Beitrag ist kein Preis für einen Kurs, den du „schaffen" musst. Er ist deine Entscheidung, jeden Monat ein Stück in dich selbst zu investieren.</p></div>
+<div class="fitcard reveal"><div class="ln"></div><h3>Wir sind für dich da</h3><p>Wenn du Hilfe brauchst, schreib im Community-Chat oder komm abends dazu. Es ist immer jemand da, der dir antwortet.</p></div>
+</div>
+<div class="pizza reveal"><b>Weniger als eine Pizza im Monat</b> — und davon hast du deutlich länger etwas.</div>
+</div>
+</section>
+
+<!-- STIMMEN -->
+<section id="stimmen">
+<div class="wrap">
+<div class="sec-head">
+<span class="sec-tag">Das sagen unsere Schüler</span>
+<h2>Endlich <span class="mark">sprechen, sprechen, sprechen</span></h2>
+</div>
+<div class="tgrid">
+<div class="tc reveal"><div class="st">★★★★★</div><p>„Ich hatte Angst zu sprechen. Jetzt rede ich viel freier — Fehler sind hier normal."</p><div class="who"><div class="av" style="background:#7ED8EA;color:#10627A">A</div><div><b>Ana</b><small>🇺🇦 Niveau B1</small></div></div></div>
+<div class="tc reveal"><div class="st">★★★★★</div><p>„Kein stilles Zuhören — jeder Abend ist aktiv. Endlich muss ich reden."</p><div class="who"><div class="av" style="background:#DD0000">O</div><div><b>Olena</b><small>🇺🇦 Niveau B1</small></div></div></div>
+<div class="tc reveal"><div class="st">★★★★★</div><p>„Kleine Gruppen, viel Sprechzeit. Mein Wortschatz ist deutlich besser."</p><div class="who"><div class="av" style="background:#E0A500">I</div><div><b>Ismail</b><small>🇸🇾 Niveau B2</small></div></div></div>
+<div class="tc reveal"><div class="st">★★★★★</div><p>„Echte Alltagsthemen statt nur Grammatik — hat mir im Job geholfen."</p><div class="who"><div class="av" style="background:#1B9BC0">C</div><div><b>Carlos</b><small>🇪🇸 Niveau B2</small></div></div></div>
+<div class="tc reveal"><div class="st">★★★★★</div><p>„Julia erklärt mit Humor. Ich trau mich endlich zu sprechen."</p><div class="who"><div class="av" style="background:#DD0000">M</div><div><b>Maria</b><small>🇧🇷 A2 → B1</small></div></div></div>
+<div class="tc reveal"><div class="st">★★★★★</div><p>„Mehr gebracht als viele Kurse. Endlich sprechen, sprechen, sprechen!"</p><div class="who"><div class="av" style="background:#7ED8EA;color:#10627A">E</div><div><b>Elena</b><small>🇮🇹 Niveau B2</small></div></div></div>
+</div>
+</div>
+</section>
+
+<!-- PREISE -->
+<section class="warm-sec" id="preise">
+<div class="wrap">
+<div class="sec-head">
+<span class="sec-tag">Deine Mitgliedschaft</span>
+<h2>Zwei Wege. <span class="und">Ein Unterschied.</span></h2>
+<p>Community gibt dir die ganze Plattform. Premium gibt dir die ganze Plattform <b>und</b> jeden Abend den Sprechclub.</p>
+</div>
+
+<div class="ptoggle">
+<div class="tg">
+<button class="on" id="tgJ" onclick="setBill('j')">Jährlich <span class="save">−25 %</span></button>
+<button id="tgM" onclick="setBill('m')">Monatlich</button>
+</div>
+</div>
+
+<div class="pgrid">
+<div class="price reveal">
+<h3>Community</h3>
+<div class="ph">Die komplette Lernplattform</div>
+<div class="amt"><span id="amtC">12</span> €</div>
+<div class="per">pro Monat</div>
+<div class="alt" id="altC">bei jährlicher Zahlung · statt 16 € monatlich</div>
+<ul>
+<li><b>Üben für Beruf und Alltag</b>, A1 bis B2</li>
+<li><b>Komplette Prüfungsvorbereitung</b></li>
+<li><b>Amanda</b>, deine KI-Sprachpartnerin rund um die Uhr</li>
+<li><b>Vokabeltrainer</b> und Fehler-Trainer</li>
+<li><b>Community-Chat</b> — Fragen jederzeit stellen</li>
+</ul>
+<a class="btn btn-ghost btn-lg" href="/preise">Community werden</a>
+</div>
+
+<div class="price feat reveal">
+<span class="pop">Das volle Erlebnis</span>
+<h3>Premium</h3>
+<div class="ph">Die Plattform <b>und</b> jeden Abend sprechen</div>
+<div class="amt"><span id="amtP">37</span> €</div>
+<div class="per">pro Monat</div>
+<div class="alt" id="altP">bei jährlicher Zahlung · statt 49 € monatlich</div>
+<div class="plusbox">
+<div class="lb">Alles aus Community — und zusätzlich:</div>
+<ul>
+<li><b>Der Sprechclub, jeden Abend um 19 Uhr</b> — Montag bis Sonntag</li>
+<li>Spannende <b>Diskussionsthemen</b> und interessante Menschen</li>
+<li><b>Immer ein Lehrer dabei</b>, der deine Fragen beantwortet</li>
+<li>So oft du willst — einmal die Woche oder jeden Abend</li>
+</ul>
+</div>
+<a class="btn btn-red btn-lg" href="/preise">Premium sichern</a>
+</div>
+</div>
+
+<div class="diff reveal">
+<div class="dh">Der Unterschied auf einen Blick</div>
+<table>
+<tr><th>Was ist enthalten?</th><th class="c">Community</th><th class="c">Premium</th></tr>
+<tr><td>Üben für Beruf und Alltag</td><td class="c yes">✓</td><td class="c yes">✓</td></tr>
+<tr><td>Prüfungsvorbereitung</td><td class="c yes">✓</td><td class="c yes">✓</td></tr>
+<tr><td>Amanda — KI-Sprachpartnerin rund um die Uhr</td><td class="c yes">✓</td><td class="c yes">✓</td></tr>
+<tr><td>Vokabeltrainer und Fehler-Trainer</td><td class="c yes">✓</td><td class="c yes">✓</td></tr>
+<tr><td>Community-Chat</td><td class="c yes">✓</td><td class="c yes">✓</td></tr>
+<tr class="hi"><td>Sprechclub — jeden Abend um 19 Uhr, mit Lehrer</td><td class="c no">✕</td><td class="c yes">✓</td></tr>
+</table>
+</div>
+<p class="diffnote">Der einzige Unterschied ist der, auf den es beim Sprechen ankommt: <b>Premium bringt dich jeden Abend ins Reden.</b></p>
+<p class="pnote">Alle Preise inkl. MwSt. · monatlich kündbar · Wechsel jederzeit möglich</p>
+</div>
+</section>
+
+<!-- FAQ -->
+<section>
+<div class="wrap">
+<div class="sec-head"><span class="sec-tag">Häufige Fragen</span><h2>Gut zu wissen</h2></div>
+<div class="faq faq-list">
+<details><summary>Wann geht es los?</summary><p>Am 1. September startet das neue Format. Wenn du dich jetzt anmeldest, ist die Plattform sofort für dich offen — und ab dem 1. September läuft der Sprechclub jeden Abend.</p></details>
+<details><summary>Brauche ich daneben noch einen anderen Kurs?</summary><p>Nein. Genau das ist die Idee: Am Tag lernst du auf der Plattform, am Abend sprichst du im Sprechclub. Lernen und Sprechen sind hier zusammen.</p></details>
+<details><summary>Was ist, wenn ich mal eine Woche nichts mache?</summary><p>Dann ist das in Ordnung. Es gibt keine Anwesenheitspflicht und keine Kontrolle. Denk an ein Fitnessstudio: Die Tür bleibt offen, und du kommst wieder, wenn du Zeit und Lust hast.</p></details>
+<details><summary>Für welches Niveau ist der Club?</summary><p>Von A1 bis C1. Auf der Plattform lernst du auf deinem Niveau, und im Sprechclub sprechen Lernende von A2 bis C1 in passenden Runden.</p></details>
+<details><summary>Kann ich jederzeit kündigen oder wechseln?</summary><p>Ja. Beide Modelle sind monatlich kündbar, und du kannst jederzeit von Community auf Premium wechseln — oder zurück.</p></details>
+</div>
+</div>
+</section>
+
+<!-- FINAL -->
+<section class="warm-sec">
+<div class="wrap">
+<div class="final-in reveal">
+<div class="final-txt">
+<h2>Komm rein. Die Tür ist <span class="mark">offen</span>.</h2>
+<p>Je mehr wir werden, desto mehr Inhalte und mehr Unterricht wird es geben. Lass uns zusammen wachsen — und dein Deutsch flüssiger machen.</p>
+<div class="hero-cta">
+<a class="btn btn-red btn-lg" href="/preise">Premium — ab 37 € im Monat</a>
+<a class="btn btn-ghost btn-lg" href="/preise">Community — ab 12 €</a>
+</div>
+<div class="hero-note">Kein Druck · monatlich kündbar · Plattform sofort, Sprechclub ab 1. September</div>
+</div>
+<div class="final-img"><img alt="Abend im Sprechclub" src="club-community.jpg"/></div>
+</div>
+</div>
+</section>
+
+<footer>
+<p>© 2026 deutschoderwas club · Hauptseite · Impressum · AGB</p>
+<p class="sm">Lernplattform und täglicher Sprechclub · A1–C1 · Montag bis Sonntag um 19 Uhr</p>
+</footer>
+
+<div class="sticky"><a class="btn btn-primary" href="#preise">Mitglied werden — ab 12 € im Monat</a></div>
+
+<script>
+addEventListener('scroll',function(){var n=document.getElementById('nav');if(n)n.classList.toggle('sc',scrollY>10)});
+
+function setBill(m){
+  var j=m==='j';
+  document.getElementById('tgJ').classList.toggle('on',j);
+  document.getElementById('tgM').classList.toggle('on',!j);
+  document.getElementById('amtC').textContent=j?'12':'16';
+  document.getElementById('amtP').textContent=j?'37':'49';
+  document.getElementById('altC').textContent=j?'bei jährlicher Zahlung · statt 16 € monatlich':'monatlich zahlbar · jährlich nur 12 € im Monat';
+  document.getElementById('altP').textContent=j?'bei jährlicher Zahlung · statt 49 € monatlich':'monatlich zahlbar · jährlich nur 37 € im Monat';
+}
+
+(function(){
+  var els=document.querySelectorAll('.reveal');
+  if(!('IntersectionObserver' in window)){els.forEach(function(e){e.style.opacity=1;e.style.transform='none'});return}
+  var io=new IntersectionObserver(function(en){en.forEach(function(x,i){
+    if(x.isIntersecting){var el=x.target;setTimeout(function(){el.style.transition='opacity .6s ease,transform .6s ease';el.style.opacity=1;el.style.transform='none'},i*70);io.unobserve(el)}
+  })},{threshold:.1});
+  els.forEach(function(e){io.observe(e)});
+})();
+</script>
+</body>
+</html>
