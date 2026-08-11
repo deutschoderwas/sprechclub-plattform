@@ -54,7 +54,7 @@
 
   /* ---------- Datenzugriff ---------- */
 
-  var QUELLEN = { 'A1':'LESEN_A1', 'A2':'LESEN_A2' };
+  var QUELLEN = { 'A1':'LESEN_A1', 'A2':'LESEN_A2', 'B1':'LESEN_B1' };
   function datenVon(niveau){ var n=QUELLEN[niveau]; return n ? (window[n]||null) : null; }
   window.lesenVorhanden = function(niveau){ return !!datenVon(niveau); };
   window.lesenDaten = function(niveau){ return datenVon(niveau); };
