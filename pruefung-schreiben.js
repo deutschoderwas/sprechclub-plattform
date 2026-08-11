@@ -61,9 +61,10 @@
      ------------------------------------------------------------ */
   var AMANDA = 'immer';
 
-  var QUELLEN = { 'A1':'SCHREIBEN_A1' };
+  var QUELLEN = { 'A1':'SCHREIBEN_A1', 'B1':'SCHREIBEN_B1' };
   function datenVon(n){ var k=QUELLEN[n]; return k ? (window[k]||null) : null; }
   window.schreibenVorhanden = function(n){ return !!datenVon(n); };
+  window.schreibenDaten = function(n){ return datenVon(n); };
 
   function blockVon(d,id){ for(var i=0;i<d.bloecke.length;i++) if(d.bloecke[i].id===id) return d.bloecke[i]; return null; }
   function teilVon(d,nr){ for(var i=0;i<d.teile.length;i++) if(d.teile[i].nr===nr) return d.teile[i]; return null; }
@@ -101,11 +102,14 @@
       var p=holen(n,t.nr,r.id); if(p!=null) hat+=p; });
     return { punkte:hat, max:max, prozent:max?Math.round(hat/max*100):0 };
   }
-  function laufMax(){ return 15; }                          /* 5 + 10 */
-  function laufZiel(){ return 9; }                          /* sechzig Prozent */
-  function laufStand(n,L){ var p=holen(n,'l',L.id);
-    return { punkte:p||0, max:laufMax(), gemacht:p!=null, geschafft:(p||0)>=laufZiel(),
-             prozent:p==null?0:Math.round(p/laufMax()*100) }; }
+  function laufMax(L){
+    if(L && L.aufgaben) return L.aufgaben.length * 10;      /* je Schreibaufgabe zehn */
+    return 15;                                              /* A1: 5 + 10 */
+  }
+  function laufZiel(L){ return Math.round(laufMax(L)*0.6*2)/2; }
+  function laufStand(n,L){ var p=holen(n,'l',L.id), m=laufMax(L);
+    return { punkte:p||0, max:m, gemacht:p!=null, geschafft:(p||0)>=laufZiel(L),
+             prozent:p==null?0:Math.round(p/m*100) }; }
 
   window.schreibenProzent = function(niveau){
     var d = datenVon(niveau); if(!d) return null;
@@ -857,15 +861,21 @@
     var niveau = W ? W.niveau : 'A1', d = datenVon(niveau); if(!d) return;
     var Lf = laufVon(d,id); if(!Lf) return;
     oeffnen();
-    /* Ein Lauf ist immer: ein Formular, dann eine Mitteilung. */
-    var t1 = teilVon(d,1);
-    var form = Lf.formular || (t1 && t1.runden[Math.floor(Math.random()*t1.runden.length)]);
+    /* A1: ein Formular, dann eine Mitteilung. Ab B1: mehrere Schreibaufgaben. */
     var folge = [];
-    if(form) folge.push({ a:form, art:'formular' });
-    folge.push({ a:Lf.aufgabe, art:'mitteilung' });
+    if(Lf.aufgaben){
+      Lf.aufgaben.forEach(function(a){ folge.push({ a:a, art:'mitteilung' }); });
+    } else {
+      var t1 = teilVon(d,1);
+      var form = Lf.formular || (t1 && t1.runden[Math.floor(Math.random()*t1.runden.length)]);
+      if(form) folge.push({ a:form, art:'formular' });
+      folge.push({ a:Lf.aufgabe, art:'mitteilung' });
+    }
     starten({ niveau:niveau, daten:d, modus:'lauf', topf:'l', id:id,
-      titel:Lf.titel, unter:'Formular und Mitteilung · '+(Lf.minuten||d.minuten)+' Minuten',
-      folge:folge, max:laufMax() });
+      titel:Lf.titel,
+      unter:(Lf.aufgaben ? Lf.aufgaben.length+' Schreibaufgaben' : 'Formular und Mitteilung')
+        +' · '+(Lf.minuten||d.minuten)+' Minuten',
+      folge:folge, max:laufMax(Lf) });
     uhrStarten(Lf.minuten || d.minuten);
     kopfMalen();
   };
