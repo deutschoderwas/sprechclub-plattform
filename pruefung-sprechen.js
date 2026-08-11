@@ -39,9 +39,9 @@
   function S(k,v){ try{ if(window.lsSet) return lsSet(k,v);
     localStorage.setItem('ub_'+k, JSON.stringify(v)); }catch(e){} }
 
-  var QUELLEN = { 'A1':'SPRECHEN_A1', 'A2':'SPRECHEN_A2' };
+  var QUELLEN = { 'A1':'SPRECHEN_A1', 'A2':'SPRECHEN_A2', 'B1':'SPRECHEN_B1' };
   /* Alle Aufgabenarten, bei denen wirklich gesprochen wird. */
-  var SPRECHARTEN = { vorstellen:1, fragen:1, bitten:1, erzaehlen:1, planen:1 };
+  var SPRECHARTEN = { vorstellen:1, fragen:1, bitten:1, erzaehlen:1, planen:1, rueckmeldung:1 };
   function datenVon(n){ var k=QUELLEN[n]; return k ? (window[k]||null) : null; }
   window.sprechenVorhanden = function(n){ return !!datenVon(n); };
   window.sprechenDaten = function(n){ return datenVon(n); };
@@ -181,6 +181,10 @@
     } else if(art==='planen'){
       h += kartePlanenHTML(e.karte, e.thema);
       h += sprechFlaeche(e.karte, zeigen, 'planen');
+
+    } else if(art==='rueckmeldung'){
+      h += karteRueckmeldungHTML(e.karte, e.thema);
+      h += sprechFlaeche(e.karte, zeigen, 'rueckmeldung');
     }
 
     if(zeigen) h += rueckmeldung(e);
@@ -295,6 +299,16 @@
       + '</div>';
   }
 
+  function karteRueckmeldungHTML(k, thema){
+    return '<div class="sp-karte sp-k-frage">'
+      + '<div class="sp-karte-kopf"><span>Teil 3 · Über eine Präsentation sprechen</span><b>Rückmeldekarte</b></div>'
+      + '<div class="sp-thema">'+E(thema||k.thema||'')+'</div>'
+      + '<div class="sp-gegenstand">'+E(k.gehoert||'')+'</div>'
+      + '<div class="sp-stich">' + (k.punkte||[]).map(function(w){
+          return '<span class="sp-stich-w">'+E(w)+'</span>'; }).join('') + '</div>'
+      + '</div>';
+  }
+
   /* ---------- Sprechen, aufnehmen, vergleichen ---------- */
 
   var AUFTRAG = {
@@ -308,7 +322,10 @@
     erzaehlen:  ['Erzähl zusammenhängend von dir — alle Stichpunkte der Karte.',
                  'Beantworte eine Nachfrage in ein bis zwei Sätzen.'],
     planen:     ['Mach einen Vorschlag und begründe ihn kurz.',
-                 'Reagiere auf den Gegenvorschlag und einigt euch.']
+                 'Reagiere auf den Gegenvorschlag und einigt euch.'],
+    rueckmeldung: ['Gib deiner Partnerin eine kurze, freundliche Rückmeldung.',
+                 'Stell eine Frage zu ihrer Präsentation.',
+                 'Beantworte die Frage zu deiner eigenen Präsentation.']
   };
 
   /* Was bei dieser Karte bewertet wird — Text und Höchstpunktzahl. */
@@ -326,6 +343,10 @@
     if(art==='planen') return [
       { t:'Dein Vorschlag', max:2, muster:function(k){ return k.mustervorschlag; } },
       { t:'Eure Einigung', max:1, muster:function(k){ return k.mustereinigung; } } ];
+    if(art==='rueckmeldung') return [
+      { t:'Deine Rückmeldung', max:1, muster:function(k){ return k.musterrueckmeldung; } },
+      { t:'Deine Frage', max:1, muster:function(k){ return k.musterfrage; } },
+      { t:'Deine Antwort', max:1, muster:function(k){ return k.musterantwort; } } ];
     return [
       { t:'Deine Bitte', max:2, muster:function(k){ return k.musterbitte; } },
       { t:'Deine Reaktion', max:1, muster:function(k){ return k.musterreaktion; } } ];

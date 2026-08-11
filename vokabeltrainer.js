@@ -475,6 +475,15 @@
 .vt-fuss .lsg{font-size:17px;color:#2A2721;line-height:1.5;font-weight:600;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .vt-fuss .lsg .vt-lauts{width:38px;height:38px;font-size:17px;border-radius:12px}
 .vt-fuss .lsg em{font-style:normal;font-weight:800}
+.vt-bed{margin:14px 0 4px}
+.vt-bed span{display:block;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  color:#0FB5A6;margin-bottom:6px}
+.vt-bed p{margin:0;font-size:17px;line-height:1.55;color:#2A2721}
+.vt-satzbox.mitlabel{position:relative;padding-top:26px}
+.vt-satzbox.mitlabel::before{content:'Beispiel aus dem Alltag';position:absolute;top:9px;left:16px;
+  font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#8A857C}
+.vt-fuss .bedz{margin-top:8px;font-size:15px;line-height:1.5;color:#2A2721}
+.vt-fuss .bedz b{font-weight:800}
 .vt-fuss .bspz{margin-top:8px;font-size:15px;color:#5A5750;line-height:1.5}
 .vt-fuss .bspz i{font-style:normal;color:#8A857C;display:block;margin-top:3px}
 .vt-fuss .bspz i.vt-rtl{direction:rtl;text-align:right}
@@ -685,7 +694,8 @@
       h += bild(v, 'gr')
         + '<h2 class="vt-gross mitte">' + artikelChip(v.artikel) + esc(v.wort || v.de) + lauts(v.de) + '</h2>'
         + (ue ? '<p class="vt-unter' + rtlK() + '" style="text-align:center">' + esc(ue) + '</p>' : '')
-        + (v.bsp ? '<div class="vt-satzbox"><p class="vt-satz">' + satzMarkiert(v.bsp, v.wort || v.de) + ' ' + lauts(v.bsp, 1) + '</p>'
+        + (v.bedeutung ? '<div class="vt-bed"><span>Bedeutung</span><p>' + esc(v.bedeutung) + '</p></div>' : '')
+        + (v.bsp ? '<div class="vt-satzbox' + (v.bedeutung ? ' mitlabel' : '') + '"><p class="vt-satz">' + satzMarkiert(v.bsp, v.wort || v.de) + ' ' + lauts(v.bsp, 1) + '</p>'
           + (trSatz(v) ? '<div class="vt-satz-tr' + rtlK() + '">' + esc(trSatz(v)) + '</div>' : '') + '</div>' : '')
         + '<button class="vt-pruefen" onclick="__vtWeiterNeu()">Verstanden — weiter</button>';
 
@@ -923,6 +933,7 @@
         : '<span>💡</span>Noch nicht — so ist es richtig') + '</b>'
       + '<div class="lsg"><em>' + artikelChip(v.artikel) + esc(v.wort || v.de) + '</em>'
       + (ue ? ' — ' + esc(ue) : '') + ' ' + lauts(v.de, 1) + '</div>'
+      + (v.bedeutung ? '<div class="bedz">' + esc(v.bedeutung) + '</div>' : '')
       + (v.bsp ? '<div class="bspz">' + satzMarkiert(v.bsp, v.wort || v.de, richtig ? 'gruen' : 'rot')
         + (trSatz(v) ? '<i class="' + (rtl() ? 'vt-rtl' : '') + '">' + esc(trSatz(v)) + '</i>' : '') + '</div>' : '')
       + (a.letzte ? '<div class="wieder">🔁 Dieses Wort kommt ' + naechsterAbstand(neuStufe) + '.</div>'
