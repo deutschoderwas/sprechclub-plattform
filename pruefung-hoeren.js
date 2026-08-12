@@ -41,7 +41,7 @@
   function S(k,v){ try{ if(window.lsSet) return lsSet(k,v);
     localStorage.setItem('ub_'+k,JSON.stringify(v)); }catch(e){} }
 
-  var QUELLEN = { 'A1':'HOEREN_A1', 'A2':'HOEREN_A2', 'B1':'HOEREN_B1' };
+  var QUELLEN = { 'A1':'HOEREN_A1', 'A2':'HOEREN_A2', 'B1':'HOEREN_B1', 'B2':'HOEREN_B2' };
   function datenVon(n){ var k=QUELLEN[n]; return k ? (window[k]||null) : null; }
   window.hoerenVorhanden = function(n){ return !!datenVon(n); };
   /* Damit die Uebersicht die Aufgabenzahl des richtigen Niveaus zeigt. */

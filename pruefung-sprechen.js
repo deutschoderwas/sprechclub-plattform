@@ -39,7 +39,7 @@
   function S(k,v){ try{ if(window.lsSet) return lsSet(k,v);
     localStorage.setItem('ub_'+k, JSON.stringify(v)); }catch(e){} }
 
-  var QUELLEN = { 'A1':'SPRECHEN_A1', 'A2':'SPRECHEN_A2', 'B1':'SPRECHEN_B1' };
+  var QUELLEN = { 'A1':'SPRECHEN_A1', 'A2':'SPRECHEN_A2', 'B1':'SPRECHEN_B1', 'B2':'SPRECHEN_B2' };
   /* Alle Aufgabenarten, bei denen wirklich gesprochen wird. */
   var SPRECHARTEN = { vorstellen:1, fragen:1, bitten:1, erzaehlen:1, planen:1, rueckmeldung:1 };
   function datenVon(n){ var k=QUELLEN[n]; return k ? (window[k]||null) : null; }
