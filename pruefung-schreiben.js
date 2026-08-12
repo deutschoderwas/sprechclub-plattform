@@ -61,7 +61,7 @@
      ------------------------------------------------------------ */
   var AMANDA = 'immer';
 
-  var QUELLEN = { 'A1':'SCHREIBEN_A1', 'B1':'SCHREIBEN_B1' };
+  var QUELLEN = { 'A1':'SCHREIBEN_A1', 'A2':'SCHREIBEN_A2', 'B1':'SCHREIBEN_B1' };
   function datenVon(n){ var k=QUELLEN[n]; return k ? (window[k]||null) : null; }
   window.schreibenVorhanden = function(n){ return !!datenVon(n); };
   window.schreibenDaten = function(n){ return datenVon(n); };
