@@ -52,7 +52,7 @@ export default async function handler(req, res) {
     method: 'POST',
     headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      sender: { name: 'Julia | deutschoderwas', email: process.env.BREVO_SENDER_EMAIL || 'info@deutschoderwas.de' },
+      sender: { name: 'Julia | deutschoderwas', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
       to: [{ email: prof.email, name: prof.name || undefined }],
       subject: `✅ Buchung bestätigt: ${cls.title} am ${when}`,
       htmlContent: html,
@@ -113,7 +113,7 @@ export async function notifyAdmin(sb, { type, prof, cls, when, clubName }) {
     method: 'POST',
     headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      sender: { name: 'deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'info@deutschoderwas.de' },
+      sender: { name: 'deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
       to: [{ email: adminEmail, name: 'Julia' }],
       subject: `${emoji} ${head}: ${cls?.title || ''} — ${prof?.name || ''}`,
       htmlContent: html,

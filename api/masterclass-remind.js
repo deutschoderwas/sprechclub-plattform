@@ -36,7 +36,7 @@ export default async function handler(req, res) {
         method: 'POST',
         headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          sender: { name: 'deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'info@deutschoderwas.de' },
+          sender: { name: 'deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
           to: [{ email, name: name || undefined }],
           subject: '🔔 Erinnerung gesichert – deine Live-Masterclass',
           htmlContent: mail(name, mc_date, topic),

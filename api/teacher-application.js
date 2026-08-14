@@ -32,7 +32,7 @@ export default async function handler(req, res) {
       method: 'POST',
       headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        sender: { name: 'deutschoderwas · Bewerbung', email: process.env.BREVO_SENDER_EMAIL || 'info@deutschoderwas.de' },
+        sender: { name: 'deutschoderwas · Bewerbung', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
         to: [{ email: process.env.ADMIN_EMAIL || 'deutschoderwas@gmail.com', name: 'Julia' }],
         replyTo: { email, name: name || undefined },
         subject: `👩‍🏫 Neue Lehrer-Bewerbung: ${name}`,

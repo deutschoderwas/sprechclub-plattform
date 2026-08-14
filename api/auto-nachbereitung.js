@@ -211,7 +211,7 @@ async function sendNachbereitungMails(sb, classId, cls, pc) {
       method: 'POST',
       headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        sender: { name: 'Julia | deutschoderwas', email: process.env.BREVO_SENDER_EMAIL || 'info@deutschoderwas.de' },
+        sender: { name: 'Julia | deutschoderwas', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
         to: [{ email: p.email, name: p.name || undefined }],
         subject: `📖 Deine Nachbereitung: ${thema}`,
         htmlContent: html,

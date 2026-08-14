@@ -66,7 +66,7 @@ async function sendToTeam({ to, name, studentEmail, body, site }) {
   </td></tr></table>
 </body></html>`;
     const payload = {
-      sender: { name: 'deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'info@deutschoderwas.de' },
+      sender: { name: 'deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
       to,
       subject: `Neue Nachricht von ${name}`,
       htmlContent: html,
