@@ -1,0 +1,70 @@
+Reparatur der Sprachausgabe
+===========================
+
+
+WAS KAPUTT WAR
+
+1. 45 Dateien in ton/ enthielten kein Wort, sondern eine Sekunde lautes
+   weisses Rauschen — und sie waren rund elfmal lauter als alle anderen
+   Aufnahmen. Das war der Krach beim Druecken auf "Hoeren".
+   Betroffen unter anderem: "ein Stueck Kuchen, bitte.",
+   "die Kueche - der Kuchen", "Entschuldigung, wo ist der Bahnhof?",
+   "der Vater", "hervorragend", "freut mich."
+
+2. 43 Dateien hatten am Ende einen kurzen, sehr lauten Knall — bis zu
+   neunmal lauter als die Stimme davor. Ein Schnittfehler.
+
+3. Alle Aufnahmen waren viel zu leise: im Mittel 37 dB unter Vollpegel,
+   normal sind etwa 20. Man musste laut aufdrehen, um etwas zu verstehen —
+   und wurde dann vom Rauschen und den Knallern voll erwischt.
+
+4. 301 Dateien hatten Stille vor dem ersten Wort, bei einigen bis zu neun
+   Sekunden. Man drueckt auf Hoeren und es passiert erstmal nichts.
+
+
+WAS JETZT DRIN IST
+
+ton/                720 bereinigte Aufnahmen
+                    - 43 Knaller am Ende entfernt
+                    - 335 mal hinten, 301 mal vorne totes Material weg
+                    - Knackser geglaettet
+                    - alle auf gleiche Lautstaerke: im Mittel -22,6 dBFS
+                      statt -37, Spitze immer unter -1,5 dBFS
+                    - weiches Ein- und Ausblenden, damit nichts knackt
+
+stimme-dateien.js   720 Saetze statt 765. Die 45 Rausch-Saetze sind raus,
+                    damit sie ueber /api/tts gesprochen werden.
+
+RAUSCH-DATEIEN.txt  Liste der 45 kaputten Dateien mit ihren Saetzen.
+
+
+NACHGEPRUEFT
+
+Alle 720 neuen Dateien einzeln durchgemessen:
+  Knackser oder Knaller am Rand ....... 0
+  uebersteuerte Dateien ............... 0
+  Rauschen statt Sprache .............. 0
+  Lautstaerke ......................... -22,6 dBFS im Mittel, eng beieinander
+
+
+WAS DU MACHEN MUSST
+
+1. Den Ordner ton/ aus dem Zip nach Plattform/ton/ kopieren (ueberschreiben).
+2. stimme-dateien.js nach Plattform/stimme-dateien.js kopieren.
+3. Committen und pushen.
+
+Danach kommt beim Druecken auf "Hoeren" nirgends mehr ein Geraeusch.
+
+
+WAS NOCH OFFEN IST
+
+Die Aufnahmen in ton/ sind alle kuenstlich erzeugt (24 kHz Mono) — keine
+davon ist deine Stimme. Wenn dort wirklich deine Stimme stehen soll, muessen
+die Saetze eingesprochen werden. Sag Bescheid, dann bereite ich dir die
+Aufnahmeliste nach Themen sortiert vor, damit du sie am Stueck einsprechen
+kannst.
+
+Die Hoerdateien im Uebungsbereich (127 Stueck) liegen nicht bei dir, sondern
+auf einem externen Server (cloudfront). Die konnte ich von hier aus nicht
+pruefen. Wenn dort auch etwas rauscht, sag mir welche Uebung, dann schaue
+ich gezielt nach.
