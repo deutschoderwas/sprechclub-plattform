@@ -1,0 +1,264 @@
+/* ============================================================
+   club-stil.css — der Stil des Schülerbereichs, an einer Stelle
+
+   Diese Datei wird als LETZTE im Kopf von konto.html geladen.
+   Dadurch gewinnt sie gegen die alten Stil-Blöcke, ohne dass wir
+   sie alle anfassen müssen.
+
+   Regel für später: Farben, Schriften und Formen ändert man HIER
+   und nirgendwo sonst. Wer eine Farbe in eine einzelne Ansicht
+   schreibt, bricht die Marke wieder auseinander.
+
+   Was diese Datei bewusst NICHT anfasst: Breiten, Abstände,
+   Rasterspalten, Positionen. Das Layout bleibt genau, wie es ist —
+   deshalb kann sich beim Einschalten nichts verschieben.
+   ============================================================ */
+
+/* ---------- 1. Die Marke, einmal ---------- */
+:root{
+  /* Die Farben aus dem Styleguide */
+  --tuerkis:#39CCE3;
+  --tuerkis-dunkel:#1990A4;
+  --auf-tuerkis:#063138;
+  --tuerkis-hauch:#EAFBFE;
+  --gelb:#FFE100;
+  --gelb-tief:#C9A200;
+  --gruen:#77D42A;
+  --gruen-tief:#4E9E12;
+  --rot:#DD0000;
+  --rot-tief:#B00000;
+  --tinte:#20211F;
+  --creme:#FFF8E0;
+  --karte:#FFFDF3;
+  --linie:#E7DFC7;
+  --linie-hell:#EFE9D8;
+
+  /* Die handgezeichnete Ecke — der Wiedererkennungswert */
+  --hand:255px 12px 225px 15px/15px 225px 15px 255px;
+  --schatten:3px 4px 0 rgba(32,33,31,.10);
+  --schatten-tief:4px 5px 0 rgba(32,33,31,.16);
+
+  /* Die Schriften */
+  --schrift-titel:'Caveat Brush', cursive;
+  --schrift-kopf:'Shantell Sans', 'Inter', cursive;
+  --schrift-notiz:'Caveat', cursive;
+  --schrift-text:'Inter', system-ui, -apple-system, sans-serif;
+
+  /* Die alten Namen zeigen jetzt auf die neuen Farben.
+     Dadurch zieht alles mit, was sie schon benutzt. */
+  --primary:#DD0000;
+  --primary-dark:#B00000;
+  --secondary:#20211F;
+  --accent:#FFE100;
+  --turquoise:#39CCE3;
+  --turquoise-soft:#9FE4F1;
+  --cream:#FFFDF3;
+  --bg:#FFF8E0;
+  --text:#20211F;
+  --text-soft:#54594a;
+  --border:#E7DFC7;
+  --green:#4E9E12;
+  --green-soft:#EFFBE4;
+}
+
+/* ---------- 2. Grundfläche ---------- */
+body{
+  font-family:var(--schrift-text);
+  color:var(--tinte);
+  background-color:var(--creme);
+  background-image:
+    radial-gradient(circle at 92% 3%, rgba(57,204,227,.10), transparent 26%),
+    radial-gradient(circle at 5% 15%, rgba(119,212,42,.05), transparent 20%);
+  background-attachment:fixed;
+}
+
+/* ---------- 3. Überschriften ---------- */
+/* Feste Zeilenhöhen. Die Handschrift-Schriften kommen erst nach dem Text
+   an. Steht die Zeilenhöhe fest, bleibt der Kasten gleich hoch und der
+   Inhalt darunter rutscht beim Nachladen nicht nach unten. */
+h1,.pagehead h1{font-family:var(--schrift-titel);font-weight:400;letter-spacing:.005em;line-height:1.06}
+h2{font-family:var(--schrift-kopf);font-weight:700;letter-spacing:.005em;line-height:1.20}
+h3{font-family:var(--schrift-kopf);font-weight:700;letter-spacing:.005em;line-height:1.25}
+h4,h5,h6{font-family:var(--schrift-kopf);font-weight:700;line-height:1.30}
+/* Keine künstlich schräg gestellten oder fett gerechneten Schriften —
+   das sieht billig aus und misst sich unterschiedlich. */
+h1,h2,h3,h4,h5,h6,.navlink,.btn,.kpill{font-synthesis:none}
+.pagehead p{color:var(--text-soft)}
+
+/* Der Signature-Move: gelbe Füllung mit Tintenkontur.
+   Nur in großen Überschriften — im Fließtext wäre er unlesbar. */
+h1 .mark,h1 .cap,.pagehead h1 .mark{
+  color:var(--gelb);
+  -webkit-text-stroke:2.5px var(--tinte);
+  paint-order:stroke fill;
+  text-shadow:3px 3px 0 rgba(32,33,31,.22);
+  background:none;
+}
+h2 .mark,h3 .mark,p .mark,li .mark{
+  background:linear-gradient(180deg,transparent 55%,var(--gelb) 55%);
+  padding:0 2px;border-radius:3px;color:var(--tinte);
+}
+
+/* ---------- 4. Seitenleiste ---------- */
+.sidebar{
+  background:var(--karte);
+  border-right:2.5px solid var(--tinte);
+}
+.brand{font-family:var(--schrift-kopf);font-weight:700;color:var(--tinte)}
+.brand img{border:2px solid var(--tinte);border-radius:50%}
+.nav-sec{font-family:var(--schrift-kopf);font-weight:700;color:var(--tuerkis-dunkel);letter-spacing:.06em}
+.navlink{
+  font-family:var(--schrift-kopf);
+  font-weight:700;
+  color:var(--text-soft);
+  border-radius:12px;
+  /* Der Zähler rechts soll den Text nicht zusammenschieben */
+  position:relative;
+  padding-right:40px;
+}
+.navlink:hover{background:var(--tuerkis-hauch);color:var(--tinte)}
+.navlink.active{
+  background:var(--tuerkis);
+  color:var(--auf-tuerkis);
+  border:2.5px solid var(--auf-tuerkis);
+  box-shadow:2px 3px 0 rgba(6,49,56,.22);
+  /* Rahmen und Schatten dürfen die Zeile nicht wachsen lassen */
+  padding-top:8.5px;padding-bottom:8.5px;padding-left:10.5px;
+}
+.navlink .badge,.navlink #commBadge{
+  position:absolute;right:11px;top:50%;transform:translateY(-50%);margin-left:0;
+}
+.nav-trenner{border-top:2px dotted var(--linie);margin:8px 4px}
+
+/* ---------- 5. Karten ----------
+   Der Rahmen wird von 1px auf 2.5px dicker. Die 1.5px nehmen wir beim
+   Innenabstand wieder weg, damit die Karte exakt gleich groß bleibt und
+   beim Einschalten nichts verrutscht. */
+.card,.stat,.hero-card,.box,.panel,.tile,.mc-card,.badge-card,.dsh-kpi,.dsh-live,.next-hero{
+  background:var(--karte);
+  border:2.5px solid var(--tinte);
+  border-radius:16px;
+  box-shadow:var(--schatten);
+}
+.card{padding:16.5px}
+.stat{padding:14.5px}
+.hero-card{
+  background:linear-gradient(135deg,#FFFDF3,#FFF3C9);
+  border-color:var(--tinte);
+  border-radius:20px;
+  box-shadow:var(--schatten-tief);
+  padding:21.5px 23.5px;   /* war 22px 24px bei 2px Rahmen */
+}
+
+/* ---------- 6. Knöpfe ---------- */
+.btn{
+  font-family:var(--schrift-kopf);
+  font-weight:700;
+  border-radius:var(--hand);
+  border:2.5px solid var(--tinte);
+  padding:7.5px 15.5px;   /* war 10px 18px ganz ohne Rahmen */
+  /* Nur Farbe und ein kleiner Versatz — nie Größe, sonst springt das Layout */
+  transition:background-color .15s ease,color .15s ease,transform .15s ease,box-shadow .15s ease;
+}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:translateY(0)}
+.btn-primary{
+  background:var(--tuerkis);
+  color:var(--auf-tuerkis);
+  border-color:var(--auf-tuerkis);
+  box-shadow:2px 3px 0 rgba(6,49,56,.28);
+}
+.btn-primary:hover{background:#54D6EA;box-shadow:3px 4px 0 rgba(6,49,56,.28)}
+.btn-ghost{
+  background:var(--karte);
+  color:var(--tinte);
+  border-color:var(--tinte);
+  box-shadow:2px 3px 0 rgba(32,33,31,.16);
+}
+.btn-ghost:hover{background:var(--creme)}
+.btn-rot,.btn-danger{background:var(--rot);color:#fff;border-color:var(--rot-tief);box-shadow:2px 3px 0 rgba(176,0,0,.30)}
+.btn:disabled,.btn[disabled]{opacity:.55;cursor:default;transform:none;box-shadow:none}
+
+/* ---------- 7. Pillen, Abzeichen, Marken ---------- */
+.kpill,.pill,.chip,.lvl{
+  font-family:var(--schrift-kopf);
+  font-weight:700;
+  border:2.5px solid var(--tinte);
+  background:var(--karte);
+  color:var(--tinte);
+  border-radius:var(--hand);
+  box-shadow:2px 3px 0 rgba(32,33,31,.12);
+  padding:7.5px 14.5px;   /* war 8px 15px bei 2px Rahmen */
+}
+.kpill.active,.pill.active,.chip.active,.kpill.on,.pill.on{
+  background:var(--tuerkis);color:var(--auf-tuerkis);border-color:var(--auf-tuerkis);
+}
+.badge{
+  font-family:var(--schrift-kopf);font-weight:700;
+  background:var(--rot);color:#fff;
+  border:2px solid var(--tinte);border-radius:20px;
+}
+
+/* ---------- 8. Eingabefelder ---------- */
+input[type=text],input[type=email],input[type=password],input[type=search],
+input[type=number],input[type=tel],input[type=date],input[type=time],
+textarea,select{
+  font-family:var(--schrift-text);
+  color:var(--tinte);
+  background:#fff;
+  border:2.5px solid var(--tinte);
+  border-radius:13px;
+  padding:9.5px 11.5px;   /* war 10px 12px bei 2px Rahmen */
+}
+input:focus,textarea:focus,select:focus{
+  outline:none;
+  border-color:var(--tuerkis-dunkel);
+  box-shadow:0 0 0 3px rgba(57,204,227,.25);
+}
+label,.field label{font-family:var(--schrift-kopf);font-weight:700;color:var(--tinte)}
+
+/* ---------- 9. Tabellen ---------- */
+table{border-collapse:collapse}
+th{font-family:var(--schrift-kopf);font-weight:700;color:var(--tuerkis-dunkel);text-align:left}
+td,th{border-bottom:2px solid var(--linie-hell)}
+
+/* ---------- 10. Kleine Hinweise in Handschrift ---------- */
+.hinweis,.note,.tip,figcaption{font-family:var(--schrift-notiz);font-size:1.1em;color:var(--text-soft)}
+
+/* ============================================================
+   11. Ruhe im Layout
+   Dieselben Regeln wie im Community-Bereich. Sie sorgen dafür,
+   dass beim Laden, Klicken und Tippen nichts hüpft.
+   ============================================================ */
+
+/* Die Scrollleiste belegt ihren Platz dauerhaft, sonst rutscht der
+   ganze Inhalt seitwärts, sobald sie auftaucht. */
+html{scrollbar-gutter:stable}
+.main,.content-inner,.sidebar{scrollbar-gutter:stable}
+
+/* Bilder bekommen ihren Platz, bevor sie geladen sind */
+img{max-width:100%}
+img[width][height]{height:auto}
+
+/* Zahlen laufen nicht in der Breite, wenn sie sich ändern */
+.big,.stat b,.dsh-kpi b,.zahl,time{font-variant-numeric:tabular-nums}
+
+/* Bewegung nur da, wo sie nichts verschiebt */
+.card,.stat,.kpill,.pill,.navlink{
+  transition:background-color .15s ease,border-color .15s ease,color .15s ease,box-shadow .15s ease;
+}
+
+/* Wer im Betriebssystem „Bewegung reduzieren" eingestellt hat,
+   bekommt gar keine — das erwartet man von einer ernsthaften Anwendung. */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    transition-duration:.01ms!important;
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    scroll-behavior:auto!important;
+  }
+  .btn:hover{transform:none}
+}
+
+/* Tastaturbedienung sichtbar machen — gehört zu „echte Plattform" */
+:focus-visible{outline:3px solid var(--tuerkis-dunkel);outline-offset:2px;border-radius:6px}
