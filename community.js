@@ -22,6 +22,7 @@
   function E(s){ return (window.esc?window.esc(s):String(s==null?'':s).replace(/[&<>"]/g,function(c){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]);})); }
   function root(){ return document.getElementById('v-community'); }
   function q(sel){ var r=root(); return r?r.querySelector(sel):null; }
+  function vorname(n){ return String(n==null?'':n).trim().split(/\s+/)[0] || 'Mitglied'; }
   function initials(n){ n=String(n||'M').trim(); var p=n.split(/\s+/); return ((p[0]||'?')[0]+(p[1]?p[1][0]:'')).toUpperCase(); }
   function avClass(name){ var s=String(name||'?'),h=0; for(var i=0;i<s.length;i++){h=(h*31+s.charCodeAt(i))>>>0;} return 'a'+((h%6)+1); }
   function isRealId(id){ return !!id && String(id).indexOf('tmp-')!==0 && String(id).indexOf('up-')!==0; }
@@ -50,6 +51,17 @@
 
   function injectStyle(){
     if(styled) return; styled=true;
+    try{
+      if(!document.getElementById('dowFonts')){
+        ['https://fonts.googleapis.com','https://fonts.gstatic.com'].forEach(function(h,i){
+          var pc=document.createElement('link'); pc.rel='preconnect'; pc.href=h;
+          if(i) pc.crossOrigin=''; document.head.appendChild(pc);
+        });
+        var fl=document.createElement('link'); fl.id='dowFonts'; fl.rel='stylesheet';
+        fl.href='https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Caveat+Brush&family=Shantell+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap';
+        document.head.appendChild(fl);
+      }
+    }catch(e){}
     var css = `
     #v-community{--brand:#1B9BC0;--brand-2:#14708B;--brand-ink:#0A3F39;--brand-wash:#F1FAF8;--brand-line:#CDEBE5;--red:#D23B3B;--gold:#C79600;--ink:#191B1C;--t1:#191B1C;--t2:#5A6169;--t3:#8B929A;--surface:#FFFFFF;--surface-2:#FAFAF8;--line:#E6E5E0;--line-2:#EFEEEA;--fh:'Space Grotesk','Inter',sans-serif}
     #v-community{font-size:14px;color:var(--t1)}
@@ -118,7 +130,7 @@
     #v-community .mfile .fi{width:34px;height:34px;border-radius:7px;background:#EAF3F1;color:var(--brand-2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
     #v-community .mfile b{font-size:12.5px;color:var(--ink)}
     #v-community .mfile small{font-size:11px;color:var(--t3);display:block}
-    #v-community .mimg{margin-top:6px;max-width:230px;max-height:280px;border-radius:10px;border:1px solid var(--line);display:block;cursor:pointer}
+    #v-community .mimg{margin-top:6px;width:230px;max-width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:10px;border:1px solid var(--line);display:block;cursor:pointer;background:#EFE9D8}
     #v-community .corr{margin-top:7px;border:1px solid var(--brand-line);background:var(--brand-wash);border-radius:10px;padding:10px 12px;max-width:460px}
     #v-community .corr .ch2{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:var(--brand-2);margin-bottom:4px}
     #v-community .corr .cx{font-size:13.5px;color:var(--ink);font-weight:600}
@@ -257,6 +269,183 @@
 #v-community .replybar button{border:none;background:none;cursor:pointer;color:var(--t3);font-size:16px;line-height:1;padding:2px 4px}
 #v-community .m.hl{background:#FFF8E1}
 
+/* ============================================================
+   Schulheft-Stil — dieselbe Marke wie deutschoderwas-club.de
+   ============================================================ */
+#v-community{
+  --tuerkis:#39CCE3; --tuerkis-dunkel:#1990A4; --auf-tuerkis:#063138;
+  --gelb:#FFE100; --gruen:#77D42A; --rot-s:#DD0000; --tinte:#20211F;
+  --creme:#FFF8E0; --karte:#FFFDF3; --hand:255px 12px 225px 15px/15px 225px 15px 255px;
+  --brand:#39CCE3; --brand-2:#1990A4; --brand-ink:#063138;
+  --brand-wash:#EAFBFE; --brand-line:#9FE4F1;
+  --red:#DD0000; --gold:#C79600;
+  --ink:#20211F; --t1:#20211F; --t2:#54594a; --t3:#8b9088;
+  --surface:#FFFDF3; --surface-2:#FFF8E0; --line:#E7DFC7; --line-2:#EFE9D8;
+  --fh:'Shantell Sans','Inter',cursive;
+}
+#v-community .pagehead h1{font-family:'Caveat Brush',cursive!important;font-size:clamp(28px,4vw,40px)!important;font-weight:400!important;color:var(--tinte)}
+#v-community .pagehead p{color:var(--t2)}
+
+/* Rahmen und Spalten */
+#v-community .comm{
+  border:2.5px solid var(--tinte)!important;border-radius:18px!important;
+  background:var(--karte)!important;box-shadow:4px 5px 0 rgba(32,33,31,.12)!important}
+#v-community .cs{border-right:2.5px solid var(--tinte)!important;background:var(--creme)!important}
+#v-community .ms{border-left:2.5px solid var(--tinte)!important;background:var(--creme)!important}
+#v-community .cs-h{border-bottom:2.5px solid var(--line)!important}
+#v-community .cs-h b{font-family:var(--fh)!important;font-weight:700!important}
+#v-community .ch-hd{border-bottom:2.5px solid var(--tinte)!important;background:var(--karte)}
+#v-community .ch-hd .ti{font-family:var(--fh)!important;font-weight:700!important;font-size:16px!important}
+
+/* Kanalliste */
+#v-community .cg,#v-community .gh{font-family:var(--fh)!important;font-weight:700!important;color:var(--tuerkis-dunkel)!important;letter-spacing:.02em!important}
+#v-community .ch{border-radius:11px!important;font-weight:600}
+#v-community .ch:hover{background:rgba(57,204,227,.14)!important;color:var(--tinte)!important}
+#v-community .ch.on{background:rgba(57,204,227,.26)!important;border:2px solid var(--tuerkis)!important;color:var(--auf-tuerkis)!important}
+#v-community .ch .cn{background:var(--rot-s)!important;border:2px solid var(--tinte);font-family:var(--fh)}
+#v-community .cs-more{font-family:var(--fh)!important;font-weight:700!important;border:2.5px solid var(--tinte)!important;
+  border-radius:var(--hand)!important;background:var(--karte)!important;color:var(--tinte)!important;
+  box-shadow:2px 3px 0 rgba(32,33,31,.14)!important}
+
+/* Ein Beitrag samt Antworten = eine Karte */
+#v-community .feed{padding:12px 16px 10px}
+#v-community .thr{
+  background:var(--karte);border:2.5px solid var(--tinte);border-radius:16px;
+  box-shadow:3px 4px 0 rgba(32,33,31,.10);padding:12px 14px 10px;margin:0 0 14px}
+#v-community .thr .m{margin:0;padding:0;background:none!important}
+#v-community .thr .m:hover{background:none!important}
+#v-community .mh .w{font-family:var(--fh)!important;font-weight:700!important;font-size:14px!important;color:var(--tinte)!important}
+#v-community .mt{color:#2e322c;font-size:14px}
+#v-community .m.pinned{outline:none}
+#v-community .m.hl{background:rgba(255,225,0,.30)!important;border-radius:10px}
+
+/* Antworten haengen sichtbar unter dem Beitrag */
+#v-community .thr-a{margin:2px 0 0 12px;padding-left:14px;border-left:2.5px solid var(--line)}
+#v-community .thr-a:empty{display:none}
+#v-community .m-a{padding:8px 0 2px!important}
+#v-community .m-a .ava{width:28px;height:28px;font-size:11px}
+#v-community .m-a .mh .w{font-size:13px!important}
+#v-community .thr-mehr{display:block;width:100%;text-align:left;border:none;background:none;cursor:pointer;
+  font-family:var(--fh);font-weight:700;font-size:12.5px;color:var(--tuerkis-dunkel);padding:7px 0 5px}
+#v-community .thr-mehr:hover{text-decoration:underline}
+
+/* Schnellzeile: reagieren und antworten */
+#v-community .schnell{display:flex;align-items:center;gap:5px;margin-top:8px;padding-top:8px;border-top:2px dotted var(--line)}
+#v-community .schnell .sr-e{border:2px solid transparent;background:none;cursor:pointer;font-size:16px;
+  line-height:1;padding:3px 5px;border-radius:9px;transition:transform .12s}
+#v-community .schnell .sr-e:hover{background:var(--brand-wash);border-color:var(--tuerkis);transform:scale(1.15)}
+#v-community .schnell .sr-r{margin-left:auto;display:inline-flex;align-items:center;gap:5px;cursor:pointer;
+  font-family:var(--fh);font-weight:700;font-size:12.5px;color:var(--auf-tuerkis);
+  background:var(--brand-wash);border:2px solid var(--tuerkis);border-radius:var(--hand);padding:4px 12px}
+#v-community .schnell .sr-r:hover{background:var(--tuerkis)}
+
+/* Reaktionen */
+#v-community .rc span{border:2px solid var(--tinte)!important;background:var(--karte)!important;
+  border-radius:20px!important;font-family:var(--fh)!important;font-weight:700!important;color:var(--t2)!important}
+#v-community .rc span.on{background:var(--gelb)!important;color:var(--tinte)!important;border-color:var(--tinte)!important}
+#v-community .repop{border:2.5px solid var(--tinte)!important;border-radius:14px!important;
+  background:var(--karte)!important;box-shadow:3px 4px 0 rgba(32,33,31,.16)!important}
+
+/* Zitat und Antwortleiste */
+#v-community .quote{border-left:3px solid var(--tuerkis)!important;background:var(--brand-wash)!important;border-radius:0 9px 9px 0}
+#v-community .replybar{background:var(--brand-wash)!important;border:2.5px solid var(--tuerkis)!important;
+  border-radius:11px!important;color:var(--auf-tuerkis)!important;font-family:var(--fh)}
+
+/* Sprachnachricht */
+#v-community .voice{border:2.5px solid var(--tinte)!important;border-radius:13px!important;background:#fff!important;
+  box-shadow:2px 3px 0 rgba(32,33,31,.10)!important}
+#v-community .voice .vp{background:var(--gelb)!important;color:var(--tinte)!important;border:2.5px solid var(--tinte)!important}
+#v-community .wave i{background:#cfe7ec}
+#v-community .wave i.p{background:var(--tuerkis-dunkel)}
+
+/* Schreibfeld */
+#v-community .cmp-in{border:2.5px solid var(--tinte)!important;border-radius:15px!important;background:#fff!important;
+  box-shadow:2px 3px 0 rgba(32,33,31,.10)!important}
+#v-community .cmp-in textarea{font-family:'Inter',system-ui,sans-serif!important;font-size:14px!important;color:var(--tinte)}
+#v-community .cse{background:var(--tuerkis)!important;color:var(--auf-tuerkis)!important;border:2.5px solid var(--auf-tuerkis)!important;
+  border-radius:50%!important;box-shadow:1px 2px 0 rgba(6,49,56,.30)!important}
+#v-community .ct{color:var(--t2)!important;border-radius:10px!important}
+#v-community .ct:hover{background:var(--brand-wash)!important;color:var(--auf-tuerkis)!important}
+#v-community .ct.rec{background:var(--rot-s)!important;color:#fff!important}
+#v-community .chint{font-family:'Caveat',cursive!important;font-size:14px!important;color:var(--t3)}
+
+/* Mitgliederspalte */
+#v-community .ms h4{font-family:var(--fh)!important;font-weight:700!important;color:var(--tuerkis-dunkel)!important}
+#v-community .mn{font-family:var(--fh)!important;font-weight:700!important}
+#v-community .ava{border:2px solid var(--tinte);font-family:var(--fh)!important}
+
+/* Trennlinie zwischen Tagen */
+#v-community .dsep{font-family:var(--fh)!important;font-weight:700!important;color:var(--tuerkis-dunkel)!important}
+#v-community .dsep::before,#v-community .dsep::after{background:var(--line)!important}
+
+#v-community .cm-empty{font-family:'Caveat',cursive;font-size:17px;color:var(--t3)}
+
+/* ============================================================
+   Ruhe im Layout — nichts springt, nichts wackelt
+   ============================================================ */
+
+/* Scrollleisten belegen ihren Platz dauerhaft. Sonst rutscht der ganze
+   Inhalt seitwaerts, sobald eine Leiste auftaucht oder verschwindet. */
+#v-community .feed,#v-community .cs-l,#v-community .ms{scrollbar-gutter:stable}
+#v-community .feed{overflow-anchor:auto;overscroll-behavior:contain}
+#v-community .cmp-box,#v-community .ch-hd,#v-community #cmPinned{overflow-anchor:none}
+
+/* Die Reaktionszeile hat immer dieselbe Hoehe. Die erste Reaktion an einem
+   Beitrag schiebt dadurch nichts mehr nach unten. */
+#v-community .rc{min-height:26px;margin-top:4px;align-items:center}
+#v-community .m-a .rc{min-height:22px}
+#v-community .rc span{min-height:22px;line-height:1}
+
+/* Der Ungelesen-Zaehler sitzt fest rechts im Kanal, statt den Namen
+   zusammenzuschieben, sobald eine Zahl erscheint. */
+#v-community .ch{position:relative;padding-right:38px!important}
+#v-community .ch .cn{position:absolute;right:9px;top:50%;transform:translateY(-50%);margin-left:0!important}
+#v-community .gh{position:relative;padding-right:34px}
+#v-community .gh .gn{position:absolute;right:8px;top:50%;transform:translateY(-50%)}
+
+/* Feste Hoehen dort, wo Inhalt nachgeladen wird */
+#v-community .ava{flex:0 0 auto}
+#v-community .voice{min-height:50px}
+#v-community .wave{min-height:24px}
+#v-community .schnell{min-height:34px}
+#v-community .schnell .sr-r{flex:0 0 auto;white-space:nowrap}
+#v-community .mh{min-height:19px}
+#v-community .mh time{flex:0 0 auto;font-variant-numeric:tabular-nums}
+#v-community .mh .w{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:14em}
+
+/* Beim Laden der Handschrift-Schriften soll die Zeile nicht umspringen */
+#v-community .pagehead h1,#v-community .ch-hd .ti,#v-community .mh .w{font-synthesis:none}
+
+/* Keine Bewegung, die Platz kostet — nur Farbe und Skalierung */
+#v-community .ch,#v-community .thr,#v-community .rc span,#v-community .sr-e,#v-community .sr-r{
+  transition:background-color .14s ease,border-color .14s ease,color .14s ease,transform .12s ease}
+#v-community .thr{contain:layout style}
+
+/* Wer es ruhiger mag oder Bewegung schlecht vertraegt, bekommt gar keine */
+@media (prefers-reduced-motion:reduce){
+  #v-community *,#v-community *::before,#v-community *::after{
+    transition-duration:.01ms!important;animation-duration:.01ms!important;scroll-behavior:auto!important}
+  #v-community .schnell .sr-e:hover{transform:none}
+}
+
+@media(max-width:900px){
+  /* Auf dem Handy gibt es kein Schweben: die Werkzeugleiste steht dann
+     immer da. Beim Hauptbeitrag ist das doppelt, weil die Schnellzeile
+     Reagieren und Antworten schon anbietet. */
+  #v-community .thr > .m > .msg-actions [data-addr],
+  #v-community .thr > .m > .msg-actions [data-rep]{display:none}
+  #v-community .msg-actions{margin-top:1px!important;opacity:.75}
+  #v-community .chint{display:none!important}
+}
+@media(max-width:680px){
+  #v-community .thr{padding:10px 11px 8px;border-radius:14px;margin-bottom:11px}
+  #v-community .thr-a{margin-left:2px;padding-left:9px}
+  #v-community .schnell{gap:3px;margin-top:6px;padding-top:6px}
+  #v-community .schnell .sr-e{font-size:19px;padding:4px 5px}
+  #v-community .schnell .sr-r{padding:4px 10px;font-size:12px}
+  #v-community .cmp-in textarea{font-size:16px!important}
+}
+
 `; document.head.appendChild(st);
   }
 
@@ -388,7 +577,10 @@
   }
   function paintSidebar(){
     var l=q('.cs-l'); if(!l) return;
-    l.innerHTML=sideHtml();
+    var h=sideHtml();
+    if(l.innerHTML===h) return;          // nichts geaendert, nichts anfassen
+    var oben=l.scrollTop;
+    l.innerHTML=h; l.scrollTop=oben;     // Bildlauf der Liste bleibt stehen
     bindSidebar();
   }
   function updateGroupCounts(){
@@ -585,6 +777,19 @@
     var kb=t.closest('[data-kibtn]'); if(kb){ ev.stopPropagation(); aiCorrect(kb.getAttribute('data-kibtn')); return; }
     var pn=t.closest('[data-pin]'); if(pn){ ev.stopPropagation(); togglePin(pn.getAttribute('data-pin')); return; }
     var sv=t.closest('[data-savecorr]'); if(sv){ ev.stopPropagation(); saveTrainer(sv.getAttribute('data-savecorr')); return; }
+    var mh=t.closest('[data-mehr]');
+    if(mh){
+      ev.stopPropagation();
+      var box=q('#cmFeed');
+      var vorH=box?box.scrollHeight:0, vorT=box?box.scrollTop:0;
+      var alt2=q('.thr-alt[data-alt="'+mh.getAttribute('data-mehr')+'"]');
+      if(alt2) alt2.hidden=false;
+      mh.remove();
+      // Der aufgeklappte Teil steht oberhalb — Bildlauf mitziehen, damit
+      // der Beitrag unter dem Finger stehen bleibt.
+      if(box){ box.scrollTop = vorT + (box.scrollHeight - vorH); }
+      return;
+    }
     var vp=t.closest('[data-play]'); if(vp){ ev.stopPropagation(); togglePlay(vp); return; }
     var dl=t.closest('[data-del]'); if(dl){ ev.stopPropagation(); delMsg(dl.getAttribute('data-del')); return; }
     var cf=t.closest('[data-corrsubmit]'); if(cf){ ev.stopPropagation(); submitCorrection(cf.getAttribute('data-corrsubmit')); return; }
@@ -698,11 +903,21 @@
     var p=null; for(var i=0;i<curMsgs.length;i++){ if(curMsgs[i].id===m.antwort_auf){ p=curMsgs[i]; break; } }
     return '<div class="quote" data-goto="'+E(m.antwort_auf)+'"><b>'+E(p?String(p.author_name||'Mitglied').split(' ')[0]:'Antwort')+'</b><span class="qt">'+E(p?kurzText(p):'Ältere Nachricht — im Verlauf nachlesen')+'</span></div>';
   }
-  function msgHtml(m){
-    return '<div class="m'+(m.pinned_at?' pinned':'')+'" data-id="'+E(m.id)+'"><div class="ava '+avClass(m.author_name)+'">'+E(initials(m.author_name))+'</div>'+
-      '<div class="mb"><div class="mh"><span class="w">'+E(m.author_name||'Mitglied')+'</span><time>'+timeStr(m.created_at)+'</time>'+(m.pinned_at?'<span class="mh-pin" title="Angepinnt">'+svg(IC.pin,'ico-sm')+'</span>':'')+'</div>'+
-      quoteHtml(m)+bodyHtml(m)+rcHtml(m.id)+'<div data-corrslot="'+E(m.id)+'">'+corrsFor(m.id)+'</div></div>'+
+  function msgHtml(m,istAntwort){
+    var vn=vorname(m.author_name);
+    return '<div class="m'+(m.pinned_at?' pinned':'')+(istAntwort?' m-a':'')+'" data-id="'+E(m.id)+'"><div class="ava '+avClass(m.author_name)+'">'+E(initials(vn))+'</div>'+
+      '<div class="mb"><div class="mh"><span class="w">'+E(vn)+'</span><time>'+timeStr(m.created_at)+'</time>'+(m.pinned_at?'<span class="mh-pin" title="Angepinnt">'+svg(IC.pin,'ico-sm')+'</span>':'')+'</div>'+
+      (istAntwort?'':quoteHtml(m))+bodyHtml(m)+rcHtml(m.id)+'<div data-corrslot="'+E(m.id)+'">'+corrsFor(m.id)+'</div></div>'+
       msgActions(m)+'</div>';
+  }
+  // Schnellzeile unter jedem Beitrag: reagieren und antworten ohne Umweg
+  function schnellHtml(m){
+    if(!isRealId(m.id)) return '';
+    var chips=QUICK.slice(0,5).map(function(em){
+      return '<button class="sr-e" data-reax="'+E(m.id)+'" data-emoji="'+em+'" title="'+em+'">'+em+'</button>';
+    }).join('');
+    return '<div class="schnell">'+chips+
+      '<button class="sr-r" data-rep="'+E(m.id)+'">'+svg(IC.reply,'ico-sm')+'Antworten</button></div>';
   }
   function msgActions(m){
     if(!isRealId(m.id)) return '';
@@ -714,12 +929,44 @@
     if(me||isAdmin){ a+='<button class="del" data-del="'+E(m.id)+'" title="Löschen">'+svg(IC.close,'ico-sm')+'</button>'; }
     return a+'</div>';
   }
+  // Beitrag + seine Antworten zu einem Strang buendeln (zwei Ebenen, wie bei Skool)
+  function baueStraenge(rows){
+    var idx={}, kinder={}, wurzeln=[];
+    rows.forEach(function(m){ idx[m.id]=m; });
+    rows.forEach(function(m){
+      var p=m.antwort_auf;
+      if(!p || !idx[p]){ wurzeln.push(m); return; }
+      var w=p, schutz=0;
+      while(idx[w] && idx[w].antwort_auf && idx[idx[w].antwort_auf] && schutz++<8){ w=idx[w].antwort_auf; }
+      (kinder[w]||(kinder[w]=[])).push(m);
+    });
+    return {wurzeln:wurzeln, kinder:kinder};
+  }
+  var ANTW_AUF=3; // so viele Antworten stehen offen da, der Rest klappt auf
+  function strangHtml(m,kinder){
+    var a=(kinder[m.id]||[]).sort(function(x,y){ return new Date(x.created_at)-new Date(y.created_at); });
+    var h='<div class="thr" data-thr="'+E(m.id)+'">'+msgHtml(m)+schnellHtml(m);
+    h+='<div class="thr-a" data-ans="'+E(m.id)+'">';
+    if(a.length>ANTW_AUF){
+      h+='<button class="thr-mehr" data-mehr="'+E(m.id)+'">'+(a.length-ANTW_AUF)+' ältere '+(a.length-ANTW_AUF===1?'Antwort':'Antworten')+' anzeigen</button>';
+      h+='<div class="thr-alt" data-alt="'+E(m.id)+'" hidden>'+a.slice(0,a.length-ANTW_AUF).map(function(x){return msgHtml(x,true);}).join('')+'</div>';
+      h+=a.slice(a.length-ANTW_AUF).map(function(x){return msgHtml(x,true);}).join('');
+    } else {
+      h+=a.map(function(x){return msgHtml(x,true);}).join('');
+    }
+    h+='</div></div>';
+    return h;
+  }
   function renderFeed(rows){
     var box=q('#cmFeed'); if(!box) return;
     if(!rows.length){ box.innerHTML='<div class="cm-empty">Noch keine Nachrichten — schreib die erste! ✍️</div>'; }
     else{
-      var out='',last='';
-      rows.forEach(function(m){ var dl=new Date(m.created_at).toDateString(); if(dl!==last){last=dl; out+='<div class="dsep">'+E(dayLabel(m.created_at))+'</div>';} out+=msgHtml(m); });
+      var st=baueStraenge(rows), out='', last='';
+      st.wurzeln.forEach(function(m){
+        var dl=new Date(m.created_at).toDateString();
+        if(dl!==last){ last=dl; out+='<div class="dsep">'+E(dayLabel(m.created_at))+'</div>'; }
+        out+=strangHtml(m,st.kinder);
+      });
       box.innerHTML=out;
     }
     box.scrollTop=box.scrollHeight;
@@ -732,7 +979,7 @@
     box.style.display='block';
     box.innerHTML='<div class="ph">'+svg(IC.pin,'ico-sm')+'Angepinnt</div>'+pins.map(function(m){
       var txt=m.kind==='text'?E(m.body||''):(m.kind==='audio'?'🎧 Sprachnachricht':(m.kind==='image'?'📷 Bild':''));
-      return '<div class="pinrow"><div class="pc"><div class="pa">'+E(m.author_name||'Mitglied')+'</div><div class="pt">'+txt+'</div></div>'+(isAdmin?'<button class="punp" data-unpin="'+E(m.id)+'">lösen</button>':'')+'</div>';
+      return '<div class="pinrow"><div class="pc"><div class="pa">'+E(vorname(m.author_name))+'</div><div class="pt">'+txt+'</div></div>'+(isAdmin?'<button class="punp" data-unpin="'+E(m.id)+'">lösen</button>':'')+'</div>';
     }).join('');
     box.onclick=function(ev){ var u=ev.target.closest&&ev.target.closest('[data-unpin]'); if(u){ togglePin(u.getAttribute('data-unpin')); } };
   }
@@ -744,12 +991,24 @@
     renderPinned();
     try{ await sbc.from('community_messages').update({pinned_at:now}).eq('id',id); }catch(e){}
   }
+  function wurzelVon(id){
+    var idx={},i; for(i=0;i<curMsgs.length;i++) idx[curMsgs[i].id]=curMsgs[i];
+    var w=id, schutz=0;
+    while(idx[w] && idx[w].antwort_auf && idx[idx[w].antwort_auf] && schutz++<8){ w=idx[w].antwort_auf; }
+    return w;
+  }
   function appendMsg(m){
     curMsgs.push(m);
     var box=q('#cmFeed'); if(!box) return;
     if(box.querySelector('.cm-empty')) box.innerHTML='';
     var near=box.scrollHeight-box.scrollTop-box.clientHeight<140;
-    box.insertAdjacentHTML('beforeend',msgHtml(m));
+    var slot=null;
+    if(m.antwort_auf){
+      var w=wurzelVon(m.antwort_auf);
+      slot=box.querySelector('.thr-a[data-ans="'+w+'"]');
+    }
+    if(slot){ slot.insertAdjacentHTML('beforeend',msgHtml(m,true)); }
+    else{ box.insertAdjacentHTML('beforeend','<div class="thr" data-thr="'+E(m.id)+'">'+msgHtml(m)+schnellHtml(m)+'<div class="thr-a" data-ans="'+E(m.id)+'"></div></div>'); }
     if(near||m.user_id===ME.id) box.scrollTop=box.scrollHeight;
   }
   function togglePlay(btn){
@@ -780,7 +1039,10 @@
   function renderComposer(canPost){
     var foot=q('#cmCmp'); if(!foot) return;
     if(!canPost){ foot.innerHTML='<div class="cmp-lock">'+svg(IC.pin,'ico-sm')+'Nur das Team schreibt hier — du bekommst alle Neuigkeiten mit.</div>'; return; }
-    var ph = mode==='dm' ? ('Nachricht an '+E((dmActive&&dmActive.name)||'')+' …') : ('Nachricht an #'+E(cur)+' …');
+    var schmal = false; try{ schmal = window.innerWidth < 560; }catch(e){}
+    var ph = mode==='dm'
+      ? ('Nachricht an '+E(vorname((dmActive&&dmActive.name)||''))+' …')
+      : (schmal ? 'Schreib etwas …' : 'Nachricht an #'+E(cur)+' …');
     foot.innerHTML='<div class="cmp-box"><div id="cmReply"></div><div class="emopick" id="cmEmo2"></div><div class="cmp-in">'+
       '<button class="ct" id="cImg" title="Bild">'+svg(IC.img)+'</button>'+
       '<textarea id="cInp" rows="1" placeholder="'+ph+'"></textarea>'+
@@ -792,7 +1054,13 @@
     var inp=q('#cInp'),send=q('#cSend'),mic=q('#cMic'),img=q('#cImg'),file=q('#cFile'),emo=q('#cEmo'),pick=q('#cmEmo2');
     if(inp){
       inp.addEventListener('keydown',function(e){ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); doSend(); } });
-      inp.addEventListener('input',function(){ inp.style.height='auto'; inp.style.height=Math.min(150,inp.scrollHeight)+'px'; });
+      inp.addEventListener('input',function(){
+        var box=q('#cmFeed');
+        var unten = box ? (box.scrollHeight-box.scrollTop-box.clientHeight < 60) : false;
+        inp.style.height='auto'; inp.style.height=Math.min(150,inp.scrollHeight)+'px';
+        // Waechst das Feld, schrumpft der Feed. Wer unten stand, bleibt unten.
+        if(box&&unten) box.scrollTop=box.scrollHeight;
+      });
     }
     if(send) send.addEventListener('click',doSend);
     if(mic) mic.addEventListener('click',toggleRec);
@@ -944,7 +1212,14 @@
       .subscribe();
   }
   function countOnline(){ var ON=window.CLUB_ONLINE||{}; return roster.filter(function(m){return ON[m.id];}).length; }
-  function paintPresence(){ if(mode!=='channel'&&mode!=='dm'&&mode!=='search'){} var rEl=q('#cmRoster'); if(rEl) rEl.innerHTML=rosterHtml(); var o=q('#cmOnline'); if(o) o.textContent=countOnline(); }
+  function paintPresence(){
+    var rEl=q('#cmRoster');
+    if(rEl){
+      var h=rosterHtml();
+      if(rEl.innerHTML!==h){ var oben=rEl.scrollTop; rEl.innerHTML=h; rEl.scrollTop=oben; }
+    }
+    var o=q('#cmOnline'); if(o){ var z=String(countOnline()); if(o.textContent!==z) o.textContent=z; }
+  }
   function stopAll(){ try{ if(chan)sbc.removeChannel(chan); if(badgeChan)sbc.removeChannel(badgeChan); }catch(e){} chan=null; badgeChan=null; }
 
   window.renderCommunity=renderCommunity;
