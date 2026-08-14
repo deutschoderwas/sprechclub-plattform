@@ -176,9 +176,13 @@
   }
   function tonDatei(t) {
     try {
-      var v = window.STIMME_DATEIEN; if (!v) return null;
-      var id = v[tonSchluessel(t)];
-      return id ? ('ton/' + id + '.mp3') : null;
+      var s = tonSchluessel(t), id = null;
+      /* zuerst die Hoer-Aufnahmen des Pruefungsbereichs (volle Adresse) */
+      var h = window.HOER_DATEIEN; if (h) id = h[s];
+      /* dann die festen Saetze der Plattform (Datei in ton/) */
+      if (!id) { var v = window.STIMME_DATEIEN; if (v) id = v[s]; }
+      if (!id) return null;
+      return /^https?:\/\//.test(id) ? id : ('ton/' + id + '.mp3');
     } catch (e) { return null; }
   }
   function tonStopp() {
