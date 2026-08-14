@@ -129,6 +129,23 @@ h2.section-title{font-family:'Fraunces',serif;font-weight:700;font-size:clamp(1.
 .speak-controls{text-align:center;margin-top:1rem;}
 footer{text-align:center;color:var(--ink-mute);font-size:.85rem;padding:3rem 1rem 1.5rem;margin-top:3rem;}
 footer strong{color:var(--ink);}
+
+/* ---- Mini-Dialoge: das Wort in echten Situationen ---- */
+.wb-dlg{max-width:720px;margin:1.2rem auto 0}
+.wb-dlg h3{font-size:1rem;margin:0 0 .1rem;letter-spacing:-.01em}
+.wb-dlg .wb-hint{font-size:.86rem;color:#6E6A63;margin:0 0 .9rem}
+.wb-b{background:var(--paper,#fff);border:2px solid var(--sand,#EBE7DF);border-radius:18px;
+  padding:.85rem 1rem;margin-bottom:.7rem}
+.wb-b .wb-kopf{display:flex;align-items:baseline;gap:.5rem;flex-wrap:wrap;margin-bottom:.55rem}
+.wb-b .wb-bed{font-weight:700;font-size:.94rem}
+.wb-b .wb-sit{font-size:.8rem;color:#6E6A63;background:#F4F1EA;border-radius:20px;padding:.1rem .55rem}
+.wb-z{display:flex;gap:.55rem;margin-bottom:.3rem;font-size:.95rem;line-height:1.5}
+.wb-z .wb-wer{flex:0 0 1.55rem;height:1.55rem;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:.72rem;font-weight:700;margin-top:.1rem}
+.wb-z.a .wb-wer{background:#DCEFF3;color:#10627A}
+.wb-z.b .wb-wer{background:#FBEED0;color:#8A6B12}
+.wb-z b{background:linear-gradient(transparent 58%,#FBE59B 58%);padding:0 1px}
+@media(max-width:600px){.wb-b{padding:.75rem .8rem}.wb-z{font-size:.92rem}}
 </style>
 </head>
 <body>
@@ -205,6 +222,7 @@ footer strong{color:var(--ink);}
 <div class="flip-side front"><div class="flip-emoji" id="flipEmoji">🧭</div><div class="flip-word" id="flipWord">führen</div><div class="flip-badge" id="flipBadge">Verb</div><div class="flip-prompt">Was bedeutet das? <br>(zum Umdrehen tippen)</div></div>
 <div class="flip-side back"><div class="flip-rule" id="flipRule">= to lead / guide</div><div class="flip-ex" id="flipEx">„Sie <strong>führt</strong> das Team."</div></div>
 </div></div>
+<div class="wb-dlg" id="wbDlg"></div>
 <div class="lk-nav"><button class="lk-btn" id="lkPrev">←</button><span class="lk-counter"><span id="lkCur">1</span> / <span id="lkTot">16</span></span><button class="lk-btn" id="lkNext">→</button></div>
 <button class="lk-shuffle" id="lkShuffle">🔀 Mischen</button>
 </section>
@@ -279,25 +297,45 @@ grid.querySelectorAll('.wcard').forEach(c=>c.addEventListener('click',()=>{if(gr
 shufBtn.onclick=()=>{const cards=[...grid.querySelectorAll('.wcard')];for(let i=cards.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cards[i],cards[j]]=[cards[j],cards[i]];}cards.forEach(c=>grid.appendChild(c));};
 })();
 const KARTEN=[
-{emoji:"🧭",word:"führen",badge:"Verb",rule:"= to lead / guide",ex:"„Sie <strong>führt</strong> das Team.“"},
-{emoji:"👑",word:"anführen",badge:"trennbar",rule:"= to lead / head",ex:"„Er <strong>führt</strong> die Gruppe <strong>an</strong>.“"},
-{emoji:"⚙️",word:"ausführen",badge:"trennbar",rule:"= to carry out / execute",ex:"„Er <strong>führt</strong> den Befehl <strong>aus</strong>.“"},
-{emoji:"📊",word:"durchführen",badge:"trennbar",rule:"= to conduct / carry out",ex:"„Wir <strong>führen</strong> es <strong>durch</strong>.“"},
-{emoji:"🆕",word:"einführen",badge:"trennbar",rule:"= to introduce / import",ex:"„Sie <strong>führen</strong> es <strong>ein</strong>.“"},
-{emoji:"😈",word:"verführen",badge:"untrennbar",rule:"= to seduce / tempt",ex:"„Der Duft hat mich <strong>verführt</strong>.“"},
-{emoji:"🎭",word:"aufführen",badge:"trennbar",rule:"= to perform (stage)",ex:"„Sie <strong>führen</strong> es <strong>auf</strong>.“"},
-{emoji:"📽️",word:"vorführen",badge:"trennbar",rule:"= to demonstrate / show",ex:"„Er <strong>führt</strong> es uns <strong>vor</strong>.“"},
-{emoji:"🚓",word:"abführen",badge:"trennbar",rule:"= to lead away",ex:"„Man <strong>führte</strong> ihn <strong>ab</strong>.“"},
-{emoji:"↩️",word:"zurückführen",badge:"trennbar",rule:"= to trace back",ex:"„Das lässt sich darauf <strong>zurückführen</strong>.“"},
-{emoji:"🚔",word:"überführen",badge:"untrennbar",rule:"= to convict / transfer",ex:"„Man hat ihn <strong>überführt</strong>.“"},
-{emoji:"➡️",word:"hinführen",badge:"trennbar",rule:"= to lead to / toward",ex:"„Wohin soll das <strong>hinführen</strong>?“"},
-{emoji:"⏩",word:"weiterführen",badge:"trennbar",rule:"= to continue / carry on",ex:"„Wir <strong>führen</strong> es <strong>weiter</strong>.“"},
-{emoji:"🔁",word:"fortführen",badge:"trennbar",rule:"= to continue / carry on",ex:"„Sie <strong>führt</strong> es <strong>fort</strong>.“"},
-{emoji:"🎒",word:"mitführen",badge:"trennbar",rule:"= to carry (with you)",ex:"„<strong>Führen</strong> Sie den Ausweis <strong>mit</strong>.“"},
-{emoji:"✨",word:"herbeiführen",badge:"trennbar",rule:"= to bring about / cause",ex:"„Es soll eine Lösung <strong>herbeiführen</strong>.“"}
+{emoji:"🧭",word:"führen",badge:"Verb",rule:"= to lead / guide",ex:"„Sie <strong>führt</strong> das Team.“",d:[{"b": "leiten, an der Spitze stehen", "s": "Im Büro", "a": "Wer führt das Projekt eigentlich?", "z": "Frau Weber. Sie führt das Team schon seit Januar."}, {"b": "ein Gespräch führen", "s": "Beim Chef", "a": "Ich möchte gern ein Gespräch mit Ihnen führen.", "z": "Gern. Kommen Sie um drei zu mir."}, {"b": "im Sortiment haben", "s": "Im Laden", "a": "Führen Sie auch glutenfreies Brot?", "z": "Leider nicht, das führen wir nicht mehr."}, {"b": "vorn liegen (Sport)", "s": "Beim Fußball", "a": "Wie steht es?", "z": "Wir führen 2:1, noch zwanzig Minuten."}, {"b": "wohin gelangen", "s": "Auf der Wanderung", "a": "Wohin führt dieser Weg?", "z": "Direkt zum See, etwa eine halbe Stunde."}]},
+{emoji:"👑",word:"anführen",badge:"trennbar",rule:"= to lead / head",ex:"„Er <strong>führt</strong> die Gruppe <strong>an</strong>.“",d:[{"b": "an der Spitze gehen", "s": "Beim Umzug", "a": "Wer führt den Zug an?", "z": "Die Musikkapelle, wie jedes Jahr."}, {"b": "nennen, als Beispiel bringen", "s": "In der Besprechung", "a": "Können Sie ein Beispiel anführen?", "z": "Ja — im letzten Quartal hatten wir denselben Fall."}, {"b": "hereinlegen (umgangssprachlich)", "s": "Unter Freunden", "a": "Das war doch gar nicht wahr!", "z": "Ich habe dich angeführt — war nur ein Scherz."}]},
+{emoji:"⚙️",word:"ausführen",badge:"trennbar",rule:"= to carry out / execute",ex:"„Er <strong>führt</strong> den Befehl <strong>aus</strong>.“",d:[{"b": "erledigen, umsetzen", "s": "Auf der Baustelle", "a": "Wer führt die Arbeiten aus?", "z": "Eine Firma aus Dortmund, ab Montag."}, {"b": "genauer erklären", "s": "Im Seminar", "a": "Könnten Sie das noch etwas ausführen?", "z": "Gern. Ich meine damit Folgendes …"}, {"b": "ins Ausland verkaufen", "s": "In der Firma", "a": "Wohin führen Sie Ihre Waren aus?", "z": "Vor allem nach Polen und Tschechien."}, {"b": "mit dem Hund rausgehen", "s": "Vor dem Haus", "a": "Wo warst du so lange?", "z": "Ich habe den Hund ausgeführt, es war so schön draußen."}, {"b": "jemanden einladen", "s": "Am Telefon", "a": "Was macht ihr am Samstag?", "z": "Er führt mich zum Essen aus, wir haben Jahrestag."}]},
+{emoji:"📊",word:"durchführen",badge:"trennbar",rule:"= to conduct / carry out",ex:"„Wir <strong>führen</strong> es <strong>durch</strong>.“",d:[{"b": "etwas Geplantes machen", "s": "Im Betrieb", "a": "Wann führen wir die Schulung durch?", "z": "Nächsten Donnerstag, von neun bis zwölf."}, {"b": "eine Untersuchung machen", "s": "Beim Arzt", "a": "Wir müssen noch einen Test durchführen.", "z": "Dauert das lange?"}, {"b": "stattfinden lassen", "s": "Im Verein", "a": "Wird das Fest bei Regen durchgeführt?", "z": "Ja, dann gehen wir einfach in die Halle."}]},
+{emoji:"🆕",word:"einführen",badge:"trennbar",rule:"= to introduce / import",ex:"„Sie <strong>führen</strong> es <strong>ein</strong>.“",d:[{"b": "neu beginnen lassen", "s": "In der Firma", "a": "Ab wann gilt die neue Regel?", "z": "Wir führen sie zum ersten Januar ein."}, {"b": "aus dem Ausland holen", "s": "Im Zoll", "a": "Was möchten Sie einführen?", "z": "Nur ein paar Lebensmittel für den Eigenbedarf."}, {"b": "jemanden einarbeiten", "s": "Am ersten Arbeitstag", "a": "Wer führt mich in die Arbeit ein?", "z": "Mein Kollege Herr Bauer, er zeigt dir alles."}, {"b": "hineinstecken", "s": "Am Automaten", "a": "Es passiert nichts.", "z": "Du musst die Karte richtig herum einführen."}]},
+{emoji:"😈",word:"verführen",badge:"untrennbar",rule:"= to seduce / tempt",ex:"„Der Duft hat mich <strong>verführt</strong>.“",d:[{"b": "neugierig machen, locken", "s": "In der Bäckerei", "a": "Ich wollte eigentlich nichts kaufen.", "z": "Der Duft hat dich verführt, gib es zu."}, {"b": "zu etwas verleiten", "s": "Unter Freunden", "a": "Ich hatte doch aufgehört zu rauchen.", "z": "Lass dich nicht dazu verführen, nur weil alle draußen stehen."}, {"b": "erobern wollen", "s": "Im Film", "a": "Worum geht es in dem Film?", "z": "Er versucht, sie zu verführen, und scheitert grandios."}]},
+{emoji:"🎭",word:"aufführen",badge:"trennbar",rule:"= to perform (stage)",ex:"„Sie <strong>führen</strong> es <strong>auf</strong>.“",d:[{"b": "auf der Bühne zeigen", "s": "Im Theater", "a": "Was führen sie diese Saison auf?", "z": "Faust, in einer modernen Fassung."}, {"b": "in einer Liste nennen", "s": "Beim Vertrag", "a": "Sind die Kosten alle aufgeführt?", "z": "Ja, auf Seite drei stehen sie einzeln aufgeführt."}, {"b": "sich benehmen (negativ)", "s": "In der Schule", "a": "Wie war er heute?", "z": "Er hat sich schrecklich aufgeführt, ich musste ihn rausschicken."}]},
+{emoji:"📽️",word:"vorführen",badge:"trennbar",rule:"= to demonstrate / show",ex:"„Er <strong>führt</strong> es uns <strong>vor</strong>.“",d:[{"b": "zeigen, demonstrieren", "s": "Auf der Messe", "a": "Können Sie mir das Gerät vorführen?", "z": "Natürlich, ich zeige Ihnen kurz, wie es funktioniert."}, {"b": "jemanden bloßstellen", "s": "Im Büro", "a": "Das war unfair vor allen Leuten.", "z": "Ja, er hat sie richtig vorgeführt. Das gehört sich nicht."}, {"b": "zur Behörde bringen", "s": "In den Nachrichten", "a": "Was ist mit dem Mann passiert?", "z": "Er wurde dem Richter vorgeführt."}]},
+{emoji:"🚓",word:"abführen",badge:"trennbar",rule:"= to lead away",ex:"„Man <strong>führte</strong> ihn <strong>ab</strong>.“",d:[{"b": "wegbringen", "s": "Bei der Polizei", "a": "Was war da los?", "z": "Sie haben ihn in Handschellen abgeführt."}, {"b": "Geld weiterleiten", "s": "Beim Steuerberater", "a": "Was passiert mit der Umsatzsteuer?", "z": "Die führen Sie monatlich ans Finanzamt ab."}, {"b": "vom Thema wegführen", "s": "In der Diskussion", "a": "Das führt uns zu weit ab.", "z": "Sie haben recht, zurück zum eigentlichen Punkt."}]},
+{emoji:"↩️",word:"zurückführen",badge:"trennbar",rule:"= to trace back",ex:"„Das lässt sich darauf <strong>zurückführen</strong>.“",d:[{"b": "als Ursache erklären", "s": "Beim Arzt", "a": "Woher kommen die Beschwerden?", "z": "Das lässt sich auf den Stress zurückführen."}, {"b": "wieder hinbringen", "s": "Auf der Führung", "a": "Und jetzt?", "z": "Ich führe Sie zum Ausgang zurück."}, {"b": "wieder aufnehmen", "s": "Im Betrieb", "a": "Und nach der Elternzeit?", "z": "Wir führen sie langsam in den Beruf zurück."}]},
+{emoji:"🚔",word:"überführen",badge:"untrennbar",rule:"= to convict / transfer",ex:"„Man hat ihn <strong>überführt</strong>.“",d:[{"b": "die Schuld nachweisen", "s": "Im Gerichtssaal", "a": "Und dann?", "z": "Die Spuren haben ihn überführt, er hat gestanden."}, {"b": "transportieren", "s": "In der Werkstatt", "a": "Wo ist das Auto?", "z": "Wir überführen es morgen nach Hamburg."}, {"b": "umwandeln in", "s": "In der Firma", "a": "Was wird aus dem Projekt?", "z": "Es wird in eine feste Abteilung überführt."}]},
+{emoji:"➡️",word:"hinführen",badge:"trennbar",rule:"= to lead to / toward",ex:"„Wohin soll das <strong>hinführen</strong>?“",d:[{"b": "wohin gelangen", "s": "Bei der Diskussion", "a": "Wohin soll das alles hinführen?", "z": "Zu einer Lösung, hoffe ich."}, {"b": "jemanden bringen", "s": "Im Museum", "a": "Ich finde den Saal nicht.", "z": "Kommen Sie, ich führe Sie hin."}, {"b": "langsam heranführen", "s": "Im Unterricht", "a": "Ist das nicht zu schwer?", "z": "Ich führe die Klasse langsam zum Thema hin."}]},
+{emoji:"⏩",word:"weiterführen",badge:"trennbar",rule:"= to continue / carry on",ex:"„Wir <strong>führen</strong> es <strong>weiter</strong>.“",d:[{"b": "fortsetzen", "s": "Im Betrieb", "a": "Und wenn der Chef aufhört?", "z": "Sein Sohn führt das Geschäft weiter."}, {"b": "nicht nützen (verneint)", "s": "In der Besprechung", "a": "Sollen wir noch länger streiten?", "z": "Nein, das führt uns nicht weiter."}, {"b": "weiterführende Schule", "s": "Beim Elternabend", "a": "Und nach der vierten Klasse?", "z": "Dann kommt die weiterführende Schule."}]},
+{emoji:"🔁",word:"fortführen",badge:"trennbar",rule:"= to continue / carry on",ex:"„Sie <strong>führt</strong> es <strong>fort</strong>.“",d:[{"b": "weitermachen", "s": "Im Verein", "a": "Wer macht nach ihr weiter?", "z": "Frau Klein führt die Arbeit fort."}, {"b": "eine Tradition halten", "s": "In der Familie", "a": "Backt ihr das jedes Jahr?", "z": "Ja, wir führen das Rezept meiner Oma fort."}]},
+{emoji:"🎒",word:"mitführen",badge:"trennbar",rule:"= to carry (with you)",ex:"„<strong>Führen</strong> Sie den Ausweis <strong>mit</strong>.“",d:[{"b": "dabeihaben (amtlich)", "s": "Bei der Kontrolle", "a": "Führen Sie Ihren Ausweis mit?", "z": "Ja, hier bitte."}, {"b": "transportieren", "s": "Im Zug", "a": "Darf ich das Fahrrad mitnehmen?", "z": "Fahrräder dürfen Sie nur in diesem Wagen mitführen."}, {"b": "etwas transportieren (Natur)", "s": "In den Nachrichten", "a": "Warum ist der Fluss so braun?", "z": "Er führt nach dem Regen viel Schlamm mit."}]},
+{emoji:"✨",word:"herbeiführen",badge:"trennbar",rule:"= to bring about / cause",ex:"„Es soll eine Lösung <strong>herbeiführen</strong>.“",d:[{"b": "bewirken, auslösen", "s": "In der Politik", "a": "Was soll das Gespräch bringen?", "z": "Es soll eine Einigung herbeiführen."}, {"b": "eine Entscheidung erzwingen", "s": "Im Betrieb", "a": "Wir drehen uns im Kreis.", "z": "Dann müssen wir heute eine Entscheidung herbeiführen."}]}
 ];
 let order=KARTEN.map((_,i)=>i);let lkIdx=0;const flipEl=document.getElementById('flip');
-function showCard(){const k=KARTEN[order[lkIdx]];document.getElementById('flipEmoji').textContent=k.emoji;document.getElementById('flipWord').textContent=k.word;document.getElementById('flipBadge').textContent=k.badge;document.getElementById('flipRule').innerHTML=k.rule;document.getElementById('flipEx').innerHTML=k.ex;document.getElementById('lkCur').textContent=lkIdx+1;document.getElementById('lkTot').textContent=KARTEN.length;flipEl.classList.remove('flipped');}
+function showCard(){const k=KARTEN[order[lkIdx]];document.getElementById('flipEmoji').textContent=k.emoji;document.getElementById('flipWord').textContent=k.word;document.getElementById('flipBadge').textContent=k.badge;document.getElementById('flipRule').innerHTML=k.rule;document.getElementById('flipEx').innerHTML=k.ex;document.getElementById('lkCur').textContent=lkIdx+1;document.getElementById('lkTot').textContent=KARTEN.length;flipEl.classList.remove('flipped');zeigeDialoge(k);}
+/* Das Wort in echten Situationen. Viele dieser Verben haben mehrere
+   Bedeutungen — deshalb steht über jedem Dialog, welche gemeint ist. */
+function zeigeDialoge(k){
+  var box=document.getElementById('wbDlg'); if(!box) return;
+  if(!k.d||!k.d.length){ box.innerHTML=''; return; }
+  /* Alle Formen des Verbs treffen: führt, führte, geführt, ausgeführt,
+     durchzuführen … Deshalb wird auf den Wortstamm „führ" geprüft und
+     nicht auf die Grundform — sonst bliebe „führt" unmarkiert. */
+  function stark(t){
+    return t.replace(/([a-zäöüß]*führ[a-zäöüß]*)/gi, '<b>$1</b>');
+  }
+  box.innerHTML='<h3>So benutzt man <em>'+k.word+'</em></h3>'+
+    '<p class="wb-hint">'+(k.d.length>1?k.d.length+' verschiedene Bedeutungen — achte auf den Unterschied.':'Ein kurzer Dialog aus dem Alltag.')+'</p>'+
+    k.d.map(function(x){
+      return '<div class="wb-b"><div class="wb-kopf"><span class="wb-bed">'+x.b+'</span>'+
+             '<span class="wb-sit">'+x.s+'</span></div>'+
+             '<div class="wb-z a"><span class="wb-wer">A</span><span>'+stark(x.a)+'</span></div>'+
+             '<div class="wb-z b"><span class="wb-wer">B</span><span>'+stark(x.z)+'</span></div></div>';
+    }).join('');
+}
 flipEl.onclick=()=>flipEl.classList.toggle('flipped');
 document.getElementById('lkPrev').onclick=()=>{lkIdx=(lkIdx-1+KARTEN.length)%KARTEN.length;showCard();};
 document.getElementById('lkNext').onclick=()=>{lkIdx=(lkIdx+1)%KARTEN.length;showCard();};
