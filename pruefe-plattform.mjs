@@ -34,8 +34,12 @@ const PRUEFUNGEN = [
    'club-stil.css fehlt oder hat keine Markenfarben mehr.'],
   ['konto.html', 'Stildatei ist eingebunden', /club-stil\.css/, 1,
    'Ohne diese Zeile sieht der Schülerbereich wieder aus wie vorher.'],
-  ['konto.html', 'Stildatei steht am Ende des Kopfes', /club-stil\.css[\s\S]{0,400}<\/head>/, 1,
-   'Sie muss als LETZTE im <head> stehen, sonst gewinnen die alten Stil-Blöcke.'],
+  ['konto.html', 'Stildatei steht NACH marke.css', /marke\.css[\s\S]{0,600}club-stil\.css/, 1,
+   'club-stil.css muss NACH marke.css geladen werden. marke.css setzt die Schrift der\n' +
+   '   Überschriften mit !important — alles davor verliert. Steht die Zeile wieder oben\n' +
+   '   im <head>, stehen die Überschriften sofort wieder in Space Grotesk.'],
+  ['club-stil.css', 'Überschriften auf Caveat Brush gezogen', /\.pagehead h1[^{]*\{[^}]*--schrift-titel/, 1,
+   'Ohne diese Regel gewinnt marke.css mit .pagehead h1{font-family:Space Grotesk!important}.'],
 
   // ---------- Die eigenen Zeichen ----------
   ['club-zeichen.js', 'Die Zeichendatei existiert', /window\.ZEICHEN/, 1,
@@ -44,6 +48,16 @@ const PRUEFUNGEN = [
    'Ohne sie bleiben alle data-zeichen-Felder leer.'],
   ['konto.html', 'Alle 15 Menüpunkte haben ein Zeichen', /data-zeichen=/g, 15,
    'Ein Menüpunkt hat sein Zeichen verloren — dort ist jetzt eine Lücke.'],
+
+  // ---------- Der Lernstand ----------
+  ['fortschritt.js', 'Das Mitschreiben existiert', /window\.lsSet\s*=\s*neu/, 1,
+   'Ohne diese Zeile klinkt sich nichts ein — der Fortschritt bleibt wieder im Browser.'],
+  ['fortschritt.js', 'Schreibt in die Tabelle lernstand', /from\('lernstand'\)/, 1,
+   'Ohne das landet nichts in der Datenbank.'],
+  ['konto.html', 'fortschritt.js ist eingebunden', /fortschritt\.js/, 1,
+   'Ohne diese Zeile wird kein Lernstand mitgeschrieben.'],
+  ['konto.html', 'lsSet gibt es noch', /function lsSet/, 1,
+   'fortschritt.js legt sich um lsSet. Wird lsSet umbenannt, hört das Mitschreiben still auf.'],
 
   // ---------- Community ----------
   ['community.js', 'Beiträge werden zu Strängen gebündelt', /function baueStraenge/, 1,
