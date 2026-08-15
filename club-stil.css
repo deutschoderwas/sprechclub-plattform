@@ -284,3 +284,81 @@ img[width][height]{height:auto}
 
 /* Tastaturbedienung sichtbar machen — gehört zu „echte Plattform" */
 :focus-visible{outline:3px solid var(--tuerkis-dunkel);outline-offset:2px;border-radius:6px}
+
+/* ============================================================
+   9. Die Seitenleiste — drei Löcher stopfen
+
+   Die Symbole in der Seitenleiste sind Masken: das Plättchen hat
+   die Farbe, die Maske schneidet die Zeichnung heraus. Für drei
+   Einträge fehlte diese Maske — dort blieb ein volles farbiges
+   Quadrat stehen: Prüfungsvorbereitung, Lernbereich, Meine Szenen.
+
+   Die Masken stehen bewusst HIER und nicht in club-theme.css,
+   damit an der gemeinsamen Datei nichts zu ändern ist.
+   ============================================================ */
+
+/* Prüfungsvorbereitung — die Zielscheibe */
+.navlink[data-view='pruefung'] .ic{
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='8'/%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Ccircle cx='12' cy='12' r='1'/%3E%3C/svg%3E");
+          mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='8'/%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Ccircle cx='12' cy='12' r='1'/%3E%3C/svg%3E");
+}
+
+/* Lernbereich — der Kompass */
+.navlink[data-view='lernen'] .ic{
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='8.5'/%3E%3Cpath d='m14.8 9.2-1.5 4.1-4.1 1.5 1.5-4.1z'/%3E%3C/svg%3E");
+          mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='8.5'/%3E%3Cpath d='m14.8 9.2-1.5 4.1-4.1 1.5 1.5-4.1z'/%3E%3C/svg%3E");
+}
+
+/* Meine Szenen — Bild mit Abspielzeichen */
+.navlink[data-view='szenen'] .ic{
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3.2' y='4.6' width='17.6' height='14.8' rx='2.6'/%3E%3Cpath d='M10.4 9.3 14.7 12l-4.3 2.7z'/%3E%3C/svg%3E");
+          mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3.2' y='4.6' width='17.6' height='14.8' rx='2.6'/%3E%3Cpath d='M10.4 9.3 14.7 12l-4.3 2.7z'/%3E%3C/svg%3E");
+}
+
+/* ------------------------------------------------------------
+   Jeder Eintrag hielt rechts 40 Pixel für eine Zahl frei — auch
+   die neunzehn Einträge, die nie eine Zahl bekommen. Dadurch war
+   für die Beschriftung zu wenig Platz: „Julia korrigiert" brach
+   auf zwei Zeilen um und die Zeile wurde höher als alle anderen,
+   „Prüfungsvorbereitung" lief über den Rand hinaus.
+
+   Jetzt hält den Platz nur noch frei, wer wirklich eine Zahl hat.
+   ------------------------------------------------------------ */
+.sidebar .navlink{padding-right:13px!important}
+
+/* ------------------------------------------------------------
+   Die Zahl der ungelesenen Nachrichten lag frei über der Schrift
+   und deckte im Community-Eintrag „…Chat" zu. Sie steht jetzt in
+   der Zeile mit, ganz rechts — dann kann sie nichts mehr verdecken,
+   egal wie lang die Beschriftung in einer anderen Sprache wird.
+
+   Das !important ist hier kein Übermut: an derselben Stelle stehen
+   in konto.html zwei ältere Regeln, die sich schon gegenseitig mit
+   !important überschreiben. Ohne kommt man nicht dazwischen.
+   ------------------------------------------------------------ */
+.sidebar .navlink-chat{position:relative;padding-right:13px!important}
+.sidebar .navlink-chat .nl-t{flex:1 1 auto;min-width:0;text-align:left}
+/* Die Zahl sitzt jetzt auf der Ecke des Symbols — so wie bei einer
+   App auf dem Handy. Dort ist Platz frei, und egal wie lang die
+   Beschriftung in einer anderen Sprache wird, sie deckt nie etwas zu. */
+.sidebar .navlink-chat .badge{
+  position:absolute!important;margin:0!important;
+  left:34px!important;top:11px!important;right:auto!important;bottom:auto!important;
+  min-width:19px;height:19px;padding:0 5px;
+  font-size:10.5px;line-height:19px;text-align:center;border-radius:999px;
+  box-shadow:0 0 0 2px var(--karte,#FFFDF3);
+}
+/* „Austausch nach Themen" war sechs Pixel zu lang und wurde stumm
+   abgeschnitten. Einen halben Punkt kleiner — und es steht ganz da. */
+.sidebar .navlink-chat .nl-t i{
+  display:block;font-size:10.5px;letter-spacing:-.004em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+
+/* ------------------------------------------------------------
+   „Prüfungsvorbereitung" ist ein Wort und lässt sich nicht
+   umbrechen — bei 14 Pixeln lief es neun Pixel über den Rand.
+   Ein halber Punkt weniger, und alle zwanzig Beschriftungen
+   passen, ohne dass man den Unterschied bemerkt.
+   ------------------------------------------------------------ */
+.sidebar .navlink{font-size:13.2px}
