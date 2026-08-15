@@ -162,6 +162,15 @@
   .bo-hint{ font-size:.78rem; color:var(--weich); }
   .bo-banner{ position:fixed; top:12px; left:50%; transform:translateX(-50%); z-index:72; background:var(--tuerkis); color:var(--auf-tuerkis); font-family:'Inter'; font-weight:800; font-size:.9rem; padding:9px 18px; border-radius:999px; box-shadow:0 6px 18px rgba(0,0,0,.2); display:none; }
   .bo-banner.show{ display:block; }
+  .bo-call{ margin-left:12px; background:#fff; color:var(--rot); border:none; border-radius:999px; padding:6px 13px; font-family:'Inter'; font-weight:800; font-size:.82rem; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,.15); }
+  .bo-call:disabled{ opacity:.7; cursor:default; }
+  .help-alert{ position:fixed; top:12px; left:50%; transform:translateX(-50%); z-index:90; background:var(--rot); color:#fff; font-family:'Inter'; font-weight:800; font-size:.92rem; padding:10px 14px; border-radius:14px; box-shadow:0 8px 24px rgba(221,0,0,.35); display:none; align-items:center; gap:10px; max-width:92vw; }
+  .help-alert.show{ display:flex; }
+  .help-alert .ha-go{ background:#fff; color:var(--rot); border:none; border-radius:999px; padding:6px 12px; font-family:'Inter'; font-weight:800; font-size:.82rem; cursor:pointer; white-space:nowrap; }
+  .help-alert .ha-x{ background:transparent; color:#fff; border:none; font-size:1rem; cursor:pointer; padding:2px 4px; }
+  @keyframes helppulse{0%,100%{box-shadow:0 8px 24px rgba(221,0,0,.35);}50%{box-shadow:0 8px 30px rgba(221,0,0,.65);}}
+  .help-alert.show{ animation:helppulse 1.2s ease-in-out infinite; }
+  .bo-grp.needhelp{ outline:2px solid var(--rot); border-radius:10px; }
   /* Präsentation ändern (Admin-Modal) */
   .pres-overlay{ position:fixed; inset:0; z-index:85; background:rgba(26,26,26,.55); display:none; align-items:center; justify-content:center; padding:20px; }
   .pres-overlay.open{ display:flex; }
@@ -1012,10 +1021,25 @@
   function boParticipants(){ try{ const ps=dframe.participants(); return Object.values(ps).filter(x=>!x.local).map(x=>({ id:x.user_id||x.session_id, name:(x.user_name&&String(x.user_name).trim())||'Teilnehmer:in' })); }catch(e){ return []; } }
   function boZufall(){
     const el=document.getElementById('bo-size'); const size=Math.max(2, parseInt((el&&el.value)||'2',10));
+    window._boSize=size;
     const ppl=boParticipants();
     for(let i=ppl.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=ppl[i]; ppl[i]=ppl[j]; ppl[j]=t; }
     window._boAssign={}; let g=1,c=0;
     ppl.forEach(pp=>{ window._boAssign[pp.id]=g; c++; if(c>=size){ g++; c=0; } });
+    boRenderTeacher();
+  }
+  // Gruppen NEU MISCHEN, während sie laufen – alle bekommen sofort neue Gruppen/Räume (neue Partner).
+  function boMix(){
+    const el=document.getElementById('bo-size-live');
+    const size=Math.max(2, parseInt((el&&el.value)||window._boSize||'2',10));
+    window._boSize=size;
+    const ppl=boParticipants(); if(!ppl.length) return;
+    for(let i=ppl.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=ppl[i]; ppl[i]=ppl[j]; ppl[j]=t; }
+    const groups={}; let g=1,c=0;
+    ppl.forEach(pp=>{ groups[pp.id]=g; c++; if(c>=size){ g++; c=0; } });
+    window._boAssign=Object.assign({},groups);
+    window._breakoutGroups=groups; window._breakoutActive=true;
+    try{ if(window._boCh) window._boCh.send({ type:'broadcast', event:'bo', payload:{ active:true, groups } }); }catch(e){}
     boRenderTeacher();
   }
   function boSet(id,g){ const n=parseInt(g,10); if(n>0) window._boAssign[id]=n; else delete window._boAssign[id]; boRenderTeacher(); }
@@ -1028,8 +1052,10 @@
       const nameOf=(id)=>{ const f=ppl.find(x=>x.id===id); return f?f.name:'…'; };
       let html='<div class="bo-active">🟢 Gruppen laufen</div>';
       Object.keys(groups).sort((a,b)=>a-b).forEach(g=>{
-        html+=`<div class="bo-grp"><div class="bo-grp-h"><b>Gruppe ${esc(g)}</b><button onclick="boHop(${esc(g)})">👀 ansehen</button></div><div class="bo-mem">${groups[g].map(id=>esc(nameOf(id))).join(', ')}</div></div>`;
+        const needs = window._helpGroups && window._helpGroups.has(String(g));
+        html+=`<div class="bo-grp${needs?' needhelp':''}"><div class="bo-grp-h"><b>Gruppe ${esc(g)}</b>${needs?' <span title="braucht Hilfe">🔔</span>':''}<button onclick="boHop(${esc(g)})">👀 ansehen</button></div><div class="bo-mem">${groups[g].map(id=>esc(nameOf(id))).join(', ')}</div></div>`;
       });
+      html+=`<div class="bo-row"><label>Gruppengröße</label><input id="bo-size-live" type="number" min="2" max="8" value="${esc(window._boSize||2)}"><button onclick="boMix()">🔀 Neu mischen</button></div>`;
       html+=`<div class="bo-row"><button onclick="boHop(0)">🏠 Hauptraum</button><button class="bo-end" onclick="boEnd()">⏹️ Alle zurückholen</button></div>`;
       body.innerHTML=html; return;
     }
@@ -1052,9 +1078,24 @@
     if(window._currentGroup) wechsleRaum(0);
     boRenderTeacher();
   }
-  function boHop(g){ wechsleRaum(g||0); }
-  function showBoBanner(g){ const b=document.getElementById('bo-banner'); if(!b) return; const t=b.querySelector('.bo-txt'); if(t) t.textContent = g ? ('👥 Gruppenarbeit – du bist in Gruppe '+g) : '👥 Gruppenarbeit läuft – du bleibst im Hauptraum'; b.classList.add('show'); }
-  function hideBoBanner(){ const b=document.getElementById('bo-banner'); if(b) b.classList.remove('show'); }
+  function boHop(g){ if(g && typeof clearHelp==='function') clearHelp(g); wechsleRaum(g||0); }
+  function showBoBanner(g){ const b=document.getElementById('bo-banner'); if(!b) return; const t=b.querySelector('.bo-txt'); if(t) t.textContent = g ? ('👥 Gruppenarbeit – du bist in Gruppe '+g) : '👥 Gruppenarbeit läuft – du bleibst im Hauptraum'; b.classList.add('show'); const cb=document.getElementById('bo-call'); if(cb){ cb.style.display=(g && !istLehrer)?'inline-block':'none'; cb.disabled=false; cb.textContent='🔔 Lehrer rufen'; } }
+  function hideBoBanner(){ const b=document.getElementById('bo-banner'); if(b) b.classList.remove('show'); const cb=document.getElementById('bo-call'); if(cb) cb.style.display='none'; }
+  // Schüler ruft aus seiner Gruppe den Lehrer (wie „Ask for Help" bei Zoom).
+  function callTeacher(){
+    const g=window._currentGroup||0; if(!g) return;
+    try{ if(window._boCh) window._boCh.send({ type:'broadcast', event:'help', payload:{ group:g, name:(window._meName||'Schüler:in') } }); }catch(e){}
+    const b=document.getElementById('bo-call'); if(b){ b.textContent='✓ Lehrer gerufen'; b.disabled=true; setTimeout(()=>{ b.textContent='🔔 Lehrer rufen'; b.disabled=false; }, 8000); }
+  }
+  // Lehrer bekommt den Hilferuf: Alarm-Banner + Markierung im Gruppen-Panel.
+  function onHelpCall(p){
+    if(!p||!p.group) return; const E=s=>String(s==null?'':s).replace(/[<>&"']/g,'');
+    window._helpGroups=window._helpGroups||new Set(); window._helpGroups.add(String(p.group));
+    const el=document.getElementById('help-alert');
+    if(el){ el.querySelector('.ha-txt').innerHTML='🔔 <b>Gruppe '+E(p.group)+'</b> braucht Hilfe'+(p.name?' · '+E(p.name):''); const go=el.querySelector('.ha-go'); if(go) go.onclick=()=>{ boHop(p.group); }; el.classList.add('show'); }
+    if(typeof boRenderTeacher==='function') boRenderTeacher();
+  }
+  function clearHelp(g){ if(window._helpGroups) window._helpGroups.delete(String(g)); const el=document.getElementById('help-alert'); if(el && (!window._helpGroups||!window._helpGroups.size)) el.classList.remove('show'); if(typeof boRenderTeacher==='function') boRenderTeacher(); }
 
   // ===== Gruppen-Notiz (kollaborativ – alle in der Gruppe dürfen schreiben) =====
   window._gnGroup=0; window._gnCh=null; window._gnLast='';
@@ -1370,6 +1411,14 @@
     if(broadcast){ try{ if(window._impulsCh) window._impulsCh.send({type:'broadcast',event:'impuls',payload:{clear:true}}); }catch(e){} }
     const p=document.getElementById('imp-panel'); if(p) p.classList.remove('open');
   }
+  // Panels (Gruppen/Hintergrund/Sprechhilfen/Impuls) schließen, sobald man irgendwo daneben klickt.
+  document.addEventListener('click', function(e){
+    const open=['bo-panel','bg-panel','sh-panel','imp-panel'].map(id=>document.getElementById(id)).filter(p=>p&&p.classList.contains('open'));
+    if(!open.length) return;
+    if(open.some(p=>p.contains(e.target))) return;                          // Klick INS Panel: offen lassen
+    if(e.target.closest('#vc-bo,#vc-bg,#sh-btn,[onclick*="toggleImpuls"]')) return;  // Auslöser regelt sich selbst
+    open.forEach(p=>p.classList.remove('open'));
+  }, true);
   function vcFull(){ const el=document.querySelector('.video-buehne'); if(el && el.requestFullscreen){ el.requestFullscreen(); } else if(api){ api.executeCommand('toggleFullScreen'); } }
   function vcLeave(){
     // Schüler:innen vor dem Verlassen kurz nach Feedback fragen (einmal pro Sitzung)
@@ -1658,6 +1707,7 @@
     // Breakout-Räume: Start/Ende + Gruppenzuordnung
     window._boCh = sb.channel('breakout-'+STUNDE)
       .on('broadcast', { event:'bo' }, ({payload})=>{ if(typeof handleBreakout==='function') handleBreakout(payload); })
+      .on('broadcast', { event:'help' }, ({payload})=>{ if(istLehrer && typeof onHelpCall==='function') onHelpCall(payload); })
       .subscribe();
     window._handCh = sb.channel('hand-'+STUNDE)
       .on('broadcast', { event:'hand' }, ({payload})=>{
@@ -1807,6 +1857,7 @@
   <div class="bo-body" id="bo-body"></div>
 </div>
 <!-- Breakout-Banner für Schüler -->
-<div class="bo-banner" id="bo-banner"><span class="bo-txt"></span></div>
+<div class="bo-banner" id="bo-banner"><span class="bo-txt"></span><button class="bo-call" id="bo-call" onclick="callTeacher()" style="display:none">🔔 Lehrer rufen</button></div>
+<div class="help-alert" id="help-alert"><span class="ha-txt"></span><button class="ha-go">👀 hinschauen</button><button class="ha-x" title="Weg" onclick="document.getElementById('help-alert').classList.remove('show')">✕</button></div>
 </body>
 </html>
