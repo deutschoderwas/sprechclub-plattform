@@ -293,8 +293,23 @@
   }
   function istThema(th){ return !th.art || th.art==='thema'; }
 
+  /* Passt ein Thema zum gewaehlten Niveau?
+     Die Themen tragen Spannen wie A2–C1. Frueher wurde einfach im Text
+     gesucht — dabei fiel ein Thema „A1–B2“ beim Filter B1 heraus, obwohl
+     B1 mittendrin liegt. Jetzt wird die Spanne wirklich aufgemacht. */
+  var STUFEN=['A1','A2','B1','B2','C1','C2'];
+  function niveauPasst(lvl,wunsch){
+    if(!wunsch||wunsch==='alle') return true;
+    var teile=String(lvl||'').split(/[\u2013\u2014\-\/]/).map(function(s){return s.trim().toUpperCase();}).filter(Boolean);
+    if(!teile.length) return false;
+    var von=STUFEN.indexOf(teile[0]), bis=STUFEN.indexOf(teile[teile.length-1]), ich=STUFEN.indexOf(wunsch);
+    if(von<0||ich<0) return String(lvl||'').indexOf(wunsch)>=0;
+    if(bis<0) bis=von;
+    return ich>=von && ich<=bis;
+  }
+
   function passtOhneBereich(th){
-    if(fNiveau!=='alle' && String(th.lvl||'').indexOf(fNiveau)<0) return false;
+    if(!niveauPasst(th.lvl,fNiveau)) return false;
     if(fSuche){
       var t=(th.t+' '+th.id+' '+(th.lvl||'')+' '+(th.bsp||'')).toLowerCase();
       if(t.indexOf(fSuche)<0) return false;
@@ -304,7 +319,7 @@
 
   function passt(th){
     if(fBereich!=='alle' && !inBereich(th,fBereich)) return false;
-    if(fNiveau!=='alle' && String(th.lvl||'').indexOf(fNiveau)<0) return false;
+    if(!niveauPasst(th.lvl,fNiveau)) return false;
     if(fSuche){
       var t=(th.t+' '+th.id+' '+(th.lvl||'')).toLowerCase();
       if(t.indexOf(fSuche)<0) return false;
@@ -427,7 +442,7 @@
     var chips='<div class="ln-chips">'
       +ber.map(function(b){ return '<button class="ln-chip'+(fBereich===b.id?' on':'')+'" onclick="lernFilter(\'b\',\''+b.id+'\')">'+E(b.t)+'</button>'; }).join('')
       +'<span style="width:1px;height:22px;background:#E0E5EC;margin:0 3px"></span>'
-      +['alle','A1','A2','B1','B2'].map(function(l){ return '<button class="ln-chip lv'+(fNiveau===l?' on':'')+'" onclick="lernFilter(\'n\',\''+l+'\')">'+(l==='alle'?'Alle':l)+'</button>'; }).join('')
+      +['alle','A1','A2','B1','B2','C1'].map(function(l){ return '<button class="ln-chip lv'+(fNiveau===l?' on':'')+'" onclick="lernFilter(\'n\',\''+l+'\')">'+(l==='alle'?'Alle':l)+'</button>'; }).join('')
       +'</div>'
       +'<div class="ln-suche"><em>🔍</em><input id="lnSuche" type="search" placeholder="Thema suchen …" value="'+E(fSuche)+'" oninput="lernFilter(\'s\',this.value)"></div>';
 

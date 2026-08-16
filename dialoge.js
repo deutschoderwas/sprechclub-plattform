@@ -6,7 +6,7 @@
      hinweis    — was der Lernende jetzt tun soll
      beispiel   — eine Musterantwort zum Ansehen
      redemittel — anklickbare Satzanfänge
-   97 Situationen. Neue einfach unten anhängen.
+   110 Situationen. Neue einfach unten anhängen.
    ============================================================ */
 window.DIALOGE = [
  {
@@ -5059,6 +5059,788 @@ window.DIALOGE = [
      "Beim nächsten Mal werde ich …",
      "Ich prüfe künftig zuerst …",
      "Lieber frage ich einmal mehr nach."
+    ]
+   }
+  ]
+ },
+
+/* ---------- C1 · dreizehn Orte, gesprochene Sprache ----------
+   Ein Dialog pro Ort. Auf C1 geht es nicht mehr um Wortschatz,
+   sondern ums Steuern: Nein sagen, widersprechen, Grenze ziehen
+   und dabei freundlich bleiben. Sprache bewusst gesprochen.
+   ------------------------------------------------------------ */
+ {
+  "id": "c1-aufgabe-zurueckgeben",
+  "kat": "buero",
+  "modus": "business",
+  "em": "🧭",
+  "titel": "Noch ein Projekt? Nein sagen, ohne Nein zu sagen",
+  "lvl": "C1",
+  "dauer": "4 Min",
+  "ort": "Kurz vor Feierabend. Deine Chefin steht an deinem Schreibtisch. Du hast schon zwei Sachen offen.",
+  "schritte": [
+   {
+    "amanda": "Du, die Auswertung hast du ja super hinbekommen — kannst du die Präsentation für Donnerstag auch noch machen?",
+    "hinweis": "Nicht sofort Ja sagen. Und nicht sofort Nein. Erst mal nachfragen — das ist völlig normal und klingt nicht nach Drücken.",
+    "beispiel": "Grundsätzlich gern. Bevor ich zusage: Wie groß soll die denn werden?",
+    "redemittel": [
+     "Grundsätzlich gern. Bevor ich zusage: …",
+     "Kann ich machen — kommt drauf an, wie viel das ist.",
+     "Wie stellst du dir das vor, vom Umfang her?"
+    ]
+   },
+   {
+    "amanda": "Ach, halb so wild. Zehn Folien, ein paar Zahlen, das Übliche.",
+    "hinweis": "Jetzt wird kleingeredet. Widersprich mit einer konkreten Zahl statt mit Gefühl — Zahlen kann man schlecht wegdiskutieren.",
+    "beispiel": "Zehn Folien sind es nie. Allein die Abstimmung mit dem Vertrieb frisst einen halben Tag, und die Zahlen muss ich ja auch erst aufbereiten. Das sind eher anderthalb Tage.",
+    "redemittel": [
+     "Zehn Folien sind es nie.",
+     "Allein … frisst schon einen halben Tag.",
+     "Das sind realistisch eher …"
+    ]
+   },
+   {
+    "amanda": "Dann nimm doch einfach die Zahlen vom letzten Quartal.",
+    "hinweis": "Hier kommen die kleinen Wörter — halt, ja, eben, schon. Ohne sie klingt derselbe Satz plötzlich patzig.",
+    "beispiel": "Könnte man schon machen. Nur sind die halt zwei Monate alt. Und wenn im Vorstand einer nachfragt, stehen wir ja beide blöd da.",
+    "redemittel": [
+     "Könnte man schon machen. Nur ist es halt so, dass …",
+     "Dann stehen wir ja beide blöd da.",
+     "Ginge, aber ehrlich gesagt …"
+    ]
+   },
+   {
+    "amanda": "Also sagst du Nein.",
+    "hinweis": "Der Moment, wo viele einknicken. Nein sagen, ohne die Tür zuzumachen: erst zugeben, dann die Bedingung.",
+    "beispiel": "Nee, ich sag nicht Nein. Ich sag nur: bis Donnerstag geht es nicht, ohne dass die Auswertung liegen bleibt. Was ist dir wichtiger?",
+    "redemittel": [
+     "Nee, ich sag nicht Nein. Ich sag nur …",
+     "Machen kann ich es — bis Donnerstag halt nicht.",
+     "Was ist dir denn wichtiger?"
+    ]
+   },
+   {
+    "amanda": "Die Auswertung. Aber irgendwas brauche ich für Donnerstag.",
+    "hinweis": "Zum Schluss ein konkretes Angebot — und klar sagen, was NICHT dabei ist. Sonst hört sie nur den ersten Teil.",
+    "beispiel": "Okay. Dann kriegst du bis Mittwochmittag ein Gerüst: die Kernaussagen und die drei wichtigsten Zahlen. Schön machen und ausformulieren erst danach. Passt das so?",
+    "redemittel": [
+     "Dann kriegst du bis … ein Gerüst mit …",
+     "Was ich zusagen kann, ist …, was nicht, ist …",
+     "Passt das so für dich?"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "c1-angehoerige-vorwurf",
+  "kat": "pflege",
+  "modus": "business",
+  "em": "🩺",
+  "titel": "Die Tochter im Flur macht Vorwürfe",
+  "lvl": "C1",
+  "dauer": "4 Min",
+  "ort": "Du kommst aus einem Zimmer, im Flur wartet die Tochter von Frau Berger. Sie ist richtig sauer.",
+  "schritte": [
+   {
+    "amanda": "Ich versteh das nicht. Meine Mutter hat seit Montag dieselbe Bluse an!",
+    "hinweis": "Nicht erklären, nicht verteidigen. Erst mal recht geben — das nimmt sofort Druck raus. Erklären kannst du danach.",
+    "beispiel": "Das versteh ich, das geht so nicht. Lassen Sie mich einmal kurz nachgucken, was dokumentiert ist — dann reden wir nicht ins Blaue.",
+    "redemittel": [
+     "Das versteh ich, das geht so nicht.",
+     "Da haben Sie recht.",
+     "Lassen Sie mich kurz nachgucken, dann …"
+    ]
+   },
+   {
+    "amanda": "Sie haben doch bestimmt zu wenig Leute. Sagen Sie's ruhig.",
+    "hinweis": "Eine Falle. Sagst du Ja, hast du deinen Arbeitgeber schlechtgemacht. Sagst du Nein, glaubt sie dir nicht. Also: zugeben — und trotzdem bei der Sache bleiben.",
+    "beispiel": "Dass es eng ist, will ich gar nicht abstreiten. Nur erklärt das nicht, warum es ausgerechnet bei Ihrer Mutter untergegangen ist. Da will ich mich auch nicht rausreden.",
+    "redemittel": [
+     "Dass es eng ist, will ich gar nicht abstreiten.",
+     "Das eine erklärt aber das andere nicht.",
+     "Da will ich mich nicht rausreden."
+    ]
+   },
+   {
+    "amanda": "Und was heißt das jetzt für meine Mutter?",
+    "hinweis": "Jetzt will sie was Festes. Sag genau, was DU machst — und trenne es von dem, was du nicht entscheidest.",
+    "beispiel": "Ganz konkret: Ich sorg dafür, dass die Kleidung ab heute in der Übergabe steht. Wie viele Leute am Wochenende da sind, entscheid ich nicht — das geb ich aber weiter, und zwar schriftlich.",
+    "redemittel": [
+     "Ganz konkret: Ich sorg dafür, dass …",
+     "Was ich selber machen kann, ist …",
+     "Das entscheid ich nicht, aber ich geb es weiter."
+    ]
+   },
+   {
+    "amanda": "Und wenn sich wieder nichts tut?",
+    "hinweis": "Nicht verteidigen, sondern eine Brücke bauen: einen festen Termin und einen kurzen Weg zu dir.",
+    "beispiel": "Dann kommen Sie bitte direkt zu mir, nicht erst nach einer Woche. Ich guck Freitag sowieso nochmal nach und sag Ihnen Bescheid. Reicht Ihnen ein kurzer Anruf?",
+    "redemittel": [
+     "Dann kommen Sie bitte direkt zu mir.",
+     "Ich meld mich am … von mir aus.",
+     "Reicht Ihnen ein kurzer Anruf?"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "c1-fehler-in-der-lieferkette",
+  "kat": "team",
+  "modus": "business",
+  "em": "📦",
+  "titel": "Palette weg, Kunde wartet, Chef sucht einen Schuldigen",
+  "lvl": "C1",
+  "dauer": "4 Min",
+  "ort": "Eine Palette ist an den falschen Standort gefahren. Der Schichtleiter steht vor dir.",
+  "schritte": [
+   {
+    "amanda": "Wer war das? Ich brauch einen Namen für die Meldung.",
+    "hinweis": "Man kann sagen, was passiert ist, ohne jemanden anzuschwärzen. Dafür ist das Passiv da — das ist kein Ausweichen, das macht man wirklich so.",
+    "beispiel": "Ein Name bringt uns jetzt gar nichts. Der Auftrag ist mit der falschen Ladestelle drin — ob beim Einlesen oder in der Disposition, das krieg ich in zehn Minuten raus.",
+    "redemittel": [
+     "Ein Name bringt uns jetzt gar nichts.",
+     "Der Auftrag ist mit … erfasst worden.",
+     "Ob … oder …, das krieg ich raus."
+    ]
+   },
+   {
+    "amanda": "Zehn Minuten hab ich nicht. Der Kunde ruft alle halbe Stunde an.",
+    "hinweis": "Zwei Sachen auseinanderhalten, die zusammen unlösbar aussehen: was jetzt sofort passieren muss, und woran es lag.",
+    "beispiel": "Dann machen wir beides gleichzeitig. Ich lass die Palette umleiten, damit der Kunde heute noch was kriegt. Woran es lag, klären wir danach — sonst suchen wir hier rum, während die Ware steht.",
+    "redemittel": [
+     "Dann machen wir beides gleichzeitig.",
+     "Erst mal … , und danach …",
+     "Sonst suchen wir hier rum, während …"
+    ]
+   },
+   {
+    "amanda": "Und wenn der Fahrer das nicht mehr schafft?",
+    "hinweis": "Das Unangenehme aussprechen, bevor es jemand anders tut — mit „müssten“ bleibt es ein Gedanke und kein Versprechen.",
+    "beispiel": "Dann müssten wir dem Kunden heute noch sagen, dass es Mittwoch früh wird. Blöd, klar. Aber immer noch besser, als wenn er bis morgen Mittag im Dunkeln sitzt.",
+    "redemittel": [
+     "Dann müssten wir …",
+     "Blöd, klar. Aber immer noch besser als …",
+     "Im schlimmsten Fall …"
+    ]
+   },
+   {
+    "amanda": "Gut. Schreib's auf, ich brauch's für die Akte.",
+    "hinweis": "Zum Schluss selbst einen Vorschlag machen. Das unterscheidet jemanden, der mitdenkt, von jemandem, der nur abarbeitet.",
+    "beispiel": "Mach ich. Ich würd außerdem sagen, wir lassen die Ladestelle künftig beim Erfassen gegenlesen. Dann fällt so was auf, bevor der Lkw losfährt.",
+    "redemittel": [
+     "Ich würd außerdem sagen, wir …",
+     "Damit das nicht nochmal passiert, könnte man …",
+     "Dann fällt so was auf, bevor …"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "c1-gehalt-und-luecke",
+  "kat": "bewerbung",
+  "modus": "business",
+  "em": "💼",
+  "titel": "Die Lücke im Lebenslauf und die Frage nach dem Geld",
+  "lvl": "C1",
+  "dauer": "5 Min",
+  "ort": "Zweites Gespräch. Läuft gut — bis zwei Fragen kommen, bei denen viele ins Schwimmen geraten.",
+  "schritte": [
+   {
+    "amanda": "In Ihrem Lebenslauf ist da eine Lücke, 2023 bis 2024. Was war da?",
+    "hinweis": "Nicht entschuldigen. Einmal sagen, was war, kurz einordnen, weiter. In einem Satz, nicht in fünf — je länger man redet, desto größer wirkt die Lücke.",
+    "beispiel": "Da hab ich meine Mutter gepflegt. Das war eine bewusste Entscheidung. Nebenbei hab ich mein B2 gemacht — untätig war ich also nicht.",
+    "redemittel": [
+     "Das war eine bewusste Entscheidung.",
+     "Untätig war ich also nicht.",
+     "Die Zeit hab ich genutzt, um …"
+    ]
+   },
+   {
+    "amanda": "Verstehe. Und was stellen Sie sich beim Gehalt vor?",
+    "hinweis": "Eine Zahl nennen, keine Spanne. Wer eine Spanne nennt, verhandelt gegen sich selbst — gehört wird immer nur die kleinere.",
+    "beispiel": "Ich geh von 48 000 aus. Das passt zu dem, was ich mitbringe, und liegt für die Stelle im üblichen Rahmen.",
+    "redemittel": [
+     "Ich geh von … aus.",
+     "Das liegt für die Stelle im üblichen Rahmen.",
+     "Da orientier ich mich an …"
+    ]
+   },
+   {
+    "amanda": "Das ist deutlich mehr, als wir eingeplant hatten.",
+    "hinweis": "Nicht sofort runtergehen. Zurückfragen — dann redet die andere Seite, und du erfährst, was noch geht.",
+    "beispiel": "Kann sein. Dann sagen Sie mir doch, was Sie eingeplant hatten. Und was sonst noch dazugehört — Weiterbildung, Zuschläge, wie es nach dem ersten Jahr weitergeht.",
+    "redemittel": [
+     "Kann sein. Dann sagen Sie mir doch, …",
+     "Was gehört denn außer dem Gehalt noch dazu?",
+     "Wie geht es nach dem ersten Jahr weiter?"
+    ]
+   },
+   {
+    "amanda": "44 000 könnten wir machen. Und dann gucken wir nach sechs Monaten nochmal.",
+    "hinweis": "Nicht sofort zuschlagen. „Wir gucken nochmal“ ist nichts wert, solange nicht feststeht, woran gemessen wird.",
+    "beispiel": "Über 44 könnten wir reden. Dann lassen Sie uns aber gleich festhalten, woran Sie das nach sechs Monaten messen. Sonst erinnert sich daran nachher keiner mehr.",
+    "redemittel": [
+     "Darüber könnten wir reden, wenn …",
+     "Woran würden Sie das festmachen?",
+     "Können wir das gleich festhalten?"
+    ]
+   },
+   {
+    "amanda": "Das ist fair. Ich schick Ihnen bis Freitag was zu.",
+    "hinweis": "Sauber zumachen: nächster Schritt, eigener Zeitpunkt, und eine kleine Absicherung — ohne zu drängeln.",
+    "beispiel": "Super, danke. Dann wart ich das ab und meld mich Anfang nächster Woche. Falls es doch länger dauert, geben Sie mir kurz Bescheid?",
+    "redemittel": [
+     "Dann wart ich das ab und meld mich …",
+     "Falls es länger dauert, geben Sie mir kurz Bescheid?",
+     "Ich freu mich, von Ihnen zu hören."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "c1-gast-wird-laut",
+  "kat": "kunden",
+  "modus": "business",
+  "em": "🍽️",
+  "titel": "Ein Gast wird laut, und der ganze Laden hört mit",
+  "lvl": "C1",
+  "dauer": "4 Min",
+  "ort": "Samstagabend, alles voll. Ein Gast beschwert sich so laut, dass die Nachbartische mitkriegen.",
+  "schritte": [
+   {
+    "amanda": "Wir warten jetzt seit einer Dreiviertelstunde! Das ist doch eine Frechheit!",
+    "hinweis": "Erst leiser machen, dann klären. Wer sofort erklärt, gießt Öl ins Feuer. Also: recht geben und das Gespräch vom Publikum wegholen.",
+    "beispiel": "Sie haben recht, das ist zu lang. Darf ich kurz zu Ihnen an den Tisch kommen? Dann klären wir das in Ruhe.",
+    "redemittel": [
+     "Sie haben recht, das ist zu lang.",
+     "Darf ich kurz zu Ihnen kommen?",
+     "Das klären wir am besten in Ruhe."
+    ]
+   },
+   {
+    "amanda": "Da gibt's nichts zu klären. Wir gehen.",
+    "hinweis": "Nicht festhalten, aber eine Tür offen lassen. Mit „würde“ klingt das Angebot leicht — man kann es annehmen, ohne einzuknicken.",
+    "beispiel": "Kann ich verstehen. Wenn Sie bleiben wollen, würd ich Ihnen die Vorspeise sofort bringen, und die Getränke gehen aufs Haus. Wenn nicht, ist das auch in Ordnung.",
+    "redemittel": [
+     "Wenn Sie bleiben wollen, würd ich Ihnen …",
+     "Wenn nicht, ist das auch in Ordnung.",
+     "Ich will Sie zu nichts überreden."
+    ]
+   },
+   {
+    "amanda": "Und woher soll ich wissen, dass es dann schneller geht?",
+    "hinweis": "Nichts versprechen, was du nicht weißt. Lieber vorsichtig schätzen und pünktlich sein als optimistisch schätzen und wieder danebenliegen.",
+    "beispiel": "Ich versprech Ihnen nur, was ich auch halten kann: Vorspeise in fünf Minuten, Hauptgang in gut zwanzig. Wenn es doch länger dauert, sag ich Ihnen vorher Bescheid.",
+    "redemittel": [
+     "Ich versprech Ihnen nur, was ich halten kann.",
+     "Wenn es länger dauert, sag ich vorher Bescheid.",
+     "Ich will Ihnen nichts erzählen, was ich nicht weiß."
+    ]
+   },
+   {
+    "amanda": "Na gut. Aber das war das letzte Mal.",
+    "hinweis": "Den Satz stehen lassen. Nicht dagegenreden. Und zum Schluss zeigen, dass die Beschwerde nicht im Sand verläuft.",
+    "beispiel": "Das nehm ich ernst. Ich sag der Küche, woran es heute gehangen hat. Und falls Sie doch nochmal kommen — sagen Sie an der Tür einfach meinen Namen.",
+    "redemittel": [
+     "Das nehm ich ernst.",
+     "Ich sag weiter, woran es gehangen hat.",
+     "Sagen Sie beim nächsten Mal einfach …"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "c1-amt-falscher-bescheid",
+  "kat": "amt",
+  "modus": "alltag",
+  "em": "🏛️",
+  "titel": "Der Bescheid stimmt nicht, und der Schalter hat keine Zeit",
+  "lvl": "C1",
+  "dauer": "5 Min",
+  "ort": "Am Schalter im Amt. Du sollst 840 Euro zurückzahlen. Die Rechnung stimmt aber nicht, und hinter dir wartet der halbe Flur.",
+  "schritte": [
+   {
+    "amanda": "Der Bescheid ist raus. Da kann ich jetzt nichts mehr dran machen.",
+    "hinweis": "Nicht sofort klein beigeben. Du musst nicht streiten — frag erst mal, worauf die Zahl überhaupt beruht. Wer fragt, kriegt eine Antwort. Wer sich beschwert, kriegt einen Satz.",
+    "beispiel": "Kann sein. Nur stimmt die Zahl trotzdem nicht. Sagen Sie mir kurz, welche Monate Sie da gerechnet haben?",
+    "redemittel": [
+     "Kann sein. Nur stimmt die Zahl trotzdem nicht.",
+     "Sagen Sie mir kurz, wie die Summe zustande kommt?",
+     "Auf welche Monate bezieht sich das?"
+    ]
+   },
+   {
+    "amanda": "Hier steht Januar bis März. So kam das aus dem System.",
+    "hinweis": "Aus dem System ist kein Argument. Widersprich mit einer konkreten Sache, die du belegen kannst — und bied den Beleg gleich an.",
+    "beispiel": "Im Februar hab ich aber gar nicht gearbeitet. Ich hab die Abrechnungen dabei. Wollen Sie kurz reingucken?",
+    "redemittel": [
+     "Im Februar hab ich aber gar nicht gearbeitet.",
+     "Ich hab die Unterlagen dabei — wollen Sie kurz gucken?",
+     "Da ist ein Monat drin, der nicht stimmt."
+    ]
+   },
+   {
+    "amanda": "Ich hab hier noch zwanzig Leute sitzen.",
+    "hinweis": "Jetzt kommt der Druck. Nicht mitgehen, nicht laut werden. Sag dein Anliegen in einem Satz — dann ist klar, dass es schnell geht.",
+    "beispiel": "Verstehe ich. Es geht auch schnell: Ich will nur wissen, wie ich das korrigiert kriege. Zwei Minuten, dann bin ich weg.",
+    "redemittel": [
+     "Verstehe ich. Es geht auch schnell.",
+     "Mir geht es nur um einen Punkt.",
+     "Sagen Sie mir einfach, was ich jetzt machen muss."
+    ]
+   },
+   {
+    "amanda": "Dann müssen Sie Widerspruch einlegen. Anders geht das nicht.",
+    "hinweis": "Sag Ja — und frag sofort nach dem Weg. Frist, Form, wohin. Ohne diese drei Sachen läufst du zweimal.",
+    "beispiel": "Okay, mach ich. Bis wann muss der raus? Reicht der per Post, oder muss ich nochmal her? Und an wen genau?",
+    "redemittel": [
+     "Okay, mach ich. Bis wann muss der raus?",
+     "Reicht das per Post, oder muss ich nochmal her?",
+     "An wen genau muss das gehen?"
+    ]
+   },
+   {
+    "amanda": "Einen Monat ab Zustellung, und schriftlich.",
+    "hinweis": "Zum Schluss absichern. Du willst einen Nachweis, dass du da warst — und einen Namen. Das klingt nicht misstrauisch, das ist normal.",
+    "beispiel": "Gut. Wenn ich den hier abgebe: Krieg ich eine Kopie mit Stempel? Nicht dass der nachher weg ist. Und wie war Ihr Name nochmal?",
+    "redemittel": [
+     "Krieg ich eine Kopie mit Stempel?",
+     "Nicht dass das nachher keiner war.",
+     "Wie war Ihr Name nochmal, für meine Unterlagen?"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "c1-arzt-nicht-abspeisen-lassen",
+  "kat": "gesundheit",
+  "modus": "alltag",
+  "em": "🩺",
+  "titel": "Wahrscheinlich Stress — und du glaubst es nicht",
+  "lvl": "C1",
+  "dauer": "5 Min",
+  "ort": "Erst beim Hausarzt, danach in der Apotheke. Du bist seit sechs Wochen platt. Das Blutbild ist in Ordnung, und der Arzt will schon zur Tür.",
+  "schritte": [
+   {
+    "amanda": "Blutbild ist unauffällig. Das ist wahrscheinlich Stress. Machen Sie mal Urlaub.",
+    "hinweis": "Sag nicht einfach okay. Beschreib genau, was anders ist als sonst — mit Zahl und Zeitraum. Auf Konkretes reagieren Ärzte, auf mir geht es schlecht nicht.",
+    "beispiel": "Kann sein. Nur: Ich schlaf acht Stunden und bin um elf schon fertig. Das kenn ich von mir gar nicht. Und das geht jetzt seit sechs Wochen so.",
+    "redemittel": [
+     "Kann sein. Nur ist das bei mir anders als sonst.",
+     "Das kenn ich von mir gar nicht.",
+     "Das geht jetzt seit … Wochen so."
+    ]
+   },
+   {
+    "amanda": "Das haben viele. Wollen wir in vier Wochen nochmal gucken?",
+    "hinweis": "Zweifel äußern, ohne anzugreifen. Nicht Sie irren sich, sondern eine Frage, die den anderen zum Weiterdenken bringt.",
+    "beispiel": "Vier Wochen würd ich ungern warten. Was könnte es denn noch sein, wenn es nicht Stress ist? Und was müsste man dafür angucken?",
+    "redemittel": [
+     "So lange würd ich ungern warten.",
+     "Was könnte es denn noch sein?",
+     "Was müsste man sich dafür angucken?"
+    ]
+   },
+   {
+    "amanda": "Man könnte die Schilddrüse anschauen. Das zahlt die Kasse aber nicht immer.",
+    "hinweis": "Nach Geld fragen ist nicht peinlich. Frag klar: was kostet es, und wann zahlt die Kasse doch.",
+    "beispiel": "Was kostet das, wenn ich es selber zahle? Und in welchem Fall übernimmt die Kasse das doch?",
+    "redemittel": [
+     "Was kostet das, wenn ich es selber zahle?",
+     "Und wann übernimmt die Kasse das doch?",
+     "Gibt es da einen Unterschied, wenn …?"
+    ]
+   },
+   {
+    "amanda": "Machen wir es. Termin fürs Blutabnehmen kriegen Sie vorne.",
+    "hinweis": "Regel das Ende selbst: Wer meldet sich bei wem, und kriegst du das Ergebnis auch auf Papier? Sonst wartest du drei Wochen auf einen Anruf, der nie kommt.",
+    "beispiel": "Gut. Krieg ich den Befund auch ausgedruckt mit? Und wenn was auffällig ist — ruft mich dann jemand an, oder soll ich mich melden?",
+    "redemittel": [
+     "Krieg ich den Befund auch auf Papier?",
+     "Ruft mich jemand an, oder soll ich mich melden?",
+     "Bis wann ist das Ergebnis ungefähr da?"
+    ]
+   },
+   {
+    "amanda": "In der Apotheke: Das haben wir da. Sie kriegen es von einem anderen Hersteller, ist aber derselbe Wirkstoff.",
+    "hinweis": "Hier fragst du nach dem, was der Arzt oft nicht weiß: Verträgt sich das mit dem, was du sowieso nimmst?",
+    "beispiel": "Alles klar. Ich nehm abends noch was für den Blutdruck — beißt sich das? Und muss ich das zum Essen nehmen, oder ist das egal?",
+    "redemittel": [
+     "Ich nehm noch … — beißt sich das?",
+     "Muss ich das zum Essen nehmen?",
+     "Worauf muss ich in den ersten Tagen achten?"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "c1-bank-mitverkauf-abwehren",
+  "kat": "vertrag",
+  "modus": "alltag",
+  "em": "🏦",
+  "titel": "Der Kredit ist okay, die Versicherung nicht",
+  "lvl": "C1",
+  "dauer": "5 Min",
+  "ort": "Beratungsgespräch in der Bank. Du willst einen Kredit für ein Auto. Der Berater will noch etwas dazupacken.",
+  "schritte": [
+   {
+    "amanda": "Den Kredit kriegen wir hin. Die Restschuldversicherung pack ich gleich mit rein, das machen eigentlich alle.",
+    "hinweis": "Das machen alle ist kein Argument. Freundlich stoppen und die zwei Sachen auseinandernehmen — erst der Kredit, dann der Rest.",
+    "beispiel": "Moment, lassen Sie uns das trennen. Erst mal der Kredit allein: Was kostet der, ohne alles andere?",
+    "redemittel": [
+     "Moment, lassen Sie uns das trennen.",
+     "Erst mal das eine, das andere danach.",
+     "Was kostet der Kredit allein?"
+    ]
+   },
+   {
+    "amanda": "Effektiv 6,9 Prozent. Mit Versicherung wird die Rate natürlich ein bisschen höher.",
+    "hinweis": "Ein bisschen nicht durchgehen lassen. Frag nach der Zahl, und zwar nach beiden — Rate und Gesamtsumme am Ende.",
+    "beispiel": "Ein bisschen ist wie viel? Sagen Sie mir bitte beides: die Rate und was ich am Ende insgesamt zurückzahle. Einmal mit, einmal ohne.",
+    "redemittel": [
+     "Ein bisschen ist wie viel?",
+     "Sagen Sie mir bitte beide Zahlen.",
+     "Was zahle ich am Ende insgesamt zurück?"
+    ]
+   },
+   {
+    "amanda": "214 statt 189 im Monat. Dafür sind Sie abgesichert, wenn was passiert.",
+    "hinweis": "Nein sagen und kurz begründen — mit deinem eigenen Fall, nicht mit einer Grundsatzdiskussion. Dann ist das Thema durch.",
+    "beispiel": "Versteh ich. Ich hab über die Arbeit aber schon eine Absicherung. Die zweite brauch ich dann nicht. Machen wir es ohne.",
+    "redemittel": [
+     "Versteh ich. Bei mir ist das aber schon abgedeckt.",
+     "Dann brauch ich das nicht doppelt.",
+     "Machen wir es ohne."
+    ]
+   },
+   {
+    "amanda": "Zu dem Zinssatz kann ich das dann so aber nicht garantieren.",
+    "hinweis": "Wenn Druck kommt, wird man langsamer, nicht schneller. Du unterschreibst heute nichts — das ist ein vollkommen normaler Satz.",
+    "beispiel": "Kann sein. Ich unterschreib heute trotzdem nichts. Geben Sie mir das bitte schriftlich mit, dann guck ich es in Ruhe an und meld mich Montag.",
+    "redemittel": [
+     "Ich unterschreib heute nichts.",
+     "Geben Sie mir das bitte schriftlich mit.",
+     "Ich guck es in Ruhe an und meld mich."
+    ]
+   },
+   {
+    "amanda": "Dann müssten wir einen neuen Termin machen.",
+    "hinweis": "Freundlich zumachen — und dabei genau sagen, welches Blatt du willst. Wer den Namen des Papiers kennt, wird anders behandelt.",
+    "beispiel": "Passt. Legen Sie mir bitte das Blatt mit den Gesamtkosten dazu, dieses Standardinformationsblatt. Genau das brauch ich zum Vergleichen.",
+    "redemittel": [
+     "Passt, machen wir einen Termin.",
+     "Legen Sie mir bitte das Blatt mit den Gesamtkosten dazu.",
+     "Ich will das nur in Ruhe vergleichen."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "c1-nachbar-vorwurf-laerm",
+  "kat": "wohnen",
+  "modus": "alltag",
+  "em": "🔔",
+  "titel": "Der Nachbar klingelt und macht Vorwürfe",
+  "lvl": "C1",
+  "dauer": "5 Min",
+  "ort": "Abends an deiner Wohnungstür. Der Nachbar von oben steht da. Er ist nicht laut, aber deutlich sauer.",
+  "schritte": [
+   {
+    "amanda": "Ich sag es Ihnen im Guten: Bei Ihnen ist ja ständig was los. Gestern wieder bis nach zehn.",
+    "hinweis": "Nicht sofort rechtfertigen und nicht zurückschießen. Gib zu, was stimmt — das nimmt sofort Tempo raus. Und widersprich nur dem, was nicht stimmt.",
+    "beispiel": "Gestern war es laut, das stimmt. Da hatten wir Geburtstag. Ständig ist es aber nicht, das würd ich so nicht stehen lassen.",
+    "redemittel": [
+     "Gestern war es laut, das stimmt.",
+     "Ständig ist es aber nicht.",
+     "Das würd ich so nicht stehen lassen."
+    ]
+   },
+   {
+    "amanda": "Na, letzte Woche war auch was.",
+    "hinweis": "Vorwürfe im Ungefähren kann man nicht lösen. Frag nach dem Tag — und sag dazu, warum du fragst, sonst klingt es wie Verhör.",
+    "beispiel": "Welcher Tag war das denn? Ich frag nicht, um Ihnen was zu beweisen. Ich will nur wissen, was Sie oben wirklich hören.",
+    "redemittel": [
+     "Welcher Tag war das denn?",
+     "Ich frag nicht, um Ihnen was zu beweisen.",
+     "Was hören Sie denn oben genau?"
+    ]
+   },
+   {
+    "amanda": "Dienstag. Dieses Rumpeln, immer so gegen sechs.",
+    "hinweis": "Jetzt kommt die Lösung — aber bied nur an, was du wirklich machst. Ein kleines Versprechen, das hält, ist mehr wert als ein großes.",
+    "beispiel": "Ah, das ist die Waschmaschine, die wandert. Ich stell die um und leg was drunter. Und ab sechs mach ich sie nicht mehr an.",
+    "redemittel": [
+     "Ah, das ist wahrscheinlich …",
+     "Da kann ich was machen: Ich …",
+     "Ab … mach ich das nicht mehr."
+    ]
+   },
+   {
+    "amanda": "Und die Kinder?",
+    "hinweis": "Grenze setzen. Freundlich im Ton, klar in der Sache: Was geht, sagst du zu. Was nicht geht, sagst du auch — ohne Entschuldigung.",
+    "beispiel": "Die Kinder sind tagsüber laut, das kann ich Ihnen nicht wegnehmen. Ab acht ist bei uns Ruhe, dafür sorg ich.",
+    "redemittel": [
+     "Das kann ich Ihnen nicht wegnehmen.",
+     "Ab … ist bei uns Ruhe, dafür sorg ich.",
+     "Was ich machen kann, ist …; was nicht geht, ist …"
+    ]
+   },
+   {
+    "amanda": "Naja. Mal sehen.",
+    "hinweis": "Nicht im Ungefähren enden. Verabrede etwas Kleines für das nächste Mal — dann geht der andere nicht mit dem Ärger nach oben.",
+    "beispiel": "Machen wir es so: Wenn es Ihnen zu viel wird, klopfen Sie einfach. Lieber sagen Sie mir das direkt, als dass Sie sich zwei Monate ärgern.",
+    "redemittel": [
+     "Machen wir es so: …",
+     "Wenn es zu viel wird, sagen Sie mir einfach Bescheid.",
+     "Lieber direkt, als dass Sie sich lange ärgern."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "c1-laden-reklamation",
+  "kat": "einkaufen",
+  "modus": "alltag",
+  "em": "🛒",
+  "titel": "Fünf Monate alt und kaputt — und der Verkäufer schickt dich weg",
+  "lvl": "C1",
+  "dauer": "5 Min",
+  "ort": "Elektroladen. Deine Kopfhörer machen seit zwei Wochen Ärger. Der Verkäufer will dich an den Hersteller verweisen.",
+  "schritte": [
+   {
+    "amanda": "Nach fünf Monaten? Da wenden Sie sich am besten an den Hersteller, das läuft über die Garantie.",
+    "hinweis": "Ruhig bleiben und den Unterschied benennen: Gekauft hast du hier. Kein Rechtsvortrag — ein Satz reicht.",
+    "beispiel": "Gekauft hab ich die aber hier bei Ihnen. Ich würd das gern über Sie regeln, nicht über den Hersteller.",
+    "redemittel": [
+     "Gekauft hab ich die aber hier.",
+     "Ich würd das gern über Sie regeln.",
+     "Darum geht es mir gar nicht — mir geht es um …"
+    ]
+   },
+   {
+    "amanda": "Haben Sie denn den Kassenbon noch?",
+    "hinweis": "Wenn du ihn nicht hast, nicht rumdrucksen. Sag, was du stattdessen hast, und frag, ob das reicht.",
+    "beispiel": "Den Bon nicht mehr, aber ich hab die Abbuchung auf dem Kontoauszug. Reicht Ihnen das als Nachweis?",
+    "redemittel": [
+     "Den hab ich nicht mehr, aber ich hab …",
+     "Reicht Ihnen das als Nachweis?",
+     "Ich kann Ihnen zeigen, wann ich das gekauft hab."
+    ]
+   },
+   {
+    "amanda": "Und was ist damit? Sieht für mich nach normaler Abnutzung aus.",
+    "hinweis": "Sag nicht kaputt. Beschreib genau, was passiert — was, wann, wie oft. Das ist der Unterschied zwischen abgewimmelt und ernst genommen.",
+    "beispiel": "Die rechte Seite geht nach zwei Minuten aus. Immer rechts, immer nach zwei Minuten. Und das seit gut zwei Wochen.",
+    "redemittel": [
+     "Die … geht nach … einfach aus.",
+     "Immer an derselben Stelle, immer nach …",
+     "Das ist nicht mal so, mal so — das ist jedes Mal."
+    ]
+   },
+   {
+    "amanda": "Ich könnte Ihnen einen Gutschein geben.",
+    "hinweis": "Nicht das Erstbeste nehmen. Sag, was du willst — und in welcher Reihenfolge. Dann verhandelt der andere in deiner Reihenfolge weiter.",
+    "beispiel": "Einen Gutschein will ich ehrlich gesagt nicht. Mir wär Reparatur oder Austausch lieber. Und wenn das nicht klappt, hätt ich gern das Geld zurück.",
+    "redemittel": [
+     "Ehrlich gesagt will ich das nicht.",
+     "Mir wär … lieber.",
+     "Und wenn das nicht klappt, hätt ich gern …"
+    ]
+   },
+   {
+    "amanda": "Das muss ich mit dem Chef klären.",
+    "hinweis": "Ende festmachen: wer meldet sich, bis wann — und lass dir etwas mitgeben, wenn du die Ware dalässt.",
+    "beispiel": "Alles klar. Bis wann kann ich mit einer Antwort rechnen? Und krieg ich einen Zettel, dass die Kopfhörer jetzt bei Ihnen sind?",
+    "redemittel": [
+     "Bis wann kann ich mit einer Antwort rechnen?",
+     "Melden Sie sich, oder soll ich nochmal anrufen?",
+     "Krieg ich was Schriftliches, dass das bei Ihnen ist?"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "c1-zug-faellt-aus",
+  "kat": "unterwegs",
+  "modus": "alltag",
+  "em": "🚆",
+  "titel": "Zug fällt aus, und du musst heute noch ankommen",
+  "lvl": "C1",
+  "dauer": "5 Min",
+  "ort": "Bahnsteig, 17 Uhr. Die Anzeige sagt nur zwei Wörter. Am Serviceschalter stehen zwanzig Leute, du bist der elfte.",
+  "schritte": [
+   {
+    "amanda": "Der fällt aus, ja. Der nächste geht in zwei Stunden.",
+    "hinweis": "Meckern bringt nichts, der kann ja nichts dafür. Sag in einem Satz, was du brauchst — dann sucht der andere für dich.",
+    "beispiel": "Okay. Ich muss heute noch nach Leipzig. Welche Möglichkeit hab ich, egal wie umständlich?",
+    "redemittel": [
+     "Ich muss heute noch nach …",
+     "Welche Möglichkeit hab ich, egal wie umständlich?",
+     "Was würden Sie an meiner Stelle machen?"
+    ]
+   },
+   {
+    "amanda": "Sie könnten über Hannover fahren, da ist der Anschluss aber knapp.",
+    "hinweis": "Nachhaken, bis du auch den schlechten Fall kennst. Wer nur den guten Fall hört, steht nachts um elf irgendwo.",
+    "beispiel": "Wie knapp ist knapp? Und wenn ich den nicht krieg — komm ich dann heute trotzdem noch an, oder steh ich in Hannover fest?",
+    "redemittel": [
+     "Wie knapp ist knapp?",
+     "Und wenn ich den nicht krieg?",
+     "Was ist der schlechteste Fall dabei?"
+    ]
+   },
+   {
+    "amanda": "Garantieren kann ich Ihnen nichts.",
+    "hinweis": "Das musst du nicht einfach abnicken. Frag nach dem, was er sehr wohl machen kann.",
+    "beispiel": "Muss ja auch nicht. Können Sie mir trotzdem auf die Fahrkarte schreiben, dass ich umgeleitet wurde? Nicht dass ich im Zug dann Ärger krieg.",
+    "redemittel": [
+     "Muss ja auch nicht.",
+     "Können Sie mir das trotzdem draufschreiben?",
+     "Nicht dass ich nachher Ärger krieg."
+    ]
+   },
+   {
+    "amanda": "Und wegen der Verspätung füllen Sie das Fahrgastrechte-Formular aus.",
+    "hinweis": "Frag genau nach: woher kriegst du das, bis wann muss es weg, und was musst du aufheben. Sonst fehlt am Ende der eine Zettel.",
+    "beispiel": "Krieg ich das hier bei Ihnen, oder muss ich das ausdrucken? Und was muss ich aufheben — reicht die Fahrkarte, oder brauch ich noch was?",
+    "redemittel": [
+     "Krieg ich das hier, oder muss ich das ausdrucken?",
+     "Bis wann muss das raus?",
+     "Was muss ich aufheben?"
+    ]
+   },
+   {
+    "amanda": "Im Zug, der Schaffner: Diese Fahrkarte gilt hier nicht, die ist zuggebunden.",
+    "hinweis": "Kurz, ruhig, sachlich — und gleich den Grund liefern, den er kennen muss. Lange Erklärungen machen es hier schlimmer.",
+    "beispiel": "Ich weiß. Mein Zug ist ausgefallen, ich bin umgeleitet worden. Ihr Kollege hat mir das hier draufgeschrieben, gucken Sie mal.",
+    "redemittel": [
+     "Ich weiß. Mein Zug ist ausgefallen.",
+     "Ihr Kollege hat mir das draufgeschrieben.",
+     "Gucken Sie mal, hier steht es."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "c1-elterngespraech-schule",
+  "kat": "bildung",
+  "modus": "alltag",
+  "em": "🎒",
+  "titel": "Elterngespräch: Ihr Sohn stört im Unterricht",
+  "lvl": "C1",
+  "dauer": "5 Min",
+  "ort": "Klassenzimmer nach dem Unterricht, zehn Minuten Zeit. Die Lehrerin fängt mit dem Verhalten an — der eigentliche Grund liegt woanders.",
+  "schritte": [
+   {
+    "amanda": "Also, Ihr Sohn stört im Unterricht. Er redet ständig dazwischen.",
+    "hinweis": "Nicht verteidigen, nicht sofort entschuldigen. Erst mal genau machen: wann, wie oft, in welchem Fach. Ohne das redet ihr über ein Gefühl.",
+    "beispiel": "Okay, das hör ich zum ersten Mal. In welchen Stunden ist das denn? Und wie oft — jeden Tag, oder eher mal?",
+    "redemittel": [
+     "Das hör ich zum ersten Mal.",
+     "In welchen Stunden ist das denn?",
+     "Wie oft passiert das — jeden Tag oder eher mal?"
+    ]
+   },
+   {
+    "amanda": "Hauptsächlich in Mathe. Ich glaub, da kommt er nicht so richtig mit.",
+    "hinweis": "Das ist der eigentliche Punkt. Zieh das Gespräch dahin, statt weiter über das Verhalten zu reden.",
+    "beispiel": "Dann sind wir ja bei was anderem. Wenn er nicht mitkommt, ist das Reden eher die Folge. Woran hakt es denn genau?",
+    "redemittel": [
+     "Dann sind wir ja bei was anderem.",
+     "Das eine ist wahrscheinlich die Folge vom anderen.",
+     "Woran hakt es denn genau?"
+    ]
+   },
+   {
+    "amanda": "Die Grundlagen aus der vierten Klasse sitzen nicht sicher.",
+    "hinweis": "Jetzt Aufgaben verteilen — deine zuerst, dann fragst du nach ihrer. In der Reihenfolge klingt es nach Zusammenarbeit, nicht nach Forderung.",
+    "beispiel": "Gut, dann machen wir es so: Ich üb mit ihm zu Hause das Einmaleins, jeden Tag zwanzig Minuten. Was können Sie in der Schule machen?",
+    "redemittel": [
+     "Dann machen wir es so: Ich …",
+     "Was können Sie in der Schule machen?",
+     "Was wär aus Ihrer Sicht der nächste Schritt?"
+    ]
+   },
+   {
+    "amanda": "Wir haben donnerstags eine Förderstunde, da ist allerdings großer Andrang.",
+    "hinweis": "Freundlich dranbleiben. Frag nach dem Weg auf die Liste, nicht danach, ob es überhaupt geht.",
+    "beispiel": "Was muss ich machen, damit er da reinkommt? Melde ich ihn bei Ihnen an, oder läuft das übers Sekretariat?",
+    "redemittel": [
+     "Was muss ich machen, damit das klappt?",
+     "Wo muss ich ihn anmelden?",
+     "Und wenn es diesmal nicht reicht — was dann?"
+    ]
+   },
+   {
+    "amanda": "Ich frag mal nach.",
+    "hinweis": "Nicht im Ungefähren enden. Ein Datum, ein Weg, ein nächster Schritt — und mach es klein, dann sagt keiner Nein.",
+    "beispiel": "Können wir in vier Wochen nochmal kurz telefonieren? Dann sagen Sie mir, ob sich was tut. Fünf Minuten reichen mir völlig.",
+    "redemittel": [
+     "Können wir in … nochmal kurz telefonieren?",
+     "Fünf Minuten reichen mir völlig.",
+     "Melden Sie sich, wenn vorher was ist?"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "c1-feier-woher-kommen-sie",
+  "kat": "menschen",
+  "modus": "alltag",
+  "em": "💬",
+  "titel": "Auf der Feier: Sie sprechen aber gut Deutsch",
+  "lvl": "C1",
+  "dauer": "5 Min",
+  "ort": "Geburtstagsfeier bei Freunden. Du kennst kaum jemanden. Ein Gast neben dir am Buffet meint es nett — und trifft trotzdem.",
+  "schritte": [
+   {
+    "amanda": "Sie sprechen aber gut Deutsch! Wo kommen Sie denn ursprünglich her?",
+    "hinweis": "Das ist meistens nett gemeint und trotzdem anstrengend. Du darfst kurz antworten und das Gespräch weiterdrehen — deine Lebensgeschichte schuldest du niemandem.",
+    "beispiel": "Danke. Ich wohn seit neun Jahren hier, aufgewachsen bin ich in Bulgarien. Und Sie, woher kennen Sie Marie?",
+    "redemittel": [
+     "Danke. Ich wohn seit … hier.",
+     "Und Sie, woher kennen Sie …?",
+     "Kurze Fassung: … Lange Fassung dauert."
+    ]
+   },
+   {
+    "amanda": "Bulgarien! Da war ich mal am Meer. Und, gefällt es Ihnen hier besser?",
+    "hinweis": "Der Vergleich ist eine Falle: Egal was du sagst, du redest ein Land schlecht. Sag ehrlich, dass es kein Entweder-oder ist.",
+    "beispiel": "Besser oder schlechter passt irgendwie nicht. Es ist anders. Manches vermiss ich, manches würd ich nicht mehr hergeben.",
+    "redemittel": [
+     "Besser oder schlechter passt irgendwie nicht.",
+     "Es ist einfach anders.",
+     "Manches vermiss ich, manches nicht."
+    ]
+   },
+   {
+    "amanda": "Ich sag ja immer: Wer herkommt, muss sich halt auch anpassen.",
+    "hinweis": "Nicht schlucken und nicht explodieren. Ein Satz Widerspruch, ruhig gesagt, und die Tür bleibt offen. Frag zurück, was er eigentlich meint.",
+    "beispiel": "Kommt drauf an, was Sie mit anpassen meinen. Sprache und Regeln, klar. Aber ich muss ja nicht aufhören, ich zu sein.",
+    "redemittel": [
+     "Kommt drauf an, was Sie damit meinen.",
+     "Das eine schon, das andere nicht.",
+     "Da bin ich anderer Meinung als Sie."
+    ]
+   },
+   {
+    "amanda": "Ich mein das gar nicht böse.",
+    "hinweis": "Der schwerste Schritt: das annehmen und trotzdem nichts zurücknehmen. Sag, wie es ankommt — über dich, nicht über ihn.",
+    "beispiel": "Glaub ich Ihnen. Ich sag Ihnen trotzdem, wie das bei mir ankommt: als müsste ich mich dauernd erklären. Und irgendwann ist man das leid.",
+    "redemittel": [
+     "Glaub ich Ihnen.",
+     "Ich sag Ihnen trotzdem, wie das bei mir ankommt.",
+     "Ich weiß, dass Sie das nicht so meinen — bei mir kommt es aber so an."
+    ]
+   },
+   {
+    "amanda": "Hmm. Verstehe.",
+    "hinweis": "Jetzt wieder rausführen, sonst endet der Abend kalt. Frag etwas, wobei der andere ins Erzählen kommt.",
+    "beispiel": "Aber lassen wir das. Sie waren am Schwarzen Meer, sagen Sie? Wo denn genau? Ich fahr im Sommer nämlich hin.",
+    "redemittel": [
+     "Aber lassen wir das.",
+     "Erzählen Sie mal, wo waren Sie denn genau?",
+     "Ganz was anderes: …"
     ]
    }
   ]

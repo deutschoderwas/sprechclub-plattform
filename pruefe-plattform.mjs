@@ -59,6 +59,25 @@ const PRUEFUNGEN = [
   ['konto.html', 'lsSet gibt es noch', /function lsSet/, 1,
    'fortschritt.js legt sich um lsSet. Wird lsSet umbenannt, hört das Mitschreiben still auf.'],
 
+  // ---------- Die Dialoge und die Ordnung nach Orten ----------
+  ['dialoge.js', 'Die dreizehn C1-Dialoge sind drin', /"lvl": "C1"/g, 13,
+   'Auf C1 hat jeder der dreizehn Orte genau einen Dialog. Fehlt einer, ist beim\n' +
+   '   Anhängen etwas verloren gegangen.'],
+  ['dialoge.js', 'Jeder Dialog hat eine Kategorie', /"kat":/g, 110,
+   'Ohne kat taucht ein Dialog unter keinem Thema auf — er ist dann zwar in der\n' +
+   '   Datei, aber für die Lernenden unsichtbar.'],
+  ['lernen.js', 'Niveau-Spanne wird richtig gelesen', /function niveauPasst/, 1,
+   'Ohne diese Funktion wird wieder stur im Text gesucht: Ein Thema A1–B2 fällt\n' +
+   '   dann beim Filter B1 heraus, obwohl B1 mittendrin liegt.'],
+  ['lernen.js', 'C1 steht im Niveau-Filter', /'B2','C1'\]/, 1,
+   'Ohne den C1-Knopf kommt niemand an die C1-Themen.'],
+  ['themen.js', 'Elf Themen sind bis C1 geöffnet', /lvl:'[A-C][12]–C1'/g, 11,
+   'Steht bei den Themen wieder nur B2, zeigt der C1-Filter eine leere Seite.'],
+  ['ort-bilder.js', 'Die Ortsbilder existieren', /window\.ORT_BILD/, 1,
+   'Ohne die Datei bleiben die Karten auf der Ortsseite grau.'],
+  ['ordnung-orte.html', 'Ortsseite lädt die Bildchen', /ort-bilder\.js/, 1,
+   'Ohne diese Zeile hat die Ortsseite keine Bilder.'],
+
   // ---------- Community ----------
   ['community.js', 'Beiträge werden zu Strängen gebündelt', /function baueStraenge/, 1,
    'Ohne das ist der Chat wieder eine flache Liste statt Beitrag mit Antworten.'],
