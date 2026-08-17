@@ -86,11 +86,10 @@ window.ap = (function () {
         '<b>🏆 Für die Prüfung lernen</b><small>telc · Goethe · DTZ — Hören, Lesen, Schreiben, Sprechen</small></button>' +
       '<div id="v-lernpfad"></div>';
 
-    if (bereich === 'alltag' && window.renderLernpfad) renderLernpfad();
+    if ((bereich === 'alltag' || bereich === 'beruf') && window.lpBereich) lpBereich(bereich);
     else document.getElementById('v-lernpfad').innerHTML =
-      '<div class="hinweis">' + (bereich === 'beruf'
-        ? 'Der Berufs-Pfad wird gerade gebaut.<br>Büro, Bewerbung, Kunden und Pflege haben schon Wortschatz — sie bekommen als Nächstes ihre Reihenfolge.'
-        : 'Der Prüfungsbereich wird gerade gebaut.<br>Er bekommt die vier Teile Hören, Lesen, Schreiben und Sprechen — und einen Countdown bis zu deinem Termin.') + '</div>';
+      '<div class="hinweis">Der Prüfungsbereich wird gerade gebaut.<br>' +
+      'Er bekommt die vier Teile Hören, Lesen, Schreiben und Sprechen — und einen Countdown bis zu deinem Termin.</div>';
   }
 
   /* ---------- Sprechen ---------- */

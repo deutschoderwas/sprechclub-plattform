@@ -48,9 +48,20 @@
     document.head.appendChild(s);
   }
 
-  function daten() { return window.LERNPFAD_B1; }
-  function stand() { return (window.lsGet ? lsGet('pfad', {}) : {}) || {}; }
-  function merken(o) { if (window.lsSet) lsSet('pfad', o); }
+  /* Welcher Pfad gerade gezeigt wird — Alltag oder Beruf.
+     Die App schaltet mit lpBereich() um, der Club bleibt bei Alltag. */
+  var welcher = 'alltag';
+  function daten() {
+    if (welcher === 'beruf' && window.LERNPFAD_BERUF) {
+      var b = window.LERNPFAD_BERUF;
+      if (!b.bauplan && window.LERNPFAD_B1) b.bauplan = window.LERNPFAD_B1.bauplan;
+      return b;
+    }
+    return window.LERNPFAD_B1;
+  }
+  window.lpBereich = function (b) { welcher = b; if (window.renderLernpfad) renderLernpfad(); };
+  function stand() { var a=(window.lsGet ? lsGet('pfad', {}) : {}) || {}; a[welcher]=a[welcher]||{}; return a[welcher]; }
+  function merken(o) { if(!window.lsSet) return; var a=lsGet('pfad',{})||{}; a[welcher]=o; lsSet('pfad', a); }
 
   function fertig(blockId, lektionId) {
     var s = stand(); return !!(s[blockId] && s[blockId][lektionId]);
