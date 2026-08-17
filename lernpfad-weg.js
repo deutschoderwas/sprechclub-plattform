@@ -61,29 +61,38 @@
     return n;
   }
 
-  /* Aufgaben für eine Lektion aus dem vorhandenen Bestand schneiden */
-  function aufgaben(block, plan) {
-    var U = window.UEBUNGEN; if (!U) return [];
-    function ausThema(skId, thId) {
-      var sk = (U.skills || []).filter(function (x) { return x.id === skId; })[0];
-      if (!sk || !thId) return [];
-      var th = sk.themes.filter(function (x) { return x.id === thId; })[0];
-      return th ? th.exercises.slice() : [];
-    }
-    var topf = [];
-    if (plan.quelle === 'ws') topf = ausThema('wortschatz', block.ws);
-    else if (plan.quelle === 'ho') topf = ausThema('hoeren', block.ho);
-    else topf = ausThema('wortschatz', block.ws).concat(ausThema('hoeren', block.ho));
+  /* Aufgaben einer Lektion aus dem vorhandenen Bestand schneiden.
+     Der ganze Block wird auf einmal aufgeteilt, damit keine Aufgabe
+     zweimal vorkommt und keine Lektion halb leer bleibt — egal, wie
+     viele Lücken oder Zuordnungen ein Thema gerade hat. */
+  function ausThema(skId, thId) {
+    var U = window.UEBUNGEN; if (!U || !thId) return [];
+    var sk = (U.skills || []).filter(function (x) { return x.id === skId; })[0];
+    if (!sk) return [];
+    var th = sk.themes.filter(function (x) { return x.id === thId; })[0];
+    return th ? th.exercises.slice() : [];
+  }
 
-    if (plan.typen) topf = topf.filter(function (e) { return plan.typen.indexOf(e.type) >= 0; });
-    if (plan.quelle === 'alle') {
-      // Abschluss: quer durch alles, nicht der Reihe nach
-      topf = topf.slice().sort(function () { return Math.random() - .5; });
-      return topf.slice(0, plan.anzahl);
-    }
-    var teil = topf.slice(plan.von, plan.von + plan.anzahl);
-    if (teil.length < 3) teil = topf.slice(0, plan.anzahl);   // Thema zu klein: von vorn
-    return teil;
+  function verteilung(block) {
+    var ws = ausThema('wortschatz', block.ws);
+    var ho = ausThema('hoeren', block.ho);
+    var luecken = ws.filter(function (e) { return e.type === 'gap'; });
+    var rest    = ws.filter(function (e) { return e.type !== 'gap'; });
+    var n = 8;
+    var l1 = rest.slice(0, n);
+    var l2 = rest.slice(n, n * 2);
+    var l4 = luecken.slice(0, n);
+    // zu wenige Lücken? Mit dem auffüllen, was noch übrig ist.
+    if (l4.length < n) l4 = l4.concat(rest.slice(n * 2, n * 2 + (n - l4.length)));
+    var l3 = ho.slice(0, n);
+    var alle = ws.concat(ho);
+    var l5 = alle.slice().sort(function () { return Math.random() - .5; }).slice(0, 12);
+    return { l1: l1, l2: l2, l3: l3, l4: l4, l5: l5 };
+  }
+
+  function aufgaben(block, plan) {
+    var v = verteilung(block);
+    return v[plan.id] || [];
   }
 
   /* Die erste noch offene Lektion im ganzen Pfad */

@@ -20,7 +20,7 @@ window.LERNPFAD_B1 = {
       versprechen:'Bestellen, nachfragen, über Essen sprechen.' },
     { id:'stadt',     titel:'Unterwegs in der Stadt',emoji:'🚌', ws:'stadt',           ho:'stadt',
       versprechen:'Weg fragen, Fahrkarten, Termine und Öffnungszeiten.' },
-    { id:'amt',       titel:'Auf dem Amt',           emoji:'🏛️', ws:'integration',     ho:null,
+    { id:'amt',       titel:'Auf dem Amt',           emoji:'🏛️', ws:'amt-b1'   ,     ho:null,
       versprechen:'Formulare, Fristen und die Wörter im Bescheid.' },
     { id:'menschen',  titel:'Menschen & Gefühle',    emoji:'💬', ws:'gefuehle',        ho:'gefuehle',
       versprechen:'Sagen, wie es dir geht — und verstehen, wie es anderen geht.' },
