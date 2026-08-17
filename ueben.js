@@ -463,6 +463,9 @@
     var total=S.items.length; var pct=Math.min(100,Math.round(S.correct/total*100));
     // Themen-Fortschritt (beste Runde) speichern
     if(S.thId!=='mix'){ var st=load(); var key=themeKey(S.skId,S.thId); var prev=(st.themes[key]||{}).best||0; if(pct>prev){ st.themes[key]={best:pct}; save(st); } }
+    // Der Lernpfad hoert mit: welche Runde ist gerade fertig geworden?
+    try { window.dispatchEvent(new CustomEvent('ub:fertig', { detail:{
+      skId:S.skId, thId:S.thId, titel:S.title||'', richtig:S.correct, gesamt:total, prozent:pct }})); } catch(e){}
     var em = outOfHearts?'💔':(pct>=80?'🏆':(pct>=50?'💪':'🙂'));
     var msg= outOfHearts?'Keine Herzen mehr – kein Problem, übernächste Runde klappt’s besser!':(pct>=80?'Stark gemacht!':(pct>=50?'Gut – dranbleiben!':'Übung macht den Meister.'));
     var body=document.getElementById('ubBody');
