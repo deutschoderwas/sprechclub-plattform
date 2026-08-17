@@ -183,7 +183,11 @@
           '<span class="tx"><b>' + bl.titel + '</b><small>' + bl.versprechen + '</small>' +
             '<span class="lp-bal"><i style="width:' + pct + '%"></i></span></span>' +
           '<span class="pf">' + fert + '/' + plaene.length + '</span>' +
-        '</div><div class="lp-lek">' + lekt + '</div></div>';
+        '</div><div class="lp-lek">' + lekt +
+          (window.apWoerter ? '<button class="lp-s" onclick="apWoerter(\'' + bl.ws + '\',\'' + bl.titel.replace(/'/g,'') + '\')">' +
+            '<span class="lp-p">📖</span><span class="tx"><b>Die Wörter ansehen</b>' +
+            '<small>mit Erklärung in deiner Sprache</small></span></button>' : '') +
+        '</div></div>';
     }).join('');
 
     ziel.innerHTML =

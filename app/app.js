@@ -161,6 +161,52 @@ window.ap = (function () {
       '</div>' + inhalt;
   }
 
+
+  /* ---------- Wörter eines Blocks, mit Muttersprache ---------- */
+  var SPRACHNAMEN = { en:'English', es:'Español', ru:'Русский', uk:'Українська', tr:'Türkçe',
+                      it:'Italiano', fa:'فارسی', ar:'العربية', pl:'Polski', ro:'Română' };
+  var wortSprache = null, wortThema = null;
+
+  window.apWoerter = function (themaId, titel) {
+    wortThema = { id: themaId, titel: titel };
+    if (!wortSprache) wortSprache = profil.native_language || 'en';
+    zeigeWoerter();
+    ap.zeige('woerter');
+  };
+
+  function zeigeWoerter() {
+    var el = document.getElementById('s-woerter'); if (!el || !wortThema) return;
+    var U = window.UEBUNGEN || { skills: [] };
+    var sk = U.skills.filter(function (x) { return x.id === 'wortschatz'; })[0];
+    var th = sk && sk.themes.filter(function (x) { return x.id === wortThema.id; })[0];
+    var woerter = (th && th.words) || [];
+
+    var auswahl = Object.keys(SPRACHNAMEN).map(function (k) {
+      return '<button class="' + (k === wortSprache ? 'an' : '') + '" onclick="apSprache(\'' + k + '\')">' +
+        SPRACHNAMEN[k] + '</button>';
+    }).join('');
+
+    var liste = woerter.map(function (w) {
+      var u = window.wortUebersetzung ? wortUebersetzung(w.de, wortSprache) : null;
+      return '<div class="wort">' +
+        '<div class="wk"><b>' + E(w.de) + '</b>' + (w.emoji ? ' <span>' + w.emoji + '</span>' : '') + '</div>' +
+        '<div class="wd">' + E(w.info || '') + '</div>' +
+        (u ? '<div class="wu"><b>' + E(u.w) + '</b>' + (u.i ? '<span>' + E(u.i) + '</span>' : '') + '</div>'
+           : '<div class="wu leer">Übersetzung folgt</div>') +
+        '</div>';
+    }).join('');
+
+    el.innerHTML =
+      '<div class="kopfzeile"><h1>' + E(wortThema.titel) + '</h1>' +
+      '<p>' + woerter.length + ' Wörter — in deiner Sprache erklärt.</p></div>' +
+      '<div class="filter sprachen">' + auswahl + '</div>' +
+      (liste || '<div class="hinweis">Für dieses Thema gibt es noch keine Wortliste.</div>') +
+      '<button class="zeile" style="margin-top:14px" onclick="ap.zeige(\'lernen\')">' +
+        '<span class="rd">←</span><span><b>Zurück zum Lernpfad</b></span></button>';
+  }
+
+  window.apSprache = function (k) { wortSprache = k; zeigeWoerter(); };
+
   /* ---------- Profil ---------- */
   function renderProfilApp() {
     document.getElementById('s-profil').innerHTML =
@@ -175,7 +221,7 @@ window.ap = (function () {
         '<span><b>Abmelden</b><small>Bis bald!</small></span></button>';
   }
 
-  var ZEICHNER = { start: renderStart, lernen: renderLernen, sprechen: renderSprechen,
+  var ZEICHNER = { start: renderStart, lernen: renderLernen, sprechen: renderSprechen, woerter: zeigeWoerter,
                    community: renderCommunityApp, medien: renderMedienApp, profil: renderProfilApp };
 
   function leisteBauen() {
