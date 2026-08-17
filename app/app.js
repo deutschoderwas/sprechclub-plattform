@@ -162,6 +162,54 @@ window.ap = (function () {
   }
 
 
+
+  /* ---------- Sprachwahl beim ersten Start ----------
+     Einmal fragen, dann nie wieder. Wer sie spaeter aendern will,
+     findet sie im Profil. Genauso macht es Duolingo. */
+  var SPRACHLISTE = [
+    { k:'en', f:'🇬🇧', n:'English',    h:'I speak English' },
+    { k:'tr', f:'🇹🇷', n:'Türkçe',     h:'Türkçe konuşuyorum' },
+    { k:'ar', f:'🇸🇦', n:'العربية',    h:'أتحدث العربية' },
+    { k:'ru', f:'🇷🇺', n:'Русский',    h:'Я говорю по-русски' },
+    { k:'uk', f:'🇺🇦', n:'Українська', h:'Я розмовляю українською' },
+    { k:'fa', f:'🇮🇷', n:'فارسی',      h:'من فارسی صحبت می‌کنم' },
+    { k:'pl', f:'🇵🇱', n:'Polski',     h:'Mówię po polsku' },
+    { k:'ro', f:'🇷🇴', n:'Română',     h:'Vorbesc română' },
+    { k:'es', f:'🇪🇸', n:'Español',    h:'Hablo español' },
+    { k:'it', f:'🇮🇹', n:'Italiano',   h:'Parlo italiano' }
+  ];
+
+  function zeigeSprachwahl() {
+    var el = document.getElementById('sprachwahl');
+    el.innerHTML =
+      '<div class="sw-innen">' +
+        '<img src="logo.png" alt="" class="sw-logo">' +
+        '<h1>Welche Sprache sprichst du?</h1>' +
+        '<p>Dann erklären wir dir neue Wörter in deiner Sprache.</p>' +
+        '<div class="sw-liste">' +
+          SPRACHLISTE.map(function (s) {
+            return '<button onclick="apWaehleSprache(\'' + s.k + '\')">' +
+              '<span class="fl">' + s.f + '</span>' +
+              '<span class="tx"><b>' + s.n + '</b><small>' + s.h + '</small></span></button>';
+          }).join('') +
+        '</div>' +
+        '<p class="sw-fuss">Du kannst das später im Profil ändern.</p>' +
+      '</div>';
+    el.classList.add('an');
+  }
+
+  window.apWaehleSprache = async function (k) {
+    profil.native_language = k;
+    if (window.profile) window.profile.native_language = k;
+    wortSprache = k;
+    document.getElementById('sprachwahl').classList.remove('an');
+    try { if (sb && user) await sb.from('profiles').update({ native_language: k }).eq('id', user.id); }
+    catch (e) { /* offline: die Wahl gilt trotzdem für diese Sitzung */ }
+    ap.zeige('start');
+  };
+
+  window.apSpracheAendern = function () { zeigeSprachwahl(); };
+
   /* ---------- Wörter eines Blocks, mit Muttersprache ---------- */
   var SPRACHNAMEN = { en:'English', es:'Español', ru:'Русский', uk:'Українська', tr:'Türkçe',
                       it:'Italiano', fa:'فارسی', ar:'العربية', pl:'Polski', ro:'Română' };
@@ -215,10 +263,15 @@ window.ap = (function () {
         '<small>' + E(user.email) + '</small></span></div>' +
       '<div class="zeile"><span class="rd">🎯</span><span><b>Niveau</b>' +
         '<small>' + E(profil.level || 'noch nicht gesetzt') + '</small></span></div>' +
-      '<div class="zeile"><span class="rd">🗣️</span><span><b>Muttersprache</b>' +
-        '<small>' + E(profil.native_language || 'noch nicht gesetzt') + '</small></span></div>' +
+      '<button class="zeile" onclick="apSpracheAendern()"><span class="rd">🗣️</span>' +
+        '<span><b>Deine Sprache</b><small>' + E(sprachName(profil.native_language)) + ' — zum Ändern tippen</small></span></button>' +
       '<button class="zeile" onclick="ap.abmelden()"><span class="rd">↩︎</span>' +
         '<span><b>Abmelden</b><small>Bis bald!</small></span></button>';
+  }
+
+  function sprachName(k) {
+    var t = SPRACHLISTE.filter(function (s) { return s.k === k; })[0];
+    return t ? t.n : 'noch nicht gewählt';
   }
 
   var ZEICHNER = { start: renderStart, lernen: renderLernen, sprechen: renderSprechen, woerter: zeigeWoerter,
@@ -259,6 +312,7 @@ window.ap = (function () {
       leisteBauen();
       var start = (location.hash || '').replace('#', '') || 'start';
       this.zeige(ZEICHNER[start] ? start : 'start');
+      if (!profil.native_language) zeigeSprachwahl();   // einmal am Anfang
     }
   };
 })();
