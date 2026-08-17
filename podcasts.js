@@ -1,5 +1,7 @@
-/* deutschoderwas club — Podcast-Folgen mit synchronem Transkript */
-window.PODCASTS = [
+/* deutschoderwas club — Podcast-Folgen mit synchronem Transkript.
+   Die feste Folge unten ist nur noch der Rückfall; alles Weitere
+   kommt aus der Datenbank (siehe Loader am Dateiende). */
+window.PODCASTS_SEED = [
  {
   id: 'a2-sommerferien',
   titel: 'Die Sommerferien sind da',
@@ -428,3 +430,111 @@ window.PODCASTS = [
   ]
  }
 ];
+
+/* ============================================================
+   Ab hier: die Folgen kommen aus der Datenbank
+   ------------------------------------------------------------
+   Früher stand jede Folge von Hand in dieser Datei. Seit der
+   Podcast täglich erscheint, geht das nicht mehr — deshalb holt
+   sich diese Datei die Folgen jetzt selbst aus Supabase.
+
+   Nach oben hin ändert sich nichts: window.PODCASTS bleibt eine
+   ganz normale Liste. Die Podcast-Seite und der Schülerbereich
+   lesen weiter genau diese Liste. Der einzige Unterschied ist,
+   dass sie kurz nach dem Laden noch einmal voller wird.
+
+   Damit niemand vor einer leeren Seite sitzt, während die
+   Datenbank antwortet, steht die allererste Folge weiterhin fest
+   in dieser Datei (window.PODCASTS_SEED). Sobald die echten Daten
+   da sind, wird sie ersetzt.
+
+   Wer nach dem Nachladen neu zeichnen will, hört einfach auf das
+   Ereignis:  window.addEventListener('podcasts-geladen', …)
+   ============================================================ */
+(function () {
+  'use strict';
+
+  var TAGE = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
+
+  window.PODCASTS = (window.PODCASTS_SEED || []).slice();
+  window.PODCASTS_STAND = 'seed';   // seed | geladen | fehler
+
+  function tagVon(datum) {
+    try { return TAGE[new Date(datum + 'T12:00:00Z').getUTCDay()]; } catch (e) { return ''; }
+  }
+
+  /* Aus einer Datenbankzeile wird genau die Form, die die Seiten
+     schon immer erwartet haben. */
+  function umformen(z) {
+    return {
+      id:     z.id,
+      titel:  z.titel,
+      level:  z.level,
+      tag:    tagVon(z.datum),
+      datum:  z.datum,
+      dauer:  z.dauer,
+      datei:  z.datei,
+      bild:   z.bild,
+      cover:  z.bild,
+      kurz:   z.kurz,
+      thema:  z.thema,
+      woerter: Array.isArray(z.woerter) ? z.woerter : [],
+      transkript: Array.isArray(z.transkript) ? z.transkript : []
+    };
+  }
+
+  /* Den Supabase-Zugang finden: entweder den, den der Schülerbereich
+     schon geöffnet hat, oder einen eigenen für die Podcast-Seite. */
+  var eigener = null;
+  function zugang() {
+    if (window.sb) return window.sb;
+    if (eigener) return eigener;
+    var c = window.SPRECHCLUB_CONFIG;
+    if (!c || !window.supabase || !window.supabase.createClient) return null;
+    eigener = window.supabase.createClient(c.SUPABASE_URL, c.SUPABASE_ANON_KEY);
+    return eigener;
+  }
+
+  function fertig(stand) {
+    window.PODCASTS_STAND = stand;
+    try { window.dispatchEvent(new Event('podcasts-geladen')); } catch (e) {}
+  }
+
+  async function laden() {
+    var sb = zugang();
+    if (!sb) return fertig('fehler');
+    try {
+      var r = await sb.from('podcasts')
+        .select('id,datum,level,titel,kurz,dauer,datei,bild,woerter,transkript,thema')
+        .eq('status', 'live')
+        .order('datum', { ascending: false })
+        .order('level')
+        .limit(160);
+      if (r.error) throw r.error;
+      var neu = (r.data || []).filter(function (z) { return z.datei; }).map(umformen);
+      if (!neu.length) return fertig('geladen');
+
+      /* An Ort und Stelle austauschen, damit Code, der sich die
+         Liste schon gemerkt hat, weiter dieselbe Liste sieht. */
+      var alt = window.PODCASTS;
+      var behalten = (window.PODCASTS_SEED || []).filter(function (s) {
+        return !neu.some(function (n) { return n.id === s.id; });
+      });
+      alt.length = 0;
+      neu.concat(behalten).forEach(function (x) { alt.push(x); });
+      fertig('geladen');
+    } catch (e) {
+      /* Kein Drama: die Seite zeigt dann eben nur die feste Folge. */
+      fertig('fehler');
+    }
+  }
+
+  /* window.sb entsteht erst nach dem Login. Kurz darauf warten,
+     dann laden — und notfalls auch ohne ihn starten. */
+  var versuche = 0;
+  (function warten() {
+    if (window.sb || versuche > 40) { laden(); return; }
+    versuche++;
+    setTimeout(warten, 150);
+  })();
+})();

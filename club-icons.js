@@ -93,13 +93,15 @@
     nodes.forEach(processTextNode);
   }
 
+  var PC_WORT_CSS = '.pc-woerter{margin:6px 0 0;padding-left:18px}.pc-woerter li{margin:3px 0;line-height:1.5}';
   function ensureStyle(){
     if(document.getElementById('dow-ic-style')) return;
     var st = document.createElement('style'); st.id = 'dow-ic-style';
     st.textContent =
       ".dow-icw{display:inline-flex;align-items:center;justify-content:center;vertical-align:-.16em}"+
       ".dow-ic{width:1.05em;height:1.05em;display:inline-block}"+
-      ".kl .dow-icw,.kpi .dow-icw{margin-right:5px}";
+      ".kl .dow-icw,.kpi .dow-icw{margin-right:5px}"+
+      PC_WORT_CSS;
     document.head.appendChild(st);
   }
 
@@ -164,8 +166,14 @@
     if(puffer) abs.push(puffer);
     var html = abs.map(function(x){ return '<p>'+pcEsc(x)+'</p>'; }).join('');
     if(f.woerter && f.woerter.length){
-      html += '<p style="margin-top:12px"><b>Wörter der Folge:</b> '
-            + f.woerter.map(pcEsc).join(' · ') + '</p>';
+      /* Ein Wort ist entweder nur ein Wort ("der Koffer") oder ein
+         Wort mit kurzer Erklärung auf Deutsch. Beides muss gehen. */
+      html += '<p style="margin-top:12px"><b>Wörter der Folge:</b></p><ul class="pc-woerter">'
+            + f.woerter.map(function(w){
+                var t = (w && typeof w==='object') ? (w.w||'') : String(w||'');
+                var e = (w && typeof w==='object') ? (w.e||w.info||'') : '';
+                return '<li><b>'+pcEsc(t)+'</b>'+(e?' — '+pcEsc(e):'')+'</li>';
+              }).join('') + '</ul>';
     }
     return html;
   }
@@ -179,7 +187,7 @@
         level:  f.level || 'A2',
         titel:  f.titel || f.title || '',
         datei:  f.datei || f.file || '',
-        cover:  f.cover || ('podcast/covers/' + (f.id||'') + '.jpg'),
+        cover:  f.cover || f.bild || ('podcast/covers/' + (f.id||'') + '.jpg'),
         dauer:  f.dauer || '',
         kurz:   f.kurz || '',
         datum:  f.datum || '',
@@ -384,6 +392,19 @@
       n.addEventListener('click', function(){ var s=document.getElementById('v-podcast'); if(s) s.classList.remove('active'); if(b) b.classList.remove('active'); });
     });
   }
+
+  /* Die Folgen kommen aus der Datenbank und treffen erst kurz nach
+     dem Seitenaufbau ein. Dann die Podcast-Ansicht neu aufbauen —
+     aber nur, wenn gerade nichts läuft, sonst bricht die Wiedergabe ab. */
+  window.addEventListener('podcasts-geladen', function(){
+    var sec = document.getElementById('v-podcast');
+    if(sec){
+      var laeuft = Array.prototype.some.call(sec.querySelectorAll('audio'), function(a){ return !a.paused; });
+      if(!laeuft){ sec.innerHTML = podcastHTML(); wirePodcastFilter(sec); }
+    }
+    try{ setupPodcast(); }catch(e){}
+    try{ if(window.startseiteNeuZeichnen) window.startseiteNeuZeichnen(); }catch(e){}
+  });
 
   var scheduled = false, obs = null;
   function run(){

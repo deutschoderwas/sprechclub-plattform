@@ -88,6 +88,9 @@
   .hand-queue .hq{display:inline-flex; align-items:center; gap:6px; background:#FFF3C2; border:1px solid #F0D98A; color:#7a5b00; border-radius:999px; padding:3px 5px 3px 10px; font-size:.78rem; font-weight:700;}
   .hand-queue .hq button{border:none; background:#fff; border-radius:999px; width:20px; height:20px; cursor:pointer; color:#16A34A; font-weight:800; line-height:1;}
   #vc-hand.on{background:#FFE0A3; border-color:#E0A83A; color:#7a5b00;}
+  #vc-event.on{ background:var(--tuerkis); border-color:var(--tuerkis); color:var(--auf-tuerkis); }
+  .event-banner{ position:fixed; top:12px; left:50%; transform:translateX(-50%); z-index:71; background:var(--anthrazit); color:#fff; font-family:'Inter'; font-weight:800; font-size:.85rem; padding:8px 16px; border-radius:999px; box-shadow:0 6px 18px rgba(0,0,0,.25); display:none; }
+  .event-banner.show{ display:block; }
   .rx-layer{position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:6;}
   .rx-fly{position:absolute; bottom:6%; font-size:2rem; will-change:transform,opacity; animation:rxfly 2.4s ease-out forwards;}
   @keyframes rxfly{0%{opacity:0; transform:translateY(0) scale(.6);}15%{opacity:1;}100%{opacity:0; transform:translateY(-170px) scale(1.25);}}
@@ -447,6 +450,7 @@
         <button id="vc-hand" onclick="vcHand()" title="Melden – ich möchte sprechen" style="display:none">✋ Melden</button>
         <button id="vc-share" onclick="vcShare()" title="Bildschirm / Präsentation teilen">🖥️ Teilen</button>
         <button id="vc-muteall" onclick="vcMuteAll()" title="Alle Schüler stummschalten (bei Hintergrundgeräuschen)" style="display:none">🔇 Alle stumm</button>
+        <button id="vc-event" onclick="toggleEvent()" title="Bühnen-Modus: Alle kommen stummgeschaltet rein, Fokus auf dir. Ideal für den Start mit vielen Leuten." style="display:none">🎤 Event-Modus</button>
         <button id="vc-bo" onclick="toggleBoPanel()" title="Kleingruppen (Breakout-Räume) bilden" style="display:none">👥 Gruppen</button>
         <button onclick="vcTiles()" title="Alle Teilnehmer sehen">👥 Alle</button>
         <button onclick="vcFull()" title="Großansicht">⛶ Groß</button>
@@ -485,6 +489,7 @@
     rolle=r; const lehrer = r==='lehrer';
     window._meIsLehrer = lehrer;
     const mb=document.getElementById('vc-muteall'); if(mb) mb.style.display = lehrer ? '' : 'none';
+    const evb=document.getElementById('vc-event'); if(evb) evb.style.display = lehrer ? '' : 'none';
     const bob=document.getElementById('vc-bo'); if(bob) bob.style.display = lehrer ? '' : 'none';
     const hb=document.getElementById('vc-hand'); if(hb) hb.style.display = lehrer ? 'none' : '';
     const tr=document.getElementById('tools-row'); if(tr) tr.classList.toggle('on', lehrer);
@@ -889,7 +894,10 @@
     dframe.on('joined-meeting', (ev)=>{ window._inCall=true; renderGrid(); if(ev&&ev.participants&&ev.participants.local) dailySyncButtons(ev.participants.local); setTimeout(checkMic,2500); setTimeout(()=>{ if(typeof applySavedBg==='function') applySavedBg(); }, 1800);
       // Bessere Bildqualität: Videos der anderen in höchster Stufe empfangen
       setTimeout(()=>{ try{ dframe.updateReceiveSettings({ '*':{ video:{ quality:'high' } } }); }catch(e){} }, 1500); });
-    dframe.on('participant-joined', renderGrid);
+    dframe.on('participant-joined', (ev)=>{ renderGrid();
+      // Event-/Bühnen-Modus: neue Teilnehmer kommen stummgeschaltet rein (nur Lehrer schaltet stumm).
+      try{ if(window._eventMode && window._meIsLehrer && ev && ev.participant && !ev.participant.local){ const o={}; o[ev.participant.session_id]={ setAudio:false }; dframe.updateParticipants(o); } }catch(e){}
+    });
     dframe.on('participant-updated', (ev)=>{ renderGrid(); if(ev&&ev.participant&&ev.participant.local) dailySyncButtons(ev.participant); });
     dframe.on('participant-left', renderGrid);
     dframe.on('track-started', renderGrid);
@@ -1059,12 +1067,22 @@
       html+=`<div class="bo-row"><button onclick="boHop(0)">🏠 Hauptraum</button><button class="bo-end" onclick="boEnd()">⏹️ Alle zurückholen</button></div>`;
       body.innerHTML=html; return;
     }
-    let html=`<div class="bo-row"><label>Gruppengröße</label><input id="bo-size" type="number" min="2" max="8" value="2"><button onclick="boZufall()">🎲 Zufällig</button></div>`;
-    if(!ppl.length) html+='<div class="bo-hint">Noch keine Schüler im Raum.</div>';
-    ppl.forEach(pp=>{ const cur=window._boAssign[pp.id]||''; html+=`<div class="bo-p"><span>${esc(pp.name)}</span><input type="number" min="1" max="12" value="${esc(cur)}" placeholder="–" onchange="boSet('${esc(pp.id)}',this.value)"></div>`; });
+    // Aufgeräumt: erst „Größe + Zufällig + Start", die Einzel-Zuordnung ist einklappbar (für große Runden übersichtlich).
+    const n=ppl.length;
+    const assigned=Object.values(window._boAssign||{}).filter(g=>g>0);
+    const nGroups=assigned.length ? new Set(assigned).size : 0;
+    let html=`<div class="bo-hint">👥 ${n} ${n===1?'Person':'Personen'} im Raum</div>`;
+    html+=`<div class="bo-row"><label>Gruppengröße</label><input id="bo-size" type="number" min="2" max="8" value="${esc(window._boSize||2)}"><button onclick="boZufall()">🎲 Zufällig zuteilen</button></div>`;
+    if(!n) html+='<div class="bo-hint">Noch keine Schüler im Raum.</div>';
+    if(nGroups) html+=`<div class="bo-hint">➜ <b>${nGroups} Gruppen</b> vorbereitet — jetzt starten:</div>`;
     html+=`<div class="bo-row"><button class="bo-start" onclick="boStart()">▶️ Gruppen starten</button></div>`;
+    html+=`<div class="bo-row"><button onclick="boToggleManual()">${window._boManual?'▾ Manuell zuordnen ausblenden':'▸ Manuell zuordnen (optional)'}</button></div>`;
+    if(window._boManual){
+      ppl.forEach(pp=>{ const cur=window._boAssign[pp.id]||''; html+=`<div class="bo-p"><span>${esc(pp.name)}</span><input type="number" min="1" max="12" value="${esc(cur)}" placeholder="–" onchange="boSet('${esc(pp.id)}',this.value)"></div>`; });
+    }
     body.innerHTML=html;
   }
+  function boToggleManual(){ window._boManual=!window._boManual; boRenderTeacher(); }
   function boStart(){
     const groups={}; Object.entries(window._boAssign).forEach(([id,g])=>{ if(g>0) groups[id]=g; });
     if(!Object.keys(groups).length) return;
@@ -1295,6 +1313,23 @@
     } else { return; }
     const b=document.getElementById('vc-muteall');
     if(b){ const t=b.textContent; b.textContent='✅ stummgeschaltet'; setTimeout(()=>{ b.textContent=t; }, 1600); }
+  }
+
+  // ---- Event-/Bühnen-Modus (Lehrer): alle kommen stummgeschaltet rein, Fokus auf der Bühne. ----
+  // Neue Teilnehmer werden beim Beitritt automatisch stummgeschaltet (siehe participant-joined).
+  // Schüler können jederzeit selbst wieder ihr Mikro anschalten, wenn sie sprechen möchten.
+  function toggleEvent(){
+    const on = !window._eventMode; window._eventMode = on;
+    const b=document.getElementById('vc-event');
+    if(b){ b.classList.toggle('on', on); b.textContent = on ? '🎤 Bühne beenden' : '🎤 Event-Modus'; }
+    if(on){ vcMuteAll(); }   // alle aktuell Anwesenden sofort stumm
+    try{ if(window._boCh) window._boCh.send({ type:'broadcast', event:'evt', payload:{ on } }); }catch(e){}
+  }
+  // Schüler-Seite: Banner zeigen + eigenes Mikro aus, wenn die Bühne startet.
+  function handleEvent(p){
+    if(!p) return; const on=!!p.on;
+    const el=document.getElementById('event-banner'); if(el) el.classList.toggle('show', on && !window._meIsLehrer);
+    if(on && window._meIsLehrer===false && window._provider==='daily' && dframe){ try{ dframe.setLocalAudio(false); }catch(e){} }
   }
 
   // ---- Reaktionen (alle) + Handmeldung (Schüler → Lehrer sieht die Reihenfolge) ----
@@ -1708,6 +1743,7 @@
     window._boCh = sb.channel('breakout-'+STUNDE)
       .on('broadcast', { event:'bo' }, ({payload})=>{ if(typeof handleBreakout==='function') handleBreakout(payload); })
       .on('broadcast', { event:'help' }, ({payload})=>{ if(istLehrer && typeof onHelpCall==='function') onHelpCall(payload); })
+      .on('broadcast', { event:'evt' }, ({payload})=>{ if(typeof handleEvent==='function') handleEvent(payload); })
       .subscribe();
     window._handCh = sb.channel('hand-'+STUNDE)
       .on('broadcast', { event:'hand' }, ({payload})=>{
@@ -1857,6 +1893,7 @@
   <div class="bo-body" id="bo-body"></div>
 </div>
 <!-- Breakout-Banner für Schüler -->
+<div class="event-banner" id="event-banner">🎤 Bühne läuft – Mikro aus, bitte zuhören</div>
 <div class="bo-banner" id="bo-banner"><span class="bo-txt"></span><button class="bo-call" id="bo-call" onclick="callTeacher()" style="display:none">🔔 Lehrer rufen</button></div>
 <div class="help-alert" id="help-alert"><span class="ha-txt"></span><button class="ha-go">👀 hinschauen</button><button class="ha-x" title="Weg" onclick="document.getElementById('help-alert').classList.remove('show')">✕</button></div>
 </body>

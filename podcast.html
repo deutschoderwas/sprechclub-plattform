@@ -148,6 +148,10 @@ h2 .ic{color:var(--acc-d)}
 </div>
 <audio id="au" preload="metadata"></audio>
 <script src="ui-icons.js"></script>
+<!-- Die Folgen liegen in der Datenbank. Dafür braucht diese Seite
+     denselben Zugang wie der Schülerbereich. -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
 <script src="podcasts.js"></script>
 <script src="stimmen.js"></script>
 <script>
@@ -157,7 +161,16 @@ var I=window.ICON||function(){return'';};
 var PC=window.PODCASTS||[];
 var au=document.getElementById('au'), cur=null, folgen=true, akt=-1, nurDE=false;
 function esc(x){return String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function bild(id,w){ return 'illu/'+id+(w&&w<=500?'-s':'')+'.jpg'; }
+function bild(id,w){
+  id=String(id||'');
+  /* Aus der Datenbank kommt eine fertige Bildadresse, aus der alten
+     Datei nur ein Kürzel wie "kat-alltag". Beides muss gehen. */
+  if(/^https?:|^\/|\.(jpg|jpeg|png|svg|webp)$/i.test(id)) return id;
+  return 'illu/'+id+(w&&w<=500?'-s':'')+'.jpg';
+}
+/* Ein Wort der Folge ist entweder nur ein Wort oder ein Wort mit Erklärung. */
+function wortText(w){ return (w&&typeof w==='object') ? (w.w||'') : String(w||''); }
+function wortInfo(w){ return (w&&typeof w==='object') ? (w.e||w.info||'') : ''; }
 function zeit(s){ s=Math.max(0,Math.floor(s||0)); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
 
 /* Sprachausgabe für Einzelwörter */
@@ -203,8 +216,10 @@ window.__oeffne=function(id){
     return '<button class="sg future" data-i="'+i+'" onclick="__spring('+i+')">'
       +'<span class="zt">'+zeit(s.t)+'</span>'+esc(s.x)+'</button>';
   }).join('');
-  var wl=p.woerter.map(function(w){
-    return '<span class="wc" onclick="__sag(\''+esc(w).replace(/'/g,"\\'")+'\')">'+I('speaker',14)+esc(w)+'</span>';
+  var wl=(p.woerter||[]).map(function(w){
+    var t=wortText(w), i=wortInfo(w);
+    return '<span class="wc" title="'+esc(i)+'" onclick="__sag(\''+esc(t).replace(/'/g,"\\'")+'\')">'
+      +I('speaker',14)+esc(t)+(i?'<em style="font-style:normal;color:var(--ink3);font-weight:400"> — '+esc(i)+'</em>':'')+'</span>';
   }).join('');
   document.getElementById('stage').innerHTML=
      '<div class="head"><span class="im"><img src="'+bild(p.bild,700)+'" alt=""></span>'
@@ -289,8 +304,18 @@ document.getElementById('bBack').innerHTML=I('arrowL',18);
 document.getElementById('bFwd').innerHTML=I('arrowR',18);
 document.getElementById('bPlay').innerHTML=I('play',22);
 document.getElementById('bSync').innerHTML=I('target',18);
-if(!PC.length) document.getElementById('stage').innerHTML='<div class="err">Noch keine Folgen verfügbar.</div>';
-else liste();
+function zeichnen(){
+  PC=window.PODCASTS||[];
+  if(!PC.length){
+    document.getElementById('stage').innerHTML='<div class="err">'
+      +(window.PODCASTS_STAND==='seed'?'Folgen werden geladen …':'Noch keine Folgen verfügbar.')+'</div>';
+  } else liste();
+}
+/* Die Folgen kommen aus der Datenbank und treffen kurz nach dem
+   Seitenaufbau ein. Dann noch einmal zeichnen — aber nur, wenn
+   gerade keine Folge offen ist, sonst reißt es die Wiedergabe ab. */
+window.addEventListener('podcasts-geladen',function(){ if(!cur) zeichnen(); });
+zeichnen();
 })();
 </script>
 </body>
