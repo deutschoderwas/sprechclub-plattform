@@ -1506,6 +1506,14 @@ async function openStudentCard(id){
     el.innerHTML='<div style="font-weight:700;color:#1A1A1A;margin-bottom:5px">✅ '+data.length+' E-Mail'+(data.length===1?'':'s')+' verschickt</div>'
       + data.map(r=>`<div style="border-bottom:1px solid #E5DEFB;padding:4px 0">${L[r.kind]||('✉️ '+esc(r.kind))} <span class="muted">· ${f.format(new Date(r.sent_at))}</span></div>`).join('');
   });
+  // Guthaben frisch aus der Datenbank holen — die Liste im Hintergrund kann veraltet sein,
+  // sobald der Schueler waehrend der offenen Admin-Seite bucht oder storniert.
+  sb.from('profiles').select('credits').eq('id',id).single().then(({data})=>{
+    if(!data) return;
+    const feld=document.getElementById('cCredits');
+    if(feld && String(feld.value)!==String(data.credits)) feld.value=data.credits;
+    const eintrag=SCHUELER.find(x=>x.id===id); if(eintrag) eintrag.credits=data.credits;
+  });
   // Gebuchte Stunden laden (wann ist die Stunde + wann wurde gebucht + Status)
   sb.from('bookings').select('status,created_at,classes(title,level,starts_at)').eq('user_id',id).then(({data})=>{
     const el=document.getElementById('cBookings'); if(!el) return;

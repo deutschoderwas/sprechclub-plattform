@@ -48,6 +48,14 @@ export default async function handler(req, res) {
     if (birthday) prof.birthday = birthday;
     const { error: pErr } = await sb.from('profiles').upsert(prof, { onConflict: 'id' });
     if (pErr) return res.status(500).json({ error: 'profile_failed', detail: pErr.message });
+    // Startguthaben protokollieren, damit das Guthabenprotokoll spaeter aufgeht.
+    // Ohne diesen Eintrag stehen im Protokoll nur die Abzuege und niemand kann
+    // nachrechnen, woher das Guthaben urspruenglich kam.
+    if (credits > 0) {
+      const { error: lErr } = await sb.from('credit_log')
+        .insert({ user_id: userId, change: credits, reason: 'startguthaben' });
+      if (lErr) console.error('credit_log (Startguthaben) fehlgeschlagen:', lErr.message);
+    }
   } else {
     // BESTEHENDER Schüler: NICHTS überschreiben! Status & Guthaben bleiben unangetastet.
     // Nur einen noch fehlenden Namen / Geburtstag ergänzen.

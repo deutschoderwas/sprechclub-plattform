@@ -125,8 +125,13 @@ function pruefeUebung(ex, wo, meldung) {
     if (ex.options.length > 5) W(`${ex.options.length} Antwortmöglichkeiten — mehr als 4 überfordert`);
     const leer = ex.options.filter((o) => !String(o || '').trim()).length;
     if (leer) F(`${leer} leere Antwortmöglichkeit(en)`);
-    const einmalig = new Set(ex.options.map((o) => String(o).trim().toLowerCase()));
-    if (einmalig.size !== ex.options.length) F('zwei Antwortmöglichkeiten sind gleich');
+    const wortgleich = new Set(ex.options.map((o) => String(o).trim()));
+    if (wortgleich.size !== ex.options.length) F('zwei Antwortmöglichkeiten sind gleich');
+    else {
+      const kleingleich = new Set(ex.options.map((o) => String(o).trim().toLowerCase()));
+      if (kleingleich.size !== ex.options.length)
+        W('zwei Antwortmöglichkeiten unterscheiden sich nur in Groß- und Kleinschreibung — bei Betonungsaufgaben (AR-beit / ar-BEIT) ist das gewollt, sonst ein Tippfehler');
+    }
     if (typeof ex.answer !== 'number') F('"answer" muss eine Zahl sein (0 = die erste Möglichkeit)');
     else if (ex.answer < 0 || ex.answer >= ex.options.length) F(`"answer": ${ex.answer} zeigt ins Leere`);
     // Die richtige Antwort darf nicht die auffällig längste sein — das verrät sie.
