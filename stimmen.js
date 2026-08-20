@@ -148,7 +148,30 @@
         if (puffer) raus.push(puffer);
       } else raus.push(x);
     });
-    return raus;
+    /* Letzte Sicherung: Chrome bricht lange Stücke nach etwa 15 Sekunden
+       mittendrin ab. Deshalb geht nichts über 120 Zeichen an die Ausgabe —
+       zu lange Reste werden an Wortgrenzen geteilt. */
+    var fein = [];
+    raus.forEach(function (x) {
+      if (x.length <= 120) { fein.push(x); return; }
+      var woerter = x.split(' '), puffer = '';
+      woerter.forEach(function (w) {
+        var k = puffer ? puffer + ' ' + w : w;
+        if (k.length > 120 && puffer) { fein.push(puffer); puffer = w; }
+        else puffer = k;
+      });
+      if (puffer) fein.push(puffer);
+    });
+    /* Zum Schluss wieder auffüllen: Stücke, die zusammen unter 120 Zeichen
+       bleiben, gehen gemeinsam raus. Sonst entstehen Pausen mitten im Satz,
+       die sich wie ein Abbruch anhören. */
+    var glatt = [];
+    fein.forEach(function (x) {
+      var letzt = glatt[glatt.length - 1];
+      if (letzt && (letzt + ' ' + x).length <= 120) glatt[glatt.length - 1] = letzt + ' ' + x;
+      else glatt.push(x);
+    });
+    return glatt;
   }
 
   /* Pause nach einem Satz — wie beim echten Sprechen */
@@ -263,13 +286,29 @@
       var i = 0;
       if (opt.aufElement) opt.aufElement.classList.add('spricht');
 
+      /* Chrome schaltet die Sprachausgabe nach etwa 15 Sekunden still ab.
+         Ein regelmäßiges pause()+resume() hält sie wach. */
+      var weckruf = setInterval(function () {
+        try {
+          if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
+            window.speechSynthesis.pause(); window.speechSynthesis.resume();
+          }
+        } catch (e) { }
+      }, 9000);
+
+      var wache = null;
+      function wacheAus() { if (wache) { clearTimeout(wache); wache = null; } }
+
       function ende() {
+        wacheAus();
+        clearInterval(weckruf);
         laeuft = false;
         if (opt.aufElement) opt.aufElement.classList.remove('spricht');
         if (opt.fertig) opt.fertig();
       }
 
       function weiter() {
+        wacheAus();
         if (abbrechen) { ende(); return; }
         if (i >= teile.length) { ende(); return; }
         var satz = teile[i++];
@@ -278,10 +317,23 @@
         u.pitch = st.pitch;
         u.rate = opt.langsam ? Math.max(0.6, st.rate - 0.30) : st.rate;
         if (st.v) u.voice = st.v;
-        u.onend = function () { setTimeout(weiter, pause(satz)); };
-        u.onerror = function () { setTimeout(weiter, 60); };
+        var weiterGings = false;
+        function einmalWeiter(ms) {
+          if (weiterGings) return;
+          weiterGings = true; wacheAus();
+          setTimeout(weiter, ms);
+        }
+        u.onend = function () { einmalWeiter(pause(satz)); };
+        u.onerror = function () { einmalWeiter(60); };
+        /* Bleibt onend aus — auch das kommt in Chrome vor —, macht der
+           Wachhund weiter, damit der Rest nicht verschluckt wird. */
+        var erwartet = (satz.length / (12 * (u.rate || 1))) * 1000 + 2500;
+        wache = setTimeout(function () {
+          try { window.speechSynthesis.cancel(); } catch (e) { }
+          einmalWeiter(80);
+        }, Math.max(4000, Math.min(30000, erwartet)));
         try { window.speechSynthesis.speak(u); }
-        catch (e) { setTimeout(weiter, 60); }
+        catch (e) { einmalWeiter(60); }
       }
       weiter();
     }
