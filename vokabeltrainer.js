@@ -1052,6 +1052,7 @@
   async function ladeStand() {
     var c = sb(); if (!c) return;
     try { var a = await c.rpc('vok_stand'); STAND = (a && a.data) || {}; } catch (e) { STAND = {}; }
+    try { window.VOKABEL_STAND = STAND; } catch (e) { }
     try {
       var b = await c.rpc('vok_bekannt');
       BEKANNT = {};
