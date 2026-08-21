@@ -292,7 +292,7 @@ export default async function handler(req, res) {
   }
 
   // ---- Vorverkauf: Zugang erst ab einem Datum, Laufzeit beginnt dann ----
-  const START_AB = { community: '2026-09-01', premium: '2026-10-01' };
+  const START_AB = { community: '2026-09-01', premium: '2026-09-01' };
   function startDatum(tier){
     const d = START_AB[tier];
     if (!d) return null;

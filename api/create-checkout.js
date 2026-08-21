@@ -7,7 +7,7 @@ import { createClient } from '@supabase/supabase-js';
 
 // Vorverkauf: Ab wann ist der gekaufte Bereich nutzbar? (Berlin-Zeit, ISO-Datum)
 // Wer vorher kauft, zahlt sofort — die Laufzeit beginnt aber erst an diesem Tag.
-const START_AB = { community: '2026-09-01', premium: '2026-10-01' };
+const START_AB = { community: '2026-09-01', premium: '2026-09-01' };
 function startDatum(tier){
   const d = START_AB[tier];
   if (!d) return null;
