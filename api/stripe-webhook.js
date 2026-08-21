@@ -303,6 +303,25 @@ export default async function handler(req, res) {
     const ms = new Date(iso + 'T00:00:00+02:00') - new Date();
     return ms > 0 ? Math.ceil(ms / 86400000) : 0;
   }
+  // Wer schon Unterricht hat, wird NICHT ausgesperrt: Bestandsschueler bekommen
+  // kein Startdatum und sehen ab der Sekunde des Kaufs alles wie bisher.
+  // Nur wirklich neue Mitglieder sehen den Countdown.
+  async function startFuer(userId, tier) {
+    const iso = startDatum(tier);
+    if (!iso || !userId) return iso;
+    try {
+      const { data: p } = await sb.from('profiles')
+        .select('status, credits, pass_until, tier, tier_ab').eq('id', userId).maybeSingle();
+      if (!p) return iso;
+      const hatSchonZugang =
+        (p.credits || 0) > 0 ||
+        (p.pass_until && new Date(p.pass_until) > new Date()) ||
+        (p.tier && !p.tier_ab) ||
+        p.status === 'aktiv' || p.status === 'urlaub' || p.status === 'pause';
+      return hatSchonZugang ? null : iso;
+    } catch (e) { return iso; }
+  }
+
   // Erste Rechnung ist bezahlt -> naechste Abbuchung erst eine Periode NACH dem Starttag.
   async function laufzeitAbStart(sub, iso){
     if (!sub || !iso) return;
@@ -414,13 +433,13 @@ export default async function handler(req, res) {
           const dk = 'inv_' + inv.id;
           const { data: cex } = await sb.from('credit_log').select('id').eq('stripe_session_id', dk).maybeSingle();
           if (!cex) await sb.from('credit_log').insert({ user_id: userId, change: 0, reason: 'abo:' + plan, stripe_session_id: dk });
-          const abCom = startDatum('community');
+          const abCom = await startFuer(userId, 'community');
           await sb.from('profiles').update({ status: 'aktiv', tier: 'community', tier_ab: abCom }).eq('id', userId);
           await laufzeitAbStart(sub, abCom);
         } else {
           // Premium + alte Pässe: Stunden gutschreiben (grant setzt auch pass_until fürs Buchen).
           // Beim Vorverkauf laufen die Stunden erst ab dem Starttag ab (Wartezeit wird draufgelegt).
-          const abPrem = (tier === 'premium') ? startDatum('premium') : null;
+          const abPrem = (tier === 'premium') ? await startFuer(userId, 'premium') : null;
           await grant(userId, stunden, 'abo:' + plan, 'inv_' + inv.id, 31 + tageBis(abPrem));
           await sendPaymentMail(sub, inv);
           if (tier === 'premium') {

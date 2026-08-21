@@ -960,7 +960,17 @@ function startAb(){
   const dt=new Date(String(d).slice(0,10)+'T00:00:00+02:00');
   return isNaN(dt) ? null : dt;
 }
-function nochNichtOffen(){ const d=startAb(); return !!(d && d>new Date()); }
+function nochNichtOffen(){
+  const d=startAb();
+  if(!(d && d>new Date())) return false;
+  // Sicherheitsnetz: Wer Guthaben, einen laufenden Pass oder gebuchte Stunden hat,
+  // ist Bestandsschueler und sieht IMMER alles — egal was im Profil steht.
+  if(credits>0) return false;
+  try{ if(passActive()) return false; }catch(e){}
+  try{ if(stats && stats.upcoming && stats.upcoming.length>0) return false; }catch(e){}
+  try{ if(bookings && bookings.some(function(b){return b.status==='booked';})) return false; }catch(e){}
+  return true;
+}
 function tageBisStart(){ const d=startAb(); if(!d) return 0; return Math.max(0,Math.ceil((d-new Date())/86400000)); }
 function startText(){ const d=startAb(); return d? d.toLocaleDateString('de-DE',{timeZone:'Europe/Berlin',day:'numeric',month:'long',year:'numeric'}) : ''; }
 function bereichName(){ return ((profile&&profile.tier)==='premium') ? 'Premium' : 'Community'; }
