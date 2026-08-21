@@ -953,10 +953,56 @@ function planInfo(){
   for(const e of log){ const m=/^(?:abo|trial|kauf):(.+)$/.exec((e&&e.reason)||''); if(m&&MAP[m[1]]) return MAP[m[1]]; }
   return { label:'Abo', stunden:null };
 }
+// ---- Vorverkauf: gekauft, aber erst ab einem Datum nutzbar ----
+function startAb(){
+  const d=(profile&&profile.tier_ab)||null;
+  if(!d) return null;
+  const dt=new Date(String(d).slice(0,10)+'T00:00:00+02:00');
+  return isNaN(dt) ? null : dt;
+}
+function nochNichtOffen(){ const d=startAb(); return !!(d && d>new Date()); }
+function tageBisStart(){ const d=startAb(); if(!d) return 0; return Math.max(0,Math.ceil((d-new Date())/86400000)); }
+function startText(){ const d=startAb(); return d? d.toLocaleDateString('de-DE',{timeZone:'Europe/Berlin',day:'numeric',month:'long',year:'numeric'}) : ''; }
+function bereichName(){ return ((profile&&profile.tier)==='premium') ? 'Premium' : 'Community'; }
+function vorverkaufKarte(){
+  if(!nochNichtOffen()) return '';
+  const tage=tageBisStart(), prem=(profile&&profile.tier)==='premium';
+  const punkte = prem
+    ? ['🗓️ <b>8 LIVE-Stunden im Monat</b> in kleiner Gruppe — deine Stunden liegen schon bereit.',
+       '💬 <b>Alles aus der Community</b>: Kursbibliothek A1–C2, Chat, Korrektur und Podcast.',
+       '✍️ <b>Korrektur deiner Texte</b> und persönliches Feedback von echten Lehrern.']
+    : ['📚 <b>Die ganze Kursbibliothek</b> von A1 bis C2 — über 100 Lektionen zum Üben.',
+       '💬 <b>Community-Chat</b> mit anderen Lernenden und täglicher Korrektur.',
+       '🎧 <b>Täglicher Podcast</b> und der Vokabeltrainer mit deinem eigenen Wortschatz.'];
+  return `<div class="card" style="border:2px solid #13A89A;background:linear-gradient(135deg,#F0FBFA,#FFF8E0);margin-bottom:16px">
+    <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap">
+      <div style="flex:none;text-align:center;background:#fff;border:2px solid #13A89A;border-radius:18px;padding:12px 20px;min-width:118px">
+        <div style="font-size:38px;font-weight:900;line-height:1;color:#0F766E">${tage}</div>
+        <div class="muted" style="font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase">${tage===1?'Tag':'Tage'}</div>
+      </div>
+      <div style="flex:1;min-width:240px">
+        <b style="font-size:19px">🎉 Dein ${bereichName()}-Bereich öffnet am ${startText()}</b>
+        <p class="muted" style="margin-top:5px">Danke, dass du von Anfang an dabei bist! Deine Mitgliedschaft ist bezahlt und läuft
+        ab dem ${startText()} — du verlierst also keinen einzigen Tag. Wir schreiben dir eine E-Mail, sobald alles offen ist.</p>
+      </div>
+    </div>
+    <ul style="list-style:none;display:grid;gap:8px;margin-top:14px;padding:0">
+      ${punkte.map(p=>`<li style="background:#fff;border:1px solid #d9ece9;border-radius:12px;padding:9px 13px;font-size:14.5px">${p}</li>`).join('')}
+    </ul>
+    <p class="muted" style="margin-top:12px;font-size:13.5px">Bis dahin kannst du hier schon dein Profil ausfüllen und uns über „Nachrichten" schreiben.</p>
+  </div>`;
+}
+function renderVorverkauf(v){
+  const label=LOCK_LABELS[v]||'Dieser Bereich';
+  document.getElementById('v-'+v).innerHTML=
+    `<div class="pagehead"><h1>${label}</h1><p>Noch ${tageBisStart()} ${tageBisStart()===1?'Tag':'Tage'} — dann geht es los.</p></div>`
+    + vorverkaufKarte();
+}
 // Live-Unterricht: nur laufende Alt-Abos, Guthaben oder die neue Premium-Mitgliedschaft.
 // Reine Community-Mitglieder bekommen das Upgrade-Fenster.
 function nurCommunity(){ return (profile&&profile.tier)==='community' && !(credits>0) && !passActive(); }
 function darfLive(){
+  if(nochNichtOffen()) return false;              // Vorverkauf: Start noch nicht erreicht
   if(credits>0||passActive()) return true;
   if((profile&&profile.tier)==='premium') return true;
   if(nurCommunity()) return false;
@@ -1084,7 +1130,7 @@ async function maybeStartNow(session){
 
 async function load(){
   const [{ data:prof }, { data:bk }, { data:cl }, { data:msg }, { data:rt }, { data:prog }, { data:chs }] = await Promise.all([
-    sb.from('profiles').select('credits,name,goal,target_level,native_language,pass_until,birthday,status,is_challenger,challenge_start').eq('id',user.id).single(),
+    sb.from('profiles').select('credits,name,goal,target_level,native_language,pass_until,birthday,status,is_challenger,challenge_start,tier,tier_ab').eq('id',user.id).single(),
     sb.rpc('my_bookings'),
     sb.from('credit_log').select('*').order('created_at',{ascending:false}),
     sb.from('messages').select('*').order('created_at'),
@@ -1204,9 +1250,11 @@ const VIEW_TITLES={dashboard:['Schülerbereich','Startseite'],lernen:['Lernberei
 function updateTopbar(v){var t=VIEW_TITLES[v]||['Schülerbereich','']; var s=document.getElementById('tbS'),b=document.getElementById('tbT'); var lang='de'; try{lang=localStorage.getItem('dow_lang')||'de';}catch(e){} var TT=window.__I18N__||{}; function tr(x){var o=TT[x]; return (o&&o[lang]!=null)?o[lang]:x;} if(s){s.setAttribute('data-de',t[0]);s.setAttribute('data-i18n',t[0]);s.textContent=tr(t[0]);} if(b){b.setAttribute('data-de',t[1]);b.setAttribute('data-i18n',t[1]);b.textContent=tr(t[1]);}}
 function routeFromHash(){ const v=(location.hash||'#dashboard').slice(1); show(VIEWS.includes(v)?v:'dashboard'); }
 // Ohne Guthaben/Probestunde/Pass: ALLES gesperrt außer Kalender (und Profil für Konto/Logout).
+// Vor dem Starttag gesperrt — offen bleiben Start, Profil, Nachrichten und Guthaben.
+const VORVERKAUF_ZU=['lernen','kurs','schreiben','kurse','ueben','community','lernpfad','szenen','kalender','stunden','materialien','vokabeln','fortschritt','amanda','fehler','buddy','fertigkeit','pruefung'];
 const LOCKED_VIEWS=['dashboard','lernen','kurs','schreiben','kurse','ueben','community','lernpfad','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','fehler','buddy','fertigkeit'];
 function show(v){
-  if(v==='kalender' && typeof nurCommunity==='function' && nurCommunity()){
+  if(v==='kalender' && !nochNichtOffen() && typeof nurCommunity==='function' && nurCommunity()){
     zeigeLiveUpgrade(); v='dashboard';
     if((location.hash||'').slice(1)!=='dashboard'){ location.hash='dashboard'; return; }
   }
@@ -1218,6 +1266,7 @@ function show(v){
   try{updateTopbar(v);}catch(e){}
   document.body.classList.remove('nav-open');
   if(LOCKED_VIEWS.includes(v) && !isActive()){ renderLocked(v); window.scrollTo(0,0); return; }
+  if(nochNichtOffen() && VORVERKAUF_ZU.includes(v)){ renderVorverkauf(v); window.scrollTo(0,0); return; }
   ({dashboard:renderDashboard,kurse:(window.renderKurse||renderDashboard),ueben:(window.renderUeben||renderDashboard),lernen:(window.renderLernen||renderDashboard),kurs:(window.renderNiveau||renderDashboard),schreiben:(window.renderSchreiben||renderDashboard),community:(window.renderCommunity||renderDashboard),lernpfad:renderLernpfad,szenen:function(){ if(window.LERNPFAD) LERNPFAD.pfad('v-szenen'); },kalender:renderKalender,stunden:renderStunden,pruefung:(window.renderPruefungen||renderDashboard),materialien:renderMaterialien,vokabeln:(window.renderVokabeln||renderVokabeln),
     fortschritt:renderFortschritt,guthaben:renderGuthaben,nachrichten:renderNachrichten,
     amanda:renderAmanda,profil:renderProfil,fehler:(window.renderFehlerTrainer||renderDashboard),buddy:(window.renderBuddy||renderDashboard),fertigkeit:(window.renderFertigkeit||renderDashboard)}[v])();
@@ -1531,7 +1580,8 @@ function challengerBalken(){
 function renderDashboard(){
   const s=stats;
   document.getElementById('v-dashboard').innerHTML =
-    `${isActive()?'':lockBanner()}
+    `${vorverkaufKarte()}
+     ${isActive()?'':lockBanner()}
      ${challengerBalken()}
      <div id="startNeu"></div>`;
   let abo='';

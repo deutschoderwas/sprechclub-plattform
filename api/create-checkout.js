@@ -5,6 +5,15 @@
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 
+// Vorverkauf: Ab wann ist der gekaufte Bereich nutzbar? (Berlin-Zeit, ISO-Datum)
+// Wer vorher kauft, zahlt sofort — die Laufzeit beginnt aber erst an diesem Tag.
+const START_AB = { community: '2026-09-01', premium: '2026-10-01' };
+function startDatum(tier){
+  const d = START_AB[tier];
+  if (!d) return null;
+  return (new Date(d + 'T00:00:00+02:00') > new Date()) ? d : null;   // schon vorbei -> sofort nutzbar
+}
+
 // Server-seitige Paket-Definition (Quelle der Wahrheit für Preise – nie dem Client vertrauen).
 const PLANS = {
   // --- Bestandskunden: alte LIVE-Stundenpaesse (bleiben aktiv, neu nicht mehr buchbar) ---
@@ -17,6 +26,11 @@ const PLANS = {
     desc: 'Ganze Lernplattform, Community, Kursbibliothek A1-C2, Vokabeltrainer & taeglicher Podcast. Jahresmitgliedschaft (12 Monate).' },
   community_month: { abo: true, interval:'month', stunden: 0, preis: 16,  tier:'community', label: 'Community',
     desc: 'Ganze Lernplattform, Community, Kursbibliothek A1-C2, Vokabeltrainer & taeglicher Podcast. Monatlich kuendbar.' },
+  // --- NEU ab 08/2026: Premium zum Seitenpreis (49 € / 37 € im Jahresabo). Das alte 149-€-Premium bleibt fuer Bestandskunden. ---
+  premium_month:   { abo: true, interval:'month', stunden: 8, preis: 49,  tier:'premium', label: 'Premium',
+    desc: 'Alles aus Community + Sprechclub: Mo-So um 19 Uhr sprechen in kleinen 2er- und 3er-Gruppen. Monatlich kuendbar.' },
+  premium_year:    { abo: true, interval:'year',  stunden: 8, preis: 444, tier:'premium', label: 'Premium',
+    desc: 'Alles aus Community + Sprechclub: Mo-So um 19 Uhr sprechen in kleinen 2er- und 3er-Gruppen. Jahresmitgliedschaft (12 Monate, 37 EUR pro Monat).' },
   premium:         { abo: true, interval:'month', stunden: 8, preis: 149, tier:'premium',  label: 'Premium',
     desc: 'Alles aus Community + 8 LIVE-Stunden/Monat in kleiner Gruppe (bis 6 Personen).' },
 };
@@ -96,10 +110,15 @@ export default async function handler(req, res) {
         }
       } catch (e) { console.error('trial-check', e); }
 
-      const subData = { metadata: { userId, plan: id, stunden: String(plan.stunden), tier: plan.tier || '' } };
+      const zugangAb = plan.tier ? startDatum(plan.tier) : null;
+      const subData = { metadata: { userId, plan: id, stunden: String(plan.stunden), tier: plan.tier || '', zugang_ab: zugangAb || '' } };
       if (trialDays > 0) subData.trial_period_days = 7; // nur Neukund:innen bekommen die Gratis-Probestunde
 
-      const abodesc = plan.desc || `${plan.stunden} LIVE-Stunden pro Monat · Üben 24/7, Amanda & Community inklusive`;
+      let abodesc = plan.desc || `${plan.stunden} LIVE-Stunden pro Monat · Üben 24/7, Amanda & Community inklusive`;
+      if (zugangAb) {
+        const dd = zugangAb.split('-');
+        abodesc += ` — Start am ${dd[2]}.${dd[1]}.${dd[0]}: Die Laufzeit beginnt an diesem Tag.`;
+      }
       session = await createSafe({
         ...common,
         mode: 'subscription',
@@ -114,7 +133,7 @@ export default async function handler(req, res) {
           },
         }],
         subscription_data: subData,
-        metadata: { userId, plan: id, stunden: String(plan.stunden), tier: plan.tier || '', kind: 'abo', trial: trialDays > 0 ? '1' : '0' },
+        metadata: { userId, plan: id, stunden: String(plan.stunden), tier: plan.tier || '', kind: 'abo', trial: trialDays > 0 ? '1' : '0', zugang_ab: zugangAb || '' },
       });
     } else {
       // Einmalkauf (Spar Pass)
