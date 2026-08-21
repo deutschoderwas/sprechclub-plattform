@@ -107,6 +107,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--turq)}
     <button id="tabN" onclick="show('neu')">Stunde anlegen</button>
     <button id="tabL" onclick="show('lehrer')">👩‍🏫 Lehrer</button>
     <button id="tabS" onclick="show('schueler')">Schüler & Guthaben</button>
+    <button id="tabLeads" onclick="show('leads')">📋 Leads<span id="leadsBdg" style="display:none;background:#DD0000;color:#fff;border-radius:20px;padding:1px 7px;font-size:11px;margin-left:4px">0</span></button>
     <button id="tabM" onclick="show('nachrichten')">Nachrichten</button>
     <button id="tabB" onclick="show('bewertungen')">Bewertungen</button>
     <button id="tabMat" onclick="show('material')">📚 Materialien</button>
@@ -120,6 +121,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--turq)}
   <div id="nachrichten" style="display:none"></div>
   <div id="bewertungen" style="display:none"></div>
   <div id="community" style="display:none"><div id="v-community"></div></div>
+  <div id="leads" style="display:none"></div>
 
   <div id="neu" style="display:none">
     <div class="card">
@@ -208,6 +210,7 @@ async function enter(u){
   if (!isAdminUser){
     // Lehrer-Ansicht: keine Guthaben-Verwaltung, keine Bewertungen, Fokus auf eigenen Plan
     document.getElementById('tabS').style.display='none';
+    document.getElementById('tabLeads').style.display='none';
     document.getElementById('tabB').style.display='none';
     document.getElementById('tabN').style.display='none';
     document.getElementById('tabMat').style.display='none';
@@ -246,7 +249,7 @@ async function login(){
 async function logout(){ await sb.auth.signOut(); location.reload(); }
 
 function show(id){
-  ['plan','klassen','neu','lehrer','schueler','nachrichten','bewertungen','material','community'].forEach(x=>document.getElementById(x).style.display = x===id?'block':'none');
+  ['plan','klassen','neu','lehrer','schueler','nachrichten','bewertungen','material','community','leads'].forEach(x=>document.getElementById(x).style.display = x===id?'block':'none');
   document.getElementById('tabP').classList.toggle('active', id==='plan');
   document.getElementById('tabK').classList.toggle('active', id==='klassen');
   document.getElementById('tabN').classList.toggle('active', id==='neu');
@@ -256,6 +259,7 @@ function show(id){
   document.getElementById('tabB').classList.toggle('active', id==='bewertungen');
   document.getElementById('tabMat').classList.toggle('active', id==='material');
   document.getElementById('tabC').classList.toggle('active', id==='community');
+  document.getElementById('tabLeads').classList.toggle('active', id==='leads');
   if (id==='plan') loadPlan();
   if (id==='klassen') loadKlassen();
   if (id==='lehrer') loadLehrer();
@@ -264,7 +268,99 @@ function show(id){
   if (id==='bewertungen') loadBewertungen();
   if (id==='material') loadMaterial();
   if (id==='community' && window.renderCommunity) window.renderCommunity();
+  if (id==='leads') loadLeads();
 }
+
+// ---------- Leads (Warteliste) ----------
+let LEADS=[], LEAD_FILTER='offen';
+const LEAD_STATUS=[['neu','🆕 Neu'],['kontaktiert','✉️ Kontaktiert'],['probestunde','🎟️ Probestunde'],['gewonnen','🎉 Gewonnen'],['abgelehnt','⚪ Kein Interesse']];
+const LEAD_BG={neu:'#FEF3C7',kontaktiert:'#DBEAFE',probestunde:'#FCE7F3',gewonnen:'#DCFCE7',abgelehnt:'#F1F1F1'};
+const LEAD_FMT=new Intl.DateTimeFormat('de-DE',{timeZone:'Europe/Berlin',day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+
+async function loadLeads(){
+  const host=document.getElementById('leads');
+  host.innerHTML='<div class="card">Lade Leads …</div>';
+  const { data, error } = await sb.from('leads').select('*').order('created_at',{ascending:false}).limit(1000);
+  if (error){ host.innerHTML='<div class="card">Fehler: '+esc(error.message)+'</div>'; return; }
+  LEADS=data||[];
+  renderLeads();
+  leadsBadge();
+}
+function leadsBadge(){
+  const b=document.getElementById('leadsBdg'); if(!b) return;
+  const neu=LEADS.filter(l=>l.status==='neu').length;
+  if(neu>0){ b.style.display='inline-block'; b.textContent=neu; } else b.style.display='none';
+}
+window.leadFilter=function(v){ LEAD_FILTER=v; renderLeads(); };
+function leadRows(){
+  if(LEAD_FILTER==='offen') return LEADS.filter(l=>['neu','kontaktiert','probestunde'].includes(l.status));
+  if(LEAD_FILTER==='alle') return LEADS;
+  return LEADS.filter(l=>l.status===LEAD_FILTER);
+}
+function renderLeads(){
+  const host=document.getElementById('leads');
+  const rows=leadRows();
+  const zahl=(st)=>LEADS.filter(l=>l.status===st).length;
+  const knopf=(v,l)=>`<button onclick="leadFilter('${v}')" style="border:1px solid #ccc;border-radius:8px;padding:6px 12px;cursor:pointer;background:${LEAD_FILTER===v?'#DD0000':'#fff'};color:${LEAD_FILTER===v?'#fff':'#333'};font-weight:600">${l}</button>`;
+  host.innerHTML=`
+  <div class="card" style="background:#F4FBFA;border:1px solid #cde">
+    <b>📋 Leads aus der Warteliste</b>
+    <span class="muted" style="margin-left:8px">${LEADS.length} gesamt · ${zahl('neu')} neu · ${zahl('gewonnen')} gewonnen</span>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin:10px 0">
+      ${knopf('offen','🔥 Offen')}${knopf('neu','🆕 Neu')}${knopf('kontaktiert','✉️ Kontaktiert')}${knopf('probestunde','🎟️ Probestunde')}${knopf('gewonnen','🎉 Gewonnen')}${knopf('abgelehnt','⚪ Abgelehnt')}${knopf('alle','Alle')}
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-ghost" onclick="leadsCsv()">⬇️ Als CSV herunterladen</button>
+      <button class="btn btn-ghost" onclick="loadLeads()">🔄 Neu laden</button>
+    </div>
+  </div>
+  <div id="leadListe">${rows.length?rows.map(leadKarte).join(''):'<div class="card muted">Keine Leads in dieser Kategorie.</div>'}</div>`;
+}
+function leadKarte(l){
+  const st=l.status||'neu';
+  const lbl=(LEAD_STATUS.find(x=>x[0]===st)||LEAD_STATUS[0])[1];
+  const wa=(l.whatsapp||'').replace(/[^0-9+]/g,'');
+  const waLink=wa?wa.replace(/^\+/,'').replace(/^00/,'').replace(/^0/,'49'):'';
+  return `<div class="card" style="border-left:6px solid ${st==='neu'?'#DD0000':(st==='gewonnen'?'#15803D':'#ddd')}">
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <span class="pill" style="background:${LEAD_BG[st]||'#eee'};color:#1A1A1A;font-weight:700">${lbl}</span>
+      <b style="font-size:16px">${esc(l.name||'–')}</b>
+      ${l.tarif?`<span class="pill" style="background:#FFF0CC;color:#8A6608;font-weight:700">${esc(l.tarif)}</span>`:''}
+      ${l.niveau?`<span class="pill" style="background:#DFF6F8;color:#0F766E;font-weight:700">${esc(l.niveau)}</span>`:''}
+      <span class="muted" style="margin-left:auto">${LEAD_FMT.format(new Date(l.created_at))}</span>
+    </div>
+    <div style="margin:8px 0;display:flex;gap:14px;flex-wrap:wrap;font-size:14px">
+      <a href="mailto:${esc(l.email)}">✉️ ${esc(l.email)}</a>
+      ${waLink?`<a href="https://wa.me/${waLink}" target="_blank" rel="noopener">💬 ${esc(l.whatsapp)}</a>`:''}
+    </div>
+    ${l.schwierigkeiten?`<div style="background:#FFF8E0;border-radius:10px;padding:8px 11px;font-size:14px;margin-bottom:6px"><b>Wo hakt es:</b> ${esc(l.schwierigkeiten)}</div>`:''}
+    ${l.mehr?`<div class="muted" style="font-size:13.5px;margin-bottom:6px">${esc(l.mehr)}</div>`:''}
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px">
+      <select id="ls_${l.id}" style="padding:6px;border:1px solid #ccc;border-radius:8px">
+        ${LEAD_STATUS.map(o=>`<option value="${o[0]}"${o[0]===st?' selected':''}>${o[1]}</option>`).join('')}
+      </select>
+      <input id="ln_${l.id}" value="${esc(l.notiz||'')}" placeholder="Notiz (z.B. am 22.8. angeschrieben)" style="flex:1;min-width:200px;padding:7px 10px;border:1px solid #ccc;border-radius:8px">
+      <button class="btn btn-primary" onclick="leadSave('${l.id}')">💾 Speichern</button>
+    </div>
+  </div>`;
+}
+window.leadSave=async function(id){
+  const st=document.getElementById('ls_'+id).value;
+  const nz=document.getElementById('ln_'+id).value;
+  const { error } = await sb.from('leads').update({ status:st, notiz:nz||null }).eq('id',id);
+  if(error) return alert('Fehler: '+error.message);
+  const l=LEADS.find(x=>x.id===id); if(l){ l.status=st; l.notiz=nz; }
+  renderLeads(); leadsBadge();
+};
+window.leadsCsv=function(){
+  const kopf=['Datum','Name','E-Mail','WhatsApp','Tarif','Niveau','Status','Schwierigkeiten','Mehr','Notiz'];
+  const z=(v)=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
+  const csv=[kopf.join(';')].concat(LEADS.map(l=>[LEAD_FMT.format(new Date(l.created_at)),l.name,l.email,l.whatsapp,l.tarif,l.niveau,l.status,l.schwierigkeiten,l.mehr,l.notiz].map(z).join(';'))).join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,﻿'+encodeURIComponent(csv);
+  a.download='leads-'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();
+};
 
 // ---------- Lehrer ----------
 let TEACHERS=[];
