@@ -1,7 +1,10 @@
-// Warteliste: schickt Julia jede Eintragung sofort als E-Mail (Brevo).
+// Warteliste: speichert jede Eintragung in der Tabelle `leads` und
+// schickt Julia zusaetzlich sofort eine E-Mail (Brevo).
 // Wird von der Clubseite (index.html) aufgerufen -> CORS offen.
 // POST { name, email, whatsapp?, tarif?, niveau?, schwierigkeiten?, mehr? }
 // Kein Login nötig. Die Liste selbst läuft weiter über das Google-Formular.
+
+import { createClient } from '@supabase/supabase-js';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -22,6 +25,19 @@ export default async function handler(req, res) {
 
   if (!name || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
     return res.status(400).json({ ok: false, error: 'bad_request' });
+  }
+
+  // 1) In die Lead-Liste schreiben (auch wenn die Mail scheitert)
+  let gespeichert = false;
+  if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    try {
+      const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+      const { error } = await sb.from('leads').insert({
+        name, email, whatsapp: whatsapp || null, tarif: tarif || null, niveau: niveau || null,
+        schwierigkeiten: schwierigkeiten || null, mehr: mehr || null, quelle: 'warteliste',
+      });
+      gespeichert = !error;
+    } catch (e) { gespeichert = false; }
   }
 
   const istPlus = /plus/i.test(tarif);
@@ -45,7 +61,7 @@ export default async function handler(req, res) {
     ok = r.ok;
   } catch (e) { ok = false; }
 
-  return res.status(200).json({ ok });
+  return res.status(200).json({ ok, gespeichert });
 }
 
 function wartelisteMail({ name, email, whatsapp, tarif, niveau, schwierigkeiten, mehr, istPlus }) {
