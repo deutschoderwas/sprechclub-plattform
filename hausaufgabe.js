@@ -192,6 +192,16 @@
         var j = await r.json().catch(function () { return {}; });
         if (!r.ok || !j.ok) throw new Error(j.error || 'fehler');
 
+        /* Der Server sagt uns, ob die E-Mail wirklich raus ist. Wenn
+           nicht, darf hier kein Haken stehen — sonst denkt der
+           Schueler, es sei angekommen, und Julia sieht es nie. */
+        if (j.gemailt === false) {
+          zeigeFehler('Gespeichert — aber die E-Mail an Julia ist gerade nicht rausgegangen. '
+            + 'Schreib ihr bitte zusätzlich in der Community, dann geht nichts verloren.');
+          knopf.disabled = false;
+          knopf.textContent = A.senden;
+          return;
+        }
         zu();
         sagen(A.fertig);
         if (window.AmandaSagt) {
