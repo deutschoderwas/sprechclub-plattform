@@ -231,7 +231,7 @@
     var felder = [];
 
     felder.push({
-      ic: '🧭', k: 'Dein Weg',
+      ic: '🧭', k: 'Dein Lernplan',
       v: (niv || '—') + (p && p.gesamt ? ' · ' + p.fertig + ' von ' + p.gesamt : ''),
       d: p && p.gesamt ? 'Schritte geschafft' : 'Niveau',
       go: 'lernpfad'
