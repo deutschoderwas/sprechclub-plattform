@@ -1307,7 +1307,7 @@ function show(v){
   document.body.classList.remove('nav-open');
   if(LOCKED_VIEWS.includes(v) && !isActive()){ renderLocked(v); window.scrollTo(0,0); return; }
   if(nochNichtOffen() && VORVERKAUF_ZU.includes(v)){ renderVorverkauf(v); window.scrollTo(0,0); return; }
-  ({dashboard:renderDashboard,kurse:(window.renderKurse||renderDashboard),ueben:(window.renderUeben||renderDashboard),lernen:(window.renderLernen||renderDashboard),bereiche:(window.renderBereiche||window.renderLernen||renderDashboard),kurs:(window.renderNiveau||renderDashboard),schreiben:(window.renderSchreiben||renderDashboard),community:(window.renderCommunity||renderDashboard),lernpfad:renderLernpfad,szenen:function(){ if(window.LERNPFAD) LERNPFAD.pfad('v-szenen'); },kalender:renderKalender,stunden:renderStunden,pruefung:(window.renderPruefungen||renderDashboard),materialien:renderMaterialien,vokabeln:(window.renderVokabeln||renderVokabeln),
+  ({dashboard:renderDashboard,kurse:(window.renderKurse||renderDashboard),ueben:(window.renderUeben||renderDashboard),lernen:(window.renderLernen||renderDashboard),bereiche:(window.renderBereiche||window.renderLernen||renderDashboard),kurs:(window.renderNiveau||renderDashboard),schreiben:(window.renderSchreiben||renderDashboard),community:(window.renderCommunity||renderDashboard),lernpfad:renderLernpfad,szenen:function(){ if(window.LERNPFAD) LERNPFAD.pfad('v-szenen'); },kalender:renderKalender,stunden:renderStunden,pruefung:(window.renderPruefungen||renderDashboard),materialien:renderMaterialien,vokabeln:(window.renderVokabeln||renderVokabelnAlt),
     fortschritt:renderFortschritt,guthaben:renderGuthaben,nachrichten:renderNachrichten,
     amanda:renderAmanda,profil:renderProfil,fehler:(window.renderFehlerTrainer||renderDashboard),buddy:(window.renderBuddy||renderDashboard),fertigkeit:(window.renderFertigkeit||renderDashboard)}[v])();
   if(v==='community') markCommRead();
@@ -2319,7 +2319,11 @@ async function saveProgress(score,total){
 
 // ---------- Vokabeltrainer ----------
 let deck=[],deckIdx=0,flipped=false;
-function renderVokabeln(){
+/* Der einfache Karteikarten-Trainer. Er hat jahrelang gewonnen, weil
+   er als letzter global definiert wurde — obwohl zwei ausgebaute
+   Trainer daneben lagen. Jetzt ist er nur noch der Rueckfall, falls
+   vokabeltrainer.js nicht laedt. */
+function renderVokabelnAlt(){
   deck=collectVocab();
   const known=new Set(lsGet('known',[]));
   const el=document.getElementById('v-vokabeln');
@@ -2381,7 +2385,7 @@ async function vbStart(){
   ov.style.display='flex'; vbSay(' ');
   vbRender();
 }
-function vbClose(){ const ov=document.getElementById('vbOverlay'); if(ov) ov.style.display='none'; try{speechSynthesis.cancel();}catch(e){} VB=null; computeStats(); if(typeof renderVokabeln==='function') renderVokabeln(); }
+function vbClose(){ const ov=document.getElementById('vbOverlay'); if(ov) ov.style.display='none'; try{speechSynthesis.cancel();}catch(e){} VB=null; computeStats(); if(typeof window.renderVokabeln==='function') window.renderVokabeln(); }
 function vbDistract(term, key){
   const out=[], used=new Set([key==='de'?term.de:vbMeaning(term)]);
   const pool=vbShuffle(VB.all.filter(v=>v.de!==term.de));
@@ -2843,7 +2847,6 @@ init();
 <script src="sprech-buddy.js"></script>
 <script src="lernziel.js"></script>
 <script src="benachrichtigungen.js"></script>
-<script src="vokabeltrainer.js"></script>
 <script>
 if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}
 </script>
@@ -3216,6 +3219,9 @@ window.addEventListener('resize',function(){ clearTimeout(_mhT); _mhT=setTimeout
 <script src="lernbereich.js"></script>
 <script src="vokabel-saetze.js"></script>
 <script src="vokabeln.js"></script>
+<!-- MUSS nach vokabeln.js stehen: beide setzen window.renderVokabeln,
+     und der letzte gewinnt. Der ausgebaute Trainer soll gewinnen. -->
+<script src="vokabeltrainer.js?v=3"></script>
 <script src="niveau.js"></script>
 <script src="a1.js"></script>
 <script src="a2.js"></script>
@@ -3321,7 +3327,7 @@ window.addEventListener('resize',function(){ clearTimeout(_mhT); _mhT=setTimeout
 <link rel="stylesheet" href="amanda-figur.css?v=3">
 <!-- Die Handschrift aus dem Lernraum-Entwurf. Diese eine Zeile
      entfernen und alles sieht wieder aus wie vorher. -->
-<link rel="stylesheet" href="lernraum-stil.css?v=1">
+<link rel="stylesheet" href="lernraum-stil.css?v=2">
 <script src="amanda-figur.js?v=2" defer></script>
 <script src="seitenleiste.js?v=3" defer></script>
 <script src="bereiche.js?v=1" defer></script>

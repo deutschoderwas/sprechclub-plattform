@@ -223,6 +223,12 @@
     return baueAufgaben(mische(woerter));
   }
 
+  // Eine Runde aus einer bestimmten Auswahl — fuer einen Kasten oder
+  // fuer die Woerter, die einen aergern.
+  function baueRundeAus(woerter) {
+    return baueAufgaben(mische(woerter.slice(0, 30)));
+  }
+
   // Aus Wörtern werden Aufgaben. Neue Wörter bekommen eine kleine Serie:
   // kennenlernen -> wiedererkennen -> selbst produzieren.
   function baueAufgaben(woerter) {
@@ -583,39 +589,183 @@
       + '<div class="zahl"><b>' + heute + '</b><small>von ' + ziel + ' heute</small></div></div>';
   }
 
+  /* ============================================================
+     Die Uebersicht: Tagesdosis oben, Kaesten in der Mitte,
+     Herkunft unten.
+
+     Warum diese Reihenfolge: eine Tagesrunde mit Ziellinie bringt
+     den Schueler morgen wieder. Die Kaesten machen sichtbar, dass
+     etwas passiert — ein Wort wandert nach rechts, wenn man es
+     konnte, und faellt zurueck, wenn nicht. Die Herkunft ist der
+     Gedaechtnishaken: „die Woerter von deiner Arzt-Stunde" behaelt
+     man, eine alphabetische Liste nicht.
+     ============================================================ */
+
+  /* Die fuenf Kaesten liegen auf den Stufen, die der Server schon
+     fuehrt. Die Abstaende stehen in naechsterAbstand(): 1, 3, 7,
+     16, 35, 75 Tage. */
+  var KAESTEN = [
+    { id: 0, nm: 'Neu',       wann: 'noch nie geübt',      von: -1, bis: 0 },
+    { id: 1, nm: 'Frisch',    wann: 'morgen wieder',       von: 1,  bis: 1 },
+    { id: 2, nm: 'Wackelig',  wann: 'in 3 bis 7 Tagen',    von: 2,  bis: 3 },
+    { id: 3, nm: 'Sitzt',     wann: 'in 2 bis 5 Wochen',   von: 4,  bis: 5 },
+    { id: 4, nm: 'Fest',      wann: 'in etwa 10 Wochen',   von: 6,  bis: 9 }
+  ];
+
+  function stufeVon(v) {
+    var b = BEKANNT[v.id];
+    if (!b) return 0;
+    return Math.max(0, b.stufe || 0);
+  }
+  function kastenVon(v) {
+    var st = stufeVon(v);
+    for (var i = KAESTEN.length - 1; i >= 0; i--) {
+      if (st >= KAESTEN[i].von && st <= KAESTEN[i].bis) return i;
+    }
+    return 0;
+  }
+  function istFaellig(v) {
+    var b = BEKANNT[v.id];
+    if (!b) return false;
+    var heute = new Date().toISOString().slice(0, 10);
+    return !!(b.faellig && b.faellig <= heute);
+  }
+  function aergertMich(v) {
+    var b = BEKANNT[v.id];
+    return !!(b && (b.falsch || 0) >= 2);
+  }
+
+  /* Die Portion baut sich selbst: alles Faellige plus hoechstens
+     fuenf neue. Nach einer Stunde mit viel neuem Wortschatz wird
+     der Tag von selbst laenger, an ruhigen Tagen kurz. Nach oben
+     gedeckelt, damit es nie erschlagend wird. */
+  function tagesplan() {
+    var alle = alleWoerter();
+    var faellig = alle.filter(istFaellig);
+    var neuDa = alle.filter(function (v) { return !BEKANNT[v.id]; });
+    var neu = Math.min(5, neuDa.length);
+    var gesamt = Math.min(30, faellig.length + neu);
+    if (!gesamt) gesamt = Math.min(8, neuDa.length);
+    return {
+      faellig: faellig.length,
+      neu: neu,
+      neuDa: neuDa.length,
+      gesamt: gesamt,
+      minuten: Math.max(2, Math.round(gesamt * 0.35))
+    };
+  }
+
+  /* Woher die Woerter kommen. Live-Woerter tragen ihre Stunde,
+     Kurswoerter ihr Thema. Mehr als sechs Regale zeigen wir nicht —
+     danach faengt es wieder an, eine Liste zu werden. */
+  function herkunft() {
+    var g = {};
+    alleWoerter().forEach(function (v) {
+      var nm = (v.quelle === 'live' ? (v.thema || 'Deine Stunde') : (v.thema || v.kurs || 'Kurs'));
+      if (!nm) return;
+      if (!g[nm]) g[nm] = { nm: nm, live: v.quelle === 'live', n: 0, sitzt: 0 };
+      g[nm].n++;
+      if (stufeVon(v) >= 4) g[nm].sitzt++;
+    });
+    return Object.keys(g).map(function (k) { return g[k]; })
+      .sort(function (a, b) { return (b.live - a.live) || (b.n - a.n); })
+      .slice(0, 8);
+  }
+
+  function vpZahl(n, wort1, wort2) {
+    return n + ' ' + (n === 1 ? wort1 : wort2);
+  }
+
   function startbild() {
-    var ziel = STAND.ziel || 15, heute = STAND.heute || 0;
-    var faellig = STAND.faellig || 0, gelernt = STAND.gelernt || 0;
-    var gesamt = STAND.gesamt || 0, serie = STAND.serie || 0;
-    var neuDa = alleWoerter().filter(function (v) { return !BEKANNT[v.id]; }).length;
-    var fertig = heute >= ziel;
-    var anteil = gesamt ? Math.round((gelernt / gesamt) * 100) : 0;
+    var plan = tagesplan();
+    var heute = STAND.heute || 0, serie = STAND.serie || 0;
+    var alle = alleWoerter();
+    var fertig = plan.gesamt === 0 || (heute >= plan.gesamt && plan.faellig === 0);
+    var aerger = alle.filter(aergertMich);
+    var zaehl = KAESTEN.map(function () { return 0; });
+    alle.forEach(function (v) { if (BEKANNT[v.id] || v.quelle === 'live' || true) zaehl[kastenVon(v)]++; });
+    var geuebt = alle.length - zaehl[0];
+    var ersterTag = geuebt === 0;
 
-    return '<div class="vt-hero"><div class="vt-hero-in"><div class="vt-hero-tx">'
-      + (serie > 0 ? '<div class="vt-serie">🔥 ' + serie + (serie === 1 ? ' Tag' : ' Tage') + ' am Stück</div>' : '')
-      + '<h1>' + (fertig ? 'Tagesziel geschafft 🎉' : 'Deine Tagesrunde') + '</h1>'
-      + '<p>' + (fertig
-        ? 'Für heute hast du genug getan. Wenn du magst, häng noch eine Runde dran — jede Wiederholung sitzt tiefer.'
-        : (faellig > 0
-          ? '<b>' + faellig + ' ' + (faellig === 1 ? 'Wort wartet' : 'Wörter warten') + '</b> auf eine Wiederholung — genau jetzt, bevor du sie vergisst. Dazu kommen neue aus deinen Lektionen.'
-          : 'Neue Wörter aus deinen Lektionen, aus dem Live-Unterricht und aus dem Üben. Jedes mit Bild, Ton und Beispielsatz.'))
-      + '</p>'
-      + '<button class="vt-los" onclick="__vtStart()">' + (fertig ? 'Noch eine Runde' : 'Runde starten') + ' →</button>'
-      + '</div>' + ring(heute, ziel) + '</div></div>'
+    var h = '<div class="vp">';
 
-      + '<div class="vt-kpis">'
-      + '<div class="vt-kpi"><i>🏆</i><div class="k">Sitzt sicher</div><div class="v">' + gelernt + '</div>'
-      + '<div class="d">von ' + gesamt + ' geübten Wörtern</div>'
-      + '<div class="balken"><i style="width:' + anteil + '%"></i></div></div>'
-      + '<div class="vt-kpi"><i>🔁</i><div class="k">Heute fällig</div><div class="v">' + faellig + '</div><div class="d">zum Auffrischen</div></div>'
-      + '<div class="vt-kpi"><i>✨</i><div class="k">Wartet auf dich</div><div class="v">' + neuDa + '</div><div class="d">neue Wörter</div></div>'
-      + '</div>'
+    /* ---------- 1  Heute ---------- */
+    h += '<div class="vp-heute' + (fertig ? ' fertig' : '') + '">'
+      + '<div class="tx">'
+      + (serie > 0 ? '<span class="vp-serie">' + vpZahl(serie, 'Tag', 'Tage') + ' am Stück</span>' : '')
+      + '<span class="vp-zuruf">' + (fertig ? 'Für heute reicht das' : 'Heute dran') + '</span>';
 
-      + '<div class="vt-zeile"><span>Wörter pro Tag:</span>'
-      + ZIEL_VORGABE.map(function (z) {
-        return '<button class="vt-zb' + (z === ziel ? ' on' : '') + '" onclick="__vtZiel(' + z + ')">' + z + '</button>';
-      }).join('') + '</div>'
-      + (l1() ? '' : '<div class="vt-hinweis">💡 Trag im Profil deine Muttersprache ein — dann steht zu jedem Wort und jedem Beispielsatz die Übersetzung dabei.</div>');
+    if (fertig) {
+      h += '<h2>Fertig für heute</h2>'
+        + '<p>' + (plan.neuDa
+          ? 'Wenn du magst, häng noch eine Runde an — es warten noch ' + vpZahl(plan.neuDa, 'neues Wort', 'neue Wörter') + '.'
+          : 'Alles wiederholt. Neue Wörter kommen automatisch aus deiner nächsten Stunde.') + '</p>'
+        + (plan.neuDa ? '<button class="vp-los" onclick="__vtStart()">Noch eine Runde</button>' : '');
+    } else if (ersterTag) {
+      h += '<h2>Deine ersten Wörter warten</h2>'
+        + '<p>' + vpZahl(plan.gesamt, 'Wort', 'Wörter') + ' für den Anfang — etwa ' + plan.minuten + ' Minuten. '
+        + 'In drei Tagen siehst du hier unten, was schon sitzt.</p>'
+        + '<button class="vp-los" onclick="__vtStart()">Losgehen</button>';
+    } else {
+      h += '<h2>' + vpZahl(plan.gesamt, 'Wort ist dran', 'Wörter sind dran') + '</h2>'
+        + '<p>'
+        + (plan.faellig ? '<b>' + vpZahl(plan.faellig, 'Wort', 'Wörter') + '</b> zum Auffrischen' : 'Nichts fällig')
+        + (plan.neu ? ' und ' + vpZahl(plan.neu, 'neues dazu', 'neue dazu') : '')
+        + ' · etwa ' + plan.minuten + ' Minuten.</p>'
+        + '<button class="vp-los" onclick="__vtStart()">Losgehen</button>';
+    }
+    h += '</div><img src="' + (window.AmandaBild ? window.AmandaBild(fertig ? 'pokal' : 'lesen') : 'amanda/a-lesen.webp')
+      + '" alt="" onerror="this.remove()"></div>';
+
+    /* ---------- 2  Die fuenf Kaesten ---------- */
+    h += '<section class="vp-teil"><header><h3>Deine Wortkästen</h3>'
+      + '<p>Ein Wort wandert nach rechts, wenn du es konntest — und fällt zurück, wenn nicht.</p></header>'
+      + '<div class="vp-kaesten">';
+    KAESTEN.forEach(function (k, i) {
+      var n = zaehl[i];
+      h += '<button class="vp-kasten' + (n ? '' : ' leer') + '" type="button"'
+        + (n ? ' onclick="__vtKasten(' + i + ')"' : ' disabled')
+        + '><span class="nr">' + (i + 1) + '</span>'
+        + '<b>' + esc(k.nm) + '</b>'
+        + '<span class="v">' + n + '</span>'
+        + '<span class="w">' + esc(k.wann) + '</span></button>';
+    });
+    h += '</div></section>';
+
+    /* ---------- 3  Die aergern dich ---------- */
+    if (aerger.length >= 3) {
+      h += '<section class="vp-teil"><div class="vp-aerger">'
+        + '<div><b>' + vpZahl(aerger.length, 'Wort ärgert dich', 'Wörter ärgern dich') + '</b>'
+        + '<span>Die hast du öfter falsch als richtig gehabt. Zehn Minuten, dann sind sie weg.</span></div>'
+        + '<button class="vp-b" type="button" onclick="__vtAerger()">Die üben</button></div></section>';
+    }
+
+    /* ---------- 4  Woher die Woerter kommen ---------- */
+    var her = herkunft();
+    if (her.length) {
+      h += '<section class="vp-teil"><header><h3>Woher deine Wörter kommen</h3>'
+        + '<p>Wörter aus einer echten Situation bleiben besser hängen als eine Liste.</p></header>'
+        + '<div class="vp-regale">';
+      her.forEach(function (r) {
+        var p = r.n ? Math.round((r.sitzt / r.n) * 100) : 0;
+        h += '<div class="vp-regal">'
+          + '<b>' + esc(r.nm) + '</b>'
+          + '<span class="z">' + vpZahl(r.n, 'Wort', 'Wörter') + ' · ' + r.sitzt + ' sitzen</span>'
+          + '<span class="bal"><i style="width:' + p + '%"></i></span></div>';
+      });
+      h += '</div>'
+        + '<p class="vp-fuss">Neue Wörter kommen von selbst: aus deinem LIVE-Unterricht und aus den Orten unter '
+        + '<a href="#bereiche">Freizeit &amp; Beruf</a>.</p>'
+        + '</section>';
+    }
+
+    if (!l1()) {
+      h += '<div class="vp-hinweis">Trag im Profil deine Muttersprache ein — dann steht zu jedem Wort '
+        + 'und jedem Beispielsatz die Übersetzung dabei.</div>';
+    }
+
+    h += '</div>';
+    return h;
   }
 
   /* ================= Vollbild ================= */
@@ -1034,7 +1184,7 @@
 
   /* ================= Steuerung ================= */
   window.__vtStart = function () {
-    SERIE = {}; RUNDE = baueRunde(STAND.ziel || 15); POS = 0; ERG = []; LAEUFT = true;
+    SERIE = {}; RUNDE = baueRunde(tagesplan().gesamt || 8); POS = 0; ERG = []; LAEUFT = true;
     if (!RUNDE.length) {
       vollZu();
       document.getElementById('v-vokabeln').innerHTML =
@@ -1044,6 +1194,25 @@
     }
     zeichne();
   };
+  /* Aus einem Kasten heraus ueben. Innerhalb des Kastens kommen die
+     faelligen zuerst — die sind der eigentliche Grund, warum man
+     hier ist. */
+  window.__vtKasten = function (i) {
+    var w = alleWoerter().filter(function (v) { return kastenVon(v) === i; });
+    w.sort(function (a, b) { return (istFaellig(b) ? 1 : 0) - (istFaellig(a) ? 1 : 0); });
+    if (!w.length) return;
+    SERIE = {}; RUNDE = baueRundeAus(w); POS = 0; ERG = []; LAEUFT = true;
+    if (!RUNDE.length) return;
+    zeichne();
+  };
+  window.__vtAerger = function () {
+    var w = alleWoerter().filter(aergertMich);
+    if (!w.length) return;
+    SERIE = {}; RUNDE = baueRundeAus(w); POS = 0; ERG = []; LAEUFT = true;
+    if (!RUNDE.length) return;
+    zeichne();
+  };
+
   window.__vtZiel = async function (z) {
     try { var c = sb(); if (c) await c.rpc('vok_ziel', { p_ziel: z }); } catch (e) {}
     STAND.ziel = z; window.renderVokabeln();
@@ -1106,4 +1275,21 @@
   };
 
   window.VokTrainer = { neu: function () { return window.renderVokabeln(); } };
+
+  /* Sicherheitsnetz. In konto.html liegen mehrere Dateien, die in
+     denselben Kasten zeichnen — der einfache Trainer in der Seite
+     selbst und vokabeln.js. Wer zuletzt malt, gewinnt, und das war
+     nicht immer der hier. Also: sobald die Ansicht offen ist und
+     noch nicht unsere Uebersicht zeigt, zeichnen wir sie. */
+  function nachziehen() {
+    var v = document.getElementById('v-vokabeln');
+    if (!v || !v.classList.contains('active')) return;
+    if (v.querySelector('.vp')) return;
+    if (LAEUFT) return;
+    try { window.renderVokabeln(); } catch (e) {}
+  }
+  window.addEventListener('hashchange', function () { setTimeout(nachziehen, 60); });
+  if (document.readyState === 'complete') setTimeout(nachziehen, 300);
+  else window.addEventListener('load', function () { setTimeout(nachziehen, 300); });
+  setTimeout(nachziehen, 1200);
 })();
