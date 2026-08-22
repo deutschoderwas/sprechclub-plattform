@@ -437,11 +437,12 @@
     var vok = (s.vocabTotal>0)
       ? (s.vocabTotal + ' ' + '<span data-i18n="sn_wvokb1">Wörter warten auf dich — mit Bild, Ton und Beispielsatz.</span>')
       : T('sn_wvokb2','Täglich eine Runde — mit Bild, Ton und Beispielsatz.');
-    /* foto = Bild füllt die Fläche · portraet = rundes Bild auf ruhigem Grund */
+    /* foto = Bild füllt die Fläche · portraet = rundes Bild auf ruhigem Grund
+       Amanda steht hier nicht mehr: sie hat in der Leiste ihr eigenes
+       Feld mit Bild und einen eigenen Bereich. Dreimal derselbe Weg
+       auf einem Bildschirm ist zweimal zu viel. */
     var K = [
       ['foto','bilder/thema/relativsaetze-s.jpg','🃏', T('sn_wvokt','Vokabeln üben'), vok, "go('vokabeln')"],
-      ['portraet','amanda.png','🎤', T('sn_wamat','Mit Amanda sprechen'), T('sn_wamab','Jederzeit frei Deutsch reden — sie hört zu, korrigiert und wird nie ungeduldig.'), "go('amanda')"],
-      ['portraet','julia-rund.png','✍️', T('sn_wjult','Julia korrigiert deinen Text'), T('sn_wjulb','Schreib etwas auf Deutsch — ich lese es persönlich und schicke es dir zurück.'), "location.href='korrektur.html'"],
       ['foto','bilder/thema/satzmelodie-s.jpg','🗣️', T('sn_wauft','Aussprache trainieren'), T('sn_waufb','Laute hören, nachsprechen und prüfen lassen — bis es sitzt.'), "location.href='aussprache.html'"],
       ['foto','bilder/thema/konjunktiv2-s.jpg','📅', T('sn_wvort','Stunden vorbereiten'), T('sn_wvorb','Übungen und Material zu deinen gebuchten Stunden.'), "go('stunden')"],
       ['foto','bilder/thema/starke-adjektive-s.jpg','🏆', T('sn_wfort','Dein Fortschritt'), T('sn_wforb','Abzeichen, Serien und wie weit du wirklich schon bist.'), "go('fortschritt')"]
