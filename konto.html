@@ -924,6 +924,34 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFFDF3 0%,#FFFDF3 60%)
 <div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<!-- Oertliche Vorschau. Wer diese Seite als Datei vom eigenen Rechner
+     oeffnet und ?vorschau=1 anhaengt, bekommt statt der echten
+     Datenbank die erfundene Schuelerin aus _vorschau-daten.js. So ist
+     die Vorschau immer der aktuelle Stand dieser Datei - es gibt keine
+     zweite Kopie, die veralten koennte.
+
+     Online passiert dabei garantiert nichts: die Bedingung verlangt
+     file:// oder localhost, und _vorschau-daten.js steht in der
+     .gitignore, liegt also gar nicht auf dem Server. -->
+<script>
+(function(){
+  try{
+    var oertlich = location.protocol === 'file:' ||
+                   /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+    if(!oertlich) return;
+    if(!/[?&]vorschau=/.test(location.search)) return;
+    document.write('<scr'+'ipt src="_vorschau-daten.js"></scr'+'ipt>');
+    document.addEventListener('DOMContentLoaded', function(){
+      var b = document.createElement('div');
+      b.style.cssText = 'position:fixed;left:0;right:0;bottom:0;z-index:99999;background:#1D1B18;'
+        + 'color:#fff;font:600 12.5px Inter,system-ui,sans-serif;padding:7px 14px;text-align:center';
+      b.textContent = 'VORSCHAU — erfundene Schülerin Marta. Nichts hier berührt deine Datenbank.';
+      document.body.appendChild(b);
+      document.title = 'VORSCHAU · ' + document.title;
+    });
+  }catch(e){}
+})();
+</script>
 <script src="hoer-dateien.js"></script>
   <script src="stimme-dateien.js"></script>
 <script src="stimmen.js"></script>
