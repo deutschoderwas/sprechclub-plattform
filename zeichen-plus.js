@@ -42,6 +42,21 @@
           '<rect class="tn" x="5" y="9.5" width="15" height="18" rx="2.5" fill="#FFFDF3"/>' +
           '<path class="tn" d="M9 16 H16"/><path class="tn" d="M9 20 H14"/>' };
 
+    Z.essen = { titel: 'Essen gehen',
+      mk: '<path class="mk" d="M7 13 L27 10.5 L28 18 L8 20.5 Z"/>',
+      tn: '<circle class="tn" cx="17" cy="17" r="8" fill="none"/>' +
+          '<circle class="tu" cx="17" cy="17" r="4.2" fill="none"/>' +
+          '<path class="tn" d="M4.5 6 V12 M7 6 V12 M9.5 6 V12"/>' +
+          '<path class="tn" d="M7 12 V26"/>' +
+          '<path class="tn" d="M27.5 6 c-2 2 -2 6 0 7.5 V26"/>' };
+
+    Z.haus = { titel: 'Wohnen',
+      mk: '<path class="mk" d="M5 17 L26 14.5 L27 22 L6 24.5 Z"/>',
+      tn: '<path class="tn" d="M4 15.5 L16 6 L28 15.5"/>' +
+          '<path class="tn" d="M7 14 V26 H25 V14"/>' +
+          '<path class="tu" d="M13.5 26 V18.5 H18.5 V26"/>' +
+          '<path class="tn" d="M13.5 26 V18.5 H18.5 V26"/>' };
+
     Z.serie = { titel: 'Tage am Stück',
       mk: '<path class="mk" d="M8 16 L25 14 L26 22 L9 24 Z"/>',
       tn: '<path class="tn" d="M16 3.5 c3.5 5 6.5 7.5 6.5 12 a6.5 6.5 0 0 1 -13 0 c0-2.6 1.6-4.6 3.4-6.4 c.9 1.9 1.8 2.6 2.6 3.1 c0-3 -1.2-5.2 .5-8.7 Z"/>' +

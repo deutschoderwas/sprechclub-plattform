@@ -37,7 +37,7 @@
       ] },
     { view: 'ueben', text: 'Üben', zeichen: 'ueben', kinder: [
         { view: 'pruefung' },
-        { view: 'lernen', text: 'Freizeit & Beruf', zeichen: 'lernen' },
+        { view: 'bereiche', text: 'Freizeit & Beruf', zeichen: 'lernen' },
         { view: 'kurse', text: 'Kursbibliothek', zeichen: 'material' },
         { titel: 'Fertigkeiten' },
         { fert: 'hoeren' }, { fert: 'lesen' },

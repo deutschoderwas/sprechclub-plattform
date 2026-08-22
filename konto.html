@@ -894,6 +894,7 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFFDF3 0%,#FFFDF3 60%)
     <section class="view" id="v-kurse"></section>
     <section class="view" id="v-ueben"></section>
     <section class="view" id="v-lernen"></section>
+    <section class="view" id="v-bereiche"></section>
     <section class="view" id="v-kurs"></section>
     <section class="view" id="v-pruefung"></section>
     <section class="view" id="v-schreiben"></section>
@@ -1273,12 +1274,12 @@ function show(v){
   document.querySelectorAll('.navlink[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));
   // Der Stufenkurs hat keinen eigenen Menüpunkt mehr — er gehört zum
   // Lernbereich. Also bleibt dort die Markierung stehen.
-  if(v==='kurs'){ var _lb=document.querySelector('.navlink[data-view="lernen"]'); if(_lb) _lb.classList.add('active'); }
+  if(v==='kurs'){ var _lb=document.querySelector('.navlink[data-view="bereiche"]'); if(_lb) _lb.classList.add('active'); }
   try{updateTopbar(v);}catch(e){}
   document.body.classList.remove('nav-open');
   if(LOCKED_VIEWS.includes(v) && !isActive()){ renderLocked(v); window.scrollTo(0,0); return; }
   if(nochNichtOffen() && VORVERKAUF_ZU.includes(v)){ renderVorverkauf(v); window.scrollTo(0,0); return; }
-  ({dashboard:renderDashboard,kurse:(window.renderKurse||renderDashboard),ueben:(window.renderUeben||renderDashboard),lernen:(window.renderLernen||renderDashboard),kurs:(window.renderNiveau||renderDashboard),schreiben:(window.renderSchreiben||renderDashboard),community:(window.renderCommunity||renderDashboard),lernpfad:renderLernpfad,szenen:function(){ if(window.LERNPFAD) LERNPFAD.pfad('v-szenen'); },kalender:renderKalender,stunden:renderStunden,pruefung:(window.renderPruefungen||renderDashboard),materialien:renderMaterialien,vokabeln:(window.renderVokabeln||renderVokabeln),
+  ({dashboard:renderDashboard,kurse:(window.renderKurse||renderDashboard),ueben:(window.renderUeben||renderDashboard),lernen:(window.renderLernen||renderDashboard),bereiche:(window.renderBereiche||window.renderLernen||renderDashboard),kurs:(window.renderNiveau||renderDashboard),schreiben:(window.renderSchreiben||renderDashboard),community:(window.renderCommunity||renderDashboard),lernpfad:renderLernpfad,szenen:function(){ if(window.LERNPFAD) LERNPFAD.pfad('v-szenen'); },kalender:renderKalender,stunden:renderStunden,pruefung:(window.renderPruefungen||renderDashboard),materialien:renderMaterialien,vokabeln:(window.renderVokabeln||renderVokabeln),
     fortschritt:renderFortschritt,guthaben:renderGuthaben,nachrichten:renderNachrichten,
     amanda:renderAmanda,profil:renderProfil,fehler:(window.renderFehlerTrainer||renderDashboard),buddy:(window.renderBuddy||renderDashboard),fertigkeit:(window.renderFertigkeit||renderDashboard)}[v])();
   if(v==='community') markCommRead();
@@ -3130,14 +3131,14 @@ window.addEventListener('resize',function(){ clearTimeout(_mhT); _mhT=setTimeout
 </script>
 <nav class="mtabs" id="mtabs"><div class="mtabs-in">
   <button class="mtab" data-t="dashboard" onclick="go('dashboard')"></button>
-  <button class="mtab" data-t="lernen" onclick="go('lernen')"></button>
+  <button class="mtab" data-t="bereiche" onclick="go('bereiche')"></button>
   <button class="mtab" data-t="kalender" onclick="go('kalender')"></button>
   <button class="mtab" data-t="community" onclick="go('community')"></button>
   <button class="mtab" data-t="amanda" onclick="go('amanda')"></button>
 </div></nav>
 <script>
 (function(){
-  var M=[['dashboard','home','Heute'],['lernen','book','Lernen'],['kalender','headset','Unterricht'],['community','chat','Chat'],['amanda','mic','Amanda']];
+  var M=[['dashboard','home','Heute'],['bereiche','book','Lernen'],['kalender','headset','Unterricht'],['community','chat','Chat'],['amanda','mic','Amanda']];
   function paint(){
     var v=(location.hash||'#dashboard').slice(1);
     M.forEach(function(m){
@@ -3265,6 +3266,8 @@ window.addEventListener('resize',function(){ clearTimeout(_mhT); _mhT=setTimeout
 <link rel="stylesheet" href="amanda-figur.css?v=3">
 <script src="amanda-figur.js?v=2" defer></script>
 <script src="seitenleiste.js?v=2" defer></script>
+<script src="bereiche.js?v=1" defer></script>
+<script src="bereiche-ansicht.js?v=1" defer></script>
 <script src="hausaufgabe.js?v=2" defer></script>
 </body>
 </html>
