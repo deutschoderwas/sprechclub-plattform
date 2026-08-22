@@ -7,7 +7,9 @@ import { createClient } from '@supabase/supabase-js';
 
 // Vorverkauf: Ab wann ist der gekaufte Bereich nutzbar? (Berlin-Zeit, ISO-Datum)
 // Wer vorher kauft, zahlt sofort — die Laufzeit beginnt aber erst an diesem Tag.
-const START_AB = { community: '2026-09-01', premium: '2026-09-01' };
+// Community laeuft ab sofort. Premium startet am 1. November, Premium
+// Plus am 1. Februar 2027 — bis dahin gibt es dort nur die Warteliste.
+const START_AB = { community: null, premium: '2026-11-01', premiumplus: '2027-02-01' };
 function startDatum(tier){
   const d = START_AB[tier];
   if (!d) return null;
@@ -33,7 +35,34 @@ const PLANS = {
     desc: 'Alles aus Community + Sprechclub: Mo-So um 19 Uhr sprechen in kleinen 2er- und 3er-Gruppen. Jahresmitgliedschaft (12 Monate, 37 EUR pro Monat).' },
   premium:         { abo: true, interval:'month', stunden: 8, preis: 149, tier:'premium',  label: 'Premium',
     desc: 'Alles aus Community + 8 LIVE-Stunden/Monat in kleiner Gruppe (bis 6 Personen).' },
+
+  /* --- Premium Plus: der geschlossene Sprechclub bei Julia persoenlich ---
+     8 Stunden im Monat. Drei Laufzeiten, und zu jeder zwei Zahlweisen:
+     monatlich abbuchen oder die ganze Laufzeit sofort zahlen.
+
+     Zur Mindestlaufzeit, ehrlich gesagt: Stripe kann bei monatlicher
+     Abbuchung keine Bindung erzwingen. Wir merken uns das Enddatum in
+     mindest_bis und blenden das Kuendigen bis dahin aus. Wer die ganze
+     Laufzeit sofort zahlt, hat das Thema ohnehin nicht. */
+  pp_m1: { abo: true, interval:'month', stunden: 8, preis: 149, tier:'premiumplus', label: 'Premium Plus · monatlich',
+    monate: 1, desc: 'Geschlossener Sprechclub mit Julia persoenlich. 8 Stunden im Monat. Monatlich kuendbar.' },
+  pp_m3: { abo: true, interval:'month', stunden: 8, preis: 129, tier:'premiumplus', label: 'Premium Plus · 3 Monate',
+    monate: 3, desc: 'Geschlossener Sprechclub mit Julia persoenlich. 8 Stunden im Monat. Mindestlaufzeit 3 Monate, danach monatlich kuendbar.' },
+  pp_m6: { abo: true, interval:'month', stunden: 8, preis: 99,  tier:'premiumplus', label: 'Premium Plus · 6 Monate',
+    monate: 6, desc: 'Geschlossener Sprechclub mit Julia persoenlich. 8 Stunden im Monat. Mindestlaufzeit 6 Monate, danach monatlich kuendbar.' },
+
+  pp_e1: { abo: false, stunden: 8,  preis: 149, tier:'premiumplus', label: 'Premium Plus · 1 Monat im Voraus', monate: 1 },
+  pp_e3: { abo: false, stunden: 24, preis: 387, tier:'premiumplus', label: 'Premium Plus · 3 Monate im Voraus', monate: 3 },
+  pp_e6: { abo: false, stunden: 48, preis: 594, tier:'premiumplus', label: 'Premium Plus · 6 Monate im Voraus', monate: 6 },
 };
+
+/* Bis wann darf nicht gekuendigt werden? Nur bei den Abos mit Bindung. */
+function mindestBis(plan){
+  if (!plan || !plan.abo || !plan.monate || plan.monate < 2) return '';
+  const d = new Date();
+  d.setMonth(d.getMonth() + plan.monate);
+  return d.toISOString().slice(0, 10);
+}
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'method_not_allowed' });
@@ -111,7 +140,7 @@ export default async function handler(req, res) {
       } catch (e) { console.error('trial-check', e); }
 
       const zugangAb = plan.tier ? startDatum(plan.tier) : null;
-      const subData = { metadata: { userId, plan: id, stunden: String(plan.stunden), tier: plan.tier || '', zugang_ab: zugangAb || '' } };
+      const subData = { metadata: { userId, plan: id, stunden: String(plan.stunden), tier: plan.tier || '', zugang_ab: zugangAb || '', mindest_bis: mindestBis(plan) } };
       if (trialDays > 0) subData.trial_period_days = 7; // nur Neukund:innen bekommen die Gratis-Probestunde
 
       let abodesc = plan.desc || `${plan.stunden} LIVE-Stunden pro Monat · Üben 24/7, Amanda & Community inklusive`;
@@ -133,7 +162,7 @@ export default async function handler(req, res) {
           },
         }],
         subscription_data: subData,
-        metadata: { userId, plan: id, stunden: String(plan.stunden), tier: plan.tier || '', kind: 'abo', trial: trialDays > 0 ? '1' : '0', zugang_ab: zugangAb || '' },
+        metadata: { userId, plan: id, stunden: String(plan.stunden), tier: plan.tier || '', kind: 'abo', trial: trialDays > 0 ? '1' : '0', zugang_ab: zugangAb || '', mindest_bis: mindestBis(plan) },
       });
     } else {
       // Einmalkauf (Spar Pass)
