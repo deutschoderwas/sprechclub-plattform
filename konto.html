@@ -779,7 +779,8 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFFDF3 0%,#FFFDF3 60%)
 .mh-note{display:flex;gap:10px;align-items:flex-start;background:#fff;border:1px solid #EFE9D8;border-radius:16px;padding:13px 15px;font-size:13.5px;color:#8B9088;line-height:1.55;margin-bottom:8px}
 .mh-note svg{width:17px;height:17px;color:#E7DFC7;flex:none;margin-top:1px}
 </style>
-<script src="club-zeichen.js?v=1"></script>
+<script src="club-zeichen.js?v=2"></script>
+<script src="zeichen-plus.js?v=1" defer></script>
 <script src="ui-icons.js"></script>
 <script src="icons-filled.js"></script>
 <style id="kb-style">
@@ -2528,26 +2529,183 @@ async function sendMsg(){
 }
 
 // ---------- Amanda ----------
+// Zwei Wege, einer über dem anderen: schreiben (sie beantwortet
+// alles, in Amandas Zeichen) und sprechen (der Live-Raum). Der
+// Chat steht jedem Angemeldeten offen; frei sprechen ist der
+// Bonus für alle mit Stundenpaket.
+const AM_VORSCHLAEGE = [
+  'Was ist der Unterschied zwischen kennen und wissen?',
+  'Prüf bitte diesen Satz: Ich habe gestern nach Berlin gefahren.',
+  'Wie sage ich das höflich beim Arzt?',
+  'Erklär mir den Dativ mit einem Beispiel.'
+];
+let amVerlauf = [], amLaeuft = false, amRec = null, amBrocken = [], amNimmt = false;
+
+function amMalen(ziel, text){
+  if (window.AmandaMalen) return window.AmandaMalen(ziel, text);
+  ziel.textContent = text; return ziel;
+}
+function amZeigen(wer, text){
+  const lauf = document.getElementById('amLauf'); if(!lauf) return null;
+  const d = document.createElement('div');
+  d.className = 'af-m ' + (wer === 'bot' ? 'bot' : 'du');
+  if (wer === 'bot') amMalen(d, text); else d.textContent = text;
+  lauf.appendChild(d); lauf.scrollTop = lauf.scrollHeight;
+  amVerlauf.push({ wer: wer, text: text });
+  return d;
+}
+async function amToken(){
+  try{ if(window.AmandaToken) return await window.AmandaToken(); }catch(e){}
+  try{ const s = await sb.auth.getSession(); return (s&&s.data&&s.data.session)?s.data.session.access_token:''; }catch(e){ return ''; }
+}
+async function amSenden(vorgabe){
+  if(amLaeuft) return;
+  const feld = document.getElementById('amText');
+  const frage = String(vorgabe || (feld ? feld.value : '') || '').trim();
+  if(!frage) return;
+  if(feld) feld.value = '';
+  const vor = document.getElementById('amVor'); if(vor) vor.remove();
+  amZeigen('du', frage);
+
+  amLaeuft = true;
+  const senden = document.getElementById('amSend'); if(senden) senden.disabled = true;
+  const lauf = document.getElementById('amLauf');
+  const warte = document.createElement('div');
+  warte.className = 'af-m warte'; warte.textContent = 'Amanda schreibt …';
+  lauf.appendChild(warte); lauf.scrollTop = lauf.scrollHeight;
+
+  const kopf = { 'Content-Type': 'application/json' };
+  const t = await amToken(); if(t) kopf.Authorization = 'Bearer ' + t;
+  try{
+    const r = await fetch('/api/support-chat', {
+      method:'POST', headers:kopf,
+      body: JSON.stringify({ verlauf: amVerlauf.slice(-12), seite: 'amanda' })
+    });
+    const j = await r.json();
+    warte.remove();
+    amZeigen('bot', (j && j.text) || 'Da ist gerade etwas schiefgegangen. Frag mich bitte gleich noch einmal.');
+  }catch(e){
+    warte.remove();
+    amZeigen('bot', 'Die Verbindung hat nicht geklappt. Frag mich bitte gleich noch einmal.');
+  }
+  amLaeuft = false;
+  if(senden) senden.disabled = false;
+}
+async function amMikro(){
+  const m = document.getElementById('amMik'); if(!m) return;
+  if(amNimmt){ try{ amRec.stop(); }catch(e){} return; }
+  if(!navigator.mediaDevices || !window.MediaRecorder){
+    amZeigen('bot','Dein Browser kann leider nicht aufnehmen. Schreib mir die Frage einfach.'); return;
+  }
+  let strom;
+  try{ strom = await navigator.mediaDevices.getUserMedia({audio:true}); }
+  catch(e){ amZeigen('bot','Ich darf das Mikrofon nicht benutzen. Erlaub es bitte im Browser — oder schreib mir.'); return; }
+  const typ = MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm'
+            : (MediaRecorder.isTypeSupported('audio/mp4') ? 'audio/mp4' : '');
+  amBrocken = [];
+  amRec = typ ? new MediaRecorder(strom,{mimeType:typ}) : new MediaRecorder(strom);
+  amRec.ondataavailable = e => { if(e.data && e.data.size) amBrocken.push(e.data); };
+  amRec.onstop = async () => {
+    amNimmt = false; m.classList.remove('an'); m.innerHTML = '&#127908;';
+    strom.getTracks().forEach(s => s.stop());
+    const blob = new Blob(amBrocken, { type:(amRec && amRec.mimeType) || 'audio/webm' });
+    if(blob.size < 1200) return;
+    await amVerstehen(blob);
+  };
+  amRec.start(); amNimmt = true; m.classList.add('an'); m.innerHTML = '&#9632;';
+}
+async function amVerstehen(blob){
+  const feld = document.getElementById('amText');
+  const vorher = feld ? feld.placeholder : '';
+  if(feld) feld.placeholder = 'Ich höre zu …';
+  try{
+    const b64 = await new Promise((ok,ab)=>{ const r=new FileReader();
+      r.onload=()=>{ const s=String(r.result||''); const i=s.indexOf(','); ok(i>-1?s.slice(i+1):s); };
+      r.onerror=ab; r.readAsDataURL(blob); });
+    const kopf = { 'Content-Type':'application/json' };
+    const t = await amToken(); if(t) kopf.Authorization = 'Bearer ' + t;
+    const r = await fetch('/api/hoeren',{ method:'POST', headers:kopf,
+      body: JSON.stringify({ audio:b64, typ:blob.type }) });
+    const j = await r.json();
+    if(feld) feld.placeholder = vorher;
+    if(j && j.ok && j.text) amSenden(j.text);
+    else amZeigen('bot','Das habe ich nicht verstanden. Sprich bitte noch einmal — oder schreib es mir.');
+  }catch(e){
+    if(feld) feld.placeholder = vorher;
+    amZeigen('bot','Die Aufnahme kam nicht an. Schreib mir die Frage gern.');
+  }
+}
+
 function renderAmanda(){
   const eligible=credits>0 || bookings.some(b=>b.status==='booked');
   const el=document.getElementById('v-amanda');
-  if(!eligible){
-    el.innerHTML=`<div class="pagehead"><h1>Amanda</h1></div>
-      <div class="empty"><img src="amanda.png" alt="Amanda" style="width:120px;height:120px;border-radius:50%;object-fit:cover;object-position:top center;margin:0 auto 12px;display:block" onerror="this.style.display='none'"><h3 style="margin-bottom:8px">🎤 Amanda — deine KI-Sprechpartnerin</h3>
-      <p style="max-width:460px;margin:0 auto 14px">Amanda ist <b>kostenlos für alle Club-Mitglieder</b> mit Stundenpaket. Hol dir ein Paket und sprich so oft du willst — 24/7.</p>
-      <a class="btn btn-primary" href="index.html#pakete">Paket ansehen</a></div>`;
-    return;
-  }
+  const bild = p => (window.AmandaBild ? window.AmandaBild(p) : 'amanda/amanda-'+p+'.webp');
+
   let prompts='';
   const withPrompts=bookings.filter(b=>materials[b.class_id]&&Array.isArray(materials[b.class_id].speak_prompts)&&materials[b.class_id].speak_prompts.length);
   if(withPrompts.length){
     const sp=materials[withPrompts[0].class_id].speak_prompts;
-    prompts=`<div class="card" style="margin-top:14px"><b>💬 Sprechimpulse zu „${esc(withPrompts[0].title)}"</b><ul style="margin:8px 0 0 18px;color:var(--text-soft);font-size:14px">${sp.map(p=>`<li style="margin-bottom:4px">${esc(p)}</li>`).join('')}</ul><p class="muted" style="margin-top:8px">Sag Amanda einfach, du willst über eines dieser Themen sprechen.</p></div>`;
+    prompts=`<div class="dw-karte" style="margin-top:16px"><b>Sprechimpulse zu „${esc(withPrompts[0].title)}"</b><ul style="margin:8px 0 0 18px;color:var(--text-soft);font-size:14px">${sp.map(p=>`<li style="margin-bottom:4px">${esc(p)}</li>`).join('')}</ul><p class="muted" style="margin-top:8px">Sag Amanda einfach, du willst über eines dieser Themen sprechen.</p></div>`;
   }
-  el.innerHTML=`<div class="pagehead"><h1 data-i18n="am_h1">Sprich mit Amanda</h1><p data-i18n="am_sub">Dein Bonus als Schüler: unbegrenzt üben — zum Aufwärmen vor der Stunde oder zum Nachüben danach.</p></div>
-    <div class="card" style="display:flex;gap:16px;align-items:center;background:linear-gradient(135deg,#E6F8FC,#CFEEF7);border-color:var(--turquoise)"><img src="amanda.png" alt="Amanda" style="width:96px;height:96px;border-radius:16px;object-fit:cover;object-position:top center;flex:none" onerror="this.style.display='none'"><p style="font-size:14px;color:#0a5;margin:0">Klick unten auf das Mikrofon und leg los. Amanda hört zu, korrigiert sanft und plaudert mit dir auf Deutsch. 🎤</p></div>
-    <elevenlabs-convai agent-id="${AMANDA_AGENT_ID}"></elevenlabs-convai>${prompts}`;
-  if(!document.getElementById('elevscript')){ const s=document.createElement('script'); s.id='elevscript'; s.src='https://unpkg.com/@elevenlabs/convai-widget-embed'; s.async=true; document.body.appendChild(s); }
+
+  const sprechen = eligible
+    ? `<div class="dw-karte" style="margin-top:18px">
+         <span class="eyebrow" style="font-family:var(--schrift-marker);color:var(--rot);font-size:14px">Frei sprechen</span>
+         <h3 style="margin:2px 0 6px">Sprich mit Amanda — sie hört zu und korrigiert sanft</h3>
+         <p class="muted" style="margin:0 0 12px">Dein Bonus als Schüler: unbegrenzt üben, zum Aufwärmen vor der Stunde oder zum Nachüben danach.</p>
+         <elevenlabs-convai agent-id="${AMANDA_AGENT_ID}"></elevenlabs-convai>
+       </div>${prompts}`
+    : `<div class="dw-karte" style="margin-top:18px;text-align:center">
+         <h3 style="margin:0 0 6px">Frei sprechen — für alle mit Stundenpaket</h3>
+         <p class="muted" style="margin:0 auto 14px;max-width:460px">Schreiben kannst du hier immer. Wer ein Stundenpaket hat, spricht mit Amanda auch frei — so oft er will, rund um die Uhr.</p>
+         <a class="btn btn-primary" href="index.html#pakete">Paket ansehen</a>
+       </div>`;
+
+  el.innerHTML=`
+    <div class="af-buehne">
+      <img src="${bild('schlau')}" alt="" onerror="this.style.display='none'">
+      <div class="tx">
+        <span class="eb">Deine Lehrerin, rund um die Uhr</span>
+        <h2>Frag Amanda — sie beantwortet alles</h2>
+        <p>Grammatik, ein Wort, ein Satz zum Prüfen, das Leben in Deutschland, der Club. Schreib ihr oder sprich einfach hinein — sie versteht dich und antwortet auf Deutsch.</p>
+      </div>
+    </div>
+
+    <div class="af-chat">
+      <div class="af-lauf" id="amLauf"></div>
+      <div class="af-fuss">
+        <div class="af-reihe">
+          <button class="af-mik" id="amMik" type="button" aria-label="Sprachnachricht aufnehmen">&#127908;</button>
+          <textarea id="amText" rows="2" placeholder="Deine Frage — tippen oder sprechen …"></textarea>
+          <button class="af-send" id="amSend" type="button">Fragen</button>
+        </div>
+        <div class="af-vor" id="amVor">${AM_VORSCHLAEGE.map(v=>`<button type="button" onclick="amSenden(${JSON.stringify(v)})">${esc(v)}</button>`).join('')}</div>
+      </div>
+    </div>
+    ${sprechen}`;
+
+  const lauf=document.getElementById('amLauf');
+  if(lauf && !amVerlauf.length){
+    amZeigen('bot','Hallo! Ich bin *Amanda*. Frag mich alles — es gibt keine dumme Frage.\n> Was ist der Unterschied zwischen *kennen* und *wissen*?\nDu kannst auch auf das Mikrofon tippen und einfach sprechen.');
+  } else if(lauf){
+    amVerlauf.forEach(z=>{
+      const d=document.createElement('div');
+      d.className='af-m '+(z.wer==='bot'?'bot':'du');
+      if(z.wer==='bot') amMalen(d,z.text); else d.textContent=z.text;
+      lauf.appendChild(d);
+    });
+    lauf.scrollTop=lauf.scrollHeight;
+  }
+  const senden=document.getElementById('amSend'); if(senden) senden.onclick=()=>amSenden();
+  const mik=document.getElementById('amMik'); if(mik) mik.onclick=amMikro;
+  const feld=document.getElementById('amText');
+  if(feld) feld.addEventListener('keydown',e=>{ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); amSenden(); } });
+
+  if(eligible && !document.getElementById('elevscript')){
+    const s=document.createElement('script'); s.id='elevscript';
+    s.src='https://unpkg.com/@elevenlabs/convai-widget-embed'; s.async=true;
+    document.body.appendChild(s);
+  }
 }
 
 // ---------- Profil ----------
@@ -2621,7 +2779,7 @@ init();
 <script src="club-fx.js"></script>
 <script src="uebungen.js"></script>
 <script src="ueben.js"></script>
-<script src="fertigkeiten.js?v=1"></script>
+<script src="fertigkeiten.js?v=2"></script>
 <script src="nachueben.js"></script>
 <script src="community.js"></script>
 <script src="fehler-trainer.js"></script>
@@ -3075,7 +3233,7 @@ window.addEventListener('resize',function(){ clearTimeout(_mhT); _mhT=setTimeout
      kann die Marken-Schrift (Caveat Brush / Shantell Sans) durchsetzen.
      Wird diese Zeile nach oben verschoben, sieht der Schuelerbereich
      wieder aus wie vorher. -->
-<link rel="stylesheet" href="club-stil.css?v=1">
+<link rel="stylesheet" href="club-stil.css?v=2">
 <!-- Der Lernstand wandert in die Datenbank. Legt sich um lsSet aus
      diesem Dokument; an den Lernmodulen ist nichts zu aendern.
      Entfernt man diese Zeile, ist alles genau wie vorher. -->
@@ -3093,20 +3251,20 @@ window.addEventListener('resize',function(){ clearTimeout(_mhT); _mhT=setTimeout
 <script>window.__I18N__=Object.assign(window.__I18N__||{},{"kl_sub2": {"en": "All LIVE lessons this week. Pick something that fits your level and your week.", "es": "Todas las clases EN VIVO de esta semana. Elige algo que encaje con tu nivel y tu semana.", "ru": "Все живые занятия на этой неделе. Выбери то, что подходит твоему уровню и твоей неделе.", "uk": "Усі живі заняття цього тижня. Обери те, що підходить твоєму рівню і твоєму тижню.", "tr": "Bu haftanın tüm CANLI dersleri. Seviyene ve haftana uyan birini seç.", "it": "Tutte le lezioni LIVE di questa settimana. Scegli quella che si adatta al tuo livello e alla tua settimana.", "fa": "همه‌ی کلاس‌های زنده‌ی این هفته. چیزی انتخاب کن که با سطح و برنامه‌ات جور باشد."}});</script>
 <script>window.__I18N__=Object.assign(window.__I18N__||{},{"ms_eyebrow": {"en": "Your live lessons", "es": "Tus clases en vivo", "ru": "Твои живые занятия", "uk": "Твої живі заняття", "tr": "Canlı derslerin", "it": "Le tue lezioni dal vivo", "fa": "کلاس‌های زنده‌ی تو"}, "ms_auf": {"en": "Open my lessons", "es": "Abrir mis clases", "ru": "Открыть мои занятия", "uk": "Відкрити мої заняття", "tr": "Derslerimi aç", "it": "Apri le mie lezioni", "fa": "کلاس‌های من را باز کن"}, "ms_zur": {"en": "Live lessons", "es": "Clases en vivo", "ru": "Живые занятия", "uk": "Живі заняття", "tr": "Canlı ders", "it": "Lezioni dal vivo", "fa": "کلاس زنده"}, "ms_gebucht": {"en": "lessons booked", "es": "clases reservadas", "ru": "занятий забронировано", "uk": "занять заброньовано", "tr": "ders ayırtıldı", "it": "lezioni prenotate", "fa": "کلاس رزرو شده"}, "ms_naechste": {"en": "the next one", "es": "la próxima", "ru": "ближайшее", "uk": "найближче", "tr": "en yakını", "it": "la prossima", "fa": "نزدیک‌ترین"}, "ms_keine": {"en": "You have no lessons booked right now. Pick one from the calendar below.", "es": "Ahora mismo no tienes clases reservadas. Elige una en el calendario de abajo.", "ru": "Сейчас у тебя нет забронированных занятий. Выбери что-нибудь в календаре ниже.", "uk": "Зараз у тебе немає заброньованих занять. Обери щось у календарі нижче.", "tr": "Şu anda ayırttığın bir ders yok. Aşağıdaki takvimden birini seç.", "it": "Al momento non hai lezioni prenotate. Scegline una dal calendario qui sotto.", "fa": "الان کلاسی رزرو نکرده‌ای. از تقویم پایین یکی انتخاب کن."}, "ms_bisher": {"en": "so far", "es": "hasta ahora", "ru": "всего", "uk": "загалом", "tr": "şimdiye kadar", "it": "finora", "fa": "تا حالا"}, "ms_besucht": {"en": "attended", "es": "asistidas", "ru": "посещено", "uk": "відвідано", "tr": "katıldın", "it": "frequentate", "fa": "شرکت‌کرده"}, "st_leer3": {"en": "Pick a lesson from the calendar →", "es": "Elige una clase en el calendario →", "ru": "Выбери занятие в календаре →", "uk": "Обери заняття в календарі →", "tr": "Takvimden bir ders seç →", "it": "Scegli una lezione dal calendario →", "fa": "از تقویم یک کلاس انتخاب کن →"}});</script>
 <script>window.__I18N__=Object.assign(window.__I18N__||{},{"st_leer": {"en": "Nothing booked yet.", "es": "Aún no has reservado nada.", "ru": "Пока ничего не забронировано.", "uk": "Поки нічого не заброньовано.", "tr": "Henüz bir şey ayırtmadın.", "it": "Non hai ancora prenotato nulla.", "fa": "هنوز چیزی رزرو نکرده‌ای."}, "st_leer2": {"en": "Pick a lesson from the calendar below →", "es": "Elige una clase en el calendario de abajo →", "ru": "Выбери занятие в календаре ниже →", "uk": "Обери заняття в календарі нижче →", "tr": "Aşağıdaki takvimden bir ders seç →", "it": "Scegli una lezione dal calendario qui sotto →", "fa": "از تقویم پایین یک کلاس انتخاب کن →"}});</script>
-<script src="hilfe-chat.js" defer></script>
+<script src="hilfe-chat.js?v=3" defer></script>
 <!-- Amanda als Figur: Begruessungsband, Chat-Gesicht, Lob.
      Nimmt man die zwei Zeilen heraus, ist alles wie vorher. -->
 <!-- Die Bausteine, aus denen jede Seite gebaut wird. -->
-<link rel="stylesheet" href="dw-baukasten.css?v=1">
-<link rel="stylesheet" href="lern-stil.css?v=1">
-<link rel="stylesheet" href="community-stil.css?v=1">
-<link rel="stylesheet" href="startseite-stil.css?v=1">
-<link rel="stylesheet" href="module-stil.css?v=1">
-<link rel="stylesheet" href="seitenleiste.css?v=1">
-<link rel="stylesheet" href="app-stil.css?v=1">
-<link rel="stylesheet" href="amanda-figur.css?v=1">
-<script src="amanda-figur.js?v=1" defer></script>
-<script src="seitenleiste.js?v=1" defer></script>
-<script src="hausaufgabe.js?v=1" defer></script>
+<link rel="stylesheet" href="dw-baukasten.css?v=2">
+<link rel="stylesheet" href="lern-stil.css?v=2">
+<link rel="stylesheet" href="community-stil.css?v=2">
+<link rel="stylesheet" href="startseite-stil.css?v=2">
+<link rel="stylesheet" href="module-stil.css?v=2">
+<link rel="stylesheet" href="seitenleiste.css?v=2">
+<link rel="stylesheet" href="app-stil.css?v=2">
+<link rel="stylesheet" href="amanda-figur.css?v=3">
+<script src="amanda-figur.js?v=2" defer></script>
+<script src="seitenleiste.js?v=2" defer></script>
+<script src="hausaufgabe.js?v=2" defer></script>
 </body>
 </html>

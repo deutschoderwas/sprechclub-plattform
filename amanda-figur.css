@@ -102,3 +102,108 @@
   height:120px; width:auto; display:block; margin:0 auto 10px;
 }
 .am-karte-fig{ height:110px; width:auto; flex:none; align-self:flex-end; margin-bottom:-18px; }
+
+/* ============================================================
+   Amanda im eigenen Bereich — der große Chat
+   Zwei Wege stehen nebeneinander: schreiben und sprechen.
+   Die Klassen heißen af-*, damit sie nicht mit dem kleinen
+   Chat unten rechts (hc-*) kollidieren.
+   ============================================================ */
+.af-buehne{
+  display:grid; grid-template-columns:auto 1fr; gap:16px; align-items:end;
+  background:linear-gradient(135deg,#FFF6D9,var(--karte,#FFFDF3));
+  border:2px solid var(--tinte,#20211F); border-radius:22px;
+  box-shadow:3px 4px 0 rgba(32,33,31,.10);
+  padding:18px 22px 0; overflow:hidden; margin-bottom:16px;
+}
+.af-buehne img{ height:130px; width:auto; display:block; margin-bottom:-4px; }
+.af-buehne .tx{ padding-bottom:20px; min-width:0; }
+.af-buehne .eb{
+  font-family:var(--schrift-marker,'Permanent Marker',cursive);
+  color:var(--rot,#DD0000); font-size:14px; display:block; margin-bottom:2px;
+}
+.af-buehne h2{
+  font-family:var(--schrift-titel,'Caveat Brush',cursive); font-weight:400;
+  font-size:clamp(24px,3vw,32px); line-height:1.08; margin:0 0 6px;
+  color:var(--tinte,#20211F);
+}
+.af-buehne p{ margin:0; color:var(--text-soft,#54594A); font-size:14.5px; max-width:52ch; }
+@media(max-width:640px){
+  .af-buehne{ grid-template-columns:1fr; padding:16px 18px 0; }
+  .af-buehne img{ height:96px; }
+  .af-buehne .tx{ padding-bottom:16px; order:-1; }
+}
+
+.af-chat{
+  background:var(--karte,#FFFDF3); border:2px solid var(--tinte,#20211F);
+  border-radius:22px; box-shadow:3px 4px 0 rgba(32,33,31,.10);
+  overflow:hidden; display:flex; flex-direction:column;
+}
+.af-lauf{
+  padding:16px; background:var(--creme,#FFF8E0);
+  min-height:240px; max-height:min(52vh,460px); overflow-y:auto;
+}
+.af-m{
+  max-width:82%; margin-bottom:11px; padding:11px 14px; border-radius:16px;
+  font-size:15px; line-height:1.58;
+}
+.af-m.bot{
+  background:var(--karte,#FFFDF3); border:1.5px solid var(--linie,#E7DFC7);
+  color:var(--tinte,#20211F); border-bottom-left-radius:6px;
+}
+.af-m.du{
+  background:var(--rot,#DD0000); color:#fff; margin-left:auto;
+  border-bottom-right-radius:6px; white-space:pre-wrap;
+}
+.af-m.warte{ color:var(--text-soft,#54594A); font-style:italic; background:none; border:0; }
+.af-m.bot p{ margin:0 0 8px } .af-m.bot p:last-child{ margin-bottom:0 }
+.af-m.bot b{ font-weight:800; color:var(--tuerkis-dunkel,#1990A4); }
+.af-m .hc-bsp{
+  margin:8px 0; padding:8px 12px; border-left:3px solid var(--tuerkis-dunkel,#1990A4);
+  background:var(--tuerkis-hauch,#EAFBFE); border-radius:0 10px 10px 0;
+}
+.af-m .hc-bsp b{
+  color:var(--tinte,#20211F) !important;
+  background:linear-gradient(transparent 58%,var(--gelb,#FFE100) 58%); padding:0 1px;
+}
+.af-m .hc-pkt{ margin:4px 0 4px 2px; padding-left:16px; position:relative; }
+.af-m .hc-pkt::before{
+  content:''; position:absolute; left:2px; top:.64em; width:6px; height:6px;
+  border-radius:50%; background:var(--rot,#DD0000);
+}
+.af-m .hc-merk{
+  margin:10px 0 2px; padding:9px 13px; border:1.5px solid var(--gelb,#FFE100);
+  border-radius:12px; background:#FFFBEC; font-weight:700; color:#6B5A22;
+  display:flex; gap:8px; align-items:flex-start;
+}
+.af-m .hc-merk::before{ content:'★'; color:var(--rot,#DD0000); flex:none; line-height:1.55; }
+
+.af-fuss{ padding:12px; border-top:2px solid var(--tinte,#20211F); background:var(--karte,#FFFDF3); }
+.af-reihe{ display:flex; gap:9px; align-items:flex-end; }
+.af-fuss textarea{
+  flex:1; min-width:0; border:1.5px solid var(--linie,#E7DFC7); border-radius:14px;
+  padding:11px 14px; font-family:inherit; font-size:15px; resize:none;
+  background:#fff; color:var(--tinte,#20211F); box-sizing:border-box;
+}
+.af-fuss textarea:focus{
+  outline:none; border-color:var(--tuerkis-dunkel,#1990A4);
+  box-shadow:0 0 0 3px var(--tuerkis-hauch,#EAFBFE);
+}
+.af-mik,.af-send{ border:0; border-radius:50px; cursor:pointer; font-family:inherit; font-weight:700; flex:none; }
+.af-mik{
+  width:46px; height:46px; border:1.5px solid var(--linie,#E7DFC7);
+  background:var(--creme,#FFF8E0); font-size:19px; padding:0; color:var(--tinte,#20211F);
+}
+.af-mik:hover{ border-color:var(--tuerkis-dunkel,#1990A4); }
+.af-mik.an{ background:var(--rot,#DD0000); border-color:var(--rot,#DD0000); color:#fff; animation:afPuls 1s infinite; }
+@keyframes afPuls{ 50%{ opacity:.55 } }
+@media(prefers-reduced-motion:reduce){ .af-mik.an{ animation:none } }
+.af-send{ background:var(--rot,#DD0000); color:#fff; padding:12px 20px; font-size:15px; }
+.af-send:disabled{ opacity:.5; cursor:default; }
+.af-vor{ display:flex; flex-wrap:wrap; gap:7px; margin-top:11px; }
+.af-vor button{
+  border:1.5px solid var(--linie,#E7DFC7); background:var(--creme,#FFF8E0);
+  color:var(--text-soft,#54594A); border-radius:50px; padding:6px 13px;
+  font-family:inherit; font-size:13px; font-weight:700; cursor:pointer;
+}
+.af-vor button:hover{ border-color:var(--tuerkis-dunkel,#1990A4); color:var(--tuerkis-dunkel,#1990A4); }
