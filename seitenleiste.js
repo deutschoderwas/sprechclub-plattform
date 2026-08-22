@@ -195,6 +195,13 @@
     return b;
   }
 
+  /* Der Stand-Streifen gehoert nur auf die Startseite. Fuer Browser
+     ohne :has() setzen wir hier zusaetzlich eine Klasse an den Body. */
+  function heuteMarkieren() {
+    var v = (location.hash || '#dashboard').slice(1);
+    document.body.classList.toggle('auf-heute', v === 'dashboard' || v === '');
+  }
+
   /* ---------- Die aktive Gruppe steht offen ---------- */
   function aufklappen() {
     [].forEach.call(document.querySelectorAll('.sl-gruppe'), function (g) {
@@ -206,7 +213,9 @@
 
   function start() {
     umbauen();
+    heuteMarkieren();
     window.addEventListener('hashchange', function () {
+      heuteMarkieren();
       /* show() markiert erst, danach klappen wir auf. */
       setTimeout(aufklappen, 0);
     });
