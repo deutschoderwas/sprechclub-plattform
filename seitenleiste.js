@@ -45,10 +45,16 @@
         { fert: 'wortschatz' }, { fert: 'grammatik' }
       ] },
     { view: 'vokabeln', text: 'Vokabeltrainer', zeichen: 'vokabeln' },
-    { view: 'podcast', text: 'Podcast', zeichen: 'podcast' },
-    { view: 'amanda', text: 'Amanda fragen', zeichen: 'amanda' }
+    { view: 'podcast', text: 'Podcast', zeichen: 'podcast' }
+    /* Amanda steht NICHT hier: sie hat unten ihr eigenes Feld mit
+       Bild. Beide fuehrten an dieselbe Stelle — zweimal dasselbe
+       Ziel in einer Leiste ist einmal zu viel. */
   ];
-  var FUSS = ['nachrichten', 'profil'];
+  /* Nachrichten steht nicht mehr in der Leiste: wer Julia etwas sagen
+   will, schreibt in der Community oder fragt Amanda — sie weiss
+   alles. Die Ansicht selbst bleibt erreichbar, damit alte Links
+   und die Hausaufgaben-Bestaetigung weiter funktionieren. */
+var FUSS = ['profil'];
 
   function q(w) { return document.querySelector(w); }
   function leiste() { return q('.sidebar'); }
@@ -182,6 +188,14 @@
     b.type = 'button';
     b.className = 'sl-amanda';
     b.onclick = function () { if (window.go) window.go('amanda'); };
+    /* Weil Amanda keinen Menuepunkt mehr hat, muss dieses Feld
+       zeigen, dass man gerade bei ihr ist. */
+    function markieren(){
+      var a = (location.hash || '').slice(1) === 'amanda';
+      b.classList.toggle('an', a);
+    }
+    window.addEventListener('hashchange', markieren);
+    setTimeout(markieren, 0);
 
     var img = document.createElement('img');
     img.src = (window.AmandaBild ? window.AmandaBild('willkommen') : 'amanda/a-willkommen.webp');

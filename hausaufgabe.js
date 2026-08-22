@@ -93,8 +93,7 @@
           '</label>' +
           '<div class="ha-fehler" id="haFehler" style="display:none"></div>' +
           '<div class="ha-fuss">' +
-            '<span class="hin">Julia bekommt sie sofort per E-Mail und kann dir direkt antworten. ' +
-            'Du findest sie danach unter <b>Nachrichten</b>.</span>' +
+            '<span class="hin">Julia bekommt sie sofort per E-Mail und kann dir direkt antworten.</span>' +
             '<button class="ha-senden" id="haSend" type="button">Abschicken</button>' +
           '</div>' +
         '</div>' +
