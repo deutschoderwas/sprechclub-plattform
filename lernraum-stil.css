@@ -1,0 +1,207 @@
+/* ============================================================
+   lernraum-stil.css — die Handschrift aus dem Lernraum-Entwurf
+
+   Der Entwurf, den Julia sich gewuenscht hat, unterscheidet sich
+   von der Plattform in genau sechs Dingen. Keine Struktur, keine
+   Reihenfolge, kein Text — nur diese sechs:
+
+     1  Akzent      Tuerkis #1990A4  ->  Petrol #0E7C7B
+     2  Gelb        Neon #FFE100     ->  warmes Gold #FFC94A
+     3  Raender     2 px Tinte       ->  1 px Kante #E7DFCD
+     4  Schatten    harter Klotz     ->  weiche Wolke
+     5  Grund       Creme #FFF8E0    ->  #FBF7EE, Karten weiss
+     6  Ecken       22 px            ->  18 px
+
+   Diese Datei aendert nur diese sechs. Sie muss als LETZTE
+   eingebunden werden — nach amanda-figur.css. Nimmt man die eine
+   Zeile heraus, sieht alles wieder aus wie vorher.
+   ============================================================ */
+
+/* ---------- 1-2  Die Farben ---------- */
+:root{
+  --tuerkis:#4FB3AE;
+  --tuerkis-dunkel:#0E7C7B;
+  --auf-tuerkis:#0A4F4E;
+  --tuerkis-hauch:#DCEFEC;
+  --gelb:#FFC94A;
+  --gelb-tief:#B4690E;
+  --tinte:#1D1B18;
+  --creme:#FBF7EE;
+  --karte:#FFFFFF;
+  --linie:#E7DFCD;
+  --linie-hell:#EFE9DC;
+
+  /* 4  Der Schatten: nicht mehr versetzter Klotz, sondern Licht */
+  --schatten:0 1px 2px rgba(29,27,24,.05), 0 8px 24px -12px rgba(29,27,24,.18);
+  --schatten-tief:0 2px 4px rgba(29,27,24,.06), 0 16px 40px -16px rgba(29,27,24,.26);
+
+  /* die alten Namen ziehen mit */
+  --accent:#FFC94A;
+  --turquoise:#0E7C7B;
+  --turquoise-soft:#DCEFEC;
+  --turq:#0E7C7B;
+  --turq2:#DCEFEC;
+  --cream:#FFFFFF;
+  --bg:#FBF7EE;
+  --text:#1D1B18;
+  --text-soft:#5C574C;
+  --border:#E7DFCD;
+  --gold:#B4690E;
+}
+
+/* 5  Der Grund. Die Startseite legt einen Verlauf darueber — der
+      passt jetzt nicht mehr, also ruhig und flach. */
+html body{ background:#FBF7EE !important; }
+
+/* ---------- 3-4-6  Die grossen Flaechen ---------- */
+html .dw-buehne,
+html .st .st-oben,
+html .ku .ku-kopf,
+html .vt-hero,
+html .st .st-chat,
+html .ub-mix,
+html .ln-bh,
+html .am-band,
+html .af-buehne,
+html .af-chat,
+html .hc-box{
+  border-width:1px !important;
+  border-color:var(--linie) !important;
+  border-radius:18px !important;
+  box-shadow:var(--schatten) !important;
+}
+html .dw-buehne > .rechts,
+html .st .st-oben > .st-rechts{
+  border-left-width:1px !important;
+  border-left-color:var(--linie) !important;
+  background:var(--creme) !important;
+}
+@media(max-width:860px){
+  html .st .st-oben > .st-rechts{
+    border-left:none !important;
+    border-top:1px solid var(--linie) !important;
+  }
+}
+
+/* Karten: haarfein statt kraeftig */
+html .card,
+html .dw-karte,
+html .st .st-karte,
+html .st .st-kachel,
+html .dw-kachel,
+html .ku .ku-karte,
+html .ku .ku-lektion,
+html .ku .ku-block,
+html .ub-card,
+html .ub-stat,
+html .vt-kpi,
+html .stand-streifen .ss-f{
+  border-width:1px !important;
+  border-color:var(--linie) !important;
+  border-radius:14px !important;
+  box-shadow:none !important;
+}
+html .dw-karte:hover,
+html .st .st-kachel:hover,
+html .dw-kachel:hover,
+html .ub-card:hover{
+  box-shadow:var(--schatten) !important;
+  border-color:var(--tuerkis-dunkel) !important;
+}
+
+/* ---------- Knoepfe: flach, nicht dreidimensional ---------- */
+html .btn,
+html .dw-b,
+html .st .st-b,
+html .ku .ku-btn,
+html .vt-los,
+html .ub-go,
+html .hc-send,
+html .af-send{
+  box-shadow:none !important;
+  border-radius:10px !important;
+}
+html .btn:active,
+html .dw-b:active{ transform:translateY(1px); }
+html .btn-primary,
+html .dw-b1,
+html .st .st-b1{ background:var(--rot) !important; color:#fff !important; }
+html .btn-ghost,
+html .dw-b2,
+html .st .st-b2{
+  background:#fff !important; color:var(--tinte) !important;
+  border:1px solid var(--linie) !important;
+}
+
+/* ---------- Die Leiste ---------- */
+html .sidebar{ background:#fff; border-right:1px solid var(--linie); }
+html .sidebar .navlink.active{
+  background:var(--tuerkis-hauch) !important;
+  color:var(--tuerkis-dunkel) !important;
+  box-shadow:none !important;
+  border-radius:9px !important;
+}
+html .sidebar .navlink.active::before{ background:var(--tuerkis-dunkel) !important; }
+html .sidebar .navlink{ border-radius:9px; font-weight:500; }
+html .sidebar .navlink:hover{ background:var(--creme); }
+html .nav-sec,
+html .sl-titel{ color:#928B7A !important; letter-spacing:.1em; }
+
+/* ---------- Chips, Balken, Zeichen ---------- */
+html .dw-chip,
+html .st .st-chip,
+html .chip{
+  background:var(--creme) !important; color:var(--text-soft) !important;
+  border:none !important; border-radius:99px !important;
+}
+html .dw-balken,
+html .st .st-bar,
+html .ub-pbar,
+html .vt-bar{ background:#EFE9DC !important; }
+html .dw-balken i,
+html .st .st-bar i,
+html .ub-pbar > *,
+html .vt-bar > *{ background:var(--tuerkis-dunkel) !important; }
+
+/* Der gelbe Marker hinter den Zeichen wird warm statt neon */
+html .zeichen .mk{ fill:#FFC94A !important; opacity:.5 !important; }
+html .zeichen .tu{ fill:var(--tuerkis-dunkel) !important; opacity:.45 !important; }
+html .zeichen .tn{ stroke:var(--tinte) !important; }
+
+/* Der Kringel unter den Abschnittstiteln nimmt das Petrol auf */
+html .st .st-titel h2::after,
+html .ln-bh h2::after{
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='12' viewBox='0 0 120 12'%3E%3Cpath d='M2 8 C 20 2 30 10 48 6 C 66 2 78 11 96 6 C 106 3 114 7 118 6' fill='none' stroke='%230E7C7B' stroke-width='3.8' stroke-linecap='round'/%3E%3C/svg%3E") left/contain no-repeat !important;
+}
+
+/* ---------- 5b  Karten sind weiss, der Grund ist creme ----------
+   Vorher lag Creme auf Creme — deshalb sah alles weich und
+   verwaschen aus. Der Entwurf setzt weisse Flaechen auf den
+   cremefarbenen Grund; erst dadurch treten die Karten hervor. */
+html .dw-buehne,
+html .dw-karte,
+html .card,
+html .st .st-karte,
+html .st .st-kachel,
+html .dw-kachel,
+html .ku .ku-karte,
+html .ku .ku-lektion,
+html .ku .ku-block,
+html .ub-card,
+html .ub-stat,
+html .vt-kpi,
+html .sidebar,
+html .stand-streifen .ss-f{ background:#FFFFFF !important; }
+html .dw-buehne > .rechts,
+html .st .st-oben > .st-rechts{ background:#FBF7EE !important; }
+html .dw-kopf .dw-kick,
+html .st .st-titel .tag{ color:var(--rot,#DD0000) !important; }
+
+/* ---------- Die Leiste: „LIVE-Unterricht" wurde abgeschnitten ----------
+   Der Aufklapp-Pfeil nimmt Platz, den das laengste Wort braucht.
+   Etwas engere Laufweite, etwas kleinerer Pfeil — dann passt es. */
+html .sidebar .navlink{ gap:10px; font-size:13.8px; letter-spacing:-.005em; }
+html .sidebar .sl-pfeil{ width:22px; height:22px; flex:none; }
+html .sidebar .navlink > span:not(.ic):not(.badge){ min-width:0; }
+html .sidebar .sl-kinder{ margin-left:16px; padding-left:9px; }
+html .sidebar .sl-kinder .navlink{ font-size:13.4px; }
