@@ -1,0 +1,171 @@
+/* ============================================================
+   lern-stil.css — der Lernbereich in den Farben der Marke
+
+   lernen.js bringt seinen eigenen Stil mit (blau, harte Schatten).
+   Das war der Grund, warum sich der Lernbereich wie ein fremdes
+   Programm anfuehlte. Diese Datei laesst die Struktur und die
+   Inhalte genau so, wie sie sind, und dreht nur das Aussehen auf
+   den Baukasten: Creme, Tinte, Rot, Gelb, Tuerkis.
+
+   Einbinden NACH dw-baukasten.css:
+     <link rel="stylesheet" href="lern-stil.css?v=1">
+
+   Warum die Selektoren so aussehen: lernen.js haengt sein
+   <style id="lernCSS"> zur Laufzeit ans Ende vom Kopf. Wer danach
+   gewinnen will, braucht mehr Gewicht — daher html #v-lernen …
+   ============================================================ */
+
+/* ---------- 1. Die Farben umhaengen ---------- */
+html #v-lernen{
+  --lb:#1990A4;            /* war Blau — jetzt Tuerkis */
+  --lb2:#0F6E7E;
+  --lr:#DD0000;
+  --lg:#FFE100;
+  --lt:#20211F;
+  --lm:#54594A;
+  --lc:#FFFDF3;
+  --ll:#E7DFC7;
+}
+
+/* ---------- 2. Der Kopf ---------- */
+#v-lernen .ln-kopf{
+  background:linear-gradient(135deg,#FFF6D9,#FFFDF3);
+  color:var(--lt);
+  border:2px solid var(--lt);
+  border-radius:22px;
+  box-shadow:3px 4px 0 rgba(32,33,31,.10);
+}
+#v-lernen .ln-kopf::after,
+#v-lernen .ln-kopf::before{ display:none; }
+#v-lernen .ln-kopf h1{
+  font-family:var(--schrift-titel,'Caveat Brush',cursive); font-weight:400;
+  font-size:clamp(30px,4vw,42px); letter-spacing:.005em;
+}
+#v-lernen .ln-kopf p{ color:var(--lm); opacity:1; }
+#v-lernen .ln-z{
+  background:#FFFDF3; border:1.5px solid var(--ll); backdrop-filter:none;
+  border-radius:14px;
+}
+#v-lernen .ln-z b{
+  font-family:var(--schrift-kopf,'Shantell Sans',sans-serif); font-weight:800;
+  font-size:20px; font-variant-numeric:tabular-nums;
+}
+#v-lernen .ln-z span{ color:var(--lm); opacity:1; font-weight:600; }
+#v-lernen .ln-ring i{ background:#FFFDF3; color:var(--lt); font-weight:800; }
+
+/* ---------- 3. Das Niveau-Band ---------- */
+#v-lernen .ln-nband{
+  background:#FFFDF3; border:1.5px solid var(--ll); border-radius:16px;
+  box-shadow:none;
+}
+#v-lernen .ln-nband .stufe{
+  background:var(--lr); color:#fff; border-radius:13px;
+  font-family:var(--schrift-kopf,'Shantell Sans',sans-serif);
+}
+#v-lernen .ln-nband b{ font-family:var(--schrift-kopf,'Shantell Sans',sans-serif); }
+
+/* ---------- 4. Knoepfe ---------- */
+#v-lernen .ln-btn{
+  border-radius:50px; box-shadow:none; font-weight:700;
+  background:var(--lr); color:#fff;
+}
+#v-lernen .ln-btn:active{ transform:translateY(1px); box-shadow:none; }
+#v-lernen .ln-btn.blau{ background:var(--lb); box-shadow:none; }
+#v-lernen .ln-btn.hell{
+  background:#FFFDF3; color:var(--lt); border:2px solid var(--ll); box-shadow:none;
+}
+#v-lernen .ln-btn.hell:hover{ background:#FFF8E0; }
+
+/* ---------- 5. Filterleiste ---------- */
+#v-lernen .ln-filter{
+  background:rgba(255,248,224,.94); border-bottom:1.5px solid var(--ll);
+}
+#v-lernen .ln-chip{
+  background:#FFFDF3; border:1.5px solid var(--ll); color:var(--lm); font-weight:700;
+}
+#v-lernen .ln-chip:hover{ border-color:var(--lb); color:var(--lb2); }
+#v-lernen .ln-chip.on{ background:var(--lb); border-color:var(--lb); color:#fff; }
+#v-lernen .ln-chip.lv.on{ background:var(--lt); border-color:var(--lt); }
+#v-lernen .ln-suche input{
+  background:#FFFDF3; border:1.5px solid var(--ll); color:var(--lt);
+}
+#v-lernen .ln-suche input:focus{ border-color:var(--lb); }
+
+/* ---------- 6. Abschnittstitel: mit dem Kringel der Marke ---------- */
+#v-lernen .ln-bh h2{
+  font-family:var(--schrift-kopf,'Shantell Sans',sans-serif); font-weight:700;
+  color:var(--lt); letter-spacing:.005em;
+}
+#v-lernen .ln-bh{ display:block; margin-bottom:16px; }
+#v-lernen .ln-bh h2::after{
+  content:''; display:block; width:118px; height:11px; margin:8px 0 0;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='12' viewBox='0 0 120 12'%3E%3Cpath d='M2 8 C 20 2 30 10 48 6 C 66 2 78 11 96 6 C 106 3 114 7 118 6' fill='none' stroke='%231990A4' stroke-width='3.8' stroke-linecap='round'/%3E%3C/svg%3E") left/contain no-repeat;
+}
+#v-lernen .ln-bh span{ color:var(--lm); font-size:13.5px; display:block; margin-top:6px; }
+#v-lernen .ln-bereich + .ln-bereich{ border-top:1.5px solid var(--ll); }
+
+/* ---------- 7. Themenkarten ---------- */
+#v-lernen .ln-karte{
+  background:#FFFDF3; border:1.5px solid var(--ll); border-radius:18px;
+  box-shadow:none; transition:transform .12s, box-shadow .12s, border-color .12s;
+}
+#v-lernen .ln-karte:hover{
+  transform:translateY(-2px); box-shadow:3px 4px 0 rgba(32,33,31,.10);
+  border-color:var(--lb);
+}
+#v-lernen .ln-bild{ background:#FFF8E0; border-radius:0; }
+#v-lernen .ln-bild .schl{
+  background:linear-gradient(to top,rgba(32,33,31,.80) 0%,rgba(32,33,31,.16) 48%,rgba(32,33,31,0) 74%);
+}
+#v-lernen .ln-lv{
+  background:#FFFDF3; color:var(--lt); border:1.5px solid var(--lt);
+  font-weight:800; border-radius:999px;
+}
+#v-lernen .ln-fertig{
+  background:#4E9E12; color:#fff; border-radius:999px; font-weight:800;
+}
+#v-lernen .ln-titel{
+  font-family:var(--schrift-kopf,'Shantell Sans',sans-serif); font-weight:800;
+  text-shadow:0 1px 10px rgba(0,0,0,.45);
+}
+#v-lernen .ln-bsp{
+  background:#FFF8E0; color:var(--lm); border-left:3px solid var(--lg);
+  border-radius:0 9px 9px 0;
+}
+#v-lernen .ln-teil{
+  background:#FFF8E0; color:var(--lm); border-radius:999px; padding:3px 9px; font-weight:600;
+}
+#v-lernen .ln-bar{ background:#FFF8E0; height:6px; border-radius:999px; }
+#v-lernen .ln-bar i{ background:var(--lb); border-radius:999px; }
+#v-lernen .ln-bar.voll i{ background:#4E9E12; }
+
+/* ---------- 8. Bausteine (Grammatik, Aussprache) ---------- */
+#v-lernen .ln-bsblock{
+  background:#FFF8E0; border:1.5px solid var(--ll); border-radius:18px;
+}
+#v-lernen .ln-bskopf b{ color:var(--lt); font-family:var(--schrift-kopf,'Shantell Sans',sans-serif); }
+#v-lernen .ln-bskopf span{ color:var(--lm); }
+#v-lernen .ln-bs{
+  background:#FFFDF3; border:1.5px solid var(--ll); border-radius:13px;
+}
+#v-lernen .ln-bs:hover{
+  border-color:var(--lb); transform:translateY(-2px); box-shadow:3px 4px 0 rgba(32,33,31,.08);
+}
+#v-lernen .ln-bs .bild{ background:#FFF8E0; }
+#v-lernen .ln-bs b{ color:var(--lt); }
+#v-lernen .ln-bs small{ color:var(--lm); }
+#v-lernen .ln-bs.fertig{ background:#F3FAEC; border-color:#CFE7B8; }
+#v-lernen .ln-bs .hk{ color:#4E9E12; }
+
+/* ---------- 9. Themenseite ---------- */
+#v-lernen .ln-zurueck{ color:var(--lb2); }
+#v-lernen .ln-hero{ background:#FFF8E0; border:2px solid var(--lt); border-radius:22px; }
+#v-lernen .ln-hero .schl{
+  background:linear-gradient(to top,rgba(32,33,31,.86),rgba(32,33,31,.22) 55%,rgba(32,33,31,.04));
+}
+#v-lernen .ln-hero h1{
+  font-family:var(--schrift-titel,'Caveat Brush',cursive); font-weight:400; letter-spacing:.005em;
+}
+#v-lernen .ln-hero .pill{
+  background:rgba(255,255,255,.22); border:1px solid rgba(255,255,255,.34); font-weight:700;
+}
