@@ -173,6 +173,13 @@ var FUSS = ['profil'];
     });
     if (ab) fuss.appendChild(ab);
 
+    /* Nachrichten ganz aus der Leiste nehmen. Nicht nur aus der
+       Sortierung — sonst bleibt der Knopf stehen, wo er gerade ist,
+       und rutscht nach ganz oben. Die Ansicht selbst bleibt ueber
+       #nachrichten erreichbar. */
+    var nr = q('.sidebar .navlink[data-view="nachrichten"]');
+    if (nr && nr.parentNode) nr.parentNode.removeChild(nr);
+
     rail.insertBefore(neu, fuss);
     aufklappen();
   }
