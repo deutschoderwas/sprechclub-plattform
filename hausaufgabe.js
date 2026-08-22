@@ -68,7 +68,38 @@
     if (window.toast) window.toast(t); else alert(t);
   }
 
-  window.hausaufgabeAbgeben = function (classId, titel) {
+  /* Zwei Anlaesse, ein Fenster: eine Hausaufgabe abgeben oder Julia
+     kurz etwas zur Stunde schreiben. Der Unterschied sind nur die
+     Woerter und die Betreffzeile in der E-Mail. */
+  var ANLASS = {
+    hausaufgabe: {
+      pose: 'stift',
+      kopf: 'Hausaufgabe abgeben',
+      zeile: function (t) { return t ? 'Zur Stunde \u201E' + t + '\u201C' : 'Julia schaut sie sich an und meldet sich.'; },
+      platz: 'Schreib deine Hausaufgabe hier hinein \u2014 oder h\u00e4ng unten eine Datei an.',
+      hin: 'Julia bekommt sie sofort per E-Mail und kann dir direkt antworten.',
+      senden: 'Abschicken',
+      fertig: 'Hausaufgabe abgeschickt \u2713',
+      lob: 'Abgeschickt! Julia schaut sie sich an und meldet sich bei dir.'
+    },
+    nachricht: {
+      pose: 'schulter',
+      kopf: 'Nachricht an Julia',
+      zeile: function (t) { return t ? 'Zur Stunde \u201E' + t + '\u201C' : 'Schreib ihr, was du brauchst.'; },
+      platz: 'Was m\u00f6chtest du Julia sagen? Zum Beispiel: Ich komme f\u00fcnf Minuten sp\u00e4ter.',
+      hin: 'Sie bekommt es sofort per E-Mail und antwortet dir direkt.',
+      senden: 'Senden',
+      fertig: 'Nachricht abgeschickt \u2713',
+      lob: 'Ist raus! Julia meldet sich bei dir.'
+    }
+  };
+
+  window.nachrichtAnLehrerin = function (classId, titel) {
+    return window.hausaufgabeAbgeben(classId, titel, 'nachricht');
+  };
+
+  window.hausaufgabeAbgeben = function (classId, titel, art) {
+    var A = ANLASS[art] || ANLASS.hausaufgabe;
     var alt = document.getElementById('haBox');
     if (alt) alt.remove();
 
@@ -78,23 +109,23 @@
     hinter.onclick = function (e) { if (e.target === hinter) zu(); };
 
     hinter.innerHTML =
-      '<div class="ha-box" role="dialog" aria-modal="true" aria-label="Hausaufgabe abgeben">' +
+      '<div class="ha-box" role="dialog" aria-modal="true" aria-label="' + A.kopf + '">' +
         '<div class="ha-kopf">' +
-          '<img src="' + amanda('stift') + '" alt="">' +
-          '<div class="tx"><h3>Hausaufgabe abgeben</h3>' +
+          '<img src="' + amanda(A.pose) + '" alt="">' +
+          '<div class="tx"><h3>' + A.kopf + '</h3>' +
           '<p>' + (titel ? 'Zur Stunde „' + titel + '"' : 'Julia schaut sie sich an und meldet sich.') + '</p></div>' +
           '<button class="zu" type="button" aria-label="Schließen">&times;</button>' +
         '</div>' +
         '<div class="ha-leib">' +
-          '<textarea id="haText" placeholder="Schreib deine Hausaufgabe hier hinein — oder häng unten eine Datei an."></textarea>' +
+          '<textarea id="haText" placeholder="' + A.platz + '"></textarea>' +
           '<label class="ha-datei" id="haLabel">' +
             '<span>📎</span><span id="haName">Datei anhängen — Foto, PDF oder Word</span>' +
             '<input type="file" id="haDatei" accept="image/*,.pdf,.doc,.docx,.txt">' +
           '</label>' +
           '<div class="ha-fehler" id="haFehler" style="display:none"></div>' +
           '<div class="ha-fuss">' +
-            '<span class="hin">Julia bekommt sie sofort per E-Mail und kann dir direkt antworten.</span>' +
-            '<button class="ha-senden" id="haSend" type="button">Abschicken</button>' +
+            '<span class="hin">' + A.hin + '</span>' +
+            '<button class="ha-senden" id="haSend" type="button">' + A.senden + '</button>' +
           '</div>' +
         '</div>' +
       '</div>';
@@ -156,19 +187,19 @@
         var r = await fetch('/api/hausaufgabe', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
-          body: JSON.stringify({ class_id: classId, text: text, datei: anhang }),
+          body: JSON.stringify({ class_id: classId, text: text, datei: anhang, art: (art || 'hausaufgabe') }),
         });
         var j = await r.json().catch(function () { return {}; });
         if (!r.ok || !j.ok) throw new Error(j.error || 'fehler');
 
         zu();
-        sagen('Hausaufgabe abgeschickt ✓');
+        sagen(A.fertig);
         if (window.AmandaSagt) {
-          window.AmandaSagt('Abgeschickt! Julia schaut sie sich an und meldet sich bei dir.', 'klatschen', 5000);
+          window.AmandaSagt(A.lob, 'klatschen', 5000);
         }
       } catch (e) {
         knopf.disabled = false;
-        knopf.textContent = 'Abschicken';
+        knopf.textContent = A.senden;
         zeigeFehler('Das hat nicht geklappt. Versuch es bitte gleich noch einmal.');
       }
     };

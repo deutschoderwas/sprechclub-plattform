@@ -24,7 +24,11 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'method_not_allowed' });
 
   const token = (req.headers.authorization || '').replace('Bearer ', '');
-  const { class_id, text, datei } = req.body || {};
+  const { class_id, text, datei, art } = req.body || {};
+  // Zwei Anlaesse, ein Weg: eine Hausaufgabe oder eine kurze Nachricht
+  // zur Stunde. Julia soll in der Betreffzeile sofort sehen, was es ist.
+  const istNachricht = art === 'nachricht';
+  const WORT = istNachricht ? 'Nachricht' : 'Hausaufgabe';
   if (!token || !class_id) return res.status(400).json({ error: 'bad_request' });
 
   const sauber = String(text || '').trim().slice(0, 8000);
@@ -57,7 +61,7 @@ export default async function handler(req, res) {
     await sb.from('messages').insert({
       user_id: user.id,
       sender: 'student',
-      body: '📮 Hausaufgabe zu „' + cls.title + '" (' + wann + ')'
+      body: (istNachricht ? '✉️ Nachricht zu „' : '📮 Hausaufgabe zu „') + cls.title + '" (' + wann + ')'
         + (sauber ? '\n\n' + sauber : '')
         + (datei ? '\n\n📎 ' + (datei.name || 'Datei') : ''),
     });
@@ -74,10 +78,10 @@ export default async function handler(req, res) {
         email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de',
       },
       to: [{ email: an }],
-      subject: '📮 Hausaufgabe von ' + name + ' — ' + cls.title,
+      subject: (istNachricht ? '✉️ Nachricht von ' : '📮 Hausaufgabe von ') + name + ' — ' + cls.title,
       htmlContent: `
         <div style="font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;max-width:600px;color:#20211F">
-          <h2 style="margin:0 0 2px;font-size:20px">Hausaufgabe abgegeben</h2>
+          <h2 style="margin:0 0 2px;font-size:20px">${istNachricht ? 'Nachricht zur Stunde' : 'Hausaufgabe abgegeben'}</h2>
           <p style="margin:0 0 16px;color:#54594A;font-size:14px">
             <b>${e(name)}</b>${mail ? ' · ' + e(mail) : ''}
           </p>
