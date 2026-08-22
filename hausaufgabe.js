@@ -75,22 +75,22 @@
     hausaufgabe: {
       pose: 'stift',
       kopf: 'Hausaufgabe abgeben',
-      zeile: function (t) { return t ? 'Zur Stunde \u201E' + t + '\u201C' : 'Julia schaut sie sich an und meldet sich.'; },
+      zeile: function (t) { return t ? 'Zur Stunde \u201E' + t + '\u201C' : 'Deine Lehrkraft schaut sie sich an.'; },
       platz: 'Schreib deine Hausaufgabe hier hinein \u2014 oder h\u00e4ng unten eine Datei an.',
-      hin: 'Julia bekommt sie sofort per E-Mail und kann dir direkt antworten.',
+      hin: 'Deine Lehrkraft bekommt sie sofort per E-Mail und kann dir direkt antworten.',
       senden: 'Abschicken',
       fertig: 'Hausaufgabe abgeschickt \u2713',
-      lob: 'Abgeschickt! Julia schaut sie sich an und meldet sich bei dir.'
+      lob: 'Abgeschickt! Deine Lehrkraft schaut sie sich an und meldet sich.'
     },
     nachricht: {
       pose: 'schulter',
-      kopf: 'Nachricht an Julia',
-      zeile: function (t) { return t ? 'Zur Stunde \u201E' + t + '\u201C' : 'Schreib ihr, was du brauchst.'; },
-      platz: 'Was m\u00f6chtest du Julia sagen? Zum Beispiel: Ich komme f\u00fcnf Minuten sp\u00e4ter.',
-      hin: 'Sie bekommt es sofort per E-Mail und antwortet dir direkt.',
+      kopf: 'Nachricht an deine Lehrkraft',
+      zeile: function (t) { return t ? 'Zur Stunde \u201E' + t + '\u201C' : 'Schreib, was du brauchst.'; },
+      platz: 'Was m\u00f6chtest du sagen? Zum Beispiel: Ich komme f\u00fcnf Minuten sp\u00e4ter.',
+      hin: 'Deine Lehrkraft bekommt es sofort per E-Mail und antwortet dir direkt.',
       senden: 'Senden',
       fertig: 'Nachricht abgeschickt \u2713',
-      lob: 'Ist raus! Julia meldet sich bei dir.'
+      lob: 'Ist raus! Deine Lehrkraft meldet sich bei dir.'
     }
   };
 
@@ -197,7 +197,7 @@
            Schueler, es sei angekommen, und Julia sieht es nie. */
         if (j.gemailt === false) {
           zeigeFehler('Gespeichert — aber die E-Mail an Julia ist gerade nicht rausgegangen. '
-            + 'Schreib ihr bitte zusätzlich in der Community, dann geht nichts verloren.');
+            + 'Schreib es bitte zusätzlich in der Community, dann geht nichts verloren.');
           knopf.disabled = false;
           knopf.textContent = A.senden;
           return;
