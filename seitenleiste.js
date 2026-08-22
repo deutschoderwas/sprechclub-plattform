@@ -26,6 +26,8 @@
     { view: 'dashboard' },
     { view: 'lernen', text: 'Lernen', zeichen: 'lernen', kinder: [
         { view: 'lernpfad' },
+        { view: 'vokabeln', text: 'Vokabeltrainer', zeichen: 'vokabeln' },
+        { view: 'kurse', text: 'Kursbibliothek', zeichen: 'material' },
         { titel: 'Fertigkeiten' },
         { fert: 'hoeren' }, { fert: 'lesen' },
         { fert: 'schreiben' }, { fert: 'sprechen' },
