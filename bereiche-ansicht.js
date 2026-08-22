@@ -63,11 +63,28 @@
   function niveau(b){ if(b.lvl) return b.lvl; var f=berufsfeld(b.beruf); return f?(f.lvl||''):''; }
 
   /* ---------- Zählen, was drinsteckt ---------- */
+  /* Ein Berufsfeld bringt eigene Dialoge mit, und in bereiche.js
+     stehen noch welche aus dialoge.js. Manche meinen dasselbe
+     („Die Uebergabe auf Station" und „Uebergabe auf der Station") —
+     die zaehlen wir nur einmal. */
+  function schluessel(t){
+    return String(t||'').toLowerCase()
+      .replace(/\b(der|die|das|dem|den|des|ein|eine|einer|einem|einen)\b/g,'')
+      .replace(/[^a-zäöüß]+/g,'');
+  }
   function dialoge(b){
-    var D=window.DIALOGE||[], ids=b.dlg||[], a=[];
-    ids.forEach(function(id){ for(var i=0;i<D.length;i++) if(D[i].id===id){ a.push(D[i]); break; } });
+    var D=window.DIALOGE||[], a=[], gesehen={};
+    function dazu(d){
+      if(!d) return;
+      var k=schluessel(d.titel);
+      if(gesehen[k]) return;
+      gesehen[k]=1; a.push(d);
+    }
+    (b.dlg||[]).forEach(function(id){
+      for(var i=0;i<D.length;i++) if(D[i].id===id){ dazu(D[i]); break; }
+    });
     var f=berufsfeld(b.beruf);
-    if(f && f.dialoge) f.dialoge.forEach(function(d){ if(a.indexOf(d)<0) a.push(d); });
+    if(f && f.dialoge) f.dialoge.forEach(dazu);
     return a;
   }
   function themaVon(sk,th){
@@ -198,7 +215,7 @@
       '#v-bereiche .be-k p{margin:0;font-size:13px;color:var(--ink-2);line-height:1.45;}',
       '#v-bereiche .be-k .fuss{margin-top:auto;padding-top:9px;display:flex;align-items:center;gap:8px;}',
       '#v-bereiche .be-chip{font-size:11.5px;font-weight:700;color:var(--ink-2);background:var(--flaeche-2);',
-      'border-radius:99px;padding:2px 9px;font-variant-numeric:tabular-nums;}',
+      'border-radius:99px;padding:2px 9px;font-variant-numeric:tabular-nums;white-space:nowrap;}',
       '#v-bereiche .be-zahl{font-size:11.5px;color:var(--ink-3);font-variant-numeric:tabular-nums;}',
       '#v-bereiche .be-balken{height:4px;border-radius:99px;background:var(--flaeche-2);overflow:hidden;margin-top:9px;}',
       '#v-bereiche .be-balken i{display:block;height:100%;background:var(--petrol);border-radius:99px;}',
@@ -216,7 +233,8 @@
       'border:1px solid var(--kante);border-radius:12px;padding:11px 13px;cursor:pointer;font-family:inherit;',
       'transition:border-color .13s,background .13s;}',
       '#v-bereiche .be-z:hover{border-color:var(--petrol);background:var(--petrol-weich);}',
-      '#v-bereiche .be-z .em{font-size:19px;flex:none;width:24px;text-align:center;}',
+      '#v-bereiche .be-z .lv{font-size:11px;font-weight:800;color:var(--petrol);background:var(--petrol-weich);'
+      +'border-radius:99px;padding:3px 9px;flex:none;min-width:52px;text-align:center;white-space:nowrap;}',
       '#v-bereiche .be-z .nm{flex:1;min-width:0;font-size:14.5px;font-weight:600;}',
       '#v-bereiche .be-z .nm small{display:block;font-weight:400;font-size:12.5px;color:var(--ink-3);margin-top:1px;}',
       '#v-bereiche .be-z .ok{color:var(--petrol);font-weight:700;font-size:13px;flex:none;}',
@@ -370,9 +388,11 @@
       h += '<div class="be-liste">';
       d.forEach(function(x){
         var fertig = dialogFertig(x.id);
+        /* Kein Emoji: das Niveau steht links, das sagt etwas.
+           Emojis sehen auf jedem Geraet anders aus. */
         h += '<button class="be-z" type="button" onclick="bereichDialog(\''+E(x.id)+'\')">' +
-             '<span class="em">'+E(x.em||'')+'</span>' +
-             '<span class="nm">'+E(x.titel)+'<small>'+E(x.lvl||'')+(x.dauer?' · '+E(x.dauer):'')+'</small></span>' +
+             '<span class="lv">'+E(x.lvl||'')+'</span>' +
+             '<span class="nm">'+E(x.titel)+(x.dauer?'<small>'+E(x.dauer)+'</small>':'')+'</span>' +
              (fertig?'<span class="ok">geschafft</span>':'') +
              '</button>';
       });

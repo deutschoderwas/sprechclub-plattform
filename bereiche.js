@@ -165,7 +165,7 @@ window.BEREICHE = [
 
 { id:'polizei', weg:'freizeit', gr:'papiere', t:'Polizei & Sicherheit',
   u:'Eine Anzeige aufgeben und genau beschreiben, was passiert ist.',
-  zeichen:'schloss', lvl:'B1',
+  zeichen:'lupe', lvl:'B1',
   dlg:['polizei-fahrraddiebstahl'], ws:[], ho:[], hilf:['perfekt-praeteritum'],
   lek:null },
 
