@@ -22,22 +22,33 @@
 
   /* Fuenf Ziele. Was ein Schueler taeglich braucht, steht oben;
      alles andere klappt erst auf, wenn er dort ist. */
+  /* Was ein Schueler sofort finden muss — mehr steht nicht oben.
+     Alles andere klappt erst auf, wenn er dort ist. */
   var PLAN = [
-    { view: 'dashboard' },
-    { view: 'lernen', text: 'Lernen', zeichen: 'lernen', kinder: [
+    { view: 'dashboard', text: 'Mein Bereich', zeichen: 'start', kinder: [
+        { view: 'stunden' },
+        { view: 'fortschritt' },
         { view: 'lernpfad' },
-        { view: 'vokabeln', text: 'Vokabeltrainer', zeichen: 'vokabeln' },
+        { view: 'guthaben' }
+      ] },
+    { view: 'kalender', text: 'LIVE-Unterricht', zeichen: 'kalender', kinder: [
+        { view: 'community' },
+        { view: 'materialien' }
+      ] },
+    { view: 'ueben', text: 'Üben', zeichen: 'ueben', kinder: [
+        { view: 'pruefung' },
+        { view: 'lernen', text: 'Freizeit & Beruf', zeichen: 'lernen' },
         { view: 'kurse', text: 'Kursbibliothek', zeichen: 'material' },
         { titel: 'Fertigkeiten' },
         { fert: 'hoeren' }, { fert: 'lesen' },
         { fert: 'schreiben' }, { fert: 'sprechen' },
         { fert: 'wortschatz' }, { fert: 'grammatik' }
-      ], paare: true },
-    { view: 'kalender', kinder: [ { view: 'stunden' }, { view: 'community' } ] },
-    { view: 'fortschritt', kinder: [ { view: 'pruefung' }, { view: 'materialien' } ] },
+      ] },
+    { view: 'vokabeln', text: 'Vokabeltrainer', zeichen: 'vokabeln' },
+    { view: 'podcast', text: 'Podcast', zeichen: 'podcast' },
     { view: 'amanda', text: 'Amanda fragen', zeichen: 'amanda' }
   ];
-  var FUSS = ['nachrichten', 'guthaben', 'profil'];
+  var FUSS = ['nachrichten', 'profil'];
 
   function q(w) { return document.querySelector(w); }
   function leiste() { return q('.sidebar'); }
