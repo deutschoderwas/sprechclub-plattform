@@ -1,0 +1,104 @@
+/* ============================================================
+   amanda-figur.css — Amanda als Figur im Schülerbereich
+
+   Wird NACH club-stil.css geladen. Fügt nur neue Klassen hinzu und
+   fasst nichts Bestehendes an, ausser dem Hilfe-Chat: der bekommt
+   Amandas Gesicht statt der Sprechblase.
+
+   Alle Bilder liegen in amanda/ als .webp mit durchsichtigem Rand.
+   ============================================================ */
+
+/* ---------- 1. Begrüssungsband auf der Startseite ---------- */
+.am-band{
+  display:grid; grid-template-columns:auto 1fr; gap:18px; align-items:end;
+  background:linear-gradient(135deg,#FFF6D9,var(--karte,#FFFDF3));
+  border:2px solid var(--gelb,#FFE100);
+  border-radius:22px; padding:16px 22px 0; margin-bottom:18px;
+}
+.am-band .am-fig{ height:150px; width:auto; align-self:end; margin-bottom:-2px; }
+.am-band .am-tx{ padding-bottom:18px; }
+.am-band .st-gruss{ display:block; }
+.am-band .st-gruss h1{ margin:0; }
+
+@media(max-width:640px){
+  .am-band{ grid-template-columns:1fr; padding:14px 16px 0; }
+  .am-band .am-fig{ height:104px; order:2; justify-self:center; }
+  .am-band .am-tx{ padding-bottom:6px; }
+}
+
+/* ---------- 2. Amanda sagt etwas (Zuruf neben einer Karte) ---------- */
+.am-zuruf{
+  display:flex; align-items:flex-end; gap:14px;
+  background:var(--creme,#FFF8E0); border-radius:16px;
+  padding:12px 16px 0; margin:14px 0;
+}
+.am-zuruf .am-fig{ height:98px; width:auto; flex:none; margin-bottom:-1px; }
+.am-zuruf .am-sagt{ font-size:14px; line-height:1.5; color:var(--text-soft,#54594A); padding-bottom:14px; }
+.am-zuruf .am-sagt b{ color:var(--text,#20211F); }
+.am-zuruf .am-k{
+  font-family:var(--schrift-notiz,'Caveat',cursive); font-size:20px; font-weight:600;
+  color:var(--tuerkis-dunkel,#1990A4); display:block; line-height:1.1; margin-bottom:1px;
+}
+
+/* ---------- 3. Lob-Fenster: taucht kurz auf und geht wieder ---------- */
+.am-lob{
+  position:fixed; right:20px; bottom:96px; z-index:9400;
+  display:flex; align-items:flex-end; gap:10px;
+  max-width:min(360px, calc(100vw - 40px));
+  pointer-events:none;
+}
+.am-lob img{ height:92px; width:auto; flex:none; }
+.am-lob .blase{
+  position:relative; background:#fff; border:2px solid var(--gelb,#FFE100);
+  border-radius:18px; padding:11px 15px; font-size:14.5px; line-height:1.45;
+  box-shadow:0 10px 30px -12px rgba(32,33,31,.35);
+  font-family:var(--schrift-kopf,'Shantell Sans',sans-serif); font-weight:600;
+}
+.am-lob .blase::before{
+  content:''; position:absolute; left:-8px; bottom:16px; width:12px; height:12px;
+  background:#fff; border-left:2px solid var(--gelb,#FFE100); border-bottom:2px solid var(--gelb,#FFE100);
+  transform:rotate(45deg);
+}
+.am-lob{ animation:am-rein .4s cubic-bezier(.2,.9,.3,1.25) both; }
+.am-lob.am-weg{ animation:am-raus .3s ease forwards; }
+@keyframes am-rein{ from{opacity:0; transform:translateY(14px) scale(.94)} to{opacity:1; transform:none} }
+@keyframes am-raus{ to{opacity:0; transform:translateY(10px) scale(.96)} }
+@media(prefers-reduced-motion:reduce){ .am-lob{animation:none} }
+@media(max-width:560px){ .am-lob{ right:12px; left:12px; bottom:84px; max-width:none } .am-lob img{height:74px} }
+
+/* ---------- 4. Hilfe-Chat bekommt Amandas Gesicht ---------- */
+.hc-btn.am-knopf{
+  background:#fff !important; border:2px solid var(--tinte,#20211F) !important;
+  box-shadow:4px 4px 0 var(--gelb,#FFE100) !important;
+  width:64px !important; height:64px !important; overflow:hidden; padding:0;
+}
+.hc-btn.am-knopf img{ width:60px; height:auto; display:block; margin-bottom:-14px; }
+.hc-btn.am-knopf.am-zu img{ display:none; }
+.hc-btn.am-knopf.am-zu::after{ content:'×'; font-size:26px; color:var(--tinte,#20211F); line-height:1; }
+.hc-box .hc-kopf.am-kopf{
+  background:linear-gradient(135deg,#FFF6D9,#FFFDF3) !important; color:var(--tinte,#20211F) !important;
+  border-bottom:1px solid var(--linie,#E7DFC7); display:flex; align-items:center; gap:10px;
+}
+.hc-kopf.am-kopf img{ height:44px; width:auto; flex:none; margin-bottom:-8px; }
+.hc-kopf.am-kopf b{ font-family:var(--schrift-kopf,'Shantell Sans',sans-serif); font-weight:800; }
+.hc-kopf.am-kopf > div{ min-width:0; }
+.hc-kopf.am-kopf span{ opacity:1 !important; color:var(--text-soft,#54594A) !important; }
+.hc-kopf.am-kopf .hc-zu{ color:var(--text-soft,#54594A) !important; margin-left:auto; }
+.hc-kopf.am-kopf .am-live{
+  display:inline-flex; align-items:center; gap:5px; white-space:nowrap;
+}
+.hc-kopf.am-kopf .am-live i{
+  width:7px; height:7px; border-radius:50%; background:var(--gruen-tief,#4E9E12); display:inline-block;
+}
+.hc-m.bot.am-mit{ position:relative; margin-left:34px; }
+.hc-m.bot.am-mit::before{
+  content:''; position:absolute; left:-34px; bottom:0; width:28px; height:28px;
+  border-radius:50%; background:#fff center/145% no-repeat;
+  background-image:var(--am-kopfbild); border:1.5px solid var(--linie,#E7DFC7);
+}
+
+/* ---------- 5. Amandas eigene Ansicht ---------- */
+.am-portraet{
+  height:120px; width:auto; display:block; margin:0 auto 10px;
+}
+.am-karte-fig{ height:110px; width:auto; flex:none; align-self:flex-end; margin-bottom:-18px; }
