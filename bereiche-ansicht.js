@@ -56,6 +56,7 @@
     if(b.u) return b.u;
     var f=berufsfeld(b.beruf);
     if(!f) return '';
+    if(f.unter) return f.unter;
     if(f.handlungen && f.handlungen.length)
       return f.handlungen.slice(0,2).map(function(h){return h.t;}).join(' · ');
     return f.warum ? String(f.warum).split('.')[0]+'.' : '';
@@ -257,6 +258,25 @@
       '#v-bereiche .zeichen .tu{fill:var(--petrol);opacity:.45;}',
       '#v-bereiche .zeichen .fu{fill:var(--petrol);}',
       '#v-bereiche .zeichen .ge{fill:var(--gold);}',
+      '#v-bereiche .be-chunk{padding:9px 0;border-bottom:1px solid var(--kante);}',
+      '#v-bereiche .be-chunk:last-child{border-bottom:0;}',
+      '#v-bereiche .be-chunk b{display:block;font-size:14.5px;font-weight:600;}',
+      '#v-bereiche .be-chunk .hi{display:block;font-size:13px;color:var(--ink-3);margin-top:1px;}',
+      '#v-bereiche .be-chunk .bsp{display:block;font-size:13.5px;color:var(--ink-2);font-style:italic;margin-top:3px;}',
+      '#v-bereiche .be-chunk.spaet{display:none;}',
+      '#v-bereiche .be-chunks.offen .be-chunk.spaet{display:block;}',
+      '#v-bereiche .be-mehr{margin-top:12px;background:var(--petrol-weich);color:var(--petrol);border:1px solid var(--petrol);',
+      'border-radius:99px;padding:8px 16px;font-family:inherit;font-size:13.5px;font-weight:700;cursor:pointer;}',
+      '#v-bereiche .be-mehr:hover{background:var(--petrol);color:#fff;}',
+      '#v-bereiche .be-saetze{display:flex;flex-direction:column;gap:8px;}',
+      '#v-bereiche .be-satz{background:var(--flaeche-2);border:1px solid var(--kante);border-radius:12px;padding:10px 13px;}',
+      '#v-bereiche .be-satz b{display:block;font-size:14.5px;font-weight:600;}',
+      '#v-bereiche .be-satz span{display:block;font-size:13px;color:var(--ink-3);margin-top:2px;}',
+      '#v-bereiche .be-schreib{background:var(--flaeche-2);border:1px solid var(--kante);border-radius:14px;padding:14px 16px;}',
+      '#v-bereiche .be-schreib .auf{margin:0 0 10px;font-size:15px;font-weight:600;}',
+      '#v-bereiche .be-schreib ul{margin:0 0 10px;padding-left:20px;}',
+      '#v-bereiche .be-schreib li{font-size:13.5px;color:var(--ink-2);margin-bottom:3px;}',
+      '#v-bereiche .be-schreib .hilfe{margin:0;font-size:13px;color:var(--ink-3);border-top:1px solid var(--kante);padding-top:9px;}',
       '@media(prefers-reduced-motion:reduce){#v-bereiche *{transition:none!important;}}'
     ].join('');
     document.head.appendChild(s);
@@ -374,11 +394,58 @@
     if(f && f.handlungen && f.handlungen.length){
       h += '<div class="be-block"><h3 class="be-kopf3">Das verlangt dein Arbeitstag</h3>' +
            '<p class="hin">Keine Vokabelliste — die Sprachhandlungen, die in diesem Feld wirklich vorkommen.</p>';
-      f.handlungen.slice(0,8).forEach(function(x){
+      f.handlungen.forEach(function(x){
         h += '<div class="be-hand"><span class="lv">'+E(x.lvl||'')+'</span><div>' +
              '<b>'+E(x.t)+'</b>'+(x.e?'<span>'+E(x.e)+'</span>':'')+'</div></div>';
       });
       h += '</div>';
+    }
+
+    /* Beruf: die Wendungen, die der Tag verlangt */
+    if(f && f.chunks && f.chunks.length){
+      var ck=f.chunks, sicht=12;
+      h += '<div class="be-block"><h3 class="be-kopf3">Die Wendungen für deinen Tag</h3>' +
+           '<p class="hin">Nicht einzelne Wörter — ganze Wendungen, so wie sie im Betrieb gesagt werden. ' +
+           E(ck.length)+' Stück.</p><div class="be-chunks">';
+      ck.forEach(function(c,i){
+        h += '<div class="be-chunk'+(i>=sicht?' spaet':'')+'">' +
+             '<b>'+E(c.de)+'</b>' +
+             (c.hi?'<span class="hi">'+E(c.hi)+'</span>':'') +
+             (c.bsp?'<span class="bsp">„'+E(c.bsp)+'"</span>':'') +
+             '</div>';
+      });
+      h += '</div>';
+      if(ck.length>sicht)
+        h += '<button class="be-mehr" type="button" onclick="bereichMehr(this)">' +
+             'Alle '+E(ck.length)+' Wendungen zeigen</button>';
+      h += '</div>';
+    }
+
+    /* Beruf: Saetze, die immer gehen */
+    if(f && f.saetze && f.saetze.length){
+      h += '<div class="be-block"><h3 class="be-kopf3">Sätze, die immer gehen</h3>' +
+           '<p class="hin">Wenn du nicht weiterweißt: einer dieser Sätze passt fast immer.</p>' +
+           '<div class="be-saetze">';
+      f.saetze.forEach(function(x){
+        h += '<div class="be-satz"><b>'+E(x.de)+'</b>' +
+             (x.wann?'<span>'+E(x.wann)+'</span>':'')+'</div>';
+      });
+      h += '</div></div>';
+    }
+
+    /* Beruf: einmal schreiben */
+    if(f && f.schreiben && f.schreiben.auf){
+      var sc=f.schreiben;
+      h += '<div class="be-block"><h3 class="be-kopf3">Einmal schreiben</h3>' +
+           '<p class="hin">Eine Aufgabe aus dem Berufsalltag. Schreib sie und schick sie Julia zur Korrektur.</p>' +
+           '<div class="be-schreib"><p class="auf">'+E(sc.auf)+'</p>';
+      if(sc.punkte && sc.punkte.length){
+        h += '<ul>';
+        sc.punkte.forEach(function(x){ h += '<li>'+E(x)+'</li>'; });
+        h += '</ul>';
+      }
+      if(sc.hilfe) h += '<p class="hilfe">'+E(sc.hilfe)+'</p>';
+      h += '</div></div>';
     }
 
     /* Situationen mit Amanda */
@@ -450,6 +517,11 @@
   };
 
   /* ---------- Was die Knöpfe tun ---------- */
+  window.bereichMehr = function(kn){
+    var block = kn.parentNode.querySelector('.be-chunks');
+    if(block){ block.classList.add('offen'); kn.remove(); }
+  };
+
   window.bereichWeg = function(w){ fWeg=w; fSuche=''; window.renderBereiche(); };
   window.bereichStufe = function(s){ fNiveau=s; window.renderBereiche(); };
   window.bereichSuche = function(v){
