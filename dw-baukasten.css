@@ -1,0 +1,312 @@
+/* ============================================================
+   dw-baukasten.css — die Bausteine von deutschoderwas
+
+   Eine Datei, aus der jede Seite gebaut wird: Schülerbereich,
+   Kursbibliothek, Lektionen, Verkaufsseite. Wer einen neuen
+   Bereich anlegt, nimmt hier einen Baustein und füllt ihn —
+   dann sieht er von selbst nach deutschoderwas aus.
+
+   Baut auf club-stil.css auf und benutzt dessen Farben, Schriften
+   und Formen. Nichts hier überschreibt etwas Bestehendes; alle
+   Klassen fangen mit dw- an.
+
+   Einbinden NACH club-stil.css:
+     <link rel="stylesheet" href="dw-baukasten.css?v=1">
+
+   Die Bausteine, in der Reihenfolge unten:
+     1  Seitenkopf      dw-kopf
+     2  Bühne           dw-buehne     — die eine nächste Sache
+     3  Karte           dw-karte      — der Grundbaustein
+     4  Kacheln         dw-kacheln    — Situationen mit Bild und Stand
+     5  Weg             dw-weg        — Lektionen als Kette
+     6  Regale          dw-regale     — Werkzeuge quer durch alle Themen
+     7  Fächer          dw-faecher    — der Vokabelkasten
+     8  Zeichen         dw-zeichen    — Community / Premium / Premium Plus
+     9  Zeilen          dw-zeile      — Termine im Kalender
+     10 Kleinteile      dw-chip, dw-balken, dw-fahne, dw-legende, dw-leer
+   ============================================================ */
+
+/* ---------- Maße, damit alle Seiten gleich atmen ---------- */
+:root{
+  --dw-luft:22px;          /* Abstand zwischen zwei Bausteinen */
+  --dw-innen:20px;         /* Innenabstand einer Karte */
+  --dw-rund:18px;          /* normale Ecke */
+  --dw-rund-gross:22px;    /* große Fläche */
+}
+
+.dw-seite{ display:flex; flex-direction:column; gap:var(--dw-luft); }
+
+/* ============================================================
+   1  Seitenkopf — Kicker, Titel, ein Satz. Immer gleich.
+   ============================================================ */
+.dw-kopf{ margin-bottom:2px; }
+.dw-kopf .dw-kick{
+  font-family:var(--schrift-marker,'Permanent Marker',cursive);
+  color:var(--rot,#DD0000); font-size:15px; display:block; margin-bottom:2px;
+}
+.dw-kopf h1,.dw-kopf h2{ margin:0; }
+.dw-kopf p{ color:var(--text-soft,#54594A); font-size:14.5px; margin:6px 0 0; max-width:64ch; }
+
+/* ============================================================
+   2  Bühne — ganz oben auf jeder Seite steht genau EINE Sache,
+      die man jetzt tun kann. Links der Text, rechts der Anlass.
+   ============================================================ */
+.dw-buehne{
+  display:grid; grid-template-columns:1.35fr .9fr;
+  background:var(--karte,#FFFDF3); border:2px solid var(--tinte,#20211F);
+  border-radius:var(--dw-rund-gross); box-shadow:var(--schatten,3px 4px 0 rgba(32,33,31,.10));
+  overflow:hidden;
+}
+.dw-buehne > .links{ padding:24px 26px; }
+.dw-buehne > .rechts{
+  background:var(--creme,#FFF8E0); border-left:2px solid var(--tinte,#20211F);
+  padding:20px 22px; display:flex; flex-direction:column; gap:12px;
+}
+.dw-buehne h2{ font-size:clamp(24px,3.4vw,34px); line-height:1.08; margin:6px 0 8px; }
+.dw-buehne p{ color:var(--text-soft,#54594A); font-size:14.5px; max-width:48ch; }
+.dw-buehne .dw-meta{ display:flex; flex-wrap:wrap; gap:8px; margin:14px 0 18px; }
+@media(max-width:860px){
+  .dw-buehne{ grid-template-columns:1fr; }
+  .dw-buehne > .rechts{ border-left:none; border-top:2px solid var(--tinte,#20211F); }
+  .dw-buehne > .links{ padding:20px 18px; }
+}
+
+/* ============================================================
+   3  Karte — der Grundbaustein. Kopf mit Kicker und Titel,
+      rechts ein Link. Darunter der Inhalt.
+   ============================================================ */
+.dw-karte{
+  background:var(--karte,#FFFDF3); border:1.5px solid var(--linie,#E7DFC7);
+  border-radius:var(--dw-rund); padding:var(--dw-innen) calc(var(--dw-innen) + 2px);
+}
+.dw-karte > header{
+  display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin-bottom:14px;
+}
+.dw-karte > header h3{ font-size:18px; margin:0; }
+.dw-karte > header .dw-mehr{
+  margin-left:auto; font-size:13px; font-weight:700; color:var(--tuerkis-dunkel,#1990A4);
+  text-decoration:none; white-space:nowrap;
+}
+.dw-karte > header .dw-mehr:hover{ text-decoration:underline; }
+.dw-karte .dw-kick{
+  font-family:var(--schrift-marker,'Permanent Marker',cursive);
+  color:var(--rot,#DD0000); font-size:14px; display:block; margin-bottom:1px;
+}
+/* Der ruhige Hinweis am Fuß einer Karte */
+.dw-notiz{
+  margin-top:14px; background:var(--creme,#FFF8E0); border-radius:12px;
+  padding:11px 13px; font-size:13.5px; color:var(--text-soft,#54594A);
+}
+.dw-notiz b{ color:var(--tinte,#20211F); }
+
+/* ============================================================
+   4  Kacheln — jede Lebenssituation, jedes Thema, jeder Kurs
+      sieht gleich aus: Bild, Name, Untertitel, Stand.
+      Der Balken zeigt, was SITZT — nicht, was angeklickt wurde.
+   ============================================================ */
+.dw-kacheln{
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:14px;
+}
+.dw-kachel{
+  position:relative; display:flex; flex-direction:column; text-align:left;
+  background:var(--karte,#FFFDF3); border:1.5px solid var(--linie,#E7DFC7);
+  border-radius:var(--dw-rund); padding:12px; cursor:pointer;
+  font:inherit; color:inherit; transition:transform .12s, box-shadow .12s, border-color .12s;
+}
+.dw-kachel:hover{ transform:translateY(-2px); box-shadow:var(--schatten,3px 4px 0 rgba(32,33,31,.10)); }
+.dw-kachel .dw-bild{
+  display:block; width:100%; aspect-ratio:4/3; object-fit:cover;
+  border-radius:11px; border:1px solid var(--linie,#E7DFC7); margin-bottom:10px;
+  background:var(--creme,#FFF8E0);
+}
+/* Kacheln ohne Foto: getöntes Feld mit großem Zeichen — damit das
+   Raster gleichmäßig bleibt und nicht halbfertig aussieht. */
+.dw-kachel .dw-bild.dw-platz{
+  display:grid; place-items:center; font-size:42px;
+  background:linear-gradient(180deg, var(--ton,#F0EBDD),
+             color-mix(in srgb, var(--ton,#F0EBDD) 45%, var(--karte,#FFFDF3)));
+}
+.dw-kachel .dw-oben{ display:flex; align-items:flex-start; gap:8px; }
+.dw-kachel .dw-em{ font-size:19px; line-height:1.2; flex:none; }
+.dw-kachel .dw-nm{ font-family:var(--schrift-kopf,'Shantell Sans',sans-serif); font-weight:700; font-size:14.5px; line-height:1.25; }
+.dw-kachel .dw-zu{ display:block; font-weight:400; font-size:12.5px; color:var(--text-soft,#54594A); margin-top:2px; }
+.dw-kachel .dw-stand{ display:flex; align-items:center; gap:9px; margin-top:auto; padding-top:12px; }
+.dw-kachel .dw-stand .dw-balken{ flex:1; }
+.dw-kachel .dw-pz{ font-size:12px; font-weight:700; color:var(--text-soft,#54594A); font-variant-numeric:tabular-nums; }
+.dw-kachel.dw-dran{ border-color:var(--rot,#DD0000); box-shadow:0 0 0 3px rgba(221,0,0,.10); }
+.dw-kachel.dw-sitzt{ border-color:var(--gruen-tief,#4E9E12); }
+
+/* ============================================================
+   5  Weg — Lektionen als Kette. Was fertig ist, was dran ist,
+      was noch kommt. Eine Zeile pro Schritt.
+   ============================================================ */
+.dw-weg{ display:flex; flex-direction:column; }
+.dw-stufe{
+  display:grid; grid-template-columns:32px 1fr auto; gap:14px; align-items:center;
+  padding:11px 0; border-bottom:1px solid var(--linie,#E7DFC7);
+}
+.dw-stufe:last-child{ border-bottom:none; }
+.dw-stufe .dw-knoten{
+  width:26px; height:26px; border-radius:50%; display:grid; place-items:center;
+  font-size:12px; font-weight:800; border:2px solid var(--linie,#E7DFC7); color:var(--text-soft,#54594A);
+}
+.dw-stufe.dw-fertig .dw-knoten{ background:var(--gruen-tief,#4E9E12); border-color:var(--gruen-tief,#4E9E12); color:#fff; }
+.dw-stufe.dw-jetzt .dw-knoten{ border-color:var(--rot,#DD0000); color:var(--rot,#DD0000); box-shadow:0 0 0 4px rgba(221,0,0,.12); }
+.dw-stufe .dw-name{ font-weight:600; font-size:14.5px; }
+.dw-stufe.dw-jetzt .dw-name{ font-weight:800; }
+.dw-stufe .dw-unter{ font-size:12.5px; color:var(--text-soft,#54594A); }
+.dw-stufe .dw-wann{ font-size:12.5px; color:var(--text-soft,#54594A); text-align:right; white-space:nowrap; }
+.dw-stufe.dw-zu .dw-name,.dw-stufe.dw-zu .dw-unter{ color:var(--text-soft,#54594A); }
+
+/* ============================================================
+   6  Regale — was quer durch alle Themen gilt: Grammatik,
+      Wortschatz, Aussprache. Zahl groß, vier Beispiele darunter.
+   ============================================================ */
+.dw-regale{ display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; }
+.dw-regal{
+  background:var(--karte,#FFFDF3); border:1.5px solid var(--linie,#E7DFC7);
+  border-radius:var(--dw-rund); padding:16px 18px;
+}
+.dw-regal .dw-rkopf{ display:flex; align-items:center; gap:9px; }
+.dw-regal .dw-rkopf .dw-em{ font-size:20px; }
+.dw-regal h3{ font-size:16px; margin:0; }
+.dw-regal .dw-zahl{
+  font-family:var(--schrift-titel,'Caveat Brush',cursive); font-size:34px; line-height:1;
+  margin:6px 0 2px; color:var(--tinte,#20211F);
+}
+.dw-regal p{ font-size:13px; color:var(--text-soft,#54594A); margin-bottom:10px; }
+.dw-regal ul{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px; }
+.dw-regal li{ font-size:13.5px; display:flex; align-items:center; gap:8px; }
+.dw-regal li i{ width:7px; height:7px; border-radius:50%; background:var(--linie,#E7DFC7); flex:none; }
+.dw-regal li.dw-sitzt i{ background:var(--gruen-tief,#4E9E12); }
+.dw-regal li.dw-geuebt i{ background:var(--tuerkis-dunkel,#1990A4); }
+.dw-regal li.dw-naechst i{ background:var(--rot,#DD0000); }
+.dw-regal li.dw-spaeter{ color:var(--text-soft,#54594A); }
+
+/* ============================================================
+   7  Fächer — der Vokabelkasten. Vier Zustände, vier Zahlen.
+      Der Lernende sieht nie „500 Vokabeln", sondern heute 48.
+   ============================================================ */
+.dw-faecher{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+@media(max-width:700px){ .dw-faecher{ grid-template-columns:repeat(2,1fr); } }
+.dw-fach{
+  background:var(--creme,#FFF8E0); border:1.5px solid var(--linie,#E7DFC7);
+  border-radius:14px; padding:13px 14px; text-align:center;
+}
+.dw-fach b{
+  display:block; font-family:var(--schrift-kopf,'Shantell Sans',sans-serif);
+  font-size:26px; font-weight:800; line-height:1; font-variant-numeric:tabular-nums;
+}
+.dw-fach span{ display:block; font-size:12px; color:var(--text-soft,#54594A); margin-top:5px; }
+.dw-fach.f1 b{ color:var(--rot,#DD0000); }
+.dw-fach.f2 b{ color:var(--gelb-tief,#C9A200); }
+.dw-fach.f3 b{ color:var(--tuerkis-dunkel,#1990A4); }
+.dw-fach.f4 b{ color:var(--gruen-tief,#4E9E12); }
+
+/* ============================================================
+   8  Zeichen — welche Mitgliedschaft. Farbe UND Form UND Wort,
+      damit es auch ohne Farbsehen erkennbar bleibt.
+      ● Community   ◆ Premium   ★ Premium Plus
+   ============================================================ */
+.dw-zeichen{
+  display:inline-flex; align-items:center; gap:6px; white-space:nowrap;
+  font-family:var(--schrift-text,'Inter',sans-serif);
+  font-size:11.5px; font-weight:800; letter-spacing:.03em;
+  border:1.5px solid transparent; border-radius:999px; padding:3px 10px 3px 7px;
+}
+.dw-zeichen::before{ font-size:11px; line-height:1; }
+.dw-zeichen.dw-com{ background:#FFF6D9; color:#8A6608; border-color:#EBC96B; }
+.dw-zeichen.dw-com::before{ content:'●'; }
+.dw-zeichen.dw-prem{ background:var(--tuerkis-hauch,#EAFBFE); color:var(--tuerkis-dunkel,#1990A4); border-color:var(--tuerkis-dunkel,#1990A4); }
+.dw-zeichen.dw-prem::before{ content:'◆'; }
+.dw-zeichen.dw-plus{ background:#FDEAE6; color:var(--rot,#DD0000); border-color:var(--rot,#DD0000); }
+.dw-zeichen.dw-plus::before{ content:'★'; }
+/* Nur das Zeichen, ohne Wort — für enge Stellen wie Chat und Listen */
+.dw-zeichen.dw-nur{ padding:3px; width:22px; height:22px; justify-content:center; gap:0; font-size:0; }
+.dw-zeichen.dw-nur::before{ font-size:11px; }
+
+/* ============================================================
+   9  Zeilen — ein Termin im Kalender. Der farbige Rand links
+      sagt sofort, um welche Art Unterricht es geht.
+   ============================================================ */
+.dw-zeile{
+  display:grid; grid-template-columns:92px 1fr auto; gap:14px; align-items:center;
+  background:var(--karte,#FFFDF3); border:1.5px solid var(--linie,#E7DFC7);
+  border-left:5px solid var(--linie,#E7DFC7);
+  border-radius:12px; padding:12px 16px; margin-bottom:9px;
+}
+@media(max-width:640px){ .dw-zeile{ grid-template-columns:1fr; gap:8px; } }
+.dw-zeile.dw-geschlossen{ border-left-color:var(--rot,#DD0000); }
+.dw-zeile.dw-offen{ border-left-color:var(--tuerkis-dunkel,#1990A4); }
+.dw-zeile .dw-wann{ font-family:var(--schrift-kopf,'Shantell Sans',sans-serif); font-weight:700; font-size:14px; text-align:left; }
+.dw-zeile .dw-wann small{ display:block; font-family:var(--schrift-text,'Inter',sans-serif); font-weight:400; font-size:12px; color:var(--text-soft,#54594A); }
+.dw-zeile .dw-titel{ font-weight:700; font-size:15px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.dw-zeile .dw-unter{ font-size:12.5px; color:var(--text-soft,#54594A); margin-top:2px; }
+.dw-zeile .dw-tun{ display:flex; align-items:center; gap:10px; justify-self:end; }
+.dw-zeile.dw-fremd{ opacity:.6; background:var(--creme,#FFF8E0); }
+/* Die Art des Unterrichts als Wort */
+.dw-art{ font-size:11px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; border-radius:999px; padding:3px 9px; }
+.dw-art.dw-geschlossen{ background:#FDEAE6; color:var(--rot,#DD0000); }
+.dw-art.dw-offen{ background:var(--tuerkis-hauch,#EAFBFE); color:var(--tuerkis-dunkel,#1990A4); }
+
+/* ============================================================
+   10  Kleinteile
+   ============================================================ */
+/* Chip: eine Angabe in einem Wort */
+.dw-chip{
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:12.5px; font-weight:600; color:var(--text-soft,#54594A);
+  background:var(--creme,#FFF8E0); border-radius:999px; padding:4px 11px;
+}
+.dw-chip.dw-hell{ background:#FFF6D9; color:#8A6608; font-weight:700; }
+
+/* Balken: immer gleich hoch, immer dieselbe Bedeutung */
+.dw-balken{ height:6px; border-radius:999px; background:var(--creme,#FFF8E0); overflow:hidden; }
+.dw-balken > i{ display:block; height:100%; background:var(--tuerkis-dunkel,#1990A4); border-radius:999px; transition:width .5s; }
+.dw-balken.dw-gut > i{ background:var(--gruen-tief,#4E9E12); }
+.dw-balken.dw-warn > i{ background:var(--gelb-tief,#C9A200); }
+
+/* Fahne: der Zustand oben links auf einer Kachel */
+.dw-fahne{
+  position:absolute; top:16px; left:16px; z-index:2;
+  font-size:10.5px; font-weight:800; letter-spacing:.06em; text-transform:uppercase;
+  border-radius:999px; padding:3px 9px; background:var(--rot,#DD0000); color:#fff;
+}
+.dw-fahne.dw-gut{ background:var(--gruen-tief,#4E9E12); }
+.dw-fahne.dw-warte{ background:var(--gelb,#FFE100); color:var(--tinte,#20211F); }
+
+/* Legende: erklärt die Zustände einmal, unter dem Raster */
+.dw-legende{
+  display:flex; gap:18px; flex-wrap:wrap; font-size:12.5px; color:var(--text-soft,#54594A);
+  background:var(--creme,#FFF8E0); border-radius:12px; padding:12px 16px;
+}
+.dw-legende span{ display:inline-flex; align-items:center; gap:7px; }
+.dw-legende i{ width:12px; height:12px; border-radius:3px; display:inline-block; flex:none; }
+
+/* Leerer Zustand: nie eine leere Fläche, immer ein nächster Schritt */
+.dw-leer{
+  display:flex; flex-direction:column; align-items:center; text-align:center; gap:8px;
+  background:var(--karte,#FFFDF3); border:1.5px dashed var(--linie,#E7DFC7);
+  border-radius:var(--dw-rund); padding:26px 22px;
+}
+.dw-leer img{ height:120px; width:auto; }
+.dw-leer p{ max-width:46ch; font-size:14px; color:var(--text-soft,#54594A); margin:0; }
+
+/* Zahlenreihe: drei bis fünf Werte nebeneinander */
+.dw-zahlen{ display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:10px; }
+.dw-zahl{
+  background:var(--karte,#FFFDF3); border:1.5px solid var(--linie,#E7DFC7);
+  border-radius:14px; padding:14px; text-align:center;
+}
+.dw-zahl b{
+  display:block; font-family:var(--schrift-titel,'Caveat Brush',cursive);
+  font-size:30px; line-height:1; font-variant-numeric:tabular-nums;
+}
+.dw-zahl span{ display:block; font-size:12px; color:var(--text-soft,#54594A); margin-top:4px; font-weight:600; }
+
+/* Zwei Spalten, die auf dem Handy untereinander stehen */
+.dw-zwei{ display:grid; grid-template-columns:1.5fr 1fr; gap:var(--dw-luft); align-items:start; }
+@media(max-width:900px){ .dw-zwei{ grid-template-columns:1fr; } }
+
+/* Tabellen und breite Sachen dürfen nie die Seite schieben */
+.dw-breit{ overflow-x:auto; -webkit-overflow-scrolling:touch; }

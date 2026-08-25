@@ -1,0 +1,48 @@
+/* ============================================================
+   app-stil.css — der Schülerbereich als App
+
+   Die App ist keine zweite Webseite mehr: sie IST die Plattform.
+   Wer das Symbol auf dem Startbildschirm antippt, landet in
+   konto.html — dieselbe Seite, dieselben Inhalte, derselbe Stand.
+   Diese Datei macht nur die Handkanten sauber: die Tableiste
+   unten, die sichere Fläche am Rand, die Kopfzeile.
+
+   Einbinden NACH seitenleiste.css.
+   ============================================================ */
+
+/* ---------- Die Tableiste unten ---------- */
+.mtabs{
+  background:color-mix(in srgb, var(--karte,#FFFDF3) 96%, transparent);
+  border-top:1.5px solid var(--linie,#E7DFC7);
+}
+.mtab{ color:var(--text-soft,#54594A); font-weight:700; font-size:10.5px; }
+.mtab .mi{ border-radius:12px; }
+.mtab.on{ color:var(--tuerkis-dunkel,#1990A4); }
+.mtab.on .mi{ background:var(--tuerkis-hauch,#EAFBFE); }
+.mtab .bdg{ border-color:var(--karte,#FFFDF3); background:var(--rot,#DD0000); }
+
+/* Auf dem Handy ist die Bühne die ganze Breite — Ränder kosten
+   dort mehr, als sie bringen. */
+@media(max-width:640px){
+  .main{ padding:16px 14px 84px; }
+  .am-band{ border-radius:18px; }
+  .dw-buehne{ border-radius:18px; }
+  .dw-karte{ border-radius:16px; padding:16px; }
+}
+
+/* ---------- Als installierte App: Platz für die Systemleisten ---------- */
+@media (display-mode: standalone){
+  .topbar{ padding-top:calc(env(safe-area-inset-top) + 4px); }
+  .mtabs{ padding-bottom:max(env(safe-area-inset-bottom), 6px); }
+  /* In der App gibt es keinen Zurück-Knopf des Browsers — der
+     Zurück-Weg muss also in der Seite stehen. */
+  .kb-back, .ln-zurueck{ font-weight:800; }
+}
+
+/* Ziehen und Wischen soll sich wie eine App anfühlen, nicht wie
+   eine Seite: keine Textauswahl an Knöpfen, kein blaues Aufblitzen. */
+.mtab, .navlink, .sl-amanda, .sl-buchen, .dw-kachel{
+  -webkit-tap-highlight-color:transparent;
+  -webkit-touch-callout:none;
+  user-select:none;
+}

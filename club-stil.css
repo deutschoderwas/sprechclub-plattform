@@ -1,0 +1,652 @@
+/* ============================================================
+   club-stil.css — der Stil des Schülerbereichs, an einer Stelle
+
+   Diese Datei wird als LETZTE im Kopf von konto.html geladen.
+   Dadurch gewinnt sie gegen die alten Stil-Blöcke, ohne dass wir
+   sie alle anfassen müssen.
+
+   Regel für später: Farben, Schriften und Formen ändert man HIER
+   und nirgendwo sonst. Wer eine Farbe in eine einzelne Ansicht
+   schreibt, bricht die Marke wieder auseinander.
+
+   Was diese Datei bewusst NICHT anfasst: Breiten, Abstände,
+   Rasterspalten, Positionen. Das Layout bleibt genau, wie es ist —
+   deshalb kann sich beim Einschalten nichts verschieben.
+   ============================================================ */
+
+/* ---------- 1. Die Marke, einmal ---------- */
+:root{
+  /* Die Farben aus dem Styleguide */
+  --tuerkis:#39CCE3;
+  --tuerkis-dunkel:#1990A4;
+  --auf-tuerkis:#063138;
+  --tuerkis-hauch:#EAFBFE;
+  --gelb:#FFE100;
+  --gelb-tief:#C9A200;
+  --gruen:#77D42A;
+  --gruen-tief:#4E9E12;
+  --rot:#DD0000;
+  --rot-tief:#B00000;
+  --tinte:#20211F;
+  --creme:#FFF8E0;
+  --karte:#FFFDF3;
+  --linie:#E7DFC7;
+  --linie-hell:#EFE9D8;
+
+  /* Die handgezeichnete Ecke — der Wiedererkennungswert */
+  --hand:255px 12px 225px 15px/15px 225px 15px 255px;
+  --schatten:3px 4px 0 rgba(32,33,31,.10);
+  --schatten-tief:4px 5px 0 rgba(32,33,31,.16);
+
+  /* Die Schriften */
+  --schrift-titel:'Caveat Brush', cursive;
+  --schrift-kopf:'Shantell Sans', 'Inter', cursive;
+  --schrift-notiz:'Caveat', cursive;
+  --schrift-marker:'Permanent Marker', cursive;
+  --schrift-text:'Inter', system-ui, -apple-system, sans-serif;
+
+  /* Die alten Namen zeigen jetzt auf die neuen Farben.
+     Dadurch zieht alles mit, was sie schon benutzt. */
+  --primary:#DD0000;
+  --primary-dark:#B00000;
+  --secondary:#20211F;
+  --accent:#FFE100;
+  --turquoise:#39CCE3;
+  --turquoise-soft:#9FE4F1;
+  --cream:#FFFDF3;
+  --bg:#FFF8E0;
+  --text:#20211F;
+  --text-soft:#54594a;
+  --border:#E7DFC7;
+  --green:#4E9E12;
+  --green-soft:#EFFBE4;
+}
+
+/* ---------- 2. Grundfläche ---------- */
+body{
+  font-family:var(--schrift-text);
+  color:var(--tinte);
+  background-color:var(--creme);
+  background-image:
+    radial-gradient(circle at 92% 3%, rgba(57,204,227,.10), transparent 26%),
+    radial-gradient(circle at 5% 15%, rgba(119,212,42,.05), transparent 20%);
+  background-attachment:fixed;
+}
+
+/* ---------- 3. Überschriften ---------- */
+/* Feste Zeilenhöhen. Die Handschrift-Schriften kommen erst nach dem Text
+   an. Steht die Zeilenhöhe fest, bleibt der Kasten gleich hoch und der
+   Inhalt darunter rutscht beim Nachladen nicht nach unten. */
+h1,.pagehead h1{font-family:var(--schrift-titel);font-weight:400;letter-spacing:.005em;line-height:1.06}
+h2{font-family:var(--schrift-kopf);font-weight:700;letter-spacing:.005em;line-height:1.20}
+h3{font-family:var(--schrift-kopf);font-weight:700;letter-spacing:.005em;line-height:1.25}
+h4,h5,h6{font-family:var(--schrift-kopf);font-weight:700;line-height:1.30}
+/* Keine künstlich schräg gestellten oder fett gerechneten Schriften —
+   das sieht billig aus und misst sich unterschiedlich. */
+h1,h2,h3,h4,h5,h6,.navlink,.btn,.kpill{font-synthesis:none}
+.pagehead p{color:var(--text-soft)}
+
+/* Der Signature-Move: gelbe Füllung mit Tintenkontur.
+   Nur in großen Überschriften — im Fließtext wäre er unlesbar. */
+h1 .mark,h1 .cap,.pagehead h1 .mark{
+  color:var(--gelb);
+  -webkit-text-stroke:2.5px var(--tinte);
+  paint-order:stroke fill;
+  text-shadow:3px 3px 0 rgba(32,33,31,.22);
+  background:none;
+}
+h2 .mark,h3 .mark,p .mark,li .mark{
+  background:linear-gradient(180deg,transparent 55%,var(--gelb) 55%);
+  padding:0 2px;border-radius:3px;color:var(--tinte);
+}
+
+/* Der Kicker über der Überschrift — dieselbe Handschrift wie auf
+   deutschoderwas-club.de. Klein, rot, mit Filzstift geschrieben. */
+.sec-tag,.kick,.kicker{
+  font-family:var(--schrift-marker);
+  color:var(--rot);
+  font-size:15px;
+  letter-spacing:0;
+  text-transform:none;
+  display:block;
+  margin-bottom:2px;
+}
+
+/* Der Kringel unter Abschnittstiteln — der Wiedererkennungswert
+   von der Verkaufsseite, jetzt auch drinnen. */
+.sec-head h2::after,.abschnitt-titel::after{
+  content:'';display:block;width:132px;height:12px;margin:9px 0 0;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='12' viewBox='0 0 120 12'%3E%3Cpath d='M2 8 C 20 2 30 10 48 6 C 66 2 78 11 96 6 C 106 3 114 7 118 6' fill='none' stroke='%231990A4' stroke-width='3.8' stroke-linecap='round'/%3E%3C/svg%3E") left/contain no-repeat;
+}
+.sec-head{text-align:inherit}
+.sec-head.mitte h2::after{margin-left:auto;margin-right:auto}
+
+/* ---------- 4. Seitenleiste ---------- */
+.sidebar{
+  background:var(--karte);
+  border-right:2.5px solid var(--tinte);
+}
+.brand{font-family:var(--schrift-kopf);font-weight:700;color:var(--tinte)}
+.brand img{border:2px solid var(--tinte);border-radius:50%}
+.nav-sec{font-family:var(--schrift-kopf);font-weight:700;color:var(--tuerkis-dunkel);letter-spacing:.06em}
+.navlink{
+  font-family:var(--schrift-kopf);
+  font-weight:700;
+  color:var(--text-soft);
+  border-radius:12px;
+  /* Der Zähler rechts soll den Text nicht zusammenschieben */
+  position:relative;
+  padding-right:40px;
+}
+.navlink:hover{background:var(--tuerkis-hauch);color:var(--tinte)}
+.navlink.active{
+  background:var(--tuerkis);
+  color:var(--auf-tuerkis);
+  border:2.5px solid var(--auf-tuerkis);
+  box-shadow:2px 3px 0 rgba(6,49,56,.22);
+  /* Rahmen und Schatten dürfen die Zeile nicht wachsen lassen */
+  padding-top:8.5px;padding-bottom:8.5px;padding-left:10.5px;
+}
+.navlink .badge,.navlink #commBadge{
+  position:absolute;right:11px;top:50%;transform:translateY(-50%);margin-left:0;
+}
+.nav-trenner{border-top:2px dotted var(--linie);margin:8px 4px}
+
+/* ---------- 5. Karten ----------
+   Der Rahmen wird von 1px auf 2.5px dicker. Die 1.5px nehmen wir beim
+   Innenabstand wieder weg, damit die Karte exakt gleich groß bleibt und
+   beim Einschalten nichts verrutscht. */
+.card,.stat,.hero-card,.box,.panel,.tile,.mc-card,.badge-card,.dsh-kpi,.dsh-live,.next-hero{
+  background:var(--karte);
+  border:2.5px solid var(--tinte);
+  border-radius:16px;
+  box-shadow:var(--schatten);
+}
+.card{padding:16.5px}
+.stat{padding:14.5px}
+.hero-card{
+  background:linear-gradient(135deg,#FFFDF3,#FFF3C9);
+  border-color:var(--tinte);
+  border-radius:20px;
+  box-shadow:var(--schatten-tief);
+  padding:21.5px 23.5px;   /* war 22px 24px bei 2px Rahmen */
+}
+
+/* ---------- 6. Knöpfe ---------- */
+.btn{
+  font-family:var(--schrift-kopf);
+  font-weight:700;
+  border-radius:var(--hand);
+  border:2.5px solid var(--tinte);
+  padding:7.5px 15.5px;   /* war 10px 18px ganz ohne Rahmen */
+  /* Nur Farbe und ein kleiner Versatz — nie Größe, sonst springt das Layout */
+  transition:background-color .15s ease,color .15s ease,transform .15s ease,box-shadow .15s ease;
+}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:translateY(0)}
+.btn-primary{
+  background:var(--tuerkis);
+  color:var(--auf-tuerkis);
+  border-color:var(--auf-tuerkis);
+  box-shadow:2px 3px 0 rgba(6,49,56,.28);
+}
+.btn-primary:hover{background:#54D6EA;box-shadow:3px 4px 0 rgba(6,49,56,.28)}
+.btn-ghost{
+  background:var(--karte);
+  color:var(--tinte);
+  border-color:var(--tinte);
+  box-shadow:2px 3px 0 rgba(32,33,31,.16);
+}
+.btn-ghost:hover{background:var(--creme)}
+.btn-rot,.btn-danger{background:var(--rot);color:#fff;border-color:var(--rot-tief);box-shadow:2px 3px 0 rgba(176,0,0,.30)}
+.btn:disabled,.btn[disabled]{opacity:.55;cursor:default;transform:none;box-shadow:none}
+
+/* ---------- 7. Pillen, Abzeichen, Marken ---------- */
+.kpill,.pill,.chip,.lvl{
+  font-family:var(--schrift-kopf);
+  font-weight:700;
+  border:2.5px solid var(--tinte);
+  background:var(--karte);
+  color:var(--tinte);
+  border-radius:var(--hand);
+  box-shadow:2px 3px 0 rgba(32,33,31,.12);
+  padding:7.5px 14.5px;   /* war 8px 15px bei 2px Rahmen */
+}
+.kpill.active,.pill.active,.chip.active,.kpill.on,.pill.on{
+  background:var(--tuerkis);color:var(--auf-tuerkis);border-color:var(--auf-tuerkis);
+}
+.badge{
+  font-family:var(--schrift-kopf);font-weight:700;
+  background:var(--rot);color:#fff;
+  border:2px solid var(--tinte);border-radius:20px;
+}
+
+/* ---------- 8. Eingabefelder ---------- */
+input[type=text],input[type=email],input[type=password],input[type=search],
+input[type=number],input[type=tel],input[type=date],input[type=time],
+textarea,select{
+  font-family:var(--schrift-text);
+  color:var(--tinte);
+  background:#fff;
+  border:2.5px solid var(--tinte);
+  border-radius:13px;
+  padding:9.5px 11.5px;   /* war 10px 12px bei 2px Rahmen */
+}
+input:focus,textarea:focus,select:focus{
+  outline:none;
+  border-color:var(--tuerkis-dunkel);
+  box-shadow:0 0 0 3px rgba(57,204,227,.25);
+}
+label,.field label{font-family:var(--schrift-kopf);font-weight:700;color:var(--tinte)}
+
+/* ---------- 9. Tabellen ---------- */
+table{border-collapse:collapse}
+th{font-family:var(--schrift-kopf);font-weight:700;color:var(--tuerkis-dunkel);text-align:left}
+td,th{border-bottom:2px solid var(--linie-hell)}
+
+/* ---------- 10. Kleine Hinweise in Handschrift ---------- */
+.hinweis,.note,.tip,figcaption{font-family:var(--schrift-notiz);font-size:1.1em;color:var(--text-soft)}
+
+/* ============================================================
+   11. Ruhe im Layout
+   Dieselben Regeln wie im Community-Bereich. Sie sorgen dafür,
+   dass beim Laden, Klicken und Tippen nichts hüpft.
+   ============================================================ */
+
+/* Die Scrollleiste belegt ihren Platz dauerhaft, sonst rutscht der
+   ganze Inhalt seitwärts, sobald sie auftaucht. */
+html{scrollbar-gutter:stable}
+.main,.content-inner,.sidebar{scrollbar-gutter:stable}
+
+/* Bilder bekommen ihren Platz, bevor sie geladen sind */
+img{max-width:100%}
+img[width][height]{height:auto}
+
+/* Zahlen laufen nicht in der Breite, wenn sie sich ändern */
+.big,.stat b,.dsh-kpi b,.zahl,time{font-variant-numeric:tabular-nums}
+
+/* Bewegung nur da, wo sie nichts verschiebt */
+.card,.stat,.kpill,.pill,.navlink{
+  transition:background-color .15s ease,border-color .15s ease,color .15s ease,box-shadow .15s ease;
+}
+
+/* Wer im Betriebssystem „Bewegung reduzieren" eingestellt hat,
+   bekommt gar keine — das erwartet man von einer ernsthaften Anwendung. */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    transition-duration:.01ms!important;
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    scroll-behavior:auto!important;
+  }
+  .btn:hover{transform:none}
+}
+
+/* Tastaturbedienung sichtbar machen — gehört zu „echte Plattform" */
+:focus-visible{outline:3px solid var(--tuerkis-dunkel);outline-offset:2px;border-radius:6px}
+
+/* ============================================================
+   9. Die Seitenleiste — drei Löcher stopfen
+
+   Die Symbole in der Seitenleiste sind Masken: das Plättchen hat
+   die Farbe, die Maske schneidet die Zeichnung heraus. Für drei
+   Einträge fehlte diese Maske — dort blieb ein volles farbiges
+   Quadrat stehen: Prüfungsvorbereitung, Lernbereich, Meine Szenen.
+
+   Die Masken stehen bewusst HIER und nicht in club-theme.css,
+   damit an der gemeinsamen Datei nichts zu ändern ist.
+   ============================================================ */
+
+/* Prüfungsvorbereitung — die Zielscheibe */
+.navlink[data-view='pruefung'] .ic{
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='8'/%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Ccircle cx='12' cy='12' r='1'/%3E%3C/svg%3E");
+          mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='8'/%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Ccircle cx='12' cy='12' r='1'/%3E%3C/svg%3E");
+}
+
+/* Lernbereich — der Kompass */
+.navlink[data-view='lernen'] .ic{
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='8.5'/%3E%3Cpath d='m14.8 9.2-1.5 4.1-4.1 1.5 1.5-4.1z'/%3E%3C/svg%3E");
+          mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='8.5'/%3E%3Cpath d='m14.8 9.2-1.5 4.1-4.1 1.5 1.5-4.1z'/%3E%3C/svg%3E");
+}
+
+/* Meine Szenen — Bild mit Abspielzeichen */
+.navlink[data-view='szenen'] .ic{
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3.2' y='4.6' width='17.6' height='14.8' rx='2.6'/%3E%3Cpath d='M10.4 9.3 14.7 12l-4.3 2.7z'/%3E%3C/svg%3E");
+          mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3.2' y='4.6' width='17.6' height='14.8' rx='2.6'/%3E%3Cpath d='M10.4 9.3 14.7 12l-4.3 2.7z'/%3E%3C/svg%3E");
+}
+
+/* ------------------------------------------------------------
+   Jeder Eintrag hielt rechts 40 Pixel für eine Zahl frei — auch
+   die neunzehn Einträge, die nie eine Zahl bekommen. Dadurch war
+   für die Beschriftung zu wenig Platz: „Julia korrigiert" brach
+   auf zwei Zeilen um und die Zeile wurde höher als alle anderen,
+   „Prüfungsvorbereitung" lief über den Rand hinaus.
+
+   Jetzt hält den Platz nur noch frei, wer wirklich eine Zahl hat.
+   ------------------------------------------------------------ */
+.sidebar .navlink{padding-right:13px!important}
+
+/* ------------------------------------------------------------
+   Die Zahl der ungelesenen Nachrichten lag frei über der Schrift
+   und deckte im Community-Eintrag „…Chat" zu. Sie steht jetzt in
+   der Zeile mit, ganz rechts — dann kann sie nichts mehr verdecken,
+   egal wie lang die Beschriftung in einer anderen Sprache wird.
+
+   Das !important ist hier kein Übermut: an derselben Stelle stehen
+   in konto.html zwei ältere Regeln, die sich schon gegenseitig mit
+   !important überschreiben. Ohne kommt man nicht dazwischen.
+   ------------------------------------------------------------ */
+.sidebar .navlink-chat{position:relative;padding-right:13px!important}
+.sidebar .navlink-chat .nl-t{flex:1 1 auto;min-width:0;text-align:left}
+/* Die Zahl sitzt jetzt auf der Ecke des Symbols — so wie bei einer
+   App auf dem Handy. Dort ist Platz frei, und egal wie lang die
+   Beschriftung in einer anderen Sprache wird, sie deckt nie etwas zu. */
+.sidebar .navlink-chat .badge{
+  position:absolute!important;margin:0!important;
+  left:34px!important;top:11px!important;right:auto!important;bottom:auto!important;
+  min-width:19px;height:19px;padding:0 5px;
+  font-size:10.5px;line-height:19px;text-align:center;border-radius:999px;
+  box-shadow:0 0 0 2px var(--karte,#FFFDF3);
+}
+/* „Austausch nach Themen" war sechs Pixel zu lang und wurde stumm
+   abgeschnitten. Einen halben Punkt kleiner — und es steht ganz da. */
+.sidebar .navlink-chat .nl-t i{
+  display:block;font-size:10.5px;letter-spacing:-.004em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+
+/* ------------------------------------------------------------
+   „Prüfungsvorbereitung" ist ein Wort und lässt sich nicht
+   umbrechen — bei 14 Pixeln lief es neun Pixel über den Rand.
+   Ein halber Punkt weniger, und alle zwanzig Beschriftungen
+   passen, ohne dass man den Unterschied bemerkt.
+   ------------------------------------------------------------ */
+.sidebar .navlink{font-size:13.2px}
+
+
+/* ============================================================
+   10. Die Schrift der Marke — auch im Schülerbereich
+
+   Auf deutschoderwas-club.de sind die Überschriften Caveat Brush
+   und Shantell Sans. Im Schülerbereich standen sie in Space
+   Grotesk und Inter. Genau daher kam das Gefühl, dass der
+   Schülerbereich "anders" aussieht als die Startseite.
+
+   Warum das nicht mit drei Zeilen ging: an der Schrift der
+   Überschriften ziehen vier Dateien gleichzeitig.
+
+     konto.html     h1,h2,h3            -> Space Grotesk
+     club-theme.css h1,h2,h3,h4         -> Inter        !important
+     marke.css      .pagehead h1 u.v.a. -> Space Grotesk!important
+     club-stil.css  h1                  -> Caveat Brush
+
+   Wer !important benutzt und genauer zielt, gewinnt — deshalb
+   stand am Ende überall Space Grotesk. Die Liste unten greift
+   jeden dieser Selektoren einzeln auf. Sie ist lang, aber sie ist
+   vollständig, und sie steht an EINER Stelle.
+
+   Damit sie überhaupt zum Zug kommt, muss club-stil.css nach
+   marke.css geladen werden — marke.css steht am Ende des Körpers.
+
+   Große Überschrift -> Caveat Brush.
+   Alles andere (Zwischentitel, Zahlen, Uhrzeiten, Beschriftungen)
+   -> Shantell Sans. Bei Zahlen ist Lesbarkeit wichtiger als Laune.
+   ============================================================ */
+
+/* Die großen Überschriften */
+h1,
+.mh-hi,
+.kb-hero h1,
+.kb-dhero h1,
+.mk h1,
+.pagehead h1,
+.nv-kopf-block h1,
+.pf-kopf h1,
+.pf-hero h1,
+.lz-kopf h1,
+.vk-kopf h1{font-family:var(--schrift-titel)!important}
+
+/* Zwischentitel, Zahlen, Uhrzeiten, Beschriftungen */
+h2,
+h3,
+.stat .big,
+.streak-chip,
+.rankbar .rank,
+.next-hero .when,
+.pdot,
+.when,
+.flashcard,
+.flashcard .hint,
+.score-banner .big,
+.log .delta,
+.kal-week span,
+.cal-dayhead b,
+.ev-time,
+.ag-day b,
+.calcol-head b,
+.brand,
+.brand span,
+.tb-bc .t,
+#v-dashboard .dsh-live .tm,
+#v-dashboard .dsh-kpi .kv,
+.lup,
+.lup h2,
+.mh-h2,
+.mh-cont .ti,
+.mh-jul .jt b,
+.mh-cta .tx b,
+.mh-comm .ch b,
+.kb-nivtest .nttx b,
+.kb-rowhead h2,
+.kb-count,
+.kb-h3,
+.kal-trenner h2,
+.kal-hinweis .tx b,
+.ms-zeile b,
+h4,
+.logo span,
+.pc-title,
+.mk h2,
+.mk h3,
+.mk h4,
+.mk-b,
+h2.sec,
+.nv-z b,
+.nvz-stufe,
+.nvz-t,
+.nvz-proz,
+.pf-test-tx b,
+.pf-gr-t,
+.pf-k-niv,
+.pf-k-n,
+.pf-ring b,
+.pf-hf b,
+.pf-termin b,
+.pf-kopfzeile h2,
+.pf-jetzt-t b,
+.pf-m-kopf b,
+.pf-muster-tx b,
+.pf-video-tx b,
+.pf-bereit-z b,
+.pf-zusatz > b,
+.lz-hinweis-t > b,
+.lz-kurs-txt h2,
+.lz-b-h,
+.lz-b-txt h3,
+.lz-gh h2,
+.lz-bk b,
+.lz-extra-txt h3,
+.lz-mix-t > b,
+.vk-z > b,
+.vk-z > div > b,
+.vk-erinnerung-t > b,
+.vk-heute-t > b,
+.vk-karte-tx > b,
+.vk-seite .innen > b,
+.vk-wortgross > b,
+.vk-ende-ring > b,
+.vk-ende > h2,
+.vk-ah h2{font-family:var(--schrift-kopf)!important}
+
+/* Space Grotesk vertrug engen Satz, die Handschriften nicht.
+   Negativer Buchstabenabstand ließ sie zusammenkleben. */
+h1,h2,h3,.pagehead h1{letter-spacing:.005em!important}
+
+/* Caveat Brush gibt es nur in einer Stärke. Ein künstlich fett
+   gerechneter Schnitt sieht ausgefranst aus. */
+h1,.pagehead h1,.mh-hi,.kb-hero h1,.kb-dhero h1{font-weight:400!important}
+
+/* Zahlen, die sich ändern, dürfen die Breite nicht ändern. */
+.stat .big,.score-banner .big,.log .delta,.ev-time,.when,
+#v-dashboard .dsh-kpi .kv,#v-dashboard .dsh-live .tm{font-variant-numeric:tabular-nums}
+
+
+/* ============================================================
+   11. Eine Form für alles — Ordnung statt Vielfalt
+
+   Gemessen, nicht geschätzt. Über die siebzehn Ansichten hinweg
+   gab es:
+
+     11 verschiedene Eckenrundungen bei den Kästen
+     12 verschiedene Eckenrundungen bei den Knöpfen
+     18 verschiedene Rahmen — darunter fünf Cremetöne, die sich
+        um wenige Zahlen unterscheiden und die niemand
+        auseinanderhalten kann
+     12 verschiedene Schatten
+
+   Nichts davon ist einzeln falsch. Zusammen ergibt es genau das
+   Gefühl von "hin und her": jede Seite sieht ein bisschen anders
+   aus als die davor, ohne dass man sagen könnte, warum.
+
+   Hier bleiben übrig: zwei Formen für Kästen, zwei für Knöpfe,
+   eine Linienfarbe, zwei Schatten.
+
+   Bewusst NICHT angefasst: Rahmenbreiten, Innenabstände, Breiten.
+   Die verschieben das Layout. Ecken, Farben und Schatten nicht —
+   deshalb kann sich beim Einschalten nichts bewegen.
+   ============================================================ */
+
+/* ---------- Kästen: eine Rundung ---------- */
+.view .card,.view .hero-card,.view .st-kurs,.view .st-karte,.view .st-chat,
+.view .st-zahlen,.view .td-m,.view .td-card,.view .ub-stat,.view .ub-hero,
+.view .vk-g,.view .calcol,.view .matcard,.view .gate,.view .td-auf,
+.view .td-fin,.view .ev,.view .phase,.view .ub-tcard,.view .vk-z,
+.view .rankbar,.view .stat,.view .badge-card,.view .pbody,.view .log,
+.view .ft-empty{border-radius:16px!important}
+
+/* ---------- Knöpfe: entweder Pille oder Rechteck mit weicher Ecke ---------- */
+.view .btn,.view .st-b,.view .td-li,.view .st-kachel,.view .kb-card,
+.view .pf-k,.view .st-pod,.view .lz-st,.view .ub-mix,.view .vk-btn,
+.view .ub-go2,.view .vk-g-karten,.view .ub-skill,.view .vk-runde,
+.view .matmode{border-radius:14px!important}
+.view .kpill,.view .kb-chip,.view .td-btn,.view .td-tb{border-radius:999px!important}
+
+/* ---------- Eine Linienfarbe statt fünf Cremetönen ---------- */
+.view .card,.view .st-kurs,.view .st-karte,.view .vk-z,.view .vk-g,
+.view .td-m,.view .td-card,.view .st-zahlen,.view .ev,.view .gate,
+.view .td-auf,.view .td-fin,.view .phase,.view .ub-hero,.view .ub-stat,
+.view .ub-tcard,.view .matcard,.view .rankbar,.view .pbody,.view .log{
+  border-color:var(--linie)!important;
+}
+/* Die türkisen Akzentrahmen — auch die waren dreimal leicht anders. */
+.view .calcol,.view .ft-empty{border-color:#BFE7F1!important}
+
+/* ---------- Zwei Schatten, mehr braucht es nicht ----------
+   Der weiche für alles Normale, der versetzte für die drei
+   Elemente, die bewusst wie aufgeklebt wirken sollen. */
+.view .card,.view .st-kurs,.view .st-karte,.view .st-chat,.view .td-m,
+.view .td-card,.view .matcard,.view .ub-hero,.view .ub-stat,.view .phase,
+.view .pbody,.view .log,.view .rankbar{
+  box-shadow:0 2px 10px rgba(20,40,50,.05);
+}
+.view .stat,.view .badge-card,.view .hero-card{
+  box-shadow:var(--schatten);
+}
+
+/* Nachzügler, die eine genauere Regel hatten und deshalb
+   zunächst bei ihrer eigenen Form geblieben sind. */
+.view .kal-trenner,.view .field{border-radius:16px!important}
+.view .ev,.view .gate,.view .ft-empty{border-color:var(--linie)!important}
+.view .st-chat{border-color:transparent!important}
+
+
+
+
+/* ============================================================
+   12. Lesbarkeit — gemessen, nicht geschätzt
+
+   Der Web-Standard verlangt für normalen Text ein Kontrast-
+   verhältnis von 4,5:1 zum Hintergrund, für großen 3:1. Darunter
+   wird Text für Menschen mit schwächeren Augen mühsam und auf
+   einem Handy in der Sonne für alle.
+
+   Gemessen über alle siebzehn Ansichten: 77 Textstellen lagen
+   darunter, verursacht von 23 Farbpaaren. Hier stehen die
+   Gegenmittel. Es sind nur Farben — Größen und Abstände bleiben,
+   wie sie sind, deshalb verschiebt sich nichts.
+
+   Ein Fund, der die Marke betrifft: WEISS AUF TÜRKIS geht nicht
+   auf. Auf #39CCE3 kommt Weiß auf 1,92:1, auf #35AFD0 auf 2,56:1.
+   Die dunkle Tinte dagegen erreicht auf demselben Türkis 7,26:1
+   — und genau so steht es auch auf der Startseite. Türkis ist bei
+   uns eine helle Fläche, kein dunkler Knopf.
+   ============================================================ */
+
+/* ---------- Die graue Nebenschrift ----------
+   #8A97A0 stand an 20 Stellen und kam auf 2,92:1. */
+:root{--m-faint:#6C767D}
+
+/* Das zweite Grau, aus den Tandem- und Prüfungskarten. */
+.view .td-sec,.view .sl,.view .sub,.view .pf-k-anz{color:#78746D}
+
+/* ---------- Gold auf hellem Grund ----------
+   Gold leuchtet, aber es trägt keinen Text. */
+.view .ev-seats.low{color:#896E00}
+.view .lz-bald,.view .td-auf b{color:#8A6E14}
+
+/* ---------- Grün auf Mint ---------- */
+.view .ev-seats.ok{color:#3F800F}
+
+/* ---------- Türkis: dunkle Schrift statt weißer ----------
+   „Beitreten" ist der wichtigste Knopf in Meine Stunden und war
+   mit 1,96:1 der schlechteste Wert im ganzen Schülerbereich —
+   türkise Schrift auf türkisem Grund. */
+.view .btn-turq,.view .btn.btn-turq{color:var(--auf-tuerkis)!important}
+.view .pdot,.view .kal-heute em,.view .ev em,.view .kmo-cell em{color:var(--auf-tuerkis)!important}
+
+/* ---------- Weiß auf mittlerem Türkis ----------
+   Wo Weiß auf Türkis stehen bleiben soll, muss der Grund tiefer
+   werden: auf #12718C kommt Weiß auf 5,58:1. */
+.view .td-btn,.view .gate a,.view .kb-chip.on{background:#12718C!important;border-color:#12718C!important;color:#fff!important}
+
+/* Ein Grau auf reinem Weiß, in der Kalender-Umschaltung. */
+.view .kal-viewtog button{color:#737871}
+
+/* Nachträge aus der zweiten Messung. */
+.view .td-safe,.view .td-safe span{color:#78746D}
+.view .delta.plus{color:#3F800F}
+
+/* Das dunkle Türkis als SCHRIFT auf Creme kam auf 3,7:1 — als
+   Fläche ist es richtig, als kleine Schrift eine Spur zu hell. */
+.view .kb-eyebrow,.view .eyebrow,.view .sec-tag,.view .kicker{color:#14778A}
+
+/* Letzte vier Stellen aus der dritten Messung.
+   Beim Lernpfad musste ich zurückrudern: die dunkle Tinte ist auf
+   dem türkisen Punkt richtig (5,45:1), auf dem roten aber falsch
+   (2,71:1). Der rote Punkt behält deshalb weiße Schrift. */
+.view .pstep.current .pdot{color:#fff!important}
+.view .calcol-head.today em{color:var(--auf-tuerkis)!important}
+.view .zurueck-live span,.view .zurueck-live{color:#14778A}
+.view .lz-st-bald-tx,.view .lz-st-bald-tx span{color:#7E6412!important}
+
+
+/* ============================================================
+   Kein Vorspann über den Überschriften
+
+   Über „Meine Stunden“ stand klein und türkis „DEIN LIVE-UNTERRICHT“ —
+   in einer gerahmten Pille, leicht schief. Das ist doppelt gemoppelt:
+   direkt darunter steht ja schon, worum es geht. Auf
+   deutschoderwas-club.de steht die Überschrift für sich, ohne
+   Etikett darüber. Genau so machen wir es hier auch.
+   ============================================================ */
+.eyebrow,.lup-eyebrow{display:none!important}

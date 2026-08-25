@@ -1,0 +1,209 @@
+/* ============================================================
+   amanda-figur.css — Amanda als Figur im Schülerbereich
+
+   Wird NACH club-stil.css geladen. Fügt nur neue Klassen hinzu und
+   fasst nichts Bestehendes an, ausser dem Hilfe-Chat: der bekommt
+   Amandas Gesicht statt der Sprechblase.
+
+   Alle Bilder liegen in amanda/ als .webp mit durchsichtigem Rand.
+   ============================================================ */
+
+/* ---------- 1. Begrüssungsband auf der Startseite ---------- */
+.am-band{
+  display:grid; grid-template-columns:auto 1fr; gap:18px; align-items:end;
+  background:linear-gradient(135deg,#FFF6D9,var(--karte,#FFFDF3));
+  border:2px solid var(--gelb,#FFE100);
+  border-radius:22px; padding:16px 22px 0; margin-bottom:18px;
+}
+.am-band .am-fig{ height:150px; width:auto; align-self:end; margin-bottom:-2px; }
+.am-band .am-tx{ padding-bottom:18px; }
+.am-band .st-gruss{ display:block; }
+.am-band .st-gruss h1{ margin:0; }
+
+@media(max-width:640px){
+  .am-band{ grid-template-columns:1fr; padding:14px 16px 0; }
+  .am-band .am-fig{ height:104px; order:2; justify-self:center; }
+  .am-band .am-tx{ padding-bottom:6px; }
+}
+
+/* ---------- 2. Amanda sagt etwas (Zuruf neben einer Karte) ---------- */
+.am-zuruf{
+  display:flex; align-items:flex-end; gap:14px;
+  background:var(--creme,#FFF8E0); border-radius:16px;
+  padding:12px 16px 0; margin:14px 0;
+}
+.am-zuruf .am-fig{ height:98px; width:auto; flex:none; margin-bottom:-1px; }
+.am-zuruf .am-sagt{ font-size:14px; line-height:1.5; color:var(--text-soft,#54594A); padding-bottom:14px; }
+.am-zuruf .am-sagt b{ color:var(--text,#20211F); }
+.am-zuruf .am-k{
+  font-family:var(--schrift-notiz,'Caveat',cursive); font-size:20px; font-weight:600;
+  color:var(--tuerkis-dunkel,#1990A4); display:block; line-height:1.1; margin-bottom:1px;
+}
+
+/* ---------- 3. Lob-Fenster: taucht kurz auf und geht wieder ---------- */
+.am-lob{
+  position:fixed; right:20px; bottom:96px; z-index:9400;
+  display:flex; align-items:flex-end; gap:10px;
+  max-width:min(360px, calc(100vw - 40px));
+  pointer-events:none;
+}
+.am-lob img{ height:92px; width:auto; flex:none; }
+.am-lob .blase{
+  position:relative; background:#fff; border:2px solid var(--gelb,#FFE100);
+  border-radius:18px; padding:11px 15px; font-size:14.5px; line-height:1.45;
+  box-shadow:0 10px 30px -12px rgba(32,33,31,.35);
+  font-family:var(--schrift-kopf,'Shantell Sans',sans-serif); font-weight:600;
+}
+.am-lob .blase::before{
+  content:''; position:absolute; left:-8px; bottom:16px; width:12px; height:12px;
+  background:#fff; border-left:2px solid var(--gelb,#FFE100); border-bottom:2px solid var(--gelb,#FFE100);
+  transform:rotate(45deg);
+}
+.am-lob{ animation:am-rein .4s cubic-bezier(.2,.9,.3,1.25) both; }
+.am-lob.am-weg{ animation:am-raus .3s ease forwards; }
+@keyframes am-rein{ from{opacity:0; transform:translateY(14px) scale(.94)} to{opacity:1; transform:none} }
+@keyframes am-raus{ to{opacity:0; transform:translateY(10px) scale(.96)} }
+@media(prefers-reduced-motion:reduce){ .am-lob{animation:none} }
+@media(max-width:560px){ .am-lob{ right:12px; left:12px; bottom:84px; max-width:none } .am-lob img{height:74px} }
+
+/* ---------- 4. Hilfe-Chat bekommt Amandas Gesicht ---------- */
+.hc-btn.am-knopf{
+  background:#fff !important; border:2px solid var(--tinte,#20211F) !important;
+  box-shadow:4px 4px 0 var(--gelb,#FFE100) !important;
+  width:64px !important; height:64px !important; overflow:hidden; padding:0;
+}
+.hc-btn.am-knopf img{ width:60px; height:auto; display:block; margin-bottom:-14px; }
+.hc-btn.am-knopf.am-zu img{ display:none; }
+.hc-btn.am-knopf.am-zu::after{ content:'×'; font-size:26px; color:var(--tinte,#20211F); line-height:1; }
+.hc-box .hc-kopf.am-kopf{
+  background:linear-gradient(135deg,#FFF6D9,#FFFDF3) !important; color:var(--tinte,#20211F) !important;
+  border-bottom:1px solid var(--linie,#E7DFC7); display:flex; align-items:center; gap:10px;
+}
+.hc-kopf.am-kopf img{ height:44px; width:auto; flex:none; margin-bottom:-8px; }
+.hc-kopf.am-kopf b{ font-family:var(--schrift-kopf,'Shantell Sans',sans-serif); font-weight:800; }
+.hc-kopf.am-kopf > div{ min-width:0; }
+.hc-kopf.am-kopf span{ opacity:1 !important; color:var(--text-soft,#54594A) !important; }
+.hc-kopf.am-kopf .hc-zu{ color:var(--text-soft,#54594A) !important; margin-left:auto; }
+.hc-kopf.am-kopf .am-live{
+  display:inline-flex; align-items:center; gap:5px; white-space:nowrap;
+}
+.hc-kopf.am-kopf .am-live i{
+  width:7px; height:7px; border-radius:50%; background:var(--gruen-tief,#4E9E12); display:inline-block;
+}
+.hc-m.bot.am-mit{ position:relative; margin-left:34px; }
+.hc-m.bot.am-mit::before{
+  content:''; position:absolute; left:-34px; bottom:0; width:28px; height:28px;
+  border-radius:50%; background:#fff center/145% no-repeat;
+  background-image:var(--am-kopfbild); border:1.5px solid var(--linie,#E7DFC7);
+}
+
+/* ---------- 5. Amandas eigene Ansicht ---------- */
+.am-portraet{
+  height:120px; width:auto; display:block; margin:0 auto 10px;
+}
+.am-karte-fig{ height:110px; width:auto; flex:none; align-self:flex-end; margin-bottom:-18px; }
+
+/* ============================================================
+   Amanda im eigenen Bereich — der große Chat
+   Zwei Wege stehen nebeneinander: schreiben und sprechen.
+   Die Klassen heißen af-*, damit sie nicht mit dem kleinen
+   Chat unten rechts (hc-*) kollidieren.
+   ============================================================ */
+.af-buehne{
+  display:grid; grid-template-columns:auto 1fr; gap:16px; align-items:end;
+  background:linear-gradient(135deg,#FFF6D9,var(--karte,#FFFDF3));
+  border:2px solid var(--tinte,#20211F); border-radius:22px;
+  box-shadow:3px 4px 0 rgba(32,33,31,.10);
+  padding:18px 22px 0; overflow:hidden; margin-bottom:16px;
+}
+.af-buehne img{ height:130px; width:auto; display:block; margin-bottom:-4px; }
+.af-buehne .tx{ padding-bottom:20px; min-width:0; }
+.af-buehne .eb{
+  font-family:var(--schrift-marker,'Permanent Marker',cursive);
+  color:var(--rot,#DD0000); font-size:14px; display:block; margin-bottom:2px;
+}
+.af-buehne h2{
+  font-family:var(--schrift-titel,'Caveat Brush',cursive); font-weight:400;
+  font-size:clamp(24px,3vw,32px); line-height:1.08; margin:0 0 6px;
+  color:var(--tinte,#20211F);
+}
+.af-buehne p{ margin:0; color:var(--text-soft,#54594A); font-size:14.5px; max-width:52ch; }
+@media(max-width:640px){
+  .af-buehne{ grid-template-columns:1fr; padding:16px 18px 0; }
+  .af-buehne img{ height:96px; }
+  .af-buehne .tx{ padding-bottom:16px; order:-1; }
+}
+
+.af-chat{
+  background:var(--karte,#FFFDF3); border:2px solid var(--tinte,#20211F);
+  border-radius:22px; box-shadow:3px 4px 0 rgba(32,33,31,.10);
+  overflow:hidden; display:flex; flex-direction:column;
+}
+.af-lauf{
+  padding:16px; background:var(--creme,#FFF8E0);
+  min-height:240px; max-height:min(52vh,460px); overflow-y:auto;
+}
+.af-m{
+  max-width:82%; margin-bottom:11px; padding:11px 14px; border-radius:16px;
+  font-size:15px; line-height:1.58;
+}
+.af-m.bot{
+  background:var(--karte,#FFFDF3); border:1.5px solid var(--linie,#E7DFC7);
+  color:var(--tinte,#20211F); border-bottom-left-radius:6px;
+}
+.af-m.du{
+  background:var(--rot,#DD0000); color:#fff; margin-left:auto;
+  border-bottom-right-radius:6px; white-space:pre-wrap;
+}
+.af-m.warte{ color:var(--text-soft,#54594A); font-style:italic; background:none; border:0; }
+.af-m.bot p{ margin:0 0 8px } .af-m.bot p:last-child{ margin-bottom:0 }
+.af-m.bot b{ font-weight:800; color:var(--tuerkis-dunkel,#1990A4); }
+.af-m .hc-bsp{
+  margin:8px 0; padding:8px 12px; border-left:3px solid var(--tuerkis-dunkel,#1990A4);
+  background:var(--tuerkis-hauch,#EAFBFE); border-radius:0 10px 10px 0;
+}
+.af-m .hc-bsp b{
+  color:var(--tinte,#20211F) !important;
+  background:linear-gradient(transparent 58%,var(--gelb,#FFE100) 58%); padding:0 1px;
+}
+.af-m .hc-pkt{ margin:4px 0 4px 2px; padding-left:16px; position:relative; }
+.af-m .hc-pkt::before{
+  content:''; position:absolute; left:2px; top:.64em; width:6px; height:6px;
+  border-radius:50%; background:var(--rot,#DD0000);
+}
+.af-m .hc-merk{
+  margin:10px 0 2px; padding:9px 13px; border:1.5px solid var(--gelb,#FFE100);
+  border-radius:12px; background:#FFFBEC; font-weight:700; color:#6B5A22;
+  display:flex; gap:8px; align-items:flex-start;
+}
+.af-m .hc-merk::before{ content:'★'; color:var(--rot,#DD0000); flex:none; line-height:1.55; }
+
+.af-fuss{ padding:12px; border-top:2px solid var(--tinte,#20211F); background:var(--karte,#FFFDF3); }
+.af-reihe{ display:flex; gap:9px; align-items:flex-end; }
+.af-fuss textarea{
+  flex:1; min-width:0; border:1.5px solid var(--linie,#E7DFC7); border-radius:14px;
+  padding:11px 14px; font-family:inherit; font-size:15px; resize:none;
+  background:#fff; color:var(--tinte,#20211F); box-sizing:border-box;
+}
+.af-fuss textarea:focus{
+  outline:none; border-color:var(--tuerkis-dunkel,#1990A4);
+  box-shadow:0 0 0 3px var(--tuerkis-hauch,#EAFBFE);
+}
+.af-mik,.af-send{ border:0; border-radius:50px; cursor:pointer; font-family:inherit; font-weight:700; flex:none; }
+.af-mik{
+  width:46px; height:46px; border:1.5px solid var(--linie,#E7DFC7);
+  background:var(--creme,#FFF8E0); font-size:19px; padding:0; color:var(--tinte,#20211F);
+}
+.af-mik:hover{ border-color:var(--tuerkis-dunkel,#1990A4); }
+.af-mik.an{ background:var(--rot,#DD0000); border-color:var(--rot,#DD0000); color:#fff; animation:afPuls 1s infinite; }
+@keyframes afPuls{ 50%{ opacity:.55 } }
+@media(prefers-reduced-motion:reduce){ .af-mik.an{ animation:none } }
+.af-send{ background:var(--rot,#DD0000); color:#fff; padding:12px 20px; font-size:15px; }
+.af-send:disabled{ opacity:.5; cursor:default; }
+.af-vor{ display:flex; flex-wrap:wrap; gap:7px; margin-top:11px; }
+.af-vor button{
+  border:1.5px solid var(--linie,#E7DFC7); background:var(--creme,#FFF8E0);
+  color:var(--text-soft,#54594A); border-radius:50px; padding:6px 13px;
+  font-family:inherit; font-size:13px; font-weight:700; cursor:pointer;
+}
+.af-vor button:hover{ border-color:var(--tuerkis-dunkel,#1990A4); color:var(--tuerkis-dunkel,#1990A4); }

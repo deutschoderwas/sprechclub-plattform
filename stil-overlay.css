@@ -1,0 +1,169 @@
+/* ============================================================
+   deutschoderwas — Stil-Versuch „Schulheft-bunt"
+   Legt sich als Schicht ueber die bestehende Seite.
+   Aendert nur das Aussehen, nichts am Inhalt oder an der Technik.
+   ============================================================ */
+
+:root{
+  /* Farben aus dem Styleguide */
+  --tuerkis:#39CCE3; --tuerkis-dunkel:#1990A4; --auf-tuerkis:#063138;
+  --gelb:#FFE100; --gelb-tief:#C9A200; --gruen:#77D42A; --gruen-tief:#4E9E12;
+  --gold-s:#FFCE00; --rot-s:#DD0000; --tinte:#20211F;
+  --creme:#FFF8E0; --karte:#FFFDF3; --linie-s:#E7DFC7;
+  --hand:255px 12px 225px 15px/15px 225px 15px 255px;
+
+  /* die alten Marken-Variablen auf den neuen Stil ziehen */
+  --ink:#20211F; --soft:#54594a; --line:#E7DFC7;
+  --turq:#39CCE3; --turq-d:#1990A4; --teal-ink:#063138; --mint:#EAFBFE;
+  --red:#DD0000; --red-d:#B00000;
+  --gold:#FFCE00; --gold-mark:#FFE100; --gold-d:#C9A200;
+  --bg:#FFF8E0; --warm:#FFFDF3; --pink:#FFF1EE;
+
+  --papier:
+    linear-gradient(90deg, transparent 44px, rgba(221,0,0,.22) 44px, rgba(221,0,0,.22) 46px, transparent 46px),
+    repeating-linear-gradient(180deg, transparent 0 37px, rgba(25,144,164,.12) 37px 38px),
+    var(--karte);
+}
+
+/* ---------- Grundfläche ---------- */
+body{
+  background-color:var(--creme) !important;
+  background-image:
+    radial-gradient(circle at 92% 3%, rgba(57,204,227,.12), transparent 28%),
+    radial-gradient(circle at 5% 14%, rgba(119,212,42,.05), transparent 20%),
+    radial-gradient(circle at 88% 62%, rgba(255,225,0,.06), transparent 20%) !important;
+  background-attachment:fixed !important;
+  color:var(--tinte);
+}
+
+/* ---------- Schriften ---------- */
+h1,h2,h3{ font-family:'Caveat Brush',cursive !important; letter-spacing:.005em; }
+h1{ line-height:1.02 !important; }
+h2{ line-height:1.06 !important; }
+h4,h5,.brand,.btn,.nav .l,.mm-l,.np-name,.np-tag,.sec-tag,.pill,.lvl,.badge,
+.np-num,.np-unit,.np-total,.eyebrow,.livebadge,.wl-badge{
+  font-family:'Shantell Sans',cursive !important; font-weight:700 !important;
+}
+.sub,.hero-note,.tip,small,.note,figcaption{ font-family:'Caveat',cursive; font-size:1.12em; font-weight:600; }
+p,li,td,th,input,textarea,select,label{ font-family:'Inter',system-ui,sans-serif; }
+
+.sec-tag{ color:var(--tuerkis-dunkel) !important; letter-spacing:.10em; }
+
+/* ---------- Der Signature-Move: Caption-Highlight ---------- */
+h1 .mark, h1 .markde, h2 .mark, h2 .markde, .hero h1 .mark{
+  background:none !important; box-shadow:none !important; padding:0 !important;
+  border-radius:0 !important;
+  color:var(--gelb) !important;
+  -webkit-text-stroke:2.5px var(--tinte);
+  paint-order:stroke fill;
+  text-shadow:3px 3px 0 rgba(32,33,31,.22);
+  font-style:normal !important;
+}
+.markde,h1 .markde,h2 .markde{ color:var(--tuerkis) !important; }
+/* kleinere Stellen behalten den klassischen Textmarker */
+h3 .mark,p .mark,.sub .mark,small .mark,li .mark,.hl-t{
+  background:linear-gradient(180deg,transparent 55%,var(--gelb) 55%) !important;
+  color:var(--tinte) !important; -webkit-text-stroke:0 !important;
+  text-shadow:none !important; padding:0 2px !important; border-radius:3px !important;
+}
+h2 .hl-t{ background:none !important; color:var(--tuerkis) !important;
+  -webkit-text-stroke:2.5px var(--tinte); paint-order:stroke fill;
+  text-shadow:3px 3px 0 rgba(32,33,31,.22); }
+h1 .mark,h1 .markde{ -webkit-text-stroke-width:3px; }
+
+/* ---------- Karten: handgezeichnete Ecken, harter Schatten ---------- */
+.pain,.gcard,.tc,.step,.fstep,.np-card,.nc,.wl-card,.frow,.solve,.card,
+.stat,.qcard,.plan,.box{
+  background:var(--karte) !important;
+  border:2.5px solid var(--tinte) !important;
+  border-radius:var(--hand) !important;
+  box-shadow:3px 4px 0 rgba(32,33,31,.10) !important;
+}
+.np-card.np-feat,.np-card.np-plus{ box-shadow:5px 6px 0 rgba(32,33,31,.16) !important; }
+
+/* ---------- Abschnitte ---------- */
+.warm-sec{ background:var(--karte) !important; border-top:2.5px solid var(--linie-s); border-bottom:2.5px solid var(--linie-s); }
+.mint-sec{ background:#EAFBFE !important; }
+
+/* ---------- Hero: Schulheft-Papier ---------- */
+.hero{ background:var(--papier) !important; border-bottom:2.5px solid var(--tinte); position:relative; }
+.hero::after{
+  content:''; position:absolute; top:16px; right:26px; width:42px; height:42px; pointer-events:none;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cpath d='M20 2 C22 14 26 18 38 20 C26 22 22 26 20 38 C18 26 14 22 2 20 C14 18 18 14 20 2 Z' fill='%2377D42A'/%3E%3C/svg%3E") center/contain no-repeat;
+  transform:rotate(10deg);
+}
+.eyebrow{
+  background:rgba(57,204,227,.18) !important; color:var(--auf-tuerkis) !important;
+  border:2px solid var(--tuerkis) !important; border-radius:var(--hand) !important;
+  transform:rotate(-1.2deg); display:inline-block;
+}
+
+/* ---------- Knöpfe ---------- */
+.btn{
+  border-radius:var(--hand) !important;
+  border:2.5px solid var(--auf-tuerkis) !important;
+  box-shadow:2px 3px 0 rgba(6,49,56,.28) !important;
+  transition:transform .15s !important;
+}
+.btn:hover{ transform:translateY(-2px); }
+.btn-primary{ background:var(--tuerkis) !important; color:var(--auf-tuerkis) !important; }
+.btn-ghost{ background:var(--karte) !important; color:var(--tinte) !important;
+  border-color:var(--tinte) !important; box-shadow:2px 3px 0 rgba(32,33,31,.16) !important; }
+
+/* ---------- Pillen & Chips ---------- */
+.pill,.chips span,.lvl{
+  border-radius:var(--hand) !important; border:2px solid var(--tinte) !important;
+  background:var(--karte) !important;
+}
+.pill.t{ background:var(--tuerkis) !important; border-color:var(--auf-tuerkis) !important; color:var(--auf-tuerkis) !important; }
+.pill.g{ background:var(--gelb) !important; color:var(--tinte) !important; }
+.pill.r{ background:rgba(221,0,0,.10) !important; color:var(--rot-s) !important; border-color:var(--rot-s) !important; }
+
+/* ---------- Navigation ---------- */
+.nav{ background:rgba(255,253,243,.94) !important; border-bottom:2.5px solid var(--tinte) !important; }
+.nav .l{ color:var(--tinte) !important; }
+.nav .l:hover{ color:var(--tuerkis-dunkel) !important; }
+.brand .c2{ color:var(--tuerkis-dunkel) !important; }
+
+/* ---------- Bilder ---------- */
+.fimg img,.sph img,.np-bild img,.callframe img,.gcard img{
+  border-radius:18px !important; border:2.5px solid var(--tinte) !important;
+  box-shadow:3px 4px 0 rgba(32,33,31,.12) !important;
+}
+
+/* ---------- Warteliste ---------- */
+.wl-sec{ background:var(--papier) !important; border-top:2.5px solid var(--tinte); }
+.wl-form input,.wl-form textarea,.wl-form select{
+  border:2.5px solid var(--tinte) !important; border-radius:14px !important; background:var(--karte) !important;
+}
+
+/* ---------- Feedback-Kacheln ---------- */
+.tc .st,.proof .st{ color:var(--gold-s) !important; }
+.proof{ background:var(--karte) !important; border-bottom:2.5px solid var(--linie-s) !important; }
+
+/* ---------- Fusszeile ---------- */
+footer{ background:var(--karte) !important; border-top:2.5px solid var(--tinte) !important; color:var(--tinte); }
+
+/* ---------- Saeulen-Karten (nc) ---------- */
+.nc-p{
+  background:var(--karte) !important; border:2.5px solid var(--tinte) !important;
+  border-radius:var(--hand) !important; box-shadow:3px 4px 0 rgba(32,33,31,.10) !important;
+}
+.nc-p h3{ font-family:'Shantell Sans',cursive !important; font-weight:800 !important;
+  color:var(--tuerkis-dunkel) !important; font-size:20px !important; }
+.nc-ic{ background:rgba(57,204,227,.20) !important; border:2.5px solid var(--tinte) !important;
+  border-radius:18px !important; box-shadow:2px 3px 0 rgba(32,33,31,.12) !important; }
+.nc-band{
+  background:var(--gelb) !important; color:var(--tinte) !important;
+  border:2.5px solid var(--tinte) !important; border-radius:var(--hand) !important;
+  box-shadow:3px 4px 0 rgba(32,33,31,.14) !important;
+  font-family:'Shantell Sans',cursive !important;
+}
+.nc-band b{ color:var(--rot-s) !important; }
+.nc-trust{ font-family:'Caveat',cursive !important; font-size:1.22em !important; color:var(--tuerkis-dunkel) !important; }
+
+/* ---------- Doodle-Unterstreichung unter Abschnittstiteln ---------- */
+.sec-head h2::after{
+  content:''; display:block; width:132px; height:12px; margin:10px auto 0;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='12' viewBox='0 0 120 12'%3E%3Cpath d='M2 8 C 20 2 30 10 48 6 C 66 2 78 11 96 6 C 106 3 114 7 118 6' fill='none' stroke='%231990A4' stroke-width='3.8' stroke-linecap='round'/%3E%3C/svg%3E") center/contain no-repeat;
+}

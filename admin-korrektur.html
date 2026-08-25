@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Korrekturen – Julia</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#FBF9F5">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FBF9F5; --surface:#FFFFFF; --ink:#171717; --ink2:#6E6A63; --ink3:#9A958C;
+  --line:#EBE7DF; --line2:#F4F1EA;
+  --acc:#1B9BC0; --acc-d:#14708B; --acc-soft:#E6F8FC; --acc-line:#C7E9F3;
+  --gold:#E8B923; --gold-soft:#FDF8EA; --gold-line:#F0E2BD;
+  --err:#C9453D; --err-soft:#FBEFEE; --err-line:#F0D5D3;
+  --r1:12px; --r2:16px; --r3:22px;
+  --sh:0 1px 2px rgba(23,23,23,.04), 0 8px 24px -16px rgba(23,23,23,.18);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Inter',system-ui,-apple-system,sans-serif;color:var(--ink);background:var(--bg);min-height:100vh;-webkit-font-smoothing:antialiased}
+.ic{flex:none;vertical-align:-.15em}
+@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+.top{position:sticky;top:0;z-index:30;background:rgba(251,249,245,.92);backdrop-filter:saturate(1.4) blur(14px);border-bottom:1px solid var(--line2)}
+.top-in{max-width:900px;margin:0 auto;padding:11px 18px;display:flex;align-items:center;gap:13px}
+.icb{width:38px;height:38px;border-radius:11px;border:1px solid var(--line);background:var(--surface);color:var(--ink2);display:flex;align-items:center;justify-content:center;text-decoration:none;flex:none;transition:.2s}
+.icb:hover{color:var(--ink);border-color:var(--ink3)}
+.tt{flex:1;min-width:0}
+.tt .k{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--acc-d)}
+.tt .t{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:16px;letter-spacing:-.02em}
+.cnt-bdg{background:var(--err);color:#fff;border-radius:999px;font-size:12px;font-weight:700;padding:4px 11px}
+
+.wrap{max-width:900px;margin:0 auto;padding:20px 18px 60px}
+h1{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;letter-spacing:-.03em;margin:0 0 8px}
+.lead{color:var(--ink2);font-size:14.5px;line-height:1.6;margin:0 0 18px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r3);padding:20px;box-shadow:var(--sh);margin-bottom:14px;animation:up .4s cubic-bezier(.16,1,.3,1) both}
+
+.tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.tb{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:9px 17px;font-family:inherit;font-size:14px;font-weight:600;color:var(--ink2);cursor:pointer;transition:.2s}
+.tb:hover{border-color:var(--ink3)}
+.tb.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.tb .n{opacity:.6;font-weight:500;margin-left:5px}
+
+/* Eintrag */
+.eh{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.who{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:16.5px;letter-spacing:-.02em}
+.tag{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:4px 10px;font-size:11.5px;font-weight:700;border:1px solid var(--line);color:var(--ink2);background:var(--line2)}
+.tag.p{background:var(--gold-soft);border-color:var(--gold-line);color:#8A6D00}
+.tag.o{background:var(--err-soft);border-color:var(--err-line);color:var(--err)}
+.tag.f{background:var(--acc-soft);border-color:var(--acc-line);color:var(--acc-d)}
+.dt{font-size:12.5px;color:var(--ink3);margin-left:auto;font-weight:500}
+.auf{font-size:13px;font-weight:600;color:var(--acc-d);margin-bottom:8px}
+.orig{background:var(--line2);border-radius:var(--r2);padding:15px 17px;font-size:15px;line-height:1.75;white-space:pre-wrap;margin-bottom:14px}
+
+.fl{margin-bottom:13px}
+.fl label{display:block;font-size:13px;font-weight:600;color:var(--ink2);margin-bottom:6px}
+.fl .hint{font-weight:400;color:var(--ink3);font-size:12.5px}
+.inp,.ta{width:100%;border:1.5px solid var(--line);border-radius:var(--r2);padding:12px 14px;font-size:15px;font-family:inherit;color:var(--ink);background:var(--surface);outline:none;transition:border-color .2s;line-height:1.7}
+.inp:focus,.ta:focus{border-color:var(--acc)}
+.ta{min-height:130px;resize:vertical}
+.ta.k{min-height:170px}
+.prev{border:1px dashed var(--acc-line);background:var(--acc-soft);border-radius:var(--r2);padding:14px 16px;font-size:15px;line-height:1.85;white-space:pre-wrap;margin-top:8px;min-height:20px}
+.prev .x{color:var(--err);text-decoration:line-through;text-decoration-thickness:1.5px;opacity:.75}
+.prev .y{color:var(--acc-d);font-weight:600;background:#fff;border-radius:5px;padding:1px 5px;box-shadow:0 0 0 1px var(--acc-line)}
+
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chg{width:100%;font-size:11.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);margin:8px 0 2px}
+.ch{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 13px;font-family:inherit;font-size:13px;font-weight:500;color:var(--ink2);cursor:pointer;transition:.15s}
+.ch:hover{border-color:var(--ink3)}
+.ch.on{background:var(--acc-soft);border-color:var(--acc);color:var(--acc-d);font-weight:600}
+
+.btn{border:none;cursor:pointer;font-family:inherit;font-weight:600;font-size:15px;border-radius:999px;padding:13px 24px;display:inline-flex;align-items:center;gap:9px;text-decoration:none;transition:.2s}
+.btn-p{background:var(--acc);color:#fff}
+.btn-p:hover{background:var(--acc-d)}
+.btn-p:disabled{background:var(--line);color:var(--ink3);cursor:not-allowed}
+.btn-s{background:var(--surface);border:1px solid var(--line);color:var(--ink2)}
+.btn-s:hover{border-color:var(--ink3);color:var(--ink)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:6px}
+.saved{font-size:13.5px;font-weight:600;color:var(--acc-d);display:none}
+.saved.on{display:inline}
+.err{font-size:13.5px;font-weight:600;color:var(--err);display:none}
+.err.on{display:inline}
+
+.done{border-top:1px solid var(--line2);margin-top:14px;padding-top:14px}
+.done .dl{font-size:12.5px;font-weight:700;color:var(--acc-d);margin-bottom:7px}
+.done .dt2{font-size:14.5px;line-height:1.65;white-space:pre-wrap;color:var(--ink2)}
+.leer{text-align:center;padding:40px 20px;color:var(--ink2);font-size:14.5px;line-height:1.6}
+#gate{max-width:420px;margin:90px auto;text-align:center}
+@media(max-width:560px){.wrap{padding:16px 14px 50px}.card{padding:16px 15px}.dt{margin-left:0;width:100%}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-in">
+    <a class="icb" id="back" href="admin.html" aria-label="Zurück"></a>
+    <div class="tt"><div class="k">Admin</div><div class="t">Korrekturen</div></div>
+    <span class="cnt-bdg" id="bdg" style="display:none">0</span>
+  </div>
+</header>
+<main class="wrap"><div id="stage"><div class="leer">Wird geladen …</div></div></main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="ui-icons.js"></script>
+<script>
+(function(){
+'use strict';
+var I=window.ICON||function(){return'';};
+var CFG=window.SPRECHCLUB_CONFIG||{};
+var sb=null, me=null, ROWS=[], FILTER='offen';
+
+/* Fehler-Taxonomie — dieselben Tags landen später im Fehler-Trainer */
+var TAX=[
+ ['Grammatik',['Artikel/Genus','Kasus','Adjektivendung','Verbposition','Nebensatz','Zeitform','Konjunktiv','Passiv','Präposition','Reflexiv','Negation','Plural']],
+ ['Wortschatz',['Falsches Wort','Zu einfach','Kollokation','Falscher Freund','Nomen-Verb-Verbindung','Redemittel fehlt']],
+ ['Text & Stil',['Aufbau','Anrede/Schluss','Register (zu locker)','Register (zu steif)','Verbindungswörter','Wiederholung','Aufgabe nicht erfüllt']],
+ ['Formales',['Rechtschreibung','Groß-/Kleinschreibung','Komma','Satzzeichen']]
+];
+
+function esc(x){return String(x==null?'':x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function dat(s){ try{ var d=new Date(s); return d.toLocaleDateString('de-DE',{day:'2-digit',month:'short'})+' · '+d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}); }catch(e){ return ''; } }
+
+/* [falsch|richtig] → durchgestrichen + Korrektur */
+function markup(t){
+  return esc(t||'').replace(/\[([^\[\]|]*)\|([^\[\]|]*)\]/g,function(m,a,b){
+    return (a.trim()?'<span class="x">'+a+'</span> ':'')+'<span class="y">'+b+'</span>';
+  });
+}
+window.__MARKUP=markup;
+
+async function start(){
+  var st=document.getElementById('stage');
+  if(!window.supabase||!CFG.SUPABASE_ANON_KEY){ st.innerHTML='<div class="leer">Konfiguration fehlt.</div>'; return; }
+  sb=window.supabase.createClient(CFG.SUPABASE_URL,CFG.SUPABASE_ANON_KEY);
+  var s=await sb.auth.getSession();
+  var u=s&&s.data&&s.data.session?s.data.session.user:null;
+  if(!u){ st.innerHTML='<div id="gate" class="card"><h1>Bitte einloggen</h1><p class="lead">Melde dich im Admin-Bereich an.</p><a class="btn btn-p" href="admin.html">'+I('arrowR',17)+'<span>Zum Admin</span></a></div>'; return; }
+  var pr=await sb.from('profiles').select('is_admin,is_teacher,name').eq('id',u.id).single();
+  var p=pr.data||{};
+  if(!p.is_admin&&!p.is_teacher){ st.innerHTML='<div id="gate" class="card"><h1>Kein Zugriff</h1><p class="lead">Dieses Konto hat keine Lehrer- oder Admin-Rechte.</p></div>'; return; }
+  me=u;
+  await laden();
+}
+
+async function laden(){
+  var r=await sb.from('korrekturen').select('*').order('created_at',{ascending:true}).limit(300);
+  ROWS=(r&&r.data)||[];
+  /* Namen der Schüler nachladen */
+  var ids=[];
+  ROWS.forEach(function(k){ if(ids.indexOf(k.user_id)<0) ids.push(k.user_id); });
+  var NAM={};
+  if(ids.length){
+    try{
+      var pr=await sb.from('profiles').select('id,name,email,level,tier').in('id',ids);
+      (pr.data||[]).forEach(function(p){ NAM[p.id]=p; });
+    }catch(e){}
+  }
+  ROWS.forEach(function(k){ k.__p=NAM[k.user_id]||{}; });
+  zeichne();
+}
+
+function zeichne(){
+  var offen=ROWS.filter(function(k){return k.status!=='erledigt';});
+  var fertig=ROWS.filter(function(k){return k.status==='erledigt';});
+  var b=document.getElementById('bdg');
+  b.textContent=offen.length; b.style.display=offen.length?'':'none';
+
+  var liste = FILTER==='offen'?offen : FILTER==='fertig'?fertig.slice().reverse() : ROWS.slice().reverse();
+
+  var h='<h1>Korrekturen</h1>'
+   +'<p class="lead">Hier landen die Texte deiner Mitglieder. Was du hier schreibst, sehen sie sofort in ihrem Club.</p>'
+   +'<div class="tabs">'
+   +'<button class="tb'+(FILTER==='offen'?' on':'')+'" onclick="__flt(\'offen\')">Offen<span class="n">'+offen.length+'</span></button>'
+   +'<button class="tb'+(FILTER==='fertig'?' on':'')+'" onclick="__flt(\'fertig\')">Erledigt<span class="n">'+fertig.length+'</span></button>'
+   +'<button class="tb'+(FILTER==='alle'?' on':'')+'" onclick="__flt(\'alle\')">Alle<span class="n">'+ROWS.length+'</span></button>'
+   +'</div>';
+
+  if(!liste.length){
+    h+='<div class="card"><div class="leer">'+(FILTER==='offen'?'Alles abgearbeitet. Schön.':'Noch nichts hier.')+'</div></div>';
+  } else {
+    h+=liste.map(karte).join('');
+  }
+  document.getElementById('stage').innerHTML=h;
+  liste.forEach(function(k){ if(k.status!=='erledigt') vorschau(k.id); });
+}
+
+function karte(k){
+  var fertig=k.status==='erledigt';
+  var p=k.__p||{};
+  var tags=k.fehler_tags||[];
+  var h='<div class="card" id="c_'+k.id+'">'
+   +'<div class="eh"><span class="who">'+esc(p.name||p.email||'Mitglied')+'</span>'
+   +(p.level?'<span class="tag">'+esc(p.level)+'</span>':'')
+   +(p.tier?'<span class="tag'+(p.tier==='premium'?' p':'')+'">'+esc(p.tier)+'</span>':'')
+   +'<span class="tag'+(k.typ==='pruefung'?' p':'')+'">'+(k.typ==='pruefung'?'Prüfungsaufgabe':'Freier Text')+'</span>'
+   +'<span class="tag '+(fertig?'f':'o')+'">'+(fertig?'erledigt':'offen')+'</span>'
+   +'<span class="dt">'+dat(k.created_at)+'</span></div>'
+   +(k.aufgabe?'<div class="auf">'+esc(k.aufgabe)+'</div>':'')
+   +'<div class="orig">'+esc(k.inhalt)+'</div>';
+
+  if(fertig){
+    h+='<div class="done">'
+      +(k.korrigiert_html?'<div class="dl">Korrigierte Fassung</div><div class="prev" style="margin-bottom:12px">'+k.korrigiert_html+'</div>':'')
+      +'<div class="dl">Deine Erklärung</div><div class="dt2">'+esc(k.feedback||'—')+'</div>'
+      +(tags.length?'<div class="chips" style="margin-top:10px">'+tags.map(function(t){return '<span class="ch on">'+esc(t)+'</span>';}).join('')+'</div>':'')
+      +'<div class="row"><button class="btn btn-s" onclick="__wieder(\''+k.id+'\')">'+I('arrowL',16)+'<span>Nochmal bearbeiten</span></button></div>'
+      +'</div>';
+  } else {
+    h+='<div class="fl"><label for="k_'+k.id+'">Korrigierte Fassung <span class="hint">— markiere Änderungen mit <b>[falsch|richtig]</b></span></label>'
+      +'<textarea class="ta k" id="k_'+k.id+'" oninput="__prev(\''+k.id+'\')">'+esc(k.korrigiert_html?'':k.inhalt)+'</textarea>'
+      +'<div class="prev" id="p_'+k.id+'"></div></div>'
+      +'<div class="fl"><label for="f_'+k.id+'">Deine Erklärung <span class="hint">— warum, nicht nur was</span></label>'
+      +'<textarea class="ta" id="f_'+k.id+'" placeholder="Was hat gut funktioniert? Was ist das eine Muster, an dem ihr jetzt arbeitet?"></textarea></div>'
+      +'<div class="fl"><label>Fehler-Tags <span class="hint">— fließen in den Fehler-Trainer</span></label><div class="chips" id="t_'+k.id+'">'
+      +TAX.map(function(g){
+          return '<div class="chg">'+g[0]+'</div>'+g[1].map(function(t){
+            return '<button type="button" class="ch" data-t="'+esc(t)+'" onclick="this.classList.toggle(\'on\')">'+esc(t)+'</button>';
+          }).join('');
+        }).join('')
+      +'</div></div>'
+      +'<div class="fl"><label for="a_'+k.id+'">Sprachnachricht <span class="hint">— optional, Link zu einer Audiodatei</span></label>'
+      +'<input class="inp" id="a_'+k.id+'" placeholder="https://…"></div>'
+      +'<div class="row"><button class="btn btn-p" id="b_'+k.id+'" onclick="__save(\''+k.id+'\')">'+I('check',17)+'<span>An das Mitglied schicken</span></button>'
+      +'<span class="saved" id="s_'+k.id+'">Gespeichert.</span><span class="err" id="e_'+k.id+'"></span></div>';
+  }
+  return h+'</div>';
+}
+
+window.__flt=function(f){ FILTER=f; zeichne(); };
+window.__prev=function(id){ vorschau(id); };
+function vorschau(id){
+  var t=document.getElementById('k_'+id), p=document.getElementById('p_'+id);
+  if(t&&p) p.innerHTML=markup(t.value);
+}
+window.__wieder=function(id){
+  var k=ROWS.filter(function(x){return x.id===id;})[0]; if(!k) return;
+  k.status='offen'; zeichne();
+};
+window.__save=async function(id){
+  var k=ROWS.filter(function(x){return x.id===id;})[0]; if(!k) return;
+  var kt=document.getElementById('k_'+id).value.trim();
+  var fb=document.getElementById('f_'+id).value.trim();
+  var au=document.getElementById('a_'+id).value.trim();
+  var tags=[].slice.call(document.querySelectorAll('#t_'+id+' .ch.on')).map(function(c){return c.getAttribute('data-t');});
+  var b=document.getElementById('b_'+id), s=document.getElementById('s_'+id), e=document.getElementById('e_'+id);
+  e.className='err';
+  if(!fb&&!kt){ e.className='err on'; e.textContent='Schreib wenigstens eine kurze Rückmeldung.'; return; }
+  b.disabled=true; b.innerHTML='<span>Wird gesendet …</span>';
+  try{
+    var r=await sb.from('korrekturen').update({
+      status:'erledigt',
+      feedback:fb||null,
+      feedback_audio:au||null,
+      korrigiert_html:kt?markup(kt):null,
+      fehler_tags:tags.length?tags:null,
+      answered_at:new Date().toISOString()
+    }).eq('id',id);
+    if(r.error) throw r.error;
+    s.className='saved on';
+    Object.assign(k,{status:'erledigt',feedback:fb,feedback_audio:au,korrigiert_html:kt?markup(kt):null,fehler_tags:tags});
+    setTimeout(zeichne,600);
+  }catch(err){
+    e.className='err on'; e.textContent='Fehler: '+(err.message||'unbekannt');
+    b.disabled=false; b.innerHTML=I('check',17)+'<span>An das Mitglied schicken</span>';
+  }
+};
+
+document.getElementById('back').innerHTML=I('arrowL',19);
+start();
+})();
+</script>
+</body>
+</html>

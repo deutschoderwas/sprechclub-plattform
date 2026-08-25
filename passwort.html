@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neues Passwort — Sprechclub | deutschoderwas</title>
+<meta name="robots" content="noindex">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--primary:#DD0000;--secondary:#1A1A1A;--cream:#FFFCF5;--text:#1A1A1A;--muted:#6B7280;--border:#F0E5D8}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--cream);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.card{background:#fff;border:1px solid var(--border);border-radius:20px;padding:34px;max-width:420px;width:100%;text-align:center}
+h1{font-family:'Space Grotesk',sans-serif;font-size:24px;margin-bottom:8px}
+p{color:var(--muted);font-size:14px;margin-bottom:18px}
+input{width:100%;padding:12px 14px;border:2px solid var(--border);border-radius:12px;font-family:inherit;font-size:15px;margin-bottom:10px}
+button{width:100%;padding:13px;border:none;border-radius:50px;background:var(--primary);color:#fff;font-weight:700;font-size:15px;cursor:pointer;font-family:inherit}
+.msg{margin-top:12px;font-size:14px;font-weight:600;min-height:20px}
+.ok{color:#0F6E56}.err{color:var(--primary)}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Neues Passwort 🔑</h1>
+  <p>Wähle ein neues Passwort für dein Sprechclub-Konto (mindestens 8 Zeichen).</p>
+  <input type="password" id="p1" placeholder="Neues Passwort">
+  <input type="password" id="p2" placeholder="Nochmal wiederholen" onkeydown="if(event.key==='Enter')save()">
+  <button onclick="save()">Passwort speichern</button>
+  <div class="msg" id="msg"></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script>
+const CFG = window.SPRECHCLUB_CONFIG;
+const sb = supabase.createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY);
+function show(ok, t){ const m=document.getElementById('msg'); m.className='msg '+(ok?'ok':'err'); m.textContent=t; }
+(async()=>{
+  // Supabase setzt die Session automatisch aus dem Link (Recovery)
+  await new Promise(r=>setTimeout(r, 600));
+  const { data:{ session } } = await sb.auth.getSession();
+  if (!session) show(false,'Der Link ist abgelaufen oder ungültig. Fordere auf der Startseite unter „Passwort vergessen?" einen neuen an.');
+})();
+async function save(){
+  const p1=document.getElementById('p1').value, p2=document.getElementById('p2').value;
+  if (p1.length < 8) return show(false,'Mindestens 8 Zeichen, bitte.');
+  if (p1 !== p2) return show(false,'Die Passwörter stimmen nicht überein.');
+  const { error } = await sb.auth.updateUser({ password: p1 });
+  if (error) return show(false,'Fehler: '+error.message);
+  show(true,'✓ Gespeichert! Du wirst angemeldet…');
+  setTimeout(()=>location.href='/schuelerbereich', 900);
+}
+</script>
+</body>
+</html>
