@@ -13,6 +13,16 @@
   var reax = {}, corr = {}, savedCorr = {};
   var replyTo = null, zielSlug = null;
   var chan = null, badgeChan = null;
+  /* Robustheit: Wir merken uns, wie weit der Verlauf geladen ist und
+     wann die letzte Nachricht kam. Nach jedem Verbindungsabbruch —
+     und am Handy passiert das staendig — holen wir genau die Luecke nach. */
+  var SEITE = 60;               // so viele Nachrichten pro Ladung
+  var aeltesteZeit = null;      // Anfang des geladenen Verlaufs
+  var letzteZeit = null;        // Ende des geladenen Verlaufs
+  var mehrDa = false;           // gibt es noch aeltere?
+  var holtGerade = false;
+  var verbunden = true;
+  var FELDER = 'id,user_id,kind,body,audio_path,audio_secs,image_path,author_name,created_at,pinned_at,antwort_auf';
   var rec = null, recStream = null, recChunks = [], recStart = 0;
 
   function getSb(){ try{ return window.sb || (typeof sb!=='undefined'?sb:null);}catch(e){return null;} }
@@ -773,10 +783,16 @@
     if(zb) zb.addEventListener('click',function(){ var w=q('.comm'); if(w) w.classList.remove('chatauf'); });
     var cw=q('.comm'); if(cw) cw.classList.add('chatauf');
     renderComposer(canPost);
-    var felder='id,user_id,kind,body,audio_path,audio_secs,image_path,author_name,created_at,pinned_at,antwort_auf';
-    var res=await sbc.from('community_messages').select(felder).eq('channel',slug).is('deleted_at',null).order('created_at').limit(200);
-    if(res.error){ res=await sbc.from('community_messages').select('id,user_id,kind,body,audio_path,audio_secs,image_path,author_name,created_at,pinned_at').eq('channel',slug).is('deleted_at',null).order('created_at').limit(200); }
-    var rows=res.data||[]; curMsgs=rows;
+    /* Die NEUESTEN zuerst holen und dann umdrehen. Vorher wurden die
+       ersten 200 geladen — in einem vollen Kanal haette man ewig alte
+       Nachrichten gesehen und die neuen nie. */
+    var res=await sbc.from('community_messages').select(FELDER).eq('channel',slug).is('deleted_at',null)
+              .order('created_at',{ascending:false}).limit(SEITE);
+    if(res.error){ res=await sbc.from('community_messages').select('id,user_id,kind,body,audio_path,audio_secs,image_path,author_name,created_at,pinned_at').eq('channel',slug).is('deleted_at',null).order('created_at',{ascending:false}).limit(SEITE); }
+    var rows=(res.data||[]).slice().reverse(); curMsgs=rows;
+    mehrDa = (res.data||[]).length >= SEITE;
+    aeltesteZeit = rows.length ? rows[0].created_at : null;
+    letzteZeit  = rows.length ? rows[rows.length-1].created_at : null;
     await hydrateMedia(rows);
     reax={}; corr={};
     await loadReactions(rows.map(function(m){return m.id;}));
@@ -1018,7 +1034,9 @@
         if(dl!==last){ last=dl; out+='<div class="dsep">'+E(dayLabel(m.created_at))+'</div>'; }
         out+=strangHtml(m,st.kinder);
       });
-      box.innerHTML=out;
+      box.innerHTML=(mehrDa?'<button type="button" class="cm-mehr" id="cmMehr">Ältere Nachrichten laden</button>':'')+out;
+      var mb=box.querySelector('#cmMehr');
+      if(mb) mb.addEventListener('click',function(){ ladeAeltere(mb); });
     }
     box.scrollTop=box.scrollHeight;
     if(!box.__b){ box.__b=true; box.addEventListener('click',onFeedClick); if(!window.__cmDoc){ window.__cmDoc=true; document.addEventListener('click',function(){ var p=document.querySelector('#v-community .repop'); if(p)p.remove(); var e=document.querySelector('#v-community .emopick'); if(e)e.style.display='none'; }); } }
@@ -1049,7 +1067,14 @@
     return w;
   }
   function appendMsg(m){
+    /* Nach einem Verbindungsabbruch kann dieselbe Nachricht zweimal
+       ankommen — einmal live, einmal beim Nachholen. Einmal reicht. */
+    if(m && m.id){
+      for(var _i=0;_i<curMsgs.length;_i++){ if(curMsgs[_i].id===m.id) return; }
+      if(q('[data-id="'+m.id+'"]')) return;
+    }
     curMsgs.push(m);
+    if(m && m.created_at && (!letzteZeit || m.created_at > letzteZeit)) letzteZeit = m.created_at;
     var box=q('#cmFeed'); if(!box) return;
     if(box.querySelector('.cm-empty')) box.innerHTML='';
     var near=box.scrollHeight-box.scrollTop-box.clientHeight<140;
@@ -1151,13 +1176,43 @@
     replyTo=null; paintReply();
     var row={channel:cur,kind:'text',body:t,author_name:myName};
     if(aw) row.antwort_auf=aw;
+    await sendeZeile(row,tmp);
+    sending=false;
+  }
+
+  /* Frueher verschwand ein Sendefehler still: die Nachricht stand da,
+     war aber nie gespeichert. Jetzt sieht man es — und kann sie mit
+     einem Tippen noch einmal schicken. */
+  async function sendeZeile(row,tmp){
+    var node=q('[data-id="'+tmp+'"]');
+    if(node){ node.classList.add('m-sendet'); node.classList.remove('m-fehler'); }
     try{
       var res=await sbc.from('community_messages').insert(row).select('id').single();
-      if(res.error&&aw){ delete row.antwort_auf; res=await sbc.from('community_messages').insert(row).select('id').single(); }
-      var node=q('[data-id="'+tmp+'"]'); if(node&&res.data) node.setAttribute('data-id',res.data.id);
+      if(res.error && row.antwort_auf){ delete row.antwort_auf; res=await sbc.from('community_messages').insert(row).select('id').single(); }
+      if(res.error) throw res.error;
+      node=q('[data-id="'+tmp+'"]');
+      if(node && res.data){
+        node.setAttribute('data-id',res.data.id);
+        node.classList.remove('m-sendet','m-fehler');
+        var w=node.querySelector('.m-warn'); if(w) w.remove();
+        for(var i=0;i<curMsgs.length;i++){ if(curMsgs[i].id===tmp){ curMsgs[i].id=res.data.id; break; } }
+      }
       notifyAdmin(cur);
-    }catch(e){}
-    sending=false;
+      return true;
+    }catch(e){
+      node=q('[data-id="'+tmp+'"]');
+      if(node){
+        node.classList.remove('m-sendet'); node.classList.add('m-fehler');
+        if(!node.querySelector('.m-warn')){
+          var d=document.createElement('div');
+          d.className='m-warn';
+          d.innerHTML='Nicht gesendet <button type="button" data-nochmal="'+E(tmp)+'">nochmal senden</button>';
+          node.appendChild(d);
+          d.querySelector('button').addEventListener('click',function(){ sendeZeile(row,tmp); });
+        }
+      }
+      return false;
+    }
   }
 
   // ---------- Audio ----------
@@ -1250,6 +1305,70 @@
       updateBadge(m.channel); updateGroupCounts();
     }).subscribe();
   }
+  /* Holt alles, was seit der letzten bekannten Nachricht geschrieben
+     wurde. Wird nach jedem erfolgreichen Verbinden aufgerufen — damit
+     schliesst sich die Luecke, die durch Funkloch oder Bildschirm-aus
+     entstanden ist. */
+  async function nachholen(){
+    if(mode!=='channel' || !cur || !letzteZeit || holtGerade) return;
+    holtGerade = true;
+    try{
+      var r = await sbc.from('community_messages').select(FELDER)
+                .eq('channel',cur).is('deleted_at',null)
+                .gt('created_at',letzteZeit).order('created_at').limit(200);
+      var neue = (r && r.data) || [];
+      if(neue.length){
+        await hydrateMedia(neue);
+        await loadReactions(neue.map(function(m){return m.id;}));
+        neue.forEach(appendMsg);
+      }
+    }catch(e){}
+    holtGerade = false;
+  }
+
+  /* Aeltere Nachrichten oben nachladen — ohne dass der Feed springt. */
+  async function ladeAeltere(btn){
+    if(!mehrDa || !aeltesteZeit || holtGerade) return;
+    holtGerade = true;
+    if(btn){ btn.disabled=true; btn.textContent='Lädt …'; }
+    var box=q('#cmFeed');
+    var vorher = box ? box.scrollHeight : 0;
+    try{
+      var r = await sbc.from('community_messages').select(FELDER)
+                .eq('channel',cur).is('deleted_at',null)
+                .lt('created_at',aeltesteZeit)
+                .order('created_at',{ascending:false}).limit(SEITE);
+      var alte = ((r && r.data) || []).slice().reverse();
+      mehrDa = ((r && r.data) || []).length >= SEITE;
+      if(alte.length){
+        await hydrateMedia(alte);
+        await loadReactions(alte.map(function(m){return m.id;}));
+        await loadCorrections(alte.map(function(m){return m.id;}));
+        aeltesteZeit = alte[0].created_at;
+        curMsgs = alte.concat(curMsgs);
+        renderFeed(curMsgs);
+        if(box) box.scrollTop = box.scrollHeight - vorher;   // Blick bleibt stehen
+      }
+    }catch(e){}
+    holtGerade = false;
+  }
+
+  /* Eine ruhige Zeile statt einer Fehlermeldung: sie sagt Bescheid,
+     wenn gerade nichts durchkommt, und verschwindet von selbst wieder. */
+  function zeigeVerbindung(ok){
+    if(verbunden===ok) return;
+    verbunden = ok;
+    var chat=q('#cmChat'); if(!chat) return;
+    var b=chat.querySelector('.cm-offline');
+    if(ok){ if(b) b.remove(); return; }
+    if(b) return;
+    var d=document.createElement('div');
+    d.className='cm-offline';
+    d.textContent='Keine Verbindung — neue Nachrichten kommen, sobald du wieder online bist.';
+    var hd=chat.querySelector('.ch-hd');
+    if(hd&&hd.parentNode) hd.parentNode.insertBefore(d, hd.nextSibling);
+  }
+
   function subscribe(slug){
     if(chan){ try{sbc.removeChannel(chan);}catch(e){} chan=null; }
     chan=sbc.channel('cmv2:'+slug)
@@ -1260,7 +1379,26 @@
       })
       .on('postgres_changes',{event:'INSERT',schema:'public',table:'community_reactions'},function(p){ var m=p.new; if(m&&m.message_id&&q('[data-id="'+m.message_id+'"]')) loadReactions([m.message_id]).then(function(){updateRc(m.message_id);}); })
       .on('postgres_changes',{event:'INSERT',schema:'public',table:'community_corrections',filter:'channel=eq.'+slug},function(p){ var c=p.new; if(!c||c.deleted_at) return; (corr[c.message_id]||(corr[c.message_id]=[])).push(c); var row=q('[data-id="'+c.message_id+'"]'); var slot=row&&row.querySelector('[data-corrslot]'); if(slot) slot.innerHTML=corrsFor(c.message_id); })
-      .subscribe();
+      .subscribe(function(status){
+        if(status==='SUBSCRIBED'){ zeigeVerbindung(true); nachholen(); }
+        else if(status==='CHANNEL_ERROR'||status==='TIMED_OUT'||status==='CLOSED'){ zeigeVerbindung(false); }
+      });
+  }
+
+  /* Am Handy schlaeft die Verbindung, sobald der Bildschirm aus geht
+     oder das Netz wechselt. Beim Zurueckkommen bauen wir sie neu auf
+     und holen die Luecke nach. Ohne das bleibt der Chat still stehen,
+     ohne dass jemand merkt, dass etwas fehlt. */
+  function wiederVerbinden(){
+    if(mode!=='channel'||!cur) return;
+    subscribe(cur);
+  }
+  if(!window.__cmWach){
+    window.__cmWach = true;
+    document.addEventListener('visibilitychange',function(){ if(!document.hidden) wiederVerbinden(); });
+    window.addEventListener('online',function(){ zeigeVerbindung(true); wiederVerbinden(); });
+    window.addEventListener('offline',function(){ zeigeVerbindung(false); });
+    window.addEventListener('focus',wiederVerbinden);
   }
   function countOnline(){ var ON=window.CLUB_ONLINE||{}; return roster.filter(function(m){return ON[m.id];}).length; }
   function paintPresence(){
