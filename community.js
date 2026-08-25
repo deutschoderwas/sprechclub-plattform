@@ -596,7 +596,7 @@
   function shellHtml(){
     return '<div class="pagehead"><h1>Community-Chat</h1><p>Schreib mit anderen Mitgliedern — nach Stufe, Thema und Ziel sortiert.</p></div>'+
       '<div class="comm">'+
-        '<div class="cs"><div class="cs-h"><b>Community</b><div class="st"><i></i>'+roster.length+' Mitglieder · <span id="cmOnline">'+countOnline()+'</span> online</div></div>'+
+        '<div class="cs"><div class="cs-h"><b>Community</b><div class="st"><i></i><span id="cmOnline">'+countOnline()+'</span> gerade online</div></div>'+
           '<div class="cs-srch"><input type="search" id="cmSearch" placeholder="Suchen …" autocomplete="off"></div>'+
           '<div class="cs-l">'+sideHtml()+'</div></div>'+
         '<div class="chat" id="cmChat"></div>'+
@@ -638,21 +638,66 @@
   }
 
   function rosterHtml(){
-    var ON=window.CLUB_ONLINE||{};
-    var team=roster.filter(function(m){return m.is_team;});
-    var onl=roster.filter(function(m){return !m.is_team&&ON[m.id];});
-    var off=roster.filter(function(m){return !m.is_team&&!ON[m.id];});
-    function row(m,cls){
-      var fn=String(m.name||'Mitglied').trim().split(/\s+/)[0];
-      return '<div class="mem'+(cls==='off'?' off':'')+'"><div class="mw"><div class="ava '+avClass(m.name)+'">'+E(initials(fn))+'</div><span class="pr'+(cls==='off'?' of':'')+'"></span></div>'+
-        '<div><div class="mn">'+E(fn)+'</div><div class="msb">'+(m.is_team?'Team':(m.level?E(m.level):'Mitglied'))+'</div></div></div>';
-    }
-    var h='';
-    if(team.length){ h+='<h4>Team</h4>'+team.map(function(m){return row(m,ON[m.id]?'on':'off');}).join(''); }
-    if(onl.length){ h+='<h4 style="margin-top:6px">Online — '+onl.length+'</h4>'+onl.map(function(m){return row(m,'on');}).join(''); }
-    if(off.length){ h+='<h4 style="margin-top:6px">Mitglieder — '+off.length+'</h4>'+off.slice(0,40).map(function(m){return row(m,'off');}).join(''); }
-    if(!h) h='<div class="cm-empty">Noch keine Mitglieder.</div>';
-    return h;
+    /* Keine Namensliste mehr: wer hier lernt, geht niemanden etwas an.
+       Namen erscheinen nur noch an den Beitraegen, die jemand schreibt.
+       Statt einer Mitgliederzahl zeigen wir, was wirklich los ist. */
+    var f = window.__commAkt || {};
+    var wo = (f.woche == null) ? '…' : f.woche;
+    var th = (f.themen == null) ? '…' : f.themen;
+    var heute = amandaFrage();
+    return ''
+      + '<div class="akt">'
+      +   '<h4>Diese Woche</h4>'
+      +   '<div class="akt-z"><b id="aktWoche">' + wo + '</b><span>' + (wo===1?'Beitrag':'Beiträge') + '</span></div>'
+      +   '<div class="akt-z"><b id="aktThemen">' + th + '</b><span>' + (th===1?'Thema':'Themen') + '</span></div>'
+      +   '<div class="akt-hin">Schreib etwas — jede Frage hilft auch den anderen.</div>'
+      + '</div>'
+      + '<div class="akt amanda">'
+      +   '<h4>Amandas Frage des Tages</h4>'
+      +   '<p class="akt-frage">' + E(heute) + '</p>'
+      +   '<div class="akt-hin">Antworte einfach im Kanal, der dir am besten passt.</div>'
+      + '</div>';
+  }
+
+  /* Eine feste Frage pro Tag — gleiche Frage fuer alle, ohne Server.
+     Klar als Amandas Frage gekennzeichnet, damit niemand sie fuer
+     einen Beitrag eines Mitglieds haelt. */
+  function amandaFrage(){
+    var F = [
+      'Welches deutsche Wort findest du am schönsten — und warum?',
+      'Was war diese Woche dein kleiner Erfolg auf Deutsch?',
+      'Welchen Satz sagst du im Alltag am häufigsten?',
+      'Was verstehst du im Deutschen immer noch nicht?',
+      'Lieber schreiben oder lieber sprechen? Und warum?',
+      'Welches Wort hast du zuletzt neu gelernt?',
+      'Was war deine peinlichste Verwechslung auf Deutsch?',
+      'Wo sprichst du im Alltag am meisten Deutsch?',
+      'Welche Serie oder welchen Podcast schaust du auf Deutsch?',
+      'Was möchtest du bis Ende des Monats auf Deutsch schaffen?',
+      'Welche Regel vergisst du jedes Mal wieder?',
+      'Was hilft dir mehr: Grammatik üben oder einfach reden?',
+      'Welches deutsche Wort gibt es in deiner Sprache nicht?',
+      'Wann hast du dich zuletzt getraut, Deutsch zu sprechen?'
+    ];
+    var d = new Date();
+    var tag = Math.floor((d - new Date(d.getFullYear(),0,0)) / 864e5);
+    return F[tag % F.length];
+  }
+
+  /* Zaehlt, was in den letzten sieben Tagen geschrieben wurde. */
+  async function ladeAktivitaet(){
+    try{
+      var seit = new Date(Date.now() - 7*864e5).toISOString();
+      var r = await sbc.from('community_messages')
+        .select('channel').gte('created_at', seit).is('deleted_at', null).limit(1000);
+      var rows = (r && r.data) || [];
+      var themen = {};
+      rows.forEach(function(m){ if(m.channel) themen[m.channel] = 1; });
+      window.__commAkt = { woche: rows.length, themen: Object.keys(themen).length };
+      var a = q('#aktWoche'), b = q('#aktThemen');
+      if(a) a.textContent = rows.length;
+      if(b) b.textContent = Object.keys(themen).length;
+    }catch(e){}
   }
 
   function bindSidebar(){
