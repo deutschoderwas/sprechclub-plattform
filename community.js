@@ -596,7 +596,7 @@
   function shellHtml(){
     return '<div class="pagehead"><h1>Community-Chat</h1><p>Schreib mit anderen Mitgliedern — nach Stufe, Thema und Ziel sortiert.</p></div>'+
       '<div class="comm">'+
-        '<div class="cs"><div class="cs-h"><b>Community</b><div class="st"><i></i><span id="cmOnline">'+countOnline()+'</span> gerade online</div></div>'+
+        '<div class="cs"><div class="cs-h"><b>Community</b><div class="st"><i></i><span id="cmMitglieder">…</span> Mitglieder · <span id="cmOnline">'+countOnline()+'</span> online</div></div>'+
           '<div class="cs-srch"><input type="search" id="cmSearch" placeholder="Suchen …" autocomplete="off"></div>'+
           '<div class="cs-l">'+sideHtml()+'</div></div>'+
         '<div class="chat" id="cmChat"></div>'+
@@ -638,14 +638,20 @@
   }
 
   function rosterHtml(){
-    /* Keine Namensliste mehr: wer hier lernt, geht niemanden etwas an.
-       Namen erscheinen nur noch an den Beitraegen, die jemand schreibt.
-       Statt einer Mitgliederzahl zeigen wir, was wirklich los ist. */
+    /* Keine Namensliste: wer hier lernt, geht niemanden etwas an.
+       Namen stehen nur noch an den Beitraegen, die jemand schreibt.
+       Die Zahlen kommen echt aus der Datenbank (RPC community_zahlen). */
     var f = window.__commAkt || {};
+    var mg = (f.mitglieder == null) ? '…' : f.mitglieder;
     var wo = (f.woche == null) ? '…' : f.woche;
     var th = (f.themen == null) ? '…' : f.themen;
     var heute = amandaFrage();
     return ''
+      + '<div class="akt akt-mg">'
+      +   '<h4>Community-Mitglieder</h4>'
+      +   '<div class="akt-gross" id="aktMitglieder">' + mg + '</div>'
+      +   '<div class="akt-hin">Alle lernen hier Deutsch — genau wie du.</div>'
+      + '</div>'
       + '<div class="akt">'
       +   '<h4>Diese Woche</h4>'
       +   '<div class="akt-z"><b id="aktWoche">' + wo + '</b><span>' + (wo===1?'Beitrag':'Beiträge') + '</span></div>'
@@ -687,18 +693,18 @@
   /* Zaehlt, was in den letzten sieben Tagen geschrieben wurde. */
   async function ladeAktivitaet(){
     try{
-      var seit = new Date(Date.now() - 7*864e5).toISOString();
-      var r = await sbc.from('community_messages')
-        .select('channel').gte('created_at', seit).is('deleted_at', null).limit(1000);
-      var rows = (r && r.data) || [];
-      var themen = {};
-      rows.forEach(function(m){ if(m.channel) themen[m.channel] = 1; });
-      window.__commAkt = { woche: rows.length, themen: Object.keys(themen).length };
-      var a = q('#aktWoche'), b = q('#aktThemen');
-      if(a) a.textContent = rows.length;
-      if(b) b.textContent = Object.keys(themen).length;
+      var r = await sbc.rpc('community_zahlen');
+      var z = (r && r.data && r.data[0]) || null;
+      if(!z) return;
+      window.__commAkt = { mitglieder:z.mitglieder, woche:z.beitraege_woche, themen:z.themen_woche };
+      var m=q('#aktMitglieder'), c=q('#aktWoche'), d=q('#aktThemen');
+      if(m) m.textContent = z.mitglieder;
+      if(c) c.textContent = z.beitraege_woche;
+      if(d) d.textContent = z.themen_woche;
+      var k=q('#cmMitglieder'); if(k) k.textContent = z.mitglieder;
     }catch(e){}
   }
+
 
   function bindSidebar(){
     var r=root();
