@@ -584,7 +584,7 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFFDF3 0%,#FFFDF3 60%)
     <a href="index.html" class="brand"><img src="logo.PNG" onerror="this.style.display='none'"><span>deutschoderwas&nbsp;club</span></a>
     <div class="nav-sec">Mein Weg</div>
     <button class="navlink active" data-view="dashboard" onclick="go('dashboard')"><span class="ic" data-zeichen="start"></span><span data-i18n="k_start">Mein Bereich</span></button>
-<div class="nav-comm"><div class="nav-comm-k">Miteinander</div><button class="navlink navlink-chat nc-haupt" data-view="community" onclick="go('community')"><span class="ic" data-zeichen="community"></span><span class="nl-t"><b>Community-Chat</b><i>Jetzt mitreden</i></span><span class="badge" id="commBadge" style="display:none">0</span></button></div>
+<div class="nav-comm"><button class="navlink nc-haupt" data-view="community" onclick="go('community')"><img class="nc-bild" src="amanda/amanda-hallo.webp" alt="" loading="lazy" onerror="this.remove()"><span class="nl-t"><b>Community-Chat</b><i>Lasst uns miteinander quatschen</i></span><span class="badge" id="commBadge" style="display:none">0</span></button></div>
     <button class="navlink" data-view="lernpfad" onclick="go('lernpfad')"><span class="ic" data-zeichen="lernpfad"></span><span data-i18n="k_path">Mein Lernplan</span></button>
     <button class="navlink" data-view="fortschritt" onclick="go('fortschritt')"><span class="ic" data-zeichen="fortschritt"></span><span data-i18n="k_prog">Mein Stand</span></button>
     <div class="nav-sec">Fertigkeiten</div>
@@ -674,20 +674,34 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFFDF3 0%,#FFFDF3 60%)
 @media(max-width:1024px){.navlink-chat{flex-direction:row!important;text-align:left!important;min-width:0}.navlink-chat .nl-t i{display:none}.navlink-chat .nl-t b{font-size:13.5px}}
 .navlink-chat{flex-direction:row!important}
 
-/* Der Community-Chat ist der Kern des Clubs: er sitzt ganz oben und ist der
-   groesste, auffaelligste Knopf. Nachrichten (1:1) steht als schlanke
-   Zweitzeile darunter, damit die Reihenfolge sofort klar ist. */
-.nc-haupt{padding:13px 14px!important;box-shadow:0 8px 22px rgba(14,133,119,.32)!important}
-.nc-haupt .ic{font-size:21px}
-.nc-haupt .nl-t b{font-size:15.5px}
-.nc-haupt .nl-t i{display:block!important;opacity:.95;font-size:11.5px;white-space:normal}
-.nc-neben{background:#fff!important;color:#0E6F66!important;box-shadow:none!important;
-  border:1.5px solid rgba(25,144,164,.32);margin-top:6px}
-.nc-neben:hover{background:#F2FBFA!important;color:#0E6F66!important;filter:none}
-.nc-neben.active{background:#fff!important;color:#0E6F66!important;box-shadow:none!important;
-  outline:2px solid #1990A4;outline-offset:-2px}
-.nc-neben .badge,.nc-neben.active .badge{background:#1990A4!important;color:#fff!important}
-.nc-neben .nl-t b{font-size:13.5px}
+/* Der Community-Chat bekommt dieselbe Karte wie Amanda in der Leiste:
+   Bild links, Titel, ein Satz darunter. Nur in Tuerkis statt Gelb, damit
+   man die beiden Karten auseinanderhaelt. */
+.sidebar .navlink.nc-haupt{
+  display:flex; align-items:flex-end; gap:9px; width:100%; text-align:left;
+  padding:8px 10px 0; margin:0;
+  background:linear-gradient(135deg,#DFF5F2,#FBFEFD)!important;
+  border:1.5px solid #1990A4!important; border-radius:14px!important;
+  color:var(--tinte,#20211F)!important; font:inherit; cursor:pointer;
+  box-shadow:none!important;
+}
+.sidebar .navlink.nc-haupt:hover{ background:#D3F0EC!important; }
+.sidebar .navlink.nc-haupt.active{
+  background:linear-gradient(135deg,#C6ECE7,#F2FBFA)!important;
+  box-shadow:inset 0 0 0 1.5px #1990A4!important;
+}
+.nc-haupt .nc-bild{ height:62px; width:auto; flex:none; margin-bottom:-1px; }
+.nc-haupt .nl-t{ display:block; padding-bottom:9px; min-width:0; flex:1 }
+.nc-haupt .nl-t b{
+  display:block; font-family:var(--schrift-kopf,'Shantell Sans',sans-serif);
+  font-size:13.5px; font-weight:800; line-height:1.2;
+}
+.nc-haupt .nl-t i{
+  display:block; font-style:normal; font-size:11.5px; color:var(--text-soft,#54594A);
+  line-height:1.35; margin-top:1px; white-space:normal;
+}
+.nc-haupt .badge{ align-self:center; background:#1990A4!important; color:#fff!important; margin-left:auto }
+@media(max-width:1024px){ .nc-haupt .nc-bild{ height:54px } }
 
 
 .dsh-chat{display:flex;align-items:center;gap:17px;background:linear-gradient(135deg,#1990A4 0%,#1990A4 58%,#39CCE3 100%);color:#fff;border-radius:18px;padding:18px 20px;margin-bottom:16px;cursor:pointer;box-shadow:0 10px 30px rgba(14,124,112,.24);transition:transform .16s,box-shadow .16s}
@@ -3338,8 +3352,9 @@ window.addEventListener('resize',function(){ clearTimeout(_mhT); _mhT=setTimeout
 
 /* ===== Community-Box ganz oben: Miteinander schreiben ist der Kern des Clubs,
    darum sitzt es direkt unter "Mein Bereich" und hat einen eigenen Rahmen. ===== */
-.nav-comm{margin:10px 0 14px;padding:8px 6px 6px;border:1.5px solid var(--petrol,#0FB5A6);
-  border-radius:14px;background:var(--petrol-weich,#E6F7F5)}
+/* Die Karte bringt ihren eigenen Rahmen mit — der Kasten drumherum
+   waere ein zweiter. Er haelt nur noch den Abstand. */
+.nav-comm{margin:10px 0 14px;padding:0;border:0;background:none}
 .nav-comm-k{font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;
   color:var(--petrol,#0FB5A6);padding:2px 8px 6px}
 .nav-comm .navlink{background:transparent}
