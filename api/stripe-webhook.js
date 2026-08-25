@@ -257,6 +257,101 @@ async function sendPaymentMail(sub, inv) {
   } catch (e) { console.error('payment mail', e); }
 }
 
+// Sofort-Mail, wenn jemand bezahlt hat, aber noch kein Konto hat.
+// Frueher kam die erst am naechsten Morgen ueber den Tages-Cron — zu spaet.
+async function sendRegisterNow(email) {
+  try {
+    if (!email || !process.env.BREVO_API_KEY) return false;
+    const site = process.env.SITE_URL || 'https://www.deutschoderwas-club.de';
+    const ff = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
+    const url = site + '/index.html?register=1';
+    const safe = String(email).replace(/[<>&]/g, '');
+    const html = `<!DOCTYPE html><html lang="de"><body style="margin:0;background:#FFF8E0;font-family:${ff}">
+  <table role="presentation" width="100%" style="padding:24px 14px"><tr><td align="center">
+    <table role="presentation" width="100%" style="max-width:560px;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 8px 26px rgba(0,0,0,.08)">
+      <tr><td style="height:6px;background:linear-gradient(90deg,#DD0000 0 33%,#FFCE00 33% 66%,#7ED8EA 66% 100%)"></td></tr>
+      <tr><td style="padding:26px 30px 6px">
+        <div style="font-size:13px;font-weight:800;letter-spacing:.04em;color:#0F766E;text-transform:uppercase">Willkommen im Club</div>
+        <h1 style="margin:8px 0 6px;font-size:23px;color:#1A1A1A">Nur noch 1 Schritt &#128275;</h1>
+        <p style="font-size:16px;line-height:1.6;color:#1A1A1A;margin:8px 0 4px">Deine Zahlung ist da &ndash; super! &#127881; Damit du die ganze Lernplattform nutzen kannst, legst du dir jetzt noch schnell ein Konto an.</p>
+        <p style="font-size:15px;line-height:1.6;color:#5B6A70;margin:8px 0 0">Wichtig: Registrier dich mit <b>genau dieser E-Mail-Adresse</b> (${safe}) &ndash; dann wird deine Mitgliedschaft automatisch erkannt und freigeschaltet.</p>
+      </td></tr>
+      <tr><td style="padding:14px 30px 8px" align="center">
+        <a href="${url}" style="display:inline-block;background:linear-gradient(135deg,#7ED8EA,#35AFD0);color:#10627A;font-weight:800;font-size:16px;text-decoration:none;padding:14px 30px;border-radius:999px">Jetzt registrieren &amp; loslegen</a>
+      </td></tr>
+      <tr><td style="padding:12px 30px 26px;font-size:12px;color:#9CA3AF">Schon registriert? Dann ignorier diese Mail einfach. &#128153; &middot; deutschoderwas club</td></tr>
+    </table>
+  </td></tr></table></body></html>`;
+    const r = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sender: { name: 'deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
+        to: [{ email }],
+        subject: '\u{1F513} Nur noch 1 Schritt: registrier dich für deinen Zugang',
+        htmlContent: html,
+      }),
+    });
+    if (!r.ok) { console.error('registerNow brevo', r.status, await r.text()); return false; }
+    return true;
+  } catch (e) { console.error('sendRegisterNow', e); return false; }
+}
+
+// Community hat keine LIVE-Stunden — sendPaymentMail steigt bei stunden=0 aus.
+// Darum eine eigene Bestaetigung, sonst hoert ein Community-Mitglied nach der Zahlung gar nichts.
+async function sendCommunityWelcome(email, name, abDatum) {
+  try {
+    if (!email || !process.env.BREVO_API_KEY) return;
+    const site = process.env.SITE_URL || 'https://www.deutschoderwas-club.de';
+    const vorname = ((name || '').trim().split(' ')[0]) || '';
+    const hallo = vorname ? `Hallo ${vorname},` : 'Hallo,';
+    const start = abDatum
+      ? `<div style="background:#fff;border-left:4px solid #FFCE00;border-radius:10px;padding:10px 14px;margin:6px 0;font-size:14px"><b>Dein Start:</b> ${abDatum}</div>`
+      : '<div style="background:#fff;border-left:4px solid #7ED8EA;border-radius:10px;padding:10px 14px;margin:6px 0;font-size:14px"><b>Ab sofort freigeschaltet</b> &ndash; du kannst direkt loslegen.</div>';
+    const PORTAL = 'https://billing.stripe.com/p/login/cNi8wP2DQcez5av6Yd5Rm00';
+    const html = `<!DOCTYPE html><html lang="de"><body style="margin:0;background:#FFF8E0;font-family:'Inter','Segoe UI',system-ui,sans-serif;color:#1A1A1A">
+  <table role="presentation" width="100%" style="padding:24px 12px"><tr><td align="center">
+    <table role="presentation" width="600" style="max-width:600px;width:100%;background:#FFFCF5;border:1px solid #F0E5D8;border-radius:20px;overflow:hidden">
+      <tr><td style="padding:24px 32px 8px">
+        <span style="font-weight:700;font-size:22px">deutsch<span style="color:#35AFD0">oderwas</span></span>
+      </td></tr>
+      <tr><td style="padding:0 32px"><div style="height:3px;background:linear-gradient(135deg,#7ED8EA,#35AFD0);border-radius:999px"></div></td></tr>
+      <tr><td style="padding:22px 32px 4px">
+        <span style="font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#DD0000">Zahlung erfolgreich</span>
+        <h1 style="font-size:26px;line-height:1.2;margin:8px 0 14px">Willkommen in der Community! &#127881;</h1>
+        <p style="font-size:16px;line-height:1.6;margin:0 0 12px">${hallo}</p>
+        <p style="font-size:16px;line-height:1.6;margin:0 0 14px">deine Zahlung ist angekommen &ndash; wie sch&ouml;n, dass du dabei bist! &#128153; Dir steht jetzt die ganze Lernplattform offen: Kursbibliothek von A1 bis C2, Vokabeltrainer, t&auml;glicher Podcast, die Community und Amanda rund um die Uhr.</p>
+        ${start}
+      </td></tr>
+      <tr><td align="center" style="padding:14px 32px 4px">
+        <a href="${site}/schuelerbereich" style="display:inline-block;background:linear-gradient(135deg,#7ED8EA,#35AFD0);color:#10627A;font-weight:700;font-size:16px;text-decoration:none;padding:14px 30px;border-radius:999px">Zum Sch&uuml;lerbereich</a>
+      </td></tr>
+      <tr><td style="padding:12px 32px 4px">
+        <p style="font-size:13px;line-height:1.6;color:#6B7280;margin:0">Deine Mitgliedschaft verl&auml;ngert sich automatisch &ndash; jederzeit k&uuml;ndbar. <a href="${PORTAL}" style="color:#35AFD0">Mitgliedschaft verwalten</a></p>
+      </td></tr>
+      <tr><td style="padding:14px 32px 22px">
+        <p style="font-size:16px;line-height:1.6;margin:0">Viel Freude beim Lernen!<br><strong>Julia</strong> &#128153;</p>
+      </td></tr>
+      <tr><td style="background:#1A1A1A;padding:18px 32px;text-align:center">
+        <p style="font-size:12px;color:#b9b9b9;margin:0">deutschoderwas &middot; <a href="https://deutschoderwas.de/#impressum" style="color:#FFCE00;text-decoration:none">Impressum</a></p>
+      </td></tr>
+    </table>
+  </td></tr></table></body></html>`;
+    const r = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sender: { name: 'deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
+        replyTo: { name: 'Julia', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
+        to: [{ email, name: vorname || undefined }],
+        subject: 'Willkommen in der Community \u{1F389}',
+        htmlContent: html,
+      }),
+    });
+    if (!r.ok) console.error('communityWelcome brevo', r.status, await r.text());
+  } catch (e) { console.error('sendCommunityWelcome', e); }
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
   if (!process.env.STRIPE_SECRET_KEY || !process.env.STRIPE_WEBHOOK_SECRET) {
@@ -347,7 +442,14 @@ export default async function handler(req, res) {
     try {
       const { data: ex } = await sb2.from('pending_purchases').select('id').eq('stripe_ref', ref).maybeSingle();
       if (ex) return;
-      await sb2.from('pending_purchases').insert({ email, stunden, plan: plan || null, make_status: makeStatus || null, is_trial: !!isTrial, stripe_ref: ref });
+      const { data: neu } = await sb2.from('pending_purchases')
+        .insert({ email, stunden, plan: plan || null, make_status: makeStatus || null, is_trial: !!isTrial, stripe_ref: ref })
+        .select('id').maybeSingle();
+      // Sofort Bescheid geben statt bis zum naechsten Morgen zu warten.
+      const ok = await sendRegisterNow(email);
+      if (ok && neu && neu.id) {
+        await sb2.from('pending_purchases').update({ reg_reminded: true }).eq('id', neu.id);
+      }
     } catch (e) { console.error('addPending', e); }
   }
 
@@ -432,10 +534,16 @@ export default async function handler(req, res) {
           // Community: ganze Plattform frei (status=aktiv), ABER keine Live-Stunden & kein pass_until (kein Buchen).
           const dk = 'inv_' + inv.id;
           const { data: cex } = await sb.from('credit_log').select('id').eq('stripe_session_id', dk).maybeSingle();
+          const ersteZahlung = !cex;
           if (!cex) await sb.from('credit_log').insert({ user_id: userId, change: 0, reason: 'abo:' + plan, stripe_session_id: dk });
           const abCom = await startFuer(userId, 'community');
           await sb.from('profiles').update({ status: 'aktiv', tier: 'community', tier_ab: abCom }).eq('id', userId);
           await laufzeitAbStart(sub, abCom);
+          // Nur beim ersten Mal begruessen, nicht bei jeder Verlaengerung.
+          if (ersteZahlung) {
+            const { data: cp } = await sb.from('profiles').select('email,name').eq('id', userId).maybeSingle();
+            await sendCommunityWelcome((cp && cp.email) || invEmail, cp && cp.name, abCom);
+          }
         } else {
           // Premium + alte Pässe: Stunden gutschreiben (grant setzt auch pass_until fürs Buchen).
           // Beim Vorverkauf laufen die Stunden erst ab dem Starttag ab (Wartezeit wird draufgelegt).
