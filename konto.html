@@ -584,6 +584,7 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFFDF3 0%,#FFFDF3 60%)
     <a href="index.html" class="brand"><img src="logo.PNG" onerror="this.style.display='none'"><span>deutschoderwas&nbsp;club</span></a>
     <div class="nav-sec">Mein Weg</div>
     <button class="navlink active" data-view="dashboard" onclick="go('dashboard')"><span class="ic" data-zeichen="start"></span><span data-i18n="k_start">Mein Bereich</span></button>
+<div class="nav-comm"><div class="nav-comm-k">Miteinander</div><button class="navlink navlink-chat" data-view="community" onclick="go('community')"><span class="ic" data-zeichen="community"></span><span class="nl-t"><b>Community-Chat</b><i>Austausch nach Themen</i></span><span class="badge" id="commBadge" style="display:none">0</span></button><button class="navlink navlink-chat" data-view="dm" onclick="go('dm')"><span class="ic" data-zeichen="community"></span><span class="nl-t"><b>Nachrichten</b><i>Schreib anderen direkt</i></span><span class="badge" id="dmBadge" style="display:none">0</span></button></div>
     <button class="navlink" data-view="lernpfad" onclick="go('lernpfad')"><span class="ic" data-zeichen="lernpfad"></span><span data-i18n="k_path">Mein Lernplan</span></button>
     <button class="navlink" data-view="fortschritt" onclick="go('fortschritt')"><span class="ic" data-zeichen="fortschritt"></span><span data-i18n="k_prog">Mein Stand</span></button>
     <div class="nav-sec">Fertigkeiten</div>
@@ -597,7 +598,6 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFFDF3 0%,#FFFDF3 60%)
     <div class="nav-sec">Live</div>
     <button class="navlink" data-view="kalender" onclick="go('kalender')"><span class="ic" data-zeichen="kalender"></span><span data-i18n="k_live">LIVE-Unterricht</span></button>
     <button class="navlink" data-view="stunden" onclick="go('stunden')"><span class="ic" data-zeichen="kalender"></span><span>Meine Stunden</span></button>
-    <button class="navlink navlink-chat" data-view="community" onclick="go('community')"><span class="ic" data-zeichen="community"></span><span class="nl-t"><b>Community</b><i>Austausch nach Themen</i></span><span class="badge" id="commBadge" style="display:none">0</span></button>
     <div class="nav-sec">Meins</div>
     <button class="navlink" data-view="materialien" onclick="go('materialien')"><span class="ic" data-zeichen="material"></span><span>Material</span></button>
     <button class="navlink" data-view="nachrichten" onclick="go('nachrichten')"><span class="ic" data-zeichen="nachrichten"></span><span>Nachrichten</span></button>
@@ -899,6 +899,7 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFFDF3 0%,#FFFDF3 60%)
     <section class="view" id="v-pruefung"></section>
     <section class="view" id="v-schreiben"></section>
     <section class="view" id="v-community"></section>
+<section class="view" id="v-dm"></section>
     <section class="view" id="v-lernpfad"></section>
     <section class="view" id="v-szenen"></section>
     <section class="view" id="v-kalender"></section>
@@ -1085,10 +1086,36 @@ function schliesseLiveUpgrade(){
   document.removeEventListener('keydown',lupEsc);
 }
 /* Premium ist bis zum 1. November nicht kaufbar — der Weg fuehrt auf die Warteliste.
-   Die alte Funktion startete hier einen Stripe-Checkout; das waere jetzt falsch. */
-function zurWartelisteLive(btn){
+   Wer eingeloggt ist, wird NICHT auf die Verkaufsseite geschickt: Name und
+   E-Mail kennen wir ja, also tragen wir direkt hier ein. Ein Klick, fertig. */
+async function zurWartelisteLive(btn){
+  var em=(typeof user!=='undefined' && user && user.email) ? user.email : '';
+  var nm=((profile&&profile.name)||'').trim() || (em?em.split('@')[0]:'');
+  if(!em){ location.href='/index.html#warteliste'; return; }   // Notnagel
   if(btn){ btn.disabled=true; btn.textContent='Einen Moment …'; }
-  location.href='/index.html#warteliste';
+  try{
+    var r=await fetch('/api/waitlist',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        name: nm, email: em, tarif: 'Premium',
+        niveau: (profile&&profile.target_level)||'',
+        mehr: 'Eingetragen im Schülerbereich (Community-Mitglied)'
+      })});
+    var j=await r.json();
+    if(j&&j.ok){ wartelisteEingetragen(); return; }
+  }catch(e){}
+  if(btn){ btn.disabled=false; btn.textContent='🔔 Auf die Warteliste'; }
+  try{ toast('Das hat gerade nicht geklappt — versuch es bitte gleich noch einmal.'); }catch(e){}
+}
+/* Bestaetigung im selben Fenster, damit niemand die Seite verlassen muss. */
+function wartelisteEingetragen(){
+  var d=document.getElementById('liveUp'); if(!d) return;
+  var box=d.querySelector('.lup'); if(!box) return;
+  box.innerHTML='<button class="lup-x" onclick="schliesseLiveUpgrade()" aria-label="Schließen">×</button>'
+    +'<div class="lup-ic">🎉</div>'
+    +'<div class="lup-eyebrow">Eingetragen</div>'
+    +'<h2>Du stehst auf der Warteliste</h2>'
+    +'<p class="lup-lead">Wir melden uns bei dir, sobald der Sprechclub am <b>1. November</b> losgeht. Bis dahin hast du die ganze Plattform — Kurse, Vokabeltrainer, Podcast und Amanda. 💛</p>'
+    +'<button class="lup-go" onclick="schliesseLiveUpgrade()">Alles klar</button>';
 }
 // Stripe-Kundenportal öffnen — Abo verwalten / kündigen (Kündigung zum Periodenende; danach verfallen die Stunden).
 async function openPortal(){
@@ -1280,7 +1307,7 @@ function collectVocab(){
 }
 
 // ---------- Router ----------
-const VIEWS=['dashboard','lernen','bereiche','kurs','pruefung','schreiben','kurse','ueben','community','lernpfad','szenen','kalender','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','profil','fehler','buddy','fertigkeit'];
+const VIEWS=['dashboard','lernen','bereiche','kurs','pruefung','schreiben','kurse','ueben','community','dm','lernpfad','szenen','kalender','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','profil','fehler','buddy','fertigkeit'];
 function go(v){ location.hash=v; }
 function toggleNav(){ document.body.classList.toggle('nav-open'); }
 const VIEW_TITLES={dashboard:['Schülerbereich','Startseite'],lernen:['Lernbereich','Deine Themen'],kurs:['Lernbereich','Dein Kurs'],pruefung:['Prüfung','Prüfungsvorbereitung'],schreiben:['Lernen','Schreibtrainer'],kurse:['Lernen','Kursbibliothek'],kalender:['Live Unterricht','Kalender'],stunden:['Live Unterricht','Meine Stunden'],community:['Community-Chat','Alle Themen'],ueben:['Lernen','Üben'],vokabeln:['Lernen','Vokabeltrainer'],materialien:['Lernen','Materialien'],fortschritt:['Lernen','Fortschritt'],nachrichten:['Nachrichten','Team'],amanda:['Amanda','KI-Sprechpartnerin'],lernpfad:['Lernen','Mein Lernplan'],szenen:['Lernen','Meine Szenen'],fehler:['Lernen','Fehler-Trainer'],buddy:['Lernen','Sprech-Buddy'],guthaben:['Konto','Guthaben'],profil:['Konto','Profil']};
@@ -1289,7 +1316,7 @@ function routeFromHash(){ const v=(location.hash||'#dashboard').slice(1); show(V
 // Ohne Guthaben/Probestunde/Pass: ALLES gesperrt außer Kalender (und Profil für Konto/Logout).
 // Vor dem Starttag gesperrt — offen bleiben Start, Profil, Nachrichten und Guthaben.
 const VORVERKAUF_ZU=['lernen','bereiche','kurs','schreiben','kurse','ueben','community','lernpfad','szenen','kalender','stunden','materialien','vokabeln','fortschritt','amanda','fehler','buddy','fertigkeit','pruefung'];
-const LOCKED_VIEWS=['dashboard','lernen','bereiche','kurs','schreiben','kurse','ueben','community','lernpfad','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','fehler','buddy','fertigkeit'];
+const LOCKED_VIEWS=['dashboard','lernen','bereiche','kurs','schreiben','kurse','ueben','community','dm','lernpfad','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','fehler','buddy','fertigkeit'];
 function show(v){
   if(v==='kalender' && !nochNichtOffen() && typeof nurCommunity==='function' && nurCommunity()){
     zeigeLiveUpgrade(); v='dashboard';
@@ -1304,7 +1331,7 @@ function show(v){
   document.body.classList.remove('nav-open');
   if(LOCKED_VIEWS.includes(v) && !isActive()){ renderLocked(v); window.scrollTo(0,0); return; }
   if(nochNichtOffen() && VORVERKAUF_ZU.includes(v)){ renderVorverkauf(v); window.scrollTo(0,0); return; }
-  ({dashboard:renderDashboard,kurse:(window.renderKurse||renderDashboard),ueben:(window.renderUeben||renderDashboard),lernen:(window.renderLernen||renderDashboard),bereiche:(window.renderBereiche||window.renderLernen||renderDashboard),kurs:(window.renderNiveau||renderDashboard),schreiben:(window.renderSchreiben||renderDashboard),community:(window.renderCommunity||renderDashboard),lernpfad:renderLernpfad,szenen:function(){ if(window.LERNPFAD) LERNPFAD.pfad('v-szenen'); },kalender:renderKalender,stunden:renderStunden,pruefung:(window.renderPruefungen||renderDashboard),materialien:renderMaterialien,vokabeln:(window.renderVokabeln||renderVokabelnAlt),
+  ({dashboard:renderDashboard,kurse:(window.renderKurse||renderDashboard),ueben:(window.renderUeben||renderDashboard),lernen:(window.renderLernen||renderDashboard),bereiche:(window.renderBereiche||window.renderLernen||renderDashboard),kurs:(window.renderNiveau||renderDashboard),schreiben:(window.renderSchreiben||renderDashboard),community:(window.renderCommunity||renderDashboard),dm:(window.renderDM||renderDashboard),lernpfad:renderLernpfad,szenen:function(){ if(window.LERNPFAD) LERNPFAD.pfad('v-szenen'); },kalender:renderKalender,stunden:renderStunden,pruefung:(window.renderPruefungen||renderDashboard),materialien:renderMaterialien,vokabeln:(window.renderVokabeln||renderVokabelnAlt),
     fortschritt:renderFortschritt,guthaben:renderGuthaben,nachrichten:renderNachrichten,
     amanda:renderAmanda,profil:renderProfil,fehler:(window.renderFehlerTrainer||renderDashboard),buddy:(window.renderBuddy||renderDashboard),fertigkeit:(window.renderFertigkeit||renderDashboard)}[v])();
   if(v==='community') markCommRead();
@@ -2845,6 +2872,7 @@ init();
 <script src="fertigkeiten.js?v=2"></script>
 <script src="nachueben.js"></script>
 <script src="community.js"></script>
+<script src="direct-messages.js?v=2"></script>
 <script src="fehler-trainer.js"></script>
 <script src="tandem-missionen.js"></script>
 <script src="sprech-buddy.js"></script>
@@ -3291,6 +3319,16 @@ window.addEventListener('resize',function(){ clearTimeout(_mhT); _mhT=setTimeout
 .club-bg{background:linear-gradient(168deg,#FFFFFF 0%,#FFFDF3 58%,#FFFDF3 100%) !important}
 .club-bg .blob{opacity:.10 !important;filter:blur(96px) !important;animation:none !important}
 .club-bg .b3{display:none !important}
+
+/* ===== Community-Box ganz oben: Miteinander schreiben ist der Kern des Clubs,
+   darum sitzt es direkt unter "Mein Bereich" und hat einen eigenen Rahmen. ===== */
+.nav-comm{margin:10px 0 14px;padding:8px 6px 6px;border:1.5px solid var(--petrol,#0FB5A6);
+  border-radius:14px;background:var(--petrol-weich,#E6F7F5)}
+.nav-comm-k{font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--petrol,#0FB5A6);padding:2px 8px 6px}
+.nav-comm .navlink{background:transparent}
+.nav-comm .navlink:hover{background:rgba(255,255,255,.7)}
+.nav-comm .navlink.active{background:#fff}
 </style>
 <link rel="stylesheet" href="marke.css">
 <!-- club-stil.css MUSS nach marke.css stehen. marke.css setzt die
