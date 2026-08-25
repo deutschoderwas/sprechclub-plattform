@@ -1287,6 +1287,20 @@ function zuPreisen(abr){
   location.hash = '#preise';
   return false;
 }
+
+/* Wer mit /#preise auf die Seite kommt — etwa aus einer Mail — soll die
+   Preise sofort sehen und nicht oben auf der Startseite landen. Der
+   Abschnitt liegt in einem Fenster, das erst geoeffnet werden muss. */
+(function(){
+  function ausHash(){
+    if(String(location.hash||'').toLowerCase()!=='#preise') return;
+    if(window.openPreise) openPreise();
+  }
+  window.addEventListener('hashchange',ausHash);
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',function(){ setTimeout(ausHash,80); });
+  } else setTimeout(ausHash,80);
+})();
 </script>
 </body>
 </html>
