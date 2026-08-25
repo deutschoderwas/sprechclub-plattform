@@ -257,6 +257,79 @@ async function sendPaymentMail(sub, inv) {
   } catch (e) { console.error('payment mail', e); }
 }
 
+// ---------------------------------------------------------------------------
+// Rechnung / Zahlungsbeleg. Geht bei JEDER bezahlten Rechnung raus, also auch
+// bei jeder Verlaengerung — wer zahlt, bekommt einen Beleg. Die Rechnung
+// selbst liegt bei Stripe; wir verschicken die Zusammenfassung und die zwei
+// Links darauf (ansehen und PDF).
+// ---------------------------------------------------------------------------
+async function sendRechnung(inv, email) {
+  try {
+    if (!inv || !email || !process.env.BREVO_API_KEY) return false;
+    const cent = inv.amount_paid || 0;
+    const waehrung = (inv.currency || 'eur').toUpperCase();
+    const betrag = (cent / 100).toLocaleString('de-DE', { style: 'currency', currency: waehrung });
+    const sek = (inv.status_transitions && inv.status_transitions.paid_at) || inv.created;
+    const datum = new Date(sek * 1000).toLocaleDateString('de-DE', { day: '2-digit', month: 'long', year: 'numeric' });
+    const nr = inv.number || inv.id;
+    const web = inv.hosted_invoice_url || '';
+    const pdf = inv.invoice_pdf || '';
+    const posten = ((inv.lines && inv.lines.data) || [])
+      .map(l => (l.description || '').trim()).filter(Boolean)[0] || 'Mitgliedschaft';
+    const name = ((inv.customer_name || '').trim().split(' ')[0]) || '';
+    const hallo = name ? `Hallo ${name},` : 'Hallo,';
+    const zeile = (k, v) => `<tr><td style="padding:7px 0;font-size:14px;color:#6B7280">${k}</td>`
+      + `<td style="padding:7px 0;font-size:14px;text-align:right;font-weight:600">${v}</td></tr>`;
+    const knopf = (href, txt, haupt) => href
+      ? `<a href="${href}" style="display:inline-block;margin:4px 6px 0 0;padding:12px 24px;border-radius:999px;text-decoration:none;font-weight:700;font-size:15px;`
+        + (haupt ? 'background:linear-gradient(135deg,#7ED8EA,#35AFD0);color:#10627A' : 'background:#fff;color:#1A1A1A;border:1.5px solid #E0D8C6')
+        + `">${txt}</a>` : '';
+    const html = `<!DOCTYPE html><html lang="de"><body style="margin:0;background:#FFF8E0;font-family:'Inter','Segoe UI',system-ui,sans-serif;color:#1A1A1A">
+  <table role="presentation" width="100%" style="padding:24px 12px"><tr><td align="center">
+    <table role="presentation" width="600" style="max-width:600px;width:100%;background:#FFFCF5;border:1px solid #F0E5D8;border-radius:20px;overflow:hidden">
+      <tr><td style="padding:24px 32px 8px">
+        <span style="font-weight:700;font-size:22px">deutsch<span style="color:#35AFD0">oderwas</span></span>
+      </td></tr>
+      <tr><td style="padding:0 32px"><div style="height:3px;background:linear-gradient(135deg,#7ED8EA,#35AFD0);border-radius:999px"></div></td></tr>
+      <tr><td style="padding:22px 32px 4px">
+        <span style="font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#DD0000">Beleg</span>
+        <h1 style="font-size:24px;line-height:1.25;margin:8px 0 14px">Deine Rechnung &uuml;ber ${betrag}</h1>
+        <p style="font-size:16px;line-height:1.6;margin:0 0 16px">${hallo}</p>
+        <p style="font-size:16px;line-height:1.6;margin:0 0 16px">danke dir &#128153; Hier ist dein Beleg &ndash; du kannst ihn dir jederzeit als PDF herunterladen.</p>
+        <table role="presentation" width="100%" style="border-top:1px solid #F0E5D8;border-bottom:1px solid #F0E5D8;margin:6px 0 14px">
+          ${zeile('Rechnungsnummer', nr)}
+          ${zeile('Datum', datum)}
+          ${zeile('Leistung', posten)}
+          ${zeile('Betrag', `<span style="font-size:16px">${betrag}</span>`)}
+        </table>
+      </td></tr>
+      <tr><td style="padding:0 32px 6px">${knopf(pdf, '&#128196; Rechnung als PDF', true)}${knopf(web, 'Im Browser ansehen', false)}</td></tr>
+      <tr><td style="padding:14px 32px 22px">
+        <p style="font-size:13px;line-height:1.6;color:#6B7280;margin:0 0 12px">Dein Abo verl&auml;ngert sich automatisch und ist jederzeit k&uuml;ndbar.</p>
+        <p style="font-size:16px;line-height:1.6;margin:0">Bis bald!<br><strong>Julia</strong> &#128153;</p>
+      </td></tr>
+      <tr><td style="background:#1A1A1A;padding:18px 32px;text-align:center">
+        <p style="font-size:12px;line-height:1.6;color:#b9b9b9;margin:0">deutschoderwas &middot; <a href="https://deutschoderwas.de/#impressum" style="color:#FFCE00;text-decoration:none">Impressum</a></p>
+      </td></tr>
+    </table>
+  </td></tr></table>
+</body></html>`;
+    const r = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sender: { name: 'deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
+        replyTo: { name: 'Julia', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
+        to: [{ email, name: inv.customer_name || undefined }],
+        subject: `Deine Rechnung ${nr} \u00fcber ${betrag}`,
+        htmlContent: html,
+      }),
+    });
+    if (!r.ok) { console.error('rechnung brevo', r.status, await r.text()); return false; }
+    return true;
+  } catch (e) { console.error('rechnung mail', e); return false; }
+}
+
 // Julia bekommt jede Mitglieder-Mail als Blindkopie — so sieht sie sofort,
 // dass jemand Neues da ist und die Zugangsdaten bekommen hat.
 const JULIA = process.env.JULIA_EMAIL || 'deutschoderwas@gmail.com';
@@ -529,6 +602,9 @@ export default async function handler(req, res) {
         const plan = sub.metadata?.plan || 'abo';
         let invEmail = (inv.customer_email || '').trim().toLowerCase();
         if (!invEmail && inv.customer) { try { const c = await stripe.customers.retrieve(inv.customer); invEmail = (c.email || '').trim().toLowerCase(); } catch (e) {} }
+        // Beleg zuerst: wer bezahlt hat, bekommt seine Rechnung — auch dann,
+        // wenn es noch kein Konto zu der Adresse gibt.
+        if (invEmail) await sendRechnung(inv, invEmail);
         if (invEmail) {
           const { data: ip } = await sb.from('profiles').select('id').ilike('email', invEmail).maybeSingle();
           if (ip) { userId = ip.id; }
