@@ -31,8 +31,11 @@
         { view: 'lernpfad' },
         { view: 'guthaben' }
       ] },
+    /* Der Community-Chat war ein Unterpunkt von LIVE-Unterricht und damit
+       hinter einem zugeklappten Pfeil versteckt. Er ist ein eigenes Ziel
+       und steht jetzt als eigener Punkt direkt unter "Mein Bereich". */
+    { view: 'community', text: 'Community-Chat', zeichen: 'community' },
     { view: 'kalender', text: 'LIVE-Unterricht', zeichen: 'kalender', kinder: [
-        { view: 'community' },
         { view: 'materialien' }
       ] },
     { view: 'ueben', text: 'Üben', zeichen: 'ueben', kinder: [

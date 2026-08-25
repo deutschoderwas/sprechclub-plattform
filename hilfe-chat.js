@@ -87,7 +87,20 @@
     '.hc-hin{font-size:11.5px;color:#8C8574;margin-top:8px;line-height:1.45}',
     '@media(prefers-reduced-motion:reduce){.hc-mik.an{animation:none}}',
     '@media(max-width:520px){.hc-box{right:10px;left:10px;width:auto;bottom:82px}.hc-btn{right:14px;bottom:14px;width:54px;height:54px}',
-    '.hc-btn .kr{line-height:50px}.hc-kopf img{height:50px}}'
+    '.hc-btn .kr{line-height:50px}.hc-kopf img{height:50px}}',
+
+    /* In der Handy-Ansicht steht unten die Reiterleiste. Amanda sass
+       genau darauf und hat die Reiter verdeckt. Sie rueckt darueber,
+       wird kleiner und halbdurchsichtig, solange man sie nicht braucht —
+       sichtbar, aber nicht im Weg. */
+    '@media(max-width:900px){',
+    '.hc-btn{width:50px;height:50px;right:12px;',
+    'bottom:calc(78px + env(safe-area-inset-bottom));opacity:.82}',
+    '.hc-btn:hover,.hc-btn:focus-visible,.hc-btn.zu{opacity:1}',
+    '.hc-btn .kr{line-height:46px;font-size:22px}',
+    '.hc-box{bottom:calc(136px + env(safe-area-inset-bottom));',
+    'max-height:calc(100vh - 210px)}',
+    '}'
   ].join('');
   document.head.appendChild(css);
 
