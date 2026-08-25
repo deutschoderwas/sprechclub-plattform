@@ -6,7 +6,10 @@ export default async function handler(req, res) {
   if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) return res.status(200).json({ skipped: 'no_db' });
   const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
   const site = process.env.SITE_URL || 'https://www.deutschoderwas-club.de';
-  const cutoff = new Date(Date.now() - 2 * 3600 * 1000).toISOString(); // mind. 2h alt
+  // Die Willkommens-Mail geht seit dem Webhook-Fix sofort beim Kauf raus.
+  // Dieser Cron ist nur noch das Sicherheitsnetz — 20 Minuten reichen als Puffer,
+  // damit niemand doppelt angeschrieben wird, der gerade selbst registriert.
+  const cutoff = new Date(Date.now() - 20 * 60 * 1000).toISOString();
 
   const { data: rows } = await sb.from('pending_purchases')
     .select('id,email,plan,applied,reg_reminded,created_at')
