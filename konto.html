@@ -1060,16 +1060,17 @@ function zeigeLiveUpgrade(){
   d.innerHTML=
      '<div class="lup" role="dialog" aria-modal="true" aria-labelledby="lupT">'
     +'<button class="lup-x" onclick="schliesseLiveUpgrade()" aria-label="Schließen">×</button>'
-    +'<div class="lup-ic">🎧</div>'
-    +'<div class="lup-eyebrow">Live-Unterricht</div>'
-    +'<h2 id="lupT">Werde Premium-Mitglied</h2>'
-    +'<p class="lup-lead">Besuche zusätzlich <b>8 Mal im Monat den LIVE-Unterricht</b> mit echten Lehrern — in kleiner Gruppe, mit Korrektur und echtem Sprechen.</p>'
+    +'<div class="lup-ic">🗣️</div>'
+    +'<div class="lup-eyebrow">Offener Sprechclub</div>'
+    +'<h2 id="lupT">Der Sprechclub startet am 1. November</h2>'
+    +'<p class="lup-lead">Deine Community-Mitgliedschaft gilt für die <b>ganze Plattform</b>. Der LIVE-Unterricht gehört zu Premium — und der geht am <b>1. November</b> los.</p>'
     +'<ul class="lup-list">'
-      +'<li><span>🗓️</span><span><b>8 LIVE-Stunden im Monat</b> — feste Termine, du buchst dich einfach ein.</span></li>'
-      +'<li><span>👥</span><span><b>Kleine Gruppen</b> bis sechs Personen — jeder kommt zu Wort.</span></li>'
-      +'<li><span>💛</span><span><b>Alles aus deiner Community-Mitgliedschaft bleibt</b> — Kurse, Podcast, Chat und Korrektur.</span></li>'
+      +'<li><span>🗓️</span><span><b>Mo bis So um 19 Uhr</b> — wie ein Sprachcafé, du kommst einfach dazu.</span></li>'
+      +'<li><span>👥</span><span><b>Kleine 2er- und 3er-Gruppen</b> — jeder kommt wirklich zum Reden.</span></li>'
+      +'<li><span>💛</span><span><b>Alles aus deiner Community bleibt</b> — Kurse, Vokabeltrainer, Podcast, Chat und Amanda.</span></li>'
     +'</ul>'
-    +'<button class="lup-go" onclick="starteUpgrade(this)">Premium werden — 149 € im Monat</button>'
+    +'<p class="lup-lead" style="font-size:14px;opacity:.85">Die Plätze sind begrenzt, deshalb läuft es über die Warteliste. Wir melden uns bei dir, sobald es losgeht.</p>'
+    +'<button class="lup-go" onclick="zurWartelisteLive(this)">🔔 Auf die Warteliste</button>'
     +'<button class="lup-later" onclick="schliesseLiveUpgrade()">Vielleicht später</button>'
     +'</div>';
   document.body.appendChild(d);
@@ -1083,15 +1084,11 @@ function schliesseLiveUpgrade(){
   document.body.style.overflow='';
   document.removeEventListener('keydown',lupEsc);
 }
-async function starteUpgrade(btn){
+/* Premium ist bis zum 1. November nicht kaufbar — der Weg fuehrt auf die Warteliste.
+   Die alte Funktion startete hier einen Stripe-Checkout; das waere jetzt falsch. */
+function zurWartelisteLive(btn){
   if(btn){ btn.disabled=true; btn.textContent='Einen Moment …'; }
-  try{
-    var r=await fetch('/api/create-checkout',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({ passId:'premium', userId:(user&&user.id)||undefined, email:(user&&user.email)||undefined })});
-    var j=await r.json();
-    if(j&&j.url){ location.href=j.url; return; }
-  }catch(e){}
-  location.href='/preise';
+  location.href='/index.html#warteliste';
 }
 // Stripe-Kundenportal öffnen — Abo verwalten / kündigen (Kündigung zum Periodenende; danach verfallen die Stunden).
 async function openPortal(){
@@ -2003,6 +2000,12 @@ function kalBook(id){
 function closeCfm(){ document.getElementById('cfmModal').classList.remove('open'); }
 function showNoCredit(){
   const card=document.getElementById('cfmCard');
+  /* Community darf die ganze Plattform nutzen — nur den LIVE-Unterricht nicht.
+     Das ist kein Mangel an Stunden, sondern ein Paket, das noch nicht gestartet ist.
+     Darum hier eine eigene, freundliche Erklärung statt der Stunden-Meldung. */
+  /* Community: kein Stunden-Problem, sondern ein Paket, das erst am 1.11. startet.
+     Wir zeigen dasselbe Fenster wie ueberall sonst — eine Meldung, eine Stelle. */
+  if(nurCommunity()){ closeCfm(); zeigeLiveUpgrade(); return; }
   card.innerHTML=`<div class="ico">🎟️</div>
     <h3 data-i18n="nc_t">Dafür brauchst du freie Stunden</h3>
     <p class="hint" data-i18n="nc_b">Auf deinem Konto ist gerade keine freie Stunde. Mit einem Abo bekommst du jeden Monat neue Stunden — und kannst dir sofort etwas aussuchen. 😊</p>

@@ -257,6 +257,10 @@ async function sendPaymentMail(sub, inv) {
   } catch (e) { console.error('payment mail', e); }
 }
 
+// Julia bekommt jede Mitglieder-Mail als Blindkopie — so sieht sie sofort,
+// dass jemand Neues da ist und die Zugangsdaten bekommen hat.
+const JULIA = process.env.JULIA_EMAIL || 'deutschoderwas@gmail.com';
+
 // Sofort-Mail, wenn jemand bezahlt hat, aber noch kein Konto hat.
 // Frueher kam die erst am naechsten Morgen ueber den Tages-Cron — zu spaet.
 async function sendRegisterNow(email) {
@@ -288,6 +292,7 @@ async function sendRegisterNow(email) {
       body: JSON.stringify({
         sender: { name: 'deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
         to: [{ email }],
+        bcc: [{ email: JULIA }],
         subject: '\u{1F513} Nur noch 1 Schritt: registrier dich für deinen Zugang',
         htmlContent: html,
       }),
@@ -344,6 +349,7 @@ async function sendCommunityWelcome(email, name, abDatum) {
         sender: { name: 'deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
         replyTo: { name: 'Julia', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
         to: [{ email, name: vorname || undefined }],
+        bcc: [{ email: JULIA }],
         subject: 'Willkommen in der Community \u{1F389}',
         htmlContent: html,
       }),
