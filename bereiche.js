@@ -86,7 +86,7 @@ window.BEREICHE = [
 { id:'kleidung', weg:'freizeit', gr:'einkaufen', t:'Kleidung & Shopping',
   u:'Größe, Farbe, Umtausch — und höflich Nein sagen zur Beratung.',
   zeichen:'karten', lvl:'A2–B1',
-  dlg:['umtausch'], ws:['a2-kleidung'], ho:[], hilf:['adjektivdeklination'],
+  dlg:['umtausch'], ws:['a2-kleidung'], ho:['kleidung'], hilf:['adjektivdeklination'],
   lek:'kleidung-shopping-teil-1-a2-b1.html' },
 
 { id:'kochen', weg:'freizeit', gr:'einkaufen', t:'Kochen & Ernährung',
@@ -98,7 +98,7 @@ window.BEREICHE = [
 { id:'verkaufen', weg:'freizeit', gr:'einkaufen', t:'Online kaufen & verkaufen',
   u:'Handeln, beschreiben, sich einig werden.',
   zeichen:'lupe', lvl:'A2–B1',
-  dlg:['flohmarkt-handeln','sofa-verkaufen'], ws:['einkaufen'], ho:[], hilf:['adjektivdeklination'],
+  dlg:['flohmarkt-handeln','sofa-verkaufen'], ws:['einkaufen'], ho:['verkaufen'], hilf:['adjektivdeklination'],
   lek:null },
 
 /* ================= FREIZEIT · Gesundheit ================= */
@@ -118,7 +118,7 @@ window.BEREICHE = [
 { id:'zahnarzt', weg:'freizeit', gr:'gesundheit', t:'Zahnarzt',
   u:'Nach Kosten fragen, bevor gebohrt wird.',
   zeichen:'herz', lvl:'A2–B1',
-  dlg:['zahnarzt-kostenplan'], ws:['zahnarzt'], ho:[], hilf:['konjunktiv2'],
+  dlg:['zahnarzt-kostenplan'], ws:['zahnarzt'], ho:['zahnarzt'], hilf:['konjunktiv2'],
   lek:'beim-zahnarzt-a2-b1.html' },
 
 { id:'notfall', weg:'freizeit', gr:'gesundheit', t:'Krankenhaus & Notfall',
@@ -132,7 +132,7 @@ window.BEREICHE = [
   u:'Widersprechen, melden, abschließen — mit den richtigen Wörtern.',
   zeichen:'schloss', lvl:'B1–B2',
   dlg:['widerspruch-krankenkasse','haftpflicht-abschliessen','wasserschaden-melden'],
-  ws:['c1-vertrag'], ho:[], hilf:['nominalisierung','passiv-praesens'],
+  ws:['c1-vertrag'], ho:['kasse'], hilf:['nominalisierung','passiv-praesens'],
   lek:null },
 
 /* ================= FREIZEIT · Ämter, Geld & Verträge ================= */
@@ -140,14 +140,14 @@ window.BEREICHE = [
   u:'Anmelden, beantragen, widersprechen — auch wenn es hakt.',
   bild:'sz-amt', lvl:'A2–C1',
   dlg:['amt','kindergeld-familienkasse','aufenthaltstitel-verlaengern','fuehrerschein-umschreiben','wohngeld-antrag','jobcenter-weiterbewilligung','c1-amt-falscher-bescheid'],
-  ws:['a2-amt','amt-b1','c1-amt','integration'], ho:[], hilf:['nominalisierung','genitiv','konnektoren'],
+  ws:['a2-amt','amt-b1','c1-amt','integration'], ho:['amt'], hilf:['nominalisierung','genitiv','konnektoren'],
   lek:'amt-a2-b1.html' },
 
 { id:'bank', weg:'freizeit', gr:'papiere', t:'Bank & Geld',
   u:'Konto eröffnen, Rechnungen prüfen, Zusatzverkauf abwehren.',
   bild:'sz-bank', lvl:'A2–C1',
   dlg:['konto-eroeffnen','rechnung-reklamieren','c1-bank-mitverkauf-abwehren'],
-  ws:['a2-bank','einkaufen'], ho:[], hilf:['konjunktiv2','genitiv'],
+  ws:['a2-bank','einkaufen'], ho:['bank'], hilf:['konjunktiv2','genitiv'],
   lek:'bank-konto-a2-interaktiv.html' },
 
 { id:'vertraege', weg:'freizeit', gr:'papiere', t:'Handy & Verträge',
@@ -160,13 +160,13 @@ window.BEREICHE = [
 { id:'post', weg:'freizeit', gr:'papiere', t:'Post & Paket',
   u:'Abholen, aufgeben, annehmen — mit Ausweis und ohne Stress.',
   zeichen:'abgeben', lvl:'A2–B1',
-  dlg:['post'], ws:['a2-post'], ho:[], hilf:['wechselpraepositionen'],
+  dlg:['post'], ws:['a2-post'], ho:['post'], hilf:['wechselpraepositionen'],
   lek:'post-pakete-a2-interaktiv.html' },
 
 { id:'polizei', weg:'freizeit', gr:'papiere', t:'Polizei & Sicherheit',
   u:'Eine Anzeige aufgeben und genau beschreiben, was passiert ist.',
   zeichen:'lupe', lvl:'B1',
-  dlg:['polizei-fahrraddiebstahl'], ws:[], ho:[], hilf:['perfekt-praeteritum'],
+  dlg:['polizei-fahrraddiebstahl'], ws:[], ho:['polizei'], hilf:['perfekt-praeteritum'],
   lek:null },
 
 /* ================= FREIZEIT · Unterwegs & Wohnen ================= */
@@ -180,7 +180,7 @@ window.BEREICHE = [
 { id:'werkstatt', weg:'freizeit', gr:'unterwegs', t:'Auto & Werkstatt',
   u:'Einen Schaden beschreiben und einen Preis nennen lassen.',
   zeichen:'blitz', lvl:'A2–B2',
-  dlg:['fahrrad-reparatur','mietwagen-abholen'], ws:['a2-werkstatt'], ho:[], hilf:['passiv-praesens'],
+  dlg:['fahrrad-reparatur','mietwagen-abholen'], ws:['a2-werkstatt'], ho:['werkstatt'], hilf:['passiv-praesens'],
   lek:null },
 
 { id:'reise', weg:'freizeit', gr:'unterwegs', t:'Reisen & Hotel',
@@ -208,7 +208,7 @@ window.BEREICHE = [
   u:'Betreuung organisieren, Absprachen treffen, Ratschläge abwehren.',
   zeichen:'gruppe', lvl:'A2–B2',
   dlg:['kinderbetreuung-bitten','bildschirmzeit-absprache','geburtstag-planen','erziehungstipp-schwieger'],
-  ws:['c1-familie','a1-familie'], ho:[], hilf:['konjunktiv2','temporale-nebensaetze'],
+  ws:['c1-familie','a1-familie'], ho:['familie'], hilf:['konjunktiv2','temporale-nebensaetze'],
   lek:'meine-familie-a2.html' },
 
 { id:'schule', weg:'freizeit', gr:'menschen', t:'Kita & Schule',
@@ -222,7 +222,7 @@ window.BEREICHE = [
   u:'Small Talk halten — auch bei der Frage „Woher kommen Sie?".',
   bild:'sz-feste', lvl:'A2–C1',
   dlg:['party','c1-feier-woher-kommen-sie'],
-  ws:['feste','kultur','a2-freizeit'], ho:[], hilf:['perfekt-praeteritum','satzmelodie'],
+  ws:['feste','kultur','a2-freizeit'], ho:['feste'], hilf:['perfekt-praeteritum','satzmelodie'],
   lek:'feste-freizeit-teil-1-a2-b1.html' },
 
 /* ================= BERUF · Überall im Job ================= */
