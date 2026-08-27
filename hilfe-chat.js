@@ -231,10 +231,45 @@
     return d;
   }
 
+  /* Amandas Zeichen sind fuer die Augen — die Stimme ueberliest sie. */
+  function nurText(t) {
+    return String(t || '')
+      .replace(/^\s*[>!\u00b7\u2022-]\s+/gm, '')
+      .replace(/\*([^*\n]+)\*/g, '$1')
+      .replace(/_([^_\n]+)_/g, '$1')
+      .replace(/\n{2,}/g, '\n')
+      .trim();
+  }
+
+  /* Vorlesen; ein zweiter Druck haelt an. */
+  function sprich(text, knopf) {
+    var rein = nurText(text);
+    if (!rein || !window.sagen) return;
+    var laeuft2 = !!(window.sagenLaeuft && window.sagenLaeuft());
+    var warDieser = !!(knopf && knopf.className.indexOf('an') >= 0);
+    if (window.sagenStopp) window.sagenStopp();
+    var alle = document.querySelectorAll('.af-hoer.an');
+    for (var i = 0; i < alle.length; i++) alle[i].classList.remove('an');
+    if (laeuft2 && warDieser) return;
+    if (knopf) knopf.classList.add('an');
+    window.sagen(rein, { rolle: 'amanda', fertig: function () { if (knopf) knopf.classList.remove('an'); } });
+  }
+
+  function hoerKnopf(blase, text) {
+    if (!window.sagen) return null;
+    var h = el('button', 'af-hoer');
+    h.type = 'button';
+    h.setAttribute('aria-label', 'Antwort vorlesen');
+    h.innerHTML = '<span aria-hidden="true">\uD83D\uDD0A</span> Vorlesen';
+    h.onclick = function () { sprich(text, h); };
+    blase.appendChild(h);
+    return h;
+  }
+
   function zeigen(wer, text) {
     var lauf = box.querySelector('#hcLauf');
     var d = el('div', 'hc-m ' + (wer === 'bot' ? 'bot' : 'du'));
-    if (wer === 'bot') malen(d, text); else d.textContent = text;
+    if (wer === 'bot') { malen(d, text); hoerKnopf(d, text); } else d.textContent = text;
     lauf.appendChild(d); lauf.scrollTop = lauf.scrollHeight;
     verlauf.push({ wer: wer, text: text });
     return d;
