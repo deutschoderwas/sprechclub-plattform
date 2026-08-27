@@ -298,6 +298,11 @@
       '  #v-bereiche .be-gruppe h3{font-size:18px;}',
       '  #v-bereiche .be-gruppe header p{font-size:12.5px;}',
       '}',
+      '#v-bereiche .be-schritt{display:inline-grid;place-items:center;width:26px;height:26px;flex:none;',
+      '  border-radius:50%;background:var(--petrol,#1990A4);color:#fff;font-size:14px;font-weight:800;',
+      '  margin-right:9px;vertical-align:2px;font-family:system-ui,sans-serif;}',
+      '#v-bereiche .be-kopf3{display:flex;align-items:center;}',
+      '@media(max-width:760px){#v-bereiche .be-schritt{width:23px;height:23px;font-size:13px;margin-right:7px;}}',
       '@media(prefers-reduced-motion:reduce){#v-bereiche *{transition:none!important;}}'
     ].join('');
     document.head.appendChild(s);
@@ -391,6 +396,10 @@
     if(window.zurueckErledigt) zurueckErledigt('bereich');
     renderBereiche();
   };
+  /* Die Nummer vor der Ueberschrift. Sie ist kein Schmuck: sie sagt,
+     in welcher Reihenfolge man hier vorgeht. */
+  function schritt(n){ return '<span class="be-schritt">' + n + '</span>'; }
+
   window.bereichOeffnen = function(id){
     stil();
     var b = bereichVon(id); if(!b) return;
@@ -476,51 +485,61 @@
       h += '</div></div>';
     }
 
-    /* Situationen mit Amanda */
-    h += '<div class="be-block"><h3 class="be-kopf3">Sprich es mit Amanda durch</h3>' +
+    /* Situationen mit Amanda — Schritt 3 auf dem Weg */
+    var blockSprechen = '<div class="be-block"><h3 class="be-kopf3">' + schritt(3) +
+         'Sprich es mit Amanda durch</h3>' +
          '<p class="hin">Sie fängt an, du antwortest. Mit Redemitteln, falls dir das Wort fehlt.</p>';
     if(d.length){
-      h += '<div class="be-liste">';
+      blockSprechen += '<div class="be-liste">';
       d.forEach(function(x){
         var fertig = dialogFertig(x.id);
         /* Kein Emoji: das Niveau steht links, das sagt etwas.
            Emojis sehen auf jedem Geraet anders aus. */
-        h += '<button class="be-z" type="button" onclick="bereichDialog(\''+E(x.id)+'\')">' +
+        blockSprechen += '<button class="be-z" type="button" onclick="bereichDialog(\''+E(x.id)+'\')">' +
              '<span class="lv">'+E(x.lvl||'')+'</span>' +
              '<span class="nm">'+E(x.titel)+(x.dauer?'<small>'+E(x.dauer)+'</small>':'')+'</span>' +
              (fertig?'<span class="ok">geschafft</span>':'') +
              '</button>';
       });
-      h += '</div>';
+      blockSprechen += '</div>';
     } else {
-      h += '<p class="be-leer">Für diesen Bereich baue ich die Situationen gerade. Die Wörter und die Lektion unten gibt es schon.</p>';
+      blockSprechen += '<p class="be-leer">Für diesen Bereich baue ich die Situationen gerade. Die Wörter und die Lektion unten gibt es schon.</p>';
     }
-    h += '</div>';
+    blockSprechen += '</div>';
 
     /* Wörter und Hören */
     var wortListe = (b.ws||[]).filter(function(t){ return !!themaVon('wortschatz',t); });
     var hoerListe = (b.ho||[]).filter(function(t){ return !!themaVon('hoeren',t); });
-    if(wortListe.length || hoerListe.length){
-      h += '<div class="be-block"><h3 class="be-kopf3">Die Wörter dazu</h3>' +
-           '<p class="hin">Genau der Wortschatz, den dieser Ort verlangt — nicht der ganze Trainer.</p>' +
+    var blockWoerter = '', blockHoeren = '';
+    if(wortListe.length){
+      blockWoerter = '<div class="be-block"><h3 class="be-kopf3">' + schritt(1) + 'Die Wörter dazu</h3>' +
+           '<p class="hin">Fang hier an. Genau der Wortschatz, den dieser Ort verlangt — nicht der ganze Trainer.</p>' +
            '<div class="be-knoepfe">';
       wortListe.forEach(function(t){
         var th=themaVon('wortschatz',t), n=(th.exercises||[]).length, best=themaBest('wortschatz',t);
-        h += '<button class="be-b" type="button" onclick="bereichUeben(\'wortschatz\',\''+E(t)+'\')">' +
+        blockWoerter += '<button class="be-b" type="button" onclick="bereichUeben(\'wortschatz\',\''+E(t)+'\')">' +
              E(th.title||t) + ' <span class="be-zahl">'+n+(best?' · '+best+' %':'')+'</span></button>';
       });
+      blockWoerter += '</div></div>';
+    }
+    if(hoerListe.length){
+      blockHoeren = '<div class="be-block"><h3 class="be-kopf3">' + schritt(2) + 'Hör es im Alltag</h3>' +
+           '<p class="hin">Dieselben Wörter, aber gesprochen — so, wie sie an diesem Ort wirklich klingen.</p>' +
+           '<div class="be-knoepfe">';
       hoerListe.forEach(function(t){
         var th=themaVon('hoeren',t);
-        h += '<button class="be-b" type="button" onclick="bereichUeben(\'hoeren\',\''+E(t)+'\')">' +
-             'Hören: '+E(th.title||t)+'</button>';
+        blockHoeren += '<button class="be-b" type="button" onclick="bereichUeben(\'hoeren\',\''+E(t)+'\')">' +
+             E(th.title||t)+'</button>';
       });
-      h += '</div></div>';
+      blockHoeren += '</div></div>';
     }
+
+    h += blockWoerter + blockHoeren + blockSprechen;
 
     /* Bausteine */
     var bau = (b.hilf||[]);
     if(bau.length){
-      h += '<div class="be-block"><h3 class="be-kopf3">Was du hier an Grammatik brauchst</h3>' +
+      h += '<div class="be-block"><h3 class="be-kopf3">Wenn du magst: die Grammatik dazu</h3>' +
            '<p class="hin">Nur die Bausteine, die an diesem Ort vorkommen.</p><div class="be-knoepfe">';
       bau.forEach(function(id){
         var g=themaVon('grammatik',id), a=themaVon('aussprache',id);
@@ -532,8 +551,10 @@
       h += '</div></div>';
     }
 
-    /* Lektion und Amanda */
-    h += '<div class="be-block"><h3 class="be-kopf3">Und wenn du mehr willst</h3><div class="be-knoepfe">';
+    /* Lektion und Amanda — der letzte Schritt */
+    h += '<div class="be-block"><h3 class="be-kopf3">' + schritt(4) + 'Alles zusammen in der Lektion</h3>' +
+         '<p class="hin">Einstieg, Wortschatz, Dialoge, Debatte, freies Sprechen und Übungen — auf einer Seite.</p>' +
+         '<div class="be-knoepfe">';
     if(b.lek) h += '<a class="be-b voll" href="'+E(b.lek)+'" target="_blank" rel="noopener">Die ganze Lektion öffnen</a>';
     h += '<button class="be-b" type="button" onclick="bereichAmanda(\''+E(b.id)+'\')">Amanda dazu fragen</button>';
     h += '</div></div>';
