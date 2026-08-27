@@ -1,0 +1,112 @@
+/* ============================================================
+   app-gefuehl.css — aus der mobilen Webseite wird eine App
+
+   Nichts davon ändert Inhalte oder Farben. Es sind die kleinen
+   Dinge, an denen man merkt, ob man in einer App ist oder in
+   einem Browserfenster: kein Gummiband beim Überscrollen, kein
+   grauer Blitz beim Antippen, keine Textmarkierung auf Knöpfen,
+   Platz für die Kerbe oben und den Balken unten, und ein Wechsel
+   zwischen den Ansichten, der sich wie ein Blättern anfühlt.
+
+   Gilt nur am Handy (bis 900px) und stört am Rechner nicht.
+   ============================================================ */
+
+/* ---------- 1. Der Rahmen des Geräts ---------- */
+@media (max-width: 900px) {
+  /* Kein Nachwippen, kein "zum Neuladen ziehen" — das ist das
+     deutlichste Zeichen dafür, dass man in einer Webseite sitzt. */
+  html, body {
+    overscroll-behavior-y: none;
+  }
+
+  /* Kerbe oben, Hausbalken unten: Inhalt darf nicht darunter liegen. */
+  .topbar {
+    padding-top: calc(9px + env(safe-area-inset-top));
+    padding-left: calc(12px + env(safe-area-inset-left));
+    padding-right: calc(12px + env(safe-area-inset-right));
+  }
+  .mtabs {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .main, .content-inner {
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+    padding-bottom: calc(86px + env(safe-area-inset-bottom));
+  }
+}
+
+/* ---------- 2. Berührung statt Mauszeiger ---------- */
+@media (max-width: 900px) {
+  /* Der graue Kasten beim Antippen ist reine Browser-Optik. */
+  a, button, .navlink, .mtab, .card, [onclick], [role="button"] {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Bedienelemente markiert man nicht mit dem Finger — Texte schon.
+     Deshalb steht das hier gezielt an der Bedienung, nicht am body. */
+  .topbar, .mtabs, .sidebar, .navlink, .mtab, .btn, button,
+  .sl-buchen, .sl-amanda, .pagehead h1, .tabs, .chips {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+
+  /* Antippen soll sich anfühlen wie Drücken. */
+  .mtab, .btn, button, .navlink, .card[onclick], [role="button"] {
+    transition: transform .09s ease, opacity .09s ease;
+  }
+  .mtab:active, .btn:active, button:active,
+  .navlink:active, .card[onclick]:active, [role="button"]:active {
+    transform: scale(.972);
+  }
+  /* Die Reiterleiste darf nicht schrumpfen, nur kurz aufleuchten. */
+  .mtab:active {
+    transform: none;
+    opacity: .55;
+  }
+}
+
+/* ---------- 3. Der Wechsel zwischen Ansichten ---------- */
+/* Vorher erschien die neue Ansicht schlagartig. Jetzt kommt sie
+   von rechts herein wie in einer App — kurz genug, dass es nie
+   im Weg ist (180 ms). */
+@media (max-width: 900px) {
+  .view.active {
+    animation: app-rein .18s cubic-bezier(.22, .61, .36, 1) both;
+  }
+  /* Zurück blättert in die andere Richtung. */
+  body.app-zurueck .view.active {
+    animation-name: app-zurueck;
+  }
+}
+@keyframes app-rein {
+  from { opacity: 0; transform: translateX(14px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes app-zurueck {
+  from { opacity: 0; transform: translateX(-14px); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .view.active,
+  body.app-zurueck .view.active { animation: none; }
+}
+
+/* ---------- 4. Ruhiges Scrollen ---------- */
+@media (max-width: 900px) {
+  /* Scrollt eine Liste zu Ende, soll nicht die ganze Seite mitrucken. */
+  .feed, .cs-l, .ms, .ub-body, .kb-b, .matliste, .modal-body {
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+  /* Sprungmarken landen nicht mehr unter der Kopfzeile. */
+  [id] { scroll-margin-top: 76px; }
+}
+
+/* ---------- 5. Kleinigkeiten, die auffallen würden ---------- */
+@media (max-width: 900px) {
+  /* Eingabefelder unter 16px lassen iOS hineinzoomen. */
+  input, select, textarea { font-size: max(16px, 1em); }
+  /* Bilder ziehen sich am Finger nicht mit. */
+  img { -webkit-user-drag: none; user-drag: none; }
+}

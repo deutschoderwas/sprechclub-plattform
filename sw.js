@@ -1,7 +1,7 @@
 // deutschoderwas club — Service Worker
 // Zweck: App installierbar machen (PWA). Bewusst KEIN aggressives Caching von
 // HTML/API, damit Buchung, Guthaben & Material immer aktuell aus dem Netz kommen.
-const VERSION = 'doc-v52';
+const VERSION = 'doc-v53';
 const APP_SHELL = [
   '/icons/icon-192.png',
   '/icons/icon-512.png',
@@ -31,6 +31,24 @@ self.addEventListener('fetch', (e) => {
   // Alles andere (HTML, /api, Supabase, Stripe) immer frisch aus dem Netz.
   const isStatic = url.origin === self.location.origin &&
     (url.pathname.startsWith('/icons/') || url.pathname === '/manifest.webmanifest');
+
+  /* Seitenaufrufe: erst aus dem Netz, damit alles frisch bleibt — aber die
+     letzte Fassung liegt als Kopie bereit. Ohne das zeigt die installierte
+     App im Funkloch die Fehlerseite des Browsers, und das sieht aus wie
+     eine kaputte Webseite statt wie eine App. */
+  if (req.mode === 'navigate') {
+    e.respondWith(
+      fetch(req)
+        .then((res) => {
+          const copy = res.clone();
+          caches.open(VERSION).then((c) => c.put(req, copy)).catch(() => {});
+          return res;
+        })
+        .catch(() => caches.match(req).then((hit) => hit || caches.match('/konto.html')))
+    );
+    return;
+  }
+
   if (!isStatic) return;
   e.respondWith(
     caches.match(req).then((hit) => hit || fetch(req).then((res) => {
