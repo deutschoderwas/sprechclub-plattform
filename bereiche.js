@@ -92,7 +92,7 @@ window.BEREICHE = [
 { id:'kochen', weg:'freizeit', gr:'einkaufen', t:'Kochen & Ernährung',
   u:'Rezepte verstehen, über Essen sprechen, Mengen angeben.',
   bild:'sz-kochen', lvl:'A2–B2',
-  dlg:[], ws:['essen'], ho:['essen'], hilf:['passiv-praesens','a1-artikel'],
+  dlg:['einkaufszettel','rezept-erklaeren'], ws:['essen'], ho:['essen'], hilf:['passiv-praesens','a1-artikel'],
   lek:'kochen-a2-b1.html' },
 
 { id:'verkaufen', bild:'sz-verkaufen', weg:'freizeit', gr:'einkaufen', t:'Online kaufen & verkaufen',
@@ -268,7 +268,7 @@ window.BEREICHE = [
 { id:'pflege', bild:'sz-pflege',        weg:'beruf', gr:'feld', beruf:'pflege',        zeichen:'herz',
   dlg:['uebergabe-station','angehoerige-kritik','bewohnerin-verweigert','c1-angehoerige-vorwurf'],
   ws:['pflege-b1','c1-pflege'], ho:['pflege'], lek:'pflege-lektion.html' },
-{ id:'medizin', bild:'sz-medizin',       weg:'beruf', gr:'feld', beruf:'medizin',       zeichen:'lupe',  dlg:[], ws:['c1-arzt'], ho:['medizin'], lek:'medizin-lektion.html' },
+{ id:'medizin', bild:'sz-medizin',       weg:'beruf', gr:'feld', beruf:'medizin',       zeichen:'lupe',  dlg:['anamnese-kurz','befund-erklaeren'], ws:['c1-arzt'], ho:['medizin'], lek:'medizin-lektion.html' },
 { id:'erziehung', bild:'sz-erziehung',     weg:'beruf', gr:'feld', beruf:'erziehung',     zeichen:'gruppe',dlg:['kita-eingewoehnung'], ws:['a2-schule'], ho:['erziehung'], lek:'erziehung-lektion.html' },
 { id:'bau', bild:'sz-bau',           weg:'beruf', gr:'feld', beruf:'bau',           zeichen:'blitz',
   dlg:['anweisung-baustelle','sicherheitsunterweisung'], ws:['bau-neu'], ho:['bau'], lek:'bau-lektion.html' },
@@ -281,17 +281,17 @@ window.BEREICHE = [
 { id:'hotel', bild:'sz-hotel',         weg:'beruf', gr:'feld', beruf:'hotel',         zeichen:'ton',   dlg:['hotel-einchecken'], ws:['reisen'], ho:['hotel'], lek:'hotel-lektion.html' },
 { id:'handel', bild:'sz-handel',        weg:'beruf', gr:'feld', beruf:'handel',        zeichen:'karten',
   dlg:['reklamation-laden','umtausch'], ws:['a2-einkaufen'], ho:['handel'], lek:'handel-lektion.html' },
-{ id:'reinigung', bild:'sz-reinigung',     weg:'beruf', gr:'feld', beruf:'reinigung',     zeichen:'haken', dlg:[], ws:['reinigung-neu'], ho:['reinigung'], lek:'reinigung-lektion.html' },
+{ id:'reinigung', bild:'sz-reinigung',     weg:'beruf', gr:'feld', beruf:'reinigung',     zeichen:'haken', dlg:['reinigung-uebergabe','reinigung-beschwerde'], ws:['reinigung-neu'], ho:['reinigung'], lek:'reinigung-lektion.html' },
 { id:'lager', bild:'sz-lager',         weg:'beruf', gr:'feld', beruf:'lager',         zeichen:'abgeben',
   dlg:['lieferung-annehmen'], ws:['lager-neu'], ho:['lager'], lek:'lager-lektion.html' },
 { id:'produktion', bild:'sz-produktion',    weg:'beruf', gr:'feld', beruf:'produktion',    zeichen:'serie', dlg:['sicherheitsunterweisung'], ws:['produktion-neu'], ho:['produktion'], lek:'produktion-lektion.html' },
 { id:'it', bild:'sz-it',            weg:'beruf', gr:'feld', beruf:'it',            zeichen:'idee',  dlg:['mail-missverstaendnis'], ws:['medien','ki-arbeitswelt'], ho:['it'], lek:'it-lektion.html' },
-{ id:'ingenieur', bild:'sz-ingenieur',     weg:'beruf', gr:'feld', beruf:'ingenieur',     zeichen:'lupe',  dlg:[], ws:['ingenieur-neu'], ho:['ingenieur'], lek:'ingenieur-lektion.html' },
+{ id:'ingenieur', bild:'sz-ingenieur',     weg:'beruf', gr:'feld', beruf:'ingenieur',     zeichen:'lupe',  dlg:['abnahme-begleiten','aenderung-begruenden'], ws:['ingenieur-neu'], ho:['ingenieur'], lek:'ingenieur-lektion.html' },
 { id:'buero', bild:'sz-buero',         weg:'beruf', gr:'feld', beruf:'buero',         zeichen:'stift',
   dlg:['meeting','telefon-melden'], ws:['c1-buero','arbeit'], ho:['buero'], lek:'wortschatz-arbeit-b1.html' },
 { id:'buchhaltung', bild:'sz-buchhaltung',   weg:'beruf', gr:'feld', beruf:'buchhaltung',   zeichen:'karten',dlg:['rechnung-reklamieren'], ws:['c1-vertrag'], ho:['buchhaltung'], lek:'buchhaltung-lektion.html' },
 { id:'friseur-beruf', bild:'sz-friseur-beruf', weg:'beruf', gr:'feld', beruf:'friseur',       zeichen:'herz',  dlg:['friseur'], ws:['a2-friseur'], ho:['friseur-beruf'], lek:'friseur-beruf-lektion.html' },
-{ id:'landwirtschaft', bild:'sz-landwirtschaft',weg:'beruf', gr:'feld', beruf:'landwirtschaft',zeichen:'serie', dlg:[], ws:['natur'], ho:['landwirtschaft'], lek:'landwirtschaft-lektion.html' },
+{ id:'landwirtschaft', bild:'sz-landwirtschaft',weg:'beruf', gr:'feld', beruf:'landwirtschaft',zeichen:'serie', dlg:['hof-einweisung','wetter-arbeit'], ws:['natur'], ho:['landwirtschaft'], lek:'landwirtschaft-lektion.html' },
 { id:'sozial', bild:'sz-sozial',        weg:'beruf', gr:'feld', beruf:'sozial',        zeichen:'gruppe',dlg:['jobcenter-weiterbewilligung'], ws:['integration'], ho:['sozial'], lek:'sozial-lektion.html' }
 
 ];
