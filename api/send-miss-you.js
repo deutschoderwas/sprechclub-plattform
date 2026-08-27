@@ -21,10 +21,19 @@ export default async function handler(req, res) {
   // keine pausierten/beendeten Mitglieder
   const INACTIVE_STATUS = ['pause', 'urlaub', 'beendet'];
   const { data: profs } = await sb.from('profiles')
-    .select('id,name,email,email_optout,is_admin,is_teacher,created_at,status')
+    .select('id,name,email,email_optout,is_admin,is_teacher,created_at,status,credits,tier')
     .eq('email_optout', false).eq('is_admin', false).eq('is_teacher', false)
     .lte('created_at', since30);
-  let targets = (profs || []).filter(p => p.email && !INACTIVE_STATUS.includes(p.status));
+  /* Zwei Gruppen bleiben aussen vor (Regel von Julia, 26.08.2026):
+     - Mitglieder mit Community- oder Premium-Mitgliedschaft. Sie buchen
+       keinen Live-Unterricht, "ich vermisse dich" waere schlicht falsch.
+     - Alle ohne Stunden. Wer keine Stunden hat, bekommt deswegen keine Mail. */
+  const MITGLIED = ['community', 'premium', 'premium_plus'];
+  let targets = (profs || []).filter(p =>
+    p.email && !INACTIVE_STATUS.includes(p.status)
+    && !MITGLIED.includes(p.tier || '')
+    && (p.credits || 0) > 0
+  );
   if (!targets.length) return res.status(200).json({ ok:true, sent:0 });
   const ids = targets.map(t => t.id);
 

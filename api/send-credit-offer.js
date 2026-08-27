@@ -8,6 +8,25 @@ import { createClient } from '@supabase/supabase-js';
 import Stripe from 'stripe';
 
 export default async function handler(req, res) {
+  /* ---------------------------------------------------------------------
+     ABGESCHALTET am 26.08.2026 auf Wunsch von Julia.
+
+     Diese Route hat Leute angeschrieben, die 0 oder 1 Stunde Guthaben
+     haben. Seit es die Community-Mitgliedschaft gibt, haben genau diese
+     Mitglieder immer 0 Stunden — sie buchen ja keinen Live-Unterricht.
+     Sie bekamen dadurch Mails, sie sollten Stunden nachkaufen, obwohl
+     sie gerade erst bezahlt haben. Das ist peinlich und falsch.
+
+     Regel ab jetzt: Wer keine Stunden hat, bekommt deswegen KEINE Mail.
+     Neue Community-Mitglieder bekommen nur die Registrierungsmail, die
+     Willkommensmail und ihre Rechnung.
+
+     Der Code bleibt stehen, falls die Erinnerung eines Tages wieder
+     gebraucht wird — dann aber mit einer sauberen Zielgruppe.
+     --------------------------------------------------------------------- */
+  return res.status(200).json({ ok: true, abgeschaltet: 'Guthaben-Erinnerung sendet nicht mehr' });
+
+  /* eslint-disable no-unreachable */
   if (!process.env.BREVO_API_KEY) return res.status(200).json({ ok:false, skipped:'BREVO_API_KEY fehlt' });
   const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
   const site = process.env.SITE_URL || 'https://www.deutschoderwas-club.de';
