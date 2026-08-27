@@ -15,10 +15,14 @@ dateien.forEach(f => {
   const zaehl = (re) => (h.match(re) || []).length;
   if (zaehl(/<section/g) !== zaehl(/<\/section>/g)) p.push('section unbalanciert');
   if (zaehl(/<div/g) !== zaehl(/<\/div>/g)) p.push('div unbalanciert');
-  const i = h.lastIndexOf('<script>');
-  const j = h.lastIndexOf('<' + '/script>');
-  if (i < 0 || j < i) p.push('kein Skriptblock');
-  else { try { new Function(h.slice(i + 8, j).replace(/<\\\//g, '</')); } catch (e) { p.push('JS: ' + e.message); } }
+  // Nur die Bloecke ohne src pruefen — die geladenen Dateien
+  // haben ihre eigene Pruefung mit node --check.
+  const bloecke = [...h.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]);
+  if (!bloecke.length) p.push('kein Skriptblock');
+  bloecke.forEach((code, nr) => {
+    try { new Function(code.replace(/<\\\//g, '</')); }
+    catch (e) { p.push('JS in Block ' + (nr + 1) + ': ' + e.message); }
+  });
   const bild = (h.match(/src="(amanda\/[^"]+)"/) || [])[1];
   if (!bild || !fs.existsSync(path.join(W, bild))) p.push('Szenenbild fehlt: ' + bild);
   if (/undefined/.test(h)) p.push('undefined im Text');
