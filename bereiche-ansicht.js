@@ -277,6 +277,27 @@
       '#v-bereiche .be-schreib ul{margin:0 0 10px;padding-left:20px;}',
       '#v-bereiche .be-schreib li{font-size:13.5px;color:var(--ink-2);margin-bottom:3px;}',
       '#v-bereiche .be-schreib .hilfe{margin:0;font-size:13px;color:var(--ink-3);border-top:1px solid var(--kante);padding-top:9px;}',
+      /* ---------- Am Handy: aus Kacheln wird eine Liste ----------
+         49 Bereiche als grosse Bildkacheln ergaben am Handy eine
+         Seite von fast 7000 Pixeln — man scrollt an allem vorbei,
+         statt etwas zu finden. Als Zeile mit kleinem Bild links
+         passt viermal so viel auf den Bildschirm. */
+      '@media(max-width:760px){',
+      '  #v-bereiche .be-liste{gap:7px;}',
+      '  #v-bereiche .be-k{flex-direction:row;align-items:stretch;}',
+      '  #v-bereiche .be-k .bd{width:78px;height:auto;min-height:78px;flex:none;}',
+      '  #v-bereiche .be-k .tx{padding:10px 12px 10px 12px;gap:3px;}',
+      '  #v-bereiche .be-k b{font-size:14.5px;}',
+      '  #v-bereiche .be-k p{font-size:12.5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}',
+      '  #v-bereiche .be-k .fuss{padding-top:6px;flex-wrap:wrap;gap:6px;}',
+      '  #v-bereiche .be-balken{margin-top:6px;}',
+      /* Die Gruppenueberschrift bleibt stehen: man weiss immer, wo man ist. */
+      '  #v-bereiche .be-gruppe > header{position:sticky;top:0;z-index:5;padding:8px 0 6px;',
+      '    background:linear-gradient(var(--grund,#FAF8F2) 82%,transparent);margin-bottom:8px;}',
+      '  #v-bereiche .be-gruppe{margin-bottom:20px;}',
+      '  #v-bereiche .be-gruppe h3{font-size:18px;}',
+      '  #v-bereiche .be-gruppe header p{font-size:12.5px;}',
+      '}',
       '@media(prefers-reduced-motion:reduce){#v-bereiche *{transition:none!important;}}'
     ].join('');
     document.head.appendChild(s);
