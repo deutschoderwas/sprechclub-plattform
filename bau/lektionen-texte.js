@@ -192,5 +192,71 @@ module.exports = {
   debatte: { frage: 'Wie viel Nähe verträgt Beratung?', pro: 'Nähe schafft Vertrauen und öffnet Türen.', con: 'Abstand schützt beide Seiten.' },
   sprechen: ['Beginne ein Gespräch und lass die andere Person zuerst erzählen.', 'Fass zusammen, was du gehört hast — in eigenen Worten.', 'Schlagt gemeinsam einen nächsten Schritt vor.'],
   neunzig: 'Erzähle, wer dir geholfen hat, als du neu warst.'
+},
+
+/* ---------- Felder, die vorher gar kein Material hatten ---------- */
+'polizei': {
+  titel: ['Polizei &', 'Sicherheit'],
+  ziel: 'Eine Anzeige machen, etwas beschreiben, bei einer Kontrolle ruhig bleiben.',
+  fragen: ['Was passiert auf dem Bild gerade?', 'Welche Nummer wählst du bei Gefahr?', 'Was sagst du, wenn dir etwas gestohlen wurde?'],
+  debatte: { frage: 'Mehr Kameras auf öffentlichen Plätzen?', pro: 'Sie helfen, Taten aufzuklären.', con: 'Sie beobachten vor allem Unschuldige.' },
+  sprechen: ['Melde einen Diebstahl: was, wo, wann, wie sah die Person aus?', 'Beschreibe eine Person in fünf Sätzen — ohne zu bewerten.', 'Bei einer Kontrolle wirst du nach dem Ausweis gefragt. Antworte höflich.'],
+  neunzig: 'Erzähle, wie sicher du dich hier fühlst — und warum.'
+},
+'bau': {
+  titel: ['Auf dem', 'Bau'],
+  ziel: 'Anweisungen verstehen, Gefahren ansprechen, den Stand der Arbeit melden.',
+  fragen: ['Was macht die Person auf dem Bild?', 'Was gehört auf jeder Baustelle zur Sicherheit?', 'Wie sagst du, dass etwas gefährlich ist?'],
+  debatte: { frage: 'Muss man auf dem Bau laut werden, damit es läuft?', pro: 'Auf der Baustelle hört man sonst nichts.', con: 'Klare Absprachen wirken besser als Lautstärke.' },
+  sprechen: ['Erklär einem neuen Kollegen den Weg über die Baustelle — mit den Gefahrenstellen.', 'Melde deinem Bauleiter, dass Material fehlt.', 'Sag höflich, dass du eine Arbeit ohne Sicherung nicht machst.'],
+  neunzig: 'Erzähle von einer Arbeit, auf die du stolz bist.'
+},
+'elektro-shk': {
+  titel: ['Elektro &', 'SHK'],
+  ziel: 'Eine Störung aufnehmen, dem Kunden erklären, was zu tun ist, sicher arbeiten.',
+  fragen: ['Woran arbeitet die Person auf dem Bild?', 'Was prüfst du, bevor du anfängst?', 'Wie erklärst du einem Kunden ein Problem ohne Fachwörter?'],
+  debatte: { frage: 'Reparieren oder gleich austauschen?', pro: 'Reparieren — günstiger und besser für die Umwelt.', con: 'Austauschen — neue Technik verbraucht weniger.' },
+  sprechen: ['Nimm eine Störung auf: seit wann, wie oft, was hat der Kunde schon versucht?', 'Erklär, warum du heute nicht fertig wirst.', 'Sag, welches Ersatzteil du brauchst und wie lange es dauert.'],
+  neunzig: 'Erzähle von einem Einsatz, der anders lief als geplant.'
+},
+'metall': {
+  titel: ['Metall &', 'Werkstatt'],
+  ziel: 'Maße und Zeichnungen besprechen, Fehler melden, sicher arbeiten.',
+  fragen: ['Was liegt auf dem Bild auf der Werkbank?', 'Was schaust du dir auf einer Zeichnung zuerst an?', 'Was machst du, wenn ein Maß nicht stimmt?'],
+  debatte: { frage: 'Lieber schnell arbeiten oder lieber genau?', pro: 'Tempo — der Auftrag muss raus.', con: 'Genauigkeit — Nacharbeit kostet mehr Zeit.' },
+  sprechen: ['Erklär einem Kollegen ein Teil nach der Zeichnung.', 'Melde, dass ein Maß außerhalb der Toleranz liegt.', 'Sag, welches Werkzeug du brauchst und warum.'],
+  neunzig: 'Erzähle, wie du zu deinem Beruf gekommen bist.'
+},
+'reinigung': {
+  titel: ['Reinigung —', 'Plan & Übergabe'],
+  ziel: 'Den Plan verstehen, eine Beschwerde annehmen, die Schicht sauber übergeben.',
+  fragen: ['Was hat die Person auf dem Bild dabei?', 'Was machst du zuerst, wenn du einen Raum betrittst?', 'Was sagst du, wenn etwas fehlt?'],
+  debatte: { frage: 'Reinigung tagsüber oder nach Feierabend?', pro: 'Tagsüber — man kann Fragen sofort klären.', con: 'Abends — man stört niemanden bei der Arbeit.' },
+  sprechen: ['Erklär, in welcher Reihenfolge du einen Raum machst.', 'Nimm eine Beschwerde an, ohne dich zu verteidigen.', 'Gib eine Übergabe: fertig, offen, kaputt.'],
+  neunzig: 'Erzähle, was an deiner Arbeit die meisten Leute nicht sehen.'
+},
+'lager': {
+  titel: ['Lager —', 'Ware & Versand'],
+  ziel: 'Ware annehmen, kommissionieren, Abweichungen sofort melden.',
+  fragen: ['Was steht auf dem Bild in den Regalen?', 'Was prüfst du beim Wareneingang?', 'Was machst du, wenn der Bestand nicht stimmt?'],
+  debatte: { frage: 'Alles per Scanner oder auch auf Papier?', pro: 'Scanner — schneller und weniger Fehler.', con: 'Papier — funktioniert auch, wenn die Technik ausfällt.' },
+  sprechen: ['Melde eine Teillieferung: was kam, was fehlt.', 'Erklär einem neuen Kollegen das Kommissionieren in drei Schritten.', 'Sag, warum der Versand heute später rausgeht.'],
+  neunzig: 'Erzähle, wie ein Tag in deinem Lager abläuft.'
+},
+'produktion': {
+  titel: ['Produktion —', 'Linie & Qualität'],
+  ziel: 'Störungen melden, Stückzahlen besprechen, die Schicht übergeben.',
+  fragen: ['Was macht die Person auf dem Bild an der Anlage?', 'Was tust du zuerst, wenn die Maschine steht?', 'Wie meldest du einen Qualitätsfehler?'],
+  debatte: { frage: 'Zählt am Ende Stückzahl oder Qualität?', pro: 'Stückzahl — ohne Menge kein Geschäft.', con: 'Qualität — Ausschuss kostet doppelt.' },
+  sprechen: ['Melde einen Stillstand: seit wann, was ist passiert, wer ist informiert?', 'Erklär einem Kollegen das Rüsten in vier Schritten.', 'Gib die Schichtübergabe: Stückzahl, Störungen, offene Punkte.'],
+  neunzig: 'Erzähle, was an deiner Schicht gut und was schwer ist.'
+},
+'ingenieur': {
+  titel: ['Technik &', 'Planung'],
+  ziel: 'Anforderungen klären, Änderungen begründen, eine Abnahme begleiten.',
+  fragen: ['Was hält die Person auf dem Bild in der Hand?', 'Was klärst du am Anfang eines Projekts?', 'Wie begründest du eine Änderung?'],
+  debatte: { frage: 'Lieber früh liefern oder lieber vollständig?', pro: 'Früh — man sieht schnell, ob es passt.', con: 'Vollständig — Nachbessern kostet Vertrauen.' },
+  sprechen: ['Erklär eine Anforderung so, dass die Werkstatt sie umsetzen kann.', 'Begründe, warum ein Termin nicht zu halten ist.', 'Führe durch eine Abnahme: was passt, was ist offen, wie geht es weiter.'],
+  neunzig: 'Erzähle von einem Projekt, das dich weitergebracht hat.'
 }
 };

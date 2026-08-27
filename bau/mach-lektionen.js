@@ -33,6 +33,7 @@ const SCHREIBEN = process.argv.includes('--schreiben');
 global.window = {};
 require(path.join(WURZEL, 'bereiche.js'));
 require(path.join(WURZEL, 'uebungen.js'));
+require(path.join(WURZEL, 'wortschatz-neu.js'));
 require(path.join(WURZEL, 'dialoge.js'));
 require(path.join(WURZEL, 'vokabeln-pool.js'));
 const TEXTE = require('./lektionen-texte.js');
@@ -321,7 +322,10 @@ function seite(b, t) {
 /* ---------- Lauf ---------- */
 let gebaut = 0, uebersprungen = [];
 BEREICHE.forEach(b => {
-  if (b.lek) return;
+  // Von Hand gebaute Lektionen bleiben unangetastet. Die hier
+  // erzeugten werden neu gebaut, damit eine Aenderung am Geruest
+  // sofort auf allen Seiten ankommt.
+  if (b.lek && !/-lektion\.html$/.test(b.lek)) return;
   const t = TEXTE[b.id];
   if (!t) { uebersprungen.push(b.id + ' (kein Text)'); return; }
   const woerter = woerterVon(b);

@@ -201,7 +201,9 @@
             emoji: w.emoji||'',
             bild:  bilder[w.de]||null,
             deko:  'bilder/thema/'+t.id+'-s.jpg',
-            bsp:   (window.VOKABEL_SAETZE||{})[w.de]||null
+            /* Ein Wort darf seinen Beispielsatz gleich mitbringen;
+               sonst wird er wie bisher in vokabel-saetze.js gesucht. */
+            bsp:   w.bsp||(window.VOKABEL_SAETZE||{})[w.de]||null
           };
         })
       };
