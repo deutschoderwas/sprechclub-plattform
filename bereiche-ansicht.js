@@ -403,6 +403,9 @@
   window.bereichOeffnen = function(id){
     stil();
     var b = bereichVon(id); if(!b) return;
+    /* Fuer 'Weiter, wo du warst' — App und Plattform schreiben in
+       dieselbe Notiz. */
+    try{ if(window.LERNSTRUKTUR) LERNSTRUKTUR.merken({typ:'bereich', id:b.id, weg:b.weg, titel:titel(b)}); }catch(e){}
     if(window.zurueckAuf) zurueckAuf('bereich', function(){ renderBereiche(); });
     var ziel = el('v-bereiche'); if(!ziel) return;
     var f = berufsfeld(b.beruf);

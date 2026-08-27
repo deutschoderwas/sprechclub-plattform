@@ -87,6 +87,7 @@
     kasten.className = 'ls-block';
     kasten.innerHTML =
       '<h2 class="a" style="margin-top:6px">Wofür lernst du gerade?</h2>'
+      + LS().weiterHtml(function () { return 'appWeiter()'; })
       + LS().tuerenHtml(function (t) { return "appTuer('" + t.id + "')"; });
     // unter das Tagesziel, über den Lernpfad
     var ziel = s.querySelector('.ziel');
@@ -237,6 +238,7 @@
     appStil();
     var b = (window.BEREICHE || []).filter(function (x) { return x.id === id; })[0];
     if (!b) return;
+    try { if (LS()) LS().merken({ typ: 'bereich', id: b.id, weg: b.weg, titel: b.t || b.beruf || b.id }); } catch (e) {}
 
     var dlg = (b.dlg || []).map(function (x) {
       return (window.DIALOGE || []).filter(function (d) { return d.id === x; })[0];
@@ -332,6 +334,18 @@
   window.appDialog = function (id) {
     if (window.zeige) window.zeige('sprechen');
     setTimeout(function () { if (window.dialogStart) window.dialogStart(id); }, 30);
+  };
+
+  /* Zurueck an die Stelle, an der zuletzt gelernt wurde. */
+  window.appWeiter = function () {
+    var o = LS() && LS().zuletzt();
+    if (!o) return;
+    if (o.typ === 'bereich') {
+      if (daBereiche()) return window.appBereich(o.id);
+      nachladen('bereiche.js', daBereiche).then(function () { window.appBereich(o.id); });
+      return;
+    }
+    appTuer(o.id);
   };
 
   window.appLernenZurueck = function () {

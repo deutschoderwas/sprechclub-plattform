@@ -146,6 +146,13 @@
       '.ls-wk b{display:block;font-size:15px;margin-bottom:2px;color:var(--tinte,var(--ink,#20211F));}',
       '.ls-wk span{display:block;font-size:12.5px;color:var(--ink-3,var(--mute,#8A857C));line-height:1.4;}',
 
+      '.ls-weiter{display:flex;align-items:center;gap:12px;width:100%;text-align:left;cursor:pointer;',
+      '  background:var(--gelb-hauch,#FFF6D9);border:2px solid var(--gelb,#FFD24A);border-radius:18px;',
+      '  padding:12px 14px;font-family:inherit;margin-bottom:16px;}',
+      '.ls-weiter .zn{font-size:20px;flex:none;}',
+      '.ls-weiter b{display:block;font-size:14px;margin-bottom:1px;color:var(--tinte,var(--ink,#20211F));}',
+      '.ls-weiter .tx > span{display:block;font-size:13px;color:var(--ink-2,var(--mute,#54594A));}',
+      '.ls-weiter .pf{margin-left:auto;color:var(--ink-3,var(--mute,#B4ADA3));font-size:20px;}',
       '@media(max-width:820px){.ls-tueren{grid-template-columns:1fr;gap:12px;margin-bottom:22px;}',
       '  .ls-tuer .inn{padding:15px 16px 17px;}.ls-tuer .zn{font-size:25px;margin-bottom:7px;}',
       '  .ls-tuer b{font-size:23px;}.ls-tuer span.u{font-size:14px;}',
@@ -153,6 +160,41 @@
       '@media(prefers-reduced-motion:reduce){.ls-tuer{transition:none;}}'
     ].join('');
     document.head.appendChild(s);
+  }
+
+  /* ---------- Wo war ich stehengeblieben? ----------
+     Beide Seiten schreiben in dieselbe Notiz. Wer in der App einen
+     Bereich oeffnet und spaeter am Rechner weitermacht, findet ihn
+     dort oben wieder. */
+  var SCHLUESSEL = 'dow_zuletzt';
+
+  function merken(o) {
+    if (!o || !o.id) return;
+    try {
+      o.zeit = Date.now();
+      localStorage.setItem(SCHLUESSEL, JSON.stringify(o));
+    } catch (e) {}
+  }
+  function zuletzt() {
+    try {
+      var o = JSON.parse(localStorage.getItem(SCHLUESSEL) || 'null');
+      if (!o || !o.id || !o.titel) return null;
+      // Nach vier Wochen ist es keine Fortsetzung mehr, sondern eine
+      // Erinnerung an etwas Fremdes.
+      if (o.zeit && Date.now() - o.zeit > 28 * 24 * 3600 * 1000) return null;
+      return o;
+    } catch (e) { return null; }
+  }
+  function vergessen() { try { localStorage.removeItem(SCHLUESSEL); } catch (e) {} }
+
+  function weiterHtml(klick) {
+    var o = zuletzt();
+    if (!o) return '';
+    return '<button class="ls-weiter" type="button" onclick="' + klick(o) + '">'
+      + '<span class="zn">↩︎</span>'
+      + '<span class="tx"><b>Weiter, wo du warst</b>'
+      + '<span>' + E(o.titel) + '</span></span>'
+      + '<span class="pf">›</span></button>';
   }
 
   /* ---------- Bausteine ---------- */
@@ -184,6 +226,7 @@
   window.LERNSTRUKTUR = {
     tueren: tueren, werkzeuge: werkzeuge,
     tuerenHtml: tuerenHtml, werkzeugHtml: werkzeugHtml,
+    weiterHtml: weiterHtml, merken: merken, zuletzt: zuletzt, vergessen: vergessen,
     stil: stil
   };
 })();

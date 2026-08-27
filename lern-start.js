@@ -38,6 +38,7 @@
       + 'Situationen zum Mitreden, Wörter, Hörtexte und die Lektion dazu.</p>'
       + '</div>';
 
+    h += LS().weiterHtml(function (o) { return "lernWeiter()"; });
     h += LS().tuerenHtml(function (t) { return "lernTuer('" + t.id + "')"; });
     h += LS().werkzeugHtml(function (w) { return "lernWerkzeug('" + w.id + "')"; });
 
@@ -71,6 +72,21 @@
       return;
     }
     gehe(was);
+  };
+
+  /* Zurueck an die Stelle, an der zuletzt gelernt wurde. */
+  window.lernWeiter = function () {
+    var o = LS() && LS().zuletzt();
+    if (!o) return;
+    if (o.typ === 'bereich') {
+      gehe('bereiche');
+      setTimeout(function () {
+        if (o.weg && window.bereichWeg) window.bereichWeg(o.weg);
+        if (window.bereichOeffnen) window.bereichOeffnen(o.id);
+      }, 0);
+      return;
+    }
+    gehe(o.id);
   };
 
   window.lernWerkzeug = function (was) {
