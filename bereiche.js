@@ -9,7 +9,7 @@
      uebungen.js   56 Wortschatzbereiche, viele schon nach Orten
      themen.js     die Grammatik- und Aussprachebausteine
      *.html        die ausgearbeiteten Lektionsseiten
-     amanda/sz-*   die zwölf Szenenbilder mit Amanda
+     amanda/sz-*   für jeden der 49 Bereiche ein Szenenbild
 
    Zwei Wege, wie Julia es beschrieben hat:
 
@@ -69,7 +69,7 @@ window.BEREICHE = [
   ws:['a2-cafe','a1-essen'], ho:['essen'], hilf:['a1-artikel','wortakzent'],
   lek:'baecker-cafe-a2-interaktiv.html' },
 
-{ id:'restaurant', weg:'freizeit', gr:'einkaufen', t:'Restaurant',
+{ id:'restaurant', bild:'sz-restaurant', weg:'freizeit', gr:'einkaufen', t:'Restaurant',
   u:'Reservieren, bestellen, eine Allergie erklären, reklamieren.',
   zeichen:'essen', lvl:'A1–B2',
   dlg:['restaurant','tisch-reservieren','allergie-erklaeren','essen-reklamieren'],
@@ -83,7 +83,7 @@ window.BEREICHE = [
   ws:['einkaufen','a2-einkaufen','a1-einkaufen'], ho:['einkaufen'], hilf:['konjunktiv2','wechselpraepositionen'],
   lek:'einkaufen-a2-b1.html' },
 
-{ id:'kleidung', weg:'freizeit', gr:'einkaufen', t:'Kleidung & Shopping',
+{ id:'kleidung', bild:'sz-kleidung', weg:'freizeit', gr:'einkaufen', t:'Kleidung & Shopping',
   u:'Größe, Farbe, Umtausch — und höflich Nein sagen zur Beratung.',
   zeichen:'karten', lvl:'A2–B1',
   dlg:['umtausch'], ws:['a2-kleidung'], ho:['kleidung'], hilf:['adjektivdeklination'],
@@ -95,7 +95,7 @@ window.BEREICHE = [
   dlg:[], ws:['essen'], ho:['essen'], hilf:['passiv-praesens','a1-artikel'],
   lek:'kochen-a2-b1.html' },
 
-{ id:'verkaufen', weg:'freizeit', gr:'einkaufen', t:'Online kaufen & verkaufen',
+{ id:'verkaufen', bild:'sz-verkaufen', weg:'freizeit', gr:'einkaufen', t:'Online kaufen & verkaufen',
   u:'Handeln, beschreiben, sich einig werden.',
   zeichen:'lupe', lvl:'A2–B1',
   dlg:['flohmarkt-handeln','sofa-verkaufen'], ws:['einkaufen'], ho:['verkaufen'], hilf:['adjektivdeklination'],
@@ -115,20 +115,20 @@ window.BEREICHE = [
   ws:['a2-arzt','c1-arzt','gesundheit'], ho:['gesundheit'], hilf:['perfekt-praeteritum','konnektoren','ch'],
   lek:'arzt-a2-b1.html' },
 
-{ id:'zahnarzt', weg:'freizeit', gr:'gesundheit', t:'Zahnarzt',
+{ id:'zahnarzt', bild:'sz-zahnarzt', weg:'freizeit', gr:'gesundheit', t:'Zahnarzt',
   u:'Nach Kosten fragen, bevor gebohrt wird.',
   zeichen:'herz', lvl:'A2–B1',
   dlg:['zahnarzt-kostenplan'], ws:['zahnarzt'], ho:['zahnarzt'], hilf:['konjunktiv2'],
   lek:'beim-zahnarzt-a2-b1.html' },
 
-{ id:'notfall', weg:'freizeit', gr:'gesundheit', t:'Krankenhaus & Notfall',
+{ id:'notfall', bild:'sz-notfall', weg:'freizeit', gr:'gesundheit', t:'Krankenhaus & Notfall',
   u:'Den Notruf absetzen, sich anmelden, Besuch machen.',
   zeichen:'blitz', lvl:'A1–B1',
   dlg:['krankenhaus-besuch','notruf-112','notaufnahme-anmeldung','bereitschaftsdienst-116117'],
   ws:['gesundheit'], ho:['gesundheit'], hilf:['nebensaetze'],
   lek:null },
 
-{ id:'kasse', weg:'freizeit', gr:'gesundheit', t:'Krankenkasse & Versicherung',
+{ id:'kasse', bild:'sz-kasse', weg:'freizeit', gr:'gesundheit', t:'Krankenkasse & Versicherung',
   u:'Widersprechen, melden, abschließen — mit den richtigen Wörtern.',
   zeichen:'schloss', lvl:'B1–B2',
   dlg:['widerspruch-krankenkasse','haftpflicht-abschliessen','wasserschaden-melden'],
@@ -150,20 +150,20 @@ window.BEREICHE = [
   ws:['a2-bank','einkaufen'], ho:['bank'], hilf:['konjunktiv2','genitiv'],
   lek:'bank-konto-a2-interaktiv.html' },
 
-{ id:'vertraege', weg:'freizeit', gr:'papiere', t:'Handy & Verträge',
+{ id:'vertraege', bild:'sz-vertraege', weg:'freizeit', gr:'papiere', t:'Handy & Verträge',
   u:'Abschließen, kündigen, und die Frist im Blick behalten.',
   zeichen:'mikro', lvl:'A2–B2',
   dlg:['handyvertrag-abschliessen','handyvertrag-kuendigen'],
   ws:['a2-handy','c1-vertrag'], ho:['medien'], hilf:['temporale-nebensaetze','genitiv'],
   lek:'handy-internet-a2-interaktiv.html' },
 
-{ id:'post', weg:'freizeit', gr:'papiere', t:'Post & Paket',
+{ id:'post', bild:'sz-post', weg:'freizeit', gr:'papiere', t:'Post & Paket',
   u:'Abholen, aufgeben, annehmen — mit Ausweis und ohne Stress.',
   zeichen:'abgeben', lvl:'A2–B1',
   dlg:['post'], ws:['a2-post'], ho:['post'], hilf:['wechselpraepositionen'],
   lek:'post-pakete-a2-interaktiv.html' },
 
-{ id:'polizei', weg:'freizeit', gr:'papiere', t:'Polizei & Sicherheit',
+{ id:'polizei', bild:'sz-polizei', weg:'freizeit', gr:'papiere', t:'Polizei & Sicherheit',
   u:'Eine Anzeige aufgeben und genau beschreiben, was passiert ist.',
   zeichen:'lupe', lvl:'B1',
   dlg:['polizei-fahrraddiebstahl'], ws:[], ho:['polizei'], hilf:['perfekt-praeteritum'],
@@ -177,7 +177,7 @@ window.BEREICHE = [
   ws:['a2-unterwegs','stadt'], ho:['stadt','reisen'], hilf:['wechselpraepositionen','vokale'],
   lek:'nach-dem-weg-fragen-a2.html' },
 
-{ id:'werkstatt', weg:'freizeit', gr:'unterwegs', t:'Auto & Werkstatt',
+{ id:'werkstatt', bild:'sz-werkstatt', weg:'freizeit', gr:'unterwegs', t:'Auto & Werkstatt',
   u:'Einen Schaden beschreiben und einen Preis nennen lassen.',
   zeichen:'blitz', lvl:'A2–B2',
   dlg:['fahrrad-reparatur','mietwagen-abholen'], ws:['a2-werkstatt'], ho:['werkstatt'], hilf:['passiv-praesens'],
@@ -189,7 +189,7 @@ window.BEREICHE = [
   dlg:['hotel-einchecken'], ws:['reisen','strand'], ho:['reisen'], hilf:['temporale-nebensaetze'],
   lek:'im-hotel-a2-interaktiv.html' },
 
-{ id:'wohnen', weg:'freizeit', gr:'unterwegs', t:'Wohnung & Nachbarn',
+{ id:'wohnen', bild:'sz-wohnen', weg:'freizeit', gr:'unterwegs', t:'Wohnung & Nachbarn',
   u:'Besichtigen, Mängel melden, Lärm ansprechen, Kaution holen.',
   zeichen:'haus', lvl:'A1–C1',
   dlg:['wohnung','nachbarn','heizung-kaputt','laerm-nachbar','kaution-zurueckfordern','muell-trennen','elektriker-bestellen','umzug-hilfe','c1-nachbar-vorwurf-laerm'],
@@ -197,21 +197,21 @@ window.BEREICHE = [
   lek:'wohnen-nachbarn-teil-1-a2-b1.html' },
 
 /* ================= FREIZEIT · Menschen & Familie ================= */
-{ id:'freunde', weg:'freizeit', gr:'menschen', t:'Freunde & Gefühle',
+{ id:'freunde', bild:'sz-freunde', weg:'freizeit', gr:'menschen', t:'Freunde & Gefühle',
   u:'Absagen, trösten, streiten, Grenzen setzen — freundlich.',
   zeichen:'herz', lvl:'A1–B2',
   dlg:['einladung-absagen','kompliment-annehmen','zu-viel-verlangt','verspaetung-entschuldigen','streit-klaeren','jemanden-troesten','heimweh-sprechen','nicht-verstanden'],
   ws:['gefuehle','persoenlichkeit'], ho:['gefuehle','persoenlichkeit'], hilf:['konjunktiv2','nebensaetze','satzmelodie'],
   lek:'wortschatz-gefuehle-b1.html' },
 
-{ id:'familie', weg:'freizeit', gr:'menschen', t:'Familie & Kinder',
+{ id:'familie', bild:'sz-familie', weg:'freizeit', gr:'menschen', t:'Familie & Kinder',
   u:'Betreuung organisieren, Absprachen treffen, Ratschläge abwehren.',
   zeichen:'gruppe', lvl:'A2–B2',
   dlg:['kinderbetreuung-bitten','bildschirmzeit-absprache','geburtstag-planen','erziehungstipp-schwieger'],
   ws:['c1-familie','a1-familie'], ho:['familie'], hilf:['konjunktiv2','temporale-nebensaetze'],
   lek:'meine-familie-a2.html' },
 
-{ id:'schule', weg:'freizeit', gr:'menschen', t:'Kita & Schule',
+{ id:'schule', bild:'sz-schule', weg:'freizeit', gr:'menschen', t:'Kita & Schule',
   u:'Elterngespräch führen — und für dein Kind einstehen.',
   zeichen:'buch', lvl:'A2–C1',
   dlg:['kita-eingewoehnung','elterngespraech-schule','kind-wird-geaergert','c1-elterngespraech-schule','pruefung-wiederholen'],
@@ -226,14 +226,14 @@ window.BEREICHE = [
   lek:'feste-freizeit-teil-1-a2-b1.html' },
 
 /* ================= BERUF · Überall im Job ================= */
-{ id:'bewerbung', weg:'beruf', gr:'ueberall', t:'Bewerbung & Vorstellung',
+{ id:'bewerbung', bild:'sz-bewerbung', weg:'beruf', gr:'ueberall', t:'Bewerbung & Vorstellung',
   u:'Sich vorstellen, nachfassen, Unterlagen klären, Gehalt verhandeln.',
   zeichen:'stift', lvl:'A2–C1',
   dlg:['bewerbung','bewerbung-nachfassen','unterlagen-nachreichen','probearbeit-termin','praktikum','gehalt','c1-gehalt-und-luecke'],
   ws:['bewerbung-b1','c1-bewerbung'], ho:['bewerbung'], hilf:['konjunktiv2','perfekt-praeteritum','satzmelodie'],
   lek:null },
 
-{ id:'erste-tage', weg:'beruf', gr:'ueberall', t:'Die ersten Tage',
+{ id:'erste-tage', bild:'sz-erste-tage', weg:'beruf', gr:'ueberall', t:'Die ersten Tage',
   u:'Sich vorstellen, um Hilfe bitten, eine unklare Aufgabe klären.',
   zeichen:'haken', lvl:'A2–B2',
   dlg:['erster-tag','hilfe-buero','unklare-aufgabe','lieferung-annehmen'],
@@ -247,14 +247,14 @@ window.BEREICHE = [
   ws:['c1-buero','arbeit'], ho:['arbeit'], hilf:['indirekte-rede','konjunktiv2'],
   lek:'wortschatz-arbeit-b1.html' },
 
-{ id:'rechte', weg:'beruf', gr:'ueberall', t:'Krank, Urlaub & Schicht',
+{ id:'rechte', bild:'sz-rechte', weg:'beruf', gr:'ueberall', t:'Krank, Urlaub & Schicht',
   u:'Sich krankmelden, Urlaub beantragen, einen Tausch ablehnen.',
   zeichen:'uhr', lvl:'A2–B2',
   dlg:['krankmeldung','urlaub','schichttausch-ablehnen'],
   ws:['a2-arbeit'], ho:['rechte'], hilf:['konjunktiv2','temporale-nebensaetze'],
   lek:null },
 
-{ id:'heikel', weg:'beruf', gr:'ueberall', t:'Heikle Gespräche',
+{ id:'heikel', bild:'sz-heikel', weg:'beruf', gr:'ueberall', t:'Heikle Gespräche',
   u:'Kritik äußern, Fehler zugeben, eine Frist reißen, Nein sagen.',
   zeichen:'idee', lvl:'B1–C1',
   dlg:['feedback','frist-nicht-halten','zuschnitt-fehler','c1-aufgabe-zurueckgeben','kunde'],
@@ -265,33 +265,33 @@ window.BEREICHE = [
    Titel, Niveau, Prüfung und alles Material stehen in berufe.js.
    Hier steht nur, wie das Feld aussehen soll und welche Dialoge
    aus dialoge.js zusätzlich dazugehören. */
-{ id:'pflege',        weg:'beruf', gr:'feld', beruf:'pflege',        zeichen:'herz',
+{ id:'pflege', bild:'sz-pflege',        weg:'beruf', gr:'feld', beruf:'pflege',        zeichen:'herz',
   dlg:['uebergabe-station','angehoerige-kritik','bewohnerin-verweigert','c1-angehoerige-vorwurf'],
   ws:['pflege-b1','c1-pflege'], ho:['pflege'], lek:null },
-{ id:'medizin',       weg:'beruf', gr:'feld', beruf:'medizin',       zeichen:'lupe',  dlg:[], ws:['c1-arzt'], ho:['medizin'], lek:null },
-{ id:'erziehung',     weg:'beruf', gr:'feld', beruf:'erziehung',     zeichen:'gruppe',dlg:['kita-eingewoehnung'], ws:['a2-schule'], ho:['erziehung'], lek:null },
-{ id:'bau',           weg:'beruf', gr:'feld', beruf:'bau',           zeichen:'blitz',
+{ id:'medizin', bild:'sz-medizin',       weg:'beruf', gr:'feld', beruf:'medizin',       zeichen:'lupe',  dlg:[], ws:['c1-arzt'], ho:['medizin'], lek:null },
+{ id:'erziehung', bild:'sz-erziehung',     weg:'beruf', gr:'feld', beruf:'erziehung',     zeichen:'gruppe',dlg:['kita-eingewoehnung'], ws:['a2-schule'], ho:['erziehung'], lek:null },
+{ id:'bau', bild:'sz-bau',           weg:'beruf', gr:'feld', beruf:'bau',           zeichen:'blitz',
   dlg:['anweisung-baustelle','sicherheitsunterweisung'], ws:[], ho:['bau'], lek:null },
-{ id:'elektro-shk',   weg:'beruf', gr:'feld', beruf:'elektro-shk',   zeichen:'blitz', dlg:['elektriker-bestellen'], ws:[], ho:['elektro-shk'], lek:null },
-{ id:'metall',        weg:'beruf', gr:'feld', beruf:'metall',        zeichen:'haken', dlg:['zuschnitt-fehler'], ws:[], ho:['metall'], lek:null },
-{ id:'fahren',        weg:'beruf', gr:'feld', beruf:'fahren',        zeichen:'karten',
+{ id:'elektro-shk', bild:'sz-elektro-shk',   weg:'beruf', gr:'feld', beruf:'elektro-shk',   zeichen:'blitz', dlg:['elektriker-bestellen'], ws:[], ho:['elektro-shk'], lek:null },
+{ id:'metall', bild:'sz-metall',        weg:'beruf', gr:'feld', beruf:'metall',        zeichen:'haken', dlg:['zuschnitt-fehler'], ws:[], ho:['metall'], lek:null },
+{ id:'fahren', bild:'sz-fahren',        weg:'beruf', gr:'feld', beruf:'fahren',        zeichen:'karten',
   dlg:['c1-fehler-in-der-lieferkette','lieferung-annehmen'], ws:['a2-unterwegs'], ho:['fahren'], lek:null },
-{ id:'kueche',        weg:'beruf', gr:'feld', beruf:'kueche',        zeichen:'essen',
+{ id:'kueche', bild:'sz-kueche',        weg:'beruf', gr:'feld', beruf:'kueche',        zeichen:'essen',
   dlg:['bestellung-kueche','c1-gast-wird-laut'], ws:['a2-essen'], ho:['kueche'], lek:null },
-{ id:'hotel',         weg:'beruf', gr:'feld', beruf:'hotel',         zeichen:'ton',   dlg:['hotel-einchecken'], ws:['reisen'], ho:['hotel'], lek:null },
-{ id:'handel',        weg:'beruf', gr:'feld', beruf:'handel',        zeichen:'karten',
+{ id:'hotel', bild:'sz-hotel',         weg:'beruf', gr:'feld', beruf:'hotel',         zeichen:'ton',   dlg:['hotel-einchecken'], ws:['reisen'], ho:['hotel'], lek:null },
+{ id:'handel', bild:'sz-handel',        weg:'beruf', gr:'feld', beruf:'handel',        zeichen:'karten',
   dlg:['reklamation-laden','umtausch'], ws:['a2-einkaufen'], ho:['handel'], lek:null },
-{ id:'reinigung',     weg:'beruf', gr:'feld', beruf:'reinigung',     zeichen:'haken', dlg:[], ws:[], ho:['reinigung'], lek:null },
-{ id:'lager',         weg:'beruf', gr:'feld', beruf:'lager',         zeichen:'abgeben',
+{ id:'reinigung', bild:'sz-reinigung',     weg:'beruf', gr:'feld', beruf:'reinigung',     zeichen:'haken', dlg:[], ws:[], ho:['reinigung'], lek:null },
+{ id:'lager', bild:'sz-lager',         weg:'beruf', gr:'feld', beruf:'lager',         zeichen:'abgeben',
   dlg:['lieferung-annehmen'], ws:[], ho:['lager'], lek:null },
-{ id:'produktion',    weg:'beruf', gr:'feld', beruf:'produktion',    zeichen:'serie', dlg:['sicherheitsunterweisung'], ws:[], ho:['produktion'], lek:null },
-{ id:'it',            weg:'beruf', gr:'feld', beruf:'it',            zeichen:'idee',  dlg:['mail-missverstaendnis'], ws:['medien','ki-arbeitswelt'], ho:['it'], lek:null },
-{ id:'ingenieur',     weg:'beruf', gr:'feld', beruf:'ingenieur',     zeichen:'lupe',  dlg:[], ws:[], ho:['ingenieur'], lek:null },
-{ id:'buero',         weg:'beruf', gr:'feld', beruf:'buero',         zeichen:'stift',
+{ id:'produktion', bild:'sz-produktion',    weg:'beruf', gr:'feld', beruf:'produktion',    zeichen:'serie', dlg:['sicherheitsunterweisung'], ws:[], ho:['produktion'], lek:null },
+{ id:'it', bild:'sz-it',            weg:'beruf', gr:'feld', beruf:'it',            zeichen:'idee',  dlg:['mail-missverstaendnis'], ws:['medien','ki-arbeitswelt'], ho:['it'], lek:null },
+{ id:'ingenieur', bild:'sz-ingenieur',     weg:'beruf', gr:'feld', beruf:'ingenieur',     zeichen:'lupe',  dlg:[], ws:[], ho:['ingenieur'], lek:null },
+{ id:'buero', bild:'sz-buero',         weg:'beruf', gr:'feld', beruf:'buero',         zeichen:'stift',
   dlg:['meeting','telefon-melden'], ws:['c1-buero','arbeit'], ho:['buero'], lek:'wortschatz-arbeit-b1.html' },
-{ id:'buchhaltung',   weg:'beruf', gr:'feld', beruf:'buchhaltung',   zeichen:'karten',dlg:['rechnung-reklamieren'], ws:['c1-vertrag'], ho:['buchhaltung'], lek:null },
-{ id:'friseur-beruf', weg:'beruf', gr:'feld', beruf:'friseur',       zeichen:'herz',  dlg:['friseur'], ws:['a2-friseur'], ho:['friseur-beruf'], lek:null },
-{ id:'landwirtschaft',weg:'beruf', gr:'feld', beruf:'landwirtschaft',zeichen:'serie', dlg:[], ws:['natur'], ho:['landwirtschaft'], lek:null },
-{ id:'sozial',        weg:'beruf', gr:'feld', beruf:'sozial',        zeichen:'gruppe',dlg:['jobcenter-weiterbewilligung'], ws:['integration'], ho:['sozial'], lek:null }
+{ id:'buchhaltung', bild:'sz-buchhaltung',   weg:'beruf', gr:'feld', beruf:'buchhaltung',   zeichen:'karten',dlg:['rechnung-reklamieren'], ws:['c1-vertrag'], ho:['buchhaltung'], lek:null },
+{ id:'friseur-beruf', bild:'sz-friseur-beruf', weg:'beruf', gr:'feld', beruf:'friseur',       zeichen:'herz',  dlg:['friseur'], ws:['a2-friseur'], ho:['friseur-beruf'], lek:null },
+{ id:'landwirtschaft', bild:'sz-landwirtschaft',weg:'beruf', gr:'feld', beruf:'landwirtschaft',zeichen:'serie', dlg:[], ws:['natur'], ho:['landwirtschaft'], lek:null },
+{ id:'sozial', bild:'sz-sozial',        weg:'beruf', gr:'feld', beruf:'sozial',        zeichen:'gruppe',dlg:['jobcenter-weiterbewilligung'], ws:['integration'], ho:['sozial'], lek:null }
 
 ];
