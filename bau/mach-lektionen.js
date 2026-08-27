@@ -44,11 +44,18 @@ const WS = window.UEBUNGEN.skills.find(s => s.id === 'wortschatz');
 const THEMA = Object.fromEntries(WS.themes.map(t => [t.id, t]));
 const DIALOG = Object.fromEntries(window.DIALOGE.map(d => [d.id, d]));
 
-/* Beispielsaetze: das Wort genau so, wie es im Wortschatz steht. */
+/* Beispielsaetze kommen aus zwei Quellen: dem Vokabelpool und der
+   Satzsammlung. Dort steht das Zielwort zwischen §…§ — das ist die
+   Markierung fuer den Trainer und muss hier wieder weg. */
+require(path.join(WURZEL, 'vokabel-saetze.js'));
+require(path.join(WURZEL, 'vokabel-saetze-neu.js'));
 const POOL = window.VOKABELN_POOL || window.VOK_POOL || [];
 const SATZ = {};
+Object.keys(window.VOKABEL_SAETZE || {}).forEach(k => {
+  SATZ[k.trim()] = String(window.VOKABEL_SAETZE[k]).replace(/§/g, '');
+});
 (Array.isArray(POOL) ? POOL : []).forEach(v => {
-  if (v.de && v.bsp) SATZ[v.de.trim()] = v.bsp;
+  if (v.de && v.bsp && !SATZ[v.de.trim()]) SATZ[v.de.trim()] = v.bsp;
 });
 
 /* ---------- Kleinkram ---------- */
