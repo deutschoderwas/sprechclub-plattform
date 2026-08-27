@@ -66,6 +66,12 @@ function artikelTeilen(wort) {
   const m = /^(der|die|das)\s+(.+)$/.exec(String(wort).trim());
   return m ? { art: m[1], rest: m[2] } : { art: '', rest: String(wort).trim() };
 }
+/* Ein Argument oder eine Liste von Argumenten — beides erlaubt,
+   damit alte Eintraege weiter funktionieren. */
+function liste(x) {
+  return (Array.isArray(x) ? x : [x]).filter(Boolean)
+    .map(a => '<li>' + esc(a) + '</li>').join('');
+}
 function mischen(liste, keim) {
   const a = liste.slice();
   let z = keim || 7;
@@ -133,22 +139,23 @@ function redemittelVon(b) {
 }
 
 /* Aus den fertigen Aufgaben werden die drei Datenreihen der Seite. */
-function quizVon(aufgaben, woerter) {
+function quizVon(aufgaben) {
   const q = [];
   aufgaben.filter(a => a.type === 'choice').forEach(a => {
     if (!a.options || a.answer == null) return;
     q.push({ q: a.q, o: a.options, c: a.answer, e: a.explain || ('Richtig ist: ' + a.options[a.answer] + '.') });
   });
-  aufgaben.filter(a => a.type === 'match').forEach(a => {
-    const p = a.pairs || [];
-    p.slice(0, 4).forEach((paar, i) => {
-      const falsche = p.filter((_, j) => j !== i).map(x => x.l).slice(0, 2);
-      if (falsche.length < 2) return;
-      const opts = mischen([paar.l].concat(falsche), i + 3);
-      q.push({ q: 'Was passt: „' + paar.r + '“?', o: opts, c: opts.indexOf(paar.l), e: paar.l + ' — ' + paar.r + '.' });
-    });
+  return q.slice(0, 12);
+}
+
+/* Zuordnen bleibt Zuordnen: aus vier Paaren wird eine Uebung zum
+   Antippen, nicht noch eine Auswahlfrage mehr. */
+function zuordnenVon(aufgaben) {
+  const z = [];
+  aufgaben.filter(a => a.type === 'match' && (a.pairs || []).length >= 3).forEach(a => {
+    z.push({ intro: a.intro || 'Ordne zu:', pairs: a.pairs.slice(0, 5) });
   });
-  return q.slice(0, 10);
+  return z.slice(0, 2);
 }
 function gapVon(aufgaben) {
   const g = [];
@@ -174,7 +181,8 @@ function neunzigVon(woerter) {
 function seite(b, t) {
   const woerter = woerterVon(b);
   const aufgaben = aufgabenVon(b);
-  const QUIZ = quizVon(aufgaben, woerter);
+  const QUIZ = quizVon(aufgaben);
+  const ZUORD = zuordnenVon(aufgaben);
   const GAP = gapVon(aufgaben);
   const W90 = neunzigVon(woerter);
   const rm = redemittelVon(b);
@@ -187,7 +195,7 @@ function seite(b, t) {
     dlg ? ['2', '💬 Dialoge'] : null,
     ['3', '⚖️ Debatte'], ['4', '🗣️ Sprechen'],
     W90.length ? ['5', '⏱️ 90 Sekunden'] : null,
-    (QUIZ.length || GAP.length) ? ['6', '✅ Üben'] : null
+    (QUIZ.length || GAP.length || ZUORD.length) ? ['6', '✅ Üben'] : null
   ].filter(Boolean);
 
   const css = fs.readFileSync(VORLAGE, 'utf8').match(/<style>[\s\S]*?<\/style>/)[0];
@@ -197,7 +205,9 @@ function seite(b, t) {
     + '<title>' + esc(titel) + ' · Sprechclub ' + esc(stufe) + ' | deutschoderwas</title>\n'
     + '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'
     + '<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">\n'
-    + css + '</head>\n<body><div class="wrapper">\n'
+    + css
+    + '<link rel="stylesheet" href="lektion-handy.css">\n'
+    + '</head>\n<body><div class="wrapper">\n'
     + '<div class="eyebrow">deutschoderwas · Sprechclub · ' + esc(stufe) + '</div>\n'
     + '<h1 class="title">' + esc(t.titel[0]) + ' <span class="hl">' + esc(t.titel[1]) + '</span></h1>\n'
     + '<p class="subtitle">' + esc(t.ziel) + '</p>\n'
@@ -207,12 +217,12 @@ function seite(b, t) {
 
   /* 0 — Einstieg */
   h += '<section class="section active" data-section="0">\n<h2 class="st">Schau dir das Bild an</h2>\n'
-    + '<p class="ssub">' + esc(t.ziel) + '</p>\n'
+    + '<p class="ssub">Zuerst nur schauen und beschreiben — die Wörter kommen gleich danach.</p>\n'
     + '<div class="scene-wrap"><img src="amanda/' + esc(b.bild || ('sz-' + b.id)) + '.webp" alt="' + esc(titel) + '"></div>\n'
     + '<div class="tip">🗣️ <strong>Zum Einstieg – sprecht reihum:</strong> Beschreibt das Bild. Nutzt: „Auf dem Bild <u>sehe ich</u> …“, „<u>Die Person</u> …“, „Im Hintergrund <u>ist</u> …“</div>\n'
     + '<h2 class="st">Erste Fragen</h2>\n<ul class="qlist">\n'
     + t.fragen.map(f => '<li>' + esc(f) + '</li>').join('\n')
-    + '\n<li>Kennst du das aus deinem Alltag? Erzähl davon.</li>\n</ul>\n</section>\n';
+    + '\n</ul>\n</section>\n';
 
   /* 1 — Wortschatz */
   h += '<section class="section" data-section="1">\n<h2 class="st">Wortschatz</h2>\n'
@@ -233,10 +243,12 @@ function seite(b, t) {
 
   /* 3 — Debatte */
   h += '<section class="section" data-section="3">\n<h2 class="st">Debatte: ' + esc(t.debatte.frage) + '</h2>\n'
-    + '<p class="ssub">Teilt euch in zwei Gruppen. Jede Gruppe sammelt drei Argumente — eins steht schon da.</p>\n'
+    + '<p class="ssub">Teilt euch in zwei Gruppen. Jede Seite hat drei Argumente — sucht euch eins aus und verteidigt es.</p>\n'
     + '<div class="pcgrid">\n'
-    + '<div class="pcol pro"><h4>✓ Dafür</h4><ul><li>' + esc(t.debatte.pro) + '</li><li>Findet ein zweites Argument.</li><li>Und ein drittes.</li></ul></div>\n'
-    + '<div class="pcol con"><h4>✓ Dagegen</h4><ul><li>' + esc(t.debatte.con) + '</li><li>Findet ein zweites Argument.</li><li>Und ein drittes.</li></ul></div>\n'
+    + '<div class="pcol pro"><h4>✓ ' + esc(t.debatte.fuer || 'Dafür') + '</h4><ul>'
+    + liste(t.debatte.pro) + '</ul></div>\n'
+    + '<div class="pcol con"><h4>✓ ' + esc(t.debatte.gegen || 'Dagegen') + '</h4><ul>'
+    + liste(t.debatte.con) + '</ul></div>\n'
     + '</div>\n'
     + '<div class="rmcard"><b>🗣️ Redemittel für die Debatte</b> — bau diese Sätze ein:\n<div style="margin-top:.5rem">'
     + ['Ich finde, dass …', 'Ein Vorteil ist …', 'Ein Nachteil ist …', 'Meiner Meinung nach …', 'Das stimmt, aber …', 'Ich sehe das anders.', 'Ich stimme dir zu.']
@@ -264,9 +276,18 @@ function seite(b, t) {
   }
 
   /* 6 — Üben */
-  if (QUIZ.length || GAP.length) {
+  if (QUIZ.length || GAP.length || ZUORD.length) {
     h += '<section class="section" data-section="6">\n<h2 class="st">✅ Üben</h2>\n';
-    if (QUIZ.length) h += '<p class="ssub">Erst tippen, dann lesen, warum es stimmt.</p>\n<div id="quiz"></div>\n';
+    if (ZUORD.length) {
+      h += '<p class="ssub">' + esc(ZUORD[0].intro) + ' Tipp links ein Wort an, dann rechts das, was dazugehört.</p>\n'
+        + '<div class="zuord" id="zuord"></div>\n';
+    }
+    if (QUIZ.length) {
+      h += '<h2 class="st">🎯 ' + QUIZ.length + ' Fragen</h2>\n'
+        + '<p class="ssub">Erst tippen, dann lesen, warum es stimmt.</p>\n'
+        + '<div class="ergebnis" id="stand">Noch keine Frage beantwortet.</div>\n'
+        + '<div id="quiz"></div>\n';
+    }
     if (GAP.length) h += '<h2 class="st">✍️ Lückentext</h2>\n<p class="ssub">Wähle das Wort, das in die Lücke gehört.</p>\n<div class="gap" id="gap"></div>\n';
     h += '</section>\n';
   }
@@ -296,19 +317,22 @@ function seite(b, t) {
   }
   if (QUIZ.length) {
     h += 'var QUIZ=' + JSON.stringify(QUIZ) + ';\n'
-      + 'var qc=document.getElementById("quiz");\n'
+      + 'var qc=document.getElementById("quiz"), richtig=0, beantwortet=0;\n'
       + 'QUIZ.forEach(function(item){\n'
       + ' var d=document.createElement("div");d.className="quiz-q";\n'
       + ' d.innerHTML=\'<div class="qt">\'+item.q+\'</div>\';\n'
       + ' var op=document.createElement("div");op.className="quiz-opts";\n'
       + ' item.o.forEach(function(t,i){var b=document.createElement("button");b.className="qopt";b.textContent=t;\n'
-      + '  b.onclick=function(){if(d.dataset.done)return;d.dataset.done=1;\n'
-      + '   if(i===item.c){b.classList.add("right");}else{b.classList.add("wrong");op.children[item.c].classList.add("right");}\n'
-      + '   d.querySelector(".qexp").classList.add("show");};\n'
+      + '  b.onclick=function(){if(d.dataset.done)return;d.dataset.done=1;beantwortet++;\n'
+      + '   if(i===item.c){b.classList.add("right");richtig++;}else{b.classList.add("wrong");op.children[item.c].classList.add("right");}\n'
+      + '   d.querySelector(".qexp").classList.add("show");stand();};\n'
       + '  op.appendChild(b);});\n'
       + ' d.appendChild(op);\n'
       + ' var e=document.createElement("div");e.className="qexp";e.innerHTML="💡 "+item.e;d.appendChild(e);\n'
-      + ' qc.appendChild(d);\n});\n';
+      + ' qc.appendChild(d);\n});\n'
+      + 'function stand(){var el=document.getElementById("stand");if(!el)return;\n'
+      + ' if(!beantwortet){el.textContent="Noch keine Frage beantwortet.";return;}\n'
+      + ' el.textContent="Du hast "+richtig+" von "+beantwortet+" richtig"+(beantwortet===QUIZ.length?" — fertig!":".");}\n';
   }
   if (GAP.length) {
     h += 'var GAP=' + JSON.stringify(GAP) + ';\n'
@@ -323,7 +347,33 @@ function seite(b, t) {
       + ' span.querySelector(".slot").replaceWith(sel);\n'
       + ' g.appendChild(span);\n});\n';
   }
-  h += '<\/script>\n</body></html>\n';
+  if (ZUORD.length) {
+    h += 'var ZUORD=' + JSON.stringify(ZUORD) + ';\n'
+      + 'var zb=document.getElementById("zuord");\n'
+      + 'if(zb){ZUORD.forEach(function(satz,si){\n'
+      + ' var links=document.createElement("div");links.className="zsp";\n'
+      + ' var rechts=document.createElement("div");rechts.className="zsp";\n'
+      + ' var lt=document.createElement("div");lt.className="zsp-titel";lt.textContent="Wort";links.appendChild(lt);\n'
+      + ' var rt=document.createElement("div");rt.className="zsp-titel";rt.textContent="Bedeutung";rechts.appendChild(rt);\n'
+      + ' var paare=satz.pairs, wahl=null;\n'
+      + ' function knopf(text,rolle,nr){var b=document.createElement("button");b.type="button";b.textContent=text;\n'
+      + '  b.dataset.nr=nr;b.dataset.rolle=rolle;\n'
+      + '  b.onclick=function(){\n'
+      + '   if(b.classList.contains("ok"))return;\n'
+      + '   if(!wahl||wahl.dataset.rolle===rolle){\n'
+      + '    if(wahl)wahl.classList.remove("gewaehlt");\n'
+      + '    wahl=b;b.classList.add("gewaehlt");return;}\n'
+      + '   if(wahl.dataset.nr===b.dataset.nr){wahl.classList.remove("gewaehlt");wahl.classList.add("ok");b.classList.add("ok");wahl=null;}\n'
+      + '   else{var falsch=wahl;b.classList.add("no");falsch.classList.remove("gewaehlt");falsch.classList.add("no");\n'
+      + '    setTimeout(function(){b.classList.remove("no");falsch.classList.remove("no");},400);wahl=null;}\n'
+      + '  };return b;}\n'
+      + ' function misch(a,k){a=a.slice();var z=k||3;for(var i=a.length-1;i>0;i--){z=(z*1103515245+12345)%2147483648;var j=z%(i+1);var h=a[i];a[i]=a[j];a[j]=h;}return a;}\n'
+      + ' paare.forEach(function(p,i){links.appendChild(knopf(p.l,"l",i));});\n'
+      + ' misch(paare.map(function(p,i){return {r:p.r,i:i};}),si+7).forEach(function(p){rechts.appendChild(knopf(p.r,"r",p.i));});\n'
+      + ' zb.appendChild(links);zb.appendChild(rechts);\n});}\n';
+  }
+  h += '<\/script>\n';
+  h += '<script src="lektion-handy.js" defer><\/script>\n</body></html>\n';
   return h;
 }
 

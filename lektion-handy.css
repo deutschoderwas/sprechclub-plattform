@@ -1,0 +1,112 @@
+/* ============================================================
+   lektion-handy.css — Ordnung auf dem kleinen Bildschirm
+
+   Die Lektionsseiten sind für den Rechner gebaut worden. Am Handy
+   stand deshalb zuerst eine Wand aus sieben Knöpfen in vier
+   Reihen, und der Inhalt fing erst darunter an. Wer die Seite
+   aufmachte, sah keine Lektion, sondern ein Menü.
+
+   Diese Datei ändert nichts am Aussehen auf dem Rechner. Sie
+   räumt nur das Handy auf:
+     · aus der Knopfwand wird eine Zeile zum Wischen
+     · die Zeile bleibt oben stehen und zeigt, wo man ist
+     · Überschriften und Abstände eine Nummer kleiner
+     · Antippbares wird gross genug für einen Daumen
+
+   Wird von allen Lektionsseiten geladen, den gebauten wie den
+   von Hand geschriebenen.
+   ============================================================ */
+
+@media (max-width: 720px) {
+
+  /* ---------- 1. Der Rahmen ---------- */
+  .wrapper { padding: 1.1rem 1rem 3.5rem; }
+  .eyebrow { font-size: .66rem; letter-spacing: .12em; margin-bottom: .5rem; }
+  .title    { font-size: clamp(25px, 7.6vw, 34px); line-height: 1.12; }
+  .subtitle { font-size: .97rem; margin-top: .55rem; }
+  .hero-tags { display: none; }          /* sagt dasselbe wie die Reiter */
+
+  /* ---------- 2. Aus der Knopfwand wird eine Zeile ---------- */
+  .tabs {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    max-width: none;
+    margin: .9rem -1rem .9rem;
+    padding: .45rem 1rem;
+    border-radius: 0;
+    gap: .4rem;
+    scroll-snap-type: x proximity;
+    box-shadow: 0 6px 12px -10px rgba(38, 32, 25, .5);
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    flex: 0 0 auto;
+    font-size: .87rem;
+    padding: .5rem .85rem;
+    scroll-snap-align: start;
+    min-height: 40px;
+  }
+
+  /* ---------- 3. Überschriften und Abstände ---------- */
+  .st   { font-size: clamp(20px, 5.6vw, 26px); margin-top: .2rem; }
+  .ssub { font-size: .93rem; margin-bottom: 1rem; }
+  .section { padding-top: .2rem; }
+
+  /* ---------- 4. Gross genug für einen Daumen ---------- */
+  .qopt { min-height: 46px; display: flex; align-items: center; }
+  .speak { min-width: 34px; min-height: 34px; }
+  .chbtn { min-height: 46px; }
+  .rm, .hw { font-size: .84rem; }
+
+  /* ---------- 5. Karten und Listen ---------- */
+  .vcard { padding: .8rem .9rem; }
+  .dwrap { padding: .9rem; }
+  .tip   { padding: .8rem .9rem; font-size: .93rem; }
+  .qlist li { margin-bottom: .5rem; }
+}
+
+/* Auf ganz schmalen Geräten die Wortkarten enger stellen. */
+@media (max-width: 380px) {
+  .wrapper { padding-left: .8rem; padding-right: .8rem; }
+  .tab { font-size: .83rem; padding: .45rem .7rem; }
+}
+
+/* ============================================================
+   Zuordnen — die Übung zum Antippen
+
+   Links das Wort, rechts die Bedeutung. Ein Tipp links, ein Tipp
+   rechts: passt es, rasten beide ein und sind fertig. Passt es
+   nicht, blinkt es kurz rot und man ist wieder frei.
+   ============================================================ */
+.zuord { display: grid; grid-template-columns: 1fr 1fr; gap: .55rem 1rem; margin-bottom: 1.4rem; }
+.zuord .zsp { display: flex; flex-direction: column; gap: .55rem; }
+.zuord button {
+  font-family: inherit; font-size: .95rem; text-align: left; line-height: 1.35;
+  background: var(--paper, #fff); color: var(--ink, #262019);
+  border: 2px solid var(--sand, #F0E2C8); border-radius: 14px;
+  padding: .6rem .8rem; cursor: pointer; transition: .12s; min-height: 46px;
+}
+.zuord button:hover { border-color: var(--teal, #0FB5A6); }
+.zuord button.gewaehlt { border-color: var(--teal, #0FB5A6); background: var(--teal-soft, #D7F0EC); }
+.zuord button.ok {
+  border-color: var(--green, #2E9E5B); background: #EAF7EF; color: var(--green, #2E9E5B);
+  cursor: default; opacity: .85;
+}
+.zuord button.no { border-color: var(--red, #E8302A); background: var(--red-soft, #FCE5E3); animation: zwack .3s; }
+@keyframes zwack { 25% { transform: translateX(-4px) } 75% { transform: translateX(4px) } }
+@media (prefers-reduced-motion: reduce) { .zuord button.no { animation: none } }
+
+/* Das Ergebnis unter dem Quiz */
+.ergebnis {
+  margin: .4rem 0 1.6rem; padding: .75rem 1rem; border-radius: 14px;
+  background: var(--yellow-soft, #FFF1C2); border: 2px solid var(--yellow, #FFD24A);
+  font-weight: 700; text-align: center;
+}
+@media (max-width: 720px) {
+  .zuord { grid-template-columns: 1fr; gap: .45rem; }
+  .zuord .zsp + .zsp { margin-top: .2rem; }
+  .zuord .zsp-titel { font-size: .8rem; font-weight: 700; color: var(--ink-mute, #A8957D); text-transform: uppercase; letter-spacing: .08em; }
+}
