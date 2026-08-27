@@ -38,11 +38,15 @@
     { view: 'kalender', text: 'LIVE-Unterricht', zeichen: 'kalender', kinder: [
         { view: 'materialien' }
       ] },
-    { view: 'ueben', text: 'Üben', zeichen: 'ueben', kinder: [
-        { view: 'pruefung' },
-        { view: 'bereiche', text: 'Freizeit & Beruf', zeichen: 'lernen' },
+    /* Dieselben drei Tueren wie auf der Startseite des Lernbereichs
+       und in der App — damit das Menue nicht eine vierte Ordnung
+       daneben aufmacht. */
+    { view: 'ueben', text: 'Lernbereich', i18n: 'sl_lernbereich', zeichen: 'ueben', kinder: [
+        { view: 'pruefung', text: 'Für die Prüfung' },
+        { view: 'bereiche', text: 'Für die Freizeit', i18n: 'sl_tuer_frei', zeichen: 'lernen', tuer: 'freizeit' },
+        { view: 'bereiche', text: 'Für den Beruf', i18n: 'sl_tuer_beruf', zeichen: 'lernen', tuer: 'beruf' },
+        { titel: 'Werkzeuge' },
         { view: 'kurse', text: 'Kursbibliothek', zeichen: 'material' },
-        { titel: 'Fertigkeiten' },
         { fert: 'hoeren' }, { fert: 'lesen' },
         { fert: 'schreiben' }, { fert: 'sprechen' },
         { fert: 'wortschatz' }, { fert: 'grammatik' }
@@ -74,18 +78,27 @@ var FUSS = ['profil'];
     var b = document.createElement('button');
     b.className = 'navlink';
     b.dataset.view = e.view;
-    b.onclick = function () { if (window.go) window.go(e.view); };
+    if (e.tuer) b.dataset.tuer = e.tuer;
+    b.onclick = e.tuer
+      ? function () { if (window.lernTuer) return window.lernTuer(e.tuer); if (window.go) window.go(e.view); }
+      : function () { if (window.go) window.go(e.view); };
     var ic = document.createElement('span');
     ic.className = 'ic';
     if (e.zeichen) ic.dataset.zeichen = e.zeichen;
     var t = document.createElement('span');
+    /* Mit Schluessel kann die Uebersetzung den Text spaeter tauschen;
+       ohne stuende er fuer alle Sprachen auf Deutsch da. */
+    if (e.i18n) t.setAttribute('data-i18n', e.i18n);
     t.textContent = e.text || e.view;
     b.appendChild(ic); b.appendChild(t);
     return b;
   }
 
   function knopf(e) {
-    var b = finde(e);
+    /* Zwei Tueren zeigen auf dieselbe Ansicht (Freizeit und Beruf).
+       Ein vorhandener Knopf wuerde dann doppelt vergeben — also
+       bekommen Tueren immer einen eigenen. */
+    var b = e.tuer ? null : finde(e);
     if (!b && e.view) b = baue(e);
     if (b && e.text) {
       /* Nur umbenennen, wenn kein Uebersetzungsschluessel dranhaengt —

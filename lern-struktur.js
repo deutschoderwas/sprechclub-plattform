@@ -77,21 +77,21 @@
     return [
       {
         id: 'pruefung', farbe: '#DD0000', zeichen: '🎓',
-        titel: 'Für die Prüfung',
+        titel: 'Für die Prüfung', i18n: 'ls_tuer_pruef',
         text: 'Von A1 bis C1: die Module einzeln üben, Musterprüfungen schreiben, den eigenen Stand prüfen.',
         zahlen: teile(pz ? pz + ' Prüfungen' : '', 'Lesen, Hören, Schreiben, Sprechen'),
         los: 'Prüfung wählen'
       },
       {
         id: 'freizeit', farbe: '#1990A4', zeichen: '🏡',
-        titel: 'Für die Freizeit',
+        titel: 'Für die Freizeit', i18n: 'ls_tuer_frei',
         text: 'Die Orte, an denen du jeden Tag Deutsch brauchst — vom Bäcker über den Arzt bis zum Amt.',
         zahlen: teile(frei.length ? frei.length + ' Bereiche' : '', sf ? sf + ' Situationen mit Amanda' : ''),
         los: 'Ort suchen'
       },
       {
         id: 'beruf', farbe: '#E0A106', zeichen: '🧰',
-        titel: 'Für den Beruf',
+        titel: 'Für den Beruf', i18n: 'ls_tuer_beruf',
         text: 'Erst, was in jedem Job gilt: Bewerbung, erste Tage, heikle Gespräche. Danach dein eigenes Berufsfeld.',
         zahlen: teile(ber.length ? ber.length + ' Bereiche' : '', sb ? sb + ' Situationen mit Amanda' : ''),
         los: 'Berufsfeld suchen'
@@ -162,7 +162,7 @@
         + '<span class="band" style="background:' + t.farbe + '"></span>'
         + '<span class="inn">'
         + '<span class="zn">' + t.zeichen + '</span>'
-        + '<b>' + E(t.titel) + '</b>'
+        + '<b' + (t.i18n ? ' data-i18n="' + t.i18n + '"' : '') + '>' + E(t.titel) + '</b>'
         + '<span class="u">' + E(t.text) + '</span>'
         + '<span class="zahlen">' + E(t.zahlen) + '</span>'
         + '<span class="los">' + E(t.los) + ' →</span>'
@@ -172,7 +172,7 @@
   function werkzeugHtml(klick, nur) {
     var liste = werkzeuge().filter(function (w) { return !nur || nur.indexOf(w.id) >= 0; });
     if (!liste.length) return '';
-    return '<p class="ls-werk-t">Werkzeuge — immer verfügbar</p><div class="ls-werk">'
+    return '<p class="ls-werk-t" data-i18n="ls_werkzeuge">Werkzeuge — immer verfügbar</p><div class="ls-werk">'
       + liste.map(function (w) {
           return '<button class="ls-wk" type="button" onclick="' + klick(w) + '">'
             + '<span class="zn">' + w.zeichen + '</span>'

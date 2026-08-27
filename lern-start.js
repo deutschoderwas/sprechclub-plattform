@@ -32,9 +32,9 @@
     kopfStil();
 
     var h = '<div class="ls-kopf">'
-      + '<span class="ls-zuruf">Dein Lernbereich</span>'
-      + '<h1>Wofür lernst du gerade Deutsch?</h1>'
-      + '<p>Such dir eine Tür aus. Dahinter liegt alles, was zu diesem Ziel gehört — '
+      + '<span class="ls-zuruf" data-i18n="ls_kicker">Dein Lernbereich</span>'
+      + '<h1 data-i18n="ls_frage">Wofür lernst du gerade Deutsch?</h1>'
+      + '<p data-i18n="ls_unter">Such dir eine Tür aus. Dahinter liegt alles, was zu diesem Ziel gehört — '
       + 'Situationen zum Mitreden, Wörter, Hörtexte und die Lektion dazu.</p>'
       + '</div>';
 
