@@ -112,8 +112,68 @@
 
   /* ---------- 2. Eine Tür öffnen ---------- */
   window.appTuer = function (was) {
-    if (was === 'pruefung') { if (window.pruefStart) window.pruefStart(); return; }
+    if (was === 'pruefung') return appPruefungen();
     appBereiche(was);
+  };
+
+  /* ---------- Die Pruefungen: dieselbe Liste wie auf der Plattform ----------
+     Vorher sprang die App hier direkt in die Simulation. Wer aber
+     wissen will, welche Pruefung ueberhaupt zu ihm passt, stand vor
+     einer Frage, die er noch gar nicht beantworten kann. */
+  var daPruef = function () { return Array.isArray(window.PRUEFUNGEN_DATEN) && window.PRUEFUNGEN_DATEN.length; };
+
+  function appPruefungen() {
+    var s = schirm(); if (!s) return;
+    appStil();
+    if (!daPruef()) {
+      s.innerHTML = '<div class="leer"><div class="em">🎓</div>Die Prüfungen werden geladen …</div>';
+      nachladen('pruefung-bereich.js', daPruef).then(function () { appPruefungen(); });
+      return;
+    }
+    var alle = window.PRUEFUNGEN_DATEN;
+    var sprach = alle.filter(function (p) { return !p.fach; });
+    var beruf = alle.filter(function (p) { return p.fach; });
+
+    s.innerHTML = kopfZurueck('Lernbereich', 'appLernenZurueck()')
+      + '<h1 class="t">Für die Prüfung</h1>'
+      + '<p class="u">Such deine Prüfung. Dahinter stehen die Module, die Zeit und was du üben kannst.</p>'
+      + '<h2 class="a">Die Sprachprüfungen</h2><div class="ls-app-liste">'
+      + sprach.map(pruefZeile).join('') + '</div>'
+      + (beruf.length ? '<h2 class="a">Für deinen Beruf</h2><div class="ls-app-liste">'
+          + beruf.map(pruefZeile).join('') + '</div>' : '');
+    try { window.scrollTo(0, 0); } catch (e) {}
+  }
+  window.appPruefungen = appPruefungen;
+
+  function pruefZeile(p) {
+    return '<button class="ls-app-z" type="button" onclick="appPruefung(\'' + E(p.id) + '\')">'
+      + '<span class="em">' + E(p.niveau || p.stufe || '') + '</span>'
+      + '<span class="tx"><b>' + E(p.name) + '</b>'
+      + (p.fuer ? '<span>' + E(p.fuer) + '</span>' : '')
+      + '<em>' + E(p.anbieter || '') + '</em></span>'
+      + '<span class="pf">›</span></button>';
+  }
+
+  window.appPruefung = function (id) {
+    var s = schirm(); if (!s) return;
+    var p = (window.PRUEFUNGEN_DATEN || []).filter(function (x) { return x.id === id; })[0];
+    if (!p) return;
+    var mod = (p.module || []).map(function (m) {
+      return '<div class="ls-app-mod"><b>' + E(m.n) + '</b><span>' + E(m.m || '') + ' Minuten</span></div>';
+    }).join('');
+    s.innerHTML = kopfZurueck('Alle Prüfungen', 'appPruefungen()')
+      + '<h1 class="t">' + E(p.name) + '</h1>'
+      + '<p class="u">' + E(p.anbieter || '') + ' · ' + E(p.niveau || '') + (p.fuer ? ' — ' + E(p.fuer) : '') + '</p>'
+      + (mod ? '<h2 class="a">' + nr(1) + 'Die Module</h2><div class="ls-app-mods">' + mod + '</div>' : '')
+      + '<h2 class="a">' + nr(2) + 'Unter Zeit üben</h2>'
+      + '<button class="ls-app-gross" type="button" onclick="pruefStart()">'
+      + '<b>Prüfungssimulation starten</b>'
+      + '<span>Lesen, Sprachbausteine und Hören mit Countdown und Auswertung.</span></button>'
+      + '<h2 class="a">' + nr(3) + 'Alles zur Prüfung</h2>'
+      + '<button class="ls-app-gross" type="button" onclick="location.href=\'konto.html#pruefung\'">'
+      + '<b>Die Prüfungsseite öffnen</b>'
+      + '<span>Module einzeln üben, Musterprüfung, Wortschatz und der eigene Stand.</span></button>';
+    try { window.scrollTo(0, 0); } catch (e) {}
   };
 
   function kopfZurueck(text, klick) {
@@ -312,6 +372,11 @@
       '.ls-app-w .em{font-size:18px;line-height:1.2;flex:none;}',
       '.ls-app-w b{display:block;font-size:13.5px;line-height:1.25;}',
       '.ls-app-w span span{display:block;font-size:11.5px;color:var(--mute,#7A7268);line-height:1.3;}',
+      '.ls-app-mods{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px;}',
+      '.ls-app-mod{background:var(--card,#fff);border:1px solid var(--line,#EDE9E1);border-radius:14px;',
+      '  padding:10px 12px;}',
+      '.ls-app-mod b{display:block;font-size:14px;}',
+      '.ls-app-mod span{display:block;font-size:12px;color:var(--mute,#7A7268);}',
       '.ls-app-nr{display:inline-grid;place-items:center;width:23px;height:23px;border-radius:50%;',
       '  background:#1990A4;color:#fff;font-size:13px;font-weight:800;margin-right:8px;vertical-align:1px;}',
       '@media(max-width:360px){.ls-app-woerter{grid-template-columns:1fr;}}'
