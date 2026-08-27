@@ -763,6 +763,12 @@
     box.innerHTML=html;
     box.onclick=function(ev){ var rz=ev.target.closest&&ev.target.closest('[data-goch]'); if(rz){ var sl=rz.getAttribute('data-goch'); var inp=document.getElementById('cmSearch'); if(inp)inp.value=''; mode='channel'; cur=sl; refreshSideActive(); openChannel(sl); } };
   }
+  /* Kanal zu: Liste wieder zeigen und den Verlaufseintrag aufloesen. */
+  function kanalZu(){
+    var w=q('.comm'); if(w) w.classList.remove('chatauf');
+    if(window.zurueckErledigt) zurueckErledigt('kanal');
+  }
+
   async function openChannel(slug){
     mode='channel'; cur=slug; replyTo=null;
     var c=chanBy(slug); if(!c) return;
@@ -780,8 +786,13 @@
     var jb=chat.querySelector('[data-join]');
     if(jb) jb.addEventListener('click',function(){ folgen(slug,true); jb.remove(); });
     var zb=chat.querySelector('[data-zurueck]');
-    if(zb) zb.addEventListener('click',function(){ var w=q('.comm'); if(w) w.classList.remove('chatauf'); });
+    if(zb) zb.addEventListener('click',function(){ kanalZu(); });
     var cw=q('.comm'); if(cw) cw.classList.add('chatauf');
+    /* Am Handy deckt der offene Kanal die Kanalliste ab. Der Zurueck-Knopf
+       des Telefons soll deshalb erst den Kanal schliessen. */
+    if(window.zurueckAuf && cw && cw.classList.contains('chatauf')){
+      zurueckAuf('kanal', function(){ var w=q('.comm'); if(w) w.classList.remove('chatauf'); });
+    }
     renderComposer(canPost);
     /* Die NEUESTEN zuerst holen und dann umdrehen. Vorher wurden die
        ersten 200 geladen — in einem vollen Kanal haette man ewig alte

@@ -15,7 +15,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png">
 
 <title>Schülerbereich — deutschoderwas club</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"></noscript>
 <style>
 :root{--primary:#DD0000;--primary-dark:#B00000;--secondary:#20211F;--accent:#FFE100;--turquoise:#9FE4F1;--turquoise-soft:#9FE4F1;--cream:#FFFDF3;--bg:#FFF8E0;--text:#20211F;--text-soft:#54594A;--border:#EFE9D8;--green:#4E9E12;--green-soft:#EAFBFE}
 *{margin:0;padding:0;box-sizing:border-box}
@@ -569,7 +569,7 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFFDF3 0%,#FFFDF3 60%)
 <!-- Der Stil der Marke, an EINER Stelle. Muss als letztes stehen,
      damit er gegen die alten Stil-Bloecke darueber gewinnt.
      Zum Abschalten einfach diese zwei Zeilen entfernen. -->
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Caveat+Brush&family=Shantell+Sans:wght@600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Caveat+Brush&family=Shantell+Sans:wght@600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Caveat+Brush&family=Shantell+Sans:wght@600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet"></noscript>
 </head>
 <body>
 <div class="dow-flagbar"></div>
@@ -904,7 +904,11 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFFDF3 0%,#FFFDF3 60%)
 
 <div class="toast" id="toast"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<!-- Supabase blockierte bisher die ganze Seite: solange die fremde Adresse
+     nicht antwortete, ging am Handy gar nichts. Jetzt laedt sie nebenher,
+     und der Start unten wartet darauf. -->
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
 <!-- Oertliche Vorschau. Wer diese Seite als Datei vom eigenen Rechner
      oeffnet und ?vorschau=1 anhaengt, bekommt statt der echten
      Datenbank die erfundene Schuelerin aus _vorschau-daten.js. So ist
@@ -1371,8 +1375,12 @@ const MAT_META={
   'Weitere Mitschriften':{e:'🗂️',c:'#ECE5DD,#FBEDD8',img:''}
 };
 function matMeta(t){ return MAT_META[t]||{e:'📄',c:'#FBEDD8,#FDF6EC',img:''}; }
-function setMatTheme(t){ matOpenTheme=t; drawMaterials((document.getElementById('matSearch')?.value||'').toLowerCase()); window.scrollTo({top:0,behavior:'smooth'}); }
-function matBack(){ matOpenTheme=null; drawMaterials((document.getElementById('matSearch')?.value||'').toLowerCase()); }
+function setMatTheme(t){ matOpenTheme=t; drawMaterials((document.getElementById('matSearch')?.value||'').toLowerCase()); window.scrollTo({top:0,behavior:'smooth'});
+  /* Ein geoeffnetes Thema ist ein eigener Schritt zurueck. */
+  if(window.zurueckAuf) zurueckAuf('material', function(){ matOpenTheme=null; drawMaterials((document.getElementById('matSearch')?.value||'').toLowerCase()); });
+}
+function matBack(){ matOpenTheme=null; drawMaterials((document.getElementById('matSearch')?.value||'').toLowerCase());
+  if(window.zurueckErledigt) zurueckErledigt('material'); }
 const MAT_THEMES=[
   ['Wortschatzboost', /wortschatzboost/],
   ['Grammatik', /konjunktiv|relativs|konjunktion|präposition|prapos|modalverb|adjektiv|nomen[ -]?verb|passiv|n-deklination|\d+ verben|temporale|lokale präp/],
@@ -2844,9 +2852,17 @@ async function saveBirthdayGate(){
 }
 
 async function logout(){ await sb.auth.signOut(); location.href='index.html'; }
-init();
+/* Der Start wartet, bis Supabase da ist. Vorher stand hier ein nacktes
+   init() — das lief nur, weil das Skript die Seite aufhielt. */
+(function starte(){
+  if (window.supabase && window.supabase.createClient) { init(); return; }
+  if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', starte, { once:true }); return; }
+  setTimeout(starte, 30);
+})();
 </script>
 <script src="club-fx.js"></script>
+<!-- Zurueck-Knopf: ein Schritt zurueck statt raus aus der Ansicht -->
+<script src="zurueck.js?v=1"></script>
 <script src="uebungen.js"></script>
 <!-- Neue Hoerthemen: haengt sich an uebungen.js an, aendert dort nichts. -->
 <script src="hoer-neu.js?v=1"></script>

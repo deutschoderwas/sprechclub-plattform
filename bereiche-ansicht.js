@@ -364,9 +364,16 @@
   /* ============================================================
      Ein Ort im Einzelnen
      ============================================================ */
+  /* Ein geoeffneter Bereich ist ein eigener Schritt: der Zurueck-Knopf
+     fuehrt zurueck zur Liste, nicht aus dem Lernbereich heraus. */
+  window.bereichSchliessen = function(){
+    if(window.zurueckErledigt) zurueckErledigt('bereich');
+    renderBereiche();
+  };
   window.bereichOeffnen = function(id){
     stil();
     var b = bereichVon(id); if(!b) return;
+    if(window.zurueckAuf) zurueckAuf('bereich', function(){ renderBereiche(); });
     var ziel = el('v-bereiche'); if(!ziel) return;
     var f = berufsfeld(b.beruf);
     var d = dialoge(b), p = stand(b);
@@ -376,7 +383,7 @@
       : '<img src="'+amandaBild('schlau')+'" alt="" onerror="this.remove()">';
 
     var h = '<div class="be">';
-    h += '<button class="be-zurueck" type="button" onclick="renderBereiche()">&larr; Alle Bereiche</button>';
+    h += '<button class="be-zurueck" type="button" onclick="bereichSchliessen()">&larr; Alle Bereiche</button>';
 
     h += '<div class="be-buehne"><div class="tx">' +
          '<span class="be-zuruf">'+E(fWeg==='beruf'?'Deutsch für den Beruf':'Deutsch für die Freizeit')+'</span>' +

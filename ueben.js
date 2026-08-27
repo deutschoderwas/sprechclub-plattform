@@ -334,12 +334,18 @@
 
   function openSession(){ injectCSS(); var o=ensureOverlay(); o.classList.add('open');
     o.querySelector('.ub-foot').innerHTML='<button class="ub-btn" id="ubBtn" disabled onclick="ubBtn()">Prüfen</button>';
-    document.body.style.overflow='hidden'; renderQ(); }
+    document.body.style.overflow='hidden'; renderQ();
+    /* Der Zurueck-Knopf des Handys soll die Uebung schliessen,
+       nicht die ganze Ansicht verlassen. */
+    if(window.zurueckAuf) zurueckAuf('ueben', function(){ window.ubClose(true); });
+  }
   window.ubClose=function(force){
     if(!force && S && !S.ended && (S.idx>0 || S.answered)){
       if(!confirm('Übung abbrechen?\n\nDein Fortschritt in dieser Runde geht verloren.')) return;
     }
-    var o=document.getElementById('ubOv'); if(o)o.classList.remove('open'); document.body.style.overflow=''; stopAudio(); shadowReset(); S=null; if(document.getElementById('v-ueben').classList.contains('active')) renderUeben(); };
+    var o=document.getElementById('ubOv'); if(o)o.classList.remove('open'); document.body.style.overflow=''; stopAudio(); shadowReset(); S=null;
+    if(window.zurueckErledigt) zurueckErledigt('ueben');
+    if(document.getElementById('v-ueben').classList.contains('active')) renderUeben(); };
 
   function hearts(){ var h=S.hearts,m=META().maxHearts||5,s=''; for(var i=0;i<m;i++)s+= i<h?'❤️':'🤍'; return s; }
   function setProg(){ document.getElementById('ubProg').style.width=Math.round(S.idx/S.items.length*100)+'%'; document.getElementById('ubHearts').innerHTML=hearts(); }
