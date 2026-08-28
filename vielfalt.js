@@ -87,8 +87,14 @@
     var m = txt(s).match(/§([^§]+)§/g) || [];
     return m.map(function (x) { return x.replace(/§/g, ''); });
   }
-  function satzZuWort(wort) {
+  /* Manche Wörter heißen in zwei Themen dasselbe und meinen etwas
+     anderes — „der Anschluss" ist unterwegs der nächste Zug und beim
+     Handyvertrag die Leitung im Haus. Für solche Fälle darf ein
+     Schlüssel das Thema vorne tragen: "a2-handy:der Anschluss". */
+  function satzZuWort(wort, themaId) {
     var K = window.VOKABEL_SAETZE || {};
+    if (themaId && K[themaId + ':' + wort]) return K[themaId + ':' + wort];
+    if (themaId && K[themaId + ':' + ohneArtikel(wort)]) return K[themaId + ':' + ohneArtikel(wort)];
     return K[wort] || K[ohneArtikel(wort)] || K[eng(wort)] || '';
   }
 
@@ -173,7 +179,36 @@
 
   /* ---------- 4. Aufgaben bauen ---------- */
 
-  function ausWoertern(t, neu) {
+  /* Für die Hörthemen steht der Beispielsatz nicht im Wörterbuch,
+     sondern im Hörtext selbst. Wo ein Wort dort vorkommt, wird genau
+     dieser Satz zum Satz auf der Wortkarte — man hat ihn eben
+     gehört, jetzt sieht man ihn. */
+  function saetzeAusHoertexten(t) {
+    var karte = {};
+    var texte = (t.exercises || []).filter(function (e) { return e.type === 'listen' && e.transcript; });
+    if (!texte.length) return karte;
+    (t.words || []).forEach(function (w) {
+      var kern = ohneArtikel(eng(w.de || ''));
+      if (kern.length < 4 || karte[w.de]) return;
+      var re = new RegExp('(^|\\s)(' + kern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')(\\W|$)', 'i');
+      texte.forEach(function (e) {
+        if (karte[w.de]) return;
+        saetzeAusText(e.transcript).forEach(function (satz) {
+          if (karte[w.de]) return;
+          /* Zum Lesen darf der Satz länger sein und Gedankenstriche
+             enthalten — gebaut wird er ja nicht, er steht nur auf der
+             Karte. Nur endlos lang soll er nicht sein. */
+          var s = eng(satz);
+          var n = s.split(' ').length;
+          if (n < 4 || n > 18 || !re.test(s)) return;
+          karte[w.de] = s.replace(re, '$1§$2§$3');
+        });
+      });
+    });
+    return karte;
+  }
+
+  function ausWoertern(t, neu, ausText) {
     var W = (t.words || []).filter(function (w) { return w && w.de; });
     if (!W.length) return;
     var infos = W.map(function (w) { return eng(w.info || ''); });
@@ -185,7 +220,7 @@
       var art = artikelVon(wort);
       var info = eng(w.info || '');
       var foto = fotoZu(wort);
-      var roh = satzZuWort(wort);
+      var roh = satzZuWort(wort, t.id) || (ausText && ausText[w.de]) || '';
       var satz = roh ? satzText(roh) : '';
 
       /* Die Wortkarte: einmal alles auf einen Blick. Sie wird nicht
@@ -396,7 +431,7 @@
     var neu = [];
     if (sk.id === 'grammatik') ausGrammatik(t, neu);
     if (sk.id === 'hoeren') ausTranskripten(t, neu);
-    ausWoertern(t, neu);
+    ausWoertern(t, neu, saetzeAusHoertexten(t));
     if (!neu.length) return 0;
     neu.forEach(function (e) { e.__v = 1; });   /* hier gebaut, nicht von Hand */
     t.exercises = (t.exercises || []).concat(neu);
