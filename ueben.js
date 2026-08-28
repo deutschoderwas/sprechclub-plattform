@@ -8,6 +8,30 @@
   function E(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]);}); }
   function shuf(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)); var t=a[i];a[i]=a[j];a[j]=t;} return a; }
   function nrm(s){ return String(s==null?'':s).trim().toLowerCase().replace(/\s+/g,' ').replace(/[.!?,;]+$/,''); }
+  /* --- Hilfen für Wortkarte, Tippen, Buchstaben, Artikel ---------------- */
+  var ART_FARBE={der:'#2F6FD0',die:'#D0407A',das:'#1E9E63'};
+  function ohneArt(s){ return String(s==null?'':s).replace(/^(der|die|das)\s+/i,'').trim(); }
+  /* Beispielsätze markieren das Zielwort zwischen §…§ — daraus wird der
+     gelbe Textmarker, so wie im Vokabeltrainer. */
+  function satzHtml(s){ if(!s) return '';
+    return E(String(s)).replace(/§([^§]+)§/g,function(_,w){ return '<mark>'+w+'</mark>'; }); }
+  function satzRein(s){ return String(s==null?'':s).replace(/§/g,''); }
+  /* Ein Tippfehler soll nicht wie ein Fehler behandelt werden: wer
+     „Bewerbnug" schreibt, kann das Wort. Ab fünf Buchstaben ist ein
+     Dreher oder ein fehlender Buchstabe erlaubt. */
+  function abstand(a,b){ a=String(a);b=String(b);
+    var m=a.length,n=b.length,i,j,v0=[],v1=[];
+    if(Math.abs(m-n)>1) return 9;
+    for(j=0;j<=n;j++) v0[j]=j;
+    for(i=0;i<m;i++){ v1[0]=i+1;
+      for(j=0;j<n;j++){ var c=a.charAt(i)===b.charAt(j)?0:1;
+        v1[j+1]=Math.min(v1[j]+1,v0[j+1]+1,v0[j]+c); }
+      for(j=0;j<=n;j++) v0[j]=v1[j]; }
+    return v0[n]; }
+  function fastGleich(a,b){ a=nrm(a); b=nrm(b);
+    if(a===b) return true;
+    if(b.length>=5 && abstand(a,b)<=1) return true;
+    return false; }
   function gGet(k,d){ try{ if(window.lsGet) return lsGet(k,d); var v=JSON.parse(localStorage.getItem('ub_'+k)); return v==null?d:v; }catch(e){ return d; } }
   function gSet(k,v){ try{ if(window.lsSet) return lsSet(k,v); localStorage.setItem('ub_'+k,JSON.stringify(v)); }catch(e){} }
   function note(t){ try{ if(window.toast) return toast(t); }catch(e){} }
@@ -196,6 +220,35 @@
     .ub-cmp-btn{border:2px solid var(--border,#ECECEC);background:#fff;border-radius:40px;padding:11px 18px;font-weight:700;font-size:15px;cursor:pointer;font-family:inherit}
     .ub-cmp-btn.mine{border-color:#7C3AED;color:#7C3AED}
     .ub-cmp-btn.playing{background:var(--turq,#2DD4BF);color:#fff;border-color:var(--turq,#2DD4BF)}
+
+    /* ---- Wortkarte, Tippen, Buchstabensalat, Artikel ----
+       Die vier Formen, die aus dem Wiedererkennen ein Können machen. */
+    .ub-karte{background:var(--card,#fff);border:2px solid var(--border,#ECECEC);border-radius:20px;padding:16px 15px 18px;text-align:center;box-shadow:0 8px 22px rgba(0,0,0,.06)}
+    .ub-karte .kimg{display:block;width:100%;height:150px;object-fit:cover;border-radius:14px;margin-bottom:12px}
+    .ub-karte .em{font-size:50px;line-height:1;display:block;margin-bottom:4px}
+    .ub-karte .wort{font-size:26px;font-weight:800;font-family:'Space Grotesk',sans-serif;line-height:1.22;display:flex;gap:9px;align-items:center;justify-content:center;flex-wrap:wrap}
+    .ub-karte .bed{margin-top:9px;font-size:16px;color:var(--soft,#5C5C5C);line-height:1.5}
+    .ub-art{display:inline-flex;align-items:center;justify-content:center;padding:3px 13px;border-radius:30px;font-size:15px;font-weight:800;color:#fff;background:var(--af,#2F6FD0)}
+    .ub-satzbox{margin-top:14px;background:var(--bg,#FFF7E6);border:1.5px solid var(--border,#ECECEC);border-radius:14px;padding:12px 14px;font-size:16.5px;line-height:1.55;text-align:left}
+    .ub-satzbox mark{background:#FFE100;padding:1px 4px;border-radius:5px;font-weight:800;color:var(--ink,#20211F)}
+    .ub-regel{margin-top:12px;text-align:left;display:flex;flex-direction:column;gap:9px}
+    .ub-regel .z{background:var(--bg,#FFF7E6);border-left:4px solid var(--turq,#2DD4BF);border-radius:0 12px 12px 0;padding:10px 13px}
+    .ub-regel .z b{display:block;font-size:16.5px;line-height:1.45;font-weight:700}
+    .ub-regel .z span{display:block;margin-top:3px;font-size:14px;color:var(--soft,#5C5C5C);line-height:1.45}
+    .ub-bed{font-size:19px;line-height:1.45;text-align:center;color:var(--ink,#2B2B2B);font-weight:600;margin:2px 0 16px}
+    .ub-emj{font-size:46px;text-align:center;display:block;margin:2px 0 6px;line-height:1}
+    .ub-drei{display:flex;gap:10px}
+    .ub-drei .ub-opt{flex:1;text-align:center;font-size:19px;font-weight:800}
+    .ub-chips.buch .ub-chip{min-width:46px;text-align:center;font-size:19px;font-weight:800;letter-spacing:.5px}
+    .ub-build.buch{letter-spacing:1px}
+    .ub-kimgs{display:block;width:100%;max-height:170px;object-fit:cover;border-radius:14px;margin:0 0 14px}
+    /* Der Wiederholen-Knopf steht neben dem Schnell-Mix und sagt,
+       wie viele Wörter heute dran sind. Ohne faellige Woerter kommt
+       er gar nicht erst. */
+    .ub-zwei{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+    .ub-zwei>button{flex:1 1 240px;margin-bottom:0}
+    .ub-wdh{background:linear-gradient(135deg,#1990A4,#2DD4BF);color:#fff;border:none;border-radius:18px;padding:16px 20px;font-weight:800;font-size:16px;cursor:pointer;box-shadow:0 10px 24px rgba(25,144,164,.25);min-height:52px}
+    .ub-wmark{display:inline-block;background:#FFE100;color:#20211F;border-radius:20px;padding:2px 10px;font-size:12.5px;font-weight:800;margin-bottom:10px}
     `;
     document.head.appendChild(st);
   }
@@ -255,7 +308,11 @@
     var el=document.getElementById('v-ueben'); if(!el)return;
     if(!window.UEBUNGEN||!UEBUNGEN.skills||!UEBUNGEN.skills.length){ el.innerHTML='<div class="pagehead"><h1>Üben</h1></div><div class="empty">Übungen werden geladen … lade die Seite neu, falls hier länger nichts erscheint.</div>'; return; }
     ensureShadow();
+    /* Die zusätzlichen Übungsformen entstehen erst im Browser. Wenn
+       vielfalt.js vor den Daten geladen wurde, holt es das hier nach. */
+    try{ if(window.VIELFALT && VIELFALT.alle) VIELFALT.alle(); }catch(e){}
     var s=load(); var goal=META().dailyGoal||30; var pct=Math.min(100,Math.round((s.dayXP||0)/goal*100));
+    var fael=wdhFaellig().length;
     if(!curSkill) curSkill=UEBUNGEN.skills[0].id;
     var sk=skillById(curSkill)||UEBUNGEN.skills[0];
     var head=
@@ -265,7 +322,10 @@
         '<div class="ub-stat"><span class="ico">⭐</span><div><div class="big">'+(s.xp||0)+'</div><div class="lbl">XP gesamt</div></div></div>'+
         '<div class="ub-stat"><div class="ub-ring" style="--p:'+pct+'"><span>'+(s.dayXP||0)+'</span></div><div><div class="big">'+Math.min(s.dayXP||0,goal)+'/'+goal+'</div><div class="lbl">Tagesziel</div></div></div>'+
       '</div>'+
-      '<button class="ub-mix" onclick="ubStartMix()">⚡ Schnell-Mix · 10 Aufgaben quer durch alles</button>';
+      '<div class="ub-zwei">'+
+        '<button class="ub-mix" onclick="ubStartMix()">⚡ Schnell-Mix · 10 Aufgaben quer durch alles</button>'+
+        (fael>0?'<button class="ub-wdh" onclick="ubStartWdh()">🔁 Wiederholen · '+fael+(fael===1?' Wort':' Wörter')+' sind heute dran</button>':'')+
+      '</div>';
     var pills='<div class="ub-skills">'+UEBUNGEN.skills.map(function(x){
         var on=x.id===curSkill; return '<button class="ub-skill'+(on?' on':'')+'" style="'+(on?'background:'+(x.color||'#DD0000')+';border-color:'+(x.color||'#DD0000'):'')+'" onclick="ubSetSkill(\''+x.id+'\')">'+x.emoji+' '+E(x.name)+'</button>';
       }).join('')+'</div>';
@@ -338,9 +398,206 @@
     document.body.appendChild(o); return o; }
   function pickItems(list,n){ return shuf(list).slice(0,Math.min(n,list.length)); }
 
+  /* ---------- Wiederholung mit Abstand -----------------------------------
+     Ein Wort, das man einmal richtig hatte, ist nicht gelernt. Gelernt
+     ist es, wenn es nach einem Tag, nach vier Tagen und nach zwei
+     Wochen immer noch sitzt. Darum merkt sich der Üben-Bereich zu
+     jedem Wort eine Stufe: richtig schiebt es eine Stufe weiter und
+     damit weiter nach hinten, falsch setzt es auf Stufe eins zurück.
+     Gespeichert wird das im Gerät, nicht im Netz — es ist eine
+     Lernhilfe, keine Note.                                              */
+  var ABSTAND=[0,1,2,4,8,16,30];
+  function inTagen(n){ var d=new Date(); d.setDate(d.getDate()+n);
+    return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2); }
+  function wdhAlle(){ var o=gGet('wdh',null); return (o&&typeof o==='object')?o:{}; }
+  function wdhMerken(e, ok){
+    try{
+      var o=wdhAlle(); var k=String(e.w); var s=o[k]||{};
+      /* Richtig: eine Stufe weiter und entsprechend später wieder.
+         Falsch: zurück auf Stufe eins und noch heute wieder dran. */
+      if(ok){ s.s=Math.min(ABSTAND.length-1,(s.s||0)+1); s.f=inTagen(ABSTAND[s.s]); }
+      else { s.s=1; s.f=today(); }
+      s.z = today();
+      if(e.info && !s.i) s.i=String(e.info).slice(0,80);
+      if(e.emoji && !s.e) s.e=e.emoji;
+      o[k]=s; gSet('wdh',o);
+    }catch(x){}
+  }
+  function wdhFaellig(){ var o=wdhAlle(), h=today(), n=[];
+    for(var k in o){ if(!o.hasOwnProperty(k))continue; if(!o[k].f || o[k].f<=h) n.push(k); }
+    return n; }
+  window.ubFaellig=wdhFaellig;
+  /* Prüfhaken: sagt, welche Aufgabe gerade dran ist. Wird beim
+     Durchklicken im Testlauf gebraucht, sonst von niemandem. */
+  window.ubAktuell=function(){ return (S && S.items && S.items[S.idx]) || null; };
+
+  /* Zu einem Wort die Aufgaben finden, in denen es vorkommt. Der
+     Katalog wird einmal gebaut und dann behalten. */
+  var WORT_IDX=null, WORT_IDX_N=-1;
+  function aufgabenZahl(){ var n=0;
+    (UEBUNGEN.skills||[]).forEach(function(sk){ (sk.themes||[]).forEach(function(t){ n+=(t.exercises||[]).length; }); });
+    return n; }
+  function wortIndex(){
+    var n=aufgabenZahl();
+    /* Kommen später Aufgaben dazu (vielfalt.js baut sie in einer
+       ruhigen Minute), wird der Katalog neu gebaut. */
+    if(WORT_IDX && n===WORT_IDX_N) return WORT_IDX;
+    WORT_IDX_N=n; WORT_IDX={};
+    (UEBUNGEN.skills||[]).forEach(function(sk){
+      if(sk.id==='shadowing') return;
+      (sk.themes||[]).forEach(function(t){
+        (t.exercises||[]).forEach(function(e){
+          if(!e.w || e.type==='karte') return;
+          (WORT_IDX[e.w]=WORT_IDX[e.w]||[]).push({e:e,sk:sk.id,th:t.id,titel:t.title});
+        });
+      });
+    });
+    return WORT_IDX;
+  }
+
+  /* ---------- Die Runde zusammenstellen ---------------------------------
+     Nicht zwölf zufällige Aufgaben, sondern eine Runde mit Bogen:
+     erst die Wortkarte, dann dasselbe Wort in einer anderen Form,
+     dann der Rest — und kein Typ zweimal hintereinander. Am Ende
+     zwei Aufgaben aus einem früheren Thema. So wiederholt sich
+     jedes Wort innerhalb einer Runde mindestens zweimal.           */
+  var LEICHT={karte:1}, REIHE=['choice','artikel','tippen','gap','order','buchstaben','match','listen','speak','shadow'];
+  function baueRunde(sk,th,n){
+    var alle=(th.exercises||[]).slice();
+    if(alle.length<=n) return shuf(alle);
+    var nachTyp={};
+    alle.forEach(function(e){ (nachTyp[e.type]=nachTyp[e.type]||[]).push(e); });
+    Object.keys(nachTyp).forEach(function(k){ nachTyp[k]=shuf(nachTyp[k]); });
+
+    var runde=[], drin=[];
+    function frei(e){ return e && drin.indexOf(e)<0; }
+    function nimm(typ){ var l=nachTyp[typ]||[];
+      for(var i=0;i<l.length;i++){ if(frei(l[i])){ drin.push(l[i]); return l[i]; } }
+      return null; }
+
+    /* 1. Eine Wortkarte zum Anfang — und gleich danach dasselbe Wort
+          als Aufgabe. Das ist die Wiederholung im Kleinen. */
+    var karte=nimm('karte');
+    if(karte){ runde.push(karte);
+      var passend=null;
+      REIHE.forEach(function(typ){ if(passend) return;
+        (nachTyp[typ]||[]).forEach(function(e){ if(!passend && frei(e) && e.w===karte.w) passend=e; }); });
+      if(passend){ drin.push(passend); runde.push(passend); }
+    }
+
+    /* 2. Reihum durch die Formen, damit keine Runde nach Wahlfragen
+          allein aussieht. */
+    var typen=Object.keys(nachTyp).filter(function(t){ return !LEICHT[t]; });
+    typen.sort(function(a,b){ return REIHE.indexOf(a)-REIHE.indexOf(b); });
+    var wache=0;
+    while(runde.length<n && wache++<200){
+      var vorher=runde.length;
+      for(var i=0;i<typen.length && runde.length<n;i++){
+        var e=nimm(typen[i]);
+        if(e) runde.push(e);
+      }
+      if(runde.length===vorher) break;
+    }
+    /* 3. Die letzten drei Plätze gehören Wörtern, die in dieser Runde
+          schon vorkamen — in einer anderen Form. Ein Wort, das man
+          einmal angeklickt hat, ist noch nicht gelernt; eines, das man
+          erkannt, geschrieben und gehört hat, bleibt eher. */
+    var woerter=[], formen={};
+    runde.forEach(function(e){ if(e.w){ if(woerter.indexOf(e.w)<0) woerter.push(e.w); formen[e.w+'|'+e.type]=1; } });
+    /* Bevorzugt die Formen, die etwas verlangen: schreiben, bauen,
+       Artikel. Eine zweite Wahlfrage zum selben Wort bringt wenig. */
+    var LIEBER=['tippen','buchstaben','artikel','order','gap','choice'];
+    var wieder=[];
+    shuf(woerter).forEach(function(w){
+      if(wieder.length>=3) return;
+      for(var i=0;i<LIEBER.length;i++){
+        var typ=LIEBER[i];
+        if(formen[w+'|'+typ]) continue;
+        var kand=(nachTyp[typ]||[]).filter(function(e){ return e.w===w && frei(e); })[0];
+        if(!kand) continue;
+        formen[w+'|'+typ]=1; drin.push(kand); wieder.push(kand); return;
+      }
+    });
+
+    /* 4. Noch nicht voll? Dann auffüllen, was übrig ist. */
+    if(runde.length+wieder.length<n) shuf(alle).forEach(function(e){
+      if(runde.length+wieder.length<n && frei(e)){ drin.push(e); runde.push(e); } });
+    runde=runde.slice(0,Math.max(0,n-wieder.length)).concat(wieder);
+
+    /* 5. Zum Schluss entzerren: gleiche Formen nicht hintereinander.
+          Drei Wahlfragen am Stück fühlen sich an wie ein Fragebogen,
+          nicht wie Üben. */
+    return entzerren(runde);
+  }
+
+  /* Ordnet eine Liste so, dass möglichst nie zweimal dieselbe Form
+     hintereinander steht: immer die Form nehmen, von der noch am
+     meisten übrig ist — außer sie war gerade dran. Der Anfang bleibt,
+     wie er ist (Wortkarte und das Wort dazu). */
+  function entzerren(liste){
+    if(liste.length<4) return liste;
+    var fest=liste.slice(0,2), rest=liste.slice(2);
+    var koerbe={};
+    rest.forEach(function(e){ (koerbe[e.type]=koerbe[e.type]||[]).push(e); });
+    var raus=[], letzter=fest.length?fest[fest.length-1].type:'';
+    while(raus.length<rest.length){
+      var beste=null, meiste=-1;
+      for(var t in koerbe){
+        if(!koerbe[t].length) continue;
+        if(t===letzter && Object.keys(koerbe).some(function(x){ return x!==letzter && koerbe[x].length; })) continue;
+        if(koerbe[t].length>meiste){ meiste=koerbe[t].length; beste=t; }
+      }
+      if(!beste) break;
+      raus.push(koerbe[beste].shift()); letzter=beste;
+    }
+    return fest.concat(raus);
+  }
+
+  /* Zwei Aufgaben aus Themen, die schon einmal geübt wurden — und
+     bevorzugt zu Wörtern, die heute wieder dran sind. */
+  function wiederholungen(skId, thId, n){
+    var idx=wortIndex(), raus=[];
+    /* Erst, was heute wirklich dran ist. Ist heute nichts fällig,
+       kommen Wörter aus früheren Runden trotzdem kurz vorbei — sonst
+       sieht man sie bis zum Fälligkeitstag gar nicht wieder. */
+    var o=wdhAlle();
+    var heute=shuf(wdhFaellig());
+    var spaeter=shuf(Object.keys(o).filter(function(w){ return heute.indexOf(w)<0; })
+      .sort(function(a,b){ return (o[a].s||0)-(o[b].s||0); }).slice(0,40));
+    heute.concat(spaeter).forEach(function(w){
+      if(raus.length>=n) return;
+      var kand=(idx[w]||[]).filter(function(x){ return x.th!==thId; });
+      if(!kand.length) return;
+      var x=kand[Math.floor(Math.random()*kand.length)];
+      var kopie={}; for(var f in x.e) if(x.e.hasOwnProperty(f)) kopie[f]=x.e[f];
+      kopie.__wdh=1; kopie.__vonTitel=x.titel||'';
+      raus.push(kopie);
+    });
+    return raus;
+  }
+
   window.ubStart=function(skId,thId){ var sk=skillById(skId); if(!sk)return; var th=sk.themes.filter(function(t){return t.id===thId;})[0]; if(!th)return;
-    S={skId:skId,thId:thId,items:pickItems(th.exercises,12),idx:0,correct:0,hearts:META().maxHearts||5,answered:false,sel:null,title:th.title,gewertet:[]};
+    var items=baueRunde(sk,th,12).concat(wiederholungen(skId,thId,2));
+    S={skId:skId,thId:thId,items:items,idx:0,correct:0,hearts:META().maxHearts||5,answered:false,sel:null,title:th.title,gewertet:[]};
     openSession(); };
+
+  /* Die eigene Wiederholungsrunde: nur Wörter, die heute fällig sind,
+     jedes in einer anderen Form als beim letzten Mal. */
+  window.ubStartWdh=function(){
+    var idx=wortIndex(), faellig=shuf(wdhFaellig()), items=[], letzter='';
+    faellig.forEach(function(w){
+      if(items.length>=12) return;
+      var kand=(idx[w]||[]);
+      if(!kand.length) return;
+      var anders=kand.filter(function(o){ return o.e.type!==letzter; });
+      var o=(anders.length?anders:kand)[Math.floor(Math.random()*(anders.length||kand.length))];
+      letzter=o.e.type; items.push(o.e);
+    });
+    if(!items.length){ note('Heute ist nichts fällig — üb ein Thema, dann kommt es später zurück.'); return false; }
+    S={skId:'mix',thId:'mix',items:items,idx:0,correct:0,hearts:META().maxHearts||5,
+       answered:false,sel:null,title:'Wiederholung',gewertet:[]};
+    openSession(); return true;
+  };
   window.ubStartMix=function(){ var all=[]; (UEBUNGEN.skills||[]).forEach(function(sk){ if(sk.id==='shadowing')return; sk.themes.forEach(function(t){ t.exercises.forEach(function(e){ all.push(e); }); }); });
     S={skId:'mix',thId:'mix',items:pickItems(all,10),idx:0,correct:0,hearts:META().maxHearts||5,answered:false,sel:null,title:'Schnell-Mix',gewertet:[]};
     openSession(); };
@@ -417,6 +674,33 @@
   function hearts(){ var h=S.hearts,m=META().maxHearts||5,s=''; for(var i=0;i<m;i++)s+= i<h?'❤️':'🤍'; return s; }
   function setProg(){ document.getElementById('ubProg').style.width=Math.round(S.idx/S.items.length*100)+'%'; document.getElementById('ubHearts').innerHTML=hearts(); }
 
+  var ART=['der','die','das'];
+
+  /* Zwei Karten in einer: die Wortkarte für Wortschatz, Hören und
+     Aussprache — und die Regelkarte für Grammatik, in der die Regel
+     an drei echten Sätzen aus genau diesem Thema steht. */
+  function karteHtml(e){
+    if(e.regel){
+      return '<div class="ub-karte">'+
+        '<span class="em">'+E(e.emoji||'🧩')+'</span>'+
+        '<div class="wort">'+E(e.wort||'Die Regel')+'</div>'+
+        '<div class="bed">'+E(e.info||'')+'</div>'+
+        '<div class="ub-regel">'+(e.beispiele||[]).map(function(b){
+          return '<div class="z"><b>'+E(b.satz)+'</b>'+(b.warum?'<span>'+E(b.warum)+'</span>':'')+'</div>';
+        }).join('')+'</div></div>';
+    }
+    var wort=ohneArt(e.wort||e.w||'');
+    var art=String(e.art||'').toLowerCase();
+    return '<div class="ub-karte">'+
+      (e.img?'<img class="kimg" src="'+E(e.img)+'" alt="" onerror="this.remove()">':'')+
+      (e.emoji?'<span class="em">'+E(e.emoji)+'</span>':'')+
+      '<div class="wort">'+(ART_FARBE[art]?'<span class="ub-art" style="--af:'+ART_FARBE[art]+'">'+art+'</span>':'')+E(wort)+'</div>'+
+      (e.info?'<div class="bed">'+E(e.info)+'</div>':'')+
+      '<button class="ub-play" style="width:56px;height:56px;font-size:24px;margin:14px auto 4px" onclick="ubSpeak(\''+E(wort).replace(/'/g,"\\'")+'\')">🔊</button>'+
+      (e.satz?'<div class="ub-satzbox">'+satzHtml(e.satz)+'</div>':'')+
+    '</div>';
+  }
+
   function renderQ(){
     stopAudio(); shadowReset();
     setProg(); S.answered=false; S.sel=null; S.order=null;
@@ -445,6 +729,40 @@
       S.order={build:[],pool:shuf(String(e.answer).split(/\s+/).filter(Boolean).map(function(w,i){return {w:w,i:i};}))};
       h+='<div class="ub-q">Bring die Wörter in die richtige Reihenfolge:</div><div class="ub-build" id="ubBuild"></div><div class="ub-chips" id="ubPool"></div>';
       if(e.hint) h+='<div class="ub-tip" style="text-align:left;margin-top:10px">💡 '+E(e.hint)+'</div>';
+    } else if(e.type==='karte'){
+      /* Die Wortkarte ist keine Frage. Sie ist der Moment davor:
+         einmal alles sehen, hören und lesen — Bild, Artikel, Bedeutung,
+         ein Satz aus dem Alltag. Danach kommt dasselbe Wort in der
+         Runde als Aufgabe zurück. */
+      h+=karteHtml(e);
+      btn.disabled=false; btn.textContent='Verstanden 👍';
+      if(!e.regel) setTimeout(function(){ speak(ohneArt(e.w||e.wort||'')); },260);
+    } else if(e.type==='tippen'){
+      if(e.img){ h+='<img class="ub-kimgs" src="'+E(e.img)+'" alt="" onerror="this.remove()">'; }
+      else if(e.emoji){ h+='<span class="ub-emj">'+E(e.emoji)+'</span>'; }
+      h+='<div class="ub-q" style="text-align:center;margin-bottom:8px">✍️ Wie heißt das Wort?</div>'+
+         '<div class="ub-bed">'+E(e.info||'')+'</div>'+
+         '<input class="ub-input" id="ubGap" placeholder="Wort eintippen…" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">';
+      if(e.tip) h+='<div class="ub-tip" style="margin-top:10px">💡 '+E(e.tip)+'</div>';
+    } else if(e.type==='buchstaben'){
+      /* Buchstabensalat: dieselbe Mechanik wie beim Satzbau, nur mit
+         Buchstaben statt Wörtern. */
+      S.order={build:[],pool:shuf(String(e.answer).split('').map(function(c,i){return {w:c,i:i};})),leim:''};
+      if(e.img){ h+='<img class="ub-kimgs" src="'+E(e.img)+'" alt="" onerror="this.remove()">'; }
+      else if(e.emoji){ h+='<span class="ub-emj">'+E(e.emoji)+'</span>'; }
+      h+='<div class="ub-q" style="text-align:center;margin-bottom:8px">🔤 Bring die Buchstaben in die richtige Reihenfolge</div>'+
+         (e.info?'<div class="ub-bed">'+E(e.info)+'</div>':'')+
+         '<div class="ub-build buch" id="ubBuild"></div><div class="ub-chips buch" id="ubPool"></div>';
+    } else if(e.type==='artikel'){
+      if(e.img){ h+='<img class="ub-kimgs" src="'+E(e.img)+'" alt="" onerror="this.remove()">'; }
+      else if(e.emoji){ h+='<span class="ub-emj">'+E(e.emoji)+'</span>'; }
+      h+='<div class="ub-q" style="text-align:center">der, die oder das?</div>'+
+         '<div class="ub-word" style="margin-top:-4px">'+E(e.wort||ohneArt(e.w))+'</div>'+
+         (e.satz?'<div class="ub-satzbox">'+satzHtml(e.satz)+'</div>':'')+
+         '<div class="ub-opts ub-drei" id="ubOpts" style="margin-top:14px">'+
+         ART.map(function(a,k){ return '<button class="ub-opt" data-k="'+k+'" onclick="ubChoose('+k+')">'+a+'</button>'; }).join('')+
+         '</div>';
+      setTimeout(function(){ speak(ohneArt(e.wort||e.w||'')); },240);
     } else if(e.type==='speak'){
       if(e.img){ h+='<img class="ub-qimg" src="'+E(e.img)+'" alt="" onerror="this.remove()">'; }
       h+='<div class="ub-q" style="text-align:center">🗣️ Hör zu und sprich nach</div>';
@@ -470,15 +788,22 @@
       setTimeout(function(){ window.ubPlayUrl(e.audioUrl, document.querySelector('#ubBody .ub-play')); },300);
     }
     h+='<div class="ub-fb" id="ubFb"></div>';
+    /* Kommt die Aufgabe aus einem früheren Thema, steht das dabei —
+       sonst denkt man, man sei im falschen Thema gelandet. */
+    if(e.__wdh) h='<span class="ub-wmark">🔁 Wiederholung'+(e.__vonTitel?': '+E(e.__vonTitel):'')+'</span>'+h;
     body.innerHTML=h; body.scrollTop=0;
-    if(e.type==='gap'){ var g=document.getElementById('ubGap'); g.addEventListener('input',function(){ btn.disabled=!g.value.trim(); }); g.focus(); }
-    if(e.type==='order') drawOrder();
+    if(e.type==='gap'||e.type==='tippen'){ var g=document.getElementById('ubGap');
+      g.addEventListener('input',function(){ btn.disabled=!g.value.trim(); });
+      g.addEventListener('keydown',function(ev){ if(ev.key==='Enter'&&!btn.disabled) window.ubBtn(); });
+      g.focus(); }
+    if(e.type==='order'||e.type==='buchstaben') drawOrder();
   }
 
   window.ubChoose=function(k){ if(S.answered)return; S.sel=k; var opts=document.getElementById('ubOpts'); Array.prototype.forEach.call(opts.children,function(b){ b.classList.toggle('sel',+b.dataset.k===k); }); document.getElementById('ubBtn').disabled=false; };
   window.ubMatchChk=function(){ var e=S.items[S.idx]; var all=e.pairs.every(function(p,k){ return document.getElementById('ubM'+k).value; }); document.getElementById('ubBtn').disabled=!all; };
   function drawOrder(){ var e=S.items[S.idx]; var b=document.getElementById('ubBuild'),p=document.getElementById('ubPool');
-    b.innerHTML=S.order.build.map(function(t,i){ return '<span class="ub-chip" onclick="ubUnpick('+i+')">'+E(t.w)+'</span>'; }).join('')||'<span style="color:var(--soft,#999);font-size:14px">Wörter unten antippen…</span>';
+    var leer=(e.type==='buchstaben')?'Buchstaben unten antippen…':'Wörter unten antippen…';
+    b.innerHTML=S.order.build.map(function(t,i){ return '<span class="ub-chip" onclick="ubUnpick('+i+')">'+E(t.w)+'</span>'; }).join('')||'<span style="color:var(--soft,#999);font-size:14px">'+leer+'</span>';
     p.innerHTML=S.order.pool.map(function(t){ return '<span class="ub-chip" onclick="ubPick('+t.i+')">'+E(t.w)+'</span>'; }).join('');
     document.getElementById('ubBtn').disabled=S.order.build.length===0; }
   window.ubPick=function(i){ var pi=S.order.pool.map(function(t){return t.i;}).indexOf(i); if(pi<0)return; S.order.build.push(S.order.pool[pi]); S.order.pool.splice(pi,1); drawOrder(); };
@@ -497,13 +822,36 @@
       /* Die Erklärung mitgeben — sonst sieht man nur die Lösung, nicht das Warum. */
       sol='Richtig: '+e.answer+(e.explain?' — '+e.explain:'');
     } else if(e.type==='match'){ ok=e.pairs.every(function(p,k){ var sel=document.getElementById('ubM'+k); sel.disabled=true; var good=nrm(sel.value)===nrm(p.r); sel.style.borderColor=good?'#16a34a':'#dc2626'; return good; }); sol=ok?'':'Schau dir die richtigen Paare nochmal an.';
-    } else if(e.type==='order'){ var built=S.order.build.map(function(t){return t.w;}).join(' '); ok=nrm(built)===nrm(e.answer); sol='Richtig: '+e.answer;
+    } else if(e.type==='order'){ var built=S.order.build.map(function(t){return t.w;}).join(' ');
+      ok=[e.answer].concat(e.alts||[]).some(function(a){ return nrm(built)===nrm(a); });
+      sol='Richtig: '+e.answer;
+    } else if(e.type==='buchstaben'){ var wort=S.order.build.map(function(t){return t.w;}).join('');
+      ok=nrm(wort)===nrm(e.answer); sol='Richtig: '+e.answer;
+    } else if(e.type==='tippen'){ var t=document.getElementById('ubGap'); var vv=t.value; t.disabled=true;
+      var ziele=[e.answer].concat(e.alts||[]).concat([ohneArt(e.answer)]);
+      ok=ziele.some(function(a){ return nrm(a)===nrm(vv); });
+      /* Fast richtig zählt als richtig — mit Hinweis auf die Schreibweise. */
+      var fast=!ok && ziele.some(function(a){ return fastGleich(vv,a); });
+      if(fast) ok=true;
+      sol=(fast?'Fast! So schreibt man es: ':'Richtig: ')+e.answer;
+      if(ok&&e.w) markKnown(e.w);
+    } else if(e.type==='artikel'){ ok=(ART[S.sel]===String(e.answer).toLowerCase());
+      var aopts=document.getElementById('ubOpts'); var rk=ART.indexOf(String(e.answer).toLowerCase());
+      Array.prototype.forEach.call(aopts.children,function(b){ var k=+b.dataset.k; b.disabled=true; b.classList.remove('sel');
+        if(k===rk)b.classList.add('right'); else if(k===S.sel)b.classList.add('wrong'); });
+      sol=String(e.answer)+' '+(e.wort||ohneArt(e.w));
+      if(ok&&e.w) markKnown(e.w);
+    } else if(e.type==='karte'){ ok=true;
     } else if(e.type==='speak'||e.type==='shadow'){ ok=true; }
     else if(e.type==='listen'){ ok=(S.sel===e.answer); var lopts=document.getElementById('ubOpts');
       Array.prototype.forEach.call(lopts.children,function(b){ var k=+b.dataset.k; b.disabled=true; b.classList.remove('sel'); if(k===e.answer)b.classList.add('right'); else if(k===S.sel)b.classList.add('wrong'); });
       sol=e.explain?e.explain:'Hör nochmal genau hin.'; }
 
-    S.answered=true; var btn=document.getElementById('ubBtn'); var selfRated=(e.type==='speak'||e.type==='shadow');
+    S.answered=true; var btn=document.getElementById('ubBtn');
+    var selfRated=(e.type==='speak'||e.type==='shadow'||e.type==='karte');
+    /* Jede Antwort zu einem Wort landet im Wiederholungsplan: richtig
+       schiebt das Wort nach hinten, falsch holt es zurück. */
+    if(e.w && e.type!=='karte') wdhMerken(e, ok);
     /* Wer zurückgeht und dieselbe Aufgabe nochmal löst, verliert kein zweites Herz
        und bekommt keine zweiten Punkte. */
     var schonGewertet=!!S.gewertet[S.idx]; S.gewertet[S.idx]=true;
@@ -514,7 +862,8 @@
     else if(!selfRated){
       if(ok){ S.correct++; addXP(META().xpPerCorrect||10); fb.className='ub-fb ok'; fb.innerHTML='✓ Richtig! +'+(META().xpPerCorrect||10)+' XP'; }
       else { S.hearts--; setProg(); fb.className='ub-fb no'; fb.innerHTML='✗ '+E(sol); }
-    } else { S.correct++; addXP(Math.round((META().xpPerCorrect||10)/2)); fb.className='ub-fb ok'; fb.innerHTML='Klasse! Weiter so. +'+Math.round((META().xpPerCorrect||10)/2)+' XP'; }
+    } else { S.correct++; addXP(Math.round((META().xpPerCorrect||10)/2)); fb.className='ub-fb ok';
+      fb.innerHTML=(e.type==='karte'?'Gemerkt? Das Wort kommt gleich noch einmal.':'Klasse! Weiter so.')+' +'+Math.round((META().xpPerCorrect||10)/2)+' XP'; }
     if(e.type==='listen'){ fb.innerHTML+='<div style="margin-top:10px;padding:11px 13px;background:#fff;border:1px solid var(--border,#ECECEC);border-radius:12px;font-weight:500;color:#333;line-height:1.5">📝 <b>Das hast du gehört:</b><br>'+E(e.transcript)+'</div>'; }
     btn.className='ub-btn'+((!ok&&!selfRated)?' no':''); btn.disabled=false;
     btn.textContent=(S.idx>=S.items.length-1)?'Abschließen':'Weiter';
