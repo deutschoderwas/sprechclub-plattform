@@ -63,6 +63,18 @@
   dazu('wohnen', 'ho', ['b2-wohnen-vertrag']);
   dazu('medien', 'ho', ['b2-medien-einordnen']);
 
+  /* Hoeren auf C1 — auf diesem Niveau geht es nicht mehr ums Wort,
+     sondern um die Absicht. Darum haengen die vier Themen dort, wo
+     jemand etwas sagt und etwas anderes meint. */
+  dazu('bewerbung', 'ho', ['c1-verhandeln', 'c1-zwischen-den-zeilen']);
+  dazu('buero', 'ho', ['c1-verhandeln', 'c1-zwischen-den-zeilen']);
+  dazu('vertraege', 'ho', ['c1-verhandeln']);
+  dazu('heikel', 'ho', ['c1-debatte', 'c1-zwischen-den-zeilen']);
+  dazu('team', 'ho', ['c1-zwischen-den-zeilen']);
+  dazu('weiterbildung', 'ho', ['c1-zahlen-hoeren', 'c1-debatte']);
+  dazu('medien', 'ho', ['c1-zahlen-hoeren', 'c1-debatte']);
+  dazu('freunde', 'ho', ['c1-zwischen-den-zeilen']);
+
   /* ---------- 2. Wortschatz, der noch nirgends hing ---------- */
   dazu('ankommen', 'ws', ['a1-begruessung']);
   dazu('familie', 'ws', ['a1-tagesablauf']);
