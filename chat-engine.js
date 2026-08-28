@@ -158,18 +158,38 @@
     if (knopf) knopf.disabled = true;
   };
 
-  /* Sprechen ins Feld — einmal antippen, sprechen, fertig */
+  /* Sprechen ins Feld — einmal antippen, sprechen, fertig.
+
+     Zwei Dinge gingen hier schief:
+     · Nach dem Absenden kam manchmal noch ein spätes Ergebnis der
+       Erkennung und schrieb den Satz zurück in das gerade geleerte
+       Feld. Nach dem Senden wird deshalb nichts mehr angenommen.
+     · Durfte das Mikrofon nicht oder hörte es nichts, passierte gar
+       nichts — kein Ton, keine Meldung, nur ein Knopf ohne Wirkung.
+       Jetzt sagt es, was los ist. */
+  var MIKRO_TEXT = {
+    'not-allowed': 'Ich darf das Mikrofon nicht benutzen. Erlaube es in den Einstellungen deines Browsers.',
+    'service-not-allowed': 'Ich darf das Mikrofon nicht benutzen. Erlaube es in den Einstellungen deines Browsers.',
+    'no-speech': 'Ich habe nichts gehört. Tipp noch einmal aufs Mikrofon und sprich etwas lauter.',
+    'audio-capture': 'Ich finde kein Mikrofon an diesem Gerät.',
+    'network': 'Die Spracherkennung braucht Internet — gerade komme ich nicht durch.',
+    'aborted': ''
+  };
   window.chatSprechen = function (knopf, feld, absenden) {
     var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SR) { if (window.toast) window.toast('Dein Gerät kann nicht zuhören — tipp die Antwort.'); return; }
+    if (!SR) {
+      if (window.toast) window.toast('Dieser Browser kann nicht zuhören. In Chrome oder Safari klappt es — sonst einfach tippen.');
+      return;
+    }
     if (knopf._laeuft) { try { knopf._erk.stop(); } catch (e) { } return; }
     try {
       var r = new SR();
       r.lang = 'de-DE'; r.interimResults = true; r.continuous = false; r.maxAlternatives = 1;
-      knopf._erk = r; knopf._laeuft = true;
+      knopf._erk = r; knopf._laeuft = true; knopf._zu = false;
       knopf.classList.add('laeuft');
       var fertig = '';
       r.onresult = function (e) {
+        if (knopf._zu) return;
         var zwischen = '';
         for (var i = e.resultIndex; i < e.results.length; i++) {
           if (e.results[i].isFinal) fertig += e.results[i][0].transcript;
@@ -180,13 +200,23 @@
       };
       r.onend = function () {
         knopf._laeuft = false; knopf.classList.remove('laeuft');
-        if (feld.value.trim() && absenden) setTimeout(absenden, 260);
+        if (knopf._zu) return;
+        if (feld.value.trim() && absenden) {
+          knopf._zu = true;               /* ab jetzt nichts mehr ins Feld */
+          setTimeout(absenden, 200);
+        }
       };
-      r.onerror = function () {
-        knopf._laeuft = false; knopf.classList.remove('laeuft');
+      r.onerror = function (e) {
+        knopf._laeuft = false; knopf.classList.remove('laeuft'); knopf._zu = true;
+        var m = MIKRO_TEXT[(e && e.error) || ''];
+        if (m === undefined) m = 'Das Zuhören hat nicht geklappt. Tipp deine Antwort einfach ein.';
+        if (m && window.toast) window.toast(m);
       };
       r.start();
-    } catch (e) { knopf._laeuft = false; knopf.classList.remove('laeuft'); }
+    } catch (e) {
+      knopf._laeuft = false; knopf.classList.remove('laeuft');
+      if (window.toast) window.toast('Das Zuhören hat nicht geklappt. Tipp deine Antwort einfach ein.');
+    }
   };
 
   /* Uhrzeit kurz */

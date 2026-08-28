@@ -141,7 +141,10 @@
     .ub-ov{position:fixed;inset:0;z-index:4000;background:var(--cream,#FFFCF5);display:none;flex-direction:column}
     .ub-ov.open{display:flex}
     .ub-head{display:flex;align-items:center;gap:14px;padding:14px 18px;max-width:680px;margin:0 auto;width:100%}
-    .ub-x{border:none;background:none;font-size:26px;cursor:pointer;color:var(--soft,#5C5C5C);line-height:1}
+    .ub-x{border:none;background:none;font-size:26px;cursor:pointer;color:var(--soft,#5C5C5C);line-height:1;
+      min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;border-radius:50%}
+    .ub-x:hover{background:rgba(32,33,31,.06)}
+    .ub-ende{font-size:22px}
     .ub-prog{flex:1;height:14px;border-radius:10px;background:#e9e4d8;overflow:hidden}
     .ub-prog span{display:block;height:100%;background:var(--turq,#2DD4BF);transition:width .3s}
     .ub-hearts{font-size:18px;letter-spacing:1px;white-space:nowrap}
@@ -392,7 +395,16 @@
   var S=null; // session state
   function ensureOverlay(){ var o=document.getElementById('ubOv'); if(o)return o;
     o=document.createElement('div'); o.className='ub-ov'; o.id='ubOv';
-    o.innerHTML='<div class="ub-head"><button class="ub-x" id="ubZur" onclick="ubZurueck()" aria-label="Eine Aufgabe zurück">←</button><div class="ub-prog"><span id="ubProg" style="width:0"></span></div><div class="ub-hearts" id="ubHearts"></div></div>'+
+    /* Zwei getrennte Knoepfe: der Pfeil geht eine Aufgabe zurueck, das
+       Kreuz beendet die Runde. Vorher war es einer, der je nach Stelle
+       mal das eine und mal das andere tat — wer zurueckging, kam nicht
+       mehr heraus. */
+    o.innerHTML='<div class="ub-head">'
+                 +'<button class="ub-x" id="ubZur" onclick="ubZurueck()" aria-label="Eine Aufgabe zurück" title="Eine Aufgabe zurück">←</button>'
+                 +'<div class="ub-prog"><span id="ubProg" style="width:0"></span></div>'
+                 +'<div class="ub-hearts" id="ubHearts"></div>'
+                 +'<button class="ub-x ub-ende" id="ubZu" onclick="ubClose()" aria-label="Übung beenden" title="Übung beenden">✕</button>'
+                 +'</div>'+
                 '<div class="ub-body" id="ubBody"></div>'+
                 '<div class="ub-foot"><button class="ub-btn" id="ubBtn" disabled onclick="ubBtn()">Prüfen</button></div>';
     document.body.appendChild(o); return o; }
@@ -710,9 +722,13 @@
   function renderQ(){
     stopAudio(); shadowReset();
     setProg(); S.answered=false; S.sel=null; S.order=null;
+    /* Bei der ersten Aufgabe gibt es nichts, wohin der Pfeil fuehren
+       koennte — dann ist er blass und tut nichts. Das Kreuz daneben
+       bleibt immer da. */
     var zr=document.getElementById('ubZur');
-    if(zr){ zr.textContent = S.idx>0 ? '←' : '×';
-            zr.setAttribute('aria-label', S.idx>0 ? 'Eine Aufgabe zurück' : 'Übung beenden'); }
+    if(zr){ zr.disabled = S.idx<=0;
+            zr.style.opacity = S.idx>0 ? '1' : '.3';
+            zr.style.pointerEvents = S.idx>0 ? '' : 'none'; }
     var e=S.items[S.idx]; var body=document.getElementById('ubBody'); var btn=document.getElementById('ubBtn');
     btn.className='ub-btn'; btn.textContent='Prüfen'; btn.disabled=true;
     var h=(S.idx===0?themenBild():'');
@@ -867,6 +883,10 @@
     }
     else if(!selfRated){
       if(ok){ S.correct++; addXP(META().xpPerCorrect||10); fb.className='ub-fb ok'; fb.innerHTML='✓ Richtig! +'+(META().xpPerCorrect||10)+' XP'; }
+      /* Beim Satzbau kostet ein anderer Bau kein Herz: im Deutschen
+         sind oft zwei Reihenfolgen richtig, und wir prüfen nur gegen
+         eine. Der gemeinte Satz steht daneben. */
+      else if(e.type==='order'){ fb.className='ub-fb no'; fb.innerHTML='So war der Satz gemeint:<br><b>'+E(e.answer)+'</b>'; }
       else { S.hearts--; setProg(); fb.className='ub-fb no'; fb.innerHTML='✗ '+E(sol); }
     } else { S.correct++; addXP(Math.round((META().xpPerCorrect||10)/2)); fb.className='ub-fb ok';
       fb.innerHTML=(e.type==='karte'?'Gemerkt? Das Wort kommt gleich noch einmal.':'Klasse! Weiter so.')+' +'+Math.round((META().xpPerCorrect||10)/2)+' XP'; }

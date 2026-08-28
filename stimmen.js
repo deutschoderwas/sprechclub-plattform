@@ -194,6 +194,52 @@
      ------------------------------------------------------------ */
   var tonAudio = null;
 
+  /* ------------------------------------------------------------
+     Ton auf dem iPhone
+
+     Safari und Chrome auf dem iPhone lassen Ton nur zu, wenn ein
+     Fingertipp ihn ausgeloest hat — und die Erlaubnis gilt jeweils
+     nur fuer die Tonspur, die waehrend des Tippens gestartet wurde.
+     Amanda antwortet aber von selbst, oft Sekunden spaeter: ihre
+     frisch angelegte Tonspur wird dann stumm abgewiesen, und es
+     klang, als ginge die Sprachausgabe gar nicht.
+
+     Deshalb gibt es genau EINE Tonspur. Beim ersten Tippen
+     irgendwo in der App wird sie mit einer stummen Aufnahme
+     freigeschaltet; danach spricht immer dieselbe Spur weiter.
+     ------------------------------------------------------------ */
+  var SPUR = null, spurFrei = false;
+  var STILL = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAgD4AAAB9AAACABAAZGF0YQAAAAA=';
+  function spur() {
+    if (!SPUR) { SPUR = new Audio(); SPUR.preload = 'auto'; }
+    return SPUR;
+  }
+  function spurFreischalten() {
+    if (spurFrei) return;
+    spurFrei = true;
+    try {
+      var a = spur();
+      a.src = STILL; a.volume = 0;
+      var p = a.play();
+      if (p && p.then) p.then(function () { a.pause(); a.volume = 1; }, function () { a.volume = 1; });
+      else a.volume = 1;
+    } catch (e) { }
+    /* Dasselbe fuer die Vorlese-Stimme des Geraets. */
+    try {
+      if ('speechSynthesis' in window) {
+        var u = new SpeechSynthesisUtterance(' ');
+        u.volume = 0; window.speechSynthesis.speak(u);
+      }
+    } catch (e) { }
+    ['pointerdown', 'touchend', 'keydown'].forEach(function (n) {
+      window.removeEventListener(n, spurFreischalten, true);
+    });
+  }
+  ['pointerdown', 'touchend', 'keydown'].forEach(function (n) {
+    window.addEventListener(n, spurFreischalten, true);
+  });
+  window.tonFreischalten = spurFreischalten;
+
   function tonSchluessel(t) {
     return String(t == null ? '' : t).toLowerCase().replace(/\s+/g, ' ').replace(/^ | $/g, '');
   }
@@ -217,7 +263,9 @@
     try {
       abbrechen = false; laeuft = true;
       if (opt.aufElement) opt.aufElement.classList.add('spricht');
-      var a = new Audio(datei); tonAudio = a;
+      var a = spur(); tonAudio = a;
+      a.onended = null; a.onerror = null;
+      a.src = datei;
       a.playbackRate = opt.langsam ? 0.8 : 1;
       function fertig() {
         if (tonAudio === a) tonAudio = null;
@@ -255,7 +303,10 @@
       .then(function (j) {
         if (abbrechen) { fertig(); return; }
         if (!j || !j.url) { geraetSagen(text, opt); return; }
-        var a = new Audio(j.url); ttsAudio = a;
+        var a = spur(); ttsAudio = a;
+        a.onended = null; a.onerror = null;
+        a.src = j.url;
+        a.playbackRate = 1;
         a.onended = function () { if (ttsAudio === a) ttsAudio = null; fertig(); };
         a.onerror = function () { if (ttsAudio === a) ttsAudio = null; geraetSagen(text, opt); };
         var p = a.play(); if (p && p.catch) p.catch(function () { if (ttsAudio === a) ttsAudio = null; geraetSagen(text, opt); });

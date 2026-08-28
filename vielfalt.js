@@ -33,7 +33,25 @@
   /* ---------- 1. Kleinkram ---------- */
 
   function txt(s) { return String(s == null ? '' : s); }
-  function eng(s) { return txt(s).replace(/\s+/g, ' ').trim(); }
+  /* Doppelte Leerzeichen weg — und keine Lücke vor dem Punkt. Beim
+     Einsetzen in einen Lückensatz entstand sonst „… worden ." */
+  function eng(s) { return txt(s).replace(/\s+/g, ' ').replace(/\s+([.,!?;:])/g, '$1').trim(); }
+
+  /* Zwei Wörter im selben Thema mit fast derselben Erklärung: dann
+     zeigt die Erklärung nicht mehr auf ein einziges Wort, und wer das
+     andere schreibt, steht als falsch da. */
+  function zweideutig(infos, i) {
+    var a = String(infos[i] || '').toLowerCase();
+    if (a.length < 6) return true;
+    for (var k = 0; k < infos.length; k++) {
+      if (k === i) continue;
+      var b = String(infos[k] || '').toLowerCase();
+      if (!b) continue;
+      if (a === b) return true;
+      if (a.length > 12 && (a.indexOf(b) === 0 || b.indexOf(a) === 0)) return true;
+    }
+    return false;
+  }
 
   /* „der Beruf" → „Beruf"; „die Eltern (Pl.)" → „Eltern" */
   function ohneArtikel(s) {
@@ -202,9 +220,38 @@
   function echtesWort(s) {
     var w = eng(s);
     if (!w || w.length < 2 || w.length > 32) return false;
-    if (/[·=\/?.!:;0-9]/.test(w)) return false;
+    if (/[·=\/?.!:;0-9→(){}\[\]]/.test(w)) return false;
     if (/\b(Laut|Frage|Aussage|Melodie)\b/.test(w) && w.indexOf(' ') < 0) return false;
     return /^[A-Za-zÄÖÜäöüß][A-Za-zÄÖÜäöüß\-' ]*$/.test(w);
+  }
+
+  /* Ein einzelnes Wort, keine Wendung. „der Vertrag" ja, „die Nase
+     voll haben" nein. */
+  function einWort(s) {
+    var w = ohneArtikel(s);
+    return echtesWort(w) && w.indexOf(' ') < 0;
+  }
+
+  /* Nomen, die es nur im Plural gibt. Nach dem Artikel zu fragen ist
+     dort irreführend: „die Schmerzen" ist kein femininer Artikel,
+     sondern der Plural. */
+  var PLURAL = /(schmerzen|kosten|eltern|leute|sachen|unterlagen|papiere|daten|ferien|verwandten|angehörigen|personalien|gebühren|nachrichten|spuren|zeiten|punkte|beläge|späne|handschuhe|geschwister|möbel|finanzen|einkünfte|lebensmittel)$/i;
+
+  /* Ablenker müssen zum Zielwort passen: dieselbe Wortart, dieselbe
+     Machart. Ein Verb neben drei Nomen ist keine Wahl, sondern ein
+     Wink mit dem Zaunpfahl — und eine Wendung mitten unter Nomen
+     sieht aus wie ein Fehler. */
+  function gleicheArt(ziel, kand) {
+    var z = ohneArtikel(ziel), k = ohneArtikel(kand);
+    if (!echtesWort(k)) return false;
+    if ((z.indexOf(' ') >= 0) !== (k.indexOf(' ') >= 0)) return false;
+    var zGross = /^[A-ZÄÖÜ]/.test(z), kGross = /^[A-ZÄÖÜ]/.test(k);
+    if (zGross !== kGross) return false;
+    /* Bei Nomen zusätzlich derselbe Artikel: sonst verrät das
+       Geschlecht im Satz die Lösung. */
+    var za = artikelVon(ziel), ka = artikelVon(kand);
+    if (zGross && za && ka && za !== ka) return false;
+    return true;
   }
 
   /* Steht das gesuchte Wort schon in der Frage, ist die Frage keine. */
@@ -271,8 +318,11 @@
       /* Alles Weitere setzt voraus, dass da wirklich ein Wort steht. */
       if (!echtesWort(kern)) return;
 
-      /* Schreiben können ist mehr als wiedererkennen. */
-      if (info && kern.length >= 3) {
+      /* Schreiben können ist mehr als wiedererkennen. Nur dann, wenn
+         die Bedeutung im Thema eindeutig auf dieses eine Wort zeigt —
+         stehen zwei Wörter mit fast derselben Erklärung nebeneinander,
+         tippt man das andere und liegt scheinbar falsch. */
+      if (info && kern.length >= 3 && !zweideutig(infos, i)) {
         neu.push({
           type: 'tippen', w: wort, answer: wort,
           alts: [kern, kern.toLowerCase()], info: info, emoji: w.emoji || '',
@@ -289,8 +339,11 @@
         });
       }
 
-      /* der, die oder das — der Klassiker, an dem es hängt. */
-      if (art) {
+      /* der, die oder das — der Klassiker, an dem es hängt. Nur für
+         einzelne Nomen im Singular: bei einer Wendung und bei einem
+         Wort, das es nur im Plural gibt, ist die Frage falsch
+         gestellt. */
+      if (art && einWort(wort) && !PLURAL.test(kern)) {
         neu.push({
           type: 'artikel', w: wort, wort: kern, answer: art,
           satz: roh || '', emoji: w.emoji || '', img: foto, level: t.level
@@ -299,8 +352,10 @@
 
       /* Bedeutung → Wort, mit drei Nachbarn aus demselben Thema. */
       if (info && info.indexOf('·') < 0 && namen.length >= 4
-        && !schonGefragt(t, info) && !verraet(info, wort)) {
-        var mgl = moeglichkeiten(wort, ablenker(namen, i, 6), 3);
+        && !schonGefragt(t, info) && !verraet(info, wort) && !zweideutig(infos, i)) {
+        var mgl = moeglichkeiten(wort, ablenker(namen, i, 6).filter(function (x) {
+          return gleicheArt(wort, x);
+        }), 3);
         if (mgl) {
           neu.push({
             type: 'choice', w: wort, img: foto,
@@ -324,11 +379,17 @@
               alts: [kern, wort], hint: info, explain: wort + ' = ' + info + '.', level: t.level
             });
           } else {
-            var mgl2 = moeglichkeiten(mk[0], ablenker(namen.map(ohneArtikel), i, 6), 3);
+            /* Die Ablenker müssen zum gesuchten Wort passen — sonst
+               steht ein Verb zwischen drei Nomen und die Lösung ist
+               geschenkt. Und die Bedeutung steht dabei: sonst passen
+               bei „ich bin echt ___" gleich zwei Gefühle. */
+            var mgl2 = moeglichkeiten(mk[0], ablenker(namen, i, 8).filter(function (x) {
+              return gleicheArt(wort, x);
+            }).map(ohneArtikel), 3);
             if (mgl2) {
               neu.push({
                 type: 'choice', w: wort, img: foto,
-                q: '🧩 Was fehlt? ' + luecke,
+                q: '🧩 Was fehlt? ' + luecke + (info ? '  (gesucht: ' + info + ')' : ''),
                 options: mgl2, answer: 0, explain: satz, level: t.level
               });
             }

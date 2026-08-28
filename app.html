@@ -1752,34 +1752,56 @@ function amandaVorschlagNehmen(t){
 async function amandaSenden(){
   var e = $('amEin'); if(!e) return;
   var t = (e.value||'').trim();
-  if(!t || AM.laeuft) return;
+  if(!t) return;
+
+  /* Das Feld wird sofort leer — auch dann, wenn Amanda gerade noch
+     antwortet. Vorher stand hier eine Sperre: wer zweimal kurz
+     hintereinander schickte, sah seinen Satz weiter im Feld stehen
+     und bekam gar keine Antwort. Jetzt wartet der zweite Satz in der
+     Schlange und wird gestellt, sobald Amanda fertig ist. */
   window.chatLeeren(e, $('amAb'));
   amandaVorschlaege([]);
 
   AM.verlauf.push({ wer:'du', text:t });
   window.chatAnhaengen(window.chatBlase({ wer:'ich', text:t, zeit:window.chatZeit() }), true);
   punkte(6,'app');
+
+  if(AM.laeuft){ AM.wartet = true; return; }
   amandaAntwortHolen();
 }
 
 async function amandaAntwortHolen(){
   if(AM.laeuft) return;
   AM.laeuft = true;
+  AM.wartet = false;
   var st = $('amStatus'); if(st) st.textContent = 'schreibt …';
   window.chatTippt(true);
+
+  /* Ohne Zeitgrenze bleibt bei einer stillen Verbindung alles stehen:
+     die Anfrage kommt nie zurueck, die Sperre bleibt zu und jede
+     weitere Nachricht haengt. Nach fuenfundvierzig Sekunden brechen
+     wir ab und sagen es. */
+  var stopp = null, wache = null;
+  try{ stopp = new AbortController(); }catch(err){ stopp = null; }
+  if(stopp) wache = setTimeout(function(){ try{ stopp.abort(); }catch(err){} }, 45000);
+  function wacheAus(){ if(wache){ clearTimeout(wache); wache = null; } }
 
   try{
     var sess = await sb.auth.getSession();
     var r = await fetch((window.__API__||'') + '/api/amanda-chat', {
       method:'POST',
       headers:{ 'content-type':'application/json', authorization:'Bearer '+sess.data.session.access_token },
-      body: JSON.stringify({ verlauf:AM.verlauf, level:S.stufe, l1:L1, thema:AM.thema })
+      body: JSON.stringify({ verlauf:AM.verlauf, level:S.stufe, l1:L1, thema:AM.thema }),
+      signal: stopp ? stopp.signal : undefined
     });
+    wacheAus();
     var j = await r.json();
     window.chatTippt(false);
     if(!r.ok || !j.ok){
       amandaBlaseAn('Entschuldige, ich war kurz weg. Sag das noch einmal?', null, '');
-      AM.laeuft = false; if(st) st.textContent='ist da'; return;
+      AM.laeuft = false; if(st) st.textContent='ist da';
+      amandaWeiterInDerSchlange();
+      return;
     }
 
     var extra = null;
@@ -1800,11 +1822,23 @@ async function amandaAntwortHolen(){
     amandaSpricht(j.text, 'amKopf');
     amandaVorschlaege(j.vorschlaege);
   }catch(err){
+    wacheAus();
     window.chatTippt(false);
-    amandaBlaseAn('Ich habe gerade keine Verbindung. Versuch es gleich noch einmal.', null, '');
+    amandaBlaseAn(err && err.name === 'AbortError'
+      ? 'Das hat zu lange gedauert. Schick es mir bitte noch einmal.'
+      : 'Ich habe gerade keine Verbindung. Versuch es gleich noch einmal.', null, '');
   }
   AM.laeuft = false;
   if(st) st.textContent = 'ist da';
+  amandaWeiterInDerSchlange();
+}
+
+/* Hat jemand geschrieben, waehrend Amanda noch tippte, ist dieser Satz
+   schon im Verlauf — jetzt wird er beantwortet. */
+function amandaWeiterInDerSchlange(){
+  if(!AM.wartet) return;
+  AM.wartet = false;
+  setTimeout(amandaAntwortHolen, 60);
 }
 
 function dialogStart(id){
