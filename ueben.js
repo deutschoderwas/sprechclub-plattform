@@ -95,6 +95,15 @@
     .ub-skill{border:1.5px solid var(--border,#ECECEC);background:#fff;border-radius:40px;padding:9px 16px;font-weight:700;font-size:14px;cursor:pointer;display:flex;gap:7px;align-items:center;transition:.15s}
     .ub-skill.on{color:#fff}
     .ub-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+    .ub-niv{display:flex;align-items:center;gap:10px;margin:26px 0 10px;font-size:16px;font-weight:800;color:var(--ink,#2B2B2B)}
+    .ub-niv:first-child{margin-top:8px}
+    .ub-niv .lv{display:inline-flex;align-items:center;justify-content:center;min-width:38px;height:26px;padding:0 9px;border-radius:40px;background:var(--rot,#DD0000);color:#fff;font-size:13px;font-weight:800;letter-spacing:.3px}
+    .ub-niv .anz{margin-left:auto;font-size:13px;font-weight:600;color:var(--mute,#9A948B)}
+    .ub-grid[hidden]{display:none}
+    .ub-grid+.ub-grid{margin-top:12px}
+    .ub-mehrbtn{width:100%;margin-top:12px;border:1.5px solid var(--border,#ECECEC);background:var(--card,#fff);border-radius:40px;padding:13px 18px;font-weight:700;font-size:14px;cursor:pointer;color:var(--ink,#2B2B2B);min-height:48px}
+    .ub-mehrbtn:hover{border-color:var(--rot,#DD0000);color:var(--rot,#DD0000)}
+    @media(max-width:640px){.ub-niv{font-size:15px;margin:20px 0 8px}.ub-niv .anz{font-size:12px}}
     .ub-card{background:var(--card,#fff);border:1px solid var(--border,#ECECEC);border-radius:18px;padding:15px 16px;box-shadow:0 6px 16px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:8px;transition:transform .15s,box-shadow .2s}
     .ub-card:hover{transform:translateY(-3px);box-shadow:0 14px 28px rgba(0,0,0,.10)}
     .ub-card .emj{font-size:24px}
@@ -170,6 +179,13 @@
     .ub-go2{margin-top:4px;border:none;border-radius:40px;padding:11px;font-weight:800;color:#fff;cursor:pointer;font-family:inherit;font-size:14.5px;transition:filter .15s}
     .ub-go2:hover{filter:brightness(1.08)}
     .ub-lesson{display:block;text-align:center;font-size:13px;font-weight:700;color:var(--soft,#5C5C5C);text-decoration:none;padding:8px;border-radius:30px;border:1.5px solid var(--border,#ECECEC);transition:.15s}
+    /* Tippflaechen am Handy: ein Daumen braucht 46px, nicht 34. */
+    @media(max-width:640px){
+      .ub-go2{min-height:48px;padding:13px}
+      .ub-lesson{min-height:46px;padding:13px 8px;display:flex;align-items:center;justify-content:center}
+      .ub-skill{min-height:46px;padding:11px 16px}
+      .ub-mix{min-height:52px}
+    }
     .ub-lesson:hover{border-color:var(--turq,#2DD4BF);color:var(--ink,#1A1A1A);background:rgba(45,212,191,.07)}
     .ub-recbtn{border:2px solid #7C3AED;background:#fff;color:#7C3AED;border-radius:40px;padding:13px 22px;font-weight:800;font-size:16px;cursor:pointer;font-family:inherit;transition:.15s}
     .ub-recbtn:hover{background:rgba(124,58,237,.08)}
@@ -237,7 +253,12 @@
     var pills='<div class="ub-skills">'+UEBUNGEN.skills.map(function(x){
         var on=x.id===curSkill; return '<button class="ub-skill'+(on?' on':'')+'" style="'+(on?'background:'+(x.color||'#DD0000')+';border-color:'+(x.color||'#DD0000'):'')+'" onclick="ubSetSkill(\''+x.id+'\')">'+x.emoji+' '+E(x.name)+'</button>';
       }).join('')+'</div>';
-    var cards='<div class="ub-grid">'+sk.themes.map(function(t,idx){
+    /* Nach Niveau geordnet. Vorher lagen alle Themen eines Bereichs in
+       einem einzigen Gitter - bei 47 Hoerthemen fand ein Anfaenger
+       seins nicht. Jetzt kommt A1 zuerst, mit Ueberschrift und Anzahl. */
+    var NIV=['A1','A2','B1','B2','C1'];
+    var NIV_TEXT={A1:'Ganz am Anfang',A2:'Schon etwas sicherer',B1:'Alltag auf eigenen Beinen',B2:'Feinheiten und Meinung',C1:'Fast wie zu Hause'};
+    function karte(t,idx){
         var tp=(s.themes[themeKey(sk.id,t.id)]||{}).best||0;
         var g=UB_PAL[idx%UB_PAL.length]; var grad='linear-gradient(135deg,'+g[0]+','+g[1]+')';
         var em=t.emoji||UB_EMOJI[t.id]||sk.emoji; var lu=lessonUrl(sk.id,t.id);
@@ -255,7 +276,36 @@
             (lu?'<a class="ub-lesson" href="'+lu+'" target="_blank" rel="noopener">📖 Passende Lektion</a>':'')+
           '</div>'+
         '</div>';
-      }).join('')+'</div>';
+    }
+    var faecher={}, rest=[];
+    sk.themes.forEach(function(t,i){
+      var lv=String(t.level||'').trim().toUpperCase();
+      if(NIV.indexOf(lv)<0){ rest.push({t:t,i:i}); return; }
+      (faecher[lv]=faecher[lv]||[]).push({t:t,i:i});
+    });
+    /* Lange Faecher werden zusammengelegt: acht Themen stehen offen,
+       der Rest kommt auf Knopfdruck. Auf B1 sind es 41 - ohne das
+       scrollt man am Handy minutenlang an Karten vorbei. */
+    var OFFEN=8;
+    function fach(lv,text,liste){
+      var kopf='<h2 class="ub-niv"><span class="lv">'+E(lv)+'</span>'+E(text)+
+        '<span class="anz">'+liste.length+(liste.length===1?' Thema':' Themen')+'</span></h2>';
+      var bau=function(l){ return '<div class="ub-grid">'+l.map(function(o){return karte(o.t,o.i);}).join('')+'</div>'; };
+      if(liste.length<=OFFEN) return kopf+bau(liste);
+      var key=sk.id+'-'+lv.toLowerCase().replace(/[^a-z0-9]/g,'');
+      return kopf+bau(liste.slice(0,OFFEN))+
+        '<div class="ub-grid" id="ubMehr-'+key+'" hidden>'+liste.slice(OFFEN).map(function(o){return karte(o.t,o.i);}).join('')+'</div>'+
+        '<button class="ub-mehrbtn" data-alle="'+liste.length+'" onclick="ubMehr(\''+key+'\',this)">Alle '+liste.length+' Themen zeigen ▾</button>';
+    }
+    window.ubMehr=function(key,btn){
+      var d=document.getElementById('ubMehr-'+key); if(!d)return;
+      d.hidden=!d.hidden;
+      btn.textContent = d.hidden ? ('Alle '+btn.getAttribute('data-alle')+' Themen zeigen ▾') : 'Weniger zeigen ▴';
+    };
+    var teile=[];
+    NIV.forEach(function(lv){ var f=faecher[lv]; if(f&&f.length) teile.push(fach(lv,NIV_TEXT[lv],f)); });
+    if(rest.length) teile.push(fach('alle','Für jedes Niveau',rest));
+    var cards=teile.join('');
     el.innerHTML=head+pills+cards;
   }
   window.renderUeben=renderUeben;
