@@ -56,6 +56,13 @@
   dazu('unterwegs', 'ho', ['a1-weg']);
   dazu('telefonieren', 'ho', ['a1-telefon']);
 
+  /* Hoeren auf B2 — dorthin, wo die Situation wirklich vorkommt. */
+  dazu('heikel', 'ho', ['b2-team-klaeren']);
+  dazu('team', 'ho', ['b2-team-klaeren']);
+  dazu('amt', 'ho', ['b2-amt-widerspruch']);
+  dazu('wohnen', 'ho', ['b2-wohnen-vertrag']);
+  dazu('medien', 'ho', ['b2-medien-einordnen']);
+
   /* ---------- 2. Wortschatz, der noch nirgends hing ---------- */
   dazu('ankommen', 'ws', ['a1-begruessung']);
   dazu('familie', 'ws', ['a1-tagesablauf']);
