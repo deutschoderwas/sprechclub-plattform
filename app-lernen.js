@@ -399,6 +399,160 @@
     if (window.zeige) window.zeige('sprechen');
   };
 
+
+  /* ============================================================
+     Das Gespräch mit Amanda: erst das Thema, dann reden
+
+     Im Chat stand Amanda als gezeichneter Kopf (ein SVG) — auf der
+     Plattform ist sie ein Cartoon. Dieselbe Person, zwei Gesichter.
+     Und wer "Frag Amanda" antippte, landete vor einem leeren Feld:
+     worüber denn? Ein Lerner, der gerade erst anfängt, weiss darauf
+     keine Antwort.
+
+     Jetzt zeigt der Chat die drei Türen und dahinter die Bereiche —
+     antippbar, mit Bild. Man wählt "Beim Arzt" und Amanda weiss,
+     worum es geht. Wer einfach reden will, kann das weiter.
+     ============================================================ */
+  function amandaCartoon() {
+    var g = $('amGesicht');
+    if (!g || g.dataset.cartoon) return;
+    g.dataset.cartoon = '1';
+    var img = new Image();
+    img.src = 'amanda/amanda-hallo.webp';
+    img.alt = 'Amanda';
+    img.style.cssText = 'width:100%;height:100%;object-fit:contain;display:block';
+    img.onload = function () { g.innerHTML = ''; g.appendChild(img); };
+    /* Laedt das Bild nicht, bleibt der gezeichnete Kopf stehen. */
+  }
+
+  function amandaStil() {
+    if ($('am-themen-stil')) return;
+    var st = document.createElement('style');
+    st.id = 'am-themen-stil';
+    st.textContent = [
+      /* Die Buehne trug ein Lila, das es sonst nirgends gibt. */
+      '.am-buehne{background:linear-gradient(180deg,var(--gelb-hauch,#FFF6D9) 0%,var(--creme,#FFF8E0) 62%,var(--bg) 100%)!important}',
+      '.am-buehne .kopf-zeile .zur{border-color:var(--linie,#E7DFC7)!important;color:var(--tinte,#20211F)!important}',
+      '.am-name{color:var(--tinte,#20211F)!important}',
+      '.am-zustand{color:var(--petrol,var(--tq,#1990A4))!important}',
+      /* Ein Daumen braucht 44px. Die Kopfknoepfe hatten 36. */
+      '.am-buehne .kopf-zeile .zur{width:44px!important;height:44px!important}',
+      '.amt-block{padding:4px 2px 10px}',
+      '.amt-frage{font-family:var(--schrift-kopf,inherit);font-size:16px;font-weight:700;margin:0 0 4px}',
+      '.amt-u{font-size:13.5px;line-height:1.5;color:var(--ink2,#54594A);margin:0 0 12px}',
+      '.amt-tueren{display:flex;flex-direction:column;gap:9px;margin-bottom:12px}',
+      '.amt-t{display:flex;align-items:center;gap:11px;width:100%;text-align:left;cursor:pointer;',
+      '  background:var(--karte,var(--card,#FFFDF3));border:2px solid var(--tinte,var(--ink,#20211F));',
+      '  border-radius:16px;padding:11px 13px;font:inherit;min-height:56px}',
+      '.amt-t .zn{font-size:22px;flex:none}',
+      '.amt-t b{display:block;font-size:15px}',
+      '.amt-t span{display:block;font-size:12.5px;color:var(--ink3,#8A857C);margin-top:1px}',
+      '.amt-t.an{border-color:var(--petrol,var(--tq,#1990A4))}',
+      '.amt-liste{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}',
+      '.amt-b{display:flex;align-items:center;gap:11px;width:100%;text-align:left;cursor:pointer;',
+      '  background:var(--karte,var(--card,#FFFDF3));border:1.5px solid var(--linie,var(--line,#E7DFC7));',
+      '  border-radius:14px;padding:8px 11px;font:inherit;min-height:60px}',
+      '.amt-b .bild{flex:none;width:52px;height:44px;border-radius:10px;overflow:hidden;background:var(--creme,#FFF8E0)}',
+      '.amt-b .bild img{width:100%;height:100%;object-fit:cover;display:block}',
+      '.amt-b b{display:block;font-size:14.5px;line-height:1.3}',
+      '.amt-b small{display:block;font-size:12px;color:var(--ink3,#8A857C);margin-top:1px}',
+      '.amt-frei{display:block;width:100%;text-align:center;background:none;border:0;font:inherit;',
+      '  font-size:13.5px;font-weight:700;color:var(--rot,var(--akt,#DD0000));padding:12px;min-height:46px;cursor:pointer}',
+      '.amt-zurueck{background:none;border:0;font:inherit;font-size:13.5px;font-weight:700;',
+      '  color:var(--ink2,#54594A);padding:8px 0;min-height:44px;cursor:pointer}'
+    ].join('');
+    document.head.appendChild(st);
+  }
+
+  function amandaThemenHtml(weg) {
+    var LSx = LS();
+    if (!weg) {
+      var tueren = (LSx && LSx.tueren) ? LSx.tueren() : [];
+      return '<div class="amt-block"><p class="amt-frage">Worüber möchtest du sprechen?</p>'
+        + '<p class="amt-u">Wähl eine Situation — dann weiß ich, welche Wörter du gerade brauchst.</p>'
+        + '<div class="amt-tueren">'
+        + tueren.map(function (t) {
+            return '<button class="amt-t" type="button" onclick="amandaThemenWeg(\'' + E(t.id) + '\')">'
+              + '<span class="zn">' + (t.zeichen || t.em || '📚') + '</span>'
+              + '<span><b>' + E(t.titel || t.id) + '</b><span>' + E(t.kurz || t.text || '') + '</span></span>'
+              + '</button>';
+          }).join('')
+        + '</div><button class="amt-frei" type="button" onclick="amandaOhneThema()">Ich rede einfach drauflos →</button></div>';
+    }
+    var liste = (window.BEREICHE || []).filter(function (b) { return b.weg === weg; });
+    if (!liste.length) return '';
+    return '<div class="amt-block">'
+      + '<button class="amt-zurueck" type="button" onclick="amandaThemenWeg(\'\')">‹ Andere Richtung</button>'
+      + '<p class="amt-frage">Welche Situation?</p>'
+      + '<div class="amt-liste">'
+      + liste.map(function (b) {
+          var t = b.t || b.beruf || b.id;
+          return '<button class="amt-b" type="button" onclick="amandaThema(' + JSON.stringify(t).replace(/"/g, '&quot;') + ')">'
+            + '<span class="bild">' + (b.bild ? '<img src="amanda/' + E(b.bild) + '.webp" alt="" loading="lazy" onerror="this.remove()">' : '') + '</span>'
+            + '<span><b>' + E(t) + '</b>' + (b.lvl ? '<small>' + E(b.lvl) + '</small>' : '') + '</span>'
+            + '</button>';
+        }).join('')
+      + '</div></div>';
+  }
+
+  function amandaThemenZeigen(weg) {
+    amandaStil();
+    var liste = $('chListe');
+    if (!liste) return;
+    var alt = liste.querySelector('.amt-block');
+    if (alt) alt.parentNode.removeChild(alt);
+    var kasten = document.createElement('div');
+    kasten.innerHTML = amandaThemenHtml(weg);
+    var b = kasten.firstChild;
+    if (b) { liste.appendChild(b); liste.scrollTop = liste.scrollHeight; }
+  }
+
+  window.amandaThemenWeg = function (weg) {
+    if (weg && !daBereiche()) {
+      return nachladen('bereiche.js', daBereiche).then(function () { amandaThemenZeigen(weg); });
+    }
+    amandaThemenZeigen(weg);
+  };
+
+  window.amandaThema = function (titel) {
+    if (window.__amandaFreiRoh) window.__amandaFreiRoh(titel);
+    amandaCartoon();
+  };
+
+  window.amandaOhneThema = function () {
+    var b = document.querySelector('#chListe .amt-block');
+    if (b && b.parentNode) b.parentNode.removeChild(b);
+  };
+
+  (function amandaThemen() {
+    var alt = window.amandaFrei;
+    if (typeof alt !== 'function') return setTimeout(amandaThemen, 150);
+    if (alt.__mitThemen) return;
+    window.__amandaFreiRoh = alt;
+    var neu = function (thema) {
+      alt.call(this, thema);
+      amandaStil();
+      amandaCartoon();
+      if (thema) return;
+      /* Erst Amandas Begruessung, dann die Auswahl — sonst steht die
+         Frage da, bevor sie Hallo gesagt hat. Kommt keine Antwort,
+         erscheint die Auswahl trotzdem. */
+      var liste = $('chListe');
+      if (!liste) return;
+      var fertig = false;
+      function zeigen() { if (fertig) return; fertig = true; amandaThemenZeigen(''); }
+      try {
+        var beob = new MutationObserver(function () {
+          if (liste.querySelector('.ch-b, .blase, .ch-a')) { beob.disconnect(); zeigen(); }
+        });
+        beob.observe(liste, { childList: true, subtree: true });
+        setTimeout(function () { try { beob.disconnect(); } catch (e) {} zeigen(); }, 2600);
+      } catch (e) { setTimeout(zeigen, 900); }
+    };
+    neu.__mitThemen = true;
+    window.amandaFrei = neu;
+  })();
+
   /* ---------- Aussehen, das es in der App noch nicht gab ---------- */
   function appStil() {
     if ($('ls-app-stil')) return;
