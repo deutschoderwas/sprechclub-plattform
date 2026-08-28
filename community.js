@@ -1208,7 +1208,7 @@
         var w=node.querySelector('.m-warn'); if(w) w.remove();
         for(var i=0;i<curMsgs.length;i++){ if(curMsgs[i].id===tmp){ curMsgs[i].id=res.data.id; break; } }
       }
-      notifyAdmin(cur);
+      notifyAdmin(cur, row && row.body);
       return true;
     }catch(e){
       node=q('[data-id="'+tmp+'"]');
@@ -1254,7 +1254,7 @@
       var res=await sbc.from('community_messages').insert({channel:cur,kind:'audio',audio_path:path,audio_secs:secs,author_name:myName}).select('id').single();
       var sg=await sbc.storage.from('community-audio').createSignedUrl(path,3600);
       if(ln&&res.data){ ln.setAttribute('data-id',res.data.id); var mb=ln.querySelector('.mb'); var mt=ln.querySelector('.mt'); if(mt) mt.outerHTML=bodyHtml({id:res.data.id,kind:'audio',audio_secs:secs,_url:sg.data?sg.data.signedUrl:''}); }
-      notifyAdmin(cur);
+      notifyAdmin(cur, '🎤 Sprachnachricht');
     }catch(e){}
   }
   async function uploadImage(fileObj){
@@ -1271,12 +1271,19 @@
       var res=await sbc.from('community_messages').insert({channel:cur,kind:'image',image_path:path,author_name:myName}).select('id').single();
       var sg=await sbc.storage.from('community-image').createSignedUrl(path,3600);
       if(ln&&res.data){ ln.setAttribute('data-id',res.data.id); var mt=ln.querySelector('.mt'); if(mt) mt.outerHTML=bodyHtml({id:res.data.id,kind:'image',_url:sg.data?sg.data.signedUrl:''}); }
-      notifyAdmin(cur);
+      notifyAdmin(cur, '📷 Bild');
     }catch(e){}
   }
-  async function notifyAdmin(channel){
+  /* Zwei Wege, ein Auslöser: die Mail an die Adminadresse wie bisher —
+     und die Glocke bei allen aktiven Mitgliedern. Die Glocke braucht
+     keinen Versanddienst; sie schreibt nur eine Zeile in die Tabelle
+     `benachrichtigungen`, auf die benachrichtigungen.js live hört. */
+  async function notifyAdmin(channel, text){
     try{ var s=await sbc.auth.getSession(); var tok=s&&s.data&&s.data.session&&s.data.session.access_token; if(!tok) return;
-      fetch('/api/notify-community',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok},body:JSON.stringify({channel:channel})}).catch(function(){}); }catch(e){}
+      var kopf={'Content-Type':'application/json','Authorization':'Bearer '+tok};
+      fetch('/api/notify-community',{method:'POST',headers:kopf,body:JSON.stringify({channel:channel})}).catch(function(){});
+      fetch('/api/notify-community-mitglieder',{method:'POST',headers:kopf,
+        body:JSON.stringify({channel:channel,text:text||''})}).catch(function(){}); }catch(e){}
   }
 
   // ---------- Direktnachrichten (inline) ----------
