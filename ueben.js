@@ -489,14 +489,20 @@
           allein aussieht. */
     var typen=Object.keys(nachTyp).filter(function(t){ return !LEICHT[t]; });
     typen.sort(function(a,b){ return REIHE.indexOf(a)-REIHE.indexOf(b); });
-    var wache=0;
+    var wache=0, zaehl={}, grenze=3;
+    runde.forEach(function(e){ zaehl[e.type]=(zaehl[e.type]||0)+1; });
     while(runde.length<n && wache++<200){
       var vorher=runde.length;
       for(var i=0;i<typen.length && runde.length<n;i++){
+        /* Höchstens drei Aufgaben derselben Form je Runde — sonst
+           frisst die Form mit dem größten Vorrat die halbe Runde.
+           Erst wenn sonst nichts mehr da ist, wird die Grenze
+           gelockert. */
+        if((zaehl[typen[i]]||0)>=grenze) continue;
         var e=nimm(typen[i]);
-        if(e) runde.push(e);
+        if(e){ runde.push(e); zaehl[e.type]=(zaehl[e.type]||0)+1; }
       }
-      if(runde.length===vorher) break;
+      if(runde.length===vorher){ if(grenze>=12) break; grenze+=3; }
     }
     /* 3. Die letzten drei Plätze gehören Wörtern, die in dieser Runde
           schon vorkamen — in einer anderen Form. Ein Wort, das man

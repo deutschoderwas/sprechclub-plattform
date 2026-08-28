@@ -177,6 +177,44 @@
     return out;
   }
 
+  /* Vier Möglichkeiten, in denen nichts doppelt vorkommt — auch nicht
+     „Kann" neben „kann". Zwei gleiche Möglichkeiten hätten zwei
+     richtige Antworten, von denen eine als falsch angestrichen wird.
+     Reicht es nicht für vier verschiedene, entsteht keine Aufgabe. */
+  function moeglichkeiten(richtig, kandidaten, n) {
+    var r = eng(richtig);
+    if (!r) return null;
+    var out = [r], gesehen = {};
+    gesehen[r.toLowerCase()] = 1;
+    for (var k = 0; k < kandidaten.length && out.length < n + 1; k++) {
+      var x = eng(kandidaten[k]);
+      if (!x || gesehen[x.toLowerCase()]) continue;
+      gesehen[x.toLowerCase()] = 1;
+      out.push(x);
+    }
+    return out.length === n + 1 ? out : null;
+  }
+
+  /* In der Aussprache stehen in der Wortliste auch Überschriften und
+     Beispielreihen: „ich-Laut", „chs = ks", „schön · die Möbel ·
+     zwölf", „Du kommst mit?". Als Karte sind sie richtig — als
+     Wahlfrage oder Buchstabensalat ergeben sie Unsinn. */
+  function echtesWort(s) {
+    var w = eng(s);
+    if (!w || w.length < 2 || w.length > 32) return false;
+    if (/[·=\/?.!:;0-9]/.test(w)) return false;
+    if (/\b(Laut|Frage|Aussage|Melodie)\b/.test(w) && w.indexOf(' ') < 0) return false;
+    return /^[A-Za-zÄÖÜäöüß][A-Za-zÄÖÜäöüß\-' ]*$/.test(w);
+  }
+
+  /* Steht das gesuchte Wort schon in der Frage, ist die Frage keine. */
+  function verraet(frage, wort) {
+    var f = ' ' + eng(frage).toLowerCase() + ' ';
+    var w = ohneArtikel(wort).toLowerCase();
+    if (w.length < 3) return false;
+    return f.indexOf(w) >= 0;
+  }
+
   /* ---------- 4. Aufgaben bauen ---------- */
 
   /* Für die Hörthemen steht der Beispielsatz nicht im Wörterbuch,
@@ -230,6 +268,9 @@
         emoji: w.emoji || '', img: foto, satz: roh || '', level: t.level
       });
 
+      /* Alles Weitere setzt voraus, dass da wirklich ein Wort steht. */
+      if (!echtesWort(kern)) return;
+
       /* Schreiben können ist mehr als wiedererkennen. */
       if (info && kern.length >= 3) {
         neu.push({
@@ -257,13 +298,16 @@
       }
 
       /* Bedeutung → Wort, mit drei Nachbarn aus demselben Thema. */
-      if (info && namen.length >= 4 && !schonGefragt(t, info)) {
-        neu.push({
-          type: 'choice', w: wort, img: foto,
-          q: 'Welches Wort passt: „' + info + '"?',
-          options: [wort].concat(ablenker(namen, i, 3)),
-          answer: 0, explain: wort + ' = ' + info + '.', level: t.level
-        });
+      if (info && info.indexOf('·') < 0 && namen.length >= 4
+        && !schonGefragt(t, info) && !verraet(info, wort)) {
+        var mgl = moeglichkeiten(wort, ablenker(namen, i, 6), 3);
+        if (mgl) {
+          neu.push({
+            type: 'choice', w: wort, img: foto,
+            q: 'Welches Wort passt: „' + info + '"?',
+            options: mgl, answer: 0, explain: wort + ' = ' + info + '.', level: t.level
+          });
+        }
       }
 
       /* Der Beispielsatz wird zweimal genutzt: einmal als Lücke, in
@@ -280,12 +324,14 @@
               alts: [kern, wort], hint: info, explain: wort + ' = ' + info + '.', level: t.level
             });
           } else {
-            neu.push({
-              type: 'choice', w: wort, img: foto,
-              q: '🧩 Was fehlt? ' + luecke,
-              options: [mk[0]].concat(ablenker(namen.map(ohneArtikel), i, 3)),
-              answer: 0, explain: satz, level: t.level
-            });
+            var mgl2 = moeglichkeiten(mk[0], ablenker(namen.map(ohneArtikel), i, 6), 3);
+            if (mgl2) {
+              neu.push({
+                type: 'choice', w: wort, img: foto,
+                q: '🧩 Was fehlt? ' + luecke,
+                options: mgl2, answer: 0, explain: satz, level: t.level
+              });
+            }
           }
         }
         if (kurz) {
@@ -325,14 +371,12 @@
         });
       }
       if (e.type !== 'gap') return;
-      var falsch = ablenker(loesungen, i, 3).filter(function (x) {
-        return x.toLowerCase() !== eng(e.answer).toLowerCase();
-      });
-      if (falsch.length === 3) {
+      var mgl3 = moeglichkeiten(e.answer, ablenker(loesungen, i, 8), 3);
+      if (mgl3) {
         neu.push({
           type: 'choice',
           q: '🧩 Was passt? ' + eng(String(e.text).replace(/_+/g, '_____')),
-          options: [eng(e.answer)].concat(falsch),
+          options: mgl3,
           answer: 0,
           explain: e.explain || ('Richtig: ' + e.answer),
           level: t.level
