@@ -64,20 +64,23 @@ function mailHtml(name) {
   </td></tr>
 
   <tr><td style="font:800 27px/1.2 Arial,sans-serif;color:#20211F;padding-bottom:10px">
-    Leg dir die App auf den Startbildschirm
+    Deutsch üben mit einem Tipp
   </td></tr>
   <tr><td style="font:400 15.5px/1.65 Arial,sans-serif;color:#54594A;padding-bottom:20px">
     ${hallo}<br><br>
-    drei Schritte, einmal gemacht — dann tippst du auf ein Symbol,
-    statt jedes Mal die Adresse einzugeben.
+    kennst du das? Du hast zehn Minuten Zeit und willst kurz üben — und
+    tippst erst einmal die halbe Adresse ins Handy. Bis du drin bist, ist
+    die Hälfte der Zeit weg.<br><br>
+    Das geht auch anders. Dein Handy kann sich deutschoderwas als Symbol
+    auf den Startbildschirm legen — <b>drei Schritte, einmal gemacht</b>.
   </td></tr>
 
   <tr><td style="background:#FFF6D9;border:2px solid #FFE100;border-radius:20px;padding:16px 18px;
       font:400 14.5px/1.6 Arial,sans-serif;color:#54594A">
-    <b style="color:#20211F;font-size:15px">Warum sich das lohnt</b><br>
-    Kein App Store, kein Download, kein Speicherplatz. Die Seite legt sich als Symbol
-    auf deinen Startbildschirm und öffnet sich dann ohne Adressleiste — wie eine
-    richtige App. Alles bleibt genau so, wie du es kennst.
+    <b style="color:#20211F;font-size:15px">Was sich dadurch ändert</b><br>
+    Kein App Store, kein Download, kein Speicherplatz — dein Handy macht das selbst.
+    Danach öffnest du es wie jede andere App: ganzer Bildschirm, keine Adressleiste,
+    und angemeldet bleibst du auch. Alles andere ist genau so, wie du es kennst.
   </td></tr>
 
   <tr><td style="font:700 20px/1.3 Arial,sans-serif;color:#20211F;padding:32px 0 4px">
