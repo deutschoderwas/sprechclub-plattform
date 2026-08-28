@@ -169,6 +169,8 @@
     .ub-tcard{background:var(--card,#fff);border:1px solid var(--border,#ECECEC);border-radius:22px;overflow:hidden;box-shadow:0 10px 24px rgba(0,0,0,.06);display:flex;flex-direction:column;transition:transform .18s,box-shadow .25s}
     .ub-tcard:hover{transform:translateY(-6px);box-shadow:0 22px 44px rgba(0,0,0,.13)}
     .ub-band{height:92px;position:relative;display:flex;align-items:center;justify-content:center}
+    .ub-bild{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.92}
+    .ub-band>*:not(.ub-bild){position:relative}
     .ub-band::after{content:'';position:absolute;inset:0;background:radial-gradient(120px 80px at 80% 0,rgba(255,255,255,.35),transparent)}
     .ub-emoji{width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,.94);display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:800;box-shadow:0 8px 18px rgba(0,0,0,.2);z-index:1}
     .ub-lv2{position:absolute;top:10px;left:12px;background:rgba(0,0,0,.28);color:#fff;font-size:11px;font-weight:800;letter-spacing:.04em;padding:3px 9px;border-radius:20px}
@@ -208,10 +210,24 @@
   var UB_EMOJI={arbeit:'💼',bildung:'📚',einkaufen:'🛒',essen:'🍳',gefuehle:'😊',gesundheit:'🩺',medien:'📱',natur:'🌳',persoenlichkeit:'😎',redewendungen:'💬',reisen:'✈️',stadt:'🚉','starke-adjektive':'💪','typisch-deutsch':'🇩🇪',wohnen:'🛋️',adjektivdeklination:'🧩',genitiv:'🔑','indirekte-rede':'🗣️',konjunktiv2:'💭',konnektoren:'🔗',nebensaetze:'🧷','passiv-praesens':'🔁','passiv-vergangenheit':'🕰️','perfekt-praeteritum':'⏳',relativsaetze:'📎','temporale-nebensaetze':'⏰',wechselpraepositionen:'📍',ch:'🔤',r:'🌀','s-z-ss':'🔊',satzmelodie:'🎵',umlaute:'Ä','v-w-f':'💨',vokale:'🅰️',wortakzent:'📢'};
   var UB_PAL=[['#DD0000','#FF7A00'],['#2563EB','#2DD4BF'],['#13A89A','#16a34a'],['#FF7A00','#FFCE00'],['#E83E8C','#7C3AED'],['#DD0000','#E83E8C'],['#2563EB','#7C3AED'],['#16a34a','#2DD4BF'],['#7C3AED','#2563EB'],['#FF7A00','#DD0000'],['#2DD4BF','#2563EB'],['#13A89A','#2563EB'],['#DD0000','#FFCE00'],['#FFCE00','#FF7A00'],['#7C3AED','#E83E8C']];
   // Passende Lektionsseite je Übungs-Thema (1:1-Verzahnung)
+  /* Der Link zur Lektion wurde frueher aus dem Themennamen geraten
+     (wortschatz-<id>-b1.html). Von 169 solchen Links fuehrten 118 auf
+     eine Seite, die es nicht gibt. Jetzt wird nachgeschlagen, was
+     wirklich im Ordner liegt — steht nichts drin, gibt es auch
+     keinen Knopf. Der Katalog kommt aus bau/mach-katalog.js. */
+  /* Bei 60 Themen stand im Feld bild eine Unsplash-Adresse: ein
+     fremdes Foto von einem fremden Server. Der Katalog haelt
+     stattdessen unser eigenes Themenbild bereit, sonst das
+     Szenenbild des Bereichs im Amanda-Stil. */
+  function bildVon(t){
+    var k=window.THEMA_BILD;
+    if(k && k[t.id]) return k[t.id];
+    if(t.bild && String(t.bild).indexOf('http')!==0) return t.bild;
+    return '';
+  }
+
   function lessonUrl(skId,thId){ if(!skId||skId==='mix'||skId==='shadowing'||!thId)return null;
-    if(skId==='aussprache') return 'aussprache-'+thId+'-a2.html';
-    if(skId==='grammatik') return 'grammatik-'+thId+'-'+(thId==='indirekte-rede'?'b2':'b1')+'.html';
-    return 'wortschatz-'+thId+'-b1.html'; /* wortschatz + hoeren teilen die Themen-IDs */
+    var k=window.LEKTION_ZU; return (k && k[skId+':'+thId]) || null;
   }
 
   // ---------- Shadowing-Daten (native Audios, aufsteigend A1 -> C1) --------
@@ -264,6 +280,7 @@
         var em=t.emoji||UB_EMOJI[t.id]||sk.emoji; var lu=lessonUrl(sk.id,t.id);
         return '<div class="ub-tcard">'+
           '<div class="ub-band" style="background:'+grad+'">'+
+            (bildVon(t) ? '<img class="ub-bild" src="'+E(bildVon(t))+'" alt="" loading="lazy" onerror="this.remove()">' : '')+
             (t.level?'<span class="ub-lv2">'+E(t.level)+'</span>':'')+
             (tp>=100?'<span class="ub-done">✓ fertig</span>':'')+
             '<span class="ub-emoji">'+em+'</span>'+

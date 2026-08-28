@@ -38,10 +38,19 @@ Object.keys(Q).forEach(id => {
 });
 
 const kopf = `/* ============================================================
-   grammatik-neu.js — die Bausteine, die auf A2 gefehlt haben
+   grammatik-neu.js — die Bausteine von A1 bis C1
 
-   Vorher: vier Themen auf A1, dreizehn auf B1/B2 — und dazwischen
-   nichts. Genau dort stehen aber die meisten Lernenden.
+   Erst fehlte A2: vier Themen auf A1, dreizehn auf B1/B2 und
+   dazwischen nichts, genau dort, wo die meisten stehen.
+   Dann fehlte das obere Ende: auf B2 zwei Themen, auf C1 keins —
+   wer die Prüfung machen will, fand nichts zum Üben.
+
+   Neu auf B2: Passiv, Konjunktiv II der Vergangenheit, Genitiv,
+   obwohl/trotzdem, Verben mit fester Präposition,
+   Adjektivendungen.
+   Neu auf C1: indirekte Rede mit Konjunktiv I, Partizip als
+   Attribut, Nominalstil, Passiv-Ersatzformen, zweiteilige
+   Konnektoren, Modalverben in ihrer subjektiven Bedeutung.
 
    Zwoelf neue Themen: Modalverben, trennbare Verben, Perfekt mit
    haben und sein, Dativ, Possessivartikel, Negation, Imperativ,
