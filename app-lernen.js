@@ -214,6 +214,7 @@
     var N = {
       einkaufen: 'Einkaufen & Essen', gesundheit: 'Gesundheit', papiere: 'Ämter & Papiere',
       unterwegs: 'Unterwegs & Wohnen', menschen: 'Menschen & Gefühle',
+      ankommen: 'Ankommen & Weiterkommen', digital: 'Telefon, Medien & Netz',
       ueberall: 'Gilt in jedem Job', feld: 'Dein Berufsfeld', alle: 'Bereiche'
     };
     return N[g] || g;

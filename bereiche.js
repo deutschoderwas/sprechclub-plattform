@@ -55,6 +55,8 @@ window.BEREICHE_GRUPPEN = [
   { weg:'freizeit', id:'papiere',   t:'Ämter, Geld & Verträge', u:'Alles, was auf Papier passiert' },
   { weg:'freizeit', id:'unterwegs', t:'Unterwegs & Wohnen',     u:'Der Weg dorthin — und das Zuhause danach' },
   { weg:'freizeit', id:'menschen',  t:'Menschen & Familie',     u:'Die Gespräche, die wirklich schwer sind' },
+  { weg:'freizeit', id:'ankommen',  t:'Ankommen & Weiterkommen', u:'Die ersten Wochen, der Kurs, der nächste Schritt' },
+  { weg:'freizeit', id:'digital',   t:'Telefon, Medien & Netz',  u:'Wo Deutsch am schnellsten geht — und am meisten Angst macht' },
   { weg:'beruf',    id:'ueberall',  t:'Überall im Job',         u:'Gilt in jedem Beruf — von der Bewerbung bis zur Kritik' },
   { weg:'beruf',    id:'feld',      t:'Dein Berufsfeld',        u:'Die Sprache, die dein Arbeitstag wirklich verlangt' }
 ];
@@ -292,6 +294,45 @@ window.BEREICHE = [
 { id:'buchhaltung', bild:'sz-buchhaltung',   weg:'beruf', gr:'feld', beruf:'buchhaltung',   zeichen:'karten',dlg:['rechnung-reklamieren'], ws:['c1-vertrag'], ho:['buchhaltung'], lek:'buchhaltung-lektion.html' },
 { id:'friseur-beruf', bild:'sz-friseur-beruf', weg:'beruf', gr:'feld', beruf:'friseur',       zeichen:'herz',  dlg:['friseur'], ws:['a2-friseur'], ho:['friseur-beruf'], lek:'friseur-beruf-lektion.html' },
 { id:'landwirtschaft', bild:'sz-landwirtschaft',weg:'beruf', gr:'feld', beruf:'landwirtschaft',zeichen:'serie', dlg:['hof-einweisung','wetter-arbeit'], ws:['natur'], ho:['landwirtschaft'], lek:'landwirtschaft-lektion.html' },
-{ id:'sozial', bild:'sz-sozial',        weg:'beruf', gr:'feld', beruf:'sozial',        zeichen:'gruppe',dlg:['jobcenter-weiterbewilligung'], ws:['integration'], ho:['sozial'], lek:'sozial-lektion.html' }
+{ id:'sozial', bild:'sz-sozial',        weg:'beruf', gr:'feld', beruf:'sozial',        zeichen:'gruppe',dlg:['jobcenter-weiterbewilligung'], ws:['integration'], ho:['sozial'], lek:'sozial-lektion.html' },
+
+/* ================= FREIZEIT · Ankommen & Weiterkommen ================= */
+
+{ id:'ankommen', bild:'sz-ankommen', weg:'freizeit', gr:'ankommen', t:'Ankommen in Deutschland',
+  u:'Anmelden, Termine bekommen, Briefe verstehen — die ersten Wochen.',
+  lvl:'A2–B1',
+  dlg:['anmeldung-buergeramt','beratungsstelle'],
+  ws:['ankommen-neu'], ho:['amt'], hilf:['a1-fragen','nebensaetze'],
+  lek:'ankommen-lektion.html' },
+
+{ id:'sprachkurs', bild:'sz-sprachkurs', weg:'freizeit', gr:'ankommen', t:'Im Deutschkurs',
+  u:'Nachfragen, ohne sich zu schämen — und nachholen, was du verpasst hast.',
+  lvl:'A1–B1',
+  dlg:['kurs-nachfragen','kurs-entschuldigung'],
+  ws:['sprachkurs-neu'], ho:['bildung'], hilf:['a1-fragen','wortakzent'],
+  lek:'sprachkurs-lektion.html' },
+
+{ id:'weiterbildung', bild:'sz-weiterbildung', weg:'freizeit', gr:'ankommen', t:'Weiterbildung & Anerkennung',
+  u:'Damit dein Abschluss auch hier zählt — und der nächste Schritt möglich wird.',
+  lvl:'B1–B2',
+  dlg:['weiterbildung-beratung','praktikum-fragen'],
+  ws:['weiterbildung-neu'], ho:['bildung','bewerbung'], hilf:['nebensaetze','konjunktiv2'],
+  lek:'weiterbildung-lektion.html' },
+
+/* ================= FREIZEIT · Telefon, Medien & Netz ================= */
+
+{ id:'telefonieren', bild:'sz-telefonieren', weg:'freizeit', gr:'digital', t:'Am Telefon',
+  u:'Ohne Gesicht, ohne Hände — und trotzdem alles klären.',
+  lvl:'A2–B1',
+  dlg:['telefon-praxis','telefon-ausrichten'],
+  ws:['telefonieren-neu'], ho:['buero','amt'], hilf:['satzmelodie','konjunktiv2'],
+  lek:'telefonieren-lektion.html' },
+
+{ id:'medien', bild:'sz-medien', weg:'freizeit', gr:'digital', t:'Nachrichten, Werbung & Netz',
+  u:'Verstehen, was gemeint ist — und merken, wenn dich jemand hereinlegen will.',
+  lvl:'B1–B2',
+  dlg:['abo-kuendigen','phishing-erkennen'],
+  ws:['medien-neu'], ho:['medien'], hilf:['konnektoren','indirekte-rede'],
+  lek:'medien-lektion.html' }
 
 ];

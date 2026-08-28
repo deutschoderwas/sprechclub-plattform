@@ -3793,6 +3793,2317 @@
     ]
    }
   ]
+ },
+ {
+  "id": "telefonieren-neu",
+  "title": "Am Telefon — melden, verstehen, klären",
+  "level": "A2",
+  "emoji": "☎️",
+  "words": [
+   {
+    "de": "sich melden",
+    "info": "am Anfang den eigenen Namen sagen",
+    "emoji": "📞",
+    "bsp": "Wenn ich abnehme, melde ich mich mit meinem Namen."
+   },
+   {
+    "de": "verbinden",
+    "info": "den Anruf zu einer anderen Person weitergeben",
+    "emoji": "🔀",
+    "bsp": "Einen Moment, ich verbinde Sie."
+   },
+   {
+    "de": "die Warteschleife",
+    "info": "die Musik, während du wartest",
+    "emoji": "⏳",
+    "bsp": "Ich hing zwanzig Minuten in der Warteschleife."
+   },
+   {
+    "de": "die Durchwahl",
+    "info": "die direkte Nummer zu einer Person",
+    "emoji": "🔢",
+    "bsp": "Haben Sie die Durchwahl von Frau Weber?"
+   },
+   {
+    "de": "zurückrufen",
+    "info": "später selbst noch einmal anrufen",
+    "emoji": "↩️",
+    "bsp": "Ich rufe Sie in einer Stunde zurück."
+   },
+   {
+    "de": "ausrichten",
+    "info": "jemandem eine Nachricht weitergeben",
+    "emoji": "📝",
+    "bsp": "Kann ich ihm etwas ausrichten?"
+   },
+   {
+    "de": "buchstabieren",
+    "info": "ein Wort Buchstabe für Buchstabe sagen",
+    "emoji": "🔤",
+    "bsp": "Mein Name ist schwierig — ich buchstabiere ihn."
+   },
+   {
+    "de": "die Verbindung",
+    "info": "wie gut man sich am Telefon hört",
+    "emoji": "📶",
+    "bsp": "Die Verbindung ist schlecht, ich rufe neu an."
+   },
+   {
+    "de": "wiederholen",
+    "info": "etwas noch einmal sagen",
+    "emoji": "🔁",
+    "bsp": "Könnten Sie das bitte wiederholen?"
+   },
+   {
+    "de": "langsamer sprechen",
+    "info": "die Bitte, das Tempo zu senken",
+    "emoji": "🐢",
+    "bsp": "Können Sie bitte langsamer sprechen?"
+   },
+   {
+    "de": "die Mailbox",
+    "info": "dort landet dein Anruf, wenn niemand rangeht",
+    "emoji": "📼",
+    "bsp": "Ich habe dir auf die Mailbox gesprochen."
+   },
+   {
+    "de": "das Anliegen",
+    "info": "der Grund, warum du anrufst",
+    "emoji": "❓",
+    "bsp": "Worum geht es? — Ich schildere kurz mein Anliegen."
+   },
+   {
+    "de": "auflegen",
+    "info": "das Gespräch beenden",
+    "emoji": "📴",
+    "bsp": "Bitte legen Sie noch nicht auf."
+   },
+   {
+    "de": "die Erreichbarkeit",
+    "info": "wann man dich anrufen kann",
+    "emoji": "🕐",
+    "bsp": "Meine Erreichbarkeit ist von neun bis sechzehn Uhr."
+   }
+  ],
+  "exercises": [
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „am Anfang den eigenen Namen sagen“?",
+    "options": [
+     "die Warteschleife",
+     "sich melden",
+     "langsamer sprechen",
+     "zurückrufen"
+    ],
+    "answer": 1,
+    "explain": "sich melden — am Anfang den eigenen Namen sagen."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „den Anruf zu einer anderen Person weitergeben“?",
+    "options": [
+     "buchstabieren",
+     "verbinden",
+     "zurückrufen",
+     "das Anliegen"
+    ],
+    "answer": 1,
+    "explain": "verbinden — den Anruf zu einer anderen Person weitergeben."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „die Musik, während du wartest“?",
+    "options": [
+     "verbinden",
+     "die Erreichbarkeit",
+     "das Anliegen",
+     "die Warteschleife"
+    ],
+    "answer": 3,
+    "explain": "die Warteschleife — die Musik, während du wartest."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „die direkte Nummer zu einer Person“?",
+    "options": [
+     "das Anliegen",
+     "zurückrufen",
+     "die Durchwahl",
+     "auflegen"
+    ],
+    "answer": 2,
+    "explain": "die Durchwahl — die direkte Nummer zu einer Person."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „später selbst noch einmal anrufen“?",
+    "options": [
+     "langsamer sprechen",
+     "buchstabieren",
+     "zurückrufen",
+     "die Mailbox"
+    ],
+    "answer": 2,
+    "explain": "zurückrufen — später selbst noch einmal anrufen."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „jemandem eine Nachricht weitergeben“?",
+    "options": [
+     "die Durchwahl",
+     "ausrichten",
+     "verbinden",
+     "die Warteschleife"
+    ],
+    "answer": 1,
+    "explain": "ausrichten — jemandem eine Nachricht weitergeben."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „ein Wort Buchstabe für Buchstabe sagen“?",
+    "options": [
+     "das Anliegen",
+     "die Durchwahl",
+     "die Verbindung",
+     "buchstabieren"
+    ],
+    "answer": 3,
+    "explain": "buchstabieren — ein Wort Buchstabe für Buchstabe sagen."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „wie gut man sich am Telefon hört“?",
+    "options": [
+     "zurückrufen",
+     "ausrichten",
+     "die Verbindung",
+     "das Anliegen"
+    ],
+    "answer": 2,
+    "explain": "die Verbindung — wie gut man sich am Telefon hört."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „etwas noch einmal sagen“?",
+    "options": [
+     "langsamer sprechen",
+     "wiederholen",
+     "verbinden",
+     "das Anliegen"
+    ],
+    "answer": 1,
+    "explain": "wiederholen — etwas noch einmal sagen."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „die Bitte, das Tempo zu senken“?",
+    "options": [
+     "die Durchwahl",
+     "langsamer sprechen",
+     "die Mailbox",
+     "verbinden"
+    ],
+    "answer": 1,
+    "explain": "langsamer sprechen — die Bitte, das Tempo zu senken."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „dort landet dein Anruf, wenn niemand rangeht“?",
+    "options": [
+     "verbinden",
+     "die Warteschleife",
+     "auflegen",
+     "die Mailbox"
+    ],
+    "answer": 3,
+    "explain": "die Mailbox — dort landet dein Anruf, wenn niemand rangeht."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „der Grund, warum du anrufst“?",
+    "options": [
+     "wiederholen",
+     "das Anliegen",
+     "die Durchwahl",
+     "verbinden"
+    ],
+    "answer": 1,
+    "explain": "das Anliegen — der Grund, warum du anrufst."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „das Gespräch beenden“?",
+    "options": [
+     "die Warteschleife",
+     "verbinden",
+     "auflegen",
+     "die Durchwahl"
+    ],
+    "answer": 2,
+    "explain": "auflegen — das Gespräch beenden."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „wann man dich anrufen kann“?",
+    "options": [
+     "die Warteschleife",
+     "die Erreichbarkeit",
+     "buchstabieren",
+     "die Durchwahl"
+    ],
+    "answer": 1,
+    "explain": "die Erreichbarkeit — wann man dich anrufen kann."
+   },
+   {
+    "type": "gap",
+    "text": "Ich hing zwanzig Minuten in der ___.",
+    "answer": "Warteschleife",
+    "options": [
+     "Warteschleife",
+     "Anliegen",
+     "Erreichbarkeit"
+    ],
+    "hint": "die Musik, während du wartest"
+   },
+   {
+    "type": "gap",
+    "text": "Haben Sie die ___ von Frau Weber?",
+    "answer": "Durchwahl",
+    "options": [
+     "Durchwahl",
+     "Mailbox",
+     "zurückrufen"
+    ],
+    "hint": "die direkte Nummer zu einer Person"
+   },
+   {
+    "type": "gap",
+    "text": "Kann ich ihm etwas ___?",
+    "answer": "ausrichten",
+    "options": [
+     "ausrichten",
+     "verbinden",
+     "zurückrufen"
+    ],
+    "hint": "jemandem eine Nachricht weitergeben"
+   },
+   {
+    "type": "gap",
+    "text": "Die ___ ist schlecht, ich rufe neu an.",
+    "answer": "Verbindung",
+    "options": [
+     "Verbindung",
+     "Anliegen",
+     "ausrichten"
+    ],
+    "hint": "wie gut man sich am Telefon hört"
+   },
+   {
+    "type": "gap",
+    "text": "Könnten Sie das bitte ___?",
+    "answer": "wiederholen",
+    "options": [
+     "wiederholen",
+     "verbinden",
+     "ausrichten"
+    ],
+    "hint": "etwas noch einmal sagen"
+   },
+   {
+    "type": "gap",
+    "text": "Können Sie bitte ___?",
+    "answer": "langsamer sprechen",
+    "options": [
+     "langsamer sprechen",
+     "auflegen",
+     "zurückrufen"
+    ],
+    "hint": "die Bitte, das Tempo zu senken"
+   },
+   {
+    "type": "gap",
+    "text": "Ich habe dir auf die ___ gesprochen.",
+    "answer": "Mailbox",
+    "options": [
+     "Mailbox",
+     "Anliegen",
+     "Warteschleife"
+    ],
+    "hint": "dort landet dein Anruf, wenn niemand rangeht"
+   },
+   {
+    "type": "gap",
+    "text": "Worum geht es? — Ich schildere kurz mein ___.",
+    "answer": "Anliegen",
+    "options": [
+     "Anliegen",
+     "verbinden",
+     "ausrichten"
+    ],
+    "hint": "der Grund, warum du anrufst"
+   },
+   {
+    "type": "gap",
+    "text": "Meine ___ ist von neun bis sechzehn Uhr.",
+    "answer": "Erreichbarkeit",
+    "options": [
+     "Erreichbarkeit",
+     "langsamer sprechen",
+     "Durchwahl"
+    ],
+    "hint": "wann man dich anrufen kann"
+   },
+   {
+    "type": "match",
+    "intro": "Ordne Wort und Bedeutung zu:",
+    "pairs": [
+     {
+      "l": "sich melden",
+      "r": "am Anfang den eigenen Namen sagen"
+     },
+     {
+      "l": "verbinden",
+      "r": "den Anruf zu einer anderen Person weitergeben"
+     },
+     {
+      "l": "die Warteschleife",
+      "r": "die Musik, während du wartest"
+     },
+     {
+      "l": "die Durchwahl",
+      "r": "die direkte Nummer zu einer Person"
+     }
+    ]
+   },
+   {
+    "type": "match",
+    "intro": "Ordne Wort und Bedeutung zu:",
+    "pairs": [
+     {
+      "l": "zurückrufen",
+      "r": "später selbst noch einmal anrufen"
+     },
+     {
+      "l": "ausrichten",
+      "r": "jemandem eine Nachricht weitergeben"
+     },
+     {
+      "l": "buchstabieren",
+      "r": "ein Wort Buchstabe für Buchstabe sagen"
+     },
+     {
+      "l": "die Verbindung",
+      "r": "wie gut man sich am Telefon hört"
+     }
+    ]
+   },
+   {
+    "type": "match",
+    "intro": "Ordne Wort und Bedeutung zu:",
+    "pairs": [
+     {
+      "l": "wiederholen",
+      "r": "etwas noch einmal sagen"
+     },
+     {
+      "l": "langsamer sprechen",
+      "r": "die Bitte, das Tempo zu senken"
+     },
+     {
+      "l": "die Mailbox",
+      "r": "dort landet dein Anruf, wenn niemand rangeht"
+     },
+     {
+      "l": "das Anliegen",
+      "r": "der Grund, warum du anrufst"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "ankommen-neu",
+  "title": "Ankommen in Deutschland — die ersten Wochen",
+  "level": "A2",
+  "emoji": "🧳",
+  "words": [
+   {
+    "de": "die Anmeldung",
+    "info": "du meldest beim Amt, wo du wohnst",
+    "emoji": "🏠",
+    "bsp": "Die Anmeldung machst du in den ersten zwei Wochen."
+   },
+   {
+    "de": "die Meldebescheinigung",
+    "info": "das Papier, das deine Adresse bestätigt",
+    "emoji": "📄",
+    "bsp": "Für den Vertrag brauchst du eine Meldebescheinigung."
+   },
+   {
+    "de": "der Aufenthaltstitel",
+    "info": "die Erlaubnis, hier zu leben",
+    "emoji": "🪪",
+    "bsp": "Mein Aufenthaltstitel gilt noch zwei Jahre."
+   },
+   {
+    "de": "die Ausländerbehörde",
+    "info": "das Amt für alle Fragen zum Aufenthalt",
+    "emoji": "🏛️",
+    "bsp": "Der Termin bei der Ausländerbehörde ist im Mai."
+   },
+   {
+    "de": "die Steuer-Identifikationsnummer",
+    "info": "die Nummer, die jeder für die Arbeit braucht",
+    "emoji": "🔢",
+    "bsp": "Ohne Steuer-Identifikationsnummer zahlt der Arbeitgeber zu viel Steuer ab."
+   },
+   {
+    "de": "die Sozialversicherungsnummer",
+    "info": "die Nummer für Rente und Krankenkasse",
+    "emoji": "🧾",
+    "bsp": "Die Sozialversicherungsnummer bekommst du von der Krankenkasse."
+   },
+   {
+    "de": "der Integrationskurs",
+    "info": "Deutschkurs plus Kurs über das Leben hier",
+    "emoji": "📚",
+    "bsp": "Mein Integrationskurs geht bis Dezember."
+   },
+   {
+    "de": "die Beratungsstelle",
+    "info": "ein Ort, an dem man dir kostenlos hilft",
+    "emoji": "🤝",
+    "bsp": "Die Beratungsstelle hat mir beim Antrag geholfen."
+   },
+   {
+    "de": "die Frist",
+    "info": "die Zeit, bis wann etwas erledigt sein muss",
+    "emoji": "⏰",
+    "bsp": "Die Frist endet am Monatsende."
+   },
+   {
+    "de": "der Nachweis",
+    "info": "das Papier, mit dem du etwas belegst",
+    "emoji": "✅",
+    "bsp": "Als Nachweis reicht der Mietvertrag."
+   },
+   {
+    "de": "beglaubigt",
+    "info": "offiziell bestätigt, dass die Kopie echt ist",
+    "emoji": "🖋️",
+    "bsp": "Die Kopie muss beglaubigt sein."
+   },
+   {
+    "de": "der Termin",
+    "info": "der feste Tag und die Uhrzeit beim Amt",
+    "emoji": "🗓️",
+    "bsp": "Einen Termin bekommt man oft nur online."
+   },
+   {
+    "de": "die Einbürgerung",
+    "info": "du wirst deutsche Staatsbürgerin",
+    "emoji": "🇩🇪",
+    "bsp": "Für die Einbürgerung braucht man meistens B1."
+   },
+   {
+    "de": "sich zurechtfinden",
+    "info": "langsam verstehen, wie hier alles läuft",
+    "emoji": "🧭",
+    "bsp": "Nach einem halben Jahr habe ich mich zurechtgefunden."
+   }
+  ],
+  "exercises": [
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „du meldest beim Amt, wo du wohnst“?",
+    "options": [
+     "der Termin",
+     "die Anmeldung",
+     "der Integrationskurs",
+     "die Steuer-Identifikationsnummer"
+    ],
+    "answer": 1,
+    "explain": "die Anmeldung — du meldest beim Amt, wo du wohnst."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „das Papier, das deine Adresse bestätigt“?",
+    "options": [
+     "der Aufenthaltstitel",
+     "die Meldebescheinigung",
+     "der Termin",
+     "sich zurechtfinden"
+    ],
+    "answer": 1,
+    "explain": "die Meldebescheinigung — das Papier, das deine Adresse bestätigt."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „die Erlaubnis, hier zu leben“?",
+    "options": [
+     "die Einbürgerung",
+     "der Termin",
+     "die Steuer-Identifikationsnummer",
+     "der Aufenthaltstitel"
+    ],
+    "answer": 3,
+    "explain": "der Aufenthaltstitel — die Erlaubnis, hier zu leben."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „das Amt für alle Fragen zum Aufenthalt“?",
+    "options": [
+     "der Integrationskurs",
+     "beglaubigt",
+     "die Ausländerbehörde",
+     "der Nachweis"
+    ],
+    "answer": 2,
+    "explain": "die Ausländerbehörde — das Amt für alle Fragen zum Aufenthalt."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „die Nummer, die jeder für die Arbeit braucht“?",
+    "options": [
+     "die Meldebescheinigung",
+     "der Aufenthaltstitel",
+     "die Steuer-Identifikationsnummer",
+     "die Ausländerbehörde"
+    ],
+    "answer": 2,
+    "explain": "die Steuer-Identifikationsnummer — die Nummer, die jeder für die Arbeit braucht."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „die Nummer für Rente und Krankenkasse“?",
+    "options": [
+     "der Termin",
+     "die Sozialversicherungsnummer",
+     "die Beratungsstelle",
+     "die Ausländerbehörde"
+    ],
+    "answer": 1,
+    "explain": "die Sozialversicherungsnummer — die Nummer für Rente und Krankenkasse."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „Deutschkurs plus Kurs über das Leben hier“?",
+    "options": [
+     "die Sozialversicherungsnummer",
+     "die Steuer-Identifikationsnummer",
+     "der Termin",
+     "der Integrationskurs"
+    ],
+    "answer": 3,
+    "explain": "der Integrationskurs — Deutschkurs plus Kurs über das Leben hier."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „ein Ort, an dem man dir kostenlos hilft“?",
+    "options": [
+     "die Meldebescheinigung",
+     "der Termin",
+     "die Beratungsstelle",
+     "der Nachweis"
+    ],
+    "answer": 2,
+    "explain": "die Beratungsstelle — ein Ort, an dem man dir kostenlos hilft."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „die Zeit, bis wann etwas erledigt sein muss“?",
+    "options": [
+     "beglaubigt",
+     "die Frist",
+     "die Meldebescheinigung",
+     "die Ausländerbehörde"
+    ],
+    "answer": 1,
+    "explain": "die Frist — die Zeit, bis wann etwas erledigt sein muss."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „das Papier, mit dem du etwas belegst“?",
+    "options": [
+     "die Einbürgerung",
+     "der Nachweis",
+     "die Meldebescheinigung",
+     "der Aufenthaltstitel"
+    ],
+    "answer": 1,
+    "explain": "der Nachweis — das Papier, mit dem du etwas belegst."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „offiziell bestätigt, dass die Kopie echt ist“?",
+    "options": [
+     "die Meldebescheinigung",
+     "die Frist",
+     "die Ausländerbehörde",
+     "beglaubigt"
+    ],
+    "answer": 3,
+    "explain": "beglaubigt — offiziell bestätigt, dass die Kopie echt ist."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „der feste Tag und die Uhrzeit beim Amt“?",
+    "options": [
+     "die Meldebescheinigung",
+     "der Termin",
+     "die Ausländerbehörde",
+     "der Aufenthaltstitel"
+    ],
+    "answer": 1,
+    "explain": "der Termin — der feste Tag und die Uhrzeit beim Amt."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „du wirst deutsche Staatsbürgerin“?",
+    "options": [
+     "der Integrationskurs",
+     "die Ausländerbehörde",
+     "die Einbürgerung",
+     "der Aufenthaltstitel"
+    ],
+    "answer": 2,
+    "explain": "die Einbürgerung — du wirst deutsche Staatsbürgerin."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „langsam verstehen, wie hier alles läuft“?",
+    "options": [
+     "die Sozialversicherungsnummer",
+     "sich zurechtfinden",
+     "die Einbürgerung",
+     "der Termin"
+    ],
+    "answer": 1,
+    "explain": "sich zurechtfinden — langsam verstehen, wie hier alles läuft."
+   },
+   {
+    "type": "gap",
+    "text": "Die ___ machst du in den ersten zwei Wochen.",
+    "answer": "Anmeldung",
+    "options": [
+     "Anmeldung",
+     "Aufenthaltstitel",
+     "Sozialversicherungsnummer"
+    ],
+    "hint": "du meldest beim Amt, wo du wohnst"
+   },
+   {
+    "type": "gap",
+    "text": "Für den Vertrag brauchst du eine ___.",
+    "answer": "Meldebescheinigung",
+    "options": [
+     "Meldebescheinigung",
+     "Termin",
+     "sich zurechtfinden"
+    ],
+    "hint": "das Papier, das deine Adresse bestätigt"
+   },
+   {
+    "type": "gap",
+    "text": "Mein ___ gilt noch zwei Jahre.",
+    "answer": "Aufenthaltstitel",
+    "options": [
+     "Aufenthaltstitel",
+     "beglaubigt",
+     "Steuer-Identifikationsnummer"
+    ],
+    "hint": "die Erlaubnis, hier zu leben"
+   },
+   {
+    "type": "gap",
+    "text": "Der Termin bei der ___ ist im Mai.",
+    "answer": "Ausländerbehörde",
+    "options": [
+     "Ausländerbehörde",
+     "Aufenthaltstitel",
+     "Steuer-Identifikationsnummer"
+    ],
+    "hint": "das Amt für alle Fragen zum Aufenthalt"
+   },
+   {
+    "type": "gap",
+    "text": "Ohne ___ zahlt der Arbeitgeber zu viel Steuer ab.",
+    "answer": "Steuer-Identifikationsnummer",
+    "options": [
+     "Steuer-Identifikationsnummer",
+     "Meldebescheinigung",
+     "Sozialversicherungsnummer"
+    ],
+    "hint": "die Nummer, die jeder für die Arbeit braucht"
+   },
+   {
+    "type": "gap",
+    "text": "Die ___ bekommst du von der Krankenkasse.",
+    "answer": "Sozialversicherungsnummer",
+    "options": [
+     "Sozialversicherungsnummer",
+     "Steuer-Identifikationsnummer",
+     "Ausländerbehörde"
+    ],
+    "hint": "die Nummer für Rente und Krankenkasse"
+   },
+   {
+    "type": "gap",
+    "text": "Mein ___ geht bis Dezember.",
+    "answer": "Integrationskurs",
+    "options": [
+     "Integrationskurs",
+     "Termin",
+     "Sozialversicherungsnummer"
+    ],
+    "hint": "Deutschkurs plus Kurs über das Leben hier"
+   },
+   {
+    "type": "gap",
+    "text": "Die ___ hat mir beim Antrag geholfen.",
+    "answer": "Beratungsstelle",
+    "options": [
+     "Beratungsstelle",
+     "Meldebescheinigung",
+     "Sozialversicherungsnummer"
+    ],
+    "hint": "ein Ort, an dem man dir kostenlos hilft"
+   },
+   {
+    "type": "gap",
+    "text": "Die ___ endet am Monatsende.",
+    "answer": "Frist",
+    "options": [
+     "Frist",
+     "Einbürgerung",
+     "Steuer-Identifikationsnummer"
+    ],
+    "hint": "die Zeit, bis wann etwas erledigt sein muss"
+   },
+   {
+    "type": "gap",
+    "text": "Als ___ reicht der Mietvertrag.",
+    "answer": "Nachweis",
+    "options": [
+     "Nachweis",
+     "Termin",
+     "Aufenthaltstitel"
+    ],
+    "hint": "das Papier, mit dem du etwas belegst"
+   },
+   {
+    "type": "gap",
+    "text": "Die Kopie muss ___ sein.",
+    "answer": "beglaubigt",
+    "options": [
+     "beglaubigt",
+     "Meldebescheinigung",
+     "Sozialversicherungsnummer"
+    ],
+    "hint": "offiziell bestätigt, dass die Kopie echt ist"
+   },
+   {
+    "type": "gap",
+    "text": "Einen ___ bekommt man oft nur online.",
+    "answer": "Termin",
+    "options": [
+     "Termin",
+     "Sozialversicherungsnummer",
+     "Ausländerbehörde"
+    ],
+    "hint": "der feste Tag und die Uhrzeit beim Amt"
+   },
+   {
+    "type": "gap",
+    "text": "Für die ___ braucht man meistens B1.",
+    "answer": "Einbürgerung",
+    "options": [
+     "Einbürgerung",
+     "Nachweis",
+     "Ausländerbehörde"
+    ],
+    "hint": "du wirst deutsche Staatsbürgerin"
+   },
+   {
+    "type": "match",
+    "intro": "Ordne Wort und Bedeutung zu:",
+    "pairs": [
+     {
+      "l": "die Anmeldung",
+      "r": "du meldest beim Amt, wo du wohnst"
+     },
+     {
+      "l": "die Meldebescheinigung",
+      "r": "das Papier, das deine Adresse bestätigt"
+     },
+     {
+      "l": "der Aufenthaltstitel",
+      "r": "die Erlaubnis, hier zu leben"
+     },
+     {
+      "l": "die Ausländerbehörde",
+      "r": "das Amt für alle Fragen zum Aufenthalt"
+     }
+    ]
+   },
+   {
+    "type": "match",
+    "intro": "Ordne Wort und Bedeutung zu:",
+    "pairs": [
+     {
+      "l": "die Steuer-Identifikationsnummer",
+      "r": "die Nummer, die jeder für die Arbeit braucht"
+     },
+     {
+      "l": "die Sozialversicherungsnummer",
+      "r": "die Nummer für Rente und Krankenkasse"
+     },
+     {
+      "l": "der Integrationskurs",
+      "r": "Deutschkurs plus Kurs über das Leben hier"
+     },
+     {
+      "l": "die Beratungsstelle",
+      "r": "ein Ort, an dem man dir kostenlos hilft"
+     }
+    ]
+   },
+   {
+    "type": "match",
+    "intro": "Ordne Wort und Bedeutung zu:",
+    "pairs": [
+     {
+      "l": "die Frist",
+      "r": "die Zeit, bis wann etwas erledigt sein muss"
+     },
+     {
+      "l": "der Nachweis",
+      "r": "das Papier, mit dem du etwas belegst"
+     },
+     {
+      "l": "beglaubigt",
+      "r": "offiziell bestätigt, dass die Kopie echt ist"
+     },
+     {
+      "l": "der Termin",
+      "r": "der feste Tag und die Uhrzeit beim Amt"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "sprachkurs-neu",
+  "title": "Im Deutschkurs — mitkommen und nachfragen",
+  "level": "A2",
+  "emoji": "📝",
+  "words": [
+   {
+    "de": "die Aufgabe",
+    "info": "das, was du machen sollst",
+    "emoji": "📋",
+    "bsp": "Die Aufgabe steht auf Seite zwölf."
+   },
+   {
+    "de": "die Hausaufgabe",
+    "info": "die Aufgabe für zu Hause",
+    "emoji": "🏡",
+    "bsp": "Die Hausaufgabe ist bis Donnerstag."
+   },
+   {
+    "de": "nachfragen",
+    "info": "noch einmal fragen, wenn etwas unklar ist",
+    "emoji": "🙋",
+    "bsp": "Frag lieber nach, als es falsch zu machen."
+   },
+   {
+    "de": "die Erklärung",
+    "info": "wenn jemand sagt, wie etwas funktioniert",
+    "emoji": "💡",
+    "bsp": "Die Erklärung habe ich noch nicht verstanden."
+   },
+   {
+    "de": "das Beispiel",
+    "info": "ein Satz, der die Regel zeigt",
+    "emoji": "🔎",
+    "bsp": "Können Sie ein Beispiel geben?"
+   },
+   {
+    "de": "die Regel",
+    "info": "wie es im Deutschen funktioniert",
+    "emoji": "📏",
+    "bsp": "Diese Regel hat drei Ausnahmen."
+   },
+   {
+    "de": "die Ausnahme",
+    "info": "der Fall, in dem die Regel nicht gilt",
+    "emoji": "⚠️",
+    "bsp": "Bei diesen Wörtern gibt es eine Ausnahme."
+   },
+   {
+    "de": "üben",
+    "info": "etwas mehrmals machen, bis es sitzt",
+    "emoji": "🔁",
+    "bsp": "Ich übe jeden Tag zwanzig Minuten."
+   },
+   {
+    "de": "wiederholen",
+    "info": "den alten Stoff noch einmal ansehen",
+    "emoji": "♻️",
+    "bsp": "Am Freitag wiederholen wir die letzte Lektion."
+   },
+   {
+    "de": "der Fehler",
+    "info": "etwas, das nicht richtig ist",
+    "emoji": "✏️",
+    "bsp": "Aus einem Fehler lernt man am meisten."
+   },
+   {
+    "de": "die Korrektur",
+    "info": "die verbesserte Fassung deines Textes",
+    "emoji": "🖊️",
+    "bsp": "Die Korrektur kommt am Montag zurück."
+   },
+   {
+    "de": "die Entschuldigung",
+    "info": "der kurze Text, warum du gefehlt hast",
+    "emoji": "📧",
+    "bsp": "Ich schreibe eine Entschuldigung für gestern."
+   },
+   {
+    "de": "fehlen",
+    "info": "nicht da sein",
+    "emoji": "🚫",
+    "bsp": "Ich habe letzte Woche zweimal gefehlt."
+   },
+   {
+    "de": "das Zertifikat",
+    "info": "das Papier am Ende des Kurses",
+    "emoji": "🏅",
+    "bsp": "Mit dem Zertifikat kann ich mich bewerben."
+   }
+  ],
+  "exercises": [
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „das, was du machen sollst“?",
+    "options": [
+     "das Zertifikat",
+     "die Aufgabe",
+     "nachfragen",
+     "die Entschuldigung"
+    ],
+    "answer": 1,
+    "explain": "die Aufgabe — das, was du machen sollst."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „die Aufgabe für zu Hause“?",
+    "options": [
+     "fehlen",
+     "die Hausaufgabe",
+     "das Beispiel",
+     "die Entschuldigung"
+    ],
+    "answer": 1,
+    "explain": "die Hausaufgabe — die Aufgabe für zu Hause."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „noch einmal fragen, wenn etwas unklar ist“?",
+    "options": [
+     "der Fehler",
+     "die Ausnahme",
+     "die Korrektur",
+     "nachfragen"
+    ],
+    "answer": 3,
+    "explain": "nachfragen — noch einmal fragen, wenn etwas unklar ist."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „wenn jemand sagt, wie etwas funktioniert“?",
+    "options": [
+     "nachfragen",
+     "das Beispiel",
+     "die Erklärung",
+     "die Hausaufgabe"
+    ],
+    "answer": 2,
+    "explain": "die Erklärung — wenn jemand sagt, wie etwas funktioniert."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „ein Satz, der die Regel zeigt“?",
+    "options": [
+     "üben",
+     "die Erklärung",
+     "das Beispiel",
+     "die Entschuldigung"
+    ],
+    "answer": 2,
+    "explain": "das Beispiel — ein Satz, der die Regel zeigt."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „wie es im Deutschen funktioniert“?",
+    "options": [
+     "die Ausnahme",
+     "die Regel",
+     "die Entschuldigung",
+     "das Beispiel"
+    ],
+    "answer": 1,
+    "explain": "die Regel — wie es im Deutschen funktioniert."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „der Fall, in dem die Regel nicht gilt“?",
+    "options": [
+     "die Entschuldigung",
+     "die Hausaufgabe",
+     "der Fehler",
+     "die Ausnahme"
+    ],
+    "answer": 3,
+    "explain": "die Ausnahme — der Fall, in dem die Regel nicht gilt."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „etwas mehrmals machen, bis es sitzt“?",
+    "options": [
+     "die Hausaufgabe",
+     "die Erklärung",
+     "üben",
+     "die Korrektur"
+    ],
+    "answer": 2,
+    "explain": "üben — etwas mehrmals machen, bis es sitzt."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „den alten Stoff noch einmal ansehen“?",
+    "options": [
+     "die Hausaufgabe",
+     "wiederholen",
+     "nachfragen",
+     "fehlen"
+    ],
+    "answer": 1,
+    "explain": "wiederholen — den alten Stoff noch einmal ansehen."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „etwas, das nicht richtig ist“?",
+    "options": [
+     "die Erklärung",
+     "der Fehler",
+     "die Hausaufgabe",
+     "wiederholen"
+    ],
+    "answer": 1,
+    "explain": "der Fehler — etwas, das nicht richtig ist."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „die verbesserte Fassung deines Textes“?",
+    "options": [
+     "nachfragen",
+     "die Hausaufgabe",
+     "die Erklärung",
+     "die Korrektur"
+    ],
+    "answer": 3,
+    "explain": "die Korrektur — die verbesserte Fassung deines Textes."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „der kurze Text, warum du gefehlt hast“?",
+    "options": [
+     "die Erklärung",
+     "die Entschuldigung",
+     "nachfragen",
+     "die Ausnahme"
+    ],
+    "answer": 1,
+    "explain": "die Entschuldigung — der kurze Text, warum du gefehlt hast."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „nicht da sein“?",
+    "options": [
+     "das Zertifikat",
+     "die Entschuldigung",
+     "fehlen",
+     "die Regel"
+    ],
+    "answer": 2,
+    "explain": "fehlen — nicht da sein."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „das Papier am Ende des Kurses“?",
+    "options": [
+     "nachfragen",
+     "das Zertifikat",
+     "die Hausaufgabe",
+     "die Regel"
+    ],
+    "answer": 1,
+    "explain": "das Zertifikat — das Papier am Ende des Kurses."
+   },
+   {
+    "type": "gap",
+    "text": "Die ___ steht auf Seite zwölf.",
+    "answer": "Aufgabe",
+    "options": [
+     "Aufgabe",
+     "Entschuldigung",
+     "Zertifikat"
+    ],
+    "hint": "das, was du machen sollst"
+   },
+   {
+    "type": "gap",
+    "text": "Die ___ ist bis Donnerstag.",
+    "answer": "Hausaufgabe",
+    "options": [
+     "Hausaufgabe",
+     "Korrektur",
+     "Beispiel"
+    ],
+    "hint": "die Aufgabe für zu Hause"
+   },
+   {
+    "type": "gap",
+    "text": "Die ___ habe ich noch nicht verstanden.",
+    "answer": "Erklärung",
+    "options": [
+     "Erklärung",
+     "Hausaufgabe",
+     "Regel"
+    ],
+    "hint": "wenn jemand sagt, wie etwas funktioniert"
+   },
+   {
+    "type": "gap",
+    "text": "Können Sie ein ___ geben?",
+    "answer": "Beispiel",
+    "options": [
+     "Beispiel",
+     "Regel",
+     "Erklärung"
+    ],
+    "hint": "ein Satz, der die Regel zeigt"
+   },
+   {
+    "type": "gap",
+    "text": "Diese ___ hat drei Ausnahmen.",
+    "answer": "Regel",
+    "options": [
+     "Regel",
+     "Entschuldigung",
+     "Ausnahme"
+    ],
+    "hint": "wie es im Deutschen funktioniert"
+   },
+   {
+    "type": "gap",
+    "text": "Bei diesen Wörtern gibt es eine ___.",
+    "answer": "Ausnahme",
+    "options": [
+     "Ausnahme",
+     "Hausaufgabe",
+     "Regel"
+    ],
+    "hint": "der Fall, in dem die Regel nicht gilt"
+   },
+   {
+    "type": "gap",
+    "text": "Am Freitag ___ wir die letzte Lektion.",
+    "answer": "wiederholen",
+    "options": [
+     "wiederholen",
+     "Entschuldigung",
+     "nachfragen"
+    ],
+    "hint": "den alten Stoff noch einmal ansehen"
+   },
+   {
+    "type": "gap",
+    "text": "Aus einem ___ lernt man am meisten.",
+    "answer": "Fehler",
+    "options": [
+     "Fehler",
+     "Hausaufgabe",
+     "Regel"
+    ],
+    "hint": "etwas, das nicht richtig ist"
+   },
+   {
+    "type": "gap",
+    "text": "Die ___ kommt am Montag zurück.",
+    "answer": "Korrektur",
+    "options": [
+     "Korrektur",
+     "Regel",
+     "Erklärung"
+    ],
+    "hint": "die verbesserte Fassung deines Textes"
+   },
+   {
+    "type": "gap",
+    "text": "Ich schreibe eine ___ für gestern.",
+    "answer": "Entschuldigung",
+    "options": [
+     "Entschuldigung",
+     "Fehler",
+     "Erklärung"
+    ],
+    "hint": "der kurze Text, warum du gefehlt hast"
+   },
+   {
+    "type": "gap",
+    "text": "Mit dem ___ kann ich mich bewerben.",
+    "answer": "Zertifikat",
+    "options": [
+     "Zertifikat",
+     "Ausnahme",
+     "nachfragen"
+    ],
+    "hint": "das Papier am Ende des Kurses"
+   },
+   {
+    "type": "match",
+    "intro": "Ordne Wort und Bedeutung zu:",
+    "pairs": [
+     {
+      "l": "die Aufgabe",
+      "r": "das, was du machen sollst"
+     },
+     {
+      "l": "die Hausaufgabe",
+      "r": "die Aufgabe für zu Hause"
+     },
+     {
+      "l": "nachfragen",
+      "r": "noch einmal fragen, wenn etwas unklar ist"
+     },
+     {
+      "l": "die Erklärung",
+      "r": "wenn jemand sagt, wie etwas funktioniert"
+     }
+    ]
+   },
+   {
+    "type": "match",
+    "intro": "Ordne Wort und Bedeutung zu:",
+    "pairs": [
+     {
+      "l": "das Beispiel",
+      "r": "ein Satz, der die Regel zeigt"
+     },
+     {
+      "l": "die Regel",
+      "r": "wie es im Deutschen funktioniert"
+     },
+     {
+      "l": "die Ausnahme",
+      "r": "der Fall, in dem die Regel nicht gilt"
+     },
+     {
+      "l": "üben",
+      "r": "etwas mehrmals machen, bis es sitzt"
+     }
+    ]
+   },
+   {
+    "type": "match",
+    "intro": "Ordne Wort und Bedeutung zu:",
+    "pairs": [
+     {
+      "l": "wiederholen",
+      "r": "den alten Stoff noch einmal ansehen"
+     },
+     {
+      "l": "der Fehler",
+      "r": "etwas, das nicht richtig ist"
+     },
+     {
+      "l": "die Korrektur",
+      "r": "die verbesserte Fassung deines Textes"
+     },
+     {
+      "l": "die Entschuldigung",
+      "r": "der kurze Text, warum du gefehlt hast"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "weiterbildung-neu",
+  "title": "Weiterbildung & Anerkennung",
+  "level": "B1",
+  "emoji": "🎓",
+  "words": [
+   {
+    "de": "die Anerkennung",
+    "info": "dein Abschluss gilt auch in Deutschland",
+    "emoji": "📜",
+    "bsp": "Die Anerkennung meines Abschlusses hat ein Jahr gedauert."
+   },
+   {
+    "de": "der Abschluss",
+    "info": "das Papier am Ende deiner Ausbildung",
+    "emoji": "🎓",
+    "bsp": "Mein Abschluss ist aus Kiew."
+   },
+   {
+    "de": "die Weiterbildung",
+    "info": "ein Kurs neben oder nach der Arbeit",
+    "emoji": "📈",
+    "bsp": "Die Weiterbildung dauert sechs Monate."
+   },
+   {
+    "de": "die Umschulung",
+    "info": "du lernst einen ganz neuen Beruf",
+    "emoji": "🔄",
+    "bsp": "Nach der Umschulung arbeitet er in der IT."
+   },
+   {
+    "de": "der Bildungsgutschein",
+    "info": "damit zahlt die Agentur deinen Kurs",
+    "emoji": "🎟️",
+    "bsp": "Mit dem Bildungsgutschein ist der Kurs kostenlos."
+   },
+   {
+    "de": "die Agentur für Arbeit",
+    "info": "das Amt für Arbeit und Weiterbildung",
+    "emoji": "🏛️",
+    "bsp": "Die Agentur für Arbeit berät dich dazu."
+   },
+   {
+    "de": "die Beratung",
+    "info": "ein Gespräch, in dem dir jemand hilft",
+    "emoji": "🤝",
+    "bsp": "In der Beratung habe ich alles gefragt."
+   },
+   {
+    "de": "die Voraussetzung",
+    "info": "was du mitbringen musst",
+    "emoji": "✔️",
+    "bsp": "Voraussetzung ist Deutsch auf B2."
+   },
+   {
+    "de": "berufsbegleitend",
+    "info": "neben der Arbeit, abends oder am Wochenende",
+    "emoji": "🌙",
+    "bsp": "Der Kurs ist berufsbegleitend."
+   },
+   {
+    "de": "das Praktikum",
+    "info": "du arbeitest eine Zeit lang zum Lernen",
+    "emoji": "🛠️",
+    "bsp": "Nach dem Praktikum wurde sie übernommen."
+   },
+   {
+    "de": "die Prüfung",
+    "info": "der Test am Ende",
+    "emoji": "📝",
+    "bsp": "Die Prüfung ist im Juni."
+   },
+   {
+    "de": "die Teilzeit",
+    "info": "weniger Stunden als eine volle Stelle",
+    "emoji": "🕐",
+    "bsp": "Ich mache die Ausbildung in Teilzeit."
+   },
+   {
+    "de": "die Förderung",
+    "info": "Geld oder Hilfe vom Staat",
+    "emoji": "💶",
+    "bsp": "Es gibt eine Förderung für die Kursgebühr."
+   },
+   {
+    "de": "der Lebenslauf",
+    "info": "die Übersicht über deinen Weg",
+    "emoji": "📄",
+    "bsp": "Der Lebenslauf passt auf zwei Seiten."
+   }
+  ],
+  "exercises": [
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „dein Abschluss gilt auch in Deutschland“?",
+    "options": [
+     "die Teilzeit",
+     "die Anerkennung",
+     "die Förderung",
+     "der Bildungsgutschein"
+    ],
+    "answer": 1,
+    "explain": "die Anerkennung — dein Abschluss gilt auch in Deutschland."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „das Papier am Ende deiner Ausbildung“?",
+    "options": [
+     "das Praktikum",
+     "der Abschluss",
+     "die Prüfung",
+     "die Beratung"
+    ],
+    "answer": 1,
+    "explain": "der Abschluss — das Papier am Ende deiner Ausbildung."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „ein Kurs neben oder nach der Arbeit“?",
+    "options": [
+     "der Abschluss",
+     "die Umschulung",
+     "der Bildungsgutschein",
+     "die Weiterbildung"
+    ],
+    "answer": 3,
+    "explain": "die Weiterbildung — ein Kurs neben oder nach der Arbeit."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „du lernst einen ganz neuen Beruf“?",
+    "options": [
+     "der Bildungsgutschein",
+     "die Teilzeit",
+     "die Umschulung",
+     "die Voraussetzung"
+    ],
+    "answer": 2,
+    "explain": "die Umschulung — du lernst einen ganz neuen Beruf."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „damit zahlt die Agentur deinen Kurs“?",
+    "options": [
+     "die Teilzeit",
+     "die Agentur für Arbeit",
+     "der Bildungsgutschein",
+     "die Beratung"
+    ],
+    "answer": 2,
+    "explain": "der Bildungsgutschein — damit zahlt die Agentur deinen Kurs."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „das Amt für Arbeit und Weiterbildung“?",
+    "options": [
+     "die Teilzeit",
+     "die Agentur für Arbeit",
+     "das Praktikum",
+     "der Abschluss"
+    ],
+    "answer": 1,
+    "explain": "die Agentur für Arbeit — das Amt für Arbeit und Weiterbildung."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „ein Gespräch, in dem dir jemand hilft“?",
+    "options": [
+     "die Umschulung",
+     "der Abschluss",
+     "die Prüfung",
+     "die Beratung"
+    ],
+    "answer": 3,
+    "explain": "die Beratung — ein Gespräch, in dem dir jemand hilft."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „was du mitbringen musst“?",
+    "options": [
+     "die Weiterbildung",
+     "die Förderung",
+     "die Voraussetzung",
+     "der Abschluss"
+    ],
+    "answer": 2,
+    "explain": "die Voraussetzung — was du mitbringen musst."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „neben der Arbeit, abends oder am Wochenende“?",
+    "options": [
+     "der Abschluss",
+     "berufsbegleitend",
+     "das Praktikum",
+     "die Umschulung"
+    ],
+    "answer": 1,
+    "explain": "berufsbegleitend — neben der Arbeit, abends oder am Wochenende."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „du arbeitest eine Zeit lang zum Lernen“?",
+    "options": [
+     "die Umschulung",
+     "das Praktikum",
+     "die Weiterbildung",
+     "der Abschluss"
+    ],
+    "answer": 1,
+    "explain": "das Praktikum — du arbeitest eine Zeit lang zum Lernen."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „der Test am Ende“?",
+    "options": [
+     "die Beratung",
+     "die Umschulung",
+     "die Weiterbildung",
+     "die Prüfung"
+    ],
+    "answer": 3,
+    "explain": "die Prüfung — der Test am Ende."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „weniger Stunden als eine volle Stelle“?",
+    "options": [
+     "die Förderung",
+     "die Teilzeit",
+     "die Agentur für Arbeit",
+     "der Lebenslauf"
+    ],
+    "answer": 1,
+    "explain": "die Teilzeit — weniger Stunden als eine volle Stelle."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „Geld oder Hilfe vom Staat“?",
+    "options": [
+     "der Abschluss",
+     "die Agentur für Arbeit",
+     "die Förderung",
+     "die Weiterbildung"
+    ],
+    "answer": 2,
+    "explain": "die Förderung — Geld oder Hilfe vom Staat."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „die Übersicht über deinen Weg“?",
+    "options": [
+     "die Weiterbildung",
+     "der Lebenslauf",
+     "der Abschluss",
+     "die Beratung"
+    ],
+    "answer": 1,
+    "explain": "der Lebenslauf — die Übersicht über deinen Weg."
+   },
+   {
+    "type": "gap",
+    "text": "Die ___ meines Abschlusses hat ein Jahr gedauert.",
+    "answer": "Anerkennung",
+    "options": [
+     "Anerkennung",
+     "Prüfung",
+     "Bildungsgutschein"
+    ],
+    "hint": "dein Abschluss gilt auch in Deutschland"
+   },
+   {
+    "type": "gap",
+    "text": "Mein ___ ist aus Kiew.",
+    "answer": "Abschluss",
+    "options": [
+     "Abschluss",
+     "Umschulung",
+     "Bildungsgutschein"
+    ],
+    "hint": "das Papier am Ende deiner Ausbildung"
+   },
+   {
+    "type": "gap",
+    "text": "Die ___ dauert sechs Monate.",
+    "answer": "Weiterbildung",
+    "options": [
+     "Weiterbildung",
+     "Abschluss",
+     "Agentur für Arbeit"
+    ],
+    "hint": "ein Kurs neben oder nach der Arbeit"
+   },
+   {
+    "type": "gap",
+    "text": "Nach der ___ arbeitet er in der IT.",
+    "answer": "Umschulung",
+    "options": [
+     "Umschulung",
+     "Agentur für Arbeit",
+     "Bildungsgutschein"
+    ],
+    "hint": "du lernst einen ganz neuen Beruf"
+   },
+   {
+    "type": "gap",
+    "text": "Mit dem ___ ist der Kurs kostenlos.",
+    "answer": "Bildungsgutschein",
+    "options": [
+     "Bildungsgutschein",
+     "Teilzeit",
+     "Beratung"
+    ],
+    "hint": "damit zahlt die Agentur deinen Kurs"
+   },
+   {
+    "type": "gap",
+    "text": "Die ___ berät dich dazu.",
+    "answer": "Agentur für Arbeit",
+    "options": [
+     "Agentur für Arbeit",
+     "Abschluss",
+     "Beratung"
+    ],
+    "hint": "das Amt für Arbeit und Weiterbildung"
+   },
+   {
+    "type": "gap",
+    "text": "In der ___ habe ich alles gefragt.",
+    "answer": "Beratung",
+    "options": [
+     "Beratung",
+     "Förderung",
+     "Bildungsgutschein"
+    ],
+    "hint": "ein Gespräch, in dem dir jemand hilft"
+   },
+   {
+    "type": "gap",
+    "text": "___ ist Deutsch auf B2.",
+    "answer": "Voraussetzung",
+    "options": [
+     "Voraussetzung",
+     "Teilzeit",
+     "Weiterbildung"
+    ],
+    "hint": "was du mitbringen musst"
+   },
+   {
+    "type": "gap",
+    "text": "Der Kurs ist ___.",
+    "answer": "berufsbegleitend",
+    "options": [
+     "berufsbegleitend",
+     "Abschluss",
+     "Agentur für Arbeit"
+    ],
+    "hint": "neben der Arbeit, abends oder am Wochenende"
+   },
+   {
+    "type": "gap",
+    "text": "Nach dem ___ wurde sie übernommen.",
+    "answer": "Praktikum",
+    "options": [
+     "Praktikum",
+     "Agentur für Arbeit",
+     "Umschulung"
+    ],
+    "hint": "du arbeitest eine Zeit lang zum Lernen"
+   },
+   {
+    "type": "gap",
+    "text": "Die ___ ist im Juni.",
+    "answer": "Prüfung",
+    "options": [
+     "Prüfung",
+     "Praktikum",
+     "Umschulung"
+    ],
+    "hint": "der Test am Ende"
+   },
+   {
+    "type": "gap",
+    "text": "Ich mache die Ausbildung in ___.",
+    "answer": "Teilzeit",
+    "options": [
+     "Teilzeit",
+     "Abschluss",
+     "Praktikum"
+    ],
+    "hint": "weniger Stunden als eine volle Stelle"
+   },
+   {
+    "type": "gap",
+    "text": "Es gibt eine ___ für die Kursgebühr.",
+    "answer": "Förderung",
+    "options": [
+     "Förderung",
+     "Beratung",
+     "Weiterbildung"
+    ],
+    "hint": "Geld oder Hilfe vom Staat"
+   },
+   {
+    "type": "gap",
+    "text": "Der ___ passt auf zwei Seiten.",
+    "answer": "Lebenslauf",
+    "options": [
+     "Lebenslauf",
+     "Weiterbildung",
+     "Umschulung"
+    ],
+    "hint": "die Übersicht über deinen Weg"
+   },
+   {
+    "type": "match",
+    "intro": "Ordne Wort und Bedeutung zu:",
+    "pairs": [
+     {
+      "l": "die Anerkennung",
+      "r": "dein Abschluss gilt auch in Deutschland"
+     },
+     {
+      "l": "der Abschluss",
+      "r": "das Papier am Ende deiner Ausbildung"
+     },
+     {
+      "l": "die Weiterbildung",
+      "r": "ein Kurs neben oder nach der Arbeit"
+     },
+     {
+      "l": "die Umschulung",
+      "r": "du lernst einen ganz neuen Beruf"
+     }
+    ]
+   },
+   {
+    "type": "match",
+    "intro": "Ordne Wort und Bedeutung zu:",
+    "pairs": [
+     {
+      "l": "der Bildungsgutschein",
+      "r": "damit zahlt die Agentur deinen Kurs"
+     },
+     {
+      "l": "die Agentur für Arbeit",
+      "r": "das Amt für Arbeit und Weiterbildung"
+     },
+     {
+      "l": "die Beratung",
+      "r": "ein Gespräch, in dem dir jemand hilft"
+     },
+     {
+      "l": "die Voraussetzung",
+      "r": "was du mitbringen musst"
+     }
+    ]
+   },
+   {
+    "type": "match",
+    "intro": "Ordne Wort und Bedeutung zu:",
+    "pairs": [
+     {
+      "l": "berufsbegleitend",
+      "r": "neben der Arbeit, abends oder am Wochenende"
+     },
+     {
+      "l": "das Praktikum",
+      "r": "du arbeitest eine Zeit lang zum Lernen"
+     },
+     {
+      "l": "die Prüfung",
+      "r": "der Test am Ende"
+     },
+     {
+      "l": "die Teilzeit",
+      "r": "weniger Stunden als eine volle Stelle"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "medien-neu",
+  "title": "Nachrichten, Werbung & sicher im Netz",
+  "level": "B1",
+  "emoji": "📱",
+  "words": [
+   {
+    "de": "die Nachrichten",
+    "info": "was heute in der Welt passiert ist",
+    "emoji": "📰",
+    "bsp": "Die Nachrichten kommen um acht."
+   },
+   {
+    "de": "die Schlagzeile",
+    "info": "die dicke Zeile ganz oben",
+    "emoji": "🗞️",
+    "bsp": "Die Schlagzeile sagt noch nicht alles."
+   },
+   {
+    "de": "die Quelle",
+    "info": "wer die Information verbreitet hat",
+    "emoji": "🔍",
+    "bsp": "Schau immer auf die Quelle."
+   },
+   {
+    "de": "die Werbung",
+    "info": "der Text, der dir etwas verkaufen will",
+    "emoji": "📢",
+    "bsp": "Zwischen den Nachrichten kommt Werbung."
+   },
+   {
+    "de": "das Abo",
+    "info": "du zahlst regelmäßig und bekommst regelmäßig etwas",
+    "emoji": "🔁",
+    "bsp": "Das Abo läuft ein Jahr."
+   },
+   {
+    "de": "kündigen",
+    "info": "einen Vertrag beenden",
+    "emoji": "✂️",
+    "bsp": "Ich möchte mein Abo kündigen."
+   },
+   {
+    "de": "die Datenschutzerklärung",
+    "info": "der Text darüber, was mit deinen Daten passiert",
+    "emoji": "🔒",
+    "bsp": "Fast niemand liest die Datenschutzerklärung."
+   },
+   {
+    "de": "das Passwort",
+    "info": "dein geheimes Wort zum Anmelden",
+    "emoji": "🔑",
+    "bsp": "Nimm für jedes Konto ein anderes Passwort."
+   },
+   {
+    "de": "der Betrug",
+    "info": "jemand will dich mit einer Lüge um Geld bringen",
+    "emoji": "🚨",
+    "bsp": "Diese Mail war ein Betrug."
+   },
+   {
+    "de": "die Phishing-Mail",
+    "info": "eine falsche Mail, die dein Passwort will",
+    "emoji": "🎣",
+    "bsp": "Öffne den Link in der Phishing-Mail nicht."
+   },
+   {
+    "de": "seriös",
+    "info": "ernst zu nehmen und vertrauenswürdig",
+    "emoji": "🤝",
+    "bsp": "Die Seite wirkt seriös."
+   },
+   {
+    "de": "die Falschmeldung",
+    "info": "eine Nachricht, die nicht stimmt",
+    "emoji": "❌",
+    "bsp": "Das war eine Falschmeldung."
+   },
+   {
+    "de": "der Beitrag",
+    "info": "ein einzelner Text oder ein Video im Netz",
+    "emoji": "💬",
+    "bsp": "Ihr Beitrag hat viele Kommentare."
+   },
+   {
+    "de": "der Kommentar",
+    "info": "was jemand unter einen Beitrag schreibt",
+    "emoji": "✍️",
+    "bsp": "Der Kommentar war unfreundlich."
+   }
+  ],
+  "exercises": [
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „was heute in der Welt passiert ist“?",
+    "options": [
+     "die Datenschutzerklärung",
+     "die Nachrichten",
+     "die Phishing-Mail",
+     "seriös"
+    ],
+    "answer": 1,
+    "explain": "die Nachrichten — was heute in der Welt passiert ist."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „die dicke Zeile ganz oben“?",
+    "options": [
+     "die Quelle",
+     "die Schlagzeile",
+     "das Abo",
+     "die Werbung"
+    ],
+    "answer": 1,
+    "explain": "die Schlagzeile — die dicke Zeile ganz oben."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „wer die Information verbreitet hat“?",
+    "options": [
+     "das Passwort",
+     "das Abo",
+     "die Falschmeldung",
+     "die Quelle"
+    ],
+    "answer": 3,
+    "explain": "die Quelle — wer die Information verbreitet hat."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „der Text, der dir etwas verkaufen will“?",
+    "options": [
+     "kündigen",
+     "die Datenschutzerklärung",
+     "die Werbung",
+     "die Falschmeldung"
+    ],
+    "answer": 2,
+    "explain": "die Werbung — der Text, der dir etwas verkaufen will."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „du zahlst regelmäßig und bekommst regelmäßig etwas“?",
+    "options": [
+     "die Phishing-Mail",
+     "die Schlagzeile",
+     "das Abo",
+     "die Falschmeldung"
+    ],
+    "answer": 2,
+    "explain": "das Abo — du zahlst regelmäßig und bekommst regelmäßig etwas."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „einen Vertrag beenden“?",
+    "options": [
+     "die Werbung",
+     "kündigen",
+     "seriös",
+     "die Schlagzeile"
+    ],
+    "answer": 1,
+    "explain": "kündigen — einen Vertrag beenden."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „der Text darüber, was mit deinen Daten passiert“?",
+    "options": [
+     "der Beitrag",
+     "die Quelle",
+     "die Schlagzeile",
+     "die Datenschutzerklärung"
+    ],
+    "answer": 3,
+    "explain": "die Datenschutzerklärung — der Text darüber, was mit deinen Daten passiert."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „dein geheimes Wort zum Anmelden“?",
+    "options": [
+     "die Phishing-Mail",
+     "die Werbung",
+     "das Passwort",
+     "die Schlagzeile"
+    ],
+    "answer": 2,
+    "explain": "das Passwort — dein geheimes Wort zum Anmelden."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „jemand will dich mit einer Lüge um Geld bringen“?",
+    "options": [
+     "die Quelle",
+     "der Betrug",
+     "die Schlagzeile",
+     "die Werbung"
+    ],
+    "answer": 1,
+    "explain": "der Betrug — jemand will dich mit einer Lüge um Geld bringen."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „eine falsche Mail, die dein Passwort will“?",
+    "options": [
+     "die Quelle",
+     "die Phishing-Mail",
+     "die Datenschutzerklärung",
+     "die Werbung"
+    ],
+    "answer": 1,
+    "explain": "die Phishing-Mail — eine falsche Mail, die dein Passwort will."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „ernst zu nehmen und vertrauenswürdig“?",
+    "options": [
+     "der Kommentar",
+     "der Beitrag",
+     "kündigen",
+     "seriös"
+    ],
+    "answer": 3,
+    "explain": "seriös — ernst zu nehmen und vertrauenswürdig."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „eine Nachricht, die nicht stimmt“?",
+    "options": [
+     "kündigen",
+     "die Falschmeldung",
+     "die Quelle",
+     "die Schlagzeile"
+    ],
+    "answer": 1,
+    "explain": "die Falschmeldung — eine Nachricht, die nicht stimmt."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „ein einzelner Text oder ein Video im Netz“?",
+    "options": [
+     "die Schlagzeile",
+     "die Datenschutzerklärung",
+     "der Beitrag",
+     "die Quelle"
+    ],
+    "answer": 2,
+    "explain": "der Beitrag — ein einzelner Text oder ein Video im Netz."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „was jemand unter einen Beitrag schreibt“?",
+    "options": [
+     "seriös",
+     "der Kommentar",
+     "die Phishing-Mail",
+     "die Datenschutzerklärung"
+    ],
+    "answer": 1,
+    "explain": "der Kommentar — was jemand unter einen Beitrag schreibt."
+   },
+   {
+    "type": "gap",
+    "text": "Die ___ kommen um acht.",
+    "answer": "Nachrichten",
+    "options": [
+     "Nachrichten",
+     "Werbung",
+     "Abo"
+    ],
+    "hint": "was heute in der Welt passiert ist"
+   },
+   {
+    "type": "gap",
+    "text": "Die ___ sagt noch nicht alles.",
+    "answer": "Schlagzeile",
+    "options": [
+     "Schlagzeile",
+     "Quelle",
+     "kündigen"
+    ],
+    "hint": "die dicke Zeile ganz oben"
+   },
+   {
+    "type": "gap",
+    "text": "Schau immer auf die ___.",
+    "answer": "Quelle",
+    "options": [
+     "Quelle",
+     "kündigen",
+     "Abo"
+    ],
+    "hint": "wer die Information verbreitet hat"
+   },
+   {
+    "type": "gap",
+    "text": "Zwischen den Nachrichten kommt ___.",
+    "answer": "Werbung",
+    "options": [
+     "Werbung",
+     "Falschmeldung",
+     "Datenschutzerklärung"
+    ],
+    "hint": "der Text, der dir etwas verkaufen will"
+   },
+   {
+    "type": "gap",
+    "text": "Das ___ läuft ein Jahr.",
+    "answer": "Abo",
+    "options": [
+     "Abo",
+     "Schlagzeile",
+     "Datenschutzerklärung"
+    ],
+    "hint": "du zahlst regelmäßig und bekommst regelmäßig etwas"
+   },
+   {
+    "type": "gap",
+    "text": "Ich möchte mein Abo ___.",
+    "answer": "kündigen",
+    "options": [
+     "kündigen",
+     "Beitrag",
+     "Abo"
+    ],
+    "hint": "einen Vertrag beenden"
+   },
+   {
+    "type": "gap",
+    "text": "Fast niemand liest die ___.",
+    "answer": "Datenschutzerklärung",
+    "options": [
+     "Datenschutzerklärung",
+     "Falschmeldung",
+     "Quelle"
+    ],
+    "hint": "der Text darüber, was mit deinen Daten passiert"
+   },
+   {
+    "type": "gap",
+    "text": "Nimm für jedes Konto ein anderes ___.",
+    "answer": "Passwort",
+    "options": [
+     "Passwort",
+     "Schlagzeile",
+     "kündigen"
+    ],
+    "hint": "dein geheimes Wort zum Anmelden"
+   },
+   {
+    "type": "gap",
+    "text": "Diese Mail war ein ___.",
+    "answer": "Betrug",
+    "options": [
+     "Betrug",
+     "kündigen",
+     "Werbung"
+    ],
+    "hint": "jemand will dich mit einer Lüge um Geld bringen"
+   },
+   {
+    "type": "gap",
+    "text": "Öffne den Link in der ___ nicht.",
+    "answer": "Phishing-Mail",
+    "options": [
+     "Phishing-Mail",
+     "seriös",
+     "Werbung"
+    ],
+    "hint": "eine falsche Mail, die dein Passwort will"
+   },
+   {
+    "type": "gap",
+    "text": "Die Seite wirkt ___.",
+    "answer": "seriös",
+    "options": [
+     "seriös",
+     "Schlagzeile",
+     "Phishing-Mail"
+    ],
+    "hint": "ernst zu nehmen und vertrauenswürdig"
+   },
+   {
+    "type": "gap",
+    "text": "Das war eine ___.",
+    "answer": "Falschmeldung",
+    "options": [
+     "Falschmeldung",
+     "Datenschutzerklärung",
+     "Quelle"
+    ],
+    "hint": "eine Nachricht, die nicht stimmt"
+   },
+   {
+    "type": "gap",
+    "text": "Ihr ___ hat viele Kommentare.",
+    "answer": "Beitrag",
+    "options": [
+     "Beitrag",
+     "Quelle",
+     "Werbung"
+    ],
+    "hint": "ein einzelner Text oder ein Video im Netz"
+   },
+   {
+    "type": "gap",
+    "text": "Der ___ war unfreundlich.",
+    "answer": "Kommentar",
+    "options": [
+     "Kommentar",
+     "Quelle",
+     "Werbung"
+    ],
+    "hint": "was jemand unter einen Beitrag schreibt"
+   },
+   {
+    "type": "match",
+    "intro": "Ordne Wort und Bedeutung zu:",
+    "pairs": [
+     {
+      "l": "die Nachrichten",
+      "r": "was heute in der Welt passiert ist"
+     },
+     {
+      "l": "die Schlagzeile",
+      "r": "die dicke Zeile ganz oben"
+     },
+     {
+      "l": "die Quelle",
+      "r": "wer die Information verbreitet hat"
+     },
+     {
+      "l": "die Werbung",
+      "r": "der Text, der dir etwas verkaufen will"
+     }
+    ]
+   },
+   {
+    "type": "match",
+    "intro": "Ordne Wort und Bedeutung zu:",
+    "pairs": [
+     {
+      "l": "das Abo",
+      "r": "du zahlst regelmäßig und bekommst regelmäßig etwas"
+     },
+     {
+      "l": "kündigen",
+      "r": "einen Vertrag beenden"
+     },
+     {
+      "l": "die Datenschutzerklärung",
+      "r": "der Text darüber, was mit deinen Daten passiert"
+     },
+     {
+      "l": "das Passwort",
+      "r": "dein geheimes Wort zum Anmelden"
+     }
+    ]
+   },
+   {
+    "type": "match",
+    "intro": "Ordne Wort und Bedeutung zu:",
+    "pairs": [
+     {
+      "l": "der Betrug",
+      "r": "jemand will dich mit einer Lüge um Geld bringen"
+     },
+     {
+      "l": "die Phishing-Mail",
+      "r": "eine falsche Mail, die dein Passwort will"
+     },
+     {
+      "l": "seriös",
+      "r": "ernst zu nehmen und vertrauenswürdig"
+     },
+     {
+      "l": "die Falschmeldung",
+      "r": "eine Nachricht, die nicht stimmt"
+     }
+    ]
+   }
+  ]
  }
 ];
 

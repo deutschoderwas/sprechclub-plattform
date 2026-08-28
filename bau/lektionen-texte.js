@@ -408,5 +408,72 @@ module.exports = {
   },
   sprechen: ['Erklär eine Anforderung so, dass die Werkstatt sie umsetzen kann.', 'Begründe, warum ein Termin nicht zu halten ist.', 'Führe durch eine Abnahme: was passt, was ist offen, wie geht es weiter.'],
   neunzig: 'Erzähle von einem Projekt, das dich weitergebracht hat.'
+},
+
+/* ---------- Ankommen, Kurs, Medien ---------- */
+'ankommen': {
+  titel: ['Ankommen in', 'Deutschland'],
+  ziel: 'Anmelden, Termine bekommen, Briefe verstehen — und wissen, wer hilft.',
+  fragen: ['Was macht die Person auf dem Bild gerade?', 'Was musstest du in den ersten Wochen erledigen?', 'Wo hast du Hilfe gefunden, als du etwas nicht verstanden hast?'],
+  debatte: {
+    frage: 'Sollte man Ämter auf Englisch bedienen dürfen?',
+    fuer: 'Ja, auf Englisch', gegen: 'Nein, auf Deutsch',
+    pro: ['Wichtige Fristen verpasst niemand mehr aus Sprachgründen.', 'Die Beratung wird schneller und billiger.', 'Wer arbeitet, hat oft keine Zeit für einen Kurs vorher.'],
+    con: ['Deutsch lernt man am schnellsten, wenn man es braucht.', 'Rechtlich zählt am Ende der deutsche Text.', 'Für einfache Sprache braucht es kein Englisch.']
+  },
+  sprechen: ['Erklär jemandem, der neu ist, die ersten drei Behördengänge.', 'Ruf an und frag nach einem Termin — nenne Grund, Name und Erreichbarkeit.', 'Beschreibe einen Brief, den du nicht verstanden hast, und was du dann getan hast.'],
+  neunzig: 'Erzähle von deiner ersten Woche in Deutschland.'
+},
+'sprachkurs': {
+  titel: ['Im', 'Deutschkurs'],
+  ziel: 'Nachfragen, ohne sich zu schämen — und nachholen, was du verpasst hast.',
+  fragen: ['Was passiert auf dem Bild im Kurs?', 'Was machst du, wenn du etwas nicht verstanden hast?', 'Wie übst du zu Hause?'],
+  debatte: {
+    frage: 'Im Kurs nur Deutsch — oder darf die Muttersprache helfen?',
+    fuer: 'Nur Deutsch', gegen: 'Muttersprache erlaubt',
+    pro: ['Man gewöhnt sich schneller ans Zuhören.', 'Alle im Raum verstehen dasselbe.', 'Man traut sich früher zu sprechen.'],
+    con: ['Eine Erklärung in der Muttersprache spart zehn Minuten Rätseln.', 'Wer nichts versteht, schaltet ab.', 'Grammatik versteht man einmal richtig — dann nie wieder.']
+  },
+  sprechen: ['Frag nach einer Erklärung: sag genau, was unklar ist, nicht nur „alles".', 'Erklär einer Mitschülerin eine Regel mit einem eigenen Beispiel.', 'Melde dich für zwei Tage ab und sag, wie du den Stoff nachholst.'],
+  neunzig: 'Erzähle, wie du am besten lernst — und was gar nicht funktioniert.'
+},
+'weiterbildung': {
+  titel: ['Weiterbildung &', 'Anerkennung'],
+  ziel: 'Sagen, was du kannst, und herausfinden, was dafür hier gilt.',
+  fragen: ['Worüber sprechen die beiden auf dem Bild?', 'Welchen Abschluss hast du — und zählt er hier?', 'Was wäre dein nächster Schritt im Beruf?'],
+  debatte: {
+    frage: 'Erst arbeiten oder erst die Sprache?',
+    fuer: 'Erst arbeiten', gegen: 'Erst die Sprache',
+    pro: ['Im Betrieb lernt man die Sprache, die man wirklich braucht.', 'Man verdient Geld und wartet nicht.', 'Kontakte entstehen bei der Arbeit, nicht im Kursraum.'],
+    con: ['Ohne B2 bleibt der Beruf verschlossen, den man gelernt hat.', 'Ein Kurs geht später nur noch abends.', 'Wer unter seinem Niveau arbeitet, bleibt oft dort.']
+  },
+  sprechen: ['Stell dich in einer Minute vor: Abschluss, Erfahrung, Ziel.', 'Frag in einer Beratung nach: Antrag, Dauer, Kosten, nächster Schritt.', 'Ruf an und frag nach einem Praktikumsplatz.'],
+  neunzig: 'Erzähle von deinem Beruf und was du daran magst.'
+},
+'telefonieren': {
+  titel: ['Am', 'Telefon'],
+  ziel: 'Sich melden, nachfragen, buchstabieren — und das Gespräch klar beenden.',
+  fragen: ['Was macht die Person auf dem Bild?', 'Was ist am Telefon schwerer als von Angesicht zu Angesicht?', 'Welchen Satz brauchst du, wenn du etwas nicht verstanden hast?'],
+  debatte: {
+    frage: 'Anrufen oder lieber schreiben?',
+    fuer: 'Anrufen', gegen: 'Schreiben',
+    pro: ['In zwei Minuten ist geklärt, was per Mail drei Tage dauert.', 'Man hört sofort, ob der andere einen verstanden hat.', 'Für die Sprache ist jedes Telefonat ein Training.'],
+    con: ['Beim Schreiben hat man Zeit für die richtigen Wörter.', 'Man hat es später schwarz auf weiß.', 'Niemand muss sich für seinen Akzent schämen.']
+  },
+  sprechen: ['Ruf in einer Praxis an und mach einen Termin — mit Buchstabieren.', 'Nimm eine Nachricht auf und wiederhole sie zur Sicherheit.', 'Sprich auf eine Mailbox: Name, Grund, Nummer, wann du erreichbar bist.'],
+  neunzig: 'Erzähle von einem Telefonat, das schiefgegangen ist.'
+},
+'medien': {
+  titel: ['Nachrichten,', 'Werbung & Netz'],
+  ziel: 'Verstehen, was gemeint ist — und merken, wenn dich jemand hereinlegen will.',
+  fragen: ['Was sieht die Person auf dem Bild auf ihrem Bildschirm?', 'Woher bekommst du deine Nachrichten?', 'Wie erkennst du, ob eine Nachricht stimmt?'],
+  debatte: {
+    frage: 'Nachrichten auf Deutsch oder in der Muttersprache?',
+    fuer: 'Auf Deutsch', gegen: 'In der Muttersprache',
+    pro: ['Man lernt jeden Tag Wörter, die hier zählen.', 'Man erfährt, worüber die Kollegen morgen reden.', 'Nachrichten in einfacher Sprache gibt es kostenlos.'],
+    con: ['Man versteht Hintergründe wirklich, nicht nur die Hälfte.', 'Nach der Arbeit ist der Kopf müde.', 'Fehlende Details führen zu falschen Schlüssen.']
+  },
+  sprechen: ['Erzähl eine Nachricht von heute in drei Sätzen nach.', 'Erklär jemandem, woran man eine Betrugsmail erkennt.', 'Kündige ein Abo am Telefon — freundlich, aber bestimmt.'],
+  neunzig: 'Erzähle, was du im Netz gern liest oder schaust.'
 }
 };
