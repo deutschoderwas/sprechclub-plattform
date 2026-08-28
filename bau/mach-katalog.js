@@ -53,7 +53,11 @@ function art(f) {
 
 /* ---------- 3. Niveau aus dem Dateinamen ---------- */
 function niveau(f) {
-  const m = f.toLowerCase().replace(/\.html$/, '').match(/(?:^|-)(a1|a2|b1|b2|c1)(?=-|$)/g) || [];
+  let n = f.toLowerCase().replace(/\.html$/, '');
+  /* Der Unterrichtsordner schreibt die Stufen zusammen: "erben-b2c1".
+     Vor dem Suchen wird daraus "erben-b2-c1". */
+  n = n.replace(/-(a1|a2|b1|b2|c1)(a1|a2|b1|b2|c1)(?=-|$)/g, '-$1-$2');
+  const m = n.match(/(?:^|-)(a1|a2|b1|b2|c1)(?=-|$)/g) || [];
   const st = m.map(x => x.replace(/^-/, '').toUpperCase());
   if (!st.length) return '';
   return st.length > 1 ? st[0] + '–' + st[st.length - 1] : st[0];
@@ -69,6 +73,12 @@ function titel(datei, roh) {
        .replace(/&shy;/g, '').replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ')
        .replace(/&[a-z]+;/g, ' ')
        .replace(/\s+/g, ' ').trim();
+  /* Steht im Titel ein Zeilenumbruch mitten im Bindestrichwort
+     ("Work-Life-<br>Balance"), bleibt nach dem Entfernen der Tags ein
+     Leerzeichen hinter dem Bindestrich stehen. Nur zusammenziehen,
+     wenn danach ein grosser Buchstabe folgt — "Wort- und Satzakzent"
+     muss so bleiben, wie es ist. */
+  t = t.replace(/(\w)-\s+([A-ZÄÖÜ])/g, '$1-$2');
   t = t.replace(/\s*[·|–-]\s*(deutschoderwas|Lektion|Kurs)\s*$/i, '').trim();
   if (!t) t = datei.replace(/\.html$/, '').replace(/-/g, ' ');
   return t;
@@ -146,6 +156,25 @@ STICH.landwirtschaft.push('wortschatz-natur');
 STICH.sprachkurs.push('nominalisierung', 'relativsaetze', 'wechselpraepositionen',
   'konnektoren', 'passiv', 'nomen-verb', 'konjunktiv', 'praeposition');
 delete STICH._nach_freunde; delete STICH._nach;
+/* Nachgetragen, nachdem der Unterrichtsordner dazukam: neue Themen und
+   dieselben Woerter in zusammengeschriebener Form (smalltalk statt
+   small-talk, secondhand statt second-hand). */
+STICH.feste.push('geburtstag');
+STICH.familie.push('haustiere');
+STICH.arzt.push('fitnessstudio', 'vegan');
+STICH.freunde.push('verabreden', 'smalltalk');
+STICH.kleidung.push('wetter');
+STICH.wohnen.push('wg-leben', 'stadt-land');
+STICH.medien.push('digitaldetox', 'gaming', 'datenschutz', 'anglizismen');
+STICH.heikel.push('prokrastination', 'dilemma');
+STICH.supermarkt.push('secondhand');
+STICH.bank.push('erben');
+STICH.sozial.push('grundeinkommen', 'zukunft');
+STICH.reise.push('tourismus');
+STICH.team.push('meetings');
+STICH.unterwegs.push('tempolimit');
+STICH.polizei.push('truecrime');
+STICH.kochen.push('vegan');
 
 function bereichVon(f, ids) {
   const s = f.toLowerCase().replace(/\.html$/, '').replace(/^vorbereitung-/, '');
@@ -171,20 +200,38 @@ const SKILLS = (window.UEBUNGEN && window.UEBUNGEN.skills) || [];
 const BIDS = BEREICHE.map(b => b.id);
 
 /* ---------- 6. Einlesen ---------- */
-const dateien = fs.readdirSync(W).filter(f => f.endsWith('.html') && !istRaus(f));
 const seiten = [];
-dateien.forEach(f => {
-  const roh = fs.readFileSync(path.join(W, f), 'utf8');
-  if (roh.length < 8000) return;              // Fragmente und Weiterleitungen raus
-  seiten.push({ d: f, t: titel(f, roh), lvl: niveau(f), art: art(f), b: bereichVon(f, BIDS) });
-});
+function einlesen(ordner, praefix, rang, artFest) {
+  let liste;
+  try { liste = fs.readdirSync(path.join(W, ordner)); } catch (e) { return; }
+  liste.forEach(f => {
+    if (!f.endsWith('.html')) return;
+    if (!praefix && istRaus(f)) return;
+    const roh = fs.readFileSync(path.join(W, ordner, f), 'utf8');
+    if (roh.length < 8000) return;            // Fragmente und Weiterleitungen raus
+    seiten.push({
+      d: praefix + f, t: titel(f, roh), lvl: niveau(f),
+      art: artFest || art(f), b: bereichVon(f, BIDS), rang: rang
+    });
+  });
+}
+einlesen('.', '', 1);
+/* Seit Ende Juli liegt im Ordner Unterricht-ab-27-07 eine zweite,
+   viel ausfuehrlichere Fassung: 78 Lektionen zu je rund 157 KB, jede
+   mit ihrer Uebungsseite daneben. 46 Themen gibt es NUR dort. Wo es
+   beide gibt, ist die neue zwischen zwei- und sechsmal so gross —
+   deshalb gewinnt sie (rang 2) und die alte faellt weg. */
+einlesen('Unterricht-ab-27-07', 'Unterricht-ab-27-07/', 2);
+einlesen('Unterricht-ab-27-07/Vorbereitung', 'Unterricht-ab-27-07/Vorbereitung/', 2, 'ueben');
 
 /* Uebungs- und Handout-Seiten haengen an ihrer Lektion, nicht daneben */
 function kern(f) {
-  return f.replace(/\.html$/, '')
+  return f.replace(/^.*\//, '')
+    .replace(/\.html$/, '')
     .replace(/^vorbereitung-/, '')
     .replace(/-handout$/, '')
     .replace(/-interaktiv$/, '')
+    .replace(/-(a1|a2|b1|b2|c1)(a1|a2|b1|b2|c1)$/, '')
     .replace(/(?:-(?:a1|a2|b1|b2|c1))+$/, '')
     .replace(/-teil-\d+$/, '');
 }
@@ -193,12 +240,14 @@ seiten.forEach(s => { const k = kern(s.d); (nachSlug[k] = nachSlug[k] || []).pus
 const haupt = [];
 Object.keys(nachSlug).forEach(slug => {
   const g = nachSlug[slug];
-  const l = g.filter(x => x.art !== 'ueben' && x.art !== 'handout')[0];
-  const u = g.filter(x => x.art === 'ueben')[0];
+  const lektionen = g.filter(x => x.art !== 'ueben' && x.art !== 'handout')
+                     .sort((a, b) => (b.rang || 1) - (a.rang || 1));
+  const l = lektionen[0];
+  const u = g.filter(x => x.art === 'ueben').sort((a, b) => (b.rang || 1) - (a.rang || 1))[0];
   const h = g.filter(x => x.art === 'handout')[0];
   const k = l || u || h;
   if (!k) return;
-  const e = { d: k.d, t: k.t, lvl: k.lvl, art: k.art, b: k.b };
+  const e = { d: k.d, t: k.t, lvl: k.lvl, art: k.art, b: k.b, rang: k.rang || 1 };
   if (u && u !== k) e.ueb = u.d;
   if (h && h !== k) e.hand = h.d;
   haupt.push(e);
@@ -260,6 +309,22 @@ function bildFuerSeite(s) {
 const RANG = { A1: 1, 'A1–A2': 1, A2: 2, 'A1–B1': 2, 'A2–B1': 3, B1: 4, 'B1–B2': 5, B2: 6, 'B2–C1': 7, C1: 8 };
 haupt.sort((a, b) => (RANG[a.lvl] || 9) - (RANG[b.lvl] || 9) || a.t.localeCompare(b.t, 'de'));
 
+/* Manche Themen liegen zweimal im Ordner: die kurze alte Seite und die
+   ausfuehrliche neue aus dem Unterrichtsordner, unter verschiedenen
+   Dateinamen, aber mit demselben Titel. Zweimal "Beim Friseur"
+   untereinander sieht nach Fehler aus. Die alte faellt weg. */
+const nachTitel = {};
+haupt.forEach(s => { const t = s.t.trim().toLowerCase(); (nachTitel[t] = nachTitel[t] || []).push(s); });
+const raus = new Set();
+Object.keys(nachTitel).forEach(t => {
+  const g = nachTitel[t];
+  if (g.length < 2) return;
+  const hoechster = Math.max(...g.map(x => x.rang || 1));
+  if (hoechster < 2) return;                       // beide gleich alt: beide bleiben
+  g.forEach(x => { if ((x.rang || 1) < hoechster) raus.add(x.d); });
+});
+for (let i = haupt.length - 1; i >= 0; i--) if (raus.has(haupt[i].d)) haupt.splice(i, 1);
+
 haupt.forEach(s => { const f = bildFuerSeite(s); if (f) s.img = f; });
 
 /* Die Hauptlektion eines Bereichs steht schon oben im Weg —
@@ -292,6 +357,7 @@ if (require.main === module) {
    zeigt die Oberflaeche eben keinen Knopf statt einen toten.
    ============================================================ */
 `;
+  haupt.forEach(x => { delete x.rang; });
   const js = kopf +
     'window.LEKTIONEN = ' + JSON.stringify(haupt, null, 1) + ';\n\n' +
     'window.BEREICH_MEHR = ' + JSON.stringify(mehr, null, 1) + ';\n\n' +

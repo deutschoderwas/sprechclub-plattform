@@ -39,15 +39,6 @@ window.LEKTIONEN = [
   "img": "amanda/sz-cafe.webp"
  },
  {
-  "d": "beim-friseur-a2-interaktiv.html",
-  "t": "Beim Friseur",
-  "lvl": "A2",
-  "art": "lektion",
-  "b": "friseur-beruf",
-  "ueb": "vorbereitung-beim-friseur-a2.html",
-  "img": "amanda/sz-friseur-beruf.webp"
- },
- {
   "d": "aussprache-r-a2.html",
   "t": "Das deutsche r",
   "lvl": "A2",
@@ -89,14 +80,6 @@ window.LEKTIONEN = [
   "img": "amanda/sz-vertraege.webp"
  },
  {
-  "d": "hobbys-freizeit-a2-interaktiv.html",
-  "t": "Hobbys & Freizeit",
-  "lvl": "A2",
-  "art": "lektion",
-  "b": "freunde",
-  "img": "amanda/sz-freunde.webp"
- },
- {
   "d": "im-hotel-a2-interaktiv.html",
   "t": "Im Hotel",
   "lvl": "A2",
@@ -131,29 +114,12 @@ window.LEKTIONEN = [
   "img": "amanda/sz-familie.webp"
  },
  {
-  "d": "nach-dem-weg-fragen-a2.html",
-  "t": "Nach dem Weg fragen",
-  "lvl": "A2",
-  "art": "lektion",
-  "b": "unterwegs",
-  "ueb": "vorbereitung-nach-dem-weg-fragen-a2.html",
-  "img": "amanda/sz-unterwegs.webp"
- },
- {
   "d": "post-pakete-a2-interaktiv.html",
   "t": "Post & Pakete",
   "lvl": "A2",
   "art": "lektion",
   "b": "post",
   "img": "amanda/sz-post.webp"
- },
- {
-  "d": "reklamation-umtausch-a2-interaktiv.html",
-  "t": "Reklamation & Umtausch",
-  "lvl": "A2",
-  "art": "lektion",
-  "b": "supermarkt",
-  "img": "amanda/sz-supermarkt.webp"
  },
  {
   "d": "aussprache-s-z-ss-a2.html",
@@ -176,14 +142,6 @@ window.LEKTIONEN = [
   "t": "v, w, f der feine Unterschied",
   "lvl": "A2",
   "art": "aussprache",
-  "b": "sprachkurs",
-  "img": "amanda/sz-sprachkurs.webp"
- },
- {
-  "d": "wortschatzboost-wetter-jahreszeiten-a2.html",
-  "t": "Wetter & Jahreszeiten",
-  "lvl": "A2",
-  "art": "wortschatz",
   "b": "sprachkurs",
   "img": "amanda/sz-sprachkurs.webp"
  },
@@ -213,46 +171,84 @@ window.LEKTIONEN = [
   "img": "amanda/sz-sprachkurs.webp"
  },
  {
-  "d": "telefon-a2-b1.html",
+  "d": "Unterricht-ab-27-07/bahnhof-a2b1.html",
+  "t": "Am Bahnhof & Reisen mit dem Zug",
+  "lvl": "A2–B1",
+  "art": "lektion",
+  "b": "unterwegs",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-bahnhof-a2b1.html",
+  "img": "amanda/sz-unterwegs.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/telefon-a2b1.html",
   "t": "Am Telefon & Termine machen",
   "lvl": "A2–B1",
   "art": "lektion",
   "b": "telefonieren",
-  "ueb": "vorbereitung-telefon-a2.html",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-telefon-a2b1.html",
   "img": "amanda/sz-telefonieren.webp"
  },
  {
-  "d": "amt-a2-b1.html",
+  "d": "Unterricht-ab-27-07/ausreden-a2b1.html",
+  "t": "Ausreden & Notlügen",
+  "lvl": "A2–B1",
+  "art": "lektion",
+  "b": "heikel",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-ausreden-a2b1.html",
+  "img": "amanda/sz-heikel.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/amt-a2b1.html",
   "t": "Beim Amt & Behördengänge",
   "lvl": "A2–B1",
   "art": "lektion",
   "b": "amt",
-  "ueb": "vorbereitung-amt-a2.html",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-amt-a2b1.html",
   "img": "amanda/sz-amt.webp"
  },
  {
-  "d": "arzt-a2-b1.html",
-  "t": "Beim Arzt",
+  "d": "Unterricht-ab-27-07/arzt-a2b1.html",
+  "t": "Beim Arzt & in der Apotheke",
   "lvl": "A2–B1",
   "art": "lektion",
   "b": "arzt",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-arzt-a2b1.html",
   "img": "amanda/sz-arzt.webp"
  },
  {
-  "d": "beim-zahnarzt-a2-b1.html",
+  "d": "Unterricht-ab-27-07/friseur-a2b1.html",
+  "t": "Beim Friseur",
+  "lvl": "A2–B1",
+  "art": "lektion",
+  "b": "friseur-beruf",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-friseur-a2b1.html",
+  "img": "amanda/sz-friseur-beruf.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/zahnarzt-a2b1.html",
   "t": "Beim Zahnarzt",
   "lvl": "A2–B1",
   "art": "lektion",
   "b": "zahnarzt",
-  "hand": "beim-zahnarzt-handout.html",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-zahnarzt-a2b1.html",
   "img": "amanda/sz-zahnarzt.webp"
  },
  {
-  "d": "einkaufen-a2-b1.html",
-  "t": "Einkaufen & Supermarkt",
+  "d": "Unterricht-ab-27-07/bewerbung-a2b1.html",
+  "t": "Bewerbung & Vorstellungsgespräch",
+  "lvl": "A2–B1",
+  "art": "lektion",
+  "b": "bewerbung",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-bewerbung-a2b1.html",
+  "img": "amanda/sz-bewerbung.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/einkaufen-a2b1.html",
+  "t": "Einkaufen & im Supermarkt",
   "lvl": "A2–B1",
   "art": "lektion",
   "b": "supermarkt",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-einkaufen-a2b1.html",
   "img": "amanda/sz-supermarkt.webp"
  },
  {
@@ -274,20 +270,57 @@ window.LEKTIONEN = [
   "img": "amanda/sz-feste.webp"
  },
  {
-  "d": "foodtrends-a2-b1.html",
+  "d": "Unterricht-ab-27-07/geburtstag-a2b1.html",
+  "t": "Feste feiern & Geburtstag",
+  "lvl": "A2–B1",
+  "art": "lektion",
+  "b": "feste",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-geburtstag-a2b1.html",
+  "img": "amanda/sz-feste.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/foodtrends-a2b1.html",
   "t": "Foodtrends & seltsames Essen",
   "lvl": "A2–B1",
   "art": "lektion",
   "b": "restaurant",
-  "ueb": "vorbereitung-foodtrends-a2.html",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-foodtrends-a2b1.html",
   "img": "amanda/sz-restaurant.webp"
  },
  {
-  "d": "restaurant-a2-b1.html",
-  "t": "Im Restaurant",
+  "d": "Unterricht-ab-27-07/haustiere-a2b1.html",
+  "t": "Haustiere im Alltag",
+  "lvl": "A2–B1",
+  "art": "lektion",
+  "b": "familie",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-haustiere-a2b1.html",
+  "img": "amanda/sz-familie.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/hobbys-a2b1.html",
+  "t": "Hobbys & Freizeit",
+  "lvl": "A2–B1",
+  "art": "lektion",
+  "b": "freunde",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-hobbys-a2b1.html",
+  "img": "amanda/sz-freunde.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/fitnessstudio-a2b1.html",
+  "t": "Im Fitnessstudio & Sport",
+  "lvl": "A2–B1",
+  "art": "lektion",
+  "b": "arzt",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-fitnessstudio-a2b1.html",
+  "img": "amanda/sz-arzt.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/restaurant-a2b1.html",
+  "t": "Im Restaurant bestellen & bezahlen",
   "lvl": "A2–B1",
   "art": "lektion",
   "b": "restaurant",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-restaurant-a2b1.html",
   "img": "amanda/sz-restaurant.webp"
  },
  {
@@ -300,12 +333,12 @@ window.LEKTIONEN = [
   "img": "amanda/sz-freunde.webp"
  },
  {
-  "d": "kleidung-a2-b1.html",
+  "d": "Unterricht-ab-27-07/kleidung-a2b1.html",
   "t": "Kleidung & Shopping",
   "lvl": "A2–B1",
   "art": "lektion",
   "b": "kleidung",
-  "ueb": "vorbereitung-kleidung-a2.html",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-kleidung-a2b1.html",
   "img": "amanda/sz-kleidung.webp"
  },
  {
@@ -318,29 +351,84 @@ window.LEKTIONEN = [
   "img": "amanda/sz-kleidung.webp"
  },
  {
-  "d": "kochen-a2-b1.html",
+  "d": "Unterricht-ab-27-07/kochen-a2b1.html",
   "t": "Kochen & Rezepte",
   "lvl": "A2–B1",
   "art": "lektion",
   "b": "kochen",
-  "ueb": "vorbereitung-kochen-a2.html",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-kochen-a2b1.html",
   "img": "amanda/sz-kochen.webp"
  },
  {
-  "d": "weg-fragen-a2-b1.html",
-  "t": "Nach dem Weg fragen & Orientierung",
+  "d": "Unterricht-ab-27-07/weg-fragen-a2b1.html",
+  "t": "Nach dem Weg fragen",
   "lvl": "A2–B1",
   "art": "lektion",
   "b": "unterwegs",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-weg-fragen-a2b1.html",
   "img": "amanda/sz-unterwegs.webp"
  },
  {
-  "d": "nachbarn-a2-b1.html",
+  "d": "Unterricht-ab-27-07/nachbarn-a2b1.html",
   "t": "Nachbarn & Hausordnung",
   "lvl": "A2–B1",
   "art": "lektion",
   "b": "wohnen",
-  "ueb": "vorbereitung-nachbarn-b1.html",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-nachbarn-a2b1.html",
+  "img": "amanda/sz-wohnen.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/peinliche-momente-a2b1.html",
+  "t": "Peinliche Momente & Fettnäpfchen",
+  "lvl": "A2–B1",
+  "art": "lektion",
+  "b": "freunde",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-peinliche-momente-a2b1.html",
+  "img": "amanda/sz-freunde.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/reklamation-a2b1.html",
+  "t": "Reklamation & Umtausch",
+  "lvl": "A2–B1",
+  "art": "lektion",
+  "b": "supermarkt",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-reklamation-a2b1.html",
+  "img": "amanda/sz-supermarkt.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/verabreden-a2b1.html",
+  "t": "Sich verabreden & Einladungen",
+  "lvl": "A2–B1",
+  "art": "lektion",
+  "b": "freunde",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-verabreden-a2b1.html",
+  "img": "amanda/sz-freunde.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/smalltalk-a2b1.html",
+  "t": "Smalltalk & übers Wetter reden",
+  "lvl": "A2–B1",
+  "art": "lektion",
+  "b": "freunde",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-smalltalk-a2b1.html",
+  "img": "amanda/sz-freunde.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/wetter-a2b1.html",
+  "t": "Wetter & Jahreszeiten",
+  "lvl": "A2–B1",
+  "art": "lektion",
+  "b": "kleidung",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-wetter-a2b1.html",
+  "img": "amanda/sz-kleidung.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/wg-leben-a2b1.html",
+  "t": "WG-Leben & die Mitbewohner",
+  "lvl": "A2–B1",
+  "art": "lektion",
+  "b": "wohnen",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-wg-leben-a2b1.html",
   "img": "amanda/sz-wohnen.webp"
  },
  {
@@ -353,21 +441,13 @@ window.LEKTIONEN = [
   "img": "amanda/sz-wohnen.webp"
  },
  {
-  "d": "wohnen-a2-b1.html",
-  "t": "Wohnungssuche & Besichtigung",
+  "d": "Unterricht-ab-27-07/wohnen-a2b1.html",
+  "t": "Wohnungssuche & Wohnen",
   "lvl": "A2–B1",
   "art": "lektion",
   "b": "wohnen",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-wohnen-a2b1.html",
   "img": "amanda/sz-wohnen.webp"
- },
- {
-  "d": "aberglaube-b1-interaktiv.html",
-  "t": "Aber glaube",
-  "lvl": "B1",
-  "art": "lektion",
-  "b": "feste",
-  "ueb": "vorbereitung-aberglaube-b1.html",
-  "img": "amanda/sz-feste.webp"
  },
  {
   "d": "grammatik-adjektivdeklination-b1.html",
@@ -400,15 +480,6 @@ window.LEKTIONEN = [
   "art": "lektion",
   "b": "heikel",
   "ueb": "vorbereitung-aufschieberitis-b1.html",
-  "img": "amanda/sz-heikel.webp"
- },
- {
-  "d": "ausreden-notluegen-b1-interaktiv.html",
-  "t": "Ausreden & Notlügen",
-  "lvl": "B1",
-  "art": "lektion",
-  "b": "heikel",
-  "ueb": "vorbereitung-ausreden-notluegen-b1.html",
   "img": "amanda/sz-heikel.webp"
  },
  {
@@ -446,16 +517,8 @@ window.LEKTIONEN = [
   "img": "amanda/sz-freunde.webp"
  },
  {
-  "d": "vorbereitung-dating-b1.html",
-  "t": "Dating & Kennenlernen",
-  "lvl": "B1",
-  "art": "ueben",
-  "b": "freunde",
-  "img": "amanda/sz-freunde.webp"
- },
- {
   "d": "debattier-arena-b1-interaktiv.html",
-  "t": "Debattier- Arena",
+  "t": "Debattier-Arena",
   "lvl": "B1",
   "art": "lektion",
   "b": "heikel",
@@ -552,14 +615,6 @@ window.LEKTIONEN = [
   "img": "amanda/sz-sozial.webp"
  },
  {
-  "d": "vorbereitung-ehrenamt-b1.html",
-  "t": "Ehrenamt & Engagement",
-  "lvl": "B1",
-  "art": "ueben",
-  "b": "sozial",
-  "img": "amanda/sz-sozial.webp"
- },
- {
   "d": "wortschatz-einkaufen-b1.html",
   "t": "Einkaufen, Geld & Bezahlen",
   "lvl": "B1",
@@ -583,15 +638,6 @@ window.LEKTIONEN = [
   "b": "medien",
   "ueb": "vorbereitung-fake-news-b1.html",
   "img": "amanda/sz-medien.webp"
- },
- {
-  "d": "feste-braeuche-b1-interaktiv.html",
-  "t": "Feste & Bräuche",
-  "lvl": "B1",
-  "art": "lektion",
-  "b": "feste",
-  "ueb": "vorbereitung-feste-braeuche-b1.html",
-  "img": "amanda/sz-feste.webp"
  },
  {
   "d": "freies-sprechen-debatten-b1.html",
@@ -618,15 +664,6 @@ window.LEKTIONEN = [
   "img": "amanda/sz-freunde.webp"
  },
  {
-  "d": "generationen-b1-interaktiv.html",
-  "t": "Generationen",
-  "lvl": "B1",
-  "art": "lektion",
-  "b": "familie",
-  "ueb": "vorbereitung-generationen-b1.html",
-  "img": "amanda/sz-familie.webp"
- },
- {
   "d": "wortschatz-gesundheit-b1.html",
   "t": "Gesundheit, Körper & Arzt",
   "lvl": "B1",
@@ -641,14 +678,6 @@ window.LEKTIONEN = [
   "art": "lektion",
   "b": "buero",
   "ueb": "vorbereitung-homeoffice-buero-b2-c1.html",
-  "img": "amanda/sz-buero.webp"
- },
- {
-  "d": "vorbereitung-homeoffice-b1.html",
-  "t": "Homeoffice oder Büro ?",
-  "lvl": "B1",
-  "art": "ueben",
-  "b": "buero",
   "img": "amanda/sz-buero.webp"
  },
  {
@@ -693,14 +722,6 @@ window.LEKTIONEN = [
   "img": "amanda/sz-sprachkurs.webp"
  },
  {
-  "d": "vorbereitung-kreativitaet-b1.html",
-  "t": "Kreativität & Ideen",
-  "lvl": "B1",
-  "art": "ueben",
-  "b": "sprachkurs",
-  "img": "amanda/sz-sprachkurs.webp"
- },
- {
   "d": "maengel-melden-b1.html",
   "t": "Mängel melden",
   "lvl": "B1",
@@ -716,14 +737,6 @@ window.LEKTIONEN = [
   "art": "lektion",
   "b": "medien",
   "img": "amanda/sz-medien.webp"
- },
- {
-  "d": "nachbarn-hausordnung-b1.html",
-  "t": "Nachbarn & Hausordnung",
-  "lvl": "B1",
-  "art": "lektion",
-  "b": "wohnen",
-  "img": "amanda/sz-wohnen.webp"
  },
  {
   "d": "wortschatz-natur-b1.html",
@@ -743,7 +756,7 @@ window.LEKTIONEN = [
  },
  {
   "d": "grammatik-nomen-verb-verbindungen-b1.html",
-  "t": "Nomen-Verb- Verbindungen",
+  "t": "Nomen-Verb-Verbindungen",
   "lvl": "B1",
   "art": "grammatik",
   "b": "sprachkurs",
@@ -766,14 +779,6 @@ window.LEKTIONEN = [
   "img": "amanda/sz-freunde.webp"
  },
  {
-  "d": "vorbereitung-nostalgie-b1.html",
-  "t": "Nostalgie & Erinnerungen",
-  "lvl": "B1",
-  "art": "ueben",
-  "b": "freunde",
-  "img": "amanda/sz-freunde.webp"
- },
- {
   "d": "grammatik-passiv-praesens-b1.html",
   "t": "Passiv im Präsens",
   "lvl": "B1",
@@ -788,15 +793,6 @@ window.LEKTIONEN = [
   "art": "grammatik",
   "b": "sprachkurs",
   "img": "amanda/sz-sprachkurs.webp"
- },
- {
-  "d": "peinliche-momente-b1-interaktiv.html",
-  "t": "Peinliche Momente",
-  "lvl": "B1",
-  "art": "lektion",
-  "b": "freunde",
-  "ueb": "vorbereitung-peinliche-momente-b1.html",
-  "img": "amanda/sz-freunde.webp"
  },
  {
   "d": "grammatik-perfekt-praeteritum-b1.html",
@@ -855,14 +851,6 @@ window.LEKTIONEN = [
   "img": "amanda/sz-reise.webp"
  },
  {
-  "d": "vorbereitung-reiseplanung-b1.html",
-  "t": "Reiseplanung & Urlaub",
-  "lvl": "B1",
-  "art": "ueben",
-  "b": "reise",
-  "img": "amanda/sz-reise.webp"
- },
- {
   "d": "grammatik-relativsaetze-b1.html",
   "t": "Relativsätze einfach erklärt",
   "lvl": "B1",
@@ -914,15 +902,6 @@ window.LEKTIONEN = [
   "img": "amanda/sz-medien.webp"
  },
  {
-  "d": "sport-lebensstil-b1-interaktiv.html",
-  "t": "Sport & Lebensstil",
-  "lvl": "B1",
-  "art": "lektion",
-  "b": "arzt",
-  "ueb": "vorbereitung-sport-lebensstil-b1.html",
-  "img": "amanda/sz-arzt.webp"
- },
- {
   "d": "wortschatz-stadt-b1.html",
   "t": "Stadt & Verkehr",
   "lvl": "B1",
@@ -954,15 +933,6 @@ window.LEKTIONEN = [
   "art": "grammatik",
   "b": "sprachkurs",
   "img": "amanda/sz-sprachkurs.webp"
- },
- {
-  "d": "traumberuf-b1-interaktiv.html",
-  "t": "Traum beruf",
-  "lvl": "B1",
-  "art": "lektion",
-  "b": "bewerbung",
-  "ueb": "vorbereitung-traumberuf-b1.html",
-  "img": "amanda/sz-bewerbung.webp"
  },
  {
   "d": "wortschatz-typisch-deutsch-b1.html",
@@ -1014,6 +984,15 @@ window.LEKTIONEN = [
   "img": "amanda/sz-sprachkurs.webp"
  },
  {
+  "d": "Unterricht-ab-27-07/aberglaube-b1b2.html",
+  "t": "Aberglaube & Rituale",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "feste",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-aberglaube-b1b2.html",
+  "img": "amanda/sz-feste.webp"
+ },
+ {
   "d": "alles-wird-teurer-sparen-b1-b2.html",
   "t": "Alles wird teurer – clever sparen",
   "lvl": "B1–B2",
@@ -1039,12 +1018,12 @@ window.LEKTIONEN = [
   "img": "amanda/sz-sprachkurs.webp"
  },
  {
-  "d": "buero-b1-b2.html",
+  "d": "Unterricht-ab-27-07/buero-b1b2.html",
   "t": "Arbeitsalltag im Büro",
   "lvl": "B1–B2",
   "art": "lektion",
   "b": "buero",
-  "ueb": "vorbereitung-buero-b1.html",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-buero-b1b2.html",
   "img": "amanda/sz-buero.webp"
  },
  {
@@ -1074,29 +1053,75 @@ window.LEKTIONEN = [
   "img": "amanda/sz-sprachkurs.webp"
  },
  {
-  "d": "duzen-siezen-b1-b2.html",
-  "t": "Duzen oder Siezen?",
-  "lvl": "B1–B2",
-  "art": "lektion",
-  "b": "heikel",
-  "img": "amanda/sz-heikel.webp"
- },
- {
-  "d": "freundschaft-b1-b2.html",
-  "t": "Freund schaft",
+  "d": "Unterricht-ab-27-07/dating-b1b2.html",
+  "t": "Dating & Kennenlern-Apps",
   "lvl": "B1–B2",
   "art": "lektion",
   "b": "freunde",
-  "ueb": "vorbereitung-freundschaft-b1.html",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-dating-b1b2.html",
   "img": "amanda/sz-freunde.webp"
  },
  {
-  "d": "sparen-b1-b2.html",
-  "t": "Geld & Sparen",
+  "d": "Unterricht-ab-27-07/digitaldetox-b1b2.html",
+  "t": "Digital Detox & Handysucht",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "medien",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-digitaldetox-b1b2.html",
+  "img": "amanda/sz-medien.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/duzen-siezen-b1b2.html",
+  "t": "Duzen oder Siezen ?",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "heikel",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-duzen-siezen-b1b2.html",
+  "img": "amanda/sz-heikel.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/ehrenamt-b1b2.html",
+  "t": "Ehrenamt & freiwillig helfen",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "sozial",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-ehrenamt-b1b2.html",
+  "img": "amanda/sz-sozial.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/feste-braeuche-b1b2.html",
+  "t": "Feste & Bräuche in Deutschland",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "feste",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-feste-braeuche-b1b2.html",
+  "img": "amanda/sz-feste.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/freundschaft-b1b2.html",
+  "t": "Freundschaft als Erwachsene",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "freunde",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-freundschaft-b1b2.html",
+  "img": "amanda/sz-freunde.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/gaming-b1b2.html",
+  "t": "Gaming & Videospiele",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "medien",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-gaming-b1b2.html",
+  "img": "amanda/sz-medien.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/sparen-b1b2.html",
+  "t": "Geld & Sparen im Alltag",
   "lvl": "B1–B2",
   "art": "lektion",
   "b": "bank",
-  "ueb": "vorbereitung-sparen-b1.html",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-sparen-b1b2.html",
   "img": "amanda/sz-bank.webp"
  },
  {
@@ -1109,12 +1134,21 @@ window.LEKTIONEN = [
   "img": "amanda/sz-bank.webp"
  },
  {
-  "d": "ernaehrung-b1-b2.html",
+  "d": "Unterricht-ab-27-07/generationen-b1b2.html",
+  "t": "Generationen & Zusammenleben",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "familie",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-generationen-b1b2.html",
+  "img": "amanda/sz-familie.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/ernaehrung-b1b2.html",
   "t": "Gesunde Ernährung & Diäten",
   "lvl": "B1–B2",
   "art": "lektion",
   "b": "kochen",
-  "ueb": "vorbereitung-ernaehrung-b1.html",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-ernaehrung-b1b2.html",
   "img": "amanda/sz-kochen.webp"
  },
  {
@@ -1143,6 +1177,15 @@ window.LEKTIONEN = [
   "img": "amanda/sz-sprachkurs.webp"
  },
  {
+  "d": "Unterricht-ab-27-07/kreativitaet-b1b2.html",
+  "t": "Kreativität & Selbermachen",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "sprachkurs",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-kreativitaet-b1b2.html",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "kultur-traditionen-teil-1-b1-b2.html",
   "t": "Kultur & Traditionen · Teil 1",
   "lvl": "B1–B2",
@@ -1161,22 +1204,40 @@ window.LEKTIONEN = [
   "img": "amanda/sz-medien.webp"
  },
  {
-  "d": "netzwerken-b1-b2.html",
-  "t": "Neue Leute kennenlernen",
+  "d": "Unterricht-ab-27-07/netzwerken-b1b2.html",
+  "t": "Netzwerken & neue Leute",
   "lvl": "B1–B2",
   "art": "lektion",
   "b": "freunde",
-  "ueb": "vorbereitung-netzwerken-b1.html",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-netzwerken-b1b2.html",
   "img": "amanda/sz-freunde.webp"
  },
  {
-  "d": "oeffis-auto-b1-b2.html",
+  "d": "Unterricht-ab-27-07/nostalgie-b1b2.html",
+  "t": "Nostalgie – früher war alles besser ?",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "freunde",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-nostalgie-b1b2.html",
+  "img": "amanda/sz-freunde.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/oeffis-auto-b1b2.html",
   "t": "Öffis oder Auto?",
   "lvl": "B1–B2",
   "art": "lektion",
   "b": "unterwegs",
-  "ueb": "vorbereitung-oeffis-auto-b1.html",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-oeffis-auto-b1b2.html",
   "img": "amanda/sz-unterwegs.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/prokrastination-b1b2.html",
+  "t": "Prokrastination & Aufschieberitis",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "heikel",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-prokrastination-b1b2.html",
+  "img": "amanda/sz-heikel.webp"
  },
  {
   "d": "reisen-urlaub-teil-1-b1-b2.html",
@@ -1188,6 +1249,24 @@ window.LEKTIONEN = [
   "img": "amanda/sz-reise.webp"
  },
  {
+  "d": "Unterricht-ab-27-07/reiseplanung-b1b2.html",
+  "t": "Reiseplanung & die Traumreise",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "reise",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-reiseplanung-b1b2.html",
+  "img": "amanda/sz-reise.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/secondhand-b1b2.html",
+  "t": "Second Hand & nachhaltiger Konsum",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "supermarkt",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-secondhand-b1b2.html",
+  "img": "amanda/sz-supermarkt.webp"
+ },
+ {
   "d": "second-hand-b1-b2.html",
   "t": "Second Hand oder neu?",
   "lvl": "B1–B2",
@@ -1197,11 +1276,12 @@ window.LEKTIONEN = [
   "img": "amanda/sz-supermarkt.webp"
  },
  {
-  "d": "socialmedia-b1-b2.html",
+  "d": "Unterricht-ab-27-07/socialmedia-b1b2.html",
   "t": "Social Media im Alltag",
   "lvl": "B1–B2",
   "art": "lektion",
   "b": "medien",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-socialmedia-b1b2.html",
   "img": "amanda/sz-medien.webp"
  },
  {
@@ -1214,6 +1294,24 @@ window.LEKTIONEN = [
   "img": "amanda/sz-arzt.webp"
  },
  {
+  "d": "Unterricht-ab-27-07/sport-lebensstil-b1b2.html",
+  "t": "Sport als Lebensstil",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "arzt",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-sport-lebensstil-b1b2.html",
+  "img": "amanda/sz-arzt.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/stadt-land-b1b2.html",
+  "t": "Stadt oder Land?",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "wohnen",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-stadt-land-b1b2.html",
+  "img": "amanda/sz-wohnen.webp"
+ },
+ {
   "d": "stadt-oder-land-teil-1-b1-b2.html",
   "t": "Stadt oder Land? · Teil 1",
   "lvl": "B1–B2",
@@ -1223,12 +1321,30 @@ window.LEKTIONEN = [
   "img": "amanda/sz-wohnen.webp"
  },
  {
-  "d": "umzug-b1-b2.html",
-  "t": "Umzug & neue Wohnung",
+  "d": "Unterricht-ab-27-07/streaming-b1b2.html",
+  "t": "Streaming & Serien-Marathon",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "it",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-streaming-b1b2.html",
+  "img": "amanda/sz-it.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/traumberuf-b1b2.html",
+  "t": "Traumberuf & Berufswahl",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "bewerbung",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-traumberuf-b1b2.html",
+  "img": "amanda/sz-bewerbung.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/umzug-b1b2.html",
+  "t": "Umzug & Neuanfang",
   "lvl": "B1–B2",
   "art": "lektion",
   "b": "wohnen",
-  "ueb": "vorbereitung-umzug-b1.html",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-umzug-b1b2.html",
   "img": "amanda/sz-wohnen.webp"
  },
  {
@@ -1241,6 +1357,15 @@ window.LEKTIONEN = [
   "img": "amanda/sz-freunde.webp"
  },
  {
+  "d": "Unterricht-ab-27-07/wohnformen-b1b2.html",
+  "t": "Wohnformen: WG, allein oder Familie?",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "wohnen",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-wohnformen-b1b2.html",
+  "img": "amanda/sz-wohnen.webp"
+ },
+ {
   "d": "wohnungssuche-mietwahnsinn-b1-b2.html",
   "t": "Wohnungssuche & Mietwahnsinn",
   "lvl": "B1–B2",
@@ -1250,12 +1375,12 @@ window.LEKTIONEN = [
   "img": "amanda/sz-wohnen.webp"
  },
  {
-  "d": "work-life-b1-b2.html",
-  "t": "Work-Life- Balance",
+  "d": "Unterricht-ab-27-07/work-life-b1b2.html",
+  "t": "Work-Life-Balance",
   "lvl": "B1–B2",
   "art": "lektion",
   "b": "team",
-  "ueb": "vorbereitung-work-life-b1.html",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-work-life-b1b2.html",
   "img": "amanda/sz-buero.webp"
  },
  {
@@ -1324,7 +1449,7 @@ window.LEKTIONEN = [
  },
  {
   "d": "wortschatzboost-nomen-verb-b2.html",
-  "t": "Nomen-Verb- Verbindungen",
+  "t": "Nomen-Verb-Verbindungen",
   "lvl": "B2",
   "art": "wortschatz",
   "b": "sprachkurs",
@@ -1363,16 +1488,26 @@ window.LEKTIONEN = [
   "img": "amanda/sz-sprachkurs.webp"
  },
  {
-  "d": "bildung-b2-c1.html",
-  "t": "Bildung & Chancen",
+  "d": "Unterricht-ab-27-07/anglizismen-b2c1.html",
+  "t": "Anglizismen – Bereicherung oder Ausverkauf ?",
+  "lvl": "B2–C1",
+  "art": "lektion",
+  "b": "medien",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-anglizismen-b2c1.html",
+  "img": "amanda/sz-medien.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/bildung-b2c1.html",
+  "t": "Bildung & Chancen­gleichheit – wer kommt nach oben ?",
   "lvl": "B2–C1",
   "art": "lektion",
   "b": "schule",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-bildung-b2c1.html",
   "img": "amanda/sz-schule.webp"
  },
  {
   "d": "buerokratie-dschungel-b2-c1.html",
-  "t": "Bürokratie- Dschungel",
+  "t": "Bürokratie-Dschungel",
   "lvl": "B2–C1",
   "art": "lektion",
   "b": "amt",
@@ -1380,12 +1515,13 @@ window.LEKTIONEN = [
   "img": "amanda/sz-amt.webp"
  },
  {
-  "d": "gesundheitssystem-b2-c1.html",
-  "t": "Das Gesundheitssystem",
+  "d": "Unterricht-ab-27-07/datenschutz-b2c1.html",
+  "t": "Datenschutz & Überwachung – wie viel Kontrolle ist zu viel ?",
   "lvl": "B2–C1",
   "art": "lektion",
-  "b": "arzt",
-  "img": "amanda/sz-arzt.webp"
+  "b": "medien",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-datenschutz-b2c1.html",
+  "img": "amanda/sz-medien.webp"
  },
  {
   "d": "plaudertisch-b2-c1.html",
@@ -1396,12 +1532,22 @@ window.LEKTIONEN = [
   "img": "amanda/sz-sprachkurs.webp"
  },
  {
-  "d": "vier-tage-woche-b2-c1.html",
-  "t": "Die 4-Tage- Woche",
+  "d": "Unterricht-ab-27-07/vier-tage-woche-b2c1.html",
+  "t": "Die 4-Tage-Woche – überfällig oder Illusion ?",
   "lvl": "B2–C1",
   "art": "lektion",
   "b": "team",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-vier-tage-woche-b2c1.html",
   "img": "amanda/sz-buero.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/erben-b2c1.html",
+  "t": "Erben & Vermögen – wie gerecht ist das?",
+  "lvl": "B2–C1",
+  "art": "lektion",
+  "b": "bank",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-erben-b2c1.html",
+  "img": "amanda/sz-bank.webp"
  },
  {
   "d": "vorbereitung-konnektoren-b2-c1.html",
@@ -1428,19 +1574,57 @@ window.LEKTIONEN = [
   "img": "amanda/sz-fahren.webp"
  },
  {
-  "d": "geld-glueck-b2-c1.html",
-  "t": "Geld & Glück",
+  "d": "Unterricht-ab-27-07/geld-glueck-b2c1.html",
+  "t": "Geld & Glück – macht Reichtum wirklich zufrieden ?",
   "lvl": "B2–C1",
   "art": "lektion",
   "b": "bank",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-geld-glueck-b2c1.html",
   "img": "amanda/sz-bank.webp"
  },
  {
-  "d": "gender-sprache-b2-c1.html",
-  "t": "Gender & Sprache",
+  "d": "Unterricht-ab-27-07/gender-sprache-b2c1.html",
+  "t": "Gender & Sprache – wie gerecht muss Sprache sein?",
   "lvl": "B2–C1",
   "art": "lektion",
   "b": "medien",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-gender-sprache-b2c1.html",
+  "img": "amanda/sz-medien.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/gesundheitssystem-b2c1.html",
+  "t": "Gesundheit & Pflege – wer trägt die Kosten?",
+  "lvl": "B2–C1",
+  "art": "lektion",
+  "b": "arzt",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-gesundheitssystem-b2c1.html",
+  "img": "amanda/sz-arzt.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/grundeinkommen-b2c1.html",
+  "t": "Grundeinkommen: Geld für alle ?",
+  "lvl": "B2–C1",
+  "art": "lektion",
+  "b": "sozial",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-grundeinkommen-b2c1.html",
+  "img": "amanda/sz-sozial.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/homeoffice-b2c1.html",
+  "t": "Homeoffice oder Büro – wo arbeitet es sich besser ?",
+  "lvl": "B2–C1",
+  "art": "lektion",
+  "b": "buero",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-homeoffice-b2c1.html",
+  "img": "amanda/sz-buero.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/influencer-b2c1.html",
+  "t": "Influencer & Konsum – alles nur inszeniert ?",
+  "lvl": "B2–C1",
+  "art": "lektion",
+  "b": "medien",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-influencer-b2c1.html",
   "img": "amanda/sz-medien.webp"
  },
  {
@@ -1462,13 +1646,22 @@ window.LEKTIONEN = [
   "img": "amanda/sz-ankommen.webp"
  },
  {
-  "d": "ki-arbeitswelt-teil-1-b2-c1.html",
-  "t": "KI & Arbeitswelt · Teil 1",
+  "d": "Unterricht-ab-27-07/ki-arbeitswelt-b2c1.html",
+  "t": "KI & die Arbeitswelt",
   "lvl": "B2–C1",
   "art": "lektion",
   "b": "it",
-  "ueb": "vorbereitung-ki-arbeitswelt-b2-c1.html",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-ki-arbeitswelt-b2c1.html",
   "img": "amanda/sz-it.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/zukunft-b2c1.html",
+  "t": "Leben in 50 Jahren",
+  "lvl": "B2–C1",
+  "art": "lektion",
+  "b": "sozial",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-zukunft-b2c1.html",
+  "img": "amanda/sz-sozial.webp"
  },
  {
   "d": "leben-in-deutschland-einbuergerung-b2-c1.html",
@@ -1480,11 +1673,30 @@ window.LEKTIONEN = [
   "img": "amanda/sz-amt.webp"
  },
  {
-  "d": "meinungsfreiheit-b2-c1.html",
-  "t": "Meinungs freiheit",
+  "d": "Unterricht-ab-27-07/tourismus-b2c1.html",
+  "t": "Massentourismus – Segen oder Fluch ?",
+  "lvl": "B2–C1",
+  "art": "lektion",
+  "b": "reise",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-tourismus-b2c1.html",
+  "img": "amanda/sz-reise.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/meetings-b2c1.html",
+  "t": "Meetings souverän meistern",
+  "lvl": "B2–C1",
+  "art": "lektion",
+  "b": "team",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-meetings-b2c1.html",
+  "img": "amanda/sz-buero.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/meinungsfreiheit-b2c1.html",
+  "t": "Meinungsfreiheit & soziale Medien – wo ist die Grenze ?",
   "lvl": "B2–C1",
   "art": "lektion",
   "b": "heikel",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-meinungsfreiheit-b2c1.html",
   "img": "amanda/sz-heikel.webp"
  },
  {
@@ -1497,27 +1709,39 @@ window.LEKTIONEN = [
   "img": "amanda/sz-arzt.webp"
  },
  {
-  "d": "migration-b2-c1.html",
-  "t": "Migration & Integration",
+  "d": "Unterricht-ab-27-07/migration-b2c1.html",
+  "t": "Migration & Integration – wie wollen wir zusammenleben ?",
   "lvl": "B2–C1",
   "art": "lektion",
   "b": "ankommen",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-migration-b2c1.html",
   "img": "amanda/sz-ankommen.webp"
  },
  {
-  "d": "mobilitaet-b2-c1.html",
+  "d": "Unterricht-ab-27-07/mobilitaet-b2c1.html",
   "t": "Mobilität & Städte der Zukunft",
   "lvl": "B2–C1",
   "art": "lektion",
   "b": "unterwegs",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-mobilitaet-b2c1.html",
   "img": "amanda/sz-unterwegs.webp"
  },
  {
-  "d": "ungleichheit-b2-c1.html",
-  "t": "Reichtum & Ungleichheit",
+  "d": "Unterricht-ab-27-07/dilemma-b2c1.html",
+  "t": "Moralische Dilemmata – was würdest du tun ?",
+  "lvl": "B2–C1",
+  "art": "lektion",
+  "b": "heikel",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-dilemma-b2c1.html",
+  "img": "amanda/sz-heikel.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/ungleichheit-b2c1.html",
+  "t": "Reichtum & soziale Ungleichheit – wie viel ist gerecht?",
   "lvl": "B2–C1",
   "art": "lektion",
   "b": "sozial",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-ungleichheit-b2c1.html",
   "img": "amanda/sz-sozial.webp"
  },
  {
@@ -1528,6 +1752,24 @@ window.LEKTIONEN = [
   "b": "medien",
   "hand": "umgangssprache-teil-1-handout.html",
   "img": "amanda/sz-medien.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/tempolimit-b2c1.html",
+  "t": "Tempolimit auf der Autobahn",
+  "lvl": "B2–C1",
+  "art": "lektion",
+  "b": "unterwegs",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-tempolimit-b2c1.html",
+  "img": "amanda/sz-unterwegs.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/truecrime-b2c1.html",
+  "t": "True Crime & das Podcast-Fieber",
+  "lvl": "B2–C1",
+  "art": "lektion",
+  "b": "polizei",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-truecrime-b2c1.html",
+  "img": "amanda/sz-polizei.webp"
  },
  {
   "d": "typisch-deutsch-b2-c1.html",
@@ -1555,19 +1797,30 @@ window.LEKTIONEN = [
   "img": "amanda/sz-bank.webp"
  },
  {
-  "d": "minimalismus-b2-c1.html",
-  "t": "Weniger besitzen",
+  "d": "Unterricht-ab-27-07/vegan-b2c1.html",
+  "t": "Vegan leben – eine Frage der Ethik ?",
+  "lvl": "B2–C1",
+  "art": "lektion",
+  "b": "kochen",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-vegan-b2c1.html",
+  "img": "amanda/sz-kochen.webp"
+ },
+ {
+  "d": "Unterricht-ab-27-07/minimalismus-b2c1.html",
+  "t": "Weniger ist mehr – oder einfach nur weniger ?",
   "lvl": "B2–C1",
   "art": "lektion",
   "b": "wohnen",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-minimalismus-b2c1.html",
   "img": "amanda/sz-wohnen.webp"
  },
  {
-  "d": "wohnungsnot-b2-c1.html",
-  "t": "Wohnungsnot & Mietpreise",
+  "d": "Unterricht-ab-27-07/wohnungsnot-b2c1.html",
+  "t": "Wohnungsnot & Mieten – wer trägt die Verantwortung ?",
   "lvl": "B2–C1",
   "art": "lektion",
   "b": "wohnen",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-wohnungsnot-b2c1.html",
   "img": "amanda/sz-wohnen.webp"
  },
  {
@@ -1692,7 +1945,7 @@ window.LEKTIONEN = [
  },
  {
   "d": "nomen-verb-verbindungen-handout.html",
-  "t": "Handout · Nomen-Verb- Verbindungen",
+  "t": "Handout · Nomen-Verb-Verbindungen",
   "lvl": "",
   "art": "handout",
   "b": "sprachkurs",
@@ -1903,45 +2156,27 @@ window.LEKTIONEN = [
 window.BEREICH_MEHR = {
  "amt": [
   "amt-a2-visuell.html",
+  "Unterricht-ab-27-07/amt-a2b1.html",
   "behoerdenbrief-b1.html",
   "buerokratie-dschungel-b2-c1.html",
   "leben-in-deutschland-einbuergerung-b2-c1.html"
  ],
- "friseur-beruf": [
-  "beim-friseur-a2-interaktiv.html"
- ],
  "restaurant": [
   "wortschatzboost-essen-restaurant-a2.html",
-  "foodtrends-a2-b1.html"
- ],
- "freunde": [
-  "hobbys-freizeit-a2-interaktiv.html",
-  "familie-beziehungen-teil-1-a2-b1.html",
-  "kennenlernen-vorstellen-a2-b1.html",
-  "dating-kennenlernen-b1-interaktiv.html",
-  "vorbereitung-dating-b1.html",
-  "nostalgie-erinnerungen-b1-interaktiv.html",
-  "vorbereitung-nostalgie-b1.html",
-  "peinliche-momente-b1-interaktiv.html",
-  "small-talk-b1.html",
-  "beziehungen-dach-teil-1-b1-b2.html",
-  "freundschaft-b1-b2.html",
-  "netzwerken-b1-b2.html",
-  "glueck-teil-1-b1-b2.html",
-  "wortschatzboost-charaktereigenschaften-b2.html"
+  "Unterricht-ab-27-07/foodtrends-a2b1.html",
+  "Unterricht-ab-27-07/restaurant-a2b1.html"
  ],
  "familie": [
   "mein-tag-a2.html",
-  "generationen-b1-interaktiv.html"
+  "Unterricht-ab-27-07/haustiere-a2b1.html",
+  "Unterricht-ab-27-07/generationen-b1b2.html"
  ],
- "supermarkt": [
-  "reklamation-umtausch-a2-interaktiv.html",
-  "vorbereitung-alles-teurer-b1.html",
-  "alles-wird-teurer-sparen-b1-b2.html",
-  "second-hand-b1-b2.html"
+ "kleidung": [
+  "wetter-kleidung-a2.html",
+  "Unterricht-ab-27-07/kleidung-a2b1.html",
+  "Unterricht-ab-27-07/wetter-a2b1.html"
  ],
  "sprachkurs": [
-  "wortschatzboost-wetter-jahreszeiten-a2.html",
   "wortschatzboost-sommer-a2.html",
   "wortschatzboost-gehen-b1.html",
   "wortschatzboost-halten-b1.html",
@@ -1951,7 +2186,6 @@ window.BEREICH_MEHR = {
   "freies-sprechen-debatten-b1.html",
   "wortschatzboost-gefuehle-b1.html",
   "kreativitaet-ideen-b1-interaktiv.html",
-  "vorbereitung-kreativitaet-b1.html",
   "grammatik-nomen-verb-verbindungen-b1.html",
   "vorbereitung-nominalisierung-b1.html",
   "wortschatzboost-tier-redewendungen-b1.html",
@@ -1964,6 +2198,7 @@ window.BEREICH_MEHR = {
   "sprachspielclub-wimmelbild-b1-b2.html",
   "sprachspielclub-stadtpark-quiz-b1-b2.html",
   "sprachspielclub-stadtpark-b1-b2.html",
+  "Unterricht-ab-27-07/kreativitaet-b1b2.html",
   "grammatik-passiv-b2.html",
   "wortschatzboost-fuehren-b2.html",
   "wortschatzboost-setzen-b2.html",
@@ -1983,108 +2218,159 @@ window.BEREICH_MEHR = {
   "konnektoren-uebung.html",
   "sprechclub-rollenspiele.html"
  ],
- "kleidung": [
-  "wetter-kleidung-a2.html",
-  "kleidung-a2-b1.html"
+ "unterwegs": [
+  "Unterricht-ab-27-07/bahnhof-a2b1.html",
+  "Unterricht-ab-27-07/weg-fragen-a2b1.html",
+  "Unterricht-ab-27-07/oeffis-auto-b1b2.html",
+  "Unterricht-ab-27-07/mobilitaet-b2c1.html",
+  "Unterricht-ab-27-07/tempolimit-b2c1.html"
  ],
  "telefonieren": [
-  "telefon-a2-b1.html"
+  "Unterricht-ab-27-07/telefon-a2b1.html"
  ],
- "unterwegs": [
-  "weg-fragen-a2-b1.html",
-  "oeffis-auto-b1-b2.html",
-  "mobilitaet-b2-c1.html"
+ "heikel": [
+  "Unterricht-ab-27-07/ausreden-a2b1.html",
+  "aufschieberitis-b1-interaktiv.html",
+  "debattier-arena-b1-interaktiv.html",
+  "Unterricht-ab-27-07/duzen-siezen-b1b2.html",
+  "Unterricht-ab-27-07/prokrastination-b1b2.html",
+  "Unterricht-ab-27-07/meinungsfreiheit-b2c1.html",
+  "Unterricht-ab-27-07/dilemma-b2c1.html"
  ],
- "wohnen": [
-  "nachbarn-a2-b1.html",
-  "wohnen-a2-b1.html",
-  "wohnungssuche-b1.html",
-  "maengel-melden-b1.html",
-  "nachbarn-hausordnung-b1.html",
-  "wohnformen-wg-b1-interaktiv.html",
-  "stadt-oder-land-teil-1-b1-b2.html",
-  "umzug-b1-b2.html",
-  "wohnungssuche-mietwahnsinn-b1-b2.html",
-  "minimalismus-b2-c1.html",
-  "wohnungsnot-b2-c1.html"
+ "arzt": [
+  "Unterricht-ab-27-07/arzt-a2b1.html",
+  "Unterricht-ab-27-07/fitnessstudio-a2b1.html",
+  "wortschatzboost-koerper-gesundheit-b1.html",
+  "krankmelden-b1.html",
+  "sport-gesund-leben-teil-1-b1-b2.html",
+  "Unterricht-ab-27-07/sport-lebensstil-b1b2.html",
+  "Unterricht-ab-27-07/gesundheitssystem-b2c1.html",
+  "mentale-gesundheit-stress-teil-1-b2-c1.html"
+ ],
+ "friseur-beruf": [
+  "Unterricht-ab-27-07/friseur-a2b1.html"
+ ],
+ "zahnarzt": [
+  "Unterricht-ab-27-07/zahnarzt-a2b1.html"
+ ],
+ "bewerbung": [
+  "Unterricht-ab-27-07/bewerbung-a2b1.html",
+  "Unterricht-ab-27-07/traumberuf-b1b2.html"
+ ],
+ "supermarkt": [
+  "Unterricht-ab-27-07/einkaufen-a2b1.html",
+  "Unterricht-ab-27-07/reklamation-a2b1.html",
+  "vorbereitung-alles-teurer-b1.html",
+  "alles-wird-teurer-sparen-b1-b2.html",
+  "Unterricht-ab-27-07/secondhand-b1b2.html",
+  "second-hand-b1-b2.html"
+ ],
+ "freunde": [
+  "familie-beziehungen-teil-1-a2-b1.html",
+  "Unterricht-ab-27-07/hobbys-a2b1.html",
+  "kennenlernen-vorstellen-a2-b1.html",
+  "Unterricht-ab-27-07/peinliche-momente-a2b1.html",
+  "Unterricht-ab-27-07/verabreden-a2b1.html",
+  "Unterricht-ab-27-07/smalltalk-a2b1.html",
+  "dating-kennenlernen-b1-interaktiv.html",
+  "nostalgie-erinnerungen-b1-interaktiv.html",
+  "small-talk-b1.html",
+  "beziehungen-dach-teil-1-b1-b2.html",
+  "Unterricht-ab-27-07/dating-b1b2.html",
+  "Unterricht-ab-27-07/freundschaft-b1b2.html",
+  "Unterricht-ab-27-07/netzwerken-b1b2.html",
+  "Unterricht-ab-27-07/nostalgie-b1b2.html",
+  "glueck-teil-1-b1-b2.html",
+  "wortschatzboost-charaktereigenschaften-b2.html"
  ],
  "feste": [
-  "aberglaube-b1-interaktiv.html",
-  "feste-braeuche-b1-interaktiv.html",
+  "Unterricht-ab-27-07/geburtstag-a2b1.html",
+  "Unterricht-ab-27-07/aberglaube-b1b2.html",
+  "Unterricht-ab-27-07/feste-braeuche-b1b2.html",
   "kultur-traditionen-teil-1-b1-b2.html",
   "typisch-deutsch-b2-c1.html"
  ],
- "heikel": [
-  "aufschieberitis-b1-interaktiv.html",
-  "ausreden-notluegen-b1-interaktiv.html",
-  "debattier-arena-b1-interaktiv.html",
-  "duzen-siezen-b1-b2.html",
-  "meinungsfreiheit-b2-c1.html"
+ "kochen": [
+  "Unterricht-ab-27-07/kochen-a2b1.html",
+  "Unterricht-ab-27-07/ernaehrung-b1b2.html",
+  "gesundheit-ernaehrung-teil-1-b1-b2.html",
+  "Unterricht-ab-27-07/vegan-b2c1.html"
+ ],
+ "wohnen": [
+  "Unterricht-ab-27-07/nachbarn-a2b1.html",
+  "Unterricht-ab-27-07/wg-leben-a2b1.html",
+  "Unterricht-ab-27-07/wohnen-a2b1.html",
+  "wohnungssuche-b1.html",
+  "maengel-melden-b1.html",
+  "wohnformen-wg-b1-interaktiv.html",
+  "Unterricht-ab-27-07/stadt-land-b1b2.html",
+  "stadt-oder-land-teil-1-b1-b2.html",
+  "Unterricht-ab-27-07/umzug-b1b2.html",
+  "Unterricht-ab-27-07/wohnformen-b1b2.html",
+  "wohnungssuche-mietwahnsinn-b1-b2.html",
+  "Unterricht-ab-27-07/minimalismus-b2c1.html",
+  "Unterricht-ab-27-07/wohnungsnot-b2c1.html"
  ],
  "bank": [
   "bargeld-karte-b1.html",
-  "sparen-b1-b2.html",
+  "Unterricht-ab-27-07/sparen-b1b2.html",
   "geld-konsum-sparen-teil-1-b1-b2.html",
-  "geld-glueck-b2-c1.html",
+  "Unterricht-ab-27-07/erben-b2c1.html",
+  "Unterricht-ab-27-07/geld-glueck-b2c1.html",
   "ueber-geld-spricht-man-nicht-b2-c1.html",
   "vorbereitung-ueber-geld-b2-c1.html"
  ],
  "team": [
   "vorbereitung-puenktlichkeit-b1.html",
   "puenktlichkeit-debatte-b1-interaktiv.html",
-  "work-life-b1-b2.html",
-  "vier-tage-woche-b2-c1.html"
+  "Unterricht-ab-27-07/work-life-b1b2.html",
+  "Unterricht-ab-27-07/vier-tage-woche-b2c1.html",
+  "Unterricht-ab-27-07/meetings-b2c1.html"
  ],
  "it": [
   "digital-detox-b1-interaktiv.html",
   "ki-alltag-b1.html",
   "streaming-serien-b1-interaktiv.html",
-  "ki-arbeitswelt-teil-1-b2-c1.html"
+  "Unterricht-ab-27-07/streaming-b1b2.html",
+  "Unterricht-ab-27-07/ki-arbeitswelt-b2c1.html"
  ],
  "sozial": [
   "ehrenamt-engagement-b1-interaktiv.html",
-  "vorbereitung-ehrenamt-b1.html",
-  "ungleichheit-b2-c1.html"
+  "Unterricht-ab-27-07/ehrenamt-b1b2.html",
+  "Unterricht-ab-27-07/grundeinkommen-b2c1.html",
+  "Unterricht-ab-27-07/zukunft-b2c1.html",
+  "Unterricht-ab-27-07/ungleichheit-b2c1.html"
  ],
  "medien": [
   "fake-news-b1.html",
   "social-media-b1-interaktiv.html",
+  "Unterricht-ab-27-07/digitaldetox-b1b2.html",
+  "Unterricht-ab-27-07/gaming-b1b2.html",
   "medien-digitalisierung-teil-1-b1-b2.html",
-  "socialmedia-b1-b2.html",
-  "gender-sprache-b2-c1.html",
+  "Unterricht-ab-27-07/socialmedia-b1b2.html",
+  "Unterricht-ab-27-07/anglizismen-b2c1.html",
+  "Unterricht-ab-27-07/datenschutz-b2c1.html",
+  "Unterricht-ab-27-07/gender-sprache-b2c1.html",
+  "Unterricht-ab-27-07/influencer-b2c1.html",
   "influencer-konsum-teil-1-b2-c1.html",
   "umgangssprache-teil-1-b2-c1.html"
  ],
  "buero": [
   "homeoffice-buero-b1.html",
-  "vorbereitung-homeoffice-b1.html",
-  "buero-b1-b2.html"
- ],
- "arzt": [
-  "wortschatzboost-koerper-gesundheit-b1.html",
-  "krankmelden-b1.html",
-  "sport-lebensstil-b1-interaktiv.html",
-  "sport-gesund-leben-teil-1-b1-b2.html",
-  "gesundheitssystem-b2-c1.html",
-  "mentale-gesundheit-stress-teil-1-b2-c1.html"
+  "Unterricht-ab-27-07/buero-b1b2.html",
+  "Unterricht-ab-27-07/homeoffice-b2c1.html"
  ],
  "reise": [
   "reiseplanung-urlaub-b1-interaktiv.html",
-  "vorbereitung-reiseplanung-b1.html",
-  "reisen-urlaub-teil-1-b1-b2.html"
- ],
- "bewerbung": [
-  "traumberuf-b1-interaktiv.html"
+  "reisen-urlaub-teil-1-b1-b2.html",
+  "Unterricht-ab-27-07/reiseplanung-b1b2.html",
+  "Unterricht-ab-27-07/tourismus-b2c1.html"
  ],
  "weiterbildung": [
   "beruf-lernen-teil-1-b1-b2.html"
  ],
- "kochen": [
-  "ernaehrung-b1-b2.html",
-  "gesundheit-ernaehrung-teil-1-b1-b2.html"
- ],
  "schule": [
-  "bildung-b2-c1.html"
+  "Unterricht-ab-27-07/bildung-b2c1.html"
  ],
  "fahren": [
   "sprechclub-fuehrerschein-b2-c1.html",
@@ -2093,7 +2379,10 @@ window.BEREICH_MEHR = {
  ],
  "ankommen": [
   "integration-heimat-teil-1-b2-c1.html",
-  "migration-b2-c1.html"
+  "Unterricht-ab-27-07/migration-b2c1.html"
+ ],
+ "polizei": [
+  "Unterricht-ab-27-07/truecrime-b2c1.html"
  ]
 };
 
