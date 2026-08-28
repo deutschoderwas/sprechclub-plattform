@@ -591,7 +591,10 @@
       +'<div class="tx"><div class="meta"><span class="pill">'+E(bereichName(th))+'</span>'
       +'<span class="pill">'+E(th.lvl||'')+'</span><span>'+p+' % geschafft</span></div>'
       +'<h1>'+E(th.t)+'</h1>'+(th.bsp?'<div class="bsp">'+E(th.bsp)+'</div>':'')+'</div></div>'
-      +teile.join('')+hilfen+dialoge;
+      +teile.join('')+hilfen+dialoge
+      /* Die fertigen Seiten zu diesem Bereich — dieselbe Liste,
+         die auch die App zeigt. Sie kommt aus lern-struktur.js. */
+      +((window.LERNSTRUKTUR && LERNSTRUKTUR.mehrHtml) ? LERNSTRUKTUR.mehrHtml(id) : '');
     try{ window.scrollTo(0,0); }catch(e){}
   };
 

@@ -18,8 +18,19 @@
    ============================================================ */
 (function () {
   'use strict';
-  var B = window.BEREICHE;
-  if (!Array.isArray(B) || !B.length) return;
+
+  /* bereiche.js wird nicht ueberall gleich geladen: im Schuelerbereich
+     steht es weiter unten mit defer, in der App wird es erst geholt,
+     wenn jemand den Lernbereich oeffnet. Diese Datei wartet deshalb,
+     bis die Daten da sind, statt sich auf eine Reihenfolge zu
+     verlassen — und sie laeuft nur ein einziges Mal durch. */
+  var fertig = false;
+
+  function anschluss() {
+    if (fertig) return true;
+    var B = window.BEREICHE;
+    if (!Array.isArray(B) || !B.length) return false;
+    fertig = true;
 
   var nach = {};
   B.forEach(function (b) { nach[b.id] = b; });
@@ -121,4 +132,14 @@
     sozial: 'B1–C1'
   };
   Object.keys(NIVEAU).forEach(function (id) { niveau(id, NIVEAU[id]); });
+    return true;
+  }
+
+  window.BEREICHE_ANSCHLUSS = anschluss;
+  if (!anschluss()) {
+    var versuche = 0;
+    var takt = setInterval(function () {
+      if (anschluss() || ++versuche > 200) clearInterval(takt);
+    }, 120);
+  }
 })();

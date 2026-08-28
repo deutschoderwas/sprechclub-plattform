@@ -50,7 +50,14 @@
       document.head.appendChild(s);
     });
   }
-  var daBereiche = function () { return Array.isArray(window.BEREICHE) && window.BEREICHE.length; };
+  var daBereiche = function () {
+    if (!(Array.isArray(window.BEREICHE) && window.BEREICHE.length)) return false;
+    /* Sobald die Bereiche da sind, werden die Nachtraege
+       eingehaengt — sonst fehlten in der App die Niveaus der
+       Berufsfelder und die neue Grammatik und Aussprache. */
+    if (window.BEREICHE_ANSCHLUSS) window.BEREICHE_ANSCHLUSS();
+    return true;
+  };
   var daDialoge = function () { return Array.isArray(window.DIALOGE) && window.DIALOGE.length; };
 
   /* Die zehn neueren Situationen stehen in dialoge-neu.js. Die App
@@ -290,6 +297,11 @@
         + '<b>Ganze Lektion öffnen</b>'
         + '<span>Einstieg, Wortschatz, Dialoge, Debatte, Sprechen und Übungen — auf einer Seite.</span></button>';
     }
+
+    /* Schritt 4: die fertigen Seiten zu diesem Bereich. Dieselbe
+       Liste wie im Schuelerbereich — sie kommt aus lern-struktur.js,
+       damit App und Plattform nicht auseinanderlaufen. */
+    if (LS() && LS().mehrHtml) h += LS().mehrHtml(b.id, { nr: b.lek ? 4 : 3 });
 
     s.innerHTML = h;
     try { window.scrollTo(0, 0); } catch (e) {}

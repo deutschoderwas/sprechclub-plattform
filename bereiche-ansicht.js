@@ -562,7 +562,13 @@
     h += '<button class="be-b" type="button" onclick="bereichAmanda(\''+E(b.id)+'\')">Amanda dazu fragen</button>';
     h += '</div></div>';
 
+    /* Schritt 5: was es sonst noch zu diesem Bereich gibt.
+       Die Liste baut lern-struktur.js — App und Plattform
+       zeigen dieselbe. */
+    if (window.LERNSTRUKTUR && LERNSTRUKTUR.mehrHtml) h += LERNSTRUKTUR.mehrHtml(b.id, { nr: 5 });
+
     h += '</div>';
+
     ziel.innerHTML = h;
     ziel.scrollTop = 0;
     try{ window.scrollTo({top:0,behavior:'instant'}); }catch(e){ window.scrollTo(0,0); }

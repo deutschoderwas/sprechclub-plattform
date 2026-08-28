@@ -227,7 +227,141 @@
       + '</div>';
   }
 
+
+  /* ============================================================
+     Mehr zu diesem Bereich — einmal gebaut, von beiden benutzt
+
+     Im Ordner liegen fast 400 fertige Seiten. Ueber die drei Tueren
+     erreichbar waren 51. Themenlektionen, Wortschatzboosts,
+     Spielseiten und die "vorbereitung-"-Seiten zum Ueben waren
+     fertig und unsichtbar.
+
+     lektionen-katalog.js (gebaut von bau/mach-katalog.js) weiss,
+     welche Seite es wirklich gibt, wie sie heisst, welches Niveau
+     sie hat, welches Bild dazugehoert und in welchen Bereich sie
+     gehoert. Diese Funktion macht daraus die Liste — nach Niveau
+     geordnet, damit der naechste Schritt sichtbar ist.
+
+     Plattform und App rufen dieselbe Funktion auf. Was hier steht,
+     steht dort gleich.
+     ============================================================ */
+  var MEHR_ART = {
+    lektion: 'Lektion', wortschatz: 'Wortschatz', grammatik: 'Grammatik',
+    aussprache: 'Aussprache', spiel: 'Spiel', sprechen: 'Sprechen',
+    ueben: 'Übung', handout: 'Zum Ausdrucken'
+  };
+  var MEHR_STUFEN = ['A1', 'A1–A2', 'A2', 'A1–B1', 'A2–B1', 'B1', 'B1–B2', 'B2', 'B2–C1', 'C1'];
+  var MEHR_ZEICHEN = {
+    lektion:    ['📖', '#1990A4'],
+    wortschatz: ['🔤', '#C9A200'],
+    grammatik:  ['🧩', '#DD0000'],
+    aussprache: ['🔊', '#4E9E12'],
+    spiel:      ['🎲', '#8B4FC7'],
+    sprechen:   ['🗣️', '#E0A106'],
+    ueben:      ['✍️', '#5A6B72'],
+    handout:    ['🖨️', '#5A6B72']
+  };
+
+  function mehrListe(bereichId) {
+    var K = window.LEKTIONEN, M = window.BEREICH_MEHR;
+    if (!K || !M || !M[bereichId]) return [];
+    var nach = {};
+    K.forEach(function (x) { nach[x.d] = x; });
+    return M[bereichId].map(function (d) { return nach[d]; }).filter(Boolean);
+  }
+
+  function mehrHtml(bereichId, o) {
+    o = o || {};
+    var liste = mehrListe(bereichId);
+    if (!liste.length) return '';
+    mehrStil();
+
+    var faecher = {}, reihe = [];
+    liste.forEach(function (x) {
+      var st = x.lvl || 'für jedes Niveau';
+      if (!faecher[st]) { faecher[st] = []; reihe.push(st); }
+      faecher[st].push(x);
+    });
+    reihe.sort(function (a, b) {
+      var ia = MEHR_STUFEN.indexOf(a), ib = MEHR_STUFEN.indexOf(b);
+      return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
+    });
+
+    /* Alle Seiten eines Bereichs teilen sich dasselbe Szenenbild —
+       elf Mal dieselbe Miniatur untereinander sieht nach Fehler aus.
+       Deshalb steht das Bild einmal gross oben, und jede Zeile
+       bekommt ihr Zeichen: woran man die Art der Seite erkennt. */
+    function zeile(x) {
+      var a = MEHR_ZEICHEN[x.art] || MEHR_ZEICHEN.lektion;
+      return '<div class="lm-paar">'
+        + '<a class="lm-z" href="' + E(x.d) + '" target="_blank" rel="noopener">'
+        + '<span class="ic" style="background:' + a[1] + '">' + a[0] + '</span>'
+        + '<span class="tx"><b>' + E(x.t) + '</b><small>' + E(MEHR_ART[x.art] || 'Lektion')
+        + (x.hand ? ' · mit Handout' : '') + '</small></span>'
+        + '<span class="pf">›</span></a>'
+        + (x.ueb ? '<a class="lm-u" href="' + E(x.ueb) + '" target="_blank" rel="noopener">Dazu üben →</a>' : '')
+        + '</div>';
+    }
+
+    var bild = '';
+    (window.BEREICHE || []).forEach(function (b) {
+      if (b.id === bereichId && b.bild) bild = 'amanda/' + b.bild + '.webp';
+    });
+
+    return '<div class="lm-block">'
+      + '<h3 class="lm-kopf">' + (o.nr ? '<span class="lm-nr">' + o.nr + '</span>' : '') + 'Mehr zu diesem Bereich</h3>'
+      + '<p class="lm-u2">' + liste.length + ' fertige Seiten zum Lesen, Hören und Üben — von leicht nach schwer.</p>'
+      + (bild ? '<div class="lm-bild"><img src="' + E(bild) + '" alt="" loading="lazy" onerror="this.parentNode.remove()"></div>' : '')
+      + reihe.map(function (st) {
+          return '<div class="lm-stufe"><span class="lv">' + E(st) + '</span>'
+            + '<span class="anz">' + faecher[st].length + (faecher[st].length === 1 ? ' Seite' : ' Seiten') + '</span></div>'
+            + '<div class="lm-liste">' + faecher[st].map(zeile).join('') + '</div>';
+        }).join('')
+      + '</div>';
+  }
+
+  function mehrStil() {
+    if (document.getElementById('lern-mehr-stil')) return;
+    var st = document.createElement('style');
+    st.id = 'lern-mehr-stil';
+    st.textContent = [
+      '.lm-block{margin-top:26px}',
+      '.lm-kopf{display:flex;align-items:center;gap:9px;font-size:17px;margin:0 0 4px}',
+      '.lm-nr{display:inline-grid;place-items:center;width:25px;height:25px;border-radius:50%;',
+      '  background:var(--rot,#DD0000);color:#fff;font-size:13px;font-weight:800;flex:none}',
+      '.lm-u2{margin:0 0 14px;font-size:13.5px;line-height:1.5;color:var(--ink-2,var(--text-soft,#54594A))}',
+      '.lm-stufe{display:flex;align-items:center;gap:10px;margin:18px 0 8px}',
+      '.lm-stufe .lv{display:inline-flex;align-items:center;justify-content:center;min-width:38px;height:25px;',
+      '  padding:0 9px;border-radius:40px;background:var(--petrol,var(--tuerkis-dunkel,#1990A4));color:#fff;',
+      '  font-size:12.5px;font-weight:800;letter-spacing:.3px}',
+      '.lm-stufe .anz{margin-left:auto;font-size:12.5px;font-weight:600;color:var(--ink-3,#8A857C)}',
+      '.lm-liste{display:flex;flex-direction:column;gap:10px}',
+      '.lm-paar{display:flex;flex-direction:column}',
+      '.lm-z{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit;',
+      '  background:var(--karte,var(--card,#FFFDF3));border:1.5px solid var(--linie,var(--line,#E7DFC7));',
+      '  border-radius:16px;padding:9px 12px;min-height:66px;transition:.12s}',
+      '.lm-z:hover{border-color:var(--petrol,#1990A4)}',
+      '.lm-bild{border-radius:18px;overflow:hidden;margin:0 0 16px;border:1.5px solid var(--linie,#E7DFC7);',
+      '  background:var(--creme,#FFF8E0)}',
+      '.lm-bild img{width:100%;height:150px;object-fit:cover;display:block}',
+      '.lm-z .ic{flex:none;width:46px;height:46px;border-radius:14px;display:grid;place-items:center;',
+      '  font-size:21px;color:#fff;box-shadow:0 4px 10px rgba(32,33,31,.14)}',
+      '.lm-z .tx{flex:1;min-width:0}',
+      '.lm-z .tx b{display:block;font-size:14.5px;line-height:1.32}',
+      '.lm-z .tx small{display:block;font-size:12.5px;color:var(--ink-3,#8A857C);margin-top:2px}',
+      '.lm-z .pf{color:var(--ink-3,#B4ADA3);font-size:19px;flex:none}',
+      '.lm-u{display:block;margin:0 0 0 22px;padding:12px 0 6px 34px;font-size:13px;font-weight:700;',
+      '  border-left:2px solid var(--linie,#E7DFC7);min-height:46px;text-decoration:none;',
+      '  color:var(--rot,var(--akt,#DD0000))}',
+      '.lm-u:hover{text-decoration:underline}',
+      '@media(max-width:640px){.lm-z{min-height:72px}.lm-bild img{height:126px}',
+      '  .lm-u{margin-left:18px;padding-left:30px}}'
+    ].join('');
+    document.head.appendChild(st);
+  }
+
   window.LERNSTRUKTUR = {
+    mehrHtml: mehrHtml, mehrListe: mehrListe,
     tueren: tueren, werkzeuge: werkzeuge,
     tuerenHtml: tuerenHtml, werkzeugHtml: werkzeugHtml,
     weiterHtml: weiterHtml, merken: merken, zuletzt: zuletzt, vergessen: vergessen,
