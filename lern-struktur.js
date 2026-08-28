@@ -24,6 +24,10 @@
    ============================================================ */
 (function () {
   'use strict';
+
+  /* Einer ist kein Plural. Vorher stand in der Tuer "1 Bereiche". */
+  function viele(n, eins, mehr) { return n + ' ' + (n === 1 ? eins : mehr); }
+
   if (window.LERNSTRUKTUR) return;
 
   function E(s) {
@@ -86,14 +90,14 @@
         id: 'freizeit', farbe: '#1990A4', zeichen: '🏡',
         titel: 'Für die Freizeit', i18n: 'ls_tuer_frei',
         text: 'Die Orte, an denen du jeden Tag Deutsch brauchst — vom Bäcker über den Arzt bis zum Amt.',
-        zahlen: teile(frei.length ? frei.length + ' Bereiche' : '', sf ? sf + ' Situationen mit Amanda' : ''),
+        zahlen: teile(frei.length ? viele(frei.length, 'Bereich', 'Bereiche') : '', sf ? viele(sf, 'Situation mit Amanda', 'Situationen mit Amanda') : ''),
         los: 'Ort suchen'
       },
       {
         id: 'beruf', farbe: '#E0A106', zeichen: '🧰',
         titel: 'Für den Beruf', i18n: 'ls_tuer_beruf',
         text: 'Erst, was in jedem Job gilt: Bewerbung, erste Tage, heikle Gespräche. Danach dein eigenes Berufsfeld.',
-        zahlen: teile(ber.length ? ber.length + ' Bereiche' : '', sb ? sb + ' Situationen mit Amanda' : ''),
+        zahlen: teile(ber.length ? viele(ber.length, 'Bereich', 'Bereiche') : '', sb ? viele(sb, 'Situation mit Amanda', 'Situationen mit Amanda') : ''),
         los: 'Berufsfeld suchen'
       }
     ];

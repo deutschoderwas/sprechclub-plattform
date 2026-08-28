@@ -86,7 +86,10 @@
     var kasten = document.createElement('div');
     kasten.className = 'ls-block';
     kasten.innerHTML =
-      '<h2 class="a" style="margin-top:6px">Wofür lernst du gerade?</h2>'
+      amBand('amanda-hallo.webp', 'Hallo!',
+        'Such dir aus, <b>wofür</b> du gerade lernst. Ich bin dabei — du kannst mich jederzeit fragen.',
+        'Frag Amanda →')
+      + '<h2 class="a" style="margin-top:6px">Wofür lernst du gerade?</h2>'
       + LS().weiterHtml(function () { return 'appWeiter()'; })
       + LS().tuerenHtml(function (t) { return "appTuer('" + t.id + "')"; });
     // unter das Tagesziel, über den Lernpfad
@@ -136,6 +139,9 @@
     var beruf = alle.filter(function (p) { return p.fach; });
 
     s.innerHTML = kopfZurueck('Lernbereich', 'appLernenZurueck()')
+      + amBand('amanda-schlau.webp', 'Prüfung?',
+          'Erst schauen, <b>was drankommt</b> — dann üben. Wenn du eine Aufgabe nicht verstehst, frag mich.',
+          'Frag Amanda →')
       + '<h1 class="t">Für die Prüfung</h1>'
       + '<p class="u">Such deine Prüfung. Dahinter stehen die Module, die Zeit und was du üben kannst.</p>'
       + '<h2 class="a">Die Sprachprüfungen</h2><div class="ls-app-liste">'
@@ -200,6 +206,12 @@
     });
 
     s.innerHTML = kopfZurueck('Lernbereich', 'appLernenZurueck()')
+      + amBand(weg === 'beruf' ? 'a-stift.webp' : 'a-zeigen.webp',
+          weg === 'beruf' ? 'Für die Arbeit' : 'Such dir einen Ort',
+          weg === 'beruf'
+            ? 'Nimm das Feld, in dem du arbeitest oder arbeiten willst. Die Wörter kommen aus <b>echten Gesprächen</b>.'
+            : 'Jeder Ort hier ist eine Situation, die dir wirklich begegnet. Fang mit der an, die <b>diese Woche</b> dran ist.',
+          'Frag Amanda →')
       + '<h1 class="t">' + E(tuer.titel || 'Bereiche') + '</h1>'
       + '<p class="u">' + E(tuer.text || '') + '</p>'
       + gruppen.map(function (g) {
@@ -247,7 +259,11 @@
 
     var h = kopfZurueck('Zurück', "appBereiche('" + E(b.weg) + "')")
       + '<h1 class="t">' + E(b.t || b.beruf || b.id) + '</h1>'
-      + (b.u ? '<p class="u">' + E(b.u) + '</p>' : '');
+      + (b.u ? '<p class="u">' + E(b.u) + '</p>' : '')
+      + amBand('a-hoeren.webp', 'So gehst du vor',
+          'Erst die <b>Wörter</b> hören, dann die Situation mit mir <b>durchsprechen</b>, '
+          + 'am Ende die ganze Lektion. Die Nummern zeigen dir den Weg.',
+          'Frag Amanda →');
 
     // Die Woerter kommen zuerst — dieselbe Reihenfolge wie auf der
     // Plattform: erst kennen, dann sprechen, dann die ganze Lektion.
@@ -354,13 +370,42 @@
     try { window.scrollTo(0, 0); } catch (e) {}
   };
 
+  /* Amanda steht im Schuelerbereich als Cartoon neben dem Inhalt.
+     In der App war sie bisher nur ein gezeichnetes Symbol im Chat -
+     dieselbe Person, zwei Gesichter. Jetzt ist es dasselbe Bild. */
+  function amBand(datei, ruf, text, knopf) {
+    return '<div class="al-am">'
+      + '<img src="amanda/' + datei + '" alt="Amanda" loading="lazy" onerror="this.remove()">'
+      + '<div class="tx"><span class="ruf">' + E(ruf) + '</span>' + text
+      + (knopf ? '<button class="frag" type="button" onclick="appAmanda()">' + E(knopf) + '</button>' : '')
+      + '</div></div>';
+  }
+
+  /* Der Weg zu ihr ist derselbe wie ueberall in der App. */
+  window.appAmanda = function (thema) {
+    if (window.amandaFrei) return window.amandaFrei(thema);
+    if (window.zeige) window.zeige('sprechen');
+  };
+
   /* ---------- Aussehen, das es in der App noch nicht gab ---------- */
   function appStil() {
     if ($('ls-app-stil')) return;
     var s = document.createElement('style');
     s.id = 'ls-app-stil';
     s.textContent = [
-      '.ls-app-zurueck{background:none;border:0;color:var(--mute,#7A7268);font:inherit;font-weight:700;',
+      /* Amanda als Cartoon - dieselbe Form wie .am-zuruf im
+         Schuelerbereich (amanda-figur.css), nur schmaler. */
+      '.al-am{display:flex;align-items:flex-end;gap:12px;background:var(--creme,var(--bg,#FFF8E0));',
+      '  border:2px solid var(--gelb,#FFE100);border-radius:18px;padding:10px 14px 0;margin:0 0 16px;}',
+      '.al-am img{height:92px;width:auto;flex:none;margin-bottom:-2px;}',
+      '.al-am .tx{padding-bottom:12px;font-size:14px;line-height:1.5;color:var(--ink2,#54594A);}',
+      '.al-am .ruf{display:block;font-family:var(--schrift-notiz,\'Caveat\',cursive);font-size:20px;',
+      '  font-weight:600;line-height:1.1;margin-bottom:2px;color:var(--petrol,var(--tq,#1990A4));}',
+      '.al-am b{color:var(--ink,#20211F);}',
+      '.al-am .frag{display:inline-block;margin-top:7px;background:none;border:0;padding:0;',
+      '  font:inherit;font-weight:700;font-size:14px;color:var(--rot,var(--akt,#DD0000));cursor:pointer;}',
+      '@media(max-width:360px){.al-am img{height:76px;}.al-am .tx{font-size:13.5px;}}',
+      '.ls-app-zurueck{background:none;border:0;color:var(--ink3,var(--mute,#7A7268));font:inherit;font-weight:700;',
       '  font-size:14px;padding:6px 0;margin-bottom:2px;cursor:pointer;}',
       '.ls-app-liste{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}',
       '.ls-app-z{display:flex;align-items:center;gap:11px;width:100%;text-align:left;cursor:pointer;',
@@ -373,25 +418,25 @@
       '  display:grid;place-items:center;font-size:21px;}',
       '.ls-app-z .tx{flex:1;min-width:0;}',
       '.ls-app-z b{display:block;font-size:15px;line-height:1.25;margin-bottom:2px;}',
-      '.ls-app-z .tx > span{display:block;font-size:12.5px;color:var(--mute,#7A7268);line-height:1.35;',
+      '.ls-app-z .tx > span{display:block;font-size:12.5px;color:var(--ink3,var(--mute,#7A7268));line-height:1.35;',
       '  overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}',
-      '.ls-app-z em{display:block;font-style:normal;font-size:11.5px;color:var(--mute,#9A948B);margin-top:3px;opacity:.75;}',
-      '.ls-app-z .pf{color:var(--mute,#B4ADA3);font-size:20px;flex:none;}',
+      '.ls-app-z em{display:block;font-style:normal;font-size:11.5px;color:var(--ink3,var(--mute,#9A948B));margin-top:3px;opacity:.75;}',
+      '.ls-app-z .pf{color:var(--ink3,var(--mute,#B4ADA3));font-size:20px;flex:none;}',
       '.ls-app-gross{display:block;width:100%;text-align:left;cursor:pointer;background:var(--card,#fff);',
       '  border:1px solid var(--line,#EDE9E1);border-radius:18px;padding:14px 16px;font:inherit;margin-bottom:22px;}',
       '.ls-app-gross b{display:block;font-size:16px;margin-bottom:3px;}',
-      '.ls-app-gross span{display:block;font-size:13px;color:var(--mute,#7A7268);line-height:1.4;}',
+      '.ls-app-gross span{display:block;font-size:13px;color:var(--ink3,var(--mute,#7A7268));line-height:1.4;}',
       '.ls-app-woerter{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:22px;}',
       '.ls-app-w{display:flex;gap:8px;align-items:flex-start;text-align:left;cursor:pointer;font:inherit;',
       '  background:var(--card,#fff);border:1px solid var(--line,#EDE9E1);border-radius:14px;padding:9px 10px;}',
       '.ls-app-w .em{font-size:18px;line-height:1.2;flex:none;}',
       '.ls-app-w b{display:block;font-size:13.5px;line-height:1.25;}',
-      '.ls-app-w span span{display:block;font-size:11.5px;color:var(--mute,#7A7268);line-height:1.3;}',
+      '.ls-app-w span span{display:block;font-size:11.5px;color:var(--ink3,var(--mute,#7A7268));line-height:1.3;}',
       '.ls-app-mods{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px;}',
       '.ls-app-mod{background:var(--card,#fff);border:1px solid var(--line,#EDE9E1);border-radius:14px;',
       '  padding:10px 12px;}',
       '.ls-app-mod b{display:block;font-size:14px;}',
-      '.ls-app-mod span{display:block;font-size:12px;color:var(--mute,#7A7268);}',
+      '.ls-app-mod span{display:block;font-size:12px;color:var(--ink3,var(--mute,#7A7268));}',
       '.ls-app-nr{display:inline-grid;place-items:center;width:23px;height:23px;border-radius:50%;',
       '  background:#1990A4;color:#fff;font-size:13px;font-weight:800;margin-right:8px;vertical-align:1px;}',
       '@media(max-width:360px){.ls-app-woerter{grid-template-columns:1fr;}}'
