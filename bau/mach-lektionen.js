@@ -34,6 +34,7 @@ global.window = {};
 require(path.join(WURZEL, 'bereiche.js'));
 require(path.join(WURZEL, 'uebungen.js'));
 require(path.join(WURZEL, 'wortschatz-neu.js'));
+require(path.join(WURZEL, 'grammatik-neu.js'));
 require(path.join(WURZEL, 'dialoge.js'));
 require(path.join(WURZEL, 'dialoge-neu.js'));
 require(path.join(WURZEL, 'vokabeln-pool.js'));
