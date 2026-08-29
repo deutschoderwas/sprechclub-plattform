@@ -976,6 +976,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-wohnen.webp"
  },
  {
+  "d": "sprachspielclub-park-b1-b2.html",
+  "t": "Ab in den Park",
+  "lvl": "B1–B2",
+  "art": "spiel",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "sprachspielclub-freibad-b1-b2.html",
   "t": "Ab ins Freibad",
   "lvl": "B1–B2",
@@ -2192,6 +2200,7 @@ window.BEREICH_MEHR = {
   "grammatik-relativsaetze-praep-b1.html",
   "vorbereitung-relativsaetze-praep-b1.html",
   "vorbereitung-wechselpraepositionen-b1.html",
+  "sprachspielclub-park-b1-b2.html",
   "sprachspielclub-freibad-b1-b2.html",
   "sprachspielclub-bahnhof-b1-b2.html",
   "sprachspielclub-flughafen-b1-b2.html",
