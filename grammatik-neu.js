@@ -1869,7 +1869,7 @@
     "type": "choice",
     "q": "Was ist der Unterschied? „Die Tür wird geschlossen.“ – „Die Tür ist geschlossen.“",
     "options": [
-     "Erstens der Vorgang, zweitens der Zustand.",
+     "Der erste zeigt den Vorgang, der zweite den Zustand.",
      "Erstens die Zukunft, zweitens die Gegenwart.",
      "Kein Unterschied.",
      "Erstens höflich, zweitens direkt."
@@ -2711,7 +2711,7 @@
      "Man benutzt das Passiv."
     ],
     "answer": 0,
-    "explain": "Bei sie haben = sie haben hilft nur würde/hätte."
+    "explain": "Konjunktiv I „sie haben“ ist gleich dem Indikativ — deshalb weicht man auf Konjunktiv II „sie hätten“ aus."
    },
    {
     "type": "choice",
@@ -2809,12 +2809,12 @@
    },
    {
     "type": "gap",
-    "text": "Eine ___ Frage blieb offen. (bleiben)",
-    "answer": "bleibende",
+    "text": "Eine ___ Frage blieb offen. (drängen)",
+    "answer": "drängende",
     "alts": [
-     "bleibende"
+     "drängende"
     ],
-    "explain": "Partizip I von bleiben: bleibend."
+    "explain": "Partizip I von drängen: drängend — plus Endung -e."
    },
    {
     "type": "choice",
@@ -2868,7 +2868,7 @@
     "alts": [
      "klingelndes"
     ],
-    "explain": "Partizip I, Neutrum ohne Artikel: -es."
+    "explain": "Partizip I nach „ein“ (Neutrum): -es."
    },
    {
     "type": "gap",

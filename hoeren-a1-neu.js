@@ -91,7 +91,7 @@
    },
    {
     "de": "das Alter",
-    "info": "wie viele Jahre eine Person hat",
+    "info": "wie alt eine Person ist",
     "emoji": "🎂"
    },
    {
@@ -170,7 +170,7 @@
      "der Gruß am frühen Tag",
      "die Buchstaben einzeln sagen",
      "einen Namen tragen",
-     "wie viele Jahre eine Person hat"
+     "wie alt eine Person ist"
     ],
     "answer": 0,
     "w": "guten Morgen",
@@ -225,7 +225,7 @@
     "options": [
      "so heißt eine Person",
      "der Gruß am späten Tag",
-     "wie viele Jahre eine Person hat",
+     "wie alt eine Person ist",
      "die Buchstaben einzeln sagen"
     ],
     "answer": 0,
@@ -280,7 +280,7 @@
     "q": "🔊 Hör zu – was bedeutet das Wort?",
     "options": [
      "der Gruß am späten Tag",
-     "wie viele Jahre eine Person hat",
+     "wie alt eine Person ist",
      "einen Namen tragen",
      "damit sprechen die Menschen miteinander"
     ],
@@ -349,7 +349,7 @@
     "audio": "das Alter",
     "q": "🔊 Hör zu – was bedeutet das Wort?",
     "options": [
-     "wie viele Jahre eine Person hat",
+     "wie alt eine Person ist",
      "an einem Ort zu Hause sein",
      "das kurze Wort beim Weggehen",
      "ein schönes Gefühl haben"
@@ -1176,7 +1176,7 @@
    },
    {
     "de": "die Scheibe",
-    "info": "ein dünner Schnitt vom Brot",
+    "info": "ein dünnes Stück Brot",
     "emoji": "🔪"
    },
    {
@@ -1322,7 +1322,7 @@
      "das große Gebäck aus Mehl und Wasser",
      "sagen, was man haben möchte",
      "das süße Gebäck für den Nachmittag",
-     "ein dünner Schnitt vom Brot"
+     "ein dünnes Stück Brot"
     ],
     "answer": 2,
     "w": "der Kuchen",
@@ -1390,7 +1390,7 @@
     "q": "🔊 Hör zu – was bedeutet das Wort?",
     "options": [
      "gerade erst gemacht",
-     "ein dünner Schnitt vom Brot",
+     "ein dünnes Stück Brot",
      "das kleine runde Brot zum Frühstück",
      "der Laden für Brot und Kuchen"
     ],
@@ -1432,7 +1432,7 @@
     "q": "🔊 Hör zu – was bedeutet das Wort?",
     "options": [
      "es schmeckt nach Zucker",
-     "ein dünner Schnitt vom Brot",
+     "ein dünnes Stück Brot",
      "ein einzelner Teil von etwas Großem",
      "das große Gebäck aus Mehl und Wasser"
     ],
@@ -1489,7 +1489,7 @@
     "options": [
      "ein einzelner Teil von etwas Großem",
      "sagen, was man haben möchte",
-     "ein dünner Schnitt vom Brot",
+     "ein dünnes Stück Brot",
      "nicht hier essen, sondern draußen"
     ],
     "answer": 3,
@@ -1546,7 +1546,7 @@
    },
    {
     "de": "die Ecke",
-    "info": "dort endet eine Häuserreihe",
+    "info": "die Stelle, an der die Straße abbiegt",
     "emoji": "📐"
    },
    {
@@ -1689,7 +1689,7 @@
     "audio": "geradeaus",
     "q": "🔊 Hör zu – was bedeutet das Wort?",
     "options": [
-     "dort endet eine Häuserreihe",
+     "die Stelle, an der die Straße abbiegt",
      "der Weg für Autos und Menschen",
      "immer nach vorn, ohne abzubiegen",
      "dort fahren die Züge ab"
@@ -1759,7 +1759,7 @@
     "audio": "die Ecke",
     "q": "🔊 Hör zu – was bedeutet das Wort?",
     "options": [
-     "dort endet eine Häuserreihe",
+     "die Stelle, an der die Straße abbiegt",
      "sie führt über Wasser oder Straßen",
      "die Seite der linken Hand",
      "dort treffen sich zwei Straßen"
@@ -1804,7 +1804,7 @@
      "sie zeigt rot, gelb und grün",
      "es ist ein langer Weg",
      "der Weg für Autos und Menschen",
-     "dort endet eine Häuserreihe"
+     "die Stelle, an der die Straße abbiegt"
     ],
     "answer": 1,
     "w": "weit",
@@ -1860,7 +1860,7 @@
      "den Weg nicht mehr finden",
      "sie zeigt rot, gelb und grün",
      "dort fahren die Züge ab",
-     "dort endet eine Häuserreihe"
+     "die Stelle, an der die Straße abbiegt"
     ],
     "answer": 0,
     "w": "sich verlaufen",

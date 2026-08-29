@@ -132,10 +132,18 @@
     });
     return ids;
   }
+  /* Steht im Profil keine Stufe, wird die genommen, die der
+     Lernbereich gemerkt hat oder die der Niveautest ergab. Vorher
+     fiel das immer auf A1 zurück — ein C1-Lerner bekam die
+     A1-Wörter zuerst. */
   function meinNiveau() {
     var n = '';
-    try { n = (window.profile && (profile.level || profile.target_level)) || ''; } catch (e) {}
-    var t = /([ABC][12])/.exec(String(n)); return t ? t[1] : 'A1';
+    try { n = (window.profile && (window.profile.level || window.profile.target_level)) || ''; } catch (e) {}
+    if (!n) { try { n = (window.lsGet && window.lsGet('niveau', '')) || ''; } catch (e) {} }
+    if (!n) {
+      try { var t = JSON.parse(localStorage.getItem('dow_niveautest') || 'null'); if (t && t.stufe) n = t.stufe; } catch (e) {}
+    }
+    var m = /([ABC][12])/.exec(String(n)); return m ? m[1] : 'A1';
   }
   var STUFEN = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
   function slug(s) {

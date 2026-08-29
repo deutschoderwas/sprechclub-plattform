@@ -99,9 +99,24 @@
     return w;
   }
 
+  /* Die Stufe kommt aus dem Profil — und wenn dort nichts steht, aus
+     dem, was der Lernbereich gemerkt hat oder der Niveautest ergeben
+     hat. Vorher fiel das immer auf B1 zurück: ein Anfänger bekam
+     einen B1-Lernplan. */
+  function gemerktesNiveau() {
+    try {
+      if (window.lsGet) {
+        var g = window.lsGet('niveau', null);
+        if (g) return String(g);
+      }
+      var t = JSON.parse(localStorage.getItem('dow_niveautest') || 'null');
+      if (t && t.stufe) return String(t.stufe);
+    } catch (e) {}
+    return '';
+  }
   function meinNiveau() {
     var p = window.profile || {};
-    var n = String(p.level || p.target_level || 'B1').toUpperCase().slice(0, 2);
+    var n = String(p.level || gemerktesNiveau() || p.target_level || 'B1').toUpperCase().slice(0, 2);
     return NIVEAUS.indexOf(n) >= 0 ? n : 'B1';
   }
 

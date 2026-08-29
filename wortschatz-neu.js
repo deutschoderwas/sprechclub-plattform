@@ -523,7 +523,7 @@
    },
    {
     "de": "der Bauleiter",
-    "info": "der Chef auf der Baustelle",
+    "info": "plant, prüft und verantwortet den ganzen Bau",
     "emoji": "👷",
     "bsp": "Der Bauleiter sagt, wann wir anfangen."
    },
@@ -799,7 +799,7 @@
      "Helm",
      "Gerüst"
     ],
-    "hint": "der Chef auf der Baustelle"
+    "hint": "plant, prüft und verantwortet den ganzen Bau"
    },
    {
     "type": "gap",
@@ -929,7 +929,7 @@
      },
      {
       "l": "der Bauleiter",
-      "r": "der Chef auf der Baustelle"
+      "r": "plant, prüft und verantwortet den ganzen Bau"
      }
     ]
    },
@@ -1950,7 +1950,7 @@
    },
    {
     "de": "der Müllsack",
-    "info": "kommt in den Eimer",
+    "info": "der große Sack für den Müll",
     "emoji": "🗑️",
     "bsp": "Der Müllsack ist voll."
    },
@@ -2256,7 +2256,7 @@
      "Wagen",
      "Wischmopp"
     ],
-    "hint": "kommt in den Eimer"
+    "hint": "der große Sack für den Müll"
    },
    {
     "type": "gap",
@@ -2356,7 +2356,7 @@
      },
      {
       "l": "der Müllsack",
-      "r": "kommt in den Eimer"
+      "r": "der große Sack für den Müll"
      },
      {
       "l": "die Kammer",
@@ -4229,7 +4229,7 @@
   "words": [
    {
     "de": "die Anmeldung",
-    "info": "du meldest beim Amt, wo du wohnst",
+    "info": "du meldest dem Amt, wo du wohnst",
     "emoji": "🏠",
     "bsp": "Die Anmeldung machst du in den ersten zwei Wochen."
    },
@@ -4277,7 +4277,7 @@
    },
    {
     "de": "die Frist",
-    "info": "die Zeit, bis wann etwas erledigt sein muss",
+    "info": "die Zeit, bis zu der etwas erledigt sein muss",
     "emoji": "⏰",
     "bsp": "Die Frist endet am Monatsende."
    },
@@ -4490,7 +4490,7 @@
      "Aufenthaltstitel",
      "Sozialversicherungsnummer"
     ],
-    "hint": "du meldest beim Amt, wo du wohnst"
+    "hint": "du meldest dem Amt, wo du wohnst"
    },
    {
     "type": "gap",
@@ -4578,7 +4578,7 @@
      "Einbürgerung",
      "Steuer-Identifikationsnummer"
     ],
-    "hint": "die Zeit, bis wann etwas erledigt sein muss"
+    "hint": "die Zeit, bis zu der etwas erledigt sein muss"
    },
    {
     "type": "gap",
@@ -4630,7 +4630,7 @@
     "pairs": [
      {
       "l": "die Anmeldung",
-      "r": "du meldest beim Amt, wo du wohnst"
+      "r": "du meldest dem Amt, wo du wohnst"
      },
      {
       "l": "die Meldebescheinigung",
@@ -4674,7 +4674,7 @@
     "pairs": [
      {
       "l": "die Frist",
-      "r": "die Zeit, bis wann etwas erledigt sein muss"
+      "r": "die Zeit, bis zu der etwas erledigt sein muss"
      },
      {
       "l": "der Nachweis",
@@ -5179,7 +5179,7 @@
    },
    {
     "de": "die Agentur für Arbeit",
-    "info": "das Amt für Arbeit und Weiterbildung",
+    "info": "das Amt, das bei Arbeitssuche und Weiterbildung hilft",
     "emoji": "🏛️",
     "bsp": "Die Agentur für Arbeit berät dich dazu."
    },
@@ -5465,7 +5465,7 @@
      "Abschluss",
      "Beratung"
     ],
-    "hint": "das Amt für Arbeit und Weiterbildung"
+    "hint": "das Amt, das bei Arbeitssuche und Weiterbildung hilft"
    },
    {
     "type": "gap",
@@ -5587,7 +5587,7 @@
      },
      {
       "l": "die Agentur für Arbeit",
-      "r": "das Amt für Arbeit und Weiterbildung"
+      "r": "das Amt, das bei Arbeitssuche und Weiterbildung hilft"
      },
      {
       "l": "die Beratung",

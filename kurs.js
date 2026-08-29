@@ -617,6 +617,55 @@
     hoch();
   };
 
+  /* ============================================================
+     Wo stehe ich im Kurs?   window.kursStand([niveau])
+
+     Die Startseite, der Lernbereich und der Prüfungsbereich fragen
+     an neun Stellen danach — die Funktion gab es nur nie. Die
+     wichtigste Karte der Startseite fiel deshalb immer in den
+     Ersatzfall und sagte auch nach zwanzig Lektionen: „Fang mit
+     Lektion 1 an."
+
+     Zurück kommt die nächste offene Lektion des Niveaus:
+       { niveau, id, nr, lektion, ziel, titel, prozent, anzahl,
+         fertig, angefangen }
+     Gibt es zu einem ausdrücklich gefragten Niveau keinen Kurs,
+     kommt null — nichts wird erfunden.
+     ============================================================ */
+  window.kursStand = function(niveau){
+    try{
+      var id = nivName(niveau || niveauGemerkt());
+      if(!hatKurs(id)){
+        if(niveau) return null;
+        id = 'A1';
+        if(!hatKurs(id)) return null;
+      }
+      var L = lektionen(id);
+      if(!L.length) return null;
+      var A = kursDaten(id) || {};
+      var offen = null, fertige = 0, angefangen = false, i, pr;
+      for(i=0;i<L.length;i++){
+        pr = lekProzent(L[i].nr, id);
+        if(pr > 0) angefangen = true;
+        if(pr >= 100) fertige++;
+        else if(!offen) offen = L[i];
+      }
+      var l = offen || L[L.length-1];
+      return {
+        niveau: id,
+        id: l.nr,
+        nr: l.nr,
+        lektion: l.t || ('Lektion ' + l.nr),
+        ziel: l.ziel || A.ziel || '',
+        titel: A.titel || (id + ' — Dein Kurs'),
+        prozent: niveauProzent(id),
+        anzahl: L.length,
+        fertig: fertige,
+        angefangen: angefangen
+      };
+    }catch(e){ return null; }
+  };
+
   window.niveauWaehlen=function(id){
     S('niveau',id);
     if(hatKurs(id)) return window.renderKurs(id);

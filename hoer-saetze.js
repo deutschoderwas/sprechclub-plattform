@@ -30,7 +30,7 @@
     "auf Wiedersehen": "Im Amt sagt man §auf Wiedersehen§.",
     "heißen": "Ich §heiße§ Julia und komme aus Bremen.",
     "wohnen": "Wir §wohnen§ seit drei Jahren in Köln.",
-    "kommen aus": "Meine Nachbarn §kommen§ aus Polen.",
+    "kommen aus": "Meine Nachbarn §kommen aus§ Polen.",
     "sich freuen": "Ich §freue mich§ auf das Wochenende.",
     "verheiratet": "Meine Schwester ist seit Mai §verheiratet§.",
     "willkommen": "Herzlich §willkommen§ in unserem Kurs!",
@@ -81,7 +81,7 @@
     "warten": "Bitte §warten§ Sie einen kurzen Moment.",
     "besetzt": "Die Nummer ist immer noch §besetzt§.",
     "laut": "Im Bus ist es sehr §laut§.",
-    "leise": "Sprich am Telefon bitte etwas §leiser§.",
+    "leise": "Im Kino müssen alle ganz §leise§ sein.",
     "langsam": "Können Sie bitte §langsam§ sprechen?",
     "der Anrufbeantworter": "Sprich mir einfach auf den §Anrufbeantworter§.",
     "Bescheid sagen": "Kannst du mir kurz §Bescheid sagen§?",
@@ -112,7 +112,7 @@
     "mitbringen": "Soll ich einen Salat §mitbringen§?",
     "der Nachtisch": "Zum §Nachtisch§ gibt es heute Eis.",
     "das Grillfest": "Am Samstag machen wir ein §Grillfest§.",
-    "reinfeiern": "Bei uns wird oft §reingefeiert§.",
+    "reinfeiern": "Bei uns wird in den Geburtstag §reingefeiert§.",
     "die Hochzeit": "Zur §Hochzeit§ schenken wir lieber Geld.",
     "das Standesamt": "Zuerst gehen die beiden zum §Standesamt§.",
     "der Umschlag": "Im §Umschlag§ steckt das Geschenk.",
@@ -131,7 +131,7 @@
     "der Umhang": "Ich lege der Kundin den §Umhang§ um.",
 
     /* ---------- A2 · An der Kasse ---------- */
-    "das Laufband": "Leg deine Sachen auf das §Laufband§.",
+    "das Laufband": "Leg deine Sachen auf das §Kassenband§.",
     "der Warentrenner": "Stell bitte den §Warentrenner§ dazwischen.",
     "der Pfandautomat": "Der §Pfandautomat§ steht neben dem Eingang.",
     "der Bon": "Möchten Sie den §Bon§ mitnehmen?",
@@ -192,7 +192,7 @@
     "der Engpass": "Im Team gibt es gerade einen §Engpass§.",
     "nachhaken": "Nach einer Woche habe ich einmal §nachgehakt§.",
     "sich abstimmen": "Wir sollten uns vorher kurz §abstimmen§.",
-    "die Frist einhalten": "Diesmal haben wir die Frist §eingehalten§.",
+    "die Frist einhalten": "Diesmal haben wir §die Frist eingehalten§.",
     "entlasten": "Damit könnt ihr mich wirklich §entlasten§.",
     "die Wertschätzung": "Ein wenig §Wertschätzung§ tut allen gut.",
     "unter vier Augen": "Das klären wir besser §unter vier Augen§.",
@@ -255,8 +255,8 @@
     "sich einigen": "Am Ende haben wir uns §geeinigt§.",
     "nachverhandeln": "Im Frühjahr können wir §nachverhandeln§.",
     "das Signal": "Das war ein deutliches §Signal§.",
-    "vage bleiben": "Sie ist beim Termin bewusst §vage geblieben§.",
-    "eine Zusage": "Eine feste §Zusage§ habe ich nicht bekommen.",
+    "vage bleiben": "Beim Datum ist sie bewusst §vage geblieben§.",
+    "die Zusage": "Eine feste §Zusage§ habe ich nicht bekommen.",
     "belastbar": "Diese Aussage ist leider nicht §belastbar§.",
 
     /* ---------- C1 · In der Debatte ---------- */
@@ -266,19 +266,19 @@
     "die Prämisse": "Ihre §Prämisse§ stimmt so nicht.",
     "ins Feld führen": "Dagegen kann man vieles §ins Feld führen§.",
     "sich festlegen": "Er wollte sich einfach nicht §festlegen§.",
-    "ausweichen": "Bei dieser Frage ist sie §ausgewichen§.",
+    "ausweichen": "Dieser Frage ist sie geschickt §ausgewichen§.",
     "sachlich bleiben": "Im Streit sollte man §sachlich bleiben§.",
     "polemisch": "Der Beitrag war eher §polemisch§.",
     "die Schlussfolgerung": "Ihre §Schlussfolgerung§ überzeugt mich nicht.",
     "widerlegen": "Diese Behauptung lässt sich leicht §widerlegen§.",
-    "den Punkt machen": "Mit diesem Satz hat sie §den Punkt gemacht§.",
+    "den Punkt machen": "Mit diesem Satz hat sie es §auf den Punkt gebracht§.",
     "das Totschlagargument": "Das ist ein klassisches §Totschlagargument§.",
 
     /* ---------- C1 · Zahlen im Vortrag ---------- */
     "die Erhebung": "Die §Erhebung§ stammt aus dem Frühjahr.",
     "die Stichprobe": "Die §Stichprobe§ war ziemlich klein.",
     "der Zusammenhang": "Zwischen beiden gibt es einen §Zusammenhang§.",
-    "die Ursache": "Die §Ursache§ ist damit nicht bewiesen.",
+    "die Ursache": "Eine §Ursache§ ist damit noch nicht bewiesen.",
     "hochrechnen": "Man darf das nicht einfach §hochrechnen§.",
     "die Schwankung": "Solche §Schwankungen§ sind ganz normal.",
     "der Anteil": "Der §Anteil§ ist seitdem leicht gestiegen.",
@@ -295,7 +295,7 @@
     "die Andeutung": "Das war nur eine vorsichtige §Andeutung§.",
     "durch die Blume sagen": "Sie hat es mir §durch die Blume gesagt§.",
     "der Unterton": "In ihrer Antwort lag ein §Unterton§.",
-    "untertreiben": "Er §untertreibt§ seine Leistung immer.",
+    "untertreiben": "Er §untertreibt§ immer maßlos.",
     "beschönigen": "Da gibt es nichts zu §beschönigen§.",
     "ausweichend": "Die Antwort war sehr §ausweichend§.",
     "verklausuliert": "Der Brief war reichlich §verklausuliert§.",
@@ -311,7 +311,7 @@
     /* ---------- B1 · Zahlen und Belege ---------- */
     "der Beleg": "Ohne §Beleg§ kann ich nichts buchen.",
     "die Eingangsrechnung": "Die §Eingangsrechnung§ liegt schon im Fach.",
-    "das Zahlungsziel": "Das §Zahlungsziel§ ist in vierzehn Tagen.",
+    "das Zahlungsziel": "Das §Zahlungsziel§ beträgt vierzehn Tage.",
     "der Skonto": "Bei schneller Zahlung gibt es §Skonto§.",
     "die Mahnung": "Heute kam schon die zweite §Mahnung§.",
     "der Verwendungszweck": "Schreib die Rechnungsnummer in den §Verwendungszweck§.",
@@ -324,7 +324,7 @@
     "der Monatsabschluss": "Vor dem §Monatsabschluss§ wird es immer eng.",
 
     /* ---------- B1 · Strom und Heizung ---------- */
-    "die Sicherung": "Die §Sicherung§ ist wieder herausgesprungen.",
+    "die Sicherung": "Die §Sicherung§ ist wieder herausgeflogen.",
     "der Verteiler": "Im §Verteiler§ ist alles sauber beschriftet.",
     "verlegen": "Die Leitung müssen wir neu §verlegen§.",
     "der Rohrbruch": "Im Keller gab es einen §Rohrbruch§.",
@@ -418,7 +418,7 @@
     "der Mähdrescher": "Der §Mähdrescher§ fährt seit heute früh.",
     "die Aussaat": "Die §Aussaat§ beginnt schon im April.",
     "der Frost": "Der §Frost§ hat die Blüten erwischt.",
-    "der Hagel": "Der §Hagel§ hat das Feld zerschlagen.",
+    "der Hagel": "Der §Hagel§ hat die ganze Ernte vernichtet.",
     "die Direktvermarktung": "Wir leben von der §Direktvermarktung§.",
     "der Hofladen": "Im §Hofladen§ gibt es frische Eier.",
     "die Saisonarbeit": "Im Herbst gibt es viel §Saisonarbeit§.",
@@ -438,7 +438,7 @@
     "die Grundpflege": "Die §Grundpflege§ machen wir am Morgen.",
 
     /* ---------- B1 · Rechte bei der Arbeit ---------- */
-    "der Urlaubsanspruch": "Mein §Urlaubsanspruch§ sind dreißig Tage.",
+    "der Urlaubsanspruch": "Mein §Urlaubsanspruch§ beträgt dreißig Tage.",
     "die Lohnabrechnung": "Auf der §Lohnabrechnung§ fehlt ein Zuschlag.",
     "der Betriebsrat": "Der §Betriebsrat§ hilft dir in diesem Fall.",
     "die Überstunden": "Meine §Überstunden§ werden am Jahresende ausgezahlt.",
@@ -595,7 +595,7 @@
     "defekt": "Der Akku ist leider §defekt§.",
     "die Verhandlungsbasis": "Der Preis ist §Verhandlungsbasis§.",
     "der Festpreis": "Hundert Euro sind mein §Festpreis§.",
-    "handeln": "Beim Preis lässt sich noch §handeln§.",
+    "handeln": "Über den Preis lässt sich noch §handeln§.",
     "der Nachlass": "Bei Abholung gebe ich einen §Nachlass§.",
     "der Interessent": "Der erste §Interessent§ kommt heute Abend.",
     "die Besichtigung": "Die §Besichtigung§ ist am Samstagvormittag.",
@@ -607,14 +607,14 @@
     "die Inspektion": "Die §Inspektion§ ist nächste Woche fällig.",
     "der Stundensatz": "Unser §Stundensatz§ liegt bei achtzig Euro.",
     "die Ersatzteile": "Die §Ersatzteile§ kommen erst am Freitag.",
-    "die Bremsbeläge": "Die §Bremsbeläge§ sind fast heruntergefahren.",
+    "die Bremsbeläge": "Die §Bremsbeläge§ sind fast abgefahren.",
     "quietschen": "Die Bremse §quietscht§ beim Anhalten.",
     "der Reifenwechsel": "Den §Reifenwechsel§ machen wir im Oktober.",
     "das Profil": "Das §Profil§ ist noch tief genug.",
     "die Plakette": "Die neue §Plakette§ klebt am Kennzeichen.",
     "der Ersatzwagen": "Für zwei Tage bekommen Sie einen §Ersatzwagen§.",
     "die Kontrollleuchte": "Die §Kontrollleuchte§ ist gestern angegangen.",
-    "die Kulanz": "Die Firma zahlt aus §Kulanz§ mit."
+    "die Kulanz": "Die Firma zahlt aus §Kulanz§ einen Teil."
   };
 
   var K = window.VOKABEL_SAETZE || (window.VOKABEL_SAETZE = {});

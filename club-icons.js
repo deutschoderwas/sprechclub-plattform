@@ -359,13 +359,15 @@
       b.className = 'navlink'; b.setAttribute('data-view','podcast');
       b.innerHTML = '<span class="ic">🎙️</span>Podcast';
     }
-    /* Ein stiller Punkt, solange die neueste Folge noch ungehört ist */
+    /* Der Knopf kommt immer ins Menü. Vorher stand das Einhängen im
+       selben if wie der Punkt für neue Folgen — wer eine Folge gehört
+       hatte, fand den Podcast ab der nächsten Anmeldung nicht mehr. */
     if(b && !b.querySelector('.pc-punkt') && pcIstNeu(pcNeueste())){
       var pt = document.createElement('span');
       pt.className = 'pc-punkt'; pt.title = 'Neue Folge';
       b.appendChild(pt);
-      anker.parentNode.insertBefore(b, anker);
     }
+    if(b && !b.parentNode) anker.parentNode.insertBefore(b, anker);
     var sec = document.getElementById('v-podcast');
     if(!sec){
       var anchor = document.getElementById('v-dashboard');

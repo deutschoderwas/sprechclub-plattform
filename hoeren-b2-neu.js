@@ -772,7 +772,7 @@
   "words": [
    {
     "de": "die Kaution",
-    "info": "das Geld, das die Vermieterin als Sicherheit behält",
+    "info": "das Geld, das man beim Einzug als Sicherheit hinterlegt",
     "emoji": "💰"
    },
    {
@@ -913,7 +913,7 @@
     "audio": "die Kaution",
     "q": "🔊 Hör zu – was bedeutet das Wort?",
     "options": [
-     "das Geld, das die Vermieterin als Sicherheit behält",
+     "das Geld, das man beim Einzug als Sicherheit hinterlegt",
      "die Miete steigt zu festen Zeitpunkten",
      "das Blatt, auf dem der Zustand festgehalten wird",
      "die Vermieterin braucht die Wohnung selbst"
@@ -958,7 +958,7 @@
      "das Geld, das man am Ende noch zahlen muss",
      "streichen und ausbessern beim Auszug",
      "die Regeln für alle im Haus",
-     "das Geld, das die Vermieterin als Sicherheit behält"
+     "das Geld, das man beim Einzug als Sicherheit hinterlegt"
     ],
     "answer": 0,
     "w": "die Nachzahlung",
@@ -1013,7 +1013,7 @@
     "options": [
      "wer die Wohnung nach dir übernimmt",
      "die Regeln für alle im Haus",
-     "das Geld, das die Vermieterin als Sicherheit behält",
+     "das Geld, das man beim Einzug als Sicherheit hinterlegt",
      "das Geld, das man zurückbekommt"
     ],
     "answer": 0,
@@ -1068,7 +1068,7 @@
     "q": "🔊 Hör zu – was bedeutet das Wort?",
     "options": [
      "weniger zahlen, weil etwas nicht in Ordnung ist",
-     "das Geld, das die Vermieterin als Sicherheit behält",
+     "das Geld, das man beim Einzug als Sicherheit hinterlegt",
      "das Geld, das man zurückbekommt",
      "streichen und ausbessern beim Auszug"
     ],

@@ -225,6 +225,13 @@
     return /^[A-Za-zÄÖÜäöüß][A-Za-zÄÖÜäöüß\-' ]*$/.test(w);
   }
 
+  /* Auf B2 und C1 ist Buchstabenschieben und Artikelraten keine
+     Aufgabe mehr. Dort zählt, was man mit dem Wort sagen kann. */
+  function schwerNiveau(t) { return /B2|C1|C2/.test(txt(t && t.level)); }
+  /* In der Aussprache stehen Laute in der Wortliste, keine Vokabeln —
+     Artikel und Buchstabensalat gehören dort nicht hin. */
+  function aussprache(t) { return !!(t && t.__aussprache); }
+
   /* Ein einzelnes Wort, keine Wendung. „der Vertrag" ja, „die Nase
      voll haben" nein. */
   function einWort(s) {
@@ -325,14 +332,16 @@
       if (info && kern.length >= 3 && !zweideutig(infos, i)) {
         neu.push({
           type: 'tippen', w: wort, answer: wort,
-          alts: [kern, kern.toLowerCase()], info: info, emoji: w.emoji || '',
+          alts: (kern === kern.toLowerCase() ? [kern] : [kern, kern.toLowerCase()]),
+          info: info, emoji: w.emoji || '',
           img: foto, tip: art ? 'Mit Artikel, zum Beispiel: ' + art + ' …' : '', level: t.level
         });
       }
 
       /* Buchstabensalat: nur echte Einzelwörter, sonst wird es zum
-         Puzzle mit Leerzeichen. */
-      if (/^[A-Za-zÄÖÜäöüß-]{4,12}$/.test(kern)) {
+         Puzzle mit Leerzeichen. Und nur bis B1 — auf B2 und C1 ist
+         Buchstabenschieben keine Aufgabe mehr, sondern Beschäftigung. */
+      if (/^[A-Za-zÄÖÜäöüß-]{4,12}$/.test(kern) && !schwerNiveau(t) && !aussprache(t)) {
         neu.push({
           type: 'buchstaben', w: wort, answer: kern, info: info,
           emoji: w.emoji || '', img: foto, level: t.level
@@ -343,7 +352,7 @@
          einzelne Nomen im Singular: bei einer Wendung und bei einem
          Wort, das es nur im Plural gibt, ist die Frage falsch
          gestellt. */
-      if (art && einWort(wort) && !PLURAL.test(kern)) {
+      if (art && einWort(wort) && !PLURAL.test(kern) && !schwerNiveau(t) && !aussprache(t)) {
         neu.push({
           type: 'artikel', w: wort, wort: kern, answer: art,
           satz: roh || '', emoji: w.emoji || '', img: foto, level: t.level
@@ -357,8 +366,10 @@
           return gleicheArt(wort, x);
         }), 3);
         if (mgl) {
+          /* Kein Bild: die Frage nennt die Bedeutung schon. Mit Foto
+             daneben bleibt keine Denkarbeit übrig. */
           neu.push({
-            type: 'choice', w: wort, img: foto,
+            type: 'choice', w: wort,
             q: 'Welches Wort passt: „' + info + '"?',
             options: mgl, answer: 0, explain: wort + ' = ' + info + '.', level: t.level
           });
@@ -374,9 +385,13 @@
           var luecke = eng(satzText(txt(roh).replace(/§[^§]+§/, '___')));
           var schwer = /B2|C1/.test(txt(t.level));
           if (schwer) {
+            /* Der Hinweis darf die Lösung nicht enthalten — bei
+               „pünktlich: nktl sind vier Laute" stand sie mit drin. */
             neu.push({
               type: 'gap', w: wort, text: luecke, answer: mk[0],
-              alts: [kern, wort], hint: info, explain: wort + ' = ' + info + '.', level: t.level
+              alts: [kern, wort],
+              hint: verraet(info, wort) ? '' : info,
+              explain: wort + ' = ' + info + '.', level: t.level
             });
           } else {
             /* Die Ablenker müssen zum gesuchten Wort passen — sonst
@@ -388,14 +403,15 @@
             }).map(ohneArtikel), 3);
             if (mgl2) {
               neu.push({
-                type: 'choice', w: wort, img: foto,
+                type: 'choice', w: wort,
                 q: '🧩 Was fehlt? ' + luecke + (info ? '  (gesucht: ' + info + ')' : ''),
-                options: mgl2, answer: 0, explain: satz, level: t.level
+                options: mgl2, answer: 0,
+                explain: wort + ' = ' + info + '. — ' + satz, level: t.level
               });
             }
           }
         }
-        if (kurz) {
+        if (kurz && !aussprache(t)) {
           neu.push({
             type: 'order', w: wort, answer: kurz,
             hint: 'Darin steckt: ' + wort, level: t.level
@@ -452,6 +468,10 @@
     luecken.forEach(function (e) {
       var a = eng(e.answer);
       if (a.split(' ').length > 2) return;
+      /* Aufgaben, bei denen die Daten selbst sagen „geht auch anders"
+         (alts), taugen nicht zum Zuordnen: dort liegt die zweite
+         richtige Lösung als Kachel daneben und wird angestrichen. */
+      if (e.alts && e.alts.length) return;
       reihen.push({ l: eng(String(e.text).replace(/_+/g, '…')), r: a });
     });
     for (var b = 0; b + 4 <= reihen.length && b < 12; b += 4) {
@@ -511,15 +531,23 @@
           if (!re.test(kurz)) continue;
           gebaut[k] = 1;
           var mitLuecke = kurz.replace(re, '$1___$3');
+          /* Der Satz stammt aus einem Hörtext — also kommt die Aufnahme
+             mit. Vorher stand über der Lücke „Das Wort kam im Hörtext
+             vor", ohne dass man ihn hören konnte; ohne Ton lassen viele
+             dieser Sätze mehr als ein Wort zu und sind nicht lösbar. */
           neu.push({
             type: 'gap', w: W[i], text: mitLuecke, answer: k,
-            alts: [k.toLowerCase(), W[i]], hint: '🎧 Das Wort kam im Hörtext vor.',
+            alts: [k.toLowerCase(), W[i]],
+            audioUrl: e.audioUrl || '',
+            hint: e.audioUrl ? '🎧 Hör noch einmal — das Wort kommt darin vor.' : '',
             explain: kurz, level: t.level
           });
           if (baubar) {
             neu.push({
               type: 'order', w: W[i], answer: baubar,
-              hint: 'Aus dem Hörtext: ' + (e.label || ''), level: t.level
+              audioUrl: e.audioUrl || '',
+              hint: e.audioUrl ? '🎧 Hör zu und bau den Satz.' : ('Aus dem Hörtext: ' + (e.label || '')),
+              level: t.level
             });
           }
           return;
@@ -533,6 +561,7 @@
   function thema(sk, t) {
     if (!t || t.__viel) return 0;
     t.__viel = 1;
+    if (sk.id === 'aussprache') t.__aussprache = 1;
     var neu = [];
     if (sk.id === 'grammatik') ausGrammatik(t, neu);
     if (sk.id === 'hoeren') ausTranskripten(t, neu);

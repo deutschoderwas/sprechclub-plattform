@@ -487,15 +487,30 @@
       for(var i=0;i<l.length;i++){ if(frei(l[i])){ drin.push(l[i]); return l[i]; } }
       return null; }
 
+    /* 0. In einem Hörthema muss gehört werden. Es gibt dort viele
+          Wortaufgaben ohne Ton — ohne diese Regel kam eine ganze Runde
+          vor, in der nie eine Aufnahme lief. Zwei Hörtexte sind
+          gesetzt, sobald es welche gibt. */
+    var hoerbar = (nachTyp['listen'] || []).length;
+    var gesetzt = [];
+    if(hoerbar){
+      var e1 = nimm('listen'); if(e1) gesetzt.push(e1);
+      var e2 = hoerbar > 1 ? nimm('listen') : null; if(e2) gesetzt.push(e2);
+    }
+
     /* 1. Eine Wortkarte zum Anfang — und gleich danach dasselbe Wort
           als Aufgabe. Das ist die Wiederholung im Kleinen. */
     var karte=nimm('karte');
     if(karte){ runde.push(karte);
+      gesetzt.forEach(function(x){ runde.push(x); });
+      gesetzt = [];
       var passend=null;
       REIHE.forEach(function(typ){ if(passend) return;
         (nachTyp[typ]||[]).forEach(function(e){ if(!passend && frei(e) && e.w===karte.w) passend=e; }); });
       if(passend){ drin.push(passend); runde.push(passend); }
     }
+
+    gesetzt.forEach(function(x){ runde.push(x); });
 
     /* 2. Reihum durch die Formen, damit keine Runde nach Wahlfragen
           allein aussieht. */
@@ -733,13 +748,21 @@
     btn.className='ub-btn'; btn.textContent='Prüfen'; btn.disabled=true;
     var h=(S.idx===0?themenBild():'');
     if(e.type==='choice'){
-      if(e.img){ h+='<img class="ub-qimg" src="'+E(e.img)+'" alt="" onerror="this.remove()">'; }
+      /* Nennt die Frage die Bedeutung schon („Welches Wort passt: …"),
+         verrät das Foto daneben die Lösung. Es kommt dann erst mit der
+         Rückmeldung — dort hilft es beim Merken. */
+      var bildSpaeter = e.img && /Welches Wort passt|gesucht:/.test(String(e.q||''));
+      if(e.img && !bildSpaeter){ h+='<img class="ub-qimg" src="'+E(e.img)+'" alt="" onerror="this.remove()">'; }
       if(e.audio){ h+='<button class="ub-play" onclick="ubSpeak(\''+E(e.audio).replace(/'/g,"\\'")+'\')">🔊</button>'; }
       h+='<div class="ub-q">'+E(e.q||'Wähle die richtige Antwort:')+'</div><div class="ub-opts" id="ubOpts">'+
          shuf(e.options.map(function(o,k){return k;})).map(function(k){ return '<button class="ub-opt" data-k="'+k+'" onclick="ubChoose('+k+')">'+E(e.options[k])+'</button>'; }).join('')+'</div>';
       if(e.audio) setTimeout(function(){ speak(e.audio); },200);
     } else if(e.type==='gap'){
-      h+=(e.img?'<img class="ub-qimg" src="'+E(e.img)+'" alt="" onerror="this.remove()">':'')+'<div class="ub-q">'+E((e.text||'').replace('___','_____'))+'</div><input class="ub-input" id="ubGap" placeholder="Antwort eintippen…" autocomplete="off" autocapitalize="off">';
+      h+=(e.img?'<img class="ub-qimg" src="'+E(e.img)+'" alt="" onerror="this.remove()">':'');
+      /* Stammt der Satz aus einem Hörtext, kann man ihn hier hören —
+         sonst ist die Lücke oft nicht eindeutig zu füllen. */
+      if(e.audioUrl) h+='<button class="ub-play" onclick="ubPlayUrl(\''+E(e.audioUrl)+'\',this)">▶</button>';
+      h+='<div class="ub-q">'+E((e.text||'').replace('___','_____'))+'</div><input class="ub-input" id="ubGap" placeholder="Antwort eintippen…" autocomplete="off" autocapitalize="off">';
       if(e.hint) h+='<div class="ub-tip" style="text-align:left;margin-top:8px">💡 '+E(e.hint)+'</div>';
     } else if(e.type==='match'){
       if(e.img){ h+='<img class="ub-qimg" src="'+E(e.img)+'" alt="" onerror="this.remove()">'; }
@@ -749,6 +772,7 @@
       }).join('');
     } else if(e.type==='order'){
       S.order={build:[],pool:shuf(String(e.answer).split(/\s+/).filter(Boolean).map(function(w,i){return {w:w,i:i};}))};
+      if(e.audioUrl) h+='<button class="ub-play" onclick="ubPlayUrl(\''+E(e.audioUrl)+'\',this)">▶</button>';
       h+='<div class="ub-q">Bring die Wörter in die richtige Reihenfolge:</div><div class="ub-build" id="ubBuild"></div><div class="ub-chips" id="ubPool"></div>';
       if(e.hint) h+='<div class="ub-tip" style="text-align:left;margin-top:10px">💡 '+E(e.hint)+'</div>';
     } else if(e.type==='karte'){
@@ -821,6 +845,37 @@
     if(e.type==='order'||e.type==='buchstaben') drawOrder();
   }
 
+  /* Satzbau: im Deutschen sind oft mehrere Reihenfolgen richtig —
+     „Am Vormittag habe ich einen Termin" und „Ich habe am Vormittag
+     einen Termin" sind beide gutes Deutsch. Geprüft wird deshalb die
+     Regel, um die es geht: alle Bausteine benutzt, der Satz beginnt
+     wie vorgesehen, und das Verb steht an zweiter Stelle. Wer den
+     Satz genau so baut wie gedacht, bekommt zusätzlich das Lob. */
+  function satzbauOk(gebaut, e){
+    var ziele=[e.answer].concat(e.alts||[]);
+    for(var i=0;i<ziele.length;i++) if(nrm(gebaut)===nrm(ziele[i])) return true;
+    var a=nrm(gebaut).split(/\s+/), b=nrm(e.answer).split(/\s+/);
+    if(a.length!==b.length) return false;
+    /* dieselben Wörter? */
+    var s1=a.slice().sort().join('|'), s2=b.slice().sort().join('|');
+    if(s1!==s2) return false;
+    /* Anfang und Verbstelle wie vorgesehen — das ist die Regel,
+       die der Satzbau übt. */
+    if(a[0]!==b[0]) return false;
+    if(a.length>1 && a[1]!==b[1]) return false;
+    /* Was am Ende steht, muss am Ende bleiben — aber nur, wenn dort
+       wirklich ein Verbteil steht (Partizip, Infinitiv, trennbare
+       Vorsilbe). Endet der Satz auf ein Nomen, darf das Mittelfeld
+       anders geordnet sein: „Ich habe zehn Jahre Erfahrung als
+       Köchin" und „Ich habe als Köchin zehn Jahre Erfahrung" sind
+       beide richtig. */
+    var letzte=b[b.length-1];
+    if(verbTeil(letzte) && a[a.length-1]!==letzte) return false;
+    return true;
+  }
+  var VORSILBE=/^(an|ab|auf|aus|mit|vor|zu|ein|nach|her|hin|los|weg|zurück|fest|frei|statt|teil|wieder|bei|durch|über|um|unter)$/;
+  function verbTeil(w){ w=String(w||''); return VORSILBE.test(w) || /(en|te|ten|end|t)$/.test(w); }
+
   window.ubChoose=function(k){ if(S.answered)return; S.sel=k; var opts=document.getElementById('ubOpts'); Array.prototype.forEach.call(opts.children,function(b){ b.classList.toggle('sel',+b.dataset.k===k); }); document.getElementById('ubBtn').disabled=false; };
   window.ubMatchChk=function(){ var e=S.items[S.idx]; var all=e.pairs.every(function(p,k){ return document.getElementById('ubM'+k).value; }); document.getElementById('ubBtn').disabled=!all; };
   function drawOrder(){ var e=S.items[S.idx]; var b=document.getElementById('ubBuild'),p=document.getElementById('ubPool');
@@ -845,8 +900,8 @@
       sol='Richtig: '+e.answer+(e.explain?' — '+e.explain:'');
     } else if(e.type==='match'){ ok=e.pairs.every(function(p,k){ var sel=document.getElementById('ubM'+k); sel.disabled=true; var good=nrm(sel.value)===nrm(p.r); sel.style.borderColor=good?'#16a34a':'#dc2626'; return good; }); sol=ok?'':'Schau dir die richtigen Paare nochmal an.';
     } else if(e.type==='order'){ var built=S.order.build.map(function(t){return t.w;}).join(' ');
-      ok=[e.answer].concat(e.alts||[]).some(function(a){ return nrm(built)===nrm(a); });
-      sol='Richtig: '+e.answer;
+      ok=satzbauOk(built, e);
+      sol='So war der Satz gemeint: '+e.answer;
     } else if(e.type==='buchstaben'){ var wort=S.order.build.map(function(t){return t.w;}).join('');
       ok=nrm(wort)===nrm(e.answer); sol='Richtig: '+e.answer;
     } else if(e.type==='tippen'){ var t=document.getElementById('ubGap'); var vv=t.value; t.disabled=true;
@@ -891,6 +946,9 @@
     } else { S.correct++; addXP(Math.round((META().xpPerCorrect||10)/2)); fb.className='ub-fb ok';
       fb.innerHTML=(e.type==='karte'?'Gemerkt? Das Wort kommt gleich noch einmal.':'Klasse! Weiter so.')+' +'+Math.round((META().xpPerCorrect||10)/2)+' XP'; }
     if(e.type==='listen'){ fb.innerHTML+='<div style="margin-top:10px;padding:11px 13px;background:#fff;border:1px solid var(--border,#ECECEC);border-radius:12px;font-weight:500;color:#333;line-height:1.5">📝 <b>Das hast du gehört:</b><br>'+E(e.transcript)+'</div>'; }
+    if(e.type==='choice' && e.img && /Welches Wort passt|gesucht:/.test(String(e.q||''))){
+      fb.innerHTML+='<img class="ub-qimg" style="margin:10px 0 0" src="'+E(e.img)+'" alt="" onerror="this.remove()">';
+    }
     btn.className='ub-btn'+((!ok&&!selfRated)?' no':''); btn.disabled=false;
     btn.textContent=(S.idx>=S.items.length-1)?'Abschließen':'Weiter';
     if(S.hearts<=0 && !selfRated && !ok){ btn.textContent='Runde beenden'; }

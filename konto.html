@@ -1189,6 +1189,12 @@ async function load(){
   ]);
   challengeSet = chs || null;
   profile = prof||{}; credits = profile.credits||0;
+  /* profile steht als let auf oberster Ebene und landet damit NICHT
+     auf window. Vier Dateien (lernpfad.js, vokabeltrainer.js,
+     fertigkeiten.js, lernen.js) lesen aber nur window.profile und
+     bekamen deshalb immer den Ersatzwert: der Lernplan war immer B1,
+     der Vokabeltrainer sortierte immer nach A1. */
+  window.profile = profile;
   bookings = (bk||[]).map(b=>{ if(b&&b.starts_at){ const s=String(b.starts_at).replace(' ','T'); b.starts_at=s.replace(/([+-]\d{2})$/,'$1:00'); } return b; }); creditLog = (cl||[]); messages = (msg||[]); ratings = (rt||[]);
   progress = {}; (prog||[]).forEach(p=>progress[p.class_id+'|'+p.phase]=p);
 
@@ -1292,7 +1298,7 @@ function collectVocab(){
 }
 
 // ---------- Router ----------
-const VIEWS=['dashboard','lernen','bereiche','kurs','pruefung','schreiben','kurse','ueben','community','dm','lernpfad','szenen','kalender','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','profil','fehler','buddy','fertigkeit'];
+const VIEWS=['dashboard','lernen','bereiche','kurs','pruefung','schreiben','kurse','ueben','community','dm','lernpfad','szenen','kalender','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','profil','fehler','buddy','fertigkeit','podcast'];
 function go(v){ location.hash=v; }
 function toggleNav(){ document.body.classList.toggle('nav-open'); }
 const VIEW_TITLES={dashboard:['Schülerbereich','Startseite'],lernen:['Lernbereich','Deine Themen'],kurs:['Lernbereich','Dein Kurs'],pruefung:['Prüfung','Prüfungsvorbereitung'],schreiben:['Lernen','Schreibtrainer'],kurse:['Lernen','Kursbibliothek'],kalender:['Live Unterricht','Kalender'],stunden:['Live Unterricht','Meine Stunden'],community:['Community-Chat','Alle Themen'],ueben:['Lernen','Üben'],vokabeln:['Lernen','Vokabeltrainer'],materialien:['Lernen','Materialien'],fortschritt:['Lernen','Fortschritt'],nachrichten:['Nachrichten','Team'],amanda:['Amanda','KI-Sprechpartnerin'],lernpfad:['Lernen','Mein Lernplan'],szenen:['Lernen','Meine Szenen'],fehler:['Lernen','Fehler-Trainer'],buddy:['Lernen','Sprech-Buddy'],guthaben:['Konto','Guthaben'],profil:['Konto','Profil']};

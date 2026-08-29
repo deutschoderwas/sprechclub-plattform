@@ -472,7 +472,7 @@
    },
    {
     "de": "den Punkt machen",
-    "info": "das entscheidende Argument setzen",
+    "info": "das Entscheidende in einem Satz sagen",
     "emoji": "🎯"
    },
    {
@@ -560,7 +560,7 @@
      "ein Argument so beantworten, dass es nicht mehr trägt",
      "ein Argument vorbringen",
      "bei der Sache bleiben statt bei der Person",
-     "das entscheidende Argument setzen"
+     "das Entscheidende in einem Satz sagen"
     ],
     "answer": 0,
     "w": "entkräften",
@@ -615,7 +615,7 @@
     "options": [
      "die Annahme, auf der ein Argument aufbaut",
      "bei der Sache bleiben statt bei der Person",
-     "das entscheidende Argument setzen",
+     "das Entscheidende in einem Satz sagen",
      "jemandem eine Absicht zuschreiben, ohne Beleg"
     ],
     "answer": 0,
@@ -670,7 +670,7 @@
     "q": "🔊 Hör zu – was bedeutet das Wort?",
     "options": [
      "schärfer formulieren, als es die Sache hergibt",
-     "das entscheidende Argument setzen",
+     "das Entscheidende in einem Satz sagen",
      "jemandem eine Absicht zuschreiben, ohne Beleg",
      "ein Argument vorbringen"
     ],
@@ -739,7 +739,7 @@
     "audio": "den Punkt machen",
     "q": "🔊 Hör zu – was bedeutet das Wort?",
     "options": [
-     "das entscheidende Argument setzen",
+     "das Entscheidende in einem Satz sagen",
      "etwas kleiner machen, ohne es zu bestreiten",
      "klar Position beziehen",
      "angriffslustig statt argumentierend"

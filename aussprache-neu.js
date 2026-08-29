@@ -932,7 +932,7 @@
   "words": [
    {
     "de": "Er ist in Österreich angekommen.",
-    "info": "Vier Vokalanfänge, vier kleine Stopps: er, ist, Österreich, angekommen",
+    "info": "Fünf Vokalanfänge, fünf kleine Stopps: er, ist, in, Österreich, angekommen",
     "emoji": "🇦🇹"
    },
    {

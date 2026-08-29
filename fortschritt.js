@@ -49,7 +49,14 @@
      Alles andere (Ansichtszustand, zuletzt geöffneter Reiter …)
      bleibt reine Browsersache und hat in der Datenbank nichts zu
      suchen. Neuen Schlüssel ergänzen: hier eintragen, fertig. */
-  var SPIEGELN = ['ub', 'lern', 'kurs', 'vok', 'vokabeln', 'pruefLetzte', 'niveau', 'lz'];
+  var SPIEGELN = ['ub', 'lern', 'kurs', 'vok', 'vokabeln', 'pruefLetzte', 'niveau', 'lz', 'lek'];
+
+  /* Ein Sonderfall: die Kursbibliothek (lektion.html) schreibt ihren
+     Stand nicht über lsSet, sondern direkt nach localStorage unter
+     'dow_lek'. Genau der Fortschritt also, den das Onboarding als
+     „Dein Weg" verkauft — und der beim Gerätewechsel verloren ging.
+     Er wird hier an seinem eigenen Ort gelesen und geschrieben. */
+  var EIGEN = { lek: 'dow_lek' };
 
   var WARTE = 'dow_fortschritt_warteschlange';
   var ZEIT  = '__zeit';           // Zeitstempel je Schlüssel, lokal
@@ -79,11 +86,32 @@
      Seiten dieselben Daten sehen: sc_<benutzer>_<schluessel> */
   function raw(k) { return 'sc_' + (uid() || 'anon') + '_' + k; }
   function holen(k) {
-    try { var v = localStorage.getItem(raw(k)); return v == null ? null : JSON.parse(v); }
-    catch (e) { return null; }
+    try {
+      var v = localStorage.getItem(EIGEN[k] || raw(k));
+      return v == null ? null : JSON.parse(v);
+    } catch (e) { return null; }
   }
   function legen(k, v) {
-    try { localStorage.setItem(raw(k), JSON.stringify(v)); } catch (e) {}
+    try { localStorage.setItem(EIGEN[k] || raw(k), JSON.stringify(v)); } catch (e) {}
+  }
+
+  /* Die eigenen Schlüssel werden von einer anderen Seite geschrieben,
+     ohne dass lsSet hier etwas mitbekommt. Beim Start wird deshalb
+     verglichen: hat sich der Wert seit dem letzten Mal geändert,
+     bekommt er einen frischen Zeitstempel und geht mit hoch. */
+  function eigenePruefen() {
+    Object.keys(EIGEN).forEach(function (k) {
+      try {
+        var jetztWert = JSON.stringify(holen(k));
+        var schatten = localStorage.getItem(raw(k) + '__schatten');
+        if (jetztWert === 'null') return;
+        if (schatten !== jetztWert) {
+          localStorage.setItem(raw(k) + '__schatten', jetztWert);
+          zeitSetzen(k, jetzt());
+          var w = warteLesen(); w[k] = zeitVon(k); warteSchreiben(w);
+        }
+      } catch (e) {}
+    });
   }
   function zeitVon(k) { try { return localStorage.getItem(raw(k) + ZEIT) || null; } catch (e) { return null; } }
   function zeitSetzen(k, t) { try { localStorage.setItem(raw(k) + ZEIT, t); } catch (e) {} }
@@ -153,6 +181,7 @@
   function abgleichen() {
     var s = sb(), u = uid();
     if (!s || !u) return;
+    eigenePruefen();
     try {
       s.from('lernstand').select('schluessel,wert,aktualisiert_am').eq('user_id', u)
         .then(function (r) {
@@ -170,6 +199,9 @@
               /* Die Datenbank ist jünger — Stand übernehmen. */
               legen(z.schluessel, z.wert);
               zeitSetzen(z.schluessel, z.aktualisiert_am);
+              if (EIGEN[z.schluessel]) {
+                try { localStorage.setItem(raw(z.schluessel) + '__schatten', JSON.stringify(z.wert)); } catch (e) {}
+              }
             } else if (hier > fern) {
               hochladen = true;
               var w = warteLesen(); w[z.schluessel] = lokalZeit; warteSchreiben(w);

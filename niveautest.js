@@ -402,7 +402,24 @@
     } catch (e) { /* still ok */ }
   }
 
+  /* Das Ergebnis gehört in die Plattform, nicht nur ins Postfach.
+     Bisher ging es an Brevo und an /api/niveau-result — und war für
+     den Lernbereich, den Lernplan und den Vokabeltrainer nie zu
+     sehen. Jetzt liegt es im Browser, wo alle drei nachsehen. */
+  function ergebnisMerken(R) {
+    try {
+      var stufe = String((R && R.placed) || '').toUpperCase().slice(0, 2);
+      if (['A1','A2','B1','B2','C1','C2'].indexOf(stufe) < 0) return;
+      localStorage.setItem('dow_niveautest', JSON.stringify({
+        stufe: stufe, prozent: (R && R.overallPct) || null, am: new Date().toISOString()
+      }));
+      if (window.lsSet) { try { window.lsSet('niveau', stufe); } catch (e) {} }
+      if (window.profile) window.profile.level = stufe;
+    } catch (e) {}
+  }
+
   function sendResult(R) {
+    ergebnisMerken(R);
     var note = $('ntMailNote');
     if (!S.email) { if (note) note.style.display = 'none'; return; }
     var payload = {

@@ -91,7 +91,7 @@
    },
    {
     "de": "die Öffnungszeiten",
-    "info": "wann du ins Amt kannst",
+    "info": "wann das Amt geöffnet hat",
     "emoji": "🕘"
    },
    {
@@ -1198,7 +1198,7 @@
    },
    {
     "de": "die Berufserfahrung",
-    "info": "was du schon gearbeitet hast",
+    "info": "wo und wie lange du schon gearbeitet hast",
     "emoji": "⏳"
    },
    {
@@ -1435,7 +1435,7 @@
     "options": [
      "was du gern lernen möchtest",
      "was du in der Schule hattest",
-     "was du schon gearbeitet hast",
+     "wo und wie lange du schon gearbeitet hast",
      "was du am liebsten machst"
     ],
     "answer": 2,
@@ -1527,7 +1527,7 @@
    },
    {
     "de": "die Eingangsrechnung",
-    "info": "kommt von der Firma zu uns",
+    "info": "eine Rechnung, die ein Lieferant uns schickt",
     "emoji": "📥"
    },
    {
@@ -1572,7 +1572,7 @@
    },
    {
     "de": "die Gutschrift",
-    "info": "Geld kommt wieder zurück",
+    "info": "eine Rechnung, die einen Betrag wieder abzieht",
     "emoji": "↩️"
    },
    {
@@ -1592,7 +1592,7 @@
    },
    {
     "de": "die Kostenstelle",
-    "info": "zeigt, wer das bezahlen muss",
+    "info": "der Bereich in der Firma, dem die Kosten zugeordnet werden",
     "emoji": "🏷️"
    },
    {
@@ -1682,7 +1682,7 @@
     "q": "🔊 Hör zu – was bedeutet das Wort?",
     "options": [
      "geht von uns an die Kunden",
-     "kommt von der Firma zu uns",
+     "eine Rechnung, die ein Lieferant uns schickt",
      "liegt beim Chef zur Unterschrift",
      "bleibt immer im Ordner liegen"
     ],
@@ -1809,7 +1809,7 @@
     "options": [
      "Geld wird später gezahlt",
      "Ware wird neu geliefert",
-     "Geld kommt wieder zurück",
+     "eine Rechnung, die einen Betrag wieder abzieht",
      "Preis wird noch verhandelt"
     ],
     "answer": 2,
@@ -1865,7 +1865,7 @@
     "options": [
      "zeigt, wann das geliefert wird",
      "zeigt, wo die Ware steht",
-     "zeigt, wer das bezahlen muss",
+     "der Bereich in der Firma, dem die Kosten zugeordnet werden",
      "zeigt, wie teuer das war"
     ],
     "answer": 2,
@@ -1926,7 +1926,7 @@
    },
    {
     "de": "die Durchwahl",
-    "info": "die letzten Zahlen der Nummer",
+    "info": "die Nummer, mit der man jemanden direkt erreicht",
     "emoji": "☎️"
    },
    {
@@ -1941,7 +1941,7 @@
    },
    {
     "de": "die Vertretung",
-    "info": "jemand macht die Arbeit solange",
+    "info": "jemand macht die Arbeit so lange",
     "emoji": "🔁"
    },
    {
@@ -2127,7 +2127,7 @@
     "options": [
      "die Nummer von der Zentrale",
      "der kurze Name am Telefon",
-     "die letzten Zahlen der Nummer",
+     "die Nummer, mit der man jemanden direkt erreicht",
      "das Zeichen vor der Vorwahl"
     ],
     "answer": 2,
@@ -2168,7 +2168,7 @@
     "q": "🔊 Hör zu – was bedeutet das Wort?",
     "options": [
      "jemand prüft die Arbeit später",
-     "jemand macht die Arbeit solange",
+     "jemand macht die Arbeit so lange",
      "jemand teilt die Arbeit ein",
      "jemand erklärt die Arbeit neu"
     ],
@@ -2345,7 +2345,7 @@
    },
    {
     "de": "der Anschluss",
-    "info": "die Stelle für die Verbindung",
+    "info": "die Stelle, an die ein Gerät angeschlossen wird",
     "emoji": "🔗"
    }
   ],
@@ -2628,7 +2628,7 @@
      "das Ende von der Leitung",
      "die Rechnung für die Arbeit",
      "der Kasten mit den Sicherungen",
-     "die Stelle für die Verbindung"
+     "die Stelle, an die ein Gerät angeschlossen wird"
     ],
     "answer": 3,
     "w": "der Anschluss",
@@ -2709,7 +2709,7 @@
    },
    {
     "de": "wickeln",
-    "info": "die nasse Hose frisch machen",
+    "info": "die volle Windel wechseln",
     "emoji": "🧷"
    },
    {
@@ -2972,7 +2972,7 @@
     "q": "🔊 Hör zu – was bedeutet das Wort?",
     "options": [
      "die dicke Jacke richtig zumachen",
-     "die nasse Hose frisch machen",
+     "die volle Windel wechseln",
      "die Hände vor dem Essen waschen",
      "die Schuhe im Flur ausziehen"
     ],
@@ -3397,7 +3397,7 @@
    },
    {
     "de": "die Eingewöhnung",
-    "info": "die erste Zeit mit Mama dabei",
+    "info": "die erste Zeit mit einem Elternteil dabei",
     "emoji": "🌱"
    },
    {
@@ -3432,12 +3432,12 @@
    },
    {
     "de": "die Notbetreuung",
-    "info": "nur für ganz wenige Kinder",
+    "info": "Betreuung nur für Kinder, deren Eltern arbeiten müssen",
     "emoji": "🆘"
    },
    {
     "de": "die Schließzeit",
-    "info": "drei Wochen im Sommer zu",
+    "info": "die Zeit, in der die Kita geschlossen ist",
     "emoji": "🔒"
    },
    {
@@ -3552,7 +3552,7 @@
     "q": "🔊 Hör zu – was bedeutet das Wort?",
     "options": [
      "die letzte Woche vor der Schule",
-     "die erste Zeit mit Mama dabei",
+     "die erste Zeit mit einem Elternteil dabei",
      "die kurze Pause nach dem Essen",
      "die Stunde vor dem Mittagsschlaf"
     ],
@@ -3649,7 +3649,7 @@
     "audio": "die Notbetreuung",
     "q": "🔊 Hör zu – was bedeutet das Wort?",
     "options": [
-     "nur für ganz wenige Kinder",
+     "Betreuung nur für Kinder, deren Eltern arbeiten müssen",
      "nur am Abend nach sechs",
      "nur für die ganz Kleinen",
      "nur an einem Tag im Monat"
@@ -3664,7 +3664,7 @@
     "q": "🔊 Hör zu – was bedeutet das Wort?",
     "options": [
      "eine Stunde am Mittag ruhig",
-     "drei Wochen im Sommer zu",
+     "die Zeit, in der die Kita geschlossen ist",
      "der letzte Tag vor dem Fest",
      "die halbe Stunde vor dem Essen"
     ],
@@ -3816,7 +3816,7 @@
    },
    {
     "de": "anstoßen",
-    "info": "die Gläser kurz zusammenhalten",
+    "info": "die Gläser kurz aneinanderstoßen",
     "emoji": "🥂"
    },
    {
@@ -4053,7 +4053,7 @@
     "options": [
      "die Kerzen alle auspusten",
      "die Teller schnell abräumen",
-     "die Gläser kurz zusammenhalten",
+     "die Gläser kurz aneinanderstoßen",
      "die Flaschen wieder zumachen"
     ],
     "answer": 2,
@@ -4544,7 +4544,7 @@
    },
    {
     "de": "der Kassenbon",
-    "info": "Zettel als Beweis vom Kauf",
+    "info": "Zettel als Beleg für den Kauf",
     "emoji": "🧾"
    },
    {
@@ -4745,7 +4745,7 @@
     "options": [
      "Karte für den Rabatt im Laden",
      "Schild mit dem Preis der Ware",
-     "Zettel als Beweis vom Kauf",
+     "Zettel als Beleg für den Kauf",
      "Zettel mit dem Plan für morgen"
     ],
     "answer": 2,
@@ -6429,7 +6429,7 @@
    },
    {
     "de": "die Geheimzahl",
-    "info": "die vier Zahlen für die Karte",
+    "info": "die vier Ziffern für die Karte",
     "emoji": "🔢"
    },
    {
@@ -6656,7 +6656,7 @@
     "q": "🔊 Hör zu – was bedeutet das Wort?",
     "options": [
      "die Zahl unter dem Strichcode",
-     "die vier Zahlen für die Karte",
+     "die vier Ziffern für die Karte",
      "die Nummer auf deinem Bon",
      "die Zahl auf dem Preisschild"
     ],
@@ -7142,7 +7142,7 @@
    },
    {
     "de": "anrichten",
-    "info": "das Essen schön auf den Teller",
+    "info": "das Essen schön auf dem Teller anordnen",
     "emoji": "🍽️"
    },
    {
@@ -7307,7 +7307,7 @@
     "options": [
      "das Essen noch einmal warm machen",
      "das Essen zum Tisch der Gäste bringen",
-     "das Essen schön auf den Teller",
+     "das Essen schön auf dem Teller anordnen",
      "das Essen für morgen kalt stellen"
     ],
     "answer": 2,
@@ -10199,7 +10199,7 @@
    },
    {
     "de": "die Schichtzulage",
-    "info": "mehr Geld für ungünstige Zeiten",
+    "info": "fester Betrag für Schichtarbeit",
     "emoji": "💶"
    }
   ],
@@ -10482,7 +10482,7 @@
      "mehr Zeit für schwere Arbeit",
      "mehr Pause für lange Tage",
      "mehr Urlaub für viele Jahre",
-     "mehr Geld für ungünstige Zeiten"
+     "fester Betrag für Schichtarbeit"
     ],
     "answer": 3,
     "w": "die Schichtzulage",
@@ -10563,7 +10563,7 @@
    },
    {
     "de": "der Zuschlag",
-    "info": "mehr Geld für ungünstige Zeiten",
+    "info": "Aufschlag auf den Stundenlohn, zum Beispiel sonntags",
     "emoji": "➕"
    },
    {
@@ -10826,7 +10826,7 @@
     "q": "🔊 Hör zu – was bedeutet das Wort?",
     "options": [
      "mehr Geld für gute Leistung",
-     "mehr Geld für ungünstige Zeiten",
+     "Aufschlag auf den Stundenlohn, zum Beispiel sonntags",
      "weniger Geld in den ersten Monaten",
      "freie Tage für lange Schichten"
     ],
@@ -12064,7 +12064,7 @@
    },
    {
     "de": "die Kulanz",
-    "info": "die Firma zahlt freiwillig mit",
+    "info": "die Firma zahlt freiwillig einen Teil",
     "emoji": "🤝"
    },
    {
@@ -12337,7 +12337,7 @@
     "options": [
      "die Firma muss laut Vertrag zahlen",
      "der Kunde zahlt später in Raten",
-     "die Firma zahlt freiwillig mit",
+     "die Firma zahlt freiwillig einen Teil",
      "die Werkstatt gibt einen kleinen Nachlass"
     ],
     "answer": 2,

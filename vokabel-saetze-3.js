@@ -29,7 +29,7 @@
   var NEU = {
 
     /* ---------- A2 · Polizei & Sicherheit ---------- */
-    "die Anzeige": "Ich habe bei der Polizei eine §Anzeige§ gemacht.",
+    "die Anzeige": "Ich habe bei der Polizei §Anzeige§ erstattet.",
     "der Diebstahl": "Der §Diebstahl§ im Supermarkt wurde sofort gemeldet.",
     "die Zeugin": "Eine §Zeugin§ hat den Unfall genau gesehen.",
     "die Streife": "Die §Streife§ fährt jede Nacht durch unser Viertel.",
@@ -37,7 +37,7 @@
     "die Aussage": "Meine §Aussage§ steht jetzt im Protokoll.",
     "das Protokoll": "Der Beamte liest mir das §Protokoll§ noch einmal vor.",
     "der Unfall": "Nach dem §Unfall§ haben wir die Polizei gerufen.",
-    "die Fundsache": "Deinen Schlüssel findest du bei den §Fundsachen§.",
+    "die Fundsache": "Deinen Schlüssel findest du im Fundbüro bei den §Fundsachen§.",
     "verdächtig": "Der Mann vor der Bank wirkte §verdächtig§.",
     "anhalten": "Die Polizei hat unser Auto kurz §angehalten§.",
     "die Anschrift": "Bitte schreiben Sie Ihre §Anschrift§ auf das Formular.",
@@ -69,10 +69,10 @@
     "der Sicherungskasten": "Der §Sicherungskasten§ hängt im Flur.",
     "spannungsfrei": "Erst wenn alles §spannungsfrei§ ist, fange ich an.",
     "das Kabel": "Das §Kabel§ ist an einer Stelle beschädigt.",
-    "der Kurzschluss": "Ein §Kurzschluss§ hat das ganze Licht ausgemacht.",
+    "der Kurzschluss": "Ein §Kurzschluss§ hat die Sicherung ausgelöst.",
     "die Heizung": "Die §Heizung§ wird oben nicht richtig warm.",
     "das Ventil": "Am §Ventil§ tropft es seit gestern.",
-    "die Dichtung": "Ich habe die alte §Dichtung§ gegen eine neue getauscht.",
+    "die Dichtung": "Ich habe die alte §Dichtung§ gegen eine neue ausgetauscht.",
     "der Abfluss": "Der §Abfluss§ in der Küche ist verstopft.",
     "der Druck": "Der §Druck§ in der Anlage ist zu niedrig.",
     "die Wartung": "Einmal im Jahr macht der Kollege die §Wartung§.",
@@ -81,14 +81,14 @@
     /* ---------- B1 · Metall ---------- */
     "die Werkbank": "Mein Werkzeug liegt auf der §Werkbank§.",
     "der Schraubstock": "Spann das Rohr in den §Schraubstock§.",
-    "die Feile": "Mit der §Feile§ nimmst du die Kante weg.",
-    "schweißen": "Der Kollege §schweißt§ die beiden Bleche zusammen.",
+    "die Feile": "Mit der §Feile§ brichst du die scharfe Kante.",
+    "schweißen": "Der Kollege §schweißt§ zwei dicke Bleche.",
     "die Naht": "Die §Naht§ sieht sauber und gleichmäßig aus.",
     "das Maß": "Das §Maß§ stimmt auf den Millimeter.",
     "der Grat": "Nach dem Sägen muss der §Grat§ weg.",
     "die Zeichnung": "Auf der §Zeichnung§ stehen alle Maße.",
     "der Span": "Nach dem Bohren liegen überall §Späne§.",
-    "spannen": "§Spann§ das Werkstück fest, bevor du bohrst.",
+    "spannen": "§Spann§ das Werkstück in den Schraubstock.",
     "prüfen": "Ich §prüfe§ jedes Teil mit dem Messschieber.",
 
     /* ---------- A2 · Reinigung ---------- */
@@ -157,7 +157,7 @@
     "langsamer sprechen": "Am Telefon musst du oft §langsamer sprechen§.",
     "die Mailbox": "Sprich mir einfach auf die §Mailbox§.",
     "auflegen": "Bitte nicht §auflegen§, ich frage kurz nach.",
-    "die Erreichbarkeit": "Meine §Erreichbarkeit§ ist von neun bis fünf.",
+    "die Erreichbarkeit": "Meine §Erreichbarkeit§ steht in der Signatur.",
 
     /* ---------- A2 · Ankommen in Deutschland ---------- */
     "die Meldebescheinigung": "Für das Konto brauchst du die §Meldebescheinigung§.",
@@ -167,7 +167,7 @@
     "der Integrationskurs": "Mein §Integrationskurs§ dauert sechs Monate.",
     "die Beratungsstelle": "In der §Beratungsstelle§ helfen sie dir kostenlos.",
     "die Einbürgerung": "Nach der §Einbürgerung§ darfst du wählen.",
-    "sich zurechtfinden": "Nach einem Jahr habe ich mich hier §zurechtgefunden§.",
+    "sich zurechtfinden": "Nach einem Jahr habe ich §mich hier zurechtgefunden§.",
 
     /* ---------- A2 · Im Deutschkurs ---------- */
     "die Aufgabe": "Die §Aufgabe§ auf Seite zehn war schwer.",
@@ -176,7 +176,7 @@
     "das Beispiel": "Kannst du mir ein §Beispiel§ geben?",
     "die Regel": "Diese §Regel§ merke ich mir mit einem Satz.",
     "die Ausnahme": "Zu jeder Regel gibt es eine §Ausnahme§.",
-    "der Fehler": "Aus einem §Fehler§ lernt man am meisten.",
+    "der Fehler": "Aus §Fehlern§ lernt man am meisten.",
     "die Korrektur": "Die §Korrektur§ kommt nächste Woche zurück.",
     "die Entschuldigung": "Bring bitte eine §Entschuldigung§ für den Montag mit.",
     "fehlen": "Gestern hat die halbe Gruppe §gefehlt§.",
