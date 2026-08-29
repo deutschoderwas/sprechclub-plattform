@@ -698,6 +698,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-sprachkurs.webp"
  },
  {
+  "d": "grammatik-modalpartikeln-b1.html",
+  "t": "Modalpartikeln: doch, mal, ja, eben",
+  "lvl": "B1",
+  "art": "grammatik",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "grammatik-konnektoren-b1.html",
   "t": "Konnektoren: deshalb, trotzdem, au erdem",
   "lvl": "B1",

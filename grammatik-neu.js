@@ -1000,12 +1000,12 @@
    },
    {
     "type": "gap",
-    "text": "___ Sie langsamer, bitte. (sprechen)",
+    "text": "___ langsamer, bitte. (Sie, sprechen)",
     "answer": "Sprechen",
     "alts": [
      "Sprechen"
     ],
-    "explain": "Der Sie-Imperativ: Verb zuerst, dann Sie — Sprechen Sie bitte langsamer."
+    "explain": "Sprechen Sie bitte langsamer."
    },
    {
     "type": "choice",
@@ -1869,7 +1869,7 @@
     "type": "choice",
     "q": "Was ist der Unterschied? „Die Tür wird geschlossen.“ – „Die Tür ist geschlossen.“",
     "options": [
-     "Der erste zeigt den Vorgang, der zweite den Zustand.",
+     "Erstens der Vorgang, zweitens der Zustand.",
      "Erstens die Zukunft, zweitens die Gegenwart.",
      "Kein Unterschied.",
      "Erstens höflich, zweitens direkt."
@@ -2711,7 +2711,7 @@
      "Man benutzt das Passiv."
     ],
     "answer": 0,
-    "explain": "Konjunktiv I „sie haben“ ist gleich dem Indikativ — deshalb weicht man auf Konjunktiv II „sie hätten“ aus."
+    "explain": "Bei sie haben = sie haben hilft nur würde/hätte."
    },
    {
     "type": "choice",
@@ -2809,12 +2809,12 @@
    },
    {
     "type": "gap",
-    "text": "Eine ___ Frage blieb offen. (drängen)",
-    "answer": "drängende",
+    "text": "Eine ___ Frage blieb offen. (bleiben)",
+    "answer": "bleibende",
     "alts": [
-     "drängende"
+     "bleibende"
     ],
-    "explain": "Partizip I von drängen: drängend — plus Endung -e."
+    "explain": "Partizip I von bleiben: bleibend."
    },
    {
     "type": "choice",
@@ -2838,7 +2838,7 @@
      "Die Unterlagen ohne Frist."
     ],
     "answer": 0,
-    "explain": "zu + Partizip I sagt: Das muss getan werden. Die einzureichenden Unterlagen = die Unterlagen, die eingereicht werden müssen."
+    "explain": "Wieder zu + Partizip I: eine Pflicht in einem Wort."
    },
    {
     "type": "choice",
@@ -2868,7 +2868,7 @@
     "alts": [
      "klingelndes"
     ],
-    "explain": "Partizip I nach „ein“ (Neutrum): -es."
+    "explain": "Partizip I, Neutrum ohne Artikel: -es."
    },
    {
     "type": "gap",
@@ -3503,6 +3503,603 @@
      "soll"
     ],
     "explain": "sollen + Passiv-Perfekt-Infinitiv: Hörensagen über etwas Vergangenes."
+   }
+  ]
+ },
+ {
+  "id": "modalpartikeln",
+  "title": "Modalpartikeln — doch, mal, ja, eben",
+  "level": "B1",
+  "emoji": "💬",
+  "words": [],
+  "exercises": [
+   {
+    "type": "gap",
+    "text": "Komm ___ her, ich zeig dir was.",
+    "answer": "mal",
+    "alts": [
+     "mal"
+    ],
+    "explain": "mal macht die Aufforderung klein und freundlich. Ohne mal klingt derselbe Satz wie ein Befehl."
+   },
+   {
+    "type": "gap",
+    "text": "Das ist ___ nicht so schlimm!",
+    "answer": "doch",
+    "alts": [
+     "doch"
+    ],
+    "explain": "doch widerspricht einer Sorge, die die andere Person gerade hat."
+   },
+   {
+    "type": "gap",
+    "text": "Du weißt ___, wie das hier läuft.",
+    "answer": "ja",
+    "alts": [
+     "ja"
+    ],
+    "explain": "ja heißt: Das wissen wir beide schon, ich sage nichts Neues."
+   },
+   {
+    "type": "gap",
+    "text": "Dann fahren wir ___ mit dem Bus.",
+    "answer": "eben",
+    "alts": [
+     "eben",
+     "halt"
+    ],
+    "explain": "eben und halt sagen: Es ist, wie es ist — da kann man nichts machen."
+   },
+   {
+    "type": "gap",
+    "text": "Was machst du ___ heute Abend?",
+    "answer": "denn",
+    "alts": [
+     "denn"
+    ],
+    "explain": "denn macht die Frage interessiert statt prüfend. Ohne denn klingt sie nach Kontrolle."
+   },
+   {
+    "type": "gap",
+    "text": "Er wird ___ im Stau stehen.",
+    "answer": "wohl",
+    "alts": [
+     "wohl"
+    ],
+    "explain": "wohl drückt eine Vermutung aus, ohne dass man vermuten sagen muss."
+   },
+   {
+    "type": "gap",
+    "text": "Setz dich ___ hin, du stehst da schon zehn Minuten.",
+    "answer": "doch",
+    "alts": [
+     "doch",
+     "mal"
+    ],
+    "explain": "doch und mal machen aus der Aufforderung eine Einladung."
+   },
+   {
+    "type": "gap",
+    "text": "Das habe ich dir ___ gesagt.",
+    "answer": "doch",
+    "alts": [
+     "doch",
+     "ja"
+    ],
+    "explain": "Hier erinnert doch an etwas, das schon einmal gesagt wurde."
+   },
+   {
+    "type": "gap",
+    "text": "Ruf mich ___ an, wenn du da bist.",
+    "answer": "einfach",
+    "alts": [
+     "einfach",
+     "mal"
+    ],
+    "explain": "einfach nimmt der Bitte das Schwere: Es ist kein Aufwand."
+   },
+   {
+    "type": "gap",
+    "text": "Das war ___ klar!",
+    "answer": "ja",
+    "alts": [
+     "ja",
+     "doch"
+    ],
+    "explain": "ja betont: Genau das war zu erwarten."
+   },
+   {
+    "type": "choice",
+    "q": "Was ändert sich an „Komm her!“ durch „Komm mal her!“?",
+    "options": [
+     "Es klingt freundlicher und weniger nach Befehl.",
+     "Es wird höflicher, weil mal ein Konjunktiv ist.",
+     "Es heißt, dass man nur ein einziges Mal kommen soll.",
+     "Die Handlung rückt in die Zukunft."
+    ],
+    "answer": 0,
+    "explain": "Modalpartikeln ändern nicht die Information, sondern den Ton."
+   },
+   {
+    "type": "choice",
+    "q": "„Das ist ja interessant!“ — was sagt das ja?",
+    "options": [
+     "Ich merke das gerade erst und bin überrascht.",
+     "Ich stimme dir zu.",
+     "Ich frage nach.",
+     "Ich bin unsicher."
+    ],
+    "answer": 0,
+    "explain": "ja drückt hier Überraschung über etwas Neues aus."
+   },
+   {
+    "type": "choice",
+    "q": "Wo stehen Modalpartikeln im Satz?",
+    "options": [
+     "Im Mittelfeld, nach dem Verb und nach den Pronomen.",
+     "Immer auf Position 1.",
+     "Immer am Satzende.",
+     "Direkt vor dem Subjekt."
+    ],
+    "answer": 0,
+    "explain": "Sie stehen nie auf Position 1 und tragen nie den Satzakzent."
+   },
+   {
+    "type": "choice",
+    "q": "Welcher Satz kommt ohne Modalpartikel aus?",
+    "options": [
+     "Der Zug fährt um 8 Uhr 14 ab.",
+     "Komm her.",
+     "Das ist nicht schlimm.",
+     "Was machst du am Wochenende?"
+    ],
+    "answer": 0,
+    "explain": "Reine Sachinformation braucht keine. Sobald eine Haltung mitschwingt, wirkt der Satz ohne Partikel schroff."
+   }
+  ]
+ },
+ {
+  "id": "praepositionaladverbien",
+  "title": "darauf, worauf, damit — die da-Wörter",
+  "level": "B1",
+  "emoji": "🔗",
+  "words": [],
+  "exercises": [
+   {
+    "type": "gap",
+    "text": "Ich warte auf den Bus. — Ich warte ___.",
+    "answer": "darauf",
+    "alts": [
+     "darauf"
+    ],
+    "explain": "Sache → da + Präposition. Vor einem Vokal kommt ein r dazwischen: darauf."
+   },
+   {
+    "type": "gap",
+    "text": "___ wartest du?",
+    "answer": "Worauf",
+    "alts": [
+     "Worauf"
+    ],
+    "explain": "Die Frage nach einer Sache: wo + r + auf."
+   },
+   {
+    "type": "gap",
+    "text": "Er denkt an den Termin. — Er denkt ___.",
+    "answer": "daran",
+    "alts": [
+     "daran"
+    ],
+    "explain": "an + Sache → daran."
+   },
+   {
+    "type": "gap",
+    "text": "___ denkst du gerade?",
+    "answer": "Woran",
+    "alts": [
+     "Woran"
+    ],
+    "explain": "Frage nach einer Sache: woran. Bei einer Person hieße es: An wen denkst du?"
+   },
+   {
+    "type": "gap",
+    "text": "Sie freut sich über das Geschenk. — Sie freut sich ___.",
+    "answer": "darüber",
+    "alts": [
+     "darüber"
+    ],
+    "explain": "über + Sache → darüber."
+   },
+   {
+    "type": "gap",
+    "text": "Ich bin ___ einverstanden, dass wir später anfangen.",
+    "answer": "damit",
+    "alts": [
+     "damit"
+    ],
+    "explain": "Das da-Wort kündigt den dass-Satz an: Ich bin damit einverstanden, dass …"
+   },
+   {
+    "type": "gap",
+    "text": "___ hast du das aufgemacht? — Mit dem Messer.",
+    "answer": "Womit",
+    "alts": [
+     "Womit"
+    ],
+    "explain": "mit + Sache in der Frage → womit."
+   },
+   {
+    "type": "gap",
+    "text": "Ich habe Angst vor großen Hunden. — Ich habe Angst ___.",
+    "answer": "davor",
+    "alts": [
+     "davor"
+    ],
+    "explain": "vor + Sache → davor."
+   },
+   {
+    "type": "gap",
+    "text": "Wir sprechen über das Projekt. — Wir sprechen ___.",
+    "answer": "darüber",
+    "alts": [
+     "darüber"
+    ],
+    "explain": "Auch hier eine Sache, also darüber. Über meinen Chef spricht man dagegen: über ihn."
+   },
+   {
+    "type": "choice",
+    "q": "Ich warte auf meine Schwester. Wie geht es weiter: Ich warte …",
+    "options": [
+     "auf sie",
+     "darauf",
+     "worauf",
+     "auf ihr"
+    ],
+    "answer": 0,
+    "explain": "Bei Personen bleibt die Präposition und es folgt ein Pronomen. Nur Sachen bekommen ein da-Wort."
+   },
+   {
+    "type": "choice",
+    "q": "Warum heißt es „darauf“ und nicht „daauf“?",
+    "options": [
+     "Weil vor einem Vokal ein r eingeschoben wird.",
+     "Weil auf immer ein r verlangt.",
+     "Weil es zwei getrennte Wörter sind.",
+     "Weil der Akkusativ ein r braucht."
+    ],
+    "answer": 0,
+    "explain": "da + r + auf. Genauso: woran, darüber, worüber."
+   },
+   {
+    "type": "choice",
+    "q": "„Ich freue mich darauf, dich zu sehen.“ Wozu dient darauf?",
+    "options": [
+     "Es kündigt an, worauf sich die Freude bezieht.",
+     "Es ersetzt das Subjekt.",
+     "Es macht den Satz höflicher.",
+     "Es zeigt die Vergangenheit an."
+    ],
+    "answer": 0,
+    "explain": "Das da-Wort steht als Platzhalter für den Satz, der danach kommt."
+   },
+   {
+    "type": "choice",
+    "q": "Welche Form passt: „Ich interessiere mich ___ Geschichte.“",
+    "options": [
+     "für",
+     "dafür",
+     "wofür",
+     "davon"
+    ],
+    "answer": 0,
+    "explain": "Vor dem Nomen steht die Präposition selbst. Das da-Wort ersetzt das Nomen, es steht nicht davor."
+   },
+   {
+    "type": "choice",
+    "q": "Welcher Satz ist richtig?",
+    "options": [
+     "Ich erinnere mich gut daran.",
+     "Ich erinnere mich gut an das.",
+     "Ich erinnere mich gut davon.",
+     "Ich erinnere mich gut worüber."
+    ],
+    "answer": 0,
+    "explain": "an + das wird im Deutschen zu daran zusammengezogen."
+   }
+  ]
+ },
+ {
+  "id": "n-deklination",
+  "title": "Die n-Deklination — den Studenten, Herrn Meier",
+  "level": "B1",
+  "emoji": "🧩",
+  "words": [],
+  "exercises": [
+   {
+    "type": "gap",
+    "text": "Ich habe mit dem ___ gesprochen. (der Student)",
+    "answer": "Studenten",
+    "alts": [
+     "Studenten"
+    ],
+    "explain": "Maskuline Wörter auf -ent bekommen in allen Fällen außer dem Nominativ ein -en."
+   },
+   {
+    "type": "gap",
+    "text": "Kennst du den ___? (der Nachbar)",
+    "answer": "Nachbarn",
+    "alts": [
+     "Nachbarn"
+    ],
+    "explain": "der Nachbar → den Nachbarn. Im Akkusativ kommt das -n dazu."
+   },
+   {
+    "type": "gap",
+    "text": "Guten Tag, ___ Meier!",
+    "answer": "Herr",
+    "alts": [
+     "Herr"
+    ],
+    "explain": "Die Anrede steht im Nominativ: Herr Meier."
+   },
+   {
+    "type": "gap",
+    "text": "Ich schreibe ___ Meier gleich eine Mail.",
+    "answer": "Herrn",
+    "alts": [
+     "Herrn"
+    ],
+    "explain": "Nach schreiben folgt der Dativ: Herrn Meier. Herr ist das kürzeste Wort der n-Deklination."
+   },
+   {
+    "type": "gap",
+    "text": "Der Chef hat einen neuen ___ eingestellt. (der Kollege)",
+    "answer": "Kollegen",
+    "alts": [
+     "Kollegen"
+    ],
+    "explain": "der Kollege → den Kollegen."
+   },
+   {
+    "type": "gap",
+    "text": "Das ist die Meinung des ___. (der Experte)",
+    "answer": "Experten",
+    "alts": [
+     "Experten"
+    ],
+    "explain": "Im Genitiv steht hier kein -s, sondern -n: des Experten."
+   },
+   {
+    "type": "gap",
+    "text": "Wir helfen dem ___. (der Junge)",
+    "answer": "Jungen",
+    "alts": [
+     "Jungen"
+    ],
+    "explain": "helfen verlangt den Dativ: dem Jungen."
+   },
+   {
+    "type": "gap",
+    "text": "Wie ist Ihr ___, bitte? (der Name)",
+    "answer": "Name",
+    "alts": [
+     "Name"
+    ],
+    "explain": "Im Nominativ bleibt es Name. Aber: Ich kenne den Namen nicht."
+   },
+   {
+    "type": "gap",
+    "text": "Der Hund gehört dem ___ nebenan. (der Mensch)",
+    "answer": "Menschen",
+    "alts": [
+     "Menschen"
+    ],
+    "explain": "der Mensch → dem Menschen."
+   },
+   {
+    "type": "gap",
+    "text": "Sie hat den ___ um Hilfe gebeten. (der Polizist)",
+    "answer": "Polizisten",
+    "alts": [
+     "Polizisten"
+    ],
+    "explain": "Wörter auf -ist gehören dazu: der Polizist, den Polizisten."
+   },
+   {
+    "type": "choice",
+    "q": "Welche Wörter gehören zur n-Deklination?",
+    "options": [
+     "Maskuline Wörter, oft für Personen: Student, Kollege, Nachbar, Junge.",
+     "Alle Wörter, die auf -e enden.",
+     "Alle femininen Wörter.",
+     "Alle Wörter im Plural."
+    ],
+    "answer": 0,
+    "explain": "Fast immer maskulin, sehr oft Personen. Feminine Wörter machen das nie."
+   },
+   {
+    "type": "choice",
+    "q": "„Ich sehe der Student.“ Was ist falsch?",
+    "options": [
+     "Es muss den Studenten heißen — Akkusativ mit -en.",
+     "Es muss die Studentin heißen.",
+     "Es muss dem Student heißen.",
+     "Der Satz ist richtig."
+    ],
+    "answer": 0,
+    "explain": "Im Akkusativ ändern sich beide Teile: den + Studenten."
+   },
+   {
+    "type": "choice",
+    "q": "Wo steht bei „der Herr“ das -n?",
+    "options": [
+     "In allen Fällen außer im Nominativ Singular.",
+     "Nur im Genitiv.",
+     "Nur im Plural.",
+     "Nie."
+    ],
+    "answer": 0,
+    "explain": "Herr, Herrn, Herrn, Herrn — und im Plural die Herren."
+   },
+   {
+    "type": "choice",
+    "q": "Warum heißt es „Sehr geehrter Herr Weber“, aber „Ich schreibe Herrn Weber“?",
+    "options": [
+     "Die Anrede steht im Nominativ, nach schreiben folgt der Dativ.",
+     "Herr wird nur in Briefen dekliniert.",
+     "Der Name Weber verlangt den Dativ.",
+     "Beides ist gleich richtig."
+    ],
+    "answer": 0,
+    "explain": "Über die Endung entscheidet der Fall, nicht die Höflichkeit."
+   }
+  ]
+ },
+ {
+  "id": "lassen",
+  "title": "lassen — machen lassen, erlauben, möglich sein",
+  "level": "B1",
+  "emoji": "🤝",
+  "words": [],
+  "exercises": [
+   {
+    "type": "gap",
+    "text": "Mein Auto ist kaputt. Ich ___ es reparieren.",
+    "answer": "lasse",
+    "alts": [
+     "lasse"
+    ],
+    "explain": "lassen + Infinitiv: Ich mache es nicht selbst, ich beauftrage jemanden."
+   },
+   {
+    "type": "gap",
+    "text": "Meine Eltern ___ mich abends nicht mehr allein weggehen.",
+    "answer": "lassen",
+    "alts": [
+     "lassen"
+    ],
+    "explain": "Hier heißt lassen: erlauben — oder eben nicht erlauben."
+   },
+   {
+    "type": "gap",
+    "text": "Das Fenster ___ sich nicht öffnen.",
+    "answer": "lässt",
+    "alts": [
+     "lässt"
+    ],
+    "explain": "sich lassen + Infinitiv heißt: Es ist nicht möglich. Ersatz für: kann nicht geöffnet werden."
+   },
+   {
+    "type": "gap",
+    "text": "Ich habe meinen Schlüssel zu Hause ___.",
+    "answer": "gelassen",
+    "alts": [
+     "gelassen"
+    ],
+    "explain": "Ohne zweites Verb heißt das Partizip gelassen."
+   },
+   {
+    "type": "gap",
+    "text": "Ich habe mir die Haare schneiden ___.",
+    "answer": "lassen",
+    "alts": [
+     "lassen"
+    ],
+    "explain": "Steht ein zweites Verb dabei, heißt es im Perfekt lassen statt gelassen."
+   },
+   {
+    "type": "gap",
+    "text": "___ uns morgen eine Stunde früher anfangen!",
+    "answer": "Lass",
+    "alts": [
+     "Lass",
+     "Lasst"
+    ],
+    "explain": "Lass uns … ist der Vorschlag an eine Person, Lasst uns … an mehrere."
+   },
+   {
+    "type": "gap",
+    "text": "Der Fehler ___ sich leicht erklären.",
+    "answer": "lässt",
+    "alts": [
+     "lässt"
+    ],
+    "explain": "sich lassen: Das kann man leicht erklären."
+   },
+   {
+    "type": "gap",
+    "text": "Bitte ___ Sie mich kurz ausreden.",
+    "answer": "lassen",
+    "alts": [
+     "lassen"
+    ],
+    "explain": "Höfliche Bitte um Erlaubnis: Erlauben Sie mir, zu Ende zu sprechen."
+   },
+   {
+    "type": "gap",
+    "text": "Wir ___ die Wohnung streichen, bevor wir einziehen.",
+    "answer": "lassen",
+    "alts": [
+     "lassen"
+    ],
+    "explain": "Auch hier: Wir machen es nicht selbst, wir geben es in Auftrag."
+   },
+   {
+    "type": "gap",
+    "text": "Lass das ___!",
+    "answer": "sein",
+    "alts": [
+     "sein"
+    ],
+    "explain": "Lass das sein heißt: Hör bitte damit auf."
+   },
+   {
+    "type": "choice",
+    "q": "„Ich lasse mir die Haare schneiden.“ Wer schneidet?",
+    "options": [
+     "Jemand anderes, zum Beispiel die Friseurin.",
+     "Ich selbst.",
+     "Niemand.",
+     "Das bleibt offen."
+    ],
+    "answer": 0,
+    "explain": "lassen sagt: Ich veranlasse es, ich tue es nicht selbst."
+   },
+   {
+    "type": "choice",
+    "q": "Was bedeutet „Das lässt sich machen“?",
+    "options": [
+     "Das ist möglich.",
+     "Das ist verboten.",
+     "Das ist schon fertig.",
+     "Das muss man machen."
+    ],
+    "answer": 0,
+    "explain": "sich lassen ersetzt das Passiv mit können: Das kann gemacht werden."
+   },
+   {
+    "type": "choice",
+    "q": "Warum heißt es „Ich habe ihn warten lassen“ und nicht „gelassen“?",
+    "options": [
+     "Weil ein zweites Verb dabeisteht — dann steht lassen im Infinitiv.",
+     "Weil lassen unregelmäßig ist.",
+     "Weil warten trennbar ist.",
+     "Weil der Satz im Passiv steht."
+    ],
+    "answer": 0,
+    "explain": "Das nennt man den Ersatzinfinitiv. Genauso bei sehen und hören."
+   },
+   {
+    "type": "choice",
+    "q": "In welchem Satz heißt lassen „erlauben“?",
+    "options": [
+     "Meine Mutter lässt mich nicht ins Kino gehen.",
+     "Ich lasse mein Fahrrad reparieren.",
+     "Das Fenster lässt sich nicht schließen.",
+     "Ich habe die Tasche im Bus gelassen."
+    ],
+    "answer": 0,
+    "explain": "Hier geht es um Erlaubnis, nicht um einen Auftrag und nicht um Möglichkeit."
    }
   ]
  }
