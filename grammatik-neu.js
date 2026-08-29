@@ -1000,12 +1000,12 @@
    },
    {
     "type": "gap",
-    "text": "___ langsamer, bitte. (Sie, sprechen)",
+    "text": "___ Sie langsamer, bitte. (sprechen)",
     "answer": "Sprechen",
     "alts": [
      "Sprechen"
     ],
-    "explain": "Sprechen Sie bitte langsamer."
+    "explain": "Der Sie-Imperativ: Verb zuerst, dann Sie — Sprechen Sie bitte langsamer."
    },
    {
     "type": "choice",
@@ -2838,7 +2838,7 @@
      "Die Unterlagen ohne Frist."
     ],
     "answer": 0,
-    "explain": "Wieder zu + Partizip I: eine Pflicht in einem Wort."
+    "explain": "zu + Partizip I sagt: Das muss getan werden. Die einzureichenden Unterlagen = die Unterlagen, die eingereicht werden müssen."
    },
    {
     "type": "choice",

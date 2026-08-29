@@ -758,7 +758,7 @@
      "keines"
     ],
     "answer": 2,
-    "explain": "Im Deutschen betont man das Wort, auf das es ankommt. Derselbe Satz kann so drei Bedeutungen haben."
+    "explain": "In einem kurzen Satz trägt meist genau ein Wort den Hauptton. Alles andere ordnet sich diesem einen Wort unter."
    },
    {
     "type": "choice",
@@ -770,7 +770,7 @@
      "Sie werden gedehnt."
     ],
     "answer": 2,
-    "explain": "Im Deutschen betont man das Wort, auf das es ankommt. Derselbe Satz kann so drei Bedeutungen haben."
+    "explain": "Unbetonte Wörter werden kürzer, leiser und undeutlicher — sie verschwinden aber nicht. Genau dieser Unterschied macht den deutschen Rhythmus aus."
    }
   ]
  },
