@@ -28,7 +28,11 @@
     { view: 'dashboard', text: 'Mein Bereich', zeichen: 'start', kinder: [
         { view: 'stunden' },
         { view: 'fortschritt' },
-        { view: 'lernpfad' },
+        /* „Mein Lernplan" stand hier als dritter Weg neben Kursbibliothek
+           und Lernbereich und beantwortete dieselbe Frage. Der Weg ist
+           jetzt die Kursbibliothek; die Ansicht bleibt über #lernpfad
+           erreichbar, aber sie steht nicht mehr als eigenes Ziel im
+           Menü. */
         { view: 'guthaben' }
       ] },
     /* Der Community-Chat war ein Unterpunkt von LIVE-Unterricht und damit

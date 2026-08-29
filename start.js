@@ -367,7 +367,7 @@
     var weiter = st.angefangen ? ['sn_kweiter','Weitermachen'] : ['sn_kstart2','Los geht’s'];
     return '<div class="st-kurs">'
       + '<div class="bild">'
-      +   '<img src="' + kursBild(st.niveau, st.id) + '" alt="" loading="lazy" onerror="this.remove()">'
+      +   '<img src="' + (st.bild || kursBild(st.niveau, st.id)) + '" alt="" loading="lazy" onerror="this.remove()">'
       +   '<span class="stufe">' + E(st.niveau) + '</span>'
       + '</div>'
       + '<div class="txt">'
@@ -379,8 +379,8 @@
       +     '<span><b>' + prozTxt + '</b> ' + T('sn_kgeschafft','geschafft') + '</span></div>'
       +     '<div class="st-bar"><i style="width:' + Math.max(2, st.prozent) + '%"></i></div>'
       +     '<div class="akt">'
-      +       '<button class="st-b st-b1" onclick="kursOeffnen(' + st.nr + ',\'' + st.niveau + '\')">' + T(weiter[0], weiter[1]) + '</button>'
-      +       '<button class="st-b st-b2" onclick="kursUebersicht(\'' + st.niveau + '\')">' + T('sn_kalle','Alle Lektionen') + '</button>'
+      +       '<button class="st-b st-b1" onclick="kursOeffnen(' + st.nr + ',\'' + (st.weg || st.niveau) + '\')">' + T(weiter[0], weiter[1]) + '</button>'
+      +       '<button class="st-b st-b2" onclick="kursUebersicht(\'' + (st.weg || st.niveau) + '\')">' + T('sn_kalle','Alle Lektionen') + '</button>'
       +     '</div>'
       +   '</div>'
       + '</div></div>';

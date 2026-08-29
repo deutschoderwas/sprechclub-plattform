@@ -632,7 +632,10 @@
      Gibt es zu einem ausdrücklich gefragten Niveau keinen Kurs,
      kommt null — nichts wird erfunden.
      ============================================================ */
-  window.kursStand = function(niveau){
+  /* Diese Antwort gilt nur noch fuer den Stufenkurs A1/A2. Der Weg
+     durch die Plattform kommt aus weg.js (Kursbibliothek) — sonst
+     gaebe es wieder zwei Wege mit zwei Staenden. */
+  window.stufenkursStand = function(niveau){
     try{
       var id = nivName(niveau || niveauGemerkt());
       if(!hatKurs(id)){
