@@ -976,6 +976,38 @@ window.LEKTIONEN = [
   "img": "amanda/sz-wohnen.webp"
  },
  {
+  "d": "sprachspielclub-flohmarkt-b1-b2.html",
+  "t": "Auf dem Flohmarkt",
+  "lvl": "B1–B2",
+  "art": "spiel",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
+  "d": "sprachspielclub-supermarkt-b1-b2.html",
+  "t": "Ab in den Supermarkt",
+  "lvl": "B1–B2",
+  "art": "spiel",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
+  "d": "sprachspielclub-arztpraxis-b1-b2.html",
+  "t": "In der Arztpraxis",
+  "lvl": "B1–B2",
+  "art": "spiel",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
+  "d": "sprachspielclub-volksfest-b1-b2.html",
+  "t": "Auf dem Volksfest",
+  "lvl": "B1–B2",
+  "art": "spiel",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "sprachspielclub-park-b1-b2.html",
   "t": "Ab in den Park",
   "lvl": "B1–B2",
@@ -2200,6 +2232,10 @@ window.BEREICH_MEHR = {
   "grammatik-relativsaetze-praep-b1.html",
   "vorbereitung-relativsaetze-praep-b1.html",
   "vorbereitung-wechselpraepositionen-b1.html",
+  "sprachspielclub-flohmarkt-b1-b2.html",
+  "sprachspielclub-supermarkt-b1-b2.html",
+  "sprachspielclub-arztpraxis-b1-b2.html",
+  "sprachspielclub-volksfest-b1-b2.html",
   "sprachspielclub-park-b1-b2.html",
   "sprachspielclub-freibad-b1-b2.html",
   "sprachspielclub-bahnhof-b1-b2.html",
