@@ -6,6 +6,7 @@ H = os.path.dirname(os.path.abspath(__file__))
 CSS = open(os.path.join(H, 'vorlage-gram.css'), encoding='utf-8').read()
 JS  = open(os.path.join(H, 'vorlage-gram.js'),  encoding='utf-8').read()
 CSS += open(os.path.join(H, 'vorlage-gram-plus.css'), encoding='utf-8').read()
+CSS += open(os.path.join(H, 'vorlage-gram-mobil.css'), encoding='utf-8').read()
 
 def typo(t):
     return re.sub(r'„([^„"“]{1,400})"', lambda m: '„'+m.group(1)+'“', t)
@@ -27,7 +28,8 @@ def bau(d):
         A('<span class="hero-tag">%s <b>%s</b></span>' % (e,n))
     A('</div>')
     A('<nav class="tabs">')
-    for i,(e,n) in enumerate([('🖼️','Einstieg'),('🧩','Die Regel'),('💬','Im Alltag'),('🎚️',d['spiel_name']),('✅','Üben'),('🗣️','Sprechen')]):
+    kurz = d.get('spiel_kurz') or d['spiel_name']
+    for i,(e,n) in enumerate([('🖼️','Einstieg'),('🧩','Die Regel'),('💬','Im Alltag'),('🎚️',kurz),('✅','Üben'),('🗣️','Sprechen')]):
         A('<button class="tab%s" data-tab="%d">%s %s</button>' % (' active' if i==0 else '', i, e, n))
     A('</nav>')
 

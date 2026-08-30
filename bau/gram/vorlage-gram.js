@@ -8,6 +8,11 @@ document.querySelectorAll('.tab').forEach(function(t){
     document.querySelectorAll('.section').forEach(function(x){x.classList.remove('active');});
     t.classList.add('active');
     document.querySelector('.section[data-section="'+t.dataset.tab+'"]').classList.add('active');
+    var leiste=t.parentNode;
+    if(leiste.scrollWidth>leiste.clientWidth+2){
+      var z=t.offsetLeft-(leiste.clientWidth-t.offsetWidth)/2;
+      if(leiste.scrollTo) leiste.scrollTo({left:z,behavior:'smooth'}); else leiste.scrollLeft=z;
+    }
     window.scrollTo({top:0,behavior:'smooth'});
   });
 });
