@@ -698,6 +698,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-sprachkurs.webp"
  },
  {
+  "d": "grammatik-lassen-b1.html",
+  "t": "lassen: machen lassen, erlauben, liegen lassen",
+  "lvl": "B1",
+  "art": "grammatik",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "grammatik-ndeklination-b1.html",
   "t": "n-Deklination: den Studenten, Herrn Meier",
   "lvl": "B1",
