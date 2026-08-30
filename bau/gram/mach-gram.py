@@ -5,6 +5,7 @@ import json, re, sys, os
 H = os.path.dirname(os.path.abspath(__file__))
 CSS = open(os.path.join(H, 'vorlage-gram.css'), encoding='utf-8').read()
 JS  = open(os.path.join(H, 'vorlage-gram.js'),  encoding='utf-8').read()
+CSS += open(os.path.join(H, 'vorlage-gram-plus.css'), encoding='utf-8').read()
 
 def typo(t):
     return re.sub(r'„([^„"“]{1,400})"', lambda m: '„'+m.group(1)+'“', t)
@@ -78,7 +79,12 @@ def bau(d):
 
     A('<section class="section" data-section="4">')
     A('<h2 class="st">✅ <em>Üben</em></h2>')
-    A('<p class="ssub">%d Aufgaben. Nach jeder Antwort steht da, warum es so ist — lies die Erklärung, auch wenn du richtig lagst.</p>' % len(d['ueb']))
+    arten={'gap':'Lücken','choice':'Auswahl','bau':'Satzbau','sort':'Sortieren','hoer':'Hören','fehler':'Fehlersuche','schreib':'Schreiben'}
+    vorh=[]
+    for a in d['ueb']:
+        n=arten.get(a['t'],'Aufgabe')
+        if n not in vorh: vorh.append(n)
+    A('<p class="ssub">%d Aufgaben in wechselnder Form: %s. Nach jeder Antwort steht da, warum es so ist — lies die Erklärung, auch wenn du richtig lagst.</p>' % (len(d['ueb']), ', '.join(vorh)))
     A('<div class="fortschritt"><div class="bar"><i id="uBar"></i></div><div class="txt" id="uTxt">0 von %d</div></div>' % len(d['ueb']))
     A('<div class="ugrid" id="ugrid"></div>')
     A('</section>')
