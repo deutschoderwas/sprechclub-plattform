@@ -1464,6 +1464,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-freunde.webp"
  },
  {
+  "d": "grammatik-nominalstil-b2.html",
+  "t": "Nominalstil: wegen des Regens oder weil es regnet",
+  "lvl": "B2",
+  "art": "grammatik",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "grammatik-passiversatz-b2.html",
   "t": "Passiversatz: lässt sich, ist zu, -bar",
   "lvl": "B2",
