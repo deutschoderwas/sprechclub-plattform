@@ -698,6 +698,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-sprachkurs.webp"
  },
  {
+  "d": "grammatik-ndeklination-b1.html",
+  "t": "n-Deklination: den Studenten, Herrn Meier",
+  "lvl": "B1",
+  "art": "grammatik",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "grammatik-dawoerter-b1.html",
   "t": "Da-Wörter: darauf, worauf, damit",
   "lvl": "B1",
