@@ -1464,6 +1464,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-freunde.webp"
  },
  {
+  "d": "grammatik-passiversatz-b2.html",
+  "t": "Passiversatz: lässt sich, ist zu, -bar",
+  "lvl": "B2",
+  "art": "grammatik",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "grammatik-passiv-b2.html",
   "t": "Das Passiv",
   "lvl": "B2",
