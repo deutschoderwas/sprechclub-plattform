@@ -3064,6 +3064,3074 @@
     "tipp": "mit dem Fahrrad, mit dem Bus, mit der Bahn — nach mit immer Dativ."
    }
   ]
+ },
+ {
+  "id": "a1-beruf",
+  "title": "Arbeit & Beruf",
+  "level": "A1",
+  "emoji": "💼",
+  "words": [
+   {
+    "de": "die Arbeit",
+    "info": "das, wofür man Geld bekommt",
+    "emoji": "💼"
+   },
+   {
+    "de": "der Beruf",
+    "info": "das, was man gelernt hat und macht",
+    "emoji": "🧑‍🔧"
+   },
+   {
+    "de": "das Büro",
+    "info": "der Raum, in dem man am Schreibtisch arbeitet",
+    "emoji": "🏢"
+   },
+   {
+    "de": "die Kollegin",
+    "info": "die Frau, mit der man zusammenarbeitet",
+    "emoji": "👩‍💼"
+   },
+   {
+    "de": "der Chef",
+    "info": "er sagt, was zu tun ist",
+    "emoji": "🧑‍💼"
+   },
+   {
+    "de": "die Pause",
+    "info": "die kurze Zeit ohne Arbeit",
+    "emoji": "☕"
+   },
+   {
+    "de": "der Lohn",
+    "info": "das Geld für die Arbeit",
+    "emoji": "💶"
+   },
+   {
+    "de": "der Urlaub",
+    "info": "die freien Tage im Jahr",
+    "emoji": "🏝️"
+   },
+   {
+    "de": "die Schicht",
+    "info": "die feste Arbeitszeit, zum Beispiel nachts",
+    "emoji": "🕗"
+   },
+   {
+    "de": "die Bewerbung",
+    "info": "die Unterlagen, mit denen man eine Stelle sucht",
+    "emoji": "📄"
+   },
+   {
+    "de": "die Stelle",
+    "info": "der Arbeitsplatz, den man sucht oder hat",
+    "emoji": "📌"
+   },
+   {
+    "de": "arbeiten",
+    "info": "etwas tun, wofür man Geld bekommt",
+    "emoji": "🛠️"
+   },
+   {
+    "de": "verdienen",
+    "info": "Geld für die Arbeit bekommen",
+    "emoji": "💰"
+   },
+   {
+    "de": "anfangen",
+    "info": "mit etwas beginnen",
+    "emoji": "▶️"
+   },
+   {
+    "de": "aufhören",
+    "info": "mit etwas Schluss machen",
+    "emoji": "⏹️"
+   },
+   {
+    "de": "der Feierabend",
+    "info": "das Ende der Arbeitszeit",
+    "emoji": "🌆"
+   }
+  ],
+  "exercises": [
+   {
+    "type": "karte",
+    "w": "die Arbeit",
+    "info": "das, wofür man Geld bekommt",
+    "emoji": "💼"
+   },
+   {
+    "type": "karte",
+    "w": "der Beruf",
+    "info": "das, was man gelernt hat und macht",
+    "emoji": "🧑‍🔧"
+   },
+   {
+    "type": "karte",
+    "w": "das Büro",
+    "info": "der Raum, in dem man am Schreibtisch arbeitet",
+    "emoji": "🏢"
+   },
+   {
+    "type": "karte",
+    "w": "die Kollegin",
+    "info": "die Frau, mit der man zusammenarbeitet",
+    "emoji": "👩‍💼"
+   },
+   {
+    "type": "karte",
+    "w": "der Chef",
+    "info": "er sagt, was zu tun ist",
+    "emoji": "🧑‍💼"
+   },
+   {
+    "type": "karte",
+    "w": "die Pause",
+    "info": "die kurze Zeit ohne Arbeit",
+    "emoji": "☕"
+   },
+   {
+    "type": "karte",
+    "w": "der Lohn",
+    "info": "das Geld für die Arbeit",
+    "emoji": "💶"
+   },
+   {
+    "type": "karte",
+    "w": "der Urlaub",
+    "info": "die freien Tage im Jahr",
+    "emoji": "🏝️"
+   },
+   {
+    "type": "karte",
+    "w": "die Schicht",
+    "info": "die feste Arbeitszeit, zum Beispiel nachts",
+    "emoji": "🕗"
+   },
+   {
+    "type": "karte",
+    "w": "die Bewerbung",
+    "info": "die Unterlagen, mit denen man eine Stelle sucht",
+    "emoji": "📄"
+   },
+   {
+    "type": "karte",
+    "w": "die Stelle",
+    "info": "der Arbeitsplatz, den man sucht oder hat",
+    "emoji": "📌"
+   },
+   {
+    "type": "karte",
+    "w": "arbeiten",
+    "info": "etwas tun, wofür man Geld bekommt",
+    "emoji": "🛠️"
+   },
+   {
+    "type": "karte",
+    "w": "verdienen",
+    "info": "Geld für die Arbeit bekommen",
+    "emoji": "💰"
+   },
+   {
+    "type": "karte",
+    "w": "anfangen",
+    "info": "mit etwas beginnen",
+    "emoji": "▶️"
+   },
+   {
+    "type": "karte",
+    "w": "aufhören",
+    "info": "mit etwas Schluss machen",
+    "emoji": "⏹️"
+   },
+   {
+    "type": "karte",
+    "w": "der Feierabend",
+    "info": "das Ende der Arbeitszeit",
+    "emoji": "🌆"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „das, wofür man Geld bekommt“?",
+    "options": [
+     "die Arbeit",
+     "die Kollegin",
+     "der Urlaub",
+     "arbeiten"
+    ],
+    "answer": 0,
+    "w": "die Arbeit",
+    "explain": "💼 die Arbeit — das, wofür man Geld bekommt"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „das, was man gelernt hat und macht“?",
+    "options": [
+     "der Beruf",
+     "der Chef",
+     "die Schicht",
+     "verdienen"
+    ],
+    "answer": 0,
+    "w": "der Beruf",
+    "explain": "🧑‍🔧 der Beruf — das, was man gelernt hat und macht"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „der Raum, in dem man am Schreibtisch arbeitet“?",
+    "options": [
+     "das Büro",
+     "die Pause",
+     "die Bewerbung",
+     "anfangen"
+    ],
+    "answer": 0,
+    "w": "das Büro",
+    "explain": "🏢 das Büro — der Raum, in dem man am Schreibtisch arbeitet"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „die Frau, mit der man zusammenarbeitet“?",
+    "options": [
+     "die Kollegin",
+     "der Lohn",
+     "die Stelle",
+     "aufhören"
+    ],
+    "answer": 0,
+    "w": "die Kollegin",
+    "explain": "👩‍💼 die Kollegin — die Frau, mit der man zusammenarbeitet"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „er sagt, was zu tun ist“?",
+    "options": [
+     "der Chef",
+     "der Urlaub",
+     "arbeiten",
+     "der Feierabend"
+    ],
+    "answer": 0,
+    "w": "der Chef",
+    "explain": "🧑‍💼 der Chef — er sagt, was zu tun ist"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „die kurze Zeit ohne Arbeit“?",
+    "options": [
+     "die Pause",
+     "die Schicht",
+     "verdienen",
+     "die Arbeit"
+    ],
+    "answer": 0,
+    "w": "die Pause",
+    "explain": "☕ die Pause — die kurze Zeit ohne Arbeit"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „das Geld für die Arbeit“?",
+    "options": [
+     "der Lohn",
+     "die Bewerbung",
+     "anfangen",
+     "der Beruf"
+    ],
+    "answer": 0,
+    "w": "der Lohn",
+    "explain": "💶 der Lohn — das Geld für die Arbeit"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „die freien Tage im Jahr“?",
+    "options": [
+     "der Urlaub",
+     "die Stelle",
+     "aufhören",
+     "das Büro"
+    ],
+    "answer": 0,
+    "w": "der Urlaub",
+    "explain": "🏝️ der Urlaub — die freien Tage im Jahr"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „die feste Arbeitszeit, zum Beispiel nachts“?",
+    "options": [
+     "die Schicht",
+     "arbeiten",
+     "der Feierabend",
+     "die Kollegin"
+    ],
+    "answer": 0,
+    "w": "die Schicht",
+    "explain": "🕗 die Schicht — die feste Arbeitszeit, zum Beispiel nachts"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „die Unterlagen, mit denen man eine Stelle sucht“?",
+    "options": [
+     "die Bewerbung",
+     "verdienen",
+     "die Arbeit",
+     "der Chef"
+    ],
+    "answer": 0,
+    "w": "die Bewerbung",
+    "explain": "📄 die Bewerbung — die Unterlagen, mit denen man eine Stelle sucht"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „der Arbeitsplatz, den man sucht oder hat“?",
+    "options": [
+     "die Stelle",
+     "anfangen",
+     "der Beruf",
+     "die Pause"
+    ],
+    "answer": 0,
+    "w": "die Stelle",
+    "explain": "📌 die Stelle — der Arbeitsplatz, den man sucht oder hat"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „etwas tun, wofür man Geld bekommt“?",
+    "options": [
+     "arbeiten",
+     "aufhören",
+     "das Büro",
+     "der Lohn"
+    ],
+    "answer": 0,
+    "w": "arbeiten",
+    "explain": "🛠️ arbeiten — etwas tun, wofür man Geld bekommt"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „Geld für die Arbeit bekommen“?",
+    "options": [
+     "verdienen",
+     "der Feierabend",
+     "die Kollegin",
+     "der Urlaub"
+    ],
+    "answer": 0,
+    "w": "verdienen",
+    "explain": "💰 verdienen — Geld für die Arbeit bekommen"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „mit etwas beginnen“?",
+    "options": [
+     "anfangen",
+     "die Arbeit",
+     "der Chef",
+     "die Schicht"
+    ],
+    "answer": 0,
+    "w": "anfangen",
+    "explain": "▶️ anfangen — mit etwas beginnen"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „mit etwas Schluss machen“?",
+    "options": [
+     "aufhören",
+     "der Beruf",
+     "die Pause",
+     "die Bewerbung"
+    ],
+    "answer": 0,
+    "w": "aufhören",
+    "explain": "⏹️ aufhören — mit etwas Schluss machen"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „das Ende der Arbeitszeit“?",
+    "options": [
+     "der Feierabend",
+     "das Büro",
+     "der Lohn",
+     "die Stelle"
+    ],
+    "answer": 0,
+    "w": "der Feierabend",
+    "explain": "🌆 der Feierabend — das Ende der Arbeitszeit"
+   },
+   {
+    "type": "gap",
+    "text": "___ Arbeit",
+    "answer": "die",
+    "hint": "der / die / das?",
+    "w": "die Arbeit",
+    "explain": "Es heißt die Arbeit — das, wofür man Geld bekommt"
+   },
+   {
+    "type": "gap",
+    "text": "___ Beruf",
+    "answer": "der",
+    "hint": "der / die / das?",
+    "w": "der Beruf",
+    "explain": "Es heißt der Beruf — das, was man gelernt hat und macht"
+   },
+   {
+    "type": "gap",
+    "text": "___ Büro",
+    "answer": "das",
+    "hint": "der / die / das?",
+    "w": "das Büro",
+    "explain": "Es heißt das Büro — der Raum, in dem man am Schreibtisch arbeitet"
+   },
+   {
+    "type": "gap",
+    "text": "___ Kollegin",
+    "answer": "die",
+    "hint": "der / die / das?",
+    "w": "die Kollegin",
+    "explain": "Es heißt die Kollegin — die Frau, mit der man zusammenarbeitet"
+   },
+   {
+    "type": "gap",
+    "text": "___ Chef",
+    "answer": "der",
+    "hint": "der / die / das?",
+    "w": "der Chef",
+    "explain": "Es heißt der Chef — er sagt, was zu tun ist"
+   },
+   {
+    "type": "gap",
+    "text": "___ Pause",
+    "answer": "die",
+    "hint": "der / die / das?",
+    "w": "die Pause",
+    "explain": "Es heißt die Pause — die kurze Zeit ohne Arbeit"
+   },
+   {
+    "type": "gap",
+    "text": "___ Lohn",
+    "answer": "der",
+    "hint": "der / die / das?",
+    "w": "der Lohn",
+    "explain": "Es heißt der Lohn — das Geld für die Arbeit"
+   },
+   {
+    "type": "gap",
+    "text": "___ Urlaub",
+    "answer": "der",
+    "hint": "der / die / das?",
+    "w": "der Urlaub",
+    "explain": "Es heißt der Urlaub — die freien Tage im Jahr"
+   },
+   {
+    "type": "gap",
+    "text": "___ Schicht",
+    "answer": "die",
+    "hint": "der / die / das?",
+    "w": "die Schicht",
+    "explain": "Es heißt die Schicht — die feste Arbeitszeit, zum Beispiel nachts"
+   },
+   {
+    "type": "gap",
+    "text": "___ Bewerbung",
+    "answer": "die",
+    "hint": "der / die / das?",
+    "w": "die Bewerbung",
+    "explain": "Es heißt die Bewerbung — die Unterlagen, mit denen man eine Stelle sucht"
+   },
+   {
+    "type": "gap",
+    "text": "___ Stelle",
+    "answer": "die",
+    "hint": "der / die / das?",
+    "w": "die Stelle",
+    "explain": "Es heißt die Stelle — der Arbeitsplatz, den man sucht oder hat"
+   },
+   {
+    "type": "gap",
+    "text": "___ Feierabend",
+    "answer": "der",
+    "hint": "der / die / das?",
+    "w": "der Feierabend",
+    "explain": "Es heißt der Feierabend — das Ende der Arbeitszeit"
+   },
+   {
+    "type": "tippen",
+    "answer": "Arbeit",
+    "info": "das, wofür man Geld bekommt",
+    "emoji": "💼",
+    "w": "die Arbeit",
+    "explain": "💼 die Arbeit"
+   },
+   {
+    "type": "tippen",
+    "answer": "Beruf",
+    "info": "das, was man gelernt hat und macht",
+    "emoji": "🧑‍🔧",
+    "w": "der Beruf",
+    "explain": "🧑‍🔧 der Beruf"
+   },
+   {
+    "type": "tippen",
+    "answer": "Büro",
+    "info": "der Raum, in dem man am Schreibtisch arbeitet",
+    "emoji": "🏢",
+    "w": "das Büro",
+    "explain": "🏢 das Büro"
+   },
+   {
+    "type": "tippen",
+    "answer": "Kollegin",
+    "info": "die Frau, mit der man zusammenarbeitet",
+    "emoji": "👩‍💼",
+    "w": "die Kollegin",
+    "explain": "👩‍💼 die Kollegin"
+   },
+   {
+    "type": "tippen",
+    "answer": "Chef",
+    "info": "er sagt, was zu tun ist",
+    "emoji": "🧑‍💼",
+    "w": "der Chef",
+    "explain": "🧑‍💼 der Chef"
+   },
+   {
+    "type": "tippen",
+    "answer": "Pause",
+    "info": "die kurze Zeit ohne Arbeit",
+    "emoji": "☕",
+    "w": "die Pause",
+    "explain": "☕ die Pause"
+   },
+   {
+    "type": "tippen",
+    "answer": "Lohn",
+    "info": "das Geld für die Arbeit",
+    "emoji": "💶",
+    "w": "der Lohn",
+    "explain": "💶 der Lohn"
+   },
+   {
+    "type": "tippen",
+    "answer": "Urlaub",
+    "info": "die freien Tage im Jahr",
+    "emoji": "🏝️",
+    "w": "der Urlaub",
+    "explain": "🏝️ der Urlaub"
+   },
+   {
+    "type": "tippen",
+    "answer": "Schicht",
+    "info": "die feste Arbeitszeit, zum Beispiel nachts",
+    "emoji": "🕗",
+    "w": "die Schicht",
+    "explain": "🕗 die Schicht"
+   },
+   {
+    "type": "tippen",
+    "answer": "Bewerbung",
+    "info": "die Unterlagen, mit denen man eine Stelle sucht",
+    "emoji": "📄",
+    "w": "die Bewerbung",
+    "explain": "📄 die Bewerbung"
+   },
+   {
+    "type": "tippen",
+    "answer": "Stelle",
+    "info": "der Arbeitsplatz, den man sucht oder hat",
+    "emoji": "📌",
+    "w": "die Stelle",
+    "explain": "📌 die Stelle"
+   },
+   {
+    "type": "tippen",
+    "answer": "arbeiten",
+    "info": "etwas tun, wofür man Geld bekommt",
+    "emoji": "🛠️",
+    "w": "arbeiten",
+    "explain": "🛠️ arbeiten"
+   },
+   {
+    "type": "tippen",
+    "answer": "verdienen",
+    "info": "Geld für die Arbeit bekommen",
+    "emoji": "💰",
+    "w": "verdienen",
+    "explain": "💰 verdienen"
+   },
+   {
+    "type": "tippen",
+    "answer": "anfangen",
+    "info": "mit etwas beginnen",
+    "emoji": "▶️",
+    "w": "anfangen",
+    "explain": "▶️ anfangen"
+   },
+   {
+    "type": "tippen",
+    "answer": "aufhören",
+    "info": "mit etwas Schluss machen",
+    "emoji": "⏹️",
+    "w": "aufhören",
+    "explain": "⏹️ aufhören"
+   },
+   {
+    "type": "tippen",
+    "answer": "Feierabend",
+    "info": "das Ende der Arbeitszeit",
+    "emoji": "🌆",
+    "w": "der Feierabend",
+    "explain": "🌆 der Feierabend"
+   },
+   {
+    "type": "order",
+    "answer": "Ich arbeite in einem Büro",
+    "hint": "Erst wer, dann das Verb.",
+    "explain": "in plus Dativ: in einem Büro."
+   },
+   {
+    "type": "order",
+    "answer": "Meine Schicht fängt um sechs Uhr an",
+    "hint": "Trennbares Verb: Der zweite Teil geht ans Ende.",
+    "explain": "anfangen ist trennbar: fängt … an."
+   },
+   {
+    "type": "order",
+    "answer": "Ich mache jetzt eine kurze Pause",
+    "hint": "Die Zeitangabe steht vor dem Objekt.",
+    "explain": "eine Pause machen — feste Verbindung."
+   },
+   {
+    "type": "order",
+    "answer": "Nächste Woche habe ich Urlaub",
+    "hint": "Nach der Zeitangabe kommt das Verb.",
+    "explain": "Steht die Zeitangabe vorn, folgt sofort das Verb: habe ich."
+   },
+   {
+    "type": "order",
+    "answer": "Ich schicke morgen meine Bewerbung ab",
+    "hint": "Trennbares Verb: Der zweite Teil geht ans Ende.",
+    "explain": "abschicken ist trennbar: schicke … ab."
+   },
+   {
+    "type": "match",
+    "intro": "Ordne Wort und Bedeutung zu:",
+    "pairs": [
+     {
+      "l": "die Arbeit",
+      "r": "das, wofür man Geld bekommt"
+     },
+     {
+      "l": "der Beruf",
+      "r": "das, was man gelernt hat und macht"
+     },
+     {
+      "l": "das Büro",
+      "r": "der Raum, in dem man am Schreibtisch arbeitet"
+     },
+     {
+      "l": "die Kollegin",
+      "r": "die Frau, mit der man zusammenarbeitet"
+     }
+    ]
+   },
+   {
+    "type": "match",
+    "intro": "Ordne Wort und Bedeutung zu:",
+    "pairs": [
+     {
+      "l": "der Chef",
+      "r": "er sagt, was zu tun ist"
+     },
+     {
+      "l": "die Pause",
+      "r": "die kurze Zeit ohne Arbeit"
+     },
+     {
+      "l": "der Lohn",
+      "r": "das Geld für die Arbeit"
+     },
+     {
+      "l": "der Urlaub",
+      "r": "die freien Tage im Jahr"
+     }
+    ]
+   },
+   {
+    "type": "match",
+    "intro": "Ordne Wort und Bedeutung zu:",
+    "pairs": [
+     {
+      "l": "die Schicht",
+      "r": "die feste Arbeitszeit, zum Beispiel nachts"
+     },
+     {
+      "l": "die Bewerbung",
+      "r": "die Unterlagen, mit denen man eine Stelle sucht"
+     },
+     {
+      "l": "die Stelle",
+      "r": "der Arbeitsplatz, den man sucht oder hat"
+     },
+     {
+      "l": "arbeiten",
+      "r": "etwas tun, wofür man Geld bekommt"
+     }
+    ]
+   },
+   {
+    "type": "match",
+    "intro": "Ordne Wort und Bedeutung zu:",
+    "pairs": [
+     {
+      "l": "verdienen",
+      "r": "Geld für die Arbeit bekommen"
+     },
+     {
+      "l": "anfangen",
+      "r": "mit etwas beginnen"
+     },
+     {
+      "l": "aufhören",
+      "r": "mit etwas Schluss machen"
+     },
+     {
+      "l": "der Feierabend",
+      "r": "das Ende der Arbeitszeit"
+     }
+    ]
+   },
+   {
+    "type": "fehler",
+    "satz": "Ich arbeite in ein Büro.",
+    "falsch": "ein",
+    "richtig": "Ich arbeite in einem Büro.",
+    "explain": "Auf die Frage wo? steht nach in der Dativ: in einem Büro."
+   },
+   {
+    "type": "fehler",
+    "satz": "Meine Schicht anfängt um sechs Uhr.",
+    "falsch": "anfängt",
+    "richtig": "Meine Schicht fängt um sechs Uhr an.",
+    "explain": "Bei trennbaren Verben bleibt nur der Verbteil auf Platz zwei, das Präfix geht ans Ende."
+   },
+   {
+    "type": "fehler",
+    "satz": "Ich habe nächste Woche frei, ich fahre zu Urlaub.",
+    "falsch": "zu",
+    "richtig": "Ich habe nächste Woche frei, ich fahre in Urlaub.",
+    "explain": "Es heißt in Urlaub fahren, nicht zu Urlaub."
+   },
+   {
+    "type": "schreiben",
+    "auftrag": "Stell dich in drei Sätzen vor: Name, Beruf, wo du arbeitest.",
+    "muster": "Ich heiße Fatima und komme aus Marokko. Von Beruf bin ich Krankenschwester. Seit zwei Jahren arbeite ich in einem Krankenhaus in Bremen.",
+    "tipp": "Von Beruf bin ich … — hier steht kein Artikel vor dem Beruf."
+   },
+   {
+    "type": "schreiben",
+    "auftrag": "Schreib deiner Kollegin, dass du heute später kommst. Zwei bis drei Sätze.",
+    "muster": "Hallo Sarah, mein Bus hat Verspätung, ich komme heute ungefähr zwanzig Minuten später. Kannst du bitte kurz Bescheid sagen, wenn der Chef fragt? Danke dir!",
+    "tipp": "Grund, neue Zeit, Bitte — mehr braucht eine kurze Nachricht nicht."
+   }
+  ]
+ },
+ {
+  "id": "a1-freizeit",
+  "title": "Freizeit & Hobbys",
+  "level": "A1",
+  "emoji": "⚽",
+  "words": [
+   {
+    "de": "die Freizeit",
+    "info": "die Zeit, in der man nicht arbeitet",
+    "emoji": "🛋️"
+   },
+   {
+    "de": "das Hobby",
+    "info": "das, was man gern in der Freizeit macht",
+    "emoji": "🎨"
+   },
+   {
+    "de": "der Sport",
+    "info": "Bewegung, zum Beispiel Laufen oder Fußball",
+    "emoji": "🏃"
+   },
+   {
+    "de": "die Musik",
+    "info": "Töne, die man hört oder selbst macht",
+    "emoji": "🎵"
+   },
+   {
+    "de": "das Buch",
+    "info": "man liest es, es hat viele Seiten",
+    "emoji": "📚"
+   },
+   {
+    "de": "der Film",
+    "info": "man sieht ihn im Kino oder zu Hause",
+    "emoji": "🎬"
+   },
+   {
+    "de": "das Spiel",
+    "info": "man spielt es allein oder mit anderen",
+    "emoji": "🎲"
+   },
+   {
+    "de": "der Freund",
+    "info": "ein Mensch, den man gern hat und oft trifft",
+    "emoji": "🧑‍🤝‍🧑"
+   },
+   {
+    "de": "das Café",
+    "info": "dort trinkt man Kaffee und sitzt zusammen",
+    "emoji": "☕"
+   },
+   {
+    "de": "der Park",
+    "info": "eine grüne Fläche in der Stadt",
+    "emoji": "🌳"
+   },
+   {
+    "de": "das Wochenende",
+    "info": "Samstag und Sonntag",
+    "emoji": "📆"
+   },
+   {
+    "de": "spielen",
+    "info": "ein Spiel oder ein Instrument machen",
+    "emoji": "🎮"
+   },
+   {
+    "de": "lesen",
+    "info": "Buchstaben ansehen und verstehen",
+    "emoji": "👓"
+   },
+   {
+    "de": "treffen",
+    "info": "mit jemandem zusammenkommen",
+    "emoji": "🤝"
+   },
+   {
+    "de": "schwimmen",
+    "info": "sich im Wasser bewegen",
+    "emoji": "🏊"
+   },
+   {
+    "de": "spazieren gehen",
+    "info": "langsam gehen, ohne Ziel",
+    "emoji": "🚶"
+   }
+  ],
+  "exercises": [
+   {
+    "type": "karte",
+    "w": "die Freizeit",
+    "info": "die Zeit, in der man nicht arbeitet",
+    "emoji": "🛋️"
+   },
+   {
+    "type": "karte",
+    "w": "das Hobby",
+    "info": "das, was man gern in der Freizeit macht",
+    "emoji": "🎨"
+   },
+   {
+    "type": "karte",
+    "w": "der Sport",
+    "info": "Bewegung, zum Beispiel Laufen oder Fußball",
+    "emoji": "🏃"
+   },
+   {
+    "type": "karte",
+    "w": "die Musik",
+    "info": "Töne, die man hört oder selbst macht",
+    "emoji": "🎵"
+   },
+   {
+    "type": "karte",
+    "w": "das Buch",
+    "info": "man liest es, es hat viele Seiten",
+    "emoji": "📚"
+   },
+   {
+    "type": "karte",
+    "w": "der Film",
+    "info": "man sieht ihn im Kino oder zu Hause",
+    "emoji": "🎬"
+   },
+   {
+    "type": "karte",
+    "w": "das Spiel",
+    "info": "man spielt es allein oder mit anderen",
+    "emoji": "🎲"
+   },
+   {
+    "type": "karte",
+    "w": "der Freund",
+    "info": "ein Mensch, den man gern hat und oft trifft",
+    "emoji": "🧑‍🤝‍🧑"
+   },
+   {
+    "type": "karte",
+    "w": "das Café",
+    "info": "dort trinkt man Kaffee und sitzt zusammen",
+    "emoji": "☕"
+   },
+   {
+    "type": "karte",
+    "w": "der Park",
+    "info": "eine grüne Fläche in der Stadt",
+    "emoji": "🌳"
+   },
+   {
+    "type": "karte",
+    "w": "das Wochenende",
+    "info": "Samstag und Sonntag",
+    "emoji": "📆"
+   },
+   {
+    "type": "karte",
+    "w": "spielen",
+    "info": "ein Spiel oder ein Instrument machen",
+    "emoji": "🎮"
+   },
+   {
+    "type": "karte",
+    "w": "lesen",
+    "info": "Buchstaben ansehen und verstehen",
+    "emoji": "👓"
+   },
+   {
+    "type": "karte",
+    "w": "treffen",
+    "info": "mit jemandem zusammenkommen",
+    "emoji": "🤝"
+   },
+   {
+    "type": "karte",
+    "w": "schwimmen",
+    "info": "sich im Wasser bewegen",
+    "emoji": "🏊"
+   },
+   {
+    "type": "karte",
+    "w": "spazieren gehen",
+    "info": "langsam gehen, ohne Ziel",
+    "emoji": "🚶"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „die Zeit, in der man nicht arbeitet“?",
+    "options": [
+     "die Freizeit",
+     "die Musik",
+     "der Freund",
+     "spielen"
+    ],
+    "answer": 0,
+    "w": "die Freizeit",
+    "explain": "🛋️ die Freizeit — die Zeit, in der man nicht arbeitet"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „das, was man gern in der Freizeit macht“?",
+    "options": [
+     "das Hobby",
+     "das Buch",
+     "das Café",
+     "lesen"
+    ],
+    "answer": 0,
+    "w": "das Hobby",
+    "explain": "🎨 das Hobby — das, was man gern in der Freizeit macht"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „Bewegung, zum Beispiel Laufen oder Fußball“?",
+    "options": [
+     "der Sport",
+     "der Film",
+     "der Park",
+     "treffen"
+    ],
+    "answer": 0,
+    "w": "der Sport",
+    "explain": "🏃 der Sport — Bewegung, zum Beispiel Laufen oder Fußball"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „Töne, die man hört oder selbst macht“?",
+    "options": [
+     "die Musik",
+     "das Spiel",
+     "das Wochenende",
+     "schwimmen"
+    ],
+    "answer": 0,
+    "w": "die Musik",
+    "explain": "🎵 die Musik — Töne, die man hört oder selbst macht"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „man liest es, es hat viele Seiten“?",
+    "options": [
+     "das Buch",
+     "der Freund",
+     "spielen",
+     "spazieren gehen"
+    ],
+    "answer": 0,
+    "w": "das Buch",
+    "explain": "📚 das Buch — man liest es, es hat viele Seiten"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „man sieht ihn im Kino oder zu Hause“?",
+    "options": [
+     "der Film",
+     "das Café",
+     "lesen",
+     "die Freizeit"
+    ],
+    "answer": 0,
+    "w": "der Film",
+    "explain": "🎬 der Film — man sieht ihn im Kino oder zu Hause"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „man spielt es allein oder mit anderen“?",
+    "options": [
+     "das Spiel",
+     "der Park",
+     "treffen",
+     "das Hobby"
+    ],
+    "answer": 0,
+    "w": "das Spiel",
+    "explain": "🎲 das Spiel — man spielt es allein oder mit anderen"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „ein Mensch, den man gern hat und oft trifft“?",
+    "options": [
+     "der Freund",
+     "das Wochenende",
+     "schwimmen",
+     "der Sport"
+    ],
+    "answer": 0,
+    "w": "der Freund",
+    "explain": "🧑‍🤝‍🧑 der Freund — ein Mensch, den man gern hat und oft trifft"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „dort trinkt man Kaffee und sitzt zusammen“?",
+    "options": [
+     "das Café",
+     "spielen",
+     "spazieren gehen",
+     "die Musik"
+    ],
+    "answer": 0,
+    "w": "das Café",
+    "explain": "☕ das Café — dort trinkt man Kaffee und sitzt zusammen"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „eine grüne Fläche in der Stadt“?",
+    "options": [
+     "der Park",
+     "lesen",
+     "die Freizeit",
+     "das Buch"
+    ],
+    "answer": 0,
+    "w": "der Park",
+    "explain": "🌳 der Park — eine grüne Fläche in der Stadt"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „Samstag und Sonntag“?",
+    "options": [
+     "das Wochenende",
+     "treffen",
+     "das Hobby",
+     "der Film"
+    ],
+    "answer": 0,
+    "w": "das Wochenende",
+    "explain": "📆 das Wochenende — Samstag und Sonntag"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „ein Spiel oder ein Instrument machen“?",
+    "options": [
+     "spielen",
+     "schwimmen",
+     "der Sport",
+     "das Spiel"
+    ],
+    "answer": 0,
+    "w": "spielen",
+    "explain": "🎮 spielen — ein Spiel oder ein Instrument machen"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „Buchstaben ansehen und verstehen“?",
+    "options": [
+     "lesen",
+     "spazieren gehen",
+     "die Musik",
+     "der Freund"
+    ],
+    "answer": 0,
+    "w": "lesen",
+    "explain": "👓 lesen — Buchstaben ansehen und verstehen"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „mit jemandem zusammenkommen“?",
+    "options": [
+     "treffen",
+     "die Freizeit",
+     "das Buch",
+     "das Café"
+    ],
+    "answer": 0,
+    "w": "treffen",
+    "explain": "🤝 treffen — mit jemandem zusammenkommen"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „sich im Wasser bewegen“?",
+    "options": [
+     "schwimmen",
+     "das Hobby",
+     "der Film",
+     "der Park"
+    ],
+    "answer": 0,
+    "w": "schwimmen",
+    "explain": "🏊 schwimmen — sich im Wasser bewegen"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „langsam gehen, ohne Ziel“?",
+    "options": [
+     "spazieren gehen",
+     "der Sport",
+     "das Spiel",
+     "das Wochenende"
+    ],
+    "answer": 0,
+    "w": "spazieren gehen",
+    "explain": "🚶 spazieren gehen — langsam gehen, ohne Ziel"
+   },
+   {
+    "type": "gap",
+    "text": "___ Freizeit",
+    "answer": "die",
+    "hint": "der / die / das?",
+    "w": "die Freizeit",
+    "explain": "Es heißt die Freizeit — die Zeit, in der man nicht arbeitet"
+   },
+   {
+    "type": "gap",
+    "text": "___ Hobby",
+    "answer": "das",
+    "hint": "der / die / das?",
+    "w": "das Hobby",
+    "explain": "Es heißt das Hobby — das, was man gern in der Freizeit macht"
+   },
+   {
+    "type": "gap",
+    "text": "___ Sport",
+    "answer": "der",
+    "hint": "der / die / das?",
+    "w": "der Sport",
+    "explain": "Es heißt der Sport — Bewegung, zum Beispiel Laufen oder Fußball"
+   },
+   {
+    "type": "gap",
+    "text": "___ Musik",
+    "answer": "die",
+    "hint": "der / die / das?",
+    "w": "die Musik",
+    "explain": "Es heißt die Musik — Töne, die man hört oder selbst macht"
+   },
+   {
+    "type": "gap",
+    "text": "___ Buch",
+    "answer": "das",
+    "hint": "der / die / das?",
+    "w": "das Buch",
+    "explain": "Es heißt das Buch — man liest es, es hat viele Seiten"
+   },
+   {
+    "type": "gap",
+    "text": "___ Film",
+    "answer": "der",
+    "hint": "der / die / das?",
+    "w": "der Film",
+    "explain": "Es heißt der Film — man sieht ihn im Kino oder zu Hause"
+   },
+   {
+    "type": "gap",
+    "text": "___ Spiel",
+    "answer": "das",
+    "hint": "der / die / das?",
+    "w": "das Spiel",
+    "explain": "Es heißt das Spiel — man spielt es allein oder mit anderen"
+   },
+   {
+    "type": "gap",
+    "text": "___ Freund",
+    "answer": "der",
+    "hint": "der / die / das?",
+    "w": "der Freund",
+    "explain": "Es heißt der Freund — ein Mensch, den man gern hat und oft trifft"
+   },
+   {
+    "type": "gap",
+    "text": "___ Café",
+    "answer": "das",
+    "hint": "der / die / das?",
+    "w": "das Café",
+    "explain": "Es heißt das Café — dort trinkt man Kaffee und sitzt zusammen"
+   },
+   {
+    "type": "gap",
+    "text": "___ Park",
+    "answer": "der",
+    "hint": "der / die / das?",
+    "w": "der Park",
+    "explain": "Es heißt der Park — eine grüne Fläche in der Stadt"
+   },
+   {
+    "type": "gap",
+    "text": "___ Wochenende",
+    "answer": "das",
+    "hint": "der / die / das?",
+    "w": "das Wochenende",
+    "explain": "Es heißt das Wochenende — Samstag und Sonntag"
+   },
+   {
+    "type": "tippen",
+    "answer": "Freizeit",
+    "info": "die Zeit, in der man nicht arbeitet",
+    "emoji": "🛋️",
+    "w": "die Freizeit",
+    "explain": "🛋️ die Freizeit"
+   },
+   {
+    "type": "tippen",
+    "answer": "Hobby",
+    "info": "das, was man gern in der Freizeit macht",
+    "emoji": "🎨",
+    "w": "das Hobby",
+    "explain": "🎨 das Hobby"
+   },
+   {
+    "type": "tippen",
+    "answer": "Sport",
+    "info": "Bewegung, zum Beispiel Laufen oder Fußball",
+    "emoji": "🏃",
+    "w": "der Sport",
+    "explain": "🏃 der Sport"
+   },
+   {
+    "type": "tippen",
+    "answer": "Musik",
+    "info": "Töne, die man hört oder selbst macht",
+    "emoji": "🎵",
+    "w": "die Musik",
+    "explain": "🎵 die Musik"
+   },
+   {
+    "type": "tippen",
+    "answer": "Buch",
+    "info": "man liest es, es hat viele Seiten",
+    "emoji": "📚",
+    "w": "das Buch",
+    "explain": "📚 das Buch"
+   },
+   {
+    "type": "tippen",
+    "answer": "Film",
+    "info": "man sieht ihn im Kino oder zu Hause",
+    "emoji": "🎬",
+    "w": "der Film",
+    "explain": "🎬 der Film"
+   },
+   {
+    "type": "tippen",
+    "answer": "Spiel",
+    "info": "man spielt es allein oder mit anderen",
+    "emoji": "🎲",
+    "w": "das Spiel",
+    "explain": "🎲 das Spiel"
+   },
+   {
+    "type": "tippen",
+    "answer": "Freund",
+    "info": "ein Mensch, den man gern hat und oft trifft",
+    "emoji": "🧑‍🤝‍🧑",
+    "w": "der Freund",
+    "explain": "🧑‍🤝‍🧑 der Freund"
+   },
+   {
+    "type": "tippen",
+    "answer": "Café",
+    "info": "dort trinkt man Kaffee und sitzt zusammen",
+    "emoji": "☕",
+    "w": "das Café",
+    "explain": "☕ das Café"
+   },
+   {
+    "type": "tippen",
+    "answer": "Park",
+    "info": "eine grüne Fläche in der Stadt",
+    "emoji": "🌳",
+    "w": "der Park",
+    "explain": "🌳 der Park"
+   },
+   {
+    "type": "tippen",
+    "answer": "Wochenende",
+    "info": "Samstag und Sonntag",
+    "emoji": "📆",
+    "w": "das Wochenende",
+    "explain": "📆 das Wochenende"
+   },
+   {
+    "type": "tippen",
+    "answer": "spielen",
+    "info": "ein Spiel oder ein Instrument machen",
+    "emoji": "🎮",
+    "w": "spielen",
+    "explain": "🎮 spielen"
+   },
+   {
+    "type": "tippen",
+    "answer": "lesen",
+    "info": "Buchstaben ansehen und verstehen",
+    "emoji": "👓",
+    "w": "lesen",
+    "explain": "👓 lesen"
+   },
+   {
+    "type": "tippen",
+    "answer": "treffen",
+    "info": "mit jemandem zusammenkommen",
+    "emoji": "🤝",
+    "w": "treffen",
+    "explain": "🤝 treffen"
+   },
+   {
+    "type": "tippen",
+    "answer": "schwimmen",
+    "info": "sich im Wasser bewegen",
+    "emoji": "🏊",
+    "w": "schwimmen",
+    "explain": "🏊 schwimmen"
+   },
+   {
+    "type": "tippen",
+    "answer": "spazieren gehen",
+    "info": "langsam gehen, ohne Ziel",
+    "emoji": "🚶",
+    "w": "spazieren gehen",
+    "explain": "🚶 spazieren gehen"
+   },
+   {
+    "type": "order",
+    "answer": "Am Wochenende treffe ich meine Freunde",
+    "hint": "Nach der Zeitangabe kommt das Verb.",
+    "explain": "Steht die Zeitangabe vorn, folgt sofort das Verb: treffe ich."
+   },
+   {
+    "type": "order",
+    "answer": "In meiner Freizeit höre ich gern Musik",
+    "hint": "Nach der Angabe kommt das Verb.",
+    "explain": "gern steht nach dem Verb: höre ich gern."
+   },
+   {
+    "type": "order",
+    "answer": "Wir gehen heute Abend ins Kino",
+    "hint": "Erst wer, dann das Verb, dann wann und wohin.",
+    "explain": "in plus das wird ins: ins Kino."
+   },
+   {
+    "type": "order",
+    "answer": "Meine Tochter spielt sehr gut Klavier",
+    "hint": "Erst das Subjekt, dann das Verb.",
+    "explain": "Bei Instrumenten steht kein Artikel: Klavier spielen."
+   },
+   {
+    "type": "order",
+    "answer": "Am Sonntag gehe ich immer im Park spazieren",
+    "hint": "Der zweite Verbteil geht ans Ende.",
+    "explain": "spazieren gehen — spazieren steht am Ende."
+   },
+   {
+    "type": "match",
+    "intro": "Ordne Wort und Bedeutung zu:",
+    "pairs": [
+     {
+      "l": "die Freizeit",
+      "r": "die Zeit, in der man nicht arbeitet"
+     },
+     {
+      "l": "das Hobby",
+      "r": "das, was man gern in der Freizeit macht"
+     },
+     {
+      "l": "der Sport",
+      "r": "Bewegung, zum Beispiel Laufen oder Fußball"
+     },
+     {
+      "l": "die Musik",
+      "r": "Töne, die man hört oder selbst macht"
+     }
+    ]
+   },
+   {
+    "type": "match",
+    "intro": "Ordne Wort und Bedeutung zu:",
+    "pairs": [
+     {
+      "l": "das Buch",
+      "r": "man liest es, es hat viele Seiten"
+     },
+     {
+      "l": "der Film",
+      "r": "man sieht ihn im Kino oder zu Hause"
+     },
+     {
+      "l": "das Spiel",
+      "r": "man spielt es allein oder mit anderen"
+     },
+     {
+      "l": "der Freund",
+      "r": "ein Mensch, den man gern hat und oft trifft"
+     }
+    ]
+   },
+   {
+    "type": "match",
+    "intro": "Ordne Wort und Bedeutung zu:",
+    "pairs": [
+     {
+      "l": "das Café",
+      "r": "dort trinkt man Kaffee und sitzt zusammen"
+     },
+     {
+      "l": "der Park",
+      "r": "eine grüne Fläche in der Stadt"
+     },
+     {
+      "l": "das Wochenende",
+      "r": "Samstag und Sonntag"
+     },
+     {
+      "l": "spielen",
+      "r": "ein Spiel oder ein Instrument machen"
+     }
+    ]
+   },
+   {
+    "type": "match",
+    "intro": "Ordne Wort und Bedeutung zu:",
+    "pairs": [
+     {
+      "l": "lesen",
+      "r": "Buchstaben ansehen und verstehen"
+     },
+     {
+      "l": "treffen",
+      "r": "mit jemandem zusammenkommen"
+     },
+     {
+      "l": "schwimmen",
+      "r": "sich im Wasser bewegen"
+     },
+     {
+      "l": "spazieren gehen",
+      "r": "langsam gehen, ohne Ziel"
+     }
+    ]
+   },
+   {
+    "type": "fehler",
+    "satz": "Am Wochenende ich treffe meine Freunde.",
+    "falsch": "ich",
+    "richtig": "Am Wochenende treffe ich meine Freunde.",
+    "explain": "Steht die Zeitangabe vorn, kommt sofort das Verb, erst danach das Subjekt."
+   },
+   {
+    "type": "fehler",
+    "satz": "Wir gehen heute Abend in das Kino.",
+    "falsch": "das",
+    "richtig": "Wir gehen heute Abend ins Kino.",
+    "explain": "in plus das zieht man zu ins zusammen."
+   },
+   {
+    "type": "fehler",
+    "satz": "Meine Tochter spielt das Klavier sehr gut.",
+    "falsch": "das",
+    "richtig": "Meine Tochter spielt sehr gut Klavier.",
+    "explain": "Bei Instrumenten steht im Deutschen kein Artikel: Klavier spielen, Gitarre spielen."
+   },
+   {
+    "type": "schreiben",
+    "auftrag": "Was machst du am Wochenende gern? Schreib drei bis vier Sätze.",
+    "muster": "Am Samstag schlafe ich zuerst lange. Danach treffe ich meine Freunde im Café oder wir gehen im Park spazieren. Am Sonntag lese ich gern ein Buch oder sehe einen Film. Sport mache ich leider zu selten.",
+    "tipp": "gern steht direkt nach dem Verb: Ich lese gern, ich koche gern."
+   },
+   {
+    "type": "schreiben",
+    "auftrag": "Lade eine Freundin für Samstag ins Kino ein. Zwei bis drei Sätze.",
+    "muster": "Hallo Nina, hast du am Samstagabend Zeit? Ich möchte gern ins Kino gehen, um acht läuft ein neuer Film. Sag mir bis Freitag Bescheid, dann kaufe ich die Karten.",
+    "tipp": "Eine Einladung beginnt oft mit einer Frage: Hast du Zeit? Hast du Lust?"
+   }
+  ]
+ },
+ {
+  "id": "a1-stadt",
+  "title": "Stadt & Orte",
+  "level": "A1",
+  "emoji": "🏙️",
+  "words": [
+   {
+    "de": "die Stadt",
+    "info": "ein großer Ort mit vielen Häusern und Menschen",
+    "emoji": "🏙️"
+   },
+   {
+    "de": "das Dorf",
+    "info": "ein kleiner Ort mit wenigen Häusern",
+    "emoji": "🏡"
+   },
+   {
+    "de": "die Bäckerei",
+    "info": "dort kauft man Brot und Brötchen",
+    "emoji": "🥖"
+   },
+   {
+    "de": "der Supermarkt",
+    "info": "dort kauft man Lebensmittel",
+    "emoji": "🛒"
+   },
+   {
+    "de": "die Post",
+    "info": "dort gibt man Briefe und Pakete ab",
+    "emoji": "📮"
+   },
+   {
+    "de": "die Bank",
+    "info": "dort holt man Geld",
+    "emoji": "🏦"
+   },
+   {
+    "de": "das Krankenhaus",
+    "info": "dort liegt man, wenn man sehr krank ist",
+    "emoji": "🏥"
+   },
+   {
+    "de": "die Schule",
+    "info": "dort lernen die Kinder",
+    "emoji": "🏫"
+   },
+   {
+    "de": "das Rathaus",
+    "info": "dort ist die Verwaltung der Stadt",
+    "emoji": "🏛️"
+   },
+   {
+    "de": "die Kirche",
+    "info": "dort beten Menschen, sie hat oft einen Turm",
+    "emoji": "⛪"
+   },
+   {
+    "de": "der Markt",
+    "info": "dort verkaufen viele Stände Obst und Gemüse",
+    "emoji": "🍎"
+   },
+   {
+    "de": "das Restaurant",
+    "info": "dort isst man und bezahlt dafür",
+    "emoji": "🍽️"
+   },
+   {
+    "de": "die Adresse",
+    "info": "Straße, Nummer und Ort, wo jemand wohnt",
+    "emoji": "🏷️"
+   },
+   {
+    "de": "der Platz",
+    "info": "eine offene Fläche mitten in der Stadt",
+    "emoji": "⛲"
+   },
+   {
+    "de": "in der Nähe",
+    "info": "nicht weit weg",
+    "emoji": "📍"
+   },
+   {
+    "de": "weit",
+    "info": "eine große Entfernung",
+    "emoji": "🛣️"
+   }
+  ],
+  "exercises": [
+   {
+    "type": "karte",
+    "w": "die Stadt",
+    "info": "ein großer Ort mit vielen Häusern und Menschen",
+    "emoji": "🏙️"
+   },
+   {
+    "type": "karte",
+    "w": "das Dorf",
+    "info": "ein kleiner Ort mit wenigen Häusern",
+    "emoji": "🏡"
+   },
+   {
+    "type": "karte",
+    "w": "die Bäckerei",
+    "info": "dort kauft man Brot und Brötchen",
+    "emoji": "🥖"
+   },
+   {
+    "type": "karte",
+    "w": "der Supermarkt",
+    "info": "dort kauft man Lebensmittel",
+    "emoji": "🛒"
+   },
+   {
+    "type": "karte",
+    "w": "die Post",
+    "info": "dort gibt man Briefe und Pakete ab",
+    "emoji": "📮"
+   },
+   {
+    "type": "karte",
+    "w": "die Bank",
+    "info": "dort holt man Geld",
+    "emoji": "🏦"
+   },
+   {
+    "type": "karte",
+    "w": "das Krankenhaus",
+    "info": "dort liegt man, wenn man sehr krank ist",
+    "emoji": "🏥"
+   },
+   {
+    "type": "karte",
+    "w": "die Schule",
+    "info": "dort lernen die Kinder",
+    "emoji": "🏫"
+   },
+   {
+    "type": "karte",
+    "w": "das Rathaus",
+    "info": "dort ist die Verwaltung der Stadt",
+    "emoji": "🏛️"
+   },
+   {
+    "type": "karte",
+    "w": "die Kirche",
+    "info": "dort beten Menschen, sie hat oft einen Turm",
+    "emoji": "⛪"
+   },
+   {
+    "type": "karte",
+    "w": "der Markt",
+    "info": "dort verkaufen viele Stände Obst und Gemüse",
+    "emoji": "🍎"
+   },
+   {
+    "type": "karte",
+    "w": "das Restaurant",
+    "info": "dort isst man und bezahlt dafür",
+    "emoji": "🍽️"
+   },
+   {
+    "type": "karte",
+    "w": "die Adresse",
+    "info": "Straße, Nummer und Ort, wo jemand wohnt",
+    "emoji": "🏷️"
+   },
+   {
+    "type": "karte",
+    "w": "der Platz",
+    "info": "eine offene Fläche mitten in der Stadt",
+    "emoji": "⛲"
+   },
+   {
+    "type": "karte",
+    "w": "in der Nähe",
+    "info": "nicht weit weg",
+    "emoji": "📍"
+   },
+   {
+    "type": "karte",
+    "w": "weit",
+    "info": "eine große Entfernung",
+    "emoji": "🛣️"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „ein großer Ort mit vielen Häusern und Menschen“?",
+    "options": [
+     "die Stadt",
+     "der Supermarkt",
+     "die Schule",
+     "das Restaurant"
+    ],
+    "answer": 0,
+    "w": "die Stadt",
+    "explain": "🏙️ die Stadt — ein großer Ort mit vielen Häusern und Menschen"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „ein kleiner Ort mit wenigen Häusern“?",
+    "options": [
+     "das Dorf",
+     "die Post",
+     "das Rathaus",
+     "die Adresse"
+    ],
+    "answer": 0,
+    "w": "das Dorf",
+    "explain": "🏡 das Dorf — ein kleiner Ort mit wenigen Häusern"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „dort kauft man Brot und Brötchen“?",
+    "options": [
+     "die Bäckerei",
+     "die Bank",
+     "die Kirche",
+     "der Platz"
+    ],
+    "answer": 0,
+    "w": "die Bäckerei",
+    "explain": "🥖 die Bäckerei — dort kauft man Brot und Brötchen"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „dort kauft man Lebensmittel“?",
+    "options": [
+     "der Supermarkt",
+     "das Krankenhaus",
+     "der Markt",
+     "in der Nähe"
+    ],
+    "answer": 0,
+    "w": "der Supermarkt",
+    "explain": "🛒 der Supermarkt — dort kauft man Lebensmittel"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „dort gibt man Briefe und Pakete ab“?",
+    "options": [
+     "die Post",
+     "die Schule",
+     "das Restaurant",
+     "weit"
+    ],
+    "answer": 0,
+    "w": "die Post",
+    "explain": "📮 die Post — dort gibt man Briefe und Pakete ab"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „dort holt man Geld“?",
+    "options": [
+     "die Bank",
+     "das Rathaus",
+     "die Adresse",
+     "die Stadt"
+    ],
+    "answer": 0,
+    "w": "die Bank",
+    "explain": "🏦 die Bank — dort holt man Geld"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „dort liegt man, wenn man sehr krank ist“?",
+    "options": [
+     "das Krankenhaus",
+     "die Kirche",
+     "der Platz",
+     "das Dorf"
+    ],
+    "answer": 0,
+    "w": "das Krankenhaus",
+    "explain": "🏥 das Krankenhaus — dort liegt man, wenn man sehr krank ist"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „dort lernen die Kinder“?",
+    "options": [
+     "die Schule",
+     "der Markt",
+     "in der Nähe",
+     "die Bäckerei"
+    ],
+    "answer": 0,
+    "w": "die Schule",
+    "explain": "🏫 die Schule — dort lernen die Kinder"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „dort ist die Verwaltung der Stadt“?",
+    "options": [
+     "das Rathaus",
+     "das Restaurant",
+     "weit",
+     "der Supermarkt"
+    ],
+    "answer": 0,
+    "w": "das Rathaus",
+    "explain": "🏛️ das Rathaus — dort ist die Verwaltung der Stadt"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „dort beten Menschen, sie hat oft einen Turm“?",
+    "options": [
+     "die Kirche",
+     "die Adresse",
+     "die Stadt",
+     "die Post"
+    ],
+    "answer": 0,
+    "w": "die Kirche",
+    "explain": "⛪ die Kirche — dort beten Menschen, sie hat oft einen Turm"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „dort verkaufen viele Stände Obst und Gemüse“?",
+    "options": [
+     "der Markt",
+     "der Platz",
+     "das Dorf",
+     "die Bank"
+    ],
+    "answer": 0,
+    "w": "der Markt",
+    "explain": "🍎 der Markt — dort verkaufen viele Stände Obst und Gemüse"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „dort isst man und bezahlt dafür“?",
+    "options": [
+     "das Restaurant",
+     "in der Nähe",
+     "die Bäckerei",
+     "das Krankenhaus"
+    ],
+    "answer": 0,
+    "w": "das Restaurant",
+    "explain": "🍽️ das Restaurant — dort isst man und bezahlt dafür"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „Straße, Nummer und Ort, wo jemand wohnt“?",
+    "options": [
+     "die Adresse",
+     "weit",
+     "der Supermarkt",
+     "die Schule"
+    ],
+    "answer": 0,
+    "w": "die Adresse",
+    "explain": "🏷️ die Adresse — Straße, Nummer und Ort, wo jemand wohnt"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „eine offene Fläche mitten in der Stadt“?",
+    "options": [
+     "der Platz",
+     "die Stadt",
+     "die Post",
+     "das Rathaus"
+    ],
+    "answer": 0,
+    "w": "der Platz",
+    "explain": "⛲ der Platz — eine offene Fläche mitten in der Stadt"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „nicht weit weg“?",
+    "options": [
+     "in der Nähe",
+     "das Dorf",
+     "die Bank",
+     "die Kirche"
+    ],
+    "answer": 0,
+    "w": "in der Nähe",
+    "explain": "📍 in der Nähe — nicht weit weg"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „eine große Entfernung“?",
+    "options": [
+     "weit",
+     "die Bäckerei",
+     "das Krankenhaus",
+     "der Markt"
+    ],
+    "answer": 0,
+    "w": "weit",
+    "explain": "🛣️ weit — eine große Entfernung"
+   },
+   {
+    "type": "gap",
+    "text": "___ Stadt",
+    "answer": "die",
+    "hint": "der / die / das?",
+    "w": "die Stadt",
+    "explain": "Es heißt die Stadt — ein großer Ort mit vielen Häusern und Menschen"
+   },
+   {
+    "type": "gap",
+    "text": "___ Dorf",
+    "answer": "das",
+    "hint": "der / die / das?",
+    "w": "das Dorf",
+    "explain": "Es heißt das Dorf — ein kleiner Ort mit wenigen Häusern"
+   },
+   {
+    "type": "gap",
+    "text": "___ Bäckerei",
+    "answer": "die",
+    "hint": "der / die / das?",
+    "w": "die Bäckerei",
+    "explain": "Es heißt die Bäckerei — dort kauft man Brot und Brötchen"
+   },
+   {
+    "type": "gap",
+    "text": "___ Supermarkt",
+    "answer": "der",
+    "hint": "der / die / das?",
+    "w": "der Supermarkt",
+    "explain": "Es heißt der Supermarkt — dort kauft man Lebensmittel"
+   },
+   {
+    "type": "gap",
+    "text": "___ Post",
+    "answer": "die",
+    "hint": "der / die / das?",
+    "w": "die Post",
+    "explain": "Es heißt die Post — dort gibt man Briefe und Pakete ab"
+   },
+   {
+    "type": "gap",
+    "text": "___ Bank",
+    "answer": "die",
+    "hint": "der / die / das?",
+    "w": "die Bank",
+    "explain": "Es heißt die Bank — dort holt man Geld"
+   },
+   {
+    "type": "gap",
+    "text": "___ Krankenhaus",
+    "answer": "das",
+    "hint": "der / die / das?",
+    "w": "das Krankenhaus",
+    "explain": "Es heißt das Krankenhaus — dort liegt man, wenn man sehr krank ist"
+   },
+   {
+    "type": "gap",
+    "text": "___ Schule",
+    "answer": "die",
+    "hint": "der / die / das?",
+    "w": "die Schule",
+    "explain": "Es heißt die Schule — dort lernen die Kinder"
+   },
+   {
+    "type": "gap",
+    "text": "___ Rathaus",
+    "answer": "das",
+    "hint": "der / die / das?",
+    "w": "das Rathaus",
+    "explain": "Es heißt das Rathaus — dort ist die Verwaltung der Stadt"
+   },
+   {
+    "type": "gap",
+    "text": "___ Kirche",
+    "answer": "die",
+    "hint": "der / die / das?",
+    "w": "die Kirche",
+    "explain": "Es heißt die Kirche — dort beten Menschen, sie hat oft einen Turm"
+   },
+   {
+    "type": "gap",
+    "text": "___ Markt",
+    "answer": "der",
+    "hint": "der / die / das?",
+    "w": "der Markt",
+    "explain": "Es heißt der Markt — dort verkaufen viele Stände Obst und Gemüse"
+   },
+   {
+    "type": "gap",
+    "text": "___ Restaurant",
+    "answer": "das",
+    "hint": "der / die / das?",
+    "w": "das Restaurant",
+    "explain": "Es heißt das Restaurant — dort isst man und bezahlt dafür"
+   },
+   {
+    "type": "gap",
+    "text": "___ Adresse",
+    "answer": "die",
+    "hint": "der / die / das?",
+    "w": "die Adresse",
+    "explain": "Es heißt die Adresse — Straße, Nummer und Ort, wo jemand wohnt"
+   },
+   {
+    "type": "gap",
+    "text": "___ Platz",
+    "answer": "der",
+    "hint": "der / die / das?",
+    "w": "der Platz",
+    "explain": "Es heißt der Platz — eine offene Fläche mitten in der Stadt"
+   },
+   {
+    "type": "tippen",
+    "answer": "Stadt",
+    "info": "ein großer Ort mit vielen Häusern und Menschen",
+    "emoji": "🏙️",
+    "w": "die Stadt",
+    "explain": "🏙️ die Stadt"
+   },
+   {
+    "type": "tippen",
+    "answer": "Dorf",
+    "info": "ein kleiner Ort mit wenigen Häusern",
+    "emoji": "🏡",
+    "w": "das Dorf",
+    "explain": "🏡 das Dorf"
+   },
+   {
+    "type": "tippen",
+    "answer": "Bäckerei",
+    "info": "dort kauft man Brot und Brötchen",
+    "emoji": "🥖",
+    "w": "die Bäckerei",
+    "explain": "🥖 die Bäckerei"
+   },
+   {
+    "type": "tippen",
+    "answer": "Supermarkt",
+    "info": "dort kauft man Lebensmittel",
+    "emoji": "🛒",
+    "w": "der Supermarkt",
+    "explain": "🛒 der Supermarkt"
+   },
+   {
+    "type": "tippen",
+    "answer": "Post",
+    "info": "dort gibt man Briefe und Pakete ab",
+    "emoji": "📮",
+    "w": "die Post",
+    "explain": "📮 die Post"
+   },
+   {
+    "type": "tippen",
+    "answer": "Bank",
+    "info": "dort holt man Geld",
+    "emoji": "🏦",
+    "w": "die Bank",
+    "explain": "🏦 die Bank"
+   },
+   {
+    "type": "tippen",
+    "answer": "Krankenhaus",
+    "info": "dort liegt man, wenn man sehr krank ist",
+    "emoji": "🏥",
+    "w": "das Krankenhaus",
+    "explain": "🏥 das Krankenhaus"
+   },
+   {
+    "type": "tippen",
+    "answer": "Schule",
+    "info": "dort lernen die Kinder",
+    "emoji": "🏫",
+    "w": "die Schule",
+    "explain": "🏫 die Schule"
+   },
+   {
+    "type": "tippen",
+    "answer": "Rathaus",
+    "info": "dort ist die Verwaltung der Stadt",
+    "emoji": "🏛️",
+    "w": "das Rathaus",
+    "explain": "🏛️ das Rathaus"
+   },
+   {
+    "type": "tippen",
+    "answer": "Kirche",
+    "info": "dort beten Menschen, sie hat oft einen Turm",
+    "emoji": "⛪",
+    "w": "die Kirche",
+    "explain": "⛪ die Kirche"
+   },
+   {
+    "type": "tippen",
+    "answer": "Markt",
+    "info": "dort verkaufen viele Stände Obst und Gemüse",
+    "emoji": "🍎",
+    "w": "der Markt",
+    "explain": "🍎 der Markt"
+   },
+   {
+    "type": "tippen",
+    "answer": "Restaurant",
+    "info": "dort isst man und bezahlt dafür",
+    "emoji": "🍽️",
+    "w": "das Restaurant",
+    "explain": "🍽️ das Restaurant"
+   },
+   {
+    "type": "tippen",
+    "answer": "Adresse",
+    "info": "Straße, Nummer und Ort, wo jemand wohnt",
+    "emoji": "🏷️",
+    "w": "die Adresse",
+    "explain": "🏷️ die Adresse"
+   },
+   {
+    "type": "tippen",
+    "answer": "Platz",
+    "info": "eine offene Fläche mitten in der Stadt",
+    "emoji": "⛲",
+    "w": "der Platz",
+    "explain": "⛲ der Platz"
+   },
+   {
+    "type": "tippen",
+    "answer": "in der Nähe",
+    "info": "nicht weit weg",
+    "emoji": "📍",
+    "w": "in der Nähe",
+    "explain": "📍 in der Nähe"
+   },
+   {
+    "type": "tippen",
+    "answer": "weit",
+    "info": "eine große Entfernung",
+    "emoji": "🛣️",
+    "w": "weit",
+    "explain": "🛣️ weit"
+   },
+   {
+    "type": "order",
+    "answer": "Die Bäckerei ist gleich um die Ecke",
+    "hint": "Erst das Subjekt, dann das Verb.",
+    "explain": "um die Ecke sein — eine feste Wendung für ganz nah."
+   },
+   {
+    "type": "order",
+    "answer": "Ich gehe schnell zur Post",
+    "hint": "Erst wer, dann das Verb.",
+    "explain": "zu plus der wird zur: zur Post."
+   },
+   {
+    "type": "order",
+    "answer": "Wohnt hier in der Nähe eine Apotheke",
+    "hint": "Bei einer Frage steht das Verb zuerst.",
+    "explain": "Bei Gebäuden sagt man eher: Gibt es hier eine Apotheke?"
+   },
+   {
+    "type": "order",
+    "answer": "Der Markt ist nur am Samstag",
+    "hint": "Erst das Subjekt, dann das Verb.",
+    "explain": "am Samstag — bei Wochentagen steht immer an plus dem."
+   },
+   {
+    "type": "order",
+    "answer": "Meine Adresse ist Lindenstraße zwölf",
+    "hint": "Erst das Subjekt, dann das Verb.",
+    "explain": "Bei der Adresse kommt die Hausnummer nach dem Straßennamen."
+   },
+   {
+    "type": "match",
+    "intro": "Ordne Wort und Bedeutung zu:",
+    "pairs": [
+     {
+      "l": "die Stadt",
+      "r": "ein großer Ort mit vielen Häusern und Menschen"
+     },
+     {
+      "l": "das Dorf",
+      "r": "ein kleiner Ort mit wenigen Häusern"
+     },
+     {
+      "l": "die Bäckerei",
+      "r": "dort kauft man Brot und Brötchen"
+     },
+     {
+      "l": "der Supermarkt",
+      "r": "dort kauft man Lebensmittel"
+     }
+    ]
+   },
+   {
+    "type": "match",
+    "intro": "Ordne Wort und Bedeutung zu:",
+    "pairs": [
+     {
+      "l": "die Post",
+      "r": "dort gibt man Briefe und Pakete ab"
+     },
+     {
+      "l": "die Bank",
+      "r": "dort holt man Geld"
+     },
+     {
+      "l": "das Krankenhaus",
+      "r": "dort liegt man, wenn man sehr krank ist"
+     },
+     {
+      "l": "die Schule",
+      "r": "dort lernen die Kinder"
+     }
+    ]
+   },
+   {
+    "type": "match",
+    "intro": "Ordne Wort und Bedeutung zu:",
+    "pairs": [
+     {
+      "l": "das Rathaus",
+      "r": "dort ist die Verwaltung der Stadt"
+     },
+     {
+      "l": "die Kirche",
+      "r": "dort beten Menschen, sie hat oft einen Turm"
+     },
+     {
+      "l": "der Markt",
+      "r": "dort verkaufen viele Stände Obst und Gemüse"
+     },
+     {
+      "l": "das Restaurant",
+      "r": "dort isst man und bezahlt dafür"
+     }
+    ]
+   },
+   {
+    "type": "match",
+    "intro": "Ordne Wort und Bedeutung zu:",
+    "pairs": [
+     {
+      "l": "die Adresse",
+      "r": "Straße, Nummer und Ort, wo jemand wohnt"
+     },
+     {
+      "l": "der Platz",
+      "r": "eine offene Fläche mitten in der Stadt"
+     },
+     {
+      "l": "in der Nähe",
+      "r": "nicht weit weg"
+     },
+     {
+      "l": "weit",
+      "r": "eine große Entfernung"
+     }
+    ]
+   },
+   {
+    "type": "fehler",
+    "satz": "Ich gehe schnell zu der Post.",
+    "falsch": "der",
+    "richtig": "Ich gehe schnell zur Post.",
+    "explain": "zu plus der zieht man zu zur zusammen."
+   },
+   {
+    "type": "fehler",
+    "satz": "Der Markt ist nur an Samstag.",
+    "falsch": "an",
+    "richtig": "Der Markt ist nur am Samstag.",
+    "explain": "an plus dem wird am. Bei Wochentagen immer: am Montag, am Samstag."
+   },
+   {
+    "type": "fehler",
+    "satz": "Gibt es hier in die Nähe eine Apotheke?",
+    "falsch": "die",
+    "richtig": "Gibt es hier in der Nähe eine Apotheke?",
+    "explain": "in der Nähe ist eine feste Wendung im Dativ."
+   },
+   {
+    "type": "schreiben",
+    "auftrag": "Beschreib in drei bis vier Sätzen, was es in deiner Straße oder deinem Viertel gibt.",
+    "muster": "Bei mir im Viertel gibt es fast alles. Gleich um die Ecke sind eine Bäckerei und ein kleiner Supermarkt. Die Post ist etwas weiter, ungefähr zehn Minuten zu Fuß. Ein Restaurant fehlt leider.",
+    "tipp": "Es gibt steht immer mit dem Akkusativ: Es gibt einen Supermarkt."
+   },
+   {
+    "type": "schreiben",
+    "auftrag": "Jemand fragt, ob es bei dir in der Nähe eine Apotheke gibt. Antworte in zwei bis drei Sätzen.",
+    "muster": "Ja, in der Nähe gibt es eine Apotheke. Sie ist am Marktplatz, direkt neben der Bank. Von hier sind es ungefähr fünf Minuten zu Fuß.",
+    "tipp": "Für Orte: neben der Bank, am Platz, gegenüber der Schule."
+   }
+  ]
+ },
+ {
+  "id": "a1-zahlen",
+  "title": "Zahlen & Mengen",
+  "level": "A1",
+  "emoji": "🔢",
+  "words": [
+   {
+    "de": "die Zahl",
+    "info": "zum Beispiel eins, zwei oder hundert",
+    "emoji": "🔢"
+   },
+   {
+    "de": "die Nummer",
+    "info": "eine Zahl, die zu etwas gehört, zum Beispiel beim Telefon",
+    "emoji": "☎️"
+   },
+   {
+    "de": "das Kilo",
+    "info": "tausend Gramm, ein Maß fürs Gewicht",
+    "emoji": "⚖️"
+   },
+   {
+    "de": "das Gramm",
+    "info": "ein kleines Maß fürs Gewicht",
+    "emoji": "🥄"
+   },
+   {
+    "de": "der Liter",
+    "info": "ein Maß für Flüssigkeit, zum Beispiel Milch",
+    "emoji": "🥛"
+   },
+   {
+    "de": "das Stück",
+    "info": "ein einzelnes Ding aus einer Menge",
+    "emoji": "🍰"
+   },
+   {
+    "de": "die Flasche",
+    "info": "darin ist Wasser oder Saft",
+    "emoji": "🍾"
+   },
+   {
+    "de": "die Packung",
+    "info": "darin sind mehrere Stücke zusammen",
+    "emoji": "📦"
+   },
+   {
+    "de": "der Euro",
+    "info": "das Geld in Deutschland",
+    "emoji": "💶"
+   },
+   {
+    "de": "der Cent",
+    "info": "der hundertste Teil von einem Euro",
+    "emoji": "🪙"
+   },
+   {
+    "de": "viel",
+    "info": "eine große Menge",
+    "emoji": "📈"
+   },
+   {
+    "de": "wenig",
+    "info": "eine kleine Menge",
+    "emoji": "📉"
+   },
+   {
+    "de": "genug",
+    "info": "so viel, wie man braucht",
+    "emoji": "👌"
+   },
+   {
+    "de": "alle",
+    "info": "jeder oder jedes von einer Gruppe",
+    "emoji": "💯"
+   },
+   {
+    "de": "zusammen",
+    "info": "alles auf einmal, nicht getrennt",
+    "emoji": "🧮"
+   },
+   {
+    "de": "kosten",
+    "info": "einen Preis haben",
+    "emoji": "🏷️"
+   }
+  ],
+  "exercises": [
+   {
+    "type": "karte",
+    "w": "die Zahl",
+    "info": "zum Beispiel eins, zwei oder hundert",
+    "emoji": "🔢"
+   },
+   {
+    "type": "karte",
+    "w": "die Nummer",
+    "info": "eine Zahl, die zu etwas gehört, zum Beispiel beim Telefon",
+    "emoji": "☎️"
+   },
+   {
+    "type": "karte",
+    "w": "das Kilo",
+    "info": "tausend Gramm, ein Maß fürs Gewicht",
+    "emoji": "⚖️"
+   },
+   {
+    "type": "karte",
+    "w": "das Gramm",
+    "info": "ein kleines Maß fürs Gewicht",
+    "emoji": "🥄"
+   },
+   {
+    "type": "karte",
+    "w": "der Liter",
+    "info": "ein Maß für Flüssigkeit, zum Beispiel Milch",
+    "emoji": "🥛"
+   },
+   {
+    "type": "karte",
+    "w": "das Stück",
+    "info": "ein einzelnes Ding aus einer Menge",
+    "emoji": "🍰"
+   },
+   {
+    "type": "karte",
+    "w": "die Flasche",
+    "info": "darin ist Wasser oder Saft",
+    "emoji": "🍾"
+   },
+   {
+    "type": "karte",
+    "w": "die Packung",
+    "info": "darin sind mehrere Stücke zusammen",
+    "emoji": "📦"
+   },
+   {
+    "type": "karte",
+    "w": "der Euro",
+    "info": "das Geld in Deutschland",
+    "emoji": "💶"
+   },
+   {
+    "type": "karte",
+    "w": "der Cent",
+    "info": "der hundertste Teil von einem Euro",
+    "emoji": "🪙"
+   },
+   {
+    "type": "karte",
+    "w": "viel",
+    "info": "eine große Menge",
+    "emoji": "📈"
+   },
+   {
+    "type": "karte",
+    "w": "wenig",
+    "info": "eine kleine Menge",
+    "emoji": "📉"
+   },
+   {
+    "type": "karte",
+    "w": "genug",
+    "info": "so viel, wie man braucht",
+    "emoji": "👌"
+   },
+   {
+    "type": "karte",
+    "w": "alle",
+    "info": "jeder oder jedes von einer Gruppe",
+    "emoji": "💯"
+   },
+   {
+    "type": "karte",
+    "w": "zusammen",
+    "info": "alles auf einmal, nicht getrennt",
+    "emoji": "🧮"
+   },
+   {
+    "type": "karte",
+    "w": "kosten",
+    "info": "einen Preis haben",
+    "emoji": "🏷️"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „zum Beispiel eins, zwei oder hundert“?",
+    "options": [
+     "die Zahl",
+     "das Gramm",
+     "die Packung",
+     "wenig"
+    ],
+    "answer": 0,
+    "w": "die Zahl",
+    "explain": "🔢 die Zahl — zum Beispiel eins, zwei oder hundert"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „eine Zahl, die zu etwas gehört, zum Beispiel beim Telefon“?",
+    "options": [
+     "die Nummer",
+     "der Liter",
+     "der Euro",
+     "genug"
+    ],
+    "answer": 0,
+    "w": "die Nummer",
+    "explain": "☎️ die Nummer — eine Zahl, die zu etwas gehört, zum Beispiel beim Telefon"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „tausend Gramm, ein Maß fürs Gewicht“?",
+    "options": [
+     "das Kilo",
+     "das Stück",
+     "der Cent",
+     "alle"
+    ],
+    "answer": 0,
+    "w": "das Kilo",
+    "explain": "⚖️ das Kilo — tausend Gramm, ein Maß fürs Gewicht"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „ein kleines Maß fürs Gewicht“?",
+    "options": [
+     "das Gramm",
+     "die Flasche",
+     "viel",
+     "zusammen"
+    ],
+    "answer": 0,
+    "w": "das Gramm",
+    "explain": "🥄 das Gramm — ein kleines Maß fürs Gewicht"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „ein Maß für Flüssigkeit, zum Beispiel Milch“?",
+    "options": [
+     "der Liter",
+     "die Packung",
+     "wenig",
+     "kosten"
+    ],
+    "answer": 0,
+    "w": "der Liter",
+    "explain": "🥛 der Liter — ein Maß für Flüssigkeit, zum Beispiel Milch"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „ein einzelnes Ding aus einer Menge“?",
+    "options": [
+     "das Stück",
+     "der Euro",
+     "genug",
+     "die Zahl"
+    ],
+    "answer": 0,
+    "w": "das Stück",
+    "explain": "🍰 das Stück — ein einzelnes Ding aus einer Menge"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „darin ist Wasser oder Saft“?",
+    "options": [
+     "die Flasche",
+     "der Cent",
+     "alle",
+     "die Nummer"
+    ],
+    "answer": 0,
+    "w": "die Flasche",
+    "explain": "🍾 die Flasche — darin ist Wasser oder Saft"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „darin sind mehrere Stücke zusammen“?",
+    "options": [
+     "die Packung",
+     "viel",
+     "zusammen",
+     "das Kilo"
+    ],
+    "answer": 0,
+    "w": "die Packung",
+    "explain": "📦 die Packung — darin sind mehrere Stücke zusammen"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „das Geld in Deutschland“?",
+    "options": [
+     "der Euro",
+     "wenig",
+     "kosten",
+     "das Gramm"
+    ],
+    "answer": 0,
+    "w": "der Euro",
+    "explain": "💶 der Euro — das Geld in Deutschland"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „der hundertste Teil von einem Euro“?",
+    "options": [
+     "der Cent",
+     "genug",
+     "die Zahl",
+     "der Liter"
+    ],
+    "answer": 0,
+    "w": "der Cent",
+    "explain": "🪙 der Cent — der hundertste Teil von einem Euro"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „eine große Menge“?",
+    "options": [
+     "viel",
+     "alle",
+     "die Nummer",
+     "das Stück"
+    ],
+    "answer": 0,
+    "w": "viel",
+    "explain": "📈 viel — eine große Menge"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „eine kleine Menge“?",
+    "options": [
+     "wenig",
+     "zusammen",
+     "das Kilo",
+     "die Flasche"
+    ],
+    "answer": 0,
+    "w": "wenig",
+    "explain": "📉 wenig — eine kleine Menge"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „so viel, wie man braucht“?",
+    "options": [
+     "genug",
+     "kosten",
+     "das Gramm",
+     "die Packung"
+    ],
+    "answer": 0,
+    "w": "genug",
+    "explain": "👌 genug — so viel, wie man braucht"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „jeder oder jedes von einer Gruppe“?",
+    "options": [
+     "alle",
+     "die Zahl",
+     "der Liter",
+     "der Euro"
+    ],
+    "answer": 0,
+    "w": "alle",
+    "explain": "💯 alle — jeder oder jedes von einer Gruppe"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „alles auf einmal, nicht getrennt“?",
+    "options": [
+     "zusammen",
+     "die Nummer",
+     "das Stück",
+     "der Cent"
+    ],
+    "answer": 0,
+    "w": "zusammen",
+    "explain": "🧮 zusammen — alles auf einmal, nicht getrennt"
+   },
+   {
+    "type": "choice",
+    "q": "Welches Wort passt: „einen Preis haben“?",
+    "options": [
+     "kosten",
+     "das Kilo",
+     "die Flasche",
+     "viel"
+    ],
+    "answer": 0,
+    "w": "kosten",
+    "explain": "🏷️ kosten — einen Preis haben"
+   },
+   {
+    "type": "gap",
+    "text": "___ Zahl",
+    "answer": "die",
+    "hint": "der / die / das?",
+    "w": "die Zahl",
+    "explain": "Es heißt die Zahl — zum Beispiel eins, zwei oder hundert"
+   },
+   {
+    "type": "gap",
+    "text": "___ Nummer",
+    "answer": "die",
+    "hint": "der / die / das?",
+    "w": "die Nummer",
+    "explain": "Es heißt die Nummer — eine Zahl, die zu etwas gehört, zum Beispiel beim Telefon"
+   },
+   {
+    "type": "gap",
+    "text": "___ Kilo",
+    "answer": "das",
+    "hint": "der / die / das?",
+    "w": "das Kilo",
+    "explain": "Es heißt das Kilo — tausend Gramm, ein Maß fürs Gewicht"
+   },
+   {
+    "type": "gap",
+    "text": "___ Gramm",
+    "answer": "das",
+    "hint": "der / die / das?",
+    "w": "das Gramm",
+    "explain": "Es heißt das Gramm — ein kleines Maß fürs Gewicht"
+   },
+   {
+    "type": "gap",
+    "text": "___ Liter",
+    "answer": "der",
+    "hint": "der / die / das?",
+    "w": "der Liter",
+    "explain": "Es heißt der Liter — ein Maß für Flüssigkeit, zum Beispiel Milch"
+   },
+   {
+    "type": "gap",
+    "text": "___ Stück",
+    "answer": "das",
+    "hint": "der / die / das?",
+    "w": "das Stück",
+    "explain": "Es heißt das Stück — ein einzelnes Ding aus einer Menge"
+   },
+   {
+    "type": "gap",
+    "text": "___ Flasche",
+    "answer": "die",
+    "hint": "der / die / das?",
+    "w": "die Flasche",
+    "explain": "Es heißt die Flasche — darin ist Wasser oder Saft"
+   },
+   {
+    "type": "gap",
+    "text": "___ Packung",
+    "answer": "die",
+    "hint": "der / die / das?",
+    "w": "die Packung",
+    "explain": "Es heißt die Packung — darin sind mehrere Stücke zusammen"
+   },
+   {
+    "type": "gap",
+    "text": "___ Euro",
+    "answer": "der",
+    "hint": "der / die / das?",
+    "w": "der Euro",
+    "explain": "Es heißt der Euro — das Geld in Deutschland"
+   },
+   {
+    "type": "gap",
+    "text": "___ Cent",
+    "answer": "der",
+    "hint": "der / die / das?",
+    "w": "der Cent",
+    "explain": "Es heißt der Cent — der hundertste Teil von einem Euro"
+   },
+   {
+    "type": "tippen",
+    "answer": "Zahl",
+    "info": "zum Beispiel eins, zwei oder hundert",
+    "emoji": "🔢",
+    "w": "die Zahl",
+    "explain": "🔢 die Zahl"
+   },
+   {
+    "type": "tippen",
+    "answer": "Nummer",
+    "info": "eine Zahl, die zu etwas gehört, zum Beispiel beim Telefon",
+    "emoji": "☎️",
+    "w": "die Nummer",
+    "explain": "☎️ die Nummer"
+   },
+   {
+    "type": "tippen",
+    "answer": "Kilo",
+    "info": "tausend Gramm, ein Maß fürs Gewicht",
+    "emoji": "⚖️",
+    "w": "das Kilo",
+    "explain": "⚖️ das Kilo"
+   },
+   {
+    "type": "tippen",
+    "answer": "Gramm",
+    "info": "ein kleines Maß fürs Gewicht",
+    "emoji": "🥄",
+    "w": "das Gramm",
+    "explain": "🥄 das Gramm"
+   },
+   {
+    "type": "tippen",
+    "answer": "Liter",
+    "info": "ein Maß für Flüssigkeit, zum Beispiel Milch",
+    "emoji": "🥛",
+    "w": "der Liter",
+    "explain": "🥛 der Liter"
+   },
+   {
+    "type": "tippen",
+    "answer": "Stück",
+    "info": "ein einzelnes Ding aus einer Menge",
+    "emoji": "🍰",
+    "w": "das Stück",
+    "explain": "🍰 das Stück"
+   },
+   {
+    "type": "tippen",
+    "answer": "Flasche",
+    "info": "darin ist Wasser oder Saft",
+    "emoji": "🍾",
+    "w": "die Flasche",
+    "explain": "🍾 die Flasche"
+   },
+   {
+    "type": "tippen",
+    "answer": "Packung",
+    "info": "darin sind mehrere Stücke zusammen",
+    "emoji": "📦",
+    "w": "die Packung",
+    "explain": "📦 die Packung"
+   },
+   {
+    "type": "tippen",
+    "answer": "Euro",
+    "info": "das Geld in Deutschland",
+    "emoji": "💶",
+    "w": "der Euro",
+    "explain": "💶 der Euro"
+   },
+   {
+    "type": "tippen",
+    "answer": "Cent",
+    "info": "der hundertste Teil von einem Euro",
+    "emoji": "🪙",
+    "w": "der Cent",
+    "explain": "🪙 der Cent"
+   },
+   {
+    "type": "tippen",
+    "answer": "viel",
+    "info": "eine große Menge",
+    "emoji": "📈",
+    "w": "viel",
+    "explain": "📈 viel"
+   },
+   {
+    "type": "tippen",
+    "answer": "wenig",
+    "info": "eine kleine Menge",
+    "emoji": "📉",
+    "w": "wenig",
+    "explain": "📉 wenig"
+   },
+   {
+    "type": "tippen",
+    "answer": "genug",
+    "info": "so viel, wie man braucht",
+    "emoji": "👌",
+    "w": "genug",
+    "explain": "👌 genug"
+   },
+   {
+    "type": "tippen",
+    "answer": "alle",
+    "info": "jeder oder jedes von einer Gruppe",
+    "emoji": "💯",
+    "w": "alle",
+    "explain": "💯 alle"
+   },
+   {
+    "type": "tippen",
+    "answer": "zusammen",
+    "info": "alles auf einmal, nicht getrennt",
+    "emoji": "🧮",
+    "w": "zusammen",
+    "explain": "🧮 zusammen"
+   },
+   {
+    "type": "tippen",
+    "answer": "kosten",
+    "info": "einen Preis haben",
+    "emoji": "🏷️",
+    "w": "kosten",
+    "explain": "🏷️ kosten"
+   },
+   {
+    "type": "order",
+    "answer": "Ein Kilo Tomaten kostet drei Euro",
+    "hint": "Erst das Subjekt, dann das Verb.",
+    "explain": "Nach Mengen steht kein von: ein Kilo Tomaten."
+   },
+   {
+    "type": "order",
+    "answer": "Ich hätte gern zwei Flaschen Wasser",
+    "hint": "Ich hätte gern steht am Anfang.",
+    "explain": "Ich hätte gern ist die höfliche Bestellung."
+   },
+   {
+    "type": "order",
+    "answer": "Das macht zusammen zwölf Euro fünfzig",
+    "hint": "Erst das Subjekt, dann das Verb.",
+    "explain": "Das macht … — so nennt die Kassiererin den Gesamtpreis."
+   },
+   {
+    "type": "order",
+    "answer": "Wie viel kostet eine Packung Kaffee",
+    "hint": "Die Frage beginnt mit dem Fragewort.",
+    "explain": "Wie viel fragt nach dem Preis oder der Menge."
+   },
+   {
+    "type": "order",
+    "answer": "Ich habe heute leider wenig Zeit",
+    "hint": "Die Zeitangabe steht vor dem Objekt.",
+    "explain": "wenig und viel stehen ohne Artikel: wenig Zeit, viel Arbeit."
+   },
+   {
+    "type": "match",
+    "intro": "Ordne Wort und Bedeutung zu:",
+    "pairs": [
+     {
+      "l": "die Zahl",
+      "r": "zum Beispiel eins, zwei oder hundert"
+     },
+     {
+      "l": "die Nummer",
+      "r": "eine Zahl, die zu etwas gehört, zum Beispiel beim Telefon"
+     },
+     {
+      "l": "das Kilo",
+      "r": "tausend Gramm, ein Maß fürs Gewicht"
+     },
+     {
+      "l": "das Gramm",
+      "r": "ein kleines Maß fürs Gewicht"
+     }
+    ]
+   },
+   {
+    "type": "match",
+    "intro": "Ordne Wort und Bedeutung zu:",
+    "pairs": [
+     {
+      "l": "der Liter",
+      "r": "ein Maß für Flüssigkeit, zum Beispiel Milch"
+     },
+     {
+      "l": "das Stück",
+      "r": "ein einzelnes Ding aus einer Menge"
+     },
+     {
+      "l": "die Flasche",
+      "r": "darin ist Wasser oder Saft"
+     },
+     {
+      "l": "die Packung",
+      "r": "darin sind mehrere Stücke zusammen"
+     }
+    ]
+   },
+   {
+    "type": "match",
+    "intro": "Ordne Wort und Bedeutung zu:",
+    "pairs": [
+     {
+      "l": "der Euro",
+      "r": "das Geld in Deutschland"
+     },
+     {
+      "l": "der Cent",
+      "r": "der hundertste Teil von einem Euro"
+     },
+     {
+      "l": "viel",
+      "r": "eine große Menge"
+     },
+     {
+      "l": "wenig",
+      "r": "eine kleine Menge"
+     }
+    ]
+   },
+   {
+    "type": "match",
+    "intro": "Ordne Wort und Bedeutung zu:",
+    "pairs": [
+     {
+      "l": "genug",
+      "r": "so viel, wie man braucht"
+     },
+     {
+      "l": "alle",
+      "r": "jeder oder jedes von einer Gruppe"
+     },
+     {
+      "l": "zusammen",
+      "r": "alles auf einmal, nicht getrennt"
+     },
+     {
+      "l": "kosten",
+      "r": "einen Preis haben"
+     }
+    ]
+   },
+   {
+    "type": "fehler",
+    "satz": "Ein Kilo von Tomaten kostet drei Euro.",
+    "falsch": "von",
+    "richtig": "Ein Kilo Tomaten kostet drei Euro.",
+    "explain": "Nach einer Mengenangabe folgt das Nomen direkt, ohne von."
+   },
+   {
+    "type": "fehler",
+    "satz": "Ich hätte gern zwei Flasche Wasser.",
+    "falsch": "Flasche",
+    "richtig": "Ich hätte gern zwei Flaschen Wasser.",
+    "explain": "Nach einer Zahl über eins steht der Plural: zwei Flaschen."
+   },
+   {
+    "type": "fehler",
+    "satz": "Ich habe heute leider wenig die Zeit.",
+    "falsch": "die",
+    "richtig": "Ich habe heute leider wenig Zeit.",
+    "explain": "Nach viel und wenig steht kein Artikel."
+   },
+   {
+    "type": "schreiben",
+    "auftrag": "Schreib einen Einkaufszettel als Satz: Was brauchst du und wie viel? Zwei bis drei Sätze.",
+    "muster": "Ich brauche noch ein Kilo Kartoffeln und zwei Flaschen Milch. Außerdem eine Packung Kaffee und sechs Eier. Brot habe ich noch genug zu Hause.",
+    "tipp": "Mengen stehen direkt vor dem Nomen: ein Kilo Kartoffeln, zwei Flaschen Milch."
+   },
+   {
+    "type": "schreiben",
+    "auftrag": "Du bezahlst an der Kasse. Schreib das kurze Gespräch in drei Sätzen.",
+    "muster": "Das macht zusammen achtzehn Euro vierzig. Kann ich mit Karte bezahlen? Ja natürlich, brauchen Sie den Kassenzettel?",
+    "tipp": "Das macht … ist der feste Satz für den Gesamtpreis."
+   }
+  ]
  }
 ];
   var ziel = null;
