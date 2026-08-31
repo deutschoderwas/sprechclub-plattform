@@ -1464,6 +1464,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-freunde.webp"
  },
  {
+  "d": "grammatik-partizipattribut-b2.html",
+  "t": "Partizipien als Attribut: das rennende Kind",
+  "lvl": "B2",
+  "art": "grammatik",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "grammatik-nominalstil-b2.html",
   "t": "Nominalstil: wegen des Regens oder weil es regnet",
   "lvl": "B2",
