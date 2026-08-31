@@ -201,6 +201,25 @@
     .ub-loes .ub-ton{margin:0;flex:0 0 auto}
     .ub-loes .ub-ton-b{width:40px;height:40px;font-size:17px}
     @media(max-width:520px){ .ub-ton-b{width:52px;height:52px;font-size:21px} }
+    /* Lesen: der Text steht ruhig da, die Frage kommt darunter. */
+    .ub-lestext{text-align:left;background:#fff;border:1px solid var(--border,#ECECEC);border-radius:14px;
+      padding:14px 16px;font-size:16px;line-height:1.7;margin:4px 0 14px;color:#222}
+    .ub-lestext p{margin:0 0 10px} .ub-lestext p:last-child{margin:0}
+    /* Schreiben: eigenes Feld, danach die Musterloesung. */
+    .ub-schreib{width:100%;border:2px solid var(--border,#ECECEC);border-radius:14px;padding:12px 14px;
+      font:inherit;font-size:16px;line-height:1.6;resize:vertical;min-height:110px;background:#fff;color:#222}
+    .ub-schreib:focus{outline:none;border-color:var(--turq,#2DD4BF)}
+    .ub-muster{text-align:left;margin-top:12px;padding:12px 14px;background:#F4FDFB;
+      border:1px solid #A7E8DE;border-radius:14px;font-size:16px;line-height:1.6;color:#1f3f3a}
+    .ub-zaehl{text-align:right;font-size:13px;color:#888;margin-top:6px}
+    /* Fehlersuche: jedes Wort ist antippbar. */
+    .ub-fsatz{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:8px 0 4px}
+    .ub-fw{border:2px solid transparent;background:#F3F3F1;border-radius:10px;padding:8px 11px;
+      font-size:17px;font-weight:600;cursor:pointer;transition:.12s;min-height:44px}
+    .ub-fw:hover:not(.aus){background:#FFF3CC}
+    .ub-fw.aus{cursor:default}
+    .ub-fw.gut{background:#E7F7EC;border-color:#16a34a}
+    .ub-fw.schlecht{background:#FDECEA;border-color:#dc2626}
     .ub-word{font-size:30px;font-weight:800;font-family:'Space Grotesk',sans-serif;text-align:center;margin:6px 0}
     .ub-tip{text-align:center;color:var(--soft,#5C5C5C);margin-bottom:14px}
     .ub-fb{margin-top:14px;padding:13px 15px;border-radius:14px;font-weight:700;display:none}
@@ -850,6 +869,34 @@
       btn.disabled=false; btn.textContent='👍 Hat geklappt';
       if(e.audioUrl){ setTimeout(function(){ ubPlayUrl(e.audioUrl, document.querySelector('#ubBody .ub-play')); },300); }
       else { setTimeout(function(){ speak(e.word); },200); }
+    } else if(e.type==='lesen'){
+      /* Erst lesen, dann antworten. Der Text bleibt beim Antworten sichtbar —
+         Leseverstehen heisst nicht Auswendiglernen. */
+      h+='<div class="ub-q">📖 Lies den Text und beantworte die Frage:</div>'+
+         '<div class="ub-lestext">'+String(e.text||'').split(/\n\s*\n/).map(function(a){return '<p>'+E(a)+'</p>';}).join('')+'</div>'+
+         tonKnoepfe(e.text)+
+         '<div class="ub-q" style="font-size:18px;margin:14px 0 12px">'+E(e.q||'')+'</div>'+
+         '<div class="ub-opts" id="ubOpts">'+
+         shuf(e.options.map(function(o,k){return k;})).map(function(k){ return '<button class="ub-opt" data-k="'+k+'" onclick="ubChoose('+k+')">'+E(e.options[k])+'</button>'; }).join('')+
+         '</div>';
+    } else if(e.type==='schreiben'){
+      /* Hier gibt es kein Richtig und kein Falsch, sondern einen Vergleich.
+         Man schreibt selbst, dann sieht man eine moegliche Fassung. */
+      h+='<div class="ub-q">✍️ '+E(e.auftrag||'Schreib deine Antwort:')+'</div>'+
+         tonKnoepfe(e.auftrag)+
+         '<textarea class="ub-schreib" id="ubSchreib" placeholder="Schreib hier …" oninput="ubSchreibZaehl()"></textarea>'+
+         '<div class="ub-zaehl" id="ubZaehl">0 Wörter</div>';
+      if(e.tipp) h+='<div class="ub-tip" style="text-align:left;margin-top:8px">💡 '+E(e.tipp)+'</div>';
+      btn.disabled=false; btn.textContent='Lösung zeigen';
+    } else if(e.type==='fehler'){
+      /* Fehler finden schult das Auge fuer die eigene Sprache — man liest
+         seinen eigenen Text danach anders. */
+      S.fehlerWahl=null;
+      h+='<div class="ub-q">🔍 In diesem Satz steckt ein Fehler. Tippe das falsche Wort an:</div>'+
+         '<div class="ub-fsatz" id="ubFsatz">'+
+         String(e.satz||'').split(/\s+/).filter(Boolean).map(function(w,k){
+           return '<button class="ub-fw" data-w="'+E(w)+'" onclick="ubFehlerWahl('+k+',this)">'+E(w)+'</button>';
+         }).join('')+'</div>';
     } else if(e.type==='listen'){
       if(e.img){ h+='<img class="ub-qimg" src="'+E(e.img)+'" alt="" onerror="this.remove()">'; }
       h+='<div class="ub-tip" style="margin-bottom:4px">'+E(e.label||'🎧 Hör gut zu – du kannst mehrmals hören')+'</div>'+
@@ -909,6 +956,13 @@
   function verbTeil(w){ w=String(w||''); return VORSILBE.test(w) || /(en|te|ten|end|t)$/.test(w); }
 
   window.ubChoose=function(k){ if(S.answered)return; S.sel=k; var opts=document.getElementById('ubOpts'); Array.prototype.forEach.call(opts.children,function(b){ b.classList.toggle('sel',+b.dataset.k===k); }); document.getElementById('ubBtn').disabled=false; };
+  window.ubSchreibZaehl=function(){ var t=document.getElementById('ubSchreib'), z=document.getElementById('ubZaehl');
+    if(!t||!z)return; var n=(t.value.trim().match(/\S+/g)||[]).length; z.textContent=n+(n===1?' Wort':' Wörter'); };
+  window.ubFehlerWahl=function(k,btn){ if(S.answered)return; S.fehlerWahl=k;
+    var fs=document.getElementById('ubFsatz');
+    if(fs) Array.prototype.forEach.call(fs.children,function(b){ b.classList.remove('sel'); b.style.borderColor=''; });
+    btn.style.borderColor='var(--turq,#2DD4BF)';
+    document.getElementById('ubBtn').disabled=false; };
   window.ubMatchChk=function(){ var e=S.items[S.idx]; var all=e.pairs.every(function(p,k){ return document.getElementById('ubM'+k).value; }); document.getElementById('ubBtn').disabled=!all; };
   function drawOrder(){ var e=S.items[S.idx]; var b=document.getElementById('ubBuild'),p=document.getElementById('ubPool');
     var leer=(e.type==='buchstaben')?'Buchstaben unten antippen…':'Wörter unten antippen…';
@@ -952,12 +1006,34 @@
       if(ok&&e.w) markKnown(e.w);
     } else if(e.type==='karte'){ ok=true;
     } else if(e.type==='speak'||e.type==='shadow'){ ok=true; }
+    else if(e.type==='lesen'){ ok=(S.sel===e.answer); var leopts=document.getElementById('ubOpts');
+      if(leopts) Array.prototype.forEach.call(leopts.children,function(b){ var k=+b.dataset.k;
+        b.disabled=true; b.classList.remove('sel'); if(k===e.answer)b.classList.add('right'); else if(k===S.sel)b.classList.add('wrong'); });
+      sol=e.explain||('Richtig wäre: '+(e.options?e.options[e.answer]:'')); }
+    else if(e.type==='schreiben'){ ok=true;
+      var ta=document.getElementById('ubSchreib'); if(ta) ta.disabled=true; }
+    else if(e.type==='fehler'){ var gewaehlt=S.fehlerWahl;
+      var woerter=String(e.satz||'').split(/\s+/).filter(Boolean);
+      /* Das falsche Wort wird ueber den Text gesucht. Damit eine Aufgabe nicht
+         daran scheitert, dass jemand den Punkt mitgeschrieben hat, werden auf
+         beiden Seiten die Satzzeichen abgeschnitten. Kommt ein Wort mehrfach
+         vor, kann die Aufgabe mit falschIdx sagen, welches gemeint ist. */
+      var ohnePunkt=function(w){ return String(w).replace(/^[«»„“”"'(]+|[.,!?;:«»„“”"')]+$/g,''); };
+      var ziel=ohnePunkt(e.falsch);
+      var zielIdx=(typeof e.falschIdx==='number')?e.falschIdx:-1;
+      if(zielIdx<0) woerter.forEach(function(w,k){ if(zielIdx<0 && ohnePunkt(w)===ziel) zielIdx=k; });
+      if(zielIdx<0) woerter.forEach(function(w,k){ if(zielIdx<0 && ohnePunkt(w).toLowerCase()===ziel.toLowerCase()) zielIdx=k; });
+      ok=(gewaehlt===zielIdx);
+      var fs=document.getElementById('ubFsatz');
+      if(fs) Array.prototype.forEach.call(fs.children,function(b,k){ b.classList.add('aus');
+        if(k===zielIdx)b.classList.add('gut'); else if(k===gewaehlt)b.classList.add('schlecht'); });
+      sol=(e.explain||'')+' Richtig heißt es: '+(e.richtig||''); }
     else if(e.type==='listen'){ ok=(S.sel===e.answer); var lopts=document.getElementById('ubOpts');
       Array.prototype.forEach.call(lopts.children,function(b){ var k=+b.dataset.k; b.disabled=true; b.classList.remove('sel'); if(k===e.answer)b.classList.add('right'); else if(k===S.sel)b.classList.add('wrong'); });
       sol=e.explain?e.explain:'Hör nochmal genau hin.'; }
 
     S.answered=true; var btn=document.getElementById('ubBtn');
-    var selfRated=(e.type==='speak'||e.type==='shadow'||e.type==='karte');
+    var selfRated=(e.type==='speak'||e.type==='shadow'||e.type==='karte'||e.type==='schreiben');
     /* Jede Antwort zu einem Wort landet im Wiederholungsplan: richtig
        schiebt das Wort nach hinten, falsch holt es zurück. */
     if(e.w && e.type!=='karte') wdhMerken(e, ok);
@@ -985,9 +1061,14 @@
     else if(e.type==='buchstaben') loesung=String(e.answer||'');
     else if(e.type==='choice' && e.options && typeof e.answer==='number') loesung=String(e.options[e.answer]||'');
     else if(e.type==='tippen') loesung=String(e.answer||e.wort||e.w||'');
+    else if(e.type==='fehler') loesung=String(e.richtig||'');
+    else if(e.type==='lesen' && e.options && typeof e.answer==='number') loesung=String(e.options[e.answer]||'');
     if(loesung && !e.audioUrl){
       fb.innerHTML+='<div class="ub-loes">'+tonKnoepfe(loesung)+'<span>'+E(loesung)+'</span></div>';
       if(!ok) setTimeout(function(){ speak(loesung.replace(/<[^>]+>/g,'')); }, 350);
+    }
+    if(e.type==='schreiben' && e.muster){
+      fb.innerHTML+='<div class="ub-muster"><b>Ein möglicher Text:</b><br>'+E(e.muster)+'</div>'+tonKnoepfe(e.muster);
     }
     if(e.type==='listen'){ fb.innerHTML+='<div style="margin-top:10px;padding:11px 13px;background:#fff;border:1px solid var(--border,#ECECEC);border-radius:12px;font-weight:500;color:#333;line-height:1.5">📝 <b>Das hast du gehört:</b><br>'+E(e.transcript)+'</div>'; }
     if(e.type==='choice' && e.img && /Welches Wort passt|gesucht:/.test(String(e.q||''))){
