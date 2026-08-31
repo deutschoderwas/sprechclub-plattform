@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Probe: neue Aufgabenformen</title>
+<style>
+  body{font-family:system-ui,-apple-system,sans-serif;margin:0;background:#FAFAF8;color:#222}
+  #v-ueben{padding:16px}
+  .probe-kopf{padding:12px 16px;background:#fff;border-bottom:1px solid #eee;font-weight:600}
+</style>
+</head>
+<body>
+<div class="probe-kopf">Probe – Aufgabenformen aus vielfalt-neu.js</div>
+<div id="v-ueben" class="active"></div>
+
+<script>
+/* Die Probe braucht nur das Nötigste: eine Handvoll echter Aufgaben,
+   je eine pro neuer Form, in der Struktur, die ueben.js erwartet. */
+window.UEBUNGEN = {
+  meta: { dailyGoal: 30, maxHearts: 5, xpPerCorrect: 10 },
+  skills: [{
+    id: 'probe', name: 'Probe', emoji: '🧪', color: '#0EA5E9',
+    themes: [{
+      id: 'formen', title: 'Neue Formen', level: 'A2', emoji: '🧪',
+      words: [],
+      exercises: [
+        { type: 'artikel', wort: 'Erkältung', answer: 'die', w: 'die Erkältung',
+          explain: 'die Erkältung — Schnupfen & Husten', emoji: '🤧' },
+        { type: 'buchstaben', answer: 'Gewürz', info: 'z. B. Salz, Pfeffer',
+          w: 'das Gewürz', explain: 'das Gewürz — z. B. Salz, Pfeffer', emoji: '🧂' },
+        { type: 'tippen', answer: 'Teller', info: 'darauf liegt das Essen',
+          w: 'der Teller', explain: '🍽️ der Teller', emoji: '🍽️' },
+        { type: 'order', answer: 'Ich fahre mit meinem Auto',
+          hint: 'Beginne mit „Ich". Gesucht ist die Form zu „mein".',
+          explain: 'mit + Dativ neutrum: meinem.' },
+        { type: 'speak', word: 'das Vorstellungsgespräch', w: 'das Vorstellungsgespräch',
+          tip: 'dort lernt die Firma dich kennen' },
+        /* Der heikle Fall: im Deutschen sind hier zwei Reihenfolgen richtig.
+           Gebaut wird gleich die zweite — sie muss auch gelten. */
+        { type: 'order', answer: 'Kinder unter zwölf dürfen vorne nicht sitzen',
+          hint: 'Beginne mit „Kinder".', explain: 'Regel/Verbot → dürfen nicht.' }
+      ]
+    }]
+  }]
+};
+</script>
+<script src="ueben.js"></script>
+<script>
+  /* Kein Ton in der Probe: der Browser im Test hat keine Stimme,
+     und ein blockierender Aufruf würde den Durchlauf aufhalten. */
+  window.speechSynthesis = { speak: function () {}, cancel: function () {}, getVoices: function () { return []; } };
+  document.addEventListener('DOMContentLoaded', function () {
+    if (window.renderUeben) window.renderUeben();
+  });
+</script>
+</body>
+</html>
