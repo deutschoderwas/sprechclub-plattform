@@ -61,6 +61,26 @@
     speechSynthesis.speak(u);
   }catch(e){} }
   window.ubSpeak=speak;
+  /* Langsamer vorlesen — fuer Lernende oft wichtiger als die normale Fassung. */
+  function speakSlow(text){ try{ stopAudio(); if(!window.speechSynthesis)return;
+    var u=new SpeechSynthesisUtterance(text); u.lang='de-DE'; u.rate=0.6;
+    var vs=(speechSynthesis.getVoices()||[]).filter(function(v){return /^de/i.test(v.lang);}); if(vs.length)u.voice=vs[0];
+    speechSynthesis.speak(u);
+  }catch(e){} }
+  window.ubSpeakSlow=speakSlow;
+  /* Zwei kleine Knoepfe: normal und langsam. Fuer jeden Satz, den man hoeren koennen sollte. */
+  function tonKnoepfe(text){
+    if(!text) return '';
+    var t=String(text).replace(/<[^>]+>/g,'').replace(/_{2,}/g,' … ').replace(/\s+/g,' ').trim();
+    if(!t) return '';
+    /* Der Text landet in einem onclick-Attribut: Anfuehrungszeichen und
+       Zeilenumbrueche wuerden es zerreissen, also vorher entschaerfen. */
+    var q=t.replace(/[„“”"]/g,'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/[\r\n]+/g,' ');
+    return '<div class="ub-ton">'+
+      '<button class="ub-play ub-ton-b" title="Vorlesen" onclick="ubSpeak(\''+q+'\')">🔊</button>'+
+      '<button class="ub-play ub-ton-b" title="Langsam vorlesen" onclick="ubSpeakSlow(\''+q+'\')">🐢</button>'+
+      '</div>';
+  }
   // Natürliche Stimme (echtes mp3) – Start/Stop-Umschalter
   window.ubPlayUrl=function(url,btn){
     if(curAudio && curBtn===btn){ stopAudio(); return; }
@@ -173,6 +193,14 @@
     .ub-play:hover{transform:scale(1.06)}
     .ub-play.playing{background:var(--primary,#DD0000);box-shadow:0 8px 22px rgba(221,0,0,.4);animation:ubpulse 1s infinite}
     @keyframes ubpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+    /* Kleine Tonknoepfe an jeder Aufgabe: normal und langsam. */
+    .ub-ton{display:flex;gap:8px;justify-content:center;margin:-6px 0 16px}
+    .ub-ton-b{width:46px;height:46px;font-size:19px;margin:0;box-shadow:0 3px 10px rgba(45,212,191,.28)}
+    .ub-loes{display:flex;align-items:center;gap:10px;margin-top:12px;padding:10px 12px;background:#fff;
+      border:1px solid var(--border,#ECECEC);border-radius:12px;text-align:left;line-height:1.45;font-weight:600;color:#333}
+    .ub-loes .ub-ton{margin:0;flex:0 0 auto}
+    .ub-loes .ub-ton-b{width:40px;height:40px;font-size:17px}
+    @media(max-width:520px){ .ub-ton-b{width:52px;height:52px;font-size:21px} }
     .ub-word{font-size:30px;font-weight:800;font-family:'Space Grotesk',sans-serif;text-align:center;margin:6px 0}
     .ub-tip{text-align:center;color:var(--soft,#5C5C5C);margin-bottom:14px}
     .ub-fb{margin-top:14px;padding:13px 15px;border-radius:14px;font-weight:700;display:none}
@@ -754,7 +782,9 @@
       var bildSpaeter = e.img && /Welches Wort passt|gesucht:/.test(String(e.q||''));
       if(e.img && !bildSpaeter){ h+='<img class="ub-qimg" src="'+E(e.img)+'" alt="" onerror="this.remove()">'; }
       if(e.audio){ h+='<button class="ub-play" onclick="ubSpeak(\''+E(e.audio).replace(/'/g,"\\'")+'\')">🔊</button>'; }
-      h+='<div class="ub-q">'+E(e.q||'Wähle die richtige Antwort:')+'</div><div class="ub-opts" id="ubOpts">'+
+      h+='<div class="ub-q">'+E(e.q||'Wähle die richtige Antwort:')+'</div>'+
+         (e.audio?'':tonKnoepfe(e.q))+
+         '<div class="ub-opts" id="ubOpts">'+
          shuf(e.options.map(function(o,k){return k;})).map(function(k){ return '<button class="ub-opt" data-k="'+k+'" onclick="ubChoose('+k+')">'+E(e.options[k])+'</button>'; }).join('')+'</div>';
       if(e.audio) setTimeout(function(){ speak(e.audio); },200);
     } else if(e.type==='gap'){
@@ -762,12 +792,14 @@
       /* Stammt der Satz aus einem Hörtext, kann man ihn hier hören —
          sonst ist die Lücke oft nicht eindeutig zu füllen. */
       if(e.audioUrl) h+='<button class="ub-play" onclick="ubPlayUrl(\''+E(e.audioUrl)+'\',this)">▶</button>';
-      h+='<div class="ub-q">'+E((e.text||'').replace('___','_____'))+'</div><input class="ub-input" id="ubGap" placeholder="Antwort eintippen…" autocomplete="off" autocapitalize="off">';
+      h+='<div class="ub-q">'+E((e.text||'').replace('___','_____'))+'</div>'+
+         (e.audioUrl?'':tonKnoepfe(e.text))+
+         '<input class="ub-input" id="ubGap" placeholder="Antwort eintippen…" autocomplete="off" autocapitalize="off">';
       if(e.hint) h+='<div class="ub-tip" style="text-align:left;margin-top:8px">💡 '+E(e.hint)+'</div>';
     } else if(e.type==='match'){
       if(e.img){ h+='<img class="ub-qimg" src="'+E(e.img)+'" alt="" onerror="this.remove()">'; }
       var rs=shuf(e.pairs.map(function(p){return p.r;}));
-      h+='<div class="ub-q">'+E(e.intro||'Ordne zu:')+'</div>'+e.pairs.map(function(p,k){
+      h+='<div class="ub-q">'+E(e.intro||'Ordne zu:')+'</div>'+tonKnoepfe(e.intro)+e.pairs.map(function(p,k){
         return '<div class="ub-mrow"><b>'+E(p.l)+'</b><select id="ubM'+k+'" onchange="ubMatchChk()"><option value="">— wählen —</option>'+rs.map(function(r){return '<option>'+E(r)+'</option>';}).join('')+'</select></div>';
       }).join('');
     } else if(e.type==='order'){
@@ -945,6 +977,18 @@
       else { S.hearts--; setProg(); fb.className='ub-fb no'; fb.innerHTML='✗ '+E(sol); }
     } else { S.correct++; addXP(Math.round((META().xpPerCorrect||10)/2)); fb.className='ub-fb ok';
       fb.innerHTML=(e.type==='karte'?'Gemerkt? Das Wort kommt gleich noch einmal.':'Klasse! Weiter so.')+' +'+Math.round((META().xpPerCorrect||10)/2)+' XP'; }
+    /* Nach der Antwort den vollstaendigen, richtigen Satz hoeren —
+       so praegt sich die Loesung ueber das Ohr ein, nicht nur ueber das Auge. */
+    var loesung='';
+    if(e.type==='gap' && e.text) loesung=String(e.text).replace('___', String(e.answer||''));
+    else if(e.type==='order') loesung=String(e.answer||'');
+    else if(e.type==='buchstaben') loesung=String(e.answer||'');
+    else if(e.type==='choice' && e.options && typeof e.answer==='number') loesung=String(e.options[e.answer]||'');
+    else if(e.type==='tippen') loesung=String(e.answer||e.wort||e.w||'');
+    if(loesung && !e.audioUrl){
+      fb.innerHTML+='<div class="ub-loes">'+tonKnoepfe(loesung)+'<span>'+E(loesung)+'</span></div>';
+      if(!ok) setTimeout(function(){ speak(loesung.replace(/<[^>]+>/g,'')); }, 350);
+    }
     if(e.type==='listen'){ fb.innerHTML+='<div style="margin-top:10px;padding:11px 13px;background:#fff;border:1px solid var(--border,#ECECEC);border-radius:12px;font-weight:500;color:#333;line-height:1.5">📝 <b>Das hast du gehört:</b><br>'+E(e.transcript)+'</div>'; }
     if(e.type==='choice' && e.img && /Welches Wort passt|gesucht:/.test(String(e.q||''))){
       fb.innerHTML+='<img class="ub-qimg" style="margin:10px 0 0" src="'+E(e.img)+'" alt="" onerror="this.remove()">';
