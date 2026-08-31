@@ -56,8 +56,10 @@ const schonDa = {};
 });
 
 /* ---------- Bausteine einlesen ---------- */
+/* Zwei Sorten Bausteine: „*-wortschatz-*.json\" legt neue Themen an,
+   „*-nachtrag-*.json\" stockt vorhandene auf. */
 const dateien = fs.readdirSync(__dirname)
-  .filter(f => /^(b2|c1)-wortschatz-.*\.json$/.test(f)).sort();
+  .filter(f => /^(b2|c1)-wortschatz-.*\.json$|^[a-z0-9]+-nachtrag-.*\.json$/.test(f)).sort();
 if (!dateien.length) { console.error('Keine Wortschatz-Bausteine gefunden.'); process.exit(1); }
 
 const themen = [];
@@ -164,6 +166,7 @@ function mischeOptionen(gut, schlecht, streu) {
 
 let nr = 0;
 const neue = [];
+const nachtrag = [];
 
 themen.forEach(t => {
   const ex = [];
@@ -218,7 +221,14 @@ themen.forEach(t => {
     });
   });
 
-  neue.push({ id: t.id, title: t.title, level: t.level, emoji: t.emoji, words: woerter, exercises: ex });
+  /* Ein Baustein mit „ergaenze" legt kein neues Thema an, sondern
+     stockt ein vorhandenes auf. Gebraucht wird das dort, wo ein
+     Thema sein Etikett nicht traegt: „Einkaufen\" steht auf B1 und
+     besteht zu 88 Prozent aus A2-Woertern. Statt das Thema
+     umzustufen oder auszutauschen — es funktioniert ja — kommen
+     die Woerter dazu, die die Stufe rechtfertigen. */
+  if (t.ergaenze) nachtrag.push({ ziel: t.ergaenze, words: woerter, exercises: ex });
+  else neue.push({ id: t.id, title: t.title, level: t.level, emoji: t.emoji, words: woerter, exercises: ex });
 });
 
 /* ---------- Datei schreiben ---------- */
@@ -244,21 +254,40 @@ const kopf = `/* ============================================================
   if (!window.UEBUNGEN || !window.UEBUNGEN.skills) return;
   var NEU = `;
 
+const mitte = `;
+  var NACHTRAG = `;
+
 const fuss = `;
   var sk = window.UEBUNGEN.skills.filter(function (s) { return s.id === 'wortschatz'; })[0];
   if (!sk) return;
+
   var da = {};
   (sk.themes || []).forEach(function (t) { da[t.id] = true; });
   NEU.forEach(function (t) { if (!da[t.id]) sk.themes.push(t); });
+
+  /* Nachtraege stocken vorhandene Themen auf, statt neue anzulegen. */
+  NACHTRAG.forEach(function (n) {
+    var teil = n.ziel.split('|');
+    var bereich = window.UEBUNGEN.skills.filter(function (s) { return s.id === teil[0]; })[0];
+    var thema = bereich && (bereich.themes || []).filter(function (t) { return t.id === teil[1]; })[0];
+    if (!thema) return;
+    var dieWoerter = {};
+    (thema.words || []).forEach(function (w) { dieWoerter[String(w.de || w)] = true; });
+    n.words.forEach(function (w) {
+      if (!dieWoerter[String(w.de)]) { (thema.words = thema.words || []).push(w); }
+    });
+    thema.exercises = (thema.exercises || []).concat(n.exercises);
+  });
 })();
 `;
 
-fs.writeFileSync(path.join(wurzel, AUSGABE), kopf + JSON.stringify(neue) + fuss, 'utf8');
+fs.writeFileSync(path.join(wurzel, AUSGABE),
+  kopf + JSON.stringify(neue) + mitte + JSON.stringify(nachtrag) + fuss, 'utf8');
 
 /* ---------- Bericht ---------- */
 let aufgaben = 0, woerter = 0;
 neue.forEach(t => { aufgaben += t.exercises.length; woerter += t.words.length; });
-console.log('\n' + neue.length + ' Themen, ' + woerter + ' Woerter, ' + aufgaben + ' Aufgaben');
+console.log('\n' + neue.length + ' neue Themen, ' + woerter + ' Woerter, ' + aufgaben + ' Aufgaben');
 neue.forEach(t => {
   const formen = {};
   t.exercises.forEach(e => formen[e.type] = (formen[e.type] || 0) + 1);
@@ -266,6 +295,15 @@ neue.forEach(t => {
     String(t.words.length).padStart(3) + ' W  ' + String(t.exercises.length).padStart(3) + ' A   ' +
     Object.keys(formen).sort().map(f => f + ' ' + formen[f]).join(', '));
 });
+
+if (nachtrag.length) {
+  let nw = 0, na = 0;
+  nachtrag.forEach(n => { nw += n.words.length; na += n.exercises.length; });
+  console.log('\n' + nachtrag.length + ' Themen aufgestockt, ' + nw + ' Woerter, ' + na + ' Aufgaben');
+  nachtrag.forEach(n => console.log('  ' + n.ziel.padEnd(26) +
+    String(n.words.length).padStart(3) + ' W  ' + String(n.exercises.length).padStart(3) + ' A   ' +
+    n.words.map(w => w.de).join(', ')));
+}
 if (hinweise.gleich.length) {
   console.log('\nSelbe Liste, selbe Stufe — die Karte kaeme zweimal vor:');
   hinweise.gleich.forEach(h => console.log('  ' + h));
