@@ -46,7 +46,7 @@ require(path.join(wurzel, 'uebungen.js'));
 ['hoer-neu.js', 'hoeren-a1-neu.js', 'aussprache-neu.js', 'hoeren-b2-neu.js',
  'hoeren-c1-neu.js', 'wortschatz-neu.js', 'grammatik-reihenfolge.js',
  'wortschatz-a1-neu.js', 'grammatik-neu.js', 'grammatik-c1-neu.js',
- 'lesen-schreiben-neu.js'].forEach(f => {
+ 'lesen-schreiben-neu.js', 'wortschatz-b2-neu.js'].forEach(f => {
   try { require(path.join(wurzel, f)); } catch (e) {}
 });
 const U = global.window.UEBUNGEN;
@@ -215,7 +215,24 @@ const bericht = [];
     const formen = {};
     alt.forEach(e => formen[e.type] = (formen[e.type] || 0) + 1);
     const groesste = Math.max(0, ...Object.values(formen));
-    if (groesste / alt.length <= 0.6) return;   /* schon vielfaeltig genug */
+
+    /* Zwei Gruende, ein Thema anzureichern.
+
+       Der erste ist Eintoenigkeit: ueber 60 % derselben Form.
+
+       Der zweite ist wichtiger und war zuerst nicht drin. Ein Thema
+       kann bunt aussehen — Wahlfrage, Luecke, Zuordnen, Lesen — und
+       trotzdem kein einziges Mal verlangen, dass man ein Wort selbst
+       hinschreibt oder ausspricht. Genau das passiert bei neu
+       angelegten Wortschatzthemen: sie sind abwechslungsreich und
+       bleiben doch komplett im Erkennen. Wo Woerter stehen, aber
+       keine produktive Form, wird deshalb auch angereichert. */
+    const PRODUKTIV = ['tippen', 'buchstaben', 'artikel', 'speak'];
+    const hatProduktiv = PRODUKTIV.some(f => formen[f]);
+    const eintoenig = groesste / alt.length > 0.6;
+    const stummerWortschatz = (t.words || []).length >= 4 && !hatProduktiv;
+
+    if (!eintoenig && !stummerWortschatz) return;
 
     /* Was es zu einem Wort oder Satz schon gibt, wird nicht doppelt gebaut. */
     const vorhanden = {};
