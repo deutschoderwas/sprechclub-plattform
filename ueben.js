@@ -200,6 +200,23 @@
       border:1px solid var(--border,#ECECEC);border-radius:12px;text-align:left;line-height:1.45;font-weight:600;color:#333}
     .ub-loes .ub-ton{margin:0;flex:0 0 auto}
     .ub-loes .ub-ton-b{width:40px;height:40px;font-size:17px}
+    /* Lernpfad: Schrittnummer und das, was vorher sitzen sollte. */
+    .ub-schritt{display:inline-flex;align-items:center;align-self:flex-start;width:fit-content;
+      gap:5px;font-size:12px;font-weight:800;color:#7C3AED;background:#F3EDFF;
+      border-radius:999px;padding:3px 9px;letter-spacing:.02em;margin:2px 0 0}
+    .ub-warum{font-size:13px;line-height:1.5;color:#555;margin:6px 0 2px}
+    .ub-vorher{font-size:12px;line-height:1.45;color:#8A8079;margin-top:6px}
+    .ub-vorher b{color:#5A5048;font-weight:700}
+    .ub-schritt,.ub-warum,.ub-vorher{overflow-wrap:anywhere}
+    /* Drei Kacheln nebeneinander brauchen 384px — auf schmalen Handys
+       lief die Seite dadurch seitlich weg. Ab hier zwei pro Zeile. */
+    .ub-stat > div{min-width:0}
+    @media(max-width:430px){
+      .ub-top{gap:8px}
+      .ub-stat{min-width:calc(50% - 6px);padding:12px 13px;gap:9px}
+      .ub-stat .ico{font-size:22px}
+      .ub-stat .big{font-size:19px}
+    }
     @media(max-width:520px){ .ub-ton-b{width:52px;height:52px;font-size:21px} }
     /* Lesen: der Text steht ruhig da, die Frage kommt darunter. */
     .ub-lestext{text-align:left;background:#fff;border:1px solid var(--border,#ECECEC);border-radius:14px;
@@ -397,6 +414,7 @@
           '</div>'+
           '<div class="ub-tbody">'+
             '<div class="tt">'+E(t.title)+'</div>'+
+            pfadHtml(t)+
             '<div class="meta">'+t.exercises.length+' Aufgaben'+(tp?' · beste Runde '+tp+'%':'')+'</div>'+
             '<div class="ub-pbar"><span style="width:'+tp+'%;background:'+grad+'"></span></div>'+
             '<button class="ub-go2" style="background:'+grad+'" onclick="ubStart(\''+sk.id+'\',\''+t.id+'\')">Üben →</button>'+
@@ -404,8 +422,26 @@
           '</div>'+
         '</div>';
     }
+    /* Der Lernpfad sagt, in welcher Reihenfolge die Themen Sinn ergeben
+       und was vorher sitzen sollte. Fehlt die Datei, bleibt alles wie
+       vorher — es steht dann nur keine Schrittnummer auf der Karte.
+       Nicht verwechseln mit lernpfad.js: das ordnet die Dialogsituationen. */
+    function pfadHtml(t){
+      var LP=window.GRAMMATIKPFAD; if(!LP) return '';
+      var sch=LP.schritt(t.id); if(!sch) return '';
+      var h='<div class="ub-schritt">Schritt '+sch.nr+'</div>';
+      if(sch.warum) h+='<div class="ub-warum">'+E(sch.warum)+'</div>';
+      var vor=LP.vorher(t.id);
+      if(vor.length) h+='<div class="ub-vorher">Vorher sitzen sollte: <b>'+vor.map(E).join('</b>, <b>')+'</b></div>';
+      return h;
+    }
+    var geordnet = (window.GRAMMATIKPFAD ? window.GRAMMATIKPFAD.sortiere(sk.themes) : sk.themes);
     var faecher={}, rest=[];
-    sk.themes.forEach(function(t,i){
+    geordnet.forEach(function(t){
+      /* Die Karte braucht den Platz im Originalarray, nicht in der
+         sortierten Liste — sonst zeigt der Fortschritt auf das
+         falsche Thema. */
+      var i = sk.themes.indexOf(t);
       var lv=String(t.level||'').trim().toUpperCase();
       if(NIV.indexOf(lv)<0){ rest.push({t:t,i:i}); return; }
       (faecher[lv]=faecher[lv]||[]).push({t:t,i:i});
