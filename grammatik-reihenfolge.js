@@ -76,7 +76,11 @@
     /* ---------- C1: Register und Stil ---------- */
     ['konjunktiv1', ['indirekte-rede'], 'Er sei gekommen — die Form für Bericht und Protokoll.'],
     ['zweiteilige-konnektoren', ['konnektoren'], 'nicht nur … sondern auch, entweder … oder, weder … noch.'],
-    ['modalverben-subjektiv', ['modalverben', 'konjunktiv1'], 'Er soll krank sein — Modalverben, die nichts befehlen, sondern vermuten.']
+    ['modalverben-subjektiv', ['modalverben', 'konjunktiv1'], 'Er soll krank sein — Modalverben, die nichts befehlen, sondern vermuten.'],
+    ['irreale-vergleiche', ['konjunktiv2-vergangenheit'], 'als ob, als wäre — Vergleiche, die bewusst nicht stimmen.'],
+    ['nominalisierte-adjektive', ['adjektivendungen'], 'der Angestellte, das Wesentliche — aus Adjektiven werden Nomen.'],
+    ['praepositionen-gehoben', ['genitiv-b2'], 'angesichts, aufgrund, hinsichtlich — der Genitiv im gehobenen Stil.'],
+    ['funktionsverbgefuege', ['nominalstil', 'praepositionen-gehoben'], 'in Betracht ziehen, zur Verfügung stellen — die Sprache der Ämter und Verträge.']
   ];
 
   var NR = {}, INFO = {};
@@ -134,7 +138,11 @@
     'indirekte-rede': 'indirekte Rede',
     'konjunktiv1': 'Konjunktiv I',
     'zweiteilige-konnektoren': 'zweiteilige Konnektoren',
-    'modalverben-subjektiv': 'subjektive Modalverben'
+    'modalverben-subjektiv': 'subjektive Modalverben',
+    'irreale-vergleiche': 'irreale Vergleiche',
+    'nominalisierte-adjektive': 'nominalisierte Adjektive',
+    'praepositionen-gehoben': 'gehobene Präpositionen',
+    'funktionsverbgefuege': 'Funktionsverbgefüge'
   };
   function titelSammeln() {
     if (!window.UEBUNGEN || !window.UEBUNGEN.skills) return;

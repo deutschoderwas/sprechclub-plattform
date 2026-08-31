@@ -2758,7 +2758,7 @@
  {
   "id": "partizipialattribut",
   "title": "Das Partizip als Attribut — der gerade eingegangene Antrag",
-  "level": "C1",
+  "level": "B2",
   "emoji": "📐",
   "words": [],
   "exercises": [
@@ -2905,7 +2905,7 @@
  {
   "id": "nominalstil",
   "title": "Vom Nebensatz zum Nomen — der Amtsstil",
-  "level": "C1",
+  "level": "B2",
   "emoji": "🏛️",
   "words": [],
   "exercises": [
@@ -3059,7 +3059,7 @@
  {
   "id": "passiv-ersatz",
   "title": "Statt Passiv — lässt sich, ist zu, -bar",
-  "level": "C1",
+  "level": "B2",
   "emoji": "🧩",
   "words": [],
   "exercises": [
