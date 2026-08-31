@@ -46,7 +46,7 @@ require(path.join(wurzel, 'uebungen.js'));
 ['hoer-neu.js', 'hoeren-a1-neu.js', 'aussprache-neu.js', 'hoeren-b2-neu.js',
  'hoeren-c1-neu.js', 'wortschatz-neu.js', 'grammatik-reihenfolge.js',
  'wortschatz-a1-neu.js', 'grammatik-neu.js', 'grammatik-c1-neu.js',
- 'lesen-schreiben-neu.js', 'wortschatz-b2-neu.js'].forEach(f => {
+ 'lesen-schreiben-neu.js', 'wortschatz-plus.js'].forEach(f => {
   try { require(path.join(wurzel, f)); } catch (e) {}
 });
 const U = global.window.UEBUNGEN;
