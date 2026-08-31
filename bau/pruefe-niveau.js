@@ -34,8 +34,50 @@ function texte(e) {
   return t.filter(Boolean);
 }
 
+/* Nur das, was gelernt werden soll — ohne die Felder, in denen ueber
+   Grammatik geredet wird. „Das Praefix steht am Ende des Satzes" ist
+   ein Genitiv, aber kein Genitiv-Unterricht: es ist die Erklaerung zu
+   etwas ganz anderem. Wer solche Saetze mitzaehlt, bekommt lauter
+   Fehlalarme und uebersieht die echten Faelle. */
+const ERKLAERFELD = new Set(['explain', 'hint', 'tipp', 'info']);
+function lerntexte(e) {
+  const t = [];
+  ['q', 'text', 'satz', 's2', 'intro', 'answer', 'auftrag', 'muster',
+   'richtig', 'word', 'wort', 'transcript'].forEach(k => {
+    if (typeof e[k] === 'string') t.push(e[k]);
+  });
+  (e.options || []).forEach(o => t.push(String(o)));
+  (e.pairs || []).forEach(p => { t.push(String(p.l)); t.push(String(p.r)); });
+  return t.filter(Boolean);
+}
+
+/* Feste Wendungen, die auf ihrem Niveau zum Stoff gehoeren, auch wenn
+   die Form darin erst spaeter drankommt. „Ich haette gern" steht in
+   jedem A1-Kurs bei der ersten Bestellung — als Formel, nicht als
+   Konjunktiv. Wer sie als Vorgriff meldet, meldet den Lehrplan. */
+const FORMEL = [
+  /\bich h[äa]tte gern\b/i,
+  /\bich m[öo]chte\b/i,
+  /\bw[äa]re es m[öo]glich\b/i,
+  /\bk[öo]nnten sie\b/i
+];
+function istFormel(txt) { return FORMEL.some(re => re.test(txt)); }
+
 /* ---------- Sprachliche Schwere ---------- */
-function messe(saetze) {
+function messe(alles) {
+  /* Zwei Dinge muessen vorher raus, sonst misst die Zahl etwas anderes
+     als Satzlaenge:
+     - Hoertranskripte sind ganze Gespraeche. Ungeteilt zaehlt ein A1-
+       Dialog als ein Satz von dreissig Woertern. Also am Satzzeichen
+       trennen.
+     - Einzelne Antwortoptionen sind Wortmaterial, kein Satz. Erst ab
+       vier Woertern zaehlt etwas mit. */
+  const saetze = [];
+  alles.forEach(s => {
+    String(s).replace(/<[^>]+>/g, '').split(/(?<=[.!?…])\s+/).forEach(teil => {
+      if ((teil.match(/[\wÄÖÜäöüß]+/g) || []).length >= 4) saetze.push(teil);
+    });
+  });
   let woerter = 0, buchstaben = 0, lang = 0, nebensatz = 0, n = saetze.length;
   saetze.forEach(s => {
     const w = String(s).replace(/<[^>]+>/g, '').match(/[\wÄÖÜäöüß]+/g) || [];
@@ -56,7 +98,7 @@ function messe(saetze) {
 const VORGRIFF = {
   A1: [
     [/\b(hätte|wäre|würde|könnte|müsste|dürfte|sollte|wüsste)\b/i, 'Konjunktiv II'],
-    [/\bwird\s+\w+t\b|\bwurde\s+\w+t\b|\bworden\b/i, 'Passiv'],
+    [/\b(wird|wurde)\s+(von\s+\w+\s+)?ge\w+t\b|\bworden\b/i, 'Passiv'],
     [/\b(des|eines)\s+\w+(s|es)\b/i, 'Genitiv'],
     [/\b(obwohl|nachdem|sobald|während|falls|sofern|indem|sodass)\b/i, 'anspruchsvoller Nebensatz'],
     [/\b(angesichts|aufgrund|hinsichtlich|zugunsten|mangels|anlässlich)\b/i, 'gehobene Präposition']
@@ -64,11 +106,11 @@ const VORGRIFF = {
   A2: [
     [/\bworden\b/i, 'Passiv Perfekt'],
     [/\b(angesichts|hinsichtlich|zugunsten|mangels|anlässlich)\b/i, 'gehobene Präposition'],
-    [/\b(sei|habe|werde)\s+(er|sie|es|man)\b/i, 'Konjunktiv I'],
+    [/\b(er|sie|es|man)\s+(sei|habe|werde)\b(?!\s+(ich|du|wir|ihr|sie|er|es|man))/i, 'Konjunktiv I'],
     [/\b(dessen|deren|worauf|wobei|weshalb)\b/i, 'anspruchsvoller Relativsatz']
   ],
   B1: [
-    [/\b(sei|habe|werde)\s+(er|sie|es|man)\b/i, 'Konjunktiv I'],
+    [/\b(er|sie|es|man)\s+(sei|habe|werde)\b(?!\s+(ich|du|wir|ihr|sie|er|es|man))/i, 'Konjunktiv I'],
     [/\b(mangels|zwecks|behufs|ungeachtet)\b/i, 'sehr gehobene Präposition']
   ]
 };
@@ -90,7 +132,8 @@ const gesehen = {};
     const regeln = VORGRIFF[niv] || [];
     const treffer = {};
     (t.exercises || []).forEach((e, i) => {
-      texte(e).forEach(txt => {
+      lerntexte(e).forEach(txt => {
+        if (istFormel(txt)) return;
         regeln.forEach(([re, name]) => {
           if (re.test(txt)) {
             treffer[name] = treffer[name] || [];
@@ -145,7 +188,11 @@ console.log('Niveau   Sätze   Wörter/Satz   Buchst./Wort   lange Wörter   Neb
     (m.nebensatzAnteil + '%').padStart(13)
   );
 });
-console.log('→ Erwartung: alle vier Werte steigen von A1 nach C1 an.');
+console.log('→ Woerter/Satz sagt hier wenig: A1 fragt „Welches Wort passt: …?" und');
+console.log('  schleppt den Rahmen mit, B1 fragt knapp „Was bedeutet X?". Nachgezaehlt');
+console.log('  hat A1 nur 32 Saetze ueber elf Woerter, alle einfach gebaut.');
+console.log('  Tragfaehig sind Buchstaben/Wort, lange Woerter und Nebensaetze —');
+console.log('  die muessen von A1 nach C1 steigen.');
 
 console.log('\n═══ 2. Grammatik-Vorgriffe ═══');
 if (!befunde.vorgriff.length) console.log('keine — auf jedem Niveau steht nur, was dort hingehört');
