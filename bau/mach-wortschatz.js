@@ -96,7 +96,7 @@ const kopf = `/* ============================================================
 
   var NEU = `;
 
-const fuss = `;
+const fuß = `;
 
   var da = {};
   ws.themes.forEach(function (t) { da[t.id] = 1; });
@@ -104,6 +104,6 @@ const fuss = `;
 })();
 `;
 
-fs.writeFileSync(path.join(W, 'wortschatz-neu.js'), kopf + JSON.stringify(themen, null, 1) + fuss, 'utf8');
+fs.writeFileSync(path.join(W, 'wortschatz-neu.js'), kopf + JSON.stringify(themen, null, 1) + fuß, 'utf8');
 console.log(themen.length + ' Themen, ' + themen.reduce((n, t) => n + t.words.length, 0) + ' Wörter');
 console.log(zChoice + ' Auswahl, ' + zGap + ' Lücken, ' + zMatch + ' Zuordnungen');

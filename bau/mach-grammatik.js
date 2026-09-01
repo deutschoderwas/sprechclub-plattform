@@ -75,7 +75,7 @@ const kopf = `/* ============================================================
 
   var NEU = `;
 
-const fuss = `;
+const fuß = `;
 
   var da = {};
   g.themes.forEach(function (t) { da[t.id] = 1; });
@@ -83,5 +83,5 @@ const fuss = `;
 })();
 `;
 
-fs.writeFileSync(path.join(W, 'grammatik-neu.js'), kopf + JSON.stringify(themen, null, 1) + fuss, 'utf8');
+fs.writeFileSync(path.join(W, 'grammatik-neu.js'), kopf + JSON.stringify(themen, null, 1) + fuß, 'utf8');
 console.log(themen.length + ' Themen, ' + (zGap + zChoice) + ' Aufgaben (' + zGap + ' Lücken, ' + zChoice + ' Auswahl)');

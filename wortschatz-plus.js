@@ -1,19 +1,19 @@
 /* ============================================================
-   wortschatz-plus.js — Wortschatz fuer B2 und C1
+   wortschatz-plus.js — Wortschatz für B2 und C1
 
    Erzeugt von bau/mach-wortschatz-plus.js aus den Bausteinen in
    bau/b2-wortschatz-*.json und bau/c1-wortschatz-*.json.
-   Nicht von Hand aendern — beim naechsten Lauf ist es weg.
+   Nicht von Hand ändern — beim nächsten Lauf ist es weg.
 
    Auf diesen Niveaus geht es nicht mehr darum, ein Wort zu kennen,
-   sondern zwei aehnliche auseinanderzuhalten: zustaendig oder
+   sondern zwei ähnliche auseinanderzuhalten: zuständig oder
    befugt, Einwand oder Bedenken, Korrelation oder Kausalitaet,
-   Abgrenzung oder Rueckzug. Deshalb kommen die falschen Antworten
+   Abgrenzung oder Rückzug. Deshalb kommen die falschen Antworten
    aus demselben Thema — sonst erkennt man die richtige am
    Sachgebiet, ohne sie zu kennen.
 
    tippen, buchstaben, artikel und speak stehen nicht hier. Die
-   erzeugt bau/mach-vielfalt.js, das nach diesem Skript laeuft.
+   erzeugt bau/mach-vielfalt.js, das nach diesem Skript läuft.
    ============================================================ */
 (function () {
   'use strict';
@@ -27,16 +27,16 @@
   (sk.themes || []).forEach(function (t) { da[t.id] = true; });
   NEU.forEach(function (t) { if (!da[t.id]) sk.themes.push(t); });
 
-  /* Nachtraege stocken vorhandene Themen auf, statt neue anzulegen. */
+  /* Nachträge stocken vorhandene Themen auf, statt neue anzulegen. */
   NACHTRAG.forEach(function (n) {
     var teil = n.ziel.split('|');
     var bereich = window.UEBUNGEN.skills.filter(function (s) { return s.id === teil[0]; })[0];
     var thema = bereich && (bereich.themes || []).filter(function (t) { return t.id === teil[1]; })[0];
     if (!thema) return;
-    var dieWoerter = {};
-    (thema.words || []).forEach(function (w) { dieWoerter[String(w.de || w)] = true; });
+    var dieWörter = {};
+    (thema.words || []).forEach(function (w) { dieWörter[String(w.de || w)] = true; });
     n.words.forEach(function (w) {
-      if (!dieWoerter[String(w.de)]) { (thema.words = thema.words || []).push(w); }
+      if (!dieWörter[String(w.de)]) { (thema.words = thema.words || []).push(w); }
     });
     thema.exercises = (thema.exercises || []).concat(n.exercises);
   });

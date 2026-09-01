@@ -46,10 +46,10 @@ const ORDNER = process.argv[2] || '.';
           fehler.push(m.text().slice(0, 60));
       });
       /* Nichts aus dem Netz — auch keine Schriften. Der Container
-         kommt nicht zuverlaessig an Google Fonts, und die Prueflaeufe
-         blieben daran haengen. Ohne die Webschrift greift die
-         Ersatzschrift, die meist etwas breiter laeuft: Ein Ueberlauf
-         faellt damit eher auf, nicht weniger. */
+         kommt nicht zuverlaessig an Google Fonts, und die Prüflaeufe
+         blieben daran hängen. Ohne die Webschrift greift die
+         Ersatzschrift, die meist etwas breiter läuft: Ein Überlauf
+         fällt damit eher auf, nicht weniger. */
       await page.route(/^https?:\/\//, r => r.abort());
 
       await page.goto('file://' + path.resolve(ORDNER, datei));

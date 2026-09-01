@@ -112,7 +112,7 @@ function prüfeFehler(t, a) {
 
   if (!stellen.length) klagen.push(t.id + ': „' + a.falsch + '" steht nicht im Satz „' + a.satz + '"');
 
-  /* Steht das Wort mehrfach da, weiss niemand, welches gemeint ist —
+  /* Steht das Wort mehrfach da, weiß niemand, welches gemeint ist —
      ausser die Aufgabe sagt es mit falschIdx. Gerade bei Fehlern in
      der Wortstellung ist das der Normalfall: „weil sie sind aktuell\"
      hat zweimal „sind\", und falsch ist genau das zweite. */
@@ -257,7 +257,7 @@ const kopf = `/* ============================================================
 const mitte = `;
   var NACHTRAG = `;
 
-const fuss = `;
+const fuß = `;
   var sk = window.UEBUNGEN.skills.filter(function (s) { return s.id === 'wortschatz'; })[0];
   if (!sk) return;
 
@@ -282,7 +282,7 @@ const fuss = `;
 `;
 
 fs.writeFileSync(path.join(wurzel, AUSGABE),
-  kopf + JSON.stringify(neue) + mitte + JSON.stringify(nachtrag) + fuss, 'utf8');
+  kopf + JSON.stringify(neue) + mitte + JSON.stringify(nachtrag) + fuß, 'utf8');
 
 /* ---------- Bericht ---------- */
 let aufgaben = 0, wörter = 0;

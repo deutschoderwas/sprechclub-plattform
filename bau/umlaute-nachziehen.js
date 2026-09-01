@@ -111,11 +111,6 @@ const TAUSCH = [
   ['Naeh', 'Näh'], ['naeh', 'näh'],
   ['Faell', 'Fäll'], ['faell', 'fäll'],
   ['Verlaeng', 'Verläng'], ['verlaeng', 'verläng'],
-  ['Massnahme', 'Maßnahme'], ['massnahme', 'maßnahme'],
-  ['Strasse', 'Straße'], ['strasse', 'straße'],
-  ['Heisst', 'Heißt'], ['heisst', 'heißt'],
-  ['Schliess', 'Schließ'], ['schliess', 'schließ'],
-  ['Weiss', 'Weiß'], ['ausschliesslich', 'ausschließlich'],
   ['Vermoegen', 'Vermögen'], ['vermoegen', 'vermögen'],
   ['Verfuegung', 'Verfügung'], ['verfuegung', 'verfügung'],
   ['Anfuehrung', 'Anführung'], ['anfuehrung', 'anführung'],
@@ -136,14 +131,32 @@ const TAUSCH = [
   ['Vollstaendig', 'Vollständig'], ['vollstaendig', 'vollständig'],
   /* ss zu ss nur dort, wo im Deutschen wirklich ein ss steht.
      Schluss, Fluss, Kuss, dass und Kasse bleiben unangetastet. */
-  ['Gross', 'Groß'], ['gross', 'groß'],
-  ['Bloss', 'Bloß'], ['bloss', 'bloß'],
-  ['Spass', 'Spaß'], ['spass', 'spaß'],
-  ['Ausserdem', 'Außerdem'], ['ausserdem', 'außerdem'],
-  ['Ausserhalb', 'Außerhalb'], ['ausserhalb', 'außerhalb'],
-  ['Suess', 'Süß'], ['suess', 'süß'],
-  ['Heiss', 'Heiß'], ['heiss', 'heiß']
 ];
+
+/* Die ss-Regeln stehen bewusst getrennt und greifen nur an ganzen
+   Woertern. Der Grund ist ein Fehler, den die Tabelle oben schon
+   angerichtet hat: „spass" als Teilstring hat in „Zustandspassiv"
+   zugeschlagen — daraus wurde „Zustandspaßiv", und das stand danach
+   in einer Grammatikerklaerung auf einer Deutschlernplattform.
+   Aufgefallen ist es erst beim Vergleich der erzeugten Dateien.
+
+   Deshalb hier: Wortgrenze auf beiden Seiten, und Zusammensetzungen
+   werden einzeln aufgefuehrt statt geraten. */
+const SS_WORTE = [
+  ['gross', 'groß'], ['grosse', 'große'], ['grossen', 'großen'],
+  ['grosser', 'großer'], ['grosses', 'großes'], ['groesse', 'größe'],
+  ['bloss', 'bloß'], ['spass', 'spaß'], ['ausserdem', 'außerdem'],
+  ['ausserhalb', 'außerhalb'], ['suess', 'süß'], ['heiss', 'heiß'],
+  ['heisst', 'heißt'], ['massnahme', 'maßnahme'], ['massnahmen', 'maßnahmen'],
+  ['strasse', 'straße'], ['strassen', 'straßen'], ['fuss', 'fuß'],
+  ['gruss', 'gruß'], ['weiss', 'weiß'], ['schliesslich', 'schließlich'],
+  ['ausschliesslich', 'ausschließlich']
+];
+
+function grossKlein(wort, vorlage) {
+  return vorlage[0] === vorlage[0].toUpperCase()
+    ? wort[0].toUpperCase() + wort.slice(1) : wort;
+}
 
 function dateienUnter(ordner) {
   const raus = [];
@@ -158,7 +171,11 @@ function dateienUnter(ordner) {
 
 let geaendert = 0, stellen = 0;
 dateienUnter(path.join(wurzel, 'bau')).forEach(f => {
-  if (path.basename(f) === 'pruefe-umlaute.js') return;   /* dort steht es absichtlich */
+  /* Zwei Dateien bleiben außen vor: in pruefe-umlaute.js sind ae, oe
+     und ue die Suchmuster, und dieses Skript hier enthält die ganze
+     Tauschtabelle plus seinen eigenen Platzhalter. */
+  const name = path.basename(f);
+  if (name === 'pruefe-umlaute.js' || name === 'umlaute-nachziehen.js') return;
   let s = fs.readFileSync(f, 'utf8');
   const vorher = s;
 
@@ -173,6 +190,11 @@ dateienUnter(path.join(wurzel, 'bau')).forEach(f => {
   });
 
   TAUSCH.forEach(([a, b]) => { s = s.split(a).join(b); });
+
+  SS_WORTE.forEach(([a, b]) => {
+    s = s.replace(new RegExp('\\b' + a + '\\b', 'gi'),
+                  m => grossKlein(b, m));
+  });
 
   s = s.replace(/@@SCHUTZ(\d+)@@/g, (_, i) => schutz[+i]);
   if (s.indexOf('@@SCHUTZ') >= 0) {
