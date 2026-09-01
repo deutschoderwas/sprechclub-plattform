@@ -59,7 +59,7 @@ const schonDa = {};
 /* Zwei Sorten Bausteine: „*-wortschatz-*.json\" legt neue Themen an,
    „*-nachtrag-*.json\" stockt vorhandene auf. */
 const dateien = fs.readdirSync(__dirname)
-  .filter(f => /^(b2|c1)-wortschatz-.*\.json$|^[a-z0-9]+-nachtrag-.*\.json$/.test(f)).sort();
+  .filter(f => /^(b2|c1)-wortschatz-.*\.json$|^[a-z0-9]+-nachtrag-.*\.json$|^lesen-schreiben-.*\.json$/.test(f)).sort();
 if (!dateien.length) { console.error('Keine Wortschatz-Bausteine gefunden.'); process.exit(1); }
 
 const themen = [];
@@ -228,7 +228,8 @@ themen.forEach(t => {
      umzustufen oder auszutauschen — es funktioniert ja — kommen
      die Wörter dazu, die die Stufe rechtfertigen. */
   if (t.ergänze) nachtrag.push({ ziel: t.ergänze, words: wörter, exercises: ex });
-  else neue.push({ id: t.id, title: t.title, level: t.level, emoji: t.emoji, words: wörter, exercises: ex });
+  else neue.push({ bereich: t.bereich || 'wortschatz', id: t.id, title: t.title,
+                   level: t.level, emoji: t.emoji, words: wörter, exercises: ex });
 });
 
 /* ---------- Datei schreiben ---------- */
@@ -258,12 +259,19 @@ const mitte = `;
   var NACHTRAG = `;
 
 const fuß = `;
-  var sk = window.UEBUNGEN.skills.filter(function (s) { return s.id === 'wortschatz'; })[0];
-  if (!sk) return;
-
-  var da = {};
-  (sk.themes || []).forEach(function (t) { da[t.id] = true; });
-  NEU.forEach(function (t) { if (!da[t.id]) sk.themes.push(t); });
+  /* Jedes Thema sagt selbst, in welchen Bereich es gehoert. So
+     koennen aus denselben Bausteinen auch Lese- und Schreibthemen
+     entstehen, nicht nur Wortschatz. */
+  NEU.forEach(function (t) {
+    var sk = window.UEBUNGEN.skills.filter(function (s) { return s.id === t.bereich; })[0];
+    if (!sk) return;
+    var da = {};
+    (sk.themes || []).forEach(function (x) { da[x.id] = true; });
+    if (da[t.id]) return;
+    var rein = { id: t.id, title: t.title, level: t.level, emoji: t.emoji,
+                 words: t.words, exercises: t.exercises };
+    sk.themes.push(rein);
+  });
 
   /* Nachträge stocken vorhandene Themen auf, statt neue anzulegen. */
   NACHTRAG.forEach(function (n) {
@@ -291,7 +299,7 @@ console.log('\n' + neue.length + ' neue Themen, ' + wörter + ' Wörter, ' + auf
 neue.forEach(t => {
   const formen = {};
   t.exercises.forEach(e => formen[e.type] = (formen[e.type] || 0) + 1);
-  console.log('  ' + String(t.level).padEnd(4) + t.id.padEnd(20) +
+  console.log('  ' + String(t.level).padEnd(4) + (t.bereich === 'wortschatz' ? '' : t.bereich + '/') + t.id.padEnd(20) +
     String(t.words.length).padStart(3) + ' W  ' + String(t.exercises.length).padStart(3) + ' A   ' +
     Object.keys(formen).sort().map(f => f + ' ' + formen[f]).join(', '));
 });
