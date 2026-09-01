@@ -192,6 +192,14 @@ themen.forEach(t => {
       ex.push({ type: 'order', answer: a.satz, hint: a.hinweis, explain: a.erklärung });
     } else if (a.art === 'schreiben') {
       ex.push({ type: 'schreiben', auftrag: a.auftrag, tipp: a.tipp, muster: a.muster });
+    } else if (a.art === 'sprechen') {
+      /* Nachsprechen ohne Tondatei: ueben.js liest den Satz dann mit
+         der Stimme des Geräts vor. Eine echte Aufnahme klingt besser,
+         und sobald es eine gibt, trägt man sie unter "ton" nach —
+         der Aufgabentyp nimmt beides. */
+      const sp = { type: 'speak', word: a.satz, tip: a.tipp };
+      if (a.ton) sp.audioUrl = a.ton;
+      ex.push(sp);
     } else if (a.art === 'lesen') {
       const m = mischeOptionen(a.gut, a.schlecht, nr);
       ex.push({ type: 'lesen', text: a.text, q: a.frage, options: m.options, answer: m.answer, explain: a.erklärung });
