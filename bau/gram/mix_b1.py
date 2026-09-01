@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Ersetzt die Uebungslisten der drei B1-Lektionen durch gemischte Aufgabenformen."""
+"""Ersetzt die Übungslisten der drei B1-Lektionen durch gemischte Aufgabenformen."""
 import json, sys, os
 from collections import Counter
 
@@ -10,7 +10,7 @@ UEB = {}
 UEB['gram-praepositionaladverbien.json'] = [
  {"t":"gap","s":"Ich warte auf den Bus. — Ich warte ___.","r":"darauf","o":["darauf","dafür","davor"],
   "e":"warten auf plus Sache wird darauf. Vor dem Vokal kommt ein r dazwischen."},
- {"t":"hoer","audio":"Worauf wartest du eigentlich noch?","s":"Wonach wird gefragt?",
+ {"t":"hör","audio":"Worauf wartest du eigentlich noch?","s":"Wonach wird gefragt?",
   "r":"Nach einer Sache.","o":["Nach einer Sache.","Nach einer Person.","Nach einem Ort.","Nach einer Uhrzeit."],
   "e":"worauf fragt nach einer Sache. Bei einer Person hieße es: Auf wen wartest du?"},
  {"t":"bau","s":"Bring die Wörter in die richtige Reihenfolge.","w":["Ich","freue","mich","schon","darauf"],
@@ -31,7 +31,7 @@ UEB['gram-praepositionaladverbien.json'] = [
   "e":"Bei Personen bleibt die Präposition und es folgt ein Pronomen. Nur Sachen bekommen ein da-Wort."},
  {"t":"bau","s":"Bring die Wörter in die richtige Reihenfolge.","w":["Damit","bin","ich","einverstanden"],
   "e":"Das da-Wort kann auch auf Platz eins stehen — dann rückt das Verb direkt dahinter."},
- {"t":"hoer","audio":"Daran habe ich überhaupt nicht gedacht.","s":"Was sagt die Person?",
+ {"t":"hör","audio":"Daran habe ich überhaupt nicht gedacht.","s":"Was sagt die Person?",
   "r":"Sie hat etwas vergessen.","o":["Sie hat etwas vergessen.","Sie ist verärgert.","Sie stimmt zu.","Sie fragt nach."],
   "e":"Daran habe ich nicht gedacht heißt: Das ist mir nicht eingefallen."},
  {"t":"gap","s":"Ich habe Angst vor großen Hunden. — Ich habe Angst ___.","r":"davor","o":["davor","dafür","darauf"],
@@ -54,7 +54,7 @@ UEB['gram-ndeklination.json'] = [
   "kat":["Bekommt ein -n","Bleibt immer gleich"],
   "items":[["der Kollege",0],["der Lehrer",1],["der Praktikant",0],["der Vater",1],["der Nachbar",0],["der Freund",1]],
   "e":"Nur maskuline Nomen auf -e, auf -ent/-ant/-ist/-at und die Einzelgänger wie Herr, Mensch, Nachbar, Bär machen mit."},
- {"t":"hoer","audio":"Ich habe Herrn Meier gestern angerufen.","s":"Wird Herr Meier angesprochen oder erwähnt?",
+ {"t":"hör","audio":"Ich habe Herrn Meier gestern angerufen.","s":"Wird Herr Meier angesprochen oder erwähnt?",
   "r":"Er wird erwähnt.","o":["Er wird erwähnt.","Er wird angesprochen.","Er ruft selbst an.","Er ist nicht gemeint."],
   "e":"Herrn mit -n heißt: Es wird über ihn gesprochen. Angesprochen hieße es: Guten Tag, Herr Meier."},
  {"t":"bau","s":"Bring die Wörter in die richtige Reihenfolge.","w":["Ich","habe","dem","Studenten","alles","erklärt"],
@@ -71,7 +71,7 @@ UEB['gram-ndeklination.json'] = [
  {"t":"choice","s":"Welches Wort gehört NICHT zur n-Deklination?","r":"der Lehrer",
   "o":["der Lehrer","der Kollege","der Praktikant","der Nachbar"],
   "e":"Lehrer endet nicht auf -e und nicht auf -ent oder -ist. Es bleibt in allen Fällen gleich: den Lehrer, dem Lehrer."},
- {"t":"hoer","audio":"Den Namen des Nachbarn weiß ich leider nicht.","s":"Welche zwei Formen hörst du?",
+ {"t":"hör","audio":"Den Namen des Nachbarn weiß ich leider nicht.","s":"Welche zwei Formen hörst du?",
   "r":"den Namen und des Nachbarn","o":["den Namen und des Nachbarn","der Name und der Nachbar","dem Namen und dem Nachbarn","des Namens und dem Nachbar"],
   "e":"Akkusativ den Namen, Genitiv des Nachbarn. Beide Wörter gehören zur n-Deklination."},
  {"t":"fehler","s":"Ein Wort ist falsch. Tippe es an.","s2":"Im Zoo haben wir einen Bär gesehen.",
@@ -101,7 +101,7 @@ UEB['gram-lassen.json'] = [
   "e":"Zwei Verben am Ende heißt zweimal Infinitiv — das nennt man Ersatzinfinitiv."},
  {"t":"gap","s":"Er ___ sein Auto in der Werkstatt reparieren.","r":"lässt","o":["lässt","lasst","lasse"],
   "e":"Dritte Person Singular mit Umlaut: er lässt."},
- {"t":"hoer","audio":"Lass uns morgen einfach weitermachen.","s":"Was ist das?",
+ {"t":"hör","audio":"Lass uns morgen einfach weitermachen.","s":"Was ist das?",
   "r":"Ein Vorschlag.","o":["Ein Vorschlag.","Ein Befehl an eine fremde Person.","Eine Absage.","Eine Frage."],
   "e":"Lass uns … ist die normale deutsche Art, einen gemeinsamen Vorschlag zu machen."},
  {"t":"gap","s":"Ich habe mein Handy im Büro ___.","r":"gelassen","o":["gelassen","lassen","gelasst"],
@@ -110,7 +110,7 @@ UEB['gram-lassen.json'] = [
   "e":"lassen verhält sich wie ein Modalverb: Platz zwei, zweites Verb ganz ans Ende."},
  {"t":"gap","s":"___ mich bitte ausreden!","r":"Lass","o":["Lass","Lasse","Lässt"],
   "e":"Du-Imperativ ohne Endung: Lass."},
- {"t":"hoer","audio":"Das lasse ich lieber machen.","s":"Was heißt das?",
+ {"t":"hör","audio":"Das lasse ich lieber machen.","s":"Was heißt das?",
   "r":"Jemand anders soll es tun.","o":["Jemand anders soll es tun.","Ich mache es selbst.","Ich möchte es nicht.","Ich habe es vergessen."],
   "e":"machen lassen heißt: in Auftrag geben statt selbst tun."},
  {"t":"fehler","s":"Ein Wort ist falsch. Tippe es an.","s2":"Ich lasse mein Auto zu reparieren.",

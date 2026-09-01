@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Haengt drei weitere Lese-/Schreibthemen an lesen-schreiben-neu.js an: A2, B2, C1."""
+"""Hängt drei weitere Lese-/Schreibthemen an lesen-schreiben-neu.js an: A2, B2, C1."""
 import shutil
 
 P = 'lesen-schreiben-neu.js'
@@ -203,4 +203,4 @@ s = s.replace(alt, """      ]
 """ + NEU)
 
 open(P, 'w', encoding='utf-8').write(s)
-print('drei Themen ergaenzt (A2, B2, C1)')
+print('drei Themen ergänzt (A2, B2, C1)')

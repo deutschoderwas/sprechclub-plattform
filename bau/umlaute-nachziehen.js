@@ -39,7 +39,9 @@ const NAMEN = [
   'pruefe-umlaute.js', 'pruefe-zusammenfuehren.js',
   'themen-zusammenfuehren.js', 'lesen-schreiben-neu.js',
   'aussprache-neu.js', 'aussprache-plan.json', 'aussprache-quelle.json',
-  'mach-aussprache.js', 'v-ueben', 'ubZur'
+  'mach-aussprache.js', 'v-ueben', 'ubZur',
+  'ton-ins-ueben.py', 'pruefe-situationen.py', 'situationen.py',
+  'situationen-ziehen.py', 'mach-hoeren', 'hoeren-', 'pruefe-', 'ueben.js'
 ];
 
 /* Ersetzt wird an Wortteilen, nicht an ganzen Wörtern — sonst
@@ -164,7 +166,7 @@ function dateienUnter(ordner) {
     if (e.name === 'node_modules' || e.name.startsWith('.')) return;
     const voll = path.join(ordner, e.name);
     if (e.isDirectory()) raus.push(...dateienUnter(voll));
-    else if (/\.(js|html|json)$/.test(e.name)) raus.push(voll);
+    else if (/\.(js|html|json|py|css)$/.test(e.name)) raus.push(voll);
   });
   return raus;
 }

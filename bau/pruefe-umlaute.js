@@ -105,7 +105,7 @@ else {
 function dateienUnter(ordner) {
   const raus = [];
   fs.readdirSync(ordner, { withFileTypes: true }).forEach(e => {
-    if (e.name === 'node_modules' || e.name.startsWith('.')) return;
+    if (e.name === 'node_modules' || e.name.startsWith('.')) return;   /* auch .stand-erzeugtes.json */
     const voll = path.join(ordner, e.name);
     if (e.isDirectory()) raus.push(...dateienUnter(voll));
     else if (/\.(js|html|json)$/.test(e.name)) raus.push(voll);
@@ -113,11 +113,20 @@ function dateienUnter(ordner) {
   return raus;
 }
 
+/* Dateinamen bleiben, wie sie heißen: uebungen.js, hoeren-b2-neu.js,
+   pruefe-niveau.js. Wenn ein Treffer nur Teil eines solchen Namens ist,
+   ist er kein Fund, sondern ein Verweis — sonst meldet die Prüfung
+   ewig dieselben Zeilen und man hört auf hinzusehen. */
+const NAMEN = /[\w-]*(uebungen|ueben|hoer|pruef|zusammenfuehr|aussprache)[\w-]*\.(js|json|py|html)|\b(hoeren-[abc][12]|mach-hoeren|v-ueben|ubZur)\b/;
+
 const imQuelltext = {};
 dateienUnter(path.join(wurzel, 'bau')).forEach(f => {
   const zeilen = fs.readFileSync(f, 'utf8').split('\n');
   zeilen.forEach((z, i) => {
     const t = findet(z);
+    /* Nennt die Zeile einen Dateinamen? Dann ist der Treffer ein
+       Verweis, kein Fund. */
+    if (t && NAMEN.test(z)) return;
     if (t) {
       const k = path.relative(wurzel, f);
       (imQuelltext[k] = imQuelltext[k] || []).push({ zeile: i + 1, treffer: t, text: z.trim().slice(0, 80) });
@@ -126,6 +135,9 @@ dateienUnter(path.join(wurzel, 'bau')).forEach(f => {
 });
 
 console.log('\n═══ In den Werkzeugen unter bau/ ═══');
+console.log('(Was hier steht, sind fast nur Dateinamen — die heißen nun mal');
+console.log(' uebungen.js und hoeren-b2-neu.js. Entscheidend ist der erste');
+console.log(' Abschnitt: was Lernende zu sehen bekommen.)');
 const dateien = Object.keys(imQuelltext).sort();
 if (!dateien.length) console.log('  nichts');
 else {

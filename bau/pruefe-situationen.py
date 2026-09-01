@@ -23,7 +23,7 @@ import io, re, glob, os, sys
 os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 
 klagen = []
-uebersicht = []
+übersicht = []
 
 for f in sorted(glob.glob('wortschatzboost-*.html')):
     s = io.open(f, encoding='utf-8').read()
@@ -31,7 +31,7 @@ for f in sorted(glob.glob('wortschatzboost-*.html')):
     zeilen = s.count('<div class="wsit">')
     etiketten = s.count('<span class="wsl">')
 
-    uebersicht.append((f, zeilen, karten))
+    übersicht.append((f, zeilen, karten))
 
     if zeilen != karten:
         klagen.append(f + ': ' + str(zeilen) + ' Situationen auf ' + str(karten) + ' Karten')
@@ -61,7 +61,7 @@ for f in sorted(glob.glob('wortschatzboost-*.html')):
                 klagen.append(f + ': Situation wird beim ' + name + ' nicht mitgeschaltet')
 
 print('\nSeite'.ljust(52) + 'Situationen / Karten')
-for f, z, k in uebersicht:
+for f, z, k in übersicht:
     print('  ' + f.ljust(50) + str(z).rjust(3) + ' / ' + str(k))
 
 print('\n' + ('Alles sauber.' if not klagen else 'Zu klären:'))

@@ -17,18 +17,18 @@ def artikel(wort):
     return None, w
 
 def bau_thema(t):
-    woerter = t['woerter']
+    wörter = t['wörter']
     auf = []
 
     # 1. Jedes Wort einmal als Karte — sehen, hören, verstehen
-    for w in woerter:
+    for w in wörter:
         auf.append({'type': 'karte', 'w': w['de'], 'info': w['info'], 'emoji': w['emoji']})
 
     # 2. Bedeutung erkennen (Auswahl) — für jedes Wort eines
-    for i, w in enumerate(woerter):
-        falsch = [x['de'] for j, x in enumerate(woerter) if j != i][:3]
+    for i, w in enumerate(wörter):
+        falsch = [x['de'] for j, x in enumerate(wörter) if j != i][:3]
         # möglichst weit auseinanderliegende Ablenker
-        falsch = [woerter[(i + k) % len(woerter)]['de'] for k in (3, 7, 11)]
+        falsch = [wörter[(i + k) % len(wörter)]['de'] for k in (3, 7, 11)]
         auf.append({'type': 'choice',
                     'q': 'Welches Wort passt: „%s“?' % w['info'],
                     'options': [w['de']] + falsch,
@@ -37,7 +37,7 @@ def bau_thema(t):
                     'explain': '%s %s — %s' % (w['emoji'], w['de'], w['info'])})
 
     # 3. Artikel üben — nur bei Nomen mit Artikel
-    for w in woerter:
+    for w in wörter:
         a, rest = artikel(w['de'])
         if a:
             auf.append({'type': 'gap', 'text': '___ %s' % rest, 'answer': a,
@@ -45,28 +45,28 @@ def bau_thema(t):
                         'explain': 'Es heißt %s — %s' % (w['de'], w['info'])})
 
     # 4. Wort schreiben
-    for w in woerter:
+    for w in wörter:
         a, rest = artikel(w['de'])
         auf.append({'type': 'tippen', 'answer': rest, 'info': w['info'],
                     'emoji': w['emoji'], 'w': w['de'],
                     'explain': '%s %s' % (w['emoji'], w['de'])})
 
     # 5. Satz bauen — aus den mitgelieferten Beispielsätzen
-    for s in t.get('saetze', []):
+    for s in t.get('sätze', []):
         auf.append({'type': 'order', 'answer': s['satz'],
                     'hint': s.get('hinweis', 'Das Verb steht an zweiter Stelle.'),
-                    'explain': s.get('erklaerung', '')})
+                    'explain': s.get('erklärung', '')})
 
     # 6. Zuordnen — in Vierergruppen
-    for k in range(0, len(woerter) - 3, 4):
-        gruppe = woerter[k:k + 4]
+    for k in range(0, len(wörter) - 3, 4):
+        gruppe = wörter[k:k + 4]
         auf.append({'type': 'match', 'intro': 'Ordne Wort und Bedeutung zu:',
                     'pairs': [{'l': x['de'], 'r': x['info']} for x in gruppe]})
 
     # 7. Fehlersuche und Schreiben — von Hand geschrieben
     for f in t.get('fehler', []):
         a = {'type': 'fehler', 'satz': f['satz'], 'falsch': f['falsch'],
-             'richtig': f['richtig'], 'explain': f['erklaerung']}
+             'richtig': f['richtig'], 'explain': f['erklärung']}
         # Kommt das Wort mehrfach vor, muss die Aufgabe sagen, welches gemeint ist.
         if 'idx' in f:
             a['falschIdx'] = f['idx']
@@ -77,7 +77,7 @@ def bau_thema(t):
 
     return {'id': t['id'], 'title': t['titel'], 'level': 'A1',
             'emoji': t['emoji'],
-            'words': [{'de': w['de'], 'info': w['info'], 'emoji': w['emoji']} for w in woerter],
+            'words': [{'de': w['de'], 'info': w['info'], 'emoji': w['emoji']} for w in wörter],
             'exercises': auf}
 
 

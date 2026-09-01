@@ -4,7 +4,7 @@
    Diese Prüfung gibt es wegen eines Fehlers, den sie gefangen hätte.
 
    Beim Umstellen der Werkzeuge auf echte Umlaute stand in der
-   Tauschtabelle „spass" → „spaß" ohne Wortgrenze. In „Zustandspassiv"
+   Tauschtabelle „spaß" → „spaß" ohne Wortgrenze. In „Zustandspassiv"
    steckt die Folge s-p-a-s-s. Aus einer Grammatikerklärung wurde
    damit „Zustandspaßiv" — falsches Deutsch, auf einer Seite, die
    Deutsch beibringt. Aufgefallen ist es erst hinterher, beim
@@ -51,7 +51,7 @@ function kern(text) {
   return ohneKopf.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\s+/g, ' ').trim();
 }
 
-function pruefsumme(t) {
+function prüfsumme(t) {
   let h = 0x811c9dc5;
   for (let i = 0; i < t.length; i++) {
     h ^= t.charCodeAt(i);
@@ -75,7 +75,7 @@ function stand() {
   const s = {};
   DATEIEN.forEach(f => {
     const p = path.join(wurzel, f);
-    if (fs.existsSync(p)) s[f] = pruefsumme(kern(fs.readFileSync(p, 'utf8')));
+    if (fs.existsSync(p)) s[f] = prüfsumme(kern(fs.readFileSync(p, 'utf8')));
   });
   return s;
 }

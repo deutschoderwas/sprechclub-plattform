@@ -53,7 +53,7 @@ def bau(d):
     for s in d['regel']:
         A('<div class="gstep"><span class="gw">%s</span><div class="gt">%s</div><div class="gs">%s</div></div>' % (s['w'], s['t'], s['s']))
     A('</div>')
-    for k in d['regel_kaesten']:
+    for k in d['regel_kästen']:
         A('<div class="%s">%s</div>' % (k['art'], k['text']))
     A('</section>')
 
@@ -72,7 +72,7 @@ def bau(d):
     A('  <div class="stimmung" id="sStimmung">Bereit?</div>')
     A('  <div class="rahmen" id="sSatz">—</div>')
     A('  <div class="knoepfe" id="sKnoepfe"></div>')
-    A('  <div class="rueck" id="sRueck"></div>')
+    A('  <div class="rück" id="sRück"></div>')
     A('  <div class="mitte"><span class="punkte" id="sPunkte">0 von 0</span></div>')
     A('  <div class="mitte"><button class="btn" id="sWeiter">Weiter →</button> <button class="btn ghost" id="sNeu">↺ Von vorn</button></div>')
     A('</div>')
@@ -81,7 +81,7 @@ def bau(d):
 
     A('<section class="section" data-section="4">')
     A('<h2 class="st">✅ <em>Üben</em></h2>')
-    arten={'gap':'Lücken','choice':'Auswahl','bau':'Satzbau','sort':'Sortieren','hoer':'Hören','fehler':'Fehlersuche','schreib':'Schreiben'}
+    arten={'gap':'Lücken','choice':'Auswahl','bau':'Satzbau','sort':'Sortieren','hör':'Hören','fehler':'Fehlersuche','schreib':'Schreiben'}
     vorh=[]
     for a in d['ueb']:
         n=arten.get(a['t'],'Aufgabe')
@@ -101,11 +101,11 @@ def bau(d):
     A('<div class="tip">%s</div>' % d['redemittel'])
     A('</section>')
 
-    A('<footer><strong>deutschoderwas</strong> · Grammatik %s · %s<br>%s</footer>' % (d['niveau'], d['titel_lang'], d['fuss']))
+    A('<footer><strong>deutschoderwas</strong> · Grammatik %s · %s<br>%s</footer>' % (d['niveau'], d['titel_lang'], d['fuß']))
     A('</div>')
     A('<script>')
     A('var BASIS=%s;' % json.dumps(d['basis']))
-    A('var SAETZE=%s;' % json.dumps(d['saetze'], ensure_ascii=False))
+    A('var SAETZE=%s;' % json.dumps(d['sätze'], ensure_ascii=False))
     A('var SPIEL=%s;'  % json.dumps(d['spiel'],  ensure_ascii=False))
     A('var UEB=%s;'    % json.dumps(d['ueb'],    ensure_ascii=False))
     A(JS)

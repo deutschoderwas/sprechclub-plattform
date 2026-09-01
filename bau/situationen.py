@@ -78,7 +78,7 @@ if 'class="wcard"' in s:
     # allen Seiten gleich aus: manche führen noch .wex mit oder setzen
     # zusätzlich pointer-events. Deshalb wird sie hier gesucht statt
     # wörtlich verglichen, und .wsit an die Auswahl angehängt.
-    def ergaenze_regel(aufgedeckt):
+    def ergänze_regel(aufgedeckt):
         global s
         mitte = r'\.wcard\.revealed' if aufgedeckt else r'\.wcard'
         muster = re.compile(r'(\.wgrid\.hide ' + mitte + r' \.ww\s*,[^{]*?)(\{[^}]*\})')
@@ -94,7 +94,7 @@ if 'class="wcard"' in s:
         return True
 
     for aufgedeckt in (False, True):
-        if not ergaenze_regel(aufgedeckt):
+        if not ergänze_regel(aufgedeckt):
             print('  Achtung: Verdeck-Regel nicht gefunden (' +
                   ('aufgedeckt' if aufgedeckt else 'verdeckt') + ') — ' + SEITE)
 
@@ -147,9 +147,9 @@ else:
 
 if ohne:
     print('  ohne Situation geblieben: ' + ', '.join(ohne))
-uebrig = set(SITUATIONEN) - set(gesetzt)
-if uebrig:
-    print('  in der Seite nicht gefunden: ' + ', '.join(sorted(uebrig)))
+übrig = set(SITUATIONEN) - set(gesetzt)
+if übrig:
+    print('  in der Seite nicht gefunden: ' + ', '.join(sorted(übrig)))
 
 io.open(SEITE, 'w', encoding='utf-8').write(s)
 print('  ' + SEITE + ': ' + str(len(gesetzt)) + ' Karten versorgt')

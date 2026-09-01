@@ -6,7 +6,7 @@ Aufruf: python3 bau/pfad-einbauen.py
 import shutil
 
 P = 'ueben.js'
-shutil.copy(P, '/tmp/bak-ueben3.js')
+shutil.copy(P, '/tmp/bak-üben3.js')
 s = open(P, encoding='utf-8').read()
 vorher = len(s)
 schritte = []
