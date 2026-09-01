@@ -3,19 +3,19 @@
 
    Die Bereiche im Lernbereich hatten alle Dialoge, Wortschatz
    und Hörtexte, aber 30 von ihnen keine ausgearbeitete
-   Lektionsseite. Diese Seiten bestehen zum groessten Teil aus
+   Lektionsseite. Diese Seiten bestehen zum größten Teil aus
    Material, das schon geschrieben ist — es war nur nie zu einer
    Stunde zusammengesetzt.
 
    Woher kommt was:
      uebungen.js   Wortschatz und die fertigen Aufgaben
-     dialoge.js    die Dialoge, Schritt fuer Schritt
-     vokabeln-pool.js  Beispielsaetze zu den Woertern
+     dialoge.js    die Dialoge, Schritt für Schritt
+     vokabeln-pool.js  Beispielsätze zu den Wörtern
      amanda/sz-*   das Szenenbild
      lektionen-texte.js  Einstiegsfragen, Streitfrage, Sprechauftrag
 
    Das Aussehen kommt 1:1 aus der vorhandenen Lektion
-   baecker-cafe-a2-interaktiv.html: das Stylesheet wird von dort
+   bäcker-cafe-a2-interaktiv.html: das Stylesheet wird von dort
    gelesen, nicht kopiert — so bleiben alle Seiten gleich.
 
    Aufruf:  node bau/mach-lektionen.js [--schreiben]
@@ -26,7 +26,7 @@ const fs = require('fs');
 const path = require('path');
 
 const WURZEL = path.join(__dirname, '..');
-const VORLAGE = path.join(WURZEL, 'baecker-cafe-a2-interaktiv.html');
+const VORLAGE = path.join(WURZEL, 'bäcker-cafe-a2-interaktiv.html');
 const SCHREIBEN = process.argv.includes('--schreiben');
 
 /* ---------- Daten laden ---------- */
@@ -45,11 +45,11 @@ const WS = window.UEBUNGEN.skills.find(s => s.id === 'wortschatz');
 const THEMA = Object.fromEntries(WS.themes.map(t => [t.id, t]));
 const DIALOG = Object.fromEntries(window.DIALOGE.map(d => [d.id, d]));
 
-/* Beispielsaetze kommen aus zwei Quellen: dem Vokabelpool und der
+/* Beispielsätze kommen aus zwei Quellen: dem Vokabelpool und der
    Satzsammlung. Dort steht das Zielwort zwischen §…§ — das ist die
-   Markierung fuer den Trainer und muss hier wieder weg. */
-require(path.join(WURZEL, 'vokabel-saetze.js'));
-require(path.join(WURZEL, 'vokabel-saetze-neu.js'));
+   Markierung für den Trainer und muss hier wieder weg. */
+require(path.join(WURZEL, 'vokabel-sätze.js'));
+require(path.join(WURZEL, 'vokabel-sätze-neu.js'));
 const POOL = window.VOKABELN_POOL || window.VOK_POOL || [];
 const SATZ = {};
 Object.keys(window.VOKABEL_SAETZE || {}).forEach(k => {
@@ -68,7 +68,7 @@ function artikelTeilen(wort) {
   return m ? { art: m[1], rest: m[2] } : { art: '', rest: String(wort).trim() };
 }
 /* Ein Argument oder eine Liste von Argumenten — beides erlaubt,
-   damit alte Eintraege weiter funktionieren. */
+   damit alte Einträge weiter funktionieren. */
 function liste(x) {
   return (Array.isArray(x) ? x : [x]).filter(Boolean)
     .map(a => '<li>' + esc(a) + '</li>').join('');
@@ -85,7 +85,7 @@ function mischen(liste, keim) {
 }
 
 /* ---------- Bausteine einer Seite ---------- */
-function woerterVon(b) {
+function wörterVon(b) {
   const raus = [];
   (b.ws || []).forEach(id => {
     const t = THEMA[id];
@@ -102,12 +102,12 @@ function aufgabenVon(b) {
   return raus;
 }
 
-function wortschatzHtml(woerter) {
-  return woerter.slice(0, 16).map(w => {
+function wortschatzHtml(wörter) {
+  return wörter.slice(0, 16).map(w => {
     const { art, rest } = artikelTeilen(w.de);
     const satz = SATZ[String(w.de).trim()];
-    // Ein echter Satz kommt in Anfuehrungszeichen. Gibt es keinen,
-    // steht die Bedeutung da — aber ohne Anfuehrungszeichen, sonst
+    // Ein echter Satz kommt in Anführungszeichen. Gibt es keinen,
+    // steht die Bedeutung da — aber ohne Anführungszeichen, sonst
     // liest sie sich wie ein Satz, den jemand gesagt hat.
     const unten = satz
       ? '„' + esc(satz) + '“'
@@ -149,7 +149,7 @@ function quizVon(aufgaben) {
   return q.slice(0, 12);
 }
 
-/* Zuordnen bleibt Zuordnen: aus vier Paaren wird eine Uebung zum
+/* Zuordnen bleibt Zuordnen: aus vier Paaren wird eine Übung zum
    Antippen, nicht noch eine Auswahlfrage mehr. */
 function zuordnenVon(aufgaben) {
   const z = [];
@@ -170,9 +170,9 @@ function gapVon(aufgaben) {
   });
   return g.slice(0, 10);
 }
-function neunzigVon(woerter) {
-  const alle = woerter.map(w => w.de);
-  return woerter.slice(0, 8).map((w, i) => ({
+function neunzigVon(wörter) {
+  const alle = wörter.map(w => w.de);
+  return wörter.slice(0, 8).map((w, i) => ({
     w: w.de,
     h: mischen(alle.filter(x => x !== w.de), i + 11).slice(0, 6)
   })).filter(x => x.h.length >= 3);
@@ -180,12 +180,12 @@ function neunzigVon(woerter) {
 
 /* ---------- Eine Seite ---------- */
 function seite(b, t) {
-  const woerter = woerterVon(b);
+  const wörter = wörterVon(b);
   const aufgaben = aufgabenVon(b);
   const QUIZ = quizVon(aufgaben);
   const ZUORD = zuordnenVon(aufgaben);
   const GAP = gapVon(aufgaben);
-  const W90 = neunzigVon(woerter);
+  const W90 = neunzigVon(wörter);
   const rm = redemittelVon(b);
   const dlg = dialogeHtml(b);
   const titel = t.titel[0] + ' ' + t.titel[1];
@@ -228,7 +228,7 @@ function seite(b, t) {
   /* 1 — Wortschatz */
   h += '<section class="section" data-section="1">\n<h2 class="st">Wortschatz</h2>\n'
     + '<p class="ssub">Tipp auf 🔊, um das Wort zu hören. Lies den Satz darunter laut.</p>\n'
-    + '<div class="vgrid" id="vgrid">\n' + wortschatzHtml(woerter) + '\n</div>\n</section>\n';
+    + '<div class="vgrid" id="vgrid">\n' + wortschatzHtml(wörter) + '\n</div>\n</section>\n';
 
   /* 2 — Dialoge */
   if (dlg) {
@@ -246,7 +246,7 @@ function seite(b, t) {
   h += '<section class="section" data-section="3">\n<h2 class="st">Debatte: ' + esc(t.debatte.frage) + '</h2>\n'
     + '<p class="ssub">Teilt euch in zwei Gruppen. Jede Seite hat drei Argumente — sucht euch eins aus und verteidigt es.</p>\n'
     + '<div class="pcgrid">\n'
-    + '<div class="pcol pro"><h4>✓ ' + esc(t.debatte.fuer || 'Dafür') + '</h4><ul>'
+    + '<div class="pcol pro"><h4>✓ ' + esc(t.debatte.für || 'Dafür') + '</h4><ul>'
     + liste(t.debatte.pro) + '</ul></div>\n'
     + '<div class="pcol con"><h4>✓ ' + esc(t.debatte.gegen || 'Dagegen') + '</h4><ul>'
     + liste(t.debatte.con) + '</ul></div>\n'
@@ -362,10 +362,10 @@ function seite(b, t) {
       + '  b.onclick=function(){\n'
       + '   if(b.classList.contains("ok"))return;\n'
       + '   if(!wahl||wahl.dataset.rolle===rolle){\n'
-      + '    if(wahl)wahl.classList.remove("gewaehlt");\n'
-      + '    wahl=b;b.classList.add("gewaehlt");return;}\n'
-      + '   if(wahl.dataset.nr===b.dataset.nr){wahl.classList.remove("gewaehlt");wahl.classList.add("ok");b.classList.add("ok");wahl=null;}\n'
-      + '   else{var falsch=wahl;b.classList.add("no");falsch.classList.remove("gewaehlt");falsch.classList.add("no");\n'
+      + '    if(wahl)wahl.classList.remove("gewählt");\n'
+      + '    wahl=b;b.classList.add("gewählt");return;}\n'
+      + '   if(wahl.dataset.nr===b.dataset.nr){wahl.classList.remove("gewählt");wahl.classList.add("ok");b.classList.add("ok");wahl=null;}\n'
+      + '   else{var falsch=wahl;b.classList.add("no");falsch.classList.remove("gewählt");falsch.classList.add("no");\n'
       + '    setTimeout(function(){b.classList.remove("no");falsch.classList.remove("no");},400);wahl=null;}\n'
       + '  };return b;}\n'
       + ' function misch(a,k){a=a.slice();var z=k||3;for(var i=a.length-1;i>0;i--){z=(z*1103515245+12345)%2147483648;var j=z%(i+1);var h=a[i];a[i]=a[j];a[j]=h;}return a;}\n'
@@ -379,24 +379,24 @@ function seite(b, t) {
 }
 
 /* ---------- Lauf ---------- */
-let gebaut = 0, uebersprungen = [];
+let gebaut = 0, übersprungen = [];
 BEREICHE.forEach(b => {
   // Von Hand gebaute Lektionen bleiben unangetastet. Die hier
-  // erzeugten werden neu gebaut, damit eine Aenderung am Geruest
+  // erzeugten werden neu gebaut, damit eine Änderung am Geruest
   // sofort auf allen Seiten ankommt.
   if (b.lek && !/-lektion\.html$/.test(b.lek)) return;
   const t = TEXTE[b.id];
-  if (!t) { uebersprungen.push(b.id + ' (kein Text)'); return; }
-  const woerter = woerterVon(b);
-  if (!woerter.length) { uebersprungen.push(b.id + ' (kein Wortschatz)'); return; }
+  if (!t) { übersprungen.push(b.id + ' (kein Text)'); return; }
+  const wörter = wörterVon(b);
+  if (!wörter.length) { übersprungen.push(b.id + ' (kein Wortschatz)'); return; }
   const datei = b.id + '-lektion.html';
   const html = seite(b, t);
   if (SCHREIBEN) fs.writeFileSync(path.join(WURZEL, datei), html, 'utf8');
   console.log((SCHREIBEN ? 'geschrieben ' : 'wuerde bauen ') + datei
-    + '  (' + woerter.length + ' Woerter, ' + (b.dlg || []).filter(x => DIALOG[x]).length + ' Dialoge, '
+    + '  (' + wörter.length + ' Wörter, ' + (b.dlg || []).filter(x => DIALOG[x]).length + ' Dialoge, '
     + Math.round(html.length / 1024) + ' KB)');
   gebaut++;
 });
 console.log('---');
 console.log(gebaut + ' Lektionen' + (SCHREIBEN ? ' geschrieben' : ' vorbereitet'));
-if (uebersprungen.length) console.log('ausgelassen: ' + uebersprungen.join(', '));
+if (übersprungen.length) console.log('ausgelassen: ' + übersprungen.join(', '));

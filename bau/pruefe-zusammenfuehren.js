@@ -7,12 +7,12 @@ require('../uebungen.js');
  'lesen-schreiben-neu.js'].forEach(f => { try { require('../' + f); } catch (e) { console.log('fehlt: '+f); } });
 
 const U = global.window.UEBUNGEN;
-function zaehle() {
+function zähle() {
   let th = 0, auf = 0;
   U.skills.forEach(sk => (sk.themes||[]).forEach(t => { th++; auf += (t.exercises||[]).length; }));
   return { th, auf };
 }
-const vorher = zaehle();
+const vorher = zähle();
 const ids = {};
 let doppelt = 0;
 U.skills.forEach(sk => (sk.themes||[]).forEach(t => {
@@ -21,7 +21,7 @@ U.skills.forEach(sk => (sk.themes||[]).forEach(t => {
 }));
 
 require('../themen-zusammenfuehren.js');
-const nachher = zaehle();
+const nachher = zähle();
 const ids2 = {};
 let doppelt2 = 0;
 U.skills.forEach(sk => (sk.themes||[]).forEach(t => {
@@ -32,7 +32,7 @@ U.skills.forEach(sk => (sk.themes||[]).forEach(t => {
 console.log('Themen   vorher ' + vorher.th + '  nachher ' + nachher.th);
 console.log('Aufgaben vorher ' + vorher.auf + '  nachher ' + nachher.auf);
 console.log('Doppelte vorher ' + doppelt + '  nachher ' + doppelt2);
-console.log('\nZusammengefuehrt:');
+console.log('\nZusammengeführt:');
 (global.window.THEMEN_ZUSAMMENGEFUEHRT||[]).forEach(b =>
   console.log('  ' + b.bereich.padEnd(12) + b.thema.padEnd(26) +
-    b.vorher + ' + ' + b.dazu + ' = ' + b.jetzt + '  (Woerter +' + b.woerterDazu + ')'));
+    b.vorher + ' + ' + b.dazu + ' = ' + b.jetzt + '  (Wörter +' + b.wörterDazu + ')'));

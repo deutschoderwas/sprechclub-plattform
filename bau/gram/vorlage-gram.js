@@ -19,7 +19,7 @@ document.querySelectorAll('.tab').forEach(function(t){
 
 /* ---------- Vorlesen (Stimme des Browsers) ---------- */
 var STIMME=null, sprechbar=('speechSynthesis' in window);
-function stimmeWaehlen(){
+function stimmeWählen(){
   if(!sprechbar) return;
   var v=window.speechSynthesis.getVoices().filter(function(x){return /^de/i.test(x.lang);});
   if(v.length){
@@ -27,7 +27,7 @@ function stimmeWaehlen(){
     STIMME=(gut[0]||v[0]);
   }
 }
-if(sprechbar){ stimmeWaehlen(); window.speechSynthesis.onvoiceschanged=stimmeWaehlen; }
+if(sprechbar){ stimmeWählen(); window.speechSynthesis.onvoiceschanged=stimmeWählen; }
 function sprich(text,knopf,tempo){
   if(!sprechbar) return;
   window.speechSynthesis.cancel();
@@ -36,7 +36,7 @@ function sprich(text,knopf,tempo){
   if(knopf){ knopf.classList.add('spricht'); u.onend=function(){knopf.classList.remove('spricht');}; u.onerror=function(){knopf.classList.remove('spricht');}; }
   window.speechSynthesis.speak(u);
 }
-function hoerKnopf(text,titel,langsam){
+function hörKnopf(text,titel,langsam){
   var b=document.createElement('button');
   b.className='hk'; b.type='button';
   b.innerHTML='🔊'+(langsam?' <span class="hklang">langsam</span>':'');
@@ -54,8 +54,8 @@ function hoerKnopf(text,titel,langsam){
       '<div class="bb"><div class="bsatz">'+k.s+'</div><div class="bwirk">'+k.w+'</div><div class="bton"></div></div>';
     var t=d.querySelector('.bton');
     var rein=k.s.replace(/<[^>]+>/g,'').replace(/^[^—]*—\s*/,'');
-    t.appendChild(hoerKnopf(rein,'Satz vorlesen'));
-    t.appendChild(hoerKnopf(rein,'Langsam vorlesen',true));
+    t.appendChild(hörKnopf(rein,'Satz vorlesen'));
+    t.appendChild(hörKnopf(rein,'Langsam vorlesen',true));
     g.appendChild(d);
   });
 })();
@@ -67,13 +67,13 @@ function spielFrage(){
   if(sNr>=SPIEL.length){
     $('sStimmung').textContent='Fertig!';
     $('sSatz').innerHTML='Du hast <b>'+sPunkte+' von '+SPIEL.length+'</b> getroffen.';
-    $('sKnoepfe').innerHTML=''; $('sRueck').className='rueck';
+    $('sKnoepfe').innerHTML=''; $('sRück').className='rück';
     $('sWeiter').style.display='none'; return;
   }
   var f=SPIEL[sNr]; sOffen=true;
   $('sStimmung').textContent=f.stimmung;
   $('sSatz').innerHTML=f.satz.replace('___','<b>?</b>');
-  $('sRueck').className='rueck';
+  $('sRück').className='rück';
   $('sWeiter').style.display='none';
   var k=$('sKnoepfe'); k.innerHTML='';
   mische(f.o).forEach(function(w){
@@ -92,8 +92,8 @@ function antwort(btn,wort,f){
   if(!ok) btn.classList.add('falsch');
   if(ok) sPunkte++;
   $('sSatz').innerHTML=f.satz.replace('___','<b>'+f.r+'</b>');
-  $('sRueck').innerHTML=(ok?'✅ Getroffen. ':'❌ Nicht ganz. ')+f.e;
-  $('sRueck').className='rueck an';
+  $('sRück').innerHTML=(ok?'✅ Getroffen. ':'❌ Nicht ganz. ')+f.e;
+  $('sRück').className='rück an';
   $('sPunkte').textContent=sPunkte+' von '+sGespielt;
   $('sWeiter').style.display='';
 }
@@ -117,7 +117,7 @@ function bauWahl(d,a){                      /* gap + choice: anklicken */
       if(b.classList.contains('aus'))return;
       box.querySelectorAll('.uo').forEach(function(x){ x.classList.add('aus'); if(x.textContent===a.r) x.classList.add('richtig'); });
       if(w!==a.r) b.classList.add('falsch');
-      var lk=d.querySelector('.luecke');
+      var lk=d.querySelector('.lücke');
       if(lk){ lk.textContent=a.r; lk.classList.add('voll'); }
       erkl(d); fertig();
     });
@@ -138,11 +138,11 @@ function bauSatzbau(d,a){                   /* bau: Wörter in die richtige Reih
     if(!gesetzt.length){ ziel.innerHTML='<span class="sbleer">Tippe die Wörter der Reihe nach an</span>'; }
     gesetzt.forEach(function(w,i){
       var s=document.createElement('button'); s.className='sbw gesetzt'; s.textContent=w;
-      s.addEventListener('click',function(){ if(erledigt)return; gesetzt.splice(i,1); zeichne(); pruefe(); });
+      s.addEventListener('click',function(){ if(erledigt)return; gesetzt.splice(i,1); zeichne(); prüfe(); });
       ziel.appendChild(s);
     });
   }
-  function pruefe(){
+  function prüfe(){
     if(erledigt) return;
     hinweis.textContent='';
     if(gesetzt.length<a.w.length) return;
@@ -152,14 +152,14 @@ function bauSatzbau(d,a){                   /* bau: Wörter in die richtige Reih
     hinweis.innerHTML=(richtig?'✅ Genau so. ':'❌ Nicht ganz. Richtig ist: <b>'+a.w.join(' ')+'</b>');
     hinweis.classList.add('an');
     vorrat.style.display='none';
-    var h=hoerKnopf(a.w.join(' '),'Richtige Lösung hören'); hinweis.appendChild(document.createTextNode(' ')); hinweis.appendChild(h);
+    var h=hörKnopf(a.w.join(' '),'Richtige Lösung hören'); hinweis.appendChild(document.createTextNode(' ')); hinweis.appendChild(h);
     erkl(d); fertig();
   }
   mische(a.w).forEach(function(w){
     var b=document.createElement('button'); b.className='sbw'; b.textContent=w;
     b.addEventListener('click',function(){
       if(erledigt||b.classList.contains('weg'))return;
-      b.classList.add('weg'); gesetzt.push(w); zeichne(); pruefe();
+      b.classList.add('weg'); gesetzt.push(w); zeichne(); prüfe();
     });
     vorrat.appendChild(b);
   });
@@ -180,25 +180,25 @@ function bauSortieren(d,a){                 /* sort: Wörter in Kategorien einso
     listen.push(l); faecher.appendChild(f);
   });
   box.appendChild(vorrat); box.appendChild(faecher); box.appendChild(hinweis);
-  var offen=a.items.length, gewaehlt=null;
-  function waehle(btn){
+  var offen=a.items.length, gewählt=null;
+  function wähle(btn){
     vorrat.querySelectorAll('.sow').forEach(function(x){x.classList.remove('aktiv');});
-    if(gewaehlt===btn){ gewaehlt=null; return; }
-    gewaehlt=btn; btn.classList.add('aktiv');
+    if(gewählt===btn){ gewählt=null; return; }
+    gewählt=btn; btn.classList.add('aktiv');
   }
   a.items.forEach(function(it){
     var b=document.createElement('button'); b.className='sow'; b.textContent=it[0]; b.dataset.k=it[1];
-    b.addEventListener('click',function(){ if(!b.classList.contains('weg')) waehle(b); });
+    b.addEventListener('click',function(){ if(!b.classList.contains('weg')) wähle(b); });
     vorrat.appendChild(b);
   });
   listen.forEach(function(l,ki){
     l.parentNode.addEventListener('click',function(){
-      if(!gewaehlt) return;
-      var richtig=Number(gewaehlt.dataset.k)===ki;
+      if(!gewählt) return;
+      var richtig=Number(gewählt.dataset.k)===ki;
       var s=document.createElement('span'); s.className='sotreffer '+(richtig?'ok':'nok');
-      s.textContent=gewaehlt.textContent+(richtig?'':' ✗');
+      s.textContent=gewählt.textContent+(richtig?'':' ✗');
       l.appendChild(s);
-      gewaehlt.classList.add('weg'); gewaehlt.classList.remove('aktiv'); gewaehlt=null;
+      gewählt.classList.add('weg'); gewählt.classList.remove('aktiv'); gewählt=null;
       offen--;
       if(offen===0){
         var falsch=box.querySelectorAll('.sotreffer.nok').length;
@@ -209,12 +209,12 @@ function bauSortieren(d,a){                 /* sort: Wörter in Kategorien einso
   });
 }
 
-function bauHoeren(d,a){                    /* hoer: erst hören, dann antworten */
+function bauHören(d,a){                    /* hör: erst hören, dann antworten */
   var f=d.querySelector('.ufrage');
-  var kopf=document.createElement('div'); kopf.className='hoerbox';
-  kopf.innerHTML='<span class="hoerlbl">Hör zu:</span>';
-  kopf.appendChild(hoerKnopf(a.audio,'Abspielen'));
-  kopf.appendChild(hoerKnopf(a.audio,'Langsam abspielen',true));
+  var kopf=document.createElement('div'); kopf.className='hörbox';
+  kopf.innerHTML='<span class="hörlbl">Hör zu:</span>';
+  kopf.appendChild(hörKnopf(a.audio,'Abspielen'));
+  kopf.appendChild(hörKnopf(a.audio,'Langsam abspielen',true));
   f.parentNode.insertBefore(kopf,f.nextSibling);
   if(!sprechbar){
     var w=document.createElement('div'); w.className='sbhinweis an';
@@ -247,7 +247,7 @@ function bauFehler(d,a){                    /* fehler: das falsche Wort finden *
         'Richtig heißt es: <b>'+a.richtig+'</b>';
       hinweis.classList.add('an');
       hinweis.appendChild(document.createTextNode(' '));
-      hinweis.appendChild(hoerKnopf(a.richtig,'Richtige Fassung hören'));
+      hinweis.appendChild(hörKnopf(a.richtig,'Richtige Fassung hören'));
       erkl(d); fertig();
     });
     satz.appendChild(b);
@@ -268,7 +268,7 @@ function bauSchreiben(d,a){                 /* schreib: selbst formulieren, dann
     if(knopf.disabled) return; knopf.disabled=true;
     muster.innerHTML='<b>Ein möglicher Satz:</b> '+a.muster;
     muster.appendChild(document.createTextNode(' '));
-    muster.appendChild(hoerKnopf(a.muster,'Lösung hören'));
+    muster.appendChild(hörKnopf(a.muster,'Lösung hören'));
     muster.classList.add('an');
     erkl(d); fertig();
   });
@@ -279,15 +279,15 @@ function bauSchreiben(d,a){                 /* schreib: selbst formulieren, dann
   UEB.forEach(function(a,nr){
     var d=document.createElement('div'); d.className='uauf';
     var kopf='<span class="unr">'+(nr+1)+'.</span> ';
-    var art={gap:'Lücke',choice:'Auswahl',bau:'Satz bauen',sort:'Sortieren',hoer:'Hören',fehler:'Fehler finden',schreib:'Schreiben'}[a.t]||'Aufgabe';
-    var text = a.t==='gap' ? a.s.replace('___','<span class="luecke">?</span>') : a.s;
+    var art={gap:'Lücke',choice:'Auswahl',bau:'Satz bauen',sort:'Sortieren',hör:'Hören',fehler:'Fehler finden',schreib:'Schreiben'}[a.t]||'Aufgabe';
+    var text = a.t==='gap' ? a.s.replace('___','<span class="lücke">?</span>') : a.s;
     d.innerHTML='<div class="uart">'+art+'</div>'+
                 '<div class="ufrage">'+kopf+text+'</div>'+
                 '<div class="uopts"></div>'+
                 '<div class="uerkl">'+a.e+'</div>';
     if(a.t==='bau') bauSatzbau(d,a);
     else if(a.t==='sort') bauSortieren(d,a);
-    else if(a.t==='hoer') bauHoeren(d,a);
+    else if(a.t==='hör') bauHören(d,a);
     else if(a.t==='fehler') bauFehler(d,a);
     else if(a.t==='schreib') bauSchreiben(d,a);
     else bauWahl(d,a);
@@ -300,7 +300,7 @@ function bauSchreiben(d,a){                 /* schreib: selbst formulieren, dann
 (function(){
   document.querySelectorAll('.dk').forEach(function(k){
     var q=k.querySelector('.dq'); if(!q) return;
-    var b=hoerKnopf(q.textContent,'Frage vorlesen');
+    var b=hörKnopf(q.textContent,'Frage vorlesen');
     b.classList.add('dkton');
     k.appendChild(b);
   });

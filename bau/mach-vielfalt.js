@@ -1,7 +1,7 @@
 /* ============================================================
    mach-vielfalt.js — gegen Themen, die nur aus Anklicken bestehen
 
-   Die Niveaupruefung hat 85 Themen gemeldet, in denen ueber 60 %
+   Die Niveauprüfung hat 85 Themen gemeldet, in denen über 60 %
    der Aufgaben dieselbe Form haben. Im B1-Wortschatz sind es bis
    zu 92 % Wahlfragen: 44-mal hintereinander „Was bedeutet X?".
    Wer ein Wort nur wiedererkennt, kann es noch lange nicht sagen
@@ -9,7 +9,7 @@
 
    Zwei Sachen sind dabei aufgefallen:
 
-   1. Die Rundenlogik in ueben.js sucht laengst nach Abwechslung.
+   1. Die Rundenlogik in ueben.js sucht längst nach Abwechslung.
       Sie geht die Liste ['tippen','buchstaben','artikel','order',
       'gap','choice'] durch und holt zu einem Wort, das man schon
       erkannt hat, bewusst eine Form, die mehr verlangt. Sie findet
@@ -19,7 +19,7 @@
 
    Dieses Skript erzeugt die fehlenden Formen aus dem, was schon
    da steht — keine erfundenen Inhalte, nur andere Zugriffe auf
-   dieselben Woerter und Saetze:
+   dieselben Wörter und Sätze:
 
      Wortschatz (aus words + den Bildern der Wahlfragen)
        tippen      Bedeutung steht da, das Wort muss man schreiben
@@ -27,7 +27,7 @@
        artikel     der/die/das zum Nomen
        speak       nachsprechen, mit Bild
 
-     Grammatik (aus den Lueckensaetzen)
+     Grammatik (aus den Lückensätzen)
        order       derselbe Satz, jetzt selbst gebaut
        speak       den fertigen Satz einmal laut sagen
 
@@ -35,7 +35,7 @@
    jeweils an der Stelle, wo sie greifen.
 
    Aufruf:  node bau/mach-vielfalt.js
-   Ergebnis: vielfalt-neu.js  (haengt sich an window.UEBUNGEN an)
+   Ergebnis: vielfalt-neu.js  (hängt sich an window.UEBUNGEN an)
    ============================================================ */
 const fs = require('fs');
 const path = require('path');
@@ -61,36 +61,36 @@ function artikelVon(w) {
   const m = String(w || '').match(/^(der|die|das)\s+/i);
   return m ? m[1].toLowerCase() : null;
 }
-function woerterZahl(s) {
+function wörterZahl(s) {
   return String(s || '').trim().split(/\s+/).filter(Boolean).length;
 }
 
-/* Aussprache-Stolpersteine: daran erkennt man Woerter, bei denen
+/* Aussprache-Stolpersteine: daran erkennt man Wörter, bei denen
    Nachsprechen wirklich etwas bringt. */
 const STOLPER = /[äöüß]|sch|ch|tz|pf|qu|sp|st|ie|eu|äu|ig\b|tion|[^aeiouäöü]{3}/i;
 
 /* Zum Satzbau und den zwei richtigen Reihenfolgen:
    Im Deutschen ist das Mittelfeld beweglich — „dürfen vorne nicht
    sitzen" ist so richtig wie „dürfen nicht vorne sitzen". Das war
-   zuerst ein Grund, solche Saetze gar nicht erst zu erzeugen.
-   Beim Nachlesen in ueben.js stand die Loesung aber schon dort:
-   satzbauOk() vergleicht nicht stur Zeichen fuer Zeichen, sondern
-   prueft, ob dieselben Woerter da sind, der Anfang stimmt, an
+   zuerst ein Grund, solche Sätze gar nicht erst zu erzeugen.
+   Beim Nachlesen in ueben.js stand die Lösung aber schon dort:
+   satzbauOk() vergleicht nicht stur Zeichen für Zeichen, sondern
+   prüft, ob dieselben Wörter da sind, der Anfang stimmt, an
    zweiter Stelle dasselbe steht und ein Verbteil am Ende bleibt.
    Genau das ist die Regel, um die es beim Satzbau geht — alles
    dazwischen darf anders liegen. Der Filter kann deshalb weg;
-   die Pruefung ist klueger als er war. */
+   die Prüfung ist klueger als er war. */
 
 /* ---------- Wortschatz ----------
-   `nurSprechen` gilt im Hoerbereich: wer dort ein Thema oeffnet,
-   will hoeren und nachsprechen. Tippen und Buchstabensalat wuerden
-   aus einem Hoerthema ein Wortschatzthema machen. */
+   `nurSprechen` gilt im Hörbereich: wer dort ein Thema öffnet,
+   will hören und nachsprechen. Tippen und Buchstabensalat wuerden
+   aus einem Hörthema ein Wortschatzthema machen. */
 function ausWortschatz(t, bildZu, schonDa, nurSprechen) {
   const neu = [];
-  const woerter = (t.words || []).filter(w => w && w.de);
-  if (!woerter.length) return neu;
+  const wörter = (t.words || []).filter(w => w && w.de);
+  if (!wörter.length) return neu;
 
-  woerter.forEach(w => {
+  wörter.forEach(w => {
     const voll = String(w.de).trim();
     const rein = ohneArtikel(voll);
     const art = artikelVon(voll);
@@ -103,7 +103,7 @@ function ausWortschatz(t, bildZu, schonDa, nurSprechen) {
        Redewendungen wie „die Nase voll haben" fallen hier raus. */
     const verraet = info && rein &&
       info.toLowerCase().indexOf(rein.toLowerCase().slice(0, Math.max(4, rein.length - 2))) >= 0;
-    if (!nurSprechen && info && !verraet && woerterZahl(rein) <= 2 && rein.length >= 3 && !schonDa('tippen', voll)) {
+    if (!nurSprechen && info && !verraet && wörterZahl(rein) <= 2 && rein.length >= 3 && !schonDa('tippen', voll)) {
       neu.push(Object.assign({
         type: 'tippen', answer: rein, info: info, w: voll,
         explain: (w.emoji ? w.emoji + ' ' : '') + voll
@@ -122,17 +122,17 @@ function ausWortschatz(t, bildZu, schonDa, nurSprechen) {
     }
 
     /* artikel — nur bei Nomen, bei denen der Artikel im Wort steht.
-       Ohne Artikel im Datensatz gibt es keine gesicherte Loesung. */
-    if (!nurSprechen && art && woerterZahl(rein) === 1 && !schonDa('artikel', voll)) {
+       Ohne Artikel im Datensatz gibt es keine gesicherte Lösung. */
+    if (!nurSprechen && art && wörterZahl(rein) === 1 && !schonDa('artikel', voll)) {
       neu.push(Object.assign({
         type: 'artikel', wort: rein, answer: art, w: voll,
         explain: voll + (info ? ' — ' + info : '')
       }, bildFeld));
     }
 
-    /* speak — fuer Woerter mit einem Aussprache-Stolperstein und
-       fuer Redewendungen, die man am besten am Stueck spricht. */
-    if ((STOLPER.test(rein) || woerterZahl(voll) >= 3) && !schonDa('speak', voll)) {
+    /* speak — für Wörter mit einem Aussprache-Stolperstein und
+       für Redewendungen, die man am besten am Stück spricht. */
+    if ((STOLPER.test(rein) || wörterZahl(voll) >= 3) && !schonDa('speak', voll)) {
       neu.push(Object.assign({
         type: 'speak', word: voll, w: voll,
         tip: info || undefined
@@ -157,37 +157,37 @@ function ausGrammatik(t, schonDa) {
     const kl = roh.match(/\s*\(([^)]*)\)\s*$/);
     if (kl) { hinweis = kl[1].trim(); roh = roh.slice(0, kl.index).trim(); }
 
-    /* Nur einfache Luecken: eine Luecke, eine Antwort. */
+    /* Nur einfache Lücken: eine Lücke, eine Antwort. */
     if ((roh.match(/_{2,}/g) || []).length !== 1) return;
     let satz = roh.replace(/_{2,}/, String(e.answer)).replace(/\s+/g, ' ').trim();
 
-    /* Fragen und Ausrufe bleiben aussen vor: beim Satzbau gehoert
-       das Zeichen zur Loesung und macht die Kontrolle bruechig. */
+    /* Fragen und Ausrufe bleiben aussen vor: beim Satzbau gehört
+       das Zeichen zur Lösung und macht die Kontrolle bruechig. */
     if (/[?!]/.test(satz)) return;
     satz = satz.replace(/[.]\s*$/, '');
 
-    /* Unter fuenf Woertern ist Sortieren keine Aufgabe. Ueber zwoelf
-       wird es auf dem Handy unuebersichtlich. */
-    const n = woerterZahl(satz);
+    /* Unter fuenf Wörtern ist Sortieren keine Aufgabe. Über zwoelf
+       wird es auf dem Handy unübersichtlich. */
+    const n = wörterZahl(satz);
     if (n < 5 || n > 12) return;
 
-    /* Zwei Saetze in einem: der Punkt in der Mitte wuerde als
+    /* Zwei Sätze in einem: der Punkt in der Mitte wuerde als
        Wortkarte auftauchen und die Aufgabe verwirren. Genauso der
        Gedankenstrich — er wuerde eine eigene Karte werden. */
     if (/[.]\s+\S/.test(satz)) return;
     if (/[—–]/.test(satz)) return;
 
-    /* Doppelte Woerter im selben Satz machen die Kontrolle mehrdeutig
+    /* Doppelte Wörter im selben Satz machen die Kontrolle mehrdeutig
        — dann kann dieselbe Reihenfolge auf zwei Wegen entstehen. */
     const kleinbuch = satz.split(/\s+/).map(x => x.toLowerCase().replace(/[.,;:]/g, ''));
     if (new Set(kleinbuch).size !== kleinbuch.length) return;
 
     if (schonDa('order', satz)) return;
 
-    /* Viele deutsche Saetze lassen zwei richtige Reihenfolgen zu
+    /* Viele deutsche Sätze lassen zwei richtige Reihenfolgen zu
        („Am Montag gehe ich …" / „Ich gehe am Montag …"). Die
-       Kontrolle kennt nur eine. Damit niemand fuer eine richtige
-       Loesung ein Kreuz bekommt, steht der Anfang im Hinweis —
+       Kontrolle kennt nur eine. Damit niemand für eine richtige
+       Lösung ein Kreuz bekommt, steht der Anfang im Hinweis —
        geuebt wird dann das, worum es geht: was danach kommt. */
     const anfang = satz.split(/\s+/)[0];
     const teile = ['Beginne mit „' + anfang + '".'];
@@ -214,25 +214,25 @@ const bericht = [];
 
     const formen = {};
     alt.forEach(e => formen[e.type] = (formen[e.type] || 0) + 1);
-    const groesste = Math.max(0, ...Object.values(formen));
+    const größte = Math.max(0, ...Object.values(formen));
 
-    /* Zwei Gruende, ein Thema anzureichern.
+    /* Zwei Gründe, ein Thema anzureichern.
 
-       Der erste ist Eintoenigkeit: ueber 60 % derselben Form.
+       Der erste ist Eintönigkeit: über 60 % derselben Form.
 
        Der zweite ist wichtiger und war zuerst nicht drin. Ein Thema
-       kann bunt aussehen — Wahlfrage, Luecke, Zuordnen, Lesen — und
+       kann bunt aussehen — Wahlfrage, Lücke, Zuordnen, Lesen — und
        trotzdem kein einziges Mal verlangen, dass man ein Wort selbst
        hinschreibt oder ausspricht. Genau das passiert bei neu
        angelegten Wortschatzthemen: sie sind abwechslungsreich und
-       bleiben doch komplett im Erkennen. Wo Woerter stehen, aber
+       bleiben doch komplett im Erkennen. Wo Wörter stehen, aber
        keine produktive Form, wird deshalb auch angereichert. */
     const PRODUKTIV = ['tippen', 'buchstaben', 'artikel', 'speak'];
     const hatProduktiv = PRODUKTIV.some(f => formen[f]);
-    const eintoenig = groesste / alt.length > 0.6;
+    const eintönig = größte / alt.length > 0.6;
     const stummerWortschatz = (t.words || []).length >= 4 && !hatProduktiv;
 
-    if (!eintoenig && !stummerWortschatz) return;
+    if (!eintönig && !stummerWortschatz) return;
 
     /* Was es zu einem Wort oder Satz schon gibt, wird nicht doppelt gebaut. */
     const vorhanden = {};
@@ -242,12 +242,12 @@ const bericht = [];
     });
     const schonDa = (typ, s) => !!vorhanden[typ + '§' + String(s).trim()];
 
-    /* Bilder liegen an den Wahlfragen. Sie gehoeren zum Wort, nicht
-       zur Aufgabe — also duerfen die neuen Formen sie mitbenutzen. */
+    /* Bilder liegen an den Wahlfragen. Sie gehören zum Wort, nicht
+       zur Aufgabe — also dürfen die neuen Formen sie mitbenutzen. */
     const bildZu = {};
     alt.forEach(e => { if (e.img && e.w) { if (!bildZu[e.w]) bildZu[e.w] = e.img; } });
 
-    const nurSprechen = (sk.id === 'hoeren' || sk.id === 'aussprache');
+    const nurSprechen = (sk.id === 'hören' || sk.id === 'aussprache');
 
     let neu = [];
     if ((t.words || []).length) neu = neu.concat(ausWortschatz(t, bildZu, schonDa, nurSprechen));
@@ -255,7 +255,7 @@ const bericht = [];
 
     if (!neu.length) return;
 
-    /* Nicht ins Uferlose: die neuen Formen sollen die Eintoenigkeit
+    /* Nicht ins Uferlose: die neuen Formen sollen die Eintönigkeit
        brechen, nicht das Thema verdoppeln. Obergrenze ist die Zahl
        der bisherigen Aufgaben. */
     if (neu.length > alt.length) neu = neu.slice(0, alt.length);
@@ -266,12 +266,12 @@ const bericht = [];
     neu.forEach(e => neueFormen[e.type] = (neueFormen[e.type] || 0) + 1);
     const jetzt = {};
     alt.concat(neu).forEach(e => jetzt[e.type] = (jetzt[e.type] || 0) + 1);
-    const jetztGroesste = Math.max(...Object.values(jetzt));
+    const jetztGrößte = Math.max(...Object.values(jetzt));
 
     bericht.push({
       bereich: sk.id, thema: t.id, niveau: t.level,
-      vorher: Math.round(groesste / alt.length * 100),
-      nachher: Math.round(jetztGroesste / (alt.length + neu.length) * 100),
+      vorher: Math.round(größte / alt.length * 100),
+      nachher: Math.round(jetztGrößte / (alt.length + neu.length) * 100),
       dazu: neu.length, formen: neueFormen
     });
   });
@@ -286,15 +286,15 @@ const zeilen = Object.keys(sammlung).sort().map(k =>
   '  ' + JSON.stringify(k) + ': ' + raus(sammlung[k]));
 
 const datei = `/* ============================================================
-   vielfalt-neu.js — dieselben Woerter, andere Zugriffe
+   vielfalt-neu.js — dieselben Wörter, andere Zugriffe
 
-   Erzeugt von bau/mach-vielfalt.js. Nicht von Hand aendern:
-   beim naechsten Lauf wird die Datei neu geschrieben.
+   Erzeugt von bau/mach-vielfalt.js. Nicht von Hand ändern:
+   beim nächsten Lauf wird die Datei neu geschrieben.
 
-   In vielen Themen bestand ueber die Haelfte der Aufgaben aus
+   In vielen Themen bestand über die Haelfte der Aufgaben aus
    derselben Form — meist Anklicken. Wer ein Wort nur wieder-
    erkennt, kann es noch nicht sagen und noch nicht schreiben.
-   Diese Datei haengt zu vorhandenen Woertern und Saetzen die
+   Diese Datei hängt zu vorhandenen Wörtern und Sätzen die
    Formen an, die mehr verlangen: selbst tippen, Buchstaben
    ordnen, der/die/das, nachsprechen, den Satz selbst bauen.
 
@@ -331,9 +331,9 @@ bericht.forEach(b => {
 console.log('\n' + bericht.length + ' Themen angereichert, ' + summe + ' neue Aufgaben');
 console.log('Formen: ' + Object.keys(gesamtFormen).sort()
   .map(f => f + ' ' + gesamtFormen[f]).join(', '));
-console.log('\nGroesster Anteil einer Form — vorher → nachher:');
+console.log('\nGrößter Anteil einer Form — vorher → nachher:');
 bericht.sort((a, b) => (b.vorher - b.nachher) - (a.vorher - a.nachher)).slice(0, 20).forEach(b =>
   console.log('  ' + String(b.niveau || '?').padEnd(4) + (b.bereich + '/' + b.thema).padEnd(34) +
     b.vorher + '% → ' + b.nachher + '%   +' + b.dazu));
 const rest = bericht.filter(b => b.nachher > 60);
-console.log('\nnoch ueber 60 %: ' + rest.length + ' von ' + bericht.length);
+console.log('\nnoch über 60 %: ' + rest.length + ' von ' + bericht.length);

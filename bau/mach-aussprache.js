@@ -2,7 +2,7 @@
    Baut aussprache-neu.js aus bau/aussprache-quelle.json (die Fragen)
    und bau/aussprache-plan.json (Karten + Tondateien).
 
-   Jede Tondatei wurde vor dem Bau maschinell abgehoert. Was die
+   Jede Tondatei wurde vor dem Bau maschinell abgehört. Was die
    Stimme nicht richtig gesagt hat, ist nicht drin.
 */
 var fs = require('fs');
@@ -28,7 +28,7 @@ Object.keys(P).forEach(function (id, ti) {
   var p = P[id];
   var q = Q[id] || {};
 
-  // Die Woerter im Themenkopf: kurze Form, wenn es eine gibt
+  // Die Wörter im Themenkopf: kurze Form, wenn es eine gibt
   var words = p.paare.map(function (x) {
     return { de: x[5] || x[0], info: x[1], emoji: x[2] };
   });
@@ -40,7 +40,7 @@ Object.keys(P).forEach(function (id, ti) {
     ex.push({ type: 'speak', word: x[0], tip: x[1], audioUrl: ton(id, 'p' + (i + 1)) });
   });
 
-  // 2. Shadowing - erst hoeren, dann selbst aufnehmen und vergleichen
+  // 2. Shadowing - erst hören, dann selbst aufnehmen und vergleichen
   p.shadow.forEach(function (x, i) {
     ex.push({ type: 'shadow', level: p.level, text: x[0], tip: x[1], audioUrl: ton(id, 's' + (i + 1)) });
   });
@@ -70,17 +70,17 @@ themen.sort(function (a, b) { return (RANG[a.level] || 9) - (RANG[b.level] || 9)
 
 var kopf = '/* ============================================================\n' +
   '   aussprache-neu.js — Aussprache von A1 bis C1\n\n' +
-  '   Wird NACH uebungen.js geladen und haengt seine Themen an den\n' +
+  '   Wird NACH uebungen.js geladen und hängt seine Themen an den\n' +
   '   Bereich "Aussprache" an. Vorher lagen dort acht Themen, alle\n' +
-  '   auf A2 — fuer den Anfaenger zu frueh, fuer C1 zu wenig.\n\n' +
-  '   Je Thema: 6 Karten zum Nachsprechen, 2 zum Shadowing (hoeren,\n' +
+  '   auf A2 — für den Anfaenger zu frueh, für C1 zu wenig.\n\n' +
+  '   Je Thema: 6 Karten zum Nachsprechen, 2 zum Shadowing (hören,\n' +
   '   selbst aufnehmen, vergleichen) und 5 Fragen zur Regel.\n' +
   '   Gesprochen ist alles in Julias eigener Stimme.\n\n' +
-  '   Jede Aufnahme wurde vor dem Einbau maschinell abgehoert und mit\n' +
+  '   Jede Aufnahme wurde vor dem Einbau maschinell abgehört und mit\n' +
   '   dem Soll-Text verglichen. Die Stimme hat bei Minimalpaaren in\n' +
-  '   einem Zug oft zweimal dasselbe Wort gesagt ("koennen, koennen") —\n' +
-  '   solche Dateien sind aussortiert und durch Kontrastsaetze ersetzt.\n' +
-  '   Gebaut von bau/mach-aussprache.js — nicht von Hand aendern.\n' +
+  '   einem Zug oft zweimal dasselbe Wort gesagt ("können, können") —\n' +
+  '   solche Dateien sind aussortiert und durch Kontrastsätze ersetzt.\n' +
+  '   Gebaut von bau/mach-aussprache.js — nicht von Hand ändern.\n' +
   '   ============================================================ */\n';
 
 var js = kopf +

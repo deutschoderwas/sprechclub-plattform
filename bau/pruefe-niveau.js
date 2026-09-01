@@ -34,11 +34,11 @@ function texte(e) {
   return t.filter(Boolean);
 }
 
-/* Nur das, was gelernt werden soll — ohne die Felder, in denen ueber
+/* Nur das, was gelernt werden soll — ohne die Felder, in denen über
    Grammatik geredet wird. „Das Praefix steht am Ende des Satzes" ist
-   ein Genitiv, aber kein Genitiv-Unterricht: es ist die Erklaerung zu
-   etwas ganz anderem. Wer solche Saetze mitzaehlt, bekommt lauter
-   Fehlalarme und uebersieht die echten Faelle. */
+   ein Genitiv, aber kein Genitiv-Unterricht: es ist die Erklärung zu
+   etwas ganz anderem. Wer solche Sätze mitzählt, bekommt lauter
+   Fehlalarme und übersieht die echten Fälle. */
 const ERKLAERFELD = new Set(['explain', 'hint', 'tipp', 'info']);
 function lerntexte(e) {
   const t = [];
@@ -51,8 +51,8 @@ function lerntexte(e) {
   return t.filter(Boolean);
 }
 
-/* Feste Wendungen, die auf ihrem Niveau zum Stoff gehoeren, auch wenn
-   die Form darin erst spaeter drankommt. „Ich haette gern" steht in
+/* Feste Wendungen, die auf ihrem Niveau zum Stoff gehören, auch wenn
+   die Form darin erst später drankommt. „Ich hätte gern" steht in
    jedem A1-Kurs bei der ersten Bestellung — als Formel, nicht als
    Konjunktiv. Wer sie als Vorgriff meldet, meldet den Lehrplan. */
 const FORMEL = [
@@ -65,31 +65,31 @@ function istFormel(txt) { return FORMEL.some(re => re.test(txt)); }
 
 /* ---------- Sprachliche Schwere ---------- */
 function messe(alles) {
-  /* Zwei Dinge muessen vorher raus, sonst misst die Zahl etwas anderes
-     als Satzlaenge:
-     - Hoertranskripte sind ganze Gespraeche. Ungeteilt zaehlt ein A1-
-       Dialog als ein Satz von dreissig Woertern. Also am Satzzeichen
+  /* Zwei Dinge müssen vorher raus, sonst misst die Zahl etwas anderes
+     als Satzlänge:
+     - Hörtranskripte sind ganze Gespraeche. Ungeteilt zählt ein A1-
+       Dialog als ein Satz von dreissig Wörtern. Also am Satzzeichen
        trennen.
      - Einzelne Antwortoptionen sind Wortmaterial, kein Satz. Erst ab
-       vier Woertern zaehlt etwas mit. */
-  const saetze = [];
+       vier Wörtern zählt etwas mit. */
+  const sätze = [];
   alles.forEach(s => {
     String(s).replace(/<[^>]+>/g, '').split(/(?<=[.!?…])\s+/).forEach(teil => {
-      if ((teil.match(/[\wÄÖÜäöüß]+/g) || []).length >= 4) saetze.push(teil);
+      if ((teil.match(/[\wÄÖÜäöüß]+/g) || []).length >= 4) sätze.push(teil);
     });
   });
-  let woerter = 0, buchstaben = 0, lang = 0, nebensatz = 0, n = saetze.length;
-  saetze.forEach(s => {
+  let wörter = 0, buchstaben = 0, lang = 0, nebensatz = 0, n = sätze.length;
+  sätze.forEach(s => {
     const w = String(s).replace(/<[^>]+>/g, '').match(/[\wÄÖÜäöüß]+/g) || [];
-    woerter += w.length;
+    wörter += w.length;
     w.forEach(x => { buchstaben += x.length; if (x.length > 12) lang++; });
     if (/\b(weil|dass|obwohl|damit|nachdem|während|wenn|falls|sofern|indem|sodass|worauf|wobei)\b/i.test(s)) nebensatz++;
   });
   return {
-    saetze: n,
-    woerterProSatz: n ? +(woerter / n).toFixed(1) : 0,
-    buchstabenProWort: woerter ? +(buchstaben / woerter).toFixed(1) : 0,
-    langeWoerter: woerter ? +(lang / woerter * 100).toFixed(1) : 0,
+    sätze: n,
+    wörterProSatz: n ? +(wörter / n).toFixed(1) : 0,
+    buchstabenProWort: wörter ? +(buchstaben / wörter).toFixed(1) : 0,
+    langeWörter: wörter ? +(lang / wörter * 100).toFixed(1) : 0,
     nebensatzAnteil: n ? +(nebensatz / n * 100).toFixed(0) : 0
   };
 }
@@ -115,7 +115,7 @@ const VORGRIFF = {
   ]
 };
 
-const befunde = { schwere: [], vorgriff: [], pfad: [], doppelt: [], eintoenig: [] };
+const befunde = { schwere: [], vorgriff: [], pfad: [], doppelt: [], eintönig: [] };
 const proNiveau = {};
 const gesehen = {};
 
@@ -152,8 +152,8 @@ const gesehen = {};
     }
 
     /* 4. Doppelte Themen-ids — nur innerhalb eines Bereichs ist das ein Fehler.
-          Dieselbe id in Wortschatz und Hoeren sind zwei verschiedene Themen,
-          und der Fortschritt zaehlt sie unter Bereich|Thema schon getrennt. */
+          Dieselbe id in Wortschatz und Hören sind zwei verschiedene Themen,
+          und der Fortschritt zählt sie unter Bereich|Thema schon getrennt. */
     const schluessel = sk.id + '|' + t.id;
     if (gesehen[schluessel]) befunde.doppelt.push({ bereich: sk.id, thema: t.id, hier: niv, schon: gesehen[schluessel] });
     else gesehen[schluessel] = niv;
@@ -162,12 +162,12 @@ const gesehen = {};
     const formen = {};
     (t.exercises || []).forEach(e => formen[e.type] = (formen[e.type] || 0) + 1);
     const anz = (t.exercises || []).length;
-    const groesste = Math.max(0, ...Object.values(formen));
-    if (anz >= 8 && groesste / anz > 0.6) {
-      befunde.eintoenig.push({
+    const größte = Math.max(0, ...Object.values(formen));
+    if (anz >= 8 && größte / anz > 0.6) {
+      befunde.eintönig.push({
         bereich: sk.id, thema: t.id, niveau: niv, aufgaben: anz,
-        haeufigste: Object.keys(formen).find(k => formen[k] === groesste),
-        anteil: Math.round(groesste / anz * 100)
+        häufigste: Object.keys(formen).find(k => formen[k] === größte),
+        anteil: Math.round(größte / anz * 100)
       });
     }
   });
@@ -181,18 +181,18 @@ console.log('Niveau   Sätze   Wörter/Satz   Buchst./Wort   lange Wörter   Neb
   const m = messe(proNiveau[n]);
   console.log(
     n.padEnd(8) +
-    String(m.saetze).padStart(5) +
-    String(m.woerterProSatz).padStart(14) +
+    String(m.sätze).padStart(5) +
+    String(m.wörterProSatz).padStart(14) +
     String(m.buchstabenProWort).padStart(15) +
-    (m.langeWoerter + '%').padStart(15) +
+    (m.langeWörter + '%').padStart(15) +
     (m.nebensatzAnteil + '%').padStart(13)
   );
 });
-console.log('→ Woerter/Satz sagt hier wenig: A1 fragt „Welches Wort passt: …?" und');
-console.log('  schleppt den Rahmen mit, B1 fragt knapp „Was bedeutet X?". Nachgezaehlt');
-console.log('  hat A1 nur 32 Saetze ueber elf Woerter, alle einfach gebaut.');
-console.log('  Tragfaehig sind Buchstaben/Wort, lange Woerter und Nebensaetze —');
-console.log('  die muessen von A1 nach C1 steigen.');
+console.log('→ Wörter/Satz sagt hier wenig: A1 fragt „Welches Wort passt: …?" und');
+console.log('  schleppt den Rahmen mit, B1 fragt knapp „Was bedeutet X?". Nachgezählt');
+console.log('  hat A1 nur 32 Sätze über elf Wörter, alle einfach gebaut.');
+console.log('  Tragfähig sind Buchstaben/Wort, lange Wörter und Nebensätze —');
+console.log('  die müssen von A1 nach C1 steigen.');
 
 console.log('\n═══ 2. Grammatik-Vorgriffe ═══');
 if (!befunde.vorgriff.length) console.log('keine — auf jedem Niveau steht nur, was dort hingehört');
@@ -219,11 +219,11 @@ if (!befunde.doppelt.length) console.log('keine Doppelung');
 else befunde.doppelt.forEach(d => console.log('  ' + d.bereich + ' · ' + d.thema + ': zweimal (' + d.schon + ' und ' + d.hier + ')'));
 
 console.log('\n═══ 5. Themen, die fast nur aus einer Aufgabenform bestehen ═══');
-if (!befunde.eintoenig.length) console.log('keine — überall genug Abwechslung');
+if (!befunde.eintönig.length) console.log('keine — überall genug Abwechslung');
 else {
-  befunde.eintoenig.sort((a, b) => b.anteil - a.anteil);
-  befunde.eintoenig.slice(0, 12).forEach(e =>
-    console.log('  ' + e.niveau.padEnd(4) + e.thema.padEnd(30) + e.anteil + '% ' + e.haeufigste + '  (' + e.aufgaben + ' Aufgaben)'));
-  console.log('  (' + befunde.eintoenig.length + ' Themen betroffen)');
+  befunde.eintönig.sort((a, b) => b.anteil - a.anteil);
+  befunde.eintönig.slice(0, 12).forEach(e =>
+    console.log('  ' + e.niveau.padEnd(4) + e.thema.padEnd(30) + e.anteil + '% ' + e.häufigste + '  (' + e.aufgaben + ' Aufgaben)'));
+  console.log('  (' + befunde.eintönig.length + ' Themen betroffen)');
 }
 console.log();

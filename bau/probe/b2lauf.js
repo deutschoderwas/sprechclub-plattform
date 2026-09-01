@@ -38,7 +38,7 @@ const path = require('path');
     });
     if(!a) break;
 
-    /* irgendeine gueltige Eingabe machen, damit Pruefen freigeschaltet wird */
+    /* irgendeine gueltige Eingabe machen, damit Prüfen freigeschaltet wird */
     if(a.opts) await page.click('#ubOpts button >> nth=0');
     else if(a.chips) { for(let k=0;k<a.chips;k++){ await page.evaluate(()=>{const c=document.querySelector('#ubPool .ub-chip'); if(c)c.click();}); await page.waitForTimeout(20);} }
     else if(a.gap) await page.fill('#ubGap','test');

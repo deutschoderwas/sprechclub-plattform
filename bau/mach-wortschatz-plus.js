@@ -1,5 +1,5 @@
 /* ============================================================
-   mach-wortschatz-plus.js — Wortschatz fuer die duennen Niveaus
+   mach-wortschatz-plus.js — Wortschatz für die dünnen Niveaus
 
    B2 hatte fuenf Wortschatzthemen gegen siebenundzwanzig auf B1,
    C1 acht kleine. Wer dort ankommt, findet also fast nichts mehr
@@ -17,8 +17,8 @@
    laufen muss.
 
    Aus dem JSON werden:
-     unterschied → choice     (zwei aehnliche Woerter trennen)
-     luecke      → gap        (das Wort in seiner festen Verbindung)
+     unterschied → choice     (zwei ähnliche Wörter trennen)
+     lücke      → gap        (das Wort in seiner festen Verbindung)
      paare       → match
      fehler      → fehler
      satzbau     → order
@@ -34,7 +34,7 @@ const AUSGABE = 'wortschatz-plus.js';
 
 /* ---------- Was es schon gibt ----------
    Ein Wort, das anderswo schon steht, ist nicht verboten — eine
-   Wiederholung auf hoeherem Niveau kann sinnvoll sein. Aber man
+   Wiederholung auf höherem Niveau kann sinnvoll sein. Aber man
    sollte es wissen, statt es aus Versehen zu tun. */
 global.window = {};
 require(path.join(wurzel, 'uebungen.js'));
@@ -68,13 +68,13 @@ dateien.forEach(f => {
   (roh.themen || []).forEach(t => themen.push(t));
 });
 
-/* ---------- Pruefungen vor dem Bauen ----------
+/* ---------- Prüfungen vor dem Bauen ----------
    Lieber hier abbrechen als eine Aufgabe ausliefern, die niemand
    loesen kann. */
 const klagen = [];
-const hinweise = { gleich: [], hoeher: [], tiefer: [] };
+const hinweise = { gleich: [], höher: [], tiefer: [] };
 
-function pruefeWort(t, w) {
+function prüfeWort(t, w) {
   const rein = String(w.de).replace(/^(der|die|das)\s+/i, '').trim();
   const info = String(w.info || '');
   if (!info) klagen.push(t.id + ': „' + w.de + '" hat keine Bedeutung');
@@ -85,7 +85,7 @@ function pruefeWort(t, w) {
     klagen.push(t.id + ': Bedeutung von „' + w.de + '" enthaelt das Wort selbst');
   }
   /* Ein Wort, das anderswo schon steht, ist nicht per se falsch —
-     aber es gibt drei sehr verschiedene Faelle, und nur einer davon
+     aber es gibt drei sehr verschiedene Fälle, und nur einer davon
      ist harmlos. Deshalb werden sie getrennt gemeldet. */
   const k = rein.toLowerCase();
   const mein = NIVEAUS.indexOf(String(t.level || '').split(/[–-]/)[0].trim());
@@ -98,17 +98,17 @@ function pruefeWort(t, w) {
     } else if (dort > mein) {
       /* Weiter oben nochmal als neu: dort ist es zu hoch eingestuft
          oder hier zu frueh. So oder so stimmt der Aufbau nicht. */
-      hinweise.hoeher.push(t.id + ' (' + t.level + '): „' + w.de + '" — steht auch als neues Wort in ' + wo);
+      hinweise.höher.push(t.id + ' (' + t.level + '): „' + w.de + '" — steht auch als neues Wort in ' + wo);
     } else {
       hinweise.tiefer.push(t.id + ': „' + w.de + '" — kam schon auf ' + wo);
     }
   });
 }
 
-function pruefeFehler(t, a) {
+function prüfeFehler(t, a) {
   const nackt = w => String(w).replace(/^[«»„""'(]+|[.,!?;:«»„""')]+$/g, '');
-  const woerter = String(a.satz).split(/\s+/);
-  const stellen = woerter.map((w, i) => nackt(w) === nackt(a.falsch) ? i : -1).filter(i => i >= 0);
+  const wörter = String(a.satz).split(/\s+/);
+  const stellen = wörter.map((w, i) => nackt(w) === nackt(a.falsch) ? i : -1).filter(i => i >= 0);
 
   if (!stellen.length) klagen.push(t.id + ': „' + a.falsch + '" steht nicht im Satz „' + a.satz + '"');
 
@@ -118,27 +118,27 @@ function pruefeFehler(t, a) {
      hat zweimal „sind\", und falsch ist genau das zweite. */
   if (stellen.length > 1 && typeof a.falschIdx !== 'number') {
     klagen.push(t.id + ': „' + a.falsch + '" steht mehrfach im Satz — bitte falschIdx angeben (' +
-      woerter.map((w, i) => i + ':' + w).join(' ') + ')');
+      wörter.map((w, i) => i + ':' + w).join(' ') + ')');
   }
-  if (typeof a.falschIdx === 'number' && nackt(woerter[a.falschIdx] || '') !== nackt(a.falsch)) {
-    klagen.push(t.id + ': falschIdx ' + a.falschIdx + ' zeigt auf „' + woerter[a.falschIdx] +
+  if (typeof a.falschIdx === 'number' && nackt(wörter[a.falschIdx] || '') !== nackt(a.falsch)) {
+    klagen.push(t.id + ': falschIdx ' + a.falschIdx + ' zeigt auf „' + wörter[a.falschIdx] +
       '", nicht auf „' + a.falsch + '"');
   }
   if (!a.richtig) klagen.push(t.id + ': Fehleraufgabe ohne richtige Fassung');
 }
 
-function pruefeLuecke(t, a) {
+function prüfeLücke(t, a) {
   const n = (String(a.satz).match(/_{3,}/g) || []).length;
-  if (n === 0) klagen.push(t.id + ': Lueckensatz ohne Luecke: ' + a.satz);
-  if (n > 1) klagen.push(t.id + ': mehr als eine Luecke: ' + a.satz);
+  if (n === 0) klagen.push(t.id + ': Lückensatz ohne Lücke: ' + a.satz);
+  if (n > 1) klagen.push(t.id + ': mehr als eine Lücke: ' + a.satz);
 }
 
 themen.forEach(t => {
-  if (!t.words || t.words.length < 4) klagen.push(t.id + ': zu wenige Woerter');
-  (t.words || []).forEach(w => pruefeWort(t, w));
+  if (!t.words || t.words.length < 4) klagen.push(t.id + ': zu wenige Wörter');
+  (t.words || []).forEach(w => prüfeWort(t, w));
   (t.aufgaben || []).forEach(a => {
-    if (a.art === 'fehler') pruefeFehler(t, a);
-    if (a.art === 'luecke') pruefeLuecke(t, a);
+    if (a.art === 'fehler') prüfeFehler(t, a);
+    if (a.art === 'lücke') prüfeLücke(t, a);
     if (a.art === 'unterschied' || a.art === 'lesen') {
       const alle = [a.gut].concat(a.schlecht || []);
       if (new Set(alle).size !== alle.length) klagen.push(t.id + ': doppelte Antwortoption bei „' + (a.frage || '').slice(0, 40) + '"');
@@ -156,7 +156,7 @@ if (klagen.length) {
 /* ---------- Bauen ---------- */
 /* Fester Streuwert: gleiche Eingabe, gleiche Reihenfolge. Sonst
    entsteht bei jedem Lauf ein anderer Diff, ohne dass sich am
-   Inhalt etwas geaendert haette. */
+   Inhalt etwas geändert hätte. */
 function mischeOptionen(gut, schlecht, streu) {
   const sortiert = [gut].concat(schlecht)
     .map((o, i) => ({ o, k: ((streu * 9301 + i * 49297) % 233280) }))
@@ -179,22 +179,22 @@ themen.forEach(t => {
     nr++;
     if (a.art === 'unterschied') {
       const m = mischeOptionen(a.gut, a.schlecht, nr);
-      ex.push({ type: 'choice', q: a.frage, options: m.options, answer: m.answer, explain: a.erklaerung });
-    } else if (a.art === 'luecke') {
-      ex.push({ type: 'gap', text: a.satz, answer: a.loesung, alts: a.alts || [a.loesung], explain: a.erklaerung });
+      ex.push({ type: 'choice', q: a.frage, options: m.options, answer: m.answer, explain: a.erklärung });
+    } else if (a.art === 'lücke') {
+      ex.push({ type: 'gap', text: a.satz, answer: a.lösung, alts: a.alts || [a.lösung], explain: a.erklärung });
     } else if (a.art === 'paare') {
       ex.push({ type: 'match', intro: a.intro || 'Ordne zu:', pairs: a.paare.map(p => ({ l: p[0], r: p[1] })) });
     } else if (a.art === 'fehler') {
-      const f = { type: 'fehler', satz: a.satz, falsch: a.falsch, richtig: a.richtig, explain: a.erklaerung };
+      const f = { type: 'fehler', satz: a.satz, falsch: a.falsch, richtig: a.richtig, explain: a.erklärung };
       if (typeof a.falschIdx === 'number') f.falschIdx = a.falschIdx;
       ex.push(f);
     } else if (a.art === 'satzbau') {
-      ex.push({ type: 'order', answer: a.satz, hint: a.hinweis, explain: a.erklaerung });
+      ex.push({ type: 'order', answer: a.satz, hint: a.hinweis, explain: a.erklärung });
     } else if (a.art === 'schreiben') {
       ex.push({ type: 'schreiben', auftrag: a.auftrag, tipp: a.tipp, muster: a.muster });
     } else if (a.art === 'lesen') {
       const m = mischeOptionen(a.gut, a.schlecht, nr);
-      ex.push({ type: 'lesen', text: a.text, q: a.frage, options: m.options, answer: m.answer, explain: a.erklaerung });
+      ex.push({ type: 'lesen', text: a.text, q: a.frage, options: m.options, answer: m.answer, explain: a.erklärung });
     }
   });
 
@@ -202,9 +202,9 @@ themen.forEach(t => {
      gebraucht wird: die Bedeutung steht da, gesucht ist das Wort.
      Die falschen Antworten kommen aus demselben Thema — sonst
      erkennt man die richtige am Sachgebiet, ohne sie zu kennen. */
-  const woerter = t.words || [];
-  woerter.forEach((w, i) => {
-    const andere = woerter.filter((_, k) => k !== i);
+  const wörter = t.words || [];
+  wörter.forEach((w, i) => {
+    const andere = wörter.filter((_, k) => k !== i);
     if (andere.length < 3) return;
     const ablenker = [andere[(i + 1) % andere.length],
                       andere[(i + 3) % andere.length],
@@ -221,33 +221,33 @@ themen.forEach(t => {
     });
   });
 
-  /* Ein Baustein mit „ergaenze" legt kein neues Thema an, sondern
+  /* Ein Baustein mit „ergänze" legt kein neues Thema an, sondern
      stockt ein vorhandenes auf. Gebraucht wird das dort, wo ein
-     Thema sein Etikett nicht traegt: „Einkaufen\" steht auf B1 und
-     besteht zu 88 Prozent aus A2-Woertern. Statt das Thema
+     Thema sein Etikett nicht trägt: „Einkaufen\" steht auf B1 und
+     besteht zu 88 Prozent aus A2-Wörtern. Statt das Thema
      umzustufen oder auszutauschen — es funktioniert ja — kommen
-     die Woerter dazu, die die Stufe rechtfertigen. */
-  if (t.ergaenze) nachtrag.push({ ziel: t.ergaenze, words: woerter, exercises: ex });
-  else neue.push({ id: t.id, title: t.title, level: t.level, emoji: t.emoji, words: woerter, exercises: ex });
+     die Wörter dazu, die die Stufe rechtfertigen. */
+  if (t.ergänze) nachtrag.push({ ziel: t.ergänze, words: wörter, exercises: ex });
+  else neue.push({ id: t.id, title: t.title, level: t.level, emoji: t.emoji, words: wörter, exercises: ex });
 });
 
 /* ---------- Datei schreiben ---------- */
 const kopf = `/* ============================================================
-   ${AUSGABE} — Wortschatz fuer B2 und C1
+   ${AUSGABE} — Wortschatz für B2 und C1
 
    Erzeugt von bau/mach-wortschatz-plus.js aus den Bausteinen in
    bau/b2-wortschatz-*.json und bau/c1-wortschatz-*.json.
-   Nicht von Hand aendern — beim naechsten Lauf ist es weg.
+   Nicht von Hand ändern — beim nächsten Lauf ist es weg.
 
    Auf diesen Niveaus geht es nicht mehr darum, ein Wort zu kennen,
-   sondern zwei aehnliche auseinanderzuhalten: zustaendig oder
+   sondern zwei ähnliche auseinanderzuhalten: zuständig oder
    befugt, Einwand oder Bedenken, Korrelation oder Kausalitaet,
-   Abgrenzung oder Rueckzug. Deshalb kommen die falschen Antworten
+   Abgrenzung oder Rückzug. Deshalb kommen die falschen Antworten
    aus demselben Thema — sonst erkennt man die richtige am
    Sachgebiet, ohne sie zu kennen.
 
    tippen, buchstaben, artikel und speak stehen nicht hier. Die
-   erzeugt bau/mach-vielfalt.js, das nach diesem Skript laeuft.
+   erzeugt bau/mach-vielfalt.js, das nach diesem Skript läuft.
    ============================================================ */
 (function () {
   'use strict';
@@ -265,16 +265,16 @@ const fuss = `;
   (sk.themes || []).forEach(function (t) { da[t.id] = true; });
   NEU.forEach(function (t) { if (!da[t.id]) sk.themes.push(t); });
 
-  /* Nachtraege stocken vorhandene Themen auf, statt neue anzulegen. */
+  /* Nachträge stocken vorhandene Themen auf, statt neue anzulegen. */
   NACHTRAG.forEach(function (n) {
     var teil = n.ziel.split('|');
     var bereich = window.UEBUNGEN.skills.filter(function (s) { return s.id === teil[0]; })[0];
     var thema = bereich && (bereich.themes || []).filter(function (t) { return t.id === teil[1]; })[0];
     if (!thema) return;
-    var dieWoerter = {};
-    (thema.words || []).forEach(function (w) { dieWoerter[String(w.de || w)] = true; });
+    var dieWörter = {};
+    (thema.words || []).forEach(function (w) { dieWörter[String(w.de || w)] = true; });
     n.words.forEach(function (w) {
-      if (!dieWoerter[String(w.de)]) { (thema.words = thema.words || []).push(w); }
+      if (!dieWörter[String(w.de)]) { (thema.words = thema.words || []).push(w); }
     });
     thema.exercises = (thema.exercises || []).concat(n.exercises);
   });
@@ -285,9 +285,9 @@ fs.writeFileSync(path.join(wurzel, AUSGABE),
   kopf + JSON.stringify(neue) + mitte + JSON.stringify(nachtrag) + fuss, 'utf8');
 
 /* ---------- Bericht ---------- */
-let aufgaben = 0, woerter = 0;
-neue.forEach(t => { aufgaben += t.exercises.length; woerter += t.words.length; });
-console.log('\n' + neue.length + ' neue Themen, ' + woerter + ' Woerter, ' + aufgaben + ' Aufgaben');
+let aufgaben = 0, wörter = 0;
+neue.forEach(t => { aufgaben += t.exercises.length; wörter += t.words.length; });
+console.log('\n' + neue.length + ' neue Themen, ' + wörter + ' Wörter, ' + aufgaben + ' Aufgaben');
 neue.forEach(t => {
   const formen = {};
   t.exercises.forEach(e => formen[e.type] = (formen[e.type] || 0) + 1);
@@ -299,7 +299,7 @@ neue.forEach(t => {
 if (nachtrag.length) {
   let nw = 0, na = 0;
   nachtrag.forEach(n => { nw += n.words.length; na += n.exercises.length; });
-  console.log('\n' + nachtrag.length + ' Themen aufgestockt, ' + nw + ' Woerter, ' + na + ' Aufgaben');
+  console.log('\n' + nachtrag.length + ' Themen aufgestockt, ' + nw + ' Wörter, ' + na + ' Aufgaben');
   nachtrag.forEach(n => console.log('  ' + n.ziel.padEnd(26) +
     String(n.words.length).padStart(3) + ' W  ' + String(n.exercises.length).padStart(3) + ' A   ' +
     n.words.map(w => w.de).join(', ')));
@@ -308,12 +308,12 @@ if (hinweise.gleich.length) {
   console.log('\nSelbe Liste, selbe Stufe — die Karte kaeme zweimal vor:');
   hinweise.gleich.forEach(h => console.log('  ' + h));
 }
-if (hinweise.hoeher.length) {
+if (hinweise.höher.length) {
   console.log('\nSteht weiter oben nochmal als neues Wort — dort zu hoch oder hier zu frueh:');
-  hinweise.hoeher.forEach(h => console.log('  ' + h));
+  hinweise.höher.forEach(h => console.log('  ' + h));
 }
 if (hinweise.tiefer.length) {
   console.log('\nKam schon auf einer tieferen Stufe vor (' + hinweise.tiefer.length +
-    ' Woerter) — das ist Wiederholung und meist gewollt.');
+    ' Wörter) — das ist Wiederholung und meist gewollt.');
 }
 console.log();

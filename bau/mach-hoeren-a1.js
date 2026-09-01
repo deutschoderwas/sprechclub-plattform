@@ -26,16 +26,16 @@ function misch(liste, saat) {
 
 var fehlt = [];
 var themen = Q.themen.map(function (th, ti) {
-  var uebungen = [];
+  var übungen = [];
 
-  // 1. echte Hoertexte
-  th.hoertexte.forEach(function (h, hi) {
+  // 1. echte Hörtexte
+  th.hörtexte.forEach(function (h, hi) {
     var key = th.id + '#' + (hi + 1);
     var url = TON[key];
     if (!url) { fehlt.push(key); return; }
     var richtig = h.options[h.answer];
     var opt = misch(h.options, (ti + 1) * 97 + hi * 11 + 41);
-    uebungen.push({
+    übungen.push({
       type: 'listen',
       label: h.label,
       audioUrl: url,
@@ -53,7 +53,7 @@ var themen = Q.themen.map(function (th, ti) {
       return th.words[(wi + off) % n].info;
     });
     var alle = misch([w.info].concat(falsch), (ti + 1) * 1000 + wi * 7 + 3);
-    uebungen.push({
+    übungen.push({
       type: 'choice',
       audio: w.de,
       q: '🔊 Hör zu – was bedeutet das Wort?',
@@ -70,23 +70,23 @@ var themen = Q.themen.map(function (th, ti) {
     level: th.level,
     emoji: th.emoji,
     words: th.words,
-    exercises: uebungen
+    exercises: übungen
   };
 });
 
 if (fehlt.length) {
-  console.error('Es fehlen Tondateien fuer: ' + fehlt.join(', '));
+  console.error('Es fehlen Tondateien für: ' + fehlt.join(', '));
   process.exit(1);
 }
 
 var kopf = '/* ============================================================\n' +
-  '   hoeren-a1-neu.js — Hoeren auf A1\n\n' +
-  '   Wird NACH uebungen.js geladen und haengt seine Themen an den\n' +
-  '   Bereich "Hoeren" an. Vorher stand auf A1 nichts: der Anfaenger\n' +
-  '   kam in den Hoerbereich und fand nur B1-Themen.\n\n' +
-  '   Je Thema: 16 Woerter, 4 echte Hoertexte mit Ton und Transkript,\n' +
+  '   hoeren-a1-neu.js — Hören auf A1\n\n' +
+  '   Wird NACH uebungen.js geladen und hängt seine Themen an den\n' +
+  '   Bereich "Hören" an. Vorher stand auf A1 nichts: der Anfaenger\n' +
+  '   kam in den Hörbereich und fand nur B1-Themen.\n\n' +
+  '   Je Thema: 16 Wörter, 4 echte Hörtexte mit Ton und Transkript,\n' +
   '   16 Wortfragen. Die Stimme ist Julias eigene.\n' +
-  '   Gebaut von bau/mach-hoeren-a1.js — nicht von Hand aendern.\n' +
+  '   Gebaut von bau/mach-hoeren-a1.js — nicht von Hand ändern.\n' +
   '   ============================================================ */\n';
 
 var js = kopf +
@@ -94,11 +94,11 @@ var js = kopf +
   '  var U = window.UEBUNGEN;\n' +
   '  if(!U || !U.skills) return;\n' +
   '  var ho = null;\n' +
-  "  for(var i=0;i<U.skills.length;i++){ if(U.skills[i].id==='hoeren'){ ho=U.skills[i]; break; } }\n" +
+  "  for(var i=0;i<U.skills.length;i++){ if(U.skills[i].id==='hören'){ ho=U.skills[i]; break; } }\n" +
   '  if(!ho) return;\n' +
   '  if(!ho.themes) ho.themes = [];\n\n' +
   '  var NEU = ' + JSON.stringify(themen, null, 1) + ';\n\n' +
-  '  // A1 gehoert nach vorn: erst die neuen Themen, dann die alten.\n' +
+  '  // A1 gehört nach vorn: erst die neuen Themen, dann die alten.\n' +
   '  NEU.slice().reverse().forEach(function(t){\n' +
   '    var pos = -1;\n' +
   '    for(var i=0;i<ho.themes.length;i++){ if(ho.themes[i].id===t.id){ pos=i; break; } }\n' +
@@ -114,6 +114,6 @@ themen.forEach(function (t) {
   zahlWort += t.words.length;
   t.exercises.forEach(function (e) { if (e.type === 'listen') zahlListen++; else zahlChoice++; });
 });
-console.log('Themen: ' + themen.length + ', Woerter: ' + zahlWort +
-  ', Hoertexte: ' + zahlListen + ', Wortfragen: ' + zahlChoice +
+console.log('Themen: ' + themen.length + ', Wörter: ' + zahlWort +
+  ', Hörtexte: ' + zahlListen + ', Wortfragen: ' + zahlChoice +
   ', Datei: ' + fs.statSync(pfad + 'hoeren-a1-neu.js').size + ' Bytes');

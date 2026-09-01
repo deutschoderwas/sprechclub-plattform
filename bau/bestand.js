@@ -1,8 +1,8 @@
 /* ============================================================
    bestand.js — was steht auf welchem Niveau?
 
-   Zeigt fuer jeden Bereich und jedes Niveau, wie viele Themen und
-   Aufgaben es gibt. Damit sieht man auf einen Blick, wo eine Luecke
+   Zeigt für jeden Bereich und jedes Niveau, wie viele Themen und
+   Aufgaben es gibt. Damit sieht man auf einen Blick, wo eine Lücke
    klafft — etwa B2-Wortschatz gegen B1-Wortschatz.
 
    Aufruf: node bau/bestand.js
@@ -13,7 +13,7 @@ global.window = {};
 require(path.join(wurzel, 'uebungen.js'));
 
 /* Alle additiven Datendateien, in derselben Reihenfolge wie in konto.html.
-   vielfalt-neu.js steht bewusst am Schluss: es haengt sich an das an,
+   vielfalt-neu.js steht bewusst am Schluss: es hängt sich an das an,
    was die anderen angelegt haben. */
 const DATEIEN = ['hoer-neu.js', 'hoeren-a1-neu.js', 'aussprache-neu.js',
   'hoeren-b2-neu.js', 'hoeren-c1-neu.js', 'wortschatz-neu.js',
@@ -58,19 +58,19 @@ console.log('zusammen'.padEnd(17) + NIVEAUS.map(n => {
   return (s.th + ' Th / ' + s.auf).padStart(13);
 }).join(''));
 
-/* Wo klafft es? Der Vergleich, der wirklich zaehlt, ist der zum
-   staerksten Niveau desselben Bereichs. */
-console.log('\nDuenn besetzt (weniger als ein Drittel des staerksten Niveaus im selben Bereich):');
+/* Wo klafft es? Der Vergleich, der wirklich zählt, ist der zum
+   stärksten Niveau desselben Bereichs. */
+console.log('\nDünn besetzt (weniger als ein Drittel des stärksten Niveaus im selben Bereich):');
 let leer = true;
 bereiche.forEach(b => {
   const werte = NIVEAUS.map(n => (zelle[n + '|' + b] || { auf: 0 }).auf);
-  const hoechst = Math.max(...werte);
-  if (hoechst < 60) return;
+  const höchst = Math.max(...werte);
+  if (höchst < 60) return;
   NIVEAUS.forEach((n, i) => {
-    if (werte[i] > 0 && werte[i] < hoechst / 3) {
+    if (werte[i] > 0 && werte[i] < höchst / 3) {
       leer = false;
-      console.log('  ' + (b + ' ' + n).padEnd(24) + werte[i] + ' Aufgaben gegen ' + hoechst +
-        ' bei ' + NIVEAUS[werte.indexOf(hoechst)]);
+      console.log('  ' + (b + ' ' + n).padEnd(24) + werte[i] + ' Aufgaben gegen ' + höchst +
+        ' bei ' + NIVEAUS[werte.indexOf(höchst)]);
     }
     if (werte[i] === 0) {
       leer = false;

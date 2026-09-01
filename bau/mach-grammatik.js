@@ -9,8 +9,8 @@
    Praepositionen mit Dativ und die Vergangenheit zum Sprechen.
 
    Die Aufgaben stehen von Hand geschrieben in
-   bau/grammatik-quelle.json — je Aufgabe der Satz, die Loesung,
-   erlaubte Alternativen und eine Erklaerung in einem Satz.
+   bau/grammatik-quelle.json — je Aufgabe der Satz, die Lösung,
+   erlaubte Alternativen und eine Erklärung in einem Satz.
 
    Aufruf: node bau/mach-grammatik.js
    ============================================================ */
@@ -57,10 +57,10 @@ const kopf = `/* ============================================================
    Vergleiche, reflexive Verben, weil/dass/wenn, Praepositionen mit
    Dativ und die Vergangenheit zum Sprechen (war, hatte, konnte).
 
-   Je Aufgabe steht eine Erklaerung in einem Satz dabei — nicht die
+   Je Aufgabe steht eine Erklärung in einem Satz dabei — nicht die
    Regel aus dem Buch, sondern der Grund, warum es hier so ist.
 
-   Wird NACH uebungen.js geladen und haengt seine Themen an den
+   Wird NACH uebungen.js geladen und hängt seine Themen an den
    Bereich "Grammatik" an. uebungen.js bleibt unangetastet.
 
    Erzeugt von bau/mach-grammatik.js aus bau/grammatik-quelle.json.
@@ -84,4 +84,4 @@ const fuss = `;
 `;
 
 fs.writeFileSync(path.join(W, 'grammatik-neu.js'), kopf + JSON.stringify(themen, null, 1) + fuss, 'utf8');
-console.log(themen.length + ' Themen, ' + (zGap + zChoice) + ' Aufgaben (' + zGap + ' Luecken, ' + zChoice + ' Auswahl)');
+console.log(themen.length + ' Themen, ' + (zGap + zChoice) + ' Aufgaben (' + zGap + ' Lücken, ' + zChoice + ' Auswahl)');

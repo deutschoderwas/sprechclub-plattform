@@ -1,6 +1,6 @@
 /* Spielt jede neue Aufgabenform durch — einmal richtig geloest,
-   und beim Satzbau zusaetzlich mit umgestelltem Mittelfeld, weil
-   das der Fall ist, bei dem eine zweite richtige Loesung entsteht. */
+   und beim Satzbau zusätzlich mit umgestelltem Mittelfeld, weil
+   das der Fall ist, bei dem eine zweite richtige Lösung entsteht. */
 const { chromium } = require('playwright');
 const path = require('path');
 
@@ -53,7 +53,7 @@ const LOESUNG = {
 
     if (a.pool > 0) {
       /* Karten sind <span class="ub-chip"> — der Text der Karte sagt,
-         was sie ist. Wir bauen die Loesung Karte fuer Karte. */
+         was sie ist. Wir bauen die Lösung Karte für Karte. */
       const karten = await page.$$eval('#ubPool .ub-chip', cs => cs.map(c => c.textContent));
       const einzelBuchstaben = karten.every(k => k.trim().length === 1);
       form = einzelBuchstaben ? 'buchstaben' : 'order';
@@ -95,14 +95,14 @@ const LOESUNG = {
     }
 
     await page.waitForTimeout(120);
-    const vorPruefen = await page.evaluate(() => {
+    const vorPrüfen = await page.evaluate(() => {
       const b = document.getElementById('ubBtn');
       return b ? { text: b.textContent, aus: b.disabled } : null;
     });
-    if (vorPruefen && !vorPruefen.aus) await page.click('#ubBtn');
+    if (vorPrüfen && !vorPrüfen.aus) await page.click('#ubBtn');
     await page.waitForTimeout(250);
 
-    const rueck = await page.evaluate(() => {
+    const rück = await page.evaluate(() => {
       const fb = document.getElementById('ubFb');
       return fb ? { klasse: fb.className, text: fb.textContent.replace(/\s+/g, ' ').slice(0, 80) } : null;
     });
@@ -111,9 +111,9 @@ const LOESUNG = {
       runde: runde + 1, form,
       zusehen: (a.wort || a.frage).replace(/\s+/g, ' ').slice(0, 42),
       bedeutung: a.bed.slice(0, 34), hinweis: a.tip.slice(0, 40),
-      knopf: vorPruefen ? (vorPruefen.text + (vorPruefen.aus ? ' AUS' : ' an')) : '—',
+      knopf: vorPrüfen ? (vorPrüfen.text + (vorPrüfen.aus ? ' AUS' : ' an')) : '—',
       getan,
-      urteil: rueck ? rueck.klasse.replace('ub-fb', '').trim() + ' · ' + rueck.text : '—'
+      urteil: rück ? rück.klasse.replace('ub-fb', '').trim() + ' · ' + rück.text : '—'
     });
 
     await page.screenshot({ path: 'schuss-' + (runde + 1) + '-' + form + '.png' });

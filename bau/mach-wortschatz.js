@@ -1,19 +1,19 @@
 /* ============================================================
    mach-wortschatz.js — baut wortschatz-neu.js
 
-   Acht Bereiche im Lernbereich hatten ueberhaupt keinen
+   Acht Bereiche im Lernbereich hatten überhaupt keinen
    Wortschatz: Polizei, Bau, Elektro/SHK, Metall, Reinigung,
-   Lager, Produktion, Ingenieurwesen. Die Woerter selbst stehen
+   Lager, Produktion, Ingenieurwesen. Die Wörter selbst stehen
    von Hand geschrieben in bau/wortschatz-quelle.json — je Wort
    Bedeutung, Zeichen und ein echter Satz aus dem Alltag.
 
    Die Aufgaben entstehen hier daraus:
      Auswahl   aus der Bedeutung
-     Luecke    aus dem Beispielsatz, das Wort wird herausgenommen
+     Lücke    aus dem Beispielsatz, das Wort wird herausgenommen
      Zuordnen  Wort und Bedeutung in Vierergruppen
 
    Ergebnis ist wortschatz-neu.js. Die Datei wird nach uebungen.js
-   geladen und haengt ihre Themen an — uebungen.js bleibt
+   geladen und hängt ihre Themen an — uebungen.js bleibt
    unangetastet.
 
    Aufruf: node bau/mach-wortschatz.js
@@ -47,8 +47,8 @@ Object.keys(QUELLE).forEach((feld, fi) => {
     zChoice++;
   });
 
-  /* Luecke: das Wort faellt aus seinem eigenen Beispielsatz heraus.
-     Nur, wenn es dort auch wirklich unveraendert steht. */
+  /* Lücke: das Wort fällt aus seinem eigenen Beispielsatz heraus.
+     Nur, wenn es dort auch wirklich unverändert steht. */
   words.forEach((w, i) => {
     const kern = ohneArtikel(w.de);
     if (w.bsp.indexOf(kern) < 0) return;
@@ -68,23 +68,23 @@ Object.keys(QUELLE).forEach((feld, fi) => {
 });
 
 const kopf = `/* ============================================================
-   wortschatz-neu.js — Wortschatz fuer acht Bereiche, die keinen hatten
+   wortschatz-neu.js — Wortschatz für acht Bereiche, die keinen hatten
 
    Polizei, Bau, Elektro/SHK, Metall, Reinigung, Lager,
    Produktion und Technik/Planung standen im Lernbereich mit
-   Dialogen und Hoertexten da, aber ohne ein einziges Wort zum
-   Ueben. Diese Datei fuellt genau diese Luecke.
+   Dialogen und Hörtexten da, aber ohne ein einziges Wort zum
+   Üben. Diese Datei fuellt genau diese Lücke.
 
-   Wird NACH uebungen.js geladen und haengt ihre Themen an den
+   Wird NACH uebungen.js geladen und hängt ihre Themen an den
    Bereich "Wortschatz" an. uebungen.js bleibt unangetastet;
    nimmt man die Zeile in konto.html heraus, ist alles wie vorher.
 
-   Je Thema 14 Woerter mit Bedeutung, Zeichen und einem echten
-   Satz aus dem Alltag, dazu Auswahl-, Luecken- und
+   Je Thema 14 Wörter mit Bedeutung, Zeichen und einem echten
+   Satz aus dem Alltag, dazu Auswahl-, Lücken- und
    Zuordnungsaufgaben.
 
    Erzeugt von bau/mach-wortschatz.js aus bau/wortschatz-quelle.json —
-   nicht von Hand aendern, sondern die Quelle und dann neu bauen.
+   nicht von Hand ändern, sondern die Quelle und dann neu bauen.
    ============================================================ */
 (function () {
   var U = window.UEBUNGEN;
@@ -105,5 +105,5 @@ const fuss = `;
 `;
 
 fs.writeFileSync(path.join(W, 'wortschatz-neu.js'), kopf + JSON.stringify(themen, null, 1) + fuss, 'utf8');
-console.log(themen.length + ' Themen, ' + themen.reduce((n, t) => n + t.words.length, 0) + ' Woerter');
-console.log(zChoice + ' Auswahl, ' + zGap + ' Luecken, ' + zMatch + ' Zuordnungen');
+console.log(themen.length + ' Themen, ' + themen.reduce((n, t) => n + t.words.length, 0) + ' Wörter');
+console.log(zChoice + ' Auswahl, ' + zGap + ' Lücken, ' + zMatch + ' Zuordnungen');

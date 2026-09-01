@@ -10,9 +10,9 @@ document.querySelectorAll('.tab').forEach(function(t){
 });
 var sitZuletzt=-1, tabuZuletzt=-1, geheimZuletzt=-1;
 var qRunde=-1,qNr=0,qPunkte=0,qOffen=false,qFertig=[];
-function zaehleFunde(){
+function zähleFunde(){
   var n=document.querySelectorAll('.find.done').length;
-  $q('findZaehler').textContent=n+' von '+FINDEN.length+' gefunden'+(n===FINDEN.length?' — alles entdeckt! 🎉':'');
+  $q('findZähler').textContent=n+' von '+FINDEN.length+' gefunden'+(n===FINDEN.length?' — alles entdeckt! 🎉':'');
 }
 function neuesGeheim(){
   var i;do{i=Math.floor(Math.random()*FINDEN.length);}while(i===geheimZuletzt&&FINDEN.length>1);
@@ -29,7 +29,7 @@ function neueSituation(){
   sitZuletzt=i;var s=SIT[i];
   $q('sitKarte').innerHTML='<div class="sit-ort">'+s.ort+'</div><div class="sit-lage">'+s.lage+'</div>'+
     '<div class="sit-rollen"><div class="sit-r"><b>A —</b> '+s.a+'</div><div class="sit-r"><b>B —</b> '+s.b+'</div></div>'+
-    '<div class="sit-woerter"><b>Diese Wörter sollen vorkommen:</b><br>'+s.w+'</div>';
+    '<div class="sit-wörter"><b>Diese Wörter sollen vorkommen:</b><br>'+s.w+'</div>';
 }
 function alleSituationen(){
   var d=$q('sitAlle');
@@ -37,7 +37,7 @@ function alleSituationen(){
   d.style.display='block';
   d.innerHTML='<div class="debate-grid">'+SIT.map(function(s,i){
     return '<div class="debate"><div class="debate-num">Szene '+(i+1)+' · '+s.ort+'</div><div class="debate-q">'+s.lage+'</div>'+
-      '<div class="sit-woerter">A — '+s.a+'<br>B — '+s.b+'<br><br>'+s.w+'</div></div>';}).join('')+'</div>';
+      '<div class="sit-wörter">A — '+s.a+'<br>B — '+s.b+'<br><br>'+s.w+'</div></div>';}).join('')+'</div>';
 }
 function quizRundeStart(i){
   qRunde=i;qNr=0;qPunkte=0;qOffen=false;
@@ -52,7 +52,7 @@ function quizFrage(){
   var R=QUIZ[qRunde];if(!R)return;
   if(qNr>=R.q.length){quizEnde();return;}
   var f=R.q[qNr];qOffen=true;
-  $q('quizZaehler').textContent='Runde '+(qRunde+1)+' · '+R.t+' · Frage '+(qNr+1)+' von '+R.q.length;
+  $q('quizZähler').textContent='Runde '+(qRunde+1)+' · '+R.t+' · Frage '+(qNr+1)+' von '+R.q.length;
   $q('quizPunkte').textContent=qPunkte+' von '+R.q.length;
   $q('quizBalken').style.width=(qNr/R.q.length*100)+'%';
   $q('quizFrage').innerHTML=f.f;
@@ -98,11 +98,11 @@ function quizEnde(){
   $q('quizBalken').style.width='100%';
   $q('quizInhalt').style.display='none';
   var lob=qPunkte===n?'Alles richtig — perfekt!':(qPunkte>=n-1?'Fast alles — stark!':(qPunkte>=n/2?'Gut gemacht. Die Erklärungen noch einmal ansehen, dann sitzt es.':'Diese Runde noch einmal — beim zweiten Mal bleibt es hängen.'));
-  var naechste=(qRunde+1)%QUIZ.length;
+  var nächste=(qRunde+1)%QUIZ.length;
   $q('quizEnde').style.display='block';
-  $q('quizEnde').innerHTML='<div class="gross">'+qPunkte+'/'+n+'</div><p>'+lob+'</p>'+
+  $q('quizEnde').innerHTML='<div class="groß">'+qPunkte+'/'+n+'</div><p>'+lob+'</p>'+
     '<div class="controls"><button class="btn ghost" onclick="quizRundeStart('+qRunde+')">↺ Diese Runde nochmal</button>'+
-    '<button class="btn" onclick="quizRundeStart('+naechste+')">'+QUIZ[naechste].i+' Weiter: '+QUIZ[naechste].t+' →</button></div>';
+    '<button class="btn" onclick="quizRundeStart('+nächste+')">'+QUIZ[nächste].i+' Weiter: '+QUIZ[nächste].t+' →</button></div>';
 }
 function start(){
   var g=$q('findGrid');
@@ -111,7 +111,7 @@ function start(){
     var d=document.createElement('div');
     d.className='find';
     d.innerHTML='<span class="art">'+teile[0]+'</span> '+teile.slice(1).join(' ');
-    d.addEventListener('click',function(){d.classList.toggle('done');zaehleFunde();});
+    d.addEventListener('click',function(){d.classList.toggle('done');zähleFunde();});
     g.appendChild(d);
   });
   var bg=$q('bgrid');

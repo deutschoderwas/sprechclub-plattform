@@ -1,14 +1,14 @@
 /* ============================================================
    mach-katalog.js — bringt die fertigen Seiten in den Lernbereich
 
-   Im Ordner liegen fast 400 HTML-Seiten. Ueber die drei Tueren
+   Im Ordner liegen fast 400 HTML-Seiten. Über die drei Tueren
    erreichbar waren davon nur 51. Der Rest — Themenlektionen,
    Wortschatzboosts, Aussprache-Lektionen, Spielseiten, die
-   "vorbereitung-"-Seiten zum Ueben — war fertig und unsichtbar.
+   "vorbereitung-"-Seiten zum Üben — war fertig und unsichtbar.
 
    Dazu kam das Umgekehrte: ueben.js hat den Link "Passende Lektion"
    aus dem Themennamen geraten (wortschatz-<id>-b1.html). Von 169
-   solchen Links fuehrten 118 auf eine Seite, die es nicht gibt.
+   solchen Links führten 118 auf eine Seite, die es nicht gibt.
 
    Dieses Skript liest den Ordner und schreibt lektionen-katalog.js:
 
@@ -45,7 +45,7 @@ function art(f) {
   if (/^aussprache-/.test(f)) return 'aussprache';
   if (/^sprachspielclub-/.test(f)) return 'spiel';
   if (/^sprechclub-/.test(f)) return 'sprechen';
-  if (/^vorbereitung-/.test(f)) return 'ueben';
+  if (/^vorbereitung-/.test(f)) return 'üben';
   if (/-handout\.html$/.test(f)) return 'handout';
   if (/-lektion\.html$/.test(f)) return 'lektion';
   return 'lektion';
@@ -76,7 +76,7 @@ function titel(datei, roh) {
   /* Steht im Titel ein Zeilenumbruch mitten im Bindestrichwort
      ("Work-Life-<br>Balance"), bleibt nach dem Entfernen der Tags ein
      Leerzeichen hinter dem Bindestrich stehen. Nur zusammenziehen,
-     wenn danach ein grosser Buchstabe folgt — "Wort- und Satzakzent"
+     wenn danach ein großer Buchstabe folgt — "Wort- und Satzakzent"
      muss so bleiben, wie es ist. */
   t = t.replace(/(\w)-\s+([A-ZÄÖÜ])/g, '$1-$2');
   t = t.replace(/\s*[·|–-]\s*(deutschoderwas|Lektion|Kurs)\s*$/i, '').trim();
@@ -84,32 +84,32 @@ function titel(datei, roh) {
   return t;
 }
 
-/* ---------- 5. Welche Seite gehoert zu welchem Bereich? ----------
+/* ---------- 5. Welche Seite gehört zu welchem Bereich? ----------
    Die Stichworte stehen hier von Hand. Ein Wort trifft, wenn es im
-   Dateinamen vorkommt. Gewinnt das laengste Wort — so schlaegt
+   Dateinamen vorkommt. Gewinnt das längste Wort — so schlaegt
    "wohnungssuche" das allgemeinere "wohnen". */
 const STICH = {
-  cafe: ['cafe', 'baecker', 'kaffee'],
+  cafe: ['cafe', 'bäcker', 'kaffee'],
   restaurant: ['restaurant', 'foodtrends', 'essen-restaurant'],
   supermarkt: ['supermarkt', 'einkaufen', 'reklamation', 'umtausch', 'teurer', 'second-hand'],
   kleidung: ['kleidung', 'shopping'],
-  kochen: ['kochen', 'ernaehrung', 'sommer'],
+  kochen: ['kochen', 'ernährung', 'sommer'],
   verkaufen: ['verkaufen', 'online-kaufen'],
   apotheke: ['apotheke'],
-  arzt: ['arzt', 'krankmelden', 'gesundheitssystem', 'koerper-gesundheit', 'mentale-gesundheit'],
+  arzt: ['arzt', 'krankmelden', 'gesundheitssystem', 'körper-gesundheit', 'mentale-gesundheit'],
   zahnarzt: ['zahnarzt'],
   notfall: ['notfall', 'krankenhaus'],
   kasse: ['krankenkasse', 'versicherung'],
-  amt: ['amt', 'behoerde', 'buerokratie', 'einbuergerung', 'leben-in-deutschland'],
-  bank: ['bank', 'sparen', 'bargeld', 'geld-konsum', 'ueber-geld', 'geld-glueck'],
-  vertraege: ['vertrag', 'handy'],
+  amt: ['amt', 'behörde', 'bürokratie', 'einbuergerung', 'leben-in-deutschland'],
+  bank: ['bank', 'sparen', 'bargeld', 'geld-konsum', 'über-geld', 'geld-glück'],
+  verträge: ['vertrag', 'handy'],
   post: ['post-paket'],
   polizei: ['polizei'],
   unterwegs: ['oeffis', 'mobilitaet', 'weg-fragen', 'bahn'],
   werkstatt: ['werkstatt'],
   reise: ['reisen', 'urlaub', 'reiseplanung', 'strand', 'freibad', 'hotel'],
   wohnen: ['wohnen', 'wohnung', 'nachbarn', 'umzug', 'hausordnung', 'wohnformen', 'wohnungsnot', 'mietwahnsinn', 'minimalismus', 'wimmelbild', 'stadt-oder-land'],
-  freunde: ['freundschaft', 'beziehungen', 'dating', 'kennenlernen', 'small-talk', 'netzwerken', 'peinliche', 'nostalgie', 'glueck', 'emotionen', 'gefuehle', 'charaktereigenschaften'],
+  freunde: ['freundschaft', 'beziehungen', 'dating', 'kennenlernen', 'small-talk', 'netzwerken', 'peinliche', 'nostalgie', 'glück', 'emotionen', 'gefühle', 'charaktereigenschaften'],
   familie: ['familie', 'generationen'],
   schule: ['schule', 'bildung', 'kita'],
   feste: ['feste', 'braeuche', 'traditionen', 'kultur', 'typisch-deutsch', 'aberglaube'],
@@ -124,8 +124,8 @@ const STICH = {
   bau: ['bau-lektion', 'baustelle'],
   'elektro-shk': ['elektro'],
   metall: ['metall'],
-  fahren: ['fahren', 'fuehrerschein'],
-  kueche: ['kueche'],
+  fahren: ['fahren', 'führerschein'],
+  küche: ['küche'],
   hotel: ['hotel-lektion'],
   handel: ['handel'],
   reinigung: ['reinigung'],
@@ -133,7 +133,7 @@ const STICH = {
   produktion: ['produktion'],
   it: ['ki-alltag', 'ki-arbeitswelt', 'digital-detox', 'streaming'],
   ingenieur: ['ingenieur'],
-  buero: ['buero', 'homeoffice'],
+  büro: ['büro', 'homeoffice'],
   buchhaltung: ['buchhaltung', 'wirtschaft'],
   'friseur-beruf': ['friseur'],
   landwirtschaft: ['landwirtschaft'],
@@ -153,11 +153,11 @@ STICH.kochen.push('wortschatz-essen');
 STICH.arzt.push('wortschatz-gesundheit', 'sport-gesund', 'sport-lebensstil');
 STICH.wohnen.push('maengel', 'wortschatz-stadt');
 STICH.landwirtschaft.push('wortschatz-natur');
-STICH.sprachkurs.push('nominalisierung', 'relativsaetze', 'wechselpraepositionen',
+STICH.sprachkurs.push('nominalisierung', 'relativsätze', 'wechselpraepositionen',
   'konnektoren', 'passiv', 'nomen-verb', 'konjunktiv', 'praeposition');
 delete STICH._nach_freunde; delete STICH._nach;
 /* Nachgetragen, nachdem der Unterrichtsordner dazukam: neue Themen und
-   dieselben Woerter in zusammengeschriebener Form (smalltalk statt
+   dieselben Wörter in zusammengeschriebener Form (smalltalk statt
    small-talk, secondhand statt second-hand). */
 STICH.feste.push('geburtstag');
 STICH.familie.push('haustiere');
@@ -178,7 +178,7 @@ STICH.kochen.push('vegan');
 
 function bereichVon(f, ids) {
   const s = f.toLowerCase().replace(/\.html$/, '').replace(/^vorbereitung-/, '');
-  /* "it-lektion.html" gehoert zu "it" — dafuer braucht es kein Stichwort. */
+  /* "it-lektion.html" gehört zu "it" — dafür braucht es kein Stichwort. */
   if (ids) { const t = s.replace(/-lektion$/, ''); if (ids.indexOf(t) >= 0) return t; }
   let best = null, len = 0;
   Object.keys(STICH).forEach(id => {
@@ -217,14 +217,14 @@ function einlesen(ordner, praefix, rang, artFest) {
 }
 einlesen('.', '', 1);
 /* Seit Ende Juli liegt im Ordner Unterricht-ab-27-07 eine zweite,
-   viel ausfuehrlichere Fassung: 78 Lektionen zu je rund 157 KB, jede
-   mit ihrer Uebungsseite daneben. 46 Themen gibt es NUR dort. Wo es
-   beide gibt, ist die neue zwischen zwei- und sechsmal so gross —
-   deshalb gewinnt sie (rang 2) und die alte faellt weg. */
+   viel ausführlichere Fassung: 78 Lektionen zu je rund 157 KB, jede
+   mit ihrer Übungsseite daneben. 46 Themen gibt es NUR dort. Wo es
+   beide gibt, ist die neue zwischen zwei- und sechsmal so groß —
+   deshalb gewinnt sie (rang 2) und die alte fällt weg. */
 einlesen('Unterricht-ab-27-07', 'Unterricht-ab-27-07/', 2);
-einlesen('Unterricht-ab-27-07/Vorbereitung', 'Unterricht-ab-27-07/Vorbereitung/', 2, 'ueben');
+einlesen('Unterricht-ab-27-07/Vorbereitung', 'Unterricht-ab-27-07/Vorbereitung/', 2, 'üben');
 
-/* Uebungs- und Handout-Seiten haengen an ihrer Lektion, nicht daneben */
+/* Übungs- und Handout-Seiten hängen an ihrer Lektion, nicht daneben */
 function kern(f) {
   return f.replace(/^.*\//, '')
     .replace(/\.html$/, '')
@@ -240,10 +240,10 @@ seiten.forEach(s => { const k = kern(s.d); (nachSlug[k] = nachSlug[k] || []).pus
 const haupt = [];
 Object.keys(nachSlug).forEach(slug => {
   const g = nachSlug[slug];
-  const lektionen = g.filter(x => x.art !== 'ueben' && x.art !== 'handout')
+  const lektionen = g.filter(x => x.art !== 'üben' && x.art !== 'handout')
                      .sort((a, b) => (b.rang || 1) - (a.rang || 1));
   const l = lektionen[0];
-  const u = g.filter(x => x.art === 'ueben').sort((a, b) => (b.rang || 1) - (a.rang || 1))[0];
+  const u = g.filter(x => x.art === 'üben').sort((a, b) => (b.rang || 1) - (a.rang || 1))[0];
   const h = g.filter(x => x.art === 'handout')[0];
   const k = l || u || h;
   if (!k) return;
@@ -281,7 +281,7 @@ BEREICHE.forEach(b => {
     if (!themaZuBereich[id]) themaZuBereich[id] = b;
   }));
 });
-function bildFuerThema(id) {
+function bildFürThema(id) {
   if (daIst('bilder/thema/' + id + '.jpg')) return 'bilder/thema/' + id + '.jpg';
   const b = themaZuBereich[id];
   if (b && b.bild && daIst('amanda/' + b.bild + '.webp')) return 'amanda/' + b.bild + '.webp';
@@ -289,14 +289,14 @@ function bildFuerThema(id) {
 }
 const themaBild = {};
 SKILLS.forEach(sk => (sk.themes || []).forEach(t => {
-  const f = bildFuerThema(t.id);
+  const f = bildFürThema(t.id);
   if (f) themaBild[t.id] = f;
 }));
 
 /* ---------- 7c. Ein Bild für jede Seite ---------- */
 const bereichNach = {};
 BEREICHE.forEach(b => { bereichNach[b.id] = b; });
-function bildFuerSeite(s) {
+function bildFürSeite(s) {
   const slug = s.d.replace(/\.html$/, '').replace(/^vorbereitung-/, '');
   const eigen = ['bilder/thema/' + slug + '.jpg', 'illu/' + slug + '.jpg', 'illu/th-' + slug + '.jpg'];
   for (const f of eigen) if (daIst(f)) return f;
@@ -310,29 +310,29 @@ const RANG = { A1: 1, 'A1–A2': 1, A2: 2, 'A1–B1': 2, 'A2–B1': 3, B1: 4, 'B
 haupt.sort((a, b) => (RANG[a.lvl] || 9) - (RANG[b.lvl] || 9) || a.t.localeCompare(b.t, 'de'));
 
 /* Manche Themen liegen zweimal im Ordner: die kurze alte Seite und die
-   ausfuehrliche neue aus dem Unterrichtsordner, unter verschiedenen
+   ausführliche neue aus dem Unterrichtsordner, unter verschiedenen
    Dateinamen, aber mit demselben Titel. Zweimal "Beim Friseur"
-   untereinander sieht nach Fehler aus. Die alte faellt weg. */
+   untereinander sieht nach Fehler aus. Die alte fällt weg. */
 const nachTitel = {};
 haupt.forEach(s => { const t = s.t.trim().toLowerCase(); (nachTitel[t] = nachTitel[t] || []).push(s); });
 const raus = new Set();
 Object.keys(nachTitel).forEach(t => {
   const g = nachTitel[t];
   if (g.length < 2) return;
-  const hoechster = Math.max(...g.map(x => x.rang || 1));
-  if (hoechster < 2) return;                       // beide gleich alt: beide bleiben
-  g.forEach(x => { if ((x.rang || 1) < hoechster) raus.add(x.d); });
+  const höchster = Math.max(...g.map(x => x.rang || 1));
+  if (höchster < 2) return;                       // beide gleich alt: beide bleiben
+  g.forEach(x => { if ((x.rang || 1) < höchster) raus.add(x.d); });
 });
 for (let i = haupt.length - 1; i >= 0; i--) if (raus.has(haupt[i].d)) haupt.splice(i, 1);
 
-haupt.forEach(s => { const f = bildFuerSeite(s); if (f) s.img = f; });
+haupt.forEach(s => { const f = bildFürSeite(s); if (f) s.img = f; });
 
 /* Die Hauptlektion eines Bereichs steht schon oben im Weg —
    sie darf unten nicht noch einmal auftauchen. */
 const schonOben = {};
 BEREICHE.forEach(b => { if (b.lek) schonOben[b.lek] = 1; });
-/* Was schon als Lektion eines Uebungsthemas erreichbar ist, steht
-   nicht noch einmal in der Liste darunter. Sonst waere "Im
+/* Was schon als Lektion eines Übungsthemas erreichbar ist, steht
+   nicht noch einmal in der Liste darunter. Sonst wäre "Im
    Deutschkurs" wieder das, was der Lernbereich vorher war: eine
    Halde mit 62 Kacheln. */
 Object.keys(zu).forEach(k => { schonOben[zu[k]] = 1; });
@@ -345,15 +345,15 @@ if (require.main === module) {
   const kopf = `/* ============================================================
    lektionen-katalog.js — welche fertigen Seiten es wirklich gibt
 
-   Erzeugt von bau/mach-katalog.js. Nicht von Hand aendern.
+   Erzeugt von bau/mach-katalog.js. Nicht von Hand ändern.
 
    Vorher hat ueben.js den Link "Passende Lektion" aus dem
-   Themennamen geraten. Von 169 Links fuehrten 118 ins Leere.
-   Und fast 200 fertige Seiten waren ueber den Lernbereich
-   ueberhaupt nicht zu erreichen.
+   Themennamen geraten. Von 169 Links führten 118 ins Leere.
+   Und fast 200 fertige Seiten waren über den Lernbereich
+   überhaupt nicht zu erreichen.
 
    Hier steht, was da ist: Titel, Niveau, Art und der Bereich,
-   in den die Seite gehoert. Was fehlt, steht nicht drin — dann
+   in den die Seite gehört. Was fehlt, steht nicht drin — dann
    zeigt die Oberflaeche eben keinen Knopf statt einen toten.
    ============================================================ */
 `;
@@ -370,7 +370,7 @@ if (require.main === module) {
   const ohne = haupt.filter(s => !s.b);
   let themen = 0; SKILLS.forEach(sk => themen += (sk.themes || []).length);
   console.log('Seiten im Katalog: ' + haupt.length + ' ' + JSON.stringify(nachArt));
-  console.log('mit Uebungsseite: ' + haupt.filter(s => s.ueb).length +
+  console.log('mit Übungsseite: ' + haupt.filter(s => s.ueb).length +
     ', mit Handout: ' + haupt.filter(s => s.hand).length +
     ', mit Bild: ' + haupt.filter(s => s.img).length);
   console.log('Bereiche mit Seiten: ' + Object.keys(mehr).length +

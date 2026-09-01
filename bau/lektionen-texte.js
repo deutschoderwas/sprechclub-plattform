@@ -19,7 +19,7 @@ module.exports = {
   fragen: ['Was verkauft die Person auf dem Bild?', 'Was möchtest du wissen, bevor du etwas Gebrauchtes kaufst?', 'Was schreibst du, wenn der Preis zu hoch ist?'],
   debatte: {
     frage: 'Gebraucht kaufen oder neu kaufen?',
-    fuer: 'Gebraucht', gegen: 'Neu',
+    für: 'Gebraucht', gegen: 'Neu',
     pro: ['Es kostet oft die Hälfte.', 'Nichts wird weggeworfen, was noch funktioniert.', 'Manche Sachen gibt es neu gar nicht mehr.'],
     con: ['Es gibt Garantie, wenn etwas kaputtgeht.', 'Man weiß genau, was man bekommt.', 'Man muss nichts abholen und nicht verhandeln.']
   },
@@ -32,7 +32,7 @@ module.exports = {
   fragen: ['Was macht die Person hinter der Theke?', 'Was sagst du, wenn du Kopfschmerzen hast?', 'Was fragst du, bevor du ein Medikament nimmst?'],
   debatte: {
     frage: 'Medikamente online bestellen — gut oder gefährlich?',
-    fuer: 'Online bestellen', gegen: 'In der Apotheke',
+    für: 'Online bestellen', gegen: 'In der Apotheke',
     pro: ['Es ist deutlich billiger.', 'Man kann auch abends und sonntags bestellen.', 'Wer schlecht laufen kann, spart sich den Weg.'],
     con: ['In der Apotheke wird man beraten und gefragt.', 'Man bekommt es sofort, nicht erst in drei Tagen.', 'Bei Wechselwirkungen schaut jemand mit.']
   },
@@ -45,7 +45,7 @@ module.exports = {
   fragen: ['Was ist der Person auf dem Bild passiert?', 'Welche Nummer wählst du im Notfall?', 'Was sagst du zuerst am Telefon?'],
   debatte: {
     frage: 'Bei welchen Beschwerden geht man in die Notaufnahme?',
-    fuer: 'Lieber einmal zu viel', gegen: 'Nur im echten Notfall',
+    für: 'Lieber einmal zu viel', gegen: 'Nur im echten Notfall',
     pro: ['Bei Brustschmerzen kann man nicht abwarten.', 'Am Wochenende ist keine Praxis offen.', 'Auch Angst ist ein Grund — Sicherheit hilft.'],
     con: ['Wer nicht dringend ist, wartet dort stundenlang.', 'Der Hausarzt kennt die Vorgeschichte.', 'Der Notdienst am Telefon sagt, was nötig ist.']
   },
@@ -58,7 +58,7 @@ module.exports = {
   fragen: ['Was bekommt die Person am Schreibtisch gerade?', 'Welche Versicherungen kennst du in Deutschland?', 'Was machst du, wenn ein Brief von der Kasse kommt?'],
   debatte: {
     frage: 'Braucht man eine Zusatzversicherung?',
-    fuer: 'Zusatzversicherung', gegen: 'Nur die gesetzliche',
+    für: 'Zusatzversicherung', gegen: 'Nur die gesetzliche',
     pro: ['Beim Zahnarzt zahlt man sonst viel selbst.', 'Eine Brille kostet schnell mehrere hundert Euro.', 'Im Krankenhaus bekommt man ein ruhigeres Zimmer.'],
     con: ['Die Grundversorgung ist bezahlt, und die reicht meistens.', 'Man zahlt jahrelang für etwas, das man selten braucht.', 'Das Geld kann man auch selbst zurücklegen.']
   },
@@ -71,7 +71,7 @@ module.exports = {
   fragen: ['Was macht der Mechaniker auf dem Bild?', 'Wie beschreibst du ein Geräusch, wenn du das Wort nicht kennst?', 'Was fragst du, bevor die Werkstatt anfängt?'],
   debatte: {
     frage: 'Kleine Reparaturen selbst machen oder machen lassen?',
-    fuer: 'Selbst machen', gegen: 'In die Werkstatt',
+    für: 'Selbst machen', gegen: 'In die Werkstatt',
     pro: ['Ein Ölwechsel ist keine Wissenschaft.', 'Man spart die Arbeitsstunde, und die ist teuer.', 'Man lernt sein Auto kennen.'],
     con: ['Bei den Bremsen geht es um Leben.', 'Ohne Werkstattnachweis kann die Garantie weg sein.', 'Werkzeug für einmal lohnt sich nicht.']
   },
@@ -84,7 +84,7 @@ module.exports = {
   fragen: ['Wer wartet auf dem Bild an der Tür?', 'Was sagst du, wenn dein Kind krank ist?', 'Was möchtest du beim Elterngespräch wissen?'],
   debatte: {
     frage: 'Hausaufgaben — sinnvoll oder zu viel?',
-    fuer: 'Sinnvoll', gegen: 'Zu viel',
+    für: 'Sinnvoll', gegen: 'Zu viel',
     pro: ['Ohne Üben bleibt nichts hängen.', 'Kinder lernen, sich selbst zu organisieren.', 'Eltern sehen, was in der Schule gerade läuft.'],
     con: ['Nach acht Stunden Schule ist der Kopf voll.', 'Wer zu Hause keine Hilfe hat, fällt weiter zurück.', 'Der Nachmittag gehört auch der Familie.']
   },
@@ -99,7 +99,7 @@ module.exports = {
   fragen: ['Wer sitzt auf dem Bild wem gegenüber?', 'Was sagst du in den ersten dreißig Sekunden?', 'Welche Frage stellst du am Ende selbst?'],
   debatte: {
     frage: 'Foto in der Bewerbung — ja oder nein?',
-    fuer: 'Mit Foto', gegen: 'Ohne Foto',
+    für: 'Mit Foto', gegen: 'Ohne Foto',
     pro: ['Ein Gesicht bleibt eher im Kopf.', 'Es wirkt persönlicher und offener.', 'In manchen Branchen wird es erwartet.'],
     con: ['Es zählt die Qualifikation, nicht das Aussehen.', 'Ein Foto lädt zu Vorurteilen ein.', 'In vielen Ländern ist es längst unüblich.']
   },
@@ -112,7 +112,7 @@ module.exports = {
   fragen: ['Was zeigt der Kollege der neuen Person?', 'Was fragst du am ersten Tag zuerst?', 'Wie sagst du, dass du etwas nicht verstanden hast?'],
   debatte: {
     frage: 'Am Anfang lieber viel fragen oder erst zuschauen?',
-    fuer: 'Fragen', gegen: 'Zuschauen',
+    für: 'Fragen', gegen: 'Zuschauen',
     pro: ['Wer nicht fragt, macht es wochenlang falsch.', 'Fragen zeigt Interesse, nicht Schwäche.', 'Am Anfang darf man alles fragen — später nicht mehr.'],
     con: ['Man stört Kollegen mitten in der Arbeit.', 'Vieles klärt sich beim Zusehen von selbst.', 'Wer erst schaut, stellt danach die besseren Fragen.']
   },
@@ -125,7 +125,7 @@ module.exports = {
   fragen: ['Was hält die Person auf dem Bild in der Hand?', 'Wen rufst du an, wenn du krank bist — und wann?', 'Wie beantragst du Urlaub?'],
   debatte: {
     frage: 'Krank zur Arbeit gehen — nie oder manchmal doch?',
-    fuer: 'Manchmal ja', gegen: 'Nie',
+    für: 'Manchmal ja', gegen: 'Nie',
     pro: ['Bei einer leichten Erkältung geht es oft.', 'Das Team ist knapp, andere müssen einspringen.', 'Zu Hause sitzen macht auch nicht gesünder.'],
     con: ['Man steckt Kollegen und Kunden an.', 'Man wird langsamer gesund und fällt länger aus.', 'Fehler passieren, wenn man nicht klar denkt.']
   },
@@ -138,7 +138,7 @@ module.exports = {
   fragen: ['Wie sitzen die beiden auf dem Bild zueinander?', 'Wie sagst du Nein, ohne unhöflich zu sein?', 'Was sagst du, wenn dir ein Fehler passiert ist?'],
   debatte: {
     frage: 'Kritik sofort ansprechen oder abwarten?',
-    fuer: 'Sofort ansprechen', gegen: 'Abwarten',
+    für: 'Sofort ansprechen', gegen: 'Abwarten',
     pro: ['Später erinnert sich niemand an die Einzelheiten.', 'Ärger wächst, wenn man ihn schluckt.', 'Wer sofort spricht, spricht meist noch sachlich.'],
     con: ['Im ersten Ärger sagt man Dinge, die man bereut.', 'Der andere hört besser zu, wenn Ruhe ist.', 'Manches erledigt sich von selbst.']
   },
@@ -153,7 +153,7 @@ module.exports = {
   fragen: ['Wer arbeitet auf dem Bild, wer wird begleitet?', 'Was sagst du zu Beginn deiner Schicht?', 'Welche drei Dinge gehören in jede Übergabe?'],
   debatte: {
     frage: 'Sollen Angehörige bei der Pflege dabei sein?',
-    fuer: 'Dabei sein', gegen: 'Draußen bleiben',
+    für: 'Dabei sein', gegen: 'Draußen bleiben',
     pro: ['Sie kennen den Menschen seit Jahrzehnten.', 'Vertraute Stimmen beruhigen.', 'Sie sehen, wie viel Arbeit dahintersteckt.'],
     con: ['Die Pflege dauert doppelt so lange.', 'Manches ist für die Familie schwer auszuhalten.', 'Viele schämen sich vor den eigenen Kindern.']
   },
@@ -166,7 +166,7 @@ module.exports = {
   fragen: ['Wer spricht auf dem Bild mit wem?', 'Welche Fragen stellst du zuerst?', 'Wie erklärst du einen Befund ohne Fachwörter?'],
   debatte: {
     frage: 'Wie viel Fachsprache verträgt ein Patientengespräch?',
-    fuer: 'Fachbegriffe nennen', gegen: 'Einfache Worte',
+    für: 'Fachbegriffe nennen', gegen: 'Einfache Worte',
     pro: ['Der richtige Begriff steht später auch im Brief.', 'Patienten können danach selbst nachlesen.', 'Es klingt genau und nicht ungefähr.'],
     con: ['Wer nichts versteht, fragt nicht mehr nach.', 'Angst wächst mit fremden Wörtern.', 'Nur verstandene Anweisungen werden befolgt.']
   },
@@ -179,7 +179,7 @@ module.exports = {
   fragen: ['Was machen die Kinder auf dem Bild?', 'Was erzählst du Eltern beim Abholen?', 'Wie sprichst du mit einem Kind, das weint?'],
   debatte: {
     frage: 'Wie früh sollen Kinder in die Kita?',
-    fuer: 'Früh', gegen: 'Später',
+    für: 'Früh', gegen: 'Später',
     pro: ['Kinder lernen Sprache am schnellsten von Kindern.', 'Eltern können arbeiten und bleiben unabhängig.', 'Feste Zeiten geben Kindern Sicherheit.'],
     con: ['Ganz Kleine brauchen wenige feste Bezugspersonen.', 'Die Gruppen sind oft zu groß.', 'Die ersten Jahre kommen nie wieder.']
   },
@@ -192,20 +192,20 @@ module.exports = {
   fragen: ['Was transportiert die Person auf dem Bild?', 'Was sagst du, wenn du im Stau stehst?', 'Was machst du, wenn niemand öffnet?'],
   debatte: {
     frage: 'Pakete beim Nachbarn abgeben — praktisch oder problematisch?',
-    fuer: 'Beim Nachbarn abgeben', gegen: 'Wieder mitnehmen',
+    für: 'Beim Nachbarn abgeben', gegen: 'Wieder mitnehmen',
     pro: ['Eine zweite Fahrt kostet Zeit und Sprit.', 'Der Kunde hat sein Paket noch heute.', 'Die meisten Nachbarn helfen gern.'],
     con: ['Ohne Erlaubnis ist es heikel.', 'Manche Nachbarn kennt man gar nicht.', 'Bei Verlust steht der Fahrer gerade.']
   },
   sprechen: ['Ruf an und melde eine Stunde Verspätung.', 'Klär eine unklare Adresse am Telefon.', 'Übergib ein Paket und lass unterschreiben.'],
   neunzig: 'Erzähle von deinem Arbeitstag auf der Straße.'
 },
-'kueche': {
+'küche': {
   titel: ['Küche —', 'Station & Bestellung'],
   ziel: 'Bestellungen annehmen, in der Küche kurz und klar reden, Allergien ernst nehmen.',
   fragen: ['Was macht die Person am Herd?', 'Wie sagst du in der Küche schnell Bescheid?', 'Was fragst du bei einer Allergie?'],
   debatte: {
     frage: 'Feste Karte oder wechselndes Tagesgericht?',
-    fuer: 'Feste Karte', gegen: 'Wechselndes Tagesgericht',
+    für: 'Feste Karte', gegen: 'Wechselndes Tagesgericht',
     pro: ['Alle Handgriffe sitzen, es geht schneller.', 'Der Einkauf ist planbar, es bleibt weniger übrig.', 'Gäste wissen, was sie bekommen.'],
     con: ['Frisches vom Markt landet sofort auf dem Teller.', 'Das Team langweilt sich nicht.', 'Stammgäste kommen öfter, weil es Neues gibt.']
   },
@@ -218,7 +218,7 @@ module.exports = {
   fragen: ['Was passiert am Empfang auf dem Bild?', 'Was fragst du beim Check-in?', 'Was sagst du, wenn ein Zimmer noch nicht fertig ist?'],
   debatte: {
     frage: 'Check-in am Automaten oder am Empfang?',
-    fuer: 'Automat', gegen: 'Empfang',
+    für: 'Automat', gegen: 'Empfang',
     pro: ['Keine Schlange nach einer langen Anreise.', 'Es geht rund um die Uhr.', 'Wer müde ist, will nicht reden.'],
     con: ['Ein Mensch löst Sonderwünsche in einer Minute.', 'Der erste Eindruck entscheidet über die Bewertung.', 'Bei Problemen steht man am Automaten allein.']
   },
@@ -231,7 +231,7 @@ module.exports = {
   fragen: ['Was macht die Verkäuferin auf dem Bild?', 'Wie sprichst du einen Kunden an?', 'Was sagst du, wenn etwas nicht mehr da ist?'],
   debatte: {
     frage: 'Braucht der Laden vor Ort noch eine Zukunft?',
-    fuer: 'Der Laden bleibt', gegen: 'Online gewinnt',
+    für: 'Der Laden bleibt', gegen: 'Online gewinnt',
     pro: ['Beraten, anfassen, anprobieren — das kann kein Paket.', 'Man hat es sofort, ohne zu warten.', 'Der Laden hält die Innenstadt am Leben.'],
     con: ['Online ist fast immer billiger.', 'Die Auswahl im Netz ist größer.', 'Dort ist auch sonntags um zehn geöffnet.']
   },
@@ -244,7 +244,7 @@ module.exports = {
   fragen: ['Was sieht die Person auf ihren Bildschirmen?', 'Welche Fragen stellst du bei einer Störung zuerst?', 'Wie erklärst du einen Schritt am Telefon?'],
   debatte: {
     frage: 'Homeoffice in der IT — dauerhaft oder nur manchmal?',
-    fuer: 'Dauerhaft Homeoffice', gegen: 'Vor Ort',
+    für: 'Dauerhaft Homeoffice', gegen: 'Vor Ort',
     pro: ['Konzentrierte Arbeit gelingt zu Hause besser.', 'Der Arbeitsweg fällt weg.', 'Man findet Leute, die weiter weg wohnen.'],
     con: ['Ein Blick über die Schulter spart eine Stunde Chat.', 'Neue Kollegen lernen vor Ort schneller.', 'Das Team bleibt zusammen, nicht nur verbunden.']
   },
@@ -257,7 +257,7 @@ module.exports = {
   fragen: ['Was liegt auf dem Schreibtisch auf dem Bild?', 'Worauf schaust du bei einer Rechnung zuerst?', 'Wie erinnerst du höflich an eine offene Zahlung?'],
   debatte: {
     frage: 'Alles digital oder Papier daneben behalten?',
-    fuer: 'Alles digital', gegen: 'Papier daneben',
+    für: 'Alles digital', gegen: 'Papier daneben',
     pro: ['Suchen dauert Sekunden statt Stunden.', 'Beim Umzug geht nichts verloren.', 'Zwei Personen können gleichzeitig hineinschauen.'],
     con: ['Ohne Strom und Netz kommt man nicht dran.', 'Auf Papier übersieht man weniger.', 'Manches will der Prüfer immer noch im Original.']
   },
@@ -270,7 +270,7 @@ module.exports = {
   fragen: ['Was passiert auf dem Bild im Salon?', 'Wie fragst du nach dem Wunsch?', 'Was sagst du, wenn ein Wunsch nicht geht?'],
   debatte: {
     frage: 'Soll man ehrlich sagen, dass eine Frisur nicht passt?',
-    fuer: 'Ehrlich sagen', gegen: 'Der Kunde entscheidet',
+    für: 'Ehrlich sagen', gegen: 'Der Kunde entscheidet',
     pro: ['Genau dafür geht man zu Fachleuten.', 'Unzufriedene Kunden kommen nicht wieder.', 'Ein ehrlicher Rat kostet nichts.'],
     con: ['Es ist der Kopf des Kunden, nicht meiner.', 'Über Geschmack lässt sich nicht streiten.', 'Wer sich bevormundet fühlt, geht woanders hin.']
   },
@@ -283,7 +283,7 @@ module.exports = {
   fragen: ['Was steht auf dem Bild neben der Person?', 'Welche Arbeit gehört zu welcher Jahreszeit?', 'Wie gibst du eine kurze Anweisung?'],
   debatte: {
     frage: 'Bio oder konventionell?',
-    fuer: 'Bio', gegen: 'Konventionell',
+    für: 'Bio', gegen: 'Konventionell',
     pro: ['Der Boden bleibt länger fruchtbar.', 'Weniger Chemie im Grundwasser.', 'Viele Kunden zahlen dafür mehr.'],
     con: ['Der Ertrag ist kleiner, das Essen teurer.', 'Nicht jeder kann sich Bio leisten.', 'Auch konventionell gelten strenge Regeln.']
   },
@@ -296,7 +296,7 @@ module.exports = {
   fragen: ['Wer sitzt auf dem Bild am Tisch?', 'Wie beginnst du ein Beratungsgespräch?', 'Wie fragst du nach, ohne zu drängen?'],
   debatte: {
     frage: 'Wie viel Nähe verträgt Beratung?',
-    fuer: 'Nähe', gegen: 'Abstand',
+    für: 'Nähe', gegen: 'Abstand',
     pro: ['Ohne Vertrauen erzählt niemand das Wesentliche.', 'Menschen kommen wieder, wenn sie sich gesehen fühlen.', 'Nähe heißt nicht Freundschaft.'],
     con: ['Zu viel Nähe macht es schwer, Nein zu sagen.', 'Abstand schützt auch die eigene Gesundheit.', 'Klare Rollen helfen beiden Seiten.']
   },
@@ -311,7 +311,7 @@ module.exports = {
   fragen: ['Was passiert auf dem Bild gerade?', 'Welche Nummer wählst du bei Gefahr?', 'Was sagst du, wenn dir etwas gestohlen wurde?'],
   debatte: {
     frage: 'Mehr Kameras auf öffentlichen Plätzen?',
-    fuer: 'Mehr Kameras', gegen: 'Weniger Kameras',
+    für: 'Mehr Kameras', gegen: 'Weniger Kameras',
     pro: ['Taten lassen sich hinterher aufklären.', 'Viele fühlen sich abends sicherer.', 'An Bahnhöfen hat es nachweislich geholfen.'],
     con: ['Beobachtet werden vor allem Unschuldige.', 'Wer filmt, verhindert die Tat nicht.', 'Die Aufnahmen landen irgendwo, und niemand weiß wo.']
   },
@@ -324,7 +324,7 @@ module.exports = {
   fragen: ['Was macht die Person auf dem Bild?', 'Was gehört auf jeder Baustelle zur Sicherheit?', 'Wie sagst du, dass etwas gefährlich ist?'],
   debatte: {
     frage: 'Muss man auf dem Bau laut werden, damit es läuft?',
-    fuer: 'Laut ist nötig', gegen: 'Ruhig geht besser',
+    für: 'Laut ist nötig', gegen: 'Ruhig geht besser',
     pro: ['Neben der Maschine hört man sonst nichts.', 'Bei Gefahr muss es sofort ankommen.', 'Ein kurzer Ruf ist schneller als eine Erklärung.'],
     con: ['Wer angeschrien wird, fragt nicht mehr nach.', 'Missverständnisse kosten mehr als eine Minute Erklärung.', 'Absprachen am Morgen sparen das Rufen am Nachmittag.']
   },
@@ -337,7 +337,7 @@ module.exports = {
   fragen: ['Woran arbeitet die Person auf dem Bild?', 'Was prüfst du, bevor du anfängst?', 'Wie erklärst du einem Kunden ein Problem ohne Fachwörter?'],
   debatte: {
     frage: 'Reparieren oder gleich austauschen?',
-    fuer: 'Reparieren', gegen: 'Austauschen',
+    für: 'Reparieren', gegen: 'Austauschen',
     pro: ['Ein Ersatzteil ist billiger als ein neues Gerät.', 'Es entsteht weniger Müll.', 'Die alte Anlage kennt man in- und auswendig.'],
     con: ['Neue Geräte verbrauchen deutlich weniger.', 'Bei alten Anlagen kommt bald das nächste Teil.', 'Für Ersatzteile gibt es oft keine Garantie mehr.']
   },
@@ -350,7 +350,7 @@ module.exports = {
   fragen: ['Was liegt auf dem Bild auf der Werkbank?', 'Was schaust du dir auf einer Zeichnung zuerst an?', 'Was machst du, wenn ein Maß nicht stimmt?'],
   debatte: {
     frage: 'Lieber schnell arbeiten oder lieber genau?',
-    fuer: 'Tempo', gegen: 'Genauigkeit',
+    für: 'Tempo', gegen: 'Genauigkeit',
     pro: ['Der Auftrag hat einen Termin.', 'Wer ewig misst, wird nie fertig.', 'Nicht jedes Teil braucht ein Zehntel.'],
     con: ['Nacharbeit kostet doppelt so viel Zeit.', 'Ein falsches Maß fällt erst beim Kunden auf.', 'Sicherheitsteile verzeihen keinen Fehler.']
   },
@@ -363,7 +363,7 @@ module.exports = {
   fragen: ['Was hat die Person auf dem Bild dabei?', 'Was machst du zuerst, wenn du einen Raum betrittst?', 'Was sagst du, wenn etwas fehlt?'],
   debatte: {
     frage: 'Reinigung tagsüber oder nach Feierabend?',
-    fuer: 'Tagsüber', gegen: 'Nach Feierabend',
+    für: 'Tagsüber', gegen: 'Nach Feierabend',
     pro: ['Fragen lassen sich sofort klären.', 'Man ist nicht allein im Haus.', 'Die Zeiten passen besser zur Familie.'],
     con: ['Niemand wird bei der Arbeit gestört.', 'Man kommt überall hinein, auch in Besprechungsräume.', 'Ohne Publikum geht es schneller.']
   },
@@ -376,7 +376,7 @@ module.exports = {
   fragen: ['Was steht auf dem Bild in den Regalen?', 'Was prüfst du beim Wareneingang?', 'Was machst du, wenn der Bestand nicht stimmt?'],
   debatte: {
     frage: 'Alles per Scanner oder auch auf Papier?',
-    fuer: 'Scanner', gegen: 'Papier',
+    für: 'Scanner', gegen: 'Papier',
     pro: ['Der Bestand stimmt in Echtzeit.', 'Es gibt weniger Zahlendreher.', 'Jeder sieht sofort, wo die Ware steht.'],
     con: ['Fällt das System aus, steht alles.', 'Auf Papier schreibt man schnell etwas dazu.', 'Nicht jeder kommt mit dem Gerät zurecht.']
   },
@@ -389,7 +389,7 @@ module.exports = {
   fragen: ['Was macht die Person auf dem Bild an der Anlage?', 'Was tust du zuerst, wenn die Maschine steht?', 'Wie meldest du einen Qualitätsfehler?'],
   debatte: {
     frage: 'Zählt am Ende Stückzahl oder Qualität?',
-    fuer: 'Stückzahl', gegen: 'Qualität',
+    für: 'Stückzahl', gegen: 'Qualität',
     pro: ['Ohne Menge trägt sich die Linie nicht.', 'Kunden bestellen Termine, keine Absichten.', 'Wer zu langsam ist, verliert den Auftrag.'],
     con: ['Ausschuss kostet Material und Zeit doppelt.', 'Eine Reklamation kostet mehr als eine Stunde Stillstand.', 'Den guten Ruf verliert man nur einmal.']
   },
@@ -402,7 +402,7 @@ module.exports = {
   fragen: ['Was hält die Person auf dem Bild in der Hand?', 'Was klärst du am Anfang eines Projekts?', 'Wie begründest du eine Änderung?'],
   debatte: {
     frage: 'Lieber früh liefern oder lieber vollständig?',
-    fuer: 'Früh liefern', gegen: 'Vollständig liefern',
+    für: 'Früh liefern', gegen: 'Vollständig liefern',
     pro: ['Man sieht schnell, ob die Richtung stimmt.', 'Frühe Änderungen sind billig.', 'Der Kunde bleibt im Bild.'],
     con: ['Halbfertiges bleibt als „funktioniert nicht“ im Kopf.', 'Nachbessern kostet Vertrauen.', 'Jede Zwischenlieferung bindet Zeit.']
   },
@@ -417,7 +417,7 @@ module.exports = {
   fragen: ['Was macht die Person auf dem Bild gerade?', 'Was musstest du in den ersten Wochen erledigen?', 'Wo hast du Hilfe gefunden, als du etwas nicht verstanden hast?'],
   debatte: {
     frage: 'Sollte man Ämter auf Englisch bedienen dürfen?',
-    fuer: 'Ja, auf Englisch', gegen: 'Nein, auf Deutsch',
+    für: 'Ja, auf Englisch', gegen: 'Nein, auf Deutsch',
     pro: ['Wichtige Fristen verpasst niemand mehr aus Sprachgründen.', 'Die Beratung wird schneller und billiger.', 'Wer arbeitet, hat oft keine Zeit für einen Kurs vorher.'],
     con: ['Deutsch lernt man am schnellsten, wenn man es braucht.', 'Rechtlich zählt am Ende der deutsche Text.', 'Für einfache Sprache braucht es kein Englisch.']
   },
@@ -430,7 +430,7 @@ module.exports = {
   fragen: ['Was passiert auf dem Bild im Kurs?', 'Was machst du, wenn du etwas nicht verstanden hast?', 'Wie übst du zu Hause?'],
   debatte: {
     frage: 'Im Kurs nur Deutsch — oder darf die Muttersprache helfen?',
-    fuer: 'Nur Deutsch', gegen: 'Muttersprache erlaubt',
+    für: 'Nur Deutsch', gegen: 'Muttersprache erlaubt',
     pro: ['Man gewöhnt sich schneller ans Zuhören.', 'Alle im Raum verstehen dasselbe.', 'Man traut sich früher zu sprechen.'],
     con: ['Eine Erklärung in der Muttersprache spart zehn Minuten Rätseln.', 'Wer nichts versteht, schaltet ab.', 'Grammatik versteht man einmal richtig — dann nie wieder.']
   },
@@ -443,7 +443,7 @@ module.exports = {
   fragen: ['Worüber sprechen die beiden auf dem Bild?', 'Welchen Abschluss hast du — und zählt er hier?', 'Was wäre dein nächster Schritt im Beruf?'],
   debatte: {
     frage: 'Erst arbeiten oder erst die Sprache?',
-    fuer: 'Erst arbeiten', gegen: 'Erst die Sprache',
+    für: 'Erst arbeiten', gegen: 'Erst die Sprache',
     pro: ['Im Betrieb lernt man die Sprache, die man wirklich braucht.', 'Man verdient Geld und wartet nicht.', 'Kontakte entstehen bei der Arbeit, nicht im Kursraum.'],
     con: ['Ohne B2 bleibt der Beruf verschlossen, den man gelernt hat.', 'Ein Kurs geht später nur noch abends.', 'Wer unter seinem Niveau arbeitet, bleibt oft dort.']
   },
@@ -456,7 +456,7 @@ module.exports = {
   fragen: ['Was macht die Person auf dem Bild?', 'Was ist am Telefon schwerer als von Angesicht zu Angesicht?', 'Welchen Satz brauchst du, wenn du etwas nicht verstanden hast?'],
   debatte: {
     frage: 'Anrufen oder lieber schreiben?',
-    fuer: 'Anrufen', gegen: 'Schreiben',
+    für: 'Anrufen', gegen: 'Schreiben',
     pro: ['In zwei Minuten ist geklärt, was per Mail drei Tage dauert.', 'Man hört sofort, ob der andere einen verstanden hat.', 'Für die Sprache ist jedes Telefonat ein Training.'],
     con: ['Beim Schreiben hat man Zeit für die richtigen Wörter.', 'Man hat es später schwarz auf weiß.', 'Niemand muss sich für seinen Akzent schämen.']
   },
@@ -469,7 +469,7 @@ module.exports = {
   fragen: ['Was sieht die Person auf dem Bild auf ihrem Bildschirm?', 'Woher bekommst du deine Nachrichten?', 'Wie erkennst du, ob eine Nachricht stimmt?'],
   debatte: {
     frage: 'Nachrichten auf Deutsch oder in der Muttersprache?',
-    fuer: 'Auf Deutsch', gegen: 'In der Muttersprache',
+    für: 'Auf Deutsch', gegen: 'In der Muttersprache',
     pro: ['Man lernt jeden Tag Wörter, die hier zählen.', 'Man erfährt, worüber die Kollegen morgen reden.', 'Nachrichten in einfacher Sprache gibt es kostenlos.'],
     con: ['Man versteht Hintergründe wirklich, nicht nur die Hälfte.', 'Nach der Arbeit ist der Kopf müde.', 'Fehlende Details führen zu falschen Schlüssen.']
   },
