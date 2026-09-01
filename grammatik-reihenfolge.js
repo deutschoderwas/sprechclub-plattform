@@ -25,10 +25,14 @@
   var PFAD = [
     /* ---------- A1: die Bausteine ---------- */
     ['a1-artikel', [], 'Ohne der, die, das geht im Deutschen gar nichts — jedes Nomen hängt daran.'],
+    ['a1-sein-haben', [], 'sein und haben braucht man in fast jedem Satz — und ausgerechnet sie sind unregelmäßig.'],
     ['a1-praesens', [], 'Das Verb im Präsens ist der Motor jedes Satzes.'],
+    ['a1-wortstellung', ['a1-praesens'], 'Die Regel, an der jeder deutsche Hauptsatz hängt: Das Verb steht an zweiter Stelle.'],
+    ['a1-plural', ['a1-artikel'], 'Ein Buch, zwei Bücher — und im Plural heißt der Artikel immer die.'],
     ['a1-fragen', ['a1-praesens'], 'Wer fragen kann, kommt ins Gespräch — auch mit fünfzig Wörtern.'],
     ['negation', ['a1-artikel'], 'Nein sagen können ist so wichtig wie Ja sagen.'],
     ['a1-akkusativ', ['a1-artikel'], 'Der erste Fallwechsel: aus der wird den.'],
+    ['a1-pronomen', ['a1-akkusativ'], 'Aus er wird ihn — derselbe Wechsel wie von der zu den.'],
     ['possessivartikel', ['a1-artikel', 'a1-akkusativ'], 'mein, dein, sein — damit gehört etwas jemandem.'],
     ['trennbare-verben', ['a1-praesens'], 'aufstehen, einkaufen, anrufen: Der zweite Teil rutscht ans Satzende.'],
 
@@ -36,6 +40,8 @@
     ['praeteritum-sein-haben', ['a1-praesens'], 'war und hatte braucht man täglich — sie kommen vor dem Perfekt.'],
     ['perfekt-bilden', ['a1-praesens', 'praeteritum-sein-haben'], 'So erzählt man auf Deutsch, was gestern war.'],
     ['modalverben', ['a1-praesens'], 'können, müssen, dürfen, wollen — plötzlich kann man Absichten ausdrücken.'],
+    ['a2-hoeflich', ['modalverben'], 'hätte, könnte, würde — aus einer Forderung wird eine Bitte.'],
+    ['a2-futur', ['a1-praesens', 'modalverben'], 'Die Zukunft braucht meist gar kein eigenes Verb — ein morgen genügt.'],
     ['imperativ', ['a1-praesens'], 'Bitten und Anweisungen: Komm, warte, machen Sie bitte.'],
     ['dativ', ['a1-akkusativ'], 'Der dritte Fall: Wem gibst du das Buch?'],
     ['praepositionen-dativ', ['dativ'], 'aus, bei, mit, nach, seit, von, zu — diese sieben verlangen immer den Dativ.'],

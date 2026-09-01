@@ -134,7 +134,11 @@ function prüfeLücke(t, a) {
 }
 
 themen.forEach(t => {
-  if (!t.words || t.words.length < 4) klagen.push(t.id + ': zu wenige Wörter');
+  /* Wortschatzthemen leben von ihrer Wortliste. Grammatik und
+     Aussprache tragen sich über Regeln — dort ist eine kurze Liste
+     in Ordnung, sie liefert nur die Fachwörter dazu. */
+  const braucht = (t.bereich || 'wortschatz') === 'wortschatz' ? 4 : 0;
+  if ((t.words || []).length < braucht) klagen.push(t.id + ': zu wenige Wörter');
   (t.words || []).forEach(w => prüfeWort(t, w));
   (t.aufgaben || []).forEach(a => {
     if (a.art === 'fehler') prüfeFehler(t, a);
@@ -167,6 +171,7 @@ function mischeOptionen(gut, schlecht, streu) {
 let nr = 0;
 const neue = [];
 const nachtrag = [];
+const unbekannt = [];
 
 themen.forEach(t => {
   const ex = [];
@@ -203,6 +208,13 @@ themen.forEach(t => {
     } else if (a.art === 'lesen') {
       const m = mischeOptionen(a.gut, a.schlecht, nr);
       ex.push({ type: 'lesen', text: a.text, q: a.frage, options: m.options, answer: m.answer, explain: a.erklärung });
+    } else {
+      /* Eine unbekannte Art wurde frueher stillschweigend uebersprungen.
+         Genau das ist passiert, als aus "luecke" beim Umstellen auf
+         Umlaute "lücke" wurde: Vier neue Bausteine lieferten ihre
+         Lueckensaetze ab, im Ergebnis fehlten sie, und niemand hat es
+         gemerkt. Deshalb ist eine unbekannte Art jetzt ein Abbruch. */
+      unbekannt.push(t.id + ': Art "' + a.art + '" kennt der Generator nicht');
     }
   });
 
@@ -239,6 +251,14 @@ themen.forEach(t => {
   else neue.push({ bereich: t.bereich || 'wortschatz', id: t.id, title: t.title,
                    level: t.level, emoji: t.emoji, words: wörter, exercises: ex });
 });
+
+if (unbekannt.length) {
+  console.error('\nSo geht das nicht:');
+  unbekannt.forEach(u => console.error('  ' + u));
+  console.error('\nBekannt sind: unterschied, lücke, paare, fehler, satzbau,');
+  console.error('sprechen, schreiben, lesen.\n');
+  process.exit(1);
+}
 
 /* ---------- Datei schreiben ---------- */
 const kopf = `/* ============================================================
