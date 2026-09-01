@@ -47,12 +47,18 @@ for f in sorted(glob.glob('wortschatzboost-*.html')):
         if re.search(r'„[^„“]{0,150}"', t):
             klagen.append(f + ': gerades Anführungszeichen — ' + t[:60])
 
-    # Beim Verdecken muss die Zeile mit verschwinden
+    # Beim Verdecken muss die Zeile mit verschwinden. Die Regel steht
+    # nicht auf allen Seiten gleich — manche führen noch .wex mit oder
+    # setzen pointer-events dazu. Deshalb wird die Regel gesucht und
+    # nachgesehen, ob .wsit in ihrer Auswahl steht.
     if 'wgrid.hide' in s:
-        if '.wgrid.hide .wcard .wsit{opacity:0;}' not in s:
-            klagen.append(f + ': Situation bleibt beim Verdecken sichtbar')
-        if '.wgrid.hide .wcard.revealed .wsit{opacity:1;}' not in s:
-            klagen.append(f + ': Situation kommt beim Aufdecken nicht zurück')
+        for aufgedeckt, name in ((False, 'Verdecken'), (True, 'Aufdecken')):
+            mitte = r'\.wcard\.revealed' if aufgedeckt else r'\.wcard'
+            m = re.search(r'\.wgrid\.hide ' + mitte + r' \.ww\s*,([^{]*)\{', s)
+            if not m:
+                klagen.append(f + ': Verdeck-Regel (' + name + ') gar nicht gefunden')
+            elif '.wsit' not in m.group(1):
+                klagen.append(f + ': Situation wird beim ' + name + ' nicht mitgeschaltet')
 
 print('\nSeite'.ljust(52) + 'Situationen / Karten')
 for f, z, k in uebersicht:
