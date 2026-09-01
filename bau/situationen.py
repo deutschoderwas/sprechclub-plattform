@@ -73,15 +73,30 @@ if 'class="wcard"' in s:
         print('Kein Platz fürs CSS gefunden — ' + SEITE)
         sys.exit(1)
 
-    # Beim Verdecken mit ausblenden, beim Aufdecken mit zeigen
-    for alt, zusatz in [
-        (".wgrid.hide .wcard .ww,.wgrid.hide .wcard .wm,.wgrid.hide .wcard .we{opacity:0;}",
-         ".wgrid.hide .wcard .wsit{opacity:0;}"),
-        (".wgrid.hide .wcard.revealed .ww,.wgrid.hide .wcard.revealed .wm,"
-         ".wgrid.hide .wcard.revealed .we{opacity:1;}",
-         ".wgrid.hide .wcard.revealed .wsit{opacity:1;}")]:
-        if alt in s and zusatz not in s:
-            s = s.replace(alt, alt + '\n' + zusatz)
+    # Beim Verdecken muss die Situationszeile mitverschwinden — sonst
+    # verrät sie das gesuchte Wort. Die Regel dafür sieht nicht auf
+    # allen Seiten gleich aus: manche führen noch .wex mit oder setzen
+    # zusätzlich pointer-events. Deshalb wird sie hier gesucht statt
+    # wörtlich verglichen, und .wsit an die Auswahl angehängt.
+    def ergaenze_regel(aufgedeckt):
+        global s
+        mitte = r'\.wcard\.revealed' if aufgedeckt else r'\.wcard'
+        muster = re.compile(r'(\.wgrid\.hide ' + mitte + r' \.ww\s*,[^{]*?)(\{[^}]*\})')
+        treffer = muster.search(s)
+        if not treffer:
+            return False
+        auswahl, block = treffer.group(1), treffer.group(2)
+        if '.wsit' in auswahl:
+            return True
+        klasse = '.wcard.revealed' if aufgedeckt else '.wcard'
+        s = s.replace(treffer.group(0),
+                      auswahl.rstrip() + ',.wgrid.hide ' + klasse + ' .wsit' + block, 1)
+        return True
+
+    for aufgedeckt in (False, True):
+        if not ergaenze_regel(aufgedeckt):
+            print('  Achtung: Verdeck-Regel nicht gefunden (' +
+                  ('aufgedeckt' if aufgedeckt else 'verdeckt') + ') — ' + SEITE)
 
     # Bei manchen Karten steht im Wort noch ein <span>, etwa
     # „die Schulden (Pl.)". Deshalb wird der Inhalt hier grosszuegig
