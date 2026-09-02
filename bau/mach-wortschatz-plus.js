@@ -59,7 +59,7 @@ const schonDa = {};
 /* Zwei Sorten Bausteine: „*-wortschatz-*.json\" legt neue Themen an,
    „*-nachtrag-*.json\" stockt vorhandene auf. */
 const dateien = fs.readdirSync(__dirname)
-  .filter(f => /^(b2|c1)-wortschatz-.*\.json$|^[a-z0-9]+-nachtrag-.*\.json$|^lesen-schreiben-.*\.json$/.test(f)).sort();
+  .filter(f => /^(a1|a2|b1|b2|c1)-wortschatz-.*\.json$|^[a-z0-9]+-nachtrag-.*\.json$|^lesen-schreiben-.*\.json$/.test(f)).sort();
 if (!dateien.length) { console.error('Keine Wortschatz-Bausteine gefunden.'); process.exit(1); }
 
 const themen = [];
