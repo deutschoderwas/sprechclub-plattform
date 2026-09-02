@@ -52,6 +52,7 @@
     file:'<path d="M14 3v5h5"/><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/>',
     pencil:'<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
     check:'<path d="M20 6 9 17l-5-5"/>',
+    copy:'<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/>',
     close:'<path d="M18 6 6 18M6 6l12 12"/>',
     back:'<path d="m15 18-6-6 6-6"/>',
     reply:'<path d="M9 14 4 9l5-5"/><path d="M4 9h7a9 9 0 0 1 9 9v2"/>',
@@ -456,6 +457,108 @@
   #v-community .cmp-in textarea{font-size:16px!important}
 }
 
+/* ============================================================
+   Handy: der Verlauf liest sich wie in einem Messenger
+   ============================================================ */
+#v-community .mzeit{display:none}
+#v-community .chat{position:relative}
+#v-community .neupille{position:absolute;left:50%;transform:translateX(-50%);bottom:92px;z-index:9;
+  display:none;align-items:center;gap:6px;background:var(--tuerkis);color:var(--auf-tuerkis);
+  border:2.5px solid var(--auf-tuerkis);border-radius:999px;padding:6px 15px;cursor:pointer;
+  font-family:var(--fh);font-weight:700;font-size:13px;box-shadow:2px 3px 0 rgba(6,49,56,.25)}
+#v-community .neupille.an{display:inline-flex}
+
+@media(max-width:680px){
+  /* Keine Karte mehr um jeden Beitrag — nur noch Sprechblasen auf Papier. */
+  #v-community .feed{padding:8px 11px 14px;background:
+    radial-gradient(circle at 1px 1px, rgba(32,33,31,.055) 1px, transparent 0) 0 0/17px 17px, var(--creme)}
+  #v-community .feed .thr{background:none;border:none;box-shadow:none;padding:0;margin:0 0 3px;border-radius:0}
+  #v-community .feed .thr-a{margin:2px 0 7px 15px;padding-left:11px;border-left:2px solid var(--line)}
+
+  #v-community .feed .m{display:flex;flex-wrap:nowrap;gap:7px;align-items:flex-start;padding:2px 0;margin:0;
+    background:none!important;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+  #v-community .feed .m .ava{width:27px;height:27px;font-size:10.5px;border-width:2px;margin-top:3px}
+  #v-community .feed .mb{flex:0 1 auto;max-width:83%;min-width:0;
+    background:var(--karte);border:2px solid var(--tinte);border-radius:15px 15px 15px 5px;
+    padding:6px 10px 4px;box-shadow:2px 2px 0 rgba(32,33,31,.10)}
+  #v-community .feed .mt{font-size:14.5px;line-height:1.45;margin-top:1px}
+
+  /* Eigene Beiträge stehen rechts und sind türkis getönt. */
+  #v-community .feed .m.me{flex-direction:row-reverse}
+  #v-community .feed .m.me .ava{display:none}
+  #v-community .feed .m.me .mb{background:var(--brand-wash);border-color:var(--tuerkis-dunkel);
+    border-radius:15px 15px 5px 15px;box-shadow:-2px 2px 0 rgba(25,144,164,.18)}
+  #v-community .feed .m.me .mh{display:none}
+
+  /* Folgt kurz darauf noch ein Beitrag derselben Person, fällt der Kopf weg. */
+  #v-community .feed .m.folge{padding-top:0;margin-top:-1px}
+  #v-community .feed .m.folge .mh{display:none}
+  #v-community .feed .m.folge .ava{visibility:hidden;height:0;margin:0}
+
+  #v-community .feed .mh{gap:6px;margin-bottom:1px;min-height:0}
+  #v-community .feed .mh .w{font-size:13px!important;max-width:9.5em}
+  #v-community .feed .mh time{display:none}
+  #v-community .feed .mzeit{display:block;text-align:right;font-size:10.5px;color:var(--t3);
+    margin-top:2px;line-height:1;font-variant-numeric:tabular-nums}
+  #v-community .feed .m.me .mzeit{color:#2f7d8c}
+  #v-community .feed .m.m-sendet .mzeit::after{content:" · sendet"}
+  #v-community .feed .m.m-fehler .mzeit{color:var(--rot-s);font-weight:700}
+  #v-community .feed .m.gehalten .mb{transform:scale(.97);filter:brightness(.96)}
+
+  /* Bild, Ton und Korrektur passen sich der Blase an. */
+  #v-community .feed .mimg{width:100%;max-width:216px;margin-top:4px}
+  #v-community .feed .voice{max-width:100%;margin-top:3px;padding:6px 9px;border-width:2px}
+  #v-community .feed .corr,#v-community .feed .corrform{max-width:100%}
+  #v-community .feed .quote{margin-bottom:4px}
+
+  #v-community .feed .rc{min-height:0;margin-top:5px;gap:4px}
+  #v-community .feed .rc span{font-size:11.5px;padding:0 7px;min-height:20px;border-width:2px}
+  #v-community .feed .m.me .rc span{background:#fff!important}
+  #v-community .feed .m.me .rc{justify-content:flex-end}
+
+  /* Die Werkzeugleiste weicht dem Halte-Menü. */
+  #v-community .feed .msg-actions{display:none!important}
+  #v-community .feed .schnell{margin:1px 0 8px 34px;padding:0;border-top:none;min-height:0;gap:2px}
+  #v-community .feed .schnell .sr-e{font-size:17px;padding:2px 4px}
+  #v-community .feed .schnell .sr-e:nth-of-type(n+4){display:none}
+  #v-community .feed .schnell .sr-r{padding:2px 10px;font-size:11.5px;border-width:2px;
+    background:none;border-color:var(--line);color:var(--t2)}
+  #v-community .feed .m.me + .schnell{margin-left:0;justify-content:flex-end}
+  #v-community .feed .thr-mehr{padding:4px 0 6px 34px;font-size:12px}
+  #v-community .feed .dsep{margin:13px 0 8px;font-size:12px}
+  #v-community .feed .dsep::before,#v-community .feed .dsep::after{height:2px}
+
+  /* Das Schreibfeld sitzt fest am unteren Rand. */
+  #v-community .cmp{padding:8px 10px calc(10px + env(safe-area-inset-bottom));border-top:2.5px solid var(--tinte);background:var(--karte)}
+  #v-community .comm{min-height:0}
+}
+
+/* Das Halte-Menü hängt an <body>, deshalb bringt es seine Farben mit. */
+.cm-sheet-ov{--tinte:#20211F;--karte:#FFFDF3;--line:#E7DFC7;--brand-wash:#EAFBFE;
+  --rot-s:#DD0000;--t2:#54594a;--t3:#8b9088;--fh:"Shantell Sans","Inter",cursive;
+  position:fixed;inset:0;background:rgba(20,20,20,.42);z-index:99998;
+  display:flex;align-items:flex-end;justify-content:center;animation:ccfade .14s ease}
+.cm-sheet{width:100%;max-width:520px;background:var(--karte);border:2.5px solid var(--tinte);
+  border-bottom:none;border-radius:20px 20px 0 0;padding:8px 12px calc(14px + env(safe-area-inset-bottom));
+  animation:sheetauf .18s ease;box-shadow:0 -6px 24px rgba(20,20,20,.18)}
+@keyframes sheetauf{from{transform:translateY(20px);opacity:.5}to{transform:none;opacity:1}}
+.cm-sheet .griff{width:44px;height:4px;border-radius:3px;background:var(--line);margin:2px auto 10px}
+.cm-sheet .cs-vor{font-family:"Inter",system-ui,sans-serif;font-size:12.5px;color:var(--t2);
+  padding:0 8px 9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cm-sheet .cs-vor b{color:var(--tinte)}
+.cm-sheet .cs-reax{display:flex;justify-content:space-between;gap:2px;padding:0 2px 10px;
+  border-bottom:2px dotted var(--line);margin-bottom:6px}
+.cm-sheet .cs-reax button{border:none;background:none;font-size:26px;line-height:1;padding:4px;
+  border-radius:12px;cursor:pointer}
+.cm-sheet .cs-reax button:active{background:var(--brand-wash);transform:scale(1.15)}
+.cm-sheet .cs-akt button{display:flex;align-items:center;gap:12px;width:100%;border:none;background:none;
+  font-family:var(--fh);font-weight:700;font-size:15px;color:var(--tinte);padding:11px 8px;
+  border-radius:11px;cursor:pointer;text-align:left}
+.cm-sheet .cs-akt button:active{background:var(--brand-wash)}
+.cm-sheet .cs-akt button.del{color:var(--rot-s)}
+.cm-sheet .cs-akt .ico{width:20px;height:20px;flex:none;stroke:currentColor;stroke-width:1.7;fill:none;
+  stroke-linecap:round;stroke-linejoin:round}
+
 `; document.head.appendChild(st);
   }
 
@@ -649,7 +752,7 @@
 
   function rosterHtml(){
     /* Keine Namensliste: wer hier lernt, geht niemanden etwas an.
-       Namen stehen nur noch an den Beitraegen, die jemand schreibt.
+       Namen stehen nur noch an den Beiträgen, die jemand schreibt.
        Die Zahlen kommen echt aus der Datenbank (RPC community_zahlen). */
     var f = window.__commAkt || {};
     var mg = (f.mitglieder == null) ? '…' : f.mitglieder;
@@ -794,6 +897,8 @@
       zurueckAuf('kanal', function(){ var w=q('.comm'); if(w) w.classList.remove('chatauf'); });
     }
     renderComposer(canPost);
+    hoeheUeberwachen();
+    if(istHandy()){ try{ if(cw) cw.scrollIntoView({block:'start'}); }catch(e){} setTimeout(passeHoehe,60); setTimeout(passeHoehe,320); }
     /* Die NEUESTEN zuerst holen und dann umdrehen. Vorher wurden die
        ersten 200 geladen — in einem vollen Kanal haette man ewig alte
        Nachrichten gesehen und die neuen nie. */
@@ -983,9 +1088,10 @@
   }
   function msgHtml(m,istAntwort){
     var vn=vorname(m.author_name);
-    return '<div class="m'+(m.pinned_at?' pinned':'')+(istAntwort?' m-a':'')+'" data-id="'+E(m.id)+'"><div class="ava '+avClass(m.author_name)+'">'+E(initials(vn))+'</div>'+
+    var meins=!!(m.user_id&&ME&&m.user_id===ME.id);
+    return '<div class="m'+(m.pinned_at?' pinned':'')+(istAntwort?' m-a':'')+(meins?' me':'')+'" data-id="'+E(m.id)+'" data-u="'+E(m.user_id||'')+'" data-t="'+E(m.created_at||'')+'"><div class="ava '+avClass(m.author_name)+'">'+E(initials(vn))+'</div>'+
       '<div class="mb"><div class="mh"><span class="w">'+E(vn)+'</span><time>'+timeStr(m.created_at)+'</time>'+(m.pinned_at?'<span class="mh-pin" title="Angepinnt">'+svg(IC.pin,'ico-sm')+'</span>':'')+'</div>'+
-      (istAntwort?'':quoteHtml(m))+bodyHtml(m)+rcHtml(m.id)+'<div data-corrslot="'+E(m.id)+'">'+corrsFor(m.id)+'</div></div>'+
+      (istAntwort?'':quoteHtml(m))+bodyHtml(m)+rcHtml(m.id)+'<div data-corrslot="'+E(m.id)+'">'+corrsFor(m.id)+'</div><span class="mzeit">'+timeStr(m.created_at)+'</span></div>'+
       msgActions(m)+'</div>';
   }
   // Schnellzeile unter jedem Beitrag: reagieren und antworten ohne Umweg
@@ -1035,6 +1141,25 @@
     h+='</div></div>';
     return h;
   }
+  /* Schreibt jemand mehrere Beiträge kurz hintereinander, gehören sie
+     zusammen: der zweite bekommt keinen eigenen Kopf mehr, sondern hängt
+     sich unter den ersten. Genau so sieht ein Messenger aus. */
+  function gleicherOrt(a,b){
+    if(a.parentElement===b.parentElement) return true;
+    var ta=a.closest('.thr'), tb=b.closest('.thr');
+    return !!(ta&&tb&&a.parentElement===ta&&b.parentElement===tb&&tb.previousElementSibling===ta);
+  }
+  function gruppiere(){
+    var box=q('#cmFeed'); if(!box) return;
+    var alle=box.querySelectorAll('.m'), vor=null;
+    for(var i=0;i<alle.length;i++){
+      var el=alle[i]; el.classList.remove('folge');
+      var u=el.getAttribute('data-u')||'', t=Date.parse(el.getAttribute('data-t')||'')||0;
+      if(vor && u && u===vor.u && t && vor.t && Math.abs(t-vor.t)<300000 && gleicherOrt(vor.el,el)) el.classList.add('folge');
+      vor={el:el,u:u,t:t};
+    }
+  }
+
   function renderFeed(rows){
     var box=q('#cmFeed'); if(!box) return;
     if(!rows.length){ box.innerHTML='<div class="cm-empty">Noch keine Nachrichten — schreib die erste! ✍️</div>'; }
@@ -1049,8 +1174,13 @@
       var mb=box.querySelector('#cmMehr');
       if(mb) mb.addEventListener('click',function(){ ladeAeltere(mb); });
     }
+    gruppiere();
     box.scrollTop=box.scrollHeight;
-    if(!box.__b){ box.__b=true; box.addEventListener('click',onFeedClick); if(!window.__cmDoc){ window.__cmDoc=true; document.addEventListener('click',function(){ var p=document.querySelector('#v-community .repop'); if(p)p.remove(); var e=document.querySelector('#v-community .emopick'); if(e)e.style.display='none'; }); } }
+    neuPille(false);
+    if(!box.__b){ box.__b=true; box.addEventListener('click',onFeedClick);
+      box.addEventListener('scroll',function(){ if(box.scrollHeight-box.scrollTop-box.clientHeight<80) neuPille(false); },{passive:true});
+      halteBinden(box);
+      if(!window.__cmDoc){ window.__cmDoc=true; document.addEventListener('click',function(){ var p=document.querySelector('#v-community .repop'); if(p)p.remove(); var e=document.querySelector('#v-community .emopick'); if(e)e.style.display='none'; }); } }
   }
   function renderPinned(){
     var box=q('#cmPinned'); if(!box) return;
@@ -1096,7 +1226,9 @@
     }
     if(slot){ slot.insertAdjacentHTML('beforeend',msgHtml(m,true)); }
     else{ box.insertAdjacentHTML('beforeend','<div class="thr" data-thr="'+E(m.id)+'">'+msgHtml(m)+schnellHtml(m)+'<div class="thr-a" data-ans="'+E(m.id)+'"></div></div>'); }
-    if(near||m.user_id===ME.id) box.scrollTop=box.scrollHeight;
+    gruppiere();
+    if(near||m.user_id===ME.id){ box.scrollTop=box.scrollHeight; neuPille(false); }
+    else neuPille(true);
   }
   function togglePlay(btn){
     var src=btn.getAttribute('data-src'); if(!src) return;
@@ -1141,6 +1273,15 @@
     var inp=q('#cInp'),send=q('#cSend'),mic=q('#cMic'),img=q('#cImg'),file=q('#cFile'),emo=q('#cEmo'),pick=q('#cmEmo2');
     if(inp){
       inp.addEventListener('keydown',function(e){ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); doSend(); } });
+      /* Geht die Tastatur auf, schrumpft das sichtbare Fenster. Wir messen
+         nach und ziehen den Verlauf ans Ende — das Schreibfeld bleibt so
+         immer sichtbar, statt unter der Tastatur zu verschwinden. */
+      inp.addEventListener('focus',function(){
+        if(!istHandy()) return;
+        setTimeout(function(){ passeHoehe(); var b=q('#cmFeed'); if(b) b.scrollTop=b.scrollHeight; },220);
+        setTimeout(passeHoehe,560);
+      });
+      inp.addEventListener('blur',function(){ if(istHandy()) setTimeout(passeHoehe,220); });
       inp.addEventListener('input',function(){
         var box=q('#cmFeed');
         var unten = box ? (box.scrollHeight-box.scrollTop-box.clientHeight < 60) : false;
@@ -1287,6 +1428,15 @@
   }
 
   // ---------- Direktnachrichten (inline) ----------
+  function dmMsgHtml(m){
+    var meins=m.sender_id===ME.id;
+    var nm=meins?myName:((dmActive&&dmActive.name)||'Mitglied');
+    return '<div class="m'+(meins?' me':'')+'" data-id="'+E(m.id||'')+'" data-u="'+E(m.sender_id||'')+'" data-t="'+E(m.created_at||'')+'">'+
+      '<div class="ava '+avClass(nm)+'">'+E(initials(nm))+'</div>'+
+      '<div class="mb"><div class="mh"><span class="w">'+(meins?'Du':E(vorname(nm)))+'</span><time>'+timeStr(m.created_at)+'</time></div>'+
+      '<div class="mt">'+E(m.body||'')+'</div><span class="mzeit">'+timeStr(m.created_at)+'</span></div></div>';
+  }
+
   async function openDM(partnerId,name){
     mode='dm'; dmActive={id:partnerId,name:name||'Mitglied'}; refreshSideActive();
     var chat=q('#cmChat'); if(!chat) return;
@@ -1297,11 +1447,11 @@
     try{ var r=await sbc.rpc('dm_thread',{p_partner:partnerId}); rows=(r&&r.data)||[]; }catch(e){}
     var box=q('#cmFeed');
     if(!rows.length){ box.innerHTML='<div class="cm-empty">Noch keine Nachrichten mit '+E(dmActive.name)+'. Sag Hallo 👋</div>'; }
-    else{ box.innerHTML=rows.map(function(m){ return '<div class="m" data-id="'+E(m.id)+'"><div class="ava '+avClass(m.sender_id===ME.id?myName:dmActive.name)+'">'+E(initials(m.sender_id===ME.id?myName:dmActive.name))+'</div><div class="mb"><div class="mh"><span class="w">'+(m.sender_id===ME.id?'Du':E(dmActive.name))+'</span><time>'+timeStr(m.created_at)+'</time></div><div class="mt">'+E(m.body||'')+'</div></div></div>'; }).join(''); box.scrollTop=box.scrollHeight; }
+    else{ box.innerHTML=rows.map(dmMsgHtml).join(''); gruppiere(); box.scrollTop=box.scrollHeight; }
     try{ await sbc.rpc('dm_mark_read',{p_partner:partnerId}); }catch(e){}
   }
   async function dmSend(t){
-    var box=q('#cmFeed'); if(box){ if(box.querySelector('.cm-empty'))box.innerHTML=''; box.insertAdjacentHTML('beforeend','<div class="m"><div class="ava '+avClass(myName)+'">'+E(initials(myName))+'</div><div class="mb"><div class="mh"><span class="w">Du</span><time>'+timeStr(new Date().toISOString())+'</time></div><div class="mt">'+E(t)+'</div></div></div>'); box.scrollTop=box.scrollHeight; }
+    var box=q('#cmFeed'); if(box){ if(box.querySelector('.cm-empty'))box.innerHTML=''; box.insertAdjacentHTML('beforeend',dmMsgHtml({id:'tmp-'+Date.now(),sender_id:ME.id,body:t,created_at:new Date().toISOString()})); gruppiere(); box.scrollTop=box.scrollHeight; }
     try{ await sbc.from('direct_messages').insert({recipient_id:dmActive.id,kind:'text',body:t}); }catch(e){}
   }
 
@@ -1428,6 +1578,127 @@
     var o=q('#cmOnline'); if(o){ var z=String(countOnline()); if(o.textContent!==z) o.textContent=z; }
   }
   function stopAll(){ try{ if(chan)sbc.removeChannel(chan); if(badgeChan)sbc.removeChannel(badgeChan); }catch(e){} chan=null; badgeChan=null; }
+
+  /* ============================================================
+     Handy: Höhe, neue Nachrichten, Halte-Menü
+     ============================================================ */
+  function istHandy(){ try{ return window.innerWidth<=680; }catch(e){ return false; } }
+
+  /* Früher stand hier eine feste Rechnung (100dvh minus 140 Pixel). Sobald
+     die Tastatur aufging, stimmte sie nicht mehr und das Schreibfeld rutschte
+     aus dem Bild. Jetzt messen wir das wirklich sichtbare Fenster. */
+  function passeHoehe(){
+    var w=q('.comm'); if(!w) return;
+    if(!istHandy()){ if(w.style.height) w.style.height=''; return; }
+    var vv=window.visualViewport;
+    var vh=vv?vv.height:window.innerHeight, vtop=vv?vv.offsetTop:0;
+    var oben=w.getBoundingClientRect().top;
+    var h=Math.max(320, Math.round(vh-(oben-vtop)-8));
+    if(w.style.height!==h+'px') w.style.height=h+'px';
+  }
+  var _hoeheAn=false;
+  function hoeheUeberwachen(){
+    if(_hoeheAn) return; _hoeheAn=true;
+    var lauf=null;
+    function nach(){
+      clearTimeout(lauf);
+      lauf=setTimeout(function(){
+        var box=q('#cmFeed');
+        var unten=box?(box.scrollHeight-box.scrollTop-box.clientHeight<160):false;
+        passeHoehe();
+        if(box&&unten) box.scrollTop=box.scrollHeight;
+      },60);
+    }
+    window.addEventListener('resize',nach);
+    window.addEventListener('orientationchange',nach);
+    try{ var vv=window.visualViewport; if(vv){ vv.addEventListener('resize',nach); vv.addEventListener('scroll',nach); } }catch(e){}
+    passeHoehe();
+  }
+
+  /* Wer weiter oben liest, wird von einer neuen Nachricht nicht mehr
+     weggerissen — es kommt nur eine Pille zum Antippen. */
+  function neuPille(an){
+    var chat=q('#cmChat'); if(!chat) return;
+    var p=chat.querySelector('.neupille');
+    if(!an){ if(p) p.classList.remove('an'); return; }
+    if(!p){
+      p=document.createElement('button'); p.type='button'; p.className='neupille';
+      p.innerHTML='↓ Neue Nachrichten';
+      p.addEventListener('click',function(){ var b=q('#cmFeed'); if(b) b.scrollTop=b.scrollHeight; neuPille(false); });
+      chat.appendChild(p);
+    }
+    p.classList.add('an');
+  }
+
+  /* Auf dem Handy gibt es kein Schweben mit der Maus. Statt einer Leiste,
+     die dauernd mitlaeuft, hält man die Nachricht kurz gedrückt — dann
+     kommt ein Menü von unten, wie man es aus jedem Messenger kennt. */
+  var SHEET_ATTR=['data-rep','data-corrbtn','data-kibtn','data-pin','data-del'];
+  var SHEET_WORT={'data-rep':'Antworten','data-corrbtn':'Korrigieren','data-kibtn':'KI-Vorschlag','data-pin':'Anpinnen','data-del':'Löschen'};
+  function sheetZu(){ var o=document.querySelector('.cm-sheet-ov'); if(o) o.remove(); }
+  function sheetAuf(mEl){
+    if(!mEl) return;
+    var id=mEl.getAttribute('data-id'); if(!id||!isRealId(id)) return;
+    sheetZu();
+    var m=null,i;
+    for(i=0;i<curMsgs.length;i++){ if(curMsgs[i].id===id){ m=curMsgs[i]; break; } }
+    var orig=mEl.querySelector('.msg-actions');
+    var akt='';
+    if(orig){
+      var bs=orig.querySelectorAll('button');
+      for(var k=0;k<bs.length;k++){
+        var b=bs[k], attr=null;
+        for(var j=0;j<SHEET_ATTR.length;j++){ if(b.hasAttribute(SHEET_ATTR[j])){ attr=SHEET_ATTR[j]; break; } }
+        if(!attr) continue;
+        var wort=SHEET_WORT[attr];
+        if(attr==='data-pin'&&m&&m.pinned_at) wort='Anheftung lösen';
+        akt+='<button type="button" class="'+(attr==='data-del'?'del':'')+'" data-k="'+k+'">'+b.innerHTML+'<span>'+E(wort)+'</span></button>';
+      }
+    }
+    if(m&&m.kind==='text'&&m.body) akt+='<button type="button" data-kopie="1">'+svg(IC.copy,'ico-sm')+'<span>Text kopieren</span></button>';
+    var reax=QUICK.map(function(em){ return '<button type="button" data-em="'+em+'">'+em+'</button>'; }).join('');
+    var ov=document.createElement('div'); ov.className='cm-sheet-ov';
+    ov.innerHTML='<div class="cm-sheet"><div class="griff"></div>'+
+      '<div class="cs-vor"><b>'+E(vorname(m?m.author_name:''))+'</b> '+E(m?kurzText(m):'')+'</div>'+
+      '<div class="cs-reax">'+reax+'</div>'+(akt?'<div class="cs-akt">'+akt+'</div>':'')+'</div>';
+    document.body.appendChild(ov);
+    ov.addEventListener('click',function(ev){
+      if(ev.target===ov){ sheetZu(); return; }
+      var em=ev.target.closest('[data-em]');
+      if(em){ toggleReaction(id,em.getAttribute('data-em')); sheetZu(); return; }
+      var kp=ev.target.closest('[data-kopie]');
+      if(kp){ try{ if(navigator.clipboard) navigator.clipboard.writeText(m.body||''); }catch(e){} sheetZu(); return; }
+      var kb=ev.target.closest('[data-k]');
+      if(kb&&orig){ var o=orig.querySelectorAll('button')[+kb.getAttribute('data-k')]; sheetZu(); if(o) o.click(); return; }
+    });
+  }
+  function halteBinden(box){
+    if(box.__halt) return; box.__halt=true;
+    var timer=null, sx=0, sy=0, ziel=null;
+    function ab(){ if(timer){ clearTimeout(timer); timer=null; } ziel=null; }
+    box.addEventListener('touchstart',function(ev){
+      if(!istHandy()) return;
+      if(!ev.touches||ev.touches.length!==1){ ab(); return; }
+      var t=ev.target; if(!t.closest) return;
+      if(t.closest('button,a,input,textarea,.rc span,.schnell,.quote,.corr')) return;
+      var el=t.closest('.m'); if(!el) return;
+      ziel=el; sx=ev.touches[0].clientX; sy=ev.touches[0].clientY;
+      timer=setTimeout(function(){
+        timer=null; if(!ziel) return;
+        try{ if(navigator.vibrate) navigator.vibrate(12); }catch(e){}
+        var z=ziel; z.classList.add('gehalten');
+        setTimeout(function(){ z.classList.remove('gehalten'); },260);
+        sheetAuf(z); ziel=null;
+      },430);
+    },{passive:true});
+    box.addEventListener('touchmove',function(ev){
+      if(!timer||!ev.touches||!ev.touches[0]) return;
+      var t=ev.touches[0];
+      if(Math.abs(t.clientX-sx)>10||Math.abs(t.clientY-sy)>10) ab();
+    },{passive:true});
+    box.addEventListener('touchend',ab,{passive:true});
+    box.addEventListener('touchcancel',ab,{passive:true});
+  }
 
   window.renderCommunity=renderCommunity;
 
