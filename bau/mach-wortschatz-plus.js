@@ -92,7 +92,11 @@ function prüfeWort(t, w) {
   (schonDa[k] || []).forEach(o => {
     const dort = NIVEAUS.indexOf(o.niveau);
     const wo = o.niveau + ' ' + o.bereich + '/' + o.thema;
-    if (o.bereich === 'wortschatz' && dort === mein) {
+    /* Kritisch ist nur, wenn beide Karten im selben Bereich stehen —
+       dann sieht man dieselbe zweimal. „der Termin" im Wortschatz und
+       in einem Lesethema sind zwei verschiedene Karten in zwei Listen,
+       und das ist so gewollt. */
+    if (o.bereich === (t.bereich || 'wortschatz') && dort === mein) {
       /* Dieselbe Liste, dieselbe Stufe: die Karte kommt zweimal vor. */
       hinweise.gleich.push(t.id + ': „' + w.de + '" — auch in ' + wo);
     } else if (dort > mein) {
