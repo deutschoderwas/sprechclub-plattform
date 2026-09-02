@@ -79,6 +79,39 @@ function inSaetze(text) {
 }
 
 // ---------------------------------------------------------------
+//  Wortzeiten innerhalb eines Satzes
+//
+//  Der Bereich von..bis zeigt auf die Buchstaben dieses Satzes in der
+//  Liste von ElevenLabs. Wir laufen ihn Wort für Wort ab: Beim ersten
+//  Buchstaben eines Wortes steht die Startzeit, beim letzten die
+//  Endzeit. Leerzeichen trennen.
+// ---------------------------------------------------------------
+function worteMitZeit(satz, zeichen, start, ende, von, bis) {
+  if (!zeichen.length || von < 0 || bis < von) return [];
+  const worte = [];
+  let aktuell = '', wT = null, wE = null;
+
+  for (let i = von; i <= bis && i < zeichen.length; i++) {
+    const c = zeichen[i] || '';
+    if (/\s/.test(c)) {
+      if (aktuell) { worte.push({ x: aktuell, t: +Number(wT || 0).toFixed(2), e: +Number(wE || 0).toFixed(2) }); }
+      aktuell = ''; wT = null; wE = null;
+      continue;
+    }
+    if (!aktuell) wT = start[i];
+    aktuell += c;
+    wE = ende[i];
+  }
+  if (aktuell) worte.push({ x: aktuell, t: +Number(wT || 0).toFixed(2), e: +Number(wE || 0).toFixed(2) });
+
+  // Nur behalten, wenn die Wörter auch zum Satz passen — sonst lieber
+  // gar keine Wortzeiten als falsche.
+  const ausSatz = satz.split(/\s+/).filter(Boolean).length;
+  if (!worte.length || Math.abs(worte.length - ausSatz) > 2) return [];
+  return worte;
+}
+
+// ---------------------------------------------------------------
 //  Sätze + Buchstaben-Zeitstempel -> Mitlese-Transkript
 // ---------------------------------------------------------------
 function transkriptBauen(text, alignment) {
@@ -120,7 +153,17 @@ function transkriptBauen(text, alignment) {
     }
     const t = von >= 0 ? start[von] : (out.length ? out[out.length - 1].e : 0);
     const e = bis >= 0 ? ende[bis] : gesamt;
-    out.push({ t: +Number(t || 0).toFixed(2), e: +Number(e || 0).toFixed(2), x: satz });
+    out.push({
+      t: +Number(t || 0).toFixed(2),
+      e: +Number(e || 0).toFixed(2),
+      x: satz,
+      // Wortzeiten fürs Mitlesen: Beim Hören soll das Wort leuchten,
+      // das gerade gesprochen wird — nicht nur der Satz. ElevenLabs
+      // liefert die Zeit je Buchstabe, daraus lässt sich das genau
+      // ableiten. Fällt es aus, rechnet die Seite es aus der
+      // Satzdauer, dann sitzt es ungefähr statt genau.
+      w: worteMitZeit(satz, zeichen, start, ende, von, bis)
+    });
   }
 
   // Lücken schließen, damit die Zeile nicht kurz "aus" ist.

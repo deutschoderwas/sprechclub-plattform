@@ -72,6 +72,18 @@ h2 .ic{color:var(--acc-d)}
 .sg.past{color:var(--ink3)}
 .sg.now{color:var(--ink);font-weight:600;background:var(--acc-soft)}
 .sg.future{color:var(--ink3)}
+/* Mitlesen Wort für Wort. Der Satz allein war zu grob: Bei einem
+   langen Satz weiß man nach zwei Sekunden nicht mehr, wo man ist.
+   Jetzt wandert die Markierung mit der Stimme mit — gesprochene
+   Wörter bleiben kräftig, das aktuelle ist unterlegt, der Rest
+   wartet blass. */
+.sg .wd{transition:color .12s,background .12s;border-radius:5px;padding:0 1px}
+.sg.now .wd{color:var(--ink3)}
+.sg.now .wd.gesagt{color:var(--ink)}
+.sg.now .wd.jetzt{color:var(--acc-d);background:#fff;font-weight:700;
+                  box-shadow:0 0 0 3px #fff,0 0 0 4px var(--acc-line)}
+.sg.past .wd,.sg.future .wd{background:none;box-shadow:none;font-weight:inherit}
+@media (prefers-reduced-motion:reduce){ .sg .wd{transition:none} }
 .sg .zt{display:block;font-size:11px;font-weight:600;color:var(--ink3);margin-bottom:2px;opacity:0;transition:opacity .2s}
 .sg:hover .zt,.sg.now .zt{opacity:1}
 .sg.now .zt{color:var(--acc-d)}
@@ -214,7 +226,7 @@ window.__oeffne=function(id){
   b.onclick=function(){ liste(); return false; };
   var tr=p.transkript.map(function(s,i){
     return '<button class="sg future" data-i="'+i+'" onclick="__spring('+i+')">'
-      +'<span class="zt">'+zeit(s.t)+'</span>'+esc(s.x)+'</button>';
+      +'<span class="zt">'+zeit(s.t)+'</span>'+worteHtml(s)+'</button>';
   }).join('');
   var wl=(p.woerter||[]).map(function(w){
     var t=wortText(w), i=wortInfo(w);
@@ -237,6 +249,69 @@ window.__oeffne=function(id){
   au.src=p.datei; au.load();
   window.scrollTo({top:0,behavior:'smooth'});
 };
+/* Ein Satz wird zu einzelnen Wortspannen. Wenn die Folge Wortzeiten
+   mitbringt (neue Folgen, aus den Buchstabenzeiten von ElevenLabs),
+   stehen sie am Element; sonst rechnet die Seite sie beim Abspielen
+   aus der Satzdauer aus — dann sitzt die Markierung ungefähr statt
+   genau, was fürs Mitlesen reicht. */
+function worteHtml(s){
+  var teile = String(s.x||'').split(/(\s+)/);
+  var zeiten = Array.isArray(s.w) ? s.w : null;
+  var wi = 0, h = '';
+  for (var k=0;k<teile.length;k++){
+    var teil = teile[k];
+    if (!teil) continue;
+    if (/^\s+$/.test(teil)) { h += teil; continue; }
+    var z = zeiten && zeiten[wi];
+    h += '<span class="wd" data-w="'+wi+'"'
+       + (z ? ' data-t="'+z.t+'" data-e="'+z.e+'"' : '')
+       + '>'+esc(teil)+'</span>';
+    wi++;
+  }
+  return h;
+}
+
+/* Welches Wort läuft gerade? Mit echten Zeiten wird verglichen, ohne
+   sie wird die Satzdauer nach Wortlänge aufgeteilt — lange Wörter
+   bekommen mehr Zeit als kurze. */
+function wortIndex(satzEl, s, t){
+  var wds = satzEl.querySelectorAll('.wd');
+  if (!wds.length) return -1;
+  if (wds[0].hasAttribute('data-t')){
+    var treffer = -1;
+    for (var i=0;i<wds.length;i++){
+      var wt = parseFloat(wds[i].getAttribute('data-t'));
+      if (t >= wt - 0.04) treffer = i; else break;
+    }
+    return treffer;
+  }
+  var dauer = Math.max(0.2, (s.e||0) - (s.t||0));
+  var laengen = [], gesamt = 0, j;
+  for (j=0;j<wds.length;j++){ var L = (wds[j].textContent||'').length + 1; laengen.push(L); gesamt += L; }
+  var vergangen = Math.max(0, t - (s.t||0));
+  var grenze = 0;
+  for (j=0;j<wds.length;j++){
+    grenze += (laengen[j]/gesamt) * dauer;
+    if (vergangen < grenze) return j;
+  }
+  return wds.length - 1;
+}
+
+/* Markiert im laufenden Satz die Wörter. */
+function markiereWorte(i, t){
+  var satzEl = document.querySelector('#tr .sg[data-i="'+i+'"]');
+  if (!satzEl || !cur) return;
+  var s = cur.transkript[i]; if (!s) return;
+  var k = wortIndex(satzEl, s, t);
+  if (k === letztesWort && i === letzterSatz) return;
+  letztesWort = k; letzterSatz = i;
+  var wds = satzEl.querySelectorAll('.wd');
+  for (var j=0;j<wds.length;j++){
+    wds[j].className = 'wd' + (j < k ? ' gesagt' : j === k ? ' jetzt' : '');
+  }
+}
+var letztesWort = -1, letzterSatz = -1;
+
 window.__folgen=function(){
   folgen=!folgen;
   document.getElementById('tbSync').classList.toggle('on',folgen);
@@ -259,7 +334,9 @@ function markiere(i){
   var nodes=document.querySelectorAll('#tr .sg');
   nodes.forEach(function(n,k){
     n.className='sg '+(k<i?'past':k===i?'now':'future');
+    if (k !== i) n.querySelectorAll('.wd').forEach(function(w){ w.className='wd'; });
   });
+  letztesWort = -1;
   akt=i;
   if(folgen) scrollAkt();
 }
@@ -275,7 +352,7 @@ au.addEventListener('timeupdate',function(){
   if(!cur) return;
   var t=au.currentTime, T=cur.transkript, i=-1;
   for(var k=0;k<T.length;k++){ if(t>=T[k].t-0.15) i=k; else break; }
-  if(i>=0) markiere(i);
+  if(i>=0){ markiere(i); markiereWorte(i, t); }
   var d=au.duration||0;
   document.getElementById('barI').style.width=(d?(t/d*100):0)+'%';
   document.getElementById('plZt').textContent=zeit(t)+' / '+zeit(d);
