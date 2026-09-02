@@ -237,7 +237,12 @@
     .ub-fw.aus{cursor:default}
     .ub-fw.gut{background:#E7F7EC;border-color:#16a34a}
     .ub-fw.schlecht{background:#FDECEA;border-color:#dc2626}
-    .ub-word{font-size:30px;font-weight:800;font-family:'Space Grotesk',sans-serif;text-align:center;margin:6px 0}
+    /* Lange Komposita — Krankenversicherungskarte, Aufenthaltserlaubnis —
+       liefen auf schmalen Schirmen seitlich aus dem Bild. Sie duerfen
+       jetzt umbrechen, und die Schrift wird auf dem Handy etwas kleiner. */
+    .ub-word{font-size:30px;font-weight:800;font-family:'Space Grotesk',sans-serif;text-align:center;margin:6px 0;
+             overflow-wrap:anywhere;hyphens:auto;max-width:100%}
+    @media(max-width:520px){ .ub-word{font-size:25px} }
     .ub-tip{text-align:center;color:var(--soft,#5C5C5C);margin-bottom:14px}
     .ub-fb{margin-top:14px;padding:13px 15px;border-radius:14px;font-weight:700;display:none}
     .ub-fb.ok{background:#dcfce7;color:#166534;display:block}
@@ -293,7 +298,7 @@
     .ub-karte{background:var(--card,#fff);border:2px solid var(--border,#ECECEC);border-radius:20px;padding:16px 15px 18px;text-align:center;box-shadow:0 8px 22px rgba(0,0,0,.06)}
     .ub-karte .kimg{display:block;width:100%;height:150px;object-fit:cover;border-radius:14px;margin-bottom:12px}
     .ub-karte .em{font-size:50px;line-height:1;display:block;margin-bottom:4px}
-    .ub-karte .wort{font-size:26px;font-weight:800;font-family:'Space Grotesk',sans-serif;line-height:1.22;display:flex;gap:9px;align-items:center;justify-content:center;flex-wrap:wrap}
+    .ub-karte .wort{font-size:26px;font-weight:800;font-family:'Space Grotesk',sans-serif;line-height:1.22;display:flex;gap:9px;align-items:center;justify-content:center;flex-wrap:wrap;overflow-wrap:anywhere;max-width:100%}
     .ub-karte .bed{margin-top:9px;font-size:16px;color:var(--soft,#5C5C5C);line-height:1.5}
     .ub-art{display:inline-flex;align-items:center;justify-content:center;padding:3px 13px;border-radius:30px;font-size:15px;font-weight:800;color:#fff;background:var(--af,#2F6FD0)}
     .ub-satzbox{margin-top:14px;background:var(--bg,#FFF7E6);border:1.5px solid var(--border,#ECECEC);border-radius:14px;padding:12px 14px;font-size:16.5px;line-height:1.55;text-align:left}
