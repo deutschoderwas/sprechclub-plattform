@@ -114,6 +114,14 @@ function styles(){
 /* Dashboard-Karte */
 '.lz-card{display:block;background:#fff;border:1px solid #EBE7DF;border-radius:20px;padding:18px 19px;text-decoration:none;color:#171717;margin-bottom:16px;box-shadow:0 1px 2px rgba(23,23,23,.04),0 12px 30px -24px rgba(23,23,23,.5);transition:.2s}',
 '.lz-card:hover{border-color:#C7E9F3;transform:translateY(-1px)}',
+/* Bild der nächsten Lektion — die Karte war reiner Text und fiel neben
+   den bebilderten Karten daneben ab. Auf dem Handy wandert es nach
+   oben und wird eine schmale Leiste über der Überschrift. */
+'.lz-card{display:flex;gap:15px;align-items:flex-start}',
+'.lz-card .lz-bild{flex:none;width:96px;height:96px;border-radius:14px;overflow:hidden;background:linear-gradient(140deg,#7ED8EA,#DFF6F8)}',
+'.lz-card .lz-bild img{width:100%;height:100%;object-fit:cover;display:block}',
+'.lz-card .lz-txt{flex:1;min-width:0}',
+'@media(max-width:560px){.lz-card{flex-direction:column;gap:12px}.lz-card .lz-bild{width:100%;height:104px}}',
 '.lz-card .ch{display:flex;align-items:center;gap:9px;margin-bottom:9px}',
 '.lz-card .ch .kk{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#14708B}',
 '.lz-card .ch .rest{margin-left:auto;font-size:12.5px;font-weight:600;color:#9A958C;font-variant-numeric:tabular-nums}',
@@ -425,14 +433,24 @@ LZ.kartenHTML=function(){
     sub='Alle '+lek.length+' Lektionen geschafft. Stark. Such dir den nächsten Bereich aus.';
     go='Weitermachen';
   }
+  var bild = '';
+  try{
+    var stand = window.kursStand && window.kursStand(pfad);
+    if(stand && stand.bild) bild = stand.bild;
+  }catch(e){}
+  if(!bild){ try{ bild = window.wegBildErsatz ? window.wegBildErsatz() : ''; }catch(e){} }
+
   return '<a class="lz-card" href="'+href+'">'
+   +(bild ? '<span class="lz-bild"><img src="'+esc(bild)+'" alt="" loading="lazy"'
+          +   ' onerror="this.onerror=null;this.src=\'illu/kat-alltag.jpg\'"></span>' : '')
+   +'<span class="lz-txt">'
    +'<span class="ch">'+I('target',16,'')+'<span class="kk">Dein Weg</span>'
    +(t!==null?'<span class="rest">noch '+t+' '+(t===1?'Tag':'Tage')+'</span>':'')+'</span>'
    +'<h4>'+esc(nam)+'</h4>'
    +'<p class="sub">'+sub+'</p>'
    +'<span class="tr"><i style="width:'+pct+'%"></i></span>'
    +'<span class="go">'+I('play',16)+'<span>'+go+'</span>'
-   +'<span class="ar">'+I('arrowR',17)+'</span></span></a>';
+   +'<span class="ar">'+I('arrowR',17)+'</span></span></span></a>';
 };
 LZ.zeichneKarte=function(){
   var h=LZ.kartenHTML();

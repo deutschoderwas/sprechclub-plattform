@@ -119,9 +119,45 @@
     } catch (e) {}
     return b || '';
   }
-  function bildVon(id, nr) {
-    return 'illu/' + id + '-l' + (nr || 1) + '.jpg';
+  /* ---- Bild je Lektion --------------------------------------------
+     Vorher hieß es schlicht 'illu/' + weg + '-l' + nr + '.jpg'. Diese
+     Dateien gibt es aber nur für a1-l1 bis l3 und für je die erste
+     Lektion von buero, medizin und pflege — für alle übrigen 60
+     Lektionen lief das Bild ins Leere. Auf der Startseite blieb dann
+     eine leere beige Fläche neben dem Text stehen, weil das onerror
+     das Bild einfach entfernt hat.
+
+     Deshalb steht hier jetzt für jede Lektion ein Motiv aus dem
+     vorhandenen Bestand unter illu/ — ausgesucht nach dem, worum es
+     in der Lektion geht, nicht nach der Nummer. */
+  var MOTIV = {
+    a1: ['a1-l1', 'a1-l2', 'a1-l3', 'th-essen', 'th-tag', 'th-einkauf'],
+    a2: ['sz-arzttermin', 'th-arzt', 'sz-wohnung', 'th-reise', 'a1-kleidung', 'th-weg'],
+    b1: ['sz-bewerbung', 'th-arbeit', 'th-nachbarn', 'th-arzt', 'th-medien', 'th-amt'],
+    b2: ['th-verhandeln', 'th-bildung', 'th-digital', 'th-gespraech', 'th-wirtschaft', 'th-rhetorik'],
+    c1: ['th-wissenschaft', 'th-debatte', 'th-arbeit', 'th-sprache', 'th-migration', 'th-verhandeln'],
+    c2: ['th-sprache', 'th-rhetorik', 'th-idiom', 'th-fachtext', 'th-ironie', 'th-debatte'],
+    goethetelc: ['th-fachtext', 'th-medien', 'th-amt', 'th-sprache', 'th-rhetorik', 'th-gespraech'],
+    telcmed: ['th-arzt', 'th-fachtext', 'sz-arztruf', 'th-sprache', 'sz-angehoerige', 'kat-pruefung'],
+    dtz: ['th-medien', 'th-amt', 'th-gespraech', 'sz-smalltalk', 'th-tag', 'th-verhandeln'],
+    medizin: ['medizin-l1', 'th-arzt', 'sz-angehoerige', 'th-fachtext', 'sz-arztruf', 'th-gespraech'],
+    pflege: ['pflege-l1', 'th-arzt', 'sz-angehoerige', 'th-fachtext', 'sz-arztruf', 'th-gespraech'],
+    buero: ['buero-l1', 'th-digital', 'th-verhandeln', 'sz-reklamation', 'th-tag', 'th-fachtext']
+  };
+  var ERSATZ = 'illu/kat-alltag.jpg';
+
+  function motivVon(id, nr) {
+    var reihe = MOTIV[id];
+    if (!reihe || !reihe.length) return '';
+    return reihe[(Math.max(1, nr || 1) - 1) % reihe.length];
   }
+  function bildVon(id, nr) {
+    var m = motivVon(id, nr);
+    return m ? ('illu/' + m + '.jpg') : ERSATZ;
+  }
+  /* Damit die Startseite bei einer fehlenden Datei nicht wieder eine
+     leere Fläche zeigt, sondern ein verwandtes Motiv. */
+  window.wegBildErsatz = function () { return ERSATZ; };
 
   /* Was ist als Nächstes dran? Ohne Angabe: mein Weg. Mit Angabe
      ('B1' oder 'pflege'): genau der — und wenn es ihn nicht gibt,

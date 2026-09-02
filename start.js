@@ -33,6 +33,13 @@
     var m = BILD[niveau] || {}, n = m[id] || 'menschen';
     return 'bilder/thema/' + n + '.jpg';
   }
+  /* Fällt eine Datei aus, springt ein verwandtes Motiv ein statt einer
+     leeren Fläche — vorher stand dort onerror="this.remove()", und die
+     Karte hatte links ein beiges Loch. */
+  function ersatzBild(){
+    try{ if(window.wegBildErsatz) return window.wegBildErsatz(); }catch(e){}
+    return 'bilder/thema/menschen.jpg';
+  }
 
   /* ---------- Aussehen ---------- */
   /* Alles hier baut auf marke.css auf — dieselben Farben und Bausteine
@@ -353,7 +360,8 @@
 
     if(!st){
       return '<div class="st-kurs"><div class="bild">'
-        + '<img src="bilder/thema/menschen.jpg" alt="" loading="lazy" onerror="this.remove()">'
+        + '<img src="bilder/thema/menschen.jpg" alt="" loading="lazy"'
+        +      ' onerror="this.onerror=null;this.src=\'' + ersatzBild() + '\'">'
         + '<span class="stufe">A1</span></div>'
         + '<div class="txt"><div class="eyebrow">' + T('sn_kdein','Dein Kurs') + '</div>'
         + '<h2>' + T('sn_klos','Fang mit Lektion 1 an') + '</h2>'
@@ -367,7 +375,8 @@
     var weiter = st.angefangen ? ['sn_kweiter','Weitermachen'] : ['sn_kstart2','Los geht’s'];
     return '<div class="st-kurs">'
       + '<div class="bild">'
-      +   '<img src="' + (st.bild || kursBild(st.niveau, st.id)) + '" alt="" loading="lazy" onerror="this.remove()">'
+      +   '<img src="' + (st.bild || kursBild(st.niveau, st.id)) + '" alt="" loading="lazy"'
+      +        ' onerror="this.onerror=null;this.src=\'' + ersatzBild() + '\'">'
       +   '<span class="stufe">' + E(st.niveau) + '</span>'
       + '</div>'
       + '<div class="txt">'
