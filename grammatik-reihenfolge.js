@@ -86,7 +86,10 @@
     ['irreale-vergleiche', ['konjunktiv2-vergangenheit'], 'als ob, als wäre — Vergleiche, die bewusst nicht stimmen.'],
     ['nominalisierte-adjektive', ['adjektivendungen'], 'der Angestellte, das Wesentliche — aus Adjektiven werden Nomen.'],
     ['praepositionen-gehoben', ['genitiv-b2'], 'angesichts, aufgrund, hinsichtlich — der Genitiv im gehobenen Stil.'],
-    ['funktionsverbgefuege', ['nominalstil', 'praepositionen-gehoben'], 'in Betracht ziehen, zur Verfügung stellen — die Sprache der Ämter und Verträge.']
+    ['funktionsverbgefuege', ['nominalstil', 'praepositionen-gehoben'], 'in Betracht ziehen, zur Verfügung stellen — die Sprache der Ämter und Verträge.'],
+    ['gerundivum', ['partizipialattribut', 'passiv-ersatz'], 'der zu prüfende Antrag — vier Wörter statt acht, und es steht in jedem Bescheid.'],
+    ['uneingeleitete-nebensaetze', ['konjunktiv2-vergangenheit'], 'Sollten Sie Fragen haben — der Bedingungssatz ohne wenn, mit dem Verb vorn.'],
+    ['korrelate', ['verben-mit-praeposition'], 'Ich freue mich darauf, dass — das kleine Wort, das dem Nebensatz den Platz freihält.']
   ];
 
   var NR = {}, INFO = {};
@@ -148,7 +151,10 @@
     'irreale-vergleiche': 'irreale Vergleiche',
     'nominalisierte-adjektive': 'nominalisierte Adjektive',
     'praepositionen-gehoben': 'gehobene Präpositionen',
-    'funktionsverbgefuege': 'Funktionsverbgefüge'
+    'funktionsverbgefuege': 'Funktionsverbgefüge',
+    'gerundivum': 'Partizip mit zu',
+    'uneingeleitete-nebensaetze': 'Nebensätze ohne wenn',
+    'korrelate': 'Korrelate'
   };
   function titelSammeln() {
     if (!window.UEBUNGEN || !window.UEBUNGEN.skills) return;

@@ -18,10 +18,10 @@
    Vergleiche, reflexive Verben, weil/dass/wenn, Praepositionen mit
    Dativ und die Vergangenheit zum Sprechen (war, hatte, konnte).
 
-   Je Aufgabe steht eine Erklaerung in einem Satz dabei — nicht die
+   Je Aufgabe steht eine Erklärung in einem Satz dabei — nicht die
    Regel aus dem Buch, sondern der Grund, warum es hier so ist.
 
-   Wird NACH uebungen.js geladen und haengt seine Themen an den
+   Wird NACH uebungen.js geladen und hängt seine Themen an den
    Bereich "Grammatik" an. uebungen.js bleibt unangetastet.
 
    Erzeugt von bau/mach-grammatik.js aus bau/grammatik-quelle.json.
@@ -2758,7 +2758,7 @@
  {
   "id": "partizipialattribut",
   "title": "Das Partizip als Attribut — der gerade eingegangene Antrag",
-  "level": "B2",
+  "level": "C1",
   "emoji": "📐",
   "words": [],
   "exercises": [
@@ -2905,7 +2905,7 @@
  {
   "id": "nominalstil",
   "title": "Vom Nebensatz zum Nomen — der Amtsstil",
-  "level": "B2",
+  "level": "C1",
   "emoji": "🏛️",
   "words": [],
   "exercises": [
@@ -3059,7 +3059,7 @@
  {
   "id": "passiv-ersatz",
   "title": "Statt Passiv — lässt sich, ist zu, -bar",
-  "level": "B2",
+  "level": "C1",
   "emoji": "🧩",
   "words": [],
   "exercises": [
@@ -4100,6 +4100,441 @@
     ],
     "answer": 0,
     "explain": "Hier geht es um Erlaubnis, nicht um einen Auftrag und nicht um Möglichkeit."
+   }
+  ]
+ },
+ {
+  "id": "gerundivum",
+  "title": "Der zu prüfende Antrag — das Partizip mit zu",
+  "level": "C1",
+  "emoji": "📐",
+  "words": [],
+  "exercises": [
+   {
+    "type": "gap",
+    "text": "Der zu ___ Antrag liegt seit Montag beim Sachbearbeiter.",
+    "answer": "prüfende",
+    "alts": [
+     "prüfende"
+    ],
+    "explain": "zu + Partizip I + Adjektivendung: der Antrag, der geprüft werden muss."
+   },
+   {
+    "type": "gap",
+    "text": "Die zu ___ Frist endet am 30. September.",
+    "answer": "beachtende",
+    "alts": [
+     "beachtende"
+    ],
+    "explain": "die Frist, die beachtet werden muss — in vier Wörtern statt in acht."
+   },
+   {
+    "type": "gap",
+    "text": "Der zu ___ Betrag beträgt 249 Euro.",
+    "answer": "zahlende",
+    "alts": [
+     "zahlende"
+    ],
+    "explain": "der Betrag, der zu zahlen ist. Diese Form steht in fast jeder Rechnung."
+   },
+   {
+    "type": "gap",
+    "text": "Die noch zu ___ Unterlagen schicke ich Ihnen morgen.",
+    "answer": "ergänzenden",
+    "alts": [
+     "ergänzenden"
+    ],
+    "explain": "Plural mit Artikel: die Endung ist -en. noch macht deutlich, dass es aussteht."
+   },
+   {
+    "type": "gap",
+    "text": "Das ist eine kaum zu ___ Aufgabe.",
+    "answer": "lösende",
+    "alts": [
+     "lösende"
+    ],
+    "explain": "kaum zu lösen heißt: fast unmöglich. Mit kaum, nicht oder schwer wird aus dem Müssen ein Können."
+   },
+   {
+    "type": "gap",
+    "text": "Die zu treffende Entscheidung ist die Entscheidung, die getroffen werden ___.",
+    "answer": "muss",
+    "alts": [
+     "muss"
+    ],
+    "explain": "Die Form trägt immer ein müssen oder können in sich — sichtbar wird es erst beim Auflösen."
+   },
+   {
+    "type": "gap",
+    "text": "Die zu ___ Kosten übernimmt die Versicherung.",
+    "answer": "erstattenden",
+    "alts": [
+     "erstattenden"
+    ],
+    "explain": "die Kosten, die erstattet werden müssen. Nach die im Plural steht -en."
+   },
+   {
+    "type": "gap",
+    "text": "Vor dem Partizip steht in dieser Form immer die Präposition ___.",
+    "answer": "zu",
+    "alts": [
+     "zu"
+    ],
+    "explain": "Ohne zu wäre es ein gewöhnliches Partizip: der prüfende Beamte prüft selbst, der zu prüfende Antrag wird geprüft."
+   },
+   {
+    "type": "gap",
+    "text": "Ein nicht zu ___ Risiko sollte man ernst nehmen.",
+    "answer": "unterschätzendes",
+    "alts": [
+     "unterschätzendes"
+    ],
+    "explain": "Neutrum ohne Artikel: die Endung ist -es. ein nicht zu unterschätzendes Risiko."
+   },
+   {
+    "type": "choice",
+    "q": "Was bedeutet „die zu prüfenden Anträge“?",
+    "options": [
+     "Anträge, die geprüft werden müssen",
+     "Anträge, die schon geprüft wurden",
+     "Anträge, die sich selbst prüfen"
+    ],
+    "answer": 0,
+    "explain": "zu + Partizip I ist immer passiv und immer noch offen — die Arbeit steht bevor."
+   },
+   {
+    "type": "choice",
+    "q": "Welche Form ist richtig?",
+    "options": [
+     "der zu zahlende Betrag",
+     "der zu zahlender Betrag",
+     "der zu zahlen Betrag"
+    ],
+    "answer": 0,
+    "explain": "Nach dem bestimmten Artikel im Nominativ Maskulinum steht -e: der zu zahlende Betrag."
+   },
+   {
+    "type": "choice",
+    "q": "Woraus besteht diese Form?",
+    "options": [
+     "zu + Partizip I + Adjektivendung",
+     "zu + Partizip II",
+     "um … zu + Infinitiv"
+    ],
+    "answer": 0,
+    "explain": "prüfen → prüfend → der zu prüfende Antrag. Das Partizip II wäre geprüft und hieße: schon fertig."
+   },
+   {
+    "type": "choice",
+    "q": "Welcher Satz sagt dasselbe wie „die zu erledigenden Aufgaben“?",
+    "options": [
+     "die Aufgaben, die erledigt werden müssen",
+     "die Aufgaben, die erledigt worden sind",
+     "die Aufgaben, die jemand erledigen wollte"
+    ],
+    "answer": 0,
+    "explain": "Der Unterschied ist die Zeit: zu erledigen steht noch aus, erledigt worden ist vorbei."
+   },
+   {
+    "type": "choice",
+    "q": "Wo begegnet dir diese Form am häufigsten?",
+    "options": [
+     "In Verträgen, Bescheiden und Bedienungsanleitungen",
+     "In Gesprächen unter Freunden",
+     "In Zeitungsüberschriften"
+    ],
+    "answer": 0,
+    "explain": "Sie spart Platz und klingt sachlich — genau das, was Schriftdeutsch will. Gesprochen sagt man lieber: der Antrag, den wir noch prüfen müssen."
+   }
+  ]
+ },
+ {
+  "id": "uneingeleitete-nebensaetze",
+  "title": "Sollten Sie Fragen haben — Nebensätze ohne wenn",
+  "level": "C1",
+  "emoji": "🔀",
+  "words": [],
+  "exercises": [
+   {
+    "type": "gap",
+    "text": "___ Sie Fragen haben, melden Sie sich gern.",
+    "answer": "Sollten",
+    "alts": [
+     "Sollten"
+    ],
+    "explain": "Ohne wenn rückt das Verb ganz nach vorn. Sollten ist die häufigste Form in Briefen."
+   },
+   {
+    "type": "gap",
+    "text": "___ ich das gewusst, wäre ich früher gekommen.",
+    "answer": "Hätte",
+    "alts": [
+     "Hätte"
+    ],
+    "explain": "Wenn ich das gewusst hätte → Hätte ich das gewusst. Das Verb übernimmt den Platz von wenn."
+   },
+   {
+    "type": "gap",
+    "text": "Im uneingeleiteten Bedingungssatz steht das Verb an ___ Stelle.",
+    "answer": "erster",
+    "alts": [
+     "erster"
+    ],
+    "explain": "Sonst steht es im Nebensatz am Ende. Fällt wenn weg, muss etwas den Anfang markieren — das übernimmt das Verb."
+   },
+   {
+    "type": "gap",
+    "text": "___ es am Samstag regnen, fällt das Fest aus.",
+    "answer": "Sollte",
+    "alts": [
+     "Sollte"
+    ],
+    "explain": "sollte steht für einen Fall, mit dem man rechnet, aber nicht sicher. Höflicher und offener als wenn."
+   },
+   {
+    "type": "gap",
+    "text": "___ Sie mit der Entscheidung nicht einverstanden, können Sie Widerspruch einlegen.",
+    "answer": "Sind",
+    "alts": [
+     "Sind"
+    ],
+    "explain": "Auch der Indikativ geht: Sind Sie nicht einverstanden … Das klingt sachlicher als Sollten Sie."
+   },
+   {
+    "type": "gap",
+    "text": "Wenn ich Zeit hätte, käme ich mit. — ___ ich Zeit, käme ich mit.",
+    "answer": "Hätte",
+    "alts": [
+     "Hätte"
+    ],
+    "explain": "Beide Sätze sagen dasselbe. Die Form ohne wenn wirkt gehobener und etwas knapper."
+   },
+   {
+    "type": "gap",
+    "text": "___ Sie weitere Unterlagen benötigen, teilen Sie uns das bitte mit.",
+    "answer": "Sollten",
+    "alts": [
+     "Sollten"
+    ],
+    "explain": "Der Standardsatz am Ende jedes Behördenbriefs — jetzt weißt du, warum er so gebaut ist."
+   },
+   {
+    "type": "gap",
+    "text": "___ der Zug Verspätung, rufen Sie bitte kurz an.",
+    "answer": "Hat",
+    "alts": [
+     "Hat"
+    ],
+    "explain": "Auch mit einem gewöhnlichen Verb möglich: Hat der Zug Verspätung … Nur das Verb wandert nach vorn."
+   },
+   {
+    "type": "gap",
+    "text": "Nach dem vorangestellten Bedingungssatz beginnt der Hauptsatz mit dem ___.",
+    "answer": "Verb",
+    "alts": [
+     "Verb"
+    ],
+    "explain": "Der ganze Nebensatz füllt das Vorfeld. Danach folgt sofort das gebeugte Verb: … , melden Sie sich."
+   },
+   {
+    "type": "choice",
+    "q": "Wie lautet „Wenn Sie Fragen haben“ ohne wenn?",
+    "options": [
+     "Sollten Sie Fragen haben",
+     "Sie sollten Fragen haben",
+     "Fragen haben sollten Sie"
+    ],
+    "answer": 0,
+    "explain": "Das Verb springt an die erste Stelle, alles andere bleibt in der Reihenfolge stehen."
+   },
+   {
+    "type": "choice",
+    "q": "Welcher Satz ist richtig gebaut?",
+    "options": [
+     "Hätte ich das gewusst, wäre ich gekommen.",
+     "Hätte ich das gewusst, ich wäre gekommen.",
+     "Ich hätte das gewusst, wäre ich gekommen."
+    ],
+    "answer": 0,
+    "explain": "Der Nebensatz steht im Vorfeld, deshalb beginnt der Hauptsatz mit wäre — nicht mit ich."
+   },
+   {
+    "type": "choice",
+    "q": "Warum steht in Briefen „Sollten Sie …“ statt „Wenn Sie …“?",
+    "options": [
+     "Es klingt höflicher und lässt den Fall offener",
+     "Es zeigt, dass der Fall sicher eintritt",
+     "Es ist die einzige korrekte Form"
+    ],
+    "answer": 0,
+    "explain": "wenn behauptet, dass der Fall vorkommt. sollten stellt ihn nur in den Raum — das ist zurückhaltender."
+   },
+   {
+    "type": "choice",
+    "q": "Was fehlt: „___ Sie Fragen, rufen Sie uns an.“",
+    "options": [
+     "Haben",
+     "Sie haben",
+     "Wenn haben"
+    ],
+    "answer": 0,
+    "explain": "Auch ohne sollten geht es: Haben Sie Fragen, rufen Sie an. Verb vorn, fertig."
+   },
+   {
+    "type": "choice",
+    "q": "Welcher Hauptsatz passt zu „Sollte das Paket nicht ankommen,“?",
+    "options": [
+     "melden Sie sich bitte innerhalb von zehn Tagen.",
+     "Sie melden sich bitte innerhalb von zehn Tagen.",
+     "bitte Sie sich innerhalb von zehn Tagen melden."
+    ],
+    "answer": 0,
+    "explain": "Nach dem Komma steht das gebeugte Verb: melden Sie sich."
+   }
+  ]
+ },
+ {
+  "id": "korrelate",
+  "title": "Ich freue mich darauf, dass — das Wort, das den Satz ankündigt",
+  "level": "C1",
+  "emoji": "🔗",
+  "words": [],
+  "exercises": [
+   {
+    "type": "gap",
+    "text": "Ich freue mich ___, dass du kommst.",
+    "answer": "darauf",
+    "alts": [
+     "darauf"
+    ],
+    "explain": "sich freuen auf — vor einem dass-Satz wird aus auf das Wort darauf. Es hält der Präposition den Platz frei."
+   },
+   {
+    "type": "gap",
+    "text": "Wir rechnen ___, dass die Frist verlängert wird.",
+    "answer": "damit",
+    "alts": [
+     "damit"
+    ],
+    "explain": "rechnen mit → damit. Die Präposition bleibt dieselbe, nur da- kommt davor."
+   },
+   {
+    "type": "gap",
+    "text": "Sie hat sich ___ beschwert, dass niemand geantwortet hat.",
+    "answer": "darüber",
+    "alts": [
+     "darüber"
+    ],
+    "explain": "sich beschweren über → darüber. Das r steht dazwischen, weil über mit einem Vokal beginnt."
+   },
+   {
+    "type": "gap",
+    "text": "Es hängt ___ ab, wie viele Leute kommen.",
+    "answer": "davon",
+    "alts": [
+     "davon"
+    ],
+    "explain": "abhängen von → davon. Auch vor einer indirekten Frage steht das Korrelat."
+   },
+   {
+    "type": "gap",
+    "text": "Ich bin ___ überzeugt, dass es funktioniert.",
+    "answer": "davon",
+    "alts": [
+     "davon"
+    ],
+    "explain": "überzeugt sein von → davon. Ohne das Korrelat fehlt dem Satz ein Bein."
+   },
+   {
+    "type": "gap",
+    "text": "Denk bitte ___, den Müll rauszubringen.",
+    "answer": "daran",
+    "alts": [
+     "daran"
+    ],
+    "explain": "denken an → daran. Auch vor einem Infinitivsatz mit zu steht es."
+   },
+   {
+    "type": "gap",
+    "text": "Zwischen da- und der Präposition steht ein ___, wenn diese mit einem Vokal beginnt.",
+    "answer": "r",
+    "alts": [
+     "r"
+    ],
+    "explain": "darauf, darüber, daran, darin — aber damit, davon, dazu. Das r ist nur eine Sprechhilfe."
+   },
+   {
+    "type": "gap",
+    "text": "Wir warten ___, dass die Bestätigung kommt.",
+    "answer": "darauf",
+    "alts": [
+     "darauf"
+    ],
+    "explain": "warten auf → darauf. Im gesprochenen Deutsch fällt es oft weg; geschrieben gehört es hin."
+   },
+   {
+    "type": "gap",
+    "text": "___ ärgert mich, dass niemand Bescheid gesagt hat.",
+    "answer": "Es",
+    "alts": [
+     "Es"
+    ],
+    "explain": "Hier hält es den Platz des Subjekts frei, bis der dass-Satz kommt. Ein anderes Korrelat, dieselbe Aufgabe."
+   },
+   {
+    "type": "choice",
+    "q": "Welcher Satz ist richtig?",
+    "options": [
+     "Ich freue mich darauf, dich zu sehen.",
+     "Ich freue mich auf, dich zu sehen.",
+     "Ich freue mich, dich zu sehen darauf."
+    ],
+    "answer": 0,
+    "explain": "Die nackte Präposition kann nicht allein vor einem Nebensatz stehen — sie braucht das da-."
+   },
+   {
+    "type": "choice",
+    "q": "Warum heißt es darauf und nicht daauf?",
+    "options": [
+     "Weil vor einem Vokal ein r eingeschoben wird",
+     "Weil auf immer mit r verbunden wird",
+     "Weil es zwei getrennte Wörter sind"
+    ],
+    "answer": 0,
+    "explain": "Dieselbe Regel wie bei worauf und woran. Zwei Vokale nebeneinander vermeidet das Deutsche hier."
+   },
+   {
+    "type": "choice",
+    "q": "Wofür steht das da- in „Sie hat sich darüber beschwert, dass …“?",
+    "options": [
+     "Für den ganzen Nebensatz, der gleich kommt",
+     "Für eine Person",
+     "Für einen Ort"
+    ],
+    "answer": 0,
+    "explain": "Es zeigt nach vorn: Gleich kommt der Inhalt. Deshalb heißt es Korrelat — es hat einen Partner im Satz."
+   },
+   {
+    "type": "choice",
+    "q": "Welches Korrelat gehört zu „sich erinnern“?",
+    "options": [
+     "daran",
+     "darauf",
+     "damit"
+    ],
+    "answer": 0,
+    "explain": "sich erinnern an → daran. Die Präposition steht am Verb fest, das Korrelat übernimmt sie."
+   },
+   {
+    "type": "choice",
+    "q": "Was ist das es in „Es freut mich, dass du da bist“?",
+    "options": [
+     "Ein Platzhalter für den dass-Satz",
+     "Das Subjekt, das sich freut",
+     "Ein Fehler, dort müsste das stehen"
+    ],
+    "answer": 0,
+    "explain": "Der dass-Satz ist das eigentliche Subjekt. Weil er hinten steht, hält es vorn den Platz."
    }
   ]
  }
