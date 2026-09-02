@@ -698,7 +698,9 @@
   setRolle('lehrer');
 
   // ---- Video: eigener, abgesicherter Server (Token aus der Club-Plattform) ----
-  const EIGENER_SERVER = 'meet.deutschoderwas-club.de';
+  // Video laeuft ueber Daily. Jitsi ist nur noch der Notausgang, und zwar
+  // ueber den oeffentlichen Server — der eigene Server in Falkenstein
+  // wird nicht mehr gebraucht und kann gekuendigt werden.
   const NOTFALL_SERVER = 'meet.jit.si';
   // Stunde aus der Adresse: ?stunde=<Klassen-ID>  (+ optionale Fallback-Anzeige)
   const _p = new URLSearchParams(location.search);
@@ -1161,10 +1163,8 @@
     try{ if(dframe){ dframe.destroy(); dframe=null; } }catch(e){}
     window._provider=null;
     const parent=document.getElementById('jitsi'); if(parent) parent.innerHTML='';
-    const jwt = await holeToken();
-    ladeJitsiApi(EIGENER_SERVER, ()=>starteRaum(EIGENER_SERVER, jwt),
-      ()=> ladeJitsiApi(NOTFALL_SERVER, ()=>starteRaum(NOTFALL_SERVER, null),
-        ()=> meldung('Video konnte nicht geladen werden. Bitte Seite neu laden.')));
+    ladeJitsiApi(NOTFALL_SERVER, ()=>starteRaum(NOTFALL_SERVER, null),
+      ()=> meldung('Video konnte nicht geladen werden. Bitte Seite neu laden.'));
   }
 
   function starteRaum(domain, jwt){
@@ -1508,9 +1508,8 @@
   async function jitsiStarten(){
     const jwt = await holeToken();
     if(jwt){
-      ladeJitsiApi(EIGENER_SERVER, ()=>starteRaum(EIGENER_SERVER, jwt),
-        ()=> ladeJitsiApi(NOTFALL_SERVER, ()=>starteRaum(NOTFALL_SERVER, null),
-          ()=> meldung('Video konnte nicht geladen werden. Bitte Seite neu laden.')));
+      ladeJitsiApi(NOTFALL_SERVER, ()=>starteRaum(NOTFALL_SERVER, null),
+        ()=> meldung('Video konnte nicht geladen werden. Bitte Seite neu laden.'));
     } else {
       meldung('Bitte zuerst im <b>Club einloggen</b> (konto.html) – im selben Browser – und diese Seite dann neu laden.');
     }

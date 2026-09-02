@@ -99,7 +99,10 @@ var Q=new URLSearchParams(location.search);
 var RAUM=(Q.get('raum')||'').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,80);
 var MIT=(Q.get('mit')||'').slice(0,60);
 var LVL=(Q.get('lvl')||'').toUpperCase();
-var EIGENER='meet.deutschoderwas-club.de', NOTFALL='meet.jit.si';
+/* Video laeuft ueber Daily — derselbe Dienst wie im Klassenraum.
+   Jitsi bleibt nur als Notausgang, und zwar ueber den oeffentlichen
+   Server: So haengt an dieser Seite kein eigener Server mehr. */
+var NOTFALL='meet.jit.si';
 var sb=null, api=null, name='Mitglied';
 
 function esc(x){return String(x==null?'':x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
@@ -166,7 +169,7 @@ async function start(){
   try{
     if(window.supabase&&CFG.SUPABASE_URL) sb=window.supabase.createClient(CFG.SUPABASE_URL,CFG.SUPABASE_ANON_KEY);
   }catch(e){}
-  var jwt=null;
+  var jwt=null, sessJwt=null;
   if(sb){
     try{
       var s=await sb.auth.getSession();
@@ -176,7 +179,8 @@ async function start(){
         return;
       }
       try{
-        var pr=await sb.from('profiles').select('name').eq('id',sess.user.id).single();
+        sessJwt = sess.access_token;
+      var pr=await sb.from('profiles').select('name').eq('id',sess.user.id).single();
         if(pr&&pr.data&&pr.data.name) name=pr.data.name;
       }catch(e){}
       var res=await fetch(CFG.SUPABASE_URL+'/functions/v1/jitsi-token',{
@@ -187,11 +191,63 @@ async function start(){
       if(res.ok){ var j=await res.json(); jwt=j.token||null; }
     }catch(e){}
   }
-  lade(EIGENER,function(){ starte(EIGENER,jwt); },function(){
-    lade(NOTFALL,function(){ starte(NOTFALL,null); },function(){
-      melde('<span>Der Videoraum lässt sich gerade nicht öffnen. Schreibt euch solange im Club.</span><a href="konto.html#buddy">Zurück zum Sprech-Tandem</a>');
-    });
+  /* Erst Daily — besseres Bild, kein eigener Server noetig. */
+  var d = sessJwt ? await holeDailyRaum(sessJwt) : null;
+  if(d){
+    ladeDaily(function(){ starteDaily(d.url, d.token); }, function(){ zurueckAufJitsi(jwt); });
+    return;
+  }
+  zurueckAufJitsi(jwt);
+}
+
+/* Notausgang: der oeffentliche Jitsi-Server. Kostet nichts und braucht
+   keinen eigenen Rechner — dafuer ohne Zugangsschutz, deshalb wirklich
+   nur, wenn Daily nicht antwortet. */
+function zurueckAufJitsi(jwt){
+  lade(NOTFALL,function(){ starte(NOTFALL,null); },function(){
+    melde('<span>Der Videoraum lässt sich gerade nicht öffnen. Schreibt euch solange im Club.</span><a href="konto.html#buddy">Zurück zum Sprech-Tandem</a>');
   });
+}
+
+function ladeDaily(ok,fehler){
+  if(window.DailyIframe){ ok(); return; }
+  var s=document.createElement('script');
+  s.src='https://unpkg.com/@daily-co/daily-js';
+  s.onload=ok; s.onerror=fehler;
+  document.head.appendChild(s);
+}
+
+/* Der Raumname entsteht serverseitig aus dieser Kennung: tandem-<raum>.
+   Zwei Leute mit demselben Link landen also im selben Raum, alle anderen
+   nicht — der Raum ist privat und nur mit Token zu betreten. */
+async function holeDailyRaum(access){
+  try{
+    var res=await fetch('/api/daily-room',{
+      method:'POST',
+      headers:{'Authorization':'Bearer '+access,'Content-Type':'application/json'},
+      body:JSON.stringify({ classId:'tandem-'+RAUM })
+    });
+    var j=await res.json();
+    if(j && j.ok && j.url && j.token) return j;
+  }catch(e){ console.warn('Daily-Raum nicht bekommen', e); }
+  return null;
+}
+
+function starteDaily(url,token){
+  var el=document.getElementById('jitsi'); el.innerHTML='';
+  try{
+    var frame=window.DailyIframe.createFrame(el,{
+      showLeaveButton:true,
+      showFullscreenButton:true,
+      iframeStyle:{ width:'100%', height:'100%', border:'0' }
+    });
+    frame.on('left-meeting',function(){
+      melde('<span>Ihr habt den Raum verlassen. Schön, dass ihr geübt habt.</span><a href="konto.html#buddy">Zurück zum Sprech-Tandem</a>');
+    });
+    frame.join({ url:url, token:token }).catch(function(e){
+      console.warn('Daily join fehlgeschlagen → Jitsi', e); zurueckAufJitsi(null);
+    });
+  }catch(e){ zurueckAufJitsi(null); }
 }
 function lade(domain,ok,fehler){
   var s=document.createElement('script');
