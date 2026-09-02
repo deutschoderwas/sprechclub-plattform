@@ -607,6 +607,7 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFFDF3 0%,#FFFDF3 60%)
     <button class="navlink" data-view="nachrichten" onclick="go('nachrichten')"><span class="ic" data-zeichen="nachrichten"></span><span>Nachrichten</span></button>
     <div class="side-foot">
       <button class="navlink" data-view="guthaben" onclick="go('guthaben')"><span class="ic" data-zeichen="guthaben"></span><span data-i18n="k_credit">Guthaben</span></button>
+      <button class="navlink" data-view="abo" onclick="go('abo')"><span class="ic">💳</span><span>Mein Abo</span></button>
       <button class="navlink" data-view="profil" onclick="go('profil')"><span class="ic" data-zeichen="profil"></span><span data-i18n="k_profile">Profil</span></button>
       <a class="navlink" href="#" onclick="return bucheStunde(event)"><span class="ic">➕</span><span data-i18n="k_book1">Stunde buchen</span></a>
       <button class="navlink" onclick="logout()"><span class="ic">↩️</span>Abmelden</button>
@@ -892,6 +893,51 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFFDF3 0%,#FFFDF3 60%)
     <section class="view" id="v-vokabeln"></section>
     <section class="view" id="v-fortschritt"></section>
     <section class="view" id="v-guthaben"></section>
+    <section class="view" id="v-abo"></section>
+<style id="abo-style">
+/* Mein Abo — eine ruhige Karte, in der die eine wichtige Zeile
+   (wann wird abgebucht, wann endet es) sofort ins Auge fällt. */
+.abo-karte{max-width:640px;padding:22px 22px 18px}
+.abo-laed{color:var(--text-soft);font-size:14px;padding:8px 0}
+.abo-kopf{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:10px}
+.abo-abz{display:inline-flex;align-items:center;gap:6px;background:var(--green-soft);color:#0E6F66;
+  border:2px solid var(--turquoise);border-radius:50px;padding:3px 13px;font-weight:800;font-size:13px}
+.abo-abz-aus{background:var(--bg);color:var(--text-soft);border-color:var(--border)}
+.abo-lage{font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;
+  border-radius:50px;padding:3px 10px}
+.abo-lage-ok{background:#EDF7E4;color:#3E7C0E}
+.abo-lage-warn{background:#FFF3D6;color:#8A6100}
+.abo-h2{font-size:27px;line-height:1.2;margin:0 0 6px;font-weight:800}
+.abo-zeile{font-size:14.5px;color:var(--text);line-height:1.55;margin:0 0 4px}
+.abo-zeile.abo-warn{background:#FFF8E6;border-left:4px solid #F5B942;border-radius:0 10px 10px 0;padding:10px 13px;margin:8px 0 4px}
+.abo-drin{list-style:none;margin:14px 0 4px;padding:0;display:grid;gap:7px}
+.abo-drin li{position:relative;padding-left:25px;font-size:14px;color:var(--text-soft);line-height:1.5}
+.abo-drin li::before{content:"✓";position:absolute;left:0;top:0;color:#4E9E12;font-weight:800}
+.abo-neben{display:flex;flex-direction:column;gap:1px;background:var(--bg);border:1px solid var(--border);
+  border-radius:13px;padding:11px 14px;margin-top:11px}
+.abo-neben b{font-size:14px}
+.abo-neben span{font-size:13px;color:var(--text-soft)}
+.abo-tipp{display:flex;flex-direction:column;gap:2px;background:var(--green-soft);border:2px solid var(--turquoise);
+  border-radius:13px;padding:12px 14px;margin-top:13px}
+.abo-tipp b{font-size:14px;color:#0E6F66}
+.abo-tipp span{font-size:13px;color:var(--text-soft);line-height:1.5}
+.abo-knoepfe{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}
+.abo-knoepfe .btn{flex:0 1 auto}
+.abo-weg{color:var(--text-soft)!important}
+.abo-weg:hover{color:var(--primary)!important;border-color:#F3C6C6!important}
+.abo-fuss{margin-top:14px;padding-top:13px;border-top:1px solid var(--border);
+  font-size:12.5px;color:var(--text-soft);line-height:1.55}
+.abo-karte .lnk{background:none;border:none;padding:0;font:inherit;color:var(--primary);
+  font-weight:700;cursor:pointer;text-decoration:underline}
+/* Am Handy stehen die Knöpfe untereinander und sind voll anfassbar. */
+@media(max-width:640px){
+  .abo-karte{padding:17px 15px 15px;border-radius:16px}
+  .abo-h2{font-size:23px}
+  .abo-knoepfe{flex-direction:column;gap:8px;margin-top:16px}
+  .abo-knoepfe .btn,.abo-knoepfe a.btn{width:100%;padding:13px 16px}
+  .abo-zeile{font-size:14px}
+}
+</style>
     <section class="view" id="v-nachrichten"></section>
     <section class="view" id="v-amanda"></section>
     <section class="view" id="v-profil"></section>
@@ -1105,12 +1151,14 @@ function wartelisteEingetragen(){
     +'<button class="lup-go" onclick="schliesseLiveUpgrade()">Alles klar</button>';
 }
 // Stripe-Kundenportal öffnen — Abo verwalten / kündigen (Kündigung zum Periodenende; danach verfallen die Stunden).
-async function openPortal(){
+async function openPortal(flow){
   try{
     const { data:{ session } }=await sb.auth.getSession();
     if(!session){ toast('Bitte melde dich neu an.'); return; }
-    toast('Portal wird geöffnet …');
-    const r=await fetch('/api/create-portal',{ method:'POST', headers:{ 'Authorization':'Bearer '+session.access_token } });
+    toast('Wir bringen dich zu Stripe …');
+    const r=await fetch('/api/create-portal',{ method:'POST',
+      headers:{ 'Authorization':'Bearer '+session.access_token, 'Content-Type':'application/json' },
+      body: JSON.stringify({ flow: flow||'', subscription: (window.MEIN_ABO && window.MEIN_ABO.abo && window.MEIN_ABO.abo.id) || null }) });
     const d=await r.json().catch(()=>({}));
     if(d&&d.url){ location.href=d.url; }
     else if(d&&d.error==='no_subscription'){ toast('Kein aktives Abo gefunden.'); }
@@ -1305,10 +1353,10 @@ function collectVocab(){
 }
 
 // ---------- Router ----------
-const VIEWS=['dashboard','lernen','bereiche','kurs','pruefung','schreiben','kurse','ueben','community','dm','lernpfad','szenen','kalender','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','profil','fehler','buddy','fertigkeit','podcast'];
+const VIEWS=['dashboard','lernen','bereiche','kurs','pruefung','schreiben','kurse','ueben','community','dm','lernpfad','szenen','kalender','stunden','materialien','vokabeln','fortschritt','guthaben','abo','nachrichten','amanda','profil','fehler','buddy','fertigkeit','podcast'];
 function go(v){ location.hash=v; }
 function toggleNav(){ document.body.classList.toggle('nav-open'); }
-const VIEW_TITLES={dashboard:['Schülerbereich','Startseite'],lernen:['Lernbereich','Deine Themen'],kurs:['Lernbereich','Dein Kurs'],pruefung:['Prüfung','Prüfungsvorbereitung'],schreiben:['Lernen','Schreibtrainer'],kurse:['Lernen','Kursbibliothek'],kalender:['Live Unterricht','Kalender'],stunden:['Live Unterricht','Meine Stunden'],community:['Community-Chat','Alle Themen'],ueben:['Lernen','Üben'],vokabeln:['Lernen','Vokabeltrainer'],materialien:['Lernen','Materialien'],fortschritt:['Lernen','Fortschritt'],nachrichten:['Nachrichten','Team'],amanda:['Amanda','KI-Sprechpartnerin'],lernpfad:['Lernen','Mein Lernplan'],szenen:['Lernen','Meine Szenen'],fehler:['Lernen','Fehler-Trainer'],buddy:['Lernen','Sprech-Buddy'],guthaben:['Konto','Guthaben'],profil:['Konto','Profil']};
+const VIEW_TITLES={dashboard:['Schülerbereich','Startseite'],lernen:['Lernbereich','Deine Themen'],kurs:['Lernbereich','Dein Kurs'],pruefung:['Prüfung','Prüfungsvorbereitung'],schreiben:['Lernen','Schreibtrainer'],kurse:['Lernen','Kursbibliothek'],kalender:['Live Unterricht','Kalender'],stunden:['Live Unterricht','Meine Stunden'],community:['Community-Chat','Alle Themen'],ueben:['Lernen','Üben'],vokabeln:['Lernen','Vokabeltrainer'],materialien:['Lernen','Materialien'],fortschritt:['Lernen','Fortschritt'],nachrichten:['Nachrichten','Team'],amanda:['Amanda','KI-Sprechpartnerin'],lernpfad:['Lernen','Mein Lernplan'],szenen:['Lernen','Meine Szenen'],fehler:['Lernen','Fehler-Trainer'],buddy:['Lernen','Sprech-Buddy'],guthaben:['Konto','Guthaben'],abo:['Konto','Mein Abo'],profil:['Konto','Profil']};
 function updateTopbar(v){var t=VIEW_TITLES[v]||['Schülerbereich','']; var s=document.getElementById('tbS'),b=document.getElementById('tbT'); var lang='de'; try{lang=localStorage.getItem('dow_lang')||'de';}catch(e){} var TT=window.__I18N__||{}; function tr(x){var o=TT[x]; return (o&&o[lang]!=null)?o[lang]:x;} if(s){s.setAttribute('data-de',t[0]);s.setAttribute('data-i18n',t[0]);s.textContent=tr(t[0]);} if(b){b.setAttribute('data-de',t[1]);b.setAttribute('data-i18n',t[1]);b.textContent=tr(t[1]);}}
 function routeFromHash(){ const v=(location.hash||'#dashboard').slice(1); show(VIEWS.includes(v)?v:'dashboard'); }
 // Ohne Guthaben/Probestunde/Pass: ALLES gesperrt außer Kalender (und Profil für Konto/Logout).
@@ -1330,7 +1378,7 @@ function show(v){
   if(LOCKED_VIEWS.includes(v) && !isActive()){ renderLocked(v); window.scrollTo(0,0); return; }
   if(nochNichtOffen() && VORVERKAUF_ZU.includes(v)){ renderVorverkauf(v); window.scrollTo(0,0); return; }
   ({dashboard:renderDashboard,kurse:(window.renderKurse||renderDashboard),ueben:(window.renderUeben||renderDashboard),lernen:(window.renderLernen||renderDashboard),bereiche:(window.renderBereiche||window.renderLernen||renderDashboard),kurs:(window.renderNiveau||renderDashboard),schreiben:(window.renderSchreiben||renderDashboard),community:(window.renderCommunity||renderDashboard),dm:(window.renderDM||renderDashboard),lernpfad:renderLernpfad,szenen:function(){ if(window.LERNPFAD) LERNPFAD.pfad('v-szenen'); },kalender:renderKalender,stunden:renderStunden,pruefung:(window.renderPruefungen||renderDashboard),materialien:renderMaterialien,vokabeln:(window.renderVokabeln||renderVokabelnAlt),
-    fortschritt:renderFortschritt,guthaben:renderGuthaben,nachrichten:renderNachrichten,
+    fortschritt:renderFortschritt,guthaben:renderGuthaben,abo:renderAbo,nachrichten:renderNachrichten,
     amanda:renderAmanda,profil:renderProfil,fehler:(window.renderFehlerTrainer||renderDashboard),buddy:(window.renderBuddy||renderDashboard),fertigkeit:(window.renderFertigkeit||renderDashboard)}[v])();
   if(v==='community') markCommRead();
   if(v==='dashboard') setTimeout(mcStatus,60);   // Community geöffnet -> Nachrichten gelesen, Badge weg
@@ -1696,7 +1744,11 @@ function renderDashboard(){
   let abo='';
   if(passActive()){
     const pi=planInfo();
-    abo=`<b>⭐ ${pi.label} aktiv</b> <span>${pi.stunden?pi.stunden+' LIVE-Stunden/Monat · ':''}verlängert am ${fmtShort(new Date(profile.pass_until))} · <a href="#" onclick="openPortal();return false">Abo verwalten</a></span>`;
+    abo=`<b>⭐ ${pi.label} aktiv</b> <span>${pi.stunden?pi.stunden+' LIVE-Stunden/Monat · ':''}verlängert am ${fmtShort(new Date(profile.pass_until))} · <a href="#abo" onclick="go('abo');return false">Mein Abo</a></span>`;
+  } else if(profile && ['community','premium','premium_plus'].indexOf(profile.tier)>=0){
+    /* Community- und Premium-Mitglieder haben keinen Pass und sahen hier
+       bisher gar nichts — auch keinen Weg zum Kündigen. */
+    abo=`<b>⭐ ${aboName(profile.tier)}-Mitgliedschaft aktiv</b> <span>Alle Kurse, Übungen und der Chat sind für dich offen · <a href="#abo" onclick="go('abo');return false">Mein Abo</a></span>`;
   }
   try{
     if(window.STARTSEITE) STARTSEITE.zeichne(document.getElementById('startNeu'),{
@@ -2882,6 +2934,178 @@ function renderAmanda(){
 }
 
 // ---------- Profil ----------
+/* ============================================================
+   Mein Abo — welche Mitgliedschaft laeuft, wie lange, und was
+   man daran aendern kann.
+
+   Bis hierher gab es das nirgends: der einzige Weg zum Kuendigen
+   war ein kleiner Textlink auf der Startseite, der nur bei den
+   alten LIVE-Paessen ueberhaupt erschien. Wer Community hatte,
+   fand ihn nie — weder am Rechner noch am Handy.
+
+   Alles, was Geld bewegt, laeuft ueber das Stripe-Kundenportal.
+   Wir zeigen hier nur an und schicken dorthin weiter.
+   ============================================================ */
+window.MEIN_ABO = null;
+
+const ABO_INHALT = {
+  community: ['Alle Kurse und Lernbereiche', 'Vokabeltrainer, Podcast und Hörtraining',
+              'Community-Chat mit Korrekturen vom Team', 'Amanda, deine KI-Sprechpartnerin'],
+  premium:   ['Alles aus der Community-Mitgliedschaft', 'LIVE-Sprechclub, Mo bis So um 19 Uhr',
+              'Kleine 2er- und 3er-Gruppen', 'Persönliche Nachbereitung nach jeder Stunde']
+};
+
+function aboGeld(a){
+  if(a.betrag==null) return '';
+  const eur = a.betrag/100;
+  const txt = eur.toLocaleString('de-DE',{style:'currency',currency:(a.waehrung||'eur').toUpperCase(),
+    minimumFractionDigits:(a.betrag%100?2:0), maximumFractionDigits:2});
+  let wann = '';
+  const n = a.intervall_anzahl||1;
+  if(a.intervall==='month') wann = n===1?'im Monat':('alle '+n+' Monate');
+  else if(a.intervall==='year') wann = n===1?'im Jahr':('alle '+n+' Jahre');
+  else if(a.intervall==='week') wann = n===1?'in der Woche':('alle '+n+' Wochen');
+  return (txt+' '+wann).trim();
+}
+function aboDatum(sek){
+  if(!sek) return '';
+  const d=new Date(sek*1000);
+  return isNaN(d)?'':d.toLocaleDateString('de-DE',{day:'numeric',month:'long',year:'numeric'});
+}
+function aboName(tier){
+  if(tier==='premium'||tier==='premium_plus') return 'Premium';
+  if(tier==='community') return 'Community';
+  return 'Mitgliedschaft';
+}
+
+function renderAbo(){
+  const el=document.getElementById('v-abo'); if(!el) return;
+  el.innerHTML =
+    '<div class="pagehead"><h1>Mein Abo</h1><p>Was gerade läuft, bis wann — und alles, was du daran ändern kannst.</p></div>'
+    + '<div class="card abo-karte" id="aboKarte"><div class="abo-laed">Wir sehen gerade bei der Zahlungsstelle nach …</div></div>';
+  aboLaden();
+}
+
+async function aboLaden(){
+  const box=document.getElementById('aboKarte'); if(!box) return;
+  let d=null;
+  try{
+    const { data:{ session } }=await sb.auth.getSession();
+    if(!session) throw new Error('keine Sitzung');
+    const r=await fetch('/api/mein-abo',{ headers:{ 'Authorization':'Bearer '+session.access_token } });
+    d=await r.json();
+    if(!r.ok) throw new Error(d&&d.error||'Fehler');
+  }catch(e){
+    box.innerHTML='<div class="abo-laed">Wir konnten deine Mitgliedschaft gerade nicht abrufen. '
+      +'<button class="lnk" onclick="aboLaden()">Noch einmal versuchen</button><br>'
+      +'<span class="muted">Wenn das öfter passiert, schreib uns kurz unter <b>Nachrichten</b> — wir schauen nach.</span></div>';
+    return;
+  }
+  window.MEIN_ABO=d;
+  box.innerHTML=aboKarteHtml(d);
+}
+
+function aboKarteHtml(d){
+  const a=d.abo;
+  const tier=d.tier||'';
+  const name=aboName(tier);
+
+  /* Kein laufendes Abo — aber vielleicht noch Guthaben oder ein alter Pass. */
+  if(!a || !a.laeuft){
+    const gek = a && a.status==='canceled';
+    let h='<div class="abo-kopf"><span class="abo-abz abo-abz-aus">Keine laufende Mitgliedschaft</span></div>'
+      +'<h2 class="abo-h2">'+(gek?'Dein Abo ist beendet':'Du hast gerade kein Abo')+'</h2>'
+      +'<p class="abo-zeile">'+(gek
+        ? 'Dein Zugang zur Plattform ist damit zu Ende. Dein ganzer Fortschritt bleibt gespeichert — mit einer neuen Mitgliedschaft ist sofort alles wieder da.'
+        : 'Für die Plattform brauchst du eine aktive Mitgliedschaft. Dein Fortschritt bleibt gespeichert.')+'</p>';
+    h+=aboRestHtml(d);
+    h+='<div class="abo-knoepfe"><a class="btn btn-primary" href="/preise">Mitgliedschaft ansehen →</a>'
+      +(d.portal && d.portal.zahlungsmittel && a ? '<button class="btn btn-ghost" onclick="openPortal()">Alte Rechnungen ansehen</button>' : '')
+      +'</div>';
+    return h;
+  }
+
+  const gekuendigt = a.kuendigt_zum_ende;
+  const pausiert   = a.pausiert;
+  const offen      = a.status==='past_due' || a.status==='unpaid';
+
+  let lage='läuft', lageK='ok';
+  if(offen){ lage='Zahlung offen'; lageK='warn'; }
+  else if(pausiert){ lage='pausiert'; lageK='warn'; }
+  else if(gekuendigt){ lage='gekündigt'; lageK='warn'; }
+  else if(a.status==='trialing'){ lage='Testzeit'; lageK='ok'; }
+
+  let h='<div class="abo-kopf"><span class="abo-abz">'+esc(a.produkt||name)+'</span>'
+    +'<span class="abo-lage abo-lage-'+lageK+'">'+lage+'</span></div>';
+
+  h+='<h2 class="abo-h2">'+(aboGeld(a)||name)+'</h2>';
+
+  /* Die eine Zeile, auf die es ankommt: was passiert wann. */
+  const bis=aboDatum(a.laeuft_bis);
+  if(offen){
+    h+='<p class="abo-zeile abo-warn">Die letzte Abbuchung hat nicht geklappt. Bitte hinterlege ein anderes Zahlungsmittel — sonst endet dein Zugang automatisch.</p>';
+  } else if(pausiert){
+    h+='<p class="abo-zeile abo-warn">Dein Abo pausiert'+(a.pause_bis?(' bis zum '+aboDatum(a.pause_bis)):'')+'. In dieser Zeit wird nichts abgebucht.</p>';
+  } else if(gekuendigt){
+    h+='<p class="abo-zeile abo-warn">Du hast gekündigt. Bis zum <b>'+esc(bis)+'</b> bleibt alles offen — danach endet dein Zugang zur Plattform.</p>';
+  } else if(bis){
+    h+='<p class="abo-zeile">Verlängert sich automatisch am <b>'+esc(bis)+'</b>.</p>';
+  }
+
+  /* Was in der Mitgliedschaft steckt. */
+  const drin=ABO_INHALT[tier==='premium_plus'?'premium':tier];
+  if(drin) h+='<ul class="abo-drin">'+drin.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul>';
+
+  h+=aboRestHtml(d);
+
+  /* Community: der Sprechclub ist der nächste Schritt. */
+  if(tier==='community' && !gekuendigt && !pausiert && !offen){
+    h+='<div class="abo-tipp"><b>🗣️ Der LIVE-Sprechclub startet am 1. November.</b>'
+      +'<span>Er gehört zu Premium. Alles, was du jetzt hast, bleibt dabei erhalten.</span></div>';
+  }
+
+  h+='<div class="abo-knoepfe">';
+  if(gekuendigt){
+    h+='<button class="btn btn-primary" onclick="openPortal()">Doch dabei bleiben</button>';
+  } else if(pausiert){
+    h+='<button class="btn btn-primary" onclick="openPortal()">Abo fortsetzen</button>';
+  } else if(offen){
+    h+='<button class="btn btn-primary" onclick="openPortal()">Zahlungsmittel ändern</button>';
+  } else if(tier==='community'){
+    h+='<a class="btn btn-primary" href="/preise">Auf Premium wechseln</a>';
+  }
+  if(d.portal && d.portal.wechseln && !gekuendigt && !offen && !pausiert){
+    h+='<button class="btn btn-ghost" onclick="openPortal(\'wechseln\')">Monatlich oder jährlich wechseln</button>';
+  }
+  h+='<button class="btn btn-ghost" onclick="openPortal()">Rechnungen und Zahlungsmittel</button>';
+  if(!gekuendigt){
+    h+='<button class="btn btn-ghost abo-weg" onclick="openPortal(\'kuendigen\')">'
+      +(d.portal && d.portal.pausieren && !pausiert ? 'Pausieren oder kündigen' : 'Kündigen')+'</button>';
+  }
+  h+='</div>';
+
+  h+='<p class="abo-fuss">Alle Änderungen laufen über unsere Zahlungsstelle Stripe — dort liegen deine Zahlungsdaten sicher, wir sehen sie nie. '
+    +'Eine Kündigung gilt immer zum Ende der bezahlten Zeit: bis dahin bleibt alles offen, danach endet der Zugang.</p>';
+  return h;
+}
+
+/* Guthaben und alter LIVE-Pass stehen neben dem Abo — sie sind eine
+   eigene Sache und dürfen nicht mit ihm verwechselt werden. */
+function aboRestHtml(d){
+  let h='';
+  if(d.pass_until){
+    const p=new Date(d.pass_until);
+    if(!isNaN(p) && p>new Date()){
+      h+='<div class="abo-neben"><b>⭐ LIVE-Pass aktiv</b><span>Verlängert am '+esc(fmtShort(p))+'.</span></div>';
+    }
+  }
+  if(d.guthaben>0){
+    h+='<div class="abo-neben"><b>🎟️ '+d.guthaben+' '+(d.guthaben===1?'freie Stunde':'freie Stunden')+'</b>'
+      +'<span>Dein Guthaben für den LIVE-Unterricht — <a href="#guthaben" onclick="go(\'guthaben\');return false">Verlauf ansehen</a>.</span></div>';
+  }
+  return h;
+}
+
 function renderProfil(){
   document.getElementById('v-profil').innerHTML=`
     <div class="pagehead"><h1 data-i18n="pr_h1">Dein Profil</h1><p data-i18n="pr_sub">Damit Amanda und deine Lehrerin dich besser unterstützen können.</p></div>
@@ -2896,6 +3120,9 @@ function renderProfil(){
         <p class="muted" style="margin:0 0 9px">Ziel, Termin und Tempo — daraus baut sich dein Lernpfad.</p>
         <button class="btn btn-ghost" onclick="if(window.LZ)LZ.starten(true)">Meinen Weg neu festlegen</button></div>
       <div class="field" style="margin-top:14px;border-top:1px solid var(--border);padding-top:14px"><label>E-Mail</label><div class="muted">${esc(user.email)}</div></div>
+      <div class="field" style="margin-top:14px;border-top:1px solid var(--border);padding-top:14px"><label>Meine Mitgliedschaft</label>
+        <p class="muted" style="margin:0 0 9px">Welches Abo läuft, bis wann — und wo du es änderst, pausierst oder kündigst.</p>
+        <button class="btn btn-ghost" onclick="go('abo')">Mein Abo ansehen →</button></div>
     </div>`;
 }
 async function saveProfil(){
