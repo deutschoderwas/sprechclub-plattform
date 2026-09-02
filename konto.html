@@ -1181,7 +1181,7 @@ async function maybeStartNow(session){
 
 async function load(){
   const [{ data:prof }, { data:bk }, { data:cl }, { data:msg }, { data:rt }, { data:prog }, { data:chs }] = await Promise.all([
-    sb.from('profiles').select('credits,name,goal,target_level,native_language,pass_until,birthday,status,is_challenger,challenge_start,tier,tier_ab').eq('id',user.id).single(),
+    sb.from('profiles').select('credits,name,goal,target_level,native_language,pass_until,birthday,status,is_challenger,challenge_start,tier,tier_ab,is_admin,is_teacher').eq('id',user.id).single(),
     sb.rpc('my_bookings'),
     sb.from('credit_log').select('*').order('created_at',{ascending:false}),
     sb.from('messages').select('*').order('created_at'),
@@ -1197,6 +1197,11 @@ async function load(){
      bekamen deshalb immer den Ersatzwert: der Lernplan war immer B1,
      der Vokabeltrainer sortierte immer nach A1. */
   window.profile = profile;
+  /* Kein aktives Mitglied? Dann gar nicht erst hereinlassen: Fenster
+     zeigen und zur Preisseite schicken. Serverseitig ist ohnehin
+     dicht (has_full_access), aber ohne diesen Hinweis säße man vor
+     leeren Listen und wüsste nicht, warum. */
+  setTimeout(function(){ try{ pruefeZugang(); }catch(e){} }, 30);
   bookings = (bk||[]).map(b=>{ if(b&&b.starts_at){ const s=String(b.starts_at).replace(' ','T'); b.starts_at=s.replace(/([+-]\d{2})$/,'$1:00'); } return b; }); creditLog = (cl||[]); messages = (msg||[]); ratings = (rt||[]);
   progress = {}; (prog||[]).forEach(p=>progress[p.class_id+'|'+p.phase]=p);
 
@@ -1351,6 +1356,27 @@ function showLockPopup(){
     <p class="hint" data-i18n="lp_hint">Mit einem Stundenpaket oder einer Probestunde schaltest du die ganze Plattform frei. Den Kalender kannst du dir natürlich frei anschauen. 😊</p>
     <div class="acts"><button class="btn btn-ghost" onclick="closeCfm()"><span data-i18n="lp_close">Schließen</span></button><a class="btn btn-primary" href="/preise" style="flex:1;text-decoration:none"><span data-i18n="lk_btn">Zu den Preisen →</span></a></div>`;
   document.getElementById('cfmModal').classList.add('open');
+}
+
+/* Beim Betreten der Plattform: aktive Mitgliedschaft oder raus.
+   Das Fenster lässt sich nicht wegklicken — nach zwölf Sekunden geht
+   es von selbst zur Preisseite, wer schneller ist, klickt. */
+function pruefeZugang(){
+  if (isActive()) return;
+  const modal = document.getElementById('cfmModal');
+  const card  = document.getElementById('cfmCard');
+  if (!modal || !card) { location.href = '/preise'; return; }
+  const community = (profile && profile.tier) === 'community';
+  card.innerHTML =
+    '<div class="ico">🔒</div>' +
+    '<h3>Deine Mitgliedschaft ist nicht aktiv</h3>' +
+    '<p class="hint">' + (community
+      ? 'Dein Community-Abo ist ausgelaufen. Mit einer neuen Mitgliedschaft bist du sofort wieder dabei — dein Fortschritt bleibt gespeichert.'
+      : 'Für die Plattform brauchst du eine aktive Mitgliedschaft. Dein Fortschritt bleibt gespeichert und ist sofort wieder da.') +
+    '</p>' +
+    '<div class="acts"><a class="btn btn-primary" href="/preise" style="flex:1;text-decoration:none">Mitgliedschaft ansehen →</a></div>';
+  modal.classList.add('open');
+  setTimeout(function(){ location.href = '/preise'; }, 12000);
 }
 
 // ---------- Materialien (PDF-Bibliothek aus dem Unterricht) ----------
@@ -1508,7 +1534,29 @@ async function openMaterial(path,a){
 
 // ---------- Dashboard ----------
 // Vollzugriff: Status aktiv/urlaub (echte Mitglieder, auch mit 0 Stunden) ODER Guthaben/Pass/kommende Buchung.
-function isActive(){ const s=(profile&&profile.status)||''; return s==='aktiv' || s==='urlaub' || credits>0 || (stats && stats.upcoming && stats.upcoming.length>0) || passActive(); }
+/* Wer darf auf die Plattform?
+   Dieselbe Regel steht als has_full_access() in der Datenbank — dort
+   zählt sie wirklich, hier sorgt sie nur dafür, dass niemand erst
+   klickt und dann eine Fehlermeldung bekommt. Wenn du eine Seite
+   änderst, ändere immer beide.
+
+   gesperrt   beendet, archiv, inaktiv, geloescht, registriert,
+              probeschuler → kein Zugang, egal wie viel Guthaben noch
+              auf dem Konto steht
+   Zugang     Alt-Schüler mit Guthaben, gültigem Pass oder einer noch
+              bevorstehenden Stunde · Community und Premium mit Status
+              aktiv · Lehrkräfte und Admin immer                        */
+const GESPERRT = ['beendet','archiv','inaktiv','geloescht','registriert','probeschuler'];
+function isActive(){
+  if(profile && (profile.is_admin || profile.is_teacher)) return true;
+  const s = (profile && profile.status) || '';
+  if (GESPERRT.indexOf(s) >= 0) return false;
+  const tier = (profile && profile.tier) || '';
+  if (['community','premium','premium_plus'].indexOf(tier) >= 0 && (s === 'aktiv' || s === '')) return true;
+  if (credits > 0 || passActive()) return true;
+  if (stats && stats.upcoming && stats.upcoming.length > 0) return true;
+  return s === 'aktiv' || s === 'urlaub';
+}
 function lockBanner(){
   return `<div class="card" style="border:2px solid #f5b942;background:#fff8ec;margin-bottom:14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
     <div style="flex:1;min-width:200px"><b>🔒 Dein Guthaben ist aufgebraucht</b>
