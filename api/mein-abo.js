@@ -6,9 +6,11 @@
 // oder ob das Abo pausiert ist, weiss allein Stripe. Ohne diese Zahlen
 // stuende in der App eine huebsche Karte ohne Aussage.
 //
-// Liest nur, aendert nichts. Alles, was Geld bewegt (kuendigen, pausieren,
-// Tarif wechseln, Karte tauschen), laeuft ueber das Stripe-Kundenportal
-// in api/create-portal.js.
+// Liest nur, aendert nichts. Alles, was Geld bewegt (kuendigen, Karte
+// tauschen), laeuft ueber das Stripe-Kundenportal in api/create-portal.js.
+// Pausieren bieten wir nicht an, und einen Tarifwechsel auch nicht:
+// Premium startet am 1. November, bis dahin fuehrt der Upgrade-Knopf in
+// der App auf die Warteliste.
 //
 // ENV: STRIPE_SECRET_KEY, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
 import Stripe from 'stripe';
@@ -105,22 +107,16 @@ export default async function handler(req, res) {
       seit: sub.start_date || sub.created || null
     }, preisVon(sub));
 
-    /* Welche Wege bietet das Kundenportal wirklich an? Nur was dort
-       eingeschaltet ist, zeigen wir auch als Knopf — sonst schickt die
-       App die Leute gegen eine Wand. */
-    let portal = { kuendigen: true, wechseln: false, pausieren: false, zahlungsmittel: true };
+    /* Kuendigen ist der einzige Weg, den wir bei Stripe anbieten.
+       Pausieren gibt es bewusst nicht, und ein Tarifwechsel auch nicht:
+       Premium startet erst am 1. November, bis dahin fuehrt der
+       Upgrade-Knopf in der App auf die Warteliste. */
+    let portal = { kuendigen: true };
     try {
       const cfg = await stripe.billingPortal.configurations.list({ active: true, limit: 1 });
       const f = cfg.data && cfg.data[0] && cfg.data[0].features;
-      if (f) {
-        portal = {
-          kuendigen: !!(f.subscription_cancel && f.subscription_cancel.enabled),
-          wechseln: !!(f.subscription_update && f.subscription_update.enabled),
-          pausieren: !!(f.subscription_pause && f.subscription_pause.enabled),
-          zahlungsmittel: !!(f.payment_method_update && f.payment_method_update.enabled)
-        };
-      }
-    } catch (e) { /* Konfiguration nicht lesbar -> mit den Vorgaben weiter */ }
+      if (f) portal = { kuendigen: !!(f.subscription_cancel && f.subscription_cancel.enabled) };
+    } catch (e) { /* Konfiguration nicht lesbar -> mit der Vorgabe weiter */ }
 
     return res.status(200).json(Object.assign({ abo, portal }, basis));
   } catch (e) {

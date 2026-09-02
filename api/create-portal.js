@@ -5,10 +5,13 @@
 // Benötigt ENV: STRIPE_SECRET_KEY, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, (optional) SITE_URL.
 // Voraussetzung: Stripe-Kundenportal muss im Stripe-Dashboard aktiviert sein.
 //
-// Optional im Rumpf: { flow: 'kuendigen' | 'wechseln', subscription: 'sub_...' }.
-// Damit landet man direkt auf der richtigen Seite im Portal, statt sich erst
-// durchklicken zu muessen. Ohne Angabe oeffnet die Uebersicht — dort liegen
-// Zahlungsmittel, Rechnungen und, falls in Stripe eingeschaltet, das Pausieren.
+// Optional im Rumpf: { flow: 'kuendigen', subscription: 'sub_...' }. Damit landet
+// man direkt im Kuendigungsablauf, statt sich erst durchklicken zu muessen.
+// Ohne Angabe oeffnet die Uebersicht mit Zahlungsmittel und Rechnungen.
+//
+// Einen Tarifwechsel bieten wir hier bewusst nicht an: Premium startet erst
+// am 1. November, bis dahin fuehrt der Upgrade-Knopf in der App auf die
+// Warteliste statt zu Stripe.
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 
@@ -48,9 +51,9 @@ export default async function handler(req, res) {
        oeffnen wir einfach die Uebersicht — lieber eine Seite zu weit
        oben als eine Fehlermeldung. */
     const body = (req.body && typeof req.body === 'object') ? req.body : {};
-    const flow = String(body.flow || '');
+    const flow = String(body.flow || '') === 'kuendigen' ? 'kuendigen' : '';
     let subId = body.subscription || null;
-    if ((flow === 'kuendigen' || flow === 'wechseln') && !subId) {
+    if (flow === 'kuendigen' && !subId) {
       try {
         const subs = await stripe.subscriptions.list({ customer: customerId, status: 'all', limit: 20 });
         const laufend = (subs.data || []).filter(x => ['active','trialing','past_due','paused','unpaid'].indexOf(x.status) >= 0);
@@ -63,8 +66,6 @@ export default async function handler(req, res) {
     const opts = { customer: customerId, return_url: `${site}/konto.html#abo` };
     if (subId && flow === 'kuendigen') {
       opts.flow_data = { type: 'subscription_cancel', subscription_cancel: { subscription: subId } };
-    } else if (subId && flow === 'wechseln') {
-      opts.flow_data = { type: 'subscription_update', subscription_update: { subscription: subId } };
     }
 
     let session;

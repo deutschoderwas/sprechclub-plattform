@@ -3020,7 +3020,7 @@ function aboKarteHtml(d){
         : 'Für die Plattform brauchst du eine aktive Mitgliedschaft. Dein Fortschritt bleibt gespeichert.')+'</p>';
     h+=aboRestHtml(d);
     h+='<div class="abo-knoepfe"><a class="btn btn-primary" href="/preise">Mitgliedschaft ansehen →</a>'
-      +(d.portal && d.portal.zahlungsmittel && a ? '<button class="btn btn-ghost" onclick="openPortal()">Alte Rechnungen ansehen</button>' : '')
+      +(a ? '<button class="btn btn-ghost" onclick="openPortal()">Alte Rechnungen ansehen</button>' : '')
       +'</div>';
     return h;
   }
@@ -3072,18 +3072,20 @@ function aboKarteHtml(d){
   } else if(offen){
     h+='<button class="btn btn-primary" onclick="openPortal()">Zahlungsmittel ändern</button>';
   } else if(tier==='community'){
-    h+='<a class="btn btn-primary" href="/preise">Auf Premium wechseln</a>';
-  }
-  if(d.portal && d.portal.wechseln && !gekuendigt && !offen && !pausiert){
-    h+='<button class="btn btn-ghost" onclick="openPortal(\'wechseln\')">Monatlich oder jährlich wechseln</button>';
+    /* Premium ist bis zum 1. November nicht kaufbar. Der Knopf bleibt
+       stehen, führt aber ins Fenster mit dem Starttermin und der
+       Warteliste — nicht in einen Tarifwechsel bei Stripe. */
+    h+='<button class="btn btn-primary" onclick="zeigeLiveUpgrade()">Auf Premium wechseln</button>';
   }
   h+='<button class="btn btn-ghost" onclick="openPortal()">Rechnungen und Zahlungsmittel</button>';
   if(!gekuendigt){
-    h+='<button class="btn btn-ghost abo-weg" onclick="openPortal(\'kuendigen\')">'
-      +(d.portal && d.portal.pausieren && !pausiert ? 'Pausieren oder kündigen' : 'Kündigen')+'</button>';
+    h+='<button class="btn btn-ghost abo-weg" onclick="openPortal(\'kuendigen\')">Kündigen</button>';
   }
   h+='</div>';
 
+  if(tier==='community' && !gekuendigt && !pausiert && !offen){
+    h+='<p class="abo-fuss" style="border:none;padding-top:0;margin-top:2px">Ein Wechsel auf Premium ist ab dem <b>1. November</b> möglich — dann startet der LIVE-Sprechclub.</p>';
+  }
   h+='<p class="abo-fuss">Alle Änderungen laufen über unsere Zahlungsstelle Stripe — dort liegen deine Zahlungsdaten sicher, wir sehen sie nie. '
     +'Eine Kündigung gilt immer zum Ende der bezahlten Zeit: bis dahin bleibt alles offen, danach endet der Zugang.</p>';
   return h;
