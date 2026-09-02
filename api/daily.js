@@ -3,10 +3,19 @@
 export default async function handler(req, res) {
   const base = process.env.SITE_URL || 'https://www.deutschoderwas-club.de';
   const eps = ['send-reminders', 'send-birthdays', 'send-miss-you', 'send-masterclass', 'send-register-reminder', 'monatsstunden'];
+  // Abgleich der Mitgliedschaften mit Stripe — braucht den internen Schlüssel.
+  const intern = ['pruefe-mitgliedschaften'];
   const ran = {};
   for (const e of eps) {
     try { const r = await fetch(base + '/api/' + e); ran[e] = r.status; }
     catch (err) { ran[e] = String((err && err.message) || err); }
+  }
+
+  for (const e of intern) {
+    try {
+      const r = await fetch(base + '/api/' + e, { headers: { 'x-intern': process.env.CRON_SECRET || '' } });
+      ran[e] = r.status;
+    } catch (err) { ran[e] = String((err && err.message) || err); }
   }
 
   // Julias 5-Minuten-Podcast: vier neue Folgen (A2, B1, B2, C1).

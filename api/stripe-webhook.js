@@ -647,7 +647,33 @@ export default async function handler(req, res) {
     } else if (event.type === 'customer.subscription.deleted') {
       // Abo ist tatsächlich beendet (zum Periodenende): ALLE gesammelten Stunden verfallen -> 0.
       const sub = event.data.object;
-      const userId = sub.metadata?.userId;
+      let userId = sub.metadata?.userId;
+
+      /* Wer die Mitgliedschaft kauft, BEVOR er ein Konto hat, steht in
+         pending_purchases — in der Subscription steht dann keine userId,
+         und dieser Zweig lief früher ins Leere: Die Person blieb auf
+         „aktiv" und behielt den Zugang. Deshalb hier zwei Auswege:
+         erst über die Stripe-Kundennummer, dann über die E-Mail. */
+      if (!userId && sub.customer) {
+        const { data: viaKunde } = await sb.from('profiles')
+          .select('id').eq('stripe_customer_id', sub.customer).maybeSingle();
+        if (viaKunde) userId = viaKunde.id;
+      }
+      if (!userId && sub.customer && process.env.STRIPE_SECRET_KEY) {
+        try {
+          const kunde = await stripe.customers.retrieve(sub.customer);
+          const mail = kunde && kunde.email;
+          if (mail) {
+            const { data: viaMail } = await sb.from('profiles')
+              .select('id').ilike('email', mail).maybeSingle();
+            if (viaMail) {
+              userId = viaMail.id;
+              await sb.from('profiles').update({ stripe_customer_id: sub.customer }).eq('id', userId);
+            }
+          }
+        } catch (e) { console.error('kunde nachschlagen', e && e.message); }
+      }
+
       if (userId) {
         const dk = 'subdel_' + sub.id;
         const { data: already } = await sb.from('credit_log').select('id').eq('stripe_session_id', dk).maybeSingle();
