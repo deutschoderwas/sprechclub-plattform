@@ -14,7 +14,7 @@ const fs = require('fs');
 
 global.window = {};
 require('../uebungen.js');
-['wortschatz-a1-neu.js', 'grammatik-neu.js', 'grammatik-c1-neu.js',
+['wortschatz-a1-neu.js', 'grammatik-neu.js', 'grammatik-c1-neu.js', 'grammatik-b1-mehr.js',
  'aussprache-neu.js', 'wortschatz-neu.js', 'lesen-schreiben-neu.js',
  'hoeren-b2-neu.js', 'hoeren-c1-neu.js', 'wortschatz-plus.js', 'vielfalt-neu.js'].forEach(f => {
   try { require('../' + f); } catch (e) {}

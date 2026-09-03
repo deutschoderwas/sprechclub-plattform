@@ -30,7 +30,7 @@ global.window = {};
 require(path.join(wurzel, 'uebungen.js'));
 ['hoer-neu.js', 'hoeren-a1-neu.js', 'aussprache-neu.js', 'hoeren-b2-neu.js',
  'hoeren-c1-neu.js', 'wortschatz-neu.js', 'wortschatz-a1-neu.js',
- 'grammatik-neu.js', 'grammatik-c1-neu.js', 'lesen-schreiben-neu.js',
+ 'grammatik-neu.js', 'grammatik-c1-neu.js', 'grammatik-b1-mehr.js', 'lesen-schreiben-neu.js',
  'wortschatz-plus.js'].forEach(f => { try { require(path.join(wurzel, f)); } catch (e) {} });
 
 const NIVEAUS = ['A1', 'A2', 'B1', 'B2', 'C1'];
