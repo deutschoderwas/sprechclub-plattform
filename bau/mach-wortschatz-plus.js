@@ -172,6 +172,14 @@ function mischeOptionen(gut, schlecht, streu) {
   return { options: sortiert, answer: sortiert.indexOf(gut) };
 }
 
+/* Welche Themen es zum Aufstocken ueberhaupt gibt — Schluessel wie im
+   Browser: bereich|id. */
+const zielDa = {};
+((global.window.UEBUNGEN || {}).skills || []).forEach(sk => {
+  (sk.themes || []).forEach(t => { zielDa[sk.id + '|' + t.id] = true; });
+});
+const zielFehler = [];
+
 let nr = 0;
 const neue = [];
 const nachtrag = [];
@@ -251,10 +259,30 @@ themen.forEach(t => {
      besteht zu 88 Prozent aus A2-Wörtern. Statt das Thema
      umzustufen oder auszutauschen — es funktioniert ja — kommen
      die Wörter dazu, die die Stufe rechtfertigen. */
-  if (t.ergänze) nachtrag.push({ ziel: t.ergänze, words: wörter, exercises: ex });
+  if (t.ergänze) {
+    /* Das Ziel muss "bereich|id" heißen. Stand dort nur die id, lief
+       der Nachtrag im Browser still ins Leere: teil[1] war undefined,
+       kein Thema passte, und die Aufgaben fehlten, ohne dass hier
+       etwas zu sehen war. Deshalb wird das Ziel jetzt geprueft. */
+    const teil = String(t.ergänze).split('|');
+    if (teil.length !== 2) {
+      zielFehler.push(t.id + ': "' + t.ergänze + '" — das Ziel muss "bereich|id" heißen');
+    } else if (!zielDa[t.ergänze]) {
+      zielFehler.push(t.id + ': Ziel "' + t.ergänze + '" gibt es nicht');
+    }
+    nachtrag.push({ ziel: t.ergänze, words: wörter, exercises: ex });
+  }
   else neue.push({ bereich: t.bereich || 'wortschatz', id: t.id, title: t.title,
                    level: t.level, emoji: t.emoji, words: wörter, exercises: ex });
 });
+
+if (zielFehler.length) {
+  console.error('\nSo geht das nicht — ein Nachtrag zeigt ins Leere:');
+  zielFehler.forEach(z => console.error('  ' + z));
+  console.error('\nBekannte Ziele stehen als "bereich|id" bereit, etwa');
+  console.error('wortschatz|einkaufen oder wortschatz|c1-amt.\n');
+  process.exit(1);
+}
 
 if (unbekannt.length) {
   console.error('\nSo geht das nicht:');
