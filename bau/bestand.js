@@ -18,7 +18,7 @@ require(path.join(wurzel, 'uebungen.js'));
 const DATEIEN = ['hoer-neu.js', 'hoeren-a1-neu.js', 'aussprache-neu.js',
   'hoeren-b2-neu.js', 'hoeren-c1-neu.js', 'wortschatz-neu.js',
   'grammatik-reihenfolge.js', 'wortschatz-a1-neu.js', 'grammatik-neu.js',
-  'grammatik-c1-neu.js', 'grammatik-b1-mehr.js', 'lesen-schreiben-neu.js', 'wortschatz-plus.js',
+  'grammatik-c1-neu.js', 'grammatik-b1-mehr.js', 'grammatik-b2c1-mehr.js', 'lesen-schreiben-neu.js', 'wortschatz-plus.js',
   'vielfalt-neu.js'];
 DATEIEN.forEach(f => {
   try { require(path.join(wurzel, f)); }

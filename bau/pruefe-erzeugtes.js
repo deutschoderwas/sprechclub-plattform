@@ -39,7 +39,7 @@ const GENERATOREN = [
 /* Alles, was Lernstoff enthält und verglichen werden soll. */
 const DATEIEN = ['wortschatz-plus.js', 'vielfalt-neu.js', 'uebungen.js',
   'wortschatz-a1-neu.js', 'wortschatz-neu.js', 'grammatik-neu.js',
-  'grammatik-c1-neu.js', 'grammatik-b1-mehr.js', 'lesen-schreiben-neu.js', 'aussprache-neu.js',
+  'grammatik-c1-neu.js', 'grammatik-b1-mehr.js', 'grammatik-b2c1-mehr.js', 'lesen-schreiben-neu.js', 'aussprache-neu.js',
   'hoer-neu.js', 'hoeren-a1-neu.js', 'hoeren-b2-neu.js', 'hoeren-c1-neu.js',
   'lektionen-katalog.js', 'grammatik-reihenfolge.js', 'themen-zusammenfuehren.js'];
 
