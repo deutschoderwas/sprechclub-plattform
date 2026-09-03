@@ -2996,13 +2996,32 @@ async function aboLaden(){
     d=await r.json();
     if(!r.ok) throw new Error(d&&d.error||'Fehler');
   }catch(e){
-    box.innerHTML='<div class="abo-laed">Wir konnten deine Mitgliedschaft gerade nicht abrufen. '
-      +'<button class="lnk" onclick="aboLaden()">Noch einmal versuchen</button><br>'
-      +'<span class="muted">Wenn das öfter passiert, schreib uns kurz unter <b>Nachrichten</b> — wir schauen nach.</span></div>';
+    box.innerHTML=aboNotHtml();
     return;
   }
   window.MEIN_ABO=d;
   box.innerHTML=aboKarteHtml(d);
+}
+
+/* Die Notfassung: alles, was ohne Stripe sicher ist — plus der Weg
+   zum Kündigen, der ohnehin bei Stripe stattfindet. */
+function aboNotHtml(){
+  const tier=(profile&&profile.tier)||'';
+  const name=aboName(tier);
+  const drin=ABO_INHALT[tier==='premium_plus'?'premium':tier];
+  let h='<div class="abo-kopf"><span class="abo-abz">'+esc(name)+'</span>'
+   +'<span class="abo-lage abo-lage-ok">aktiv</span></div>'
+   +'<h2 class="abo-h2">Deine '+esc(name)+'-Mitgliedschaft läuft</h2>'
+   +'<p class="abo-zeile">Das genaue Datum der nächsten Abbuchung konnten wir gerade nicht laden. '
+   +'<button class="lnk" onclick="aboLaden()">Noch einmal versuchen</button></p>';
+  if(drin) h+='<ul class="abo-drin">'+drin.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>';
+  h+=aboRestHtml({pass_until:(profile&&profile.pass_until)||null, guthaben:(typeof credits==='number'?credits:0)});
+  h+='<div class="abo-knoepfe">'
+   +'<button class="btn btn-primary" onclick="openPortal()">Rechnungen und Zahlungsmittel</button>'
+   +'<button class="btn btn-ghost abo-weg" onclick="openPortal(\'kuendigen\')">Kündigen</button></div>'
+   +'<p class="abo-fuss">Kündigen und Zahlungsdaten laufen bei unserer Zahlungsstelle Stripe — '
+   +'das funktioniert auch dann, wenn wir die Angaben hier gerade nicht anzeigen können.</p>';
+  return h;
 }
 
 function aboKarteHtml(d){

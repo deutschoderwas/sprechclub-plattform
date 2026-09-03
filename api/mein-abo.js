@@ -32,14 +32,22 @@ function preisVon(sub) {
   const p = it && it.price;
   if (!p) return {};
   const r = p.recurring || {};
-  const prod = p.product;
   return {
     betrag: p.unit_amount != null ? p.unit_amount : null,
     waehrung: p.currency || 'eur',
     intervall: r.interval || null,
     intervall_anzahl: r.interval_count || 1,
-    produkt: (prod && typeof prod === 'object' && prod.name) ? prod.name : null
+    produkt: null,
+    produkt_id: (p.product && typeof p.product === 'string') ? p.product : null
   };
+}
+
+/* Den Produktnamen einzeln nachholen. Faellt das aus, steht in der
+   App der Tarifname — die Karte funktioniert trotzdem. */
+async function produktName(stripe, id) {
+  if (!id) return null;
+  try { const pr = await stripe.products.retrieve(id); return (pr && pr.name) || null; }
+  catch (e) { return null; }
 }
 
 /* Von mehreren Abos ist das laufende das interessante; sonst das juengste. */
@@ -88,13 +96,15 @@ export default async function handler(req, res) {
     if (!customerId) return res.status(200).json(Object.assign({ abo: null, grund: 'kein_kunde' }, basis));
 
     const subs = await stripe.subscriptions.list({
-      customer: customerId, status: 'all', limit: 20,
-      expand: ['data.items.data.price.product']
+      customer: customerId, status: 'all', limit: 20
     });
     const sub = bestesAbo(subs.data || []);
     if (!sub) return res.status(200).json(Object.assign({ abo: null, grund: 'kein_abo' }, basis));
 
     const pc = sub.pause_collection || null;
+    const preis = preisVon(sub);
+    preis.produkt = await produktName(stripe, preis.produkt_id);
+    delete preis.produkt_id;
     const abo = Object.assign({
       id: sub.id,
       status: sub.status,
@@ -105,7 +115,7 @@ export default async function handler(req, res) {
       pausiert: !!pc,
       pause_bis: (pc && pc.resumes_at) || null,
       seit: sub.start_date || sub.created || null
-    }, preisVon(sub));
+    }, preis);
 
     /* Kuendigen ist der einzige Weg, den wir bei Stripe anbieten.
        Pausieren gibt es bewusst nicht, und ein Tarifwechsel auch nicht:
