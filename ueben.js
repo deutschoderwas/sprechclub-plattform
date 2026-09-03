@@ -300,6 +300,19 @@
     .ub-karte .em{font-size:50px;line-height:1;display:block;margin-bottom:4px}
     .ub-karte .wort{font-size:26px;font-weight:800;font-family:'Space Grotesk',sans-serif;line-height:1.22;display:flex;gap:9px;align-items:center;justify-content:center;flex-wrap:wrap;overflow-wrap:anywhere;max-width:100%}
     .ub-karte .bed{margin-top:9px;font-size:16px;color:var(--soft,#5C5C5C);line-height:1.5}
+    /* Die eigene Sprache steht abgesetzt unter der deutschen Bedeutung —
+       sichtbar, aber nicht so laut, dass man nur noch sie liest. */
+    .ub-uebs{margin:10px auto 0;padding:6px 13px;border-radius:999px;background:var(--wash,#F3FBFD);
+      max-width:100%;display:inline-flex;align-items:baseline;gap:7px;flex-wrap:wrap;justify-content:center;text-align:center}
+    .ub-uebs i{font-style:normal;font-size:13px;opacity:.65;flex:0 0 auto}
+    .ub-uebs b{font-size:17px;font-weight:700;color:var(--ink,#20211F);overflow-wrap:anywhere}
+    .ub-uebs span{font-size:13.5px;color:var(--soft,#5C5C5C);line-height:1.4}
+    .ub-uebs.rtl{direction:rtl}
+    /* Ausserhalb der Wortkarte steht die Zeile mittig für sich —
+       ohne text-align auf #ubBody, sonst rutscht der ganze Rest
+       der Aufgabe mit in die Mitte. */
+    #ubBody > .ub-uebs{display:flex;width:fit-content;margin-left:auto;margin-right:auto;margin-top:8px}
+    @media(max-width:520px){ .ub-uebs b{font-size:16px} }
     .ub-art{display:inline-flex;align-items:center;justify-content:center;padding:3px 13px;border-radius:30px;font-size:15px;font-weight:800;color:#fff;background:var(--af,#2F6FD0)}
     .ub-satzbox{margin-top:14px;background:var(--bg,#FFF7E6);border:1.5px solid var(--border,#ECECEC);border-radius:14px;padding:12px 14px;font-size:16.5px;line-height:1.55;text-align:left}
     .ub-satzbox mark{background:#FFE100;padding:1px 4px;border-radius:5px;font-weight:800;color:var(--ink,#20211F)}
@@ -797,6 +810,36 @@
 
   var ART=['der','die','das'];
 
+  /* ------------------------------------------------------------
+     Das Wort in der eigenen Sprache.
+
+     Bis jetzt gab es die Übersetzungen nur in der App — im
+     Schülerbereich, wo tatsächlich geübt wird, standen sie nirgends.
+     Dabei ist genau die Wortkarte die Stelle, an der ein Wort zum
+     ersten Mal auftaucht: deutsches Wort, Bedeutung auf Deutsch, und
+     darunter, wer es braucht, dasselbe in der eigenen Sprache.
+
+     Die Sprache steht im Profil und war jahrelang ein freies
+     Textfeld — sprachCode() macht daraus einen Code. Wer nichts
+     eingetragen hat oder eine Sprache spricht, für die wir nichts
+     haben, sieht die Zeile einfach nicht.
+     ------------------------------------------------------------ */
+  function meineSprache(){
+    try{
+      var p = window.profile || (typeof profile!=='undefined' ? profile : null);
+      var roh = p && p.native_language;
+      return window.sprachCode ? window.sprachCode(roh) : null;
+    }catch(e){ return null; }
+  }
+  function uebersetzungHtml(wort){
+    if(!wort || !window.wortUebersetzung) return '';
+    var k = meineSprache(); if(!k) return '';
+    var u = window.wortUebersetzung(wort, k); if(!u || !u.w) return '';
+    var rtl = (k==='fa' || k==='ar');
+    return '<div class="ub-uebs'+(rtl?' rtl':'')+'" lang="'+k+'"'+(rtl?' dir="rtl"':'')+'>'+
+      '<i aria-hidden="true">🌍</i><b>'+E(u.w)+'</b>'+(u.i?'<span>'+E(u.i)+'</span>':'')+'</div>';
+  }
+
   /* Zwei Karten in einer: die Wortkarte für Wortschatz, Hören und
      Aussprache — und die Regelkarte für Grammatik, in der die Regel
      an drei echten Sätzen aus genau diesem Thema steht. */
@@ -817,6 +860,7 @@
       (e.emoji?'<span class="em">'+E(e.emoji)+'</span>':'')+
       '<div class="wort">'+(ART_FARBE[art]?'<span class="ub-art" style="--af:'+ART_FARBE[art]+'">'+art+'</span>':'')+E(wort)+'</div>'+
       (e.info?'<div class="bed">'+E(e.info)+'</div>':'')+
+      uebersetzungHtml(e.w || e.wort)+
       '<button class="ub-play" style="width:56px;height:56px;font-size:24px;margin:14px auto 4px" onclick="ubSpeak(\''+E(wort).replace(/'/g,"\\'")+'\')">🔊</button>'+
       (e.satz?'<div class="ub-satzbox">'+satzHtml(e.satz)+'</div>':'')+
     '</div>';
@@ -880,6 +924,7 @@
       else if(e.emoji){ h+='<span class="ub-emj">'+E(e.emoji)+'</span>'; }
       h+='<div class="ub-q" style="text-align:center;margin-bottom:8px">✍️ Wie heißt das Wort?</div>'+
          '<div class="ub-bed">'+E(e.info||'')+'</div>'+
+         uebersetzungHtml(e.w)+
          '<input class="ub-input" id="ubGap" placeholder="Wort eintippen…" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">';
       if(e.tip) h+='<div class="ub-tip" style="margin-top:10px">💡 '+E(e.tip)+'</div>';
     } else if(e.type==='buchstaben'){
@@ -890,6 +935,7 @@
       else if(e.emoji){ h+='<span class="ub-emj">'+E(e.emoji)+'</span>'; }
       h+='<div class="ub-q" style="text-align:center;margin-bottom:8px">🔤 Bring die Buchstaben in die richtige Reihenfolge</div>'+
          (e.info?'<div class="ub-bed">'+E(e.info)+'</div>':'')+
+         uebersetzungHtml(e.w)+
          '<div class="ub-build buch" id="ubBuild"></div><div class="ub-chips buch" id="ubPool"></div>';
     } else if(e.type==='artikel'){
       if(e.img){ h+='<img class="ub-kimgs" src="'+E(e.img)+'" alt="" onerror="this.remove()">'; }

@@ -3108,6 +3108,22 @@ function aboRestHtml(d){
   return h;
 }
 
+/* Die zehn Sprachen, für die wir Übersetzungen haben — plus, falls
+   nötig, der alte frei geschriebene Eintrag, damit er nicht
+   verschwindet. */
+function nativeOptionen(){
+  const NAMEN = { en:'English', es:'Español', ru:'Русский', uk:'Українська', tr:'Türkçe',
+                  it:'Italiano', fa:'فارسی', ar:'العربية', pl:'Polski', ro:'Română' };
+  const roh = (profile && profile.native_language) || '';
+  const code = (window.sprachCode ? window.sprachCode(roh) : null);
+  let h = '<option value="">— wählen —</option>';
+  Object.keys(NAMEN).forEach(k => {
+    h += '<option value="' + k + '"' + (code === k ? ' selected' : '') + '>' + esc(NAMEN[k]) + '</option>';
+  });
+  h += '<option value="andere"' + (roh && !code ? ' selected' : '') + '>Eine andere Sprache</option>';
+  return h;
+}
+
 function renderProfil(){
   document.getElementById('v-profil').innerHTML=`
     <div class="pagehead"><h1 data-i18n="pr_h1">Dein Profil</h1><p data-i18n="pr_sub">Damit Amanda und deine Lehrerin dich besser unterstützen können.</p></div>
@@ -3115,7 +3131,9 @@ function renderProfil(){
       <div class="field"><label>Name</label><input id="pName" value="${esc(profile.name||'')}" placeholder="Wie heißt du?"></div>
       <div class="field"><label>Mein Lernziel</label><textarea id="pGoal" placeholder="z.B. Ich will fließend im Job sprechen / die B2-Prüfung schaffen">${esc(profile.goal||'')}</textarea></div>
       <div class="field"><label>Mein Zielniveau 🎯</label><select id="pTarget"><option value="">— wählen —</option>${LEVELS.map(l=>`<option ${profile.target_level===l?'selected':''}>${l}</option>`).join('')}</select></div>
-      <div class="field"><label>Meine Muttersprache</label><input id="pNative" value="${esc(profile.native_language||'')}" placeholder="z.B. Englisch, Arabisch, Ukrainisch"></div>
+      <div class="field"><label>Meine Muttersprache</label>
+        <select id="pNative">${nativeOptionen()}</select>
+        <p class="muted" style="margin:6px 0 0">Damit zeigen wir dir neue Wörter auch in deiner Sprache.</p></div>
       <div class="field"><label>Mein Geburtstag 🎂</label><input id="pBday" type="date" value="${esc(profile.birthday||'')}"></div>
       <button class="btn btn-primary" onclick="saveProfil()"><span data-i18n="pr_save">Speichern</span></button>
       <div class="field" style="margin-top:18px;border-top:1px solid var(--border);padding-top:14px"><label>Mein Weg 🎯</label>
@@ -3127,20 +3145,25 @@ function renderProfil(){
         <button class="btn btn-ghost" onclick="go('abo')">Mein Abo ansehen →</button></div>
     </div>`;
 }
+function nativeWert(){
+  const v = (document.getElementById('pNative')||{}).value || '';
+  if (v === 'andere') return (profile && profile.native_language) || null;   // alten Text behalten
+  return v || null;
+}
 async function saveProfil(){
   const bday=document.getElementById('pBday').value||null;
   const { error }=await sb.rpc('update_my_profile',{
     p_name:document.getElementById('pName').value.trim(),
     p_goal:document.getElementById('pGoal').value.trim()||null,
     p_target_level:document.getElementById('pTarget').value||null,
-    p_native_language:document.getElementById('pNative').value.trim()||null,
+    p_native_language:nativeWert(),
     p_birthday:bday
   });
   if(error){ toast('Konnte nicht speichern.'); return; }
   profile.name=document.getElementById('pName').value.trim();
   profile.goal=document.getElementById('pGoal').value.trim()||null;
   profile.target_level=document.getElementById('pTarget').value||null;
-  profile.native_language=document.getElementById('pNative').value.trim()||null;
+  profile.native_language=nativeWert();
   profile.birthday=bday;
   computeStats(); toast('Profil gespeichert ✓');
 }
@@ -3208,6 +3231,7 @@ async function logout(){ await sb.auth.signOut(); location.href='index.html'; }
 <script src="vielfalt-neu.js?v=1"></script>
 <!-- Doppelte Themen zusammenfuehren: nach allen Datendateien, vor ueben.js -->
 <script src="themen-zusammenfuehren.js?v=1"></script>
+<script src="woerter-sprachen.js?v=1"></script>
 <script src="ueben.js"></script>
 <script>window.__I18N__=Object.assign(window.__I18N__||{},{"sl_lernbereich": {"en": "Learning area", "es": "Área de aprendizaje", "ru": "Учебный раздел", "uk": "Навчальний розділ", "tr": "Öğrenme alanı", "it": "Area di apprendimento", "fa": "بخش یادگیری"}, "sl_tuer_frei": {"en": "For everyday life", "es": "Para el día a día", "ru": "Для повседневной жизни", "uk": "Для повсякдення", "tr": "Günlük hayat için", "it": "Per la vita quotidiana", "fa": "برای زندگی روزمره"}, "sl_tuer_beruf": {"en": "For work", "es": "Para el trabajo", "ru": "Для работы", "uk": "Для роботи", "tr": "İş için", "it": "Per il lavoro", "fa": "برای کار"}, "ls_frage": {"en": "What are you learning German for right now?", "es": "¿Para qué estás aprendiendo alemán ahora?", "ru": "Для чего ты сейчас учишь немецкий?", "uk": "Для чого ти зараз вчиш німецьку?", "tr": "Şu anda Almancayı ne için öğreniyorsun?", "it": "Per cosa stai imparando il tedesco?", "fa": "الان برای چه آلمانی یاد می‌گیری؟"}, "ls_kicker": {"en": "Your learning area", "es": "Tu área de aprendizaje", "ru": "Твой учебный раздел", "uk": "Твій навчальний розділ", "tr": "Öğrenme alanın", "it": "La tua area di apprendimento", "fa": "بخش یادگیری تو"}, "ls_unter": {"en": "Pick a door. Behind it is everything for that goal — situations to speak, words, listening and the lesson.", "es": "Elige una puerta. Detrás está todo lo que sirve para ese objetivo: situaciones para hablar, palabras, audios y la lección.", "ru": "Выбери дверь. За ней всё, что нужно для этой цели: ситуации для разговора, слова, аудио и урок.", "uk": "Обери двері. За ними все для цієї мети: ситуації для розмови, слова, аудіо та урок.", "tr": "Bir kapı seç. Arkasında o hedefe ait her şey var: konuşma durumları, kelimeler, dinleme ve ders.", "it": "Scegli una porta. Dietro c'è tutto ciò che serve per quell'obiettivo: situazioni da parlare, parole, ascolto e la lezione.", "fa": "یک در انتخاب کن. پشت آن هر چیزی که برای این هدف لازم است: موقعیت‌های گفتگو، واژه‌ها، شنیدن و درس."}, "ls_tuer_pruef": {"en": "For the exam", "es": "Para el examen", "ru": "Для экзамена", "uk": "Для іспиту", "tr": "Sınav için", "it": "Per l'esame", "fa": "برای آزمون"}, "ls_tuer_frei": {"en": "For everyday life", "es": "Para el día a día", "ru": "Для повседневной жизни", "uk": "Для повсякдення", "tr": "Günlük hayat için", "it": "Per la vita quotidiana", "fa": "برای زندگی روزمره"}, "ls_tuer_beruf": {"en": "For work", "es": "Para el trabajo", "ru": "Для работы", "uk": "Для роботи", "tr": "İş için", "it": "Per il lavoro", "fa": "برای کار"}, "ls_werkzeuge": {"en": "Tools — always available", "es": "Herramientas — siempre disponibles", "ru": "Инструменты — всегда под рукой", "uk": "Інструменти — завжди під рукою", "tr": "Araçlar — her zaman elinde", "it": "Strumenti — sempre disponibili", "fa": "ابزارها — همیشه در دسترس"}});</script>
 <script src="app-tipp.js?v=1" defer></script>
