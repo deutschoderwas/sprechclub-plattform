@@ -229,6 +229,10 @@ einlesen('Unterricht-ab-27-07/Vorbereitung', 'Unterricht-ab-27-07/Vorbereitung/'
    liegen in Unterricht-ab-14-09 und sind die aktuellsten (rang 3). */
 einlesen('Unterricht-ab-14-09', 'Unterricht-ab-14-09/', 3);
 
+/* Die Vorwoche ab dem 7.9.: acht Einzelstunden im selben Aufbau,
+   aber ohne Teil 2. */
+einlesen('Unterricht-ab-07-09', 'Unterricht-ab-07-09/', 3);
+
 /* Übungs- und Handout-Seiten hängen an ihrer Lektion, nicht daneben */
 function kern(f) {
   return f.replace(/^.*\//, '')

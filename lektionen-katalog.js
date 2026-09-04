@@ -421,6 +421,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-freunde.webp"
  },
  {
+  "d": "Unterricht-ab-07-09/vw-mo-telefonieren-a2b1.html",
+  "t": "Telefonieren, ohne Angst",
+  "lvl": "A2–B1",
+  "art": "lektion",
+  "b": "telefonieren",
+  "img": "amanda/sz-telefonieren.webp"
+ },
+ {
   "d": "Unterricht-ab-27-07/wetter-a2b1.html",
   "t": "Wetter & Jahreszeiten",
   "lvl": "A2–B1",
@@ -2322,7 +2330,8 @@ window.BEREICH_MEHR = {
   "Unterricht-ab-27-07/tempolimit-b2c1.html"
  ],
  "telefonieren": [
-  "Unterricht-ab-27-07/telefon-a2b1.html"
+  "Unterricht-ab-27-07/telefon-a2b1.html",
+  "Unterricht-ab-07-09/vw-mo-telefonieren-a2b1.html"
  ],
  "heikel": [
   "Unterricht-ab-27-07/ausreden-a2b1.html",
