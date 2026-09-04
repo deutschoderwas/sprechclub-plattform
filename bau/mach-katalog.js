@@ -176,6 +176,17 @@ STICH.unterwegs.push('tempolimit');
 STICH.polizei.push('truecrime');
 STICH.kochen.push('vegan');
 
+/* Nachgetragen fuer die acht Einzelstunden der Vorwoche (7.-12.9.).
+   Ihre Dateinamen fangen mit vw- an und enthalten keines der bisherigen
+   Stichwoerter — ohne diese Zeilen landen sechs von acht ohne Bereich
+   und tauchen im Lernbereich nirgends auf. */
+STICH.heikel.push('nein-sagen', 'kritik');
+STICH.rechte.push('beschweren');
+STICH.feste.push('besuch');
+STICH.wohnen.push('ordnung');
+STICH.sprachkurs.push('partikeln');
+
+
 function bereichVon(f, ids) {
   const s = f.toLowerCase().replace(/\.html$/, '').replace(/^vorbereitung-/, '');
   /* "it-lektion.html" gehört zu "it" — dafür braucht es kein Stichwort. */

@@ -99,11 +99,13 @@ function wortschatz(w) {
   s += `<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>\n<div class="bgrid" id="bgrid">\n`;
   w.karten.forEach((k, i) => {
     if (!k.bild && !k.emoji) fehler.push('Wortschatzkarte ' + (i + 1) + ' (' + k.wort + ') hat weder Bild noch Emoji');
+    /* hoch:true fuer freigestellte, hochformatige Figuren — sonst
+       schneidet der quadratische Kartenschnitt die Geste ab. */
     const kopf = k.bild
       ? `<img src="${attr(bild(k.bild))}" alt="${attr(k.alt || k.wort)}" loading="lazy">`
       : `<div class="bem" role="img" aria-label="${attr(k.wort)}">${h(k.emoji)}</div>`;
     const art = k.art ? `<span class="art">${h(k.art)}</span> ` : '';
-    s += `<div class="bcard">${kopf}<div class="bb">` +
+    s += `<div class="bcard${k.hoch ? ' hoch' : ''}">${kopf}<div class="bb">` +
          `<div class="bw">${art}${h(k.wort)}</div>` +
          `<div class="bex">„${h(k.bsp)}“</div>` +
          `<div class="bti">💡 ${h(k.tipp)}</div>` +
