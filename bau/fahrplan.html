@@ -1,0 +1,413 @@
+<title>Sprechclub-Fahrplan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap">
+<style>
+:root{
+  --grund:#FFF8E0; --karte:#FFFCF5; --rahmen:#EADFC6; --rahmen-fein:#F2E8D4;
+  --text:#1A1A1A; --weich:#6B7280; --tuerkis:#1990A4; --rot:#DD0000;
+  --gold:#FFCE00; --anthrazit:#3F4650; --ocker:#B8860B; --band:#FDF6E3; --frisch:#0E7C66;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --grund:#16161A; --karte:#1F2026; --rahmen:#33343C; --rahmen-fein:#2A2B32;
+    --text:#F4EFE2; --weich:#A2A5AE; --tuerkis:#7FD4E4; --rot:#FF6B6B;
+    --gold:#FFD84D; --anthrazit:#C9CCD4; --ocker:#FFD84D; --band:#1B1C21; --frisch:#6FD6BC;
+  }
+}
+:root[data-theme="dark"]{
+  --grund:#16161A; --karte:#1F2026; --rahmen:#33343C; --rahmen-fein:#2A2B32;
+  --text:#F4EFE2; --weich:#A2A5AE; --tuerkis:#7FD4E4; --rot:#FF6B6B;
+  --gold:#FFD84D; --anthrazit:#C9CCD4; --ocker:#FFD84D; --band:#1B1C21; --frisch:#6FD6BC;
+}
+
+*{box-sizing:border-box}
+body{background:var(--grund);color:var(--text);font-family:Inter,"Segoe UI",system-ui,sans-serif;
+  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.huelle{max-width:1180px;margin:0 auto;padding:44px 22px 80px;display:flex;flex-direction:column;gap:40px}
+
+h1,h2,h3{font-family:"Space Grotesk",Inter,system-ui,sans-serif;text-wrap:balance;margin:0}
+h1{font-size:clamp(30px,4.4vw,44px);font-weight:700;letter-spacing:-.015em}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--tuerkis);margin:0 0 10px}
+
+.kopf{display:flex;flex-direction:column;gap:14px}
+.kopf p{max-width:66ch;margin:0;color:var(--weich);font-size:17px}
+.kopf p b{color:var(--text);font-weight:600}
+.eckdaten{display:flex;flex-wrap:wrap;gap:10px 26px;padding:16px 20px;margin-top:6px;
+  background:var(--karte);border:1px solid var(--rahmen);border-radius:14px}
+.eck{display:flex;flex-direction:column;gap:1px}
+.eck dt{font-size:11.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--weich)}
+.eck dd{margin:0;font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:18px;font-variant-numeric:tabular-nums}
+
+.zeiten{background:var(--karte);border:1px solid var(--rahmen);border-radius:14px;padding:18px 20px;
+  display:flex;flex-direction:column;gap:12px}
+.zeiten h2{font-size:19px;font-weight:600}
+.zeiten table{border-collapse:collapse;font-size:14.5px;width:100%}
+.zeiten th,.zeiten td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--rahmen-fein);
+  font-variant-numeric:tabular-nums}
+.zeiten th{font-size:11.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--weich)}
+.zeiten td b{font-weight:600}
+.zeiten .neu{color:var(--frisch);font-weight:600}
+
+.vorwoche{background:var(--karte);border:1px solid var(--rahmen);border-radius:14px;
+  padding:20px 22px;display:flex;flex-direction:column;gap:14px;border-left:4px solid var(--frisch)}
+.vorwoche h2{font-size:19px;font-weight:600}
+.vorwoche > p{margin:0;color:var(--weich);font-size:15px;max-width:72ch}
+.vw-liste{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}
+.vw{background:var(--band);border:1px solid var(--rahmen-fein);border-radius:12px;
+  padding:11px 13px;display:flex;flex-direction:column;gap:5px}
+.vw .wann{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--weich);font-variant-numeric:tabular-nums}
+.vw h3{font-size:14.5px;font-weight:600;line-height:1.32}
+.vw .her{font-size:12.5px;color:var(--weich)}
+.vw .weg{font-size:12.5px;color:var(--weich);border-top:1px dashed var(--rahmen);padding-top:5px;margin-top:1px}
+.vw .weg b{color:var(--text);font-weight:500}
+
+.straenge{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.strang{background:var(--karte);border:1px solid var(--rahmen);border-radius:14px;
+  padding:16px 16px 15px;display:flex;flex-direction:column;gap:7px;border-top:3px solid var(--ton)}
+.strang .chip{align-self:flex-start;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ton)}
+.strang h3{font-size:16.5px;font-weight:600;line-height:1.3}
+.strang .was{font-size:13.5px;color:var(--weich);margin:0}
+.strang .wann{font-size:13px;color:var(--weich);font-variant-numeric:tabular-nums;margin:0}
+.strang .niveau{align-self:flex-start;margin-top:2px;font-size:12px;font-weight:600;
+  padding:2px 9px;border-radius:999px;background:var(--band);border:1px solid var(--rahmen);color:var(--text)}
+.s-a{--ton:var(--tuerkis)}
+.s-b{--ton:var(--ocker)}
+.s-c{--ton:var(--rot)}
+.s-d{--ton:var(--anthrazit)}
+
+.bausteine{background:var(--karte);border:1px solid var(--rahmen);border-radius:14px;padding:20px 22px;
+  display:flex;flex-direction:column;gap:12px}
+.bausteine h2{font-size:19px;font-weight:600}
+.bausteine > p{margin:0;color:var(--weich);font-size:15px;max-width:70ch}
+.teile{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.teil{display:flex;flex-direction:column;gap:7px}
+.teil .kennung{font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--tuerkis)}
+.teil ol{margin:0;padding-left:19px;display:flex;flex-direction:column;gap:4px;font-size:14.5px}
+.teil li::marker{color:var(--weich);font-variant-numeric:tabular-nums}
+
+.gleise{display:flex;flex-direction:column;gap:18px}
+.gleis{background:var(--band);border:1px solid var(--rahmen-fein);border-radius:16px;
+  padding:16px 18px 18px;display:flex;flex-direction:column;gap:13px;border-left:4px solid var(--ton)}
+.gkopf{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.gkopf .chip{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:12.5px;color:var(--ton);
+  padding:3px 10px;border-radius:999px;background:var(--karte);border:1px solid var(--rahmen);
+  letter-spacing:.05em;text-transform:uppercase}
+.gkopf h2{font-size:19px;font-weight:600}
+.gkopf .wann{margin-left:auto;font-size:13px;color:var(--weich);font-variant-numeric:tabular-nums}
+.liste{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}
+.thema{background:var(--karte);border:1px solid var(--rahmen);border-radius:12px;
+  padding:12px 13px;display:flex;flex-direction:column;gap:6px}
+.thema.neu{border-color:var(--frisch);box-shadow:inset 3px 0 0 var(--frisch)}
+.thema .wo{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--weich);
+  font-variant-numeric:tabular-nums;display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.thema .marke{color:var(--frisch)}
+.thema h3{font-size:14.5px;font-weight:600;line-height:1.32}
+.thema dl{margin:2px 0 0;display:flex;flex-direction:column;gap:4px;font-size:13px}
+.thema .zeile{display:flex;gap:7px;align-items:baseline}
+.thema dt{flex:none;font-size:10px;font-weight:700;letter-spacing:.05em;color:var(--weich);padding-top:2px;min-width:30px}
+.thema dd{margin:0;color:var(--text)}
+
+.schluss{background:var(--karte);border:1px solid var(--rahmen);border-radius:14px;padding:18px 20px;
+  display:flex;flex-direction:column;gap:8px}
+.schluss h2{font-size:17px;font-weight:600}
+.schluss p{margin:0;color:var(--weich);font-size:14.5px;max-width:72ch}
+.schluss b{color:var(--text);font-weight:600}
+
+@media (max-width:980px){
+  .straenge{grid-template-columns:repeat(2,1fr)}
+  .liste,.vw-liste{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:620px){
+  .huelle{padding:30px 15px 60px;gap:30px}
+  .straenge,.liste,.teile,.vw-liste{grid-template-columns:1fr}
+  .gkopf .wann{margin-left:0;width:100%}
+  .zeiten{overflow-x:auto}
+}
+</style>
+
+<div class="huelle">
+
+  <header class="kopf">
+    <p class="eyebrow">deutschoderwas club · Live-Unterricht</p>
+    <h1>Sprechclub-Fahrplan</h1>
+    <p>Zwölf Wochen, vier Stränge, 48 Themen — jedes in <b>Teil 1</b> und <b>Teil 2</b>. Jede Stunde dauert 60 Minuten und hat eine Umschalttaste zwischen den beiden Niveaus: dasselbe Thema, einmal einfacher, einmal anspruchsvoller. Davor steht eine Vorwoche mit acht Einzelstunden.</p>
+    <dl class="eckdaten">
+      <div class="eck"><dt>Vorwoche</dt><dd>Mo 7.9.</dd></div>
+      <div class="eck"><dt>Beginn</dt><dd>Mo 14.09.</dd></div>
+      <div class="eck"><dt>Ende</dt><dd>Mo 30.11.</dd></div>
+      <div class="eck"><dt>Wochen</dt><dd>12</dd></div>
+      <div class="eck"><dt>Stunden pro Woche</dt><dd>14</dd></div>
+      <div class="eck"><dt>Themen</dt><dd>48</dd></div>
+      <div class="eck"><dt>Präsentationen</dt><dd>96 + 8</dd></div>
+    </dl>
+  </header>
+
+  <section class="zeiten">
+    <h2>Die Woche ab dem 14. September</h2>
+    <table>
+      <tr><th>Zeit</th><th>Mo</th><th>Di</th><th>Mi</th><th>Do</th><th>Fr</th><th>Sa</th></tr>
+      <tr><td><b>9:00</b></td><td>A · T1</td><td>B · T1</td><td>A · T2</td><td>B · T2</td><td>—</td><td>—</td></tr>
+      <tr><td><b class="neu">17:30</b></td><td>C · T1</td><td>D · T1</td><td>C · T2</td><td>D · T2</td><td>—</td><td>—</td></tr>
+      <tr><td><b>19:30</b></td><td>C · T1</td><td>D · T1</td><td>C · T2</td><td>D · T2</td><td>Spielclub</td><td>—</td></tr>
+      <tr><td><b>11:00</b></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>Spielclub</td></tr>
+    </table>
+    <p style="margin:0;color:var(--weich);font-size:14.5px;">Abends laufen <b>zwei Gruppen mit demselben Thema</b>: die erste um <span class="neu">17:30–18:30</span>, die zweite um 19:30–20:30, beide B1 ⇄ B2. Morgens gibt es je Tag eine Stunde von 9 bis 10. Sonntags ist kein Unterricht.</p>
+  </section>
+
+  <section class="vorwoche">
+    <h2>Vorwoche · 7.–12. September · acht Einzelstunden</h2>
+    <p>Die letzte Woche im alten Format, deshalb noch mit den alten Abendzeiten. Statt der Themen, die dort standen, laufen acht der stärksten Themen aus dem Plan — jedes als abgeschlossene Einzelstunde, ohne Teil 2. Freitag hat kein A2 mehr (dafür der Sprachspielclub ab B1 um 19:30), sonntags ist gar kein Unterricht. Die verdrängten Themen sind nicht weg: sie sind in die frei gewordenen Plätze im Plan gerückt (unten grün markiert). Wortschatzboost, Aussprache und Sprachspielclub bleiben unverändert.</p>
+    <div class="vw-liste">
+      <div class="vw"><span class="wann">Mo 9:00 · Mi 18:30 · ab A2</span><h3>Telefonieren — sich melden, buchstabieren, nachfragen</h3>
+        <p class="her">aus Strang A, Woche 10</p><p class="weg">stand dort: <b>Handy &amp; Internet</b></p></div>
+      <div class="vw"><span class="wann">Mi 9:00 · ab A2</span><h3>Besuch und Einladung</h3>
+        <p class="her">aus Strang A, Woche 8</p><p class="weg">stand dort: <b>Bäckerei &amp; Café</b></p></div>
+      <div class="vw"><span class="wann">Mo 10:00 · Mo 19:30 · ab B1</span><h3>Nein sagen, ohne unhöflich zu sein</h3>
+        <p class="her">aus Strang D, Woche 3</p><p class="weg">stand dort: <b>Zug fällt aus — meine Rechte</b></p></div>
+      <div class="vw"><span class="wann">Di 19:30 · ab B1</span><h3>Wie viel Ordnung braucht der Mensch?</h3>
+        <p class="her">aus Strang C, Woche 3</p><p class="weg">stand dort: <b>Job wechseln</b></p></div>
+      <div class="vw"><span class="wann">Mi 10:00 · Mi 19:30 · ab B1</span><h3>Sich beschweren und gewinnen</h3>
+        <p class="her">aus Strang D, Woche 5</p><p class="weg">stand dort: <b>Paket verpasst</b></p></div>
+      <div class="vw"><span class="wann">Do 20:00 · ab B1</span><h3>Pünktlichkeit — Marotte oder Respekt?</h3>
+        <p class="her">aus Strang C, Woche 4</p><p class="weg">stand dort: <b>Ehrlich sein oder höflich sein?</b></p></div>
+      <div class="vw"><span class="wann">Di 9:00 · Di 19:00 · ab B2</span><h3>doch, mal, ja, eben, halt</h3>
+        <p class="her">aus Strang B, Woche 6</p><p class="weg">stand dort: <b>Vier-Tage-Woche</b></p></div>
+      <div class="vw"><span class="wann">Do 9:00 · Do 19:00 · ab B2</span><h3>Kritik üben, ohne zu verletzen</h3>
+        <p class="her">aus Strang D, Woche 6</p><p class="weg">stand dort: <b>Mobilität &amp; Verkehrswende</b></p></div>
+    </div>
+  </section>
+
+  <section class="straenge">
+    <article class="strang s-a">
+      <span class="chip">Strang A</span><h3>Alltag</h3>
+      <p class="was">Situationen, die jede Woche vorkommen — Bäcker, Arzt, Bahn, Besuch.</p>
+      <p class="wann">Mo + Mi · 9–10 Uhr</p><span class="niveau">A2 ⇄ B1</span>
+    </article>
+    <article class="strang s-b">
+      <span class="chip">Strang B</span><h3>Wörter, die alles können</h3>
+      <p class="was">Ein Wort, viele Bedeutungen: machen, gehen, die kleinen Partikeln.</p>
+      <p class="wann">Di + Do · 9–10 Uhr</p><span class="niveau">B1 ⇄ B2</span>
+    </article>
+    <article class="strang s-c">
+      <span class="chip">Strang C</span><h3>Reden wir drüber</h3>
+      <p class="was">Jede Woche eine Streitfrage aus dem Alltag, mit Pro und Contra.</p>
+      <p class="wann">Mo + Mi · 17:30 und 19:30</p><span class="niveau">B1 ⇄ B2</span>
+    </article>
+    <article class="strang s-d">
+      <span class="chip">Strang D</span><h3>Sprache, die wirkt</h3>
+      <p class="was">Was kein Lehrbuch übt: nein sagen, nachfragen, sich beschweren.</p>
+      <p class="wann">Di + Do · 17:30 und 19:30</p><span class="niveau">B1 ⇄ B2</span>
+    </article>
+  </section>
+
+  <section class="bausteine">
+    <h2>Was in jeder Stunde steckt</h2>
+    <p>Der Aufbau bleibt in allen 96 Präsentationen gleich — wer einmal dabei war, weiß beim nächsten Mal sofort, wo er ist. Teil 2 beginnt mit einer kurzen Wiederholung, damit auch mitkommt, wer Teil 1 verpasst hat. Die acht Einzelstunden der Vorwoche nehmen aus beiden Spalten das Wichtigste in eine Stunde.</p>
+    <div class="teile">
+      <div class="teil">
+        <span class="kennung">Teil 1 · Montag bzw. Dienstag</span>
+        <ol>
+          <li>Einstieg: ein Bild, drei Fragen, alle sprechen sofort</li>
+          <li>Wortschatz: 10 Wörter mit Bild, Ton und Beispielsatz</li>
+          <li>Dialoge in zwei Runden — zweite Runde ohne Vorlage</li>
+          <li>Grammatik: eine Struktur, farbig markiert im Satz</li>
+          <li>Rollenspiel zu zweit mit Rollenkarten</li>
+          <li>90-Sekunden-Challenge mit gezogenen Wörtern</li>
+        </ol>
+      </div>
+      <div class="teil">
+        <span class="kennung">Teil 2 · Mittwoch bzw. Donnerstag</span>
+        <ol>
+          <li>Kurze Wiederholung: Wörter und Struktur aus Teil 1</li>
+          <li>Vertiefung: Wendungen, Register, typische Fehler</li>
+          <li>Praxis: Muster-Nachricht, Anruf oder Formular</li>
+          <li>Debatte oder zweites Rollenspiel mit Redemitteln</li>
+          <li>Lückentext zur Kontrolle</li>
+          <li>Hausaufgabe: schreiben oder Sprachnachricht</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="gleise">
+
+    <article class="gleis s-a">
+      <div class="gkopf"><span class="chip">Strang A</span><h2>Alltag</h2><span class="wann">Mo + Mi · 9–10 Uhr · A2 ⇄ B1</span></div>
+      <div class="liste">
+        <div class="thema"><span class="wo">Woche 1 · 14.–16.9.</span><h3>Beim Bäcker und im Supermarkt</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Bestellen, Mengen, bezahlen</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Etwas ist alle — nachfragen, Rollenspiel</dd></div></dl></div>
+        <div class="thema"><span class="wo">Woche 2 · 21.–23.9.</span><h3>Einen Termin machen und absagen</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Anrufen, Zeit vorschlagen</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Verschieben und absagen, ohne Ärger</dd></div></dl></div>
+        <div class="thema"><span class="wo">Woche 3 · 28.–30.9.</span><h3>Beim Arzt</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Wo tut es weh? Körper und Beschwerden</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Rezept, Apotheke, Krankschreibung</dd></div></dl></div>
+        <div class="thema"><span class="wo">Woche 4 · 5.–7.10.</span><h3>In der Wohnung</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Zimmer, Möbel, wo etwas steht</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Etwas ist kaputt — melden und beschreiben</dd></div></dl></div>
+        <div class="thema"><span class="wo">Woche 5 · 12.–14.10.</span><h3>Einkaufen, kochen, essen</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Zutaten, Mengen, ein Rezept erklären</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Im Restaurant bestellen und reklamieren</dd></div></dl></div>
+        <div class="thema"><span class="wo">Woche 6 · 19.–21.10.</span><h3>Wetter, Jahreszeit, Kleidung</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Wetter beschreiben, sich anziehen</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Kleidung kaufen: Größe, Farbe, umtauschen</dd></div></dl></div>
+        <div class="thema"><span class="wo">Woche 7 · 26.–28.10.</span><h3>Unterwegs mit Bus und Bahn</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Ticket, Fahrplan, umsteigen</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Nach dem Weg fragen, Verspätung</dd></div></dl></div>
+        <div class="thema neu"><span class="wo">Woche 8 · 2.–4.11. <span class="marke">· nachgerückt</span></span><h3>Zug fällt aus — meine Rechte</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Anzeige lesen, Ersatz finden, nachfragen</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Entschädigung: Formular und Anruf</dd></div></dl></div>
+        <div class="thema"><span class="wo">Woche 9 · 9.–11.11.</span><h3>Beim Friseur und beim Umtausch</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Sagen, was man will — genau</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Es ist anders geworden: reklamieren</dd></div></dl></div>
+        <div class="thema neu"><span class="wo">Woche 10 · 16.–18.11. <span class="marke">· nachgerückt</span></span><h3>Handy, Internet und Vertrag</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Tarif, Vertrag, Datenvolumen</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Kündigen, Störung melden, Hotline</dd></div></dl></div>
+        <div class="thema"><span class="wo">Woche 11 · 23.–25.11.</span><h3>Freizeit und Nachbarn</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Verein, Sport, Hobbys</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Nachbarn: grüßen, bitten, um Ruhe bitten</dd></div></dl></div>
+        <div class="thema"><span class="wo">Woche 12 · 30.11.</span><h3>Feiern im Winter</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Weihnachtsmarkt, Glühwein, Geschenke</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>—</dd></div></dl></div>
+      </div>
+    </article>
+
+    <article class="gleis s-b">
+      <div class="gkopf"><span class="chip">Strang B</span><h2>Wörter, die alles können</h2><span class="wann">Di + Do · 9–10 Uhr · B1 ⇄ B2</span></div>
+      <div class="liste">
+        <div class="thema"><span class="wo">Woche 1 · 15.–17.9.</span><h3>MACHEN — das Wort, das alles kann</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Frühstück, Termin, Musik, Platz, sauber</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>machen oder tun? Und: macht nichts, mach's gut</dd></div></dl></div>
+        <div class="thema"><span class="wo">Woche 2 · 22.–24.9.</span><h3>GEHEN, KOMMEN, FAHREN</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Wohin und womit — im Alltag</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Das geht nicht. Wie geht's? Es kommt darauf an</dd></div></dl></div>
+        <div class="thema"><span class="wo">Woche 3 · 29.9.–1.10.</span><h3>LEGEN, STELLEN, SETZEN, HÄNGEN</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Etwas hinlegen — und wo es dann liegt</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Wohin oder wo? Der Fall entscheidet</dd></div></dl></div>
+        <div class="thema"><span class="wo">Woche 4 · 6.–8.10.</span><h3>Die Vorsilben an-, ab-, auf-, aus-, ein-</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>anrufen, abholen, aufmachen, einkaufen</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Dieselbe Silbe, neue Bedeutung</dd></div></dl></div>
+        <div class="thema"><span class="wo">Woche 5 · 13.–15.10.</span><h3>Úmfahren oder umfáhren?</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Trennbar oder nicht — man hört es</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>übersetzen, durchschauen, wiederholen</dd></div></dl></div>
+        <div class="thema neu"><span class="wo">Woche 6 · 20.–22.10. <span class="marke">· neu</span></span><h3>Die Vorsilben ver-, be-, ent-, zer-</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>suchen/versuchen, sprechen/besprechen</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Was ver- alles anrichtet: verlaufen, verschlafen</dd></div></dl></div>
+        <div class="thema"><span class="wo">Woche 7 · 27.–29.10.</span><h3>Nase voll, Hand und Fuß</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Redewendungen mit Körperteilen</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Wann sie passen — und wann nicht</dd></div></dl></div>
+        <div class="thema"><span class="wo">Woche 8 · 3.–5.11.</span><h3>NEHMEN, GEBEN, BRINGEN, HOLEN</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Wer bewegt was wohin</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>in Kauf nehmen, Bescheid geben, zur Sprache bringen</dd></div></dl></div>
+        <div class="thema"><span class="wo">Woche 9 · 10.–12.11.</span><h3>Wörter, die sich ähneln</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>kennen/wissen, legen/liegen, lernen/studieren</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>schmecken/gefallen/mögen, sehen/schauen, sagen/sprechen</dd></div></dl></div>
+        <div class="thema"><span class="wo">Woche 10 · 17.–19.11.</span><h3>Eine Entscheidung treffen</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Feste Verbindungen aus Nomen und Verb</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Wo sie stehen: Brief, Amt, Gespräch</dd></div></dl></div>
+        <div class="thema"><span class="wo">Woche 11 · 24.–26.11.</span><h3>Blau machen, Schwein haben</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Farben und Tiere in Redewendungen</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Essen und Trinken: das ist mir Wurst</dd></div></dl></div>
+        <div class="thema"><span class="wo">Woche 12 · 30.11.</span><h3>STELLEN, HALTEN, ZIEHEN</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Die letzten drei großen Alleskönner</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>—</dd></div></dl></div>
+      </div>
+    </article>
+
+    <article class="gleis s-c">
+      <div class="gkopf"><span class="chip">Strang C</span><h2>Reden wir drüber</h2><span class="wann">Mo + Mi · 17:30 und 19:30 · B1 ⇄ B2</span></div>
+      <div class="liste">
+        <div class="thema"><span class="wo">Woche 1 · 14.–16.9.</span><h3>Handy am Esstisch — geht das?</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Wortschatz: Regeln zu Hause</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Debatte mit Redemitteln</dd></div></dl></div>
+        <div class="thema"><span class="wo">Woche 2 · 21.–23.9.</span><h3>Muss man Geburtstage feiern?</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Feiern, einladen, sich drücken</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Debatte</dd></div></dl></div>
+        <div class="thema neu"><span class="wo">Woche 3 · 28.–30.9. <span class="marke">· nachgerückt</span></span><h3>Vier-Tage-Woche — für alle?</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Arbeitszeit, Lohn, Produktivität</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Debatte</dd></div></dl></div>
+        <div class="thema neu"><span class="wo">Woche 4 · 5.–7.10. <span class="marke">· nachgerückt</span></span><h3>Job wechseln — wann ist der Moment?</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Kündigen, bleiben, sich neu bewerben</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Debatte</dd></div></dl></div>
+        <div class="thema"><span class="wo">Woche 5 · 12.–14.10.</span><h3>Wie gesund muss Essen sein?</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Fleisch, Zucker, Fertigessen — ein Etikett lesen</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Debatte: Zuckersteuer und Schulessen</dd></div></dl></div>
+        <div class="thema"><span class="wo">Woche 6 · 19.–21.10.</span><h3>Haustiere in der Mietwohnung</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Hund, Katze, Nachbarn, Vermieter</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Debatte</dd></div></dl></div>
+        <div class="thema"><span class="wo">Woche 7 · 26.–28.10.</span><h3>Geschenke: sinnvoll oder Verschwendung?</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Schenken, umtauschen, Geld schenken</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Debatte</dd></div></dl></div>
+        <div class="thema neu"><span class="wo">Woche 8 · 2.–4.11. <span class="marke">· nachgerückt</span></span><h3>Weniger Auto — und dann?</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Bus, Rad, Parkplatz, Land gegen Stadt</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Debatte: autofreie Innenstadt</dd></div></dl></div>
+        <div class="thema"><span class="wo">Woche 9 · 9.–11.11.</span><h3>Stadt oder Dorf?</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Miete, Ruhe, Bus, Nachbarn</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Debatte</dd></div></dl></div>
+        <div class="thema"><span class="wo">Woche 10 · 16.–18.11.</span><h3>Muss man Small Talk können?</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Wetter, Fahrstuhl, Kaffeeküche</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Debatte</dd></div></dl></div>
+        <div class="thema"><span class="wo">Woche 11 · 23.–25.11.</span><h3>Brauchen wir mehr Feiertage?</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Arbeit, Erholung, Tradition</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Debatte</dd></div></dl></div>
+        <div class="thema"><span class="wo">Woche 12 · 30.11.</span><h3>Was vermisst du am meisten?</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Essen, Menschen, Wetter, Wörter</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>—</dd></div></dl></div>
+      </div>
+    </article>
+
+    <article class="gleis s-d">
+      <div class="gkopf"><span class="chip">Strang D</span><h2>Sprache, die wirkt</h2><span class="wann">Di + Do · 17:30 und 19:30 · B1 ⇄ B2</span></div>
+      <div class="liste">
+        <div class="thema"><span class="wo">Woche 1 · 15.–17.9.</span><h3>Small Talk, der nicht wehtut</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Einstiegsfragen, sichere Themen</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Weiterführen und höflich beenden</dd></div></dl></div>
+        <div class="thema"><span class="wo">Woche 2 · 22.–24.9.</span><h3>Nachfragen, bis es klar ist</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Rückfragen ohne Gesichtsverlust</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Zusammenfassen und absichern</dd></div></dl></div>
+        <div class="thema neu"><span class="wo">Woche 3 · 29.9.–1.10. <span class="marke">· nachgerückt</span></span><h3>Ehrlich sein oder höflich sein?</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Die ehrliche Antwort freundlich verpacken</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Wenn Höflichkeit zur Lüge wird — Rollenspiel</dd></div></dl></div>
+        <div class="thema"><span class="wo">Woche 4 · 6.–8.10.</span><h3>Um Hilfe bitten</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Die Bitte klein und konkret machen</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Wenn die Antwort nein ist</dd></div></dl></div>
+        <div class="thema neu"><span class="wo">Woche 5 · 13.–15.10. <span class="marke">· neu</span></span><h3>Ein Missverständnis aufklären</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Merken, dass etwas schiefging — und es ansprechen</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Richtigstellen, ohne dass jemand das Gesicht verliert</dd></div></dl></div>
+        <div class="thema neu"><span class="wo">Woche 6 · 20.–22.10. <span class="marke">· neu</span></span><h3>Unterbrechen — und selbst zu Wort kommen</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>In ein Gespräch hineinkommen</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Den Faden halten, wenn andere schneller sind</dd></div></dl></div>
+        <div class="thema"><span class="wo">Woche 7 · 27.–29.10.</span><h3>Über sich selbst sprechen</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Stärken nennen ohne Angeberei</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Was man nicht kann — freundlich sagen</dd></div></dl></div>
+        <div class="thema"><span class="wo">Woche 8 · 3.–5.11.</span><h3>Am Telefon: das Anliegen in drei Sätzen</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Sich melden und zur Sache kommen</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Hartnäckig bleiben, freundlich bleiben</dd></div></dl></div>
+        <div class="thema"><span class="wo">Woche 9 · 10.–12.11.</span><h3>Erklären, was man selbst kaum versteht</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Umschreiben statt steckenbleiben</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Nachfragen aushalten</dd></div></dl></div>
+        <div class="thema"><span class="wo">Woche 10 · 17.–19.11.</span><h3>Etwas vorschlagen und überzeugen</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Den Vorschlag aufbauen</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Einwände entkräften — Rollenspiel</dd></div></dl></div>
+        <div class="thema"><span class="wo">Woche 11 · 24.–26.11.</span><h3>Sich entschuldigen — richtig</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Tut mir leid, Entschuldigung, Verzeihung</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>Wiedergutmachen, ohne sich klein zu machen</dd></div></dl></div>
+        <div class="thema"><span class="wo">Woche 12 · 30.11.</span><h3>Die eigene Geschichte erzählen</h3><dl>
+          <div class="zeile"><dt>T 1</dt><dd>Roter Faden, Anfang, Pointe</dd></div>
+          <div class="zeile"><dt>T 2</dt><dd>—</dd></div></dl></div>
+      </div>
+    </article>
+
+  </section>
+
+  <section class="schluss">
+    <h2>Drei Hinweise</h2>
+    <p><b>Duzen oder siezen?</b> ist ganz gestrichen. Acht Themen sind in die Vorwoche vorgezogen; auf ihren Plätzen stehen jetzt die Themen, die dort verdrängt wurden — grün markiert. Vier alte Themen sind nicht nachgerückt, weil sie ein vorhandenes gedoppelt hätten und es sie als fertige Lektion schon gibt: <b>Bäckerei &amp; Café</b>, <b>Kochen &amp; Rezepte</b>, <b>Paket verpasst</b> und <b>Mobilität Teil 2</b> (im neuen „Weniger Auto“ aufgegangen). Dafür stehen drei neue Themen im Plan. Es bleiben 48.</p>
+    <p>Der 30. November ist ein Montag. In Woche 12 gibt es deshalb nur Teil 1 und keinen Teil 2. Entweder werden die vier Themen als Einzelstunden gebaut, oder der Plan endet am <b>Samstag, 28. November</b> — dann sind es elf runde Wochen und 44 Themen.</p>
+    <p>Der <b>Freitag um 19:30</b> (freies Sprechen mit Spielen, ab B1) und der <b>Samstag um 11 Uhr</b> (Spiele-Mix und Wimmelbild, ab B1) laufen unabhängig weiter und brauchen keine eigene Präsentation.</p>
+  </section>
+
+</div>
