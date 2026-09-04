@@ -46,8 +46,10 @@ const text = worte.join(' ')
   .replace(/<[^>]*>/g, ' ')          /* Auszeichnung raus */
   .replace(/&[a-z#0-9]+;/gi, ' ');   /* Entitaeten raus */
 
+/* Die Buchstaben vor ue/oe/ae werden auch gross geprueft — sonst wird
+   „Quelle“ gemeldet, weil das kleine q nicht auf das grosse Q passt. */
 const verdacht = [...new Set(text
-  .match(/\b[A-Za-zÄÖÜäöüß]*(?:(?<![aeq])ue|(?<![aou])oe|(?<![aou])ae)[A-Za-zÄÖÜäöüß]*\b/g) || [])]
+  .match(/\b[A-Za-zÄÖÜäöüß]*(?:(?<![aeqAEQ])ue|(?<![aouAOU])oe|(?<![aouAOU])ae)[A-Za-zÄÖÜäöüß]*\b/g) || [])]
   .filter(w => !echt.test(w));
 
 verdacht.forEach(w => meldung.push('Umlaut? „' + w + '“ — steht ue/oe/ae statt ü/ö/ä?'));

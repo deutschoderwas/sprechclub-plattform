@@ -186,6 +186,15 @@ STICH.feste.push('besuch');
 STICH.wohnen.push('ordnung');
 STICH.sprachkurs.push('partikeln');
 
+/* Und fuer die 92 Praesentationen ab dem 14.9.: Strang B heisst
+   „Woerter, die alles koennen“ — das ist Sprachtraining, kein Sachthema,
+   deshalb greift bei allen Dateien w<NN>-b-teil… derselbe Bereich.
+   „Handy am Esstisch“ waere sonst bei den Vertraegen gelandet, weil
+   „handy“ dort als Stichwort steht; „esstisch“ ist laenger und gewinnt. */
+STICH.sprachkurs.push('-b-teil');
+STICH.familie.push('esstisch');
+
+
 
 function bereichVon(f, ids) {
   const s = f.toLowerCase().replace(/\.html$/, '').replace(/^vorbereitung-/, '');

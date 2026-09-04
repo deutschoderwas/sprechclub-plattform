@@ -267,6 +267,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-supermarkt.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w01-a-teil2-baecker-supermarkt-a2b1.html",
+  "t": "Etwas ist alle — und jetzt?",
+  "lvl": "A2–B1",
+  "art": "lektion",
+  "b": "supermarkt",
+  "img": "amanda/sz-supermarkt.webp"
+ },
+ {
   "d": "familie-beziehungen-teil-1-a2-b1.html",
   "t": "Familie & Beziehungen · Teil 1",
   "lvl": "A2–B1",
@@ -1144,6 +1152,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-freunde.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w01-c-teil2-handy-esstisch-b1b2.html",
+  "t": "Die Debatte: Handy am Esstisch",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "familie",
+  "img": "amanda/sz-familie.webp"
+ },
+ {
   "d": "Unterricht-ab-27-07/digitaldetox-b1b2.html",
   "t": "Digital Detox & Handysucht",
   "lvl": "B1–B2",
@@ -1249,6 +1265,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-sprachkurs.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w01-c-teil1-handy-esstisch-b1b2.html",
+  "t": "Handy am Esstisch — geht das?",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "familie",
+  "img": "amanda/sz-familie.webp"
+ },
+ {
   "d": "sprachspielclub-stadtpark-b1-b2.html",
   "t": "Im Stadtpark",
   "lvl": "B1–B2",
@@ -1281,6 +1305,22 @@ window.LEKTIONEN = [
   "b": "feste",
   "hand": "kultur-traditionen-teil-1-handout.html",
   "img": "amanda/sz-feste.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/w01-b-teil1-machen-b1b2.html",
+  "t": "MACHEN — das Wort, das alles kann",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/w01-b-teil2-machen-b1b2.html",
+  "t": "machen oder tun — und macht nichts",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
  },
  {
   "d": "medien-digitalisierung-teil-1-b1-b2.html",
@@ -1388,6 +1428,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-rechte.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w01-d-teil1-small-talk-b1b2.html",
+  "t": "Small Talk, der nicht wehtut",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "freunde",
+  "img": "amanda/sz-freunde.webp"
+ },
+ {
   "d": "Unterricht-ab-27-07/socialmedia-b1b2.html",
   "t": "Social Media im Alltag",
   "lvl": "B1–B2",
@@ -1466,6 +1514,14 @@ window.LEKTIONEN = [
   "art": "lektion",
   "b": null,
   "hand": "glueck-teil-1-handout.html"
+ },
+ {
+  "d": "Unterricht-ab-14-09/w01-d-teil2-small-talk-b1b2.html",
+  "t": "Weiterführen und höflich beenden",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "freunde",
+  "img": "amanda/sz-freunde.webp"
  },
  {
   "d": "Unterricht-ab-07-09/vw-di-ordnung-b1b2.html",
@@ -2319,7 +2375,9 @@ window.BEREICH_MEHR = {
  "familie": [
   "mein-tag-a2.html",
   "Unterricht-ab-27-07/haustiere-a2b1.html",
-  "Unterricht-ab-27-07/generationen-b1b2.html"
+  "Unterricht-ab-14-09/w01-c-teil2-handy-esstisch-b1b2.html",
+  "Unterricht-ab-27-07/generationen-b1b2.html",
+  "Unterricht-ab-14-09/w01-c-teil1-handy-esstisch-b1b2.html"
  ],
  "kleidung": [
   "wetter-kleidung-a2.html",
@@ -2356,6 +2414,8 @@ window.BEREICH_MEHR = {
   "sprachspielclub-stadtpark-b1-b2.html",
   "sprachspielclub-arztpraxis-b1-b2.html",
   "Unterricht-ab-27-07/kreativitaet-b1b2.html",
+  "Unterricht-ab-14-09/w01-b-teil1-machen-b1b2.html",
+  "Unterricht-ab-14-09/w01-b-teil2-machen-b1b2.html",
   "grammatik-passiv-b2.html",
   "grammatik-partizipattribut-b2.html",
   "wortschatzboost-fuehren-b2.html",
@@ -2413,6 +2473,7 @@ window.BEREICH_MEHR = {
  "supermarkt": [
   "Unterricht-ab-14-09/w01-a-teil1-baecker-supermarkt-a2b1.html",
   "Unterricht-ab-27-07/einkaufen-a2b1.html",
+  "Unterricht-ab-14-09/w01-a-teil2-baecker-supermarkt-a2b1.html",
   "Unterricht-ab-27-07/reklamation-a2b1.html",
   "vorbereitung-alles-teurer-b1.html",
   "alles-wird-teurer-sparen-b1-b2.html",
@@ -2452,6 +2513,8 @@ window.BEREICH_MEHR = {
   "Unterricht-ab-27-07/freundschaft-b1b2.html",
   "Unterricht-ab-27-07/netzwerken-b1b2.html",
   "Unterricht-ab-27-07/nostalgie-b1b2.html",
+  "Unterricht-ab-14-09/w01-d-teil1-small-talk-b1b2.html",
+  "Unterricht-ab-14-09/w01-d-teil2-small-talk-b1b2.html",
   "wortschatzboost-charaktereigenschaften-b2.html"
  ],
  "kochen": [

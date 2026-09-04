@@ -115,6 +115,29 @@ function wortschatz(w) {
   return s;
 }
 
+/* ---------- 1b Wiederholung (nur in Teil 2) ----------
+   Der Plan verspricht: "Teil 2 beginnt mit einer kurzen Wiederholung,
+   damit auch mitkommt, wer Teil 1 verpasst hat." Genau das steht hier:
+   die Woerter aus Teil 1 als Chips, der Satzbau von Teil 1 als
+   Merkkasten, und drei Fragen, mit denen sofort gesprochen wird. */
+function wiederholung(w) {
+  if (!w) return '';
+  let s = `<section class="section" id="wiederholung">\n` + kopfzeile(w.h2, w.hl, w.ssub);
+  if (w.woerter && w.woerter.length) {
+    s += `<div class="gchips">\n` + w.woerter.map(c => `<span class="gchip">${h(c)}</span>`).join('') + `\n</div>\n`;
+  }
+  (w.merk || []).forEach(m => {
+    s += `<div class="rmcard"><b>${h(m.titel)}</b>\n` +
+      `<div class="bsp"><span class="wer">${h(m.label || 'So ging der Satz')}</span>${h(m.bsp)}</div>\n` +
+      sprechKnopf(m.say || m.bsp) + `</div>\n`;
+  });
+  if (w.fragen) s += fragenListe(w.fragen);
+  if (w.fragenA2) s += fragenListe(w.fragenA2, 'nur-a2');
+  if (w.fragenB1) s += fragenListe(w.fragenB1, 'nur-b1');
+  s += tipp(w.tipp) + `</section>\n`;
+  return s;
+}
+
 /* ---------- 2 Konzepte (Ja/Nein-Karten und Dreier) ---------- */
 function konzepte(k) {
   if (!k) return '';
@@ -330,6 +353,7 @@ const abschnitte = [];
 function nimm(id, name, html) { if (html) abschnitte.push({ id, name, html }); }
 
 nimm('einstieg',     '🖼️ Einstieg',      einstieg(S.einstieg));
+nimm('wiederholung', '🔁 Wiederholung',  S.wiederholung ? wiederholung(S.wiederholung) : '');
 nimm('wortschatz',   '🔤 Wortschatz',    wortschatz(S.wortschatz));
 nimm('konzepte',     S.konzepte && S.konzepte.tab || '⚖️ Unterschiede', S.konzepte ? konzepte(S.konzepte) : '');
 nimm('saetze',       '💬 Sätze',         S.saetze ? saetze(S.saetze) : '');
