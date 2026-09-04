@@ -37,7 +37,26 @@ const nurText = t => String(t || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' '
 
 const fehler = [];
 const bilder = new Set();
-function bild(p) { if (p) bilder.add(p); return p; }
+
+/* Bildpfade stehen in der JSON immer vom Stammordner aus (amanda/…,
+   vok-bild/…) — so wie sie auch geprueft werden. Die fertige Seite liegt
+   aber in einem Unterordner, und im Browser zaehlt der Ordner der Seite:
+   aus amanda/x.webp wuerde /Unterricht-ab-07-09/amanda/x.webp und damit
+   ein 404. Deshalb bekommt jeder Pfad hier so viele ../ vorgesetzt, wie
+   die Zieldatei tief liegt. Das funktioniert online und auch, wenn man
+   die Datei einfach doppelklickt. */
+const tiefe = path.dirname(S.datei).split('/').filter(x => x && x !== '.').length;
+const hoch  = '../'.repeat(tiefe);
+function bild(p) { if (!p) return p; bilder.add(p); return hoch + p; }
+
+/* Die 90-Sekunden-Bilder gehen nicht durch die Vorlage, sondern als
+   Daten an den Motor — die muessen genauso umgeschrieben werden. */
+if (S.daten && Array.isArray(S.daten.w90)) {
+  S.daten.w90 = S.daten.w90.map(x => {
+    if (x.b) { bilder.add(x.b); return Object.assign({}, x, { b: hoch + x.b }); }
+    return x;
+  });
+}
 
 /* ---------- Bausteine ---------- */
 function tipp(t) {
@@ -98,6 +117,20 @@ function wortschatz(w) {
 function konzepte(k) {
   if (!k) return '';
   let s = `<section class="section" id="konzepte">\n` + kopfzeile(k.h2, k.hl, k.ssub);
+  /* Normalerweise erst die Gegensatzpaare, dann die Dreierkarten.
+     Steht zuerst:"dreier" in der JSON, wird getauscht — dann naemlich,
+     wenn die Ueberschrift die drei Karten ankuendigt und der Leser sie
+     sonst erst nach den Paaren zu sehen bekaeme. */
+  const dreierZuerst = k.zuerst === 'dreier';
+  const dreierBlock = () => {
+    if (!k.dreier || !k.dreier.length) return '';
+    const toene = ['gelb', 'blau', 'ja'];
+    return `<div class="gdrei">\n` + k.dreier.map((d, i) =>
+      `<div class="gk ${toene[i % 3]}"><span class="gem2">${h(d.emoji)}</span>` +
+      `<div class="gmw">${h(d.wort)}</div><div class="gmb">${h(d.was)}</div>` +
+      `<div class="gmx">${h(d.bsp)}</div></div>`).join('\n') + `\n</div>\n`;
+  };
+  if (dreierZuerst) s += dreierBlock();
   (k.paare || []).forEach(p => {
     s += `<div class="gpaar">\n` +
       `<div class="gk ja"><div class="gkl">✅ ${h(p.jaLabel || 'Richtig')}</div><div class="gsatz">${h(p.ja)}</div>` +
@@ -105,16 +138,7 @@ function konzepte(k) {
       `<div class="gk no"><div class="gkl">❌ ${h(p.noLabel || 'So nicht')}</div><div class="gsatz">${h(p.no)}</div>` +
       (p.noWarum ? `<div class="bsp"><span class="wer">${h(p.noWarumLabel || 'Warum')}</span>${h(p.noWarum)}</div>` : '') + `</div>\n</div>\n`;
   });
-  if (k.dreier && k.dreier.length) {
-    const toene = ['gelb', 'blau', 'ja'];
-    s += `<div class="gdrei">\n`;
-    k.dreier.forEach((d, i) => {
-      s += `<div class="gk ${toene[i % 3]}"><span class="gem2">${h(d.emoji)}</span>` +
-           `<div class="gmw">${h(d.wort)}</div><div class="gmb">${h(d.was)}</div>` +
-           `<div class="gmx">${h(d.bsp)}</div></div>\n`;
-    });
-    s += `</div>\n`;
-  }
+  if (!dreierZuerst) s += dreierBlock();
   s += hilfe(k.hilfe) + tipp(k.tipp) + `</section>\n`;
   return s;
 }
@@ -239,9 +263,8 @@ function rollenspiele(r) {
 
 /* ---------- 7 Neunzig Sekunden ---------- */
 function challenge(c) {
+  /* w90 ist oben schon umgeschrieben und eingesammelt — hier nur noch lesen. */
   const erste = (S.daten.w90 && S.daten.w90[0]) || {};
-  if (erste.b) bild(erste.b);
-  (S.daten.w90 || []).forEach(x => bild(x.b));
   return `<section class="section" id="challenge">\n` +
     kopfzeile('⏱️ Die 90-Sekunden-Challenge', null, c && c.ssub || 'Ein Wort, anderthalb Minuten, freies Sprechen. Es muss nicht perfekt sein — es muss weitergehen.') +
     `<div class="card90">\n<div class="lbl">Dein Wort</div>\n` +
