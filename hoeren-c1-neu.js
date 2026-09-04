@@ -1,19 +1,19 @@
 /* ============================================================
-   hoeren-c1-neu.js — Hoeren auf C1
+   hoeren-c1-neu.js — Hören auf C1
 
-   Wird NACH uebungen.js geladen und haengt seine Themen an den
-   Bereich "Hoeren" an. Vorher stand auf C1 kein einziges Thema.
+   Wird NACH uebungen.js geladen und hängt seine Themen an den
+   Bereich "Hören" an. Vorher stand auf C1 kein einziges Thema.
 
-   Vier Themen, in denen der Ton mehr traegt als das Wort:
-   verhandeln, in der Debatte bestehen, Zahlen im Vortrag pruefen,
-   und hoeren, was zwischen den Zeilen gesagt wird.
+   Vier Themen, in denen der Ton mehr trägt als das Wort:
+   verhandeln, in der Debatte bestehen, Zahlen im Vortrag prüfen,
+   und hören, was zwischen den Zeilen gesagt wird.
 
-   Je Thema 16 Woerter, 4 Hoertexte mit Transkript, 16 Wortfragen.
+   Je Thema 16 Wörter, 4 Hörtexte mit Transkript, 16 Wortfragen.
    Die Fragen zielen nicht auf Einzelheiten, sondern auf die
    Absicht: Was wurde zugesagt, was nur angedeutet, wo weicht
    jemand aus. Gesprochen ist alles in Julias eigener Stimme;
-   jede Aufnahme wurde vor dem Einbau maschinell abgehoert.
-   Gebaut von bau/mach-hoeren-c1.js — nicht von Hand aendern.
+   jede Aufnahme wurde vor dem Einbau maschinell abgehört.
+   Gebaut von bau/mach-hoeren-c1.js — nicht von Hand ändern.
    ============================================================ */
 (function(){
   var U = window.UEBUNGEN;
@@ -746,7 +746,7 @@
     ],
     "answer": 0,
     "w": "den Punkt machen",
-    "explain": "den Punkt machen = das entscheidende Argument setzen."
+    "explain": "den Punkt machen = das Entscheidende in einem Satz sagen."
    },
    {
     "type": "choice",

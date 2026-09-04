@@ -1,19 +1,19 @@
 /* ============================================================
-   hoeren-b2-neu.js — Hoeren auf B2
+   hoeren-b2-neu.js — Hören auf B2
 
-   Wird NACH uebungen.js geladen und haengt seine Themen an den
-   Bereich "Hoeren" an. Vorher stand auf B2 ein einziges Thema.
+   Wird NACH uebungen.js geladen und hängt seine Themen an den
+   Bereich "Hören" an. Vorher stand auf B2 ein einziges Thema.
 
    Vier Themen aus dem Alltag, in dem B2 wirklich gebraucht wird:
    im Team etwas ansprechen, ein Bescheid vom Amt, der Mietvertrag,
    und die Frage, was in den Medien Nachricht und was Meinung ist.
 
-   Je Thema 16 Woerter, 4 Hoertexte mit Transkript, 16 Wortfragen.
-   Die Texte sind laenger als auf A1 und enthalten das, was auf
-   diesem Niveau schwerfaellt: Zahlen im Nebensatz, Umschreibungen,
+   Je Thema 16 Wörter, 4 Hörtexte mit Transkript, 16 Wortfragen.
+   Die Texte sind länger als auf A1 und enthalten das, was auf
+   diesem Niveau schwerfällt: Zahlen im Nebensatz, Umschreibungen,
    Zwischentoene. Gesprochen ist alles in Julias eigener Stimme;
-   jede Aufnahme wurde vor dem Einbau maschinell abgehoert.
-   Gebaut von bau/mach-hoeren-b2.js — nicht von Hand aendern.
+   jede Aufnahme wurde vor dem Einbau maschinell abgehört.
+   Gebaut von bau/mach-hoeren-b2.js — nicht von Hand ändern.
    ============================================================ */
 (function(){
   var U = window.UEBUNGEN;
@@ -920,7 +920,7 @@
     ],
     "answer": 0,
     "w": "die Kaution",
-    "explain": "die Kaution = das Geld, das die Vermieterin als Sicherheit behält."
+    "explain": "die Kaution = das Geld, das man beim Einzug als Sicherheit hinterlegt."
    },
    {
     "type": "choice",

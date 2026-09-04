@@ -7,6 +7,10 @@
 */
 var fs = require('fs');
 var pfad = __dirname + '/';
+/* Gelesen wird aus bau/, geschrieben in den Stammordner: dort laedt
+   konto.html die Datei. Vorher stand hier zweimal pfad, die erzeugte
+   Datei landete also in bau/ und die ausgelieferte blieb, wie sie war. */
+var wurzel = __dirname + '/../';
 var Q = JSON.parse(fs.readFileSync(pfad + 'hoeren-a1-quelle.json', 'utf8'));
 var TON = JSON.parse(fs.readFileSync(pfad + 'audio-a1.json', 'utf8'));
 
@@ -94,7 +98,7 @@ var js = kopf +
   '  var U = window.UEBUNGEN;\n' +
   '  if(!U || !U.skills) return;\n' +
   '  var ho = null;\n' +
-  "  for(var i=0;i<U.skills.length;i++){ if(U.skills[i].id==='hören'){ ho=U.skills[i]; break; } }\n" +
+  "  for(var i=0;i<U.skills.length;i++){ if(U.skills[i].id==='hoeren'){ ho=U.skills[i]; break; } }\n" +
   '  if(!ho) return;\n' +
   '  if(!ho.themes) ho.themes = [];\n\n' +
   '  var NEU = ' + JSON.stringify(themen, null, 1) + ';\n\n' +
@@ -107,7 +111,42 @@ var js = kopf +
   '  });\n' +
   '})();\n';
 
-fs.writeFileSync(pfad + 'hoeren-a1-neu.js', js);
+
+/* Ein Schluessel in der Tonkarte heisst noch nicht, dass die Datei auch
+   da ist. Alle 56 Pfade zeigten auf Ordner mit Umlaut, die es nie gab —
+   im Browser waere jeder Hoerknopf stumm geblieben. Deshalb wird jetzt
+   nachgesehen, ob die Datei wirklich auf der Platte liegt. */
+(function () {
+  var ohneDatei = [];
+  Object.keys(TON).forEach(function (k) {
+    if (!fs.existsSync(wurzel + TON[k])) ohneDatei.push(k + ' -> ' + TON[k]);
+  });
+  if (ohneDatei.length) {
+    console.error('Diese Tondateien gibt es nicht:');
+    ohneDatei.forEach(function (z) { console.error('  ' + z); });
+    process.exit(1);
+  }
+})();
+
+/* Der erzeugte Anhaenger sucht seinen Bereich ueber die id. Steht dort
+   ein Name, den es nicht gibt, findet er nichts und haengt still nichts
+   an — die ganze Stufe waere weg, ohne dass irgendwo etwas zu sehen ist.
+   Genau das stand hier: die Vorlage schrieb 'hören', der Bereich heisst
+   'hoeren'. Deshalb wird der Name jetzt gegen uebungen.js geprueft. */
+(function () {
+  var t = js.match(/id===['"]([^'"]+)['"]/);
+  if (!t) { console.error('Im erzeugten Anhaenger steht keine Bereichs-id.'); process.exit(1); }
+  global.window = {};
+  require(wurzel + 'uebungen.js');
+  var da = ((global.window.UEBUNGEN || {}).skills || []).map(function (s) { return s.id; });
+  if (da.indexOf(t[1]) < 0) {
+    console.error('Den Bereich "' + t[1] + '" gibt es nicht. Bekannt sind: ' + da.join(', '));
+    console.error('Der Anhaenger wuerde im Browser still nichts anhaengen.');
+    process.exit(1);
+  }
+})();
+
+fs.writeFileSync(wurzel + 'hoeren-a1-neu.js', js);
 
 var zahlListen = 0, zahlChoice = 0, zahlWort = 0;
 themen.forEach(function (t) {
@@ -116,4 +155,4 @@ themen.forEach(function (t) {
 });
 console.log('Themen: ' + themen.length + ', Wörter: ' + zahlWort +
   ', Hörtexte: ' + zahlListen + ', Wortfragen: ' + zahlChoice +
-  ', Datei: ' + fs.statSync(pfad + 'hoeren-a1-neu.js').size + ' Bytes');
+  ', Datei: ' + fs.statSync(wurzel + 'hoeren-a1-neu.js').size + ' Bytes');

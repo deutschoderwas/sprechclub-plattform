@@ -1,13 +1,13 @@
 /* ============================================================
-   hoeren-a1-neu.js — Hoeren auf A1
+   hoeren-a1-neu.js — Hören auf A1
 
-   Wird NACH uebungen.js geladen und haengt seine Themen an den
-   Bereich "Hoeren" an. Vorher stand auf A1 nichts: der Anfaenger
-   kam in den Hoerbereich und fand nur B1-Themen.
+   Wird NACH uebungen.js geladen und hängt seine Themen an den
+   Bereich "Hören" an. Vorher stand auf A1 nichts: der Anfaenger
+   kam in den Hörbereich und fand nur B1-Themen.
 
-   Je Thema: 16 Woerter, 4 echte Hoertexte mit Ton und Transkript,
+   Je Thema: 16 Wörter, 4 echte Hörtexte mit Ton und Transkript,
    16 Wortfragen. Die Stimme ist Julias eigene.
-   Gebaut von bau/mach-hoeren-a1.js — nicht von Hand aendern.
+   Gebaut von bau/mach-hoeren-a1.js — nicht von Hand ändern.
    ============================================================ */
 (function(){
   var U = window.UEBUNGEN;
@@ -356,7 +356,7 @@
     ],
     "answer": 0,
     "w": "das Alter",
-    "explain": "das Alter = wie viele Jahre eine Person hat."
+    "explain": "das Alter = wie alt eine Person ist."
    },
    {
     "type": "choice",
@@ -1396,7 +1396,7 @@
     ],
     "answer": 1,
     "w": "die Scheibe",
-    "explain": "die Scheibe = ein dünner Schnitt vom Brot."
+    "explain": "die Scheibe = ein dünnes Stück Brot."
    },
    {
     "type": "choice",
@@ -1766,7 +1766,7 @@
     ],
     "answer": 0,
     "w": "die Ecke",
-    "explain": "die Ecke = dort endet eine Häuserreihe."
+    "explain": "die Ecke = die Stelle, an der die Straße abbiegt."
    },
    {
     "type": "choice",
@@ -2240,7 +2240,7 @@
  }
 ];
 
-  // A1 gehoert nach vorn: erst die neuen Themen, dann die alten.
+  // A1 gehört nach vorn: erst die neuen Themen, dann die alten.
   NEU.slice().reverse().forEach(function(t){
     var pos = -1;
     for(var i=0;i<ho.themes.length;i++){ if(ho.themes[i].id===t.id){ pos=i; break; } }

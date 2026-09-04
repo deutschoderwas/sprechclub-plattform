@@ -1,19 +1,19 @@
 /* ============================================================
    aussprache-neu.js — Aussprache von A1 bis C1
 
-   Wird NACH uebungen.js geladen und haengt seine Themen an den
+   Wird NACH uebungen.js geladen und hängt seine Themen an den
    Bereich "Aussprache" an. Vorher lagen dort acht Themen, alle
-   auf A2 — fuer den Anfaenger zu frueh, fuer C1 zu wenig.
+   auf A2 — für den Anfaenger zu frueh, für C1 zu wenig.
 
-   Je Thema: 6 Karten zum Nachsprechen, 2 zum Shadowing (hoeren,
+   Je Thema: 6 Karten zum Nachsprechen, 2 zum Shadowing (hören,
    selbst aufnehmen, vergleichen) und 5 Fragen zur Regel.
    Gesprochen ist alles in Julias eigener Stimme.
 
-   Jede Aufnahme wurde vor dem Einbau maschinell abgehoert und mit
+   Jede Aufnahme wurde vor dem Einbau maschinell abgehört und mit
    dem Soll-Text verglichen. Die Stimme hat bei Minimalpaaren in
-   einem Zug oft zweimal dasselbe Wort gesagt ("koennen, koennen") —
-   solche Dateien sind aussortiert und durch Kontrastsaetze ersetzt.
-   Gebaut von bau/mach-aussprache.js — nicht von Hand aendern.
+   einem Zug oft zweimal dasselbe Wort gesagt ("können, können") —
+   solche Dateien sind aussortiert und durch Kontrastsätze ersetzt.
+   Gebaut von bau/mach-aussprache.js — nicht von Hand ändern.
    ============================================================ */
 (function(){
   var U = window.UEBUNGEN;
@@ -965,7 +965,7 @@
    {
     "type": "speak",
     "word": "Er ist in Österreich angekommen.",
-    "tip": "Vier Vokalanfänge, vier kleine Stopps: er, ist, Österreich, angekommen",
+    "tip": "Fünf Vokalanfänge, fünf kleine Stopps: er, ist, in, Österreich, angekommen",
     "audioUrl": "ton/aussprache/knacklaut-p1.mp3"
    },
    {

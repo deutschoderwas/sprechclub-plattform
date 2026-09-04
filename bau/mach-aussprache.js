@@ -7,6 +7,10 @@
 */
 var fs = require('fs');
 var pfad = __dirname + '/';
+/* Gelesen wird aus bau/, geschrieben in den Stammordner: dort laedt
+   konto.html die Datei. Vorher stand hier zweimal pfad, die erzeugte
+   Datei landete also in bau/ und die ausgelieferte blieb, wie sie war. */
+var wurzel = __dirname + '/../';
 var Q = JSON.parse(fs.readFileSync(pfad + 'aussprache-quelle.json', 'utf8'));
 var P = JSON.parse(fs.readFileSync(pfad + 'aussprache-plan.json', 'utf8')).themen;
 
@@ -54,7 +58,12 @@ Object.keys(P).forEach(function (id, ti) {
       q: f[0],
       options: opt,
       answer: opt.indexOf(richtig),
-      explain: q.hinweis || ''
+      /* Steht bei der Frage selbst eine Erklaerung (drittes Feld),
+         gilt sie. Sonst der allgemeine Hinweis des Themas. Vorher gab
+         es nur den Hinweis, und wer eine bessere Erklaerung schrieb,
+         musste sie in der erzeugten Datei nachtragen — beim naechsten
+         Bau war sie wieder weg. */
+      explain: f[2] || q.hinweis || ''
     });
   });
 
@@ -100,11 +109,30 @@ var js = kopf +
   '  });\n' +
   '})();\n';
 
-fs.writeFileSync(pfad + 'aussprache-neu.js', js);
+
+/* Der erzeugte Anhaenger sucht seinen Bereich ueber die id. Steht dort
+   ein Name, den es nicht gibt, findet er nichts und haengt still nichts
+   an — die ganze Stufe waere weg, ohne dass irgendwo etwas zu sehen ist.
+   Genau das stand hier: die Vorlage schrieb 'hören', der Bereich heisst
+   'hoeren'. Deshalb wird der Name jetzt gegen uebungen.js geprueft. */
+(function () {
+  var t = js.match(/id===['"]([^'"]+)['"]/);
+  if (!t) { console.error('Im erzeugten Anhaenger steht keine Bereichs-id.'); process.exit(1); }
+  global.window = {};
+  require(wurzel + 'uebungen.js');
+  var da = ((global.window.UEBUNGEN || {}).skills || []).map(function (s) { return s.id; });
+  if (da.indexOf(t[1]) < 0) {
+    console.error('Den Bereich "' + t[1] + '" gibt es nicht. Bekannt sind: ' + da.join(', '));
+    console.error('Der Anhaenger wuerde im Browser still nichts anhaengen.');
+    process.exit(1);
+  }
+})();
+
+fs.writeFileSync(wurzel + 'aussprache-neu.js', js);
 
 var z = { speak: 0, shadow: 0, choice: 0 };
 themen.forEach(function (t) { t.exercises.forEach(function (e) { z[e.type]++; }); });
 console.log('Themen: ' + themen.length +
   ' (' + themen.map(function (t) { return t.level; }).join(', ') + ')' +
   ', Nachsprechen: ' + z.speak + ', Shadowing: ' + z.shadow + ', Fragen: ' + z.choice +
-  ', Datei: ' + fs.statSync(pfad + 'aussprache-neu.js').size + ' Bytes');
+  ', Datei: ' + fs.statSync(wurzel + 'aussprache-neu.js').size + ' Bytes');
