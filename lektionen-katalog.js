@@ -1,15 +1,15 @@
 /* ============================================================
    lektionen-katalog.js — welche fertigen Seiten es wirklich gibt
 
-   Erzeugt von bau/mach-katalog.js. Nicht von Hand aendern.
+   Erzeugt von bau/mach-katalog.js. Nicht von Hand ändern.
 
    Vorher hat ueben.js den Link "Passende Lektion" aus dem
-   Themennamen geraten. Von 169 Links fuehrten 118 ins Leere.
-   Und fast 200 fertige Seiten waren ueber den Lernbereich
-   ueberhaupt nicht zu erreichen.
+   Themennamen geraten. Von 169 Links führten 118 ins Leere.
+   Und fast 200 fertige Seiten waren über den Lernbereich
+   überhaupt nicht zu erreichen.
 
    Hier steht, was da ist: Titel, Niveau, Art und der Bereich,
-   in den die Seite gehoert. Was fehlt, steht nicht drin — dann
+   in den die Seite gehört. Was fehlt, steht nicht drin — dann
    zeigt die Oberflaeche eben keinen Knopf statt einen toten.
    ============================================================ */
 window.LEKTIONEN = [
@@ -75,9 +75,8 @@ window.LEKTIONEN = [
   "t": "Handy & Internet",
   "lvl": "A2",
   "art": "lektion",
-  "b": "vertraege",
-  "ueb": "vorbereitung-handy-internet-a2.html",
-  "img": "amanda/sz-vertraege.webp"
+  "b": "verträge",
+  "ueb": "vorbereitung-handy-internet-a2.html"
  },
  {
   "d": "im-hotel-a2-interaktiv.html",
@@ -214,6 +213,14 @@ window.LEKTIONEN = [
   "b": "arzt",
   "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-arzt-a2b1.html",
   "img": "amanda/sz-arzt.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/w01-a-teil1-baecker-supermarkt-a2b1.html",
+  "t": "Beim Bäcker und im Supermarkt",
+  "lvl": "A2–B1",
+  "art": "lektion",
+  "b": "supermarkt",
+  "img": "amanda/sz-supermarkt.webp"
  },
  {
   "d": "Unterricht-ab-27-07/friseur-a2b1.html",
@@ -461,7 +468,7 @@ window.LEKTIONEN = [
   "d": "vorbereitung-alles-teurer-b1.html",
   "t": "Alles wird teurer",
   "lvl": "B1",
-  "art": "ueben",
+  "art": "üben",
   "b": "supermarkt",
   "img": "amanda/sz-supermarkt.webp"
  },
@@ -496,9 +503,8 @@ window.LEKTIONEN = [
   "t": "Behördenbrief verstehen",
   "lvl": "B1",
   "art": "lektion",
-  "b": "amt",
-  "ueb": "vorbereitung-behoerdenbrief-b1.html",
-  "img": "amanda/sz-amt.webp"
+  "b": null,
+  "ueb": "vorbereitung-behoerdenbrief-b1.html"
  },
  {
   "d": "wortschatz-bildung-b1.html",
@@ -507,6 +513,14 @@ window.LEKTIONEN = [
   "art": "lektion",
   "b": "schule",
   "img": "amanda/sz-schule.webp"
+ },
+ {
+  "d": "grammatik-dawoerter-b1.html",
+  "t": "darauf, worauf, damit",
+  "lvl": "B1",
+  "art": "grammatik",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
  },
  {
   "d": "dating-kennenlernen-b1-interaktiv.html",
@@ -525,6 +539,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-heikel.webp"
  },
  {
+  "d": "grammatik-ndeklination-b1.html",
+  "t": "den Studenten, Herrn Meier",
+  "lvl": "B1",
+  "art": "grammatik",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "grammatik-genitiv-b1.html",
   "t": "Der Genitiv & Genitiv-Präpositionen",
   "lvl": "B1",
@@ -536,9 +558,17 @@ window.LEKTIONEN = [
   "d": "vorbereitung-puenktlichkeit-b1.html",
   "t": "Die Debatte um Pünktlichkeit",
   "lvl": "B1",
-  "art": "ueben",
+  "art": "üben",
   "b": "team",
   "img": "amanda/sz-buero.webp"
+ },
+ {
+  "d": "grammatik-lassen-b1.html",
+  "t": "die Haare schneiden lassen",
+  "lvl": "B1",
+  "art": "grammatik",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
  },
  {
   "d": "grammatik-nominalisierung-b1.html",
@@ -607,6 +637,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-it.webp"
  },
  {
+  "d": "grammatik-modalpartikeln-b1.html",
+  "t": "doch, mal, ja, eben",
+  "lvl": "B1",
+  "art": "grammatik",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "ehrenamt-engagement-b1-interaktiv.html",
   "t": "Ehrenamt & Engagement",
   "lvl": "B1",
@@ -660,8 +698,7 @@ window.LEKTIONEN = [
   "t": "Gefühle & Stimmungen",
   "lvl": "B1",
   "art": "lektion",
-  "b": "freunde",
-  "img": "amanda/sz-freunde.webp"
+  "b": null
  },
  {
   "d": "wortschatz-gesundheit-b1.html",
@@ -676,9 +713,8 @@ window.LEKTIONEN = [
   "t": "Homeoffice oder Büro ?",
   "lvl": "B1",
   "art": "lektion",
-  "b": "buero",
-  "ueb": "vorbereitung-homeoffice-buero-b2-c1.html",
-  "img": "amanda/sz-buero.webp"
+  "b": "büro",
+  "ueb": "vorbereitung-homeoffice-buero-b2-c1.html"
  },
  {
   "d": "ki-alltag-b1.html",
@@ -698,40 +734,8 @@ window.LEKTIONEN = [
   "img": "amanda/sz-sprachkurs.webp"
  },
  {
-  "d": "grammatik-lassen-b1.html",
-  "t": "lassen: machen lassen, erlauben, liegen lassen",
-  "lvl": "B1",
-  "art": "grammatik",
-  "b": "sprachkurs",
-  "img": "amanda/sz-sprachkurs.webp"
- },
- {
-  "d": "grammatik-ndeklination-b1.html",
-  "t": "n-Deklination: den Studenten, Herrn Meier",
-  "lvl": "B1",
-  "art": "grammatik",
-  "b": "sprachkurs",
-  "img": "amanda/sz-sprachkurs.webp"
- },
- {
-  "d": "grammatik-dawoerter-b1.html",
-  "t": "Da-Wörter: darauf, worauf, damit",
-  "lvl": "B1",
-  "art": "grammatik",
-  "b": "sprachkurs",
-  "img": "amanda/sz-sprachkurs.webp"
- },
- {
-  "d": "grammatik-modalpartikeln-b1.html",
-  "t": "Modalpartikeln: doch, mal, ja, eben",
-  "lvl": "B1",
-  "art": "grammatik",
-  "b": "sprachkurs",
-  "img": "amanda/sz-sprachkurs.webp"
- },
- {
   "d": "grammatik-konnektoren-b1.html",
-  "t": "Konnektoren: deshalb, trotzdem, außerdem",
+  "t": "Konnektoren: deshalb, trotzdem, au erdem",
   "lvl": "B1",
   "art": "grammatik",
   "b": "sprachkurs",
@@ -742,8 +746,8 @@ window.LEKTIONEN = [
   "t": "Körper & Gesundheit",
   "lvl": "B1",
   "art": "wortschatz",
-  "b": "arzt",
-  "img": "amanda/sz-arzt.webp"
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
  },
  {
   "d": "kreativitaet-ideen-b1-interaktiv.html",
@@ -798,7 +802,7 @@ window.LEKTIONEN = [
   "d": "vorbereitung-nominalisierung-b1.html",
   "t": "Nominalisierung Verb → Nomen",
   "lvl": "B1",
-  "art": "ueben",
+  "art": "üben",
   "b": "sprachkurs",
   "img": "amanda/sz-sprachkurs.webp"
  },
@@ -902,9 +906,8 @@ window.LEKTIONEN = [
   "d": "vorbereitung-relativsaetze-praep-b1.html",
   "t": "Relativsätze üben",
   "lvl": "B1",
-  "art": "ueben",
-  "b": "sprachkurs",
-  "img": "amanda/sz-sprachkurs.webp"
+  "art": "üben",
+  "b": null
  },
  {
   "d": "krankmelden-b1.html",
@@ -986,7 +989,7 @@ window.LEKTIONEN = [
   "d": "vorbereitung-wechselpraepositionen-b1.html",
   "t": "Wechselpräpositionen · Wo? / Wohin?",
   "lvl": "B1",
-  "art": "ueben",
+  "art": "üben",
   "b": "sprachkurs",
   "img": "amanda/sz-sprachkurs.webp"
  },
@@ -1008,8 +1011,8 @@ window.LEKTIONEN = [
   "img": "amanda/sz-wohnen.webp"
  },
  {
-  "d": "sprachspielclub-flohmarkt-b1-b2.html",
-  "t": "Auf dem Flohmarkt",
+  "d": "sprachspielclub-park-b1-b2.html",
+  "t": "Ab in den Park",
   "lvl": "B1–B2",
   "art": "spiel",
   "b": "sprachkurs",
@@ -1018,30 +1021,6 @@ window.LEKTIONEN = [
  {
   "d": "sprachspielclub-supermarkt-b1-b2.html",
   "t": "Ab in den Supermarkt",
-  "lvl": "B1–B2",
-  "art": "spiel",
-  "b": "sprachkurs",
-  "img": "amanda/sz-sprachkurs.webp"
- },
- {
-  "d": "sprachspielclub-arztpraxis-b1-b2.html",
-  "t": "In der Arztpraxis",
-  "lvl": "B1–B2",
-  "art": "spiel",
-  "b": "sprachkurs",
-  "img": "amanda/sz-sprachkurs.webp"
- },
- {
-  "d": "sprachspielclub-volksfest-b1-b2.html",
-  "t": "Auf dem Volksfest",
-  "lvl": "B1–B2",
-  "art": "spiel",
-  "b": "sprachkurs",
-  "img": "amanda/sz-sprachkurs.webp"
- },
- {
-  "d": "sprachspielclub-park-b1-b2.html",
-  "t": "Ab in den Park",
   "lvl": "B1–B2",
   "art": "spiel",
   "b": "sprachkurs",
@@ -1094,9 +1073,24 @@ window.LEKTIONEN = [
   "t": "Arbeitsalltag im Büro",
   "lvl": "B1–B2",
   "art": "lektion",
-  "b": "buero",
-  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-buero-b1b2.html",
-  "img": "amanda/sz-buero.webp"
+  "b": null,
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-buero-b1b2.html"
+ },
+ {
+  "d": "sprachspielclub-flohmarkt-b1-b2.html",
+  "t": "Auf dem Flohmarkt",
+  "lvl": "B1–B2",
+  "art": "spiel",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
+  "d": "sprachspielclub-volksfest-b1-b2.html",
+  "t": "Auf dem Volksfest",
+  "lvl": "B1–B2",
+  "art": "spiel",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
  },
  {
   "d": "beruf-lernen-teil-1-b1-b2.html",
@@ -1219,18 +1213,16 @@ window.LEKTIONEN = [
   "t": "Gesunde Ernährung & Diäten",
   "lvl": "B1–B2",
   "art": "lektion",
-  "b": "kochen",
-  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-ernaehrung-b1b2.html",
-  "img": "amanda/sz-kochen.webp"
+  "b": null,
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-ernaehrung-b1b2.html"
  },
  {
   "d": "gesundheit-ernaehrung-teil-1-b1-b2.html",
   "t": "Gesundheit & Ernährung · Teil 1",
   "lvl": "B1–B2",
   "art": "lektion",
-  "b": "kochen",
-  "ueb": "vorbereitung-gesundheit-ernaehrung-b1-b2.html",
-  "img": "amanda/sz-kochen.webp"
+  "b": null,
+  "ueb": "vorbereitung-gesundheit-ernaehrung-b1-b2.html"
  },
  {
   "d": "sprachspielclub-stadtpark-quiz-b1-b2.html",
@@ -1243,6 +1235,14 @@ window.LEKTIONEN = [
  {
   "d": "sprachspielclub-stadtpark-b1-b2.html",
   "t": "Im Stadtpark",
+  "lvl": "B1–B2",
+  "art": "spiel",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
+  "d": "sprachspielclub-arztpraxis-b1-b2.html",
+  "t": "In der Arztpraxis",
   "lvl": "B1–B2",
   "art": "spiel",
   "b": "sprachkurs",
@@ -1424,9 +1424,8 @@ window.LEKTIONEN = [
   "t": "Was macht glücklich ? · Teil 1",
   "lvl": "B1–B2",
   "art": "lektion",
-  "b": "freunde",
-  "hand": "glueck-teil-1-handout.html",
-  "img": "amanda/sz-freunde.webp"
+  "b": null,
+  "hand": "glueck-teil-1-handout.html"
  },
  {
   "d": "Unterricht-ab-27-07/wohnformen-b1b2.html",
@@ -1464,32 +1463,16 @@ window.LEKTIONEN = [
   "img": "amanda/sz-freunde.webp"
  },
  {
-  "d": "grammatik-partizipattribut-b2.html",
-  "t": "Partizipien als Attribut: das rennende Kind",
-  "lvl": "B2",
-  "art": "grammatik",
-  "b": "sprachkurs",
-  "img": "amanda/sz-sprachkurs.webp"
- },
- {
-  "d": "grammatik-nominalstil-b2.html",
-  "t": "Nominalstil: wegen des Regens oder weil es regnet",
-  "lvl": "B2",
-  "art": "grammatik",
-  "b": "sprachkurs",
-  "img": "amanda/sz-sprachkurs.webp"
- },
- {
-  "d": "grammatik-passiversatz-b2.html",
-  "t": "Passiversatz: lässt sich, ist zu, -bar",
-  "lvl": "B2",
-  "art": "grammatik",
-  "b": "sprachkurs",
-  "img": "amanda/sz-sprachkurs.webp"
- },
- {
   "d": "grammatik-passiv-b2.html",
   "t": "Das Passiv",
+  "lvl": "B2",
+  "art": "grammatik",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
+  "d": "grammatik-partizipattribut-b2.html",
+  "t": "das rennende Kind, der reparierte Reifen",
   "lvl": "B2",
   "art": "grammatik",
   "b": "sprachkurs",
@@ -1544,6 +1527,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-sprachkurs.webp"
  },
  {
+  "d": "grammatik-passiversatz-b2.html",
+  "t": "lässt sich öffnen, ist zu machen",
+  "lvl": "B2",
+  "art": "grammatik",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "wortschatzboost-nomen-verb-b2.html",
   "t": "Nomen-Verb-Verbindungen",
   "lvl": "B2",
@@ -1563,7 +1554,7 @@ window.LEKTIONEN = [
   "d": "vorbereitung-passiv-b2.html",
   "t": "Passiv – Wortschatz & Grammatik",
   "lvl": "B2",
-  "art": "ueben",
+  "art": "üben",
   "b": "sprachkurs",
   "img": "amanda/sz-sprachkurs.webp"
  },
@@ -1572,6 +1563,14 @@ window.LEKTIONEN = [
   "t": "Samstags auf dem Wochenmarkt",
   "lvl": "B2",
   "art": "spiel",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
+  "d": "grammatik-nominalstil-b2.html",
+  "t": "wegen des Regens, weil es regnet",
+  "lvl": "B2",
+  "art": "grammatik",
   "b": "sprachkurs",
   "img": "amanda/sz-sprachkurs.webp"
  },
@@ -1606,9 +1605,8 @@ window.LEKTIONEN = [
   "t": "Bürokratie-Dschungel",
   "lvl": "B2–C1",
   "art": "lektion",
-  "b": "amt",
-  "ueb": "vorbereitung-buerokratie-dschungel-b2-c1.html",
-  "img": "amanda/sz-amt.webp"
+  "b": null,
+  "ueb": "vorbereitung-buerokratie-dschungel-b2-c1.html"
  },
  {
   "d": "Unterricht-ab-27-07/datenschutz-b2c1.html",
@@ -1649,7 +1647,7 @@ window.LEKTIONEN = [
   "d": "vorbereitung-konnektoren-b2-c1.html",
   "t": "Erweiterte Konnektoren",
   "lvl": "B2–C1",
-  "art": "ueben",
+  "art": "üben",
   "b": "sprachkurs",
   "img": "amanda/sz-sprachkurs.webp"
  },
@@ -1658,25 +1656,23 @@ window.LEKTIONEN = [
   "t": "Führerschein – Theorie & Prüfung",
   "lvl": "B2–C1",
   "art": "sprechen",
-  "b": "fahren",
-  "img": "amanda/sz-fahren.webp"
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
  },
  {
   "d": "fuehrerschein-vorbereitung-b2-c1.html",
   "t": "Führerschein – Wortschatz & Grammatik",
   "lvl": "B2–C1",
   "art": "lektion",
-  "b": "fahren",
-  "img": "amanda/sz-fahren.webp"
+  "b": null
  },
  {
   "d": "Unterricht-ab-27-07/geld-glueck-b2c1.html",
   "t": "Geld & Glück – macht Reichtum wirklich zufrieden ?",
   "lvl": "B2–C1",
   "art": "lektion",
-  "b": "bank",
-  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-geld-glueck-b2c1.html",
-  "img": "amanda/sz-bank.webp"
+  "b": null,
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-geld-glueck-b2c1.html"
  },
  {
   "d": "Unterricht-ab-27-07/gender-sprache-b2c1.html",
@@ -1710,9 +1706,8 @@ window.LEKTIONEN = [
   "t": "Homeoffice oder Büro – wo arbeitet es sich besser ?",
   "lvl": "B2–C1",
   "art": "lektion",
-  "b": "buero",
-  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-homeoffice-b2c1.html",
-  "img": "amanda/sz-buero.webp"
+  "b": "büro",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-homeoffice-b2c1.html"
  },
  {
   "d": "Unterricht-ab-27-07/influencer-b2c1.html",
@@ -1881,16 +1876,14 @@ window.LEKTIONEN = [
   "t": "Über Geld spricht man nicht?",
   "lvl": "B2–C1",
   "art": "lektion",
-  "b": "bank",
-  "img": "amanda/sz-bank.webp"
+  "b": null
  },
  {
   "d": "vorbereitung-ueber-geld-b2-c1.html",
   "t": "Über Geld spricht man nicht? · üben",
   "lvl": "B2–C1",
-  "art": "ueben",
-  "b": "bank",
-  "img": "amanda/sz-bank.webp"
+  "art": "üben",
+  "b": null
  },
  {
   "d": "Unterricht-ab-27-07/vegan-b2c1.html",
@@ -2036,8 +2029,7 @@ window.LEKTIONEN = [
   "t": "Handout · Führerschein Teil 2",
   "lvl": "",
   "art": "handout",
-  "b": "fahren",
-  "img": "amanda/sz-fahren.webp"
+  "b": null
  },
  {
   "d": "nomen-verb-verbindungen-handout.html",
@@ -2253,8 +2245,6 @@ window.BEREICH_MEHR = {
  "amt": [
   "amt-a2-visuell.html",
   "Unterricht-ab-27-07/amt-a2b1.html",
-  "behoerdenbrief-b1.html",
-  "buerokratie-dschungel-b2-c1.html",
   "leben-in-deutschland-einbuergerung-b2-c1.html"
  ],
  "restaurant": [
@@ -2274,6 +2264,8 @@ window.BEREICH_MEHR = {
  ],
  "sprachkurs": [
   "wortschatzboost-sommer-a2.html",
+  "grammatik-dawoerter-b1.html",
+  "grammatik-ndeklination-b1.html",
   "wortschatzboost-gehen-b1.html",
   "wortschatzboost-halten-b1.html",
   "wortschatzboost-kommen-b1.html",
@@ -2281,31 +2273,33 @@ window.BEREICH_MEHR = {
   "wortschatzboost-ziehen-b1.html",
   "freies-sprechen-debatten-b1.html",
   "wortschatzboost-gefuehle-b1.html",
+  "wortschatzboost-koerper-gesundheit-b1.html",
   "kreativitaet-ideen-b1-interaktiv.html",
   "grammatik-nomen-verb-verbindungen-b1.html",
   "vorbereitung-nominalisierung-b1.html",
   "wortschatzboost-tier-redewendungen-b1.html",
   "grammatik-relativsaetze-praep-b1.html",
-  "vorbereitung-relativsaetze-praep-b1.html",
   "vorbereitung-wechselpraepositionen-b1.html",
-  "sprachspielclub-flohmarkt-b1-b2.html",
-  "sprachspielclub-supermarkt-b1-b2.html",
-  "sprachspielclub-arztpraxis-b1-b2.html",
-  "sprachspielclub-volksfest-b1-b2.html",
   "sprachspielclub-park-b1-b2.html",
+  "sprachspielclub-supermarkt-b1-b2.html",
   "sprachspielclub-freibad-b1-b2.html",
   "sprachspielclub-bahnhof-b1-b2.html",
   "sprachspielclub-flughafen-b1-b2.html",
+  "sprachspielclub-flohmarkt-b1-b2.html",
+  "sprachspielclub-volksfest-b1-b2.html",
   "sprachspielclub-wimmelbild-b1-b2.html",
   "sprachspielclub-stadtpark-quiz-b1-b2.html",
   "sprachspielclub-stadtpark-b1-b2.html",
+  "sprachspielclub-arztpraxis-b1-b2.html",
   "Unterricht-ab-27-07/kreativitaet-b1b2.html",
   "grammatik-passiv-b2.html",
+  "grammatik-partizipattribut-b2.html",
   "wortschatzboost-fuehren-b2.html",
   "wortschatzboost-setzen-b2.html",
   "wortschatzboost-sprechen-b2.html",
   "sprachspielclub-wimmelbild-strand-b2.html",
   "wortschatzboost-idiome-b2.html",
+  "grammatik-passiversatz-b2.html",
   "wortschatzboost-nomen-verb-b2.html",
   "wortschatzboost-emotionen-nuanciert-b2.html",
   "vorbereitung-passiv-b2.html",
@@ -2313,6 +2307,7 @@ window.BEREICH_MEHR = {
   "wortschatzboost-wirtschaft-b2.html",
   "plaudertisch-b2-c1.html",
   "vorbereitung-konnektoren-b2-c1.html",
+  "sprechclub-fuehrerschein-b2-c1.html",
   "sprechclub-debatten.html",
   "sprechclub-freies-sprechen.html",
   "nomen-verb-verbindungen-handout.html",
@@ -2341,12 +2336,20 @@ window.BEREICH_MEHR = {
  "arzt": [
   "Unterricht-ab-27-07/arzt-a2b1.html",
   "Unterricht-ab-27-07/fitnessstudio-a2b1.html",
-  "wortschatzboost-koerper-gesundheit-b1.html",
   "krankmelden-b1.html",
   "sport-gesund-leben-teil-1-b1-b2.html",
   "Unterricht-ab-27-07/sport-lebensstil-b1b2.html",
   "Unterricht-ab-27-07/gesundheitssystem-b2c1.html",
   "mentale-gesundheit-stress-teil-1-b2-c1.html"
+ ],
+ "supermarkt": [
+  "Unterricht-ab-14-09/w01-a-teil1-baecker-supermarkt-a2b1.html",
+  "Unterricht-ab-27-07/einkaufen-a2b1.html",
+  "Unterricht-ab-27-07/reklamation-a2b1.html",
+  "vorbereitung-alles-teurer-b1.html",
+  "alles-wird-teurer-sparen-b1-b2.html",
+  "Unterricht-ab-27-07/secondhand-b1b2.html",
+  "second-hand-b1-b2.html"
  ],
  "friseur-beruf": [
   "Unterricht-ab-27-07/friseur-a2b1.html"
@@ -2357,14 +2360,6 @@ window.BEREICH_MEHR = {
  "bewerbung": [
   "Unterricht-ab-27-07/bewerbung-a2b1.html",
   "Unterricht-ab-27-07/traumberuf-b1b2.html"
- ],
- "supermarkt": [
-  "Unterricht-ab-27-07/einkaufen-a2b1.html",
-  "Unterricht-ab-27-07/reklamation-a2b1.html",
-  "vorbereitung-alles-teurer-b1.html",
-  "alles-wird-teurer-sparen-b1-b2.html",
-  "Unterricht-ab-27-07/secondhand-b1b2.html",
-  "second-hand-b1-b2.html"
  ],
  "freunde": [
   "familie-beziehungen-teil-1-a2-b1.html",
@@ -2381,7 +2376,6 @@ window.BEREICH_MEHR = {
   "Unterricht-ab-27-07/freundschaft-b1b2.html",
   "Unterricht-ab-27-07/netzwerken-b1b2.html",
   "Unterricht-ab-27-07/nostalgie-b1b2.html",
-  "glueck-teil-1-b1-b2.html",
   "wortschatzboost-charaktereigenschaften-b2.html"
  ],
  "feste": [
@@ -2393,8 +2387,6 @@ window.BEREICH_MEHR = {
  ],
  "kochen": [
   "Unterricht-ab-27-07/kochen-a2b1.html",
-  "Unterricht-ab-27-07/ernaehrung-b1b2.html",
-  "gesundheit-ernaehrung-teil-1-b1-b2.html",
   "Unterricht-ab-27-07/vegan-b2c1.html"
  ],
  "wohnen": [
@@ -2416,10 +2408,7 @@ window.BEREICH_MEHR = {
   "bargeld-karte-b1.html",
   "Unterricht-ab-27-07/sparen-b1b2.html",
   "geld-konsum-sparen-teil-1-b1-b2.html",
-  "Unterricht-ab-27-07/erben-b2c1.html",
-  "Unterricht-ab-27-07/geld-glueck-b2c1.html",
-  "ueber-geld-spricht-man-nicht-b2-c1.html",
-  "vorbereitung-ueber-geld-b2-c1.html"
+  "Unterricht-ab-27-07/erben-b2c1.html"
  ],
  "team": [
   "vorbereitung-puenktlichkeit-b1.html",
@@ -2456,9 +2445,8 @@ window.BEREICH_MEHR = {
   "influencer-konsum-teil-1-b2-c1.html",
   "umgangssprache-teil-1-b2-c1.html"
  ],
- "buero": [
+ "büro": [
   "homeoffice-buero-b1.html",
-  "Unterricht-ab-27-07/buero-b1b2.html",
   "Unterricht-ab-27-07/homeoffice-b2c1.html"
  ],
  "reise": [
@@ -2472,11 +2460,6 @@ window.BEREICH_MEHR = {
  ],
  "schule": [
   "Unterricht-ab-27-07/bildung-b2c1.html"
- ],
- "fahren": [
-  "sprechclub-fuehrerschein-b2-c1.html",
-  "fuehrerschein-vorbereitung-b2-c1.html",
-  "fuehrerschein-teil-2-handout.html"
  ],
  "ankommen": [
   "integration-heimat-teil-1-b2-c1.html",
@@ -2516,6 +2499,9 @@ window.LEKTION_ZU = {
  "grammatik:temporale-nebensaetze": "grammatik-temporale-nebensaetze-b1.html",
  "grammatik:wechselpraepositionen": "grammatik-wechselpraepositionen-b1.html",
  "grammatik:nominalisierung": "grammatik-nominalisierung-b1.html",
+ "grammatik:nominalstil": "grammatik-nominalstil-b2.html",
+ "grammatik:modalpartikeln": "grammatik-modalpartikeln-b1.html",
+ "grammatik:lassen": "grammatik-lassen-b1.html",
  "hoeren:arbeit": "wortschatz-arbeit-b1.html",
  "hoeren:bildung": "wortschatz-bildung-b1.html",
  "hoeren:einkaufen": "wortschatz-einkaufen-b1.html",

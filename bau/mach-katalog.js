@@ -224,6 +224,11 @@ einlesen('.', '', 1);
 einlesen('Unterricht-ab-27-07', 'Unterricht-ab-27-07/', 2);
 einlesen('Unterricht-ab-27-07/Vorbereitung', 'Unterricht-ab-27-07/Vorbereitung/', 2, 'üben');
 
+/* Ab dem 14.09. laeuft der Live-Unterricht in der neuen Wochenform:
+   ein Thema, zwei Teile, zwei Niveaus per Umschalter. Diese Seiten
+   liegen in Unterricht-ab-14-09 und sind die aktuellsten (rang 3). */
+einlesen('Unterricht-ab-14-09', 'Unterricht-ab-14-09/', 3);
+
 /* Übungs- und Handout-Seiten hängen an ihrer Lektion, nicht daneben */
 function kern(f) {
   return f.replace(/^.*\//, '')

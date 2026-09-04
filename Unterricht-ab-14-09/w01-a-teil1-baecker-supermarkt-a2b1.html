@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Beim Bäcker und im Supermarkt · A2/B1 | deutschoderwas Sprechclub</title>
+<!--
+  ============================================================
+  deutschoderwas · Sprechclub-Lektion
+  Woche 1 · Strang A · Teil 1 · Montag, 14. September
+  Beim Bäcker und im Supermarkt — bestellen, Mengen, bezahlen
+  Niveau: A2 mit Umschalttaste auf B1
+  ============================================================
+  Gebaut aus template/lektion-template.html. Design und Widgets
+  des Templates sind unveraendert; dazugekommen sind der
+  Niveau-Umschalter, die Farbmarkierungen, die Hilfe-Knoepfe und
+  die 90-Sekunden-Challenge (Block "Zusatz" in Style und Script).
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FDF6EC;--cream-warm:#FBEDD8;--paper:#FFFFFF;
+  --ink:#262019;--ink-soft:#5C4E3E;--ink-mute:#A8957D;
+  --red:#E8302A;--red-soft:#FCE5E3;
+  --teal:#0FB5A6;--teal-soft:#D7F0EC;
+  --yellow:#FFD24A;--yellow-soft:#FFF1C2;
+  --pink:#E69CB3;--sand:#F0E2C8;
+  --wa-bg:#ECE5DD;--wa-out:#DCF8C6;--wa-in:#FFFFFF;
+  --radius:18px;--shadow:0 10px 30px rgba(38,32,25,.08);
+  --font-head:'Fraunces',Georgia,serif;
+  --font-body:'Outfit','Segoe UI',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  background:linear-gradient(180deg,#FDE6E0 0%,var(--cream) 14%,var(--cream) 100%);
+  color:var(--ink);font-family:var(--font-body);line-height:1.55;min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+.wrapper{max-width:920px;margin:0 auto;padding:2.5rem 1.4rem 5rem;}
+
+/* ---------- Hero ---------- */
+.eyebrow{text-align:center;font-size:.78rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--red);margin-bottom:.9rem;}
+.title-wrap{text-align:center;margin-bottom:1rem;}
+h1.title{font-family:var(--font-head);font-weight:600;font-size:clamp(1.9rem,4.5vw,3.6rem);line-height:1.06;letter-spacing:-.01em;}
+h1.title .hl{position:relative;display:inline-block;color:var(--red);}
+h1.title .hl::after{content:"";position:absolute;left:-2px;right:-2px;bottom:.06em;height:.28em;background:var(--yellow);opacity:.55;z-index:-1;border-radius:3px;}
+.subtitle{text-align:center;max-width:620px;margin:.9rem auto 1.3rem;color:var(--ink-soft);font-size:1.06rem;}
+.level-badge{display:inline-block;background:var(--teal);color:#063b35;font-weight:700;font-size:.8rem;padding:5px 14px;border-radius:999px;}
+.journey{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem 1.1rem;margin:1.1rem auto 0;color:var(--ink-soft);font-size:.9rem;font-weight:600;}
+.journey span{display:inline-flex;align-items:center;gap:.3rem;}
+
+/* ---------- Sticky Nav ---------- */
+nav.tabs{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;
+  padding:.7rem .5rem;margin:1.6rem 0 2.2rem;background:rgba(253,246,236,.86);backdrop-filter:blur(8px);
+  border:1px solid var(--sand);border-radius:999px;}
+nav.tabs a{font-size:.82rem;font-weight:600;color:var(--ink-soft);text-decoration:none;padding:.4rem .8rem;border-radius:999px;transition:.15s;}
+nav.tabs a:hover{background:var(--cream-warm);}
+nav.tabs a.active{background:var(--ink);color:var(--cream);}
+
+/* ---------- Blocks ---------- */
+section.block{background:var(--paper);border:1px solid var(--sand);border-radius:var(--radius);
+  padding:1.8rem 1.7rem;margin-bottom:1.6rem;box-shadow:var(--shadow);scroll-margin-top:5rem;}
+.block-head{font-family:var(--font-head);font-weight:600;font-size:clamp(1.3rem,3vw,1.9rem);margin-bottom:.5rem;}
+.block-head .hl{color:var(--red);font-style:italic;}
+.block-intro{color:var(--ink-soft);margin-bottom:1.2rem;}
+.block.alt{background:var(--cream-warm);}
+
+/* Info boxes */
+.note{border-radius:14px;padding:.9rem 1.1rem;margin:1rem 0;font-size:.96rem;}
+.note.tip{background:var(--teal-soft);border-left:4px solid var(--teal);}
+.note.warn{background:var(--red-soft);border-left:4px solid var(--red);}
+.note.info{background:var(--yellow-soft);border-left:4px solid var(--yellow);}
+.note strong{color:var(--ink);}
+
+/* Generic grids */
+.grid{display:grid;gap:.9rem;}
+.grid.g2{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));}
+.grid.g3{grid-template-columns:repeat(auto-fit,minmax(180px,1fr));}
+
+/* Vocab card */
+.vocab{background:var(--cream);border:1px solid var(--sand);border-radius:14px;padding:1rem;}
+.vocab .emoji{font-size:1.6rem;display:block;margin-bottom:.3rem;}
+.vocab .term{font-weight:700;color:var(--ink);}
+.vocab .gloss{font-size:.9rem;color:var(--ink-soft);}
+
+/* Concept-contrast card */
+.concept{background:var(--cream);border:1px solid var(--sand);border-top:4px solid var(--teal);border-radius:14px;padding:1.1rem;}
+.concept.red{border-top-color:var(--red);}
+.concept.yellow{border-top-color:var(--yellow);}
+.concept .label{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-mute);}
+.concept .term{font-family:var(--font-head);font-weight:600;font-size:1.2rem;margin:.2rem 0 .4rem;}
+.concept .desc{font-size:.92rem;color:var(--ink-soft);}
+
+/* Template box (email etc.) */
+.doc{background:var(--cream);border:1px dashed var(--ink-mute);border-radius:14px;padding:1.2rem;font-size:.96rem;}
+.doc .meta{color:var(--ink-mute);font-size:.85rem;}
+.doc strong{color:var(--red);}
+
+/* Discussion question card */
+.qcard{background:var(--cream);border:1px solid var(--sand);border-radius:14px;padding:1.1rem;}
+.qcard .tag{display:inline-block;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;
+  color:#063b35;background:var(--teal-soft);padding:3px 9px;border-radius:999px;margin-bottom:.5rem;}
+.qcard .hint{font-size:.85rem;color:var(--ink-mute);margin-top:.5rem;font-style:italic;}
+
+/* ---------- Flashcards ---------- */
+.flashbox{text-align:center;}
+.flashcard{max-width:380px;margin:0 auto;aspect-ratio:3/2;perspective:1200px;cursor:pointer;}
+.flashcard .inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.flashcard.flipped .inner{transform:rotateY(180deg);}
+.flashcard .face{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4rem;padding:1.2rem;border:1px solid var(--sand);}
+.flashcard .front{background:var(--cream);}
+.flashcard .front .big{font-size:2rem;}
+.flashcard .front .term{font-family:var(--font-head);font-weight:600;font-size:1.5rem;}
+.flashcard .front .tagword{font-size:.8rem;color:var(--ink-mute);}
+.flashcard .back{background:var(--teal-soft);transform:rotateY(180deg);}
+.flashcard .back .answer{font-weight:700;font-size:1.3rem;color:#063b35;}
+.flashcard .back .ex{font-size:.9rem;color:var(--ink-soft);font-style:italic;}
+.flash-ctrl{display:flex;align-items:center;justify-content:center;gap:1rem;margin-top:1rem;}
+.flash-ctrl button{background:var(--ink);color:var(--cream);border:none;border-radius:999px;padding:.5rem 1rem;font-weight:600;cursor:pointer;font-family:var(--font-body);}
+.flash-ctrl .count{font-weight:700;color:var(--ink-soft);}
+
+/* ---------- Quiz ---------- */
+.quiz-q{border-top:1px solid var(--sand);padding-top:1.1rem;margin-top:1.1rem;}
+.quiz-q:first-child{border-top:none;margin-top:0;padding-top:0;}
+.quiz-q .qtext{font-weight:600;margin-bottom:.6rem;}
+.quiz-opts{display:flex;flex-direction:column;gap:.5rem;}
+.quiz-opt{text-align:left;background:var(--cream);border:1px solid var(--sand);border-radius:12px;
+  padding:.6rem .9rem;cursor:pointer;font-family:var(--font-body);font-size:.96rem;transition:.12s;}
+.quiz-opt:hover{background:var(--cream-warm);}
+.quiz-opt.correct{background:var(--teal-soft);border-color:var(--teal);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-soft);border-color:var(--red);}
+.quiz-exp{display:none;margin-top:.6rem;font-size:.9rem;color:var(--ink-soft);background:var(--yellow-soft);border-radius:10px;padding:.6rem .8rem;}
+.quiz-q.answered .quiz-exp{display:block;}
+
+/* ---------- Lückentext (fill-in) ---------- */
+.gap-item{margin:.7rem 0;line-height:2;}
+.gap-item select{font-family:var(--font-body);font-size:.95rem;border:1px solid var(--ink-mute);
+  background:var(--paper);border-radius:8px;padding:.2rem .4rem;color:var(--ink);}
+.gap-item select.ok{border-color:var(--teal);background:var(--teal-soft);}
+.gap-item select.no{border-color:var(--red);background:var(--red-soft);}
+.btn{display:inline-block;background:var(--teal);color:#063b35;font-weight:700;border:none;
+  border-radius:999px;padding:.6rem 1.3rem;cursor:pointer;font-family:var(--font-body);font-size:.95rem;}
+.btn.dark{background:var(--ink);color:var(--cream);}
+.btn.ghost{background:transparent;border:1.5px solid var(--ink-mute);color:var(--ink);}
+.score{font-weight:700;margin-left:.8rem;}
+
+/* ---------- Zuordnen (matching) ---------- */
+.match{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;}
+.match h4{font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-mute);margin-bottom:.3rem;}
+.match-item{background:var(--cream);border:1px solid var(--sand);border-radius:10px;padding:.55rem .8rem;
+  margin-bottom:.5rem;cursor:pointer;font-size:.93rem;transition:.12s;}
+.match-item.sel{border-color:var(--ink);background:var(--cream-warm);}
+.match-item.done{background:var(--teal-soft);border-color:var(--teal);cursor:default;opacity:.75;}
+
+/* ---------- Sprechkarten (random) ---------- */
+.speak{text-align:center;}
+.speak .card{background:var(--cream);border:1px solid var(--sand);border-radius:16px;padding:1.6rem 1.2rem;min-height:130px;
+  display:flex;align-items:center;justify-content:center;font-size:1.12rem;font-weight:600;font-family:var(--font-head);}
+.speak .card .ph{color:var(--ink-mute);font-family:var(--font-body);font-weight:400;}
+
+/* ---------- Rollenspiel / Debatte (accordion) ---------- */
+.rp{border:1px solid var(--sand);border-radius:14px;margin-bottom:.8rem;overflow:hidden;background:var(--cream);}
+.rp summary{list-style:none;cursor:pointer;padding:1rem 1.2rem;font-weight:600;display:flex;justify-content:space-between;align-items:center;gap:1rem;}
+.rp summary::-webkit-details-marker{display:none;}
+.rp summary .badge{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-mute);}
+.rp summary::after{content:"+";font-size:1.3rem;color:var(--ink-mute);}
+.rp[open] summary::after{content:"–";}
+.rp .body{padding:0 1.2rem 1.2rem;font-size:.96rem;}
+.rp .body p{margin:.5rem 0;}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem;margin:.6rem 0;}
+.chip{background:var(--teal-soft);color:#063b35;font-size:.82rem;font-weight:600;padding:.25rem .6rem;border-radius:999px;}
+.chip.red{background:var(--red-soft);color:#8a1410;}
+.phrases{margin:.5rem 0 .2rem;padding-left:1.1rem;}
+.phrases li{margin:.25rem 0;}
+.success{background:var(--yellow-soft);border-radius:10px;padding:.6rem .8rem;font-size:.9rem;margin-top:.6rem;}
+
+/* Debate columns */
+.debate{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;}
+.debate .col{border-radius:14px;padding:1rem;}
+.debate .pro{background:var(--teal-soft);}
+.debate .con{background:var(--red-soft);}
+.debate h4{font-family:var(--font-head);font-weight:600;margin-bottom:.4rem;}
+.debate ul{padding-left:1.1rem;font-size:.93rem;}
+
+/* Grammar */
+.rule{background:var(--cream);border:1px solid var(--sand);border-radius:14px;padding:1.1rem;}
+.rule table{width:100%;border-collapse:collapse;margin-top:.5rem;font-size:.93rem;}
+.rule td,.rule th{border:1px solid var(--sand);padding:.4rem .6rem;text-align:left;}
+.rule th{background:var(--cream-warm);}
+.ex-good{color:#0a7d72;}.ex-bad{color:var(--red);text-decoration:line-through;}
+
+/* Pronunciation */
+.pair{display:flex;gap:.8rem;align-items:center;background:var(--cream);border:1px solid var(--sand);
+  border-radius:12px;padding:.7rem 1rem;margin-bottom:.5rem;font-size:1.05rem;}
+.pair .ipa{color:var(--teal);font-weight:700;}
+.twister{font-family:var(--font-head);font-size:1.15rem;font-style:italic;color:var(--ink);background:var(--yellow-soft);border-radius:12px;padding:1rem;}
+
+/* ---------- WhatsApp chat ---------- */
+.chat{background:var(--wa-bg);border-radius:16px;padding:1rem;max-width:480px;margin:0 auto 1rem;}
+.chat .head{font-weight:700;font-size:.9rem;color:var(--ink-soft);margin-bottom:.6rem;display:flex;gap:.5rem;align-items:center;}
+.bubble{max-width:80%;padding:.5rem .75rem;border-radius:12px;margin:.35rem 0;font-size:.93rem;clear:both;box-shadow:0 1px 1px rgba(0,0,0,.06);}
+.bubble.in{background:var(--wa-in);float:left;border-top-left-radius:3px;}
+.bubble.out{background:var(--wa-out);float:right;border-top-right-radius:3px;}
+.chat::after{content:"";display:block;clear:both;}
+.gloss{font-size:.85rem;color:var(--ink-soft);background:var(--cream);border-radius:10px;padding:.6rem .8rem;margin-top:.4rem;}
+.gloss b{color:var(--ink);}
+
+/* Phrase card */
+.phrase{background:var(--cream);border:1px solid var(--sand);border-radius:12px;padding:.9rem;}
+.phrase .emoji{font-size:1.3rem;}
+.phrase .de{font-weight:600;margin:.2rem 0;}
+.phrase .use{font-size:.85rem;color:var(--ink-mute);}
+
+/* Mission */
+.mission{background:var(--ink);color:var(--cream);border-radius:var(--radius);padding:1.6rem;}
+.mission .block-head{color:var(--cream);}
+.mission .bonus{background:rgba(255,255,255,.08);border-radius:10px;padding:.6rem .8rem;margin-top:.6rem;font-size:.93rem;}
+
+/* Footer */
+footer{text-align:center;color:var(--ink-mute);font-size:.85rem;margin-top:2rem;}
+footer .mark{font-family:var(--font-head);font-weight:600;color:var(--ink);font-size:1rem;}
+footer .mark .t{color:var(--teal);}
+
+@media(max-width:560px){.match,.debate{grid-template-columns:1fr;}}
+</style>
+<style>
+/* ============================================================
+   ZUSATZ zum Template — nur ergaenzend, nichts ueberschrieben.
+   1. Niveau-Umschalter A2 / B1
+   2. Farbmarkierungen im Beispielsatz
+   3. Hilfe-Knoepfe
+   4. 90-Sekunden-Challenge
+   5. Zwei-Runden-Dialog
+   ============================================================ */
+
+/* ---------- 0. Zwei klebende Leisten sauber stapeln ----------
+   Der Umschalter klebt ganz oben, die Tab-Leiste direkt darunter.
+   Ohne das liegen beide auf top:0 und verdecken sich gegenseitig. */
+:root{--leiste:56px;}
+nav.tabs{top:var(--leiste) !important;}
+section.block{scroll-margin-top:calc(var(--leiste) + 4.5rem) !important;}
+
+/* Auf dem Handy: Tabs in einer Zeile zum Wischen statt fuenf gestapelter Reihen */
+@media(max-width:700px){
+  nav.tabs{
+    flex-wrap:nowrap !important;overflow-x:auto;justify-content:flex-start !important;
+    scrollbar-width:none;-webkit-overflow-scrolling:touch;
+  }
+  nav.tabs::-webkit-scrollbar{display:none;}
+  nav.tabs a{white-space:nowrap;flex:0 0 auto;}
+}
+
+/* ---------- 1. Niveau-Umschalter ---------- */
+.niv-schalter{
+  position:sticky;top:0;z-index:60;display:flex;align-items:center;justify-content:center;
+  gap:.7rem;flex-wrap:wrap;padding:.7rem 1rem;margin:0 0 1rem;
+  background:var(--ink);color:var(--cream);border-radius:999px;box-shadow:var(--shadow);
+}
+.niv-schalter .lab{font-size:.82rem;font-weight:600;letter-spacing:.04em;opacity:.85;}
+.niv-knoepfe{display:flex;gap:.25rem;background:rgba(255,255,255,.12);border-radius:999px;padding:3px;}
+.niv-knoepfe button{
+  font-family:var(--font-body);font-size:.86rem;font-weight:700;cursor:pointer;
+  border:none;border-radius:999px;padding:.35rem 1.1rem;background:transparent;color:var(--cream);
+  transition:.15s;
+}
+.niv-knoepfe button[aria-pressed="true"]{background:var(--yellow);color:var(--ink);}
+.niv-knoepfe button:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.niv-hinweis{font-size:.8rem;opacity:.8;width:100%;text-align:center;}
+
+body[data-niveau="a2"] .nur-b1{display:none !important;}
+body[data-niveau="b1"] .nur-a2{display:none !important;}
+.stufe{
+  display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.06em;
+  padding:2px 7px;border-radius:999px;background:var(--sand);color:var(--ink-soft);
+  vertical-align:middle;margin-left:.3rem;
+}
+.stufe.b1{background:var(--teal-soft);color:#063b35;}
+
+/* ---------- 2. Farbmarkierungen ---------- */
+.m-verb,.m-akk,.m-menge,.m-hoefl{font-weight:700;border-radius:5px;padding:0 3px;}
+.m-verb{background:#DCEBFF;color:#14457F;}
+.m-akk{background:var(--red-soft);color:#8a1410;}
+.m-menge{background:var(--teal-soft);color:#063b35;}
+.m-hoefl{background:var(--yellow-soft);color:#7a5600;}
+.legende{
+  display:flex;flex-wrap:wrap;gap:.5rem .9rem;font-size:.85rem;color:var(--ink-soft);
+  background:var(--cream);border:1px solid var(--sand);border-radius:12px;padding:.7rem .9rem;margin:.9rem 0;
+}
+.legende span{display:inline-flex;align-items:center;gap:.35rem;}
+.legende i{width:14px;height:14px;border-radius:4px;display:inline-block;font-style:normal;}
+.i-verb{background:#DCEBFF;border:1px solid #14457F;}
+.i-akk{background:var(--red-soft);border:1px solid var(--red);}
+.i-menge{background:var(--teal-soft);border:1px solid var(--teal);}
+.i-hoefl{background:var(--yellow-soft);border:1px solid var(--yellow);}
+
+/* ---------- 3. Hilfe-Knopf ---------- */
+.hilfe{margin:.7rem 0 0;}
+.hilfe > button{
+  font-family:var(--font-body);font-size:.85rem;font-weight:700;cursor:pointer;
+  background:var(--yellow-soft);color:#7a5600;border:1.5px solid var(--yellow);
+  border-radius:999px;padding:.35rem .95rem;transition:.15s;
+}
+.hilfe > button:hover{background:var(--yellow);color:var(--ink);}
+.hilfe > button:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.hilfe .inhalt{
+  display:none;margin-top:.6rem;background:var(--yellow-soft);border-left:4px solid var(--yellow);
+  border-radius:10px;padding:.7rem .9rem;font-size:.93rem;
+}
+.hilfe.offen .inhalt{display:block;}
+.hilfe .inhalt ul{margin:.3rem 0 0 1.1rem;}
+.hilfe .inhalt li{margin:.2rem 0;}
+
+/* ---------- Beispielzeile ---------- */
+.bsp{
+  background:var(--cream);border-left:3px solid var(--teal);border-radius:0 10px 10px 0;
+  padding:.5rem .8rem;margin:.5rem 0;font-size:.95rem;
+}
+.bsp .wer{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-mute);display:block;}
+.vocab .bsp{margin:.5rem 0 0;font-size:.88rem;border-left-width:2px;padding:.35rem .6rem;}
+
+/* ---------- 4. 90-Sekunden-Challenge ---------- */
+.challenge{text-align:center;}
+.uhr{
+  font-family:var(--font-head);font-weight:700;font-size:clamp(2.6rem,10vw,4.2rem);
+  line-height:1;color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:-.02em;
+}
+.uhr.laeuft{color:var(--teal);}
+.uhr.knapp{color:var(--red);}
+.balken{height:10px;border-radius:999px;background:var(--sand);overflow:hidden;margin:.8rem 0 1.1rem;}
+.balken i{display:block;height:100%;width:100%;background:var(--teal);border-radius:999px;transition:width .3s linear;}
+.balken i.knapp{background:var(--red);}
+.woerter{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;margin:1rem 0;min-height:44px;
+}
+.woerter b{
+  background:var(--cream);border:1.5px solid var(--sand);border-radius:999px;
+  padding:.35rem .9rem;font-size:1rem;font-weight:600;
+}
+.woerter .ph{color:var(--ink-mute);font-weight:400;font-size:.95rem;align-self:center;}
+.ch-knoepfe{display:flex;justify-content:center;gap:.6rem;flex-wrap:wrap;}
+
+/* ---------- 5. Zwei-Runden-Dialog ---------- */
+.runde{border:1px solid var(--sand);border-radius:14px;padding:1.1rem;background:var(--cream);margin-bottom:.9rem;}
+.runde h4{font-family:var(--font-head);font-weight:600;font-size:1.08rem;margin-bottom:.2rem;}
+.runde .wie{font-size:.85rem;color:var(--ink-mute);margin-bottom:.7rem;}
+.dlg{display:flex;flex-direction:column;gap:.45rem;}
+.dlg p{margin:0;font-size:.97rem;}
+.dlg .wer{font-weight:700;color:var(--ink-soft);margin-right:.3rem;}
+.luecke{
+  display:inline-block;min-width:120px;border-bottom:2px dashed var(--ink-mute);
+  color:var(--ink-mute);font-style:italic;
+}
+
+/* ---------- Vier Karten: 2x2 statt 3+1 ----------
+   Sonst steht die vierte Karte allein in einer Reihe. */
+@media(min-width:720px){
+  .grid.g-vier{grid-template-columns:repeat(2,1fr) !important;}
+}
+
+/* ---------- Tabelle auf dem Handy scrollbar ---------- */
+.tab-rollen{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:.5rem;}
+.tab-rollen table{min-width:330px;margin-top:0;}
+
+/* ---------- 6. Hausaufgabe ---------- */
+.ha-liste{display:flex;flex-direction:column;gap:.7rem;margin:1rem 0;}
+.ha{
+  display:flex;gap:.8rem;align-items:flex-start;
+  background:var(--paper);border:1.5px solid var(--sand);border-radius:14px;
+  padding:.9rem 1rem;cursor:pointer;transition:.15s;text-align:left;width:100%;
+  font-family:var(--font-body);font-size:1rem;color:var(--ink);
+}
+.ha:hover{border-color:var(--teal);}
+.ha:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.ha .box{
+  flex:0 0 auto;width:24px;height:24px;border-radius:7px;
+  border:2px solid var(--ink-mute);background:var(--cream);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.95rem;line-height:1;color:transparent;margin-top:1px;transition:.15s;
+}
+.ha .txt{flex:1;}
+.ha .kopf{font-weight:700;display:block;margin-bottom:.15rem;}
+.ha .wie{font-size:.9rem;color:var(--ink-soft);}
+.ha .zeit{
+  display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.05em;
+  background:var(--sand);color:var(--ink-soft);border-radius:999px;padding:2px 8px;margin-left:.35rem;
+}
+.ha.fertig{background:var(--teal-soft);border-color:var(--teal);}
+.ha.fertig .box{background:var(--teal);border-color:var(--teal);color:#fff;}
+.ha.fertig .kopf{text-decoration:line-through;text-decoration-thickness:2px;opacity:.75;}
+.ha-stand{
+  font-size:.95rem;font-weight:600;color:var(--ink-soft);
+  background:var(--cream);border:1px solid var(--sand);border-radius:12px;
+  padding:.6rem .9rem;margin-top:.9rem;
+}
+.ha-stand.voll{background:var(--teal-soft);border-color:var(--teal);color:#063b35;}
+.abgabe{
+  background:var(--yellow-soft);border-left:4px solid var(--yellow);
+  border-radius:0 12px 12px 0;padding:.8rem 1rem;margin-top:1.1rem;font-size:.95rem;
+}
+
+@media(max-width:560px){
+  .niv-schalter{border-radius:16px;gap:.5rem;padding:.5rem .7rem;flex-wrap:nowrap;}
+  .niv-hinweis{display:none;}          /* die Erklaerung steht schon im Text darueber */
+  .niv-schalter .lab{font-size:.76rem;white-space:nowrap;}
+  .niv-knoepfe button{padding:.35rem .8rem;font-size:.82rem;white-space:nowrap;}
+}
+@media(max-width:430px){
+  .niv-knoepfe button .dazu{display:none;}   /* nur noch A2 / B1 — sonst bricht die Zeile um */
+  .niv-knoepfe button{padding:.35rem 1.2rem;}
+  .uhr{font-size:3rem;}
+  .ha{padding:.8rem;}
+}
+</style>
+</head>
+<body data-niveau="a2">
+<div class="wrapper">
+
+  <!-- ============ HERO ============ -->
+  <div class="eyebrow">Woche 1 · Strang A · Teil 1 · Montag</div>
+  <div class="title-wrap">
+    <h1 class="title">Beim Bäcker und im <span class="hl">Supermarkt</span></h1>
+    <p class="subtitle">Sechs Brötchen, hundert Gramm Käse, mit Karte zahlen. Nach dieser Stunde bestellst du, ohne vorher im Kopf zu üben.</p>
+    <span class="level-badge">A2 ⇄ B1 · umschaltbar</span>
+    <div class="journey">
+      <span>🥐 Bestellen</span><span>⚖️ Mengen</span><span>💳 Bezahlen</span><span>⏱️ 90 Sekunden</span>
+    </div>
+  </div>
+
+  <!-- ============ NIVEAU-UMSCHALTER ============ -->
+  <div class="niv-schalter">
+    <span class="lab">Dein Niveau</span>
+    <div class="niv-knoepfe" role="group" aria-label="Niveau wählen">
+      <button type="button" data-niv="a2" aria-pressed="true">A2<span class="dazu"> · einfacher</span></button>
+      <button type="button" data-niv="b1" aria-pressed="false">B1<span class="dazu"> · mehr</span></button>
+    </div>
+    <span class="niv-hinweis">Gleiches Thema, andere Sätze. Du kannst jederzeit wechseln — probier ruhig beides.</span>
+  </div>
+
+  <!-- ============ NAV ============ -->
+  <nav class="tabs">
+    <a href="#aufwaermen">📖 Aufwärmen</a>
+    <a href="#wortschatz">🧠 Wortschatz</a>
+    <a href="#mengen">⚖️ Mengen</a>
+    <a href="#phrasen">💬 Sätze</a>
+    <a href="#vorlage">🎬 Dialog</a>
+    <a href="#grammatik">🧩 Grammatik</a>
+    <a href="#quiz">✅ Quiz</a>
+    <a href="#lueckentext">✍️ Lückentext</a>
+    <a href="#zuordnen">🧩 Zuordnen</a>
+    <a href="#rollenspiele">🎭 Rollenspiel</a>
+    <a href="#challenge">⏱️ 90 Sekunden</a>
+    <a href="#mission">⭐ Mission</a>
+    <a href="#hausaufgabe">📝 Hausaufgabe</a>
+  </nav>
+
+  <!-- ============ AUFWÄRMEN ============ -->
+  <section class="block" id="aufwaermen">
+    <h2 class="block-head">Zum <span class="hl">Aufwärmen</span></h2>
+    <p class="block-intro">Bevor wir loslegen — eine Situation, die du bestimmt kennst.</p>
+    <p><strong>Stell dir vor:</strong> Samstagmorgen, halb zehn. Vor dir in der Bäckerei stehen sieben Leute. Du weißt, was du willst — aber du hast Angst, dass die Verkäuferin zu schnell spricht. Und dann kommt die Frage: „Sonst noch was?“</p>
+    <p style="margin-top:.6rem;">Sprich kurz darüber:</p>
+    <ul class="nur-a2" style="margin:.4rem 0 0 1.1rem;">
+      <li>Was kaufst du am liebsten beim Bäcker?</li>
+      <li>Gehst du lieber zum Bäcker oder in den Supermarkt? Warum?</li>
+      <li>Bezahlst du mit Karte oder mit Bargeld?</li>
+    </ul>
+    <ul class="nur-b1" style="margin:.4rem 0 0 1.1rem;">
+      <li>Was war dein peinlichster Moment beim Einkaufen auf Deutsch?</li>
+      <li>Warum ist die Bäckerei für viele Deutsche mehr als nur ein Laden?</li>
+      <li>Wo merkst du beim Einkaufen, dass du in einem anderen Land bist?</li>
+    </ul>
+    <div class="note tip"><strong>💡 Heute lernst du:</strong> bestellen, Mengen richtig sagen, auf Rückfragen reagieren und bezahlen — so, dass du dich nicht mehr vorher innerlich vorbereiten musst.</div>
+  </section>
+
+  <!-- ============ WORTSCHATZ ============ -->
+  <section class="block" id="wortschatz">
+    <h2 class="block-head">Die Wörter, die du <span class="hl">jedes Mal</span> brauchst</h2>
+    <p class="block-intro">Zwölf Wörter — jedes mit einem Satz, den du genau so sagen kannst.</p>
+    <div class="grid g3">
+      <div class="vocab"><span class="emoji">🥐</span><div class="term">das Brötchen</div><div class="gloss">das kleine runde Brot zum Frühstück</div>
+        <div class="bsp"><span class="wer">So sagst du es</span>Ich hätte gern <b class="m-menge">sechs</b> <b class="m-akk">Brötchen</b>, bitte.</div></div>
+      <div class="vocab"><span class="emoji">🍞</span><div class="term">die Scheibe</div><div class="gloss">ein dünnes Stück, zum Beispiel vom Brot</div>
+        <div class="bsp"><span class="wer">So sagst du es</span><b class="m-menge">Zehn Scheiben</b> <b class="m-akk">Schinken</b>, bitte.</div></div>
+      <div class="vocab"><span class="emoji">🧀</span><div class="term">das Gramm</div><div class="gloss">die kleine Gewichtseinheit — 1000 davon sind ein Kilo</div>
+        <div class="bsp"><span class="wer">So sagst du es</span><b class="m-menge">Zweihundert Gramm</b> <b class="m-akk">Gouda</b>, bitte.</div></div>
+      <div class="vocab"><span class="emoji">📦</span><div class="term">die Packung</div><div class="gloss">was fertig verpackt im Regal steht</div>
+        <div class="bsp"><span class="wer">So sagst du es</span>Ich nehme <b class="m-menge">eine Packung</b> <b class="m-akk">Butter</b>.</div></div>
+      <div class="vocab"><span class="emoji">🛒</span><div class="term">der Einkaufswagen</div><div class="gloss">der Wagen, den man durch den Laden schiebt</div>
+        <div class="bsp"><span class="wer">So sagst du es</span>Für den Einkaufswagen <b class="m-verb">brauchst</b> du einen Euro.</div></div>
+      <div class="vocab"><span class="emoji">🧾</span><div class="term">der Kassenbon</div><div class="gloss">der Zettel, den du nach dem Bezahlen bekommst</div>
+        <div class="bsp"><span class="wer">So sagst du es</span><b class="m-verb">Brauchen</b> Sie <b class="m-akk">den Kassenbon</b>? — Ja, gern.</div></div>
+      <div class="vocab"><span class="emoji">💳</span><div class="term">die Karte</div><div class="gloss">damit bezahlst du ohne Bargeld</div>
+        <div class="bsp"><span class="wer">So sagst du es</span>Ich <b class="m-verb">zahle</b> mit <b class="m-akk">Karte</b>.</div></div>
+      <div class="vocab"><span class="emoji">💶</span><div class="term">das Bargeld</div><div class="gloss">Scheine und Münzen in der Hand</div>
+        <div class="bsp"><span class="wer">So sagst du es</span>Nehmen Sie auch <b class="m-akk">Bargeld</b>? — Natürlich.</div></div>
+      <div class="vocab"><span class="emoji">🥖</span><div class="term">frisch</div><div class="gloss">gerade erst gemacht, noch warm</div>
+        <div class="bsp"><span class="wer">So sagst du es</span>Ist das Brot noch <b class="m-verb">frisch</b> von heute?</div></div>
+      <div class="vocab"><span class="emoji">🏷️</span><div class="term">das Angebot</div><div class="gloss">diese Woche billiger als sonst</div>
+        <div class="bsp"><span class="wer">So sagst du es</span>Der Käse <b class="m-verb">ist</b> gerade <b class="m-akk">im Angebot</b>.</div></div>
+      <div class="vocab"><span class="emoji">🥡</span><div class="term">die Tüte</div><div class="gloss">der Beutel aus Papier oder Plastik</div>
+        <div class="bsp"><span class="wer">So sagst du es</span><b class="m-verb">Brauchen</b> Sie <b class="m-akk">eine Tüte</b>? — Nein danke, ich habe eine.</div></div>
+      <div class="vocab"><span class="emoji">✋</span><div class="term">Sonst noch was?</div><div class="gloss">die Frage, ob du noch etwas möchtest</div>
+        <div class="bsp"><span class="wer">So antwortest du</span>Nein danke, <b class="m-hoefl">das war's</b>.</div></div>
+    </div>
+    <div class="legende">
+      <span><i class="i-verb"></i> Verb</span>
+      <span><i class="i-akk"></i> das, was du bekommst (Akkusativ)</span>
+      <span><i class="i-menge"></i> Menge</span>
+      <span><i class="i-hoefl"></i> Höflichkeit</span>
+    </div>
+    <div class="note info"><strong>Gut zu wissen:</strong> „Das war's“ ist der Satz, mit dem in Deutschland jeder Einkauf endet. Wörtlich heißt er „das war es“ — gemeint ist: <em>Ich möchte nichts mehr.</em></div>
+  </section>
+
+  <!-- ============ MENGEN ============ -->
+  <section class="block alt" id="mengen">
+    <h2 class="block-head">Mengen: <span class="hl">Stück, Gramm, Scheibe</span></h2>
+    <p class="block-intro">Der häufigste Fehler beim Einkaufen ist nicht die Grammatik, sondern die Menge. Diese vier decken fast alles ab.</p>
+    <div class="grid g2 g-vier">
+      <div class="concept"><div class="label">Zählbar</div><div class="term">drei Brötchen</div><div class="desc">Bei Dingen, die man zählen kann, sagst du <b>nur die Zahl</b> — nicht „drei Stück Brötchen“.</div>
+        <div class="bsp">✅ <b class="m-menge">Drei</b> Brötchen, bitte.<br>❌ <span class="ex-bad">Drei Stück Brötchen</span></div></div>
+      <div class="concept red"><div class="label">Gewicht</div><div class="term">200 Gramm Käse</div><div class="desc">Gramm und Kilo bleiben <b>immer im Singular</b>: nicht „Gramme“.</div>
+        <div class="bsp">✅ <b class="m-menge">Zweihundert Gramm</b> Käse.<br>❌ <span class="ex-bad">Zweihundert Gramme Käse</span></div></div>
+      <div class="concept yellow"><div class="label">Dünn geschnitten</div><div class="term">fünf Scheiben Schinken</div><div class="desc">Für Wurst, Käse und Brot am Stück: <b>die Scheibe, die Scheiben</b>.</div>
+        <div class="bsp">✅ <b class="m-menge">Fünf Scheiben</b> Käse, bitte.</div></div>
+      <div class="concept"><div class="label">Verpackt</div><div class="term">eine Packung Milch</div><div class="desc">Packung, Flasche, Tüte, Becher — was die Verpackung ist, sagst du dazu.</div>
+        <div class="bsp">✅ <b class="m-menge">Eine Flasche</b> Wasser und <b class="m-menge">einen Becher</b> Joghurt.</div></div>
+    </div>
+    <div class="hilfe">
+      <button type="button">🆘 Ich weiß nie, wie viel ich bestellen soll</button>
+      <div class="inhalt">
+        <p>Grobe Orientierung fürs erste Mal:</p>
+        <ul>
+          <li><b>Aufschnitt für eine Person, eine Woche:</b> 150–200 Gramm</li>
+          <li><b>Käse am Stück:</b> 200 Gramm reichen für mehrere Tage</li>
+          <li><b>Brötchen zum Frühstück:</b> zwei pro Person</li>
+          <li>Und wenn es zu viel wird: <em>„Ein bisschen weniger, bitte.“</em> Das sagt man ständig.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PHRASEN ============ -->
+  <section class="block" id="phrasen">
+    <h2 class="block-head">Die Sätze, die <span class="hl">immer gehen</span></h2>
+    <p class="block-intro nur-a2">Kurz, einfach, richtig. Mit diesen sechs Sätzen kommst du durch jeden Einkauf.</p>
+    <p class="block-intro nur-b1">Dieselben Situationen, aber flüssiger und höflicher — so klingt es, wenn man länger hier ist.</p>
+
+    <div class="grid g2 nur-a2">
+      <div class="phrase"><span class="emoji">🥐</span><div class="de">Ich <b class="m-verb">hätte</b> gern <b class="m-menge">sechs</b> <b class="m-akk">Brötchen</b>.</div><div class="use">Der Standardsatz zum Bestellen.</div></div>
+      <div class="phrase"><span class="emoji">🧀</span><div class="de"><b class="m-menge">Zweihundert Gramm</b> <b class="m-akk">Käse</b>, bitte.</div><div class="use">Menge zuerst, dann das Produkt.</div></div>
+      <div class="phrase"><span class="emoji">❓</span><div class="de"><b class="m-verb">Haben</b> Sie <b class="m-akk">frisches Brot</b>?</div><div class="use">Wenn du etwas suchst.</div></div>
+      <div class="phrase"><span class="emoji">✋</span><div class="de">Nein danke, <b class="m-hoefl">das war's</b>.</div><div class="use">Die Antwort auf „Sonst noch was?“</div></div>
+      <div class="phrase"><span class="emoji">💳</span><div class="de">Ich <b class="m-verb">zahle</b> mit <b class="m-akk">Karte</b>.</div><div class="use">An der Kasse.</div></div>
+      <div class="phrase"><span class="emoji">🙏</span><div class="de">Können Sie das bitte <b class="m-hoefl">noch mal</b> sagen?</div><div class="use">Wenn du nicht verstanden hast — völlig normal.</div></div>
+    </div>
+
+    <div class="grid g2 nur-b1">
+      <div class="phrase"><span class="emoji">🥐</span><div class="de">Ich <b class="m-verb">nehme</b> <b class="m-menge">sechs</b> von den <b class="m-akk">hinteren</b>, die sehen frischer aus.</div><div class="use">Wenn du auf etwas Bestimmtes zeigst.</div></div>
+      <div class="phrase"><span class="emoji">🧀</span><div class="de"><b class="m-menge">Zweihundert Gramm</b> — aber lieber <b class="m-hoefl">etwas weniger als mehr</b>.</div><div class="use">Die Menge eingrenzen, ohne umständlich zu werden.</div></div>
+      <div class="phrase"><span class="emoji">❓</span><div class="de"><b class="m-verb">Können</b> Sie mir sagen, ob das noch <b class="m-akk">von heute</b> ist?</div><div class="use">Indirekte Frage — klingt höflicher als die direkte.</div></div>
+      <div class="phrase"><span class="emoji">✋</span><div class="de">Danke, <b class="m-hoefl">das reicht mir erst mal</b>.</div><div class="use">Weicher als „das war's“.</div></div>
+      <div class="phrase"><span class="emoji">💳</span><div class="de"><b class="m-verb">Geht</b> auch <b class="m-akk">Karte</b>, oder nur bar?</div><div class="use">Vorher fragen statt an der Kasse überrascht werden.</div></div>
+      <div class="phrase"><span class="emoji">🙏</span><div class="de">Entschuldigung, das <b class="m-verb">ging</b> mir <b class="m-hoefl">zu schnell</b> — noch mal, bitte?</div><div class="use">Ehrlich und freundlich. Niemand nimmt das übel.</div></div>
+    </div>
+
+    <div class="hilfe">
+      <button type="button">🆘 Warum „ich hätte gern“ und nicht „ich will“?</button>
+      <div class="inhalt">
+        <p><b>Ich will</b> klingt im Deutschen hart, fast wie ein Befehl. Im Laden benutzt das niemand.</p>
+        <ul>
+          <li><b>Ich hätte gern …</b> — der freundliche Standard, überall richtig</li>
+          <li><b>Ich nehme …</b> — etwas direkter, aber völlig in Ordnung</li>
+          <li><b>Ich möchte …</b> — geht auch, klingt eine Spur formeller</li>
+          <li><span class="ex-bad">Ich will zwei Brötchen</span> — grammatisch richtig, aber unhöflich</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DIALOG IN ZWEI RUNDEN ============ -->
+  <section class="block" id="vorlage">
+    <h2 class="block-head">Der Dialog — in <span class="hl">zwei Runden</span></h2>
+    <p class="block-intro">Runde 1 lest ihr zusammen. In Runde 2 fehlen deine Sätze — die sagst du selbst. Der Hilfe-Knopf ist da, wenn du hängst.</p>
+
+    <div class="runde">
+      <h4>Runde 1 · Beim Bäcker</h4>
+      <p class="wie">Lest zu zweit. Eine Person ist die Verkäuferin, eine der Kunde.</p>
+      <div class="dlg">
+        <p><span class="wer">Verkäuferin:</span> Guten Morgen! Was darf es sein?</p>
+        <p class="nur-a2"><span class="wer">Du:</span> Guten Morgen. Ich <b class="m-verb">hätte</b> gern <b class="m-menge">vier</b> <b class="m-akk">Brötchen</b> und <b class="m-menge">ein</b> <b class="m-akk">Brot</b>.</p>
+        <p class="nur-b1"><span class="wer">Du:</span> Morgen! Ich <b class="m-verb">nehme</b> <b class="m-menge">vier</b> <b class="m-akk">Brötchen</b> — und ist das <b class="m-akk">Roggenbrot</b> noch von heute?</p>
+        <p><span class="wer">Verkäuferin:</span> Das ist frisch, ja. Ganz oder halb?</p>
+        <p class="nur-a2"><span class="wer">Du:</span> <b class="m-menge">Halb</b>, bitte.</p>
+        <p class="nur-b1"><span class="wer">Du:</span> Ein <b class="m-menge">halbes</b> reicht, danke — ich wohne allein.</p>
+        <p><span class="wer">Verkäuferin:</span> Gerne. Sonst noch was?</p>
+        <p class="nur-a2"><span class="wer">Du:</span> Nein danke, <b class="m-hoefl">das war's</b>.</p>
+        <p class="nur-b1"><span class="wer">Du:</span> Danke, <b class="m-hoefl">das reicht mir erst mal</b>.</p>
+        <p><span class="wer">Verkäuferin:</span> Das macht dann 4,80 Euro.</p>
+        <p><span class="wer">Du:</span> Ich <b class="m-verb">zahle</b> mit <b class="m-akk">Karte</b>.</p>
+        <p><span class="wer">Verkäuferin:</span> Gern. Bitte einmal auflegen. — Danke, schönen Tag noch!</p>
+      </div>
+    </div>
+
+    <div class="runde">
+      <h4>Runde 2 · Jetzt du</h4>
+      <p class="wie">Dieselbe Situation, aber deine Sätze fehlen. Sprich frei — es muss nicht wörtlich stimmen.</p>
+      <div class="dlg">
+        <p><span class="wer">Verkäuferin:</span> Guten Morgen! Was darf es sein?</p>
+        <p><span class="wer">Du:</span> <span class="luecke">… bestelle zwei Sachen</span></p>
+        <p><span class="wer">Verkäuferin:</span> Das ist frisch, ja. Ganz oder halb?</p>
+        <p><span class="wer">Du:</span> <span class="luecke">… entscheide dich</span></p>
+        <p><span class="wer">Verkäuferin:</span> Gerne. Sonst noch was?</p>
+        <p><span class="wer">Du:</span> <span class="luecke">… beende die Bestellung</span></p>
+        <p><span class="wer">Verkäuferin:</span> Das macht dann 4,80 Euro.</p>
+        <p><span class="wer">Du:</span> <span class="luecke">… sag, wie du zahlst</span></p>
+      </div>
+      <div class="hilfe">
+        <button type="button">🆘 Hilfe zeigen</button>
+        <div class="inhalt">
+          <ul>
+            <li>Bestellen: <em>Ich hätte gern … / Ich nehme …</em></li>
+            <li>Entscheiden: <em>Halb, bitte. / Ein halbes reicht.</em></li>
+            <li>Beenden: <em>Nein danke, das war's. / Danke, das reicht.</em></li>
+            <li>Zahlen: <em>Mit Karte, bitte. / Ich zahle bar.</em></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="note warn"><strong>Achtung, typische Falle:</strong> Auf „Sonst noch was?“ antworten viele mit <span class="ex-bad">„Nein, danke schön“</span>. Das ist nicht falsch, klingt aber nach Abschied. Im Laden sagt man <b class="ex-good">„Nein danke, das war's.“</b></div>
+  </section>
+
+  <!-- ============ GRAMMATIK ============ -->
+  <section class="block alt" id="grammatik">
+    <h2 class="block-head">Eine Struktur: <span class="hl">Ich hätte gern …</span></h2>
+    <p class="block-intro">Ein einziger Satzbau trägt den ganzen Einkauf. Schau dir die Farben an — die Reihenfolge ist immer gleich.</p>
+
+    <div class="rule">
+      <p style="font-size:1.15rem;margin-bottom:.5rem;">
+        Ich <b class="m-verb">hätte gern</b> <b class="m-menge">zweihundert Gramm</b> <b class="m-akk">Käse</b>, bitte.
+      </p>
+      <div class="tab-rollen">
+      <table>
+        <tr><th>Wer</th><th>Verb</th><th>Menge</th><th>Was</th></tr>
+        <tr><td>Ich</td><td class="m-verb">hätte gern</td><td class="m-menge">sechs</td><td class="m-akk">Brötchen</td></tr>
+        <tr><td>Ich</td><td class="m-verb">nehme</td><td class="m-menge">eine Packung</td><td class="m-akk">Butter</td></tr>
+        <tr><td>Ich</td><td class="m-verb">möchte</td><td class="m-menge">drei Scheiben</td><td class="m-akk">Schinken</td></tr>
+      </table>
+      </div>
+      <p style="margin-top:.8rem;">Das Wort nach der Menge steht im <b>Akkusativ</b>. Bei <em>der</em>-Wörtern wird daraus <b>den</b>:</p>
+      <p class="bsp">✅ <span class="ex-good">Ich nehme <b>den</b> Käse.</span> &nbsp;&nbsp; ❌ <span class="ex-bad">Ich nehme der Käse.</span></p>
+      <p class="bsp">✅ <span class="ex-good">Ich hätte gern <b>das</b> Brot.</span> — bei <em>das</em>- und <em>die</em>-Wörtern ändert sich nichts.</p>
+    </div>
+
+    <div class="hilfe">
+      <button type="button">🆘 Woher weiß ich, ob „den“ oder „der“?</button>
+      <div class="inhalt">
+        <p>Frag dich: <b>Wer macht etwas — und was bekommt es ab?</b></p>
+        <ul>
+          <li><b>Ich</b> nehme <b>den Käse</b>. → <em>Ich</em> mache etwas, <em>der Käse</em> bekommt es ab → <b>den</b></li>
+          <li><b>Der Käse</b> ist teuer. → Hier macht der Käse selbst etwas → <b>der</b></li>
+        </ul>
+        <p style="margin-top:.4rem;">Merksatz: Nach <em>ich nehme</em>, <em>ich hätte gern</em>, <em>ich möchte</em> und <em>ich kaufe</em> steht immer der Akkusativ. Nur <b>der</b> wird zu <b>den</b> — die anderen bleiben.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ QUIZ ============ -->
+  <section class="block" id="quiz">
+    <h2 class="block-head">Quiz: <span class="hl">Sitzt es schon?</span></h2>
+    <p class="block-intro">Acht Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+    <div data-quiz>
+
+      <div class="quiz-q">
+        <div class="qtext">1. Du möchtest sechs Brötchen. Was sagst du?</div>
+        <div class="quiz-opts">
+          <button class="quiz-opt" data-correct>Ich hätte gern sechs Brötchen, bitte.</button>
+          <button class="quiz-opt">Ich will sechs Brötchen.</button>
+          <button class="quiz-opt">Ich hätte gern sechs Stück Brötchen.</button>
+          <button class="quiz-opt">Gib mir sechs Brötchen.</button>
+        </div>
+        <div class="quiz-exp">„Ich hätte gern“ ist der höfliche Standard. <em>Stück</em> braucht man bei zählbaren Dingen nicht, und <em>ich will</em> klingt im Laden zu hart.</div>
+      </div>
+
+      <div class="quiz-q">
+        <div class="qtext">2. Wie bestellst du 200 Gramm Käse?</div>
+        <div class="quiz-opts">
+          <button class="quiz-opt">Zweihundert Gramme Käse, bitte.</button>
+          <button class="quiz-opt" data-correct>Zweihundert Gramm Käse, bitte.</button>
+          <button class="quiz-opt">Zweihundert von Käse, bitte.</button>
+          <button class="quiz-opt">Zweihundert Käse Gramm, bitte.</button>
+        </div>
+        <div class="quiz-exp"><b>Gramm</b> bleibt immer im Singular — auch bei 200. Genauso: zwei <em>Kilo</em>, drei <em>Liter</em>.</div>
+      </div>
+
+      <div class="quiz-q">
+        <div class="qtext">3. Die Verkäuferin fragt: „Sonst noch was?“ Du möchtest nichts mehr.</div>
+        <div class="quiz-opts">
+          <button class="quiz-opt">Nein, ich bin fertig.</button>
+          <button class="quiz-opt">Nein, nichts mehr für mich.</button>
+          <button class="quiz-opt" data-correct>Nein danke, das war's.</button>
+          <button class="quiz-opt">Nein, das ist alles gewesen.</button>
+        </div>
+        <div class="quiz-exp">„Das war's“ ist die feste Wendung. Die anderen versteht man zwar, aber sie klingen umständlich.</div>
+      </div>
+
+      <div class="quiz-q">
+        <div class="qtext">4. Was gehört <em>nicht</em> in diese Reihe: Scheibe – Packung – Flasche – …?</div>
+        <div class="quiz-opts">
+          <button class="quiz-opt">Becher</button>
+          <button class="quiz-opt">Tüte</button>
+          <button class="quiz-opt" data-correct>Angebot</button>
+          <button class="quiz-opt">Dose</button>
+        </div>
+        <div class="quiz-exp">Scheibe, Packung, Flasche, Becher, Tüte und Dose sagen, <em>wie viel</em> oder <em>worin</em>. Das <b>Angebot</b> sagt, dass etwas gerade billiger ist.</div>
+      </div>
+
+      <div class="quiz-q">
+        <div class="qtext">5. Welcher Satz ist richtig?</div>
+        <div class="quiz-opts">
+          <button class="quiz-opt">Ich nehme der Käse.</button>
+          <button class="quiz-opt" data-correct>Ich nehme den Käse.</button>
+          <button class="quiz-opt">Ich nehme dem Käse.</button>
+          <button class="quiz-opt">Ich nehme des Käse.</button>
+        </div>
+        <div class="quiz-exp">Nach <em>ich nehme</em> steht der Akkusativ. Aus <b>der</b> Käse wird <b>den</b> Käse.</div>
+      </div>
+
+      <div class="quiz-q">
+        <div class="qtext">6. Du hast die Verkäuferin nicht verstanden. Was sagst du?</div>
+        <div class="quiz-opts">
+          <button class="quiz-opt">Was?</button>
+          <button class="quiz-opt" data-correct>Entschuldigung, können Sie das noch mal sagen?</button>
+          <button class="quiz-opt">Ich verstehe nicht Deutsch.</button>
+          <button class="quiz-opt">Sprechen Sie Englisch?</button>
+        </div>
+        <div class="quiz-exp">Nachfragen ist völlig normal und niemand nimmt es übel. „Was?“ allein klingt allerdings unhöflich — mit <em>Entschuldigung</em> davor ist alles gut.</div>
+      </div>
+
+      <div class="quiz-q">
+        <div class="qtext">7. An der Kasse: „Brauchen Sie den Kassenbon?“ Du willst ihn behalten.</div>
+        <div class="quiz-opts">
+          <button class="quiz-opt" data-correct>Ja, gern.</button>
+          <button class="quiz-opt">Ja, ich brauche.</button>
+          <button class="quiz-opt">Ja, bitte geben Sie mir ihn.</button>
+          <button class="quiz-opt">Nein danke.</button>
+        </div>
+        <div class="quiz-exp">„Ja, gern“ reicht völlig. <em>Ich brauche</em> ohne Objekt geht im Deutschen nicht — es müsste <em>ich brauche ihn</em> heißen.</div>
+      </div>
+
+      <div class="quiz-q">
+        <div class="qtext">8. Was heißt „Das Brot ist im Angebot“?</div>
+        <div class="quiz-opts">
+          <button class="quiz-opt">Das Brot ist frisch.</button>
+          <button class="quiz-opt" data-correct>Das Brot ist gerade billiger als sonst.</button>
+          <button class="quiz-opt">Das Brot ist ausverkauft.</button>
+          <button class="quiz-opt">Das Brot ist schon bezahlt.</button>
+        </div>
+        <div class="quiz-exp">Ein Angebot ist ein zeitlich begrenzter niedrigerer Preis. Am Regal steht dann oft ein gelbes oder rotes Schild.</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ LÜCKENTEXT ============ -->
+  <section class="block alt" id="lueckentext">
+    <h2 class="block-head">Lückentext: <span class="hl">Samstag, halb zehn</span></h2>
+    <p class="block-intro">Wähle in jeder Lücke das passende Wort. Danach auf „Überprüfen“ tippen.</p>
+    <div data-fillgap>
+      <div class="gap-item">
+        Guten Morgen! Ich
+        <select data-answer="hätte"><option value="">— wählen —</option><option>will</option><option>hätte</option><option>habe</option></select>
+        gern
+        <select data-answer="sechs"><option value="">— wählen —</option><option>sechs</option><option>sechste</option><option>sechsmal</option></select>
+        Brötchen und zweihundert
+        <select data-answer="Gramm"><option value="">— wählen —</option><option>Gramme</option><option>Gramm</option><option>Grammen</option></select>
+        Käse, bitte.
+      </div>
+      <div class="gap-item">
+        — Sonst noch was? — Nein danke, das
+        <select data-answer="war's"><option value="">— wählen —</option><option>ist</option><option>war's</option><option>hat</option></select>.
+        Ich nehme noch
+        <select data-answer="den"><option value="">— wählen —</option><option>der</option><option>den</option><option>dem</option></select>
+        Kuchen dort.
+      </div>
+      <div class="gap-item">
+        — Das macht 9,40 Euro. — Ich
+        <select data-answer="zahle"><option value="">— wählen —</option><option>bezahle mit</option><option>zahle</option><option>kaufe</option></select>
+        mit Karte. Brauchen Sie
+        <select data-answer="eine"><option value="">— wählen —</option><option>ein</option><option>eine</option><option>einen</option></select>
+        Tüte? — Nein, ich habe eine dabei.
+      </div>
+      <button class="btn" data-check>Überprüfen</button><span class="score" data-score></span>
+      <div class="hilfe">
+        <button type="button">🆘 Ich komme nicht weiter</button>
+        <div class="inhalt">
+          <ul>
+            <li><b>hätte gern</b> — die höfliche Bestellung, nie <em>will</em></li>
+            <li><b>Gramm</b> bleibt im Singular</li>
+            <li><b>das war's</b> — die feste Wendung am Ende</li>
+            <li><b>den Kuchen</b> — der Kuchen wird im Akkusativ zu <em>den</em></li>
+            <li><b>eine Tüte</b> — die Tüte ist feminin, im Akkusativ bleibt <em>eine</em></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ZUORDNEN ============ -->
+  <section class="block" id="zuordnen">
+    <h2 class="block-head">Zuordnen: <span class="hl">Menge und Ware</span></h2>
+    <p class="block-intro">Tippe links auf eine Menge und dann rechts auf das, was dazu passt.</p>
+    <div class="match" data-match>
+      <div>
+        <h4>Menge</h4>
+        <div class="match-item" data-left="1">zehn Scheiben</div>
+        <div class="match-item" data-left="2">eine Flasche</div>
+        <div class="match-item" data-left="3">dreihundert Gramm</div>
+        <div class="match-item" data-left="4">ein halbes</div>
+        <div class="match-item" data-left="5">ein Becher</div>
+        <div class="match-item" data-left="6">eine Packung</div>
+      </div>
+      <div>
+        <h4>Ware</h4>
+        <div class="match-item" data-right="3">Hackfleisch</div>
+        <div class="match-item" data-right="6">Butter</div>
+        <div class="match-item" data-right="1">Schinken</div>
+        <div class="match-item" data-right="5">Joghurt</div>
+        <div class="match-item" data-right="4">Brot</div>
+        <div class="match-item" data-right="2">Mineralwasser</div>
+      </div>
+    </div>
+    <div class="note tip"><strong>💡 Merke:</strong> Flüssiges kommt in die <b>Flasche</b>, Cremiges in den <b>Becher</b>, Dünngeschnittenes zählt man in <b>Scheiben</b>, und alles, was man wiegt, geht in <b>Gramm</b>.</div>
+  </section>
+
+  <!-- ============ ROLLENSPIELE ============ -->
+  <section class="block alt" id="rollenspiele">
+    <h2 class="block-head">Rollenspiel <span class="hl">zu zweit</span></h2>
+    <p class="block-intro">Sucht euch eine Situation aus. Eine Person verkauft, eine kauft — dann tauscht ihr.</p>
+
+    <details class="rp" open>
+      <summary>🥐 Samstagmorgen beim Bäcker <span class="badge">Situation 1</span></summary>
+      <div class="body">
+        <p><b>Die Lage:</b> Du kaufst Frühstück für dich und einen Gast. Hinter dir wird die Schlange länger.</p>
+        <p><b>Deine Rolle:</b> Du willst vier Brötchen, ein halbes Brot und zwei Stück Kuchen. Du fragst außerdem, ob das Brot von heute ist.</p>
+        <div class="chips"><span class="chip">Ich hätte gern …</span><span class="chip">ein halbes</span><span class="chip">von heute?</span><span class="chip">das war's</span><span class="chip red">Sonst noch was?</span></div>
+        <ul class="phrases">
+          <li class="nur-a2">Ich hätte gern vier Brötchen und ein halbes Brot.</li>
+          <li class="nur-a2">Ist das Brot frisch?</li>
+          <li class="nur-b1">Vier Brötchen, bitte — und ein halbes von dem dunklen dort hinten.</li>
+          <li class="nur-b1">Können Sie mir sagen, ob der Kuchen von heute ist?</li>
+        </ul>
+        <div class="success">✅ Gelungen, wenn du drei Dinge bestellt, eine Rückfrage gestellt und die Bestellung beendet hast — ohne ins Englische zu wechseln.</div>
+      </div>
+    </details>
+
+    <details class="rp">
+      <summary>🧀 An der Käsetheke <span class="badge">Situation 2</span></summary>
+      <div class="body">
+        <p><b>Die Lage:</b> Du stehst an der Theke. Die Verkäuferin schneidet ab — und es wird mehr, als du wolltest.</p>
+        <p><b>Deine Rolle:</b> Du bestellst 200 Gramm Gouda. Sie legt 280 Gramm auf die Waage und fragt: „Darf's ein bisschen mehr sein?“</p>
+        <div class="chips"><span class="chip">ein bisschen weniger</span><span class="chip">das passt so</span><span class="chip">lieber nicht</span><span class="chip red">Darf's ein bisschen mehr sein?</span></div>
+        <ul class="phrases">
+          <li class="nur-a2">Nein danke, ein bisschen weniger, bitte.</li>
+          <li class="nur-a2">Ja, das passt so.</li>
+          <li class="nur-b1">Lieber etwas weniger — sonst schaffe ich das nicht.</li>
+          <li class="nur-b1">Das ist mir ehrlich gesagt zu viel, machen Sie ruhig 200.</li>
+        </ul>
+        <div class="success">✅ Gelungen, wenn du freundlich nein gesagt hast, ohne dich zu entschuldigen. Das darf man hier.</div>
+      </div>
+    </details>
+
+    <details class="rp">
+      <summary>💳 An der Supermarktkasse <span class="badge">Situation 3</span></summary>
+      <div class="body">
+        <p><b>Die Lage:</b> Alles ist auf dem Band. Es geht schnell, und du sollst gleichzeitig packen und antworten.</p>
+        <p><b>Deine Rolle:</b> Du wirst gefragt: Payback-Karte? Tüte? Kassenbon? Bar oder Karte? Antworte auf alles.</p>
+        <div class="chips"><span class="chip">Nein danke</span><span class="chip">Ja, gern</span><span class="chip">mit Karte</span><span class="chip">Moment, bitte</span><span class="chip red">Haben Sie es passend?</span></div>
+        <ul class="phrases">
+          <li class="nur-a2">Nein danke. — Ja, gern. — Mit Karte, bitte.</li>
+          <li class="nur-a2">Einen Moment, bitte.</li>
+          <li class="nur-b1">Keine Payback, danke. Tüte brauche ich auch nicht, ich habe eine dabei.</li>
+          <li class="nur-b1">Moment, ich packe nur schnell ein — dann zahle ich mit Karte.</li>
+        </ul>
+        <div class="success">✅ Gelungen, wenn du alle vier Fragen beantwortet hast, ohne dass jemand wiederholen musste.</div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ 90-SEKUNDEN-CHALLENGE ============ -->
+  <section class="block" id="challenge">
+    <h2 class="block-head">Die <span class="hl">90-Sekunden-Challenge</span></h2>
+    <p class="block-intro">Drei Wörter, anderthalb Minuten, freies Sprechen. Es muss nicht perfekt sein — es muss weitergehen.</p>
+    <div class="challenge" data-challenge>
+      <div class="uhr" data-uhr>1:30</div>
+      <div class="balken"><i data-balken></i></div>
+      <div class="woerter" data-woerter><span class="ph">Tippe auf „Wörter ziehen“ und leg los.</span></div>
+      <div class="ch-knoepfe">
+        <button class="btn" type="button" data-ziehen>🎲 Wörter ziehen</button>
+        <button class="btn dark" type="button" data-start>▶︎ Start</button>
+        <button class="btn ghost" type="button" data-reset>↺ Zurücksetzen</button>
+      </div>
+      <script type="application/json" data-challenge-woerter>
+      ["das Brötchen","die Scheibe","frisch","das Angebot","die Tüte","der Kassenbon","das Gramm","die Packung","bezahlen","der Einkaufswagen","die Kasse","das Bargeld","die Karte","das Brot","der Käse","die Milch","das war's","Sonst noch was?","die Schlange","die Theke"]
+      </script>
+      <div class="hilfe" style="text-align:left;">
+        <button type="button">🆘 Mir fällt nichts ein</button>
+        <div class="inhalt">
+          <p>Erzähl einfach der Reihe nach, was passiert:</p>
+          <ul>
+            <li><b>Wo bist du?</b> Ich bin am Samstag beim Bäcker …</li>
+            <li><b>Was willst du?</b> Ich hätte gern …</li>
+            <li><b>Was fragt die Verkäuferin?</b> Sie fragt, ob …</li>
+            <li><b>Wie endet es?</b> Am Ende zahle ich …</li>
+          </ul>
+          <p style="margin-top:.4rem;">Und wenn ein Wort fehlt: beschreib es. <em>„So ein Papierding, das man nach dem Bezahlen bekommt.“</em> Genau das ist die Fähigkeit, die zählt.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SPRECHKARTEN ============ -->
+  <section class="block alt" id="sprechen">
+    <h2 class="block-head">Sprechkarten: <span class="hl">zieh eine</span></h2>
+    <p class="block-intro">Zum Schluss noch eine Runde. Jede Karte ist eine kleine Aufgabe — sprich mindestens vier Sätze.</p>
+    <div class="speak" data-speak>
+      <div class="card"><span class="ph">Tippe auf den Knopf.</span></div>
+      <p style="margin-top:1rem;"><button class="btn dark" type="button" data-draw>🎴 Karte ziehen</button></p>
+      <script type="application/json" data-speak-cards>
+      ["Beschreibe deinen letzten Einkauf: <b>Wo, was, wie viel, wie bezahlt?</b>",
+       "Du stehst vor dem Regal und findest die Milch nicht. <b>Frag jemanden.</b>",
+       "Erkläre einem Kind, <b>warum man für den Einkaufswagen einen Euro braucht.</b>",
+       "Bestelle für ein Frühstück mit vier Personen. <b>Sag die Mengen laut.</b>",
+       "Die Verkäuferin hat sich verzählt. <b>Sag es ihr freundlich.</b>",
+       "Vergleiche: <b>Einkaufen hier und in deinem Heimatland</b> — was ist anders?",
+       "Du hast deine Karte vergessen und nur 5 Euro dabei. <b>Was sagst du an der Kasse?</b>",
+       "Beschreibe deinen Lieblingsladen, <b>ohne den Namen zu sagen.</b>",
+       "Jemand drängelt sich vor. <b>Was sagst du?</b>",
+       "Erkläre den Unterschied zwischen <b>Scheibe, Packung und Gramm</b> — mit Beispielen."]
+      </script>
+    </div>
+  </section>
+
+  <!-- ============ MISSION ============ -->
+  <section class="block mission" id="mission">
+    <h2 class="block-head">Deine <span class="hl">Mission</span> bis Mittwoch</h2>
+    <p>Geh diese Woche <strong>einmal einkaufen und sprich Deutsch</strong> — auch wenn es kurz ist. Bestell etwas an einer Theke, wo du sprechen musst: Bäcker, Käse, Wurst oder Obst.</p>
+    <div class="bonus"><strong>Bonus 1:</strong> Stell eine Rückfrage. <em>„Ist das von heute?“</em> oder <em>„Haben Sie das auch größer?“</em></div>
+    <div class="bonus"><strong>Bonus 2:</strong> Nimm dich mit dem Handy auf, während du deinen Einkauf beschreibst — 60 Sekunden reichen. Schick sie in die Community, wenn du magst.</div>
+    <div class="bonus"><strong>Am Mittwoch geht es weiter:</strong> Teil 2 — etwas ist alle, etwas ist falsch, und du musst nachfragen.</div>
+  </section>
+
+  <!-- ============ HAUSAUFGABE ============ -->
+  <section class="block" id="hausaufgabe">
+    <h2 class="block-head">Deine <span class="hl">Hausaufgabe</span> bis Mittwoch</h2>
+    <p class="block-intro">Vier kleine Aufgaben, zusammen etwa 25 Minuten. Hak ab, was du geschafft hast — der Haken bleibt, solange du die Seite offen hast.</p>
+
+    <div class="note tip"><strong>Warum das hilft:</strong> Du hast heute viel gehört. Was du erst schreibst und dann laut sagst, bleibt hängen. Deshalb ist bei jeder Aufgabe beides drin.</div>
+
+    <!-- ---- A2 ---- -->
+    <div class="nur-a2">
+      <div class="ha-liste">
+        <button type="button" class="ha" data-ha>
+          <span class="box">✓</span>
+          <span class="txt">
+            <span class="kopf">1. Zehn Wörter abschreiben <span class="zeit">5 Min</span></span>
+            <span class="wie">Schreib zehn Wörter von heute in dein Heft — <b>immer mit Artikel</b>: die Scheibe, die Packung, das Brötchen … Sprich jedes Wort laut mit, während du es schreibst.</span>
+          </span>
+        </button>
+
+        <button type="button" class="ha" data-ha>
+          <span class="box">✓</span>
+          <span class="txt">
+            <span class="kopf">2. Deinen Einkaufszettel auf Deutsch <span class="zeit">5 Min</span></span>
+            <span class="wie">Schreib auf, was du wirklich brauchst — aber <b>mit Menge</b>: „500 Gramm Hackfleisch“, „eine Packung Milch“, „sechs Eier“. Mindestens acht Zeilen.</span>
+          </span>
+        </button>
+
+        <button type="button" class="ha" data-ha>
+          <span class="box">✓</span>
+          <span class="txt">
+            <span class="kopf">3. Fünf Sätze mit „Ich hätte gern …“ <span class="zeit">8 Min</span></span>
+            <span class="wie">Nimm fünf Zeilen von deinem Zettel und mach richtige Bestellsätze daraus. Schreib sie auf und sag sie danach dreimal laut.</span>
+          </span>
+        </button>
+
+        <button type="button" class="ha" data-ha>
+          <span class="box">✓</span>
+          <span class="txt">
+            <span class="kopf">4. Eine Sprachnachricht an dich selbst <span class="zeit">5 Min</span></span>
+            <span class="wie">Nimm dich auf: <b>„Gestern war ich im Supermarkt. Ich habe … gekauft. Ich habe mit … bezahlt.“</b> 30 Sekunden reichen. Danach einmal anhören — das ist die halbe Übung.</span>
+          </span>
+        </button>
+      </div>
+
+      <div class="hilfe">
+        <button type="button">💡 Beispiel ansehen (Aufgabe 3)</button>
+        <div class="inhalt">
+          <p>So könnte deine Liste aussehen:</p>
+          <ul>
+            <li>Ich <b class="m-hoefl">hätte gern</b> <b class="m-menge">sechs</b> <b class="m-akk">Brötchen</b>, bitte.</li>
+            <li>Ich <b class="m-hoefl">hätte gern</b> <b class="m-menge">200 Gramm</b> <b class="m-akk">Gouda</b>.</li>
+            <li>Ich <b class="m-hoefl">hätte gern</b> <b class="m-menge">eine Packung</b> <b class="m-akk">Butter</b>.</li>
+            <li>Ich <b class="m-hoefl">hätte gern</b> <b class="m-menge">vier Scheiben</b> <b class="m-akk">Schinken</b>.</li>
+            <li>Ich <b class="m-hoefl">hätte gern</b> <b class="m-menge">ein Kilo</b> <b class="m-akk">Kartoffeln</b>.</li>
+          </ul>
+          <p style="margin-top:.5rem;">Merk dir die Reihenfolge: <b class="m-hoefl">höflich</b> → <b class="m-menge">Menge</b> → <b class="m-akk">Was</b>. Immer gleich.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---- B1 ---- -->
+    <div class="nur-b1">
+      <div class="ha-liste">
+        <button type="button" class="ha" data-ha>
+          <span class="box">✓</span>
+          <span class="txt">
+            <span class="kopf">1. Zwölf Wörter — aber im Satz <span class="zeit">6 Min</span></span>
+            <span class="wie">Nimm zwölf Wörter von heute und schreib zu jedem <b>einen eigenen Satz</b>, der etwas über dich sagt. Nicht „die Theke ist eine Theke“, sondern: „An der Theke traue ich mich immer noch nicht zu fragen.“</span>
+          </span>
+        </button>
+
+        <button type="button" class="ha" data-ha>
+          <span class="box">✓</span>
+          <span class="txt">
+            <span class="kopf">2. Ein kleiner Text: dein Einkauf <span class="zeit">10 Min</span></span>
+            <span class="wie">Schreib 80–100 Wörter über deinen letzten Einkauf: <b>wo, was, wie viel, was hat gefehlt, wie hast du bezahlt.</b> Nutz mindestens fünf Wörter von heute und einmal <b>weil</b> oder <b>obwohl</b>.</span>
+          </span>
+        </button>
+
+        <button type="button" class="ha" data-ha>
+          <span class="box">✓</span>
+          <span class="txt">
+            <span class="kopf">3. Höflich umformulieren <span class="zeit">6 Min</span></span>
+            <span class="wie">Schreib diese fünf Sätze höflicher: „Geben Sie mir Brot.“ · „Ich will Käse.“ · „Das ist zu teuer.“ · „Wo ist die Milch?“ · „Sie haben falsch gerechnet.“</span>
+          </span>
+        </button>
+
+        <button type="button" class="ha" data-ha>
+          <span class="box">✓</span>
+          <span class="txt">
+            <span class="kopf">4. Sprachnachricht: 60 Sekunden frei <span class="zeit">6 Min</span></span>
+            <span class="wie">Nimm dich auf und antworte auf die Frage: <b>„Was kaufst du in Deutschland anders als zu Hause — und warum?“</b> Eine Minute, ohne abzulesen. Danach anhören und ein Wort suchen, das dir gefehlt hat.</span>
+          </span>
+        </button>
+      </div>
+
+      <div class="hilfe">
+        <button type="button">💡 Lösungsvorschlag ansehen (Aufgabe 3)</button>
+        <div class="inhalt">
+          <ul>
+            <li>„Geben Sie mir Brot.“ → <b>Könnten Sie mir bitte ein Brot geben?</b></li>
+            <li>„Ich will Käse.“ → <b>Ich hätte gern etwas Käse, bitte.</b></li>
+            <li>„Das ist zu teuer.“ → <b>Das ist mir ehrlich gesagt etwas zu teuer.</b></li>
+            <li>„Wo ist die Milch?“ → <b>Entschuldigung, könnten Sie mir sagen, wo die Milch steht?</b></li>
+            <li>„Sie haben falsch gerechnet.“ → <b>Entschuldigung, da stimmt etwas nicht — könnten Sie das bitte noch einmal prüfen?</b></li>
+          </ul>
+          <p style="margin-top:.5rem;">Die drei Werkzeuge: <b>Konjunktiv</b> (könnten, hätte), <b>bitte</b>, und ein <b>weicher Einstieg</b> (Entschuldigung, ehrlich gesagt). Eines reicht schon — zwei sind sehr höflich.</p>
+        </div>
+      </div>
+    </div>
+
+    <p class="ha-stand" data-ha-stand>0 von 4 Aufgaben geschafft.</p>
+
+    <div class="abgabe">
+      <strong>Abgabe:</strong> Schick deinen Text oder deine Sprachnachricht bis Mittwoch früh in die Community — Julia hört sich alles an und antwortet dir. Wenn du lieber für dich übst: auch gut. Dann bring am Mittwoch <b>eine Frage</b> mit, die beim Üben aufgetaucht ist.
+    </div>
+  </section>
+
+  <footer>
+    <div class="mark">deutsch<span class="t">oderwas</span> club</div>
+    <p>Beim Bäcker und im Supermarkt · A2/B1 · Woche 1, Teil 1 · Montag, 14. September 2026</p>
+  </footer>
+
+</div>
+<script>
+(function(){
+  /* ---- Sticky-Nav: aktiven Tab beim Scrollen markieren ---- */
+  const tabs=[...document.querySelectorAll('nav.tabs a')];
+  const map=tabs.map(a=>({a,sec:document.querySelector(a.getAttribute('href'))})).filter(x=>x.sec);
+  if('IntersectionObserver' in window){
+    const obs=new IntersectionObserver(es=>{
+      es.forEach(e=>{ if(e.isIntersecting){ tabs.forEach(t=>t.classList.remove('active'));
+        const m=map.find(x=>x.sec===e.target); if(m) m.a.classList.add('active'); } });
+    },{rootMargin:'-45% 0px -50% 0px'});
+    map.forEach(x=>obs.observe(x.sec));
+  }
+
+  /* ---- Flashcards ---- */
+  document.querySelectorAll('[data-flashcards]').forEach(box=>{
+    let cards=[...box.querySelectorAll('[data-card]')];
+    let i=0;
+    const count=box.querySelector('[data-count]');
+    function show(){ cards.forEach((c,n)=>{c.style.display=n===i?'block':'none';c.classList.remove('flipped');});
+      if(count) count.textContent=(i+1)+' / '+cards.length; }
+    box.querySelectorAll('[data-card]').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('flipped')));
+    const nx=box.querySelector('[data-next]'),pv=box.querySelector('[data-prev]'),sh=box.querySelector('[data-shuffle]');
+    if(nx)nx.addEventListener('click',()=>{i=(i+1)%cards.length;show();});
+    if(pv)pv.addEventListener('click',()=>{i=(i-1+cards.length)%cards.length;show();});
+    if(sh)sh.addEventListener('click',()=>{for(let k=cards.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[cards[k],cards[j]]=[cards[j],cards[k]];}i=0;show();});
+    show();
+  });
+
+  /* ---- Quiz ---- */
+  document.querySelectorAll('[data-quiz] .quiz-q').forEach(q=>{
+    q.querySelectorAll('.quiz-opt').forEach(opt=>{
+      opt.addEventListener('click',()=>{
+        if(q.classList.contains('answered'))return;
+        q.classList.add('answered');
+        const correct=q.querySelector('.quiz-opt[data-correct]');
+        if(opt.hasAttribute('data-correct')) opt.classList.add('correct');
+        else { opt.classList.add('wrong'); if(correct) correct.classList.add('correct'); }
+      });
+    });
+  });
+
+  /* ---- Lückentext ---- */
+  document.querySelectorAll('[data-fillgap]').forEach(box=>{
+    const btn=box.querySelector('[data-check]'),score=box.querySelector('[data-score]');
+    if(!btn)return;
+    btn.addEventListener('click',()=>{
+      let ok=0;const sels=box.querySelectorAll('select[data-answer]');
+      sels.forEach(s=>{ s.classList.remove('ok','no');
+        if(s.value===s.getAttribute('data-answer')){s.classList.add('ok');ok++;}
+        else s.classList.add('no'); });
+      if(score) score.textContent=ok+' / '+sels.length+' richtig'+(ok===sels.length?' 🎉':'');
+    });
+  });
+
+  /* ---- Zuordnen (Matching) ---- */
+  document.querySelectorAll('[data-match]').forEach(box=>{
+    let selLeft=null;
+    box.querySelectorAll('.match-item').forEach(item=>{
+      item.addEventListener('click',()=>{
+        if(item.classList.contains('done'))return;
+        const isLeft=item.hasAttribute('data-left');
+        if(isLeft){ box.querySelectorAll('.match-item.sel').forEach(s=>s.classList.remove('sel'));
+          item.classList.add('sel'); selLeft=item; return; }
+        if(!selLeft)return;
+        if(item.getAttribute('data-right')===selLeft.getAttribute('data-left')){
+          item.classList.add('done');selLeft.classList.add('done');selLeft.classList.remove('sel');selLeft=null;
+        } else { item.classList.add('no');setTimeout(()=>item.classList.remove('no'),500); }
+      });
+    });
+  });
+
+  /* ---- Sprechkarten (random) ---- */
+  document.querySelectorAll('[data-speak]').forEach(box=>{
+    let cards=[];
+    const data=box.querySelector('[data-speak-cards]');
+    try{cards=JSON.parse(data.textContent);}catch(e){}
+    const card=box.querySelector('.card'),btn=box.querySelector('[data-draw]');
+    if(btn)btn.addEventListener('click',()=>{ if(!cards.length)return;
+      card.innerHTML=cards[Math.floor(Math.random()*cards.length)]; });
+  });
+})();
+</script>
+<script>
+/* ============================================================
+   ZUSATZ zum Template-Script — eigener Block, nichts geaendert.
+   1. Niveau-Umschalter A2 / B1
+   2. Hilfe-Knoepfe
+   3. 90-Sekunden-Challenge
+   4. Hausaufgaben-Haken
+   ============================================================ */
+(function () {
+
+  /* ---- 1. Niveau-Umschalter ---- */
+  var nivKnoepfe = document.querySelectorAll('.niv-knoepfe button[data-niv]');
+  function setzeNiveau(niv) {
+    document.body.setAttribute('data-niveau', niv);
+    nivKnoepfe.forEach(function (b) {
+      b.setAttribute('aria-pressed', b.getAttribute('data-niv') === niv ? 'true' : 'false');
+    });
+  }
+  nivKnoepfe.forEach(function (b) {
+    b.addEventListener('click', function () { setzeNiveau(b.getAttribute('data-niv')); });
+  });
+
+  /* Die Tab-Leiste klebt unter dem Umschalter. Dessen Hoehe haengt von der
+     Fensterbreite ab, also messen statt raten — sonst verdeckt die eine Leiste
+     die andere. */
+  (function () {
+    var leiste = document.querySelector('.niv-schalter');
+    if (!leiste) return;
+    function miss() {
+      document.documentElement.style.setProperty('--leiste', Math.round(leiste.offsetHeight) + 'px');
+    }
+    miss();
+    window.addEventListener('resize', miss);
+    if (window.ResizeObserver) new ResizeObserver(miss).observe(leiste);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(miss);
+  })();
+
+  /* ---- 2. Hilfe-Knoepfe ---- */
+  document.querySelectorAll('.hilfe > button').forEach(function (b) {
+    var kasten = b.parentElement;
+    var text = b.textContent;
+    b.setAttribute('aria-expanded', 'false');
+    b.addEventListener('click', function () {
+      var offen = kasten.classList.toggle('offen');
+      b.setAttribute('aria-expanded', offen ? 'true' : 'false');
+      b.textContent = offen ? '✕ Hilfe schließen' : text;
+    });
+  });
+
+  /* ---- 3. 90-Sekunden-Challenge ---- */
+  document.querySelectorAll('[data-challenge]').forEach(function (box) {
+    var GESAMT = 90;
+    var uhr = box.querySelector('[data-uhr]');
+    var balken = box.querySelector('[data-balken]');
+    var feld = box.querySelector('[data-woerter]');
+    var bZiehen = box.querySelector('[data-ziehen]');
+    var bStart = box.querySelector('[data-start]');
+    var bReset = box.querySelector('[data-reset]');
+    var alle = [];
+    try { alle = JSON.parse(box.querySelector('[data-challenge-woerter]').textContent); } catch (e) {}
+
+    var rest = GESAMT, ticker = null;
+
+    function zeige() {
+      var m = Math.floor(rest / 60), s = rest % 60;
+      uhr.textContent = m + ':' + (s < 10 ? '0' : '') + s;
+      var teil = Math.max(0, rest / GESAMT) * 100;
+      balken.style.width = teil + '%';
+      var knapp = rest <= 15 && rest > 0;
+      uhr.classList.toggle('knapp', knapp);
+      balken.classList.toggle('knapp', knapp);
+    }
+
+    function stopp() {
+      if (ticker) { clearInterval(ticker); ticker = null; }
+      uhr.classList.remove('laeuft');
+      bStart.textContent = '▶︎ Start';
+    }
+
+    function ziehe() {
+      if (alle.length < 3) return;
+      var topf = alle.slice(), gezogen = [];
+      for (var i = 0; i < 3; i++) {
+        gezogen.push(topf.splice(Math.floor(Math.random() * topf.length), 1)[0]);
+      }
+      feld.innerHTML = gezogen.map(function (w) { return '<b>' + w + '</b>'; }).join('');
+    }
+
+    if (bZiehen) bZiehen.addEventListener('click', ziehe);
+
+    if (bStart) bStart.addEventListener('click', function () {
+      if (ticker) { stopp(); return; }
+      if (!feld.querySelector('b')) ziehe();
+      if (rest <= 0) rest = GESAMT;
+      uhr.classList.add('laeuft');
+      bStart.textContent = '⏸ Pause';
+      zeige();
+      ticker = setInterval(function () {
+        rest--;
+        zeige();
+        if (rest <= 0) {
+          stopp();
+          uhr.textContent = 'Fertig!';
+          uhr.classList.add('knapp');
+        }
+      }, 1000);
+    });
+
+    if (bReset) bReset.addEventListener('click', function () {
+      stopp();
+      rest = GESAMT;
+      uhr.classList.remove('knapp');
+      zeige();
+    });
+
+    zeige();
+  });
+
+  /* ---- 4. Hausaufgaben-Haken ---- */
+  (function () {
+    var stand = document.querySelector('[data-ha-stand]');
+    function zaehle() {
+      if (!stand) return;
+      var sicht = [].slice.call(document.querySelectorAll('[data-ha]')).filter(function (h) {
+        return h.offsetParent !== null;
+      });
+      var fertig = sicht.filter(function (h) { return h.classList.contains('fertig'); }).length;
+      var voll = sicht.length > 0 && fertig === sicht.length;
+      stand.textContent = voll
+        ? 'Alle ' + sicht.length + ' Aufgaben geschafft. Stark — bis Mittwoch! 🎉'
+        : fertig + ' von ' + sicht.length + ' Aufgaben geschafft.';
+      stand.classList.toggle('voll', voll);
+    }
+    document.querySelectorAll('[data-ha]').forEach(function (h) {
+      h.setAttribute('aria-pressed', 'false');
+      h.addEventListener('click', function () {
+        var an = h.classList.toggle('fertig');
+        h.setAttribute('aria-pressed', an ? 'true' : 'false');
+        zaehle();
+      });
+    });
+    nivKnoepfe.forEach(function (b) { b.addEventListener('click', zaehle); });
+    zaehle();
+  })();
+
+})();
+</script>
+</body>
+</html>
