@@ -422,6 +422,26 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 .hastand.voll{background:#EAF7EF;}
 
+/* ============================================================
+   EINE DURCHGEHENDE SEITE statt Tab-Wechsel.
+   Julia wollte den Ablauf der ersten Fassung zurueck: alles
+   untereinander, die Leiste oben springt nur hin.
+   ============================================================ */
+.section{display:block;animation:none;}
+.section + .section{
+  margin-top:2.4rem;padding-top:.6rem;   /* h2.st bringt seinen eigenen Abstand mit */
+  border-top:3px dashed var(--sand);
+}
+section.section{scroll-margin-top:calc(var(--leiste,58px) + 5.2rem);}
+
+/* Umschalter klebt ganz oben, die Sprungleiste direkt darunter.
+   Beide gehen ueber die volle Spaltenbreite — sonst schaut der Text
+   beim Scrollen links und rechts an ihnen vorbei. */
+.niv{position:sticky;top:0;z-index:60;margin:1.4rem auto 0;max-width:none;width:100%;}
+.tabs{top:var(--leiste,58px);margin:1rem auto 1.6rem;max-width:none;width:100%;}
+.tab{text-decoration:none;}
+a.tab:hover{color:var(--ink);}
+
 /* ---------- Kleinkram ---------- */
 .bsp{
   background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
@@ -456,20 +476,20 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 </div>
 
 <nav class="tabs">
-<button class="tab active" data-tab="0">🖼️ Einstieg</button>
-<button class="tab" data-tab="1">🔤 Wortschatz</button>
-<button class="tab" data-tab="2">⚖️ Mengen</button>
-<button class="tab" data-tab="3">💬 Sätze</button>
-<button class="tab" data-tab="4">🎬 Dialoge</button>
-<button class="tab" data-tab="5">🧩 Grammatik</button>
-<button class="tab" data-tab="6">🎭 Rollenspiele</button>
-<button class="tab" data-tab="7">⏱️ 90 Sekunden</button>
-<button class="tab" data-tab="8">✅ Üben</button>
-<button class="tab" data-tab="9">📮 Hausaufgabe</button>
+<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
+<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
+<a class="tab" href="#mengen">⚖️ Mengen</a>
+<a class="tab" href="#saetze">💬 Sätze</a>
+<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#grammatik">🧩 Grammatik</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
 </nav>
 
 <!-- ============================================================ 0 · EINSTIEG -->
-<section class="section active" data-section="0">
+<section class="section" id="einstieg">
 <h2 class="st">Samstagmorgen, halb zehn</h2>
 <p class="ssub">Schaut euch das Bild an. Sieben Leute vor dir, und gleich bist du dran.</p>
 <div class="scene-wrap klein"><img src="amanda/sz-supermarkt.webp" alt="Kundin mit vollem Einkaufswagen zwischen den Regalen im Supermarkt"></div>
@@ -497,7 +517,7 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 </section>
 
 <!-- ============================================================ 1 · WORTSCHATZ -->
-<section class="section" data-section="1">
+<section class="section" id="wortschatz">
 <h2 class="st">Zwölf Wörter, die in jedem Laden gehen</h2>
 <p class="ssub">Sagt jedes Wort laut — und gleich den Beispielsatz dazu. Genau diese Sätze brauchst du an der Theke.</p>
 <div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
@@ -532,7 +552,7 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 </section>
 
 <!-- ============================================================ 2 · MENGEN -->
-<section class="section" data-section="2">
+<section class="section" id="mengen">
 <h2 class="st">Mengen: Stück, Gramm, Scheibe</h2>
 <p class="ssub">Der häufigste Fehler beim Einkaufen ist nicht die Grammatik, sondern die Menge. Diese vier decken fast alles ab.</p>
 
@@ -573,7 +593,7 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 </section>
 
 <!-- ============================================================ 3 · SÄTZE -->
-<section class="section" data-section="3">
+<section class="section" id="saetze">
 <h2 class="st">Die Sätze, die immer gehen</h2>
 <p class="ssub">Kurz, freundlich, richtig. Mit diesen kommst du durch jeden Einkauf — ohne dass du vorher überlegen musst.</p>
 
@@ -632,7 +652,7 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 </section>
 
 <!-- ============================================================ 4 · DIALOGE -->
-<section class="section" data-section="4">
+<section class="section" id="dialoge">
 <h2 class="st">Zwei Dialoge — zwei Runden</h2>
 <p class="ssub"><b>Runde 1:</b> Lest den ganzen Dialog zu zweit. <b>Runde 2:</b> Tippt auf den Knopf — deine Sätze verschwinden, du siehst nur noch, <i>was</i> du sagen sollst. Steckst du fest, tippe auf das gelbe Feld.</p>
 
@@ -675,7 +695,7 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 </section>
 
 <!-- ============================================================ 5 · GRAMMATIK -->
-<section class="section" data-section="5">
+<section class="section" id="grammatik">
 <h2 class="st">🧩 Ich hätte gern + Akkusativ</h2>
 <p class="ssub">Ein einziger Bauplan — und du kannst alles bestellen, was es gibt.</p>
 
@@ -741,7 +761,7 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 </section>
 
 <!-- ============================================================ 6 · ROLLENSPIELE -->
-<section class="section" data-section="6">
+<section class="section" id="rollenspiele">
 <h2 class="st">🎭 Drei Rollenspiele</h2>
 <p class="ssub">Zu zweit. Einer ist Kunde, einer verkauft — dann tauschen. Jede Runde dauert höchstens zwei Minuten.</p>
 
@@ -779,7 +799,7 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 </section>
 
 <!-- ============================================================ 7 · 90 SEKUNDEN -->
-<section class="section" data-section="7">
+<section class="section" id="challenge">
 <h2 class="st">⏱️ Die 90-Sekunden-Challenge</h2>
 <p class="ssub">Ein Wort, anderthalb Minuten, freies Sprechen. Es muss nicht perfekt sein — es muss weitergehen.</p>
 
@@ -813,7 +833,7 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 </section>
 
 <!-- ============================================================ 8 · ÜBEN -->
-<section class="section" data-section="8">
+<section class="section" id="ueben">
 <h2 class="st">✅ Sitzt es schon?</h2>
 <p class="ssub">Acht Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
 <div id="quiz"></div>
@@ -826,7 +846,7 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 </section>
 
 <!-- ============================================================ 9 · HAUSAUFGABE -->
-<section class="section" data-section="9">
+<section class="section" id="hausaufgabe">
 <h2 class="st">📮 Deine Hausaufgabe bis Mittwoch</h2>
 <p class="ssub">Vier kleine Aufgaben, zusammen etwa 25 Minuten. Hak ab, was du geschafft hast.</p>
 
@@ -910,13 +930,38 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 
 </div>
 <script>
-/* ---- Tabs ---- */
-document.querySelectorAll('.tab').forEach(function(b){b.onclick=function(){
- document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('active');});
- document.querySelectorAll('.section').forEach(function(x){x.classList.remove('active');});
- b.classList.add('active');document.querySelector('[data-section="'+b.dataset.tab+'"]').classList.add('active');
- var n=document.querySelector('.tabs');window.scrollTo({top:n.offsetTop-8,behavior:'instant'});
-};});
+/* ---- Sprungleiste: markiert, wo man gerade ist ----
+   Frueher hat sie Abschnitte umgeschaltet. Jetzt steht alles
+   untereinander, die Leiste zeigt nur noch die Stelle an. */
+(function(){
+ var tabs=[].slice.call(document.querySelectorAll('nav.tabs a.tab'));
+ var paare=tabs.map(function(a){return {a:a,sec:document.querySelector(a.getAttribute('href'))};})
+               .filter(function(x){return x.sec;});
+ if(!('IntersectionObserver' in window))return;
+ var beob=new IntersectionObserver(function(eintraege){
+  eintraege.forEach(function(e){
+   if(!e.isIntersecting)return;
+   tabs.forEach(function(t){t.classList.remove('active');});
+   var p=paare.find(function(x){return x.sec===e.target;});
+   if(p){p.a.classList.add('active');
+     /* die aktive Marke in der schmalen Leiste in den Blick holen */
+     if(p.a.scrollIntoView)p.a.scrollIntoView({block:'nearest',inline:'center'});}
+  });
+ },{rootMargin:'-40% 0px -55% 0px'});
+ paare.forEach(function(x){beob.observe(x.sec);});
+})();
+
+/* ---- Hoehe des klebenden Umschalters messen, damit die
+   Sprungleiste sauber darunter sitzt ---- */
+(function(){
+ var leiste=document.querySelector('.niv');
+ if(!leiste)return;
+ function miss(){document.documentElement.style.setProperty('--leiste',Math.round(leiste.offsetHeight)+'px');}
+ miss();
+ window.addEventListener('resize',miss);
+ if(window.ResizeObserver)new ResizeObserver(miss).observe(leiste);
+ if(document.fonts&&document.fonts.ready)document.fonts.ready.then(miss);
+})();
 
 /* ---- Vorlesen ---- */
 function say(t){try{var u=new SpeechSynthesisUtterance(t);u.lang='de-DE';u.rate=.85;speechSynthesis.cancel();speechSynthesis.speak(u);}catch(e){}}
