@@ -194,6 +194,13 @@ STICH.sprachkurs.push('partikeln');
 STICH.sprachkurs.push('-b-teil');
 STICH.familie.push('esstisch');
 
+/* Strang A ab Woche 2 dreht sich ums Terminmachen — das sind Telefonate,
+   also gehoert es zum Bereich Telefonieren. Strang D ist Gespraechstechnik,
+   also Sprachtraining wie Strang B; das '-d-teil' greift nur, wenn kein
+   laengeres, genaueres Stichwort passt (smalltalk zum Beispiel gewinnt). */
+STICH.telefonieren.push('termin-machen', 'termin-verschieben');
+STICH.sprachkurs.push('nachfragen', '-d-teil');
+
 
 
 function bereichVon(f, ids) {

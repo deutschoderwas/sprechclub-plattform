@@ -258,6 +258,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-bewerbung.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w02-a-teil1-termin-machen-a2b1.html",
+  "t": "Einen Termin machen",
+  "lvl": "A2–B1",
+  "art": "lektion",
+  "b": "telefonieren",
+  "img": "amanda/sz-telefonieren.webp"
+ },
+ {
   "d": "Unterricht-ab-27-07/einkaufen-a2b1.html",
   "t": "Einkaufen & im Supermarkt",
   "lvl": "A2–B1",
@@ -265,6 +273,14 @@ window.LEKTIONEN = [
   "b": "supermarkt",
   "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-einkaufen-a2b1.html",
   "img": "amanda/sz-supermarkt.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/w02-a-teil2-termin-verschieben-a2b1.html",
+  "t": "Es geht doch nicht — verschieben und absagen",
+  "lvl": "A2–B1",
+  "art": "lektion",
+  "b": "telefonieren",
+  "img": "amanda/sz-telefonieren.webp"
  },
  {
   "d": "Unterricht-ab-14-09/w01-a-teil2-baecker-supermarkt-a2b1.html",
@@ -1143,6 +1159,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-sprachkurs.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w02-b-teil2-gehen-kommen-fahren-b1b2.html",
+  "t": "Das geht nicht. Wie geht's? Es kommt darauf an.",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "Unterricht-ab-27-07/dating-b1b2.html",
   "t": "Dating & Kennenlern-Apps",
   "lvl": "B1–B2",
@@ -1158,6 +1182,14 @@ window.LEKTIONEN = [
   "art": "lektion",
   "b": "familie",
   "img": "amanda/sz-familie.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/w02-c-teil2-geburtstag-feiern-b1b2.html",
+  "t": "Die Debatte: Muss man Geburtstage feiern?",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "feste",
+  "img": "amanda/sz-feste.webp"
  },
  {
   "d": "Unterricht-ab-27-07/digitaldetox-b1b2.html",
@@ -1212,6 +1244,14 @@ window.LEKTIONEN = [
   "b": "medien",
   "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-gaming-b1b2.html",
   "img": "amanda/sz-medien.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/w02-b-teil1-gehen-kommen-fahren-b1b2.html",
+  "t": "GEHEN, KOMMEN, FAHREN — wohin und womit",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
  },
  {
   "d": "Unterricht-ab-27-07/sparen-b1b2.html",
@@ -1330,6 +1370,22 @@ window.LEKTIONEN = [
   "b": "medien",
   "ueb": "vorbereitung-medien-digitalisierung-b1-b2.html",
   "img": "amanda/sz-medien.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/w02-c-teil1-geburtstag-feiern-b1b2.html",
+  "t": "Muss man Geburtstage eigentlich feiern?",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "feste",
+  "img": "amanda/sz-feste.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/w02-d-teil1-nachfragen-b1b2.html",
+  "t": "Nachfragen, bis es klar ist",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
  },
  {
   "d": "Unterricht-ab-07-09/vw-mo-nein-sagen-b1b2.html",
@@ -1557,6 +1613,14 @@ window.LEKTIONEN = [
   "b": "team",
   "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-work-life-b1b2.html",
   "img": "amanda/sz-buero.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/w02-d-teil2-nachfragen-b1b2.html",
+  "t": "Zusammenfassen und absichern",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
  },
  {
   "d": "wortschatzboost-charaktereigenschaften-b2.html",
@@ -2410,12 +2474,16 @@ window.BEREICH_MEHR = {
   "sprachspielclub-flohmarkt-b1-b2.html",
   "sprachspielclub-volksfest-b1-b2.html",
   "sprachspielclub-wimmelbild-b1-b2.html",
+  "Unterricht-ab-14-09/w02-b-teil2-gehen-kommen-fahren-b1b2.html",
+  "Unterricht-ab-14-09/w02-b-teil1-gehen-kommen-fahren-b1b2.html",
   "sprachspielclub-stadtpark-quiz-b1-b2.html",
   "sprachspielclub-stadtpark-b1-b2.html",
   "sprachspielclub-arztpraxis-b1-b2.html",
   "Unterricht-ab-27-07/kreativitaet-b1b2.html",
   "Unterricht-ab-14-09/w01-b-teil1-machen-b1b2.html",
   "Unterricht-ab-14-09/w01-b-teil2-machen-b1b2.html",
+  "Unterricht-ab-14-09/w02-d-teil1-nachfragen-b1b2.html",
+  "Unterricht-ab-14-09/w02-d-teil2-nachfragen-b1b2.html",
   "grammatik-passiv-b2.html",
   "grammatik-partizipattribut-b2.html",
   "wortschatzboost-fuehren-b2.html",
@@ -2448,6 +2516,8 @@ window.BEREICH_MEHR = {
  ],
  "telefonieren": [
   "Unterricht-ab-27-07/telefon-a2b1.html",
+  "Unterricht-ab-14-09/w02-a-teil1-termin-machen-a2b1.html",
+  "Unterricht-ab-14-09/w02-a-teil2-termin-verschieben-a2b1.html",
   "Unterricht-ab-07-09/vw-mo-telefonieren-a2b1.html"
  ],
  "heikel": [
@@ -2490,8 +2560,10 @@ window.BEREICH_MEHR = {
   "Unterricht-ab-07-09/vw-mi-besuch-a2b1.html",
   "Unterricht-ab-27-07/geburtstag-a2b1.html",
   "Unterricht-ab-27-07/aberglaube-b1b2.html",
+  "Unterricht-ab-14-09/w02-c-teil2-geburtstag-feiern-b1b2.html",
   "Unterricht-ab-27-07/feste-braeuche-b1b2.html",
   "kultur-traditionen-teil-1-b1-b2.html",
+  "Unterricht-ab-14-09/w02-c-teil1-geburtstag-feiern-b1b2.html",
   "typisch-deutsch-b2-c1.html"
  ],
  "bewerbung": [
