@@ -62,6 +62,20 @@ const verdacht = [...new Set(text
 
 verdacht.forEach(w => meldung.push('Umlaut? „' + w + '“ — steht ue/oe/ae statt ü/ö/ä?'));
 
+/* ---------- 1b Anfuehrungszeichen ----------
+   Im Lesetext gehoeren die deutschen Zeichen „ und “. Ein gerades "
+   ist entweder ein Tippfehler, der die JSON-Datei zerbricht, oder es
+   ueberlebt escaped und steht dann als falsches Zeichen auf der
+   Seite — mitten zwischen lauter richtigen. Beides ist einmal
+   passiert. Bildpfade und Alt-Texte sind ausgenommen, dort sind
+   gerade Zeichen unverdaechtig. */
+worte.forEach(w => {
+  const ohneTags = (w || '').replace(/<[^>]*>/g, ' ');
+  if (ohneTags.indexOf('"') >= 0)
+    meldung.push('Gerades Anführungszeichen im Lesetext: „' + ohneTags.slice(0, 70)
+      + '“ — im Deutschen stehen dort „ und “');
+});
+
 /* ---------- 2 Pflichtfelder ---------- */
 ['datei', 'eyebrow', 'titel', 'stufe', 'untertitel', 'fuss', 'einstieg', 'wortschatz', 'daten']
   .forEach(k => { if (!S[k]) meldung.push('Feld fehlt: ' + k); });

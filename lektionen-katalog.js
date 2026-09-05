@@ -1415,6 +1415,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-sprachkurs.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w05-d-teil1-missverstaendnis-b1b2.html",
+  "t": "Ein Missverständnis aufklären: merken, dass etwas schiefgegangen ist",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "Unterricht-ab-27-07/feste-braeuche-b1b2.html",
   "t": "Feste & Bräuche in Deutschland",
   "lvl": "B1–B2",
@@ -1670,6 +1678,14 @@ window.LEKTIONEN = [
   "b": "reise",
   "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-reiseplanung-b1b2.html",
   "img": "amanda/sz-reise.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/w05-d-teil2-missverstaendnis-b1b2.html",
+  "t": "Richtigstellen, ohne dass jemand das Gesicht verliert",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
  },
  {
   "d": "Unterricht-ab-27-07/secondhand-b1b2.html",
@@ -2753,6 +2769,7 @@ window.BEREICH_MEHR = {
   "Unterricht-ab-14-09/w02-b-teil2-gehen-kommen-fahren-b1b2.html",
   "Unterricht-ab-14-09/w04-b-teil2-vorsilben-bedeutung-b1b2.html",
   "Unterricht-ab-14-09/w03-d-teil1-ehrlich-hoeflich-b1b2.html",
+  "Unterricht-ab-14-09/w05-d-teil1-missverstaendnis-b1b2.html",
   "Unterricht-ab-14-09/w02-b-teil1-gehen-kommen-fahren-b1b2.html",
   "sprachspielclub-stadtpark-quiz-b1-b2.html",
   "sprachspielclub-stadtpark-b1-b2.html",
@@ -2762,6 +2779,7 @@ window.BEREICH_MEHR = {
   "Unterricht-ab-14-09/w01-b-teil1-machen-b1b2.html",
   "Unterricht-ab-14-09/w01-b-teil2-machen-b1b2.html",
   "Unterricht-ab-14-09/w02-d-teil1-nachfragen-b1b2.html",
+  "Unterricht-ab-14-09/w05-d-teil2-missverstaendnis-b1b2.html",
   "Unterricht-ab-14-09/w05-b-teil2-uebersetzen-durchschauen-b1b2.html",
   "Unterricht-ab-14-09/w04-d-teil1-um-hilfe-bitten-b1b2.html",
   "Unterricht-ab-14-09/w05-b-teil1-umfahren-betonung-b1b2.html",
