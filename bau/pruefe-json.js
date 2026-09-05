@@ -77,6 +77,15 @@ if (S.wortschatz && S.wortschatz.karten) {
   });
 }
 
+/* ---------- 2a Zieldatei: Endung nicht vergessen ----------
+   mach-stunde.js schreibt genau das, was in datei steht. Fehlt das
+   .html, entsteht eine Datei ohne Endung: der Browser zeigt sie nicht
+   an, und der Link im Klassenraum geht ins Leere. Der Generator
+   meldet nichts, weil er den Namen nicht bewertet. */
+if (S.datei && !/\.html$/.test(S.datei))
+  meldung.push('datei endet nicht auf .html: „' + S.datei + '“ — die Seite '
+    + 'entsteht dann ohne Endung und wird im Browser nicht angezeigt');
+
 /* ---------- 2b Kopfzeile: kein haengendes Trennzeichen ----------
    Die Kopfzeile wird unveraendert ausgegeben. Endet sie auf „· “,
    steht auf der fertigen Seite ein Trennpunkt ohne alles dahinter —

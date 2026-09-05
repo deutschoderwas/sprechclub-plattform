@@ -372,6 +372,13 @@ window.LEKTIONEN = [
   "img": "amanda/sz-supermarkt.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w05-a-teil1-zutaten-mengen-a2b1.html",
+  "t": "Einkaufen, kochen, essen: erklär mir dein Rezept",
+  "lvl": "A2–B1",
+  "art": "lektion",
+  "b": null
+ },
+ {
   "d": "Unterricht-ab-14-09/w02-a-teil2-termin-verschieben-a2b1.html",
   "t": "Es geht doch nicht — verschieben und absagen",
   "lvl": "A2–B1",
@@ -465,6 +472,14 @@ window.LEKTIONEN = [
   "art": "lektion",
   "b": "restaurant",
   "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-restaurant-a2b1.html",
+  "img": "amanda/sz-restaurant.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/w05-a-teil2-restaurant-reklamieren-a2b1.html",
+  "t": "Im Restaurant: bestellen — und sagen, wenn etwas nicht stimmt",
+  "lvl": "A2–B1",
+  "art": "lektion",
+  "b": "restaurant",
   "img": "amanda/sz-restaurant.webp"
  },
  {
@@ -2752,7 +2767,8 @@ window.BEREICH_MEHR = {
  "restaurant": [
   "wortschatzboost-essen-restaurant-a2.html",
   "Unterricht-ab-27-07/foodtrends-a2b1.html",
-  "Unterricht-ab-27-07/restaurant-a2b1.html"
+  "Unterricht-ab-27-07/restaurant-a2b1.html",
+  "Unterricht-ab-14-09/w05-a-teil2-restaurant-reklamieren-a2b1.html"
  ],
  "familie": [
   "mein-tag-a2.html",
