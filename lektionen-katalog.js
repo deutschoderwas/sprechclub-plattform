@@ -1368,7 +1368,8 @@ window.LEKTIONEN = [
   "t": "Die Debatte: Zuckersteuer und Schulessen",
   "lvl": "B1–B2",
   "art": "lektion",
-  "b": null
+  "b": "supermarkt",
+  "img": "amanda/sz-supermarkt.webp"
  },
  {
   "d": "Unterricht-ab-14-09/w04-b-teil2-vorsilben-bedeutung-b1b2.html",
@@ -1846,7 +1847,8 @@ window.LEKTIONEN = [
   "t": "Wie gesund muss Essen sein? Fleisch, Zucker, Fertigessen — und was auf der Packung steht",
   "lvl": "B1–B2",
   "art": "lektion",
-  "b": null
+  "b": "supermarkt",
+  "img": "amanda/sz-supermarkt.webp"
  },
  {
   "d": "Unterricht-ab-07-09/vw-di-ordnung-b1b2.html",
@@ -2861,8 +2863,10 @@ window.BEREICH_MEHR = {
   "Unterricht-ab-27-07/reklamation-a2b1.html",
   "vorbereitung-alles-teurer-b1.html",
   "alles-wird-teurer-sparen-b1-b2.html",
+  "Unterricht-ab-14-09/w05-c-teil2-gesund-essen-b1b2.html",
   "Unterricht-ab-27-07/secondhand-b1b2.html",
-  "second-hand-b1-b2.html"
+  "second-hand-b1-b2.html",
+  "Unterricht-ab-14-09/w05-c-teil1-gesund-essen-b1b2.html"
  ],
  "friseur-beruf": [
   "Unterricht-ab-27-07/friseur-a2b1.html"

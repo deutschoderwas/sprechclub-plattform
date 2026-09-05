@@ -223,6 +223,7 @@ STICH.bewerbung.push('job-wechseln');
    „Geld und Glueck" bei den Freunden statt bei der Bank. */
 STICH.amt.push('behoerdenbrief', 'buerokratie', 'anmeldung-aufenthalt');
 STICH.kochen.push('zutaten-mengen');
+STICH.supermarkt.push('gesund-essen');
 STICH["büro"].push('buero-b1b2');
 STICH.arzt.push('ernaehrung');
 STICH.freunde.push('glueck');
