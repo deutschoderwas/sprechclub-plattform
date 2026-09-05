@@ -1364,6 +1364,13 @@ window.LEKTIONEN = [
   "img": "amanda/sz-bewerbung.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w05-c-teil2-gesund-essen-b1b2.html",
+  "t": "Die Debatte: Zuckersteuer und Schulessen",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": null
+ },
+ {
   "d": "Unterricht-ab-14-09/w04-b-teil2-vorsilben-bedeutung-b1b2.html",
   "t": "Dieselbe Silbe, ganz neue Bedeutung",
   "lvl": "B1–B2",
@@ -1833,6 +1840,13 @@ window.LEKTIONEN = [
   "art": "lektion",
   "b": "sprachkurs",
   "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/w05-c-teil1-gesund-essen-b1b2.html",
+  "t": "Wie gesund muss Essen sein? Fleisch, Zucker, Fertigessen — und was auf der Packung steht",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": null
  },
  {
   "d": "Unterricht-ab-07-09/vw-di-ordnung-b1b2.html",
