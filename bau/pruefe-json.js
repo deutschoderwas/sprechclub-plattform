@@ -47,9 +47,17 @@ const text = worte.join(' ')
   .replace(/&[a-z#0-9]+;/gi, ' ');   /* Entitaeten raus */
 
 /* Die Buchstaben vor ue/oe/ae werden auch gross geprueft — sonst wird
-   „Quelle“ gemeldet, weil das kleine q nicht auf das grosse Q passt. */
+   „Quelle“ gemeldet, weil das kleine q nicht auf das grosse Q passt.
+
+   Die Betonungszeichen (á é í ó ú) gehoeren mit in die Buchstabenliste.
+   In der Vorsilben-Stunde steht die betonte Silbe so geschrieben —
+   „durchscháuen“. Ohne sie zerfaellt das Wort an dieser Stelle, und
+   der Pruefer meldet den Rest „uen“ als fehlenden Umlaut. Das ist
+   ein Fehlalarm, und Fehlalarme bringen einen dazu, wegzuschauen. */
+const BUCH = 'A-Za-zÄÖÜäöüßÁÉÍÓÚáéíóú';
 const verdacht = [...new Set(text
-  .match(/\b[A-Za-zÄÖÜäöüß]*(?:(?<![aeqAEQ])ue|(?<![aouAOU])oe|(?<![aouAOU])ae)[A-Za-zÄÖÜäöüß]*\b/g) || [])]
+  .match(new RegExp('\\b[' + BUCH + ']*(?:(?<![aeqAEQáéÁÉ])ue|(?<![aouAOUáóúÁÓÚ])oe|(?<![aouAOUáóúÁÓÚ])ae)['
+    + BUCH + ']*\\b', 'g')) || [])]
   .filter(w => !echt.test(w));
 
 verdacht.forEach(w => meldung.push('Umlaut? „' + w + '“ — steht ue/oe/ae statt ü/ö/ä?'));

@@ -1761,8 +1761,24 @@ window.LEKTIONEN = [
   "img": "amanda/sz-bewerbung.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w05-b-teil2-uebersetzen-durchschauen-b1b2.html",
+  "t": "übersetzen, durchschauen, wiederholen — die Seite, die man täglich braucht",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "Unterricht-ab-14-09/w04-d-teil1-um-hilfe-bitten-b1b2.html",
   "t": "Um Hilfe bitten: klein, konkret, klar",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/w05-b-teil1-umfahren-betonung-b1b2.html",
+  "t": "Úmfahren oder umfáhren? wenn die Betonung alles umdreht",
   "lvl": "B1–B2",
   "art": "lektion",
   "b": "sprachkurs",
@@ -2730,7 +2746,9 @@ window.BEREICH_MEHR = {
   "Unterricht-ab-14-09/w01-b-teil1-machen-b1b2.html",
   "Unterricht-ab-14-09/w01-b-teil2-machen-b1b2.html",
   "Unterricht-ab-14-09/w02-d-teil1-nachfragen-b1b2.html",
+  "Unterricht-ab-14-09/w05-b-teil2-uebersetzen-durchschauen-b1b2.html",
   "Unterricht-ab-14-09/w04-d-teil1-um-hilfe-bitten-b1b2.html",
+  "Unterricht-ab-14-09/w05-b-teil1-umfahren-betonung-b1b2.html",
   "Unterricht-ab-14-09/w04-d-teil2-um-hilfe-bitten-b1b2.html",
   "Unterricht-ab-14-09/w03-d-teil2-ehrlich-hoeflich-b1b2.html",
   "Unterricht-ab-14-09/w03-b-teil2-legen-stellen-setzen-b1b2.html",
