@@ -1500,6 +1500,55 @@ footer{padding:34px 0 30px !important}
 .rniv-btn:hover{background:var(--ink) !important;color:#fff !important}
 @media(max-width:760px){.rniv-in{flex-direction:column;align-items:flex-start;gap:18px}.rniv-btn{width:100%;justify-content:center}}
 
+
+/* ================= Bewegung: sparsam, mit Sinn ================= */
+
+/* 1. Der Hero baut sich beim Laden auf — Zeile für Zeile */
+@keyframes rauf{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.rhero .reyebrow,.rhero h1,.rhero .rsub,.rhero .rcta,.rhero .rfein,.rhero .rcount,.rhero .rtrust,.rhero-img{
+  animation:rauf .7s cubic-bezier(.2,.7,.3,1) both}
+.rhero h1{animation-delay:.06s}
+.rhero .rsub{animation-delay:.13s}
+.rhero .rcta{animation-delay:.20s}
+.rhero .rfein{animation-delay:.26s}
+.rhero .rcount{animation-delay:.32s}
+.rhero .rtrust{animation-delay:.38s}
+.rhero-img{animation-delay:.16s;animation-duration:.9s}
+
+/* 2. Der Gold-Marker malt sich ein, wenn die Zeile ins Bild kommt */
+html.rmk .mark{background-image:linear-gradient(#FFD84D,#FFD84D) !important;background-color:transparent !important;
+  background-repeat:no-repeat !important;background-size:0% 100% !important;background-position:0 0 !important;transition:background-size .65s cubic-bezier(.2,.7,.3,1)}
+html.rmk .mark.gemalt{background-size:100% 100% !important}
+html.rmk .rst-h .mark{background-image:linear-gradient(#A7F3D0,#A7F3D0) !important}
+html.rmk .nend .mark{background-image:linear-gradient(#FFD84D,#FFD84D) !important}
+html.rmk .rbridge em,html.rmk .rpod h2 em{background-image:linear-gradient(#FFD84D,#FFD84D);background-color:transparent;
+  background-repeat:no-repeat;background-size:0% 100%;transition:background-size .65s cubic-bezier(.2,.7,.3,1)}
+html.rmk .rbridge em.gemalt,html.rmk .rpod h2 em.gemalt{background-size:100% 100%}
+
+/* 3. Bilder kommen eine Spur herangefahren */
+html.rmk .rcard>img,html.rmk .rabend-img img,html.rmk .rpod-liste{transform:scale(1.025);opacity:.001;
+  transition:transform .8s cubic-bezier(.2,.7,.3,1),opacity .6s ease}
+html.rmk .rcard>img.da,html.rmk .rabend-img img.da,html.rmk .rpod-liste.da{transform:none;opacity:1}
+
+/* 4. Die Kopfleiste bekommt beim Scrollen Tiefe */
+.nav{transition:box-shadow .25s ease,height .25s ease}
+.nav.tief{box-shadow:0 6px 24px rgba(18,36,43,.28)}
+
+/* 5. Die Countdown-Zahlen blinzeln beim Wechsel */
+@keyframes zahlwechsel{0%{opacity:.35;transform:translateY(-3px)}100%{opacity:1;transform:none}}
+.rcount-z b.neu{animation:zahlwechsel .45s ease both}
+
+/* 6. Podcast-Zeilen rücken beim Zeigen einen Hauch vor */
+.rfolge{transition:background .18s ease,padding-left .18s ease}
+.rfolge:hover{padding-left:18px}
+
+@media (prefers-reduced-motion:reduce){
+  .rhero .reyebrow,.rhero h1,.rhero .rsub,.rhero .rcta,.rhero .rfein,.rhero .rcount,.rhero .rtrust,.rhero-img{animation:none !important}
+  html.rmk .mark,html.rmk .rbridge em,html.rmk .rpod h2 em{background-size:100% 100% !important;transition:none !important}
+  html.rmk .rcard>img,html.rmk .rabend-img img,html.rmk .rpod-liste{transform:none !important;opacity:1 !important;transition:none !important}
+  .rcount-z b.neu{animation:none !important}
+}
+
 /* --- Countdown --- */
 .rcount{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;margin-top:22px;padding:14px 18px;border:1px solid rgba(232,185,59,.35);border-radius:16px;background:rgba(232,185,59,.07)}
 .rcount-l{font-size:13.5px;font-weight:700;color:var(--gold);letter-spacing:.02em}
@@ -1601,7 +1650,9 @@ footer{padding:34px 0 30px !important}
     }
     var t=Math.floor(rest/86400000), s=Math.floor(rest/3600000)%24, m=Math.floor(rest/60000)%60;
     var eT=document.getElementById('rcT'), eH=document.getElementById('rcH'), eM=document.getElementById('rcM');
-    if(eT) eT.textContent=t; if(eH) eH.textContent=zwei(s); if(eM) eM.textContent=zwei(m);
+    function setz(el,wert){ if(!el) return; if(el.textContent===String(wert)) return; el.textContent=wert;
+      el.classList.remove('neu'); void el.offsetWidth; el.classList.add('neu'); }
+    setz(eT,t); setz(eH,zwei(s)); setz(eM,zwei(m));
     box.hidden=false;
   }
   tick(); setInterval(tick, 30000);
@@ -1628,6 +1679,35 @@ function podTorZu(){ var m=document.getElementById('podTor'); if(!m) return;
   m.classList.remove('open'); document.body.style.overflow=''; }
 document.addEventListener('keydown',function(e){ if(e.key==='Escape') podTorZu(); });
 (function(){ var m=document.getElementById('podTor'); if(m) m.addEventListener('click',function(e){ if(e.target===m) podTorZu(); }); })();
+</script>
+<script>
+/* Bewegung: nur wenn der Besucher sie nicht abbestellt hat und die Technik mitspielt.
+   Ohne dieses Skript ist alles ganz normal sichtbar. */
+(function(){
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if(!('IntersectionObserver' in window)) return;
+  document.documentElement.classList.add('rmk');
+
+  var malen = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('gemalt'); malen.unobserve(e.target); } });
+  },{threshold:.6});
+  document.querySelectorAll('.mark, .rbridge em, .rpod h2 em').forEach(function(el){ malen.observe(el); });
+
+  var zeigen = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('da'); zeigen.unobserve(e.target); } });
+  },{threshold:.12, rootMargin:'0px 0px -5% 0px'});
+  document.querySelectorAll('.rcard>img, .rabend-img img, .rpod-liste').forEach(function(el){ zeigen.observe(el); });
+
+  /* Sicherheitsnetz: nach 3,5 s ist alles sichtbar, egal was passiert */
+  setTimeout(function(){
+    document.querySelectorAll('.mark, .rbridge em, .rpod h2 em').forEach(function(el){ el.classList.add('gemalt'); });
+    document.querySelectorAll('.rcard>img, .rabend-img img, .rpod-liste').forEach(function(el){ el.classList.add('da'); });
+  }, 3500);
+
+  var nav=document.getElementById('nav');
+  if(nav){ var pruef=function(){ nav.classList.toggle('tief', window.scrollY>40); };
+    window.addEventListener('scroll',pruef,{passive:true}); pruef(); }
+})();
 </script>
 </body>
 </html>
