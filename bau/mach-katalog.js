@@ -212,6 +212,23 @@ STICH.sprachkurs.push('nachfragen', '-d-teil');
 STICH.wohnen.push('zimmer-moebel', 'kaputt-melden');
 STICH.bewerbung.push('job-wechseln');
 
+/* Dreizehn fertige Seiten hatten gar keinen Bereich und waren
+   deshalb im Schuelerbereich nicht auffindbar. Die Stichwoerter
+   hier ordnen sie dorthin, wo ihre Geschwister schon stehen.
+
+   Zwei Stellen brauchen Sorgfalt, weil der laengste Treffer
+   gewinnt: „buerokratie" (11 Zeichen) muss „buero" (5) schlagen,
+   sonst landet der Buerokratie-Dschungel im Buero. Und
+   „geld-glueck" (11) muss „glueck" (6) schlagen, sonst landet
+   „Geld und Glueck" bei den Freunden statt bei der Bank. */
+STICH.amt.push('behoerdenbrief', 'buerokratie');
+STICH["büro"].push('buero-b1b2');
+STICH.arzt.push('ernaehrung');
+STICH.freunde.push('glueck');
+STICH.bank.push('geld-glueck', 'ueber-geld');
+STICH.unterwegs.push('fuehrerschein');
+STICH.sprachkurs.push('relativsaetze', 'gefuehle');
+
 function bereichVon(f, ids) {
   const s = f.toLowerCase().replace(/\.html$/, '').replace(/^vorbereitung-/, '');
   /* "it-lektion.html" gehört zu "it" — dafür braucht es kein Stichwort. */

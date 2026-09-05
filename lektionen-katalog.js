@@ -663,8 +663,9 @@ window.LEKTIONEN = [
   "t": "Behördenbrief verstehen",
   "lvl": "B1",
   "art": "lektion",
-  "b": null,
-  "ueb": "vorbereitung-behoerdenbrief-b1.html"
+  "b": "amt",
+  "ueb": "vorbereitung-behoerdenbrief-b1.html",
+  "img": "amanda/sz-amt.webp"
  },
  {
   "d": "wortschatz-bildung-b1.html",
@@ -858,7 +859,8 @@ window.LEKTIONEN = [
   "t": "Gefühle & Stimmungen",
   "lvl": "B1",
   "art": "lektion",
-  "b": null
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
  },
  {
   "d": "wortschatz-gesundheit-b1.html",
@@ -1067,7 +1069,8 @@ window.LEKTIONEN = [
   "t": "Relativsätze üben",
   "lvl": "B1",
   "art": "üben",
-  "b": null
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
  },
  {
   "d": "krankmelden-b1.html",
@@ -1241,7 +1244,7 @@ window.LEKTIONEN = [
   "t": "Arbeitsalltag im Büro",
   "lvl": "B1–B2",
   "art": "lektion",
-  "b": null,
+  "b": "büro",
   "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-buero-b1b2.html"
  },
  {
@@ -1445,16 +1448,18 @@ window.LEKTIONEN = [
   "t": "Gesunde Ernährung & Diäten",
   "lvl": "B1–B2",
   "art": "lektion",
-  "b": null,
-  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-ernaehrung-b1b2.html"
+  "b": "arzt",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-ernaehrung-b1b2.html",
+  "img": "amanda/sz-arzt.webp"
  },
  {
   "d": "gesundheit-ernaehrung-teil-1-b1-b2.html",
   "t": "Gesundheit & Ernährung · Teil 1",
   "lvl": "B1–B2",
   "art": "lektion",
-  "b": null,
-  "ueb": "vorbereitung-gesundheit-ernaehrung-b1-b2.html"
+  "b": "arzt",
+  "ueb": "vorbereitung-gesundheit-ernaehrung-b1-b2.html",
+  "img": "amanda/sz-arzt.webp"
  },
  {
   "d": "sprachspielclub-stadtpark-quiz-b1-b2.html",
@@ -1760,8 +1765,9 @@ window.LEKTIONEN = [
   "t": "Was macht glücklich ? · Teil 1",
   "lvl": "B1–B2",
   "art": "lektion",
-  "b": null,
-  "hand": "glueck-teil-1-handout.html"
+  "b": "freunde",
+  "hand": "glueck-teil-1-handout.html",
+  "img": "amanda/sz-freunde.webp"
  },
  {
   "d": "Unterricht-ab-14-09/w01-d-teil2-small-talk-b1b2.html",
@@ -1989,8 +1995,9 @@ window.LEKTIONEN = [
   "t": "Bürokratie-Dschungel",
   "lvl": "B2–C1",
   "art": "lektion",
-  "b": null,
-  "ueb": "vorbereitung-buerokratie-dschungel-b2-c1.html"
+  "b": "amt",
+  "ueb": "vorbereitung-buerokratie-dschungel-b2-c1.html",
+  "img": "amanda/sz-amt.webp"
  },
  {
   "d": "Unterricht-ab-27-07/datenschutz-b2c1.html",
@@ -2048,23 +2055,25 @@ window.LEKTIONEN = [
   "t": "Führerschein – Theorie & Prüfung",
   "lvl": "B2–C1",
   "art": "sprechen",
-  "b": "sprachkurs",
-  "img": "amanda/sz-sprachkurs.webp"
+  "b": "unterwegs",
+  "img": "amanda/sz-unterwegs.webp"
  },
  {
   "d": "fuehrerschein-vorbereitung-b2-c1.html",
   "t": "Führerschein – Wortschatz & Grammatik",
   "lvl": "B2–C1",
   "art": "lektion",
-  "b": null
+  "b": "unterwegs",
+  "img": "amanda/sz-unterwegs.webp"
  },
  {
   "d": "Unterricht-ab-27-07/geld-glueck-b2c1.html",
   "t": "Geld & Glück – macht Reichtum wirklich zufrieden ?",
   "lvl": "B2–C1",
   "art": "lektion",
-  "b": null,
-  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-geld-glueck-b2c1.html"
+  "b": "bank",
+  "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-geld-glueck-b2c1.html",
+  "img": "amanda/sz-bank.webp"
  },
  {
   "d": "Unterricht-ab-27-07/gender-sprache-b2c1.html",
@@ -2276,14 +2285,16 @@ window.LEKTIONEN = [
   "t": "Über Geld spricht man nicht?",
   "lvl": "B2–C1",
   "art": "lektion",
-  "b": null
+  "b": "bank",
+  "img": "amanda/sz-bank.webp"
  },
  {
   "d": "vorbereitung-ueber-geld-b2-c1.html",
   "t": "Über Geld spricht man nicht? · üben",
   "lvl": "B2–C1",
   "art": "üben",
-  "b": null
+  "b": "bank",
+  "img": "amanda/sz-bank.webp"
  },
  {
   "d": "Unterricht-ab-27-07/vegan-b2c1.html",
@@ -2429,7 +2440,8 @@ window.LEKTIONEN = [
   "t": "Handout · Führerschein Teil 2",
   "lvl": "",
   "art": "handout",
-  "b": null
+  "b": "unterwegs",
+  "img": "amanda/sz-unterwegs.webp"
  },
  {
   "d": "nomen-verb-verbindungen-handout.html",
@@ -2670,6 +2682,7 @@ window.BEREICH_MEHR = {
   "vorbereitung-nominalisierung-b1.html",
   "wortschatzboost-tier-redewendungen-b1.html",
   "grammatik-relativsaetze-praep-b1.html",
+  "vorbereitung-relativsaetze-praep-b1.html",
   "vorbereitung-wechselpraepositionen-b1.html",
   "sprachspielclub-park-b1-b2.html",
   "sprachspielclub-supermarkt-b1-b2.html",
@@ -2713,7 +2726,6 @@ window.BEREICH_MEHR = {
   "plaudertisch-b2-c1.html",
   "Unterricht-ab-07-09/vw-di-partikeln-b2c1.html",
   "vorbereitung-konnektoren-b2-c1.html",
-  "sprechclub-fuehrerschein-b2-c1.html",
   "sprechclub-debatten.html",
   "sprechclub-freies-sprechen.html",
   "nomen-verb-verbindungen-handout.html",
@@ -2723,6 +2735,8 @@ window.BEREICH_MEHR = {
  "amt": [
   "amt-a2-visuell.html",
   "Unterricht-ab-27-07/amt-a2b1.html",
+  "behoerdenbrief-b1.html",
+  "buerokratie-dschungel-b2-c1.html",
   "leben-in-deutschland-einbuergerung-b2-c1.html"
  ],
  "restaurant": [
@@ -2746,8 +2760,11 @@ window.BEREICH_MEHR = {
   "Unterricht-ab-27-07/bahnhof-a2b1.html",
   "Unterricht-ab-27-07/weg-fragen-a2b1.html",
   "Unterricht-ab-27-07/oeffis-auto-b1b2.html",
+  "sprechclub-fuehrerschein-b2-c1.html",
+  "fuehrerschein-vorbereitung-b2-c1.html",
   "Unterricht-ab-27-07/mobilitaet-b2c1.html",
-  "Unterricht-ab-27-07/tempolimit-b2c1.html"
+  "Unterricht-ab-27-07/tempolimit-b2c1.html",
+  "fuehrerschein-teil-2-handout.html"
  ],
  "telefonieren": [
   "Unterricht-ab-27-07/telefon-a2b1.html",
@@ -2771,6 +2788,8 @@ window.BEREICH_MEHR = {
   "Unterricht-ab-27-07/fitnessstudio-a2b1.html",
   "Unterricht-ab-14-09/w03-a-teil1-arzt-beschwerden-a2b1.html",
   "krankmelden-b1.html",
+  "Unterricht-ab-27-07/ernaehrung-b1b2.html",
+  "gesundheit-ernaehrung-teil-1-b1-b2.html",
   "sport-gesund-leben-teil-1-b1-b2.html",
   "Unterricht-ab-27-07/sport-lebensstil-b1b2.html",
   "Unterricht-ab-27-07/gesundheitssystem-b2c1.html",
@@ -2842,6 +2861,7 @@ window.BEREICH_MEHR = {
   "Unterricht-ab-27-07/netzwerken-b1b2.html",
   "Unterricht-ab-27-07/nostalgie-b1b2.html",
   "Unterricht-ab-14-09/w01-d-teil1-small-talk-b1b2.html",
+  "glueck-teil-1-b1-b2.html",
   "Unterricht-ab-14-09/w01-d-teil2-small-talk-b1b2.html",
   "wortschatzboost-charaktereigenschaften-b2.html"
  ],
@@ -2856,7 +2876,10 @@ window.BEREICH_MEHR = {
   "bargeld-karte-b1.html",
   "Unterricht-ab-27-07/sparen-b1b2.html",
   "geld-konsum-sparen-teil-1-b1-b2.html",
-  "Unterricht-ab-27-07/erben-b2c1.html"
+  "Unterricht-ab-27-07/erben-b2c1.html",
+  "Unterricht-ab-27-07/geld-glueck-b2c1.html",
+  "ueber-geld-spricht-man-nicht-b2-c1.html",
+  "vorbereitung-ueber-geld-b2-c1.html"
  ],
  "team": [
   "vorbereitung-puenktlichkeit-b1.html",
@@ -2898,6 +2921,7 @@ window.BEREICH_MEHR = {
  ],
  "büro": [
   "homeoffice-buero-b1.html",
+  "Unterricht-ab-27-07/buero-b1b2.html",
   "Unterricht-ab-27-07/homeoffice-b2c1.html"
  ],
  "reise": [
