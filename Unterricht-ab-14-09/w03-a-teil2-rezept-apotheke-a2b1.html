@@ -1,0 +1,1193 @@
+<!DOCTYPE html><html lang="de"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Rezept, Apotheke, Krankschreibung · Sprechclub A2/B1 | deutschoderwas</title>
+<!--
+  deutschoderwas · Sprechclub · Mi 30.9. 9:00 · Strang A · Teil 2 · ab A2
+  Rezept, Apotheke, Krankschreibung — Am Montag warst du im Sprechzimmer. Heute kommt der Teil danach: das Papier in der Hand, der Gang zur Apotheke und der Anruf beim Chef. Drei Orte, drei kurze Gespräche.
+  Erzeugt von bau/mach-stunde.js aus w03-a2-rezept.json. Nicht von Hand aendern.
+  Aufbau und Design wie maengel-melden-b1.html.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+
+:root{--cream:#FDF6EC;--cream-warm:#FBEDD8;--paper:#FFFFFF;--ink:#262019;--ink-soft:#5C4E3E;--ink-mute:#A8957D;--red:#E8302A;--red-soft:#FCE5E3;--teal:#0FB5A6;--teal-soft:#D7F0EC;--yellow:#FFD24A;--yellow-soft:#FFF1C2;--sand:#F0E2C8;--green:#2E9E5B;}
+*{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}
+body{background:linear-gradient(180deg,#FDE6E0 0%,var(--cream) 14%,var(--cream) 100%);color:var(--ink);font-family:'Outfit',sans-serif;line-height:1.55;min-height:100vh;}
+.wrapper{max-width:1080px;margin:0 auto;padding:2.2rem 1.5rem 5rem;}
+.eyebrow{text-align:center;font-size:.78rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--red);margin-bottom:.7rem;}
+h1.title{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(2rem,5vw,3.6rem);line-height:1.05;text-align:center;letter-spacing:-.01em;}
+h1.title .hl{position:relative;display:inline-block;font-style:italic;padding:.05em .3em;}
+h1.title .hl::before{content:'';position:absolute;inset:0;background:var(--yellow);border-radius:12px;transform:rotate(-2deg);z-index:-1;}
+.subtitle{text-align:center;max-width:640px;margin:.8rem auto 0;font-size:1.05rem;color:var(--ink-soft);}
+.hero-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;margin:1rem auto 0;}
+.hero-tag{background:var(--paper);border:1.5px solid var(--sand);border-radius:999px;padding:.3rem .85rem;font-size:.82rem;font-weight:600;}
+.hero-tag b{color:var(--red);}
+.tabs{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;background:rgba(251,237,216,.94);backdrop-filter:blur(8px);border-radius:20px;padding:.5rem;margin:1.8rem auto;max-width:fit-content;}
+.tab{font-size:.92rem;font-weight:600;border:2px solid transparent;background:var(--paper);color:var(--ink);padding:.5rem 1rem;border-radius:999px;cursor:pointer;transition:.15s;display:inline-flex;gap:.35rem;align-items:center;}
+.tab:hover{border-color:var(--ink);transform:translateY(-1px);}
+.tab.active{background:var(--red);color:#fff;border-color:var(--red);}
+.section{display:none;animation:fade .35s ease;}.section.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+h2.st{font-family:'Fraunces',serif;font-weight:700;font-size:clamp(1.7rem,3.4vw,2.3rem);text-align:center;margin:1.8rem 0 .4rem;}
+.ssub{text-align:center;color:var(--ink-soft);margin-bottom:1.3rem;}
+.scene-wrap{background:var(--paper);border:4px solid var(--paper);border-radius:20px;box-shadow:0 14px 38px rgba(38,32,25,.16);overflow:hidden;margin:1rem 0;}
+.scene-wrap img{width:100%;display:block;}
+.tip{background:var(--yellow-soft);border:2px dashed var(--yellow);border-radius:16px;padding:.9rem 1.2rem;font-size:.95rem;margin:1rem 0;line-height:1.65;}
+.tip strong{color:var(--red);}.tip.teal{background:var(--teal-soft);border-color:var(--teal);}
+.tip u{text-decoration-color:var(--red);text-underline-offset:3px;}
+.qlist{list-style:none;display:grid;gap:.55rem;margin:.6rem 0;}
+.qlist li{background:var(--paper);border:1.5px solid var(--sand);border-left:5px solid var(--teal);border-radius:12px;padding:.7rem 1rem;font-weight:500;}
+/* vocab */
+.vgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:.7rem;margin:1rem 0;}
+@media(max-width:640px){.vgrid{grid-template-columns:1fr;}}
+.vcard{background:var(--paper);border:1.5px solid var(--sand);border-radius:14px;padding:.85rem 1rem;}
+.vcard .w{font-weight:700;font-size:1.05rem;color:var(--ink);}
+.vcard .w .art{color:var(--red);}
+.vcard .ex{font-family:'Fraunces',serif;font-style:italic;color:var(--ink-soft);font-size:.92rem;margin-top:.25rem;}
+.vcard .speak{margin-top:.4rem;background:var(--teal-soft);border:none;color:#0a7d72;font-weight:700;border-radius:999px;padding:.2rem .7rem;font-size:.78rem;cursor:pointer;}
+/* dialog */
+.dwrap{background:var(--paper);border:1.5px solid var(--sand);border-radius:16px;padding:1.1rem 1.2rem;margin:1rem 0;}
+.dwrap h4{font-family:'Fraunces',serif;font-size:1.1rem;margin-bottom:.6rem;color:var(--red);}
+.dline{display:flex;gap:.5rem;margin:.35rem 0;align-items:flex-start;}
+.dwho{flex:none;width:26px;height:26px;border-radius:50%;font-size:.8rem;font-weight:700;display:flex;align-items:center;justify-content:center;color:#fff;}
+.dwho.a{background:var(--red);}.dwho.b{background:var(--teal);}
+.dtxt{background:var(--cream-warm);border-radius:12px;padding:.4rem .7rem;font-size:.96rem;}
+.dbtn{margin-top:.6rem;background:var(--red);color:#fff;border:none;border-radius:999px;padding:.4rem 1rem;font-weight:700;cursor:pointer;font-size:.85rem;}
+/* debate */
+.pcgrid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin:1rem 0;}
+@media(max-width:640px){.pcgrid{grid-template-columns:1fr;}}
+.pcol{border-radius:16px;padding:1rem 1.1rem;border:2px solid;}
+.pcol.pro{background:#EAF7EF;border-color:var(--green);}
+.pcol.con{background:var(--red-soft);border-color:var(--red);}
+.pcol h4{font-family:'Fraunces',serif;font-size:1.15rem;margin-bottom:.5rem;}
+.pcol.pro h4{color:var(--green);}.pcol.con h4{color:var(--red);}
+.pcol ul{list-style:none;display:grid;gap:.4rem;}
+.pcol li{font-size:.94rem;padding-left:1.3rem;position:relative;}
+.pcol.pro li::before{content:'✓';position:absolute;left:0;color:var(--green);font-weight:700;}
+.pcol.con li::before{content:'✓';position:absolute;left:0;color:var(--red);font-weight:700;}
+.rmcard{background:var(--paper);border:1.5px solid var(--sand);border-radius:14px;padding:.9rem 1.1rem;margin:.8rem 0;}
+.rmcard b{color:var(--teal);}
+.rm{display:inline-block;background:var(--teal-soft);color:#0a7d72;border-radius:999px;padding:.2rem .7rem;font-size:.85rem;font-weight:600;margin:.2rem .2rem 0 0;}
+/* 90 sek */
+.card90{background:linear-gradient(135deg,var(--paper),var(--cream-warm));border:2px solid var(--sand);border-radius:20px;padding:1.6rem;text-align:center;max-width:460px;margin:1.2rem auto;box-shadow:0 8px 24px rgba(38,32,25,.08);}
+.card90 .lbl{font-size:.72rem;font-weight:700;color:var(--red);letter-spacing:.12em;text-transform:uppercase;}
+.card90 .word{font-family:'Fraunces',serif;font-weight:900;font-size:2.2rem;margin:.4rem 0;}
+.helpwords{display:flex;flex-wrap:wrap;gap:.35rem;justify-content:center;margin:.7rem 0;}
+.hw{background:var(--yellow-soft);border:1px solid var(--yellow);border-radius:999px;padding:.2rem .7rem;font-size:.85rem;font-weight:600;}
+.timer{font-family:'Fraunces',serif;font-size:2rem;font-weight:700;color:var(--teal);margin:.5rem 0;}
+.btn{background:var(--red);color:#fff;border:none;border-radius:999px;padding:.5rem 1.3rem;font-weight:700;cursor:pointer;font-size:.9rem;font-family:'Outfit';margin:.2rem;}
+.btn.ghost{background:var(--paper);color:var(--ink);border:2px solid var(--sand);}
+/* quiz */
+.quiz-q{background:var(--paper);border:1.5px solid var(--sand);border-radius:14px;padding:.9rem 1.1rem;margin:.7rem 0;}
+.quiz-q .qt{font-weight:600;margin-bottom:.55rem;}
+.quiz-opts{display:grid;gap:.4rem;}
+.qopt{text-align:left;background:var(--cream);border:1.5px solid var(--sand);border-radius:10px;padding:.5rem .8rem;cursor:pointer;font-size:.94rem;font-family:'Outfit';font-weight:500;}
+.qopt:hover{border-color:var(--ink);}
+.qopt.right{background:#EAF7EF;border-color:var(--green);color:var(--green);font-weight:700;}
+.qopt.wrong{background:var(--red-soft);border-color:var(--red);color:var(--red);}
+.qexp{font-size:.86rem;color:var(--ink-soft);margin-top:.5rem;display:none;}
+.qexp.show{display:block;}
+/* gap */
+.gap{background:var(--paper);border:1.5px solid var(--sand);border-radius:14px;padding:1rem 1.1rem;margin:.7rem 0;line-height:2.2;}
+.gap select{font-family:'Outfit';font-weight:600;border:2px solid var(--teal);border-radius:8px;padding:.15rem .4rem;background:var(--teal-soft);color:#0a7d72;font-size:.95rem;}
+.gap select.ok{background:#EAF7EF;border-color:var(--green);color:var(--green);}
+.gap select.no{background:var(--red-soft);border-color:var(--red);color:var(--red);}
+
+.bgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin:1rem 0;}
+@media(max-width:900px){.bgrid{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:600px){.bgrid{grid-template-columns:repeat(2,1fr);}}
+.bcard{background:var(--paper);border:1.5px solid var(--sand);border-radius:16px;overflow:hidden;box-shadow:0 4px 14px rgba(38,32,25,.06);transition:.2s;}
+.bcard:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(38,32,25,.13);}
+.bcard img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block;border-bottom:1.5px solid var(--sand);}
+.bcard .bb{padding:.6rem .7rem .8rem;}
+.bcard .bw{font-weight:700;font-size:.98rem;line-height:1.2;}
+.bcard .bw .art{color:var(--red);}
+.bcard .bex{font-family:'Fraunces',serif;font-style:italic;font-size:.82rem;color:var(--ink-soft);margin-top:.3rem;}
+.bcard .bti{font-size:.78rem;color:var(--ink);background:var(--yellow-soft);border-radius:8px;padding:.3rem .5rem;margin-top:.4rem;line-height:1.4;}
+.bgrid.hide .bcard .bw,.bgrid.hide .bcard .bex,.bgrid.hide .bcard .bti,.bgrid.hide .bcard .speak{opacity:0;pointer-events:none;}
+.bgrid.hide .bcard.auf .bw,.bgrid.hide .bcard.auf .bex,.bgrid.hide .bcard.auf .bti,.bgrid.hide .bcard.auf .speak{opacity:1;pointer-events:auto;}
+.bgrid.hide .bcard{cursor:pointer;}
+.dhead{display:flex;gap:.8rem;align-items:center;margin-bottom:.4rem;flex-wrap:wrap;}
+.dhead img{width:60px;height:60px;border-radius:12px;object-fit:cover;border:1.5px solid var(--sand);flex:none;}
+.dhead h4{margin:0;flex:1;min-width:180px;}
+.dsit{font-size:.9rem;color:var(--ink-soft);font-style:italic;margin-bottom:.7rem;}
+.rbtn{background:var(--teal);color:#fff;border:none;border-radius:999px;padding:.4rem 1rem;font-weight:700;font-size:.82rem;cursor:pointer;font-family:'Outfit';}
+.rbtn.zwei{background:var(--red);}
+.dline{display:flex;gap:.5rem;margin:.4rem 0;align-items:flex-start;}
+.dbild{width:44px;height:44px;border-radius:10px;object-fit:cover;border:1.5px solid var(--sand);flex:none;}
+.dcue{display:none;background:var(--yellow-soft);border:2px dashed var(--yellow);border-radius:12px;padding:.4rem .7rem;font-size:.92rem;cursor:pointer;font-weight:600;}
+.dcue .kl{display:block;font-size:.74rem;font-weight:500;color:var(--ink-mute);margin-top:.15rem;}
+.dwrap[data-runde="2"] .dline.b .dtxt{display:none;}
+.dwrap[data-runde="2"] .dline.b .dcue{display:block;}
+.dwrap[data-runde="2"] .dline.b.zeigen .dtxt{display:block;}
+.dwrap[data-runde="2"] .dline.b.zeigen .dcue{display:none;}
+.bpl{display:grid;gap:.5rem;margin:1rem 0;}
+.bpz{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;background:var(--paper);border:1.5px solid var(--sand);border-radius:14px;padding:.7rem .9rem;}
+.bpz .stk{padding:.3rem .7rem;border-radius:10px;font-weight:700;font-size:.95rem;color:#fff;}
+.bpz .s1{background:#3B5EA8;}.bpz .s2{background:var(--red);}.bpz .s3{background:var(--green);}
+.bpz .wof{margin-left:auto;font-size:.82rem;color:var(--ink-mute);font-style:italic;}
+.hagrid{display:grid;gap:.7rem;margin:1rem 0;}
+.ha{background:var(--paper);border:1.5px solid var(--sand);border-left:5px solid var(--red);border-radius:14px;padding:.9rem 1.1rem;display:flex;gap:.8rem;align-items:flex-start;}
+.ha .hi{font-size:1.5rem;flex:none;}
+.ha h4{font-family:'Fraunces',serif;font-size:1.05rem;margin-bottom:.2rem;}
+.ha p{font-size:.95rem;color:var(--ink-soft);}
+.card90 img{width:160px;height:160px;object-fit:cover;border-radius:16px;border:2px solid var(--sand);margin:.2rem auto .4rem;display:block;}
+.rule{background:var(--paper);border:1.5px solid var(--sand);border-radius:16px;padding:1rem 1.1rem;margin:1rem 0;overflow-x:auto;}
+.rule table{width:100%;border-collapse:collapse;font-size:.93rem;}
+.rule td,.rule th{border:1px solid var(--sand);padding:.45rem .6rem;text-align:left;}
+.rule th{background:var(--cream-warm);font-weight:700;}
+.rule tr:nth-child(4) td{background:var(--yellow-soft);}
+/* ---------- Grammatik: cartoonig & bunt ---------- */
+.gintro{background:linear-gradient(135deg,var(--yellow-soft),var(--teal-soft));border:2.5px solid var(--ink);border-radius:22px;padding:1.1rem 1.3rem;margin:1.2rem 0;box-shadow:5px 5px 0 rgba(38,32,25,.14);font-size:1rem;line-height:1.65;}
+.gintro b{color:var(--red);}
+.gkette{display:grid;gap:.5rem;margin:1.2rem 0;}
+.gstep{display:flex;align-items:center;gap:.7rem;background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;padding:.6rem .9rem;box-shadow:4px 4px 0 rgba(38,32,25,.12);}
+.gstep .gem{font-size:1.7rem;flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:var(--cream-warm);border-radius:50%;border:2px solid var(--ink);}
+.gstep .gw{flex:none;font-weight:800;font-size:.86rem;color:#fff;background:var(--red);border:2px solid var(--ink);border-radius:999px;padding:.22rem .75rem;transform:rotate(-2deg);}
+.gstep.c2 .gw{background:var(--teal);transform:rotate(2deg);}
+.gstep.c3 .gw{background:#3B5EA8;}
+.gstep.c4 .gw{background:var(--green);transform:rotate(2deg);}
+.gstep.c5 .gw{background:#C2481F;}
+.gstep.c6 .gw{background:#7A4FA3;transform:rotate(2deg);}
+.gstep .gs{font-family:'Fraunces',serif;font-size:1.02rem;}
+.gstep .gs u{text-decoration:none;background:var(--yellow);border-radius:6px;padding:.05em .3em;font-family:'Outfit';font-weight:700;font-style:normal;}
+.gpfeil{text-align:center;font-size:1.2rem;color:var(--ink-mute);line-height:.6;}
+.gpaar{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin:1.2rem 0;}
+@media(max-width:640px){.gpaar{grid-template-columns:1fr;}}
+.gk{border:2.5px solid var(--ink);border-radius:20px;padding:1rem 1.1rem;box-shadow:5px 5px 0 rgba(38,32,25,.13);}
+.gk.no{background:var(--red-soft);}
+.gk.ja{background:#EAF7EF;}
+.gk .gkl{font-weight:800;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.4rem;}
+.gk.no .gkl{color:var(--red);}
+.gk.ja .gkl{color:var(--green);}
+.gk .gsatz{font-family:'Fraunces',serif;font-size:1.15rem;line-height:1.5;}
+.gk .gsatz .v{background:var(--yellow);border-radius:7px;padding:.05em .35em;font-family:'Outfit';font-weight:800;font-style:normal;border:2px solid var(--ink);}
+.gchips{display:flex;flex-wrap:wrap;gap:.45rem;margin:1rem 0;justify-content:center;}
+.gchip{background:var(--paper);border:2.5px solid var(--ink);border-radius:999px;padding:.35rem .95rem;font-weight:700;font-size:.95rem;box-shadow:3px 3px 0 rgba(38,32,25,.13);}
+.gchip:nth-child(3n){background:var(--yellow-soft);}
+.gchip:nth-child(3n+1){background:var(--teal-soft);}
+.gbau{background:var(--paper);border:2.5px solid var(--ink);border-radius:20px;padding:1rem 1.1rem;margin:1rem 0;box-shadow:5px 5px 0 rgba(38,32,25,.12);}
+.gbau .gfrage{font-weight:600;margin-bottom:.6rem;}
+.gbau .gteile{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.6rem;}
+.gteil{background:var(--cream-warm);border:2px solid var(--ink);border-radius:12px;padding:.35rem .8rem;font-weight:600;cursor:pointer;font-family:'Outfit';font-size:.95rem;}
+.gteil:hover{background:var(--yellow-soft);}
+.gteil.weg{opacity:.25;pointer-events:none;}
+.gbau .gzeile{min-height:2.6rem;background:var(--cream);border:2px dashed var(--sand);border-radius:12px;padding:.5rem .7rem;font-family:'Fraunces',serif;font-size:1.05rem;display:flex;flex-wrap:wrap;gap:.35rem;align-items:center;}
+.gbau .gzeile.ok{background:#EAF7EF;border-color:var(--green);border-style:solid;}
+.gbau .gzeile.no{background:var(--red-soft);border-color:var(--red);border-style:solid;}
+.gbau .gfuss{display:flex;gap:.5rem;margin-top:.6rem;}
+.gbau .gmini{background:var(--ink);color:#fff;border:none;border-radius:999px;padding:.35rem .9rem;font-weight:700;font-size:.85rem;cursor:pointer;font-family:'Outfit';}
+.gbau .gmini.hell{background:var(--paper);color:var(--ink);border:2px solid var(--ink);}
+.gbau .gtipp{margin-top:.5rem;font-size:.88rem;color:var(--ink-soft);display:none;}
+.gbau .gtipp.show{display:block;}
+.gstory{background:var(--cream-warm);border:2.5px solid var(--ink);border-radius:20px;padding:1.1rem 1.2rem;margin:1.1rem 0;box-shadow:5px 5px 0 rgba(38,32,25,.12);font-family:'Fraunces',serif;font-size:1.05rem;line-height:2.2;}
+.gstory select{font-family:'Outfit';font-weight:700;font-size:.95rem;border:2px solid var(--ink);border-radius:10px;padding:.18rem .4rem;background:var(--paper);margin:0 .15rem;}
+.gstory select.ok{background:#EAF7EF;border-color:var(--green);}
+.gstory select.no{background:var(--red-soft);border-color:var(--red);}
+.gpos{display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem;margin:1rem 0;text-align:center;}
+@media(max-width:640px){.gpos{grid-template-columns:repeat(2,1fr);}}
+.gpos .gz{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.55rem .3rem;box-shadow:4px 4px 0 rgba(38,32,25,.12);}
+.gpos .gz b{display:block;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:.25rem;}
+.gpos .gz span{font-family:'Fraunces',serif;font-size:1.05rem;}
+.gpos .gz.zwei{background:var(--yellow);}
+.gpos .gz.zwei b{color:var(--ink);}
+.gdrei{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin:1.2rem 0;}
+@media(max-width:700px){.gdrei{grid-template-columns:1fr;}}
+.gk.blau{background:#E9EFFA;}
+.gk.gelb{background:var(--yellow-soft);}
+.gk .gem2{font-size:1.6rem;display:block;margin-bottom:.2rem;}
+.gk .gmw{font-family:'Fraunces',serif;font-size:1.3rem;margin-bottom:.15rem;}
+.gk .gmb{font-size:.9rem;color:var(--ink-soft);margin-bottom:.45rem;}
+.gk .gmx{font-size:.97rem;border-top:2px dashed var(--sand);padding-top:.45rem;}
+.gklam{background:var(--paper);border:2.5px solid var(--ink);border-radius:20px;padding:.9rem 1.1rem;margin:.7rem 0;box-shadow:5px 5px 0 rgba(38,32,25,.12);}
+.gklam .gsatz{font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.6;}
+.gklam .gsatz .v{background:var(--yellow);border-radius:7px;padding:.05em .35em;font-family:'Outfit';font-weight:800;border:2px solid var(--ink);}
+.gklam .gsatz .v2{background:var(--teal);color:#fff;}
+.gklam .gbogen{margin-top:.5rem;padding-top:.4rem;border-top:3px dashed var(--red);font-size:.82rem;color:var(--ink-soft);display:flex;justify-content:space-between;gap:.5rem;}
+.gklam .gbogen b{color:var(--red);}
+/* ================= CARTOON-LOOK für die ganze Stunde ================= */
+.hero-tag{border:2px solid var(--ink);box-shadow:3px 3px 0 rgba(38,32,25,.13);padding:.35rem 1rem;font-size:.85rem;}
+.hero-tag:nth-child(2n){transform:rotate(-1.4deg);background:var(--yellow-soft);}
+.hero-tag:nth-child(3n){transform:rotate(1.4deg);background:var(--teal-soft);}
+.tabs{border:2.5px solid var(--ink);box-shadow:5px 5px 0 rgba(38,32,25,.13);background:var(--cream-warm);padding:.55rem;}
+.tab{border:2.5px solid var(--ink);box-shadow:3px 3px 0 rgba(38,32,25,.15);font-weight:700;}
+.tab:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 rgba(38,32,25,.18);}
+.tab.active{background:var(--red);color:#fff;border-color:var(--ink);transform:translate(1px,1px);box-shadow:1px 1px 0 rgba(38,32,25,.2);}
+h2.st{margin-top:2.2rem;}
+h2.st::after{content:'';display:block;width:72px;height:8px;background:var(--yellow);border:2.5px solid var(--ink);border-radius:999px;margin:.5rem auto 0;transform:rotate(-1deg);}
+.scene-wrap{border:3px solid var(--ink);box-shadow:7px 7px 0 rgba(38,32,25,.15);border-radius:22px;}
+.tip{border:2.5px solid var(--ink);box-shadow:5px 5px 0 rgba(38,32,25,.13);border-radius:20px;}
+.tip.teal{background:var(--teal-soft);}
+.qlist li{border:2.5px solid var(--ink);border-left:9px solid var(--teal);border-radius:16px;box-shadow:4px 4px 0 rgba(38,32,25,.12);font-weight:600;}
+.qlist li:nth-child(2n){border-left-color:var(--red);}
+.qlist li:nth-child(3n){border-left-color:var(--yellow);}
+/* Bildwortkarten mit Nummer */
+.bgrid{counter-reset:bk;}
+.bcard{border:2.5px solid var(--ink);border-radius:20px;box-shadow:5px 5px 0 rgba(38,32,25,.14);position:relative;}
+.bcard:hover{transform:translate(-2px,-3px) rotate(-.6deg);box-shadow:8px 9px 0 rgba(38,32,25,.16);}
+.bcard img{border-bottom:2.5px solid var(--ink);}
+.bcard::before{counter-increment:bk;content:counter(bk);position:absolute;top:8px;left:8px;width:30px;height:30px;border-radius:50%;background:var(--red);color:#fff;border:2.5px solid var(--ink);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.9rem;z-index:2;box-shadow:2px 2px 0 rgba(38,32,25,.2);}
+.bcard .bti{border:2px dashed var(--yellow);border-radius:10px;}
+.bcard .speak,.vcard .speak{border:2px solid var(--ink);box-shadow:2px 2px 0 rgba(38,32,25,.15);}
+/* Dialoge als Sprechblasen */
+.dwrap{border:2.5px solid var(--ink);border-radius:22px;box-shadow:6px 6px 0 rgba(38,32,25,.13);}
+.dwrap h4{font-size:1.2rem;}
+.dhead img{border:2.5px solid var(--ink);border-radius:14px;box-shadow:3px 3px 0 rgba(38,32,25,.15);width:64px;height:64px;}
+.rbtn{border:2.5px solid var(--ink);box-shadow:3px 3px 0 rgba(38,32,25,.18);}
+.rbtn:active{transform:translate(2px,2px);box-shadow:0 0 0 rgba(0,0,0,0);}
+.dwho{width:34px;height:34px;font-size:.95rem;border:2.5px solid var(--ink);box-shadow:2px 2px 0 rgba(38,32,25,.18);}
+.dtxt{border:2.5px solid var(--ink);border-radius:16px;padding:.55rem .85rem;box-shadow:3px 3px 0 rgba(38,32,25,.1);position:relative;}
+.dline.a .dtxt{background:var(--red-soft);}
+.dline.b .dtxt{background:var(--teal-soft);}
+.dcue{border:2.5px dashed var(--ink);background:var(--yellow-soft);border-radius:16px;box-shadow:3px 3px 0 rgba(38,32,25,.1);}
+.dbild{width:52px;height:52px;border:2.5px solid var(--ink);border-radius:12px;box-shadow:2px 2px 0 rgba(38,32,25,.15);}
+.dbtn{border:2.5px solid var(--ink);box-shadow:3px 3px 0 rgba(38,32,25,.18);}
+/* Baupläne, Redemittel */
+.bpz{border:2.5px solid var(--ink);border-radius:18px;box-shadow:4px 4px 0 rgba(38,32,25,.12);}
+.bpz .stk{border:2px solid var(--ink);box-shadow:2px 2px 0 rgba(38,32,25,.18);}
+.rmcard{border:2.5px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 rgba(38,32,25,.12);}
+.rm{border:2px solid var(--ink);box-shadow:2px 2px 0 rgba(38,32,25,.14);padding:.25rem .8rem;}
+/* Debatte */
+.pcol{border-width:2.5px;border-color:var(--ink);border-radius:20px;box-shadow:5px 5px 0 rgba(38,32,25,.13);}
+.pcol li{font-weight:500;padding-left:1.6rem;}
+.pcol.pro li::before{content:'👍';}
+.pcol.con li::before{content:'💤';}
+/* 90 Sekunden */
+.card90{border:3px solid var(--ink);border-radius:26px;box-shadow:8px 8px 0 rgba(38,32,25,.15);}
+.card90 img{border:2.5px solid var(--ink);width:180px;height:180px;box-shadow:4px 4px 0 rgba(38,32,25,.15);}
+.card90 .word{font-size:2.4rem;}
+.hw{border:2px solid var(--ink);box-shadow:2px 2px 0 rgba(38,32,25,.14);}
+.timer{border:2.5px solid var(--ink);background:var(--paper);border-radius:16px;display:inline-block;padding:.1rem 1.2rem;box-shadow:4px 4px 0 rgba(38,32,25,.15);}
+.btn{border:2.5px solid var(--ink);box-shadow:4px 4px 0 rgba(38,32,25,.18);}
+.btn:active{transform:translate(3px,3px);box-shadow:0 0 0 rgba(0,0,0,0);}
+.btn.ghost{border-color:var(--ink);}
+/* Quiz & Lücken */
+.quiz-q{border:2.5px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 rgba(38,32,25,.12);}
+.quiz-q .qt{font-size:1.02rem;font-weight:700;}
+.qopt{border:2.5px solid var(--ink);border-radius:14px;box-shadow:3px 3px 0 rgba(38,32,25,.12);font-weight:600;background:var(--paper);}
+.qopt:hover{transform:translate(-1px,-1px);background:var(--yellow-soft);box-shadow:4px 4px 0 rgba(38,32,25,.16);}
+.qopt.right::after{content:' ✅';}
+.qopt.wrong::after{content:' ❌';}
+.qexp.show{background:var(--cream-warm);border:2px dashed var(--ink);border-radius:12px;padding:.5rem .7rem;font-size:.9rem;color:var(--ink);}
+.gap{border:2.5px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 rgba(38,32,25,.12);}
+.gap select{border:2.5px solid var(--ink);border-radius:10px;}
+/* Hausaufgabe */
+.ha{border:2.5px solid var(--ink);border-left:10px solid var(--red);border-radius:18px;box-shadow:5px 5px 0 rgba(38,32,25,.12);align-items:center;}
+.ha:nth-child(2n){border-left-color:var(--teal);}
+.ha:nth-child(3n){border-left-color:var(--yellow);}
+.ha .hi{width:46px;height:46px;border-radius:50%;background:var(--cream-warm);border:2.5px solid var(--ink);display:flex;align-items:center;justify-content:center;box-shadow:3px 3px 0 rgba(38,32,25,.13);}
+.rule{border:2.5px solid var(--ink);border-radius:20px;box-shadow:5px 5px 0 rgba(38,32,25,.12);}
+.rule td,.rule th{border:2px solid var(--sand);}
+.rule th{background:var(--ink);color:#fff;border-color:var(--ink);}
+@media(max-width:640px){
+ .tab{font-size:.84rem;padding:.42rem .8rem;}
+ .bcard::before{width:26px;height:26px;font-size:.8rem;}
+ .card90 .word{font-size:1.9rem;}
+}
+/* Dialog wie ein Chat: A links, B rechts */
+.dline.b{flex-direction:row-reverse;}
+.dtxt{position:relative;max-width:min(660px,78%);}
+.dline.a .dtxt::after{content:'';position:absolute;left:-9px;top:13px;width:13px;height:13px;background:var(--red-soft);border-left:2.5px solid var(--ink);border-bottom:2.5px solid var(--ink);transform:rotate(45deg);border-bottom-left-radius:3px;}
+.dline.b .dtxt::after{content:'';position:absolute;right:-9px;top:13px;width:13px;height:13px;background:var(--teal-soft);border-right:2.5px solid var(--ink);border-top:2.5px solid var(--ink);transform:rotate(45deg);border-top-right-radius:3px;}
+.dcue{max-width:min(660px,78%);}
+/* Antwort-Buchstaben A B C */
+.quiz-opts{counter-reset:qo;}
+.qopt{position:relative;padding:.6rem .9rem .6rem 3rem;min-height:44px;display:flex;align-items:center;}
+.qopt::before{counter-increment:qo;content:counter(qo,upper-alpha);position:absolute;left:.55rem;top:50%;transform:translateY(-50%);width:28px;height:28px;border-radius:50%;background:var(--cream-warm);border:2.5px solid var(--ink);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.82rem;}
+.qopt.right::before{background:var(--green);color:#fff;}
+.qopt.wrong::before{background:var(--red);color:#fff;}
+.qopt.right{background:#EAF7EF;border-color:var(--green);}
+.qopt.wrong{background:var(--red-soft);border-color:var(--red);}
+@media(max-width:700px){
+ .tabs{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;max-width:100%;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+ .tabs::-webkit-scrollbar{display:none;}
+ .tab{flex:none;}
+ .dtxt,.dcue{max-width:84%;}
+}
+footer{text-align:center;color:var(--ink-mute);font-size:.85rem;padding:3rem 1rem 1rem;}
+footer strong{color:var(--ink);}
+
+</style>
+<style>
+
+/* ============================================================
+   ZUSATZ — nur was das Maengel-Design noch nicht kennt.
+   Alles im selben Look: dicker Rahmen, harter Schatten.
+   1. Niveau-Umschalter A2 / B1
+   2. Emoji-Kachel, wo es (noch) kein Foto gibt
+   3. Farbmarkierungen im Beispielsatz
+   4. Hilfe-Knoepfe
+   5. Hausaufgabe zum Abhaken
+   ============================================================ */
+
+/* ---------- 1. Niveau-Umschalter ---------- */
+.niv{
+  display:flex;align-items:center;justify-content:center;gap:.7rem;flex-wrap:wrap;
+  background:var(--ink);color:var(--cream);border:2.5px solid var(--ink);
+  border-radius:20px;box-shadow:5px 5px 0 rgba(38,32,25,.2);
+  padding:.6rem 1rem;margin:1.4rem auto 0;max-width:fit-content;
+}
+.niv .lab{font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.85;}
+.nivk{display:flex;gap:.3rem;background:rgba(255,255,255,.13);border-radius:999px;padding:3px;}
+.nivk button{
+  font-family:'Outfit';font-size:.88rem;font-weight:700;cursor:pointer;
+  border:none;border-radius:999px;padding:.35rem 1.1rem;background:transparent;color:var(--cream);
+  transition:.15s;white-space:nowrap;
+}
+.nivk button[aria-pressed="true"]{background:var(--yellow);color:var(--ink);}
+.nivk button:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.niv .wie{font-size:.8rem;opacity:.85;width:100%;text-align:center;}
+
+body[data-niveau="a2"] .nur-b1{display:none !important;}
+body[data-niveau="b1"] .nur-a2{display:none !important;}
+.stufe{
+  display:inline-block;font-size:.68rem;font-weight:800;letter-spacing:.06em;
+  border:2px solid var(--ink);border-radius:999px;padding:1px 8px;margin-left:.35rem;
+  background:var(--sand);color:var(--ink);vertical-align:middle;
+}
+.stufe.b1{background:var(--teal-soft);}
+
+/* ---------- 2. Emoji-Kachel statt Foto ---------- */
+.bcard .bem{
+  aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;
+  font-size:clamp(3rem,7vw,5rem);background:var(--cream-warm);
+  border-bottom:2.5px solid var(--ink);
+}
+
+/* ---------- Kleine Illustrationen nicht hochskalieren ----------
+   sz-*.webp sind 260 Pixel breit. Auf volle Breite gezogen werden
+   sie unscharf, deshalb bleiben sie klein und stehen mittig. */
+.scene-wrap.klein{max-width:360px;margin:1rem auto;}
+
+/* ---------- 3. Farbmarkierungen ---------- */
+.m-verb,.m-akk,.m-menge,.m-hoefl{font-weight:800;border-radius:6px;padding:.03em .3em;border:2px solid var(--ink);}
+.m-verb{background:#DCEBFF;}
+.m-akk{background:var(--red-soft);}
+.m-menge{background:var(--teal-soft);}
+.m-hoefl{background:var(--yellow);}
+.legende{
+  display:flex;flex-wrap:wrap;gap:.5rem .9rem;justify-content:center;
+  font-size:.85rem;font-weight:600;margin:1rem 0;
+}
+.legende span{
+  display:inline-flex;align-items:center;gap:.4rem;background:var(--paper);
+  border:2.5px solid var(--ink);border-radius:999px;padding:.25rem .8rem;
+  box-shadow:3px 3px 0 rgba(38,32,25,.13);
+}
+.legende i{width:15px;height:15px;border-radius:5px;border:2px solid var(--ink);display:inline-block;}
+.i-verb{background:#DCEBFF;}
+.i-akk{background:var(--red-soft);}
+.i-menge{background:var(--teal-soft);}
+.i-hoefl{background:var(--yellow);}
+
+/* ---------- 4. Hilfe-Knopf ---------- */
+.hilfe{margin:1rem 0;text-align:center;}
+.hilfe > button{
+  font-family:'Outfit';font-size:.9rem;font-weight:700;cursor:pointer;
+  background:var(--yellow);color:var(--ink);border:2.5px solid var(--ink);
+  border-radius:999px;padding:.45rem 1.1rem;box-shadow:4px 4px 0 rgba(38,32,25,.18);
+}
+.hilfe > button:active{transform:translate(3px,3px);box-shadow:0 0 0 rgba(0,0,0,0);}
+.hilfe > button:focus-visible{outline:3px solid var(--teal);outline-offset:3px;}
+.hilfe .inhalt{
+  display:none;text-align:left;margin-top:.8rem;background:var(--yellow-soft);
+  border:2.5px dashed var(--ink);border-radius:20px;padding:.9rem 1.1rem;
+  box-shadow:5px 5px 0 rgba(38,32,25,.12);font-size:.96rem;line-height:1.7;
+}
+.hilfe.offen .inhalt{display:block;}
+.hilfe .inhalt ul{margin:.4rem 0 0 1.2rem;}
+.hilfe .inhalt li{margin:.25rem 0;}
+
+/* ---------- 5. Hausaufgabe zum Abhaken ---------- */
+.ha{cursor:pointer;text-align:left;width:100%;font-family:'Outfit';color:var(--ink);background:var(--paper);}
+.ha:focus-visible{outline:3px solid var(--teal);outline-offset:3px;}
+.ha .box{
+  flex:none;width:30px;height:30px;border-radius:9px;border:2.5px solid var(--ink);
+  background:var(--cream);display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;line-height:1;color:transparent;box-shadow:2px 2px 0 rgba(38,32,25,.18);
+}
+.ha .htxt{flex:1;}
+.ha .zeit{
+  display:inline-block;font-size:.7rem;font-weight:800;letter-spacing:.05em;
+  background:var(--cream-warm);border:2px solid var(--ink);border-radius:999px;
+  padding:1px 8px;margin-left:.4rem;vertical-align:middle;
+}
+.ha.fertig{background:#EAF7EF;}
+.ha.fertig .box{background:var(--green);border-color:var(--green);color:#fff;}
+.ha.fertig h4{text-decoration:line-through;text-decoration-thickness:2.5px;opacity:.7;}
+.hastand{
+  text-align:center;font-weight:700;margin-top:1rem;background:var(--paper);
+  border:2.5px solid var(--ink);border-radius:18px;padding:.6rem 1rem;
+  box-shadow:5px 5px 0 rgba(38,32,25,.12);
+}
+.hastand.voll{background:#EAF7EF;}
+
+/* ============================================================
+   EINE DURCHGEHENDE SEITE statt Tab-Wechsel.
+   Julia wollte den Ablauf der ersten Fassung zurueck: alles
+   untereinander, die Leiste oben springt nur hin.
+   ============================================================ */
+.section{display:block;animation:none;}
+.section + .section{
+  margin-top:2.4rem;padding-top:.6rem;   /* h2.st bringt seinen eigenen Abstand mit */
+  border-top:3px dashed var(--sand);
+}
+section.section{scroll-margin-top:calc(var(--leiste,58px) + 5.2rem);}
+
+/* Umschalter klebt ganz oben, die Sprungleiste direkt darunter.
+   Beide gehen ueber die volle Spaltenbreite — sonst schaut der Text
+   beim Scrollen links und rechts an ihnen vorbei. */
+.niv{position:sticky;top:0;z-index:60;margin:1.4rem auto 0;max-width:none;width:100%;}
+.tabs{top:var(--leiste,58px);margin:1rem auto 1.6rem;max-width:none;width:100%;}
+.tab{text-decoration:none;}
+a.tab:hover{color:var(--ink);}
+
+/* ---------- Kleinkram ---------- */
+.bsp{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:4px 4px 0 rgba(38,32,25,.12);padding:.6rem .9rem;margin:.6rem 0;font-size:.97rem;
+}
+.bsp .wer{
+  display:block;font-size:.7rem;font-weight:800;text-transform:uppercase;
+  letter-spacing:.08em;color:var(--ink-mute);margin-bottom:.15rem;
+}
+.gk .bsp{box-shadow:none;margin:.5rem 0 0;}
+@media(max-width:560px){
+  .niv{border-radius:16px;padding:.5rem .7rem;gap:.5rem;}
+  .niv .wie{display:none;}
+  .nivk button{padding:.35rem .85rem;font-size:.84rem;}
+}
+
+/* ---- Freigestellte Figuren auf den Wortschatzkarten ----
+   Die Amanda-Bilder sind hoch und schmal (etwa 150x340) und ohne
+   Hintergrund. Der normale Kartenschnitt ist quadratisch und schneidet
+   mit object-fit:cover genau das weg, worauf es ankommt: Haende,
+   Schultern, Gesicht. Mit hoch:true in der JSON wird das Bild ganz
+   gezeigt und steht auf einer warmen Flaeche statt auf Weiss. */
+.bcard.hoch img{
+  object-fit:contain;
+  background:linear-gradient(180deg,var(--cream),var(--sand));
+  padding:.35rem;
+}
+
+/* Die Grammatik-Kette ist auf dem Handy zu breit: das rote Schild und der
+   Satz passen nicht nebeneinander. Auf schmalen Bildschirmen rutscht der
+   Satz deshalb in eine eigene Zeile — sonst schiebt er die ganze Seite
+   nach rechts. */
+@media (max-width:640px){
+  .gstep{flex-wrap:wrap;}
+  .gstep .gw{flex:0 1 auto;white-space:normal;text-align:center;}
+  .gstep .gs{flex:1 1 100%;min-width:0;}
+}
+.gstep .gs{min-width:0;overflow-wrap:anywhere;}
+
+</style>
+</head>
+<body data-niveau="a2"><div class="wrapper">
+
+<div class="eyebrow">deutschoderwas · Sprechclub · Woche 3 · Strang A · Teil 2 · </div>
+<h1 class="title">Rezept, Apotheke, <span class="hl">Krankschreibung</span></h1>
+
+<p class="subtitle">Am Montag warst du im Sprechzimmer. Heute kommt der Teil danach: das Papier in der Hand, der Gang zur Apotheke und der Anruf beim Chef. Drei Orte, drei kurze Gespräche.</p>
+
+<div class="niv">
+  <span class="lab">Dein Niveau</span>
+  <div class="nivk" role="group" aria-label="Niveau wählen">
+    <button type="button" data-niv="a2" aria-pressed="true">A2 · einfacher</button>
+    <button type="button" data-niv="b1" aria-pressed="false">B1 · mehr</button>
+  </div>
+  <span class="wie">Gleiches Thema, andere Sätze. Wechsle jederzeit — probier ruhig beide Seiten aus.</span>
+</div>
+
+<nav class="tabs">
+<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
+<a class="tab" href="#wiederholung">🔁 Wiederholung</a>
+<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
+<a class="tab" href="#konzepte">⚖️ Drei Zettel</a>
+<a class="tab" href="#saetze">💬 Sätze</a>
+<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#grammatik">🧩 Grammatik</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+</nav>
+
+<section class="section" id="einstieg">
+<h2 class="st">Drei Zettel, <span class="hl">die man auseinanderhalten muss</span></h2>
+<p class="ssub">Das <b>Rezept</b> geht in die Apotheke. Die <b>Krankschreibung</b> geht zum Arbeitgeber. Die <b>Überweisung</b> geht zum Facharzt. Wer die drei verwechselt, läuft am nächsten Tag noch einmal los.</p>
+<div class="scene-wrap klein"><img src="../vok-bild/das-rezept.webp" alt="Eine Ärztin überreicht einem Patienten ein Rezept"></div>
+<ul class="qlist nur-a2">
+<li>Warst du schon einmal in einer deutschen Apotheke? Wie war das?</li>
+<li>Was machst du, wenn du krank bist und arbeiten musst?</li>
+<li>Gibt es in deinem Land auch eine Krankschreibung?</li>
+</ul>
+<ul class="qlist nur-b1">
+<li>Warum braucht der Arbeitgeber ein Papier vom Arzt — reicht ein Anruf nicht?</li>
+<li>Was ist praktischer: Medikamente im Supermarkt oder nur in der Apotheke?</li>
+<li>Wie viel darf ein Apotheker entscheiden, was ein Arzt entschieden hat?</li>
+</ul>
+<div class="tip teal">💊 <strong>Gut zu wissen:</strong> In Deutschland gibt es Medikamente fast nur in der <u>Apotheke</u>, nicht im Supermarkt. Und viele brauchen ein <b>Rezept</b> — ohne das bekommst du sie nicht, auch wenn du bezahlen willst.</div>
+<h2 class="st">Die Apotheke <span class="hl">berät dich — kostenlos</span></h2>
+<p class="ssub">Viele trauen sich nicht zu fragen und nehmen einfach, was sie bekommen. Dabei ist die Beratung der eigentliche Grund, warum es Apotheken gibt. Fragen kostet nichts und dauert eine Minute.</p>
+<div class="scene-wrap klein"><img src="../amanda/sz-apotheke.webp" alt="Amanda bekommt in der Apotheke eine Packung überreicht"></div>
+<ul class="qlist nur-a2">
+<li>Was fragst du in der Apotheke, bevor du gehst?</li>
+<li>Liest du den Beipackzettel?</li>
+</ul>
+<ul class="qlist nur-b1">
+<li>Wann ist Selbstmedikation sinnvoll — und wann gefährlich?</li>
+<li>Was würdest du fragen, wenn du ein Medikament zum ersten Mal nimmst?</li>
+</ul>
+<div class="tip">💡 <strong>Die vier Fragen für die Apotheke:</strong> <b>Wie oft?</b> · <b>Wie lange?</b> · <b>Vor oder nach dem Essen?</b> · <b>Worauf muss ich achten?</b> — vier Sätze, und du gehst mit einem Plan statt mit einer Schachtel.</div>
+</section>
+
+<section class="section" id="wiederholung">
+<h2 class="st">Kurz zurück: <span class="hl">Montag in zwei Minuten</span></h2>
+<p class="ssub">Falls du Teil 1 verpasst hast — das hier reicht, um heute mitzumachen.</p>
+<div class="gchips">
+<span class="gchip">der Kopf</span><span class="gchip">der Hals</span><span class="gchip">der Bauch</span><span class="gchip">der Rücken</span><span class="gchip">das Bein</span><span class="gchip">die Schmerzen</span><span class="gchip">wehtun</span><span class="gchip">das Fieber</span><span class="gchip">der Husten</span><span class="gchip">die Beschwerden</span>
+</div>
+<div class="rmcard"><b>wehtun steht mit Dativ</b>
+<div class="bsp"><span class="wer">So ging der Satz</span>Mir tut der Hals weh, seit drei Tagen.</div>
+<button class="speak" data-say="Mir tut der Hals weh, seit drei Tagen.">🔊 hören</button></div>
+<div class="rmcard"><b>seit für jetzt, vor für vorbei</b>
+<div class="bsp"><span class="wer">So ging der Satz</span>Ich habe seit einer Woche Husten. Fieber hatte ich vor zwei Tagen.</div>
+<button class="speak" data-say="Ich habe seit einer Woche Husten. Fieber hatte ich vor zwei Tagen.">🔊 hören</button></div>
+<ul class="qlist">
+<li>Sag in einem Satz, was dir wehtut — mit <b>mir</b> und <b>seit</b>.</li>
+<li>Nenn drei Körperteile mit Artikel.</li>
+<li>Was ist der Unterschied zwischen <b>seit</b> und <b>vor</b>?</li>
+</ul>
+<div class="tip teal">🔁 <strong>Zu zweit, dreißig Sekunden:</strong> Einer spielt den Arzt und fragt „Was führt Sie zu mir?“, der andere antwortet in drei Sätzen. Danach geht es weiter — mit dem Rezept in der Hand.</div>
+</section>
+
+<section class="section" id="wortschatz">
+<h2 class="st">Zwölf Wörter für <span class="hl">danach</span></h2>
+<p class="ssub">Sagt jedes Wort laut — und gleich den Beispielsatz hinterher. Zwei Sekunden pro Karte reichen.</p>
+<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
+<div class="bgrid" id="bgrid">
+<div class="bcard"><img src="../vok-bild/das-rezept.webp" alt="Eine Ärztin überreicht einem Patienten ein Rezept" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Rezept</div><div class="bex">„Ich habe ein Rezept für ein Antibiotikum bekommen.“</div><div class="bti">💡 Achtung, zwei Bedeutungen: beim Arzt der Zettel, in der Küche die Kochanleitung. Der Zusammenhang klärt es immer.</div><button class="speak" data-say="Ich habe ein Rezept für ein Antibiotikum bekommen.">🔊 hören</button></div></div>
+<div class="bcard"><img src="../vok-bild/die-apotheke.webp" alt="Apothekerin hinter dem Tresen" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Apotheke</div><div class="bex">„Die Apotheke gleich neben der Praxis hat bis acht offen.“</div><div class="bti">💡 Nicht die Drogerie! In der <b>Drogerie</b> gibt es Shampoo und Vitamine, in der <b>Apotheke</b> die richtigen Medikamente.</div><button class="speak" data-say="Die Apotheke gleich neben der Praxis hat bis acht offen.">🔊 hören</button></div></div>
+<div class="bcard"><img src="../vok-bild/die-krankmeldung.webp" alt="Eine Krankmeldung vom Arzt liegt auf einem Schreibtisch" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Krankschreibung</div><div class="bex">„Ich brauche eine Krankschreibung für drei Tage.“</div><div class="bti">💡 Amtlich heißt sie <b>Arbeitsunfähigkeitsbescheinigung</b>, alle sagen <b>der gelbe Schein</b> oder <b>die AU</b>. Alles dasselbe Papier.</div><button class="speak" data-say="Ich brauche eine Krankschreibung für drei Tage.">🔊 hören</button></div></div>
+<div class="bcard"><div class="bem" role="img" aria-label="Medikament">💊</div><div class="bb"><div class="bw"><span class="art">das</span> Medikament</div><div class="bex">„Nehmen Sie das Medikament dreimal täglich.“</div><div class="bti">💡 Umgangssprachlich auch <b>die Tablette</b> (Form) oder <b>das Mittel</b> (<i>ein Mittel gegen Husten</i>). Plural: <b>die Medikamente</b>.</div><button class="speak" data-say="Nehmen Sie das Medikament dreimal täglich.">🔊 hören</button></div></div>
+<div class="bcard"><img src="../vok-bild/die-salbe.webp" alt="Salbe wird aus der Tube auf einen Finger gedrückt" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Salbe</div><div class="bex">„Die Salbe kommt zweimal am Tag auf die Stelle.“</div><div class="bti">💡 Die drei Formen: <b>die Tablette</b> zum Schlucken, <b>die Salbe</b> zum Auftragen, <b>die Tropfen</b> zum Tropfen.</div><button class="speak" data-say="Die Salbe kommt zweimal am Tag auf die Stelle.">🔊 hören</button></div></div>
+<div class="bcard"><div class="bem" role="img" aria-label="einnehmen">🔁</div><div class="bb"><div class="bw">einnehmen</div><div class="bex">„Wie oft soll ich das einnehmen?“</div><div class="bti">💡 Trennbar und das Fachwort für „nehmen“ beim Medikament. Im Alltag sagt man auch einfach <b>nehmen</b>.</div><button class="speak" data-say="Wie oft soll ich das einnehmen?">🔊 hören</button></div></div>
+<div class="bcard"><div class="bem" role="img" aria-label="nüchtern">🍽️</div><div class="bb"><div class="bw">nüchtern</div><div class="bex">„Das müssen Sie nüchtern einnehmen.“</div><div class="bti">💡 Beim Arzt heißt <b>nüchtern</b> immer „mit leerem Magen“, nie „ohne Alkohol“. Das Gegenteil im Beipackzettel: <b>zu den Mahlzeiten</b>.</div><button class="speak" data-say="Das müssen Sie nüchtern einnehmen.">🔊 hören</button></div></div>
+<div class="bcard"><img src="../amanda/sz-apotheke.webp" alt="Amanda bekommt in der Apotheke eine Packung überreicht" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Nebenwirkung</div><div class="bex">„Hat das Nebenwirkungen, auf die ich achten muss?“</div><div class="bti">💡 Meist im Plural. Der berühmteste Satz der deutschen Werbung endet damit: <i>… fragen Sie Ihren Arzt oder Apotheker.</i></div><button class="speak" data-say="Hat das Nebenwirkungen, auf die ich achten muss?">🔊 hören</button></div></div>
+<div class="bcard"><div class="bem" role="img" aria-label="Zuzahlung">💶</div><div class="bb"><div class="bw"><span class="art">die</span> Zuzahlung</div><div class="bex">„Auf das Rezept kommt noch eine Zuzahlung von fünf Euro.“</div><div class="bti">💡 Bei rezeptpflichtigen Medikamenten zahlt die Kasse den Rest. <b>rezeptfrei</b> heißt dagegen: alles selbst zahlen.</div><button class="speak" data-say="Auf das Rezept kommt noch eine Zuzahlung von fünf Euro.">🔊 hören</button></div></div>
+<div class="bcard"><img src="../amanda/sz-medizin.webp" alt="Ein Arzt steht neben einer sitzenden Patientin" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Überweisung</div><div class="bex">„Für den Orthopäden brauche ich eine Überweisung.“</div><div class="bti">💡 Auch hier zwei Bedeutungen: beim Arzt der Zettel zum Facharzt, bei der Bank die Zahlung. Wieder klärt der Zusammenhang alles.</div><button class="speak" data-say="Für den Orthopäden brauche ich eine Überweisung.">🔊 hören</button></div></div>
+<div class="bcard"><img src="../amanda/sz-buero.webp" alt="Zwei Kolleginnen am Schreibtisch mit Laptop" loading="lazy"><div class="bb"><div class="bw">sich krankmelden</div><div class="bex">„Ich habe mich heute Morgen krankgemeldet.“</div><div class="bti">💡 Reflexiv und trennbar: <i>Ich melde mich krank.</i> Und dazu gehört immer der Satz: <b>Die Krankschreibung schicke ich nach.</b></div><button class="speak" data-say="Ich habe mich heute Morgen krankgemeldet.">🔊 hören</button></div></div>
+<div class="bcard"><div class="bem" role="img" aria-label="gute Besserung">🌿</div><div class="bb"><div class="bw">gute Besserung</div><div class="bex">„Gute Besserung! — Danke, das ist lieb.“</div><div class="bti">💡 Der Standardsatz zum Abschied bei jedem Kranken. Die Antwort ist immer einfach <b>Danke</b>, nie „Ihnen auch“.</div><button class="speak" data-say="Gute Besserung! Danke, das ist lieb.">🔊 hören</button></div></div>
+</div>
+<div class="tip">💡 <strong>Spiel:</strong> Einer nennt eine Situation („Kopfschmerzen“, „drei Tage nicht arbeiten“, „zum Facharzt“). Der andere sagt in zwei Sekunden, welches der drei Papiere er braucht — Rezept, Krankschreibung oder Überweisung.</div>
+</section>
+
+<section class="section" id="konzepte">
+<h2 class="st">Drei Papiere, <span class="hl">drei verschiedene Wege</span></h2>
+<p class="ssub">Erst die drei Zettel und wohin sie gehören. Darunter drei Satzpaare, bei denen fast alle danebenliegen.</p>
+<div class="gdrei">
+<div class="gk gelb"><span class="gem2">💊</span><div class="gmw">Das Rezept</div><div class="gmb">Geht in die Apotheke. Dafür bekommst du das Medikament.</div><div class="gmx">Ich möchte dieses Rezept einlösen.</div></div>
+<div class="gk blau"><span class="gem2">🟨</span><div class="gmw">Die Krankschreibung</div><div class="gmb">Geht zum Arbeitgeber und zur Krankenkasse.</div><div class="gmx">Ich brauche eine Krankschreibung bis Freitag.</div></div>
+<div class="gk ja"><span class="gem2">➡️</span><div class="gmw">Die Überweisung</div><div class="gmb">Geht zum Facharzt. Ohne sie nimmt er dich oft nicht.</div><div class="gmx">Ich habe eine Überweisung vom Hausarzt.</div></div>
+</div>
+<div class="gpaar">
+<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Ich möchte das Rezept einlösen.</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>ein Rezept einlösen</b> ist der feste Ausdruck in der Apotheke — man gibt den Zettel ab und bekommt dafür das Medikament.</div></div>
+<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Ich möchte das Rezept kaufen.</div><div class="bsp"><span class="wer">Das Problem</span>Den Zettel kauft niemand. Gekauft wird das <b>Medikament</b> — der Zettel wird <b>eingelöst</b>.</div></div>
+</div>
+<div class="gpaar">
+<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Ich habe mich krankgemeldet.</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>sich krankmelden</b> ist reflexiv: Du meldest <u>dich</u>. Im Perfekt wird alles ein Wort: <b>krankgemeldet</b>.</div></div>
+<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Ich habe krank gemeldet.</div><div class="bsp"><span class="wer">Das Problem</span>Ohne <b>mich</b> fehlt die halbe Bedeutung — so klingt es, als hättest du jemand anderen gemeldet.</div></div>
+</div>
+<div class="gpaar">
+<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Nehmen Sie die Tablette nüchtern ein.</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>nüchtern</b> heißt in der Medizin: mit leerem Magen, also vor dem Essen. Das steht so auf jedem Beipackzettel.</div></div>
+<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Nehmen Sie die Tablette ohne Alkohol ein.</div><div class="bsp"><span class="wer">Das Problem</span>Im Alltag heißt <b>nüchtern</b> auch „nicht betrunken“ — beim Arzt aber nie. Dort geht es immer ums Essen.</div></div>
+</div>
+<div class="hilfe">
+<button type="button">🆘 Welchen Zettel brauche ich?</button>
+<div class="inhalt">
+<p>Frag dich, wohin du als Nächstes gehst:</p>
+<ul>
+<li><b>In die Apotheke</b>, um ein Medikament zu holen → <b>das Rezept</b>.</li>
+<li><b>Zur Arbeit</b>, um zu Hause bleiben zu dürfen → <b>die Krankschreibung</b>.</li>
+<li><b>Zum Facharzt</b> (Orthopäde, Hautarzt, Augenarzt) → <b>die Überweisung</b>.</li>
+<li><b>Nirgendwohin</b>, du willst es nur wissen → gar keinen Zettel, nur eine Frage.</li>
+</ul>
+<p style="margin-top:.5rem;">Und wenn du unsicher bist, frag im Sprechzimmer: <b>Brauche ich dafür noch etwas von Ihnen?</b> — der Satz spart dir einen zweiten Weg.</p>
+</div>
+</div>
+<div class="tip">⚖️ <strong>Kurzübung:</strong> Einer nennt ein Ziel („Orthopäde“, „Antibiotikum“, „drei Tage frei“). Der andere nennt den Zettel <u>und</u> den Satz, mit dem er ihn beim Arzt erbittet.</div>
+</section>
+
+<section class="section" id="saetze">
+<h2 class="st">Die vier Sätze für <span class="hl">Apotheke und Arbeit</span></h2>
+<p class="ssub">Erbitten, einlösen, nachfragen, sich melden. Vier Bausteine für die drei Orte nach dem Sprechzimmer.</p>
+<div class="nur-a2">
+<div class="rmcard"><b>1 · 📝 Beim Arzt erbitten</b><br>
+<span class="rm">Brauche ich ein Rezept?</span><span class="rm">Können Sie mich krankschreiben?</span><span class="rm">Für wie lange?</span>
+<div class="bsp"><span class="wer">So klingt es</span>Können Sie mich krankschreiben? Ich müsste diese Woche zu Hause bleiben.</div>
+<button class="speak" data-say="Können Sie mich krankschreiben? Ich müsste diese Woche zu Hause bleiben.">🔊 hören</button></div>
+<div class="rmcard"><b>2 · 💊 In der Apotheke</b><br>
+<span class="rm">Ich möchte dieses Rezept einlösen</span><span class="rm">Haben Sie etwas gegen …?</span><span class="rm">Was kostet das?</span>
+<div class="bsp"><span class="wer">So klingt es</span>Guten Tag, ich möchte dieses Rezept einlösen.</div>
+<button class="speak" data-say="Guten Tag, ich möchte dieses Rezept einlösen.">🔊 hören</button></div>
+<div class="rmcard"><b>3 · ❓ Zur Einnahme fragen</b><br>
+<span class="rm">Wie oft am Tag?</span><span class="rm">Vor oder nach dem Essen?</span><span class="rm">Wie lange nehme ich das?</span>
+<div class="bsp"><span class="wer">So klingt es</span>Wie oft soll ich das nehmen — und vor oder nach dem Essen?</div>
+<button class="speak" data-say="Wie oft soll ich das nehmen, und vor oder nach dem Essen?">🔊 hören</button></div>
+<div class="rmcard"><b>4 · 📞 Sich krankmelden</b><br>
+<span class="rm">Ich bin heute krank</span><span class="rm">Ich komme nicht</span><span class="rm">Die Krankschreibung schicke ich</span>
+<div class="bsp"><span class="wer">So klingt es</span>Guten Morgen, ich bin heute krank und komme nicht. Die Krankschreibung schicke ich noch heute.</div>
+<button class="speak" data-say="Guten Morgen, ich bin heute krank und komme nicht. Die Krankschreibung schicke ich noch heute.">🔊 hören</button></div>
+</div>
+<div class="nur-b1">
+<div class="rmcard"><b>1 · 📝 Genau erbitten</b><br>
+<span class="rm">Wäre eine Krankschreibung möglich?</span><span class="rm">Ich bräuchte eine Überweisung zum …</span><span class="rm">Reicht das rezeptfrei?</span>
+<div class="bsp"><span class="wer">So klingt es</span>Wäre eine Krankschreibung bis Freitag möglich? Und bräuchte ich für den Orthopäden eine Überweisung?</div>
+<button class="speak" data-say="Wäre eine Krankschreibung bis Freitag möglich? Und bräuchte ich für den Orthopäden eine Überweisung?">🔊 hören</button></div>
+<div class="rmcard"><b>2 · 💊 In der Apotheke beraten lassen</b><br>
+<span class="rm">Gibt es das auch als …?</span><span class="rm">Vertrage ich das mit …?</span><span class="rm">Haben Sie eine günstigere Alternative?</span>
+<div class="bsp"><span class="wer">So klingt es</span>Gibt es das auch als Saft? Und vertrage ich es zusammen mit dem, was ich schon nehme?</div>
+<button class="speak" data-say="Gibt es das auch als Saft? Und vertrage ich es zusammen mit dem, was ich schon nehme?">🔊 hören</button></div>
+<div class="rmcard"><b>3 · ❓ Nebenwirkungen klären</b><br>
+<span class="rm">Worauf muss ich achten?</span><span class="rm">Kann ich damit Auto fahren?</span><span class="rm">Was mache ich, wenn …?</span>
+<div class="bsp"><span class="wer">So klingt es</span>Worauf muss ich achten — kann ich damit Auto fahren? Und was mache ich, wenn mir schlecht wird?</div>
+<button class="speak" data-say="Worauf muss ich achten? Kann ich damit Auto fahren? Und was mache ich, wenn mir schlecht wird?">🔊 hören</button></div>
+<div class="rmcard"><b>4 · 📞 Beim Arbeitgeber absichern</b><br>
+<span class="rm">Ich melde mich krank</span><span class="rm">Die AU geht heute raus</span><span class="rm">Ich sage Bescheid, sobald …</span>
+<div class="bsp"><span class="wer">So klingt es</span>Ich melde mich für diese Woche krank, die Bescheinigung geht heute noch raus. Sobald ich mehr weiß, sage ich Bescheid.</div>
+<button class="speak" data-say="Ich melde mich für diese Woche krank, die Bescheinigung geht heute noch raus. Sobald ich mehr weiß, sage ich Bescheid.">🔊 hören</button></div>
+</div>
+<div class="legende">
+<span><i class="i-verb"></i> Verb</span>
+<span><i class="i-akk"></i> das Papier</span>
+<span><i class="i-menge"></i> Menge und Zeit</span>
+<span><i class="i-hoefl"></i> Höflichkeit</span>
+</div>
+<div class="tip">🗣️ <strong>Sofort anwenden:</strong> Spielt die Apotheke durch — aber der Apotheker antwortet auf jede Frage sehr knapp. Der Kunde muss so lange fragen, bis er den ganzen Einnahmeplan kennt.</div>
+</section>
+
+<section class="section" id="dialoge">
+<h2 class="st">Vier Wege — <span class="hl">zwei Runden</span></h2>
+<p class="ssub"><b>Runde 1:</b> Lest den Dialog zu zweit laut. <b>Runde 2:</b> Deckt die Zeilen von B ab und sprecht frei — die Hinweise reichen.</p>
+<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-arzt.webp" alt="Eine Frau sitzt im Sprechzimmer einem Arzt gegenüber"><h4>Dialog 1 · „Am Ende der Untersuchung“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Der Arzt ist fertig. Jetzt entscheidet sich, mit welchen Papieren du rausgehst — und ob du an alles gedacht hast.</div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Also, das ist eine Entzündung. Ich verschreibe Ihnen etwas.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Danke. Bekomme ich dafür ein Rezept?</div><div class="dcue">🗣️ Nachfragen, auch wenn es selbstverständlich scheint. Es kostet vier Wörter.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ja, das drucke ich Ihnen aus.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Und könnten Sie mich krankschreiben? Ich arbeite im Verkauf.</div><div class="dcue">🗣️ Der Grund in drei Wörtern hilft dem Arzt bei der Entscheidung.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Bis Freitag, denke ich. Reicht das?</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ja, das reicht. Brauche ich sonst noch etwas von Ihnen?</div><div class="dcue">🗣️ Der Satz, der einen zweiten Weg spart. Immer am Ende stellen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Nein, das war's. Gute Besserung!</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Vielen Dank. Auf Wiedersehen.</div><div class="dcue">🗣️ Auf <b>Gute Besserung</b> antwortet man einfach mit <b>Danke</b>.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<button class="speak dbtn" data-say="Also, das ist eine Entzündung. Ich verschreibe Ihnen etwas. Danke. Bekomme ich dafür ein Rezept? Ja, das drucke ich Ihnen aus. Und könnten Sie mich krankschreiben? Ich arbeite im Verkauf. Bis Freitag, denke ich. Reicht das? Ja, das reicht. Brauche ich sonst noch etwas von Ihnen? Nein, das war's. Gute Besserung! Vielen Dank. Auf Wiedersehen.">🔊 Dialog vorlesen lassen</button></div>
+
+<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-apotheke.webp" alt="Amanda bekommt in der Apotheke eine Packung überreicht"><h4>Dialog 2 · „In der Apotheke“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Du gibst das Rezept ab. Die Apothekerin erklärt schnell — du willst wirklich verstehen, wie du das Mittel nimmst.</div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Guten Tag, was kann ich für Sie tun?</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Guten Tag, ich möchte dieses Rezept einlösen.</div><div class="dcue">🗣️ <b>Ein Rezept einlösen</b> — der feste Ausdruck. Damit bist du sofort verstanden.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Einen Moment … so, hier ist es. Dreimal täglich eine Tablette.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Vor oder nach dem Essen?</div><div class="dcue">🗣️ Die Frage, die fast alle vergessen — und die den größten Unterschied macht.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Nach dem Essen, mit viel Wasser. Und die Packung aufbrauchen.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Auch wenn es mir vorher besser geht?</div><div class="dcue">🗣️ Genau nachhaken. Bei Antibiotika ist das die entscheidende Frage.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ja, unbedingt weiternehmen. Das sind fünf Tage.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Alles klar. Und was zahle ich?</div><div class="dcue">🗣️ Am Ende nach der Zuzahlung fragen — dann gibt es an der Kasse keine Überraschung.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<button class="speak dbtn" data-say="Guten Tag, was kann ich für Sie tun? Guten Tag, ich möchte dieses Rezept einlösen. Einen Moment … so, hier ist es. Dreimal täglich eine Tablette. Vor oder nach dem Essen? Nach dem Essen, mit viel Wasser. Und die Packung aufbrauchen. Auch wenn es mir vorher besser geht? Ja, unbedingt weiternehmen. Das sind fünf Tage. Alles klar. Und was zahle ich?">🔊 Dialog vorlesen lassen</button></div>
+
+<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-buero.webp" alt="Zwei Kolleginnen am Schreibtisch mit Laptop"><h4>Dialog 3 · „Beim Chef krankmelden“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Halb acht morgens. Du bist krank, hast aber erst um neun einen Arzttermin.</div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Müller, guten Morgen.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Guten Morgen, Frau Müller, hier ist Kaya Demir. Ich muss mich krankmelden.</div><div class="dcue">🗣️ Gruß, Name, Sache. Beim Chef besonders knapp.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Oh je. Waren Sie schon beim Arzt?</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ich habe um neun einen Termin. Die Krankschreibung schicke ich Ihnen heute noch.</div><div class="dcue">🗣️ Von selbst sagen, wann das Papier kommt. Dann muss niemand nachfragen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Gut. Wie lange, glauben Sie?</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Das weiß ich noch nicht. Ich melde mich, sobald ich mehr weiß.</div><div class="dcue">🗣️ <b>Ich melde mich, sobald …</b> ist die höflichste Form von „ich weiß es nicht“.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">In Ordnung. Die Termine heute übernimmt Sara.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Danke. Ich habe alles im Kalender notiert, sie findet es dort.</div><div class="dcue">🗣️ Kurz mitdenken, was ohne dich liegen bleibt. Das merkt sich jeder Chef.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<button class="speak dbtn" data-say="Müller, guten Morgen. Guten Morgen, Frau Müller, hier ist Kaya Demir. Ich muss mich krankmelden. Oh je. Waren Sie schon beim Arzt? Ich habe um neun einen Termin. Die Krankschreibung schicke ich Ihnen heute noch. Gut. Wie lange, glauben Sie? Das weiß ich noch nicht. Ich melde mich, sobald ich mehr weiß. In Ordnung. Die Termine heute übernimmt Sara. Danke. Ich habe alles im Kalender notiert, sie findet es dort.">🔊 Dialog vorlesen lassen</button></div>
+
+<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-medizin.webp" alt="Ein Arzt steht neben einer sitzenden Patientin"><h4>Dialog 4 · „Die Überweisung“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Der Hausarzt schickt dich zum Facharzt. Du hast noch nie eine Überweisung benutzt und willst wissen, wie es läuft.</div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Das sollte sich ein Orthopäde ansehen. Ich schreibe Ihnen eine Überweisung.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Danke. Muss ich mir den Orthopäden selbst suchen?</div><div class="dcue">🗣️ Praktische Fragen sind erlaubt. Niemand erwartet, dass du das System kennst.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ja, aber ich kann Ihnen zwei in der Nähe nennen.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Sehr gern. Und wie lange ist die Überweisung gültig?</div><div class="dcue">🗣️ Gute Frage: Eine Überweisung gilt nicht ewig, meistens ein Quartal.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Bis Ende des Quartals, also bis Ende Dezember.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Gut. Soll ich danach noch einmal zu Ihnen kommen?</div><div class="dcue">🗣️ Klären, wer am Ende zuständig ist — sonst fällt der Fall zwischen zwei Praxen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ja, bringen Sie den Befund einfach mit.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Mache ich. Vielen Dank!</div><div class="dcue">🗣️ <b>Der Befund</b> ist das Ergebnis der Untersuchung. Ein Wort, das oft fällt.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<button class="speak dbtn" data-say="Das sollte sich ein Orthopäde ansehen. Ich schreibe Ihnen eine Überweisung. Danke. Muss ich mir den Orthopäden selbst suchen? Ja, aber ich kann Ihnen zwei in der Nähe nennen. Sehr gern. Und wie lange ist die Überweisung gültig? Bis Ende des Quartals, also bis Ende Dezember. Gut. Soll ich danach noch einmal zu Ihnen kommen? Ja, bringen Sie den Befund einfach mit. Mache ich. Vielen Dank!">🔊 Dialog vorlesen lassen</button></div>
+
+<div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 2 noch einmal — aber die Apothekerin sagt alles nur einmal und ziemlich schnell. Der Kunde muss zweimal um Wiederholung bitten, ohne unhöflich zu werden.</div>
+</section>
+
+<section class="section" id="grammatik">
+<h2 class="st">🧩 Wie oft, wie lange: <span class="hl">Häufigkeit und Dauer</span></h2>
+<p class="ssub">Bei Medikamenten hängt alles an zwei Angaben: <b>wie oft</b> und <b>wie lange</b>. Beide haben eigene Wörter — und die verwechselt fast jeder am Anfang.</p>
+<div class="gintro"><b>Wie oft?</b> beantwortest du mit <b>-mal</b>: <i>ein<b>mal</b>, zwei<b>mal</b>, drei<b>mal</b> täglich</i> — zusammengeschrieben und klein. <b>Wie lange?</b> mit <b>für</b> oder einer Zeitspanne: <i><b>für</b> fünf Tage, <b>eine Woche</b> lang, <b>bis</b> Freitag</i>. Und die Tageszeit steht mit <b>am</b> oder als Adverb: <i>am Morgen</i> = <i>morgens</i>.</div>
+<div class="gkette">
+<div class="gstep"><span class="gem">🔢</span><span class="gw">wie oft → -mal</span><span class="gs">einmal, zweimal, dreimal täglich · alle acht Stunden</span></div>
+<div class="gpfeil">▾</div>
+<div class="gstep c2"><span class="gem">⏳</span><span class="gw">wie lange → für / bis</span><span class="gs">für fünf Tage · eine Woche lang · bis Freitag</span></div>
+<div class="gpfeil">▾</div>
+<div class="gstep c3"><span class="gem">🌅</span><span class="gw">wann → morgens, mittags, abends</span><span class="gs">morgens und abends je eine Tablette</span></div>
+<div class="gpfeil">▾</div>
+<div class="gstep c4"><span class="gem">🍽️</span><span class="gw">wozu → vor / nach dem Essen</span><span class="gs">vor dem Essen · nach dem Essen · nüchtern</span></div>
+</div>
+<div class="gpos">
+<div class="gz"><b>wie oft</b><span>Dreimal täglich</span></div>
+<div class="gz"><b>was</b><span>eine Tablette</span></div>
+<div class="gz"><b>wann</b><span>nach dem Essen,</span></div>
+<div class="gz"><b>wie lange</b><span>für fünf Tage.</span></div>
+</div>
+<h2 class="st">Die Angaben, <span class="hl">die auf jeder Packung stehen</span></h2>
+<p class="ssub">Mehr als diese brauchst du für keinen Beipackzettel. Lies jede Zeile laut, dann erkennst du sie später sofort wieder.</p>
+<div class="gdrei">
+<div class="gk blau"><span class="gem2">🔢</span><div class="gmw">-mal täglich</div><div class="gmb">wie oft am Tag</div><div class="gmx">dreimal täglich = alle acht Stunden</div></div>
+<div class="gk gelb"><span class="gem2">🌅</span><div class="gmw">morgens / abends</div><div class="gmb">die Tageszeit als Adverb, klein</div><div class="gmx">morgens eine, abends eine</div></div>
+<div class="gk ja"><span class="gem2">⏳</span><div class="gmw">für / bis</div><div class="gmb">wie lange insgesamt</div><div class="gmx">für fünf Tage · bis Freitag</div></div>
+</div>
+<div class="gchips">
+<span class="gchip">einmal täglich · zweimal täglich</span><span class="gchip">morgens und abends</span><span class="gchip">vor dem Essen · nach dem Essen</span><span class="gchip">nüchtern einnehmen</span><span class="gchip">für fünf Tage · eine Woche lang</span><span class="gchip">bei Bedarf · höchstens dreimal</span>
+</div>
+<h2 class="st">Die Falle: <span class="hl">vor dem Essen ist Dativ</span></h2>
+<p class="ssub"><b>vor</b> und <b>nach</b> stehen hier immer mit <b>Dativ</b>, weil es um Zeit geht und nicht um einen Ort. Deshalb heißt es <i>vor <b>dem</b> Essen</i> — und nie „vor das Essen“.</p>
+<div class="gdrei">
+<div class="gk blau"><span class="gem2">🍽️</span><div class="gmw">vor / nach + Dativ</div><div class="gmb">bei Zeitangaben immer Dativ</div><div class="gmx">vor dem Essen, nach der Mahlzeit</div></div>
+<div class="gk gelb"><span class="gem2">💧</span><div class="gmw">mit / ohne</div><div class="gmb">mit + Dativ, ohne + Akkusativ</div><div class="gmx">mit viel Wasser · ohne Milch</div></div>
+<div class="gk ja"><span class="gem2">🚫</span><div class="gmw">nüchtern</div><div class="gmb">kein Fall, nur ein Adjektiv</div><div class="gmx">Nüchtern einnehmen.</div></div>
+</div>
+<div class="gchips">
+<span class="gchip">vor dem Essen · nach dem Essen</span><span class="gchip">vor dem Schlafengehen</span><span class="gchip">nach der Mahlzeit</span><span class="gchip">zwischen den Mahlzeiten</span><span class="gchip">mit viel Wasser</span><span class="gchip">ohne Milch</span>
+</div>
+<h2 class="st">🧱 Bau die Sätze selbst</h2>
+<p class="ssub">Tippe die Teile in der richtigen Reihenfolge an. Danach auf „Prüfen“ — und den fertigen Satz laut lesen.</p>
+<div id="gbau"></div>
+<h2 class="st">📖 Und jetzt im Zusammenhang</h2>
+<p class="ssub">Ein Vormittag zwischen Praxis, Apotheke und Büro. Wähle in jeder Lücke das passende Wort.</p>
+<div class="gstory" id="gstory"></div>
+<div class="hilfe">
+<button type="button">🆘 Den Einnahmeplan in vier Fragen</button>
+<div class="inhalt">
+<p>Wenn du das gefragt hast, weißt du alles:</p>
+<ul>
+<li><b>Wie oft am Tag?</b> — <i>dreimal täglich</i> oder <i>alle acht Stunden</i>.</li>
+<li><b>Vor oder nach dem Essen?</b> — die Frage, die fast alle vergessen.</li>
+<li><b>Wie lange insgesamt?</b> — <i>für fünf Tage</i>, und ob man aufbrauchen muss.</li>
+<li><b>Worauf muss ich achten?</b> — Nebenwirkungen, Autofahren, andere Medikamente.</li>
+</ul>
+<p style="margin-top:.5rem;">Und wenn es zu schnell ging: <b>Könnten Sie mir das kurz aufschreiben?</b> In jeder Apotheke völlig normal.</p>
+</div>
+</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei <span class="hl">Gänge nach dem Arzt</span></h2>
+<p class="ssub">Zu zweit. Einer hat den Zettel in der Hand, einer sitzt hinter dem Tresen oder am Telefon. Danach tauschen.</p>
+<div class="rmcard">
+<b>1 · Das Rezept einlösen</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A gibt ein Rezept ab. B als Apothekerin hat das Mittel nur in einer anderen Packungsgröße und erklärt die Einnahme sehr knapp.</p>
+<div class="nur-a2"><span class="rm">Ich möchte dieses Rezept einlösen</span><span class="rm">Wie oft am Tag?</span><span class="rm">Vor oder nach dem Essen?</span><span class="rm">Was zahle ich?</span></div>
+<div class="nur-b1"><span class="rm">Gibt es das auch als Saft?</span><span class="rm">Wie lange muss ich es nehmen?</span><span class="rm">Vertrage ich das mit …?</span><span class="rm">Könnten Sie mir das kurz aufschreiben?</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A geht nicht, bevor er alle vier Angaben hat — wie oft, wann, wie lange, worauf achten — und fragt am Ende nach dem Preis.</div>
+</div>
+<div class="rmcard">
+<b>2 · Krankmeldung mit Rückfragen</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A meldet sich beim Chef krank. B als Chefin fragt nach, wie lange es dauert und wer die Termine übernimmt.</p>
+<div class="nur-a2"><span class="rm">Ich muss mich krankmelden</span><span class="rm">Ich habe um neun einen Termin</span><span class="rm">Die Krankschreibung schicke ich</span><span class="rm">Ich melde mich morgen</span></div>
+<div class="nur-b1"><span class="rm">Ich bin voraussichtlich bis … nicht da</span><span class="rm">Die Bescheinigung geht heute raus</span><span class="rm">Sara kann die Termine übernehmen</span><span class="rm">Ich sage Bescheid, sobald ich mehr weiß</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A nennt von sich aus, wann das Papier kommt, denkt kurz mit, was liegen bleibt, und verspricht keine Dauer, die er nicht kennt.</div>
+</div>
+<div class="rmcard">
+<b>3 · Ohne Rezept in der Apotheke</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat kein Rezept und will etwas gegen Husten. B fragt nach Alter, anderen Medikamenten und Schwangerschaft, bevor sie etwas gibt.</p>
+<div class="nur-a2"><span class="rm">Haben Sie etwas gegen Husten?</span><span class="rm">Seit drei Tagen</span><span class="rm">Nein, ich nehme nichts anderes</span><span class="rm">Ist das rezeptfrei?</span></div>
+<div class="nur-b1"><span class="rm">Ich hätte gern etwas für die Nacht</span><span class="rm">Eher trockener Husten als mit Schleim</span><span class="rm">Gibt es eine günstigere Alternative?</span><span class="rm">Ab wann sollte ich zum Arzt?</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A beschreibt die Beschwerde genau genug, dass B etwas empfehlen kann, und fragt am Ende, ab wann ein Arztbesuch nötig wäre.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
+</section>
+
+<section class="section" id="challenge">
+<h2 class="st">⏱️ Die 90-Sekunden-Challenge</h2>
+<p class="ssub">Ein Wort, anderthalb Minuten, freies Sprechen. Es muss nicht perfekt sein — es muss nur weitergehen.</p>
+<div class="card90">
+<div class="lbl">Dein Wort</div>
+<img id="i90" src="../vok-bild/das-rezept.webp" alt="das Rezept">
+<div class="word" id="w90">das Rezept</div>
+<div class="helpwords" id="hw90"></div>
+<div class="timer" id="t90">1:30</div>
+<div>
+<button class="btn ghost" id="new90">🎲 Neues Wort</button>
+<button class="btn" id="start90">▶︎ Start</button>
+</div>
+</div>
+<div class="hilfe">
+<button type="button">🆘 Mir fällt nichts ein</button>
+<div class="inhalt">
+<p>Erzähl es als Weg, dann trägt sich die Zeit von selbst:</p>
+<ul>
+<li>Wo hat es angefangen? <b>Ich war beim Arzt, weil …</b></li>
+<li>Was hast du bekommen? <b>Er hat mir … verschrieben.</b></li>
+<li>Wohin bist du dann? <b>Danach bin ich in die Apotheke …</b></li>
+<li>Wie ging es aus? <b>Nach drei Tagen war es besser.</b></li>
+</ul>
+<p style="margin-top:.5rem;">Und wenn ein Wort fehlt: beschreib den Zettel. <b>„Das Papier, das man dem Chef schickt“</b> — jeder versteht dich.</p>
+</div>
+</div>
+<div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde muss einmal <u>-mal täglich</u> und einmal <u>vor oder nach dem Essen</u> vorkommen. Der Partner hebt die Hand, sobald beides da war.</div>
+</section>
+
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Diktiert euch gegenseitig einen Einnahmeplan — wie oft, wann, wie lange. Der andere schreibt mit und liest ihn zurück. Erst wenn beides gleich ist, seid ihr fertig.</div>
+</section>
+
+<section class="section" id="hausaufgabe">
+<h2 class="st">📮 Deine Hausaufgabe bis <span class="hl">nächste Woche</span></h2>
+<p class="ssub">Vier kleine Aufgaben, zusammen etwa 25 Minuten. Tippe eine an, wenn du sie erledigt hast.</p>
+<div class="tip">💡 <strong>Warum das hilft:</strong> Diese drei Gespräche kommen im Leben in Deutschland immer wieder. Wer sie einmal geübt hat, verliert die Scheu vor Apotheke und Krankmeldung.</div>
+<div class="hagrid nur-a2">
+<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🎙️</span><span class="htxt">
+<h4>1. In der Apotheke <span class="zeit">5 Min</span></h4>
+<p>Nimm eine Sprachnachricht auf: Du löst ein Rezept ein und stellst die vier Fragen — wie oft, wann, wie lange, worauf achten.</p></span></button>
+<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">📞</span><span class="htxt">
+<h4>2. Krankmeldung <span class="zeit">5 Min</span></h4>
+<p>Sprich eine Krankmeldung wie auf einen Anrufbeantworter: Gruß, Name, dass du krank bist, wann die Bescheinigung kommt.</p></span></button>
+<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">✍️</span><span class="htxt">
+<h4>3. Sechs Einnahmepläne <span class="zeit">7 Min</span></h4>
+<p>Schreib sechs Sätze mit <b>-mal täglich</b>, <b>vor/nach dem Essen</b> und <b>für … Tage</b>. Achte auf den Dativ.</p></span></button>
+<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🗂️</span><span class="htxt">
+<h4>4. Welcher Zettel? <span class="zeit">6 Min</span></h4>
+<p>Schreib sechs Situationen auf und dahinter, welches Papier man braucht: Rezept, Krankschreibung oder Überweisung.</p></span></button>
+</div>
+<div class="hagrid nur-b1">
+<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🎙️</span><span class="htxt">
+<h4>1. Beratung ohne Rezept <span class="zeit">7 Min</span></h4>
+<p>Nimm ein Gespräch auf, in dem du ohne Rezept etwas gegen Husten willst — und die Apothekerin dir Rückfragen stellt.</p></span></button>
+<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">✍️</span><span class="htxt">
+<h4>2. Einen Beipackzettel erklären <span class="zeit">8 Min</span></h4>
+<p>Such einen echten Beipackzettel und schreib in fünf einfachen Sätzen, was drinsteht — als würdest du es jemandem am Telefon erklären.</p></span></button>
+<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">📧</span><span class="htxt">
+<h4>3. Die Krankmeldung schriftlich <span class="zeit">5 Min</span></h4>
+<p>Schreib fünf Zeilen an deinen Arbeitgeber: Betreff, Anrede, seit wann, voraussichtlich bis wann, wann die Bescheinigung kommt.</p></span></button>
+<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🎧</span><span class="htxt">
+<h4>4. Hör hin <span class="zeit">5 Min</span></h4>
+<p>Achte in einer deutschen Werbung für ein Medikament auf den Schlusssatz. Schreib ihn auf und erklär, was er bedeutet.</p></span></button>
+</div>
+<p class="hastand" data-ha-stand>0 von 0 Aufgaben geschafft.</p>
+<div class="hilfe nur-a2">
+<button type="button">💡 Beispiel ansehen (Aufgabe 3)</button>
+<div class="inhalt">
+<p>So sehen die Sätze aus:</p>
+<ul>
+<li><b>Dreimal täglich</b> eine Tablette, <b>nach dem Essen</b>, <b>für fünf Tage</b>.</li>
+<li><b>Einmal täglich</b> abends, <b>vor dem Schlafengehen</b>.</li>
+<li><b>Zweimal täglich</b> die Salbe auftragen, <b>eine Woche lang</b>.</li>
+<li><b>Nüchtern</b> einnehmen, also <b>vor dem Frühstück</b>.</li>
+<li><b>Bei Bedarf</b>, aber <b>höchstens dreimal</b> am Tag.</li>
+</ul>
+<p style="margin-top:.5rem;">Ein einziger Test: <b>Steht in deinem Satz, wie oft, wann und wie lange? Dann ist er vollständig.</b></p>
+</div>
+</div>
+<div class="hilfe nur-b1">
+<button type="button">💡 Beispiel ansehen (Aufgabe 3)</button>
+<div class="inhalt">
+<p>So könnte die Mail aussehen:</p>
+<ul>
+<li><b>Betreff:</b> Krankmeldung Kaya Demir, ab 30.09.</li>
+<li><b>Sehr geehrte Frau Müller,</b></li>
+<li>hiermit melde ich mich für heute krank. Ich war beim Arzt; die Arbeitsunfähigkeitsbescheinigung geht heute noch an Sie raus.</li>
+<li>Voraussichtlich bin ich bis Freitag nicht im Haus. Sobald ich mehr weiß, melde ich mich.</li>
+<li><b>Mit freundlichen Grüßen</b><br>Kaya Demir</li>
+</ul>
+<p style="margin-top:.5rem;">Drei Dinge müssen drinstehen: <b>ab wann</b>, <b>voraussichtlich bis wann</b> und <b>wann die Bescheinigung kommt</b>. Alles andere ist optional.</p>
+</div>
+</div>
+<div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Sprachnachricht bis Sonntag in die WhatsApp-Gruppe. Ich höre jede an und antworte dir persönlich.</div>
+<div class="tip">🔜 <strong>Nächste Woche, Strang A:</strong> <u>Wohnungssuche</u> — Anzeigen lesen, bei der Besichtigung fragen und den Mietvertrag verstehen.</div>
+</section>
+
+<footer>
+<strong>deutschoderwas Sprechclub</strong> · Beim Arzt · Teil 2 · A2/B1 · Woche 3 · Montag war Teil 1
+</footer>
+
+</div>
+
+<script type="application/json" id="daten-sk">
+["Löse in der Apotheke ein <b>Rezept</b> ein — mit allen vier Fragen.","Bitte deinen Arzt um eine <b>Krankschreibung</b> und nenne einen Grund.","Melde dich bei deinem Chef <b>krank</b>. Vier Sätze.","Erklär den Unterschied zwischen <b>Rezept</b>, <b>Krankschreibung</b> und <b>Überweisung</b>.","Du hast kein Rezept und brauchst etwas gegen <b>Husten</b>. Frag nach.","Wiederhole einen <b>Einnahmeplan</b>, den du gerade gehört hast.","Frag nach <b>Nebenwirkungen</b> und ob du Auto fahren darfst.","Die Apothekerin spricht zu schnell. Bitte um Wiederholung.","Erzähl von einer <b>Apotheke</b> oder einem Arztbesuch in deinem Land.","Jemand sagt „Gute Besserung“. Antworte — und sag noch einen Satz dazu."]
+</script>
+<script type="application/json" id="daten-w90">
+[{"w":"das Rezept","b":"../vok-bild/das-rezept.webp","h":["einlösen","der Arzt","die Apotheke","rezeptpflichtig","die Unterschrift"]},{"w":"die Apotheke","b":"../vok-bild/die-apotheke.webp","h":["die Beratung","der Tresen","die Packung","rezeptfrei","der Notdienst"]},{"w":"die Krankschreibung","b":"../vok-bild/die-krankmeldung.webp","h":["der gelbe Schein","der Arbeitgeber","drei Tage","einreichen","die Kasse"]},{"w":"die Salbe","b":"../vok-bild/die-salbe.webp","h":["auftragen","die Tube","die Haut","zweimal täglich","die Stelle"]},{"w":"in der Apotheke fragen","b":"../amanda/sz-apotheke.webp","h":["wie oft","vor dem Essen","die Nebenwirkung","die Zuzahlung","aufschreiben"]},{"w":"sich krankmelden","b":"../amanda/sz-buero.webp","h":["der Chef","der Anruf","die Vertretung","die Bescheinigung","morgen früh"]},{"w":"die Überweisung","b":"../amanda/sz-medizin.webp","h":["der Facharzt","der Hausarzt","das Quartal","der Befund","der Termin"]},{"w":"der Tee und die Ruhe","b":"../vok-bild/der-tee.webp","h":["viel trinken","sich ausruhen","die Decke","schlafen","gute Besserung"]},{"w":"die Beschwerden","b":"../vok-bild/die-schmerzen.webp","h":["seit gestern","besser werden","aushalten","beobachten","wiederkommen"]},{"w":"beim Arzt","b":"../amanda/sz-arzt.webp","h":["untersuchen","verschreiben","die Diagnose","die Kontrolle","das Wartezimmer"]}]
+</script>
+<script type="application/json" id="daten-quiz">
+[{"q":"Was macht man mit einem Rezept?","o":["Man löst es in der Apotheke ein.","Man kauft es beim Arzt.","Man gibt es dem Chef.","Man schickt es der Krankenkasse."],"c":0,"e":"<b>ein Rezept einlösen</b> ist der feste Ausdruck. Zum Chef geht die <b>Krankschreibung</b>, nicht das Rezept."},{"q":"Was bedeutet „nüchtern einnehmen“?","o":["Mit leerem Magen","Ohne Alkohol","Mit viel Wasser","Nur abends"],"c":0,"e":"In der Medizin heißt <b>nüchtern</b> immer „vor dem Essen, mit leerem Magen“ — nie „nicht betrunken“."},{"q":"Wie heißt es richtig?","o":["Ich habe mich krankgemeldet.","Ich habe krank gemeldet.","Ich habe mich krank meldet.","Ich bin krankgemeldet mich."],"c":0,"e":"<b>sich krankmelden</b> ist reflexiv und trennbar. Im Perfekt wird es ein Wort: <b>krankgemeldet</b>."},{"q":"Wofür braucht man eine Überweisung?","o":["Für den Facharzt","Für die Apotheke","Für den Arbeitgeber","Für die Krankenkasse"],"c":0,"e":"Die <b>Überweisung</b> schickt dich vom Hausarzt zum Facharzt. Sie gilt meist bis zum Ende des Quartals."},{"q":"Was passt: „Nehmen Sie das ___ dem Essen.“","o":["nach","nachdem","nachher","danach"],"c":0,"e":"<b>nach</b> + Dativ: <i>nach dem Essen</i>. <b>nachdem</b> leitet einen Nebensatz ein und braucht ein Verb."},{"q":"Wie fragt man nach der Häufigkeit?","o":["Wie oft am Tag?","Wie viel am Tag?","Wie lange am Tag?","Wann am Tag?"],"c":0,"e":"<b>Wie oft?</b> fragt nach der Anzahl der Male. Die Antwort kommt mit <b>-mal</b>: <i>dreimal täglich</i>."},{"q":"Wo bekommt man in Deutschland rezeptpflichtige Medikamente?","o":["Nur in der Apotheke","Im Supermarkt","In der Drogerie","Beim Arzt direkt"],"c":0,"e":"Rezeptpflichtige Mittel gibt es <b>nur in der Apotheke</b> und nur gegen Rezept. In der Drogerie gibt es keine Medikamente."},{"q":"Was antwortet man auf „Gute Besserung“?","o":["Danke.","Ihnen auch.","Gleichfalls.","Bitte schön."],"c":0,"e":"Einfach <b>Danke</b>. „Ihnen auch“ wäre seltsam — der andere ist ja nicht krank."}]
+</script>
+<script type="application/json" id="daten-gap">
+[{"t":"Ich möchte dieses Rezept ___.","o":["einlösen","kaufen","einkaufen","bezahlen"],"a":"einlösen"},{"t":"Nehmen Sie die Tablette ___ dem Essen.","o":["nach","nachdem","nachher","danach"],"a":"nach"},{"t":"___ täglich eine Tablette, für fünf Tage.","o":["Dreimal","Drei Mal am","Dritte Mal","Drei mal täglich am"],"a":"Dreimal"},{"t":"Ich habe ___ heute Morgen krankgemeldet.","o":["mich","mir","sich","meine"],"a":"mich"},{"t":"Für den Orthopäden brauche ich eine ___.","o":["Überweisung","Krankschreibung","Rezept","Bescheinigung"],"a":"Überweisung"},{"t":"Das müssen Sie ___ einnehmen, also vor dem Frühstück.","o":["nüchtern","nüchtel","nüchternd","nüchtig"],"a":"nüchtern"},{"t":"Hat das ___, auf die ich achten muss?","o":["Nebenwirkungen","Nebenwirkung","Nebensachen","Nebenkosten"],"a":"Nebenwirkungen"},{"t":"Die Krankschreibung schicke ich Ihnen ___ heute.","o":["noch","nach","schon mal nach","danach noch"],"a":"noch"}]
+</script>
+<script type="application/json" id="daten-gbau">
+[{"f":"Löse das Rezept ein:","t":["Guten","Tag,","ich","möchte","dieses","Rezept","einlösen"],"l":["Guten","Tag,","ich","möchte","dieses","Rezept","einlösen"],"e":"Nach dem Modalverb <b>möchte</b> steht der Infinitiv <b>einlösen</b> ganz am Ende — zusammengeschrieben."},{"f":"Gib den Einnahmeplan wieder:","t":["Dreimal","täglich","eine","Tablette","nach","dem","Essen"],"l":["Dreimal","täglich","eine","Tablette","nach","dem","Essen"],"e":"Erst <b>wie oft</b>, dann <b>was</b>, dann <b>wann</b>. Und <b>nach</b> steht hier mit Dativ: <i>dem Essen</i>."},{"f":"Melde dich krank:","t":["Ich","muss","mich","heute","leider","krankmelden"],"l":["Ich","muss","mich","heute","leider","krankmelden"],"e":"Das <b>mich</b> gehört fest dazu und steht direkt hinter dem Modalverb. <b>krankmelden</b> bleibt zusammen."},{"f":"Bitte um eine Krankschreibung:","t":["Könnten","Sie","mich","bis","Freitag","krankschreiben"],"l":["Könnten","Sie","mich","bis","Freitag","krankschreiben"],"e":"Bei der Frage steht <b>Könnten</b> ganz vorn, der Infinitiv <b>krankschreiben</b> ganz hinten. Hier ohne <i>mich</i> als Reflexiv — der Arzt schreibt <u>dich</u> krank."}]
+</script>
+<script type="application/json" id="daten-gstory">
+{"t":"Halb elf, ich komme aus der Praxis. In der Hand habe ich zwei Zettel: ein ___ für die Apotheke und die Krankschreibung für den Chef. In der Apotheke sage ich: „Guten Tag, ich möchte dieses Rezept ___.“ Die Apothekerin gibt mir eine Packung und erklärt: ___ täglich eine Tablette, immer ___ dem Essen, und die Packung bitte aufbrauchen. Ich frage noch, ob es ___ gibt, auf die ich achten muss — man wird müde, sagt sie, Autofahren also lieber nicht. Danach rufe ich im Büro an und melde ___ krank. Die Bescheinigung schicke ich am Nachmittag. Um zwölf liege ich auf dem Sofa, mit Tee und einer Decke. Zwei Zettel, drei Gespräche, keine zwei Stunden.","o":["Rezept","einlösen","Dreimal","nach","Nebenwirkungen","mich","vor","Überweisung"],"a":[["Rezept"],["einlösen"],["Dreimal"],["nach"],["Nebenwirkungen"],["mich"]]}
+</script>
+
+<script>
+
+/* ---- Sprungleiste: markiert, wo man gerade ist ----
+   Frueher hat sie Abschnitte umgeschaltet. Jetzt steht alles
+   untereinander, die Leiste zeigt nur noch die Stelle an. */
+(function(){
+ var tabs=[].slice.call(document.querySelectorAll('nav.tabs a.tab'));
+ var paare=tabs.map(function(a){return {a:a,sec:document.querySelector(a.getAttribute('href'))};})
+               .filter(function(x){return x.sec;});
+ if(!('IntersectionObserver' in window))return;
+ var beob=new IntersectionObserver(function(eintraege){
+  eintraege.forEach(function(e){
+   if(!e.isIntersecting)return;
+   tabs.forEach(function(t){t.classList.remove('active');});
+   var p=paare.find(function(x){return x.sec===e.target;});
+   if(p){p.a.classList.add('active');
+     /* die aktive Marke in der schmalen Leiste in den Blick holen */
+     if(p.a.scrollIntoView)p.a.scrollIntoView({block:'nearest',inline:'center'});}
+  });
+ },{rootMargin:'-40% 0px -55% 0px'});
+ paare.forEach(function(x){beob.observe(x.sec);});
+})();
+
+/* ---- Hoehe des klebenden Umschalters messen, damit die
+   Sprungleiste sauber darunter sitzt ---- */
+(function(){
+ var leiste=document.querySelector('.niv');
+ if(!leiste)return;
+ function miss(){document.documentElement.style.setProperty('--leiste',Math.round(leiste.offsetHeight)+'px');}
+ miss();
+ window.addEventListener('resize',miss);
+ if(window.ResizeObserver)new ResizeObserver(miss).observe(leiste);
+ if(document.fonts&&document.fonts.ready)document.fonts.ready.then(miss);
+})();
+
+/* ---- Vorlesen ---- */
+function say(t){try{var u=new SpeechSynthesisUtterance(t);u.lang='de-DE';u.rate=.85;speechSynthesis.cancel();speechSynthesis.speak(u);}catch(e){}}
+document.querySelectorAll('.speak').forEach(function(b){if(b.dataset.say)b.onclick=function(){say(b.dataset.say);};});
+
+/* ---- Niveau-Umschalter ---- */
+var nivk=document.querySelectorAll('.nivk button[data-niv]');
+nivk.forEach(function(b){b.onclick=function(){
+ var n=b.dataset.niv;document.body.setAttribute('data-niveau',n);
+ nivk.forEach(function(x){x.setAttribute('aria-pressed',x.dataset.niv===n?'true':'false');});
+ hazaehlen();
+};});
+
+/* ---- Hilfe-Knoepfe ---- */
+document.querySelectorAll('.hilfe > button').forEach(function(b){
+ var kasten=b.parentElement,text=b.textContent;
+ b.setAttribute('aria-expanded','false');
+ b.onclick=function(){var auf=kasten.classList.toggle('offen');
+  b.setAttribute('aria-expanded',auf?'true':'false');
+  b.textContent=auf?'✕ Hilfe schließen':text;};
+});
+
+/* ---- Bildkarten verdecken ---- */
+var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
+vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+ vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+
+/* ---- Dialoge: Runde 1 / Runde 2 ---- */
+document.querySelectorAll('.dwrap').forEach(function(d){
+ var b=d.querySelector('.rbtn');
+ b.onclick=function(){
+  var zwei=d.dataset.runde==='1';
+  d.dataset.runde=zwei?'2':'1';
+  b.textContent=zwei?'◀︎ Runde 1 · Text zeigen':'▶︎ Runde 2 · du antwortest';
+  b.classList.toggle('zwei',zwei);
+  d.querySelectorAll('.dline.b').forEach(function(l){l.classList.remove('zeigen');});
+ };
+ d.querySelectorAll('.dcue').forEach(function(c){
+  c.onclick=function(){c.closest('.dline').classList.add('zeigen');};});
+});
+
+/* ---- Hausaufgabe abhaken ---- */
+var hastand=document.querySelector('[data-ha-stand]');
+function hazaehlen(){
+ if(!hastand)return;
+ /* Nach dem Niveau zaehlen, nicht nach offsetParent: beim Laden ist der
+    Hausaufgaben-Abschnitt noch zugeklappt und haette 0 von 0 ergeben. */
+ var niv=document.body.getAttribute('data-niveau');
+ var weg=niv==='a2'?'.nur-b1':'.nur-a2';
+ var da=[].slice.call(document.querySelectorAll('[data-ha]')).filter(function(h){return !h.closest(weg);});
+ var fertig=da.filter(function(h){return h.classList.contains('fertig');}).length;
+ var voll=da.length>0&&fertig===da.length;
+ hastand.textContent=voll?('Alle '+da.length+' Aufgaben geschafft. Stark — bis Mittwoch! 🎉')
+                        :(fertig+' von '+da.length+' Aufgaben geschafft.');
+ hastand.classList.toggle('voll',voll);
+}
+document.querySelectorAll('[data-ha]').forEach(function(h){
+ h.setAttribute('aria-pressed','false');
+ h.onclick=function(){var an=h.classList.toggle('fertig');
+  h.setAttribute('aria-pressed',an?'true':'false');hazaehlen();};
+});
+hazaehlen();
+
+/* ---- Daten aus den JSON-Bloecken im Koerper ----
+   Der Motor ist fuer alle Stunden derselbe; nur die Daten wechseln.
+   Fehlt ein Block, bleibt der Abschnitt einfach leer. */
+function daten(id){
+ var el=document.getElementById('daten-'+id);
+ if(!el)return null;
+ try{return JSON.parse(el.textContent);}catch(e){console.error('Daten "'+id+'" sind kaputt:',e);return null;}
+}
+/* ---- Mischen (Fisher-Yates) ----
+   Ein Vergleich mit Math.random() mischt nicht gleichmaessig, die
+   erste Stelle bleibt zu oft die erste. Deshalb richtig tauschen. */
+function misch(liste){
+ var a=liste.slice();
+ for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}
+ return a;
+}
+
+/* ---- Sprechkarten ---- */
+var SK=daten('sk')||[];
+if(SK.length){
+var lastsk=-1;
+document.getElementById('sknew').onclick=function(){var i;
+ do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
+ document.getElementById('wsk').innerHTML=SK[i];};
+
+}
+
+/* ---- 90 Sekunden ---- */
+var W90=daten('w90')||[];
+if(W90.length){
+var last90=-1,t90=null,rest=90;
+function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
+function zeige90(i){
+ document.getElementById('w90').textContent=W90[i].w;
+ document.getElementById('i90').src=W90[i].b;
+ document.getElementById('i90').alt=W90[i].w;
+ document.getElementById('hw90').innerHTML=W90[i].h.map(function(x){return '<span class="hw">'+x+'</span>';}).join('');
+}
+document.getElementById('new90').onclick=function(){var i;
+ do{i=Math.floor(Math.random()*W90.length);}while(i===last90&&W90.length>1);last90=i;
+ zeige90(i);clearInterval(t90);rest=90;document.getElementById('t90').textContent=fmt(rest);};
+document.getElementById('start90').onclick=function(){clearInterval(t90);rest=90;
+ var el=document.getElementById('t90');el.textContent=fmt(rest);
+ t90=setInterval(function(){rest--;el.textContent=fmt(rest);
+  if(rest<=0){clearInterval(t90);el.textContent='✅ Fertig!';}},1000);};
+zeige90(0);last90=0;
+
+}
+
+/* ---- Quiz ---- */
+var QUIZ=daten('quiz')||[];
+var qc=document.getElementById('quiz');
+if(qc&&QUIZ.length){
+QUIZ.forEach(function(item){
+ var d=document.createElement('div');d.className='quiz-q';
+ d.innerHTML='<div class="qt">'+item.q+'</div>';
+ var op=document.createElement('div');op.className='quiz-opts';
+ /* Gemischt, sonst stuende die richtige Antwort immer an erster Stelle
+    und man koennte die ganze Runde raten, ohne zu lesen. */
+ var wahl=misch(item.o.map(function(t,i){return {t:t,richtig:i===item.c};}));
+ wahl.forEach(function(w){
+  var b=document.createElement('button');b.className='qopt';b.textContent=w.t;
+  b.onclick=function(){
+   if(d.dataset.done)return;d.dataset.done=1;
+   if(w.richtig){b.classList.add('right');}
+   else{
+    b.classList.add('wrong');
+    op.children[wahl.findIndex(function(x){return x.richtig;})].classList.add('right');
+   }
+   d.querySelector('.qexp').classList.add('show');};
+  op.appendChild(b);});
+ d.appendChild(op);
+ var e=document.createElement('div');e.className='qexp';e.innerHTML='💡 '+item.e;d.appendChild(e);
+ qc.appendChild(d);
+});
+
+}
+
+/* ---- Lueckentext ---- */
+var GAP=daten('gap')||[];
+var g=document.getElementById('gap');
+if(g&&GAP.length){
+GAP.forEach(function(item){
+ var row=document.createElement('div');row.style.margin='.35rem 0';
+ var sel=document.createElement('select');
+ var leer=document.createElement('option');leer.textContent='– wählen –';leer.value='';sel.appendChild(leer);
+ misch(item.o).forEach(function(o){
+  var op=document.createElement('option');op.textContent=o;op.value=o;sel.appendChild(op);});
+ sel.onchange=function(){sel.className=sel.value===item.a?'ok':'no';};
+ var teile=item.t.split('___');
+ row.appendChild(document.createTextNode(teile[0]));row.appendChild(sel);
+ row.appendChild(document.createTextNode(teile[1]||''));
+ g.appendChild(row);
+});
+
+}
+
+/* ---- Satzbauer ---- */
+var GBAU=daten('gbau')||[];
+var gbc=document.getElementById('gbau');
+if(gbc&&GBAU.length){
+{GBAU.forEach(function(item){
+ var d=document.createElement('div');d.className='gbau';
+ d.innerHTML='<div class="gfrage">🧱 '+item.f+'</div>';
+ var teile=document.createElement('div');teile.className='gteile';
+ var zeile=document.createElement('div');zeile.className='gzeile';
+ var gebaut=[];
+ misch(item.t).forEach(function(w){
+  var b=document.createElement('button');b.className='gteil';b.textContent=w;
+  b.onclick=function(){b.classList.add('weg');gebaut.push(w);zeile.classList.remove('ok','no');
+   var s=document.createElement('span');s.textContent=w;zeile.appendChild(s);};
+  teile.appendChild(b);});
+ d.appendChild(teile);d.appendChild(zeile);
+ var fuss=document.createElement('div');fuss.className='gfuss';
+ var pr=document.createElement('button');pr.className='gmini';pr.textContent='✅ prüfen';
+ var nm=document.createElement('button');nm.className='gmini hell';nm.textContent='↻ nochmal';
+ var tp=document.createElement('div');tp.className='gtipp';tp.innerHTML='💡 '+item.e;
+ pr.onclick=function(){var richtig=gebaut.join(' ')===item.l.join(' ');
+  zeile.classList.remove('ok','no');zeile.classList.add(richtig?'ok':'no');tp.classList.add('show');};
+ nm.onclick=function(){gebaut=[];zeile.innerHTML='';zeile.classList.remove('ok','no');tp.classList.remove('show');
+  teile.querySelectorAll('.gteil').forEach(function(b){b.classList.remove('weg');});};
+ fuss.appendChild(pr);fuss.appendChild(nm);d.appendChild(fuss);d.appendChild(tp);
+ gbc.appendChild(d);
+});}
+
+}
+
+/* ---- Lueckengeschichte ---- */
+var GSTORY=daten('gstory');
+var gsc=document.getElementById('gstory');
+if(gsc&&GSTORY){
+{
+ var gsWahl=misch(GSTORY.o);   /* einmal mischen, alle Luecken zeigen dieselbe Reihenfolge */
+ var st=GSTORY.t.split('___');
+ st.forEach(function(txt,i){
+  gsc.appendChild(document.createTextNode(txt));
+  if(i<GSTORY.a.length){
+   var sel=document.createElement('select');
+   var leer=document.createElement('option');leer.textContent='– ? –';leer.value='';sel.appendChild(leer);
+   gsWahl.forEach(function(o){var op=document.createElement('option');op.textContent=o;op.value=o;sel.appendChild(op);});
+   (function(loesung){sel.onchange=function(){sel.className=loesung.indexOf(sel.value)>=0?'ok':'no';};})(GSTORY.a[i]);
+   gsc.appendChild(sel);
+  }
+ });
+}
+
+}
+
+</script>
+</body>
+</html>

@@ -40,7 +40,7 @@ const worte = [];
 /* Sonderfall: die Vorsilbe „zu“ vor einem Stamm mit e — anzuecken,
    zueinander, zuerkennen. Da treffen z+u+e zufaellig aufeinander.
    Bewusst eng gefasst, damit ein falsch getipptes „zuenden“ haengen bleibt. */
-const echt = /^(\w*zu(?:eck|eign|erkenn|erst|einander)\w*|zuerst|dauer\w*|steuer\w*|feuer\w*|abenteuer\w*|museum|poesie|\w*duell\w*|aktuell\w*|individuell\w*|manuell\w*|virtuell\w*|ritual\w*|jubel\w*|neuer\w*|teuer\w*|treue\w*|scheue\w*|\w*bauen|\w*baue|genue?g?\w*|\w*schauen|\w*schaue|\w*graue\w*|\w*blaue\w*|\w*neue\w*|\w*freue\w*|\w*reue\w*)$/i;
+const echt = /^(\w*zu(?:eck|eign|erkenn|erst|einander)\w*|zuerst|dauer\w*|steuer\w*|feuer\w*|abenteuer\w*|museum|poesie|\w*duell\w*|aktuell\w*|individuell\w*|manuell\w*|virtuell\w*|ritual\w*|jubel\w*|neuer\w*|teuer\w*|treue\w*|scheue\w*|\w*bauen|\w*baue|genue?g?\w*|\w*schauen|\w*schaue|\w*graue\w*|\w*blaue\w*|\w*neue\w*|\w*freue\w*|\w*reue\w*|\w*tue|\w*tuen|\w*eventuell\w*|\w*aktuell\w*|\w*sexuell\w*|\w*intellektuell\w*)$/i;
 
 const text = worte.join(' ')
   .replace(/<[^>]*>/g, ' ')          /* Auszeichnung raus */

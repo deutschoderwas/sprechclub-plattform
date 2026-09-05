@@ -435,6 +435,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-supermarkt.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w03-a-teil2-rezept-apotheke-a2b1.html",
+  "t": "Rezept, Apotheke, Krankschreibung",
+  "lvl": "A2–B1",
+  "art": "lektion",
+  "b": "apotheke",
+  "img": "amanda/sz-apotheke.webp"
+ },
+ {
   "d": "Unterricht-ab-27-07/verabreden-a2b1.html",
   "t": "Sich verabreden & Einladungen",
   "lvl": "A2–B1",
@@ -477,6 +485,14 @@ window.LEKTIONEN = [
   "b": "wohnen",
   "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-wg-leben-a2b1.html",
   "img": "amanda/sz-wohnen.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/w03-a-teil1-arzt-beschwerden-a2b1.html",
+  "t": "Wo tut es weh? Körper und Beschwerden",
+  "lvl": "A2–B1",
+  "art": "lektion",
+  "b": "arzt",
+  "img": "amanda/sz-arzt.webp"
  },
  {
   "d": "wohnen-nachbarn-teil-1-a2-b1.html",
@@ -1192,6 +1208,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-feste.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w03-c-teil2-vier-tage-woche-b1b2.html",
+  "t": "Die Debatte: Vier-Tage-Woche für alle?",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "team",
+  "img": "amanda/sz-buero.webp"
+ },
+ {
   "d": "Unterricht-ab-27-07/digitaldetox-b1b2.html",
   "t": "Digital Detox & Handysucht",
   "lvl": "B1–B2",
@@ -1217,6 +1241,14 @@ window.LEKTIONEN = [
   "b": "sozial",
   "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-ehrenamt-b1b2.html",
   "img": "amanda/sz-sozial.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/w03-d-teil1-ehrlich-hoeflich-b1b2.html",
+  "t": "Ehrlich sein oder höflich sein?",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
  },
  {
   "d": "Unterricht-ab-27-07/feste-braeuche-b1b2.html",
@@ -1345,6 +1377,14 @@ window.LEKTIONEN = [
   "b": "feste",
   "hand": "kultur-traditionen-teil-1-handout.html",
   "img": "amanda/sz-feste.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/w03-b-teil1-legen-stellen-setzen-b1b2.html",
+  "t": "LEGEN, STELLEN, SETZEN — und wo es dann liegt",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
  },
  {
   "d": "Unterricht-ab-14-09/w01-b-teil1-machen-b1b2.html",
@@ -1564,6 +1604,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-wohnen.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w03-c-teil1-vier-tage-woche-b1b2.html",
+  "t": "Vier-Tage-Woche — für alle?",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "team",
+  "img": "amanda/sz-buero.webp"
+ },
+ {
   "d": "glueck-teil-1-b1-b2.html",
   "t": "Was macht glücklich ? · Teil 1",
   "lvl": "B1–B2",
@@ -1580,12 +1628,28 @@ window.LEKTIONEN = [
   "img": "amanda/sz-freunde.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w03-d-teil2-ehrlich-hoeflich-b1b2.html",
+  "t": "Wenn Höflichkeit zur Lüge wird",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "Unterricht-ab-07-09/vw-di-ordnung-b1b2.html",
   "t": "Wie viel Ordnung braucht der Mensch?",
   "lvl": "B1–B2",
   "art": "lektion",
   "b": "wohnen",
   "img": "amanda/sz-wohnen.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/w03-b-teil2-legen-stellen-setzen-b1b2.html",
+  "t": "Wohin oder wo? Der Fall entscheidet",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
  },
  {
   "d": "Unterricht-ab-27-07/wohnformen-b1b2.html",
@@ -2475,14 +2539,18 @@ window.BEREICH_MEHR = {
   "sprachspielclub-volksfest-b1-b2.html",
   "sprachspielclub-wimmelbild-b1-b2.html",
   "Unterricht-ab-14-09/w02-b-teil2-gehen-kommen-fahren-b1b2.html",
+  "Unterricht-ab-14-09/w03-d-teil1-ehrlich-hoeflich-b1b2.html",
   "Unterricht-ab-14-09/w02-b-teil1-gehen-kommen-fahren-b1b2.html",
   "sprachspielclub-stadtpark-quiz-b1-b2.html",
   "sprachspielclub-stadtpark-b1-b2.html",
   "sprachspielclub-arztpraxis-b1-b2.html",
   "Unterricht-ab-27-07/kreativitaet-b1b2.html",
+  "Unterricht-ab-14-09/w03-b-teil1-legen-stellen-setzen-b1b2.html",
   "Unterricht-ab-14-09/w01-b-teil1-machen-b1b2.html",
   "Unterricht-ab-14-09/w01-b-teil2-machen-b1b2.html",
   "Unterricht-ab-14-09/w02-d-teil1-nachfragen-b1b2.html",
+  "Unterricht-ab-14-09/w03-d-teil2-ehrlich-hoeflich-b1b2.html",
+  "Unterricht-ab-14-09/w03-b-teil2-legen-stellen-setzen-b1b2.html",
   "Unterricht-ab-14-09/w02-d-teil2-nachfragen-b1b2.html",
   "grammatik-passiv-b2.html",
   "grammatik-partizipattribut-b2.html",
@@ -2534,6 +2602,7 @@ window.BEREICH_MEHR = {
  "arzt": [
   "Unterricht-ab-27-07/arzt-a2b1.html",
   "Unterricht-ab-27-07/fitnessstudio-a2b1.html",
+  "Unterricht-ab-14-09/w03-a-teil1-arzt-beschwerden-a2b1.html",
   "krankmelden-b1.html",
   "sport-gesund-leben-teil-1-b1-b2.html",
   "Unterricht-ab-27-07/sport-lebensstil-b1b2.html",
@@ -2609,6 +2678,9 @@ window.BEREICH_MEHR = {
   "Unterricht-ab-27-07/minimalismus-b2c1.html",
   "Unterricht-ab-27-07/wohnungsnot-b2c1.html"
  ],
+ "apotheke": [
+  "Unterricht-ab-14-09/w03-a-teil2-rezept-apotheke-a2b1.html"
+ ],
  "bank": [
   "bargeld-karte-b1.html",
   "Unterricht-ab-27-07/sparen-b1b2.html",
@@ -2618,7 +2690,9 @@ window.BEREICH_MEHR = {
  "team": [
   "vorbereitung-puenktlichkeit-b1.html",
   "puenktlichkeit-debatte-b1-interaktiv.html",
+  "Unterricht-ab-14-09/w03-c-teil2-vier-tage-woche-b1b2.html",
   "Unterricht-ab-07-09/vw-do-puenktlichkeit-b1b2.html",
+  "Unterricht-ab-14-09/w03-c-teil1-vier-tage-woche-b1b2.html",
   "Unterricht-ab-27-07/work-life-b1b2.html",
   "Unterricht-ab-27-07/vier-tage-woche-b2c1.html",
   "Unterricht-ab-27-07/meetings-b2c1.html"
