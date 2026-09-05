@@ -63,6 +63,17 @@ if (S.wortschatz && S.wortschatz.karten) {
     ['wort', 'bsp', 'tipp'].forEach(f => {
       if (!k[f]) meldung.push('Wortschatzkarte ' + (i + 1) + ': ' + f + ' ist leer');
     });
+    /* Der Artikel steht im Feld art und wird davorgesetzt. Steht er
+       zusaetzlich im Wort, liest der Schueler „die die Frist“. */
+    if (k.art && /^(der|die|das)\s/i.test(k.wort || ''))
+      meldung.push('Wortschatzkarte ' + (i + 1) + ' („' + k.wort + '“): Artikel doppelt — '
+        + 'art="' + k.art + '" und das Wort faengt auch mit einem Artikel an, '
+        + 'auf der Seite steht dann „' + k.art + ' ' + k.wort + '“');
+    /* Umgekehrt: ein Nomen ohne art-Feld erscheint ohne Artikel. Das ist bei
+       ganzen Saetzen gewollt („Das geht.“), bei einem einzelnen Nomen nicht. */
+    if (!k.art && !k.emoji && /^[A-ZÄÖÜ][a-zäöüß]+$/.test((k.wort || '').trim()))
+      hinweis.push('Wortschatzkarte ' + (i + 1) + ' („' + k.wort + '“): sieht aus wie ein '
+        + 'Nomen ohne Artikel — fehlt das Feld art?');
   });
 }
 
