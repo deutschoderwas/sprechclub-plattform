@@ -276,6 +276,15 @@ window.LEKTIONEN = [
   "img": "amanda/sz-telefonieren.webp"
  },
  {
+  "d": "anmeldung-aufenthalt-a2b1.html",
+  "t": "Anmelden und Aufenthalt: die ersten Behördengänge",
+  "lvl": "A2–B1",
+  "art": "lektion",
+  "b": "amt",
+  "ueb": "vorbereitung-anmeldung-aufenthalt-a2b1.html",
+  "img": "amanda/sz-amt.webp"
+ },
+ {
   "d": "Unterricht-ab-27-07/ausreden-a2b1.html",
   "t": "Ausreden & Notlügen",
   "lvl": "A2–B1",
@@ -2734,6 +2743,7 @@ window.BEREICH_MEHR = {
  ],
  "amt": [
   "amt-a2-visuell.html",
+  "anmeldung-aufenthalt-a2b1.html",
   "Unterricht-ab-27-07/amt-a2b1.html",
   "behoerdenbrief-b1.html",
   "buerokratie-dschungel-b2-c1.html",

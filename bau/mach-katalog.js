@@ -221,7 +221,7 @@ STICH.bewerbung.push('job-wechseln');
    sonst landet der Buerokratie-Dschungel im Buero. Und
    „geld-glueck" (11) muss „glueck" (6) schlagen, sonst landet
    „Geld und Glueck" bei den Freunden statt bei der Bank. */
-STICH.amt.push('behoerdenbrief', 'buerokratie');
+STICH.amt.push('behoerdenbrief', 'buerokratie', 'anmeldung-aufenthalt');
 STICH["büro"].push('buero-b1b2');
 STICH.arzt.push('ernaehrung');
 STICH.freunde.push('glueck');

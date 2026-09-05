@@ -77,6 +77,15 @@ if (S.wortschatz && S.wortschatz.karten) {
   });
 }
 
+/* ---------- 2b Kopfzeile: kein haengendes Trennzeichen ----------
+   Die Kopfzeile wird unveraendert ausgegeben. Endet sie auf „· “,
+   steht auf der fertigen Seite ein Trennpunkt ohne alles dahinter —
+   sichtbar, aber leicht zu uebersehen. Das ist 24 Seiten lang
+   passiert, bevor es jemandem aufgefallen ist. */
+if (S.eyebrow && /[·•\-–—]\s*$/.test(S.eyebrow))
+  meldung.push('Kopfzeile endet mit einem Trennzeichen ohne Text dahinter: „'
+    + S.eyebrow + '“ — auf der Seite steht dann ein Punkt und danach nichts');
+
 /* ---------- 3 Bilder: doppelt und vorhanden ---------- */
 const bilder = [];
 (function sammleBilder(o) {

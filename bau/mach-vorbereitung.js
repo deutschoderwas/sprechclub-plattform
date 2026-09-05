@@ -40,10 +40,20 @@ const nurText = t => String(t || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' '
 
 /* Der Zielname: aus Unterricht-ab-14-09/w01-a-teil1-….html wird
    Unterricht-ab-14-09/Vorbereitung/vorbereitung-w01-a-teil1-….html —
-   so wie es die bestehenden Ordner schon machen. */
+   so wie es die bestehenden Ordner schon machen.
+
+   Liegt die Stunde dagegen im Wurzelordner — das sind die Themen,
+   die nicht zu einer Unterrichtswoche gehoeren —, kommt die
+   Vorbereitung flach daneben: vorbereitung-<name>.html. Genau so
+   liegen die bestehenden dort schon (vorbereitung-ueber-geld,
+   vorbereitung-behoerdenbrief). Ein eigener Vorbereitung-Ordner
+   im Wurzelverzeichnis waere ein zweiter, widerspruechlicher Ort. */
 const ordner  = path.dirname(S.datei);
 const basis   = path.basename(S.datei);
-const zieldat = path.join(ordner, 'Vorbereitung', 'vorbereitung-' + basis);
+const imWurzelordner = (ordner === '.' || ordner === '');
+const zieldat = imWurzelordner
+  ? 'vorbereitung-' + basis
+  : path.join(ordner, 'Vorbereitung', 'vorbereitung-' + basis);
 
 /* ---------- kleine Helfer ---------- */
 /* Kurze Erklaerung fuer ein Wort: bevorzugt das Feld "kurz",
