@@ -376,7 +376,8 @@ window.LEKTIONEN = [
   "t": "Einkaufen, kochen, essen: erklär mir dein Rezept",
   "lvl": "A2–B1",
   "art": "lektion",
-  "b": null
+  "b": "kochen",
+  "img": "amanda/sz-kochen.webp"
  },
  {
   "d": "Unterricht-ab-14-09/w02-a-teil2-termin-verschieben-a2b1.html",
@@ -2853,6 +2854,11 @@ window.BEREICH_MEHR = {
   "Unterricht-ab-14-09/w04-c-teil1-job-wechseln-b1b2.html",
   "Unterricht-ab-27-07/traumberuf-b1b2.html"
  ],
+ "kochen": [
+  "Unterricht-ab-14-09/w05-a-teil1-zutaten-mengen-a2b1.html",
+  "Unterricht-ab-27-07/kochen-a2b1.html",
+  "Unterricht-ab-27-07/vegan-b2c1.html"
+ ],
  "wohnen": [
   "Unterricht-ab-14-09/w04-a-teil2-kaputt-melden-a2b1.html",
   "Unterricht-ab-14-09/w04-a-teil1-zimmer-moebel-a2b1.html",
@@ -2890,10 +2896,6 @@ window.BEREICH_MEHR = {
   "glueck-teil-1-b1-b2.html",
   "Unterricht-ab-14-09/w01-d-teil2-small-talk-b1b2.html",
   "wortschatzboost-charaktereigenschaften-b2.html"
- ],
- "kochen": [
-  "Unterricht-ab-27-07/kochen-a2b1.html",
-  "Unterricht-ab-27-07/vegan-b2c1.html"
  ],
  "apotheke": [
   "Unterricht-ab-14-09/w03-a-teil2-rezept-apotheke-a2b1.html"

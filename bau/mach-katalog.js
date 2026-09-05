@@ -222,6 +222,7 @@ STICH.bewerbung.push('job-wechseln');
    „geld-glueck" (11) muss „glueck" (6) schlagen, sonst landet
    „Geld und Glueck" bei den Freunden statt bei der Bank. */
 STICH.amt.push('behoerdenbrief', 'buerokratie', 'anmeldung-aufenthalt');
+STICH.kochen.push('zutaten-mengen');
 STICH["büro"].push('buero-b1b2');
 STICH.arzt.push('ernaehrung');
 STICH.freunde.push('glueck');
@@ -440,5 +441,14 @@ if (require.main === module) {
   console.log('Themen mit echter Lektion: ' + Object.keys(zu).length + ' von ' + themen +
     ' (vorher wurde der Link geraten, 118 davon waren tot)');
   console.log('Themen mit eigenem Bild: ' + Object.keys(themaBild).length + ' von ' + themen);
-  if (ohne.length) console.log('  ohne Bereich: ' + ohne.map(s => s.d).join(', '));
+  if (ohne.length) {
+    /* Alle Seiten hatten schon einmal einen Bereich. Wer jetzt keinen
+       hat, ist neu und im Schuelerbereich nicht zu finden — der Katalog
+       ist dann zwar geschrieben, aber unvollstaendig. Deshalb halten
+       wir hier an, statt es nur zu erwaehnen. */
+    console.error('  ohne Bereich: ' + ohne.map(s => s.d).join(', '));
+    console.error('  Diese Seite waere im Schuelerbereich nicht auffindbar.' +
+      ' Trag in mach-katalog.js ein Stichwort dafuer ein.');
+    process.exitCode = 1;
+  }
 }
