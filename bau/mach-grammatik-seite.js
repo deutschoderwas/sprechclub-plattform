@@ -113,8 +113,11 @@ function notiz(n) {
 /* Aufwärmen: drei Karten mit Bild oder Emoji, dann ein Hinweis. */
 function aufwaermen(a) {
   const karten = (a.karten || []).map(k => {
+    /* hoch:true fuer freigestellte, hochformatige Figuren (die
+       Amanda-Bilder). Ohne das schneidet der 4:3-Ausschnitt ihr
+       den Kopf ab. */
     const kopfteil = k.bild
-      ? `<img class="kbild" src="${bildPfad(k.bild)}" alt="${attr(k.alt)}" loading="lazy">`
+      ? `<img class="kbild${k.hoch ? ' hoch' : ''}" src="${bildPfad(k.bild)}" alt="${attr(k.alt)}" loading="lazy">`
       : `<span class="emoji">${sicher(k.emoji || '•')}</span>`;
     return `<div class="vocab">${kopfteil}<div class="term">${sicher(k.wort)}</div>` +
            `<div class="gloss">${sicher(k.kurz)}</div></div>`;
@@ -147,7 +150,13 @@ function regel(r) {
     `<h2 class="block-head">${sicher(r.h2)} <span class="hl">${sicher(r.hl)}</span></h2>` +
     `<p class="block-intro">${sicher(r.intro)}</p>` +
     (leiste ? `<div class="satzbau">${leiste}</div>` : '') +
-    `<div class="rule">` + (zeilen ? `<table>${zeilen}</table>` : '') + paare + `</div>` +
+    /* Die Tabelle steht in einem eigenen Rahmen, der bei Bedarf
+       seitlich scrollt. Ohne ihn schiebt eine breite Tabelle (fünf
+       Spalten bei den Possessivartikeln) die ganze Seite nach
+       rechts — auf dem Handy sofort sichtbar. */
+    `<div class="rule">` +
+    (zeilen ? `<div class="tabelle-rahmen"><table>${zeilen}</table></div>` : '') +
+    paare + `</div>` +
     bild + notiz(r.tipp) + `</section>`;
 }
 
@@ -355,6 +364,12 @@ section.block{background:var(--paper);border:1px solid var(--sand);border-radius
 .speak .card .ph{color:var(--ink-mute);font-family:var(--font-body);font-weight:400;}
 .rule{background:var(--cream);border:1px solid var(--sand);border-radius:14px;padding:1.1rem;}
 .rule table{width:100%;border-collapse:collapse;margin-top:.6rem;font-size:.93rem;}
+/* Breite Tabellen scrollen in ihrem eigenen Kasten, statt die
+   ganze Seite nach rechts zu schieben. */
+.tabelle-rahmen{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:.6rem;}
+.tabelle-rahmen table{margin-top:0;min-width:100%;}
+.tabelle-rahmen td,.tabelle-rahmen th{white-space:nowrap;}
+@media(min-width:620px){.tabelle-rahmen td,.tabelle-rahmen th{white-space:normal;}}
 .rule td,.rule th{border:1px solid var(--sand);padding:.45rem .6rem;text-align:left;vertical-align:top;}
 .rule th{background:var(--cream-warm);font-family:var(--font-head);}
 .ex-good{color:#14708B;font-weight:600;}
@@ -383,6 +398,9 @@ footer .mark .t{color:var(--teal);}
 /* Neu: Bilder in den Aufwaermkarten. Ohne sie waren die
    Grammatikseiten die einzigen ganz unbebilderten Seiten. */
 .vocab .kbild{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:10px;margin-bottom:.5rem;display:block;}
+/* Freigestellte Figuren sind hochformatig. Sie werden nicht
+   beschnitten, sondern ganz gezeigt — auf warmem Grund. */
+.vocab .kbild.hoch{aspect-ratio:4/3;object-fit:contain;background:var(--cream-warm);}
 /* Neu: ein grosses Bild in der Regel, damit die Regel einen Ort
    in der Welt bekommt und nicht nur eine Tabelle ist. */
 .regelbild{margin:1.1rem 0 0;}

@@ -14,12 +14,44 @@
    ============================================================ */
 window.LEKTIONEN = [
  {
+  "d": "grammatik-possessivartikel-a1.html",
+  "t": "mein, dein, sein: wem gehört es?",
+  "lvl": "A1",
+  "art": "grammatik",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
+  "d": "grammatik-trennbare-verben-a1.html",
+  "t": "Trennbare Verben: aufstehen, einkaufen, anrufen",
+  "lvl": "A1",
+  "art": "grammatik",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
+  "d": "grammatik-negation-a1.html",
+  "t": "Verneinen: nicht oder kein?",
+  "lvl": "A1",
+  "art": "grammatik",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "amt-a2-visuell.html",
   "t": "Auf dem Amt",
   "lvl": "A2",
   "art": "lektion",
   "b": "amt",
   "img": "amanda/sz-amt.webp"
+ },
+ {
+  "d": "grammatik-praepositionen-dativ-a2.html",
+  "t": "aus, bei, mit, nach, seit, von, zu",
+  "lvl": "A2",
+  "art": "grammatik",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
  },
  {
   "d": "bank-konto-a2-interaktiv.html",
@@ -47,10 +79,34 @@ window.LEKTIONEN = [
   "img": "amanda/sz-sprachkurs.webp"
  },
  {
+  "d": "grammatik-perfekt-a2.html",
+  "t": "Das Perfekt: haben oder sein?",
+  "lvl": "A2",
+  "art": "grammatik",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "aussprache-ch-a2.html",
   "t": "Das schwierige ch",
   "lvl": "A2",
   "art": "aussprache",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
+  "d": "grammatik-dativ-a2.html",
+  "t": "Der Dativ: wem gehört was, wem hilfst du?",
+  "lvl": "A2",
+  "art": "grammatik",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
+  "d": "grammatik-imperativ-a2.html",
+  "t": "Der Imperativ: bitten, raten, anweisen",
+  "lvl": "A2",
+  "art": "grammatik",
   "b": "sprachkurs",
   "img": "amanda/sz-sprachkurs.webp"
  },
@@ -113,6 +169,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-familie.webp"
  },
  {
+  "d": "grammatik-modalverben-a2.html",
+  "t": "Modalverben: können, müssen, dürfen, wollen",
+  "lvl": "A2",
+  "art": "grammatik",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "post-pakete-a2-interaktiv.html",
   "t": "Post & Pakete",
   "lvl": "A2",
@@ -137,10 +201,34 @@ window.LEKTIONEN = [
   "img": "amanda/sz-sprachkurs.webp"
  },
  {
+  "d": "grammatik-reflexive-verben-a2.html",
+  "t": "sich freuen, sich beeilen: reflexive Verben",
+  "lvl": "A2",
+  "art": "grammatik",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "aussprache-v-w-f-a2.html",
   "t": "v, w, f der feine Unterschied",
   "lvl": "A2",
   "art": "aussprache",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
+  "d": "grammatik-komparativ-a2.html",
+  "t": "Vergleichen: größer, am größten",
+  "lvl": "A2",
+  "art": "grammatik",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
+  "d": "grammatik-praeteritum-sein-haben-a2.html",
+  "t": "war, hatte, konnte: die Vergangenheit zum Sprechen",
+  "lvl": "A2",
+  "art": "grammatik",
   "b": "sprachkurs",
   "img": "amanda/sz-sprachkurs.webp"
  },
@@ -2554,29 +2642,18 @@ window.LEKTIONEN = [
 ];
 
 window.BEREICH_MEHR = {
- "amt": [
-  "amt-a2-visuell.html",
-  "Unterricht-ab-27-07/amt-a2b1.html",
-  "leben-in-deutschland-einbuergerung-b2-c1.html"
- ],
- "restaurant": [
-  "wortschatzboost-essen-restaurant-a2.html",
-  "Unterricht-ab-27-07/foodtrends-a2b1.html",
-  "Unterricht-ab-27-07/restaurant-a2b1.html"
- ],
- "familie": [
-  "mein-tag-a2.html",
-  "Unterricht-ab-27-07/haustiere-a2b1.html",
-  "Unterricht-ab-14-09/w01-c-teil2-handy-esstisch-b1b2.html",
-  "Unterricht-ab-27-07/generationen-b1b2.html",
-  "Unterricht-ab-14-09/w01-c-teil1-handy-esstisch-b1b2.html"
- ],
- "kleidung": [
-  "wetter-kleidung-a2.html",
-  "Unterricht-ab-27-07/kleidung-a2b1.html",
-  "Unterricht-ab-27-07/wetter-a2b1.html"
- ],
  "sprachkurs": [
+  "grammatik-possessivartikel-a1.html",
+  "grammatik-trennbare-verben-a1.html",
+  "grammatik-negation-a1.html",
+  "grammatik-praepositionen-dativ-a2.html",
+  "grammatik-perfekt-a2.html",
+  "grammatik-dativ-a2.html",
+  "grammatik-imperativ-a2.html",
+  "grammatik-modalverben-a2.html",
+  "grammatik-reflexive-verben-a2.html",
+  "grammatik-komparativ-a2.html",
+  "grammatik-praeteritum-sein-haben-a2.html",
   "wortschatzboost-sommer-a2.html",
   "grammatik-dawoerter-b1.html",
   "grammatik-ndeklination-b1.html",
@@ -2642,6 +2719,28 @@ window.BEREICH_MEHR = {
   "nomen-verb-verbindungen-handout.html",
   "konnektoren-uebung.html",
   "sprechclub-rollenspiele.html"
+ ],
+ "amt": [
+  "amt-a2-visuell.html",
+  "Unterricht-ab-27-07/amt-a2b1.html",
+  "leben-in-deutschland-einbuergerung-b2-c1.html"
+ ],
+ "restaurant": [
+  "wortschatzboost-essen-restaurant-a2.html",
+  "Unterricht-ab-27-07/foodtrends-a2b1.html",
+  "Unterricht-ab-27-07/restaurant-a2b1.html"
+ ],
+ "familie": [
+  "mein-tag-a2.html",
+  "Unterricht-ab-27-07/haustiere-a2b1.html",
+  "Unterricht-ab-14-09/w01-c-teil2-handy-esstisch-b1b2.html",
+  "Unterricht-ab-27-07/generationen-b1b2.html",
+  "Unterricht-ab-14-09/w01-c-teil1-handy-esstisch-b1b2.html"
+ ],
+ "kleidung": [
+  "wetter-kleidung-a2.html",
+  "Unterricht-ab-27-07/kleidung-a2b1.html",
+  "Unterricht-ab-27-07/wetter-a2b1.html"
  ],
  "unterwegs": [
   "Unterricht-ab-27-07/bahnhof-a2b1.html",
