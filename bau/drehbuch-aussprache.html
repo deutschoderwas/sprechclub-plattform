@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Drehbücher: acht Aussprachevideos | deutschoderwas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FDF6EC;--cream-warm:#FBEDD8;--paper:#FFFFFF;
+  --ink:#262019;--ink-soft:#5C4E3E;--ink-mute:#A8957D;
+  --red:#E8302A;--red-soft:#FCE5E3;
+  --teal:#35AFD0;--teal-soft:#CFEEF7;
+  --yellow:#FFD24A;--yellow-soft:#FFF1C2;
+  --sand:#F0E2C8;
+  --radius:18px;--shadow:0 10px 30px rgba(38,32,25,.08);
+  --font-head:'Fraunces',Georgia,serif;
+  --font-body:'Outfit','Segoe UI',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:linear-gradient(180deg,#FDE6E0 0%,var(--cream) 14%,var(--cream) 100%);
+  color:var(--ink);font-family:var(--font-body);line-height:1.55;min-height:100vh;-webkit-font-smoothing:antialiased;}
+.wrapper{max-width:920px;margin:0 auto;padding:2.5rem 1.4rem 5rem;}
+.eyebrow{text-align:center;font-size:.78rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--red);margin-bottom:.9rem;}
+h1.title{font-family:var(--font-head);font-weight:600;font-size:clamp(1.9rem,4.5vw,3.2rem);line-height:1.08;text-align:center;}
+h1.title .hl{position:relative;display:inline-block;color:var(--red);}
+h1.title .hl::after{content:"";position:absolute;left:-2px;right:-2px;bottom:.06em;height:.28em;background:var(--yellow);opacity:.55;z-index:-1;border-radius:3px;}
+.subtitle{text-align:center;max-width:660px;margin:.9rem auto 1.6rem;color:var(--ink-soft);font-size:1.06rem;}
+nav.tabs{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;gap:.35rem;justify-content:center;
+  padding:.7rem .5rem;margin:1rem 0 2rem;background:rgba(253,246,236,.9);backdrop-filter:blur(8px);
+  border:1px solid var(--sand);border-radius:999px;}
+nav.tabs a{font-size:.8rem;font-weight:600;color:var(--ink-soft);text-decoration:none;padding:.35rem .7rem;border-radius:999px;}
+nav.tabs a:hover{background:var(--cream-warm);}
+section.block{background:var(--paper);border:1px solid var(--sand);border-radius:var(--radius);
+  padding:1.7rem 1.6rem;margin-bottom:1.5rem;box-shadow:var(--shadow);scroll-margin-top:5rem;}
+.block-head{font-family:var(--font-head);font-weight:600;font-size:clamp(1.25rem,3vw,1.8rem);margin-bottom:.4rem;}
+.block-head .hl{color:var(--red);font-style:italic;}
+.block-intro{color:var(--ink-soft);margin-bottom:1.1rem;}
+.note{border-radius:14px;padding:.9rem 1.1rem;margin:1rem 0;font-size:.96rem;}
+.note.tip{background:var(--teal-soft);border-left:4px solid var(--teal);}
+.note.warn{background:var(--red-soft);border-left:4px solid var(--red);}
+.note.info{background:var(--yellow-soft);border-left:4px solid var(--yellow);}
+/* Kopfzeile eines Clips */
+.clip-kopf{display:flex;flex-wrap:wrap;align-items:baseline;gap:.6rem 1rem;margin-bottom:.2rem;}
+.nummer{font-family:var(--font-head);font-weight:700;font-size:2.1rem;color:var(--red);line-height:1;}
+.dauer{background:var(--ink);color:var(--cream);border-radius:999px;padding:3px 12px;font-size:.76rem;font-weight:700;}
+.warum{background:var(--teal);color:#063b35;border-radius:999px;padding:3px 12px;font-size:.76rem;font-weight:700;}
+/* Die Tabelle des Ablaufs */
+.ablauf{width:100%;border-collapse:collapse;margin:.9rem 0;font-size:.94rem;}
+.ablauf th,.ablauf td{border:1px solid var(--sand);padding:.55rem .7rem;text-align:left;vertical-align:top;}
+.ablauf th{background:var(--cream-warm);font-family:var(--font-head);font-weight:600;white-space:nowrap;}
+.ablauf td:first-child{white-space:nowrap;font-weight:700;color:var(--ink-mute);width:1%;}
+.rahmen{overflow-x:auto;}
+.sag{background:var(--cream);border-left:4px solid var(--yellow);border-radius:0 10px 10px 0;
+  padding:.7rem .9rem;margin:.5rem 0;font-size:1rem;}
+.sag b{color:var(--red);}
+.einblend{display:inline-block;background:var(--ink);color:#fff;border-radius:6px;
+  padding:2px 9px;font-size:.86rem;font-weight:600;margin:.15rem .25rem .15rem 0;}
+.woerter{display:flex;flex-wrap:wrap;gap:.4rem;margin:.6rem 0;}
+.woerter span{background:var(--cream);border:1px solid var(--sand);border-radius:999px;
+  padding:.3rem .75rem;font-size:.95rem;}
+.woerter span.gut{background:var(--teal-soft);border-color:var(--teal);font-weight:600;}
+.woerter span.schlecht{background:var(--red-soft);border-color:var(--red);text-decoration:line-through;}
+.paare{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.6rem;margin:.7rem 0;}
+.paar{background:var(--cream);border:1px solid var(--sand);border-radius:12px;padding:.7rem .9rem;text-align:center;}
+.paar .w{font-family:var(--font-head);font-weight:600;font-size:1.1rem;}
+.paar .k{font-size:.84rem;color:var(--ink-soft);}
+h4{font-family:var(--font-head);font-weight:700;margin:1.1rem 0 .35rem;color:var(--red);font-size:1.02rem;}
+ul{padding-left:1.15rem;font-size:.97rem;}
+li{margin:.3rem 0;}
+.block.setup{background:var(--cream-warm);}
+.block.abschluss{background:var(--ink);color:#fff;}
+.block.abschluss .block-head,.block.abschluss h4{color:#fff;}
+.block.abschluss .block-intro,.block.abschluss li{color:#F3E9DC;}
+.block.abschluss h4{color:var(--yellow);}
+footer{text-align:center;color:var(--ink-mute);font-size:.85rem;margin-top:2rem;}
+footer .mark{font-family:var(--font-head);font-weight:600;color:var(--ink);font-size:1rem;}
+footer .mark .t{color:var(--teal);}
+@media(max-width:560px){section.block{padding:1.2rem 1rem;}.ablauf th,.ablauf td{white-space:normal;}}
+@media print{
+  body{background:#fff;}nav.tabs{display:none;}
+  section.block{break-inside:avoid;box-shadow:none;page-break-inside:avoid;}
+}
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="eyebrow">deutschoderwas · Drehbücher · Aussprache</div>
+  <h1 class="title">Acht Clips, <span class="hl">an einem Nachmittag gedreht</span></h1>
+  <p class="subtitle">Für jeden Laut ein Video von 60 bis 90 Sekunden. Alles, was du sagst, steht hier wörtlich — du musst nichts vorbereiten außer der Kamera. Jeder Clip wird zweimal verwendet: auf der Plattform und als Reel.</p>
+
+  <nav class="tabs">
+    <a href="#setup">🎬 Vorbereitung</a>
+    <a href="#c1">1 Ü und Ö</a>
+    <a href="#c2">2 ch</a>
+    <a href="#c3">3 v, w, f</a>
+    <a href="#c4">4 R</a>
+    <a href="#c5">5 s und z</a>
+    <a href="#c6">6 Knacklaut</a>
+    <a href="#c7">7 Wortakzent</a>
+    <a href="#c8">8 Satzmelodie</a>
+    <a href="#danach">📦 Danach</a>
+  </nav>
+
+<section class="block setup" id="setup">
+  <h2 class="block-head">Einmal vorbereiten, <span class="hl">dann achtmal drehen</span></h2>
+  <p class="block-intro">Alle acht Clips brauchen denselben Aufbau. Wenn er einmal steht, drehst du in gut zwei Stunden alles ab.</p>
+
+  <h4>Kamera</h4>
+  <ul>
+    <li><b>Hochkant, 9:16.</b> Der Mund ist das Motiv, und hochkant brauchst du es ohnehin für Reels. Für die Plattform baue ich einen hochformatigen Platz in die Seite ein — du musst nichts zweimal drehen.</li>
+    <li><b>Zwei Einstellungen je Clip:</b> einmal <u>Gesicht</u> (Kinn bis Stirn) fürs Erklären, einmal <u>Mund groß</u> (Nasenspitze bis Kinn) fürs Vormachen. Der Mund-Ausschnitt ist der eigentliche Grund für das Video.</li>
+    <li><b>Licht von vorn</b>, nicht von der Seite. Ein Fenster vor dir reicht. Seitenlicht wirft Schatten in die Mundwinkel, und genau dort muss man etwas sehen.</li>
+    <li><b>Handy auf Augenhöhe</b>, nicht von unten.</li>
+  </ul>
+
+  <h4>Ton</h4>
+  <ul>
+    <li>In einem Raum mit Teppich, Vorhang oder Sofa drehen — nicht in der Küche und nicht im Bad.</li>
+    <li><b>Keine Musik.</b> Bei Ausspracheclips ist Musik nicht Geschmackssache, sondern ein Fehler: Sie überdeckt genau die Unterschiede, um die es geht.</li>
+    <li>Wenn du ein Ansteckmikrofon hast, nimm es. Wenn nicht, sprich näher ans Handy — 30 bis 40 Zentimeter.</li>
+  </ul>
+
+  <h4>Der Ablauf ist bei allen acht gleich</h4>
+  <ul>
+    <li><b>Hook</b> (5 Sek.) — ein Satz, der das Problem benennt.</li>
+    <li><b>Der Trick</b> (15–20 Sek.) — wie man den Laut findet, nicht wie er heißt.</li>
+    <li><b>Mund groß</b> (15–20 Sek.) — du machst es vor, dreimal langsam.</li>
+    <li><b>Wörter</b> (15–20 Sek.) — vier bis sechs echte Wörter.</li>
+    <li><b>Der Fehler</b> (10 Sek.) — du machst den typischen Fehler absichtlich vor, dann richtig.</li>
+    <li><b>Schluss</b> (5 Sek.) — Aufforderung zum Nachsprechen.</li>
+  </ul>
+
+  <div class="note tip">
+    <strong>💡 Der wichtigste Teil ist „der Fehler".</strong> Lernende hören ihren eigenen Fehler nicht. Wenn du ihn einmal absichtlich machst und direkt danach richtig sprichst, hören sie den Unterschied zum ersten Mal — und genau dieser Moment ist es, der geteilt wird.
+  </div>
+</section>
+
+<section class="block" id="c1">
+  <div class="clip-kopf">
+    <span class="nummer">1</span>
+    <h2 class="block-head">Ü und Ö — <span class="hl">alles liegt in den Lippen</span></h2>
+  </div>
+  <p><span class="dauer">75 Sekunden</span> <span class="warum">Video schlägt Ton am deutlichsten</span></p>
+  <p class="block-intro">Diese beiden Laute gibt es in den meisten Sprachen nicht. Man kann sie nicht erraten und nicht aus dem Ton ableiten — man muss die Lippen sehen. Deshalb steht dieser Clip an erster Stelle.</p>
+
+  <div class="rahmen"><table class="ablauf">
+    <tr><th>Teil</th><th>Bild</th><th>Was passiert</th></tr>
+    <tr><td>Hook</td><td>Gesicht</td><td>Direkt in die Kamera, ohne Begrüßung.</td></tr>
+    <tr><td>Trick</td><td>Gesicht</td><td>Die Anleitung in zwei Schritten.</td></tr>
+    <tr><td>Vormachen</td><td><b>Mund groß</b></td><td>I → Ü, dreimal. Dann E → Ö, dreimal.</td></tr>
+    <tr><td>Wörter</td><td>Mund groß</td><td>Vier Wörter, langsam.</td></tr>
+    <tr><td>Fehler</td><td>Gesicht</td><td>Minimalpaare, erst falsch, dann richtig.</td></tr>
+    <tr><td>Schluss</td><td>Gesicht</td><td>Aufforderung.</td></tr>
+  </table></div>
+
+  <h4>Was du sagst</h4>
+  <div class="sag">„Wenn du <b>Tür</b> sagst und es klingt wie <b>Tour</b> — dann liegt es nicht an deiner Zunge. Es liegt an den Lippen."</div>
+  <div class="sag">„Sag <b>iiii</b>. Und jetzt lass die Zunge genau da, wo sie ist — und mach nur die Lippen rund, wie beim U. Das ist <b>Ü</b>."</div>
+  <div class="sag">„Dasselbe für Ö: Sag <b>eeee</b>. Zunge bleibt. Lippen rund wie beim O. Fertig — das ist <b>Ö</b>."</div>
+  <div class="sag">„Die Zunge macht gar nichts. Nur die Lippen."</div>
+  <div class="sag">„Und jetzt du. Sag mir <b>über</b>, <b>Tür</b>, <b>schön</b>, <b>hören</b> — in die Kommentare oder einfach laut vor dich hin."</div>
+
+  <h4>Wörter zum Vormachen</h4>
+  <div class="woerter"><span>über</span><span>Tür</span><span>müde</span><span>Bücher</span><span>schön</span><span>hören</span><span>zwölf</span><span>möchte</span></div>
+
+  <h4>Der Fehler, den du vormachst</h4>
+  <div class="paare">
+    <div class="paar"><div class="w">Tour → Tür</div><div class="k">U wird zu Ü</div></div>
+    <div class="paar"><div class="w">schon → schön</div><div class="k">O wird zu Ö</div></div>
+    <div class="paar"><div class="w">Mutter → Mütter</div><div class="k">Einzahl oder Mehrzahl</div></div>
+  </div>
+  <div class="note warn"><strong>Sag diesen Satz dazu:</strong> „<i>Mutter</i> ist eine, <i>Mütter</i> sind mehrere. Wer die Lippen nicht rundet, sagt immer nur eine."</div>
+
+  <h4>Eingeblendeter Text</h4>
+  <p><span class="einblend">Zunge bleibt.</span><span class="einblend">Lippen rund.</span><span class="einblend">i → ü</span><span class="einblend">e → ö</span></p>
+</section>
+
+<section class="block" id="c2">
+  <div class="clip-kopf">
+    <span class="nummer">2</span>
+    <h2 class="block-head">Das <span class="hl">ch</span> — und warum es zwei davon gibt</h2>
+  </div>
+  <p><span class="dauer">90 Sekunden</span> <span class="warum">der häufigste Fehler überhaupt</span></p>
+  <p class="block-intro">Fast alle sagen <i>isch</i> statt <i>ich</i>. Der Laut existiert in vielen Sprachen nicht, und der Unterschied zwischen den beiden ch ist mit Ton allein kaum zu erklären.</p>
+
+  <div class="rahmen"><table class="ablauf">
+    <tr><th>Teil</th><th>Bild</th><th>Was passiert</th></tr>
+    <tr><td>Hook</td><td>Gesicht</td><td>Den Fehler zuerst zeigen.</td></tr>
+    <tr><td>Trick 1</td><td><b>Mund groß</b></td><td>Der ich-Laut über das geflüsterte J.</td></tr>
+    <tr><td>Trick 2</td><td>Gesicht</td><td>Der ach-Laut, hinten im Hals.</td></tr>
+    <tr><td>Regel</td><td>Gesicht</td><td>Welcher wann — in einem Satz.</td></tr>
+    <tr><td>Wörter</td><td>Mund groß</td><td>Je vier für beide Laute.</td></tr>
+    <tr><td>Schluss</td><td>Gesicht</td><td>Minimalpaar als Pointe.</td></tr>
+  </table></div>
+
+  <h4>Was du sagst</h4>
+  <div class="sag">„<b>Isch</b> bin müde. — Merkst du was? Genau das sagen fast alle. Und es ist ganz leicht zu ändern."</div>
+  <div class="sag">„Sag <b>ja</b>. Jetzt sag dasselbe, aber flüster es — ohne Stimme. Dieses Geräusch ist der <b>ich-Laut</b>. Mehr ist es nicht."</div>
+  <div class="sag">„Der zweite ist ganz woanders: weiter hinten, fast wie Räuspern, aber sanft. <b>ach</b>. <b>Buch</b>. <b>auch</b>."</div>
+  <div class="sag">„Und die Regel dazu passt in einen Satz: Nach <b>a</b>, <b>o</b>, <b>u</b> und <b>au</b> kommt der hintere. Nach allem anderen der vordere."</div>
+  <div class="sag">„Letzte Probe: <b>Kirche</b> und <b>Kirsche</b>. Zwei ganz verschiedene Orte. Sag beide laut."</div>
+
+  <h4>Wörter zum Vormachen</h4>
+  <p style="font-size:.9rem;color:var(--ink-soft);margin-bottom:.3rem">vorderer ich-Laut</p>
+  <div class="woerter"><span class="gut">ich</span><span class="gut">nicht</span><span class="gut">Milch</span><span class="gut">Mädchen</span><span class="gut">richtig</span></div>
+  <p style="font-size:.9rem;color:var(--ink-soft);margin:.6rem 0 .3rem">hinterer ach-Laut</p>
+  <div class="woerter"><span>Buch</span><span>acht</span><span>auch</span><span>Sprache</span><span>Tochter</span></div>
+
+  <h4>Der Fehler, den du vormachst</h4>
+  <div class="paare">
+    <div class="paar"><div class="w">isch → ich</div><div class="k">sch statt ch</div></div>
+    <div class="paar"><div class="w">Kirsche / Kirche</div><div class="k">Obst oder Gebäude</div></div>
+    <div class="paar"><div class="w">Löscher / Löcher</div><div class="k">löschen oder Loch</div></div>
+  </div>
+
+  <h4>Eingeblendeter Text</h4>
+  <p><span class="einblend">ja → flüstern = ich</span><span class="einblend">nach a, o, u, au: hinten</span><span class="einblend">sonst: vorn</span></p>
+</section>
+
+<section class="block" id="c3">
+  <div class="clip-kopf">
+    <span class="nummer">3</span>
+    <h2 class="block-head">v, w und f — <span class="hl">Unterlippe an die Zähne</span></h2>
+  </div>
+  <p><span class="dauer">70 Sekunden</span> <span class="warum">sofort sichtbar</span></p>
+  <p class="block-intro">Hier sieht man die Lösung wirklich: Die Unterlippe berührt die oberen Schneidezähne — oder eben nicht. Dazu die Eigenart, dass <i>v</i> im Deutschen meistens wie <i>f</i> klingt.</p>
+
+  <div class="rahmen"><table class="ablauf">
+    <tr><th>Teil</th><th>Bild</th><th>Was passiert</th></tr>
+    <tr><td>Hook</td><td>Gesicht</td><td>Die Verwechslung benennen.</td></tr>
+    <tr><td>Trick</td><td><b>Mund groß</b></td><td>Lippe an die Zähne, Hand an den Hals.</td></tr>
+    <tr><td>Der Sonderfall</td><td>Gesicht</td><td>Das deutsche v.</td></tr>
+    <tr><td>Wörter</td><td>Mund groß</td><td>Drei Gruppen.</td></tr>
+    <tr><td>Schluss</td><td>Gesicht</td><td>Minimalpaar.</td></tr>
+  </table></div>
+
+  <h4>Was du sagst</h4>
+  <div class="sag">„<b>W</b> ist im Deutschen nicht das englische W. <i>Wasser</i> ist nicht <i>Uasser</i>."</div>
+  <div class="sag">„Leg die Unterlippe an die oberen Zähne — so. Und jetzt mit Stimme: <b>wwww</b>. Leg die Hand an den Hals: Es vibriert."</div>
+  <div class="sag">„Dieselbe Stellung, aber ohne Stimme: <b>ffff</b>. Keine Vibration. Das ist der ganze Unterschied."</div>
+  <div class="sag">„Und jetzt das Merkwürdige: Das deutsche <b>v</b> klingt meistens wie <b>f</b>. <i>Vater</i>, <i>viel</i>, <i>vor</i> — alles mit f. Nur in Fremdwörtern klingt es wie w: <i>Vase</i>, <i>Klavier</i>, <i>November</i>."</div>
+  <div class="sag">„<b>Wein</b> oder <b>fein</b>? Hand an den Hals und selbst prüfen."</div>
+
+  <h4>Wörter zum Vormachen</h4>
+  <p style="font-size:.9rem;color:var(--ink-soft);margin-bottom:.3rem">w — mit Stimme</p>
+  <div class="woerter"><span class="gut">Wasser</span><span class="gut">Wein</span><span class="gut">wohnen</span><span class="gut">Wohnung</span></div>
+  <p style="font-size:.9rem;color:var(--ink-soft);margin:.6rem 0 .3rem">v wie f</p>
+  <div class="woerter"><span>Vater</span><span>viel</span><span>vor</span><span>vier</span></div>
+  <p style="font-size:.9rem;color:var(--ink-soft);margin:.6rem 0 .3rem">v wie w — nur bei Fremdwörtern</p>
+  <div class="woerter"><span>Vase</span><span>Klavier</span><span>November</span></div>
+
+  <h4>Der Fehler, den du vormachst</h4>
+  <div class="paare">
+    <div class="paar"><div class="w">Uasser → Wasser</div><div class="k">englisches W</div></div>
+    <div class="paar"><div class="w">Wein / fein</div><div class="k">mit oder ohne Stimme</div></div>
+    <div class="paar"><div class="w">Water → Vater</div><div class="k">v klingt wie f</div></div>
+  </div>
+
+  <h4>Eingeblendeter Text</h4>
+  <p><span class="einblend">Lippe an die Zähne</span><span class="einblend">w vibriert, f nicht</span><span class="einblend">v = meistens f</span></p>
+</section>
+
+<section class="block" id="c4">
+  <div class="clip-kopf">
+    <span class="nummer">4</span>
+    <h2 class="block-head">Das R — <span class="hl">und das R, das gar keins ist</span></h2>
+  </div>
+  <p><span class="dauer">85 Sekunden</span> <span class="warum">das größte Aha-Erlebnis</span></p>
+  <p class="block-intro">Zwei Dinge in einem Clip: das deutsche R hinten im Hals — und die Erkenntnis, dass das <i>-er</i> am Wortende überhaupt kein R ist. Das zweite überrascht fast jeden.</p>
+
+  <div class="rahmen"><table class="ablauf">
+    <tr><th>Teil</th><th>Bild</th><th>Was passiert</th></tr>
+    <tr><td>Hook</td><td>Gesicht</td><td>Die Überraschung ankündigen.</td></tr>
+    <tr><td>Trick 1</td><td>Gesicht</td><td>Das Zäpfchen-R über das Gurgeln.</td></tr>
+    <tr><td>Trick 2</td><td>Gesicht</td><td>Das Vokal-R am Ende.</td></tr>
+    <tr><td>Wörter</td><td>Mund groß</td><td>Zwei Gruppen im Wechsel.</td></tr>
+    <tr><td>Schluss</td><td>Gesicht</td><td>Ein Satz mit beiden.</td></tr>
+  </table></div>
+
+  <h4>Was du sagst</h4>
+  <div class="sag">„Das deutsche R hat zwei Gesichter. Und das zweite ist gar kein R."</div>
+  <div class="sag">„Am Anfang einer Silbe kommt es aus dem Hals — nicht von der Zungenspitze. Stell dir vor, du gurgelst ohne Wasser: <b>rot</b>, <b>Reis</b>, <b>Frau</b>."</div>
+  <div class="sag">„Und jetzt das Wichtige: Am Wortende, nach einem Vokal, wird aus dem R ein <b>a</b>. <i>Vater</i> klingt wie <i>Vata</i>. <i>aber</i> wie <i>aba</i>. <i>Uhr</i> wie <i>Ua</i>."</div>
+  <div class="sag">„Wenn du das <b>-er</b> am Ende wirklich als R sprichst, klingt es sofort nach Lehrbuch. Kein Mensch sagt <i>Vat-er</i>."</div>
+  <div class="sag">„Ein Satz mit beiden: <b>Mein Vater fährt morgen wieder.</b> Das erste R hinten im Hals, alle anderen sind ein a."</div>
+
+  <h4>Wörter zum Vormachen</h4>
+  <p style="font-size:.9rem;color:var(--ink-soft);margin-bottom:.3rem">R am Silbenanfang — hinten im Hals</p>
+  <div class="woerter"><span class="gut">rot</span><span class="gut">Reis</span><span class="gut">Frau</span><span class="gut">hören</span><span class="gut">Büro</span></div>
+  <p style="font-size:.9rem;color:var(--ink-soft);margin:.6rem 0 .3rem">R am Wortende — klingt wie a</p>
+  <div class="woerter"><span>Vater</span><span>aber</span><span>Uhr</span><span>wieder</span><span>immer</span></div>
+
+  <h4>Der Fehler, den du vormachst</h4>
+  <div class="paare">
+    <div class="paar"><div class="w">gerolltes R → Hals-R</div><div class="k">Zungenspitze statt Zäpfchen</div></div>
+    <div class="paar"><div class="w">Vat-err → Vata</div><div class="k">das -er am Ende</div></div>
+  </div>
+  <div class="note tip"><strong>💡 Wenn dir das Gurgeln nicht gelingt:</strong> Sag das Wort <i>ach</i> und lass dabei die Stimme mitlaufen. Genau an dieser Stelle sitzt das deutsche R.</div>
+
+  <h4>Eingeblendeter Text</h4>
+  <p><span class="einblend">Anfang: hinten im Hals</span><span class="einblend">Ende: -er klingt wie a</span><span class="einblend">Vater = Vata</span></p>
+</section>
+
+<section class="block" id="c5">
+  <div class="clip-kopf">
+    <span class="nummer">5</span>
+    <h2 class="block-head">s und z — <span class="hl">und wo das t herkommt</span></h2>
+  </div>
+  <p><span class="dauer">70 Sekunden</span> <span class="warum">verändert ganze Wörter</span></p>
+  <p class="block-intro">Das deutsche <b>z</b> ist kein englisches z, sondern ein <b>ts</b>. Und das <b>s</b> am Wortanfang summt. Beides ändert die Bedeutung, nicht nur den Klang.</p>
+
+  <div class="rahmen"><table class="ablauf">
+    <tr><th>Teil</th><th>Bild</th><th>Was passiert</th></tr>
+    <tr><td>Hook</td><td>Gesicht</td><td>Minimalpaar als Aufhänger.</td></tr>
+    <tr><td>Trick 1</td><td>Gesicht</td><td>z = t + s.</td></tr>
+    <tr><td>Trick 2</td><td>Gesicht</td><td>Hand an den Hals für das summende s.</td></tr>
+    <tr><td>Wörter</td><td>Mund groß</td><td>Drei Gruppen.</td></tr>
+    <tr><td>Schluss</td><td>Gesicht</td><td>Zungenbrecher.</td></tr>
+  </table></div>
+
+  <h4>Was du sagst</h4>
+  <div class="sag">„<b>Seit</b> und <b>Zeit</b> — hörst du den Unterschied? Wenn nicht, bist du nicht allein."</div>
+  <div class="sag">„Das deutsche <b>z</b> ist eigentlich zwei Laute: <b>t</b> plus <b>s</b>. Sag <i>nichts</i>. Genau dieses <b>ts</b> am Ende — das ist das z. <b>Zeit</b>, <b>zehn</b>, <b>Zug</b>."</div>
+  <div class="sag">„Und das <b>s</b> am Wortanfang summt. Hand an den Hals: <b>Sonne</b>, <b>sagen</b>, <b>Sie</b>. Es vibriert."</div>
+  <div class="sag">„Doppel-s und ß dagegen sind scharf, ohne Summen: <b>Wasser</b>, <b>Straße</b>, <b>heißen</b>."</div>
+  <div class="sag">„Und zum Schluss der Klassiker: <b>Zehn zahme Ziegen ziehen zehn Zentner Zucker zum Zoo.</b>"</div>
+
+  <h4>Wörter zum Vormachen</h4>
+  <p style="font-size:.9rem;color:var(--ink-soft);margin-bottom:.3rem">z = ts</p>
+  <div class="woerter"><span class="gut">Zeit</span><span class="gut">zehn</span><span class="gut">Zug</span><span class="gut">zusammen</span></div>
+  <p style="font-size:.9rem;color:var(--ink-soft);margin:.6rem 0 .3rem">s am Anfang — summt</p>
+  <div class="woerter"><span>Sonne</span><span>sagen</span><span>Sie</span><span>sieben</span></div>
+  <p style="font-size:.9rem;color:var(--ink-soft);margin:.6rem 0 .3rem">ss und ß — scharf</p>
+  <div class="woerter"><span>Wasser</span><span>Straße</span><span>heißen</span></div>
+
+  <h4>Der Fehler, den du vormachst</h4>
+  <div class="paare">
+    <div class="paar"><div class="w">Seit / Zeit</div><div class="k">s oder ts</div></div>
+    <div class="paar"><div class="w">so / Zoo</div><div class="k">derselbe Unterschied</div></div>
+  </div>
+
+  <h4>Eingeblendeter Text</h4>
+  <p><span class="einblend">z = t + s</span><span class="einblend">s am Anfang summt</span><span class="einblend">ss und ß sind scharf</span></p>
+</section>
+
+<section class="block" id="c6">
+  <div class="clip-kopf">
+    <span class="nummer">6</span>
+    <h2 class="block-head">Der Knacklaut — <span class="hl">der Stopp, den niemand sieht</span></h2>
+  </div>
+  <p><span class="dauer">65 Sekunden</span> <span class="warum">macht den Akzent aus</span></p>
+  <p class="block-intro">Der Grund, warum Deutsch so abgehackt klingt — und warum es <u>nicht</u> deutsch klingt, wenn man ihn weglässt. Fast niemand lernt ihn, dabei ist er in zwei Minuten erklärt.</p>
+
+  <div class="rahmen"><table class="ablauf">
+    <tr><th>Teil</th><th>Bild</th><th>Was passiert</th></tr>
+    <tr><td>Hook</td><td>Gesicht</td><td>Zwei Versionen desselben Satzes.</td></tr>
+    <tr><td>Trick</td><td>Gesicht</td><td>Über „oh-oh" zum Stopp.</td></tr>
+    <tr><td>Regel</td><td>Gesicht</td><td>Vor jedem Wort, das mit Vokal beginnt.</td></tr>
+    <tr><td>Wörter</td><td>Mund groß</td><td>Wortpaare und ein Satz.</td></tr>
+    <tr><td>Schluss</td><td>Gesicht</td><td>Selbst probieren.</td></tr>
+  </table></div>
+
+  <h4>Was du sagst</h4>
+  <div class="sag">„Hör dir diese zwei Sätze an. <b>Amabend essichein Ei.</b> Und: <b>Am | Abend | ess ich | ein | Ei.</b> Derselbe Satz — aber nur einer klingt deutsch."</div>
+  <div class="sag">„Der Unterschied ist ein winziger Stopp. Sag <b>oh-oh</b>. Genau die kleine Pause dazwischen — das ist er."</div>
+  <div class="sag">„Und die Regel: Diesen Stopp machst du vor <u>jedem</u> Wort, das mit einem Vokal anfängt. Deshalb verschmelzen deutsche Wörter nicht miteinander."</div>
+  <div class="sag">„<b>am Abend</b>. <b>in Ordnung</b>. <b>ein Ei</b>. Und sogar mitten im Wort: <b>The-ater</b>, <b>be-obachten</b>, <b>ver-abreden</b>."</div>
+  <div class="sag">„Sag jetzt selbst: <b>Am Abend esse ich ein Ei.</b> Fünf kleine Stopps. Danach klingst du sofort anders."</div>
+
+  <h4>Wörter zum Vormachen</h4>
+  <div class="woerter"><span class="gut">am Abend</span><span class="gut">in Ordnung</span><span class="gut">ein Ei</span><span class="gut">Theater</span><span class="gut">verabreden</span><span class="gut">beobachten</span></div>
+
+  <h4>Der Fehler, den du vormachst</h4>
+  <div class="paare">
+    <div class="paar"><div class="w">Amabend → am Abend</div><div class="k">Wörter kleben zusammen</div></div>
+    <div class="paar"><div class="w">Theeater → The-ater</div><div class="k">Stopp mitten im Wort</div></div>
+  </div>
+  <div class="note info"><strong>Für die Caption:</strong> Dieser Laut hat keinen Buchstaben. Man schreibt ihn nie, aber man hört sofort, wenn er fehlt — das ist einer der Gründe, warum ein Akzent bleibt, obwohl die Grammatik stimmt.</div>
+
+  <h4>Eingeblendeter Text</h4>
+  <p><span class="einblend">oh | oh</span><span class="einblend">Vokal am Wortanfang = kleiner Stopp</span><span class="einblend">am | Abend</span></p>
+</section>
+
+<section class="block" id="c7">
+  <div class="clip-kopf">
+    <span class="nummer">7</span>
+    <h2 class="block-head">Wortakzent — <span class="hl">welche Silbe trägt</span></h2>
+  </div>
+  <p><span class="dauer">75 Sekunden</span> <span class="warum">Gestik trägt die Erklärung</span></p>
+  <p class="block-intro">Hier hilft Video über den Mund hinaus: Klatschen und Handbewegung machen die Betonung sichtbar. Und ein Wortpaar zeigt, dass die Betonung sogar die Bedeutung ändern kann.</p>
+
+  <div class="rahmen"><table class="ablauf">
+    <tr><th>Teil</th><th>Bild</th><th>Was passiert</th></tr>
+    <tr><td>Hook</td><td>Gesicht</td><td>Ein Wort zweimal, zwei Bedeutungen.</td></tr>
+    <tr><td>Regel 1</td><td>Gesicht + Hände</td><td>Meistens vorn. Dazu klatschen.</td></tr>
+    <tr><td>Regel 2</td><td>Gesicht + Hände</td><td>Trennbar vorn, untrennbar hinten.</td></tr>
+    <tr><td>Regel 3</td><td>Gesicht</td><td>Wörter auf -ieren.</td></tr>
+    <tr><td>Schluss</td><td>Gesicht</td><td>Mitklatschen lassen.</td></tr>
+  </table></div>
+
+  <h4>Was du sagst</h4>
+  <div class="sag">„<b>ÚM</b>fahren und um<b>FÁH</b>ren. Einmal fährst du außen herum — einmal fährst du drüber. Dasselbe Wort, nur die Betonung ist anders."</div>
+  <div class="sag">„Deutsche Wörter betont man meistens <b>vorn</b>. <b>ÁR</b>beit. <b>MÓR</b>gen. <b>WÓH</b>nung. Klatsch mit — auf der ersten Silbe."</div>
+  <div class="sag">„Bei trennbaren Verben liegt der Ton auf der Vorsilbe: <b>ÁN</b>rufen, <b>ÉIN</b>kaufen, <b>ÁUF</b>stehen. Und genau daran erkennst du, dass sie sich trennen."</div>
+  <div class="sag">„Bei untrennbaren liegt er hinten: ver<b>STÉ</b>hen, be<b>ZÁH</b>len, er<b>KLÄ</b>ren. Diese trennen sich nie."</div>
+  <div class="sag">„Und Wörter auf <b>-ieren</b> betont man immer auf dem <b>ier</b>: stud<b>ÍE</b>ren, telefon<b>ÍE</b>ren, funktion<b>ÍE</b>ren."</div>
+  <div class="sag">„Klatsch die nächsten fünf mit mir mit."</div>
+
+  <h4>Wörter zum Vormachen</h4>
+  <p style="font-size:.9rem;color:var(--ink-soft);margin-bottom:.3rem">Betonung vorn</p>
+  <div class="woerter"><span class="gut">ÁRbeit</span><span class="gut">MÓRgen</span><span class="gut">WÓHnung</span><span class="gut">ÁNrufen</span><span class="gut">ÉINkaufen</span></div>
+  <p style="font-size:.9rem;color:var(--ink-soft);margin:.6rem 0 .3rem">Betonung hinten</p>
+  <div class="woerter"><span>verSTÉHen</span><span>beZÁHlen</span><span>erKLÄren</span><span>studÍEren</span><span>telefonÍEren</span></div>
+
+  <h4>Der Fehler, den du vormachst</h4>
+  <div class="paare">
+    <div class="paar"><div class="w">ÚMfahren / umFÁHren</div><div class="k">außen herum oder drüber</div></div>
+    <div class="paar"><div class="w">anRÚFen → ÁNrufen</div><div class="k">Ton gehört auf die Vorsilbe</div></div>
+  </div>
+
+  <h4>Eingeblendeter Text</h4>
+  <p><span class="einblend">meistens vorn</span><span class="einblend">trennbar = Ton auf der Vorsilbe</span><span class="einblend">-ieren = Ton auf ier</span></p>
+</section>
+
+<section class="block" id="c8">
+  <div class="clip-kopf">
+    <span class="nummer">8</span>
+    <h2 class="block-head">Satzmelodie — <span class="hl">warum W-Fragen fallen</span></h2>
+  </div>
+  <p><span class="dauer">80 Sekunden</span> <span class="warum">Handbewegung zeigt es</span></p>
+  <p class="block-intro">Die eine Sache, die fast alle falsch machen: <i>Wo wohnst du?</i> geht im Deutschen nach <u>unten</u>. In vielen Sprachen steigt jede Frage — und genau das klingt dann fremd.</p>
+
+  <div class="rahmen"><table class="ablauf">
+    <tr><th>Teil</th><th>Bild</th><th>Was passiert</th></tr>
+    <tr><td>Hook</td><td>Gesicht</td><td>Die Überraschung vorweg.</td></tr>
+    <tr><td>Regel 1</td><td>Gesicht + Hand</td><td>Aussage fällt. Hand geht runter.</td></tr>
+    <tr><td>Regel 2</td><td>Gesicht + Hand</td><td>W-Frage fällt auch.</td></tr>
+    <tr><td>Regel 3</td><td>Gesicht + Hand</td><td>Ja-Nein-Frage steigt.</td></tr>
+    <tr><td>Regel 4</td><td>Gesicht + Hand</td><td>Aufzählung: steigt, steigt, fällt.</td></tr>
+    <tr><td>Schluss</td><td>Gesicht</td><td>Nachsprechen.</td></tr>
+  </table></div>
+
+  <h4>Was du sagst</h4>
+  <div class="sag">„Eine Frage geht immer nach oben? Im Deutschen nicht. Die Hälfte aller Fragen geht nach <b>unten</b>."</div>
+  <div class="sag">„Eine normale Aussage fällt am Ende. <b>Ich komme aus Polen.</b> ↘ Die Hand geht mit runter."</div>
+  <div class="sag">„Und jetzt das Überraschende: Eine Frage mit einem <b>W-Wort</b> fällt genauso. <b>Wo wohnst du?</b> ↘ <b>Wie heißt du?</b> ↘ Nicht nach oben."</div>
+  <div class="sag">„Nur wenn die Frage <u>ohne</u> Fragewort anfängt, steigt sie: <b>Kommst du mit?</b> ↗ <b>Hast du Zeit?</b> ↗"</div>
+  <div class="sag">„Und bei einer Aufzählung steigt jedes Element — nur das letzte fällt. <b>Ich kaufe Brot</b> ↗<b>, Milch</b> ↗ <b>und Käse.</b> ↘"</div>
+  <div class="sag">„Sprich die vier mit mir nach. Und lass die Hand mitgehen — das hilft mehr, als man denkt."</div>
+
+  <h4>Sätze zum Vormachen</h4>
+  <div class="paare">
+    <div class="paar"><div class="w">Ich komme aus Polen. ↘</div><div class="k">Aussage — fällt</div></div>
+    <div class="paar"><div class="w">Wo wohnst du? ↘</div><div class="k">W-Frage — fällt auch</div></div>
+    <div class="paar"><div class="w">Kommst du mit? ↗</div><div class="k">Ja-Nein-Frage — steigt</div></div>
+    <div class="paar"><div class="w">Brot ↗, Milch ↗ und Käse ↘</div><div class="k">Aufzählung</div></div>
+  </div>
+
+  <h4>Der Fehler, den du vormachst</h4>
+  <div class="paare">
+    <div class="paar"><div class="w">Wo wohnst du? ↗</div><div class="k">klingt unsicher oder erstaunt</div></div>
+  </div>
+  <div class="note warn"><strong>Sag das dazu:</strong> „Wenn du eine W-Frage nach oben ziehst, klingt sie wie eine Rückfrage — als hättest du es nicht verstanden. Deshalb wirken manche Sätze ungewollt zweifelnd."</div>
+
+  <h4>Eingeblendeter Text</h4>
+  <p><span class="einblend">Aussage ↘</span><span class="einblend">W-Frage ↘</span><span class="einblend">Ja-Nein-Frage ↗</span><span class="einblend">Aufzählung ↗ ↗ ↘</span></p>
+</section>
+
+<section class="block abschluss" id="danach">
+  <h2 class="block-head">🎯 Was danach passiert</h2>
+  <p class="block-intro">Du filmst — den Rest übernehme ich.</p>
+
+  <h4>Was ich brauche</h4>
+  <ul>
+    <li>Acht Dateien, benannt nach dem Laut: <code>ue-oe.mp4</code>, <code>ch.mp4</code>, <code>v-w-f.mp4</code>, <code>r.mp4</code>, <code>s-z.mp4</code>, <code>knacklaut.mp4</code>, <code>wortakzent.mp4</code>, <code>satzmelodie.mp4</code></li>
+    <li>Leg sie in den Projektordner unter <code>video/aussprache/</code> — mehr nicht.</li>
+  </ul>
+
+  <h4>Was ich damit mache</h4>
+  <ul>
+    <li>Ich baue in jede der acht Aussprache-Seiten einen hochformatigen Videoplatz ein und hänge deinen Clip dort ein.</li>
+    <li>Die Seiten haben heute <u>weder Ton noch Bild</u> — mit den Clips wird aus einer Lesestunde eine Aussprachestunde.</li>
+    <li>Ich schneide je Clip eine Fassung ohne den Schluss-Aufruf für die Plattform und lasse die Reel-Fassung wie sie ist.</li>
+  </ul>
+
+  <h4>Reihenfolge, falls du nicht alles auf einmal schaffst</h4>
+  <ul>
+    <li><b>Zuerst 1 (Ü und Ö) und 2 (ch)</b> — dort ist der Abstand zwischen „gelesen" und „verstanden" am größten.</li>
+    <li>Dann 4 (R) — wegen des <i>-er</i> am Ende, das fast alle überrascht.</li>
+    <li>Der Rest in beliebiger Reihenfolge.</li>
+  </ul>
+
+  <div class="note tip" style="background:rgba(255,255,255,.14);border-left-color:var(--yellow);color:#F3E9DC">
+    <strong>Ein Hinweis zum Aufwand:</strong> Plan pro Clip zwei bis drei Anläufe ein, nicht mehr. Ein Ausspracheclip muss nicht perfekt sein — er muss den Mund zeigen. Der dritte Versuch ist fast immer der beste, der siebte klingt vorgelesen.
+  </div>
+</section>
+
+  <footer>
+    <div class="mark">deutsch<span class="t">oderwas</span></div>
+    <p>Drehbücher · acht Aussprachevideos · zur Verwendung auf der Plattform und als Reels</p>
+  </footer>
+</div>
+</body>
+</html>
