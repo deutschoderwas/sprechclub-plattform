@@ -291,6 +291,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-supermarkt.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w04-a-teil2-kaputt-melden-a2b1.html",
+  "t": "Etwas ist kaputt — und jetzt?",
+  "lvl": "A2–B1",
+  "art": "lektion",
+  "b": "wohnen",
+  "img": "amanda/sz-wohnen.webp"
+ },
+ {
   "d": "familie-beziehungen-teil-1-a2-b1.html",
   "t": "Familie & Beziehungen · Teil 1",
   "lvl": "A2–B1",
@@ -361,6 +369,14 @@ window.LEKTIONEN = [
   "b": "restaurant",
   "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-restaurant-a2b1.html",
   "img": "amanda/sz-restaurant.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/w04-a-teil1-zimmer-moebel-a2b1.html",
+  "t": "In der Wohnung: wo steht eigentlich was?",
+  "lvl": "A2–B1",
+  "art": "lektion",
+  "b": "wohnen",
+  "img": "amanda/sz-wohnen.webp"
  },
  {
   "d": "kennenlernen-vorstellen-a2-b1.html",
@@ -1125,6 +1141,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-sprachkurs.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w04-b-teil1-vorsilben-an-ab-auf-b1b2.html",
+  "t": "an-, ab-, auf-, aus-, ein-: fünf Silben, hundert Verben",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "Unterricht-ab-27-07/buero-b1b2.html",
   "t": "Arbeitsalltag im Büro",
   "lvl": "B1–B2",
@@ -1214,6 +1238,22 @@ window.LEKTIONEN = [
   "art": "lektion",
   "b": "team",
   "img": "amanda/sz-buero.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/w04-c-teil2-job-wechseln-b1b2.html",
+  "t": "Die Debatte: wechseln, solange es gut läuft?",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "bewerbung",
+  "img": "amanda/sz-bewerbung.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/w04-b-teil2-vorsilben-bedeutung-b1b2.html",
+  "t": "Dieselbe Silbe, ganz neue Bedeutung",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
  },
  {
   "d": "Unterricht-ab-27-07/digitaldetox-b1b2.html",
@@ -1359,6 +1399,14 @@ window.LEKTIONEN = [
   "art": "spiel",
   "b": "sprachkurs",
   "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/w04-c-teil1-job-wechseln-b1b2.html",
+  "t": "Job wechseln — wann ist der Moment?",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "bewerbung",
+  "img": "amanda/sz-bewerbung.webp"
  },
  {
   "d": "Unterricht-ab-27-07/kreativitaet-b1b2.html",
@@ -1595,6 +1643,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-bewerbung.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w04-d-teil1-um-hilfe-bitten-b1b2.html",
+  "t": "Um Hilfe bitten: klein, konkret, klar",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "Unterricht-ab-27-07/umzug-b1b2.html",
   "t": "Umzug & Neuanfang",
   "lvl": "B1–B2",
@@ -1626,6 +1682,14 @@ window.LEKTIONEN = [
   "art": "lektion",
   "b": "freunde",
   "img": "amanda/sz-freunde.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/w04-d-teil2-um-hilfe-bitten-b1b2.html",
+  "t": "Wenn die Antwort nein ist",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
  },
  {
   "d": "Unterricht-ab-14-09/w03-d-teil2-ehrlich-hoeflich-b1b2.html",
@@ -2535,10 +2599,12 @@ window.BEREICH_MEHR = {
   "sprachspielclub-freibad-b1-b2.html",
   "sprachspielclub-bahnhof-b1-b2.html",
   "sprachspielclub-flughafen-b1-b2.html",
+  "Unterricht-ab-14-09/w04-b-teil1-vorsilben-an-ab-auf-b1b2.html",
   "sprachspielclub-flohmarkt-b1-b2.html",
   "sprachspielclub-volksfest-b1-b2.html",
   "sprachspielclub-wimmelbild-b1-b2.html",
   "Unterricht-ab-14-09/w02-b-teil2-gehen-kommen-fahren-b1b2.html",
+  "Unterricht-ab-14-09/w04-b-teil2-vorsilben-bedeutung-b1b2.html",
   "Unterricht-ab-14-09/w03-d-teil1-ehrlich-hoeflich-b1b2.html",
   "Unterricht-ab-14-09/w02-b-teil1-gehen-kommen-fahren-b1b2.html",
   "sprachspielclub-stadtpark-quiz-b1-b2.html",
@@ -2549,6 +2615,8 @@ window.BEREICH_MEHR = {
   "Unterricht-ab-14-09/w01-b-teil1-machen-b1b2.html",
   "Unterricht-ab-14-09/w01-b-teil2-machen-b1b2.html",
   "Unterricht-ab-14-09/w02-d-teil1-nachfragen-b1b2.html",
+  "Unterricht-ab-14-09/w04-d-teil1-um-hilfe-bitten-b1b2.html",
+  "Unterricht-ab-14-09/w04-d-teil2-um-hilfe-bitten-b1b2.html",
   "Unterricht-ab-14-09/w03-d-teil2-ehrlich-hoeflich-b1b2.html",
   "Unterricht-ab-14-09/w03-b-teil2-legen-stellen-setzen-b1b2.html",
   "Unterricht-ab-14-09/w02-d-teil2-nachfragen-b1b2.html",
@@ -2637,7 +2705,27 @@ window.BEREICH_MEHR = {
  ],
  "bewerbung": [
   "Unterricht-ab-27-07/bewerbung-a2b1.html",
+  "Unterricht-ab-14-09/w04-c-teil2-job-wechseln-b1b2.html",
+  "Unterricht-ab-14-09/w04-c-teil1-job-wechseln-b1b2.html",
   "Unterricht-ab-27-07/traumberuf-b1b2.html"
+ ],
+ "wohnen": [
+  "Unterricht-ab-14-09/w04-a-teil2-kaputt-melden-a2b1.html",
+  "Unterricht-ab-14-09/w04-a-teil1-zimmer-moebel-a2b1.html",
+  "Unterricht-ab-27-07/nachbarn-a2b1.html",
+  "Unterricht-ab-27-07/wg-leben-a2b1.html",
+  "Unterricht-ab-27-07/wohnen-a2b1.html",
+  "wohnungssuche-b1.html",
+  "maengel-melden-b1.html",
+  "wohnformen-wg-b1-interaktiv.html",
+  "Unterricht-ab-27-07/stadt-land-b1b2.html",
+  "stadt-oder-land-teil-1-b1-b2.html",
+  "Unterricht-ab-27-07/umzug-b1b2.html",
+  "Unterricht-ab-07-09/vw-di-ordnung-b1b2.html",
+  "Unterricht-ab-27-07/wohnformen-b1b2.html",
+  "wohnungssuche-mietwahnsinn-b1-b2.html",
+  "Unterricht-ab-27-07/minimalismus-b2c1.html",
+  "Unterricht-ab-27-07/wohnungsnot-b2c1.html"
  ],
  "freunde": [
   "familie-beziehungen-teil-1-a2-b1.html",
@@ -2661,22 +2749,6 @@ window.BEREICH_MEHR = {
  "kochen": [
   "Unterricht-ab-27-07/kochen-a2b1.html",
   "Unterricht-ab-27-07/vegan-b2c1.html"
- ],
- "wohnen": [
-  "Unterricht-ab-27-07/nachbarn-a2b1.html",
-  "Unterricht-ab-27-07/wg-leben-a2b1.html",
-  "Unterricht-ab-27-07/wohnen-a2b1.html",
-  "wohnungssuche-b1.html",
-  "maengel-melden-b1.html",
-  "wohnformen-wg-b1-interaktiv.html",
-  "Unterricht-ab-27-07/stadt-land-b1b2.html",
-  "stadt-oder-land-teil-1-b1-b2.html",
-  "Unterricht-ab-27-07/umzug-b1b2.html",
-  "Unterricht-ab-07-09/vw-di-ordnung-b1b2.html",
-  "Unterricht-ab-27-07/wohnformen-b1b2.html",
-  "wohnungssuche-mietwahnsinn-b1-b2.html",
-  "Unterricht-ab-27-07/minimalismus-b2c1.html",
-  "Unterricht-ab-27-07/wohnungsnot-b2c1.html"
  ],
  "apotheke": [
   "Unterricht-ab-14-09/w03-a-teil2-rezept-apotheke-a2b1.html"

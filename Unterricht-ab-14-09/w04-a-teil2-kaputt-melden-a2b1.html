@@ -1,0 +1,1193 @@
+<!DOCTYPE html><html lang="de"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Etwas ist kaputt — und jetzt? · Sprechclub A2/B1 | deutschoderwas</title>
+<!--
+  deutschoderwas · Sprechclub · Mi 7.10. 9:00 · Strang A · Teil 2 · A2 ⇄ B1
+  Etwas ist kaputt — und jetzt? — Der Wasserhahn tropft, die Heizung bleibt kalt, der Aufzug steht still. Melden muss man es selbst — und zwar so, dass der andere sofort weiß, was los ist und wo.
+  Erzeugt von bau/mach-stunde.js aus w04-a2-kaputt.json. Nicht von Hand aendern.
+  Aufbau und Design wie maengel-melden-b1.html.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+
+:root{--cream:#FDF6EC;--cream-warm:#FBEDD8;--paper:#FFFFFF;--ink:#262019;--ink-soft:#5C4E3E;--ink-mute:#A8957D;--red:#E8302A;--red-soft:#FCE5E3;--teal:#0FB5A6;--teal-soft:#D7F0EC;--yellow:#FFD24A;--yellow-soft:#FFF1C2;--sand:#F0E2C8;--green:#2E9E5B;}
+*{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}
+body{background:linear-gradient(180deg,#FDE6E0 0%,var(--cream) 14%,var(--cream) 100%);color:var(--ink);font-family:'Outfit',sans-serif;line-height:1.55;min-height:100vh;}
+.wrapper{max-width:1080px;margin:0 auto;padding:2.2rem 1.5rem 5rem;}
+.eyebrow{text-align:center;font-size:.78rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--red);margin-bottom:.7rem;}
+h1.title{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(2rem,5vw,3.6rem);line-height:1.05;text-align:center;letter-spacing:-.01em;}
+h1.title .hl{position:relative;display:inline-block;font-style:italic;padding:.05em .3em;}
+h1.title .hl::before{content:'';position:absolute;inset:0;background:var(--yellow);border-radius:12px;transform:rotate(-2deg);z-index:-1;}
+.subtitle{text-align:center;max-width:640px;margin:.8rem auto 0;font-size:1.05rem;color:var(--ink-soft);}
+.hero-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;margin:1rem auto 0;}
+.hero-tag{background:var(--paper);border:1.5px solid var(--sand);border-radius:999px;padding:.3rem .85rem;font-size:.82rem;font-weight:600;}
+.hero-tag b{color:var(--red);}
+.tabs{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;background:rgba(251,237,216,.94);backdrop-filter:blur(8px);border-radius:20px;padding:.5rem;margin:1.8rem auto;max-width:fit-content;}
+.tab{font-size:.92rem;font-weight:600;border:2px solid transparent;background:var(--paper);color:var(--ink);padding:.5rem 1rem;border-radius:999px;cursor:pointer;transition:.15s;display:inline-flex;gap:.35rem;align-items:center;}
+.tab:hover{border-color:var(--ink);transform:translateY(-1px);}
+.tab.active{background:var(--red);color:#fff;border-color:var(--red);}
+.section{display:none;animation:fade .35s ease;}.section.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+h2.st{font-family:'Fraunces',serif;font-weight:700;font-size:clamp(1.7rem,3.4vw,2.3rem);text-align:center;margin:1.8rem 0 .4rem;}
+.ssub{text-align:center;color:var(--ink-soft);margin-bottom:1.3rem;}
+.scene-wrap{background:var(--paper);border:4px solid var(--paper);border-radius:20px;box-shadow:0 14px 38px rgba(38,32,25,.16);overflow:hidden;margin:1rem 0;}
+.scene-wrap img{width:100%;display:block;}
+.tip{background:var(--yellow-soft);border:2px dashed var(--yellow);border-radius:16px;padding:.9rem 1.2rem;font-size:.95rem;margin:1rem 0;line-height:1.65;}
+.tip strong{color:var(--red);}.tip.teal{background:var(--teal-soft);border-color:var(--teal);}
+.tip u{text-decoration-color:var(--red);text-underline-offset:3px;}
+.qlist{list-style:none;display:grid;gap:.55rem;margin:.6rem 0;}
+.qlist li{background:var(--paper);border:1.5px solid var(--sand);border-left:5px solid var(--teal);border-radius:12px;padding:.7rem 1rem;font-weight:500;}
+/* vocab */
+.vgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:.7rem;margin:1rem 0;}
+@media(max-width:640px){.vgrid{grid-template-columns:1fr;}}
+.vcard{background:var(--paper);border:1.5px solid var(--sand);border-radius:14px;padding:.85rem 1rem;}
+.vcard .w{font-weight:700;font-size:1.05rem;color:var(--ink);}
+.vcard .w .art{color:var(--red);}
+.vcard .ex{font-family:'Fraunces',serif;font-style:italic;color:var(--ink-soft);font-size:.92rem;margin-top:.25rem;}
+.vcard .speak{margin-top:.4rem;background:var(--teal-soft);border:none;color:#0a7d72;font-weight:700;border-radius:999px;padding:.2rem .7rem;font-size:.78rem;cursor:pointer;}
+/* dialog */
+.dwrap{background:var(--paper);border:1.5px solid var(--sand);border-radius:16px;padding:1.1rem 1.2rem;margin:1rem 0;}
+.dwrap h4{font-family:'Fraunces',serif;font-size:1.1rem;margin-bottom:.6rem;color:var(--red);}
+.dline{display:flex;gap:.5rem;margin:.35rem 0;align-items:flex-start;}
+.dwho{flex:none;width:26px;height:26px;border-radius:50%;font-size:.8rem;font-weight:700;display:flex;align-items:center;justify-content:center;color:#fff;}
+.dwho.a{background:var(--red);}.dwho.b{background:var(--teal);}
+.dtxt{background:var(--cream-warm);border-radius:12px;padding:.4rem .7rem;font-size:.96rem;}
+.dbtn{margin-top:.6rem;background:var(--red);color:#fff;border:none;border-radius:999px;padding:.4rem 1rem;font-weight:700;cursor:pointer;font-size:.85rem;}
+/* debate */
+.pcgrid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin:1rem 0;}
+@media(max-width:640px){.pcgrid{grid-template-columns:1fr;}}
+.pcol{border-radius:16px;padding:1rem 1.1rem;border:2px solid;}
+.pcol.pro{background:#EAF7EF;border-color:var(--green);}
+.pcol.con{background:var(--red-soft);border-color:var(--red);}
+.pcol h4{font-family:'Fraunces',serif;font-size:1.15rem;margin-bottom:.5rem;}
+.pcol.pro h4{color:var(--green);}.pcol.con h4{color:var(--red);}
+.pcol ul{list-style:none;display:grid;gap:.4rem;}
+.pcol li{font-size:.94rem;padding-left:1.3rem;position:relative;}
+.pcol.pro li::before{content:'✓';position:absolute;left:0;color:var(--green);font-weight:700;}
+.pcol.con li::before{content:'✓';position:absolute;left:0;color:var(--red);font-weight:700;}
+.rmcard{background:var(--paper);border:1.5px solid var(--sand);border-radius:14px;padding:.9rem 1.1rem;margin:.8rem 0;}
+.rmcard b{color:var(--teal);}
+.rm{display:inline-block;background:var(--teal-soft);color:#0a7d72;border-radius:999px;padding:.2rem .7rem;font-size:.85rem;font-weight:600;margin:.2rem .2rem 0 0;}
+/* 90 sek */
+.card90{background:linear-gradient(135deg,var(--paper),var(--cream-warm));border:2px solid var(--sand);border-radius:20px;padding:1.6rem;text-align:center;max-width:460px;margin:1.2rem auto;box-shadow:0 8px 24px rgba(38,32,25,.08);}
+.card90 .lbl{font-size:.72rem;font-weight:700;color:var(--red);letter-spacing:.12em;text-transform:uppercase;}
+.card90 .word{font-family:'Fraunces',serif;font-weight:900;font-size:2.2rem;margin:.4rem 0;}
+.helpwords{display:flex;flex-wrap:wrap;gap:.35rem;justify-content:center;margin:.7rem 0;}
+.hw{background:var(--yellow-soft);border:1px solid var(--yellow);border-radius:999px;padding:.2rem .7rem;font-size:.85rem;font-weight:600;}
+.timer{font-family:'Fraunces',serif;font-size:2rem;font-weight:700;color:var(--teal);margin:.5rem 0;}
+.btn{background:var(--red);color:#fff;border:none;border-radius:999px;padding:.5rem 1.3rem;font-weight:700;cursor:pointer;font-size:.9rem;font-family:'Outfit';margin:.2rem;}
+.btn.ghost{background:var(--paper);color:var(--ink);border:2px solid var(--sand);}
+/* quiz */
+.quiz-q{background:var(--paper);border:1.5px solid var(--sand);border-radius:14px;padding:.9rem 1.1rem;margin:.7rem 0;}
+.quiz-q .qt{font-weight:600;margin-bottom:.55rem;}
+.quiz-opts{display:grid;gap:.4rem;}
+.qopt{text-align:left;background:var(--cream);border:1.5px solid var(--sand);border-radius:10px;padding:.5rem .8rem;cursor:pointer;font-size:.94rem;font-family:'Outfit';font-weight:500;}
+.qopt:hover{border-color:var(--ink);}
+.qopt.right{background:#EAF7EF;border-color:var(--green);color:var(--green);font-weight:700;}
+.qopt.wrong{background:var(--red-soft);border-color:var(--red);color:var(--red);}
+.qexp{font-size:.86rem;color:var(--ink-soft);margin-top:.5rem;display:none;}
+.qexp.show{display:block;}
+/* gap */
+.gap{background:var(--paper);border:1.5px solid var(--sand);border-radius:14px;padding:1rem 1.1rem;margin:.7rem 0;line-height:2.2;}
+.gap select{font-family:'Outfit';font-weight:600;border:2px solid var(--teal);border-radius:8px;padding:.15rem .4rem;background:var(--teal-soft);color:#0a7d72;font-size:.95rem;}
+.gap select.ok{background:#EAF7EF;border-color:var(--green);color:var(--green);}
+.gap select.no{background:var(--red-soft);border-color:var(--red);color:var(--red);}
+
+.bgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin:1rem 0;}
+@media(max-width:900px){.bgrid{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:600px){.bgrid{grid-template-columns:repeat(2,1fr);}}
+.bcard{background:var(--paper);border:1.5px solid var(--sand);border-radius:16px;overflow:hidden;box-shadow:0 4px 14px rgba(38,32,25,.06);transition:.2s;}
+.bcard:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(38,32,25,.13);}
+.bcard img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block;border-bottom:1.5px solid var(--sand);}
+.bcard .bb{padding:.6rem .7rem .8rem;}
+.bcard .bw{font-weight:700;font-size:.98rem;line-height:1.2;}
+.bcard .bw .art{color:var(--red);}
+.bcard .bex{font-family:'Fraunces',serif;font-style:italic;font-size:.82rem;color:var(--ink-soft);margin-top:.3rem;}
+.bcard .bti{font-size:.78rem;color:var(--ink);background:var(--yellow-soft);border-radius:8px;padding:.3rem .5rem;margin-top:.4rem;line-height:1.4;}
+.bgrid.hide .bcard .bw,.bgrid.hide .bcard .bex,.bgrid.hide .bcard .bti,.bgrid.hide .bcard .speak{opacity:0;pointer-events:none;}
+.bgrid.hide .bcard.auf .bw,.bgrid.hide .bcard.auf .bex,.bgrid.hide .bcard.auf .bti,.bgrid.hide .bcard.auf .speak{opacity:1;pointer-events:auto;}
+.bgrid.hide .bcard{cursor:pointer;}
+.dhead{display:flex;gap:.8rem;align-items:center;margin-bottom:.4rem;flex-wrap:wrap;}
+.dhead img{width:60px;height:60px;border-radius:12px;object-fit:cover;border:1.5px solid var(--sand);flex:none;}
+.dhead h4{margin:0;flex:1;min-width:180px;}
+.dsit{font-size:.9rem;color:var(--ink-soft);font-style:italic;margin-bottom:.7rem;}
+.rbtn{background:var(--teal);color:#fff;border:none;border-radius:999px;padding:.4rem 1rem;font-weight:700;font-size:.82rem;cursor:pointer;font-family:'Outfit';}
+.rbtn.zwei{background:var(--red);}
+.dline{display:flex;gap:.5rem;margin:.4rem 0;align-items:flex-start;}
+.dbild{width:44px;height:44px;border-radius:10px;object-fit:cover;border:1.5px solid var(--sand);flex:none;}
+.dcue{display:none;background:var(--yellow-soft);border:2px dashed var(--yellow);border-radius:12px;padding:.4rem .7rem;font-size:.92rem;cursor:pointer;font-weight:600;}
+.dcue .kl{display:block;font-size:.74rem;font-weight:500;color:var(--ink-mute);margin-top:.15rem;}
+.dwrap[data-runde="2"] .dline.b .dtxt{display:none;}
+.dwrap[data-runde="2"] .dline.b .dcue{display:block;}
+.dwrap[data-runde="2"] .dline.b.zeigen .dtxt{display:block;}
+.dwrap[data-runde="2"] .dline.b.zeigen .dcue{display:none;}
+.bpl{display:grid;gap:.5rem;margin:1rem 0;}
+.bpz{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;background:var(--paper);border:1.5px solid var(--sand);border-radius:14px;padding:.7rem .9rem;}
+.bpz .stk{padding:.3rem .7rem;border-radius:10px;font-weight:700;font-size:.95rem;color:#fff;}
+.bpz .s1{background:#3B5EA8;}.bpz .s2{background:var(--red);}.bpz .s3{background:var(--green);}
+.bpz .wof{margin-left:auto;font-size:.82rem;color:var(--ink-mute);font-style:italic;}
+.hagrid{display:grid;gap:.7rem;margin:1rem 0;}
+.ha{background:var(--paper);border:1.5px solid var(--sand);border-left:5px solid var(--red);border-radius:14px;padding:.9rem 1.1rem;display:flex;gap:.8rem;align-items:flex-start;}
+.ha .hi{font-size:1.5rem;flex:none;}
+.ha h4{font-family:'Fraunces',serif;font-size:1.05rem;margin-bottom:.2rem;}
+.ha p{font-size:.95rem;color:var(--ink-soft);}
+.card90 img{width:160px;height:160px;object-fit:cover;border-radius:16px;border:2px solid var(--sand);margin:.2rem auto .4rem;display:block;}
+.rule{background:var(--paper);border:1.5px solid var(--sand);border-radius:16px;padding:1rem 1.1rem;margin:1rem 0;overflow-x:auto;}
+.rule table{width:100%;border-collapse:collapse;font-size:.93rem;}
+.rule td,.rule th{border:1px solid var(--sand);padding:.45rem .6rem;text-align:left;}
+.rule th{background:var(--cream-warm);font-weight:700;}
+.rule tr:nth-child(4) td{background:var(--yellow-soft);}
+/* ---------- Grammatik: cartoonig & bunt ---------- */
+.gintro{background:linear-gradient(135deg,var(--yellow-soft),var(--teal-soft));border:2.5px solid var(--ink);border-radius:22px;padding:1.1rem 1.3rem;margin:1.2rem 0;box-shadow:5px 5px 0 rgba(38,32,25,.14);font-size:1rem;line-height:1.65;}
+.gintro b{color:var(--red);}
+.gkette{display:grid;gap:.5rem;margin:1.2rem 0;}
+.gstep{display:flex;align-items:center;gap:.7rem;background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;padding:.6rem .9rem;box-shadow:4px 4px 0 rgba(38,32,25,.12);}
+.gstep .gem{font-size:1.7rem;flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:var(--cream-warm);border-radius:50%;border:2px solid var(--ink);}
+.gstep .gw{flex:none;font-weight:800;font-size:.86rem;color:#fff;background:var(--red);border:2px solid var(--ink);border-radius:999px;padding:.22rem .75rem;transform:rotate(-2deg);}
+.gstep.c2 .gw{background:var(--teal);transform:rotate(2deg);}
+.gstep.c3 .gw{background:#3B5EA8;}
+.gstep.c4 .gw{background:var(--green);transform:rotate(2deg);}
+.gstep.c5 .gw{background:#C2481F;}
+.gstep.c6 .gw{background:#7A4FA3;transform:rotate(2deg);}
+.gstep .gs{font-family:'Fraunces',serif;font-size:1.02rem;}
+.gstep .gs u{text-decoration:none;background:var(--yellow);border-radius:6px;padding:.05em .3em;font-family:'Outfit';font-weight:700;font-style:normal;}
+.gpfeil{text-align:center;font-size:1.2rem;color:var(--ink-mute);line-height:.6;}
+.gpaar{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin:1.2rem 0;}
+@media(max-width:640px){.gpaar{grid-template-columns:1fr;}}
+.gk{border:2.5px solid var(--ink);border-radius:20px;padding:1rem 1.1rem;box-shadow:5px 5px 0 rgba(38,32,25,.13);}
+.gk.no{background:var(--red-soft);}
+.gk.ja{background:#EAF7EF;}
+.gk .gkl{font-weight:800;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.4rem;}
+.gk.no .gkl{color:var(--red);}
+.gk.ja .gkl{color:var(--green);}
+.gk .gsatz{font-family:'Fraunces',serif;font-size:1.15rem;line-height:1.5;}
+.gk .gsatz .v{background:var(--yellow);border-radius:7px;padding:.05em .35em;font-family:'Outfit';font-weight:800;font-style:normal;border:2px solid var(--ink);}
+.gchips{display:flex;flex-wrap:wrap;gap:.45rem;margin:1rem 0;justify-content:center;}
+.gchip{background:var(--paper);border:2.5px solid var(--ink);border-radius:999px;padding:.35rem .95rem;font-weight:700;font-size:.95rem;box-shadow:3px 3px 0 rgba(38,32,25,.13);}
+.gchip:nth-child(3n){background:var(--yellow-soft);}
+.gchip:nth-child(3n+1){background:var(--teal-soft);}
+.gbau{background:var(--paper);border:2.5px solid var(--ink);border-radius:20px;padding:1rem 1.1rem;margin:1rem 0;box-shadow:5px 5px 0 rgba(38,32,25,.12);}
+.gbau .gfrage{font-weight:600;margin-bottom:.6rem;}
+.gbau .gteile{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.6rem;}
+.gteil{background:var(--cream-warm);border:2px solid var(--ink);border-radius:12px;padding:.35rem .8rem;font-weight:600;cursor:pointer;font-family:'Outfit';font-size:.95rem;}
+.gteil:hover{background:var(--yellow-soft);}
+.gteil.weg{opacity:.25;pointer-events:none;}
+.gbau .gzeile{min-height:2.6rem;background:var(--cream);border:2px dashed var(--sand);border-radius:12px;padding:.5rem .7rem;font-family:'Fraunces',serif;font-size:1.05rem;display:flex;flex-wrap:wrap;gap:.35rem;align-items:center;}
+.gbau .gzeile.ok{background:#EAF7EF;border-color:var(--green);border-style:solid;}
+.gbau .gzeile.no{background:var(--red-soft);border-color:var(--red);border-style:solid;}
+.gbau .gfuss{display:flex;gap:.5rem;margin-top:.6rem;}
+.gbau .gmini{background:var(--ink);color:#fff;border:none;border-radius:999px;padding:.35rem .9rem;font-weight:700;font-size:.85rem;cursor:pointer;font-family:'Outfit';}
+.gbau .gmini.hell{background:var(--paper);color:var(--ink);border:2px solid var(--ink);}
+.gbau .gtipp{margin-top:.5rem;font-size:.88rem;color:var(--ink-soft);display:none;}
+.gbau .gtipp.show{display:block;}
+.gstory{background:var(--cream-warm);border:2.5px solid var(--ink);border-radius:20px;padding:1.1rem 1.2rem;margin:1.1rem 0;box-shadow:5px 5px 0 rgba(38,32,25,.12);font-family:'Fraunces',serif;font-size:1.05rem;line-height:2.2;}
+.gstory select{font-family:'Outfit';font-weight:700;font-size:.95rem;border:2px solid var(--ink);border-radius:10px;padding:.18rem .4rem;background:var(--paper);margin:0 .15rem;}
+.gstory select.ok{background:#EAF7EF;border-color:var(--green);}
+.gstory select.no{background:var(--red-soft);border-color:var(--red);}
+.gpos{display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem;margin:1rem 0;text-align:center;}
+@media(max-width:640px){.gpos{grid-template-columns:repeat(2,1fr);}}
+.gpos .gz{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.55rem .3rem;box-shadow:4px 4px 0 rgba(38,32,25,.12);}
+.gpos .gz b{display:block;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:.25rem;}
+.gpos .gz span{font-family:'Fraunces',serif;font-size:1.05rem;}
+.gpos .gz.zwei{background:var(--yellow);}
+.gpos .gz.zwei b{color:var(--ink);}
+.gdrei{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin:1.2rem 0;}
+@media(max-width:700px){.gdrei{grid-template-columns:1fr;}}
+.gk.blau{background:#E9EFFA;}
+.gk.gelb{background:var(--yellow-soft);}
+.gk .gem2{font-size:1.6rem;display:block;margin-bottom:.2rem;}
+.gk .gmw{font-family:'Fraunces',serif;font-size:1.3rem;margin-bottom:.15rem;}
+.gk .gmb{font-size:.9rem;color:var(--ink-soft);margin-bottom:.45rem;}
+.gk .gmx{font-size:.97rem;border-top:2px dashed var(--sand);padding-top:.45rem;}
+.gklam{background:var(--paper);border:2.5px solid var(--ink);border-radius:20px;padding:.9rem 1.1rem;margin:.7rem 0;box-shadow:5px 5px 0 rgba(38,32,25,.12);}
+.gklam .gsatz{font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.6;}
+.gklam .gsatz .v{background:var(--yellow);border-radius:7px;padding:.05em .35em;font-family:'Outfit';font-weight:800;border:2px solid var(--ink);}
+.gklam .gsatz .v2{background:var(--teal);color:#fff;}
+.gklam .gbogen{margin-top:.5rem;padding-top:.4rem;border-top:3px dashed var(--red);font-size:.82rem;color:var(--ink-soft);display:flex;justify-content:space-between;gap:.5rem;}
+.gklam .gbogen b{color:var(--red);}
+/* ================= CARTOON-LOOK für die ganze Stunde ================= */
+.hero-tag{border:2px solid var(--ink);box-shadow:3px 3px 0 rgba(38,32,25,.13);padding:.35rem 1rem;font-size:.85rem;}
+.hero-tag:nth-child(2n){transform:rotate(-1.4deg);background:var(--yellow-soft);}
+.hero-tag:nth-child(3n){transform:rotate(1.4deg);background:var(--teal-soft);}
+.tabs{border:2.5px solid var(--ink);box-shadow:5px 5px 0 rgba(38,32,25,.13);background:var(--cream-warm);padding:.55rem;}
+.tab{border:2.5px solid var(--ink);box-shadow:3px 3px 0 rgba(38,32,25,.15);font-weight:700;}
+.tab:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 rgba(38,32,25,.18);}
+.tab.active{background:var(--red);color:#fff;border-color:var(--ink);transform:translate(1px,1px);box-shadow:1px 1px 0 rgba(38,32,25,.2);}
+h2.st{margin-top:2.2rem;}
+h2.st::after{content:'';display:block;width:72px;height:8px;background:var(--yellow);border:2.5px solid var(--ink);border-radius:999px;margin:.5rem auto 0;transform:rotate(-1deg);}
+.scene-wrap{border:3px solid var(--ink);box-shadow:7px 7px 0 rgba(38,32,25,.15);border-radius:22px;}
+.tip{border:2.5px solid var(--ink);box-shadow:5px 5px 0 rgba(38,32,25,.13);border-radius:20px;}
+.tip.teal{background:var(--teal-soft);}
+.qlist li{border:2.5px solid var(--ink);border-left:9px solid var(--teal);border-radius:16px;box-shadow:4px 4px 0 rgba(38,32,25,.12);font-weight:600;}
+.qlist li:nth-child(2n){border-left-color:var(--red);}
+.qlist li:nth-child(3n){border-left-color:var(--yellow);}
+/* Bildwortkarten mit Nummer */
+.bgrid{counter-reset:bk;}
+.bcard{border:2.5px solid var(--ink);border-radius:20px;box-shadow:5px 5px 0 rgba(38,32,25,.14);position:relative;}
+.bcard:hover{transform:translate(-2px,-3px) rotate(-.6deg);box-shadow:8px 9px 0 rgba(38,32,25,.16);}
+.bcard img{border-bottom:2.5px solid var(--ink);}
+.bcard::before{counter-increment:bk;content:counter(bk);position:absolute;top:8px;left:8px;width:30px;height:30px;border-radius:50%;background:var(--red);color:#fff;border:2.5px solid var(--ink);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.9rem;z-index:2;box-shadow:2px 2px 0 rgba(38,32,25,.2);}
+.bcard .bti{border:2px dashed var(--yellow);border-radius:10px;}
+.bcard .speak,.vcard .speak{border:2px solid var(--ink);box-shadow:2px 2px 0 rgba(38,32,25,.15);}
+/* Dialoge als Sprechblasen */
+.dwrap{border:2.5px solid var(--ink);border-radius:22px;box-shadow:6px 6px 0 rgba(38,32,25,.13);}
+.dwrap h4{font-size:1.2rem;}
+.dhead img{border:2.5px solid var(--ink);border-radius:14px;box-shadow:3px 3px 0 rgba(38,32,25,.15);width:64px;height:64px;}
+.rbtn{border:2.5px solid var(--ink);box-shadow:3px 3px 0 rgba(38,32,25,.18);}
+.rbtn:active{transform:translate(2px,2px);box-shadow:0 0 0 rgba(0,0,0,0);}
+.dwho{width:34px;height:34px;font-size:.95rem;border:2.5px solid var(--ink);box-shadow:2px 2px 0 rgba(38,32,25,.18);}
+.dtxt{border:2.5px solid var(--ink);border-radius:16px;padding:.55rem .85rem;box-shadow:3px 3px 0 rgba(38,32,25,.1);position:relative;}
+.dline.a .dtxt{background:var(--red-soft);}
+.dline.b .dtxt{background:var(--teal-soft);}
+.dcue{border:2.5px dashed var(--ink);background:var(--yellow-soft);border-radius:16px;box-shadow:3px 3px 0 rgba(38,32,25,.1);}
+.dbild{width:52px;height:52px;border:2.5px solid var(--ink);border-radius:12px;box-shadow:2px 2px 0 rgba(38,32,25,.15);}
+.dbtn{border:2.5px solid var(--ink);box-shadow:3px 3px 0 rgba(38,32,25,.18);}
+/* Baupläne, Redemittel */
+.bpz{border:2.5px solid var(--ink);border-radius:18px;box-shadow:4px 4px 0 rgba(38,32,25,.12);}
+.bpz .stk{border:2px solid var(--ink);box-shadow:2px 2px 0 rgba(38,32,25,.18);}
+.rmcard{border:2.5px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 rgba(38,32,25,.12);}
+.rm{border:2px solid var(--ink);box-shadow:2px 2px 0 rgba(38,32,25,.14);padding:.25rem .8rem;}
+/* Debatte */
+.pcol{border-width:2.5px;border-color:var(--ink);border-radius:20px;box-shadow:5px 5px 0 rgba(38,32,25,.13);}
+.pcol li{font-weight:500;padding-left:1.6rem;}
+.pcol.pro li::before{content:'👍';}
+.pcol.con li::before{content:'💤';}
+/* 90 Sekunden */
+.card90{border:3px solid var(--ink);border-radius:26px;box-shadow:8px 8px 0 rgba(38,32,25,.15);}
+.card90 img{border:2.5px solid var(--ink);width:180px;height:180px;box-shadow:4px 4px 0 rgba(38,32,25,.15);}
+.card90 .word{font-size:2.4rem;}
+.hw{border:2px solid var(--ink);box-shadow:2px 2px 0 rgba(38,32,25,.14);}
+.timer{border:2.5px solid var(--ink);background:var(--paper);border-radius:16px;display:inline-block;padding:.1rem 1.2rem;box-shadow:4px 4px 0 rgba(38,32,25,.15);}
+.btn{border:2.5px solid var(--ink);box-shadow:4px 4px 0 rgba(38,32,25,.18);}
+.btn:active{transform:translate(3px,3px);box-shadow:0 0 0 rgba(0,0,0,0);}
+.btn.ghost{border-color:var(--ink);}
+/* Quiz & Lücken */
+.quiz-q{border:2.5px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 rgba(38,32,25,.12);}
+.quiz-q .qt{font-size:1.02rem;font-weight:700;}
+.qopt{border:2.5px solid var(--ink);border-radius:14px;box-shadow:3px 3px 0 rgba(38,32,25,.12);font-weight:600;background:var(--paper);}
+.qopt:hover{transform:translate(-1px,-1px);background:var(--yellow-soft);box-shadow:4px 4px 0 rgba(38,32,25,.16);}
+.qopt.right::after{content:' ✅';}
+.qopt.wrong::after{content:' ❌';}
+.qexp.show{background:var(--cream-warm);border:2px dashed var(--ink);border-radius:12px;padding:.5rem .7rem;font-size:.9rem;color:var(--ink);}
+.gap{border:2.5px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 rgba(38,32,25,.12);}
+.gap select{border:2.5px solid var(--ink);border-radius:10px;}
+/* Hausaufgabe */
+.ha{border:2.5px solid var(--ink);border-left:10px solid var(--red);border-radius:18px;box-shadow:5px 5px 0 rgba(38,32,25,.12);align-items:center;}
+.ha:nth-child(2n){border-left-color:var(--teal);}
+.ha:nth-child(3n){border-left-color:var(--yellow);}
+.ha .hi{width:46px;height:46px;border-radius:50%;background:var(--cream-warm);border:2.5px solid var(--ink);display:flex;align-items:center;justify-content:center;box-shadow:3px 3px 0 rgba(38,32,25,.13);}
+.rule{border:2.5px solid var(--ink);border-radius:20px;box-shadow:5px 5px 0 rgba(38,32,25,.12);}
+.rule td,.rule th{border:2px solid var(--sand);}
+.rule th{background:var(--ink);color:#fff;border-color:var(--ink);}
+@media(max-width:640px){
+ .tab{font-size:.84rem;padding:.42rem .8rem;}
+ .bcard::before{width:26px;height:26px;font-size:.8rem;}
+ .card90 .word{font-size:1.9rem;}
+}
+/* Dialog wie ein Chat: A links, B rechts */
+.dline.b{flex-direction:row-reverse;}
+.dtxt{position:relative;max-width:min(660px,78%);}
+.dline.a .dtxt::after{content:'';position:absolute;left:-9px;top:13px;width:13px;height:13px;background:var(--red-soft);border-left:2.5px solid var(--ink);border-bottom:2.5px solid var(--ink);transform:rotate(45deg);border-bottom-left-radius:3px;}
+.dline.b .dtxt::after{content:'';position:absolute;right:-9px;top:13px;width:13px;height:13px;background:var(--teal-soft);border-right:2.5px solid var(--ink);border-top:2.5px solid var(--ink);transform:rotate(45deg);border-top-right-radius:3px;}
+.dcue{max-width:min(660px,78%);}
+/* Antwort-Buchstaben A B C */
+.quiz-opts{counter-reset:qo;}
+.qopt{position:relative;padding:.6rem .9rem .6rem 3rem;min-height:44px;display:flex;align-items:center;}
+.qopt::before{counter-increment:qo;content:counter(qo,upper-alpha);position:absolute;left:.55rem;top:50%;transform:translateY(-50%);width:28px;height:28px;border-radius:50%;background:var(--cream-warm);border:2.5px solid var(--ink);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.82rem;}
+.qopt.right::before{background:var(--green);color:#fff;}
+.qopt.wrong::before{background:var(--red);color:#fff;}
+.qopt.right{background:#EAF7EF;border-color:var(--green);}
+.qopt.wrong{background:var(--red-soft);border-color:var(--red);}
+@media(max-width:700px){
+ .tabs{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;max-width:100%;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+ .tabs::-webkit-scrollbar{display:none;}
+ .tab{flex:none;}
+ .dtxt,.dcue{max-width:84%;}
+}
+footer{text-align:center;color:var(--ink-mute);font-size:.85rem;padding:3rem 1rem 1rem;}
+footer strong{color:var(--ink);}
+
+</style>
+<style>
+
+/* ============================================================
+   ZUSATZ — nur was das Maengel-Design noch nicht kennt.
+   Alles im selben Look: dicker Rahmen, harter Schatten.
+   1. Niveau-Umschalter A2 / B1
+   2. Emoji-Kachel, wo es (noch) kein Foto gibt
+   3. Farbmarkierungen im Beispielsatz
+   4. Hilfe-Knoepfe
+   5. Hausaufgabe zum Abhaken
+   ============================================================ */
+
+/* ---------- 1. Niveau-Umschalter ---------- */
+.niv{
+  display:flex;align-items:center;justify-content:center;gap:.7rem;flex-wrap:wrap;
+  background:var(--ink);color:var(--cream);border:2.5px solid var(--ink);
+  border-radius:20px;box-shadow:5px 5px 0 rgba(38,32,25,.2);
+  padding:.6rem 1rem;margin:1.4rem auto 0;max-width:fit-content;
+}
+.niv .lab{font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.85;}
+.nivk{display:flex;gap:.3rem;background:rgba(255,255,255,.13);border-radius:999px;padding:3px;}
+.nivk button{
+  font-family:'Outfit';font-size:.88rem;font-weight:700;cursor:pointer;
+  border:none;border-radius:999px;padding:.35rem 1.1rem;background:transparent;color:var(--cream);
+  transition:.15s;white-space:nowrap;
+}
+.nivk button[aria-pressed="true"]{background:var(--yellow);color:var(--ink);}
+.nivk button:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.niv .wie{font-size:.8rem;opacity:.85;width:100%;text-align:center;}
+
+body[data-niveau="a2"] .nur-b1{display:none !important;}
+body[data-niveau="b1"] .nur-a2{display:none !important;}
+.stufe{
+  display:inline-block;font-size:.68rem;font-weight:800;letter-spacing:.06em;
+  border:2px solid var(--ink);border-radius:999px;padding:1px 8px;margin-left:.35rem;
+  background:var(--sand);color:var(--ink);vertical-align:middle;
+}
+.stufe.b1{background:var(--teal-soft);}
+
+/* ---------- 2. Emoji-Kachel statt Foto ---------- */
+.bcard .bem{
+  aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;
+  font-size:clamp(3rem,7vw,5rem);background:var(--cream-warm);
+  border-bottom:2.5px solid var(--ink);
+}
+
+/* ---------- Kleine Illustrationen nicht hochskalieren ----------
+   sz-*.webp sind 260 Pixel breit. Auf volle Breite gezogen werden
+   sie unscharf, deshalb bleiben sie klein und stehen mittig. */
+.scene-wrap.klein{max-width:360px;margin:1rem auto;}
+
+/* ---------- 3. Farbmarkierungen ---------- */
+.m-verb,.m-akk,.m-menge,.m-hoefl{font-weight:800;border-radius:6px;padding:.03em .3em;border:2px solid var(--ink);}
+.m-verb{background:#DCEBFF;}
+.m-akk{background:var(--red-soft);}
+.m-menge{background:var(--teal-soft);}
+.m-hoefl{background:var(--yellow);}
+.legende{
+  display:flex;flex-wrap:wrap;gap:.5rem .9rem;justify-content:center;
+  font-size:.85rem;font-weight:600;margin:1rem 0;
+}
+.legende span{
+  display:inline-flex;align-items:center;gap:.4rem;background:var(--paper);
+  border:2.5px solid var(--ink);border-radius:999px;padding:.25rem .8rem;
+  box-shadow:3px 3px 0 rgba(38,32,25,.13);
+}
+.legende i{width:15px;height:15px;border-radius:5px;border:2px solid var(--ink);display:inline-block;}
+.i-verb{background:#DCEBFF;}
+.i-akk{background:var(--red-soft);}
+.i-menge{background:var(--teal-soft);}
+.i-hoefl{background:var(--yellow);}
+
+/* ---------- 4. Hilfe-Knopf ---------- */
+.hilfe{margin:1rem 0;text-align:center;}
+.hilfe > button{
+  font-family:'Outfit';font-size:.9rem;font-weight:700;cursor:pointer;
+  background:var(--yellow);color:var(--ink);border:2.5px solid var(--ink);
+  border-radius:999px;padding:.45rem 1.1rem;box-shadow:4px 4px 0 rgba(38,32,25,.18);
+}
+.hilfe > button:active{transform:translate(3px,3px);box-shadow:0 0 0 rgba(0,0,0,0);}
+.hilfe > button:focus-visible{outline:3px solid var(--teal);outline-offset:3px;}
+.hilfe .inhalt{
+  display:none;text-align:left;margin-top:.8rem;background:var(--yellow-soft);
+  border:2.5px dashed var(--ink);border-radius:20px;padding:.9rem 1.1rem;
+  box-shadow:5px 5px 0 rgba(38,32,25,.12);font-size:.96rem;line-height:1.7;
+}
+.hilfe.offen .inhalt{display:block;}
+.hilfe .inhalt ul{margin:.4rem 0 0 1.2rem;}
+.hilfe .inhalt li{margin:.25rem 0;}
+
+/* ---------- 5. Hausaufgabe zum Abhaken ---------- */
+.ha{cursor:pointer;text-align:left;width:100%;font-family:'Outfit';color:var(--ink);background:var(--paper);}
+.ha:focus-visible{outline:3px solid var(--teal);outline-offset:3px;}
+.ha .box{
+  flex:none;width:30px;height:30px;border-radius:9px;border:2.5px solid var(--ink);
+  background:var(--cream);display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;line-height:1;color:transparent;box-shadow:2px 2px 0 rgba(38,32,25,.18);
+}
+.ha .htxt{flex:1;}
+.ha .zeit{
+  display:inline-block;font-size:.7rem;font-weight:800;letter-spacing:.05em;
+  background:var(--cream-warm);border:2px solid var(--ink);border-radius:999px;
+  padding:1px 8px;margin-left:.4rem;vertical-align:middle;
+}
+.ha.fertig{background:#EAF7EF;}
+.ha.fertig .box{background:var(--green);border-color:var(--green);color:#fff;}
+.ha.fertig h4{text-decoration:line-through;text-decoration-thickness:2.5px;opacity:.7;}
+.hastand{
+  text-align:center;font-weight:700;margin-top:1rem;background:var(--paper);
+  border:2.5px solid var(--ink);border-radius:18px;padding:.6rem 1rem;
+  box-shadow:5px 5px 0 rgba(38,32,25,.12);
+}
+.hastand.voll{background:#EAF7EF;}
+
+/* ============================================================
+   EINE DURCHGEHENDE SEITE statt Tab-Wechsel.
+   Julia wollte den Ablauf der ersten Fassung zurueck: alles
+   untereinander, die Leiste oben springt nur hin.
+   ============================================================ */
+.section{display:block;animation:none;}
+.section + .section{
+  margin-top:2.4rem;padding-top:.6rem;   /* h2.st bringt seinen eigenen Abstand mit */
+  border-top:3px dashed var(--sand);
+}
+section.section{scroll-margin-top:calc(var(--leiste,58px) + 5.2rem);}
+
+/* Umschalter klebt ganz oben, die Sprungleiste direkt darunter.
+   Beide gehen ueber die volle Spaltenbreite — sonst schaut der Text
+   beim Scrollen links und rechts an ihnen vorbei. */
+.niv{position:sticky;top:0;z-index:60;margin:1.4rem auto 0;max-width:none;width:100%;}
+.tabs{top:var(--leiste,58px);margin:1rem auto 1.6rem;max-width:none;width:100%;}
+.tab{text-decoration:none;}
+a.tab:hover{color:var(--ink);}
+
+/* ---------- Kleinkram ---------- */
+.bsp{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:4px 4px 0 rgba(38,32,25,.12);padding:.6rem .9rem;margin:.6rem 0;font-size:.97rem;
+}
+.bsp .wer{
+  display:block;font-size:.7rem;font-weight:800;text-transform:uppercase;
+  letter-spacing:.08em;color:var(--ink-mute);margin-bottom:.15rem;
+}
+.gk .bsp{box-shadow:none;margin:.5rem 0 0;}
+@media(max-width:560px){
+  .niv{border-radius:16px;padding:.5rem .7rem;gap:.5rem;}
+  .niv .wie{display:none;}
+  .nivk button{padding:.35rem .85rem;font-size:.84rem;}
+}
+
+/* ---- Freigestellte Figuren auf den Wortschatzkarten ----
+   Die Amanda-Bilder sind hoch und schmal (etwa 150x340) und ohne
+   Hintergrund. Der normale Kartenschnitt ist quadratisch und schneidet
+   mit object-fit:cover genau das weg, worauf es ankommt: Haende,
+   Schultern, Gesicht. Mit hoch:true in der JSON wird das Bild ganz
+   gezeigt und steht auf einer warmen Flaeche statt auf Weiss. */
+.bcard.hoch img{
+  object-fit:contain;
+  background:linear-gradient(180deg,var(--cream),var(--sand));
+  padding:.35rem;
+}
+
+/* Die Grammatik-Kette ist auf dem Handy zu breit: das rote Schild und der
+   Satz passen nicht nebeneinander. Auf schmalen Bildschirmen rutscht der
+   Satz deshalb in eine eigene Zeile — sonst schiebt er die ganze Seite
+   nach rechts. */
+@media (max-width:640px){
+  .gstep{flex-wrap:wrap;}
+  .gstep .gw{flex:0 1 auto;white-space:normal;text-align:center;}
+  .gstep .gs{flex:1 1 100%;min-width:0;}
+}
+.gstep .gs{min-width:0;overflow-wrap:anywhere;}
+
+</style>
+</head>
+<body data-niveau="a2"><div class="wrapper">
+
+<div class="eyebrow">deutschoderwas · Sprechclub · Woche 4 · Strang A · Teil 2 · </div>
+<h1 class="title">Etwas ist kaputt — <span class="hl">und jetzt?</span></h1>
+
+<p class="subtitle">Der Wasserhahn tropft, die Heizung bleibt kalt, der Aufzug steht still. Melden muss man es selbst — und zwar so, dass der andere sofort weiß, was los ist und wo.</p>
+
+<div class="niv">
+  <span class="lab">Dein Niveau</span>
+  <div class="nivk" role="group" aria-label="Niveau wählen">
+    <button type="button" data-niv="a2" aria-pressed="true">A2 · einfacher</button>
+    <button type="button" data-niv="b1" aria-pressed="false">B1 · mehr</button>
+  </div>
+  <span class="wie">Gleiches Thema, andere Sätze. Wechsle jederzeit — probier ruhig beide Seiten aus.</span>
+</div>
+
+<nav class="tabs">
+<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
+<a class="tab" href="#wiederholung">🔁 Wiederholung</a>
+<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
+<a class="tab" href="#konzepte">⚖️ Drei Stufen</a>
+<a class="tab" href="#saetze">💬 Sätze</a>
+<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#grammatik">🧩 Grammatik</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+</nav>
+
+<section class="section" id="einstieg">
+<h2 class="st">Der Satz, <span class="hl">der alles auslöst</span></h2>
+<p class="ssub">„Ich wollte Bescheid geben, dass die Heizung im Wohnzimmer seit gestern nicht mehr warm wird.“ Ein Satz — und der Handwerker weiß, <u>was</u> kaputt ist, <u>wo</u> es ist und <u>seit wann</u>. Genau das bauen wir heute.</p>
+<div class="scene-wrap klein"><img src="../amanda/sz-elektro-shk.webp" alt="Ein Handwerker arbeitet an einer Steckdose"></div>
+<ul class="qlist nur-a2">
+<li>Was war in deiner Wohnung zuletzt kaputt?</li>
+<li>Wen rufst du an, wenn etwas nicht funktioniert?</li>
+<li>Reparierst du selbst oder lässt du reparieren?</li>
+</ul>
+<ul class="qlist nur-b1">
+<li>Wie lange wartet man in deinem Land auf einen Handwerker?</li>
+<li>Was macht man, wenn der Vermieter nicht reagiert?</li>
+<li>Wann lohnt sich Reparieren und wann Neukaufen?</li>
+</ul>
+<div class="tip teal">🔑 <strong>Die Formel für heute:</strong> <b>Was + wo + seit wann + was du dir wünschst.</b> <i>„Der Wasserhahn im Bad tropft seit Montag. Könnten Sie jemanden vorbeischicken?“</i> Vier Angaben, ein Anruf, fertig.</div>
+<h2 class="st">Kaputt ist nicht <span class="hl">gleich kaputt</span></h2>
+<p class="ssub">Etwas <b>ist kaputt</b>, etwas <b>funktioniert nicht</b>, etwas <b>geht nicht mehr</b> — und manchmal <b>klemmt</b> es nur. Wer den Unterschied nennt, bekommt schneller die richtige Hilfe.</p>
+<div class="scene-wrap klein"><img src="../amanda/sz-werkstatt.webp" alt="Ein Mechaniker erklärt einer Kundin etwas am Auto"></div>
+<ul class="qlist nur-a2">
+<li>Was heißt „Es klemmt“?</li>
+<li>Sagst du lieber „kaputt“ oder „defekt“?</li>
+</ul>
+<ul class="qlist nur-b1">
+<li>Warum reicht „Es geht nicht“ am Telefon oft nicht aus?</li>
+<li>Wie beschreibt man ein Geräusch, für das man kein Wort hat?</li>
+</ul>
+<div class="tip">💡 <strong>Beschreib, was du siehst oder hörst:</strong> <i>„Es tropft.“ · „Es macht ein Geräusch.“ · „Es wird nicht mehr warm.“ · „Es geht nicht mehr auf.“</i> Das ist immer besser als nur <b>kaputt</b> — und du brauchst dafür kein Fachwort.</div>
+</section>
+
+<section class="section" id="wiederholung">
+<h2 class="st">Kurz zurück: <span class="hl">Montag in zwei Minuten</span></h2>
+<p class="ssub">Falls du Teil 1 verpasst hast — das hier reicht, um heute mitzumachen.</p>
+<div class="gchips">
+<span class="gchip">das Wohnzimmer</span><span class="gchip">das Schlafzimmer</span><span class="gchip">die Küche</span><span class="gchip">der Flur</span><span class="gchip">der Balkon</span><span class="gchip">der Keller</span><span class="gchip">der Schrank</span><span class="gchip">das Regal</span><span class="gchip">die Wand</span><span class="gchip">der Esstisch</span>
+</div>
+<div class="rmcard"><b>Wo? → Dativ</b>
+<div class="bsp"><span class="wer">So ging der Satz</span>Das Bild hängt über dem Sofa, und die Schlüssel liegen auf dem Tisch.</div>
+<button class="speak" data-say="Das Bild hängt über dem Sofa, und die Schlüssel liegen auf dem Tisch.">🔊 hören</button></div>
+<div class="rmcard"><b>stehen, liegen, hängen</b>
+<div class="bsp"><span class="wer">So ging der Satz</span>Die Flasche steht im Kühlschrank, das Buch liegt auf dem Nachttisch, die Jacke hängt im Flur.</div>
+<button class="speak" data-say="Die Flasche steht im Kühlschrank, das Buch liegt auf dem Nachttisch, die Jacke hängt im Flur.">🔊 hören</button></div>
+<ul class="qlist">
+<li>Sag in einem Satz, wo bei dir der Kühlschrank steht — mit <b>Dativ</b>.</li>
+<li>Nenne drei Zimmer mit Artikel.</li>
+<li>Was ist der Unterschied zwischen <b>in der Küche</b> und <b>in die Küche</b>?</li>
+</ul>
+<div class="tip teal">🔁 <strong>Zu zweit, dreißig Sekunden:</strong> Einer nennt einen Gegenstand, der andere sagt sofort, wo er bei ihm zu Hause ist. Danach geht es weiter — heute ist dieser Gegenstand nämlich kaputt.</div>
+</section>
+
+<section class="section" id="wortschatz">
+<h2 class="st">Zwölf Wörter <span class="hl">für den Ernstfall</span></h2>
+<p class="ssub">Sagt jedes Wort laut — <u>mit Artikel</u>. Und gleich den Beispielsatz hinterher, damit ihr ihn am Telefon parat habt.</p>
+<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
+<div class="bgrid" id="bgrid">
+<div class="bcard"><div class="bem" role="img" aria-label="kaputt">💥</div><div class="bb"><div class="bw">kaputt</div><div class="bex">„Der Aufzug ist seit gestern kaputt.“</div><div class="bti">💡 Ganz normale Umgangssprache. Im Schriftlichen und beim Amt schreibt man eher <b>defekt</b> — das ist dasselbe, nur ordentlicher angezogen.</div><button class="speak" data-say="Der Aufzug ist seit gestern kaputt.">🔊 hören</button></div></div>
+<div class="bcard"><div class="bem" role="img" aria-label="funktionieren">⚙️</div><div class="bb"><div class="bw">funktionieren</div><div class="bex">„Die Klingel funktioniert nicht mehr.“</div><div class="bti">💡 Das wichtigste Verb für Geräte. Achtung auf die Endung: <i>Es funktioni<b>ert</b></i> — mit <b>-ieren</b>, wie telefonieren und reparieren.</div><button class="speak" data-say="Die Klingel funktioniert nicht mehr.">🔊 hören</button></div></div>
+<div class="bcard"><div class="bem" role="img" aria-label="tropfen">💧</div><div class="bb"><div class="bw">tropfen</div><div class="bex">„Der Wasserhahn tropft die ganze Nacht.“</div><div class="bti">💡 Für Wasser gibt es drei Stufen: es <b>tropft</b> (langsam), es <b>läuft</b> (dauernd), es <b>läuft aus</b> (wo es nicht soll).</div><button class="speak" data-say="Der Wasserhahn tropft die ganze Nacht.">🔊 hören</button></div></div>
+<div class="bcard"><div class="bem" role="img" aria-label="Heizung">🌡️</div><div class="bb"><div class="bw"><span class="art">die</span> Heizung</div><div class="bex">„Die Heizung im Schlafzimmer wird nicht mehr warm.“</div><div class="bti">💡 Der typische Satz ist nicht <i>Die Heizung ist kaputt</i>, sondern <b>Die Heizung wird nicht warm</b> — das beschreibt genau, was du merkst.</div><button class="speak" data-say="Die Heizung im Schlafzimmer wird nicht mehr warm.">🔊 hören</button></div></div>
+<div class="bcard"><div class="bem" role="img" aria-label="Wasserhahn">🚰</div><div class="bb"><div class="bw"><span class="art">der</span> Wasserhahn</div><div class="bex">„Am Wasserhahn in der Küche ist etwas locker.“</div><div class="bti">💡 Dazu gehören <b>das Waschbecken</b>, <b>der Abfluss</b> und <b>die Spülung</b>. Mit diesen vier Wörtern kannst du fast jedes Badezimmerproblem melden.</div><button class="speak" data-say="Am Wasserhahn in der Küche ist etwas locker.">🔊 hören</button></div></div>
+<div class="bcard"><div class="bem" role="img" aria-label="Steckdose">🔌</div><div class="bb"><div class="bw"><span class="art">die</span> Steckdose</div><div class="bex">„Die Steckdose neben dem Bett hat keinen Strom.“</div><div class="bti">💡 Dazu: <b>der Stecker</b> kommt hinein, <b>die Sicherung</b> ist im Kasten, und <b>der Strom</b> ist das, was fehlt.</div><button class="speak" data-say="Die Steckdose neben dem Bett hat keinen Strom.">🔊 hören</button></div></div>
+<div class="bcard"><img src="../amanda/sz-elektro-shk.webp" alt="Ein Handwerker arbeitet an einer Steckdose" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Handwerker</div><div class="bex">„Der Handwerker kommt am Donnerstag zwischen acht und zwölf.“</div><div class="bti">💡 Die Frau heißt <b>die Handwerkerin</b>. Je nach Fach: <b>der Klempner</b> für Wasser, <b>der Elektriker</b> für Strom, <b>der Hausmeister</b> für alles andere.</div><button class="speak" data-say="Der Handwerker kommt am Donnerstag zwischen acht und zwölf.">🔊 hören</button></div></div>
+<div class="bcard"><img src="../vok-bild/die-vermieterin.webp" alt="Eine Frau übergibt an der Wohnungstür einen Schlüssel" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Vermieterin</div><div class="bex">„Ich habe der Vermieterin gestern geschrieben.“</div><div class="bti">💡 Der Mann ist <b>der Vermieter</b>. Bei größeren Häusern schreibt man an <b>die Hausverwaltung</b> — dann heißt es <i>Sehr geehrte Damen und Herren</i>.</div><button class="speak" data-say="Ich habe der Vermieterin gestern geschrieben.">🔊 hören</button></div></div>
+<div class="bcard"><img src="../vok-bild/anrufen.webp" alt="Ein Mann telefoniert auf dem Sofa" loading="lazy"><div class="bb"><div class="bw">melden</div><div class="bex">„Ich möchte einen Schaden melden.“</div><div class="bti">💡 Der freundlichste Anfang überhaupt: <b>„Ich wollte kurz Bescheid geben, dass …“</b> Damit klingt es nach Hilfe, nicht nach Beschwerde.</div><button class="speak" data-say="Ich möchte einen Schaden melden.">🔊 hören</button></div></div>
+<div class="bcard"><img src="../vok-bild/der-termin.webp" alt="Ein Kalender und ein Stift auf einem Tisch" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Termin</div><div class="bex">„Können wir einen Termin am Nachmittag machen?“</div><div class="bti">💡 Handwerker nennen oft ein <b>Zeitfenster</b>: <i>zwischen acht und zwölf</i>. Frag ruhig nach: <b>„Geht es auch etwas genauer?“</b></div><button class="speak" data-say="Können wir einen Termin am Nachmittag machen?">🔊 hören</button></div></div>
+<div class="bcard"><img src="../vok-bild/die-rechnung.webp" alt="Eine Rechnung und Münzen auf einem Tablett" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Rechnung</div><div class="bex">„Die Rechnung geht direkt an die Hausverwaltung.“</div><div class="bti">💡 Wichtiger Satz zur Sicherheit: <b>„Wer übernimmt die Kosten?“</b> Bei Mietwohnungen ist das oft nicht der Mieter — aber fragen muss man.</div><button class="speak" data-say="Die Rechnung geht direkt an die Hausverwaltung.">🔊 hören</button></div></div>
+<div class="bcard"><img src="../amanda/sz-werkstatt.webp" alt="Ein Mechaniker erklärt einer Kundin etwas am Auto" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Reparatur</div><div class="bex">„Die Reparatur dauert ungefähr eine Stunde.“</div><div class="bti">💡 Das Verb ist <b>reparieren</b>, das Ergebnis <b>repariert</b>. Und wenn es sich nicht lohnt, sagt man: <i>Das ist ein Totalschaden.</i></div><button class="speak" data-say="Die Reparatur dauert ungefähr eine Stunde.">🔊 hören</button></div></div>
+</div>
+<div class="tip">💡 <strong>Spiel „Was ist los?“:</strong> Einer nennt nur ein Geräusch oder eine Beobachtung („Es tropft“, „Es riecht komisch“, „Es geht nicht mehr auf“). Der andere rät in einem vollständigen Satz, was kaputt ist — und wo.</div>
+</section>
+
+<section class="section" id="konzepte">
+<h2 class="st">Kaputt, defekt, <span class="hl">oder nur klemmt es?</span></h2>
+<p class="ssub">Drei Wörter für dasselbe Gefühl und drei ganz verschiedene Reaktionen am anderen Ende der Leitung. Danach drei Satzpaare, bei denen fast alle danebenliegen.</p>
+<div class="gdrei">
+<div class="gk gelb"><span class="gem2">💥</span><div class="gmw">kaputt</div><div class="gmb">das Alltagswort — jeder versteht es, aber es sagt nichts Genaues</div><div class="gmx">Die Waschmaschine ist kaputt.</div></div>
+<div class="gk blau"><span class="gem2">📄</span><div class="gmw">defekt</div><div class="gmb">dasselbe, nur schriftlich und offiziell</div><div class="gmx">Das Gerät ist leider defekt.</div></div>
+<div class="gk ja"><span class="gem2">🔩</span><div class="gmw">es klemmt</div><div class="gmb">geht schwer, ist aber nicht kaputt — oft reicht ein Handgriff</div><div class="gmx">Das Fenster klemmt, seit es so warm ist.</div></div>
+</div>
+<div class="gpaar">
+<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Ich wollte Bescheid geben, dass die Heizung nicht warm wird.</div><div class="bsp"><span class="wer">Warum das stimmt</span>Nach <b>dass</b> geht das Verb ans <u>Ende</u>: <i>… nicht warm <b>wird</b></i>. Und <i>Ich wollte Bescheid geben</i> klingt hilfsbereit statt vorwurfsvoll.</div></div>
+<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Ich wollte Bescheid geben, dass die Heizung wird nicht warm.</div><div class="bsp"><span class="wer">Das Problem</span>Das Verb steht noch an zweiter Stelle wie im Hauptsatz. Im Nebensatz muss es ganz nach hinten — das ist der häufigste Fehler überhaupt.</div></div>
+</div>
+<div class="gpaar">
+<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Der Wasserhahn tropft seit Montag.</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>seit</b> plus Dativ, und das Verb im <u>Präsens</u> — auch wenn es schon lange so ist. Genau das verwirrt viele.</div></div>
+<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Der Wasserhahn tropft seit Montag gewesen.</div><div class="bsp"><span class="wer">Das Problem</span>Im Deutschen bleibt es Präsens, solange es <u>noch andauert</u>. Vergangenheit brauchst du erst, wenn es vorbei ist.</div></div>
+</div>
+<div class="gpaar">
+<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Könnten Sie jemanden vorbeischicken?</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>Könnten Sie</b> ist die höfliche Bitte. Und <i>vorbeischicken</i> ist trennbar — im Infinitiv bleibt es zusammen.</div></div>
+<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Sie müssen jemanden schicken.</div><div class="bsp"><span class="wer">Das Problem</span>Sachlich vielleicht richtig, im Ton aber eine Ansage. <b>müssen</b> gehört nicht in den ersten Anruf — auch dann nicht, wenn du recht hast.</div></div>
+</div>
+<div class="hilfe">
+<button type="button">🆘 Was sage ich zuerst?</button>
+<div class="inhalt">
+<p>Vier Schritte, immer in dieser Reihenfolge — dann vergisst du nichts:</p>
+<ul>
+<li><b>Wer bist du und wo wohnst du:</b> <i>Guten Tag, Yara Demir, Lindenstraße 12, dritter Stock.</i></li>
+<li><b>Was ist los und wo genau:</b> <i>Der Wasserhahn im Bad tropft.</i></li>
+<li><b>Seit wann:</b> <i>Seit Montag, und es wird eher schlimmer.</i></li>
+<li><b>Was du dir wünschst:</b> <i>Könnten Sie jemanden vorbeischicken?</i></li>
+</ul>
+<p style="margin-top:.5rem;">Und ganz am Schluss immer die Frage, die alles einfacher macht: <b>„Wann passt es Ihnen?“</b> Damit hast du sofort einen Termin statt eines Versprechens.</p>
+</div>
+</div>
+<div class="tip">🎯 <strong>Zu zweit, eine Minute:</strong> Einer nennt einen Schaden in drei Wörtern („Heizung, Schlafzimmer, seit Freitag“). Der andere macht daraus sofort einen vollständigen Anruf mit allen vier Schritten.</div>
+</section>
+
+<section class="section" id="saetze">
+<h2 class="st">Vier Bausteine <span class="hl">für jede Meldung</span></h2>
+<p class="ssub">Melden, beschreiben, einordnen, um etwas bitten. Ob am Telefon, per Mail oder an der Tür — die Reihenfolge bleibt gleich.</p>
+<div class="nur-a2">
+<div class="rmcard"><b>1 · 📣 Melden</b><br>
+<span class="rm">Ich wollte Bescheid geben, dass …</span><span class="rm">Ich möchte einen Schaden melden</span><span class="rm">Bei uns ist etwas kaputt</span>
+<div class="bsp"><span class="wer">So klingt es</span>Guten Tag, ich wollte Bescheid geben, dass bei uns die Heizung nicht warm wird.</div>
+<button class="speak" data-say="Guten Tag, ich wollte Bescheid geben, dass bei uns die Heizung nicht warm wird.">🔊 hören</button></div>
+<div class="rmcard"><b>2 · 🔍 Beschreiben</b><br>
+<span class="rm">Es tropft</span><span class="rm">Es funktioniert nicht mehr</span><span class="rm">Es macht ein Geräusch</span>
+<div class="bsp"><span class="wer">So klingt es</span>Der Wasserhahn im Bad tropft, und zwar ziemlich stark.</div>
+<button class="speak" data-say="Der Wasserhahn im Bad tropft, und zwar ziemlich stark.">🔊 hören</button></div>
+<div class="rmcard"><b>3 · 📅 Seit wann</b><br>
+<span class="rm">seit gestern</span><span class="rm">seit einer Woche</span><span class="rm">seit heute Morgen</span>
+<div class="bsp"><span class="wer">So klingt es</span>Das ist seit Montag so, und es wird eher schlimmer.</div>
+<button class="speak" data-say="Das ist seit Montag so, und es wird eher schlimmer.">🔊 hören</button></div>
+<div class="rmcard"><b>4 · 🙏 Bitten</b><br>
+<span class="rm">Könnten Sie …?</span><span class="rm">Wäre es möglich, dass …?</span><span class="rm">Wann passt es Ihnen?</span>
+<div class="bsp"><span class="wer">So klingt es</span>Könnten Sie jemanden vorbeischicken? Wann würde es Ihnen passen?</div>
+<button class="speak" data-say="Könnten Sie jemanden vorbeischicken? Wann würde es Ihnen passen?">🔊 hören</button></div>
+</div>
+<div class="nur-b1">
+<div class="rmcard"><b>1 · 📣 Sachlich einsteigen</b><br>
+<span class="rm">Ich melde mich wegen …</span><span class="rm">Es geht um einen Schaden in …</span><span class="rm">Ich hatte Ihnen schon geschrieben</span>
+<div class="bsp"><span class="wer">So klingt es</span>Ich melde mich wegen eines Wasserschadens in der Küche — ich hatte Ihnen dazu am Montag schon geschrieben.</div>
+<button class="speak" data-say="Ich melde mich wegen eines Wasserschadens in der Küche. Ich hatte Ihnen dazu am Montag schon geschrieben.">🔊 hören</button></div>
+<div class="rmcard"><b>2 · 🔬 Genau beschreiben</b><br>
+<span class="rm">Es tritt Wasser aus …</span><span class="rm">Der Schaden hat sich vergrößert</span><span class="rm">Auffällig ist besonders …</span>
+<div class="bsp"><span class="wer">So klingt es</span>Unter dem Waschbecken tritt Wasser aus; die Stelle an der Wand hat sich seit gestern deutlich vergrößert.</div>
+<button class="speak" data-say="Unter dem Waschbecken tritt Wasser aus. Die Stelle an der Wand hat sich seit gestern deutlich vergrößert.">🔊 hören</button></div>
+<div class="rmcard"><b>3 · ⚖️ Folgen benennen</b><br>
+<span class="rm">Solange das so ist, …</span><span class="rm">Das führt dazu, dass …</span><span class="rm">Ich mache mir Sorgen, dass …</span>
+<div class="bsp"><span class="wer">So klingt es</span>Solange das so bleibt, kann ich die Küche kaum benutzen — und ich mache mir Sorgen, dass es in die Wand zieht.</div>
+<button class="speak" data-say="Solange das so bleibt, kann ich die Küche kaum benutzen. Und ich mache mir Sorgen, dass es in die Wand zieht.">🔊 hören</button></div>
+<div class="rmcard"><b>4 · 🤝 Verbindlich werden</b><br>
+<span class="rm">Ich wäre Ihnen dankbar, wenn …</span><span class="rm">Bis wann kann ich mit … rechnen?</span><span class="rm">Ich bin ab 15 Uhr erreichbar</span>
+<div class="bsp"><span class="wer">So klingt es</span>Ich wäre Ihnen dankbar, wenn diese Woche jemand kommen könnte. Bis wann kann ich mit einer Rückmeldung rechnen?</div>
+<button class="speak" data-say="Ich wäre Ihnen dankbar, wenn diese Woche jemand kommen könnte. Bis wann kann ich mit einer Rückmeldung rechnen?">🔊 hören</button></div>
+</div>
+<div class="legende">
+<span><i class="i-verb"></i> Verb</span>
+<span><i class="i-akk"></i> der Schaden</span>
+<span><i class="i-menge"></i> Ton und Bitte</span>
+<span><i class="i-hoefl"></i> Höflichkeit</span>
+</div>
+<div class="tip">📣 <strong>Sofort anwenden:</strong> Sagt euren Anruf zu zweit einmal komplett durch — ohne Pause und ohne aufzuschreiben. Wer stockt, fängt von vorne an. Nach dem dritten Mal sitzt er.</div>
+</section>
+
+<section class="section" id="dialoge">
+<h2 class="st">Vier Meldungen — <span class="hl">zwei Runden</span></h2>
+<p class="ssub"><b>Runde 1:</b> Lest den Dialog zu zweit laut. <b>Runde 2:</b> Deckt die Zeilen von B ab und sprecht frei — die Hinweise reichen.</p>
+<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-telefonieren.webp" alt="Frau sitzt am Tisch und telefoniert, daneben ein Notizblock"><h4>Dialog 1 · „Der Anruf bei der Hausverwaltung“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Die Heizung im Schlafzimmer bleibt kalt. Du rufst bei der Verwaltung an.</div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Hausverwaltung Berger, guten Tag.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Guten Tag, Demir, Lindenstraße 12. Ich wollte Bescheid geben, dass unsere Heizung nicht mehr warm wird.</div><div class="dcue">🗣️ Name und Adresse zuerst — dann muss niemand nachfragen. Und nach <b>dass</b> steht <i>wird</i> ganz am Ende.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">In welchem Raum denn?</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Im Schlafzimmer. Die anderen Heizungen funktionieren normal.</div><div class="dcue">🗣️ <b>Im</b> Schlafzimmer — Dativ, wie am Montag. Und gleich die nützliche Zusatzinfo.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Seit wann ist das so?</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Seit Freitag. Wir haben schon entlüftet, das hat nichts gebracht.</div><div class="dcue">🗣️ <b>seit</b> plus Präsens. Und: sag, was du schon versucht hast — das spart einen ganzen Anruf.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Gut, ich gebe das weiter.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Vielen Dank. Bis wann kann ich mit einer Rückmeldung rechnen?</div><div class="dcue">🗣️ Nie ohne diese Frage auflegen. <b>Bis wann</b> macht aus einem Versprechen einen Termin.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<button class="speak dbtn" data-say="Hausverwaltung Berger, guten Tag. Guten Tag, Demir, Lindenstraße 12. Ich wollte Bescheid geben, dass unsere Heizung nicht mehr warm wird. In welchem Raum denn? Im Schlafzimmer. Die anderen Heizungen funktionieren normal. Seit wann ist das so? Seit Freitag. Wir haben schon entlüftet, das hat nichts gebracht. Gut, ich gebe das weiter. Vielen Dank. Bis wann kann ich mit einer Rückmeldung rechnen?">🔊 Dialog vorlesen lassen</button></div>
+
+<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-wohnen.webp" alt="Zwei Personen stehen an einer Wohnungstür"><h4>Dialog 2 · „Der Handwerker steht vor der Tür“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Der Handwerker kommt und will wissen, was los ist. Du führst ihn hin und erklärst.</div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Guten Tag, Sanitär Weber. Was ist denn kaputt?</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Kommen Sie rein. Der Wasserhahn im Bad tropft, und unten im Schrank ist alles feucht.</div><div class="dcue">🗣️ Erst hereinbitten, dann beschreiben. Zwei Beobachtungen sind besser als ein Wort.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Tropft es nur, oder läuft es dauernd?</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Nachts tropft es, tagsüber läuft es fast durchgehend.</div><div class="dcue">🗣️ Der Unterschied zwischen <b>tropfen</b> und <b>laufen</b> — genau danach wird gefragt.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ich schau mir das an. Haben Sie einen Eimer?</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ja, hole ich sofort. Steht der Hauptschalter für das Wasser im Keller?</div><div class="dcue">🗣️ Selbst mitdenken und nachfragen — das mögen Handwerker.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Meistens ja. Das dauert ungefähr eine halbe Stunde.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Gut. Und wer bekommt die Rechnung — ich oder die Verwaltung?</div><div class="dcue">🗣️ Die wichtigste Frage überhaupt, und man muss sie selbst stellen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<button class="speak dbtn" data-say="Guten Tag, Sanitär Weber. Was ist denn kaputt? Kommen Sie rein. Der Wasserhahn im Bad tropft, und unten im Schrank ist alles feucht. Tropft es nur, oder läuft es dauernd? Nachts tropft es, tagsüber läuft es fast durchgehend. Ich schau mir das an. Haben Sie einen Eimer? Ja, hole ich sofort. Steht der Hauptschalter für das Wasser im Keller? Meistens ja. Das dauert ungefähr eine halbe Stunde. Gut. Und wer bekommt die Rechnung — ich oder die Verwaltung?">🔊 Dialog vorlesen lassen</button></div>
+
+<div class="dwrap" data-runde="1"><div class="dhead"><img src="../vok-bild/der-aushang.webp" alt="Eine leere Pinnwand an einer hellen Wand"><h4>Dialog 3 · „Der Aufzug steht still“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Im Treppenhaus triffst du eine Nachbarin. Der Aufzug geht seit Tagen nicht.</div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Sie auch zu Fuß? Der Aufzug geht immer noch nicht.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Seit Montag schon. Haben Sie es eigentlich gemeldet?</div><div class="dcue">🗣️ Kurze Bestätigung, dann die eigentliche Frage. <b>eigentlich</b> macht sie freundlicher.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ich dachte, das macht der Hausmeister.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Der weiß es oft gar nicht. Ich rufe nachher an und sage, dass es seit einer Woche steht.</div><div class="dcue">🗣️ Wieder ein <b>dass</b>-Satz: <i>… seit einer Woche <b>steht</b></i> ganz am Ende.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Machen Sie das? Ich wohne im vierten Stock.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Mache ich. Wenn Sie wollen, hänge ich auch einen Zettel ans Brett.</div><div class="dcue">🗣️ <b>ans Brett</b> = an das Brett, Akkusativ — hier bewegt sich etwas.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Das wäre nett. Dann wissen alle Bescheid.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Genau. Und wenn bis Freitag nichts passiert, schreiben wir zusammen an die Verwaltung.</div><div class="dcue">🗣️ <b>Wenn …, dann …</b> — der Nebensatz vorne, das Verb im zweiten Teil gleich danach.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<button class="speak dbtn" data-say="Sie auch zu Fuß? Der Aufzug geht immer noch nicht. Seit Montag schon. Haben Sie es eigentlich gemeldet? Ich dachte, das macht der Hausmeister. Der weiß es oft gar nicht. Ich rufe nachher an und sage, dass es seit einer Woche steht. Machen Sie das? Ich wohne im vierten Stock. Mache ich. Wenn Sie wollen, hänge ich auch einen Zettel ans Brett. Das wäre nett. Dann wissen alle Bescheid. Genau. Und wenn bis Freitag nichts passiert, schreiben wir zusammen an die Verwaltung.">🔊 Dialog vorlesen lassen</button></div>
+
+<div class="dwrap" data-runde="1"><div class="dhead"><img src="../vok-bild/die-reklamation.webp" alt="Ein Paket steht auf einer Ladentheke"><h4>Dialog 4 · „Das neue Gerät geht nicht“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Du hast vor zwei Wochen eine Kaffeemaschine gekauft. Sie schaltet sich nicht mehr ein.</div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Guten Tag, was kann ich für Sie tun?</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ich habe die Maschine hier vor zwei Wochen gekauft, und sie geht seit gestern nicht mehr an.</div><div class="dcue">🗣️ Erst der Kauf, dann das Problem. <b>angehen</b> ist trennbar: <i>geht … an</i>.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Haben Sie den Kassenbon dabei?</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ja, hier. Und die Verpackung habe ich auch noch.</div><div class="dcue">🗣️ Zwei Sätze, zwei gute Nachrichten. Damit ist der Fall meistens schon gelöst.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Was genau passiert denn?</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Nichts. Die Lampe leuchtet kurz auf, dann ist sie wieder aus.</div><div class="dcue">🗣️ Beschreiben, nicht bewerten. <b>Nichts</b> als ganze Antwort ist im Deutschen völlig normal.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Dann tauschen wir sie um.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Sehr gern. Bekomme ich dann eine neue Garantie darauf?</div><div class="dcue">🗣️ Immer eine Frage mehr stellen, als man sich traut. Sie kostet nichts.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<button class="speak dbtn" data-say="Guten Tag, was kann ich für Sie tun? Ich habe die Maschine hier vor zwei Wochen gekauft, und sie geht seit gestern nicht mehr an. Haben Sie den Kassenbon dabei? Ja, hier. Und die Verpackung habe ich auch noch. Was genau passiert denn? Nichts. Die Lampe leuchtet kurz auf, dann ist sie wieder aus. Dann tauschen wir sie um. Sehr gern. Bekomme ich dann eine neue Garantie darauf?">🔊 Dialog vorlesen lassen</button></div>
+
+<div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 1 noch einmal — aber A ist gestresst und hat nur eine Minute Zeit. B muss trotzdem alle vier Angaben unterbringen: was, wo, seit wann, was er möchte.</div>
+</section>
+
+<section class="section" id="grammatik">
+<h2 class="st">🧩 Der Nebensatz: <span class="hl">dass, weil und das Verb am Ende</span></h2>
+<p class="ssub">Sobald du meldest, erklärst oder begründest, brauchst du einen Nebensatz. Und im Nebensatz rutscht das Verb ganz nach hinten — daran erkennt man Deutsch.</p>
+<div class="gintro">Nach <b>dass</b>, <b>weil</b>, <b>wenn</b> und <b>ob</b> ändert sich die Wortstellung: Das Verb steht nicht mehr an zweiter Stelle, sondern <u>am Ende</u>. <i>Die Heizung wird nicht warm.</i> → <i>Ich melde, dass die Heizung nicht warm <b>wird</b>.</i> Bei zwei Verben geht das gebeugte Verb ganz nach hinten: <i>… dass ich niemanden erreichen <b>konnte</b>.</i> Und ein Komma steht immer davor — das ist im Deutschen keine Frage des Gefühls, sondern Pflicht.</div>
+<div class="gkette">
+<div class="gstep"><span class="gem">📣</span><span class="gw">dass = das Gemeldete</span><span class="gs">Ich melde, dass der Aufzug nicht geht.</span></div>
+<div class="gpfeil">▾</div>
+<div class="gstep c2"><span class="gem">🧠</span><span class="gw">weil = der Grund</span><span class="gs">Ich rufe an, weil der Wasserhahn tropft.</span></div>
+<div class="gpfeil">▾</div>
+<div class="gstep c3"><span class="gem">🔀</span><span class="gw">wenn = die Bedingung</span><span class="gs">Wenn niemand kommt, schreibe ich noch einmal.</span></div>
+<div class="gpfeil">▾</div>
+<div class="gstep c4"><span class="gem">❓</span><span class="gw">ob = die indirekte Frage</span><span class="gs">Wissen Sie, ob der Handwerker heute kommt?</span></div>
+</div>
+<div class="gpos">
+<div class="gz"><b>Hauptsatz</b><span>Ich wollte Bescheid geben,</span></div>
+<div class="gz"><b>Signalwort</b><span>dass</span></div>
+<div class="gz"><b>Wer und was</b><span>die Heizung nicht warm</span></div>
+<div class="gz"><b>Verb ans Ende</b><span>wird.</span></div>
+</div>
+<h2 class="st">Vom Hauptsatz <span class="hl">zum Nebensatz</span></h2>
+<p class="ssub">Immer derselbe Handgriff: Signalwort davor, Verb nach hinten, Komma dazwischen. Lies jede Zeile laut, bis der Sprung von selbst kommt.</p>
+<div class="gdrei">
+<div class="gk blau"><span class="gem2">1️⃣</span><div class="gmw">Signalwort</div><div class="gmb">dass, weil, wenn, ob — es eröffnet den Nebensatz</div><div class="gmx">, dass …</div></div>
+<div class="gk gelb"><span class="gem2">2️⃣</span><div class="gmw">Verb ans Ende</div><div class="gmb">das gebeugte Verb ganz nach hinten</div><div class="gmx">… nicht warm wird.</div></div>
+<div class="gk ja"><span class="gem2">3️⃣</span><div class="gmw">Komma</div><div class="gmb">steht immer vor dem Signalwort</div><div class="gmx">Ich melde<b>,</b> dass …</div></div>
+</div>
+<div class="gchips">
+<span class="gchip">Der Aufzug geht nicht. → …, dass der Aufzug nicht geht.</span><span class="gchip">Die Heizung wird nicht warm. → …, dass die Heizung nicht warm wird.</span><span class="gchip">Es tropft seit Montag. → …, weil es seit Montag tropft.</span><span class="gchip">Ich konnte niemanden erreichen. → …, weil ich niemanden erreichen konnte.</span><span class="gchip">Kommt der Handwerker heute? → …, ob der Handwerker heute kommt.</span><span class="gchip">Niemand meldet sich. → Wenn sich niemand meldet, schreibe ich noch einmal.</span>
+</div>
+<h2 class="st">Höflich melden, <span class="hl">ohne zu drängeln</span></h2>
+<p class="ssub">Derselbe Inhalt kann als Bitte oder als Vorwurf ankommen. Der Unterschied liegt in drei, vier festen Wendungen — und die lernt man einmal und benutzt sie ewig.</p>
+<div class="gdrei">
+<div class="gk blau"><span class="gem2">🕊️</span><div class="gmw">Ich wollte …</div><div class="gmb">die freundlichste Art zu melden</div><div class="gmx">Ich wollte kurz Bescheid geben, dass …</div></div>
+<div class="gk gelb"><span class="gem2">🙏</span><div class="gmw">Könnten Sie …?</div><div class="gmb">die Bitte statt der Forderung</div><div class="gmx">Könnten Sie jemanden vorbeischicken?</div></div>
+<div class="gk ja"><span class="gem2">⏰</span><div class="gmw">Bis wann …?</div><div class="gmb">macht aus einem Vielleicht einen Termin</div><div class="gmx">Bis wann kann ich damit rechnen?</div></div>
+</div>
+<div class="gchips">
+<span class="gchip">✅ Ich wollte Bescheid geben, dass …</span><span class="gchip">✅ Könnten Sie jemanden vorbeischicken?</span><span class="gchip">✅ Wäre es möglich, dass jemand vorbeikommt?</span><span class="gchip">❌ Sie müssen das sofort reparieren.</span><span class="gchip">❌ Das ist Ihre Aufgabe.</span><span class="gchip">✅ Bis wann kann ich mit einer Rückmeldung rechnen?</span>
+</div>
+<h2 class="st">🧱 Bau die Sätze selbst</h2>
+<p class="ssub">Tippe die Teile in der richtigen Reihenfolge an. Danach auf „Prüfen“ — und den fertigen Satz laut lesen.</p>
+<div id="gbau"></div>
+<h2 class="st">📖 Und jetzt im Zusammenhang</h2>
+<p class="ssub">Eine Woche mit einer kalten Heizung, von der ersten Meldung bis zum Handwerker. Wähle in jeder Lücke das passende Wort.</p>
+<div class="gstory" id="gstory"></div>
+<div class="hilfe">
+<button type="button">🆘 Wohin mit dem Verb?</button>
+<div class="inhalt">
+<p>Drei Handgriffe, immer in dieser Reihenfolge:</p>
+<ul>
+<li><b>Sag den Satz erst allein:</b> <i>Die Heizung wird nicht warm.</i> So hörst du, welches Verb gebeugt ist.</li>
+<li><b>Setz das Signalwort davor:</b> <i>…, dass die Heizung nicht warm …</i></li>
+<li><b>Häng das gebeugte Verb hinten an:</b> <i>… wird.</i> Bei zwei Verben kommt das gebeugte zuletzt: <i>… reparieren konnte.</i></li>
+<li><b>Komma nicht vergessen</b> — es steht immer vor <i>dass</i>, <i>weil</i>, <i>wenn</i> und <i>ob</i>.</li>
+</ul>
+<p style="margin-top:.5rem;">Ein Satz zum Auswendiglernen, in dem alles steckt: <b>„Ich rufe an, weil die Heizung seit Freitag nicht mehr warm wird.“</b> Grund, Zeit, Verb am Ende.</p>
+</div>
+</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei Anrufe <span class="hl">zu zweit</span></h2>
+<p class="ssub">Einer meldet, einer nimmt auf. Danach tauschen — und beim zweiten Mal ohne die Stichwörter.</p>
+<div class="rmcard">
+<b>1 · Die kalte Heizung</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A ruft bei der Hausverwaltung an. B nimmt den Anruf entgegen, ist freundlich, aber hat wenig Zeit und fragt knapp nach.</p>
+<div class="nur-a2"><span class="rm">Ich wollte Bescheid geben, dass …</span><span class="rm">Im Schlafzimmer</span><span class="rm">Seit Freitag</span><span class="rm">Wann kann jemand kommen?</span></div>
+<div class="nur-b1"><span class="rm">Ich melde mich wegen …</span><span class="rm">Wir haben schon entlüftet</span><span class="rm">Solange das so bleibt, …</span><span class="rm">Bis wann kann ich mit einer Rückmeldung rechnen?</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A nennt alle vier Angaben — was, wo, seit wann, welche Bitte — und benutzt mindestens einen <b>dass</b>-Satz mit Verb am Ende.</div>
+</div>
+<div class="rmcard">
+<b>2 · Der Handwerker findet nichts</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B ist Handwerker und sagt, alles funktioniere. A hat den Fehler aber selbst gesehen und muss ihn genau beschreiben, ohne unhöflich zu werden.</p>
+<div class="nur-a2"><span class="rm">Gestern hat es noch getropft</span><span class="rm">Es passiert nur morgens</span><span class="rm">Können Sie noch mal schauen?</span><span class="rm">Ich zeige es Ihnen</span></div>
+<div class="nur-b1"><span class="rm">Der Fehler tritt nur auf, wenn …</span><span class="rm">Ich habe es mit dem Handy gefilmt</span><span class="rm">Wäre es möglich, dass Sie …</span><span class="rm">Was schlagen Sie vor?</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A bleibt ruhig, beschreibt <u>wann</u> der Fehler auftritt statt nur <i>kaputt</i> zu sagen, und macht am Ende einen Vorschlag.</div>
+</div>
+<div class="rmcard">
+<b>3 · Der Nachbar über dir</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Bei A tropft Wasser von der Decke. B wohnt darüber und weiß von nichts. Beide wollen keinen Streit — aber es muss jetzt geklärt werden.</p>
+<div class="nur-a2"><span class="rm">Bei uns kommt Wasser von der Decke</span><span class="rm">Seit heute Morgen</span><span class="rm">Haben Sie etwas bemerkt?</span><span class="rm">Können wir zusammen schauen?</span></div>
+<div class="nur-b1"><span class="rm">Ich wollte nichts unterstellen, aber …</span><span class="rm">Es könnte damit zu tun haben, dass …</span><span class="rm">Am besten melden wir es gemeinsam</span><span class="rm">Dann brauchen wir die Verwaltung</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide bleiben bei Beobachtungen statt bei Schuld. Am Ende steht eine gemeinsame Handlung — kein Vorwurf.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
+</section>
+
+<section class="section" id="challenge">
+<h2 class="st">⏱️ Die 90-Sekunden-Challenge</h2>
+<p class="ssub">Ein Wort, anderthalb Minuten, freies Sprechen. Es muss nicht perfekt sein — es muss nur weitergehen.</p>
+<div class="card90">
+<div class="lbl">Dein Wort</div>
+<img id="i90" src="../amanda/sz-elektro-shk.webp" alt="die Heizung">
+<div class="word" id="w90">die Heizung</div>
+<div class="helpwords" id="hw90"></div>
+<div class="timer" id="t90">1:30</div>
+<div>
+<button class="btn ghost" id="new90">🎲 Neues Wort</button>
+<button class="btn" id="start90">▶︎ Start</button>
+</div>
+</div>
+<div class="hilfe">
+<button type="button">🆘 Mir fällt nichts ein</button>
+<div class="inhalt">
+<p>Erzähl es als kleine Geschichte, dann trägt sich die Zeit von selbst:</p>
+<ul>
+<li>Was ist passiert? <b>Auf einmal hat …</b></li>
+<li>Wann hast du es gemerkt? <b>Als ich morgens …</b></li>
+<li>Was hast du gemacht? <b>Ich habe sofort …</b></li>
+<li>Und wie ging es aus? <b>Am Ende kam …</b></li>
+</ul>
+<p style="margin-top:.5rem;">Und wenn dir ein Wort fehlt: beschreib es. <b>„Das Ding, aus dem das Wasser kommt“</b> versteht jeder Handwerker.</p>
+</div>
+</div>
+<div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde muss einmal ein <u>dass-Satz</u> und einmal ein <u>weil-Satz</u> vorkommen. Der Partner hebt die Hand, sobald beides da war.</div>
+</section>
+
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Sagt reihum einen Hauptsatz — der Nachbar macht sofort einen <u>dass-Satz</u> daraus. Wer das Verb nicht ans Ende bekommt, gibt weiter.</div>
+</section>
+
+<section class="section" id="hausaufgabe">
+<h2 class="st">📮 Deine Hausaufgabe bis <span class="hl">nächste Woche</span></h2>
+<p class="ssub">Vier kleine Aufgaben, zusammen etwa 25 Minuten. Tippe eine an, wenn du sie erledigt hast.</p>
+<div class="tip">💡 <strong>Warum das hilft:</strong> Einen Schaden melden muss jeder irgendwann — und dabei entscheidet nicht dein Wortschatz, sondern ob du in einem Satz sagen kannst, was wo seit wann kaputt ist.</div>
+<div class="hagrid nur-a2">
+<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🎙️</span><span class="htxt">
+<h4>1. Der Anruf <span class="zeit">5 Min</span></h4>
+<p>Nimm eine Sprachnachricht auf: Melde einen Schaden mit allen vier Schritten — wer du bist, was los ist, seit wann, was du dir wünschst.</p></span></button>
+<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">✍️</span><span class="htxt">
+<h4>2. Acht dass-Sätze <span class="zeit">7 Min</span></h4>
+<p>Schreib acht Hauptsätze über Dinge, die kaputt sein können, und mach aus jedem einen Satz mit <i>Ich wollte Bescheid geben, dass …</i></p></span></button>
+<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🔍</span><span class="htxt">
+<h4>3. Beschreiben statt bewerten <span class="zeit">6 Min</span></h4>
+<p>Schreib zu fünf Geräten je einen Satz, der beschreibt, <u>was passiert</u> — ohne das Wort <i>kaputt</i> zu benutzen.</p></span></button>
+<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">📧</span><span class="htxt">
+<h4>4. Die kurze Mail <span class="zeit">6 Min</span></h4>
+<p>Schreib eine Mail an die Hausverwaltung, etwa 50 Wörter: Anrede, Problem, seit wann, Bitte, Gruß.</p></span></button>
+</div>
+<div class="hagrid nur-b1">
+<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🎙️</span><span class="htxt">
+<h4>1. Mit Widerstand <span class="zeit">7 Min</span></h4>
+<p>Nimm ein Gespräch auf, in dem dein Gegenüber behauptet, alles funktioniere. Beschreib den Fehler so genau, dass er es nachprüfen kann.</p></span></button>
+<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">✉️</span><span class="htxt">
+<h4>2. Die zweite Mail <span class="zeit">7 Min</span></h4>
+<p>Schreib eine Erinnerung nach zwei Wochen ohne Antwort: sachlich, mit Datum der ersten Mail und einer konkreten Frist.</p></span></button>
+<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🧾</span><span class="htxt">
+<h4>3. Wer zahlt was? <span class="zeit">6 Min</span></h4>
+<p>Recherchiere kurz, welche Kleinreparaturen Mieter in Deutschland oft selbst zahlen. Schreib fünf Sätze darüber, jeder mit <i>weil</i> oder <i>dass</i>.</p></span></button>
+<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🎧</span><span class="htxt">
+<h4>4. Hör hin <span class="zeit">5 Min</span></h4>
+<p>Such ein deutsches Video über eine Reparatur zu Hause. Schreib fünf Sätze mit, in denen ein Nebensatz vorkommt.</p></span></button>
+</div>
+<p class="hastand" data-ha-stand>0 von 0 Aufgaben geschafft.</p>
+<div class="hilfe nur-a2">
+<button type="button">💡 Beispiel ansehen (Aufgabe 4)</button>
+<div class="inhalt">
+<p>So sieht die Mail aus:</p>
+<ul>
+<li><b>Anrede:</b> Sehr geehrte Damen und Herren,</li>
+<li><b>Problem:</b> ich wollte Ihnen mitteilen, dass in unserer Wohnung der Wasserhahn im Bad tropft.</li>
+<li><b>Seit wann:</b> Das ist seit Montag so und wird eher stärker.</li>
+<li><b>Bitte:</b> Könnten Sie bitte einen Handwerker beauftragen? Ich bin ab 15 Uhr erreichbar.</li>
+<li><b>Gruß:</b> Mit freundlichen Grüßen, Yara Demir, Lindenstraße 12, 3. OG</li>
+</ul>
+<p style="margin-top:.5rem;">Nach der Anrede geht es <b>klein</b> weiter: <i>Sehr geehrte Damen und Herren,</i> <b>i</b><i>ch wollte …</i> Das übersehen fast alle.</p>
+</div>
+</div>
+<div class="hilfe nur-b1">
+<button type="button">💡 Beispiel ansehen (Aufgabe 2)</button>
+<div class="inhalt">
+<p>So klingt eine höfliche Erinnerung:</p>
+<ul>
+<li><b>Bezug nehmen:</b> ich beziehe mich auf meine E-Mail vom 7. Oktober.</li>
+<li><b>Stand nennen:</b> Bisher habe ich dazu leider keine Rückmeldung erhalten.</li>
+<li><b>Lage schildern:</b> Der Schaden hat sich seitdem vergrößert; inzwischen ist auch die Wand feucht.</li>
+<li><b>Frist setzen:</b> Ich bitte Sie, mir bis zum 20. Oktober einen Termin zu nennen.</li>
+<li><b>Offen bleiben:</b> Für Rückfragen erreichen Sie mich jederzeit unter dieser Nummer.</li>
+</ul>
+<p style="margin-top:.5rem;">Eine Frist ist keine Drohung, sondern eine Information. <b>„Ich bitte Sie, mir bis zum … zu nennen“</b> bleibt höflich und ist trotzdem verbindlich.</p>
+</div>
+</div>
+<div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Sprachnachricht bis Sonntag in die WhatsApp-Gruppe. Ich höre jede an und antworte dir persönlich.</div>
+<div class="tip">🔜 <strong>Nächste Woche, Strang A:</strong> <u>Einkaufen, kochen, essen</u> — Zutaten, Mengen und ein Rezept so erklären, dass es jemand nachkochen kann.</div>
+</section>
+
+<footer>
+<strong>deutschoderwas Sprechclub</strong> · In der Wohnung · Teil 2 · A2/B1 · Woche 4 · Montag war Teil 1
+</footer>
+
+</div>
+
+<script type="application/json" id="daten-sk">
+["Melde am Telefon, dass deine <b>Heizung</b> nicht warm wird.","Beschreibe ein Geräusch, das dein Kühlschrank macht — ohne das Wort <b>kaputt</b>.","Erklär einem Handwerker, <b>wann genau</b> der Fehler auftritt.","Frag höflich nach einem <b>Termin</b> und nach den Kosten.","Erzähl von etwas, das bei dir zu Hause <b>lange</b> kaputt war.","Sag dreimal dasselbe: als Hauptsatz, mit <b>dass</b>, mit <b>weil</b>.","Dein Nachbar hat einen <b>Wasserschaden</b> verursacht. Sprich ihn an.","Reklamiere ein Gerät, das nach zwei Wochen nicht mehr <b>angeht</b>.","Was reparierst du selbst, was nie? <b>Warum?</b>","Erklär jemandem, wie man in deinem Land einen <b>Schaden meldet</b>."]
+</script>
+<script type="application/json" id="daten-w90">
+[{"w":"die Heizung","b":"../amanda/sz-elektro-shk.webp","h":["warm","entlüften","der Winter","kalt","der Thermostat"]},{"w":"der Wasserhahn","b":"../amanda/sz-kueche.webp","h":["tropfen","das Waschbecken","der Abfluss","feucht","zudrehen"]},{"w":"der Handwerker","b":"../amanda/sz-werkstatt.webp","h":["der Termin","das Werkzeug","die Reparatur","warten","die Rechnung"]},{"w":"die Vermieterin","b":"../vok-bild/die-vermieterin.webp","h":["die Miete","melden","die Wohnung","der Vertrag","schreiben"]},{"w":"melden","b":"../vok-bild/anrufen.webp","h":["Bescheid geben","das Telefon","der Schaden","sofort","die Verwaltung"]},{"w":"die Rechnung","b":"../vok-bild/die-rechnung.webp","h":["bezahlen","die Kosten","wer zahlt","das Papier","teuer"]},{"w":"der Termin","b":"../vok-bild/der-termin.webp","h":["vereinbaren","der Vormittag","warten","absagen","das Zeitfenster"]},{"w":"die Reklamation","b":"../vok-bild/die-reklamation.webp","h":["der Kassenbon","umtauschen","die Garantie","das Gerät","der Laden"]},{"w":"der Aufzug","b":"../vok-bild/der-aushang.webp","h":["das Treppenhaus","der Stock","stehen bleiben","der Nachbar","zu Fuß"]},{"w":"der Schaden","b":"../vok-bild/die-wand.webp","h":["das Wasser","feucht","die Decke","die Versicherung","groß"]}]
+</script>
+<script type="application/json" id="daten-quiz">
+[{"q":"Welcher Satz ist richtig?","o":["Ich wollte Bescheid geben, dass die Heizung nicht warm wird.","Ich wollte Bescheid geben, dass die Heizung wird nicht warm.","Ich wollte Bescheid geben, dass wird die Heizung nicht warm.","Ich wollte Bescheid geben, die Heizung dass nicht warm wird."],"c":0,"e":"Nach <b>dass</b> geht das gebeugte Verb ans <u>Ende</u> des Nebensatzes: <i>… nicht warm <b>wird</b></i>."},{"q":"Wie sagt man es am höflichsten?","o":["Könnten Sie jemanden vorbeischicken?","Sie müssen jemanden schicken.","Schicken Sie jemanden.","Ich brauche sofort jemanden."],"c":0,"e":"<b>Könnten Sie …?</b> ist eine Bitte. Alles andere ist eine Ansage — und das hilft im ersten Anruf nie."},{"q":"Ergänze: Der Wasserhahn tropft ___ Montag.","o":["seit","vor","ab","für"],"c":0,"e":"<b>seit</b> für etwas, das angefangen hat und <u>noch andauert</u>. Und danach bleibt das Verb im Präsens."},{"q":"Welcher Satz beschreibt, statt nur zu bewerten?","o":["Die Lampe leuchtet kurz auf, dann geht sie wieder aus.","Das Gerät ist kaputt.","Das ist Schrott.","Es geht nicht."],"c":0,"e":"Eine Beschreibung sagt, <b>was passiert</b>. Damit kann der Handwerker etwas anfangen — mit <i>kaputt</i> nicht."},{"q":"Was gehört NICHT in eine gute Schadensmeldung?","o":["Das ist Ihre Schuld.","Seit wann es so ist.","In welchem Raum es ist.","Wann du erreichbar bist."],"c":0,"e":"Schuld klärt niemand am Telefon. Melde, was ist — nicht, wer es verursacht hat."},{"q":"Ergänze: Ich rufe an, ___ der Aufzug seit einer Woche steht.","o":["weil","denn","deshalb","darum"],"c":0,"e":"<b>weil</b> leitet einen Nebensatz ein — deshalb steht <i>steht</i> am Ende. Bei <i>denn</i> bliebe die Wortstellung wie im Hauptsatz."},{"q":"Was heißt „Das Fenster klemmt“?","o":["Es geht schwer auf, ist aber nicht kaputt.","Es ist zerbrochen.","Es ist undicht.","Es lässt sich gar nicht mehr öffnen."],"c":0,"e":"<b>klemmen</b> heißt: Es geht, aber schwer. Oft reicht ein Handgriff — deshalb lohnt sich das genaue Wort."},{"q":"Welche Frage solltest du am Ende jedes Anrufs stellen?","o":["Bis wann kann ich mit einer Rückmeldung rechnen?","Ist das schlimm?","Machen Sie das oft?","Warum dauert das so lange?"],"c":0,"e":"Diese eine Frage macht aus einem Versprechen einen Termin — und du hast etwas, worauf du dich beziehen kannst."}]
+</script>
+<script type="application/json" id="daten-gap">
+[{"t":"Ich wollte Bescheid geben, ___ die Heizung nicht warm wird.","o":["dass","das","weil","ob"],"a":"dass"},{"t":"Ich rufe an, weil der Wasserhahn seit Montag ___.","o":["tropft","tropfen","getropft","tropfe"],"a":"tropft"},{"t":"___ Sie bitte jemanden vorbeischicken?","o":["Könnten","Müssen","Sollen","Werden"],"a":"Könnten"},{"t":"Der Aufzug funktioniert ___ Freitag nicht mehr.","o":["seit","vor","ab","in"],"a":"seit"},{"t":"Wissen Sie, ___ der Handwerker heute noch kommt?","o":["ob","dass","wenn","wann ob"],"a":"ob"},{"t":"Wenn bis Freitag niemand ___, schreibe ich noch einmal.","o":["kommt","kommen","gekommen","komme"],"a":"kommt"},{"t":"Ich habe der Vermieterin geschrieben, dass ich niemanden erreichen ___.","o":["konnte","konnte nicht","kann","gekonnt"],"a":"konnte"},{"t":"Die Rechnung geht direkt ___ die Hausverwaltung.","o":["an","auf","zu","bei"],"a":"an"}]
+</script>
+<script type="application/json" id="daten-gbau">
+[{"f":"Melde einen Schaden höflich:","t":["Ich","wollte","Bescheid","geben","dass","die","Heizung","nicht","warm","wird"],"l":["Ich","wollte","Bescheid","geben","dass","die","Heizung","nicht","warm","wird"],"e":"Erst der Hauptsatz, dann das Signalwort <b>dass</b> — und das Verb <b>wird</b> steht ganz am Ende."},{"f":"Nenne den Grund für deinen Anruf:","t":["Ich","rufe","an","weil","der","Wasserhahn","seit","Montag","tropft"],"l":["Ich","rufe","an","weil","der","Wasserhahn","seit","Montag","tropft"],"e":"<b>anrufen</b> ist trennbar: <i>rufe … an</i>. Und nach <b>weil</b> rutscht <i>tropft</i> ans Ende."},{"f":"Bitte um einen Handwerker:","t":["Könnten","Sie","bitte","jemanden","vorbeischicken"],"l":["Könnten","Sie","bitte","jemanden","vorbeischicken"],"e":"In der Frage steht das Verb vorn. <b>vorbeischicken</b> bleibt im Infinitiv zusammen und geht ans Ende."},{"f":"Frag nach einer Rückmeldung:","t":["Bis","wann","kann","ich","mit","einer","Rückmeldung","rechnen"],"l":["Bis","wann","kann","ich","mit","einer","Rückmeldung","rechnen"],"e":"<b>rechnen mit</b> steht immer mit Dativ: <i>mit einer Rückmeldung</i>. Der Infinitiv geht ans Satzende."}]
+</script>
+<script type="application/json" id="daten-gstory">
+{"t":"Am Freitag merke ich, dass es im Schlafzimmer kalt ___. Die Heizung bleibt einfach kalt, obwohl der Regler ganz oben steht. Ich rufe bei der Verwaltung an und sage, ___ die Heizung seit dem Morgen nicht mehr warm wird. Die Frau am Telefon fragt, ___ wir schon entlüftet haben. Haben wir. Sie verspricht, jemanden zu schicken. Am Dienstag ist immer noch niemand da, also schreibe ich eine Mail — höflich, aber mit Datum. Am Mittwoch klingelt es endlich. Der Handwerker schaut zwei Minuten, dreht an einem kleinen Ventil und sagt, das sei nur Luft im System gewesen. „___ Sie das nicht früher gemeldet?“, fragt er. Doch, denke ich, ___ zwei Mal. Aber ich sage nur: „Schön, dass es jetzt ___.“","o":["bleibt","dass","ob","Warum","sogar","funktioniert","weil","wird"],"a":[["bleibt"],["dass"],["ob"],["Warum"],["sogar"],["funktioniert"]]}
+</script>
+
+<script>
+
+/* ---- Sprungleiste: markiert, wo man gerade ist ----
+   Frueher hat sie Abschnitte umgeschaltet. Jetzt steht alles
+   untereinander, die Leiste zeigt nur noch die Stelle an. */
+(function(){
+ var tabs=[].slice.call(document.querySelectorAll('nav.tabs a.tab'));
+ var paare=tabs.map(function(a){return {a:a,sec:document.querySelector(a.getAttribute('href'))};})
+               .filter(function(x){return x.sec;});
+ if(!('IntersectionObserver' in window))return;
+ var beob=new IntersectionObserver(function(eintraege){
+  eintraege.forEach(function(e){
+   if(!e.isIntersecting)return;
+   tabs.forEach(function(t){t.classList.remove('active');});
+   var p=paare.find(function(x){return x.sec===e.target;});
+   if(p){p.a.classList.add('active');
+     /* die aktive Marke in der schmalen Leiste in den Blick holen */
+     if(p.a.scrollIntoView)p.a.scrollIntoView({block:'nearest',inline:'center'});}
+  });
+ },{rootMargin:'-40% 0px -55% 0px'});
+ paare.forEach(function(x){beob.observe(x.sec);});
+})();
+
+/* ---- Hoehe des klebenden Umschalters messen, damit die
+   Sprungleiste sauber darunter sitzt ---- */
+(function(){
+ var leiste=document.querySelector('.niv');
+ if(!leiste)return;
+ function miss(){document.documentElement.style.setProperty('--leiste',Math.round(leiste.offsetHeight)+'px');}
+ miss();
+ window.addEventListener('resize',miss);
+ if(window.ResizeObserver)new ResizeObserver(miss).observe(leiste);
+ if(document.fonts&&document.fonts.ready)document.fonts.ready.then(miss);
+})();
+
+/* ---- Vorlesen ---- */
+function say(t){try{var u=new SpeechSynthesisUtterance(t);u.lang='de-DE';u.rate=.85;speechSynthesis.cancel();speechSynthesis.speak(u);}catch(e){}}
+document.querySelectorAll('.speak').forEach(function(b){if(b.dataset.say)b.onclick=function(){say(b.dataset.say);};});
+
+/* ---- Niveau-Umschalter ---- */
+var nivk=document.querySelectorAll('.nivk button[data-niv]');
+nivk.forEach(function(b){b.onclick=function(){
+ var n=b.dataset.niv;document.body.setAttribute('data-niveau',n);
+ nivk.forEach(function(x){x.setAttribute('aria-pressed',x.dataset.niv===n?'true':'false');});
+ hazaehlen();
+};});
+
+/* ---- Hilfe-Knoepfe ---- */
+document.querySelectorAll('.hilfe > button').forEach(function(b){
+ var kasten=b.parentElement,text=b.textContent;
+ b.setAttribute('aria-expanded','false');
+ b.onclick=function(){var auf=kasten.classList.toggle('offen');
+  b.setAttribute('aria-expanded',auf?'true':'false');
+  b.textContent=auf?'✕ Hilfe schließen':text;};
+});
+
+/* ---- Bildkarten verdecken ---- */
+var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
+vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+ vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+
+/* ---- Dialoge: Runde 1 / Runde 2 ---- */
+document.querySelectorAll('.dwrap').forEach(function(d){
+ var b=d.querySelector('.rbtn');
+ b.onclick=function(){
+  var zwei=d.dataset.runde==='1';
+  d.dataset.runde=zwei?'2':'1';
+  b.textContent=zwei?'◀︎ Runde 1 · Text zeigen':'▶︎ Runde 2 · du antwortest';
+  b.classList.toggle('zwei',zwei);
+  d.querySelectorAll('.dline.b').forEach(function(l){l.classList.remove('zeigen');});
+ };
+ d.querySelectorAll('.dcue').forEach(function(c){
+  c.onclick=function(){c.closest('.dline').classList.add('zeigen');};});
+});
+
+/* ---- Hausaufgabe abhaken ---- */
+var hastand=document.querySelector('[data-ha-stand]');
+function hazaehlen(){
+ if(!hastand)return;
+ /* Nach dem Niveau zaehlen, nicht nach offsetParent: beim Laden ist der
+    Hausaufgaben-Abschnitt noch zugeklappt und haette 0 von 0 ergeben. */
+ var niv=document.body.getAttribute('data-niveau');
+ var weg=niv==='a2'?'.nur-b1':'.nur-a2';
+ var da=[].slice.call(document.querySelectorAll('[data-ha]')).filter(function(h){return !h.closest(weg);});
+ var fertig=da.filter(function(h){return h.classList.contains('fertig');}).length;
+ var voll=da.length>0&&fertig===da.length;
+ hastand.textContent=voll?('Alle '+da.length+' Aufgaben geschafft. Stark — bis Mittwoch! 🎉')
+                        :(fertig+' von '+da.length+' Aufgaben geschafft.');
+ hastand.classList.toggle('voll',voll);
+}
+document.querySelectorAll('[data-ha]').forEach(function(h){
+ h.setAttribute('aria-pressed','false');
+ h.onclick=function(){var an=h.classList.toggle('fertig');
+  h.setAttribute('aria-pressed',an?'true':'false');hazaehlen();};
+});
+hazaehlen();
+
+/* ---- Daten aus den JSON-Bloecken im Koerper ----
+   Der Motor ist fuer alle Stunden derselbe; nur die Daten wechseln.
+   Fehlt ein Block, bleibt der Abschnitt einfach leer. */
+function daten(id){
+ var el=document.getElementById('daten-'+id);
+ if(!el)return null;
+ try{return JSON.parse(el.textContent);}catch(e){console.error('Daten "'+id+'" sind kaputt:',e);return null;}
+}
+/* ---- Mischen (Fisher-Yates) ----
+   Ein Vergleich mit Math.random() mischt nicht gleichmaessig, die
+   erste Stelle bleibt zu oft die erste. Deshalb richtig tauschen. */
+function misch(liste){
+ var a=liste.slice();
+ for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}
+ return a;
+}
+
+/* ---- Sprechkarten ---- */
+var SK=daten('sk')||[];
+if(SK.length){
+var lastsk=-1;
+document.getElementById('sknew').onclick=function(){var i;
+ do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
+ document.getElementById('wsk').innerHTML=SK[i];};
+
+}
+
+/* ---- 90 Sekunden ---- */
+var W90=daten('w90')||[];
+if(W90.length){
+var last90=-1,t90=null,rest=90;
+function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
+function zeige90(i){
+ document.getElementById('w90').textContent=W90[i].w;
+ document.getElementById('i90').src=W90[i].b;
+ document.getElementById('i90').alt=W90[i].w;
+ document.getElementById('hw90').innerHTML=W90[i].h.map(function(x){return '<span class="hw">'+x+'</span>';}).join('');
+}
+document.getElementById('new90').onclick=function(){var i;
+ do{i=Math.floor(Math.random()*W90.length);}while(i===last90&&W90.length>1);last90=i;
+ zeige90(i);clearInterval(t90);rest=90;document.getElementById('t90').textContent=fmt(rest);};
+document.getElementById('start90').onclick=function(){clearInterval(t90);rest=90;
+ var el=document.getElementById('t90');el.textContent=fmt(rest);
+ t90=setInterval(function(){rest--;el.textContent=fmt(rest);
+  if(rest<=0){clearInterval(t90);el.textContent='✅ Fertig!';}},1000);};
+zeige90(0);last90=0;
+
+}
+
+/* ---- Quiz ---- */
+var QUIZ=daten('quiz')||[];
+var qc=document.getElementById('quiz');
+if(qc&&QUIZ.length){
+QUIZ.forEach(function(item){
+ var d=document.createElement('div');d.className='quiz-q';
+ d.innerHTML='<div class="qt">'+item.q+'</div>';
+ var op=document.createElement('div');op.className='quiz-opts';
+ /* Gemischt, sonst stuende die richtige Antwort immer an erster Stelle
+    und man koennte die ganze Runde raten, ohne zu lesen. */
+ var wahl=misch(item.o.map(function(t,i){return {t:t,richtig:i===item.c};}));
+ wahl.forEach(function(w){
+  var b=document.createElement('button');b.className='qopt';b.textContent=w.t;
+  b.onclick=function(){
+   if(d.dataset.done)return;d.dataset.done=1;
+   if(w.richtig){b.classList.add('right');}
+   else{
+    b.classList.add('wrong');
+    op.children[wahl.findIndex(function(x){return x.richtig;})].classList.add('right');
+   }
+   d.querySelector('.qexp').classList.add('show');};
+  op.appendChild(b);});
+ d.appendChild(op);
+ var e=document.createElement('div');e.className='qexp';e.innerHTML='💡 '+item.e;d.appendChild(e);
+ qc.appendChild(d);
+});
+
+}
+
+/* ---- Lueckentext ---- */
+var GAP=daten('gap')||[];
+var g=document.getElementById('gap');
+if(g&&GAP.length){
+GAP.forEach(function(item){
+ var row=document.createElement('div');row.style.margin='.35rem 0';
+ var sel=document.createElement('select');
+ var leer=document.createElement('option');leer.textContent='– wählen –';leer.value='';sel.appendChild(leer);
+ misch(item.o).forEach(function(o){
+  var op=document.createElement('option');op.textContent=o;op.value=o;sel.appendChild(op);});
+ sel.onchange=function(){sel.className=sel.value===item.a?'ok':'no';};
+ var teile=item.t.split('___');
+ row.appendChild(document.createTextNode(teile[0]));row.appendChild(sel);
+ row.appendChild(document.createTextNode(teile[1]||''));
+ g.appendChild(row);
+});
+
+}
+
+/* ---- Satzbauer ---- */
+var GBAU=daten('gbau')||[];
+var gbc=document.getElementById('gbau');
+if(gbc&&GBAU.length){
+{GBAU.forEach(function(item){
+ var d=document.createElement('div');d.className='gbau';
+ d.innerHTML='<div class="gfrage">🧱 '+item.f+'</div>';
+ var teile=document.createElement('div');teile.className='gteile';
+ var zeile=document.createElement('div');zeile.className='gzeile';
+ var gebaut=[];
+ misch(item.t).forEach(function(w){
+  var b=document.createElement('button');b.className='gteil';b.textContent=w;
+  b.onclick=function(){b.classList.add('weg');gebaut.push(w);zeile.classList.remove('ok','no');
+   var s=document.createElement('span');s.textContent=w;zeile.appendChild(s);};
+  teile.appendChild(b);});
+ d.appendChild(teile);d.appendChild(zeile);
+ var fuss=document.createElement('div');fuss.className='gfuss';
+ var pr=document.createElement('button');pr.className='gmini';pr.textContent='✅ prüfen';
+ var nm=document.createElement('button');nm.className='gmini hell';nm.textContent='↻ nochmal';
+ var tp=document.createElement('div');tp.className='gtipp';tp.innerHTML='💡 '+item.e;
+ pr.onclick=function(){var richtig=gebaut.join(' ')===item.l.join(' ');
+  zeile.classList.remove('ok','no');zeile.classList.add(richtig?'ok':'no');tp.classList.add('show');};
+ nm.onclick=function(){gebaut=[];zeile.innerHTML='';zeile.classList.remove('ok','no');tp.classList.remove('show');
+  teile.querySelectorAll('.gteil').forEach(function(b){b.classList.remove('weg');});};
+ fuss.appendChild(pr);fuss.appendChild(nm);d.appendChild(fuss);d.appendChild(tp);
+ gbc.appendChild(d);
+});}
+
+}
+
+/* ---- Lueckengeschichte ---- */
+var GSTORY=daten('gstory');
+var gsc=document.getElementById('gstory');
+if(gsc&&GSTORY){
+{
+ var gsWahl=misch(GSTORY.o);   /* einmal mischen, alle Luecken zeigen dieselbe Reihenfolge */
+ var st=GSTORY.t.split('___');
+ st.forEach(function(txt,i){
+  gsc.appendChild(document.createTextNode(txt));
+  if(i<GSTORY.a.length){
+   var sel=document.createElement('select');
+   var leer=document.createElement('option');leer.textContent='– ? –';leer.value='';sel.appendChild(leer);
+   gsWahl.forEach(function(o){var op=document.createElement('option');op.textContent=o;op.value=o;sel.appendChild(op);});
+   (function(loesung){sel.onchange=function(){sel.className=loesung.indexOf(sel.value)>=0?'ok':'no';};})(GSTORY.a[i]);
+   gsc.appendChild(sel);
+  }
+ });
+}
+
+}
+
+</script>
+</body>
+</html>

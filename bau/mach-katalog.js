@@ -203,6 +203,15 @@ STICH.sprachkurs.push('nachfragen', '-d-teil');
 
 
 
+/* Woche 4: Strang A ist diesmal kein Telefonthema, sondern die Wohnung
+   selbst — Zimmer und Moebel im Teil 1, ein Schaden melden im Teil 2.
+   Beides gehoert zum Bereich Wohnen. Strang C dreht sich um Kuendigung
+   und Bewerbung, also Bereich Bewerbung. Ohne diese vier Stichwoerter
+   haetten die Seiten gar keinen Bereich und waeren im Schuelerbereich
+   nicht zu finden. */
+STICH.wohnen.push('zimmer-moebel', 'kaputt-melden');
+STICH.bewerbung.push('job-wechseln');
+
 function bereichVon(f, ids) {
   const s = f.toLowerCase().replace(/\.html$/, '').replace(/^vorbereitung-/, '');
   /* "it-lektion.html" gehört zu "it" — dafür braucht es kein Stichwort. */

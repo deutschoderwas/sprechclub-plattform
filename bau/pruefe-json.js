@@ -109,6 +109,41 @@ Object.keys(soll).forEach(k => {
 if (S.wortschatz && (S.wortschatz.karten || []).length < 10)
   hinweis.push('Wortschatz: nur ' + S.wortschatz.karten.length + ' Karten, geplant sind 10–12');
 
+/* ---------- 4b Luecken: stimmt die Anzahl? ----------
+   Im Lueckentext braucht jeder Satz genau eine Luecke. Und in der
+   Geschichte muss die Zahl der ___ zur Zahl der Loesungen passen —
+   sonst rutschen alle Antworten um eine Stelle und der Schueler
+   bekommt fuer richtige Eingaben ein Kreuz. */
+const zaehleLuecken = s => ((s || '').match(/___/g) || []).length;
+
+(d.gap || []).forEach((g, i) => {
+  const n = zaehleLuecken(g.t);
+  if (n !== 1)
+    meldung.push('Lückentext ' + (i + 1) + ': ' + n + ' Lücken im Satz, genau eine ist nötig — „'
+      + (g.t || '').slice(0, 60) + '“');
+  if (g.a && Array.isArray(g.o) && g.o.indexOf(g.a) < 0)
+    meldung.push('Lückentext ' + (i + 1) + ': die Lösung „' + g.a + '“ steht nicht in der Auswahl');
+});
+
+if (d.gstory) {
+  const n = zaehleLuecken(d.gstory.t);
+  const loesungen = d.gstory.a || [];
+  if (n !== loesungen.length)
+    meldung.push('Geschichte: ' + n + ' Lücken im Text, aber ' + loesungen.length
+      + ' Lösungen — die Antworten verschieben sich sonst um eine Stelle');
+  const auswahl = d.gstory.o || [];
+  const doppelt = auswahl.filter((w, i) => auswahl.indexOf(w) !== i);
+  if (doppelt.length)
+    hinweis.push('Geschichte: „' + [...new Set(doppelt)].join('“, „')
+      + '“ steht doppelt in der Auswahl — der Schüler sieht dasselbe Wort zweimal');
+  loesungen.forEach((l, i) => {
+    const wort = Array.isArray(l) ? l[0] : l;
+    if (auswahl.indexOf(wort) < 0)
+      meldung.push('Geschichte, Lücke ' + (i + 1) + ': die Lösung „' + wort
+        + '“ steht nicht in der Auswahl');
+  });
+}
+
 /* ---------- 5 Beide Niveaus wirklich gefuellt? ---------- */
 if (S.niveau) {
   const tiefen = JSON.stringify(S);
