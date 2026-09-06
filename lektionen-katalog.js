@@ -1666,6 +1666,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-sprachkurs.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w07-b-teil1-koerper-redewendungen-b1b2.html",
+  "t": "Nase voll, Hand und Fuß: Redewendungen mit Körperteilen",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "freunde",
+  "img": "amanda/sz-freunde.webp"
+ },
+ {
   "d": "Unterricht-ab-07-09/vw-mo-nein-sagen-b1b2.html",
   "t": "Nein sagen, ohne unhöflich zu sein",
   "lvl": "B1–B2",
@@ -3034,6 +3042,7 @@ window.BEREICH_MEHR = {
   "beziehungen-dach-teil-1-b1-b2.html",
   "Unterricht-ab-27-07/dating-b1b2.html",
   "Unterricht-ab-27-07/freundschaft-b1b2.html",
+  "Unterricht-ab-14-09/w07-b-teil1-koerper-redewendungen-b1b2.html",
   "Unterricht-ab-27-07/netzwerken-b1b2.html",
   "Unterricht-ab-27-07/nostalgie-b1b2.html",
   "Unterricht-ab-14-09/w01-d-teil1-small-talk-b1b2.html",
