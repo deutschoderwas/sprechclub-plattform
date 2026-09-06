@@ -1,5 +1,6 @@
-// Warteliste: speichert jede Eintragung in der Tabelle `leads` und
-// schickt Julia zusaetzlich sofort eine E-Mail (Brevo).
+// Warteliste: speichert jede Eintragung in der Tabelle `leads` (Admin-Bereich),
+// legt die Person sofort als Kontakt in Brevo an (damit sie E-Mails bekommt)
+// und schickt Julia eine Benachrichtigung.
 // Wird von der Clubseite (index.html) aufgerufen -> CORS offen.
 // POST { name, email, whatsapp?, tarif?, niveau?, schwierigkeiten?, mehr? }
 // Kein Login nötig. Die Liste selbst läuft weiter über das Google-Formular.
@@ -27,7 +28,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ ok: false, error: 'bad_request' });
   }
 
-  // 1) In die Lead-Liste schreiben (auch wenn die Mail scheitert)
+  // 1) In die Lead-Liste schreiben (erscheint im Admin-Bereich unter Leads)
   let gespeichert = false;
   if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
     try {
@@ -39,6 +40,32 @@ export default async function handler(req, res) {
       gespeichert = !error;
     } catch (e) { gespeichert = false; }
   }
+
+  // 2) Sofort als Kontakt in Brevo anlegen bzw. aktualisieren, damit die Person
+  //    ab der Sekunde E-Mails bekommen kann. Scheitert das, laeuft der Rest weiter.
+  let inBrevo = false;
+  try {
+    const listen = [];
+    if (process.env.BREVO_WAITLIST_LIST_ID) listen.push(Number(process.env.BREVO_WAITLIST_LIST_ID));
+    else if (process.env.BREVO_LIST_ID) listen.push(Number(process.env.BREVO_LIST_ID));
+    const vorname = name.split(/\s+/)[0] || name;
+    const r = await fetch('https://api.brevo.com/v3/contacts', {
+      method: 'POST',
+      headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email,
+        updateEnabled: true,
+        attributes: Object.assign(
+          { VORNAME: vorname, NAME: name, QUELLE: 'warteliste' },
+          niveau ? { NIVEAU: niveau } : {},
+          tarif ? { TARIF: tarif } : {},
+          whatsapp ? { WHATSAPP: whatsapp } : {}
+        ),
+        listIds: listen.length ? listen : undefined,
+      }),
+    });
+    inBrevo = r.ok || r.status === 204;
+  } catch (e) { inBrevo = false; }
 
   const istPlus = /plus/i.test(tarif);
   const betreff = istPlus
@@ -61,7 +88,7 @@ export default async function handler(req, res) {
     ok = r.ok;
   } catch (e) { ok = false; }
 
-  return res.status(200).json({ ok, gespeichert });
+  return res.status(200).json({ ok, gespeichert, inBrevo });
 }
 
 function wartelisteMail({ name, email, whatsapp, tarif, niveau, schwierigkeiten, mehr, istPlus }) {
