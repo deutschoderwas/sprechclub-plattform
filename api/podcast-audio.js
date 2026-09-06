@@ -222,13 +222,37 @@ export default async function handler(req, res) {
 
   const db = createClient(SUPA, SERVICE, { auth: { persistSession: false } });
 
-  // Ältester Entwurf zuerst — so wird nie eine Folge vergessen.
+  /* Nur nachsehen, was offen ist, ohne etwas zu tun: ?stand=1
+     Ohne das merkt niemand, dass die Schlange steht. */
+  if (req.query && req.query.stand) {
+    const { data: offen } = await db.from('podcasts')
+      .select('id,datum,level,status,fehler')
+      .neq('status', 'live').order('datum', { ascending: false }).limit(50);
+    return res.status(200).json({ ok: true, offen: offen || [] });
+  }
+
+  /* Ältester Entwurf zuerst — aber nur aus den letzten Tagen.
+     Vorher stand hier kein Zeitfilter, und das hatte zwei Folgen:
+     Ein Entwurf, der einmal nicht durchlief, stand ab da für immer
+     vorn in der Schlange und blockierte alles dahinter. Und würde man
+     ihn irgendwann doch abarbeiten, ginge zwei Wochen alter Inhalt
+     ohne Nachfrage live. Beides will man nicht.
+     Altes holt man deshalb bewusst nach: ?tage=30 */
+  const tage = Math.max(1, Math.min(365, Number((req.query && req.query.tage) || 3)));
+  const ab = new Date(Date.now() - tage * 86400000).toISOString().slice(0, 10);
   const nur = req.query && req.query.id;
-  let q = db.from('podcasts').select('*').eq('status', 'entwurf').order('datum').order('level').limit(1);
+  let q = db.from('podcasts').select('*').eq('status', 'entwurf').gte('datum', ab)
+            .order('datum').order('level').limit(1);
   if (nur) q = db.from('podcasts').select('*').eq('id', nur).limit(1);
   const { data, error } = await q;
   if (error) return res.status(500).json({ error: error.message });
-  if (!data || !data.length) return res.status(200).json({ ok: true, info: 'nichts offen' });
+  if (!data || !data.length) {
+    /* Ehrlich mitzählen, was älter ist als das Fenster — sonst sieht
+       „nichts offen“ nach Ordnung aus, obwohl noch Entwürfe liegen. */
+    const { count } = await db.from('podcasts')
+      .select('id', { count: 'exact', head: true }).eq('status', 'entwurf').lt('datum', ab);
+    return res.status(200).json({ ok: true, info: 'nichts offen', aeltere_entwuerfe: count || 0 });
+  }
 
   const folge = data[0];
   const roh = (folge.transkript && folge.transkript[0] && folge.transkript[0].roh) || '';
@@ -289,11 +313,15 @@ export default async function handler(req, res) {
     }).eq('id', folge.id);
     if (uErr) throw new Error('Speichern: ' + uErr.message);
 
-    // Nächste Folge anstoßen, ohne zu warten.
+    /* Nächste Folge anstoßen, ohne auf sie zu warten.
+       Achtung: Der Abbruch darf nicht zu kurz sein. Bei 1,2 Sekunden
+       wurde die Anfrage abgebrochen, bevor der nächste Aufruf richtig
+       stand — und die Kette riss ab. Acht Sekunden reichen, um sie
+       anzustoßen, und blockieren diesen Aufruf trotzdem nicht. */
     fetch(SITE + '/api/podcast-audio', {
       method: 'POST',
       headers: { 'x-intern': geheim || '' },
-      signal: AbortSignal.timeout(1200)
+      signal: AbortSignal.timeout(8000)
     }).catch(() => {});
 
     return res.status(200).json({ ok: true, id: folge.id, dauer: Math.round(sek), saetze: transkript.length });

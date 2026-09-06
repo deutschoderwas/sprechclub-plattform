@@ -312,7 +312,10 @@ async function weiterAnAudio() {
     await fetch(SITE + '/api/podcast-audio', {
       method: 'POST',
       headers: { 'x-intern': process.env.CRON_SECRET || '' },
-      signal: AbortSignal.timeout(1200)
+      // 1,2 Sekunden waren zu knapp: Die Anfrage wurde abgebrochen,
+      // bevor der Audioschritt losgelaufen war, und die Folgen blieben
+      // als Entwurf liegen. Acht Sekunden stoßen ihn sicher an.
+      signal: AbortSignal.timeout(8000)
     });
   } catch (e) { /* Absicht: wir wollen nur anstoßen, nicht warten. */ }
 }
