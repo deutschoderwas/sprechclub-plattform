@@ -1208,10 +1208,28 @@ async function init(){
   startPresence();
   window.addEventListener('hashchange', routeFromHash);
   routeFromHash();
+  kanalAusLink();      // konto.html?kanal=fragen#community oeffnet genau diesen Kanal
   requireBirthday();   // Pflicht: Geburtsdatum abfragen, falls noch nicht gesetzt
   window.sb = sb; window.user = user;
   try{ if(window.LZ) LZ.pruefe(); }catch(e){}
   try{ if(window.NB) NB.start(); }catch(e){}
+}
+
+// Aus der Tagesmail kommt man mit konto.html?kanal=<slug>#community.
+// Ohne diese Zeilen landet man zwar im Chat, aber im zuletzt geoeffneten
+// Kanal — und der Beitrag, wegen dem man geklickt hat, ist nicht zu sehen.
+// communityOeffne wartet selbst, bis die Kanalliste geladen ist.
+function kanalAusLink(){
+  try{
+    const slug = new URLSearchParams(location.search).get('kanal');
+    if(!slug) return;
+    history.replaceState(null,'',location.pathname+location.hash);
+    const holen = (n) => {
+      if (window.communityOeffne) return window.communityOeffne(slug);
+      if (n > 0) setTimeout(() => holen(n-1), 300);   // community.js noch nicht so weit
+    };
+    holen(20);
+  }catch(e){ console.error('kanal-link', e); }
 }
 
 // Sofort voll starten (aus Trial-Mail: konto.html?start=now) — Testphase beenden, sofort abbuchen
