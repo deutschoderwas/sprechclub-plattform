@@ -1834,6 +1834,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-wohnen.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w06-b-teil1-ver-be-ent-zer-b1b2.html",
+  "t": "ver-, be-, ent-, zer-: vier Silben, die nie wandern",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "Unterricht-ab-14-09/w03-c-teil1-vier-tage-woche-b1b2.html",
   "t": "Vier-Tage-Woche — für alle?",
   "lvl": "B1–B2",
@@ -1849,6 +1857,14 @@ window.LEKTIONEN = [
   "b": "freunde",
   "hand": "glueck-teil-1-handout.html",
   "img": "amanda/sz-freunde.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/w06-b-teil2-ver-anrichtet-b1b2.html",
+  "t": "Was ver- alles anrichtet: verlaufen, verschlafen, versprochen",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
  },
  {
   "d": "Unterricht-ab-14-09/w01-d-teil2-small-talk-b1b2.html",
@@ -2799,6 +2815,8 @@ window.BEREICH_MEHR = {
   "Unterricht-ab-14-09/w05-b-teil2-uebersetzen-durchschauen-b1b2.html",
   "Unterricht-ab-14-09/w04-d-teil1-um-hilfe-bitten-b1b2.html",
   "Unterricht-ab-14-09/w05-b-teil1-umfahren-betonung-b1b2.html",
+  "Unterricht-ab-14-09/w06-b-teil1-ver-be-ent-zer-b1b2.html",
+  "Unterricht-ab-14-09/w06-b-teil2-ver-anrichtet-b1b2.html",
   "Unterricht-ab-14-09/w04-d-teil2-um-hilfe-bitten-b1b2.html",
   "Unterricht-ab-14-09/w03-d-teil2-ehrlich-hoeflich-b1b2.html",
   "Unterricht-ab-14-09/w03-b-teil2-legen-stellen-setzen-b1b2.html",
