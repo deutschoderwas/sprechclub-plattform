@@ -480,6 +480,12 @@ async function doRegister(){
 async function doForgot(){
   const email=document.getElementById('loginEmail').value.trim();
   if (!email.includes('@')) return authMsg(false,'Gib oben deine E-Mail ein, dann nochmal klicken.');
+  /* Erst über Brevo (kommt an), dann notfalls über Supabase. */
+  try{
+    const _r = await fetch('/api/passwort-vergessen',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});
+    const _j = await _r.json();
+    if (_j && _j.gesendet) return authMsg(true,'✓ Link zum Zurücksetzen verschickt — schau in dein Postfach.');
+  }catch(e){ console.error('passwort-vergessen', e); }
   const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + '/passwort.html' });
   if (error) return authMsg(false,'Fehler: '+error.message);
   authMsg(true,'✓ Link zum Zurücksetzen verschickt — schau in dein Postfach.');

@@ -1020,6 +1020,16 @@ async function doForgot(){
   if(!sb) return authMsg(false,'ℹ️ Vorschau: Login & Zahlung laufen erst auf der Live-Seite (deutschoderwas-club.de).');
   const email=document.getElementById('loginEmail').value.trim();
   if (!email.includes('@')) return authMsg(false,'Gib oben deine E-Mail ein, dann nochmal klicken.');
+  /* Nicht über Supabase, sondern über unseren eigenen Endpunkt und
+     damit über Brevo: Die Mails, die Supabase selbst verschickt,
+     kommen nicht zuverlässig an — daran ist am 4. September eine
+     Kundin zwei Tage hängen geblieben. Klappt der eigene Weg nicht,
+     versuchen wir hinterher noch den alten. */
+  try{
+    const _r = await fetch('/api/passwort-vergessen',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});
+    const _j = await _r.json();
+    if (_j && _j.gesendet) return authMsg(true,'✓ Link zum Zurücksetzen verschickt — schau in dein Postfach.');
+  }catch(e){ console.error('passwort-vergessen', e); }
   const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + '/passwort.html' });
   if (error) return authMsg(false,'Fehler: '+error.message);
   authMsg(true,'✓ Link zum Zurücksetzen verschickt — schau in dein Postfach.');
