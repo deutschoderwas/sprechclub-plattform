@@ -4,7 +4,10 @@ export default async function handler(req, res) {
   const base = process.env.SITE_URL || 'https://www.deutschoderwas-club.de';
   const eps = ['send-reminders', 'send-birthdays', 'send-miss-you', 'send-masterclass', 'send-register-reminder', 'monatsstunden'];
   // Abgleich der Mitgliedschaften mit Stripe — braucht den internen Schlüssel.
-  const intern = ['pruefe-mitgliedschaften'];
+  // freischalten?alle=1 ist das Sicherheitsnetz: Wer bezahlt hat und
+  // trotzdem nicht bestätigt ist, kommt hier hinein. Niemand soll je
+  // wieder tagelang vor der Tür stehen, obwohl das Geld geflossen ist.
+  const intern = ['pruefe-mitgliedschaften', 'freischalten?alle=1'];
   const ran = {};
   for (const e of eps) {
     try { const r = await fetch(base + '/api/' + e); ran[e] = r.status; }
@@ -25,7 +28,9 @@ export default async function handler(req, res) {
     await fetch(base + '/api/generate-podcast', {
       method: 'POST',
       headers: { 'x-intern': process.env.CRON_SECRET || '' },
-      signal: AbortSignal.timeout(1500)
+      // 1,5 Sekunden waren zu knapp — der Aufruf wurde abgebrochen,
+      // bevor der Generator lief. Acht Sekunden stoßen ihn sicher an.
+      signal: AbortSignal.timeout(8000)
     });
     ran['generate-podcast'] = 'angestossen';
   } catch (err) {
