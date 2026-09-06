@@ -21,15 +21,79 @@ function kurz(m, max = 150) {
   return t.length > max ? t.slice(0, max - 1) + '…' : t;
 }
 
+/* Beitraege eines Kanals in Zeilen fuer die Mail.
+   Wenn jemand mehrere Sachen direkt hintereinander schreibt — bei
+   Ankuendigungen passiert das staendig —, wuerden diese Zeilen sonst den
+   ganzen Kanalblock fuellen und die anderen Kanaele nach unten druecken.
+   Darum: die ersten zwei stehen ausgeschrieben da, der Rest wird gezaehlt.
+   Jede Zeile merkt sich in „zaehlt", fuer wie viele Beitraege sie steht,
+   damit die Restangabe am Ende des Blocks stimmt. */
+function zeilenBauen(alle) {
+  const zeilen = [];
+  let i = 0;
+  while (i < alle.length) {
+    const wer = String(alle[i].author_name || 'Mitglied').split(' ')[0];
+    let bis = i;
+    while (bis + 1 < alle.length
+      && String(alle[bis + 1].author_name || 'Mitglied').split(' ')[0] === wer) bis++;
+    const lauf = alle.slice(i, bis + 1);
+    /* Zweimal dasselbe direkt hintereinander ist ein Versehen — das kommt
+       vor, wenn jemand zweimal auf Senden tippt. In der Mail steht es
+       einmal, gezaehlt wird es trotzdem richtig. */
+    const stuecke = [];
+    for (const m of lauf) {
+      const t = kurz(m);
+      const letzt = stuecke[stuecke.length - 1];
+      if (letzt && letzt.text === t) letzt.zaehlt++;
+      else stuecke.push({ text: t, zaehlt: 1 });
+    }
+    const zeigen = stuecke.slice(0, 2);
+    zeigen.forEach((s) => zeilen.push({ wer, text: s.text, zaehlt: s.zaehlt }));
+    const rest = lauf.length - zeigen.reduce((n, s) => n + s.zaehlt, 0);
+    if (rest > 0) zeilen.push({ wer, mehr: rest, zaehlt: rest });
+    i = bis + 1;
+  }
+  return zeilen;
+}
+
+/* Aus den Rohbeitraegen die fertigen Kanalbloecke: zusammengefasst,
+   auf fuenf Zeilen je Kanal gekuerzt, mit ehrlicher Restangabe. */
+function gruppenBauen(msgs, chanBy) {
+  const roh = [];
+  for (const m of msgs) {
+    const c = chanBy[m.channel];
+    if (!c) continue;
+    let g = roh.find((x) => x.slug === m.channel);
+    if (!g) { g = { slug: m.channel, name: c.name, emoji: c.emoji, pos: c.sort_order || 99, alle: [] }; roh.push(g); }
+    g.alle.push(m);
+  }
+  /* In der Reihenfolge der Kanalleiste, damit die Mail jeden Tag
+     gleich gelesen wird und nicht danach, wer zufaellig zuerst schrieb. */
+  roh.sort((a, b) => a.pos - b.pos);
+  return roh.map((g) => {
+    const sichtbar = zeilenBauen(g.alle).slice(0, 5);
+    const gezeigt = sichtbar.reduce((n, z) => n + z.zaehlt, 0);
+    return { slug: g.slug, name: g.name, emoji: g.emoji, msgs: sichtbar, rest: g.alle.length - gezeigt };
+  });
+}
+
 function mailHtml({ vorname, datum, kanaele, gesamt, leute, site }) {
+  const wortBeitrag = (n) => n === 1 ? 'weiterer Beitrag' : 'weitere Beiträge';
   const bloecke = kanaele.map((k) => `
     <tr><td style="padding:18px 26px 0">
       <div style="font-size:13px;font-weight:800;color:#1990A4">${esc(k.emoji || '')} ${esc(k.name)}</div>
-      ${k.msgs.map((m) => `
+      ${k.msgs.map((m) => m.mehr ? `
+        <div style="margin-top:7px;padding-left:14px;font-size:12.5px;color:#9CA3AF;font-style:italic">
+          … und ${m.mehr} ${wortBeitrag(m.mehr)} von ${esc(m.wer)}
+        </div>` : `
         <div style="margin-top:9px;padding-left:12px;border-left:2px solid #F0E5D8">
           <div style="font-size:12.5px;font-weight:700;color:#6B7280">${esc(m.wer)}</div>
           <div style="font-size:14px;color:#1A1A1A;line-height:1.5">${esc(m.text)}</div>
         </div>`).join('')}
+      ${k.rest > 0 ? `
+        <div style="margin-top:9px;padding-left:14px;font-size:12.5px;color:#9CA3AF">
+          + ${k.rest} ${wortBeitrag(k.rest)} in diesem Kanal
+        </div>` : ''}
     </td></tr>`).join('');
 
   return `<!DOCTYPE html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
@@ -81,18 +145,10 @@ export default async function handler(req, res) {
 
   if (!msgs || !msgs.length) return res.status(200).json({ ok: true, sent: 0, grund: 'heute nichts geschrieben' });
 
-  const { data: chans } = await sb.from('community_channels').select('slug,name,emoji').eq('is_active', true);
+  const { data: chans } = await sb.from('community_channels').select('slug,name,emoji,sort_order').eq('is_active', true);
   const chanBy = Object.fromEntries((chans || []).map((c) => [c.slug, c]));
 
-  /* Nach Kanal gruppieren, hoechstens fuenf Beitraege je Kanal in die Mail. */
-  const gruppen = [];
-  for (const m of msgs) {
-    const c = chanBy[m.channel];
-    if (!c) continue;
-    let g = gruppen.find((x) => x.slug === m.channel);
-    if (!g) { g = { slug: m.channel, name: c.name, emoji: c.emoji, msgs: [] }; gruppen.push(g); }
-    if (g.msgs.length < 5) g.msgs.push({ wer: String(m.author_name || 'Mitglied').split(' ')[0], text: kurz(m) });
-  }
+  const gruppen = gruppenBauen(msgs, chanBy);
   if (!gruppen.length) return res.status(200).json({ ok: true, sent: 0, grund: 'nur Beitraege in stillgelegten Kanaelen' });
 
   const gesamt = msgs.length;
@@ -135,3 +191,6 @@ export default async function handler(req, res) {
 
   return res.status(200).json({ ok: true, sent, errors, beitraege: gesamt });
 }
+
+/* Damit man die Mail ansehen kann, ohne sie zu verschicken. */
+export { mailHtml, gruppenBauen };
