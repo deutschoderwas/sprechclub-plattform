@@ -519,6 +519,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-kleidung.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w06-a-teil2-kleidung-umtauschen-a2b1.html",
+  "t": "Kleidung kaufen: Größe, Farbe und der Weg zurück",
+  "lvl": "A2–B1",
+  "art": "lektion",
+  "b": "supermarkt",
+  "img": "amanda/sz-supermarkt.webp"
+ },
+ {
   "d": "Unterricht-ab-27-07/kochen-a2b1.html",
   "t": "Kochen & Rezepte",
   "lvl": "A2–B1",
@@ -604,6 +612,14 @@ window.LEKTIONEN = [
   "art": "lektion",
   "b": "kleidung",
   "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-wetter-a2b1.html",
+  "img": "amanda/sz-kleidung.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/w06-a-teil1-wetter-kleidung-a2b1.html",
+  "t": "Wetter und Kleidung: Was ziehe ich heute an?",
+  "lvl": "A2–B1",
+  "art": "lektion",
+  "b": "kleidung",
   "img": "amanda/sz-kleidung.webp"
  },
  {
@@ -2833,7 +2849,8 @@ window.BEREICH_MEHR = {
  "kleidung": [
   "wetter-kleidung-a2.html",
   "Unterricht-ab-27-07/kleidung-a2b1.html",
-  "Unterricht-ab-27-07/wetter-a2b1.html"
+  "Unterricht-ab-27-07/wetter-a2b1.html",
+  "Unterricht-ab-14-09/w06-a-teil1-wetter-kleidung-a2b1.html"
  ],
  "unterwegs": [
   "Unterricht-ab-27-07/bahnhof-a2b1.html",
@@ -2878,6 +2895,7 @@ window.BEREICH_MEHR = {
   "Unterricht-ab-14-09/w01-a-teil1-baecker-supermarkt-a2b1.html",
   "Unterricht-ab-27-07/einkaufen-a2b1.html",
   "Unterricht-ab-14-09/w01-a-teil2-baecker-supermarkt-a2b1.html",
+  "Unterricht-ab-14-09/w06-a-teil2-kleidung-umtauschen-a2b1.html",
   "Unterricht-ab-27-07/reklamation-a2b1.html",
   "vorbereitung-alles-teurer-b1.html",
   "alles-wird-teurer-sparen-b1-b2.html",
