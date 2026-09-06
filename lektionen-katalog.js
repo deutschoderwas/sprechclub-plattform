@@ -1865,6 +1865,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-bewerbung.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w07-d-teil1-staerken-b1b2.html",
+  "t": "Über sich selbst sprechen: Stärken nennen ohne Angeberei",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "Unterricht-ab-14-09/w05-b-teil2-uebersetzen-durchschauen-b1b2.html",
   "t": "übersetzen, durchschauen, wiederholen — die Seite, die man täglich braucht",
   "lvl": "B1–B2",
@@ -2893,6 +2901,7 @@ window.BEREICH_MEHR = {
   "Unterricht-ab-14-09/w01-b-teil2-machen-b1b2.html",
   "Unterricht-ab-14-09/w02-d-teil1-nachfragen-b1b2.html",
   "Unterricht-ab-14-09/w05-d-teil2-missverstaendnis-b1b2.html",
+  "Unterricht-ab-14-09/w07-d-teil1-staerken-b1b2.html",
   "Unterricht-ab-14-09/w05-b-teil2-uebersetzen-durchschauen-b1b2.html",
   "Unterricht-ab-14-09/w04-d-teil1-um-hilfe-bitten-b1b2.html",
   "Unterricht-ab-14-09/w05-b-teil1-umfahren-betonung-b1b2.html",
