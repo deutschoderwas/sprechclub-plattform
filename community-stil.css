@@ -214,3 +214,164 @@ html #v-community .emopick{
   #v-community .cmp{ padding-bottom:calc(6px + env(safe-area-inset-bottom)) }
   #v-community .m-warn{ margin-left:0 }
 }
+
+/* ============================================================
+   MOBIL UND SUCHE — nachgetragen, damit der Chat am Handy
+   wirklich benutzbar ist.
+
+   Diese Datei wird in konto.html ganz zuletzt geladen und
+   benutzt den Vorsatz „html #v-community". Beides zusammen
+   sticht die aelteren Bloecke in konto.html, ohne dass ueberall
+   !important stehen muss. Nur dort, wo dort !important steht,
+   steht es hier auch.
+   ============================================================ */
+
+/* ---------- 1 Das Suchfeld ----------
+   Es war bisher gar nicht gestaltet: ein nacktes Browser-Feld
+   mitten in der Kanalleiste. Am Handy sah das aus wie ein
+   Fehler und war kaum zu treffen. */
+html #v-community .cs-srch{
+  padding:8px 12px 4px;
+  position:relative;
+}
+html #v-community .cs-srch::before{
+  content:"🔍";
+  position:absolute; left:22px; top:50%; transform:translateY(-40%);
+  font-size:13px; opacity:.55; pointer-events:none;
+}
+html #v-community #cmSearch{
+  width:100%; box-sizing:border-box;
+  /* 16px ist kein Geschmack, sondern Technik: Darunter zoomt
+     iOS beim Antippen in die Seite hinein und verschiebt alles. */
+  font:inherit; font-size:16px;
+  padding:10px 12px 10px 32px;
+  border:1.5px solid var(--line,#EFE9D8); border-radius:999px;
+  background:var(--surface,#fff); color:var(--t1,#20211F);
+  outline:none; -webkit-appearance:none; appearance:none;
+}
+html #v-community #cmSearch::placeholder{ color:var(--t3,#A79E86) }
+html #v-community #cmSearch:focus{
+  border-color:var(--brand,#1990A4);
+  box-shadow:0 0 0 3px rgba(25,144,164,.14);
+}
+/* Das kleine x, das manche Browser einbauen, sonst sitzt es schief */
+html #v-community #cmSearch::-webkit-search-cancel-button{ margin-right:2px }
+
+/* ---------- 2 Alle Eingabefelder auf 16px ----------
+   Dasselbe Problem wie oben, nur an der wichtigsten Stelle:
+   dem Schreibfeld. Wer bisher am iPhone auf das Feld getippt
+   hat, bekam die Seite hineingezoomt und musste danach wieder
+   herausziehen. Das war der Hauptgrund, warum sich der Chat am
+   Handy zaeh angefuehlt hat. */
+@media(max-width:900px){
+  html #v-community .cmp-in input,
+  html #v-community .cmp-in textarea{ font-size:16px !important }
+  html #v-community .cmp-box{ padding:6px }
+}
+
+/* ---------- 3 Die Kanalleiste am Handy ----------
+   Sie laeuft waagerecht. Damit sie sich nicht anfuehlt wie ein
+   Rutschen ins Nichts, rasten die Kacheln ein, und die Leiste
+   bekommt links und rechts Luft, damit man sieht, dass es
+   weitergeht. */
+@media(max-width:900px){
+  html #v-community .cs-l{
+    scroll-snap-type:x proximity;
+    scroll-padding-left:10px;
+    padding:8px 10px 10px !important;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+  html #v-community .cs-l::-webkit-scrollbar{ display:none }
+  html #v-community .ch{
+    scroll-snap-align:start;
+    /* 40px hoch: Das ist die Grenze, ab der ein Finger sicher
+       trifft. Darunter tippt man staendig daneben. */
+    min-height:40px;
+    padding:9px 13px !important;
+    font-size:14px !important;
+    border:1px solid var(--line,#EFE9D8);
+    background:var(--surface,#fff);
+  }
+  html #v-community .ch.on{ border-color:transparent }
+}
+
+/* ---------- 4 Der Kopf der Leiste ----------
+   „Community · 24 Mitglieder · 3 online" stand am Handy in
+   zwei Zeilen ueber dem Suchfeld und hat Platz gefressen, den
+   der Verlauf braucht. Jetzt eine Zeile, kleiner. */
+@media(max-width:900px){
+  html #v-community .cs-h{
+    display:flex; align-items:baseline; gap:8px;
+    padding:10px 14px 2px !important;
+  }
+  html #v-community .cs-h b{ font-size:14px }
+  html #v-community .cs-h .st{ font-size:11.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+}
+
+/* ---------- 5 Suchergebnisse antippbar machen ----------
+   Die Treffer waren am Handy sehr eng und ohne sichtbare
+   Trennung. Wer sucht, will danach auch treffen. */
+html #v-community .srch-res{
+  display:block; width:100%; text-align:left;
+  padding:11px 14px; border:none; border-bottom:1px solid var(--line-2,#F3EDE0);
+  background:none; font:inherit; cursor:pointer;
+}
+html #v-community .srch-res:hover,
+html #v-community .srch-res:focus-visible{ background:var(--surface-2,#FBF7EE) }
+html #v-community .srch-res .sr-top{
+  display:flex; align-items:baseline; gap:8px; flex-wrap:wrap;
+  font-size:11.5px; color:var(--t3,#A79E86); margin-bottom:3px;
+}
+html #v-community .srch-res .sr-ch{ font-weight:700; color:var(--brand,#1990A4) }
+html #v-community .srch-res .sr-body{
+  font-size:14px; color:var(--t1,#20211F); line-height:1.45;
+  display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;
+  overflow-wrap:anywhere;
+}
+html #v-community .srch-sec{
+  font-size:10.5px; font-weight:800; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--t3,#A79E86); padding:14px 14px 6px;
+}
+html #v-community .srch-mem{
+  display:flex; align-items:center; gap:10px; padding:8px 14px; font-size:14px;
+}
+
+/* ---------- 6 Der Verlauf am Handy ----------
+   Mehr Luft zwischen den Beitraegen, damit man beim Scrollen
+   erkennt, wo einer aufhoert und der naechste anfaengt. */
+@media(max-width:900px){
+  html #v-community .feed{ padding:8px 12px 10px !important }
+  html #v-community .m{ padding:9px 8px }
+  html #v-community .mt{ font-size:15px; line-height:1.55 }
+  html #v-community .mh .w{ font-size:14px }
+  /* Die Uhrzeit stand am Handy zweimal da: im Kopf und unten. */
+  html #v-community .mzeit{ display:none }
+}
+
+/* ---------- 7 Die Knoepfe unter einem Beitrag ----------
+   Antworten, Reaktion, Korrektur — die waren am Handy so
+   klein, dass man sie kaum treffen konnte. */
+@media(max-width:900px){
+  html #v-community .corrbtn,
+  html #v-community .kibtn,
+  html #v-community .rc,
+  html #v-community .mact button{
+    min-height:34px; padding:6px 10px; font-size:13px !important;
+  }
+}
+
+/* ---------- 8 Umbruch, ohne sich auf Aelteres zu verlassen ----------
+   Diese Regeln stehen schon in konto.html. Sie stehen hier noch
+   einmal, damit dieser Block fuer sich allein funktioniert: Wenn
+   jemand spaeter in konto.html aufraeumt, bricht der Chat nicht. */
+html #v-community .comm{ max-width:100%; overflow:hidden }
+html #v-community .chat,
+html #v-community .feed{ max-width:100%; min-width:0; overflow-x:hidden }
+html #v-community .m{ max-width:100% }
+html #v-community .mb{ min-width:0; max-width:100% }
+html #v-community .mt,
+html #v-community .sr-body,
+html #v-community .cm-cap{ overflow-wrap:anywhere; word-break:break-word }
+html #v-community .cs,
+html #v-community .cs-h{ min-width:0; max-width:100% }
