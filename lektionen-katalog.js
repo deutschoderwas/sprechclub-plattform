@@ -1396,6 +1396,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-feste.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w07-c-teil2-geschenke-b1b2.html",
+  "t": "Die Debatte: Sind Geschenke sinnvoll oder Verschwendung?",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "feste",
+  "img": "amanda/sz-feste.webp"
+ },
+ {
   "d": "Unterricht-ab-14-09/w03-c-teil2-vier-tage-woche-b1b2.html",
   "t": "Die Debatte: Vier-Tage-Woche für alle?",
   "lvl": "B1–B2",
@@ -3012,6 +3020,7 @@ window.BEREICH_MEHR = {
   "Unterricht-ab-27-07/geburtstag-a2b1.html",
   "Unterricht-ab-27-07/aberglaube-b1b2.html",
   "Unterricht-ab-14-09/w02-c-teil2-geburtstag-feiern-b1b2.html",
+  "Unterricht-ab-14-09/w07-c-teil2-geschenke-b1b2.html",
   "Unterricht-ab-27-07/feste-braeuche-b1b2.html",
   "Unterricht-ab-14-09/w07-c-teil1-geschenke-b1b2.html",
   "kultur-traditionen-teil-1-b1-b2.html",
