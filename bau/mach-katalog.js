@@ -201,6 +201,11 @@ STICH.familie.push('esstisch');
 STICH.telefonieren.push('termin-machen', 'termin-verschieben');
 STICH.sprachkurs.push('nachfragen', '-d-teil');
 
+/* Woche 7, Strang A: Bus und Bahn. Die Dateinamen heissen
+   ticket-fahrplan und weg-verspaetung — ohne diese beiden Stichworte
+   faenden die Schueler die Seiten im Schuelerbereich nicht. */
+STICH.unterwegs.push('ticket-fahrplan', 'weg-verspaetung');
+
 
 
 /* Woche 4: Strang A ist diesmal kein Telefonthema, sondern die Wohnung

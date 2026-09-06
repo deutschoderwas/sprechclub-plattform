@@ -606,6 +606,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-telefonieren.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w07-a-teil1-ticket-fahrplan-a2b1.html",
+  "t": "Unterwegs mit Bus und Bahn: Ticket, Fahrplan, umsteigen",
+  "lvl": "A2–B1",
+  "art": "lektion",
+  "b": "unterwegs",
+  "img": "amanda/sz-unterwegs.webp"
+ },
+ {
   "d": "Unterricht-ab-27-07/wetter-a2b1.html",
   "t": "Wetter & Jahreszeiten",
   "lvl": "A2–B1",
@@ -2909,6 +2917,7 @@ window.BEREICH_MEHR = {
  "unterwegs": [
   "Unterricht-ab-27-07/bahnhof-a2b1.html",
   "Unterricht-ab-27-07/weg-fragen-a2b1.html",
+  "Unterricht-ab-14-09/w07-a-teil1-ticket-fahrplan-a2b1.html",
   "Unterricht-ab-27-07/oeffis-auto-b1b2.html",
   "sprechclub-fuehrerschein-b2-c1.html",
   "fuehrerschein-vorbereitung-b2-c1.html",
