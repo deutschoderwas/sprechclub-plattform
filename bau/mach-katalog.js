@@ -235,6 +235,9 @@ STICH.freunde.push('glueck');
 STICH.bank.push('geld-glueck', 'ueber-geld');
 STICH.unterwegs.push('fuehrerschein');
 STICH.sprachkurs.push('relativsaetze', 'gefuehle');
+/* Woche 7, Strang C: Geschenke — schenken, umtauschen, Geld schenken.
+   Teil 1 und Teil 2 liegen thematisch bei den Festen. */
+STICH.feste.push('geschenke');
 
 function bereichVon(f, ids) {
   const s = f.toLowerCase().replace(/\.html$/, '').replace(/^vorbereitung-/, '');
