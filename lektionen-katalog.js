@@ -1348,6 +1348,22 @@ window.LEKTIONEN = [
   "img": "amanda/sz-freunde.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w06-d-teil2-den-faden-halten-b1b2.html",
+  "t": "Den Faden halten, wenn andere schneller sind",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/w06-c-teil2-haustiere-b1b2.html",
+  "t": "Die Debatte: Darf ein Vermieter Haustiere verbieten?",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "familie",
+  "img": "amanda/sz-familie.webp"
+ },
+ {
   "d": "Unterricht-ab-14-09/w01-c-teil2-handy-esstisch-b1b2.html",
   "t": "Die Debatte: Handy am Esstisch",
   "lvl": "B1–B2",
@@ -1529,6 +1545,14 @@ window.LEKTIONEN = [
  {
   "d": "Unterricht-ab-14-09/w01-c-teil1-handy-esstisch-b1b2.html",
   "t": "Handy am Esstisch — geht das?",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "familie",
+  "img": "amanda/sz-familie.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/w06-c-teil1-haustiere-b1b2.html",
+  "t": "Haustiere in der Mietwohnung: Hund, Katze, Nachbarn, Vermieter",
   "lvl": "B1–B2",
   "art": "lektion",
   "b": "familie",
@@ -1832,6 +1856,14 @@ window.LEKTIONEN = [
   "b": "wohnen",
   "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-umzug-b1b2.html",
   "img": "amanda/sz-wohnen.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/w06-d-teil1-unterbrechen-b1b2.html",
+  "t": "Unterbrechen: wie man in ein Gespräch hineinkommt",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
  },
  {
   "d": "Unterricht-ab-14-09/w06-b-teil1-ver-be-ent-zer-b1b2.html",
@@ -2799,6 +2831,7 @@ window.BEREICH_MEHR = {
   "sprachspielclub-volksfest-b1-b2.html",
   "sprachspielclub-wimmelbild-b1-b2.html",
   "Unterricht-ab-14-09/w02-b-teil2-gehen-kommen-fahren-b1b2.html",
+  "Unterricht-ab-14-09/w06-d-teil2-den-faden-halten-b1b2.html",
   "Unterricht-ab-14-09/w04-b-teil2-vorsilben-bedeutung-b1b2.html",
   "Unterricht-ab-14-09/w03-d-teil1-ehrlich-hoeflich-b1b2.html",
   "Unterricht-ab-14-09/w05-d-teil1-missverstaendnis-b1b2.html",
@@ -2815,6 +2848,7 @@ window.BEREICH_MEHR = {
   "Unterricht-ab-14-09/w05-b-teil2-uebersetzen-durchschauen-b1b2.html",
   "Unterricht-ab-14-09/w04-d-teil1-um-hilfe-bitten-b1b2.html",
   "Unterricht-ab-14-09/w05-b-teil1-umfahren-betonung-b1b2.html",
+  "Unterricht-ab-14-09/w06-d-teil1-unterbrechen-b1b2.html",
   "Unterricht-ab-14-09/w06-b-teil1-ver-be-ent-zer-b1b2.html",
   "Unterricht-ab-14-09/w06-b-teil2-ver-anrichtet-b1b2.html",
   "Unterricht-ab-14-09/w04-d-teil2-um-hilfe-bitten-b1b2.html",
@@ -2860,9 +2894,11 @@ window.BEREICH_MEHR = {
  "familie": [
   "mein-tag-a2.html",
   "Unterricht-ab-27-07/haustiere-a2b1.html",
+  "Unterricht-ab-14-09/w06-c-teil2-haustiere-b1b2.html",
   "Unterricht-ab-14-09/w01-c-teil2-handy-esstisch-b1b2.html",
   "Unterricht-ab-27-07/generationen-b1b2.html",
-  "Unterricht-ab-14-09/w01-c-teil1-handy-esstisch-b1b2.html"
+  "Unterricht-ab-14-09/w01-c-teil1-handy-esstisch-b1b2.html",
+  "Unterricht-ab-14-09/w06-c-teil1-haustiere-b1b2.html"
  ],
  "kleidung": [
   "wetter-kleidung-a2.html",
