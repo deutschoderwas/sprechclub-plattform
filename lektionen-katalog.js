@@ -545,6 +545,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-unterwegs.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w07-a-teil2-weg-verspaetung-a2b1.html",
+  "t": "Nach dem Weg fragen — und was tun, wenn nichts fährt",
+  "lvl": "A2–B1",
+  "art": "lektion",
+  "b": "unterwegs",
+  "img": "amanda/sz-unterwegs.webp"
+ },
+ {
   "d": "Unterricht-ab-27-07/nachbarn-a2b1.html",
   "t": "Nachbarn & Hausordnung",
   "lvl": "A2–B1",
@@ -2917,6 +2925,7 @@ window.BEREICH_MEHR = {
  "unterwegs": [
   "Unterricht-ab-27-07/bahnhof-a2b1.html",
   "Unterricht-ab-27-07/weg-fragen-a2b1.html",
+  "Unterricht-ab-14-09/w07-a-teil2-weg-verspaetung-a2b1.html",
   "Unterricht-ab-14-09/w07-a-teil1-ticket-fahrplan-a2b1.html",
   "Unterricht-ab-27-07/oeffis-auto-b1b2.html",
   "sprechclub-fuehrerschein-b2-c1.html",
