@@ -17,10 +17,11 @@ import { createClient } from '@supabase/supabase-js';
 const FF = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
 const esc = (s) => String(s == null ? '' : s).replace(/[<>&]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c]));
 
-/* Ein Beitrag als Anreisser. Rund hundert Zeichen sind genug, um neugierig
-   zu machen, und zu wenig, um die Sache erledigt zu haben. Ob gekuerzt
-   wurde, gibt die Funktion mit zurueck — nur dann steht „weiterlesen“ da. */
-function anreissen(m, max = 100) {
+/* Ein Beitrag als Anreisser. Bewusst kurz — etwa eine Zeile. Das reicht,
+   um neugierig zu machen, und reicht nicht, um die Sache erledigt zu haben.
+   Ob gekuerzt wurde, gibt die Funktion mit zurueck — nur dann steht
+   „weiterlesen“ da. */
+function anreissen(m, max = 55) {
   if (m.kind === 'audio') return { text: '🎧 Sprachnachricht', gekuerzt: true };
   if (m.kind === 'image') return { text: '📷 Bild' + (m.body ? ' · ' + m.body : ''), gekuerzt: true };
   const t = String(m.body || '').replace(/\s+/g, ' ').trim();
