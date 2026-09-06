@@ -1906,6 +1906,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-buero.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w07-b-teil2-wann-sie-passen-b1b2.html",
+  "t": "Wann sie passen — und wann besser nicht",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "glueck-teil-1-b1-b2.html",
   "t": "Was macht glücklich ? · Teil 1",
   "lvl": "B1–B2",
@@ -2874,6 +2882,7 @@ window.BEREICH_MEHR = {
   "Unterricht-ab-14-09/w05-b-teil1-umfahren-betonung-b1b2.html",
   "Unterricht-ab-14-09/w06-d-teil1-unterbrechen-b1b2.html",
   "Unterricht-ab-14-09/w06-b-teil1-ver-be-ent-zer-b1b2.html",
+  "Unterricht-ab-14-09/w07-b-teil2-wann-sie-passen-b1b2.html",
   "Unterricht-ab-14-09/w06-b-teil2-ver-anrichtet-b1b2.html",
   "Unterricht-ab-14-09/w04-d-teil2-um-hilfe-bitten-b1b2.html",
   "Unterricht-ab-14-09/w03-d-teil2-ehrlich-hoeflich-b1b2.html",
