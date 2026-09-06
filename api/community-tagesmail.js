@@ -62,7 +62,7 @@ function gruppenBauen(msgs, chanBy, proKanal = 5) {
   });
 }
 
-function mailHtml({ vorname, datum, kanaele, gesamt, leute, podcasts = [], site }) {
+function mailHtml({ vorname, datum, kanaele, gesamt, leute, podcasts = [], podcastKopf = 'Neu im Podcast', site }) {
   const wortBeitrag = (n) => n === 1 ? 'weiterer Beitrag' : 'weitere Beiträge';
   const chatLink = (slug) => `${site}/konto.html?kanal=${encodeURIComponent(slug)}#community`;
 
@@ -97,7 +97,7 @@ function mailHtml({ vorname, datum, kanaele, gesamt, leute, podcasts = [], site 
   const podcastBlock = podcasts.length ? `
    <tr><td style="padding:24px 26px 0">
      <div style="background:#FFFCF5;border:1px solid #F0E5D8;border-radius:16px;padding:16px 18px">
-       <div style="font-size:13px;font-weight:800;color:#1A1A1A">🎧 Heute neu: ${podcasts.length} ${podcasts.length === 1 ? 'Folge' : 'Folgen'} im Podcast</div>
+       <div style="font-size:13px;font-weight:800;color:#1A1A1A">🎧 ${esc(podcastKopf)}: ${podcasts.length} ${podcasts.length === 1 ? 'Folge' : 'Folgen'}</div>
        <div style="font-size:12.5px;color:#6B7280;margin-top:3px;line-height:1.5">Für jedes Niveau eine — such dir deins aus und hör rein.</div>
        ${podcasts.map((p) => `
          <div style="margin-top:12px">
@@ -166,13 +166,22 @@ export default async function handler(req, res) {
   const chanBy = Object.fromEntries((chans || []).map((c) => [c.slug, c]));
   const gruppen = gruppenBauen(msgs || [], chanBy);
 
-  /* Die vier Folgen von heute, eine je Niveau, in fester Reihenfolge. */
+  /* Die neuen Folgen, eine je Niveau, in fester Reihenfolge.
+     Nicht nach Datum gefiltert, sondern danach, wann sie live gegangen
+     sind: Eine Folge, die gestern um 20:45 fertig wurde, hat die Mail von
+     gestern (20 Uhr) nicht mehr erwischt und gehoert in die von heute.
+     Sechsundzwanzig Stunden decken den Abstand zweier Mails ab, ohne dass
+     dieselbe Folge zweimal angekuendigt wird. */
   const REIHE = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+  const seit = new Date(jetzt.getTime() - 26 * 60 * 60000).toISOString();
   const { data: pods } = await sb.from('podcasts')
-    .select('level,titel,thema,kurz,dauer,datum,status')
-    .eq('datum', heute).eq('status', 'live');
+    .select('level,titel,thema,kurz,dauer,datum,status,created_at')
+    .eq('status', 'live').gte('created_at', seit);
   const podcasts = (pods || []).slice()
     .sort((a, b) => REIHE.indexOf(a.level) - REIHE.indexOf(b.level));
+  /* „Heute neu“ nur schreiben, wenn es auch stimmt. */
+  const podcastKopf = podcasts.length && podcasts.every((p) => p.datum === heute)
+    ? 'Heute neu im Podcast' : 'Neu im Podcast';
 
   const gesamt = (msgs || []).length;
   const leute = new Set((msgs || []).map((m) => m.author_name)).size;
@@ -181,10 +190,11 @@ export default async function handler(req, res) {
   if (!gruppen.length && !podcasts.length)
     return res.status(200).json({ ok: true, sent: 0, grund: 'heute nichts geschrieben und keine neue Folge' });
 
-  const inhalt = (vorname) => mailHtml({ vorname, datum: datumText, kanaele: gruppen, gesamt, leute, podcasts, site });
+  const inhalt = (vorname) => mailHtml({ vorname, datum: datumText, kanaele: gruppen, gesamt, leute, podcasts, podcastKopf, site });
+  const folgenText = `${podcasts.length} neue ${podcasts.length === 1 ? 'Folge' : 'Folgen'}`;
   const betreff = gesamt
-    ? `Heute im Club: ${gesamt} ${gesamt === 1 ? 'Beitrag' : 'Beiträge'} 💬${podcasts.length ? ` und ${podcasts.length} neue Folgen 🎧` : ''}`
-    : `Heute neu: ${podcasts.length} ${podcasts.length === 1 ? 'Folge' : 'Folgen'} im Podcast 🎧`;
+    ? `Heute im Club: ${gesamt} ${gesamt === 1 ? 'Beitrag' : 'Beiträge'} 💬${podcasts.length ? ` und ${folgenText} 🎧` : ''}`
+    : `${folgenText} im Podcast 🎧`;
 
   if (trocken) {
     return res.status(200).setHeader('Content-Type', 'text/html; charset=utf-8').send(inhalt('Julia'));
