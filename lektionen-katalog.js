@@ -329,6 +329,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-friseur-beruf.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w09-a-teil1-friseur-a2b1.html",
+  "t": "Beim Friseur und im Laden: Sagen, was man will — genau",
+  "lvl": "A2–B1",
+  "art": "lektion",
+  "b": "friseur-beruf",
+  "img": "amanda/sz-friseur-beruf.webp"
+ },
+ {
   "d": "Unterricht-ab-27-07/zahnarzt-a2b1.html",
   "t": "Beim Zahnarzt",
   "lvl": "A2–B1",
@@ -3100,7 +3108,8 @@ window.BEREICH_MEHR = {
   "Unterricht-ab-14-09/w05-c-teil1-gesund-essen-b1b2.html"
  ],
  "friseur-beruf": [
-  "Unterricht-ab-27-07/friseur-a2b1.html"
+  "Unterricht-ab-27-07/friseur-a2b1.html",
+  "Unterricht-ab-14-09/w09-a-teil1-friseur-a2b1.html"
  ],
  "zahnarzt": [
   "Unterricht-ab-27-07/zahnarzt-a2b1.html"
