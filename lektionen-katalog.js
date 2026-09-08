@@ -456,6 +456,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-restaurant.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w10-a-teil1-handy-vertrag-a2b1.html",
+  "t": "Handy, Internet und Vertrag: Tarif, Laufzeit, Datenvolumen",
+  "lvl": "A2–B1",
+  "art": "lektion",
+  "b": "medien",
+  "img": "amanda/sz-medien.webp"
+ },
+ {
   "d": "Unterricht-ab-27-07/haustiere-a2b1.html",
   "t": "Haustiere im Alltag",
   "lvl": "A2–B1",
@@ -550,6 +558,14 @@ window.LEKTIONEN = [
   "b": "kochen",
   "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-kochen-a2b1.html",
   "img": "amanda/sz-kochen.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/w10-a-teil2-kuendigen-stoerung-a2b1.html",
+  "t": "Kündigen, Störung melden und die Hotline überstehen",
+  "lvl": "A2–B1",
+  "art": "lektion",
+  "b": "medien",
+  "img": "amanda/sz-medien.webp"
  },
  {
   "d": "Unterricht-ab-27-07/weg-fragen-a2b1.html",
@@ -3239,6 +3255,22 @@ window.BEREICH_MEHR = {
   "Unterricht-ab-14-09/w01-d-teil2-small-talk-b1b2.html",
   "wortschatzboost-charaktereigenschaften-b2.html"
  ],
+ "medien": [
+  "Unterricht-ab-14-09/w10-a-teil1-handy-vertrag-a2b1.html",
+  "Unterricht-ab-14-09/w10-a-teil2-kuendigen-stoerung-a2b1.html",
+  "fake-news-b1.html",
+  "social-media-b1-interaktiv.html",
+  "Unterricht-ab-27-07/digitaldetox-b1b2.html",
+  "Unterricht-ab-27-07/gaming-b1b2.html",
+  "medien-digitalisierung-teil-1-b1-b2.html",
+  "Unterricht-ab-27-07/socialmedia-b1b2.html",
+  "Unterricht-ab-27-07/anglizismen-b2c1.html",
+  "Unterricht-ab-27-07/datenschutz-b2c1.html",
+  "Unterricht-ab-27-07/gender-sprache-b2c1.html",
+  "Unterricht-ab-27-07/influencer-b2c1.html",
+  "influencer-konsum-teil-1-b2-c1.html",
+  "umgangssprache-teil-1-b2-c1.html"
+ ],
  "apotheke": [
   "Unterricht-ab-14-09/w03-a-teil2-rezept-apotheke-a2b1.html"
  ],
@@ -3274,20 +3306,6 @@ window.BEREICH_MEHR = {
   "Unterricht-ab-27-07/grundeinkommen-b2c1.html",
   "Unterricht-ab-27-07/zukunft-b2c1.html",
   "Unterricht-ab-27-07/ungleichheit-b2c1.html"
- ],
- "medien": [
-  "fake-news-b1.html",
-  "social-media-b1-interaktiv.html",
-  "Unterricht-ab-27-07/digitaldetox-b1b2.html",
-  "Unterricht-ab-27-07/gaming-b1b2.html",
-  "medien-digitalisierung-teil-1-b1-b2.html",
-  "Unterricht-ab-27-07/socialmedia-b1b2.html",
-  "Unterricht-ab-27-07/anglizismen-b2c1.html",
-  "Unterricht-ab-27-07/datenschutz-b2c1.html",
-  "Unterricht-ab-27-07/gender-sprache-b2c1.html",
-  "Unterricht-ab-27-07/influencer-b2c1.html",
-  "influencer-konsum-teil-1-b2-c1.html",
-  "umgangssprache-teil-1-b2-c1.html"
  ],
  "büro": [
   "homeoffice-buero-b1.html",
