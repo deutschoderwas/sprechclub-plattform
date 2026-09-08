@@ -1452,6 +1452,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-sprachkurs.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w08-b-teil2-feste-wendungen-b1b2.html",
+  "t": "Dieselben vier Verben: in Kauf nehmen, Bescheid geben, zur Sprache bringen",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "Unterricht-ab-27-07/digitaldetox-b1b2.html",
   "t": "Digital Detox & Handysucht",
   "lvl": "B1–B2",
@@ -2921,6 +2929,7 @@ window.BEREICH_MEHR = {
   "Unterricht-ab-14-09/w02-b-teil2-gehen-kommen-fahren-b1b2.html",
   "Unterricht-ab-14-09/w06-d-teil2-den-faden-halten-b1b2.html",
   "Unterricht-ab-14-09/w04-b-teil2-vorsilben-bedeutung-b1b2.html",
+  "Unterricht-ab-14-09/w08-b-teil2-feste-wendungen-b1b2.html",
   "Unterricht-ab-14-09/w03-d-teil1-ehrlich-hoeflich-b1b2.html",
   "Unterricht-ab-14-09/w05-d-teil1-missverstaendnis-b1b2.html",
   "Unterricht-ab-14-09/w02-b-teil1-gehen-kommen-fahren-b1b2.html",
