@@ -258,6 +258,15 @@ STICH.sprachkurs.push('entscheidung-treffen', 'wo-sie-stehen');
 STICH.freunde.push('small-talk');
 STICH.team.push('vorschlag-aufbauen', 'einwaende-entkraeften');
 
+/* Die eigens gebauten Niveau-Lektionen. Ihr Dateiname enthaelt kein
+   Wort, das schon in einem Bereich steht — ohne diese Zeilen waeren
+   sie im Schuelerbereich nicht zu finden. */
+STICH.arzt.push('belastung-vorsorge');
+STICH.medien.push('daten-masche');
+STICH.sprachkurs.push('plateau-fehler-fortschritt');
+STICH.heikel.push('standpunkt-widerspruch');
+STICH["büro"].push('buero-prioritaeten');
+
 function bereichVon(f, ids) {
   const s = f.toLowerCase().replace(/\.html$/, '').replace(/^vorbereitung-/, '');
   /* "it-lektion.html" gehört zu "it" — dafür braucht es kein Stichwort. */
@@ -273,7 +282,7 @@ function bereichVon(f, ids) {
 
 global.window = global.window || {};
 ['bereiche.js', 'uebungen.js', 'bereiche-anschluss.js',
- 'wortschatz-neu.js', 'grammatik-neu.js', 'hoer-neu.js',
+ 'wortschatz-neu.js', 'wortschatz-plus.js', 'grammatik-neu.js', 'hoer-neu.js',
  'hoeren-a1-neu.js', 'aussprache-neu.js'].forEach(f => {
   try { require(path.join(W, f)); } catch (e) { /* fehlt eben */ }
 });
@@ -344,6 +353,18 @@ Object.keys(nachSlug).forEach(slug => {
   haupt.push(e);
 });
 
+/* Niveau nachtragen: 41 Seiten tragen es nicht im Dateinamen,
+   darunter alle Bereichs-Lektionen. Der Bereich weiss es aber —
+   ohne diese Zeile stehen sie im Lernbereich ohne Niveau-Schild
+   und fallen aus jedem Filter heraus. */
+const bereichLvl = {};
+BEREICHE.forEach(b => { if (b.lvl) bereichLvl[b.id] = b.lvl; });
+let lvlNachgetragen = 0;
+haupt.forEach(x => {
+  if (!x.lvl && x.b && bereichLvl[x.b]) { x.lvl = bereichLvl[x.b]; lvlNachgetragen++; }
+});
+console.log('Niveau aus dem Bereich nachgetragen: ' + lvlNachgetragen);
+
 /* ---------- 7. Themen-ID -> Seite, nur wo die Datei wirklich liegt ---------- */
 const daIst = f => fs.existsSync(path.join(W, f));
 const zu = {};
@@ -385,7 +406,12 @@ function passtNiveau(themaLvl, bereichLvl) {
   const x = STUFE[String(themaLvl || '').trim().toUpperCase()];
   const sp = spanne(bereichLvl);
   if (!x || !sp) return true;          // unbekannt heisst: nicht im Weg stehen
-  return x >= sp[0] && x <= sp[1];
+  /* Geprueft wird nur nach oben. Ein C1-Thema bekommt keine Lektion,
+     die bei B2 endet — dort waere nichts mehr zu holen. Umgekehrt ist
+     eine Lektion, die etwas hoeher liegt, kein Schaden: Sie ist bei den
+     Bereichs-Lektionen sogar aus genau diesen Woertern gebaut. Wer auf
+     A2 steht, darf also auf einer B1-Seite landen. */
+  return x <= sp[1];
 }
 /* Zuerst die eigens gebauten Niveau-Lektionen: Sie sind fuer genau
    ein Thema gemacht und schlagen deshalb jede Bereichs-Zuordnung. */
@@ -393,6 +419,11 @@ const NIVEAU_LEK = (() => {
   const f = path.join(__dirname, 'niveau-lektionen.json');
   return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : {};
 })();
+/* Das Niveau der Seite selbst ist verlaesslicher als das des
+   Bereichs: Ein Bereich spannt oft A2 bis C1, die einzelne Seite
+   darin ist aber klar eine B1-Seite. */
+const seitenLvl = {};
+haupt.forEach(x => { if (x.lvl) seitenLvl[x.d] = x.lvl; });
 const themaZuLek = {};
 Object.keys(NIVEAU_LEK).forEach(id => {
   const k = NIVEAU_LEK[id];
@@ -412,7 +443,7 @@ SKILLS.forEach(sk => {
     if (zu[key]) return;
     const tr = themaZuLek[t.id];
     if (!tr) return;
-    if (!passtNiveau(t.level, tr.lvl)) { wegenNiveau++; return; }
+    if (!passtNiveau(t.level, seitenLvl[tr.datei] || tr.lvl)) { wegenNiveau++; return; }
     zu[key] = tr.datei; ergaenzt++;
   });
 });
@@ -503,17 +534,6 @@ if (require.main === module) {
    zeigt die Oberflaeche eben keinen Knopf statt einen toten.
    ============================================================ */
 `;
-  /* Niveau nachtragen: 41 Seiten tragen es nicht im Dateinamen,
-     darunter alle Bereichs-Lektionen. Der Bereich weiss es aber —
-     ohne diese Zeile stehen sie im Lernbereich ohne Niveau-Schild
-     und fallen aus jedem Filter heraus. */
-  const bereichLvl = {};
-  BEREICHE.forEach(b => { if (b.lvl) bereichLvl[b.id] = b.lvl; });
-  let lvlNachgetragen = 0;
-  haupt.forEach(x => {
-    if (!x.lvl && x.b && bereichLvl[x.b]) { x.lvl = bereichLvl[x.b]; lvlNachgetragen++; }
-  });
-  console.log('Niveau aus dem Bereich nachgetragen: ' + lvlNachgetragen);
   haupt.forEach(x => { delete x.rang; });
   const js = kopf +
     'window.LEKTIONEN = ' + JSON.stringify(haupt, null, 1) + ';\n\n' +
