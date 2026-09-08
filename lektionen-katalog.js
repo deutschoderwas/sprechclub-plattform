@@ -1706,6 +1706,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-freunde.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w08-b-teil1-nehmen-geben-bringen-b1b2.html",
+  "t": "NEHMEN, GEBEN, BRINGEN, HOLEN: Wer bewegt was wohin?",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "Unterricht-ab-07-09/vw-mo-nein-sagen-b1b2.html",
   "t": "Nein sagen, ohne unhöflich zu sein",
   "lvl": "B1–B2",
@@ -2924,6 +2932,7 @@ window.BEREICH_MEHR = {
   "Unterricht-ab-14-09/w01-b-teil1-machen-b1b2.html",
   "Unterricht-ab-14-09/w01-b-teil2-machen-b1b2.html",
   "Unterricht-ab-14-09/w02-d-teil1-nachfragen-b1b2.html",
+  "Unterricht-ab-14-09/w08-b-teil1-nehmen-geben-bringen-b1b2.html",
   "Unterricht-ab-14-09/w05-d-teil2-missverstaendnis-b1b2.html",
   "Unterricht-ab-14-09/w07-d-teil1-staerken-b1b2.html",
   "Unterricht-ab-14-09/w07-d-teil2-schwaechen-b1b2.html",
