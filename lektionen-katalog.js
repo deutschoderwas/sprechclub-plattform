@@ -682,6 +682,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-unterwegs.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w08-a-teil2-entschaedigung-a2b1.html",
+  "t": "Zug fällt aus: Entschädigung, Formular und Anruf",
+  "lvl": "A2–B1",
+  "art": "lektion",
+  "b": "unterwegs",
+  "img": "amanda/sz-unterwegs.webp"
+ },
+ {
   "d": "grammatik-adjektivdeklination-b1.html",
   "t": "Adjektiv deklination",
   "lvl": "B1",
@@ -2987,6 +2995,7 @@ window.BEREICH_MEHR = {
   "Unterricht-ab-14-09/w07-a-teil2-weg-verspaetung-a2b1.html",
   "Unterricht-ab-14-09/w07-a-teil1-ticket-fahrplan-a2b1.html",
   "Unterricht-ab-14-09/w08-a-teil1-zug-faellt-aus-a2b1.html",
+  "Unterricht-ab-14-09/w08-a-teil2-entschaedigung-a2b1.html",
   "Unterricht-ab-27-07/oeffis-auto-b1b2.html",
   "sprechclub-fuehrerschein-b2-c1.html",
   "fuehrerschein-vorbereitung-b2-c1.html",
