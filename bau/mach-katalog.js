@@ -243,6 +243,10 @@ STICH.feste.push('geschenke');
    Teil 1 und Teil 2 gehoeren zum Bereich unterwegs. */
 STICH.unterwegs.push('zug-faellt-aus', 'entschaedigung');
 
+/* Woche 8, Strang B und C: Verben des Bewegens und die Verkehrsdebatte. */
+STICH.sprachkurs.push('nehmen-geben-bringen', 'feste-wendungen');
+STICH.unterwegs.push('weniger-auto', 'autofreie-innenstadt');
+
 function bereichVon(f, ids) {
   const s = f.toLowerCase().replace(/\.html$/, '').replace(/^vorbereitung-/, '');
   /* "it-lektion.html" gehört zu "it" — dafür braucht es kein Stichwort. */

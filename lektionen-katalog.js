@@ -2003,6 +2003,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-freunde.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w08-c-teil1-weniger-auto-b1b2.html",
+  "t": "Weniger Auto — und dann? Bus, Rad, Parkplatz, Land gegen Stadt",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "unterwegs",
+  "img": "amanda/sz-unterwegs.webp"
+ },
+ {
   "d": "Unterricht-ab-14-09/w04-d-teil2-um-hilfe-bitten-b1b2.html",
   "t": "Wenn die Antwort nein ist",
   "lvl": "B1–B2",
@@ -3015,6 +3023,7 @@ window.BEREICH_MEHR = {
   "Unterricht-ab-14-09/w08-a-teil1-zug-faellt-aus-a2b1.html",
   "Unterricht-ab-14-09/w08-a-teil2-entschaedigung-a2b1.html",
   "Unterricht-ab-27-07/oeffis-auto-b1b2.html",
+  "Unterricht-ab-14-09/w08-c-teil1-weniger-auto-b1b2.html",
   "sprechclub-fuehrerschein-b2-c1.html",
   "fuehrerschein-vorbereitung-b2-c1.html",
   "Unterricht-ab-27-07/mobilitaet-b2c1.html",
