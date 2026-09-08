@@ -252,6 +252,12 @@ STICH.supermarkt.push('reklamieren');
 STICH.sprachkurs.push('kennen-wissen', 'schmecken-gefallen', 'umschreiben', 'nachfragen-aushalten');
 STICH.wohnen.push('stadt-oder-dorf');
 
+/* Woche 10 */
+STICH.medien.push('handy-vertrag', 'kuendigen-stoerung');
+STICH.sprachkurs.push('entscheidung-treffen', 'wo-sie-stehen');
+STICH.freunde.push('small-talk');
+STICH.team.push('vorschlag-aufbauen', 'einwaende-entkraeften');
+
 function bereichVon(f, ids) {
   const s = f.toLowerCase().replace(/\.html$/, '').replace(/^vorbereitung-/, '');
   /* "it-lektion.html" gehört zu "it" — dafür braucht es kein Stichwort. */
