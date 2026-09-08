@@ -239,6 +239,10 @@ STICH.sprachkurs.push('relativsaetze', 'gefuehle');
    Teil 1 und Teil 2 liegen thematisch bei den Festen. */
 STICH.feste.push('geschenke');
 
+/* Woche 8, Strang A: Zug faellt aus — meine Rechte.
+   Teil 1 und Teil 2 gehoeren zum Bereich unterwegs. */
+STICH.unterwegs.push('zug-faellt-aus', 'entschaedigung');
+
 function bereichVon(f, ids) {
   const s = f.toLowerCase().replace(/\.html$/, '').replace(/^vorbereitung-/, '');
   /* "it-lektion.html" gehört zu "it" — dafür braucht es kein Stichwort. */
