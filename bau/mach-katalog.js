@@ -362,6 +362,51 @@ SKILLS.forEach(sk => {
   });
 });
 
+/* ---------- 7a. Der Bereich kennt seine Lektion ----------
+   Nach dem Muster oben findet nur ein Bruchteil der Themen eine
+   Seite: gesucht wird wortschatz-<id>-b1.html, und so heisst kaum
+   eine Datei. Dabei steht die Antwort schon in bereiche.js — jeder
+   Bereich nennt in "lek" seine ausgearbeitete Lektion, und jedes
+   Thema haengt ueber "ws" an einem Bereich.
+
+   Genau das wird hier nachgeschlagen. Zwei Bedingungen, sonst
+   bleibt der Knopf aus: die Datei muss liegen, und das Niveau des
+   Themas muss in die Spanne des Bereichs passen. Ein C1-Thema
+   bekommt also keine A2-Lektion angehaengt, auch wenn sie
+   thematisch danebenliegt. */
+const STUFE = { A1: 1, A2: 2, B1: 3, B2: 4, C1: 5 };
+function spanne(txt) {
+  if (!txt) return null;
+  const s = String(txt).split(/[–—-]/).map(x => STUFE[x.trim().toUpperCase()]).filter(Boolean);
+  if (!s.length) return null;
+  return [Math.min.apply(null, s), Math.max.apply(null, s)];
+}
+function passtNiveau(themaLvl, bereichLvl) {
+  const x = STUFE[String(themaLvl || '').trim().toUpperCase()];
+  const sp = spanne(bereichLvl);
+  if (!x || !sp) return true;          // unbekannt heisst: nicht im Weg stehen
+  return x >= sp[0] && x <= sp[1];
+}
+const themaZuLek = {};
+BEREICHE.forEach(b => {
+  if (!b.lek || !daIst(b.lek)) return;
+  (b.ws || []).forEach(id => {
+    if (themaZuLek[id]) return;        // der erste Bereich gewinnt
+    themaZuLek[id] = { datei: b.lek, lvl: b.lvl };
+  });
+});
+let ergaenzt = 0, wegenNiveau = 0;
+SKILLS.forEach(sk => {
+  (sk.themes || []).forEach(t => {
+    const key = sk.id + ':' + t.id;
+    if (zu[key]) return;
+    const tr = themaZuLek[t.id];
+    if (!tr) return;
+    if (!passtNiveau(t.level, tr.lvl)) { wegenNiveau++; return; }
+    zu[key] = tr.datei; ergaenzt++;
+  });
+});
+
 /* ---------- 7b. Ein Bild für jedes Thema — aus unserem eigenen Bestand ----------
    In den Daten stehen bei 60 Themen Unsplash-Adressen: fremde Fotos
    von fremden Servern. Hier gilt: erst unser Themenbild, dann das
@@ -448,6 +493,17 @@ if (require.main === module) {
    zeigt die Oberflaeche eben keinen Knopf statt einen toten.
    ============================================================ */
 `;
+  /* Niveau nachtragen: 41 Seiten tragen es nicht im Dateinamen,
+     darunter alle Bereichs-Lektionen. Der Bereich weiss es aber —
+     ohne diese Zeile stehen sie im Lernbereich ohne Niveau-Schild
+     und fallen aus jedem Filter heraus. */
+  const bereichLvl = {};
+  BEREICHE.forEach(b => { if (b.lvl) bereichLvl[b.id] = b.lvl; });
+  let lvlNachgetragen = 0;
+  haupt.forEach(x => {
+    if (!x.lvl && x.b && bereichLvl[x.b]) { x.lvl = bereichLvl[x.b]; lvlNachgetragen++; }
+  });
+  console.log('Niveau aus dem Bereich nachgetragen: ' + lvlNachgetragen);
   haupt.forEach(x => { delete x.rang; });
   const js = kopf +
     'window.LEKTIONEN = ' + JSON.stringify(haupt, null, 1) + ';\n\n' +
@@ -466,6 +522,8 @@ if (require.main === module) {
     ', mit Bild: ' + haupt.filter(s => s.img).length);
   console.log('Bereiche mit Seiten: ' + Object.keys(mehr).length +
     ', Seiten ohne Bereich: ' + ohne.length);
+  console.log('ueber den Bereich ergaenzt: ' + ergaenzt +
+    ', wegen Niveau ausgelassen: ' + wegenNiveau);
   console.log('Themen mit echter Lektion: ' + Object.keys(zu).length + ' von ' + themen +
     ' (vorher wurde der Link geraten, 118 davon waren tot)');
   console.log('Themen mit eigenem Bild: ' + Object.keys(themaBild).length + ' von ' + themen);

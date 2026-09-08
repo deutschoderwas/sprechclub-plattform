@@ -26,7 +26,7 @@ const fs = require('fs');
 const path = require('path');
 
 const WURZEL = path.join(__dirname, '..');
-const VORLAGE = path.join(WURZEL, 'bäcker-cafe-a2-interaktiv.html');
+const VORLAGE = path.join(WURZEL, 'baecker-cafe-a2-interaktiv.html');
 const SCHREIBEN = process.argv.includes('--schreiben');
 
 /* ---------- Daten laden ---------- */
@@ -48,8 +48,8 @@ const DIALOG = Object.fromEntries(window.DIALOGE.map(d => [d.id, d]));
 /* Beispielsätze kommen aus zwei Quellen: dem Vokabelpool und der
    Satzsammlung. Dort steht das Zielwort zwischen §…§ — das ist die
    Markierung für den Trainer und muss hier wieder weg. */
-require(path.join(WURZEL, 'vokabel-sätze.js'));
-require(path.join(WURZEL, 'vokabel-sätze-neu.js'));
+require(path.join(WURZEL, 'vokabel-saetze.js'));
+require(path.join(WURZEL, 'vokabel-saetze-neu.js'));
 const POOL = window.VOKABELN_POOL || window.VOK_POOL || [];
 const SATZ = {};
 Object.keys(window.VOKABEL_SAETZE || {}).forEach(k => {

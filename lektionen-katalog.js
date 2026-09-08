@@ -2671,7 +2671,7 @@ window.LEKTIONEN = [
  {
   "d": "telefonieren-lektion.html",
   "t": "Am Telefon",
-  "lvl": "",
+  "lvl": "A2–B1",
   "art": "lektion",
   "b": "telefonieren",
   "img": "amanda/sz-telefonieren.webp"
@@ -2679,7 +2679,7 @@ window.LEKTIONEN = [
  {
   "d": "ankommen-lektion.html",
   "t": "Ankommen in Deutschland",
-  "lvl": "",
+  "lvl": "A2–B1",
   "art": "lektion",
   "b": "ankommen",
   "img": "amanda/sz-ankommen.webp"
@@ -2687,7 +2687,7 @@ window.LEKTIONEN = [
  {
   "d": "bau-lektion.html",
   "t": "Auf dem Bau",
-  "lvl": "",
+  "lvl": "A1–B1",
   "art": "lektion",
   "b": "bau",
   "img": "amanda/sz-bau.webp"
@@ -2695,7 +2695,7 @@ window.LEKTIONEN = [
  {
   "d": "werkstatt-lektion.html",
   "t": "Auto & Werkstatt",
-  "lvl": "",
+  "lvl": "A2–B2",
   "art": "lektion",
   "b": "werkstatt",
   "img": "amanda/sz-werkstatt.webp"
@@ -2703,7 +2703,7 @@ window.LEKTIONEN = [
  {
   "d": "bewerbung-lektion.html",
   "t": "Bewerbung & Vorstellung",
-  "lvl": "",
+  "lvl": "A2–C1",
   "art": "lektion",
   "b": "bewerbung",
   "img": "amanda/sz-bewerbung.webp"
@@ -2711,7 +2711,7 @@ window.LEKTIONEN = [
  {
   "d": "buchhaltung-lektion.html",
   "t": "Buchhaltung — Rechnung & Frist",
-  "lvl": "",
+  "lvl": "B2–C1",
   "art": "lektion",
   "b": "buchhaltung",
   "img": "amanda/sz-buchhaltung.webp"
@@ -2719,7 +2719,7 @@ window.LEKTIONEN = [
  {
   "d": "sprechclub-debatten.html",
   "t": "Debatten & Argumentieren",
-  "lvl": "",
+  "lvl": "A1–B1",
   "art": "sprechen",
   "b": "sprachkurs",
   "img": "amanda/sz-sprachkurs.webp"
@@ -2727,7 +2727,7 @@ window.LEKTIONEN = [
  {
   "d": "erste-tage-lektion.html",
   "t": "Die ersten Tage",
-  "lvl": "",
+  "lvl": "A2–B2",
   "art": "lektion",
   "b": "erste-tage",
   "img": "amanda/sz-erste-tage.webp"
@@ -2735,7 +2735,7 @@ window.LEKTIONEN = [
  {
   "d": "elektro-shk-lektion.html",
   "t": "Elektro & SHK",
-  "lvl": "",
+  "lvl": "A2–B1",
   "art": "lektion",
   "b": "elektro-shk",
   "img": "amanda/sz-elektro-shk.webp"
@@ -2743,7 +2743,7 @@ window.LEKTIONEN = [
  {
   "d": "erziehung-lektion.html",
   "t": "Erziehung — Kita & Eltern",
-  "lvl": "",
+  "lvl": "A2–B2",
   "art": "lektion",
   "b": "erziehung",
   "img": "amanda/sz-erziehung.webp"
@@ -2751,7 +2751,7 @@ window.LEKTIONEN = [
  {
   "d": "fahren-lektion.html",
   "t": "Fahren — Tour & Übergabe",
-  "lvl": "",
+  "lvl": "A2–B1",
   "art": "lektion",
   "b": "fahren",
   "img": "amanda/sz-fahren.webp"
@@ -2759,7 +2759,7 @@ window.LEKTIONEN = [
  {
   "d": "sprechclub-freies-sprechen.html",
   "t": "Freies Sprechen",
-  "lvl": "",
+  "lvl": "A1–B1",
   "art": "sprechen",
   "b": "sprachkurs",
   "img": "amanda/sz-sprachkurs.webp"
@@ -2767,7 +2767,7 @@ window.LEKTIONEN = [
  {
   "d": "friseur-beruf-lektion.html",
   "t": "Friseur — Beratung & Termin",
-  "lvl": "",
+  "lvl": "A2–B1",
   "art": "lektion",
   "b": "friseur-beruf",
   "img": "amanda/sz-friseur-beruf.webp"
@@ -2775,7 +2775,7 @@ window.LEKTIONEN = [
  {
   "d": "handel-lektion.html",
   "t": "Handel — Beraten & Kasse",
-  "lvl": "",
+  "lvl": "A2–B2",
   "art": "lektion",
   "b": "handel",
   "img": "amanda/sz-handel.webp"
@@ -2783,7 +2783,7 @@ window.LEKTIONEN = [
  {
   "d": "fuehrerschein-teil-2-handout.html",
   "t": "Handout · Führerschein Teil 2",
-  "lvl": "",
+  "lvl": "A1–C1",
   "art": "handout",
   "b": "unterwegs",
   "img": "amanda/sz-unterwegs.webp"
@@ -2791,7 +2791,7 @@ window.LEKTIONEN = [
  {
   "d": "nomen-verb-verbindungen-handout.html",
   "t": "Handout · Nomen-Verb-Verbindungen",
-  "lvl": "",
+  "lvl": "A1–B1",
   "art": "handout",
   "b": "sprachkurs",
   "img": "amanda/sz-sprachkurs.webp"
@@ -2799,7 +2799,7 @@ window.LEKTIONEN = [
  {
   "d": "heikel-lektion.html",
   "t": "Heikle Gespräche",
-  "lvl": "",
+  "lvl": "B1–C1",
   "art": "lektion",
   "b": "heikel",
   "img": "amanda/sz-heikel.webp"
@@ -2807,7 +2807,7 @@ window.LEKTIONEN = [
  {
   "d": "hotel-lektion.html",
   "t": "Hotel — Empfang & Gäste",
-  "lvl": "",
+  "lvl": "A2–B2",
   "art": "lektion",
   "b": "hotel",
   "img": "amanda/sz-hotel.webp"
@@ -2815,7 +2815,7 @@ window.LEKTIONEN = [
  {
   "d": "sprachkurs-lektion.html",
   "t": "Im Deutschkurs",
-  "lvl": "",
+  "lvl": "A1–B1",
   "art": "lektion",
   "b": "sprachkurs",
   "img": "amanda/sz-sprachkurs.webp"
@@ -2823,7 +2823,7 @@ window.LEKTIONEN = [
  {
   "d": "apotheke-lektion.html",
   "t": "In der Apotheke",
-  "lvl": "",
+  "lvl": "A1–B1",
   "art": "lektion",
   "b": "apotheke",
   "img": "amanda/sz-apotheke.webp"
@@ -2831,7 +2831,7 @@ window.LEKTIONEN = [
  {
   "d": "it-lektion.html",
   "t": "IT — Ticket & Störung",
-  "lvl": "",
+  "lvl": "B1–C1",
   "art": "lektion",
   "b": "it",
   "img": "amanda/sz-it.webp"
@@ -2839,7 +2839,7 @@ window.LEKTIONEN = [
  {
   "d": "schule-lektion.html",
   "t": "Kita & Schule",
-  "lvl": "",
+  "lvl": "A2–C1",
   "art": "lektion",
   "b": "schule",
   "img": "amanda/sz-schule.webp"
@@ -2847,7 +2847,7 @@ window.LEKTIONEN = [
  {
   "d": "konnektoren-uebung.html",
   "t": "Konnektoren – sprich flüssiger",
-  "lvl": "",
+  "lvl": "A1–B1",
   "art": "lektion",
   "b": "sprachkurs",
   "img": "amanda/sz-sprachkurs.webp"
@@ -2855,7 +2855,7 @@ window.LEKTIONEN = [
  {
   "d": "rechte-lektion.html",
   "t": "Krank, Urlaub & Schicht",
-  "lvl": "",
+  "lvl": "A2–B2",
   "art": "lektion",
   "b": "rechte",
   "img": "amanda/sz-rechte.webp"
@@ -2863,7 +2863,7 @@ window.LEKTIONEN = [
  {
   "d": "notfall-lektion.html",
   "t": "Krankenhaus & Notfall",
-  "lvl": "",
+  "lvl": "A1–B1",
   "art": "lektion",
   "b": "notfall",
   "img": "amanda/sz-notfall.webp"
@@ -2871,7 +2871,7 @@ window.LEKTIONEN = [
  {
   "d": "kasse-lektion.html",
   "t": "Krankenkasse & Versicherung",
-  "lvl": "",
+  "lvl": "B1–B2",
   "art": "lektion",
   "b": "kasse",
   "img": "amanda/sz-kasse.webp"
@@ -2879,7 +2879,7 @@ window.LEKTIONEN = [
  {
   "d": "kueche-lektion.html",
   "t": "Küche — Station & Bestellung",
-  "lvl": "",
+  "lvl": "A1–B1",
   "art": "lektion",
   "b": "kueche",
   "img": "amanda/sz-kueche.webp"
@@ -2887,7 +2887,7 @@ window.LEKTIONEN = [
  {
   "d": "lager-lektion.html",
   "t": "Lager — Ware & Versand",
-  "lvl": "",
+  "lvl": "A1–B1",
   "art": "lektion",
   "b": "lager",
   "img": "amanda/sz-lager.webp"
@@ -2895,7 +2895,7 @@ window.LEKTIONEN = [
  {
   "d": "landwirtschaft-lektion.html",
   "t": "Landwirtschaft — Hof & Saison",
-  "lvl": "",
+  "lvl": "A2–B1",
   "art": "lektion",
   "b": "landwirtschaft",
   "img": "amanda/sz-landwirtschaft.webp"
@@ -2903,7 +2903,7 @@ window.LEKTIONEN = [
  {
   "d": "medizin-lektion.html",
   "t": "Medizin — Anamnese & Aufklärung",
-  "lvl": "",
+  "lvl": "B1–C1",
   "art": "lektion",
   "b": "medizin",
   "img": "amanda/sz-medizin.webp"
@@ -2911,7 +2911,7 @@ window.LEKTIONEN = [
  {
   "d": "metall-lektion.html",
   "t": "Metall & Werkstatt",
-  "lvl": "",
+  "lvl": "A2–B1",
   "art": "lektion",
   "b": "metall",
   "img": "amanda/sz-metall.webp"
@@ -2919,7 +2919,7 @@ window.LEKTIONEN = [
  {
   "d": "medien-lektion.html",
   "t": "Nachrichten, Werbung & Netz",
-  "lvl": "",
+  "lvl": "B1–B2",
   "art": "lektion",
   "b": "medien",
   "img": "amanda/sz-medien.webp"
@@ -2927,7 +2927,7 @@ window.LEKTIONEN = [
  {
   "d": "verkaufen-lektion.html",
   "t": "Online kaufen & verkaufen",
-  "lvl": "",
+  "lvl": "A2–B1",
   "art": "lektion",
   "b": "verkaufen",
   "img": "amanda/sz-verkaufen.webp"
@@ -2935,7 +2935,7 @@ window.LEKTIONEN = [
  {
   "d": "pflege-lektion.html",
   "t": "Pflege — Schicht & Übergabe",
-  "lvl": "",
+  "lvl": "A2–C1",
   "art": "lektion",
   "b": "pflege",
   "img": "amanda/sz-pflege.webp"
@@ -2943,7 +2943,7 @@ window.LEKTIONEN = [
  {
   "d": "polizei-lektion.html",
   "t": "Polizei & Sicherheit",
-  "lvl": "",
+  "lvl": "B1",
   "art": "lektion",
   "b": "polizei",
   "img": "amanda/sz-polizei.webp"
@@ -2951,7 +2951,7 @@ window.LEKTIONEN = [
  {
   "d": "produktion-lektion.html",
   "t": "Produktion — Linie & Qualität",
-  "lvl": "",
+  "lvl": "A2–B1",
   "art": "lektion",
   "b": "produktion",
   "img": "amanda/sz-produktion.webp"
@@ -2959,7 +2959,7 @@ window.LEKTIONEN = [
  {
   "d": "reinigung-lektion.html",
   "t": "Reinigung — Plan & Übergabe",
-  "lvl": "",
+  "lvl": "A1–A2",
   "art": "lektion",
   "b": "reinigung",
   "img": "amanda/sz-reinigung.webp"
@@ -2967,7 +2967,7 @@ window.LEKTIONEN = [
  {
   "d": "sprechclub-rollenspiele.html",
   "t": "Rollenspiele & situatives Lernen",
-  "lvl": "",
+  "lvl": "A1–B1",
   "art": "sprechen",
   "b": "sprachkurs",
   "img": "amanda/sz-sprachkurs.webp"
@@ -2975,7 +2975,7 @@ window.LEKTIONEN = [
  {
   "d": "sozial-lektion.html",
   "t": "Soziale Arbeit — Beratung & Nähe",
-  "lvl": "",
+  "lvl": "B1–C1",
   "art": "lektion",
   "b": "sozial",
   "img": "amanda/sz-sozial.webp"
@@ -2983,7 +2983,7 @@ window.LEKTIONEN = [
  {
   "d": "ingenieur-lektion.html",
   "t": "Technik & Planung",
-  "lvl": "",
+  "lvl": "B2–C1",
   "art": "lektion",
   "b": "ingenieur",
   "img": "amanda/sz-ingenieur.webp"
@@ -2991,7 +2991,7 @@ window.LEKTIONEN = [
  {
   "d": "weiterbildung-lektion.html",
   "t": "Weiterbildung & Anerkennung",
-  "lvl": "",
+  "lvl": "B1–B2",
   "art": "lektion",
   "b": "weiterbildung",
   "img": "amanda/sz-weiterbildung.webp"
@@ -3390,7 +3390,58 @@ window.LEKTION_ZU = {
  "aussprache:umlaute": "aussprache-umlaute-a2.html",
  "aussprache:v-w-f": "aussprache-v-w-f-a2.html",
  "aussprache:vokale": "aussprache-vokale-a2.html",
- "aussprache:wortakzent": "aussprache-wortakzent-a2.html"
+ "aussprache:wortakzent": "aussprache-wortakzent-a2.html",
+ "wortschatz:kultur": "feste-freizeit-teil-1-a2-b1.html",
+ "wortschatz:integration": "amt-a2-b1.html",
+ "wortschatz:umgangssprache": "medien-lektion.html",
+ "wortschatz:feste": "feste-freizeit-teil-1-a2-b1.html",
+ "wortschatz:strand": "im-hotel-a2-interaktiv.html",
+ "wortschatz:redemittel": "heikel-lektion.html",
+ "wortschatz:zahnarzt": "beim-zahnarzt-a2-b1.html",
+ "wortschatz:ki-arbeitswelt": "it-lektion.html",
+ "wortschatz:a1-essen": "baecker-cafe-a2-interaktiv.html",
+ "wortschatz:a1-wohnen": "wohnen-nachbarn-teil-1-a2-b1.html",
+ "wortschatz:a1-einkaufen": "einkaufen-a2-b1.html",
+ "wortschatz:c1-amt": "amt-a2-b1.html",
+ "wortschatz:c1-arzt": "arzt-a2-b1.html",
+ "wortschatz:c1-buero": "wortschatz-arbeit-b1.html",
+ "wortschatz:c1-pflege": "pflege-lektion.html",
+ "wortschatz:c1-bewerbung": "bewerbung-lektion.html",
+ "wortschatz:c1-kunden": "heikel-lektion.html",
+ "wortschatz:amt-b1": "amt-a2-b1.html",
+ "wortschatz:bewerbung-b1": "bewerbung-lektion.html",
+ "wortschatz:pflege-b1": "pflege-lektion.html",
+ "wortschatz:a2-arzt": "arzt-a2-b1.html",
+ "wortschatz:a2-wohnung": "wohnen-nachbarn-teil-1-a2-b1.html",
+ "wortschatz:a2-einkaufen": "einkaufen-a2-b1.html",
+ "wortschatz:a2-amt": "amt-a2-b1.html",
+ "wortschatz:a2-arbeit": "erste-tage-lektion.html",
+ "wortschatz:a2-unterwegs": "nach-dem-weg-fragen-a2.html",
+ "wortschatz:a2-essen": "restaurant-a2-b1.html",
+ "wortschatz:a2-freizeit": "feste-freizeit-teil-1-a2-b1.html",
+ "wortschatz:a2-cafe": "baecker-cafe-a2-interaktiv.html",
+ "wortschatz:a2-bank": "bank-konto-a2-interaktiv.html",
+ "wortschatz:a2-post": "post-pakete-a2-interaktiv.html",
+ "wortschatz:a2-friseur": "friseur-beruf-lektion.html",
+ "wortschatz:a2-handy": "handy-internet-a2-interaktiv.html",
+ "wortschatz:a2-schule": "schule-lektion.html",
+ "wortschatz:a2-werkstatt": "werkstatt-lektion.html",
+ "wortschatz:a2-kleidung": "kleidung-shopping-teil-1-a2-b1.html",
+ "wortschatz:bau-neu": "bau-lektion.html",
+ "wortschatz:elektro-shk-neu": "elektro-shk-lektion.html",
+ "wortschatz:metall-neu": "metall-lektion.html",
+ "wortschatz:reinigung-neu": "reinigung-lektion.html",
+ "wortschatz:lager-neu": "lager-lektion.html",
+ "wortschatz:produktion-neu": "produktion-lektion.html",
+ "wortschatz:ingenieur-neu": "ingenieur-lektion.html",
+ "wortschatz:telefonieren-neu": "telefonieren-lektion.html",
+ "wortschatz:ankommen-neu": "ankommen-lektion.html",
+ "wortschatz:sprachkurs-neu": "sprachkurs-lektion.html",
+ "wortschatz:weiterbildung-neu": "weiterbildung-lektion.html",
+ "wortschatz:medien-neu": "medien-lektion.html",
+ "hoeren:umgangssprache": "medien-lektion.html",
+ "hoeren:feste": "feste-freizeit-teil-1-a2-b1.html",
+ "hoeren:zahnarzt": "beim-zahnarzt-a2-b1.html"
 };
 
 window.THEMA_BILD = {
