@@ -387,7 +387,17 @@ function passtNiveau(themaLvl, bereichLvl) {
   if (!x || !sp) return true;          // unbekannt heisst: nicht im Weg stehen
   return x >= sp[0] && x <= sp[1];
 }
+/* Zuerst die eigens gebauten Niveau-Lektionen: Sie sind fuer genau
+   ein Thema gemacht und schlagen deshalb jede Bereichs-Zuordnung. */
+const NIVEAU_LEK = (() => {
+  const f = path.join(__dirname, 'niveau-lektionen.json');
+  return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : {};
+})();
 const themaZuLek = {};
+Object.keys(NIVEAU_LEK).forEach(id => {
+  const k = NIVEAU_LEK[id];
+  if (k.datei && daIst(k.datei)) themaZuLek[id] = { datei: k.datei, lvl: k.lvl };
+});
 BEREICHE.forEach(b => {
   if (!b.lek || !daIst(b.lek)) return;
   (b.ws || []).forEach(id => {

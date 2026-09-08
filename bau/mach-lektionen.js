@@ -34,6 +34,9 @@ global.window = {};
 require(path.join(WURZEL, 'bereiche.js'));
 require(path.join(WURZEL, 'uebungen.js'));
 require(path.join(WURZEL, 'wortschatz-neu.js'));
+/* wortschatz-plus.js traegt die B2- und C1-Themen nach. Ohne diese
+   Zeile war der ganze obere Bereich fuer den Generator unsichtbar. */
+require(path.join(WURZEL, 'wortschatz-plus.js'));
 require(path.join(WURZEL, 'grammatik-neu.js'));
 require(path.join(WURZEL, 'dialoge.js'));
 require(path.join(WURZEL, 'dialoge-neu.js'));
@@ -378,6 +381,38 @@ function seite(b, t) {
   return h;
 }
 
+/* ---------- Niveau-Lektionen ----------
+   Manche Wortschatzthemen haengen zwar an einem Bereich, aber der
+   Bereich hat nur eine Lektion bis B2 — ein C1-Thema laeuft dort
+   ins Leere. Fuer diese Faelle steht in bau/niveau-lektionen.json
+   ein eigener Kopf: Bild, Niveau, Dialoge und die Texte. Wortschatz
+   und Aufgaben kommen wie ueberall aus dem Thema selbst.
+   So entsteht eine eigene Seite auf dem richtigen Niveau, im
+   gleichen Aufbau wie alle anderen. */
+const NIVEAU = (() => {
+  const f = path.join(__dirname, 'niveau-lektionen.json');
+  return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : {};
+})();
+function niveauLauf() {
+  let n = 0;
+  Object.keys(NIVEAU).forEach(id => {
+    const k = NIVEAU[id];
+    const b = { id: id, bild: k.bild, lvl: k.lvl, ws: k.ws, dlg: k.dlg, lek: k.datei };
+    const t = { titel: k.titel, ziel: k.ziel, fragen: k.fragen,
+                debatte: k.debatte, sprechen: k.sprechen, neunzig: k.neunzig };
+    const wörter = wörterVon(b);
+    if (!wörter.length) { console.log('ausgelassen: ' + id + ' (kein Wortschatz)'); return; }
+    const html = seite(b, t);
+    if (SCHREIBEN) fs.writeFileSync(path.join(WURZEL, k.datei), html, 'utf8');
+    console.log((SCHREIBEN ? 'geschrieben ' : 'wuerde bauen ') + k.datei
+      + '  [' + k.lvl + ']  (' + wörter.length + ' Wörter, '
+      + (b.dlg || []).filter(x => DIALOG[x]).length + ' Dialoge, '
+      + Math.round(html.length / 1024) + ' KB)');
+    n++;
+  });
+  return n;
+}
+
 /* ---------- Lauf ---------- */
 let gebaut = 0, übersprungen = [];
 BEREICHE.forEach(b => {
@@ -398,5 +433,6 @@ BEREICHE.forEach(b => {
   gebaut++;
 });
 console.log('---');
+gebaut += niveauLauf();
 console.log(gebaut + ' Lektionen' + (SCHREIBEN ? ' geschrieben' : ' vorbereitet'));
 if (übersprungen.length) console.log('ausgelassen: ' + übersprungen.join(', '));

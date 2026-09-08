@@ -2669,6 +2669,21 @@ window.LEKTIONEN = [
   "img": "amanda/sz-wohnen.webp"
  },
  {
+  "d": "vertrag-bank-c1-lektion.html",
+  "t": "Bank & Vertrag — bevor du unterschreibst",
+  "lvl": "C1",
+  "art": "lektion",
+  "b": "verträge"
+ },
+ {
+  "d": "familie-kita-schule-c1-lektion.html",
+  "t": "Familie, Kita & Schule — der Papierkram",
+  "lvl": "C1",
+  "art": "lektion",
+  "b": "familie",
+  "img": "amanda/sz-familie.webp"
+ },
+ {
   "d": "telefonieren-lektion.html",
   "t": "Am Telefon",
   "lvl": "A2–B1",
@@ -3404,10 +3419,12 @@ window.LEKTION_ZU = {
  "wortschatz:a1-einkaufen": "einkaufen-a2-b1.html",
  "wortschatz:c1-amt": "amt-a2-b1.html",
  "wortschatz:c1-arzt": "arzt-a2-b1.html",
+ "wortschatz:c1-vertrag": "vertrag-bank-c1-lektion.html",
  "wortschatz:c1-buero": "wortschatz-arbeit-b1.html",
  "wortschatz:c1-pflege": "pflege-lektion.html",
  "wortschatz:c1-bewerbung": "bewerbung-lektion.html",
  "wortschatz:c1-kunden": "heikel-lektion.html",
+ "wortschatz:c1-familie": "familie-kita-schule-c1-lektion.html",
  "wortschatz:amt-b1": "amt-a2-b1.html",
  "wortschatz:bewerbung-b1": "bewerbung-lektion.html",
  "wortschatz:pflege-b1": "pflege-lektion.html",
