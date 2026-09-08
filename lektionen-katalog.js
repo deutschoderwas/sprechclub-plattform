@@ -1460,6 +1460,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-feste.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w09-c-teil2-stadt-oder-dorf-b1b2.html",
+  "t": "Die Debatte: Stadt gegen Dorf",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "wohnen",
+  "img": "amanda/sz-wohnen.webp"
+ },
+ {
   "d": "Unterricht-ab-14-09/w03-c-teil2-vier-tage-woche-b1b2.html",
   "t": "Die Debatte: Vier-Tage-Woche für alle?",
   "lvl": "B1–B2",
@@ -1738,6 +1746,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-feste.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w09-d-teil2-nachfragen-aushalten-b1b2.html",
+  "t": "Nachfragen aushalten und trotzdem ruhig bleiben",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "Unterricht-ab-14-09/w02-d-teil1-nachfragen-b1b2.html",
   "t": "Nachfragen, bis es klar ist",
   "lvl": "B1–B2",
@@ -1901,6 +1917,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-arzt.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w09-c-teil1-stadt-oder-dorf-b1b2.html",
+  "t": "Stadt oder Dorf? Miete, Ruhe, Bus, Nachbarn",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "wohnen",
+  "img": "amanda/sz-wohnen.webp"
+ },
+ {
   "d": "Unterricht-ab-27-07/stadt-land-b1b2.html",
   "t": "Stadt oder Land?",
   "lvl": "B1–B2",
@@ -2053,6 +2077,14 @@ window.LEKTIONEN = [
  {
   "d": "Unterricht-ab-14-09/w04-d-teil2-um-hilfe-bitten-b1b2.html",
   "t": "Wenn die Antwort nein ist",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/w09-d-teil1-umschreiben-b1b2.html",
+  "t": "Wenn dir das Wort fehlt: umschreiben statt steckenbleiben",
   "lvl": "B1–B2",
   "art": "lektion",
   "b": "sprachkurs",
@@ -3006,6 +3038,7 @@ window.BEREICH_MEHR = {
   "Unterricht-ab-14-09/w03-b-teil1-legen-stellen-setzen-b1b2.html",
   "Unterricht-ab-14-09/w01-b-teil1-machen-b1b2.html",
   "Unterricht-ab-14-09/w01-b-teil2-machen-b1b2.html",
+  "Unterricht-ab-14-09/w09-d-teil2-nachfragen-aushalten-b1b2.html",
   "Unterricht-ab-14-09/w02-d-teil1-nachfragen-b1b2.html",
   "Unterricht-ab-14-09/w08-b-teil1-nehmen-geben-bringen-b1b2.html",
   "Unterricht-ab-14-09/w05-d-teil2-missverstaendnis-b1b2.html",
@@ -3019,6 +3052,7 @@ window.BEREICH_MEHR = {
   "Unterricht-ab-14-09/w07-b-teil2-wann-sie-passen-b1b2.html",
   "Unterricht-ab-14-09/w06-b-teil2-ver-anrichtet-b1b2.html",
   "Unterricht-ab-14-09/w04-d-teil2-um-hilfe-bitten-b1b2.html",
+  "Unterricht-ab-14-09/w09-d-teil1-umschreiben-b1b2.html",
   "Unterricht-ab-14-09/w03-d-teil2-ehrlich-hoeflich-b1b2.html",
   "Unterricht-ab-14-09/w03-b-teil2-legen-stellen-setzen-b1b2.html",
   "Unterricht-ab-14-09/w09-b-teil1-kennen-wissen-b1b2.html",
@@ -3173,6 +3207,8 @@ window.BEREICH_MEHR = {
   "wohnungssuche-b1.html",
   "maengel-melden-b1.html",
   "wohnformen-wg-b1-interaktiv.html",
+  "Unterricht-ab-14-09/w09-c-teil2-stadt-oder-dorf-b1b2.html",
+  "Unterricht-ab-14-09/w09-c-teil1-stadt-oder-dorf-b1b2.html",
   "Unterricht-ab-27-07/stadt-land-b1b2.html",
   "stadt-oder-land-teil-1-b1-b2.html",
   "Unterricht-ab-27-07/umzug-b1b2.html",
