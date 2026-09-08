@@ -1305,6 +1305,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-sprachkurs.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w08-d-teil1-am-telefon-b1b2.html",
+  "t": "Am Telefon: Sich melden und zur Sache kommen",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "Unterricht-ab-14-09/w04-b-teil1-vorsilben-an-ab-auf-b1b2.html",
   "t": "an-, ab-, auf-, aus-, ein-: fünf Silben, hundert Verben",
   "lvl": "B1–B2",
@@ -2938,6 +2946,7 @@ window.BEREICH_MEHR = {
   "sprachspielclub-freibad-b1-b2.html",
   "sprachspielclub-bahnhof-b1-b2.html",
   "sprachspielclub-flughafen-b1-b2.html",
+  "Unterricht-ab-14-09/w08-d-teil1-am-telefon-b1b2.html",
   "Unterricht-ab-14-09/w04-b-teil1-vorsilben-an-ab-auf-b1b2.html",
   "sprachspielclub-flohmarkt-b1-b2.html",
   "sprachspielclub-volksfest-b1-b2.html",
