@@ -2955,6 +2955,22 @@ window.LEKTIONEN = [
   "img": "amanda/sz-bewerbung.webp"
  },
  {
+  "d": "grammatik-a1-akkusativ-a1.html",
+  "t": "Der Akkusativ: nur der ändert sich",
+  "lvl": "A1–A1",
+  "art": "grammatik",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
+  "d": "grammatik-a1-artikel-a1.html",
+  "t": "der, die, das: das erste große Rätsel",
+  "lvl": "A1–A1",
+  "art": "grammatik",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "erste-tage-lektion.html",
   "t": "Die ersten Tage",
   "lvl": "A2–B2",
@@ -2969,6 +2985,14 @@ window.LEKTIONEN = [
   "art": "lektion",
   "b": "erziehung",
   "img": "amanda/sz-erziehung.webp"
+ },
+ {
+  "d": "grammatik-a1-fragen-a1.html",
+  "t": "Fragen stellen: mit W-Wort und ohne",
+  "lvl": "A1–A1",
+  "art": "grammatik",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
  },
  {
   "d": "handel-lektion.html",
@@ -3049,6 +3073,14 @@ window.LEKTIONEN = [
   "art": "lektion",
   "b": "sozial",
   "img": "amanda/sz-sozial.webp"
+ },
+ {
+  "d": "grammatik-a1-praesens-a1.html",
+  "t": "Verben im Präsens: die Endung verrät, wer spricht",
+  "lvl": "A1–A1",
+  "art": "grammatik",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
  }
 ];
 
@@ -3403,6 +3435,10 @@ window.LEKTION_ZU = {
  "grammatik:relativsaetze": "grammatik-relativsaetze-b1.html",
  "grammatik:temporale-nebensaetze": "grammatik-temporale-nebensaetze-b1.html",
  "grammatik:wechselpraepositionen": "grammatik-wechselpraepositionen-b1.html",
+ "grammatik:a1-artikel": "grammatik-a1-artikel-a1.html",
+ "grammatik:a1-praesens": "grammatik-a1-praesens-a1.html",
+ "grammatik:a1-akkusativ": "grammatik-a1-akkusativ-a1.html",
+ "grammatik:a1-fragen": "grammatik-a1-fragen-a1.html",
  "grammatik:modalverben": "grammatik-modalverben-a2.html",
  "grammatik:trennbare-verben": "grammatik-trennbare-verben-a1.html",
  "grammatik:perfekt-bilden": "grammatik-perfekt-a2.html",
