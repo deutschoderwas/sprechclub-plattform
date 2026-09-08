@@ -2126,6 +2126,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-sprachkurs.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w09-b-teil2-schmecken-gefallen-b1b2.html",
+  "t": "Wörter, die sich ähneln: schmecken, gefallen, mögen — sehen, sagen, sprechen",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "Unterricht-ab-14-09/w02-d-teil2-nachfragen-b1b2.html",
   "t": "Zusammenfassen und absichern",
   "lvl": "B1–B2",
@@ -3014,6 +3022,7 @@ window.BEREICH_MEHR = {
   "Unterricht-ab-14-09/w03-d-teil2-ehrlich-hoeflich-b1b2.html",
   "Unterricht-ab-14-09/w03-b-teil2-legen-stellen-setzen-b1b2.html",
   "Unterricht-ab-14-09/w09-b-teil1-kennen-wissen-b1b2.html",
+  "Unterricht-ab-14-09/w09-b-teil2-schmecken-gefallen-b1b2.html",
   "Unterricht-ab-14-09/w02-d-teil2-nachfragen-b1b2.html",
   "grammatik-passiv-b2.html",
   "grammatik-partizipattribut-b2.html",
