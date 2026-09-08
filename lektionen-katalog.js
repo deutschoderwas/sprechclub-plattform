@@ -396,6 +396,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-telefonieren.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w09-a-teil2-reklamieren-a2b1.html",
+  "t": "Es ist anders geworden: umtauschen und reklamieren",
+  "lvl": "A2–B1",
+  "art": "lektion",
+  "b": "supermarkt",
+  "img": "amanda/sz-supermarkt.webp"
+ },
+ {
   "d": "Unterricht-ab-14-09/w01-a-teil2-baecker-supermarkt-a2b1.html",
   "t": "Etwas ist alle — und jetzt?",
   "lvl": "A2–B1",
@@ -488,8 +496,8 @@ window.LEKTIONEN = [
   "t": "Im Restaurant: bestellen — und sagen, wenn etwas nicht stimmt",
   "lvl": "A2–B1",
   "art": "lektion",
-  "b": "restaurant",
-  "img": "amanda/sz-restaurant.webp"
+  "b": "supermarkt",
+  "img": "amanda/sz-supermarkt.webp"
  },
  {
   "d": "Unterricht-ab-14-09/w04-a-teil1-zimmer-moebel-a2b1.html",
@@ -3031,8 +3039,7 @@ window.BEREICH_MEHR = {
  "restaurant": [
   "wortschatzboost-essen-restaurant-a2.html",
   "Unterricht-ab-27-07/foodtrends-a2b1.html",
-  "Unterricht-ab-27-07/restaurant-a2b1.html",
-  "Unterricht-ab-14-09/w05-a-teil2-restaurant-reklamieren-a2b1.html"
+  "Unterricht-ab-27-07/restaurant-a2b1.html"
  ],
  "familie": [
   "mein-tag-a2.html",
@@ -3097,7 +3104,9 @@ window.BEREICH_MEHR = {
  "supermarkt": [
   "Unterricht-ab-14-09/w01-a-teil1-baecker-supermarkt-a2b1.html",
   "Unterricht-ab-27-07/einkaufen-a2b1.html",
+  "Unterricht-ab-14-09/w09-a-teil2-reklamieren-a2b1.html",
   "Unterricht-ab-14-09/w01-a-teil2-baecker-supermarkt-a2b1.html",
+  "Unterricht-ab-14-09/w05-a-teil2-restaurant-reklamieren-a2b1.html",
   "Unterricht-ab-14-09/w06-a-teil2-kleidung-umtauschen-a2b1.html",
   "Unterricht-ab-27-07/reklamation-a2b1.html",
   "vorbereitung-alles-teurer-b1.html",

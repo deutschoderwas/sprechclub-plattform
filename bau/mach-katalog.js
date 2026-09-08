@@ -247,6 +247,11 @@ STICH.unterwegs.push('zug-faellt-aus', 'entschaedigung');
 STICH.sprachkurs.push('nehmen-geben-bringen', 'feste-wendungen');
 STICH.unterwegs.push('weniger-auto', 'autofreie-innenstadt');
 
+/* Woche 9: Friseur und Umtausch, Wortpaare, Stadt oder Dorf, Erklaeren. */
+STICH.supermarkt.push('reklamieren');
+STICH.sprachkurs.push('kennen-wissen', 'schmecken-gefallen', 'umschreiben', 'nachfragen-aushalten');
+STICH.wohnen.push('stadt-oder-dorf');
+
 function bereichVon(f, ids) {
   const s = f.toLowerCase().replace(/\.html$/, '').replace(/^vorbereitung-/, '');
   /* "it-lektion.html" gehört zu "it" — dafür braucht es kein Stichwort. */
