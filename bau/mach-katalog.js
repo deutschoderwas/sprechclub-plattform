@@ -370,31 +370,6 @@ const daIst = f => fs.existsSync(path.join(W, f));
 const zu = {};
 
 
-/* Der Link "Passende Lektion" wurde bisher geraten. Hier wird er
-   nachgeschlagen — und nur eingetragen, wenn die Datei existiert. */
-SKILLS.forEach(sk => {
-  (sk.themes || []).forEach(t => {
-    const k = [];
-    if (sk.id === 'aussprache') k.push('aussprache-' + t.id + '-a2.html');
-    if (sk.id === 'grammatik') k.push('grammatik-' + t.id + '-b1.html', 'grammatik-' + t.id + '-b2.html', 'grammatik-' + t.id + '-b2-c1.html');
-    k.push('wortschatz-' + t.id + '-b1.html', 'wortschatzboost-' + t.id + '-b1.html',
-           'wortschatzboost-' + t.id + '-b2.html', 'wortschatzboost-' + t.id + '-a2.html');
-    for (const f of k) if (daIst(f)) { zu[sk.id + ':' + t.id] = f; break; }
-  });
-});
-
-/* ---------- 7a. Der Bereich kennt seine Lektion ----------
-   Nach dem Muster oben findet nur ein Bruchteil der Themen eine
-   Seite: gesucht wird wortschatz-<id>-b1.html, und so heisst kaum
-   eine Datei. Dabei steht die Antwort schon in bereiche.js — jeder
-   Bereich nennt in "lek" seine ausgearbeitete Lektion, und jedes
-   Thema haengt ueber "ws" an einem Bereich.
-
-   Genau das wird hier nachgeschlagen. Zwei Bedingungen, sonst
-   bleibt der Knopf aus: die Datei muss liegen, und das Niveau des
-   Themas muss in die Spanne des Bereichs passen. Ein C1-Thema
-   bekommt also keine A2-Lektion angehaengt, auch wenn sie
-   thematisch danebenliegt. */
 const STUFE = { A1: 1, A2: 2, B1: 3, B2: 4, C1: 5 };
 function spanne(txt) {
   if (!txt) return null;
@@ -424,6 +399,63 @@ const NIVEAU_LEK = (() => {
    darin ist aber klar eine B1-Seite. */
 const seitenLvl = {};
 haupt.forEach(x => { if (x.lvl) seitenLvl[x.d] = x.lvl; });
+/* Ein paar Seiten heissen anders als ihr Thema — sie sind aelter als
+   die Themenliste. Hier stehen sie namentlich, damit auch sie
+   gefunden werden. Aufgenommen wird nur, was inhaltlich wirklich
+   dasselbe behandelt; die Niveau-Pruefung greift danach trotzdem. */
+const ALIAS = {
+  'perfekt-bilden': 'grammatik-perfekt-a2.html',
+  'n-deklination': 'grammatik-ndeklination-b1.html',
+  'praepositionaladverbien': 'grammatik-dawoerter-b1.html',
+  'partizipialattribut': 'grammatik-partizipattribut-b2.html',
+  'passiv-ersatz': 'grammatik-passiversatz-b2.html',
+  'weil-dass-wenn': 'grammatik-nebensaetze-b1.html'
+};
+
+/* Der Link "Passende Lektion" wurde bisher geraten. Hier wird er
+   nachgeschlagen — und nur eingetragen, wenn die Datei existiert. */
+SKILLS.forEach(sk => {
+  (sk.themes || []).forEach(t => {
+    const k = [];
+    /* Die Seiten tragen ihr eigenes Niveau im Namen, nicht das der
+       Suche. Deshalb werden alle Stufen durchprobiert — vorher wurden
+       nur b1 und b2 gesucht, und saemtliche A1-, A2- und C1-Seiten
+       blieben unentdeckt, obwohl sie laengst liegen. */
+    const stufen = ['a1', 'a2', 'b1', 'b2', 'c1', 'b2-c1', 'a1-a2'];
+    if (sk.id === 'aussprache') {
+      stufen.forEach(n => k.push('aussprache-' + t.id + '-' + n + '.html'));
+      k.push('aussprache-' + t.id + '.html');
+    }
+    if (sk.id === 'grammatik') {
+      stufen.forEach(n => k.push('grammatik-' + t.id + '-' + n + '.html'));
+      k.push('grammatik-' + t.id + '.html');
+      if (ALIAS[t.id]) k.unshift(ALIAS[t.id]);
+    }
+    k.push('wortschatz-' + t.id + '-b1.html', 'wortschatzboost-' + t.id + '-b1.html',
+           'wortschatzboost-' + t.id + '-b2.html', 'wortschatzboost-' + t.id + '-a2.html');
+    /* Auch hier gilt die Niveau-Regel: Eine B1-Seite ist fuer ein
+       B2-Thema keine Antwort. Vorher wurde der erste Treffer genommen,
+       egal auf welcher Stufe er lag. */
+    for (const f of k) {
+      if (!daIst(f)) continue;
+      if (!passtNiveau(t.level, seitenLvl[f] || niveau(f))) continue;
+      zu[sk.id + ':' + t.id] = f; break;
+    }
+  });
+});
+
+/* ---------- 7a. Der Bereich kennt seine Lektion ----------
+   Nach dem Muster oben findet nur ein Bruchteil der Themen eine
+   Seite: gesucht wird wortschatz-<id>-b1.html, und so heisst kaum
+   eine Datei. Dabei steht die Antwort schon in bereiche.js — jeder
+   Bereich nennt in "lek" seine ausgearbeitete Lektion, und jedes
+   Thema haengt ueber "ws" an einem Bereich.
+
+   Genau das wird hier nachgeschlagen. Zwei Bedingungen, sonst
+   bleibt der Knopf aus: die Datei muss liegen, und das Niveau des
+   Themas muss in die Spanne des Bereichs passen. Ein C1-Thema
+   bekommt also keine A2-Lektion angehaengt, auch wenn sie
+   thematisch danebenliegt. */
 const themaZuLek = {};
 Object.keys(NIVEAU_LEK).forEach(id => {
   const k = NIVEAU_LEK[id];
