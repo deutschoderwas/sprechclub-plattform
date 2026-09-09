@@ -406,7 +406,7 @@
           +    '<span class="pw-tel-av">'+E(String(a.an||'?').charAt(0))+'</span>'
           +    '<b>'+E(a.an||'Nachricht')+'</b></div>'
           +  '<div class="pw-tel-raum">'
-          +    '<textarea id="pwText" class="pw-ta" rows="6"'
+          +    '<textarea id="pwText" class="pw-ta" rows="6" spellcheck="false" autocorrect="off" autocapitalize="sentences"'
           +      ' placeholder="Tippe deine Nachricht …">'+E(text)+'</textarea></div>';
       } else if(srt==='email'){
         h += '<div class="pw-mail-bar"><i></i><i></i><i></i><span>Neue E-Mail</span></div>'
@@ -414,11 +414,11 @@
           +    '<div><span>An</span><b>'+E(a.an||'')+'</b></div>'
           +    (a.betreff?'<div><span>Betreff</span><b>'+E(a.betreff)+'</b></div>':'')
           +  '</div>'
-          +  '<textarea id="pwText" class="pw-ta" rows="7"'
+          +  '<textarea id="pwText" class="pw-ta" rows="7" spellcheck="false" autocorrect="off" autocapitalize="sentences"'
           +    ' placeholder="Schreib hier deine E-Mail …">'+E(text)+'</textarea>';
       } else {
         h += (a.an ? '<div class="pw-zet-an">Für <b>'+E(a.an)+'</b></div>' : '')
-          +  '<textarea id="pwText" class="pw-ta" rows="7"'
+          +  '<textarea id="pwText" class="pw-ta" rows="7" spellcheck="false" autocorrect="off" autocapitalize="sentences"'
           +    ' placeholder="Schreib hier deinen Zettel …">'+E(text)+'</textarea>';
       }
       h += '<div class="pw-fuss">'

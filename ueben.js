@@ -1073,7 +1073,7 @@
          Man schreibt selbst, dann sieht man eine moegliche Fassung. */
       h+='<div class="ub-q">✍️ '+E(e.auftrag||'Schreib deine Antwort:')+'</div>'+
          tonKnoepfe(e.auftrag)+
-         '<textarea class="ub-schreib" id="ubSchreib" placeholder="Schreib hier …" oninput="ubSchreibZaehl()"></textarea>'+
+         '<textarea class="ub-schreib" id="ubSchreib" spellcheck="false" autocorrect="off" placeholder="Schreib hier …" oninput="ubSchreibZaehl()"></textarea>'+
          '<div class="ub-zaehl" id="ubZaehl">0 Wörter</div>';
       if(e.tipp) h+='<div class="ub-tip" style="text-align:left;margin-top:8px">💡 '+E(e.tipp)+'</div>';
       btn.disabled=false; btn.textContent='Lösung zeigen';

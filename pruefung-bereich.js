@@ -322,7 +322,13 @@
     { id:'video',   z:'🎬', f:'lila',  t:'Videokurs',
       k:'Erklärungen zum Anschauen, direkt beim passenden Teil.' },
     { id:'bereit',  z:'🎯', f:'gruen', t:'Bist du bereit?',
-      k:'Eine ehrliche Einschätzung, bevor du dich anmeldest.' }
+      k:'Eine ehrliche Einschätzung, bevor du dich anmeldest.' },
+    /* Seit 2026 laufen Hoeren, Lesen und Schreiben am Rechner.
+       Getippt wird auf QWERTZ, ohne Rechtschreibpruefung. Das ist
+       eine eigene Fertigkeit: man kann B2 koennen und trotzdem an
+       „Staatsangehoerigkeit" scheitern, weil das ö nicht kommt. */
+    { id:'bildschirm', z:'⌨️', f:'lila', t:'Am Bildschirm',
+      k:'Die Prüfung läuft jetzt am Rechner. Tippen, wie sie es verlangt.' }
   ];
 
   function gesamtProzent(p){
@@ -465,6 +471,7 @@
     if(id==='material') return materialBlock(p);
     if(id==='video')    return videoBlock(p);
     if(id==='bereit')   return bereitBlock(p);
+    if(id==='bildschirm') return (window.bildschirmBlock ? window.bildschirmBlock(p) : '');
     return '';
   }
 
