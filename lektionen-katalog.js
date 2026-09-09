@@ -2955,6 +2955,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-bewerbung.webp"
  },
  {
+  "d": "grammatik-a1-wortstellung-a1.html",
+  "t": "Das Verb steht an zweiter Stelle",
+  "lvl": "A1–A1",
+  "art": "grammatik",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "grammatik-a1-akkusativ-a1.html",
   "t": "Der Akkusativ: nur der ändert sich",
   "lvl": "A1–A1",
@@ -2977,6 +2985,14 @@ window.LEKTIONEN = [
   "art": "lektion",
   "b": "erste-tage",
   "img": "amanda/sz-erste-tage.webp"
+ },
+ {
+  "d": "grammatik-a1-plural-a1.html",
+  "t": "Ein Buch, zwei Bücher: der Plural",
+  "lvl": "A1–A1",
+  "art": "grammatik",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
  },
  {
   "d": "erziehung-lektion.html",
@@ -3011,6 +3027,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-unterwegs.webp"
  },
  {
+  "d": "grammatik-a2-hoeflich-a2.html",
+  "t": "hätte, könnte, würde: höflich fragen",
+  "lvl": "A2–A2",
+  "art": "grammatik",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "heikel-lektion.html",
   "t": "Heikle Gespräche",
   "lvl": "B1–C1",
@@ -3025,6 +3049,14 @@ window.LEKTIONEN = [
   "art": "lektion",
   "b": "hotel",
   "img": "amanda/sz-hotel.webp"
+ },
+ {
+  "d": "grammatik-a1-pronomen-a1.html",
+  "t": "ich, du, er — und mich, dich, ihn",
+  "lvl": "A1–A1",
+  "art": "grammatik",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
  },
  {
   "d": "it-lektion.html",
@@ -3059,12 +3091,28 @@ window.LEKTIONEN = [
   "img": "amanda/sz-medizin.webp"
  },
  {
+  "d": "grammatik-a2-futur-a2.html",
+  "t": "Morgen fahre ich: die Zukunft",
+  "lvl": "A2–A2",
+  "art": "grammatik",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "pflege-lektion.html",
   "t": "Pflege — Schicht & Übergabe",
   "lvl": "A2–C1",
   "art": "lektion",
   "b": "pflege",
   "img": "amanda/sz-pflege.webp"
+ },
+ {
+  "d": "grammatik-a1-sein-haben-a1.html",
+  "t": "sein und haben: die zwei wichtigsten Verben",
+  "lvl": "A1–A1",
+  "art": "grammatik",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
  },
  {
   "d": "sozial-lektion.html",
@@ -3439,6 +3487,12 @@ window.LEKTION_ZU = {
  "grammatik:a1-praesens": "grammatik-a1-praesens-a1.html",
  "grammatik:a1-akkusativ": "grammatik-a1-akkusativ-a1.html",
  "grammatik:a1-fragen": "grammatik-a1-fragen-a1.html",
+ "grammatik:a1-sein-haben": "grammatik-a1-sein-haben-a1.html",
+ "grammatik:a1-plural": "grammatik-a1-plural-a1.html",
+ "grammatik:a1-pronomen": "grammatik-a1-pronomen-a1.html",
+ "grammatik:a1-wortstellung": "grammatik-a1-wortstellung-a1.html",
+ "grammatik:a2-hoeflich": "grammatik-a2-hoeflich-a2.html",
+ "grammatik:a2-futur": "grammatik-a2-futur-a2.html",
  "grammatik:modalverben": "grammatik-modalverben-a2.html",
  "grammatik:trennbare-verben": "grammatik-trennbare-verben-a1.html",
  "grammatik:perfekt-bilden": "grammatik-perfekt-a2.html",
