@@ -2390,6 +2390,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-sprachkurs.webp"
  },
  {
+  "d": "grammatik-adjektivendungen-sicher-b2.html",
+  "t": "Adjektivendungen sicher: mit der, mit ein, ohne Artikel",
+  "lvl": "B2",
+  "art": "grammatik",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "belastung-vorsorge-b2-lektion.html",
   "t": "Belastung & Vorsorge",
   "lvl": "B2",
@@ -2416,6 +2424,14 @@ window.LEKTIONEN = [
  {
   "d": "grammatik-partizipattribut-b2.html",
   "t": "das rennende Kind, der reparierte Reifen",
+  "lvl": "B2",
+  "art": "grammatik",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
+  "d": "grammatik-genitiv-schriftdeutsch-b2.html",
+  "t": "Der Genitiv im Schriftdeutsch: wegen, trotz, während, innerhalb",
   "lvl": "B2",
   "art": "grammatik",
   "b": "sprachkurs",
@@ -2450,6 +2466,22 @@ window.LEKTIONEN = [
   "t": "Ein Tag am Strand",
   "lvl": "B2",
   "art": "spiel",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
+  "d": "grammatik-gegensatz-konnektoren-b2.html",
+  "t": "Gegensätze: obwohl, trotzdem, trotz, dennoch",
+  "lvl": "B2",
+  "art": "grammatik",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
+  "d": "grammatik-konjunktiv2-vergangenheit-b2.html",
+  "t": "Hätte, wäre — über das reden, was nicht passiert ist",
+  "lvl": "B2",
+  "art": "grammatik",
   "b": "sprachkurs",
   "img": "amanda/sz-sprachkurs.webp"
  },
@@ -2494,6 +2526,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-sprachkurs.webp"
  },
  {
+  "d": "grammatik-nominalisierung-praepositionen-b2.html",
+  "t": "Nominalisierung: vom Nebensatz zur Präposition",
+  "lvl": "B2",
+  "art": "grammatik",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "wortschatzboost-emotionen-nuanciert-b2.html",
   "t": "Nuancierte Gefühle & Stimmungen",
   "lvl": "B2",
@@ -2532,6 +2572,14 @@ window.LEKTIONEN = [
   "art": "lektion",
   "b": "heikel",
   "img": "amanda/sz-heikel.webp"
+ },
+ {
+  "d": "grammatik-verben-mit-praeposition-b2.html",
+  "t": "Verben mit fester Präposition: warten auf, sich freuen über",
+  "lvl": "B2",
+  "art": "grammatik",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
  },
  {
   "d": "grammatik-nominalstil-b2.html",
@@ -3483,6 +3531,7 @@ window.LEKTION_ZU = {
  "grammatik:relativsaetze": "grammatik-relativsaetze-b1.html",
  "grammatik:temporale-nebensaetze": "grammatik-temporale-nebensaetze-b1.html",
  "grammatik:wechselpraepositionen": "grammatik-wechselpraepositionen-b1.html",
+ "grammatik:nominalisierung": "grammatik-nominalisierung-praepositionen-b2.html",
  "grammatik:a1-artikel": "grammatik-a1-artikel-a1.html",
  "grammatik:a1-praesens": "grammatik-a1-praesens-a1.html",
  "grammatik:a1-akkusativ": "grammatik-a1-akkusativ-a1.html",
@@ -3506,6 +3555,11 @@ window.LEKTION_ZU = {
  "grammatik:praepositionen-dativ": "grammatik-praepositionen-dativ-a2.html",
  "grammatik:praeteritum-sein-haben": "grammatik-praeteritum-sein-haben-a2.html",
  "grammatik:passiv-b2": "grammatik-passiv-b2.html",
+ "grammatik:konjunktiv2-vergangenheit": "grammatik-konjunktiv2-vergangenheit-b2.html",
+ "grammatik:genitiv-b2": "grammatik-genitiv-schriftdeutsch-b2.html",
+ "grammatik:gegensatz-konnektoren": "grammatik-gegensatz-konnektoren-b2.html",
+ "grammatik:verben-mit-praeposition": "grammatik-verben-mit-praeposition-b2.html",
+ "grammatik:adjektivendungen": "grammatik-adjektivendungen-sicher-b2.html",
  "grammatik:partizipialattribut": "grammatik-partizipattribut-b2.html",
  "grammatik:nominalstil": "grammatik-nominalstil-b2.html",
  "grammatik:passiv-ersatz": "grammatik-passiversatz-b2.html",

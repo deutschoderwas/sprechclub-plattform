@@ -409,7 +409,12 @@ const ALIAS = {
   'praepositionaladverbien': 'grammatik-dawoerter-b1.html',
   'partizipialattribut': 'grammatik-partizipattribut-b2.html',
   'passiv-ersatz': 'grammatik-passiversatz-b2.html',
-  'weil-dass-wenn': 'grammatik-nebensaetze-b1.html'
+  'weil-dass-wenn': 'grammatik-nebensaetze-b1.html',
+  /* Diese drei tragen einen erklaerenden Zusatz im Namen, damit sie
+     nicht mit der aelteren B1-Seite desselben Themas zusammenfallen. */
+  'nominalisierung': 'grammatik-nominalisierung-praepositionen-b2.html',
+  'genitiv-b2': 'grammatik-genitiv-schriftdeutsch-b2.html',
+  'adjektivendungen': 'grammatik-adjektivendungen-sicher-b2.html'
 };
 
 /* Der Link "Passende Lektion" wurde bisher geraten. Hier wird er
