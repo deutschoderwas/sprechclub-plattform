@@ -32,6 +32,87 @@
     if(a===b) return true;
     if(b.length>=5 && abstand(a,b)<=1) return true;
     return false; }
+  /* ---------- Aussprache hoeren und bewerten ----------
+     Der Browser bringt die Spracherkennung mit; chat-engine.js und
+     lernen.js nutzen sie laengst. Im Uebungsbereich fehlte sie: 1162
+     Sprechaufgaben endeten mit „hat geklappt", selbst angekreuzt.
+
+     Verglichen wird Wort fuer Wort, nicht Buchstabe fuer Buchstabe.
+     Die Erkennung schreibt „Ich haette gern einen Kaffee" auch dann
+     sauber, wenn jemand mit Akzent spricht — sie verschluckt aber
+     gern ein kurzes Wort oder haengt eines an. Ein Zeichenvergleich
+     wuerde daran scheitern, ein Wortvergleich nicht. */
+  function woerterVonSatz(s){
+    return String(s==null?'':s).toLowerCase()
+      .replace(/[.,!?;:„“”"'»«()\-–—]/g,' ')
+      .split(/\s+/).filter(Boolean);
+  }
+  function sprechVergleich(ziel, gehoert){
+    /* Verglichen wird klein geschrieben, gezeigt wird das Wort so, wie
+       es in der Aufgabe steht — „Straße" und nicht „straße". */
+    var zRoh=String(ziel==null?'':ziel).split(/\s+/).filter(Boolean);
+    var z=woerterVonSatz(ziel), g=woerterVonSatz(gehoert);
+    if(!z.length) return {quote:0, fehlt:[], z:z};
+    var frei=g.slice(), fehlt=[], treffer=0;
+    z.forEach(function(w,n){
+      var i=-1, k;
+      for(k=0;k<frei.length;k++){ if(frei[k]===w || fastGleich(frei[k],w)){ i=k; break; } }
+      if(i>=0){ frei.splice(i,1); treffer++; }
+      else {
+        /* Nur wenn die beiden Zerlegungen an dieser Stelle dasselbe Wort
+           meinen, darf die Schreibweise aus der Aufgabe genommen werden.
+           „S-Bahn" faellt beim Vergleich in zwei Woerter, die Rohliste
+           nicht — dann zaehlt die kleine Fassung. */
+        var roh=String(zRoh[n]||'').replace(/^[«»„“”"'(]+|[.,!?;:«»„“”"')]+$/g,'');
+        fehlt.push(roh.toLowerCase()===w ? roh : w);
+      }
+    });
+    return {quote: treffer/z.length, fehlt: fehlt, z: z};
+  }
+  var srLaeuft=null;
+  function sprechStop(){ try{ if(srLaeuft) srLaeuft.stop(); }catch(e){} srLaeuft=null; }
+  window.ubKannHoeren=function(){ return !!(window.SpeechRecognition||window.webkitSpeechRecognition); };
+  window.ubSprechen=function(ziel){
+    var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+    var k=document.getElementById('ubMic'), box=document.getElementById('ubGehoert');
+    if(!SR||!k) return;
+    if(srLaeuft){ sprechStop(); return; }
+    stopAudio();
+    var r;
+    try{ r=new SR(); }catch(e){ return; }
+    r.lang='de-DE'; r.interimResults=true; r.continuous=false; r.maxAlternatives=1;
+    srLaeuft=r; k.classList.add('hoert'); k.textContent='🎙️ Ich höre zu … (tippen zum Beenden)';
+    var fest='';
+    r.onresult=function(ev){
+      var zw='';
+      for(var i=ev.resultIndex;i<ev.results.length;i++){
+        if(ev.results[i].isFinal) fest+=ev.results[i][0].transcript; else zw+=ev.results[i][0].transcript;
+      }
+      if(box){ box.style.display='block'; box.className='ub-gehoert';
+        box.innerHTML='<span class="lbl">Ich höre …</span>'+E((fest+zw).trim()); }
+    };
+    r.onerror=function(){ k.classList.remove('hoert'); k.textContent='🎤 Nochmal sprechen'; srLaeuft=null; };
+    r.onend=function(){
+      k.classList.remove('hoert'); srLaeuft=null;
+      var gehoert=fest.trim();
+      if(!gehoert){ k.textContent='🎤 Nochmal sprechen';
+        if(box){ box.style.display='block'; box.className='ub-gehoert';
+          box.innerHTML='<span class="lbl">Nichts verstanden</span>Sprich bitte etwas lauter — oder tipp unten auf „Hat geklappt".'; }
+        return; }
+      var v=sprechVergleich(ziel, gehoert);
+      S.sprech={quote:v.quote, gehoert:gehoert, fehlt:v.fehlt};
+      if(box){ box.style.display='block';
+        box.className='ub-gehoert '+(v.quote>=0.7?'gut':'fast');
+        var txt=woerterVonSatz(gehoert).join(' ');
+        box.innerHTML='<span class="lbl">Das habe ich gehört</span>'+E(gehoert)+
+          (v.fehlt.length?'<div style="margin-top:7px;font-size:15px;color:var(--soft,#5C5C5C)">Gefehlt hat: '+
+            v.fehlt.map(function(w){return '<b class="fehlt">'+E(w)+'</b>';}).join(', ')+'</div>':''); }
+      k.textContent='🎤 Nochmal sprechen';
+      var b=document.getElementById('ubBtn'); if(b){ b.disabled=false; b.textContent='Weiter'; }
+    };
+    try{ r.start(); }catch(e){ k.classList.remove('hoert'); srLaeuft=null; }
+  };
+
   function gGet(k,d){ try{ if(window.lsGet) return lsGet(k,d); var v=JSON.parse(localStorage.getItem('ub_'+k)); return v==null?d:v; }catch(e){ return d; } }
   function gSet(k,v){ try{ if(window.lsSet) return lsSet(k,v); localStorage.setItem('ub_'+k,JSON.stringify(v)); }catch(e){} }
   function note(t){ try{ if(window.toast) return toast(t); }catch(e){} }
@@ -288,6 +369,16 @@
     .ub-recbtn{border:2px solid #7C3AED;background:#fff;color:#7C3AED;border-radius:40px;padding:13px 22px;font-weight:800;font-size:16px;cursor:pointer;font-family:inherit;transition:.15s}
     .ub-recbtn:hover{background:rgba(124,58,237,.08)}
     .ub-recbtn.rec{background:#dc2626;border-color:#dc2626;color:#fff;animation:ubpulse 1s infinite}
+    /* Aussprachepruefung: der Knopf, das Gehoerte, das Urteil. */
+    .ub-mic{border:none;background:linear-gradient(135deg,#2DD4BF,#14B8A6);color:#06403A;border-radius:40px;padding:14px 24px;font-weight:800;font-size:16.5px;cursor:pointer;font-family:inherit;box-shadow:0 8px 20px rgba(45,212,191,.35);transition:.15s;display:block;margin:4px auto 0}
+    .ub-mic:hover{filter:brightness(1.05)}
+    .ub-mic:disabled{opacity:.5;cursor:default;box-shadow:none}
+    .ub-mic.hoert{background:#dc2626;color:#fff;animation:ubpulse 1s infinite;box-shadow:0 8px 20px rgba(220,38,38,.35)}
+    .ub-gehoert{margin:14px auto 0;max-width:520px;background:var(--bg,#FFF7E6);border:2px solid var(--border,#ECECEC);border-radius:16px;padding:12px 15px;text-align:left;font-size:16px;line-height:1.5}
+    .ub-gehoert .lbl{display:block;font-size:13px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--soft,#5C5C5C);margin-bottom:4px}
+    .ub-gehoert.gut{border-color:#16a34a;background:rgba(22,163,74,.07)}
+    .ub-gehoert.fast{border-color:#FFCE00;background:rgba(255,206,0,.12)}
+    .ub-gehoert b.fehlt{color:#DD0000;text-decoration:underline;text-decoration-color:#FFCE00;text-decoration-thickness:3px}
     .ub-cmp{display:flex;gap:10px;justify-content:center;margin:14px 0 4px;flex-wrap:wrap}
     .ub-cmp-btn{border:2px solid var(--border,#ECECEC);background:#fff;border-radius:40px;padding:11px 18px;font-weight:700;font-size:15px;cursor:pointer;font-family:inherit}
     .ub-cmp-btn.mine{border-color:#7C3AED;color:#7C3AED}
@@ -866,9 +957,19 @@
     '</div>';
   }
 
+  /* Der Knopf erscheint nur, wo der Browser wirklich zuhoeren kann.
+     Firefox und aeltere Browser bekommen weiterhin die Selbsteinschaetzung
+     — lieber kein Knopf als einer, der nichts tut. */
+  function micHtml(ziel){
+    if(!window.ubKannHoeren() || !ziel) return '';
+    var z=String(ziel).replace(/'/g,"\\'").replace(/"/g,'&quot;');
+    return '<button class="ub-mic" id="ubMic" onclick="ubSprechen(\''+z+'\')">🎤 Jetzt du — sprich es</button>'+
+           '<div class="ub-gehoert" id="ubGehoert" style="display:none"></div>';
+  }
+
   function renderQ(){
-    stopAudio(); shadowReset();
-    setProg(); S.answered=false; S.sel=null; S.order=null;
+    stopAudio(); shadowReset(); sprechStop();
+    setProg(); S.answered=false; S.sel=null; S.order=null; S.sprech=null;
     /* Bei der ersten Aufgabe gibt es nichts, wohin der Pfeil fuehren
        koennte — dann ist er blass und tut nichts. Das Kreuz daneben
        bleibt immer da. */
@@ -953,6 +1054,7 @@
       if(e.audioUrl){ h+='<button class="ub-play" onclick="ubPlayUrl(\''+E(e.audioUrl)+'\',this)">▶</button>'; }
       else { h+='<button class="ub-play" onclick="ubSpeak(\''+E(e.word).replace(/'/g,"\\'")+'\')">🔊</button>'; }
       h+='<div class="ub-word">'+E(e.word)+'</div>'+(e.tip?'<div class="ub-tip">'+E(e.tip)+'</div>':'');
+      h+=micHtml(e.word);
       btn.disabled=false; btn.textContent='👍 Hat geklappt';
       if(e.audioUrl){ setTimeout(function(){ ubPlayUrl(e.audioUrl, document.querySelector('#ubBody .ub-play')); },300); }
       else { setTimeout(function(){ speak(e.word); },200); }
@@ -996,6 +1098,7 @@
       h+='<div class="ub-word" style="font-size:22px;line-height:1.32">'+E(e.text)+'</div>';
       if(e.tip) h+='<div class="ub-tip">💡 '+E(e.tip)+'</div>';
       h+='<div style="text-align:center;margin-top:6px"><button class="ub-recbtn" id="ubRecBtn" onclick="ubRecToggle()">🎙️ Aufnehmen</button></div><div id="ubCmp"></div>';
+      h+=micHtml(e.text);
       btn.disabled=false; btn.textContent='Fertig 👍';
       setTimeout(function(){ window.ubPlayUrl(e.audioUrl, document.querySelector('#ubBody .ub-play')); },300);
     }
@@ -1092,7 +1195,10 @@
       sol=String(e.answer)+' '+(e.wort||ohneArt(e.w));
       if(ok&&e.w) markKnown(e.w);
     } else if(e.type==='karte'){ ok=true;
-    } else if(e.type==='speak'||e.type==='shadow'){ ok=true; }
+    } else if(e.type==='speak'||e.type==='shadow'){ ok=true;
+      /* Hat der Browser zugehoert, zaehlt sein Urteil statt des eigenen. */
+      if(S.sprech) ok=(S.sprech.quote>=0.7);
+    }
     else if(e.type==='lesen'){ ok=(S.sel===e.answer); var leopts=document.getElementById('ubOpts');
       if(leopts) Array.prototype.forEach.call(leopts.children,function(b){ var k=+b.dataset.k;
         b.disabled=true; b.classList.remove('sel'); if(k===e.answer)b.classList.add('right'); else if(k===S.sel)b.classList.add('wrong'); });
@@ -1121,6 +1227,11 @@
 
     S.answered=true; var btn=document.getElementById('ubBtn');
     var selfRated=(e.type==='speak'||e.type==='shadow'||e.type==='karte'||e.type==='schreiben');
+    /* Die Spracherkennung ist keine Pruefungsjury. Sie versteht Akzente
+       unterschiedlich gut und verschluckt kurze Woerter. Deshalb gibt sie
+       zwar eine echte Rueckmeldung, kostet aber nie ein Herz — sonst
+       bestraft die Plattform genau die Leute, fuer die sie da ist. */
+    var sprechMic=(S.sprech && (e.type==='speak'||e.type==='shadow'));
     /* Jede Antwort zu einem Wort landet im Wiederholungsplan: richtig
        schiebt das Wort nach hinten, falsch holt es zurück. */
     if(e.w && e.type!=='karte') wdhMerken(e, ok);
@@ -1131,13 +1242,21 @@
       if(ok){ fb.className='ub-fb ok'; fb.innerHTML='✓ Richtig!'; }
       else { fb.className='ub-fb no'; fb.innerHTML='✗ '+E(sol); }
     }
-    else if(!selfRated){
+    else if(!selfRated && !sprechMic){
       if(ok){ S.correct++; addXP(META().xpPerCorrect||10); fb.className='ub-fb ok'; fb.innerHTML='✓ Richtig! +'+(META().xpPerCorrect||10)+' XP'; }
       /* Beim Satzbau kostet ein anderer Bau kein Herz: im Deutschen
          sind oft zwei Reihenfolgen richtig, und wir prüfen nur gegen
          eine. Der gemeinte Satz steht daneben. */
       else if(e.type==='order'){ fb.className='ub-fb no'; fb.innerHTML='So war der Satz gemeint:<br><b>'+E(e.answer)+'</b>'; }
       else { S.hearts--; setProg(); fb.className='ub-fb no'; fb.innerHTML='✗ '+E(sol); }
+    } else if(sprechMic){
+      var proz=Math.round(S.sprech.quote*100);
+      if(ok){ S.correct++; addXP(META().xpPerCorrect||10); fb.className='ub-fb ok';
+        fb.innerHTML='✓ Verstanden — '+proz+' % der Wörter saßen. +'+(META().xpPerCorrect||10)+' XP'; }
+      else { S.correct++; addXP(Math.round((META().xpPerCorrect||10)/2)); fb.className='ub-fb no';
+        fb.innerHTML='Noch nicht ganz: '+proz+' % der Wörter kamen an.'+
+          (S.sprech.fehlt.length?'<br>Nimm dir <b>'+E(S.sprech.fehlt.slice(0,3).join(', '))+'</b> nochmal einzeln vor.':'')+
+          '<br>+'+Math.round((META().xpPerCorrect||10)/2)+' XP fürs Ausprobieren.'; }
     } else { S.correct++; addXP(Math.round((META().xpPerCorrect||10)/2)); fb.className='ub-fb ok';
       fb.innerHTML=(e.type==='karte'?'Gemerkt? Das Wort kommt gleich noch einmal.':'Klasse! Weiter so.')+' +'+Math.round((META().xpPerCorrect||10)/2)+' XP'; }
     /* Nach der Antwort den vollstaendigen, richtigen Satz hoeren —
