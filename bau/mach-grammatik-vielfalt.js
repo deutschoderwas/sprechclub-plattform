@@ -281,6 +281,11 @@ GRAM.themes.forEach(t => {
     if (m.length) { neu.push.apply(neu, m); nMatch += m.length; }
   }
 
+  /* Jede erzeugte Aufgabe traegt ihre Herkunft. bau/pruefe-aufgaben.js
+     legt an maschinell Gebautes einen strengeren Massstab an als an
+     das, was von Hand geschrieben wurde — Handarbeit darf ungewoehnlich
+     sein, Automatik nicht. */
+  neu.forEach(e => { e.gen = 'grammatik-vielfalt'; });
   if (neu.length) zusatz[t.id] = neu;
 });
 

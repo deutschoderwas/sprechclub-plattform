@@ -24,35 +24,40 @@
      "satz": "Starker Kaffee schmeckt morgens super.",
      "warum": "gar kein Artikel: volle Endung"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "fehler",
    "satz": "Ich sehe einen großer Hund.",
    "falsch": "großer",
    "richtig": "großen",
-   "explain": "einen (Akk. mask.) → -en: einen großen Hund."
+   "explain": "einen (Akk. mask.) → -en: einen großen Hund.",
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "fehler",
    "satz": "Starke Kaffee schmeckt morgens super.",
    "falsch": "Starke",
    "richtig": "Starker",
-   "explain": "Ohne Artikel zeigt das Adjektiv das Genus: Starker Kaffee (mask.)."
+   "explain": "Ohne Artikel zeigt das Adjektiv das Genus: Starker Kaffee (mask.).",
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "fehler",
    "satz": "Ich kaufe ein neuer Auto.",
    "falsch": "neuer",
    "richtig": "neues",
-   "explain": "ein + neutral → -es: ein neues Auto."
+   "explain": "ein + neutral → -es: ein neues Auto.",
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "fehler",
    "satz": "Das ist der alter Mann.",
    "falsch": "alter",
    "richtig": "alte",
-   "explain": "der + Nominativ → -e: der alte Mann."
+   "explain": "der + Nominativ → -e: der alte Mann.",
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "match",
@@ -74,7 +79,8 @@
      "l": "Ich kaufe ein _____ Auto.",
      "r": "neues"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "match",
@@ -96,7 +102,8 @@
      "l": "Ich suche eine _____ Wohnung.",
      "r": "günstige"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "genitiv": [
@@ -119,28 +126,32 @@
      "satz": "wegen des schlechten Wetters",
      "warum": "wegen, trotz, während nehmen den Genitiv"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "fehler",
    "satz": "Die Farbe des Tür gefällt mir.",
    "falsch": "des",
    "richtig": "der",
-   "explain": "feminin Genitiv → der Tür."
+   "explain": "feminin Genitiv → der Tür.",
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "fehler",
    "satz": "Das ist das Auto der Mannes.",
    "falsch": "der",
    "richtig": "des",
-   "explain": "maskulin Genitiv → des Mannes."
+   "explain": "maskulin Genitiv → des Mannes.",
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "fehler",
    "satz": "Am Ende des Woche fahren wir weg.",
    "falsch": "des",
    "richtig": "der",
-   "explain": "die Woche ist feminin: der Woche."
+   "explain": "die Woche ist feminin: der Woche.",
+   "gen": "grammatik-vielfalt"
   }
  ],
  "indirekte-rede": [
@@ -163,7 +174,8 @@
      "satz": "Sie sagen, sie kämen später.",
      "warum": "kommen klänge gleich — also Konjunktiv II"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "konjunktiv2": [
@@ -186,7 +198,8 @@
      "satz": "Ich würde gern früher anfangen.",
      "warum": "alle anderen Verben: würde"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "konnektoren": [
@@ -209,7 +222,8 @@
      "satz": "Die Wohnung ist günstig. Außerdem ist sie hell.",
      "warum": "ein zweites Argument"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "nebensaetze": [
@@ -232,7 +246,8 @@
      "satz": "Er sagt, dass er morgen anrufen will.",
      "warum": "Modalverb hinter dem Infinitiv"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "passiv-praesens": [
@@ -255,14 +270,16 @@
      "satz": "Der Antrag wird vom Amt geprüft.",
      "warum": "von + Dativ nennt den Täter"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "fehler",
    "satz": "Wann werdet die Pakete ausgeliefert?",
    "falsch": "werdet",
    "richtig": "werden",
-   "explain": "Das Subjekt ist Plural, also werden."
+   "explain": "Das Subjekt ist Plural, also werden.",
+   "gen": "grammatik-vielfalt"
   }
  ],
  "passiv-vergangenheit": [
@@ -285,7 +302,8 @@
      "satz": "nicht: ist geworden — sondern: ist worden",
      "warum": "im Passiv fällt das ge- weg"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "perfekt-praeteritum": [
@@ -308,7 +326,8 @@
      "satz": "Er ging zum Fenster und öffnete es.",
      "warum": "geschrieben: Präteritum"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "relativsaetze": [
@@ -331,35 +350,40 @@
      "satz": "Das ist das Kind, dem ich geholfen habe.",
      "warum": "helfen verlangt den Dativ"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "fehler",
    "satz": "Das ist das Kind, den ich ein Buch gebe.",
    "falsch": "den",
    "richtig": "dem",
-   "explain": "ich gebe ihm (wem?) → Dativ neutral = dem."
+   "explain": "ich gebe ihm (wem?) → Dativ neutral = dem.",
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "fehler",
    "satz": "Das ist der Kollege, mit den ich das Projekt mache.",
    "falsch": "den",
    "richtig": "dem",
-   "explain": "mit + Dativ, maskulin Singular → dem."
+   "explain": "mit + Dativ, maskulin Singular → dem.",
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "fehler",
    "satz": "Der Chef, von den ich viel gelernt habe, geht in Rente.",
    "falsch": "den",
    "richtig": "dem",
-   "explain": "von + Dativ, maskulin → dem."
+   "explain": "von + Dativ, maskulin → dem.",
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "fehler",
    "satz": "Das Werkzeug, mit der man das repariert, ist teuer.",
    "falsch": "der",
    "richtig": "dem",
-   "explain": "mit + Dativ, Neutrum → dem."
+   "explain": "mit + Dativ, Neutrum → dem.",
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "match",
@@ -381,7 +405,8 @@
      "l": "„Die Kollegen, mit _____ ich arbeite, sind sehr nett.“",
      "r": "denen"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "temporale-nebensaetze": [
@@ -404,7 +429,8 @@
      "satz": "Nachdem ich gegessen hatte, ging ich spazieren.",
      "warum": "danach — mit Zeitstufe zurück"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "wechselpraepositionen": [
@@ -427,7 +453,8 @@
      "satz": "stellen, legen, setzen, hängen = Bewegung",
      "warum": "stehen, liegen, sitzen, hängen = Ort"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "match",
@@ -449,7 +476,8 @@
      "l": "Das Bild hängt _____ Sofa.",
      "r": "über dem"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "nominalisierung": [
@@ -472,7 +500,8 @@
      "satz": "Während der Sitzung war er still.",
      "warum": "während"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "karte",
@@ -493,7 +522,8 @@
      "satz": "wieder Nebensatz — Beim Sprechen dreht man es um: Wegen des Regens wird wieder zu weil es geregnet hat. Beide Richtungen zu können, ist das eigentliche Ziel.",
      "warum": "Gesprochen zurück"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "a1-artikel": [
@@ -516,7 +546,8 @@
      "satz": "der Lehrer, der Frühling",
      "warum": "der"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "karte",
@@ -537,28 +568,32 @@
      "satz": "was zusammengehört — Tage, Monate, Jahreszeiten und Wetter sind fast alle der: der Montag, der Mai, der Sommer, der Regen.",
      "warum": "Gruppen"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "fehler",
    "satz": "Ich habe ein Hund.",
    "falsch": "ein",
    "richtig": "einen",
-   "explain": "haben braucht den Akkusativ. Maskulin: der Hund → einen Hund."
+   "explain": "haben braucht den Akkusativ. Maskulin: der Hund → einen Hund.",
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "fehler",
    "satz": "Das ist eine Auto.",
    "falsch": "eine",
    "richtig": "ein",
-   "explain": "das Auto ist neutrum → ein Auto. Nach sein steht kein Akkusativ, sondern der Nominativ."
+   "explain": "das Auto ist neutrum → ein Auto. Nach sein steht kein Akkusativ, sondern der Nominativ.",
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "fehler",
    "satz": "Ich brauche ein Stift.",
    "falsch": "ein",
    "richtig": "einen",
-   "explain": "brauchen braucht den Akkusativ, der Stift ist maskulin → einen Stift."
+   "explain": "brauchen braucht den Akkusativ, der Stift ist maskulin → einen Stift.",
+   "gen": "grammatik-vielfalt"
   }
  ],
  "a1-praesens": [
@@ -581,7 +616,8 @@
      "satz": "er kommt",
      "warum": "-t"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "karte",
@@ -602,35 +638,40 @@
      "satz": "ich bin, ich habe — Die zwei wichtigsten Verben sind unregelmäßig: ich bin, du bist, er ist · ich habe, du hast, er hat.",
      "warum": "sein und haben"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "fehler",
    "satz": "Er stehe jeden Tag um sechs auf.",
    "falsch": "stehe",
    "richtig": "steht",
-   "explain": "er/sie/es + t: er steht auf. Das Präfix auf steht am Satzende."
+   "explain": "er/sie/es + t: er steht auf. Das Präfix auf steht am Satzende.",
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "fehler",
    "satz": "Ihr hat heute keine Zeit.",
    "falsch": "hat",
    "richtig": "habt",
-   "explain": "haben ist unregelmäßig: ich habe, du hast, er hat, wir haben, ihr habt, sie haben."
+   "explain": "haben ist unregelmäßig: ich habe, du hast, er hat, wir haben, ihr habt, sie haben.",
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "fehler",
    "satz": "Seit ihr aus Deutschland?",
    "falsch": "Seit",
    "richtig": "Seid",
-   "explain": "ihr seid. Vorsicht: seit mit t ist eine Zeitangabe, kein Verb."
+   "explain": "ihr seid. Vorsicht: seit mit t ist eine Zeitangabe, kein Verb.",
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "fehler",
    "satz": "Wir wohnt in Hamburg.",
    "falsch": "wohnt",
    "richtig": "wohnen",
-   "explain": "wir + Infinitiv-Form: wir wohnen."
+   "explain": "wir + Infinitiv-Form: wir wohnen.",
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "match",
@@ -652,7 +693,8 @@
      "l": "Wir _____ in Hamburg.",
      "r": "wohnen"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "a1-akkusativ": [
@@ -675,7 +717,8 @@
      "satz": "das Brot, ein Brot",
      "warum": "das Brot, ein Brot"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "karte",
@@ -696,35 +739,40 @@
      "satz": "Ich habe keinen … — Ich habe keinen Hunger. · Ich habe keinen Termin. — kein verhält sich genau wie ein.",
      "warum": "Verneinen"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "fehler",
    "satz": "Ich sehe der Mann.",
    "falsch": "der",
    "richtig": "den",
-   "explain": "Maskulin im Akkusativ: der → den. Nur diese eine Form ändert sich."
+   "explain": "Maskulin im Akkusativ: der → den. Nur diese eine Form ändert sich.",
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "fehler",
    "satz": "Ich brauche ein neuen Stuhl.",
    "falsch": "ein",
    "richtig": "einen",
-   "explain": "ein → einen bei maskulin im Akkusativ. Das Adjektiv bekommt dann -en: einen neuen Stuhl."
+   "explain": "ein → einen bei maskulin im Akkusativ. Das Adjektiv bekommt dann -en: einen neuen Stuhl.",
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "fehler",
    "satz": "Sie sucht ein Wohnung.",
    "falsch": "ein",
    "richtig": "eine",
-   "explain": "die Wohnung ist feminin → eine, im Nominativ wie im Akkusativ."
+   "explain": "die Wohnung ist feminin → eine, im Nominativ wie im Akkusativ.",
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "fehler",
    "satz": "Ich möchte ein Kaffee, bitte.",
    "falsch": "ein",
    "richtig": "einen",
-   "explain": "der Kaffee ist maskulin, möchten braucht den Akkusativ → einen Kaffee."
+   "explain": "der Kaffee ist maskulin, möchten braucht den Akkusativ → einen Kaffee.",
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "match",
@@ -746,7 +794,8 @@
      "l": "Das Kind isst _____ Brötchen.",
      "r": "ein"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "a1-fragen": [
@@ -769,7 +818,8 @@
      "satz": "Position 2",
      "warum": "Wann kommst du?"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "karte",
@@ -790,14 +840,16 @@
      "satz": "wohin — Wo du hingehst. Wohin gehst du? — Nach Hause.",
      "warum": "das Ziel"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "fehler",
    "satz": "Woher gehst du am Wochenende?",
    "falsch": "Woher",
    "richtig": "Wohin",
-   "explain": "wohin fragt nach dem Ziel einer Bewegung: Wohin gehst du?"
+   "explain": "wohin fragt nach dem Ziel einer Bewegung: Wohin gehst du?",
+   "gen": "grammatik-vielfalt"
   }
  ],
  "modalverben": [
@@ -820,7 +872,8 @@
      "satz": "Hier darf man parken.",
      "warum": "Erlaubnis"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "karte",
@@ -841,7 +894,8 @@
      "satz": "dürfen — Es ist erlaubt. Im Hof darf man parken, auf dem Gehweg nicht.",
      "warum": "Erlaubt"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "trennbare-verben": [
@@ -864,7 +918,8 @@
      "satz": "Sie ruft ihre Mutter an.",
      "warum": "telefonieren"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "karte",
@@ -885,7 +940,8 @@
      "satz": "zusammen — Nach einem Modalverb bleibt das Verb ganz. Ich muss um sechs aufstehen.",
      "warum": "Nach muss, kann, will"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "perfekt-bilden": [
@@ -908,7 +964,8 @@
      "satz": "einkaufen → eingekauft",
      "warum": "Vorsilbe + ge + Rest"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "karte",
@@ -929,7 +986,8 @@
      "satz": "sein, bleiben, werden — Sie merkt man sich extra. Ich bin zu Hause geblieben.",
      "warum": "Drei Einzelne"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "dativ": [
@@ -952,7 +1010,8 @@
      "satz": "Ich helfe dem Kind.",
      "warum": "das Kind"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "karte",
@@ -973,7 +1032,8 @@
      "satz": "gefallen, schmecken — Die Wohnung gefällt mir. Die Suppe schmeckt ihm.",
      "warum": "Gefühl"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "possessivartikel": [
@@ -996,7 +1056,8 @@
      "satz": "seine Eltern",
      "warum": "sein Vater"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "karte",
@@ -1017,7 +1078,8 @@
      "satz": "Ihr — Die höfliche Form — immer groß. Ist das Ihr Mantel?",
      "warum": "von Ihnen"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "negation": [
@@ -1040,7 +1102,8 @@
      "satz": "bestimmter Artikel → nicht",
      "warum": "Ich kenne den Mann nicht."
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "karte",
@@ -1061,7 +1124,8 @@
      "satz": "nicht direkt davor — Wenn nur ein Wort verneint wird. Ich komme nicht heute, sondern morgen.",
      "warum": "Einzelnes Wort"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "imperativ": [
@@ -1084,7 +1148,8 @@
      "satz": "Sprechen Sie!",
      "warum": "Sprich!"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "karte",
@@ -1105,7 +1170,8 @@
      "satz": "als Frage — Könnten Sie bitte kurz warten? Kein Imperativ mehr — die höflichste Variante.",
      "warum": "Sehr höflich"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "komparativ": [
@@ -1128,7 +1194,8 @@
      "satz": "Umlaut",
      "warum": "größer"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "karte",
@@ -1149,7 +1216,8 @@
      "satz": "immer + Vergleich — Schritt für Schritt mehr. Es wird immer teurer. · Sie spricht immer besser Deutsch.",
      "warum": "Es verändert sich"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "reflexive-verben": [
@@ -1172,7 +1240,8 @@
      "satz": "Er ärgert sich.",
      "warum": "sich"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "karte",
@@ -1193,7 +1262,8 @@
      "satz": "sich freuen auf — sich freuen auf (Zukunft) gegen sich freuen über (etwas Geschehenes).",
      "warum": "Mit Präposition"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "weil-dass-wenn": [
@@ -1216,7 +1286,8 @@
      "satz": "Wenn es regnet, nehme ich den Bus.",
      "warum": "wenn nennt die Bedingung"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "praepositionen-dativ": [
@@ -1239,7 +1310,8 @@
      "satz": "Ich fahre mit dem Rad.",
      "warum": "zusammen, Verkehrsmittel"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "karte",
@@ -1260,7 +1332,8 @@
      "satz": "beim — Ich war beim Zahnarzt.",
      "warum": "bei + dem"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "praeteritum-sein-haben": [
@@ -1283,7 +1356,8 @@
      "satz": "musste",
      "warum": "war"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "karte",
@@ -1304,7 +1378,8 @@
      "satz": "Präteritum — In Büchern, Berichten und Nachrichten steht es auch bei allen anderen Verben. Er ging zur Tür.",
      "warum": "Im Text"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "passiv-b2": [
@@ -1327,7 +1402,8 @@
      "satz": "Das Fenster ist geöffnet.",
      "warum": "Zustand: es ist das Ergebnis"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "konjunktiv2-vergangenheit": [
@@ -1350,7 +1426,8 @@
      "satz": "Vorwurf",
      "warum": "Du hättest anrufen können."
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "karte",
@@ -1371,7 +1448,8 @@
      "satz": "Das wäre nicht nötig gewesen. — Der Standardsatz, wenn jemand etwas Nettes tut: dankbar und bescheiden zugleich.",
      "warum": "Höflich ablehnen"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "karte",
@@ -1392,7 +1470,8 @@
      "satz": "Das wäre fast schiefgegangen.",
      "warum": "beinahe — es ist nicht passiert"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "genitiv-b2": [
@@ -1415,7 +1494,8 @@
      "satz": "während der Laufzeit",
      "warum": "Zeitraum"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "karte",
@@ -1436,7 +1516,8 @@
      "satz": "von + Dativ — Beim Besitz geht immer von: die Miete von der Wohnung. Nach wegen und trotz allerdings nicht.",
      "warum": "Der Notausgang"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "gegensatz-konnektoren": [
@@ -1459,7 +1540,8 @@
      "satz": "Es regnete; dennoch sind wir gelaufen.",
      "warum": "Adverb, schriftlicher"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "karte",
@@ -1480,7 +1562,8 @@
      "satz": "dennoch, gleichwohl — dennoch ist die geschriebene Variante, gleichwohl die sehr förmliche. Beide funktionieren wie trotzdem.",
      "warum": "Schriftlicher"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "verben-mit-praeposition": [
@@ -1503,7 +1586,8 @@
      "satz": "Ich freue mich auf den Urlaub. (später)",
      "warum": "Akkusativ"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "karte",
@@ -1524,7 +1608,8 @@
      "satz": "Ich warte darauf. — Statt die Sache zu wiederholen: darauf, darüber, damit, daran. Bei Personen: auf ihn, über sie.",
      "warum": "Zurückverweisen"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "adjektivendungen": [
@@ -1547,7 +1632,8 @@
      "satz": "eine warme Jacke",
      "warum": "nur -e"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "karte",
@@ -1568,7 +1654,8 @@
      "satz": "viele gute Gründe — Nach viele, einige, mehrere steht die volle Endung: viele gute Gründe.",
      "warum": "Nach viele, einige"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "konjunktiv1": [
@@ -1591,7 +1678,8 @@
      "satz": "Er sagte, er werde am Montag zurückkommen.",
      "warum": "Zukunft in der indirekten Rede"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "partizipialattribut": [
@@ -1614,7 +1702,8 @@
      "satz": "die seit Jahren steigenden Kosten",
      "warum": "so schreibt die Zeitung"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "nominalstil": [
@@ -1637,7 +1726,8 @@
      "satz": "trotz mehrfacher Nachfrage",
      "warum": "statt: obwohl mehrfach nachgefragt wurde"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "passiv-ersatz": [
@@ -1660,7 +1750,8 @@
      "satz": "Der Antrag ist bis Freitag einzureichen.",
      "warum": "sein + zu: es ist nötig, sehr formell"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "zweiteilige-konnektoren": [
@@ -1683,7 +1774,8 @@
      "satz": "Sie ist nicht nur schnell, sondern auch genau.",
      "warum": "Steigerung: und obendrein"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "modalverben-subjektiv": [
@@ -1706,7 +1798,8 @@
      "satz": "Er will nichts davon gewusst haben.",
      "warum": "er behauptet es — ich glaube es nicht"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "modalpartikeln": [
@@ -1729,7 +1822,8 @@
      "satz": "Das ist eben so.",
      "warum": "eben: da kann man nichts machen"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "praepositionaladverbien": [
@@ -1752,14 +1846,16 @@
      "satz": "Worüber habt ihr gesprochen?",
      "warum": "die Frage nach der Sache"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   },
   {
    "type": "fehler",
    "satz": "Wir haben lange über den Plan gesprochen. — Wir haben lange daran gesprochen.",
    "falsch": "daran",
    "richtig": "darüber",
-   "explain": "sprechen über wird zu darüber."
+   "explain": "sprechen über wird zu darüber.",
+   "gen": "grammatik-vielfalt"
   }
  ],
  "n-deklination": [
@@ -1782,7 +1878,8 @@
      "satz": "Der Kunde wartet schon.",
      "warum": "nur hier ohne -n"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "lassen": [
@@ -1805,7 +1902,8 @@
      "satz": "Das lässt sich machen.",
      "warum": "sich lassen: es ist möglich"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "gerundivum": [
@@ -1828,7 +1926,8 @@
      "satz": "eine nicht zu unterschätzende Gefahr",
      "warum": "die man nicht unterschätzen darf"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "uneingeleitete-nebensaetze": [
@@ -1851,7 +1950,8 @@
      "satz": "Sollten Sie Fragen haben, melden Sie sich gern.",
      "warum": "die höfliche Standardformel"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "korrelate": [
@@ -1874,7 +1974,8 @@
      "satz": "Ich erinnere mich daran, ihn getroffen zu haben.",
      "warum": "auch vor einem Infinitivsatz"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "funktionsverbgefuege": [
@@ -1897,7 +1998,8 @@
      "satz": "Ich nehme Bezug auf Ihr Schreiben.",
      "warum": "der Standardanfang im Brief"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "irreale-vergleiche": [
@@ -1920,7 +2022,8 @@
      "satz": "Es sieht aus, als hätte es geregnet.",
      "warum": "Vergangenheit mit hätte"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "praepositionen-gehoben": [
@@ -1943,7 +2046,8 @@
      "satz": "seitens der Behörde",
      "warum": "von der Behörde aus"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ],
  "nominalisierte-adjektive": [
@@ -1966,7 +2070,8 @@
      "satz": "Er erzählt nichts Neues.",
      "warum": "dasselbe nach nichts"
     }
-   ]
+   ],
+   "gen": "grammatik-vielfalt"
   }
  ]
 };

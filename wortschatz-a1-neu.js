@@ -2278,8 +2278,8 @@
    },
    {
     "type": "fehler",
-    "satz": "Heute ist kalt.",
-    "falsch": "ist",
+    "satz": "Heute ist er kalt.",
+    "falsch": "er",
     "richtig": "Heute ist es kalt.",
     "explain": "Beim Wetter braucht der Satz immer ein es: Es ist kalt."
    },
