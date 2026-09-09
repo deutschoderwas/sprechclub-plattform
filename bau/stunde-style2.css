@@ -121,13 +121,70 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
   margin-top:2.4rem;padding-top:.6rem;   /* h2.st bringt seinen eigenen Abstand mit */
   border-top:3px dashed var(--sand);
 }
-section.section{scroll-margin-top:calc(var(--leiste,58px) + 5.2rem);}
+section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
-/* Umschalter klebt ganz oben, die Sprungleiste direkt darunter.
-   Beide gehen ueber die volle Spaltenbreite — sonst schaut der Text
-   beim Scrollen links und rechts an ihnen vorbei. */
-.niv{position:sticky;top:0;z-index:60;margin:1.4rem auto 0;max-width:none;width:100%;}
-.tabs{top:var(--leiste,58px);margin:1rem auto 1.6rem;max-width:none;width:100%;}
+/* ---------- Eine klebende Leiste statt zweier ----------
+   Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
+   die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
+   achte Zeile der Stunde, waren beim Scrollen dauerhaft verdeckt —
+   und die Sprungmarken brachen am rechten Rand einfach ab.
+
+   Jetzt teilen sich beide eine Zeile von rund 48 Pixeln: die zwei
+   Niveau-Knoepfe fest links, die Sprungmarken daneben in einem
+   Streifen, der sich seitlich schieben laesst statt umzubrechen. */
+.leiste{
+  position:sticky;top:0;z-index:60;
+  display:flex;align-items:center;gap:.55rem;
+  width:100%;margin:1rem 0 1.5rem;padding:.4rem .5rem;
+  background:rgba(253,246,236,.94);backdrop-filter:blur(8px);
+  border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:0 6px 14px rgba(38,32,25,.1);
+}
+.leiste .nivk{flex:none;background:var(--ink);padding:3px;}
+.leiste .nivk button{color:var(--cream);padding:.3rem .8rem;font-size:.84rem;}
+.leiste .nivk button[aria-pressed="true"]{background:var(--yellow);color:var(--ink);}
+.leiste .tabs{
+  position:static;flex:1 1 auto;min-width:0;
+  display:flex;flex-wrap:nowrap;gap:.35rem;overflow-x:auto;overscroll-behavior-x:contain;
+  margin:0;padding:.1rem 0;max-width:none;width:auto;
+  background:none;border:none;border-radius:0;box-shadow:none;backdrop-filter:none;
+  scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;
+}
+.leiste .tabs::-webkit-scrollbar{display:none;}
+.leiste .tab{flex:none;white-space:nowrap;}
+/* ---------- Ein Abschnitt nach dem anderen ----------
+   Sichtbar wird das erst, wenn der Motor die Schaltung uebernommen
+   hat. Ohne JavaScript und beim Drucken steht die Stunde weiterhin
+   vollstaendig da. */
+body.schaltet section.section[hidden]{display:none !important;}
+body.schaltet section.section{margin-top:1.2rem;border-top:none;padding-top:0;}
+.tabAlles{font-family:inherit;cursor:pointer;border:1px dashed var(--ink-mute,#7a6a56);background:transparent;}
+.tabAlles[aria-pressed="true"]{background:var(--ink);color:var(--cream);border-style:solid;}
+
+/* Am Ende jedes Abschnitts: zurueck und weiter. In der Stunde haelt
+   das den Takt — sonst sucht man die naechste Ueberschrift. */
+.weiterzeile{
+  display:flex;gap:.6rem;flex-wrap:wrap;justify-content:space-between;
+  margin:2rem 0 .4rem;padding-top:1.2rem;border-top:3px dashed var(--sand);
+}
+.weiterknopf{
+  font-family:'Outfit';font-size:.95rem;font-weight:700;cursor:pointer;
+  border:2.5px solid var(--ink);border-radius:999px;padding:.6rem 1.2rem;
+  background:var(--yellow);color:var(--ink);box-shadow:3px 3px 0 rgba(38,32,25,.18);
+  transition:.12s;margin-left:auto;
+}
+.weiterknopf.zurueck{background:var(--paper);margin-left:0;margin-right:auto;}
+.weiterknopf:hover{transform:translate(1px,1px);box-shadow:2px 2px 0 rgba(38,32,25,.18);}
+@media print{
+  body.schaltet section.section[hidden]{display:block !important;}
+  .leiste,.weiterzeile{display:none !important;}
+}
+
+/* Der Satz zum Niveau wird einmal gelesen, nicht mitgeschleppt. */
+.niv-wie{
+  margin:.9rem auto 0;max-width:52ch;text-align:center;
+  font-size:.86rem;color:var(--ink-mute,#7a6a56);
+}
 .tab{text-decoration:none;}
 a.tab:hover{color:var(--ink);}
 
@@ -142,9 +199,10 @@ a.tab:hover{color:var(--ink);}
 }
 .gk .bsp{box-shadow:none;margin:.5rem 0 0;}
 @media(max-width:560px){
-  .niv{border-radius:16px;padding:.5rem .7rem;gap:.5rem;}
-  .niv .wie{display:none;}
-  .nivk button{padding:.35rem .85rem;font-size:.84rem;}
+  .leiste{border-radius:14px;padding:.35rem .4rem;gap:.4rem;}
+  .leiste .nivk button{padding:.3rem .65rem;font-size:.82rem;}
+  .leiste .nivk .zusatz{display:none;}
+  .niv-wie{font-size:.82rem;}
 }
 
 /* ---- Freigestellte Figuren auf den Wortschatzkarten ----

@@ -434,13 +434,70 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
   margin-top:2.4rem;padding-top:.6rem;   /* h2.st bringt seinen eigenen Abstand mit */
   border-top:3px dashed var(--sand);
 }
-section.section{scroll-margin-top:calc(var(--leiste,58px) + 5.2rem);}
+section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
-/* Umschalter klebt ganz oben, die Sprungleiste direkt darunter.
-   Beide gehen ueber die volle Spaltenbreite — sonst schaut der Text
-   beim Scrollen links und rechts an ihnen vorbei. */
-.niv{position:sticky;top:0;z-index:60;margin:1.4rem auto 0;max-width:none;width:100%;}
-.tabs{top:var(--leiste,58px);margin:1rem auto 1.6rem;max-width:none;width:100%;}
+/* ---------- Eine klebende Leiste statt zweier ----------
+   Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
+   die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
+   achte Zeile der Stunde, waren beim Scrollen dauerhaft verdeckt —
+   und die Sprungmarken brachen am rechten Rand einfach ab.
+
+   Jetzt teilen sich beide eine Zeile von rund 48 Pixeln: die zwei
+   Niveau-Knoepfe fest links, die Sprungmarken daneben in einem
+   Streifen, der sich seitlich schieben laesst statt umzubrechen. */
+.leiste{
+  position:sticky;top:0;z-index:60;
+  display:flex;align-items:center;gap:.55rem;
+  width:100%;margin:1rem 0 1.5rem;padding:.4rem .5rem;
+  background:rgba(253,246,236,.94);backdrop-filter:blur(8px);
+  border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:0 6px 14px rgba(38,32,25,.1);
+}
+.leiste .nivk{flex:none;background:var(--ink);padding:3px;}
+.leiste .nivk button{color:var(--cream);padding:.3rem .8rem;font-size:.84rem;}
+.leiste .nivk button[aria-pressed="true"]{background:var(--yellow);color:var(--ink);}
+.leiste .tabs{
+  position:static;flex:1 1 auto;min-width:0;
+  display:flex;flex-wrap:nowrap;gap:.35rem;overflow-x:auto;overscroll-behavior-x:contain;
+  margin:0;padding:.1rem 0;max-width:none;width:auto;
+  background:none;border:none;border-radius:0;box-shadow:none;backdrop-filter:none;
+  scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;
+}
+.leiste .tabs::-webkit-scrollbar{display:none;}
+.leiste .tab{flex:none;white-space:nowrap;}
+/* ---------- Ein Abschnitt nach dem anderen ----------
+   Sichtbar wird das erst, wenn der Motor die Schaltung uebernommen
+   hat. Ohne JavaScript und beim Drucken steht die Stunde weiterhin
+   vollstaendig da. */
+body.schaltet section.section[hidden]{display:none !important;}
+body.schaltet section.section{margin-top:1.2rem;border-top:none;padding-top:0;}
+.tabAlles{font-family:inherit;cursor:pointer;border:1px dashed var(--ink-mute,#7a6a56);background:transparent;}
+.tabAlles[aria-pressed="true"]{background:var(--ink);color:var(--cream);border-style:solid;}
+
+/* Am Ende jedes Abschnitts: zurueck und weiter. In der Stunde haelt
+   das den Takt — sonst sucht man die naechste Ueberschrift. */
+.weiterzeile{
+  display:flex;gap:.6rem;flex-wrap:wrap;justify-content:space-between;
+  margin:2rem 0 .4rem;padding-top:1.2rem;border-top:3px dashed var(--sand);
+}
+.weiterknopf{
+  font-family:'Outfit';font-size:.95rem;font-weight:700;cursor:pointer;
+  border:2.5px solid var(--ink);border-radius:999px;padding:.6rem 1.2rem;
+  background:var(--yellow);color:var(--ink);box-shadow:3px 3px 0 rgba(38,32,25,.18);
+  transition:.12s;margin-left:auto;
+}
+.weiterknopf.zurueck{background:var(--paper);margin-left:0;margin-right:auto;}
+.weiterknopf:hover{transform:translate(1px,1px);box-shadow:2px 2px 0 rgba(38,32,25,.18);}
+@media print{
+  body.schaltet section.section[hidden]{display:block !important;}
+  .leiste,.weiterzeile{display:none !important;}
+}
+
+/* Der Satz zum Niveau wird einmal gelesen, nicht mitgeschleppt. */
+.niv-wie{
+  margin:.9rem auto 0;max-width:52ch;text-align:center;
+  font-size:.86rem;color:var(--ink-mute,#7a6a56);
+}
 .tab{text-decoration:none;}
 a.tab:hover{color:var(--ink);}
 
@@ -455,9 +512,10 @@ a.tab:hover{color:var(--ink);}
 }
 .gk .bsp{box-shadow:none;margin:.5rem 0 0;}
 @media(max-width:560px){
-  .niv{border-radius:16px;padding:.5rem .7rem;gap:.5rem;}
-  .niv .wie{display:none;}
-  .nivk button{padding:.35rem .85rem;font-size:.84rem;}
+  .leiste{border-radius:14px;padding:.35rem .4rem;gap:.4rem;}
+  .leiste .nivk button{padding:.3rem .65rem;font-size:.82rem;}
+  .leiste .nivk .zusatz{display:none;}
+  .niv-wie{font-size:.82rem;}
 }
 
 /* ---- Freigestellte Figuren auf den Wortschatzkarten ----
@@ -492,15 +550,12 @@ a.tab:hover{color:var(--ink);}
 
 <p class="subtitle">Am Dienstag hast du gefragt, bis es klar war. Heute lernst du den Satz danach: <b>„Also halten wir fest …“</b> — der Moment, in dem aus einem Gespräch eine Absprache wird, an die sich beide erinnern.</p>
 
-<div class="niv">
-  <span class="lab">Dein Niveau</span>
+<p class="niv-wie">Gleiches Thema, andere Sätze. Wechsle jederzeit — probier ruhig beide Seiten aus.</p>
+<div class="leiste">
   <div class="nivk" role="group" aria-label="Niveau wählen">
-    <button type="button" data-niv="a2" aria-pressed="true">B1 · sicherer</button>
-    <button type="button" data-niv="b1" aria-pressed="false">B2 · feiner</button>
+    <button type="button" data-niv="a2" aria-pressed="true">B1<span class="zusatz"> · sicherer</span></button>
+    <button type="button" data-niv="b1" aria-pressed="false">B2<span class="zusatz"> · feiner</span></button>
   </div>
-  <span class="wie">Gleiches Thema, andere Sätze. Wechsle jederzeit — probier ruhig beide Seiten aus.</span>
-</div>
-
 <nav class="tabs">
 <a class="tab active" href="#einstieg">🖼️ Einstieg</a>
 <a class="tab" href="#wiederholung">🔁 Wiederholung</a>
@@ -514,6 +569,7 @@ a.tab:hover{color:var(--ink);}
 <a class="tab" href="#ueben">✅ Üben</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
 </nav>
+</div>
 
 <section class="section" id="einstieg">
 <h2 class="st">Das Gespräch war klar — <span class="hl">eine Woche später nicht mehr</span></h2>
@@ -932,25 +988,128 @@ a.tab:hover{color:var(--ink);}
 
 <script>
 
-/* ---- Sprungleiste: markiert, wo man gerade ist ----
-   Frueher hat sie Abschnitte umgeschaltet. Jetzt steht alles
-   untereinander, die Leiste zeigt nur noch die Stelle an. */
+/* ---- Sprungleiste: sie schaltet die Abschnitte wieder um ----
+   Eine Weile stand alles untereinander. Gemessen an der Stunde
+   „Kritik ueben": 28 512 Pixel, auf dem Handy 34 Bildschirme fuer
+   eine Unterrichtsstunde. Man scrollt und scrollt und weiss nicht,
+   wo man ist — und in der Stunde selbst kommt man nie durch.
+
+   Jetzt zeigt die Seite einen Abschnitt. Die Leiste oben waehlt aus,
+   am Ende jedes Abschnitts steht, was als Naechstes kommt. Wer die
+   ganze Stunde am Stueck sehen will (zum Vorbereiten, zum Drucken),
+   klickt auf „Alles". Beim Drucken kommt ohnehin alles mit, und ein
+   Link mit #abschnitt oeffnet genau dort. */
 (function(){
  var tabs=[].slice.call(document.querySelectorAll('nav.tabs a.tab'));
  var paare=tabs.map(function(a){return {a:a,sec:document.querySelector(a.getAttribute('href'))};})
                .filter(function(x){return x.sec;});
- if(!('IntersectionObserver' in window))return;
- var beob=new IntersectionObserver(function(eintraege){
-  eintraege.forEach(function(e){
-   if(!e.isIntersecting)return;
-   tabs.forEach(function(t){t.classList.remove('active');});
-   var p=paare.find(function(x){return x.sec===e.target;});
-   if(p){p.a.classList.add('active');
-     /* die aktive Marke in der schmalen Leiste in den Blick holen */
-     if(p.a.scrollIntoView)p.a.scrollIntoView({block:'nearest',inline:'center'});}
+ if(paare.length<2) return;
+ var alles=false, jetzt=paare[0].sec.id;
+
+ /* Ohne JavaScript steht die Stunde weiterhin komplett da — erst
+    hier wird ueberhaupt etwas versteckt. */
+ document.body.classList.add('schaltet');
+
+ var kopf=document.querySelector('.leiste');
+ function hoehe(){ return kopf ? kopf.getBoundingClientRect().height+10 : 66; }
+
+ /* Die aktive Marke in den schmalen Streifen holen — aber nur ihn
+    schieben. scrollIntoView() nahm die ganze Seite mit: der Titel
+    der Stunde rutschte beim Umschalten aus dem Bild. */
+ function markeInsBild(a, weich){
+  var streifen=a.parentNode;
+  if(!streifen || streifen.scrollWidth<=streifen.clientWidth+2) return;
+  /* Gerechnet wird ueber die Rechtecke, nicht ueber offsetLeft: der
+     naechste positionierte Vorfahr ist die Leiste, nicht der Streifen
+     — offsetLeft haette die Marke um die Breite der Niveau-Knoepfe
+     verschoben. */
+  var r=a.getBoundingClientRect(), rs=streifen.getBoundingClientRect();
+  var links=streifen.scrollLeft+(r.left-rs.left)-(rs.width-r.width)/2;
+  links=Math.max(0,Math.min(links,streifen.scrollWidth-streifen.clientWidth));
+  if(Math.abs(links-streifen.scrollLeft)<2) return;
+  /* Beim ersten Aufbau hart setzen. Ein weiches Scrollen im Streifen
+     zog in Chrome die ganze Seite 399 Pixel mit nach unten, weil
+     html{scroll-behavior:smooth} gilt — der Titel der Stunde war
+     dann schon beim Laden aus dem Bild. */
+  if(weich && streifen.scrollTo) streifen.scrollTo({left:links,behavior:'smooth'});
+  else streifen.scrollLeft=links;
+ }
+
+ function zeige(id, springen, stumm){
+  var da=paare.filter(function(p){return p.sec.id===id;})[0];
+  if(!da) return;
+  jetzt=id;
+  paare.forEach(function(p){
+   p.sec.hidden = !alles && p.sec.id!==id;
+   p.a.classList.toggle('active', p.sec.id===id);
   });
- },{rootMargin:'-40% 0px -55% 0px'});
- paare.forEach(function(x){beob.observe(x.sec);});
+  if(alles) paare.forEach(function(p){ p.sec.hidden=false; });
+  markeInsBild(da.a, !!springen);
+  if(springen){
+   var y=da.sec.getBoundingClientRect().top+window.pageYOffset-hoehe();
+   window.scrollTo({top:Math.max(0,y),behavior:'smooth'});
+  }
+  /* Die Marke kommt erst in die Adresse, wenn jemand wirklich
+     umschaltet. Steht sie schon beim Laden drin, springt Chrome
+     nachtraeglich selbst dorthin — sobald die Bilder da sind, zog es
+     die Seite 399 Pixel nach unten und der Titel der Stunde war weg. */
+  if(!stumm){ try{ history.replaceState(null,'','#'+id); }catch(e){} }
+ }
+ window.stundeZeige=zeige;
+
+ tabs.forEach(function(a){
+  a.addEventListener('click',function(ev){
+   var id=(a.getAttribute('href')||'').replace('#','');
+   if(!id) return;
+   ev.preventDefault();
+   if(alles){ alles=false; if(knopfAlles) knopfAlles.setAttribute('aria-pressed','false'); }
+   zeige(id,true);
+  });
+ });
+
+ /* Am Ende jedes Abschnitts: was jetzt drankommt. In der Stunde
+    haelt das den Takt — man klickt weiter, statt zu suchen. */
+ paare.forEach(function(p,i){
+  var naechste=paare[i+1], vorige=paare[i-1];
+  var z=document.createElement('div'); z.className='weiterzeile';
+  if(vorige){
+   var zur=document.createElement('button');
+   zur.type='button'; zur.className='weiterknopf zurueck';
+   zur.innerHTML='← '+vorige.a.textContent.trim();
+   zur.addEventListener('click',function(){ zeige(vorige.sec.id,true); });
+   z.appendChild(zur);
+  }
+  if(naechste){
+   var w=document.createElement('button');
+   w.type='button'; w.className='weiterknopf';
+   w.innerHTML='Weiter: '+naechste.a.textContent.trim()+' →';
+   w.addEventListener('click',function(){ zeige(naechste.sec.id,true); });
+   z.appendChild(w);
+  }
+  if(z.children.length) p.sec.appendChild(z);
+ });
+
+ /* Der Schalter fuer die lange Ansicht sitzt am Ende der Leiste. */
+ var knopfAlles=null;
+ var streifen=document.querySelector('nav.tabs');
+ if(streifen){
+  knopfAlles=document.createElement('button');
+  knopfAlles.type='button'; knopfAlles.className='tab tabAlles';
+  knopfAlles.setAttribute('aria-pressed','false');
+  knopfAlles.textContent='⇕ Alles';
+  knopfAlles.title='Die ganze Stunde am Stück zeigen';
+  knopfAlles.addEventListener('click',function(){
+   alles=!alles;
+   knopfAlles.setAttribute('aria-pressed', alles?'true':'false');
+   if(alles){ paare.forEach(function(p){ p.sec.hidden=false; }); }
+   else zeige(jetzt,true);
+  });
+  streifen.appendChild(knopfAlles);
+ }
+
+ var ausLink=(location.hash||'').replace('#','');
+ var beimLaden=paare.filter(function(p){return p.sec.id===ausLink;}).length ? ausLink : paare[0].sec.id;
+ zeige(beimLaden, false, beimLaden!==ausLink);
 })();
 
 /* ---- Hoehe des klebenden Umschalters messen, damit die

@@ -1,23 +1,126 @@
 
-/* ---- Sprungleiste: markiert, wo man gerade ist ----
-   Frueher hat sie Abschnitte umgeschaltet. Jetzt steht alles
-   untereinander, die Leiste zeigt nur noch die Stelle an. */
+/* ---- Sprungleiste: sie schaltet die Abschnitte wieder um ----
+   Eine Weile stand alles untereinander. Gemessen an der Stunde
+   „Kritik ueben": 28 512 Pixel, auf dem Handy 34 Bildschirme fuer
+   eine Unterrichtsstunde. Man scrollt und scrollt und weiss nicht,
+   wo man ist — und in der Stunde selbst kommt man nie durch.
+
+   Jetzt zeigt die Seite einen Abschnitt. Die Leiste oben waehlt aus,
+   am Ende jedes Abschnitts steht, was als Naechstes kommt. Wer die
+   ganze Stunde am Stueck sehen will (zum Vorbereiten, zum Drucken),
+   klickt auf „Alles". Beim Drucken kommt ohnehin alles mit, und ein
+   Link mit #abschnitt oeffnet genau dort. */
 (function(){
  var tabs=[].slice.call(document.querySelectorAll('nav.tabs a.tab'));
  var paare=tabs.map(function(a){return {a:a,sec:document.querySelector(a.getAttribute('href'))};})
                .filter(function(x){return x.sec;});
- if(!('IntersectionObserver' in window))return;
- var beob=new IntersectionObserver(function(eintraege){
-  eintraege.forEach(function(e){
-   if(!e.isIntersecting)return;
-   tabs.forEach(function(t){t.classList.remove('active');});
-   var p=paare.find(function(x){return x.sec===e.target;});
-   if(p){p.a.classList.add('active');
-     /* die aktive Marke in der schmalen Leiste in den Blick holen */
-     if(p.a.scrollIntoView)p.a.scrollIntoView({block:'nearest',inline:'center'});}
+ if(paare.length<2) return;
+ var alles=false, jetzt=paare[0].sec.id;
+
+ /* Ohne JavaScript steht die Stunde weiterhin komplett da — erst
+    hier wird ueberhaupt etwas versteckt. */
+ document.body.classList.add('schaltet');
+
+ var kopf=document.querySelector('.leiste');
+ function hoehe(){ return kopf ? kopf.getBoundingClientRect().height+10 : 66; }
+
+ /* Die aktive Marke in den schmalen Streifen holen — aber nur ihn
+    schieben. scrollIntoView() nahm die ganze Seite mit: der Titel
+    der Stunde rutschte beim Umschalten aus dem Bild. */
+ function markeInsBild(a, weich){
+  var streifen=a.parentNode;
+  if(!streifen || streifen.scrollWidth<=streifen.clientWidth+2) return;
+  /* Gerechnet wird ueber die Rechtecke, nicht ueber offsetLeft: der
+     naechste positionierte Vorfahr ist die Leiste, nicht der Streifen
+     — offsetLeft haette die Marke um die Breite der Niveau-Knoepfe
+     verschoben. */
+  var r=a.getBoundingClientRect(), rs=streifen.getBoundingClientRect();
+  var links=streifen.scrollLeft+(r.left-rs.left)-(rs.width-r.width)/2;
+  links=Math.max(0,Math.min(links,streifen.scrollWidth-streifen.clientWidth));
+  if(Math.abs(links-streifen.scrollLeft)<2) return;
+  /* Beim ersten Aufbau hart setzen. Ein weiches Scrollen im Streifen
+     zog in Chrome die ganze Seite 399 Pixel mit nach unten, weil
+     html{scroll-behavior:smooth} gilt — der Titel der Stunde war
+     dann schon beim Laden aus dem Bild. */
+  if(weich && streifen.scrollTo) streifen.scrollTo({left:links,behavior:'smooth'});
+  else streifen.scrollLeft=links;
+ }
+
+ function zeige(id, springen, stumm){
+  var da=paare.filter(function(p){return p.sec.id===id;})[0];
+  if(!da) return;
+  jetzt=id;
+  paare.forEach(function(p){
+   p.sec.hidden = !alles && p.sec.id!==id;
+   p.a.classList.toggle('active', p.sec.id===id);
   });
- },{rootMargin:'-40% 0px -55% 0px'});
- paare.forEach(function(x){beob.observe(x.sec);});
+  if(alles) paare.forEach(function(p){ p.sec.hidden=false; });
+  markeInsBild(da.a, !!springen);
+  if(springen){
+   var y=da.sec.getBoundingClientRect().top+window.pageYOffset-hoehe();
+   window.scrollTo({top:Math.max(0,y),behavior:'smooth'});
+  }
+  /* Die Marke kommt erst in die Adresse, wenn jemand wirklich
+     umschaltet. Steht sie schon beim Laden drin, springt Chrome
+     nachtraeglich selbst dorthin — sobald die Bilder da sind, zog es
+     die Seite 399 Pixel nach unten und der Titel der Stunde war weg. */
+  if(!stumm){ try{ history.replaceState(null,'','#'+id); }catch(e){} }
+ }
+ window.stundeZeige=zeige;
+
+ tabs.forEach(function(a){
+  a.addEventListener('click',function(ev){
+   var id=(a.getAttribute('href')||'').replace('#','');
+   if(!id) return;
+   ev.preventDefault();
+   if(alles){ alles=false; if(knopfAlles) knopfAlles.setAttribute('aria-pressed','false'); }
+   zeige(id,true);
+  });
+ });
+
+ /* Am Ende jedes Abschnitts: was jetzt drankommt. In der Stunde
+    haelt das den Takt — man klickt weiter, statt zu suchen. */
+ paare.forEach(function(p,i){
+  var naechste=paare[i+1], vorige=paare[i-1];
+  var z=document.createElement('div'); z.className='weiterzeile';
+  if(vorige){
+   var zur=document.createElement('button');
+   zur.type='button'; zur.className='weiterknopf zurueck';
+   zur.innerHTML='← '+vorige.a.textContent.trim();
+   zur.addEventListener('click',function(){ zeige(vorige.sec.id,true); });
+   z.appendChild(zur);
+  }
+  if(naechste){
+   var w=document.createElement('button');
+   w.type='button'; w.className='weiterknopf';
+   w.innerHTML='Weiter: '+naechste.a.textContent.trim()+' →';
+   w.addEventListener('click',function(){ zeige(naechste.sec.id,true); });
+   z.appendChild(w);
+  }
+  if(z.children.length) p.sec.appendChild(z);
+ });
+
+ /* Der Schalter fuer die lange Ansicht sitzt am Ende der Leiste. */
+ var knopfAlles=null;
+ var streifen=document.querySelector('nav.tabs');
+ if(streifen){
+  knopfAlles=document.createElement('button');
+  knopfAlles.type='button'; knopfAlles.className='tab tabAlles';
+  knopfAlles.setAttribute('aria-pressed','false');
+  knopfAlles.textContent='⇕ Alles';
+  knopfAlles.title='Die ganze Stunde am Stück zeigen';
+  knopfAlles.addEventListener('click',function(){
+   alles=!alles;
+   knopfAlles.setAttribute('aria-pressed', alles?'true':'false');
+   if(alles){ paare.forEach(function(p){ p.sec.hidden=false; }); }
+   else zeige(jetzt,true);
+  });
+  streifen.appendChild(knopfAlles);
+ }
+
+ var ausLink=(location.hash||'').replace('#','');
+ var beimLaden=paare.filter(function(p){return p.sec.id===ausLink;}).length ? ausLink : paare[0].sec.id;
+ zeige(beimLaden, false, beimLaden!==ausLink);
 })();
 
 /* ---- Hoehe des klebenden Umschalters messen, damit die

@@ -368,14 +368,29 @@ nimm('hausaufgabe',  '📮 Hausaufgabe',   S.hausaufgabe ? hausaufgabe(S.hausauf
 const nav = `<nav class="tabs">\n` + abschnitte.map((a, i) =>
   `<a class="tab${i ? '' : ' active'}" href="#${a.id}">${a.name}</a>`).join('\n') + `\n</nav>\n`;
 
-const umschalter = S.niveau ? `<div class="niv">
-  <span class="lab">Dein Niveau</span>
-  <div class="nivk" role="group" aria-label="Niveau wählen">
-    <button type="button" data-niv="a2" aria-pressed="true">${h(S.niveau.a)}</button>
-    <button type="button" data-niv="b1" aria-pressed="false">${h(S.niveau.b)}</button>
-  </div>
-  <span class="wie">${h(S.niveau.hinweis || 'Gleiches Thema, andere Sätze. Wechsle jederzeit — probier ruhig beides.')}</span>
-</div>\n` : '';
+/* Der Umschalter und die Sprungleiste sitzen in derselben klebenden
+   Zeile. Vorher klebten sie einzeln uebereinander: zusammen 113 von
+   844 Pixeln auf dem Handy, jede achte Zeile der Stunde dauerhaft
+   verdeckt. Der erklaerende Satz zum Niveau steht jetzt darueber im
+   Text — man liest ihn einmal, er muss nicht mitwandern. */
+const nivHinweis = S.niveau
+  ? `<p class="niv-wie">${h(S.niveau.hinweis || 'Gleiches Thema, andere Sätze. Wechsle jederzeit — probier ruhig beides.')}</p>\n`
+  : '';
+/* „B2 · klar" wird auf dem Handy zu „B2". Der Zusatz ist schoen,
+   aber er nahm den Sprungmarken 90 der 390 Pixel weg — von zehn
+   Abschnitten war noch anderthalb zu sehen. */
+const nivKnopf = (niv, txt) => {
+  const teile = String(txt).split('·');
+  const kopf = h(teile[0].trim());
+  const rest = teile.slice(1).join('·').trim();
+  return `<button type="button" data-niv="${niv}" aria-pressed="${niv === 'a2'}">${kopf}` +
+         (rest ? `<span class="zusatz"> · ${h(rest)}</span>` : '') + `</button>`;
+};
+const nivKnoepfe = S.niveau ? `<div class="nivk" role="group" aria-label="Niveau wählen">
+    ${nivKnopf('a2', S.niveau.a)}
+    ${nivKnopf('b1', S.niveau.b)}
+  </div>` : '';
+const leiste = `<div class="leiste">\n  ${nivKnoepfe}\n${nav}</div>\n`;
 
 const datenBloecke = Object.keys(S.daten || {}).filter(k => S.daten[k] && (!Array.isArray(S.daten[k]) || S.daten[k].length))
   .map(k => `<script type="application/json" id="daten-${k}">\n${JSON.stringify(S.daten[k])}\n</script>`).join('\n');
@@ -405,8 +420,7 @@ ${fs.readFileSync(hier + 'stunde-style2.css', 'utf8')}
 
 <p class="subtitle">${h(S.untertitel)}</p>
 
-${umschalter}
-${nav}
+${nivHinweis}${leiste}
 ${abschnitte.map(a => a.html).join('\n')}
 <footer>
 <strong>deutschoderwas Sprechclub</strong> · ${h(S.fuss)}
