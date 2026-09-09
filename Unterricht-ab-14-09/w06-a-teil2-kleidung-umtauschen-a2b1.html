@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,105 +627,43 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B1<span class="zusatz"> · mehr</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">⚖️ Drei Wege zurück</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">Der Moment <span class="hl">vor dem Spiegel</span></h2>
-<p class="ssub">Die Hose sitzt nicht, und draußen wartet jemand vom Personal. Jetzt bräuchtest du einen Satz — und die meisten sagen dann „ist okay“ und kaufen etwas, das sie nie tragen. Heute lernen wir den Satz.</p>
-<div class="scene-wrap klein"><img src="../vok-bild/die-umkleidekabine.webp" alt="Eine Umkleidekabine mit Vorhang, Spiegel und Bank in einem Laden"></div>
-<ul class="qlist nur-a2">
-<li>Kaufst du Kleidung lieber im Laden oder online?</li>
-<li>Probierst du immer an?</li>
-<li>Was war dein letzter Kleiderkauf?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Warum ist es so schwer zu sagen, dass etwas nicht passt?</li>
-<li>Was hast du gekauft und danach nie getragen — und warum?</li>
-<li>Wie ist das Verkaufsgespräch in deinem Land anders als hier?</li>
-</ul>
-<div class="tip teal">🔑 <strong>Die Formel für heute:</strong> <b>Was ist + was du brauchst.</b> <i>„Die ist mir zu eng — hätten Sie die eine Nummer größer?“</i> Erst die Beobachtung, dann die Bitte. Zwei Teile, und die Verkäuferin weiß sofort, was zu tun ist.</div>
-<h2 class="st">Was hier <span class="hl">wirklich gilt</span></h2>
-<p class="ssub">Im Laden gekaufte Kleidung <u>muss</u> ein Geschäft nicht zurücknehmen, wenn sie in Ordnung ist — viele tun es freiwillig, aber es ist ihre Entscheidung. Bei einem echten Mangel sieht es anders aus. Und online gilt wieder etwas anderes.</p>
-<div class="scene-wrap klein"><img src="../vok-bild/der-kassenbon.webp" alt="Eine Hand hält einen Kassenbon in einem Laden"></div>
-<ul class="qlist nur-a2">
-<li>Hebst du Kassenbons auf?</li>
-<li>Hast du schon mal etwas umgetauscht?</li>
-<li>Wie lange hat das gedauert?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Wann ist Umtausch Kulanz und wann ein Recht?</li>
-<li>Kaufst du anders ein, seit du das weißt?</li>
-<li>Wie reagierst du, wenn ein Laden sich weigert?</li>
-</ul>
-<div class="tip">💡 <strong>Wichtig — und deshalb steht es hier:</strong> Diese Stunde übt die <u>Sprache</u>, nicht das Recht. Die Regeln sind je nach Fall verschieden, und verbindlich sagt dir das nur der Laden selbst, eine Verbraucherzentrale oder eine Rechtsberatung. Was du hier lernst, sind die <b>Sätze</b>, mit denen du dein Anliegen klar vorbringst.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
 </section>
 
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Wörter <span class="hl">von der Kabine bis zur Kasse</span></h2>
-<p class="ssub">Sagt jedes Wort laut — <u>mit Artikel</u>. Und gleich einen Satz hinterher: In welchem Moment im Laden brauchst du dieses Wort?</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../vok-bild/die-groesse.webp" alt="Eine Hand misst etwas auf einem Tisch" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Größe</div><div class="bex">„Haben Sie das eine Nummer größer?“</div><div class="bti">💡 Zwei Systeme nebeneinander: Zahlen (38, 40, 42) und Buchstaben (S, M, L). Der wichtigste Satz: <b>„Haben Sie das eine Nummer größer?“</b> — <i>Nummer</i>, nicht <i>Größe</i>, klingt hier natürlicher.</div><button class="speak" data-say="Haben Sie das eine Nummer größer?">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-umkleidekabine.webp" alt="Eine Umkleidekabine mit Vorhang, Spiegel und Bank" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Umkleidekabine</div><div class="bex">„Wo sind denn die Umkleidekabinen?“</div><div class="bti">💡 Im Alltag sagt fast jeder nur <b>die Kabine</b> oder <b>die Umkleide</b>. Und das Personal fragt oft: <i>Möchten Sie es anprobieren?</i></div><button class="speak" data-say="Wo sind denn die Umkleidekabinen?">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-kleidung.webp" alt="Zwei Personen in einem Kleidergeschäft halten einen Pullover hoch" loading="lazy"><div class="bb"><div class="bw">anprobieren</div><div class="bex">„Kann ich das mal anprobieren?“</div><div class="bti">💡 Trennbar: <i>Ich probiere es an.</i> Und ein Wort weiter: <b>ausprobieren</b> heißt „testen“ und geht mit allem — <i>Ich probiere das Rezept aus.</i></div><button class="speak" data-say="Kann ich das mal anprobieren?">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/das-hemd.webp" alt="Ein hellblaues Hemd hängt auf einem Bügel an einer Schranktür" loading="lazy"><div class="bb"><div class="bw">passen</div><div class="bex">„Das Hemd passt mir gut.“</div><div class="bti">💡 Mit <b>Dativ</b>: <i>Es passt <b>mir</b>.</i> Nicht verwechseln mit <b>stehen</b>: <i>Die Farbe steht dir</i> heißt, dass sie dir gut aussieht — das ist eine andere Frage.</div><button class="speak" data-say="Das Hemd passt mir gut.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-aermel.webp" alt="Jemand krempelt sich am Tisch den Ärmel hoch" loading="lazy"><div class="bb"><div class="bw">zu eng</div><div class="bex">„Im Ärmel ist es mir zu eng.“</div><div class="bti">💡 Die vier Wörter, die du im Laden brauchst: <b>zu eng</b>, <b>zu weit</b>, <b>zu kurz</b>, <b>zu lang</b>. Und immer mit <b>mir</b>: <i>Es ist <b>mir</b> zu eng.</i></div><button class="speak" data-say="Im Ärmel ist es mir zu eng.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-verkaufen.webp" alt="Zwei Personen an einem Verkaufstresen" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Beratung</div><div class="bex">„Werden Sie schon beraten?“</div><div class="bti">💡 Diese Frage hörst du in jedem Laden. Zwei Antworten reichen: <b>„Ich schaue erst mal.“</b> oder <b>„Ja, gern — ich suche …“</b> Beide sind völlig normal.</div><button class="speak" data-say="Werden Sie schon beraten?">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-kassenbon.webp" alt="Eine Hand hält einen Kassenbon in einem Laden" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Kassenbon</div><div class="bex">„Haben Sie den Kassenbon noch?“</div><div class="bti">💡 Auch <b>der Bon</b>, <b>der Beleg</b> oder <b>die Quittung</b>. Beim Umtausch ist er die erste Frage — deshalb hebt man ihn auf, bis das Stück wirklich getragen wurde.</div><button class="speak" data-say="Haben Sie den Kassenbon noch?">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-retoure.webp" alt="Ein verschlossener Karton auf einem Tisch" loading="lazy"><div class="bb"><div class="bw">umtauschen</div><div class="bex">„Ich möchte das gern umtauschen.“</div><div class="bti">💡 Trennbar. Und beachte den Unterschied: <b>umtauschen</b> = gegen etwas anderes, <b>zurückgeben</b> = Geld zurück. Im Laden fragt man meist erst nach dem Umtausch.</div><button class="speak" data-say="Ich möchte das gern umtauschen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-reklamation.webp" alt="Ein Paket steht auf einer Ladentheke" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Mangel</div><div class="bex">„Hier ist ein Mangel — die Naht ist offen.“</div><div class="bti">💡 Das Wort, das den ganzen Ton ändert: Ein <b>Mangel</b> ist etwas anderes als „gefällt mir nicht“. Sag ihn konkret: <i>Die Naht ist offen. Der Reißverschluss klemmt.</i></div><button class="speak" data-say="Hier ist ein Mangel — die Naht ist offen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/das-angebot.webp" alt="Ein Supermarktregal mit Produkten und einem Angebotsschild" loading="lazy"><div class="bb"><div class="bw">reduziert</div><div class="bex">„Die Jacke ist um dreißig Prozent reduziert.“</div><div class="bti">💡 Ein Satz, den man an der Kasse oft hört: <b>„Reduzierte Ware ist vom Umtausch ausgeschlossen.“</b> Ob das im Einzelfall gilt, sagt dir der Laden — aber du solltest wissen, was der Satz bedeutet.</div><button class="speak" data-say="Die Jacke ist um dreißig Prozent reduziert.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-mantel.webp" alt="Ein Mantel hängt im Flur neben der Treppe" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Farbe</div><div class="bex">„Gibt es den Mantel auch in Dunkelblau?“</div><div class="bti">💡 Sehr nützlich: <b>„Gibt es das auch in …?“</b> Damit fragst du nach jeder Variante — Farbe, Größe, Material. Und <b>die Farbe steht dir</b> ist das Kompliment dazu.</div><button class="speak" data-say="Gibt es den Mantel auch in Dunkelblau?">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-kasse.webp" alt="Eine Kundin bezahlt an einer Kasse" loading="lazy"><div class="bb"><div class="bw">sich entscheiden</div><div class="bex">„Ich kann mich nicht entscheiden.“</div><div class="bti">💡 Immer mit <b>sich</b> und mit <b>für</b>: <i>Ich entscheide mich <b>für</b> den blauen.</i> Und der ehrlichste Satz im Laden: <b>„Ich überlege es mir noch.“</b> Damit darfst du jederzeit gehen.</div><button class="speak" data-say="Ich kann mich nicht entscheiden.">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel „Passt nicht“:</strong> Einer nennt ein Kleidungsstück und ein Problem — <i>Hose zu lang, Jacke zu eng, Schuhe zu klein, Farbe zu grell.</i> Der Nachbar sagt sofort den vollständigen Satz an die Verkäuferin: Beobachtung plus Bitte. Wer nur meckert und nichts erbittet, gibt weiter.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Umtauschen, zurückgeben, <span class="hl">reklamieren — was denn nun?</span></h2>
-<p class="ssub">Drei Wörter, die im Laden ständig durcheinandergehen. Sie führen zu drei ganz verschiedenen Gesprächen — und du entscheidest mit dem ersten Satz, welches du führst.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">🔁</span><div class="gmw">umtauschen</div><div class="gmb">gegen etwas anderes tauschen — andere Größe, andere Farbe</div><div class="gmx">Ich möchte das in Größe 40 umtauschen.</div></div>
-<div class="gk blau"><span class="gem2">💶</span><div class="gmw">zurückgeben</div><div class="gmb">zurück und Geld wieder haben</div><div class="gmx">Kann ich das zurückgeben?</div></div>
-<div class="gk ja"><span class="gem2">🧵</span><div class="gmw">reklamieren</div><div class="gmb">etwas ist kaputt oder fehlerhaft</div><div class="gmx">Ich möchte das reklamieren, die Naht ist offen.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So kommst du weiter</div><div class="gsatz">Die Naht ist an zwei Stellen offen — ich möchte das reklamieren.</div><div class="bsp"><span class="wer">Warum das wirkt</span>Du nennst einen <b>konkreten Mangel</b> und sagst, was du willst. Damit ist klar, dass es nicht um Geschmack geht — und das Gespräch läuft ganz anders.</div></div>
-<div class="gk no"><div class="gkl">❌ So bleibst du stecken</div><div class="gsatz">Das Ding taugt nichts, ich will mein Geld zurück.</div><div class="bsp"><span class="wer">Das Problem</span><i>Taugt nichts</i> ist ein Urteil, kein Mangel. Und der Ton macht aus einem einfachen Vorgang eine Auseinandersetzung, in der beide Seiten hart werden.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Die ist mir zu eng — hätten Sie die eine Nummer größer?</div><div class="bsp"><span class="wer">Warum das funktioniert</span>Beobachtung und Bitte in einem Satz. Die Verkäuferin weiß sofort, was sie holen soll, und niemand muss raten.</div></div>
-<div class="gk no"><div class="gkl">❌ So kommt nichts zurück</div><div class="gsatz">Die ist zu klein.</div><div class="bsp"><span class="wer">Das Problem</span>Der Satz beschreibt nur — es fehlt die Bitte. Sehr oft folgt dann ein <i>„Ja, das kann sein“</i> und beide stehen da.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So bleibst du frei</div><div class="gsatz">Ich überlege es mir noch, danke.</div><div class="bsp"><span class="wer">Warum das reicht</span>Ein vollständiger, höflicher Satz, der keine Begründung braucht. Du musst nichts erklären und nichts kaufen — das ist hier völlig üblich.</div></div>
-<div class="gk no"><div class="gkl">❌ So wird es zäh</div><div class="gsatz">Ähm, ja, ich weiß nicht, vielleicht, also …</div><div class="bsp"><span class="wer">Das Problem</span>Unsicherheit lädt zum Nachfassen ein. Ein klarer Satz beendet das Gespräch freundlich — und niemand nimmt es dir übel.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Was sage ich, wenn ich nur schauen will?</button>
-<div class="inhalt">
-<p>Vier Sätze, mehr brauchst du im ganzen Laden nicht:</p>
-<ul>
-<li><b>Beim Reinkommen:</b> <i>Danke, ich schaue erst mal.</i> — auf die Frage <i>Werden Sie schon beraten?</i></li>
-<li><b>Wenn du doch Hilfe willst:</b> <i>Ja, gern — ich suche eine Jacke für den Herbst.</i></li>
-<li><b>In der Kabine:</b> <i>Hätten Sie das eine Nummer größer?</i></li>
-<li><b>Zum Schluss:</b> <i>Ich überlege es mir noch, danke.</i> oder <i>Ich nehme es.</i></li>
-</ul>
-<p style="margin-top:.5rem;">Und einer für den Notfall, wenn dir das Wort fehlt: <b>„Ich zeige es Ihnen kurz.“</b> Zeigen ist erlaubt — im Laden ist das die schnellste Verständigung überhaupt.</p>
-</div>
-</div>
-<div class="tip">🎯 <strong>Zu zweit, eine Minute:</strong> Einer nennt eine Situation im Laden, der andere sagt sofort den passenden von den vier Sätzen. Wer zögert oder etwas erfindet, gibt weiter.</div>
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Kaufst du Kleidung lieber im Laden oder online?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Probierst du immer an?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -814,37 +822,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
-<p class="ssub">Einer ist Kundin, einer arbeitet im Laden. Danach tauschen — und beim zweiten Mal ohne Notizen.</p>
-<div class="rmcard">
-<b>1 · Der ganz normale Einkauf</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A arbeitet im Laden, B sucht eine Jacke für den Herbst. Spielt den kompletten Ablauf: begrüßt werden, suchen, anprobieren, eine andere Größe holen lassen, entscheiden, zahlen.</p>
-<div class="nur-a2"><span class="rm">Werden Sie schon beraten?</span><span class="rm">Ich suche eine Jacke für den Herbst</span><span class="rm">Hätten Sie die eine Nummer größer?</span><span class="rm">Ich nehme sie</span></div>
-<div class="nur-b1"><span class="rm">Ich suche etwas Schlichtes, nichts Auffälliges</span><span class="rm">Der Schnitt gefällt mir, aber im Ärmel spannt es</span><span class="rm">Gibt es die auch in Naturfarben?</span><span class="rm">Wie lange kann ich das umtauschen?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat alle vier Momente durchgespielt und dabei <i>passen</i>, <i>stehen</i> oder <i>gefallen</i> mindestens dreimal richtig mit Dativ benutzt. Kein einziges <i>Es passt mich</i>.</div>
-</div>
-<div class="rmcard">
-<b>2 · Umtausch — und einmal Nein</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B bringt etwas zurück. Im ersten Durchgang klappt es problemlos. Im zweiten sagt A, dass reduzierte Ware nicht umgetauscht wird. B bleibt freundlich und fragt, was stattdessen möglich wäre.</p>
-<div class="nur-a2"><span class="rm">Ich möchte das gern umtauschen</span><span class="rm">Hier ist der Kassenbon</span><span class="rm">Es passt mir leider doch nicht</span><span class="rm">Und was wäre möglich?</span></div>
-<div class="nur-b1"><span class="rm">Ich hatte gefragt, ob das umtauschbar ist</span><span class="rm">Gibt es die Möglichkeit eines Gutscheins?</span><span class="rm">Ich verstehe die Regel, frage aber trotzdem</span><span class="rm">Dann behalte ich es, kein Problem</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B ist beim Nein weder laut geworden noch sofort gegangen, sondern hat nach einer Alternative gefragt. Und im ersten Durchgang stand das Anliegen gleich im ersten Satz.</div>
-</div>
-<div class="rmcard">
-<b>3 · Der echte Mangel</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">An B's Jacke ist nach zweimal Tragen die Naht offen. A ist zunächst skeptisch und vermutet einen Trageschaden. B bleibt sachlich, nennt den Mangel konkret und sagt, was er sich wünscht.</p>
-<div class="nur-a2"><span class="rm">Ich möchte das reklamieren</span><span class="rm">Die Naht ist an zwei Stellen offen</span><span class="rm">Getragen habe ich es zweimal</span><span class="rm">Mir wäre ein Austausch am liebsten</span></div>
-<div class="nur-b1"><span class="rm">Das war schon beim Kauf so</span><span class="rm">Ich verstehe die Frage, aber es ist normal getragen worden</span><span class="rm">Können Sie das jemandem zeigen, der das beurteilt?</span><span class="rm">Was schlagen Sie vor?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat den Mangel konkret benannt statt allgemein zu klagen, ist sachlich geblieben und hat einen eigenen Wunsch genannt. Das Wort <i>reklamieren</i> kam im ersten Satz.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Jeder nennt reihum ein Kleidungsstück. Der Nachbar sagt sofort drei Sätze dazu: einen mit <i>passen</i>, einen mit <i>stehen</i>, einen mit <i>gefallen</i>. Wer <i>mich</i> statt <i>mir</i> sagt, gibt weiter.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -877,14 +862,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde müssen <u>passen, stehen</u> und <u>gefallen</u> je einmal vorkommen — alle drei mit Dativ. Der Partner hört mit und hebt bei einem <i>mich</i> die Hand.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Jeder nennt reihum ein Kleidungsstück. Der Nachbar sagt sofort drei Sätze dazu: einen mit <i>passen</i>, einen mit <i>stehen</i>, einen mit <i>gefallen</i>. Wer <i>mich</i> statt <i>mir</i> sagt, gibt weiter.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Warum ist es so schwer zu sagen, dass etwas nicht passt?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Was hast du gekauft und danach nie getragen — und warum?</li><li>Wie ist das Verkaufsgespräch in deinem Land anders als hier?</li><li>Wann ist Umtausch Kulanz und wann ein Recht?</li><li>Kaufst du anders ein, seit du das weißt?</li><li>Wie reagierst du, wenn ein Laden sich weigert?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
+<p class="ssub">Einer ist Kundin, einer arbeitet im Laden. Danach tauschen — und beim zweiten Mal ohne Notizen.</p>
+<div class="rmcard">
+<b>1 · Der ganz normale Einkauf</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A arbeitet im Laden, B sucht eine Jacke für den Herbst. Spielt den kompletten Ablauf: begrüßt werden, suchen, anprobieren, eine andere Größe holen lassen, entscheiden, zahlen.</p>
+<div class="nur-a2"><span class="rm">Werden Sie schon beraten?</span><span class="rm">Ich suche eine Jacke für den Herbst</span><span class="rm">Hätten Sie die eine Nummer größer?</span><span class="rm">Ich nehme sie</span></div>
+<div class="nur-b1"><span class="rm">Ich suche etwas Schlichtes, nichts Auffälliges</span><span class="rm">Der Schnitt gefällt mir, aber im Ärmel spannt es</span><span class="rm">Gibt es die auch in Naturfarben?</span><span class="rm">Wie lange kann ich das umtauschen?</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat alle vier Momente durchgespielt und dabei <i>passen</i>, <i>stehen</i> oder <i>gefallen</i> mindestens dreimal richtig mit Dativ benutzt. Kein einziges <i>Es passt mich</i>.</div>
+</div>
+<div class="rmcard">
+<b>2 · Umtausch — und einmal Nein</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B bringt etwas zurück. Im ersten Durchgang klappt es problemlos. Im zweiten sagt A, dass reduzierte Ware nicht umgetauscht wird. B bleibt freundlich und fragt, was stattdessen möglich wäre.</p>
+<div class="nur-a2"><span class="rm">Ich möchte das gern umtauschen</span><span class="rm">Hier ist der Kassenbon</span><span class="rm">Es passt mir leider doch nicht</span><span class="rm">Und was wäre möglich?</span></div>
+<div class="nur-b1"><span class="rm">Ich hatte gefragt, ob das umtauschbar ist</span><span class="rm">Gibt es die Möglichkeit eines Gutscheins?</span><span class="rm">Ich verstehe die Regel, frage aber trotzdem</span><span class="rm">Dann behalte ich es, kein Problem</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B ist beim Nein weder laut geworden noch sofort gegangen, sondern hat nach einer Alternative gefragt. Und im ersten Durchgang stand das Anliegen gleich im ersten Satz.</div>
+</div>
+<div class="rmcard">
+<b>3 · Der echte Mangel</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">An B's Jacke ist nach zweimal Tragen die Naht offen. A ist zunächst skeptisch und vermutet einen Trageschaden. B bleibt sachlich, nennt den Mangel konkret und sagt, was er sich wünscht.</p>
+<div class="nur-a2"><span class="rm">Ich möchte das reklamieren</span><span class="rm">Die Naht ist an zwei Stellen offen</span><span class="rm">Getragen habe ich es zweimal</span><span class="rm">Mir wäre ein Austausch am liebsten</span></div>
+<div class="nur-b1"><span class="rm">Das war schon beim Kauf so</span><span class="rm">Ich verstehe die Frage, aber es ist normal getragen worden</span><span class="rm">Können Sie das jemandem zeigen, der das beurteilt?</span><span class="rm">Was schlagen Sie vor?</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat den Mangel konkret benannt statt allgemein zu klagen, ist sachlich geblieben und hat einen eigenen Wunsch genannt. Das Wort <i>reklamieren</i> kam im ersten Satz.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -950,6 +969,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine beiden Sprachnachrichten bis Sonntagabend. Ich achte vor allem auf <i>mir</i> gegen <i>mich</i> — das ist bei diesen Verben der häufigste Fehler und einer, den man sich sonst jahrelang selbst nicht anhört.</div>
 <div class="tip">🔜 <strong>Nächste Woche, Teil 1:</strong> <u>Unterwegs mit Bus und Bahn.</u> Ticket, Fahrplan, umsteigen — und am Mittwoch nach dem Weg fragen und mit Verspätungen umgehen.</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1136,11 +1162,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1197,7 +1230,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1207,7 +1242,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

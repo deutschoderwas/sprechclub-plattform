@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,35 +627,44 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B2<span class="zusatz"> · feiner</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#wiederholung">🔁 Wiederholung</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">⚖️ Zwei Fälle</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">Neun Präpositionen, <span class="hl">die beides können</span></h2>
-<p class="ssub"><b>in, an, auf, über, unter, vor, hinter, neben, zwischen.</b> Nach allen neun kann Akkusativ oder Dativ stehen — und du entscheidest das, nicht das Wörterbuch. Die Frage lautet immer gleich: <b>Wohin?</b> oder <b>Wo?</b></p>
-<div class="scene-wrap klein"><img src="../vok-bild/das-schlafzimmer.webp" alt="Ein aufgeräumtes, helles Schlafzimmer"></div>
-<ul class="qlist nur-a2">
-<li>Sag einen Satz mit <b>auf den Tisch</b> und einen mit <b>auf dem Tisch</b>.</li>
-<li>Welche der neun Präpositionen benutzt du am häufigsten?</li>
-<li>Gibt es in deiner Sprache auch zwei Formen für Ziel und Ort?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Warum reicht ein einziger Buchstabe, um die Bedeutung zu drehen?</li>
-<li>Wann merkt ein Muttersprachler den Fehler sofort — und wann gar nicht?</li>
-<li>Welche Präposition ist bei dir am unsichersten?</li>
-</ul>
-<div class="tip teal">🔑 <strong>Die ganze Regel in einem Satz:</strong> Bewegt sich etwas <u>dorthin</u>? → <b>Akkusativ</b>. Ist es <u>schon dort</u>? → <b>Dativ</b>. Und das Verb sagt es dir: <b>legen, stellen, setzen, hängen</b> → Akkusativ. <b>liegen, stehen, sitzen, hängen</b> → Dativ.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
+</section>
+
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Sag einen Satz mit <b>auf den Tisch</b> und einen mit <b>auf dem Tisch</b>.</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Welche der neun Präpositionen benutzt du am häufigsten?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="wiederholung">
@@ -606,63 +685,6 @@ a.tab:hover{color:var(--ink);}
 <li>Warum steht eine Flasche und liegt ein Buch?</li>
 </ul>
 <div class="tip teal">🔁 <strong>Zu zweit, dreißig Sekunden:</strong> Einer nennt einen Gegenstand, der andere sagt Handlung und Zustand. Fünf Gegenstände — und ab heute achtet ihr zusätzlich auf den Artikel dahinter.</div>
-</section>
-
-<section class="section" id="wortschatz">
-<h2 class="st">Neun Präpositionen und <span class="hl">drei Wörter für die Lage</span></h2>
-<p class="ssub">Sagt jede Präposition laut — und gleich beide Beispielsätze hinterher. Erst Akkusativ, dann Dativ.</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../vok-bild/der-schrank.webp" alt="Ein offener Kleiderschrank mit ordentlich aufgehängter Kleidung" loading="lazy"><div class="bb"><div class="bw">in</div><div class="bex">„Ich lege es in den Schrank. — Es liegt im Schrank.“</div><div class="bti">💡 Die häufigste der neun. Und die Verschmelzungen merken: <b>in dem = im</b>, <b>in das = ins</b>.</div><button class="speak" data-say="Ich lege es in den Schrank. Es liegt im Schrank.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-wand.webp" alt="Eine Frau sitzt in einem fast leeren, hellen Zimmer" loading="lazy"><div class="bb"><div class="bw">an</div><div class="bex">„Ich hänge es an die Wand. — Es hängt an der Wand.“</div><div class="bti">💡 <b>an</b> für senkrechte Flächen und Ränder: an die Wand, an den See, ans Fenster. Verschmelzung: <b>an dem = am</b>.</div><button class="speak" data-say="Ich hänge es an die Wand. Es hängt an der Wand.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-buero.webp" alt="Zwei Kolleginnen am Schreibtisch mit Laptop" loading="lazy"><div class="bb"><div class="bw">auf</div><div class="bex">„Ich lege es auf den Tisch. — Es liegt auf dem Tisch.“</div><div class="bti">💡 <b>auf</b> für waagerechte Flächen — Tisch, Boden, Regal. Keine Verschmelzung: es bleibt <i>auf dem</i>, nicht „aufm“.</div><button class="speak" data-say="Ich lege es auf den Tisch. Es liegt auf dem Tisch.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="über">⬆️</div><div class="bb"><div class="bw">über</div><div class="bex">„Ich hänge die Lampe über den Tisch. — Sie hängt über dem Tisch.“</div><div class="bti">💡 Der Unterschied zu <b>auf</b>: <b>über</b> berührt nicht. Die Lampe über dem Tisch schwebt, das Buch auf dem Tisch liegt auf.</div><button class="speak" data-say="Ich hänge die Lampe über den Tisch. Sie hängt über dem Tisch.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="unter">⬇️</div><div class="bb"><div class="bw">unter</div><div class="bex">„Ich stelle die Kiste unter das Bett. — Sie steht unter dem Bett.“</div><div class="bti">💡 Auch übertragen sehr häufig: <b>unter Druck</b>, <b>unter Freunden</b>, <b>unter anderem</b>.</div><button class="speak" data-say="Ich stelle die Kiste unter das Bett. Sie steht unter dem Bett.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/das-schlafzimmer.webp" alt="Ein aufgeräumtes, helles Schlafzimmer" loading="lazy"><div class="bb"><div class="bw">vor</div><div class="bex">„Ich lege den Teppich vor das Bett. — Er liegt vor dem Bett.“</div><div class="bti">💡 Räumlich mit beiden Fällen, zeitlich immer mit Dativ: <i>vor dem Essen, vor drei Tagen</i>.</div><button class="speak" data-say="Ich lege den Teppich vor das Bett. Er liegt vor dem Bett.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="hinter">🚪</div><div class="bb"><div class="bw">hinter</div><div class="bex">„Ich stelle den Besen hinter die Tür. — Er steht hinter der Tür.“</div><div class="bti">💡 Das Gegenstück zu <b>vor</b>. Und eine schöne Wendung: <b>etwas hinter sich haben</b> — es ist geschafft.</div><button class="speak" data-say="Ich stelle den Besen hinter die Tür. Er steht hinter der Tür.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-mantel.webp" alt="Ein Mantel hängt im Flur neben der Treppe" loading="lazy"><div class="bb"><div class="bw">neben</div><div class="bex">„Ich hänge die Jacke neben den Mantel. — Sie hängt neben dem Mantel.“</div><div class="bti">💡 Für die genaue Beschreibung unentbehrlich: <i>direkt neben, gleich neben, schräg neben</i>.</div><button class="speak" data-say="Ich hänge die Jacke neben den Mantel. Sie hängt neben dem Mantel.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-lager.webp" alt="Person räumt Kartons in ein Regal" loading="lazy"><div class="bb"><div class="bw">zwischen</div><div class="bex">„Ich stelle die Kiste zwischen die Regale. — Sie steht zwischen den Regalen.“</div><div class="bti">💡 Braucht immer <u>zwei</u> Bezugspunkte. Im Dativ Plural: <b>zwischen den Regalen</b> — mit -n am Ende.</div><button class="speak" data-say="Ich stelle die Kiste zwischen die Regale. Sie steht zwischen den Regalen.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="wohin">🧭</div><div class="bb"><div class="bw">wohin</div><div class="bex">„Wohin soll das Regal? — An die Wand.“</div><div class="bti">💡 Die Antwort steht immer im <b>Akkusativ</b>. Umgangssprachlich zerlegt: <i>Wo soll das <b>hin</b>?</i></div><button class="speak" data-say="Wohin soll das Regal? An die Wand.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="wo">📍</div><div class="bb"><div class="bw">wo</div><div class="bex">„Wo steht das Regal? — An der Wand.“</div><div class="bti">💡 Die Antwort steht immer im <b>Dativ</b>. Merksatz: <b>Wo mit o wie ohne Bewegung.</b></div><button class="speak" data-say="Wo steht das Regal? An der Wand.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="woher">🔙</div><div class="bb"><div class="bw">woher</div><div class="bex">„Woher hast du das? — Aus dem Keller.“</div><div class="bti">💡 Die dritte Frage, die selten geübt wird. Die Antwort kommt mit <b>aus</b>, <b>von</b> oder <b>vom</b> — immer Dativ.</div><button class="speak" data-say="Woher hast du das? Aus dem Keller.">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel:</strong> Einer nennt eine Präposition, der andere sagt in zwei Sekunden beide Sätze — einmal mit Akkusativ, einmal mit Dativ. Neun Präpositionen, dann tauschen.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Ein Buchstabe, <span class="hl">zwei Bedeutungen</span></h2>
-<p class="ssub">Erst das System, das hinter allen neun Präpositionen steckt. Darunter drei Satzpaare, bei denen fast alle danebenliegen.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">➡️</span><div class="gmw">Wohin? → Akkusativ</div><div class="gmb">Etwas bewegt sich zu einem Ziel.</div><div class="gmx">Ich lege es auf den Tisch. · in den Schrank · an die Wand</div></div>
-<div class="gk blau"><span class="gem2">📍</span><div class="gmw">Wo? → Dativ</div><div class="gmb">Etwas ist schon dort und bleibt.</div><div class="gmx">Es liegt auf dem Tisch. · im Schrank · an der Wand</div></div>
-<div class="gk ja"><span class="gem2">🔙</span><div class="gmw">Woher? → immer Dativ</div><div class="gmb">Der Ausgangspunkt, mit aus oder von.</div><div class="gmx">Ich hole es aus dem Schrank. · vom Tisch</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Ich lege das Buch auf den Tisch.</div><div class="bsp"><span class="wer">Warum das stimmt</span>Das Buch bewegt sich zum Tisch hin — also <b>Wohin?</b> und damit <b>Akkusativ</b>: <i>auf <b>den</b> Tisch</i>.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Ich lege das Buch auf dem Tisch.</div><div class="bsp"><span class="wer">Das Problem</span>Mit Dativ hieße es: Du liegst selbst auf dem Tisch und legst dort etwas hin. Das Verb <b>legen</b> verlangt hier immer Akkusativ.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Das Bild hängt an der Wand.</div><div class="bsp"><span class="wer">Warum das stimmt</span>Nichts bewegt sich — <b>Wo?</b> und damit <b>Dativ</b>: <i>an <b>der</b> Wand</i>. Das Zustandsverb <b>hängen</b> verrät es sofort.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Das Bild hängt an die Wand.</div><div class="bsp"><span class="wer">Das Problem</span>Akkusativ würde bedeuten, das Bild fliegt gerade zur Wand. Merksatz: <b>Zustandsverb → Dativ, immer.</b></div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Setz dich auf den Stuhl.</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>sich setzen</b> ist eine Bewegung — vom Stehen zum Sitzen. Also Akkusativ: <i>auf <b>den</b> Stuhl</i>.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Setz dich auf dem Stuhl.</div><div class="bsp"><span class="wer">Das Problem</span>Dativ hieße: Du sitzt schon dort und setzt dich noch einmal. Erst wenn du sitzt, gilt: <i>Ich sitze auf <b>dem</b> Stuhl.</i></div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Akkusativ oder Dativ — in zwei Sekunden</button>
-<div class="inhalt">
-<p>Du musst gar nicht über den Fall nachdenken. Schau auf das Verb:</p>
-<ul>
-<li><b>legen, stellen, setzen, hängen, stecken</b> (Handlung) → immer <b>Akkusativ</b>.</li>
-<li><b>liegen, stehen, sitzen, hängen, stecken</b> (Zustand) → immer <b>Dativ</b>.</li>
-<li>Bei anderen Verben frag <b>Wohin?</b> oder <b>Wo?</b>: <i>Ich gehe in die Küche</i> (wohin) — <i>Ich koche in der Küche</i> (wo).</li>
-<li>Und wenn du das Verb nicht sicher zuordnest: Kannst du <b>„was?“</b> fragen? Dann ist es Handlung, also Akkusativ.</li>
-</ul>
-<p style="margin-top:.5rem;">Merksatz für alles: <b>Bewegung zieht den Akkusativ nach sich, Ruhe bleibt im Dativ.</b></p>
-</div>
-</div>
-<div class="tip">⚖️ <strong>Kurzübung:</strong> Einer sagt einen Satz mit Akkusativ, der andere macht sofort den Dativ-Satz daraus. <i>„Ich stelle die Vase auf den Tisch.“ — „Die Vase steht auf dem Tisch.“</i> Zehn Runden.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -823,37 +845,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei <span class="hl">Räume, zwei Fälle</span></h2>
-<p class="ssub">Zu zweit. Bei jedem Stück muss zuerst der Akkusativ-Satz fallen und danach der Dativ-Satz. Danach tauschen.</p>
-<div class="rmcard">
-<b>1 · Die Wohnung am Telefon einrichten</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A steht in der neuen Wohnung, B ist am Telefon und sagt, wohin alles soll. B sieht nichts — also muss jede Angabe genau sein.</p>
-<div class="nur-a2"><span class="rm">Wohin soll das Sofa?</span><span class="rm">Und der Tisch?</span><span class="rm">Steht das jetzt gut?</span><span class="rm">Wo ist noch Platz?</span></div>
-<div class="nur-b1"><span class="rm">Am besten an die Wand gegenüber</span><span class="rm">Zwischen das Fenster und das Regal</span><span class="rm">Dann steht es nicht im Weg</span><span class="rm">Schräg gegenüber vom Eingang</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Jede Anweisung kommt im Akkusativ, jede Rückmeldung im Dativ — und beide benutzen mindestens einmal <b>zwischen</b>.</div>
-</div>
-<div class="rmcard">
-<b>2 · Der Suchdienst</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A sucht fünf Dinge. B weiß, wo alle sind, sagt es aber erst nach einer Rückfrage genau genug.</p>
-<div class="nur-a2"><span class="rm">Wo ist der Schlüssel?</span><span class="rm">Auf dem Tisch?</span><span class="rm">Woher kommt der denn?</span><span class="rm">Und wohin soll er zurück?</span></div>
-<div class="nur-b1"><span class="rm">Er müsste noch in der Jacke stecken</span><span class="rm">Direkt unter den Unterlagen</span><span class="rm">Den habe ich aus dem Auto geholt</span><span class="rm">Leg ihn bitte wieder an den Haken</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B benutzt bei jeder Antwort eine andere Präposition und wechselt korrekt zwischen Dativ (wo es ist) und Akkusativ (wohin es soll).</div>
-</div>
-<div class="rmcard">
-<b>3 · Umgeräumt und nichts gefunden</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat in der gemeinsamen Küche alles umgeräumt. B findet nichts mehr und fragt sich durch — bis klar ist, wo jetzt was steht.</p>
-<div class="nur-a2"><span class="rm">Ich habe alles umgeräumt</span><span class="rm">Die Teller sind jetzt …</span><span class="rm">Warum steht das da?</span><span class="rm">Stell das bitte zurück</span></div>
-<div class="nur-b1"><span class="rm">Das Geschirr ist nach unten gewandert</span><span class="rm">Ich habe die Gläser nach oben gestellt</span><span class="rm">So kommt man leichter dran</span><span class="rm">Dann räumen wir es wieder um</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A erklärt jede Veränderung mit beiden Sätzen — was er getan hat (Akkusativ) und wie es jetzt ist (Dativ).</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Geht die neun Präpositionen der Reihe nach durch und sagt zu jeder beide Sätze. Wer stockt, fängt bei <b>in</b> wieder an.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -886,14 +885,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde müssen mindestens <u>vier verschiedene</u> Präpositionen vorkommen — und einmal ein Dativ im Plural. Der Partner zählt mit.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Geht die neun Präpositionen der Reihe nach durch und sagt zu jeder beide Sätze. Wer stockt, fängt bei <b>in</b> wieder an.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Warum reicht ein einziger Buchstabe, um die Bedeutung zu drehen?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Wann merkt ein Muttersprachler den Fehler sofort — und wann gar nicht?</li><li>Welche Präposition ist bei dir am unsichersten?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei <span class="hl">Räume, zwei Fälle</span></h2>
+<p class="ssub">Zu zweit. Bei jedem Stück muss zuerst der Akkusativ-Satz fallen und danach der Dativ-Satz. Danach tauschen.</p>
+<div class="rmcard">
+<b>1 · Die Wohnung am Telefon einrichten</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A steht in der neuen Wohnung, B ist am Telefon und sagt, wohin alles soll. B sieht nichts — also muss jede Angabe genau sein.</p>
+<div class="nur-a2"><span class="rm">Wohin soll das Sofa?</span><span class="rm">Und der Tisch?</span><span class="rm">Steht das jetzt gut?</span><span class="rm">Wo ist noch Platz?</span></div>
+<div class="nur-b1"><span class="rm">Am besten an die Wand gegenüber</span><span class="rm">Zwischen das Fenster und das Regal</span><span class="rm">Dann steht es nicht im Weg</span><span class="rm">Schräg gegenüber vom Eingang</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Jede Anweisung kommt im Akkusativ, jede Rückmeldung im Dativ — und beide benutzen mindestens einmal <b>zwischen</b>.</div>
+</div>
+<div class="rmcard">
+<b>2 · Der Suchdienst</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A sucht fünf Dinge. B weiß, wo alle sind, sagt es aber erst nach einer Rückfrage genau genug.</p>
+<div class="nur-a2"><span class="rm">Wo ist der Schlüssel?</span><span class="rm">Auf dem Tisch?</span><span class="rm">Woher kommt der denn?</span><span class="rm">Und wohin soll er zurück?</span></div>
+<div class="nur-b1"><span class="rm">Er müsste noch in der Jacke stecken</span><span class="rm">Direkt unter den Unterlagen</span><span class="rm">Den habe ich aus dem Auto geholt</span><span class="rm">Leg ihn bitte wieder an den Haken</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B benutzt bei jeder Antwort eine andere Präposition und wechselt korrekt zwischen Dativ (wo es ist) und Akkusativ (wohin es soll).</div>
+</div>
+<div class="rmcard">
+<b>3 · Umgeräumt und nichts gefunden</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat in der gemeinsamen Küche alles umgeräumt. B findet nichts mehr und fragt sich durch — bis klar ist, wo jetzt was steht.</p>
+<div class="nur-a2"><span class="rm">Ich habe alles umgeräumt</span><span class="rm">Die Teller sind jetzt …</span><span class="rm">Warum steht das da?</span><span class="rm">Stell das bitte zurück</span></div>
+<div class="nur-b1"><span class="rm">Das Geschirr ist nach unten gewandert</span><span class="rm">Ich habe die Gläser nach oben gestellt</span><span class="rm">So kommt man leichter dran</span><span class="rm">Dann räumen wir es wieder um</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A erklärt jede Veränderung mit beiden Sätzen — was er getan hat (Akkusativ) und wie es jetzt ist (Dativ).</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -959,6 +992,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Sprachnachricht bis Sonntag in die WhatsApp-Gruppe. Ich höre jede an und antworte dir persönlich.</div>
 <div class="tip">🔜 <strong>Nächste Woche, Strang B:</strong> <u>BRINGEN, HOLEN, NEHMEN</u> — drei Verben, die ständig verwechselt werden, und die Vorsilben, die alles ändern.</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1145,11 +1185,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1206,7 +1253,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1216,7 +1265,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,105 +627,43 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B2<span class="zusatz"> · feiner</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">🔍 Drei Fragen</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">Ich kenne ihn, <span class="hl">aber ich weiß es nicht</span></h2>
-<p class="ssub">Im Englischen, im Türkischen, im Arabischen und in vielen anderen Sprachen gibt es dafür ein einziges Wort. Im Deutschen zwei — und der Unterschied ist streng: <b>kennen</b> braucht eine Person oder eine Sache. <b>wissen</b> braucht eine Information, meistens einen ganzen Nebensatz. <i>Ich kenne die Stadt</i>, aber <i>Ich weiß, wo sie liegt</i>.</p>
-<div class="scene-wrap klein"><img src="../amanda/sz-sprachkurs.webp" alt="Ein Klassenzimmer, eine Lehrerin an der Tafel, eine Schülerin meldet sich"></div>
-<ul class="qlist nur-a2">
-<li>Welche zwei Wörter verwechselst du am häufigsten?</li>
-<li>Gibt es in deiner Sprache ein Wort für <i>kennen</i> und <i>wissen</i>?</li>
-<li>Wen kennst du hier am längsten?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Warum fällt es so schwer, zwei Wörter zu trennen, die in der eigenen Sprache eines sind?</li>
-<li>Wie lernst du solche Paare — mit Regeln oder mit Beispielsätzen?</li>
-<li>Welches Paar hat dich schon einmal in eine peinliche Lage gebracht?</li>
-</ul>
-<div class="tip teal">🔑 <strong>Die eine Frage:</strong> Kommt danach ein <b>Ding oder eine Person</b>? Dann <b>kennen</b>. Kommt ein ganzer <b>Nebensatz</b> mit <i>dass</i>, <i>ob</i> oder einem W-Wort? Dann <b>wissen</b>. Mehr ist die Regel nicht.</div>
-<h2 class="st">Und dahinter <span class="hl">steckt immer dasselbe Muster</span></h2>
-<p class="ssub">Bei <i>legen</i> und <i>liegen</i> ist es dieselbe Logik: <b>legen</b> ist etwas, das ich mit einem Ding <u>mache</u> — es braucht also ein Objekt. <b>liegen</b> beschreibt, wie das Ding danach <u>ist</u> — dafür braucht es keines. Sobald du diese Frage stellst, sortieren sich alle sechs Paare von allein.</p>
-<div class="scene-wrap klein"><img src="../amanda/amanda-denk.webp" alt="Amanda überlegt, den Finger nachdenklich am Kinn"></div>
-<ul class="qlist nur-a2">
-<li>Wo liegt dein Handy gerade?</li>
-<li>Wohin legst du deine Schlüssel, wenn du nach Hause kommst?</li>
-<li>Was steht auf deinem Schreibtisch?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Warum ist <i>Ich habe das Buch auf den Tisch gelegen</i> falsch?</li>
-<li>Welche Frage hilft dir schneller: <i>wohin</i> oder <i>was tue ich damit</i>?</li>
-<li>Gibt es solche Paare auch in deiner Sprache?</li>
-</ul>
-<div class="tip">💡 <strong>Ein Merksatz für alles:</strong> <b>Ich lege — es liegt. Ich stelle — es steht.</b> Das Verb mit dem <i>e</i> in der Mitte macht etwas. Das andere beschreibt nur, wie es danach ist.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
 </section>
 
-<section class="section" id="wortschatz">
-<h2 class="st">Sechs Paare, <span class="hl">zwölf Verben</span></h2>
-<p class="ssub">Sag jedes Verb laut — und gleich einen Satz dazu. Achte darauf, ob nach dem Verb ein Objekt kommt oder nicht.</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../amanda/sz-erste-tage.webp" alt="Zwei Kolleginnen begrüßen eine neue Person im Büro" loading="lazy"><div class="bb"><div class="bw">kennen</div><div class="bex">„Ich kenne sie seit dem ersten Kurstag.“</div><div class="bti">💡 Braucht immer ein <b>Objekt im Akkusativ</b>: <i>Ich kenne <u>ihn</u>, die Stadt, den Weg.</i> Nach <i>kennen</i> kommt nie ein Nebensatz — dafür ist <b>wissen</b> zuständig.</div><button class="speak" data-say="Ich kenne sie seit dem ersten Kurstag.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/amanda-schlau.webp" alt="Amanda lächelt zufrieden mit geschlossenen Augen" loading="lazy"><div class="bb"><div class="bw">wissen</div><div class="bex">„Ich weiß, dass der Kurs um neun anfängt.“</div><div class="bti">💡 Braucht fast immer einen <b>Nebensatz</b>: <i>ich weiß, dass … / ob … / wo …</i> Und die Formen sind unregelmäßig: <i>ich <b>weiß</b>, du <b>weißt</b>, er <b>weiß</b></i> — kein <i>wisse</i>.</div><button class="speak" data-say="Ich weiß, dass der Kurs um neun anfängt.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/zettel.webp" alt="Ein leerer Zettel und ein Bleistift daneben" loading="lazy"><div class="bb"><div class="bw">legen</div><div class="bex">„Ich lege den Zettel auf den Tisch.“</div><div class="bti">💡 Regelmäßig und mit <b>Objekt</b>: <i>ich lege <u>etwas</u></i>. Danach kommt die Frage <b>wohin?</b> und damit der Akkusativ: <i>auf <u>den</u> Tisch</i>.</div><button class="speak" data-say="Ich lege den Zettel auf den Tisch.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-lieferung.webp" alt="Ein mit Schnur verschnürtes Päckchen liegt im Flur auf einem Läufer" loading="lazy"><div class="bb"><div class="bw">liegen</div><div class="bex">„Das Päckchen liegt seit gestern im Flur.“</div><div class="bti">💡 Unregelmäßig und <b>ohne Objekt</b>: <i>liegen — lag — gelegen</i>. Danach kommt <b>wo?</b> und damit der Dativ: <i>in <u>dem</u> Flur</i>.</div><button class="speak" data-say="Das Päckchen liegt seit gestern im Flur.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-wareneingang.webp" alt="Ein Regal, in dem Kartons und Kisten stehen" loading="lazy"><div class="bb"><div class="bw">stellen</div><div class="bex">„Ich stelle die Kiste ins Regal.“</div><div class="bti">💡 Dasselbe Muster wie <i>legen</i>, nur senkrecht: mit <b>Objekt</b> und der Frage <b>wohin?</b> Regelmäßig: <i>gestellt</i>.</div><button class="speak" data-say="Ich stelle die Kiste ins Regal.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/wohnung.webp" alt="Ein Sofa, eine Zimmerpflanze und eine Stehlampe" loading="lazy"><div class="bb"><div class="bw">stehen</div><div class="bex">„Die Lampe steht neben dem Sofa.“</div><div class="bti">💡 Ohne Objekt, unregelmäßig: <i>stehen — stand — gestanden</i>. Und die Frage danach ist <b>wo?</b> mit Dativ: <i>neben <u>dem</u> Sofa</i>.</div><button class="speak" data-say="Die Lampe steht neben dem Sofa.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-sprachkurs.webp" alt="Ein Klassenzimmer, eine Lehrerin an der Tafel, eine Schülerin meldet sich" loading="lazy"><div class="bb"><div class="bw">lernen</div><div class="bex">„Ich lerne seit zwei Jahren Deutsch.“</div><div class="bti">💡 Für alles, was man übt — Sprachen, Vokabeln, Fahrradfahren. Und Vorsicht: <b>lernen</b> heißt nie <i>unterrichten</i>. Wer anderen etwas beibringt, <b>lehrt</b> oder <b>unterrichtet</b>.</div><button class="speak" data-say="Ich lerne seit zwei Jahren Deutsch.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/bibliothek.webp" alt="Ein Bücherregal voller Bücher" loading="lazy"><div class="bb"><div class="bw">studieren</div><div class="bex">„Sie studiert Medizin in Bochum.“</div><div class="bti">💡 Nur für die <b>Universität</b> — nicht für einen Sprachkurs. <i>Ich studiere Deutsch</i> heißt: Germanistik an der Uni. Was du im Kurs machst, ist <b>lernen</b>.</div><button class="speak" data-say="Sie studiert Medizin in Bochum.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/familie.webp" alt="Ein Regal mit einem Bilderrahmen, einem Teddybären und einem kleinen Kinderwagen" loading="lazy"><div class="bb"><div class="bw">sich erinnern</div><div class="bex">„Ich erinnere mich gut an diesen Sommer.“</div><div class="bti">💡 Reflexiv, mit <b>an</b> + Akkusativ: <i>sich erinnern an</i>. Es passiert von selbst — man kann es nicht planen. Genau darin liegt der Unterschied zu <b>sich merken</b>.</div><button class="speak" data-say="Ich erinnere mich gut an diesen Sommer.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/a-stift.webp" alt="Amanda hält einen großen Bleistift in der Hand" loading="lazy"><div class="bb"><div class="bw">sich merken</div><div class="bex">„Die Nummer merke ich mir sofort.“</div><div class="bti">💡 Reflexiv mit <b>Dativ</b>: <i>ich merke <u>mir</u> etwas</i>. Es ist eine Entscheidung — im Gegensatz zu <b>sich erinnern</b>, das einfach passiert.</div><button class="speak" data-say="Die Nummer merke ich mir sofort.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/a-willkommen.webp" alt="Amanda steht mit ausgebreiteten Armen da" loading="lazy"><div class="bb"><div class="bw">kennenlernen</div><div class="bex">„Wir haben uns im Kurs kennengelernt.“</div><div class="bti">💡 Ein Wort, zusammengeschrieben, im Perfekt <b>kennengelernt</b>. Nur beim <u>ersten</u> Mal — danach heißt es <b>treffen</b> oder <b>sehen</b>.</div><button class="speak" data-say="Wir haben uns im Kurs kennengelernt.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/cafe.webp" alt="Ein runder Tisch mit einer Tasse Kaffee und einem Stück Kuchen" loading="lazy"><div class="bb"><div class="bw">treffen</div><div class="bex">„Wir treffen uns morgen um vier im Café.“</div><div class="bti">💡 Reflexiv heißt es <b>sich treffen mit</b> + Dativ (verabredet), ohne <i>sich</i> heißt <b>jemanden treffen</b> auch zufällig begegnen. Unregelmäßig: <i>trifft — traf — getroffen</i>.</div><button class="speak" data-say="Wir treffen uns morgen um vier im Café.">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel „Objekt oder nicht?“:</strong> Einer nennt ein Verb, der andere sagt sofort, ob ein Objekt folgen muss — und baut den Satz. Wer <i>Ich liege das Buch</i> sagt, zieht ein neues Verb.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Ding, Information <span class="hl">oder Zustand?</span></h2>
-<p class="ssub">Alle sechs Paare lassen sich mit denselben drei Fragen sortieren. Wer sie stellt, braucht keine Liste im Kopf — sondern nur zwei Sekunden vor dem Satz.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">📦</span><div class="gmw">ein Ding oder eine Person?</div><div class="gmb">dann kennen, legen, stellen</div><div class="gmx">Ich kenne den Weg. Ich lege das Buch hin.</div></div>
-<div class="gk blau"><span class="gem2">💭</span><div class="gmw">eine Information?</div><div class="gmb">dann wissen — mit Nebensatz</div><div class="gmx">Ich weiß, wo der Weg ist.</div></div>
-<div class="gk ja"><span class="gem2">🪑</span><div class="gmw">ein Zustand?</div><div class="gmb">dann liegen, stehen — ohne Objekt</div><div class="gmx">Das Buch liegt auf dem Tisch.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So ist es richtig</div><div class="gsatz">Ich kenne die Stadt gut, aber ich weiß nicht, wie man dorthin kommt.</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>kennen</b> steht mit einem Objekt (<i>die Stadt</i>), <b>wissen</b> mit einem Nebensatz (<i>wie man …</i>). Der Satz zeigt beides nebeneinander — und genau so hört man den Unterschied.</div></div>
-<div class="gk no"><div class="gkl">❌ So klingt es falsch</div><div class="gsatz">Ich weiß die Stadt, aber ich kenne nicht, wie man dorthin kommt.</div><div class="bsp"><span class="wer">Das Problem</span>Beide Verben stehen an der falschen Stelle. <i>Ich weiß die Stadt</i> geht nur in ganz seltenen Fällen, und <i>ich kenne, wie …</i> gibt es überhaupt nicht.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So ist es richtig</div><div class="gsatz">Ich habe den Schlüssel auf den Tisch gelegt — jetzt liegt er dort.</div><div class="bsp"><span class="wer">Warum das stimmt</span>Erst die Handlung mit Objekt (<b>legen</b> + Akkusativ, <i>auf den Tisch</i>), dann der Zustand ohne Objekt (<b>liegen</b> + Dativ). Der Satz enthält die ganze Regel.</div></div>
-<div class="gk no"><div class="gkl">❌ So klingt es falsch</div><div class="gsatz">Ich habe den Schlüssel auf dem Tisch gelegen.</div><div class="bsp"><span class="wer">Das Problem</span>Zwei Fehler: <i>gelegen</i> ist die Form von <b>liegen</b> und verträgt kein Objekt — und nach <i>legen</i> müsste die Frage <b>wohin</b> beantwortet werden, also <i>auf den Tisch</i>.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So ist es richtig</div><div class="gsatz">Ich lerne seit zwei Jahren Deutsch und studiere nebenbei Informatik.</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>lernen</b> für alles, was man übt, <b>studieren</b> nur für die Universität. Im selben Satz nebeneinander wird der Unterschied sofort deutlich.</div></div>
-<div class="gk no"><div class="gkl">❌ So klingt es falsch</div><div class="gsatz">Ich studiere Deutsch in der Volkshochschule.</div><div class="bsp"><span class="wer">Das Problem</span>An der Volkshochschule wird <b>gelernt</b>, nicht studiert. Wer <i>studieren</i> sagt, meint für deutsche Ohren einen Universitätsabschluss — und das führt regelmäßig zu Missverständnissen im Lebenslauf.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Wie unterscheide ich die Paare?</button>
-<div class="inhalt">
-<p>Drei Fragen, in dieser Reihenfolge:</p>
-<ul>
-<li><b>Steht nach dem Verb ein Ding im Akkusativ?</b> Dann das Verb mit Objekt: <i>kennen, legen, stellen, setzen</i>.</li>
-<li><b>Kommt ein ganzer Nebensatz?</b> Dann <b>wissen</b>: <i>Ich weiß, dass / ob / wo …</i></li>
-<li><b>Beschreibst du nur, wie etwas ist?</b> Dann das Verb ohne Objekt: <i>liegen, stehen, sitzen</i>.</li>
-<li><b>Uni oder Kurs?</b> Uni → <b>studieren</b>. Alles andere → <b>lernen</b>.</li>
-</ul>
-<p style="margin-top:.5rem;">Und ein Satz, der alle sechs Paare enthält: <b>„Ich kenne sie aus dem Kurs, wo wir Deutsch lernen — sie hat mir den Zettel auf den Tisch gelegt, der jetzt noch dort liegt.“</b> Wenn du diesen Satz frei bauen kannst, sitzt das System.</p>
-</div>
-</div>
-<div class="tip">🎯 <strong>Zu zweit, eine Minute:</strong> Einer sagt einen Satz mit dem einen Verb, der andere baut sofort den Gegensatz mit dem Partnerverb. <i>Ich lege das Buch hin.</i> → <i>Jetzt liegt es hier.</i> Nach zwölf Runden habt ihr alle Paare durch.</div>
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Welche zwei Wörter verwechselst du am häufigsten?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Gibt es in deiner Sprache ein Wort für <i>kennen</i> und <i>wissen</i>?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -808,37 +816,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
-<p class="ssub">Einer fragt, einer antwortet. Danach tauschen — und beim zweiten Mal ohne die Sätze unten. Regel: In jeder Runde mindestens drei Verben von heute.</p>
-<div class="rmcard">
-<b>1 · Neu im Team</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A ist neu, B arbeitet schon länger dort. A fragt nach Menschen, Wegen und Regeln — und B antwortet mal mit <i>kennen</i>, mal mit <i>wissen</i>.</p>
-<div class="nur-a2"><span class="rm">Kennst du die Kollegin aus dem zweiten Stock?</span><span class="rm">Weißt du, wann die Besprechung anfängt?</span><span class="rm">Ich kenne den Weg zur Kantine noch nicht</span><span class="rm">Wo liegen die Formulare?</span></div>
-<div class="nur-b1"><span class="rm">Ich kenne sie nur flüchtig — wir haben uns einmal auf einer Fortbildung kennengelernt</span><span class="rm">Soweit ich weiß, fängt die Besprechung um zehn an, Genaues weiß ich aber nicht</span><span class="rm">Die Formulare liegen im Schrank neben dem Drucker, dort stelle ich auch die Ordner hin</span><span class="rm">Frag am besten Frau Berger, sie weiß, wie das hier läuft</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat mindestens einmal <i>kennen</i> mit Objekt und einmal <i>wissen</i> mit Nebensatz benutzt — und beim Ort zwischen <i>liegen</i> und <i>stellen</i> unterschieden.</div>
-</div>
-<div class="rmcard">
-<b>2 · Wo ist es hin?</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Etwas ist verschwunden. Beide erinnern sich anders daran, wer es wohin gelegt hat.</p>
-<div class="nur-a2"><span class="rm">Ich habe es auf den Tisch gelegt</span><span class="rm">Da liegt es aber nicht</span><span class="rm">Vielleicht steht es im Regal</span><span class="rm">Ich erinnere mich nicht genau</span></div>
-<div class="nur-b1"><span class="rm">Ich bin sicher, ich habe es dorthin gelegt, wo es sonst auch liegt</span><span class="rm">Kann sein, dass jemand es ins Regal gestellt hat</span><span class="rm">Ich merke mir solche Sachen normalerweise</span><span class="rm">Wenn ich mich richtig erinnere, lag es gestern noch hier</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide haben Bewegung und Zustand sauber getrennt — <i>gelegt</i> mit <i>wohin</i>, <i>lag</i> mit <i>wo</i>. Und <i>sich merken</i> stand mit Dativ, <i>sich erinnern</i> mit <i>an</i>.</div>
-</div>
-<div class="rmcard">
-<b>3 · Der Lebenslauf</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A führt ein kurzes Gespräch über den Werdegang, B erklärt den Unterschied zwischen dem, was studiert, und dem, was gelernt wurde.</p>
-<div class="nur-a2"><span class="rm">Was haben Sie studiert?</span><span class="rm">Und wie lange lernen Sie schon Deutsch?</span><span class="rm">Kennen Sie unsere Software?</span><span class="rm">Wissen Sie, wie das Programm heißt?</span></div>
-<div class="nur-b1"><span class="rm">Studiert habe ich Betriebswirtschaft, Deutsch habe ich hier gelernt</span><span class="rm">Angefangen habe ich im Abendkurs, den Rest habe ich mir selbst beigebracht</span><span class="rm">Die Software kenne ich aus meiner letzten Stelle</span><span class="rm">Ich weiß allerdings nicht, ob Sie dieselbe Version benutzen</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat <i>studieren</i> und <i>lernen</i> klar getrennt und im letzten Satz beide Verben nebeneinander benutzt: <i>kennen</i> für die Software, <i>wissen</i> für die Information darüber.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Einer nennt reihum ein Verb, der Nachbar sagt sofort das Partnerverb und baut zwei Sätze — einen mit Objekt, einen ohne. Wer die Fälle vertauscht (<i>auf dem Tisch legen</i>), gibt weiter.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -871,14 +856,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde müssen <u>drei verschiedene Paare</u> vorkommen. Wer <i>Ich liege das Buch</i> oder <i>Ich studiere Deutsch im Kurs</i> sagt, fängt noch einmal an.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Einer nennt reihum ein Verb, der Nachbar sagt sofort das Partnerverb und baut zwei Sätze — einen mit Objekt, einen ohne. Wer die Fälle vertauscht (<i>auf dem Tisch legen</i>), gibt weiter.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Warum fällt es so schwer, zwei Wörter zu trennen, die in der eigenen Sprache eines sind?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Wie lernst du solche Paare — mit Regeln oder mit Beispielsätzen?</li><li>Welches Paar hat dich schon einmal in eine peinliche Lage gebracht?</li><li>Warum ist <i>Ich habe das Buch auf den Tisch gelegen</i> falsch?</li><li>Welche Frage hilft dir schneller: <i>wohin</i> oder <i>was tue ich damit</i>?</li><li>Gibt es solche Paare auch in deiner Sprache?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
+<p class="ssub">Einer fragt, einer antwortet. Danach tauschen — und beim zweiten Mal ohne die Sätze unten. Regel: In jeder Runde mindestens drei Verben von heute.</p>
+<div class="rmcard">
+<b>1 · Neu im Team</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A ist neu, B arbeitet schon länger dort. A fragt nach Menschen, Wegen und Regeln — und B antwortet mal mit <i>kennen</i>, mal mit <i>wissen</i>.</p>
+<div class="nur-a2"><span class="rm">Kennst du die Kollegin aus dem zweiten Stock?</span><span class="rm">Weißt du, wann die Besprechung anfängt?</span><span class="rm">Ich kenne den Weg zur Kantine noch nicht</span><span class="rm">Wo liegen die Formulare?</span></div>
+<div class="nur-b1"><span class="rm">Ich kenne sie nur flüchtig — wir haben uns einmal auf einer Fortbildung kennengelernt</span><span class="rm">Soweit ich weiß, fängt die Besprechung um zehn an, Genaues weiß ich aber nicht</span><span class="rm">Die Formulare liegen im Schrank neben dem Drucker, dort stelle ich auch die Ordner hin</span><span class="rm">Frag am besten Frau Berger, sie weiß, wie das hier läuft</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat mindestens einmal <i>kennen</i> mit Objekt und einmal <i>wissen</i> mit Nebensatz benutzt — und beim Ort zwischen <i>liegen</i> und <i>stellen</i> unterschieden.</div>
+</div>
+<div class="rmcard">
+<b>2 · Wo ist es hin?</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Etwas ist verschwunden. Beide erinnern sich anders daran, wer es wohin gelegt hat.</p>
+<div class="nur-a2"><span class="rm">Ich habe es auf den Tisch gelegt</span><span class="rm">Da liegt es aber nicht</span><span class="rm">Vielleicht steht es im Regal</span><span class="rm">Ich erinnere mich nicht genau</span></div>
+<div class="nur-b1"><span class="rm">Ich bin sicher, ich habe es dorthin gelegt, wo es sonst auch liegt</span><span class="rm">Kann sein, dass jemand es ins Regal gestellt hat</span><span class="rm">Ich merke mir solche Sachen normalerweise</span><span class="rm">Wenn ich mich richtig erinnere, lag es gestern noch hier</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide haben Bewegung und Zustand sauber getrennt — <i>gelegt</i> mit <i>wohin</i>, <i>lag</i> mit <i>wo</i>. Und <i>sich merken</i> stand mit Dativ, <i>sich erinnern</i> mit <i>an</i>.</div>
+</div>
+<div class="rmcard">
+<b>3 · Der Lebenslauf</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A führt ein kurzes Gespräch über den Werdegang, B erklärt den Unterschied zwischen dem, was studiert, und dem, was gelernt wurde.</p>
+<div class="nur-a2"><span class="rm">Was haben Sie studiert?</span><span class="rm">Und wie lange lernen Sie schon Deutsch?</span><span class="rm">Kennen Sie unsere Software?</span><span class="rm">Wissen Sie, wie das Programm heißt?</span></div>
+<div class="nur-b1"><span class="rm">Studiert habe ich Betriebswirtschaft, Deutsch habe ich hier gelernt</span><span class="rm">Angefangen habe ich im Abendkurs, den Rest habe ich mir selbst beigebracht</span><span class="rm">Die Software kenne ich aus meiner letzten Stelle</span><span class="rm">Ich weiß allerdings nicht, ob Sie dieselbe Version benutzen</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat <i>studieren</i> und <i>lernen</i> klar getrennt und im letzten Satz beide Verben nebeneinander benutzt: <i>kennen</i> für die Software, <i>wissen</i> für die Information darüber.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -944,6 +963,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Sprachnachricht und die zehn Satzpaare bis Mittwochabend in den Chat. Ich höre alles an und schreibe dir zurück, welche Paare schon sitzen.</div>
 <div class="tip">🔜 <strong>Am Donnerstag, Teil 2:</strong> <u>schmecken, gefallen, mögen — sehen, schauen, sagen, sprechen.</u> Die nächsten Paare, und wieder mit demselben Trick: Nicht die Bedeutung entscheidet, sondern was hinter dem Verb stehen muss.</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1130,11 +1156,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1191,7 +1224,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1201,7 +1236,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

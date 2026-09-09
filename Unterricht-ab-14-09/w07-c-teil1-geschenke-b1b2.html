@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,105 +627,43 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B2<span class="zusatz"> · feiner</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">⚖️ Umtausch, Widerruf, Mangel</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">Was schenkt man <span class="hl">und was auf keinen Fall?</span></h2>
-<p class="ssub">In jedem Land gibt es ungeschriebene Regeln, und niemand sagt sie einem. In Deutschland gilt: lieber persönlich als teuer, lieber klein und passend als groß und beliebig. Und wenn du eingeladen bist, bringst du etwas mit — Blumen, Wein, etwas Selbstgemachtes. Mit leeren Händen zu kommen fällt auf.</p>
-<div class="scene-wrap klein"><img src="../vok-bild/die-lieferung.webp" alt="Ein mit Schnur verschnürtes Päckchen liegt auf einer Kommode"></div>
-<ul class="qlist nur-a2">
-<li>Was hast du zuletzt verschenkt?</li>
-<li>Was bringt man in deinem Heimatland mit, wenn man eingeladen ist?</li>
-<li>Schenkst du lieber etwas Praktisches oder etwas Persönliches?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Woran merkst du, dass ein Geschenk unpassend war?</li>
-<li>Wie viel Geld ist bei euch üblich — und wovon hängt das ab?</li>
-<li>Gibt es Dinge, die man bei euch auf keinen Fall schenkt?</li>
-</ul>
-<div class="tip teal">🔑 <strong>Der Satz, der beim Schenken immer geht:</strong> <b>„Ich habe dir etwas Kleines mitgebracht.“</b> Das Wort <u>klein</u> ist entscheidend: Es nimmt dem Geschenk den Druck, verpflichtet den anderen zu nichts und funktioniert selbst dann, wenn das Geschenk gar nicht klein ist.</div>
-<h2 class="st">Und die Überraschung <span class="hl">beim Umtauschen</span></h2>
-<p class="ssub">Viele glauben, man dürfe gekaufte Dinge einfach zurückbringen. Im Laden stimmt das <u>nicht</u>: Ein gesetzliches Umtauschrecht gibt es dort in der Regel nicht — dass die meisten Geschäfte trotzdem umtauschen, ist Entgegenkommen, kein Anspruch. Anders ist es online und anders bei einem Mangel. Genau diese drei Fälle sollte man auseinanderhalten können.</p>
-<div class="scene-wrap klein"><img src="../vok-bild/der-kassenbon.webp" alt="Eine Hand hält einen Kassenbon in einem Laden"></div>
-<ul class="qlist nur-a2">
-<li>Hast du schon einmal etwas umgetauscht?</li>
-<li>Was hast du dabei gesagt?</li>
-<li>Hebst du Kassenbons auf?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Warum tauschen Geschäfte um, obwohl sie nicht müssen?</li>
-<li>Was ist der Unterschied zwischen umtauschen und reklamieren?</li>
-<li>Wie fragst du nach etwas, auf das du keinen Anspruch hast?</li>
-</ul>
-<div class="tip">💡 <strong>Drei Fälle, die man nicht verwechseln sollte:</strong> <b>Umtausch im Laden</b> — kein Anspruch, reine Kulanz, deshalb höflich fragen. <b>Onlinekauf</b> — in der Regel vierzehn Tage Widerrufsrecht, das ist ein echtes Recht. <b>Mangel</b> — wenn etwas kaputt oder falsch ist, greift die Gewährleistung, meist zwei Jahre. Das ist keine Rechtsberatung, aber es erklärt, warum du im Laden bitten und beim Mangel fordern kannst.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
 </section>
 
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Wörter <span class="hl">vom Wunschzettel bis zur Reklamation</span></h2>
-<p class="ssub">Sagt jedes Wort laut — <u>mit Artikel</u>. Und gleich einen Satz hinterher: Wann hast du dieses Wort zuletzt gebraucht?</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../vok-bild/die-lieferung.webp" alt="Ein mit Schnur verschnürtes Päckchen liegt auf einer Kommode" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Geschenk</div><div class="bex">„Ich habe dir ein kleines Geschenk mitgebracht.“</div><div class="bti">💡 Das Verb ist <b>schenken</b> und steht mit zwei Objekten: <i>Ich schenke <u>dir</u> (Dativ) <u>ein Buch</u> (Akkusativ).</i> Genau darum geht es heute in der Grammatik.</div><button class="speak" data-say="Ich habe dir ein kleines Geschenk mitgebracht.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-vorschlag.webp" alt="Notizbuch und Tasse auf einem Schreibtisch" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Wunsch</div><div class="bex">„Hast du einen Wunsch zum Geburtstag?“</div><div class="bti">💡 Dazu <b>sich etwas wünschen</b> — reflexiv und mit Dativ: <i>Ich wünsche <u>mir</u> ein Buch.</i> Und die Liste heißt <b>der Wunschzettel</b>, ursprünglich für Kinder zu Weihnachten, heute auch bei Erwachsenen völlig normal.</div><button class="speak" data-say="Hast du einen Wunsch zum Geburtstag?">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/dreiundzwanzig.webp" alt="Eine Torte mit vielen brennenden Kerzen auf einem Küchentisch" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Geburtstag</div><div class="bex">„Zum Geburtstag schenke ich ihr Blumen.“</div><div class="bti">💡 Achtung bei der Präposition: <b>zum</b> Geburtstag schenken, aber <b>am</b> Geburtstag feiern. Und eine deutsche Eigenheit: Vorher gratulieren bringt angeblich Unglück — die meisten warten wirklich bis zum Tag selbst.</div><button class="speak" data-say="Zum Geburtstag schenke ich ihr Blumen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-feste.webp" alt="Menschen feiern mit Luftballons und stoßen an" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Einladung</div><div class="bex">„Danke für die Einladung — ich bringe etwas mit.“</div><div class="bti">💡 Das Verb <b>einladen</b> ist trennbar: <i>Ich lade dich ein.</i> Und es hat zwei Bedeutungen — jemanden zu sich bitten <u>und</u> für jemanden bezahlen. <i>Ich lade dich ein</i> heißt im Restaurant: Du zahlst nicht.</div><button class="speak" data-say="Danke für die Einladung — ich bringe etwas mit.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-euro.webp" alt="Eine Hand legt Geldscheine und Münzen auf einen Tisch" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Geld</div><div class="bex">„Bei uns schenkt man zur Hochzeit Geld.“</div><div class="bti">💡 Ein heikles Geschenk: Bei Hochzeiten und runden Geburtstagen ist Geld in Deutschland üblich, sonst gilt es schnell als lieblos. Der Ausweg heißt <b>der Gutschein</b> — Geld mit einer Absicht dahinter.</div><button class="speak" data-say="Bei uns schenkt man zur Hochzeit Geld.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/amanda-jubel.webp" alt="Amanda lacht und freut sich" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Freude</div><div class="bex">„Damit machst du ihr eine große Freude.“</div><div class="bti">💡 Die feste Wendung lautet <b>jemandem eine Freude machen</b> — wieder Dativ und Akkusativ zusammen. Und das Verb <b>sich freuen</b> steht mit <i>über</i> (etwas Konkretes) oder <i>auf</i> (etwas Zukünftiges).</div><button class="speak" data-say="Damit machst du ihr eine große Freude.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-handel.webp" alt="Eine Kundin und ein Verkäufer stehen in einem Laden an der Theke" loading="lazy"><div class="bb"><div class="bw">umtauschen</div><div class="bex">„Kann ich das noch umtauschen?“</div><div class="bti">💡 Trennbar: <i>Ich tausche es um.</i> Und im Laden gibt es dafür in der Regel <u>kein</u> Recht — deshalb fragt man höflich: <b>Wäre es möglich, das umzutauschen?</b> statt <i>Ich möchte das umtauschen.</i></div><button class="speak" data-say="Kann ich das noch umtauschen?">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-kassenbon.webp" alt="Eine Hand hält einen Kassenbon in einem Laden" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Kassenbon</div><div class="bex">„Haben Sie den Kassenbon noch?“</div><div class="bti">💡 Auch <b>der Kassenzettel</b> oder <b>der Beleg</b>. Für einen Umtausch aus Kulanz verlangen ihn fast alle Geschäfte — bei einem echten Mangel reicht dagegen jeder andere Nachweis, zum Beispiel der Kontoauszug.</div><button class="speak" data-say="Haben Sie den Kassenbon noch?">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-retoure.webp" alt="Ein verschlossener Karton mit einem Zettel obenauf steht auf einem Tisch" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Rücksendung</div><div class="bex">„Die Rücksendung ist kostenlos.“</div><div class="bti">💡 Im Alltag hörst du auch <b>die Retoure</b>. Online gilt in der Regel ein <b>Widerrufsrecht von vierzehn Tagen</b> — das ist ein echtes Recht und nicht dasselbe wie der Umtausch im Laden.</div><button class="speak" data-say="Die Rücksendung ist kostenlos.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-reklamation.webp" alt="Ein Karton steht neben einer zerbrochenen Tasse auf einem Tisch" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Reklamation</div><div class="bex">„Das ist keine Frage von Kulanz, das ist eine Reklamation.“</div><div class="bti">💡 Der wichtigste Unterschied der Stunde: Beim <b>Umtausch</b> bittest du, bei der <b>Reklamation</b> hast du ein Recht. Das Verb ist <b>reklamieren</b>, und dazu gehört <b>der Mangel</b> — kaputt, unvollständig oder anders als beschrieben.</div><button class="speak" data-say="Das ist keine Frage von Kulanz, das ist eine Reklamation.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/paket.webp" alt="Ein Paket steht auf einer Fußmatte vor einer Tür" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Paket</div><div class="bex">„Das Paket stand vor der Tür.“</div><div class="bti">💡 Kleiner als ein Paket ist <b>das Päckchen</b>. Und wenn es beim Nachbarn abgegeben wurde, findest du <b>den Benachrichtigungszettel</b> im Briefkasten — ein Wort, das man einmal gelesen haben muss.</div><button class="speak" data-say="Das Paket stand vor der Tür.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/muell.webp" alt="Drei Mülltonnen nebeneinander, darüber das Recycling-Zeichen" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Verschwendung</div><div class="bex">„Das meiste davon ist reine Verschwendung.“</div><div class="bti">💡 Das Verb ist <b>verschwenden</b>, und es steht mit Akkusativ: <i>Zeit verschwenden</i>, <i>Geld verschwenden</i>. Das Wort für Mittwoch — dann diskutieren wir genau darüber.</div><button class="speak" data-say="Das meiste davon ist reine Verschwendung.">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel „Drei Geschenke“:</strong> Jeder nennt drei Dinge — eines, über das er sich wirklich gefreut hat, eines, mit dem er nichts anfangen konnte, und eines, das er selbst verschenkt hat. Die anderen raten, welches welches war. Danach: Woran lag es jeweils?</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Bitten oder <span class="hl">fordern?</span></h2>
-<p class="ssub">Ob du im Laden höflich fragst oder klar dein Recht einforderst, hängt an einer einzigen Frage: Ist mit der Ware etwas nicht in Ordnung? Wer die drei Fälle auseinanderhält, redet in jedem davon richtig.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">🙏</span><div class="gmw">der Umtausch</div><div class="gmb">im Laden, kein Anspruch — Kulanz</div><div class="gmx">Wäre es möglich, das umzutauschen?</div></div>
-<div class="gk blau"><span class="gem2">📦</span><div class="gmw">der Widerruf</div><div class="gmb">online, meist vierzehn Tage — ein Recht</div><div class="gmx">Ich möchte den Kauf widerrufen.</div></div>
-<div class="gk ja"><span class="gem2">🔧</span><div class="gmw">der Mangel</div><div class="gmb">kaputt oder falsch — Gewährleistung</div><div class="gmx">Der Artikel war beim Auspacken beschädigt.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Funktioniert im Laden</div><div class="gsatz">Wäre es möglich, das noch umzutauschen? Ich habe den Bon dabei.</div><div class="bsp"><span class="wer">Warum das wirkt</span>Du <b>bittest</b>, und das ist hier auch richtig — ein Umtauschrecht gibt es im Laden in der Regel nicht. Wer freundlich fragt und den Bon dabeihat, bekommt in den allermeisten Fällen ein Ja.</div></div>
-<div class="gk no"><div class="gkl">❌ Funktioniert nicht</div><div class="gsatz">Ich habe ein Recht darauf, das umzutauschen.</div><div class="bsp"><span class="wer">Das Problem</span>Der Satz stimmt sachlich nicht — und das weiß die Person hinter der Theke besser als du. Damit verlierst du genau die Kulanz, auf die du angewiesen bist.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Richtig beim Mangel</div><div class="gsatz">Die Tasse war beim Auspacken zerbrochen. Ich hätte gern Ersatz.</div><div class="bsp"><span class="wer">Warum das klar ist</span>Hier <b>forderst</b> du, und das ist berechtigt. Wichtig sind zwei Dinge im Satz: <u>was</u> nicht in Ordnung ist und <u>was</u> du möchtest — Ersatz, Reparatur oder Geld zurück.</div></div>
-<div class="gk no"><div class="gkl">❌ Zu vage</div><div class="gsatz">Ich bin nicht zufrieden mit der Lieferung.</div><div class="bsp"><span class="wer">Das Problem</span>Unzufriedenheit ist kein Mangel. Solange nicht dasteht, <i>was</i> kaputt oder falsch ist, kann der andere nichts tun — und wird nachfragen, was Zeit kostet.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Nimmt dem Geschenk den Druck</div><div class="gsatz">Ich habe dir etwas Kleines mitgebracht.</div><div class="bsp"><span class="wer">Warum das gut ist</span><b>Etwas Kleines</b> verpflichtet den anderen zu nichts. Er muss sich nicht revanchieren und nicht übertrieben freuen — und genau deshalb freut er sich meistens ehrlicher.</div></div>
-<div class="gk no"><div class="gkl">❌ Macht Druck</div><div class="gsatz">Das war ziemlich teuer, aber du bist es mir wert.</div><div class="bsp"><span class="wer">Das Problem</span>Der Preis gehört nie ins Gespräch. Er verwandelt ein Geschenk in eine Rechnung, die der andere im Kopf offen hat — und beim nächsten Anlass zurückzahlen muss.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Wie viel schenkt man in Deutschland?</button>
-<div class="inhalt">
-<p>Es gibt keine Regel, aber verlässliche Anhaltspunkte:</p>
-<ul>
-<li><b>Eingeladen zum Essen:</b> Blumen, Wein oder etwas Selbstgemachtes. Zehn bis zwanzig Euro, mehr wäre unangenehm.</li>
-<li><b>Geburtstag bei Freunden:</b> zwanzig bis fünfzig Euro, je nach Nähe — und lieber persönlich als teuer.</li>
-<li><b>Hochzeit:</b> Geld ist üblich und wird oft erwartet; die Spanne liegt meist bei fünfzig bis hundertfünfzig Euro pro Person.</li>
-<li><b>Im Beruf:</b> gar nichts oder etwas sehr Kleines. Ein teures Geschenk an Vorgesetzte bringt beide in eine unangenehme Lage.</li>
-</ul>
-<p style="margin-top:.5rem;">Und die Regel, die alles überschreibt: <b>Wenn du unsicher bist, frag jemanden aus der Runde.</b> <i>Was schenkt ihr denn?</i> ist eine völlig normale Frage — und die einzige, die zuverlässig funktioniert.</p>
-</div>
-</div>
-<div class="tip">🎯 <strong>Zu zweit, eine Minute:</strong> Einer nennt eine Situation (kaputte Tasse, falsche Größe, online bestellt und doch nicht gewollt), der andere sagt sofort, ob er bittet oder fordert — und mit welchem Satz.</div>
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Was hast du zuletzt verschenkt?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Was bringt man in deinem Heimatland mit, wenn man eingeladen ist?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -806,37 +814,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
-<p class="ssub">Einer will etwas, einer entscheidet. Danach tauschen — und beim zweiten Mal ohne Notizen. Regel für alle drei: mindestens ein Satz mit zwei Objekten, einmal mit Pronomen.</p>
-<div class="rmcard">
-<b>1 · Umtausch ohne Bon</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A möchte einen Pullover umtauschen, hat aber den Kassenbon verloren. B arbeitet im Laden und darf ohne Bon eigentlich nicht. A muss freundlich bleiben und einen anderen Nachweis anbieten.</p>
-<div class="nur-a2"><span class="rm">Wäre es möglich, das umzutauschen?</span><span class="rm">Ich habe den Bon leider nicht mehr</span><span class="rm">Ich habe aber den Kontoauszug</span><span class="rm">Geht auch ein Gutschein?</span></div>
-<div class="nur-b1"><span class="rm">Ich weiß, dass Sie das nicht müssen</span><span class="rm">Ich habe die Zahlung auf dem Konto</span><span class="rm">Wäre ein Gutschein für Sie ein Weg?</span><span class="rm">Danke, das ist wirklich entgegenkommend</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat gebeten und nicht gefordert, einen Ersatznachweis angeboten und am Ende akzeptiert, was möglich war. Der Satz <i>ich habe ein Recht darauf</i> ist nicht gefallen.</div>
-</div>
-<div class="rmcard">
-<b>2 · Das falsche Geschenk</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat B etwas geschenkt, das offensichtlich nicht passt. B möchte es ehrlich sagen, ohne A zu verletzen. A soll es leicht machen. Zwei Minuten, dann tauschen.</p>
-<div class="nur-a2"><span class="rm">Ich habe dir etwas mitgebracht</span><span class="rm">Der Bon liegt dabei</span><span class="rm">Sag ruhig, wenn es nicht passt</span><span class="rm">Dann tauschen wir es einfach um</span></div>
-<div class="nur-b1"><span class="rm">Darüber freue ich mich wirklich</span><span class="rm">Ehrlich gesagt weiß ich noch nicht, wo ich es hintue</span><span class="rm">Darf ich es umtauschen, ohne dass du es krummnimmst?</span><span class="rm">Mir ist die Geste wichtiger als die Sache</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat es ehrlich gesagt, ohne das Geschenk schlechtzumachen, und A hat es leicht gemacht statt beleidigt zu reagieren. Der Preis wurde nicht erwähnt.</div>
-</div>
-<div class="rmcard">
-<b>3 · Was schenken wir dem Chef?</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Im Team steht ein Abschied an. A will etwas Teures, B findet, dass ein teures Geschenk beide Seiten in eine unangenehme Lage bringt. Einigt euch auf einen Betrag und eine Form.</p>
-<div class="nur-a2"><span class="rm">Sollen wir zusammenlegen?</span><span class="rm">An wie viel hattest du gedacht?</span><span class="rm">Zehn Euro pro Person</span><span class="rm">Ich würde einen Gutschein vorschlagen</span></div>
-<div class="nur-b1"><span class="rm">Bei einem teuren Geschenk hätte ich Bauchschmerzen</span><span class="rm">Wer mehr geben will, gibt mehr</span><span class="rm">Ein Gutschein ist persönlicher als Geld</span><span class="rm">Dann fühlt sich niemand verpflichtet</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Es steht am Ende ein konkreter Betrag und eine konkrete Form. Und beide haben daran gedacht, dass niemand in der Runde sich das Geschenk nicht leisten können soll.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Jeder sagt reihum einen Satz mit zwei Nomen (<i>Ich schenke meiner Mutter ein Buch</i>). Der Nachbar ersetzt sofort beide durch Pronomen (<i>Ich schenke es ihr</i>). Wer in die falsche Reihenfolge gerät, gibt weiter.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -869,14 +854,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde muss <u>ein Satz mit zwei Objekten</u> vorkommen und <u>einmal die Pronomen-Reihenfolge</u> (<i>Ich habe es ihr geschenkt</i>). Wer <i>ich danke dich</i> sagt, gibt weiter.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Jeder sagt reihum einen Satz mit zwei Nomen (<i>Ich schenke meiner Mutter ein Buch</i>). Der Nachbar ersetzt sofort beide durch Pronomen (<i>Ich schenke es ihr</i>). Wer in die falsche Reihenfolge gerät, gibt weiter.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Woran merkst du, dass ein Geschenk unpassend war?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Wie viel Geld ist bei euch üblich — und wovon hängt das ab?</li><li>Gibt es Dinge, die man bei euch auf keinen Fall schenkt?</li><li>Warum tauschen Geschäfte um, obwohl sie nicht müssen?</li><li>Was ist der Unterschied zwischen umtauschen und reklamieren?</li><li>Wie fragst du nach etwas, auf das du keinen Anspruch hast?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
+<p class="ssub">Einer will etwas, einer entscheidet. Danach tauschen — und beim zweiten Mal ohne Notizen. Regel für alle drei: mindestens ein Satz mit zwei Objekten, einmal mit Pronomen.</p>
+<div class="rmcard">
+<b>1 · Umtausch ohne Bon</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A möchte einen Pullover umtauschen, hat aber den Kassenbon verloren. B arbeitet im Laden und darf ohne Bon eigentlich nicht. A muss freundlich bleiben und einen anderen Nachweis anbieten.</p>
+<div class="nur-a2"><span class="rm">Wäre es möglich, das umzutauschen?</span><span class="rm">Ich habe den Bon leider nicht mehr</span><span class="rm">Ich habe aber den Kontoauszug</span><span class="rm">Geht auch ein Gutschein?</span></div>
+<div class="nur-b1"><span class="rm">Ich weiß, dass Sie das nicht müssen</span><span class="rm">Ich habe die Zahlung auf dem Konto</span><span class="rm">Wäre ein Gutschein für Sie ein Weg?</span><span class="rm">Danke, das ist wirklich entgegenkommend</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat gebeten und nicht gefordert, einen Ersatznachweis angeboten und am Ende akzeptiert, was möglich war. Der Satz <i>ich habe ein Recht darauf</i> ist nicht gefallen.</div>
+</div>
+<div class="rmcard">
+<b>2 · Das falsche Geschenk</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat B etwas geschenkt, das offensichtlich nicht passt. B möchte es ehrlich sagen, ohne A zu verletzen. A soll es leicht machen. Zwei Minuten, dann tauschen.</p>
+<div class="nur-a2"><span class="rm">Ich habe dir etwas mitgebracht</span><span class="rm">Der Bon liegt dabei</span><span class="rm">Sag ruhig, wenn es nicht passt</span><span class="rm">Dann tauschen wir es einfach um</span></div>
+<div class="nur-b1"><span class="rm">Darüber freue ich mich wirklich</span><span class="rm">Ehrlich gesagt weiß ich noch nicht, wo ich es hintue</span><span class="rm">Darf ich es umtauschen, ohne dass du es krummnimmst?</span><span class="rm">Mir ist die Geste wichtiger als die Sache</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat es ehrlich gesagt, ohne das Geschenk schlechtzumachen, und A hat es leicht gemacht statt beleidigt zu reagieren. Der Preis wurde nicht erwähnt.</div>
+</div>
+<div class="rmcard">
+<b>3 · Was schenken wir dem Chef?</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Im Team steht ein Abschied an. A will etwas Teures, B findet, dass ein teures Geschenk beide Seiten in eine unangenehme Lage bringt. Einigt euch auf einen Betrag und eine Form.</p>
+<div class="nur-a2"><span class="rm">Sollen wir zusammenlegen?</span><span class="rm">An wie viel hattest du gedacht?</span><span class="rm">Zehn Euro pro Person</span><span class="rm">Ich würde einen Gutschein vorschlagen</span></div>
+<div class="nur-b1"><span class="rm">Bei einem teuren Geschenk hätte ich Bauchschmerzen</span><span class="rm">Wer mehr geben will, gibt mehr</span><span class="rm">Ein Gutschein ist persönlicher als Geld</span><span class="rm">Dann fühlt sich niemand verpflichtet</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Es steht am Ende ein konkreter Betrag und eine konkrete Form. Und beide haben daran gedacht, dass niemand in der Runde sich das Geschenk nicht leisten können soll.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -942,6 +961,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Sprachnachricht und die umgebauten Sätze bis Dienstagabend. Ich achte besonders auf die Pronomen-Reihenfolge — und darauf, ob nach <i>danken</i> und <i>gratulieren</i> wirklich der Dativ steht.</div>
 <div class="tip">🔜 <strong>Am Mittwoch, Teil 2:</strong> <u>Die Debatte — sind Geschenke sinnvoll oder Verschwendung?</u> Heute ging es darum, wie man schenkt. Am Mittwoch um die unbequemere Frage: ob das Ganze überhaupt einen Sinn hat, wenn am Ende die Hälfte umgetauscht oder weggeworfen wird.</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1128,11 +1154,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1189,7 +1222,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1199,7 +1234,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

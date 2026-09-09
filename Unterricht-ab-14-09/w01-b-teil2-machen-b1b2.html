@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,35 +627,44 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B2<span class="zusatz"> · feiner</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#wiederholung">🔁 Wiederholung</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">⚖️ machen oder tun</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">„Tut mir leid“ oder <span class="hl">„macht nichts“?</span></h2>
-<p class="ssub">Schaut euch das Bild an. Einer entschuldigt sich, der andere winkt ab. Welche zwei Sätze fallen hier — und warum lassen sie sich nicht tauschen?</p>
-<div class="scene-wrap klein"><img src="../amanda/sz-freunde.webp" alt="Zwei Freunde sitzen mit Kaffee auf einer Bank und unterhalten sich"></div>
-<ul class="qlist nur-a2">
-<li>Welche dieser Sätze benutzt du schon: macht nichts, tut mir leid, mach's gut?</li>
-<li>Was sagst du, wenn sich jemand bei dir entschuldigt?</li>
-<li>Gibt es in deiner Sprache auch zwei Verben für machen und tun?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Warum haben feste Wendungen keine Logik — und warum lernt man sie trotzdem am besten als Ganzes?</li>
-<li>Woran merkst du, dass jemand eine Wendung wörtlich übersetzt hat?</li>
-<li>Welche deutsche Wendung fandest du am Anfang seltsam?</li>
-</ul>
-<div class="tip">🗣️ <strong>Sprecht reihum:</strong> „Neulich habe ich gesagt: …“ · „Verstanden habe ich es erst, als …“ · „Eine Wendung, die ich mir nie merken kann, ist …“</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
+</section>
+
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Welche dieser Sätze benutzt du schon: macht nichts, tut mir leid, mach's gut?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Was sagst du, wenn sich jemand bei dir entschuldigt?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="wiederholung">
@@ -606,62 +685,6 @@ a.tab:hover{color:var(--ink);}
 <li>Welche Verbindung braucht einen Artikel: Pause, Urlaub oder Sport?</li>
 </ul>
 <div class="tip teal">🔁 <strong>Zu zweit, dreißig Sekunden:</strong> Einer nennt ein Nomen, der andere baut es sofort mit <u>machen</u> in einen Satz. Aufwärmen, mehr nicht.</div>
-</section>
-
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Wendungen mit <span class="hl">machen und tun</span></h2>
-<p class="ssub">Sagt jede laut — und gleich den Beispielsatz hinterher. Diese hier lernt man als Ganzes, nicht Wort für Wort.</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../amanda/amanda-super.webp" alt="Amanda zeigt den Daumen nach oben" loading="lazy"><div class="bb"><div class="bw">Das macht nichts.</div><div class="bex">„Du bist zu spät? Das macht nichts.“</div><div class="bti">💡 Die Antwort auf eine Entschuldigung. Sie bedeutet: kein Problem. Wörtlich übersetzen bringt gar nichts.</div><button class="speak" data-say="Du bist zu spät? Das macht nichts.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/amanda-ups.webp" alt="Amanda schaut überrascht" loading="lazy"><div class="bb"><div class="bw">Das tut mir leid.</div><div class="bex">„Das tut mir wirklich leid, das wollte ich nicht.“</div><div class="bti">💡 Immer mit <b>tun</b>, nie mit machen. Und immer mit Dativ: <b>mir</b>, <b>ihm</b>, <b>uns</b>.</div><button class="speak" data-say="Das tut mir wirklich leid, das wollte ich nicht.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/amanda-hallo.webp" alt="Amanda winkt freundlich" loading="lazy"><div class="bb"><div class="bw">Mach's gut!</div><div class="bex">„Also dann — mach's gut, wir sehen uns!“</div><div class="bti">💡 Lockerer Abschied unter Freunden. Die Antwort darauf ist fast immer: <b>Du auch!</b> oder <b>Mach's besser!</b></div><button class="speak" data-say="Also dann, mach's gut, wir sehen uns!">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-kopf.webp" alt="Eine Frau tippt sich an die Schläfe" loading="lazy"><div class="bb"><div class="bw">Mach dir keinen Kopf.</div><div class="bex">„Mach dir keinen Kopf, das kriegen wir hin.“</div><div class="bti">💡 Heißt: mach dir keine Sorgen. Mit Dativ (<b>dir</b>) — und immer verneint, nie positiv.</div><button class="speak" data-say="Mach dir keinen Kopf, das kriegen wir hin.">🔊 hören</button></div></div>
-<div class="bcard hoch"><img src="../amanda/a-warten.webp" alt="Amanda hält sich besorgt die Wangen" loading="lazy"><div class="bb"><div class="bw">sich Sorgen machen</div><div class="bex">„Ich mache mir Sorgen um meine Mutter.“</div><div class="bti">💡 Reflexiv im Dativ: <b>mir</b>, <b>dir</b>, <b>sich</b>. Und dahinter: <b>um</b> + Akkusativ.</div><button class="speak" data-say="Ich mache mir Sorgen um meine Mutter.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="Das macht mir nichts aus.">🤷</div><div class="bb"><div class="bw">Das macht mir nichts aus.</div><div class="bex">„Kälte macht mir nichts aus, ich mag den Winter.“</div><div class="bti">💡 Bedeutet: Das stört mich nicht. Mit Dativ und trennbar — die Vorsilbe <b>aus</b> steht ganz am Ende.</div><button class="speak" data-say="Kälte macht mir nichts aus, ich mag den Winter.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-kassenbon.webp" alt="Eine Hand hält einen Kassenbon" loading="lazy"><div class="bb"><div class="bw">Was macht das?</div><div class="bex">„Was macht das zusammen?“</div><div class="bti">💡 An der Kasse die Frage nach der Summe. Für einen einzelnen Preis fragt man dagegen: <b>Was kostet das?</b></div><button class="speak" data-say="Was macht das zusammen?">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/amanda-denk.webp" alt="Amanda überlegt" loading="lazy"><div class="bb"><div class="bw">Das ergibt Sinn.</div><div class="bex">„So gesehen ergibt das Sinn.“</div><div class="bti">💡 Klassisch ist <b>Sinn ergeben</b>. <b>Sinn machen</b> hört man überall — im Beruf lieber die erste Form.</div><button class="speak" data-say="So gesehen ergibt das Sinn.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/arbeiten.webp" alt="Eine Frau arbeitet am Laptop" loading="lazy"><div class="bb"><div class="bw">Ich habe zu tun.</div><div class="bex">„Heute Abend geht nicht, ich habe noch zu tun.“</div><div class="bti">💡 <b>zu tun haben</b> heißt: beschäftigt sein. Und: <b>Das hat nichts damit zu tun</b> — das gehört nicht hierher.</div><button class="speak" data-say="Heute Abend geht nicht, ich habe noch zu tun.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-buero.webp" alt="Zwei Kolleginnen am Schreibtisch" loading="lazy"><div class="bb"><div class="bw">So tun, als ob</div><div class="bex">„Er tut so, als ob er nichts gewusst hätte.“</div><div class="bti">💡 Nur mit <b>tun</b>. Danach kommt ein Nebensatz mit Konjunktiv — deshalb <b>hätte</b>, nicht <i>hat</i>.</div><button class="speak" data-say="Er tut so, als ob er nichts gewusst hätte.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-ruecken.webp" alt="Ein Mann hält sich den unteren Rücken" loading="lazy"><div class="bb"><div class="bw">Das tut weh.</div><div class="bex">„Aua, das tut weh!“</div><div class="bti">💡 Immer mit tun. Und mit Person im Dativ: <b>Mir tut der Rücken weh.</b></div><button class="speak" data-say="Aua, das tut weh!">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="Mach mal halblang.">✋</div><div class="bb"><div class="bw">Mach mal halblang.</div><div class="bex">„Mach mal halblang, so schlimm war es nicht.“</div><div class="bti">💡 Umgangssprachlich für: Übertreib nicht. Nur unter Leuten, die man duzt — nie zur Chefin.</div><button class="speak" data-say="Mach mal halblang, so schlimm war es nicht.">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel:</strong> Verdeckt die Wörter. Einer beschreibt eine <u>Situation</u>, die anderen raten, welche Wendung passt.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Wann machen, <span class="hl">wann tun?</span></h2>
-<p class="ssub">Erst die drei Fälle, in denen man das eine oder das andere braucht. Darunter drei Sätze richtig und falsch nebeneinander.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">🔨</span><div class="gmw">machen</div><div class="gmb">Etwas entsteht oder verändert sich.</div><div class="gmx">Frühstück machen · sauber machen · einen Termin machen</div></div>
-<div class="gk blau"><span class="gem2">🤲</span><div class="gmw">tun</div><div class="gmb">Eine Handlung, ohne Ergebnis im Blick.</div><div class="gmx">Was tust du da? · Ich habe zu tun. · Tu, was du willst.</div></div>
-<div class="gk ja"><span class="gem2">🔒</span><div class="gmw">Feste Wendungen</div><div class="gmb">Hier gibt es keine Regel — nur auswendig.</div><div class="gmx">Das tut mir leid. · Das macht nichts. · Das tut weh.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Das tut mir leid.</div><div class="bsp"><span class="wer">Warum das stimmt</span>Feste Wendung mit <b>tun</b> und Dativ. Sie lässt sich nicht auseinandernehmen und nicht tauschen.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Das macht mir leid.</div><div class="bsp"><span class="wer">Das Problem</span>Klingt für deutsche Ohren sofort falsch — obwohl der Satz logisch gebaut ist. Wendungen folgen keiner Logik.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Kein Problem, das macht nichts.</div><div class="bsp"><span class="wer">Warum das stimmt</span>Auch das ist eine feste Wendung — hier mit <b>machen</b>. Sie ist die Antwort auf eine Entschuldigung.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Kein Problem, das tut nichts.</div><div class="bsp"><span class="wer">Das Problem</span>Dasselbe Muster, das falsche Verb. Genau diese beiden Sätze werden am häufigsten vertauscht.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Ich mache mir Sorgen um dich.</div><div class="bsp"><span class="wer">Warum das stimmt</span>Reflexiv im <b>Dativ</b> (mir), dann <b>um</b> + Akkusativ. Beides gehört fest dazu.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Ich mache mich Sorgen für dich.</div><div class="bsp"><span class="wer">Das Problem</span>Zwei Fehler auf einmal: <i>mich</i> statt <i>mir</i> und <i>für</i> statt <i>um</i>. Die Wendung nimmt beides nicht.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Woran erkenne ich, welches Verb?</button>
-<div class="inhalt">
-<p>Drei Anhaltspunkte, mehr brauchst du nicht:</p>
-<ul>
-<li>Entsteht etwas Neues oder ändert sich etwas? → <b>machen</b> (Frühstück, Ordnung, sauber, kaputt)</li>
-<li>Geht es nur um die Handlung selbst? → <b>tun</b> (Was tust du? Ich habe zu tun. Tu es einfach.)</li>
-<li>Ist es eine <b>feste Wendung</b>? → auswendig lernen. Da hilft keine Regel.</li>
-</ul>
-<p style="margin-top:.5rem;">Und der beste Merksatz für die zwei häufigsten: <b>Es tut mir leid — das macht nichts.</b> Sag ihn zehnmal, dann sitzt er.</p>
-</div>
-</div>
-<div class="tip">⚖️ <strong>Kurzübung:</strong> Einer entschuldigt sich für etwas Kleines, der Nächste winkt ab. Reihum — und jedes Mal mit einer anderen Formulierung.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -819,37 +842,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei <span class="hl">kleine Pannen</span></h2>
-<p class="ssub">Zu zweit. Einer verursacht etwas, der andere reagiert. In jeder Antwort mindestens eine feste Wendung. Zwei Minuten, dann tauschen.</p>
-<div class="rmcard">
-<b>1 · Die kaputte Vase</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat beim Besuch etwas umgeworfen. B ist der Gastgeber und will, dass niemand sich schlecht fühlt.</p>
-<div class="nur-a2"><span class="rm">Das tut mir so leid</span><span class="rm">Ich ersetze das</span><span class="rm">Das war mein Fehler</span><span class="rm">Wie kann ich das gutmachen?</span></div>
-<div class="nur-b1"><span class="rm">Das ist nicht der Rede wert</span><span class="rm">Machen Sie sich keine Gedanken</span><span class="rm">Das hat sich damit erledigt</span><span class="rm">Damit ist die Sache gut</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A entschuldigt sich einmal und bietet etwas an. B winkt ab, ohne A zu beschämen — und beide sind nach vier Sätzen fertig.</div>
-</div>
-<div class="rmcard">
-<b>2 · Die falsche Zahl im Bericht</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat einen Fehler gemacht, den der Kunde gesehen hat. B ist die Führungskraft.</p>
-<div class="nur-a2"><span class="rm">Das tut mir leid</span><span class="rm">Ich korrigiere das heute</span><span class="rm">Das passiert nicht wieder</span><span class="rm">Was soll ich dem Kunden schreiben?</span></div>
-<div class="nur-b1"><span class="rm">Das hätte mir nicht passieren dürfen</span><span class="rm">Ich bin mir des Ernstes bewusst</span><span class="rm">Ich schicke die korrigierte Fassung</span><span class="rm">Ich mache mir Gedanken, wie ich das künftig verhindere</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A entschuldigt sich ohne Ausrede und nennt einen konkreten nächsten Schritt. B beruhigt, ohne die Sache kleinzureden.</div>
-</div>
-<div class="rmcard">
-<b>3 · Absage kurz vor knapp</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A sagt zwei Stunden vorher ab. B hat schon eingekauft — und will trotzdem freundlich bleiben.</p>
-<div class="nur-a2"><span class="rm">Es tut mir wirklich leid</span><span class="rm">Mir geht es nicht gut</span><span class="rm">Können wir es nachholen?</span><span class="rm">Ich melde mich morgen</span></div>
-<div class="nur-b1"><span class="rm">Das ist mir unangenehm</span><span class="rm">Ich sage so spät ungern ab</span><span class="rm">Mach dir keinen Kopf</span><span class="rm">Das macht mir nichts aus</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide bleiben bei festen Wendungen statt bei Erklärungen — und am Ende steht ein neuer Termin.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Sagt zum Schluss zehnmal hintereinander: <u>Es tut mir leid — das macht nichts.</u> Danach vertauscht ihr die beiden nie wieder.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -882,14 +882,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde müssen <u>zwei feste Wendungen</u> vorkommen — eine mit machen, eine mit tun. Die Gruppe hört mit.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Sagt zum Schluss zehnmal hintereinander: <u>Es tut mir leid — das macht nichts.</u> Danach vertauscht ihr die beiden nie wieder.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Warum haben feste Wendungen keine Logik — und warum lernt man sie trotzdem am besten als Ganzes?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Woran merkst du, dass jemand eine Wendung wörtlich übersetzt hat?</li><li>Welche deutsche Wendung fandest du am Anfang seltsam?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei <span class="hl">kleine Pannen</span></h2>
+<p class="ssub">Zu zweit. Einer verursacht etwas, der andere reagiert. In jeder Antwort mindestens eine feste Wendung. Zwei Minuten, dann tauschen.</p>
+<div class="rmcard">
+<b>1 · Die kaputte Vase</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat beim Besuch etwas umgeworfen. B ist der Gastgeber und will, dass niemand sich schlecht fühlt.</p>
+<div class="nur-a2"><span class="rm">Das tut mir so leid</span><span class="rm">Ich ersetze das</span><span class="rm">Das war mein Fehler</span><span class="rm">Wie kann ich das gutmachen?</span></div>
+<div class="nur-b1"><span class="rm">Das ist nicht der Rede wert</span><span class="rm">Machen Sie sich keine Gedanken</span><span class="rm">Das hat sich damit erledigt</span><span class="rm">Damit ist die Sache gut</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A entschuldigt sich einmal und bietet etwas an. B winkt ab, ohne A zu beschämen — und beide sind nach vier Sätzen fertig.</div>
+</div>
+<div class="rmcard">
+<b>2 · Die falsche Zahl im Bericht</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat einen Fehler gemacht, den der Kunde gesehen hat. B ist die Führungskraft.</p>
+<div class="nur-a2"><span class="rm">Das tut mir leid</span><span class="rm">Ich korrigiere das heute</span><span class="rm">Das passiert nicht wieder</span><span class="rm">Was soll ich dem Kunden schreiben?</span></div>
+<div class="nur-b1"><span class="rm">Das hätte mir nicht passieren dürfen</span><span class="rm">Ich bin mir des Ernstes bewusst</span><span class="rm">Ich schicke die korrigierte Fassung</span><span class="rm">Ich mache mir Gedanken, wie ich das künftig verhindere</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A entschuldigt sich ohne Ausrede und nennt einen konkreten nächsten Schritt. B beruhigt, ohne die Sache kleinzureden.</div>
+</div>
+<div class="rmcard">
+<b>3 · Absage kurz vor knapp</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A sagt zwei Stunden vorher ab. B hat schon eingekauft — und will trotzdem freundlich bleiben.</p>
+<div class="nur-a2"><span class="rm">Es tut mir wirklich leid</span><span class="rm">Mir geht es nicht gut</span><span class="rm">Können wir es nachholen?</span><span class="rm">Ich melde mich morgen</span></div>
+<div class="nur-b1"><span class="rm">Das ist mir unangenehm</span><span class="rm">Ich sage so spät ungern ab</span><span class="rm">Mach dir keinen Kopf</span><span class="rm">Das macht mir nichts aus</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide bleiben bei festen Wendungen statt bei Erklärungen — und am Ende steht ein neuer Termin.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -953,6 +987,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Sprachnachricht bis <u>Sonntag 18 Uhr</u> in die Gruppe. Wir hören zwei davon gemeinsam an — freiwillig, versteht sich.</div>
 <div class="tip">🔜 <strong>Nächste Woche:</strong> <u>GEHEN, KOMMEN, FAHREN</u> — wohin und womit, und am Donnerstag: Das geht nicht. Wie geht's? Es kommt darauf an.</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1139,11 +1180,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1200,7 +1248,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1210,7 +1260,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

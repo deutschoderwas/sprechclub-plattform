@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,49 +627,44 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B2<span class="zusatz"> · feiner</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#wiederholung">🔁 Wiederholung</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">⚖️ Drei Arten zu argumentieren</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">Wem gehört <span class="hl">eine Mietwohnung?</span></h2>
-<p class="ssub">Juristisch ist die Antwort einfach: dem Vermieter. Praktisch ist sie es nicht. Wer dreißig Jahre in derselben Wohnung lebt, dort Kinder großzieht und Wände streicht, empfindet sie als sein Zuhause — und ein Zuhause, in dem jemand anders über den Hund entscheidet, fühlt sich nicht wie eines an.</p>
-<div class="scene-wrap klein"><img src="../bilder/lesen/nachbarschaft.webp" alt="Eine Reihe von Häusern mit kleinen Vorgärten"></div>
-<ul class="qlist nur-a2">
-<li>Ist eine Mietwohnung dein Zuhause oder nur eine Wohnung?</li>
-<li>Was darf man in einer Mietwohnung deiner Meinung nach selbst entscheiden?</li>
-<li>Wie ist das in deinem Heimatland geregelt?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Wo endet das Recht des Eigentümers und wo beginnt das Recht des Bewohners?</li>
-<li>Verändert die Wohndauer diese Grenze — sollte sie es?</li>
-<li>Welche Entscheidungen sind wirklich Privatsache, welche betreffen das ganze Haus?</li>
-</ul>
-<div class="tip teal">🔑 <strong>Damit die Debatte nicht kippt:</strong> Es gibt in Deutschland kein einfaches Ja und kein einfaches Nein. Gerichte urteilen im <b>Einzelfall</b> und wägen ab: Größe des Tieres, Zustand des Hauses, Rücksicht der Halter, Belastung der Nachbarn. Wer das weiß, argumentiert nicht über Prinzipien, sondern über Umstände — und genau das üben wir heute.</div>
-<h2 class="st">Vier Menschen, <span class="hl">vier gute Gründe</span></h2>
-<p class="ssub">Das Unangenehme an dieser Debatte: Alle Seiten haben recht. Der Vermieter denkt an Böden und Türen, der allergische Nachbar an seine Gesundheit, die alleinlebende Rentnerin an das einzige Lebewesen, das sie täglich sieht — und der Hund an gar nichts davon.</p>
-<div class="scene-wrap klein"><img src="../vok-bild/die-meinung.webp" alt="Vier Menschen sitzen im Café zusammen und diskutieren"></div>
-<ul class="qlist nur-a2">
-<li>Wessen Argument findest du am stärksten?</li>
-<li>Wer hat am wenigsten Möglichkeiten, sich zu wehren?</li>
-<li>Gibt es einen Kompromiss, mit dem alle leben können?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Welches Argument wird in dieser Debatte am häufigsten überschätzt?</li>
-<li>Wie viel Rücksicht darf man von Menschen verlangen, die nichts davon haben?</li>
-<li>Wann ist ein Kompromiss ein Kompromiss und wann nur ein Nachgeben?</li>
-</ul>
-<div class="tip">💡 <strong>Ein Werkzeug für heute:</strong> Wer die Gegenseite <u>besser</u> formulieren kann, als sie es selbst tut, gewinnt jede Debatte an Glaubwürdigkeit. Beginn dein Argument deshalb ruhig mit <b>„Der stärkste Einwand gegen meine Position wäre …“</b> — und beantworte ihn dann.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
+</section>
+
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Ist eine Mietwohnung dein Zuhause oder nur eine Wohnung?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Was darf man in einer Mietwohnung deiner Meinung nach selbst entscheiden?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="wiederholung">
@@ -620,62 +685,6 @@ a.tab:hover{color:var(--ink);}
 <li>Warum wirkt <i>„Der tut doch nichts“</i> nie?</li>
 </ul>
 <div class="tip teal">🔁 <strong>Zu zweit, dreißig Sekunden:</strong> Einer sagt einen Satz mit <i>darf nicht</i>, der andere denselben Inhalt mit <i>muss nicht</i> — und erklärt, was sich dadurch ändert. Danach geht es los: Heute wird aus der Bitte eine Position.</div>
-</section>
-
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Wörter <span class="hl">für eine Debatte, die alle betrifft</span></h2>
-<p class="ssub">Sagt jedes Wort laut — <u>mit Artikel</u>. Und gleich einen Satz hinterher: Auf welcher Seite der Debatte würdest du dieses Wort brauchen?</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../bilder/lesen/tier.webp" alt="Ein Futternapf, eine Hundeleine und ein Pfotenabdruck" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Tierhaltung</div><div class="bex">„Die Tierhaltung ist im Vertrag nicht geregelt.“</div><div class="bti">💡 Das Wort aus den Verträgen. Dazu gehört <b>ein Tier halten</b> — nicht <i>haben</i>. <i>Wir halten einen Hund</i> klingt im Deutschen normal, auch wenn es beim ersten Hören seltsam wirkt.</div><button class="speak" data-say="Die Tierhaltung ist im Vertrag nicht geregelt.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/nachbarschaft.webp" alt="Eine Reihe von Häusern mit kleinen Vorgärten" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Eigentum</div><div class="bex">„Es ist sein Eigentum, aber unser Zuhause.“</div><div class="bti">💡 Das Kernwort dieser Debatte. Dazu: <b>der Eigentümer</b> (dem es gehört) gegen <b>der Mieter</b> (der darin wohnt). Und der Satz, der die ganze Spannung enthält: <i>sein Eigentum, unser Zuhause</i>.</div><button class="speak" data-say="Es ist sein Eigentum, aber unser Zuhause.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-ampel.webp" alt="Eine Ampel zeigt Rot über einer Straße" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Verbot</div><div class="bex">„Ein generelles Verbot hält vor Gericht meistens nicht.“</div><div class="bti">💡 Achte auf das Adjektiv davor: <b>generell</b> heißt ohne Ausnahme, für alle, immer. Genau solche Verbote sind in Mietverträgen häufig — und oft angreifbar, weil sie den Einzelfall ausschließen.</div><button class="speak" data-say="Ein generelles Verbot hält vor Gericht meistens nicht.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/schild.webp" alt="Ein leeres Schild mit einem Pfeil an einem Pfosten" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Vorschrift</div><div class="bex">„Diese Vorschrift steht so in keinem Gesetz.“</div><div class="bti">💡 Umgangssprachlich hörst du oft <i>Vorschrift ist Vorschrift</i> — der Satz von jemandem, der nicht weiterdiskutieren will. In einer Debatte ist er ein Signal: Jetzt fehlt das Argument.</div><button class="speak" data-say="Diese Vorschrift steht so in keinem Gesetz.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-unterlagen.webp" alt="Hände blättern durch einen Stapel Papiere" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Einzelfall</div><div class="bex">„Das wird immer im Einzelfall entschieden.“</div><div class="bti">💡 Eines der wichtigsten Wörter im deutschen Rechtsalltag. <b>Im Einzelfall entscheiden</b> heißt: Es gibt keine Regel für alle, es kommt auf die Umstände an. Wer das sagt, verweigert bewusst das einfache Ja oder Nein.</div><button class="speak" data-say="Das wird immer im Einzelfall entschieden.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-pflege.webp" alt="Eine Pflegerin begleitet eine ältere Frau mit Rollator" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Verantwortung</div><div class="bex">„Ein Tier ist vor allem Verantwortung.“</div><div class="bti">💡 Feste Wendungen: <b>Verantwortung übernehmen für</b> und <b>die Verantwortung tragen</b>. In dieser Debatte das beste Argument der Tierhalter — aber nur, wenn man es mit konkreten Handlungen füllt.</div><button class="speak" data-say="Ein Tier ist vor allem Verantwortung.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/nachbar.webp" alt="Zwei Wohnungstüren nebeneinander im Hausflur, davor eine Fußmatte" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Zusammenleben</div><div class="bex">„Es geht ums Zusammenleben, nicht um Hunde.“</div><div class="bti">💡 Ein Wort, das jede Debatte um eine Ebene hebt. Wer sagt <i>es geht ums Zusammenleben</i>, redet nicht mehr über sein eigenes Interesse — und wirkt deshalb sofort weniger eigennützig.</div><button class="speak" data-say="Es geht ums Zusammenleben, nicht um Hunde.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-meinung.webp" alt="Vier Menschen sitzen im Café zusammen und diskutieren" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Einwand</div><div class="bex">„Der stärkste Einwand ist die Lärmbelastung.“</div><div class="bti">💡 Dazu das Verb <b>einwenden</b>: <i>Man könnte einwenden, dass …</i> — die höflichste Art, in einer Diskussion zu widersprechen. Und das Adjektiv <b>berechtigt</b>: <i>ein berechtigter Einwand</i>.</div><button class="speak" data-say="Der stärkste Einwand ist die Lärmbelastung.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-wand.webp" alt="Eine Frau sitzt in einem fast leeren, hellen Zimmer" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Einsamkeit</div><div class="bex">„Für viele ältere Menschen ist das Tier der einzige Grund rauszugehen.“</div><div class="bti">💡 Das Adjektiv ist <b>einsam</b>, und Vorsicht: Es ist nicht dasselbe wie <b>allein</b>. Allein ist eine Lage, einsam ist ein Gefühl. Man kann allein sein, ohne einsam zu sein — und umgekehrt.</div><button class="speak" data-say="Für viele ältere Menschen ist das Tier der einzige Grund rauszugehen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-bewerbung.webp" alt="Zwei Personen sitzen sich mit Unterlagen an einem Tisch gegenüber" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Kompromiss</div><div class="bex">„Wir haben einen Kompromiss gefunden.“</div><div class="bti">💡 Mit <b>eingehen</b> oder <b>finden</b>: <i>einen Kompromiss eingehen</i>. Und ein Wort, das in Debatten oft danebenliegt: Ein Kompromiss ist keiner, wenn nur eine Seite nachgibt — das heißt <b>nachgeben</b>.</div><button class="speak" data-say="Wir haben einen Kompromiss gefunden.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-briefkasten.webp" alt="Ein Briefkasten an einer Hauswand mit einem Brief darin" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Kündigung</div><div class="bex">„Mit einer Kündigung zu drohen, macht alles schlimmer.“</div><div class="bti">💡 Dazu <b>kündigen</b> — und beachte: Man kündigt <i>jemandem</i> (Dativ) oder <i>einen Vertrag</i> (Akkusativ). In dieser Debatte ist es das schärfste Wort auf der Vermieterseite und selten das klügste.</div><button class="speak" data-say="Mit einer Kündigung zu drohen, macht alles schlimmer.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/a-zeigen.webp" alt="Amanda hebt den Zeigefinger" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Ausnahme</div><div class="bex">„Für Blindenhunde gilt eine Ausnahme.“</div><div class="bti">💡 Feste Wendungen: <b>eine Ausnahme machen</b> und <b>mit Ausnahme von</b>. In Debatten das nützlichste Wort überhaupt — es rettet dich, wenn dein Prinzip an einem Beispiel scheitert.</div><button class="speak" data-say="Für Blindenhunde gilt eine Ausnahme.">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel „Der stärkste Einwand“:</strong> Jeder nennt seine Position in einem Satz. Der Nachbar muss nicht widersprechen, sondern den <u>besten</u> Einwand dagegen formulieren — so gut er kann. Danach darf der Erste antworten. Ihr werdet merken, wie viel schwerer das ist, als einfach dagegen zu sein.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Prinzip, Folge <span class="hl">oder Beispiel?</span></h2>
-<p class="ssub">Argumente sind nicht alle gleich gebaut. Und wer erkennt, welche Sorte das Gegenüber gerade benutzt, weiß auch, womit man darauf antwortet — mit einem Prinzip gegen ein Beispiel zu argumentieren, geht fast immer daneben.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">⚖️</span><div class="gmw">das Prinzip</div><div class="gmb">eine Regel, die immer gelten soll</div><div class="gmx">Wer Miete zahlt, entscheidet über sein Zuhause.</div></div>
-<div class="gk blau"><span class="gem2">➡️</span><div class="gmw">die Folge</div><div class="gmb">was daraus praktisch entsteht</div><div class="gmx">Wenn jeder ein Tier hielte, wäre der Hof unbenutzbar.</div></div>
-<div class="gk ja"><span class="gem2">🔎</span><div class="gmw">das Beispiel</div><div class="gmb">ein einzelner Fall, der etwas zeigt</div><div class="gmx">Bei uns im Haus leben vier Hunde und niemand stört sich.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Trägt in einer Debatte</div><div class="gsatz">Ein generelles Verbot trifft auch die, die nachweislich niemanden stören.</div><div class="bsp"><span class="wer">Warum das funktioniert</span>Der Satz greift nicht das Verbot als solches an, sondern seine <b>Reichweite</b>. Das ist viel schwerer zu entkräften — und die Gegenseite muss nun erklären, warum sie den Einzelfall ausschließt.</div></div>
-<div class="gk no"><div class="gkl">❌ Trägt nicht</div><div class="gsatz">Verbote bringen sowieso nie etwas.</div><div class="bsp"><span class="wer">Das Problem</span>Eine Behauptung ohne Grenze. Sie lässt sich mit einem einzigen Gegenbeispiel umwerfen — und danach steht nicht nur dieser Satz in Frage, sondern deine ganze Position.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Nimmt den Einwand ernst</div><div class="gsatz">Der stärkste Einwand wäre die Allergie im Haus. Dafür bräuchte man eine Regelung im Treppenhaus.</div><div class="bsp"><span class="wer">Warum das wirkt</span>Du nennst das beste Argument der Gegenseite <b>selbst</b> — und beantwortest es. Damit nimmst du ihr den stärksten Zug aus der Hand und wirkst zugleich, als hättest du wirklich nachgedacht.</div></div>
-<div class="gk no"><div class="gkl">❌ Wirkt schwach</div><div class="gsatz">Allergien sind heute doch behandelbar.</div><div class="bsp"><span class="wer">Das Problem</span>Du erklärst dem anderen sein Problem für kleiner, als es ist. Selbst wenn der Satz stimmen sollte, verlierst du damit die Zuhörer — niemand mag es, wenn seine Beschwerden weggeredet werden.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Bleibt beweglich</div><div class="gsatz">Grundsätzlich ja — mit einer Ausnahme für Fälle, in denen jemand im Haus gesundheitlich betroffen ist.</div><div class="bsp"><span class="wer">Warum das klug ist</span>Eine Position mit einer selbst gesetzten <b>Ausnahme</b> ist fast nicht angreifbar. Du hast die Schwachstelle deiner eigenen Regel bereits eingebaut, bevor sie jemand findet.</div></div>
-<div class="gk no"><div class="gkl">❌ Wird brechen</div><div class="gsatz">Das muss in jedem Fall erlaubt sein, ohne Ausnahme.</div><div class="bsp"><span class="wer">Das Problem</span><i>Ohne Ausnahme</i> ist ein Versprechen, das kein Argument halten kann. Es genügt ein einziger Extremfall — ein Kampfhund im Kinderzimmer —, und du musst deine ganze Position räumen.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Wie bringe ich mein Argument in drei Sätzen unter?</button>
-<div class="inhalt">
-<p>Drei Sätze, immer in dieser Reihenfolge:</p>
-<ul>
-<li><b>Die Position:</b> ein Satz, ohne Vorrede. <i>Ein generelles Verbot halte ich für falsch.</i></li>
-<li><b>Der Grund:</b> Prinzip, Folge oder Beispiel — aber nur eines davon. <i>Es trifft auch die, die niemanden stören.</i></li>
-<li><b>Der eingebaute Einwand:</b> <i>Der stärkste Gegenpunkt wäre die Allergie — dafür bräuchte es eine eigene Regel.</i></li>
-</ul>
-<p style="margin-top:.5rem;">Und wenn du unter Druck gerätst, gibt es einen Satz, der immer geht: <b>„Da haben Sie recht — für diesen Fall würde ich eine Ausnahme machen.“</b> Nachgeben an einer Stelle macht die restliche Position stärker, nicht schwächer.</p>
-</div>
-</div>
-<div class="tip">🎯 <strong>Zu zweit, eine Minute:</strong> Einer nennt ein Argument, der andere sagt nur, welche Sorte es war — Prinzip, Folge oder Beispiel. Danach tauschen. Ihr werdet merken: Die meisten Menschen benutzen immer dieselbe Sorte.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -827,37 +836,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei Debatten <span class="hl">zu zweit</span></h2>
-<p class="ssub">Einer vertritt eine Position, einer die andere. Danach tauschen — und beim zweiten Mal ohne Notizen. Regel für alle drei: Jede Antwort beginnt mit einem Zugeständnis.</p>
-<div class="rmcard">
-<b>1 · Verbot oder Einzelfall?</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A ist Vermieterin und möchte Tierhaltung generell ausschließen, weil die letzte Wohnung beschädigt war. B ist Mieter und argumentiert für eine Regelung im Einzelfall. Zwei Minuten, dann tauschen.</p>
-<div class="nur-a2"><span class="rm">Ich halte ein Verbot für falsch</span><span class="rm">Das stimmt schon, aber …</span><span class="rm">Und die, die niemanden stören?</span><span class="rm">Wie wäre es, wenn wir es befristen?</span></div>
-<div class="nur-b1"><span class="rm">Ein generelles Verbot trifft auch die Rücksichtsvollen</span><span class="rm">Der stärkste Einwand wäre …</span><span class="rm">Man müsste hier abwägen zwischen …</span><span class="rm">Denkbar wäre eine Regelung, die …</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide haben mindestens einmal etwas zugegeben, bevor sie widersprochen haben. Es kam mindestens ein Satz im Konjunktiv II vor, und am Ende stand ein konkreter Vorschlag statt einer Wiederholung der Anfangsposition.</div>
-</div>
-<div class="rmcard">
-<b>2 · Die Allergie gegen die Einsamkeit</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A ist allergisch und leidet im Treppenhaus. B lebt allein und die Katze ist der Grund, morgens aufzustehen. Beide haben recht. Findet in zwei Minuten etwas Praktisches.</p>
-<div class="nur-a2"><span class="rm">Ich verstehe deinen Punkt</span><span class="rm">Bei mir geht es um die Gesundheit</span><span class="rm">Wie wäre es, wenn …?</span><span class="rm">Damit könnte ich leben</span></div>
-<div class="nur-b1"><span class="rm">Das ist ein berechtigter Einwand</span><span class="rm">Man müsste unterscheiden zwischen Wohnung und Treppenhaus</span><span class="rm">An deiner Stelle würde ich das genauso sagen</span><span class="rm">Ein gangbarer Weg wäre …</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Niemand hat das Problem des anderen kleingeredet. Die Lösung betrifft einen konkreten Ort (Treppenhaus, Aufzug) und nicht die Grundsatzfrage — und beide haben am Ende etwas gegeben.</div>
-</div>
-<div class="rmcard">
-<b>3 · Die Vertragsklausel</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A arbeitet in der Hausverwaltung und beruft sich auf den Vertrag. B möchte erreichen, dass der Fall einzeln geprüft wird. B darf den Vertrag nicht angreifen, sondern nur seine Reichweite.</p>
-<div class="nur-a2"><span class="rm">Im Vertrag steht es aber so</span><span class="rm">Darf ich fragen, für welche Fälle das gedacht war?</span><span class="rm">Ich schicke Ihnen das schriftlich</span><span class="rm">Ich schlage zwei Auflagen selbst vor</span></div>
-<div class="nur-b1"><span class="rm">Ein Satz für alle kann diesen Fall nicht kennen</span><span class="rm">Ich würde Sie bitten, ihn einmal konkret zu prüfen</span><span class="rm">Man könnte einwenden, dass …</span><span class="rm">Ich hätte dazu einen Vorschlag</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat nicht über Recht und Unrecht gestritten, sondern über die Reichweite der Klausel — und mindestens zweimal die höfliche Konjunktivform benutzt. A hat einen konkreten nächsten Schritt genannt.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Jeder nennt reihum eine Forderung im Indikativ (<i>Prüfen Sie das!</i>). Der Nachbar formt sie sofort in eine höfliche Konjunktivform um (<i>Ich würde Sie bitten, das zu prüfen.</i>). Wer bei <i>würde sein</i> landet, gibt weiter.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -890,14 +876,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde müssen <u>ein Zugeständnis</u> und <u>ein Satz im Konjunktiv II</u> vorkommen. Wer anfängt zu wiederholen, statt neu zu begründen, gibt weiter.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Jeder nennt reihum eine Forderung im Indikativ (<i>Prüfen Sie das!</i>). Der Nachbar formt sie sofort in eine höfliche Konjunktivform um (<i>Ich würde Sie bitten, das zu prüfen.</i>). Wer bei <i>würde sein</i> landet, gibt weiter.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Wo endet das Recht des Eigentümers und wo beginnt das Recht des Bewohners?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Verändert die Wohndauer diese Grenze — sollte sie es?</li><li>Welche Entscheidungen sind wirklich Privatsache, welche betreffen das ganze Haus?</li><li>Welches Argument wird in dieser Debatte am häufigsten überschätzt?</li><li>Wie viel Rücksicht darf man von Menschen verlangen, die nichts davon haben?</li><li>Wann ist ein Kompromiss ein Kompromiss und wann nur ein Nachgeben?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei Debatten <span class="hl">zu zweit</span></h2>
+<p class="ssub">Einer vertritt eine Position, einer die andere. Danach tauschen — und beim zweiten Mal ohne Notizen. Regel für alle drei: Jede Antwort beginnt mit einem Zugeständnis.</p>
+<div class="rmcard">
+<b>1 · Verbot oder Einzelfall?</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A ist Vermieterin und möchte Tierhaltung generell ausschließen, weil die letzte Wohnung beschädigt war. B ist Mieter und argumentiert für eine Regelung im Einzelfall. Zwei Minuten, dann tauschen.</p>
+<div class="nur-a2"><span class="rm">Ich halte ein Verbot für falsch</span><span class="rm">Das stimmt schon, aber …</span><span class="rm">Und die, die niemanden stören?</span><span class="rm">Wie wäre es, wenn wir es befristen?</span></div>
+<div class="nur-b1"><span class="rm">Ein generelles Verbot trifft auch die Rücksichtsvollen</span><span class="rm">Der stärkste Einwand wäre …</span><span class="rm">Man müsste hier abwägen zwischen …</span><span class="rm">Denkbar wäre eine Regelung, die …</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide haben mindestens einmal etwas zugegeben, bevor sie widersprochen haben. Es kam mindestens ein Satz im Konjunktiv II vor, und am Ende stand ein konkreter Vorschlag statt einer Wiederholung der Anfangsposition.</div>
+</div>
+<div class="rmcard">
+<b>2 · Die Allergie gegen die Einsamkeit</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A ist allergisch und leidet im Treppenhaus. B lebt allein und die Katze ist der Grund, morgens aufzustehen. Beide haben recht. Findet in zwei Minuten etwas Praktisches.</p>
+<div class="nur-a2"><span class="rm">Ich verstehe deinen Punkt</span><span class="rm">Bei mir geht es um die Gesundheit</span><span class="rm">Wie wäre es, wenn …?</span><span class="rm">Damit könnte ich leben</span></div>
+<div class="nur-b1"><span class="rm">Das ist ein berechtigter Einwand</span><span class="rm">Man müsste unterscheiden zwischen Wohnung und Treppenhaus</span><span class="rm">An deiner Stelle würde ich das genauso sagen</span><span class="rm">Ein gangbarer Weg wäre …</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Niemand hat das Problem des anderen kleingeredet. Die Lösung betrifft einen konkreten Ort (Treppenhaus, Aufzug) und nicht die Grundsatzfrage — und beide haben am Ende etwas gegeben.</div>
+</div>
+<div class="rmcard">
+<b>3 · Die Vertragsklausel</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A arbeitet in der Hausverwaltung und beruft sich auf den Vertrag. B möchte erreichen, dass der Fall einzeln geprüft wird. B darf den Vertrag nicht angreifen, sondern nur seine Reichweite.</p>
+<div class="nur-a2"><span class="rm">Im Vertrag steht es aber so</span><span class="rm">Darf ich fragen, für welche Fälle das gedacht war?</span><span class="rm">Ich schicke Ihnen das schriftlich</span><span class="rm">Ich schlage zwei Auflagen selbst vor</span></div>
+<div class="nur-b1"><span class="rm">Ein Satz für alle kann diesen Fall nicht kennen</span><span class="rm">Ich würde Sie bitten, ihn einmal konkret zu prüfen</span><span class="rm">Man könnte einwenden, dass …</span><span class="rm">Ich hätte dazu einen Vorschlag</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat nicht über Recht und Unrecht gestritten, sondern über die Reichweite der Klausel — und mindestens zweimal die höfliche Konjunktivform benutzt. A hat einen konkreten nächsten Schritt genannt.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -963,6 +983,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Sprachnachricht und die fünf gedachten Fälle bis Sonntagabend. Ich achte besonders auf <i>würde sein</i> — das ist der häufigste Fehler beim Konjunktiv, und er verschwindet, sobald man ihn einmal bemerkt hat.</div>
 <div class="tip">🔜 <strong>Nächste Woche:</strong> <u>Geschenke — sinnvoll oder Verschwendung?</u> Wieder eine Frage, bei der alle eine Meinung haben und niemand streiten will. Und wieder brauchst du den Konjunktiv: <i>Ich hätte mich mehr über Zeit als über ein Paket gefreut.</i></div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1149,11 +1176,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1210,7 +1244,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1220,7 +1256,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

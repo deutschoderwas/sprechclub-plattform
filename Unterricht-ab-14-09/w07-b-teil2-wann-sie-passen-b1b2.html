@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,49 +627,44 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B2<span class="zusatz"> · feiner</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#wiederholung">🔁 Wiederholung</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">⚖️ Drei Stilebenen</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">Dieselben Wörter, <span class="hl">drei verschiedene Wirkungen</span></h2>
-<p class="ssub"><i>Ich habe die Nase voll.</i> Unter Freunden: völlig normal. In der Teambesprechung: ehrlich, vielleicht etwas heftig. In einer Mail an die Hausverwaltung: unpassend, weil dort niemand deine Stimmung hören will, sondern dein Anliegen lesen. Der Satz ändert sich nicht — der Raum ändert sich.</p>
-<div class="scene-wrap klein"><img src="../amanda/sz-heikel.webp" alt="Zwei Personen in einem ernsten Gespräch"></div>
-<ul class="qlist nur-a2">
-<li>Wo würdest du <i>ich habe die Nase voll</i> sagen, wo nicht?</li>
-<li>Gibt es Wörter, die du nur unter Freunden benutzt?</li>
-<li>Wie merkst du, dass ein Satz zu locker war?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Woran erkennst du in einer fremden Sprache die Stilebene eines Ausdrucks?</li>
-<li>Ist es schlimmer, zu locker oder zu förmlich zu klingen?</li>
-<li>Welche Situation ist für dich am schwersten einzuschätzen?</li>
-</ul>
-<div class="tip teal">🔑 <strong>Die Frage, die alles entscheidet:</strong> <b>Würde die Person, mit der ich rede, diesen Satz auch zu mir sagen?</b> Wenn ja, passt er. Wenn nein, ist er wahrscheinlich zu locker — oder zu steif. Diese eine Frage ersetzt eine ganze Stiltabelle.</div>
-<h2 class="st">Die zweite Falle: <span class="hl">über Sachen oder über Menschen</span></h2>
-<p class="ssub">Manche Wendungen beschreiben eine Lage — <i>der Plan hat Hand und Fuß</i>. Andere bewerten einen Menschen — <i>der geht mir auf den Keks</i>. Die ersten kannst du fast überall benutzen. Die zweiten sind auch unter Freunden riskant, weil sie beim Betroffenen ankommen wie ein Urteil, nicht wie eine Beobachtung.</p>
-<div class="scene-wrap klein"><img src="../vok-bild/der-gesichtsausdruck.webp" alt="Eine lächelnde Frau schaut in die Kamera"></div>
-<ul class="qlist nur-a2">
-<li>Welche Wendungen über Menschen kennst du?</li>
-<li>Wie fühlt es sich an, wenn jemand so über dich redet?</li>
-<li>Wie könnte man dasselbe freundlicher sagen?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Warum wirken Wendungen über Menschen schärfer als normale Kritik?</li>
-<li>Wann ist ein bildhafter Ausdruck ein Vorteil, wann ein Risiko?</li>
-<li>Wie sagt man dasselbe, ohne die Person zu bewerten?</li>
-</ul>
-<div class="tip">💡 <strong>Eine Faustregel, die trägt:</strong> <b>Über Sachen darfst du bildhaft reden, über Menschen lieber sachlich.</b> <i>Der Zeitplan hat Hand und Fuß</i> ist ein Kompliment. <i>Du gehst mir auf den Keks</i> ist ein Angriff — auch wenn es lustig klingt, und selbst dann, wenn es stimmt.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
+</section>
+
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Wo würdest du <i>ich habe die Nase voll</i> sagen, wo nicht?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Gibt es Wörter, die du nur unter Freunden benutzt?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="wiederholung">
@@ -620,63 +685,6 @@ a.tab:hover{color:var(--ink);}
 <li>Bei welcher Wendung gehört ein <b>Dativ</b> fest dazu?</li>
 </ul>
 <div class="tip teal">🔁 <strong>Zu zweit, dreißig Sekunden:</strong> Einer nennt eine Wendung von Dienstag, der andere baut sie in einen Satz aus seinem Alltag ein — mit richtigem Fall. Dann geht es los: Heute fragen wir nicht mehr, wie sie heißt, sondern wo sie hingehört.</div>
-</section>
-
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Wörter <span class="hl">für Stil, Ton und Situation</span></h2>
-<p class="ssub">Sagt jedes Wort laut — <u>mit Artikel</u>. Und gleich eine Situation dazu: Wo in deinem Alltag kommt sie vor?</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../amanda/sz-heikel.webp" alt="Zwei Personen in einem ernsten Gespräch" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Ton</div><div class="bex">„Der Ton war unpassend, der Inhalt stimmte.“</div><div class="bti">💡 Das Sprichwort dazu kennt jeder: <b>Der Ton macht die Musik.</b> Und im Berufsalltag hörst du <i>im richtigen Ton</i> — damit ist genau das gemeint, worum es heute geht.</div><button class="speak" data-say="Der Ton war unpassend, der Inhalt stimmte.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-freunde.webp" alt="Zwei Freunde sitzen mit Kaffee auf einer Bank" loading="lazy"><div class="bb"><div class="bw">umgangssprachlich</div><div class="bex">„Das ist umgangssprachlich, aber nicht falsch.“</div><div class="bti">💡 Ein wichtiges Wort für Wörterbücher: Steht dort <b>ugs.</b>, gehört der Ausdruck in ein lockeres Gespräch — nicht in eine Bewerbung. Die Abkürzung findest du in fast jedem Eintrag.</div><button class="speak" data-say="Das ist umgangssprachlich, aber nicht falsch.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/amt.webp" alt="Ein öffentliches Gebäude mit Eingangstür und Fahne" loading="lazy"><div class="bb"><div class="bw">förmlich</div><div class="bex">„Beim Amt schreibt man förmlich.“</div><div class="bti">💡 Nicht zu verwechseln mit <i>formell</i>, das sich auf Regeln bezieht. <b>Förmlich</b> ist der Ton, <b>formal</b> ist die Form. Und im Zweifel gilt: Beim Amt lieber eine Stufe förmlicher als eine zu wenig.</div><button class="speak" data-say="Beim Amt schreibt man förmlich.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-bewerbung.webp" alt="Zwei Personen sitzen sich mit Unterlagen an einem Tisch gegenüber" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Vorstellungsgespräch</div><div class="bex">„Im Vorstellungsgespräch war ich zu locker.“</div><div class="bti">💡 Hier ist die Stilebene besonders heikel: zu förmlich wirkt steif, zu locker wirkt unvorbereitet. Ein oder zwei neutrale Wendungen sind gut — mehr wirken schnell wie auswendig gelernt.</div><button class="speak" data-say="Im Vorstellungsgespräch war ich zu locker.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-buero.webp" alt="Zwei Kolleginnen am Schreibtisch mit Laptop" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Besprechung</div><div class="bex">„In der Besprechung geht das noch.“</div><div class="bti">💡 Der Ort mit dem größten Spielraum: Unter Kollegen sind Wendungen wie <i>Bauchschmerzen haben</i> und <i>die Ärmel hochkrempeln</i> völlig normal — beim Kunden im selben Raum aber schon wieder nicht.</div><button class="speak" data-say="In der Besprechung geht das noch.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/handy.webp" alt="Ein Handy mit zwei Sprechblasen auf dem Bildschirm" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Chat</div><div class="bex">„Im Chat schreibe ich wie ich rede.“</div><div class="bti">💡 Die Ausnahme von der Regel „geschrieben gleich förmlich“. Im Chat gilt der Ton des Gesprächs, nicht der des Briefes — deshalb passen Wendungen dort fast immer.</div><button class="speak" data-say="Im Chat schreibe ich wie ich rede.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-unterlagen.webp" alt="Hände blättern durch einen Stapel Papiere" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Schreiben</div><div class="bex">„Ihr Schreiben vom dritten Oktober liegt mir vor.“</div><div class="bti">💡 Ein Nomen aus einem Verb — und ein sicheres Zeichen für förmliche Sprache. Wo <b>das Schreiben</b> steht, gehört keine Redewendung hin. Dort heißt es nicht <i>ich habe die Nase voll</i>, sondern <i>ich bitte um eine abschließende Klärung</i>.</div><button class="speak" data-say="Ihr Schreiben vom dritten Oktober liegt mir vor.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-gesichtsausdruck.webp" alt="Eine lächelnde Frau schaut in die Kamera" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Wirkung</div><div class="bex">„Die Wirkung war eine ganz andere als gemeint.“</div><div class="bti">💡 Der Unterschied, um den es heute geht: <b>Absicht</b> ist, was du meinst. <b>Wirkung</b> ist, was ankommt. Bei Redewendungen liegen die beiden weiter auseinander als bei normalen Sätzen.</div><button class="speak" data-say="Die Wirkung war eine ganz andere als gemeint.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-ampel.webp" alt="Eine Ampel zeigt Rot über einer Straße" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Grenze</div><div class="bex">„Da ist für mich die Grenze.“</div><div class="bti">💡 Feste Wendungen: <b>eine Grenze überschreiten</b> und <b>an seine Grenzen kommen</b>. Und im Gespräch der nützlichste Satz überhaupt: <i>Das geht mir zu weit.</i></div><button class="speak" data-say="Da ist für mich die Grenze.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/a-schulter.webp" alt="Amanda zuckt mit den Schultern" loading="lazy"><div class="bb"><div class="bw">abschwächen</div><div class="bex">„Ich würde das etwas abschwächen.“</div><div class="bti">💡 Die Werkzeuge dafür sind klein: <i>etwas</i>, <i>eher</i>, <i>vielleicht</i>, <i>nicht ganz</i>. Und der Konjunktiv: <i>ich würde sagen</i> statt <i>ich sage</i>. Damit wird aus jedem harten Satz ein möglicher.</div><button class="speak" data-say="Ich würde das etwas abschwächen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/das-stichwort.webp" alt="Hand schreibt in einen Notizblock" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Wendung</div><div class="bex">„Diese Wendung passt hier nicht.“</div><div class="bti">💡 Genauer heißt es <b>die Redewendung</b> oder <b>die Redensart</b>. Und im Wörterbuch stehen sie meistens unter dem wichtigsten Nomen — <i>die Nase voll haben</i> also unter <b>Nase</b>.</div><button class="speak" data-say="Diese Wendung passt hier nicht.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/amanda-ups.webp" alt="Amanda schaut überrascht" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Missverständnis</div><div class="bex">„Da gab es wohl ein Missverständnis.“</div><div class="bti">💡 Bei Redewendungen die häufigste Ursache: Der eine meint es lustig, der andere hört ein Urteil. Der Satz <b>„So war das nicht gemeint“</b> rettet fast jede Situation — wenn er schnell genug kommt.</div><button class="speak" data-say="Da gab es wohl ein Missverständnis.">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel „Drei Räume“:</strong> Einer nennt eine Wendung. Die anderen sagen reihum, ob sie in den <i>Freundeskreis</i>, in die <i>Besprechung</i> oder in ein <i>Schreiben ans Amt</i> passt — und wenn sie nirgends passt, warum. Ihr werdet merken: Über die Hälfte gehört nur in den ersten Raum.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Neutral, locker <span class="hl">oder besser gar nicht?</span></h2>
-<p class="ssub">Die meisten Wendungen lassen sich einer von drei Ebenen zuordnen. Und die Zuordnung ist keine Geschmackssache: Sie steht im Wörterbuch, und man kann sie nachschlagen.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">🟢</span><div class="gmw">neutral</div><div class="gmb">geht überall, auch im Beruf</div><div class="gmx">Der Plan hat Hand und Fuß.</div></div>
-<div class="gk blau"><span class="gem2">🟡</span><div class="gmw">umgangssprachlich</div><div class="gmb">unter Kollegen ja, im Schreiben nein</div><div class="gmx">Ich habe die Nase voll.</div></div>
-<div class="gk ja"><span class="gem2">🔴</span><div class="gmw">salopp bis derb</div><div class="gmb">nur unter Freunden, und auch da vorsichtig</div><div class="gmx">Der geht mir auf den Keks.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Passt in der Besprechung</div><div class="gsatz">Bei der Frist hätte ich Bauchschmerzen.</div><div class="bsp"><span class="wer">Warum das funktioniert</span>Die Wendung beschreibt <b>deine</b> Sorge, nicht den Fehler eines anderen. Sie ist bildhaft genug, um menschlich zu klingen, und sachlich genug, um im Protokoll nicht komisch zu wirken.</div></div>
-<div class="gk no"><div class="gkl">❌ Passt dort nicht</div><div class="gsatz">Der Zeitplan geht mir auf den Keks.</div><div class="bsp"><span class="wer">Das Problem</span>Zwei Stufen zu locker — und es bewertet, statt zu begründen. In einer Besprechung will man wissen, <i>was</i> nicht geht, nicht, wie sehr es dich nervt.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Passt im Schreiben</div><div class="gsatz">Ich bitte um eine abschließende Klärung bis zum 15. Oktober.</div><div class="bsp"><span class="wer">Warum das richtig ist</span>Förmliche Schreiben leben von <b>Sache und Datum</b>, nicht von Bildern. Der Satz sagt genau, was passieren soll — und man kann ihn weiterleiten, ohne dass er im nächsten Büro seltsam wirkt.</div></div>
-<div class="gk no"><div class="gkl">❌ Passt dort nicht</div><div class="gsatz">Ich habe langsam wirklich die Nase voll.</div><div class="bsp"><span class="wer">Das Problem</span>Verständlich, aber es hilft nicht. Ein Amt reagiert auf Anliegen und Fristen, nicht auf Stimmung. Und schriftlich bleibt der Satz stehen — mündlich wäre er nach zwei Minuten vergessen.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Bleibt bei der Sache</div><div class="gsatz">Bei diesem Punkt komme ich nicht mit.</div><div class="bsp"><span class="wer">Warum das klug ist</span>Es beschreibt <b>deine</b> Lage. Niemand muss sich verteidigen, und das Gespräch geht weiter — genau das ist der Unterschied zwischen einer Beobachtung und einem Urteil.</div></div>
-<div class="gk no"><div class="gkl">❌ Bewertet den Menschen</div><div class="gsatz">Du redest wie ein Wasserfall.</div><div class="bsp"><span class="wer">Das Problem</span>Auch unter Freunden riskant. Die Wendung ist witzig und trifft trotzdem — sie sagt nicht <i>ich komme nicht mit</i>, sondern <i>mit dir stimmt etwas nicht</i>. Und so kommt sie an.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Woher weiß ich, welche Stufe eine Wendung hat?</button>
-<div class="inhalt">
-<p>Vier Wege, und der erste ist der schnellste:</p>
-<ul>
-<li><b>Ins Wörterbuch schauen.</b> Dort steht <i>ugs.</i> für umgangssprachlich, <i>salopp</i> oder <i>derb</i>. Diese Angabe ist verlässlicher als jedes Gefühl.</li>
-<li><b>Fragen, ob sie den Menschen bewertet.</b> Wenn ja, eine Stufe tiefer einordnen — und im Beruf lieber weglassen.</li>
-<li><b>Hören, wo du sie gehört hast.</b> Im Podcast unter Freunden? Dann gehört sie dorthin. In der Tagesschau? Dann ist sie neutral.</li>
-<li><b>Im Zweifel: neutral sagen.</b> Zu förmlich wirkt höchstens etwas steif. Zu locker kann eine Bewerbung kosten.</li>
-</ul>
-<p style="margin-top:.5rem;">Und ein Gedanke, der beim Sprechen hilft: Du musst nicht viele Wendungen benutzen, um gut zu klingen. <b>Zwei sichere, an der richtigen Stelle, wirken souveräner als zehn, bei denen man merkt, dass sie geübt wurden.</b></p>
-</div>
-</div>
-<div class="tip">🎯 <strong>Zu zweit, eine Minute:</strong> Einer nennt eine Wendung, der andere ordnet sie einer Ampelfarbe zu — grün, gelb, rot — und nennt eine Situation, in der sie <u>nicht</u> geht. Danach tauschen.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -828,37 +836,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
-<p class="ssub">Einer formuliert, einer hört auf den Ton. Danach tauschen — und beim zweiten Mal ohne Notizen. Regel für alle drei: Jede Korrektur muss eine Alternative anbieten, nicht nur warnen.</p>
-<div class="rmcard">
-<b>1 · Die Mail an den Kunden</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A schreibt eine Mail und benutzt zwei Wendungen, die unter Kollegen normal sind. B liest gegen und schlägt für jede eine neutrale Fassung vor — ohne den Text kaputtzumachen.</p>
-<div class="nur-a2"><span class="rm">Wir krempeln die Ärmel hoch</span><span class="rm">Da hätten wir Bauchschmerzen</span><span class="rm">Unter uns würde ich das auch so sagen</span><span class="rm">Sachlich heißt das: …</span></div>
-<div class="nur-b1"><span class="rm">Unter Kollegen ja, beim Kunden würde ich es umformulieren</span><span class="rm">Das trifft es, klingt aber lockerer als nötig</span><span class="rm">Ich würde daraus machen: …</span><span class="rm">Dann bleibt die Aussage, nur der Ton ändert sich</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Für jede beanstandete Wendung stand am Ende eine Alternative — und die war konkreter als das Original, nicht blasser. B hat mindestens einmal gesagt, wo die Wendung sehr wohl passt.</div>
-</div>
-<div class="rmcard">
-<b>2 · Der Entwurf im Ärger</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat sich über eine Behörde geärgert und einen scharfen Entwurf geschrieben. B nimmt den Ärger ernst und baut daraus ein Schreiben, das deutlicher ist als der Ärger — mit Sache und Frist.</p>
-<div class="nur-a2"><span class="rm">Ich habe die Nase voll</span><span class="rm">Aber ich will deutlich sein</span><span class="rm">Sachlich heißt das: …</span><span class="rm">Ich bitte um Klärung bis zum 15.</span></div>
-<div class="nur-b1"><span class="rm">Ich verstehe den Ärger, nur liest das jemand, der nichts dafür kann</span><span class="rm">Deutlich ja, scharf nein</span><span class="rm">Aus meiner Sicht ist der Punkt offen</span><span class="rm">Ich bitte um eine Rückmeldung bis zum …</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Die Endfassung enthält keine Wendung und ist trotzdem deutlicher als der Entwurf — weil eine Frist und ein konkretes Anliegen darin stehen. B hat den Ärger anerkannt, bevor er korrigiert hat.</div>
-</div>
-<div class="rmcard">
-<b>3 · Das war nicht so gemeint</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat im Team eine Wendung benutzt, die B getroffen hat. A merkt es und spricht es an. B sagt ehrlich, was angekommen ist. Findet in zwei Minuten heraus, wie man es hätte sagen können.</p>
-<div class="nur-a2"><span class="rm">So war das nicht gemeint</span><span class="rm">Das klang schärfer, als ich wollte</span><span class="rm">Was ist bei dir angekommen?</span><span class="rm">Mir ging es um die Sache</span></div>
-<div class="nur-b1"><span class="rm">Ich glaube, das kam anders an, als du es gemeint hast</span><span class="rm">Es klang, als würdest du mich bewerten</span><span class="rm">Darf ich das noch mal anders sagen?</span><span class="rm">Beim nächsten Mal sage ich einfach: …</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A ist bei sich geblieben (<i>mein Satz kam an</i>) statt B einen Fehler zuzuschreiben. Und am Ende stand ein konkreter Satz, mit dem es beim nächsten Mal funktioniert.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Jeder nennt reihum eine Wendung, der Nachbar sagt sofort die sachliche Entsprechung — und dann, in welchem Raum er welche nehmen würde. Wer zögert, gibt weiter.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -891,14 +876,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> Jede Runde muss <u>dieselbe Aussage</u> in allen drei Stufen enthalten. Wer in der dritten Fassung noch eine Wendung benutzt, gibt weiter — und wer eine Wendung über einen Menschen benutzt, auch.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Jeder nennt reihum eine Wendung, der Nachbar sagt sofort die sachliche Entsprechung — und dann, in welchem Raum er welche nehmen würde. Wer zögert, gibt weiter.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Woran erkennst du in einer fremden Sprache die Stilebene eines Ausdrucks?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Ist es schlimmer, zu locker oder zu förmlich zu klingen?</li><li>Welche Situation ist für dich am schwersten einzuschätzen?</li><li>Warum wirken Wendungen über Menschen schärfer als normale Kritik?</li><li>Wann ist ein bildhafter Ausdruck ein Vorteil, wann ein Risiko?</li><li>Wie sagt man dasselbe, ohne die Person zu bewerten?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
+<p class="ssub">Einer formuliert, einer hört auf den Ton. Danach tauschen — und beim zweiten Mal ohne Notizen. Regel für alle drei: Jede Korrektur muss eine Alternative anbieten, nicht nur warnen.</p>
+<div class="rmcard">
+<b>1 · Die Mail an den Kunden</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A schreibt eine Mail und benutzt zwei Wendungen, die unter Kollegen normal sind. B liest gegen und schlägt für jede eine neutrale Fassung vor — ohne den Text kaputtzumachen.</p>
+<div class="nur-a2"><span class="rm">Wir krempeln die Ärmel hoch</span><span class="rm">Da hätten wir Bauchschmerzen</span><span class="rm">Unter uns würde ich das auch so sagen</span><span class="rm">Sachlich heißt das: …</span></div>
+<div class="nur-b1"><span class="rm">Unter Kollegen ja, beim Kunden würde ich es umformulieren</span><span class="rm">Das trifft es, klingt aber lockerer als nötig</span><span class="rm">Ich würde daraus machen: …</span><span class="rm">Dann bleibt die Aussage, nur der Ton ändert sich</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Für jede beanstandete Wendung stand am Ende eine Alternative — und die war konkreter als das Original, nicht blasser. B hat mindestens einmal gesagt, wo die Wendung sehr wohl passt.</div>
+</div>
+<div class="rmcard">
+<b>2 · Der Entwurf im Ärger</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat sich über eine Behörde geärgert und einen scharfen Entwurf geschrieben. B nimmt den Ärger ernst und baut daraus ein Schreiben, das deutlicher ist als der Ärger — mit Sache und Frist.</p>
+<div class="nur-a2"><span class="rm">Ich habe die Nase voll</span><span class="rm">Aber ich will deutlich sein</span><span class="rm">Sachlich heißt das: …</span><span class="rm">Ich bitte um Klärung bis zum 15.</span></div>
+<div class="nur-b1"><span class="rm">Ich verstehe den Ärger, nur liest das jemand, der nichts dafür kann</span><span class="rm">Deutlich ja, scharf nein</span><span class="rm">Aus meiner Sicht ist der Punkt offen</span><span class="rm">Ich bitte um eine Rückmeldung bis zum …</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Die Endfassung enthält keine Wendung und ist trotzdem deutlicher als der Entwurf — weil eine Frist und ein konkretes Anliegen darin stehen. B hat den Ärger anerkannt, bevor er korrigiert hat.</div>
+</div>
+<div class="rmcard">
+<b>3 · Das war nicht so gemeint</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat im Team eine Wendung benutzt, die B getroffen hat. A merkt es und spricht es an. B sagt ehrlich, was angekommen ist. Findet in zwei Minuten heraus, wie man es hätte sagen können.</p>
+<div class="nur-a2"><span class="rm">So war das nicht gemeint</span><span class="rm">Das klang schärfer, als ich wollte</span><span class="rm">Was ist bei dir angekommen?</span><span class="rm">Mir ging es um die Sache</span></div>
+<div class="nur-b1"><span class="rm">Ich glaube, das kam anders an, als du es gemeint hast</span><span class="rm">Es klang, als würdest du mich bewerten</span><span class="rm">Darf ich das noch mal anders sagen?</span><span class="rm">Beim nächsten Mal sage ich einfach: …</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A ist bei sich geblieben (<i>mein Satz kam an</i>) statt B einen Fehler zuzuschreiben. Und am Ende stand ein konkreter Satz, mit dem es beim nächsten Mal funktioniert.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -964,6 +983,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Sprachnachricht und die Ampel-Einordnung bis Sonntagabend. Ich achte besonders darauf, ob die dritte Stufe wirklich ohne Bild auskommt — und ob deine Beschwerdemail eine Frist enthält.</div>
 <div class="tip">🔜 <strong>Nächste Woche:</strong> <u>NEHMEN, GEBEN, BRINGEN, HOLEN.</u> Vier Verben, die im Deutschen viel mehr können, als im Wörterbuch steht — und die man ständig verwechselt. Nach den Bildern also wieder zurück zu den Wörtern, die alles können.</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1150,11 +1176,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1211,7 +1244,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1221,7 +1256,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,105 +627,43 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B2<span class="zusatz"> · feiner</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">🔍 Drei Wege</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">Das Wort ist weg — <span class="hl">und jetzt?</span></h2>
-<p class="ssub">Die meisten Lernenden machen an dieser Stelle dasselbe: Sie halten an, greifen zum Handy, übersetzen. Das kostet zehn Sekunden, und in diesen zehn Sekunden ist das Gespräch woanders. Die Alternative kostet zwei Sekunden und klingt so: <b>„Wie heißt das noch — dieses Ding, mit dem man Flaschen aufmacht?“</b> Der andere hilft dir sofort. Und nebenbei hat er gehört, dass du wunderbar Deutsch sprichst.</p>
-<div class="scene-wrap klein"><img src="../amanda/sz-sprachkurs.webp" alt="Ein Klassenzimmer, eine Lehrerin an der Tafel, eine Schülerin meldet sich"></div>
-<ul class="qlist nur-a2">
-<li>Was machst du, wenn dir mitten im Satz ein Wort fehlt?</li>
-<li>Hast du schon einmal etwas mit den Händen erklärt?</li>
-<li>Welches deutsche Wort vergisst du immer wieder?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Warum fühlt sich eine Lücke im Wortschatz peinlicher an, als sie ist?</li>
-<li>Was verrät es über jemanden, wenn er einfach weiterspricht?</li>
-<li>Gibt es Situationen, in denen Umschreiben besser ist als das genaue Wort?</li>
-</ul>
-<div class="tip teal">🔑 <strong>Die drei Anfänge, die immer funktionieren:</strong> <b>„so ein Ding, mit dem man …“</b> · <b>„der Ort, wo man …“</b> · <b>„das ist so etwas Ähnliches wie …“</b>. Mehr brauchst du nicht. Alles Weitere ist heute nur Übung.</div>
-<h2 class="st">Und die Grammatik dahinter <span class="hl">ist eine einzige</span></h2>
-<p class="ssub">Alle drei Anfänge sind derselbe Satz: ein Nomen und danach ein Relativsatz. Neu ist heute nur, was zwischen die beiden kommt. Bei einem <u>Ding</u> steht eine Präposition davor: <i>das Ding, <b>mit dem</b> man …</i> Bei einem <u>Ort</u> genügt <b>wo</b>: <i>der Raum, <b>wo</b> man …</i> Und wenn es kein Nomen gibt, hilft ein einziges Wort: <i>etwas, <b>womit</b> man …</i></p>
-<div class="scene-wrap klein"><img src="../amanda/amanda-ups.webp" alt="Amanda zuckt mit den Schultern und lacht verlegen"></div>
-<ul class="qlist nur-a2">
-<li>Kannst du erklären, was ein Briefkasten ist — ohne das Wort zu benutzen?</li>
-<li>Was ist ein Keller? Sag es in einem Satz.</li>
-<li>Beschreib einen Gegenstand in deiner Tasche.</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Wie erklärst du ein Wort, für das es in deiner Sprache kein deutsches Gegenstück gibt?</li>
-<li>Was ist schwerer zu beschreiben: ein Ding oder ein Gefühl?</li>
-<li>Wann hat dich jemand missverstanden, obwohl du alles richtig gesagt hast?</li>
-</ul>
-<div class="tip">💡 <strong>Der Trick mit den zwei Fragen:</strong> Frag dich zuerst <i>Was ist es ungefähr?</i> (ein Ding, ein Raum, eine Person, ein Papier) und dann <i>Was macht man damit?</i> Aus diesen zwei Antworten wird jede Umschreibung — automatisch.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
 </section>
 
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Dinge, <span class="hl">die du gleich umschreibst</span></h2>
-<p class="ssub">Sag jedes Wort laut. Und dann — noch wichtiger — sag den Satz aus dem Tipp: die Umschreibung, mit der du dasselbe Ding erklärst, wenn dir das Wort gerade fehlt.</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../vok-bild/der-briefkasten.webp" alt="Ein Briefkasten an einer Hauswand, ein Brief wird eingeworfen" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Briefkasten</div><div class="bex">„Der Brief liegt seit gestern im Briefkasten.“</div><div class="bti">💡 Falls dir das Wort fehlt: <i>„so ein Kasten an der Hauswand, <b>in den</b> die Post geworfen wird“</i>. Achte auf den Fall: <b>in den</b> Kasten (wohin, Akkusativ), aber <b>in dem</b> Kasten (wo, Dativ).</div><button class="speak" data-say="Der Brief liegt seit gestern im Briefkasten.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-umkleidekabine.webp" alt="Eine Umkleidekabine mit Vorhang und Bank in einem Geschäft" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Umkleidekabine</div><div class="bex">„Die Umkleidekabine ist gleich hinten links.“</div><div class="bti">💡 Die Umschreibung geht mit <b>wo</b>: <i>„der kleine Raum, <b>wo</b> man die Sachen anprobiert“</i>. Bei Orten ist <i>wo</i> immer die einfachste Lösung — und immer richtig.</div><button class="speak" data-say="Die Umkleidekabine ist gleich hinten links.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-kassenbon.webp" alt="Eine Hand hält einen Kassenbon in einem Laden" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Kassenbon</div><div class="bex">„Ohne Kassenbon kann ich das leider nicht umtauschen.“</div><div class="bti">💡 Umschreibung: <i>„der Zettel, <b>den</b> man an der Kasse bekommt und <b>mit dem</b> man umtauschen kann“</i>. Andere Wörter dafür: der <b>Kassenzettel</b>, die <b>Quittung</b>, der <b>Beleg</b>.</div><button class="speak" data-say="Ohne Kassenbon kann ich das leider nicht umtauschen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-salbe.webp" alt="Aus einer Tube wird Salbe auf einen Finger gedrückt" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Salbe</div><div class="bex">„Die Salbe hilft gegen die Schmerzen im Rücken.“</div><div class="bti">💡 Umschreibung: <i>„so eine Creme in einer Tube, <b>mit der</b> man etwas einreibt“</i>. Man <b>trägt sie auf</b> oder <b>reibt sie ein</b> — beides klingt besser als <i>tun</i>.</div><button class="speak" data-say="Die Salbe hilft gegen die Schmerzen im Rücken.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-ranzen.webp" alt="Ein Schulranzen steht auf dem Boden in einem Flur" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Ranzen</div><div class="bex">„Der Ranzen ist schwerer als das Kind.“</div><div class="bti">💡 Umschreibung: <i>„so eine feste Tasche, <b>die</b> Kinder auf dem Rücken tragen“</i>. Für Erwachsene heißt dasselbe <b>der Rucksack</b> — <i>Ranzen</i> sagt man nur bei Schulkindern.</div><button class="speak" data-say="Der Ranzen ist schwerer als das Kind.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/muell.webp" alt="Drei Mülltonnen nebeneinander mit einem Recyclingzeichen" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Mülltonne</div><div class="bex">„Die gelbe Mülltonne wird nur alle zwei Wochen geleert.“</div><div class="bti">💡 Umschreibung: <i>„der große Behälter, <b>in den</b> man den Müll wirft“</i>. Und ein Wort, das du nur in Deutschland brauchst: <b>die Mülltrennung</b> — gelb, blau, braun und schwarz, jede Tonne für etwas anderes.</div><button class="speak" data-say="Die gelbe Mülltonne wird nur alle zwei Wochen geleert.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/aufzug.webp" alt="Eine Aufzugtür mit Rufknopf" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Aufzug</div><div class="bex">„Der Aufzug ist seit Montag kaputt.“</div><div class="bti">💡 Umschreibung: <i>„das Ding, <b>mit dem</b> man in den vierten Stock fährt, ohne zu laufen“</i>. Zweites Wort dafür: <b>der Fahrstuhl</b> — beide sind völlig üblich.</div><button class="speak" data-say="Der Aufzug ist seit Montag kaputt.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-ampel.webp" alt="Eine Ampel an einer Straße in der Stadt" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Ampel</div><div class="bex">„An der zweiten Ampel biegst du rechts ab.“</div><div class="bti">💡 Umschreibung: <i>„das Ding an der Kreuzung, <b>das</b> rot, gelb und grün wird“</i>. Und Vorsicht bei einem sehr deutschen Detail: Bei Rot geht hier wirklich niemand über die Straße, besonders nicht, wenn Kinder danebenstehen.</div><button class="speak" data-say="An der zweiten Ampel biegst du rechts ab.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-aermel.webp" alt="Jemand schiebt sich den Ärmel eines Pullovers hoch" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Ärmel</div><div class="bex">„Der linke Ärmel ist deutlich länger als der rechte.“</div><div class="bti">💡 Umschreibung: <i>„der Teil vom Hemd, <b>in dem</b> der Arm steckt“</i>. Und eine Redewendung, die du sofort brauchen kannst: <b>etwas aus dem Ärmel schütteln</b> — es ohne Mühe können.</div><button class="speak" data-say="Der linke Ärmel ist deutlich länger als der rechte.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-keller.webp" alt="Ein Kellerraum mit Regalen, Kisten und einem Fahrrad" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Keller</div><div class="bex">„Die Winterreifen liegen unten im Keller.“</div><div class="bti">💡 Umschreibung: <i>„der Raum unter dem Haus, <b>wo</b> man Sachen abstellt“</i>. In deutschen Mietshäusern gehört meistens ein <b>Kellerabteil</b> zur Wohnung — mit eigenem Schloss.</div><button class="speak" data-say="Die Winterreifen liegen unten im Keller.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-schrank.webp" alt="Ein offener Kleiderschrank mit Kleidung auf Bügeln" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Schrank</div><div class="bex">„Im Schrank ist wirklich kein Platz mehr.“</div><div class="bti">💡 Umschreibung: <i>„das große Möbel mit Türen, <b>in dem</b> die Kleidung hängt“</i>. Und pass auf: <b>der Schrank</b> hat Türen, <b>das Regal</b> hat keine. Deutsche Wohnungen kommen übrigens fast immer ohne Schrank.</div><button class="speak" data-say="Im Schrank ist wirklich kein Platz mehr.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-stock.webp" alt="Ein Treppenhaus mit heller Holztreppe und Geländer" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Treppenhaus</div><div class="bex">„Im Treppenhaus hängt ein Aushang von der Hausverwaltung.“</div><div class="bti">💡 Umschreibung: <i>„der Teil vom Haus, <b>wo</b> die Treppe ist und <b>über den</b> alle nach oben gehen“</i>. Wichtig: Im Treppenhaus darf nichts stehen — das ist der Fluchtweg, und darauf achten Vermieter sehr genau.</div><button class="speak" data-say="Im Treppenhaus hängt ein Aushang von der Hausverwaltung.">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel „Rate das Ding“:</strong> Einer wählt heimlich eine Karte und beschreibt sie, ohne das Wort zu sagen — mit <i>„so ein Ding, mit dem …“</i> oder <i>„der Raum, wo …“</i>. Der andere rät. Wer das Wort versehentlich sagt, hat verloren.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Ding, Ort <span class="hl">oder gar kein Nomen?</span></h2>
-<p class="ssub">Es gibt drei Umschreibungen, und welche du brauchst, hängt nur davon ab, worüber du sprichst. Zwei Sekunden Nachdenken genügen — danach baut sich der Satz von allein.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">🔧</span><div class="gmw">Es ist ein Ding</div><div class="gmb">Präposition + Relativpronomen</div><div class="gmx">so ein Ding, <b>mit dem</b> man Flaschen aufmacht</div></div>
-<div class="gk blau"><span class="gem2">🏠</span><div class="gmw">Es ist ein Ort</div><div class="gmb">einfach wo</div><div class="gmx">der Raum, <b>wo</b> man die Sachen anprobiert</div></div>
-<div class="gk ja"><span class="gem2">❔</span><div class="gmw">Du hast gar kein Nomen</div><div class="gmb">etwas + wo(r)-</div><div class="gmx">etwas, <b>womit</b> man schneidet</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So ist es richtig</div><div class="gsatz">Das ist so ein Ding, mit dem man Flaschen aufmacht.</div><div class="bsp"><span class="wer">Warum das stimmt</span>Das Verb <i>aufmachen</i> braucht hier ein Werkzeug, also <b>mit</b>. Die Präposition steht <u>vor</u> dem Relativpronomen, und danach richtet sich der Fall: <b>mit</b> verlangt den Dativ, also <b>dem</b>.</div></div>
-<div class="gk no"><div class="gkl">❌ So klingt es falsch</div><div class="gsatz">Das ist so ein Ding, das man Flaschen mit aufmacht.</div><div class="bsp"><span class="wer">Das Problem</span>Im Englischen wandert die Präposition ans Ende, im Deutschen nie. Sie steht immer direkt vor dem Relativpronomen — <i>mit dem</i>, <i>in dem</i>, <i>auf dem</i>, <i>für den</i>.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So ist es richtig</div><div class="gsatz">Das ist der Raum, wo man die Kleidung anprobiert.</div><div class="bsp"><span class="wer">Warum das stimmt</span>Bei Orten darfst du immer <b>wo</b> nehmen — auch wenn <i>in dem</i> genauso richtig wäre. <b>wo</b> ist kürzer, klingt natürlicher und du musst über keinen Fall nachdenken.</div></div>
-<div class="gk no"><div class="gkl">❌ So klingt es falsch</div><div class="gsatz">Das ist der Raum, wo man die Kleidung anprobiert in.</div><div class="bsp"><span class="wer">Das Problem</span>Wieder die Präposition am Ende. Und sie ist hier sogar überflüssig: <b>wo</b> enthält das <i>in</i> bereits. Entweder <i>wo man anprobiert</i> oder <i>in dem man anprobiert</i> — nie beides.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So ist es richtig</div><div class="gsatz">Ich suche etwas, womit ich das Paket aufschneiden kann.</div><div class="bsp"><span class="wer">Warum das stimmt</span>Nach <b>etwas</b>, <b>nichts</b>, <b>alles</b> und <b>das</b> gibt es kein normales Relativpronomen. Dort steht <b>was</b> — und mit Präposition wird daraus ein <b>wo(r)-</b>Wort: <i>womit, wofür, worauf, worüber</i>.</div></div>
-<div class="gk no"><div class="gkl">❌ So klingt es falsch</div><div class="gsatz">Ich suche etwas, mit dem ich das Paket aufschneiden kann — oder: etwas, was ich mit aufschneiden kann.</div><div class="bsp"><span class="wer">Das Problem</span>Die erste Variante hört man zwar, korrekt ist nach <i>etwas</i> aber <b>womit</b>. Die zweite ist in beiden Teilen falsch. Merk dir die Reihe: <i>etwas, <b>was</b></i> — und mit Präposition <i>etwas, <b>wo</b>+Präposition</i>.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Welche Umschreibung nehme ich?</button>
-<div class="inhalt">
-<p>Drei Fragen, in dieser Reihenfolge:</p>
-<ul>
-<li><b>Ist es ein Ort?</b> Dann <b>wo</b>: <i>der Raum, wo …</i>, <i>die Stelle, wo …</i> Das geht immer und ist nie falsch.</li>
-<li><b>Ist es ein Ding, das man benutzt?</b> Dann Präposition plus Relativpronomen: <i>das Ding, <b>mit dem</b> man …</i></li>
-<li><b>Fehlt dir sogar das Nomen?</b> Dann <b>etwas</b> plus <b>wo(r)-</b>: <i>etwas, <b>womit</b> man …</i>, <i>etwas, <b>worauf</b> man …</i></li>
-<li><b>Und immer möglich:</b> der Vergleich. <i>Das ist so etwas Ähnliches wie ein Messer, nur kleiner.</i></li>
-</ul>
-<p style="margin-top:.5rem;">Und wenn gar nichts geht, gibt es die Notbremse, die jeder Deutsche benutzt: <b>„Wie heißt das noch mal — dieses Ding da?“</b> Zusammen mit einer Handbewegung funktioniert das in hundert Prozent der Fälle. Sprich weiter, hör nicht auf.</p>
-</div>
-</div>
-<div class="tip">🎯 <strong>Zu zweit, zwei Minuten:</strong> Einer nennt ein alltägliches Wort, der andere beschreibt es in drei Sätzen, ohne es zu benutzen. Erst <i>Was ist es ungefähr?</i>, dann <i>Was macht man damit?</i>, dann <i>Wo findet man es?</i></div>
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Was machst du, wenn dir mitten im Satz ein Wort fehlt?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Hast du schon einmal etwas mit den Händen erklärt?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -808,37 +816,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
-<p class="ssub">Einer beschreibt, einer rät oder fragt nach. Danach tauschen — und beim zweiten Mal ohne die Sätze unten. Regel: In jeder Runde mindestens drei Relativsätze.</p>
-<div class="rmcard">
-<b>1 · Im Baumarkt</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A sucht einen Gegenstand und kennt das Wort nicht. B arbeitet dort und darf nur durch Fragen herausfinden, was gemeint ist.</p>
-<div class="nur-a2"><span class="rm">Ich suche so ein Ding aus Metall.</span><span class="rm">Man braucht es, um Bilder aufzuhängen.</span><span class="rm">Es ist ungefähr so groß wie ein Finger.</span><span class="rm">Man schlägt es in die Wand.</span></div>
-<div class="nur-b1"><span class="rm">Ich suche etwas, womit man ein Regal an der Wand befestigt — aber nicht in Beton</span><span class="rm">Es ist so ein kleines Teil, das man erst in die Wand steckt und in das dann die Schraube kommt</span><span class="rm">Der Raum, wo ich das brauche, ist das Bad — es muss also feucht vertragen</span><span class="rm">Haben Sie so etwas, mit dem man alte Farbe von der Wand bekommt?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat nie das Fachwort benutzt und trotzdem drei brauchbare Relativsätze gebaut. B hat mit zwei konkreten Möglichkeiten nachgefragt statt mit <i>Wie bitte?</i></div>
-</div>
-<div class="rmcard">
-<b>2 · Beim Arzt etwas beschreiben</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat Beschwerden und kennt keine Körper- und Fachwörter. B fragt nach, ohne A die Wörter in den Mund zu legen.</p>
-<div class="nur-a2"><span class="rm">Es tut hier weh, an der Stelle, wo ich hinzeige.</span><span class="rm">Ich habe so ein Ziehen im Rücken.</span><span class="rm">Es ist schlimmer, wenn ich sitze.</span><span class="rm">Ich brauche etwas, womit man das einreibt.</span></div>
-<div class="nur-b1"><span class="rm">Es ist die Stelle, wo der Rücken in den Nacken übergeht — genau da drückt es</span><span class="rm">Ich hätte gern etwas, womit man das behandeln kann, ohne Tabletten zu nehmen</span><span class="rm">Der Schmerz kommt vor allem an den Tagen, an denen ich lange am Schreibtisch sitze</span><span class="rm">Gibt es eine Übung, mit der ich das selbst lockern kann?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat den Ort mit <i>wo</i> und die Zeit mit <i>an denen</i> beschrieben, ohne ein einziges Fachwort. B hat weitergefragt, statt zu raten.</div>
-</div>
-<div class="rmcard">
-<b>3 · Erklär es einem Kind</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A muss ein abstraktes Wort erklären — <i>die Miete</i>, <i>die Versicherung</i>, <i>der Vertrag</i>, <i>das Amt</i> — so, dass ein siebenjähriges Kind es versteht. B spielt das Kind und fragt so lange nach, bis es wirklich klar ist.</p>
-<div class="nur-a2"><span class="rm">Das ist Geld, das man jeden Monat bezahlt.</span><span class="rm">Man wohnt in einer Wohnung, die einem nicht gehört.</span><span class="rm">Der Ort, wo man das machen muss, heißt Amt.</span><span class="rm">Das ist ein Papier, auf dem beide unterschreiben.</span></div>
-<div class="nur-b1"><span class="rm">Eine Versicherung ist etwas, wofür man jeden Monat bezahlt, obwohl nichts passiert — und wenn doch etwas passiert, hilft sie</span><span class="rm">Ein Vertrag ist ein Papier, in dem steht, was beide versprochen haben, damit sich später niemand anders erinnert</span><span class="rm">Das Amt ist die Stelle, wo entschieden wird, was man darf und was nicht</span><span class="rm">Miete ist das Geld, mit dem man dafür bezahlt, dass man in einer fremden Wohnung wohnen darf</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat abstrakte Begriffe nur mit einfachen Wörtern und Relativsätzen erklärt — und B hat mindestens zweimal <i>Warum?</i> gefragt, ohne dass A ins Stocken geraten ist.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Einer zeigt reihum auf einen Gegenstand im Raum, der Nachbar beschreibt ihn in einem einzigen Satz mit Relativsatz. <i>Das ist das Ding, mit dem man das Licht anmacht.</i> Wer zögert, gibt weiter.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -871,14 +856,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> Wer das gesuchte Wort selbst sagt, verliert den Gegenstand. Wer <i>Ähm</i> länger als zwei Sekunden macht, fängt den Satz noch einmal an — mit einem anderen Anfang.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Einer zeigt reihum auf einen Gegenstand im Raum, der Nachbar beschreibt ihn in einem einzigen Satz mit Relativsatz. <i>Das ist das Ding, mit dem man das Licht anmacht.</i> Wer zögert, gibt weiter.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Warum fühlt sich eine Lücke im Wortschatz peinlicher an, als sie ist?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Was verrät es über jemanden, wenn er einfach weiterspricht?</li><li>Gibt es Situationen, in denen Umschreiben besser ist als das genaue Wort?</li><li>Wie erklärst du ein Wort, für das es in deiner Sprache kein deutsches Gegenstück gibt?</li><li>Was ist schwerer zu beschreiben: ein Ding oder ein Gefühl?</li><li>Wann hat dich jemand missverstanden, obwohl du alles richtig gesagt hast?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
+<p class="ssub">Einer beschreibt, einer rät oder fragt nach. Danach tauschen — und beim zweiten Mal ohne die Sätze unten. Regel: In jeder Runde mindestens drei Relativsätze.</p>
+<div class="rmcard">
+<b>1 · Im Baumarkt</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A sucht einen Gegenstand und kennt das Wort nicht. B arbeitet dort und darf nur durch Fragen herausfinden, was gemeint ist.</p>
+<div class="nur-a2"><span class="rm">Ich suche so ein Ding aus Metall.</span><span class="rm">Man braucht es, um Bilder aufzuhängen.</span><span class="rm">Es ist ungefähr so groß wie ein Finger.</span><span class="rm">Man schlägt es in die Wand.</span></div>
+<div class="nur-b1"><span class="rm">Ich suche etwas, womit man ein Regal an der Wand befestigt — aber nicht in Beton</span><span class="rm">Es ist so ein kleines Teil, das man erst in die Wand steckt und in das dann die Schraube kommt</span><span class="rm">Der Raum, wo ich das brauche, ist das Bad — es muss also feucht vertragen</span><span class="rm">Haben Sie so etwas, mit dem man alte Farbe von der Wand bekommt?</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat nie das Fachwort benutzt und trotzdem drei brauchbare Relativsätze gebaut. B hat mit zwei konkreten Möglichkeiten nachgefragt statt mit <i>Wie bitte?</i></div>
+</div>
+<div class="rmcard">
+<b>2 · Beim Arzt etwas beschreiben</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat Beschwerden und kennt keine Körper- und Fachwörter. B fragt nach, ohne A die Wörter in den Mund zu legen.</p>
+<div class="nur-a2"><span class="rm">Es tut hier weh, an der Stelle, wo ich hinzeige.</span><span class="rm">Ich habe so ein Ziehen im Rücken.</span><span class="rm">Es ist schlimmer, wenn ich sitze.</span><span class="rm">Ich brauche etwas, womit man das einreibt.</span></div>
+<div class="nur-b1"><span class="rm">Es ist die Stelle, wo der Rücken in den Nacken übergeht — genau da drückt es</span><span class="rm">Ich hätte gern etwas, womit man das behandeln kann, ohne Tabletten zu nehmen</span><span class="rm">Der Schmerz kommt vor allem an den Tagen, an denen ich lange am Schreibtisch sitze</span><span class="rm">Gibt es eine Übung, mit der ich das selbst lockern kann?</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat den Ort mit <i>wo</i> und die Zeit mit <i>an denen</i> beschrieben, ohne ein einziges Fachwort. B hat weitergefragt, statt zu raten.</div>
+</div>
+<div class="rmcard">
+<b>3 · Erklär es einem Kind</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A muss ein abstraktes Wort erklären — <i>die Miete</i>, <i>die Versicherung</i>, <i>der Vertrag</i>, <i>das Amt</i> — so, dass ein siebenjähriges Kind es versteht. B spielt das Kind und fragt so lange nach, bis es wirklich klar ist.</p>
+<div class="nur-a2"><span class="rm">Das ist Geld, das man jeden Monat bezahlt.</span><span class="rm">Man wohnt in einer Wohnung, die einem nicht gehört.</span><span class="rm">Der Ort, wo man das machen muss, heißt Amt.</span><span class="rm">Das ist ein Papier, auf dem beide unterschreiben.</span></div>
+<div class="nur-b1"><span class="rm">Eine Versicherung ist etwas, wofür man jeden Monat bezahlt, obwohl nichts passiert — und wenn doch etwas passiert, hilft sie</span><span class="rm">Ein Vertrag ist ein Papier, in dem steht, was beide versprochen haben, damit sich später niemand anders erinnert</span><span class="rm">Das Amt ist die Stelle, wo entschieden wird, was man darf und was nicht</span><span class="rm">Miete ist das Geld, mit dem man dafür bezahlt, dass man in einer fremden Wohnung wohnen darf</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat abstrakte Begriffe nur mit einfachen Wörtern und Relativsätzen erklärt — und B hat mindestens zweimal <i>Warum?</i> gefragt, ohne dass A ins Stocken geraten ist.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -944,6 +963,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip"></div>
 <div class="tip"></div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1130,11 +1156,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1191,7 +1224,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1201,7 +1236,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

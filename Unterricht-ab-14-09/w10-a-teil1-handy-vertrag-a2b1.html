@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,105 +627,43 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B1<span class="zusatz"> · mehr</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">🔍 Drei Fragen</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">Zwölf Euro im Monat — <span class="hl">oder doch achtundzwanzig?</span></h2>
-<p class="ssub">Im Laden steht groß <i>12,99 €</i>. Im Vertrag steht dann: <b>24 Monate Laufzeit</b>, <b>3 Monate Kündigungsfrist</b>, ab dem 13. Monat <b>27,99 €</b>, und einmalig <b>39,99 €</b> Anschlusspreis. Nichts davon ist versteckt — es steht alles da. Es steht nur in Wörtern, die man vorher einmal gelernt haben muss. Genau die lernen wir heute.</p>
-<div class="scene-wrap klein"><img src="../amanda/sz-vertraege.webp" alt="Zwei Menschen geben sich über einem Tisch die Hand"></div>
-<ul class="qlist nur-a2">
-<li>Was zahlst du im Monat für dein Handy?</li>
-<li>Hast du einen Vertrag oder eine Prepaid-Karte?</li>
-<li>Wie lange hast du deinen Anbieter schon?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Hast du schon einmal etwas unterschrieben, das du nicht ganz verstanden hast?</li>
-<li>Warum sind Verträge in Deutschland so lang — und lesen sie trotzdem alle nicht?</li>
-<li>Was würdest du jemandem raten, der gerade neu hier ist?</li>
-</ul>
-<div class="tip teal">🔑 <strong>Die vier Zahlen, die zählen:</strong> <b>Wie viel</b> im Monat? <b>Wie lange</b> läuft der Vertrag? <b>Bis wann</b> muss ich kündigen? <b>Wie viel</b> Datenvolumen? Wer diese vier Fragen stellt, bevor er unterschreibt, spart im Jahr oft über hundert Euro.</div>
-<h2 class="st">Und die Grammatik dazu <span class="hl">sind vier kleine Wörter</span></h2>
-<p class="ssub">Fast alles im Vertrag ist eine Zeitangabe: <b>ab</b> dem 1. Dezember, <b>für</b> 24 Monate, <b>bis</b> zum 30. September, <b>seit</b> zwei Jahren, zwölf Euro <b>pro</b> Monat. Diese kleinen Wörter entscheiden, ob du den Vertrag verstehst — und jedes von ihnen zieht einen bestimmten Fall nach sich. Vier Wörter, eine halbe Stunde, und du liest jeden Vertrag anders.</p>
-<div class="scene-wrap klein"><img src="../amanda/amanda-denk.webp" alt="Amanda überlegt, den Finger nachdenklich am Kinn"></div>
-<ul class="qlist nur-a2">
-<li>Seit wann wohnst du in deiner Wohnung?</li>
-<li>Wie lange dauert dein Deutschkurs?</li>
-<li>Ab wann hast du heute Zeit?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Was ist der Unterschied zwischen <i>seit</i> und <i>vor</i>?</li>
-<li>Warum sagt man <i>für zwei Jahre</i>, aber <i>seit zwei Jahren</i>?</li>
-<li>Welche Zeitangabe verwechselst du am häufigsten?</li>
-</ul>
-<div class="tip">💡 <strong>Der schnellste Merksatz:</strong> <b>seit</b> und <b>ab</b> nehmen den <u>Dativ</u> (seit zwei Jahr<b>en</b>, ab dem 1.). <b>für</b> und <b>pro</b> nehmen den <u>Akkusativ</u> (für ein<b>en</b> Monat, pro Monat). Und <b>bis</b> steht fast immer mit <i>zum</i> oder <i>zur</i>.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
 </section>
 
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Wörter, <span class="hl">die im Vertrag stehen</span></h2>
-<p class="ssub">Sag jedes Wort laut — mit Artikel. Und lies bei jedem den Tipp: Dort steht, was das Wort im echten Vertrag bedeutet und wo die Falle liegt.</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../vok-bild/der-mietvertrag.webp" alt="Ein Vertrag mit einem Stift auf einem Tisch" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Vertrag</div><div class="bex">„Der Vertrag läuft ab dem 1. Dezember für 24 Monate.“</div><div class="bti">💡 Man <b>schließt</b> einen Vertrag ab und <b>kündigt</b> ihn. In Deutschland gilt: Was im Vertrag steht, gilt — auch wenn der Verkäufer im Laden etwas anderes gesagt hat. Deshalb immer nach der schriftlichen Bestätigung fragen.</div><button class="speak" data-say="Der Vertrag läuft ab dem 1. Dezember für 24 Monate.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-unterschrift.webp" alt="Eine Hand unterschreibt ein Blatt Papier" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Unterschrift</div><div class="bex">„Vor der Unterschrift lese ich immer die letzte Seite.“</div><div class="bti">💡 Das Verb heißt <b>unterschreiben</b>, und es ist untrennbar: <i>ich unterschreibe</i>, nicht <i>ich schreibe unter</i>. Und ein wichtiges Recht: Bei Verträgen am Telefon oder im Internet hast du <b>14 Tage Widerrufsrecht</b> — im Laden nicht.</div><button class="speak" data-say="Vor der Unterschrift lese ich immer die letzte Seite.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-it.webp" alt="Eine Frau vergleicht etwas an zwei Bildschirmen am Schreibtisch" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Tarif</div><div class="bex">„Ich habe die Tarife verglichen und einen ohne Laufzeit genommen.“</div><div class="bti">💡 Zwei Wörter, die zusammengehören: der <b>Tarif</b> ist das Paket, der <b>Anbieter</b> ist die Firma. Und ein Tipp, der wirklich Geld spart: <b>Tarife vergleichen</b> dauert zehn Minuten und lohnt sich jedes Jahr neu.</div><button class="speak" data-say="Ich habe die Tarife verglichen und einen ohne Laufzeit genommen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-gebuehr.webp" alt="Geldscheine und Münzen auf einem Tresen, dahinter eine Mitarbeiterin" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Grundgebühr</div><div class="bex">„Die Grundgebühr beträgt zwölf Euro pro Monat.“</div><div class="bti">💡 Achte auf das Verb: Eine Gebühr <b>beträgt</b> zwölf Euro — man sagt nicht <i>ist</i> zwölf Euro, wenn es offiziell klingen soll. Und pass bei Angeboten auf: Die niedrige Grundgebühr gilt oft nur für die ersten sechs oder zwölf Monate.</div><button class="speak" data-say="Die Grundgebühr beträgt zwölf Euro pro Monat.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-rechnung.webp" alt="Eine Rechnung mit Münzen auf einem kleinen Tablett" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Rechnung</div><div class="bex">„Auf der Rechnung stehen dieses Mal acht Euro mehr.“</div><div class="bti">💡 Der Betrag wird meistens automatisch vom Konto <b>abgebucht</b> — das nennt man <b>Lastschrift</b>. Sieh trotzdem jeden Monat kurz nach: Falsche Posten fallen nur auf, wenn jemand hinschaut.</div><button class="speak" data-say="Auf der Rechnung stehen dieses Mal acht Euro mehr.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-termin.webp" alt="Eine Hand schreibt in einen Tischkalender" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Laufzeit</div><div class="bex">„Die Laufzeit beträgt 24 Monate ab dem Vertragsbeginn.“</div><div class="bti">💡 Das wichtigste Wort im ganzen Vertrag. <b>Mit Laufzeit</b> heißt: Du kommst zwei Jahre lang nicht raus. <b>Ohne Laufzeit</b> (auch <i>monatlich kündbar</i>) kostet meist ein bis zwei Euro mehr — und ist die Freiheit fast immer wert.</div><button class="speak" data-say="Die Laufzeit beträgt 24 Monate ab dem Vertragsbeginn.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-uhrzeit.webp" alt="Eine Wanduhr an einer hellen Wand" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Kündigungsfrist</div><div class="bex">„Die Kündigungsfrist beträgt einen Monat zum Vertragsende.“</div><div class="bti">💡 Die häufigste teure Falle. Kündigst du zu spät, verlängert sich der Vertrag — früher oft um ein ganzes Jahr, seit 2022 nur noch <b>monatlich</b>. Schreib dir das Datum in den Kalender, sobald du unterschrieben hast.</div><button class="speak" data-say="Die Kündigungsfrist beträgt einen Monat zum Vertragsende.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-medien.webp" alt="Eine Person sitzt auf dem Sofa mit Handy und Laptop" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Datenvolumen</div><div class="bex">„Mein Datenvolumen ist nach zwei Wochen schon aufgebraucht.“</div><div class="bti">💡 Wenn es alle ist, sagt man: Das Volumen ist <b>aufgebraucht</b> oder <i>verbraucht</i> — danach wird das Internet nur noch langsam, es kostet aber nichts extra. Umgangssprachlich heißt das <b>gedrosselt</b>.</div><button class="speak" data-say="Mein Datenvolumen ist nach zwei Wochen schon aufgebraucht.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/handy.webp" alt="Ein Handy mit zwei Chat-Blasen auf dem Bildschirm" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Handy</div><div class="bex">„Mein Handy ist alt, aber es funktioniert noch einwandfrei.“</div><div class="bti">💡 Ein deutsches Wort, das im Englischen so nicht existiert: <b>das Handy</b> heißt auf Englisch <i>mobile phone</i>. Der Plural ist <b>die Handys</b>. Und die Nummer heißt die <b>Handynummer</b>, nie <i>Handy-Zahl</i>.</div><button class="speak" data-say="Mein Handy ist alt, aber es funktioniert noch einwandfrei.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-elektro-shk.webp" alt="Ein Handwerker kniet vor einer Steckdose und arbeitet daran" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Anschluss</div><div class="bex">„Der Anschluss wird erst in drei Wochen freigeschaltet.“</div><div class="bti">💡 Beim Internet zu Hause dauert es fast immer länger als versprochen: Der <b>Anschluss</b> muss <b>freigeschaltet</b> werden, manchmal kommt ein Techniker. Plane bei einem Umzug zwei bis vier Wochen ein — und melde dich früh.</div><button class="speak" data-say="Der Anschluss wird erst in drei Wochen freigeschaltet.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/mail.webp" alt="Ein Briefumschlag mit einem Blatt Papier" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Bestätigung</div><div class="bex">„Ohne Bestätigung per E-Mail gilt für mich gar nichts.“</div><div class="bti">💡 Der wichtigste Satz im ganzen Kapitel: <b>„Schicken Sie mir das bitte schriftlich.“</b> Was du schriftlich hast, kannst du beweisen — was am Telefon gesagt wurde, hat später niemand gesagt.</div><button class="speak" data-say="Ohne Bestätigung per E-Mail gilt für mich gar nichts.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-bank.webp" alt="Eine Kundin steht an einem Schalter, dahinter eine Mitarbeiterin" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Anbieter</div><div class="bex">„Ich möchte den Anbieter wechseln, aber die Nummer behalten.“</div><div class="bti">💡 Zwei Wörter für dasselbe: der <b>Anbieter</b> und der <b>Provider</b>. Und ein Recht, das viele nicht kennen: Beim Wechsel darfst du deine <b>Rufnummer mitnehmen</b> — das heißt <i>Rufnummernmitnahme</i> und ist kostenlos.</div><button class="speak" data-say="Ich möchte den Anbieter wechseln, aber die Nummer behalten.">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel „Vier Fragen“:</strong> Einer spielt den Verkäufer und nennt ein Angebot, der andere stellt die vier Fragen — <i>Wie viel im Monat? Wie lange? Bis wann kündigen? Wie viel Datenvolumen?</i> Wer eine Frage vergisst, hat den teuren Vertrag.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Ab wann, bis wann <span class="hl">oder wie lange?</span></h2>
-<p class="ssub">Fast jede Angabe im Vertrag beantwortet eine von drei Fragen. Wer weiß, welche gerade dran ist, wählt das richtige Wort automatisch.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">▶️</span><div class="gmw">Ab wann?</div><div class="gmb">der Anfang — ab, seit</div><div class="gmx"><b>ab dem</b> 1. Dezember · <b>seit</b> zwei Jahren</div></div>
-<div class="gk blau"><span class="gem2">⏹️</span><div class="gmw">Bis wann?</div><div class="gmb">das Ende — bis, bis zum</div><div class="gmx"><b>bis zum</b> 30. September · <b>bis</b> Freitag</div></div>
-<div class="gk ja"><span class="gem2">↔️</span><div class="gmw">Wie lange?</div><div class="gmb">die Dauer — für, lang</div><div class="gmx"><b>für</b> 24 Monate · zwei Jahre <b>lang</b></div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So ist es richtig</div><div class="gsatz">Ich habe den Vertrag seit zwei Jahren.</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>seit</b> beschreibt etwas, das in der Vergangenheit angefangen hat und <u>immer noch</u> gilt. Deshalb steht das Verb im <b>Präsens</b>, nicht im Perfekt — und nach <i>seit</i> kommt der Dativ: <i>zwei Jahr<b>en</b></i>.</div></div>
-<div class="gk no"><div class="gkl">❌ So klingt es falsch</div><div class="gsatz">Ich habe den Vertrag seit zwei Jahre gehabt.</div><div class="bsp"><span class="wer">Das Problem</span>Zwei Fehler: der fehlende Dativ (<i>Jahren</i>) und das Perfekt. Im Englischen und in vielen anderen Sprachen steht hier eine Vergangenheitsform — im Deutschen niemals, solange es noch andauert.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So ist es richtig</div><div class="gsatz">Der Vertrag läuft für 24 Monate, ab dem 1. Dezember.</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>für</b> nennt die Dauer und steht mit dem <u>Akkusativ</u> (<i>für ein<b>en</b> Monat</i>). <b>ab</b> nennt den Anfang und steht mit dem <u>Dativ</u> (<i>ab <b>dem</b> 1.</i>). Zwei Wörter, zwei verschiedene Fälle — im selben Satz.</div></div>
-<div class="gk no"><div class="gkl">❌ So klingt es falsch</div><div class="gsatz">Der Vertrag läuft seit 24 Monate, ab den 1. Dezember.</div><div class="bsp"><span class="wer">Das Problem</span><i>seit</i> passt nicht: Der Vertrag hat noch gar nicht angefangen. Und die Fälle sind vertauscht — nach <b>ab</b> steht der Dativ (<i>ab dem</i>), nicht der Akkusativ.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So ist es richtig</div><div class="gsatz">Ich muss bis zum 30. September kündigen.</div><div class="bsp"><span class="wer">Warum das stimmt</span>Vor einem Datum heißt es <b>bis zum</b> — mit Dativ. Nur vor Wochentagen, Monaten und Städten steht <b>bis</b> allein: <i>bis Freitag</i>, <i>bis Dezember</i>, <i>bis Köln</i>.</div></div>
-<div class="gk no"><div class="gkl">❌ So klingt es falsch</div><div class="gsatz">Ich muss bis 30. September kündigen.</div><div class="bsp"><span class="wer">Das Problem</span>Vor einem konkreten Datum fehlt hier das <b>zum</b>. Das ist kein kleiner Schönheitsfehler — in einem Kündigungsschreiben liest es sich sofort wie Deutsch aus dem Übersetzungsprogramm.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Welche Zeitangabe nehme ich?</button>
-<div class="inhalt">
-<p>Vier Fragen, in dieser Reihenfolge:</p>
-<ul>
-<li><b>Läuft es noch?</b> Dann <b>seit</b> + Dativ und <u>Präsens</u>: <i>Ich wohne seit drei Jahren hier.</i></li>
-<li><b>Fängt es erst an?</b> Dann <b>ab</b> + Dativ: <i>ab dem 1. Dezember</i>, <i>ab nächster Woche</i>.</li>
-<li><b>Geht es um die Dauer?</b> Dann <b>für</b> + Akkusativ: <i>für einen Monat</i>, <i>für zwei Jahre</i>.</li>
-<li><b>Geht es um das Ende?</b> Dann <b>bis zum</b> vor einem Datum, <b>bis</b> allein vor Tagen und Monaten.</li>
-</ul>
-<p style="margin-top:.5rem;">Und ein Satz, in dem alles vorkommt: <b>„Ich habe den Vertrag seit zwei Jahren, er läuft ab dem 1. Dezember noch für zwölf Monate, und ich muss bis zum 30. September kündigen.“</b> Wer diesen Satz frei sagen kann, versteht jeden Vertrag.</p>
-</div>
-</div>
-<div class="tip">🎯 <strong>Zu zweit, zwei Minuten:</strong> Einer nennt eine Zeitangabe (<i>1. Dezember</i>, <i>zwei Jahre</i>, <i>Freitag</i>), der andere baut sofort drei Sätze — einen mit <b>ab</b>, einen mit <b>für</b>, einen mit <b>bis</b>. Wer den Fall vertauscht, zieht neu.</div>
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Was zahlst du im Monat für dein Handy?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Hast du einen Vertrag oder eine Prepaid-Karte?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -808,37 +816,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
-<p class="ssub">Einer fragt, einer verkauft oder erklärt. Danach tauschen — und beim zweiten Mal ohne die Sätze unten. Regel: In jeder Runde mindestens drei Zeitangaben.</p>
-<div class="rmcard">
-<b>1 · Im Laden, ohne zu unterschreiben</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A will einen Tarif und stellt alle Fragen. B verkauft und möchte, dass A heute unterschreibt. A geht am Ende ohne Unterschrift raus — aber freundlich.</p>
-<div class="nur-a2"><span class="rm">Was kostet das im Monat?</span><span class="rm">Wie lange läuft der Vertrag?</span><span class="rm">Wie viel Datenvolumen ist dabei?</span><span class="rm">Ich möchte es mir überlegen.</span></div>
-<div class="nur-b1"><span class="rm">Gilt der Preis für die gesamte Laufzeit oder nur für die ersten Monate?</span><span class="rm">Ab wann würde der Vertrag laufen, und bis wann müsste ich kündigen?</span><span class="rm">Was passiert, wenn das Volumen aufgebraucht ist — wird gedrosselt oder abgerechnet?</span><span class="rm">Ich unterschreibe heute nichts. Geben Sie mir das Angebot bitte schriftlich mit</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat mindestens drei Zeitangaben benutzt (<i>ab</i>, <i>für</i>, <i>bis</i>) und ist ohne Unterschrift gegangen, ohne unhöflich zu werden. B hat alles beantwortet, aber nur, wenn gefragt wurde.</div>
-</div>
-<div class="rmcard">
-<b>2 · Der Anruf mit dem Sonderangebot</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B ruft an und will A zu einer Verlängerung überreden — mit Zeitdruck. A bleibt freundlich und verlangt alles schriftlich.</p>
-<div class="nur-a2"><span class="rm">Wie lange wäre ich gebunden?</span><span class="rm">Was kostet es danach?</span><span class="rm">Bis wann gilt das Angebot?</span><span class="rm">Schicken Sie es mir bitte per E-Mail.</span></div>
-<div class="nur-b1"><span class="rm">Seit wann bin ich eigentlich bei Ihnen? Ich glaube, seit gut zwei Jahren</span><span class="rm">Ab wann würde der neue Tarif gelten, und für wie lange wäre ich dann gebunden?</span><span class="rm">Am Telefon sage ich grundsätzlich nicht zu — schicken Sie es mir bitte schriftlich</span><span class="rm">Wenn das Angebot nur bis heute Abend gilt, brauche ich es gar nicht</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat kein einziges Mal am Telefon zugestimmt und mindestens einmal <i>seit</i> mit Präsens benutzt. B hat Zeitdruck aufgebaut, ohne unhöflich zu sein.</div>
-</div>
-<div class="rmcard">
-<b>3 · Der Freund fragt um Rat</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat gerade unterschrieben und ist stolz. B stellt die Fragen, die A vorher nicht gestellt hat — freundlich, aber gründlich.</p>
-<div class="nur-a2"><span class="rm">Ich habe einen neuen Vertrag.</span><span class="rm">Er kostet zwölf Euro im Monat.</span><span class="rm">Ich weiß nicht, wie lange er läuft.</span><span class="rm">Was soll ich jetzt machen?</span></div>
-<div class="nur-b1"><span class="rm">Seit wann hast du ihn, und ab wann läuft er offiziell?</span><span class="rm">Steht in der Bestätigung, für wie lange der Einstiegspreis gilt?</span><span class="rm">Schreib dir das Kündigungsdatum sofort in den Kalender — sonst verlängert er sich</span><span class="rm">Wenn du online abgeschlossen hast, hast du noch 14 Tage Widerrufsrecht</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat mindestens vier verschiedene Zeitangaben benutzt und A einen konkreten nächsten Schritt gegeben — nicht nur erklärt, was falsch gelaufen ist.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Einer nennt reihum ein Datum oder eine Dauer (<i>1. Dezember</i>, <i>drei Wochen</i>, <i>Freitag</i>), der Nachbar baut sofort zwei Sätze — einen mit <b>ab</b> oder <b>seit</b>, einen mit <b>für</b> oder <b>bis</b>. Wer den Fall vertauscht, gibt weiter.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -871,14 +856,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde müssen <u>drei verschiedene</u> Zeitwörter vorkommen — <i>seit</i>, <i>ab</i>, <i>für</i> oder <i>bis</i>. Wer <i>seit zwei Jahre</i> ohne Dativ sagt, fängt noch einmal an.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Einer nennt reihum ein Datum oder eine Dauer (<i>1. Dezember</i>, <i>drei Wochen</i>, <i>Freitag</i>), der Nachbar baut sofort zwei Sätze — einen mit <b>ab</b> oder <b>seit</b>, einen mit <b>für</b> oder <b>bis</b>. Wer den Fall vertauscht, gibt weiter.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Hast du schon einmal etwas unterschrieben, das du nicht ganz verstanden hast?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Warum sind Verträge in Deutschland so lang — und lesen sie trotzdem alle nicht?</li><li>Was würdest du jemandem raten, der gerade neu hier ist?</li><li>Was ist der Unterschied zwischen <i>seit</i> und <i>vor</i>?</li><li>Warum sagt man <i>für zwei Jahre</i>, aber <i>seit zwei Jahren</i>?</li><li>Welche Zeitangabe verwechselst du am häufigsten?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
+<p class="ssub">Einer fragt, einer verkauft oder erklärt. Danach tauschen — und beim zweiten Mal ohne die Sätze unten. Regel: In jeder Runde mindestens drei Zeitangaben.</p>
+<div class="rmcard">
+<b>1 · Im Laden, ohne zu unterschreiben</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A will einen Tarif und stellt alle Fragen. B verkauft und möchte, dass A heute unterschreibt. A geht am Ende ohne Unterschrift raus — aber freundlich.</p>
+<div class="nur-a2"><span class="rm">Was kostet das im Monat?</span><span class="rm">Wie lange läuft der Vertrag?</span><span class="rm">Wie viel Datenvolumen ist dabei?</span><span class="rm">Ich möchte es mir überlegen.</span></div>
+<div class="nur-b1"><span class="rm">Gilt der Preis für die gesamte Laufzeit oder nur für die ersten Monate?</span><span class="rm">Ab wann würde der Vertrag laufen, und bis wann müsste ich kündigen?</span><span class="rm">Was passiert, wenn das Volumen aufgebraucht ist — wird gedrosselt oder abgerechnet?</span><span class="rm">Ich unterschreibe heute nichts. Geben Sie mir das Angebot bitte schriftlich mit</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat mindestens drei Zeitangaben benutzt (<i>ab</i>, <i>für</i>, <i>bis</i>) und ist ohne Unterschrift gegangen, ohne unhöflich zu werden. B hat alles beantwortet, aber nur, wenn gefragt wurde.</div>
+</div>
+<div class="rmcard">
+<b>2 · Der Anruf mit dem Sonderangebot</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B ruft an und will A zu einer Verlängerung überreden — mit Zeitdruck. A bleibt freundlich und verlangt alles schriftlich.</p>
+<div class="nur-a2"><span class="rm">Wie lange wäre ich gebunden?</span><span class="rm">Was kostet es danach?</span><span class="rm">Bis wann gilt das Angebot?</span><span class="rm">Schicken Sie es mir bitte per E-Mail.</span></div>
+<div class="nur-b1"><span class="rm">Seit wann bin ich eigentlich bei Ihnen? Ich glaube, seit gut zwei Jahren</span><span class="rm">Ab wann würde der neue Tarif gelten, und für wie lange wäre ich dann gebunden?</span><span class="rm">Am Telefon sage ich grundsätzlich nicht zu — schicken Sie es mir bitte schriftlich</span><span class="rm">Wenn das Angebot nur bis heute Abend gilt, brauche ich es gar nicht</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat kein einziges Mal am Telefon zugestimmt und mindestens einmal <i>seit</i> mit Präsens benutzt. B hat Zeitdruck aufgebaut, ohne unhöflich zu sein.</div>
+</div>
+<div class="rmcard">
+<b>3 · Der Freund fragt um Rat</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat gerade unterschrieben und ist stolz. B stellt die Fragen, die A vorher nicht gestellt hat — freundlich, aber gründlich.</p>
+<div class="nur-a2"><span class="rm">Ich habe einen neuen Vertrag.</span><span class="rm">Er kostet zwölf Euro im Monat.</span><span class="rm">Ich weiß nicht, wie lange er läuft.</span><span class="rm">Was soll ich jetzt machen?</span></div>
+<div class="nur-b1"><span class="rm">Seit wann hast du ihn, und ab wann läuft er offiziell?</span><span class="rm">Steht in der Bestätigung, für wie lange der Einstiegspreis gilt?</span><span class="rm">Schreib dir das Kündigungsdatum sofort in den Kalender — sonst verlängert er sich</span><span class="rm">Wenn du online abgeschlossen hast, hast du noch 14 Tage Widerrufsrecht</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat mindestens vier verschiedene Zeitangaben benutzt und A einen konkreten nächsten Schritt gegeben — nicht nur erklärt, was falsch gelaufen ist.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -944,6 +963,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip"></div>
 <div class="tip"></div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1130,11 +1156,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1191,7 +1224,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1201,7 +1236,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

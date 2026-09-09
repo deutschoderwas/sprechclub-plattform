@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,105 +627,43 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B2<span class="zusatz"> · feiner</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">⚖️ Drei Türen ins Gespräch</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">Die Lücke kommt nicht — <span class="hl">man muss sie machen</span></h2>
-<p class="ssub">Wer darauf wartet, dass jemand fertig wird und höflich in die Runde schaut, wartet in einem deutschen Gespräch sehr lange. Gesprochen wird hier ohne große Pausen, und wer etwas sagen will, steigt ein. Das ist keine Unhöflichkeit, sondern eine andere Verkehrsregel.</p>
-<div class="scene-wrap klein"><img src="../vok-bild/die-meinung.webp" alt="Vier Menschen sitzen im Café zusammen und diskutieren"></div>
-<ul class="qlist nur-a2">
-<li>Wann hast du zuletzt etwas sagen wollen und es nicht gesagt?</li>
-<li>Wie unterbricht man in deiner Sprache?</li>
-<li>Ist Unterbrechen bei euch höflich oder unhöflich?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Woran erkennst du, dass jemand noch nicht fertig ist?</li>
-<li>Wie unterscheidet sich Unterbrechen unter Freunden von Unterbrechen im Beruf?</li>
-<li>Warum trauen sich Lernende oft weniger als Muttersprachler, obwohl sie mehr zu sagen hätten?</li>
-</ul>
-<div class="tip teal">🔑 <strong>Der wichtigste Satz für heute:</strong> <b>„Darf ich da mal kurz einhaken?“</b> Er ist kurz, er kündigt an, dass es kurz wird, und das kleine Wörtchen <u>mal</u> macht ihn beiläufig statt wichtig. Wer diesen Satz sicher hat, kommt in jedes Gespräch hinein.</div>
-<h2 class="st">Warum ein deutscher Satz <span class="hl">so schwer zu unterbrechen ist</span></h2>
-<p class="ssub">Es hat auch einen sprachlichen Grund. Im Deutschen steht der wichtigste Teil oft ganz am Ende — <i>Ich habe gestern mit meinem Chef darüber <b>gesprochen</b>.</i> Vor diesem letzten Wort weiß niemand sicher, wohin der Satz läuft. Deshalb wartet man, und deshalb fühlen sich Pausen so selten an.</p>
-<div class="scene-wrap klein"><img src="../amanda/sz-buero.webp" alt="Zwei Kolleginnen am Schreibtisch mit Laptop"></div>
-<ul class="qlist nur-a2">
-<li>Merkst du, wenn ein deutscher Satz zu Ende geht?</li>
-<li>Woran erkennt man das — an der Stimme oder an den Wörtern?</li>
-<li>In welcher Situation ist Unterbrechen für dich am schwersten?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Welche Signale zeigen, dass jemand gleich fertig ist?</li>
-<li>Wie verändert es das Gespräch, wenn man erst am Satzende einsteigt?</li>
-<li>Gibt es Situationen, in denen Unterbrechen sogar erwartet wird?</li>
-</ul>
-<div class="tip">💡 <strong>Zwei Signale, auf die du hören kannst:</strong> Die Stimme geht am Satzende nach <u>unten</u>, und das letzte Verb fällt (<i>… gesprochen</i>, <i>… angerufen</i>, <i>… machen</i>). Wer auf diese beiden Dinge achtet, findet plötzlich Einstiege, wo vorher eine Wand war.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
 </section>
 
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Wörter <span class="hl">für den Moment, in dem du einsteigst</span></h2>
-<p class="ssub">Sagt jedes Wort laut — <u>mit Artikel</u>. Und gleich einen Satz hinterher: In welchem Gespräch hättest du dieses Wort schon einmal gebraucht?</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../vok-bild/die-meinung.webp" alt="Vier Menschen sitzen im Café zusammen und diskutieren" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Gespräch</div><div class="bex">„In so einer großen Runde komme ich schwer ins Gespräch.“</div><div class="bti">💡 Achte auf die Präpositionen: <b>ins Gespräch kommen</b> (anfangen zu reden), <b>im Gespräch sein</b> (gerade reden) und <b>ein Gespräch führen</b> — nicht <i>machen</i>.</div><button class="speak" data-say="In so einer großen Runde komme ich schwer ins Gespräch.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/a-zeigen.webp" alt="Amanda hebt den Zeigefinger" loading="lazy"><div class="bb"><div class="bw">unterbrechen</div><div class="bex">„Darf ich Sie kurz unterbrechen?“</div><div class="bti">💡 Untrennbar, also kein <i>ge-</i> im Perfekt: <b>unterbrochen</b>. Und die höfliche Form fragt vorher: <i>Darf ich Sie kurz unterbrechen?</i> — schon damit ist es fast keine Unterbrechung mehr.</div><button class="speak" data-say="Darf ich Sie kurz unterbrechen?">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-buero.webp" alt="Zwei Kolleginnen am Schreibtisch mit Laptop" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Besprechung</div><div class="bex">„In der Besprechung bin ich gar nicht drangekommen.“</div><div class="bti">💡 Das häufigste Wort für ein Arbeitstreffen. Alternativen: <b>das Meeting</b> (moderner) und <b>die Sitzung</b> (förmlicher, in Behörden). Das Verb dazu ist <b>besprechen</b>.</div><button class="speak" data-say="In der Besprechung bin ich gar nicht drangekommen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-kurzpraesentation.webp" alt="Ein Mann präsentiert vor einer kleinen Gruppe" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Beitrag</div><div class="bex">„Ich hätte dazu einen kurzen Beitrag.“</div><div class="bti">💡 Sehr nützlich, um sich anzukündigen: <b>Ich hätte dazu einen kurzen Beitrag.</b> Das Wort <i>kurz</i> ist dabei kein Schmuck — es ist der Grund, warum man dich reden lässt.</div><button class="speak" data-say="Ich hätte dazu einen kurzen Beitrag.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-feste.webp" alt="Menschen feiern mit Luftballons und stoßen an" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Runde</div><div class="bex">„In kleiner Runde traue ich mich mehr.“</div><div class="bti">💡 <b>in großer Runde</b>, <b>in kleiner Runde</b> — meistens ohne Artikel. Und <b>die Runde machen</b> heißt: Jeder kommt einmal dran. Wenn jemand das ankündigt, ist dein Platz sicher.</div><button class="speak" data-say="In kleiner Runde traue ich mich mehr.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-sprachkurs.webp" alt="Ein Klassenraum, ein Schüler meldet sich" loading="lazy"><div class="bb"><div class="bw">sich melden</div><div class="bex">„Ich habe mich gemeldet, aber niemand hat es gesehen.“</div><div class="bti">💡 Immer mit <b>sich</b>. In Besprechungen reicht die Hand oft nicht — dazu gehört ein hörbares Signal: <i>Kurz dazu …</i> Wer nur die Hand hebt, wird in deutschen Runden häufig übersehen.</div><button class="speak" data-say="Ich habe mich gemeldet, aber niemand hat es gesehen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-freunde.webp" alt="Zwei Freunde sitzen mit Kaffee auf einer Bank" loading="lazy"><div class="bb"><div class="bw">anknüpfen</div><div class="bex">„Da würde ich gern anknüpfen.“</div><div class="bti">💡 Trennbar und mit <b>an</b> + Akkusativ: <i>Ich knüpfe <b>an deinen Punkt</b> an.</i> Der eleganteste Einstieg überhaupt, weil er wie eine Fortsetzung klingt und nicht wie eine Unterbrechung.</div><button class="speak" data-say="Da würde ich gern anknüpfen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-kaffee.webp" alt="Eine Tasse Kaffee auf einem Tisch" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Sprechpause</div><div class="bex">„Ich warte auf eine Sprechpause, die nie kommt.“</div><div class="bti">💡 Deutsche Gespräche haben sehr kurze Pausen — oft weniger als eine Sekunde. Wer auf eine lange wartet, wartet vergeblich. Man steigt in die kleine Pause ein, nicht in die große.</div><button class="speak" data-say="Ich warte auf eine Sprechpause, die nie kommt.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/amanda-ups.webp" alt="Amanda schaut überrascht" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Zwischenruf</div><div class="bex">„Nur ein kurzer Zwischenruf dazu.“</div><div class="bti">💡 Kündigt an, dass es wirklich kurz wird — zwei, drei Wörter. Wer <i>Zwischenruf</i> sagt und dann drei Minuten redet, wird beim nächsten Mal nicht mehr gelassen.</div><button class="speak" data-say="Nur ein kurzer Zwischenruf dazu.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/amanda-denk.webp" alt="Amanda überlegt mit dem Finger am Kinn" loading="lazy"><div class="bb"><div class="bw">zögern</div><div class="bex">„Ich habe zu lange gezögert, dann war das Thema durch.“</div><div class="bti">💡 Das Nomen ist <b>das Zögern</b>, das Adjektiv <b>zögerlich</b>. Und die Wahrheit für heute: In einer Runde kostet Zögern nicht Sekunden, sondern den ganzen Beitrag.</div><button class="speak" data-say="Ich habe zu lange gezögert, dann war das Thema durch.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-gesichtsausdruck.webp" alt="Eine lächelnde Frau schaut in die Kamera" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Blickkontakt</div><div class="bex">„Such vorher Blickkontakt, dann geht es leichter.“</div><div class="bti">💡 Der stille Teil des Einsteigens: Wer den Sprechenden ansieht und leicht einatmet, wird in vielen Runden ganz von selbst drangenommen. Das Wort dazu: <b>Blickkontakt suchen</b>.</div><button class="speak" data-say="Such vorher Blickkontakt, dann geht es leichter.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/wie-spaet-ist-es.webp" alt="Ein Mann schaut am Bahnsteig auf seine Armbanduhr" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Tempo</div><div class="bex">„Bei dem Tempo komme ich nicht hinterher.“</div><div class="bti">💡 Ein Satz, den du dir merken solltest, weil er nie unhöflich wirkt: <b>„Können wir da kurz langsamer machen?“</b> Fast alle Muttersprachler reagieren darauf freundlich — die wenigsten merken selbst, wie schnell sie reden.</div><button class="speak" data-say="Bei dem Tempo komme ich nicht hinterher.">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel „Rein in dreißig Sekunden“:</strong> Einer erzählt ununterbrochen von seinem Wochenende. Die anderen müssen hinein — mit einem der Einstiegssätze, nicht mit Winken. Wer drin ist, erzählt weiter, und die Nächsten versuchen es bei ihm. Nach drei Runden merkt ihr, welcher Satz bei euch am besten funktioniert.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Anknüpfen, ankündigen <span class="hl">oder dazwischengehen?</span></h2>
-<p class="ssub">Es gibt drei Arten, in ein laufendes Gespräch zu kommen — und sie sind unterschiedlich höflich und unterschiedlich sicher. Wer die passende wählt, wirkt selbstverständlich statt aufdringlich.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">🔗</span><div class="gmw">anknüpfen</div><div class="gmb">am Satzende, an das, was gesagt wurde</div><div class="gmx">Da würde ich gern anknüpfen.</div></div>
-<div class="gk blau"><span class="gem2">✋</span><div class="gmw">ankündigen</div><div class="gmb">kurz sagen, dass du gleich etwas sagst</div><div class="gmx">Ich hätte dazu einen kurzen Beitrag.</div></div>
-<div class="gk ja"><span class="gem2">⚡</span><div class="gmw">dazwischengehen</div><div class="gmb">mitten hinein, nur wenn es dringend ist</div><div class="gmx">Darf ich da mal kurz einhaken?</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Kommt an</div><div class="gsatz">Darf ich da mal kurz einhaken?</div><div class="bsp"><span class="wer">Warum das funktioniert</span>Drei Dinge auf einmal: Du fragst (<i>darf ich</i>), du machst es klein (<i>mal</i>) und du versprichst, dass es nicht lange dauert (<i>kurz</i>). Kaum jemand sagt darauf nein.</div></div>
-<div class="gk no"><div class="gkl">❌ Kommt nicht an</div><div class="gsatz">Entschuldigung, tut mir leid, wenn ich störe, ich wollte nur ganz kurz vielleicht …</div><div class="bsp"><span class="wer">Das Problem</span>Bis die Entschuldigung zu Ende ist, redet längst jemand anders. Und sie sagt dem Raum: Was jetzt kommt, ist die Störung wahrscheinlich nicht wert. Eine kurze Frage ist höflicher als eine lange Entschuldigung.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Hält den Faden</div><div class="gsatz">Genau das wollte ich auch sagen — und zwar aus einem anderen Grund.</div><div class="bsp"><span class="wer">Warum das wirkt</span>Du steigst nicht als Gegner ein, sondern als Fortsetzung. Der andere fühlt sich bestätigt und gibt dir den Faden freiwillig — das ist der leiseste Weg, das Wort zu bekommen.</div></div>
-<div class="gk no"><div class="gkl">❌ Verliert den Faden</div><div class="gsatz">Ja, aber …</div><div class="bsp"><span class="wer">Das Problem</span><i>Ja, aber</i> ist im Deutschen ein Signal für Widerspruch, und der Zuhörer stellt sich sofort quer. Alles, was nach <i>aber</i> kommt, wird als Angriff gehört — auch wenn es keiner ist.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Sichert dir den Platz</div><div class="gsatz">Bevor wir weitergehen: Einen Satz noch dazu.</div><div class="bsp"><span class="wer">Warum das klug ist</span>Du <b>reservierst</b> den Platz, bevor das Thema wechselt. <i>Einen Satz noch</i> ist eine Mengenangabe, und Mengenangaben beruhigen — die Runde weiß, wie lange es dauert.</div></div>
-<div class="gk no"><div class="gkl">❌ Sichert nichts</div><div class="gsatz">Ich melde mich später dazu.</div><div class="bsp"><span class="wer">Das Problem</span>Es gibt kein Später. In fünf Minuten spricht die Runde über etwas anderes, und dein Punkt kommt nie zurück. Wer etwas zu sagen hat, sagt es in diesem Thema oder gar nicht.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Ich traue mich einfach nicht — was hilft wirklich?</button>
-<div class="inhalt">
-<p>Vier Dinge, in dieser Reihenfolge, und es wird von Mal zu Mal leichter:</p>
-<ul>
-<li><b>Einen einzigen Satz auswendig:</b> <i>Darf ich da mal kurz einhaken?</i> Nicht drei — einen, der sofort da ist.</li>
-<li><b>Früh einsteigen, nicht spät.</b> Der erste Beitrag ist der leichteste. Je länger du wartest, desto größer wird die Schwelle.</li>
-<li><b>Erst atmen, dann sprechen.</b> Ein hörbares Einatmen ist in jeder Runde ein Signal — viele geben dir daraufhin von selbst das Wort.</li>
-<li><b>Kurz halten.</b> Zwei Sätze reichen. Wer kurz ist, wird beim nächsten Mal schneller drangelassen.</li>
-</ul>
-<p style="margin-top:.5rem;">Und ein Gedanke, der vielen hilft: Unterbrechen fühlt sich für dich viel unhöflicher an, als es für die anderen klingt. In deutschen Gesprächen ist der Einstieg normal — was auffällt, ist das Schweigen.</p>
-</div>
-</div>
-<div class="tip">🎯 <strong>Zu zweit, eine Minute:</strong> Einer redet ohne Punkt und Komma, der andere steigt drei Mal ein — einmal anknüpfend, einmal ankündigend, einmal dazwischen. Danach tauschen. Ihr hört sofort, welche Tür bei euch am besten aufgeht.</div>
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Wann hast du zuletzt etwas sagen wollen und es nicht gesagt?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Wie unterbricht man in deiner Sprache?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -810,37 +818,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
-<p class="ssub">Einer redet, einer muss hinein. Danach tauschen — und beim zweiten Mal ohne Notizen. Regel für alle drei: Der Einstieg muss innerhalb von zehn Sekunden kommen.</p>
-<div class="rmcard">
-<b>1 · Die Besprechung, in der du etwas weißt</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A trägt einen Plan vor, der einen Fehler enthält. B kennt den Fehler und muss ihn anbringen, bevor beschlossen wird. A redet flüssig und macht kaum Pausen.</p>
-<div class="nur-a2"><span class="rm">Darf ich da mal kurz einhaken?</span><span class="rm">Ganz kurz nur:</span><span class="rm">Das stand gestern im Aushang</span><span class="rm">Das war es von mir</span></div>
-<div class="nur-b1"><span class="rm">Wenn ich da kurz einhaken darf …</span><span class="rm">Nur zur Einordnung:</span><span class="rm">Ich hätte dazu eine Ergänzung</span><span class="rm">So weit von meiner Seite</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B ist innerhalb von zehn Sekunden drin gewesen, hat den Inhalt <u>vor</u> jede Erklärung gestellt und am Ende das Wort zurückgegeben. Mindestens eine Modalpartikel war dabei.</div>
-</div>
-<div class="rmcard">
-<b>2 · Acht Leute, ein Tisch</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A erzählt in großer Runde eine lange Geschichte. B will nicht dagegenreden, sondern anknüpfen — und dann selbst den Faden für zwei Sätze halten.</p>
-<div class="nur-a2"><span class="rm">Da würde ich gern anknüpfen</span><span class="rm">Zwei Sachen dazu</span><span class="rm">Genau das kenne ich</span><span class="rm">Erzähl mal weiter</span></div>
-<div class="nur-b1"><span class="rm">Ich würde gern an deinen letzten Punkt anknüpfen</span><span class="rm">Zwei Punkte dazu, dann bin ich fertig</span><span class="rm">Ein Beispiel dazu, dann höre ich auf</span><span class="rm">Was meint ihr dazu?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Der Einstieg war ein Anknüpfen, kein Widerspruch — <i>„Ja, aber“</i> ist nicht gefallen. B hat eine Mengenangabe benutzt (<i>zwei Sachen</i>) und sie eingehalten.</div>
-</div>
-<div class="rmcard">
-<b>3 · Zu schnell</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A und B sprechen über einen Termin, und A redet sehr schnell. B regelt erst das Tempo, sichert dann den Inhalt ab und bringt zuletzt den eigenen Punkt.</p>
-<div class="nur-a2"><span class="rm">Können wir da kurz langsamer machen?</span><span class="rm">Habe ich das richtig verstanden, dass …?</span><span class="rm">Dazu hätte ich noch eine Sache</span><span class="rm">Ganz kurz nur</span></div>
-<div class="nur-b1"><span class="rm">Darf ich Sie kurz unterbrechen — das ging mir zu schnell</span><span class="rm">Nur damit wir vom selben reden: …</span><span class="rm">Ich hätte dazu noch einen Punkt offen</span><span class="rm">Darauf komme ich gleich zurück</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat in dieser Reihenfolge gehandelt: erst Tempo, dann Absicherung, dann eigener Punkt. Und B hat sich für den eigenen Beitrag <u>nicht</u> entschuldigt.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Jeder sagt reihum einen harten Satz ohne Partikel (<i>Komm her.</i>). Der Nachbar macht ihn sofort weich (<i>Komm doch mal her.</i>). Wer die Partikel an den Anfang setzt, gibt weiter.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -873,14 +858,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> Jeder Einstieg muss <u>eine Modalpartikel</u> enthalten und der Beitrag <u>höchstens drei Sätze</u> lang sein. Wer sich entschuldigt, bevor er etwas sagt, gibt weiter.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Jeder sagt reihum einen harten Satz ohne Partikel (<i>Komm her.</i>). Der Nachbar macht ihn sofort weich (<i>Komm doch mal her.</i>). Wer die Partikel an den Anfang setzt, gibt weiter.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Woran erkennst du, dass jemand noch nicht fertig ist?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Wie unterscheidet sich Unterbrechen unter Freunden von Unterbrechen im Beruf?</li><li>Warum trauen sich Lernende oft weniger als Muttersprachler, obwohl sie mehr zu sagen hätten?</li><li>Welche Signale zeigen, dass jemand gleich fertig ist?</li><li>Wie verändert es das Gespräch, wenn man erst am Satzende einsteigt?</li><li>Gibt es Situationen, in denen Unterbrechen sogar erwartet wird?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
+<p class="ssub">Einer redet, einer muss hinein. Danach tauschen — und beim zweiten Mal ohne Notizen. Regel für alle drei: Der Einstieg muss innerhalb von zehn Sekunden kommen.</p>
+<div class="rmcard">
+<b>1 · Die Besprechung, in der du etwas weißt</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A trägt einen Plan vor, der einen Fehler enthält. B kennt den Fehler und muss ihn anbringen, bevor beschlossen wird. A redet flüssig und macht kaum Pausen.</p>
+<div class="nur-a2"><span class="rm">Darf ich da mal kurz einhaken?</span><span class="rm">Ganz kurz nur:</span><span class="rm">Das stand gestern im Aushang</span><span class="rm">Das war es von mir</span></div>
+<div class="nur-b1"><span class="rm">Wenn ich da kurz einhaken darf …</span><span class="rm">Nur zur Einordnung:</span><span class="rm">Ich hätte dazu eine Ergänzung</span><span class="rm">So weit von meiner Seite</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B ist innerhalb von zehn Sekunden drin gewesen, hat den Inhalt <u>vor</u> jede Erklärung gestellt und am Ende das Wort zurückgegeben. Mindestens eine Modalpartikel war dabei.</div>
+</div>
+<div class="rmcard">
+<b>2 · Acht Leute, ein Tisch</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A erzählt in großer Runde eine lange Geschichte. B will nicht dagegenreden, sondern anknüpfen — und dann selbst den Faden für zwei Sätze halten.</p>
+<div class="nur-a2"><span class="rm">Da würde ich gern anknüpfen</span><span class="rm">Zwei Sachen dazu</span><span class="rm">Genau das kenne ich</span><span class="rm">Erzähl mal weiter</span></div>
+<div class="nur-b1"><span class="rm">Ich würde gern an deinen letzten Punkt anknüpfen</span><span class="rm">Zwei Punkte dazu, dann bin ich fertig</span><span class="rm">Ein Beispiel dazu, dann höre ich auf</span><span class="rm">Was meint ihr dazu?</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Der Einstieg war ein Anknüpfen, kein Widerspruch — <i>„Ja, aber“</i> ist nicht gefallen. B hat eine Mengenangabe benutzt (<i>zwei Sachen</i>) und sie eingehalten.</div>
+</div>
+<div class="rmcard">
+<b>3 · Zu schnell</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A und B sprechen über einen Termin, und A redet sehr schnell. B regelt erst das Tempo, sichert dann den Inhalt ab und bringt zuletzt den eigenen Punkt.</p>
+<div class="nur-a2"><span class="rm">Können wir da kurz langsamer machen?</span><span class="rm">Habe ich das richtig verstanden, dass …?</span><span class="rm">Dazu hätte ich noch eine Sache</span><span class="rm">Ganz kurz nur</span></div>
+<div class="nur-b1"><span class="rm">Darf ich Sie kurz unterbrechen — das ging mir zu schnell</span><span class="rm">Nur damit wir vom selben reden: …</span><span class="rm">Ich hätte dazu noch einen Punkt offen</span><span class="rm">Darauf komme ich gleich zurück</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat in dieser Reihenfolge gehandelt: erst Tempo, dann Absicherung, dann eigener Punkt. Und B hat sich für den eigenen Beitrag <u>nicht</u> entschuldigt.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -946,6 +965,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Sprachnachricht und die weich gemachten Sätze bis Mittwochabend. Ich achte besonders auf den Platz der Partikeln — und darauf, ob du dich vor deinem Beitrag entschuldigst.</div>
 <div class="tip">🔜 <strong>Am Donnerstag, Teil 2:</strong> <u>Den Faden halten, wenn andere schneller sind.</u> Heute ging es darum, hineinzukommen. Am Donnerstag um das, was danach schwerer ist: drinzubleiben, wenn jemand dir mitten im Satz das Wort abnimmt.</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1132,11 +1158,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1193,7 +1226,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1203,7 +1238,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

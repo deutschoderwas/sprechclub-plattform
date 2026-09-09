@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,105 +627,43 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B1<span class="zusatz"> · mehr</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">🚦 Drei Meldungen</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">Auf der Tafel steht <span class="hl">plötzlich rot</span></h2>
-<p class="ssub">Die Anzeigetafel im Bahnhof zeigt immer dieselben Angaben: Uhrzeit, Ziel, Gleis — und rechts eine Spalte für die Meldung. Dort steht entweder eine Zahl (<i>+15</i>), ein Wort (<i>fällt aus</i>) oder ein Hinweis (<i>Gleiswechsel</i>). Wer diese drei Fälle kennt, versteht jede Tafel in Deutschland, ohne ein einziges Wort zu hören.</p>
-<div class="scene-wrap klein"><img src="../amanda/sz-unterwegs.webp" alt="Amanda steht mit ihrem Koffer vor einer großen Anzeigetafel am Bahnsteig"></div>
-<ul class="qlist nur-a2">
-<li>Wohin fährst du am häufigsten mit dem Zug?</li>
-<li>Hattest du schon einmal einen Zug, der ausgefallen ist?</li>
-<li>Liest du die Anzeigetafel oder schaust du in die App?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Was machst du zuerst, wenn dein Zug ausfällt?</li>
-<li>Fragst du lieber jemanden oder suchst du selbst?</li>
-<li>Wie gut funktionieren Bus und Bahn dort, wo du wohnst?</li>
-</ul>
-<div class="tip teal">🔑 <strong>Drei Wörter reichen:</strong> <b>Verspätung</b> heißt, er kommt später. <b>Fällt aus</b> heißt, er kommt gar nicht. <b>Gleiswechsel</b> heißt, er kommt — nur woanders. Alles andere auf der Tafel kannst du heute ignorieren.</div>
-<h2 class="st">Und dann steht man da <span class="hl">auf einem leeren Bahnsteig</span></h2>
-<p class="ssub">Der Moment danach ist immer gleich: Der Bahnsteig leert sich, und du weißt nicht, ob du warten oder gehen sollst. Die gute Nachricht ist, dass es fast immer einen Ersatz gibt — einen späteren Zug, eine andere Strecke oder einen Bus. Man muss nur fragen. Und fragen ist einfacher, wenn man den Satz vorher einmal geübt hat.</p>
-<div class="scene-wrap klein"><img src="../vok-bild/die-verspaetung.webp" alt="Ein leerer Bahnsteig mit einer Uhr, einem Schild und einer leeren Bank"></div>
-<ul class="qlist nur-a2">
-<li>Wartest du lieber oder suchst du eine andere Verbindung?</li>
-<li>Wen fragst du am Bahnhof um Hilfe?</li>
-<li>Wie kommst du nach Hause, wenn nichts mehr fährt?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Was ist schlimmer: eine Stunde warten oder dreimal umsteigen?</li>
-<li>Wie reagierst du, wenn du deshalb zu spät zur Arbeit kommst?</li>
-<li>Was würdest du dir von der Bahn in so einer Situation wünschen?</li>
-</ul>
-<div class="tip">💡 <strong>Wichtig für Mittwoch:</strong> Heb deine Fahrkarte auf — auch die digitale. Ohne sie gibt es später kein Geld zurück. Am Mittwoch füllen wir gemeinsam das Formular aus, mit dem man sich das Geld holt.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
 </section>
 
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Wörter <span class="hl">für den Tag, an dem nichts fährt</span></h2>
-<p class="ssub">Sag jedes Wort laut — <u>mit Artikel</u>. Und häng gleich einen kurzen Satz an, so wie du ihn im Bahnhof sagen würdest.</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../amanda/sz-unterwegs.webp" alt="Amanda steht mit Koffer vor einer großen Anzeigetafel" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Anzeigetafel</div><div class="bex">„Auf der Anzeigetafel steht, dass der Zug ausfällt.“</div><div class="bti">💡 Man sagt auch kurz <b>die Anzeige</b>. Und der Satz, mit dem du sie liest: <i>Auf der Tafel steht …</i> — nicht <i>in der Tafel</i>.</div><button class="speak" data-say="Auf der Anzeigetafel steht, dass der Zug ausfällt.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-verspaetung.webp" alt="Ein leerer Bahnsteig mit Uhr und Schild" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Ausfall</div><div class="bex">„Wegen eines Ausfalls stehe ich noch in Hagen.“</div><div class="bti">💡 Das Verb ist <b>ausfallen</b> — trennbar: <i>Der Zug fällt aus.</i> Verwechsle es nicht mit <b>Verspätung</b>: Die Verspätung kommt, der Ausfall kommt nicht.</div><button class="speak" data-say="Wegen eines Ausfalls stehe ich noch in Hagen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/bahn.webp" alt="Ein Zug steht an einem Bahnsteig neben einem Schild" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Gleis</div><div class="bex">„Der Zug fährt heute von Gleis acht statt von Gleis drei.“</div><div class="bti">💡 Immer mit <b>von</b> und <b>auf</b>: <i>Der Zug fährt von Gleis 8</i>, aber <i>Ich stehe auf Gleis 8</i>. Und das Wort, das du auf der Tafel suchst, heißt <b>Gleiswechsel</b>.</div><button class="speak" data-say="Der Zug fährt heute von Gleis acht statt von Gleis drei.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/bus.webp" alt="Ein Bus steht an einer Haltestelle" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Ersatzverkehr</div><div class="bex">„Es gibt Ersatzverkehr mit Bussen ab dem Vorplatz.“</div><div class="bti">💡 Ein typisches Bahnhofswort. Sprich es in zwei Teilen: <i>Ersatz-verkehr</i>. Dazu die Frage, die immer funktioniert: <b>Wo fährt der Ersatzverkehr ab?</b></div><button class="speak" data-say="Es gibt Ersatzverkehr mit Bussen ab dem Vorplatz.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-strassenbahn.webp" alt="Eine Straßenbahn fährt durch eine Altstadtstraße" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Verbindung</div><div class="bex">„Gibt es noch eine andere Verbindung nach Köln?“</div><div class="bti">💡 Das wichtigste Wort beim Nachfragen. <b>Eine Verbindung suchen</b>, <b>finden</b> oder <b>verpassen</b>. In der App heißt es genauso.</div><button class="speak" data-say="Gibt es noch eine andere Verbindung nach Köln?">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-haltestelle.webp" alt="Ein Mann sitzt wartend in einem Haltestellenhäuschen" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Anschluss</div><div class="bex">„Wenn ich hier warte, verpasse ich meinen Anschluss.“</div><div class="bti">💡 Der Satz, den du dir merken solltest: <b>Ich erreiche meinen Anschluss nicht mehr.</b> Genau dieser Satz bringt dir am Schalter Hilfe — und später oft Geld zurück.</div><button class="speak" data-say="Wenn ich hier warte, verpasse ich meinen Anschluss.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-reise.webp" alt="Amanda steht mit ihrem Koffer an einem Schalter und spricht mit einer Mitarbeiterin" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Auskunft</div><div class="bex">„Ich hole mir schnell eine Auskunft am Schalter.“</div><div class="bti">💡 Zwei Bedeutungen: die <b>Information</b> selbst und der <b>Ort</b>, wo man sie bekommt. Im Bahnhof steht an der Tür oft nur <i>Information</i> oder <i>Reisezentrum</i>.</div><button class="speak" data-say="Ich hole mir schnell eine Auskunft am Schalter.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-rechte.webp" alt="Amanda sitzt im Sessel, telefoniert und hält eine Karte in der Hand" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Fahrgastrechte</div><div class="bex">„Ab einer Stunde Verspätung greifen die Fahrgastrechte.“</div><div class="bti">💡 Nur im Plural. Das Wort steht auf dem Formular, das wir am Mittwoch ausfüllen. Und die einfache Version davon: <b>Was steht mir zu?</b></div><button class="speak" data-say="Ab einer Stunde Verspätung greifen die Fahrgastrechte.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-fahrkarte.webp" alt="Eine Hand hält eine Fahrkarte, im Hintergrund ein Zug" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Fahrkarte</div><div class="bex">„Heb die Fahrkarte auf, die brauchst du später.“</div><div class="bti">💡 Auch <b>das Ticket</b> geht, das versteht jeder. Wichtig ist nur das Verb: <b>aufheben</b> — nicht wegwerfen. Ohne Fahrkarte kein Geld zurück.</div><button class="speak" data-say="Heb die Fahrkarte auf, die brauchst du später.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/das-gepaeck.webp" alt="Ein Koffer und eine Reisetasche stehen auf einem Bahnsteig" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Gepäck</div><div class="bex">„Mit dem Gepäck schaffe ich den Umstieg in vier Minuten nicht.“</div><div class="bti">💡 Nur Singular — man sagt nie <i>die Gepäcke</i>. Ein einzelnes Stück ist <b>der Koffer</b> oder <b>die Tasche</b>. Und beim Nachfragen hilft der Satz: <i>Ich bin mit Gepäck unterwegs.</i></div><button class="speak" data-say="Mit dem Gepäck schaffe ich den Umstieg in vier Minuten nicht.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/anzeige.webp" alt="Eine aufgeschlagene Seite mit einer Lupe darüber" loading="lazy"><div class="bb"><div class="bw">nachlesen</div><div class="bex">„Das kann man auf dem Aushang nachlesen.“</div><div class="bti">💡 Trennbar: <i>ich lese es nach</i>. Und drei Geschwister davon, die alle im Bahnhof helfen: <b>nachschauen</b>, <b>nachfragen</b>, <b>nachsehen</b>.</div><button class="speak" data-say="Das kann man auf dem Aushang nachlesen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-rueckfahrt.webp" alt="Ein Koffer und ein Mantel stehen im Flur neben einer Bank" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Rückfahrt</div><div class="bex">„Für die Rückfahrt nehme ich lieber den früheren Zug.“</div><div class="bti">💡 Das Gegenstück ist <b>die Hinfahrt</b>. Zusammen sagt man <b>hin und zurück</b> — genau so kauft man auch die Fahrkarte.</div><button class="speak" data-say="Für die Rückfahrt nehme ich lieber den früheren Zug.">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel „Was steht auf der Tafel?“:</strong> Einer sagt eine Meldung (<i>+20</i>, <i>fällt aus</i>, <i>Gleiswechsel auf 8</i>), der andere sagt in einem Satz, was er jetzt tut. Wer zweimal dasselbe tut, ist raus — es gibt für jede Meldung eine andere Reaktion.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Verspätung, Ausfall <span class="hl">oder Gleiswechsel?</span></h2>
-<p class="ssub">Auf der Tafel steht immer eine von drei Sachen — und für jede gibt es eine andere Reaktion. Wer sie verwechselt, wartet auf einem Bahnsteig, an dem nichts mehr kommt.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">🕒</span><div class="gmw">die Verspätung</div><div class="gmb">er kommt, nur später</div><div class="gmx">ICE 645 · +20 · Gleis 3</div></div>
-<div class="gk blau"><span class="gem2">❌</span><div class="gmw">der Ausfall</div><div class="gmb">er kommt gar nicht</div><div class="gmx">RE 7 · fällt heute aus</div></div>
-<div class="gk ja"><span class="gem2">↔️</span><div class="gmw">der Gleiswechsel</div><div class="gmb">er kommt, aber woanders</div><div class="gmx">heute von Gleis 8</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So kommst du weiter</div><div class="gsatz">Entschuldigung, mein Zug nach Köln fällt aus. Gibt es eine andere Verbindung?</div><div class="bsp"><span class="wer">Warum das funktioniert</span>Zwei Informationen in zwei Sätzen: <b>wohin</b> du willst und <b>was</b> passiert ist. Danach kann die Person sofort suchen, ohne dich erst ausfragen zu müssen.</div></div>
-<div class="gk no"><div class="gkl">❌ So kommst du nicht weiter</div><div class="gsatz">Hallo, was ist denn hier los?</div><div class="bsp"><span class="wer">Das Problem</span>Die Frage klingt nach Ärger und enthält kein Ziel. Die Antwort ist dann meistens auch nur allgemein — und du stehst genauso da wie vorher.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So kommst du weiter</div><div class="gsatz">Können Sie mir sagen, ob der Ersatzverkehr vom Vorplatz abfährt?</div><div class="bsp"><span class="wer">Warum das funktioniert</span>Eine <b>indirekte Frage</b> — heute unser Grammatikthema. Sie klingt höflicher als <i>Fährt der Bus vom Vorplatz?</i> und ist trotzdem genauso konkret.</div></div>
-<div class="gk no"><div class="gkl">❌ So kommst du nicht weiter</div><div class="gsatz">Wo Bus?</div><div class="bsp"><span class="wer">Das Problem</span>Verstanden wird es schon. Aber du klingst dabei viel weniger sicher, als du bist — und im Bahnhof entscheidet der erste Satz, wie viel Zeit sich jemand für dich nimmt.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So kommst du weiter</div><div class="gsatz">Ich erreiche meinen Anschluss in Hamm nicht mehr. Was schlagen Sie vor?</div><div class="bsp"><span class="wer">Warum das funktioniert</span>Du nennst das <b>Problem</b> und gibst die Entscheidung ab. <i>Was schlagen Sie vor?</i> ist der nützlichste Satz am Schalter — er macht aus einer Beschwerde eine gemeinsame Suche.</div></div>
-<div class="gk no"><div class="gkl">❌ So kommst du nicht weiter</div><div class="gsatz">Das ist doch eine Frechheit, ich habe extra bezahlt!</div><div class="bsp"><span class="wer">Das Problem</span>Die Person am Schalter kann für den Ausfall nichts. Ärger bringt hier nichts — die Regeln für Geld zurück gelten sowieso, und zwar über das Formular, nicht über die Lautstärke.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Was mache ich zuerst?</button>
-<div class="inhalt">
-<p>Vier Schritte, immer in dieser Reihenfolge:</p>
-<ul>
-<li><b>Tafel lesen:</b> Steht dort <i>+Minuten</i>, <i>fällt aus</i> oder <i>Gleis …</i>?</li>
-<li><b>App oder Aushang:</b> Gibt es eine andere Verbindung? Meist reicht ein Blick.</li>
-<li><b>Fragen:</b> am Schalter, beim Personal auf dem Bahnsteig oder im Zug.</li>
-<li><b>Fahrkarte aufheben:</b> und die Uhrzeit notieren, zu der du wirklich ankommst.</li>
-</ul>
-<p style="margin-top:.5rem;">Und ein Satz, der in jeder dieser vier Situationen passt: <b>„Entschuldigung, können Sie mir kurz helfen?“</b> Er kostet zwei Sekunden und öffnet fast jede Tür — auch bei Menschen, die es gerade eilig haben.</p>
-</div>
-</div>
-<div class="tip">🎯 <strong>Zu zweit, eine Minute:</strong> Einer nennt eine Meldung von der Tafel, der andere sagt die passende Reaktion in einem Satz — mit Ziel und Problem. Danach tauschen. Nach fünf Runden geht es von allein.</div>
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Wohin fährst du am häufigsten mit dem Zug?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Hattest du schon einmal einen Zug, der ausgefallen ist?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -808,37 +816,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
-<p class="ssub">Einer arbeitet am Bahnhof, einer steht mit einem Problem da. Danach tauschen — und beim zweiten Mal ohne die Sätze unten. Regel: In jeder Runde mindestens eine indirekte Frage.</p>
-<div class="rmcard">
-<b>1 · Der Zug fällt aus</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A arbeitet im Reisezentrum. B muss heute noch nach Köln, der Zug ist ausgefallen und die Fahrkarte war nicht billig.</p>
-<div class="nur-a2"><span class="rm">Mein Zug nach Köln fällt aus</span><span class="rm">Gibt es eine andere Verbindung?</span><span class="rm">Gilt meine Fahrkarte auch dort?</span><span class="rm">Von welchem Gleis fährt der ab?</span></div>
-<div class="nur-b1"><span class="rm">Können Sie mir sagen, ob es heute noch eine Verbindung nach Köln gibt?</span><span class="rm">Ich erreiche meinen Anschluss in Hamm nicht mehr</span><span class="rm">Was schlagen Sie vor — warten oder umsteigen?</span><span class="rm">Bekomme ich die Verspätung schriftlich bestätigt?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat das Problem in zwei Sätzen erklärt, ohne sich zu beschweren, und mindestens einmal <i>Können Sie mir sagen, ob …</i> benutzt. Am Ende weiß B: welche Verbindung, welches Gleis, und ob die Fahrkarte gilt.</div>
-</div>
-<div class="rmcard">
-<b>2 · Ersatzverkehr suchen</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A steht am Bahnsteig und kennt sich aus. B sucht den Bus, hat viel Gepäck und wenig Zeit.</p>
-<div class="nur-a2"><span class="rm">Wo fährt der Ersatzverkehr ab?</span><span class="rm">Wie lange braucht der Bus?</span><span class="rm">Ich habe viel Gepäck</span><span class="rm">Muss ich vorne einsteigen?</span></div>
-<div class="nur-b1"><span class="rm">Wissen Sie, ob der Ersatzverkehr vom Vorplatz abfährt?</span><span class="rm">Können Sie mir sagen, wie lange die Fahrt bis Unna dauert?</span><span class="rm">Mit Gepäck schaffe ich die Unterführung nicht in vier Minuten</span><span class="rm">Lohnt es sich zu warten oder nehme ich besser den Bus?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat gesagt, was die Situation besonders macht (Gepäck, Zeit), und nach einer Empfehlung gefragt statt nur nach einem Fahrplan. A konnte deshalb wirklich helfen.</div>
-</div>
-<div class="rmcard">
-<b>3 · Anrufen und Bescheid sagen</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B kommt zu spät zu einem Termin und ruft an. A wartet schon. Drei Sätze reichen — und eine Lösung dazu.</p>
-<div class="nur-a2"><span class="rm">Mein Zug ist ausgefallen</span><span class="rm">Ich komme eine Stunde später</span><span class="rm">Fangt ruhig ohne mich an</span><span class="rm">Ich melde mich, wenn ich im Zug sitze</span></div>
-<div class="nur-b1"><span class="rm">Ich stehe noch in Hagen, der Zug ist ausgefallen</span><span class="rm">Nach jetzigem Stand bin ich gegen halb vier da</span><span class="rm">Fangt ohne mich an, ich steige später ein</span><span class="rm">Sobald ich Genaueres weiß, schreibe ich dir</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat zuerst gesagt, was los ist, dann eine Uhrzeit genannt und einen Vorschlag gemacht. Keine langen Entschuldigungen — dafür eine klare Absprache, wie es weitergeht.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Einer stellt reihum eine direkte Frage (<i>Fährt der Zug?</i>), der Nachbar macht sofort eine höfliche daraus (<i>Wissen Sie, ob der Zug fährt?</i>). Wer das Verb nicht ans Ende stellt, gibt weiter.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -871,14 +856,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde müssen <u>eine indirekte Frage</u> und <u>eine Zeitangabe</u> vorkommen. Wer nur <i>Wo ist der Bus?</i> sagt, fängt noch einmal an.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Einer stellt reihum eine direkte Frage (<i>Fährt der Zug?</i>), der Nachbar macht sofort eine höfliche daraus (<i>Wissen Sie, ob der Zug fährt?</i>). Wer das Verb nicht ans Ende stellt, gibt weiter.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Was machst du zuerst, wenn dein Zug ausfällt?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Fragst du lieber jemanden oder suchst du selbst?</li><li>Wie gut funktionieren Bus und Bahn dort, wo du wohnst?</li><li>Was ist schlimmer: eine Stunde warten oder dreimal umsteigen?</li><li>Wie reagierst du, wenn du deshalb zu spät zur Arbeit kommst?</li><li>Was würdest du dir von der Bahn in so einer Situation wünschen?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
+<p class="ssub">Einer arbeitet am Bahnhof, einer steht mit einem Problem da. Danach tauschen — und beim zweiten Mal ohne die Sätze unten. Regel: In jeder Runde mindestens eine indirekte Frage.</p>
+<div class="rmcard">
+<b>1 · Der Zug fällt aus</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A arbeitet im Reisezentrum. B muss heute noch nach Köln, der Zug ist ausgefallen und die Fahrkarte war nicht billig.</p>
+<div class="nur-a2"><span class="rm">Mein Zug nach Köln fällt aus</span><span class="rm">Gibt es eine andere Verbindung?</span><span class="rm">Gilt meine Fahrkarte auch dort?</span><span class="rm">Von welchem Gleis fährt der ab?</span></div>
+<div class="nur-b1"><span class="rm">Können Sie mir sagen, ob es heute noch eine Verbindung nach Köln gibt?</span><span class="rm">Ich erreiche meinen Anschluss in Hamm nicht mehr</span><span class="rm">Was schlagen Sie vor — warten oder umsteigen?</span><span class="rm">Bekomme ich die Verspätung schriftlich bestätigt?</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat das Problem in zwei Sätzen erklärt, ohne sich zu beschweren, und mindestens einmal <i>Können Sie mir sagen, ob …</i> benutzt. Am Ende weiß B: welche Verbindung, welches Gleis, und ob die Fahrkarte gilt.</div>
+</div>
+<div class="rmcard">
+<b>2 · Ersatzverkehr suchen</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A steht am Bahnsteig und kennt sich aus. B sucht den Bus, hat viel Gepäck und wenig Zeit.</p>
+<div class="nur-a2"><span class="rm">Wo fährt der Ersatzverkehr ab?</span><span class="rm">Wie lange braucht der Bus?</span><span class="rm">Ich habe viel Gepäck</span><span class="rm">Muss ich vorne einsteigen?</span></div>
+<div class="nur-b1"><span class="rm">Wissen Sie, ob der Ersatzverkehr vom Vorplatz abfährt?</span><span class="rm">Können Sie mir sagen, wie lange die Fahrt bis Unna dauert?</span><span class="rm">Mit Gepäck schaffe ich die Unterführung nicht in vier Minuten</span><span class="rm">Lohnt es sich zu warten oder nehme ich besser den Bus?</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat gesagt, was die Situation besonders macht (Gepäck, Zeit), und nach einer Empfehlung gefragt statt nur nach einem Fahrplan. A konnte deshalb wirklich helfen.</div>
+</div>
+<div class="rmcard">
+<b>3 · Anrufen und Bescheid sagen</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B kommt zu spät zu einem Termin und ruft an. A wartet schon. Drei Sätze reichen — und eine Lösung dazu.</p>
+<div class="nur-a2"><span class="rm">Mein Zug ist ausgefallen</span><span class="rm">Ich komme eine Stunde später</span><span class="rm">Fangt ruhig ohne mich an</span><span class="rm">Ich melde mich, wenn ich im Zug sitze</span></div>
+<div class="nur-b1"><span class="rm">Ich stehe noch in Hagen, der Zug ist ausgefallen</span><span class="rm">Nach jetzigem Stand bin ich gegen halb vier da</span><span class="rm">Fangt ohne mich an, ich steige später ein</span><span class="rm">Sobald ich Genaueres weiß, schreibe ich dir</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat zuerst gesagt, was los ist, dann eine Uhrzeit genannt und einen Vorschlag gemacht. Keine langen Entschuldigungen — dafür eine klare Absprache, wie es weitergeht.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -944,6 +963,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Sprachnachricht und die Fragen bis Dienstagabend in den Chat. Ich höre alles an und schreibe dir zurück, was schon klingt wie am echten Schalter.</div>
 <div class="tip">🔜 <strong>Am Mittwoch, Teil 2:</strong> <u>Entschädigung: Formular und Anruf.</u> Heute ging es darum, weiterzukommen. Am Mittwoch holen wir das Geld zurück — mit dem Fahrgastrechte-Formular und einem Anruf, der in drei Sätzen zur Sache kommt.</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1130,11 +1156,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1191,7 +1224,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1201,7 +1236,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

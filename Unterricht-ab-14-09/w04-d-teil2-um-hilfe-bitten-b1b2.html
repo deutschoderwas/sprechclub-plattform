@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,47 +627,44 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B2<span class="zusatz"> · feiner</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#wiederholung">🔁 Wiederholung</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">⚖️ Drei Reaktionen</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">Ein Nein ist <span class="hl">eine Information</span></h2>
-<p class="ssub">Wer nein sagt, sagt meistens etwas über <u>seine Woche</u>, nicht über dich. Trotzdem hört man es oft als Urteil — und reagiert dann so, dass es beim nächsten Mal schwieriger wird zu fragen.</p>
-<div class="scene-wrap klein"><img src="../amanda/amanda-ups.webp" alt="Amanda schaut überrascht"></div>
-<ul class="qlist nur-a2">
-<li>Wie reagierst du, wenn jemand deine Bitte ablehnt?</li>
-<li>Sagst du selbst leicht nein?</li>
-<li>Fragst du danach noch einmal — oder nie wieder?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Warum nehmen wir ein Nein so oft persönlich?</li>
-<li>Wann ist Nachhaken angebracht und wann Druck?</li>
-<li>Ist ein ehrliches Nein freundlicher als ein unklares Vielleicht?</li>
-</ul>
-<div class="tip teal">🔑 <strong>Die Formel für heute:</strong> <b>Danken + Verständnis zeigen + Tür offen lassen.</b> <i>„Danke fürs Nachdenken. Verstehe ich gut — falls es später anders aussieht, melde ich mich noch mal.“</i> Drei Sätze, und niemand ist verlegen.</div>
-<h2 class="st">Die drei Sätze, <span class="hl">die alles verderben</span></h2>
-<p class="ssub"><i>„Kein Problem …“</i> mit gekränktem Ton. <i>„Ist ja auch egal.“</i> Und <i>„Schon okay, ich mache es halt allein.“</i> Alle drei sagen: Doch, es ist ein Problem. Und sie kosten mehr als das Nein selbst.</p>
-<div class="scene-wrap klein"><img src="../amanda/sz-heikel.webp" alt="Zwei Personen in einem angespannten Gespräch"></div>
-<ul class="qlist nur-a2">
-<li>Kennst du solche Sätze — von dir oder von anderen?</li>
-<li>Woran merkt man, dass ein <i>Kein Problem</i> nicht stimmt?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Warum ist stiller Rückzug schlimmer als offener Ärger?</li>
-<li>Wie sagt man ehrlich, dass man enttäuscht ist, ohne Druck zu machen?</li>
-</ul>
-<div class="tip">💡 <strong>Der Unterschied:</strong> <i>„Schade, ich hatte gehofft — aber ich verstehe es.“</i> ist ehrlich <u>und</u> frei von Druck. <i>„Kein Problem“</i> mit spitzem Ton ist beides nicht.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
+</section>
+
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Wie reagierst du, wenn jemand deine Bitte ablehnt?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Sagst du selbst leicht nein?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="wiederholung">
@@ -618,63 +685,6 @@ a.tab:hover{color:var(--ink);}
 <li>Warum gehört der <b>Ausstieg</b> zu jeder Bitte dazu?</li>
 </ul>
 <div class="tip teal">🔁 <strong>Zu zweit, dreißig Sekunden:</strong> Einer sagt eine Bitte aus Teil 1, der andere antwortet heute zum ersten Mal mit <b>Nein</b>. Und genau da fängt die Stunde an.</div>
-</section>
-
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Wörter <span class="hl">für das Nein danach</span></h2>
-<p class="ssub">Sagt jedes Wort laut — <u>mit Artikel</u>. Und gleich den Beispielsatz hinterher, damit er im Ernstfall von selbst kommt.</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><div class="bem" role="img" aria-label="Absage">❌</div><div class="bb"><div class="bw"><span class="art">die</span> Absage</div><div class="bex">„Die Absage kam freundlich und schnell — das war fair.“</div><div class="bti">💡 Das Verb ist <b>absagen</b>, trennbar: <i>Sie sagt den Termin ab.</i> Und <b>eine Absage bekommen</b> ist die feste Wendung.</div><button class="speak" data-say="Die Absage kam freundlich und schnell — das war fair.">🔊 hören</button></div></div>
-<div class="bcard hoch"><img src="../amanda/a-schulter.webp" alt="Amanda zuckt mit den Schultern" loading="lazy"><div class="bb"><div class="bw">ablehnen</div><div class="bex">„Sie hat höflich abgelehnt, aber einen anderen Termin vorgeschlagen.“</div><div class="bti">💡 Sachlicher als <i>Nein sagen</i> und deshalb angenehmer. Das Gegenteil ist <b>annehmen</b> — dasselbe Wort wie beim Angebot.</div><button class="speak" data-say="Sie hat höflich abgelehnt, aber einen anderen Termin vorgeschlagen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/amanda-ups.webp" alt="Amanda schaut überrascht" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Enttäuschung</div><div class="bex">„Die Enttäuschung war kurz, die Erleichterung länger.“</div><div class="bti">💡 Das Verb ist <b>enttäuschen</b>: <i>Ich bin enttäuscht.</i> Wichtig: Man sagt <i>enttäuscht <b>von</b> etwas</i>, nicht <i>über</i>.</div><button class="speak" data-say="Die Enttäuschung war kurz, die Erleichterung länger.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/amanda-denk.webp" alt="Amanda überlegt mit dem Finger am Kinn" loading="lazy"><div class="bb"><div class="bw">nachvollziehen</div><div class="bex">„Das kann ich gut nachvollziehen.“</div><div class="bti">💡 Der stärkste Satz nach einem Nein — stärker als <i>Kein Problem</i>, weil er zeigt, dass du zugehört hast. Auch: <b>nachvollziehbar</b>.</div><button class="speak" data-say="Das kann ich gut nachvollziehen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-freunde.webp" alt="Zwei Freunde sitzen mit Kaffee auf einer Bank" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Verständnis</div><div class="bex">„Ich habe volles Verständnis dafür.“</div><div class="bti">💡 Feste Wendung: <b>Verständnis haben für</b> plus Akkusativ. Und <i>Ich bitte um Verständnis</i> ist der Satz, mit dem Ämter absagen.</div><button class="speak" data-say="Ich habe volles Verständnis dafür.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-heikel.webp" alt="Zwei Personen sitzen sich gegenüber und diskutieren" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Kompromiss</div><div class="bex">„Finden wir einen Kompromiss: dann eben nur den ersten Teil.“</div><div class="bti">💡 Man <b>schließt</b> oder <b>findet</b> einen Kompromiss. Und <i>kompromissbereit sein</i> ist eines der beliebtesten Wörter in Bewerbungen.</div><button class="speak" data-say="Finden wir einen Kompromiss: dann eben nur den ersten Teil.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-vorschlag.webp" alt="Notizbuch und Tasse auf einem Schreibtisch" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Alternative</div><div class="bex">„Gibt es eine Alternative, die für dich leichter wäre?“</div><div class="bti">💡 Sprich es mit Betonung auf dem <i>a</i>: Alternatí-ve. Und im Plural sehr häufig: <b>Alternativen prüfen</b>.</div><button class="speak" data-say="Gibt es eine Alternative, die für dich leichter wäre?">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="nachhaken">🎣</div><div class="bb"><div class="bw">nachhaken</div><div class="bex">„Darf ich einmal nachhaken, oder ist die Sache erledigt?“</div><div class="bti">💡 Trennbar. Die Regel im Deutschen: <b>einmal</b> nachhaken ist normal, <b>zweimal</b> ist Druck. Danach wartet man.</div><button class="speak" data-say="Darf ich einmal nachhaken, oder ist die Sache erledigt?">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="beleidigt">😤</div><div class="bb"><div class="bw">beleidigt</div><div class="bex">„Er war beleidigt, hat es aber nie zugegeben.“</div><div class="bti">💡 Wichtig zu unterscheiden: <b>enttäuscht</b> sagt man, <b>beleidigt</b> ist man. Wer <i>beleidigt</i> reagiert, bekommt beim nächsten Mal seltener ein Ja.</div><button class="speak" data-say="Er war beleidigt, hat es aber nie zugegeben.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="Grenze">🚧</div><div class="bb"><div class="bw"><span class="art">die</span> Grenze</div><div class="bex">„Sie hat eine klare Grenze gezogen, und das war gut so.“</div><div class="bti">💡 Feste Wendung: <b>eine Grenze ziehen</b>. Und <i>an seine Grenzen kommen</i> heißt: nicht mehr können — ein sehr häufiger Satz im Berufsleben.</div><button class="speak" data-say="Sie hat eine klare Grenze gezogen, und das war gut so.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-uhrzeit.webp" alt="Eine Wanduhr an einer hellen Wand" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Zeitpunkt</div><div class="bex">„Es lag nicht an der Sache, sondern am Zeitpunkt.“</div><div class="bti">💡 Der wichtigste Satz dieser Stunde steckt darin: <b>„Zurzeit nicht“ ist kein „nie“.</b> Deshalb fragt man später einfach noch einmal.</div><button class="speak" data-say="Es lag nicht an der Sache, sondern am Zeitpunkt.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/anrufen.webp" alt="Ein Mann telefoniert auf dem Sofa" loading="lazy"><div class="bb"><div class="bw">sich melden</div><div class="bex">„Falls sich etwas ändert, melde ich mich noch einmal.“</div><div class="bti">💡 Reflexiv, also immer mit <b>sich</b>. Und dieser Satz ist die eigentliche offene Tür — er nimmt dem Nein das Endgültige.</div><button class="speak" data-say="Falls sich etwas ändert, melde ich mich noch einmal.">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel „Drei Sätze nach dem Nein“:</strong> Einer lehnt eine Bitte ab. Der andere muss in fünf Sekunden mit genau drei Sätzen antworten: danken, Verständnis zeigen, Tür offen lassen. Wer nachbohrt, gibt ab.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Dasselbe Nein, <span class="hl">drei Antworten</span></h2>
-<p class="ssub">Wie du auf ein Nein reagierst, entscheidet, ob du beim nächsten Mal noch fragen kannst. Danach drei Satzpaare, bei denen fast alle danebenliegen.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">🧊</span><div class="gmw">Der stille Rückzug</div><div class="gmb">wirkt höflich und ist der teuerste Weg — der andere merkt es</div><div class="gmx">Kein Problem. (und dann nie wieder fragen)</div></div>
-<div class="gk blau"><span class="gem2">📣</span><div class="gmw">Das Nachbohren</div><div class="gmb">zweimal nachhaken macht aus einer Bitte Druck</div><div class="gmx">Aber nur ganz kurz? Wirklich nicht? Auch nicht Freitag?</div></div>
-<div class="gk ja"><span class="gem2">🚪</span><div class="gmw">Danken und offen lassen</div><div class="gmb">ehrlich, ohne Druck — und die Tür bleibt auf</div><div class="gmx">Schade, aber verständlich. Falls sich etwas ändert, melde ich mich.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Schade, ich hatte gehofft — aber das kann ich gut nachvollziehen.</div><div class="bsp"><span class="wer">Warum das stimmt</span>Ehrlich (<i>schade</i>) und trotzdem ohne Druck. <b>nachvollziehen</b> zeigt, dass du den Grund gehört hast.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Kein Problem. Ist ja auch egal.</div><div class="bsp"><span class="wer">Das Problem</span><i>Ist ja auch egal</i> sagt genau das Gegenteil. Der andere hört den Vorwurf — und fühlt sich schlecht für ein berechtigtes Nein.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Auch wenn es diesmal nicht klappt, danke fürs Überlegen.</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>auch wenn</b> leitet einen Nebensatz ein — Verb ans Ende (<i>klappt</i>). Und der Dank gilt dem Nachdenken, nicht dem Ergebnis.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Auch wenn es diesmal nicht klappt, danke ich dir trotzdem noch mal ganz herzlich vielmals.</div><div class="bsp"><span class="wer">Das Problem</span>Zu viel Dank klingt nach Vorwurf. Ein Satz reicht — alles darüber hinaus macht dem anderen ein schlechtes Gewissen.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Falls sich etwas ändert, melde dich einfach.</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>falls</b> ist die höfliche Bedingung: Es <u>kann</u> passieren, es muss nicht. Und der Ball liegt beim anderen, nicht bei dir.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Ich frage dann nächste Woche noch mal.</div><div class="bsp"><span class="wer">Das Problem</span>Das ist kein offenes Angebot, sondern eine Ankündigung. Der andere hat schon Nein gesagt und weiß jetzt, dass es wiederkommt.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Was sage ich, wenn jemand nein sagt?</button>
-<div class="inhalt">
-<p>Vier Schritte, immer in dieser Reihenfolge — und dann Schluss:</p>
-<ul>
-<li><b>Danken für das Überlegen:</b> <i>Danke, dass du es geprüft hast.</i> Das gilt auch bei einem Nein.</li>
-<li><b>Ehrlich sein, aber kurz:</b> <i>Schade, ich hatte gehofft.</i> Ein Satz — kein zweiter.</li>
-<li><b>Verständnis zeigen:</b> <i>Das kann ich gut nachvollziehen.</i> Nur sagen, wenn du den Grund kennst.</li>
-<li><b>Tür offen lassen:</b> <i>Falls sich etwas ändert, melde dich.</i> Und dann wirklich aufhören.</li>
-</ul>
-<p style="margin-top:.5rem;">Und falls du unsicher bist, ob du noch einmal fragen darfst: <b>Einmal nachhaken ist normal, zweimal ist Druck.</b> Frag lieber offen: <i>„Ist die Sache damit erledigt, oder darf ich in zwei Wochen noch mal fragen?“</i></p>
-</div>
-</div>
-<div class="tip">🎯 <strong>Zu zweit, eine Minute:</strong> Einer lehnt ab, ohne einen Grund zu nennen. Der andere reagiert in drei Sätzen — ohne nach dem Grund zu fragen. Danach tauschen.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -835,37 +845,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei Absagen <span class="hl">zu zweit</span></h2>
-<p class="ssub">Einer sagt ab, einer nimmt es an. Regel: Niemand darf zweimal nachhaken — und danach wird getauscht.</p>
-<div class="rmcard">
-<b>1 · Das Nein ohne Grund</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A bittet um etwas, B lehnt ab und nennt keinen Grund. A darf kein einziges Mal nach dem Warum fragen und muss das Gespräch freundlich beenden.</p>
-<div class="nur-a2"><span class="rm">Danke für die klare Antwort</span><span class="rm">Schade, aber okay</span><span class="rm">Falls sich etwas ändert, melde dich</span><span class="rm">Ich frage sonst jemand anderen</span></div>
-<div class="nur-b1"><span class="rm">Eine klare Antwort ist mir lieber als ein Vielleicht</span><span class="rm">Musst du auch nicht begründen</span><span class="rm">Auch wenn es nicht klappt, danke fürs Überlegen</span><span class="rm">Sollte sich etwas ändern, sag Bescheid</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A benutzt alle vier Bausteine, fragt kein einziges Mal nach dem Grund und beendet das Gespräch, ohne dass sich B schlecht fühlt.</div>
-</div>
-<div class="rmcard">
-<b>2 · Die Absage mit Gegenangebot</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B kann das Große nicht, aber ein kleines Stück davon. A muss das Angebot annehmen, wie es kommt — ohne nachzuverhandeln.</p>
-<div class="nur-a2"><span class="rm">Gäbe es etwas, das leichter wäre?</span><span class="rm">Das würde mir schon sehr helfen</span><span class="rm">Dann machen wir es so</span><span class="rm">Danke, das reicht völlig</span></div>
-<div class="nur-b1"><span class="rm">Würde ein kleinerer Teil gehen?</span><span class="rm">Wüsstest du sonst jemanden?</span><span class="rm">Finden wir einen Kompromiss?</span><span class="rm">Auch wenn es nur die Hälfte ist, ist das eine Hilfe</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A nimmt das kleinere Angebot an und versucht kein einziges Mal, wieder das Große daraus zu machen. Am Ende steht eine <b>konkrete Abmachung</b>.</div>
-</div>
-<div class="rmcard">
-<b>3 · Die Absage von oben</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat um Entlastung gebeten. B ist die Vorgesetzte und lehnt ab. A soll trotzdem mit etwas aus dem Gespräch gehen — und sei es nur ein Termin.</p>
-<div class="nur-a2"><span class="rm">Verstehe. Wäre die zweite Variante möglich?</span><span class="rm">Darf ich in zwei Wochen nachhaken?</span><span class="rm">Auch wenn es jetzt nicht klappt, …</span><span class="rm">Ich schreibe Ihnen die Punkte kurz auf</span></div>
-<div class="nur-b1"><span class="rm">Was müsste sich ändern, damit es möglich wäre?</span><span class="rm">Sollte sich die Lage ändern, komme ich noch einmal darauf zurück</span><span class="rm">Ich würde das gern schriftlich festhalten</span><span class="rm">Was wäre denn ein realistischer Zeitpunkt?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A wiederholt die abgelehnte Bitte nicht, sondern bringt eine <b>Alternative</b> oder klärt einen <b>Zeitpunkt</b>. Kein Satz beginnt mit <i>aber</i>.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Sagt reihum eine Absage. Der Nachbar antwortet sofort mit drei Sätzen — danken, verstehen, Tür offen lassen. Wer nachbohrt oder beleidigt klingt, gibt weiter.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -898,14 +885,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde muss einmal <u>auch wenn</u> und einmal <u>falls</u> oder <u>sollte</u> vorkommen. Der Partner hebt die Hand, sobald beides da war.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Sagt reihum eine Absage. Der Nachbar antwortet sofort mit drei Sätzen — danken, verstehen, Tür offen lassen. Wer nachbohrt oder beleidigt klingt, gibt weiter.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Warum nehmen wir ein Nein so oft persönlich?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Wann ist Nachhaken angebracht und wann Druck?</li><li>Ist ein ehrliches Nein freundlicher als ein unklares Vielleicht?</li><li>Warum ist stiller Rückzug schlimmer als offener Ärger?</li><li>Wie sagt man ehrlich, dass man enttäuscht ist, ohne Druck zu machen?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei Absagen <span class="hl">zu zweit</span></h2>
+<p class="ssub">Einer sagt ab, einer nimmt es an. Regel: Niemand darf zweimal nachhaken — und danach wird getauscht.</p>
+<div class="rmcard">
+<b>1 · Das Nein ohne Grund</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A bittet um etwas, B lehnt ab und nennt keinen Grund. A darf kein einziges Mal nach dem Warum fragen und muss das Gespräch freundlich beenden.</p>
+<div class="nur-a2"><span class="rm">Danke für die klare Antwort</span><span class="rm">Schade, aber okay</span><span class="rm">Falls sich etwas ändert, melde dich</span><span class="rm">Ich frage sonst jemand anderen</span></div>
+<div class="nur-b1"><span class="rm">Eine klare Antwort ist mir lieber als ein Vielleicht</span><span class="rm">Musst du auch nicht begründen</span><span class="rm">Auch wenn es nicht klappt, danke fürs Überlegen</span><span class="rm">Sollte sich etwas ändern, sag Bescheid</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A benutzt alle vier Bausteine, fragt kein einziges Mal nach dem Grund und beendet das Gespräch, ohne dass sich B schlecht fühlt.</div>
+</div>
+<div class="rmcard">
+<b>2 · Die Absage mit Gegenangebot</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B kann das Große nicht, aber ein kleines Stück davon. A muss das Angebot annehmen, wie es kommt — ohne nachzuverhandeln.</p>
+<div class="nur-a2"><span class="rm">Gäbe es etwas, das leichter wäre?</span><span class="rm">Das würde mir schon sehr helfen</span><span class="rm">Dann machen wir es so</span><span class="rm">Danke, das reicht völlig</span></div>
+<div class="nur-b1"><span class="rm">Würde ein kleinerer Teil gehen?</span><span class="rm">Wüsstest du sonst jemanden?</span><span class="rm">Finden wir einen Kompromiss?</span><span class="rm">Auch wenn es nur die Hälfte ist, ist das eine Hilfe</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A nimmt das kleinere Angebot an und versucht kein einziges Mal, wieder das Große daraus zu machen. Am Ende steht eine <b>konkrete Abmachung</b>.</div>
+</div>
+<div class="rmcard">
+<b>3 · Die Absage von oben</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat um Entlastung gebeten. B ist die Vorgesetzte und lehnt ab. A soll trotzdem mit etwas aus dem Gespräch gehen — und sei es nur ein Termin.</p>
+<div class="nur-a2"><span class="rm">Verstehe. Wäre die zweite Variante möglich?</span><span class="rm">Darf ich in zwei Wochen nachhaken?</span><span class="rm">Auch wenn es jetzt nicht klappt, …</span><span class="rm">Ich schreibe Ihnen die Punkte kurz auf</span></div>
+<div class="nur-b1"><span class="rm">Was müsste sich ändern, damit es möglich wäre?</span><span class="rm">Sollte sich die Lage ändern, komme ich noch einmal darauf zurück</span><span class="rm">Ich würde das gern schriftlich festhalten</span><span class="rm">Was wäre denn ein realistischer Zeitpunkt?</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A wiederholt die abgelehnte Bitte nicht, sondern bringt eine <b>Alternative</b> oder klärt einen <b>Zeitpunkt</b>. Kein Satz beginnt mit <i>aber</i>.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -971,6 +992,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Sprachnachricht bis Sonntag in die WhatsApp-Gruppe. Ich höre jede an und antworte dir persönlich.</div>
 <div class="tip">🔜 <strong>Nächste Woche, Strang D:</strong> <u>Ein Missverständnis aufklären</u> — merken, dass etwas schiefgegangen ist, und es ansprechen, bevor es größer wird.</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1157,11 +1185,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1218,7 +1253,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1228,7 +1265,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

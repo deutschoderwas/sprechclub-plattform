@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,99 +627,43 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B2<span class="zusatz"> · feiner</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">⚖️ Mit oder ohne Artikel</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">„Ich mach das <span class="hl">schon.“</span></h2>
-<p class="ssub">Schaut euch das Bild an. Zwei Leute in der Küche. Wie viele Sätze mit <i>machen</i> fallen euch dazu ein — in dreißig Sekunden?</p>
-<div class="scene-wrap klein"><img src="../amanda/sz-kueche.webp" alt="Eine Person kocht in einer Küche am Herd"></div>
-<ul class="qlist nur-a2">
-<li>Was machst du jeden Morgen als Erstes?</li>
-<li>Welche Sätze mit machen benutzt du schon?</li>
-<li>Gibt es in deiner Sprache auch so ein Wort, das alles kann?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Warum brauchen Sprachen solche Alleskönner-Verben? Was wäre ohne sie?</li>
-<li>Klingt es schlechter, wenn man immer machen sagt — oder einfach normal?</li>
-<li>Wo würdest du ein genaueres Verb wählen: im Gespräch oder im Text?</li>
-</ul>
-<div class="tip">🗣️ <strong>Sprecht reihum:</strong> „Heute Morgen habe ich … gemacht.“ · „Am Wochenende mache ich meistens …“ · „Was ich nie mache, ist …“</div>
-<h2 class="st">Ein Verb, <span class="hl">drei Baustellen</span></h2>
-<p class="ssub"><i>machen</i> steht in festen Verbindungen (Frühstück machen), in Vorsilben (aufmachen, mitmachen) und in Wendungen (das macht nichts). Heute nehmen wir die ersten beiden.</p>
-<div class="scene-wrap klein"><img src="../vok-bild/das-fruehstueck.webp" alt="Ein gedeckter Frühstückstisch mit Brötchen, Kaffee und Marmelade"></div>
-<ul class="qlist">
-<li>Was ist der Unterschied zwischen „Musik machen“ und „Musik hören“?</li>
-<li>Was bedeutet „Mach mal!“ — und in welchem Ton?</li>
-<li>Welche Verbindung mit machen hast du zuletzt gelernt?</li>
-</ul>
-<div class="tip teal">👀 <strong>Zu zweit, eine Minute:</strong> Sammelt so viele Verbindungen mit <u>machen</u> wie möglich. Wer eine nennt, muss sie sofort in einem Satz benutzen. Wer stockt, gibt ab.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
 </section>
 
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Verbindungen mit <span class="hl">machen</span></h2>
-<p class="ssub">Sagt jedes Wort laut — und gleich den Beispielsatz hinterher. Erst dann bleibt es hängen.</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../vok-bild/das-fruehstueck.webp" alt="Ein gedeckter Frühstückstisch" loading="lazy"><div class="bb"><div class="bw">Frühstück machen</div><div class="bex">„Ich mache uns schnell Frühstück.“</div><div class="bti">💡 Ohne Artikel — genau wie <b>Mittagessen machen</b>, <b>Kaffee machen</b>, <b>Tee machen</b>. Umgangssprachlich für „zubereiten“.</div><button class="speak" data-say="Ich mache uns schnell Frühstück.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-termin.webp" alt="Ein Kalender und ein Stift auf einem Tisch" loading="lazy"><div class="bb"><div class="bw">einen Termin machen</div><div class="bex">„Ich mache morgen einen Termin beim Zahnarzt.“</div><div class="bti">💡 Auch <b>ausmachen</b> oder <b>vereinbaren</b>. Mit Artikel, weil man <u>einen</u> bestimmten Termin meint.</div><button class="speak" data-say="Ich mache morgen einen Termin beim Zahnarzt.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-reinigung.webp" alt="Eine Person putzt in einem Flur" loading="lazy"><div class="bb"><div class="bw">sauber machen</div><div class="bex">„Ich mache am Samstag die Küche sauber.“</div><div class="bti">💡 Hier steht ein Adjektiv dahinter: <b>sauber</b>, <b>kaputt</b>, <b>fertig</b>, <b>müde</b> — das Muster ist immer gleich.</div><button class="speak" data-say="Ich mache am Samstag die Küche sauber.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-urlaub.webp" alt="Ein Strandkorb am Meer" loading="lazy"><div class="bb"><div class="bw">Urlaub machen</div><div class="bex">„Wir machen dieses Jahr Urlaub an der Ostsee.“</div><div class="bti">💡 Ohne Artikel. Achtung: <b>Urlaub nehmen</b> heißt beantragen, <b>Urlaub machen</b> heißt verreisen.</div><button class="speak" data-say="Wir machen dieses Jahr Urlaub an der Ostsee.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-ausflug.webp" alt="Zwei Menschen wandern mit Rucksäcken über einen Feldweg" loading="lazy"><div class="bb"><div class="bw">einen Ausflug machen</div><div class="bex">„Sonntags machen wir oft einen Ausflug ins Grüne.“</div><div class="bti">💡 Mit Artikel. Ebenso: <b>eine Reise machen</b>, <b>einen Spaziergang machen</b>, <b>eine Wanderung machen</b>.</div><button class="speak" data-say="Sonntags machen wir oft einen Ausflug ins Grüne.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-kaffee.webp" alt="Eine Tasse Kaffee auf einem Tisch" loading="lazy"><div class="bb"><div class="bw">eine Pause machen</div><div class="bex">„Lass uns kurz eine Pause machen.“</div><div class="bti">💡 Mit Artikel. Im Beruf hört man auch <b>Mittag machen</b> — dann ohne Artikel und deutlich lockerer.</div><button class="speak" data-say="Lass uns kurz eine Pause machen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-buero.webp" alt="Zwei Kolleginnen am Schreibtisch" loading="lazy"><div class="bb"><div class="bw">Feierabend machen</div><div class="bex">„Ich mache heute schon um vier Feierabend.“</div><div class="bti">💡 Ohne Artikel, sehr häufig im Büro. Bedeutet: aufhören zu arbeiten — nicht: feiern.</div><button class="speak" data-say="Ich mache heute schon um vier Feierabend.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-schule.webp" alt="Ein Klassenzimmer mit Kindern und einer Lehrerin" loading="lazy"><div class="bb"><div class="bw">Hausaufgaben machen</div><div class="bex">„Hast du deine Hausaufgaben schon gemacht?“</div><div class="bti">💡 Immer Plural, meistens mit Possessivwort: <b>meine, deine, seine Hausaufgaben</b>.</div><button class="speak" data-say="Hast du deine Hausaufgaben schon gemacht?">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="Musik machen">🎸</div><div class="bb"><div class="bw">Musik machen</div><div class="bex">„Meine Tochter macht seit drei Jahren Musik.“</div><div class="bti">💡 Ohne Artikel und mit Bedeutung: selbst spielen oder singen. <b>Musik hören</b> ist etwas ganz anderes.</div><button class="speak" data-say="Meine Tochter macht seit drei Jahren Musik.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="Platz machen">↔️</div><div class="bb"><div class="bw">Platz machen</div><div class="bex">„Machen Sie bitte Platz, der Wagen muss durch.“</div><div class="bti">💡 Ohne Artikel. Im Bus hört man es täglich — meistens freundlich, manchmal auch nicht.</div><button class="speak" data-say="Machen Sie bitte Platz, der Wagen muss durch.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="Fotos machen">📸</div><div class="bb"><div class="bw">Fotos machen</div><div class="bex">„Darf ich hier Fotos machen?“</div><div class="bti">💡 Plural, ohne Artikel. Auch: <b>ein Foto machen von</b> + Dativ. <b>fotografieren</b> geht genauso, klingt nur förmlicher.</div><button class="speak" data-say="Darf ich hier Fotos machen?">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="Sport machen">🏃</div><div class="bb"><div class="bw">Sport machen</div><div class="bex">„Ich mache dreimal in der Woche Sport.“</div><div class="bti">💡 Ohne Artikel. Für eine bestimmte Sportart nimmt man ein anderes Verb: <b>Fußball spielen</b>, <b>schwimmen gehen</b>.</div><button class="speak" data-say="Ich mache dreimal in der Woche Sport.">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel:</strong> Verdeckt die Wörter. Wer eine Karte trifft, sagt einen Satz aus dem <u>eigenen Leben</u> damit — kein erfundenes Beispiel.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Drei Muster, und <span class="hl">du hast das System</span></h2>
-<p class="ssub">Erst die drei Bauarten, die <i>machen</i> kennt. Darunter drei Sätze richtig und falsch nebeneinander.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">🚫</span><div class="gmw">ohne Artikel</div><div class="gmb">Feste Verbindung — das Nomen ist fast Teil des Verbs.</div><div class="gmx">Frühstück machen · Urlaub machen · Feierabend machen · Sport machen</div></div>
-<div class="gk blau"><span class="gem2">🔢</span><div class="gmw">mit Artikel</div><div class="gmb">Eine einzelne, zählbare Sache.</div><div class="gmx">einen Termin machen · eine Pause machen · einen Ausflug machen</div></div>
-<div class="gk ja"><span class="gem2">🎨</span><div class="gmw">mit Adjektiv</div><div class="gmb">Etwas bekommt eine neue Eigenschaft.</div><div class="gmx">sauber machen · kaputt machen · fertig machen · müde machen</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Ich mache uns Frühstück.</div><div class="bsp"><span class="wer">Warum das stimmt</span>Feste Verbindung ohne Artikel — genau wie Urlaub machen, Feierabend machen, Sport machen.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Ich mache uns ein Frühstück.</div><div class="bsp"><span class="wer">Das Problem</span>Grammatisch geht es, klingt aber ungewohnt. Bei Mahlzeiten lässt man den Artikel weg.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Ich mache morgen einen Termin.</div><div class="bsp"><span class="wer">Warum das stimmt</span>Ein Termin ist zählbar, du meinst genau einen — also mit unbestimmtem Artikel.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Ich mache morgen Termin.</div><div class="bsp"><span class="wer">Das Problem</span>Ohne Artikel klingt es nach Telegramm. Zählbare Einzeldinge brauchen einen.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Ich mache die Küche sauber.</div><div class="bsp"><span class="wer">Warum das stimmt</span>Das Adjektiv steht ganz am Ende, hinter dem Objekt. Diese Reihenfolge ist fest.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Ich mache sauber die Küche.</div><div class="bsp"><span class="wer">Das Problem</span>Das Adjektiv gehört ans Satzende — es ist der zweite Teil des Verbs, nicht ein Anhängsel.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Artikel oder nicht — wie merke ich mir das?</button>
-<div class="inhalt">
-<p>Eine Frage genügt: Kann ich das zählen?</p>
-<ul>
-<li><b>Zählbar</b> (ein Termin, eine Pause, ein Ausflug) → mit Artikel.</li>
-<li><b>Nicht zählbar</b> oder als Tätigkeit gemeint (Frühstück, Urlaub, Sport, Musik) → ohne Artikel.</li>
-<li><b>Adjektiv dahinter</b> (sauber, kaputt, fertig) → gar kein Nomen nötig, das Adjektiv steht ganz hinten.</li>
-</ul>
-<p style="margin-top:.5rem;">Und wenn du unsicher bist: Lass den Artikel weg. Bei <i>machen</i> ist das öfter richtig als falsch.</p>
-</div>
-</div>
-<div class="tip">⚖️ <strong>Kurzübung:</strong> Reihum. Einer nennt ein Nomen, der Nächste baut es mit <u>machen</u> in einen Satz — und sagt dazu, ob es einen Artikel braucht.</div>
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Was machst du jeden Morgen als Erstes?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Welche Sätze mit machen benutzt du schon?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -809,37 +823,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei <span class="hl">Alltagsszenen</span></h2>
-<p class="ssub">Zu zweit. In jeder Antwort muss mindestens einmal <i>machen</i> vorkommen. Zwei Minuten, dann tauschen.</p>
-<div class="rmcard">
-<b>1 · Der Morgen zu zweit</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A und B haben zwanzig Minuten, bis beide aus dem Haus müssen. Verteilt die Aufgaben.</p>
-<div class="nur-a2"><span class="rm">Ich mache Frühstück</span><span class="rm">Machst du Kaffee?</span><span class="rm">Ich mache das Bett</span><span class="rm">Mach dich fertig</span></div>
-<div class="nur-b1"><span class="rm">Ich mache uns schnell etwas zu essen</span><span class="rm">Machst du das Licht aus?</span><span class="rm">Das mache ich nachher</span><span class="rm">Machen wir es so</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide verteilen die Aufgaben in ganzen Sätzen — und jede Antwort enthält mindestens ein machen.</div>
-</div>
-<div class="rmcard">
-<b>2 · Der Termin, der nicht passt</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A will einen Termin für Donnerstag, B kann nicht und schlägt etwas anderes vor.</p>
-<div class="nur-a2"><span class="rm">Können wir einen Termin machen?</span><span class="rm">Donnerstag geht bei mir</span><span class="rm">Machen wir das online?</span><span class="rm">Abgemacht</span></div>
-<div class="nur-b1"><span class="rm">Ich mache Ihnen einen Vorschlag</span><span class="rm">Da lässt sich nichts machen</span><span class="rm">Machen wir es lieber vor Ort</span><span class="rm">Dann machen wir Freitag weiter</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B sagt nicht nur ab, sondern macht einen Gegenvorschlag — und am Ende steht eine feste Verabredung.</div>
-</div>
-<div class="rmcard">
-<b>3 · Zwei Stunden vor dem Besuch</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Die Wohnung ist unordentlich, das Essen fehlt, die Gäste kommen um sieben. Teilt alles auf.</p>
-<div class="nur-a2"><span class="rm">Ich mache die Küche sauber</span><span class="rm">Machst du den Salat?</span><span class="rm">Das Licht mache ich an</span><span class="rm">Wir sind gleich fertig</span></div>
-<div class="nur-b1"><span class="rm">Ich mache uns eine Liste</span><span class="rm">Mach dir keinen Kopf</span><span class="rm">Das macht nichts</span><span class="rm">Wir machen es uns danach gemütlich</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Die Arbeit wird konkret aufgeteilt, und mindestens eine feste Wendung kommt vor — das macht nichts, mach dir keinen Kopf.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Lest die drei Muster noch einmal vor — <u>ohne Artikel, mit Artikel, mit Adjektiv</u>. Erst wenn ihr sie hört, sitzen sie.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -872,14 +863,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde müssen <u>drei verschiedene</u> Verbindungen mit machen vorkommen. Die Gruppe zählt mit.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Lest die drei Muster noch einmal vor — <u>ohne Artikel, mit Artikel, mit Adjektiv</u>. Erst wenn ihr sie hört, sitzen sie.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Warum brauchen Sprachen solche Alleskönner-Verben? Was wäre ohne sie?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Klingt es schlechter, wenn man immer machen sagt — oder einfach normal?</li><li>Wo würdest du ein genaueres Verb wählen: im Gespräch oder im Text?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei <span class="hl">Alltagsszenen</span></h2>
+<p class="ssub">Zu zweit. In jeder Antwort muss mindestens einmal <i>machen</i> vorkommen. Zwei Minuten, dann tauschen.</p>
+<div class="rmcard">
+<b>1 · Der Morgen zu zweit</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A und B haben zwanzig Minuten, bis beide aus dem Haus müssen. Verteilt die Aufgaben.</p>
+<div class="nur-a2"><span class="rm">Ich mache Frühstück</span><span class="rm">Machst du Kaffee?</span><span class="rm">Ich mache das Bett</span><span class="rm">Mach dich fertig</span></div>
+<div class="nur-b1"><span class="rm">Ich mache uns schnell etwas zu essen</span><span class="rm">Machst du das Licht aus?</span><span class="rm">Das mache ich nachher</span><span class="rm">Machen wir es so</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide verteilen die Aufgaben in ganzen Sätzen — und jede Antwort enthält mindestens ein machen.</div>
+</div>
+<div class="rmcard">
+<b>2 · Der Termin, der nicht passt</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A will einen Termin für Donnerstag, B kann nicht und schlägt etwas anderes vor.</p>
+<div class="nur-a2"><span class="rm">Können wir einen Termin machen?</span><span class="rm">Donnerstag geht bei mir</span><span class="rm">Machen wir das online?</span><span class="rm">Abgemacht</span></div>
+<div class="nur-b1"><span class="rm">Ich mache Ihnen einen Vorschlag</span><span class="rm">Da lässt sich nichts machen</span><span class="rm">Machen wir es lieber vor Ort</span><span class="rm">Dann machen wir Freitag weiter</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B sagt nicht nur ab, sondern macht einen Gegenvorschlag — und am Ende steht eine feste Verabredung.</div>
+</div>
+<div class="rmcard">
+<b>3 · Zwei Stunden vor dem Besuch</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Die Wohnung ist unordentlich, das Essen fehlt, die Gäste kommen um sieben. Teilt alles auf.</p>
+<div class="nur-a2"><span class="rm">Ich mache die Küche sauber</span><span class="rm">Machst du den Salat?</span><span class="rm">Das Licht mache ich an</span><span class="rm">Wir sind gleich fertig</span></div>
+<div class="nur-b1"><span class="rm">Ich mache uns eine Liste</span><span class="rm">Mach dir keinen Kopf</span><span class="rm">Das macht nichts</span><span class="rm">Wir machen es uns danach gemütlich</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Die Arbeit wird konkret aufgeteilt, und mindestens eine feste Wendung kommt vor — das macht nichts, mach dir keinen Kopf.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -944,6 +969,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Sprachnachricht bis <u>Donnerstag 8 Uhr</u> in die Gruppe. Wir hören zwei davon gemeinsam an — freiwillig, versteht sich.</div>
 <div class="tip">🔜 <strong>Am Donnerstag, Teil 2:</strong> <u>machen oder tun?</u> Und die Wendungen, die kein Wörterbuch erklärt — das macht nichts, mach's gut, mach mal halblang.</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1130,11 +1162,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1191,7 +1230,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1201,7 +1242,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

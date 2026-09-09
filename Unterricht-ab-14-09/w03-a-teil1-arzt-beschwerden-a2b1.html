@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,103 +627,43 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B1<span class="zusatz"> · mehr</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">⚖️ Drei Wege</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">Zwei Minuten, <span class="hl">in denen alles gesagt sein muss</span></h2>
-<p class="ssub">Die Ärztin fragt: „Was führt Sie zu mir?“ Jetzt zählt nicht schönes Deutsch, sondern die richtige Reihenfolge: <b>wo</b>, <b>seit wann</b>, <b>wie schlimm</b>. Mehr will sie im ersten Satz gar nicht wissen.</p>
-<div class="scene-wrap klein"><img src="../amanda/sz-arzt.webp" alt="Eine Frau sitzt im Sprechzimmer einem Arzt gegenüber"></div>
-<ul class="qlist nur-a2">
-<li>Wann warst du zuletzt beim Arzt? Warum?</li>
-<li>Gehst du schnell zum Arzt oder wartest du lieber ab?</li>
-<li>Was machst du zu Hause, wenn du krank bist?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Wie erklärst du etwas, für das du das deutsche Wort nicht kennst?</li>
-<li>Was ist schwieriger: die Krankheit beschreiben oder die Rückfragen verstehen?</li>
-<li>Wie viel erzählt man in deinem Land dem Arzt von sich selbst?</li>
-</ul>
-<div class="tip teal">🩺 <strong>Die drei Angaben, die immer kommen:</strong> <b>Wo?</b> — <i>Mein Hals tut weh.</i> · <b>Seit wann?</b> — <i>Seit drei Tagen.</i> · <b>Wie schlimm?</b> — <i>Beim Schlucken sehr.</i> Wer die drei parat hat, kommt durch jedes Gespräch.</div>
-<h2 class="st">Ein Wort fehlt? <span class="hl">Zeig hin und beschreib es</span></h2>
-<p class="ssub">Kein Arzt erwartet Fachwörter. <b>„Hier tut es weh“</b> plus die Hand an der Stelle ist eine vollständige Antwort. Und wenn du das Wort halb kennst, hilft schon der Versuch.</p>
-<div class="scene-wrap klein"><img src="../vok-bild/die-schmerzen.webp" alt="Eine Decke und eine Tasse Tee auf dem Sofa"></div>
-<ul class="qlist nur-a2">
-<li>Zeig auf drei Körperteile und sag die Wörter laut.</li>
-<li>Was sagst du, wenn du das Wort nicht weißt?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Wie beschreibst du einen Schmerz, ohne ihn zu benennen?</li>
-<li>Welche Fragen stellt ein Arzt, die man leicht falsch versteht?</li>
-</ul>
-<div class="tip">💡 <strong>Die Notlösung, die immer geht:</strong> <b>Hier tut es weh.</b> · <b>Das habe ich seit …</b> · <b>Es fühlt sich an wie …</b> — drei Sätze, mit denen du jeden Körperteil beschreiben kannst, dessen Namen du nicht kennst.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
 </section>
 
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Wörter für <span class="hl">das Sprechzimmer</span></h2>
-<p class="ssub">Sagt jedes Wort laut — und gleich den Beispielsatz hinterher. Zwei Sekunden pro Karte reichen.</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../vok-bild/der-kopf.webp" alt="Eine Frau tippt sich an die Schläfe" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Kopf</div><div class="bex">„Mein Kopf tut seit gestern weh.“</div><div class="bti">💡 Daraus wird ein festes Wort: <b>die Kopfschmerzen</b> — immer im Plural. <i>Ich habe Kopfschmerzen.</i></div><button class="speak" data-say="Mein Kopf tut seit gestern weh.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-hals.webp" alt="Eine Person fasst sich an den Hals" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Hals</div><div class="bex">„Mein Hals tut beim Schlucken weh.“</div><div class="bti">💡 <b>Hals</b> meint außen den Nacken und innen den Rachen. Beim Arzt reicht: <i>Mein Hals tut weh.</i> — er schaut dann selbst nach.</div><button class="speak" data-say="Mein Hals tut beim Schlucken weh.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-bauch.webp" alt="Eine Frau hält sich den Bauch" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Bauch</div><div class="bex">„Mir tut der Bauch weh.“</div><div class="bti">💡 Umgangssprachlich für alles zwischen Magen und Darm. Genauer: <b>der Magen</b> (oben) und <b>der Darm</b> (unten).</div><button class="speak" data-say="Mir tut der Bauch weh.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-ruecken.webp" alt="Ein Mann hält sich den unteren Rücken" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Rücken</div><div class="bex">„Ich habe seit einer Woche Rückenschmerzen.“</div><div class="bti">💡 Die häufigste Beschwerde in Deutschland. Auch: <b>der Nacken</b> (oben) und <b>das Kreuz</b> (unten, umgangssprachlich).</div><button class="speak" data-say="Ich habe seit einer Woche Rückenschmerzen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/das-bein.webp" alt="Eine Frau sitzt auf einem Stuhl, die Beine ausgestreckt" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Bein</div><div class="bex">„Mein linkes Bein tut beim Laufen weh.“</div><div class="bti">💡 Plural: <b>die Beine</b>. Und dazu gehören <b>das Knie</b>, <b>der Fuß</b> (Plural: <b>die Füße</b>) und <b>der Zeh</b>.</div><button class="speak" data-say="Mein linkes Bein tut beim Laufen weh.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-schmerzen.webp" alt="Eine Decke und eine Tasse Tee auf dem Sofa" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Schmerzen</div><div class="bex">„Ich habe starke Schmerzen im Rücken.“</div><div class="bti">💡 Fast immer im <b>Plural</b>. Und die Stärke dazu: <b>leicht</b>, <b>stark</b>, <b>unerträglich</b>. Mit <b>in</b> + Dativ für den Ort.</div><button class="speak" data-say="Ich habe starke Schmerzen im Rücken.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="wehtun">😖</div><div class="bb"><div class="bw">wehtun</div><div class="bex">„Was tut Ihnen denn weh?“</div><div class="bti">💡 Trennbar und mit <b>Dativ</b>: <i>Mir tut der Kopf weh.</i> Nicht „Ich tue weh“ — das würde heißen, du tust jemand anderem weh.</div><button class="speak" data-say="Was tut Ihnen denn weh?">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="Fieber">🌡️</div><div class="bb"><div class="bw"><span class="art">das</span> Fieber</div><div class="bex">„Ich hatte gestern 39 Grad Fieber.“</div><div class="bti">💡 Ohne Plural. <b>Fieber haben</b>, <b>Fieber messen</b>. Ab 38 Grad sagt man Fieber, darunter <b>erhöhte Temperatur</b>.</div><button class="speak" data-say="Ich hatte gestern 39 Grad Fieber.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="Husten">🤧</div><div class="bb"><div class="bw"><span class="art">der</span> Husten</div><div class="bex">„Der Husten ist nachts am schlimmsten.“</div><div class="bti">💡 Das Verb: <b>husten</b>. Die Nachbarn im Wortfeld: <b>der Schnupfen</b> (Nase) und <b>die Heiserkeit</b> (Stimme).</div><button class="speak" data-say="Der Husten ist nachts am schlimmsten.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-tee.webp" alt="Eine Kanne und eine Tasse Tee auf dem Tisch" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Erkältung</div><div class="bex">„Das ist nur eine Erkältung, keine Grippe.“</div><div class="bti">💡 Reflexiv als Verb: <b>sich erkälten</b> — <i>Ich habe mich erkältet.</i> Nicht verwechseln mit <b>die Grippe</b>, die ist deutlich schwerer.</div><button class="speak" data-say="Das ist nur eine Erkältung.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-medizin.webp" alt="Ein Arzt steht neben einer sitzenden Patientin" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Beschwerden</div><div class="bex">„Welche Beschwerden haben Sie denn?“</div><div class="bti">💡 Das Wort, mit dem der Arzt fragt — immer <b>Plural</b>. Nicht dasselbe wie <b>die Beschwerde</b> (Singular), das ist die Reklamation.</div><button class="speak" data-say="Welche Beschwerden haben Sie denn?">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-notfall.webp" alt="Ein Wartebereich in einer Praxis" loading="lazy"><div class="bb"><div class="bw">untersuchen</div><div class="bex">„Ich untersuche Sie kurz, machen Sie bitte den Mund auf.“</div><div class="bti">💡 Nicht trennbar, obwohl es so aussieht: <i>Der Arzt untersucht mich.</i> Das Nomen: <b>die Untersuchung</b>.</div><button class="speak" data-say="Ich untersuche Sie kurz, machen Sie bitte den Mund auf.">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel:</strong> Einer zeigt stumm auf einen Körperteil und macht ein Gesicht. Der andere sagt in zwei Sekunden den ganzen Satz: <i>„Dir tut der Rücken weh.“</i> Wer zögert, gibt ab.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Drei Arten, <span class="hl">dasselbe zu sagen</span></h2>
-<p class="ssub">Für jede Beschwerde gibt es drei Sätze — und alle drei sind richtig. Darunter drei Satzpaare, bei denen fast alle danebenliegen.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">😖</span><div class="gmw">tut weh</div><div class="gmb">Der Körperteil ist das Subjekt, du stehst im Dativ.</div><div class="gmx">Mir tut der Kopf weh. · Der Hals tut mir weh.</div></div>
-<div class="gk blau"><span class="gem2">🤕</span><div class="gmw">ich habe … schmerzen</div><div class="gmb">Ein zusammengesetztes Wort, immer im Plural.</div><div class="gmx">Ich habe Kopfschmerzen. · Ich habe Rückenschmerzen.</div></div>
-<div class="gk ja"><span class="gem2">📍</span><div class="gmw">Schmerzen in …</div><div class="gmb">Für Stellen ohne eigenes Wort — mit in + Dativ.</div><div class="gmx">Ich habe Schmerzen im linken Arm.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Mir tut der Kopf weh.</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>wehtun</b> steht mit <b>Dativ</b>: <i>mir, dir, ihm, Ihnen</i>. Der Körperteil ist das Subjekt und steht im Nominativ.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Ich tue den Kopf weh.</div><div class="bsp"><span class="wer">Das Problem</span>So würde es heißen, dass <u>du</u> jemandem wehtust. Merksatz: <b>Nicht ich tue weh — mir tut etwas weh.</b></div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Ich habe seit drei Tagen Husten.</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>seit</b> steht mit <b>Dativ</b> und meint einen Zeitraum, der <u>noch andauert</u>: <i>seit drei Tagen, seit einer Woche</i>.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Ich habe vor drei Tagen Husten.</div><div class="bsp"><span class="wer">Das Problem</span><b>vor drei Tagen</b> ist ein Punkt in der Vergangenheit — da war es einmal so. <b>seit</b> heißt: es geht bis jetzt weiter.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Ich habe Kopfschmerzen.</div><div class="bsp"><span class="wer">Warum das stimmt</span>Die Zusammensetzungen auf <b>-schmerzen</b> stehen immer im Plural und ohne Artikel: <i>Kopfschmerzen, Bauchschmerzen, Halsschmerzen</i>.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Ich habe einen Kopfschmerz.</div><div class="bsp"><span class="wer">Das Problem</span>Den Singular gibt es zwar, aber niemand sagt ihn. Beim Arzt klingt er, als hättest du das Wort gerade erfunden.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Welchen der drei Sätze nehme ich?</button>
-<div class="inhalt">
-<p>Es hängt nur davon ab, ob es das Wort gibt:</p>
-<ul>
-<li><b>Der Körperteil hat ein kurzes Wort</b> (Kopf, Hals, Bauch) → <b>… tut mir weh</b> oder <b>-schmerzen</b>, beides geht.</li>
-<li><b>Die Stelle hat kein eigenes Wort</b> → <b>Ich habe Schmerzen in …</b> + Dativ, und zeig dabei hin.</li>
-<li><b>Du weißt das Wort nicht</b> → <b>Hier tut es weh.</b> Das reicht vollkommen.</li>
-<li><b>Es ist mehr ein Gefühl als ein Schmerz</b> → <b>Mir ist schlecht.</b> · <b>Mir ist schwindelig.</b> — auch Dativ.</li>
-</ul>
-<p style="margin-top:.5rem;">Und wenn der Arzt genauer fragt: <b>stechend</b>, <b>drückend</b>, <b>ziehend</b>, <b>dumpf</b>. Vier Wörter, mit denen jeder Schmerz beschrieben ist.</p>
-</div>
-</div>
-<div class="tip">⚖️ <strong>Kurzübung:</strong> Einer nennt einen Körperteil, der andere sagt denselben Satz dreimal — mit <b>tut weh</b>, mit <b>-schmerzen</b> und mit <b>Schmerzen in</b>. Zehn Körperteile, dann tauschen.</div>
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Wann warst du zuletzt beim Arzt? Warum?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Gehst du schnell zum Arzt oder wartest du lieber ab?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -814,37 +824,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei <span class="hl">Besuche im Sprechzimmer</span></h2>
-<p class="ssub">Zu zweit. Einer ist Patient, einer Arzt — und der Arzt fragt genauer nach, als dem Patienten lieb ist. Danach tauschen.</p>
-<div class="rmcard">
-<b>1 · Die Erkältung, die nicht weggeht</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A ist seit zwei Wochen erkältet und will endlich etwas dagegen. B als Arzt findet, das sei normal, und fragt nach Fieber, Schlaf und Arbeit.</p>
-<div class="nur-a2"><span class="rm">Ich bin seit zwei Wochen erkältet</span><span class="rm">Der Husten ist nachts am schlimmsten</span><span class="rm">Kein Fieber</span><span class="rm">Können Sie mir etwas verschreiben?</span></div>
-<div class="nur-b1"><span class="rm">Es wird einfach nicht besser</span><span class="rm">Anfangs war es nur Schnupfen</span><span class="rm">Ich komme nachts kaum zum Schlafen</span><span class="rm">Wäre ein Abstrich sinnvoll?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A nennt im ersten Satz Ort und Dauer, beschreibt den Verlauf statt nur den Zustand und fragt am Ende nach dem konkreten nächsten Schritt.</div>
-</div>
-<div class="rmcard">
-<b>2 · Der Schmerz ohne Namen</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat Schmerzen an einer Stelle, für die er das deutsche Wort nicht kennt. B fragt nach — A muss beschreiben statt benennen.</p>
-<div class="nur-a2"><span class="rm">Hier tut es weh</span><span class="rm">Es fühlt sich an wie …</span><span class="rm">Beim Bewegen wird es schlimmer</span><span class="rm">Ich weiß das Wort nicht</span></div>
-<div class="nur-b1"><span class="rm">Es zieht von hier bis dorthin</span><span class="rm">Am ehesten würde ich es stechend nennen</span><span class="rm">In Ruhe ist es kaum spürbar</span><span class="rm">Wie heißt diese Stelle auf Deutsch?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A gibt nicht auf, sondern beschreibt Lage, Art und Auslöser — und fragt am Ende nach dem Wort, statt es zu vermeiden.</div>
-</div>
-<div class="rmcard">
-<b>3 · Ohne Termin am Empfang</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat starke Schmerzen und keinen Termin. B am Empfang sagt zweimal, dass es heute schwierig wird, bietet dann aber eine Lösung an.</p>
-<div class="nur-a2"><span class="rm">Ich habe leider keinen Termin</span><span class="rm">Seit heute Nacht sehr starke Schmerzen</span><span class="rm">Ich kann warten</span><span class="rm">Wie lange ungefähr?</span></div>
-<div class="nur-b1"><span class="rm">Ich weiß, dass das ungünstig ist</span><span class="rm">Ich würde jede Lücke nehmen</span><span class="rm">Gäbe es eine Notfallsprechstunde?</span><span class="rm">Dann komme ich morgen früh wieder</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A wird nicht ungeduldig, macht die Dringlichkeit an einer Tatsache fest (seit wann, wie stark) und nimmt die angebotene Lösung an.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Sagt reihum je einen Satz mit einem anderen Körperteil — aber niemand darf einen Körperteil zweimal nehmen. Wer keinen neuen findet, ist raus.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -877,14 +864,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde muss einmal <u>seit</u> und einmal ein Satz mit <u>mir tut … weh</u> vorkommen. Der Partner hebt die Hand, sobald beides da war.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Sagt reihum je einen Satz mit einem anderen Körperteil — aber niemand darf einen Körperteil zweimal nehmen. Wer keinen neuen findet, ist raus.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Wie erklärst du etwas, für das du das deutsche Wort nicht kennst?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Was ist schwieriger: die Krankheit beschreiben oder die Rückfragen verstehen?</li><li>Wie viel erzählt man in deinem Land dem Arzt von sich selbst?</li><li>Wie beschreibst du einen Schmerz, ohne ihn zu benennen?</li><li>Welche Fragen stellt ein Arzt, die man leicht falsch versteht?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei <span class="hl">Besuche im Sprechzimmer</span></h2>
+<p class="ssub">Zu zweit. Einer ist Patient, einer Arzt — und der Arzt fragt genauer nach, als dem Patienten lieb ist. Danach tauschen.</p>
+<div class="rmcard">
+<b>1 · Die Erkältung, die nicht weggeht</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A ist seit zwei Wochen erkältet und will endlich etwas dagegen. B als Arzt findet, das sei normal, und fragt nach Fieber, Schlaf und Arbeit.</p>
+<div class="nur-a2"><span class="rm">Ich bin seit zwei Wochen erkältet</span><span class="rm">Der Husten ist nachts am schlimmsten</span><span class="rm">Kein Fieber</span><span class="rm">Können Sie mir etwas verschreiben?</span></div>
+<div class="nur-b1"><span class="rm">Es wird einfach nicht besser</span><span class="rm">Anfangs war es nur Schnupfen</span><span class="rm">Ich komme nachts kaum zum Schlafen</span><span class="rm">Wäre ein Abstrich sinnvoll?</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A nennt im ersten Satz Ort und Dauer, beschreibt den Verlauf statt nur den Zustand und fragt am Ende nach dem konkreten nächsten Schritt.</div>
+</div>
+<div class="rmcard">
+<b>2 · Der Schmerz ohne Namen</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat Schmerzen an einer Stelle, für die er das deutsche Wort nicht kennt. B fragt nach — A muss beschreiben statt benennen.</p>
+<div class="nur-a2"><span class="rm">Hier tut es weh</span><span class="rm">Es fühlt sich an wie …</span><span class="rm">Beim Bewegen wird es schlimmer</span><span class="rm">Ich weiß das Wort nicht</span></div>
+<div class="nur-b1"><span class="rm">Es zieht von hier bis dorthin</span><span class="rm">Am ehesten würde ich es stechend nennen</span><span class="rm">In Ruhe ist es kaum spürbar</span><span class="rm">Wie heißt diese Stelle auf Deutsch?</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A gibt nicht auf, sondern beschreibt Lage, Art und Auslöser — und fragt am Ende nach dem Wort, statt es zu vermeiden.</div>
+</div>
+<div class="rmcard">
+<b>3 · Ohne Termin am Empfang</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat starke Schmerzen und keinen Termin. B am Empfang sagt zweimal, dass es heute schwierig wird, bietet dann aber eine Lösung an.</p>
+<div class="nur-a2"><span class="rm">Ich habe leider keinen Termin</span><span class="rm">Seit heute Nacht sehr starke Schmerzen</span><span class="rm">Ich kann warten</span><span class="rm">Wie lange ungefähr?</span></div>
+<div class="nur-b1"><span class="rm">Ich weiß, dass das ungünstig ist</span><span class="rm">Ich würde jede Lücke nehmen</span><span class="rm">Gäbe es eine Notfallsprechstunde?</span><span class="rm">Dann komme ich morgen früh wieder</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A wird nicht ungeduldig, macht die Dringlichkeit an einer Tatsache fest (seit wann, wie stark) und nimmt die angebotene Lösung an.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -950,6 +971,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Sprachnachricht bis Sonntag in die WhatsApp-Gruppe. Ich höre jede an und antworte dir persönlich.</div>
 <div class="tip">🔜 <strong>Am Mittwoch, Teil 2:</strong> <u>Rezept, Apotheke, Krankschreibung</u> — was nach dem Sprechzimmer kommt und wie du in der Apotheke fragst.</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1136,11 +1164,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1197,7 +1232,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1207,7 +1244,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

@@ -350,19 +350,191 @@ function hilfe(hf, klasse) {
 
 /* ---------- Zusammenbau ---------- */
 const abschnitte = [];
+/* ---------- 0 Ablauf ----------
+   Der Sprechclub sitzt zu sechst, die Stunde hat sechzig Minuten.
+   Vorher stand das nirgends: die Seite zeigte zehn Abschnitte, aber
+   nicht, wer wann spricht. In der Stunde kam man nie durch, und
+   ausgerechnet die Stillen kamen gar nicht dran.
+
+   Diese Tafel sagt es fuer jeden Abschnitt: wie lange, in welcher
+   Aufstellung, und wer redet. Drei Paare oder zwei Dreiergruppen —
+   sechs teilt sich gut. Gerechnet ist so, dass jede Person in der
+   Stunde auf ungefaehr zwoelf Minuten eigenes Sprechen kommt. */
+const TAKT = [
+  { id:'ankommen',    min:'0–4',   z:'👋', t:'Ankommen',
+    w:'Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.', wer:'alle sechs, je etwa 30 Sekunden' },
+  { id:'saetze',      min:'4–12',  z:'💬', t:'Sätze für heute',
+    w:'Die Sätze laut lesen, dann zwei selbst bauen.', wer:'erst gemeinsam, dann zwei Freiwillige' },
+  { id:'dialoge',     min:'12–20', z:'🎬', t:'Dialog',
+    w:'Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.', wer:'drei Paare' },
+  { id:'ueben',       min:'20–27', z:'✅', t:'Üben',
+    w:'Quiz und Lücken zusammen am Bildschirm.', wer:'reihum, jede Person eine Aufgabe' },
+  { id:'challenge',   min:'27–33', z:'⏱️', t:'90 Sekunden',
+    w:'Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.', wer:'drei Paare, zwei Runden' },
+  { id:'debatte',     min:'33–45', z:'⚖️', t:'Debatte',
+    w:'Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.', wer:'zwei Dreiergruppen' },
+  { id:'rollenspiele',min:'45–56', z:'🎭', t:'Rollenspiel',
+    w:'Zwei Durchgänge, dazwischen Rollentausch.', wer:'drei Paare' },
+  { id:'abschluss',   min:'56–60', z:'🎯', t:'Abschluss',
+    w:'Ein Satz pro Person: Was nimmst du mit?', wer:'alle sechs' }
+];
+
+function ablauf() {
+  let s = `<section class="section" id="ablauf">\n`
+    + kopfzeile('Sechzig Minuten,', 'sechs Leute', 'So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.')
+    + `<div class="takt">\n`;
+  TAKT.forEach(x => {
+    s += `<div class="takt-z"><span class="takt-m">${h(x.min)}</span>`
+       + `<span class="takt-z2">${x.z}</span>`
+       + `<div class="takt-t"><b>${h(x.t)}</b><span>${h(x.w)}</span><em>${h(x.wer)}</em></div></div>\n`;
+  });
+  s += `</div>\n`
+    + tipp({ text: 'Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, '
+           + 'bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.' })
+    + `</section>\n`;
+  return s;
+}
+
+/* Eine schmale Zeile am Kopf eines Abschnitts: Zeit und Aufstellung.
+   Dieselbe Angabe wie in der Tafel, nur dort, wo man sie braucht. */
+function regie(id) {
+  const x = TAKT.filter(t => t.id === id)[0];
+  if (!x) return '';
+  return `<div class="regie"><span>${h(x.min)} Min</span><b>${h(x.wer)}</b></div>\n`;
+}
+
+/* ---------- 0b Ankommen ----------
+   Der alte Einstieg begann mit einem grossen Bild und drei Fragen
+   wie „Was bringt mehr: freundlich bleiben oder Druck machen?".
+   Das sind gute Fragen — aber nicht in Minute eins, kalt, auf
+   Deutsch, vor fuenf anderen. Sie stehen jetzt in der Debatte, wo
+   sie nach einer halben Stunde Anlauf hingehoeren.
+
+   Hier steht eine Frage, die jeder sofort beantworten kann, und
+   der Auftrag dazu: ein Satz, reihum, ohne Kommentar. */
+function ankommen(S) {
+  const eig = S.ankommen;
+  let frage = eig && eig.frage;
+  if (!frage) {
+    /* Die A2-Fassung ist die konkrete: „Hast du dich schon einmal
+       beschwert?" statt „Wann lohnt sich der Aufwand nicht mehr?" */
+    (S.einstieg || []).forEach(x => {
+      if (!frage && x.fragenA2 && x.fragenA2.length) frage = x.fragenA2[0];
+    });
+    (S.einstieg || []).forEach(x => {
+      if (!frage && x.fragen && x.fragen.length) frage = x.fragen[0];
+    });
+  }
+  if (!frage) return '';
+  const zweit = (eig && eig.zweite) ||
+    (S.einstieg || []).map(x => (x.fragenA2 || [])[1]).filter(Boolean)[0] || '';
+  return `<section class="section" id="ankommen">\n`
+    + kopfzeile('Erst mal', 'ankommen', 'Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.')
+    + regie('ankommen')
+    + `<div class="ank">${h(frage)}</div>\n`
+    + (zweit ? `<div class="ank zweit"><span>Wenn noch Zeit ist:</span>${h(zweit)}</div>\n` : '')
+    + tipp({ text: 'Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.' })
+    + `</section>\n`;
+}
+
+/* ---------- 8 Debatte ----------
+   Neu in der Stunde. Drei gegen drei, damit alle sechs reden muessen
+   und niemand sich hinter der Gruppe verstecken kann. Die Fragen sind
+   die, die frueher am Anfang standen — abstrakt, streitbar, und nach
+   einer halben Stunde Wortschatz und Dialog genau richtig. */
+function debatte(S) {
+  const eig = S.debatte;
+  let fragen = (eig && eig.fragen) || [];
+  if (!fragen.length) {
+    (S.einstieg || []).forEach(x => {
+      (x.fragenB1 || []).forEach(f => fragen.push(f));
+    });
+  }
+  if (!fragen.length) {
+    (S.einstieg || []).forEach(x => { (x.fragen || []).slice(1).forEach(f => fragen.push(f)); });
+  }
+  if (!fragen.length) return '';
+  const these = (eig && eig.these) || fragen[0];
+  const rest = fragen.filter(f => f !== these);
+
+  const proSaetze = (eig && eig.pro) || [];
+  const conSaetze = (eig && eig.con) || [];
+
+  let s = `<section class="section" id="debatte">\n`
+    + kopfzeile('Drei gegen', 'drei', 'Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.')
+    + regie('debatte')
+    + `<div class="deb-these">${h(these)}</div>\n`;
+
+  s += `<div class="deb-seiten">`
+    + `<div class="deb-s pro"><b>Gruppe A · dafür</b>`
+    + (proSaetze.length
+        ? `<ul>` + proSaetze.map(x => `<li>${h(x)}</li>`).join('') + `</ul>`
+        : `<p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p>`)
+    + `</div>`
+    + `<div class="deb-s con"><b>Gruppe B · dagegen</b>`
+    + (conSaetze.length
+        ? `<ul>` + conSaetze.map(x => `<li>${h(x)}</li>`).join('') + `</ul>`
+        : `<p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p>`)
+    + `</div></div>\n`;
+
+  s += `<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips">`
+    + ['Ich sehe das anders, weil …',
+       'Da stimme ich zu, aber …',
+       'Genau das ist der Punkt: …',
+       'Das mag sein — trotzdem …',
+       'Wenn das stimmt, warum dann …?',
+       'Ich bleibe dabei: …'].map(x => `<span>${h(x)}</span>`).join('')
+    + `</div></div>\n`;
+
+  if (rest.length) {
+    s += `<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b>`
+      + `<ul>` + rest.map(f => `<li>${h(f)}</li>`).join('') + `</ul></div>\n`;
+  }
+
+  return s + tipp({ art:'teal', text: 'Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — '
+                  + 'und ist genau das, was in der Prüfung und in der Besprechung zählt.' })
+           + `</section>\n`;
+}
+
+/* ---------- 9 Abschluss ---------- */
+function abschluss() {
+  return `<section class="section" id="abschluss">\n`
+    + kopfzeile('Zum', 'Schluss', 'Vier Minuten, sechs Sätze.')
+    + regie('abschluss')
+    + `<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>\n`
+    + `</section>\n`;
+}
+
 function nimm(id, name, html) { if (html) abschnitte.push({ id, name, html }); }
 
-nimm('einstieg',     '🖼️ Einstieg',      einstieg(S.einstieg));
+/* Die Reihenfolge ist die Stunde selbst, nicht mehr eine Sammlung
+   von Material. Sie folgt der Tafel in ablauf().
+
+   Zwei Abschnitte sind rausgeflogen:
+
+     Wortschatz  — acht Bilder und zwoelf Karten, die in der Stunde
+                   nie drankamen. Die Woerter kommen jetzt dort vor,
+                   wo sie gebraucht werden: im Dialog, in den Saetzen
+                   und in den 90 Sekunden. Im Lernbereich stehen sie
+                   ohnehin als Uebung.
+     Konzepte    — die Begriffstafel („Womit stehst du da?"). Gute
+                   Landeskunde, aber in einer Sprechstunde spricht
+                   dabei niemand.
+
+   Die Daten dazu bleiben in der JSON-Datei stehen. Wer sie zurueck
+   will, holt sie mit zwei Zeilen zurueck — geloescht ist nichts. */
+nimm('ablauf',       '🎬 Ablauf',        ablauf());
+nimm('ankommen',     '👋 Ankommen',      ankommen(S));
 nimm('wiederholung', '🔁 Wiederholung',  S.wiederholung ? wiederholung(S.wiederholung) : '');
-nimm('wortschatz',   '🔤 Wortschatz',    wortschatz(S.wortschatz));
-nimm('konzepte',     S.konzepte && S.konzepte.tab || '⚖️ Unterschiede', S.konzepte ? konzepte(S.konzepte) : '');
 nimm('saetze',       '💬 Sätze',         S.saetze ? saetze(S.saetze) : '');
-nimm('dialoge',      '🎬 Dialoge',       S.dialoge ? dialoge(S.dialoge) : '');
+nimm('dialoge',      '🎬 Dialog',        S.dialoge ? dialoge(S.dialoge) : '');
 nimm('grammatik',    '🧩 Grammatik',     S.grammatik ? grammatik(S.grammatik) : '');
-nimm('rollenspiele', '🎭 Rollenspiele',  S.rollenspiele ? rollenspiele(S.rollenspiele) : '');
-nimm('challenge',    '⏱️ 90 Sekunden',   (S.daten.w90 && S.daten.w90.length) ? challenge(S.challenge) : '');
 nimm('ueben',        '✅ Üben',          ((S.daten.quiz && S.daten.quiz.length) || (S.daten.gap && S.daten.gap.length)) ? ueben(S.ueben) : '');
+nimm('challenge',    '⏱️ 90 Sekunden',   (S.daten.w90 && S.daten.w90.length) ? challenge(S.challenge) : '');
+nimm('debatte',      '⚖️ Debatte',       debatte(S));
+nimm('rollenspiele', '🎭 Rollenspiel',   S.rollenspiele ? rollenspiele(S.rollenspiele) : '');
 nimm('hausaufgabe',  '📮 Hausaufgabe',   S.hausaufgabe ? hausaufgabe(S.hausaufgabe) : '');
+nimm('abschluss',    '🎯 Abschluss',     abschluss());
 
 /* erster Abschnitt ist beim Laden markiert */
 const nav = `<nav class="tabs">\n` + abschnitte.map((a, i) =>

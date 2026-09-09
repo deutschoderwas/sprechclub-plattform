@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,105 +627,43 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B2<span class="zusatz"> · feiner</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">🎯 Vier Verben, zwei Fragen</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">Zwei Fragen, <span class="hl">und das Verb steht fest</span></h2>
-<p class="ssub">Stell dir eine Tasse auf dem Tisch vor. Wer sie <b>nimmt</b>, hat sie danach. Wer sie <b>gibt</b>, hat sie danach nicht mehr. Wer sie <b>bringt</b>, geht mit ihr dorthin, wo jemand anders ist. Und wer sie <b>holt</b>, geht dorthin und kommt mit ihr zurück. Vier Verben, zwei Fragen: Wer hat es danach — und in welche Richtung geht es?</p>
-<div class="scene-wrap klein"><img src="../amanda/sz-restaurant.webp" alt="Ein Kellner bringt einer Frau am Tisch etwas zu essen"></div>
-<ul class="qlist nur-a2">
-<li>Was hast du heute schon jemandem gegeben?</li>
-<li>Was musst du heute noch irgendwo abholen?</li>
-<li>Bringst du zu Besuch immer etwas mit?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Wo verwechselst du <i>bringen</i> und <i>holen</i> am häufigsten?</li>
-<li>Gibt es in deiner Sprache auch vier verschiedene Verben dafür?</li>
-<li>Welches der vier benutzt du im Alltag am meisten?</li>
-</ul>
-<div class="tip teal">🔑 <strong>Der Trick des Abends:</strong> Frag dich immer, <b>wo du am Ende bist</b>. Bleibst du dort, wo das Ding hingehört, heißt es <b>bringen</b>. Kommst du zurück, heißt es <b>holen</b>. Genau das ist der ganze Unterschied.</div>
-<h2 class="st">Und dann kommen <span class="hl">hin und her dazu</span></h2>
-<p class="ssub">An dieselben Verben hängt das Deutsche noch kleine Wörter, die nur eines sagen: die Richtung. <b>hin</b> heißt weg von mir, <b>her</b> heißt zu mir. Deshalb <i>Bring das bitte hin</i> und <i>Komm mal her</i>. Zusammen mit <i>ab-, mit-, weg-, zurück-</i> entstehen daraus die Verben, die du im Alltag ständig brauchst.</p>
-<div class="scene-wrap klein"><img src="../amanda/sz-lager.webp" alt="Ein Lagerarbeiter zieht einen Hubwagen mit Kartons durch ein Regallager"></div>
-<ul class="qlist nur-a2">
-<li>Wer holt bei euch die Pakete ab?</li>
-<li>Was nimmst du immer mit, wenn du aus dem Haus gehst?</li>
-<li>Was hast du zuletzt zurückgegeben?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Wann sagt man <i>herbringen</i> und wann <i>hinbringen</i>?</li>
-<li>Welche Vorsilbe fällt dir am schwersten: ab-, mit- oder weg-?</li>
-<li>Wie erklärst du jemandem den Unterschied zwischen <i>mitnehmen</i> und <i>abholen</i>?</li>
-</ul>
-<div class="tip">💡 <strong>Merksatz für heute:</strong> <b>hin</b> geht von mir weg, <b>her</b> kommt zu mir. Deshalb sagt man am Telefon <i>Kommst du her?</i>, wenn man selbst zu Hause ist — und <i>Ich komme hin</i>, wenn man losfährt.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
 </section>
 
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Verben <span class="hl">für alles, was den Besitzer wechselt</span></h2>
-<p class="ssub">Sag jedes Verb laut und häng sofort einen Satz an — mit einer Person und einem Ding. Genau daran erkennst du, ob du das richtige gewählt hast.</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../amanda/sz-handel.webp" alt="Zwei Menschen stehen in einem Laden, einer nimmt etwas aus dem Regal" loading="lazy"><div class="bb"><div class="bw">nehmen</div><div class="bex">„Ich nehme das grüne, das gefällt mir besser.“</div><div class="bti">💡 Stark und unregelmäßig: <i>ich nehme, du nimmst, genommen</i>. Und pass auf die Bedeutung auf: <b>nehmen</b> heißt oft auch <i>sich entscheiden für</i> — <i>Ich nehme einen Kaffee.</i></div><button class="speak" data-say="Ich nehme das grüne, das gefällt mir besser.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-cafe.webp" alt="Ein Barista reicht Amanda zwei Becher über die Theke" loading="lazy"><div class="bb"><div class="bw">geben</div><div class="bex">„Gibst du mir bitte kurz den Zettel?“</div><div class="bti">💡 Immer mit zwei Objekten: <b>jemandem</b> (Dativ) <b>etwas</b> (Akkusativ). Und die Form ändert sich: <i>ich gebe, du gibst, er gibt, gegeben</i>.</div><button class="speak" data-say="Gibst du mir bitte kurz den Zettel?">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-restaurant.webp" alt="Ein Kellner bringt einer Frau am Tisch etwas zu essen" loading="lazy"><div class="bb"><div class="bw">bringen</div><div class="bex">„Ich bringe dir das Buch morgen mit ins Büro.“</div><div class="bti">💡 Du gehst hin — und das Ding bleibt dort. Das Partizip ist unregelmäßig: <b>gebracht</b>. Nicht <i>gebringt</i>.</div><button class="speak" data-say="Ich bringe dir das Buch morgen mit ins Büro.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/paket.webp" alt="Ein Paket steht in einem Aufzug" loading="lazy"><div class="bb"><div class="bw">holen</div><div class="bex">„Ich hole schnell das Paket von unten.“</div><div class="bti">💡 Du gehst hin <u>und</u> kommst zurück — das ist der ganze Unterschied zu <b>bringen</b>. Regelmäßig: <i>geholt</i>.</div><button class="speak" data-say="Ich hole schnell das Paket von unten.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-lieferung.webp" alt="Ein mit Schnur verschnürtes Päckchen liegt im Flur auf einem Läufer" loading="lazy"><div class="bb"><div class="bw">abholen</div><div class="bex">„Ich hole das Päckchen morgen in der Filiale ab.“</div><div class="bti">💡 Trennbar, Partizip <b>abgeholt</b>. Man holt Dinge ab — und Menschen: <i>Ich hole dich vom Bahnhof ab.</i> Das ist einer der freundlichsten Sätze im Deutschen.</div><button class="speak" data-say="Ich hole das Päckchen morgen in der Filiale ab.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-sammelladung.webp" alt="Ein Lastwagen ist bis oben mit Kartons beladen" loading="lazy"><div class="bb"><div class="bw">mitnehmen</div><div class="bex">„Soll ich dir etwas vom Bäcker mitnehmen?“</div><div class="bti">💡 Trennbar: <i>ich nehme es mit</i>. Der Unterschied zu <b>abholen</b>: Beim Mitnehmen bist du sowieso unterwegs, beim Abholen fährst du extra hin.</div><button class="speak" data-say="Soll ich dir etwas vom Bäcker mitnehmen?">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-retoure.webp" alt="Ein verschlossener Karton mit einem Zettel obenauf" loading="lazy"><div class="bb"><div class="bw">zurückgeben</div><div class="bex">„Die Jacke gebe ich morgen zurück, sie passt nicht.“</div><div class="bti">💡 Trennbar, Partizip <b>zurückgegeben</b>. Im Laden sagt man dafür meist <b>umtauschen</b> — <i>zurückgeben</i> benutzt du eher bei Menschen, die dir etwas geliehen haben.</div><button class="speak" data-say="Die Jacke gebe ich morgen zurück, sie passt nicht.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-lieferschein.webp" alt="Ein geöffneter Karton mit einem Klemmbrett darauf" loading="lazy"><div class="bb"><div class="bw">übergeben</div><div class="bex">„Ich übergebe Ihnen die Unterlagen persönlich.“</div><div class="bti">💡 Untrennbar, Partizip ohne <i>ge-</i>: <b>übergeben</b>. Das förmliche Wort für <i>geben</i> — im Büro, bei Schlüsseln, bei einer Wohnung. Das Nomen ist <b>die Übergabe</b>.</div><button class="speak" data-say="Ich übergebe Ihnen die Unterlagen persönlich.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-lager.webp" alt="Ein Lagerarbeiter zieht einen Hubwagen mit Kartons durch ein Regallager" loading="lazy"><div class="bb"><div class="bw">liefern</div><div class="bex">„Der Schrank wird nächste Woche geliefert.“</div><div class="bti">💡 Regelmäßig: <b>geliefert</b>. Nomen: <b>die Lieferung</b>. Und die Frage, die du beim Kaufen immer stellen kannst: <i>Liefern Sie auch?</i></div><button class="speak" data-say="Der Schrank wird nächste Woche geliefert.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-kueche.webp" alt="Ein Koch in der Küche richtet einen Teller an" loading="lazy"><div class="bb"><div class="bw">reichen</div><div class="bex">„Reichst du mir bitte das Salz?“</div><div class="bti">💡 Am Tisch das höflichere <b>geben</b>. Zweite Bedeutung, ganz anders: <i>Das reicht</i> heißt <b>das ist genug</b> — mit demselben Verb.</div><button class="speak" data-say="Reichst du mir bitte das Salz?">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-verkaufen.webp" alt="Eine Frau kniet vor Kleidung und einem Karton und tippt auf dem Handy" loading="lazy"><div class="bb"><div class="bw">weggeben</div><div class="bex">„Die Sachen gebe ich weg, ich trage sie sowieso nicht.“</div><div class="bti">💡 Trennbar: <i>ich gebe es weg</i>. Der Unterschied zu <b>wegwerfen</b>: Beim Weggeben bekommt es jemand anders, beim Wegwerfen niemand.</div><button class="speak" data-say="Die Sachen gebe ich weg, ich trage sie sowieso nicht.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-wareneingang.webp" alt="Ein Regal, in dem Kartons und Kisten stehen" loading="lazy"><div class="bb"><div class="bw">hinstellen</div><div class="bex">„Stell die Kiste einfach da hinten hin.“</div><div class="bti">💡 Trennbar, mit <b>hin</b> — also weg von mir. Kommt es zu mir, heißt es <b>herstellen</b>? Nein, Vorsicht: <i>herstellen</i> heißt <b>produzieren</b>. Für <i>hierher stellen</i> sagt man einfach <b>hierhin stellen</b>.</div><button class="speak" data-say="Stell die Kiste einfach da hinten hin.">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel „Wer hat es danach?“:</strong> Einer nennt eine Situation (<i>Das Buch liegt bei dir, ich brauche es</i>), der andere baut den passenden Satz mit einem der vier Verben. Wer <i>bringen</i> und <i>holen</i> vertauscht, gibt weiter.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Wer hat es danach — <span class="hl">und wohin geht es?</span></h2>
-<p class="ssub">Alle vier Verben beschreiben dieselbe Bewegung, nur aus einer anderen Perspektive. Sobald du weißt, wo du am Ende stehst und wer die Sache dann hat, gibt es nur noch eine mögliche Antwort.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">🤲</span><div class="gmw">nehmen ⇄ geben</div><div class="gmb">wer hat es danach?</div><div class="gmx">Ich nehme es. / Ich gebe es dir.</div></div>
-<div class="gk blau"><span class="gem2">➡️</span><div class="gmw">bringen</div><div class="gmb">ich gehe hin, es bleibt dort</div><div class="gmx">Ich bringe dir das Buch.</div></div>
-<div class="gk ja"><span class="gem2">🔄</span><div class="gmw">holen</div><div class="gmb">ich gehe hin und komme zurück</div><div class="gmx">Ich hole das Buch bei dir.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So ist es richtig</div><div class="gsatz">Ich bringe dir morgen das Buch mit ins Büro.</div><div class="bsp"><span class="wer">Warum das stimmt</span>Du gehst dorthin, wo der andere ist, und das Buch bleibt bei ihm. Das ist genau <b>bringen</b> — die Richtung geht von dir weg, zum anderen hin.</div></div>
-<div class="gk no"><div class="gkl">❌ So kippt die Bedeutung</div><div class="gsatz">Ich hole dir morgen das Buch ins Büro.</div><div class="bsp"><span class="wer">Das Problem</span><b>holen</b> heißt: Du gehst irgendwohin und kommst mit dem Buch <u>zurück</u>. Der Satz sagt also, dass du es aus dem Büro wieder mitnimmst — das Gegenteil von dem, was gemeint war.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So ist es richtig</div><div class="gsatz">Kannst du mir bitte einen Kaffee mitbringen?</div><div class="bsp"><span class="wer">Warum das stimmt</span>Der andere ist sowieso unterwegs und nimmt den Kaffee <b>mit</b>, wenn er zurückkommt. <i>Mitbringen</i> ist die freundlichste Bitte, die es gibt — sie macht niemandem extra Arbeit.</div></div>
-<div class="gk no"><div class="gkl">❌ So kippt die Bedeutung</div><div class="gsatz">Kannst du mir bitte einen Kaffee abholen?</div><div class="bsp"><span class="wer">Das Problem</span><b>abholen</b> heißt, dass jemand <u>extra</u> irgendwohin fährt. Aus einer kleinen Bitte wird dadurch ein Auftrag — und genau so hört es der andere auch.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So ist es richtig</div><div class="gsatz">Reichst du mir bitte das Salz?</div><div class="bsp"><span class="wer">Warum das stimmt</span>Am Tisch, über kurze Distanz, von Hand zu Hand: <b>reichen</b>. Es klingt höflicher als <i>geben</i> und ist der Standardsatz bei jedem Essen in Deutschland.</div></div>
-<div class="gk no"><div class="gkl">❌ So klingt es schräg</div><div class="gsatz">Bringst du mir bitte das Salz?</div><div class="bsp"><span class="wer">Das Problem</span>Verstanden wird es. Aber <b>bringen</b> setzt einen Weg voraus — der andere müsste aufstehen. Am selben Tisch wirkt das, als wäre er das Personal.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 bringen oder holen — wie entscheide ich?</button>
-<div class="inhalt">
-<p>Zwei Fragen, mehr brauchst du nicht:</p>
-<ul>
-<li><b>Wo bin ich am Ende?</b> Dort, wo das Ding hingehört → <b>bringen</b>. Wieder hier → <b>holen</b>.</li>
-<li><b>Wer hat es danach?</b> Der andere → <b>geben</b> oder <b>bringen</b>. Ich → <b>nehmen</b> oder <b>holen</b>.</li>
-<li><b>Bin ich sowieso unterwegs?</b> Dann <b>mitbringen</b> statt <b>abholen</b>.</li>
-<li><b>Gehört es jemandem?</b> Dann <b>zurückgeben</b> statt einfach <i>geben</i>.</li>
-</ul>
-<p style="margin-top:.5rem;">Ein Satz, an dem du alle vier gleichzeitig prüfst: <b>„Ich hole das Paket bei der Nachbarin und bringe es dir morgen mit — dann kannst du es nehmen und musst nichts zurückgeben.“</b> Wenn dieser Satz für dich Sinn ergibt, sitzt der Unterschied.</p>
-</div>
-</div>
-<div class="tip">🎯 <strong>Zu zweit, eine Minute:</strong> Einer nennt ein Ding und einen Ort (<i>der Schlüssel, bei deiner Mutter</i>), der andere baut zwei Sätze — einen mit <b>holen</b>, einen mit <b>bringen</b> — und erklärt, was sich dadurch ändert.</div>
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Was hast du heute schon jemandem gegeben?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Was musst du heute noch irgendwo abholen?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -808,37 +816,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
-<p class="ssub">Einer bittet, einer bietet an — oder umgekehrt. Danach tauschen, beim zweiten Mal ohne die Sätze unten. Regel: In jeder Runde mindestens drei verschiedene Verben von heute.</p>
-<div class="rmcard">
-<b>1 · Das Paket organisieren</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A erwartet ein Paket, ist aber den ganzen Tag außer Haus. B wohnt nebenan und ist da. Klärt gemeinsam, wer was wann macht.</p>
-<div class="nur-a2"><span class="rm">Kannst du das Paket für mich annehmen?</span><span class="rm">Ich hole es abends bei dir ab</span><span class="rm">Soll ich dir etwas mitbringen?</span><span class="rm">Danke, das ist lieb von dir</span></div>
-<div class="nur-b1"><span class="rm">Ich nehme es gern an, ich bin sowieso zu Hause</span><span class="rm">Wenn es dir lieber ist, bringe ich es dir abends vorbei</span><span class="rm">Gib mir kurz Bescheid, sobald du zurück bist</span><span class="rm">Beim nächsten Mal bringe ich dir etwas mit, versprochen</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide haben gesagt, wo sie am Ende sind — und deshalb die richtigen Verben benutzt. Es kam mindestens einmal <i>abholen</i> und einmal <i>vorbeibringen</i> vor, und am Ende war klar, wer was tut.</div>
-</div>
-<div class="rmcard">
-<b>2 · Geliehen und vergessen</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B hat sich vor Wochen etwas geliehen und nie zurückgegeben. A spricht es an — freundlich, ohne Vorwurf.</p>
-<div class="nur-a2"><span class="rm">Hast du noch meine Bohrmaschine?</span><span class="rm">Kannst du sie mir mitbringen?</span><span class="rm">Ich hole sie auch gern ab</span><span class="rm">Kein Stress, wann es dir passt</span></div>
-<div class="nur-b1"><span class="rm">Stimmt, die steht noch bei mir — ich hatte sie ganz vergessen</span><span class="rm">Ich bringe sie dir am Wochenende vorbei</span><span class="rm">Oder ich lege sie dir in den Keller, falls du nicht da bist</span><span class="rm">Danke fürs Erinnern, das war mir peinlich</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat nachgefragt, ohne Vorwurf, und B hat sofort einen konkreten Weg genannt — mit <i>vorbeibringen</i> oder <i>zurückgeben</i>. Am Ende stand ein Termin, keine Entschuldigung.</div>
-</div>
-<div class="rmcard">
-<b>3 · Der große Einkauf</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat viel gekauft und bekommt es allein nicht nach Hause. B überlegt mit: liefern lassen, mitnehmen oder später abholen?</p>
-<div class="nur-a2"><span class="rm">Liefern Sie das auch?</span><span class="rm">Ich nehme das Kleine gleich mit</span><span class="rm">Das Große hole ich morgen ab</span><span class="rm">Wann kann ich es abholen?</span></div>
-<div class="nur-b1"><span class="rm">Wissen Sie, ob Sie auch nach Hagen liefern?</span><span class="rm">Das Kleine nehme ich direkt mit, das Große lasse ich hier</span><span class="rm">Könnte ich es am Samstag abholen, oder ist dann geschlossen?</span><span class="rm">Wenn die Lieferung zu teuer ist, komme ich lieber noch einmal vorbei</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat zwischen <i>liefern</i>, <i>mitnehmen</i> und <i>abholen</i> unterschieden und jedes Mal begründet, warum. B konnte deshalb sofort sagen, was geht.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Einer nennt reihum eine Situation (<i>Der Schlüssel liegt bei mir, du brauchst ihn</i>), der Nachbar sagt sofort den passenden Satz — und dazu, ob er am Ende dort bleibt oder zurückkommt. Wer <i>bringen</i> und <i>holen</i> vertauscht, gibt weiter.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -871,14 +856,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde müssen <u>alle vier Grundverben</u> und <u>mindestens zwei Vorsilben</u> vorkommen. Wer eins vergisst, bekommt eine zweite Runde.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Einer nennt reihum eine Situation (<i>Der Schlüssel liegt bei mir, du brauchst ihn</i>), der Nachbar sagt sofort den passenden Satz — und dazu, ob er am Ende dort bleibt oder zurückkommt. Wer <i>bringen</i> und <i>holen</i> vertauscht, gibt weiter.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Wo verwechselst du <i>bringen</i> und <i>holen</i> am häufigsten?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Gibt es in deiner Sprache auch vier verschiedene Verben dafür?</li><li>Welches der vier benutzt du im Alltag am meisten?</li><li>Wann sagt man <i>herbringen</i> und wann <i>hinbringen</i>?</li><li>Welche Vorsilbe fällt dir am schwersten: ab-, mit- oder weg-?</li><li>Wie erklärst du jemandem den Unterschied zwischen <i>mitnehmen</i> und <i>abholen</i>?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
+<p class="ssub">Einer bittet, einer bietet an — oder umgekehrt. Danach tauschen, beim zweiten Mal ohne die Sätze unten. Regel: In jeder Runde mindestens drei verschiedene Verben von heute.</p>
+<div class="rmcard">
+<b>1 · Das Paket organisieren</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A erwartet ein Paket, ist aber den ganzen Tag außer Haus. B wohnt nebenan und ist da. Klärt gemeinsam, wer was wann macht.</p>
+<div class="nur-a2"><span class="rm">Kannst du das Paket für mich annehmen?</span><span class="rm">Ich hole es abends bei dir ab</span><span class="rm">Soll ich dir etwas mitbringen?</span><span class="rm">Danke, das ist lieb von dir</span></div>
+<div class="nur-b1"><span class="rm">Ich nehme es gern an, ich bin sowieso zu Hause</span><span class="rm">Wenn es dir lieber ist, bringe ich es dir abends vorbei</span><span class="rm">Gib mir kurz Bescheid, sobald du zurück bist</span><span class="rm">Beim nächsten Mal bringe ich dir etwas mit, versprochen</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide haben gesagt, wo sie am Ende sind — und deshalb die richtigen Verben benutzt. Es kam mindestens einmal <i>abholen</i> und einmal <i>vorbeibringen</i> vor, und am Ende war klar, wer was tut.</div>
+</div>
+<div class="rmcard">
+<b>2 · Geliehen und vergessen</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B hat sich vor Wochen etwas geliehen und nie zurückgegeben. A spricht es an — freundlich, ohne Vorwurf.</p>
+<div class="nur-a2"><span class="rm">Hast du noch meine Bohrmaschine?</span><span class="rm">Kannst du sie mir mitbringen?</span><span class="rm">Ich hole sie auch gern ab</span><span class="rm">Kein Stress, wann es dir passt</span></div>
+<div class="nur-b1"><span class="rm">Stimmt, die steht noch bei mir — ich hatte sie ganz vergessen</span><span class="rm">Ich bringe sie dir am Wochenende vorbei</span><span class="rm">Oder ich lege sie dir in den Keller, falls du nicht da bist</span><span class="rm">Danke fürs Erinnern, das war mir peinlich</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat nachgefragt, ohne Vorwurf, und B hat sofort einen konkreten Weg genannt — mit <i>vorbeibringen</i> oder <i>zurückgeben</i>. Am Ende stand ein Termin, keine Entschuldigung.</div>
+</div>
+<div class="rmcard">
+<b>3 · Der große Einkauf</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat viel gekauft und bekommt es allein nicht nach Hause. B überlegt mit: liefern lassen, mitnehmen oder später abholen?</p>
+<div class="nur-a2"><span class="rm">Liefern Sie das auch?</span><span class="rm">Ich nehme das Kleine gleich mit</span><span class="rm">Das Große hole ich morgen ab</span><span class="rm">Wann kann ich es abholen?</span></div>
+<div class="nur-b1"><span class="rm">Wissen Sie, ob Sie auch nach Hagen liefern?</span><span class="rm">Das Kleine nehme ich direkt mit, das Große lasse ich hier</span><span class="rm">Könnte ich es am Samstag abholen, oder ist dann geschlossen?</span><span class="rm">Wenn die Lieferung zu teuer ist, komme ich lieber noch einmal vorbei</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat zwischen <i>liefern</i>, <i>mitnehmen</i> und <i>abholen</i> unterschieden und jedes Mal begründet, warum. B konnte deshalb sofort sagen, was geht.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -944,6 +963,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Sprachnachricht und die zehn Sätze bis Mittwochabend in den Chat. Ich höre alles an und schreibe dir zurück, wo <i>bringen</i> und <i>holen</i> noch kippen.</div>
 <div class="tip">🔜 <strong>Am Donnerstag, Teil 2:</strong> <u>in Kauf nehmen, Bescheid geben, zur Sprache bringen.</u> Dieselben vier Verben — nur bewegen sie dann keine Pakete mehr, sondern Entscheidungen, Informationen und Themen.</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1130,11 +1156,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1191,7 +1224,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1201,7 +1236,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

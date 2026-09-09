@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,105 +627,43 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B1<span class="zusatz"> · mehr</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">⚖️ Drei Arten zu garen</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">Dein Gericht <span class="hl">in dreißig Sekunden</span></h2>
-<p class="ssub">Denk an ein Essen, das du wirklich kochen kannst — ohne nachzuschauen. Die meisten sagen den Namen und dann: „Ja, das ist halt … lecker.“ Heute füllen wir die Lücke zwischen dem Namen und dem Teller.</p>
-<div class="scene-wrap klein"><img src="../amanda/sz-kochen.webp" alt="Amanda rührt mit einem Löffel in einem Topf in der Küche"></div>
-<ul class="qlist nur-a2">
-<li>Was kochst du am häufigsten?</li>
-<li>Wie viele Zutaten brauchst du dafür?</li>
-<li>Wie lange dauert es ungefähr?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Welches Gericht aus deiner Heimat würde hier niemand kennen?</li>
-<li>Was ist der Schritt, bei dem am meisten schiefgehen kann?</li>
-<li>Kochst du nach Rezept oder nach Gefühl — und warum?</li>
-</ul>
-<div class="tip teal">🔑 <strong>Die Formel für heute:</strong> <b>Reihenfolgewort + Menge + Zutat + Handlung.</b> <i>„Zuerst schneide ich zwei Tomaten klein.“</i> Wenn diese vier Teile drin sind, kann dir jemand folgen — mehr braucht ein Rezept nicht.</div>
-<h2 class="st">Warum das <span class="hl">mehr als Kochen ist</span></h2>
-<p class="ssub">Ein Rezept erklären ist die Übung für alles, was in einer Reihenfolge passiert: einen Weg beschreiben, einen Antrag ausfüllen, jemandem zeigen, wie ein Gerät funktioniert. Wer <i>zuerst, dann, danach, zum Schluss</i> sicher benutzt, wird überall verstanden.</p>
-<div class="scene-wrap klein"><img src="../amanda/sz-kueche.webp" alt="Eine Person kocht in einer Küche am Herd"></div>
-<ul class="qlist nur-a2">
-<li>Hat dir schon mal jemand etwas auf Deutsch erklärt und du hast nichts verstanden?</li>
-<li>Erklärst du lieber mit Worten oder zeigst du es?</li>
-<li>Wem hast du zuletzt etwas beigebracht?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Woran merkst du, dass eine Erklärung zu schnell war?</li>
-<li>Was hilft mehr: mehr Wörter oder eine klarere Reihenfolge?</li>
-<li>Gibt es in deiner Sprache eine eigene „Rezeptsprache“?</li>
-</ul>
-<div class="tip">💡 <strong>Erinnerst du dich an Woche 1?</strong> Da haben wir Mengen beim Einkaufen geübt: <i>ein Kilo, eine Flasche, 200 Gramm.</i> Heute kommen die Mengen dazu, die man in der Küche braucht: <b>eine Scheibe, ein Stück, eine Packung, eine Portion.</b> Dieselbe Regel wie damals — nach der Menge kommt kein Artikel: <i>zwei Scheiben Brot</i>, nicht <i>zwei Scheiben das Brot</i>.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
 </section>
 
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Wörter <span class="hl">für Küche und Menge</span></h2>
-<p class="ssub">Sagt jedes Wort laut — <u>mit Artikel</u>. Und gleich einen Satz hinterher: Wann brauchst du dieses Wort in deiner Küche?</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../vok-bild/die-tomate-die-tomaten.webp" alt="Frische Tomaten auf einem Schneidebrett" loading="lazy"><div class="bb"><div class="bw">schneiden</div><div class="bex">„Ich schneide die Tomaten in kleine Stücke.“</div><div class="bti">💡 Wie klein? Das sagst du dahinter: <b>in Scheiben</b>, <b>in Würfel</b>, <b>klein</b>, <b>grob</b>. <i>Schneide die Zwiebel klein.</i></div><button class="speak" data-say="Ich schneide die Tomaten in kleine Stücke.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/das-oel.webp" alt="Öl wird aus einer Flasche in eine Pfanne auf dem Herd gegossen" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Pfanne</div><div class="bex">„Gib etwas Öl in die Pfanne.“</div><div class="bti">💡 Merke dir das Paar: <b>in die Pfanne</b> (Wohin? etwas kommt hinein) und <b>in der Pfanne</b> (Wo? es liegt schon drin). <i>Das Ei ist in der Pfanne.</i></div><button class="speak" data-say="Gib etwas Öl in die Pfanne.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-kochen.webp" alt="Amanda rührt mit einem Löffel in einem Topf" loading="lazy"><div class="bb"><div class="bw">rühren</div><div class="bex">„Rühr bitte kurz um, sonst brennt es an.“</div><div class="bti">💡 Meistens hörst du es mit einer Vorsilbe: <b>umrühren</b> (kurz bewegen), <b>einrühren</b> (etwas hineingeben und mischen). Beide sind trennbar: <i>Ich rühre um.</i></div><button class="speak" data-say="Rühr bitte kurz um, sonst brennt es an.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-kueche.webp" alt="Eine Person kocht in einer Küche am Herd" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Herd</div><div class="bex">„Der Topf steht schon auf dem Herd.“</div><div class="bti">💡 Nicht verwechseln: <b>der Herd</b> ist oben zum Kochen, <b>der Ofen</b> ist darunter zum Backen. Und <b>die Küche</b> ist der ganze Raum.</div><button class="speak" data-say="Der Topf steht schon auf dem Herd.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-suppe.webp" alt="Eine Gemüsesuppe mit Karotten und Kartoffeln in einer Schale" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Gemüse</div><div class="bex">„In die Suppe kommt viel frisches Gemüse.“</div><div class="bti">💡 <b>Das Gemüse</b> gibt es fast nur im Singular — auch wenn zehn Sorten drin sind. Genau wie <b>das Obst</b>. Man sagt nicht <i>die Gemüse</i>.</div><button class="speak" data-say="In die Suppe kommt viel frisches Gemüse.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-salat.webp" alt="Eine Schüssel mit frischem Salat" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Schüssel</div><div class="bex">„Gib den Salat in eine große Schüssel.“</div><div class="bti">💡 Drei Größen, die oft verwechselt werden: <b>die Schüssel</b> (groß, zum Mischen), <b>die Schale</b> (kleiner, für eine Person), <b>der Teller</b> (flach).</div><button class="speak" data-say="Gib den Salat in eine große Schüssel.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/das-mittagessen.webp" alt="Ein Teller mit Kartoffeln, Würstchen und Gemüse" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Beilage</div><div class="bex">„Als Beilage gibt es Kartoffeln und Gemüse.“</div><div class="bti">💡 Typische Beilagen in Deutschland: <b>Kartoffeln, Reis, Nudeln, Salat.</b> Im Restaurant hörst du: <i>Was möchten Sie als Beilage?</i></div><button class="speak" data-say="Als Beilage gibt es Kartoffeln und Gemüse.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-nudeln.webp" alt="Eine Schüssel mit Nudeln auf einem Tisch" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Portion</div><div class="bex">„Das Rezept reicht für vier Portionen.“</div><div class="bti">💡 Fast jedes Rezept fängt so an: <i>Zutaten <b>für vier Portionen</b>.</i> Willst du für zwei kochen, nimmst du die Hälfte — <i>Ich halbiere das Rezept.</i></div><button class="speak" data-say="Das Rezept reicht für vier Portionen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/einkaufen.webp" alt="Eine Frau nimmt im Supermarkt eine Packung aus dem Regal" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Packung</div><div class="bex">„Nimm bitte eine Packung Nudeln mit.“</div><div class="bti">💡 Nach der Menge kommt <u>kein Artikel</u>: <b>eine Packung Nudeln</b>, nicht <i>eine Packung die Nudeln</i>. Genauso: eine Flasche Öl, ein Becher Sahne.</div><button class="speak" data-say="Nimm bitte eine Packung Nudeln mit.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/das-abendessen.webp" alt="Brot, Wurst und Käse in Scheiben auf einem Holzbrett" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Scheibe</div><div class="bex">„Ich nehme zwei Scheiben Brot.“</div><div class="bti">💡 Für alles, was man flach schneidet: <b>eine Scheibe Brot, Käse, Wurst, Zitrone.</b> Der Plural ist <b>Scheiben</b> — und dahinter steht die Sache ohne Artikel.</div><button class="speak" data-say="Ich nehme zwei Scheiben Brot.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-kaese.webp" alt="Verschiedene Käsesorten auf einem Holzbrett" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Stück</div><div class="bex">„Schneid mir bitte ein Stück Käse ab.“</div><div class="bti">💡 Nach einer Zahl bleibt <b>Stück</b> im Singular: <i>drei <b>Stück</b> Kuchen</i>, nicht <i>drei Stücke Kuchen</i>. So ist es bei allen Maßen: zwei Kilo, drei Glas.</div><button class="speak" data-say="Schneid mir bitte ein Stück Käse ab.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/guten-appetit.webp" alt="Eine Gruppe sitzt beim Essen am gedeckten Tisch" loading="lazy"><div class="bb"><div class="bw">schmecken</div><div class="bex">„Das schmeckt wirklich gut.“</div><div class="bti">💡 Achtung, anderer Bau als in vielen Sprachen: <b>Das Essen schmeckt mir.</b> Das Essen ist das Subjekt, du stehst im Dativ — genau wie bei <i>gefallen</i>.</div><button class="speak" data-say="Das schmeckt wirklich gut.">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel „Was fehlt noch?“:</strong> Einer nennt ein Gericht — <i>Kartoffelsalat.</i> Reihum sagt jeder eine Zutat <u>mit Menge</u>: <i>ein Kilo Kartoffeln, zwei Zwiebeln, drei Esslöffel Öl.</i> Wer eine Menge vergisst oder einen Artikel dahinter setzt, scheidet aus.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Kochen, braten, <span class="hl">backen — was denn nun?</span></h2>
-<p class="ssub">Im Wörterbuch steht bei allen dreien so etwas wie „Essen heiß machen“. In der Küche sind es drei ganz verschiedene Dinge — und man hört sofort, wenn jemand das falsche Wort nimmt.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">💧</span><div class="gmw">kochen</div><div class="gmb">in Wasser, im Topf — es blubbert</div><div class="gmx">Ich koche die Kartoffeln zwanzig Minuten.</div></div>
-<div class="gk blau"><span class="gem2">🍳</span><div class="gmw">braten</div><div class="gmb">in Fett, in der Pfanne — es zischt</div><div class="gmx">Ich brate das Gemüse kurz an.</div></div>
-<div class="gk ja"><span class="gem2">🔥</span><div class="gmw">backen</div><div class="gmb">trockene Hitze, im Ofen — nichts bewegt sich</div><div class="gmx">Der Kuchen backt vierzig Minuten im Ofen.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Ich brate die Zwiebeln in der Pfanne an.</div><div class="bsp"><span class="wer">Warum das stimmt</span>In der Pfanne mit Fett heißt <b>braten</b>. Und mit der Vorsilbe <b>an-</b>: kurz und nur von außen. Genau das macht man mit Zwiebeln.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Ich koche die Zwiebeln in der Pfanne an.</div><div class="bsp"><span class="wer">Das Problem</span><i>kochen</i> geht nur mit Wasser im Topf. In einer Pfanne mit Öl kocht nichts — da fehlt die Flüssigkeit.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Das Wasser kocht schon.</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>kochen</b> kann beides: was <i>du</i> tust und was das Wasser tut. <i>Ich koche Nudeln</i> — und <i>das Wasser kocht.</i></div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Das Wasser backt schon.</div><div class="bsp"><span class="wer">Das Problem</span><i>backen</i> braucht trockene Hitze im Ofen. Wasser kann nie backen — es kocht.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Ich mache uns schnell etwas zu essen.</div><div class="bsp"><span class="wer">Warum das stimmt</span>Wenn du nicht sagen willst <i>wie</i>, nimm <b>machen</b>. Das ist im Alltag sehr häufig und immer richtig.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Ich koche uns schnell ein Brot.</div><div class="bsp"><span class="wer">Das Problem</span>Ein Brot wird nicht gekocht. Sag <b>machen</b> oder genauer: <i>Ich schmiere uns ein Brot.</i></div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Wie merke ich mir, welches Wort passt?</button>
-<div class="inhalt">
-<p>Frag nicht nach dem Essen, frag nach dem Gerät:</p>
-<ul>
-<li><b>Topf mit Wasser?</b> → kochen. <i>Nudeln kochen, Eier kochen.</i></li>
-<li><b>Pfanne mit Öl?</b> → braten. <i>Fleisch braten, Gemüse anbraten.</i></li>
-<li><b>Ofen, Tür zu?</b> → backen. <i>Brot backen, Kuchen backen.</i></li>
-<li><b>Weißt du es nicht?</b> → machen. <i>Ich mache Abendessen.</i> Das geht immer.</li>
-</ul>
-<p style="margin-top:.5rem;">Ein Satz mit allen dreien zum Auswendiglernen: <b>Ich koche die Nudeln, brate das Gemüse und backe morgen einen Kuchen.</b></p>
-</div>
-</div>
-<div class="tip">🎯 <strong>Zu zweit, eine Minute:</strong> Einer nennt ein Lebensmittel — <i>Ei, Kartoffel, Fisch, Brot, Apfel.</i> Der andere sagt sofort alle Arten, wie man es zubereiten kann: <i>Ein Ei kann man kochen oder braten — aber nicht backen.</i></div>
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Was kochst du am häufigsten?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Wie viele Zutaten brauchst du dafür?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -816,37 +824,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
-<p class="ssub">Einer erklärt, einer fragt nach. Danach tauschen — und beim zweiten Mal ohne Notizen.</p>
-<div class="rmcard">
-<b>1 · Das Rezept am Telefon</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A steht in der Küche und will heute Abend kochen. B erklärt sein Lieblingsgericht Schritt für Schritt am Telefon. A darf nichts aufschreiben und muss dreimal nachfragen.</p>
-<div class="nur-a2"><span class="rm">Womit fange ich an?</span><span class="rm">Wie viel brauche ich davon?</span><span class="rm">Wie lange muss das kochen?</span><span class="rm">Und was kommt dann?</span></div>
-<div class="nur-b1"><span class="rm">Woran merke ich, dass es fertig ist?</span><span class="rm">Was mache ich, wenn ich das nicht bekomme?</span><span class="rm">Geht das auch ohne Ofen?</span><span class="rm">Kann man das vorbereiten?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat alle vier Reihenfolgewörter benutzt und jede Zutat mit einer Menge genannt. A könnte das Gericht danach wirklich kochen.</div>
-</div>
-<div class="rmcard">
-<b>2 · Einkaufen für zwei Gerichte</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Ihr wollt gemeinsam kochen, habt aber nur zwanzig Euro. A hat den Zettel, B den Wagen. Ihr müsst euch bei jeder Zutat auf eine Menge einigen.</p>
-<div class="nur-a2"><span class="rm">Wie viel nehmen wir davon?</span><span class="rm">Eine Packung reicht, oder?</span><span class="rm">Das ist zu teuer</span><span class="rm">Haben wir das nicht zu Hause?</span></div>
-<div class="nur-b1"><span class="rm">Lass uns lieber die größere Packung nehmen</span><span class="rm">Das lohnt sich nur, wenn wir es aufbrauchen</span><span class="rm">Statt Käse nehmen wir …</span><span class="rm">Damit kommen wir hin</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Jede Zutat wurde mit einer Mengenangabe genannt — und nach der Menge kam nie ein Artikel. Am Ende steht ein Einkauf, der wirklich in zwanzig Euro passt.</div>
-</div>
-<div class="rmcard">
-<b>3 · Der Gast in der Küche</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A kocht, B will helfen und weiß nicht wie. A gibt Anweisungen im Imperativ, B fragt bei jedem Schritt genau nach — B ist nämlich sehr vorsichtig.</p>
-<div class="nur-a2"><span class="rm">Schneide bitte die Tomaten</span><span class="rm">Gib das Öl in die Pfanne</span><span class="rm">Rühr einmal um</span><span class="rm">Wie klein soll ich sie schneiden?</span></div>
-<div class="nur-b1"><span class="rm">Pass auf, dass nichts anbrennt</span><span class="rm">Lass es noch fünf Minuten ziehen</span><span class="rm">Probier mal, ob genug Salz drin ist</span><span class="rm">Soll ich warten, bis es kocht?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat mindestens fünf Anweisungen im Imperativ gegeben, B hat jedes Mal mit einer echten Frage nachgehakt. Beide haben mindestens drei trennbare Verben benutzt.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Jeder nennt reihum eine Zutat. Der Nachbar sagt sofort einen Satz mit Menge und Handlung — <i>„Zwei Zwiebeln schneide ich klein.“</i> Wer zögert oder die Menge vergisst, gibt weiter.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -879,14 +864,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde müssen mindestens <u>drei Mengenangaben</u> und <u>alle vier Reihenfolgewörter</u> vorkommen. Der Partner zählt mit und hebt bei jedem Treffer einen Finger.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Jeder nennt reihum eine Zutat. Der Nachbar sagt sofort einen Satz mit Menge und Handlung — <i>„Zwei Zwiebeln schneide ich klein.“</i> Wer zögert oder die Menge vergisst, gibt weiter.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Welches Gericht aus deiner Heimat würde hier niemand kennen?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Was ist der Schritt, bei dem am meisten schiefgehen kann?</li><li>Kochst du nach Rezept oder nach Gefühl — und warum?</li><li>Woran merkst du, dass eine Erklärung zu schnell war?</li><li>Was hilft mehr: mehr Wörter oder eine klarere Reihenfolge?</li><li>Gibt es in deiner Sprache eine eigene „Rezeptsprache“?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
+<p class="ssub">Einer erklärt, einer fragt nach. Danach tauschen — und beim zweiten Mal ohne Notizen.</p>
+<div class="rmcard">
+<b>1 · Das Rezept am Telefon</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A steht in der Küche und will heute Abend kochen. B erklärt sein Lieblingsgericht Schritt für Schritt am Telefon. A darf nichts aufschreiben und muss dreimal nachfragen.</p>
+<div class="nur-a2"><span class="rm">Womit fange ich an?</span><span class="rm">Wie viel brauche ich davon?</span><span class="rm">Wie lange muss das kochen?</span><span class="rm">Und was kommt dann?</span></div>
+<div class="nur-b1"><span class="rm">Woran merke ich, dass es fertig ist?</span><span class="rm">Was mache ich, wenn ich das nicht bekomme?</span><span class="rm">Geht das auch ohne Ofen?</span><span class="rm">Kann man das vorbereiten?</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat alle vier Reihenfolgewörter benutzt und jede Zutat mit einer Menge genannt. A könnte das Gericht danach wirklich kochen.</div>
+</div>
+<div class="rmcard">
+<b>2 · Einkaufen für zwei Gerichte</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Ihr wollt gemeinsam kochen, habt aber nur zwanzig Euro. A hat den Zettel, B den Wagen. Ihr müsst euch bei jeder Zutat auf eine Menge einigen.</p>
+<div class="nur-a2"><span class="rm">Wie viel nehmen wir davon?</span><span class="rm">Eine Packung reicht, oder?</span><span class="rm">Das ist zu teuer</span><span class="rm">Haben wir das nicht zu Hause?</span></div>
+<div class="nur-b1"><span class="rm">Lass uns lieber die größere Packung nehmen</span><span class="rm">Das lohnt sich nur, wenn wir es aufbrauchen</span><span class="rm">Statt Käse nehmen wir …</span><span class="rm">Damit kommen wir hin</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Jede Zutat wurde mit einer Mengenangabe genannt — und nach der Menge kam nie ein Artikel. Am Ende steht ein Einkauf, der wirklich in zwanzig Euro passt.</div>
+</div>
+<div class="rmcard">
+<b>3 · Der Gast in der Küche</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A kocht, B will helfen und weiß nicht wie. A gibt Anweisungen im Imperativ, B fragt bei jedem Schritt genau nach — B ist nämlich sehr vorsichtig.</p>
+<div class="nur-a2"><span class="rm">Schneide bitte die Tomaten</span><span class="rm">Gib das Öl in die Pfanne</span><span class="rm">Rühr einmal um</span><span class="rm">Wie klein soll ich sie schneiden?</span></div>
+<div class="nur-b1"><span class="rm">Pass auf, dass nichts anbrennt</span><span class="rm">Lass es noch fünf Minuten ziehen</span><span class="rm">Probier mal, ob genug Salz drin ist</span><span class="rm">Soll ich warten, bis es kocht?</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat mindestens fünf Anweisungen im Imperativ gegeben, B hat jedes Mal mit einer echten Frage nachgehakt. Beide haben mindestens drei trennbare Verben benutzt.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -952,6 +971,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Sprachnachricht und den Einkaufszettel bis Dienstagabend. Ich höre alles an und schicke dir zurück, an welcher Stelle jemand beim Nachkochen ins Stocken käme.</div>
 <div class="tip">🔜 <strong>Am Mittwoch, Teil 2:</strong> <u>Im Restaurant bestellen und reklamieren.</u> Du bestellst, fragst nach Zutaten — und sagst höflich, aber deutlich, wenn etwas nicht stimmt. Die Mengen und Zutaten von heute brauchst du dort wieder.</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1138,11 +1164,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1199,7 +1232,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1209,7 +1244,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

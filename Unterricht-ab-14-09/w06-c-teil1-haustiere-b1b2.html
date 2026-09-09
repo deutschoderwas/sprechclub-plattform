@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,105 +627,43 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B2<span class="zusatz"> · feiner</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">⚖️ Drei Arten von Einwand</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">Ein Hund zieht ein — <span class="hl">wer muss eigentlich gefragt werden?</span></h2>
-<p class="ssub">Stell dir vor, du möchtest einen Hund. Die Wohnung ist gemietet, im Treppenhaus wohnen fünf Parteien, und im Mietvertrag steht ein Satz über Tierhaltung, den du noch nie gelesen hast. Bevor irgendjemand streitet, lohnt sich eine Minute Nachdenken: Wen betrifft das überhaupt?</p>
-<div class="scene-wrap klein"><img src="../bilder/lesen/tier.webp" alt="Ein Futternapf, eine Hundeleine und ein Pfotenabdruck"></div>
-<ul class="qlist nur-a2">
-<li>Hast du ein Haustier — oder hättest du gern eins?</li>
-<li>Welche Tiere sind in deinem Heimatland in Wohnungen normal?</li>
-<li>Wen würdest du zuerst fragen: den Vermieter oder die Nachbarn?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Wo verläuft für dich die Grenze zwischen Privatsache und Sache des Hauses?</li>
-<li>Warum reagieren Menschen bei Tieren oft heftiger als bei Musik oder Besuch?</li>
-<li>Kann ein Vermieter überhaupt beurteilen, ob ein Tier stört?</li>
-</ul>
-<div class="tip teal">🔑 <strong>Die deutsche Grundregel in einem Satz:</strong> <b>Kleintiere ja, große Tiere fragen.</b> Fische, Hamster, Wellensittiche gelten als Kleintiere und brauchen in der Regel keine Erlaubnis. Bei Hund und Katze sieht es anders aus — dort ist die <u>Zustimmung des Vermieters</u> das Wort, um das sich alles dreht.</div>
-<h2 class="st">Es geht selten <span class="hl">um das Tier</span></h2>
-<p class="ssub">Wenn man genau hinhört, sagt niemand <i>„Ich mag keine Hunde“</i>. Man hört: <i>Er bellt, wenn ihr weg seid.</i> <i>Meine Tochter hat Angst im Treppenhaus.</i> <i>Ich bin allergisch.</i> Das sind vier ganz verschiedene Probleme — und jedes hat eine eigene Lösung.</p>
-<div class="scene-wrap klein"><img src="../bilder/lesen/nachbar.webp" alt="Zwei Wohnungstüren nebeneinander im Hausflur, davor eine Fußmatte"></div>
-<ul class="qlist nur-a2">
-<li>Was stört Nachbarn an einem Tier am meisten?</li>
-<li>Was könnte man dagegen tun?</li>
-<li>Wie merkst du, ob sich jemand ärgert?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Wie unterscheidet man einen echten Einwand von einer allgemeinen Abneigung?</li>
-<li>Wann ist ein Nachbar im Recht, auch wenn er unfreundlich klingt?</li>
-<li>Was wäre ein Angebot, das ein Gespräch sofort entspannt?</li>
-</ul>
-<div class="tip">💡 <strong>Der Satz, der jedes Gespräch öffnet:</strong> <b>„Was genau stört dich — dann finden wir dafür etwas.“</b> Er nimmt den Einwand ernst und macht aus einem Streit über Tiere eine Aufgabe, die zwei Leute gemeinsam lösen. Und du erfährst nebenbei, worum es wirklich geht.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
 </section>
 
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Wörter <span class="hl">vom Mietvertrag bis zum Treppenhaus</span></h2>
-<p class="ssub">Sagt jedes Wort laut — <u>mit Artikel</u>. Und gleich einen Satz hinterher: Wo in deinem Haus würdest du dieses Wort brauchen?</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../bilder/lesen/tier.webp" alt="Ein Futternapf, eine Hundeleine und ein Pfotenabdruck" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Haustier</div><div class="bex">„Ich hätte gern ein Haustier, aber die Wohnung ist klein.“</div><div class="bti">💡 Im Mietrecht wird unterschieden zwischen <b>Kleintieren</b> (Fische, Hamster, Wellensittiche) und größeren Tieren. Die Unterscheidung klingt spitzfindig, entscheidet aber darüber, ob du fragen musst.</div><button class="speak" data-say="Ich hätte gern ein Haustier, aber die Wohnung ist klein.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/wohnung.webp" alt="Ein Sofa mit Kissen, daneben eine Zimmerpflanze und eine Stehlampe" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Mietwohnung</div><div class="bex">„In einer Mietwohnung darf man nicht alles allein entscheiden.“</div><div class="bti">💡 Achte auf den Unterschied: <b>mieten</b> heißt bezahlen und wohnen, <b>vermieten</b> heißt besitzen und hergeben. Wer <i>vermietet</i>, ist der Vermieter — wer <i>mietet</i>, der Mieter.</div><button class="speak" data-say="In einer Mietwohnung darf man nicht alles allein entscheiden.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-unterschrift.webp" alt="Eine Hand unterschreibt ein Dokument" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Zustimmung</div><div class="bex">„Dafür brauche ich die Zustimmung des Vermieters.“</div><div class="bti">💡 Das Schlüsselwort dieser Stunde. Dazu gehört das Verb <b>zustimmen</b> — und Achtung, es steht mit Dativ: <i>Er stimmt <b>dem</b> Vorschlag zu.</i></div><button class="speak" data-say="Dafür brauche ich die Zustimmung des Vermieters.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/aushang.webp" alt="Eine Korkpinnwand mit einem leeren Blatt, mit Pinnnadeln befestigt" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Hausordnung</div><div class="bex">„Das steht so in der Hausordnung im Treppenhaus.“</div><div class="bti">💡 Hängt fast immer im Hausflur oder im Keller aus. Sie regelt Ruhezeiten, Müll, Treppenhaus — und manchmal auch Tiere. Ein Blick darauf spart viele Diskussionen.</div><button class="speak" data-say="Das steht so in der Hausordnung im Treppenhaus.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-vermieterin.webp" alt="Eine Frau übergibt an der Wohnungstür einen Schlüssel" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Vermieterin</div><div class="bex">„Ich schreibe der Vermieterin und frage nach.“</div><div class="bti">💡 Männlich: <b>der Vermieter</b>. Und ein Wort, das oft dazwischensteht: <b>die Hausverwaltung</b> — eine Firma, die für den Vermieter antwortet. Dann schreibst du dorthin.</div><button class="speak" data-say="Ich schreibe der Vermieterin und frage nach.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/nachbar.webp" alt="Zwei Wohnungstüren nebeneinander im Hausflur, davor eine Fußmatte" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Nachbar</div><div class="bex">„Ich habe vorher mit den Nachbarn gesprochen.“</div><div class="bti">💡 Ein <b>n-Nomen</b>: <i>der Nachbar</i>, aber <i>dem Nachbar<b>n</b></i>, <i>den Nachbar<b>n</b></i>, <i>die Nachbar<b>n</b></i>. Weiblich: <b>die Nachbarin</b>.</div><button class="speak" data-say="Ich habe vorher mit den Nachbarn gesprochen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-uhrzeit.webp" alt="Eine Wanduhr an einer hellen Wand" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Ruhezeit</div><div class="bex">„Nach zweiundzwanzig Uhr ist Ruhezeit.“</div><div class="bti">💡 Meistens nachts von <b>22 bis 6 Uhr</b>, oft zusätzlich mittags. Die genauen Zeiten stehen in der Hausordnung und sind nicht überall gleich — deshalb lohnt sich das Nachlesen.</div><button class="speak" data-say="Nach zweiundzwanzig Uhr ist Ruhezeit.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/zettel.webp" alt="Ein leerer Zettel und ein Bleistift" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Beschwerde</div><div class="bex">„Es gab eine Beschwerde wegen des Bellens.“</div><div class="bti">💡 Dazu das Verb <b>sich beschweren</b> — reflexiv und mit <i>über</i>: <i>Sie beschwert sich <b>über</b> den Lärm.</i> Ein Zettel an der Tür ist übrigens die häufigste Form davon.</div><button class="speak" data-say="Es gab eine Beschwerde wegen des Bellens.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/schild.webp" alt="Ein leeres Schild mit einem Pfeil an einem Pfosten" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Auflage</div><div class="bex">„Die Erlaubnis gilt nur mit zwei Auflagen.“</div><div class="bti">💡 Das Wort aus jedem amtlichen Brief: <b>unter der Auflage, dass …</b> Es heißt schlicht: Du darfst — aber nur, wenn du dich an etwas hältst. Sehr nützlich, wenn du selbst etwas anbietest.</div><button class="speak" data-say="Die Erlaubnis gilt nur mit zwei Auflagen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-arzt.webp" alt="Eine Frau sitzt im Sprechzimmer einem Arzt gegenüber" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Allergie</div><div class="bex">„Meine Nachbarin hat eine Allergie gegen Katzenhaare.“</div><div class="bti">💡 Mit <b>gegen</b>: <i>eine Allergie gegen Tierhaare</i>. Als Adjektiv <b>allergisch gegen</b>. Und das ist der eine Einwand, den man nicht wegdiskutieren kann — er braucht eine praktische Lösung.</div><button class="speak" data-say="Meine Nachbarin hat eine Allergie gegen Katzenhaare.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/hausmeister.webp" alt="Ein Werkzeugkasten mit Besen und einem Schlüsselbund" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Hausmeister</div><div class="bex">„Der Hausmeister hat mich im Treppenhaus angesprochen.“</div><div class="bti">💡 In vielen Häusern der Mensch, der wirklich alles mitbekommt. Wer ihn früh und freundlich informiert, hat später einen Fürsprecher statt eines Melders.</div><button class="speak" data-say="Der Hausmeister hat mich im Treppenhaus angesprochen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-wohnen.webp" alt="Zwei Personen stehen an einer Wohnungstür" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Rücksicht</div><div class="bex">„Wir nehmen Rücksicht auf die Nachbarn.“</div><div class="bti">💡 Fast immer in der festen Wendung <b>Rücksicht nehmen auf</b> + Akkusativ. Das Adjektiv dazu: <b>rücksichtsvoll</b> — eines der größten Komplimente, die man im deutschen Mietshaus bekommen kann.</div><button class="speak" data-say="Wir nehmen Rücksicht auf die Nachbarn.">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel „Der Zettel im Treppenhaus“:</strong> Jeder schreibt in dreißig Sekunden eine Beschwerde auf einen gedachten Zettel — <i>ein Satz, unfreundlich.</i> Der Nachbar liest sie vor und formuliert sie sofort freundlich um, ohne den Inhalt zu ändern. Ihr werdet merken: Der Inhalt ist fast immer berechtigt, der Ton fast nie.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Lärm, Angst <span class="hl">oder Gesundheit?</span></h2>
-<p class="ssub">Wenn ein Nachbar etwas gegen das Tier hat, steckt fast immer einer von drei Gründen dahinter. Und jeder braucht eine andere Antwort — mit der falschen macht man aus einem lösbaren Problem einen Dauerstreit.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">🔊</span><div class="gmw">der Lärm</div><div class="gmb">bellen, kratzen, nachts unruhig sein</div><div class="gmx">Er bellt, wenn ihr nicht da seid.</div></div>
-<div class="gk blau"><span class="gem2">😰</span><div class="gmw">die Angst</div><div class="gmb">im Treppenhaus, im Aufzug, mit Kindern</div><div class="gmx">Meine Tochter traut sich nicht mehr raus.</div></div>
-<div class="gk ja"><span class="gem2">🤧</span><div class="gmw">die Gesundheit</div><div class="gmb">Allergie, Hygiene, Gerüche</div><div class="gmx">Ich bin allergisch gegen Katzenhaare.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Führt weiter</div><div class="gsatz">Was genau stört dich — dann finden wir dafür etwas.</div><div class="bsp"><span class="wer">Warum das funktioniert</span>Du fragst nach dem <b>konkreten</b> Punkt statt nach der Meinung. Damit wird aus <i>ich bin dagegen</i> ein einzelnes Problem, das eine Lösung haben kann — und ihr steht plötzlich auf derselben Seite.</div></div>
-<div class="gk no"><div class="gkl">❌ Führt in den Streit</div><div class="gsatz">Ein Hund ist doch wohl mein gutes Recht.</div><div class="bsp"><span class="wer">Das Problem</span>Sobald das Wort <i>Recht</i> fällt, geht es nicht mehr um das Zusammenleben, sondern ums Gewinnen. Und selbst wenn du recht behältst, wohnst du danach noch Jahre in diesem Haus.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Nimmt den Einwand ernst</div><div class="gsatz">Ich nehme sie im Treppenhaus ab jetzt kurz an die Leine.</div><div class="bsp"><span class="wer">Warum das wirkt</span>Ein <b>konkretes Angebot</b> statt einer Zusicherung. <i>Ich passe auf</i> kann jeder sagen — <i>im Treppenhaus an der Leine</i> kann man nachprüfen. Genau das beruhigt.</div></div>
-<div class="gk no"><div class="gkl">❌ Beruhigt niemanden</div><div class="gsatz">Der tut doch nichts.</div><div class="bsp"><span class="wer">Das Problem</span>Der meistgesagte und am wenigsten hilfreiche Satz überhaupt. Er erklärt dem anderen, dass seine Angst unbegründet ist — und Angst verschwindet nicht dadurch, dass jemand sie für falsch erklärt.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Fragt richtig</div><div class="gsatz">Ich würde gern einen Hund halten. Unter welchen Auflagen wäre das möglich?</div><div class="bsp"><span class="wer">Warum das klug ist</span>Die Frage lädt zum <b>Ja mit Bedingungen</b> ein statt zu einem Nein. Wer nach Auflagen fragt, zeigt außerdem: Ich habe schon verstanden, dass es nicht nur um mich geht.</div></div>
-<div class="gk no"><div class="gkl">❌ Lädt zum Nein ein</div><div class="gsatz">Darf ich einen Hund haben?</div><div class="bsp"><span class="wer">Das Problem</span>Eine Ja-Nein-Frage bekommt eine Ja-Nein-Antwort — und <i>nein</i> ist für einen Vermieter immer die bequemere. Frag nie nach der Erlaubnis, frag nach den <b>Bedingungen</b>.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Wie frage ich den Vermieter, ohne ein Nein zu kassieren?</button>
-<div class="inhalt">
-<p>Vier Schritte, immer in dieser Reihenfolge:</p>
-<ul>
-<li><b>Sag, was du willst — ruhig und ohne Entschuldigung:</b> <i>Ich würde gern einen Hund halten.</i></li>
-<li><b>Zeig, dass du an die anderen gedacht hast:</b> <i>Ich habe vorher mit den direkten Nachbarn gesprochen.</i></li>
-<li><b>Biete selbst Auflagen an:</b> <i>im Treppenhaus an der Leine, Betreuung, wenn ich arbeite.</i></li>
-<li><b>Frag nach Bedingungen, nicht nach Erlaubnis:</b> <i>Unter welchen Auflagen wäre das für Sie möglich?</i></li>
-</ul>
-<p style="margin-top:.5rem;">Und ein Satz, der fast immer hilft, weil er das Wichtigste vorwegnimmt: <b>„Wenn es Beschwerden gibt, melde ich mich sofort bei Ihnen — ich möchte nicht, dass Sie das von anderen erfahren.“</b></p>
-</div>
-</div>
-<div class="tip">🎯 <strong>Zu zweit, eine Minute:</strong> Einer nennt einen Einwand (<i>„Der bellt bestimmt den ganzen Tag“</i>), der andere antwortet in zwei Schritten — erst nachfragen, dann ein konkretes Angebot. Der Satz <i>„Der tut doch nichts“</i> ist verboten.</div>
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Hast du ein Haustier — oder hättest du gern eins?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Welche Tiere sind in deinem Heimatland in Wohnungen normal?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -811,37 +819,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
-<p class="ssub">Einer bringt ein Anliegen, einer hat Bedenken. Danach tauschen — und beim zweiten Mal ohne Notizen. Regel für alle drei: Es muss mindestens ein konkretes Angebot fallen, das man nachprüfen kann.</p>
-<div class="rmcard">
-<b>1 · Das Gespräch mit der Vermieterin</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A möchte einen Hund halten und ruft bei der Vermieterin an. B ist die Vermieterin und war mit dem letzten Mieter schlecht gefahren. B sagt nicht nein, aber nennt Bedenken.</p>
-<div class="nur-a2"><span class="rm">Ich würde gern einen Hund halten</span><span class="rm">Ich habe vorher mit den Nachbarn gesprochen</span><span class="rm">Im Treppenhaus immer an der Leine</span><span class="rm">Unter welchen Auflagen wäre das möglich?</span></div>
-<div class="nur-b1"><span class="rm">Ich möchte Sie um Ihre Zustimmung bitten</span><span class="rm">Ich schlage folgende Auflagen vor</span><span class="rm">sofern es zu Beschwerden kommt</span><span class="rm">Ich fasse das schriftlich zusammen</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat nach <i>Auflagen</i> gefragt statt nach <i>Erlaubnis</i>, mindestens zwei konkrete Angebote gemacht und am Ende eine schriftliche Zusammenfassung angeboten. B hat mindestens eine Bedingung mit <i>sofern</i> oder <i>solange</i> formuliert.</div>
-</div>
-<div class="rmcard">
-<b>2 · An der Wohnungstür</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A klingelt beim Nachbarn und sagt Bescheid, dass ein Hund einzieht. B hat ein Kind, das Angst vor Hunden hat. Ihr habt zwei Minuten, um eine Absprache zu finden, mit der beide leben können.</p>
-<div class="nur-a2"><span class="rm">Ich wollte kurz Bescheid sagen</span><span class="rm">Was genau macht dir Sorgen?</span><span class="rm">Dann ist er im Treppenhaus an der Leine</span><span class="rm">Wenn etwas ist, klingel einfach</span></div>
-<div class="nur-b1"><span class="rm">Das ist ein berechtigter Einwand</span><span class="rm">Darf ich fragen, worauf sich das bezieht?</span><span class="rm">Ich schaue vorher, ob jemand im Flur ist</span><span class="rm">Wir schauen in vier Wochen noch einmal</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Der Satz <i>„Der tut doch nichts“</i> ist nicht gefallen. A hat nach dem konkreten Punkt gefragt, bevor er etwas angeboten hat — und das Angebot ließ sich nachprüfen.</div>
-</div>
-<div class="rmcard">
-<b>3 · Die Beschwerde kommt an</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B hat sich bei der Hausverwaltung über das Bellen beschwert, ohne vorher mit A zu reden. A spricht B im Treppenhaus darauf an — ohne Vorwurf, aber deutlich.</p>
-<div class="nur-a2"><span class="rm">Ich habe von der Verwaltung gehört, dass …</span><span class="rm">Wann genau bellt er denn?</span><span class="rm">Ich probiere es mit einer Betreuung</span><span class="rm">Sag es mir beim nächsten Mal bitte direkt</span></div>
-<div class="nur-b1"><span class="rm">Ich hatte verstanden, dass wir uns direkt melden</span><span class="rm">Darf ich fragen, was den Ausschlag gegeben hat?</span><span class="rm">Ich melde mich in vierzehn Tagen von mir aus</span><span class="rm">Mir ist lieber, ich erfahre es von dir</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat nach der Uhrzeit gefragt, statt sich zu rechtfertigen, und eine Frist genannt. B hat gesagt, warum er den Umweg über die Verwaltung genommen hat — und beide haben für das nächste Mal etwas vereinbart.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Jeder nennt reihum eine Regel aus einer Hausordnung — im Passiv, wie im Vertrag. Der Nachbar übersetzt sie sofort in normales Deutsch mit <i>man</i>. Wer stockt, gibt weiter.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -874,14 +859,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde müssen <u>ein Modalverb</u> und <u>eine Bedingung mit sofern, solange oder vorausgesetzt, dass</u> vorkommen. Der Satz <i>„Das ist mein Recht“</i> kostet einen Punkt.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Jeder nennt reihum eine Regel aus einer Hausordnung — im Passiv, wie im Vertrag. Der Nachbar übersetzt sie sofort in normales Deutsch mit <i>man</i>. Wer stockt, gibt weiter.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Wo verläuft für dich die Grenze zwischen Privatsache und Sache des Hauses?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Warum reagieren Menschen bei Tieren oft heftiger als bei Musik oder Besuch?</li><li>Kann ein Vermieter überhaupt beurteilen, ob ein Tier stört?</li><li>Wie unterscheidet man einen echten Einwand von einer allgemeinen Abneigung?</li><li>Wann ist ein Nachbar im Recht, auch wenn er unfreundlich klingt?</li><li>Was wäre ein Angebot, das ein Gespräch sofort entspannt?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
+<p class="ssub">Einer bringt ein Anliegen, einer hat Bedenken. Danach tauschen — und beim zweiten Mal ohne Notizen. Regel für alle drei: Es muss mindestens ein konkretes Angebot fallen, das man nachprüfen kann.</p>
+<div class="rmcard">
+<b>1 · Das Gespräch mit der Vermieterin</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A möchte einen Hund halten und ruft bei der Vermieterin an. B ist die Vermieterin und war mit dem letzten Mieter schlecht gefahren. B sagt nicht nein, aber nennt Bedenken.</p>
+<div class="nur-a2"><span class="rm">Ich würde gern einen Hund halten</span><span class="rm">Ich habe vorher mit den Nachbarn gesprochen</span><span class="rm">Im Treppenhaus immer an der Leine</span><span class="rm">Unter welchen Auflagen wäre das möglich?</span></div>
+<div class="nur-b1"><span class="rm">Ich möchte Sie um Ihre Zustimmung bitten</span><span class="rm">Ich schlage folgende Auflagen vor</span><span class="rm">sofern es zu Beschwerden kommt</span><span class="rm">Ich fasse das schriftlich zusammen</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat nach <i>Auflagen</i> gefragt statt nach <i>Erlaubnis</i>, mindestens zwei konkrete Angebote gemacht und am Ende eine schriftliche Zusammenfassung angeboten. B hat mindestens eine Bedingung mit <i>sofern</i> oder <i>solange</i> formuliert.</div>
+</div>
+<div class="rmcard">
+<b>2 · An der Wohnungstür</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A klingelt beim Nachbarn und sagt Bescheid, dass ein Hund einzieht. B hat ein Kind, das Angst vor Hunden hat. Ihr habt zwei Minuten, um eine Absprache zu finden, mit der beide leben können.</p>
+<div class="nur-a2"><span class="rm">Ich wollte kurz Bescheid sagen</span><span class="rm">Was genau macht dir Sorgen?</span><span class="rm">Dann ist er im Treppenhaus an der Leine</span><span class="rm">Wenn etwas ist, klingel einfach</span></div>
+<div class="nur-b1"><span class="rm">Das ist ein berechtigter Einwand</span><span class="rm">Darf ich fragen, worauf sich das bezieht?</span><span class="rm">Ich schaue vorher, ob jemand im Flur ist</span><span class="rm">Wir schauen in vier Wochen noch einmal</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Der Satz <i>„Der tut doch nichts“</i> ist nicht gefallen. A hat nach dem konkreten Punkt gefragt, bevor er etwas angeboten hat — und das Angebot ließ sich nachprüfen.</div>
+</div>
+<div class="rmcard">
+<b>3 · Die Beschwerde kommt an</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B hat sich bei der Hausverwaltung über das Bellen beschwert, ohne vorher mit A zu reden. A spricht B im Treppenhaus darauf an — ohne Vorwurf, aber deutlich.</p>
+<div class="nur-a2"><span class="rm">Ich habe von der Verwaltung gehört, dass …</span><span class="rm">Wann genau bellt er denn?</span><span class="rm">Ich probiere es mit einer Betreuung</span><span class="rm">Sag es mir beim nächsten Mal bitte direkt</span></div>
+<div class="nur-b1"><span class="rm">Ich hatte verstanden, dass wir uns direkt melden</span><span class="rm">Darf ich fragen, was den Ausschlag gegeben hat?</span><span class="rm">Ich melde mich in vierzehn Tagen von mir aus</span><span class="rm">Mir ist lieber, ich erfahre es von dir</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat nach der Uhrzeit gefragt, statt sich zu rechtfertigen, und eine Frist genannt. B hat gesagt, warum er den Umweg über die Verwaltung genommen hat — und beide haben für das nächste Mal etwas vereinbart.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -947,6 +966,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Sprachnachricht und die Bedingungssätze bis Dienstagabend. Ich achte besonders auf die Verbstellung im Nebensatz — und darauf, ob deine Angebote wirklich nachprüfbar sind.</div>
 <div class="tip">🔜 <strong>Am Mittwoch, Teil 2:</strong> <u>Die Debatte — darf ein Vermieter Haustiere verbieten?</u> Heute ging es darum, wie man fragt. Am Mittwoch geht es um die härtere Frage: Wessen Wohnung ist es eigentlich, wenn man Miete zahlt?</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1133,11 +1159,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1194,7 +1227,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1204,7 +1239,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

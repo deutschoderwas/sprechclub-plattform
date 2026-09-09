@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,103 +627,43 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B2<span class="zusatz"> · feiner</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">⚖️ Drei Stellungen</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">Ein Verb, <span class="hl">und es springt auseinander</span></h2>
-<p class="ssub"><i>Ich rufe dich morgen <b>an</b>.</i> Das <b>an</b> gehört zum Verb, steht aber am Ende des Satzes — manchmal zehn Wörter weit weg. Wer das nicht hört, versteht den halben Satz falsch.</p>
-<div class="scene-wrap klein"><img src="../vok-bild/anrufen.webp" alt="Ein Mann telefoniert auf dem Sofa"></div>
-<ul class="qlist nur-a2">
-<li>Welche trennbaren Verben benutzt du täglich?</li>
-<li>Bei welchem vergisst du die Vorsilbe am häufigsten?</li>
-<li>Wie ist das in deiner Sprache — gibt es so etwas auch?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Wann merkst du beim Zuhören, dass noch eine Vorsilbe kommt?</li>
-<li>Warum ist <i>ausmachen</i> so schwer zu übersetzen?</li>
-<li>Welche Vorsilbe verändert die Bedeutung am stärksten?</li>
-</ul>
-<div class="tip teal">🔑 <strong>Die Regel für heute:</strong> Ist die Vorsilbe <u>betont</u>, ist sie trennbar. <b>ÁN</b>rufen, <b>ÁB</b>holen, <b>ÁUF</b>machen, <b>ÁUS</b>machen, <b>ÉIN</b>kaufen — hörst du den Ton vorn, geht die Silbe im Hauptsatz ans Ende.</div>
-<h2 class="st">Fünf Vorsilben, <span class="hl">fünf Richtungen</span></h2>
-<p class="ssub">Die Silben sind keine Zufallsteile. <b>an</b> heißt Kontakt oder Beginn, <b>ab</b> heißt weg oder Schluss, <b>auf</b> heißt öffnen oder nach oben, <b>aus</b> heißt heraus oder aus dem Betrieb, <b>ein</b> heißt hinein. Wer die Richtung kennt, rät bei neuen Verben richtig.</p>
-<div class="scene-wrap klein"><img src="../vok-bild/einkaufen.webp" alt="Eine Frau nimmt im Supermarkt etwas aus dem Regal"></div>
-<ul class="qlist nur-a2">
-<li>Was bedeutet <i>abfahren</i> — und was <i>ankommen</i>?</li>
-<li>Warum passt <i>einsteigen</i> zu <i>hinein</i>?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Bei welchem Verb passt die Richtung überhaupt nicht mehr?</li>
-<li>Kannst du ein Verb erfinden, das es nicht gibt, aber verstanden würde?</li>
-</ul>
-<div class="tip">💡 <strong>Zwei Paare, die alles zeigen:</strong> <b>anmachen ⇄ ausmachen</b> (Licht an, Licht aus) und <b>aufmachen ⇄ zumachen</b> (Tür auf, Tür zu). Dieselbe Wurzel <i>machen</i>, vier völlig verschiedene Handlungen.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
 </section>
 
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf trennbare Verben <span class="hl">aus dem echten Alltag</span></h2>
-<p class="ssub">Sagt jedes Verb laut — und gleich den Beispielsatz. Achtet dabei besonders darauf, <u>wo die Vorsilbe landet</u>.</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../vok-bild/anrufen.webp" alt="Ein Mann telefoniert auf dem Sofa" loading="lazy"><div class="bb"><div class="bw">anrufen</div><div class="bex">„Ich rufe dich morgen früh an.“</div><div class="bti">💡 Immer mit <b>Akkusativ</b>: <i>Ich rufe <u>dich</u> an</i> — nicht <i>dir</i>. Das ist der häufigste Fehler bei diesem Verb.</div><button class="speak" data-say="Ich rufe dich morgen früh an.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-lieferung.webp" alt="Ein Paket steht auf dem Boden vor einer Tür" loading="lazy"><div class="bb"><div class="bw">abholen</div><div class="bex">„Kannst du das Paket bei der Post abholen?“</div><div class="bti">💡 Der Gegensatz ist <b>bringen</b>: Du <i>holst ab</i>, wenn du hingehst; du <i>bringst</i>, wenn du kommst. Die Richtung entscheidet.</div><button class="speak" data-say="Kannst du das Paket bei der Post abholen?">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-schrank.webp" alt="Ein offener Kleiderschrank mit ordentlich aufgehängter Kleidung" loading="lazy"><div class="bb"><div class="bw">aufmachen</div><div class="bex">„Mach bitte das Fenster auf, hier ist es stickig.“</div><div class="bti">💡 Umgangssprachlich häufiger als <b>öffnen</b>. Im Schriftlichen und bei Ämtern nimmt man <i>öffnen</i> — beim Sprechen fast immer <i>aufmachen</i>.</div><button class="speak" data-say="Mach bitte das Fenster auf, hier ist es stickig.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="ausmachen">🔌</div><div class="bb"><div class="bw">ausmachen</div><div class="bex">„Machst du bitte das Licht im Flur aus?“</div><div class="bti">💡 Achtung, <b>ausmachen</b> hat noch zwei Bedeutungen: <i>Wir machen einen Termin aus</i> (vereinbaren) und <i>Das macht mir nichts aus</i> (stört mich nicht).</div><button class="speak" data-say="Machst du bitte das Licht im Flur aus?">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/einkaufen.webp" alt="Eine Frau nimmt im Supermarkt etwas aus dem Regal" loading="lazy"><div class="bb"><div class="bw">einkaufen</div><div class="bex">„Ich kaufe auf dem Rückweg noch schnell ein.“</div><div class="bti">💡 <b>einkaufen</b> steht meist ohne Objekt: <i>Ich gehe einkaufen.</i> Willst du sagen <u>was</u>, nimmst du <b>kaufen</b>: <i>Ich kaufe Brot.</i></div><button class="speak" data-say="Ich kaufe auf dem Rückweg noch schnell ein.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/anfangen.webp" alt="Eine Lehrerin beginnt den Unterricht vor der Tafel" loading="lazy"><div class="bb"><div class="bw">anfangen</div><div class="bex">„Der Kurs fängt um Viertel nach neun an.“</div><div class="bti">💡 <b>anfangen</b> ist gesprochen, <b>beginnen</b> geschrieben — und <i>beginnen</i> ist nicht trennbar. Deshalb heißt es <i>fängt an</i>, aber <i>beginnt</i>.</div><button class="speak" data-say="Der Kurs fängt um Viertel nach neun an.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="aufhören">🛑</div><div class="bb"><div class="bw">aufhören</div><div class="bex">„Hör bitte auf damit, das nervt.“</div><div class="bti">💡 Das Gegenteil von <i>anfangen</i>. Mit Verb braucht es <b>zu</b>: <i>Ich höre auf <b>zu</b> rauchen.</i> Ohne das <i>zu</i> klingt es falsch.</div><button class="speak" data-say="Hör bitte auf damit, das nervt.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-post.webp" alt="Eine Kundin an einem Postschalter mit Paketen" loading="lazy"><div class="bb"><div class="bw">abgeben</div><div class="bex">„Ich gebe die Unterlagen morgen im Büro ab.“</div><div class="bti">💡 Beim Amt, in der Schule, auf der Arbeit — überall gibt man etwas <b>ab</b>. Und man <b>gibt</b> etwas <b>zurück</b>, wenn es geliehen war.</div><button class="speak" data-say="Ich gebe die Unterlagen morgen im Büro ab.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-feste.webp" alt="Menschen feiern mit Luftballons und stoßen an" loading="lazy"><div class="bb"><div class="bw">einladen</div><div class="bex">„Wir laden dich am Samstag zum Essen ein.“</div><div class="bti">💡 Zwei Bedeutungen in einem Wort: jemanden <u>bitten zu kommen</u> und <u>für ihn bezahlen</u>. <i>Ich lade dich ein</i> heißt in der Kneipe eindeutig das Zweite.</div><button class="speak" data-say="Wir laden dich am Samstag zum Essen ein.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-ankommen.webp" alt="Zwei Personen an einem Empfangstresen" loading="lazy"><div class="bb"><div class="bw">ankommen</div><div class="bex">„Der Zug kommt um 18:40 in Köln an.“</div><div class="bti">💡 Auch übertragen: <b>Es kommt darauf an</b> = es hängt davon ab. Und <i>Das kam gut an</i> heißt: Es hat den Leuten gefallen.</div><button class="speak" data-say="Der Zug kommt um 18:40 in Köln an.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-unterwegs.webp" alt="Eine Frau mit Koffer auf einem Bahnsteig" loading="lazy"><div class="bb"><div class="bw">aussteigen</div><div class="bex">„Wir steigen an der nächsten Haltestelle aus.“</div><div class="bti">💡 Die ganze Familie: <b>einsteigen</b> hinein, <b>aussteigen</b> heraus, <b>umsteigen</b> wechseln. Genau diese drei stehen an jeder Bahnsteigdurchsage.</div><button class="speak" data-say="Wir steigen an der nächsten Haltestelle aus.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/aufstehen.webp" alt="Ein Mann sitzt morgens im Schlafanzug auf der Bettkante" loading="lazy"><div class="bb"><div class="bw">aufstehen</div><div class="bex">„Unter der Woche stehe ich um halb sieben auf.“</div><div class="bti">💡 Perfekt mit <b>sein</b>: <i>Ich <u>bin</u> um sechs aufgestanden.</i> Alle Verben der Bewegung und Veränderung nehmen <i>sein</i>.</div><button class="speak" data-say="Unter der Woche stehe ich um halb sieben auf.">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel „Vorsilbe fehlt“:</strong> Einer sagt einen Satz ohne die Vorsilbe („Ich rufe dich morgen …“). Der andere muss sie ergänzen — und zwar so schnell, dass keine Pause entsteht. Wer zögert, gibt ab.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Dieselbe Vorsilbe, <span class="hl">drei Plätze im Satz</span></h2>
-<p class="ssub">Trennbare Verben stehen nicht immer auseinander. Es hängt davon ab, in welchem Satztyp sie vorkommen — drei Fälle, mehr sind es nicht.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">➡️</span><div class="gmw">Hauptsatz: getrennt</div><div class="gmb">die Vorsilbe geht ganz ans Ende</div><div class="gmx">Ich rufe dich morgen früh an.</div></div>
-<div class="gk blau"><span class="gem2">🔗</span><div class="gmw">Nebensatz: zusammen</div><div class="gmb">alles bleibt am Ende in einem Wort</div><div class="gmx">Ich hoffe, dass du mich morgen anrufst.</div></div>
-<div class="gk ja"><span class="gem2">🧩</span><div class="gmw">Perfekt: ge in der Mitte</div><div class="gmb">die Vorsilbe bleibt vorn, ge rutscht dahinter</div><div class="gmx">Ich habe dich gestern angerufen.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Ich rufe dich morgen an.</div><div class="bsp"><span class="wer">Warum das stimmt</span>Im Hauptsatz steht das gebeugte Verb an Position zwei und die Vorsilbe <u>ganz am Ende</u> — auch wenn dazwischen noch fünf Wörter kommen.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Ich anrufe dich morgen.</div><div class="bsp"><span class="wer">Das Problem</span>Zusammen bleibt es nur im Infinitiv und im Nebensatz. Im Hauptsatz wird jedes betonte Präfix abgetrennt.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Ich habe das Paket abgeholt.</div><div class="bsp"><span class="wer">Warum das stimmt</span>Im Partizip steht das <b>ge</b> <u>zwischen</u> Vorsilbe und Stamm: <i>ab</i> + <i>ge</i> + <i>holt</i>. Ein Wort, drei Teile.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Ich habe das Paket geabholt.</div><div class="bsp"><span class="wer">Das Problem</span>Das <b>ge</b> steht nie vorn, wenn eine trennbare Vorsilbe da ist. Genau daran erkennt man das Partizip eines trennbaren Verbs.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Ich habe vergessen, dich anzurufen.</div><div class="bsp"><span class="wer">Warum das stimmt</span>Beim Infinitiv mit <b>zu</b> schiebt sich das <i>zu</i> in die Mitte: <i>an</i> + <i>zu</i> + <i>rufen</i>. Zusammengeschrieben, ohne Leerzeichen.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Ich habe vergessen, dich zu anrufen.</div><div class="bsp"><span class="wer">Das Problem</span>Bei trennbaren Verben steht das <i>zu</i> nie davor. Nur bei untrennbaren bleibt es außen: <i>zu verstehen</i>, <i>zu bezahlen</i>.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Woher weiß ich, ob es trennbar ist?</button>
-<div class="inhalt">
-<p>Ein Test, drei Sekunden — und du brauchst kein Wörterbuch:</p>
-<ul>
-<li><b>Sprich das Verb laut.</b> Liegt die Betonung auf der Vorsilbe (<i>ÁN</i>rufen, <i>ÉIN</i>kaufen)? Dann ist es trennbar.</li>
-<li><b>Liegt sie auf dem Stamm</b> (ver<i>STÉ</i>hen, be<i>ZÁH</i>len, er<i>KLÁ</i>ren)? Dann nicht.</li>
-<li><b>Die fünf von heute sind alle trennbar:</b> an-, ab-, auf-, aus-, ein-. Dazu kommen mit-, zu-, vor-, nach-, weg-, hin-, her-.</li>
-<li><b>Nie trennbar sind:</b> be-, ge-, er-, ver-, zer-, ent-, emp-, miss-. Diese acht kann man auswendig lernen — sie kommen immer wieder.</li>
-</ul>
-<p style="margin-top:.5rem;">Und die praktische Folge: Untrennbare Verben bekommen im Perfekt <u>kein ge</u>. <b>bezahlt</b>, <b>verstanden</b>, <b>erklärt</b> — aber <b>angerufen</b>, <b>eingekauft</b>, <b>aufgemacht</b>.</p>
-</div>
-</div>
-<div class="tip">🎯 <strong>Zu zweit, eine Minute:</strong> Einer nennt ein trennbares Verb im Infinitiv, der andere baut sofort drei Sätze: Hauptsatz, Nebensatz mit <i>dass</i>, Perfekt. Drei Sätze, drei Stellungen.</div>
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Welche trennbaren Verben benutzt du täglich?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Bei welchem vergisst du die Vorsilbe am häufigsten?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -814,37 +824,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
-<p class="ssub">Zu zweit. Jede Antwort muss mindestens ein trennbares Verb enthalten — der Partner achtet darauf, wo die Vorsilbe landet.</p>
-<div class="rmcard">
-<b>1 · Die Terminabsprache</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A und B wollen sich treffen, haben aber beide volle Wochen. Jeder Vorschlag muss ein trennbares Verb enthalten.</p>
-<div class="nur-a2"><span class="rm">Wann fängst du an?</span><span class="rm">Ich rufe dich vorher an</span><span class="rm">Ich hole dich ab</span><span class="rm">Sagen wir Donnerstag?</span></div>
-<div class="nur-b1"><span class="rm">Machen wir es fest aus?</span><span class="rm">Falls etwas dazwischenkommt, sage ich rechtzeitig ab</span><span class="rm">Ich melde mich, sobald ich es weiß</span><span class="rm">Es kommt darauf an, wann ich aufhöre</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Am Ende steht ein konkreter Termin mit Uhrzeit. Beide haben mindestens vier verschiedene trennbare Verben benutzt — und keine Vorsilbe stand in der Mitte.</div>
-</div>
-<div class="rmcard">
-<b>2 · Die Einkaufsliste am Telefon</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A steht im Laden, B sitzt zu Hause und fällt immer wieder etwas Neues ein. Alles wird am Telefon geklärt.</p>
-<div class="nur-a2"><span class="rm">Was soll ich einkaufen?</span><span class="rm">Ich bringe es mit</span><span class="rm">Ist das im Angebot?</span><span class="rm">Ich gebe die Flaschen ab</span></div>
-<div class="nur-b1"><span class="rm">Vergiss nicht, … abzugeben</span><span class="rm">Falls es das nicht gibt, ruf noch mal an</span><span class="rm">Ich mache schon mal den Ofen an</span><span class="rm">Kauf lieber zwei ein, das reicht länger</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B benutzt mindestens einmal einen <b>zu-Infinitiv</b> mit trennbarem Verb. A wiederholt jede Bestellung — falsch wiederholt gilt nicht.</div>
-</div>
-<div class="rmcard">
-<b>3 · Was hast du gestern gemacht?</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A erzählt seinen gestrigen Tag von morgens bis abends. B hört zu und fragt bei jedem Schritt nach — alles im Perfekt.</p>
-<div class="nur-a2"><span class="rm">Ich bin um sechs aufgestanden</span><span class="rm">Dann habe ich eingekauft</span><span class="rm">Ich habe meine Mutter angerufen</span><span class="rm">Abends bin ich früh eingeschlafen</span></div>
-<div class="nur-b1"><span class="rm">Vorher hatte ich noch abgesagt</span><span class="rm">Ich habe vergessen, … abzuholen</span><span class="rm">Danach sind wir ausgegangen</span><span class="rm">Am Ende habe ich alles aufgeräumt</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A benutzt mindestens sechs Partizipien mit <b>ge in der Mitte</b> — und einmal <i>sein</i> statt <i>haben</i> als Hilfsverb.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Sagt reihum ein trennbares Verb im Infinitiv. Der Nachbar bildet sofort einen Hauptsatz, der übernächste dasselbe im Perfekt. Wer die Vorsilbe verliert, gibt weiter.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -877,14 +864,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde müssen mindestens <u>drei trennbare Verben</u> vorkommen — und einmal muss die Vorsilbe wirklich am Satzende landen. Der Partner zählt mit.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Sagt reihum ein trennbares Verb im Infinitiv. Der Nachbar bildet sofort einen Hauptsatz, der übernächste dasselbe im Perfekt. Wer die Vorsilbe verliert, gibt weiter.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Wann merkst du beim Zuhören, dass noch eine Vorsilbe kommt?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Warum ist <i>ausmachen</i> so schwer zu übersetzen?</li><li>Welche Vorsilbe verändert die Bedeutung am stärksten?</li><li>Bei welchem Verb passt die Richtung überhaupt nicht mehr?</li><li>Kannst du ein Verb erfinden, das es nicht gibt, aber verstanden würde?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
+<p class="ssub">Zu zweit. Jede Antwort muss mindestens ein trennbares Verb enthalten — der Partner achtet darauf, wo die Vorsilbe landet.</p>
+<div class="rmcard">
+<b>1 · Die Terminabsprache</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A und B wollen sich treffen, haben aber beide volle Wochen. Jeder Vorschlag muss ein trennbares Verb enthalten.</p>
+<div class="nur-a2"><span class="rm">Wann fängst du an?</span><span class="rm">Ich rufe dich vorher an</span><span class="rm">Ich hole dich ab</span><span class="rm">Sagen wir Donnerstag?</span></div>
+<div class="nur-b1"><span class="rm">Machen wir es fest aus?</span><span class="rm">Falls etwas dazwischenkommt, sage ich rechtzeitig ab</span><span class="rm">Ich melde mich, sobald ich es weiß</span><span class="rm">Es kommt darauf an, wann ich aufhöre</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Am Ende steht ein konkreter Termin mit Uhrzeit. Beide haben mindestens vier verschiedene trennbare Verben benutzt — und keine Vorsilbe stand in der Mitte.</div>
+</div>
+<div class="rmcard">
+<b>2 · Die Einkaufsliste am Telefon</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A steht im Laden, B sitzt zu Hause und fällt immer wieder etwas Neues ein. Alles wird am Telefon geklärt.</p>
+<div class="nur-a2"><span class="rm">Was soll ich einkaufen?</span><span class="rm">Ich bringe es mit</span><span class="rm">Ist das im Angebot?</span><span class="rm">Ich gebe die Flaschen ab</span></div>
+<div class="nur-b1"><span class="rm">Vergiss nicht, … abzugeben</span><span class="rm">Falls es das nicht gibt, ruf noch mal an</span><span class="rm">Ich mache schon mal den Ofen an</span><span class="rm">Kauf lieber zwei ein, das reicht länger</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B benutzt mindestens einmal einen <b>zu-Infinitiv</b> mit trennbarem Verb. A wiederholt jede Bestellung — falsch wiederholt gilt nicht.</div>
+</div>
+<div class="rmcard">
+<b>3 · Was hast du gestern gemacht?</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A erzählt seinen gestrigen Tag von morgens bis abends. B hört zu und fragt bei jedem Schritt nach — alles im Perfekt.</p>
+<div class="nur-a2"><span class="rm">Ich bin um sechs aufgestanden</span><span class="rm">Dann habe ich eingekauft</span><span class="rm">Ich habe meine Mutter angerufen</span><span class="rm">Abends bin ich früh eingeschlafen</span></div>
+<div class="nur-b1"><span class="rm">Vorher hatte ich noch abgesagt</span><span class="rm">Ich habe vergessen, … abzuholen</span><span class="rm">Danach sind wir ausgegangen</span><span class="rm">Am Ende habe ich alles aufgeräumt</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A benutzt mindestens sechs Partizipien mit <b>ge in der Mitte</b> — und einmal <i>sein</i> statt <i>haben</i> als Hilfsverb.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -950,6 +971,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Sprachnachricht bis Sonntag in die WhatsApp-Gruppe. Ich höre jede an und antworte dir persönlich.</div>
 <div class="tip">🔜 <strong>Am Donnerstag, Teil 2:</strong> <u>Dieselbe Silbe, neue Bedeutung</u> — annehmen, abnehmen, aufnehmen, einnehmen. Ein Grundverb, fünf Vorsilben, fünf völlig verschiedene Sätze.</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1136,11 +1164,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1197,7 +1232,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1207,7 +1244,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

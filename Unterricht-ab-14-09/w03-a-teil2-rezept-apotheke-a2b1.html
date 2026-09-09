@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,47 +627,44 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B1<span class="zusatz"> · mehr</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#wiederholung">🔁 Wiederholung</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">⚖️ Drei Zettel</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">Drei Zettel, <span class="hl">die man auseinanderhalten muss</span></h2>
-<p class="ssub">Das <b>Rezept</b> geht in die Apotheke. Die <b>Krankschreibung</b> geht zum Arbeitgeber. Die <b>Überweisung</b> geht zum Facharzt. Wer die drei verwechselt, läuft am nächsten Tag noch einmal los.</p>
-<div class="scene-wrap klein"><img src="../vok-bild/das-rezept.webp" alt="Eine Ärztin überreicht einem Patienten ein Rezept"></div>
-<ul class="qlist nur-a2">
-<li>Warst du schon einmal in einer deutschen Apotheke? Wie war das?</li>
-<li>Was machst du, wenn du krank bist und arbeiten musst?</li>
-<li>Gibt es in deinem Land auch eine Krankschreibung?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Warum braucht der Arbeitgeber ein Papier vom Arzt — reicht ein Anruf nicht?</li>
-<li>Was ist praktischer: Medikamente im Supermarkt oder nur in der Apotheke?</li>
-<li>Wie viel darf ein Apotheker entscheiden, was ein Arzt entschieden hat?</li>
-</ul>
-<div class="tip teal">💊 <strong>Gut zu wissen:</strong> In Deutschland gibt es Medikamente fast nur in der <u>Apotheke</u>, nicht im Supermarkt. Und viele brauchen ein <b>Rezept</b> — ohne das bekommst du sie nicht, auch wenn du bezahlen willst.</div>
-<h2 class="st">Die Apotheke <span class="hl">berät dich — kostenlos</span></h2>
-<p class="ssub">Viele trauen sich nicht zu fragen und nehmen einfach, was sie bekommen. Dabei ist die Beratung der eigentliche Grund, warum es Apotheken gibt. Fragen kostet nichts und dauert eine Minute.</p>
-<div class="scene-wrap klein"><img src="../amanda/sz-apotheke.webp" alt="Amanda bekommt in der Apotheke eine Packung überreicht"></div>
-<ul class="qlist nur-a2">
-<li>Was fragst du in der Apotheke, bevor du gehst?</li>
-<li>Liest du den Beipackzettel?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Wann ist Selbstmedikation sinnvoll — und wann gefährlich?</li>
-<li>Was würdest du fragen, wenn du ein Medikament zum ersten Mal nimmst?</li>
-</ul>
-<div class="tip">💡 <strong>Die vier Fragen für die Apotheke:</strong> <b>Wie oft?</b> · <b>Wie lange?</b> · <b>Vor oder nach dem Essen?</b> · <b>Worauf muss ich achten?</b> — vier Sätze, und du gehst mit einem Plan statt mit einer Schachtel.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
+</section>
+
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Warst du schon einmal in einer deutschen Apotheke? Wie war das?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Was machst du, wenn du krank bist und arbeiten musst?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="wiederholung">
@@ -618,63 +685,6 @@ a.tab:hover{color:var(--ink);}
 <li>Was ist der Unterschied zwischen <b>seit</b> und <b>vor</b>?</li>
 </ul>
 <div class="tip teal">🔁 <strong>Zu zweit, dreißig Sekunden:</strong> Einer spielt den Arzt und fragt „Was führt Sie zu mir?“, der andere antwortet in drei Sätzen. Danach geht es weiter — mit dem Rezept in der Hand.</div>
-</section>
-
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Wörter für <span class="hl">danach</span></h2>
-<p class="ssub">Sagt jedes Wort laut — und gleich den Beispielsatz hinterher. Zwei Sekunden pro Karte reichen.</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../vok-bild/das-rezept.webp" alt="Eine Ärztin überreicht einem Patienten ein Rezept" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Rezept</div><div class="bex">„Ich habe ein Rezept für ein Antibiotikum bekommen.“</div><div class="bti">💡 Achtung, zwei Bedeutungen: beim Arzt der Zettel, in der Küche die Kochanleitung. Der Zusammenhang klärt es immer.</div><button class="speak" data-say="Ich habe ein Rezept für ein Antibiotikum bekommen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-apotheke.webp" alt="Apothekerin hinter dem Tresen" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Apotheke</div><div class="bex">„Die Apotheke gleich neben der Praxis hat bis acht offen.“</div><div class="bti">💡 Nicht die Drogerie! In der <b>Drogerie</b> gibt es Shampoo und Vitamine, in der <b>Apotheke</b> die richtigen Medikamente.</div><button class="speak" data-say="Die Apotheke gleich neben der Praxis hat bis acht offen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-krankmeldung.webp" alt="Eine Krankmeldung vom Arzt liegt auf einem Schreibtisch" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Krankschreibung</div><div class="bex">„Ich brauche eine Krankschreibung für drei Tage.“</div><div class="bti">💡 Amtlich heißt sie <b>Arbeitsunfähigkeitsbescheinigung</b>, alle sagen <b>der gelbe Schein</b> oder <b>die AU</b>. Alles dasselbe Papier.</div><button class="speak" data-say="Ich brauche eine Krankschreibung für drei Tage.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="Medikament">💊</div><div class="bb"><div class="bw"><span class="art">das</span> Medikament</div><div class="bex">„Nehmen Sie das Medikament dreimal täglich.“</div><div class="bti">💡 Umgangssprachlich auch <b>die Tablette</b> (Form) oder <b>das Mittel</b> (<i>ein Mittel gegen Husten</i>). Plural: <b>die Medikamente</b>.</div><button class="speak" data-say="Nehmen Sie das Medikament dreimal täglich.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-salbe.webp" alt="Salbe wird aus der Tube auf einen Finger gedrückt" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Salbe</div><div class="bex">„Die Salbe kommt zweimal am Tag auf die Stelle.“</div><div class="bti">💡 Die drei Formen: <b>die Tablette</b> zum Schlucken, <b>die Salbe</b> zum Auftragen, <b>die Tropfen</b> zum Tropfen.</div><button class="speak" data-say="Die Salbe kommt zweimal am Tag auf die Stelle.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="einnehmen">🔁</div><div class="bb"><div class="bw">einnehmen</div><div class="bex">„Wie oft soll ich das einnehmen?“</div><div class="bti">💡 Trennbar und das Fachwort für „nehmen“ beim Medikament. Im Alltag sagt man auch einfach <b>nehmen</b>.</div><button class="speak" data-say="Wie oft soll ich das einnehmen?">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="nüchtern">🍽️</div><div class="bb"><div class="bw">nüchtern</div><div class="bex">„Das müssen Sie nüchtern einnehmen.“</div><div class="bti">💡 Beim Arzt heißt <b>nüchtern</b> immer „mit leerem Magen“, nie „ohne Alkohol“. Das Gegenteil im Beipackzettel: <b>zu den Mahlzeiten</b>.</div><button class="speak" data-say="Das müssen Sie nüchtern einnehmen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-apotheke.webp" alt="Amanda bekommt in der Apotheke eine Packung überreicht" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Nebenwirkung</div><div class="bex">„Hat das Nebenwirkungen, auf die ich achten muss?“</div><div class="bti">💡 Meist im Plural. Der berühmteste Satz der deutschen Werbung endet damit: <i>… fragen Sie Ihren Arzt oder Apotheker.</i></div><button class="speak" data-say="Hat das Nebenwirkungen, auf die ich achten muss?">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="Zuzahlung">💶</div><div class="bb"><div class="bw"><span class="art">die</span> Zuzahlung</div><div class="bex">„Auf das Rezept kommt noch eine Zuzahlung von fünf Euro.“</div><div class="bti">💡 Bei rezeptpflichtigen Medikamenten zahlt die Kasse den Rest. <b>rezeptfrei</b> heißt dagegen: alles selbst zahlen.</div><button class="speak" data-say="Auf das Rezept kommt noch eine Zuzahlung von fünf Euro.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-medizin.webp" alt="Ein Arzt steht neben einer sitzenden Patientin" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Überweisung</div><div class="bex">„Für den Orthopäden brauche ich eine Überweisung.“</div><div class="bti">💡 Auch hier zwei Bedeutungen: beim Arzt der Zettel zum Facharzt, bei der Bank die Zahlung. Wieder klärt der Zusammenhang alles.</div><button class="speak" data-say="Für den Orthopäden brauche ich eine Überweisung.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-buero.webp" alt="Zwei Kolleginnen am Schreibtisch mit Laptop" loading="lazy"><div class="bb"><div class="bw">sich krankmelden</div><div class="bex">„Ich habe mich heute Morgen krankgemeldet.“</div><div class="bti">💡 Reflexiv und trennbar: <i>Ich melde mich krank.</i> Und dazu gehört immer der Satz: <b>Die Krankschreibung schicke ich nach.</b></div><button class="speak" data-say="Ich habe mich heute Morgen krankgemeldet.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="gute Besserung">🌿</div><div class="bb"><div class="bw">gute Besserung</div><div class="bex">„Gute Besserung! — Danke, das ist lieb.“</div><div class="bti">💡 Der Standardsatz zum Abschied bei jedem Kranken. Die Antwort ist immer einfach <b>Danke</b>, nie „Ihnen auch“.</div><button class="speak" data-say="Gute Besserung! Danke, das ist lieb.">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel:</strong> Einer nennt eine Situation („Kopfschmerzen“, „drei Tage nicht arbeiten“, „zum Facharzt“). Der andere sagt in zwei Sekunden, welches der drei Papiere er braucht — Rezept, Krankschreibung oder Überweisung.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Drei Papiere, <span class="hl">drei verschiedene Wege</span></h2>
-<p class="ssub">Erst die drei Zettel und wohin sie gehören. Darunter drei Satzpaare, bei denen fast alle danebenliegen.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">💊</span><div class="gmw">Das Rezept</div><div class="gmb">Geht in die Apotheke. Dafür bekommst du das Medikament.</div><div class="gmx">Ich möchte dieses Rezept einlösen.</div></div>
-<div class="gk blau"><span class="gem2">🟨</span><div class="gmw">Die Krankschreibung</div><div class="gmb">Geht zum Arbeitgeber und zur Krankenkasse.</div><div class="gmx">Ich brauche eine Krankschreibung bis Freitag.</div></div>
-<div class="gk ja"><span class="gem2">➡️</span><div class="gmw">Die Überweisung</div><div class="gmb">Geht zum Facharzt. Ohne sie nimmt er dich oft nicht.</div><div class="gmx">Ich habe eine Überweisung vom Hausarzt.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Ich möchte das Rezept einlösen.</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>ein Rezept einlösen</b> ist der feste Ausdruck in der Apotheke — man gibt den Zettel ab und bekommt dafür das Medikament.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Ich möchte das Rezept kaufen.</div><div class="bsp"><span class="wer">Das Problem</span>Den Zettel kauft niemand. Gekauft wird das <b>Medikament</b> — der Zettel wird <b>eingelöst</b>.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Ich habe mich krankgemeldet.</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>sich krankmelden</b> ist reflexiv: Du meldest <u>dich</u>. Im Perfekt wird alles ein Wort: <b>krankgemeldet</b>.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Ich habe krank gemeldet.</div><div class="bsp"><span class="wer">Das Problem</span>Ohne <b>mich</b> fehlt die halbe Bedeutung — so klingt es, als hättest du jemand anderen gemeldet.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Nehmen Sie die Tablette nüchtern ein.</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>nüchtern</b> heißt in der Medizin: mit leerem Magen, also vor dem Essen. Das steht so auf jedem Beipackzettel.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Nehmen Sie die Tablette ohne Alkohol ein.</div><div class="bsp"><span class="wer">Das Problem</span>Im Alltag heißt <b>nüchtern</b> auch „nicht betrunken“ — beim Arzt aber nie. Dort geht es immer ums Essen.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Welchen Zettel brauche ich?</button>
-<div class="inhalt">
-<p>Frag dich, wohin du als Nächstes gehst:</p>
-<ul>
-<li><b>In die Apotheke</b>, um ein Medikament zu holen → <b>das Rezept</b>.</li>
-<li><b>Zur Arbeit</b>, um zu Hause bleiben zu dürfen → <b>die Krankschreibung</b>.</li>
-<li><b>Zum Facharzt</b> (Orthopäde, Hautarzt, Augenarzt) → <b>die Überweisung</b>.</li>
-<li><b>Nirgendwohin</b>, du willst es nur wissen → gar keinen Zettel, nur eine Frage.</li>
-</ul>
-<p style="margin-top:.5rem;">Und wenn du unsicher bist, frag im Sprechzimmer: <b>Brauche ich dafür noch etwas von Ihnen?</b> — der Satz spart dir einen zweiten Weg.</p>
-</div>
-</div>
-<div class="tip">⚖️ <strong>Kurzübung:</strong> Einer nennt ein Ziel („Orthopäde“, „Antibiotikum“, „drei Tage frei“). Der andere nennt den Zettel <u>und</u> den Satz, mit dem er ihn beim Arzt erbittet.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -835,37 +845,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei <span class="hl">Gänge nach dem Arzt</span></h2>
-<p class="ssub">Zu zweit. Einer hat den Zettel in der Hand, einer sitzt hinter dem Tresen oder am Telefon. Danach tauschen.</p>
-<div class="rmcard">
-<b>1 · Das Rezept einlösen</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A gibt ein Rezept ab. B als Apothekerin hat das Mittel nur in einer anderen Packungsgröße und erklärt die Einnahme sehr knapp.</p>
-<div class="nur-a2"><span class="rm">Ich möchte dieses Rezept einlösen</span><span class="rm">Wie oft am Tag?</span><span class="rm">Vor oder nach dem Essen?</span><span class="rm">Was zahle ich?</span></div>
-<div class="nur-b1"><span class="rm">Gibt es das auch als Saft?</span><span class="rm">Wie lange muss ich es nehmen?</span><span class="rm">Vertrage ich das mit …?</span><span class="rm">Könnten Sie mir das kurz aufschreiben?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A geht nicht, bevor er alle vier Angaben hat — wie oft, wann, wie lange, worauf achten — und fragt am Ende nach dem Preis.</div>
-</div>
-<div class="rmcard">
-<b>2 · Krankmeldung mit Rückfragen</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A meldet sich beim Chef krank. B als Chefin fragt nach, wie lange es dauert und wer die Termine übernimmt.</p>
-<div class="nur-a2"><span class="rm">Ich muss mich krankmelden</span><span class="rm">Ich habe um neun einen Termin</span><span class="rm">Die Krankschreibung schicke ich</span><span class="rm">Ich melde mich morgen</span></div>
-<div class="nur-b1"><span class="rm">Ich bin voraussichtlich bis … nicht da</span><span class="rm">Die Bescheinigung geht heute raus</span><span class="rm">Sara kann die Termine übernehmen</span><span class="rm">Ich sage Bescheid, sobald ich mehr weiß</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A nennt von sich aus, wann das Papier kommt, denkt kurz mit, was liegen bleibt, und verspricht keine Dauer, die er nicht kennt.</div>
-</div>
-<div class="rmcard">
-<b>3 · Ohne Rezept in der Apotheke</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat kein Rezept und will etwas gegen Husten. B fragt nach Alter, anderen Medikamenten und Schwangerschaft, bevor sie etwas gibt.</p>
-<div class="nur-a2"><span class="rm">Haben Sie etwas gegen Husten?</span><span class="rm">Seit drei Tagen</span><span class="rm">Nein, ich nehme nichts anderes</span><span class="rm">Ist das rezeptfrei?</span></div>
-<div class="nur-b1"><span class="rm">Ich hätte gern etwas für die Nacht</span><span class="rm">Eher trockener Husten als mit Schleim</span><span class="rm">Gibt es eine günstigere Alternative?</span><span class="rm">Ab wann sollte ich zum Arzt?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A beschreibt die Beschwerde genau genug, dass B etwas empfehlen kann, und fragt am Ende, ab wann ein Arztbesuch nötig wäre.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Diktiert euch gegenseitig einen Einnahmeplan — wie oft, wann, wie lange. Der andere schreibt mit und liest ihn zurück. Erst wenn beides gleich ist, seid ihr fertig.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -898,14 +885,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde muss einmal <u>-mal täglich</u> und einmal <u>vor oder nach dem Essen</u> vorkommen. Der Partner hebt die Hand, sobald beides da war.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Diktiert euch gegenseitig einen Einnahmeplan — wie oft, wann, wie lange. Der andere schreibt mit und liest ihn zurück. Erst wenn beides gleich ist, seid ihr fertig.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Warum braucht der Arbeitgeber ein Papier vom Arzt — reicht ein Anruf nicht?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Was ist praktischer: Medikamente im Supermarkt oder nur in der Apotheke?</li><li>Wie viel darf ein Apotheker entscheiden, was ein Arzt entschieden hat?</li><li>Wann ist Selbstmedikation sinnvoll — und wann gefährlich?</li><li>Was würdest du fragen, wenn du ein Medikament zum ersten Mal nimmst?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei <span class="hl">Gänge nach dem Arzt</span></h2>
+<p class="ssub">Zu zweit. Einer hat den Zettel in der Hand, einer sitzt hinter dem Tresen oder am Telefon. Danach tauschen.</p>
+<div class="rmcard">
+<b>1 · Das Rezept einlösen</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A gibt ein Rezept ab. B als Apothekerin hat das Mittel nur in einer anderen Packungsgröße und erklärt die Einnahme sehr knapp.</p>
+<div class="nur-a2"><span class="rm">Ich möchte dieses Rezept einlösen</span><span class="rm">Wie oft am Tag?</span><span class="rm">Vor oder nach dem Essen?</span><span class="rm">Was zahle ich?</span></div>
+<div class="nur-b1"><span class="rm">Gibt es das auch als Saft?</span><span class="rm">Wie lange muss ich es nehmen?</span><span class="rm">Vertrage ich das mit …?</span><span class="rm">Könnten Sie mir das kurz aufschreiben?</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A geht nicht, bevor er alle vier Angaben hat — wie oft, wann, wie lange, worauf achten — und fragt am Ende nach dem Preis.</div>
+</div>
+<div class="rmcard">
+<b>2 · Krankmeldung mit Rückfragen</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A meldet sich beim Chef krank. B als Chefin fragt nach, wie lange es dauert und wer die Termine übernimmt.</p>
+<div class="nur-a2"><span class="rm">Ich muss mich krankmelden</span><span class="rm">Ich habe um neun einen Termin</span><span class="rm">Die Krankschreibung schicke ich</span><span class="rm">Ich melde mich morgen</span></div>
+<div class="nur-b1"><span class="rm">Ich bin voraussichtlich bis … nicht da</span><span class="rm">Die Bescheinigung geht heute raus</span><span class="rm">Sara kann die Termine übernehmen</span><span class="rm">Ich sage Bescheid, sobald ich mehr weiß</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A nennt von sich aus, wann das Papier kommt, denkt kurz mit, was liegen bleibt, und verspricht keine Dauer, die er nicht kennt.</div>
+</div>
+<div class="rmcard">
+<b>3 · Ohne Rezept in der Apotheke</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat kein Rezept und will etwas gegen Husten. B fragt nach Alter, anderen Medikamenten und Schwangerschaft, bevor sie etwas gibt.</p>
+<div class="nur-a2"><span class="rm">Haben Sie etwas gegen Husten?</span><span class="rm">Seit drei Tagen</span><span class="rm">Nein, ich nehme nichts anderes</span><span class="rm">Ist das rezeptfrei?</span></div>
+<div class="nur-b1"><span class="rm">Ich hätte gern etwas für die Nacht</span><span class="rm">Eher trockener Husten als mit Schleim</span><span class="rm">Gibt es eine günstigere Alternative?</span><span class="rm">Ab wann sollte ich zum Arzt?</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A beschreibt die Beschwerde genau genug, dass B etwas empfehlen kann, und fragt am Ende, ab wann ein Arztbesuch nötig wäre.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -971,6 +992,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Sprachnachricht bis Sonntag in die WhatsApp-Gruppe. Ich höre jede an und antworte dir persönlich.</div>
 <div class="tip">🔜 <strong>Nächste Woche, Strang A:</strong> <u>Wohnungssuche</u> — Anzeigen lesen, bei der Besichtigung fragen und den Mietvertrag verstehen.</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1157,11 +1185,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1218,7 +1253,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1228,7 +1265,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

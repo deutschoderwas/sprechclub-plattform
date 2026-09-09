@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,49 +627,44 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B2<span class="zusatz"> · feiner</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#wiederholung">🔁 Wiederholung</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">⚖️ Drei Sorten Argumente</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">Was passiert <span class="hl">nach dem Auspacken?</span></h2>
-<p class="ssub">Der Moment des Schenkens dauert zehn Sekunden. Danach steht das Geschenk irgendwo — im Regal, im Schrank, auf einem Verkaufsportal oder in der Tonne. Wer ehrlich rechnet, kommt bei sich selbst schnell auf mehrere Dinge, die er nie benutzt hat und trotzdem nicht wegwerfen kann. Genau da fängt die Debatte an.</p>
-<div class="scene-wrap klein"><img src="../vok-bild/der-schrank.webp" alt="Ein geöffneter Kleiderschrank, voll mit Kleidung und gefalteter Wäsche"></div>
-<ul class="qlist nur-a2">
-<li>Was war das letzte Geschenk, das du nie benutzt hast?</li>
-<li>Wirfst du Geschenke weg, wenn du sie nicht brauchst?</li>
-<li>Wie viele Geschenke bekommst du im Jahr ungefähr?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Warum fällt es so schwer, ein ungenutztes Geschenk wegzugeben?</li>
-<li>Ist ein Geschenk, das im Schrank liegt, trotzdem etwas wert?</li>
-<li>Wem zuliebe schenken wir eigentlich — dem anderen oder uns selbst?</li>
-</ul>
-<div class="tip teal">🔑 <strong>Damit die Debatte trägt:</strong> Es geht heute nicht um Weihnachten oder Geburtstage abschaffen. Es geht um die Frage dahinter: <b>Wofür ist ein Geschenk da?</b> Wer das beantwortet, hat automatisch eine Position.</div>
-<h2 class="st">Der Preis <span class="hl">und die Bedeutung</span></h2>
-<p class="ssub">Ein Geschenk hat zwei Werte, und sie haben wenig miteinander zu tun. Der eine steht auf dem Etikett, der andere entsteht erst beim anderen. Deshalb kann etwas Teures völlig danebengehen und ein Zettel mit drei Sätzen jahrelang aufgehoben werden. Wer in dieser Debatte nur über Geld spricht, hat die Hälfte schon verloren.</p>
-<div class="scene-wrap klein"><img src="../vok-bild/die-gebuehr.webp" alt="Münzen und ein Geldschein liegen auf einem hellen Tresen"></div>
-<ul class="qlist nur-a2">
-<li>Was war dein schönstes Geschenk — und was hat es gekostet?</li>
-<li>Findest du Geld schenken praktisch oder lieblos?</li>
-<li>Schenkst du lieber Dinge oder gemeinsame Zeit?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Kann ein teures Geschenk den anderen unter Druck setzen?</li>
-<li>Ist Geld schenken ehrlicher als etwas zu kaufen, das niemand wollte?</li>
-<li>Woran merkt man, dass sich jemand wirklich Gedanken gemacht hat?</li>
-</ul>
-<div class="tip">💡 <strong>Zahlen für die Debatte:</strong> Umfragen in Deutschland kommen Jahr für Jahr auf ungefähr ein Viertel aller Weihnachtsgeschenke, die nicht gefallen — umgetauscht, weiterverschenkt oder verkauft. Nenn die Zahl ruhig, aber sag dazu, woher du sie hast. Genau das macht in einer Debatte den Unterschied.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
+</section>
+
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Was war das letzte Geschenk, das du nie benutzt hast?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Wirfst du Geschenke weg, wenn du sie nicht brauchst?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="wiederholung">
@@ -620,62 +685,6 @@ a.tab:hover{color:var(--ink);}
 <li>Wie fragt man höflich nach einem <b>Wunsch</b>, ohne einfallslos zu wirken?</li>
 </ul>
 <div class="tip teal">🔁 <strong>Zu zweit, dreißig Sekunden:</strong> Einer nennt ein Geschenk, das er einmal bekommen hat, der andere sagt in einem Satz, was daran gut war — mit Dativ und Akkusativ zusammen. Danach geht es los: Heute wird aus dem Schenken eine Streitfrage.</div>
-</section>
-
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Wörter <span class="hl">für eine Streitfrage, die jeden betrifft</span></h2>
-<p class="ssub">Sag jedes Wort laut — <u>mit Artikel</u>. Und häng gleich einen Satz an: Auf welcher Seite der Debatte steht dieses Wort?</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../bilder/lesen/muell.webp" alt="Drei Mülltonnen nebeneinander, daneben ein Recycling-Zeichen" loading="lazy"><div class="bb"><div class="bw">wegwerfen</div><div class="bex">„Niemand wirft ein Geschenk weg — man stellt es in den Keller.“</div><div class="bti">💡 Trennbar: <i>ich werfe es weg</i>. Genau darum dreht sich die Debatte: Weggeworfen wird selten, aufgehoben dafür ewig. Dazu passen <b>die Verschwendung</b> von Montag und <b>etwas verschwenden</b>.</div><button class="speak" data-say="Niemand wirft ein Geschenk weg — man stellt es in den Keller.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/supermarkt.webp" alt="Ein Einkaufswagen, gefüllt mit Lebensmitteln" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Konsum</div><div class="bex">„Weihnachten ist für viele vor allem Konsum geworden.“</div><div class="bti">💡 Ein sachliches Wort, kein Schimpfwort — bis man <b>Konsumzwang</b> daraus macht. Merk dir auch <b>konsumieren</b> und den Gegensatz <b>der Verzicht</b>.</div><button class="speak" data-say="Weihnachten ist für viele vor allem Konsum geworden.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-schrank.webp" alt="Ein geöffneter Kleiderschrank, voll mit Kleidung" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Überfluss</div><div class="bex">„Wir schenken im Überfluss und wissen nicht mehr, wohin damit.“</div><div class="bti">💡 Das Wort der Gegenseite zur Armut. <b>Im Überfluss leben</b> ist die feste Wendung. Und pass auf den Unterschied auf: <i>überflüssig</i> heißt <b>unnötig</b>, nicht <i>reichlich</i>.</div><button class="speak" data-say="Wir schenken im Überfluss und wissen nicht mehr, wohin damit.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/familie.webp" alt="Ein Regal mit einem Bilderrahmen, einem Teddybären und einem kleinen Kinderwagen" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Erinnerung</div><div class="bex">„Von diesem Tag ist mir vor allem eine Erinnerung geblieben.“</div><div class="bti">💡 Das stärkste Argument der Gegenseite: <b>Erinnerungen kann man nicht umtauschen.</b> Dazu gehört <b>sich an etwas erinnern</b> — immer mit <i>an</i> und Akkusativ.</div><button class="speak" data-say="Von diesem Tag ist mir vor allem eine Erinnerung geblieben.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/kino.webp" alt="Eine Kinoleinwand mit zwei Sesseln davor und einer Tüte Popcorn" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Erlebnis</div><div class="bex">„Wir schenken uns nur noch Erlebnisse — ein Konzert, ein Wochenende.“</div><div class="bti">💡 Das Wort für den beliebtesten Kompromiss der Debatte. <b>Etwas erleben</b> ist das Verb dazu. Und ein feiner Unterschied: Ein <i>Erlebnis</i> hat man, eine <i>Erfahrung</i> macht man.</div><button class="speak" data-say="Wir schenken uns nur noch Erlebnisse — ein Konzert, ein Wochenende.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-sozial.webp" alt="Drei Menschen sitzen an einem Tisch und sprechen miteinander" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Absprache</div><div class="bex">„Wir haben die Absprache, dass wir uns nichts mehr schenken.“</div><div class="bti">💡 Das praktischste Wort des Abends: <b>etwas absprechen</b>. In vielen Familien löst genau eine Absprache das ganze Problem — und niemand traut sich, sie vorzuschlagen.</div><button class="speak" data-say="Wir haben die Absprache, dass wir uns nichts mehr schenken.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/das-stichwort.webp" alt="Eine Hand schreibt mit einem Bleistift in ein Notizbuch" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Wunschliste</div><div class="bex">„Bei uns schreibt jeder eine Wunschliste, dann geht nichts daneben.“</div><div class="bti">💡 Für die einen die Rettung, für die anderen das Ende der Überraschung. Genau deshalb taucht das Wort heute auf beiden Seiten auf. Verwandt: <b>sich etwas wünschen</b> — reflexiv, mit Dativ.</div><button class="speak" data-say="Bei uns schreibt jeder eine Wunschliste, dann geht nichts daneben.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-gebuehr.webp" alt="Münzen und ein Geldschein auf einem hellen Tresen" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Wert</div><div class="bex">„Der Wert eines Geschenks steht selten auf dem Etikett.“</div><div class="bti">💡 Das Wort hat zwei Bedeutungen, und genau davon lebt diese Debatte. Nützlich: <b>Wert legen auf</b> (+ Akkusativ) und das Adjektiv <b>wertvoll</b>.</div><button class="speak" data-say="Der Wert eines Geschenks steht selten auf dem Etikett.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-meinung.webp" alt="Vier Menschen sitzen im Café zusammen und diskutieren" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Meinung</div><div class="bex">„Meiner Meinung nach ist Geld das ehrlichste Geschenk.“</div><div class="bti">💡 Zwei feste Wendungen für heute: <b>meiner Meinung nach</b> (ohne <i>ist</i> dahinter!) und <b>der Meinung sein, dass …</b>. Beides klingt sofort erwachsener als <i>ich denke</i>.</div><button class="speak" data-say="Meiner Meinung nach ist Geld das ehrlichste Geschenk.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/amanda-denk.webp" alt="Amanda überlegt, den Finger nachdenklich am Kinn" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Zweifel</div><div class="bex">„Ich habe Zweifel, ob teure Geschenke wirklich glücklich machen.“</div><div class="bti">💡 Ein Wort, das in Debatten stark wirkt: Wer Zweifel zugibt, wirkt sicher, nicht schwach. Dazu <b>an etwas zweifeln</b> und die Wendung <b>ohne Zweifel</b>.</div><button class="speak" data-say="Ich habe Zweifel, ob teure Geschenke wirklich glücklich machen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/cafe.webp" alt="Ein runder Tisch mit einer Tasse Kaffee und einem Stück Kuchen" loading="lazy"><div class="bb"><div class="bw">einladen</div><div class="bex">„Statt etwas zu kaufen, lade ich sie lieber zum Essen ein.“</div><div class="bti">💡 Trennbar: <i>ich lade dich ein</i>. Und Vorsicht mit der Bedeutung — <b>einladen</b> heißt hier <u>bezahlen</u>. Wer nur mitkommen soll, wird <i>gefragt</i>, nicht eingeladen.</div><button class="speak" data-say="Statt etwas zu kaufen, lade ich sie lieber zum Essen ein.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/das-angebot.webp" alt="Ein Regal in einem Laden mit Geschirr und einer aufgestellten Karte" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Angebot</div><div class="bex">„Im Angebot kaufen wir Dinge, die wir sonst nie kaufen würden.“</div><div class="bti">💡 Achtung, zwei Bedeutungen: das <b>Angebot</b> im Laden (der Preis) und ein <b>Angebot machen</b> (der Vorschlag). Für heute wichtig: <b>im Angebot sein</b> und <b>reduziert</b>.</div><button class="speak" data-say="Im Angebot kaufen wir Dinge, die wir sonst nie kaufen würden.">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel „Zwei Seiten, ein Wort“:</strong> Zieht ein Wort. Der erste baut damit ein Argument <u>für</u> Geschenke, der zweite mit demselben Wort eines <u>dagegen</u>. Wer es nicht schafft, zieht ein neues Wort — und merkt schnell: Fast jedes Wort funktioniert auf beiden Seiten.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Zahl, Gefühl <span class="hl">oder Erfahrung?</span></h2>
-<p class="ssub">Wer über Geschenke streitet, streitet selten über Fakten. Die drei Sorten unten wirken völlig unterschiedlich — und wer erkennt, welche Sorte gerade kommt, weiß auch, womit er antworten kann.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">📊</span><div class="gmw">die Zahl</div><div class="gmb">etwas, das man nachprüfen kann</div><div class="gmx">Rund ein Viertel aller Weihnachtsgeschenke gefällt nicht.</div></div>
-<div class="gk blau"><span class="gem2">❤️</span><div class="gmw">das Gefühl</div><div class="gmb">was etwas mit Menschen macht</div><div class="gmx">Ein Geschenk zeigt: Ich habe an dich gedacht.</div></div>
-<div class="gk ja"><span class="gem2">🧾</span><div class="gmw">die Erfahrung</div><div class="gmb">was du selbst erlebt hast</div><div class="gmx">Bei uns liegt seit drei Jahren dieselbe Vase im Keller.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Trägt in einer Debatte</div><div class="gsatz">Ein Viertel aller Geschenke gefällt nicht — das ist viel Geld für wenig Freude.</div><div class="bsp"><span class="wer">Warum das funktioniert</span>Die Zahl steht nicht allein, sondern führt zu einer <b>Folge</b>. Wer eine Zahl nennt und stehen lässt, hat nur Wissen gezeigt. Wer sie weiterdenkt, hat argumentiert.</div></div>
-<div class="gk no"><div class="gkl">❌ Trägt nicht</div><div class="gsatz">Geschenke sind sowieso nur Konsum.</div><div class="bsp"><span class="wer">Das Problem</span>Ein Urteil ohne Begründung. Es lässt dem anderen nichts, worauf er antworten könnte — und deshalb kommt fast immer nur ein <i>Finde ich nicht</i> zurück.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Trägt in einer Debatte</div><div class="gsatz">Meine Großmutter hat mir jedes Jahr etwas Selbstgemachtes geschenkt. Gekostet hat es fast nichts, und ich habe alles behalten.</div><div class="bsp"><span class="wer">Warum das funktioniert</span>Eine <b>Erfahrung</b> kann niemand widerlegen. Sie beweist zwar nichts allgemein, aber sie zeigt einen Fall — und danach diskutiert man über deine Geschichte, nicht gegen dich.</div></div>
-<div class="gk no"><div class="gkl">❌ Trägt nicht</div><div class="gsatz">Bei uns war das schon immer so, das macht man eben.</div><div class="bsp"><span class="wer">Das Problem</span>Eine <b>Gewohnheit</b> ist kein Argument. Sie erklärt, warum etwas passiert, aber nicht, warum es gut ist — und genau das fragt die Gegenseite als Nächstes.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Trägt in einer Debatte</div><div class="gsatz">Für Kinder würde ich eine Ausnahme machen: Da ist das Auspacken selbst das Erlebnis.</div><div class="bsp"><span class="wer">Warum das funktioniert</span>Eine <b>Ausnahme</b> macht deine Position nicht schwächer, sondern glaubwürdiger. Wer eine Grenze für die eigene Regel nennt, wirkt wie jemand, der wirklich nachgedacht hat.</div></div>
-<div class="gk no"><div class="gkl">❌ Trägt nicht</div><div class="gsatz">Also ich schenke trotzdem weiter, egal was ihr sagt.</div><div class="bsp"><span class="wer">Das Problem</span>Das ist keine Position, sondern ein Ausstieg. Die Debatte ist damit beendet, ohne dass jemand etwas gewonnen hat — und beim nächsten Punkt hört dir keiner mehr zu.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Wie baue ich ein Argument, das hält?</button>
-<div class="inhalt">
-<p>Drei Sätze, immer in dieser Reihenfolge:</p>
-<ul>
-<li><b>Die Position:</b> ein Satz, ohne Vorrede. <i>Ich halte das Schenken für sinnvoll — aber nicht in dieser Menge.</i></li>
-<li><b>Der Grund:</b> genau einer. Zahl, Gefühl oder Erfahrung, nicht alle drei gleichzeitig.</li>
-<li><b>Die Folge:</b> was daraus folgt. <i>Deshalb schlage ich vor, dass wir vorher fragen.</i></li>
-</ul>
-<p style="margin-top:.5rem;">Und ein Satz, der dich aus jeder Enge holt, ohne dass du aufgibst: <b>„Da haben Sie recht — und genau deshalb würde ich es anders regeln.“</b> Zustimmen und trotzdem bei der eigenen Position bleiben ist in Debatten die stärkste Bewegung, die es gibt.</p>
-</div>
-</div>
-<div class="tip">🎯 <strong>Zu zweit, eine Minute:</strong> Einer nennt ein Argument, der andere sagt nur, welche Sorte es war — Zahl, Gefühl oder Erfahrung. Ihr werdet merken: Die meisten Menschen benutzen fast immer dieselbe Sorte. Wer die anderen zwei dazunimmt, überzeugt doppelt so viele.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -828,37 +837,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei Debatten <span class="hl">zu zweit</span></h2>
-<p class="ssub">Einer vertritt eine Position, einer die andere. Danach tauschen — und beim zweiten Mal ohne die Sätze unten. Regel für beide Runden: In jeder Antwort muss ein <i>da</i>-Wort vorkommen.</p>
-<div class="rmcard">
-<b>1 · Abschaffen oder behalten?</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A möchte, dass die Familie sich dieses Jahr gar nichts schenkt: zu viel Aufwand, zu viel Müll, zu wenig Freude. B hängt an dem Ritual und findet den Vorschlag kalt.</p>
-<div class="nur-a2"><span class="rm">Ich bin dafür, dass wir dieses Jahr nichts schenken</span><span class="rm">Davon haben doch alle nur Stress</span><span class="rm">Trotzdem verstehe ich, dass es dir wichtig ist</span><span class="rm">Wie wäre es, wenn wir nur für die Kinder etwas kaufen?</span></div>
-<div class="nur-b1"><span class="rm">Ich bin dagegen, das Ritual ganz zu streichen — daran hängen Erinnerungen</span><span class="rm">Der Aufwand ist ein Argument, allerdings gegen die Menge, nicht gegen das Schenken</span><span class="rm">Denkbar wäre eine Regelung, die den Betrag begrenzt</span><span class="rm">Darauf könnten wir uns wahrscheinlich alle einigen</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide haben mindestens einmal etwas zugegeben, bevor sie widersprochen haben. Es kam mindestens ein Kompromiss zur Sprache, und keiner hat am Ende gewonnen — sondern beide haben einen Vorschlag, mit dem sie leben können.</div>
-</div>
-<div class="rmcard">
-<b>2 · Geld oder Gedanke?</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A schenkt grundsätzlich Geld: praktisch, nichts landet im Müll, jeder kauft sich, was er will. B findet das lieblos und sagt es auch — sachlich, aber deutlich.</p>
-<div class="nur-a2"><span class="rm">Meiner Meinung nach ist Geld das ehrlichste Geschenk</span><span class="rm">Davon kann sich jeder kaufen, was er wirklich braucht</span><span class="rm">Da hast du recht, ganz ohne Worte wirkt es kalt</span><span class="rm">Ich könnte einen Zettel dazulegen, wofür es gedacht ist</span></div>
-<div class="nur-b1"><span class="rm">Ich halte Geld für vertretbar, solange eine Idee dahintersteht</span><span class="rm">Was mich daran stört, ist die fehlende Mühe</span><span class="rm">Das trifft nur zu, wenn man den Betrag kommentarlos überreicht</span><span class="rm">Über den Zettel würde ich mich tatsächlich mehr freuen als über die Summe</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Es wurde über Bedeutung gesprochen, nicht nur über Beträge. Beide haben mindestens ein <i>da</i>-Wort benutzt, und am Ende stand eine Idee, wie man Geld schenken kann, ohne dass es lieblos wirkt.</div>
-</div>
-<div class="rmcard">
-<b>3 · Die Firma und der Kollege</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Im Büro soll für die Chefin gesammelt werden. A organisiert und findet es selbstverständlich. B möchte nicht mitmachen — und muss das sagen, ohne dass es unangenehm wird.</p>
-<div class="nur-a2"><span class="rm">Wir legen alle zusammen, machst du mit?</span><span class="rm">Es geht nur um zehn Euro pro Person</span><span class="rm">Ich verstehe, dass dir das unangenehm ist</span><span class="rm">Dann trag dich einfach nicht ein, das ist kein Problem</span></div>
-<div class="nur-b1"><span class="rm">Ich würde mich diesmal gern heraushalten — dagegen habe ich grundsätzlich etwas</span><span class="rm">Es geht mir nicht um den Betrag, sondern darum, dass niemand wirklich frei entscheiden kann</span><span class="rm">Ich schlage vor, dass wir eine Karte machen, die alle unterschreiben</span><span class="rm">Darauf würden sich vermutlich mehr Leute einlassen</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat abgelehnt, ohne sich zu entschuldigen, und einen Grund genannt, der nichts mit Geiz zu tun hat. A hat die Ablehnung stehen lassen. Am Ende gab es eine Alternative, die niemanden ausschließt.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Einer nennt reihum ein Verb mit fester Präposition (<i>sich freuen über</i>), der Nachbar bildet sofort zwei Sätze — einen mit einer Sache (<i>Darüber freue ich mich</i>) und einen mit einer Person (<i>Über sie freue ich mich</i>). Wer bei <i>über es</i> landet, gibt weiter.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -891,14 +877,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde müssen <u>ein Zugeständnis</u> und <u>ein da-Wort</u> vorkommen. Wer anfängt zu wiederholen, statt neu zu begründen, gibt weiter.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Einer nennt reihum ein Verb mit fester Präposition (<i>sich freuen über</i>), der Nachbar bildet sofort zwei Sätze — einen mit einer Sache (<i>Darüber freue ich mich</i>) und einen mit einer Person (<i>Über sie freue ich mich</i>). Wer bei <i>über es</i> landet, gibt weiter.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Warum fällt es so schwer, ein ungenutztes Geschenk wegzugeben?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Ist ein Geschenk, das im Schrank liegt, trotzdem etwas wert?</li><li>Wem zuliebe schenken wir eigentlich — dem anderen oder uns selbst?</li><li>Kann ein teures Geschenk den anderen unter Druck setzen?</li><li>Ist Geld schenken ehrlicher als etwas zu kaufen, das niemand wollte?</li><li>Woran merkt man, dass sich jemand wirklich Gedanken gemacht hat?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei Debatten <span class="hl">zu zweit</span></h2>
+<p class="ssub">Einer vertritt eine Position, einer die andere. Danach tauschen — und beim zweiten Mal ohne die Sätze unten. Regel für beide Runden: In jeder Antwort muss ein <i>da</i>-Wort vorkommen.</p>
+<div class="rmcard">
+<b>1 · Abschaffen oder behalten?</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A möchte, dass die Familie sich dieses Jahr gar nichts schenkt: zu viel Aufwand, zu viel Müll, zu wenig Freude. B hängt an dem Ritual und findet den Vorschlag kalt.</p>
+<div class="nur-a2"><span class="rm">Ich bin dafür, dass wir dieses Jahr nichts schenken</span><span class="rm">Davon haben doch alle nur Stress</span><span class="rm">Trotzdem verstehe ich, dass es dir wichtig ist</span><span class="rm">Wie wäre es, wenn wir nur für die Kinder etwas kaufen?</span></div>
+<div class="nur-b1"><span class="rm">Ich bin dagegen, das Ritual ganz zu streichen — daran hängen Erinnerungen</span><span class="rm">Der Aufwand ist ein Argument, allerdings gegen die Menge, nicht gegen das Schenken</span><span class="rm">Denkbar wäre eine Regelung, die den Betrag begrenzt</span><span class="rm">Darauf könnten wir uns wahrscheinlich alle einigen</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide haben mindestens einmal etwas zugegeben, bevor sie widersprochen haben. Es kam mindestens ein Kompromiss zur Sprache, und keiner hat am Ende gewonnen — sondern beide haben einen Vorschlag, mit dem sie leben können.</div>
+</div>
+<div class="rmcard">
+<b>2 · Geld oder Gedanke?</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A schenkt grundsätzlich Geld: praktisch, nichts landet im Müll, jeder kauft sich, was er will. B findet das lieblos und sagt es auch — sachlich, aber deutlich.</p>
+<div class="nur-a2"><span class="rm">Meiner Meinung nach ist Geld das ehrlichste Geschenk</span><span class="rm">Davon kann sich jeder kaufen, was er wirklich braucht</span><span class="rm">Da hast du recht, ganz ohne Worte wirkt es kalt</span><span class="rm">Ich könnte einen Zettel dazulegen, wofür es gedacht ist</span></div>
+<div class="nur-b1"><span class="rm">Ich halte Geld für vertretbar, solange eine Idee dahintersteht</span><span class="rm">Was mich daran stört, ist die fehlende Mühe</span><span class="rm">Das trifft nur zu, wenn man den Betrag kommentarlos überreicht</span><span class="rm">Über den Zettel würde ich mich tatsächlich mehr freuen als über die Summe</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Es wurde über Bedeutung gesprochen, nicht nur über Beträge. Beide haben mindestens ein <i>da</i>-Wort benutzt, und am Ende stand eine Idee, wie man Geld schenken kann, ohne dass es lieblos wirkt.</div>
+</div>
+<div class="rmcard">
+<b>3 · Die Firma und der Kollege</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Im Büro soll für die Chefin gesammelt werden. A organisiert und findet es selbstverständlich. B möchte nicht mitmachen — und muss das sagen, ohne dass es unangenehm wird.</p>
+<div class="nur-a2"><span class="rm">Wir legen alle zusammen, machst du mit?</span><span class="rm">Es geht nur um zehn Euro pro Person</span><span class="rm">Ich verstehe, dass dir das unangenehm ist</span><span class="rm">Dann trag dich einfach nicht ein, das ist kein Problem</span></div>
+<div class="nur-b1"><span class="rm">Ich würde mich diesmal gern heraushalten — dagegen habe ich grundsätzlich etwas</span><span class="rm">Es geht mir nicht um den Betrag, sondern darum, dass niemand wirklich frei entscheiden kann</span><span class="rm">Ich schlage vor, dass wir eine Karte machen, die alle unterschreiben</span><span class="rm">Darauf würden sich vermutlich mehr Leute einlassen</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat abgelehnt, ohne sich zu entschuldigen, und einen Grund genannt, der nichts mit Geiz zu tun hat. A hat die Ablehnung stehen lassen. Am Ende gab es eine Alternative, die niemanden ausschließt.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -964,6 +984,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Sprachnachricht und die Sätze bis Sonntag in den Chat. Ich höre alles an und schreibe dir zurück, was schon sitzt und woran wir arbeiten.</div>
 <div class="tip">🔜 <strong>Nächste Woche:</strong> <u>Weniger Auto — und dann?</u> Bus, Rad, Parkplatz, Stadt gegen Land — und am Mittwoch die Debatte über die autofreie Innenstadt. Die vier Bausteine von heute nimmst du direkt mit.</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1150,11 +1177,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1211,7 +1245,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1221,7 +1257,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,100 +627,43 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B2<span class="zusatz"> · förmlich</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">⚖️ Womit stehst du da?</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">Der Karton war <span class="hl">schon offen</span></h2>
-<p class="ssub">Schaut euch das Bild an. Was ist hier schiefgelaufen — und was wäre dein erster Satz an der Theke?</p>
-<div class="scene-wrap klein"><img src="../amanda/sz-handel.webp" alt="Eine Kundin und ein Verkäufer stehen in einem Laden an der Theke"></div>
-<ul class="qlist nur-a2">
-<li>Hast du dich schon einmal beschwert? Wo, und wie ist es ausgegangen?</li>
-<li>Was ist schwerer: sich am Telefon oder im Laden beschweren?</li>
-<li>Wann lässt du etwas lieber auf sich beruhen?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Beschwert man sich in deinem Land direkt — oder gilt das als unhöflich?</li>
-<li>Was bringt mehr: freundlich bleiben oder Druck machen? Woran liegt das?</li>
-<li>Wann lohnt sich der Aufwand nicht mehr, und wer entscheidet das?</li>
-</ul>
-<div class="tip">🗣️ <strong>Sprecht reihum:</strong> „Zuletzt habe ich mich beschwert wegen …“ · „Ich habe gesagt: …“ · „Am Ende habe ich … bekommen.“</div>
-<h2 class="st">Ruhig ist nicht <span class="hl">schwach</span></h2>
-<p class="ssub">Wer laut wird, bekommt einen Vorgesetzten. Wer ruhig bleibt, konkret sagt, was er will, und eine Frist setzt, bekommt sein Geld.</p>
-<div class="scene-wrap klein"><img src="../amanda/sz-rechte.webp" alt="Eine Frau sitzt im Sessel und telefoniert mit einem Dokument in der Hand"></div>
-<ul class="qlist">
-<li>Was wirkt auf dich überzeugender: jemand, der schimpft, oder jemand, der ruhig bleibt?</li>
-<li>Warum hilft ein Datum mehr als ein Adjektiv?</li>
-<li>Wann darf man den Ton verschärfen — und wie?</li>
-</ul>
-<div class="tip teal">👀 <strong>Zu zweit, eine Minute:</strong> Einer beschwert sich <u>laut</u>, dann derselbe Fall <u>ruhig und konkret</u>. Der andere sagt, worauf er reagieren würde. Dann tauschen.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
 </section>
 
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Wörter für <span class="hl">eine gute Beschwerde</span></h2>
-<p class="ssub">Sagt jedes Wort laut — und gleich den Beispielsatz hinterher. Erst dann bleibt es hängen.</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../vok-bild/die-reklamation.webp" alt="Ein Paket steht auf einer Ladentheke" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Reklamation</div><div class="bex">„Ich möchte eine Reklamation aufgeben, die Ware kam beschädigt an.“</div><div class="bti">💡 Die Reklamation ist die Beschwerde über ein <b>fehlerhaftes</b> Produkt. Wer nur das Modell tauschen will, macht eine Retoure.</div><button class="speak" data-say="Ich möchte eine Reklamation aufgeben, die Ware kam beschädigt an.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-retoure.webp" alt="Ein verschlossener Karton auf einem Tisch" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Retoure</div><div class="bex">„Die Retoure ist innerhalb von vierzehn Tagen kostenlos.“</div><div class="bti">💡 Rückgabe ohne Grund — im Onlinehandel dein gutes Recht. Dafür muss nichts kaputt sein.</div><button class="speak" data-say="Die Retoure ist innerhalb von vierzehn Tagen kostenlos.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-kassenbon.webp" alt="Eine Hand hält einen Kassenbon in einem Laden" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Kassenbon</div><div class="bex">„Ohne Kassenbon wird es schwierig — aber nicht unmöglich.“</div><div class="bti">💡 Auch <b>der Kassenzettel</b> oder <b>der Beleg</b>. Als Nachweis reicht oft auch der Kontoauszug.</div><button class="speak" data-say="Ohne Kassenbon wird es schwierig, aber nicht unmöglich.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-rechnung.webp" alt="Eine Rechnung und Münzen auf einem Tablett" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Rechnung</div><div class="bex">„Auf der Rechnung stehen zwei Positionen, die ich nie bestellt habe.“</div><div class="bti">💡 Eine einzelne Zeile darauf heißt <b>die Position</b>. „Ich beanstande Position drei“ klingt sofort professionell.</div><button class="speak" data-say="Auf der Rechnung stehen zwei Positionen, die ich nie bestellt habe.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-lieferschein.webp" alt="Ein offener Karton mit einem Lieferschein" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Lieferschein</div><div class="bex">„Laut Lieferschein sollten drei Teile drin sein, es waren zwei.“</div><div class="bti">💡 <b>laut Lieferschein</b>, <b>laut Vertrag</b>, <b>laut Auskunft</b> — mit „laut“ berufst du dich auf etwas Schriftliches.</div><button class="speak" data-say="Laut Lieferschein sollten drei Teile drin sein, es waren zwei.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-gebuehr.webp" alt="Geldscheine und Münzen neben einem Laptop" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Gebühr</div><div class="bex">„Die Gebühr von 4,90 Euro wurde nie vereinbart.“</div><div class="bti">💡 <b>eine Gebühr erheben</b>, <b>eine Gebühr erstatten</b>. Nicht vereinbart heißt: muss zurück.</div><button class="speak" data-say="Die Gebühr von vier Euro neunzig wurde nie vereinbart.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="Mangel">🛠️</div><div class="bb"><div class="bw"><span class="art">der</span> Mangel</div><div class="bex">„Der Mangel war schon bei der Lieferung vorhanden.“</div><div class="bti">💡 Der juristische Begriff für den Fehler. Plural: <b>die Mängel</b>. Mit diesem Wort wirst du ernst genommen.</div><button class="speak" data-say="Der Mangel war schon bei der Lieferung vorhanden.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="Frist">📅</div><div class="bb"><div class="bw"><span class="art">die</span> Frist</div><div class="bex">„Ich setze Ihnen eine Frist bis zum zwanzigsten September.“</div><div class="bti">💡 <b>eine Frist setzen</b> ist der wichtigste Satz jeder Beschwerde. Ohne Datum passiert nichts.</div><button class="speak" data-say="Ich setze Ihnen eine Frist bis zum zwanzigsten September.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/das-protokoll.webp" alt="Jemand macht Notizen an einem Tisch" loading="lazy"><div class="bb"><div class="bw">beanstanden</div><div class="bex">„Ich beanstande die zweite Position auf der Rechnung.“</div><div class="bti">💡 Förmlicher als „sich beschweren“ und deshalb wirksamer. Passt in jede Mail an eine Firma.</div><button class="speak" data-say="Ich beanstande die zweite Position auf der Rechnung.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="erstatten">💶</div><div class="bb"><div class="bw">erstatten</div><div class="bex">„Bitte erstatten Sie mir den Betrag auf mein Konto.“</div><div class="bti">💡 Geld zurückzahlen. Das Substantiv: <b>die Erstattung</b>. Sag immer dazu, <u>wohin</u> — Konto oder Karte.</div><button class="speak" data-say="Bitte erstatten Sie mir den Betrag auf mein Konto.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-verspaetung.webp" alt="Ein leerer Bahnsteig mit einer Uhr" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Verspätung</div><div class="bex">„Wegen der Verspätung habe ich meinen Anschluss verpasst.“</div><div class="bti">💡 Ab 60 Minuten gibt es bei der Bahn Geld zurück. Der Antrag heißt <b>Fahrgastrechteformular</b>.</div><button class="speak" data-say="Wegen der Verspätung habe ich meinen Anschluss verpasst.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="Kulanz">⚖️</div><div class="bb"><div class="bw"><span class="art">die</span> Kulanz</div><div class="bex">„Der Händler hat es aus Kulanz getauscht, obwohl die Garantie abgelaufen war.“</div><div class="bti">💡 Freiwilliges Entgegenkommen ohne rechtliche Pflicht. Danach fragt man freundlich — fordern kann man es nicht.</div><button class="speak" data-say="Der Händler hat es aus Kulanz getauscht, obwohl die Garantie abgelaufen war.">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel:</strong> Verdeckt die Wörter. Wer eine Karte aufdeckt, baut damit einen Satz, der mit <u>„Ich bitte Sie …“</u> anfängt.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Drei Rechte, die <span class="hl">ständig verwechselt werden</span></h2>
-<p class="ssub">Erst die drei Begriffe, die in jedem Laden durcheinandergehen. Darunter drei Sätze, die zeigen, was wirkt und was nicht.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">🏛️</span><div class="gmw">Die Gewährleistung</div><div class="gmb">Gesetzlich, zwei Jahre, gilt gegenüber dem Verkäufer.</div><div class="gmx">Das Gerät war von Anfang an defekt — dafür haftet der Händler.</div></div>
-<div class="gk blau"><span class="gem2">🎁</span><div class="gmw">Die Garantie</div><div class="gmb">Freiwillig vom Hersteller, Dauer und Umfang stehen im Heft.</div><div class="gmx">Drei Jahre Garantie, aber nur auf den Motor.</div></div>
-<div class="gk ja"><span class="gem2">🤝</span><div class="gmw">Die Kulanz</div><div class="gmb">Reine Freundlichkeit, kein Anspruch. Danach fragt man.</div><div class="gmx">Wäre da vielleicht etwas auf Kulanz möglich?</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Wirkt</div><div class="gsatz">Das Gerät hat seit dem ersten Tag nicht geladen. Ich bitte Sie um Austausch bis zum 20. September.</div><div class="bsp"><span class="wer">Warum das wirkt</span>Ein Fakt, eine Forderung, ein Datum. Darauf muss jemand antworten — auf Ärger nicht.</div></div>
-<div class="gk no"><div class="gkl">❌ Wirkt nicht</div><div class="gsatz">Das ist eine Frechheit, so etwas ist mir noch nie passiert!</div><div class="bsp"><span class="wer">Das Problem</span>Keine Forderung, kein Datum, nichts zum Bearbeiten. Der Mitarbeiter kann nur zuhören und wegschicken.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Wirkt</div><div class="gsatz">Laut Lieferschein sollten drei Teile enthalten sein, geliefert wurden zwei.</div><div class="bsp"><span class="wer">Warum das wirkt</span>Du berufst dich auf ein Papier, das die Firma selbst geschrieben hat. Dagegen gibt es kein Argument.</div></div>
-<div class="gk no"><div class="gkl">❌ Wirkt nicht</div><div class="gsatz">Ich glaube, da hat irgendwas gefehlt.</div><div class="bsp"><span class="wer">Das Problem</span>„Ich glaube“ und „irgendwas“ machen aus einem Anspruch eine Vermutung. Vermutungen werden abgelehnt.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Wirkt</div><div class="gsatz">Ich habe Verständnis dafür, dass Sie das nicht entscheiden können. Wer kann es?</div><div class="bsp"><span class="wer">Warum das wirkt</span>Du greifst nicht die Person an, sondern gehst eine Ebene weiter. Höflich und trotzdem hartnäckig.</div></div>
-<div class="gk no"><div class="gkl">❌ Wirkt nicht</div><div class="gsatz">Holen Sie mir sofort Ihren Chef!</div><div class="bsp"><span class="wer">Das Problem</span>Das macht aus dem Mitarbeiter einen Gegner. Er wird dich beim Vorgesetzten nicht empfehlen.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Der Aufbau jeder Beschwerde</button>
-<div class="inhalt">
-<p>Vier Schritte, mündlich wie schriftlich immer gleich:</p>
-<ul>
-<li>1. <b>Sachverhalt:</b> Was ist wann passiert? Ein Satz, mit Datum.</li>
-<li>2. <b>Beleg:</b> Worauf berufst du dich — Bon, Lieferschein, Vertrag, Auskunft?</li>
-<li>3. <b>Forderung:</b> Was genau willst du — Austausch, Reparatur, Erstattung?</li>
-<li>4. <b>Frist:</b> Bis wann? Ohne Datum ist alles davor wirkungslos.</li>
-</ul>
-<p style="margin-top:.5rem;">Merk dir die Reihenfolge: <b>Was → Beleg → Wunsch → Datum</b>. Vier Sätze reichen für jede Beschwerde der Welt.</p>
-</div>
-</div>
-<div class="tip">⚖️ <strong>Kurzübung:</strong> Jeder denkt an einen echten Fall und baut ihn in genau vier Sätzen — <u>Sachverhalt, Beleg, Forderung, Frist</u>. Die Gruppe hört, ob ein Datum vorkommt.</div>
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Hast du dich schon einmal beschwert? Wo, und wie ist es ausgegangen?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Was ist schwerer: sich am Telefon oder im Laden beschweren?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -809,37 +822,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei <span class="hl">Beschwerden</span></h2>
-<p class="ssub">Zu zweit. A ist Kundin oder Kunde, B arbeitet dort und sagt zuerst nein. Zwei Minuten, dann tauschen.</p>
-<div class="rmcard">
-<b>1 · Die Waschmaschine nach zehn Monaten</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat vor zehn Monaten gekauft, das Gerät verliert Wasser. B verweist auf den Hersteller.</p>
-<div class="nur-a2"><span class="rm">Ich habe hier gekauft</span><span class="rm">Hier ist die Rechnung</span><span class="rm">Ich möchte eine Reparatur</span><span class="rm">Bis wann geht das?</span></div>
-<div class="nur-b1"><span class="rm">Innerhalb der Gewährleistung …</span><span class="rm">Der Mangel bestand von Anfang an</span><span class="rm">Ich bitte Sie um Nachbesserung</span><span class="rm">Ich setze eine Frist bis zum …</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A bleibt beim Händler, nennt die Gewährleistung, fordert konkret und setzt ein Datum. B lenkt erst nach dem dritten Argument ein.</div>
-</div>
-<div class="rmcard">
-<b>2 · Die Handwerkerrechnung</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Vereinbart waren 400 Euro, auf der Rechnung stehen 620 — mit einer Position, von der nie die Rede war.</p>
-<div class="nur-a2"><span class="rm">Wir hatten 400 Euro besprochen</span><span class="rm">Diese Position kenne ich nicht</span><span class="rm">Ich zahle den vereinbarten Teil</span><span class="rm">Bitte erklären Sie mir das</span></div>
-<div class="nur-b1"><span class="rm">Ich beanstande Position drei</span><span class="rm">Eine Mehrarbeit wurde nie angekündigt</span><span class="rm">Ich zahle unter Vorbehalt</span><span class="rm">Bitte legen Sie eine korrigierte Rechnung vor</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A zahlt den unstrittigen Teil und beanstandet nur die eine Position. Niemand wird beleidigt, und am Ende steht ein Datum.</div>
-</div>
-<div class="rmcard">
-<b>3 · Der Kurs, der ausgefallen ist</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat einen Sprachkurs bezahlt, drei von zehn Terminen sind ersatzlos ausgefallen.</p>
-<div class="nur-a2"><span class="rm">Drei Termine sind ausgefallen</span><span class="rm">Ich möchte einen Teil zurück</span><span class="rm">Oder Ersatztermine</span><span class="rm">Was schlagen Sie vor?</span></div>
-<div class="nur-b1"><span class="rm">Die vereinbarte Leistung wurde nicht erbracht</span><span class="rm">Mir wurden zehn Termine zugesagt</span><span class="rm">Ich bitte um anteilige Erstattung</span><span class="rm">Alternativ akzeptiere ich Ersatztermine</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A nennt eine Zahl, macht einen Alternativvorschlag und bleibt freundlich. So kommt eine Lösung heraus statt eines Streits.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Lest die vier Bausteine noch einmal am Stück vor — <u>Sachverhalt, Beleg, Forderung, Frist</u>. Erst wenn es flüssig klingt, sitzt es.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -872,14 +862,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde müssen ein <u>Datum</u> und eine <u>Forderung</u> vorkommen. Die Gruppe hört mit und sagt hinterher, ob beides da war.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Lest die vier Bausteine noch einmal am Stück vor — <u>Sachverhalt, Beleg, Forderung, Frist</u>. Erst wenn es flüssig klingt, sitzt es.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Beschwert man sich in deinem Land direkt — oder gilt das als unhöflich?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Was bringt mehr: freundlich bleiben oder Druck machen? Woran liegt das?</li><li>Wann lohnt sich der Aufwand nicht mehr, und wer entscheidet das?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei <span class="hl">Beschwerden</span></h2>
+<p class="ssub">Zu zweit. A ist Kundin oder Kunde, B arbeitet dort und sagt zuerst nein. Zwei Minuten, dann tauschen.</p>
+<div class="rmcard">
+<b>1 · Die Waschmaschine nach zehn Monaten</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat vor zehn Monaten gekauft, das Gerät verliert Wasser. B verweist auf den Hersteller.</p>
+<div class="nur-a2"><span class="rm">Ich habe hier gekauft</span><span class="rm">Hier ist die Rechnung</span><span class="rm">Ich möchte eine Reparatur</span><span class="rm">Bis wann geht das?</span></div>
+<div class="nur-b1"><span class="rm">Innerhalb der Gewährleistung …</span><span class="rm">Der Mangel bestand von Anfang an</span><span class="rm">Ich bitte Sie um Nachbesserung</span><span class="rm">Ich setze eine Frist bis zum …</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A bleibt beim Händler, nennt die Gewährleistung, fordert konkret und setzt ein Datum. B lenkt erst nach dem dritten Argument ein.</div>
+</div>
+<div class="rmcard">
+<b>2 · Die Handwerkerrechnung</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Vereinbart waren 400 Euro, auf der Rechnung stehen 620 — mit einer Position, von der nie die Rede war.</p>
+<div class="nur-a2"><span class="rm">Wir hatten 400 Euro besprochen</span><span class="rm">Diese Position kenne ich nicht</span><span class="rm">Ich zahle den vereinbarten Teil</span><span class="rm">Bitte erklären Sie mir das</span></div>
+<div class="nur-b1"><span class="rm">Ich beanstande Position drei</span><span class="rm">Eine Mehrarbeit wurde nie angekündigt</span><span class="rm">Ich zahle unter Vorbehalt</span><span class="rm">Bitte legen Sie eine korrigierte Rechnung vor</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A zahlt den unstrittigen Teil und beanstandet nur die eine Position. Niemand wird beleidigt, und am Ende steht ein Datum.</div>
+</div>
+<div class="rmcard">
+<b>3 · Der Kurs, der ausgefallen ist</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat einen Sprachkurs bezahlt, drei von zehn Terminen sind ersatzlos ausgefallen.</p>
+<div class="nur-a2"><span class="rm">Drei Termine sind ausgefallen</span><span class="rm">Ich möchte einen Teil zurück</span><span class="rm">Oder Ersatztermine</span><span class="rm">Was schlagen Sie vor?</span></div>
+<div class="nur-b1"><span class="rm">Die vereinbarte Leistung wurde nicht erbracht</span><span class="rm">Mir wurden zehn Termine zugesagt</span><span class="rm">Ich bitte um anteilige Erstattung</span><span class="rm">Alternativ akzeptiere ich Ersatztermine</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A nennt eine Zahl, macht einen Alternativvorschlag und bleibt freundlich. So kommt eine Lösung heraus statt eines Streits.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -946,6 +970,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Mail oder Sprachnachricht bis <u>Sonntag 18 Uhr</u> in die Gruppe. Wir sehen uns zwei davon gemeinsam an — freiwillig, versteht sich.</div>
 <div class="tip">🔜 <strong>Ab dem 14. September</strong> geht es in Strang D jede Woche um Sprache, die etwas bewirkt — nachfragen, verhandeln, sich durchsetzen.</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1132,11 +1163,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1193,7 +1231,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1203,7 +1243,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

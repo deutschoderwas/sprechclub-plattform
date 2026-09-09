@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,103 +627,43 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B2<span class="zusatz"> · feiner</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">⚖️ Drei Verben</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">Drei Verben, <span class="hl">und du kommst überall hin</span></h2>
-<p class="ssub">Wer <b>gehen</b>, <b>kommen</b> und <b>fahren</b> sicher benutzt, braucht für den halben Alltag kein anderes Verb. Der Unterschied ist einfacher, als er aussieht.</p>
-<div class="scene-wrap klein"><img src="../amanda/sz-unterwegs.webp" alt="Frau mit Koffer auf einem Bahnsteig"></div>
-<ul class="qlist nur-a2">
-<li>Wie bist du heute zum Kurs gekommen — zu Fuß, mit dem Bus, mit dem Auto?</li>
-<li>Wohin gehst du in deiner Stadt am liebsten?</li>
-<li>Fährst du gern Zug? Warum, warum nicht?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Was sagt es über eine Stadt aus, wie die Leute dort unterwegs sind?</li>
-<li>Gibt es in deiner Sprache auch drei verschiedene Verben dafür?</li>
-<li>Wann hast du das letzte Mal jemanden vom Bahnhof abgeholt?</li>
-</ul>
-<div class="tip teal">🧭 <strong>Der ganze Unterschied in einem Satz:</strong> <b>gehen</b> = auf den eigenen Füßen. <b>fahren</b> = mit etwas, das Räder hat. <b>kommen</b> = die Richtung ist dorthin, wo der Sprecher ist.</div>
-<h2 class="st">Zwei Fragen, <span class="hl">und der Satz steht</span></h2>
-<p class="ssub">Fast jeder Satz über Bewegung beantwortet nur zwei Fragen: <b>Wohin?</b> und <b>Womit?</b> Wer sich das merkt, baut den Rest von allein.</p>
-<div class="scene-wrap klein"><img src="../amanda/a-zeigen.webp" alt="Amanda hebt den Zeigefinger"></div>
-<ul class="qlist nur-a2">
-<li>Sag in einem Satz: Wohin fährst du morgen und womit?</li>
-<li>Wohin gehst du nie zu Fuß?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Wann sagt man „ich komme“ und wann „ich gehe“ — obwohl es dieselbe Bewegung ist?</li>
-<li>Welche Präposition macht dir am meisten Ärger: zu, nach oder in?</li>
-</ul>
-<div class="tip">💡 <strong>Merk dir das Paar:</strong> <b>Wohin?</b> → zu, nach, in, an, auf. <b>Womit?</b> → immer <b>mit</b> + Dativ: <i>mit dem Bus, mit der Bahn, mit dem Rad</i>. Und für die Füße: <b>zu Fuß</b>, ganz ohne Artikel.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
 </section>
 
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Verbindungen mit <span class="hl">gehen, kommen und fahren</span></h2>
-<p class="ssub">Sagt jede Verbindung laut — und gleich den Beispielsatz hinterher. Nicht das Verb lernen, sondern das Paar aus Präposition und Verb.</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../vok-bild/die-ampel.webp" alt="Eine Frau wartet an einer roten Fußgängerampel" loading="lazy"><div class="bb"><div class="bw">zu Fuß gehen</div><div class="bex">„Bei dem Wetter gehe ich lieber zu Fuß.“</div><div class="bti">💡 <b>zu Fuß</b> steht ohne Artikel — das ist eine feste Wendung. Nicht „mit dem Fuß“, das wäre ein einzelner Fuß.</div><button class="speak" data-say="Bei dem Wetter gehe ich lieber zu Fuß.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-haltestelle.webp" alt="Eine Bushaltestelle mit einer wartenden Person" loading="lazy"><div class="bb"><div class="bw">mit dem Bus fahren</div><div class="bex">„Ich fahre jeden Morgen mit dem Bus zur Arbeit.“</div><div class="bti">💡 Nach <b>mit</b> kommt immer Dativ: <b>mit dem</b> Bus, <b>mit der</b> Bahn, <b>mit dem</b> Fahrrad. Der Artikel darf nie fehlen.</div><button class="speak" data-say="Ich fahre jeden Morgen mit dem Bus zur Arbeit.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-ankommen.webp" alt="Zwei Personen an einem Empfangstresen" loading="lazy"><div class="bb"><div class="bw">nach Hause kommen</div><div class="bex">„Ich komme heute erst um acht nach Hause.“</div><div class="bti">💡 Die eine Ausnahme, die alle kennen müssen: <b>nach Hause</b> (Bewegung) — <b>zu Hause</b> (schon dort). Immer ohne Artikel.</div><button class="speak" data-say="Ich komme heute erst um acht nach Hause.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-arzt.webp" alt="Eine Patientin im Sprechzimmer beim Arzt" loading="lazy"><div class="bb"><div class="bw">zum Arzt gehen</div><div class="bex">„Ich gehe morgen zum Arzt.“</div><div class="bti">💡 Bei <b>Personen und Berufen</b> immer <b>zu</b>: zum Arzt, zum Chef, zu meiner Schwester. Nie „in den Arzt“.</div><button class="speak" data-say="Ich gehe morgen zum Arzt.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-strassenbahn.webp" alt="Eine Straßenbahn fährt durch eine Altstadt" loading="lazy"><div class="bb"><div class="bw">in die Stadt fahren</div><div class="bex">„Am Samstag fahren wir in die Stadt.“</div><div class="bti">💡 <b>in</b> heißt: du gehst <u>hinein</u>. Deshalb Akkusativ: in <b>die</b> Stadt, in <b>den</b> Park, in <b>das</b> Kino (ins Kino).</div><button class="speak" data-say="Am Samstag fahren wir in die Stadt.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-kueste.webp" alt="Ein Weg durch die Dünen zum Meer" loading="lazy"><div class="bb"><div class="bw">an die Küste fahren</div><div class="bex">„Im Sommer fahren wir immer an die Küste.“</div><div class="bti">💡 <b>an</b> benutzt man bei Rändern und Kanten: an <b>die</b> Küste, an <b>den</b> See, an <b>den</b> Strand. Auch hier Akkusativ.</div><button class="speak" data-say="Im Sommer fahren wir immer an die Küste.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-supermarkt.webp" alt="Ein Supermarkt von außen" loading="lazy"><div class="bb"><div class="bw">einkaufen gehen</div><div class="bex">„Ich gehe schnell einkaufen.“</div><div class="bti">💡 <b>gehen</b> + Infinitiv ist eine ganze Familie: <b>einkaufen gehen</b>, <b>schwimmen gehen</b>, <b>essen gehen</b>, <b>spazieren gehen</b>. Kein „zu“ dazwischen.</div><button class="speak" data-say="Ich gehe schnell einkaufen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-kreuzung.webp" alt="Eine Kreuzung mit Zebrastreifen in einer Altstadt" loading="lazy"><div class="bb"><div class="bw">geradeaus gehen</div><div class="bex">„Gehen Sie geradeaus bis zur Kreuzung.“</div><div class="bti">💡 Die drei Wegwörter: <b>geradeaus</b>, <b>links</b>, <b>rechts</b>. Und immer <b>bis zu</b> + Dativ: bis <b>zur</b> Ampel, bis <b>zum</b> Bahnhof.</div><button class="speak" data-say="Gehen Sie geradeaus bis zur Kreuzung.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-fahrkarte.webp" alt="Eine Hand hält eine Fahrkarte auf dem Bahnsteig" loading="lazy"><div class="bb"><div class="bw">umsteigen</div><div class="bex">„In Hagen musst du einmal umsteigen.“</div><div class="bti">💡 Trennbar: <b>Ich steige in Köln um.</b> Perfekt mit <b>sein</b>: <i>Ich bin umgestiegen.</i> — wie alle Bewegungsverben.</div><button class="speak" data-say="In Hagen musst du einmal umsteigen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-freunde.webp" alt="Zwei Freunde sitzen mit Kaffee auf einer Bank" loading="lazy"><div class="bb"><div class="bw">vorbeikommen</div><div class="bex">„Komm doch heute Abend kurz vorbei!“</div><div class="bti">💡 Sehr freundlich und sehr deutsch. <b>Komm vorbei</b> heißt: kein großer Besuch, nur kurz. Auch: <b>Ich schaue mal vorbei.</b></div><button class="speak" data-say="Komm doch heute Abend kurz vorbei!">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-unterwegs.webp" alt="Frau mit Koffer auf einem Bahnsteig" loading="lazy"><div class="bb"><div class="bw">abholen</div><div class="bex">„Ich hole dich um sieben vom Bahnhof ab.“</div><div class="bti">💡 Immer <b>von</b> + Dativ für den Ort: <b>vom</b> Bahnhof, <b>von</b> der Schule, <b>von</b> der Arbeit. Trennbar: <i>Ich hole dich ab.</i></div><button class="speak" data-say="Ich hole dich um sieben vom Bahnhof ab.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-fahren.webp" alt="Ein Lieferwagen mit einem Fahrer am Steuer" loading="lazy"><div class="bb"><div class="bw">los</div><div class="bex">„Wann fahren wir los?“</div><div class="bti">💡 <b>los</b> hängt sich an viele Verben: <b>losfahren</b>, <b>losgehen</b>, <b>loslaufen</b>. Und allein bedeutet es: „Fang an!“ — <i>Na los!</i></div><button class="speak" data-say="Wann fahren wir los?">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel:</strong> Einer nennt ein Ziel („der Bahnhof“, „meine Mutter“, „der See“). Der andere baut in zwei Sekunden den Satz — mit dem richtigen kleinen Wort davor. Wer zögert, gibt ab.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">gehen, fahren, kommen — <span class="hl">wann welches?</span></h2>
-<p class="ssub">Erst die drei Verben und was sie wirklich unterscheiden. Darunter drei Satzpaare, bei denen fast alle danebenliegen.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">🚶</span><div class="gmw">gehen</div><div class="gmb">Auf den eigenen Füßen — oder als feste Wendung.</div><div class="gmx">Ich gehe zur Arbeit. · Wir gehen ins Kino.</div></div>
-<div class="gk blau"><span class="gem2">🚌</span><div class="gmw">fahren</div><div class="gmb">Mit etwas, das Räder hat. Auch: selbst steuern.</div><div class="gmx">Ich fahre mit dem Bus. · Sie fährt Auto.</div></div>
-<div class="gk ja"><span class="gem2">🏠</span><div class="gmw">kommen</div><div class="gmb">Die Richtung geht dorthin, wo der Zuhörer ist.</div><div class="gmx">Ich komme um acht. · Kommst du mit?</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Ich fahre nach Hause.</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>nach Hause</b> ist eine feste Wendung für die Bewegung dorthin. Ohne Artikel, ohne Ausnahme.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Ich fahre zu Hause.</div><div class="bsp"><span class="wer">Das Problem</span><b>zu Hause</b> heißt: du <u>bist</u> schon dort. Merksatz: <b>nach Hause fahren, zu Hause bleiben.</b></div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Ich gehe zum Arzt.</div><div class="bsp"><span class="wer">Warum das stimmt</span>Bei <b>Personen</b> — auch bei Berufen — steht immer <b>zu</b> + Dativ: zum Arzt, zum Friseur, zu meiner Oma.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Ich gehe in den Arzt.</div><div class="bsp"><span class="wer">Das Problem</span><b>in</b> heißt „hinein“ — in einen Menschen geht man nicht. Nur beim Gebäude geht beides: <i>in die Praxis</i>.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Wir fahren mit dem Auto.</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>mit</b> + Dativ + <u>Artikel</u>. Der Artikel gehört dazu, auch wenn er im Deutschen unwichtig klingt.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Wir fahren mit Auto.</div><div class="bsp"><span class="wer">Das Problem</span>Ohne Artikel klingt es wie eine Materialangabe. Die einzige Ausnahme ohne Artikel ist <b>zu Fuß</b>.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 zu, nach oder in — in zwei Sekunden</button>
-<div class="inhalt">
-<p>Frag dich nur, <u>was</u> das Ziel ist:</p>
-<ul>
-<li><b>Ein Mensch</b> (Arzt, Chef, Freundin) → <b>zu</b> + Dativ: <i>zum Arzt, zu Anna</i>.</li>
-<li><b>Eine Stadt oder ein Land ohne Artikel</b> (Berlin, Italien) → <b>nach</b>: <i>nach Berlin, nach Italien</i>.</li>
-<li><b>Ein Raum oder ein Gebäude, in das man hineingeht</b> → <b>in</b> + Akkusativ: <i>ins Kino, in die Schule</i>.</li>
-<li><b>Ein Rand: See, Meer, Fenster</b> → <b>an</b> + Akkusativ: <i>an den See, ans Meer</i>.</li>
-</ul>
-<p style="margin-top:.5rem;">Und die zwei Wendungen, die keiner Regel folgen: <b>nach Hause</b> und <b>zu Fuß</b>. Die lernt man einfach auswendig.</p>
-</div>
-</div>
-<div class="tip">⚖️ <strong>Kurzübung:</strong> Einer nennt ein Ziel, der andere antwortet mit einem vollständigen Satz — Verb <u>und</u> Präposition müssen stimmen. Zehn Ziele in einer Minute, dann tauschen.</div>
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Wie bist du heute zum Kurs gekommen — zu Fuß, mit dem Bus, mit dem Auto?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Wohin gehst du in deiner Stadt am liebsten?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -814,37 +824,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei <span class="hl">Wege durch die Stadt</span></h2>
-<p class="ssub">Zu zweit. Einer will irgendwohin, einer kennt sich aus — oder tut zumindest so. Danach tauschen.</p>
-<div class="rmcard">
-<b>1 · Der Weg zum Bahnhof</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A ist neu in der Stadt und muss in zwanzig Minuten am Bahnhof sein. B erklärt den Weg — aber es gibt eine Baustelle, also geht der direkte Weg nicht.</p>
-<div class="nur-a2"><span class="rm">Wie komme ich zum Bahnhof?</span><span class="rm">Zu Fuß oder mit dem Bus?</span><span class="rm">Wie lange dauert das?</span><span class="rm">An welcher Haltestelle?</span></div>
-<div class="nur-b1"><span class="rm">Was wäre der schnellste Weg?</span><span class="rm">Lohnt sich die Bahn überhaupt?</span><span class="rm">Komme ich da auch mit Koffer durch?</span><span class="rm">Gibt es eine Alternative?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A fragt zuerst nach Zeit und Verkehrsmittel, bevor er losgeht, und wiederholt am Ende den Weg in eigenen Worten.</div>
-</div>
-<div class="rmcard">
-<b>2 · Die Verabredung</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A und B wollen sich am Wochenende treffen. A hat kein Auto, B wohnt außerhalb. Sie müssen Ort, Zeit und Verkehrsmittel klären.</p>
-<div class="nur-a2"><span class="rm">Wann treffen wir uns?</span><span class="rm">Ich komme mit dem Bus</span><span class="rm">Holst du mich ab?</span><span class="rm">Wo genau?</span></div>
-<div class="nur-b1"><span class="rm">Passt es dir, wenn …?</span><span class="rm">Ich richte mich nach dir</span><span class="rm">Ich könnte dich abholen</span><span class="rm">Sag Bescheid, wenn du losfährst</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide einigen sich auf einen genauen Treffpunkt — nicht nur „am Bahnhof“, sondern „am Ausgang Nord“ — und auf eine Uhrzeit.</div>
-</div>
-<div class="rmcard">
-<b>3 · Der Anschluss ist weg</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A steht in einer fremden Stadt, der Anschlusszug ist ausgefallen. B arbeitet bei der Information und hat drei Vorschläge, von denen zwei schlecht sind.</p>
-<div class="nur-a2"><span class="rm">Mein Zug ist ausgefallen</span><span class="rm">Wann fährt der nächste?</span><span class="rm">Muss ich umsteigen?</span><span class="rm">Von welchem Gleis?</span></div>
-<div class="nur-b1"><span class="rm">Gibt es eine Verbindung über …?</span><span class="rm">Was wäre die schnellste Alternative?</span><span class="rm">Bekomme ich das Geld zurück?</span><span class="rm">Reicht die Zeit zum Umsteigen?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A bleibt freundlich, fragt nach Alternativen statt sich zu beschweren, und lässt sich Gleis und Uhrzeit wiederholen.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Lest die vier Zeilen der Grammatik-Kette noch einmal vor — aber ersetzt jedes Ziel durch einen echten Ort aus eurer Stadt.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -877,14 +864,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde müssen mindestens <u>zwei verschiedene Präpositionen</u> vorkommen — zum Beispiel <b>zu</b> und <b>in</b>. Der Partner zählt mit.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Lest die vier Zeilen der Grammatik-Kette noch einmal vor — aber ersetzt jedes Ziel durch einen echten Ort aus eurer Stadt.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Was sagt es über eine Stadt aus, wie die Leute dort unterwegs sind?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Gibt es in deiner Sprache auch drei verschiedene Verben dafür?</li><li>Wann hast du das letzte Mal jemanden vom Bahnhof abgeholt?</li><li>Wann sagt man „ich komme“ und wann „ich gehe“ — obwohl es dieselbe Bewegung ist?</li><li>Welche Präposition macht dir am meisten Ärger: zu, nach oder in?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei <span class="hl">Wege durch die Stadt</span></h2>
+<p class="ssub">Zu zweit. Einer will irgendwohin, einer kennt sich aus — oder tut zumindest so. Danach tauschen.</p>
+<div class="rmcard">
+<b>1 · Der Weg zum Bahnhof</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A ist neu in der Stadt und muss in zwanzig Minuten am Bahnhof sein. B erklärt den Weg — aber es gibt eine Baustelle, also geht der direkte Weg nicht.</p>
+<div class="nur-a2"><span class="rm">Wie komme ich zum Bahnhof?</span><span class="rm">Zu Fuß oder mit dem Bus?</span><span class="rm">Wie lange dauert das?</span><span class="rm">An welcher Haltestelle?</span></div>
+<div class="nur-b1"><span class="rm">Was wäre der schnellste Weg?</span><span class="rm">Lohnt sich die Bahn überhaupt?</span><span class="rm">Komme ich da auch mit Koffer durch?</span><span class="rm">Gibt es eine Alternative?</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A fragt zuerst nach Zeit und Verkehrsmittel, bevor er losgeht, und wiederholt am Ende den Weg in eigenen Worten.</div>
+</div>
+<div class="rmcard">
+<b>2 · Die Verabredung</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A und B wollen sich am Wochenende treffen. A hat kein Auto, B wohnt außerhalb. Sie müssen Ort, Zeit und Verkehrsmittel klären.</p>
+<div class="nur-a2"><span class="rm">Wann treffen wir uns?</span><span class="rm">Ich komme mit dem Bus</span><span class="rm">Holst du mich ab?</span><span class="rm">Wo genau?</span></div>
+<div class="nur-b1"><span class="rm">Passt es dir, wenn …?</span><span class="rm">Ich richte mich nach dir</span><span class="rm">Ich könnte dich abholen</span><span class="rm">Sag Bescheid, wenn du losfährst</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide einigen sich auf einen genauen Treffpunkt — nicht nur „am Bahnhof“, sondern „am Ausgang Nord“ — und auf eine Uhrzeit.</div>
+</div>
+<div class="rmcard">
+<b>3 · Der Anschluss ist weg</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A steht in einer fremden Stadt, der Anschlusszug ist ausgefallen. B arbeitet bei der Information und hat drei Vorschläge, von denen zwei schlecht sind.</p>
+<div class="nur-a2"><span class="rm">Mein Zug ist ausgefallen</span><span class="rm">Wann fährt der nächste?</span><span class="rm">Muss ich umsteigen?</span><span class="rm">Von welchem Gleis?</span></div>
+<div class="nur-b1"><span class="rm">Gibt es eine Verbindung über …?</span><span class="rm">Was wäre die schnellste Alternative?</span><span class="rm">Bekomme ich das Geld zurück?</span><span class="rm">Reicht die Zeit zum Umsteigen?</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A bleibt freundlich, fragt nach Alternativen statt sich zu beschweren, und lässt sich Gleis und Uhrzeit wiederholen.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -950,6 +971,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Sprachnachricht bis Sonntag in die WhatsApp-Gruppe. Ich höre jede an und antworte dir persönlich.</div>
 <div class="tip">🔜 <strong>Am Donnerstag, Teil 2:</strong> <u>Das geht nicht. Wie geht's? Es kommt darauf an.</u> — dieselben drei Verben, aber ohne jede Bewegung.</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1136,11 +1164,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1197,7 +1232,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1207,7 +1244,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

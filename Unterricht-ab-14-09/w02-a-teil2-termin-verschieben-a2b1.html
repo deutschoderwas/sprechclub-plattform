@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,47 +627,44 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B1<span class="zusatz"> · mehr</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#wiederholung">🔁 Wiederholung</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">⚖️ Drei Wege</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">Der Anruf, den <span class="hl">niemand gern macht</span></h2>
-<p class="ssub">Der Termin steht seit zwei Wochen im Kalender. Heute Morgen wachst du auf und weißt: Das wird nichts. Und jetzt?</p>
-<div class="scene-wrap klein"><img src="../amanda/sz-telefonieren.webp" alt="Frau sitzt am Tisch und telefoniert, daneben ein Notizblock"></div>
-<ul class="qlist nur-a2">
-<li>Hast du schon einmal einen Termin abgesagt? Was hast du gesagt?</li>
-<li>Rufst du lieber an oder schreibst du lieber?</li>
-<li>Wie früh sagt man in deinem Land ab?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Wann ist Absagen unhöflich — und wann völlig normal?</li>
-<li>Nennst du den echten Grund oder einen bequemen?</li>
-<li>Was ärgert dich mehr: eine späte Absage oder gar keine?</li>
-</ul>
-<div class="tip teal">⏰ <strong>Die deutsche Regel in einem Satz:</strong> Sag ab, <u>sobald du es weißt</u> — nicht erst kurz vorher. Bei Arzt und Friseur gelten meist <b>24 Stunden</b>. Wer später absagt, zahlt manchmal eine Gebühr.</div>
-<h2 class="st">Absagen ist nicht <span class="hl">unhöflich — zu spät absagen schon</span></h2>
-<p class="ssub">Viele Lernende trauen sich nicht anzurufen und gehen dann einfach nicht hin. Genau das macht Ärger. Der Anruf dauert vierzig Sekunden.</p>
-<div class="scene-wrap klein"><img src="../vok-bild/die-krankmeldung.webp" alt="Eine Krankmeldung vom Arzt liegt auf einem Schreibtisch"></div>
-<ul class="qlist nur-a2">
-<li>Was ist schlimmer: absagen oder nicht kommen?</li>
-<li>Wen musst du informieren, wenn du krank bist?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Wie viel Begründung ist genug — und ab wann ist es zu viel?</li>
-<li>Gibt es Termine, die man nie absagen sollte?</li>
-</ul>
-<div class="tip">💡 <strong>Merk dir die Reihenfolge:</strong> erst <b>entschuldigen</b>, dann <b>Grund</b>, dann <b>neuer Vorschlag</b>. Wer gleich einen neuen Termin anbietet, klingt zuverlässig statt unzuverlässig.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
+</section>
+
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Hast du schon einmal einen Termin abgesagt? Was hast du gesagt?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Rufst du lieber an oder schreibst du lieber?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="wiederholung">
@@ -618,63 +685,6 @@ a.tab:hover{color:var(--ink);}
 <li>Wie wiederholst du am Ende den Termin, damit nichts schiefgeht?</li>
 </ul>
 <div class="tip teal">🔁 <strong>Zu zweit, dreißig Sekunden:</strong> Einer macht einen Termin aus wie am Montag, der andere bestätigt ihn. Danach fängt die heutige Stunde an — mit der Absage genau dieses Termins.</div>
-</section>
-
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Wörter für <span class="hl">den Rückzieher</span></h2>
-<p class="ssub">Sagt jedes Wort laut — und gleich den Beispielsatz hinterher. Zwei Sekunden pro Karte reichen.</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../vok-bild/der-termin.webp" alt="Ein Kalender und ein Stift auf einem Tisch" loading="lazy"><div class="bb"><div class="bw">absagen</div><div class="bex">„Ich muss meinen Termin leider absagen.“</div><div class="bti">💡 Trennbar: <b>Ich sage den Termin ab.</b> Aber: <b>Ich muss den Termin absagen.</b> Nach einem Modalverb bleibt es zusammen.</div><button class="speak" data-say="Ich muss meinen Termin leider absagen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-uhrzeit.webp" alt="Eine Wanduhr an einer hellen Wand" loading="lazy"><div class="bb"><div class="bw">verschieben</div><div class="bex">„Können wir den Termin auf nächste Woche verschieben?“</div><div class="bti">💡 Immer mit <b>auf</b> + Akkusativ: <b>auf Freitag</b>, <b>auf nächste Woche</b>, <b>auf halb vier</b>. Nicht „zu Freitag“.</div><button class="speak" data-say="Können wir den Termin auf nächste Woche verschieben?">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-krankmeldung.webp" alt="Eine Krankmeldung vom Arzt liegt auf einem Schreibtisch" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Krankmeldung</div><div class="bex">„Die Krankmeldung schicke ich Ihnen noch heute.“</div><div class="bti">💡 Umgangssprachlich hörst du oft <b>der gelbe Schein</b> oder <b>die AU</b> (Arbeitsunfähigkeitsbescheinigung). Alles dasselbe Papier.</div><button class="speak" data-say="Die Krankmeldung schicke ich Ihnen noch heute.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-verspaetung.webp" alt="Ein leerer Bahnsteig mit einer Uhr" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Verspätung</div><div class="bex">„Ich habe zwanzig Minuten Verspätung.“</div><div class="bti">💡 Zwei Sätze, beide richtig: <b>Ich habe Verspätung.</b> und <b>Der Zug hat Verspätung.</b> Aber nicht: „Ich bin Verspätung.“</div><button class="speak" data-say="Ich habe zwanzig Minuten Verspätung.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-buero.webp" alt="Zwei Kolleginnen am Schreibtisch mit Laptop" loading="lazy"><div class="bb"><div class="bw">verhindert</div><div class="bex">„Ich bin leider verhindert.“</div><div class="bti">💡 Der höfliche Allzweck-Satz. Er nennt <u>keinen</u> Grund — und das ist erlaubt. Perfekt, wenn der Grund privat ist.</div><button class="speak" data-say="Ich bin leider verhindert.">🔊 hören</button></div></div>
-<div class="bcard hoch"><img src="../amanda/a-uhr.webp" alt="Amanda zeigt auf ihre Armbanduhr" loading="lazy"><div class="bb"><div class="bw">kurzfristig</div><div class="bex">„Entschuldigen Sie die kurzfristige Absage.“</div><div class="bti">💡 Das Gegenteil ist <b>rechtzeitig</b>. Wenn du weniger als einen Tag vorher absagst, sagst du dieses Wort besser dazu — es zeigt, dass du es weißt.</div><button class="speak" data-say="Entschuldigen Sie die kurzfristige Absage.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="rechtzeitig">📅</div><div class="bb"><div class="bw">rechtzeitig</div><div class="bex">„Ich sage rechtzeitig Bescheid.“</div><div class="bti">💡 <b>rechtzeitig</b> heißt nicht „pünktlich“, sondern „noch früh genug, damit es kein Problem ist“.</div><button class="speak" data-say="Ich sage rechtzeitig Bescheid.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="Bescheid sagen">🙋</div><div class="bb"><div class="bw">Bescheid sagen</div><div class="bex">„Sagen Sie mir bitte Bescheid, wenn etwas frei wird.“</div><div class="bti">💡 Fester Ausdruck, immer groß: <b>Bescheid sagen</b>, <b>Bescheid geben</b>. Nie mit Artikel.</div><button class="speak" data-say="Sagen Sie mir bitte Bescheid, wenn etwas frei wird.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-gebuehr.webp" alt="Geldscheine und Münzen neben einem Laptop" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Ausfallgebühr</div><div class="bex">„Bei einer Absage am selben Tag fällt eine Ausfallgebühr an.“</div><div class="bti">💡 Kommt vor allem beim <b>Zahnarzt</b>, beim <b>Friseur</b> und bei <b>Therapeuten</b> vor. Meist steht es im Wartezimmer an der Wand.</div><button class="speak" data-say="Bei einer Absage am selben Tag fällt eine Ausfallgebühr an.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="Ersatztermin">🗓️</div><div class="bb"><div class="bw"><span class="art">der</span> Ersatztermin</div><div class="bex">„Können wir gleich einen Ersatztermin ausmachen?“</div><div class="bti">💡 Auch möglich: <b>ein neuer Termin</b>, <b>ein Ausweichtermin</b>. Wer selbst einen vorschlägt, wirkt zuverlässig.</div><button class="speak" data-say="Können wir gleich einen Ersatztermin ausmachen?">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="dazwischenkommen">⚡</div><div class="bb"><div class="bw">dazwischenkommen</div><div class="bex">„Mir ist leider etwas dazwischengekommen.“</div><div class="bti">💡 Der Standardsatz für „ich sage nicht, was los ist“. Perfekt mit <b>ist</b>: <b>ist dazwischengekommen</b>.</div><button class="speak" data-say="Mir ist leider etwas dazwischengekommen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/anrufen.webp" alt="Mann telefoniert mit dem Handy" loading="lazy"><div class="bb"><div class="bw">sich melden</div><div class="bex">„Ich melde mich morgen wegen eines neuen Termins.“</div><div class="bti">💡 Zwei Bedeutungen: am Telefon <b>„Meier am Apparat“</b> — und hier: sich später wieder bei jemandem melden.</div><button class="speak" data-say="Ich melde mich morgen wegen eines neuen Termins.">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel:</strong> Verdeckt die Wörter und lest nur die Erklärungen vor. Wer das Wort zuerst ruft, bekommt einen Punkt — und muss sofort einen Satz damit sagen.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Absagen, verschieben, <span class="hl">zu spät kommen</span></h2>
-<p class="ssub">Erst die drei Situationen, die es überhaupt gibt. Darunter drei Satzpaare, bei denen fast alle danebenliegen.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">❌</span><div class="gmw">Absagen</div><div class="gmb">Du kommst gar nicht. Der Termin ist weg.</div><div class="gmx">Ich muss den Termin leider absagen.</div></div>
-<div class="gk blau"><span class="gem2">🔁</span><div class="gmw">Verschieben</div><div class="gmb">Du kommst — nur an einem anderen Tag.</div><div class="gmx">Können wir auf nächste Woche verschieben?</div></div>
-<div class="gk ja"><span class="gem2">⏰</span><div class="gmw">Zu spät</div><div class="gmb">Du kommst, aber später. Sag es vorher.</div><div class="gmx">Ich komme etwa zwanzig Minuten später.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Können wir den Termin auf Freitag verschieben?</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>verschieben auf</b> + Akkusativ. Der neue Tag steht hinter <b>auf</b>.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Können wir den Termin zu Freitag verschieben?</div><div class="bsp"><span class="wer">Das Problem</span><b>zu</b> passt hier nicht. Merksatz: <b>Ich schiebe den Termin auf einen anderen Tag.</b></div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Ich kann nicht kommen, weil mein Kind krank ist.</div><div class="bsp"><span class="wer">Warum das stimmt</span>Nach <b>weil</b> geht das Verb ganz nach hinten: <i>… weil mein Kind krank <b>ist</b>.</i></div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Ich kann nicht kommen, weil ist mein Kind krank.</div><div class="bsp"><span class="wer">Das Problem</span>Das Verb steht viel zu früh. Nach <b>weil</b> gilt immer: erst alles andere, dann das Verb.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Es tut mir leid, dass ich so kurzfristig absage.</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>Es tut mir leid</b> ist der feste Ausdruck. Danach kommt <b>dass</b> und das Verb wandert ans Ende.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Ich bin traurig, dass ich absage.</div><div class="bsp"><span class="wer">Das Problem</span><b>traurig</b> ist ein Gefühl über dich selbst. Für eine Entschuldigung braucht man <b>Es tut mir leid</b> oder <b>Entschuldigen Sie bitte</b>.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Welcher der drei Wege ist meiner?</button>
-<div class="inhalt">
-<p>Stell dir eine einzige Frage: Komme ich heute noch?</p>
-<ul>
-<li><b>Gar nicht, nie wieder zu diesem Termin</b> → absagen.</li>
-<li><b>Nicht heute, aber gern an einem anderen Tag</b> → verschieben. Schlag gleich zwei Zeiten vor.</li>
-<li><b>Heute schon, nur später</b> → anrufen und die Verspätung sagen. Nenn eine Zahl: „etwa zwanzig Minuten“.</li>
-<li><b>Ich weiß es noch nicht</b> → trotzdem anrufen: „Ich melde mich bis spätestens zwölf Uhr.“</li>
-</ul>
-<p style="margin-top:.5rem;">In allen vier Fällen gilt dasselbe: <b>anrufen ist besser als schreiben</b> — und heute ist besser als morgen.</p>
-</div>
-</div>
-<div class="tip">⚖️ <strong>Kurzübung:</strong> Einer nennt eine Situation („Mein Zug fällt aus“, „Ich habe Fieber“, „Ich stehe im Stau“). Der andere sagt in einem Satz, welcher der drei Wege passt — und warum.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -832,37 +842,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei <span class="hl">unangenehme Anrufe</span></h2>
-<p class="ssub">Zu zweit. Einer sagt ab, einer sitzt am Empfang und macht es <u>nicht</u> ganz leicht. Danach tauschen.</p>
-<div class="rmcard">
-<b>1 · Krank am Morgen</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat heute um elf einen Arzttermin und Fieber. B ist am Empfang und fragt nach, ob es wirklich nicht geht — der Termin war schwer zu bekommen.</p>
-<div class="nur-a2"><span class="rm">Ich muss leider absagen</span><span class="rm">Ich bin krank</span><span class="rm">Können wir verschieben?</span><span class="rm">Nächste Woche wäre gut</span></div>
-<div class="nur-b1"><span class="rm">Es tut mir leid, so kurzfristig</span><span class="rm">Ich wäre nächste Woche flexibel</span><span class="rm">Ginge auch Dienstag?</span><span class="rm">Bekomme ich eine Bestätigung?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A entschuldigt sich zuerst, nennt dann erst den Grund, bleibt beim Nachhaken freundlich und schlägt selbst zwei neue Zeiten vor.</div>
-</div>
-<div class="rmcard">
-<b>2 · Die Gebühr</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A sagt zwei Stunden vorher beim Friseur ab. B erklärt, dass eine Ausfallgebühr fällig wird. A ist überrascht, aber soll ruhig bleiben.</p>
-<div class="nur-a2"><span class="rm">Das wusste ich nicht</span><span class="rm">Wie hoch ist die Gebühr?</span><span class="rm">Das verstehe ich</span><span class="rm">Können wir einen neuen Termin machen?</span></div>
-<div class="nur-b1"><span class="rm">Das war mir nicht bewusst</span><span class="rm">Darf ich fragen, wie hoch …?</span><span class="rm">Ich verstehe Ihren Standpunkt</span><span class="rm">Gibt es eine Ausnahme, wenn ich sofort neu buche?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A diskutiert nicht, fragt sachlich nach der Höhe, zeigt Verständnis und rettet das Gespräch mit einem neuen Termin.</div>
-</div>
-<div class="rmcard">
-<b>3 · Ich stehe im Stau</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A ist unterwegs und kommt zwanzig Minuten zu spät. B sagt, dass danach der nächste Patient wartet — es wird knapp.</p>
-<div class="nur-a2"><span class="rm">Ich habe Verspätung</span><span class="rm">Ich brauche noch zwanzig Minuten</span><span class="rm">Geht das trotzdem?</span><span class="rm">Sonst komme ich morgen</span></div>
-<div class="nur-b1"><span class="rm">Ich stecke leider im Stau fest</span><span class="rm">Ich schaffe es voraussichtlich um …</span><span class="rm">Wäre das noch machbar?</span><span class="rm">Sonst nehme ich gern einen anderen Termin</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A nennt eine konkrete Zahl statt „ein bisschen später“, fragt, ob es noch passt, und bietet von sich aus die Alternative an.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Lest die vier Sätze aus dem Abschnitt „Die vier Sätze“ noch einmal — aber diesmal in einem Zug, ohne abzusetzen. Genau so lang dauert der echte Anruf.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -895,14 +882,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde muss einmal <u>weil</u> und einmal <u>deshalb</u> vorkommen. Der Partner hört mit und hebt die Hand, sobald beides da war.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Lest die vier Sätze aus dem Abschnitt „Die vier Sätze“ noch einmal — aber diesmal in einem Zug, ohne abzusetzen. Genau so lang dauert der echte Anruf.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Wann ist Absagen unhöflich — und wann völlig normal?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Nennst du den echten Grund oder einen bequemen?</li><li>Was ärgert dich mehr: eine späte Absage oder gar keine?</li><li>Wie viel Begründung ist genug — und ab wann ist es zu viel?</li><li>Gibt es Termine, die man nie absagen sollte?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei <span class="hl">unangenehme Anrufe</span></h2>
+<p class="ssub">Zu zweit. Einer sagt ab, einer sitzt am Empfang und macht es <u>nicht</u> ganz leicht. Danach tauschen.</p>
+<div class="rmcard">
+<b>1 · Krank am Morgen</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat heute um elf einen Arzttermin und Fieber. B ist am Empfang und fragt nach, ob es wirklich nicht geht — der Termin war schwer zu bekommen.</p>
+<div class="nur-a2"><span class="rm">Ich muss leider absagen</span><span class="rm">Ich bin krank</span><span class="rm">Können wir verschieben?</span><span class="rm">Nächste Woche wäre gut</span></div>
+<div class="nur-b1"><span class="rm">Es tut mir leid, so kurzfristig</span><span class="rm">Ich wäre nächste Woche flexibel</span><span class="rm">Ginge auch Dienstag?</span><span class="rm">Bekomme ich eine Bestätigung?</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A entschuldigt sich zuerst, nennt dann erst den Grund, bleibt beim Nachhaken freundlich und schlägt selbst zwei neue Zeiten vor.</div>
+</div>
+<div class="rmcard">
+<b>2 · Die Gebühr</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A sagt zwei Stunden vorher beim Friseur ab. B erklärt, dass eine Ausfallgebühr fällig wird. A ist überrascht, aber soll ruhig bleiben.</p>
+<div class="nur-a2"><span class="rm">Das wusste ich nicht</span><span class="rm">Wie hoch ist die Gebühr?</span><span class="rm">Das verstehe ich</span><span class="rm">Können wir einen neuen Termin machen?</span></div>
+<div class="nur-b1"><span class="rm">Das war mir nicht bewusst</span><span class="rm">Darf ich fragen, wie hoch …?</span><span class="rm">Ich verstehe Ihren Standpunkt</span><span class="rm">Gibt es eine Ausnahme, wenn ich sofort neu buche?</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A diskutiert nicht, fragt sachlich nach der Höhe, zeigt Verständnis und rettet das Gespräch mit einem neuen Termin.</div>
+</div>
+<div class="rmcard">
+<b>3 · Ich stehe im Stau</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A ist unterwegs und kommt zwanzig Minuten zu spät. B sagt, dass danach der nächste Patient wartet — es wird knapp.</p>
+<div class="nur-a2"><span class="rm">Ich habe Verspätung</span><span class="rm">Ich brauche noch zwanzig Minuten</span><span class="rm">Geht das trotzdem?</span><span class="rm">Sonst komme ich morgen</span></div>
+<div class="nur-b1"><span class="rm">Ich stecke leider im Stau fest</span><span class="rm">Ich schaffe es voraussichtlich um …</span><span class="rm">Wäre das noch machbar?</span><span class="rm">Sonst nehme ich gern einen anderen Termin</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A nennt eine konkrete Zahl statt „ein bisschen später“, fragt, ob es noch passt, und bietet von sich aus die Alternative an.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -968,6 +989,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Sprachnachricht bis Sonntag in die WhatsApp-Gruppe. Ich höre jede an und antworte dir persönlich.</div>
 <div class="tip">🔜 <strong>Nächste Woche, Strang A:</strong> <u>Beim Arzt: sagen, wo es weh tut</u> — vom Termin ins Sprechzimmer.</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1154,11 +1182,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1215,7 +1250,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1225,7 +1262,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

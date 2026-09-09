@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,49 +627,44 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B1<span class="zusatz"> · mehr</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#wiederholung">🔁 Wiederholung</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">🧾 Drei Wege zum Geld</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">Ein Formular, <span class="hl">das sich wirklich lohnt</span></h2>
-<p class="ssub">Das Fahrgastrechte-Formular ist eine einzige Seite. Oben stehen dein Name und deine Adresse, in der Mitte die Fahrt — Datum, Zugnummer, von wo nach wo — und unten die beiden wichtigsten Zeilen: die geplante und die tatsächliche Ankunftszeit. Ab einer Stunde Unterschied bekommst du ein Viertel des Fahrpreises zurück, ab zwei Stunden die Hälfte.</p>
-<div class="scene-wrap klein"><img src="../vok-bild/der-antwortbogen.webp" alt="Ein Blatt mit leeren Kästchen und ein Bleistift daneben"></div>
-<ul class="qlist nur-a2">
-<li>Hast du in Deutschland schon einmal ein Formular ausgefüllt?</li>
-<li>Was ist schwer daran — die Wörter oder die Kästchen?</li>
-<li>Machst du das lieber auf Papier oder online?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Warum füllen viele Menschen so ein Formular nie aus?</li>
-<li>Was würdest du ändern, damit es einfacher wird?</li>
-<li>Lohnt sich der Aufwand für zehn Euro?</li>
-</ul>
-<div class="tip teal">🔑 <strong>Drei Angaben entscheiden alles:</strong> das <b>Datum</b>, die <b>Zugnummer</b> und die <b>tatsächliche Ankunftszeit</b>. Alles andere kann man nachreichen — diese drei nicht. Notier sie dir noch am Bahnsteig.</div>
-<h2 class="st">Und wenn nichts <span class="hl">zurückkommt: anrufen</span></h2>
-<p class="ssub">Manchmal passiert nach dem Einreichen wochenlang nichts. Dann hilft ein Anruf — und der ist kürzer, als die meisten denken. Du sagst, worum es geht, nennst deine Vorgangsnummer und fragst nach dem Stand. Drei Sätze, und du weißt, ob dein Antrag überhaupt angekommen ist.</p>
-<div class="scene-wrap klein"><img src="../bilder/lesen/handy.webp" alt="Ein Handy mit zwei Sprechblasen auf dem Bildschirm"></div>
-<ul class="qlist nur-a2">
-<li>Telefonierst du gern auf Deutsch?</li>
-<li>Was ist am Telefon schwerer als im Gespräch?</li>
-<li>Was machst du, wenn du etwas nicht verstehst?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Warum ist Telefonieren auf einer Fremdsprache besonders anstrengend?</li>
-<li>Wie bereitest du dich auf so ein Gespräch vor?</li>
-<li>Bleibst du dran, wenn du in der Warteschleife hängst?</li>
-</ul>
-<div class="tip">💡 <strong>Vorher aufschreiben:</strong> deinen Namen, die Vorgangsnummer, das Datum der Fahrt und den einen Satz, mit dem du anfängst. Mit diesem Zettel vor dir dauert der Anruf zwei Minuten — ohne ihn zehn.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
+</section>
+
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Hast du in Deutschland schon einmal ein Formular ausgefüllt?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Was ist schwer daran — die Wörter oder die Kästchen?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="wiederholung">
@@ -620,65 +685,6 @@ a.tab:hover{color:var(--ink);}
 <li>Warum solltest du die <b>Fahrkarte</b> aufheben?</li>
 </ul>
 <div class="tip teal">🔁 <strong>Zu zweit, dreißig Sekunden:</strong> Einer nennt eine Meldung von der Tafel, der andere stellt dazu eine höfliche Frage mit <i>Wissen Sie, ob …</i> Danach geht es los: Heute holen wir uns das Geld zurück.</div>
-</section>
-
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Wörter <span class="hl">für Formular und Anruf</span></h2>
-<p class="ssub">Sag jedes Wort laut — <u>mit Artikel</u>. Und häng einen Satz an, in dem etwas schon passiert ist: <i>Ich habe … / Ich bin …</i></p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../vok-bild/die-gebuehr.webp" alt="Münzen und ein Geldschein liegen auf einem hellen Tresen" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Entschädigung</div><div class="bex">„Ich habe eine Entschädigung für die Verspätung bekommen.“</div><div class="bti">💡 Das Wort steht oben auf dem Formular. Dazu gehört <b>jemanden entschädigen</b>. Und der einfache Satz dafür: <i>Ich möchte mein Geld zurück.</i></div><button class="speak" data-say="Ich habe eine Entschädigung für die Verspätung bekommen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-antwortbogen.webp" alt="Ein Blatt mit leeren Kästchen und ein Bleistift daneben" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Formular</div><div class="bex">„Das Formular habe ich in fünf Minuten ausgefüllt.“</div><div class="bti">💡 Immer <b>ein Formular ausfüllen</b> — nicht <i>schreiben</i>. Und im Amt hörst du dasselbe Wort für alles: <i>Füllen Sie bitte das Formular aus.</i></div><button class="speak" data-say="Das Formular habe ich in fünf Minuten ausgefüllt.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-unterschrift.webp" alt="Eine Hand unterschreibt ein Blatt Papier auf einem Tisch" loading="lazy"><div class="bb"><div class="bw">unterschreiben</div><div class="bex">„Ich habe unten unterschrieben und es abgeschickt.“</div><div class="bti">💡 Untrennbar und ohne <i>ge-</i> im Partizip: <b>unterschrieben</b>. Das Nomen dazu ist <b>die Unterschrift</b> — ohne sie gilt kein Formular.</div><button class="speak" data-say="Ich habe unten unterschrieben und es abgeschickt.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/mail.webp" alt="Ein Briefumschlag mit einem Blatt Papier darin" loading="lazy"><div class="bb"><div class="bw">einreichen</div><div class="bex">„Ich habe das Formular online eingereicht.“</div><div class="bti">💡 Trennbar: <i>ich reiche es ein</i>. Klingt offizieller als <b>abgeben</b> und passt für Post, E-Mail und Online-Formular gleichermaßen.</div><button class="speak" data-say="Ich habe das Formular online eingereicht.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-unterlagen.webp" alt="Zwei Hände blättern in einem Stapel Unterlagen" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Nachweis</div><div class="bex">„Als Nachweis habe ich die Fahrkarte mitgeschickt.“</div><div class="bti">💡 Das Wort, nach dem in jedem Amt gefragt wird. Dazu <b>etwas nachweisen</b>. Und die Sammelform für alles zusammen: <b>die Unterlagen</b>.</div><button class="speak" data-say="Als Nachweis habe ich die Fahrkarte mitgeschickt.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-rechnung.webp" alt="Eine Rechnung mit Münzen auf einem kleinen Tablett" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Betrag</div><div class="bex">„Der Betrag war nach drei Wochen auf dem Konto.“</div><div class="bti">💡 Das offizielle Wort für <i>die Summe</i>. Sehr nützlich: <b>der volle Betrag</b>, <b>ein Teil des Betrags</b> und <b>den Betrag überweisen</b>.</div><button class="speak" data-say="Der Betrag war nach drei Wochen auf dem Konto.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/handy.webp" alt="Ein Handy mit zwei Sprechblasen auf dem Bildschirm" loading="lazy"><div class="bb"><div class="bw">anrufen</div><div class="bex">„Ich habe gestern angerufen und nachgefragt.“</div><div class="bti">💡 Trennbar, und mit <b>Akkusativ</b>: <i>Ich rufe dich an</i>, nicht <i>dir</i>. Das Partizip heißt <b>angerufen</b> — das <i>ge</i> steckt in der Mitte.</div><button class="speak" data-say="Ich habe gestern angerufen und nachgefragt.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-anrufbeantworter.webp" alt="Ein altes Telefon mit Anrufbeantworter steht auf einer Kommode" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Warteschleife</div><div class="bex">„Ich habe zwölf Minuten in der Warteschleife gehangen.“</div><div class="bti">💡 Die feste Wendung ist <b>in der Warteschleife hängen</b>. Und der Satz danach, den jeder kennt: <i>Ihr Anruf ist uns wichtig.</i></div><button class="speak" data-say="Ich habe zwölf Minuten in der Warteschleife gehangen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/das-protokoll.webp" alt="Eine Hand schreibt auf einem Klemmbrett, daneben zwei Tassen" loading="lazy"><div class="bb"><div class="bw">bearbeiten</div><div class="bex">„Mein Antrag wird gerade bearbeitet.“</div><div class="bti">💡 Untrennbar, Partizip ohne <i>ge-</i>: <b>bearbeitet</b>. Am Telefon hörst du fast immer denselben Satz: <i>Der Vorgang ist noch in Bearbeitung.</i></div><button class="speak" data-say="Mein Antrag wird gerade bearbeitet.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-post.webp" alt="Amanda gibt an einem Schalter ein Päckchen ab, dahinter stapeln sich Pakete" loading="lazy"><div class="bb"><div class="bw">abschicken</div><div class="bex">„Ich habe den Antrag am Montag abgeschickt.“</div><div class="bti">💡 Trennbar: <i>ich schicke es ab</i>. Für die Post nimmst du auch <b>aufgeben</b>, für E-Mails <b>abschicken</b> oder <b>senden</b>.</div><button class="speak" data-say="Ich habe den Antrag am Montag abgeschickt.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/zettel.webp" alt="Ein leerer Zettel und ein Bleistift daneben" loading="lazy"><div class="bb"><div class="bw">aufschreiben</div><div class="bex">„Ich habe mir die Vorgangsnummer aufgeschrieben.“</div><div class="bti">💡 Trennbar und meistens mit Dativ: <i>Ich schreibe <b>mir</b> etwas auf.</i> Vor jedem Anruf lohnt sich genau das — Name, Nummer, Datum.</div><button class="speak" data-say="Ich habe mir die Vorgangsnummer aufgeschrieben.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-termin.webp" alt="Eine Hand trägt einen Termin in einen Kalender ein" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Frist</div><div class="bex">„Die Frist ist ein Jahr — so lange kannst du das einreichen.“</div><div class="bti">💡 Zwei feste Wendungen: <b>eine Frist einhalten</b> und <b>die Frist ist abgelaufen</b>. Bei den Fahrgastrechten hast du ein Jahr Zeit — trotzdem besser gleich.</div><button class="speak" data-say="Die Frist ist ein Jahr — so lange kannst du das einreichen.">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel „Was ist passiert?“:</strong> Einer zieht ein Wort, der andere baut damit einen Satz im Perfekt — mit <i>haben</i> oder <i>sein</i>. Wer das falsche Hilfsverb nimmt, zieht ein neues Wort. Nach zehn Runden sitzt der Unterschied.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Formular, online <span class="hl">oder am Schalter?</span></h2>
-<p class="ssub">Es gibt drei Wege, und sie unterscheiden sich vor allem darin, wie schnell du eine Antwort bekommst. Alle drei brauchen dieselben Angaben — nur die Verpackung ist anders.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">📄</span><div class="gmw">das Papierformular</div><div class="gmb">ausfüllen, unterschreiben, abschicken</div><div class="gmx">Liegt im Zug und im Reisezentrum aus.</div></div>
-<div class="gk blau"><span class="gem2">💻</span><div class="gmw">online</div><div class="gmb">dieselben Felder, nur schneller</div><div class="gmx">Foto der Fahrkarte hochladen, fertig.</div></div>
-<div class="gk ja"><span class="gem2">🏢</span><div class="gmw">am Schalter</div><div class="gmb">jemand füllt es mit dir aus</div><div class="gmx">Gut, wenn du unsicher bist.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So kommt dein Antrag durch</div><div class="gsatz">Am 2. November bin ich mit dem RE 7 von Hagen nach Köln gefahren. Der Zug ist ausgefallen, ich bin um 16:20 statt um 15:05 angekommen.</div><div class="bsp"><span class="wer">Warum das funktioniert</span>Datum, Zug, Strecke, zwei Uhrzeiten. Mehr will niemand wissen. Alles steht im <b>Perfekt</b> — genau so erzählt man auf Deutsch, was passiert ist.</div></div>
-<div class="gk no"><div class="gkl">❌ So kommt er nicht durch</div><div class="gsatz">Ihr Zug hatte mal wieder riesige Verspätung, das ist ja immer so bei euch.</div><div class="bsp"><span class="wer">Das Problem</span>Kein Datum, keine Zugnummer, keine Uhrzeit — und ein Vorwurf. Der Antrag kommt zurück mit der Bitte um Angaben, und du fängst von vorne an.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So läuft der Anruf</div><div class="gsatz">Guten Tag, mein Name ist Nadia Karim. Es geht um einen Fahrgastrechte-Antrag vom 5. November, Vorgangsnummer 4471. Können Sie mir sagen, ob er angekommen ist?</div><div class="bsp"><span class="wer">Warum das funktioniert</span>Name, Anliegen, Nummer, Frage — in dieser Reihenfolge. Die Person am anderen Ende kann sofort suchen, statt dich erst nach allem fragen zu müssen.</div></div>
-<div class="gk no"><div class="gkl">❌ So läuft er nicht</div><div class="gsatz">Ja hallo, ich warte jetzt seit Wochen auf mein Geld, was ist da eigentlich los?</div><div class="bsp"><span class="wer">Das Problem</span>Ohne Namen und Nummer kann niemand nachschauen. Und der Ton führt dazu, dass du die Auskunft bekommst, die im System steht — nicht die, die dir weiterhilft.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sicherst du dich ab</div><div class="gsatz">Ich habe mir die Vorgangsnummer aufgeschrieben und ein Foto von der Fahrkarte gemacht.</div><div class="bsp"><span class="wer">Warum das funktioniert</span>Zwei Minuten Arbeit, die dir Wochen später die ganze Diskussion ersparen. Ohne <b>Nachweis</b> ist jeder Antrag nur eine Behauptung.</div></div>
-<div class="gk no"><div class="gkl">❌ So gehst du leer aus</div><div class="gsatz">Die Fahrkarte habe ich weggeworfen, die brauchte ich ja nicht mehr.</div><div class="bsp"><span class="wer">Das Problem</span>Ohne Fahrkarte gibt es kein Geld — auch nicht bei einem Ausfall, den alle mitbekommen haben. Das ist die häufigste Stelle, an der Anträge scheitern.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Was schreibe ich in welches Feld?</button>
-<div class="inhalt">
-<p>Sechs Felder, mehr ist es nicht:</p>
-<ul>
-<li><b>Name und Adresse:</b> deine, so wie sie im Ausweis stehen.</li>
-<li><b>Datum der Fahrt:</b> der Tag, an dem du unterwegs warst.</li>
-<li><b>Von / nach:</b> die beiden Bahnhöfe, zwischen denen du fahren wolltest.</li>
-<li><b>Zugnummer:</b> steht auf der Fahrkarte und auf der Anzeigetafel (RE 7, ICE 645).</li>
-<li><b>Geplant / tatsächlich:</b> die beiden Ankunftszeiten. Nur der Unterschied zählt.</li>
-<li><b>Unterschrift:</b> ohne sie ist das Formular ungültig.</li>
-</ul>
-<p style="margin-top:.5rem;">Und ein Feld, das viele leer lassen, obwohl es hilft: die <b>Kontonummer</b>. Ohne sie bekommst du einen Gutschein, mit ihr das Geld. Beides ist möglich — du entscheidest.</p>
-</div>
-</div>
-<div class="tip">🎯 <strong>Zu zweit, eine Minute:</strong> Einer ist das Formular und fragt die sechs Felder ab, der andere antwortet aus dem Kopf — mit einer erfundenen Fahrt. Danach tauschen. Beim zweiten Mal geht es doppelt so schnell.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -831,37 +837,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
-<p class="ssub">Einer sitzt hinter dem Schalter oder am Telefon, einer möchte sein Geld. Danach tauschen — und beim zweiten Mal ohne die Sätze unten. Regel: In jeder Runde mindestens drei Sätze im Perfekt.</p>
-<div class="rmcard">
-<b>1 · Den Antrag stellen</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A arbeitet im Reisezentrum, B möchte eine Entschädigung. Der Zug ist ausgefallen, B ist über eine Stunde später angekommen und hat die Fahrkarte dabei.</p>
-<div class="nur-a2"><span class="rm">Mein Zug ist gestern ausgefallen</span><span class="rm">Ich bin eine Stunde später angekommen</span><span class="rm">Ich möchte eine Entschädigung</span><span class="rm">Hier ist meine Fahrkarte</span></div>
-<div class="nur-b1"><span class="rm">Am Montag bin ich mit dem RE 7 von Hagen nach Köln gefahren</span><span class="rm">Geplant war 15:05, angekommen bin ich um 16:20</span><span class="rm">Nach den Fahrgastrechten steht mir eine Entschädigung zu</span><span class="rm">Den Betrag hätte ich gern überwiesen statt als Gutschein</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat die Fahrt in zwei bis drei Sätzen im Perfekt erzählt, beide Uhrzeiten genannt und die Fahrkarte gezeigt. A musste nichts nachfragen — das Formular war in fünf Minuten fertig.</div>
-</div>
-<div class="rmcard">
-<b>2 · Nachhaken am Telefon</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Drei Wochen sind vergangen, nichts ist passiert. B ruft an. A hat den Vorgang im System, aber es fehlt angeblich etwas.</p>
-<div class="nur-a2"><span class="rm">Mein Name ist … , es geht um meinen Antrag</span><span class="rm">Ich habe ihn am 5. November abgeschickt</span><span class="rm">Ist er bei Ihnen angekommen?</span><span class="rm">Was fehlt Ihnen noch?</span></div>
-<div class="nur-b1"><span class="rm">Es geht um Vorgang 4471 vom 5. November</span><span class="rm">Können Sie mir sagen, ob der Antrag eingegangen ist?</span><span class="rm">Ich habe die Fahrkarte als Kopie beigelegt</span><span class="rm">Bis wann kann ich mit einer Antwort rechnen?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat mit Name und Nummer angefangen, ruhig gefragt statt sich zu beschweren, und am Ende ein Datum vereinbart. Beide wissen jetzt, wie es weitergeht.</div>
-</div>
-<div class="rmcard">
-<b>3 · Beim Ausfüllen helfen</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A versteht das Formular nicht und fragt B um Hilfe. B erklärt Feld für Feld — auf Deutsch, ohne Fachwörter.</p>
-<div class="nur-a2"><span class="rm">Was muss ich hier eintragen?</span><span class="rm">Wo steht die Zugnummer?</span><span class="rm">Muss ich das unterschreiben?</span><span class="rm">Wohin schicke ich das?</span></div>
-<div class="nur-b1"><span class="rm">In dieses Feld kommt die geplante Ankunftszeit, in das daneben die tatsächliche</span><span class="rm">Die Zugnummer findest du oben auf der Fahrkarte</span><span class="rm">Ohne Unterschrift wird das Formular nicht bearbeitet</span><span class="rm">Leg eine Kopie der Fahrkarte bei, nicht das Original</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat jedes Feld in einem Satz erklärt und dabei gesagt, wo die Angabe zu finden ist. A konnte das Formular danach allein zu Ende ausfüllen.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Einer nennt reihum ein Verb (<i>fahren, warten, anrufen, ausfallen</i>), der Nachbar bildet sofort einen Satz im Perfekt und sagt dazu, warum <i>haben</i> oder <i>sein</i>. Wer zögert, gibt weiter.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -894,14 +877,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde müssen <u>ein Satz mit bin</u> und <u>ein Satz mit habe</u> vorkommen. Wer alles mit <i>war</i> erzählt, fängt noch einmal an.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Einer nennt reihum ein Verb (<i>fahren, warten, anrufen, ausfallen</i>), der Nachbar bildet sofort einen Satz im Perfekt und sagt dazu, warum <i>haben</i> oder <i>sein</i>. Wer zögert, gibt weiter.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Warum füllen viele Menschen so ein Formular nie aus?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Was würdest du ändern, damit es einfacher wird?</li><li>Lohnt sich der Aufwand für zehn Euro?</li><li>Warum ist Telefonieren auf einer Fremdsprache besonders anstrengend?</li><li>Wie bereitest du dich auf so ein Gespräch vor?</li><li>Bleibst du dran, wenn du in der Warteschleife hängst?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
+<p class="ssub">Einer sitzt hinter dem Schalter oder am Telefon, einer möchte sein Geld. Danach tauschen — und beim zweiten Mal ohne die Sätze unten. Regel: In jeder Runde mindestens drei Sätze im Perfekt.</p>
+<div class="rmcard">
+<b>1 · Den Antrag stellen</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A arbeitet im Reisezentrum, B möchte eine Entschädigung. Der Zug ist ausgefallen, B ist über eine Stunde später angekommen und hat die Fahrkarte dabei.</p>
+<div class="nur-a2"><span class="rm">Mein Zug ist gestern ausgefallen</span><span class="rm">Ich bin eine Stunde später angekommen</span><span class="rm">Ich möchte eine Entschädigung</span><span class="rm">Hier ist meine Fahrkarte</span></div>
+<div class="nur-b1"><span class="rm">Am Montag bin ich mit dem RE 7 von Hagen nach Köln gefahren</span><span class="rm">Geplant war 15:05, angekommen bin ich um 16:20</span><span class="rm">Nach den Fahrgastrechten steht mir eine Entschädigung zu</span><span class="rm">Den Betrag hätte ich gern überwiesen statt als Gutschein</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat die Fahrt in zwei bis drei Sätzen im Perfekt erzählt, beide Uhrzeiten genannt und die Fahrkarte gezeigt. A musste nichts nachfragen — das Formular war in fünf Minuten fertig.</div>
+</div>
+<div class="rmcard">
+<b>2 · Nachhaken am Telefon</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Drei Wochen sind vergangen, nichts ist passiert. B ruft an. A hat den Vorgang im System, aber es fehlt angeblich etwas.</p>
+<div class="nur-a2"><span class="rm">Mein Name ist … , es geht um meinen Antrag</span><span class="rm">Ich habe ihn am 5. November abgeschickt</span><span class="rm">Ist er bei Ihnen angekommen?</span><span class="rm">Was fehlt Ihnen noch?</span></div>
+<div class="nur-b1"><span class="rm">Es geht um Vorgang 4471 vom 5. November</span><span class="rm">Können Sie mir sagen, ob der Antrag eingegangen ist?</span><span class="rm">Ich habe die Fahrkarte als Kopie beigelegt</span><span class="rm">Bis wann kann ich mit einer Antwort rechnen?</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat mit Name und Nummer angefangen, ruhig gefragt statt sich zu beschweren, und am Ende ein Datum vereinbart. Beide wissen jetzt, wie es weitergeht.</div>
+</div>
+<div class="rmcard">
+<b>3 · Beim Ausfüllen helfen</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A versteht das Formular nicht und fragt B um Hilfe. B erklärt Feld für Feld — auf Deutsch, ohne Fachwörter.</p>
+<div class="nur-a2"><span class="rm">Was muss ich hier eintragen?</span><span class="rm">Wo steht die Zugnummer?</span><span class="rm">Muss ich das unterschreiben?</span><span class="rm">Wohin schicke ich das?</span></div>
+<div class="nur-b1"><span class="rm">In dieses Feld kommt die geplante Ankunftszeit, in das daneben die tatsächliche</span><span class="rm">Die Zugnummer findest du oben auf der Fahrkarte</span><span class="rm">Ohne Unterschrift wird das Formular nicht bearbeitet</span><span class="rm">Leg eine Kopie der Fahrkarte bei, nicht das Original</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat jedes Feld in einem Satz erklärt und dabei gesagt, wo die Angabe zu finden ist. A konnte das Formular danach allein zu Ende ausfüllen.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -967,6 +984,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Sprachnachricht und die zehn Sätze bis Sonntag in den Chat. Ich höre alles an und schreibe dir zurück — vor allem, wo <i>haben</i> und <i>sein</i> noch wackeln.</div>
 <div class="tip">🔜 <strong>Nächste Woche:</strong> <u>Beim Friseur und beim Umtausch.</u> Sagen, was man will — genau. Und wenn es anders geworden ist, als man wollte: freundlich reklamieren. Das Perfekt von heute nimmst du direkt mit.</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1153,11 +1177,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1214,7 +1245,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1224,7 +1257,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

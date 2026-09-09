@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,105 +627,43 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B2<span class="zusatz"> · feiner</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">📞 Drei Sätze, drei Aufgaben</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">Die ersten drei Sätze <span class="hl">sind immer gleich</span></h2>
-<p class="ssub">Wer in Deutschland anruft, sagt zuerst seinen Namen, dann worum es geht, dann was er möchte. In dieser Reihenfolge, ohne Vorrede. Das klingt nüchtern, ist aber eine Höflichkeit: Die Person am anderen Ende weiß nach fünf Sekunden, ob sie zuständig ist — und muss dich nicht erst ausfragen.</p>
-<div class="scene-wrap klein"><img src="../amanda/sz-telefonieren.webp" alt="Eine Frau telefoniert am Tisch und macht sich dabei Notizen"></div>
-<ul class="qlist nur-a2">
-<li>Telefonierst du gern auf Deutsch?</li>
-<li>Wen rufst du auf Deutsch an — und wen lieber nicht?</li>
-<li>Was machst du, wenn du etwas nicht verstehst?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Warum ist Telefonieren schwerer als ein Gespräch von Angesicht zu Angesicht?</li>
-<li>Wie bereitest du dich auf einen wichtigen Anruf vor?</li>
-<li>Gibt es in deinem Herkunftsland andere Regeln für den Gesprächsanfang?</li>
-</ul>
-<div class="tip teal">🔑 <strong>Die drei Sätze:</strong> <b>1. Wer:</b> <i>Guten Tag, mein Name ist …</i> <b>2. Worum:</b> <i>Es geht um …</i> <b>3. Was du willst:</b> <i>Ich wollte fragen, ob …</i> Mehr braucht der Anfang nicht — und weniger auch nicht.</div>
-<h2 class="st">Und ein Zettel <span class="hl">vor dem Telefon</span></h2>
-<p class="ssub">Geübte Anrufer schreiben sich drei Dinge auf, bevor sie wählen: den eigenen Namen mit Buchstabierhilfe, die Nummer des Vorgangs und den ersten Satz. Das klingt übertrieben, spart aber die Sekunde Panik am Anfang — und die entscheidet oft darüber, wie der Rest des Gesprächs läuft.</p>
-<div class="scene-wrap klein"><img src="../vok-bild/die-telefonnummer.webp" alt="Eine Hand wählt an einem Telefon, daneben liegt ein Notizblock"></div>
-<ul class="qlist nur-a2">
-<li>Schreibst du dir vor einem Anruf etwas auf?</li>
-<li>Kannst du deinen Namen auf Deutsch buchstabieren?</li>
-<li>Wie sagst du deine Telefonnummer?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Was hilft dir, ruhig zu bleiben, wenn du nicht alles verstehst?</li>
-<li>Wann ist ein Anruf besser als eine E-Mail — und wann umgekehrt?</li>
-<li>Was war dein unangenehmster Anruf auf Deutsch?</li>
-</ul>
-<div class="tip">💡 <strong>Namen buchstabieren:</strong> Deutsche buchstabieren mit Vornamen — <i>K wie Kaufmann, A wie Anton, R wie Richard</i>. Üb deinen Namen einmal zu Hause, dann kommt er am Telefon von allein.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
 </section>
 
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Wörter <span class="hl">für die ersten zwei Minuten</span></h2>
-<p class="ssub">Sag jedes Wort laut — <u>mit Artikel</u>. Und häng einen Satz an, den du wirklich am Telefon sagen würdest.</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../amanda/sz-telefonieren.webp" alt="Eine Frau telefoniert am Tisch und macht sich dabei Notizen" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Anliegen</div><div class="bex">„Mein Anliegen ist schnell erklärt.“</div><div class="bti">💡 Das offizielle Wort für <i>Grund</i> am Telefon und im Amt. Der Standardsatz der Gegenseite lautet: <b>Was ist Ihr Anliegen?</b> — und darauf antwortest du mit einem Satz, nicht mit einer Geschichte.</div><button class="speak" data-say="Mein Anliegen ist schnell erklärt.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-telefonnummer.webp" alt="Eine Hand wählt an einem Telefon, daneben liegt ein Notizblock" loading="lazy"><div class="bb"><div class="bw">sich melden</div><div class="bex">„Ich melde mich wegen meines Antrags vom 5. November.“</div><div class="bti">💡 Reflexiv, und mit <b>wegen</b> + Genitiv oder <b>bei</b> + Dativ: <i>Ich melde mich bei Ihnen wegen …</i> Zweite Bedeutung: <i>Melden Sie sich, wenn etwas fehlt</i> — also <b>Bescheid geben</b>.</div><button class="speak" data-say="Ich melde mich wegen meines Antrags vom 5. November.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-buero.webp" alt="Amanda sitzt am Laptop im Büro und spricht mit einer Kollegin" loading="lazy"><div class="bb"><div class="bw">weiterverbinden</div><div class="bex">„Einen Moment, ich verbinde Sie weiter.“</div><div class="bti">💡 Trennbar: <i>ich verbinde Sie weiter</i>. Der Satz, den du dann hörst: <b>Bleiben Sie bitte dran.</b> Und wenn niemand abnimmt: <i>Da geht leider niemand ran.</i></div><button class="speak" data-say="Einen Moment, ich verbinde Sie weiter.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/a-uhr.webp" alt="Amanda zeigt auf ihre Armbanduhr" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Rückruf</div><div class="bex">„Könnte ich um einen Rückruf bitten?“</div><div class="bti">💡 Die höfliche Bitte lautet <b>um einen Rückruf bitten</b>. Und das Verb dazu ist trennbar: <i>Ich rufe Sie um drei zurück.</i></div><button class="speak" data-say="Könnte ich um einen Rückruf bitten?">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-amt.webp" alt="Amanda steht an einem Amtsschalter und reicht ein Formular über den Tresen" loading="lazy"><div class="bb"><div class="bw">zuständig</div><div class="bex">„Können Sie mir sagen, wer dafür zuständig ist?“</div><div class="bti">💡 Immer mit <b>für</b> + Akkusativ. Das wichtigste Wort in jedem deutschen Amt — und die häufigste Antwort am Telefon: <i>Dafür bin ich leider nicht zuständig.</i></div><button class="speak" data-say="Können Sie mir sagen, wer dafür zuständig ist?">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-krankmeldung.webp" alt="Ein leeres Blatt und ein Stift neben einer Tasse Tee" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Notiz</div><div class="bex">„Ich mache mir eben eine Notiz, einen Moment bitte.“</div><div class="bti">💡 Dazu <b>sich etwas notieren</b> — reflexiv mit Dativ. Und der Satz, mit dem du dir Zeit verschaffst: <i>Einen Moment, ich schreibe kurz mit.</i></div><button class="speak" data-say="Ich mache mir eben eine Notiz, einen Moment bitte.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-vertraege.webp" alt="Zwei Menschen sitzen an einem Schreibtisch und geben sich die Hand" loading="lazy"><div class="bb"><div class="bw">vereinbaren</div><div class="bex">„Können wir einen Termin vereinbaren?“</div><div class="bti">💡 Das förmliche Wort für <i>ausmachen</i>. <b>Einen Termin vereinbaren</b> ist die feste Wendung — und das Nomen dazu ist <b>die Vereinbarung</b>.</div><button class="speak" data-say="Können wir einen Termin vereinbaren?">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/amanda-super.webp" alt="Amanda lächelt und zeigt den Daumen nach oben" loading="lazy"><div class="bb"><div class="bw">bestätigen</div><div class="bex">„Können Sie mir den Termin kurz bestätigen?“</div><div class="bti">💡 Untrennbar, Partizip ohne <i>ge-</i>: <b>bestätigt</b>. Am Telefon der wichtigste Schlusssatz: Wer sich etwas bestätigen lässt, muss später nicht diskutieren.</div><button class="speak" data-say="Können Sie mir den Termin kurz bestätigen?">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/handy.webp" alt="Ein Handy mit zwei Sprechblasen auf dem Bildschirm" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Leitung</div><div class="bex">„Die Leitung ist sehr schlecht, ich verstehe Sie kaum.“</div><div class="bti">💡 Feste Sätze: <b>Die Leitung ist schlecht</b> und <b>Sie sind ganz leise</b>. Und wenn jemand anders spricht: <i>Ich bin gerade in einer anderen Leitung.</i></div><button class="speak" data-say="Die Leitung ist sehr schlecht, ich verstehe Sie kaum.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-kasse.webp" alt="Amanda steht an einem Tresen, der Verkäufer zeigt ihr ein Handy" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Grund</div><div class="bex">„Der Grund für meinen Anruf ist eine Rechnung vom Oktober.“</div><div class="bti">💡 Mit <b>für</b> + Akkusativ: <i>der Grund für den Anruf</i>. Und die Frage danach lautet <b>Warum?</b> oder förmlicher <b>Aus welchem Grund?</b></div><button class="speak" data-say="Der Grund für meinen Anruf ist eine Rechnung vom Oktober.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/a-willkommen.webp" alt="Amanda steht mit ausgebreiteten Armen da" loading="lazy"><div class="bb"><div class="bw">erreichbar</div><div class="bex">„Ich bin heute bis 16 Uhr erreichbar.“</div><div class="bti">💡 Dazu das Verb <b>erreichen</b>: <i>Ich habe Sie leider nicht erreicht.</i> Und die häufigste Frage am Telefon: <b>Wann sind Sie am besten erreichbar?</b></div><button class="speak" data-say="Ich bin heute bis 16 Uhr erreichbar.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/mail.webp" alt="Ein Briefumschlag mit einem Blatt Papier darin" loading="lazy"><div class="bb"><div class="bw">schriftlich</div><div class="bex">„Könnten Sie mir das bitte schriftlich schicken?“</div><div class="bti">💡 Das Gegenteil ist <b>mündlich</b>. In Deutschland gilt: Was wichtig ist, will man schriftlich haben — und genau danach fragt man am Ende jedes Telefonats.</div><button class="speak" data-say="Könnten Sie mir das bitte schriftlich schicken?">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel „Die ersten drei Sätze“:</strong> Einer nennt eine Situation (<i>Rechnung falsch</i>, <i>Termin verschieben</i>, <i>Wohnung besichtigen</i>), der andere sagt sofort die drei Anfangssätze. Wer länger als zwanzig Sekunden braucht, zieht eine neue Situation.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Wer, worum, <span class="hl">und was du willst</span></h2>
-<p class="ssub">Jeder Gesprächsanfang am Telefon erfüllt drei Aufgaben. Wer eine davon weglässt, macht der anderen Person Arbeit — und wer sie in der falschen Reihenfolge sagt, klingt unsicher, obwohl er alles weiß.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">🙋</span><div class="gmw">Wer bist du?</div><div class="gmb">Name, bei Bedarf buchstabiert</div><div class="gmx">Guten Tag, mein Name ist Nadia Karim.</div></div>
-<div class="gk blau"><span class="gem2">📌</span><div class="gmw">Worum geht es?</div><div class="gmb">Sache, Datum, Nummer</div><div class="gmx">Es geht um meinen Antrag vom 5. November.</div></div>
-<div class="gk ja"><span class="gem2">🎯</span><div class="gmw">Was möchtest du?</div><div class="gmb">eine einzige Frage oder Bitte</div><div class="gmx">Ich wollte fragen, ob er angekommen ist.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So kommt der Anruf an</div><div class="gsatz">Guten Tag, mein Name ist Nadia Karim. Es geht um meinen Antrag vom 5. November, Nummer 4471. Ich wollte fragen, ob noch etwas von mir fehlt.</div><div class="bsp"><span class="wer">Warum das funktioniert</span>Drei Sätze, drei Informationen, keine Vorrede. Die Person am anderen Ende kann sofort suchen — und hat nach fünf Sekunden entschieden, ob sie helfen kann oder weiterverbindet.</div></div>
-<div class="gk no"><div class="gkl">❌ So kommt er nicht an</div><div class="gsatz">Ja hallo, ich hatte da vor ein paar Wochen etwas geschickt, und jetzt weiß ich nicht, ob das angekommen ist, also ich weiß auch nicht, ob Sie da die Richtige sind …</div><div class="bsp"><span class="wer">Das Problem</span>Kein Name, kein Datum, keine Nummer — und die Unsicherheit gleich mitgeliefert. Der andere muss jetzt alles einzeln erfragen, und das dauert länger als das eigentliche Anliegen.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So kommt der Anruf an</div><div class="gsatz">Ich habe leider nur das letzte Wort verstanden — könnten Sie das bitte noch einmal wiederholen?</div><div class="bsp"><span class="wer">Warum das funktioniert</span>Sag <b>genau</b>, was fehlt. Wer nur <i>Wie bitte?</i> sagt, bekommt denselben Satz in derselben Geschwindigkeit noch einmal — wer die Stelle benennt, bekommt eine andere Antwort.</div></div>
-<div class="gk no"><div class="gkl">❌ So kommt er nicht an</div><div class="gsatz">Ja … ja … genau … ja.</div><div class="bsp"><span class="wer">Das Problem</span>Zustimmen, ohne zu verstehen, ist am Telefon besonders gefährlich: Am Ende hast du einem Termin zugestimmt, den du nicht kennst — und niemand merkt es, bis es zu spät ist.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So kommt der Anruf an</div><div class="gsatz">Ich fasse kurz zusammen: Sie schicken mir das Formular per Mail, ich schicke es bis Freitag zurück. Ist das so richtig?</div><div class="bsp"><span class="wer">Warum das funktioniert</span>Eine <b>Zusammenfassung</b> am Ende ist die beste Absicherung, die es gibt. Sie kostet zehn Sekunden und verhindert die Hälfte aller Missverständnisse.</div></div>
-<div class="gk no"><div class="gkl">❌ So kommt er nicht an</div><div class="gsatz">Okay, alles klar, danke, tschüss.</div><div class="bsp"><span class="wer">Das Problem</span>Nach dem Auflegen fällt dir ein, dass du nicht weißt, wer was bis wann macht. Und dann musst du noch einmal anrufen — was unangenehmer ist als die zehn Sekunden vorher.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Was sage ich, wenn ich nichts verstanden habe?</button>
-<div class="inhalt">
-<p>Vier Sätze, die immer funktionieren:</p>
-<ul>
-<li><b>Etwas langsamer, bitte:</b> <i>Könnten Sie bitte etwas langsamer sprechen?</i></li>
-<li><b>Nur diese Stelle:</b> <i>Den letzten Teil habe ich nicht verstanden.</i></li>
-<li><b>Buchstabieren lassen:</b> <i>Könnten Sie das bitte buchstabieren?</i></li>
-<li><b>Selbst wiederholen:</b> <i>Ich wiederhole kurz, damit ich sicher bin: …</i></li>
-</ul>
-<p style="margin-top:.5rem;">Und ein Satz, der keinerlei Peinlichkeit hat, obwohl fast alle ihn vermeiden: <b>„Entschuldigung, ich lerne noch Deutsch — sprechen Sie bitte etwas langsamer.“</b> In neun von zehn Fällen wird die andere Person sofort freundlicher.</p>
-</div>
-</div>
-<div class="tip">🎯 <strong>Zu zweit, eine Minute:</strong> Einer sagt einen Satz absichtlich zu schnell und zu leise, der andere reagiert — aber jedes Mal mit einem anderen der vier Sätze oben. Nach vier Runden habt ihr alle durch.</div>
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Telefonierst du gern auf Deutsch?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Wen rufst du auf Deutsch an — und wen lieber nicht?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -808,37 +816,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei Anrufe <span class="hl">zu zweit</span></h2>
-<p class="ssub">Setzt euch mit dem Rücken zueinander. Einer nimmt ab, einer ruft an. Danach tauschen — und beim zweiten Mal ohne die Sätze unten. Regel: Die ersten drei Sätze müssen sitzen.</p>
-<div class="rmcard">
-<b>1 · Die falsche Rechnung</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B hat eine Rechnung über einen Betrag bekommen, den er nicht versteht. A arbeitet in der Kundenbetreuung und findet den Vorgang erst nach einer Weile.</p>
-<div class="nur-a2"><span class="rm">Guten Tag, mein Name ist …</span><span class="rm">Es geht um eine Rechnung vom Oktober</span><span class="rm">Ich wollte fragen, wofür der Betrag ist</span><span class="rm">Können Sie mir das schriftlich schicken?</span></div>
-<div class="nur-b1"><span class="rm">Ich melde mich wegen der Rechnung vom 12. Oktober, Kundennummer 88431</span><span class="rm">Der Betrag ist mir nicht klar — ich bitte um eine Aufschlüsselung</span><span class="rm">Verstehe ich Sie richtig, dass die Gebühr für die Zusatzleistung ist?</span><span class="rm">Ich fasse zusammen: Sie prüfen das und melden sich bis Freitag</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat mit Name, Sache und Nummer angefangen, eine einzige Frage gestellt und am Ende zusammengefasst. Es kam mindestens einmal <i>es geht um</i> oder <i>ich melde mich wegen</i> vor.</div>
-</div>
-<div class="rmcard">
-<b>2 · Termin verschieben</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B kann einen vereinbarten Termin nicht halten und ruft an — früh genug, mit einem Alternativvorschlag.</p>
-<div class="nur-a2"><span class="rm">Ich habe am 18. einen Termin bei Ihnen</span><span class="rm">Leider kann ich nicht kommen</span><span class="rm">Hätten Sie etwas am Nachmittag?</span><span class="rm">Können Sie mir den neuen Termin bestätigen?</span></div>
-<div class="nur-b1"><span class="rm">Ich melde mich wegen meines Termins am 18. um 9:30 Uhr</span><span class="rm">Der Termin lässt sich bei mir nicht mit der Arbeitszeit vereinbaren</span><span class="rm">Möglich wäre bei mir alles ab 14 Uhr — hätten Sie da etwas frei?</span><span class="rm">Ich bitte um eine kurze Bestätigung per Mail</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat abgesagt, ohne sich mehrfach zu entschuldigen, und sofort gesagt, wann es geht. Am Ende stand ein neuer Termin und eine Bestätigung.</div>
-</div>
-<div class="rmcard">
-<b>3 · Wer ist zuständig?</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B ruft bei einer großen Stelle an und weiß nicht, wer helfen kann. A nimmt ab und ist nicht zuständig — hilft aber weiter.</p>
-<div class="nur-a2"><span class="rm">Bin ich bei Ihnen richtig für …?</span><span class="rm">Wer ist dafür zuständig?</span><span class="rm">Können Sie mich weiterverbinden?</span><span class="rm">Wie ist die Durchwahl?</span></div>
-<div class="nur-b1"><span class="rm">Ich bin nicht sicher, ob ich bei Ihnen richtig bin — es geht um eine Wohngeldsache</span><span class="rm">Könnten Sie mir sagen, wer dafür zuständig ist?</span><span class="rm">Bevor Sie weiterverbinden: Wie ist die Durchwahl, falls die Verbindung abbricht?</span><span class="rm">Und wann ist die Kollegin am besten erreichbar?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat nach dem Namen und der Durchwahl gefragt, bevor weiterverbunden wurde — und weiß jetzt, wen er beim nächsten Mal direkt anruft. Kein Anruf war umsonst.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Einer nennt reihum eine Situation, der Nachbar sagt sofort die drei Anfangssätze — mit <i>es geht um</i> oder <i>ich melde mich wegen</i>. Wer zögert oder mit <i>äh</i> anfängt, gibt weiter.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -871,14 +856,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde müssen die <u>ersten drei Sätze</u> und <u>eine Zusammenfassung</u> vorkommen. Wer mit <i>Ja hallo, also …</i> anfängt, fängt noch einmal an.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Einer nennt reihum eine Situation, der Nachbar sagt sofort die drei Anfangssätze — mit <i>es geht um</i> oder <i>ich melde mich wegen</i>. Wer zögert oder mit <i>äh</i> anfängt, gibt weiter.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Warum ist Telefonieren schwerer als ein Gespräch von Angesicht zu Angesicht?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Wie bereitest du dich auf einen wichtigen Anruf vor?</li><li>Gibt es in deinem Herkunftsland andere Regeln für den Gesprächsanfang?</li><li>Was hilft dir, ruhig zu bleiben, wenn du nicht alles verstehst?</li><li>Wann ist ein Anruf besser als eine E-Mail — und wann umgekehrt?</li><li>Was war dein unangenehmster Anruf auf Deutsch?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei Anrufe <span class="hl">zu zweit</span></h2>
+<p class="ssub">Setzt euch mit dem Rücken zueinander. Einer nimmt ab, einer ruft an. Danach tauschen — und beim zweiten Mal ohne die Sätze unten. Regel: Die ersten drei Sätze müssen sitzen.</p>
+<div class="rmcard">
+<b>1 · Die falsche Rechnung</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B hat eine Rechnung über einen Betrag bekommen, den er nicht versteht. A arbeitet in der Kundenbetreuung und findet den Vorgang erst nach einer Weile.</p>
+<div class="nur-a2"><span class="rm">Guten Tag, mein Name ist …</span><span class="rm">Es geht um eine Rechnung vom Oktober</span><span class="rm">Ich wollte fragen, wofür der Betrag ist</span><span class="rm">Können Sie mir das schriftlich schicken?</span></div>
+<div class="nur-b1"><span class="rm">Ich melde mich wegen der Rechnung vom 12. Oktober, Kundennummer 88431</span><span class="rm">Der Betrag ist mir nicht klar — ich bitte um eine Aufschlüsselung</span><span class="rm">Verstehe ich Sie richtig, dass die Gebühr für die Zusatzleistung ist?</span><span class="rm">Ich fasse zusammen: Sie prüfen das und melden sich bis Freitag</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat mit Name, Sache und Nummer angefangen, eine einzige Frage gestellt und am Ende zusammengefasst. Es kam mindestens einmal <i>es geht um</i> oder <i>ich melde mich wegen</i> vor.</div>
+</div>
+<div class="rmcard">
+<b>2 · Termin verschieben</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B kann einen vereinbarten Termin nicht halten und ruft an — früh genug, mit einem Alternativvorschlag.</p>
+<div class="nur-a2"><span class="rm">Ich habe am 18. einen Termin bei Ihnen</span><span class="rm">Leider kann ich nicht kommen</span><span class="rm">Hätten Sie etwas am Nachmittag?</span><span class="rm">Können Sie mir den neuen Termin bestätigen?</span></div>
+<div class="nur-b1"><span class="rm">Ich melde mich wegen meines Termins am 18. um 9:30 Uhr</span><span class="rm">Der Termin lässt sich bei mir nicht mit der Arbeitszeit vereinbaren</span><span class="rm">Möglich wäre bei mir alles ab 14 Uhr — hätten Sie da etwas frei?</span><span class="rm">Ich bitte um eine kurze Bestätigung per Mail</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat abgesagt, ohne sich mehrfach zu entschuldigen, und sofort gesagt, wann es geht. Am Ende stand ein neuer Termin und eine Bestätigung.</div>
+</div>
+<div class="rmcard">
+<b>3 · Wer ist zuständig?</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B ruft bei einer großen Stelle an und weiß nicht, wer helfen kann. A nimmt ab und ist nicht zuständig — hilft aber weiter.</p>
+<div class="nur-a2"><span class="rm">Bin ich bei Ihnen richtig für …?</span><span class="rm">Wer ist dafür zuständig?</span><span class="rm">Können Sie mich weiterverbinden?</span><span class="rm">Wie ist die Durchwahl?</span></div>
+<div class="nur-b1"><span class="rm">Ich bin nicht sicher, ob ich bei Ihnen richtig bin — es geht um eine Wohngeldsache</span><span class="rm">Könnten Sie mir sagen, wer dafür zuständig ist?</span><span class="rm">Bevor Sie weiterverbinden: Wie ist die Durchwahl, falls die Verbindung abbricht?</span><span class="rm">Und wann ist die Kollegin am besten erreichbar?</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat nach dem Namen und der Durchwahl gefragt, bevor weiterverbunden wurde — und weiß jetzt, wen er beim nächsten Mal direkt anruft. Kein Anruf war umsonst.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -944,6 +963,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Sprachnachricht und die zehn Sätze bis Mittwochabend in den Chat. Ich höre alles an und schreibe dir zurück — vor allem zu den ersten drei Sätzen.</div>
 <div class="tip">🔜 <strong>Am Donnerstag, Teil 2:</strong> <u>Hartnäckig bleiben, freundlich bleiben.</u> Heute ging es um den Anfang. Am Donnerstag um den schwierigen Teil: Was sagst du, wenn dich jemand vertröstet, weiterverbindet oder einfach nicht zurückruft?</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1130,11 +1156,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1191,7 +1224,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1201,7 +1236,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

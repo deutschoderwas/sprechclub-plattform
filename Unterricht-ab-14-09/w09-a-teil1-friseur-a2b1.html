@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,104 +627,43 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B1<span class="zusatz"> · mehr</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">🎯 Drei Angaben</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">Etwas kürzer <span class="hl">oder kurz?</span></h2>
-<p class="ssub">Beim Friseur entscheidet ein einziges Wort über das Ergebnis. <b>Etwas kürzer</b> heißt: zwei Zentimeter. <b>Kurz</b> heißt: eine neue Frisur. Und weil das Ergebnis vier Wochen bleibt, lohnt es sich, genau zu sagen, was man will — mit Zahlen, mit Vergleichen und ruhig auch mit einem Foto auf dem Handy.</p>
-<div class="scene-wrap klein"><img src="../amanda/sz-friseur.webp" alt="Amanda sitzt im Friseurstuhl, die Friseurin kämmt ihr die Haare"></div>
-<ul class="qlist nur-a2">
-<li>Wann warst du zuletzt beim Friseur?</li>
-<li>Sagst du dort genau, was du möchtest?</li>
-<li>Zeigst du manchmal ein Foto?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Was ist schon einmal schiefgegangen, weil du zu ungenau warst?</li>
-<li>Traust du dich zu sagen, wenn dir etwas nicht gefällt?</li>
-<li>Wie beschreibt man eine Frisur, ohne die Fachwörter zu kennen?</li>
-</ul>
-<div class="tip teal">🔑 <strong>Die Regel des Tages:</strong> Sag immer <b>eine Zahl</b> oder <b>einen Vergleich</b> dazu. <i>Zwei Zentimeter kürzer.</i> <i>So lang wie jetzt, nur die Spitzen.</i> Ein Adjektiv allein ist beim Friseur zu wenig.</div>
-<h2 class="st">Und im Laden <span class="hl">genauso</span></h2>
-<p class="ssub">Im Geschäft ist es dasselbe Prinzip: Wer sagt <i>Ich suche eine Jacke</i>, bekommt zwanzig Jacken gezeigt. Wer sagt <i>Ich suche eine dunkelblaue Jacke in Größe 40, am liebsten ohne Kapuze</i>, bekommt zwei — und eine davon passt. Genau dafür brauchst du heute die Adjektive und ihre Endungen.</p>
-<div class="scene-wrap klein"><img src="../amanda/sz-kleidung.webp" alt="In einem Bekleidungsgeschäft zeigt eine Verkäuferin einer Kundin einen Pullover"></div>
-<ul class="qlist nur-a2">
-<li>Kaufst du Kleidung lieber im Laden oder online?</li>
-<li>Kennst du deine Größe auf Deutsch?</li>
-<li>Probierst du immer an?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Was fragst du im Laden, bevor du etwas kaufst?</li>
-<li>Wie beschreibst du eine Farbe, die keinen einfachen Namen hat?</li>
-<li>Warum kaufen viele lieber online — und was verliert man dabei?</li>
-</ul>
-<div class="tip">💡 <strong>Der nützlichste Satz im Laden:</strong> <b>„Haben Sie das auch in …?“</b> Danach setzt du ein: <i>eine Nummer größer</i>, <i>in Blau</i>, <i>in Baumwolle</i>. Ein Satz, drei Situationen.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
 </section>
 
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Wörter <span class="hl">für Salon und Laden</span></h2>
-<p class="ssub">Sag jedes Wort laut — <u>mit Artikel</u>. Und häng ein Adjektiv davor: welche Farbe, welche Länge, welche Größe?</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../vok-bild/der-termin.webp" alt="Eine Hand trägt einen Termin in einen Kalender ein" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Termin</div><div class="bex">„Ich hätte gern einen Termin für Donnerstagnachmittag.“</div><div class="bti">💡 Beim Friseur braucht man fast immer einen. Die drei Sätze dazu: <b>einen Termin machen</b>, <b>verschieben</b> und <b>absagen</b> — mehr brauchst du am Telefon nicht.</div><button class="speak" data-say="Ich hätte gern einen Termin für Donnerstagnachmittag.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/friseur.webp" alt="Ein Kamm, eine Schere und ein Föhn" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Friseur</div><div class="bex">„Mein Friseur ist gleich um die Ecke.“</div><div class="bti">💡 Weiblich: <b>die Friseurin</b>. Der Ort heißt <b>der Salon</b> oder einfach <i>zum Friseur gehen</i> — mit <b>zu</b> + Dativ, nicht <i>in den Friseur</i>.</div><button class="speak" data-say="Mein Friseur ist gleich um die Ecke.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-friseur.webp" alt="Amanda sitzt im Friseurstuhl, die Friseurin kämmt ihr die Haare" loading="lazy"><div class="bb"><div class="bw">schneiden</div><div class="bex">„Bitte nur die Spitzen schneiden, etwa zwei Zentimeter.“</div><div class="bti">💡 Unregelmäßig: <i>schneiden — schnitt — geschnitten</i>. Und der wichtigste Zusatz: sag immer, <b>wie viel</b>. <i>Kurz schneiden</i> und <i>etwas kürzer schneiden</i> sind zwei verschiedene Aufträge.</div><button class="speak" data-say="Bitte nur die Spitzen schneiden, etwa zwei Zentimeter.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-friseur-beruf.webp" alt="Ein Friseursalon, eine Kundin wird am Stuhl bedient" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Frisur</div><div class="bex">„Ich möchte die Frisur eigentlich behalten, nur frischer.“</div><div class="bti">💡 Nicht verwechseln mit <b>die Haare</b> (das Material) und <b>der Friseur</b> (die Person). Und ein sehr nützlicher Satz: <i>Ich möchte nichts Neues, nur nachschneiden.</i></div><button class="speak" data-say="Ich möchte die Frisur eigentlich behalten, nur frischer.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-groesse.webp" alt="Eine Hand legt ein Etikett auf gefaltete Wäsche" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Größe</div><div class="bex">„Haben Sie das auch eine Nummer größer?“</div><div class="bti">💡 Man fragt nach der Größe mit <b>Welche Größe haben Sie?</b> Und die feste Wendung im Laden: <b>eine Nummer größer</b> oder <b>kleiner</b> — nicht <i>ein Größe mehr</i>.</div><button class="speak" data-say="Haben Sie das auch eine Nummer größer?">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-umkleidekabine.webp" alt="Eine Umkleidekabine mit Vorhang und einer kleinen Bank" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Umkleidekabine</div><div class="bex">„Entschuldigung, wo sind die Umkleidekabinen?“</div><div class="bti">💡 Kurz sagt man auch <b>die Kabine</b>. Auf dem Schild steht meistens <i>Anprobe</i>. Und die Frage der Verkäuferin lautet: <b>Möchten Sie es anprobieren?</b></div><button class="speak" data-say="Entschuldigung, wo sind die Umkleidekabinen?">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-kleidung.webp" alt="In einem Bekleidungsgeschäft zeigt eine Verkäuferin einer Kundin einen Pullover" loading="lazy"><div class="bb"><div class="bw">anprobieren</div><div class="bex">„Kann ich das in zwei Größen anprobieren?“</div><div class="bti">💡 Trennbar: <i>ich probiere es an</i>. Und Vorsicht beim Partizip: <b>anprobiert</b> — kein zusätzliches <i>ge</i>, weil <i>probieren</i> auf <i>-ieren</i> endet.</div><button class="speak" data-say="Kann ich das in zwei Größen anprobieren?">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-aermel.webp" alt="Zwei Hände krempeln einen Ärmel hoch" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Ärmel</div><div class="bex">„Die Ärmel sind mir zwei Zentimeter zu lang.“</div><div class="bti">💡 Plural wie Singular: <i>der Ärmel, die Ärmel</i>. Und die feste Wendung, die jeder kennt: <b>die Ärmel hochkrempeln</b> — anfangen zu arbeiten.</div><button class="speak" data-say="Die Ärmel sind mir zwei Zentimeter zu lang.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/das-hemd.webp" alt="Ein hellblaues Hemd hängt auf einem Bügel" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Hemd</div><div class="bex">„Ich suche ein hellblaues Hemd in Größe 40.“</div><div class="bti">💡 Für Frauen sagt man meist <b>die Bluse</b>. Dazu <b>der Kragen</b>, <b>der Knopf</b> und die Frage, die alles klärt: <i>Ist das Baumwolle?</i></div><button class="speak" data-say="Ich suche ein hellblaues Hemd in Größe 40.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-mantel.webp" alt="Ein heller Mantel hängt auf einem Bügel im Flur" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Mantel</div><div class="bex">„Der lange Mantel gefällt mir besser als der kurze.“</div><div class="bti">💡 Plural mit Umlaut: <b>die Mäntel</b>. Und der Unterschied zur <b>Jacke</b>: Ein Mantel geht mindestens bis zum Knie.</div><button class="speak" data-say="Der lange Mantel gefällt mir besser als der kurze.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-muetze.webp" alt="Eine gestrickte Mütze und ein Schal liegen auf einer Bank" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Mütze</div><div class="bex">„Dazu hätte ich gern eine warme Mütze in Grau.“</div><div class="bti">💡 Nicht verwechseln mit <b>der Hut</b> — der ist fest und hat eine Krempe. Dazu passen <b>der Schal</b> und <b>die Handschuhe</b>.</div><button class="speak" data-say="Dazu hätte ich gern eine warme Mütze in Grau.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-empfang.webp" alt="Eine Frau steht freundlich an einem hellen Empfangstresen" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Empfang</div><div class="bex">„Melden Sie sich bitte kurz am Empfang.“</div><div class="bti">💡 Auch <b>die Rezeption</b>. Der Satz, mit dem du ankommst: <b>Ich habe einen Termin um zehn, auf den Namen …</b> — mehr braucht es nicht.</div><button class="speak" data-say="Melden Sie sich bitte kurz am Empfang.">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel „Genauer, bitte“:</strong> Einer sagt einen ungenauen Wunsch (<i>Ich suche eine Jacke</i>), der andere fragt so lange nach, bis drei Angaben feststehen: Farbe, Größe, Material. Dann wird getauscht — und beim zweiten Mal sagt man alles gleich in einem Satz.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Farbe, Größe <span class="hl">und wie viel genau</span></h2>
-<p class="ssub">Ob beim Friseur oder im Laden — es sind immer dieselben drei Angaben, die dein Gegenüber braucht. Wer sie von allein nennt, spart sich fünf Rückfragen und bekommt genau das, was er wollte.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">🎨</span><div class="gmw">die Farbe</div><div class="gmb">welche genau, nicht nur hell oder dunkel</div><div class="gmx">dunkelblau, nicht schwarz</div></div>
-<div class="gk blau"><span class="gem2">📏</span><div class="gmw">die Größe oder Länge</div><div class="gmb">am besten mit Zahl</div><div class="gmx">Größe 40 · zwei Zentimeter kürzer</div></div>
-<div class="gk ja"><span class="gem2">🧵</span><div class="gmw">das Material oder Detail</div><div class="gmb">das eine Ding, das dir wichtig ist</div><div class="gmx">aus Baumwolle · ohne Kapuze</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So bekommst du, was du willst</div><div class="gsatz">Bitte nur die Spitzen, etwa zwei Zentimeter — die Länge möchte ich behalten.</div><div class="bsp"><span class="wer">Warum das funktioniert</span>Eine <b>Zahl</b> und eine <b>Grenze</b>. Die Friseurin weiß jetzt genau, wo sie aufhören soll — und du bekommst kein Ergebnis, das dich vier Wochen begleitet.</div></div>
-<div class="gk no"><div class="gkl">❌ So wird es riskant</div><div class="gsatz">Machen Sie mal was Schönes.</div><div class="bsp"><span class="wer">Das Problem</span>Der Satz klingt nett und ist eine Vollmacht. <i>Schön</i> heißt für jeden etwas anderes — und hinterher sagt niemand mehr, dass es doch anders gemeint war.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So bekommst du, was du willst</div><div class="gsatz">Ich suche ein hellblaues Hemd in Größe 40, am liebsten aus Baumwolle.</div><div class="bsp"><span class="wer">Warum das funktioniert</span>Drei Angaben in einem Satz — Farbe, Größe, Material. Die Verkäuferin muss nichts erfragen und zeigt dir zwei Hemden statt zwanzig.</div></div>
-<div class="gk no"><div class="gkl">❌ So wird es mühsam</div><div class="gsatz">Haben Sie Hemden?</div><div class="bsp"><span class="wer">Das Problem</span>Die Antwort ist <i>ja</i> — und dann stehst du vor einer ganzen Wand. Jede weitere Frage kostet dich einen Satz, den du gleich hättest sagen können.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So bleibst du im Gespräch</div><div class="gsatz">Vorne ist es mir noch etwas zu lang. Könnten Sie da noch einen Zentimeter nehmen?</div><div class="bsp"><span class="wer">Warum das funktioniert</span>Du sagst <b>wo</b> und <b>wie viel</b>. Kritik mit einer konkreten Angabe ist keine Kritik, sondern ein Auftrag — und wird auch so gehört.</div></div>
-<div class="gk no"><div class="gkl">❌ So bleibt es unangenehm</div><div class="gsatz">Nein, nein, passt schon. (und zu Hause ärgerst du dich)</div><div class="bsp"><span class="wer">Das Problem</span>Solange du im Stuhl sitzt, kostet die Korrektur zwei Minuten. Danach kostet sie einen neuen Termin — und das Ergebnis bleibt vier Wochen.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Wie sage ich, was ich will?</button>
-<div class="inhalt">
-<p>Drei Sätze, immer in dieser Reihenfolge:</p>
-<ul>
-<li><b>Was du suchst:</b> <i>Ich suche ein Hemd / Ich hätte gern einen Termin.</i></li>
-<li><b>Die Angaben:</b> Farbe, Größe, Länge — am besten alle drei auf einmal.</li>
-<li><b>Die Grenze:</b> was <u>nicht</u> passieren soll. <i>Aber bitte nicht kürzer als bis zur Schulter.</i></li>
-</ul>
-<p style="margin-top:.5rem;">Und ein Hilfsmittel, das niemand albern findet: <b>ein Foto auf dem Handy</b>. Beim Friseur ist es der schnellste Weg, sich zu verständigen — und in jedem Salon völlig normal.</p>
-</div>
-</div>
-<div class="tip">🎯 <strong>Zu zweit, eine Minute:</strong> Einer beschreibt ein Kleidungsstück, das er wirklich besitzt — mit drei Angaben. Der andere zeichnet oder beschreibt es nach. Danach vergleichen: Wo war es zu ungenau?</div>
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Wann warst du zuletzt beim Friseur?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Sagst du dort genau, was du möchtest?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -807,37 +816,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
-<p class="ssub">Einer bedient, einer möchte etwas. Danach tauschen — und beim zweiten Mal ohne die Sätze unten. Regel: In jedem Wunsch mindestens ein Adjektiv mit Endung und eine Zahl.</p>
-<div class="rmcard">
-<b>1 · Beim Friseur</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A ist Friseurin, B möchte die Länge behalten und nur nachschneiden lassen. Zwischendurch fragt A, ob es so passt.</p>
-<div class="nur-a2"><span class="rm">Ich möchte nur die Spitzen, etwa zwei Zentimeter</span><span class="rm">Die Länge möchte ich behalten</span><span class="rm">Vorne bitte etwas kürzer</span><span class="rm">So ist es gut, vielen Dank</span></div>
-<div class="nur-b1"><span class="rm">Die Länge bleibt, nur nachschneiden — höchstens zwei Zentimeter</span><span class="rm">Wenn Sie unsicher sind, lieber weniger als zu viel</span><span class="rm">Vorne ist es mir noch etwas zu lang, könnten Sie da einen Zentimeter nehmen?</span><span class="rm">Was würden Sie mir für den Winter raten?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat eine Zahl und eine Grenze genannt und sich zwischendurch getraut zu korrigieren. Am Ende gab es keine Überraschung im Spiegel.</div>
-</div>
-<div class="rmcard">
-<b>2 · Im Bekleidungsgeschäft</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A verkauft, B sucht etwas Bestimmtes: Farbe, Größe, Material stehen schon fest. Es passt fast — nur eine Kleinigkeit stimmt nicht.</p>
-<div class="nur-a2"><span class="rm">Ich suche ein hellblaues Hemd in Größe 40</span><span class="rm">Haben Sie das auch eine Nummer größer?</span><span class="rm">Wo kann ich das anprobieren?</span><span class="rm">Die Ärmel sind mir zu lang</span></div>
-<div class="nur-b1"><span class="rm">Ich suche ein schlichtes Hemd aus Baumwolle, hellblau, Größe 40</span><span class="rm">Läuft das beim Waschen ein?</span><span class="rm">Könnten Sie es mir vorsichtshalber auch in 41 bereitlegen?</span><span class="rm">Die Schultern sitzen gut, aber die Ärmel sind zwei Zentimeter zu lang</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat drei Angaben von allein genannt und beim Anprobieren gesagt, was passt und was nicht. A musste nichts erraten.</div>
-</div>
-<div class="rmcard">
-<b>3 · Kurz vor der Kasse</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B ist unsicher, ob es die richtige Größe ist, und will vor dem Bezahlen die Bedingungen klären.</p>
-<div class="nur-a2"><span class="rm">Kann ich das umtauschen?</span><span class="rm">Wie lange habe ich Zeit?</span><span class="rm">Brauche ich den Kassenbon?</span><span class="rm">Bekomme ich Geld zurück oder einen Gutschein?</span></div>
-<div class="nur-b1"><span class="rm">Falls es doch nicht passt — bis wann könnte ich es umtauschen?</span><span class="rm">Gilt das auch für reduzierte Ware?</span><span class="rm">Muss es ungetragen sein, oder reicht das Etikett?</span><span class="rm">Und bekomme ich den Betrag zurück oder einen Gutschein?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat vor dem Bezahlen gefragt statt danach — und weiß jetzt genau, unter welchen Bedingungen ein Umtausch möglich ist. Genau das brauchen wir am Mittwoch.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Einer nennt reihum ein Nomen mit Artikel (<i>der Mantel, die Mütze, das Hemd</i>), der Nachbar baut sofort zwei Sätze — einen mit <i>der/die/das</i> und einen mit <i>ein/eine</i>. Wer die Endung vergisst, gibt weiter.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -870,14 +856,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde müssen <u>zwei Adjektive mit Endung</u> und <u>eine Zahl</u> vorkommen. Wer nur <i>schön</i> oder <i>gut</i> sagt, fängt noch einmal an.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Einer nennt reihum ein Nomen mit Artikel (<i>der Mantel, die Mütze, das Hemd</i>), der Nachbar baut sofort zwei Sätze — einen mit <i>der/die/das</i> und einen mit <i>ein/eine</i>. Wer die Endung vergisst, gibt weiter.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Was ist schon einmal schiefgegangen, weil du zu ungenau warst?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Traust du dich zu sagen, wenn dir etwas nicht gefällt?</li><li>Wie beschreibt man eine Frisur, ohne die Fachwörter zu kennen?</li><li>Was fragst du im Laden, bevor du etwas kaufst?</li><li>Wie beschreibst du eine Farbe, die keinen einfachen Namen hat?</li><li>Warum kaufen viele lieber online — und was verliert man dabei?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
+<p class="ssub">Einer bedient, einer möchte etwas. Danach tauschen — und beim zweiten Mal ohne die Sätze unten. Regel: In jedem Wunsch mindestens ein Adjektiv mit Endung und eine Zahl.</p>
+<div class="rmcard">
+<b>1 · Beim Friseur</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A ist Friseurin, B möchte die Länge behalten und nur nachschneiden lassen. Zwischendurch fragt A, ob es so passt.</p>
+<div class="nur-a2"><span class="rm">Ich möchte nur die Spitzen, etwa zwei Zentimeter</span><span class="rm">Die Länge möchte ich behalten</span><span class="rm">Vorne bitte etwas kürzer</span><span class="rm">So ist es gut, vielen Dank</span></div>
+<div class="nur-b1"><span class="rm">Die Länge bleibt, nur nachschneiden — höchstens zwei Zentimeter</span><span class="rm">Wenn Sie unsicher sind, lieber weniger als zu viel</span><span class="rm">Vorne ist es mir noch etwas zu lang, könnten Sie da einen Zentimeter nehmen?</span><span class="rm">Was würden Sie mir für den Winter raten?</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat eine Zahl und eine Grenze genannt und sich zwischendurch getraut zu korrigieren. Am Ende gab es keine Überraschung im Spiegel.</div>
+</div>
+<div class="rmcard">
+<b>2 · Im Bekleidungsgeschäft</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A verkauft, B sucht etwas Bestimmtes: Farbe, Größe, Material stehen schon fest. Es passt fast — nur eine Kleinigkeit stimmt nicht.</p>
+<div class="nur-a2"><span class="rm">Ich suche ein hellblaues Hemd in Größe 40</span><span class="rm">Haben Sie das auch eine Nummer größer?</span><span class="rm">Wo kann ich das anprobieren?</span><span class="rm">Die Ärmel sind mir zu lang</span></div>
+<div class="nur-b1"><span class="rm">Ich suche ein schlichtes Hemd aus Baumwolle, hellblau, Größe 40</span><span class="rm">Läuft das beim Waschen ein?</span><span class="rm">Könnten Sie es mir vorsichtshalber auch in 41 bereitlegen?</span><span class="rm">Die Schultern sitzen gut, aber die Ärmel sind zwei Zentimeter zu lang</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat drei Angaben von allein genannt und beim Anprobieren gesagt, was passt und was nicht. A musste nichts erraten.</div>
+</div>
+<div class="rmcard">
+<b>3 · Kurz vor der Kasse</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B ist unsicher, ob es die richtige Größe ist, und will vor dem Bezahlen die Bedingungen klären.</p>
+<div class="nur-a2"><span class="rm">Kann ich das umtauschen?</span><span class="rm">Wie lange habe ich Zeit?</span><span class="rm">Brauche ich den Kassenbon?</span><span class="rm">Bekomme ich Geld zurück oder einen Gutschein?</span></div>
+<div class="nur-b1"><span class="rm">Falls es doch nicht passt — bis wann könnte ich es umtauschen?</span><span class="rm">Gilt das auch für reduzierte Ware?</span><span class="rm">Muss es ungetragen sein, oder reicht das Etikett?</span><span class="rm">Und bekomme ich den Betrag zurück oder einen Gutschein?</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat vor dem Bezahlen gefragt statt danach — und weiß jetzt genau, unter welchen Bedingungen ein Umtausch möglich ist. Genau das brauchen wir am Mittwoch.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -943,6 +963,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Sprachnachricht und die zehn Sätze bis Dienstagabend in den Chat. Ich höre alles an und schreibe dir zurück, welche Endungen schon sitzen.</div>
 <div class="tip">🔜 <strong>Am Mittwoch, Teil 2:</strong> <u>Es ist anders geworden — reklamieren.</u> Der Pullover ist beim Waschen eingelaufen, die Farbe ist nicht die vom Foto, die Frisur ist kürzer als besprochen. Wir üben, wie man das sagt, ohne unfreundlich zu werden.</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1129,11 +1156,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1190,7 +1224,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1200,7 +1236,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

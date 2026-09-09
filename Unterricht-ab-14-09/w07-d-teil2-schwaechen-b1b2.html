@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,49 +627,44 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B2<span class="zusatz"> · feiner</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#wiederholung">🔁 Wiederholung</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">🎚️ Drei Arten, es zu sagen</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">Der Moment, <span class="hl">in dem man nichts versteht</span></h2>
-<p class="ssub">Eine Durchsage im Bahnhof, drei Sätze schnell gesprochen, und alle um dich herum setzen sich in Bewegung. Du hast nichts verstanden. Es gibt jetzt zwei Möglichkeiten: so tun als ob — oder fragen. Die zweite ist unangenehmer und in fünf von fünf Fällen besser. Genau darum geht es heute: den unangenehmen Satz so zu sagen, dass er niemanden stört.</p>
-<div class="scene-wrap klein"><img src="../vok-bild/die-durchsage.webp" alt="Menschen stehen in einer Bahnhofshalle und schauen zu den Lautsprechern hinauf"></div>
-<ul class="qlist nur-a2">
-<li>Wann hast du zuletzt etwas nicht verstanden und nicht nachgefragt?</li>
-<li>Was sagst du, wenn jemand zu schnell spricht?</li>
-<li>Was fällt dir auf Deutsch noch schwer?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Warum tun wir manchmal so, als hätten wir verstanden?</li>
-<li>Was passiert im schlimmsten Fall, wenn man nachfragt?</li>
-<li>Wie merkt man einem Menschen an, dass er nur so tut?</li>
-</ul>
-<div class="tip teal">🔑 <strong>Die Regel des Abends:</strong> Sag, was du <u>noch nicht</u> kannst — nicht, was du <u>nicht</u> kannst. Ein einziges Wort, und aus einem Urteil über dich wird ein Zwischenstand.</div>
-<h2 class="st">Warum Ehrlichkeit hier <span class="hl">besser ankommt als Mut</span></h2>
-<p class="ssub">In deutschen Teams gilt eine unausgesprochene Regel: Lieber jemand, der früh sagt, dass es eng wird, als jemand, der es bis zum Schluss allein versucht. Wer eine Grenze nennt, macht sich nicht klein — er macht sich planbar. Und Planbarkeit ist im Berufsleben hier fast das höchste Lob, das es gibt.</p>
-<div class="scene-wrap klein"><img src="../amanda/sz-sprachkurs.webp" alt="Ein Klassenzimmer, eine Lehrerin an der Tafel, eine Schülerin meldet sich"></div>
-<ul class="qlist nur-a2">
-<li>Sagst du im Kurs, wenn du etwas nicht verstanden hast?</li>
-<li>Wer hilft dir, wenn du nicht weiterkommst?</li>
-<li>Was möchtest du bis Weihnachten besser können?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Ist es in deinem Land in Ordnung, im Beruf eine Schwäche zuzugeben?</li>
-<li>Wann ist Ehrlichkeit über eigene Grenzen ein Risiko?</li>
-<li>Wie sagt man eine Grenze, ohne sich dabei zu entschuldigen?</li>
-</ul>
-<div class="tip">💡 <strong>Das Wort, das alles kippt:</strong> <b>leider</b>. <i>Ich kann das leider nicht</i> klingt nach Entschuldigung. <i>Das kann ich noch nicht — ich arbeite daran</i> klingt nach jemandem, der weiß, wo er steht. Streich <i>leider</i> heute Abend aus jedem Satz.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
+</section>
+
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Wann hast du zuletzt etwas nicht verstanden und nicht nachgefragt?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Was sagst du, wenn jemand zu schnell spricht?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="wiederholung">
@@ -620,61 +685,6 @@ a.tab:hover{color:var(--ink);}
 <li>Wie heißt der Satz vollständig: <i>Ich bin jemand, ___ man Probleme geben kann</i>?</li>
 </ul>
 <div class="tip teal">🔁 <strong>Zu zweit, dreißig Sekunden:</strong> Einer nennt seine Stärke von Dienstag in einem Satz, der andere fragt einmal nach: <i>Woran hat man das gemerkt?</i> Danach drehen wir die Frage um — heute geht es um das, was noch nicht sitzt.</div>
-</section>
-
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Wörter <span class="hl">für den ehrlichen Teil</span></h2>
-<p class="ssub">Sag jedes Wort laut — <u>mit Artikel</u>. Und häng gleich einen Satz an, in dem <i>noch nicht</i> vorkommt.</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../amanda/a-warten.webp" alt="Amanda steht unsicher da und hält die Hände an die Wangen" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Schwäche</div><div class="bex">„Meine größte Schwäche ist das Sprechen unter Zeitdruck.“</div><div class="bti">💡 Vorsicht mit dem Wort im Gespräch: Es klingt härter, als es gemeint ist. Sag im Zweifel lieber <b>Was mir weniger liegt</b> oder <b>Woran ich arbeite</b> — dieselbe Aussage, freundlicherer Ton.</div><button class="speak" data-say="Meine größte Schwäche ist das Sprechen unter Zeitdruck.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/amanda-ups.webp" alt="Amanda schaut erschrocken, der Mund steht offen" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Fehler</div><div class="bex">„Der Fehler war meiner, das habe ich sofort gesagt.“</div><div class="bti">💡 Zwei Wendungen, die du oft brauchst: <b>einen Fehler machen</b> und <b>aus Fehlern lernen</b>. Ein Fehler ist im Deutschen kein Charakterurteil — solange man ihn selbst benennt.</div><button class="speak" data-say="Der Fehler war meiner, das habe ich sofort gesagt.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-heikel.webp" alt="Zwei Menschen sitzen sich in Sesseln gegenüber und sprechen ernst miteinander" loading="lazy"><div class="bb"><div class="bw">zugeben</div><div class="bex">„Ich gebe zu, dass ich damit noch keine Erfahrung habe.“</div><div class="bti">💡 Trennbar: <i>ich gebe zu</i>. Und merk dir den Unterschied im Ton: <b>zugeben</b> klingt nach Größe, <i>gestehen</i> nach Gericht. Im Alltag nimmst du immer <b>zugeben</b>.</div><button class="speak" data-say="Ich gebe zu, dass ich damit noch keine Erfahrung habe.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-sprachkurs.webp" alt="Eine Schülerin meldet sich im Unterricht, die Lehrerin steht an der Tafel" loading="lazy"><div class="bb"><div class="bw">nachfragen</div><div class="bex">„Darf ich kurz nachfragen? Ich habe das letzte Wort nicht verstanden.“</div><div class="bti">💡 Trennbar, und die höflichste Einleitung überhaupt: <b>Darf ich kurz nachfragen?</b> Wer nachfragt, gilt hier als aufmerksam — nicht als langsam.</div><button class="speak" data-say="Darf ich kurz nachfragen? Ich habe das letzte Wort nicht verstanden.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/zettel.webp" alt="Ein leerer Zettel und ein Bleistift daneben" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Lücke</div><div class="bex">„Bei den Fachbegriffen habe ich noch Lücken.“</div><div class="bti">💡 Ein sehr nützliches Wort, weil es sachlich klingt: Eine <b>Lücke</b> kann man füllen, eine Schwäche muss man sein. Dazu <b>eine Lücke schließen</b>.</div><button class="speak" data-say="Bei den Fachbegriffen habe ich noch Lücken.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/handy.webp" alt="Ein Handy mit zwei Sprechblasen auf dem Bildschirm" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Rückmeldung</div><div class="bex">„Ich hätte gern eine kurze Rückmeldung, bevor ich weitermache.“</div><div class="bti">💡 Das deutsche Wort für <i>Feedback</i> — beides ist üblich. <b>Um eine Rückmeldung bitten</b> ist der Satz, mit dem man zeigt, dass man dazulernen will.</div><button class="speak" data-say="Ich hätte gern eine kurze Rückmeldung, bevor ich weitermache.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/a-stift.webp" alt="Amanda hält einen großen Bleistift in der Hand" loading="lazy"><div class="bb"><div class="bw">notieren</div><div class="bex">„Ich notiere mir das lieber, sonst geht es unter.“</div><div class="bti">💡 Klingt erwachsener als <i>aufschreiben</i> und ist im Beruf das übliche Wort. Reflexiv mit Dativ: <b>ich notiere mir etwas</b>.</div><button class="speak" data-say="Ich notiere mir das lieber, sonst geht es unter.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/a-hoeren.webp" alt="Amanda hört mit Kopfhörern zu und lächelt" loading="lazy"><div class="bb"><div class="bw">zuhören</div><div class="bex">„Beim schnellen Sprechen komme ich beim Zuhören noch nicht mit.“</div><div class="bti">💡 Trennbar und mit <b>Dativ</b>: <i>Ich höre dir zu</i>, nicht <i>dich</i>. Der Unterschied zu <b>hören</b>: Hören passiert von allein, zuhören ist eine Entscheidung.</div><button class="speak" data-say="Beim schnellen Sprechen komme ich beim Zuhören noch nicht mit.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/fitness.webp" alt="Hanteln, eine Matte und eine Trinkflasche" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Übung</div><div class="bex">„Das ist reine Übung — vor einem Jahr konnte ich es gar nicht.“</div><div class="bti">💡 Die beste Antwort auf jede eigene Schwäche: <b>Das ist Übungssache.</b> Und das Sprichwort dazu kennt hier wirklich jeder: <i>Übung macht den Meister.</i></div><button class="speak" data-say="Das ist reine Übung — vor einem Jahr konnte ich es gar nicht.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-uhrzeit.webp" alt="Eine runde Wanduhr über einem Regal mit einer Pflanze" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Zeitdruck</div><div class="bex">„Unter Zeitdruck vergesse ich manchmal die Artikel.“</div><div class="bti">💡 Immer mit <i>unter</i>: <b>unter Zeitdruck stehen</b> oder <b>unter Zeitdruck arbeiten</b>. Eine sehr gute Einschränkung, weil sie sagt: Es liegt an der Situation, nicht am Können.</div><button class="speak" data-say="Unter Zeitdruck vergesse ich manchmal die Artikel.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-antwortbogen.webp" alt="Ein Blatt mit leeren Kästchen und ein Bleistift daneben" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Prüfung</div><div class="bex">„Für die Prüfung fehlt mir noch das freie Sprechen.“</div><div class="bti">💡 <b>Eine Prüfung ablegen</b>, <b>bestehen</b> oder <b>durchfallen</b> — drei Wörter, die zusammengehören. Und Vorsicht: Es heißt <i>durch die Prüfung fallen</i>, nicht <i>verlieren</i>.</div><button class="speak" data-say="Für die Prüfung fehlt mir noch das freie Sprechen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-durchsage.webp" alt="Menschen in einer Bahnhofshalle schauen zu den Lautsprechern hinauf" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Durchsage</div><div class="bex">„Die Durchsage habe ich nicht verstanden, können Sie mir helfen?“</div><div class="bti">💡 Der Klassiker unter den Verstehproblemen — und niemand nimmt es dir übel. Der ganze Satz dazu: <b>Entschuldigung, was wurde gerade durchgesagt?</b></div><button class="speak" data-say="Die Durchsage habe ich nicht verstanden, können Sie mir helfen?">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel „Noch nicht“:</strong> Reihum sagt jeder einen Satz über etwas, das er nicht kann — und muss ihn sofort mit <b>noch nicht</b> und einem Plan wiederholen. <i>Ich kann keine Präsentation halten.</i> → <i>Freie Präsentationen kann ich noch nicht, ich übe das gerade mit Sprachnachrichten.</i></div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Entschuldigung, Ausrede <span class="hl">oder Zwischenstand?</span></h2>
-<p class="ssub">Dieselbe Information — drei völlig verschiedene Wirkungen. Wer den Unterschied kennt, kann eine Schwäche nennen und trotzdem sicher wirken. Und alle drei erkennt man an einem einzigen Wort im Satz.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">🙇</span><div class="gmw">die Entschuldigung</div><div class="gmb">du bittest um Nachsicht für dich selbst</div><div class="gmx">Tut mir leid, mein Deutsch ist leider nicht so gut.</div></div>
-<div class="gk blau"><span class="gem2">🌫️</span><div class="gmw">die Ausrede</div><div class="gmb">du schiebst es auf etwas anderes</div><div class="gmx">Dafür hatte ich einfach nie die richtige Gelegenheit.</div></div>
-<div class="gk ja"><span class="gem2">📈</span><div class="gmw">der Zwischenstand</div><div class="gmb">du sagst, wo du stehst und wohin es geht</div><div class="gmx">Am Telefon bin ich noch unsicher — ich übe das gerade.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Wirkt souverän</div><div class="gsatz">Fachbegriffe verstehe ich noch nicht alle. Ich frage dann nach und schreibe sie mir auf.</div><div class="bsp"><span class="wer">Warum das funktioniert</span>Zwei Sätze, zwei Teile: die <b>Grenze</b> und der <b>Umgang</b> damit. Der zweite Satz ist der wichtigere — er zeigt, dass die Lücke nicht liegen bleibt.</div></div>
-<div class="gk no"><div class="gkl">❌ Wirkt unsicher</div><div class="gsatz">Tut mir leid, ich verstehe leider immer noch nicht alles.</div><div class="bsp"><span class="wer">Das Problem</span><b>Tut mir leid</b> und <b>leider</b> in einem Satz. Du entschuldigst dich für etwas, das völlig normal ist — und der andere fühlt sich verpflichtet, dich zu trösten.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Wirkt souverän</div><div class="gsatz">Das schaffe ich bis Freitag nicht mehr in Ruhe. Bis Montag ja — oder ich lasse den letzten Teil weg.</div><div class="bsp"><span class="wer">Warum das funktioniert</span>Ein Nein mit <b>zwei Auswegen</b>. Wer sagt, was stattdessen geht, hat nicht abgelehnt, sondern mitgedacht — und darauf reagieren Menschen fast immer freundlich.</div></div>
-<div class="gk no"><div class="gkl">❌ Wirkt unsicher</div><div class="gsatz">Ich versuche es, aber ich verspreche nichts.</div><div class="bsp"><span class="wer">Das Problem</span>Ein halbes Ja ist schlimmer als ein klares Nein: Der andere plant damit, und am Freitag stehen beide schlechter da als vorher.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Wirkt souverän</div><div class="gsatz">Mit dem Programm habe ich noch nicht gearbeitet. Wenn mir das jemand einmal zeigt, komme ich zurecht.</div><div class="bsp"><span class="wer">Warum das funktioniert</span>Die Grenze steht im ersten Satz, die <b>Bedingung</b> im zweiten. Du sagst damit: Das ist kein Können-Problem, sondern ein Zeitpunkt-Problem — und genau so hört es der andere.</div></div>
-<div class="gk no"><div class="gkl">❌ Wirkt unsicher</div><div class="gsatz">Damit kenne ich mich überhaupt nicht aus, ich bin da echt schlecht.</div><div class="bsp"><span class="wer">Das Problem</span><b>Überhaupt nicht</b> und <b>echt schlecht</b> sind Urteile über dich als Person. Sie sagen nichts über die Sache — und sie lassen sich nachher schwer zurücknehmen.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Wie sage ich eine Schwäche, ohne mich kleinzumachen?</button>
-<div class="inhalt">
-<p>Zwei Sätze, immer in dieser Reihenfolge:</p>
-<ul>
-<li><b>Die Grenze:</b> sachlich, mit <i>noch nicht</i>. <i>Freie Präsentationen kann ich noch nicht.</i></li>
-<li><b>Der Umgang damit:</b> was du tust oder brauchst. <i>Ich übe das gerade — und ich bereite mir Stichpunkte vor.</i></li>
-</ul>
-<p style="margin-top:.5rem;">Und drei Wörter, die du dabei streichst: <b>leider</b>, <b>eigentlich</b>, <b>nur</b>. Alle drei entschuldigen dich für etwas, wofür sich niemand entschuldigen muss. <i>Ich kann das leider eigentlich nur ein bisschen</i> — dieser Satz sagt weniger als gar nichts.</p>
-</div>
-</div>
-<div class="tip">🎯 <strong>Zu zweit, eine Minute:</strong> Einer sagt einen Satz mit <i>leider</i> oder <i>Tut mir leid</i>, der andere baut ihn sofort um: ohne Entschuldigung, mit <b>noch nicht</b> und einem zweiten Satz dazu. Ihr hört den Unterschied sofort — und die anderen im Raum auch.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -827,37 +837,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
-<p class="ssub">Einer fragt oder bittet, einer sagt eine Grenze. Danach tauschen — und beim zweiten Mal ohne die Sätze unten. Verboten in beiden Runden: <i>leider</i>, <i>eigentlich</i>, <i>tut mir leid</i>.</p>
-<div class="rmcard">
-<b>1 · Die Aufgabe, die zu groß ist</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A bittet B, eine Präsentation vor dreißig Leuten zu übernehmen. B möchte gern dazulernen, traut sich das allein aber noch nicht zu — und sagt genau das.</p>
-<div class="nur-a2"><span class="rm">Das kann ich noch nicht allein</span><span class="rm">Zu zweit würde ich es machen</span><span class="rm">Könnten Sie mir das einmal zeigen?</span><span class="rm">In ein paar Monaten gern allein</span></div>
-<div class="nur-b1"><span class="rm">Allein traue ich mir das noch nicht zu — zu zweit sofort</span><span class="rm">Woran ich noch arbeite, ist das freie Sprechen vor Gruppen</span><span class="rm">Machbar wäre es, wenn ich den fachlichen Teil übernehme</span><span class="rm">In einem halben Jahr würde ich es allein machen</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat nicht abgelehnt, sondern eine Grenze und einen Ausweg genannt. Es kam kein <i>leider</i> vor, und A weiß am Ende genau, was geht und was noch nicht — und ab wann.</div>
-</div>
-<div class="rmcard">
-<b>2 · Der Fehler in der Abrechnung</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat einen Fehler entdeckt, den B gemacht hat. B merkt es im Gespräch — und muss ihn zugeben, ohne in Entschuldigungen zu versinken.</p>
-<div class="nur-a2"><span class="rm">Sie haben recht, das war mein Fehler</span><span class="rm">Ich habe die Zeile übersehen</span><span class="rm">Ich korrigiere es sofort</span><span class="rm">Beim nächsten Mal prüfe ich es zweimal</span></div>
-<div class="nur-b1"><span class="rm">Das stimmt, den Fehler habe ich gemacht</span><span class="rm">Ich habe die Position nicht geprüft, das hätte auffallen müssen</span><span class="rm">Ich korrigiere das heute und schicke es Ihnen bis fünf</span><span class="rm">Damit es nicht wieder passiert, lege ich mir eine kurze Prüfliste an</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat den Fehler in einem Satz zugegeben, ohne ihn zu erklären oder wegzuschieben, und sofort gesagt, was jetzt passiert. Keine Entschuldigungsschleife — dafür ein Vorschlag für die Zukunft.</div>
-</div>
-<div class="rmcard">
-<b>3 · Die Frage, die du nicht verstanden hast</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A spricht schnell und benutzt Fachbegriffe. B versteht die Hälfte — und muss unterbrechen, ohne dass es unhöflich wird.</p>
-<div class="nur-a2"><span class="rm">Darf ich kurz nachfragen?</span><span class="rm">Das Wort kenne ich noch nicht</span><span class="rm">Können Sie das bitte wiederholen?</span><span class="rm">Ich notiere mir das</span></div>
-<div class="nur-b1"><span class="rm">Einen Moment — ab welcher Stelle genau, das habe ich nicht mitbekommen</span><span class="rm">Den Begriff höre ich zum ersten Mal, was bedeutet er hier?</span><span class="rm">Ich wiederhole es kurz, damit ich sicher bin, dass ich es richtig habe</span><span class="rm">Sprechen Sie ruhig weiter, ich frage am Ende noch einmal nach</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat unterbrochen, ohne sich zu entschuldigen, und die Stelle genau benannt. Am Ende hat B das Verstandene wiederholt — und A wusste sofort, ob es richtig angekommen ist.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Einer sagt reihum einen harten Satz (<i>Das kann ich nicht.</i>), der Nachbar macht sofort einen freundlichen daraus (<i>Das kann ich noch nicht — ich übe es gerade.</i>). Wer bei <i>Ich kann leider nicht</i> landet, gibt weiter.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -890,14 +877,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde müssen <u>ein noch nicht</u> und <u>ein Plan</u> vorkommen. Wer <i>leider</i>, <i>eigentlich</i> oder <i>tut mir leid</i> sagt, gibt weiter.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Einer sagt reihum einen harten Satz (<i>Das kann ich nicht.</i>), der Nachbar macht sofort einen freundlichen daraus (<i>Das kann ich noch nicht — ich übe es gerade.</i>). Wer bei <i>Ich kann leider nicht</i> landet, gibt weiter.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Warum tun wir manchmal so, als hätten wir verstanden?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Was passiert im schlimmsten Fall, wenn man nachfragt?</li><li>Wie merkt man einem Menschen an, dass er nur so tut?</li><li>Ist es in deinem Land in Ordnung, im Beruf eine Schwäche zuzugeben?</li><li>Wann ist Ehrlichkeit über eigene Grenzen ein Risiko?</li><li>Wie sagt man eine Grenze, ohne sich dabei zu entschuldigen?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
+<p class="ssub">Einer fragt oder bittet, einer sagt eine Grenze. Danach tauschen — und beim zweiten Mal ohne die Sätze unten. Verboten in beiden Runden: <i>leider</i>, <i>eigentlich</i>, <i>tut mir leid</i>.</p>
+<div class="rmcard">
+<b>1 · Die Aufgabe, die zu groß ist</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A bittet B, eine Präsentation vor dreißig Leuten zu übernehmen. B möchte gern dazulernen, traut sich das allein aber noch nicht zu — und sagt genau das.</p>
+<div class="nur-a2"><span class="rm">Das kann ich noch nicht allein</span><span class="rm">Zu zweit würde ich es machen</span><span class="rm">Könnten Sie mir das einmal zeigen?</span><span class="rm">In ein paar Monaten gern allein</span></div>
+<div class="nur-b1"><span class="rm">Allein traue ich mir das noch nicht zu — zu zweit sofort</span><span class="rm">Woran ich noch arbeite, ist das freie Sprechen vor Gruppen</span><span class="rm">Machbar wäre es, wenn ich den fachlichen Teil übernehme</span><span class="rm">In einem halben Jahr würde ich es allein machen</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat nicht abgelehnt, sondern eine Grenze und einen Ausweg genannt. Es kam kein <i>leider</i> vor, und A weiß am Ende genau, was geht und was noch nicht — und ab wann.</div>
+</div>
+<div class="rmcard">
+<b>2 · Der Fehler in der Abrechnung</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat einen Fehler entdeckt, den B gemacht hat. B merkt es im Gespräch — und muss ihn zugeben, ohne in Entschuldigungen zu versinken.</p>
+<div class="nur-a2"><span class="rm">Sie haben recht, das war mein Fehler</span><span class="rm">Ich habe die Zeile übersehen</span><span class="rm">Ich korrigiere es sofort</span><span class="rm">Beim nächsten Mal prüfe ich es zweimal</span></div>
+<div class="nur-b1"><span class="rm">Das stimmt, den Fehler habe ich gemacht</span><span class="rm">Ich habe die Position nicht geprüft, das hätte auffallen müssen</span><span class="rm">Ich korrigiere das heute und schicke es Ihnen bis fünf</span><span class="rm">Damit es nicht wieder passiert, lege ich mir eine kurze Prüfliste an</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat den Fehler in einem Satz zugegeben, ohne ihn zu erklären oder wegzuschieben, und sofort gesagt, was jetzt passiert. Keine Entschuldigungsschleife — dafür ein Vorschlag für die Zukunft.</div>
+</div>
+<div class="rmcard">
+<b>3 · Die Frage, die du nicht verstanden hast</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A spricht schnell und benutzt Fachbegriffe. B versteht die Hälfte — und muss unterbrechen, ohne dass es unhöflich wird.</p>
+<div class="nur-a2"><span class="rm">Darf ich kurz nachfragen?</span><span class="rm">Das Wort kenne ich noch nicht</span><span class="rm">Können Sie das bitte wiederholen?</span><span class="rm">Ich notiere mir das</span></div>
+<div class="nur-b1"><span class="rm">Einen Moment — ab welcher Stelle genau, das habe ich nicht mitbekommen</span><span class="rm">Den Begriff höre ich zum ersten Mal, was bedeutet er hier?</span><span class="rm">Ich wiederhole es kurz, damit ich sicher bin, dass ich es richtig habe</span><span class="rm">Sprechen Sie ruhig weiter, ich frage am Ende noch einmal nach</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat unterbrochen, ohne sich zu entschuldigen, und die Stelle genau benannt. Am Ende hat B das Verstandene wiederholt — und A wusste sofort, ob es richtig angekommen ist.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -963,6 +984,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Sprachnachricht und die Sätze bis Sonntag in den Chat. Ich höre alles an und schreibe dir zurück — besonders bei den Stellen, an denen du dich noch entschuldigst, ohne es zu merken.</div>
 <div class="tip">🔜 <strong>Nächste Woche:</strong> <u>Am Telefon: das Anliegen in drei Sätzen.</u> Sich melden, zur Sache kommen, freundlich hartnäckig bleiben — und ohne Gesicht und Hände auskommen. Alles von dieser Woche nimmst du direkt mit.</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1149,11 +1177,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1210,7 +1245,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1220,7 +1257,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

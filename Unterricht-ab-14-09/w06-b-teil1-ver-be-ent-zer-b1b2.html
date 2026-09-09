@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,105 +627,43 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B2<span class="zusatz"> · feiner</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">⚖️ Vier Vorsilben, vier Bedeutungen</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">suchen und <span class="hl">versuchen</span></h2>
-<p class="ssub">Zwei Wörter, ein Buchstabenunterschied, und sie haben nichts miteinander zu tun. <i>Ich suche eine Wohnung</i> und <i>Ich versuche es</i> — dazwischen liegen drei Buchstaben und eine ganz andere Welt. Genau das machen diese vier Vorsilben.</p>
-<div class="scene-wrap klein"><img src="../amanda/amanda-denk.webp" alt="Amanda überlegt mit der Hand am Kinn"></div>
-<ul class="qlist nur-a2">
-<li>Welches Verb mit ver- benutzt du oft?</li>
-<li>Kennst du ein Wortpaar, das sich nur durch die Vorsilbe unterscheidet?</li>
-<li>Was hast du zuletzt versucht?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Merkst du beim Zuhören, wenn eine Vorsilbe die Bedeutung dreht?</li>
-<li>Welche Vorsilbe hat dich schon einmal in ein Missverständnis gebracht?</li>
-<li>Rätst du die Bedeutung neuer Verben — und wie oft stimmt es?</li>
-</ul>
-<div class="tip teal">🔑 <strong>Die Regel für heute, in einem Satz:</strong> <b>ver-, be-, ent- und zer- trennen sich nie und bekommen nie ein ge-.</b> <i>besprochen, versucht, entschieden, zerbrochen.</i> Wenn du das weißt, hast du bei Hunderten von Verben das Perfekt automatisch richtig.</div>
-<h2 class="st">Damit ist <span class="hl">das Bild vollständig</span></h2>
-<p class="ssub">Drei Wochen, drei Gruppen: <b>immer trennbar</b> (an-, ab-, auf-, aus-, ein-), <b>beides möglich</b> (um-, über-, unter-, durch-, wider-, wieder-) und ab heute <b>nie trennbar</b> (be-, ge-, er-, ver-, zer-, ent-, emp-, miss-). Danach kannst du jedes zusammengesetzte Verb einordnen, das dir begegnet.</p>
-<div class="scene-wrap klein"><img src="../amanda/sz-sprachkurs.webp" alt="Ein Kursraum mit Teilnehmern und einer Lehrerin"></div>
-<ul class="qlist nur-a2">
-<li>Welche Gruppe fiel dir bisher am schwersten?</li>
-<li>Wo steht die Vorsilbe bei anrufen im Satz?</li>
-<li>Warum heißt es verstanden und nicht verstehgt?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Hilft dir die Betonung inzwischen weiter?</li>
-<li>Was passiert eigentlich mit dem Objekt, wenn be- dazukommt?</li>
-<li>Welche Vorsilbe hat für dich die klarste Bedeutung?</li>
-</ul>
-<div class="tip">💡 <strong>Der Trick mit dem Ton:</strong> Bei diesen vier liegt der Ton <u>nie</u> auf der Vorsilbe — man sagt <i>verSÚchen</i>, <i>beSPRÉchen</i>, <i>entSCHÉIden</i>, <i>zerBRÉchen</i>. Und genau deshalb ist dort auch kein Platz für ein <b>ge-</b>: Das ge- braucht eine betonte Silbe vor sich.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
 </section>
 
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Verben <span class="hl">mit fester Vorsilbe</span></h2>
-<p class="ssub">Sagt jedes Verb laut — und gleich das Partizip hinterher. Bei allen zwölf gilt dasselbe: kein ge-, nirgends.</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../amanda/sz-buero.webp" alt="Zwei Personen besprechen etwas an einem Schreibtisch" loading="lazy"><div class="bb"><div class="bw">besprechen</div><div class="bex">„Das besprechen wir morgen in Ruhe.“</div><div class="bti">💡 Vergleich mit <b>sprechen über</b>: <i>Wir sprechen <b>über</b> das Projekt</i> → <i>Wir <b>besprechen</b> das Projekt.</i> Das <b>be-</b> zieht das Objekt direkt heran, die Präposition fällt weg.</div><button class="speak" data-say="Das besprechen wir morgen in Ruhe.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-antwortbogen.webp" alt="Ein leerer Antwortbogen mit Ankreuzfeldern und ein Stift" loading="lazy"><div class="bb"><div class="bw">beantworten</div><div class="bex">„Ich beantworte die Mail heute noch.“</div><div class="bti">💡 Dasselbe Muster: <i>antworten <b>auf</b> die Mail</i> → <i>die Mail <b>beantworten</b></i>. Merk dir: Nach <b>be-</b> steht immer der <u>Akkusativ</u>, nie eine Präposition.</div><button class="speak" data-say="Ich beantworte die Mail heute noch.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-post.webp" alt="Eine Kundin an einem Postschalter mit Paketen" loading="lazy"><div class="bb"><div class="bw">bekommen</div><div class="bex">„Ich habe heute Post bekommen.“</div><div class="bti">💡 Achtung, eine berühmte Falle: <b>bekommen</b> heißt <u>nicht</u> „werden“. <i>Ich bekomme ein Paket</i> — nicht <i>Ich werde ein Paket</i>. Und das Partizip ist <b>bekommen</b>, ohne ge-.</div><button class="speak" data-say="Ich habe heute Post bekommen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-unterlagen.webp" alt="Jemand blättert am Tisch einen Stapel Unterlagen durch" loading="lazy"><div class="bb"><div class="bw">bearbeiten</div><div class="bex">„Ihr Antrag wird gerade bearbeitet.“</div><div class="bti">💡 Das Wort aus jedem Amtsbrief. Fast immer im Passiv: <b>wird bearbeitet</b>. Und dazu <b>die Bearbeitung</b> — noch so ein Nomen, das auf Formularen steht.</div><button class="speak" data-say="Ihr Antrag wird gerade bearbeitet.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/a-warten.webp" alt="Amanda hält sich erschrocken die Wangen" loading="lazy"><div class="bb"><div class="bw">versuchen</div><div class="bex">„Ich versuche es noch einmal.“</div><div class="bti">💡 Nichts mit <b>suchen</b> zu tun. Und im Alltag oft mit <i>zu</i>: <b>Ich versuche, pünktlich zu sein.</b> Das <i>zu</i> steht vor dem Infinitiv am Satzende.</div><button class="speak" data-say="Ich versuche es noch einmal.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/a-hoeren.webp" alt="Amanda hört aufmerksam zu" loading="lazy"><div class="bb"><div class="bw">verstehen</div><div class="bex">„Das habe ich nicht ganz verstanden.“</div><div class="bti">💡 Partizip <b>verstanden</b> — kein ge-. Und zwei Bedeutungen: akustisch (<i>Ich habe Sie nicht verstanden</i>) und inhaltlich (<i>Ich verstehe das nicht</i>). Im Zweifel sagst du dazu, welche du meinst.</div><button class="speak" data-say="Das habe ich nicht ganz verstanden.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/amanda-ups.webp" alt="Amanda schaut überrascht" loading="lazy"><div class="bb"><div class="bw">verlieren</div><div class="bex">„Ich habe meinen Schlüssel verloren.“</div><div class="bti">💡 Partizip <b>verloren</b>, kein ge-. Nicht verwechseln mit <b>vergessen</b>: verloren heißt, du weißt nicht wo — vergessen heißt, du hast es liegen lassen.</div><button class="speak" data-say="Ich habe meinen Schlüssel verloren.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-vorschlag.webp" alt="Ein Notizbuch und eine Tasse auf einem Schreibtisch" loading="lazy"><div class="bb"><div class="bw">entscheiden</div><div class="bex">„Wir entscheiden das nächste Woche.“</div><div class="bti">💡 Mit <b>sich</b> geht es um dich selbst: <i>Ich entscheide <b>mich</b> für den blauen.</i> Ohne <i>sich</i> entscheidest du eine Sache: <i>Wir entscheiden die Frage.</i> Beides ohne ge-.</div><button class="speak" data-say="Wir entscheiden das nächste Woche.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-urlaub.webp" alt="Ein Strandkorb am Meer" loading="lazy"><div class="bb"><div class="bw">sich entspannen</div><div class="bex">„Am Wochenende entspanne ich mich.“</div><div class="bti">💡 Das <b>ent-</b> heißt hier „weg von“: weg von der Spannung. Genauso: <b>entfernen</b> (weg vom Ort), <b>entlassen</b> (weglassen aus der Arbeit), <b>entkommen</b> (wegkommen).</div><button class="speak" data-say="Am Wochenende entspanne ich mich.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-cafe.webp" alt="Zwei Personen an einer Café-Theke im Gespräch" loading="lazy"><div class="bb"><div class="bw">sich entschuldigen</div><div class="bex">„Ich möchte mich für gestern entschuldigen.“</div><div class="bti">💡 Immer mit <b>sich</b> und mit <b>für</b> + Akkusativ: <i>Ich entschuldige <b>mich für</b> die Verspätung.</i> Nicht <i>Ich entschuldige die Verspätung</i> — das würde heißen, du verzeihst sie jemandem.</div><button class="speak" data-say="Ich möchte mich für gestern entschuldigen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-werkstatt.webp" alt="Ein Mechaniker erklärt einer Kundin etwas am geöffneten Auto" loading="lazy"><div class="bb"><div class="bw">zerbrechen</div><div class="bex">„Das Glas ist mir zerbrochen.“</div><div class="bti">💡 <b>zer-</b> heißt immer „in Stücke“ oder „kaputt“: <i>zerreißen, zerschneiden, zerstören</i>. Und das <b>mir</b> im Beispiel heißt: Es ist passiert, ohne dass ich es wollte.</div><button class="speak" data-say="Das Glas ist mir zerbrochen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-freunde.webp" alt="Drei Freunde stehen zusammen und lachen" loading="lazy"><div class="bb"><div class="bw">sich verabreden</div><div class="bex">„Wollen wir uns für Freitag verabreden?“</div><div class="bti">💡 Mit <b>sich</b> und mit <b>mit</b> + Dativ: <i>Ich habe mich <b>mit</b> Anna verabredet.</i> Das Nomen dazu ist <b>die Verabredung</b> — und das heißt Termin, nicht Date.</div><button class="speak" data-say="Wollen wir uns für Freitag verabreden?">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel „Vorsilbe weg“:</strong> Einer nennt ein Verb mit fester Vorsilbe — <i>besprechen, versuchen, entscheiden, zerbrechen.</i> Der Nachbar sagt das Grundverb ohne Vorsilbe und erklärt, was sich geändert hat. Bei <i>bekommen</i> und <i>versuchen</i> wird es interessant: Da hat das Grundverb mit dem neuen Wort fast nichts mehr zu tun.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Was be-, ent- <span class="hl">und zer- eigentlich tun</span></h2>
-<p class="ssub">Drei der vier haben eine erstaunlich klare Bedeutung. Wenn du sie kennst, kannst du bei vielen neuen Verben raten — und liegst überraschend oft richtig.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">🎯</span><div class="gmw">be- holt das Objekt heran</div><div class="gmb">aus einer Präposition wird ein direktes Objekt</div><div class="gmx">antworten auf → beantworten</div></div>
-<div class="gk blau"><span class="gem2">🚪</span><div class="gmw">ent- heißt weg von</div><div class="gmb">etwas löst sich oder wird weggenommen</div><div class="gmx">die Spannung → sich entspannen</div></div>
-<div class="gk ja"><span class="gem2">💥</span><div class="gmw">zer- heißt in Stücke</div><div class="gmb">immer kaputt, immer endgültig</div><div class="gmx">brechen → zerbrechen</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Wir besprechen das Projekt morgen.</div><div class="bsp"><span class="wer">Warum das stimmt</span>Nach <b>be-</b> steht das Objekt direkt im <b>Akkusativ</b> — die Präposition fällt weg. Aus <i>über das Projekt sprechen</i> wird <i>das Projekt besprechen</i>.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Wir besprechen über das Projekt morgen.</div><div class="bsp"><span class="wer">Das Problem</span>Beides zusammen geht nicht. Entweder <i>sprechen <b>über</b></i> oder <i><b>be</b>sprechen</i> — das <b>be-</b> hat die Präposition schon aufgesaugt.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Ich habe deine Mail beantwortet.</div><div class="bsp"><span class="wer">Warum das stimmt</span>Feste Vorsilbe, also <u>kein ge-</u>: <b>beantwortet</b>. Und das Objekt direkt dahinter, ohne <i>auf</i>.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Ich habe deine Mail gebeantwortet.</div><div class="bsp"><span class="wer">Das Problem</span>Das <i>ge-</i> braucht eine betonte Silbe vor sich. Bei <i>be-ANT-wortet</i> ist die Vorsilbe unbetont — da ist kein Platz, und deutsche Ohren hören das sofort.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Ich entschuldige mich für die Verspätung.</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>sich entschuldigen für</b> + Akkusativ. Du bittest um Verzeihung — das <i>sich</i> gehört zwingend dazu.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Ich entschuldige die Verspätung.</div><div class="bsp"><span class="wer">Das Problem</span>Ohne <i>mich</i> heißt der Satz: Du <u>verzeihst</u> jemand anderem die Verspätung. Das ist genau die Gegenrichtung — ein Fehler, der schnell peinlich wird.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Woran erkenne ich eine feste Vorsilbe?</button>
-<div class="inhalt">
-<p>Drei Wege, und der letzte funktioniert immer:</p>
-<ul>
-<li><b>Die Liste:</b> be-, ge-, er-, ver-, zer-, ent-, emp-, miss-. Acht Stück, und sie sind alle fest. Mehr gibt es nicht.</li>
-<li><b>Der Ton:</b> Bei allen acht liegt die Betonung auf dem Verb, nie auf der Vorsilbe. <i>verSTÉHen, beKÓMMen, entSCHÉIden.</i></li>
-<li><b>Der Klang-Test:</b> Sprich das Partizip mit ge- aus — <i>gebekommen, geverstanden.</i> Wenn es unmöglich klingt, ist die Vorsilbe fest.</li>
-<li><b>Und die Merkhilfe:</b> Diese Vorsilben sind keine eigenen Wörter. <i>an</i>, <i>auf</i>, <i>mit</i> gibt es allein — <i>ver</i>, <i>be</i>, <i>zer</i> nicht. Was allein nicht existiert, kann sich auch nicht abtrennen.</li>
-</ul>
-<p style="margin-top:.5rem;">Ein Satz zum Auswendiglernen, in dem alle vier vorkommen: <b>„Ich habe es versucht, wir haben es besprochen, dann haben wir entschieden — und dabei ist leider eine Tasse zerbrochen.“</b></p>
-</div>
-</div>
-<div class="tip">🎯 <strong>Zu zweit, eine Minute:</strong> Einer nennt ein Verb mit Präposition — <i>sprechen über, antworten auf, steigen auf, denken an.</i> Der andere sagt, ob es dafür ein be-Verb gibt, und baut den Satz um.</div>
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Welches Verb mit ver- benutzt du oft?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Kennst du ein Wortpaar, das sich nur durch die Vorsilbe unterscheidet?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -813,37 +821,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
-<p class="ssub">Einer bringt ein Anliegen, einer reagiert. Danach tauschen — und beim zweiten Mal ohne Notizen.</p>
-<div class="rmcard">
-<b>1 · Der Anruf beim Amt</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A arbeitet in einer Behörde, B fragt nach einem Antrag. A antwortet betont amtlich — im Passiv und mit Nomen. B muss verstehen und in normalen Sätzen zurückfragen.</p>
-<div class="nur-a2"><span class="rm">Ihr Antrag wird noch bearbeitet</span><span class="rm">Es ist noch nicht entschieden worden</span><span class="rm">Wie lange dauert die Bearbeitung?</span><span class="rm">Was bedeutet das genau?</span></div>
-<div class="nur-b1"><span class="rm">Der Vorgang ist noch nicht abgeschlossen</span><span class="rm">Die Unterlagen werden benötigt</span><span class="rm">Können Sie mir das in einfachen Worten sagen?</span><span class="rm">Muss ich noch etwas einreichen?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat mindestens dreimal ein festes Verb im Passiv benutzt, B hat jedes Mal in eigenen Worten zurückgefragt. Kein einziges Partizip hatte ein <i>ge-</i>, das dort nicht hingehört.</div>
-</div>
-<div class="rmcard">
-<b>2 · Sprechen über oder besprechen?</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A bekommt Sätze mit Präposition vorgelesen und muss sie sofort mit be- umbauen — und umgekehrt. Nach jedem Paar sagt B, ob sich die Bedeutung verändert hat oder nur der Bau.</p>
-<div class="nur-a2"><span class="rm">Wir sprechen über den Plan</span><span class="rm">Ich antworte auf die Mail</span><span class="rm">Sie arbeitet an dem Text</span><span class="rm">Er steigt auf den Berg</span></div>
-<div class="nur-b1"><span class="rm">Man urteilt über die Sache zu schnell</span><span class="rm">Achte auf die Reihenfolge</span><span class="rm">Wir denken über den Vorschlag nach</span><span class="rm">Sie schreibt über ihre Kindheit</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Jedes Paar wurde in beide Richtungen gebaut. Bei mindestens einem Beispiel konnte einer erklären, dass sich <u>nicht nur</u> der Bau ändert, sondern auch der Ton — <i>besprechen</i> klingt entschiedener als <i>über etwas sprechen</i>.</div>
-</div>
-<div class="rmcard">
-<b>3 · Die Entschuldigung</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B war gestern unfreundlich und entschuldigt sich. A nimmt es an, will aber wissen, was los war. Regel: <i>sich entschuldigen</i>, <i>beantworten</i>, <i>besprechen</i> und <i>sich verabreden</i> müssen alle vier vorkommen.</p>
-<div class="nur-a2"><span class="rm">Ich möchte mich für gestern entschuldigen</span><span class="rm">Ich habe deine Frage nicht beantwortet</span><span class="rm">Was war denn los?</span><span class="rm">Wollen wir uns diese Woche verabreden?</span></div>
-<div class="nur-b1"><span class="rm">Das war nicht in Ordnung, und es tut mir leid</span><span class="rm">Ich hatte den Kopf woanders</span><span class="rm">Lass es uns in Ruhe besprechen</span><span class="rm">Danke, dass du es ansprichst</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Alle vier Verben kamen vor, jedes mit dem richtigen Reflexivpronomen und der richtigen Präposition. Und die Entschuldigung stand am Anfang, nicht am Ende.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Jeder nennt reihum ein Verb mit fester Vorsilbe. Der Nachbar sagt sofort das Partizip <u>und</u> das Nomen dazu — <i>besprochen, die Besprechung.</i> Wer ein ge- einbaut, gibt weiter.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -876,14 +861,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde muss das Verb <u>einmal im Präsens und einmal im Perfekt</u> vorkommen. Der Partner hört auf das ge- und hebt die Hand, sobald eines auftaucht, das dort nicht hingehört.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Jeder nennt reihum ein Verb mit fester Vorsilbe. Der Nachbar sagt sofort das Partizip <u>und</u> das Nomen dazu — <i>besprochen, die Besprechung.</i> Wer ein ge- einbaut, gibt weiter.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Merkst du beim Zuhören, wenn eine Vorsilbe die Bedeutung dreht?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Welche Vorsilbe hat dich schon einmal in ein Missverständnis gebracht?</li><li>Rätst du die Bedeutung neuer Verben — und wie oft stimmt es?</li><li>Hilft dir die Betonung inzwischen weiter?</li><li>Was passiert eigentlich mit dem Objekt, wenn be- dazukommt?</li><li>Welche Vorsilbe hat für dich die klarste Bedeutung?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
+<p class="ssub">Einer bringt ein Anliegen, einer reagiert. Danach tauschen — und beim zweiten Mal ohne Notizen.</p>
+<div class="rmcard">
+<b>1 · Der Anruf beim Amt</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A arbeitet in einer Behörde, B fragt nach einem Antrag. A antwortet betont amtlich — im Passiv und mit Nomen. B muss verstehen und in normalen Sätzen zurückfragen.</p>
+<div class="nur-a2"><span class="rm">Ihr Antrag wird noch bearbeitet</span><span class="rm">Es ist noch nicht entschieden worden</span><span class="rm">Wie lange dauert die Bearbeitung?</span><span class="rm">Was bedeutet das genau?</span></div>
+<div class="nur-b1"><span class="rm">Der Vorgang ist noch nicht abgeschlossen</span><span class="rm">Die Unterlagen werden benötigt</span><span class="rm">Können Sie mir das in einfachen Worten sagen?</span><span class="rm">Muss ich noch etwas einreichen?</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat mindestens dreimal ein festes Verb im Passiv benutzt, B hat jedes Mal in eigenen Worten zurückgefragt. Kein einziges Partizip hatte ein <i>ge-</i>, das dort nicht hingehört.</div>
+</div>
+<div class="rmcard">
+<b>2 · Sprechen über oder besprechen?</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A bekommt Sätze mit Präposition vorgelesen und muss sie sofort mit be- umbauen — und umgekehrt. Nach jedem Paar sagt B, ob sich die Bedeutung verändert hat oder nur der Bau.</p>
+<div class="nur-a2"><span class="rm">Wir sprechen über den Plan</span><span class="rm">Ich antworte auf die Mail</span><span class="rm">Sie arbeitet an dem Text</span><span class="rm">Er steigt auf den Berg</span></div>
+<div class="nur-b1"><span class="rm">Man urteilt über die Sache zu schnell</span><span class="rm">Achte auf die Reihenfolge</span><span class="rm">Wir denken über den Vorschlag nach</span><span class="rm">Sie schreibt über ihre Kindheit</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Jedes Paar wurde in beide Richtungen gebaut. Bei mindestens einem Beispiel konnte einer erklären, dass sich <u>nicht nur</u> der Bau ändert, sondern auch der Ton — <i>besprechen</i> klingt entschiedener als <i>über etwas sprechen</i>.</div>
+</div>
+<div class="rmcard">
+<b>3 · Die Entschuldigung</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B war gestern unfreundlich und entschuldigt sich. A nimmt es an, will aber wissen, was los war. Regel: <i>sich entschuldigen</i>, <i>beantworten</i>, <i>besprechen</i> und <i>sich verabreden</i> müssen alle vier vorkommen.</p>
+<div class="nur-a2"><span class="rm">Ich möchte mich für gestern entschuldigen</span><span class="rm">Ich habe deine Frage nicht beantwortet</span><span class="rm">Was war denn los?</span><span class="rm">Wollen wir uns diese Woche verabreden?</span></div>
+<div class="nur-b1"><span class="rm">Das war nicht in Ordnung, und es tut mir leid</span><span class="rm">Ich hatte den Kopf woanders</span><span class="rm">Lass es uns in Ruhe besprechen</span><span class="rm">Danke, dass du es ansprichst</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Alle vier Verben kamen vor, jedes mit dem richtigen Reflexivpronomen und der richtigen Präposition. Und die Entschuldigung stand am Anfang, nicht am Ende.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -949,6 +968,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Sprachnachricht und die Umbausätze bis Mittwochabend. Ich höre auf die Partizipien — bei diesen Verben ist ein zu viel gesetztes ge- der häufigste Fehler überhaupt.</div>
 <div class="tip">🔜 <strong>Am Donnerstag, Teil 2:</strong> <u>Was ver- alles anrichtet.</u> Sich verlaufen, sich versprechen, sich verwählen, verschlafen — die Vorsilbe, mit der im Deutschen alles danebengeht. Und ein Muster, das du danach selbst weiterbauen kannst.</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1135,11 +1161,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1196,7 +1229,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1206,7 +1241,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

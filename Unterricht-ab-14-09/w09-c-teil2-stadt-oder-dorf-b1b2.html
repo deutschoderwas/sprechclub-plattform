@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,49 +627,44 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B2<span class="zusatz"> · feiner</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#wiederholung">🔁 Wiederholung</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">🔍 Drei Wege</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">Ein Satz, <span class="hl">zwei Bauweisen</span></h2>
-<p class="ssub">Sag einmal: <i>Der Laden schließt im Januar, und deshalb müssen die Älteren jetzt zwölf Kilometer fahren.</i> Und dann: <b>Die Schließung des Ladens zwingt die Älteren zu einer Fahrt von zwölf Kilometern.</b> Dieselbe Aussage, dieselbe Länge — aber der zweite Satz klingt nach Zeitung, nach Gemeinderat, nach jemandem, der ernst genommen wird. Der Unterschied ist ein einziger Handgriff: aus dem Verb wird ein Nomen.</p>
-<div class="scene-wrap klein"><img src="../vok-bild/die-meinung.webp" alt="Vier Menschen sitzen an einem Tisch und diskutieren"></div>
-<ul class="qlist nur-a2">
-<li>Diskutierst du gern — oder gehst du Streit lieber aus dem Weg?</li>
-<li>Über welches Thema streitest du dich am häufigsten?</li>
-<li>Fällt es dir auf Deutsch schwerer als in deiner Sprache?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Woran merkst du, dass jemand in einer Diskussion ernst genommen wird?</li>
-<li>Ist eine sachliche Formulierung ehrlicher — oder nur höflicher?</li>
-<li>Wann hast du zuletzt deine Meinung wegen eines guten Arguments geändert?</li>
-</ul>
-<div class="tip teal">🔑 <strong>Der Handgriff von heute:</strong> Nimm das Verb und mach ein Nomen daraus. <i>schließen</i> → <b>die Schließung</b>, <i>ausbauen</i> → <b>der Ausbau</b>, <i>entscheiden</i> → <b>die Entscheidung</b>. Und was danach kommt, steht im Genitiv — genau wie am Montag.</div>
-<h2 class="st">Und dann die Kunst, <span class="hl">es nicht zu übertreiben</span></h2>
-<p class="ssub">Deutsche Behörden haben aus diesem Handgriff eine Krankheit gemacht: <i>Nach erfolgter Prüfung der Sachlage unter Berücksichtigung der Stellungnahme …</i> Niemand versteht das, und niemand will so klingen. Die Regel für heute lautet deshalb: <b>ein bis zwei Nomen pro Satz</b> — und das Verb, das wirklich zählt, bleibt ein Verb. Dann klingst du klar statt behördlich.</p>
-<div class="scene-wrap klein"><img src="../amanda/amanda-schlau.webp" alt="Amanda lächelt zufrieden und zeigt nach oben"></div>
-<ul class="qlist nur-a2">
-<li>Verstehst du deutsche Briefe von Ämtern?</li>
-<li>Welches deutsche Wort findest du am kompliziertesten?</li>
-<li>Liest du Nachrichten auf Deutsch?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Warum schreiben Behörden so, obwohl es niemand versteht?</li>
-<li>Wo ist die Grenze zwischen präzise und unverständlich?</li>
-<li>Gibt es in deiner Sprache auch eine eigene Amtssprache?</li>
-</ul>
-<div class="tip">💡 <strong>Die Faustregel:</strong> Ein Nomen macht den Satz sachlich. Drei machen ihn tot. Wenn du beim Vorlesen Luft holen musst, bevor der Satz zu Ende ist, war eines zu viel.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
+</section>
+
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Diskutierst du gern — oder gehst du Streit lieber aus dem Weg?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Über welches Thema streitest du dich am häufigsten?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="wiederholung">
@@ -620,63 +685,6 @@ a.tab:hover{color:var(--ink);}
 <li>Was ist der Unterschied zwischen <b>wegen</b> und <b>trotz</b> im Argument?</li>
 </ul>
 <div class="tip teal">🔁 <strong>Zu zweit, dreißig Sekunden:</strong> Einer nennt ein Wort aus der Liste, der andere baut sofort einen Satz mit <i>wegen</i> oder <i>trotz</i> im Genitiv. Danach geht es los — heute wird diskutiert.</div>
-</section>
-
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Wörter <span class="hl">für die Diskussion</span></h2>
-<p class="ssub">Fast alle sind aus einem Verb oder einem Adjektiv gebaut. Sag jedes Wort laut — und nenn sofort das Verb, das darin steckt: <i>die Entscheidung</i> → <i>entscheiden</i>.</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../vok-bild/die-meinung.webp" alt="Vier Menschen sitzen an einem Tisch und diskutieren" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Meinung</div><div class="bex">„Meiner Meinung nach entscheidet die Anbindung alles.“</div><div class="bti">💡 Der wichtigste Baustein steht schon im Beispiel: <b>meiner Meinung nach</b> — mit Dativ, und <i>nach</i> steht hinten. Häufige Verwechslung: <i>nach meiner Meinung</i> geht auch, klingt aber steifer.</div><button class="speak" data-say="Meiner Meinung nach entscheidet die Anbindung alles.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-heikel.webp" alt="Zwei Menschen sitzen sich in Sesseln gegenüber und sprechen ernst" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Auseinandersetzung</div><div class="bex">„Die Auseinandersetzung über den Dorfladen dauert seit zwei Jahren.“</div><div class="bti">💡 Nicht dasselbe wie ein <b>Streit</b>: Eine <b>Auseinandersetzung</b> kann sachlich und produktiv sein. Man setzt sich <i>mit</i> einem Thema auseinander — das Verb ist trennbar und reflexiv.</div><button class="speak" data-say="Die Auseinandersetzung über den Dorfladen dauert seit zwei Jahren.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-vorschlag.webp" alt="Ein Notizblock mit Stift und eine Tasse Kaffee auf einem Tisch" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Vorschlag</div><div class="bex">„Mein Vorschlag wäre ein Bürgerbus zweimal täglich.“</div><div class="bti">💡 Von <i>vorschlagen</i> — und das Nomen hat keine <b>-ung</b>-Endung, sondern ist ein sogenanntes Nullsuffix: <i>schlagen → der Schlag</i>. Der Konjunktiv <b>wäre</b> macht den Vorschlag höflich statt fordernd.</div><button class="speak" data-say="Mein Vorschlag wäre ein Bürgerbus zweimal täglich.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/schild.webp" alt="Ein Wegweiser mit einem Pfeil an einem Pfosten" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Entscheidung</div><div class="bex">„Die Entscheidung der Gemeinde fällt im Dezember.“</div><div class="bti">💡 Man <b>trifft</b> eine Entscheidung, man macht sie nicht. Und sie <b>fällt</b> — <i>die Entscheidung fällt im Dezember</i> heißt: Dann steht sie fest.</div><button class="speak" data-say="Die Entscheidung der Gemeinde fällt im Dezember.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-sozial.webp" alt="Drei Erwachsene und ein Kind sitzen an einem Tisch" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Zusammenhalt</div><div class="bex">„Der Zusammenhalt im Dorf ist das stärkste Argument dafür.“</div><div class="bti">💡 Von <i>zusammenhalten</i>, ohne Endung. Das Gegenstück heißt die <b>Anonymität</b> — und für viele Menschen ist genau die ein Vorteil der Stadt, kein Nachteil.</div><button class="speak" data-say="Der Zusammenhalt im Dorf ist das stärkste Argument dafür.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/amt.webp" alt="Ein öffentliches Gebäude mit hohem Eingang" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Gemeinde</div><div class="bex">„Die Gemeinde will die Buslinie ausbauen.“</div><div class="bti">💡 Zwei Bedeutungen, ein Wort: die politische <b>Gemeinde</b> (Rathaus, Bürgermeister) und die kirchliche <b>Gemeinde</b>. Im Gespräch über Busse und Läden ist immer die erste gemeint.</div><button class="speak" data-say="Die Gemeinde will die Buslinie ausbauen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-ankommen.webp" alt="Eine Frau meldet sich an einem Empfangstresen an" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Anmeldung</div><div class="bex">„Nach der Anmeldung beim Amt kam die Post automatisch.“</div><div class="bti">💡 In Deutschland Pflicht: Wer umzieht, muss sich innerhalb von zwei Wochen <b>anmelden</b> — das nennt man <i>ummelden</i>. Ohne Anmeldung gibt es keine Steuer-ID, kein Konto und keinen Kitaplatz.</div><button class="speak" data-say="Nach der Anmeldung beim Amt kam die Post automatisch.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/praxis.webp" alt="Eine geschlossene Praxistür mit einem Stethoskop daneben" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Schließung</div><div class="bex">„Die Schließung der Praxis trifft vor allem die Ältesten.“</div><div class="bti">💡 Von <i>schließen</i>. Und weil <b>-ung</b>-Wörter <u>immer</u> feminin sind, heißt es im Genitiv <b>der</b> Schließung — nie <i>des</i>. Diese Endung erspart dir das Artikellernen.</div><button class="speak" data-say="Die Schließung der Praxis trifft vor allem die Ältesten.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/das-angebot.webp" alt="Regale mit Geschirr und ein Schild in einem Laden" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Angebot</div><div class="bex">„Das kulturelle Angebot der Stadt ist unschlagbar.“</div><div class="bti">💡 Zwei Bedeutungen: das <b>Angebot</b> als Auswahl (<i>ein großes Angebot an Kursen</i>) und das <b>Angebot</b> als Sonderpreis (<i>diese Woche im Angebot</i>). In der Debatte ist fast immer die erste gemeint.</div><button class="speak" data-say="Das kulturelle Angebot der Stadt ist unschlagbar.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/schule.webp" alt="Ein Schulgebäude mit einem Ranzen davor" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Schulweg</div><div class="bex">„Wegen des langen Schulwegs stehen die Kinder um halb sechs auf.“</div><div class="bti">💡 Ein Wort, das in dieser Debatte oft alles entscheidet. Auf dem Land bedeutet es meistens <b>der Schulbus</b> — und der fährt einmal hin und einmal zurück, egal wann der Unterricht endet.</div><button class="speak" data-say="Wegen des langen Schulwegs stehen die Kinder um halb sechs auf.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/spielplatz.webp" alt="Ein Spielplatz mit Schaukel, Rutsche und Sandkasten" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Spielplatz</div><div class="bex">„Bis zum nächsten Spielplatz sind es zwei Straßen.“</div><div class="bti">💡 Klingt harmlos, ist aber ein echtes Argument: Wie viele Spielplätze, Vereine und Sportangebote es gibt, entscheidet für Familien oft mehr als der Quadratmeterpreis.</div><button class="speak" data-say="Bis zum nächsten Spielplatz sind es zwei Straßen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/auto.webp" alt="Ein kleines Auto von der Seite" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Verkehr</div><div class="bex">„Die Belastung durch den Verkehr ist in der Innenstadt am höchsten.“</div><div class="bti">💡 <b>der Verkehr</b> hat keinen Plural. Und pass auf die Kombination auf: <i>öffentlicher Verkehr</i> ist Bus und Bahn, <i>Individualverkehr</i> das eigene Auto — in Gemeinderatspapieren stehen genau diese zwei Wörter.</div><button class="speak" data-say="Die Belastung durch den Verkehr ist in der Innenstadt am höchsten.">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel „Verb zurück“:</strong> Einer nennt ein Nomen von oben, der andere sagt sofort das Verb oder Adjektiv, das darin steckt, und baut damit einen ganzen Satz. <i>die Entscheidung</i> → <i>entscheiden</i> → <i>Die Gemeinde entscheidet im Dezember.</i> Wer keines findet, zieht ein neues Wort.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Vom Verb <span class="hl">zum Nomen</span></h2>
-<p class="ssub">Es gibt genau drei Wege, aus einem Verb oder Adjektiv ein Nomen zu machen. Wer sie kennt, baut sich jedes Argument selbst — und kennt nebenbei auch gleich den Artikel.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">🅰️</span><div class="gmw">Verb + -ung</div><div class="gmb">immer die — ohne Ausnahme</div><div class="gmx">schließen → <b>die</b> Schließ<b>ung</b>, entscheiden → <b>die</b> Entscheid<b>ung</b></div></div>
-<div class="gk blau"><span class="gem2">🅱️</span><div class="gmw">Adjektiv + -heit / -keit</div><div class="gmb">ebenfalls immer die</div><div class="gmx">frei → <b>die</b> Frei<b>heit</b>, einsam → <b>die</b> Einsam<b>keit</b></div></div>
-<div class="gk ja"><span class="gem2">🅲</span><div class="gmw">Der Infinitiv selbst</div><div class="gmb">immer das — und großgeschrieben</div><div class="gmx">warten → <b>das</b> Warten, wegziehen → <b>das</b> Wegziehen</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So ist es richtig</div><div class="gsatz">Die Schließung des Ladens trifft vor allem die Älteren.</div><div class="bsp"><span class="wer">Warum das stimmt</span>Aus <i>der Laden schließt</i> wird <b>die Schließung des Ladens</b>: das Verb wird zum Nomen, und das alte Subjekt rutscht in den Genitiv. Genau diese Verbindung brauchst du heute in jedem zweiten Argument.</div></div>
-<div class="gk no"><div class="gkl">❌ So klingt es falsch</div><div class="gsatz">Die Schließung von dem Laden trifft vor allem die Älteren.</div><div class="bsp"><span class="wer">Das Problem</span>Nicht grammatisch falsch, aber in einem Argument deutlich schwächer. <b>von dem</b> gehört ins mündliche Erzählen; sobald du sachlich klingen willst, nimmst du den Genitiv.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So ist es richtig</div><div class="gsatz">Wegen der Möglichkeit, dort günstig zu wohnen, ziehen viele Familien weg.</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>-keit</b> macht das Wort feminin, also heißt es nach <i>wegen</i> im Genitiv <b>der Möglichkeit</b>. Alle Wörter auf <b>-ung</b>, <b>-heit</b>, <b>-keit</b>, <b>-schaft</b> und <b>-ion</b> sind feminin — das ist eine der wenigen Artikelregeln ohne Ausnahme.</div></div>
-<div class="gk no"><div class="gkl">❌ So klingt es falsch</div><div class="gsatz">Wegen dem Möglichkeit, dort günstig zu wohnen, ziehen viele Familien weg.</div><div class="bsp"><span class="wer">Das Problem</span>Zwei Fehler in drei Wörtern: falscher Artikel (es heißt <i>die</i> Möglichkeit) und falscher Fall (nach <i>wegen</i> steht der Genitiv, nicht der Dativ).</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So ist es richtig</div><div class="gsatz">Weil der Bus nur zweimal fährt, brauchen dort alle ein Auto.</div><div class="bsp"><span class="wer">Warum das stimmt</span>Hier ist das Verb die bessere Wahl. Das Argument ist konkret und alltäglich — ein Nomen würde es nur schwerfälliger machen, nicht klarer.</div></div>
-<div class="gk no"><div class="gkl">❌ So klingt es übertrieben</div><div class="gsatz">Aufgrund der lediglich zweimaligen täglichen Bedienung der Haltestelle besteht dort eine Notwendigkeit zur Nutzung eines Kraftfahrzeugs.</div><div class="bsp"><span class="wer">Das Problem</span>Vier Nomen hintereinander — das ist Amtsdeutsch. Es ist grammatisch korrekt und trotzdem eine schlechte Wahl: Niemand hört so zu. Ein bis zwei Nomen pro Satz, mehr nicht.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Nomen oder Verb — was nehme ich?</button>
-<div class="inhalt">
-<p>Vier Fragen, dann steht es fest:</p>
-<ul>
-<li><b>Willst du sachlich klingen?</b> Dann ein Nomen: <i>die Schließung des Ladens</i> statt <i>der Laden schließt</i>.</li>
-<li><b>Erzählst du gerade eine Geschichte?</b> Dann Verben. Nominalstil in einer Anekdote klingt kalt.</li>
-<li><b>Hast du im selben Satz schon zwei Nomen?</b> Dann lass das dritte weg und nimm ein Verb.</li>
-<li><b>Suchst du den Artikel?</b> Endet es auf <b>-ung</b>, <b>-heit</b>, <b>-keit</b>, <b>-schaft</b> oder <b>-ion</b>, ist es <b>die</b>. Ist es ein Infinitiv, ist es <b>das</b>.</li>
-</ul>
-<p style="margin-top:.5rem;">Und ein Satz, der beides gut mischt: <b>„Wegen der Schließung des einzigen Ladens müssen die Älteren jetzt zwölf Kilometer fahren.“</b> Zwei Nomen vorn, ein starkes Verb hinten — so sieht ein Argument aus, das man auch hören will.</p>
-</div>
-</div>
-<div class="tip">🎯 <strong>Zu zweit, zwei Minuten:</strong> Einer sagt einen Satz mit Verb, der andere baut ihn sofort in den Nominalstil um. <i>Der Bus fährt seltener.</i> → <i>Wegen der selteneren Busverbindung …</i> Nach zehn Runden geht es von allein.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -829,37 +837,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
-<p class="ssub">Einer eröffnet, einer widerspricht. Danach tauschen — und beim zweiten Mal die Seiten wechseln. Regel: Fass immer zuerst den anderen zusammen, und benutz mindestens zwei Nomen aus Verben.</p>
-<div class="rmcard">
-<b>1 · Die Debatte</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A vertritt die Stadt, B das Dorf. Jeder hat zwei Minuten. Wer den anderen unterbricht, verliert dreißig Sekunden.</p>
-<div class="nur-a2"><span class="rm">Ich bin für die Stadt, weil alles nah ist.</span><span class="rm">Auf dem Land ist es viel ruhiger.</span><span class="rm">Ohne Auto geht dort gar nichts.</span><span class="rm">Dafür kennt man dort seine Nachbarn.</span></div>
-<div class="nur-b1"><span class="rm">Meiner Meinung nach überwiegt die Versorgung — Ärzte, Schulen, Kurse, alles in fünfzehn Minuten</span><span class="rm">Das trifft zu, greift aber zu kurz: Die Belastung durch den Verkehr trägt in der Stadt jeder mit</span><span class="rm">Der Zusammenhalt der Nachbarschaft lässt sich nicht kaufen, und in der Stadt gibt es ihn selten</span><span class="rm">Unterm Strich hängt die Entscheidung an der Lebensphase, nicht am Ort</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide haben den anderen zuerst zusammengefasst, bevor sie widersprochen haben, und mindestens zweimal ein Nomen aus einem Verb benutzt (<i>die Versorgung</i>, <i>die Belastung</i>, <i>die Entscheidung</i>).</div>
-</div>
-<div class="rmcard">
-<b>2 · In der Bürgerversammlung</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A fordert von der Gemeinde einen Bus oder einen Dorfladen. B arbeitet bei der Gemeinde und muss zwischen Wunsch und Haushalt vermitteln — ohne den Menschen abzubürsten.</p>
-<div class="nur-a2"><span class="rm">Wir brauchen zweimal am Tag mehr einen Bus.</span><span class="rm">Der letzte Laden macht im Januar zu.</span><span class="rm">Was ist mit den Leuten ohne Auto?</span><span class="rm">Wann entscheiden Sie das?</span></div>
-<div class="nur-b1"><span class="rm">Ich verstehe die Forderung — die Finanzierung zusätzlicher Fahrten liegt aber bei achtzigtausend Euro im Jahr</span><span class="rm">Die Schließung des Ladens ist ein Verlust, das bestreitet niemand hier im Raum</span><span class="rm">Wir prüfen die Einrichtung eines Bürgerbusses mit ehrenamtlichen Fahrerinnen und Fahrern</span><span class="rm">Die Entscheidung des Gemeinderats fällt im Dezember, bis dahin brauchen wir Ihre Unterschriften</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat sachlich erklärt statt sich zu rechtfertigen, A hat aus Ärger eine konkrete Forderung gemacht. Auf beiden Seiten mindestens zwei Nomen plus Genitiv.</div>
-</div>
-<div class="rmcard">
-<b>3 · Die Seite wechseln</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Beide vertreten jetzt die Position, die sie vorhin bekämpft haben — und müssen sie so gut vertreten, dass der andere es glaubt.</p>
-<div class="nur-a2"><span class="rm">Also gut, ich bin jetzt für das Dorf.</span><span class="rm">Das Wichtigste ist die Ruhe.</span><span class="rm">Man braucht nicht alles vor der Tür.</span><span class="rm">Meine Kinder hätten einen Garten.</span></div>
-<div class="nur-b1"><span class="rm">Ich beginne mit dem stärksten Argument der Gegenseite und erkläre, warum es mich überzeugt hat</span><span class="rm">Die Anonymität der Großstadt ist für viele keine Freiheit, sondern eine Belastung</span><span class="rm">Die Möglichkeit, abends spontan loszugehen, verliert mit den Jahren an Gewicht</span><span class="rm">Am Ende ist es die Frage, wofür man seine Zeit ausgeben will — für Wege oder für Menschen</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide haben ein echtes Argument der anderen Seite gefunden — kein Strohmann. Und mindestens einer hat zugegeben, dass ihn dabei etwas überzeugt hat.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Einer sagt reihum einen ganz normalen Satz mit Verb, der Nachbar baut ihn sofort in den Nominalstil um und hängt ein echtes Verb hinten dran. <i>Der Bus fährt seltener.</i> → <i>Die seltenere Busverbindung trifft vor allem die Älteren.</i></div>
 </section>
 
 <section class="section" id="challenge">
@@ -892,14 +877,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> Nach jeder Runde nennt der Partner <u>ein</u> Nomen, das gefehlt hat. Wer dreimal dieselbe Lücke hat, schreibt sich das Wort auf und bringt es nächste Woche mit.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Einer sagt reihum einen ganz normalen Satz mit Verb, der Nachbar baut ihn sofort in den Nominalstil um und hängt ein echtes Verb hinten dran. <i>Der Bus fährt seltener.</i> → <i>Die seltenere Busverbindung trifft vor allem die Älteren.</i></div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Woran merkst du, dass jemand in einer Diskussion ernst genommen wird?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Ist eine sachliche Formulierung ehrlicher — oder nur höflicher?</li><li>Wann hast du zuletzt deine Meinung wegen eines guten Arguments geändert?</li><li>Warum schreiben Behörden so, obwohl es niemand versteht?</li><li>Wo ist die Grenze zwischen präzise und unverständlich?</li><li>Gibt es in deiner Sprache auch eine eigene Amtssprache?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
+<p class="ssub">Einer eröffnet, einer widerspricht. Danach tauschen — und beim zweiten Mal die Seiten wechseln. Regel: Fass immer zuerst den anderen zusammen, und benutz mindestens zwei Nomen aus Verben.</p>
+<div class="rmcard">
+<b>1 · Die Debatte</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A vertritt die Stadt, B das Dorf. Jeder hat zwei Minuten. Wer den anderen unterbricht, verliert dreißig Sekunden.</p>
+<div class="nur-a2"><span class="rm">Ich bin für die Stadt, weil alles nah ist.</span><span class="rm">Auf dem Land ist es viel ruhiger.</span><span class="rm">Ohne Auto geht dort gar nichts.</span><span class="rm">Dafür kennt man dort seine Nachbarn.</span></div>
+<div class="nur-b1"><span class="rm">Meiner Meinung nach überwiegt die Versorgung — Ärzte, Schulen, Kurse, alles in fünfzehn Minuten</span><span class="rm">Das trifft zu, greift aber zu kurz: Die Belastung durch den Verkehr trägt in der Stadt jeder mit</span><span class="rm">Der Zusammenhalt der Nachbarschaft lässt sich nicht kaufen, und in der Stadt gibt es ihn selten</span><span class="rm">Unterm Strich hängt die Entscheidung an der Lebensphase, nicht am Ort</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide haben den anderen zuerst zusammengefasst, bevor sie widersprochen haben, und mindestens zweimal ein Nomen aus einem Verb benutzt (<i>die Versorgung</i>, <i>die Belastung</i>, <i>die Entscheidung</i>).</div>
+</div>
+<div class="rmcard">
+<b>2 · In der Bürgerversammlung</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A fordert von der Gemeinde einen Bus oder einen Dorfladen. B arbeitet bei der Gemeinde und muss zwischen Wunsch und Haushalt vermitteln — ohne den Menschen abzubürsten.</p>
+<div class="nur-a2"><span class="rm">Wir brauchen zweimal am Tag mehr einen Bus.</span><span class="rm">Der letzte Laden macht im Januar zu.</span><span class="rm">Was ist mit den Leuten ohne Auto?</span><span class="rm">Wann entscheiden Sie das?</span></div>
+<div class="nur-b1"><span class="rm">Ich verstehe die Forderung — die Finanzierung zusätzlicher Fahrten liegt aber bei achtzigtausend Euro im Jahr</span><span class="rm">Die Schließung des Ladens ist ein Verlust, das bestreitet niemand hier im Raum</span><span class="rm">Wir prüfen die Einrichtung eines Bürgerbusses mit ehrenamtlichen Fahrerinnen und Fahrern</span><span class="rm">Die Entscheidung des Gemeinderats fällt im Dezember, bis dahin brauchen wir Ihre Unterschriften</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat sachlich erklärt statt sich zu rechtfertigen, A hat aus Ärger eine konkrete Forderung gemacht. Auf beiden Seiten mindestens zwei Nomen plus Genitiv.</div>
+</div>
+<div class="rmcard">
+<b>3 · Die Seite wechseln</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Beide vertreten jetzt die Position, die sie vorhin bekämpft haben — und müssen sie so gut vertreten, dass der andere es glaubt.</p>
+<div class="nur-a2"><span class="rm">Also gut, ich bin jetzt für das Dorf.</span><span class="rm">Das Wichtigste ist die Ruhe.</span><span class="rm">Man braucht nicht alles vor der Tür.</span><span class="rm">Meine Kinder hätten einen Garten.</span></div>
+<div class="nur-b1"><span class="rm">Ich beginne mit dem stärksten Argument der Gegenseite und erkläre, warum es mich überzeugt hat</span><span class="rm">Die Anonymität der Großstadt ist für viele keine Freiheit, sondern eine Belastung</span><span class="rm">Die Möglichkeit, abends spontan loszugehen, verliert mit den Jahren an Gewicht</span><span class="rm">Am Ende ist es die Frage, wofür man seine Zeit ausgeben will — für Wege oder für Menschen</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide haben ein echtes Argument der anderen Seite gefunden — kein Strohmann. Und mindestens einer hat zugegeben, dass ihn dabei etwas überzeugt hat.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -965,6 +984,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip"></div>
 <div class="tip"></div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1151,11 +1177,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1212,7 +1245,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1222,7 +1257,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

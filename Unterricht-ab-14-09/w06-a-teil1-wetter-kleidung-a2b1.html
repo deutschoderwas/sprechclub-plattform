@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,105 +627,43 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B1<span class="zusatz"> · mehr</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">⚖️ Drei Wetterverben</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">Der Blick <span class="hl">aus dem Fenster</span></h2>
-<p class="ssub">Jeder Morgen fängt mit derselben Frage an: Wie ist es draußen, und was heißt das für heute? Zwei Sätze, und du hast beides gesagt — <i>„Es regnet und ist kalt. Ich nehme den Mantel.“</i> Genau diese Verbindung üben wir heute.</p>
-<div class="scene-wrap klein"><img src="../vok-bild/die-muetze.webp" alt="Eine Mütze und ein Schal liegen auf einer Parkbank, ringsum Herbstlaub"></div>
-<ul class="qlist nur-a2">
-<li>Wie ist das Wetter heute bei dir?</li>
-<li>Was hast du heute Morgen angezogen?</li>
-<li>Welche Jahreszeit magst du am liebsten?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Wie unterscheidet sich das Wetter hier von dem in deiner Heimat?</li>
-<li>Hat sich dein Kleidungsstil geändert, seit du hier lebst?</li>
-<li>Gibt es Wetter, bei dem du gar nicht vor die Tür gehst?</li>
-</ul>
-<div class="tip teal">🔑 <strong>Die Formel für heute:</strong> <b>Wetter nennen + Folge daraus.</b> <i>„Es ist windig, deshalb nehme ich die Mütze mit.“</i> Zwei Teile, verbunden mit <b>deshalb</b> — und schon ist aus einer Beobachtung ein richtiger Satz geworden.</div>
-<h2 class="st">Warum Wetter <span class="hl">hier so oft Thema ist</span></h2>
-<p class="ssub">Im Fahrstuhl, an der Kasse, beim Nachbarn im Treppenhaus: Das Wetter ist das sichere Thema, mit dem man ein Gespräch anfangen kann, ohne jemandem zu nahe zu treten. Wer zwei Sätze darüber sagen kann, kommt hier überall ins Gespräch.</p>
-<div class="scene-wrap klein"><img src="../vok-bild/die-haltestelle.webp" alt="Eine Bushaltestelle mit einer wartenden Person"></div>
-<ul class="qlist nur-a2">
-<li>Redest du mit Fremden über das Wetter?</li>
-<li>Was sagt man bei euch, wenn man jemanden trifft?</li>
-<li>Wo wartest du oft draußen?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Warum ist ausgerechnet das Wetter das sichere Thema?</li>
-<li>Wann wird Small Talk über das Wetter unangenehm?</li>
-<li>Was ist bei euch das Thema, mit dem man ein Gespräch anfängt?</li>
-</ul>
-<div class="tip">💡 <strong>Drei Sätze, die immer gehen:</strong> <b>„Ganz schön kalt heute.“</b> · <b>„Endlich mal Sonne.“</b> · <b>„Und morgen soll es wieder regnen.“</b> Alle drei kannst du an der Bushaltestelle sagen, ohne dass es aufdringlich wirkt — und meistens antwortet jemand.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
 </section>
 
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Wörter <span class="hl">für draußen und für den Schrank</span></h2>
-<p class="ssub">Sagt jedes Wort laut — <u>mit Artikel</u>. Und gleich einen Satz hinterher: Wann hast du dieses Wort zuletzt gebraucht?</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../vok-bild/die-kueste.webp" alt="Ein Weg durch die Dünen zum Meer" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Wetter</div><div class="bex">„Das Wetter soll morgen besser werden.“</div><div class="bti">💡 Immer <b>das</b> und immer im Singular — <i>die Wetter</i> gibt es nicht. Und merk dir das kleine <b>soll</b>: <i>Es soll regnen</i> heißt „so ist die Vorhersage“, nicht dass jemand es befiehlt.</div><button class="speak" data-say="Das Wetter soll morgen besser werden.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-urlaub.webp" alt="Ein Strandkorb am Meer" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Sonne</div><div class="bex">„Endlich scheint mal die Sonne.“</div><div class="bti">💡 Das Verb dazu ist <b>scheinen</b>: <i>Die Sonne scheint.</i> Und ganz häufig im Alltag: <b>sonnig</b>, <b>die Sonnenbrille</b>, <b>in der Sonne sitzen</b>.</div><button class="speak" data-say="Endlich scheint mal die Sonne.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-ausflug.webp" alt="Zwei Menschen wandern mit Rucksäcken über einen Feldweg" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Jahreszeit</div><div class="bex">„Der Herbst ist meine liebste Jahreszeit.“</div><div class="bti">💡 Alle vier sind <b>der</b>: der Frühling, der Sommer, der Herbst, der Winter. Und mit <b>im</b>: <i>im Sommer, im Winter</i> — nur <i>im Frühling</i> heißt oft auch <b>im Frühjahr</b>.</div><button class="speak" data-say="Der Herbst ist meine liebste Jahreszeit.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-haltestelle.webp" alt="Eine Bushaltestelle mit einer wartenden Person" loading="lazy"><div class="bb"><div class="bw">frieren</div><div class="bex">„Ich friere, der Bus kommt einfach nicht.“</div><div class="bti">💡 Zwei Formen, beide richtig: <b>Ich friere</b> und <b>Mir ist kalt.</b> Die zweite hörst du öfter. Und für Hände und Füße: <i>Mir sind die Füße kalt.</i></div><button class="speak" data-say="Ich friere, der Bus kommt einfach nicht.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-muetze.webp" alt="Eine Mütze und ein Schal liegen auf einer Parkbank" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Mütze</div><div class="bex">„Nimm die Mütze mit, es ist windig.“</div><div class="bti">💡 Dazu gehören <b>der Schal</b> und <b>die Handschuhe</b> — immer im Plural, man hat ja zwei. Der Satz, den hier jedes Kind hört: <i>Zieh dir was an!</i></div><button class="speak" data-say="Nimm die Mütze mit, es ist windig.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-mantel.webp" alt="Ein Mantel hängt im Flur neben der Treppe" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Mantel</div><div class="bex">„Bei dem Wetter brauchst du einen Mantel.“</div><div class="bti">💡 Der Unterschied: <b>die Jacke</b> ist kürzer, <b>der Mantel</b> geht bis übers Knie. Und die <b>Regenjacke</b> ist die, die man hier am häufigsten braucht.</div><button class="speak" data-say="Bei dem Wetter brauchst du einen Mantel.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/das-hemd.webp" alt="Ein hellblaues Hemd hängt auf einem Bügel an einer Schranktür" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Hemd</div><div class="bex">„Zum Termin ziehe ich ein Hemd an.“</div><div class="bti">💡 Nicht verwechseln: <b>das Hemd</b> hat Knöpfe, <b>das T-Shirt</b> nicht, <b>die Bluse</b> ist die Damenvariante. Und <b>der Pullover</b> kommt darüber.</div><button class="speak" data-say="Zum Termin ziehe ich ein Hemd an.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-aermel.webp" alt="Jemand krempelt sich am Tisch den Ärmel hoch" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Ärmel</div><div class="bex">„Krempel dir die Ärmel hoch, es wird warm.“</div><div class="bti">💡 Die Wendung <b>die Ärmel hochkrempeln</b> heißt auch übertragen: anpacken, sich an die Arbeit machen. <i>Jetzt krempeln wir die Ärmel hoch.</i></div><button class="speak" data-say="Krempel dir die Ärmel hoch, es wird warm.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-kleidung.webp" alt="Zwei Personen in einem Kleidergeschäft halten einen Pullover hoch" loading="lazy"><div class="bb"><div class="bw">sich anziehen</div><div class="bex">„Zieh dir was Warmes an.“</div><div class="bti">💡 Drei Verben, die zusammengehören: <b>anziehen</b> (Kleidung anlegen), <b>ausziehen</b> (abnehmen), <b>umziehen</b> (andere Kleidung anlegen). Alle drei trennbar und alle drei mit <b>sich</b>.</div><button class="speak" data-say="Zieh dir was Warmes an.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/das-schlafzimmer.webp" alt="Ein aufgeräumtes, helles Schlafzimmer" loading="lazy"><div class="bb"><div class="bw">sich umziehen</div><div class="bex">„Ich ziehe mich schnell um, dann können wir los.“</div><div class="bti">💡 Achtung, zwei Bedeutungen: <b>sich umziehen</b> = andere Kleidung anlegen. <b>umziehen</b> ohne <i>sich</i> = in eine andere Wohnung ziehen. Das kleine Wort entscheidet.</div><button class="speak" data-say="Ich ziehe mich schnell um, dann können wir los.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-schrank.webp" alt="Ein offener Kleiderschrank mit ordentlich aufgehängter Kleidung" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Kleiderschrank</div><div class="bex">„Im Kleiderschrank hängt noch die Sommerkleidung.“</div><div class="bti">💡 Zweimal im Jahr hört man hier denselben Satz: <b>„Ich muss den Schrank umräumen.“</b> Gemeint ist der Wechsel von Sommer- auf Winterkleidung.</div><button class="speak" data-say="Im Kleiderschrank hängt noch die Sommerkleidung.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-balkon.webp" alt="Blick durch die Balkontür auf zwei Personen an einem Tisch" loading="lazy"><div class="bb"><div class="bw">draußen</div><div class="bex">„Wollen wir draußen sitzen? Es ist noch warm genug.“</div><div class="bti">💡 Merk dir das Paar: <b>draußen</b> (Wo?) und <b>nach draußen</b> (Wohin?). <i>Ich sitze draußen</i> — aber <i>Ich gehe nach draußen.</i> Genauso: drinnen und nach drinnen.</div><button class="speak" data-say="Wollen wir draußen sitzen? Es ist noch warm genug.">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel „Was ziehst du an?“:</strong> Einer nennt ein Wetter — <i>Regen, Schnee, dreißig Grad, Wind, Nebel.</i> Der Nachbar sagt sofort einen Satz mit <b>deshalb</b>: <i>„Es schneit, deshalb ziehe ich die dicken Schuhe an.“</i> Wer <i>deshalb</i> vergisst, gibt weiter.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Es regnet, es ist kalt, <span class="hl">mir ist kalt — was denn nun?</span></h2>
-<p class="ssub">Beim Wetter gibt es drei Satzmuster, und sie werden ständig verwechselt. Wenn du sie einmal auseinanderhältst, klingt jeder Wettersatz richtig.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">🌧️</span><div class="gmw">Es regnet.</div><div class="gmb">ein eigenes Wetterverb, das immer es braucht</div><div class="gmx">Es regnet seit heute Morgen.</div></div>
-<div class="gk blau"><span class="gem2">🌡️</span><div class="gmw">Es ist kalt.</div><div class="gmb">das Wetter allgemein, für alle gleich</div><div class="gmx">Draußen ist es richtig kalt.</div></div>
-<div class="gk ja"><span class="gem2">🧣</span><div class="gmw">Mir ist kalt.</div><div class="gmb">dein Gefühl — du stehst im Dativ</div><div class="gmx">Mir ist kalt, ich hole eine Jacke.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Es regnet schon den ganzen Tag.</div><div class="bsp"><span class="wer">Warum das stimmt</span>Wetterverben brauchen immer ein <b>es</b>: <i>es regnet, es schneit, es blitzt.</i> Das <i>es</i> ist kein richtiges Subjekt, aber es muss trotzdem dastehen.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Regnet schon den ganzen Tag.</div><div class="bsp"><span class="wer">Das Problem</span>Ohne <i>es</i> fehlt dem Satz der Anfang. In vielen Sprachen geht das, im Deutschen nicht — das <b>es</b> ist Pflicht.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Mir ist kalt.</div><div class="bsp"><span class="wer">Warum das stimmt</span>Wenn du von <u>deinem</u> Gefühl sprichst, stehst du im <b>Dativ</b>: <i>mir, dir, ihm.</i> Genauso: <i>Mir ist warm. Mir ist schlecht.</i></div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Ich bin kalt.</div><div class="bsp"><span class="wer">Das Problem</span><i>Ich bin kalt</i> heißt, dass du als Mensch kühl und abweisend bist — das sagt man über den Charakter, nicht über die Temperatur.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Zieh dir eine Jacke an.</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>sich anziehen</b> braucht das <i>dir</i>, sobald das Kleidungsstück dabeisteht: <i>Ich ziehe <b>mir</b> die Jacke an.</i> Ohne Kleidungsstück reicht <i>Ich ziehe mich an.</i></div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Zieh eine Jacke.</div><div class="bsp"><span class="wer">Das Problem</span>Ohne <i>an</i> heißt <i>ziehen</i> nur „an etwas zerren“. Die Vorsilbe macht die ganze Bedeutung — und sie muss ans Satzende.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Wann sage ich es ist und wann mir ist?</button>
-<div class="inhalt">
-<p>Eine Frage entscheidet: Geht es um draußen oder um dich?</p>
-<ul>
-<li><b>Um das Wetter?</b> → <b>Es ist</b> kalt. <i>Draußen ist es kalt, überall gleich.</i></li>
-<li><b>Um dein Gefühl?</b> → <b>Mir ist</b> kalt. <i>Neben dir kann jemandem warm sein.</i></li>
-<li><b>Um eine Sache?</b> → normal mit sein. <i>Die Suppe ist kalt. Das Zimmer ist warm.</i></li>
-<li><b>Nie:</b> <i>Ich bin kalt.</i> Das ist ein Satz über deinen Charakter.</li>
-</ul>
-<p style="margin-top:.5rem;">Ein Satz zum Auswendiglernen, in dem alle drei vorkommen: <b>„Draußen ist es kalt, mir ist auch kalt, und der Kaffee ist inzwischen kalt.“</b></p>
-</div>
-</div>
-<div class="tip">🎯 <strong>Zu zweit, eine Minute:</strong> Einer sagt ein Wetter, der andere baut sofort drei Sätze: einen mit <i>es</i>, einen mit <i>mir</i>, einen mit <i>deshalb</i>. Danach tauschen.</div>
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Wie ist das Wetter heute bei dir?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Was hast du heute Morgen angezogen?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -816,37 +824,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
-<p class="ssub">Einer fragt, einer entscheidet. Danach tauschen — und beim zweiten Mal ohne Notizen.</p>
-<div class="rmcard">
-<b>1 · Der Ausflug am Wochenende</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Ihr plant einen Ausflug. A hat die Wettervorhersage gesehen, B will unbedingt los. Ihr müsst euch einigen: fahren, verschieben oder anders planen — und jede Entscheidung begründen.</p>
-<div class="nur-a2"><span class="rm">Es soll den ganzen Tag regnen</span><span class="rm">Dann nehmen wir Regenjacken mit</span><span class="rm">Ich habe keine Lust zu frieren</span><span class="rm">Wir könnten auch Sonntag fahren</span></div>
-<div class="nur-b1"><span class="rm">Angeblich klart es am Nachmittag auf</span><span class="rm">Zur Sicherheit nehme ich beides mit</span><span class="rm">Bei dem Wetter lohnt sich das nicht</span><span class="rm">Dann verschieben wir es lieber</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Jede Entscheidung wurde begründet — mindestens dreimal kam <i>weil</i>, <i>deshalb</i> oder <i>denn</i> vor. Am Ende steht ein Plan, nicht nur eine Meinung.</div>
-</div>
-<div class="rmcard">
-<b>2 · Zieh dir was an!</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A ist Elternteil oder besorgte Freundin, B will genau das anziehen, was er will. A begründet, B widerspricht — und einer gibt am Ende nach.</p>
-<div class="nur-a2"><span class="rm">Zieh dir was Warmes an</span><span class="rm">Es sind nur acht Grad</span><span class="rm">Mir ist nicht kalt</span><span class="rm">Nimm wenigstens die Mütze mit</span></div>
-<div class="nur-b1"><span class="rm">Ich friere nun mal schneller als du</span><span class="rm">Ich stecke sie in die Tasche, das reicht</span><span class="rm">Wenn es zieht, wirst du dich ärgern</span><span class="rm">Also gut, du hast ja recht</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide haben mit Gründen gearbeitet, nicht mit Lautstärke. <i>Mir ist kalt</i> kam mindestens einmal richtig vor — und <i>Ich bin kalt</i> kein einziges Mal.</div>
-</div>
-<div class="rmcard">
-<b>3 · Small Talk, der weitergeht</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Ihr wartet zusammen — an der Haltestelle, im Wartezimmer, im Fahrstuhl. Fangt mit dem Wetter an. Regel: Nach spätestens vier Sätzen muss das Gespräch bei einem anderen Thema sein.</p>
-<div class="nur-a2"><span class="rm">Ganz schön kalt heute</span><span class="rm">Endlich mal Sonne</span><span class="rm">Warten Sie auch schon lange?</span><span class="rm">Was machen Sie denn beruflich?</span></div>
-<div class="nur-b1"><span class="rm">So ein Wetter im Oktober habe ich selten erlebt</span><span class="rm">Bei uns wäre das schon Winter</span><span class="rm">Sind Sie hier aus der Gegend?</span><span class="rm">Das kenne ich, bei mir ist es genauso</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Das Gespräch hat das Wetter verlassen und ist bei etwas anderem gelandet. Keiner hat den anderen ausgefragt — auf jede Frage kam auch etwas Eigenes zurück.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Jeder nennt reihum ein Wetter. Der Nachbar sagt sofort einen Satz mit <i>deshalb</i> und einen mit <i>weil</i> — dieselbe Aussage, zwei Bauformen. Wer das Verb falsch stellt, sagt den Satz noch einmal.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -879,14 +864,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde müssen <u>ein es-Satz</u> (es regnet, es ist kalt), <u>ein mir-Satz</u> (mir ist kalt) und <u>ein Grund</u> mit weil, deshalb oder denn vorkommen. Der Partner hakt auf den Fingern ab.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Jeder nennt reihum ein Wetter. Der Nachbar sagt sofort einen Satz mit <i>deshalb</i> und einen mit <i>weil</i> — dieselbe Aussage, zwei Bauformen. Wer das Verb falsch stellt, sagt den Satz noch einmal.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Wie unterscheidet sich das Wetter hier von dem in deiner Heimat?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Hat sich dein Kleidungsstil geändert, seit du hier lebst?</li><li>Gibt es Wetter, bei dem du gar nicht vor die Tür gehst?</li><li>Warum ist ausgerechnet das Wetter das sichere Thema?</li><li>Wann wird Small Talk über das Wetter unangenehm?</li><li>Was ist bei euch das Thema, mit dem man ein Gespräch anfängt?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
+<p class="ssub">Einer fragt, einer entscheidet. Danach tauschen — und beim zweiten Mal ohne Notizen.</p>
+<div class="rmcard">
+<b>1 · Der Ausflug am Wochenende</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Ihr plant einen Ausflug. A hat die Wettervorhersage gesehen, B will unbedingt los. Ihr müsst euch einigen: fahren, verschieben oder anders planen — und jede Entscheidung begründen.</p>
+<div class="nur-a2"><span class="rm">Es soll den ganzen Tag regnen</span><span class="rm">Dann nehmen wir Regenjacken mit</span><span class="rm">Ich habe keine Lust zu frieren</span><span class="rm">Wir könnten auch Sonntag fahren</span></div>
+<div class="nur-b1"><span class="rm">Angeblich klart es am Nachmittag auf</span><span class="rm">Zur Sicherheit nehme ich beides mit</span><span class="rm">Bei dem Wetter lohnt sich das nicht</span><span class="rm">Dann verschieben wir es lieber</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Jede Entscheidung wurde begründet — mindestens dreimal kam <i>weil</i>, <i>deshalb</i> oder <i>denn</i> vor. Am Ende steht ein Plan, nicht nur eine Meinung.</div>
+</div>
+<div class="rmcard">
+<b>2 · Zieh dir was an!</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A ist Elternteil oder besorgte Freundin, B will genau das anziehen, was er will. A begründet, B widerspricht — und einer gibt am Ende nach.</p>
+<div class="nur-a2"><span class="rm">Zieh dir was Warmes an</span><span class="rm">Es sind nur acht Grad</span><span class="rm">Mir ist nicht kalt</span><span class="rm">Nimm wenigstens die Mütze mit</span></div>
+<div class="nur-b1"><span class="rm">Ich friere nun mal schneller als du</span><span class="rm">Ich stecke sie in die Tasche, das reicht</span><span class="rm">Wenn es zieht, wirst du dich ärgern</span><span class="rm">Also gut, du hast ja recht</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide haben mit Gründen gearbeitet, nicht mit Lautstärke. <i>Mir ist kalt</i> kam mindestens einmal richtig vor — und <i>Ich bin kalt</i> kein einziges Mal.</div>
+</div>
+<div class="rmcard">
+<b>3 · Small Talk, der weitergeht</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Ihr wartet zusammen — an der Haltestelle, im Wartezimmer, im Fahrstuhl. Fangt mit dem Wetter an. Regel: Nach spätestens vier Sätzen muss das Gespräch bei einem anderen Thema sein.</p>
+<div class="nur-a2"><span class="rm">Ganz schön kalt heute</span><span class="rm">Endlich mal Sonne</span><span class="rm">Warten Sie auch schon lange?</span><span class="rm">Was machen Sie denn beruflich?</span></div>
+<div class="nur-b1"><span class="rm">So ein Wetter im Oktober habe ich selten erlebt</span><span class="rm">Bei uns wäre das schon Winter</span><span class="rm">Sind Sie hier aus der Gegend?</span><span class="rm">Das kenne ich, bei mir ist es genauso</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Das Gespräch hat das Wetter verlassen und ist bei etwas anderem gelandet. Keiner hat den anderen ausgefragt — auf jede Frage kam auch etwas Eigenes zurück.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -952,6 +971,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine drei Wettersprachnachrichten bis Dienstagabend. Ich höre vor allem auf die Verbstellung nach <i>weil</i> und <i>deshalb</i> — das ist die Stelle, an der es bei fast allen anfangs rutscht.</div>
 <div class="tip">🔜 <strong>Am Mittwoch, Teil 2:</strong> <u>Kleidung kaufen: Größe, Farbe, umtauschen.</u> Anprobieren, nach einer anderen Größe fragen — und was du sagst, wenn es zu Hause doch nicht passt. Die höflichen Formen aus Woche 5 kommen dabei zurück.</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1138,11 +1164,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1199,7 +1232,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1209,7 +1244,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,104 +627,43 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B2<span class="zusatz"> · feiner</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">🧮 Drei Arten zu vergleichen</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">Dieselbe Frage, <span class="hl">zwei verschiedene Leben</span></h2>
-<p class="ssub">Wer in der Stadt wohnt, zahlt fürs Auto Parkgebühren, sucht abends zwanzig Minuten einen Platz und kommt mit dem Rad meistens schneller ans Ziel. Wer auf dem Land wohnt, fährt zwölf Kilometer zum nächsten Supermarkt, und der Bus kommt dreimal am Tag. Beide reden über Autos — aber über ganz verschiedene Autos.</p>
-<div class="scene-wrap klein"><img src="../bilder/lesen/strasse.webp" alt="Eine Kreuzung mit Ampel und Zebrastreifen"></div>
-<ul class="qlist nur-a2">
-<li>Wie kommst du normalerweise zur Arbeit oder zum Kurs?</li>
-<li>Hast du ein Auto? Und brauchst du es wirklich?</li>
-<li>Wie lange brauchst du zur nächsten Haltestelle?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Was wäre für dich der größte Unterschied ohne Auto?</li>
-<li>Ist ein Auto bei dir Freiheit oder eher eine Last?</li>
-<li>Wie war das in dem Land, in dem du aufgewachsen bist?</li>
-</ul>
-<div class="tip teal">🔑 <strong>Damit das Gespräch trägt:</strong> Sag immer dazu, <b>wo</b> du wohnst. Der Satz <i>Ich brauche kein Auto</i> bedeutet in Köln etwas völlig anderes als in einem Dorf mit 400 Einwohnern — und ohne diese Angabe reden alle aneinander vorbei.</div>
-<h2 class="st">Und auf dem Land <span class="hl">sieht die Rechnung anders aus</span></h2>
-<p class="ssub">Ein Auto kostet in Deutschland im Schnitt mehrere hundert Euro im Monat — Versicherung, Steuer, Sprit, Werkstatt, Wertverlust. In der Stadt lässt sich das oft durch Bahn und Rad ersetzen. Auf dem Land selten: Dort ist das Auto kein Komfort, sondern die Voraussetzung für Arbeit, Arzt und Einkauf.</p>
-<div class="scene-wrap klein"><img src="../amanda/sz-landwirtschaft.webp" alt="Ein Landwirt steht mit seinem Traktor auf einem Feld"></div>
-<ul class="qlist nur-a2">
-<li>Was kostet ein Auto bei dir im Monat ungefähr?</li>
-<li>Fährst du lieber Bus oder Rad?</li>
-<li>Gibt es bei dir einen guten Radweg?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Was müsste sich ändern, damit du das Auto stehen lässt?</li>
-<li>Ist es gerecht, Parkplätze in der Stadt teurer zu machen?</li>
-<li>Wer trägt die Kosten, wenn ein Dorf keinen Bus mehr hat?</li>
-</ul>
-<div class="tip">💡 <strong>Zahlen für Mittwoch:</strong> Ein privates Auto steht im Schnitt über 23 Stunden am Tag ungenutzt. Eine gute Zahl für die Debatte — aber sag dazu, dass sie einen Durchschnitt beschreibt und nicht deinen Nachbarn.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
 </section>
 
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Wörter <span class="hl">für Straße, Rad und Dorf</span></h2>
-<p class="ssub">Sag jedes Wort laut — <u>mit Artikel</u>. Und häng gleich einen Vergleich an: schneller, teurer oder ruhiger als was?</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../bilder/lesen/auto.webp" alt="Ein kleines Auto von der Seite" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Parkplatz</div><div class="bex">„Abends suche ich zwanzig Minuten einen Parkplatz.“</div><div class="bti">💡 Ein einzelner Platz ist <b>der Parkplatz</b>, die große Fläche auch. Dazu: <b>parken</b>, <b>das Parkhaus</b> und <b>die Parkgebühr</b> — das Wort, um das in Städten am meisten gestritten wird.</div><button class="speak" data-say="Abends suche ich zwanzig Minuten einen Parkplatz.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/fahrrad.webp" alt="Ein Fahrrad mit einem Korb am Lenker" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Radweg</div><div class="bex">„Ohne durchgehenden Radweg fahre ich dort nicht.“</div><div class="bti">💡 Zusammengesetzt aus <i>Rad</i> und <i>Weg</i>. Wichtig ist das Adjektiv dazu: ein <b>durchgehender</b> Radweg — einer, der nicht nach zweihundert Metern aufhört.</div><button class="speak" data-say="Ohne durchgehenden Radweg fahre ich dort nicht.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-ampel.webp" alt="Eine Ampel in einer Stadtstraße, dahinter eine Straßenbahn" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Ampel</div><div class="bex">„An dieser Ampel stehe ich jeden Morgen zwei Minuten.“</div><div class="bti">💡 Man steht <b>an</b> der Ampel und fährt <b>bei</b> Rot oder Grün. Und die Wendung, die jeder kennt: <b>bei Rot über die Ampel gehen</b> — in Deutschland ein kleines Verbrechen.</div><button class="speak" data-say="An dieser Ampel stehe ich jeden Morgen zwei Minuten.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-kreuzung.webp" alt="Eine Kreuzung mit Zebrastreifen zwischen Fachwerkhäusern" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Innenstadt</div><div class="bex">„In der Innenstadt gibt es kaum noch freie Parkplätze.“</div><div class="bti">💡 Auch <b>das Zentrum</b> oder <b>die City</b>. Und das Wort, um das es am Mittwoch geht: <b>autofrei</b> — eine Innenstadt ohne Autos.</div><button class="speak" data-say="In der Innenstadt gibt es kaum noch freie Parkplätze.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/strasse.webp" alt="Eine Kreuzung mit Ampel und Zebrastreifen" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Zebrastreifen</div><div class="bex">„Am Zebrastreifen müssen Autos halten.“</div><div class="bti">💡 Das Wort kommt wirklich vom Zebra. Amtlich heißt es <i>Fußgängerüberweg</i> — das sagt aber niemand. Dazu <b>der Fußgänger</b> und <b>der Vorrang</b>.</div><button class="speak" data-say="Am Zebrastreifen müssen Autos halten.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-fahren.webp" alt="Ein Lieferwagen voller Kartons mit einem Fahrer am Steuer" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Lieferverkehr</div><div class="bex">„Auch in einer autofreien Zone bleibt der Lieferverkehr erlaubt.“</div><div class="bti">💡 Ein Wort, das in jeder Debatte auftaucht — denn Geschäfte brauchen Ware. Auf Schildern steht dann <b>Anlieger frei</b> oder <b>Lieferverkehr frei</b>.</div><button class="speak" data-say="Auch in einer autofreien Zone bleibt der Lieferverkehr erlaubt.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-landwirtschaft.webp" alt="Ein Landwirt steht mit seinem Traktor auf einem Feld" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Land</div><div class="bex">„Auf dem Land fährt der Bus dreimal am Tag.“</div><div class="bti">💡 Immer mit <b>auf</b>: <i>auf dem Land wohnen</i>, <i>aufs Land ziehen</i>. Das Gegenstück ist <b>in der Stadt</b>. Und Vorsicht: <i>das Land</i> heißt auch <b>Staat</b> und <b>Bundesland</b>.</div><button class="speak" data-say="Auf dem Land fährt der Bus dreimal am Tag.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/nachbarschaft.webp" alt="Eine Reihe von Häusern mit kleinen Vorgärten" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Viertel</div><div class="bex">„In unserem Viertel ist es seit der Sperrung deutlich ruhiger.“</div><div class="bti">💡 Auch <b>der Stadtteil</b> oder <b>der Kiez</b> (vor allem in Berlin). Und Achtung: <i>das Viertel</i> ist auch <b>ein Viertel</b> — 25 Prozent oder Viertel vor acht.</div><button class="speak" data-say="In unserem Viertel ist es seit der Sperrung deutlich ruhiger.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/spielplatz.webp" alt="Ein Spielplatz mit Schaukel, Rutsche und Sandkasten" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Spielplatz</div><div class="bex">„Aus dem Parkplatz vor der Schule ist ein Spielplatz geworden.“</div><div class="bti">💡 In der Debatte das stärkste Bild der einen Seite: Was passiert mit dem Platz, wenn dort keine Autos mehr stehen? Verwandt: <b>die Grünfläche</b> und <b>die Fußgängerzone</b>.</div><button class="speak" data-say="Aus dem Parkplatz vor der Schule ist ein Spielplatz geworden.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-werkstatt.webp" alt="Ein Mechaniker erklärt einer Kundin etwas am geöffneten Auto" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Werkstatt</div><div class="bex">„Die Werkstatt allein kostet mich im Jahr über tausend Euro.“</div><div class="bti">💡 Plural: <b>die Werkstätten</b>. Dazu die anderen Kostenwörter, die du für die Debatte brauchst: <b>die Versicherung</b>, <b>die Steuer</b>, <b>der Sprit</b> und <b>der Wertverlust</b>.</div><button class="speak" data-say="Die Werkstatt allein kostet mich im Jahr über tausend Euro.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-ausflug.webp" alt="Drei Menschen mit Rucksäcken gehen einen Weg über eine Wiese" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Fußweg</div><div class="bex">„Bis zur Haltestelle sind es zehn Minuten Fußweg.“</div><div class="bti">💡 Zwei Bedeutungen: der <b>Gehweg</b> neben der Straße und die <b>Strecke</b>, die man geht. In Fahrplänen steht meistens die zweite: <i>8 Minuten Fußweg</i>.</div><button class="speak" data-say="Bis zur Haltestelle sind es zehn Minuten Fußweg.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-balkon.webp" alt="Ein Balkon mit Tisch, Stühlen und Pflanzen über einer Häuserzeile" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Ruhe</div><div class="bex">„Seit der Sperrung habe ich abends endlich Ruhe auf dem Balkon.“</div><div class="bti">💡 Kein Plural. Dazu <b>der Lärm</b> als Gegenteil und die feste Wendung <b>seine Ruhe haben</b> — der Grund, aus dem viele Menschen aufs Land ziehen.</div><button class="speak" data-say="Seit der Sperrung habe ich abends endlich Ruhe auf dem Balkon.">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel „Stadt oder Land“:</strong> Einer zieht ein Wort und sagt einen Satz damit. Die anderen raten, ob der Satz eher aus der Stadt oder vom Land kommt — und begründen es in einem Satz. Bei den meisten Wörtern geht beides, und genau darüber lohnt sich das Gespräch.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Zeit, Geld <span class="hl">oder Nerven?</span></h2>
-<p class="ssub">Fast jeder Satz über Verkehr ist ein Vergleich. Nur vergleichen die Leute unterschiedliche Dinge — und deshalb kommen sie zu unterschiedlichen Ergebnissen, ohne dass jemand lügt.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">⏱️</span><div class="gmw">die Zeit</div><div class="gmb">wie lange dauert es wirklich?</div><div class="gmx">Mit dem Rad bin ich schneller als mit dem Auto.</div></div>
-<div class="gk blau"><span class="gem2">💶</span><div class="gmw">das Geld</div><div class="gmb">was kostet es im Monat?</div><div class="gmx">Das Monatsticket ist billiger als die Versicherung.</div></div>
-<div class="gk ja"><span class="gem2">😮‍💨</span><div class="gmw">der Aufwand</div><div class="gmb">wie anstrengend ist es?</div><div class="gmx">Mit Kindern und Einkauf ist der Bus deutlich anstrengender.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Trägt im Gespräch</div><div class="gsatz">Bei mir ist das Rad morgens schneller als das Auto — sieben Minuten gegen zwölf, weil ich keinen Parkplatz suchen muss.</div><div class="bsp"><span class="wer">Warum das funktioniert</span>Ein <b>Vergleich mit Zahlen</b> und einem Grund. Der Satz sagt außerdem <i>bei mir</i> — er behauptet nichts über alle anderen und ist deshalb nicht angreifbar.</div></div>
-<div class="gk no"><div class="gkl">❌ Trägt nicht</div><div class="gsatz">Mit dem Rad ist man doch immer schneller.</div><div class="bsp"><span class="wer">Das Problem</span><b>immer</b> ist der Todesstoß für jedes Verkehrsargument. Ein einziges Gegenbeispiel — Regen, Einkauf, zwölf Kilometer — und die ganze Aussage ist erledigt.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Trägt im Gespräch</div><div class="gsatz">In der Stadt komme ich gut ohne Auto aus. Auf dem Land wäre das für mich kaum machbar.</div><div class="bsp"><span class="wer">Warum das funktioniert</span>Der Satz nennt die <b>Bedingung</b>, unter der die Aussage gilt. Damit ist er für beide Seiten anschlussfähig — und genau solche Sätze bringen eine Debatte weiter.</div></div>
-<div class="gk no"><div class="gkl">❌ Trägt nicht</div><div class="gsatz">Wer heute noch Auto fährt, hat es einfach nicht verstanden.</div><div class="bsp"><span class="wer">Das Problem</span>Ein Urteil über <b>Menschen</b> statt über die Sache. Danach verteidigt sich jeder, der ein Auto besitzt — und über Radwege redet niemand mehr.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Trägt im Gespräch</div><div class="gsatz">Ein Auto steht im Schnitt über 23 Stunden am Tag. Für die Fläche in der Innenstadt ist das viel.</div><div class="bsp"><span class="wer">Warum das funktioniert</span>Eine <b>Zahl</b> plus eine <b>Folge</b>. Und das Wort <i>im Schnitt</i> zeigt, dass du weißt, was die Zahl ist: ein Durchschnitt, keine Aussage über den Nachbarn.</div></div>
-<div class="gk no"><div class="gkl">❌ Trägt nicht</div><div class="gsatz">Autos stehen sowieso nur rum.</div><div class="bsp"><span class="wer">Das Problem</span>Dieselbe Information, aber ohne Zahl und ohne Folge. Der Satz klingt nach Meinung statt nach Argument — und wird deshalb auch so behandelt.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Wie baue ich einen Vergleich, der stimmt?</button>
-<div class="inhalt">
-<p>Drei Angaben, dann ist der Vergleich wasserdicht:</p>
-<ul>
-<li><b>Was genau vergleichst du?</b> Zeit, Geld oder Aufwand — nicht alles auf einmal.</li>
-<li><b>Unter welchen Bedingungen?</b> <i>morgens</i>, <i>mit Kindern</i>, <i>in der Stadt</i>. Ohne Bedingung stimmt fast kein Vergleich.</li>
-<li><b>Woher weißt du das?</b> Eigene Erfahrung, gemessene Zeit oder eine Statistik — sag welche.</li>
-</ul>
-<p style="margin-top:.5rem;">Und ein Wort, das jeden Vergleich sofort besser macht: <b>bei mir</b>. <i>Bei mir ist das Rad schneller</i> lässt sich nicht widerlegen — <i>das Rad ist schneller</i> schon.</p>
-</div>
-</div>
-<div class="tip">🎯 <strong>Zu zweit, eine Minute:</strong> Einer nennt zwei Verkehrsmittel, der andere vergleicht sie in drei Sätzen — einmal nach Zeit, einmal nach Geld, einmal nach Aufwand. Ihr werdet merken: Je nach Maßstab gewinnt ein anderes.</div>
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Wie kommst du normalerweise zur Arbeit oder zum Kurs?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Hast du ein Auto? Und brauchst du es wirklich?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -807,37 +816,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
-<p class="ssub">Einer rechnet vor, einer hält dagegen. Danach tauschen, beim zweiten Mal ohne die Sätze unten. Regel: In jeder Runde mindestens zwei Vergleiche und eine Zahl.</p>
-<div class="rmcard">
-<b>1 · Das zweite Auto</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">In der Familie steht die Frage, ob das zweite Auto weg kann. A hat nachgerechnet, B hat Bedenken — vor allem wegen der Kinder.</p>
-<div class="nur-a2"><span class="rm">Das zweite Auto kostet uns 250 Euro im Monat</span><span class="rm">Mit dem Rad bin ich morgens schneller</span><span class="rm">Ein Monatsticket ist billiger als die Versicherung</span><span class="rm">Wir könnten es drei Monate probieren</span></div>
-<div class="nur-b1"><span class="rm">Auf das Jahr gerechnet sind das über dreitausend Euro</span><span class="rm">Sobald die Kinder zum Sport müssen, wird es allerdings eng</span><span class="rm">Mit Carsharing wäre es fast genauso flexibel wie mit dem eigenen Wagen</span><span class="rm">Ich würde es befristet probieren und danach neu entscheiden</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide haben mit Zahlen argumentiert statt mit Gefühlen, und beide haben mindestens einen Vergleich mit <i>als</i> oder <i>so … wie</i> gebaut. Am Ende stand ein Vorschlag mit einer Frist, keine Entscheidung für immer.</div>
-</div>
-<div class="rmcard">
-<b>2 · Der Radweg vor dem Laden</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Vor einem Geschäft sollen zwei Parkplätze zu einem Radweg werden. A führt das Geschäft, B fährt jeden Tag mit dem Rad daran vorbei.</p>
-<div class="nur-a2"><span class="rm">Ohne Parkplätze kommen weniger Kunden</span><span class="rm">Der Lieferverkehr muss trotzdem halten können</span><span class="rm">Ich verstehe, dass der Radweg fehlt</span><span class="rm">Vielleicht geht beides</span></div>
-<div class="nur-b1"><span class="rm">Zwei Parkplätze bringen Ihnen weniger Kunden als ein sicherer Radweg</span><span class="rm">Studien zeigen, dass Kundschaft zu Fuß und mit dem Rad häufiger kommt</span><span class="rm">Eine Ladezone für den Lieferverkehr wäre ein Kompromiss</span><span class="rm">Probieren wir es ein halbes Jahr und schauen dann auf die Zahlen</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide Seiten haben ein echtes Interesse genannt — Kundschaft und Sicherheit — statt sich Vorwürfe zu machen. Es kam mindestens ein Kompromiss zur Sprache und ein Vorschlag mit Frist.</div>
-</div>
-<div class="rmcard">
-<b>3 · Der letzte Bus</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">In einem Dorf soll die Abendverbindung gestrichen werden. A sitzt im Gemeinderat und rechnet, B fährt jeden Abend damit nach Hause.</p>
-<div class="nur-a2"><span class="rm">Der Bus fährt abends fast leer</span><span class="rm">Ohne den Bus komme ich nicht von der Schicht nach Hause</span><span class="rm">Ein Rufbus wäre billiger</span><span class="rm">Wir suchen eine Lösung</span></div>
-<div class="nur-b1"><span class="rm">Vier Fahrgäste pro Fahrt sind wenig — aber für diese vier ist es die einzige Verbindung</span><span class="rm">Ein Rufbus wäre günstiger als die feste Linie und trotzdem verlässlich</span><span class="rm">Wer keinen Bus hat, braucht ein Auto — das ist teurer als jedes Ticket</span><span class="rm">Ich würde die Linie ein Jahr behalten und den Takt anpassen</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat die Zahlen ernst genommen und B die Menschen dahinter — beide zusammen. Am Ende gab es eine Alternative statt eines Siegers.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Einer nennt reihum zwei Dinge (<i>Bus und Rad</i>, <i>Stadt und Dorf</i>), der Nachbar vergleicht sie in einem Satz — einmal mit <i>als</i>, einmal mit <i>so … wie</i>. Wer die beiden vertauscht, gibt weiter.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -870,14 +856,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde müssen <u>ein Vergleich mit als</u>, <u>ein Vergleich mit wie</u> und <u>eine Zahl</u> vorkommen. Wer <i>größer wie</i> sagt, fängt noch einmal an.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Einer nennt reihum zwei Dinge (<i>Bus und Rad</i>, <i>Stadt und Dorf</i>), der Nachbar vergleicht sie in einem Satz — einmal mit <i>als</i>, einmal mit <i>so … wie</i>. Wer die beiden vertauscht, gibt weiter.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Was wäre für dich der größte Unterschied ohne Auto?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Ist ein Auto bei dir Freiheit oder eher eine Last?</li><li>Wie war das in dem Land, in dem du aufgewachsen bist?</li><li>Was müsste sich ändern, damit du das Auto stehen lässt?</li><li>Ist es gerecht, Parkplätze in der Stadt teurer zu machen?</li><li>Wer trägt die Kosten, wenn ein Dorf keinen Bus mehr hat?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
+<p class="ssub">Einer rechnet vor, einer hält dagegen. Danach tauschen, beim zweiten Mal ohne die Sätze unten. Regel: In jeder Runde mindestens zwei Vergleiche und eine Zahl.</p>
+<div class="rmcard">
+<b>1 · Das zweite Auto</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">In der Familie steht die Frage, ob das zweite Auto weg kann. A hat nachgerechnet, B hat Bedenken — vor allem wegen der Kinder.</p>
+<div class="nur-a2"><span class="rm">Das zweite Auto kostet uns 250 Euro im Monat</span><span class="rm">Mit dem Rad bin ich morgens schneller</span><span class="rm">Ein Monatsticket ist billiger als die Versicherung</span><span class="rm">Wir könnten es drei Monate probieren</span></div>
+<div class="nur-b1"><span class="rm">Auf das Jahr gerechnet sind das über dreitausend Euro</span><span class="rm">Sobald die Kinder zum Sport müssen, wird es allerdings eng</span><span class="rm">Mit Carsharing wäre es fast genauso flexibel wie mit dem eigenen Wagen</span><span class="rm">Ich würde es befristet probieren und danach neu entscheiden</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide haben mit Zahlen argumentiert statt mit Gefühlen, und beide haben mindestens einen Vergleich mit <i>als</i> oder <i>so … wie</i> gebaut. Am Ende stand ein Vorschlag mit einer Frist, keine Entscheidung für immer.</div>
+</div>
+<div class="rmcard">
+<b>2 · Der Radweg vor dem Laden</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Vor einem Geschäft sollen zwei Parkplätze zu einem Radweg werden. A führt das Geschäft, B fährt jeden Tag mit dem Rad daran vorbei.</p>
+<div class="nur-a2"><span class="rm">Ohne Parkplätze kommen weniger Kunden</span><span class="rm">Der Lieferverkehr muss trotzdem halten können</span><span class="rm">Ich verstehe, dass der Radweg fehlt</span><span class="rm">Vielleicht geht beides</span></div>
+<div class="nur-b1"><span class="rm">Zwei Parkplätze bringen Ihnen weniger Kunden als ein sicherer Radweg</span><span class="rm">Studien zeigen, dass Kundschaft zu Fuß und mit dem Rad häufiger kommt</span><span class="rm">Eine Ladezone für den Lieferverkehr wäre ein Kompromiss</span><span class="rm">Probieren wir es ein halbes Jahr und schauen dann auf die Zahlen</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide Seiten haben ein echtes Interesse genannt — Kundschaft und Sicherheit — statt sich Vorwürfe zu machen. Es kam mindestens ein Kompromiss zur Sprache und ein Vorschlag mit Frist.</div>
+</div>
+<div class="rmcard">
+<b>3 · Der letzte Bus</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">In einem Dorf soll die Abendverbindung gestrichen werden. A sitzt im Gemeinderat und rechnet, B fährt jeden Abend damit nach Hause.</p>
+<div class="nur-a2"><span class="rm">Der Bus fährt abends fast leer</span><span class="rm">Ohne den Bus komme ich nicht von der Schicht nach Hause</span><span class="rm">Ein Rufbus wäre billiger</span><span class="rm">Wir suchen eine Lösung</span></div>
+<div class="nur-b1"><span class="rm">Vier Fahrgäste pro Fahrt sind wenig — aber für diese vier ist es die einzige Verbindung</span><span class="rm">Ein Rufbus wäre günstiger als die feste Linie und trotzdem verlässlich</span><span class="rm">Wer keinen Bus hat, braucht ein Auto — das ist teurer als jedes Ticket</span><span class="rm">Ich würde die Linie ein Jahr behalten und den Takt anpassen</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat die Zahlen ernst genommen und B die Menschen dahinter — beide zusammen. Am Ende gab es eine Alternative statt eines Siegers.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -943,6 +963,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Sprachnachricht und die zehn Vergleiche bis Dienstagabend in den Chat. Ich höre alles an und schreibe dir zurück — vor allem bei <i>als</i> und <i>wie</i>.</div>
 <div class="tip">🔜 <strong>Am Mittwoch, Teil 2:</strong> <u>Die Debatte: autofreie Innenstadt.</u> Heute haben wir gesammelt und gerechnet. Am Mittwoch nimmst du eine Position ein — und musst sie gegen die andere Seite verteidigen.</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1129,11 +1156,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1190,7 +1224,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1200,7 +1236,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

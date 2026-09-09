@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,103 +627,43 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B2<span class="zusatz"> · feiner</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">⚖️ Drei Haltungen</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">Ein Tag, <span class="hl">zwei völlig verschiedene Gefühle</span></h2>
-<p class="ssub">Die einen planen drei Monate vorher. Die anderen hoffen, dass niemand daran denkt. Beides ist normal — und beides muss man erklären können, ohne den anderen zu kränken.</p>
-<div class="scene-wrap klein"><img src="../amanda/sz-feste.webp" alt="Menschen feiern mit Luftballons und stoßen an"></div>
-<ul class="qlist nur-a2">
-<li>Feierst du deinen Geburtstag? Wie?</li>
-<li>Was war die schönste Feier, an die du dich erinnerst?</li>
-<li>Gibt es in deinem Land einen Tag, der wichtiger ist als der Geburtstag?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Woher kommt eigentlich der Druck, feiern zu müssen?</li>
-<li>Ist eine Einladung ein Geschenk — oder eine Rechnung, die man zurückzahlt?</li>
-<li>Ab welchem Alter wird ein Geburtstag zur Verhandlungssache?</li>
-</ul>
-<div class="tip teal">🎂 <strong>Gut zu wissen:</strong> In Deutschland lädt das <u>Geburtstagskind</u> ein — und zahlt oft auch. Wer im Büro Geburtstag hat, bringt selbst den Kuchen mit. Das überrascht viele, die neu hier sind.</div>
-<h2 class="st">Vorher gratulieren <span class="hl">bringt Unglück</span></h2>
-<p class="ssub">Ein Aberglaube, an den fast alle sich halten, auch wenn keiner daran glaubt. Wer am 3. für den 5. gratuliert, erntet ein „Oh, nicht vorher!“ — freundlich, aber sofort.</p>
-<div class="scene-wrap klein"><img src="../amanda/a-warten.webp" alt="Amanda hält sich erschrocken die Wangen"></div>
-<ul class="qlist nur-a2">
-<li>Gibt es bei euch auch so eine Regel?</li>
-<li>Was schenkt man in deinem Land zum Geburtstag?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Warum halten sich Menschen an Regeln, an die sie nicht glauben?</li>
-<li>Welche kleine deutsche Regel hat dich am meisten überrascht?</li>
-</ul>
-<div class="tip">💡 <strong>Die sichere Formel:</strong> <b>Herzlichen Glückwunsch zum Geburtstag!</b> — geht immer, bei jedem Alter und in jeder Nähe. Im Brief auch: <b>Alles Gute zum Geburtstag.</b></div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
 </section>
 
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Wörter rund um <span class="hl">Einladung und Absage</span></h2>
-<p class="ssub">Sagt jedes Wort laut — und gleich den Beispielsatz hinterher. Zwei Sekunden pro Karte reichen.</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../vok-bild/der-vorschlag.webp" alt="Notizbuch und Tasse auf einem Schreibtisch" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Einladung</div><div class="bex">„Danke für die Einladung — ich komme gern.“</div><div class="bti">💡 <b>eine Einladung annehmen</b> oder <b>ablehnen</b>. Und wer eingeladen wird, ist <b>der Gast</b>; wer einlädt, ist <b>der Gastgeber</b>.</div><button class="speak" data-say="Danke für die Einladung, ich komme gern.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-freunde.webp" alt="Zwei Freunde sitzen mit Kaffee auf einer Bank" loading="lazy"><div class="bb"><div class="bw">einladen</div><div class="bex">„Ich lade euch alle zu meinem Geburtstag ein.“</div><div class="bti">💡 Trennbar und mit zwei Bedeutungen: <b>zu einer Feier einladen</b> — und <b>bezahlen</b>: <i>Heute lade ich dich ein.</i></div><button class="speak" data-say="Ich lade euch alle zu meinem Geburtstag ein.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-feste.webp" alt="Menschen feiern mit Luftballons und stoßen an" loading="lazy"><div class="bb"><div class="bw">feiern</div><div class="bex">„Wir feiern dieses Jahr im Garten.“</div><div class="bti">💡 <b>etwas feiern</b> (den Geburtstag) oder einfach <b>feiern</b> (eine Party machen). Und: <b>reinfeiern</b> heißt, um Mitternacht zu beginnen.</div><button class="speak" data-say="Wir feiern dieses Jahr im Garten.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/amanda-jubel.webp" alt="Amanda lacht und freut sich" loading="lazy"><div class="bb"><div class="bw">gratulieren</div><div class="bex">„Ich gratuliere dir ganz herzlich!“</div><div class="bti">💡 Immer mit <b>Dativ</b>: <i>Ich gratuliere <b>dir</b>, <b>ihm</b>, <b>Ihnen</b>.</i> Und wozu? Mit <b>zu</b> + Dativ: <i>zum Geburtstag</i>.</div><button class="speak" data-say="Ich gratuliere dir ganz herzlich!">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-familie.webp" alt="Eine Familie sitzt zusammen auf dem Sofa" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Anlass</div><div class="bex">„Zu welchem Anlass feiert ihr denn?“</div><div class="bti">💡 <b>ein besonderer Anlass</b>, <b>ein feierlicher Anlass</b>. Und: <b>ohne besonderen Anlass</b> — einfach so.</div><button class="speak" data-say="Zu welchem Anlass feiert ihr denn?">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="ein runder Geburtstag">🎯</div><div class="bb"><div class="bw">ein runder Geburtstag</div><div class="bex">„Nächstes Jahr habe ich einen runden Geburtstag.“</div><div class="bti">💡 30, 40, 50 — die <b>runden</b> feiert man größer. Der 50. heißt umgangssprachlich manchmal <b>der Fünfzigste</b>, ganz ohne Wort dahinter.</div><button class="speak" data-say="Nächstes Jahr habe ich einen runden Geburtstag.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-heikel.webp" alt="Zwei Personen sitzen sich in einem Wohnzimmer gegenüber" loading="lazy"><div class="bb"><div class="bw">sich drücken</div><div class="bex">„Ich habe mich dieses Jahr vor der Feier gedrückt.“</div><div class="bti">💡 Immer <b>vor</b> + Dativ: <i>sich <b>vor</b> etwas drücken</i>. Umgangssprachlich und leicht selbstkritisch — man gibt damit zu, dass man eigentlich gemusst hätte.</div><button class="speak" data-say="Ich habe mich dieses Jahr vor der Feier gedrückt.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="Ausrede">🙈</div><div class="bb"><div class="bw"><span class="art">die</span> Ausrede</div><div class="bex">„Das war eine Ausrede, und alle haben es gemerkt.“</div><div class="bti">💡 Unterschied merken: <b>der Grund</b> ist echt, <b>die Ausrede</b> nicht. <b>eine Ausrede erfinden</b>, <b>sich herausreden</b>.</div><button class="speak" data-say="Das war eine Ausrede, und alle haben es gemerkt.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-verkaufen.webp" alt="Zwei Personen an einem Verkaufstresen" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Geschenk</div><div class="bex">„Ich habe noch kein Geschenk für sie.“</div><div class="bti">💡 <b>ein Geschenk machen</b> oder <b>schenken</b>. Und die deutsche Standardfrage: <b>Was wünschst du dir?</b> — Antworten wie „nichts“ gelten als unhöflich.</div><button class="speak" data-say="Ich habe noch kein Geschenk für sie.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/guten-appetit.webp" alt="Eine Gruppe sitzt beim Essen am gedeckten Tisch" loading="lazy"><div class="bb"><div class="bw">anstoßen</div><div class="bex">„Lasst uns auf dich anstoßen!“</div><div class="bti">💡 Immer <b>auf</b> + Akkusativ: <i>auf dich, auf das neue Jahr</i>. Und dabei gilt: in die Augen schauen, nicht aufs Glas.</div><button class="speak" data-say="Lasst uns auf dich anstoßen!">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-kochen.webp" alt="Amanda rührt in einem Topf in der Küche" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Gastgeber</div><div class="bex">„Als Gastgeber hat man den ganzen Abend zu tun.“</div><div class="bti">💡 Weiblich: <b>die Gastgeberin</b>. Und der Gegenpart: <b>der Gast</b>, Plural <b>die Gäste</b> — mit Umlaut.</div><button class="speak" data-say="Als Gastgeber hat man den ganzen Abend zu tun.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="absagen">✋</div><div class="bb"><div class="bw">absagen</div><div class="bex">„Ich muss leider absagen, aber ich denke an dich.“</div><div class="bti">💡 Bei einer privaten Einladung gehört ein zweiter Satz dazu — sonst klingt es kalt: <b>Ich melde mich, sobald es ruhiger ist.</b></div><button class="speak" data-say="Ich muss leider absagen, aber ich denke an dich.">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel:</strong> Einer nennt eine Situation („runder Geburtstag“, „Kollege im Büro“, „Einladung, auf die du keine Lust hast“). Der andere sagt in zwei Sekunden, welches Wort dazu passt — und einen Satz damit.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Drei Arten, <span class="hl">mit dem eigenen Geburtstag umzugehen</span></h2>
-<p class="ssub">Erst die drei Haltungen, die es in jeder Gruppe gibt. Darunter drei Satzpaare, bei denen fast alle danebenliegen.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">🎉</span><div class="gmw">Groß feiern</div><div class="gmb">Einladen, planen, Gäste bewirten — der Tag gehört den anderen.</div><div class="gmx">Ich lade alle ein, die mir wichtig sind.</div></div>
-<div class="gk blau"><span class="gem2">☕</span><div class="gmw">Klein halten</div><div class="gmb">Zwei Leute, ein Kuchen, kein Aufwand.</div><div class="gmx">Nur Kaffee und Kuchen, mehr brauche ich nicht.</div></div>
-<div class="gk ja"><span class="gem2">🤫</span><div class="gmw">Übergehen</div><div class="gmb">Kein Wort, kein Termin, und am liebsten kein Anruf.</div><div class="gmx">Ich mache dieses Jahr gar nichts.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Ich gratuliere dir zum Geburtstag.</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>gratulieren</b> steht immer mit <b>Dativ</b> — und der Anlass kommt mit <b>zu</b> + Dativ dazu.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Ich gratuliere dich für den Geburtstag.</div><div class="bsp"><span class="wer">Das Problem</span>Zwei Fehler auf einmal: Akkusativ statt Dativ, und <b>für</b> statt <b>zu</b>. Merksatz: <b>Ich gratuliere dir zu etwas.</b></div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Ich würde gern kommen, aber ich schaffe es nicht.</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>würde gern</b> zeigt: Ich will schon — es geht nur nicht. Genau das macht eine Absage freundlich.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Ich will nicht kommen.</div><div class="bsp"><span class="wer">Das Problem</span>Grammatisch richtig, menschlich hart. <b>wollen</b> im Nein klingt nach Ablehnung der Person, nicht des Termins.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Ich habe mich vor der Feier gedrückt.</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>sich drücken vor</b> + Dativ. Das <b>sich</b> gehört fest dazu — ohne es ergibt der Satz etwas ganz anderes.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Ich habe die Feier gedrückt.</div><div class="bsp"><span class="wer">Das Problem</span>Ohne <b>sich</b> heißt <b>drücken</b> schlicht „Druck ausüben“ — wie beim Knopf im Aufzug.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Zusagen oder absagen — welche Formel?</button>
-<div class="inhalt">
-<p>Es hängt nur davon ab, wie nah dir die Person steht:</p>
-<ul>
-<li><b>Enge Freunde</b> → offen sein: <i>Ich habe gerade wirklich keine Kraft. Können wir das nachholen?</i></li>
-<li><b>Kollegen und Bekannte</b> → kurz und freundlich: <i>Danke für die Einladung! Ich schaffe es leider nicht.</i></li>
-<li><b>Familie</b> → Grund plus Ersatz: <i>Ich kann nicht kommen, aber ich rufe dich am Sonntag an.</i></li>
-<li><b>Gar keine Lust</b> → trotzdem kein „keine Lust“ sagen: <i>Das passt bei mir gerade nicht.</i></li>
-</ul>
-<p style="margin-top:.5rem;">Und in allen vier Fällen gilt: <b>früh absagen</b>. Wer erst am Abend absagt, ärgert den Gastgeber mehr als die Absage selbst.</p>
-</div>
-</div>
-<div class="tip">⚖️ <strong>Kurzübung:</strong> Jeder sagt in einem Satz, zu welcher der drei Haltungen er gehört — und in einem zweiten, warum. Wer zwei Sätze schafft, ist fertig.</div>
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Feierst du deinen Geburtstag? Wie?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Was war die schönste Feier, an die du dich erinnerst?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -814,37 +824,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei <span class="hl">Einladungen</span></h2>
-<p class="ssub">Zu zweit. Einer lädt ein und lässt nicht sofort locker, einer muss sich entscheiden. Danach tauschen.</p>
-<div class="rmcard">
-<b>1 · Der runde Geburtstag</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A wird fünfzig und will groß feiern. B hat an dem Tag schon etwas vor — es ist aber nichts Wichtiges. B muss entscheiden und begründen.</p>
-<div class="nur-a2"><span class="rm">Ich würde gern kommen, aber …</span><span class="rm">Ich habe schon etwas vor</span><span class="rm">Kann ich später dazukommen?</span><span class="rm">Ich melde mich bis Freitag</span></div>
-<div class="nur-b1"><span class="rm">Das trifft sich unglücklich</span><span class="rm">Ich versuche, es einzurichten</span><span class="rm">Wäre es schlimm, wenn ich später komme?</span><span class="rm">Ich sage dir bis Freitag verbindlich Bescheid</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B sagt weder sofort ja noch sofort nein, nennt einen Zeitpunkt für die endgültige Antwort und hält den Ton warm.</div>
-</div>
-<div class="rmcard">
-<b>2 · Nur Kaffee, versprochen</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A will gar nichts machen, B findet das schade und schlägt etwas ganz Kleines vor. Am Ende soll ein konkreter Plan stehen.</p>
-<div class="nur-a2"><span class="rm">Ich mache dieses Jahr nichts</span><span class="rm">Nur wir zwei?</span><span class="rm">Das könnte ich mir vorstellen</span><span class="rm">Aber ohne Geschenke</span></div>
-<div class="nur-b1"><span class="rm">Ich möchte diesmal nicht Gastgeber sein</span><span class="rm">Etwas ganz Kleines wäre denkbar</span><span class="rm">Unter einer Bedingung: …</span><span class="rm">Dann machen wir es so</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide einigen sich auf etwas Konkretes — Ort, Uhrzeit, wie viele Leute — statt auf ein vages „mal sehen“.</div>
-</div>
-<div class="rmcard">
-<b>3 · Der Kollege lädt ein</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A lädt das ganze Team zum Geburtstag ein. B ist neu, kennt kaum jemanden und ist unsicher, ob eine Zusage erwartet wird.</p>
-<div class="nur-a2"><span class="rm">Danke für die Einladung</span><span class="rm">Soll ich etwas mitbringen?</span><span class="rm">Kommen alle aus dem Team?</span><span class="rm">Wie lange geht das ungefähr?</span></div>
-<div class="nur-b1"><span class="rm">Das ist nett, dass du auch mich fragst</span><span class="rm">Ist es eher förmlich oder locker?</span><span class="rm">Ich komme gern für eine Stunde vorbei</span><span class="rm">Gibt es eine Karte, in die ich mich eintragen kann?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B fragt nach dem Rahmen, bevor er zusagt, und findet eine Formulierung, mit der ein kurzer Besuch völlig in Ordnung ist.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Sagt einander dreimal ab — einmal einem engen Freund, einmal einem Kollegen, einmal der eigenen Mutter. Derselbe Inhalt, drei verschiedene Töne.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -877,14 +864,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde muss einmal <u>ich würde gern</u> oder <u>es wäre schön</u> vorkommen. Der Partner hebt die Hand, sobald es da war.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Sagt einander dreimal ab — einmal einem engen Freund, einmal einem Kollegen, einmal der eigenen Mutter. Derselbe Inhalt, drei verschiedene Töne.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Woher kommt eigentlich der Druck, feiern zu müssen?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Ist eine Einladung ein Geschenk — oder eine Rechnung, die man zurückzahlt?</li><li>Ab welchem Alter wird ein Geburtstag zur Verhandlungssache?</li><li>Warum halten sich Menschen an Regeln, an die sie nicht glauben?</li><li>Welche kleine deutsche Regel hat dich am meisten überrascht?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei <span class="hl">Einladungen</span></h2>
+<p class="ssub">Zu zweit. Einer lädt ein und lässt nicht sofort locker, einer muss sich entscheiden. Danach tauschen.</p>
+<div class="rmcard">
+<b>1 · Der runde Geburtstag</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A wird fünfzig und will groß feiern. B hat an dem Tag schon etwas vor — es ist aber nichts Wichtiges. B muss entscheiden und begründen.</p>
+<div class="nur-a2"><span class="rm">Ich würde gern kommen, aber …</span><span class="rm">Ich habe schon etwas vor</span><span class="rm">Kann ich später dazukommen?</span><span class="rm">Ich melde mich bis Freitag</span></div>
+<div class="nur-b1"><span class="rm">Das trifft sich unglücklich</span><span class="rm">Ich versuche, es einzurichten</span><span class="rm">Wäre es schlimm, wenn ich später komme?</span><span class="rm">Ich sage dir bis Freitag verbindlich Bescheid</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B sagt weder sofort ja noch sofort nein, nennt einen Zeitpunkt für die endgültige Antwort und hält den Ton warm.</div>
+</div>
+<div class="rmcard">
+<b>2 · Nur Kaffee, versprochen</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A will gar nichts machen, B findet das schade und schlägt etwas ganz Kleines vor. Am Ende soll ein konkreter Plan stehen.</p>
+<div class="nur-a2"><span class="rm">Ich mache dieses Jahr nichts</span><span class="rm">Nur wir zwei?</span><span class="rm">Das könnte ich mir vorstellen</span><span class="rm">Aber ohne Geschenke</span></div>
+<div class="nur-b1"><span class="rm">Ich möchte diesmal nicht Gastgeber sein</span><span class="rm">Etwas ganz Kleines wäre denkbar</span><span class="rm">Unter einer Bedingung: …</span><span class="rm">Dann machen wir es so</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide einigen sich auf etwas Konkretes — Ort, Uhrzeit, wie viele Leute — statt auf ein vages „mal sehen“.</div>
+</div>
+<div class="rmcard">
+<b>3 · Der Kollege lädt ein</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A lädt das ganze Team zum Geburtstag ein. B ist neu, kennt kaum jemanden und ist unsicher, ob eine Zusage erwartet wird.</p>
+<div class="nur-a2"><span class="rm">Danke für die Einladung</span><span class="rm">Soll ich etwas mitbringen?</span><span class="rm">Kommen alle aus dem Team?</span><span class="rm">Wie lange geht das ungefähr?</span></div>
+<div class="nur-b1"><span class="rm">Das ist nett, dass du auch mich fragst</span><span class="rm">Ist es eher förmlich oder locker?</span><span class="rm">Ich komme gern für eine Stunde vorbei</span><span class="rm">Gibt es eine Karte, in die ich mich eintragen kann?</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B fragt nach dem Rahmen, bevor er zusagt, und findet eine Formulierung, mit der ein kurzer Besuch völlig in Ordnung ist.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -949,6 +970,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Bring deine Argumente am Mittwoch mit — auf Papier oder im Kopf. Sprachnachrichten wie immer bis Sonntag in die WhatsApp-Gruppe.</div>
 <div class="tip">🔜 <strong>Am Mittwoch, Teil 2:</strong> die <u>Debatte</u>. Zwei Lager, feste Redemittel, und am Ende stimmt die Gruppe ab. Bring dein stärkstes Argument mit.</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1135,11 +1163,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1196,7 +1231,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1206,7 +1243,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

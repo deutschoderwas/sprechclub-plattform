@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,47 +627,44 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B2<span class="zusatz"> · feiner</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#wiederholung">🔁 Wiederholung</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">⚖️ Drei Grade</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">Vier Vorsilben, <span class="hl">vier fremde Verben</span></h2>
-<p class="ssub"><b>annehmen</b> (akzeptieren), <b>abnehmen</b> (leichter werden), <b>aufnehmen</b> (aufzeichnen), <b>einnehmen</b> (schlucken). Vier Wörter aus derselben Wurzel — und keines heißt mehr <i>nehmen</i>. Genau hier trennt sich B1 von B2.</p>
-<div class="scene-wrap klein"><img src="../amanda/sz-medien.webp" alt="Eine Frau sitzt mit Laptop und Handy auf dem Sofa"></div>
-<ul class="qlist nur-a2">
-<li>Welche dieser vier Bedeutungen kanntest du schon?</li>
-<li>Welche hättest du falsch geraten?</li>
-<li>Gibt es in deiner Sprache auch solche Wortfamilien?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Woran erkennst du beim Zuhören, welche Bedeutung gemeint ist?</li>
-<li>Warum reicht die Vorsilbe allein oft nicht — was verrät noch mehr?</li>
-<li>Welches Verb hat dich schon einmal in eine peinliche Lage gebracht?</li>
-</ul>
-<div class="tip teal">🔑 <strong>Die Regel für heute:</strong> Nicht die Vorsilbe allein entscheidet, sondern <u>was danach kommt</u>. <i>Ich nehme das Angebot an</i> (akzeptieren) gegen <i>Ich habe fünf Kilo abgenommen</i> (Gewicht). Das Objekt verrät die Bedeutung.</div>
-<h2 class="st">Und dann gibt es <span class="hl">die festen Wendungen</span></h2>
-<p class="ssub"><b>Es kommt darauf an.</b> <b>Das hängt davon ab.</b> <b>Mir ist aufgefallen, dass …</b> Diese Sätze stehen in jedem zweiten deutschen Gespräch — und man kann sie nicht Wort für Wort übersetzen. Man lernt sie als Ganzes.</p>
-<div class="scene-wrap klein"><img src="../amanda/amanda-denk.webp" alt="Amanda überlegt mit dem Finger am Kinn"></div>
-<ul class="qlist nur-a2">
-<li>Was heißt <i>Es kommt darauf an</i> in deiner Sprache?</li>
-<li>Welche feste Wendung benutzt du schon oft?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Warum sind gerade diese Wendungen so schwer zu übersetzen?</li>
-<li>Wie merkst du dir, ob es <i>darauf</i>, <i>davon</i> oder <i>damit</i> heißt?</li>
-</ul>
-<div class="tip">💡 <strong>Der Trick mit da(r)-:</strong> Das kleine <b>da</b> kündigt an, dass gleich ein ganzer Satz kommt. <i>Es kommt <b>darauf</b> an, <u>ob du Zeit hast</u>.</i> Wer das <i>darauf</i> hört, weiß: Der wichtige Teil kommt erst.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
+</section>
+
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Welche dieser vier Bedeutungen kanntest du schon?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Welche hättest du falsch geraten?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="wiederholung">
@@ -618,63 +685,6 @@ a.tab:hover{color:var(--ink);}
 <li>Warum heißt es <b>anzurufen</b> und nicht <i>zu anrufen</i>?</li>
 </ul>
 <div class="tip teal">🔁 <strong>Zu zweit, dreißig Sekunden:</strong> Einer nennt ein trennbares Verb, der andere baut sofort Hauptsatz und Perfekt. Danach geht es weiter — heute ändert die Vorsilbe nämlich nicht mehr nur die Stellung, sondern den ganzen Sinn.</div>
-</section>
-
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Verben, <span class="hl">die sich verstellen</span></h2>
-<p class="ssub">Sagt jedes Verb laut — und gleich den Beispielsatz. Achtet darauf, wie weit die Bedeutung vom Grundverb weg ist.</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../amanda/sz-vertraege.webp" alt="Ein Verkäufer zeigt einer Kundin ein Handy im Laden" loading="lazy"><div class="bb"><div class="bw">annehmen</div><div class="bex">„Ich habe das Angebot angenommen.“</div><div class="bti">💡 Zweite Bedeutung: <b>vermuten</b>. <i>Ich nehme an, dass er kommt.</i> Genau daran erkennt man, ob jemand wirklich B2 spricht.</div><button class="speak" data-say="Ich habe das Angebot angenommen.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="abnehmen">📉</div><div class="bb"><div class="bw">abnehmen</div><div class="bex">„Er hat seit dem Sommer sechs Kilo abgenommen.“</div><div class="bti">💡 Aber auch: <i>Nimmst du mir die Tasche ab?</i> (abnehmen = abnehmen helfen) und <i>Das nehme ich dir nicht ab</i> (= das glaube ich dir nicht).</div><button class="speak" data-say="Er hat seit dem Sommer sechs Kilo abgenommen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-medien.webp" alt="Eine Frau sitzt mit Laptop und Handy auf dem Sofa" loading="lazy"><div class="bb"><div class="bw">aufnehmen</div><div class="bex">„Ich nehme das Gespräch auf, wenn es dir recht ist.“</div><div class="bti">💡 Drei Bedeutungen: <b>aufzeichnen</b> (Ton, Video), <b>bei sich wohnen lassen</b> und <b>in eine Gruppe aufnehmen</b>. Der Zusammenhang entscheidet.</div><button class="speak" data-say="Ich nehme das Gespräch auf, wenn es dir recht ist.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/das-rezept.webp" alt="Eine Ärztin überreicht einem Patienten ein Rezept" loading="lazy"><div class="bb"><div class="bw">einnehmen</div><div class="bex">„Die Tabletten sind dreimal täglich einzunehmen.“</div><div class="bti">💡 Das offizielle Wort auf jedem Beipackzettel. Im Alltag sagt man einfach <b>nehmen</b>: <i>Ich nehme das morgens.</i></div><button class="speak" data-say="Die Tabletten sind dreimal täglich einzunehmen.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="anmachen">💡</div><div class="bb"><div class="bw">anmachen</div><div class="bex">„Machst du bitte das Licht an?“</div><div class="bti">💡 Achtung, dritte Bedeutung: <i>jemanden anmachen</i> heißt <b>anbaggern</b> oder <b>anpöbeln</b>. Bei Personen also besser <i>ansprechen</i> sagen.</div><button class="speak" data-say="Machst du bitte das Licht an?">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-termin.webp" alt="Ein Kalender und ein Stift auf einem Tisch" loading="lazy"><div class="bb"><div class="bw">ausmachen</div><div class="bex">„Wir haben für Freitag einen Termin ausgemacht.“</div><div class="bti">💡 Drei Bedeutungen: <b>vereinbaren</b> (einen Termin), <b>abschalten</b> (das Licht) und in <i>Das macht mir nichts aus</i> = <b>das stört mich nicht</b>.</div><button class="speak" data-say="Wir haben für Freitag einen Termin ausgemacht.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-post.webp" alt="Eine Kundin an einem Postschalter mit Paketen" loading="lazy"><div class="bb"><div class="bw">aufgeben</div><div class="bex">„Gib nicht auf, du bist fast durch.“</div><div class="bti">💡 Zwei weit auseinanderliegende Bedeutungen: <b>resignieren</b> und <b>etwas zur Beförderung abgeben</b> (<i>ein Paket aufgeben</i>, <i>eine Anzeige aufgeben</i>).</div><button class="speak" data-say="Gib nicht auf, du bist fast durch.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-unterlagen.webp" alt="Hände blättern durch einen Stapel Papiere" loading="lazy"><div class="bb"><div class="bw">angeben</div><div class="bex">„Bitte geben Sie im Formular Ihre Telefonnummer an.“</div><div class="bti">💡 Im Formular heißt es <b>nennen</b>, im Gespräch heißt es <b>prahlen</b>: <i>Er gibt gern an.</i> Der Ton verrät sofort, welche gemeint ist.</div><button class="speak" data-say="Bitte geben Sie im Formular Ihre Telefonnummer an.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-euro.webp" alt="Eine Hand legt Geldscheine und Münzen auf einen Tisch" loading="lazy"><div class="bb"><div class="bw">ausgeben</div><div class="bex">„Wir haben am Wochenende viel zu viel ausgegeben.“</div><div class="bti">💡 <i>Ich gebe einen aus</i> heißt: Ich zahle die Runde. Und <i>sich als etwas ausgeben</i> heißt: so tun, als wäre man jemand anderes.</div><button class="speak" data-say="Wir haben am Wochenende viel zu viel ausgegeben.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/amanda-denk.webp" alt="Amanda überlegt mit dem Finger am Kinn" loading="lazy"><div class="bb"><div class="bw">einfallen</div><div class="bex">„Mir fällt gerade kein besseres Wort ein.“</div><div class="bti">💡 Steht immer mit <b>Dativ</b>: <i><u>Mir</u> fällt ein</i>, nicht <i>ich falle ein</i>. Und der Satz <b>Mir fällt nichts ein</b> rettet jede Sprechpause.</div><button class="speak" data-say="Mir fällt gerade kein besseres Wort ein.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-gesichtsausdruck.webp" alt="Eine lächelnde Frau schaut in die Kamera" loading="lazy"><div class="bb"><div class="bw">auffallen</div><div class="bex">„Mir ist aufgefallen, dass du heute sehr still bist.“</div><div class="bti">💡 Auch mit <b>Dativ</b>. <i>Mir ist aufgefallen, dass …</i> ist die höflichste Art, etwas anzusprechen — es klingt nach Beobachtung, nicht nach Vorwurf.</div><button class="speak" data-say="Mir ist aufgefallen, dass du heute sehr still bist.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-ankommen.webp" alt="Zwei Personen an einem Empfangstresen" loading="lazy"><div class="bb"><div class="bw">ankommen auf</div><div class="bex">„Es kommt darauf an, wie viel Zeit wir haben.“</div><div class="bti">💡 Mit <b>Akkusativ</b>: <i>Es kommt auf <u>den</u> Preis an.</i> Und mit Nebensatz immer über <b>darauf</b>: <i>Es kommt darauf an, ob …</i></div><button class="speak" data-say="Es kommt darauf an, wie viel Zeit wir haben.">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel „Welche Bedeutung?“:</strong> Einer sagt nur das Verb („aufnehmen“). Der andere muss in fünf Sekunden zwei verschiedene Sätze bilden, in denen es Verschiedenes heißt. Wer nur eine Bedeutung findet, gibt ab.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Wie weit ist es <span class="hl">vom Grundverb weg?</span></h2>
-<p class="ssub">Manche Vorsilben schieben die Bedeutung nur ein Stück, andere tauschen sie komplett aus. Drei Grade — und danach drei Satzpaare, bei denen fast alle danebenliegen.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">🟢</span><div class="gmw">Die Richtung bleibt</div><div class="gmb">das Grundverb ist noch klar zu erkennen</div><div class="gmx">einsteigen, aussteigen, mitkommen</div></div>
-<div class="gk blau"><span class="gem2">🟡</span><div class="gmw">Die Bedeutung verschiebt sich</div><div class="gmb">man erkennt die Verbindung noch, wenn jemand sie erklärt</div><div class="gmx">aufnehmen (aufzeichnen), abnehmen (weniger werden)</div></div>
-<div class="gk ja"><span class="gem2">🔴</span><div class="gmw">Neues Wort</div><div class="gmb">raten hilft nicht mehr — das lernt man einzeln</div><div class="gmx">Es kommt darauf an. · Das macht mir nichts aus.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Mir ist aufgefallen, dass du heute wenig sagst.</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>auffallen</b> steht mit <b>Dativ</b>: <i>mir</i>, <i>ihm</i>, <i>uns</i>. Die Person ist nicht der Handelnde, sondern der, dem etwas auffällt.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Ich habe aufgefallen, dass du heute wenig sagst.</div><div class="bsp"><span class="wer">Das Problem</span>Dann wärst <u>du</u> aufgefallen. Und das Hilfsverb ist <b>sein</b>, nicht <i>haben</i>: <i>Mir <b>ist</b> aufgefallen</i>.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Es kommt darauf an, ob wir genug Zeit haben.</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>ankommen auf</b> braucht vor einem Nebensatz das Wörtchen <b>darauf</b>. Ohne dieses <i>darauf</i> hängt der Satz in der Luft.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Es kommt an, ob wir genug Zeit haben.</div><div class="bsp"><span class="wer">Das Problem</span><i>ankommen</i> allein heißt <b>eintreffen</b> — der Zug kommt an. Für <i>entscheidend sein</i> braucht es die Präposition.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Ich nehme an, dass sie schon Bescheid weiß.</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>annehmen</b> heißt hier <b>vermuten</b> und steht mit einem <i>dass</i>-Satz. Genauso häufig: <i>Ich nehme an, du kommst?</i></div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Ich nehme, dass sie schon Bescheid weiß.</div><div class="bsp"><span class="wer">Das Problem</span>Ohne <b>an</b> fehlt genau die Bedeutung. <i>nehmen</i> allein braucht immer ein Objekt: <i>Ich nehme den Bus.</i></div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Wie merke ich mir so viele Bedeutungen?</button>
-<div class="inhalt">
-<p>Vier Handgriffe — und du lernst nicht mehr Wörter, sondern weniger:</p>
-<ul>
-<li><b>Lerne nie das Verb allein</b>, sondern immer mit Objekt: <i>ein Angebot annehmen</i>, <i>Gewicht abnehmen</i>, <i>ein Gespräch aufnehmen</i>.</li>
-<li><b>Achte auf den Fall:</b> <i>mir fällt ein</i> und <i>mir fällt auf</i> stehen mit Dativ. Wer den Fall kennt, kennt oft schon die Bedeutung.</li>
-<li><b>Sammle die Wendungen als ganze Sätze:</b> <i>Es kommt darauf an.</i> <i>Das hängt davon ab.</i> <i>Das macht mir nichts aus.</i></li>
-<li><b>Frag im Zweifel nach:</b> <i>Meinst du annehmen wie akzeptieren oder wie vermuten?</i> Das ist keine Schwäche, sondern genau das, was Muttersprachler auch tun.</li>
-</ul>
-<p style="margin-top:.5rem;">Und der wichtigste Punkt: Diese Verben lernst du nicht durch Listen, sondern durch <b>Wiedererkennen</b>. Jedes Mal, wenn dir eines im Gespräch auffällt, sitzt es ein Stück fester.</p>
-</div>
-</div>
-<div class="tip">🎯 <strong>Zu zweit, eine Minute:</strong> Einer sagt eine Bedeutung („akzeptieren“, „Gewicht verlieren“, „aufzeichnen“). Der andere nennt sofort das Verb und einen ganzen Satz dazu — mit Objekt.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -835,37 +845,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei Gespräche <span class="hl">zu zweit</span></h2>
-<p class="ssub">Zu zweit. In jedem Gespräch muss mindestens dreimal eine feste Wendung mit <i>da(r)-</i> vorkommen. Danach tauschen.</p>
-<div class="rmcard">
-<b>1 · Soll ich das Angebot annehmen?</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat ein Angebot bekommen und schwankt. B fragt nach und hilft beim Abwägen — ohne zu entscheiden.</p>
-<div class="nur-a2"><span class="rm">Es kommt darauf an, ob …</span><span class="rm">Ich nehme an, dass …</span><span class="rm">Mir ist aufgefallen, dass …</span><span class="rm">Das macht mir nichts aus</span></div>
-<div class="nur-b1"><span class="rm">Woran hängt es für dich am meisten?</span><span class="rm">Es kommt weniger auf … an als auf …</span><span class="rm">Ich würde annehmen, dass …</span><span class="rm">Was spricht dagegen, es anzunehmen?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A benutzt mindestens dreimal ein <b>da(r)</b>-Wort mit Nebensatz. Am Ende steht eine Entscheidung mit Begründung — kein bloßes Vielleicht.</div>
-</div>
-<div class="rmcard">
-<b>2 · Das teure Wochenende</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A und B haben zusammen viel Geld ausgegeben und schauen zurück. Es soll keine Schuldfrage werden, sondern ein Plan.</p>
-<div class="nur-a2"><span class="rm">Wir haben viel ausgegeben</span><span class="rm">Mir ist aufgefallen, dass …</span><span class="rm">Das hängt davon ab, ob …</span><span class="rm">Ich gebe das nächste Mal einen aus</span></div>
-<div class="nur-b1"><span class="rm">Es kommt darauf an, was uns wichtig ist</span><span class="rm">Ich nehme an, dass es nicht am Essen lag</span><span class="rm">Darauf könnten wir verzichten</span><span class="rm">Machen wir aus, dass …</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide sprechen über Beobachtungen, nicht über Schuld. Am Ende steht eine gemeinsame Abmachung mit <b>ausmachen</b>.</div>
-</div>
-<div class="rmcard">
-<b>3 · Mir fällt der Name nicht ein</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A will von einem Erlebnis erzählen, aber ständig fehlen Wörter. B hilft — ohne einfach das Wort zu sagen.</p>
-<div class="nur-a2"><span class="rm">Mir fällt das Wort nicht ein</span><span class="rm">Es ist so ein Ding, mit dem man …</span><span class="rm">Wie heißt das noch mal?</span><span class="rm">Genau, das meine ich</span></div>
-<div class="nur-b1"><span class="rm">Meinst du das, womit man …?</span><span class="rm">Beschreib es mal anders</span><span class="rm">Ist dir aufgefallen, dass du es umschrieben hast?</span><span class="rm">Das war eine gute Umschreibung</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A gibt nie auf und wechselt nie in die Muttersprache. Jedes fehlende Wort wird umschrieben — und mindestens zweimal fällt der Satz <b>Mir fällt … nicht ein</b>.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Sagt reihum ein Verb aus der Liste. Der Nachbar muss zwei Sätze bilden, in denen es Verschiedenes heißt. Wer nur eine Bedeutung findet, gibt weiter.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -898,14 +885,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde muss einmal <u>Es kommt darauf an</u> oder <u>Das hängt davon ab</u> fallen — mit einem echten Nebensatz dahinter. Der Partner hebt die Hand, sobald es da war.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Sagt reihum ein Verb aus der Liste. Der Nachbar muss zwei Sätze bilden, in denen es Verschiedenes heißt. Wer nur eine Bedeutung findet, gibt weiter.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Woran erkennst du beim Zuhören, welche Bedeutung gemeint ist?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Warum reicht die Vorsilbe allein oft nicht — was verrät noch mehr?</li><li>Welches Verb hat dich schon einmal in eine peinliche Lage gebracht?</li><li>Warum sind gerade diese Wendungen so schwer zu übersetzen?</li><li>Wie merkst du dir, ob es <i>darauf</i>, <i>davon</i> oder <i>damit</i> heißt?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei Gespräche <span class="hl">zu zweit</span></h2>
+<p class="ssub">Zu zweit. In jedem Gespräch muss mindestens dreimal eine feste Wendung mit <i>da(r)-</i> vorkommen. Danach tauschen.</p>
+<div class="rmcard">
+<b>1 · Soll ich das Angebot annehmen?</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat ein Angebot bekommen und schwankt. B fragt nach und hilft beim Abwägen — ohne zu entscheiden.</p>
+<div class="nur-a2"><span class="rm">Es kommt darauf an, ob …</span><span class="rm">Ich nehme an, dass …</span><span class="rm">Mir ist aufgefallen, dass …</span><span class="rm">Das macht mir nichts aus</span></div>
+<div class="nur-b1"><span class="rm">Woran hängt es für dich am meisten?</span><span class="rm">Es kommt weniger auf … an als auf …</span><span class="rm">Ich würde annehmen, dass …</span><span class="rm">Was spricht dagegen, es anzunehmen?</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A benutzt mindestens dreimal ein <b>da(r)</b>-Wort mit Nebensatz. Am Ende steht eine Entscheidung mit Begründung — kein bloßes Vielleicht.</div>
+</div>
+<div class="rmcard">
+<b>2 · Das teure Wochenende</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A und B haben zusammen viel Geld ausgegeben und schauen zurück. Es soll keine Schuldfrage werden, sondern ein Plan.</p>
+<div class="nur-a2"><span class="rm">Wir haben viel ausgegeben</span><span class="rm">Mir ist aufgefallen, dass …</span><span class="rm">Das hängt davon ab, ob …</span><span class="rm">Ich gebe das nächste Mal einen aus</span></div>
+<div class="nur-b1"><span class="rm">Es kommt darauf an, was uns wichtig ist</span><span class="rm">Ich nehme an, dass es nicht am Essen lag</span><span class="rm">Darauf könnten wir verzichten</span><span class="rm">Machen wir aus, dass …</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide sprechen über Beobachtungen, nicht über Schuld. Am Ende steht eine gemeinsame Abmachung mit <b>ausmachen</b>.</div>
+</div>
+<div class="rmcard">
+<b>3 · Mir fällt der Name nicht ein</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A will von einem Erlebnis erzählen, aber ständig fehlen Wörter. B hilft — ohne einfach das Wort zu sagen.</p>
+<div class="nur-a2"><span class="rm">Mir fällt das Wort nicht ein</span><span class="rm">Es ist so ein Ding, mit dem man …</span><span class="rm">Wie heißt das noch mal?</span><span class="rm">Genau, das meine ich</span></div>
+<div class="nur-b1"><span class="rm">Meinst du das, womit man …?</span><span class="rm">Beschreib es mal anders</span><span class="rm">Ist dir aufgefallen, dass du es umschrieben hast?</span><span class="rm">Das war eine gute Umschreibung</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A gibt nie auf und wechselt nie in die Muttersprache. Jedes fehlende Wort wird umschrieben — und mindestens zweimal fällt der Satz <b>Mir fällt … nicht ein</b>.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -971,6 +992,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Sprachnachricht bis Sonntag in die WhatsApp-Gruppe. Ich höre jede an und antworte dir persönlich.</div>
 <div class="tip">🔜 <strong>Nächste Woche, Strang B:</strong> <u>Úmfahren oder umfáhren?</u> — wenn die Betonung die Bedeutung umdreht. Ein Wort, zwei Aussprachen, zwei völlig verschiedene Sätze.</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1157,11 +1185,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1218,7 +1253,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1228,7 +1265,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,49 +627,44 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B2<span class="zusatz"> · feiner</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#wiederholung">🔁 Wiederholung</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">⚖️ Drei Arten zu widersprechen</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">Zwei Fragen, <span class="hl">über die wirklich gestritten wird</span></h2>
-<p class="ssub"><b>Erstens:</b> Soll auf stark gezuckerte Getränke eine Steuer erhoben werden — so wie es einige Länder gemacht haben? <b>Zweitens:</b> Soll vorgeschrieben werden, was es in Schulen und Kitas zu essen gibt? Beide Fragen klingen nach Ernährung. In Wahrheit geht es um etwas anderes.</p>
-<div class="scene-wrap klein"><img src="../vok-bild/die-meinung.webp" alt="Vier Menschen sitzen im Café zusammen und diskutieren"></div>
-<ul class="qlist nur-a2">
-<li>Was denkst du spontan — Steuer ja oder nein?</li>
-<li>Wer sollte entscheiden, was Kinder in der Schule essen?</li>
-<li>Gibt es so etwas in deinem Land?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Wo endet die Verantwortung des Einzelnen und wo beginnt die des Staates?</li>
-<li>Wirkt eine Steuer anders als eine Kennzeichnung — und warum?</li>
-<li>Was wäre für dich ein Zeichen dafür, dass eine solche Maßnahme funktioniert hat?</li>
-</ul>
-<div class="tip teal">🔑 <strong>Die Formel für heute:</strong> <b>Position + Grund + Beispiel + Einschränkung.</b> <i>„Ich bin dafür, weil … Zum Beispiel … Allerdings nur, wenn …“</i> Vier Teile. Wer die Einschränkung selbst nennt, nimmt der Gegenseite ihr bestes Argument weg.</div>
-<h2 class="st">Worum es <span class="hl">wirklich geht</span></h2>
-<p class="ssub">Hinter jedem Argument in dieser Debatte steckt ein Wert: <b>Freiheit</b> („Ich entscheide selbst“), <b>Verantwortung</b> („Kinder können das nicht“), <b>Gerechtigkeit</b> („Gutes Essen darf kein Luxus sein“), <b>Geld</b> und <b>Zeit</b>. Wer den Wert hinter dem Satz erkennt, diskutiert ruhiger und trifft besser.</p>
-<div class="scene-wrap klein"><img src="../amanda/sz-schule.webp" alt="Ein Klassenzimmer mit Kindern und einer Lehrerin"></div>
-<ul class="qlist nur-a2">
-<li>Was ist dir wichtiger: selbst entscheiden oder klare Regeln?</li>
-<li>Wer hat bei dir zu Hause entschieden, was es gab?</li>
-<li>Was hast du als Kind in der Schule gegessen?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Welcher Wert wiegt für dich schwerer — Freiheit oder Gerechtigkeit?</li>
-<li>Ist es ein Widerspruch, für Kennzeichnung und gegen Verbote zu sein?</li>
-<li>Wann ist ein Verbot die ehrlichere Lösung als ein Appell?</li>
-</ul>
-<div class="tip">💡 <strong>Der Satz, der jede Debatte verbessert:</strong> <b>„Ich glaube, wir reden über zwei verschiedene Dinge.“</b> Sehr oft streiten zwei Leute gar nicht über dieselbe Frage — der eine über Erwachsene, der andere über Kinder. Wer das ausspricht, gewinnt Zeit und Sympathie.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
+</section>
+
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Was denkst du spontan — Steuer ja oder nein?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Wer sollte entscheiden, was Kinder in der Schule essen?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="wiederholung">
@@ -620,63 +685,6 @@ a.tab:hover{color:var(--ink);}
 <li>Wann kommt <b>wie</b>, wann <b>als</b>?</li>
 </ul>
 <div class="tip teal">🔁 <strong>Zu zweit, dreißig Sekunden:</strong> Einer nennt eine Zahl ohne Bezug, der andere fragt sofort nach: <i>Worauf bezieht sich das?</i> Danach geht es los — heute wird aus den Zahlen eine Position.</div>
-</section>
-
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Wörter <span class="hl">für Pro und Contra</span></h2>
-<p class="ssub">Sagt jedes Wort laut — <u>mit Artikel</u>. Und gleich einen Satz hinterher: Auf welcher Seite der Debatte würdest du dieses Wort benutzen?</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../vok-bild/der-euro.webp" alt="Eine Hand legt Geldscheine und Münzen auf einen Tisch" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Steuer</div><div class="bex">„Auf gezuckerte Getränke soll eine Steuer erhoben werden.“</div><div class="bti">💡 Achtung, zwei verschiedene Wörter: <b>die Steuer</b> ist das Geld, <b>das Steuer</b> ist das Lenkrad. Und das Verb dazu heißt <b>erheben</b>: <i>eine Steuer erheben.</i></div><button class="speak" data-say="Auf gezuckerte Getränke soll eine Steuer erhoben werden.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/das-angebot.webp" alt="Ein Supermarktregal mit Produkten und einem Angebotsschild" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Kennzeichnung</div><div class="bex">„Eine klare Kennzeichnung wäre der mildere Weg.“</div><div class="bti">💡 Das häufigste Kompromissangebot in dieser Debatte: <b>kennzeichnen statt verbieten</b>. Wer nicht verbieten will, aber auch nicht nichts tun, landet fast immer hier.</div><button class="speak" data-say="Eine klare Kennzeichnung wäre der mildere Weg.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-schule.webp" alt="Ein Klassenzimmer mit Kindern und einer Lehrerin" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Vorschrift</div><div class="bex">„Für Kitas gibt es bereits Vorschriften.“</div><div class="bti">💡 Unterscheide sauber: <b>die Empfehlung</b> darf man ignorieren, <b>die Vorschrift</b> nicht. In der Debatte wird das ständig durcheinandergebracht — und du kannst es klarstellen.</div><button class="speak" data-say="Für Kitas gibt es bereits Vorschriften.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/amanda-denk.webp" alt="Amanda überlegt mit der Hand am Kinn" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Eigenverantwortung</div><div class="bex">„Ich bin für Eigenverantwortung statt Verbote.“</div><div class="bti">💡 Das stärkste Wort der Contra-Seite. Die übliche Gegenfrage darauf: <b>Gilt das auch für Achtjährige?</b> Darauf solltest du eine Antwort haben.</div><button class="speak" data-say="Ich bin für Eigenverantwortung statt Verbote.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-sozial.webp" alt="Eine Beraterin sitzt mit einer Mutter und ihrem Kind am Tisch" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Gerechtigkeit</div><div class="bex">„Es geht um Gerechtigkeit: Gutes Essen darf kein Luxus sein.“</div><div class="bti">💡 Das stärkste Wort der Pro-Seite. Häufig als Adjektiv im Satz: <b>sozial ungerecht</b>. Und die Gegenfrage: <i>Trifft eine Steuer nicht gerade die, die wenig haben?</i></div><button class="speak" data-say="Es geht um Gerechtigkeit: Gutes Essen darf kein Luxus sein.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-supermarkt.webp" alt="Eine Frau schiebt einen Einkaufswagen durch einen Supermarkt" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Auswirkung</div><div class="bex">„Welche Auswirkung hätte das auf den Preis?“</div><div class="bti">💡 Die nüchternste Frage der ganzen Debatte — und die beste. <b>sich auswirken auf</b> + Akkusativ: <i>Das wirkt sich auf den Preis aus.</i></div><button class="speak" data-say="Welche Auswirkung hätte das auf den Preis?">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-heikel.webp" alt="Zwei Personen in einem ernsten Gespräch" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Bevormundung</div><div class="bex">„Das empfinde ich als Bevormundung.“</div><div class="bti">💡 Ein hartes Wort — es unterstellt der Gegenseite Überheblichkeit. Setz es bewusst ein, nicht beiläufig. Das Verb: <b>bevormunden</b>.</div><button class="speak" data-say="Das empfinde ich als Bevormundung.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-meinung.webp" alt="Vier Menschen sitzen im Café zusammen und diskutieren" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Kompromiss</div><div class="bex">„Ein Kompromiss wäre: kennzeichnen statt besteuern.“</div><div class="bti">💡 Das Verb ist unregelmäßig gebaut: <b>einen Kompromiss schließen</b> oder <b>eingehen</b> — nie <i>machen</i>. Und: <i>sich auf einen Kompromiss einigen</i>.</div><button class="speak" data-say="Ein Kompromiss wäre: kennzeichnen statt besteuern.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/a-zeigen.webp" alt="Amanda hebt den Zeigefinger" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Einwand</div><div class="bex">„Ein berechtigter Einwand — darauf habe ich keine gute Antwort.“</div><div class="bti">💡 <b>einen Einwand haben</b> oder <b>erheben</b>. Und der eleganteste Satz einer Debatte: <i>Das ist ein berechtigter Einwand.</i> Damit zeigst du Größe, ohne die Position aufzugeben.</div><button class="speak" data-say="Ein berechtigter Einwand — darauf habe ich keine gute Antwort.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-unterlagen.webp" alt="Jemand blättert am Tisch einen Stapel Unterlagen durch" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Studie</div><div class="bex">„Es gibt Studien für beide Seiten.“</div><div class="bti">💡 Vorsicht im Streit: <i>Es gibt Studien, die …</i> beweist wenig, wenn du sie nicht kennst. Besser ehrlich: <b>„Ich habe die Zahl nicht im Kopf, aber der Punkt ist …“</b></div><button class="speak" data-say="Es gibt Studien für beide Seiten.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-kasse.webp" alt="Eine Kundin bezahlt an einer Kasse" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Preis</div><div class="bex">„Über den Preis kann man Verhalten steuern.“</div><div class="bti">💡 Das eigentliche Werkzeug hinter einer Zuckersteuer. Nützliche Wendungen: <b>im Preis steigen</b>, <b>preislich attraktiv</b>, <b>die Preise anheben</b>.</div><button class="speak" data-say="Über den Preis kann man Verhalten steuern.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/amanda-super.webp" alt="Amanda zeigt den Daumen nach oben" loading="lazy"><div class="bb"><div class="bw">einlenken</div><div class="bex">„Da lenke ich ein — das Argument zieht.“</div><div class="bti">💡 Trennbar: <i>Ich lenke ein.</i> Einlenken ist keine Niederlage, sondern das Zeichen dafür, dass man zugehört hat. In deutschen Diskussionen macht es dich glaubwürdiger, nicht schwächer.</div><button class="speak" data-say="Da lenke ich ein — das Argument zieht.">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel „Wert dahinter“:</strong> Einer sagt ein Argument aus der Debatte. Die Runde ruft, welcher Wert dahintersteckt — <i>Freiheit, Verantwortung, Gerechtigkeit, Geld, Zeit.</i> Wer zwei Werte in einem Argument findet, hat gewonnen.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Angreifen, einordnen, <span class="hl">einlenken — was wirkt wann?</span></h2>
-<p class="ssub">Es gibt drei Wege, auf ein Argument zu reagieren. Alle drei sind legitim — aber sie wirken völlig verschieden, und die meisten benutzen nur einen davon.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">⚔️</span><div class="gmw">widerlegen</div><div class="gmb">das Argument selbst angreifen</div><div class="gmx">Das gilt nur, wenn man die Portionsgröße gleich lässt.</div></div>
-<div class="gk blau"><span class="gem2">🧭</span><div class="gmw">einordnen</div><div class="gmb">es stehen lassen, aber kleiner machen</div><div class="gmx">Das stimmt — nur betrifft es einen sehr kleinen Teil.</div></div>
-<div class="gk ja"><span class="gem2">🤝</span><div class="gmw">einlenken</div><div class="gmb">es anerkennen und die eigene Position nachschärfen</div><div class="gmx">Berechtigter Einwand. Dann müsste man es auf Kinderprodukte begrenzen.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Wirkt</div><div class="gsatz">Das ist ein berechtigter Einwand. Dann müsste man es auf Getränke begrenzen.</div><div class="bsp"><span class="wer">Warum das stark ist</span>Du erkennst den Punkt an und <b>schärfst deine Position nach</b>, statt sie aufzugeben. Danach ist deine Position besser als vorher — und schwerer anzugreifen.</div></div>
-<div class="gk no"><div class="gkl">❌ Wirkt nicht</div><div class="gsatz">Das ist doch Unsinn, das sagen nur die Konzerne.</div><div class="bsp"><span class="wer">Das Problem</span>Das greift nicht das Argument an, sondern den <b>Absender</b>. In einer Debatte gilt das als schwach — und der Zuhörer merkt, dass du keine Antwort hast.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Sauber</div><div class="gsatz">Ich bin dafür, allerdings nur bei Produkten, die sich an Kinder richten.</div><div class="bsp"><span class="wer">Warum das trägt</span>Eine Position <b>mit Grenze</b>. Sie ist überprüfbar, angreifbar an einer klaren Stelle — und lässt Raum für einen Kompromiss.</div></div>
-<div class="gk no"><div class="gkl">❌ Unsauber</div><div class="gsatz">Ich bin einfach dafür, das ist doch klar.</div><div class="bsp"><span class="wer">Das Problem</span><i>Das ist doch klar</i> ist kein Grund. Wenn es klar wäre, gäbe es die Debatte nicht — und der Satz unterstellt dem anderen, dass er nicht mitdenkt.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Ehrlich</div><div class="gsatz">Die genaue Zahl habe ich nicht im Kopf, aber der Punkt bleibt derselbe.</div><div class="bsp"><span class="wer">Warum das klug ist</span>Wer eine Unsicherheit selbst zugibt, wirkt <b>glaubwürdiger</b>, nicht schwächer. Und niemand kann dich später an einer falschen Zahl aufhängen.</div></div>
-<div class="gk no"><div class="gkl">❌ Riskant</div><div class="gsatz">Studien zeigen eindeutig, dass es funktioniert.</div><div class="bsp"><span class="wer">Das Problem</span><i>Studien zeigen</i> ohne konkrete Angabe ist eine Behauptung im Mantel eines Belegs. Kommt eine Rückfrage, bricht das ganze Argument zusammen.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Was mache ich, wenn ich kein Argument mehr habe?</button>
-<div class="inhalt">
-<p>Das passiert jedem und ist kein Grund, laut zu werden. Vier Auswege:</p>
-<ul>
-<li><b>Einlenken:</b> <i>Das ist ein berechtigter Einwand, darauf habe ich keine gute Antwort.</i> Das ist erlaubt und macht dich stärker.</li>
-<li><b>Die Position begrenzen:</b> <i>Dann würde ich es zumindest auf … beschränken.</i> Du gibst nicht auf, du wirst genauer.</li>
-<li><b>Den Wert benennen:</b> <i>Für mich ist das am Ende eine Frage von Gerechtigkeit.</i> Über Werte kann man streiten, ohne zu verlieren.</li>
-<li><b>Zurückfragen:</b> <i>Wie würden Sie es denn lösen?</i> Eine ehrliche Frage, keine Ausweichbewegung — und du bekommst Zeit.</li>
-</ul>
-<p style="margin-top:.5rem;">Und der Satz, der eine festgefahrene Debatte am zuverlässigsten löst: <b>„Ich glaube, wir reden gerade über zwei verschiedene Dinge.“</b></p>
-</div>
-</div>
-<div class="tip">🎯 <strong>Zu zweit, eine Minute:</strong> Einer bringt ein Argument, der andere reagiert dreimal hintereinander — einmal widerlegend, einmal einordnend, einmal einlenkend. Danach sagt ihr euch, welche Reaktion am stärksten gewirkt hat.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -837,37 +845,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei Debatten <span class="hl">zu zweit</span></h2>
-<p class="ssub">Jeder bekommt eine Seite zugeteilt — auch wenn er sie nicht teilt. Danach tauschen. Regel für alle drei: Bevor du widersprichst, sagst du einen Satz, der dem anderen recht gibt.</p>
-<div class="rmcard">
-<b>1 · Zuckersteuer: dafür oder dagegen</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A vertritt die Steuer, B ist dagegen. Beide müssen mindestens einmal einlenken und die eigene Position dabei nachschärfen statt aufgeben. Drei Minuten, dann Rollentausch.</p>
-<div class="nur-a2"><span class="rm">Ich bin dafür, weil …</span><span class="rm">Das trifft aber die, die wenig haben</span><span class="rm">Zum Beispiel bei Getränken</span><span class="rm">Da haben Sie recht</span></div>
-<div class="nur-b1"><span class="rm">Grundsätzlich dafür, sofern die Einnahmen zurückfließen</span><span class="rm">Das gilt allerdings nur, wenn …</span><span class="rm">Das ist ein berechtigter Einwand</span><span class="rm">Im Kern ist das eine Frage von Gerechtigkeit</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide haben Position, Grund, Beispiel und Einschränkung gebracht. Jeder hat mindestens einmal eingelenkt — und niemand hat den anderen für seine Meinung persönlich angegriffen.</div>
-</div>
-<div class="rmcard">
-<b>2 · Der Elternabend</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A ist Elternteil und will Regeln für die Mensa, B findet, das sei Sache der Familien. Ihr müsst am Ende einen Kompromiss formulieren, mit dem beide leben können — und ihn in einem Satz sagen.</p>
-<div class="nur-a2"><span class="rm">Wir entscheiden nur, was angeboten wird</span><span class="rm">Am Ende essen sie gar nichts</span><span class="rm">Fangen wir mit den Getränken an</span><span class="rm">Damit könnte ich leben</span></div>
-<div class="nur-b1"><span class="rm">Da wird zweierlei vermischt: anbieten und vorschreiben</span><span class="rm">Unter der Voraussetzung, dass …</span><span class="rm">Ich würde es zumindest auf … begrenzen</span><span class="rm">Einigen wir uns darauf, dass …</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Am Ende steht ein Kompromiss in genau einem Satz, den beide wiederholen können. Der Unterschied zwischen <i>anbieten</i> und <i>vorschreiben</i> wurde mindestens einmal ausgesprochen.</div>
-</div>
-<div class="rmcard">
-<b>3 · Die Position, die du nicht teilst</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Jeder vertritt das Gegenteil dessen, was er wirklich denkt — und zwar so gut wie möglich. Nach zwei Minuten sagt ihr euch gegenseitig, welches Argument der Gegenseite euch am meisten zu denken gegeben hat.</p>
-<div class="nur-a2"><span class="rm">Ich bin dafür, weil …</span><span class="rm">Ich bin dagegen, weil …</span><span class="rm">Zum Beispiel …</span><span class="rm">Das habe ich so nicht gesehen</span></div>
-<div class="nur-b1"><span class="rm">Umgekehrt ließe sich sagen, dass …</span><span class="rm">Das stärkste Argument dagegen ist wahrscheinlich …</span><span class="rm">Ich gebe zu, dass mich das ins Grübeln bringt</span><span class="rm">In gewisser Weise haben beide Seiten recht</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide haben die fremde Position ernsthaft vertreten, nicht karikiert. Und beide konnten am Ende ein Argument der Gegenseite nennen, das sie wirklich überzeugt hat.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Jeder nennt reihum ein Argument aus der Debatte. Der Nachbar antwortet mit einem Satz, der zuerst zugibt und dann bleibt — <i>zwar … aber</i>, <i>trotzdem</i> oder <i>obwohl</i>. Wer sofort widerspricht, ohne zuzugeben, gibt weiter.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -900,14 +885,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde müssen <u>alle vier Bausteine</u> vorkommen und mindestens einmal <u>zwar … aber</u>, <u>trotzdem</u> oder <u>obwohl</u>. Der Partner hakt die Bausteine auf den Fingern ab.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Jeder nennt reihum ein Argument aus der Debatte. Der Nachbar antwortet mit einem Satz, der zuerst zugibt und dann bleibt — <i>zwar … aber</i>, <i>trotzdem</i> oder <i>obwohl</i>. Wer sofort widerspricht, ohne zuzugeben, gibt weiter.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Wo endet die Verantwortung des Einzelnen und wo beginnt die des Staates?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Wirkt eine Steuer anders als eine Kennzeichnung — und warum?</li><li>Was wäre für dich ein Zeichen dafür, dass eine solche Maßnahme funktioniert hat?</li><li>Welcher Wert wiegt für dich schwerer — Freiheit oder Gerechtigkeit?</li><li>Ist es ein Widerspruch, für Kennzeichnung und gegen Verbote zu sein?</li><li>Wann ist ein Verbot die ehrlichere Lösung als ein Appell?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei Debatten <span class="hl">zu zweit</span></h2>
+<p class="ssub">Jeder bekommt eine Seite zugeteilt — auch wenn er sie nicht teilt. Danach tauschen. Regel für alle drei: Bevor du widersprichst, sagst du einen Satz, der dem anderen recht gibt.</p>
+<div class="rmcard">
+<b>1 · Zuckersteuer: dafür oder dagegen</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A vertritt die Steuer, B ist dagegen. Beide müssen mindestens einmal einlenken und die eigene Position dabei nachschärfen statt aufgeben. Drei Minuten, dann Rollentausch.</p>
+<div class="nur-a2"><span class="rm">Ich bin dafür, weil …</span><span class="rm">Das trifft aber die, die wenig haben</span><span class="rm">Zum Beispiel bei Getränken</span><span class="rm">Da haben Sie recht</span></div>
+<div class="nur-b1"><span class="rm">Grundsätzlich dafür, sofern die Einnahmen zurückfließen</span><span class="rm">Das gilt allerdings nur, wenn …</span><span class="rm">Das ist ein berechtigter Einwand</span><span class="rm">Im Kern ist das eine Frage von Gerechtigkeit</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide haben Position, Grund, Beispiel und Einschränkung gebracht. Jeder hat mindestens einmal eingelenkt — und niemand hat den anderen für seine Meinung persönlich angegriffen.</div>
+</div>
+<div class="rmcard">
+<b>2 · Der Elternabend</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A ist Elternteil und will Regeln für die Mensa, B findet, das sei Sache der Familien. Ihr müsst am Ende einen Kompromiss formulieren, mit dem beide leben können — und ihn in einem Satz sagen.</p>
+<div class="nur-a2"><span class="rm">Wir entscheiden nur, was angeboten wird</span><span class="rm">Am Ende essen sie gar nichts</span><span class="rm">Fangen wir mit den Getränken an</span><span class="rm">Damit könnte ich leben</span></div>
+<div class="nur-b1"><span class="rm">Da wird zweierlei vermischt: anbieten und vorschreiben</span><span class="rm">Unter der Voraussetzung, dass …</span><span class="rm">Ich würde es zumindest auf … begrenzen</span><span class="rm">Einigen wir uns darauf, dass …</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Am Ende steht ein Kompromiss in genau einem Satz, den beide wiederholen können. Der Unterschied zwischen <i>anbieten</i> und <i>vorschreiben</i> wurde mindestens einmal ausgesprochen.</div>
+</div>
+<div class="rmcard">
+<b>3 · Die Position, die du nicht teilst</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Jeder vertritt das Gegenteil dessen, was er wirklich denkt — und zwar so gut wie möglich. Nach zwei Minuten sagt ihr euch gegenseitig, welches Argument der Gegenseite euch am meisten zu denken gegeben hat.</p>
+<div class="nur-a2"><span class="rm">Ich bin dafür, weil …</span><span class="rm">Ich bin dagegen, weil …</span><span class="rm">Zum Beispiel …</span><span class="rm">Das habe ich so nicht gesehen</span></div>
+<div class="nur-b1"><span class="rm">Umgekehrt ließe sich sagen, dass …</span><span class="rm">Das stärkste Argument dagegen ist wahrscheinlich …</span><span class="rm">Ich gebe zu, dass mich das ins Grübeln bringt</span><span class="rm">In gewisser Weise haben beide Seiten recht</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide haben die fremde Position ernsthaft vertreten, nicht karikiert. Und beide konnten am Ende ein Argument der Gegenseite nennen, das sie wirklich überzeugt hat.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -973,6 +992,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Sprachnachricht und den Kompromisssatz bis Sonntagabend. Ich achte darauf, ob deine Einschränkung wirklich eine ist — bei den meisten fehlt genau dieser vierte Baustein, und das ist die Stelle, an der eine Position angreifbar bleibt.</div>
 <div class="tip">🔜 <strong>Nächste Woche, Teil 1:</strong> <u>Haustiere in der Mietwohnung.</u> Hund, Katze, Nachbarn, Vermieter — und am Mittwoch wieder eine Debatte. Dieselben vier Bausteine, nur ein Thema, bei dem es fast alle persönlich betrifft.</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1159,11 +1185,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1220,7 +1253,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1230,7 +1265,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

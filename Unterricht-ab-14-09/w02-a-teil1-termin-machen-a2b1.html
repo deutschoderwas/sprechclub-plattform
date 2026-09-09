@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,99 +627,43 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B1<span class="zusatz"> · mehr</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">⚖️ Zeit sagen</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">„Praxis Dr. Weber, <span class="hl">guten Tag.“</span></h2>
-<p class="ssub">Schaut euch das Bild an. Du willst einen Termin. Was sagst du in den ersten zehn Sekunden?</p>
-<div class="scene-wrap klein"><img src="../amanda/sz-arzt.webp" alt="Eine Frau sitzt im Sprechzimmer einem Arzt gegenüber"></div>
-<ul class="qlist nur-a2">
-<li>Wo hast du zuletzt einen Termin gemacht — beim Arzt, beim Amt, beim Friseur?</li>
-<li>Machst du Termine lieber am Telefon oder online?</li>
-<li>Was ist am Telefon am schwersten?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Warum braucht man in Deutschland für fast alles einen Termin?</li>
-<li>Was tust du, wenn der nächste freie Termin in drei Monaten ist?</li>
-<li>Wann lohnt es sich, hartnäckig zu bleiben — und wann nicht?</li>
-</ul>
-<div class="tip">🗣️ <strong>Sprecht reihum:</strong> „Zuletzt habe ich einen Termin gemacht bei …“ · „Am Telefon fällt mir schwer …“ · „Ich sage dann immer: …“</div>
-<h2 class="st">Vier Schritte, und <span class="hl">der Termin steht</span></h2>
-<p class="ssub">Melden, Anliegen sagen, Zeit vorschlagen, bestätigen. Immer dieselbe Reihenfolge — beim Arzt, beim Amt, in der Werkstatt.</p>
-<div class="scene-wrap klein"><img src="../vok-bild/der-termin.webp" alt="Ein Kalender und ein Stift auf einem Tisch"></div>
-<ul class="qlist">
-<li>Was sagst du, wenn die vorgeschlagene Zeit nicht passt?</li>
-<li>Wie fragst du nach einem früheren Termin?</li>
-<li>Was wiederholst du am Ende immer?</li>
-</ul>
-<div class="tip teal">👀 <strong>Zu zweit, dreißig Sekunden:</strong> Einer sagt nur <u>„Praxis Weber, guten Tag.“</u> — der andere bringt Name, Anliegen und Wunschzeit in einem Atemzug. Dann tauschen.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
 </section>
 
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Wörter für <span class="hl">die Terminvergabe</span></h2>
-<p class="ssub">Sagt jedes Wort laut — und gleich den Beispielsatz hinterher. Erst dann bleibt es hängen.</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../vok-bild/der-termin.webp" alt="Ein Kalender und ein Stift auf einem Tisch" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Termin</div><div class="bex">„Ich hätte gern einen Termin bei Dr. Weber.“</div><div class="bti">💡 <b>einen Termin machen</b>, <b>ausmachen</b>, <b>vereinbaren</b> — alle drei gehen. Und später: <b>verschieben</b> oder <b>absagen</b>.</div><button class="speak" data-say="Ich hätte gern einen Termin bei Dr. Weber.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/anrufen.webp" alt="Ein Mann telefoniert auf dem Sofa" loading="lazy"><div class="bb"><div class="bw">anrufen</div><div class="bex">„Ich rufe wegen eines Termins an.“</div><div class="bti">💡 Trennbar: Ich <b>rufe</b> … <b>an</b>. Und die feste Wendung: <b>anrufen wegen</b> + Genitiv.</div><button class="speak" data-say="Ich rufe wegen eines Termins an.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-arzt.webp" alt="Eine Patientin im Sprechzimmer" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Sprechstunde</div><div class="bex">„Die Sprechstunde ist von acht bis zwölf.“</div><div class="bti">💡 Beim Arzt und in der Uni. Ohne Termin heißt es <b>offene Sprechstunde</b> — dann wartet man.</div><button class="speak" data-say="Die Sprechstunde ist von acht bis zwölf.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-vormittag.webp" alt="Ein gedeckter Tisch am hellen Vormittag" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Vormittag</div><div class="bex">„Am Vormittag hätte ich Zeit.“</div><div class="bti">💡 <b>am Vormittag</b>, <b>am Nachmittag</b>, <b>am Abend</b> — aber: <b>in der Nacht</b>. Das eine Wort tanzt aus der Reihe.</div><button class="speak" data-say="Am Vormittag hätte ich Zeit.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-nachmittag.webp" alt="Ein Wohnzimmer im Nachmittagslicht" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Nachmittag</div><div class="bex">„Nachmittags kann ich leider nicht.“</div><div class="bti">💡 Ohne Artikel und mit -s wird daraus die Gewohnheit: <b>nachmittags</b> heißt „jeden Nachmittag“.</div><button class="speak" data-say="Nachmittags kann ich leider nicht.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-uhrzeit.webp" alt="Eine Wanduhr an einer hellen Wand" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Uhrzeit</div><div class="bex">„Welche Uhrzeit würde Ihnen passen?“</div><div class="bti">💡 Offiziell sagt man <b>vierzehn Uhr dreißig</b>, im Alltag <b>halb drei</b>. Beim Termin lieber die offizielle Form.</div><button class="speak" data-say="Welche Uhrzeit würde Ihnen passen?">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/viertel-nach-neun.webp" alt="Eine Uhr zeigt Viertel nach neun" loading="lazy"><div class="bb"><div class="bw">frei</div><div class="bex">„Haben Sie am Dienstag noch etwas frei?“</div><div class="bti">💡 <b>ein freier Termin</b>, <b>etwas frei haben</b>. Und die Gegenfrage lautet: <b>Ist da noch was frei?</b></div><button class="speak" data-say="Haben Sie am Dienstag noch etwas frei?">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="passen">🤝</div><div class="bb"><div class="bw">passen</div><div class="bex">„Donnerstag um zehn würde mir gut passen.“</div><div class="bti">💡 Immer mit Dativ: <b>Das passt mir</b>. Und die Standardfrage am Telefon: <b>Wann würde es Ihnen passen?</b></div><button class="speak" data-say="Donnerstag um zehn würde mir gut passen.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="dringend">🚨</div><div class="bb"><div class="bw">dringend</div><div class="bex">„Es ist dringend, ich habe seit drei Tagen Schmerzen.“</div><div class="bti">💡 Das Wort, das einen früheren Termin möglich macht. Aber nur benutzen, wenn es stimmt.</div><button class="speak" data-say="Es ist dringend, ich habe seit drei Tagen Schmerzen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-unterlagen.webp" alt="Hände blättern durch Papiere" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Versichertenkarte</div><div class="bex">„Bringen Sie bitte Ihre Versichertenkarte mit.“</div><div class="bti">💡 Auch <b>die Gesundheitskarte</b>. Ohne sie zahlst du beim Arzt erst mal selbst.</div><button class="speak" data-say="Bringen Sie bitte Ihre Versichertenkarte mit.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="bestätigen">✅</div><div class="bb"><div class="bw">bestätigen</div><div class="bex">„Ich bestätige: Donnerstag, der 24., um zehn Uhr.“</div><div class="bti">💡 Am Telefon Gold wert: Wiederhol Tag, Datum und Uhrzeit. So fällt jeder Hörfehler sofort auf.</div><button class="speak" data-say="Ich bestätige: Donnerstag, der vierundzwanzigste, um zehn Uhr.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-anrufbeantworter.webp" alt="Ein Telefon mit Anrufbeantworter auf einer Kommode" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Rückruf</div><div class="bex">„Können Sie mir einen Rückruf einrichten?“</div><div class="bti">💡 <b>um einen Rückruf bitten</b>. Dazu gehören immer: Name, Nummer und wann du erreichbar bist.</div><button class="speak" data-say="Können Sie mir einen Rückruf einrichten?">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel:</strong> Verdeckt die Wörter. Wer eine Karte trifft, baut damit einen Satz, den man <u>am Telefon</u> wirklich sagt.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Drei Arten, <span class="hl">eine Zeit zu nennen</span></h2>
-<p class="ssub">Erst die drei Formen, mit denen man einen Zeitpunkt angibt. Darunter drei Sätze richtig und falsch nebeneinander.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">🎯</span><div class="gmw">Genau</div><div class="gmb">Ein fester Zeitpunkt — mit um.</div><div class="gmx">um zehn Uhr · um halb drei · um Viertel nach neun</div></div>
-<div class="gk blau"><span class="gem2">🌤️</span><div class="gmw">Ungefähr</div><div class="gmb">Ein Zeitraum — mit gegen, ab, zwischen.</div><div class="gmx">gegen zehn · ab neun · zwischen zwei und drei</div></div>
-<div class="gk ja"><span class="gem2">📅</span><div class="gmw">Der Tag</div><div class="gmb">Wochentage und Tageszeiten — mit am.</div><div class="gmx">am Montag · am Vormittag · am 24. September</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Am Montag um zehn Uhr.</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>am</b> für den Tag, <b>um</b> für die Uhrzeit. Beide zusammen, in dieser Reihenfolge.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Um Montag am zehn Uhr.</div><div class="bsp"><span class="wer">Das Problem</span>Die beiden sind vertauscht. Merksatz: <b>am Tag, um die Uhr.</b></div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Donnerstag um zehn würde mir gut passen.</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>passen</b> steht mit Dativ: <b>mir</b>, <b>Ihnen</b>, <b>uns</b>. So fragt jede Praxis am Telefon.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Donnerstag um zehn würde mich gut passen.</div><div class="bsp"><span class="wer">Das Problem</span><i>mich</i> ist Akkusativ. Bei passen, gefallen und gehören steht immer der Dativ.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Im Oktober habe ich mehr Zeit.</div><div class="bsp"><span class="wer">Warum das stimmt</span>Bei Monaten und Jahreszeiten steht <b>im</b>: im Oktober, im Sommer, im nächsten Jahr.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Am Oktober habe ich mehr Zeit.</div><div class="bsp"><span class="wer">Das Problem</span><b>am</b> gehört zu Tagen, <b>im</b> zu Monaten. Und die Uhrzeit bekommt <b>um</b>.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Und wenn der nächste Termin erst in drei Monaten ist?</button>
-<div class="inhalt">
-<p>Drei Sätze, die erstaunlich oft funktionieren:</p>
-<ul>
-<li>„Gibt es eine <b>Warteliste</b> für kurzfristige Absagen?“</li>
-<li>„Ich bin <b>zeitlich flexibel</b> — auch kurzfristig.“</li>
-<li>„Rufen Sie mich <b>gern an</b>, wenn jemand absagt.“</li>
-</ul>
-<p style="margin-top:.5rem;">In fast jeder Praxis sagt täglich jemand ab. Wer auf der Liste steht und ans Telefon geht, ist oft in ein paar Tagen dran.</p>
-</div>
-</div>
-<div class="tip">⚖️ <strong>Kurzübung:</strong> Jeder nennt drei Zeiten für einen Termin — eine <u>genaue</u>, eine <u>ungefähre</u> und einen ganzen <u>Tag</u>. Die Gruppe hört, ob am, um oder im passt.</div>
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Wo hast du zuletzt einen Termin gemacht — beim Arzt, beim Amt, beim Friseur?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Machst du Termine lieber am Telefon oder online?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -813,37 +827,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei <span class="hl">Anrufe</span></h2>
-<p class="ssub">Zu zweit, Rücken an Rücken. Einer nimmt ab, einer will einen Termin. Zwei Minuten, dann tauschen.</p>
-<div class="rmcard">
-<b>1 · Der ganz normale Termin</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A ruft beim Hausarzt an und braucht einen Kontrolltermin. B schlägt drei Zeiten vor, zwei passen nicht.</p>
-<div class="nur-a2"><span class="rm">Ich hätte gern einen Termin</span><span class="rm">Am Vormittag wäre gut</span><span class="rm">Da kann ich leider nicht</span><span class="rm">Also Donnerstag um zehn</span></div>
-<div class="nur-b1"><span class="rm">Ich bin zeitlich recht flexibel</span><span class="rm">Vormittags ginge es besser</span><span class="rm">Darf ich das kurz wiederholen?</span><span class="rm">Bekomme ich eine Erinnerung?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A nennt eine Tageszeit statt einer festen Stunde, lehnt zweimal freundlich ab und wiederholt am Ende Tag, Datum und Uhrzeit.</div>
-</div>
-<div class="rmcard">
-<b>2 · Es ist dringend</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat starke Schmerzen, der nächste Termin wäre in acht Wochen. B ist freundlich, aber ausgebucht.</p>
-<div class="nur-a2"><span class="rm">Es ist dringend</span><span class="rm">Ich habe seit drei Tagen Schmerzen</span><span class="rm">Gibt es eine andere Möglichkeit?</span><span class="rm">Das mache ich</span></div>
-<div class="nur-b1"><span class="rm">Es wäre eher dringend</span><span class="rm">Gibt es eine Warteliste?</span><span class="rm">Auch kurzfristig, wenn jemand absagt</span><span class="rm">Rufen Sie mich gern an</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A wird nicht laut, sondern konkret: seit wann, wie stark — und fragt nach Warteliste und Schmerzsprechstunde.</div>
-</div>
-<div class="rmcard">
-<b>3 · Auf den Anrufbeantworter sprechen</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Niemand geht ran. A spricht eine Nachricht, B hört zu und sagt danach, was gefehlt hat.</p>
-<div class="nur-a2"><span class="rm">Hier spricht …</span><span class="rm">Ich rufe an wegen …</span><span class="rm">Sie erreichen mich unter …</span><span class="rm">Vielen Dank</span></div>
-<div class="nur-b1"><span class="rm">Ich rufe im Auftrag von … an</span><span class="rm">Am liebsten vormittags</span><span class="rm">Ich wiederhole die Nummer</span><span class="rm">Ich bin ab 14 Uhr erreichbar</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Name, Grund, Nummer zweimal, Erreichbarkeit. Fehlt eins davon, ruft niemand zurück — genau das prüft B.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Lest die vier Sätze noch einmal am Stück vor — <u>melden, Anliegen, Zeit, bestätigen</u>. Erst wenn es flüssig klingt, sitzt es.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -876,14 +867,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde müssen ein <u>am</u>, ein <u>um</u> und eine <u>Bestätigung</u> vorkommen. Die Gruppe hört mit.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Lest die vier Sätze noch einmal am Stück vor — <u>melden, Anliegen, Zeit, bestätigen</u>. Erst wenn es flüssig klingt, sitzt es.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Warum braucht man in Deutschland für fast alles einen Termin?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Was tust du, wenn der nächste freie Termin in drei Monaten ist?</li><li>Wann lohnt es sich, hartnäckig zu bleiben — und wann nicht?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei <span class="hl">Anrufe</span></h2>
+<p class="ssub">Zu zweit, Rücken an Rücken. Einer nimmt ab, einer will einen Termin. Zwei Minuten, dann tauschen.</p>
+<div class="rmcard">
+<b>1 · Der ganz normale Termin</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A ruft beim Hausarzt an und braucht einen Kontrolltermin. B schlägt drei Zeiten vor, zwei passen nicht.</p>
+<div class="nur-a2"><span class="rm">Ich hätte gern einen Termin</span><span class="rm">Am Vormittag wäre gut</span><span class="rm">Da kann ich leider nicht</span><span class="rm">Also Donnerstag um zehn</span></div>
+<div class="nur-b1"><span class="rm">Ich bin zeitlich recht flexibel</span><span class="rm">Vormittags ginge es besser</span><span class="rm">Darf ich das kurz wiederholen?</span><span class="rm">Bekomme ich eine Erinnerung?</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A nennt eine Tageszeit statt einer festen Stunde, lehnt zweimal freundlich ab und wiederholt am Ende Tag, Datum und Uhrzeit.</div>
+</div>
+<div class="rmcard">
+<b>2 · Es ist dringend</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat starke Schmerzen, der nächste Termin wäre in acht Wochen. B ist freundlich, aber ausgebucht.</p>
+<div class="nur-a2"><span class="rm">Es ist dringend</span><span class="rm">Ich habe seit drei Tagen Schmerzen</span><span class="rm">Gibt es eine andere Möglichkeit?</span><span class="rm">Das mache ich</span></div>
+<div class="nur-b1"><span class="rm">Es wäre eher dringend</span><span class="rm">Gibt es eine Warteliste?</span><span class="rm">Auch kurzfristig, wenn jemand absagt</span><span class="rm">Rufen Sie mich gern an</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A wird nicht laut, sondern konkret: seit wann, wie stark — und fragt nach Warteliste und Schmerzsprechstunde.</div>
+</div>
+<div class="rmcard">
+<b>3 · Auf den Anrufbeantworter sprechen</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Niemand geht ran. A spricht eine Nachricht, B hört zu und sagt danach, was gefehlt hat.</p>
+<div class="nur-a2"><span class="rm">Hier spricht …</span><span class="rm">Ich rufe an wegen …</span><span class="rm">Sie erreichen mich unter …</span><span class="rm">Vielen Dank</span></div>
+<div class="nur-b1"><span class="rm">Ich rufe im Auftrag von … an</span><span class="rm">Am liebsten vormittags</span><span class="rm">Ich wiederhole die Nummer</span><span class="rm">Ich bin ab 14 Uhr erreichbar</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Name, Grund, Nummer zweimal, Erreichbarkeit. Fehlt eins davon, ruft niemand zurück — genau das prüft B.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -948,6 +973,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Sprachnachricht bis <u>Mittwoch 8 Uhr</u> in die Gruppe. Wir hören zwei davon gemeinsam an — freiwillig, versteht sich.</div>
 <div class="tip">🔜 <strong>Am Mittwoch, Teil 2:</strong> <u>Verschieben und absagen, ohne Ärger</u> — was sagst du, wenn du den Termin doch nicht schaffst?</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1134,11 +1166,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1195,7 +1234,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1205,7 +1246,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

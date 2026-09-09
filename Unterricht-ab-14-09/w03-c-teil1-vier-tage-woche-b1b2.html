@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,103 +627,43 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B2<span class="zusatz"> · feiner</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">⚖️ Drei Modelle</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">Ein Tag weniger, <span class="hl">gleiches Geld</span></h2>
-<p class="ssub">In mehreren Ländern wurde es ausprobiert: vier Arbeitstage statt fünf, bei vollem Lohn. Die Ergebnisse waren gut — aber fast nur in Büros. In Pflege, Produktion und Handwerk sieht die Rechnung anders aus.</p>
-<div class="scene-wrap klein"><img src="../amanda/sz-buero.webp" alt="Zwei Kolleginnen am Schreibtisch mit Laptop"></div>
-<ul class="qlist nur-a2">
-<li>Würdest du lieber vier Tage arbeiten? Was wäre der Haken?</li>
-<li>Wie viele Stunden arbeitest du in der Woche?</li>
-<li>Was würdest du mit dem freien Tag machen?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Funktioniert das in jedem Beruf gleich gut — oder nur in manchen?</li>
-<li>Wäre weniger Zeit oder mehr Geld für dich wichtiger?</li>
-<li>Wer trägt am Ende die Kosten, wenn alle einen Tag weniger arbeiten?</li>
-</ul>
-<div class="tip teal">📊 <strong>Drei Zahlen für heute:</strong> Eine normale Vollzeitstelle in Deutschland liegt bei <b>38 bis 40 Stunden</b>. Bei der Vier-Tage-Woche sind es je nach Modell <b>32 bis 36</b>. Und in Umfragen sagen regelmäßig <b>über 70 Prozent</b>, sie fänden das gut — solange der Lohn gleich bleibt.</div>
-<h2 class="st">Drei Modelle, <span class="hl">die alle so heißen</span></h2>
-<p class="ssub">Wenn zwei über die Vier-Tage-Woche streiten, meinen sie oft nicht dasselbe. <b>Weniger Stunden bei gleichem Lohn</b> ist etwas anderes als <b>gleiche Stunden auf vier Tage verteilt</b> — und wieder etwas anderes als <b>weniger Stunden, weniger Lohn</b>.</p>
-<div class="scene-wrap klein"><img src="../amanda/a-uhr.webp" alt="Amanda zeigt auf ihre Armbanduhr"></div>
-<ul class="qlist nur-a2">
-<li>Welches der drei Modelle wäre für dich das beste?</li>
-<li>Kennst du jemanden, der schon so arbeitet?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Warum reden Menschen aneinander vorbei, wenn sie das Modell nicht nennen?</li>
-<li>Welches Modell wäre für deinen Beruf realistisch?</li>
-</ul>
-<div class="tip">💡 <strong>Für die Debatte am Mittwoch:</strong> Sag immer dazu, <u>welches Modell</u> du meinst. Ein Argument gegen das eine ist oft gar kein Argument gegen das andere — und genau daran scheitern die meisten Diskussionen.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
 </section>
 
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Wörter für <span class="hl">die Arbeitswoche</span></h2>
-<p class="ssub">Sagt jedes Wort laut — und gleich den Beispielsatz hinterher. Diese Wörter braucht ihr am Mittwoch in der Debatte.</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard hoch"><img src="../amanda/a-uhr.webp" alt="Amanda zeigt auf ihre Armbanduhr" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Arbeitszeit</div><div class="bex">„Meine Arbeitszeit liegt bei 38 Stunden pro Woche.“</div><div class="bti">💡 Wichtige Nachbarn: <b>die Vollzeit</b> (meist 38–40 Stunden) und <b>die Teilzeit</b> (alles darunter).</div><button class="speak" data-say="Meine Arbeitszeit liegt bei 38 Stunden pro Woche.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-buero.webp" alt="Zwei Kolleginnen am Schreibtisch mit Laptop" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Gehalt</div><div class="bex">„Das Gehalt bleibt gleich, die Stunden werden weniger.“</div><div class="bti">💡 Feiner Unterschied: <b>das Gehalt</b> zahlt man Angestellten monatlich, <b>der Lohn</b> eher nach Stunden im Handwerk und in der Produktion.</div><button class="speak" data-say="Das Gehalt bleibt gleich, die Stunden werden weniger.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-produktion.webp" alt="Eine Arbeiterin an einem Fließband in der Produktion" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Produktivität</div><div class="bex">„In den Versuchen blieb die Produktivität gleich oder stieg sogar.“</div><div class="bti">💡 Das Kernwort der ganzen Debatte. Und die Frage dahinter: <i>Schafft man in vier Tagen wirklich dasselbe wie in fünf?</i></div><button class="speak" data-say="In den Versuchen blieb die Produktivität gleich oder stieg sogar.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="Überstunde">⏱️</div><div class="bb"><div class="bw"><span class="art">die</span> Überstunde</div><div class="bex">„Am Ende macht man die Stunden als Überstunden doch wieder.“</div><div class="bti">💡 Meist im Plural: <b>Überstunden machen</b>, <b>abbauen</b>, <b>bezahlt bekommen</b>. Das häufigste Gegenargument in dieser Debatte.</div><button class="speak" data-say="Am Ende macht man die Stunden als Überstunden doch wieder.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-pflege.webp" alt="Eine Pflegerin begleitet eine ältere Frau mit Rollator" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Schicht</div><div class="bex">„In der Pflege wird in drei Schichten gearbeitet.“</div><div class="bti">💡 <b>Frühschicht</b>, <b>Spätschicht</b>, <b>Nachtschicht</b>. Wo in Schichten gearbeitet wird, muss jede Stunde besetzt sein — deshalb ist die Rechnung dort schwieriger.</div><button class="speak" data-say="In der Pflege wird in drei Schichten gearbeitet.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-bau.webp" alt="Ein Bauarbeiter mit Helm und Wasserwaage" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Fachkräftemangel</div><div class="bex">„Wegen des Fachkräftemangels fehlt in vielen Betrieben das Personal.“</div><div class="bti">💡 Ein Wort, das in Deutschland fast täglich in den Nachrichten vorkommt. Und beide Seiten benutzen es — für entgegengesetzte Schlüsse.</div><button class="speak" data-say="Wegen des Fachkräftemangels fehlt in vielen Betrieben das Personal.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-it.webp" alt="Eine Frau arbeitet am Computer im Homeoffice" loading="lazy"><div class="bb"><div class="bw">flexibel</div><div class="bex">„Ich arbeite flexibel — Hauptsache, die Stunden stimmen am Monatsende.“</div><div class="bti">💡 Das Nomen: <b>die Flexibilität</b>. Und der Klassiker im Stellenangebot: <b>flexible Arbeitszeiten</b>.</div><button class="speak" data-say="Ich arbeite flexibel. Hauptsache, die Stunden stimmen am Monatsende.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="Belastung">🪫</div><div class="bb"><div class="bw"><span class="art">die</span> Belastung</div><div class="bex">„Die Belastung ist in vier Tagen höher als in fünf.“</div><div class="bti">💡 <b>körperliche</b> und <b>psychische Belastung</b>. Und das Verb: <b>belasten</b> — <i>Das belastet mich sehr.</i></div><button class="speak" data-say="Die Belastung ist in vier Tagen höher als in fünf.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-urlaub.webp" alt="Ein Strandkorb am Meer" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Erholung</div><div class="bex">„Ein dritter freier Tag bringt mehr Erholung als zwei.“</div><div class="bti">💡 Das Verb ist reflexiv: <b>sich erholen</b> — <i>Ich habe mich am Wochenende gut erholt.</i></div><button class="speak" data-say="Ein dritter freier Tag bringt mehr Erholung als zwei.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="sich lohnen">💰</div><div class="bb"><div class="bw">sich lohnen</div><div class="bex">„Für kleine Betriebe lohnt sich das oft nicht.“</div><div class="bti">💡 Immer unpersönlich mit <b>es</b> oder mit einer Sache als Subjekt: <i>Das lohnt sich.</i> Nie: „Ich lohne mich.“</div><button class="speak" data-say="Für kleine Betriebe lohnt sich das oft nicht.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-handel.webp" alt="Eine Kundin und ein Verkäufer stehen in einem Laden an der Theke" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Teilzeit</div><div class="bex">„Sie arbeitet Teilzeit, dreißig Stunden die Woche.“</div><div class="bti">💡 Ohne Artikel als Wendung: <b>Teilzeit arbeiten</b>, <b>in Teilzeit gehen</b>. Und das Gegenteil ist <b>Vollzeit</b>.</div><button class="speak" data-say="Sie arbeitet Teilzeit, dreißig Stunden die Woche.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-weiterbildung.webp" alt="Zwei Personen arbeiten gemeinsam an einem Laptop" loading="lazy"><div class="bb"><div class="bw">einführen</div><div class="bex">„Der Betrieb hat die Vier-Tage-Woche vor einem Jahr eingeführt.“</div><div class="bti">💡 Trennbar. Das Nomen: <b>die Einführung</b>. Und die Vorstufe: <b>etwas testen</b> oder <b>einen Versuch starten</b>.</div><button class="speak" data-say="Der Betrieb hat die Vier-Tage-Woche vor einem Jahr eingeführt.">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel:</strong> Einer nennt einen Beruf, der andere sagt in zwei Sekunden, ob eine Vier-Tage-Woche dort leicht oder schwer wäre — und ein Wort von der Liste als Begründung.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Drei Modelle, <span class="hl">ein Name</span></h2>
-<p class="ssub">Erst die drei Varianten, über die alle gleichzeitig streiten. Darunter drei Satzpaare, bei denen fast alle danebenliegen.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">🎁</span><div class="gmw">Weniger Stunden, gleicher Lohn</div><div class="gmb">32 statt 40 Stunden, das Gehalt bleibt. Das meistdiskutierte Modell.</div><div class="gmx">Vier Tage arbeiten, fünf Tage bezahlt bekommen.</div></div>
-<div class="gk blau"><span class="gem2">📦</span><div class="gmw">Gleiche Stunden, vier Tage</div><div class="gmb">40 Stunden auf vier Tage verteilt — also zehn Stunden täglich.</div><div class="gmx">Länger arbeiten, dafür einen Tag mehr frei.</div></div>
-<div class="gk ja"><span class="gem2">✂️</span><div class="gmw">Weniger Stunden, weniger Lohn</div><div class="gmb">Im Grunde Teilzeit — nur mit einem neuen Namen.</div><div class="gmx">80 Prozent arbeiten, 80 Prozent verdienen.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Ich arbeite weniger als früher.</div><div class="bsp"><span class="wer">Warum das stimmt</span>Beim <b>Komparativ</b> steht immer <b>als</b>: <i>weniger als, mehr als, besser als</i>. Ohne Ausnahme.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Ich arbeite weniger wie früher.</div><div class="bsp"><span class="wer">Das Problem</span><b>wie</b> gehört zur Gleichheit: <i>genauso viel <b>wie</b> früher</i>. Man hört „weniger wie“ oft, aber es gilt als falsch.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Für kleine Betriebe lohnt sich das nicht.</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>sich lohnen</b> braucht eine Sache als Subjekt — hier <b>das</b>. Die Person kommt mit <b>für</b> dazu.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Kleine Betriebe lohnen sich das nicht.</div><div class="bsp"><span class="wer">Das Problem</span>Menschen und Betriebe lohnen sich nicht — nur Dinge tun das. Merksatz: <b>Etwas lohnt sich für jemanden.</b></div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Die Belastung ist höher als vorher.</div><div class="bsp"><span class="wer">Warum das stimmt</span>Der Komparativ von <b>hoch</b> ist <b>höher</b> — mit Umlaut und ohne das <b>c</b>. Danach folgt <b>als</b>.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Die Belastung ist hocher als vorher.</div><div class="bsp"><span class="wer">Das Problem</span><b>hoch</b> verliert im Komparativ das <b>c</b> und bekommt einen Umlaut: <i>hoch – höher – am höchsten</i>.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Wie baue ich ein Argument mit Zahlen?</button>
-<div class="inhalt">
-<p>Drei Schritte, und dein Beitrag sitzt:</p>
-<ul>
-<li><b>Nenn das Modell:</b> <i>Ich rede von 32 Stunden bei gleichem Lohn.</i></li>
-<li><b>Nenn die Zahl:</b> <i>Das sind acht Stunden weniger als jetzt.</i></li>
-<li><b>Nenn die Folge:</b> <i>Also muss dieselbe Arbeit in weniger Zeit passen.</i></li>
-<li><b>Nenn den Beruf:</b> <i>Im Büro geht das leichter als in der Pflege.</i></li>
-</ul>
-<p style="margin-top:.5rem;">Und immer den Vergleich mitliefern: <b>mehr als</b>, <b>weniger als</b>, <b>genauso viel wie</b>. Ohne Vergleich ist eine Zahl nur eine Zahl.</p>
-</div>
-</div>
-<div class="tip">⚖️ <strong>Kurzübung:</strong> Jeder nennt eines der drei Modelle und sagt in einem Satz, für wen es gut wäre und für wen nicht. Zwei Sätze pro Person, mehr nicht.</div>
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Würdest du lieber vier Tage arbeiten? Was wäre der Haken?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Wie viele Stunden arbeitest du in der Woche?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -814,37 +824,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei <span class="hl">Gespräche über Arbeitszeit</span></h2>
-<p class="ssub">Zu zweit. Jeder Beitrag muss mindestens einen Vergleich enthalten — mit <b>als</b>, <b>wie</b> oder einem Superlativ. Danach tauschen.</p>
-<div class="rmcard">
-<b>1 · Der Vorschlag im Team</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A schlägt die Vier-Tage-Woche vor. B findet die Idee gut, will aber wissen, welche Arbeit dafür wegfällt — und lässt nicht locker.</p>
-<div class="nur-a2"><span class="rm">Ich fände vier Tage besser</span><span class="rm">Wir schaffen dasselbe in weniger Zeit</span><span class="rm">Die Meetings kosten am meisten Zeit</span><span class="rm">Wir könnten es testen</span></div>
-<div class="nur-b1"><span class="rm">Grundsätzlich positiv, vorausgesetzt …</span><span class="rm">Was genau würde wegfallen?</span><span class="rm">Das gilt nur, solange …</span><span class="rm">Lieber Aufgaben streichen als Überstunden</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A nennt das Modell mit Zahlen, benutzt mindestens zwei Vergleiche und sagt konkret, was gestrichen würde.</div>
-</div>
-<div class="rmcard">
-<b>2 · Büro gegen Schichtdienst</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A arbeitet im Büro, B in der Pflege. Beide sind grundsätzlich dafür — aber die Rechnung geht in den zwei Berufen völlig verschieden auf.</p>
-<div class="nur-a2"><span class="rm">Bei uns würde das gehen</span><span class="rm">In der Pflege ist das anders</span><span class="rm">Dann bräuchte man mehr Leute</span><span class="rm">Wer bezahlt das?</span></div>
-<div class="nur-b1"><span class="rm">Jede Schicht muss besetzt sein</span><span class="rm">Das wäre teurer als im Büro</span><span class="rm">Der Fachkräftemangel kommt dazu</span><span class="rm">Für wen lohnt es sich am Ende?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide erkennen an, dass ihr eigenes Argument nur für ihre Branche gilt — und sagen das ausdrücklich.</div>
-</div>
-<div class="rmcard">
-<b>3 · Der kleine Betrieb</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A führt einen Laden mit drei Angestellten und sagt zuerst kategorisch Nein. B rechnet vor, wie es doch gehen könnte — mit versetzten freien Tagen.</p>
-<div class="nur-a2"><span class="rm">Für uns lohnt sich das nicht</span><span class="rm">Der Laden muss offen sein</span><span class="rm">Wenn wir uns abwechseln?</span><span class="rm">Das müsste man durchrechnen</span></div>
-<div class="nur-b1"><span class="rm">Bei drei Leuten ist es schwieriger als …</span><span class="rm">Müsste jeder dieselben Tage frei haben?</span><span class="rm">Dann bliebe der Laden trotzdem offen</span><span class="rm">Unter der Voraussetzung, dass …</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A bleibt nicht beim ersten Nein, sondern lässt sich auf die Rechnung ein — und beide benutzen mindestens einen Superlativ.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Sagt reihum je einen Satz über euren eigenen Beruf — immer mit einem Vergleich. Wer zweimal dieselbe Vergleichsform nimmt, ist raus.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -877,14 +864,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde muss einmal ein <u>Komparativ mit als</u> und einmal ein <u>Superlativ</u> vorkommen. Der Partner hebt die Hand, sobald beides da war.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Sagt reihum je einen Satz über euren eigenen Beruf — immer mit einem Vergleich. Wer zweimal dieselbe Vergleichsform nimmt, ist raus.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Funktioniert das in jedem Beruf gleich gut — oder nur in manchen?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Wäre weniger Zeit oder mehr Geld für dich wichtiger?</li><li>Wer trägt am Ende die Kosten, wenn alle einen Tag weniger arbeiten?</li><li>Warum reden Menschen aneinander vorbei, wenn sie das Modell nicht nennen?</li><li>Welches Modell wäre für deinen Beruf realistisch?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei <span class="hl">Gespräche über Arbeitszeit</span></h2>
+<p class="ssub">Zu zweit. Jeder Beitrag muss mindestens einen Vergleich enthalten — mit <b>als</b>, <b>wie</b> oder einem Superlativ. Danach tauschen.</p>
+<div class="rmcard">
+<b>1 · Der Vorschlag im Team</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A schlägt die Vier-Tage-Woche vor. B findet die Idee gut, will aber wissen, welche Arbeit dafür wegfällt — und lässt nicht locker.</p>
+<div class="nur-a2"><span class="rm">Ich fände vier Tage besser</span><span class="rm">Wir schaffen dasselbe in weniger Zeit</span><span class="rm">Die Meetings kosten am meisten Zeit</span><span class="rm">Wir könnten es testen</span></div>
+<div class="nur-b1"><span class="rm">Grundsätzlich positiv, vorausgesetzt …</span><span class="rm">Was genau würde wegfallen?</span><span class="rm">Das gilt nur, solange …</span><span class="rm">Lieber Aufgaben streichen als Überstunden</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A nennt das Modell mit Zahlen, benutzt mindestens zwei Vergleiche und sagt konkret, was gestrichen würde.</div>
+</div>
+<div class="rmcard">
+<b>2 · Büro gegen Schichtdienst</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A arbeitet im Büro, B in der Pflege. Beide sind grundsätzlich dafür — aber die Rechnung geht in den zwei Berufen völlig verschieden auf.</p>
+<div class="nur-a2"><span class="rm">Bei uns würde das gehen</span><span class="rm">In der Pflege ist das anders</span><span class="rm">Dann bräuchte man mehr Leute</span><span class="rm">Wer bezahlt das?</span></div>
+<div class="nur-b1"><span class="rm">Jede Schicht muss besetzt sein</span><span class="rm">Das wäre teurer als im Büro</span><span class="rm">Der Fachkräftemangel kommt dazu</span><span class="rm">Für wen lohnt es sich am Ende?</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide erkennen an, dass ihr eigenes Argument nur für ihre Branche gilt — und sagen das ausdrücklich.</div>
+</div>
+<div class="rmcard">
+<b>3 · Der kleine Betrieb</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A führt einen Laden mit drei Angestellten und sagt zuerst kategorisch Nein. B rechnet vor, wie es doch gehen könnte — mit versetzten freien Tagen.</p>
+<div class="nur-a2"><span class="rm">Für uns lohnt sich das nicht</span><span class="rm">Der Laden muss offen sein</span><span class="rm">Wenn wir uns abwechseln?</span><span class="rm">Das müsste man durchrechnen</span></div>
+<div class="nur-b1"><span class="rm">Bei drei Leuten ist es schwieriger als …</span><span class="rm">Müsste jeder dieselben Tage frei haben?</span><span class="rm">Dann bliebe der Laden trotzdem offen</span><span class="rm">Unter der Voraussetzung, dass …</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A bleibt nicht beim ersten Nein, sondern lässt sich auf die Rechnung ein — und beide benutzen mindestens einen Superlativ.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -950,6 +971,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Bring deine Argumente am Mittwoch mit — auf Papier oder im Kopf. Sprachnachrichten wie immer bis Sonntag in die WhatsApp-Gruppe.</div>
 <div class="tip">🔜 <strong>Am Mittwoch, Teil 2:</strong> die <u>Debatte</u>. Zwei Lager, feste Redemittel, und am Ende stimmt die Gruppe ab. Bring dein stärkstes Argument mit.</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1136,11 +1164,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1197,7 +1232,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1207,7 +1244,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

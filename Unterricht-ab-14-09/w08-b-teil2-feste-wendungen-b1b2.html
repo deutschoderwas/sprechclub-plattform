@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,49 +627,44 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B2<span class="zusatz"> · feiner</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#wiederholung">🔁 Wiederholung</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">🔗 Drei Sorten Paare</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">Ein Wort allein <span class="hl">sagt hier gar nichts</span></h2>
-<p class="ssub"><i>Sprache</i> kennst du. <i>Bringen</i> kennst du. Aber <b>zur Sprache bringen</b> heißt weder das eine noch das andere — es heißt: ein Thema ansprechen, das bisher niemand angesprochen hat. Genauso bei <b>in Kauf nehmen</b>: Da wird nichts gekauft. Diese Paare muss man als Ganzes lernen, so wie eine Vokabel.</p>
-<div class="scene-wrap klein"><img src="../amanda/sz-heikel.webp" alt="Zwei Menschen sitzen sich in Sesseln gegenüber und sprechen ernst miteinander"></div>
-<ul class="qlist nur-a2">
-<li>Kennst du eine solche feste Wendung aus deiner Sprache?</li>
-<li>Welche deutsche Wendung hast du zuerst gelernt?</li>
-<li>Was machst du, wenn du eine Wendung nicht verstehst?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Warum sind feste Wendungen schwerer als einzelne Wörter?</li>
-<li>Woran merkst du, dass ein Ausdruck fest ist und nicht wörtlich gemeint?</li>
-<li>Welche Wendung hast du einmal falsch benutzt — und was ist passiert?</li>
-</ul>
-<div class="tip teal">🔑 <strong>Die Regel des Abends:</strong> Lern nie das Nomen allein und nie das Verb allein — lern immer das <b>Paar</b>. <i>Rücksicht</i> nimmt man, <i>Bescheid</i> gibt man, <i>zur Sprache</i> bringt man. Ein anderes Verb macht den Satz sofort falsch.</div>
-<h2 class="st">Warum man sie <span class="hl">trotzdem braucht</span></h2>
-<p class="ssub">Man könnte auch ohne sie auskommen — <i>Ich sage dir Bescheid</i> geht auch als <i>Ich sage dir, wenn ich es weiß</i>. Nur klingt das erste erwachsen und das zweite umständlich. Diese Wendungen sind die Abkürzungen der deutschen Sprache: Sie sagen in zwei Wörtern, wofür man sonst einen halben Satz braucht.</p>
-<div class="scene-wrap klein"><img src="../vok-bild/die-kurzpraesentation.webp" alt="Ein Mann steht am Flipchart und spricht zu einer kleinen Gruppe"></div>
-<ul class="qlist nur-a2">
-<li>Welche Wendung von heute möchtest du diese Woche benutzen?</li>
-<li>Sagst du oft <i>Bescheid</i>?</li>
-<li>Wann hast du zuletzt jemandem recht gegeben?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Klingen feste Wendungen im Beruf anders als privat?</li>
-<li>Kann man zu viele davon benutzen?</li>
-<li>Welche Wendung findest du besonders schön oder besonders seltsam?</li>
-</ul>
-<div class="tip">💡 <strong>Kleiner Test:</strong> Wenn du das Nomen im Satz nicht mit <i>der, die, das</i> versehen kannst, ist es eine feste Wendung. <i>Ich gebe dir Bescheid</i> — nie <i>den Bescheid</i>. Genau daran erkennst du sie.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
+</section>
+
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Kennst du eine solche feste Wendung aus deiner Sprache?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Welche deutsche Wendung hast du zuerst gelernt?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="wiederholung">
@@ -620,63 +685,6 @@ a.tab:hover{color:var(--ink);}
 <li>Wann sagt man <b>mitbringen</b> statt <b>abholen</b>?</li>
 </ul>
 <div class="tip teal">🔁 <strong>Zu zweit, dreißig Sekunden:</strong> Einer nennt eine Sache und einen Ort, der andere baut zwei Sätze — einen mit <i>holen</i>, einen mit <i>bringen</i>. Danach geht es los: Heute bewegen dieselben Verben etwas völlig anderes.</div>
-</section>
-
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Paare, <span class="hl">die man nur zusammen lernt</span></h2>
-<p class="ssub">Sag jedes Paar laut — als <u>ein</u> Wort, ohne Pause dazwischen. Und häng gleich einen eigenen Satz an, in dem es wirklich vorkommt.</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../amanda/a-schulter.webp" alt="Amanda zuckt mit den Schultern und hebt die Hände" loading="lazy"><div class="bb"><div class="bw">in Kauf nehmen</div><div class="bex">„Die lange Fahrt nehme ich in Kauf, die Wohnung ist es wert.“</div><div class="bti">💡 Hier wird nichts gekauft. Die Wendung heißt: Ich weiß, dass es unangenehm ist, und mache es trotzdem. Immer ohne Artikel: <b>in Kauf nehmen</b>.</div><button class="speak" data-say="Die lange Fahrt nehme ich in Kauf, die Wohnung ist es wert.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/handy.webp" alt="Ein Handy mit zwei Sprechblasen auf dem Bildschirm" loading="lazy"><div class="bb"><div class="bw">Bescheid geben</div><div class="bex">„Ich gebe dir Bescheid, sobald der Termin steht.“</div><div class="bti">💡 Nie mit Artikel: <i>Bescheid geben</i>, nicht <i>den Bescheid geben</i>. Und die zwei Geschwister: <b>Bescheid sagen</b> (dasselbe) und <b>Bescheid wissen</b> (informiert sein).</div><button class="speak" data-say="Ich gebe dir Bescheid, sobald der Termin steht.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-heikel.webp" alt="Zwei Menschen sitzen sich in Sesseln gegenüber und sprechen ernst miteinander" loading="lazy"><div class="bb"><div class="bw">zur Sprache bringen</div><div class="bex">„Ich möchte das noch einmal zur Sprache bringen.“</div><div class="bti">💡 Die höfliche Form von <i>ansprechen</i> — besonders bei unangenehmen Themen. Und passend dazu: <b>zur Sprache kommen</b>, wenn ein Thema von allein auftaucht.</div><button class="speak" data-say="Ich möchte das noch einmal zur Sprache bringen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-sozial.webp" alt="Drei Menschen sitzen an einem Tisch und sprechen miteinander" loading="lazy"><div class="bb"><div class="bw">Rücksicht nehmen</div><div class="bex">„Nimm bitte Rücksicht, die Nachbarn arbeiten nachts.“</div><div class="bti">💡 Immer mit <b>auf</b> + Akkusativ, wenn du dazusagst, auf wen: <i>Rücksicht auf die Nachbarn nehmen</i>. Ein Wort, das in Deutschland sehr ernst genommen wird.</div><button class="speak" data-say="Nimm bitte Rücksicht, die Nachbarn arbeiten nachts.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-bewerbung.webp" alt="Zwei Menschen sitzen sich an einem Tisch gegenüber und sprechen über eine Mappe" loading="lazy"><div class="bb"><div class="bw">Platz nehmen</div><div class="bex">„Nehmen Sie doch bitte Platz.“</div><div class="bti">💡 Die formelle Variante von <i>Setz dich</i>. Du hörst sie beim Arzt, im Amt und im Vorstellungsgespräch. Antworten kannst du einfach mit <i>Danke.</i></div><button class="speak" data-say="Nehmen Sie doch bitte Platz.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-beratung.webp" alt="Zwei Menschen sitzen an einem Tisch mit einer Mappe und sprechen" loading="lazy"><div class="bb"><div class="bw">einen Rat geben</div><div class="bex">„Darf ich dir einen Rat geben?“</div><div class="bti">💡 Hier steht ausnahmsweise ein Artikel: <b>einen</b> Rat. Und Vorsicht bei der Aussprache: <i>der Rat</i> (Empfehlung) und <i>das Rad</i> (Fahrrad) klingen gleich.</div><button class="speak" data-say="Darf ich dir einen Rat geben?">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-uhrzeit.webp" alt="Eine runde Wanduhr über einem Regal mit einer Pflanze" loading="lazy"><div class="bb"><div class="bw">sich Zeit nehmen</div><div class="bex">„Nimm dir Zeit, das muss heute nicht fertig werden.“</div><div class="bti">💡 Reflexiv mit Dativ: <i>Ich nehme <b>mir</b> Zeit.</i> Und der Unterschied zu <b>Zeit haben</b>: Zeit haben ist Zufall, sich Zeit nehmen ist eine Entscheidung.</div><button class="speak" data-say="Nimm dir Zeit, das muss heute nicht fertig werden.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/amanda-denk.webp" alt="Amanda überlegt, den Finger nachdenklich am Kinn" loading="lazy"><div class="bb"><div class="bw">Luft holen</div><div class="bex">„Hol erst mal Luft, dann erzähl noch mal von vorne.“</div><div class="bti">💡 Wörtlich und übertragen zugleich. Auch schön: <b>tief Luft holen</b> vor etwas Unangenehmem — und <b>jemandem die Luft nehmen</b>, wenn man ihn nicht mehr sprechen lässt.</div><button class="speak" data-say="Hol erst mal Luft, dann erzähl noch mal von vorne.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-meinung.webp" alt="Vier Menschen sitzen im Café zusammen und diskutieren" loading="lazy"><div class="bb"><div class="bw">recht geben</div><div class="bex">„Da muss ich dir recht geben.“</div><div class="bti">💡 Mit <b>Dativ</b>: <i>Ich gebe <b>dir</b> recht.</i> Klein geschrieben. In Diskussionen der stärkste Satz überhaupt — man verliert nichts und gewinnt Gehör.</div><button class="speak" data-say="Da muss ich dir recht geben.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-kurzpraesentation.webp" alt="Ein Mann steht am Flipchart und spricht zu einer kleinen Gruppe" loading="lazy"><div class="bb"><div class="bw">auf den Punkt bringen</div><div class="bex">„Sie hat es auf den Punkt gebracht.“</div><div class="bti">💡 Ein echtes Lob. Und der Gegensatz dazu: <b>um den heißen Brei herumreden</b> — lange sprechen, ohne zur Sache zu kommen.</div><button class="speak" data-say="Sie hat es auf den Punkt gebracht.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-unterlagen.webp" alt="Zwei Hände blättern in einem Stapel Unterlagen" loading="lazy"><div class="bb"><div class="bw">in Ordnung bringen</div><div class="bex">„Den Fehler bringe ich bis Freitag in Ordnung.“</div><div class="bti">💡 Geht für Papiere, für Geräte und für Streit. Verwandt: <b>in Ordnung sein</b> (alles gut) und die Zustimmung <i>Geht in Ordnung.</i></div><button class="speak" data-say="Den Fehler bringe ich bis Freitag in Ordnung.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/a-stift.webp" alt="Amanda hält einen großen Bleistift in der Hand" loading="lazy"><div class="bb"><div class="bw">sich Mühe geben</div><div class="bex">„Er gibt sich wirklich Mühe mit dem Deutschen.“</div><div class="bti">💡 Reflexiv mit Dativ: <i>Ich gebe <b>mir</b> Mühe.</i> Sehr beliebtes Lob für Lernende — und ehrlicher als <i>Du sprichst perfekt</i>.</div><button class="speak" data-say="Er gibt sich wirklich Mühe mit dem Deutschen.">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel „Falsches Verb“:</strong> Einer sagt eine Wendung mit dem <u>falschen</u> Verb (<i>Rücksicht geben</i>), der andere korrigiert sofort und baut einen richtigen Satz. Wer den Fehler nicht hört, zieht die nächste Karte.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Ohne Artikel, mit Artikel <span class="hl">oder mit Präposition?</span></h2>
-<p class="ssub">Feste Wendungen sehen alle ähnlich aus, folgen aber drei verschiedenen Mustern. Wer das Muster erkennt, muss sich nur noch das Verb merken — der Rest ergibt sich.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">🚫</span><div class="gmw">ohne Artikel</div><div class="gmb">Nomen steht nackt beim Verb</div><div class="gmx">Bescheid geben · Rücksicht nehmen · Platz nehmen</div></div>
-<div class="gk blau"><span class="gem2">📌</span><div class="gmw">mit festem Artikel</div><div class="gmb">der Artikel gehört dazu</div><div class="gmx">einen Rat geben · die Zeit nehmen</div></div>
-<div class="gk ja"><span class="gem2">🧩</span><div class="gmw">mit Präposition</div><div class="gmb">Präposition plus Nomen plus Verb</div><div class="gmx">in Kauf nehmen · zur Sprache bringen · auf den Punkt bringen</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Ich gebe dir Bescheid, sobald ich mehr weiß.</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>Bescheid geben</b> steht immer ohne Artikel — das Nomen ist mit dem Verb verwachsen. Genau daran erkennst du eine feste Wendung.</div></div>
-<div class="gk no"><div class="gkl">❌ So sagt man es nicht</div><div class="gsatz">Ich gebe dir den Bescheid, sobald ich mehr weiß.</div><div class="bsp"><span class="wer">Das Problem</span>Mit Artikel wird daraus plötzlich ein <b>Dokument</b> — der Bescheid vom Amt. Ein einziges Wort, und der Satz bedeutet etwas völlig anderes.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Den langen Weg nehme ich in Kauf.</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>in Kauf nehmen</b> bleibt als Block zusammen und rutscht ans Satzende. Davor steht das, was du akzeptierst — hier <i>den langen Weg</i>.</div></div>
-<div class="gk no"><div class="gkl">❌ So sagt man es nicht</div><div class="gsatz">Ich kaufe den langen Weg ein.</div><div class="bsp"><span class="wer">Das Problem</span>Die Wendung hat mit Kaufen nichts zu tun. Wer sie wörtlich nimmt, baut einen Satz, den kein Mensch versteht — und genau das ist die Falle bei festen Paaren.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Da muss ich dir recht geben.</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>recht geben</b> steht klein und ohne Artikel, mit der Person im <b>Dativ</b>. Der Satz ist die eleganteste Art, in einer Diskussion nachzugeben, ohne die eigene Position aufzugeben.</div></div>
-<div class="gk no"><div class="gkl">❌ So sagt man es nicht</div><div class="gsatz">Da muss ich dich Recht geben.</div><div class="bsp"><span class="wer">Das Problem</span>Zwei Fehler auf einmal: <i>dich</i> statt <b>dir</b> — es ist ein Dativ — und ein großes <i>Recht</i>, das nur beim Gesetz steht: <i>das Recht auf Urlaub</i>.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Wie merke ich mir das richtige Verb?</button>
-<div class="inhalt">
-<p>Sortier die Wendungen nach ihrem Verb, nicht nach ihrer Bedeutung:</p>
-<ul>
-<li><b>nehmen</b> — man akzeptiert oder holt sich etwas: <i>in Kauf nehmen, Rücksicht nehmen, Platz nehmen, sich Zeit nehmen</i>.</li>
-<li><b>geben</b> — es geht zu jemand anderem: <i>Bescheid geben, einen Rat geben, recht geben, sich Mühe geben</i>.</li>
-<li><b>bringen</b> — etwas kommt an ein Ziel: <i>zur Sprache bringen, auf den Punkt bringen, in Ordnung bringen</i>.</li>
-<li><b>holen</b> — man verschafft sich etwas: <i>Luft holen, sich Rat holen, sich Hilfe holen</i>.</li>
-</ul>
-<p style="margin-top:.5rem;">Und ein Muster, das fast immer trägt: Was zu <u>dir</u> kommt, <b>nimmst</b> oder <b>holst</b> du. Was zu <u>anderen</u> geht, <b>gibst</b> oder <b>bringst</b> du. Dieselbe Logik wie am Dienstag — nur mit Gedanken statt mit Paketen.</p>
-</div>
-</div>
-<div class="tip">🎯 <strong>Zu zweit, eine Minute:</strong> Einer nennt ein Nomen (<i>Bescheid, Rücksicht, Punkt, Luft</i>), der andere ergänzt Verb und Satz. Wer zögert, bekommt das nächste Nomen — nach zwei Runden sitzen die Paare.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -829,37 +837,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
-<p class="ssub">Einer bringt etwas zur Sprache, einer reagiert. Danach tauschen, beim zweiten Mal ohne die Sätze unten. Regel: In jeder Runde mindestens drei feste Wendungen von heute.</p>
-<div class="rmcard">
-<b>1 · Die Sache im Team</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B übernimmt seit Monaten eine Aufgabe allein, die eigentlich geteilt werden sollte. A ist die Teamleitung und hat es nicht bemerkt.</p>
-<div class="nur-a2"><span class="rm">Ich möchte etwas zur Sprache bringen</span><span class="rm">Bisher habe ich das in Kauf genommen</span><span class="rm">Da gebe ich dir recht</span><span class="rm">Wir bringen das in Ordnung</span></div>
-<div class="nur-b1"><span class="rm">Eine Sache beschäftigt mich seit einer Weile — ich bringe sie lieber jetzt zur Sprache</span><span class="rm">Die zusätzliche Vertretung habe ich bisher bewusst in Kauf genommen</span><span class="rm">In diesem Punkt gebe ich Ihnen recht, das war nicht abgesprochen</span><span class="rm">Ich würde vorschlagen, dass wir das bis Monatsende in Ordnung bringen</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat das Thema angekündigt und sofort konkret gemacht, ohne Vorwurf. A hat einmal recht gegeben statt sich zu verteidigen. Am Ende stand ein Termin und eine Aufgabe — nicht nur ein gutes Gefühl.</div>
-</div>
-<div class="rmcard">
-<b>2 · Der Rat unter Freunden</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A steht vor einer Entscheidung und hat wenig Zeit. B rät — ohne zu bestimmen, was A tun soll.</p>
-<div class="nur-a2"><span class="rm">Ich weiß nicht, was ich machen soll</span><span class="rm">Darf ich dir einen Rat geben?</span><span class="rm">Nimm dir zwei Tage Zeit</span><span class="rm">Gib mir Bescheid, wenn du entschieden hast</span></div>
-<div class="nur-b1"><span class="rm">Ich müsste morgen antworten und komme innerlich nicht zur Ruhe</span><span class="rm">Darf ich dir einen Rat geben, oder willst du nur erzählen?</span><span class="rm">Hol erst mal Luft — die zwei Tage wird dir niemand übelnehmen</span><span class="rm">Und was auch immer du entscheidest: Gib mir danach Bescheid</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat gefragt, bevor er geraten hat, und A die Entscheidung gelassen. Es kamen mindestens <i>einen Rat geben</i>, <i>Luft holen</i> und <i>Bescheid geben</i> vor.</div>
-</div>
-<div class="rmcard">
-<b>3 · Die Wohnung mit dem Haken</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat eine Wohnung gefunden: schön, aber weit weg. B fragt nach — und A wägt laut ab.</p>
-<div class="nur-a2"><span class="rm">Die Fahrt ist lang, aber die Wohnung ist toll</span><span class="rm">Das nehme ich in Kauf</span><span class="rm">Ich muss auf die Kinder Rücksicht nehmen</span><span class="rm">Ich gebe mir Mühe, das zu organisieren</span></div>
-<div class="nur-b1"><span class="rm">Eine Stunde Fahrt nehme ich in Kauf, wenn dafür alles andere stimmt</span><span class="rm">Ich muss allerdings Rücksicht auf die Schulzeiten der Kinder nehmen</span><span class="rm">Um es auf den Punkt zu bringen: Es geht um Ruhe gegen Zeit</span><span class="rm">Ich nehme mir bis Sonntag Zeit und gebe dann Bescheid</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat einen Nachteil klar benannt und trotzdem eine Position bezogen — mit <i>in Kauf nehmen</i>. Mindestens einmal kam eine Wendung mit Präposition vor, und beide haben am Ende zusammengefasst.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Einer nennt reihum ein Nomen (<i>Bescheid, Rücksicht, Kauf, Punkt, Ordnung, Mühe</i>), der Nachbar ergänzt das richtige Verb und baut einen Satz. Wer das falsche Verb nimmt, gibt weiter.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -892,14 +877,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde müssen <u>drei feste Wendungen</u> vorkommen, und jede darf nur einmal benutzt werden. Wer eine wörtlich übersetzt, fängt noch einmal an.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Einer nennt reihum ein Nomen (<i>Bescheid, Rücksicht, Kauf, Punkt, Ordnung, Mühe</i>), der Nachbar ergänzt das richtige Verb und baut einen Satz. Wer das falsche Verb nimmt, gibt weiter.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Warum sind feste Wendungen schwerer als einzelne Wörter?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Woran merkst du, dass ein Ausdruck fest ist und nicht wörtlich gemeint?</li><li>Welche Wendung hast du einmal falsch benutzt — und was ist passiert?</li><li>Klingen feste Wendungen im Beruf anders als privat?</li><li>Kann man zu viele davon benutzen?</li><li>Welche Wendung findest du besonders schön oder besonders seltsam?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
+<p class="ssub">Einer bringt etwas zur Sprache, einer reagiert. Danach tauschen, beim zweiten Mal ohne die Sätze unten. Regel: In jeder Runde mindestens drei feste Wendungen von heute.</p>
+<div class="rmcard">
+<b>1 · Die Sache im Team</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B übernimmt seit Monaten eine Aufgabe allein, die eigentlich geteilt werden sollte. A ist die Teamleitung und hat es nicht bemerkt.</p>
+<div class="nur-a2"><span class="rm">Ich möchte etwas zur Sprache bringen</span><span class="rm">Bisher habe ich das in Kauf genommen</span><span class="rm">Da gebe ich dir recht</span><span class="rm">Wir bringen das in Ordnung</span></div>
+<div class="nur-b1"><span class="rm">Eine Sache beschäftigt mich seit einer Weile — ich bringe sie lieber jetzt zur Sprache</span><span class="rm">Die zusätzliche Vertretung habe ich bisher bewusst in Kauf genommen</span><span class="rm">In diesem Punkt gebe ich Ihnen recht, das war nicht abgesprochen</span><span class="rm">Ich würde vorschlagen, dass wir das bis Monatsende in Ordnung bringen</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat das Thema angekündigt und sofort konkret gemacht, ohne Vorwurf. A hat einmal recht gegeben statt sich zu verteidigen. Am Ende stand ein Termin und eine Aufgabe — nicht nur ein gutes Gefühl.</div>
+</div>
+<div class="rmcard">
+<b>2 · Der Rat unter Freunden</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A steht vor einer Entscheidung und hat wenig Zeit. B rät — ohne zu bestimmen, was A tun soll.</p>
+<div class="nur-a2"><span class="rm">Ich weiß nicht, was ich machen soll</span><span class="rm">Darf ich dir einen Rat geben?</span><span class="rm">Nimm dir zwei Tage Zeit</span><span class="rm">Gib mir Bescheid, wenn du entschieden hast</span></div>
+<div class="nur-b1"><span class="rm">Ich müsste morgen antworten und komme innerlich nicht zur Ruhe</span><span class="rm">Darf ich dir einen Rat geben, oder willst du nur erzählen?</span><span class="rm">Hol erst mal Luft — die zwei Tage wird dir niemand übelnehmen</span><span class="rm">Und was auch immer du entscheidest: Gib mir danach Bescheid</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat gefragt, bevor er geraten hat, und A die Entscheidung gelassen. Es kamen mindestens <i>einen Rat geben</i>, <i>Luft holen</i> und <i>Bescheid geben</i> vor.</div>
+</div>
+<div class="rmcard">
+<b>3 · Die Wohnung mit dem Haken</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat eine Wohnung gefunden: schön, aber weit weg. B fragt nach — und A wägt laut ab.</p>
+<div class="nur-a2"><span class="rm">Die Fahrt ist lang, aber die Wohnung ist toll</span><span class="rm">Das nehme ich in Kauf</span><span class="rm">Ich muss auf die Kinder Rücksicht nehmen</span><span class="rm">Ich gebe mir Mühe, das zu organisieren</span></div>
+<div class="nur-b1"><span class="rm">Eine Stunde Fahrt nehme ich in Kauf, wenn dafür alles andere stimmt</span><span class="rm">Ich muss allerdings Rücksicht auf die Schulzeiten der Kinder nehmen</span><span class="rm">Um es auf den Punkt zu bringen: Es geht um Ruhe gegen Zeit</span><span class="rm">Ich nehme mir bis Sonntag Zeit und gebe dann Bescheid</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat einen Nachteil klar benannt und trotzdem eine Position bezogen — mit <i>in Kauf nehmen</i>. Mindestens einmal kam eine Wendung mit Präposition vor, und beide haben am Ende zusammengefasst.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -964,6 +983,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Sprachnachricht und die zwölf Sätze bis Sonntag in den Chat. Ich höre alles an und schreibe dir zurück — besonders bei den Wendungen, die noch einen Artikel zu viel haben.</div>
 <div class="tip">🔜 <strong>Nächste Woche:</strong> <u>Wörter, die sich ähneln.</u> kennen und wissen, legen und liegen, sich erinnern und sich merken — Paare, die im Kopf ständig die Plätze tauschen. Wir sortieren sie einmal gründlich.</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1150,11 +1176,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1211,7 +1244,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1221,7 +1256,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

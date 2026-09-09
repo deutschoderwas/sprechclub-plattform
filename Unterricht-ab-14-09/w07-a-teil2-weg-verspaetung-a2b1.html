@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,49 +627,44 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B1<span class="zusatz"> · mehr</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#wiederholung">🔁 Wiederholung</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">⚖️ Drei Arten von Wegbeschreibung</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">Du stehst da <span class="hl">und weißt nicht, wo es langgeht</span></h2>
-<p class="ssub">Das Handy ist leer oder es gibt kein Netz, und irgendwo vor dir liegen drei Straßen. Der Trick ist nicht, perfekt zu fragen — sondern so zu fragen, dass die Antwort kurz ausfällt. Denn eine lange Wegbeschreibung versteht auch niemand, der die Sprache gut kann.</p>
-<div class="scene-wrap klein"><img src="../bilder/lesen/strasse.webp" alt="Eine Straßenkreuzung mit Ampel und Zebrastreifen"></div>
-<ul class="qlist nur-a2">
-<li>Wann hast du zuletzt nach dem Weg gefragt?</li>
-<li>Fragst du lieber Menschen oder schaust du aufs Handy?</li>
-<li>Was machst du, wenn du die Antwort nicht verstehst?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Warum sind Wegbeschreibungen so schwer zu verstehen?</li>
-<li>Wie merkst du dir einen Weg, den dir jemand erklärt?</li>
-<li>Was ist besser: einmal fragen und viel bekommen, oder dreimal fragen und wenig?</li>
-</ul>
-<div class="tip teal">🔑 <strong>Der Trick für heute:</strong> Frag nicht <i>„Wie komme ich zum Bahnhof?“</i>, sondern <b>„Ist der Bahnhof in dieser Richtung?“</b> und zeig dabei. Dann bekommst du ein Ja oder ein Nein statt einer Beschreibung mit vier Abbiegungen — und kannst nach hundert Metern einfach noch mal fragen.</div>
-<h2 class="st">Der Zug kommt nicht. <span class="hl">Und jetzt?</span></h2>
-<p class="ssub">Auf der Anzeige steht plötzlich eine andere Zeit, oder gar nichts mehr. In Deutschland heißt das dann <i>Zugausfall</i> oder <i>Schienenersatzverkehr</i> — zwei Wörter, die man einmal gehört haben muss, sonst versteht man die Durchsage nicht. Und meistens gibt es eine Lösung, man muss nur danach fragen.</p>
-<div class="scene-wrap klein"><img src="../vok-bild/die-verspaetung.webp" alt="Ein leerer Bahnsteig mit einer Uhr"></div>
-<ul class="qlist nur-a2">
-<li>Hattest du schon einmal eine große Verspätung?</li>
-<li>Was hast du gemacht?</li>
-<li>Wem sagst du Bescheid, wenn du später kommst?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Was ärgert dich mehr: die Verspätung oder die fehlende Information?</li>
-<li>Wie sagst du im Beruf, dass du zu spät kommst?</li>
-<li>Wann lohnt es sich, jemanden vom Personal zu suchen?</li>
-</ul>
-<div class="tip">💡 <strong>Zwei Wörter, die dich retten:</strong> <b>der Zugausfall</b> — der Zug fährt gar nicht. <b>der Schienenersatzverkehr</b> — statt des Zuges fährt ein Bus, meistens vor dem Bahnhof. Wenn du diese beiden in einer Durchsage hörst, weißt du sofort, was zu tun ist: raus und nach dem Bus schauen.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
+</section>
+
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Wann hast du zuletzt nach dem Weg gefragt?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Fragst du lieber Menschen oder schaust du aufs Handy?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="wiederholung">
@@ -620,63 +685,6 @@ a.tab:hover{color:var(--ink);}
 <li>Wie spät ist <b>halb drei</b>?</li>
 </ul>
 <div class="tip teal">🔁 <strong>Zu zweit, dreißig Sekunden:</strong> Einer sagt eine Uhrzeit im Fahrplanformat, der andere sofort gesprochen — und danach einen Satz mit einem trennbaren Verb. Dann geht es los: Heute stehen wir nicht im Zug, sondern davor.</div>
-</section>
-
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Wörter <span class="hl">für den Weg und für die Wartezeit</span></h2>
-<p class="ssub">Sagt jedes Wort laut — <u>mit Artikel</u>. Und gleich einen Satz hinterher: Wo in deiner Stadt würdest du dieses Wort brauchen?</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../bilder/lesen/strasse.webp" alt="Eine Straßenkreuzung mit Ampel und Zebrastreifen" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Weg</div><div class="bex">„Können Sie mir den Weg zum Bahnhof zeigen?“</div><div class="bti">💡 Feste Wendungen: <b>nach dem Weg fragen</b> und <b>den Weg zeigen</b>. Und ganz wichtig für den Alltag: <i>Der Weg dauert zehn Minuten</i> — bei Wegen sagt man <b>dauern</b>, nicht <i>brauchen</i>.</div><button class="speak" data-say="Können Sie mir den Weg zum Bahnhof zeigen?">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-ampel.webp" alt="Eine Ampel zeigt Rot über einer Straße" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Ampel</div><div class="bex">„Gehen Sie bis zur Ampel.“</div><div class="bti">💡 Der wichtigste Orientierungspunkt in jeder Wegbeschreibung. Merk dir die Wendung <b>bis zur Ampel</b> — <i>bis zu</i> steht immer mit Dativ, deshalb <i>zur</i> und nicht <i>zu die</i>.</div><button class="speak" data-say="Gehen Sie bis zur Ampel.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-kreuzung.webp" alt="Eine Straßenkreuzung mit Fahrbahnmarkierungen von oben" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Kreuzung</div><div class="bex">„An der nächsten Kreuzung links.“</div><div class="bti">💡 Dazu passt <b>die Ecke</b> für kleinere Stellen: <i>um die Ecke</i>. Und Vorsicht — <i>an der Kreuzung</i> heißt: dort stehen. <i>über die Kreuzung</i> heißt: darüber gehen. Zwei Präpositionen, zwei Fälle.</div><button class="speak" data-say="An der nächsten Kreuzung links.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/schild.webp" alt="Ein leeres Schild mit einem Pfeil an einem Pfosten" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Schild</div><div class="bex">„Folgen Sie einfach den Schildern.“</div><div class="bti">💡 Plural: <b>die Schilder</b>, mit -er. Und das Verb dazu steht mit Dativ: <b>den Schildern folgen</b>. Wenn du unsicher bist, ist das oft die beste Antwort auf eine zu lange Wegbeschreibung.</div><button class="speak" data-say="Folgen Sie einfach den Schildern.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/auto.webp" alt="Ein kleines Auto von der Seite" loading="lazy"><div class="bb"><div class="bw">abbiegen</div><div class="bex">„Biegen Sie an der Ampel rechts ab.“</div><div class="bti">💡 Trennbar, und im Perfekt mit <b>sein</b>: <i>Ich bin links abgebogen.</i> Im Alltag lässt man das Verb oft ganz weg: <i>An der Ampel rechts</i> — das versteht jeder und ist völlig normal.</div><button class="speak" data-say="Biegen Sie an der Ampel rechts ab.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-ausflug.webp" alt="Zwei Menschen wandern mit Rucksäcken über einen Feldweg" loading="lazy"><div class="bb"><div class="bw">zu Fuß</div><div class="bex">„Zu Fuß sind das zehn Minuten.“</div><div class="bti">💡 Immer ohne Artikel: <b>zu Fuß</b>. Und die häufigste Frage danach: <i>Ist das zu Fuß zu schaffen?</i> — eine Ja-Nein-Frage, auf die man eine kurze Antwort bekommt.</div><button class="speak" data-say="Zu Fuß sind das zehn Minuten.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-haltestelle.webp" alt="Eine Bushaltestelle mit einer wartenden Person" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Haltestelle</div><div class="bex">„Die Haltestelle ist gleich um die Ecke.“</div><div class="bti">💡 Bei Wegbeschreibungen der häufigste Zielpunkt überhaupt. Und <b>um die Ecke</b> ist die freundlichste Antwort, die es gibt — sie heißt: sehr nah, du schaffst das.</div><button class="speak" data-say="Die Haltestelle ist gleich um die Ecke.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-verspaetung.webp" alt="Ein leerer Bahnsteig mit einer Uhr" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Verspätung</div><div class="bex">„Ich habe zwanzig Minuten Verspätung.“</div><div class="bti">💡 Nicht nur Züge haben Verspätung — Menschen auch: <i>Ich habe Verspätung</i>. Und das Verb ist reflexiv: <b>sich verspäten</b>. <i>Ich verspäte mich um zehn Minuten.</i></div><button class="speak" data-say="Ich habe zwanzig Minuten Verspätung.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/bus.webp" alt="Ein Bus an einer Haltestelle mit Haltestellenschild" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Ersatzverkehr</div><div class="bex">„Ab hier fährt Ersatzverkehr.“</div><div class="bti">💡 Das lange Wort dafür heißt <b>der Schienenersatzverkehr</b>, abgekürzt <b>SEV</b>. Der Bus steht fast immer direkt vor dem Bahnhof — wenn du das Wort in einer Durchsage hörst, geh einfach raus und schau dich um.</div><button class="speak" data-say="Ab hier fährt Ersatzverkehr.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-telefonnummer.webp" alt="Telefon und Notizblock auf dem Tisch" loading="lazy"><div class="bb"><div class="bw">Bescheid sagen</div><div class="bex">„Ich sage dir Bescheid, wenn ich da bin.“</div><div class="bti">💡 Immer ohne Artikel und immer mit Dativ: <b>jemandem Bescheid sagen</b>. Wenn du zu spät kommst, ist das der wichtigste Satz überhaupt — in Deutschland zählt die frühe Information mehr als die Entschuldigung hinterher.</div><button class="speak" data-say="Ich sage dir Bescheid, wenn ich da bin.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../bilder/lesen/handy.webp" alt="Ein Handy mit zwei Sprechblasen auf dem Bildschirm" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Handy</div><div class="bex">„Mein Handy ist gleich leer.“</div><div class="bti">💡 Ein deutsches Wort, das im Englischen so nicht existiert — dort heißt es <i>mobile</i> oder <i>cell phone</i>. Und wenn der Akku leer ist: <b>Mein Handy ist leer</b>, nicht <i>tot</i>.</div><button class="speak" data-say="Mein Handy ist gleich leer.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-durchsage.webp" alt="Menschen in einer Bahnhofshalle hören einer Durchsage zu" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Durchsage</div><div class="bex">„In der Durchsage kam etwas von Ersatzverkehr.“</div><div class="bti">💡 Bei Störungen kommt die wichtigste Information immer per Durchsage — und immer schnell. Hör auf drei Dinge: <b>Zug, Grund, was jetzt gilt</b>. Den Rest kannst du getrost überhören.</div><button class="speak" data-say="In der Durchsage kam etwas von Ersatzverkehr.">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel „Blind zum Ziel“:</strong> Einer denkt sich ein Ziel im Raum aus und beschreibt den Weg dorthin nur mit Wegwörtern — <i>geradeaus, dann links, bis zum Fenster, an der Pflanze vorbei.</i> Der andere schließt die Augen und geht mit. Wer ankommt, hat gewonnen. Ihr merkt sofort, welche Wörter wirklich helfen.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Richtung, Punkt <span class="hl">oder Schild?</span></h2>
-<p class="ssub">Menschen erklären Wege auf drei ganz verschiedene Arten. Wenn du weißt, welche du gerade bekommst, weißt du auch, ob du sie dir merken kannst — oder besser nach hundert Metern noch einmal fragst.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">🧭</span><div class="gmw">die Richtung</div><div class="gmb">grob, aber leicht zu merken</div><div class="gmx">Immer geradeaus, dann sehen Sie es schon.</div></div>
-<div class="gk blau"><span class="gem2">📍</span><div class="gmw">der Punkt</div><div class="gmb">an etwas Sichtbarem entlang</div><div class="gmx">Bis zur Ampel und dann links.</div></div>
-<div class="gk ja"><span class="gem2">🪧</span><div class="gmw">das Schild</div><div class="gmb">am zuverlässigsten von allen</div><div class="gmx">Folgen Sie einfach den Schildern.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Kannst du dir merken</div><div class="gsatz">Ist der Bahnhof in dieser Richtung?</div><div class="bsp"><span class="wer">Warum das funktioniert</span>Eine <b>Ja-Nein-Frage</b> mit einer Handbewegung dazu. Die Antwort ist ein Wort, und danach gehst du hundert Meter und fragst einfach noch mal. Drei kurze Fragen sind besser als eine lange Antwort.</div></div>
-<div class="gk no"><div class="gkl">❌ Verlierst du unterwegs</div><div class="gsatz">Wie komme ich zum Bahnhof?</div><div class="bsp"><span class="wer">Das Problem</span>Die Frage ist völlig richtig — nur bekommst du darauf eine Beschreibung mit vier Abbiegungen und zwei Straßennamen. Nach dem dritten Satz ist der erste weg, und nachfragen traut man sich dann meistens nicht mehr.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Bringt dich weiter</div><div class="gsatz">Ist das zu Fuß zu schaffen?</div><div class="bsp"><span class="wer">Warum das klug ist</span>Du erfährst in einem Wort, ob du überhaupt losgehen sollst. Und wenn nein, kommt fast immer von selbst hinterher, welcher Bus fährt — die Leute helfen gern weiter, wenn die erste Frage leicht zu beantworten war.</div></div>
-<div class="gk no"><div class="gkl">❌ Hilft dir nicht</div><div class="gsatz">Ist das weit?</div><div class="bsp"><span class="wer">Das Problem</span><i>Weit</i> ist für jeden etwas anderes. Der eine sagt <i>nein, gar nicht</i> und meint zwanzig Minuten. Frag lieber nach Minuten oder danach, ob du laufen kannst.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Rettet dich bei Störung</div><div class="gsatz">Entschuldigung, was gilt jetzt für den Zug nach Köln?</div><div class="bsp"><span class="wer">Warum das wirkt</span>Du fragst nach dem, was jetzt zählt — nicht nach dem, was passiert ist. Personal auf dem Bahnsteig hat wenig Zeit und antwortet auf diese Frage in einem Satz: <i>Ersatzverkehr vor dem Bahnhof</i> oder <i>Gleis elf, in zwanzig Minuten</i>.</div></div>
-<div class="gk no"><div class="gkl">❌ Kostet nur Zeit</div><div class="gsatz">Warum hat der Zug denn schon wieder Verspätung?</div><div class="bsp"><span class="wer">Das Problem</span>Verständlich, aber es bringt dich keinen Meter weiter. Der Mensch vor dir kann nichts dafür und weiß den Grund meistens selbst nicht. Den Ärger kannst du hinterher loswerden — jetzt brauchst du eine Information.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Ich verstehe die Wegbeschreibung nicht — was mache ich?</button>
-<div class="inhalt">
-<p>Vier Sätze, und du kommst trotzdem an:</p>
-<ul>
-<li><b>Langsamer bitten:</b> <i>Entschuldigung, noch mal langsam bitte?</i> — kostet nichts und hilft immer.</li>
-<li><b>Nur den ersten Schritt nehmen:</b> <i>Also erst geradeaus, ja?</i> Den Rest fragst du später noch einmal.</li>
-<li><b>Auf die Richtung zeigen:</b> <i>In diese Richtung?</i> — dann nickt oder schüttelt jemand, und das versteht man immer.</li>
-<li><b>Nach dem Schild fragen:</b> <i>Gibt es ein Schild dorthin?</i> Schilder sind geduldiger als Menschen.</li>
-</ul>
-<p style="margin-top:.5rem;">Und der wichtigste Gedanke: Du musst die ganze Beschreibung gar nicht verstehen. Wenn du die <b>erste Richtung</b> hast, bist du schon weiter — und in hundert Metern steht der nächste Mensch, den du fragen kannst.</p>
-</div>
-</div>
-<div class="tip">🎯 <strong>Zu zweit, eine Minute:</strong> Einer beschreibt einen Weg absichtlich zu lang und zu schnell. Der andere darf nur mit den vier Sätzen aus der Hilfe reagieren — und muss am Ende die erste Richtung wissen. Danach tauschen.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -826,37 +834,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
-<p class="ssub">Einer sucht, einer hilft. Danach tauschen — und beim zweiten Mal ohne Notizen. Regel für alle drei: Die Antwort muss einmal zurückgespiegelt werden.</p>
-<div class="rmcard">
-<b>1 · Der Weg zum Bahnhof</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A sucht den Bahnhof und hat kein Netz. B kennt sich aus und erklärt es — mit mindestens zwei Imperativen und zwei Richtungswörtern. A darf nur zwei Schritte auf einmal mitnehmen.</p>
-<div class="nur-a2"><span class="rm">Entschuldigung, ist der Bahnhof in dieser Richtung?</span><span class="rm">Also erst geradeaus, ja?</span><span class="rm">Ist das zu Fuß zu schaffen?</span><span class="rm">Gibt es dort ein Schild?</span></div>
-<div class="nur-b1"><span class="rm">Können Sie mir sagen, wie ich am besten hinkomme?</span><span class="rm">Ich fasse kurz zusammen: …</span><span class="rm">Lohnt sich zu Fuß oder besser der Bus?</span><span class="rm">Ist der Weg gut ausgeschildert?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat mindestens zwei Imperative und zwei Richtungswörter benutzt (<i>bis zur</i>, <i>an … vorbei</i>, <i>über die</i>, <i>um die</i>). A hat den Weg einmal zurückgespiegelt, bevor er losgegangen ist.</div>
-</div>
-<div class="rmcard">
-<b>2 · Zu ausführlich</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B erklärt absichtlich einen viel zu langen Weg mit fünf Abbiegungen. A muss freundlich bremsen und darf am Ende nur den ersten Schritt und ein Schild kennen — mehr braucht es nicht.</p>
-<div class="nur-a2"><span class="rm">Noch mal langsam bitte?</span><span class="rm">Also erst hier runter?</span><span class="rm">In diese Richtung?</span><span class="rm">Gibt es ein Schild dorthin?</span></div>
-<div class="nur-b1"><span class="rm">Darf ich kurz nachfragen — der erste Teil?</span><span class="rm">Habe ich das richtig verstanden, dass …?</span><span class="rm">Den Rest frage ich unterwegs noch einmal</span><span class="rm">Ist es ab dort ausgeschildert?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat unterbrochen, statt höflich alles über sich ergehen zu lassen, und ist am Ende mit genau zwei Informationen losgegangen: erste Richtung und Schild.</div>
-</div>
-<div class="rmcard">
-<b>3 · Der Zug fällt aus</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A steht am Bahnsteig, der Zug fällt aus. B ist beim Personal und hat es eilig. A muss in zwei Fragen klären, was jetzt gilt und ob die Fahrkarte weiter gültig ist — und danach jemandem Bescheid sagen.</p>
-<div class="nur-a2"><span class="rm">Was gilt jetzt für den Zug nach …?</span><span class="rm">Fährt hier Ersatzverkehr?</span><span class="rm">Gilt meine Fahrkarte da auch?</span><span class="rm">Ich komme etwa zwanzig Minuten später</span></div>
-<div class="nur-b1"><span class="rm">Gibt es eine andere Verbindung?</span><span class="rm">Wo fährt der Ersatzverkehr ab?</span><span class="rm">Muss ich mir das bestätigen lassen?</span><span class="rm">Ich verspäte mich um etwa zwanzig Minuten</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat nach der Lösung gefragt und nicht nach dem Grund. Beide Punkte sind geklärt, und A hat mit einer <u>Zahl</u> Bescheid gesagt, nicht nur <i>ich komme später</i>.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Jeder nennt reihum ein Ziel im Raum, der Nachbar beschreibt den Weg dorthin in genau zwei Sätzen — mit einem Imperativ und einem Richtungswort. Wer drei Sätze braucht, gibt weiter.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -889,14 +874,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde müssen <u>zwei Imperative</u> und <u>zwei Richtungswörter</u> vorkommen. Wer <i>bis zu die Ampel</i> sagt, gibt weiter — es heißt <b>bis zur</b>.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Jeder nennt reihum ein Ziel im Raum, der Nachbar beschreibt den Weg dorthin in genau zwei Sätzen — mit einem Imperativ und einem Richtungswort. Wer drei Sätze braucht, gibt weiter.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Warum sind Wegbeschreibungen so schwer zu verstehen?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Wie merkst du dir einen Weg, den dir jemand erklärt?</li><li>Was ist besser: einmal fragen und viel bekommen, oder dreimal fragen und wenig?</li><li>Was ärgert dich mehr: die Verspätung oder die fehlende Information?</li><li>Wie sagst du im Beruf, dass du zu spät kommst?</li><li>Wann lohnt es sich, jemanden vom Personal zu suchen?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
+<p class="ssub">Einer sucht, einer hilft. Danach tauschen — und beim zweiten Mal ohne Notizen. Regel für alle drei: Die Antwort muss einmal zurückgespiegelt werden.</p>
+<div class="rmcard">
+<b>1 · Der Weg zum Bahnhof</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A sucht den Bahnhof und hat kein Netz. B kennt sich aus und erklärt es — mit mindestens zwei Imperativen und zwei Richtungswörtern. A darf nur zwei Schritte auf einmal mitnehmen.</p>
+<div class="nur-a2"><span class="rm">Entschuldigung, ist der Bahnhof in dieser Richtung?</span><span class="rm">Also erst geradeaus, ja?</span><span class="rm">Ist das zu Fuß zu schaffen?</span><span class="rm">Gibt es dort ein Schild?</span></div>
+<div class="nur-b1"><span class="rm">Können Sie mir sagen, wie ich am besten hinkomme?</span><span class="rm">Ich fasse kurz zusammen: …</span><span class="rm">Lohnt sich zu Fuß oder besser der Bus?</span><span class="rm">Ist der Weg gut ausgeschildert?</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat mindestens zwei Imperative und zwei Richtungswörter benutzt (<i>bis zur</i>, <i>an … vorbei</i>, <i>über die</i>, <i>um die</i>). A hat den Weg einmal zurückgespiegelt, bevor er losgegangen ist.</div>
+</div>
+<div class="rmcard">
+<b>2 · Zu ausführlich</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B erklärt absichtlich einen viel zu langen Weg mit fünf Abbiegungen. A muss freundlich bremsen und darf am Ende nur den ersten Schritt und ein Schild kennen — mehr braucht es nicht.</p>
+<div class="nur-a2"><span class="rm">Noch mal langsam bitte?</span><span class="rm">Also erst hier runter?</span><span class="rm">In diese Richtung?</span><span class="rm">Gibt es ein Schild dorthin?</span></div>
+<div class="nur-b1"><span class="rm">Darf ich kurz nachfragen — der erste Teil?</span><span class="rm">Habe ich das richtig verstanden, dass …?</span><span class="rm">Den Rest frage ich unterwegs noch einmal</span><span class="rm">Ist es ab dort ausgeschildert?</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat unterbrochen, statt höflich alles über sich ergehen zu lassen, und ist am Ende mit genau zwei Informationen losgegangen: erste Richtung und Schild.</div>
+</div>
+<div class="rmcard">
+<b>3 · Der Zug fällt aus</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A steht am Bahnsteig, der Zug fällt aus. B ist beim Personal und hat es eilig. A muss in zwei Fragen klären, was jetzt gilt und ob die Fahrkarte weiter gültig ist — und danach jemandem Bescheid sagen.</p>
+<div class="nur-a2"><span class="rm">Was gilt jetzt für den Zug nach …?</span><span class="rm">Fährt hier Ersatzverkehr?</span><span class="rm">Gilt meine Fahrkarte da auch?</span><span class="rm">Ich komme etwa zwanzig Minuten später</span></div>
+<div class="nur-b1"><span class="rm">Gibt es eine andere Verbindung?</span><span class="rm">Wo fährt der Ersatzverkehr ab?</span><span class="rm">Muss ich mir das bestätigen lassen?</span><span class="rm">Ich verspäte mich um etwa zwanzig Minuten</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat nach der Lösung gefragt und nicht nach dem Grund. Beide Punkte sind geklärt, und A hat mit einer <u>Zahl</u> Bescheid gesagt, nicht nur <i>ich komme später</i>.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -962,6 +981,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Sprachnachricht und die Imperative bis Sonntagabend. Ich achte besonders auf <i>bis zur</i> gegen <i>bis zu die</i> — und darauf, ob die Vorsilbe bei <i>abbiegen</i> hinten steht.</div>
 <div class="tip">🔜 <strong>Nächste Woche:</strong> <u>Zug fällt aus — meine Rechte.</u> Heute ging es darum, was man am Bahnsteig sagt. Nächste Woche darum, was einem danach zusteht: Erstattung, Ersatz und die Frage, ab wann man ein Taxi nehmen darf.</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1148,11 +1174,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1209,7 +1242,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1219,7 +1254,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

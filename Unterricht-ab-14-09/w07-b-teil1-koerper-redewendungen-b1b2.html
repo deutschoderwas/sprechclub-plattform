@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,105 +627,43 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B2<span class="zusatz"> · feiner</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">⚖️ Drei Arten von Redewendung</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">Warum der Körper <span class="hl">überall mitspricht</span></h2>
-<p class="ssub">Sprachen benutzen für abstrakte Dinge gern das, was jeder kennt — und niemand kennt etwas besser als den eigenen Körper. Deshalb sitzt der Ärger im Hals, die Entscheidung im Bauch und die Arbeit in der Hand. Fast jede Sprache macht das, nur mit anderen Körperteilen.</p>
-<div class="scene-wrap klein"><img src="../vok-bild/der-kopf.webp" alt="Eine Frau tippt sich an die Schläfe"></div>
-<ul class="qlist nur-a2">
-<li>Welche Redewendung mit einem Körperteil kennst du schon?</li>
-<li>Gibt es in deiner Sprache etwas Ähnliches?</li>
-<li>Welche findest du am komischsten?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Warum benutzen Sprachen für Gefühle so oft den Körper?</li>
-<li>Welche Wendung aus deiner Sprache lässt sich nicht übersetzen?</li>
-<li>Was passiert, wenn man eine Redewendung wörtlich nimmt?</li>
-</ul>
-<div class="tip teal">🔑 <strong>Die Regel für heute:</strong> Eine Redewendung lernt man <b>als Ganzes</b> — wie eine einzige lange Vokabel. Nicht die Wörter einzeln, nicht die Grammatik dahinter, sondern den kompletten Satz mit allem Drumherum. <i>Die Nase voll haben.</i> Ein Stück, ein Eintrag, fertig.</div>
-<h2 class="st">Die Falle: <span class="hl">mein Kopf oder der Kopf?</span></h2>
-<p class="ssub">Im Englischen sagt man <i>I broke my arm</i>. Im Deutschen sagt man <b>Ich habe mir den Arm gebrochen</b> — mit bestimmtem Artikel und der Person im Dativ. Das ist keine Ausnahme für Redewendungen, sondern die normale Art, im Deutschen über den eigenen Körper zu sprechen. Und wer es einmal verstanden hat, hört den Fehler danach sofort.</p>
-<div class="scene-wrap klein"><img src="../vok-bild/der-ruecken.webp" alt="Ein Mann hält sich den unteren Rücken"></div>
-<ul class="qlist nur-a2">
-<li>Sagst du eher <i>mein Kopf tut weh</i> oder <i>mir tut der Kopf weh</i>?</li>
-<li>Wie ist das in deiner Sprache?</li>
-<li>Welche Variante klingt für dich natürlicher?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Warum reicht im Deutschen der bestimmte Artikel aus?</li>
-<li>In welchen Fällen benutzt man doch ein Possessivpronomen?</li>
-<li>Woran merkst du, dass jemand hier aus einer anderen Sprache übersetzt?</li>
-</ul>
-<div class="tip">💡 <strong>Warum das so ist:</strong> Der Dativ sagt schon, <u>wem</u> der Körperteil gehört. <i>Ich wasche <b>mir</b> die Hände</i> — wessen Hände das sind, steht im <i>mir</i>. Ein <i>meine</i> davor wäre doppelt gemoppelt. Deshalb klingt <i>ich wasche meine Hände</i> für deutsche Ohren seltsam umständlich, obwohl es nicht falsch ist.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
 </section>
 
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Wendungen <span class="hl">vom Kopf bis zum Bein</span></h2>
-<p class="ssub">Sagt jede Wendung laut — <u>ganz</u>, nicht in Einzelteilen. Und gleich eine Situation dazu: Wann hättest du diesen Satz schon einmal gebrauchen können?</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../vok-bild/der-kopf.webp" alt="Eine Frau tippt sich an die Schläfe" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Kopf</div><div class="bex">„Bleib ruhig, verlier jetzt nicht den Kopf.“</div><div class="bti">💡 Die Familie ist groß: <b>den Kopf verlieren</b> (panisch werden), <b>sich etwas durch den Kopf gehen lassen</b> (nachdenken), <b>etwas im Kopf haben</b> (sich merken). Immer mit <u>bestimmtem</u> Artikel — nie <i>seinen Kopf verlieren</i>.</div><button class="speak" data-say="Bleib ruhig, verlier jetzt nicht den Kopf.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/a-klatschen.webp" alt="Amanda klatscht in die Hände" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Hand</div><div class="bex">„Der Vorschlag hat Hand und Fuß.“</div><div class="bti">💡 Kommt aus dem Mittelalter: Wer Hand und Fuß hatte, war kampffähig. Heute sagt man es über Pläne und Argumente. Ohne Artikel, feste Reihenfolge — <i>Fuß und Hand</i> sagt niemand.</div><button class="speak" data-say="Der Vorschlag hat Hand und Fuß.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/a-schulter.webp" alt="Amanda zuckt mit den Schultern" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Schulter</div><div class="bex">„Das solltest du nicht auf die leichte Schulter nehmen.“</div><div class="bti">💡 Fast immer mit <b>nicht</b> — als Warnung. Dazu passt <b>mit den Schultern zucken</b>, das nur die Geste beschreibt, und <b>jemandem die kalte Schulter zeigen</b> (jemanden ignorieren).</div><button class="speak" data-say="Das solltest du nicht auf die leichte Schulter nehmen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/a-hoeren.webp" alt="Amanda hört aufmerksam zu" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Ohr</div><div class="bex">„Erzähl, ich bin ganz Ohr.“</div><div class="bti">💡 Ohne Artikel und im Singular, obwohl man zwei hat — das ist das Erstarrte an einer Redewendung. Weitere: <b>etwas im Ohr haben</b> (eine Melodie), <b>jemandem in den Ohren liegen</b> (jemanden bedrängen).</div><button class="speak" data-say="Erzähl, ich bin ganz Ohr.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-hals.webp" alt="Eine Person fasst sich an den Hals" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Hals</div><div class="bex">„Dieses Lied hängt mir zum Hals heraus.“</div><div class="bti">💡 Die Person steht im <b>Dativ</b>: <i>mir</i>, <i>dir</i>, <i>ihm</i>. Ähnlich, aber stärker als <i>die Nase voll haben</i>. Und <b>Hals über Kopf</b> heißt etwas ganz anderes: sehr schnell und überstürzt.</div><button class="speak" data-say="Dieses Lied hängt mir zum Hals heraus.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-bauch.webp" alt="Eine Frau hält sich den Bauch" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Bauch</div><div class="bex">„Ich entscheide das aus dem Bauch heraus.“</div><div class="bti">💡 Sehr gebräuchlich im Beruf: <b>aus dem Bauch heraus entscheiden</b> und <b>Bauchschmerzen bei etwas haben</b> — Letzteres heißt nicht Bauchweh, sondern Bedenken. Ein schöner Satz für Besprechungen.</div><button class="speak" data-say="Ich entscheide das aus dem Bauch heraus.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-aermel.webp" alt="Jemand krempelt sich am Tisch den Ärmel hoch" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Ärmel</div><div class="bex">„Jetzt krempeln wir die Ärmel hoch.“</div><div class="bti">💡 Kein Körperteil, sondern Kleidung — gehört aber in dieselbe Familie. Dazu: <b>etwas aus dem Ärmel schütteln</b> (etwas mühelos hervorbringen). Beide sind positiv und passen gut in den Beruf.</div><button class="speak" data-say="Jetzt krempeln wir die Ärmel hoch.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-gesichtsausdruck.webp" alt="Eine lächelnde Frau schaut in die Kamera" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Gesicht</div><div class="bex">„Ich wollte nicht, dass er vor allen das Gesicht verliert.“</div><div class="bti">💡 Dazu das Gegenstück <b>das Gesicht wahren</b>. Sehr nützlich, wenn man Kritik übt: <i>ohne dass jemand das Gesicht verliert</i>. Und <b>ein langes Gesicht machen</b> heißt: enttäuscht aussehen.</div><button class="speak" data-say="Ich wollte nicht, dass er vor allen das Gesicht verliert.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/a-zeigen.webp" alt="Amanda hebt den Zeigefinger" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Finger</div><div class="bex">„Von dem Vertrag würde ich die Finger lassen.“</div><div class="bti">💡 Eine deutliche Warnung, aber freundlich im Ton. Dazu: <b>jemandem auf die Finger schauen</b> (kontrollieren) und <b>keinen Finger krumm machen</b> (nichts tun). Alle drei hört man im Alltag ständig.</div><button class="speak" data-say="Von dem Vertrag würde ich die Finger lassen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/amanda-denk.webp" alt="Amanda überlegt mit dem Finger am Kinn" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Gedanke</div><div class="bex">„Lass es dir noch mal durch den Kopf gehen.“</div><div class="bti">💡 Der höflichste Weg, um Bedenkzeit zu bitten oder sie jemandem zu geben. Achte auf den Dativ: <i>Lass es <b>dir</b> durch den Kopf gehen.</i> Ohne das <i>dir</i> ist der Satz unvollständig.</div><button class="speak" data-say="Lass es dir noch mal durch den Kopf gehen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/das-bein.webp" alt="Eine Frau sitzt auf einem Stuhl, die Beine ausgestreckt" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Bein</div><div class="bex">„Seit einem Jahr steht sie auf eigenen Beinen.“</div><div class="bti">💡 Immer Plural und ohne Artikel: <b>auf eigenen Beinen</b>. Dazu: <b>jemandem ein Bein stellen</b> (jemanden hereinlegen) und <b>etwas auf die Beine stellen</b> (etwas organisieren) — dreimal Bein, dreimal etwas ganz anderes.</div><button class="speak" data-say="Seit einem Jahr steht sie auf eigenen Beinen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-ruecken.webp" alt="Ein Mann hält sich den unteren Rücken" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Rücken</div><div class="bex">„In der Sitzung hat sie mir den Rücken gestärkt.“</div><div class="bti">💡 Ein Kompliment, das man wirklich benutzt. Und der Gegensatz: <b>hinter jemandes Rücken</b> — heimlich, ohne dass die Person es weiß. Beide mit bestimmtem Artikel, nie mit <i>seinen</i>.</div><button class="speak" data-say="In der Sitzung hat sie mir den Rücken gestärkt.">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel „Wörtlich genommen“:</strong> Einer nennt eine Wendung, der andere erklärt sie absichtlich <u>wörtlich</u> — <i>Er hat die Nase voll: Da ist etwas in seiner Nase.</i> Danach die richtige Bedeutung. Ihr merkt sofort, welche Bilder im Deutschen noch durchscheinen und welche vollkommen erstarrt sind.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Durchsichtig, halb <span class="hl">oder gar nicht?</span></h2>
-<p class="ssub">Manche Wendungen kann man erraten, andere nie. Der Unterschied ist wichtig: Bei den durchsichtigen darfst du dich auf dein Gefühl verlassen, bei den anderen musst du sie einfach lernen — und Raten führt dort zuverlässig in die Irre.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">🔍</span><div class="gmw">durchsichtig</div><div class="gmb">das Bild erklärt sich selbst</div><div class="gmx">die Ärmel hochkrempeln = anfangen</div></div>
-<div class="gk blau"><span class="gem2">🌗</span><div class="gmw">halb durchsichtig</div><div class="gmb">man ahnt es, wenn man es einmal weiß</div><div class="gmx">die Nase voll haben = genug haben</div></div>
-<div class="gk ja"><span class="gem2">🌑</span><div class="gmw">undurchsichtig</div><div class="gmb">reine Vokabel, kein Bild hilft</div><div class="gmx">Hand und Fuß haben = durchdacht sein</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Richtig</div><div class="gsatz">Ich habe die Nase voll.</div><div class="bsp"><span class="wer">Warum das stimmt</span>Bestimmter Artikel, feste Form, nichts austauschbar. So und nur so steht die Wendung im Wörterbuch — und so sagt sie jeder Muttersprachler.</div></div>
-<div class="gk no"><div class="gkl">❌ Falsch</div><div class="gsatz">Ich habe meine Nase voll.</div><div class="bsp"><span class="wer">Das Problem</span>Der Satz ist grammatisch nicht falsch, aber die Redewendung ist damit kaputt. Man hört sofort, dass hier jemand aus einer anderen Sprache übersetzt — im Deutschen steht bei Körperteilen der <b>bestimmte Artikel</b>.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Richtig</div><div class="gsatz">Das Projekt hat Hand und Fuß.</div><div class="bsp"><span class="wer">Warum das stimmt</span>Ohne Artikel, in genau dieser Reihenfolge. Eine Redewendung ist <b>erstarrt</b> — man kann kein Wort ersetzen, nichts hinzufügen und nichts umstellen.</div></div>
-<div class="gk no"><div class="gkl">❌ Falsch</div><div class="gsatz">Das Projekt hat sehr viel Hand und Fuß.</div><div class="bsp"><span class="wer">Das Problem</span>Redewendungen lassen sich nicht steigern. <i>Sehr</i>, <i>viel</i>, <i>ein bisschen</i> — alles davor macht sie kaputt. Wenn du abstufen willst, brauchst du einen anderen Satz: <i>Das Projekt ist gut durchdacht.</i></div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Richtig</div><div class="gsatz">Dieses Lied hängt mir zum Hals heraus.</div><div class="bsp"><span class="wer">Warum das stimmt</span>Die Person steht im <b>Dativ</b> und ist Teil der Wendung. Ohne <i>mir</i> fehlt dem Satz die Hälfte — es muss immer jemandem zum Hals heraushängen.</div></div>
-<div class="gk no"><div class="gkl">❌ Falsch</div><div class="gsatz">Dieses Lied hängt zum Hals heraus.</div><div class="bsp"><span class="wer">Das Problem</span>Ohne den Dativ steht der Satz in der Luft. Genau daran erkennt man, ob jemand die Wendung als Ganzes gelernt hat oder nur die Wörter darin kennt.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Wie lerne ich Redewendungen so, dass sie hängen bleiben?</button>
-<div class="inhalt">
-<p>Vier Dinge, und sie sitzen:</p>
-<ul>
-<li><b>Als ganzen Satz lernen</b>, nie als einzelne Wörter. <i>Die Nase voll haben</i> ist eine Vokabel, keine drei.</li>
-<li><b>Mit der Person üben:</b> <i>mir</i>, <i>dir</i>, <i>ihm</i>. Bei vielen Wendungen gehört der Dativ dazu und fehlt sonst.</li>
-<li><b>Eine eigene Situation dazu erfinden</b> — deine Arbeit, dein Nachbar, dein letzter Montag. Ohne Situation bleibt nichts hängen.</li>
-<li><b>Erst zwei benutzen, nicht zwölf.</b> Zwei Wendungen, die sicher sitzen, wirken souveräner als zwölf, bei denen du zögerst.</li>
-</ul>
-<p style="margin-top:.5rem;">Und die wichtigste Warnung: <b>Übersetze nie wörtlich aus deiner Sprache.</b> Fast jede Sprache hat ein Bild für „genug haben“ — nur eben mit einem anderen Körperteil. Wörtlich übersetzt versteht dich niemand, und meistens klingt es sehr komisch.</p>
-</div>
-</div>
-<div class="tip">🎯 <strong>Zu zweit, eine Minute:</strong> Einer nennt eine Wendung, der andere sagt sofort, ob sie durchsichtig, halb durchsichtig oder undurchsichtig ist — und begründet es in einem Halbsatz. Danach tauschen.</div>
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Welche Redewendung mit einem Körperteil kennst du schon?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Gibt es in deiner Sprache etwas Ähnliches?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -808,37 +816,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
-<p class="ssub">Einer bringt etwas ein, einer reagiert. Danach tauschen — und beim zweiten Mal ohne Notizen. Regel für alle drei: mindestens zwei Wendungen von heute, und keine davon gesteigert.</p>
-<div class="rmcard">
-<b>1 · Die Idee und der Einwand</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A stellt einen Plan vor, der grundsätzlich gut ist, aber einen Haken hat. B lobt konkret und meldet den Haken an — ohne den Plan kleinzureden.</p>
-<div class="nur-a2"><span class="rm">Ich bin ganz Ohr</span><span class="rm">Das hat Hand und Fuß</span><span class="rm">Da hätte ich Bauchschmerzen</span><span class="rm">Lass es mir durch den Kopf gehen</span></div>
-<div class="nur-b1"><span class="rm">Der Vorschlag hat Hand und Fuß, vor allem …</span><span class="rm">Ehrlich gesagt hätte ich bei … Bauchschmerzen</span><span class="rm">Das würde ich nicht auf die leichte Schulter nehmen</span><span class="rm">Ich melde mich morgen mit etwas Konkretem</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat zuerst gelobt und dann eingewendet, mindestens zwei Wendungen benutzt und keine davon gesteigert. Am Ende stand etwas Konkretes, nicht nur ein Gefühl.</div>
-</div>
-<div class="rmcard">
-<b>2 · Mir reicht es</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A bringt zum vierten Mal dasselbe Thema. B sagt deutlich, dass es reicht — und schlägt sofort vor, wie man die Sache endgültig löst.</p>
-<div class="nur-a2"><span class="rm">Können wir noch mal über … reden?</span><span class="rm">Mir hängt das zum Hals heraus</span><span class="rm">Ich habe die Nase voll</span><span class="rm">Lass es uns einmal richtig entscheiden</span></div>
-<div class="nur-b1"><span class="rm">Ehrlich gesagt hängt mir das langsam zum Hals heraus</span><span class="rm">Ich merke, dass mir die Geduld ausgeht</span><span class="rm">Ich möchte das nicht jede Woche aufrollen</span><span class="rm">Dann krempeln wir am Freitag die Ärmel hoch</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Der Ärger richtete sich gegen das Thema, nicht gegen die Person. Und nach dem deutlichen Satz kam sofort ein Vorschlag — sonst bleibt nur schlechte Laune übrig.</div>
-</div>
-<div class="rmcard">
-<b>3 · Unter vier Augen</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Jemand im Team hat einen Fehler gemacht. A will es sofort in der Runde ansprechen, B will es unter vier Augen klären. Findet in zwei Minuten einen Weg, bei dem niemand bloßsteht.</p>
-<div class="nur-a2"><span class="rm">Wir müssen das ansprechen</span><span class="rm">Sonst passiert es wieder</span><span class="rm">Aber nicht vor allen</span><span class="rm">Ich stärke ihm danach den Rücken</span></div>
-<div class="nur-b1"><span class="rm">So, dass er dabei nicht das Gesicht verliert</span><span class="rm">Wir sollten ihm eine Brücke bauen</span><span class="rm">Unter vier Augen und danach in der Runde</span><span class="rm">Verlieren wir jetzt nicht den Kopf</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide haben eine Lösung gefunden, die die Sache klärt <u>und</u> das Gesicht wahrt. Mindestens zwei Wendungen kamen vor, richtig mit Dativ.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Jeder sagt reihum einen Satz mit Possessivpronomen (<i>Mein Kopf tut weh</i>). Der Nachbar formt ihn sofort in die Dativform um (<i>Mir tut der Kopf weh</i>). Wer stockt, gibt weiter.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -871,14 +856,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> Mindestens <u>drei</u> Wendungen, jede mit dem richtigen Fall. Wer eine steigert (<i>sehr Hand und Fuß</i>) oder ein Possessivpronomen benutzt (<i>meine Nase voll</i>), gibt weiter.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Jeder sagt reihum einen Satz mit Possessivpronomen (<i>Mein Kopf tut weh</i>). Der Nachbar formt ihn sofort in die Dativform um (<i>Mir tut der Kopf weh</i>). Wer stockt, gibt weiter.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Warum benutzen Sprachen für Gefühle so oft den Körper?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Welche Wendung aus deiner Sprache lässt sich nicht übersetzen?</li><li>Was passiert, wenn man eine Redewendung wörtlich nimmt?</li><li>Warum reicht im Deutschen der bestimmte Artikel aus?</li><li>In welchen Fällen benutzt man doch ein Possessivpronomen?</li><li>Woran merkst du, dass jemand hier aus einer anderen Sprache übersetzt?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
+<p class="ssub">Einer bringt etwas ein, einer reagiert. Danach tauschen — und beim zweiten Mal ohne Notizen. Regel für alle drei: mindestens zwei Wendungen von heute, und keine davon gesteigert.</p>
+<div class="rmcard">
+<b>1 · Die Idee und der Einwand</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A stellt einen Plan vor, der grundsätzlich gut ist, aber einen Haken hat. B lobt konkret und meldet den Haken an — ohne den Plan kleinzureden.</p>
+<div class="nur-a2"><span class="rm">Ich bin ganz Ohr</span><span class="rm">Das hat Hand und Fuß</span><span class="rm">Da hätte ich Bauchschmerzen</span><span class="rm">Lass es mir durch den Kopf gehen</span></div>
+<div class="nur-b1"><span class="rm">Der Vorschlag hat Hand und Fuß, vor allem …</span><span class="rm">Ehrlich gesagt hätte ich bei … Bauchschmerzen</span><span class="rm">Das würde ich nicht auf die leichte Schulter nehmen</span><span class="rm">Ich melde mich morgen mit etwas Konkretem</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat zuerst gelobt und dann eingewendet, mindestens zwei Wendungen benutzt und keine davon gesteigert. Am Ende stand etwas Konkretes, nicht nur ein Gefühl.</div>
+</div>
+<div class="rmcard">
+<b>2 · Mir reicht es</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A bringt zum vierten Mal dasselbe Thema. B sagt deutlich, dass es reicht — und schlägt sofort vor, wie man die Sache endgültig löst.</p>
+<div class="nur-a2"><span class="rm">Können wir noch mal über … reden?</span><span class="rm">Mir hängt das zum Hals heraus</span><span class="rm">Ich habe die Nase voll</span><span class="rm">Lass es uns einmal richtig entscheiden</span></div>
+<div class="nur-b1"><span class="rm">Ehrlich gesagt hängt mir das langsam zum Hals heraus</span><span class="rm">Ich merke, dass mir die Geduld ausgeht</span><span class="rm">Ich möchte das nicht jede Woche aufrollen</span><span class="rm">Dann krempeln wir am Freitag die Ärmel hoch</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Der Ärger richtete sich gegen das Thema, nicht gegen die Person. Und nach dem deutlichen Satz kam sofort ein Vorschlag — sonst bleibt nur schlechte Laune übrig.</div>
+</div>
+<div class="rmcard">
+<b>3 · Unter vier Augen</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Jemand im Team hat einen Fehler gemacht. A will es sofort in der Runde ansprechen, B will es unter vier Augen klären. Findet in zwei Minuten einen Weg, bei dem niemand bloßsteht.</p>
+<div class="nur-a2"><span class="rm">Wir müssen das ansprechen</span><span class="rm">Sonst passiert es wieder</span><span class="rm">Aber nicht vor allen</span><span class="rm">Ich stärke ihm danach den Rücken</span></div>
+<div class="nur-b1"><span class="rm">So, dass er dabei nicht das Gesicht verliert</span><span class="rm">Wir sollten ihm eine Brücke bauen</span><span class="rm">Unter vier Augen und danach in der Runde</span><span class="rm">Verlieren wir jetzt nicht den Kopf</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide haben eine Lösung gefunden, die die Sache klärt <u>und</u> das Gesicht wahrt. Mindestens zwei Wendungen kamen vor, richtig mit Dativ.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -944,6 +963,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Sprachnachricht und die umgeformten Sätze bis Mittwochabend. Ich achte besonders auf zwei Dinge: den Dativ statt des Possessivpronomens — und ob die Wendungen wirklich passen oder nur eingebaut wurden.</div>
 <div class="tip">🔜 <strong>Am Donnerstag, Teil 2:</strong> <u>Wann sie passen — und wann nicht.</u> Heute haben wir gesammelt. Am Donnerstag wird es heikler: Manche dieser Wendungen sind im Beruf völlig normal, andere klingen dort plötzlich zu locker — und ein paar wirken im falschen Moment sogar verletzend.</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1130,11 +1156,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1191,7 +1224,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1201,7 +1236,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

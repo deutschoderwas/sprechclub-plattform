@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,100 +627,43 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B2<span class="zusatz"> · feiner</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">⚖️ Sicher oder heikel</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">Zwölf Sekunden <span class="hl">Stille</span></h2>
-<p class="ssub">Schaut euch das Bild an. Ihr steht nebeneinander und wartet. Was sagt man — und was sagt man auf keinen Fall?</p>
-<div class="scene-wrap klein"><img src="../amanda/sz-cafe.webp" alt="Zwei Personen stehen an einer Café-Theke und warten"></div>
-<ul class="qlist nur-a2">
-<li>Fällt dir Small Talk leicht oder schwer?</li>
-<li>Über welche Themen sprichst du mit Fremden?</li>
-<li>Was ist schlimmer: Stille oder ein falsches Thema?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Ist Small Talk oberflächlich — oder ist er die Eintrittskarte für alles Weitere?</li>
-<li>Welche Themen sind in deinem Land sicher, die hier heikel wären? Und umgekehrt?</li>
-<li>Woran merkst du, dass jemand aus Höflichkeit fragt und nicht aus Interesse?</li>
-</ul>
-<div class="tip">🗣️ <strong>Sprecht reihum:</strong> „Mit Fremden rede ich über …“ · „Unangenehm wird es, wenn …“ · „Am liebsten sage ich als Erstes …“</div>
-<h2 class="st">Es geht nicht um <span class="hl">den Inhalt</span></h2>
-<p class="ssub">Beim Small Talk interessiert niemanden wirklich das Wetter. Es geht um ein Signal: Ich sehe dich, ich bin freundlich, wir können reden. Der Inhalt ist nur der Anlass.</p>
-<div class="scene-wrap klein"><img src="../amanda/sz-erste-tage.webp" alt="Neue Kollegin wird im Büro von zwei Personen begrüßt"></div>
-<ul class="qlist">
-<li>Warum funktioniert ausgerechnet das Wetter überall als Thema?</li>
-<li>Was passiert, wenn man beim Small Talk zu ernst antwortet?</li>
-<li>Wie lang darf ein Small Talk sein, bevor er anstrengend wird?</li>
-</ul>
-<div class="tip teal">👀 <strong>Zu zweit, dreißig Sekunden:</strong> Stellt euch nebeneinander, als wartet ihr auf den Fahrstuhl. Einer fängt an. <u>Keine Pause länger als drei Sekunden.</u> Dann tauschen.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
 </section>
 
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Wörter für <span class="hl">die ersten Sätze</span></h2>
-<p class="ssub">Sagt jedes Wort laut — und gleich den Beispielsatz hinterher. Erst dann bleibt es hängen.</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../vok-bild/hallo.webp" alt="Eine Frau winkt vor einem Café" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Small Talk</div><div class="bex">„Ein bisschen Small Talk gehört hier einfach dazu.“</div><div class="bti">💡 Das deutsche Wort dafür wäre <b>die Plauderei</b> — sagt aber fast niemand. Small Talk versteht jeder.</div><button class="speak" data-say="Ein bisschen Small Talk gehört hier einfach dazu.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="Wetter">🌦️</div><div class="bb"><div class="bw"><span class="art">das</span> Wetter</div><div class="bex">„So ein Wetter im September, kaum zu glauben!“</div><div class="bti">💡 Das sicherste Thema der Welt. Und beliebt: <b>Wahnsinn, oder?</b> als Antwort — das reicht schon.</div><button class="speak" data-say="So ein Wetter im September, kaum zu glauben!">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/ich-heisse.webp" alt="Eine Frau stellt sich lächelnd vor" loading="lazy"><div class="bb"><div class="bw">sich vorstellen</div><div class="bex">„Darf ich mich kurz vorstellen? Ich bin Kaya.“</div><div class="bti">💡 Reflexiv mit Akkusativ: <b>mich</b>, <b>dich</b>, <b>sich</b>. Achtung: <b>sich etwas vorstellen</b> (Dativ) heißt „sich denken“.</div><button class="speak" data-say="Darf ich mich kurz vorstellen? Ich bin Kaya.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="Fahrstuhl">🛗</div><div class="bb"><div class="bw"><span class="art">der</span> Fahrstuhl</div><div class="bex">„Im Fahrstuhl sagt man wenigstens Guten Morgen.“</div><div class="bti">💡 Auch <b>der Aufzug</b> oder <b>der Lift</b>. Der klassische Ort für Small Talk — und für peinliche Stille.</div><button class="speak" data-say="Im Fahrstuhl sagt man wenigstens Guten Morgen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-kaffee.webp" alt="Eine Tasse Kaffee auf einem Tisch" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Kaffeeküche</div><div class="bex">„In der Kaffeeküche erfährt man mehr als in jedem Meeting.“</div><div class="bti">💡 Der zweite große Ort für Small Talk im Büro. Auch <b>die Teeküche</b> — je nach Firma.</div><button class="speak" data-say="In der Kaffeeküche erfährt man mehr als in jedem Meeting.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-ausflug.webp" alt="Zwei Menschen wandern mit Rucksäcken" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Wochenende</div><div class="bex">„Und, was haben Sie am Wochenende gemacht?“</div><div class="bti">💡 Die häufigste Montagsfrage in Deutschland. Antworte in zwei Sätzen und frag zurück — mehr will niemand hören.</div><button class="speak" data-say="Und, was haben Sie am Wochenende gemacht?">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-meinung.webp" alt="Vier Menschen unterhalten sich im Café" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Gemeinsamkeit</div><div class="bex">„Sobald man eine Gemeinsamkeit findet, läuft das Gespräch von allein.“</div><div class="bti">💡 Das eigentliche Ziel jedes Small Talks. Die passende Wendung: <b>Ach, Sie auch?</b></div><button class="speak" data-say="Sobald man eine Gemeinsamkeit findet, läuft das Gespräch von allein.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/amanda-denk.webp" alt="Amanda überlegt" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Anschlussfrage</div><div class="bex">„Ohne Anschlussfrage ist das Gespräch nach zwei Sätzen zu Ende.“</div><div class="bti">💡 Die Frage, die auf die Antwort des anderen aufbaut. Sie ist der Unterschied zwischen Verhör und Gespräch.</div><button class="speak" data-say="Ohne Anschlussfrage ist das Gespräch nach zwei Sätzen zu Ende.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-heikel.webp" alt="Zwei Personen in einem unangenehmen Gespräch" loading="lazy"><div class="bb"><div class="bw">heikel</div><div class="bex">„Gehalt und Politik sind hier heikle Themen.“</div><div class="bti">💡 Heißt: unangenehm, riskant. <b>ein heikles Thema</b>, <b>eine heikle Frage</b>. Sehr nützliches Wort.</div><button class="speak" data-say="Gehalt und Politik sind hier heikle Themen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-erste-tage.webp" alt="Eine neue Kollegin wird im Büro begrüßt" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> erste Eindruck</div><div class="bex">„Für den ersten Eindruck gibt es keine zweite Chance.“</div><div class="bti">💡 Fester Satz, den hier jeder kennt. Und: <b>einen guten Eindruck machen</b>.</div><button class="speak" data-say="Für den ersten Eindruck gibt es keine zweite Chance.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-haltestelle.webp" alt="Eine Person wartet an einer Bushaltestelle" loading="lazy"><div class="bb"><div class="bw">warten</div><div class="bex">„Wir warten hier schon eine Viertelstunde, oder?“</div><div class="bti">💡 Gemeinsames Warten ist der beste Anlass für Small Talk: Ihr habt schon etwas gemeinsam — die Situation.</div><button class="speak" data-say="Wir warten hier schon eine Viertelstunde, oder?">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="unverbindlich">🙂</div><div class="bb"><div class="bw">unverbindlich</div><div class="bex">„Halte es unverbindlich, dann kann sich niemand unwohl fühlen.“</div><div class="bti">💡 Das Gegenteil ist <b>persönlich</b>. Small Talk bleibt unverbindlich — genau deshalb funktioniert er.</div><button class="speak" data-say="Halte es unverbindlich, dann kann sich niemand unwohl fühlen.">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel:</strong> Verdeckt die Wörter. Wer eine Karte trifft, baut daraus eine <u>Frage an einen Fremden</u> — keine Aussage.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Drei Zonen, <span class="hl">und wo die Grenze liegt</span></h2>
-<p class="ssub">Erst die drei Themenzonen im deutschsprachigen Raum. Darunter drei Sätze richtig und falsch nebeneinander.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">✅</span><div class="gmw">Sicher</div><div class="gmb">Geht immer, überall, mit jedem.</div><div class="gmx">Wetter · Anfahrt · Essen · Wochenende · die Situation hier</div></div>
-<div class="gk blau"><span class="gem2">⚠️</span><div class="gmw">Kommt darauf an</div><div class="gmb">Erst, wenn der andere es selbst anspricht.</div><div class="gmx">Familie · Wohnort · Beruf im Detail · Gesundheit</div></div>
-<div class="gk ja"><span class="gem2">🚫</span><div class="gmw">Heikel</div><div class="gmb">In Deutschland fast immer zu privat.</div><div class="gmx">Gehalt · Miete · Politik · Religion · Gewicht · Alter</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Öffnet das Gespräch</div><div class="gsatz">Und, was haben Sie am Wochenende gemacht?</div><div class="bsp"><span class="wer">Warum das funktioniert</span>Eine offene Frage — der andere kann in zwei Sätzen oder in zehn antworten. Er entscheidet.</div></div>
-<div class="gk no"><div class="gkl">❌ Schließt es</div><div class="gsatz">Hatten Sie ein schönes Wochenende?</div><div class="bsp"><span class="wer">Das Problem</span>Auf eine Ja-Nein-Frage folgt „Ja, danke“ — und dann steht ihr wieder in der Stille.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Angenehm</div><div class="gsatz">Sind Sie auch neu hier?</div><div class="bsp"><span class="wer">Warum das funktioniert</span>Sie fragt nach der gemeinsamen Situation, nicht nach der Person. Das ist immer sicher.</div></div>
-<div class="gk no"><div class="gkl">❌ Zu persönlich</div><div class="gsatz">Und, was verdienen Sie hier so?</div><div class="bsp"><span class="wer">Das Problem</span>Über Geld spricht man in Deutschland nicht mit Fremden — auch nicht scherzhaft.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ Hält das Gespräch</div><div class="gsatz">Wandern? Wo waren Sie denn unterwegs?</div><div class="bsp"><span class="wer">Warum das funktioniert</span>Eine Anschlussfrage greift ein Wort der Antwort auf. So merkt der andere, dass wirklich zugehört wurde.</div></div>
-<div class="gk no"><div class="gkl">❌ Bricht ab</div><div class="gsatz">Wandern? Aha. Und wo wohnen Sie?</div><div class="bsp"><span class="wer">Das Problem</span>Ein Themenwechsel ohne Anschluss wirkt wie ein Fragebogen. Und die Wohnfrage ist noch dazu heikel.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Die vier Einstiege, die immer gehen</button>
-<div class="inhalt">
-<p>Egal wo, egal mit wem — einer davon passt:</p>
-<ul>
-<li><b>Die Situation:</b> „Ganz schön voll heute, oder?“</li>
-<li><b>Das Wetter:</b> „So ein Wetter im September — Wahnsinn.“</li>
-<li><b>Die Anfahrt:</b> „Sind Sie gut hergekommen?“</li>
-<li><b>Das Naheliegende:</b> „Ist der Kaffee hier zu empfehlen?“</li>
-</ul>
-<p style="margin-top:.5rem;">Alle vier haben eines gemeinsam: Sie fragen nach etwas, das ihr <u>beide</u> gerade erlebt. Deshalb ist keine davon zu privat.</p>
-</div>
-</div>
-<div class="tip">⚖️ <strong>Kurzübung:</strong> Jeder nennt ein Thema, die Gruppe ordnet es zu — <u>sicher, kommt darauf an, heikel</u>. Wo seid ihr euch uneinig?</div>
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Fällt dir Small Talk leicht oder schwer?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Über welche Themen sprichst du mit Fremden?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -811,37 +824,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei <span class="hl">Begegnungen</span></h2>
-<p class="ssub">Zu zweit, je zwei Minuten. Regel: keine Pause länger als drei Sekunden. Danach tauschen.</p>
-<div class="rmcard">
-<b>1 · Im Fahrstuhl, achter Stock</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Ihr fahrt gemeinsam nach oben und kennt euch nicht. Ihr habt genau eine Minute.</p>
-<div class="nur-a2"><span class="rm">Ganz schön voll heute</span><span class="rm">Auch so früh dran?</span><span class="rm">Arbeiten Sie hier?</span><span class="rm">Schönen Tag noch!</span></div>
-<div class="nur-b1"><span class="rm">Ich habe Sie hier schon mal gesehen</span><span class="rm">Sind Sie auch wegen der Tagung hier?</span><span class="rm">Wie gefällt es Ihnen im Haus?</span><span class="rm">Dann bis bald mal</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Das Gespräch beginnt bei der gemeinsamen Situation, enthält eine offene Frage und endet freundlich, bevor der Fahrstuhl hält.</div>
-</div>
-<div class="rmcard">
-<b>2 · Der erste Tag im Team</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A ist neu, B arbeitet seit zehn Jahren dort. Fünf Minuten in der Kaffeeküche.</p>
-<div class="nur-a2"><span class="rm">Darf ich mich vorstellen?</span><span class="rm">Seit heute</span><span class="rm">Wie lange sind Sie schon hier?</span><span class="rm">Danke für den Tipp</span></div>
-<div class="nur-b1"><span class="rm">Herzlich willkommen im Haus</span><span class="rm">Was machen Sie genau?</span><span class="rm">Wie sind Sie hergekommen?</span><span class="rm">Melden Sie sich, wenn etwas fehlt</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide fragen abwechselnd, keiner verhört den anderen — und mindestens eine Gemeinsamkeit wird gefunden.</div>
-</div>
-<div class="rmcard">
-<b>3 · Die heikle Frage</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B fragt A nach Gehalt, Miete oder Alter. A will freundlich bleiben und trotzdem nicht antworten.</p>
-<div class="nur-a2"><span class="rm">Darüber rede ich nicht so gern</span><span class="rm">Aber die Arbeit ist spannend</span><span class="rm">Und Sie, was machen Sie?</span><span class="rm">Erzählen Sie mal</span></div>
-<div class="nur-b1"><span class="rm">Das halte ich lieber für mich</span><span class="rm">Ich merke, das ist hier ein Thema</span><span class="rm">Viel spannender finde ich …</span><span class="rm">Wie sind Sie dazu gekommen?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A weicht aus, ohne den anderen zu beschämen — und lenkt mit einer echten Frage auf ein sicheres Thema.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Sagt die vier Einstiege am Stück — <u>Situation, Wetter, Anfahrt, das Naheliegende</u>. Erst wenn sie ohne Nachdenken kommen, sitzen sie.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -874,14 +864,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde muss eine <u>W-Frage</u> und eine <u>Anschlussfrage</u> vorkommen. Die Gruppe hört mit.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Sagt die vier Einstiege am Stück — <u>Situation, Wetter, Anfahrt, das Naheliegende</u>. Erst wenn sie ohne Nachdenken kommen, sitzen sie.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Ist Small Talk oberflächlich — oder ist er die Eintrittskarte für alles Weitere?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Welche Themen sind in deinem Land sicher, die hier heikel wären? Und umgekehrt?</li><li>Woran merkst du, dass jemand aus Höflichkeit fragt und nicht aus Interesse?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei <span class="hl">Begegnungen</span></h2>
+<p class="ssub">Zu zweit, je zwei Minuten. Regel: keine Pause länger als drei Sekunden. Danach tauschen.</p>
+<div class="rmcard">
+<b>1 · Im Fahrstuhl, achter Stock</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Ihr fahrt gemeinsam nach oben und kennt euch nicht. Ihr habt genau eine Minute.</p>
+<div class="nur-a2"><span class="rm">Ganz schön voll heute</span><span class="rm">Auch so früh dran?</span><span class="rm">Arbeiten Sie hier?</span><span class="rm">Schönen Tag noch!</span></div>
+<div class="nur-b1"><span class="rm">Ich habe Sie hier schon mal gesehen</span><span class="rm">Sind Sie auch wegen der Tagung hier?</span><span class="rm">Wie gefällt es Ihnen im Haus?</span><span class="rm">Dann bis bald mal</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Das Gespräch beginnt bei der gemeinsamen Situation, enthält eine offene Frage und endet freundlich, bevor der Fahrstuhl hält.</div>
+</div>
+<div class="rmcard">
+<b>2 · Der erste Tag im Team</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A ist neu, B arbeitet seit zehn Jahren dort. Fünf Minuten in der Kaffeeküche.</p>
+<div class="nur-a2"><span class="rm">Darf ich mich vorstellen?</span><span class="rm">Seit heute</span><span class="rm">Wie lange sind Sie schon hier?</span><span class="rm">Danke für den Tipp</span></div>
+<div class="nur-b1"><span class="rm">Herzlich willkommen im Haus</span><span class="rm">Was machen Sie genau?</span><span class="rm">Wie sind Sie hergekommen?</span><span class="rm">Melden Sie sich, wenn etwas fehlt</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide fragen abwechselnd, keiner verhört den anderen — und mindestens eine Gemeinsamkeit wird gefunden.</div>
+</div>
+<div class="rmcard">
+<b>3 · Die heikle Frage</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B fragt A nach Gehalt, Miete oder Alter. A will freundlich bleiben und trotzdem nicht antworten.</p>
+<div class="nur-a2"><span class="rm">Darüber rede ich nicht so gern</span><span class="rm">Aber die Arbeit ist spannend</span><span class="rm">Und Sie, was machen Sie?</span><span class="rm">Erzählen Sie mal</span></div>
+<div class="nur-b1"><span class="rm">Das halte ich lieber für mich</span><span class="rm">Ich merke, das ist hier ein Thema</span><span class="rm">Viel spannender finde ich …</span><span class="rm">Wie sind Sie dazu gekommen?</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A weicht aus, ohne den anderen zu beschämen — und lenkt mit einer echten Frage auf ein sicheres Thema.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -946,6 +970,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Aufnahme bis <u>Donnerstag 16 Uhr</u> in die Gruppe. Wir hören zwei davon gemeinsam an — freiwillig, versteht sich.</div>
 <div class="tip">🔜 <strong>Am Donnerstag, Teil 2:</strong> <u>Weiterführen und höflich beenden</u> — wie man aus zwei Minuten zehn macht, und wie man wieder herauskommt, ohne unhöflich zu wirken.</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1132,11 +1163,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1193,7 +1231,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1203,7 +1243,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

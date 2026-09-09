@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,100 +627,43 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B2<span class="zusatz"> · differenziert</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">⚖️ Drei Haushalte</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">Fünf Menschen, <span class="hl">ein Tisch</span></h2>
-<p class="ssub">Schaut euch das Bild an. Was liegt hier <u>nicht</u> auf dem Tisch — und wie ist das bei euch zu Hause?</p>
-<div class="scene-wrap klein"><img src="../amanda/sz-familie.webp" alt="Eine Familie sitzt gemeinsam mit Kaffee am Tisch"></div>
-<ul class="qlist nur-a2">
-<li>Liegt dein Handy beim Essen auf dem Tisch?</li>
-<li>Gibt es bei euch zu Hause Regeln dafür?</li>
-<li>Wann darf man ans Handy gehen, auch wenn man am Tisch sitzt?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Ist es eine Frage der Höflichkeit oder der Gewohnheit — und wo ist der Unterschied?</li>
-<li>Gelten für Kinder und Erwachsene dieselben Regeln? Sollten sie?</li>
-<li>Was verändert sich in einem Gespräch, sobald ein Handy sichtbar auf dem Tisch liegt?</li>
-</ul>
-<div class="tip">🗣️ <strong>Sprecht reihum:</strong> „Bei uns zu Hause …“ · „Was mich stört, ist …“ · „Eine Ausnahme mache ich, wenn …“</div>
-<h2 class="st">Es geht nicht ums Handy — <span class="hl">es geht um Aufmerksamkeit</span></h2>
-<p class="ssub">Kaum jemand streitet über ein Gerät. Gestritten wird darüber, wer gerade wem zuhört. Genau das üben wir heute in Worten.</p>
-<div class="scene-wrap klein"><img src="../amanda/sz-medien.webp" alt="Eine Frau sitzt mit Laptop und Handy auf dem Sofa"></div>
-<ul class="qlist">
-<li>Merkst du, wenn dir jemand nur halb zuhört? Woran?</li>
-<li>Wie war das vor dem Handy — gab es da andere Störungen bei Tisch?</li>
-<li>Wer setzt in einer Familie die Regeln: die Eltern, alle zusammen, oder niemand?</li>
-</ul>
-<div class="tip teal">👀 <strong>Zu zweit, eine Minute:</strong> Einer erzählt etwas, der andere schaut zwischendurch <u>zweimal aufs Handy</u>. Danach sagt der Erzähler, wie es sich angefühlt hat. Dann tauschen.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
 </section>
 
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Wörter für <span class="hl">Regeln zu Hause</span></h2>
-<p class="ssub">Sagt jedes Wort laut — und gleich den Beispielsatz hinterher. Erst dann bleibt es hängen.</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><div class="bem" role="img" aria-label="Handy">📱</div><div class="bb"><div class="bw"><span class="art">das</span> Handy</div><div class="bex">„Das Handy bleibt beim Essen in der Tasche.“</div><div class="bti">💡 Nur im Deutschen heißt es so — im Englischen ist es <i>mobile phone</i>. Formell: <b>das Mobiltelefon</b>.</div><button class="speak" data-say="Das Handy bleibt beim Essen in der Tasche.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="Regel">📜</div><div class="bb"><div class="bw"><span class="art">die</span> Regel</div><div class="bex">„Bei uns gilt die Regel: kein Handy bei Tisch.“</div><div class="bti">💡 <b>eine Regel aufstellen</b>, <b>eine Regel befolgen</b>, <b>gegen eine Regel verstoßen</b>. Und: <b>in der Regel</b> heißt „meistens“.</div><button class="speak" data-say="Bei uns gilt die Regel: kein Handy bei Tisch.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/guten-appetit.webp" alt="Eine Gruppe sitzt beim Essen am gedeckten Tisch" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Mahlzeit</div><div class="bex">„Wir haben nur eine gemeinsame Mahlzeit am Tag.“</div><div class="bti">💡 Frühstück, Mittagessen, Abendessen — alle drei sind Mahlzeiten. Als Gruß in der Kantine sagt man einfach: <b>Mahlzeit!</b></div><button class="speak" data-say="Wir haben nur eine gemeinsame Mahlzeit am Tag.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-eltern.webp" alt="Ein Elternpaar steht nebeneinander" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Vorbild</div><div class="bex">„Kinder machen nicht, was man sagt — sie machen, was man vormacht. Eltern sind Vorbild.“</div><div class="bti">💡 <b>ein Vorbild sein für</b> + Akkusativ. Das Verb dazu: <b>vorleben</b>.</div><button class="speak" data-say="Kinder machen nicht, was man sagt. Eltern sind Vorbild.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-meinung.webp" alt="Vier Menschen sitzen im Café zusammen und unterhalten sich" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Aufmerksamkeit</div><div class="bex">„Ein Gespräch braucht ungeteilte Aufmerksamkeit.“</div><div class="bti">💡 <b>Aufmerksamkeit schenken</b> oder <b>widmen</b> + Dativ. Das Adjektiv: <b>aufmerksam</b>.</div><button class="speak" data-say="Ein Gespräch braucht ungeteilte Aufmerksamkeit.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-medien.webp" alt="Eine Frau sitzt mit Laptop und Handy auf dem Sofa" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Bildschirmzeit</div><div class="bex">„Meine Bildschirmzeit war letzte Woche fünf Stunden am Tag.“</div><div class="bti">💡 Neues Wort, überall verstanden. Zusammengesetzt aus <b>der Bildschirm</b> + <b>die Zeit</b> — Artikel richtet sich nach dem letzten Wort.</div><button class="speak" data-say="Meine Bildschirmzeit war letzte Woche fünf Stunden am Tag.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-heikel.webp" alt="Zwei Personen sitzen sich in einem ernsten Gespräch gegenüber" loading="lazy"><div class="bb"><div class="bw">stören</div><div class="bex">„Es stört mich, wenn das Handy dauernd vibriert.“</div><div class="bti">💡 Mit Akkusativ: <b>es stört mich</b>. Die höflichere Variante mit Dativ: <b>Macht es Ihnen etwas aus, wenn …?</b></div><button class="speak" data-say="Es stört mich, wenn das Handy dauernd vibriert.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="Ausnahme">⚠️</div><div class="bb"><div class="bw"><span class="art">die</span> Ausnahme</div><div class="bex">„Bei einem Notfall machen wir eine Ausnahme.“</div><div class="bti">💡 <b>eine Ausnahme machen</b>. Und der Satz, der jede Debatte rettet: <b>Ausnahmen bestätigen die Regel.</b></div><button class="speak" data-say="Bei einem Notfall machen wir eine Ausnahme.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-notfall.webp" alt="Ein Wartebereich in einer Praxis" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Notfall</div><div class="bex">„Im Notfall darf man natürlich rangehen.“</div><div class="bti">💡 <b>im Notfall</b>, <b>der Notruf</b>, <b>die Notaufnahme</b>. In der Debatte das stärkste Argument für eine Ausnahme.</div><button class="speak" data-say="Im Notfall darf man natürlich rangehen.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/die-familie.webp" alt="Eine Familie sitzt zusammen auf dem Sofa" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Familienleben</div><div class="bex">„Das Familienleben findet bei uns am Küchentisch statt.“</div><div class="bti">💡 Kein Plural. <b>stattfinden</b> ist das passende Verb dazu — und es ist trennbar.</div><button class="speak" data-say="Das Familienleben findet bei uns am Küchentisch statt.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="abschalten">🔕</div><div class="bb"><div class="bw">abschalten</div><div class="bex">„Abends schalte ich das Handy ganz ab.“</div><div class="bti">💡 Trennbar. Doppelte Bedeutung: das Gerät ausmachen — und selbst zur Ruhe kommen. <b>Ich kann nicht abschalten.</b></div><button class="speak" data-say="Abends schalte ich das Handy ganz ab.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-erziehung.webp" alt="Eine Erzieherin spielt mit Kindern auf dem Boden" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Erziehung</div><div class="bex">„Das ist keine Frage der Technik, sondern der Erziehung.“</div><div class="bti">💡 Kein Plural. <b>jemanden erziehen</b>, <b>gut erzogen sein</b>. In Debatten oft das erste Wort, das fällt.</div><button class="speak" data-say="Das ist keine Frage der Technik, sondern der Erziehung.">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel:</strong> Verdeckt die Wörter. Wer eine Karte trifft, baut damit eine <u>Regel</u> für den eigenen Haushalt — mit dürfen, müssen oder sollen.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Drei Regeln, <span class="hl">drei Haltungen</span></h2>
-<p class="ssub">Erst die drei Modelle, die es in jeder Runde gibt. Darunter drei Sätze richtig und falsch nebeneinander.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">📦</span><div class="gmw">Die Kiste</div><div class="gmb">Alle Geräte kommen vor dem Essen weg.</div><div class="gmx">Bei uns muss das Handy in die Kiste — auch bei den Erwachsenen.</div></div>
-<div class="gk blau"><span class="gem2">🤝</span><div class="gmw">Die Absprache</div><div class="gmb">Kein Verbot, aber eine Verabredung.</div><div class="gmx">Wir haben abgesprochen, dass niemand ans Handy geht.</div></div>
-<div class="gk ja"><span class="gem2">🕊️</span><div class="gmw">Die Freiheit</div><div class="gmb">Jeder entscheidet selbst — und trägt die Folgen.</div><div class="gmx">Wer ständig aufs Handy schaut, merkt selbst, wie das ankommt.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man die Regel</div><div class="gsatz">Beim Essen darf niemand ans Handy gehen.</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>dürfen</b> ist das Verb für Erlaubnis und Verbot. Verneint heißt es: es ist nicht erlaubt.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Beim Essen muss niemand ans Handy gehen.</div><div class="bsp"><span class="wer">Das Problem</span><b>müssen</b> verneint heißt: es ist nicht nötig — nicht: es ist verboten. Ein großer Unterschied.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man die Erwartung</div><div class="gsatz">Man sollte beim Essen nicht auf das Handy schauen.</div><div class="bsp"><span class="wer">Warum das stimmt</span><b>sollen</b> im Konjunktiv ist der Rat: Es wäre besser. Kein Verbot, aber eine klare Erwartung.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Man kann beim Essen nicht auf das Handy schauen.</div><div class="bsp"><span class="wer">Das Problem</span><b>können</b> heißt: Es ist unmöglich. Aber möglich ist es ja — nur unerwünscht.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man die Ausnahme</div><div class="gsatz">Im Notfall darf man natürlich rangehen.</div><div class="bsp"><span class="wer">Warum das wirkt</span>Wer die Ausnahme selbst nennt, nimmt der Gegenseite ihr bestes Argument — noch bevor sie es ausspricht.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Ausnahmen gibt es keine, das ist eine klare Regel.</div><div class="bsp"><span class="wer">Das Problem</span>Eine Regel ohne Ausnahme lädt zum Widerspruch ein. Der Notfall kommt garantiert als Gegenfrage.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 dürfen, müssen, sollen — was heißt was?</button>
-<div class="inhalt">
-<p>Vier Sätze, und der Unterschied ist für immer klar:</p>
-<ul>
-<li><b>Du darfst nicht</b> → Es ist verboten.</li>
-<li><b>Du musst nicht</b> → Es ist nicht nötig (aber erlaubt).</li>
-<li><b>Du sollst nicht</b> → Jemand erwartet, dass du es lässt.</li>
-<li><b>Du kannst nicht</b> → Es ist unmöglich.</li>
-</ul>
-<p style="margin-top:.5rem;">Der Klassiker unter den Missverständnissen ist <b>müssen nicht</b>. „Du musst nicht kommen“ ist eine Erlaubnis, keine Absage.</p>
-</div>
-</div>
-<div class="tip">⚖️ <strong>Kurzübung:</strong> Jeder formuliert eine Hausregel dreimal — einmal mit <u>dürfen</u>, einmal mit <u>müssen</u>, einmal mit <u>sollen</u>. Was ändert sich am Ton?</div>
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Liegt dein Handy beim Essen auf dem Tisch?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Gibt es bei euch zu Hause Regeln dafür?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -810,37 +823,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei <span class="hl">Regelgespräche</span></h2>
-<p class="ssub">Zu zweit. Einer will eine Regel, einer nicht. Zwei Minuten, dann tauschen — auch die Position.</p>
-<div class="rmcard">
-<b>1 · Die Handykiste</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A will, dass alle Geräte beim Essen weggelegt werden. B findet das übertrieben.</p>
-<div class="nur-a2"><span class="rm">Bei uns soll gelten: …</span><span class="rm">Der Grund ist …</span><span class="rm">Im Notfall natürlich schon</span><span class="rm">Das gilt für alle</span></div>
-<div class="nur-b1"><span class="rm">Wir haben uns darauf verständigt, dass …</span><span class="rm">Es geht nicht ums Gerät, sondern um …</span><span class="rm">Notfälle sind ausgenommen</span><span class="rm">Wollen wir es vier Wochen ausprobieren?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A nennt zuerst den Grund und erst dann die Regel — und lässt die Ausnahme selbst zu, bevor B danach fragt.</div>
-</div>
-<div class="rmcard">
-<b>2 · Der Freund am Tisch</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A tippt beim gemeinsamen Essen ständig. B will es ansprechen, ohne den Abend zu verderben.</p>
-<div class="nur-a2"><span class="rm">Es stört mich, wenn …</span><span class="rm">Ich sage es lieber</span><span class="rm">War nicht so gemeint</span><span class="rm">Ich leg's weg</span></div>
-<div class="nur-b1"><span class="rm">Bei mir kommt an, dass …</span><span class="rm">Ich unterstelle dir nichts</span><span class="rm">Absicht und Wirkung sind zwei Dinge</span><span class="rm">Danke, dass du es sagst</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B sagt „mich stört“ statt „du bist“ — und A reagiert, ohne sich zu verteidigen.</div>
-</div>
-<div class="rmcard">
-<b>3 · Elternabend</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A ist für ein striktes Bildschirmverbot bis sechs, B für feste Zeiten. Findet eine gemeinsame Empfehlung.</p>
-<div class="nur-a2"><span class="rm">Ich finde, dass …</span><span class="rm">Bei uns funktioniert …</span><span class="rm">Das verstehe ich</span><span class="rm">Probieren wir es aus</span></div>
-<div class="nur-b1"><span class="rm">Ich vertrete die Auffassung, dass …</span><span class="rm">Ein Verbot verlagert das Problem nur</span><span class="rm">Kinder machen nach, was sie sehen</span><span class="rm">Einigen wir uns auf …</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide stimmen der Gegenseite in einem Punkt zu — und am Ende steht ein Vorschlag mit Frist statt eines Grundsatzstreits.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Sagt die vier Verneinungen am Stück — <u>darfst nicht, musst nicht, sollst nicht, kannst nicht</u> — und jeweils, was sie bedeuten.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -873,14 +863,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde müssen <u>zwei verschiedene Modalverben</u> vorkommen. Die Gruppe hört mit und sagt hinterher, welche es waren.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Sagt die vier Verneinungen am Stück — <u>darfst nicht, musst nicht, sollst nicht, kannst nicht</u> — und jeweils, was sie bedeuten.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Ist es eine Frage der Höflichkeit oder der Gewohnheit — und wo ist der Unterschied?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Gelten für Kinder und Erwachsene dieselben Regeln? Sollten sie?</li><li>Was verändert sich in einem Gespräch, sobald ein Handy sichtbar auf dem Tisch liegt?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei <span class="hl">Regelgespräche</span></h2>
+<p class="ssub">Zu zweit. Einer will eine Regel, einer nicht. Zwei Minuten, dann tauschen — auch die Position.</p>
+<div class="rmcard">
+<b>1 · Die Handykiste</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A will, dass alle Geräte beim Essen weggelegt werden. B findet das übertrieben.</p>
+<div class="nur-a2"><span class="rm">Bei uns soll gelten: …</span><span class="rm">Der Grund ist …</span><span class="rm">Im Notfall natürlich schon</span><span class="rm">Das gilt für alle</span></div>
+<div class="nur-b1"><span class="rm">Wir haben uns darauf verständigt, dass …</span><span class="rm">Es geht nicht ums Gerät, sondern um …</span><span class="rm">Notfälle sind ausgenommen</span><span class="rm">Wollen wir es vier Wochen ausprobieren?</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A nennt zuerst den Grund und erst dann die Regel — und lässt die Ausnahme selbst zu, bevor B danach fragt.</div>
+</div>
+<div class="rmcard">
+<b>2 · Der Freund am Tisch</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A tippt beim gemeinsamen Essen ständig. B will es ansprechen, ohne den Abend zu verderben.</p>
+<div class="nur-a2"><span class="rm">Es stört mich, wenn …</span><span class="rm">Ich sage es lieber</span><span class="rm">War nicht so gemeint</span><span class="rm">Ich leg's weg</span></div>
+<div class="nur-b1"><span class="rm">Bei mir kommt an, dass …</span><span class="rm">Ich unterstelle dir nichts</span><span class="rm">Absicht und Wirkung sind zwei Dinge</span><span class="rm">Danke, dass du es sagst</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B sagt „mich stört“ statt „du bist“ — und A reagiert, ohne sich zu verteidigen.</div>
+</div>
+<div class="rmcard">
+<b>3 · Elternabend</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A ist für ein striktes Bildschirmverbot bis sechs, B für feste Zeiten. Findet eine gemeinsame Empfehlung.</p>
+<div class="nur-a2"><span class="rm">Ich finde, dass …</span><span class="rm">Bei uns funktioniert …</span><span class="rm">Das verstehe ich</span><span class="rm">Probieren wir es aus</span></div>
+<div class="nur-b1"><span class="rm">Ich vertrete die Auffassung, dass …</span><span class="rm">Ein Verbot verlagert das Problem nur</span><span class="rm">Kinder machen nach, was sie sehen</span><span class="rm">Einigen wir uns auf …</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide stimmen der Gegenseite in einem Punkt zu — und am Ende steht ein Vorschlag mit Frist statt eines Grundsatzstreits.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -943,6 +967,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Sprachnachricht bis <u>Mittwoch 16 Uhr</u> in die Gruppe. Wir hören zwei davon gemeinsam an — freiwillig, versteht sich.</div>
 <div class="tip">🔜 <strong>Am Mittwoch, Teil 2:</strong> die <u>Debatte</u>. Zwei Lager, feste Redemittel, und am Ende stimmt die Gruppe ab. Bring dein stärkstes Argument mit.</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1129,11 +1160,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1190,7 +1228,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1200,7 +1240,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){

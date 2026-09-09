@@ -436,6 +436,76 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Die Ablauftafel ----------
+   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
+   und in welcher Aufstellung. */
+.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
+  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
+  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
+.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
+.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
+.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+
+/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
+.regie{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
+  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
+.regie b{font-weight:600;color:var(--ink-soft);}
+
+/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+.ank{
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
+  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+}
+.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
+  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+}
+.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
+.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
+.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
+.deb-s.con{border-left:9px solid var(--red,#E8302A);}
+.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
+.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
+.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
+.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-chips span{
+  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
+  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+}
+.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
+.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
+.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
+
+/* Die Bilder im Dialog sind Gesichter, keine Poster. */
+.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
+img.dbild{max-width:180px;border-radius:12px;}
+
 /* ---------- Eine klebende Leiste statt zweier ----------
    Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
    die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
@@ -557,99 +627,43 @@ a.tab:hover{color:var(--ink);}
     <button type="button" data-niv="b1" aria-pressed="false">B1<span class="zusatz"> · mehr</span></button>
   </div>
 <nav class="tabs">
-<a class="tab active" href="#einstieg">🖼️ Einstieg</a>
-<a class="tab" href="#wortschatz">🔤 Wortschatz</a>
-<a class="tab" href="#konzepte">⚖️ Feine Unterschiede</a>
+<a class="tab active" href="#ablauf">🎬 Ablauf</a>
+<a class="tab" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#saetze">💬 Sätze</a>
-<a class="tab" href="#dialoge">🎬 Dialoge</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
 <a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiele</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#ueben">✅ Üben</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
 </nav>
 </div>
 
-<section class="section" id="einstieg">
-<h2 class="st">Es klingelt. <span class="hl">Der Besuch ist da.</span></h2>
-<p class="ssub">Schaut euch das Bild an. Was sagt die Person an der Tür als Erstes — und was antwortet die andere?</p>
-<div class="scene-wrap klein"><img src="../amanda/sz-wohnen.webp" alt="Zwei Personen an einer Wohnungstür, eine bringt eine Pflanze mit"></div>
-<ul class="qlist nur-a2">
-<li>Bekommst du oft Besuch? Wen?</li>
-<li>Was bringst du mit, wenn du eingeladen bist?</li>
-<li>Kommst du lieber pünktlich oder ein bisschen später?</li>
-</ul>
-<ul class="qlist nur-b1">
-<li>Wie lädt man in deinem Land ein — mündlich, per Nachricht, mit Karte? Und wie verbindlich ist das?</li>
-<li>Was ist bei euch ein passendes Gastgeschenk, und was wäre peinlich?</li>
-<li>Woran merkst du als Gast, dass der Abend zu Ende ist?</li>
-</ul>
-<div class="tip">🗣️ <strong>Sprecht reihum:</strong> „Zuletzt war ich eingeladen bei …“ · „Ich habe … mitgebracht.“ · „Am Anfang habe ich gesagt: …“</div>
-<h2 class="st">In Deutschland fängt der Abend <span class="hl">an der Tür an</span></h2>
-<p class="ssub">Begrüßen, Mantel abgeben, Blumen überreichen, Schuhe — ja oder nein? Diese ersten zwei Minuten haben feste Sätze. Die üben wir heute.</p>
-<div class="scene-wrap klein"><img src="../vok-bild/guten-abend.webp" alt="Gäste kommen abends bei jemandem an der Wohnungstür an"></div>
-<ul class="qlist">
-<li>Zieht man bei euch die Schuhe aus? Und was macht man, wenn man es nicht weiß?</li>
-<li>Wann sagt man „du“ und wann „Sie“, wenn man neue Leute kennenlernt?</li>
-<li>Was sagst du, wenn dir das Essen nicht schmeckt?</li>
-</ul>
-<div class="tip teal">👀 <strong>Zu zweit:</strong> Stellt euch gegenüber und spielt nur die <u>ersten dreißig Sekunden</u> — klingeln, öffnen, begrüßen, Blumen. Dann tauschen. Kurz, aber jedes Mal anders.</div>
+<section class="section" id="ablauf">
+<h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
+<p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
+<div class="takt">
+<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
+<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
+<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+</div>
+<div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
 </section>
 
-<section class="section" id="wortschatz">
-<h2 class="st">Zwölf Wörter für <span class="hl">einen Abend zu Gast</span></h2>
-<p class="ssub">Sagt jedes Wort laut — und gleich den Beispielsatz hinterher. Erst dann bleibt es hängen.</p>
-<div style="text-align:center;margin:.4rem 0"><button class="btn ghost" id="verdecken">🙈 Wörter verdecken</button></div>
-<div class="bgrid" id="bgrid">
-<div class="bcard"><img src="../amanda/sz-feste.webp" alt="Menschen feiern mit Luftballons und stoßen an" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Einladung</div><div class="bex">„Vielen Dank für die Einladung!“</div><div class="bti">💡 <b>jemanden einladen</b> zu etwas. Und Achtung: Wer einlädt, bezahlt oft auch — im Restaurant heißt „ich lade dich ein“ genau das.</div><button class="speak" data-say="Vielen Dank für die Einladung!">🔊 hören</button></div></div>
-<div class="bcard"><img src="../amanda/sz-familie.webp" alt="Eine Familie sitzt mit Kaffee am Tisch" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Gast</div><div class="bex">„Wir haben heute Abend Gäste.“</div><div class="bti">💡 Plural: <b>die Gäste</b>. Der Gegenpart heißt <b>der Gastgeber</b> oder <b>die Gastgeberin</b>.</div><button class="speak" data-say="Wir haben heute Abend Gäste.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/guten-abend.webp" alt="Gäste kommen abends an einer Wohnungstür an" loading="lazy"><div class="bb"><div class="bw">vorbeikommen</div><div class="bex">„Komm doch am Samstag mal vorbei!“</div><div class="bti">💡 Trennbar und sehr locker. Für Freunde perfekt — für die Chefin sagt man lieber „Kommen Sie uns gern besuchen“.</div><button class="speak" data-say="Komm doch am Samstag mal vorbei!">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-mantel.webp" alt="Ein Mantel hängt im Flur neben der Treppe" loading="lazy"><div class="bb"><div class="bw"><span class="art">die</span> Garderobe</div><div class="bex">„Den Mantel kannst du an die Garderobe hängen.“</div><div class="bti">💡 Die Garderobe ist der Ort im Flur für Mäntel und Jacken. Der Gastgeber sagt fast immer: „Gib mir deine Jacke.“</div><button class="speak" data-say="Den Mantel kannst du an die Garderobe hängen.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="Gastgeschenk">💐</div><div class="bb"><div class="bw"><span class="art">das</span> Gastgeschenk</div><div class="bex">„Als Gastgeschenk bringt man Blumen, Wein oder etwas Süßes mit.“</div><div class="bti">💡 Blumen werden ohne Papier überreicht — das Papier nimmt man vorher ab. Bei Wein passt: „Nur eine Kleinigkeit.“</div><button class="speak" data-say="Als Gastgeschenk bringt man Blumen, Wein oder etwas Süßes mit.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/guten-appetit.webp" alt="Eine Gruppe sitzt beim Essen am gedeckten Tisch" loading="lazy"><div class="bb"><div class="bw">anstoßen</div><div class="bex">„Lasst uns anstoßen — auf euch!“</div><div class="bti">💡 Trennbar. Man schaut sich dabei in die Augen, sonst gilt es als unhöflich. Dazu sagt man <b>Prost</b> oder <b>zum Wohl</b>.</div><button class="speak" data-say="Lasst uns anstoßen, auf euch!">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/das-abendessen.webp" alt="Brot, Wurst und Käse auf einem Holzbrett" loading="lazy"><div class="bb"><div class="bw"><span class="art">das</span> Abendbrot</div><div class="bex">„Bei uns gibt es abends meistens nur Abendbrot.“</div><div class="bti">💡 Typisch deutsch: Brot, Käse, Wurst — kalt. Wer zum Abendbrot einlädt, kocht nicht unbedingt.</div><button class="speak" data-say="Bei uns gibt es abends meistens nur Abendbrot.">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-kaffee.webp" alt="Eine Tasse Kaffee auf einem Tisch" loading="lazy"><div class="bb"><div class="bw">nachschenken</div><div class="bex">„Darf ich dir noch etwas nachschenken?“</div><div class="bti">💡 Trennbar. Als Gast antwortet man entweder „gern“ oder „danke, ich habe noch“ — nie einfach nur „nein“.</div><button class="speak" data-say="Darf ich dir noch etwas nachschenken?">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/der-salat.webp" alt="Eine Schüssel mit frischem Salat" loading="lazy"><div class="bb"><div class="bw">zugreifen</div><div class="bex">„Greif ruhig zu, es ist genug da!“</div><div class="bti">💡 Trennbar. Der Gastgeber sagt es, der Gast antwortet: „Danke, sehr gern.“ Wörtlich: mit der Hand nehmen.</div><button class="speak" data-say="Greif ruhig zu, es ist genug da!">🔊 hören</button></div></div>
-<div class="bcard"><img src="../vok-bild/dreiundzwanzig.webp" alt="Eine Torte mit Kerzen auf einem Küchentisch" loading="lazy"><div class="bb"><div class="bw"><span class="art">der</span> Anlass</div><div class="bex">„Zu welchem Anlass ist die Einladung — Geburtstag oder einfach so?“</div><div class="bti">💡 Der Anlass ist der Grund für ein Fest. <b>aus diesem Anlass</b>, <b>ohne besonderen Anlass</b>.</div><button class="speak" data-say="Zu welchem Anlass ist die Einladung, Geburtstag oder einfach so?">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="absagen">🕕</div><div class="bb"><div class="bw">absagen</div><div class="bex">„Ich muss leider absagen, mir geht es nicht gut.“</div><div class="bti">💡 Trennbar. Gegenteil: <b>zusagen</b>. Absagen tut man so früh wie möglich — und immer mit einem Grund.</div><button class="speak" data-say="Ich muss leider absagen, mir geht es nicht gut.">🔊 hören</button></div></div>
-<div class="bcard"><div class="bem" role="img" aria-label="sich verabschieden">👋</div><div class="bb"><div class="bw">sich verabschieden</div><div class="bex">„Wir verabschieden uns langsam, es ist schon spät.“</div><div class="bti">💡 Reflexiv: <b>sich verabschieden von</b> jemandem. Das Signal zum Aufbrechen: „Wir wollen euch nicht länger aufhalten.“</div><button class="speak" data-say="Wir verabschieden uns langsam, es ist schon spät.">🔊 hören</button></div></div>
-</div>
-<div class="tip">💡 <strong>Spiel:</strong> Verdeckt die Wörter und deckt sie einzeln auf. Wer eine Karte trifft, sagt einen Satz, den man <u>an dem Abend wirklich sagt</u>.</div>
-</section>
-
-<section class="section" id="konzepte">
-<h2 class="st">Drei Wörter, die <span class="hl">fast dasselbe heißen</span></h2>
-<p class="ssub">Erst die drei Fälle, die man leicht verwechselt. Darunter drei Sätze richtig und falsch nebeneinander.</p>
-<div class="gdrei">
-<div class="gk gelb"><span class="gem2">🎉</span><div class="gmw">die Party</div><div class="gmb">Viele Leute, Musik, oft am Wochenende.</div><div class="gmx">Am Samstag ist bei Timo eine Party.</div></div>
-<div class="gk blau"><span class="gem2">🍰</span><div class="gmw">die Feier</div><div class="gmb">Ein Anlass steht dahinter: Geburtstag, Hochzeit, Abschied.</div><div class="gmx">Zu meiner Feier kommen nur zwölf Leute.</div></div>
-<div class="gk ja"><span class="gem2">☕</span><div class="gmw">der Besuch</div><div class="gmb">Zwei bis vier Personen, meistens am Nachmittag.</div><div class="gmx">Wir bekommen am Sonntag Besuch.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Vielen Dank für die Einladung!</div><div class="bsp"><span class="wer">Warum das passt</span>Der Dank kommt an der Tür, nicht erst beim Gehen. Und er kommt <u>vor</u> dem Gastgeschenk.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Danke, dass du mich eingeladen hast, das war wirklich sehr, sehr nett von dir, ich weiß gar nicht …</div><div class="bsp"><span class="wer">Das Problem</span>Zu lang für die Türschwelle. Ein Satz reicht — der Rest kommt beim Essen.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Soll ich die Schuhe ausziehen?</div><div class="bsp"><span class="wer">Warum das passt</span>In Deutschland ist es sehr unterschiedlich. Fragen ist nie falsch — einfach anbehalten manchmal schon.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">Bei uns zieht man immer die Schuhe aus.</div><div class="bsp"><span class="wer">Das Problem</span>Klingt wie eine Belehrung. Als Gast fragt man, als Gastgeber sagt man Bescheid.</div></div>
-</div>
-<div class="gpaar">
-<div class="gk ja"><div class="gkl">✅ So sagt man es</div><div class="gsatz">Wir wollen euch nicht länger aufhalten — es war ein schöner Abend.</div><div class="bsp"><span class="wer">Warum das passt</span>Das ist die feste Formel fürs Aufbrechen. Sie gibt beiden Seiten einen freundlichen Ausgang.</div></div>
-<div class="gk no"><div class="gkl">❌ So nicht</div><div class="gsatz">So, ich gehe jetzt.</div><div class="bsp"><span class="wer">Das Problem</span>Nicht falsch, aber schroff. Zum Abschied gehören zwei Sätze: einer zum Gehen, einer zum Danken.</div></div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Wann komme ich, was bringe ich mit?</button>
-<div class="inhalt">
-<p>Drei Faustregeln, die in Deutschland fast immer stimmen:</p>
-<ul>
-<li><b>Zeit:</b> Zum Essen pünktlich, zur Party ruhig eine halbe Stunde später. Zu früh ist unangenehmer als zu spät.</li>
-<li><b>Mitbringen:</b> Blumen, Wein oder etwas Süßes. Bei „bring nichts mit“ bringt man trotzdem eine Kleinigkeit.</li>
-<li><b>Fragen:</b> „Kann ich etwas mitbringen?“ ist immer richtig — und die Antwort „einen Nachtisch“ ist ernst gemeint.</li>
-</ul>
-<p style="margin-top:.5rem;">Und wenn du unsicher bist: Frag beim Zusagen gleich mit. Das gilt als aufmerksam, nicht als umständlich.</p>
-</div>
-</div>
-<div class="tip">⚖️ <strong>Kurzübung:</strong> Jeder sagt einen Satz für <u>zusagen</u>, einen für <u>absagen</u> und einen für <u>nachfragen</u>. Die Gruppe entscheidet, welcher am freundlichsten klingt.</div>
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
+<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="ank">Bekommst du oft Besuch? Wen?</div>
+<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Was bringst du mit, wenn du eingeladen bist?</div>
+<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="saetze">
@@ -808,37 +822,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei <span class="hl">Besuche</span></h2>
-<p class="ssub">Zu zweit. Einer ist Gast, einer ist Gastgeber. Zwei Minuten pro Runde, dann tauschen.</p>
-<div class="rmcard">
-<b>1 · Der erste Besuch bei den Nachbarn</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A wohnt seit einer Woche im Haus und ist zum Kaffee eingeladen. Man siezt sich noch.</p>
-<div class="nur-a2"><span class="rm">Guten Tag, ich bin …</span><span class="rm">Danke für die Einladung</span><span class="rm">Soll ich die Schuhe ausziehen?</span><span class="rm">Es war sehr nett</span></div>
-<div class="nur-b1"><span class="rm">Schön, dass wir uns kennenlernen</span><span class="rm">Eine Kleinigkeit für Sie</span><span class="rm">Wohnen Sie schon lange hier?</span><span class="rm">Kommen Sie uns auch mal besuchen</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide bleiben beim Sie, der Gast bringt etwas mit, und am Ende steht eine Gegeneinladung.</div>
-</div>
-<div class="rmcard">
-<b>2 · Ich muss leider absagen</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat zugesagt und muss zwei Stunden vorher absagen. B hat schon eingekauft.</p>
-<div class="nur-a2"><span class="rm">Es tut mir leid</span><span class="rm">Ich kann leider nicht kommen</span><span class="rm">Mir geht es nicht gut</span><span class="rm">Können wir es nachholen?</span></div>
-<div class="nur-b1"><span class="rm">Es ist mir wirklich unangenehm</span><span class="rm">Ich sage so spät ungern ab</span><span class="rm">Ich melde mich morgen</span><span class="rm">Lass es uns nachholen</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A sagt früh Bescheid, nennt einen echten Grund und schlägt einen neuen Termin vor. B nimmt es ohne Vorwurf an.</div>
-</div>
-<div class="rmcard">
-<b>3 · Das Essen, das du nicht essen kannst</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B hat stundenlang gekocht — und es ist genau das, was A nicht verträgt.</p>
-<div class="nur-a2"><span class="rm">Das sieht toll aus</span><span class="rm">Ich vertrage leider keine …</span><span class="rm">Ich nehme gern vom Salat</span><span class="rm">Es tut mir leid</span></div>
-<div class="nur-b1"><span class="rm">Ich hätte es vorher sagen sollen</span><span class="rm">Das ist keine Frage des Geschmacks</span><span class="rm">Ich freue mich trotzdem sehr</span><span class="rm">Beim nächsten Mal sage ich Bescheid</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A lobt zuerst, lehnt dann konkret ab und nimmt etwas anderes. Niemand muss sich am Ende schlecht fühlen.</div>
-</div>
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
+<section class="section" id="ueben">
+<h2 class="st">✅ Sitzt es schon?</h2>
+<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
+<div id="quiz"></div>
+<h2 class="st">✍️ Lückentext</h2>
+<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
+<div class="gap" id="gap"></div>
+<div class="tip teal">📣 <strong>Danach laut:</strong> Lest die vier Momente noch einmal am Stück vor — <u>zusagen, ankommen, bei Tisch, verabschieden</u>. Erst wenn es flüssig klingt, sitzt es.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -871,14 +862,48 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> Wer stehen bleibt, sagt einfach <u>„Moment, ich überlege“</u> — auf Deutsch. Das ist erlaubt und klingt im echten Gespräch völlig normal.</div>
 </section>
 
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Lest die vier Momente noch einmal am Stück vor — <u>zusagen, ankommen, bei Tisch, verabschieden</u>. Erst wenn es flüssig klingt, sitzt es.</div>
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Wie lädt man in deinem Land ein — mündlich, per Nachricht, mit Karte? Und wie verbindlich ist das?</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Was ist bei euch ein passendes Gastgeschenk, und was wäre peinlich?</li><li>Woran merkst du als Gast, dass der Abend zu Ende ist?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei <span class="hl">Besuche</span></h2>
+<p class="ssub">Zu zweit. Einer ist Gast, einer ist Gastgeber. Zwei Minuten pro Runde, dann tauschen.</p>
+<div class="rmcard">
+<b>1 · Der erste Besuch bei den Nachbarn</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A wohnt seit einer Woche im Haus und ist zum Kaffee eingeladen. Man siezt sich noch.</p>
+<div class="nur-a2"><span class="rm">Guten Tag, ich bin …</span><span class="rm">Danke für die Einladung</span><span class="rm">Soll ich die Schuhe ausziehen?</span><span class="rm">Es war sehr nett</span></div>
+<div class="nur-b1"><span class="rm">Schön, dass wir uns kennenlernen</span><span class="rm">Eine Kleinigkeit für Sie</span><span class="rm">Wohnen Sie schon lange hier?</span><span class="rm">Kommen Sie uns auch mal besuchen</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide bleiben beim Sie, der Gast bringt etwas mit, und am Ende steht eine Gegeneinladung.</div>
+</div>
+<div class="rmcard">
+<b>2 · Ich muss leider absagen</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat zugesagt und muss zwei Stunden vorher absagen. B hat schon eingekauft.</p>
+<div class="nur-a2"><span class="rm">Es tut mir leid</span><span class="rm">Ich kann leider nicht kommen</span><span class="rm">Mir geht es nicht gut</span><span class="rm">Können wir es nachholen?</span></div>
+<div class="nur-b1"><span class="rm">Es ist mir wirklich unangenehm</span><span class="rm">Ich sage so spät ungern ab</span><span class="rm">Ich melde mich morgen</span><span class="rm">Lass es uns nachholen</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A sagt früh Bescheid, nennt einen echten Grund und schlägt einen neuen Termin vor. B nimmt es ohne Vorwurf an.</div>
+</div>
+<div class="rmcard">
+<b>3 · Das Essen, das du nicht essen kannst</b>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B hat stundenlang gekocht — und es ist genau das, was A nicht verträgt.</p>
+<div class="nur-a2"><span class="rm">Das sieht toll aus</span><span class="rm">Ich vertrage leider keine …</span><span class="rm">Ich nehme gern vom Salat</span><span class="rm">Es tut mir leid</span></div>
+<div class="nur-b1"><span class="rm">Ich hätte es vorher sagen sollen</span><span class="rm">Das ist keine Frage des Geschmacks</span><span class="rm">Ich freue mich trotzdem sehr</span><span class="rm">Beim nächsten Mal sage ich Bescheid</span></div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A lobt zuerst, lehnt dann konkret ab und nimmt etwas anderes. Niemand muss sich am Ende schlecht fühlen.</div>
+</div>
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -942,6 +967,13 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Sprachnachricht bis <u>Sonntag 18 Uhr</u> in die Gruppe. Wir hören zwei davon gemeinsam an — freiwillig, versteht sich.</div>
 <div class="tip">🔜 <strong>Ab dem 14. September</strong> geht es in Strang A jede Woche um so eine Alltagssituation — mit Teil 1 am Montag und Teil 2 am Mittwoch.</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <footer>
@@ -1128,11 +1160,18 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
 
-/* ---- Bildkarten verdecken ---- */
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
 var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
- vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
-bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
 
 /* ---- Dialoge: Runde 1 / Runde 2 ---- */
 document.querySelectorAll('.dwrap').forEach(function(d){
@@ -1189,7 +1228,9 @@ function misch(liste){
 
 /* ---- Sprechkarten ---- */
 var SK=daten('sk')||[];
-if(SK.length){
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
 var lastsk=-1;
 document.getElementById('sknew').onclick=function(){var i;
  do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
@@ -1199,7 +1240,7 @@ document.getElementById('sknew').onclick=function(){var i;
 
 /* ---- 90 Sekunden ---- */
 var W90=daten('w90')||[];
-if(W90.length){
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
 var last90=-1,t90=null,rest=90;
 function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
 function zeige90(i){
