@@ -236,6 +236,44 @@ function fragenListe(f, klasse) {
   const k = klasse ? ' ' + klasse : '';
   return `<ul class="qlist${k}">\n` + f.map(x => `<li>${h(x)}</li>`).join('\n') + `\n</ul>\n`;
 }
+/* Die Anweisung ueber einer Sprechaufgabe steht in der JSON als ein
+   Absatz: „Einer vertritt eine Position, einer die andere. Danach
+   tauschen — und beim zweiten Mal ohne die Saetze unten. Regel: In
+   jeder Runde mindestens ein Zielwort."
+
+   Gemessen: 225 solcher Absaetze haben 18 Woerter und mehr. Als
+   Block liest die in der Stunde niemand — man ueberfliegt und faengt
+   falsch an. Als drei kurze Zeilen sieht man die Aufgabe auf einen
+   Blick: wer macht was, was kommt danach, was ist die Regel.
+
+   Zerlegt wird an Satzenden, nicht an Kommas. Eine Zeile, die mit
+   „Regel" anfaengt, bekommt ihre eigene Marke. Kurze Absaetze bleiben
+   unangetastet — bei einem Satz waere eine Liste laecherlich. */
+function schritte(text) {
+  const roh = String(text || '').trim();
+  if (!roh) return '';
+  if (roh.split(/\s+/).length < 14) return `<p class="ssub">${h(roh)}</p>\n`;
+  let teile = roh.split(/(?<=[.!?])\s+/).map(x => x.trim()).filter(Boolean);
+  /* „Zu zweit." als eigener Schritt sieht albern aus. Alles unter
+     vier Woertern wandert an den naechsten Satz. */
+  const zusammen = [];
+  teile.forEach(t => {
+    if (zusammen.length && t.split(/\s+/).length < 4) { zusammen[zusammen.length - 1] += ' ' + t; return; }
+    zusammen.push(t);
+  });
+  for (let i = 0; i + 1 < zusammen.length; i++) {
+    if (zusammen[i].split(/\s+/).length < 4) { zusammen[i + 1] = zusammen[i] + ' ' + zusammen[i + 1]; zusammen[i] = ''; }
+  }
+  teile = zusammen.filter(Boolean);
+  if (teile.length < 2) return `<p class="ssub">${h(roh)}</p>\n`;
+  let n = 0;
+  return `<ol class="schritte">\n` + teile.map(t => {
+    const regel = /^Regel\b/i.test(t);
+    const marke = regel ? '!' : String(++n);
+    return `<li${regel ? ' class="regel"' : ''}><span>${marke}</span>${h(t)}</li>`;
+  }).join('\n') + `\n</ol>\n`;
+}
+
 function kopfzeile(h2, hl, ssub) {
   let s = `<h2 class="st">${h(h2)}${hl ? ' <span class="hl">' + h(hl) + '</span>' : ''}</h2>\n`;
   if (ssub) s += `<p class="ssub">${h(ssub)}</p>\n`;
@@ -362,7 +400,7 @@ function saetze(s3) {
 /* ---------- 4 Dialoge ---------- */
 function dialoge(d) {
   neuerAbschnitt();
-  let s = `<section class="section" id="dialoge">\n` + kopfzeile(d.h2, d.hl, d.ssub);
+  let s = `<section class="section" id="dialoge">\n` + kopfzeile(d.h2, d.hl, null) + schritte(d.ssub);
   d.liste.forEach((dl, n) => {
     const vorlesen = dl.zeilen.map(z => nurText(z.text)).join(' ');
     s += `<div class="dwrap" data-runde="1"><div class="dhead">` +
@@ -457,7 +495,7 @@ function rollenTeilen(text) {
 
 function rollenspiele(r) {
   neuerAbschnitt();
-  let s = `<section class="section" id="rollenspiele">\n` + kopfzeile(r.h2, r.hl, r.ssub);
+  let s = `<section class="section" id="rollenspiele">\n` + kopfzeile(r.h2, r.hl, null) + schritte(r.ssub);
   r.liste.forEach((x, i) => {
     const rollen = rollenTeilen(x.situation);
     s += `<div class="rsp">\n`
