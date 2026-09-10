@@ -540,7 +540,6 @@ function ankommen(S) {
     (S.einstieg || []).map(x => (x.fragenA2 || [])[1]).filter(Boolean)[0] || '';
   return `<section class="section" id="ankommen">\n`
     + kopfzeile('Erst mal', 'ankommen', 'Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.')
-    + regie('ankommen')
     + `<div class="ank">${h(frage)}</div>\n`
     + (zweit ? `<div class="ank zweit"><span>Wenn noch Zeit ist:</span>${h(zweit)}</div>\n` : '')
     + tipp({ text: 'Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.' })
@@ -572,7 +571,6 @@ function debatte(S) {
 
   let s = `<section class="section" id="debatte">\n`
     + kopfzeile('Drei gegen', 'drei', 'Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.')
-    + regie('debatte')
     + `<div class="deb-these">${h(these)}</div>\n`;
 
   s += `<div class="deb-seiten">`
@@ -610,7 +608,6 @@ function debatte(S) {
 function abschluss() {
   return `<section class="section" id="abschluss">\n`
     + kopfzeile('Zum', 'Schluss', 'Vier Minuten, sechs Sätze.')
-    + regie('abschluss')
     + `<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>\n`
     + `</section>\n`;
 }
@@ -637,9 +634,15 @@ function nimm(id, name, html) { if (html) abschnitte.push({ id, name, html }); }
    Sechs Abschnitte statt elf, und keiner davon ist eine Uebung.
    Die Hausaufgabe steht hinten dran — sie ist nach der Stunde.
 
+   Die Ablauftafel und die Regieanweisungen („0-5 Min, alle sechs")
+   sind ebenfalls raus. Die Seite sehen die Schuelerinnen und
+   Schueler, nicht die Lehrerin — wie lange ein Abschnitt dauert und
+   wer in welcher Aufstellung spricht, ist ihre Sache, nicht deren.
+   Die Taktung steht weiter unten in TAKT und kann jederzeit wieder
+   sichtbar gemacht werden.
+
    Die Daten der entfernten Abschnitte bleiben in den JSON-Dateien
    stehen. Geloescht ist nichts. */
-nimm('ablauf',       '🎬 Ablauf',        ablauf());
 nimm('ankommen',     '👋 Ankommen',      ankommen(S));
 nimm('dialoge',      '🎬 Dialog',        S.dialoge ? dialoge(S.dialoge) : '');
 nimm('challenge',    '⏱️ 90 Sekunden',   (S.daten.w90 && S.daten.w90.length) ? challenge(S.challenge) : '');
