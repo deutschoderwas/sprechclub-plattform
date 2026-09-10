@@ -46,6 +46,18 @@
   else streifen.scrollLeft=links;
  }
 
+ /* Der Umschalter erscheint nur, wo er wirklich etwas aendert.
+    Vorher stand er auf jeder Seite, tat aber in vier von sieben
+    Abschnitten gar nichts — man tippt, nichts passiert, und denkt,
+    es sei kaputt. Jetzt sagt sein Verschwinden: Hier gibt es keine
+    zwei Fassungen. */
+ var umschalter=document.querySelector('.leiste .nivk');
+ function umschalterZeigen(sec){
+  if(!umschalter) return;
+  var da = !!sec.querySelector('.nur-a2, .nur-b1');
+  umschalter.style.display = da ? '' : 'none';
+ }
+
  function zeige(id, springen, stumm){
   var da=paare.filter(function(p){return p.sec.id===id;})[0];
   if(!da) return;
@@ -55,6 +67,7 @@
    p.a.classList.toggle('active', p.sec.id===id);
   });
   if(alles) paare.forEach(function(p){ p.sec.hidden=false; });
+  umschalterZeigen(da.sec);
   markeInsBild(da.a, !!springen);
   if(springen){
    var y=da.sec.getBoundingClientRect().top+window.pageYOffset-hoehe();

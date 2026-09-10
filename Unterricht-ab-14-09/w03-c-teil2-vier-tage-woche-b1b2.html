@@ -119,9 +119,18 @@ h1.title .hl{
 .tabAlles[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff;border-style:solid;}
 
 /* ---------- Abschnitte ---------- */
-.section{animation:auf .25s ease;}
+/* Der Wechsel soll nicht springen. Eine halbe Sekunde, weich
+   auslaufend, und der Inhalt kommt ein kleines Stueck von unten —
+   gerade genug, dass das Auge mitgeht, ohne dass man wartet. */
+.section{animation:auf .5s cubic-bezier(.22,.8,.3,1);}
 body.schaltet .section[hidden]{display:none !important;}
-@keyframes auf{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+@keyframes auf{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+.leiste .nivk,.tab,.weiterknopf,.btn,.hilf summary{transition:background .25s ease,color .25s ease,border-color .25s ease;}
+.hilf-i{animation:auf .35s cubic-bezier(.22,.8,.3,1);}
+@media(prefers-reduced-motion:reduce){
+  .section,.hilf-i{animation:none;}
+  html{scroll-behavior:auto;}
+}
 section.section{scroll-margin-top:calc(var(--leiste,58px) + 1rem);}
 /* Ein kurzer Abschnitt wie der Abschluss ist niedriger als das
    Fenster. Dann kann die Seite gar nicht weit genug scrollen, und
@@ -237,7 +246,13 @@ img.dbild{max-width:160px;border-radius:10px;margin-top:.4rem;}
   background:#fff;border:1px solid var(--line);border-radius:18px;
   padding:1.1rem 1.15rem 1.2rem;text-align:center;box-shadow:var(--schatten);
 }
-.card90 img{width:100%;max-width:240px;border-radius:12px;margin:0 auto .8rem;display:block;}
+/* Das Bild in den 90 Sekunden ist das einzige grosse auf der Seite.
+   Weiche Ecken, ein heller Rand statt einer harten Kante, und es
+   blendet mit dem Wort zusammen ein — kein Springen beim Wechsel. */
+.card90 img{
+  width:100%;max-width:230px;border-radius:14px;margin:0 auto .8rem;display:block;
+  border:1px solid var(--line);animation:auf .45s cubic-bezier(.22,.8,.3,1);
+}
 .card90 .lbl{
   font-size:.7rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase;
   color:var(--red);margin-bottom:.3rem;
@@ -509,11 +524,9 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
-<div class="ank">Welche Seite würdest du freiwillig nehmen?</div>
-<div class="ank zweit"><span>Wenn noch Zeit ist:</span>Was ist dein stärkstes Argument — in einem Satz?</div>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
+<div class="nur-a2"><div class="ank">Welche Seite würdest du freiwillig nehmen?</div></div><div class="nur-b1"><div class="ank">Ist „das haben wir immer so gemacht“ ein Argument oder eine Gewohnheit?</div></div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
-<div class="tip">Antworte in einem Satz. Der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="dialoge">
@@ -616,7 +629,7 @@ footer strong{color:var(--ink);}
 </div>
 
 <h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
+<p class="ssub">Zieh eine Karte. Vier Sätze am Stück.</p>
 <div class="card90">
 <div class="lbl">Deine Aufgabe</div>
 <div class="word" id="wsk" style="font-size:1.15rem;line-height:1.4;">Tippe auf den Knopf.</div>
@@ -626,15 +639,15 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="debatte">
 <h2 class="st">Drei gegen <span class="hl">drei</span></h2>
-<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<p class="ssub">Zwei Gruppen, eine Frage. Abwechselnd sprechen.</p>
 <div class="deb-these">Weniger arbeiten heißt weniger Geld.</div>
 <div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><ul><li>Kleine Firmen können keinen freien Tag bezahlen.</li><li>Sonst werden am Ende die Preise teurer.</li><li>Ehrlich sagen ist besser als ein Versprechen zurücknehmen.</li></ul></div><div class="deb-s con"><b>Gruppe B · dagegen</b><ul><li>In den Versuchen blieb der Lohn gleich, die Arbeit auch.</li><li>Weniger Krankentage sparen der Firma Geld.</li><li>Weniger Lohn ist einfach Teilzeit. Das trifft vor allem Frauen.</li></ul></div></div>
 </section>
 
 <section class="section" id="abschluss">
 <h2 class="st">Zum <span class="hl">Schluss</span></h2>
-<p class="ssub">Vier Minuten, sechs Sätze.</p>
-<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
+<p class="ssub">Ein Satz von jedem.</p>
+<div class="ank">Welchen Satz von heute nimmst du mit — und wo brauchst du ihn?</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Ich nehme mit: …</span><span>Ich will den Satz „…“ benutzen.</span><span>Neu war für mich: …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Ich nehme mit, dass …</span><span>Den Satz „…“ will ich nächste Woche wirklich benutzen.</span><span>Neu war für mich, dass …</span></div></div></details>
 </section>
 
@@ -777,6 +790,18 @@ footer strong{color:var(--ink);}
   else streifen.scrollLeft=links;
  }
 
+ /* Der Umschalter erscheint nur, wo er wirklich etwas aendert.
+    Vorher stand er auf jeder Seite, tat aber in vier von sieben
+    Abschnitten gar nichts — man tippt, nichts passiert, und denkt,
+    es sei kaputt. Jetzt sagt sein Verschwinden: Hier gibt es keine
+    zwei Fassungen. */
+ var umschalter=document.querySelector('.leiste .nivk');
+ function umschalterZeigen(sec){
+  if(!umschalter) return;
+  var da = !!sec.querySelector('.nur-a2, .nur-b1');
+  umschalter.style.display = da ? '' : 'none';
+ }
+
  function zeige(id, springen, stumm){
   var da=paare.filter(function(p){return p.sec.id===id;})[0];
   if(!da) return;
@@ -786,6 +811,7 @@ footer strong{color:var(--ink);}
    p.a.classList.toggle('active', p.sec.id===id);
   });
   if(alles) paare.forEach(function(p){ p.sec.hidden=false; });
+  umschalterZeigen(da.sec);
   markeInsBild(da.a, !!springen);
   if(springen){
    var y=da.sec.getBoundingClientRect().top+window.pageYOffset-hoehe();

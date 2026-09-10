@@ -484,7 +484,7 @@ function rollenspiele(r) {
   });
 
   if (S.daten && S.daten.sk && S.daten.sk.length) {
-    s += kopfzeile('🎴 Sprechkarten', null, 'Zieh eine Karte und sprich mindestens vier Sätze am Stück.');
+    s += kopfzeile('🎴 Sprechkarten', null, 'Zieh eine Karte. Vier Sätze am Stück.');
     s += `<div class="card90">\n<div class="lbl">Deine Aufgabe</div>\n` +
       `<div class="word" id="wsk" style="font-size:1.15rem;line-height:1.4;">Tippe auf den Knopf.</div>\n` +
       `<button class="btn" id="sknew">🎴 Karte ziehen</button>\n</div>\n`;
@@ -615,28 +615,29 @@ function regie(id) {
    Hier steht eine Frage, die jeder sofort beantworten kann, und
    der Auftrag dazu: ein Satz, reihum, ohne Kommentar. */
 function ankommen(S) {
-  const eig = S.ankommen;
-  let frage = eig && eig.frage;
-  if (!frage) {
-    /* Die A2-Fassung ist die konkrete: „Hast du dich schon einmal
-       beschwert?" statt „Wann lohnt sich der Aufwand nicht mehr?" */
-    (S.einstieg || []).forEach(x => {
-      if (!frage && x.fragenA2 && x.fragenA2.length) frage = x.fragenA2[0];
-    });
-    (S.einstieg || []).forEach(x => {
-      if (!frage && x.fragen && x.fragen.length) frage = x.fragen[0];
-    });
-  }
-  if (!frage) return '';
-  const zweit = (eig && eig.zweite) ||
-    (S.einstieg || []).map(x => (x.fragenA2 || [])[1]).filter(Boolean)[0] || '';
   neuerAbschnitt();
+  /* Zwei Fragen statt einer: die konkrete fuer die untere Stufe, die
+     offene fuer die obere. Beide stehen laengst in der JSON — vorher
+     wurde nur die A2-Fassung genommen, und der Umschalter tat in
+     diesem Abschnitt nichts. */
+  const holen = (feld, i) => {
+    let x = null;
+    (S.einstieg || []).forEach(e => { if (!x && (e[feld] || []).length > i) x = e[feld][i]; });
+    return x;
+  };
+  const leicht = (S.ankommen && S.ankommen.frage) || holen('fragenA2', 0) || holen('fragen', 0);
+  const schwer = holen('fragenB1', 0) || leicht;
+  if (!leicht) return '';
+
+  const karte = t => `<div class="ank">${h(t)}</div>`;
+  const inhalt = (S.niveau && schwer !== leicht)
+    ? `<div class="nur-a2">${karte(leicht)}</div><div class="nur-b1">${karte(schwer)}</div>`
+    : karte(leicht);
+
   return `<section class="section" id="ankommen">\n`
-    + kopfzeile('Erst mal', 'ankommen', 'Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.')
-    + `<div class="ank">${h(frage)}</div>\n`
-    + (zweit ? `<div class="ank zweit"><span>Wenn noch Zeit ist:</span>${h(zweit)}</div>\n` : '')
+    + kopfzeile('Erst mal', 'ankommen', 'Eine Frage, ein Satz pro Person. Reihum.')
+    + inhalt + `\n`
     + anfangshilfe('ankommen', 'Wie fange ich an?')
-    + tipp({ text: 'Antworte in einem Satz. Der Rest kommt dann von allein.' })
     + `</section>\n`;
 }
 
@@ -659,7 +660,7 @@ function debatte(S) {
      aber in der Stunde liest das niemand. Wer streiten soll, braucht
      Argumente, nicht noch eine Tafel. */
   return `<section class="section" id="debatte">\n`
-    + kopfzeile(S.debatteH2 || 'Drei gegen', 'drei', 'Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.')
+    + kopfzeile(S.debatteH2 || 'Drei gegen', 'drei', 'Zwei Gruppen, eine Frage. Abwechselnd sprechen.')
     + `<div class="deb-these">${h(these)}</div>\n`
     + `<div class="deb-seiten">`
     +   `<div class="deb-s pro"><b>Gruppe A · dafür</b><ul>`
@@ -675,8 +676,8 @@ function debatte(S) {
 /* ---------- 9 Abschluss ---------- */
 function abschluss() {
   return `<section class="section" id="abschluss">\n`
-    + kopfzeile('Zum', 'Schluss', 'Vier Minuten, sechs Sätze.')
-    + `<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>\n`
+    + kopfzeile('Zum', 'Schluss', 'Ein Satz von jedem.')
+    + `<div class="ank">Welchen Satz von heute nimmst du mit — und wo brauchst du ihn?</div>\n`
     + anfangshilfe('abschluss', 'Wie fange ich an?')
     + `</section>\n`;
 }
