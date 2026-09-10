@@ -280,6 +280,72 @@ img.dbild{max-width:160px;border-radius:10px;margin-top:.4rem;}
   color:var(--soft);margin-bottom:.15rem;
 }
 
+/* ---------- Rollenspiel: wer bin ich, was will ich ----------
+   Die Lage stand vorher als ein grauer Satz da. Zwei Leute, die
+   gleich sprechen sollen, mussten daraus selbst herauslesen, wer sie
+   sind. Jetzt stehen die Rollen nebeneinander, in denselben Farben
+   wie im Dialog: A rot, B tuerkis. */
+.rsp{
+  background:#fff;border:1px solid var(--line);border-radius:16px;
+  padding:.9rem 1rem 1rem;margin:0 0 .9rem;box-shadow:var(--schatten-k);
+}
+.rsp-kopf{display:flex;align-items:center;gap:.6rem;margin-bottom:.7rem;}
+.rsp-nr{
+  flex:none;width:26px;height:26px;border-radius:8px;background:var(--ink);color:#fff;
+  display:grid;place-items:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.85rem;
+}
+.rsp-kopf b{font-family:'Space Grotesk',sans-serif;font-size:1.02rem;line-height:1.25;}
+.rsp-rollen{display:grid;gap:.5rem;margin:0 0 .75rem;}
+@media(min-width:560px){ .rsp-rollen{grid-template-columns:1fr 1fr;} }
+.rsp-r{
+  display:grid;grid-template-columns:auto 1fr;gap:.5rem;align-items:start;
+  border-radius:12px;padding:.6rem .75rem;
+}
+.rsp-r span{
+  width:24px;height:24px;border-radius:50%;display:grid;place-items:center;color:#fff;
+  font-family:'Space Grotesk',sans-serif;font-size:.75rem;font-weight:700;
+}
+.rsp-r p{font-size:.93rem;line-height:1.5;}
+.rsp-r.a{background:var(--pink);}
+.rsp-r.a span{background:var(--red);}
+.rsp-r.b{background:var(--mint);}
+.rsp-r.b span{background:var(--turq-d);}
+.rsp-lage{background:#F7F6F3;border-radius:12px;padding:.6rem .8rem;margin:0 0 .75rem;font-size:.93rem;line-height:1.5;}
+.rsp-lage span{
+  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.2rem;
+}
+.rsp-saetze{margin:0 0 .7rem;}
+.rsp-lbl{
+  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.35rem;
+}
+.rsp-ziel{
+  background:var(--warm);border-left:4px solid var(--gold);border-radius:0 10px 10px 0;
+  padding:.55rem .8rem;font-size:.92rem;line-height:1.5;
+}
+.rsp-ziel span{
+  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.15rem;
+}
+
+/* ---------- Anfangshilfe ----------
+   Zugeklappt eine Zeile, aufgeklappt drei Satzanfaenge. Wer sie
+   nicht braucht, sieht fast nichts. */
+.hilf{margin:.8rem 0 0;}
+.hilf summary{
+  cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:.35rem;
+  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;color:var(--teal-ink);
+  background:var(--mint);border:1px solid #CDEEF3;border-radius:999px;padding:.32rem .8rem;
+}
+.hilf summary::-webkit-details-marker{display:none;}
+.hilf[open] summary{background:var(--turq-d);color:#fff;border-color:var(--turq-d);}
+.hilf-i{display:flex;flex-direction:column;gap:.35rem;margin:.55rem 0 0;}
+.hilf-i span{
+  background:#fff;border:1px dashed var(--line);border-radius:10px;
+  padding:.45rem .7rem;font-size:.93rem;line-height:1.5;
+}
+
 /* ---------- Debatte ---------- */
 .deb-these{
   background:var(--ink);color:#fff;border-radius:14px;padding:1rem 1.15rem;
@@ -446,7 +512,8 @@ footer strong{color:var(--ink);}
 <p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
 <div class="ank">Wann hast du zuletzt genickt, ohne wirklich zu verstehen?</div>
 <div class="ank zweit"><span>Wenn noch Zeit ist:</span>Fragst du lieber sofort nach oder erst später?</div>
-<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
+<details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
+<div class="tip">Antworte in einem Satz. Der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="dialoge">
@@ -532,32 +599,35 @@ footer strong{color:var(--ink);}
 <section class="section" id="rollenspiele">
 <h2 class="st">🎭 Drei <span class="hl">unklare Erklärungen</span></h2>
 <p class="ssub">Zu zweit. Einer erklärt absichtlich vage, einer muss so lange nachfragen, bis wirklich alles klar ist. Danach tauschen.</p>
-<div class="rmcard">
-<b>1 · Der Behördentermin</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A ist Sachbearbeiter und nennt drei Unterlagen, zwei davon mit Wörtern, die B noch nie gehört hat. Am Ende soll B den ganzen Ablauf wiederholen können.</p>
-<div class="nur-a2"><span class="rm">Welche Unterlagen genau?</span><span class="rm">Wo bekomme ich das?</span><span class="rm">Habe ich das richtig verstanden?</span><span class="rm">Und wenn etwas fehlt?</span></div>
-<div class="nur-b1"><span class="rm">Darf ich da kurz nachhaken?</span><span class="rm">Könnten Sie das kurz erläutern?</span><span class="rm">Wenn ich Sie richtig verstehe, …</span><span class="rm">Wer wäre bei Rückfragen zuständig?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B fragt mindestens dreimal nach, benutzt einmal <b>welch- … genau</b> und fasst am Ende den ganzen Ablauf in einem Satz zusammen.</div>
+<div class="rsp">
+<div class="rsp-kopf"><span class="rsp-nr">1</span><b>Der Behördentermin</b></div>
+<div class="rsp-lage"><span>Die Lage</span>A ist Sachbearbeiter und nennt drei Unterlagen, zwei davon mit Wörtern, die B noch nie gehört hat. Am Ende soll B den ganzen Ablauf wiederholen können.</div>
+<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Welche Unterlagen genau?</span><span class="rm">Wo bekomme ich das?</span><span class="rm">Habe ich das richtig verstanden?</span><span class="rm">Und wenn etwas fehlt?</span></div><div class="nur-b1"><span class="rm">Darf ich da kurz nachhaken?</span><span class="rm">Könnten Sie das kurz erläutern?</span><span class="rm">Wenn ich Sie richtig verstehe, …</span><span class="rm">Wer wäre bei Rückfragen zuständig?</span></div></div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>B fragt mindestens dreimal nach, benutzt einmal <b>welch- … <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von genau" data-wort="genau" data-kurz="Wort, das eine Frage präzise macht" data-bsp="Welches Formular genau brauchen Sie?">genau</b></b> und fasst am Ende den ganzen Ablauf in einem Satz zusammen.</div>
+<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
-<div class="rmcard">
-<b>2 · Die Aufgabe vom Chef</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A gibt B eine Aufgabe: „Machen Sie das bitte bis nächste Woche fertig.“ Alles daran ist unklar — was, bis wann genau, für wen, in welcher Form.</p>
-<div class="nur-a2"><span class="rm">Was genau soll ich machen?</span><span class="rm">Bis wann genau?</span><span class="rm">In welcher Form?</span><span class="rm">An wen schicke ich das?</span></div>
-<div class="nur-b1"><span class="rm">Damit ich nichts durcheinanderbringe: …</span><span class="rm">Ist das eher grob oder ausführlich gemeint?</span><span class="rm">Hat das Vorrang vor …?</span><span class="rm">Könnten Sie mir das kurz per Mail bestätigen?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B stellt vier verschiedene Fragen statt viermal dieselbe und klärt am Ende auch die Priorität — nicht nur die Frist.</div>
+
+<div class="rsp">
+<div class="rsp-kopf"><span class="rsp-nr">2</span><b>Die Aufgabe vom Chef</b></div>
+<div class="rsp-lage"><span>Die Lage</span>A gibt B eine Aufgabe: „Machen Sie das bitte bis nächste Woche fertig.“ Alles daran ist unklar — was, bis wann genau, für wen, in welcher Form.</div>
+<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Was genau soll ich machen?</span><span class="rm">Bis wann genau?</span><span class="rm">In welcher Form?</span><span class="rm">An wen schicke ich das?</span></div><div class="nur-b1"><span class="rm">Damit ich nichts durcheinanderbringe: …</span><span class="rm">Ist das eher grob oder ausführlich gemeint?</span><span class="rm">Hat das Vorrang vor …?</span><span class="rm">Könnten Sie mir das kurz per Mail bestätigen?</span></div></div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>B stellt vier verschiedene Fragen statt viermal dieselbe und klärt am Ende auch die Priorität — nicht nur die Frist.</div>
+<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
-<div class="rmcard">
-<b>3 · Das Missverständnis</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Etwas ist bereits schiefgelaufen: B hat den falschen Termin notiert. Beide müssen herausfinden, wo es auseinanderging — ohne Schuldzuweisung.</p>
-<div class="nur-a2"><span class="rm">Da liegt wohl ein Missverständnis vor</span><span class="rm">Ich hatte verstanden, dass …</span><span class="rm">Was war denn abgemacht?</span><span class="rm">Wie machen wir es jetzt?</span></div>
-<div class="nur-b1"><span class="rm">Da haben wir wohl aneinander vorbeigeredet</span><span class="rm">Ich hatte es so verstanden, dass …</span><span class="rm">Lassen Sie uns kurz zurückgehen</span><span class="rm">Damit das nicht noch einmal passiert: …</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide sagen, was sie verstanden hatten, statt zu fragen, wer schuld war — und einigen sich am Ende auf eine schriftliche Bestätigung.</div>
+
+<div class="rsp">
+<div class="rsp-kopf"><span class="rsp-nr">3</span><b>Das Missverständnis</b></div>
+<div class="rsp-lage"><span>Die Lage</span>Etwas ist bereits schiefgelaufen: B hat den falschen Termin notiert. Beide müssen herausfinden, wo es auseinanderging — ohne Schuldzuweisung.</div>
+<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Da liegt wohl ein Missverständnis vor</span><span class="rm">Ich hatte verstanden, dass …</span><span class="rm">Was war denn abgemacht?</span><span class="rm">Wie machen wir es jetzt?</span></div><div class="nur-b1"><span class="rm">Da haben wir wohl aneinander vorbeigeredet</span><span class="rm">Ich hatte es so verstanden, dass …</span><span class="rm">Lassen Sie uns kurz zurückgehen</span><span class="rm">Damit das nicht noch einmal passiert: …</span></div></div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>Beide sagen, was sie verstanden hatten, statt zu fragen, wer schuld war — und einigen sich am Ende auf eine schriftliche Bestätigung.</div>
+<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
+
 <h2 class="st">🎴 Sprechkarten</h2>
 <p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
 <div class="card90">
 <div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<div class="word" id="wsk" style="font-size:1.15rem;line-height:1.4;">Tippe auf den Knopf.</div>
 <button class="btn" id="sknew">🎴 Karte ziehen</button>
 </div>
 </section>
@@ -565,17 +635,15 @@ footer strong{color:var(--ink);}
 <section class="section" id="debatte">
 <h2 class="st">Drei gegen <span class="hl">drei</span></h2>
 <p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
-<div class="deb-these">Nachfragen zeigt Schwäche.</div>
-<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><ul><li>In vielen Firmen gilt: Wer fragt, hat nicht aufgepasst — das ist ungerecht, aber real.</li><li>Wer zu oft nachfragt, wird beim nächsten Mal nicht mehr gefragt.</li><li>Bei einer Prüfung oder einem Vorstellungsgespräch zählt der erste Eindruck von Sicherheit.</li></ul></div><div class="deb-s con"><b>Gruppe B · dagegen</b><ul><li>Wer nachfragt, macht die Aufgabe richtig; wer rät, macht sie zweimal.</li><li>Eine gute Frage zeigt, dass man mitgedacht hat — sie verrät Kompetenz, nicht Unwissen.</li><li>Der Schaden entsteht nie durch die Frage, sondern durch das falsche Ergebnis danach.</li></ul></div></div>
-<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
-<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Warum fühlt sich Nachfragen wie ein Eingeständnis an — und warum ist es keines?</li><li>Was kostet ein Missverständnis mehr: die Rückfrage oder das Schweigen?</li><li>Gibt es Situationen, in denen Nachfragen tatsächlich unhöflich ist?</li><li>Wann macht eine präzise Rückfrage die Situation schwieriger statt leichter?</li><li>Wie fragt man nach, wenn man den Namen einer Sache gar nicht kennt?</li></ul></div>
-<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+<div class="deb-these">Nachfragen ist peinlich.</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><ul><li>In manchen Firmen heißt es: Wer fragt, hat nicht aufgepasst.</li><li>Wer oft fragt, wird beim nächsten Mal nicht mehr gefragt.</li><li>In der Prüfung will man sicher wirken.</li></ul></div><div class="deb-s con"><b>Gruppe B · dagegen</b><ul><li>Wer fragt, macht es richtig. Wer rät, macht es zweimal.</li><li>Eine gute Frage zeigt, dass man mitdenkt.</li><li>Peinlich ist nicht die Frage, sondern das falsche Ergebnis.</li></ul></div></div>
 </section>
 
 <section class="section" id="abschluss">
 <h2 class="st">Zum <span class="hl">Schluss</span></h2>
 <p class="ssub">Vier Minuten, sechs Sätze.</p>
 <div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
+<details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Ich nehme mit: …</span><span>Ich will den Satz „…“ benutzen.</span><span>Neu war für mich: …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Ich nehme mit, dass …</span><span>Den Satz „…“ will ich nächste Woche wirklich benutzen.</span><span>Neu war für mich, dass …</span></div></div></details>
 </section>
 
 <section class="section" id="hausaufgabe">

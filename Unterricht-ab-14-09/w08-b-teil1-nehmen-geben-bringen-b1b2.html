@@ -280,6 +280,72 @@ img.dbild{max-width:160px;border-radius:10px;margin-top:.4rem;}
   color:var(--soft);margin-bottom:.15rem;
 }
 
+/* ---------- Rollenspiel: wer bin ich, was will ich ----------
+   Die Lage stand vorher als ein grauer Satz da. Zwei Leute, die
+   gleich sprechen sollen, mussten daraus selbst herauslesen, wer sie
+   sind. Jetzt stehen die Rollen nebeneinander, in denselben Farben
+   wie im Dialog: A rot, B tuerkis. */
+.rsp{
+  background:#fff;border:1px solid var(--line);border-radius:16px;
+  padding:.9rem 1rem 1rem;margin:0 0 .9rem;box-shadow:var(--schatten-k);
+}
+.rsp-kopf{display:flex;align-items:center;gap:.6rem;margin-bottom:.7rem;}
+.rsp-nr{
+  flex:none;width:26px;height:26px;border-radius:8px;background:var(--ink);color:#fff;
+  display:grid;place-items:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.85rem;
+}
+.rsp-kopf b{font-family:'Space Grotesk',sans-serif;font-size:1.02rem;line-height:1.25;}
+.rsp-rollen{display:grid;gap:.5rem;margin:0 0 .75rem;}
+@media(min-width:560px){ .rsp-rollen{grid-template-columns:1fr 1fr;} }
+.rsp-r{
+  display:grid;grid-template-columns:auto 1fr;gap:.5rem;align-items:start;
+  border-radius:12px;padding:.6rem .75rem;
+}
+.rsp-r span{
+  width:24px;height:24px;border-radius:50%;display:grid;place-items:center;color:#fff;
+  font-family:'Space Grotesk',sans-serif;font-size:.75rem;font-weight:700;
+}
+.rsp-r p{font-size:.93rem;line-height:1.5;}
+.rsp-r.a{background:var(--pink);}
+.rsp-r.a span{background:var(--red);}
+.rsp-r.b{background:var(--mint);}
+.rsp-r.b span{background:var(--turq-d);}
+.rsp-lage{background:#F7F6F3;border-radius:12px;padding:.6rem .8rem;margin:0 0 .75rem;font-size:.93rem;line-height:1.5;}
+.rsp-lage span{
+  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.2rem;
+}
+.rsp-saetze{margin:0 0 .7rem;}
+.rsp-lbl{
+  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.35rem;
+}
+.rsp-ziel{
+  background:var(--warm);border-left:4px solid var(--gold);border-radius:0 10px 10px 0;
+  padding:.55rem .8rem;font-size:.92rem;line-height:1.5;
+}
+.rsp-ziel span{
+  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.15rem;
+}
+
+/* ---------- Anfangshilfe ----------
+   Zugeklappt eine Zeile, aufgeklappt drei Satzanfaenge. Wer sie
+   nicht braucht, sieht fast nichts. */
+.hilf{margin:.8rem 0 0;}
+.hilf summary{
+  cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:.35rem;
+  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;color:var(--teal-ink);
+  background:var(--mint);border:1px solid #CDEEF3;border-radius:999px;padding:.32rem .8rem;
+}
+.hilf summary::-webkit-details-marker{display:none;}
+.hilf[open] summary{background:var(--turq-d);color:#fff;border-color:var(--turq-d);}
+.hilf-i{display:flex;flex-direction:column;gap:.35rem;margin:.55rem 0 0;}
+.hilf-i span{
+  background:#fff;border:1px dashed var(--line);border-radius:10px;
+  padding:.45rem .7rem;font-size:.93rem;line-height:1.5;
+}
+
 /* ---------- Debatte ---------- */
 .deb-these{
   background:var(--ink);color:#fff;border-radius:14px;padding:1rem 1.15rem;
@@ -446,7 +512,8 @@ footer strong{color:var(--ink);}
 <p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
 <div class="ank">Was hast du heute schon jemandem gegeben?</div>
 <div class="ank zweit"><span>Wenn noch Zeit ist:</span>Was musst du heute noch irgendwo abholen?</div>
-<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
+<details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
+<div class="tip">Antworte in einem Satz. Der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="dialoge">
@@ -524,32 +591,35 @@ footer strong{color:var(--ink);}
 <section class="section" id="rollenspiele">
 <h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
 <p class="ssub">Einer bittet, einer bietet an — oder umgekehrt. Danach tauschen, beim zweiten Mal ohne die Sätze unten. Regel: In jeder Runde mindestens drei verschiedene Verben von heute.</p>
-<div class="rmcard">
-<b>1 · Das Paket organisieren</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A erwartet ein Paket, ist aber den ganzen Tag außer Haus. B wohnt nebenan und ist da. Klärt gemeinsam, wer was wann macht.</p>
-<div class="nur-a2"><span class="rm">Kannst du das Paket für mich annehmen?</span><span class="rm">Ich hole es abends bei dir ab</span><span class="rm">Soll ich dir etwas mitbringen?</span><span class="rm">Danke, das ist lieb von dir</span></div>
-<div class="nur-b1"><span class="rm">Ich nehme es gern an, ich bin sowieso zu Hause</span><span class="rm">Wenn es dir lieber ist, bringe ich es dir abends vorbei</span><span class="rm">Gib mir kurz Bescheid, sobald du zurück bist</span><span class="rm">Beim nächsten Mal bringe ich dir etwas mit, versprochen</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide haben gesagt, wo sie am Ende sind — und deshalb die richtigen Verben benutzt. Es kam mindestens einmal <i>abholen</i> und einmal <i>vorbeibringen</i> vor, und am Ende war klar, wer was tut.</div>
+<div class="rsp">
+<div class="rsp-kopf"><span class="rsp-nr">1</span><b>Das Paket organisieren</b></div>
+<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>erwartet ein Paket, ist aber den ganzen Tag außer Haus.</p></div><div class="rsp-r b"><span>B</span><p>wohnt nebenan und ist da. Klärt gemeinsam, wer was wann macht.</p></div></div>
+<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Kannst du das Paket für mich annehmen?</span><span class="rm">Ich hole es abends bei dir ab</span><span class="rm">Soll ich dir etwas mitbringen?</span><span class="rm">Danke, das ist lieb von dir</span></div><div class="nur-b1"><span class="rm">Ich nehme es gern an, ich bin sowieso zu Hause</span><span class="rm">Wenn es dir lieber ist, bringe ich es dir abends vorbei</span><span class="rm">Gib mir kurz Bescheid, sobald du zurück bist</span><span class="rm">Beim nächsten Mal bringe ich dir etwas mit, versprochen</span></div></div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>Beide haben gesagt, wo sie am Ende sind — und deshalb die richtigen Verben benutzt. Es kam mindestens einmal <i><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von abholen" data-wort="abholen" data-kurz="etwas oder jemanden von einem Ort mitnehmen" data-bsp="Ich hole das Päckchen morgen in der Filiale ab.">abholen</b></i> und einmal <i>vorbeibringen</i> vor, und am Ende war klar, wer was tut.</div>
+<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
-<div class="rmcard">
-<b>2 · Geliehen und vergessen</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B hat sich vor Wochen etwas geliehen und nie zurückgegeben. A spricht es an — freundlich, ohne Vorwurf.</p>
-<div class="nur-a2"><span class="rm">Hast du noch meine Bohrmaschine?</span><span class="rm">Kannst du sie mir mitbringen?</span><span class="rm">Ich hole sie auch gern ab</span><span class="rm">Kein Stress, wann es dir passt</span></div>
-<div class="nur-b1"><span class="rm">Stimmt, die steht noch bei mir — ich hatte sie ganz vergessen</span><span class="rm">Ich bringe sie dir am Wochenende vorbei</span><span class="rm">Oder ich lege sie dir in den Keller, falls du nicht da bist</span><span class="rm">Danke fürs Erinnern, das war mir peinlich</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat nachgefragt, ohne Vorwurf, und B hat sofort einen konkreten Weg genannt — mit <i>vorbeibringen</i> oder <i><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von zurückgeben" data-wort="zurückgeben" data-kurz="etwas dem Besitzer wiedergeben" data-bsp="Die Jacke gebe ich morgen zurück, sie passt nicht.">zurückgeben</b></i>. Am Ende stand ein Termin, keine Entschuldigung.</div>
+
+<div class="rsp">
+<div class="rsp-kopf"><span class="rsp-nr">2</span><b>Geliehen und vergessen</b></div>
+<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>spricht es an — freundlich, ohne Vorwurf.</p></div><div class="rsp-r b"><span>B</span><p>hat sich vor Wochen etwas geliehen und nie zurückgegeben.</p></div></div>
+<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Hast du noch meine Bohrmaschine?</span><span class="rm">Kannst du sie mir mitbringen?</span><span class="rm">Ich hole sie auch gern ab</span><span class="rm">Kein Stress, wann es dir passt</span></div><div class="nur-b1"><span class="rm">Stimmt, die steht noch bei mir — ich hatte sie ganz vergessen</span><span class="rm">Ich bringe sie dir am Wochenende vorbei</span><span class="rm">Oder ich lege sie dir in den Keller, falls du nicht da bist</span><span class="rm">Danke fürs Erinnern, das war mir peinlich</span></div></div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>A hat nachgefragt, ohne Vorwurf, und B hat sofort einen konkreten Weg genannt — mit <i>vorbeibringen</i> oder <i><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von zurückgeben" data-wort="zurückgeben" data-kurz="etwas dem Besitzer wiedergeben" data-bsp="Die Jacke gebe ich morgen zurück, sie passt nicht.">zurückgeben</b></i>. Am Ende stand ein Termin, keine Entschuldigung.</div>
+<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
-<div class="rmcard">
-<b>3 · Der große Einkauf</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat viel gekauft und bekommt es allein nicht nach Hause. B überlegt mit: liefern lassen, <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von mitnehmen" data-wort="mitnehmen" data-kurz="etwas oder jemanden mit sich nehmen, wenn man geht" data-bsp="Soll ich dir etwas vom Bäcker mitnehmen?">mitnehmen</b> oder später abholen?</p>
-<div class="nur-a2"><span class="rm">Liefern Sie das auch?</span><span class="rm">Ich nehme das Kleine gleich mit</span><span class="rm">Das Große hole ich morgen ab</span><span class="rm">Wann kann ich es abholen?</span></div>
-<div class="nur-b1"><span class="rm">Wissen Sie, ob Sie auch nach Hagen liefern?</span><span class="rm">Das Kleine nehme ich direkt mit, das Große lasse ich hier</span><span class="rm">Könnte ich es am Samstag abholen, oder ist dann geschlossen?</span><span class="rm">Wenn die Lieferung zu teuer ist, komme ich lieber noch einmal vorbei</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat zwischen <i>liefern</i>, <i>mitnehmen</i> und <i>abholen</i> unterschieden und jedes Mal begründet, warum. B konnte deshalb sofort sagen, was geht.</div>
+
+<div class="rsp">
+<div class="rsp-kopf"><span class="rsp-nr">3</span><b>Der große Einkauf</b></div>
+<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>hat viel gekauft und bekommt es allein nicht nach Hause.</p></div><div class="rsp-r b"><span>B</span><p>überlegt mit: <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von liefern" data-wort="liefern" data-kurz="eine Ware zu jemandem bringen" data-bsp="Der Schrank wird nächste Woche geliefert.">liefern</b> lassen, <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von mitnehmen" data-wort="mitnehmen" data-kurz="etwas oder jemanden mit sich nehmen, wenn man geht" data-bsp="Soll ich dir etwas vom Bäcker mitnehmen?">mitnehmen</b> oder später abholen?</p></div></div>
+<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Liefern Sie das auch?</span><span class="rm">Ich nehme das Kleine gleich mit</span><span class="rm">Das Große hole ich morgen ab</span><span class="rm">Wann kann ich es abholen?</span></div><div class="nur-b1"><span class="rm">Wissen Sie, ob Sie auch nach Hagen liefern?</span><span class="rm">Das Kleine nehme ich direkt mit, das Große lasse ich hier</span><span class="rm">Könnte ich es am Samstag abholen, oder ist dann geschlossen?</span><span class="rm">Wenn die Lieferung zu teuer ist, komme ich lieber noch einmal vorbei</span></div></div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>A hat zwischen <i>liefern</i>, <i>mitnehmen</i> und <i>abholen</i> unterschieden und jedes Mal begründet, warum. B konnte deshalb sofort sagen, was geht.</div>
+<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
+
 <h2 class="st">🎴 Sprechkarten</h2>
 <p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
 <div class="card90">
 <div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<div class="word" id="wsk" style="font-size:1.15rem;line-height:1.4;">Tippe auf den Knopf.</div>
 <button class="btn" id="sknew">🎴 Karte ziehen</button>
 </div>
 </section>
@@ -557,17 +627,15 @@ footer strong{color:var(--ink);}
 <section class="section" id="debatte">
 <h2 class="st">Drei gegen <span class="hl">drei</span></h2>
 <p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
-<div class="deb-these">Wer bringen und holen verwechselt, wird trotzdem verstanden.</div>
-<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><ul><li>Aus dem Zusammenhang ergibt sich fast immer, wer wohin geht.</li><li>Muttersprachler korrigieren im Kopf, ohne zu stocken.</li><li>Wer beim Sprechen über die Richtung nachdenkt, verliert den Faden.</li></ul></div><div class="deb-s con"><b>Gruppe B · dagegen</b><ul><li>„Bring mir das“ und „Hol mir das“ schicken zwei verschiedene Leute los.</li><li>Bei einer Verabredung entscheidet es, wer sich auf den Weg macht.</li><li>Es ist ein Fehler, der bei jedem Satz auffällt — und er verschwindet nur, wenn man ihn ernst nimmt.</li></ul></div></div>
-<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
-<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Wo verwechselst du <i>bringen</i> und <i>holen</i> am häufigsten?</li><li>Gibt es in deiner Sprache auch vier verschiedene Verben dafür?</li><li>Welches der vier benutzt du im Alltag am meisten?</li><li>Wann sagt man <i>herbringen</i> und wann <i>hinbringen</i>?</li><li>Welche Vorsilbe fällt dir am schwersten: ab-, mit- oder weg-?</li><li>Wie erklärst du jemandem den Unterschied zwischen <i>mitnehmen</i> und <i>abholen</i>?</li></ul></div>
-<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+<div class="deb-these">bringen und holen zu verwechseln ist nicht schlimm.</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><ul><li>Aus dem Zusammenhang ist meistens klar, wer geht.</li><li>Deutsche verstehen es trotzdem.</li><li>Wer über die Richtung nachdenkt, verliert den Faden.</li></ul></div><div class="deb-s con"><b>Gruppe B · dagegen</b><ul><li>„Bring mir das“ und „Hol mir das“ schicken andere Leute los.</li><li>Bei einer Verabredung entscheidet es, wer losgeht.</li><li>Der Fehler fällt in jedem Satz auf.</li></ul></div></div>
 </section>
 
 <section class="section" id="abschluss">
 <h2 class="st">Zum <span class="hl">Schluss</span></h2>
 <p class="ssub">Vier Minuten, sechs Sätze.</p>
 <div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
+<details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Ich nehme mit: …</span><span>Ich will den Satz „…“ benutzen.</span><span>Neu war für mich: …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Ich nehme mit, dass …</span><span>Den Satz „…“ will ich nächste Woche wirklich benutzen.</span><span>Neu war für mich, dass …</span></div></div></details>
 </section>
 
 <section class="section" id="hausaufgabe">

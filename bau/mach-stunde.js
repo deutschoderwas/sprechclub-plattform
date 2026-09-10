@@ -74,8 +74,14 @@ const bilder = new Set();
    das Wort nachgeschlagen hat, erkennt es beim zweiten Mal. */
 
 const MARKEN = [];
-const markZahl = {};
-const HOECHSTENS = 1;
+const markZahl = {};       /* wie oft auf der ganzen Seite */
+let markHier = {};         /* wie oft in diesem Abschnitt */
+const HOECHSTENS = 2;      /* je Seite */
+const HOECHSTENS_HIER = 1; /* je Abschnitt */
+/* Jeder Abschnitt faengt bei null an. So kann ein Wort im Dialog und
+   spaeter im Rollenspiel je einmal markiert sein — aber nie zweimal
+   im selben Absatz, wo es nur unruhig aussieht. */
+function neuerAbschnitt() { markHier = {}; }
 
 function ohneArtikel(w) { return String(w || '').replace(/^(der|die|das)\s+/i, '').trim(); }
 function artikelVon(w)  { const m = String(w || '').match(/^(der|die|das)\s/i); return m ? m[1].toLowerCase() : ''; }
@@ -115,6 +121,7 @@ function markiere(text) {
     const treffer = [];
     MARKEN.forEach(m => {
       if ((markZahl[m.wort] || 0) >= HOECHSTENS) return;
+      if ((markHier[m.wort] || 0) >= HOECHSTENS_HIER) return;
       const re = new RegExp('(?:^|[^' + BUCHSTABE + '])(' + fluchtRegex(m.wort) + ENDUNG + ')(?![' + BUCHSTABE + '])', 'i');
       const t = re.exec(teil);
       if (!t) return;
@@ -122,6 +129,7 @@ function markiere(text) {
       /* Keine zwei Markierungen uebereinander. */
       if (treffer.some(x => von < x.bis && von + t[1].length > x.von)) return;
       markZahl[m.wort] = (markZahl[m.wort] || 0) + 1;
+      markHier[m.wort] = (markHier[m.wort] || 0) + 1;
       treffer.push({ von, bis: von + t[1].length, wort: t[1], m });
     });
     if (!treffer.length) return teil;
@@ -137,6 +145,51 @@ function markiere(text) {
     });
     return s;
   }).join('');
+}
+
+/* ---------- Anfangshilfen ----------
+   „Mir faellt nichts ein" ist der haeufigste Grund, warum jemand im
+   Sprechclub schweigt — nicht fehlender Wortschatz, sondern der
+   fehlende erste Satz. Diese Anfaenge stehen aufklappbar unter jeder
+   Sprechaufgabe: wer sie braucht, tippt drauf; wer nicht, sieht nur
+   eine Zeile.
+
+   Die Saetze richten sich nach dem Niveau der Stunde. Auf A2/B1 sind
+   es kurze Hauptsaetze, ab B2 kommen Nebensatz und Abtoenung dazu —
+   ein C1-Anfang „Ehrlich gesagt faellt es mir schwer, …" hilft auf
+   A2 niemandem, er schuechtert nur ein. */
+/* Zwei Saetze fuer jedes Niveau. Der Umschalter oben schaltet auch
+   die Hilfe um: Wer auf der unteren Stufe steht, bekommt kurze
+   Hauptsaetze; auf der oberen kommen Nebensatz und Abtoenung dazu.
+   Vorher richtete sich die Hilfe nach der Stunde, nicht nach dem,
+   was der Lernende gerade gewaehlt hat — auf B1 stand dann „Ehrlich
+   gesagt faellt es mir schwer, …" und schuechterte genau die Leute
+   ein, denen sie helfen sollte. */
+const ANFAENGE = {
+  ankommen: {
+    leicht: ['Bei mir war das so: …', 'Ich habe einmal …', 'Ich glaube, das ist …'],
+    schwer: ['Bei mir war das so: …', 'Ehrlich gesagt habe ich das noch nie …', 'Mir fällt spontan ein Fall ein, in dem …']
+  },
+  rollenspiel: {
+    leicht: ['Das verstehe ich. Aber …', 'Kann ich bitte fragen: …?', 'Was kann ich jetzt machen?'],
+    schwer: ['Das verstehe ich — trotzdem bleibe ich dabei: …', 'Darf ich kurz nachfragen: …?', 'Wer kann das denn entscheiden?']
+  },
+  abschluss: {
+    leicht: ['Ich nehme mit: …', 'Ich will den Satz „…“ benutzen.', 'Neu war für mich: …'],
+    schwer: ['Ich nehme mit, dass …', 'Den Satz „…“ will ich nächste Woche wirklich benutzen.', 'Neu war für mich, dass …']
+  }
+};
+
+function anfangshilfe(art, text) {
+  const paar = ANFAENGE[art];
+  if (!paar) return '';
+  const liste = st => `<div class="hilf-i">` + st.map(x => `<span>${h(x)}</span>`).join('') + `</div>`;
+  /* Ohne Umschalter in der Stunde gibt es nur eine Stufe — dann
+     entscheidet das Niveau der Stunde, welche. */
+  const inhalt = S.niveau
+    ? `<div class="nur-a2">${liste(paar.leicht)}</div><div class="nur-b1">${liste(paar.schwer)}</div>`
+    : liste(/B2|C1|C2/.test(String(S.stufe || '')) ? paar.schwer : paar.leicht);
+  return `<details class="hilf"><summary>🆘 ${h(text || 'Wie fange ich an?')}</summary>${inhalt}</details>\n`;
 }
 
 /* h() mit Markierung — nur dort, wo die Sprache benutzt wird:
@@ -308,6 +361,7 @@ function saetze(s3) {
 
 /* ---------- 4 Dialoge ---------- */
 function dialoge(d) {
+  neuerAbschnitt();
   let s = `<section class="section" id="dialoge">\n` + kopfzeile(d.h2, d.hl, d.ssub);
   d.liste.forEach((dl, n) => {
     const vorlesen = dl.zeilen.map(z => nurText(z.text)).join(' ');
@@ -382,19 +436,57 @@ function grammatik(g) {
 }
 
 /* ---------- 6 Rollenspiele + Sprechkarten ---------- */
+/* Die Lage steht als ein Satz da: „A hat vor zehn Monaten gekauft,
+   das Geraet verliert Wasser. B verweist auf den Hersteller."
+   Gelesen wird das in der Stunde von zwei Leuten, die wissen
+   muessen, wer sie sind und was sie wollen — und zwar auf einen
+   Blick, nicht nach dreimal Lesen.
+
+   Deshalb wird der Satz an der Stelle geteilt, an der B anfaengt.
+   Das gelingt bei 187 von 249 Rollenspielen; bei den uebrigen steht
+   die Lage als ein Block da, weil eine falsche Trennung schlimmer
+   waere als gar keine. */
+function rollenTeilen(text) {
+  const t = String(text || '').trim();
+  const m = t.match(/^(A\b[\s\S]*?[.!?])\s+(B\b[\s\S]*)$/);
+  if (m) return { a: m[1].trim(), b: m[2].trim() };
+  const m2 = t.match(/^(B\b[\s\S]*?[.!?])\s+(A\b[\s\S]*)$/);
+  if (m2) return { a: m2[2].trim(), b: m2[1].trim() };
+  return null;
+}
+
 function rollenspiele(r) {
+  neuerAbschnitt();
   let s = `<section class="section" id="rollenspiele">\n` + kopfzeile(r.h2, r.hl, r.ssub);
   r.liste.forEach((x, i) => {
-    s += `<div class="rmcard">\n<b>${i + 1} · ${h(x.titel)}</b>\n` +
-      `<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">${hm(x.situation)}</p>\n` +
-      (x.a2 ? `<div class="nur-a2">` + x.a2.map(c => `<span class="rm">${h(c)}</span>`).join('') + `</div>\n` : '') +
-      (x.b1 ? `<div class="nur-b1">` + x.b1.map(c => `<span class="rm">${h(c)}</span>`).join('') + `</div>\n` : '') +
-      `<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>${hm(x.gut)}</div>\n</div>\n`;
+    const rollen = rollenTeilen(x.situation);
+    s += `<div class="rsp">\n`
+      + `<div class="rsp-kopf"><span class="rsp-nr">${i + 1}</span><b>${h(x.titel)}</b></div>\n`;
+
+    if (rollen) {
+      s += `<div class="rsp-rollen">`
+        + `<div class="rsp-r a"><span>A</span><p>${hm(rollen.a.replace(/^A\s*/, ''))}</p></div>`
+        + `<div class="rsp-r b"><span>B</span><p>${hm(rollen.b.replace(/^B\s*/, ''))}</p></div>`
+        + `</div>\n`;
+    } else {
+      s += `<div class="rsp-lage"><span>Die Lage</span>${hm(x.situation)}</div>\n`;
+    }
+
+    if (x.a2 || x.b1) {
+      s += `<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span>`
+        + (x.a2 ? `<div class="nur-a2">` + x.a2.map(c => `<span class="rm">${h(c)}</span>`).join('') + `</div>` : '')
+        + (x.b1 ? `<div class="nur-b1">` + x.b1.map(c => `<span class="rm">${h(c)}</span>`).join('') + `</div>` : '')
+        + `</div>\n`;
+    }
+    if (x.gut) s += `<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>${hm(x.gut)}</div>\n`;
+    s += anfangshilfe('rollenspiel', 'Und wenn B nein sagt?');
+    s += `</div>\n\n`;
   });
+
   if (S.daten && S.daten.sk && S.daten.sk.length) {
     s += kopfzeile('🎴 Sprechkarten', null, 'Zieh eine Karte und sprich mindestens vier Sätze am Stück.');
     s += `<div class="card90">\n<div class="lbl">Deine Aufgabe</div>\n` +
-      `<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>\n` +
+      `<div class="word" id="wsk" style="font-size:1.15rem;line-height:1.4;">Tippe auf den Knopf.</div>\n` +
       `<button class="btn" id="sknew">🎴 Karte ziehen</button>\n</div>\n`;
   }
   return s + `</section>\n`;
@@ -538,11 +630,13 @@ function ankommen(S) {
   if (!frage) return '';
   const zweit = (eig && eig.zweite) ||
     (S.einstieg || []).map(x => (x.fragenA2 || [])[1]).filter(Boolean)[0] || '';
+  neuerAbschnitt();
   return `<section class="section" id="ankommen">\n`
     + kopfzeile('Erst mal', 'ankommen', 'Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.')
     + `<div class="ank">${h(frage)}</div>\n`
     + (zweit ? `<div class="ank zweit"><span>Wenn noch Zeit ist:</span>${h(zweit)}</div>\n` : '')
-    + tipp({ text: 'Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.' })
+    + anfangshilfe('ankommen', 'Wie fange ich an?')
+    + tipp({ text: 'Antworte in einem Satz. Der Rest kommt dann von allein.' })
     + `</section>\n`;
 }
 
@@ -552,56 +646,30 @@ function ankommen(S) {
    die, die frueher am Anfang standen — abstrakt, streitbar, und nach
    einer halben Stunde Wortschatz und Dialog genau richtig. */
 function debatte(S) {
+  neuerAbschnitt();
   const eig = DEB || S.debatte;
-  let fragen = (eig && eig.fragen) || [];
-  if (!fragen.length) {
-    (S.einstieg || []).forEach(x => {
-      (x.fragenB1 || []).forEach(f => fragen.push(f));
-    });
-  }
-  if (!fragen.length) {
-    (S.einstieg || []).forEach(x => { (x.fragen || []).slice(1).forEach(f => fragen.push(f)); });
-  }
-  if (!fragen.length) return '';
-  const these = (eig && eig.these) || fragen[0];
-  const rest = fragen.filter(f => f !== these);
+  if (!eig) return '';
+  const these = eig.these;
+  const pro = eig.pro || [];
+  const con = eig.con || [];
+  if (!these || !pro.length || !con.length) return '';
 
-  const proSaetze = (eig && eig.pro) || [];
-  const conSaetze = (eig && eig.con) || [];
-
-  let s = `<section class="section" id="debatte">\n`
-    + kopfzeile('Drei gegen', 'drei', 'Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.')
-    + `<div class="deb-these">${h(these)}</div>\n`;
-
-  s += `<div class="deb-seiten">`
-    + `<div class="deb-s pro"><b>Gruppe A · dafür</b>`
-    + (proSaetze.length
-        ? `<ul>` + proSaetze.map(x => `<li>${h(x)}</li>`).join('') + `</ul>`
-        : `<p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p>`)
-    + `</div>`
-    + `<div class="deb-s con"><b>Gruppe B · dagegen</b>`
-    + (conSaetze.length
-        ? `<ul>` + conSaetze.map(x => `<li>${h(x)}</li>`).join('') + `</ul>`
-        : `<p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p>`)
-    + `</div></div>\n`;
-
-  s += `<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips">`
-    + ['Ich sehe das anders, weil …',
-       'Da stimme ich zu, aber …',
-       'Genau das ist der Punkt: …',
-       'Das mag sein — trotzdem …',
-       'Wenn das stimmt, warum dann …?',
-       'Ich bleibe dabei: …'].map(x => `<span>${h(x)}</span>`).join('')
-    + `</div></div>\n`;
-
-  if (rest.length) {
-    s += `<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b>`
-      + `<ul>` + rest.map(f => `<li>${h(f)}</li>`).join('') + `</ul></div>\n`;
-  }
-
-  return s + tipp({ art:'teal', text: 'Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — '
-                  + 'und ist genau das, was in der Prüfung und in der Besprechung zählt.' })
-           + `</section>\n`;
+  /* Nur die These und die Argumente. Vorher standen darunter noch
+     Redemittel-Chips und eine Liste weiterer Fragen — gut gemeint,
+     aber in der Stunde liest das niemand. Wer streiten soll, braucht
+     Argumente, nicht noch eine Tafel. */
+  return `<section class="section" id="debatte">\n`
+    + kopfzeile(S.debatteH2 || 'Drei gegen', 'drei', 'Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.')
+    + `<div class="deb-these">${h(these)}</div>\n`
+    + `<div class="deb-seiten">`
+    +   `<div class="deb-s pro"><b>Gruppe A · dafür</b><ul>`
+    +     pro.map(x => `<li>${h(x)}</li>`).join('')
+    +   `</ul></div>`
+    +   `<div class="deb-s con"><b>Gruppe B · dagegen</b><ul>`
+    +     con.map(x => `<li>${h(x)}</li>`).join('')
+    +   `</ul></div>`
+    + `</div>\n`
+    + `</section>\n`;
 }
 
 /* ---------- 9 Abschluss ---------- */
@@ -609,6 +677,7 @@ function abschluss() {
   return `<section class="section" id="abschluss">\n`
     + kopfzeile('Zum', 'Schluss', 'Vier Minuten, sechs Sätze.')
     + `<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>\n`
+    + anfangshilfe('abschluss', 'Wie fange ich an?')
     + `</section>\n`;
 }
 

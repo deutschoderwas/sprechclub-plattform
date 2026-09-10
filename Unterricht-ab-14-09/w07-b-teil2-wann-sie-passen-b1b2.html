@@ -280,6 +280,72 @@ img.dbild{max-width:160px;border-radius:10px;margin-top:.4rem;}
   color:var(--soft);margin-bottom:.15rem;
 }
 
+/* ---------- Rollenspiel: wer bin ich, was will ich ----------
+   Die Lage stand vorher als ein grauer Satz da. Zwei Leute, die
+   gleich sprechen sollen, mussten daraus selbst herauslesen, wer sie
+   sind. Jetzt stehen die Rollen nebeneinander, in denselben Farben
+   wie im Dialog: A rot, B tuerkis. */
+.rsp{
+  background:#fff;border:1px solid var(--line);border-radius:16px;
+  padding:.9rem 1rem 1rem;margin:0 0 .9rem;box-shadow:var(--schatten-k);
+}
+.rsp-kopf{display:flex;align-items:center;gap:.6rem;margin-bottom:.7rem;}
+.rsp-nr{
+  flex:none;width:26px;height:26px;border-radius:8px;background:var(--ink);color:#fff;
+  display:grid;place-items:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.85rem;
+}
+.rsp-kopf b{font-family:'Space Grotesk',sans-serif;font-size:1.02rem;line-height:1.25;}
+.rsp-rollen{display:grid;gap:.5rem;margin:0 0 .75rem;}
+@media(min-width:560px){ .rsp-rollen{grid-template-columns:1fr 1fr;} }
+.rsp-r{
+  display:grid;grid-template-columns:auto 1fr;gap:.5rem;align-items:start;
+  border-radius:12px;padding:.6rem .75rem;
+}
+.rsp-r span{
+  width:24px;height:24px;border-radius:50%;display:grid;place-items:center;color:#fff;
+  font-family:'Space Grotesk',sans-serif;font-size:.75rem;font-weight:700;
+}
+.rsp-r p{font-size:.93rem;line-height:1.5;}
+.rsp-r.a{background:var(--pink);}
+.rsp-r.a span{background:var(--red);}
+.rsp-r.b{background:var(--mint);}
+.rsp-r.b span{background:var(--turq-d);}
+.rsp-lage{background:#F7F6F3;border-radius:12px;padding:.6rem .8rem;margin:0 0 .75rem;font-size:.93rem;line-height:1.5;}
+.rsp-lage span{
+  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.2rem;
+}
+.rsp-saetze{margin:0 0 .7rem;}
+.rsp-lbl{
+  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.35rem;
+}
+.rsp-ziel{
+  background:var(--warm);border-left:4px solid var(--gold);border-radius:0 10px 10px 0;
+  padding:.55rem .8rem;font-size:.92rem;line-height:1.5;
+}
+.rsp-ziel span{
+  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.15rem;
+}
+
+/* ---------- Anfangshilfe ----------
+   Zugeklappt eine Zeile, aufgeklappt drei Satzanfaenge. Wer sie
+   nicht braucht, sieht fast nichts. */
+.hilf{margin:.8rem 0 0;}
+.hilf summary{
+  cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:.35rem;
+  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;color:var(--teal-ink);
+  background:var(--mint);border:1px solid #CDEEF3;border-radius:999px;padding:.32rem .8rem;
+}
+.hilf summary::-webkit-details-marker{display:none;}
+.hilf[open] summary{background:var(--turq-d);color:#fff;border-color:var(--turq-d);}
+.hilf-i{display:flex;flex-direction:column;gap:.35rem;margin:.55rem 0 0;}
+.hilf-i span{
+  background:#fff;border:1px dashed var(--line);border-radius:10px;
+  padding:.45rem .7rem;font-size:.93rem;line-height:1.5;
+}
+
 /* ---------- Debatte ---------- */
 .deb-these{
   background:var(--ink);color:#fff;border-radius:14px;padding:1rem 1.15rem;
@@ -446,7 +512,8 @@ footer strong{color:var(--ink);}
 <p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
 <div class="ank">Wo würdest du <i>ich habe die Nase voll</i> sagen, wo nicht?</div>
 <div class="ank zweit"><span>Wenn noch Zeit ist:</span>Gibt es Wörter, die du nur unter Freunden benutzt?</div>
-<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
+<details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
+<div class="tip">Antworte in einem Satz. Der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="dialoge">
@@ -523,32 +590,35 @@ footer strong{color:var(--ink);}
 <section class="section" id="rollenspiele">
 <h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
 <p class="ssub">Einer formuliert, einer hört auf den Ton. Danach tauschen — und beim zweiten Mal ohne Notizen. Regel für alle drei: Jede Korrektur muss eine Alternative anbieten, nicht nur warnen.</p>
-<div class="rmcard">
-<b>1 · Die Mail an den Kunden</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A schreibt eine Mail und benutzt zwei Wendungen, die unter Kollegen normal sind. B liest gegen und schlägt für jede eine neutrale Fassung vor — ohne den Text kaputtzumachen.</p>
-<div class="nur-a2"><span class="rm">Wir krempeln die Ärmel hoch</span><span class="rm">Da hätten wir Bauchschmerzen</span><span class="rm">Unter uns würde ich das auch so sagen</span><span class="rm">Sachlich heißt das: …</span></div>
-<div class="nur-b1"><span class="rm">Unter Kollegen ja, beim Kunden würde ich es umformulieren</span><span class="rm">Das trifft es, klingt aber lockerer als nötig</span><span class="rm">Ich würde daraus machen: …</span><span class="rm">Dann bleibt die Aussage, nur der Ton ändert sich</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Für jede beanstandete Wendung stand am Ende eine Alternative — und die war konkreter als das Original, nicht blasser. B hat mindestens einmal gesagt, wo die Wendung sehr wohl passt.</div>
+<div class="rsp">
+<div class="rsp-kopf"><span class="rsp-nr">1</span><b>Die Mail an den Kunden</b></div>
+<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>schreibt eine Mail und benutzt zwei <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Wendungen" data-wort="die Wendung" data-kurz="eine feste Verbindung von Wörtern" data-bsp="Diese Wendung passt hier nicht.">Wendungen</b>, die unter Kollegen normal sind.</p></div><div class="rsp-r b"><span>B</span><p>liest gegen und schlägt für jede eine <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von neutrale" data-wort="neutral" data-kurz="geht überall, auch im Beruf" data-bsp="Der Plan hat Hand und Fuß.">neutrale</b> Fassung vor — ohne den Text kaputtzumachen.</p></div></div>
+<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Wir krempeln die Ärmel hoch</span><span class="rm">Da hätten wir Bauchschmerzen</span><span class="rm">Unter uns würde ich das auch so sagen</span><span class="rm">Sachlich heißt das: …</span></div><div class="nur-b1"><span class="rm">Unter Kollegen ja, beim Kunden würde ich es umformulieren</span><span class="rm">Das trifft es, klingt aber lockerer als nötig</span><span class="rm">Ich würde daraus machen: …</span><span class="rm">Dann bleibt die Aussage, nur der Ton ändert sich</span></div></div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>Für jede beanstandete Wendung stand am Ende eine Alternative — und die war konkreter als das Original, nicht blasser. B hat mindestens einmal gesagt, wo die Wendung sehr wohl passt.</div>
+<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
-<div class="rmcard">
-<b>2 · Der Entwurf im Ärger</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat sich über eine Behörde geärgert und einen scharfen Entwurf geschrieben. B nimmt den Ärger ernst und baut daraus ein Schreiben, das deutlicher ist als der Ärger — mit Sache und Frist.</p>
-<div class="nur-a2"><span class="rm">Ich habe die Nase voll</span><span class="rm">Aber ich will deutlich sein</span><span class="rm">Sachlich heißt das: …</span><span class="rm">Ich bitte um Klärung bis zum 15.</span></div>
-<div class="nur-b1"><span class="rm">Ich verstehe den Ärger, nur liest das jemand, der nichts dafür kann</span><span class="rm">Deutlich ja, scharf nein</span><span class="rm">Aus meiner Sicht ist der Punkt offen</span><span class="rm">Ich bitte um eine Rückmeldung bis zum …</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Die Endfassung enthält keine Wendung und ist trotzdem deutlicher als der Entwurf — weil eine Frist und ein konkretes Anliegen darin stehen. B hat den Ärger anerkannt, bevor er korrigiert hat.</div>
+
+<div class="rsp">
+<div class="rsp-kopf"><span class="rsp-nr">2</span><b>Der Entwurf im Ärger</b></div>
+<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>hat sich über eine Behörde geärgert und einen scharfen Entwurf geschrieben.</p></div><div class="rsp-r b"><span>B</span><p>nimmt den Ärger ernst und baut daraus ein <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Schreiben" data-wort="das Schreiben" data-kurz="ein förmlicher Brief, meist an eine Behörde" data-bsp="Ihr Schreiben vom dritten Oktober liegt mir vor.">Schreiben</b>, das deutlicher ist als der Ärger — mit Sache und Frist.</p></div></div>
+<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Ich habe die Nase voll</span><span class="rm">Aber ich will deutlich sein</span><span class="rm">Sachlich heißt das: …</span><span class="rm">Ich bitte um Klärung bis zum 15.</span></div><div class="nur-b1"><span class="rm">Ich verstehe den Ärger, nur liest das jemand, der nichts dafür kann</span><span class="rm">Deutlich ja, scharf nein</span><span class="rm">Aus meiner Sicht ist der Punkt offen</span><span class="rm">Ich bitte um eine Rückmeldung bis zum …</span></div></div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>Die Endfassung enthält keine Wendung und ist trotzdem deutlicher als der Entwurf — weil eine Frist und ein konkretes Anliegen darin stehen. B hat den Ärger anerkannt, bevor er korrigiert hat.</div>
+<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
-<div class="rmcard">
-<b>3 · Das war nicht so gemeint</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat im Team eine Wendung benutzt, die B getroffen hat. A merkt es und spricht es an. B sagt ehrlich, was angekommen ist. Findet in zwei Minuten heraus, wie man es hätte sagen können.</p>
-<div class="nur-a2"><span class="rm">So war das nicht gemeint</span><span class="rm">Das klang schärfer, als ich wollte</span><span class="rm">Was ist bei dir angekommen?</span><span class="rm">Mir ging es um die Sache</span></div>
-<div class="nur-b1"><span class="rm">Ich glaube, das kam anders an, als du es gemeint hast</span><span class="rm">Es klang, als würdest du mich bewerten</span><span class="rm">Darf ich das noch mal anders sagen?</span><span class="rm">Beim nächsten Mal sage ich einfach: …</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A ist bei sich geblieben (<i>mein Satz kam an</i>) statt B einen Fehler zuzuschreiben. Und am Ende stand ein konkreter Satz, mit dem es beim nächsten Mal funktioniert.</div>
+
+<div class="rsp">
+<div class="rsp-kopf"><span class="rsp-nr">3</span><b>Das war nicht so gemeint</b></div>
+<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>hat im Team eine Wendung benutzt, die B getroffen hat. A merkt es und spricht es an.</p></div><div class="rsp-r b"><span>B</span><p>sagt ehrlich, was angekommen ist. Findet in zwei Minuten heraus, wie man es hätte sagen können.</p></div></div>
+<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">So war das nicht gemeint</span><span class="rm">Das klang schärfer, als ich wollte</span><span class="rm">Was ist bei dir angekommen?</span><span class="rm">Mir ging es um die Sache</span></div><div class="nur-b1"><span class="rm">Ich glaube, das kam anders an, als du es gemeint hast</span><span class="rm">Es klang, als würdest du mich bewerten</span><span class="rm">Darf ich das noch mal anders sagen?</span><span class="rm">Beim nächsten Mal sage ich einfach: …</span></div></div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>A ist bei sich geblieben (<i>mein Satz kam an</i>) statt B einen Fehler zuzuschreiben. Und am Ende stand ein konkreter Satz, mit dem es beim nächsten Mal funktioniert.</div>
+<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
+
 <h2 class="st">🎴 Sprechkarten</h2>
 <p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
 <div class="card90">
 <div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<div class="word" id="wsk" style="font-size:1.15rem;line-height:1.4;">Tippe auf den Knopf.</div>
 <button class="btn" id="sknew">🎴 Karte ziehen</button>
 </div>
 </section>
@@ -556,17 +626,15 @@ footer strong{color:var(--ink);}
 <section class="section" id="debatte">
 <h2 class="st">Drei gegen <span class="hl">drei</span></h2>
 <p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
-<div class="deb-these">Im Beruf sollte man auf Redewendungen verzichten.</div>
-<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><ul><li>Kollegen aus anderen Ländern verstehen sie nicht, auch wenn sie gut Deutsch sprechen.</li><li>In einem Protokoll oder einer Mail wirken sie salopp und ungenau.</li><li>Wer sich klar ausdrückt, braucht keine Bilder.</li></ul></div><div class="deb-s con"><b>Gruppe B · dagegen</b><ul><li>Sprache im Büro besteht zur Hälfte aus solchen Wendungen — wer sie meidet, klingt förmlich und fremd.</li><li>„Das hat Hand und Fuß“ sagt in vier Wörtern, wofür man sonst zwei Sätze braucht.</li><li>Die Frage ist nicht ob, sondern welche — im Gespräch andere als im Bericht.</li></ul></div></div>
-<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
-<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Woran erkennst du in einer fremden Sprache die Stilebene eines Ausdrucks?</li><li>Ist es schlimmer, zu locker oder zu förmlich zu klingen?</li><li>Welche Situation ist für dich am schwersten einzuschätzen?</li><li>Warum wirken Wendungen über Menschen schärfer als normale Kritik?</li><li>Wann ist ein bildhafter Ausdruck ein Vorteil, wann ein Risiko?</li><li>Wie sagt man dasselbe, ohne die Person zu bewerten?</li></ul></div>
-<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+<div class="deb-these">Im Büro benutzt man keine Redewendungen.</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><ul><li>Kollegen aus anderen Ländern verstehen sie nicht.</li><li>In einer Mail klingt es zu locker.</li><li>Wer klar schreibt, braucht keine Bilder.</li></ul></div><div class="deb-s con"><b>Gruppe B · dagegen</b><ul><li>Im Büro reden alle so. Ohne klingt man steif.</li><li>„Das hat Hand und Fuß“ spart zwei Sätze.</li><li>Die Frage ist nur, welche man wann benutzt.</li></ul></div></div>
 </section>
 
 <section class="section" id="abschluss">
 <h2 class="st">Zum <span class="hl">Schluss</span></h2>
 <p class="ssub">Vier Minuten, sechs Sätze.</p>
 <div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
+<details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Ich nehme mit: …</span><span>Ich will den Satz „…“ benutzen.</span><span>Neu war für mich: …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Ich nehme mit, dass …</span><span>Den Satz „…“ will ich nächste Woche wirklich benutzen.</span><span>Neu war für mich, dass …</span></div></div></details>
 </section>
 
 <section class="section" id="hausaufgabe">

@@ -280,6 +280,72 @@ img.dbild{max-width:160px;border-radius:10px;margin-top:.4rem;}
   color:var(--soft);margin-bottom:.15rem;
 }
 
+/* ---------- Rollenspiel: wer bin ich, was will ich ----------
+   Die Lage stand vorher als ein grauer Satz da. Zwei Leute, die
+   gleich sprechen sollen, mussten daraus selbst herauslesen, wer sie
+   sind. Jetzt stehen die Rollen nebeneinander, in denselben Farben
+   wie im Dialog: A rot, B tuerkis. */
+.rsp{
+  background:#fff;border:1px solid var(--line);border-radius:16px;
+  padding:.9rem 1rem 1rem;margin:0 0 .9rem;box-shadow:var(--schatten-k);
+}
+.rsp-kopf{display:flex;align-items:center;gap:.6rem;margin-bottom:.7rem;}
+.rsp-nr{
+  flex:none;width:26px;height:26px;border-radius:8px;background:var(--ink);color:#fff;
+  display:grid;place-items:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.85rem;
+}
+.rsp-kopf b{font-family:'Space Grotesk',sans-serif;font-size:1.02rem;line-height:1.25;}
+.rsp-rollen{display:grid;gap:.5rem;margin:0 0 .75rem;}
+@media(min-width:560px){ .rsp-rollen{grid-template-columns:1fr 1fr;} }
+.rsp-r{
+  display:grid;grid-template-columns:auto 1fr;gap:.5rem;align-items:start;
+  border-radius:12px;padding:.6rem .75rem;
+}
+.rsp-r span{
+  width:24px;height:24px;border-radius:50%;display:grid;place-items:center;color:#fff;
+  font-family:'Space Grotesk',sans-serif;font-size:.75rem;font-weight:700;
+}
+.rsp-r p{font-size:.93rem;line-height:1.5;}
+.rsp-r.a{background:var(--pink);}
+.rsp-r.a span{background:var(--red);}
+.rsp-r.b{background:var(--mint);}
+.rsp-r.b span{background:var(--turq-d);}
+.rsp-lage{background:#F7F6F3;border-radius:12px;padding:.6rem .8rem;margin:0 0 .75rem;font-size:.93rem;line-height:1.5;}
+.rsp-lage span{
+  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.2rem;
+}
+.rsp-saetze{margin:0 0 .7rem;}
+.rsp-lbl{
+  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.35rem;
+}
+.rsp-ziel{
+  background:var(--warm);border-left:4px solid var(--gold);border-radius:0 10px 10px 0;
+  padding:.55rem .8rem;font-size:.92rem;line-height:1.5;
+}
+.rsp-ziel span{
+  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.15rem;
+}
+
+/* ---------- Anfangshilfe ----------
+   Zugeklappt eine Zeile, aufgeklappt drei Satzanfaenge. Wer sie
+   nicht braucht, sieht fast nichts. */
+.hilf{margin:.8rem 0 0;}
+.hilf summary{
+  cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:.35rem;
+  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;color:var(--teal-ink);
+  background:var(--mint);border:1px solid #CDEEF3;border-radius:999px;padding:.32rem .8rem;
+}
+.hilf summary::-webkit-details-marker{display:none;}
+.hilf[open] summary{background:var(--turq-d);color:#fff;border-color:var(--turq-d);}
+.hilf-i{display:flex;flex-direction:column;gap:.35rem;margin:.55rem 0 0;}
+.hilf-i span{
+  background:#fff;border:1px dashed var(--line);border-radius:10px;
+  padding:.45rem .7rem;font-size:.93rem;line-height:1.5;
+}
+
 /* ---------- Debatte ---------- */
 .deb-these{
   background:var(--ink);color:#fff;border-radius:14px;padding:1rem 1.15rem;
@@ -446,7 +512,8 @@ footer strong{color:var(--ink);}
 <p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
 <div class="ank">Was schmeckt dir hier am besten?</div>
 <div class="ank zweit"><span>Wenn noch Zeit ist:</span>Was gefällt dir an deiner Stadt?</div>
-<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
+<details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
+<div class="tip">Antworte in einem Satz. Der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="dialoge">
@@ -524,32 +591,35 @@ footer strong{color:var(--ink);}
 <section class="section" id="rollenspiele">
 <h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
 <p class="ssub">Einer fragt, einer bewertet. Danach tauschen — und beim zweiten Mal ohne die Sätze unten. Regel: In jeder Runde mindestens ein Dativ-Verb und ein Sprechverb.</p>
-<div class="rmcard">
-<b>1 · Die Wohnungsbesichtigung</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A zeigt die Wohnung, B schaut sich um und sagt ehrlich, was gefällt und was nicht.</p>
-<div class="nur-a2"><span class="rm">Die Wohnung gefällt mir gut</span><span class="rm">Die Küche finde ich etwas klein</span><span class="rm">Der Preis passt mir leider nicht</span><span class="rm">Ich spreche noch mit meinem Mann darüber</span></div>
-<div class="nur-b1"><span class="rm">Optisch gefällt sie mir sehr, der Grundriss sagt mir weniger zu</span><span class="rm">Mir fehlt eigentlich nur ein Abstellraum</span><span class="rm">Die Lage finde ich ausgezeichnet, die Miete allerdings grenzwertig</span><span class="rm">Ich rede heute Abend mit meiner Familie darüber und melde mich morgen</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat mindestens zweimal ein Dativ-Verb benutzt und einmal ein Sprechverb mit der richtigen Präposition — und dabei ehrlich gesagt, was nicht passt, ohne unhöflich zu sein.</div>
+<div class="rsp">
+<div class="rsp-kopf"><span class="rsp-nr">1</span><b>Die Wohnungsbesichtigung</b></div>
+<div class="rsp-lage"><span>Die Lage</span>A zeigt die Wohnung, B schaut sich um und sagt ehrlich, was gefällt und was nicht.</div>
+<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Die Wohnung gefällt mir gut</span><span class="rm">Die Küche finde ich etwas klein</span><span class="rm">Der Preis passt mir leider nicht</span><span class="rm">Ich spreche noch mit meinem Mann darüber</span></div><div class="nur-b1"><span class="rm">Optisch gefällt sie mir sehr, der Grundriss sagt mir weniger zu</span><span class="rm">Mir fehlt eigentlich nur ein Abstellraum</span><span class="rm">Die Lage finde ich ausgezeichnet, die Miete allerdings grenzwertig</span><span class="rm">Ich rede heute Abend mit meiner Familie darüber und melde mich morgen</span></div></div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>B hat mindestens zweimal ein Dativ-Verb benutzt und einmal ein Sprechverb mit der richtigen Präposition — und dabei ehrlich gesagt, was nicht passt, ohne unhöflich zu sein.</div>
+<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
-<div class="rmcard">
-<b>2 · Am Esstisch</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat gekocht und fragt nach. B mag nicht alles — sagt es aber freundlich.</p>
-<div class="nur-a2"><span class="rm">Das schmeckt mir sehr gut</span><span class="rm">Die Soße mag ich besonders</span><span class="rm">Fisch mag ich leider nicht so</span><span class="rm">Kannst du mir das Rezept sagen?</span></div>
-<div class="nur-b1"><span class="rm">Das Gemüse schmeckt mir ausgezeichnet, den Fisch esse ich generell selten</span><span class="rm">Die Kombination finde ich ungewöhnlich, aber sie funktioniert</span><span class="rm">Erzähl mir mal, wie du das gemacht hast</span><span class="rm">Über die Nachspeise reden wir später noch</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat gelobt, ohne zu lügen, und eine Abneigung so gesagt, dass sie nicht nach Kritik klingt. Mindestens ein Satz mit <i>schmecken</i> und einer mit <i><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von mögen" data-wort="mögen" data-kurz="etwas oder jemanden gernhaben" data-bsp="Ich mag Hunde, aber ich hätte gern keinen eigenen.">mögen</b></i> — mit verschiedenen Subjekten.</div>
+
+<div class="rsp">
+<div class="rsp-kopf"><span class="rsp-nr">2</span><b>Am Esstisch</b></div>
+<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>hat gekocht und fragt nach.</p></div><div class="rsp-r b"><span>B</span><p>mag nicht alles — sagt es aber freundlich.</p></div></div>
+<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Das schmeckt mir sehr gut</span><span class="rm">Die Soße mag ich besonders</span><span class="rm">Fisch mag ich leider nicht so</span><span class="rm">Kannst du mir das Rezept sagen?</span></div><div class="nur-b1"><span class="rm">Das Gemüse schmeckt mir ausgezeichnet, den Fisch esse ich generell selten</span><span class="rm">Die Kombination finde ich ungewöhnlich, aber sie funktioniert</span><span class="rm">Erzähl mir mal, wie du das gemacht hast</span><span class="rm">Über die Nachspeise reden wir später noch</span></div></div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>B hat gelobt, ohne zu lügen, und eine Abneigung so gesagt, dass sie nicht nach Kritik klingt. Mindestens ein Satz mit <i><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von schmecken" data-wort="schmecken" data-kurz="einem gut oder schlecht munden — beim Essen" data-bsp="Der Kaffee schmeckt mir hier besser als zu Hause.">schmecken</b></i> und einer mit <i><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von mögen" data-wort="mögen" data-kurz="etwas oder jemanden gernhaben" data-bsp="Ich mag Hunde, aber ich hätte gern keinen eigenen.">mögen</b></i> — mit verschiedenen Subjekten.</div>
+<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
-<div class="rmcard">
-<b>3 · Das Gespräch mit der Chefin</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B möchte etwas ansprechen und kündigt es an. A fragt nach, worum es geht.</p>
-<div class="nur-a2"><span class="rm">Kann ich Sie kurz sprechen?</span><span class="rm">Ich würde gern über den Urlaub reden</span><span class="rm">Ich sage Ihnen, worum es geht</span><span class="rm">Hätten Sie morgen kurz Zeit?</span></div>
-<div class="nur-b1"><span class="rm">Ich würde gern einmal mit Ihnen über die Urlaubsplanung sprechen</span><span class="rm">Es geht darum, dass zwei Kolleginnen dieselbe Woche beantragt haben</span><span class="rm">Erzählen Sie mir kurz, wie das sonst geregelt wird?</span><span class="rm">Wenn es Ihnen recht ist, reden wir am Donnerstag in Ruhe darüber</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat Person und Thema sauber getrennt — <i>mit Ihnen</i> und <i>über die Planung</i> — und einen Termin vorgeschlagen statt nur ein Problem zu nennen.</div>
+
+<div class="rsp">
+<div class="rsp-kopf"><span class="rsp-nr">3</span><b>Das Gespräch mit der Chefin</b></div>
+<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>fragt nach, worum es geht.</p></div><div class="rsp-r b"><span>B</span><p>möchte etwas ansprechen und kündigt es an.</p></div></div>
+<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Kann ich Sie kurz sprechen?</span><span class="rm">Ich würde gern über den Urlaub reden</span><span class="rm">Ich sage Ihnen, worum es geht</span><span class="rm">Hätten Sie morgen kurz Zeit?</span></div><div class="nur-b1"><span class="rm">Ich würde gern einmal mit Ihnen über die Urlaubsplanung sprechen</span><span class="rm">Es geht darum, dass zwei Kolleginnen dieselbe Woche beantragt haben</span><span class="rm">Erzählen Sie mir kurz, wie das sonst geregelt wird?</span><span class="rm">Wenn es Ihnen recht ist, reden wir am Donnerstag in Ruhe darüber</span></div></div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>B hat Person und Thema sauber getrennt — <i>mit Ihnen</i> und <i>über die Planung</i> — und einen Termin vorgeschlagen statt nur ein Problem zu nennen.</div>
+<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
+
 <h2 class="st">🎴 Sprechkarten</h2>
 <p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
 <div class="card90">
 <div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<div class="word" id="wsk" style="font-size:1.15rem;line-height:1.4;">Tippe auf den Knopf.</div>
 <button class="btn" id="sknew">🎴 Karte ziehen</button>
 </div>
 </section>
@@ -557,17 +627,15 @@ footer strong{color:var(--ink);}
 <section class="section" id="debatte">
 <h2 class="st">Drei gegen <span class="hl">drei</span></h2>
 <p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
-<div class="deb-these">Man sollte lernen, wie Muttersprachler es sagen, nicht wie es logisch wäre.</div>
-<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><ul><li>„Es gefällt mir“ ist keine Übersetzung von I like it — wer wörtlich denkt, sagt es falsch.</li><li>Was üblich ist, entscheidet, ob man verstanden wird; Logik entscheidet gar nichts.</li><li>Beim Zuhören lernt man Muster, die in keinem Buch stehen.</li></ul></div><div class="deb-s con"><b>Gruppe B · dagegen</b><ul><li>Ohne Regel kann man nichts übertragen und hängt an gehörten Sätzen fest.</li><li>Was üblich ist, wechselt mit Region und Alter — welchem Muttersprachler folgt man?</li><li>Wer die Struktur versteht, korrigiert sich später selbst.</li></ul></div></div>
-<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
-<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Wann sagst du <i>Es gefällt mir</i> und wann <i>Ich mag es</i>?</li><li>Gibt es in deiner Sprache auch solche umgedrehten Sätze?</li><li>Welcher Satz klingt für dich höflicher — und warum?</li><li>Wann sagt man <i>reden</i> statt <i>sprechen</i>?</li><li>Was ist der Unterschied zwischen <i>erzählen</i> und <i>berichten</i>?</li><li>Welche dieser vier Verben benutzt du am seltensten?</li></ul></div>
-<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+<div class="deb-these">Man lernt, wie Deutsche es sagen, nicht was logisch wäre.</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><ul><li>„Es gefällt mir“ ist keine Übersetzung von I like it.</li><li>Wichtig ist, was üblich ist, nicht was logisch ist.</li><li>Beim Zuhören lernt man Sätze, die in keinem Buch stehen.</li></ul></div><div class="deb-s con"><b>Gruppe B · dagegen</b><ul><li>Ohne Regel kann man nichts übertragen.</li><li>Üblich ist je nach Region etwas anderes.</li><li>Wer das System versteht, korrigiert sich selbst.</li></ul></div></div>
 </section>
 
 <section class="section" id="abschluss">
 <h2 class="st">Zum <span class="hl">Schluss</span></h2>
 <p class="ssub">Vier Minuten, sechs Sätze.</p>
 <div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
+<details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Ich nehme mit: …</span><span>Ich will den Satz „…“ benutzen.</span><span>Neu war für mich: …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Ich nehme mit, dass …</span><span>Den Satz „…“ will ich nächste Woche wirklich benutzen.</span><span>Neu war für mich, dass …</span></div></div></details>
 </section>
 
 <section class="section" id="hausaufgabe">

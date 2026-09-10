@@ -280,6 +280,72 @@ img.dbild{max-width:160px;border-radius:10px;margin-top:.4rem;}
   color:var(--soft);margin-bottom:.15rem;
 }
 
+/* ---------- Rollenspiel: wer bin ich, was will ich ----------
+   Die Lage stand vorher als ein grauer Satz da. Zwei Leute, die
+   gleich sprechen sollen, mussten daraus selbst herauslesen, wer sie
+   sind. Jetzt stehen die Rollen nebeneinander, in denselben Farben
+   wie im Dialog: A rot, B tuerkis. */
+.rsp{
+  background:#fff;border:1px solid var(--line);border-radius:16px;
+  padding:.9rem 1rem 1rem;margin:0 0 .9rem;box-shadow:var(--schatten-k);
+}
+.rsp-kopf{display:flex;align-items:center;gap:.6rem;margin-bottom:.7rem;}
+.rsp-nr{
+  flex:none;width:26px;height:26px;border-radius:8px;background:var(--ink);color:#fff;
+  display:grid;place-items:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.85rem;
+}
+.rsp-kopf b{font-family:'Space Grotesk',sans-serif;font-size:1.02rem;line-height:1.25;}
+.rsp-rollen{display:grid;gap:.5rem;margin:0 0 .75rem;}
+@media(min-width:560px){ .rsp-rollen{grid-template-columns:1fr 1fr;} }
+.rsp-r{
+  display:grid;grid-template-columns:auto 1fr;gap:.5rem;align-items:start;
+  border-radius:12px;padding:.6rem .75rem;
+}
+.rsp-r span{
+  width:24px;height:24px;border-radius:50%;display:grid;place-items:center;color:#fff;
+  font-family:'Space Grotesk',sans-serif;font-size:.75rem;font-weight:700;
+}
+.rsp-r p{font-size:.93rem;line-height:1.5;}
+.rsp-r.a{background:var(--pink);}
+.rsp-r.a span{background:var(--red);}
+.rsp-r.b{background:var(--mint);}
+.rsp-r.b span{background:var(--turq-d);}
+.rsp-lage{background:#F7F6F3;border-radius:12px;padding:.6rem .8rem;margin:0 0 .75rem;font-size:.93rem;line-height:1.5;}
+.rsp-lage span{
+  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.2rem;
+}
+.rsp-saetze{margin:0 0 .7rem;}
+.rsp-lbl{
+  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.35rem;
+}
+.rsp-ziel{
+  background:var(--warm);border-left:4px solid var(--gold);border-radius:0 10px 10px 0;
+  padding:.55rem .8rem;font-size:.92rem;line-height:1.5;
+}
+.rsp-ziel span{
+  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.15rem;
+}
+
+/* ---------- Anfangshilfe ----------
+   Zugeklappt eine Zeile, aufgeklappt drei Satzanfaenge. Wer sie
+   nicht braucht, sieht fast nichts. */
+.hilf{margin:.8rem 0 0;}
+.hilf summary{
+  cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:.35rem;
+  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;color:var(--teal-ink);
+  background:var(--mint);border:1px solid #CDEEF3;border-radius:999px;padding:.32rem .8rem;
+}
+.hilf summary::-webkit-details-marker{display:none;}
+.hilf[open] summary{background:var(--turq-d);color:#fff;border-color:var(--turq-d);}
+.hilf-i{display:flex;flex-direction:column;gap:.35rem;margin:.55rem 0 0;}
+.hilf-i span{
+  background:#fff;border:1px dashed var(--line);border-radius:10px;
+  padding:.45rem .7rem;font-size:.93rem;line-height:1.5;
+}
+
 /* ---------- Debatte ---------- */
 .deb-these{
   background:var(--ink);color:#fff;border-radius:14px;padding:1rem 1.15rem;
@@ -446,7 +512,8 @@ footer strong{color:var(--ink);}
 <p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
 <div class="ank">Wann warst du zuletzt beim Arzt? Warum?</div>
 <div class="ank zweit"><span>Wenn noch Zeit ist:</span>Gehst du schnell zum Arzt oder wartest du lieber ab?</div>
-<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
+<details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
+<div class="tip">Antworte in einem Satz. Der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="dialoge">
@@ -532,32 +599,35 @@ footer strong{color:var(--ink);}
 <section class="section" id="rollenspiele">
 <h2 class="st">🎭 Drei <span class="hl">Besuche im Sprechzimmer</span></h2>
 <p class="ssub">Zu zweit. Einer ist Patient, einer Arzt — und der Arzt fragt genauer nach, als dem Patienten lieb ist. Danach tauschen.</p>
-<div class="rmcard">
-<b>1 · Die Erkältung, die nicht weggeht</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A ist seit zwei Wochen erkältet und will endlich etwas dagegen. B als Arzt findet, das sei normal, und fragt nach Fieber, Schlaf und Arbeit.</p>
-<div class="nur-a2"><span class="rm">Ich bin seit zwei Wochen erkältet</span><span class="rm">Der Husten ist nachts am schlimmsten</span><span class="rm">Kein Fieber</span><span class="rm">Können Sie mir etwas verschreiben?</span></div>
-<div class="nur-b1"><span class="rm">Es wird einfach nicht besser</span><span class="rm">Anfangs war es nur Schnupfen</span><span class="rm">Ich komme nachts kaum zum Schlafen</span><span class="rm">Wäre ein Abstrich sinnvoll?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A nennt im ersten Satz Ort und Dauer, beschreibt den Verlauf statt nur den Zustand und fragt am Ende nach dem konkreten nächsten Schritt.</div>
+<div class="rsp">
+<div class="rsp-kopf"><span class="rsp-nr">1</span><b>Die Erkältung, die nicht weggeht</b></div>
+<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>ist seit zwei Wochen erkältet und will endlich etwas dagegen.</p></div><div class="rsp-r b"><span>B</span><p>als Arzt findet, das sei normal, und fragt nach <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Fieber" data-wort="das Fieber" data-kurz="erhöhte Körpertemperatur bei Krankheit" data-bsp="Ich hatte gestern 39 Grad Fieber.">Fieber</b>, Schlaf und Arbeit.</p></div></div>
+<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Ich bin seit zwei Wochen erkältet</span><span class="rm">Der Husten ist nachts am schlimmsten</span><span class="rm">Kein Fieber</span><span class="rm">Können Sie mir etwas verschreiben?</span></div><div class="nur-b1"><span class="rm">Es wird einfach nicht besser</span><span class="rm">Anfangs war es nur Schnupfen</span><span class="rm">Ich komme nachts kaum zum Schlafen</span><span class="rm">Wäre ein Abstrich sinnvoll?</span></div></div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>A nennt im ersten Satz Ort und Dauer, beschreibt den Verlauf statt nur den Zustand und fragt am Ende nach dem konkreten nächsten Schritt.</div>
+<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
-<div class="rmcard">
-<b>2 · Der Schmerz ohne Namen</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat Schmerzen an einer Stelle, für die er das deutsche Wort nicht kennt. B fragt nach — A muss beschreiben statt benennen.</p>
-<div class="nur-a2"><span class="rm">Hier tut es weh</span><span class="rm">Es fühlt sich an wie …</span><span class="rm">Beim Bewegen wird es schlimmer</span><span class="rm">Ich weiß das Wort nicht</span></div>
-<div class="nur-b1"><span class="rm">Es zieht von hier bis dorthin</span><span class="rm">Am ehesten würde ich es stechend nennen</span><span class="rm">In Ruhe ist es kaum spürbar</span><span class="rm">Wie heißt diese Stelle auf Deutsch?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A gibt nicht auf, sondern beschreibt Lage, Art und Auslöser — und fragt am Ende nach dem Wort, statt es zu vermeiden.</div>
+
+<div class="rsp">
+<div class="rsp-kopf"><span class="rsp-nr">2</span><b>Der Schmerz ohne Namen</b></div>
+<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>hat <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Schmerzen" data-wort="die Schmerzen" data-kurz="das unangenehme Gefühl, wenn etwas wehtut" data-bsp="Ich habe starke Schmerzen im Rücken.">Schmerzen</b> an einer Stelle, für die er das deutsche Wort nicht kennt.</p></div><div class="rsp-r b"><span>B</span><p>fragt nach — A muss beschreiben statt benennen.</p></div></div>
+<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Hier tut es weh</span><span class="rm">Es fühlt sich an wie …</span><span class="rm">Beim Bewegen wird es schlimmer</span><span class="rm">Ich weiß das Wort nicht</span></div><div class="nur-b1"><span class="rm">Es zieht von hier bis dorthin</span><span class="rm">Am ehesten würde ich es stechend nennen</span><span class="rm">In Ruhe ist es kaum spürbar</span><span class="rm">Wie heißt diese Stelle auf Deutsch?</span></div></div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>A gibt nicht auf, sondern beschreibt Lage, Art und Auslöser — und fragt am Ende nach dem Wort, statt es zu vermeiden.</div>
+<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
-<div class="rmcard">
-<b>3 · Ohne Termin am Empfang</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat starke Schmerzen und keinen Termin. B am Empfang sagt zweimal, dass es heute schwierig wird, bietet dann aber eine Lösung an.</p>
-<div class="nur-a2"><span class="rm">Ich habe leider keinen Termin</span><span class="rm">Seit heute Nacht sehr starke Schmerzen</span><span class="rm">Ich kann warten</span><span class="rm">Wie lange ungefähr?</span></div>
-<div class="nur-b1"><span class="rm">Ich weiß, dass das ungünstig ist</span><span class="rm">Ich würde jede Lücke nehmen</span><span class="rm">Gäbe es eine Notfallsprechstunde?</span><span class="rm">Dann komme ich morgen früh wieder</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A wird nicht ungeduldig, macht die Dringlichkeit an einer Tatsache fest (seit wann, wie stark) und nimmt die angebotene Lösung an.</div>
+
+<div class="rsp">
+<div class="rsp-kopf"><span class="rsp-nr">3</span><b>Ohne Termin am Empfang</b></div>
+<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>hat starke Schmerzen und keinen Termin.</p></div><div class="rsp-r b"><span>B</span><p>am Empfang sagt zweimal, dass es heute schwierig wird, bietet dann aber eine Lösung an.</p></div></div>
+<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Ich habe leider keinen Termin</span><span class="rm">Seit heute Nacht sehr starke Schmerzen</span><span class="rm">Ich kann warten</span><span class="rm">Wie lange ungefähr?</span></div><div class="nur-b1"><span class="rm">Ich weiß, dass das ungünstig ist</span><span class="rm">Ich würde jede Lücke nehmen</span><span class="rm">Gäbe es eine Notfallsprechstunde?</span><span class="rm">Dann komme ich morgen früh wieder</span></div></div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>A wird nicht ungeduldig, macht die Dringlichkeit an einer Tatsache fest (seit wann, wie stark) und nimmt die angebotene Lösung an.</div>
+<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
+
 <h2 class="st">🎴 Sprechkarten</h2>
 <p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
 <div class="card90">
 <div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<div class="word" id="wsk" style="font-size:1.15rem;line-height:1.4;">Tippe auf den Knopf.</div>
 <button class="btn" id="sknew">🎴 Karte ziehen</button>
 </div>
 </section>
@@ -565,17 +635,15 @@ footer strong{color:var(--ink);}
 <section class="section" id="debatte">
 <h2 class="st">Drei gegen <span class="hl">drei</span></h2>
 <p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
-<div class="deb-these">Wenn dir das Wort fehlt, sollst du es umschreiben statt zu übersetzen.</div>
-<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><ul><li>Der Arzt versteht „hier drückt es beim Atmen“ sofort — den Fachbegriff braucht er nicht.</li><li>Wer aufs Handy schaut, verliert den Blickkontakt und damit die Hälfte der Verständigung.</li><li>Umschreiben trainiert genau das, was in der Prüfung und im Notfall zählt.</li></ul></div><div class="deb-s con"><b>Gruppe B · dagegen</b><ul><li>Bei Medikamenten und Allergien darf nichts ungefähr sein — da ist das genaue Wort lebenswichtig.</li><li>Eine schlechte Umschreibung führt zur falschen Diagnose, und niemand merkt es.</li><li>Zehn Sekunden übersetzen sind ehrlicher als zwei Minuten Rätselraten.</li></ul></div></div>
-<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
-<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Wie erklärst du etwas, für das du das deutsche Wort nicht kennst?</li><li>Was ist schwieriger: die Krankheit beschreiben oder die Rückfragen verstehen?</li><li>Wie viel erzählt man in deinem Land dem Arzt von sich selbst?</li><li>Wie beschreibst du einen Schmerz, ohne ihn zu benennen?</li><li>Welche Fragen stellt ein Arzt, die man leicht falsch versteht?</li></ul></div>
-<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+<div class="deb-these">Beim Arzt erklärt man mit eigenen Worten, statt zu übersetzen.</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><ul><li>„Hier drückt es beim Atmen“ versteht jeder Arzt.</li><li>Wer aufs Handy schaut, schaut den Arzt nicht an.</li><li>Genau das braucht man auch in der Prüfung.</li></ul></div><div class="deb-s con"><b>Gruppe B · dagegen</b><ul><li>Bei Medikamenten muss das Wort genau stimmen.</li><li>Eine schlechte Erklärung führt zur falschen Diagnose.</li><li>Zehn Sekunden übersetzen sind besser als zwei Minuten raten.</li></ul></div></div>
 </section>
 
 <section class="section" id="abschluss">
 <h2 class="st">Zum <span class="hl">Schluss</span></h2>
 <p class="ssub">Vier Minuten, sechs Sätze.</p>
 <div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
+<details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Ich nehme mit: …</span><span>Ich will den Satz „…“ benutzen.</span><span>Neu war für mich: …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Ich nehme mit, dass …</span><span>Den Satz „…“ will ich nächste Woche wirklich benutzen.</span><span>Neu war für mich, dass …</span></div></div></details>
 </section>
 
 <section class="section" id="hausaufgabe">

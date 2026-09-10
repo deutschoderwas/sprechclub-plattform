@@ -280,6 +280,72 @@ img.dbild{max-width:160px;border-radius:10px;margin-top:.4rem;}
   color:var(--soft);margin-bottom:.15rem;
 }
 
+/* ---------- Rollenspiel: wer bin ich, was will ich ----------
+   Die Lage stand vorher als ein grauer Satz da. Zwei Leute, die
+   gleich sprechen sollen, mussten daraus selbst herauslesen, wer sie
+   sind. Jetzt stehen die Rollen nebeneinander, in denselben Farben
+   wie im Dialog: A rot, B tuerkis. */
+.rsp{
+  background:#fff;border:1px solid var(--line);border-radius:16px;
+  padding:.9rem 1rem 1rem;margin:0 0 .9rem;box-shadow:var(--schatten-k);
+}
+.rsp-kopf{display:flex;align-items:center;gap:.6rem;margin-bottom:.7rem;}
+.rsp-nr{
+  flex:none;width:26px;height:26px;border-radius:8px;background:var(--ink);color:#fff;
+  display:grid;place-items:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.85rem;
+}
+.rsp-kopf b{font-family:'Space Grotesk',sans-serif;font-size:1.02rem;line-height:1.25;}
+.rsp-rollen{display:grid;gap:.5rem;margin:0 0 .75rem;}
+@media(min-width:560px){ .rsp-rollen{grid-template-columns:1fr 1fr;} }
+.rsp-r{
+  display:grid;grid-template-columns:auto 1fr;gap:.5rem;align-items:start;
+  border-radius:12px;padding:.6rem .75rem;
+}
+.rsp-r span{
+  width:24px;height:24px;border-radius:50%;display:grid;place-items:center;color:#fff;
+  font-family:'Space Grotesk',sans-serif;font-size:.75rem;font-weight:700;
+}
+.rsp-r p{font-size:.93rem;line-height:1.5;}
+.rsp-r.a{background:var(--pink);}
+.rsp-r.a span{background:var(--red);}
+.rsp-r.b{background:var(--mint);}
+.rsp-r.b span{background:var(--turq-d);}
+.rsp-lage{background:#F7F6F3;border-radius:12px;padding:.6rem .8rem;margin:0 0 .75rem;font-size:.93rem;line-height:1.5;}
+.rsp-lage span{
+  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.2rem;
+}
+.rsp-saetze{margin:0 0 .7rem;}
+.rsp-lbl{
+  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.35rem;
+}
+.rsp-ziel{
+  background:var(--warm);border-left:4px solid var(--gold);border-radius:0 10px 10px 0;
+  padding:.55rem .8rem;font-size:.92rem;line-height:1.5;
+}
+.rsp-ziel span{
+  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.15rem;
+}
+
+/* ---------- Anfangshilfe ----------
+   Zugeklappt eine Zeile, aufgeklappt drei Satzanfaenge. Wer sie
+   nicht braucht, sieht fast nichts. */
+.hilf{margin:.8rem 0 0;}
+.hilf summary{
+  cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:.35rem;
+  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;color:var(--teal-ink);
+  background:var(--mint);border:1px solid #CDEEF3;border-radius:999px;padding:.32rem .8rem;
+}
+.hilf summary::-webkit-details-marker{display:none;}
+.hilf[open] summary{background:var(--turq-d);color:#fff;border-color:var(--turq-d);}
+.hilf-i{display:flex;flex-direction:column;gap:.35rem;margin:.55rem 0 0;}
+.hilf-i span{
+  background:#fff;border:1px dashed var(--line);border-radius:10px;
+  padding:.45rem .7rem;font-size:.93rem;line-height:1.5;
+}
+
 /* ---------- Debatte ---------- */
 .deb-these{
   background:var(--ink);color:#fff;border-radius:14px;padding:1rem 1.15rem;
@@ -446,7 +512,8 @@ footer strong{color:var(--ink);}
 <p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
 <div class="ank">Sagst du in so einer Situation etwas?</div>
 <div class="ank zweit"><span>Wenn noch Zeit ist:</span>Macht es einen Unterschied, ob andere zuhören?</div>
-<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
+<details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
+<div class="tip">Antworte in einem Satz. Der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="dialoge">
@@ -530,32 +597,35 @@ footer strong{color:var(--ink);}
 <section class="section" id="rollenspiele">
 <h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
 <p class="ssub">Einer liegt falsch, einer korrigiert. Danach tauschen — und beim zweiten Mal ohne Notizen. Regel für alle drei: Kein Satz darf mit <i>„Sie haben“</i> oder <i>„Du hast“</i> anfangen.</p>
-<div class="rmcard">
-<b>1 · Die Zahl in der Besprechung</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A nennt vor der Runde eine falsche Zahl, über die gleich entschieden wird. B korrigiert — vor Publikum, also weich in der Form und klar in der Sache. Zwei Minuten.</p>
-<div class="nur-a2"><span class="rm">Dann halten wir den 21. fest</span><span class="rm">Eine Ergänzung, wenn ich darf</span><span class="rm">Ich kann mich irren, aber …</span><span class="rm">Sollen wir kurz nachsehen?</span></div>
-<div class="nur-b1"><span class="rm">Dazu habe ich einen anderen Stand</span><span class="rm">Das war lange auch mein Stand</span><span class="rm">Bevor wir das beschließen, …</span><span class="rm">Gut, dass wir es vorher gemerkt haben</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Kein Satz begann mit <i>Sie haben</i>. B hat sich selbst einmal einen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Irrtum" data-wort="der Irrtum" data-kurz="eine falsche Annahme, kein Fehler aus Absicht" data-bsp="Das war ein Irrtum, kein Vorwurf an irgendjemanden.">Irrtum</b> eingeräumt, und die Entscheidung fiel am Ende durch Nachsehen — nicht durch Rechthaben.</div>
+<div class="rsp">
+<div class="rsp-kopf"><span class="rsp-nr">1</span><b>Die Zahl in der Besprechung</b></div>
+<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>nennt vor der Runde eine falsche Zahl, über die gleich entschieden wird.</p></div><div class="rsp-r b"><span>B</span><p>korrigiert — vor Publikum, also weich in der Form und klar in der Sache. Zwei Minuten.</p></div></div>
+<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Dann halten wir den 21. fest</span><span class="rm">Eine Ergänzung, wenn ich darf</span><span class="rm">Ich kann mich irren, aber …</span><span class="rm">Sollen wir kurz nachsehen?</span></div><div class="nur-b1"><span class="rm">Dazu habe ich einen anderen Stand</span><span class="rm">Das war lange auch mein Stand</span><span class="rm">Bevor wir das beschließen, …</span><span class="rm">Gut, dass wir es vorher gemerkt haben</span></div></div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>Kein Satz begann mit <i>Sie haben</i>. B hat sich selbst einmal einen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Irrtum" data-wort="der Irrtum" data-kurz="eine falsche Annahme, kein Fehler aus Absicht" data-bsp="Das war ein Irrtum, kein Vorwurf an irgendjemanden.">Irrtum</b> eingeräumt, und die Entscheidung fiel am Ende durch <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Nachsehen" data-wort="nachsehen" data-kurz="prüfen, was wirklich stimmt" data-bsp="Sollen wir kurz nachsehen?">Nachsehen</b> — nicht durch Rechthaben.</div>
+<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
-<div class="rmcard">
-<b>2 · Diesmal liegst du falsch</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B wird von A vor anderen korrigiert und liegt tatsächlich falsch. B muss es <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von zugeben" data-wort="zugeben" data-kurz="einen eigenen Fehler einräumen" data-bsp="Da hatte ich unrecht, das gebe ich zu.">zugeben</b>, ohne sich klein zu machen — und darf einen Teil seines Vorschlags retten.</p>
-<div class="nur-a2"><span class="rm">Das stimmt so nicht mehr</span><span class="rm">Dann hatte ich einen veralteten Stand</span><span class="rm">Danke, gut zu wissen</span><span class="rm">Da hatte ich unrecht</span></div>
-<div class="nur-b1"><span class="rm">Die Rundmail habe ich offenbar überhört</span><span class="rm">Das gebe ich zu, dann ziehe ich das zurück</span><span class="rm">Der Rest des Vorschlags bleibt aber</span><span class="rm">Ich bringe ihn nächste Woche noch mal</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat sich nicht verteidigt und sich auch nicht klein gemacht. Der Fehler wurde in einem Satz zugegeben, und danach ging es sofort um die Sache weiter.</div>
+
+<div class="rsp">
+<div class="rsp-kopf"><span class="rsp-nr">2</span><b>Diesmal liegst du falsch</b></div>
+<div class="rsp-lage"><span>Die Lage</span>B wird von A vor anderen korrigiert und liegt tatsächlich falsch. B muss es <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von zugeben" data-wort="zugeben" data-kurz="einen eigenen Fehler einräumen" data-bsp="Da hatte ich unrecht, das gebe ich zu.">zugeben</b>, ohne sich klein zu machen — und darf einen Teil seines Vorschlags retten.</div>
+<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Das stimmt so nicht mehr</span><span class="rm">Dann hatte ich einen veralteten Stand</span><span class="rm">Danke, gut zu wissen</span><span class="rm">Da hatte ich unrecht</span></div><div class="nur-b1"><span class="rm">Die Rundmail habe ich offenbar überhört</span><span class="rm">Das gebe ich zu, dann ziehe ich das zurück</span><span class="rm">Der Rest des Vorschlags bleibt aber</span><span class="rm">Ich bringe ihn nächste Woche noch mal</span></div></div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>B hat sich nicht verteidigt und sich auch nicht klein gemacht. Der Fehler wurde in einem Satz zugegeben, und danach ging es sofort um die Sache weiter.</div>
+<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
-<div class="rmcard">
-<b>3 · Zwei Zeitpunkte</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Dieselbe falsche Angabe, zwei Durchgänge: einmal korrigiert B sofort mitten in der Präsentation, einmal erst hinterher <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von unter vier Augen" data-wort="unter vier Augen" data-kurz="allein, ohne Zuhörer" data-bsp="Können wir das kurz unter vier Augen klären?">unter vier Augen</b>. Danach sagt ihr euch, welcher <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Zeitpunkt" data-wort="der Zeitpunkt" data-kurz="der Moment, in dem man etwas sagt" data-bsp="Ich sage es später, das ist nicht der richtige Zeitpunkt.">Zeitpunkt</b> hier richtig war und warum.</p>
-<div class="nur-a2"><span class="rm">Nur ein kurzer Einwurf</span><span class="rm">Eine Kleinigkeit ist mir aufgefallen</span><span class="rm">Es hing nichts daran</span><span class="rm">Magst du es hören?</span></div>
-<div class="nur-b1"><span class="rm">Bevor wir das beschließen, muss ich …</span><span class="rm">Mittendrin wäre es unangenehm gewesen</span><span class="rm">Bei einer Frist hätte ich sofort unterbrochen</span><span class="rm">Lassen wir das auf sich beruhen</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide konnten begründen, warum der eine Zeitpunkt hier besser war als der andere — und dabei die Grenze benennen: Bei Fristen, Geld und Sicherheit wird sofort unterbrochen.</div>
+
+<div class="rsp">
+<div class="rsp-kopf"><span class="rsp-nr">3</span><b>Zwei Zeitpunkte</b></div>
+<div class="rsp-lage"><span>Die Lage</span>Dieselbe falsche Angabe, zwei Durchgänge: einmal korrigiert B sofort mitten in der Präsentation, einmal erst hinterher <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von unter vier Augen" data-wort="unter vier Augen" data-kurz="allein, ohne Zuhörer" data-bsp="Können wir das kurz unter vier Augen klären?">unter vier Augen</b>. Danach sagt ihr euch, welcher <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Zeitpunkt" data-wort="der Zeitpunkt" data-kurz="der Moment, in dem man etwas sagt" data-bsp="Ich sage es später, das ist nicht der richtige Zeitpunkt.">Zeitpunkt</b> hier richtig war und warum.</div>
+<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Nur ein kurzer Einwurf</span><span class="rm">Eine Kleinigkeit ist mir aufgefallen</span><span class="rm">Es hing nichts daran</span><span class="rm">Magst du es hören?</span></div><div class="nur-b1"><span class="rm">Bevor wir das beschließen, muss ich …</span><span class="rm">Mittendrin wäre es unangenehm gewesen</span><span class="rm">Bei einer Frist hätte ich sofort unterbrochen</span><span class="rm">Lassen wir das auf sich beruhen</span></div></div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>Beide konnten begründen, warum der eine Zeitpunkt hier besser war als der andere — und dabei die Grenze benennen: Bei Fristen, Geld und Sicherheit wird sofort unterbrochen.</div>
+<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
+
 <h2 class="st">🎴 Sprechkarten</h2>
 <p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
 <div class="card90">
 <div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<div class="word" id="wsk" style="font-size:1.15rem;line-height:1.4;">Tippe auf den Knopf.</div>
 <button class="btn" id="sknew">🎴 Karte ziehen</button>
 </div>
 </section>
@@ -563,17 +633,15 @@ footer strong{color:var(--ink);}
 <section class="section" id="debatte">
 <h2 class="st">Drei gegen <span class="hl">drei</span></h2>
 <p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
-<div class="deb-these">Wer einen Fehler bemerkt, muss ihn richtigstellen — auch wenn er nicht von ihm stammt.</div>
-<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><ul><li>Wer schweigt und es weiß, trägt den Fehler mit.</li><li>Später kommt heraus, dass man es wusste — und das kostet mehr als die Korrektur.</li><li>Eine sachliche Richtigstellung ist keine Bloßstellung, wenn man sie ohne Namen formuliert.</li></ul></div><div class="deb-s con"><b>Gruppe B · dagegen</b><ul><li>Es ist nicht immer die eigene Zuständigkeit — man fällt anderen ins Handwerk.</li><li>Manche Fehler sind zu klein für ein Gespräch, das jemanden beschämt.</li><li>Wer ständig korrigiert, gilt als schwierig, egal wie recht er hat.</li></ul></div></div>
-<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
-<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Wann ist Schweigen in so einem Moment schon fast unehrlich?</li><li>Was ändert sich, wenn die Person über dir steht?</li><li>Woran merkst du, dass jemand eine Korrektur gut aufgenommen hat?</li><li>Ist Gesichtswahrung in deiner Kultur wichtiger oder unwichtiger als hier?</li><li>Wann ist Rücksicht auf das Gesicht schädlich — weil die Sache wichtiger ist?</li><li>Wie korrigierst du jemanden, der es nicht hören will?</li></ul></div>
-<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+<div class="deb-these">Einen Fehler sagt man, auch wenn es nicht der eigene ist.</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><ul><li>Wer schweigt und es weiß, macht mit.</li><li>Später kommt heraus, dass man es wusste.</li><li>Man kann es sachlich sagen, ohne Namen.</li></ul></div><div class="deb-s con"><b>Gruppe B · dagegen</b><ul><li>Es ist nicht immer die eigene Aufgabe.</li><li>Manche Fehler sind zu klein für ein Gespräch.</li><li>Wer ständig korrigiert, gilt als schwierig.</li></ul></div></div>
 </section>
 
 <section class="section" id="abschluss">
 <h2 class="st">Zum <span class="hl">Schluss</span></h2>
 <p class="ssub">Vier Minuten, sechs Sätze.</p>
 <div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
+<details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Ich nehme mit: …</span><span>Ich will den Satz „…“ benutzen.</span><span>Neu war für mich: …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Ich nehme mit, dass …</span><span>Den Satz „…“ will ich nächste Woche wirklich benutzen.</span><span>Neu war für mich, dass …</span></div></div></details>
 </section>
 
 <section class="section" id="hausaufgabe">

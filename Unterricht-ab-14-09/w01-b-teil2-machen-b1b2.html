@@ -280,6 +280,72 @@ img.dbild{max-width:160px;border-radius:10px;margin-top:.4rem;}
   color:var(--soft);margin-bottom:.15rem;
 }
 
+/* ---------- Rollenspiel: wer bin ich, was will ich ----------
+   Die Lage stand vorher als ein grauer Satz da. Zwei Leute, die
+   gleich sprechen sollen, mussten daraus selbst herauslesen, wer sie
+   sind. Jetzt stehen die Rollen nebeneinander, in denselben Farben
+   wie im Dialog: A rot, B tuerkis. */
+.rsp{
+  background:#fff;border:1px solid var(--line);border-radius:16px;
+  padding:.9rem 1rem 1rem;margin:0 0 .9rem;box-shadow:var(--schatten-k);
+}
+.rsp-kopf{display:flex;align-items:center;gap:.6rem;margin-bottom:.7rem;}
+.rsp-nr{
+  flex:none;width:26px;height:26px;border-radius:8px;background:var(--ink);color:#fff;
+  display:grid;place-items:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.85rem;
+}
+.rsp-kopf b{font-family:'Space Grotesk',sans-serif;font-size:1.02rem;line-height:1.25;}
+.rsp-rollen{display:grid;gap:.5rem;margin:0 0 .75rem;}
+@media(min-width:560px){ .rsp-rollen{grid-template-columns:1fr 1fr;} }
+.rsp-r{
+  display:grid;grid-template-columns:auto 1fr;gap:.5rem;align-items:start;
+  border-radius:12px;padding:.6rem .75rem;
+}
+.rsp-r span{
+  width:24px;height:24px;border-radius:50%;display:grid;place-items:center;color:#fff;
+  font-family:'Space Grotesk',sans-serif;font-size:.75rem;font-weight:700;
+}
+.rsp-r p{font-size:.93rem;line-height:1.5;}
+.rsp-r.a{background:var(--pink);}
+.rsp-r.a span{background:var(--red);}
+.rsp-r.b{background:var(--mint);}
+.rsp-r.b span{background:var(--turq-d);}
+.rsp-lage{background:#F7F6F3;border-radius:12px;padding:.6rem .8rem;margin:0 0 .75rem;font-size:.93rem;line-height:1.5;}
+.rsp-lage span{
+  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.2rem;
+}
+.rsp-saetze{margin:0 0 .7rem;}
+.rsp-lbl{
+  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.35rem;
+}
+.rsp-ziel{
+  background:var(--warm);border-left:4px solid var(--gold);border-radius:0 10px 10px 0;
+  padding:.55rem .8rem;font-size:.92rem;line-height:1.5;
+}
+.rsp-ziel span{
+  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.15rem;
+}
+
+/* ---------- Anfangshilfe ----------
+   Zugeklappt eine Zeile, aufgeklappt drei Satzanfaenge. Wer sie
+   nicht braucht, sieht fast nichts. */
+.hilf{margin:.8rem 0 0;}
+.hilf summary{
+  cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:.35rem;
+  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;color:var(--teal-ink);
+  background:var(--mint);border:1px solid #CDEEF3;border-radius:999px;padding:.32rem .8rem;
+}
+.hilf summary::-webkit-details-marker{display:none;}
+.hilf[open] summary{background:var(--turq-d);color:#fff;border-color:var(--turq-d);}
+.hilf-i{display:flex;flex-direction:column;gap:.35rem;margin:.55rem 0 0;}
+.hilf-i span{
+  background:#fff;border:1px dashed var(--line);border-radius:10px;
+  padding:.45rem .7rem;font-size:.93rem;line-height:1.5;
+}
+
 /* ---------- Debatte ---------- */
 .deb-these{
   background:var(--ink);color:#fff;border-radius:14px;padding:1rem 1.15rem;
@@ -446,7 +512,8 @@ footer strong{color:var(--ink);}
 <p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
 <div class="ank">Welche dieser Sätze benutzt du schon: macht nichts, tut mir leid, mach's gut?</div>
 <div class="ank zweit"><span>Wenn noch Zeit ist:</span>Was sagst du, wenn sich jemand bei dir entschuldigt?</div>
-<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
+<details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
+<div class="tip">Antworte in einem Satz. Der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="dialoge">
@@ -526,32 +593,35 @@ footer strong{color:var(--ink);}
 <section class="section" id="rollenspiele">
 <h2 class="st">🎭 Drei <span class="hl">kleine Pannen</span></h2>
 <p class="ssub">Zu zweit. Einer verursacht etwas, der andere reagiert. In jeder Antwort mindestens eine feste Wendung. Zwei Minuten, dann tauschen.</p>
-<div class="rmcard">
-<b>1 · Die kaputte Vase</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat beim Besuch etwas umgeworfen. B ist der Gastgeber und will, dass niemand sich schlecht fühlt.</p>
-<div class="nur-a2"><span class="rm">Das tut mir so leid</span><span class="rm">Ich ersetze das</span><span class="rm">Das war mein Fehler</span><span class="rm">Wie kann ich das gutmachen?</span></div>
-<div class="nur-b1"><span class="rm">Das ist nicht der Rede wert</span><span class="rm">Machen Sie sich keine Gedanken</span><span class="rm">Das hat sich damit erledigt</span><span class="rm">Damit ist die Sache gut</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A entschuldigt sich einmal und bietet etwas an. B winkt ab, ohne A zu beschämen — und beide sind nach vier Sätzen fertig.</div>
+<div class="rsp">
+<div class="rsp-kopf"><span class="rsp-nr">1</span><b>Die kaputte Vase</b></div>
+<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>hat beim Besuch etwas umgeworfen.</p></div><div class="rsp-r b"><span>B</span><p>ist der Gastgeber und will, dass niemand sich schlecht fühlt.</p></div></div>
+<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Das tut mir so leid</span><span class="rm">Ich ersetze das</span><span class="rm">Das war mein Fehler</span><span class="rm">Wie kann ich das gutmachen?</span></div><div class="nur-b1"><span class="rm">Das ist nicht der Rede wert</span><span class="rm">Machen Sie sich keine Gedanken</span><span class="rm">Das hat sich damit erledigt</span><span class="rm">Damit ist die Sache gut</span></div></div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>A entschuldigt sich einmal und bietet etwas an. B winkt ab, ohne A zu beschämen — und beide sind nach vier Sätzen fertig.</div>
+<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
-<div class="rmcard">
-<b>2 · Die falsche Zahl im Bericht</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat einen Fehler gemacht, den der Kunde gesehen hat. B ist die Führungskraft.</p>
-<div class="nur-a2"><span class="rm">Das tut mir leid</span><span class="rm">Ich korrigiere das heute</span><span class="rm">Das passiert nicht wieder</span><span class="rm">Was soll ich dem Kunden schreiben?</span></div>
-<div class="nur-b1"><span class="rm">Das hätte mir nicht passieren dürfen</span><span class="rm">Ich bin mir des Ernstes bewusst</span><span class="rm">Ich schicke die korrigierte Fassung</span><span class="rm">Ich mache mir Gedanken, wie ich das künftig verhindere</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A entschuldigt sich ohne Ausrede und nennt einen konkreten nächsten Schritt. B beruhigt, ohne die Sache kleinzureden.</div>
+
+<div class="rsp">
+<div class="rsp-kopf"><span class="rsp-nr">2</span><b>Die falsche Zahl im Bericht</b></div>
+<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>hat einen Fehler gemacht, den der Kunde gesehen hat.</p></div><div class="rsp-r b"><span>B</span><p>ist die Führungskraft.</p></div></div>
+<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Das tut mir leid</span><span class="rm">Ich korrigiere das heute</span><span class="rm">Das passiert nicht wieder</span><span class="rm">Was soll ich dem Kunden schreiben?</span></div><div class="nur-b1"><span class="rm">Das hätte mir nicht passieren dürfen</span><span class="rm">Ich bin mir des Ernstes bewusst</span><span class="rm">Ich schicke die korrigierte Fassung</span><span class="rm">Ich mache mir Gedanken, wie ich das künftig verhindere</span></div></div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>A entschuldigt sich ohne Ausrede und nennt einen konkreten nächsten Schritt. B beruhigt, ohne die Sache kleinzureden.</div>
+<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
-<div class="rmcard">
-<b>3 · Absage kurz vor knapp</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A sagt zwei Stunden vorher ab. B hat schon eingekauft — und will trotzdem freundlich bleiben.</p>
-<div class="nur-a2"><span class="rm">Es tut mir wirklich leid</span><span class="rm">Mir geht es nicht gut</span><span class="rm">Können wir es nachholen?</span><span class="rm">Ich melde mich morgen</span></div>
-<div class="nur-b1"><span class="rm">Das ist mir unangenehm</span><span class="rm">Ich sage so spät ungern ab</span><span class="rm">Mach dir keinen Kopf</span><span class="rm">Das macht mir nichts aus</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide bleiben bei festen Wendungen statt bei Erklärungen — und am Ende steht ein neuer Termin.</div>
+
+<div class="rsp">
+<div class="rsp-kopf"><span class="rsp-nr">3</span><b>Absage kurz vor knapp</b></div>
+<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>sagt zwei Stunden vorher ab.</p></div><div class="rsp-r b"><span>B</span><p>hat schon eingekauft — und will trotzdem freundlich bleiben.</p></div></div>
+<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Es tut mir wirklich leid</span><span class="rm">Mir geht es nicht gut</span><span class="rm">Können wir es nachholen?</span><span class="rm">Ich melde mich morgen</span></div><div class="nur-b1"><span class="rm">Das ist mir unangenehm</span><span class="rm">Ich sage so spät ungern ab</span><span class="rm">Mach dir keinen Kopf</span><span class="rm">Das macht mir nichts aus</span></div></div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>Beide bleiben bei festen Wendungen statt bei Erklärungen — und am Ende steht ein neuer Termin.</div>
+<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
+
 <h2 class="st">🎴 Sprechkarten</h2>
 <p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
 <div class="card90">
 <div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<div class="word" id="wsk" style="font-size:1.15rem;line-height:1.4;">Tippe auf den Knopf.</div>
 <button class="btn" id="sknew">🎴 Karte ziehen</button>
 </div>
 </section>
@@ -559,17 +629,15 @@ footer strong{color:var(--ink);}
 <section class="section" id="debatte">
 <h2 class="st">Drei gegen <span class="hl">drei</span></h2>
 <p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
-<div class="deb-these">Feste Wendungen lernt man am besten als Ganzes, ohne nach der Logik zu fragen.</div>
-<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><ul><li>„Das macht nichts“ lässt sich nicht herleiten — wer die Logik sucht, verliert nur Zeit.</li><li>Als Block gelernt kommt die Wendung im Gespräch von allein, ohne Nachdenken.</li><li>Kinder lernen genauso: erst der ganze Satz, viel später die Regel.</li></ul></div><div class="deb-s con"><b>Gruppe B · dagegen</b><ul><li>Ohne Verständnis vergisst man die Wendung nach zwei Wochen wieder.</li><li>Wer die Struktur versteht, kann sie auf zwanzig ähnliche Fälle übertragen.</li><li>Blind auswendig gelernt setzt man Wendungen im falschen Register ein — im Amt klingt das peinlich.</li></ul></div></div>
-<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
-<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Warum haben feste Wendungen keine Logik — und warum lernt man sie trotzdem am besten als Ganzes?</li><li>Woran merkst du, dass jemand eine Wendung wörtlich übersetzt hat?</li><li>Welche deutsche Wendung fandest du am Anfang seltsam?</li></ul></div>
-<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+<div class="deb-these">Feste Wendungen lernt man am Stück.</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><ul><li>„Das macht nichts“ kann man nicht erklären. Man merkt es sich.</li><li>Als ganzer Satz kommt es später von allein.</li><li>Kinder lernen auch erst den Satz, dann die Regel.</li></ul></div><div class="deb-s con"><b>Gruppe B · dagegen</b><ul><li>Ohne Verstehen vergisst man es schnell wieder.</li><li>Wer die Regel kennt, kann sie auch woanders benutzen.</li><li>Auswendig gelernt sagt man es im falschen Moment.</li></ul></div></div>
 </section>
 
 <section class="section" id="abschluss">
 <h2 class="st">Zum <span class="hl">Schluss</span></h2>
 <p class="ssub">Vier Minuten, sechs Sätze.</p>
 <div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
+<details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Ich nehme mit: …</span><span>Ich will den Satz „…“ benutzen.</span><span>Neu war für mich: …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Ich nehme mit, dass …</span><span>Den Satz „…“ will ich nächste Woche wirklich benutzen.</span><span>Neu war für mich, dass …</span></div></div></details>
 </section>
 
 <section class="section" id="hausaufgabe">

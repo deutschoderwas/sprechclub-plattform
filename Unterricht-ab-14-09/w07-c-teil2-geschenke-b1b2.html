@@ -280,6 +280,72 @@ img.dbild{max-width:160px;border-radius:10px;margin-top:.4rem;}
   color:var(--soft);margin-bottom:.15rem;
 }
 
+/* ---------- Rollenspiel: wer bin ich, was will ich ----------
+   Die Lage stand vorher als ein grauer Satz da. Zwei Leute, die
+   gleich sprechen sollen, mussten daraus selbst herauslesen, wer sie
+   sind. Jetzt stehen die Rollen nebeneinander, in denselben Farben
+   wie im Dialog: A rot, B tuerkis. */
+.rsp{
+  background:#fff;border:1px solid var(--line);border-radius:16px;
+  padding:.9rem 1rem 1rem;margin:0 0 .9rem;box-shadow:var(--schatten-k);
+}
+.rsp-kopf{display:flex;align-items:center;gap:.6rem;margin-bottom:.7rem;}
+.rsp-nr{
+  flex:none;width:26px;height:26px;border-radius:8px;background:var(--ink);color:#fff;
+  display:grid;place-items:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.85rem;
+}
+.rsp-kopf b{font-family:'Space Grotesk',sans-serif;font-size:1.02rem;line-height:1.25;}
+.rsp-rollen{display:grid;gap:.5rem;margin:0 0 .75rem;}
+@media(min-width:560px){ .rsp-rollen{grid-template-columns:1fr 1fr;} }
+.rsp-r{
+  display:grid;grid-template-columns:auto 1fr;gap:.5rem;align-items:start;
+  border-radius:12px;padding:.6rem .75rem;
+}
+.rsp-r span{
+  width:24px;height:24px;border-radius:50%;display:grid;place-items:center;color:#fff;
+  font-family:'Space Grotesk',sans-serif;font-size:.75rem;font-weight:700;
+}
+.rsp-r p{font-size:.93rem;line-height:1.5;}
+.rsp-r.a{background:var(--pink);}
+.rsp-r.a span{background:var(--red);}
+.rsp-r.b{background:var(--mint);}
+.rsp-r.b span{background:var(--turq-d);}
+.rsp-lage{background:#F7F6F3;border-radius:12px;padding:.6rem .8rem;margin:0 0 .75rem;font-size:.93rem;line-height:1.5;}
+.rsp-lage span{
+  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.2rem;
+}
+.rsp-saetze{margin:0 0 .7rem;}
+.rsp-lbl{
+  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.35rem;
+}
+.rsp-ziel{
+  background:var(--warm);border-left:4px solid var(--gold);border-radius:0 10px 10px 0;
+  padding:.55rem .8rem;font-size:.92rem;line-height:1.5;
+}
+.rsp-ziel span{
+  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.15rem;
+}
+
+/* ---------- Anfangshilfe ----------
+   Zugeklappt eine Zeile, aufgeklappt drei Satzanfaenge. Wer sie
+   nicht braucht, sieht fast nichts. */
+.hilf{margin:.8rem 0 0;}
+.hilf summary{
+  cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:.35rem;
+  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;color:var(--teal-ink);
+  background:var(--mint);border:1px solid #CDEEF3;border-radius:999px;padding:.32rem .8rem;
+}
+.hilf summary::-webkit-details-marker{display:none;}
+.hilf[open] summary{background:var(--turq-d);color:#fff;border-color:var(--turq-d);}
+.hilf-i{display:flex;flex-direction:column;gap:.35rem;margin:.55rem 0 0;}
+.hilf-i span{
+  background:#fff;border:1px dashed var(--line);border-radius:10px;
+  padding:.45rem .7rem;font-size:.93rem;line-height:1.5;
+}
+
 /* ---------- Debatte ---------- */
 .deb-these{
   background:var(--ink);color:#fff;border-radius:14px;padding:1rem 1.15rem;
@@ -446,7 +512,8 @@ footer strong{color:var(--ink);}
 <p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
 <div class="ank">Was war das letzte Geschenk, das du nie benutzt hast?</div>
 <div class="ank zweit"><span>Wenn noch Zeit ist:</span>Wirfst du Geschenke weg, wenn du sie nicht brauchst?</div>
-<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
+<details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
+<div class="tip">Antworte in einem Satz. Der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="dialoge">
@@ -524,32 +591,35 @@ footer strong{color:var(--ink);}
 <section class="section" id="rollenspiele">
 <h2 class="st">🎭 Drei Debatten <span class="hl">zu zweit</span></h2>
 <p class="ssub">Einer vertritt eine Position, einer die andere. Danach tauschen — und beim zweiten Mal ohne die Sätze unten. Regel für beide Runden: In jeder Antwort muss ein <i>da</i>-Wort vorkommen.</p>
-<div class="rmcard">
-<b>1 · Abschaffen oder behalten?</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A möchte, dass die Familie sich dieses Jahr gar nichts schenkt: zu viel Aufwand, zu viel Müll, zu wenig Freude. B hängt an dem Ritual und findet den Vorschlag kalt.</p>
-<div class="nur-a2"><span class="rm">Ich bin dafür, dass wir dieses Jahr nichts schenken</span><span class="rm">Davon haben doch alle nur Stress</span><span class="rm">Trotzdem verstehe ich, dass es dir wichtig ist</span><span class="rm">Wie wäre es, wenn wir nur für die Kinder etwas kaufen?</span></div>
-<div class="nur-b1"><span class="rm">Ich bin dagegen, das Ritual ganz zu streichen — daran hängen Erinnerungen</span><span class="rm">Der Aufwand ist ein Argument, allerdings gegen die Menge, nicht gegen das Schenken</span><span class="rm">Denkbar wäre eine Regelung, die den Betrag begrenzt</span><span class="rm">Darauf könnten wir uns wahrscheinlich alle einigen</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide haben mindestens einmal etwas zugegeben, bevor sie widersprochen haben. Es kam mindestens ein Kompromiss zur Sprache, und keiner hat am Ende gewonnen — sondern beide haben einen Vorschlag, mit dem sie leben können.</div>
+<div class="rsp">
+<div class="rsp-kopf"><span class="rsp-nr">1</span><b>Abschaffen oder behalten?</b></div>
+<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>möchte, dass die Familie sich dieses Jahr gar nichts schenkt: zu viel Aufwand, zu viel Müll, zu wenig Freude.</p></div><div class="rsp-r b"><span>B</span><p>hängt an dem Ritual und findet den Vorschlag kalt.</p></div></div>
+<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Ich bin dafür, dass wir dieses Jahr nichts schenken</span><span class="rm">Davon haben doch alle nur Stress</span><span class="rm">Trotzdem verstehe ich, dass es dir wichtig ist</span><span class="rm">Wie wäre es, wenn wir nur für die Kinder etwas kaufen?</span></div><div class="nur-b1"><span class="rm">Ich bin dagegen, das Ritual ganz zu streichen — daran hängen Erinnerungen</span><span class="rm">Der Aufwand ist ein Argument, allerdings gegen die Menge, nicht gegen das Schenken</span><span class="rm">Denkbar wäre eine Regelung, die den Betrag begrenzt</span><span class="rm">Darauf könnten wir uns wahrscheinlich alle einigen</span></div></div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>Beide haben mindestens einmal etwas zugegeben, bevor sie widersprochen haben. Es kam mindestens ein Kompromiss zur Sprache, und keiner hat am Ende gewonnen — sondern beide haben einen Vorschlag, mit dem sie leben können.</div>
+<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
-<div class="rmcard">
-<b>2 · Geld oder Gedanke?</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A schenkt grundsätzlich Geld: praktisch, nichts landet im Müll, jeder kauft sich, was er will. B findet das lieblos und sagt es auch — sachlich, aber deutlich.</p>
-<div class="nur-a2"><span class="rm">Meiner Meinung nach ist Geld das ehrlichste Geschenk</span><span class="rm">Davon kann sich jeder kaufen, was er wirklich braucht</span><span class="rm">Da hast du recht, ganz ohne Worte wirkt es kalt</span><span class="rm">Ich könnte einen Zettel dazulegen, wofür es gedacht ist</span></div>
-<div class="nur-b1"><span class="rm">Ich halte Geld für vertretbar, solange eine Idee dahintersteht</span><span class="rm">Was mich daran stört, ist die fehlende Mühe</span><span class="rm">Das trifft nur zu, wenn man den Betrag kommentarlos überreicht</span><span class="rm">Über den Zettel würde ich mich tatsächlich mehr freuen als über die Summe</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Es wurde über Bedeutung gesprochen, nicht nur über Beträge. Beide haben mindestens ein <i>da</i>-Wort benutzt, und am Ende stand eine Idee, wie man Geld schenken kann, ohne dass es lieblos wirkt.</div>
+
+<div class="rsp">
+<div class="rsp-kopf"><span class="rsp-nr">2</span><b>Geld oder Gedanke?</b></div>
+<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>schenkt grundsätzlich Geld: praktisch, nichts landet im Müll, jeder kauft sich, was er will.</p></div><div class="rsp-r b"><span>B</span><p>findet das lieblos und sagt es auch — sachlich, aber deutlich.</p></div></div>
+<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Meiner Meinung nach ist Geld das ehrlichste Geschenk</span><span class="rm">Davon kann sich jeder kaufen, was er wirklich braucht</span><span class="rm">Da hast du recht, ganz ohne Worte wirkt es kalt</span><span class="rm">Ich könnte einen Zettel dazulegen, wofür es gedacht ist</span></div><div class="nur-b1"><span class="rm">Ich halte Geld für vertretbar, solange eine Idee dahintersteht</span><span class="rm">Was mich daran stört, ist die fehlende Mühe</span><span class="rm">Das trifft nur zu, wenn man den Betrag kommentarlos überreicht</span><span class="rm">Über den Zettel würde ich mich tatsächlich mehr freuen als über die Summe</span></div></div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>Es wurde über Bedeutung gesprochen, nicht nur über Beträge. Beide haben mindestens ein <i>da</i>-Wort benutzt, und am Ende stand eine Idee, wie man Geld schenken kann, ohne dass es lieblos wirkt.</div>
+<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
-<div class="rmcard">
-<b>3 · Die Firma und der Kollege</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Im Büro soll für die Chefin gesammelt werden. A organisiert und findet es selbstverständlich. B möchte nicht mitmachen — und muss das sagen, ohne dass es unangenehm wird.</p>
-<div class="nur-a2"><span class="rm">Wir legen alle zusammen, machst du mit?</span><span class="rm">Es geht nur um zehn Euro pro Person</span><span class="rm">Ich verstehe, dass dir das unangenehm ist</span><span class="rm">Dann trag dich einfach nicht ein, das ist kein Problem</span></div>
-<div class="nur-b1"><span class="rm">Ich würde mich diesmal gern heraushalten — dagegen habe ich grundsätzlich etwas</span><span class="rm">Es geht mir nicht um den Betrag, sondern darum, dass niemand wirklich frei entscheiden kann</span><span class="rm">Ich schlage vor, dass wir eine Karte machen, die alle unterschreiben</span><span class="rm">Darauf würden sich vermutlich mehr Leute einlassen</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat abgelehnt, ohne sich zu entschuldigen, und einen Grund genannt, der nichts mit Geiz zu tun hat. A hat die Ablehnung stehen lassen. Am Ende gab es eine Alternative, die niemanden ausschließt.</div>
+
+<div class="rsp">
+<div class="rsp-kopf"><span class="rsp-nr">3</span><b>Die Firma und der Kollege</b></div>
+<div class="rsp-lage"><span>Die Lage</span>Im Büro soll für die Chefin gesammelt werden. A organisiert und findet es selbstverständlich. B möchte nicht mitmachen — und muss das sagen, ohne dass es unangenehm wird.</div>
+<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Wir legen alle zusammen, machst du mit?</span><span class="rm">Es geht nur um zehn Euro pro Person</span><span class="rm">Ich verstehe, dass dir das unangenehm ist</span><span class="rm">Dann trag dich einfach nicht ein, das ist kein Problem</span></div><div class="nur-b1"><span class="rm">Ich würde mich diesmal gern heraushalten — dagegen habe ich grundsätzlich etwas</span><span class="rm">Es geht mir nicht um den Betrag, sondern darum, dass niemand wirklich frei entscheiden kann</span><span class="rm">Ich schlage vor, dass wir eine Karte machen, die alle unterschreiben</span><span class="rm">Darauf würden sich vermutlich mehr Leute einlassen</span></div></div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>B hat abgelehnt, ohne sich zu entschuldigen, und einen Grund genannt, der nichts mit Geiz zu tun hat. A hat die Ablehnung stehen lassen. Am Ende gab es eine Alternative, die niemanden ausschließt.</div>
+<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
+
 <h2 class="st">🎴 Sprechkarten</h2>
 <p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
 <div class="card90">
 <div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<div class="word" id="wsk" style="font-size:1.15rem;line-height:1.4;">Tippe auf den Knopf.</div>
 <button class="btn" id="sknew">🎴 Karte ziehen</button>
 </div>
 </section>
@@ -557,17 +627,15 @@ footer strong{color:var(--ink);}
 <section class="section" id="debatte">
 <h2 class="st">Drei gegen <span class="hl">drei</span></h2>
 <p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
-<div class="deb-these">Wichteln und Pflichtgeschenke sollte man abschaffen.</div>
-<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><ul><li>Was man kauft, weil man muss, ist meistens genau das, was niemand braucht.</li><li>Es kostet Zeit und Geld und erzeugt Druck bei denen, die wenig haben.</li><li>Ohne Pflicht bleibt Raum für Geschenke, die wirklich gemeint sind.</li></ul></div><div class="deb-s con"><b>Gruppe B · dagegen</b><ul><li>Gemeinsames Wichteln ist für viele Teams das einzige Fest im Jahr.</li><li>Ein kleines Ritual verbindet Leute, die sonst nur über Arbeit sprechen.</li><li>Wer nichts schenkt, spart Geld — aber die Gruppe verliert einen Anlass zusammenzukommen.</li></ul></div></div>
-<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
-<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Warum fällt es so schwer, ein ungenutztes Geschenk wegzugeben?</li><li>Ist ein Geschenk, das im Schrank liegt, trotzdem etwas wert?</li><li>Wem zuliebe schenken wir eigentlich — dem anderen oder uns selbst?</li><li>Kann ein teures Geschenk den anderen unter Druck setzen?</li><li>Ist Geld schenken ehrlicher als etwas zu kaufen, das niemand wollte?</li><li>Woran merkt man, dass sich jemand wirklich Gedanken gemacht hat?</li></ul></div>
-<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+<div class="deb-these">Wichteln in der Firma soll man abschaffen.</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><ul><li>Was man kaufen muss, braucht keiner.</li><li>Es kostet Zeit und Geld.</li><li>Ohne Pflicht schenkt man wieder von Herzen.</li></ul></div><div class="deb-s con"><b>Gruppe B · dagegen</b><ul><li>Für viele Teams ist das das einzige Fest im Jahr.</li><li>Ein kleines Ritual verbindet.</li><li>Ohne Anlass trifft man sich gar nicht mehr.</li></ul></div></div>
 </section>
 
 <section class="section" id="abschluss">
 <h2 class="st">Zum <span class="hl">Schluss</span></h2>
 <p class="ssub">Vier Minuten, sechs Sätze.</p>
 <div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
+<details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Ich nehme mit: …</span><span>Ich will den Satz „…“ benutzen.</span><span>Neu war für mich: …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Ich nehme mit, dass …</span><span>Den Satz „…“ will ich nächste Woche wirklich benutzen.</span><span>Neu war für mich, dass …</span></div></div></details>
 </section>
 
 <section class="section" id="hausaufgabe">

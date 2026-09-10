@@ -280,6 +280,72 @@ img.dbild{max-width:160px;border-radius:10px;margin-top:.4rem;}
   color:var(--soft);margin-bottom:.15rem;
 }
 
+/* ---------- Rollenspiel: wer bin ich, was will ich ----------
+   Die Lage stand vorher als ein grauer Satz da. Zwei Leute, die
+   gleich sprechen sollen, mussten daraus selbst herauslesen, wer sie
+   sind. Jetzt stehen die Rollen nebeneinander, in denselben Farben
+   wie im Dialog: A rot, B tuerkis. */
+.rsp{
+  background:#fff;border:1px solid var(--line);border-radius:16px;
+  padding:.9rem 1rem 1rem;margin:0 0 .9rem;box-shadow:var(--schatten-k);
+}
+.rsp-kopf{display:flex;align-items:center;gap:.6rem;margin-bottom:.7rem;}
+.rsp-nr{
+  flex:none;width:26px;height:26px;border-radius:8px;background:var(--ink);color:#fff;
+  display:grid;place-items:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.85rem;
+}
+.rsp-kopf b{font-family:'Space Grotesk',sans-serif;font-size:1.02rem;line-height:1.25;}
+.rsp-rollen{display:grid;gap:.5rem;margin:0 0 .75rem;}
+@media(min-width:560px){ .rsp-rollen{grid-template-columns:1fr 1fr;} }
+.rsp-r{
+  display:grid;grid-template-columns:auto 1fr;gap:.5rem;align-items:start;
+  border-radius:12px;padding:.6rem .75rem;
+}
+.rsp-r span{
+  width:24px;height:24px;border-radius:50%;display:grid;place-items:center;color:#fff;
+  font-family:'Space Grotesk',sans-serif;font-size:.75rem;font-weight:700;
+}
+.rsp-r p{font-size:.93rem;line-height:1.5;}
+.rsp-r.a{background:var(--pink);}
+.rsp-r.a span{background:var(--red);}
+.rsp-r.b{background:var(--mint);}
+.rsp-r.b span{background:var(--turq-d);}
+.rsp-lage{background:#F7F6F3;border-radius:12px;padding:.6rem .8rem;margin:0 0 .75rem;font-size:.93rem;line-height:1.5;}
+.rsp-lage span{
+  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.2rem;
+}
+.rsp-saetze{margin:0 0 .7rem;}
+.rsp-lbl{
+  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.35rem;
+}
+.rsp-ziel{
+  background:var(--warm);border-left:4px solid var(--gold);border-radius:0 10px 10px 0;
+  padding:.55rem .8rem;font-size:.92rem;line-height:1.5;
+}
+.rsp-ziel span{
+  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.15rem;
+}
+
+/* ---------- Anfangshilfe ----------
+   Zugeklappt eine Zeile, aufgeklappt drei Satzanfaenge. Wer sie
+   nicht braucht, sieht fast nichts. */
+.hilf{margin:.8rem 0 0;}
+.hilf summary{
+  cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:.35rem;
+  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;color:var(--teal-ink);
+  background:var(--mint);border:1px solid #CDEEF3;border-radius:999px;padding:.32rem .8rem;
+}
+.hilf summary::-webkit-details-marker{display:none;}
+.hilf[open] summary{background:var(--turq-d);color:#fff;border-color:var(--turq-d);}
+.hilf-i{display:flex;flex-direction:column;gap:.35rem;margin:.55rem 0 0;}
+.hilf-i span{
+  background:#fff;border:1px dashed var(--line);border-radius:10px;
+  padding:.45rem .7rem;font-size:.93rem;line-height:1.5;
+}
+
 /* ---------- Debatte ---------- */
 .deb-these{
   background:var(--ink);color:#fff;border-radius:14px;padding:1rem 1.15rem;
@@ -446,7 +512,8 @@ footer strong{color:var(--ink);}
 <p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
 <div class="ank">Was kochst du am häufigsten?</div>
 <div class="ank zweit"><span>Wenn noch Zeit ist:</span>Wie viele Zutaten brauchst du dafür?</div>
-<div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
+<details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
+<div class="tip">Antworte in einem Satz. Der Rest kommt dann von allein.</div>
 </section>
 
 <section class="section" id="dialoge">
@@ -532,32 +599,35 @@ footer strong{color:var(--ink);}
 <section class="section" id="rollenspiele">
 <h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
 <p class="ssub">Einer erklärt, einer fragt nach. Danach tauschen — und beim zweiten Mal ohne Notizen.</p>
-<div class="rmcard">
-<b>1 · Das Rezept am Telefon</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A steht in der Küche und will heute Abend kochen. B erklärt sein Lieblingsgericht Schritt für Schritt am Telefon. A darf nichts aufschreiben und muss dreimal nachfragen.</p>
-<div class="nur-a2"><span class="rm">Womit fange ich an?</span><span class="rm">Wie viel brauche ich davon?</span><span class="rm">Wie lange muss das kochen?</span><span class="rm">Und was kommt dann?</span></div>
-<div class="nur-b1"><span class="rm">Woran merke ich, dass es fertig ist?</span><span class="rm">Was mache ich, wenn ich das nicht bekomme?</span><span class="rm">Geht das auch ohne Ofen?</span><span class="rm">Kann man das vorbereiten?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat alle vier Reihenfolgewörter benutzt und jede Zutat mit einer Menge genannt. A könnte das Gericht danach wirklich kochen.</div>
+<div class="rsp">
+<div class="rsp-kopf"><span class="rsp-nr">1</span><b>Das Rezept am Telefon</b></div>
+<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>steht in der Küche und will heute Abend <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von kochen" data-wort="kochen" data-kurz="in Wasser, im Topf — es blubbert" data-bsp="Ich koche die Kartoffeln zwanzig Minuten.">kochen</b>.</p></div><div class="rsp-r b"><span>B</span><p>erklärt sein Lieblingsgericht Schritt für Schritt am Telefon. A darf nichts aufschreiben und muss dreimal nachfragen.</p></div></div>
+<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Womit fange ich an?</span><span class="rm">Wie viel brauche ich davon?</span><span class="rm">Wie lange muss das kochen?</span><span class="rm">Und was kommt dann?</span></div><div class="nur-b1"><span class="rm">Woran merke ich, dass es fertig ist?</span><span class="rm">Was mache ich, wenn ich das nicht bekomme?</span><span class="rm">Geht das auch ohne Ofen?</span><span class="rm">Kann man das vorbereiten?</span></div></div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>B hat alle vier Reihenfolgewörter benutzt und jede Zutat mit einer Menge genannt. A könnte das Gericht danach wirklich kochen.</div>
+<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
-<div class="rmcard">
-<b>2 · Einkaufen für zwei Gerichte</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Ihr wollt gemeinsam kochen, habt aber nur zwanzig Euro. A hat den Zettel, B den Wagen. Ihr müsst euch bei jeder Zutat auf eine Menge einigen.</p>
-<div class="nur-a2"><span class="rm">Wie viel nehmen wir davon?</span><span class="rm">Eine Packung reicht, oder?</span><span class="rm">Das ist zu teuer</span><span class="rm">Haben wir das nicht zu Hause?</span></div>
-<div class="nur-b1"><span class="rm">Lass uns lieber die größere Packung nehmen</span><span class="rm">Das lohnt sich nur, wenn wir es aufbrauchen</span><span class="rm">Statt Käse nehmen wir …</span><span class="rm">Damit kommen wir hin</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Jede Zutat wurde mit einer Mengenangabe genannt — und nach der Menge kam nie ein Artikel. Am Ende steht ein Einkauf, der wirklich in zwanzig Euro passt.</div>
+
+<div class="rsp">
+<div class="rsp-kopf"><span class="rsp-nr">2</span><b>Einkaufen für zwei Gerichte</b></div>
+<div class="rsp-lage"><span>Die Lage</span>Ihr wollt gemeinsam kochen, habt aber nur zwanzig Euro. A hat den Zettel, B den Wagen. Ihr müsst euch bei jeder Zutat auf eine Menge einigen.</div>
+<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Wie viel nehmen wir davon?</span><span class="rm">Eine Packung reicht, oder?</span><span class="rm">Das ist zu teuer</span><span class="rm">Haben wir das nicht zu Hause?</span></div><div class="nur-b1"><span class="rm">Lass uns lieber die größere Packung nehmen</span><span class="rm">Das lohnt sich nur, wenn wir es aufbrauchen</span><span class="rm">Statt Käse nehmen wir …</span><span class="rm">Damit kommen wir hin</span></div></div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>Jede Zutat wurde mit einer Mengenangabe genannt — und nach der Menge kam nie ein Artikel. Am Ende steht ein Einkauf, der wirklich in zwanzig Euro passt.</div>
+<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
-<div class="rmcard">
-<b>3 · Der Gast in der Küche</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A kocht, B will helfen und weiß nicht wie. A gibt Anweisungen im Imperativ, B fragt bei jedem Schritt genau nach — B ist nämlich sehr vorsichtig.</p>
-<div class="nur-a2"><span class="rm">Schneide bitte die Tomaten</span><span class="rm">Gib das Öl in die Pfanne</span><span class="rm">Rühr einmal um</span><span class="rm">Wie klein soll ich sie schneiden?</span></div>
-<div class="nur-b1"><span class="rm">Pass auf, dass nichts anbrennt</span><span class="rm">Lass es noch fünf Minuten ziehen</span><span class="rm">Probier mal, ob genug Salz drin ist</span><span class="rm">Soll ich warten, bis es kocht?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat mindestens fünf Anweisungen im Imperativ gegeben, B hat jedes Mal mit einer echten Frage nachgehakt. Beide haben mindestens drei trennbare Verben benutzt.</div>
+
+<div class="rsp">
+<div class="rsp-kopf"><span class="rsp-nr">3</span><b>Der Gast in der Küche</b></div>
+<div class="rsp-lage"><span>Die Lage</span>A kocht, B will helfen und weiß nicht wie. A gibt Anweisungen im Imperativ, B fragt bei jedem Schritt genau nach — B ist nämlich sehr vorsichtig.</div>
+<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Schneide bitte die Tomaten</span><span class="rm">Gib das Öl in die Pfanne</span><span class="rm">Rühr einmal um</span><span class="rm">Wie klein soll ich sie schneiden?</span></div><div class="nur-b1"><span class="rm">Pass auf, dass nichts anbrennt</span><span class="rm">Lass es noch fünf Minuten ziehen</span><span class="rm">Probier mal, ob genug Salz drin ist</span><span class="rm">Soll ich warten, bis es kocht?</span></div></div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>A hat mindestens fünf Anweisungen im Imperativ gegeben, B hat jedes Mal mit einer echten Frage nachgehakt. Beide haben mindestens drei trennbare Verben benutzt.</div>
+<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
+
 <h2 class="st">🎴 Sprechkarten</h2>
 <p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
 <div class="card90">
 <div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<div class="word" id="wsk" style="font-size:1.15rem;line-height:1.4;">Tippe auf den Knopf.</div>
 <button class="btn" id="sknew">🎴 Karte ziehen</button>
 </div>
 </section>
@@ -565,17 +635,15 @@ footer strong{color:var(--ink);}
 <section class="section" id="debatte">
 <h2 class="st">Drei gegen <span class="hl">drei</span></h2>
 <p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
-<div class="deb-these">Selbst kochen ist immer besser als Fertigessen.</div>
-<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><ul><li>Man weiß, was drin ist — bei Fertigessen steht es klein auf der Rückseite.</li><li>Frisch gekocht ist bei den meisten Gerichten deutlich billiger.</li><li>Kochen ist der einfachste Weg, den Wortschatz für Mengen, Zeiten und Gemüse wirklich zu lernen.</li></ul></div><div class="deb-s con"><b>Gruppe B · dagegen</b><ul><li>Nach einer Zwölf-Stunden-Schicht ist Fertigessen besser als gar nichts.</li><li>Wer für eine Person kocht, wirft mehr weg, als er spart.</li><li>Nicht jede Küche ist eine Küche — in manchen Wohnungen gibt es zwei Platten und keinen Ofen.</li></ul></div></div>
-<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
-<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Welches Gericht aus deiner Heimat würde hier niemand kennen?</li><li>Was ist der Schritt, bei dem am meisten schiefgehen kann?</li><li>Kochst du nach Rezept oder nach Gefühl — und warum?</li><li>Woran merkst du, dass eine Erklärung zu schnell war?</li><li>Was hilft mehr: mehr Wörter oder eine klarere Reihenfolge?</li><li>Gibt es in deiner Sprache eine eigene „Rezeptsprache“?</li></ul></div>
-<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+<div class="deb-these">Selbst kochen ist immer besser.</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><ul><li>Man weiß, was drin ist.</li><li>Frisch kochen ist meistens billiger.</li><li>Beim Kochen lernt man Mengen und Gemüse auf Deutsch.</li></ul></div><div class="deb-s con"><b>Gruppe B · dagegen</b><ul><li>Nach zwölf Stunden Arbeit ist Fertigessen besser als nichts.</li><li>Wer allein kocht, wirft viel weg.</li><li>Nicht jede Küche hat einen Ofen.</li></ul></div></div>
 </section>
 
 <section class="section" id="abschluss">
 <h2 class="st">Zum <span class="hl">Schluss</span></h2>
 <p class="ssub">Vier Minuten, sechs Sätze.</p>
 <div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
+<details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Ich nehme mit: …</span><span>Ich will den Satz „…“ benutzen.</span><span>Neu war für mich: …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Ich nehme mit, dass …</span><span>Den Satz „…“ will ich nächste Woche wirklich benutzen.</span><span>Neu war für mich, dass …</span></div></div></details>
 </section>
 
 <section class="section" id="hausaufgabe">
