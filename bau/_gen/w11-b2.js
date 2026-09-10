@@ -1,0 +1,412 @@
+'use strict';
+const fs = require('fs');
+const S = {
+  datei: 'Unterricht-ab-14-09/w11-b-teil2-zustaende-beschreiben-b1b2.html',
+  eyebrow: 'deutschoderwas · Sprechclub · Woche 11 · Strang B · Teil 2 · Donnerstag, 26. November',
+  titel: 'Wörter für Zustände:',
+  hl: 'müde, erschöpft, genervt',
+  stufe: 'B1/B2',
+  termin: 'Do 26.11. 9:00 · Strang B · Teil 2 · B1 ⇄ B2',
+  untertitel: 'Am Dienstag ging es um Gefühle, heute um Zustände: wie es dir gerade geht. Dafür braucht man drei Verben — <b>sein</b>, <b>werden</b> und <b>bleiben</b> — und eine Handvoll Wörter, die im Deutschen mit dem Dativ stehen: <i>mir ist kalt</i>, <i>mir ist langweilig</i>.',
+  fuss: 'Wörter für Zustände · Teil 2 · B1/B2 · Woche 11 · danach macht der Sprechclub eine Pause',
+  niveau: { a: 'B1 · sicherer', b: 'B2 · feiner', hinweis: 'Gleiches Thema, andere Sätze. Wechsle jederzeit — probier ruhig beide Seiten aus.' },
+
+  einstieg: [
+    {
+      h2: 'Bin ich müde',
+      hl: 'oder werde ich müde?',
+      ssub: 'Drei Verben, drei ganz verschiedene Aussagen. <b>Ich bin müde</b> — so ist es jetzt. <b>Ich werde müde</b> — es fängt gerade an. <b>Ich bleibe wach</b> — es geht weiter. Wer diese drei sicher trennt, klingt sofort genauer.',
+      bild: 'vok-bild/einschlafen.webp',
+      alt: 'Eine Person liegt im Bett und schläft ein',
+      fragenA2: [
+        'Wie geht es dir gerade wirklich?',
+        'Wann wirst du am Tag müde?',
+        'Was machst du, wenn du gestresst bist?'
+      ],
+      fragenB1: [
+        'Sagst du ehrlich, wie es dir geht, oder eher <i>ganz gut</i>?',
+        'Woran merkst du selbst, dass du erschöpft bist?',
+        'Wie fragt man in deinem Land nach dem Befinden?'
+      ],
+      tipp: { art: 'teal', text: '🔑 <strong>Die drei Verben:</strong> <b>sein</b> = so ist es jetzt. <b>werden</b> = es ändert sich gerade. <b>bleiben</b> = es geht so weiter. <i>Ich bin wach — ich werde müde — ich bleibe trotzdem wach.</i>' }
+    },
+    {
+      h2: 'Und warum heißt es',
+      hl: 'mir ist kalt?',
+      ssub: 'Bei manchen Zuständen bist nicht <i>du</i> das Subjekt, sondern es. <b>Mir ist kalt.</b> <b>Mir ist langweilig.</b> <b>Mir ist schlecht.</b> Das klingt fremd, ist aber die einzige richtige Form — <i>ich bin kalt</i> heißt auf Deutsch etwas ganz anderes.',
+      bild: 'amanda/a-kaffee.webp',
+      alt: 'Eine Tasse Kaffee steht auf einem Tisch',
+      fragenA2: [
+        'Ist dir im Winter oft kalt?',
+        'Wann ist dir langweilig?',
+        'Wann warst du zuletzt richtig entspannt?'
+      ],
+      fragenB1: [
+        'Welche dieser Formen vergisst du im Gespräch am häufigsten?',
+        'Wie sagst du, dass es dir schlecht geht, ohne zu klagen?',
+        'Wo im Alltag brauchst du diese Wörter am meisten?'
+      ],
+      tipp: { art: 'yellow', text: '💡 <strong>Vorsicht, Falle:</strong> <b>Mir ist kalt</b> heißt: Ich friere. <b>Ich bin kalt</b> heißt: Ich bin ein kühler Mensch. Dieselbe Falle bei <i>heiß</i> — <b>mir ist heiß</b> statt <i>ich bin heiß</i>.' }
+    }
+  ],
+
+  wortschatz: {
+    h2: 'Zwölf Wörter,',
+    hl: 'die sagen, wie es dir geht',
+    ssub: 'Sag jedes laut — mit <i>ich bin</i> und noch einmal mit <i>ich werde</i>. Dann hörst du den Unterschied sofort.',
+    karten: [
+      { bild: 'vok-bild/einschlafen.webp', alt: 'Eine Person schläft ein', wort: 'müde', kurz: 'wenn du schlafen willst', bsp: 'Ich bin heute Abend richtig müde.', tipp: 'Das häufigste Wort dieser Gruppe. Und mit <b>werden</b> beschreibst du den Weg dorthin: <i>Ab acht werde ich müde.</i> Steigerung: <b>hundemüde</b>.', say: 'Ich bin heute Abend richtig müde.' },
+      { bild: 'amanda/sz-bau.webp', alt: 'Werkzeug und Material auf einer Baustelle', wort: 'erschöpft', kurz: 'wenn deine Kraft ganz weg ist', bsp: 'Nach der Schicht bin ich völlig erschöpft.', tipp: 'Stärker als <i>müde</i>: Müdigkeit geht mit Schlaf weg, Erschöpfung braucht länger. Und <b>ausgelaugt</b> oder <b>fix und fertig</b> sagen dasselbe im Alltagston.', say: 'Nach der Schicht bin ich völlig erschöpft.' },
+      { bild: 'amanda/amanda-ups.webp', alt: 'Amanda verzieht das Gesicht', wort: 'genervt', kurz: 'wenn dir etwas auf die Nerven geht', bsp: 'Ich bin von dem Lärm total genervt.', tipp: 'Immer mit <b>von</b> plus Dativ: <i>genervt <b>von dem</b> Lärm</i>. Und das Verb dazu ist <b>nerven</b>: <i>Das nervt mich.</i> — einer der häufigsten deutschen Alltagssätze.', say: 'Ich bin von dem Lärm total genervt.' },
+      { bild: 'amanda/sz-notfall.webp', alt: 'Eine Person telefoniert unter Druck', wort: 'gestresst', kurz: 'wenn zu viel auf einmal ist', bsp: 'Diese Woche bin ich ziemlich gestresst.', tipp: 'Das Nomen ist <b>der Stress</b>, und man sagt auch <i>Ich habe Stress</i> oder <i>Ich stehe unter Stress</i>. Alle drei sind normal, alle drei hörst du täglich.', say: 'Diese Woche bin ich ziemlich gestresst.' },
+      { bild: 'amanda/sz-buero.webp', alt: 'Ein voller Schreibtisch mit Papieren', wort: 'überfordert', kurz: 'wenn es einfach zu viel für dich ist', bsp: 'Am Anfang war ich mit allem überfordert.', tipp: 'Mit <b>mit</b> plus Dativ: <i>überfordert <b>mit der</b> Arbeit</i>. Ein sehr ehrliches Wort — im Beruf sagt man es lieber als <i>Ich schaffe das nicht</i>.', say: 'Am Anfang war ich mit allem überfordert.' },
+      { bild: 'amanda/a-kaffee.webp', alt: 'Eine Tasse Kaffee auf einem Tisch', wort: 'entspannt', kurz: 'wenn nichts drückt', bsp: 'Sonntags bin ich meistens ganz entspannt.', tipp: 'Das Gegenteil von <i>gestresst</i>. Und als Verb: <b>sich entspannen</b> — reflexiv, wie die Gefühlsverben von Dienstag: <i>Ich entspanne mich.</i>', say: 'Sonntags bin ich meistens ganz entspannt.' },
+      { bild: 'amanda/sz-bewerbung.webp', alt: 'Ein Bewerbungsgespräch an einem Tisch', wort: 'aufgeregt', kurz: 'wenn du innerlich zittrig bist', bsp: 'Vor dem Gespräch war ich sehr aufgeregt.', tipp: 'Nicht verwechseln mit <i>sich aufregen</i>: <b>aufgeregt sein</b> ist Nervosität, <b>sich aufregen</b> ist Wut. Dasselbe Wort, zwei Welten.', say: 'Vor dem Gespräch war ich sehr aufgeregt.' },
+      { bild: 'amanda/a-schulter.webp', alt: 'Eine Hand liegt tröstend auf einer Schulter', wort: 'enttäuscht', kurz: 'wenn etwas nicht so kam, wie du gehofft hast', bsp: 'Ich war von der Antwort ziemlich enttäuscht.', tipp: 'Mit <b>von</b> plus Dativ. Und ein guter, leiser Satz für Kritik: <i>Ehrlich gesagt bin ich davon ein bisschen enttäuscht.</i> Das wirkt stärker als lautes Schimpfen.', say: 'Ich war von der Antwort ziemlich enttäuscht.' },
+      { bild: 'amanda/amanda-super.webp', alt: 'Amanda hebt anerkennend den Daumen', wort: 'erleichtert', kurz: 'wenn eine Sorge weg ist', bsp: 'Ich bin so erleichtert, dass es geklappt hat.', tipp: 'Das schönste Wort dieser Liste. Oft mit einem <b>dass</b>-Satz: <i>Ich bin erleichtert, <b>dass</b> es vorbei ist.</i> Im Alltag auch: <i>Da fällt mir ein Stein vom Herzen.</i>', say: 'Ich bin so erleichtert, dass es geklappt hat.' },
+      { bild: 'amanda/amanda-jubel.webp', alt: 'Amanda freut sich', wort: 'zufrieden', kurz: 'wenn es für dich genug gut ist', bsp: 'Mit dem Ergebnis bin ich zufrieden.', tipp: 'Mit <b>mit</b> plus Dativ: <i>zufrieden <b>mit dem</b> Ergebnis</i>. Achtung: <i>zufrieden</i> ist nicht <i>glücklich</i> — es heißt eher: Es passt so.', say: 'Mit dem Ergebnis bin ich zufrieden.' },
+      { bild: 'amanda/a-uhr.webp', alt: 'Eine Uhr an der Wand', wort: 'langweilig', kurz: 'wenn nichts passiert', bsp: 'Mir ist im Warteraum langweilig geworden.', tipp: 'Hier kommt die Dativ-Falle: <b>Mir ist langweilig</b> heißt, ich langweile mich. <b>Ich bin langweilig</b> heißt, andere langweilen sich mit mir. Ein kleiner Unterschied mit großer Wirkung.', say: 'Mir ist im Warteraum langweilig geworden.' },
+      { bild: 'vok-bild/aufstehen.webp', alt: 'Eine Person steht morgens auf', wort: 'wach', kurz: 'wenn du nicht schläfst', bsp: 'Nach dem Kaffee bin ich sofort wach.', tipp: 'Das Wort für alle drei Verben: <i>Ich <b>bin</b> wach</i>, <i>Ich <b>werde</b> wach</i>, <i>Ich <b>bleibe</b> wach</i>. Sag den Dreisatz einmal laut, dann sitzt das ganze Thema.', say: 'Nach dem Kaffee bin ich sofort wach.' }
+    ],
+    spiel: { text: '💡 <strong>Spiel „Drei Verben“:</strong> Einer nennt ein Wort — <i>müde</i>, <i>wach</i>, <i>ruhig</i>. Der andere macht daraus in fünf Sekunden drei Sätze: mit <b>bin</b>, mit <b>werde</b> und mit <b>bleibe</b>.' }
+  },
+
+  konzepte: {
+    tab: '🔍 Drei Verben',
+    zuerst: 'dreier',
+    h2: 'Sein, werden',
+    hl: 'oder bleiben?',
+    ssub: 'Dasselbe Wort, drei Aussagen. Der Unterschied ist immer die Zeit: jetzt, gerade eben, oder weiterhin.',
+    dreier: [
+      { emoji: '📍', wort: 'sein', was: 'so ist es jetzt', bsp: 'Ich <b>bin</b> müde. — Sie <b>ist</b> zufrieden.' },
+      { emoji: '➡️', wort: 'werden', was: 'es ändert sich gerade', bsp: 'Ich <b>werde</b> langsam müde. — Es <b>wird</b> kalt.' },
+      { emoji: '🔁', wort: 'bleiben', was: 'es geht so weiter', bsp: 'Ich <b>bleibe</b> wach. — Bitte <b>bleib</b> ruhig.' }
+    ],
+    paare: [
+      {
+        jaLabel: 'So ist es richtig', ja: 'Mir ist kalt, mach bitte das Fenster zu.',
+        jaWarumLabel: 'Warum das stimmt', jaWarum: 'Bei <b>kalt</b>, <b>warm</b>, <b>heiß</b>, <b>schlecht</b>, <b>schwindelig</b> und <b>langweilig</b> steht die Person im Dativ: <i>mir</i>, <i>dir</i>, <i>ihm</i>. Das Subjekt ist ein unsichtbares <i>es</i>.',
+        noLabel: 'So klingt es falsch', no: 'Ich bin kalt, mach bitte das Fenster zu.',
+        noWarumLabel: 'Das Problem', noWarum: 'Verstanden wird es, aber es heißt etwas anderes: <i>Ich bin kalt</i> beschreibt deinen Charakter, nicht deine Temperatur. Merk dir den kurzen Satz: <b>Mir ist kalt.</b>'
+      },
+      {
+        jaLabel: 'So ist es richtig', ja: 'Ich bin von dem Lärm genervt.',
+        jaWarumLabel: 'Warum das stimmt', jaWarum: '<b>genervt von</b> plus Dativ. Und wenn du kurz sein willst: <i>Das nervt mich.</i> — mit dem Ding als Subjekt und dir im Akkusativ.',
+        noLabel: 'So klingt es falsch', no: 'Ich bin über den Lärm genervt.',
+        noWarumLabel: 'Das Problem', noWarum: 'Hier wird die Präposition von <i>sich ärgern über</i> mitgenommen. Merk dir die kleine Gruppe mit <b>von</b>: genervt von, enttäuscht von, begeistert von.'
+      },
+      {
+        jaLabel: 'So ist es richtig', ja: 'Vor der Prüfung war ich aufgeregt — aber ich habe mich nicht aufgeregt.',
+        jaWarumLabel: 'Warum das stimmt', jaWarum: '<b>aufgeregt sein</b> ist Nervosität vor etwas. <b>sich aufregen</b> ist Wut über etwas. Derselbe Wortstamm, zwei völlig verschiedene Gefühle — und beide kommen täglich vor.',
+        noLabel: 'So wird es missverstanden', no: 'Vor der Prüfung habe ich mich sehr aufgeregt.',
+        noWarumLabel: 'Das Problem', noWarum: 'Das heißt: Du warst wütend, nicht nervös. Wenn du Nervosität meinst, sag <b>Ich war aufgeregt</b> oder <b>Ich war nervös</b>.'
+      }
+    ],
+    hilfe: {
+      knopf: '🆘 Sein, werden oder Dativ?',
+      vor: 'Drei Fragen, dann steht der Satz:',
+      punkte: [
+        '<b>Beschreibst du den Moment jetzt?</b> Dann <b>sein</b>: <i>Ich bin müde.</i>',
+        '<b>Ändert es sich gerade?</b> Dann <b>werden</b>: <i>Ich werde müde.</i>',
+        '<b>Geht es weiter?</b> Dann <b>bleiben</b>: <i>Ich bleibe wach.</i>',
+        '<b>Geht es um kalt, warm, heiß, schlecht oder langweilig?</b> Dann Dativ: <i>Mir ist kalt.</i>'
+      ],
+      nach: 'Und wenn du unsicher bist, ob Dativ oder nicht: Die Dativ-Gruppe ist klein. <b>kalt, warm, heiß, schlecht, übel, schwindelig, langweilig, peinlich</b> — alles andere geht mit <i>ich bin</i>.'
+    },
+    tipp: { art: 'yellow', text: '🎯 <strong>Zu zweit, zwei Minuten:</strong> Einer nennt eine Situation — <i>Montagmorgen</i>, <i>nach dem Sport</i>, <i>im Wartezimmer</i>. Der andere beschreibt seinen Zustand in drei Sätzen: <i>bin</i>, <i>werde</i>, <i>bleibe</i>.' }
+  },
+
+  saetze: {
+    h2: 'Vier Bausteine',
+    hl: 'für die Frage, wie es dir geht',
+    ssub: 'Ehrlich antworten. Nachfragen. Etwas anbieten. Und höflich abwehren, wenn du nicht reden willst.',
+    akkLabel: 'der Schritt',
+    mengeLabel: 'was du damit sagst',
+    a2: [
+      { titel: '1 · 💬 Ehrlich antworten', chips: ['Ich bin ziemlich müde.', 'Mir geht es gut, danke.', 'Ich bin gerade etwas gestresst.', 'Mir ist kalt.'], bsp: 'Ehrlich gesagt bin ich gerade ziemlich müde.', say: 'Ehrlich gesagt bin ich gerade ziemlich müde.' },
+      { titel: '2 · ❓ Nachfragen', chips: ['Wie geht es dir?', 'Alles in Ordnung?', 'Bist du müde?', 'Was ist los?'], bsp: 'Du siehst müde aus — alles in Ordnung?', say: 'Du siehst müde aus — alles in Ordnung?' },
+      { titel: '3 · 🤝 Etwas anbieten', chips: ['Soll ich dir einen Kaffee holen?', 'Setz dich erst mal.', 'Kann ich dir helfen?', 'Machen wir eine Pause?'], bsp: 'Setz dich erst mal, ich hole dir einen Kaffee.', say: 'Setz dich erst mal, ich hole dir einen Kaffee.' },
+      { titel: '4 · 🚪 Höflich abwehren', chips: ['Es geht schon.', 'Ich brauche nur kurz Ruhe.', 'Danke, alles gut.', 'Später vielleicht.'], bsp: 'Danke, es geht schon. Ich brauche nur kurz Ruhe.', say: 'Danke, es geht schon. Ich brauche nur kurz Ruhe.' }
+    ],
+    b1: [
+      { titel: '1 · 💬 Genauer antworten', chips: ['Müde bin ich weniger, eher erschöpft.', 'Es ist gerade viel, aber es geht.', 'Ich merke, dass ich langsam überfordert bin.', 'Im Moment fühle ich mich ziemlich ausgelaugt.'], bsp: 'Müde bin ich weniger — eher erschöpft, und das ist ein Unterschied.', say: 'Müde bin ich weniger — eher erschöpft, und das ist ein Unterschied.' },
+      { titel: '2 · ❓ Wirklich nachfragen', chips: ['Wie geht es dir wirklich?', 'Ist das gerade zu viel?', 'Seit wann geht das schon so?', 'Willst du darüber reden oder lieber nicht?'], bsp: 'Wie geht es dir wirklich — und seit wann geht das schon so?', say: 'Wie geht es dir wirklich — und seit wann geht das schon so?' },
+      { titel: '3 · 🤝 Konkret helfen', chips: ['Ich kann das übernehmen, wenn du willst.', 'Was würde dir jetzt am meisten helfen?', 'Lass uns kurz rausgehen.', 'Ich melde mich morgen noch mal.'], bsp: 'Was würde dir jetzt am meisten helfen — reden oder einfach Ruhe?', say: 'Was würde dir jetzt am meisten helfen — reden oder einfach Ruhe?' },
+      { titel: '4 · 🚪 Grenzen setzen', chips: ['Darüber möchte ich gerade nicht reden.', 'Ich brauche heute einfach einen ruhigen Abend.', 'Das schaffe ich diese Woche nicht mehr.', 'Können wir das auf Montag schieben?'], bsp: 'Das schaffe ich diese Woche wirklich nicht mehr — können wir das auf Montag schieben?', say: 'Das schaffe ich diese Woche wirklich nicht mehr — können wir das auf Montag schieben?' }
+    ],
+    tipp: { art: 'teal', text: '📣 <strong>Reihum:</strong> Jeder beantwortet die Frage <i>Wie geht es dir?</i> zweimal — einmal so, wie man es höflich sagt, und einmal so, wie es wirklich ist.' }
+  },
+
+  dialoge: {
+    h2: 'Vier Situationen —',
+    hl: 'zwei Runden',
+    ssub: '<b>Runde 1:</b> Lest den Dialog zu zweit laut. <b>Runde 2:</b> Klappt die Zeilen zu und sprecht frei — nur die Stichwörter bleiben.',
+    liste: [
+      {
+        bild: 'amanda/sz-buero.webp', alt: 'Ein voller Schreibtisch mit Unterlagen',
+        titel: 'Zu viel auf einmal',
+        situation: 'A ist neu und kommt mit der Menge nicht hinterher. B merkt es und spricht es an.',
+        zeilen: [
+          { wer: 'a', text: 'Ich glaube, ich bin gerade mit allem ein bisschen überfordert.' },
+          { wer: 'b', text: 'Das war bei mir am Anfang genauso. Womit genau?', cue: '<b>überfordert mit</b> plus Dativ. Und B fragt nach der Sache statt zu trösten — das hilft mehr.' },
+          { wer: 'a', text: 'Vor allem mit den Namen und den ganzen Programmen.' },
+          { wer: 'b', text: 'Die Namen werden von allein besser. Bei den Programmen kann ich dir helfen.', cue: '<b>werden</b> für eine Veränderung, die von selbst kommt. Und dann ein konkretes Angebot.' },
+          { wer: 'a', text: 'Das wäre super. Ich bin abends immer völlig erschöpft.' },
+          { wer: 'b', text: 'Das bleibt nicht so, ehrlich. Nach vier Wochen wirst du merken, dass es ruhiger wird.', cue: '<b>bleiben</b> und zweimal <b>werden</b> — drei Zustandsverben in einem Satz, und alle drei zeigen Bewegung.' }
+        ]
+      },
+      {
+        bild: 'amanda/a-kaffee.webp', alt: 'Zwei Kaffeebecher auf einem Tisch',
+        titel: 'Wie geht es dir wirklich?',
+        situation: 'A antwortet automatisch mit <i>ganz gut</i>. B fragt noch einmal nach — freundlich, nicht bohrend.',
+        zeilen: [
+          { wer: 'a', text: 'Und, wie geht es dir?' },
+          { wer: 'b', text: 'Ganz gut. — Also, ehrlich gesagt: ziemlich gestresst.', cue: 'Die Standardantwort und dann die echte. <b>Ehrlich gesagt</b> ist das Signal, dass jetzt die Wahrheit kommt.' },
+          { wer: 'a', text: 'Seit wann geht das schon so?' },
+          { wer: 'b', text: 'Seit zwei Wochen etwa. Ich werde einfach nicht fertig.', cue: '<b>seit</b> plus Dativ und Präsens — für etwas, das noch läuft. Und <b>werden</b> für den Zustand, der nicht eintritt.' },
+          { wer: 'a', text: 'Was würde dir jetzt am meisten helfen?' },
+          { wer: 'b', text: 'Ehrlich? Ein ruhiger Abend, an dem mir mal langweilig ist.', cue: '<b>Mir ist langweilig</b> — die Dativform. Und hier wird sie zum Wunsch, das ist der Witz an dem Satz.' }
+        ]
+      },
+      {
+        bild: 'amanda/sz-bewerbung.webp', alt: 'Ein Gespräch an einem Tisch, jemand wartet nervös',
+        titel: 'Vorher und nachher',
+        situation: 'A hat ein wichtiges Gespräch hinter sich. B fragt, wie es war — und A beschreibt beides: vorher und jetzt.',
+        zeilen: [
+          { wer: 'a', text: 'Ich war vorher so aufgeregt, dass ich kaum geschlafen habe.' },
+          { wer: 'b', text: 'Und jetzt? Wie geht es dir nach dem Gespräch?', cue: '<b>aufgeregt</b> heißt hier nervös, nicht wütend. Und B fragt nach dem Danach — genau da wird es interessant.' },
+          { wer: 'a', text: 'Erleichtert. Es lief besser, als ich gedacht habe.' },
+          { wer: 'b', text: 'Das freut mich! Bist du zufrieden mit dir?', cue: '<b>erleichtert</b> — die Sorge ist weg. Und <b>zufrieden mit</b> plus Dativ, hier sogar mit sich selbst.' },
+          { wer: 'a', text: 'Ziemlich. Ein bisschen enttäuscht bin ich nur von der letzten Frage.' },
+          { wer: 'b', text: 'Das wird dir in einer Woche egal sein. Bleib erst mal bei dem guten Gefühl.', cue: '<b>enttäuscht von</b> plus Dativ, und zum Schluss ein <b>bleiben</b> als freundliche Aufforderung.' }
+        ]
+      },
+      {
+        bild: 'amanda/a-uhr.webp', alt: 'Eine Uhr an einer Wand in einem Warteraum',
+        titel: 'Im Wartezimmer',
+        situation: 'A und B warten seit einer Stunde. Beide sind genervt — aber sie machen das Beste daraus.',
+        zeilen: [
+          { wer: 'a', text: 'Eine Stunde schon. Mir wird hier langsam langweilig.' },
+          { wer: 'b', text: 'Und mir ist kalt. Die haben die Heizung wohl aus.', cue: 'Zweimal Dativ hintereinander: <b>mir wird langweilig</b> und <b>mir ist kalt</b>. Genau diese beiden Sätze braucht man ständig.' },
+          { wer: 'a', text: 'Ich bin von diesen Wartezeiten wirklich genervt.' },
+          { wer: 'b', text: 'Ich auch. Aber aufregen bringt hier nichts, dann wird es nur anstrengender.', cue: '<b>genervt von</b> plus Dativ. Und der Unterschied zu <b>sich aufregen</b> steht gleich daneben.' },
+          { wer: 'a', text: 'Stimmt. Bleiben wir einfach ruhig.' },
+          { wer: 'b', text: 'Genau. Und wenn wir dran sind, sind wir beide wieder wach.', cue: '<b>bleiben</b> als gemeinsame Entscheidung — und <b>wach sein</b> als kleiner Scherz zum Schluss.' }
+        ]
+      }
+    ],
+    tipp: { art: 'yellow', text: '🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 2 mit eurer eigenen Woche. Regel: Die erste Antwort ist die höfliche, die zweite die ehrliche.' }
+  },
+
+  grammatik: {
+    h2: '🧩 Ich bin müde,',
+    hl: 'mir ist kalt',
+    ssub: 'Die meisten Zustände sagt man mit <i>ich bin</i>. Eine kleine Gruppe nicht — und genau die kommt im Alltag ständig vor.',
+    intro: 'Bei <b>kalt</b>, <b>warm</b>, <b>heiß</b>, <b>schlecht</b>, <b>übel</b>, <b>schwindelig</b>, <b>langweilig</b> und <b>peinlich</b> steht die Person im <u>Dativ</u>: <i><b>Mir</b> ist kalt.</i> Bei allem anderen ist die Person das Subjekt: <i><b>Ich</b> bin müde.</i>',
+    kette: [
+      { emoji: '🙋', rolle: 'Dativ', bsp: 'Mir' },
+      { emoji: '🔧', rolle: 'ist / wird', bsp: 'ist' },
+      { emoji: '🌡️', rolle: 'Zustand', bsp: 'kalt.' },
+      { emoji: '🚫', rolle: 'kein ich', bsp: 'nicht: Ich bin kalt.' }
+    ],
+    felder: [
+      { rolle: 'Ich', wort: 'Ich' },
+      { rolle: 'werde', wort: 'werde', hervor: true },
+      { rolle: 'langsam', wort: 'langsam' },
+      { rolle: 'Zustand', wort: 'müde.' }
+    ],
+    bloecke: [
+      {
+        h2: 'Und die Präpositionen',
+        hl: 'gehören fest dazu',
+        ssub: 'Drei kleine Gruppen, und jede hat ihre eigene Präposition. Auswendig lernen lohnt sich hier wirklich.',
+        dreier: [
+          { emoji: '😤', wort: 'von + Dativ', was: 'wenn etwas auf dich wirkt', bsp: 'genervt <b>von</b>, enttäuscht <b>von</b>, begeistert <b>von</b>' },
+          { emoji: '📦', wort: 'mit + Dativ', was: 'wenn es um eine Sache geht', bsp: 'zufrieden <b>mit</b>, überfordert <b>mit</b>, fertig <b>mit</b>' },
+          { emoji: '😨', wort: 'vor + Dativ', was: 'wenn du Respekt hast', bsp: 'Angst <b>vor</b>, nervös <b>vor</b> — aber: aufgeregt <b>wegen</b>' }
+        ],
+        chips: ['müde', 'erschöpft', 'genervt von', 'gestresst', 'überfordert mit', 'entspannt', 'aufgeregt', 'enttäuscht von', 'erleichtert', 'zufrieden mit', 'mir ist langweilig', 'mir ist kalt']
+      },
+      {
+        h2: 'Aufgeregt sein',
+        hl: 'oder sich aufregen?',
+        ssub: 'Ein Wortstamm, zwei Gefühle — und ein Missverständnis, das im Beruf richtig unangenehm werden kann.',
+        paare: [
+          {
+            jaLabel: 'So ist es richtig', ja: 'Vor der Prüfung war ich aufgeregt, aber ich habe mich über nichts aufgeregt.',
+            jaWarumLabel: 'Warum das stimmt', jaWarum: '<b>aufgeregt sein</b> heißt nervös, gespannt, zittrig. <b>sich aufregen über</b> heißt wütend werden. Das eine ist ein Zustand, das andere eine Reaktion.',
+            noLabel: 'So wird es missverstanden', no: 'Vor der Prüfung habe ich mich sehr aufgeregt.',
+            noWarumLabel: 'Das Problem', noWarum: 'Wer das hört, denkt: Du warst wütend — auf wen? Wenn du Nervosität meinst, sag <b>Ich war aufgeregt</b> oder ganz einfach <b>Ich war nervös</b>.'
+          }
+        ]
+      }
+    ],
+    bauH2: '🧱 Bau die Sätze selbst',
+    bauSsub: 'Tippe die Teile in der richtigen Reihenfolge an. Achte darauf, ob die Person im Dativ steht.',
+    storyH2: '📖 Und jetzt im Zusammenhang',
+    storySsub: 'Ein langer Tag von morgens bis abends. Wähle in jeder Lücke die passende Form.',
+    hilfe: {
+      knopf: '🆘 Ich bin oder mir ist?',
+      vor: 'Zwei Listen, mehr brauchst du nicht:',
+      punkte: [
+        '<b>Mit Dativ (mir ist …):</b> kalt, warm, heiß, schlecht, übel, schwindelig, langweilig, peinlich.',
+        '<b>Mit ich bin:</b> müde, erschöpft, genervt, gestresst, überfordert, entspannt, aufgeregt, enttäuscht, erleichtert, zufrieden, wach.',
+        '<b>Für eine Veränderung</b> nimm <b>werden</b>: <i>Mir wird kalt.</i> — <i>Ich werde müde.</i>',
+        '<b>Für etwas, das weitergeht,</b> nimm <b>bleiben</b>: <i>Bleib ruhig.</i> — <i>Ich bleibe wach.</i>'
+      ],
+      nach: 'Und wenn du dir bei einem neuen Wort unsicher bist: Die Dativ-Gruppe hat mit Temperatur, Übelkeit und Langeweile zu tun. Alles, was deinen Charakter oder deine Kraft beschreibt, geht mit <i>ich bin</i>.'
+    }
+  },
+
+  rollenspiele: {
+    h2: '🎭 Drei Situationen',
+    hl: 'zu zweit',
+    ssub: 'Einer erzählt, wie es ihm geht, einer fragt nach. Danach tauschen — beim zweiten Mal ohne die Sätze unten.',
+    liste: [
+      {
+        titel: 'Die erste Woche',
+        situation: 'A ist neu und kommt mit der Menge nicht hinterher. B war vor einem Jahr in derselben Lage und bietet konkret etwas an.',
+        a2: ['Ich bin gerade mit allem überfordert', 'Abends bin ich völlig erschöpft', 'Die Namen kann ich mir nicht merken', 'Wird das besser?'],
+        b1: ['Das war bei mir am Anfang genauso — womit genau?', 'Die Namen werden von allein besser, glaub mir', 'Bei den Programmen kann ich dir helfen, sag einfach Bescheid', 'Nach vier Wochen wirst du merken, dass es ruhiger wird'],
+        gut: 'Alle drei Verben sind vorgekommen: <i>sein</i> für jetzt, <i>werden</i> für die Veränderung, <i>bleiben</i> für das, was weitergeht.'
+      },
+      {
+        titel: 'Wie geht es dir wirklich?',
+        situation: 'A antwortet zuerst mit <i>ganz gut</i>. B fragt freundlich noch einmal nach — und A sagt, wie es wirklich ist.',
+        a2: ['Ganz gut, danke', 'Ehrlich gesagt bin ich ziemlich gestresst', 'Ich werde einfach nicht fertig', 'Mir wäre ein ruhiger Abend am liebsten'],
+        b1: ['Und wie geht es dir wirklich?', 'Seit wann geht das schon so?', 'Ist das gerade zu viel, oder geht es noch?', 'Was würde dir jetzt am meisten helfen?'],
+        gut: 'B hat zweimal gefragt, ohne zu drängen. Und A hat mindestens einmal eine Dativform benutzt — <i>mir ist</i> oder <i>mir wäre</i>.'
+      },
+      {
+        titel: 'Im Wartezimmer',
+        situation: 'A und B warten seit einer Stunde. Beide sind genervt, aber keiner regt sich auf. Redet über euren Zustand.',
+        a2: ['Mir wird hier langsam langweilig', 'Und mir ist kalt', 'Ich bin von den Wartezeiten genervt', 'Bleiben wir einfach ruhig'],
+        b1: ['Aufregen bringt hier nichts, dann wird es nur anstrengender', 'Ich bin heute sowieso schon erschöpft', 'Wenn wir dran sind, sind wir beide wieder wach', 'Enttäuscht bin ich vor allem von der Organisation'],
+        gut: 'Mindestens zwei Dativsätze sind gefallen — <i>mir ist kalt</i>, <i>mir wird langweilig</i>. Und niemand hat <i>ich bin kalt</i> gesagt.'
+      }
+    ]
+  },
+
+  challenge: {
+    ssub: 'Neunzig Sekunden über deinen Tag: Wie bist du aufgewacht, wie geht es dir jetzt, und wie wirst du dich heute Abend fühlen?',
+    hilfe: {
+      knopf: '🆘 Mir fällt nichts ein',
+      vor: 'Vier Sätze, dann trägt dich die Zeit:',
+      punkte: [
+        '<b>Morgens:</b> <i>Heute Morgen war ich …, weil …</i>',
+        '<b>Jetzt:</b> <i>Im Moment bin ich eher …</i>',
+        '<b>Veränderung:</b> <i>Gegen Abend werde ich meistens …</i>',
+        '<b>Dativ:</b> <i>Und wenn ich ehrlich bin: Mir ist gerade …</i>'
+      ],
+      nach: 'Und wenn du in der Mitte hängst: nimm dasselbe Wort und häng die drei Verben daran. <i>Ich bin müde. Ich werde immer müder. Und ich bleibe es wahrscheinlich den ganzen Tag.</i>'
+    },
+    tipp: { art: 'yellow', text: '⏱️ <strong>Spielregel:</strong> In jeder Runde müssen <u>sein</u>, <u>werden</u> und <u>bleiben</u> je einmal vorkommen. Wer <i>Ich bin kalt</i> sagt, fängt noch einmal an.' }
+  },
+
+  ueben: { tipp: { art: 'teal', text: '📣 <strong>Danach laut:</strong> Einer nennt ein Wort, der Nächste macht daraus drei Sätze — <i>bin</i>, <i>werde</i>, <i>bleibe</i>. Reihum, ohne Pause.' } },
+
+  hausaufgabe: {
+    h2: '📮 Deine Hausaufgabe bis',
+    hl: 'Montag',
+    ssub: 'Vier kleine Aufgaben, zusammen etwa 25 Minuten. Danach macht der Sprechclub eine Pause — im Lernbereich bleibt alles offen.',
+    warum: { text: '💡 <strong>Warum das hilft:</strong> <i>Wie geht es dir?</i> ist die häufigste Frage überhaupt, und die meisten antworten ein Leben lang mit <i>gut, danke</i>. Wer zwölf Wörter dafür hat, kann sagen, was wirklich los ist — beim Arzt, im Team und zu Hause.' },
+    a2: [
+      { emoji: '✍️', titel: 'Dreimal zwölf', zeit: '7 Min', text: 'Schreib zu jedem der zwölf Wörter drei Sätze: einmal mit <i>bin</i>, einmal mit <i>werde</i>, einmal mit <i>bleibe</i>.' },
+      { emoji: '🌡️', titel: 'Acht Dativsätze', zeit: '5 Min', text: 'Schreib acht Sätze mit <i>mir ist …</i> — kalt, warm, heiß, schlecht, schwindelig, langweilig, peinlich und einer frei.' },
+      { emoji: '🎙️', titel: 'Dein Tag', zeit: '6 Min', text: 'Nimm eine Sprachnachricht auf: Wie ging es dir heute Morgen, wie geht es dir jetzt, und wie wird es dir heute Abend gehen?' },
+      { emoji: '👂', titel: 'Zuhören', zeit: '7 Min', text: 'Achte in einer deutschen Serie oder einem Video darauf, wie Leute ihren Zustand beschreiben, und notier fünf Sätze wörtlich.' }
+    ],
+    b1: [
+      { emoji: '📝', titel: 'Eine ehrliche Nachricht', zeit: '7 Min', text: 'Schreib eine Nachricht an eine Kollegin: Du schaffst etwas diese Woche nicht mehr. Sag ehrlich, warum, ohne dich klein zu machen. Höchstens acht Sätze.' },
+      { emoji: '🔍', titel: 'Feine Unterschiede', zeit: '6 Min', text: 'Erklär in je zwei Sätzen: <i>müde</i> und <i>erschöpft</i>, <i>genervt</i> und <i>wütend</i>, <i>zufrieden</i> und <i>glücklich</i>, <i>aufgeregt sein</i> und <i>sich aufregen</i>.' },
+      { emoji: '🎙️', titel: 'Zwei Minuten nachfragen', zeit: '6 Min', text: 'Nimm auf, wie du jemanden fragst, dem es sichtbar nicht gut geht — freundlich, ohne zu bohren, mit einem konkreten Angebot am Ende.' },
+      { emoji: '📚', titel: 'Zehn Präpositionen', zeit: '6 Min', text: 'Schreib zehn Sätze mit <i>genervt von</i>, <i>enttäuscht von</i>, <i>zufrieden mit</i>, <i>überfordert mit</i> und <i>fertig mit</i> — jede Verbindung mindestens zweimal.' }
+    ],
+    hilfeA2: {
+      knopf: '💡 Beispiel ansehen (Aufgabe 1)',
+      vor: 'So sehen die drei Sätze pro Wort aus:',
+      punkte: [
+        '<i>Ich <b>bin</b> müde. — Ich <b>werde</b> langsam müde. — Ich <b>bleibe</b> trotzdem noch wach.</i>',
+        '<i>Ich <b>bin</b> entspannt. — Ich <b>werde</b> langsam entspannter. — Bitte <b>bleib</b> entspannt.</i>',
+        '<i>Ich <b>bin</b> wach. — Nach dem Kaffee <b>werde</b> ich wach. — Ich <b>bleibe</b> bis Mitternacht wach.</i>',
+        '<i>Ich <b>bin</b> genervt. — Langsam <b>werde</b> ich genervt. — Ich <b>bleibe</b> trotzdem freundlich.</i>',
+        '<i>Ich <b>bin</b> zufrieden. — Damit <b>werde</b> ich nie zufrieden. — Ich <b>bleibe</b> dabei.</i>'
+      ],
+      nach: 'Ein einziger Test genügt: Beschreibt dein Satz einen Moment, eine Veränderung oder etwas, das weitergeht? Genau danach wählst du <i>sein</i>, <i>werden</i> oder <i>bleiben</i>.'
+    },
+    hilfeB1: {
+      knopf: '💡 Beispiel ansehen (Aufgabe 1)',
+      vor: 'Das sind die Stellen, auf die es in der Nachricht ankommt:',
+      punkte: [
+        '<b>Klar sagen:</b> <i>Ich schaffe die Auswertung diese Woche nicht mehr.</i>',
+        '<b>Grund, ohne Ausrede:</b> <i>Es ist gerade viel auf einmal, und ich bin damit ehrlich gesagt überfordert.</i>',
+        '<b>Lösung anbieten:</b> <i>Bis Dienstag könnte ich sie fertig haben.</i>',
+        '<b>Nicht klein machen:</b> <i>Ich sage es lieber jetzt als am Freitagabend.</i>',
+        '<b>Schluss:</b> <i>Sag mir gern, ob das für dich geht.</i>'
+      ],
+      nach: 'Und ein Hinweis, der im Beruf viel wert ist: <b>überfordert</b> klingt in deutschen Ohren nicht nach Schwäche, sondern nach Selbsteinschätzung — vor allem, wenn gleich ein neuer Termin dabeisteht.'
+    },
+    abgabe: 'Schick mir bis Montag 12 Uhr deine Sätze und die Sprachnachricht — ich markiere dir jede Stelle, an der <i>ich bin</i> statt <i>mir ist</i> steht.',
+    ausblick: 'Danach macht der Sprechclub eine Pause. Die Wörter für Gefühle und Zustände bleiben aber im Lernbereich — dort kannst du sie so oft wiederholen, wie du magst.'
+  },
+
+  daten: {
+    sk: [
+      'Wie geht es dir gerade wirklich? Antworte in vier Sätzen.',
+      'Erklär den Unterschied zwischen <i>müde</i> und <i>erschöpft</i>.',
+      'Sag dasselbe Wort dreimal: mit <i>bin</i>, <i>werde</i> und <i>bleibe</i>.',
+      'Wann ist dir langweilig — und was machst du dann?',
+      'Jemand sieht erschöpft aus. Frag freundlich nach.',
+      'Erzähl von einem Moment, in dem du sehr erleichtert warst.',
+      'Womit bist du zurzeit zufrieden, womit nicht?',
+      'Sag fünf Sätze mit <i>mir ist</i> statt <i>ich bin</i>.',
+      'Was macht dich schnell genervt? Und was entspannt dich?',
+      'Erklär den Unterschied zwischen <i>aufgeregt sein</i> und <i>sich aufregen</i>.'
+    ],
+    w90: [
+      { w: 'müde', b: 'vok-bild/einschlafen.webp', h: ['schlafen', 'das Bett', 'gähnen', 'der Abend', 'werden'] },
+      { w: 'erschöpft', b: 'amanda/sz-bau.webp', h: ['die Kraft', 'die Schicht', 'fix und fertig', 'die Pause', 'ausgelaugt'] },
+      { w: 'genervt', b: 'amanda/amanda-ups.webp', h: ['von', 'der Lärm', 'nerven', 'stören', 'die Nerven'] },
+      { w: 'gestresst', b: 'amanda/sz-notfall.webp', h: ['der Stress', 'zu viel', 'die Zeit', 'hetzen', 'der Termin'] },
+      { w: 'überfordert', b: 'amanda/sz-buero.webp', h: ['mit', 'zu viel', 'nicht schaffen', 'der Anfang', 'Hilfe brauchen'] },
+      { w: 'entspannt', b: 'amanda/a-kaffee.webp', h: ['ruhig', 'der Sonntag', 'sich entspannen', 'die Pause', 'nichts tun'] },
+      { w: 'aufgeregt', b: 'amanda/sz-bewerbung.webp', h: ['nervös', 'vorher', 'das Gespräch', 'zittern', 'gespannt'] },
+      { w: 'enttäuscht', b: 'amanda/a-schulter.webp', h: ['von', 'die Hoffnung', 'schade', 'anders gedacht', 'traurig'] },
+      { w: 'erleichtert', b: 'amanda/amanda-super.webp', h: ['die Sorge weg', 'geschafft', 'aufatmen', 'vorbei', 'froh'] },
+      { w: 'zufrieden', b: 'amanda/amanda-jubel.webp', h: ['mit', 'das Ergebnis', 'genug', 'passt so', 'in Ordnung'] }
+    ],
+    quiz: [
+      { q: 'Welcher Satz ist richtig?', o: ['Mir ist kalt.', 'Ich bin kalt.', 'Ich habe kalt.', 'Es ist mich kalt.'], c: 0, e: 'Bei <b>kalt</b>, <b>warm</b>, <b>heiß</b>, <b>schlecht</b> und <b>langweilig</b> steht die Person im Dativ. <i>Ich bin kalt</i> beschreibt deinen Charakter.' },
+      { q: 'Was heißt <u>Ich werde müde</u>?', o: ['Es fängt gerade an.', 'Ich bin schon lange müde.', 'Ich bleibe müde.', 'Ich war müde.'], c: 0, e: '<b>werden</b> zeigt die Veränderung. <b>sein</b> zeigt den Moment, <b>bleiben</b> zeigt, dass es weitergeht.' },
+      { q: 'Was passt zu <u>genervt</u>?', o: ['von + Dativ', 'über + Akkusativ', 'für + Akkusativ', 'auf + Akkusativ'], c: 0, e: '<i>Ich bin genervt <b>von dem</b> Lärm.</i> Dieselbe Gruppe: enttäuscht von, begeistert von.' },
+      { q: 'Was ist stärker?', o: ['erschöpft', 'müde', 'wach', 'entspannt'], c: 0, e: 'Müdigkeit geht mit Schlaf weg, Erschöpfung braucht länger. Im Alltag sagt man auch <i>fix und fertig</i>.' },
+      { q: 'Welcher Satz meint Nervosität?', o: ['Ich war vor dem Gespräch aufgeregt.', 'Ich habe mich vor dem Gespräch aufgeregt.', 'Ich habe mich über das Gespräch aufgeregt.', 'Ich rege mich vor dem Gespräch auf.'], c: 0, e: '<b>aufgeregt sein</b> ist nervös, <b>sich aufregen</b> ist wütend. Ein Wortstamm, zwei Gefühle.' },
+      { q: 'Was passt zu <u>zufrieden</u>?', o: ['mit + Dativ', 'von + Dativ', 'über + Akkusativ', 'für + Akkusativ'], c: 0, e: '<i>Ich bin zufrieden <b>mit dem</b> Ergebnis.</i> Genauso: überfordert mit, fertig mit.' },
+      { q: 'Wie sagst du, dass dir übel ist?', o: ['Mir ist schlecht.', 'Ich bin schlecht.', 'Ich habe schlecht.', 'Es geht mir schlecht davon.'], c: 0, e: '<i>Ich bin schlecht</i> heißt: Ich kann etwas nicht gut. Beim Arzt sagst du <b>Mir ist schlecht</b> oder <b>Mir ist übel</b>.' },
+      { q: 'Welches Verb zeigt, dass etwas weitergeht?', o: ['bleiben', 'sein', 'werden', 'haben'], c: 0, e: '<i>Bleib ruhig.</i> <i>Ich bleibe wach.</i> — <b>bleiben</b> beschreibt einen Zustand, der anhält.' }
+    ],
+    gap: [
+      { t: '___ ist kalt, mach bitte das Fenster zu.', o: ['Mir', 'Ich', 'Mich', 'Meine'], a: 'Mir' },
+      { t: 'Gegen zehn ___ ich immer müde.', o: ['werde', 'bin', 'bleibe', 'habe'], a: 'werde' },
+      { t: 'Bitte ___ ruhig, das klärt sich gleich.', o: ['bleib', 'werde', 'bist', 'sei mir'], a: 'bleib' },
+      { t: 'Ich bin von dem Lärm total ___.', o: ['genervt', 'geärgert', 'aufgeregt', 'enttäuscht'], a: 'genervt' },
+      { t: 'Mit dem Ergebnis bin ich sehr ___.', o: ['zufrieden', 'genervt', 'erschöpft', 'wach'], a: 'zufrieden' },
+      { t: 'Am Anfang war ich mit allem ___.', o: ['überfordert', 'überfordernd', 'überforderte', 'überfordere'], a: 'überfordert' },
+      { t: 'Im Wartezimmer ___ mir langweilig.', o: ['wurde', 'wurde ich', 'war ich', 'bin'], a: 'wurde' },
+      { t: 'Vor der Prüfung war ich sehr ___.', o: ['aufgeregt', 'aufgeregen', 'aufregt', 'geregt auf'], a: 'aufgeregt' }
+    ],
+    gbau: [
+      { f: 'Bau den Dativsatz:', t: ['Mir', 'ist', 'im', 'Wartezimmer', 'langweilig'], l: ['Mir', 'ist', 'im', 'Wartezimmer', 'langweilig'], e: 'Die Person steht im <b>Dativ</b>, das Subjekt ist ein unsichtbares <i>es</i>. Deshalb nie <i>ich bin langweilig</i>.' },
+      { f: 'Bau den Satz mit werden:', t: ['Gegen', 'Abend', 'werde', 'ich', 'immer', 'müde'], l: ['Gegen', 'Abend', 'werde', 'ich', 'immer', 'müde'], e: '<b>werden</b> zeigt die Veränderung. Und weil die Zeitangabe vorn steht, rutscht das Verb an Position zwei.' },
+      { f: 'Bau den Satz mit einer Präposition:', t: ['Ich', 'bin', 'mit', 'dem', 'Ergebnis', 'zufrieden'], l: ['Ich', 'bin', 'mit', 'dem', 'Ergebnis', 'zufrieden'], e: '<b>zufrieden mit</b> plus Dativ. Das Adjektiv steht ganz hinten, die Präposition davor.' },
+      { f: 'Bau die Aufforderung:', t: ['Bleib', 'bitte', 'ganz', 'ruhig'], l: ['Bleib', 'bitte', 'ganz', 'ruhig'], e: '<b>bleiben</b> im Imperativ, ohne <i>du</i>. Und <i>bitte</i> macht aus dem Befehl eine Bitte.' }
+    ],
+    gstory: {
+      t: 'Der Tag fing schlecht an: Ich habe verschlafen und ___ erst nach dem zweiten Kaffee richtig wach. Im Bus ___ mir dann auch noch kalt, weil die Heizung aus war. Um zehn hatte ich das Gespräch, vorher war ich furchtbar ___, danach vor allem erleichtert. Am Nachmittag ___ ich langsam müde, aber ich musste noch eine Auswertung fertig machen. Ehrlich gesagt war ich damit ein bisschen ___, es war einfach zu viel auf einmal. Abends im Wartezimmer beim Arzt ___ mir richtig langweilig. Ich war von der Wartezeit ___, habe mich aber nicht aufgeregt. Um neun war ich zu Hause, fix und fertig — und trotzdem ___ mit dem Tag.',
+      o: ['wurde', 'war', 'aufgeregt', 'überfordert', 'genervt', 'zufrieden', 'blieb', 'erschöpft'],
+      a: [['wurde'], ['war'], ['aufgeregt'], ['wurde'], ['überfordert'], ['war'], ['genervt'], ['zufrieden']]
+    }
+  }
+};
+fs.writeFileSync(__dirname + '/../stunden/w11-b2-zustaende-beschreiben.json', JSON.stringify(S, null, 2) + '\n', 'utf8');
+console.log('geschrieben');

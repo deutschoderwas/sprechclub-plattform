@@ -1,0 +1,412 @@
+'use strict';
+const fs = require('fs');
+const S = {
+  datei: 'Unterricht-ab-14-09/w11-b-teil1-gefuehle-zeigen-b1b2.html',
+  eyebrow: 'deutschoderwas · Sprechclub · Woche 11 · Strang B · Teil 1 · Dienstag, 24. November',
+  titel: 'Wörter für Gefühle:',
+  hl: 'sich freuen über oder auf?',
+  stufe: 'B1/B2',
+  termin: 'Di 24.11. 9:00 · Strang B · Teil 1 · B1 ⇄ B2',
+  untertitel: 'Gefühle sagt man auf Deutsch fast immer mit einem reflexiven Verb — <i>ich freue mich</i>, <i>ich ärgere mich</i>, <i>ich wundere mich</i>. Und danach kommt eine feste Präposition, die man nicht raten kann. Heute lernst du die zwölf, die im Alltag wirklich vorkommen.',
+  fuss: 'Wörter für Gefühle · Teil 1 · B1/B2 · Woche 11 · am Donnerstag: müde, genervt, erschöpft — Zustände beschreiben',
+  niveau: { a: 'B1 · sicherer', b: 'B2 · feiner', hinweis: 'Gleiches Thema, andere Sätze. Wechsle jederzeit — probier ruhig beide Seiten aus.' },
+
+  einstieg: [
+    {
+      h2: 'Ich freue mich',
+      hl: 'auf oder über?',
+      ssub: 'Beides gibt es, und der Unterschied ist die Zeit. <b>Ich freue mich auf</b> etwas, das noch kommt. <b>Ich freue mich über</b> etwas, das schon da ist. <i>Ich freue mich auf den Urlaub</i> — <i>Ich freue mich über dein Geschenk</i>. Ein Wort, zwei Bedeutungen.',
+      bild: 'amanda/amanda-jubel.webp',
+      alt: 'Amanda freut sich und reißt die Arme hoch',
+      fragenA2: [
+        'Worauf freust du dich gerade?',
+        'Worüber hast du dich zuletzt gefreut?',
+        'Was macht dich schnell wütend?'
+      ],
+      fragenB1: [
+        'Zeigst du deine Gefühle offen oder eher nicht?',
+        'Welches Gefühl kannst du auf Deutsch am schlechtesten sagen?',
+        'Redet man in deinem Land anders über Gefühle?'
+      ],
+      tipp: { art: 'teal', text: '🔑 <strong>Die eine Frage:</strong> Ist es <u>schon passiert</u> oder <u>kommt es noch</u>? Schon passiert heißt <b>über</b>, kommt noch heißt <b>auf</b>. Das gilt bei <i>sich freuen</i>, <i>warten</i> und <i>hoffen</i> genauso.' }
+    },
+    {
+      h2: 'Und das kleine mich',
+      hl: 'gehört fest dazu',
+      ssub: 'Im Deutschen ärgert man nicht, man <b>ärgert sich</b>. Man wundert nicht, man <b>wundert sich</b>. Dieses <i>mich</i>, <i>dich</i>, <i>sich</i> ist kein Extra, sondern Teil des Verbs — ohne es ist der Satz falsch, auch wenn ihn jeder versteht.',
+      bild: 'amanda/amanda-denk.webp',
+      alt: 'Amanda überlegt, den Finger nachdenklich am Kinn',
+      fragenA2: [
+        'Worüber ärgerst du dich oft?',
+        'Wofür interessierst du dich?',
+        'Um wen kümmerst du dich?'
+      ],
+      fragenB1: [
+        'Welches reflexive Verb vergisst du im Gespräch am häufigsten?',
+        'Gibt es dieses <i>sich</i> auch in deiner Sprache?',
+        'Wann sagst du bewusst nichts, obwohl du dich ärgerst?'
+      ],
+      tipp: { art: 'yellow', text: '💡 <strong>Ein Merksatz für alles:</strong> <b>Ich freue mich, ich ärgere mich, ich wundere mich.</b> Sprich die drei einmal laut hintereinander — dann sitzt das Muster für alle zwölf.' }
+    }
+  ],
+
+  wortschatz: {
+    h2: 'Zwölf Verben,',
+    hl: 'die dein Gefühl sagen',
+    ssub: 'Sag jedes laut — mit <i>mich</i> und mit der Präposition. Nie einzeln, immer als ganzer Block.',
+    karten: [
+      { bild: 'amanda/amanda-jubel.webp', alt: 'Amanda freut sich und reißt die Arme hoch', wort: 'sich freuen', kurz: 'wenn etwas schön ist oder schön wird', bsp: 'Ich freue mich auf das Wochenende.', tipp: 'Zwei Präpositionen, zwei Zeiten: <b>auf</b> für später, <b>über</b> für jetzt oder vorher. Beide mit Akkusativ: <i>auf <b>das</b> Wochenende</i>, <i>über <b>das</b> Geschenk</i>.', say: 'Ich freue mich auf das Wochenende.' },
+      { bild: 'amanda/sz-heikel.webp', alt: 'Zwei Menschen in einem angespannten Gespräch', wort: 'sich ärgern', kurz: 'wenn dich etwas stört', bsp: 'Ich ärgere mich über den Lärm im Haus.', tipp: 'Immer <b>über</b> plus Akkusativ. Und der Unterschied zu <i>sich aufregen</i>: <b>ärgern</b> ist leiser und dauert länger, <b>aufregen</b> ist laut und kurz.', say: 'Ich ärgere mich über den Lärm im Haus.' },
+      { bild: 'amanda/sz-notfall.webp', alt: 'Eine Person telefoniert aufgeregt', wort: 'sich aufregen', kurz: 'wenn du richtig wütend wirst', bsp: 'Reg dich nicht auf, das klärt sich.', tipp: 'Auch <b>über</b> plus Akkusativ. <i>Reg dich nicht auf</i> ist der Satz, mit dem man in Deutschland jemanden beruhigt — trennbar, deshalb steht <i>auf</i> ganz hinten.', say: 'Reg dich nicht auf, das klärt sich.' },
+      { bild: 'amanda/amanda-denk.webp', alt: 'Amanda überlegt nachdenklich', wort: 'sich wundern', kurz: 'wenn du etwas nicht erwartet hast', bsp: 'Ich wundere mich über die Antwort vom Amt.', tipp: '<b>über</b> plus Akkusativ. Und sehr nützlich als höfliche Kritik: <i>Ich wundere mich ein bisschen, dass …</i> — damit sagst du, dass etwas nicht in Ordnung ist, ohne jemanden anzugreifen.', say: 'Ich wundere mich über die Antwort vom Amt.' },
+      { bild: 'amanda/a-warten.webp', alt: 'Amanda wartet mit verschränkten Armen', wort: 'sich fürchten', kurz: 'wenn du Angst hast', bsp: 'Ich fürchte mich vor der Prüfung.', tipp: 'Hier steht <b>vor</b> plus <u>Dativ</u>: <i>vor <b>der</b> Prüfung</i>. Im Alltag sagt man öfter <b>Angst haben vor</b> — dasselbe Muster, derselbe Fall.', say: 'Ich fürchte mich vor der Prüfung.' },
+      { bild: 'amanda/a-lesen.webp', alt: 'Amanda liest konzentriert in einem Buch', wort: 'sich interessieren', kurz: 'wenn du mehr darüber wissen willst', bsp: 'Ich interessiere mich für alte Filme.', tipp: '<b>für</b> plus Akkusativ. Und die Frage dazu lautet <b>Wofür interessierst du dich?</b> — nicht <i>für was</i>. Beides hört man, aber <i>wofür</i> klingt besser.', say: 'Ich interessiere mich für alte Filme.' },
+      { bild: 'amanda/sz-pflege.webp', alt: 'Eine Person kümmert sich um jemanden', wort: 'sich kümmern', kurz: 'wenn du für jemanden oder etwas sorgst', bsp: 'Ich kümmere mich um die Anmeldung.', tipp: '<b>um</b> plus Akkusativ. Im Beruf der nützlichste Satz überhaupt: <b>Darum kümmere ich mich.</b> Damit übernimmst du etwas, ohne lange zu erklären.', say: 'Ich kümmere mich um die Anmeldung.' },
+      { bild: 'vok-bild/die-reklamation.webp', alt: 'Eine Person reklamiert etwas an einem Schalter', wort: 'sich beschweren', kurz: 'wenn du offiziell sagst, dass etwas nicht in Ordnung ist', bsp: 'Ich möchte mich über die Lieferung beschweren.', tipp: '<b>über</b> plus Akkusativ, und wenn du sagst, wo: <b>bei</b> plus Dativ. <i>Ich beschwere mich <b>bei der</b> Firma <b>über die</b> Lieferung.</i>', say: 'Ich möchte mich über die Lieferung beschweren.' },
+      { bild: 'amanda/amanda-ups.webp', alt: 'Amanda hält sich die Hand vor den Mund', wort: 'sich schämen', kurz: 'wenn dir etwas peinlich ist', bsp: 'Ich schäme mich für meinen Fehler.', tipp: '<b>für</b> plus Akkusativ. Und ein tröstlicher Satz für den Sprechclub: <i>Niemand muss sich für seine Fehler schämen — davon lernt man am meisten.</i>', say: 'Ich schäme mich für meinen Fehler.' },
+      { bild: 'amanda/a-schulter.webp', alt: 'Amanda legt jemandem die Hand auf die Schulter', wort: 'sich entschuldigen', kurz: 'wenn du sagst, dass es dir leidtut', bsp: 'Ich möchte mich für gestern entschuldigen.', tipp: '<b>für</b> die Sache, <b>bei</b> der Person: <i>Ich entschuldige mich <b>bei dir</b> <b>für</b> gestern.</i> Und Achtung: <i>Ich entschuldige mich</i> heißt nicht, dass die andere Person das annehmen muss.', say: 'Ich möchte mich für gestern entschuldigen.' },
+      { bild: 'amanda/a-klatschen.webp', alt: 'Amanda klatscht anerkennend', wort: 'sich bedanken', kurz: 'wenn du Danke sagst', bsp: 'Ich möchte mich für deine Hilfe bedanken.', tipp: 'Genau wie oben: <b>für</b> die Sache, <b>bei</b> der Person. Im Brief klingt das förmlicher als ein einfaches <i>Danke</i> — deshalb steht es fast in jeder Mail ans Amt.', say: 'Ich möchte mich für deine Hilfe bedanken.' },
+      { bild: 'amanda/a-kaffee.webp', alt: 'Eine Tasse Kaffee steht auf einem Tisch', wort: 'sich beruhigen', kurz: 'wenn du wieder ruhig wirst', bsp: 'Trink erst mal einen Kaffee und beruhig dich.', tipp: 'Ohne Präposition, dafür oft als Aufforderung: <b>Beruhig dich</b> oder <b>Ganz ruhig</b>. Und für dich selbst: <i>Ich musste mich erst mal beruhigen.</i>', say: 'Trink erst mal einen Kaffee und beruhig dich.' }
+    ],
+    spiel: { text: '💡 <strong>Spiel „Welche Präposition?“:</strong> Einer nennt nur das Verb — <i>sich ärgern</i>, <i>sich kümmern</i>, <i>sich fürchten</i>. Der andere sagt sofort den ganzen Satz mit Präposition und Fall. Wer zögert, ist als Nächster dran.' }
+  },
+
+  konzepte: {
+    tab: '🔍 Drei Gruppen',
+    zuerst: 'dreier',
+    h2: 'Über, für',
+    hl: 'oder vor?',
+    ssub: 'Fast alle zwölf gehören in eine dieser drei Gruppen. Wer die Gruppe kennt, muss nicht mehr raten.',
+    dreier: [
+      { emoji: '💢', wort: 'über + Akkusativ', was: 'wenn dich etwas berührt oder stört', bsp: 'sich <b>ärgern über</b>, sich <b>freuen über</b>, sich <b>wundern über</b>, sich <b>beschweren über</b>' },
+      { emoji: '🎯', wort: 'für + Akkusativ', was: 'wenn es um eine Sache geht', bsp: 'sich <b>interessieren für</b>, sich <b>bedanken für</b>, sich <b>entschuldigen für</b>, sich <b>schämen für</b>' },
+      { emoji: '😨', wort: 'vor + Dativ', was: 'wenn du Angst hast', bsp: 'sich <b>fürchten vor</b>, <b>Angst haben vor</b>, sich <b>schützen vor</b>' }
+    ],
+    paare: [
+      {
+        jaLabel: 'So ist es richtig', ja: 'Ich freue mich auf den Urlaub — und über die Karte, die du mir geschickt hast.',
+        jaWarumLabel: 'Warum das stimmt', jaWarum: '<b>auf</b> für etwas, das noch kommt. <b>über</b> für etwas, das schon da ist. Beide mit Akkusativ. Im selben Satz hört man den Unterschied am deutlichsten.',
+        noLabel: 'So klingt es falsch', no: 'Ich freue mich über den Urlaub nächste Woche.',
+        noWarumLabel: 'Das Problem', noWarum: 'Der Urlaub kommt erst noch, also <b>auf</b>. Der Test ist einfach: Kannst du <i>schon</i> davor setzen? Dann <i>über</i>. Kannst du <i>bald</i> davor setzen? Dann <i>auf</i>.'
+      },
+      {
+        jaLabel: 'So ist es richtig', ja: 'Darum kümmere ich mich morgen.',
+        jaWarumLabel: 'Warum das stimmt', jaWarum: 'Statt <i>um das</i> sagt man <b>darum</b>. Bei Sachen wird aus Präposition plus <i>das</i> immer ein <b>da(r)-</b>Wort: <i>darüber</i>, <i>dafür</i>, <i>davor</i>, <i>darum</i>.',
+        noLabel: 'So klingt es falsch', no: 'Um das kümmere ich mich morgen.',
+        noWarumLabel: 'Das Problem', noWarum: 'Bei Sachen geht das nicht. Nur bei <u>Personen</u> bleibt die Präposition getrennt: <i>Um meine Mutter kümmere ich mich.</i> Sache heißt <b>darum</b>, Person heißt <b>um sie</b>.'
+      },
+      {
+        jaLabel: 'So ist es richtig', ja: 'Worüber ärgerst du dich?',
+        jaWarumLabel: 'Warum das stimmt', jaWarum: 'Bei der Frage nach einer <u>Sache</u> wird aus <i>über was</i> ein <b>worüber</b>. Genauso: <b>wofür</b>, <b>wovor</b>, <b>worauf</b>, <b>worum</b>.',
+        noLabel: 'So klingt es umgangssprachlich', no: 'Über was ärgerst du dich?',
+        noWarumLabel: 'Das Problem', noWarum: 'Man hört es täglich, auch von Deutschen. Im Sprechclub ist es in Ordnung, in der Prüfung nicht. Bei <u>Personen</u> ist die getrennte Form dagegen richtig: <i>Über wen ärgerst du dich?</i>'
+      }
+    ],
+    hilfe: {
+      knopf: '🆘 Welche Präposition, welcher Fall?',
+      vor: 'Drei Fragen, dann steht der Satz:',
+      punkte: [
+        '<b>Geht es um Angst?</b> Dann <b>vor</b> plus Dativ: <i>vor <b>der</b> Prüfung</i>.',
+        '<b>Geht es um eine Sache, für die du dankst oder dich entschuldigst?</b> Dann <b>für</b> plus Akkusativ.',
+        '<b>Stört oder freut dich etwas, das schon da ist?</b> Dann <b>über</b> plus Akkusativ.',
+        '<b>Kommt es erst noch?</b> Dann <b>auf</b> plus Akkusativ — <i>Ich freue mich auf …</i>'
+      ],
+      nach: 'Und wenn dir die Präposition entfällt, sag das Gefühl einfach als Nomen: <i>Ich habe Angst.</i> <i>Das war ein Ärger.</i> <i>Ich hatte große Freude daran.</i> Das ist immer richtig und im Gespräch völlig normal.'
+    },
+    tipp: { art: 'yellow', text: '🎯 <strong>Zu zweit, zwei Minuten:</strong> Einer stellt eine Frage mit <i>wo(r)-</i> — <i>Worüber ärgerst du dich?</i>, <i>Wofür interessierst du dich?</i> Der andere antwortet in einem vollen Satz mit derselben Präposition.' }
+  },
+
+  saetze: {
+    h2: 'Vier Bausteine',
+    hl: 'für Gefühle im Gespräch',
+    ssub: 'Sagen, wie es dir geht. Nachfragen. Mitfühlen. Und beruhigen, wenn jemand sich aufregt.',
+    akkLabel: 'der Schritt',
+    mengeLabel: 'was du damit erreichst',
+    a2: [
+      { titel: '1 · 💬 Dein Gefühl sagen', chips: ['Ich freue mich über …', 'Ich ärgere mich über …', 'Ich habe Angst vor …', 'Das macht mich traurig.'], bsp: 'Ich ärgere mich über den Lärm, aber ich sage nichts.', say: 'Ich ärgere mich über den Lärm, aber ich sage nichts.' },
+      { titel: '2 · ❓ Nachfragen', chips: ['Worüber ärgerst du dich?', 'Wovor hast du Angst?', 'Wofür interessierst du dich?', 'Wie geht es dir damit?'], bsp: 'Worüber ärgerst du dich gerade so?', say: 'Worüber ärgerst du dich gerade so?' },
+      { titel: '3 · 🤝 Mitfühlen', chips: ['Das kann ich gut verstehen.', 'Das ginge mir genauso.', 'Das ist wirklich ärgerlich.', 'Das tut mir leid.'], bsp: 'Das kann ich gut verstehen, das ginge mir genauso.', say: 'Das kann ich gut verstehen, das ginge mir genauso.' },
+      { titel: '4 · 🕊️ Beruhigen', chips: ['Reg dich nicht auf.', 'Das klärt sich bestimmt.', 'Ganz ruhig.', 'Wir finden eine Lösung.'], bsp: 'Reg dich nicht auf, das klärt sich bestimmt.', say: 'Reg dich nicht auf, das klärt sich bestimmt.' }
+    ],
+    b1: [
+      { titel: '1 · 💬 Genauer sagen, wie es dir geht', chips: ['Ich ärgere mich weniger über …, sondern eher über …', 'Ehrlich gesagt hat mich das ziemlich getroffen.', 'Ich wundere mich ein bisschen, dass …', 'Es geht mir dabei vor allem um …'], bsp: 'Ich ärgere mich weniger über die Verspätung als darüber, dass niemand etwas gesagt hat.', say: 'Ich ärgere mich weniger über die Verspätung als darüber, dass niemand etwas gesagt hat.' },
+      { titel: '2 · ❓ Offen nachfragen', chips: ['Was genau hat dich daran gestört?', 'Wie ist es dir damit gegangen?', 'Worum ging es dir eigentlich?', 'Willst du darüber reden?'], bsp: 'Was genau hat dich daran gestört — die Sache selbst oder wie es gesagt wurde?', say: 'Was genau hat dich daran gestört — die Sache selbst oder wie es gesagt wurde?' },
+      { titel: '3 · 🤝 Wirklich mitfühlen', chips: ['Ich kann nachvollziehen, dass dich das ärgert.', 'An deiner Stelle wäre ich auch sauer.', 'Das klingt anstrengend.', 'Du musst dich dafür nicht rechtfertigen.'], bsp: 'Ich kann gut nachvollziehen, dass dich das ärgert — an deiner Stelle wäre ich auch sauer.', say: 'Ich kann gut nachvollziehen, dass dich das ärgert — an deiner Stelle wäre ich auch sauer.' },
+      { titel: '4 · 🕊️ Runterholen', chips: ['Lass uns kurz durchatmen.', 'Was würde dir jetzt helfen?', 'Wir müssen das heute nicht lösen.', 'Darum kümmere ich mich, versprochen.'], bsp: 'Lass uns kurz durchatmen. Was würde dir jetzt am meisten helfen?', say: 'Lass uns kurz durchatmen. Was würde dir jetzt am meisten helfen?' }
+    ],
+    tipp: { art: 'teal', text: '📣 <strong>Reihum:</strong> Jeder sagt einen Satz über etwas, das ihn diese Woche geärgert hat. Der Nächste fragt mit <i>wo(r)-</i> nach, der Übernächste fühlt mit. Drei Personen, drei Bausteine.' }
+  },
+
+  dialoge: {
+    h2: 'Vier Situationen —',
+    hl: 'zwei Runden',
+    ssub: '<b>Runde 1:</b> Lest den Dialog zu zweit laut. <b>Runde 2:</b> Klappt die Zeilen zu und sprecht frei — nur die Stichwörter bleiben.',
+    liste: [
+      {
+        bild: 'amanda/a-kaffee.webp', alt: 'Zwei Kaffeebecher auf einem Tisch',
+        titel: 'Der schlechte Tag',
+        situation: 'A hatte einen furchtbaren Tag und muss reden. B hört zu und fragt nach, statt gleich Ratschläge zu geben.',
+        zeilen: [
+          { wer: 'a', text: 'Ich ärgere mich seit heute Morgen und komme nicht davon los.' },
+          { wer: 'b', text: 'Worüber denn? Erzähl mal.', cue: '<b>Worüber</b> — die Frageform bei Sachen. Und <i>Erzähl mal</i> ist die kürzeste Einladung, die es gibt.' },
+          { wer: 'a', text: 'Über meinen Chef. Er hat die Entscheidung ohne mich getroffen.' },
+          { wer: 'b', text: 'Das kann ich gut verstehen. Ärgert dich die Entscheidung oder dass er nicht gefragt hat?', cue: 'B trennt zwei Dinge. Genau diese Frage bringt fast immer den echten Grund zutage.' },
+          { wer: 'a', text: 'Ehrlich gesagt vor allem das Zweite.' },
+          { wer: 'b', text: 'Dann würde ich mich auch aufregen. Willst du morgen mit ihm reden?', cue: '<b>sich aufregen</b> — lauter und kürzer als <i>sich ärgern</i>. Und die Frage am Ende lässt A selbst entscheiden.' }
+        ]
+      },
+      {
+        bild: 'amanda/amanda-jubel.webp', alt: 'Amanda freut sich mit hochgerissenen Armen',
+        titel: 'Endlich die Zusage',
+        situation: 'A hat eine gute Nachricht bekommen und will sie teilen. B freut sich mit — und fragt nach.',
+        zeilen: [
+          { wer: 'a', text: 'Ich habe die Zusage! Ich freue mich riesig darüber.' },
+          { wer: 'b', text: 'Das ist ja großartig! Und worauf freust du dich am meisten?', cue: 'Zweimal <b>sich freuen</b>: einmal <b>über</b> die Zusage (schon da), einmal <b>auf</b> das, was kommt. Der ganze Unterschied in zwei Sätzen.' },
+          { wer: 'a', text: 'Auf das Team, glaube ich. Und auf den ersten Tag.' },
+          { wer: 'b', text: 'Fürchtest du dich gar nicht ein bisschen davor?', cue: '<b>sich fürchten vor</b> plus Dativ — hier als <b>davor</b>, weil es um eine Sache geht.' },
+          { wer: 'a', text: 'Doch, schon. Aber die Freude ist größer.' },
+          { wer: 'b', text: 'So soll es sein. Ich bedanke mich schon mal für die Einladung zur Feier.', cue: '<b>sich bedanken für</b> — und der kleine Scherz am Ende macht aus einem Gespräch über Gefühle etwas Leichtes.' }
+        ]
+      },
+      {
+        bild: 'vok-bild/die-reklamation.webp', alt: 'Eine Person reklamiert etwas an einem Schalter',
+        titel: 'Die Beschwerde',
+        situation: 'A will sich über eine Lieferung beschweren und ist schon aufgeregt. B nimmt die Beschwerde an und holt A herunter.',
+        zeilen: [
+          { wer: 'a', text: 'Ich möchte mich über die Lieferung beschweren. Das ist jetzt das dritte Mal!' },
+          { wer: 'b', text: 'Das verstehe ich. Erzählen Sie mir bitte genau, was passiert ist.', cue: '<b>sich beschweren über</b> plus Akkusativ. Und B geht nicht auf die Lautstärke ein, sondern auf die Sache.' },
+          { wer: 'a', text: 'Das Paket kam wieder nicht an, und niemand hat mich informiert.' },
+          { wer: 'b', text: 'Da würde ich mich auch ärgern. Ich kümmere mich sofort darum.', cue: '<b>Da würde ich mich auch ärgern</b> nimmt jeder Beschwerde die Spitze. Und <b>darum kümmern</b> heißt: Ich mache es, jetzt.' },
+          { wer: 'a', text: 'Entschuldigung, ich war gerade etwas laut.' },
+          { wer: 'b', text: 'Dafür müssen Sie sich nicht entschuldigen. Ich melde mich heute noch.', cue: '<b>sich entschuldigen für</b> — und die Antwort <i>dafür müssen Sie sich nicht entschuldigen</i> ist die freundlichste, die es an dieser Stelle gibt.' }
+        ]
+      },
+      {
+        bild: 'amanda/sz-sprachkurs.webp', alt: 'Ein Kursraum mit Tischen und einer Tafel',
+        titel: 'Vor der Prüfung',
+        situation: 'A hat Angst vor der Prüfung. B kennt das Gefühl und redet es nicht klein.',
+        zeilen: [
+          { wer: 'a', text: 'Ich fürchte mich richtig vor der Prüfung nächste Woche.' },
+          { wer: 'b', text: 'Wovor genau? Vor dem Sprechen oder vor dem Schreiben?', cue: '<b>Wovor</b> — die Frageform bei <i>vor</i> plus Sache. Und die zwei Möglichkeiten helfen A beim Antworten.' },
+          { wer: 'a', text: 'Vor dem Sprechen. Da werde ich immer nervös und vergesse alles.' },
+          { wer: 'b', text: 'Das ging mir genauso. Ich habe mich vorher zehn Minuten laut mit mir selbst unterhalten.', cue: '<b>Das ging mir genauso</b> — mitfühlen, ohne kleinzureden. Und dann ein konkreter Tipp statt eines Trostspruchs.' },
+          { wer: 'a', text: 'Und das hat wirklich geholfen?' },
+          { wer: 'b', text: 'Sehr. Und schämen musst du dich für gar nichts, alle sind da nervös.', cue: '<b>sich schämen für</b> — hier verneint. Der Satz nimmt A genau die Sorge, die A gar nicht ausgesprochen hat.' }
+        ]
+      }
+    ],
+    tipp: { art: 'yellow', text: '🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 1 mit etwas, das euch diese Woche wirklich geärgert hat. Regel: Wer zuhört, darf zuerst nur fragen — kein Ratschlag in den ersten zwei Sätzen.' }
+  },
+
+  grammatik: {
+    h2: '🧩 Worüber, darüber:',
+    hl: 'die wo- und da-Wörter',
+    ssub: 'Wer reflexive Verben benutzt, braucht sofort auch diese kleinen Wörter. Sie ersetzen die Präposition plus Sache — und ohne sie klingt jeder Satz umständlich.',
+    intro: 'Die Regel ist kurz: Bei einer <u>Sache</u> wird Präposition plus <i>das</i> zu <b>da(r)-</b>, Präposition plus <i>was</i> zu <b>wo(r)-</b>. Bei einer <u>Person</u> bleibt alles getrennt. Das <b>r</b> kommt nur dazu, wenn die Präposition mit einem Vokal anfängt: <i>da<b>r</b>über</i>, aber <i>dafür</i>.',
+    kette: [
+      { emoji: '❔', rolle: 'Frage', bsp: 'Worüber' },
+      { emoji: '🙋', rolle: 'wer', bsp: 'ärgerst du dich?' },
+      { emoji: '➡️', rolle: 'Antwort', bsp: 'Darüber,' },
+      { emoji: '🔚', rolle: 'dass-Satz', bsp: 'dass niemand Bescheid gesagt hat.' }
+    ],
+    felder: [
+      { rolle: 'Ich', wort: 'Ich' },
+      { rolle: 'Verb', wort: 'kümmere' },
+      { rolle: 'reflexiv', wort: 'mich', hervor: true },
+      { rolle: 'da-Wort', wort: 'darum.' }
+    ],
+    bloecke: [
+      {
+        h2: 'Sache oder Person?',
+        hl: 'Daran hängt alles',
+        ssub: 'Ein einziger Unterschied entscheidet, ob du ein <i>da</i>-Wort brauchst oder nicht.',
+        dreier: [
+          { emoji: '📦', wort: 'Sache', was: 'da(r)- und wo(r)-', bsp: '<b>Darüber</b> ärgere ich mich. — <b>Worüber</b> ärgerst du dich?' },
+          { emoji: '🙋', wort: 'Person', was: 'ganz normal getrennt', bsp: '<b>Über ihn</b> ärgere ich mich. — <b>Über wen</b> ärgerst du dich?' },
+          { emoji: '🔤', wort: 'das r dazwischen', was: 'nur vor a, e, i, o, u', bsp: 'da<b>r</b>über, da<b>r</b>auf, da<b>r</b>um — aber dafür, davor, damit' }
+        ],
+        chips: ['darüber', 'darauf', 'darum', 'dafür', 'davor', 'damit', 'worüber', 'worauf', 'worum', 'wofür', 'wovor', 'womit']
+      },
+      {
+        h2: 'Und wenn ein ganzer Satz folgt,',
+        hl: 'steht das da-Wort vorher',
+        ssub: 'Das ist die Stelle, an der viele stecken bleiben — dabei ist das Muster immer dasselbe.',
+        paare: [
+          {
+            jaLabel: 'So ist es richtig', ja: 'Ich ärgere mich darüber, dass niemand Bescheid gesagt hat.',
+            jaWarumLabel: 'Warum das stimmt', jaWarum: 'Vor einem <b>dass</b>-Satz steht das <b>da</b>-Wort wie ein Platzhalter: <i>darüber, dass …</i>, <i>darauf, dass …</i>, <i>davor, dass …</i> Und im Nebensatz geht das Verb ans Ende.',
+            noLabel: 'So klingt es falsch', no: 'Ich ärgere mich, dass niemand Bescheid gesagt hat.',
+            noWarumLabel: 'Das Problem', noWarum: 'Man versteht es, aber es fehlt die Klammer. Merk dir das Paar als Block: <b>darüber, dass</b> — genauso <b>darauf, dass</b> und <b>dafür, dass</b>.'
+          }
+        ]
+      }
+    ],
+    bauH2: '🧱 Bau die Sätze selbst',
+    bauSsub: 'Tippe die Teile in der richtigen Reihenfolge an. Achte auf das kleine <i>mich</i> und auf die Präposition.',
+    storyH2: '📖 Und jetzt im Zusammenhang',
+    storySsub: 'Ein Tag mit ziemlich vielen Gefühlen. Wähle in jeder Lücke das passende Wort.',
+    hilfe: {
+      knopf: '🆘 Wo steht das mich?',
+      vor: 'Drei Regeln, dann sitzt jeder Satz:',
+      punkte: [
+        '<b>Im normalen Satz</b> steht es gleich hinter dem Verb: <i>Ich ärgere <u>mich</u> über den Lärm.</i>',
+        '<b>Am Satzanfang</b> rutscht es hinter das Subjekt: <i>Darüber ärgere ich <u>mich</u> schon lange.</i>',
+        '<b>Im Nebensatz</b> steht es vorn: <i>…, weil ich <u>mich</u> darüber ärgere.</i>',
+        '<b>Und im Imperativ</b> wird daraus <i>dich</i>: <i>Reg <u>dich</u> nicht auf.</i>'
+      ],
+      nach: 'Ein Trick fürs Gespräch: Sprich das Verb immer als Block mit — <i>ärgere mich</i>, <i>freue mich</i>, <i>kümmere mich</i>. Wer es nie einzeln übt, vergisst es auch nie.'
+    }
+  },
+
+  rollenspiele: {
+    h2: '🎭 Drei Situationen',
+    hl: 'zu zweit',
+    ssub: 'Einer erzählt, einer hört zu und fragt nach. Danach tauschen — beim zweiten Mal ohne die Sätze unten. Mindestens drei Verben von heute pro Runde.',
+    liste: [
+      {
+        titel: 'Der Ärger im Haus',
+        situation: 'A ärgert sich seit Wochen über etwas im Haus und hat noch nichts gesagt. B hört zu und fragt nach, statt sofort zu raten.',
+        a2: ['Ich ärgere mich seit Wochen darüber', 'Aber ich traue mich nicht, etwas zu sagen', 'Worüber würdest du dich aufregen?', 'Vielleicht rede ich morgen mit ihnen'],
+        b1: ['Worüber genau ärgerst du dich — über die Sache oder über den Ton?', 'Ich kann gut nachvollziehen, dass dich das stört', 'An deiner Stelle wäre ich auch längst sauer', 'Willst du, dass ich mitkomme, oder machst du das lieber allein?'],
+        gut: 'B hat zuerst gefragt und erst danach etwas geraten. Und mindestens einmal kam ein <i>wo(r)-</i> oder <i>da(r)-</i> Wort vor.'
+      },
+      {
+        titel: 'Die gute Nachricht',
+        situation: 'A hat etwas erreicht, worauf A lange gewartet hat. B freut sich mit — und fragt nach dem, was jetzt kommt.',
+        a2: ['Ich freue mich riesig darüber', 'Worauf ich mich am meisten freue, ist …', 'Ein bisschen fürchte ich mich auch', 'Ich möchte mich für deine Hilfe bedanken'],
+        b1: ['Das ist großartig — und worauf freust du dich am meisten?', 'Fürchtest du dich denn gar nicht ein bisschen davor?', 'Du hast lange darauf hingearbeitet, das darfst du auch genießen', 'Ich bedanke mich schon mal für die Einladung'],
+        gut: 'Beide Formen von <i>sich freuen</i> sind vorgekommen — einmal <b>über</b> für das, was da ist, einmal <b>auf</b> für das, was kommt.'
+      },
+      {
+        titel: 'Die Beschwerde',
+        situation: 'A beschwert sich über etwas und ist dabei zu laut geworden. B nimmt die Sache ernst und holt A ruhig herunter.',
+        a2: ['Ich möchte mich über die Lieferung beschweren', 'Das ist jetzt das dritte Mal', 'Entschuldigung, ich war gerade laut', 'Wann melden Sie sich bei mir?'],
+        b1: ['Erzählen Sie mir bitte genau, was passiert ist', 'Da würde ich mich auch ärgern, das verstehe ich', 'Ich kümmere mich sofort darum', 'Dafür müssen Sie sich nicht entschuldigen'],
+        gut: 'B ist bei der Sache geblieben und hat nicht über den Ton gesprochen. Und <i>sich beschweren über</i>, <i>sich kümmern um</i> und <i>sich entschuldigen für</i> sind alle drei gefallen.'
+      }
+    ]
+  },
+
+  challenge: {
+    ssub: 'Neunzig Sekunden über ein Gefühl: Worüber ärgerst du dich, worauf freust du dich, wovor hast du Respekt?',
+    hilfe: {
+      knopf: '🆘 Mir fällt nichts ein',
+      vor: 'Vier Sätze, dann trägt dich die Zeit:',
+      punkte: [
+        '<b>Ärger:</b> <i>Ich ärgere mich zurzeit über …</i>',
+        '<b>Freude:</b> <i>Ich freue mich auf …, weil …</i>',
+        '<b>Angst:</b> <i>Ein bisschen fürchte ich mich vor …</i>',
+        '<b>Interesse:</b> <i>Im Moment interessiere ich mich sehr für …</i>'
+      ],
+      nach: 'Und wenn du in der Mitte hängst: dreh die Zeit um. <i>Früher habe ich mich darüber aufgeregt, heute nicht mehr.</i> Damit füllst du die zweite Hälfte fast von allein.'
+    },
+    tipp: { art: 'yellow', text: '⏱️ <strong>Spielregel:</strong> In jeder Runde müssen <u>drei verschiedene</u> reflexive Verben vorkommen — und jedes mit seiner Präposition. Wer das <i>mich</i> vergisst, fängt noch einmal an.' }
+  },
+
+  ueben: { tipp: { art: 'teal', text: '📣 <strong>Danach laut:</strong> Einer stellt eine Frage mit <i>wo(r)-</i>, der Nächste antwortet mit dem passenden <i>da(r)-</i> Wort. Reihum, ohne Pause.' } },
+
+  hausaufgabe: {
+    h2: '📮 Deine Hausaufgabe bis',
+    hl: 'Donnerstag',
+    ssub: 'Vier kleine Aufgaben, zusammen etwa 25 Minuten. Am Donnerstag geht es weiter: müde, genervt, erschöpft — die Wörter für Zustände.',
+    warum: { text: '💡 <strong>Warum das hilft:</strong> Über Gefühle zu reden ist in einer Fremdsprache doppelt schwer: Man ist ohnehin aufgewühlt, und dann fehlen auch noch die Wörter. Wer diese zwölf sicher hat, kann sagen, was los ist — statt zu schweigen oder laut zu werden.' },
+    a2: [
+      { emoji: '✍️', titel: 'Zwölf Sätze', zeit: '7 Min', text: 'Schreib zu jedem der zwölf Verben einen eigenen Satz aus deinem Leben — immer mit dem <i>mich</i> und mit der Präposition.' },
+      { emoji: '❓', titel: 'Zwölf Fragen', zeit: '6 Min', text: 'Mach aus jedem Satz eine Frage mit <i>wo(r)-</i>: <i>Worüber ärgerst du dich?</i>, <i>Wofür interessierst du dich?</i>' },
+      { emoji: '🎙️', titel: 'Deine Woche', zeit: '5 Min', text: 'Nimm eine Sprachnachricht auf: Worüber hast du dich diese Woche geärgert und worauf freust du dich?' },
+      { emoji: '👂', titel: 'Zuhören', zeit: '7 Min', text: 'Such ein deutsches Video oder eine Serie und notier fünf Stellen, an denen jemand ein Gefühl mit einem reflexiven Verb sagt.' }
+    ],
+    b1: [
+      { emoji: '📝', titel: 'Eine Beschwerde', zeit: '8 Min', text: 'Schreib eine höfliche Beschwerdemail: Was ist passiert, worüber ärgerst du dich genau, was möchtest du? Höchstens acht Sätze.' },
+      { emoji: '🔗', titel: 'Zehnmal darüber, dass', zeit: '6 Min', text: 'Schreib zehn Sätze nach dem Muster <i>Ich ärgere mich darüber, dass …</i> — mit fünf verschiedenen Verben.' },
+      { emoji: '🎙️', titel: 'Zwei Minuten zuhören', zeit: '6 Min', text: 'Nimm auf, wie du jemandem zuhörst, der sich aufregt: erst fragen, dann mitfühlen, dann beruhigen. Beide Rollen.' },
+      { emoji: '🔍', titel: 'Die feinen Unterschiede', zeit: '5 Min', text: 'Erklär in je zwei Sätzen den Unterschied: <i>sich ärgern</i> und <i>sich aufregen</i>, <i>sich schämen</i> und <i>sich entschuldigen</i>, <i>freuen auf</i> und <i>freuen über</i>.' }
+    ],
+    hilfeA2: {
+      knopf: '💡 Beispiel ansehen (Aufgabe 1)',
+      vor: 'So sehen die Sätze aus:',
+      punkte: [
+        '<i>Ich freue <b>mich auf</b> das Wochenende.</i>',
+        '<i>Ich ärgere <b>mich über</b> den Lärm im Treppenhaus.</i>',
+        '<i>Ich interessiere <b>mich für</b> alte Filme.</i>',
+        '<i>Ich fürchte <b>mich vor</b> der Prüfung.</i>',
+        '<i>Ich kümmere <b>mich um</b> die Anmeldung.</i>'
+      ],
+      nach: 'Ein einziger Test genügt: Steht in deinem Satz das kleine <b>mich</b>? Wenn nicht, fehlt es fast sicher — von den zwölf Verben von heute kommt keines ohne aus.'
+    },
+    hilfeB1: {
+      knopf: '💡 Beispiel ansehen (Aufgabe 1)',
+      vor: 'Das sind die Stellen, auf die es in der Mail ankommt:',
+      punkte: [
+        '<b>Anlass:</b> <i>ich wende mich an Sie, weil die Lieferung vom 20.11. erneut nicht angekommen ist.</i>',
+        '<b>Gefühl, sachlich:</b> <i>Ich ärgere mich vor allem darüber, dass ich nicht informiert wurde.</i>',
+        '<b>Wunsch:</b> <i>Ich bitte Sie, mir bis Freitag mitzuteilen, wann die Ware kommt.</i>',
+        '<b>Angebot:</b> <i>Sollte das nicht möglich sein, möchte ich vom Kauf zurücktreten.</i>',
+        '<b>Schluss:</b> <i>Für eine kurze Rückmeldung bedanke ich mich im Voraus.</i>'
+      ],
+      nach: 'Und ein Hinweis, der jede Beschwerde stärker macht: Schreib nicht, wie wütend du bist, sondern <b>worüber</b> genau. <i>Ich ärgere mich darüber, dass niemand Bescheid gesagt hat</i> wirkt zehnmal mehr als drei Ausrufezeichen.'
+    },
+    abgabe: 'Schick mir bis Donnerstag 12 Uhr deine zwölf Sätze und die Sprachnachricht — ich markiere dir jede Stelle, an der das <i>mich</i> oder die Präposition fehlt.',
+    ausblick: 'Am Donnerstag geht es weiter mit den Zuständen: <i>müde</i>, <i>erschöpft</i>, <i>genervt</i>, <i>überfordert</i> — und dem Unterschied zwischen <i>sein</i>, <i>werden</i> und <i>bleiben</i>.'
+  },
+
+  daten: {
+    sk: [
+      'Worüber hast du dich diese Woche geärgert? Erzähl es in vier Sätzen.',
+      'Worauf freust du dich am meisten — und warum?',
+      'Erklär den Unterschied zwischen <i>freuen auf</i> und <i>freuen über</i>.',
+      'Jemand regt sich auf. Beruhige ihn in drei Sätzen.',
+      'Wovor hast du Respekt? Sag es, ohne das Wort Angst zu benutzen.',
+      'Wofür interessierst du dich, seit du hier bist?',
+      'Beschwer dich höflich über etwas, das dich wirklich stört.',
+      'Um wen oder was kümmerst du dich gerade?',
+      'Stell fünf Fragen mit <i>wo(r)-</i> und beantworte sie selbst.',
+      'Wofür hast du dich zuletzt entschuldigt?'
+    ],
+    w90: [
+      { w: 'sich freuen', b: 'amanda/amanda-jubel.webp', h: ['auf', 'über', 'die Freude', 'lachen', 'sich freuen'] },
+      { w: 'sich ärgern', b: 'amanda/sz-heikel.webp', h: ['über', 'der Ärger', 'sauer', 'stören', 'schweigen'] },
+      { w: 'sich aufregen', b: 'amanda/sz-notfall.webp', h: ['laut', 'wütend', 'beruhigen', 'reg dich nicht auf', 'kurz'] },
+      { w: 'sich wundern', b: 'amanda/amanda-denk.webp', h: ['überrascht', 'nicht erwartet', 'komisch', 'nachfragen', 'seltsam'] },
+      { w: 'sich fürchten', b: 'amanda/a-warten.webp', h: ['vor', 'die Angst', 'die Prüfung', 'nervös', 'der Respekt'] },
+      { w: 'sich interessieren', b: 'amanda/a-lesen.webp', h: ['für', 'das Hobby', 'wissen wollen', 'spannend', 'lesen'] },
+      { w: 'sich kümmern', b: 'amanda/sz-pflege.webp', h: ['um', 'übernehmen', 'sorgen', 'helfen', 'zuständig'] },
+      { w: 'sich beschweren', b: 'vok-bild/die-reklamation.webp', h: ['über', 'bei', 'die Beschwerde', 'reklamieren', 'die Firma'] },
+      { w: 'sich entschuldigen', b: 'amanda/a-schulter.webp', h: ['für', 'bei', 'leidtun', 'der Fehler', 'ehrlich'] },
+      { w: 'sich bedanken', b: 'amanda/a-klatschen.webp', h: ['für', 'bei', 'danke', 'die Hilfe', 'freundlich'] }
+    ],
+    quiz: [
+      { q: 'Welcher Satz ist richtig?', o: ['Ich freue mich auf den Urlaub nächste Woche.', 'Ich freue mich über den Urlaub nächste Woche.', 'Ich freue auf den Urlaub nächste Woche.', 'Ich freue mich für den Urlaub nächste Woche.'], c: 0, e: 'Der Urlaub kommt erst noch, also <b>auf</b>. <b>über</b> steht für etwas, das schon da ist.' },
+      { q: 'Was passt zu <u>sich fürchten</u>?', o: ['vor + Dativ', 'über + Akkusativ', 'für + Akkusativ', 'um + Akkusativ'], c: 0, e: '<i>Ich fürchte mich <b>vor der</b> Prüfung.</i> Dieselbe Verbindung wie bei <b>Angst haben vor</b>.' },
+      { q: 'Wie fragst du nach einer <u>Sache</u>?', o: ['Worüber ärgerst du dich?', 'Über was ärgerst du dich?', 'Über wen ärgerst du dich?', 'Was ärgerst du dich?'], c: 0, e: 'Bei Sachen wird aus <i>über was</i> ein <b>worüber</b>. Bei Personen bleibt es getrennt: <i>Über wen …?</i>' },
+      { q: 'Welcher Satz stimmt?', o: ['Darum kümmere ich mich morgen.', 'Um das kümmere ich mich morgen.', 'Darum kümmere ich morgen.', 'Um es kümmere ich mich morgen.'], c: 0, e: 'Bei Sachen steht das <b>da</b>-Wort. Und das reflexive <i>mich</i> darf nie fehlen.' },
+      { q: 'Wo steht das <u>r</u> in den da-Wörtern?', o: ['nur wenn die Präposition mit einem Vokal beginnt', 'immer', 'nie', 'nur im Plural'], c: 0, e: '<i>da<b>r</b>über</i>, <i>da<b>r</b>auf</i>, <i>da<b>r</b>um</i> — aber <i>dafür</i>, <i>davor</i>, <i>damit</i>. Dasselbe gilt bei <i>wo(r)-</i>.' },
+      { q: 'Was ist der Unterschied zwischen <u>sich ärgern</u> und <u>sich aufregen</u>?', o: ['ärgern ist leiser und länger, aufregen lauter und kürzer', 'sie bedeuten genau dasselbe', 'ärgern ist förmlich, aufregen umgangssprachlich', 'aufregen braucht keine Präposition'], c: 0, e: 'Beide stehen mit <b>über</b> plus Akkusativ. <i>Reg dich nicht auf</i> sagt man zu jemandem, der gerade laut wird.' },
+      { q: 'Welcher Satz ist vollständig?', o: ['Ich ärgere mich darüber, dass niemand etwas gesagt hat.', 'Ich ärgere mich, dass niemand etwas gesagt hat.', 'Ich ärgere darüber, dass niemand etwas gesagt hat.', 'Ich ärgere mich über, dass niemand etwas gesagt hat.'], c: 0, e: 'Vor einem <b>dass</b>-Satz steht das <b>da</b>-Wort als Platzhalter: <i>darüber, dass …</i>' },
+      { q: 'Bei wem entschuldigst du dich wofür?', o: ['bei der Person, für die Sache', 'für die Person, bei der Sache', 'über die Person, für die Sache', 'um die Person, über die Sache'], c: 0, e: '<i>Ich entschuldige mich <b>bei dir</b> <b>für</b> gestern.</i> Genauso bei <b>sich bedanken</b>.' }
+    ],
+    gap: [
+      { t: 'Ich freue mich schon ___ das Wochenende.', o: ['auf', 'über', 'für', 'vor'], a: 'auf' },
+      { t: 'Ich freue mich sehr ___ dein Geschenk.', o: ['über', 'auf', 'für', 'um'], a: 'über' },
+      { t: 'Ich ärgere ___ über den Lärm im Haus.', o: ['mich', 'mir', 'sich', 'mein'], a: 'mich' },
+      { t: 'Ich fürchte mich ___ der Prüfung.', o: ['vor', 'über', 'für', 'auf'], a: 'vor' },
+      { t: '___ interessierst du dich?', o: ['Wofür', 'Worüber', 'Wovor', 'Worauf'], a: 'Wofür' },
+      { t: '___ kümmere ich mich gleich morgen.', o: ['Darum', 'Um das', 'Dafür', 'Darüber'], a: 'Darum' },
+      { t: 'Ich ärgere mich ___, dass niemand Bescheid gesagt hat.', o: ['darüber', 'über', 'davor', 'darauf'], a: 'darüber' },
+      { t: 'Ich möchte mich ___ deine Hilfe bedanken.', o: ['für', 'über', 'um', 'vor'], a: 'für' }
+    ],
+    gbau: [
+      { f: 'Bau den Satz mit auf:', t: ['Ich', 'freue', 'mich', 'auf', 'das', 'Wochenende'], l: ['Ich', 'freue', 'mich', 'auf', 'das', 'Wochenende'], e: 'Das <b>mich</b> steht direkt hinter dem Verb. Und <b>auf</b> plus Akkusativ, weil das Wochenende erst kommt.' },
+      { f: 'Bau die Frage:', t: ['Worüber', 'ärgerst', 'du', 'dich', 'so'], l: ['Worüber', 'ärgerst', 'du', 'dich', 'so'], e: '<b>Worüber</b> steht ganz vorn, danach das Verb, dann das Subjekt und erst dann <i>dich</i>.' },
+      { f: 'Bau den Satz mit dass:', t: ['Ich', 'ärgere', 'mich', 'darüber', 'dass', 'niemand', 'Bescheid', 'gesagt', 'hat'], l: ['Ich', 'ärgere', 'mich', 'darüber', 'dass', 'niemand', 'Bescheid', 'gesagt', 'hat'], e: '<b>darüber, dass</b> als Block — und im Nebensatz steht das Verb ganz hinten.' },
+      { f: 'Bau die Aufforderung:', t: ['Reg', 'dich', 'bitte', 'nicht', 'auf'], l: ['Reg', 'dich', 'bitte', 'nicht', 'auf'], e: 'Im Imperativ wird aus <i>mich</i> ein <b>dich</b>. Und <b>auf</b> geht ans Ende, weil <i>aufregen</i> trennbar ist.' }
+    ],
+    gstory: {
+      t: 'Heute Morgen habe ich mich ___ die Nachricht vom Amt geärgert: Der Termin wurde ohne Grund verschoben. Ich habe mich vor allem ___ geärgert, dass mir niemand Bescheid gesagt hat. Erst habe ich mich richtig ___, dann habe ich mich hingesetzt und beruhigt. Am Nachmittag habe ich angerufen und mich höflich ___ die Verschiebung beschwert. Die Frau am Telefon war nett und hat gesagt: Darum ___ ich mich sofort. Danach ging es mir besser. Und ehrlich gesagt freue ich mich sogar ___ den neuen Termin, weil er mir besser passt. ___ hätte ich gestern nicht gedacht. Und ich habe mich am Ende sogar ___ ihre Hilfe bedankt.',
+      o: ['über', 'darüber', 'aufgeregt', 'kümmere', 'auf', 'Damit', 'für', 'davor'],
+      a: [['über'], ['darüber'], ['aufgeregt'], ['über'], ['kümmere'], ['auf'], ['Damit'], ['für']]
+    }
+  }
+};
+fs.writeFileSync(__dirname + '/../stunden/w11-b1-gefuehle-zeigen.json', JSON.stringify(S, null, 2) + '\n', 'utf8');
+console.log('geschrieben');
