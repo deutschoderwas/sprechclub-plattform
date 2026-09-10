@@ -643,6 +643,7 @@ function nimm(id, name, html) { if (html) abschnitte.push({ id, name, html }); }
 
    Die Daten der entfernten Abschnitte bleiben in den JSON-Dateien
    stehen. Geloescht ist nichts. */
+markenSammeln();
 nimm('ankommen',     '👋 Ankommen',      ankommen(S));
 nimm('dialoge',      '🎬 Dialog',        S.dialoge ? dialoge(S.dialoge) : '');
 nimm('challenge',    '⏱️ 90 Sekunden',   (S.daten.w90 && S.daten.w90.length) ? challenge(S.challenge) : '');
