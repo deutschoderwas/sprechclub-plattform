@@ -755,7 +755,7 @@ markenSammeln();
 nimm('ankommen',     '👋 Ankommen',      ankommen(S));
 nimm('dialoge',      '🎬 Dialog',        S.dialoge ? dialoge(S.dialoge) : '');
 nimm('challenge',    '⏱️ 90 Sekunden',   (S.daten.w90 && S.daten.w90.length) ? challenge(S.challenge) : '');
-nimm('rollenspiele', '🎭 Rollenspiel',   S.rollenspiele ? rollenspiele(S.rollenspiele) : '');
+nimm('rollenspiele', S.spiele ? '🎲 Spiele' : '🎭 Rollenspiel',   (S.spiele || S.rollenspiele) ? rollenspiele(S.spiele || S.rollenspiele) : '');
 nimm('debatte',      '⚖️ Debatte',       debatte(S));
 nimm('abschluss',    '🎯 Abschluss',     abschluss());
 nimm('hausaufgabe',  '📮 Hausaufgabe',   S.hausaufgabe ? hausaufgabe(S.hausaufgabe) : '');
