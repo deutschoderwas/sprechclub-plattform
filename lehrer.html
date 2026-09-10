@@ -28,6 +28,9 @@ h1{font-family:var(--fh);font-weight:600;font-size:clamp(1.6rem,4vw,2.3rem);marg
 .btn{border:none;border-radius:999px;padding:.5rem 1rem;cursor:pointer;font-family:inherit;font-size:.9rem;font-weight:700;text-decoration:none;display:inline-block;}
 .btn.tafel{background:var(--ink);color:var(--cream);}
 .btn.meet{background:var(--teal);color:#063b35;}
+.btn.stunde{background:var(--red,#E8302A);color:#fff;}
+.btn.vorb{background:var(--yellow,#FFD24A);color:var(--ink,#262019);}
+.btn.raum{background:#fff;color:var(--ink,#262019);border:2px solid var(--ink,#262019);}
 .center{text-align:center;padding:3rem 1rem;color:var(--ink-soft);}
 .center a{color:var(--teal);font-weight:700;}
 .empty{background:var(--paper);border:1px dashed var(--sand);border-radius:14px;padding:1.4rem;text-align:center;color:var(--ink-soft);}
@@ -68,7 +71,7 @@ async function init(){
   const to=new Date(Date.now()+21*24*3600*1000).toISOString();
   let cls=[];
   if(teacher){
-    const { data }=await sb.from('classes').select('id,title,level,topic,club,starts_at,zoom_link')
+    const { data }=await sb.from('classes').select('id,title,level,topic,club,starts_at,zoom_link,material_live,material_pre')
       .eq('teacher_id',teacher.id).gte('starts_at',from).lt('starts_at',to).eq('is_cancelled',false).order('starts_at');
     cls=data||[];
   }
@@ -98,6 +101,9 @@ function render(vorname, teacher, cls, prof){
         <div class="acts">
           <a class="btn tafel" href="tafel.html?id=${c.id}" target="_blank" rel="noopener">🖊️ Live-Tafel</a>
           ${c.zoom_link?`<a class="btn meet" href="${esc(c.zoom_link)}" target="_blank" rel="noopener">🎥 Zum Unterricht</a>`:''}
+          ${c.material_live?`<a class="btn stunde" href="${esc(c.material_live)}" target="_blank" rel="noopener">📊 Stunde öffnen</a>`:''}
+          ${c.material_pre&&/^https?:/.test(c.material_pre)?`<a class="btn vorb" href="${esc(c.material_pre)}" target="_blank" rel="noopener">📝 Vorbereitung</a>`:''}
+          <a class="btn raum" href="klassenraum.html?stunde=${c.id}" target="_blank" rel="noopener">🏫 Klassenraum</a>
         </div></div>`;
     });
     html+=`</div>`;

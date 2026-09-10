@@ -1,0 +1,412 @@
+'use strict';
+const fs = require('fs');
+const S = {
+  datei: 'Unterricht-ab-14-09/w10-c-teil2-small-talk-b1b2.html',
+  eyebrow: 'deutschoderwas · Sprechclub · Woche 10 · Strang C · Teil 2 · Mittwoch, 18. November',
+  titel: 'Die Debatte:',
+  hl: 'höflich oder verlogen?',
+  stufe: 'B1/B2',
+  termin: 'Mi 18.11. 17:30 und 19:30 · Strang C · Teil 2 · B1 ⇄ B2',
+  untertitel: 'Am Montag ging es darum, worüber man hier redet. Heute geht es um die Frage dahinter: Ist es freundlich, zwei Minuten über das Wetter zu reden — oder ist es unehrlich? Und muss man sich eigentlich anpassen, wenn man in einem anderen Land lebt?',
+  fuss: 'Die Debatte: höflich oder verlogen? · Teil 2 · B1/B2 · Woche 10 · nächste Woche: neues Thema',
+  niveau: { a: 'B1 · sicherer', b: 'B2 · feiner', hinweis: 'Gleiches Thema, andere Sätze. Wechsle jederzeit — probier ruhig beide Seiten aus.' },
+
+  einstieg: [
+    {
+      h2: 'Nett gemeint',
+      hl: 'oder nur gesagt?',
+      ssub: 'Wenn jemand fragt <i>Wie geht es Ihnen?</i> und keine Antwort erwartet — ist das höflich oder falsch? Beide Seiten haben gute Gründe. Genau deshalb streitet man darüber gut.',
+      bild: 'amanda/sz-cafe.webp',
+      alt: 'Zwei Menschen unterhalten sich mit Kaffeebechern in der Hand',
+      fragenA2: [
+        'Sagst du manchmal etwas, das du nicht so meinst?',
+        'Wie antwortest du auf <i>Wie geht es dir?</i>',
+        'Redest du lieber viel oder wenig mit Fremden?'
+      ],
+      fragenB1: [
+        'Wo hört Höflichkeit auf und wo fängt Unehrlichkeit an?',
+        'Was ist unangenehmer: Schweigen oder ein leeres Gespräch?',
+        'Wie viel Anpassung findest du in einem fremden Land normal?'
+      ],
+      tipp: { art: 'teal', text: '🔑 <strong>Für heute wichtig:</strong> Du musst nicht deine echte Meinung vertreten. In der Debatte bekommst du eine Seite zugeteilt — und die Übung besteht genau darin, auch die andere Seite gut zu verteidigen.' }
+    },
+    {
+      h2: 'Und die zweite Frage:',
+      hl: 'Wie viel Anpassung ist normal?',
+      ssub: 'Manche sagen: Wer hier lebt, macht es wie die Leute hier. Andere sagen: Man bleibt, wer man ist, und die anderen gewöhnen sich daran. Beides hört man täglich, beides von Leuten, die es gut meinen.',
+      bild: 'amanda/sz-ankommen.webp',
+      alt: 'Eine Person mit Koffer steht in einer fremden Stadt',
+      fragenA2: [
+        'Was machst du hier anders als zu Hause?',
+        'Was hast du hier neu gelernt?',
+        'Was möchtest du nicht ändern?'
+      ],
+      fragenB1: [
+        'Was hast du dir hier angewöhnt, ohne es zu merken?',
+        'Wo ziehst du eine Grenze und sagst: das mache ich nicht mit?',
+        'Ändert sich das nach ein paar Jahren?'
+      ],
+      tipp: { art: 'yellow', text: '💡 <strong>Ein Satz für jede Debatte:</strong> <b>Da haben Sie recht, und trotzdem …</b> Damit nimmst du dem anderen den Wind aus den Segeln und bleibst trotzdem bei deiner Meinung. Der nützlichste Satz des Abends.' }
+    }
+  ],
+
+  wortschatz: {
+    h2: 'Zwölf Wörter,',
+    hl: 'die du heute brauchst',
+    ssub: 'Sag jedes laut. Und sag bei jedem sofort einen Satz, in dem du eine Meinung damit sagst.',
+    karten: [
+      { bild: 'vok-bild/die-meinung.webp', alt: 'Eine Sprechblase über einem Kopf', art: 'die', wort: 'Meinung', kurz: 'was du über eine Sache denkst', bsp: 'Meiner Meinung nach ist das übertrieben.', tipp: 'Der Standardsatz heißt <b>meiner Meinung nach</b> — ohne <i>ich denke</i> davor. Und danach kommt normale Wortstellung: <i>Meiner Meinung nach <b>ist</b> das übertrieben.</i>', say: 'Meiner Meinung nach ist das übertrieben.' },
+      { bild: 'amanda/a-zeigen.webp', alt: 'Amanda zeigt auf einen Punkt', art: 'das', wort: 'Argument', kurz: 'der Grund, mit dem du deine Meinung erklärst', bsp: 'Das ist ein gutes Argument, aber es gilt nicht überall.', tipp: 'Ein Argument <b>bringt</b> oder <b>nennt</b> man. Und der einfachste Aufbau ist immer derselbe: Meinung, dann <i>weil</i>, dann ein Beispiel aus dem Alltag.', say: 'Das ist ein gutes Argument, aber es gilt nicht überall.' },
+      { bild: 'amanda/sz-bewerbung.webp', alt: 'Ein Bewerbungsgespräch an einem Tisch', art: 'der', wort: 'Eindruck', kurz: 'wie du auf andere wirkst', bsp: 'Ich habe den Eindruck, dass es hier anders läuft.', tipp: 'Zwei feste Wendungen: <b>den Eindruck haben, dass …</b> (du glaubst etwas) und <b>einen guten Eindruck machen</b> (du wirkst gut). Beide hörst du ständig.', say: 'Ich habe den Eindruck, dass es hier anders läuft.' },
+      { bild: 'amanda/a-willkommen.webp', alt: 'Amanda begrüßt jemanden freundlich', art: 'die', wort: 'Höflichkeit', kurz: 'wenn du freundlich bist, auch ohne Grund', bsp: 'Das ist reine Höflichkeit, mehr steckt nicht dahinter.', tipp: '<b>Reine Höflichkeit</b> heißt: nett, aber ohne tiefere Bedeutung. Das ist kein Vorwurf — im deutschen Alltag ist das oft genau richtig.', say: 'Das ist reine Höflichkeit, mehr steckt nicht dahinter.' },
+      { bild: 'amanda/sz-freunde.webp', alt: 'Zwei Freundinnen sitzen dicht beieinander', art: 'die', wort: 'Nähe', kurz: 'wenn dir jemand nahe ist', bsp: 'Nähe braucht Zeit, hier geht das nicht so schnell.', tipp: 'Das Gegenteil ist <b>die Distanz</b>. In der Debatte brauchst du beide: <i>Small Talk schafft Nähe</i> gegen <i>Small Talk hält Distanz</i>. Zwei Sätze, zwei Seiten.', say: 'Nähe braucht Zeit, hier geht das nicht so schnell.' },
+      { bild: 'amanda/sz-unterwegs.webp', alt: 'Menschen gehen aneinander vorbei auf einem Bahnsteig', art: 'die', wort: 'Distanz', kurz: 'der Abstand zwischen zwei Menschen', bsp: 'Ein bisschen Distanz ist auch angenehm.', tipp: 'In Deutschland gilt Distanz nicht als kalt, sondern als höflich: Man lässt der anderen Person Platz. Gute Wendung: <b>auf Distanz gehen</b> — sich zurückziehen.', say: 'Ein bisschen Distanz ist auch angenehm.' },
+      { bild: 'amanda/sz-ankommen.webp', alt: 'Eine Person mit Koffer in einer fremden Stadt', art: 'die', wort: 'Anpassung', kurz: 'wenn du dich nach den anderen richtest', bsp: 'Ein bisschen Anpassung gehört dazu, finde ich.', tipp: 'Das Verb ist <b>sich anpassen an</b> plus Akkusativ: <i>Ich passe mich <b>an die</b> Regeln an.</i> Und Vorsicht: Für manche klingt das Wort negativ, für andere selbstverständlich.', say: 'Ein bisschen Anpassung gehört dazu, finde ich.' },
+      { bild: 'amanda/sz-heikel.webp', alt: 'Zwei Menschen in einem ernsten Gespräch', art: 'die', wort: 'Ehrlichkeit', kurz: 'wenn du sagst, was du wirklich denkst', bsp: 'Ehrlichkeit ist mir lieber als schöne Worte.', tipp: 'In der Debatte ist das ein starkes Wort. Aber achte darauf: <b>ehrlich</b> und <b>direkt</b> sind nicht dasselbe. Man kann ehrlich sein und trotzdem freundlich bleiben.', say: 'Ehrlichkeit ist mir lieber als schöne Worte.' },
+      { bild: 'amanda/a-uhr.webp', alt: 'Eine Uhr an der Wand', art: 'die', wort: 'Gewohnheit', kurz: 'etwas, das man immer so macht', bsp: 'Das ist einfach Gewohnheit, darüber denkt niemand nach.', tipp: 'Sehr nützlich in Debatten: <b>Das ist reine Gewohnheit</b> heißt, es gibt keinen guten Grund dafür. Und <b>sich etwas angewöhnen</b> ist der Weg dorthin.', say: 'Das ist einfach Gewohnheit, darüber denkt niemand nach.' },
+      { bild: 'amanda/sz-telefonieren.webp', alt: 'Eine Person telefoniert und macht sich Notizen', art: 'der', wort: 'Kontakt', kurz: 'die Verbindung zu anderen Menschen', bsp: 'Über Small Talk entsteht der erste Kontakt.', tipp: 'Feste Wendungen: <b>Kontakt aufnehmen</b> (anfangen), <b>in Kontakt bleiben</b> (weitermachen), <b>den Kontakt verlieren</b> (aufhören). Alle drei brauchst du oft.', say: 'Über Small Talk entsteht der erste Kontakt.' },
+      { bild: 'amanda/sz-feste.webp', alt: 'Menschen feiern zusammen an einem langen Tisch', art: 'die', wort: 'Stimmung', kurz: 'wie sich alle gerade fühlen', bsp: 'Ein Satz kann die ganze Stimmung kippen.', tipp: '<b>Die Stimmung kippt</b> heißt: Sie wird plötzlich schlecht. Genau das passiert, wenn im Small Talk ein falsches Thema kommt — und darum geht es heute.', say: 'Ein Satz kann die ganze Stimmung kippen.' },
+      { bild: 'amanda/sz-sozial.webp', alt: 'Menschen sitzen im Kreis und sprechen miteinander', art: 'der', wort: 'Kompromiss', kurz: 'wenn beide Seiten etwas nachgeben', bsp: 'Am Ende finden wir bestimmt einen Kompromiss.', tipp: 'Einen Kompromiss <b>findet</b> oder <b>schließt</b> man. In der Debatte ist das dein Schlusssatz, wenn keine Seite gewinnt — und das ist völlig in Ordnung.', say: 'Am Ende finden wir bestimmt einen Kompromiss.' }
+    ],
+    spiel: { text: '💡 <strong>Spiel „Gegenseite“:</strong> Einer sagt einen Satz mit seiner echten Meinung. Der andere muss sofort das Gegenteil vertreten — und zwar so, dass es überzeugend klingt. Danach tauschen.' }
+  },
+
+  konzepte: {
+    tab: '🔍 Drei Werkzeuge',
+    zuerst: 'dreier',
+    h2: 'Zustimmen, widersprechen',
+    hl: 'oder dazwischen?',
+    ssub: 'In einer Debatte braucht man nur drei Bewegungen. Wer sie kennt, muss nicht mehr überlegen, wie er anfängt.',
+    dreier: [
+      { emoji: '👍', wort: 'Zustimmen', was: 'und dann etwas dazugeben', bsp: '<b>Da haben Sie recht</b>, und ich würde noch weiter gehen: …' },
+      { emoji: '↩️', wort: 'Zustimmen und drehen', was: 'der stärkste Zug überhaupt', bsp: '<b>Stimmt</b>, aber genau deshalb …' },
+      { emoji: '✋', wort: 'Widersprechen', was: 'freundlich, aber deutlich', bsp: '<b>Das sehe ich anders</b>, weil …' }
+    ],
+    paare: [
+      {
+        jaLabel: 'So klingt es stark', ja: 'Stimmt, das kostet Zeit. Aber genau diese zwei Minuten entscheiden, ob man mich später fragt.',
+        jaWarumLabel: 'Warum das funktioniert', jaWarum: 'Du gibst dem anderen recht und drehst sein Argument um. Er kann dir nicht widersprechen, ohne sich selbst zu widersprechen — das ist der beste Zug in jeder Debatte.',
+        noLabel: 'So klingt es schwach', no: 'Nein, das stimmt überhaupt nicht.',
+        noWarumLabel: 'Das Problem', noWarum: 'Ein reines Nein bringt nichts Neues. Die andere Seite wiederholt ihr Argument, und ihr steht nach zwei Minuten genau da, wo ihr angefangen habt.'
+      },
+      {
+        jaLabel: 'So klingt es überzeugend', ja: 'Bei mir im Haus grüßt niemand — und trotzdem hat mir die Nachbarin schon zweimal ein Paket angenommen.',
+        jaWarumLabel: 'Warum das funktioniert', jaWarum: 'Ein Beispiel aus dem eigenen Leben schlägt jede allgemeine Aussage. Es ist konkret, niemand kann es bestreiten, und alle können es sich vorstellen.',
+        noLabel: 'So klingt es leer', no: 'In Deutschland sind die Menschen eben kalt.',
+        noWarumLabel: 'Das Problem', noWarum: 'Ein Satz über alle Menschen eines Landes ist kein Argument, sondern ein Vorurteil. Und er lässt sich mit einem einzigen Gegenbeispiel kaputtmachen.'
+      },
+      {
+        jaLabel: 'So bleibt es freundlich', ja: 'Das sehe ich anders, aber ich verstehe, wie Sie darauf kommen.',
+        jaWarumLabel: 'Warum das funktioniert', jaWarum: 'Du sagst klar, dass du anderer Meinung bist, und lässt die andere Person trotzdem im Recht stehen. So bleibt das Gespräch offen statt verhärtet.',
+        noLabel: 'So wird es persönlich', no: 'Das kann nur jemand sagen, der noch nie hier gearbeitet hat.',
+        noWarumLabel: 'Das Problem', noWarum: 'Damit greifst du die Person an, nicht das Argument. Ab da geht es nicht mehr um die Sache, und gewinnen kann niemand mehr.'
+      }
+    ],
+    hilfe: {
+      knopf: '🆘 Wie fange ich meine Wortmeldung an?',
+      vor: 'Vier Anfänge, mit denen du nie danebenliegst:',
+      punkte: [
+        '<b>Zustimmen:</b> <i>Da haben Sie recht — und ich würde sogar noch weiter gehen.</i>',
+        '<b>Drehen:</b> <i>Stimmt. Aber genau deshalb …</i>',
+        '<b>Widersprechen:</b> <i>Das sehe ich anders, weil …</i>',
+        '<b>Beispiel bringen:</b> <i>Bei mir war das so: …</i>'
+      ],
+      nach: 'Und wenn du zwischendrin den Faden verlierst: sag <i>Moment, ich sortiere kurz.</i> Das ist völlig normal, auch unter Deutschen — und es klingt tausendmal besser als ein Satz, der irgendwo aufhört.'
+    },
+    tipp: { art: 'yellow', text: '🎯 <strong>Zu zweit, zwei Minuten:</strong> Einer nennt eine Meinung, der andere antwortet dreimal hintereinander — einmal zustimmend, einmal drehend, einmal widersprechend. Derselbe Inhalt, drei Bewegungen.' }
+  },
+
+  saetze: {
+    h2: 'Vier Bausteine',
+    hl: 'für deine Wortmeldung',
+    ssub: 'Meinung sagen, begründen, Beispiel bringen, auf den anderen reagieren. In dieser Reihenfolge hört dir jeder zu.',
+    akkLabel: 'der Schritt',
+    mengeLabel: 'was du damit erreichst',
+    a2: [
+      { titel: '1 · 💬 Meinung sagen', chips: ['Ich finde, …', 'Meiner Meinung nach …', 'Für mich ist klar: …', 'Ich bin dafür, weil …'], bsp: 'Ich finde, ein bisschen Small Talk gehört einfach dazu.', say: 'Ich finde, ein bisschen Small Talk gehört einfach dazu.' },
+      { titel: '2 · 🔗 Begründen', chips: ['… weil …', 'Der Grund ist einfach: …', 'Sonst passiert es, dass …', 'Das merkt man daran, dass …'], bsp: 'Ich finde das gut, weil man sonst gar nicht ins Gespräch kommt.', say: 'Ich finde das gut, weil man sonst gar nicht ins Gespräch kommt.' },
+      { titel: '3 · 📌 Beispiel bringen', chips: ['Bei mir war das so: …', 'Letzte Woche zum Beispiel …', 'Ich kenne jemanden, der …', 'In meinem Haus ist es so, dass …'], bsp: 'Bei mir war das so: Nach zwei Minuten über das Wetter hat mich die Kollegin mit zum Mittagessen genommen.', say: 'Bei mir war das so: Nach zwei Minuten über das Wetter hat mich die Kollegin mit zum Mittagessen genommen.' },
+      { titel: '4 · ↔️ Reagieren', chips: ['Da haben Sie recht, aber …', 'Das sehe ich anders.', 'Stimmt, und trotzdem …', 'Wie meinen Sie das genau?'], bsp: 'Da haben Sie recht, aber genau deshalb finde ich es wichtig.', say: 'Da haben Sie recht, aber genau deshalb finde ich es wichtig.' }
+    ],
+    b1: [
+      { titel: '1 · 💬 Meinung mit Einschränkung', chips: ['Grundsätzlich bin ich dafür, allerdings …', 'Ich neige zu der Meinung, dass …', 'In den meisten Fällen würde ich sagen: …', 'Da bin ich zwiegespalten, aber …'], bsp: 'Grundsätzlich bin ich dafür, allerdings nur, solange sich niemand verstellen muss.', say: 'Grundsätzlich bin ich dafür, allerdings nur, solange sich niemand verstellen muss.' },
+      { titel: '2 · 🔗 Sauber begründen', chips: ['Das liegt vor allem daran, dass …', 'Der entscheidende Punkt ist: …', 'Man darf dabei nicht vergessen, dass …', 'Das führt am Ende dazu, dass …'], bsp: 'Der entscheidende Punkt ist: Ohne diese zwei Minuten wird man nie gefragt, ob man mitkommt.', say: 'Der entscheidende Punkt ist: Ohne diese zwei Minuten wird man nie gefragt, ob man mitkommt.' },
+      { titel: '3 · 📌 Beispiel mit Wirkung', chips: ['Ein Beispiel aus meinem Alltag: …', 'Genau das habe ich erlebt, als …', 'Bei uns in der Firma läuft es so, dass …', 'Ich habe lange geglaubt, dass … — bis …'], bsp: 'Ich habe lange geglaubt, dass hier niemand redet — bis ich einmal selbst angefangen habe.', say: 'Ich habe lange geglaubt, dass hier niemand redet — bis ich einmal selbst angefangen habe.' },
+      { titel: '4 · ↔️ Drehen statt streiten', chips: ['Stimmt — und genau deshalb …', 'Ihr Argument spricht eher für meine Seite, weil …', 'Das würde ich sogar unterschreiben, nur folgt daraus …', 'Ich verstehe, wie Sie darauf kommen, sehe es aber anders.'], bsp: 'Stimmt, es kostet Zeit — und genau deshalb lohnt es sich, sie einmal zu investieren.', say: 'Stimmt, es kostet Zeit — und genau deshalb lohnt es sich, sie einmal zu investieren.' }
+    ],
+    tipp: { art: 'teal', text: '📣 <strong>Reihum:</strong> Jeder sagt einen Satz zur These und muss dabei an den Satz des Vorredners anknüpfen — mit <i>stimmt</i>, <i>da haben Sie recht</i> oder <i>das sehe ich anders</i>.' }
+  },
+
+  dialoge: {
+    h2: 'Vier Gespräche —',
+    hl: 'zwei Runden',
+    ssub: '<b>Runde 1:</b> Lest zu zweit laut. <b>Runde 2:</b> Klappt die Zeilen zu und streitet frei — nur die Stichwörter bleiben.',
+    liste: [
+      {
+        bild: 'amanda/a-kaffee.webp', alt: 'Zwei Kaffeebecher auf einem Tisch in einer Büroküche',
+        titel: 'In der Pause',
+        situation: 'A findet Small Talk anstrengend und sagt das. B hält dagegen, ohne A zu belehren.',
+        zeilen: [
+          { wer: 'a', text: 'Ich verstehe nicht, warum alle jeden Morgen über das Wetter reden.' },
+          { wer: 'b', text: 'Da haben Sie recht, gesagt wird dabei wenig. Aber ohne diese zwei Minuten kennt man sich nie.', cue: 'Erst <b>zustimmen</b>, dann drehen. Genau dieser Aufbau macht eine Antwort stark — und nimmt dem anderen den Ärger.' },
+          { wer: 'a', text: 'Trotzdem meint es doch niemand ernst.' },
+          { wer: 'b', text: 'Muss es auch nicht. Das ist reine Höflichkeit, und die hält den Kontakt offen.', cue: '<b>Reine Höflichkeit</b> — und das Argument dahinter: Nicht jedes Gespräch muss tief sein, um nützlich zu sein.' },
+          { wer: 'a', text: 'Bei uns zu Hause fragt man sofort, wie es der Familie geht.' },
+          { wer: 'b', text: 'Das finde ich schön. Hier braucht Nähe einfach länger, das ist der ganze Unterschied.', cue: 'Kein Vergleich mit Gewinner und Verlierer. <b>Das ist der ganze Unterschied</b> beendet den Streit, ohne dass jemand nachgeben muss.' }
+        ]
+      },
+      {
+        bild: 'amanda/sz-ankommen.webp', alt: 'Eine Person mit Koffer in einer fremden Stadt',
+        titel: 'Muss man sich anpassen?',
+        situation: 'A sagt, man müsse sich anpassen. B findet, das gehe zu weit. Beide bleiben freundlich.',
+        zeilen: [
+          { wer: 'a', text: 'Wer hier lebt, sollte es auch so machen wie die Leute hier.' },
+          { wer: 'b', text: 'Bei Regeln ja. Aber wie ich mit meinen Nachbarn rede, entscheide ich selbst.', cue: 'B trennt zwei Dinge: <b>Regeln</b> und <b>Gewohnheiten</b>. Diese Unterscheidung ist heute Abend der stärkste Trumpf.' },
+          { wer: 'a', text: 'Und wenn die Nachbarn das komisch finden?' },
+          { wer: 'b', text: 'Dann gewöhnen sie sich daran. Ich habe mich ja auch an vieles gewöhnt.', cue: '<b>sich gewöhnen an</b> plus Akkusativ. Und das Argument dreht das Thema um: Anpassung ist keine Einbahnstraße.' },
+          { wer: 'a', text: 'Da ist was dran. Ich hätte am Anfang auch gern jemanden gehabt, der das erklärt.' },
+          { wer: 'b', text: 'Genau. Und deshalb finde ich einen Kompromiss besser als eine Regel.', cue: 'Ein <b>Kompromiss</b> als Schluss — der eleganteste Weg aus einer Debatte, in der beide recht haben.' }
+        ]
+      },
+      {
+        bild: 'amanda/sz-feste.webp', alt: 'Menschen sitzen an einem langen Tisch und feiern',
+        titel: 'Auf der Feier',
+        situation: 'A hat auf einer Feier etwas Falsches gefragt und die Stimmung gekippt. B erklärt, was passiert ist.',
+        zeilen: [
+          { wer: 'a', text: 'Ich habe nur gefragt, was die Wohnung kostet. Warum war es danach so still?' },
+          { wer: 'b', text: 'Das gilt hier als privat. Nicht schlimm, aber die Stimmung kippt dann kurz.', cue: '<b>Die Stimmung kippt</b> — sie wird plötzlich schlecht. Und <i>nicht schlimm</i> nimmt A sofort die Peinlichkeit.' },
+          { wer: 'a', text: 'Das ist doch albern. Jeder weiß doch ungefähr, was Mieten kosten.' },
+          { wer: 'b', text: 'Stimmt eigentlich. Es ist reine Gewohnheit — einen guten Grund gibt es nicht.', cue: 'B gibt A recht und behält trotzdem die Realität im Blick. <b>Reine Gewohnheit</b> heißt: kein Argument, nur üblich.' },
+          { wer: 'a', text: 'Und was hätte ich stattdessen fragen sollen?' },
+          { wer: 'b', text: 'Ob die Gegend gut ist. Damit bekommst du dieselbe Information, nur höflicher.', cue: 'Der praktischste Satz des Abends: Dieselbe Frage anders stellen. Das funktioniert bei fast jedem heiklen Thema.' }
+        ]
+      },
+      {
+        bild: 'amanda/sz-buero.webp', alt: 'Zwei Kolleginnen besprechen etwas am Schreibtisch',
+        titel: 'Zwei Meinungen im Team',
+        situation: 'A und B sollen entscheiden, ob die Besprechung mit einer privaten Runde anfängt. Sie sind nicht einer Meinung.',
+        zeilen: [
+          { wer: 'a', text: 'Diese Runde am Anfang kostet jedes Mal zehn Minuten.' },
+          { wer: 'b', text: 'Ich sehe das anders. Seit wir das machen, sagen auch die Stillen etwas.', cue: '<b>Ich sehe das anders</b> plus ein Grund. Klarer Widerspruch, aber kein Angriff — genau das soll heute jeder üben.' },
+          { wer: 'a', text: 'Kann sein. Trotzdem sitzen wir dann länger.' },
+          { wer: 'b', text: 'Stimmt. Aber wir sparen die Zeit hinterher, weil weniger nachgefragt wird.', cue: 'Zustimmen und drehen — das Argument des anderen wird zum eigenen. Der beste Zug, den es gibt.' },
+          { wer: 'a', text: 'Also fünf Minuten statt zehn?' },
+          { wer: 'b', text: 'Damit wäre ich einverstanden. Das ist ein fairer Kompromiss.', cue: '<b>Damit wäre ich einverstanden</b> und <b>ein fairer Kompromiss</b> — so endet eine Debatte, in der beide etwas mitnehmen.' }
+        ]
+      }
+    ],
+    tipp: { art: 'yellow', text: '🎭 <strong>Und jetzt ihr:</strong> Spielt Gespräch 2 mit einem Beispiel aus eurem eigenen Alltag. Regel: Jeder muss dem anderen mindestens einmal recht geben, bevor er widerspricht.' }
+  },
+
+  grammatik: {
+    h2: '🧩 Weil, obwohl, trotzdem:',
+    hl: 'die Wörter, die Meinungen verbinden',
+    ssub: 'Eine Meinung ohne Verbindungswort bleibt eine Behauptung. Vier Wörter reichen, damit daraus ein Argument wird.',
+    intro: 'Drei davon schicken das Verb ans Ende: <b>weil</b>, <b>obwohl</b> und <b>dass</b>. Eins nicht: nach <b>trotzdem</b> und <b>deshalb</b> kommt das Verb sofort. Genau hier verrutscht es am häufigsten.',
+    kette: [
+      { emoji: '💬', rolle: 'Meinung', bsp: 'Ich finde Small Talk wichtig,' },
+      { emoji: '🔗', rolle: 'weil', bsp: 'weil' },
+      { emoji: '🧱', rolle: 'Grund', bsp: 'man sonst nie ins Gespräch' },
+      { emoji: '🔚', rolle: 'Verb hinten', bsp: 'kommt.' }
+    ],
+    felder: [
+      { rolle: 'Es kostet Zeit,', wort: 'Es kostet Zeit,' },
+      { rolle: 'trotzdem', wort: 'trotzdem' },
+      { rolle: 'Verb sofort', wort: 'mache', hervor: true },
+      { rolle: 'Rest', wort: 'ich es gern.' }
+    ],
+    bloecke: [
+      {
+        h2: 'Vier Verbinder,',
+        hl: 'zwei Bauweisen',
+        ssub: 'Die eine Hälfte schickt das Verb nach hinten, die andere nicht. Mehr musst du dir nicht merken.',
+        dreier: [
+          { emoji: '🔚', wort: 'weil / obwohl / dass', was: 'Verb ganz ans Ende', bsp: 'Ich rede gern, <b>weil</b> man sich sonst nie <u>kennenlernt</u>.' },
+          { emoji: '➡️', wort: 'deshalb / trotzdem', was: 'Verb kommt sofort', bsp: 'Es kostet Zeit, <b>trotzdem</b> <u>mache</u> ich es gern.' },
+          { emoji: '🤝', wort: 'aber / und / denn', was: 'ändert gar nichts', bsp: 'Es kostet Zeit, <b>aber</b> ich <u>mache</u> es gern.' }
+        ],
+        chips: ['weil', 'obwohl', 'dass', 'deshalb', 'trotzdem', 'aber', 'denn', 'sonst', 'außerdem', 'zum Beispiel', 'meiner Meinung nach', 'im Gegenteil']
+      },
+      {
+        h2: 'Obwohl oder trotzdem?',
+        hl: 'Dasselbe sagen, anders bauen',
+        ssub: 'Beide zeigen einen Gegensatz. Der Unterschied liegt nur im Satzbau — und den hört man sofort.',
+        paare: [
+          {
+            jaLabel: 'So ist es richtig', ja: 'Obwohl es Zeit kostet, mache ich es gern. — Es kostet Zeit, trotzdem mache ich es gern.',
+            jaWarumLabel: 'Warum das stimmt', jaWarum: 'Nach <b>obwohl</b> steht das Verb am Ende des Nebensatzes (<i>kostet</i>). Nach <b>trotzdem</b> kommt das Verb sofort (<i>mache ich</i>). Zwei Bauweisen, ein Inhalt.',
+            noLabel: 'So klingt es falsch', no: 'Obwohl es kostet Zeit, ich mache es gern.',
+            noWarumLabel: 'Das Problem', noWarum: 'Beide Hälften sind vertauscht. Merk dir das Paar als Block: <b>obwohl … kostet</b> gegen <b>trotzdem mache ich</b>. Sprich beide Versionen einmal laut, dann sitzt es.'
+          }
+        ]
+      }
+    ],
+    bauH2: '🧱 Bau die Sätze selbst',
+    bauSsub: 'Tippe die Teile in der richtigen Reihenfolge an. Achte darauf, wohin das Verb gehört.',
+    storyH2: '📖 Und jetzt im Zusammenhang',
+    storySsub: 'Eine kurze Stellungnahme zur heutigen These. Wähle in jeder Lücke das passende Verbindungswort.',
+    hilfe: {
+      knopf: '🆘 Weil oder deshalb?',
+      vor: 'Drei Fragen, dann steht der Satz:',
+      punkte: [
+        '<b>Nennst du den Grund?</b> Dann <b>weil</b> — und das Verb geht ans Ende.',
+        '<b>Nennst du die Folge?</b> Dann <b>deshalb</b> — und das Verb kommt sofort danach.',
+        '<b>Ist es ein Gegensatz?</b> <b>obwohl</b> schickt das Verb ans Ende, <b>trotzdem</b> nicht.',
+        '<b>Und der einfachste Weg:</b> <i>aber</i> und <i>denn</i> ändern nie etwas an der Wortstellung.'
+      ],
+      nach: 'Ein Trick für das Gespräch: Wenn du dir unsicher bist, mach zwei kurze Sätze und verbinde sie mit <i>aber</i>. Das ist immer richtig, und im Sprechen klingt es sogar natürlicher als ein langer Nebensatz.'
+    }
+  },
+
+  rollenspiele: {
+    h2: '🎭 Drei Situationen',
+    hl: 'zu zweit',
+    ssub: 'Einer vertritt die eine Seite, einer die andere — auch wenn er anders denkt. Danach tauschen, und beim zweiten Mal ohne die Sätze unten.',
+    liste: [
+      {
+        titel: 'Zwei Minuten oder gleich zur Sache?',
+        situation: 'A will Besprechungen sofort mit dem Thema anfangen. B besteht auf der kurzen privaten Runde am Anfang. Beide haben gute Gründe.',
+        a2: ['Das kostet jedes Mal zehn Minuten', 'Wir könnten früher fertig sein', 'Ich sehe da keinen Nutzen', 'Von mir aus fünf Minuten'],
+        b1: ['Seit wir das machen, sagen auch die Stillen etwas', 'Wir sparen die Zeit hinterher, weil weniger nachgefragt wird', 'Ohne den Anfang redet nachher nur, wer sowieso redet', 'Fünf Minuten wären ein fairer Kompromiss'],
+        gut: 'Beide haben mindestens einmal zugestimmt, bevor sie widersprochen haben. Und am Ende stand ein Vorschlag, kein Sieg.'
+      },
+      {
+        titel: 'Die Frage, die kippte',
+        situation: 'A hat auf einer Feier nach der Miete gefragt und findet die Reaktion übertrieben. B erklärt, warum das hier so ist — ohne A zu belehren.',
+        a2: ['Ich habe doch nur gefragt', 'Das ist doch kein Geheimnis', 'Bei uns ist das ganz normal', 'Was hätte ich sagen sollen?'],
+        b1: ['Stimmt eigentlich, es ist reine Gewohnheit und kein guter Grund', 'Nicht schlimm, aber die Stimmung kippt dann kurz', 'Frag lieber, ob die Gegend gut ist, dann erfährst du dasselbe', 'Ich finde es auch albern, trotzdem ist es hier so'],
+        gut: 'B hat A recht gegeben und trotzdem erklärt, wie es läuft. Niemand hat über ein ganzes Land gesprochen, sondern über eine Gewohnheit.'
+      },
+      {
+        titel: 'Wie viel Anpassung?',
+        situation: 'A findet, wer hier lebt, sollte es machen wie die Leute hier. B trennt zwischen Regeln und Gewohnheiten. Am Ende sucht ihr einen Kompromiss.',
+        a2: ['Man sollte es machen wie die Leute hier', 'Sonst versteht dich niemand', 'Ein bisschen Anpassung gehört dazu', 'Da ist was dran'],
+        b1: ['Bei Regeln stimme ich sofort zu, bei Gewohnheiten nicht', 'Wie ich mit meinen Nachbarn rede, entscheide ich selbst', 'Anpassung ist keine Einbahnstraße, die anderen gewöhnen sich auch', 'Einen Kompromiss finde ich besser als eine Regel'],
+        gut: 'Der Unterschied zwischen <i>Regel</i> und <i>Gewohnheit</i> ist im Gespräch vorgekommen. Und beide haben mit einem Beispiel aus dem eigenen Leben argumentiert, nicht mit einer allgemeinen Aussage.'
+      }
+    ]
+  },
+
+  challenge: {
+    ssub: 'Neunzig Sekunden zu einem Wort: Sag deine Meinung, nenne einen Grund, bring ein Beispiel — und halte durch, bis die Zeit um ist.',
+    hilfe: {
+      knopf: '🆘 Mir fällt nichts ein',
+      vor: 'Vier Sätze, dann trägt dich die Zeit:',
+      punkte: [
+        '<b>Meinung:</b> <i>Meiner Meinung nach ist das …</i>',
+        '<b>Grund:</b> <i>Das liegt vor allem daran, dass …</i>',
+        '<b>Beispiel:</b> <i>Bei mir war das so: …</i>',
+        '<b>Gegenseite:</b> <i>Man könnte natürlich sagen, dass … — aber …</i>'
+      ],
+      nach: 'Und wenn du in der Mitte hängst: nimm die Gegenseite. Sag <i>Man könnte natürlich auch sagen …</i> und argumentiere dagegen. Das füllt die zweite Hälfte fast von allein.'
+    },
+    tipp: { art: 'yellow', text: '⏱️ <strong>Spielregel:</strong> In jeder Runde muss <u>ein Beispiel aus deinem eigenen Leben</u> vorkommen. Wer nur allgemein bleibt, fängt noch einmal an.' }
+  },
+
+  ueben: { tipp: { art: 'teal', text: '📣 <strong>Danach laut:</strong> Einer sagt eine Meinung, der Nächste antwortet mit <i>Stimmt, aber genau deshalb …</i> Reihum, ohne Pause.' } },
+
+  hausaufgabe: {
+    h2: '📮 Deine Hausaufgabe bis',
+    hl: 'Montag',
+    ssub: 'Vier kleine Aufgaben, zusammen etwa 25 Minuten. Nächste Woche fangen wir mit einem neuen Thema an.',
+    warum: { text: '💡 <strong>Warum das hilft:</strong> In jeder Prüfung ab B1 musst du eine Meinung sagen und begründen. Und im Alltag ebenso — beim Elternabend, in der Besprechung, beim Streit im Haus. Wer zustimmen kann, ohne nachzugeben, kommt fast immer weiter als der, der nur widerspricht.' },
+    a2: [
+      { emoji: '💬', titel: 'Zehn Meinungen', zeit: '6 Min', text: 'Schreib zehn Sätze mit deiner Meinung — jeden mit <i>weil</i> und einem Grund. Themen: Small Talk, Nachbarn, Anpassung, Höflichkeit.' },
+      { emoji: '🔄', titel: 'Dieselben zehn dagegen', zeit: '7 Min', text: 'Schreib zu jedem Satz das Gegenteil — und begründe es genauso gut. Auch wenn du es nicht so meinst.' },
+      { emoji: '🎙️', titel: 'Eine Minute These', zeit: '5 Min', text: 'Nimm eine Sprachnachricht auf: Sag eine Minute lang, warum du für oder gegen die heutige These bist. Mit einem Beispiel aus deinem Leben.' },
+      { emoji: '👂', titel: 'Zuhören', zeit: '7 Min', text: 'Such eine deutsche Diskussionssendung und notier fünf Sätze, mit denen jemand widerspricht, ohne unhöflich zu werden.' }
+    ],
+    b1: [
+      { emoji: '📝', titel: 'Eine kurze Stellungnahme', zeit: '8 Min', text: 'Schreib zehn Sätze zur These: Meinung, zwei Gründe, ein Beispiel, das stärkste Gegenargument und deine Antwort darauf.' },
+      { emoji: '↩️', titel: 'Achtmal drehen', zeit: '6 Min', text: 'Schreib acht Antworten nach dem Muster <i>Stimmt — und genau deshalb …</i> Nimm dafür Argumente, die gegen dich sprechen.' },
+      { emoji: '🎙️', titel: 'Zwei Minuten Gegenseite', zeit: '6 Min', text: 'Nimm auf, wie du die Position vertrittst, die du eigentlich ablehnst. So überzeugend wie möglich, ohne Ironie.' },
+      { emoji: '🔍', titel: 'Verbinder sammeln', zeit: '5 Min', text: 'Such in einem deutschen Text acht Verbindungswörter und schreib zu jedem einen eigenen Satz. Achte auf die Stellung des Verbs.' }
+    ],
+    hilfeA2: {
+      knopf: '💡 Beispiel ansehen (Aufgabe 1)',
+      vor: 'So sehen die zehn Sätze aus:',
+      punkte: [
+        '<i>Ich finde Small Talk gut, <b>weil</b> man sonst nie ins Gespräch <u>kommt</u>.</i>',
+        '<i>Ich rede gern mit Nachbarn, <b>weil</b> man sich dann besser <u>hilft</u>.</i>',
+        '<i>Ein bisschen Anpassung ist normal, <b>weil</b> jedes Land eigene Gewohnheiten <u>hat</u>.</i>',
+        '<i>Höflichkeit ist nicht gelogen, <b>weil</b> sie das Leben leichter <u>macht</u>.</i>',
+        '<i>Ich frage nicht nach Geld, <b>weil</b> das hier als privat <u>gilt</u>.</i>'
+      ],
+      nach: 'Ein einziger Test genügt: Steht nach <i>weil</i> das Verb ganz am Ende? Wenn nicht, ist es entweder ein Fehler — oder du wolltest eigentlich <i>denn</i> sagen, und dann ändert sich nichts an der Wortstellung.'
+    },
+    hilfeB1: {
+      knopf: '💡 Beispiel ansehen (Aufgabe 1)',
+      vor: 'Das ist der Aufbau, der immer trägt:',
+      punkte: [
+        '<b>Meinung:</b> <i>Grundsätzlich halte ich Small Talk für nützlich.</i>',
+        '<b>Grund 1:</b> <i>Er entscheidet darüber, ob man überhaupt angesprochen wird.</i>',
+        '<b>Grund 2:</b> <i>Und er kostet weniger, als man denkt — zwei Minuten am Tag.</i>',
+        '<b>Beispiel:</b> <i>Bei mir hat genau so ein Gespräch dazu geführt, dass ich mittags mitgehen durfte.</i>',
+        '<b>Gegenargument und Antwort:</b> <i>Man könnte sagen, das sei unehrlich. Aber unehrlich wäre es erst, wenn ich etwas verspreche, das ich nicht halte.</i>'
+      ],
+      nach: 'Ein Hinweis, der in jeder Prüfung zählt: Nenne das stärkste Argument der Gegenseite selbst. Wer das tut, wirkt sicher — und nimmt dem anderen genau den Satz weg, mit dem er angefangen hätte.'
+    },
+    abgabe: 'Schick mir bis Montag 12 Uhr deine Stellungnahme und die Sprachnachricht — ich sage dir, welches Argument wirklich trägt und welches nur laut klingt.',
+    ausblick: 'Nächste Woche fangen wir mit einem neuen Thema an. Die Sätze zum Zustimmen und Widersprechen bleiben aber im Lernbereich — die brauchst du in jeder Prüfung wieder.'
+  },
+
+  daten: {
+    sk: [
+      'Sag deine Meinung zu Small Talk — und danach das Gegenteil, genauso überzeugend.',
+      'Widersprich jemandem, ohne unhöflich zu werden. Drei Sätze.',
+      'Erzähl von einem Moment, in dem die Stimmung gekippt ist.',
+      'Was hast du hier übernommen, ohne es zu merken?',
+      'Wo ziehst du eine Grenze und sagst: Das mache ich nicht mit?',
+      'Stimm einem Argument zu und dreh es dann um.',
+      'Ist Höflichkeit ohne echtes Interesse gelogen? Begründe.',
+      'Nenne ein Beispiel aus deinem Alltag statt einer allgemeinen Aussage.',
+      'Finde einen Kompromiss zwischen Ehrlichkeit und Höflichkeit.',
+      'Erklär den Unterschied zwischen einer Regel und einer Gewohnheit.'
+    ],
+    w90: [
+      { w: 'die Meinung', b: 'vok-bild/die-meinung.webp', h: ['finden', 'begründen', 'anders sehen', 'überzeugen', 'der Standpunkt'] },
+      { w: 'das Argument', b: 'amanda/a-zeigen.webp', h: ['bringen', 'der Grund', 'das Beispiel', 'stark', 'widerlegen'] },
+      { w: 'der Eindruck', b: 'amanda/sz-bewerbung.webp', h: ['machen', 'wirken', 'der erste', 'täuschen', 'bleiben'] },
+      { w: 'die Höflichkeit', b: 'amanda/a-willkommen.webp', h: ['freundlich', 'grüßen', 'die Form', 'rein', 'angenehm'] },
+      { w: 'die Nähe', b: 'amanda/sz-freunde.webp', h: ['vertraut', 'die Freundschaft', 'brauchen', 'Zeit', 'zulassen'] },
+      { w: 'die Distanz', b: 'amanda/sz-unterwegs.webp', h: ['der Abstand', 'kühl', 'wahren', 'fremd', 'angenehm'] },
+      { w: 'die Anpassung', b: 'amanda/sz-ankommen.webp', h: ['sich anpassen', 'die Regel', 'fremd', 'lernen', 'die Grenze'] },
+      { w: 'die Ehrlichkeit', b: 'amanda/sz-heikel.webp', h: ['ehrlich', 'direkt', 'die Wahrheit', 'wehtun', 'offen'] },
+      { w: 'die Gewohnheit', b: 'amanda/a-uhr.webp', h: ['immer so', 'sich angewöhnen', 'kein Grund', 'üblich', 'ändern'] },
+      { w: 'der Kompromiss', b: 'amanda/sz-sozial.webp', h: ['finden', 'nachgeben', 'fair', 'beide Seiten', 'die Lösung'] }
+    ],
+    quiz: [
+      { q: 'Welche Antwort ist in einer Debatte am stärksten?', o: ['Stimmt — und genau deshalb …', 'Nein, das stimmt nicht.', 'Das ist doch albern.', 'Da kann ich nichts zu sagen.'], c: 0, e: 'Zustimmen und drehen: Du gibst dem anderen recht und machst sein Argument zu deinem. Er kann dir nicht widersprechen, ohne sich selbst zu widersprechen.' },
+      { q: 'Wo steht das Verb nach <u>weil</u>?', o: ['ganz am Ende', 'an Position zwei', 'direkt nach weil', 'ganz am Anfang'], c: 0, e: '<b>weil</b>, <b>obwohl</b> und <b>dass</b> schicken das Verb ans Ende. <b>deshalb</b> und <b>trotzdem</b> nicht — dort kommt das Verb sofort.' },
+      { q: 'Welcher Satz ist richtig?', o: ['Es kostet Zeit, trotzdem mache ich es gern.', 'Es kostet Zeit, trotzdem ich mache es gern.', 'Trotzdem es Zeit kostet, ich mache es gern.', 'Es kostet Zeit, trotzdem ich es gern mache.'], c: 0, e: 'Nach <b>trotzdem</b> kommt sofort das Verb: <i>trotzdem <u>mache</u> ich</i>. Mit <b>obwohl</b> wäre es andersherum: <i>obwohl es Zeit <u>kostet</u></i>.' },
+      { q: 'Was überzeugt in einer Debatte am meisten?', o: ['ein Beispiel aus dem eigenen Leben', 'eine Aussage über ein ganzes Land', 'ein lauter Ton', 'viele Fremdwörter'], c: 0, e: 'Ein konkretes Beispiel kann niemand bestreiten. Eine Aussage über alle Menschen eines Landes dagegen fällt mit einem einzigen Gegenbeispiel um.' },
+      { q: 'Wie widersprichst du freundlich?', o: ['Das sehe ich anders, weil …', 'Das ist völlig falsch.', 'Das kann nur sagen, wer …', 'Darüber diskutiere ich nicht.'], c: 0, e: 'Widerspruch plus Grund. Die anderen drei greifen entweder die Person an oder beenden das Gespräch — beides bringt dich nicht weiter.' },
+      { q: 'Was bedeutet <u>die Stimmung kippt</u>?', o: ['Sie wird plötzlich schlecht.', 'Alle lachen.', 'Es wird lauter.', 'Das Gespräch endet.'], c: 0, e: '<b>Kippen</b> heißt umfallen — von gut nach schlecht, in einem Moment. Genau das passiert, wenn im Small Talk ein heikles Thema kommt.' },
+      { q: 'Welcher Satz nennt einen Gegensatz mit Verb am Ende?', o: ['Obwohl es Zeit kostet …', 'Trotzdem mache ich es …', 'Aber ich mache es …', 'Deshalb mache ich es …'], c: 0, e: 'Nur <b>obwohl</b> ist ein Nebensatz. <i>trotzdem</i> und <i>deshalb</i> stellen das Verb nach vorn, <i>aber</i> ändert gar nichts.' },
+      { q: 'Was ist ein <u>Kompromiss</u>?', o: ['Beide Seiten geben etwas nach.', 'Eine Seite gewinnt.', 'Niemand sagt mehr etwas.', 'Man vertagt alles.'], c: 0, e: 'Einen Kompromiss <b>findet</b> oder <b>schließt</b> man. In der Debatte ist er der beste Schluss, wenn beide Seiten gute Gründe haben.' }
+    ],
+    gap: [
+      { t: 'Ich rede gern mit Fremden, ___ man sich sonst nie kennenlernt.', o: ['weil', 'deshalb', 'trotzdem', 'denn dass'], a: 'weil' },
+      { t: 'Es kostet Zeit, ___ mache ich es gern.', o: ['trotzdem', 'obwohl', 'weil', 'dass'], a: 'trotzdem' },
+      { t: '___ es Zeit kostet, mache ich es gern.', o: ['Obwohl', 'Trotzdem', 'Deshalb', 'Denn'], a: 'Obwohl' },
+      { t: 'Ich habe den ___, dass es hier anders läuft.', o: ['Eindruck', 'Kompromiss', 'Kontakt', 'Vorschlag'], a: 'Eindruck' },
+      { t: 'Meiner ___ nach ist das übertrieben.', o: ['Meinung', 'Ehrlichkeit', 'Gewohnheit', 'Distanz'], a: 'Meinung' },
+      { t: 'Das ist reine ___, einen guten Grund gibt es nicht.', o: ['Gewohnheit', 'Anpassung', 'Nähe', 'Stimmung'], a: 'Gewohnheit' },
+      { t: 'Am Ende haben wir einen ___ gefunden.', o: ['Kompromiss', 'Eindruck', 'Abstand', 'Anfang'], a: 'Kompromiss' },
+      { t: 'Ich sehe das ___, aber ich verstehe Sie.', o: ['anders', 'gleich', 'genauso', 'dagegen'], a: 'anders' }
+    ],
+    gbau: [
+      { f: 'Bau den Satz mit weil:', t: ['Ich', 'rede', 'gern', 'weil', 'man', 'sich', 'sonst', 'nicht', 'kennenlernt'], l: ['Ich', 'rede', 'gern', 'weil', 'man', 'sich', 'sonst', 'nicht', 'kennenlernt'], e: 'Nach <b>weil</b> geht das Verb <i>kennenlernt</i> ganz ans Ende. Der erste Teil bleibt ein normaler Hauptsatz.' },
+      { f: 'Bau den Satz mit trotzdem:', t: ['Es', 'kostet', 'Zeit', 'trotzdem', 'mache', 'ich', 'es', 'gern'], l: ['Es', 'kostet', 'Zeit', 'trotzdem', 'mache', 'ich', 'es', 'gern'], e: 'Nach <b>trotzdem</b> kommt sofort das Verb: <i>mache ich</i>. Das ist der häufigste Fehler auf B1.' },
+      { f: 'Bau den Satz mit obwohl:', t: ['Obwohl', 'es', 'Zeit', 'kostet', 'mache', 'ich', 'es', 'gern'], l: ['Obwohl', 'es', 'Zeit', 'kostet', 'mache', 'ich', 'es', 'gern'], e: 'Der Nebensatz steht vorn, deshalb rückt das Verb des Hauptsatzes direkt hinter das Komma: <i>kostet, mache ich</i>.' },
+      { f: 'Bau die höfliche Ablehnung:', t: ['Das', 'sehe', 'ich', 'anders', 'aber', 'ich', 'verstehe', 'Sie'], l: ['Das', 'sehe', 'ich', 'anders', 'aber', 'ich', 'verstehe', 'Sie'], e: 'Nach <b>aber</b> ändert sich nichts an der Wortstellung. Deshalb ist es im Sprechen das sicherste Verbindungswort.' }
+    ],
+    gstory: {
+      t: 'Ich habe lange gedacht, dass Small Talk verlorene Zeit ist, ___ dabei kaum etwas gesagt wird. Inzwischen sehe ich das anders. ___ es nur zwei Minuten sind, entscheiden sie oft, ob man überhaupt angesprochen wird. Bei mir war das so: Ich habe morgens über das Wetter geredet, ___ hat mich die Kollegin mittags mitgenommen. Man könnte sagen, das sei unehrlich. ___ finde ich das nicht, denn niemand verspricht dabei etwas. Es ist reine Höflichkeit, ___ sie macht den Tag leichter. Natürlich kostet es Kraft, wenn man die Sprache noch lernt, ___ lohnt es sich. Und wenn die Stimmung einmal kippt, ___ man einfach das Thema wechselt, ist auch nichts verloren. Am Ende ist es ein Kompromiss, ___ beide Seiten gut leben können.',
+      o: ['weil', 'Obwohl', 'deshalb', 'Trotzdem', 'und', 'aber', 'indem', 'mit dem'],
+      a: [['weil'], ['Obwohl'], ['deshalb'], ['Trotzdem'], ['und'], ['aber'], ['indem'], ['mit dem']]
+    }
+  }
+};
+fs.writeFileSync(__dirname + '/../stunden/w10-c2-small-talk-debatte.json', JSON.stringify(S, null, 2) + '\n', 'utf8');
+console.log('geschrieben');

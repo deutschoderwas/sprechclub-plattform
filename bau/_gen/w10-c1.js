@@ -1,0 +1,412 @@
+'use strict';
+const fs = require('fs');
+const S = {
+  datei: 'Unterricht-ab-14-09/w10-c-teil1-small-talk-b1b2.html',
+  eyebrow: 'deutschoderwas · Sprechclub · Woche 10 · Strang C · Teil 1 · Montag, 16. November',
+  titel: 'Worüber redet man hier?',
+  hl: 'Wetter, Weg, Wochenende — und was besser nicht',
+  stufe: 'B1/B2',
+  termin: 'Mo 16.11. 17:30 und 19:30 · Strang C · Teil 1 · B1 ⇄ B2',
+  untertitel: 'Im Aufzug, an der Kasse, in der Kaffeeküche: In Deutschland redet man in diesen Minuten über sehr wenige Dinge — und über manche gar nicht. Wer weiß, was hier normal ist, steht nicht mehr stumm daneben und tritt auch niemandem aus Versehen auf den Fuß.',
+  fuss: 'Worüber redet man hier? · Teil 1 · B1/B2 · Woche 10 · am Mittwoch: die große Debatte',
+  niveau: { a: 'B1 · sicherer', b: 'B2 · feiner', hinweis: 'Gleiches Thema, andere Sätze. Wechsle jederzeit — probier ruhig beide Seiten aus.' },
+
+  einstieg: [
+    {
+      h2: 'Zwei Minuten,',
+      hl: 'in denen niemand etwas will',
+      ssub: 'Small Talk hat in Deutschland eine klare Aufgabe: die Stille freundlich machen. Niemand will dich kennenlernen, niemand erwartet eine Antwort mit Tiefgang. Deshalb sind die Themen so klein — Wetter, Weg, Wochenende. Klein ist hier nicht langweilig, sondern höflich.',
+      bild: 'amanda/sz-cafe.webp',
+      alt: 'Zwei Menschen stehen mit Kaffeebechern beieinander und unterhalten sich',
+      fragenA2: [
+        'Worüber redest du, wenn du auf den Bus wartest?',
+        'Sprichst du im Aufzug mit anderen?',
+        'Über welches Thema redest du gern?'
+      ],
+      fragenB1: [
+        'Worüber redet man bei euch zu Hause mit Fremden?',
+        'Wann fühlt sich Schweigen unangenehm an und wann nicht?',
+        'Welche Frage würdest du hier nie stellen?'
+      ],
+      tipp: { art: 'teal', text: '🔑 <strong>Die kurze Fassung:</strong> Drei Themen gehen immer — <b>Wetter</b>, <b>Weg</b>, <b>Wochenende</b>. Drei Themen besser nicht — <b>Geld</b>, <b>Alter</b>, <b>Politik</b>. Alles andere hängt davon ab, wie gut ihr euch kennt.' }
+    },
+    {
+      h2: 'Und warum',
+      hl: 'ist Geld hier tabu?',
+      ssub: 'Es ist kein Geheimnis, es gilt nur als privat. Wer nach dem Gehalt, der Miete oder dem Alter fragt, wirkt nicht neugierig, sondern aufdringlich. Das hat nichts mit dir zu tun — dieselbe Frage ist in anderen Ländern völlig normal.',
+      bild: 'amanda/sz-heikel.webp',
+      alt: 'Zwei Menschen an einem Tisch, das Gespräch wirkt angespannt',
+      fragenA2: [
+        'Welche Frage findest du zu persönlich?',
+        'Redet ihr zu Hause über Geld?',
+        'Was fragst du jemanden, den du neu kennenlernst?'
+      ],
+      fragenB1: [
+        'Warum gilt Geld ausgerechnet hier als privat?',
+        'Welche Frage hat dich schon einmal überrascht?',
+        'Wie kommst du höflich aus einem Thema wieder heraus?'
+      ],
+      tipp: { art: 'yellow', text: '💡 <strong>Der Rettungssatz:</strong> Wenn ein Thema heikel wird, brauchst du nur einen Satz: <b>Das ist eine gute Frage — was meinst du denn?</b> Damit gibst du zurück, ohne zu antworten, und niemand merkt etwas.' }
+    }
+  ],
+
+  wortschatz: {
+    h2: 'Zwölf Wörter,',
+    hl: 'die in diesen zwei Minuten vorkommen',
+    ssub: 'Sag jedes laut. Und sag bei jedem gleich, ob das Thema hier leicht oder heikel ist.',
+    karten: [
+      { bild: 'vok-bild/die-kueste.webp', alt: 'Ein bewölkter Himmel über dem Meer', art: 'das', wort: 'Wetter', kurz: 'ob es regnet, schneit oder die Sonne scheint', bsp: 'So ein Wetter im November, das kennt man ja.', tipp: 'Das sicherste Thema überhaupt. Und der wichtigste Trick: keine Frage, sondern ein Satz mit <i>ja</i> oder <i>ja auch</i> — <i>Ganz schön kalt heute, ne?</i> Darauf kann jeder antworten.', say: 'So ein Wetter im November, das kennt man ja.' },
+      { bild: 'bilder/lesen/strasse.webp', alt: 'Eine Straße mit Autos und einer Ampel', art: 'der', wort: 'Weg', kurz: 'die Strecke zur Arbeit oder nach Hause', bsp: 'Wie lang ist Ihr Weg zur Arbeit?', tipp: 'Das zweite sichere Thema: wie man hergekommen ist. <i>Stau</i>, <i>Verspätung</i>, <i>Baustelle</i> — darüber kann man in Deutschland unendlich lange reden, ohne jemandem zu nahe zu kommen.', say: 'Wie lang ist Ihr Weg zur Arbeit?' },
+      { bild: 'vok-bild/der-ausflug.webp', alt: 'Menschen bei einem Ausflug ins Grüne', art: 'das', wort: 'Wochenende', kurz: 'Samstag und Sonntag', bsp: 'Haben Sie schon was vor am Wochenende?', tipp: 'Montags fragt man <i>Wie war Ihr Wochenende?</i>, freitags <i>Haben Sie schon was vor?</i> Zwei feste Sätze, mit denen im Büro jede Woche anfängt und aufhört.', say: 'Haben Sie schon was vor am Wochenende?' },
+      { bild: 'amanda/sz-freunde.webp', alt: 'Zwei Menschen sitzen entspannt beieinander', art: 'der', wort: 'Feierabend', kurz: 'die Zeit nach der Arbeit', bsp: 'Schönen Feierabend noch!', tipp: 'Es gibt kein Wort dafür in vielen Sprachen. <b>Schönen Feierabend</b> sagt man beim Gehen, wie ein zweites Tschüss — auch zu Leuten, die man kaum kennt.', say: 'Schönen Feierabend noch!' },
+      { bild: 'amanda/a-kaffee.webp', alt: 'Eine Tasse Kaffee auf einem Tisch', art: 'die', wort: 'Pause', kurz: 'die kurze Zeit zwischendurch', bsp: 'Machen Sie auch gerade Pause?', tipp: 'Die Kaffeeküche ist der wichtigste Ort für Small Talk in deutschen Firmen. Und <i>Machen Sie auch gerade Pause?</i> ist die Frage, mit der man dort einsteigt.', say: 'Machen Sie auch gerade Pause?' },
+      { bild: 'bilder/lesen/aufzug.webp', alt: 'Der Innenraum eines Aufzugs mit Knöpfen', art: 'der', wort: 'Aufzug', kurz: 'der kleine Raum, der dich nach oben bringt', bsp: 'Im Aufzug sagt man kurz Hallo und schaut dann auf die Zahlen.', tipp: 'Zwanzig Sekunden, zwei Menschen, kein Ausweg. Hier reicht ein Gruß und höchstens ein Satz. Zu viel reden ist im Aufzug ungewöhnlicher als gar nichts zu sagen.', say: 'Im Aufzug sagt man kurz Hallo und schaut dann auf die Zahlen.' },
+      { bild: 'amanda/sz-kasse.webp', alt: 'Eine Kasse im Supermarkt, davor eine Schlange', art: 'die', wort: 'Warteschlange', kurz: 'die Reihe von Leuten, die warten', bsp: 'In der Warteschlange redet hier fast niemand.', tipp: 'Ein Unterschied, der viele überrascht: An der Kasse spricht man in Deutschland kaum jemanden an. Ein Blick und ein Lächeln reichen — mehr wirkt schnell aufdringlich.', say: 'In der Warteschlange redet hier fast niemand.' },
+      { bild: 'bilder/lesen/nachbar.webp', alt: 'Zwei Nachbarn begegnen sich im Treppenhaus', art: 'der', wort: 'Nachbar', kurz: 'wer neben dir wohnt', bsp: 'Mit den Nachbarn rede ich meistens über das Haus.', tipp: 'Mit Nachbarn redet man über gemeinsame Dinge: Treppenhaus, Müll, Paketannahme, Heizung. Das ist kein kaltes Thema, sondern ein sicheres.', say: 'Mit den Nachbarn rede ich meistens über das Haus.' },
+      { bild: 'amanda/sz-bank.webp', alt: 'Ein Schalter in einer Bank', art: 'das', wort: 'Gehalt', kurz: 'das Geld, das du im Monat verdienst', bsp: 'Über das Gehalt spricht man hier normalerweise nicht.', tipp: 'Das größte Tabu im deutschen Small Talk. Nicht, weil es peinlich wäre, sondern weil es als privat gilt — wie das Gewicht oder die Miete. Frag es nicht, auch nicht freundlich.', say: 'Über das Gehalt spricht man hier normalerweise nicht.' },
+      { bild: 'vok-bild/wie-alt-bist-du.webp', alt: 'Eine Sprechblase mit der Frage nach dem Alter', art: 'das', wort: 'Alter', kurz: 'wie alt jemand ist', bsp: 'Nach dem Alter fragt man hier eher nicht.', tipp: 'Bei Kindern ist die Frage normal, bei Erwachsenen nicht. Wenn du es trotzdem wissen willst, wartest du, bis die andere Person es von selbst sagt — sehr oft tut sie das.', say: 'Nach dem Alter fragt man hier eher nicht.' },
+      { bild: 'amanda/sz-rechte.webp', alt: 'Unterlagen und ein Stempel auf einem Schreibtisch', art: 'die', wort: 'Politik', kurz: 'wer regiert und was entschieden wird', bsp: 'Über Politik reden wir lieber, wenn wir uns besser kennen.', tipp: 'Kein Tabu, aber ein Thema für später. Mit Freunden diskutiert man hier gern und lange — mit einem Fremden im Aufzug lieber nicht.', say: 'Über Politik reden wir lieber, wenn wir uns besser kennen.' },
+      { bild: 'amanda/a-klatschen.webp', alt: 'Amanda klatscht anerkennend', art: 'das', wort: 'Kompliment', kurz: 'wenn du jemandem etwas Nettes sagst', bsp: 'Ein Kompliment über die Jacke geht immer.', tipp: 'Sicher sind Komplimente über Dinge: Jacke, Tasche, Brille, Kaffeebecher. Unsicher sind Komplimente über den Körper. Die Regel ist einfach: lobe, was jemand ausgesucht hat, nicht, wie er aussieht.', say: 'Ein Kompliment über die Jacke geht immer.' }
+    ],
+    spiel: { text: '💡 <strong>Spiel „Geht das?“:</strong> Einer nennt eine Frage — <i>Wie viel zahlst du Miete?</i>, <i>War der Zug wieder voll?</i> Der andere sagt sofort: geht immer, geht später, geht gar nicht. Und dann in einem Satz, warum.' }
+  },
+
+  konzepte: {
+    tab: '🔍 Drei Schubladen',
+    zuerst: 'dreier',
+    h2: 'Geht immer, geht später',
+    hl: 'oder geht gar nicht?',
+    ssub: 'Fast jedes Thema fällt in eine dieser drei Schubladen. Wer sie kennt, muss im Gespräch nicht mehr raten.',
+    dreier: [
+      { emoji: '☀️', wort: 'Geht immer', was: 'auch bei völlig Fremden', bsp: '<b>Wetter</b>, <b>Weg</b>, <b>Wochenende</b>, Essen, Urlaub, der Ort, an dem ihr gerade seid' },
+      { emoji: '🚪', wort: 'Geht später', was: 'wenn ihr euch schon kennt', bsp: '<b>Familie</b>, <b>Wohnung</b>, <b>Arbeit im Detail</b>, Gesundheit, Politik' },
+      { emoji: '🔒', wort: 'Geht gar nicht', was: 'auch nicht freundlich gefragt', bsp: '<b>Gehalt</b>, <b>Miete</b>, <b>Alter</b>, Gewicht, Religion, Warum hast du keine Kinder' }
+    ],
+    paare: [
+      {
+        jaLabel: 'So geht es gut', ja: 'Ganz schön kalt heute, oder?',
+        jaWarumLabel: 'Warum das funktioniert', jaWarum: 'Es ist keine echte Frage, sondern ein Angebot. Die andere Person kann mit einem Wort antworten oder mit fünf Sätzen — beides ist in Ordnung. Genau das macht guten Small Talk aus.',
+        noLabel: 'So wird es schwierig', no: 'Wie finden Sie den Klimawandel?',
+        noWarumLabel: 'Das Problem', noWarum: 'Zu groß für zwei Minuten. Die andere Person müsste nachdenken, sich positionieren und sich vielleicht rechtfertigen. Im Aufzug will das niemand.'
+      },
+      {
+        jaLabel: 'So geht es gut', ja: 'Waren Sie am Wochenende auch im Grünen?',
+        jaWarumLabel: 'Warum das funktioniert', jaWarum: 'Klein, konkret, und mit dem Wort <i>auch</i>: Damit sagst du nebenbei etwas über dich und musst nicht ausfragen. Der beste Trick im deutschen Small Talk.',
+        noLabel: 'So wird es schwierig', no: 'Was machen Sie eigentlich am Wochenende immer?',
+        noWarumLabel: 'Das Problem', noWarum: 'Das <i>immer</i> macht aus einer netten Frage eine Prüfung. Und <i>eigentlich</i> klingt, als hättest du dich schon gewundert. Beide Wörter im Small Talk lieber weglassen.'
+      },
+      {
+        jaLabel: 'So geht es gut', ja: 'Die Jacke ist schön — die habe ich neulich auch gesucht.',
+        jaWarumLabel: 'Warum das funktioniert', jaWarum: 'Das Kompliment gilt einer Sache, nicht der Person, und du hängst gleich etwas von dir dran. Damit hat die andere Person sofort einen Anknüpfungspunkt.',
+        noLabel: 'So wird es schwierig', no: 'Sie sehen heute aber viel besser aus als letzte Woche.',
+        noWarumLabel: 'Das Problem', noWarum: 'Ein Kompliment mit einem Vergleich darin ist keins. Und alles, was den Körper betrifft, ist hier heikel — auch wenn es nett gemeint ist.'
+      }
+    ],
+    hilfe: {
+      knopf: '🆘 Worüber rede ich jetzt?',
+      vor: 'Drei Fragen, in dieser Reihenfolge:',
+      punkte: [
+        '<b>Was habt ihr gerade gemeinsam?</b> Der Raum, das Wetter, die Schlange, der Zug. Das ist immer das erste Thema.',
+        '<b>Kennt ihr euch schon?</b> Wenn ja, geht auch Familie, Arbeit oder Wohnung. Wenn nein, bleib klein.',
+        '<b>Muss die andere Person etwas über sich verraten?</b> Wenn ja, lass es. Geld, Alter, Gesundheit und Religion gehören dazu.',
+        '<b>Und danach:</b> immer eine Anschlussfrage. Ohne sie ist das Gespräch nach zwei Sätzen zu Ende.'
+      ],
+      nach: 'Und wenn dir nichts einfällt: sag etwas über den Ort, an dem ihr steht. <i>Hier ist es heute aber voll.</i> <i>Der Kaffee hier ist gar nicht schlecht.</i> Das geht in jedem Land und in jeder Situation.'
+    },
+    tipp: { art: 'yellow', text: '🎯 <strong>Zu zweit, zwei Minuten:</strong> Einer nennt einen Ort — Aufzug, Bushaltestelle, Kaffeeküche, Wartezimmer. Der andere sagt sofort den ersten Satz, den er dort sagen würde.' }
+  },
+
+  saetze: {
+    h2: 'Vier Bausteine',
+    hl: 'für zwei Minuten',
+    ssub: 'Anfangen, weitermachen, ausweichen, aufhören. Mehr braucht ein Small Talk nicht.',
+    akkLabel: 'der Schritt',
+    mengeLabel: 'was du damit erreichst',
+    a2: [
+      { titel: '1 · 👋 Anfangen', chips: ['Ganz schön kalt heute, oder?', 'Warten Sie auch schon lange?', 'Machen Sie auch Pause?', 'Ist hier noch frei?'], bsp: 'Ganz schön voll heute, oder? Warten Sie auch schon lange?', say: 'Ganz schön voll heute, oder? Warten Sie auch schon lange?' },
+      { titel: '2 · 🔁 Weitermachen', chips: ['Und Sie?', 'Ach, wirklich?', 'Das kenne ich.', 'Wie war das bei Ihnen?'], bsp: 'Ach, wirklich? Das kenne ich. Wie war das bei Ihnen?', say: 'Ach, wirklich? Das kenne ich. Wie war das bei Ihnen?' },
+      { titel: '3 · 🚪 Ausweichen', chips: ['Gute Frage — was meinen Sie denn?', 'Das ist eine lange Geschichte.', 'Da bin ich ehrlich gesagt keine Hilfe.', 'Ach, das ist kompliziert.'], bsp: 'Gute Frage — was meinen Sie denn? Ich bin da keine große Hilfe.', say: 'Gute Frage — was meinen Sie denn? Ich bin da keine große Hilfe.' },
+      { titel: '4 · 👋 Aufhören', chips: ['Ich muss dann mal.', 'Schönen Tag noch!', 'Schönen Feierabend!', 'Bis später!'], bsp: 'Ich muss dann mal. Schönen Feierabend noch!', say: 'Ich muss dann mal. Schönen Feierabend noch!' }
+    ],
+    b1: [
+      { titel: '1 · 👋 Weich einsteigen', chips: ['Sind Sie auch wegen … hier?', 'Das war ja heute ein Weg.', 'Ich glaube, wir warten beide auf dasselbe.', 'Kennen Sie sich hier aus?'], bsp: 'Das war ja heute ein Weg — bei Ihnen war die Bahn wahrscheinlich genauso voll.', say: 'Das war ja heute ein Weg — bei Ihnen war die Bahn wahrscheinlich genauso voll.' },
+      { titel: '2 · 🔁 Anschluss finden', chips: ['Das ging mir letzte Woche genauso.', 'Wie halten Sie das denn?', 'Da wäre ich nicht drauf gekommen.', 'Und wie ist das bei Ihnen so?'], bsp: 'Das ging mir letzte Woche genauso — und wie halten Sie das dann?', say: 'Das ging mir letzte Woche genauso — und wie halten Sie das dann?' },
+      { titel: '3 · 🚪 Freundlich abbiegen', chips: ['Das würde jetzt zu weit führen.', 'Darüber rede ich lieber nach Feierabend.', 'Interessante Frage — bei mir ist das anders.', 'Sagen wir es so: kompliziert.'], bsp: 'Das würde jetzt zu weit führen — sagen wir einfach: kompliziert.', say: 'Das würde jetzt zu weit führen — sagen wir einfach: kompliziert.' },
+      { titel: '4 · 👋 Sauber beenden', chips: ['Ich will Sie nicht aufhalten.', 'Dann wünsche ich Ihnen noch …', 'Wir sehen uns bestimmt wieder.', 'War nett, kurz zu quatschen.'], bsp: 'Ich will Sie gar nicht aufhalten — war nett, kurz zu quatschen.', say: 'Ich will Sie gar nicht aufhalten — war nett, kurz zu quatschen.' }
+    ],
+    tipp: { art: 'teal', text: '📣 <strong>Reihum:</strong> Jeder bekommt einen Ort zugerufen und sagt in fünf Sekunden den ersten Satz. Wer zögert, bekommt denselben Ort noch einmal.' }
+  },
+
+  dialoge: {
+    h2: 'Vier Situationen —',
+    hl: 'zwei Runden',
+    ssub: '<b>Runde 1:</b> Lest den Dialog zu zweit laut. <b>Runde 2:</b> Klappt die Zeilen zu und sprecht frei — nur die Stichwörter bleiben.',
+    liste: [
+      {
+        bild: 'bilder/lesen/aufzug.webp', alt: 'Der Innenraum eines Aufzugs mit Knöpfen',
+        titel: 'Im Aufzug',
+        situation: 'A und B fahren gemeinsam in den fünften Stock. Zwanzig Sekunden, in denen niemand weiß, wohin schauen.',
+        zeilen: [
+          { wer: 'a', text: 'Morgen. Auch in den Fünften?' },
+          { wer: 'b', text: 'Guten Morgen, ja. Ganz schön voll heute unten, oder?', cue: 'Gruß, kurze Antwort, dann ein Satz über den gemeinsamen Ort. Und das <b>oder?</b> am Ende ist der wichtigste Teil — es lädt ein, ohne zu fragen.' },
+          { wer: 'a', text: 'Stimmt. Ich glaube, der Zug war wieder ausgefallen.' },
+          { wer: 'b', text: 'Das erklärt einiges. Bei mir war die Bahn heute auch komplett.', cue: '<b>Das erklärt einiges</b> ist ein kleiner Satz mit großer Wirkung: Du stimmst zu und bringst gleich etwas Eigenes mit.' },
+          { wer: 'a', text: 'Na dann. Fünfter Stock, ich bin raus.' },
+          { wer: 'b', text: 'Schönen Tag noch!', cue: 'Kurz und freundlich, kein langer Abschied. Im Aufzug endet das Gespräch mit der Tür — das ist völlig normal.' }
+        ]
+      },
+      {
+        bild: 'amanda/a-kaffee.webp', alt: 'Eine Tasse Kaffee in einer kleinen Büroküche',
+        titel: 'In der Kaffeeküche',
+        situation: 'A ist neu in der Firma. B holt sich Kaffee und spricht ihn an — freundlich, aber ohne auszufragen.',
+        zeilen: [
+          { wer: 'a', text: 'Funktioniert die Maschine? Ich stehe hier gerade etwas ratlos.' },
+          { wer: 'b', text: 'Zweimal drücken, dann läuft sie. Sie sind neu, oder?', cue: 'Erst helfen, dann fragen. Und wieder das freundliche <b>oder?</b> statt einer direkten Frage.' },
+          { wer: 'a', text: 'Seit Montag, ja. Ich bin drüben im zweiten Stock.' },
+          { wer: 'b', text: 'Ah, bei den Kollegen von der Abrechnung. Und, gut angekommen?', cue: '<b>Gut angekommen?</b> ist die Standardfrage an Neue. Sie fragt nach dem Gefühl, ohne persönlich zu werden.' },
+          { wer: 'a', text: 'Ganz gut. Die Namen sind noch ein Problem.' },
+          { wer: 'b', text: 'Das dauert. Fragen Sie ruhig zweimal, das nimmt hier niemand krumm.', cue: '<b>Das nimmt niemand krumm</b> heißt: Keiner ist deswegen beleidigt. Ein sehr deutscher, sehr beruhigender Satz.' }
+        ]
+      },
+      {
+        bild: 'bilder/lesen/nachbar.webp', alt: 'Zwei Nachbarn begegnen sich im Treppenhaus',
+        titel: 'Im Treppenhaus',
+        situation: 'A und B wohnen im selben Haus und kennen sich vom Sehen. Diesmal bleiben beide kurz stehen.',
+        zeilen: [
+          { wer: 'a', text: 'Hallo! Sie sind doch aus dem Zweiten?' },
+          { wer: 'b', text: 'Genau. Und Sie wohnen über mir, oder? Man hört sich ja manchmal.', cue: 'Ein kleiner Scherz über die dünnen Wände — mit Nachbarn ist das ein sicherer Einstieg, solange man dabei lacht.' },
+          { wer: 'a', text: 'Hoffentlich nicht zu oft. Wissen Sie, wann die Heizung wieder läuft?' },
+          { wer: 'b', text: 'Nächste Woche, hat der Hausmeister gesagt. Steht auch unten am Aushang.', cue: 'Das Haus ist das gemeinsame Thema: Heizung, Müll, Pakete, Treppenhaus. Immer sicher, immer nützlich.' },
+          { wer: 'a', text: 'Gut zu wissen. Danke!' },
+          { wer: 'b', text: 'Gern. Und wenn mal ein Paket kommt, nehme ich es an.', cue: 'Ein kleines Angebot zum Schluss. So wird aus Small Talk unter Nachbarn etwas, das beiden hilft.' }
+        ]
+      },
+      {
+        bild: 'amanda/sz-heikel.webp', alt: 'Zwei Menschen an einem Tisch, das Gespräch wirkt angespannt',
+        titel: 'Die heikle Frage',
+        situation: 'A fragt in bester Absicht etwas, das hier als privat gilt. B weicht freundlich aus, ohne das Gespräch zu beenden.',
+        zeilen: [
+          { wer: 'a', text: 'Darf ich fragen, was Sie in dem Job verdienen?' },
+          { wer: 'b', text: 'Das behalte ich lieber für mich — hier redet man darüber eher nicht.', cue: 'Kein Vorwurf, nur eine Information. <b>Das behalte ich lieber für mich</b> ist der freundlichste Weg, nicht zu antworten.' },
+          { wer: 'a', text: 'Oh, entschuldigen Sie. Bei uns ist das ganz normal.' },
+          { wer: 'b', text: 'Kein Problem, das wusste ich nicht. Woher kommen Sie denn?', cue: 'B nimmt A die Peinlichkeit und dreht das Gespräch auf ein leichtes Thema. Genau so rettet man eine Situation.' },
+          { wer: 'a', text: 'Aus Rumänien. Ich bin seit zwei Jahren hier.' },
+          { wer: 'b', text: 'Und, wie gefällt es Ihnen? Das Wetter ist ja gewöhnungsbedürftig.', cue: 'Zurück beim sichersten Thema von allen. <b>Gewöhnungsbedürftig</b> heißt: nicht schön, aber man gewöhnt sich dran.' }
+        ]
+      }
+    ],
+    tipp: { art: 'yellow', text: '🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 4 mit einer Frage, die in deinem Land normal ist und hier heikel. Regel: Niemand darf beleidigt sein, das Gespräch muss weitergehen.' }
+  },
+
+  grammatik: {
+    h2: '🧩 Die kleinen Wörter,',
+    hl: 'die freundlich machen',
+    ssub: 'Small Talk lebt nicht von Vokabeln, sondern von vier winzigen Wörtern. Sie machen aus einer Frage ein Angebot.',
+    intro: 'Ein Satz ohne sie klingt wie eine Prüfung. Mit ihnen klingt derselbe Satz wie ein Gespräch: <i>Es ist kalt.</i> gegen <i>Ganz schön kalt heute, <b>oder?</b></i> — <i>Warten Sie lange?</i> gegen <i>Warten Sie <b>auch</b> schon lange?</i>',
+    kette: [
+      { emoji: '❔', rolle: 'oder? / ne?', bsp: 'Ganz schön voll heute, oder?' },
+      { emoji: '🤝', rolle: 'auch', bsp: 'Machen Sie auch Pause?' },
+      { emoji: '🎈', rolle: 'ja', bsp: 'Das ist ja ein Wetter.' },
+      { emoji: '🕊️', rolle: 'mal / eben', bsp: 'Ich muss dann mal.' }
+    ],
+    felder: [
+      { rolle: 'Ganz schön', wort: 'Ganz schön' },
+      { rolle: 'kalt', wort: 'kalt' },
+      { rolle: 'heute', wort: 'heute' },
+      { rolle: 'die Einladung', wort: 'oder?', hervor: true }
+    ],
+    bloecke: [
+      {
+        h2: 'Vier Wörter,',
+        hl: 'vier Wirkungen',
+        ssub: 'Jedes hat eine eigene Aufgabe. Wer sie kennt, klingt sofort weniger fremd.',
+        dreier: [
+          { emoji: '❔', wort: 'oder? / ne?', was: 'macht aus einer Aussage eine Einladung', bsp: 'Ganz schön voll heute, <b>ne?</b>' },
+          { emoji: '🤝', wort: 'auch', was: 'sagt: mir geht es genauso', bsp: 'Warten Sie <b>auch</b> schon so lange?' },
+          { emoji: '🎈', wort: 'ja', was: 'zeigt, dass ihr euch einig seid', bsp: 'Das ist <b>ja</b> ein Wetter heute.' }
+        ],
+        chips: ['oder?', 'ne?', 'auch', 'ja', 'mal', 'eben', 'halt', 'so', 'irgendwie', 'eigentlich', 'echt', 'ganz schön']
+      },
+      {
+        h2: 'Und zwei Wörter,',
+        hl: 'die du besser weglässt',
+        ssub: 'Sie sind grammatisch richtig und machen den Satz trotzdem unangenehm.',
+        paare: [
+          {
+            jaLabel: 'So klingt es freundlich', ja: 'Waren Sie am Wochenende auch draußen?',
+            jaWarumLabel: 'Warum das funktioniert', jaWarum: 'Mit <b>auch</b> sagst du nebenbei, dass du selbst draußen warst. Die andere Person antwortet, ohne sich beobachtet zu fühlen.',
+            noLabel: 'So klingt es prüfend', no: 'Was machen Sie eigentlich immer am Wochenende?',
+            noWarumLabel: 'Das Problem', noWarum: '<b>eigentlich</b> klingt, als hättest du dich schon gewundert, und <b>immer</b> macht aus einer Frage eine Beobachtung über längere Zeit. Beide Wörter im Small Talk weglassen.'
+          }
+        ]
+      }
+    ],
+    bauH2: '🧱 Bau die Sätze selbst',
+    bauSsub: 'Tippe die Teile in der richtigen Reihenfolge an. Achte darauf, wo das kleine Wort steht.',
+    storyH2: '📖 Und jetzt im Zusammenhang',
+    storySsub: 'Ein Morgen im Büro, von der Tür bis zur Kaffeeküche. Wähle in jeder Lücke das passende Wort.',
+    hilfe: {
+      knopf: '🆘 Wo steht das kleine Wort?',
+      vor: 'Vier feste Plätze, mehr gibt es nicht:',
+      punkte: [
+        '<b>oder? / ne?</b> stehen ganz am Ende, nach einem Komma: <i>Kalt heute, oder?</i>',
+        '<b>auch</b> steht direkt vor dem Wort, das du meinst: <i>Warten Sie <u>auch</u> so lange?</i>',
+        '<b>ja</b> steht hinter dem Verb: <i>Das ist <u>ja</u> ein Wetter.</i> Es heißt hier nicht <i>yes</i>, sondern zeigt Einigkeit.',
+        '<b>mal</b> und <b>eben</b> machen alles kleiner und unverbindlicher: <i>Ich muss dann <u>mal</u>.</i>'
+      ],
+      nach: 'Und ein Test, der immer geht: Sag den Satz einmal ohne das kleine Wort. Wenn er dann wie eine Frage aus einem Formular klingt, gehört es hinein.'
+    }
+  },
+
+  rollenspiele: {
+    h2: '🎭 Drei Situationen',
+    hl: 'zu zweit',
+    ssub: 'Einer fängt an, einer antwortet. Danach tauschen — beim zweiten Mal ohne die Sätze unten. Jede Runde dauert höchstens zwei Minuten.',
+    liste: [
+      {
+        titel: 'Zwanzig Sekunden im Aufzug',
+        situation: 'A und B fahren gemeinsam nach oben und kennen sich nicht. A fängt an, B antwortet — und beide steigen freundlich wieder aus.',
+        a2: ['Guten Morgen, auch nach oben?', 'Ganz schön voll heute, oder?', 'War die Bahn bei Ihnen auch so voll?', 'Schönen Tag noch!'],
+        b1: ['Morgen! Ja, in den Vierten — bei Ihnen auch so ein Weg heute?', 'Das erklärt einiges, unten stand ja alles', 'Bei mir war es dasselbe, ich bin zwanzig Minuten später los', 'Dann wünsche ich Ihnen einen guten Start, bis später!'],
+        gut: 'Beide haben angefangen, weitergemacht und aufgehört — drei Schritte in zwanzig Sekunden. Und mindestens einmal kam ein <i>oder?</i> oder ein <i>auch</i> vor.'
+      },
+      {
+        titel: 'Neu in der Kaffeeküche',
+        situation: 'A ist seit Montag in der Firma und kennt fast niemanden. B arbeitet dort seit Jahren und spricht A an — freundlich, aber ohne auszufragen.',
+        a2: ['Ich bin neu hier, seit Montag', 'Wie funktioniert die Maschine?', 'Die Namen sind noch schwierig', 'Machen Sie auch gerade Pause?'],
+        b1: ['Ach, Sie sind der neue Kollege aus dem Zweiten — gut angekommen?', 'Zweimal drücken, dann läuft sie, das ist der ganze Trick', 'Die Namen dauern, fragen Sie ruhig zweimal nach', 'Wenn Sie mittags mitwollen, wir gehen meistens gegen halb eins'],
+        gut: 'B hat nur nach dem Gefühl gefragt, nicht nach Details. A hat mindestens eine Anschlussfrage gestellt, statt nur zu antworten.'
+      },
+      {
+        titel: 'Die Frage, die hier nicht geht',
+        situation: 'A stellt eine Frage, die im eigenen Land völlig normal ist — nach dem Gehalt, der Miete oder dem Alter. B weicht freundlich aus und rettet das Gespräch.',
+        a2: ['Darf ich fragen, was Sie verdienen?', 'Wie alt sind Sie eigentlich?', 'Bei uns ist das ganz normal', 'Entschuldigung, das wusste ich nicht'],
+        b1: ['Das behalte ich lieber für mich, hier redet man darüber eher nicht', 'Gute Frage — was schätzen Sie denn?', 'Kein Problem, woher kommen Sie denn ursprünglich?', 'Da bin ich altmodisch, aber erzählen Sie doch mal von zu Hause'],
+        gut: 'B hat nicht geantwortet und trotzdem niemanden vor den Kopf gestoßen. Und das Gespräch ist weitergegangen, statt nach der Frage stehen zu bleiben.'
+      }
+    ]
+  },
+
+  challenge: {
+    ssub: 'Neunzig Sekunden Small Talk über ein Wort: Fang an, mach weiter, hör auf — und lass keine Pause länger als zwei Sekunden.',
+    hilfe: {
+      knopf: '🆘 Mir fällt nichts ein',
+      vor: 'Vier Sätze, dann trägt dich die Zeit:',
+      punkte: [
+        '<b>Was du siehst:</b> <i>Ganz schön voll hier heute, oder?</i>',
+        '<b>Was du selbst kennst:</b> <i>Bei mir war das letzte Woche genauso.</i>',
+        '<b>Zurückgeben:</b> <i>Und wie ist das bei Ihnen so?</i>',
+        '<b>Aufhören:</b> <i>Ich will Sie gar nicht aufhalten — schönen Tag noch!</i>'
+      ],
+      nach: 'Und wenn du in der Mitte hängst, sag einfach etwas über den Ort, an dem ihr steht. Das geht immer, in jedem Land und in jeder Situation.'
+    },
+    tipp: { art: 'yellow', text: '⏱️ <strong>Spielregel:</strong> In jeder Runde muss <u>eine Anschlussfrage</u> vorkommen. Wer nur antwortet und nichts zurückfragt, fängt noch einmal an.' }
+  },
+
+  ueben: { tipp: { art: 'teal', text: '📣 <strong>Danach laut:</strong> Einer nennt einen Ort, der Nächste sagt in fünf Sekunden den ersten Satz. Ohne Nachdenken — schnell ist hier besser als schön.' } },
+
+  hausaufgabe: {
+    h2: '📮 Deine Hausaufgabe bis',
+    hl: 'Mittwoch',
+    ssub: 'Vier kleine Aufgaben, zusammen etwa 25 Minuten. Am Mittwoch geht es weiter mit der großen Debatte über genau dieses Thema.',
+    warum: { text: '💡 <strong>Warum das hilft:</strong> Small Talk entscheidet mehr, als man denkt. Nicht darüber, ob jemand dich mag — sondern darüber, ob jemand dich anspricht. Wer zwei Minuten leicht füllen kann, wird gefragt, ob er mittags mitkommt. Und genau dort fängt alles andere an.' },
+    a2: [
+      { emoji: '👂', titel: 'Zuhören und mitzählen', zeit: '6 Min', text: 'Achte einen Tag lang darauf, worüber Fremde in deiner Nähe reden. Schreib fünf Themen auf, die du gehört hast.' },
+      { emoji: '✍️', titel: 'Zwölf erste Sätze', zeit: '7 Min', text: 'Schreib zu zwölf Orten je einen Einstiegssatz: Aufzug, Bushaltestelle, Kaffeeküche, Wartezimmer, Kasse, Treppenhaus, Bahn, Park und vier weitere.' },
+      { emoji: '🗣️', titel: 'Einmal wirklich anfangen', zeit: '5 Min', text: 'Sprich diese Woche einmal eine fremde Person an — ein Satz über das Wetter oder den Ort reicht. Schreib danach auf, wie es gelaufen ist.' },
+      { emoji: '🎙️', titel: 'Zwei Minuten allein', zeit: '7 Min', text: 'Nimm eine Sprachnachricht auf: Führ ein Small-Talk-Gespräch mit dir selbst, beide Rollen. Anfangen, weitermachen, aufhören.' }
+    ],
+    b1: [
+      { emoji: '🌍', titel: 'Der Vergleich', zeit: '7 Min', text: 'Schreib acht Sätze darüber, worüber man in deinem Land mit Fremden redet — und was hier anders ist. Nimm konkrete Beispiele, keine allgemeinen Sätze.' },
+      { emoji: '🚪', titel: 'Zehnmal ausweichen', zeit: '6 Min', text: 'Schreib zehn Antworten auf heikle Fragen, die freundlich bleiben und trotzdem nichts verraten. Jede in höchstens zwei Sätzen.' },
+      { emoji: '🎙️', titel: 'Zwei Minuten Kaffeeküche', zeit: '6 Min', text: 'Nimm auf, wie du einem neuen Kollegen die Firma erklärst — ohne Details, nur so viel, wie in eine Pause passt.' },
+      { emoji: '📺', titel: 'Genau hinhören', zeit: '6 Min', text: 'Such eine deutsche Serie oder Reportage und notier acht Stellen, an denen jemand <i>oder?</i>, <i>ne?</i>, <i>ja</i> oder <i>mal</i> benutzt. Schreib dazu, was es bewirkt.' }
+    ],
+    hilfeA2: {
+      knopf: '💡 Beispiel ansehen (Aufgabe 2)',
+      vor: 'So sehen die ersten Sätze aus:',
+      punkte: [
+        '<b>Aufzug:</b> <i>Morgen! Auch nach oben?</i>',
+        '<b>Bushaltestelle:</b> <i>Warten Sie auch schon so lange?</i>',
+        '<b>Kaffeeküche:</b> <i>Machen Sie auch gerade Pause?</i>',
+        '<b>Wartezimmer:</b> <i>Ganz schön voll heute, oder?</i>',
+        '<b>Treppenhaus:</b> <i>Wissen Sie, wann die Heizung wieder läuft?</i>'
+      ],
+      nach: 'Ein einziger Test genügt: Kann die andere Person mit einem Wort antworten? Wenn ja, ist der Satz gut. Wenn sie nachdenken muss, ist er für zwei Minuten zu groß.'
+    },
+    hilfeB1: {
+      knopf: '💡 Beispiel ansehen (Aufgabe 2)',
+      vor: 'Das sind die Muster, die immer funktionieren:',
+      punkte: [
+        '<b>Zurückgeben:</b> <i>Gute Frage — was schätzen Sie denn?</i>',
+        '<b>Klein machen:</b> <i>Ach, das ist eine lange Geschichte.</i>',
+        '<b>Ehrlich abbiegen:</b> <i>Das behalte ich lieber für mich.</i>',
+        '<b>Zeit gewinnen:</b> <i>Da muss ich kurz überlegen.</i>',
+        '<b>Und danach immer:</b> eine eigene Frage, damit das Gespräch weitergeht.'
+      ],
+      nach: 'Ein Hinweis, der viel spart: Sag nie <i>Das geht Sie nichts an.</i> Das stimmt zwar, beendet aber das Gespräch und meistens auch die Beziehung. Alle fünf Muster oben sagen dasselbe und tun das nicht.'
+    },
+    abgabe: 'Schick mir bis Mittwoch 12 Uhr deine zwölf Einstiegssätze und die Sprachnachricht — ich sage dir, welche im Aufzug funktionieren und welche zu groß sind.',
+    ausblick: 'Am Mittwoch: die große Debatte. Ist Small Talk höflich oder verlogen, und muss man sich hier anpassen? Dann drei gegen drei, mit allem, was du heute gesammelt hast.'
+  },
+
+  daten: {
+    sk: [
+      'Du stehst im Aufzug mit einer fremden Person. Sag deine ersten zwei Sätze.',
+      'Worüber redet man in deinem Land mit Fremden? Nenne drei Themen.',
+      'Jemand fragt dich nach deinem Gehalt. Weich freundlich aus.',
+      'Erzähl von einem Gespräch mit einem Fremden, das gut lief.',
+      'Du bist neu in einer Firma. Sprich in der Kaffeeküche jemanden an.',
+      'Welche Frage findest du zu persönlich — und warum?',
+      'Beende ein Gespräch höflich, ohne unfreundlich zu wirken.',
+      'Mach jemandem ein Kompliment über etwas, das er ausgesucht hat.',
+      'Wie redest du mit deinen Nachbarn? Nenne drei Themen.',
+      'Sag drei Sätze über das Wetter, ohne sie langweilig klingen zu lassen.'
+    ],
+    w90: [
+      { w: 'das Wetter', b: 'vok-bild/die-kueste.webp', h: ['kalt', 'der Regen', 'grau', 'sich beschweren', 'November'] },
+      { w: 'der Weg', b: 'bilder/lesen/strasse.webp', h: ['der Stau', 'die Verspätung', 'die Bahn', 'pünktlich', 'die Baustelle'] },
+      { w: 'das Wochenende', b: 'vok-bild/der-ausflug.webp', h: ['frei', 'der Ausflug', 'ausschlafen', 'die Pläne', 'Montag'] },
+      { w: 'der Feierabend', b: 'amanda/sz-freunde.webp', h: ['nach der Arbeit', 'sich verabschieden', 'entspannen', 'Schönen', 'gehen'] },
+      { w: 'die Pause', b: 'amanda/a-kaffee.webp', h: ['der Kaffee', 'die Kaffeeküche', 'kurz', 'die Kollegen', 'mittags'] },
+      { w: 'der Aufzug', b: 'bilder/lesen/aufzug.webp', h: ['der Stock', 'drücken', 'kurz', 'grüßen', 'die Tür'] },
+      { w: 'die Warteschlange', b: 'amanda/sz-kasse.webp', h: ['warten', 'die Kasse', 'schweigen', 'anstehen', 'ungeduldig'] },
+      { w: 'der Nachbar', b: 'bilder/lesen/nachbar.webp', h: ['das Treppenhaus', 'die Heizung', 'das Paket', 'der Müll', 'grüßen'] },
+      { w: 'das Gehalt', b: 'amanda/sz-bank.webp', h: ['privat', 'tabu', 'verdienen', 'nicht fragen', 'der Monat'] },
+      { w: 'das Kompliment', b: 'amanda/a-klatschen.webp', h: ['nett', 'die Jacke', 'loben', 'sich freuen', 'ehrlich'] }
+    ],
+    quiz: [
+      { q: 'Welches Thema geht in Deutschland auch bei Fremden immer?', o: ['das Wetter', 'das Gehalt', 'das Alter', 'die Religion'], c: 0, e: 'Wetter, Weg und Wochenende sind die drei sicheren Themen. Geld, Alter und Religion gelten als privat — auch freundlich gefragt.' },
+      { q: 'Welcher Einstieg funktioniert am besten?', o: ['Ganz schön kalt heute, oder?', 'Wie finden Sie den Klimawandel?', 'Was verdienen Sie hier?', 'Warum haben Sie keine Kinder?'], c: 0, e: 'Ein Satz mit <b>oder?</b> ist ein Angebot, keine Frage. Die andere Person kann mit einem Wort antworten — genau das macht guten Small Talk aus.' },
+      { q: 'Was bewirkt das Wörtchen <u>auch</u> in einer Frage?', o: ['Es sagt: mir geht es genauso.', 'Es macht die Frage höflicher als Sie.', 'Es zeigt, dass man sich wundert.', 'Es hat keine Bedeutung.'], c: 0, e: '<b>Warten Sie auch schon so lange?</b> heißt: Ich warte auch. Damit fragst du nicht aus, sondern teilst etwas.' },
+      { q: 'Jemand fragt nach deiner Miete. Was sagst du?', o: ['Das behalte ich lieber für mich.', 'Das geht Sie nichts an.', 'Warum wollen Sie das wissen?', 'Sagen Sie mir erst Ihre.'], c: 0, e: 'Alle vier sind ehrlich, aber nur der erste hält das Gespräch am Leben. Danach am besten sofort eine eigene, leichte Frage.' },
+      { q: 'Welches Kompliment ist hier sicher?', o: ['Die Jacke steht Ihnen gut.', 'Sie sehen heute besser aus als sonst.', 'Sie sind aber schlank geworden.', 'Für Ihr Alter sehen Sie gut aus.'], c: 0, e: 'Lobe, was jemand ausgesucht hat — Jacke, Tasche, Brille. Alles, was den Körper betrifft, ist heikel, auch wenn es nett gemeint ist.' },
+      { q: 'Wo redet man in Deutschland am wenigsten?', o: ['in der Warteschlange an der Kasse', 'in der Kaffeeküche', 'im Treppenhaus', 'auf einer Feier'], c: 0, e: 'An der Kasse spricht man Fremde kaum an. Ein Blick und ein Lächeln reichen — mehr wirkt schnell aufdringlich.' },
+      { q: 'Wie beendest du ein Gespräch freundlich?', o: ['Ich will Sie gar nicht aufhalten.', 'Ich habe jetzt keine Lust mehr.', 'Ich muss jetzt wirklich weg.', 'Sie reden aber viel.'], c: 0, e: '<b>Ich will Sie gar nicht aufhalten</b> gibt der anderen Person die Schuld am Ende, ohne dass es unhöflich wird. Ein sehr nützlicher Satz.' },
+      { q: 'Was gehört <u>nicht</u> in den Small Talk?', o: ['eigentlich und immer', 'oder und ne', 'auch und ja', 'mal und eben'], c: 0, e: '<i>eigentlich</i> klingt, als hättest du dich gewundert, und <i>immer</i> macht aus der Frage eine Beobachtung. Beide besser weglassen.' }
+    ],
+    gap: [
+      { t: 'Ganz schön voll heute, ___?', o: ['oder', 'wohl', 'doch', 'schon'], a: 'oder' },
+      { t: 'Warten Sie ___ schon so lange?', o: ['auch', 'eigentlich', 'immer', 'sehr'], a: 'auch' },
+      { t: 'Das ist ___ ein Wetter heute.', o: ['ja', 'auch', 'oder', 'mal'], a: 'ja' },
+      { t: 'Ich muss dann ___.', o: ['mal', 'ja', 'auch', 'oder'], a: 'mal' },
+      { t: 'Schönen ___ noch!', o: ['Feierabend', 'Gehalt', 'Aufzug', 'Weg'], a: 'Feierabend' },
+      { t: 'Über das Gehalt spricht man hier ___ nicht.', o: ['normalerweise', 'niemals kaum', 'sehr gern', 'immer wieder'], a: 'normalerweise' },
+      { t: 'Ich will Sie gar nicht ___.', o: ['aufhalten', 'anhalten', 'behalten', 'erhalten'], a: 'aufhalten' },
+      { t: 'Machen Sie ___ gerade Pause?', o: ['auch', 'eigentlich', 'immer', 'schon'], a: 'auch' }
+    ],
+    gbau: [
+      { f: 'Bau den Einstiegssatz:', t: ['Ganz', 'schön', 'kalt', 'heute', 'oder'], l: ['Ganz', 'schön', 'kalt', 'heute', 'oder'], e: 'Erst die Aussage, dann das <b>oder</b> ganz am Ende. So wird aus einer Feststellung eine Einladung.' },
+      { f: 'Bau die Frage mit auch:', t: ['Machen', 'Sie', 'auch', 'gerade', 'Pause'], l: ['Machen', 'Sie', 'auch', 'gerade', 'Pause'], e: '<b>auch</b> steht direkt vor dem, was du meinst. Damit sagst du nebenbei, dass du selbst Pause machst.' },
+      { f: 'Bau die höfliche Absage:', t: ['Das', 'behalte', 'ich', 'lieber', 'für', 'mich'], l: ['Das', 'behalte', 'ich', 'lieber', 'für', 'mich'], e: 'Kein Vorwurf, nur eine Entscheidung. Mit <b>lieber</b> klingt es weich statt abweisend.' },
+      { f: 'Bau den Abschied:', t: ['Ich', 'will', 'Sie', 'gar', 'nicht', 'aufhalten'], l: ['Ich', 'will', 'Sie', 'gar', 'nicht', 'aufhalten'], e: 'Der Infinitiv <b>aufhalten</b> steht ganz hinten. Und <i>gar nicht</i> macht den Satz freundlich statt eilig.' }
+    ],
+    gstory: {
+      t: 'Im Aufzug steht schon jemand. Ich sage guten Morgen und danach: Ganz schön voll heute, ___? Sie nickt und sagt, die Bahn sei ___ ausgefallen. Das ist ___ ein Morgen, denke ich, und erzähle von meinem Weg. Oben in der Kaffeeküche frage ich einen Kollegen, ob er ___ gerade Pause macht. Wir reden zwei Minuten über das Wochenende, dann sage ich: Ich muss dann ___. Nach dem Gehalt hat mich hier noch nie jemand gefragt, das gilt als ___. Am Abend ruft mir jemand hinterher: Schönen ___ noch! Und ich merke: Diese kleinen Sätze sind ___ das Wichtigste am Tag.',
+      o: ['oder', 'wieder', 'ja', 'auch', 'mal', 'privat', 'Feierabend', 'irgendwie'],
+      a: [['oder'], ['wieder'], ['ja'], ['auch'], ['mal'], ['privat'], ['Feierabend'], ['irgendwie']]
+    }
+  }
+};
+fs.writeFileSync(__dirname + '/../stunden/w10-c1-small-talk.json', JSON.stringify(S, null, 2) + '\n', 'utf8');
+console.log('geschrieben');
