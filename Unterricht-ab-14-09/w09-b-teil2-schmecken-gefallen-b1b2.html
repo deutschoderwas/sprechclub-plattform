@@ -436,6 +436,48 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Markierte Wörter ----------
+   Keine Wortschatzliste mehr, sondern das Wort dort, wo es steht.
+   Gelb unterstrichen: Wort dieser Stunde. Rot gepunktet: Begriff,
+   den viele verwechseln. Beides bleibt lesbar, wenn man es ignoriert —
+   die Markierung liegt unter der Zeile, nicht auf dem Wort. */
+.wm{
+  font-weight:inherit;cursor:pointer;position:relative;
+  border-bottom:3px solid var(--yellow);
+  padding-bottom:1px;transition:background .12s;
+}
+.wm.schwer{border-bottom:3px dotted var(--red);}
+.wm:hover,.wm.offen{background:rgba(255,210,74,.35);border-radius:4px 4px 0 0;}
+.wm.schwer:hover,.wm.schwer.offen{background:rgba(232,48,42,.12);}
+.wm:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.wm::after{
+  content:'';display:inline-block;width:.42em;height:.42em;margin-left:.22em;
+  vertical-align:.35em;border-radius:50%;background:var(--yellow);
+}
+.wm.schwer::after{background:var(--red);}
+
+.wmk{
+  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.2);padding:.85rem 1rem .9rem;
+}
+.wmk b{display:block;font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.25;padding-right:1.4rem;}
+.wmk span{display:block;margin-top:.3rem;font-size:.94rem;line-height:1.5;color:var(--ink-soft);}
+.wmk em{
+  display:block;margin-top:.55rem;padding-left:.7rem;border-left:3px solid var(--teal);
+  font-style:italic;font-size:.93rem;line-height:1.5;
+}
+.wmk-zu{
+  position:absolute;top:.45rem;right:.5rem;border:none;background:transparent;
+  font-size:.95rem;line-height:1;cursor:pointer;color:var(--ink-mute,#7a6a56);padding:.2rem;
+}
+.wmk-ton{
+  margin-top:.6rem;border:2px solid var(--ink);background:var(--sand);color:var(--ink);
+  border-radius:999px;padding:.3rem .75rem;font-family:inherit;font-size:.82rem;
+  font-weight:700;cursor:pointer;
+}
+@media print{ .wm::after{display:none;} .wmk{display:none;} }
+
 /* ---------- Die Ablauftafel ----------
    Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
    und in welcher Aufstellung. */
@@ -719,7 +761,7 @@ a.tab:hover{color:var(--ink);}
 <button class="speak" data-say="Grundsätzlich finde ich den Vorschlag gut — allerdings hängt es davon ab, wer ihn umsetzt.">🔊 hören</button></div>
 <div class="rmcard"><b>3 · 🗣️ Gesprächsbedarf anmelden</b><br>
 <span class="rm">Ich würde das gern einmal mit Ihnen besprechen.</span><span class="rm">Darüber sollten wir in Ruhe reden.</span><span class="rm">Hätten Sie kurz Zeit für ein Gespräch?</span><span class="rm">Ich melde mich, dann sprechen wir darüber.</span>
-<div class="bsp"><span class="wer">So klingt es</span>Darüber sollten wir in Ruhe reden — hätten Sie diese Woche eine halbe Stunde Zeit?</div>
+<div class="bsp"><span class="wer">So klingt es</span>Darüber sollten wir in Ruhe <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von reden" data-wort="reden" data-kurz="sich unterhalten — lockerer als sprechen" data-bsp="Wir haben lange über alles Mögliche geredet.">reden</b> — hätten Sie diese Woche eine halbe Stunde Zeit?</div>
 <button class="speak" data-say="Darüber sollten wir in Ruhe reden — hätten Sie diese Woche eine halbe Stunde Zeit?">🔊 hören</button></div>
 <div class="rmcard"><b>4 · 📖 Ausführlich erzählen</b><br>
 <span class="rm">Ich erzähle es dir von Anfang an.</span><span class="rm">Um es kurz zu machen:</span><span class="rm">Das Spannende daran war, dass …</span><span class="rm">Wenn du magst, erzähle ich dir den Rest später.</span>
@@ -751,16 +793,16 @@ a.tab:hover{color:var(--ink);}
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ich würde gern mal mit dir über die Urlaubsplanung reden.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Klar. Hast du schon mit den anderen darüber gesprochen?</div><div class="dcue">🗣️ <b>reden über</b> und <b>sprechen mit … über</b> — beide Muster nebeneinander. Die Person kommt mit <i>mit</i>, das Thema mit <i>über</i>.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Noch nicht. Ich wollte erst wissen, wie du dazu stehst.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Sag mir einfach, worum es genau geht, dann kann ich dir mehr sagen.</div><div class="dcue">🗣️ <b>sagen</b> mit zwei Objekten: <i>mir</i> (Dativ) und <i>worum es geht</i> (der Inhalt). Nie mit <i>über</i>.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Sag mir einfach, worum es genau geht, dann kann ich dir mehr <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von sagen" data-wort="sagen" data-kurz="eine Information mitteilen" data-bsp="Kannst du mir bitte die Uhrzeit sagen?">sagen</b>.</div><div class="dcue">🗣️ <b>sagen</b> mit zwei Objekten: <i>mir</i> (Dativ) und <i>worum es geht</i> (der Inhalt). Nie mit <i>über</i>.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Es geht um die zweite Augustwoche.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Erzähl mir am besten in Ruhe davon — hast du morgen Mittag Zeit?</div><div class="dcue">🗣️ <b>erzählen von</b> + Dativ, hier als <i>davon</i>. Und die Bitte um Zeit macht aus dem Thema ein echtes Gespräch.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Ich würde gern mal mit dir über die Urlaubsplanung reden. Klar. Hast du schon mit den anderen darüber gesprochen? Noch nicht. Ich wollte erst wissen, wie du dazu stehst. Sag mir einfach, worum es genau geht, dann kann ich dir mehr sagen. Es geht um die zweite Augustwoche. Erzähl mir am besten in Ruhe davon — hast du morgen Mittag Zeit?">🔊 Dialog vorlesen lassen</button></div>
 
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-medien.webp" alt="Eine Person sitzt auf dem Sofa mit Handy und Laptop"><h4>Dialog 3 · „Sehen oder schauen“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Zwei sprechen über einen Film — und stolpern beinahe über den Unterschied zwischen den beiden Verben.</div>
+<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-medien.webp" alt="Eine Person sitzt auf dem Sofa mit Handy und Laptop"><h4>Dialog 3 · „Sehen oder schauen“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Zwei <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von sprechen" data-wort="sprechen" data-kurz="eine Sprache benutzen oder ein Gespräch führen" data-bsp="Ich spreche morgen mit meiner Chefin über den Urlaub.">sprechen</b> über einen Film — und stolpern beinahe über den Unterschied zwischen den beiden Verben.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Hast du den Film gesehen, von dem alle reden?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ich habe ihn gestern geschaut. Also: bewusst hingesetzt, Handy weg.</div><div class="dcue">🗣️ <b>sehen</b> passiert von allein, <b>schauen</b> ist eine Entscheidung. Bei Filmen benutzt man beide — <i>schauen</i> betont, dass man sich Zeit genommen hat.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Und? Wie fandest du ihn?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Die erste Hälfte hat mir gut gefallen, danach fand ich ihn zu lang.</div><div class="dcue">🗣️ Wieder beide Muster: <b>gefallen</b> mit Dativ, <b>finden</b> mit Akkusativ und Adjektiv. Und das Perfekt <i>hat gefallen</i>, ohne zusätzliches <i>ge</i>.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Die erste Hälfte hat mir gut <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von gefallen" data-wort="gefallen" data-kurz="einem optisch oder als Idee zusagen" data-bsp="Die Wohnung gefällt mir sehr.">gefallen</b>, danach fand ich ihn zu lang.</div><div class="dcue">🗣️ Wieder beide Muster: <b>gefallen</b> mit Dativ, <b>finden</b> mit Akkusativ und Adjektiv. Und das Perfekt <i>hat gefallen</i>, ohne zusätzliches <i>ge</i>.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Das habe ich auch von anderen gehört.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Schau ihn dir trotzdem an. Und wenn du magst, reden wir danach darüber.</div><div class="dcue">🗣️ <b>sich etwas anschauen</b> mit Dativ (<i>dir</i>) und der Vorschlag mit <b>reden über</b> — als <i>darüber</i>.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Hast du den Film gesehen, von dem alle reden? Ich habe ihn gestern geschaut. Also: bewusst hingesetzt, Handy weg. Und? Wie fandest du ihn? Die erste Hälfte hat mir gut gefallen, danach fand ich ihn zu lang. Das habe ich auch von anderen gehört. Schau ihn dir trotzdem an. Und wenn du magst, reden wir danach darüber.">🔊 Dialog vorlesen lassen</button></div>
@@ -769,7 +811,7 @@ a.tab:hover{color:var(--ink);}
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ich habe den Anfang nicht mitbekommen, worum ging es?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Hör mir kurz zu, dann erzähle ich dir schnell, was du verpasst hast.</div><div class="dcue">🗣️ Zwei Dativ-Verben in einem Satz: <b>jemandem zuhören</b> und <b>jemandem etwas erzählen</b>. Beide nie mit Akkusativ.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Danke, das ist nett.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Es ging darum, welche Verben mit Dativ stehen. Gefallen zum Beispiel, und schmecken.</div><div class="dcue">🗣️ <b>Es geht darum, …</b> ist der beste Weg, ein Thema zusammenzufassen. Danach ein Beispiel, und die Sache ist erklärt.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Es ging darum, welche Verben mit Dativ stehen. Gefallen zum Beispiel, und <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von schmecken" data-wort="schmecken" data-kurz="einem gut oder schlecht munden — beim Essen" data-bsp="Der Kaffee schmeckt mir hier besser als zu Hause.">schmecken</b>.</div><div class="dcue">🗣️ <b>Es geht darum, …</b> ist der beste Weg, ein Thema zusammenzufassen. Danach ein Beispiel, und die Sache ist erklärt.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ah, das kenne ich aus meiner Sprache anders.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Mir ging es genauso. Sag Bescheid, wenn du willst, dann üben wir das nachher zusammen.</div><div class="dcue">🗣️ <b>Mir ging es genauso</b> — wieder Dativ. Und ein Angebot, das nichts kostet, aber viel bewirkt.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Ich habe den Anfang nicht mitbekommen, worum ging es? Hör mir kurz zu, dann erzähle ich dir schnell, was du verpasst hast. Danke, das ist nett. Es ging darum, welche Verben mit Dativ stehen. Gefallen zum Beispiel, und schmecken. Ah, das kenne ich aus meiner Sprache anders. Mir ging es genauso. Sag Bescheid, wenn du willst, dann üben wir das nachher zusammen.">🔊 Dialog vorlesen lassen</button></div>
@@ -903,7 +945,7 @@ a.tab:hover{color:var(--ink);}
 <p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A hat gekocht und fragt nach. B mag nicht alles — sagt es aber freundlich.</p>
 <div class="nur-a2"><span class="rm">Das schmeckt mir sehr gut</span><span class="rm">Die Soße mag ich besonders</span><span class="rm">Fisch mag ich leider nicht so</span><span class="rm">Kannst du mir das Rezept sagen?</span></div>
 <div class="nur-b1"><span class="rm">Das Gemüse schmeckt mir ausgezeichnet, den Fisch esse ich generell selten</span><span class="rm">Die Kombination finde ich ungewöhnlich, aber sie funktioniert</span><span class="rm">Erzähl mir mal, wie du das gemacht hast</span><span class="rm">Über die Nachspeise reden wir später noch</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat gelobt, ohne zu lügen, und eine Abneigung so gesagt, dass sie nicht nach Kritik klingt. Mindestens ein Satz mit <i>schmecken</i> und einer mit <i>mögen</i> — mit verschiedenen Subjekten.</div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat gelobt, ohne zu lügen, und eine Abneigung so gesagt, dass sie nicht nach Kritik klingt. Mindestens ein Satz mit <i>schmecken</i> und einer mit <i><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von mögen" data-wort="mögen" data-kurz="etwas oder jemanden gernhaben" data-bsp="Ich mag Hunde, aber ich hätte gern keinen eigenen.">mögen</b></i> — mit verschiedenen Subjekten.</div>
 </div>
 <div class="rmcard">
 <b>3 · Das Gespräch mit der Chefin</b>
@@ -1176,6 +1218,64 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.setAttribute('aria-expanded',auf?'true':'false');
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
+
+/* ---- Markierte Woerter ----
+   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
+   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
+   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
+
+   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
+   den viele verwechseln. */
+(function(){
+ var woerter=[].slice.call(document.querySelectorAll('.wm'));
+ if(!woerter.length) return;
+ var karte=null;
+
+ function zu(){ if(karte){ karte.remove(); karte=null; }
+  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
+
+ function auf(w){
+  var schonOffen=w.classList.contains('offen');
+  zu();
+  if(schonOffen) return;
+  w.classList.add('offen');
+  karte=document.createElement('div');
+  karte.className='wmk';
+  var satz=w.dataset.bsp||'';
+  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
+   + '<b>'+w.dataset.wort+'</b>'
+   + '<span>'+(w.dataset.kurz||'')+'</span>'
+   + (satz?'<em>'+satz+'</em>':'')
+   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
+  document.body.appendChild(karte);
+
+  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
+  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
+  var links=r.left+r.width/2-b.width/2;
+  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
+  var oben=r.bottom+window.pageYOffset+9;
+  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
+   oben=r.top+window.pageYOffset-b.height-9;
+  karte.style.left=links+'px'; karte.style.top=oben+'px';
+
+  karte.querySelector('.wmk-zu').onclick=zu;
+  var ton=karte.querySelector('.wmk-ton');
+  if(ton) ton.onclick=function(){ say(satz); };
+ }
+
+ woerter.forEach(function(w){
+  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
+  w.addEventListener('keydown',function(ev){
+   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
+ });
+ document.addEventListener('click',zu);
+ document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
+ window.addEventListener('resize',zu);
+ /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
+    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
+ document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
+  k.addEventListener('click',zu); });
+})();
 
 /* ---- Bildkarten verdecken ----
    Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau

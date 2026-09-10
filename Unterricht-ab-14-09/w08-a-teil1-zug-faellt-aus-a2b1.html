@@ -436,6 +436,48 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Markierte Wörter ----------
+   Keine Wortschatzliste mehr, sondern das Wort dort, wo es steht.
+   Gelb unterstrichen: Wort dieser Stunde. Rot gepunktet: Begriff,
+   den viele verwechseln. Beides bleibt lesbar, wenn man es ignoriert —
+   die Markierung liegt unter der Zeile, nicht auf dem Wort. */
+.wm{
+  font-weight:inherit;cursor:pointer;position:relative;
+  border-bottom:3px solid var(--yellow);
+  padding-bottom:1px;transition:background .12s;
+}
+.wm.schwer{border-bottom:3px dotted var(--red);}
+.wm:hover,.wm.offen{background:rgba(255,210,74,.35);border-radius:4px 4px 0 0;}
+.wm.schwer:hover,.wm.schwer.offen{background:rgba(232,48,42,.12);}
+.wm:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.wm::after{
+  content:'';display:inline-block;width:.42em;height:.42em;margin-left:.22em;
+  vertical-align:.35em;border-radius:50%;background:var(--yellow);
+}
+.wm.schwer::after{background:var(--red);}
+
+.wmk{
+  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.2);padding:.85rem 1rem .9rem;
+}
+.wmk b{display:block;font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.25;padding-right:1.4rem;}
+.wmk span{display:block;margin-top:.3rem;font-size:.94rem;line-height:1.5;color:var(--ink-soft);}
+.wmk em{
+  display:block;margin-top:.55rem;padding-left:.7rem;border-left:3px solid var(--teal);
+  font-style:italic;font-size:.93rem;line-height:1.5;
+}
+.wmk-zu{
+  position:absolute;top:.45rem;right:.5rem;border:none;background:transparent;
+  font-size:.95rem;line-height:1;cursor:pointer;color:var(--ink-mute,#7a6a56);padding:.2rem;
+}
+.wmk-ton{
+  margin-top:.6rem;border:2px solid var(--ink);background:var(--sand);color:var(--ink);
+  border-radius:999px;padding:.3rem .75rem;font-family:inherit;font-size:.82rem;
+  font-weight:700;cursor:pointer;
+}
+@media print{ .wm::after{display:none;} .wmk{display:none;} }
+
 /* ---------- Die Ablauftafel ----------
    Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
    und in welcher Aufstellung. */
@@ -672,25 +714,25 @@ a.tab:hover{color:var(--ink);}
 <div class="nur-a2">
 <div class="rmcard"><b>1 · 📣 Sagen, was los ist</b><br>
 <span class="rm">Mein Zug fällt aus.</span><span class="rm">Ich muss nach Köln.</span><span class="rm">Ich habe eine Fahrkarte für 14 Uhr.</span><span class="rm">Ich komme aus Hagen.</span>
-<div class="bsp"><span class="wer">So klingt es</span>Mein Zug nach Köln fällt aus. Ich habe eine Fahrkarte für 14 Uhr.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Mein Zug nach Köln fällt aus. Ich habe eine <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Fahrkarte" data-wort="die Fahrkarte" data-kurz="das Ticket für die Fahrt" data-bsp="Heb die Fahrkarte auf, die brauchst du später.">Fahrkarte</b> für 14 Uhr.</div>
 <button class="speak" data-say="Mein Zug nach Köln fällt aus. Ich habe eine Fahrkarte für 14 Uhr.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · ❓ Fragen, was geht</b><br>
 <span class="rm">Gibt es eine andere Verbindung?</span><span class="rm">Wann fährt der nächste Zug?</span><span class="rm">Kann ich mit dem Bus fahren?</span><span class="rm">Gilt meine Fahrkarte auch dort?</span>
-<div class="bsp"><span class="wer">So klingt es</span>Gibt es eine andere Verbindung nach Köln? Und gilt meine Fahrkarte dort?</div>
+<div class="bsp"><span class="wer">So klingt es</span>Gibt es eine andere <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Verbindung" data-wort="die Verbindung" data-kurz="der Weg von A nach B mit Bus oder Bahn" data-bsp="Gibt es noch eine andere Verbindung nach Köln?">Verbindung</b> nach Köln? Und gilt meine Fahrkarte dort?</div>
 <button class="speak" data-say="Gibt es eine andere Verbindung nach Köln? Und gilt meine Fahrkarte dort?">🔊 hören</button></div>
 <div class="rmcard"><b>3 · 🧭 Nach dem Weg fragen</b><br>
 <span class="rm">Wo fährt der Bus ab?</span><span class="rm">Von welchem Gleis?</span><span class="rm">Wie komme ich dorthin?</span><span class="rm">Ist das weit?</span>
-<div class="bsp"><span class="wer">So klingt es</span>Wo fährt der Ersatzverkehr ab? Ist das weit von hier?</div>
+<div class="bsp"><span class="wer">So klingt es</span>Wo fährt der <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Ersatzverkehr" data-wort="der Ersatzverkehr" data-kurz="Busse, die fahren, wenn der Zug nicht fährt" data-bsp="Es gibt Ersatzverkehr mit Bussen ab dem Vorplatz.">Ersatzverkehr</b> ab? Ist das weit von hier?</div>
 <button class="speak" data-say="Wo fährt der Ersatzverkehr ab? Ist das weit von hier?">🔊 hören</button></div>
 <div class="rmcard"><b>4 · ✅ Sich absichern</b><br>
 <span class="rm">Also Gleis acht, richtig?</span><span class="rm">Um wie viel Uhr genau?</span><span class="rm">Muss ich noch umsteigen?</span><span class="rm">Vielen Dank, das hilft mir.</span>
-<div class="bsp"><span class="wer">So klingt es</span>Also Gleis acht um 14:40, richtig? Vielen Dank, das hilft mir.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Also <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Gleis" data-wort="das Gleis" data-kurz="der Platz im Bahnhof, wo der Zug hält" data-bsp="Der Zug fährt heute von Gleis acht statt von Gleis drei.">Gleis</b> acht um 14:40, richtig? Vielen Dank, das hilft mir.</div>
 <button class="speak" data-say="Also Gleis acht um 14:40, richtig? Vielen Dank, das hilft mir.">🔊 hören</button></div>
 </div>
 <div class="nur-b1">
 <div class="rmcard"><b>1 · 📣 Die Lage in einem Satz</b><br>
 <span class="rm">Mein Zug ist ausgefallen, ich muss aber heute noch nach Köln.</span><span class="rm">Ich habe eine Fahrkarte für die 14-Uhr-Verbindung.</span><span class="rm">Ich erreiche meinen Anschluss nicht mehr.</span><span class="rm">Ich bin mit Gepäck unterwegs.</span>
-<div class="bsp"><span class="wer">So klingt es</span>Mein Zug ist ausgefallen, ich erreiche meinen Anschluss in Hamm nicht mehr.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Mein Zug ist ausgefallen, ich erreiche meinen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Anschluss" data-wort="der Anschluss" data-kurz="der nächste Zug oder Bus, in den man umsteigt" data-bsp="Wenn ich hier warte, verpasse ich meinen Anschluss.">Anschluss</b> in Hamm nicht mehr.</div>
 <button class="speak" data-say="Mein Zug ist ausgefallen, ich erreiche meinen Anschluss in Hamm nicht mehr.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · ❓ Die höfliche Frage</b><br>
 <span class="rm">Können Sie mir sagen, ob …</span><span class="rm">Wissen Sie, wann …</span><span class="rm">Darf ich fragen, wo …</span><span class="rm">Könnten Sie mir kurz zeigen, wie …</span>
@@ -702,7 +744,7 @@ a.tab:hover{color:var(--ink);}
 <button class="speak" data-say="Was schlagen Sie vor — warten oder über Dortmund fahren?">🔊 hören</button></div>
 <div class="rmcard"><b>4 · 🧾 An später denken</b><br>
 <span class="rm">Bekomme ich das schriftlich?</span><span class="rm">Muss ich mir etwas bestätigen lassen?</span><span class="rm">Wie heißt das Formular dafür?</span><span class="rm">Ich notiere mir die Ankunftszeit.</span>
-<div class="bsp"><span class="wer">So klingt es</span>Bekomme ich die Verspätung schriftlich bestätigt? Ich möchte das später einreichen.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Bekomme ich die <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von Verspätung" data-wort="die Verspätung" data-kurz="er kommt, nur später" data-bsp="ICE 645 · +20 · Gleis 3">Verspätung</b> schriftlich bestätigt? Ich möchte das später einreichen.</div>
 <button class="speak" data-say="Bekomme ich die Verspätung schriftlich bestätigt? Ich möchte das später einreichen.">🔊 hören</button></div>
 </div>
 <div class="legende">
@@ -722,7 +764,7 @@ a.tab:hover{color:var(--ink);}
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Guten Tag. Mein Zug nach Köln fällt aus. Können Sie mir sagen, ob es heute noch eine andere Verbindung gibt?</div><div class="dcue">🗣️ Erst das Problem, dann die Frage. <b>Können Sie mir sagen, ob …</b> ist die höfliche Form — und das Verb <i>gibt</i> wandert dabei ans Ende.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Um 15:12 über Dortmund. Sie sind dann eine Stunde später da.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Gilt meine Fahrkarte auch für diese Strecke?</div><div class="dcue">🗣️ Die wichtigste Nachfrage überhaupt. Bei einem Ausfall gilt die Fahrkarte fast immer auch anders — aber sicher ist sicher.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ja, bei einem Ausfall gilt sie auch über Dortmund.</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ja, bei einem <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Ausfall" data-wort="der Ausfall" data-kurz="wenn ein Zug gar nicht fährt" data-bsp="Wegen eines Ausfalls stehe ich noch in Hagen.">Ausfall</b> gilt sie auch über Dortmund.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Gut. Von welchem Gleis fährt der ab — und bekomme ich die Verspätung schriftlich?</div><div class="dcue">🗣️ Zwei Dinge auf einmal: das Gleis für jetzt, die Bestätigung für später. Genau diese Bestätigung brauchst du am Mittwoch für das Formular.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Guten Tag, was kann ich für Sie tun? Guten Tag. Mein Zug nach Köln fällt aus. Können Sie mir sagen, ob es heute noch eine andere Verbindung gibt? Um 15:12 über Dortmund. Sie sind dann eine Stunde später da. Gilt meine Fahrkarte auch für diese Strecke? Ja, bei einem Ausfall gilt sie auch über Dortmund. Gut. Von welchem Gleis fährt der ab — und bekomme ich die Verspätung schriftlich?">🔊 Dialog vorlesen lassen</button></div>
 
@@ -730,7 +772,7 @@ a.tab:hover{color:var(--ink);}
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Der geht heute von acht, haben Sie das gehört?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Nein, die Durchsage habe ich nicht verstanden. Wissen Sie, ob das der Zug nach Köln ist?</div><div class="dcue">🗣️ <b>Wissen Sie, ob …</b> — wieder eine indirekte Frage, diesmal an eine fremde Person. Sie klingt nie aufdringlich.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ja, der um 14:12. Wir müssen einmal durch die Unterführung.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ich habe ziemlich viel Gepäck. Schaffe ich das in vier Minuten?</div><div class="dcue">🗣️ Sag, was dein Problem konkret ist. <i>Mit Gepäck</i> ändert die Antwort — Menschen zeigen dir dann den Aufzug statt die Treppe.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ich habe ziemlich viel <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Gepäck" data-wort="das Gepäck" data-kurz="alles, was man auf einer Reise dabeihat" data-bsp="Mit dem Gepäck schaffe ich den Umstieg in vier Minuten nicht.">Gepäck</b>. Schaffe ich das in vier Minuten?</div><div class="dcue">🗣️ Sag, was dein Problem konkret ist. <i>Mit Gepäck</i> ändert die Antwort — Menschen zeigen dir dann den Aufzug statt die Treppe.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Mit dem Aufzug schon. Der ist gleich da vorne links.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Vielen Dank, dann gehe ich einfach mit.</div><div class="dcue">🗣️ Ein kurzer Dank und ein einfacher Anschlusssatz. So bleibt aus einer Frage ein kleines Gespräch — und du bist nicht mehr allein unterwegs.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Der geht heute von acht, haben Sie das gehört? Nein, die Durchsage habe ich nicht verstanden. Wissen Sie, ob das der Zug nach Köln ist? Ja, der um 14:12. Wir müssen einmal durch die Unterführung. Ich habe ziemlich viel Gepäck. Schaffe ich das in vier Minuten? Mit dem Aufzug schon. Der ist gleich da vorne links. Vielen Dank, dann gehe ich einfach mit.">🔊 Dialog vorlesen lassen</button></div>
@@ -1155,6 +1197,64 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.setAttribute('aria-expanded',auf?'true':'false');
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
+
+/* ---- Markierte Woerter ----
+   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
+   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
+   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
+
+   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
+   den viele verwechseln. */
+(function(){
+ var woerter=[].slice.call(document.querySelectorAll('.wm'));
+ if(!woerter.length) return;
+ var karte=null;
+
+ function zu(){ if(karte){ karte.remove(); karte=null; }
+  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
+
+ function auf(w){
+  var schonOffen=w.classList.contains('offen');
+  zu();
+  if(schonOffen) return;
+  w.classList.add('offen');
+  karte=document.createElement('div');
+  karte.className='wmk';
+  var satz=w.dataset.bsp||'';
+  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
+   + '<b>'+w.dataset.wort+'</b>'
+   + '<span>'+(w.dataset.kurz||'')+'</span>'
+   + (satz?'<em>'+satz+'</em>':'')
+   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
+  document.body.appendChild(karte);
+
+  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
+  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
+  var links=r.left+r.width/2-b.width/2;
+  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
+  var oben=r.bottom+window.pageYOffset+9;
+  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
+   oben=r.top+window.pageYOffset-b.height-9;
+  karte.style.left=links+'px'; karte.style.top=oben+'px';
+
+  karte.querySelector('.wmk-zu').onclick=zu;
+  var ton=karte.querySelector('.wmk-ton');
+  if(ton) ton.onclick=function(){ say(satz); };
+ }
+
+ woerter.forEach(function(w){
+  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
+  w.addEventListener('keydown',function(ev){
+   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
+ });
+ document.addEventListener('click',zu);
+ document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
+ window.addEventListener('resize',zu);
+ /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
+    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
+ document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
+  k.addEventListener('click',zu); });
+})();
 
 /* ---- Bildkarten verdecken ----
    Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau

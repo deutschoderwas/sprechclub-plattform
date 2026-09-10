@@ -38,6 +38,109 @@ const nurText = t => String(t || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' '
 const fehler = [];
 const bilder = new Set();
 
+/* ---------- Woerter im Text markieren ----------
+   Julia will keine Wortschatzliste mehr, aber sehr wohl, dass
+   schwierige und wichtige Woerter auffallen — dort, wo sie stehen.
+
+   Die Woerter dafuer sind schon da. Sie kamen aus den zwei
+   Abschnitten, die beim Umbau rausgeflogen sind:
+
+     wortschatz.karten  die zwoelf Woerter der Stunde, mit Artikel,
+                        Kurzbedeutung und Beispielsatz  -> wichtig
+     konzepte.dreier    die drei Begriffe, die staendig verwechselt
+                        werden, mit Erklaerung          -> schwer
+
+   Beides steht jetzt nicht mehr als Liste am Anfang, sondern als
+   Markierung mitten im Satz: antippen zeigt Bedeutung und Beispiel.
+   Wer das Wort schon kennt, liest darueber hinweg.
+
+   Zwei Regeln halten die Seite ruhig:
+     · jedes Wort genau einmal — dort, wo man ihm zuerst begegnet
+     · Markierungen ueberschneiden sich nie
+   Ohne die erste Regel steht in der Beschwerde-Stunde „Reklamation"
+   siebenmal angestrichen, und „Verspaetung" zweimal direkt
+   hintereinander — dann sieht man nichts mehr. Einmal reicht: wer
+   das Wort nachgeschlagen hat, erkennt es beim zweiten Mal. */
+
+const MARKEN = [];
+const markZahl = {};
+const HOECHSTENS = 1;
+
+function ohneArtikel(w) { return String(w || '').replace(/^(der|die|das)\s+/i, '').trim(); }
+function artikelVon(w)  { const m = String(w || '').match(/^(der|die|das)\s/i); return m ? m[1].toLowerCase() : ''; }
+function fluchtRegex(w) { return String(w).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+function markenSammeln() {
+  ((S.wortschatz && S.wortschatz.karten) || []).forEach(k => {
+    const wort = ohneArtikel(nurText(k.wort));
+    if (wort.length < 4) return;
+    MARKEN.push({ wort, art: (k.art || artikelVon(nurText(k.wort)) || ''), grad: 'wichtig',
+                  kurz: nurText(k.kurz || k.tipp || ''), bsp: nurText(k.bsp || '') });
+  });
+  ((S.konzepte && S.konzepte.dreier) || []).forEach(k => {
+    const wort = ohneArtikel(nurText(k.wort));
+    if (wort.length < 4) return;
+    MARKEN.push({ wort, art: artikelVon(nurText(k.wort)), grad: 'schwer',
+                  kurz: nurText(k.was || ''), bsp: nurText(k.bsp || '') });
+  });
+  /* Das laengste Wort zuerst, sonst frisst „Garantie" den Anfang von
+     „Garantiefall" und der Rest bleibt unmarkiert stehen. */
+  MARKEN.sort((a, b) => b.wort.length - a.wort.length);
+}
+
+/* Deutsche Endungen, die an ein Nomen oder Verb noch drankommen
+   koennen. Mehr nicht — „Frist" soll „Fristen" finden, aber nicht
+   „fristlos". */
+const ENDUNG = '(?:en|e|es|s|n|er|em|ern)?';
+const BUCHSTABE = 'A-Za-zÄÖÜäöüßÀ-ÿ';
+
+function markiere(text) {
+  if (!text || !MARKEN.length) return text;
+  /* Nur die Stuecke zwischen den Tags anfassen: in der JSON steht
+     Auszeichnung wie <b>, und in einem Attribut hat eine Markierung
+     nichts zu suchen. */
+  return String(text).split(/(<[^>]+>)/).map(teil => {
+    if (teil.charAt(0) === '<') return teil;
+    const treffer = [];
+    MARKEN.forEach(m => {
+      if ((markZahl[m.wort] || 0) >= HOECHSTENS) return;
+      const re = new RegExp('(?:^|[^' + BUCHSTABE + '])(' + fluchtRegex(m.wort) + ENDUNG + ')(?![' + BUCHSTABE + '])', 'i');
+      const t = re.exec(teil);
+      if (!t) return;
+      const von = t.index + t[0].length - t[1].length;
+      /* Keine zwei Markierungen uebereinander. */
+      if (treffer.some(x => von < x.bis && von + t[1].length > x.von)) return;
+      markZahl[m.wort] = (markZahl[m.wort] || 0) + 1;
+      treffer.push({ von, bis: von + t[1].length, wort: t[1], m });
+    });
+    if (!treffer.length) return teil;
+    treffer.sort((a, b) => b.von - a.von);
+    let s = teil;
+    treffer.forEach(t => {
+      s = s.slice(0, t.von)
+        + `<b class="wm ${t.m.grad}" tabindex="0" role="button" aria-label="Bedeutung von ${attr(t.wort)}"`
+        + ` data-wort="${attr((t.m.art ? t.m.art + ' ' : '') + t.m.wort)}"`
+        + ` data-kurz="${attr(t.m.kurz)}"`
+        + ` data-bsp="${attr(t.m.bsp)}">${t.wort}</b>`
+        + s.slice(t.bis);
+    });
+    return s;
+  }).join('');
+}
+
+/* h() mit Markierung — nur dort, wo die Sprache benutzt wird:
+   Beispielsaetze, Dialogzeilen, Rollenspiele.
+
+   Nicht im Quiz und nicht im Lueckentext, dort waere die Bedeutung
+   die halbe Loesung. Und nicht in Ankommen und Debatte: das sind
+   Anweisungen, kein Lernstoff. In der Partikel-Stunde stand in der
+   Ankommen-Frage „Welche dieser Woertchen benutzt du schon — doch,
+   mal, ja, eben, halt?" — eine Aufzaehlung der Woerter selbst. Dort
+   angestrichen erklaerte die Karte ein Wort, das gar nicht in
+   Gebrauch war, und verbrauchte das Zeichen fuer den Dialog, wo es
+   wirklich vorkommt. */
+const hm = t => markiere(h(t));
+
 /* Bildpfade stehen in der JSON immer vom Stammordner aus (amanda/…,
    vok-bild/…) — so wie sie auch geprueft werden. Die fertige Seite liegt
    aber in einem Unterordner, und im Browser zaehlt der Ordner der Seite:
@@ -178,7 +281,7 @@ function saetze(s3) {
     gruppen.forEach(g => {
       s += `<div class="rmcard"><b>${h(g.titel)}</b><br>\n` +
         g.chips.map(c => `<span class="rm">${h(c)}</span>`).join('') + '\n' +
-        `<div class="bsp"><span class="wer">So klingt es</span>${h(g.bsp)}</div>\n` +
+        `<div class="bsp"><span class="wer">So klingt es</span>${hm(g.bsp)}</div>\n` +
         sprechKnopf(g.say || g.bsp) + `</div>\n`;
     });
     s += `</div>\n`;
@@ -201,12 +304,12 @@ function dialoge(d) {
       (dl.bild ? `<img src="${attr(bild(dl.bild))}" alt="${attr(dl.alt || dl.titel)}">` : '') +
       `<h4>Dialog ${n + 1} · „${h(dl.titel)}“</h4>` +
       `<button class="rbtn">▶︎ Runde 2 · du antwortest</button></div>` +
-      `<div class="dsit">${h(dl.situation)}</div>\n`;
+      `<div class="dsit">${hm(dl.situation)}</div>\n`;
     dl.zeilen.forEach(z => {
       const wer = z.wer === 'b' ? 'b' : 'a';
       if (wer === 'b' && !z.cue) fehler.push('Dialog ' + (n + 1) + ': eine B-Zeile ohne Regieanweisung — in Runde 2 steht die Person dann ohne Hilfe da');
       s += `<div class="dline ${wer}"><div class="dwho ${wer}">${wer.toUpperCase()}</div>` +
-        `<div class="dtxt">${h(z.text)}</div>` +
+        `<div class="dtxt">${hm(z.text)}</div>` +
         (z.cue ? `<div class="dcue">🗣️ ${h(z.cue)}<span class="kl">tippen = Hilfe zeigen</span></div>` : '') +
         (z.bild ? `<img class="dbild" src="${attr(bild(z.bild))}" alt="" loading="lazy">` : '') +
         `</div>\n`;
@@ -272,10 +375,10 @@ function rollenspiele(r) {
   let s = `<section class="section" id="rollenspiele">\n` + kopfzeile(r.h2, r.hl, r.ssub);
   r.liste.forEach((x, i) => {
     s += `<div class="rmcard">\n<b>${i + 1} · ${h(x.titel)}</b>\n` +
-      `<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">${h(x.situation)}</p>\n` +
+      `<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">${hm(x.situation)}</p>\n` +
       (x.a2 ? `<div class="nur-a2">` + x.a2.map(c => `<span class="rm">${h(c)}</span>`).join('') + `</div>\n` : '') +
       (x.b1 ? `<div class="nur-b1">` + x.b1.map(c => `<span class="rm">${h(c)}</span>`).join('') + `</div>\n` : '') +
-      `<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>${h(x.gut)}</div>\n</div>\n`;
+      `<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>${hm(x.gut)}</div>\n</div>\n`;
   });
   if (S.daten && S.daten.sk && S.daten.sk.length) {
     s += kopfzeile('🎴 Sprechkarten', null, 'Zieh eine Karte und sprich mindestens vier Sätze am Stück.');
@@ -523,6 +626,7 @@ function nimm(id, name, html) { if (html) abschnitte.push({ id, name, html }); }
 
    Die Daten dazu bleiben in der JSON-Datei stehen. Wer sie zurueck
    will, holt sie mit zwei Zeilen zurueck — geloescht ist nichts. */
+markenSammeln();
 nimm('ablauf',       '🎬 Ablauf',        ablauf());
 nimm('ankommen',     '👋 Ankommen',      ankommen(S));
 nimm('wiederholung', '🔁 Wiederholung',  S.wiederholung ? wiederholung(S.wiederholung) : '');

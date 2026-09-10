@@ -436,6 +436,48 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Markierte Wörter ----------
+   Keine Wortschatzliste mehr, sondern das Wort dort, wo es steht.
+   Gelb unterstrichen: Wort dieser Stunde. Rot gepunktet: Begriff,
+   den viele verwechseln. Beides bleibt lesbar, wenn man es ignoriert —
+   die Markierung liegt unter der Zeile, nicht auf dem Wort. */
+.wm{
+  font-weight:inherit;cursor:pointer;position:relative;
+  border-bottom:3px solid var(--yellow);
+  padding-bottom:1px;transition:background .12s;
+}
+.wm.schwer{border-bottom:3px dotted var(--red);}
+.wm:hover,.wm.offen{background:rgba(255,210,74,.35);border-radius:4px 4px 0 0;}
+.wm.schwer:hover,.wm.schwer.offen{background:rgba(232,48,42,.12);}
+.wm:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.wm::after{
+  content:'';display:inline-block;width:.42em;height:.42em;margin-left:.22em;
+  vertical-align:.35em;border-radius:50%;background:var(--yellow);
+}
+.wm.schwer::after{background:var(--red);}
+
+.wmk{
+  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.2);padding:.85rem 1rem .9rem;
+}
+.wmk b{display:block;font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.25;padding-right:1.4rem;}
+.wmk span{display:block;margin-top:.3rem;font-size:.94rem;line-height:1.5;color:var(--ink-soft);}
+.wmk em{
+  display:block;margin-top:.55rem;padding-left:.7rem;border-left:3px solid var(--teal);
+  font-style:italic;font-size:.93rem;line-height:1.5;
+}
+.wmk-zu{
+  position:absolute;top:.45rem;right:.5rem;border:none;background:transparent;
+  font-size:.95rem;line-height:1;cursor:pointer;color:var(--ink-mute,#7a6a56);padding:.2rem;
+}
+.wmk-ton{
+  margin-top:.6rem;border:2px solid var(--ink);background:var(--sand);color:var(--ink);
+  border-radius:999px;padding:.3rem .75rem;font-family:inherit;font-size:.82rem;
+  font-weight:700;cursor:pointer;
+}
+@media print{ .wm::after{display:none;} .wmk{display:none;} }
+
 /* ---------- Die Ablauftafel ----------
    Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
    und in welcher Aufstellung. */
@@ -676,7 +718,7 @@ a.tab:hover{color:var(--ink);}
 <button class="speak" data-say="Mir ist aufgefallen, dass ich seit zwei Jahren dieselben Projekte mache.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 🧠 Begründen mit weil</b><br>
 <span class="rm">…, weil …</span><span class="rm">…, denn …</span><span class="rm">Der Grund ist, dass …</span>
-<div class="bsp"><span class="wer">So klingt es</span>Ich denke über einen Wechsel nach, weil sich meine Aufgaben kaum verändern.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Ich denke über einen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Wechsel" data-wort="der Wechsel" data-kurz="der Schritt von einer Stelle zur nächsten" data-bsp="Der Wechsel hat sich am Ende gelohnt.">Wechsel</b> nach, weil sich meine Aufgaben kaum verändern.</div>
 <button class="speak" data-say="Ich denke über einen Wechsel nach, weil sich meine Aufgaben kaum verändern.">🔊 hören</button></div>
 <div class="rmcard"><b>3 · ➡️ Folgern</b><br>
 <span class="rm">Deshalb …</span><span class="rm">Darum …</span><span class="rm">Aus diesem Grund …</span>
@@ -684,7 +726,7 @@ a.tab:hover{color:var(--ink);}
 <button class="speak" data-say="Das Team ist gut. Deshalb bleibe ich vorerst.">🔊 hören</button></div>
 <div class="rmcard"><b>4 · ↩️ Einschränken</b><br>
 <span class="rm">Obwohl …</span><span class="rm">Trotzdem …</span><span class="rm">Zwar …, aber …</span>
-<div class="bsp"><span class="wer">So klingt es</span>Obwohl das Gehalt gut ist, fehlt mir die Entwicklung.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Obwohl das <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Gehalt" data-wort="das Gehalt" data-kurz="das Geld, das man monatlich für die Arbeit bekommt" data-bsp="Beim Wechsel ist das Gehalt selten der einzige Grund.">Gehalt</b> gut ist, fehlt mir die Entwicklung.</div>
 <button class="speak" data-say="Obwohl das Gehalt gut ist, fehlt mir die Entwicklung.">🔊 hören</button></div>
 </div>
 <div class="nur-b1">
@@ -717,24 +759,24 @@ a.tab:hover{color:var(--ink);}
 <section class="section" id="dialoge">
 <h2 class="st">Vier Gespräche — <span class="hl">zwei Runden</span></h2>
 <p class="ssub"><b>Runde 1:</b> Lest den Dialog zu zweit laut. <b>Runde 2:</b> Deckt die Zeilen von B ab und sprecht frei — die Hinweise reichen.</p>
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-freunde.webp" alt="Zwei Freunde sitzen mit Kaffee auf einer Bank"><h4>Dialog 1 · „Soll ich oder soll ich nicht?“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">B überlegt seit Monaten zu kündigen und redet zum ersten Mal offen darüber.</div>
+<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-freunde.webp" alt="Zwei Freunde sitzen mit Kaffee auf einer Bank"><h4>Dialog 1 · „Soll ich oder soll ich nicht?“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">B überlegt seit Monaten zu <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von kündigen" data-wort="kündigen" data-kurz="das Arbeitsverhältnis von sich aus beenden" data-bsp="Ich habe zum Ende des Quartals gekündigt.">kündigen</b> und redet zum ersten Mal offen darüber.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Du wirkst in letzter Zeit ziemlich müde, wenn du von der Arbeit erzählst.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Merkt man das? Ich denke seit Monaten über einen Wechsel nach, weil sich einfach nichts mehr entwickelt.</div><div class="dcue">🗣️ <b>weil</b> mit Verb am Ende. Und der Grund ist konkret, nicht nur ein Gefühl.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Und was hält dich?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Das Team ist gut. Deshalb schiebe ich es immer wieder auf.</div><div class="dcue">🗣️ <b>deshalb</b> besetzt Position 1, das Verb kommt sofort danach: <i>schiebe ich</i>.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Hast du mal mit deiner Chefin gesprochen?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Obwohl wir jedes Jahr ein Mitarbeitergespräch haben, habe ich es nie richtig angesprochen.</div><div class="dcue">🗣️ Der Nebensatz mit <b>obwohl</b> steht vorn — danach kommt sofort das Verb <i>habe</i>.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Obwohl wir jedes Jahr ein <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Mitarbeitergespräch" data-wort="das Mitarbeitergespräch" data-kurz="das jährliche Gespräch über Leistung und Ziele" data-bsp="Im Mitarbeitergespräch habe ich das Thema angesprochen.">Mitarbeitergespräch</b> haben, habe ich es nie richtig angesprochen.</div><div class="dcue">🗣️ Der Nebensatz mit <b>obwohl</b> steht vorn — danach kommt sofort das Verb <i>habe</i>.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Dann fang doch damit an.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Vielleicht hast du recht. Wenn sich danach nichts ändert, weiß ich wenigstens Bescheid.</div><div class="dcue">🗣️ <b>Wenn</b> vorn, Verb am Ende des Nebensatzes — und im Hauptsatz gleich <i>weiß ich</i>.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Du wirkst in letzter Zeit ziemlich müde, wenn du von der Arbeit erzählst. Merkt man das? Ich denke seit Monaten über einen Wechsel nach, weil sich einfach nichts mehr entwickelt. Und was hält dich? Das Team ist gut. Deshalb schiebe ich es immer wieder auf. Hast du mal mit deiner Chefin gesprochen? Obwohl wir jedes Jahr ein Mitarbeitergespräch haben, habe ich es nie richtig angesprochen. Dann fang doch damit an. Vielleicht hast du recht. Wenn sich danach nichts ändert, weiß ich wenigstens Bescheid.">🔊 Dialog vorlesen lassen</button></div>
 
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../vok-bild/die-beratung.webp" alt="Zwei Personen sitzen mit einem Laptop an einem Tisch"><h4>Dialog 2 · „Das Mitarbeitergespräch“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">B spricht mit der Vorgesetzten — nicht um zu kündigen, sondern um etwas zu verändern.</div>
+<div class="dwrap" data-runde="1"><div class="dhead"><img src="../vok-bild/die-beratung.webp" alt="Zwei Personen sitzen mit einem Laptop an einem Tisch"><h4>Dialog 2 · „Das Mitarbeitergespräch“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">B spricht mit der Vorgesetzten — nicht um zu <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von kündigen" data-wort="Kündigen" data-kurz="sinnvoll, wenn sich das Grundsätzliche nicht ändern lässt" data-bsp="Ich gehe, weil sich die Aufgabe nicht mehr entwickelt.">kündigen</b>, sondern um etwas zu verändern.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Sie wollten über Ihre Aufgaben sprechen?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Genau. Mir ist aufgefallen, dass ich seit zwei Jahren dieselben drei Projekte betreue.</div><div class="dcue">🗣️ Beobachtung statt Klage. <b>Mir ist aufgefallen</b> mit Dativ und <i>dass</i>-Satz.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Sie machen das ja auch sehr gut.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Danke. Trotzdem würde ich gern etwas dazulernen, weil ich sonst irgendwann stehen bleibe.</div><div class="dcue">🗣️ <b>Trotzdem</b> auf Position 1 — Verb danach. Dann ein <b>weil</b>-Satz als Begründung.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">An was denken Sie konkret?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">An eine Weiterbildung im nächsten Halbjahr — oder daran, ein Projekt selbst zu leiten.</div><div class="dcue">🗣️ <b>denken an</b> mit Akkusativ, und vor dem Nebensatz das Ersatzwort <b>daran</b>.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">An eine <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Weiterbildung" data-wort="die Weiterbildung" data-kurz="ein Kurs, der einen im Beruf weiterbringt" data-bsp="Statt zu kündigen, habe ich um eine Weiterbildung gebeten.">Weiterbildung</b> im nächsten Halbjahr — oder daran, ein Projekt selbst zu leiten.</div><div class="dcue">🗣️ <b>denken an</b> mit Akkusativ, und vor dem Nebensatz das Ersatzwort <b>daran</b>.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Das kann ich mir gut vorstellen. Lassen Sie mich das prüfen.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Sehr gern. Können wir in vier Wochen noch einmal darüber sprechen?</div><div class="dcue">🗣️ Nie ohne konkreten nächsten Termin gehen — sonst versandet es.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Sie wollten über Ihre Aufgaben sprechen? Genau. Mir ist aufgefallen, dass ich seit zwei Jahren dieselben drei Projekte betreue. Sie machen das ja auch sehr gut. Danke. Trotzdem würde ich gern etwas dazulernen, weil ich sonst irgendwann stehen bleibe. An was denken Sie konkret? An eine Weiterbildung im nächsten Halbjahr — oder daran, ein Projekt selbst zu leiten. Das kann ich mir gut vorstellen. Lassen Sie mich das prüfen. Sehr gern. Können wir in vier Wochen noch einmal darüber sprechen?">🔊 Dialog vorlesen lassen</button></div>
@@ -747,11 +789,11 @@ a.tab:hover{color:var(--ink);}
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Haben Sie das intern versucht?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ja, im letzten Mitarbeitergespräch. Es ging nicht, weil die Stelle dort einfach nicht frei wurde.</div><div class="dcue">🗣️ <b>weil</b>-Satz mit Verb am Ende — und der Grund liegt bei den Umständen, nicht bei Personen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Verstehe. Und wann könnten Sie anfangen?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Meine Kündigungsfrist beträgt drei Monate zum Quartalsende, also zum 1. Januar.</div><div class="dcue">🗣️ <b>betragen</b> ist das offizielle Wort für Fristen und Beträge. Klingt sofort vorbereitet.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Meine <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Kündigungsfrist" data-wort="die Kündigungsfrist" data-kurz="die Zeit zwischen Kündigung und letztem Arbeitstag" data-bsp="Meine Kündigungsfrist beträgt drei Monate zum Quartalsende.">Kündigungsfrist</b> beträgt drei Monate zum Quartalsende, also zum 1. Januar.</div><div class="dcue">🗣️ <b>betragen</b> ist das offizielle Wort für Fristen und Beträge. Klingt sofort vorbereitet.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Warum möchten Sie sich verändern? Ich habe dort viel gelernt, und genau deshalb suche ich jetzt den nächsten Schritt. Und was fehlt Ihnen dort? Verantwortung. Die Projekte laufen gut, aber sie werden nicht größer. Haben Sie das intern versucht? Ja, im letzten Mitarbeitergespräch. Es ging nicht, weil die Stelle dort einfach nicht frei wurde. Verstehe. Und wann könnten Sie anfangen? Meine Kündigungsfrist beträgt drei Monate zum Quartalsende, also zum 1. Januar.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-heikel.webp" alt="Zwei Personen sitzen sich in einem ernsten Gespräch gegenüber"><h4>Dialog 4 · „Der Gegenvorschlag“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">B hat gekündigt, und die Firma will ihn halten. Das ist angenehmer, als es klingt — und schwieriger.</div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Wir würden Sie sehr ungern verlieren. Was müsste passieren, damit Sie bleiben?</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Wir würden Sie sehr ungern verlieren. Was müsste passieren, damit Sie <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von bleiben" data-wort="Bleiben" data-kurz="eine Entscheidung, keine Bequemlichkeit — wenn man weiß, wofür" data-bsp="Ich bleibe, weil ich hier lerne, auch wenn das Gehalt nicht stimmt.">bleiben</b>?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Das ist eine faire Frage. Ehrlich gesagt geht es mir weniger ums Gehalt als um die Aufgaben.</div><div class="dcue">🗣️ <b>weniger … als</b> — die eleganteste Art, Prioritäten zu setzen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Wir könnten beim Gehalt etwas machen.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Das weiß ich zu schätzen. Trotzdem bliebe die Aufgabe dieselbe, und genau die ist der Grund.</div><div class="dcue">🗣️ <b>Trotzdem</b> mit Umstellung, und der Konjunktiv <i>bliebe</i> macht es weicher.<span class="kl">tippen = Hilfe zeigen</span></div></div>
@@ -1163,6 +1205,64 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.setAttribute('aria-expanded',auf?'true':'false');
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
+
+/* ---- Markierte Woerter ----
+   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
+   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
+   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
+
+   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
+   den viele verwechseln. */
+(function(){
+ var woerter=[].slice.call(document.querySelectorAll('.wm'));
+ if(!woerter.length) return;
+ var karte=null;
+
+ function zu(){ if(karte){ karte.remove(); karte=null; }
+  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
+
+ function auf(w){
+  var schonOffen=w.classList.contains('offen');
+  zu();
+  if(schonOffen) return;
+  w.classList.add('offen');
+  karte=document.createElement('div');
+  karte.className='wmk';
+  var satz=w.dataset.bsp||'';
+  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
+   + '<b>'+w.dataset.wort+'</b>'
+   + '<span>'+(w.dataset.kurz||'')+'</span>'
+   + (satz?'<em>'+satz+'</em>':'')
+   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
+  document.body.appendChild(karte);
+
+  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
+  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
+  var links=r.left+r.width/2-b.width/2;
+  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
+  var oben=r.bottom+window.pageYOffset+9;
+  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
+   oben=r.top+window.pageYOffset-b.height-9;
+  karte.style.left=links+'px'; karte.style.top=oben+'px';
+
+  karte.querySelector('.wmk-zu').onclick=zu;
+  var ton=karte.querySelector('.wmk-ton');
+  if(ton) ton.onclick=function(){ say(satz); };
+ }
+
+ woerter.forEach(function(w){
+  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
+  w.addEventListener('keydown',function(ev){
+   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
+ });
+ document.addEventListener('click',zu);
+ document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
+ window.addEventListener('resize',zu);
+ /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
+    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
+ document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
+  k.addEventListener('click',zu); });
+})();
 
 /* ---- Bildkarten verdecken ----
    Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau

@@ -436,6 +436,48 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Markierte Wörter ----------
+   Keine Wortschatzliste mehr, sondern das Wort dort, wo es steht.
+   Gelb unterstrichen: Wort dieser Stunde. Rot gepunktet: Begriff,
+   den viele verwechseln. Beides bleibt lesbar, wenn man es ignoriert —
+   die Markierung liegt unter der Zeile, nicht auf dem Wort. */
+.wm{
+  font-weight:inherit;cursor:pointer;position:relative;
+  border-bottom:3px solid var(--yellow);
+  padding-bottom:1px;transition:background .12s;
+}
+.wm.schwer{border-bottom:3px dotted var(--red);}
+.wm:hover,.wm.offen{background:rgba(255,210,74,.35);border-radius:4px 4px 0 0;}
+.wm.schwer:hover,.wm.schwer.offen{background:rgba(232,48,42,.12);}
+.wm:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.wm::after{
+  content:'';display:inline-block;width:.42em;height:.42em;margin-left:.22em;
+  vertical-align:.35em;border-radius:50%;background:var(--yellow);
+}
+.wm.schwer::after{background:var(--red);}
+
+.wmk{
+  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.2);padding:.85rem 1rem .9rem;
+}
+.wmk b{display:block;font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.25;padding-right:1.4rem;}
+.wmk span{display:block;margin-top:.3rem;font-size:.94rem;line-height:1.5;color:var(--ink-soft);}
+.wmk em{
+  display:block;margin-top:.55rem;padding-left:.7rem;border-left:3px solid var(--teal);
+  font-style:italic;font-size:.93rem;line-height:1.5;
+}
+.wmk-zu{
+  position:absolute;top:.45rem;right:.5rem;border:none;background:transparent;
+  font-size:.95rem;line-height:1;cursor:pointer;color:var(--ink-mute,#7a6a56);padding:.2rem;
+}
+.wmk-ton{
+  margin-top:.6rem;border:2px solid var(--ink);background:var(--sand);color:var(--ink);
+  border-radius:999px;padding:.3rem .75rem;font-family:inherit;font-size:.82rem;
+  font-weight:700;cursor:pointer;
+}
+@media print{ .wm::after{display:none;} .wmk{display:none;} }
+
 /* ---------- Die Ablauftafel ----------
    Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
    und in welcher Aufstellung. */
@@ -676,11 +718,11 @@ a.tab:hover{color:var(--ink);}
 <button class="speak" data-say="Was kostet das im Monat — und ist das der Preis für die ganze Zeit?">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 📅 Nach der Zeit fragen</b><br>
 <span class="rm">Wie lange läuft der Vertrag?</span><span class="rm">Ab wann gilt er?</span><span class="rm">Bis wann muss ich kündigen?</span><span class="rm">Kann ich monatlich kündigen?</span>
-<div class="bsp"><span class="wer">So klingt es</span>Wie lange läuft der Vertrag, und bis wann muss ich kündigen?</div>
+<div class="bsp"><span class="wer">So klingt es</span>Wie lange läuft der <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Vertrag" data-wort="der Vertrag" data-kurz="das Papier, in dem steht, was beide Seiten versprechen" data-bsp="Der Vertrag läuft ab dem 1. Dezember für 24 Monate.">Vertrag</b>, und bis wann muss ich kündigen?</div>
 <button class="speak" data-say="Wie lange läuft der Vertrag, und bis wann muss ich kündigen?">🔊 hören</button></div>
 <div class="rmcard"><b>3 · 📶 Nach der Leistung fragen</b><br>
 <span class="rm">Wie viel Datenvolumen ist dabei?</span><span class="rm">Gilt das auch im Ausland?</span><span class="rm">Was passiert, wenn es alle ist?</span><span class="rm">Ist Telefonieren inklusive?</span>
-<div class="bsp"><span class="wer">So klingt es</span>Wie viel Datenvolumen ist dabei, und was passiert, wenn es alle ist?</div>
+<div class="bsp"><span class="wer">So klingt es</span>Wie viel <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Datenvolumen" data-wort="das Datenvolumen" data-kurz="wie viel Internet du pro Monat mobil nutzen kannst" data-bsp="Mein Datenvolumen ist nach zwei Wochen schon aufgebraucht.">Datenvolumen</b> ist dabei, und was passiert, wenn es alle ist?</div>
 <button class="speak" data-say="Wie viel Datenvolumen ist dabei, und was passiert, wenn es alle ist?">🔊 hören</button></div>
 <div class="rmcard"><b>4 · ✋ Zeit gewinnen</b><br>
 <span class="rm">Ich möchte es mir überlegen.</span><span class="rm">Kann ich das mitnehmen?</span><span class="rm">Schicken Sie es mir bitte per E-Mail.</span><span class="rm">Ich melde mich morgen.</span>
@@ -690,15 +732,15 @@ a.tab:hover{color:var(--ink);}
 <div class="nur-b1">
 <div class="rmcard"><b>1 · ❓ Nach den echten Kosten fragen</b><br>
 <span class="rm">Wie hoch sind die Gesamtkosten über die Laufzeit?</span><span class="rm">Ab wann greift der reguläre Preis?</span><span class="rm">Sind das Netto- oder Endpreise?</span><span class="rm">Welche Posten kommen einmalig dazu?</span>
-<div class="bsp"><span class="wer">So klingt es</span>Ab wann greift der reguläre Preis, und wie hoch sind die Gesamtkosten über die gesamte Laufzeit?</div>
+<div class="bsp"><span class="wer">So klingt es</span>Ab wann greift der reguläre Preis, und wie hoch sind die Gesamtkosten über die gesamte <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Laufzeit" data-wort="die Laufzeit" data-kurz="wie lange der Vertrag gilt — meistens 12 oder 24 Monate" data-bsp="Die Laufzeit beträgt 24 Monate ab dem Vertragsbeginn.">Laufzeit</b>?</div>
 <button class="speak" data-say="Ab wann greift der reguläre Preis, und wie hoch sind die Gesamtkosten über die gesamte Laufzeit?">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 📅 Fristen klären</b><br>
 <span class="rm">Verlängert sich der Vertrag automatisch?</span><span class="rm">Wann genau beginnt die Kündigungsfrist?</span><span class="rm">Gilt das Widerrufsrecht auch hier im Laden?</span><span class="rm">Kann ich die Frist irgendwo nachlesen?</span>
-<div class="bsp"><span class="wer">So klingt es</span>Verlängert sich der Vertrag automatisch, und wann genau beginnt die Kündigungsfrist?</div>
+<div class="bsp"><span class="wer">So klingt es</span>Verlängert sich der Vertrag automatisch, und wann genau beginnt die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Kündigungsfrist" data-wort="die Kündigungsfrist" data-kurz="wie lange vor dem Ende man kündigen muss" data-bsp="Die Kündigungsfrist beträgt einen Monat zum Vertragsende.">Kündigungsfrist</b>?</div>
 <button class="speak" data-say="Verlängert sich der Vertrag automatisch, und wann genau beginnt die Kündigungsfrist?">🔊 hören</button></div>
 <div class="rmcard"><b>3 · 📶 Bedingungen prüfen</b><br>
 <span class="rm">Wird nach dem Verbrauch gedrosselt oder abgerechnet?</span><span class="rm">Gilt der Tarif im EU-Ausland unverändert?</span><span class="rm">Ist ein Wechsel innerhalb der Laufzeit möglich?</span><span class="rm">Was passiert bei einem Umzug?</span>
-<div class="bsp"><span class="wer">So klingt es</span>Wird nach dem Verbrauch gedrosselt oder zusätzlich abgerechnet — und gilt der Tarif im EU-Ausland unverändert?</div>
+<div class="bsp"><span class="wer">So klingt es</span>Wird nach dem Verbrauch gedrosselt oder zusätzlich abgerechnet — und gilt der <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Tarif" data-wort="der Tarif" data-kurz="das Preismodell: was du bekommst und was es kostet" data-bsp="Ich habe die Tarife verglichen und einen ohne Laufzeit genommen.">Tarif</b> im EU-Ausland unverändert?</div>
 <button class="speak" data-say="Wird nach dem Verbrauch gedrosselt oder zusätzlich abgerechnet — und gilt der Tarif im EU-Ausland unverändert?">🔊 hören</button></div>
 <div class="rmcard"><b>4 · ✋ Höflich Abstand nehmen</b><br>
 <span class="rm">Ich unterschreibe heute grundsätzlich nichts.</span><span class="rm">Ich lasse mir das gern schriftlich geben.</span><span class="rm">Ich vergleiche das noch mit zwei anderen Angeboten.</span><span class="rm">Danke, das ist mir zu lang gebunden.</span>
@@ -732,11 +774,11 @@ a.tab:hover{color:var(--ink);}
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Klingt gut. Und wie lange wäre ich dann wieder gebunden?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">24 Monate ab dem nächsten Ersten. Das Angebot gilt allerdings nur bis heute Abend.</div><div class="dcue">🗣️ <i>Nur bis heute Abend</i> ist fast immer Druck, kein Fakt. Ein gutes Angebot gilt auch morgen noch.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Dann schicken Sie es mir bitte schriftlich per E-Mail. Am Telefon unterschreibe ich grundsätzlich nichts.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Selbstverständlich. Sie bekommen die Bestätigung in den nächsten zehn Minuten.</div><div class="dcue">🗣️ Der wichtigste Satz der ganzen Stunde: <b>Schicken Sie es mir bitte schriftlich.</b> Er beendet jeden Druck — höflich und endgültig.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Selbstverständlich. Sie bekommen die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Bestätigung" data-wort="die Bestätigung" data-kurz="die schriftliche Nachricht, dass etwas wirklich gilt" data-bsp="Ohne Bestätigung per E-Mail gilt für mich gar nichts.">Bestätigung</b> in den nächsten zehn Minuten.</div><div class="dcue">🗣️ Der wichtigste Satz der ganzen Stunde: <b>Schicken Sie es mir bitte schriftlich.</b> Er beendet jeden Druck — höflich und endgültig.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Ja, hallo? … Ach so, wegen der Verlängerung. Ich höre. Sie sind seit fast zwei Jahren bei uns. Wir hätten ein Angebot: doppeltes Datenvolumen für denselben Preis. Klingt gut. Und wie lange wäre ich dann wieder gebunden? 24 Monate ab dem nächsten Ersten. Das Angebot gilt allerdings nur bis heute Abend. Dann schicken Sie es mir bitte schriftlich per E-Mail. Am Telefon unterschreibe ich grundsätzlich nichts. Selbstverständlich. Sie bekommen die Bestätigung in den nächsten zehn Minuten.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-buero.webp" alt="Zwei Kolleginnen arbeiten an einem Laptop im Büro"><h4>Dialog 3 · „Der Vertrag beim Umzug“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">A zieht um und braucht Internet in der neuen Wohnung. B erklärt, wie lange das dauert — und was das für die Zeit dazwischen heißt.</div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ich ziehe zum 1. Dezember um. Kann ich den Anschluss mitnehmen?</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ich ziehe zum 1. Dezember um. Kann ich den <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Anschluss" data-wort="der Anschluss" data-kurz="die Verbindung ins Haus — Internet, Telefon, Strom" data-bsp="Der Anschluss wird erst in drei Wochen freigeschaltet.">Anschluss</b> mitnehmen?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">In der Regel ja. Melden Sie den Umzug aber bitte mindestens vier Wochen vorher, sonst wird es eng.</div><div class="dcue">🗣️ <b>mindestens vier Wochen vorher</b> — die Dauer im Akkusativ, ohne Präposition. Und <i>vorher</i> heißt: vor dem genannten Zeitpunkt.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Und wann ist der Anschluss in der neuen Wohnung dann frei?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Meistens am Umzugstag selbst. Es kann aber bis zu drei Wochen dauern, wenn ein Techniker kommen muss.</div><div class="dcue">🗣️ <b>bis zu drei Wochen</b> — nicht dasselbe wie <i>drei Wochen</i>. Es ist die Obergrenze, nicht die Zusage.<span class="kl">tippen = Hilfe zeigen</span></div></div>
@@ -872,7 +914,7 @@ a.tab:hover{color:var(--ink);}
 <p class="ssub">Einer fragt, einer verkauft oder erklärt. Danach tauschen — und beim zweiten Mal ohne die Sätze unten. Regel: In jeder Runde mindestens drei Zeitangaben.</p>
 <div class="rmcard">
 <b>1 · Im Laden, ohne zu unterschreiben</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A will einen Tarif und stellt alle Fragen. B verkauft und möchte, dass A heute unterschreibt. A geht am Ende ohne Unterschrift raus — aber freundlich.</p>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A will einen Tarif und stellt alle Fragen. B verkauft und möchte, dass A heute unterschreibt. A geht am Ende ohne <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Unterschrift" data-wort="die Unterschrift" data-kurz="der eigene Name, mit der Hand geschrieben, unter einem Papier" data-bsp="Vor der Unterschrift lese ich immer die letzte Seite.">Unterschrift</b> raus — aber freundlich.</p>
 <div class="nur-a2"><span class="rm">Was kostet das im Monat?</span><span class="rm">Wie lange läuft der Vertrag?</span><span class="rm">Wie viel Datenvolumen ist dabei?</span><span class="rm">Ich möchte es mir überlegen.</span></div>
 <div class="nur-b1"><span class="rm">Gilt der Preis für die gesamte Laufzeit oder nur für die ersten Monate?</span><span class="rm">Ab wann würde der Vertrag laufen, und bis wann müsste ich kündigen?</span><span class="rm">Was passiert, wenn das Volumen aufgebraucht ist — wird gedrosselt oder abgerechnet?</span><span class="rm">Ich unterschreibe heute nichts. Geben Sie mir das Angebot bitte schriftlich mit</span></div>
 <div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat mindestens drei Zeitangaben benutzt (<i>ab</i>, <i>für</i>, <i>bis</i>) und ist ohne Unterschrift gegangen, ohne unhöflich zu werden. B hat alles beantwortet, aber nur, wenn gefragt wurde.</div>
@@ -1155,6 +1197,64 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.setAttribute('aria-expanded',auf?'true':'false');
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
+
+/* ---- Markierte Woerter ----
+   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
+   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
+   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
+
+   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
+   den viele verwechseln. */
+(function(){
+ var woerter=[].slice.call(document.querySelectorAll('.wm'));
+ if(!woerter.length) return;
+ var karte=null;
+
+ function zu(){ if(karte){ karte.remove(); karte=null; }
+  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
+
+ function auf(w){
+  var schonOffen=w.classList.contains('offen');
+  zu();
+  if(schonOffen) return;
+  w.classList.add('offen');
+  karte=document.createElement('div');
+  karte.className='wmk';
+  var satz=w.dataset.bsp||'';
+  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
+   + '<b>'+w.dataset.wort+'</b>'
+   + '<span>'+(w.dataset.kurz||'')+'</span>'
+   + (satz?'<em>'+satz+'</em>':'')
+   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
+  document.body.appendChild(karte);
+
+  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
+  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
+  var links=r.left+r.width/2-b.width/2;
+  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
+  var oben=r.bottom+window.pageYOffset+9;
+  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
+   oben=r.top+window.pageYOffset-b.height-9;
+  karte.style.left=links+'px'; karte.style.top=oben+'px';
+
+  karte.querySelector('.wmk-zu').onclick=zu;
+  var ton=karte.querySelector('.wmk-ton');
+  if(ton) ton.onclick=function(){ say(satz); };
+ }
+
+ woerter.forEach(function(w){
+  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
+  w.addEventListener('keydown',function(ev){
+   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
+ });
+ document.addEventListener('click',zu);
+ document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
+ window.addEventListener('resize',zu);
+ /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
+    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
+ document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
+  k.addEventListener('click',zu); });
+})();
 
 /* ---- Bildkarten verdecken ----
    Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau

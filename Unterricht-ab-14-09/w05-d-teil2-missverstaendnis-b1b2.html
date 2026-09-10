@@ -436,6 +436,48 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Markierte Wörter ----------
+   Keine Wortschatzliste mehr, sondern das Wort dort, wo es steht.
+   Gelb unterstrichen: Wort dieser Stunde. Rot gepunktet: Begriff,
+   den viele verwechseln. Beides bleibt lesbar, wenn man es ignoriert —
+   die Markierung liegt unter der Zeile, nicht auf dem Wort. */
+.wm{
+  font-weight:inherit;cursor:pointer;position:relative;
+  border-bottom:3px solid var(--yellow);
+  padding-bottom:1px;transition:background .12s;
+}
+.wm.schwer{border-bottom:3px dotted var(--red);}
+.wm:hover,.wm.offen{background:rgba(255,210,74,.35);border-radius:4px 4px 0 0;}
+.wm.schwer:hover,.wm.schwer.offen{background:rgba(232,48,42,.12);}
+.wm:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.wm::after{
+  content:'';display:inline-block;width:.42em;height:.42em;margin-left:.22em;
+  vertical-align:.35em;border-radius:50%;background:var(--yellow);
+}
+.wm.schwer::after{background:var(--red);}
+
+.wmk{
+  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.2);padding:.85rem 1rem .9rem;
+}
+.wmk b{display:block;font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.25;padding-right:1.4rem;}
+.wmk span{display:block;margin-top:.3rem;font-size:.94rem;line-height:1.5;color:var(--ink-soft);}
+.wmk em{
+  display:block;margin-top:.55rem;padding-left:.7rem;border-left:3px solid var(--teal);
+  font-style:italic;font-size:.93rem;line-height:1.5;
+}
+.wmk-zu{
+  position:absolute;top:.45rem;right:.5rem;border:none;background:transparent;
+  font-size:.95rem;line-height:1;cursor:pointer;color:var(--ink-mute,#7a6a56);padding:.2rem;
+}
+.wmk-ton{
+  margin-top:.6rem;border:2px solid var(--ink);background:var(--sand);color:var(--ink);
+  border-radius:999px;padding:.3rem .75rem;font-family:inherit;font-size:.82rem;
+  font-weight:700;cursor:pointer;
+}
+@media print{ .wm::after{display:none;} .wmk{display:none;} }
+
 /* ---------- Die Ablauftafel ----------
    Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
    und in welcher Aufstellung. */
@@ -693,7 +735,7 @@ a.tab:hover{color:var(--ink);}
 <div class="nur-a2">
 <div class="rmcard"><b>1 · 🔔 Ankündigen</b><br>
 <span class="rm">Nur ein kurzer Einwurf</span><span class="rm">Eine Ergänzung dazu</span><span class="rm">Bevor wir weitermachen</span><span class="rm">Darf ich kurz?</span>
-<div class="bsp"><span class="wer">So klingt es</span>Nur ein kurzer Einwurf, dann rede ich nicht mehr rein.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Nur ein kurzer <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Einwurf" data-wort="der Einwurf" data-kurz="eine kurze Bemerkung mitten im Gespräch" data-bsp="Nur ein kurzer Einwurf, dann rede ich nicht mehr rein.">Einwurf</b>, dann rede ich nicht mehr rein.</div>
 <button class="speak" data-say="Nur ein kurzer Einwurf, dann rede ich nicht mehr rein.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 🪞 Sich selbst einräumen</b><br>
 <span class="rm">Ich kann mich irren</span><span class="rm">Vielleicht habe ich es falsch im Kopf</span><span class="rm">Korrigiere mich, wenn ich danebenliege</span><span class="rm">Ich bin mir nicht ganz sicher</span>
@@ -705,13 +747,13 @@ a.tab:hover{color:var(--ink);}
 <button class="speak" data-say="In der neuen Fassung steht der 12., nicht der 21.">🔊 hören</button></div>
 <div class="rmcard"><b>4 · 🔍 Gemeinsam prüfen</b><br>
 <span class="rm">Sollen wir kurz nachsehen?</span><span class="rm">Wer hat die aktuelle Fassung?</span><span class="rm">Können wir das vorher klären?</span><span class="rm">Ich schaue nach und melde mich</span>
-<div class="bsp"><span class="wer">So klingt es</span>Sollen wir kurz nachsehen, bevor wir es so beschließen?</div>
+<div class="bsp"><span class="wer">So klingt es</span>Sollen wir kurz <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von nachsehen" data-wort="nachsehen" data-kurz="prüfen, was wirklich stimmt" data-bsp="Sollen wir kurz nachsehen?">nachsehen</b>, bevor wir es so beschließen?</div>
 <button class="speak" data-say="Sollen wir kurz nachsehen, bevor wir es so beschließen?">🔊 hören</button></div>
 </div>
 <div class="nur-b1">
 <div class="rmcard"><b>1 · 🔔 Ankündigen vor Publikum</b><br>
 <span class="rm">Eine Ergänzung, wenn ich darf</span><span class="rm">Ich hake da nur kurz ein</span><span class="rm">Ein Punkt noch, bevor wir beschließen</span><span class="rm">Dazu habe ich einen anderen Stand</span>
-<div class="bsp"><span class="wer">So klingt es</span>Eine Ergänzung, wenn ich darf — dazu habe ich einen anderen Stand.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Eine <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Ergänzung" data-wort="die Ergänzung" data-kurz="etwas, das man hinzufügt" data-bsp="Eine Ergänzung dazu, wenn ich darf.">Ergänzung</b>, wenn ich darf — dazu habe ich einen anderen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Stand" data-wort="der Stand" data-kurz="die aktuelle Fassung oder Lage" data-bsp="Ist das noch der aktuelle Stand?">Stand</b>.</div>
 <button class="speak" data-say="Eine Ergänzung, wenn ich darf — dazu habe ich einen anderen Stand.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 🕊️ Die Person schützen</b><br>
 <span class="rm">Das war lange auch mein Stand</span><span class="rm">Die alte Fassung sagte genau das</span><span class="rm">Das ist erst seit Kurzem anders</span><span class="rm">Das haben mehrere so verstanden</span>
@@ -719,7 +761,7 @@ a.tab:hover{color:var(--ink);}
 <button class="speak" data-say="Das war lange auch mein Stand — es ist erst seit letzter Woche anders.">🔊 hören</button></div>
 <div class="rmcard"><b>3 · ✋ Deutlich werden</b><br>
 <span class="rm">Bevor wir das beschließen, muss ich …</span><span class="rm">Da würde ich widersprechen, und zwar deutlich</span><span class="rm">Das halte ich für einen Irrtum</span><span class="rm">Darauf würde ich bestehen</span>
-<div class="bsp"><span class="wer">So klingt es</span>Bevor wir das beschließen, muss ich einen Punkt richtigstellen — es geht um die Frist.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Bevor wir das beschließen, muss ich einen Punkt <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von richtigstellen" data-wort="richtigstellen" data-kurz="eine falsche Angabe korrigieren" data-bsp="Ich möchte eine Zahl kurz richtigstellen.">richtigstellen</b> — es geht um die Frist.</div>
 <button class="speak" data-say="Bevor wir das beschließen, muss ich einen Punkt richtigstellen — es geht um die Frist.">🔊 hören</button></div>
 <div class="rmcard"><b>4 · 🤲 Selbst korrigiert werden</b><br>
 <span class="rm">Da hatte ich unrecht, danke</span><span class="rm">Das gebe ich zu</span><span class="rm">Gut, dass Sie das sagen</span><span class="rm">Dann ziehe ich das zurück</span>
@@ -902,18 +944,18 @@ a.tab:hover{color:var(--ink);}
 <p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A nennt vor der Runde eine falsche Zahl, über die gleich entschieden wird. B korrigiert — vor Publikum, also weich in der Form und klar in der Sache. Zwei Minuten.</p>
 <div class="nur-a2"><span class="rm">Dann halten wir den 21. fest</span><span class="rm">Eine Ergänzung, wenn ich darf</span><span class="rm">Ich kann mich irren, aber …</span><span class="rm">Sollen wir kurz nachsehen?</span></div>
 <div class="nur-b1"><span class="rm">Dazu habe ich einen anderen Stand</span><span class="rm">Das war lange auch mein Stand</span><span class="rm">Bevor wir das beschließen, …</span><span class="rm">Gut, dass wir es vorher gemerkt haben</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Kein Satz begann mit <i>Sie haben</i>. B hat sich selbst einmal einen Irrtum eingeräumt, und die Entscheidung fiel am Ende durch Nachsehen — nicht durch Rechthaben.</div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Kein Satz begann mit <i>Sie haben</i>. B hat sich selbst einmal einen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Irrtum" data-wort="der Irrtum" data-kurz="eine falsche Annahme, kein Fehler aus Absicht" data-bsp="Das war ein Irrtum, kein Vorwurf an irgendjemanden.">Irrtum</b> eingeräumt, und die Entscheidung fiel am Ende durch Nachsehen — nicht durch Rechthaben.</div>
 </div>
 <div class="rmcard">
 <b>2 · Diesmal liegst du falsch</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B wird von A vor anderen korrigiert und liegt tatsächlich falsch. B muss es zugeben, ohne sich klein zu machen — und darf einen Teil seines Vorschlags retten.</p>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B wird von A vor anderen korrigiert und liegt tatsächlich falsch. B muss es <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von zugeben" data-wort="zugeben" data-kurz="einen eigenen Fehler einräumen" data-bsp="Da hatte ich unrecht, das gebe ich zu.">zugeben</b>, ohne sich klein zu machen — und darf einen Teil seines Vorschlags retten.</p>
 <div class="nur-a2"><span class="rm">Das stimmt so nicht mehr</span><span class="rm">Dann hatte ich einen veralteten Stand</span><span class="rm">Danke, gut zu wissen</span><span class="rm">Da hatte ich unrecht</span></div>
 <div class="nur-b1"><span class="rm">Die Rundmail habe ich offenbar überhört</span><span class="rm">Das gebe ich zu, dann ziehe ich das zurück</span><span class="rm">Der Rest des Vorschlags bleibt aber</span><span class="rm">Ich bringe ihn nächste Woche noch mal</span></div>
 <div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat sich nicht verteidigt und sich auch nicht klein gemacht. Der Fehler wurde in einem Satz zugegeben, und danach ging es sofort um die Sache weiter.</div>
 </div>
 <div class="rmcard">
 <b>3 · Zwei Zeitpunkte</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Dieselbe falsche Angabe, zwei Durchgänge: einmal korrigiert B sofort mitten in der Präsentation, einmal erst hinterher unter vier Augen. Danach sagt ihr euch, welcher Zeitpunkt hier richtig war und warum.</p>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Dieselbe falsche Angabe, zwei Durchgänge: einmal korrigiert B sofort mitten in der Präsentation, einmal erst hinterher <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von unter vier Augen" data-wort="unter vier Augen" data-kurz="allein, ohne Zuhörer" data-bsp="Können wir das kurz unter vier Augen klären?">unter vier Augen</b>. Danach sagt ihr euch, welcher <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Zeitpunkt" data-wort="der Zeitpunkt" data-kurz="der Moment, in dem man etwas sagt" data-bsp="Ich sage es später, das ist nicht der richtige Zeitpunkt.">Zeitpunkt</b> hier richtig war und warum.</p>
 <div class="nur-a2"><span class="rm">Nur ein kurzer Einwurf</span><span class="rm">Eine Kleinigkeit ist mir aufgefallen</span><span class="rm">Es hing nichts daran</span><span class="rm">Magst du es hören?</span></div>
 <div class="nur-b1"><span class="rm">Bevor wir das beschließen, muss ich …</span><span class="rm">Mittendrin wäre es unangenehm gewesen</span><span class="rm">Bei einer Frist hätte ich sofort unterbrochen</span><span class="rm">Lassen wir das auf sich beruhen</span></div>
 <div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide konnten begründen, warum der eine Zeitpunkt hier besser war als der andere — und dabei die Grenze benennen: Bei Fristen, Geld und Sicherheit wird sofort unterbrochen.</div>
@@ -1182,6 +1224,64 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.setAttribute('aria-expanded',auf?'true':'false');
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
+
+/* ---- Markierte Woerter ----
+   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
+   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
+   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
+
+   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
+   den viele verwechseln. */
+(function(){
+ var woerter=[].slice.call(document.querySelectorAll('.wm'));
+ if(!woerter.length) return;
+ var karte=null;
+
+ function zu(){ if(karte){ karte.remove(); karte=null; }
+  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
+
+ function auf(w){
+  var schonOffen=w.classList.contains('offen');
+  zu();
+  if(schonOffen) return;
+  w.classList.add('offen');
+  karte=document.createElement('div');
+  karte.className='wmk';
+  var satz=w.dataset.bsp||'';
+  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
+   + '<b>'+w.dataset.wort+'</b>'
+   + '<span>'+(w.dataset.kurz||'')+'</span>'
+   + (satz?'<em>'+satz+'</em>':'')
+   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
+  document.body.appendChild(karte);
+
+  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
+  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
+  var links=r.left+r.width/2-b.width/2;
+  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
+  var oben=r.bottom+window.pageYOffset+9;
+  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
+   oben=r.top+window.pageYOffset-b.height-9;
+  karte.style.left=links+'px'; karte.style.top=oben+'px';
+
+  karte.querySelector('.wmk-zu').onclick=zu;
+  var ton=karte.querySelector('.wmk-ton');
+  if(ton) ton.onclick=function(){ say(satz); };
+ }
+
+ woerter.forEach(function(w){
+  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
+  w.addEventListener('keydown',function(ev){
+   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
+ });
+ document.addEventListener('click',zu);
+ document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
+ window.addEventListener('resize',zu);
+ /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
+    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
+ document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
+  k.addEventListener('click',zu); });
+})();
 
 /* ---- Bildkarten verdecken ----
    Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau

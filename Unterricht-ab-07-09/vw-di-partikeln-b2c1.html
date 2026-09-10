@@ -436,6 +436,48 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Markierte Wörter ----------
+   Keine Wortschatzliste mehr, sondern das Wort dort, wo es steht.
+   Gelb unterstrichen: Wort dieser Stunde. Rot gepunktet: Begriff,
+   den viele verwechseln. Beides bleibt lesbar, wenn man es ignoriert —
+   die Markierung liegt unter der Zeile, nicht auf dem Wort. */
+.wm{
+  font-weight:inherit;cursor:pointer;position:relative;
+  border-bottom:3px solid var(--yellow);
+  padding-bottom:1px;transition:background .12s;
+}
+.wm.schwer{border-bottom:3px dotted var(--red);}
+.wm:hover,.wm.offen{background:rgba(255,210,74,.35);border-radius:4px 4px 0 0;}
+.wm.schwer:hover,.wm.schwer.offen{background:rgba(232,48,42,.12);}
+.wm:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.wm::after{
+  content:'';display:inline-block;width:.42em;height:.42em;margin-left:.22em;
+  vertical-align:.35em;border-radius:50%;background:var(--yellow);
+}
+.wm.schwer::after{background:var(--red);}
+
+.wmk{
+  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.2);padding:.85rem 1rem .9rem;
+}
+.wmk b{display:block;font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.25;padding-right:1.4rem;}
+.wmk span{display:block;margin-top:.3rem;font-size:.94rem;line-height:1.5;color:var(--ink-soft);}
+.wmk em{
+  display:block;margin-top:.55rem;padding-left:.7rem;border-left:3px solid var(--teal);
+  font-style:italic;font-size:.93rem;line-height:1.5;
+}
+.wmk-zu{
+  position:absolute;top:.45rem;right:.5rem;border:none;background:transparent;
+  font-size:.95rem;line-height:1;cursor:pointer;color:var(--ink-mute,#7a6a56);padding:.2rem;
+}
+.wmk-ton{
+  margin-top:.6rem;border:2px solid var(--ink);background:var(--sand);color:var(--ink);
+  border-radius:999px;padding:.3rem .75rem;font-family:inherit;font-size:.82rem;
+  font-weight:700;cursor:pointer;
+}
+@media print{ .wm::after{display:none;} .wmk{display:none;} }
+
 /* ---------- Die Ablauftafel ----------
    Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
    und in welcher Aufstellung. */
@@ -676,15 +718,15 @@ a.tab:hover{color:var(--ink);}
 <button class="speak" data-say="Kannst du mir mal die Butter geben?">🔊 hören</button></div>
 <div class="rmcard"><b>2 · ✋ Höflich widersprechen</b><br>
 <span class="rm">Das stimmt doch gar nicht.</span><span class="rm">Du weißt doch, dass …</span><span class="rm">Das habe ich doch gesagt.</span>
-<div class="bsp"><span class="wer">So klingt es</span>Du <b class="m-verb">weißt</b> <b class="m-hoefl">doch</b>, dass ich <b class="m-menge">dienstags</b> arbeite.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Du <b class="m-verb">weißt</b> <b class="m-hoefl"><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von doch" data-wort="doch" data-kurz="Widerspruch oder Erinnerung: Du weißt es eigentlich schon" data-bsp="Das habe ich dir doch gesagt!">doch</b></b>, dass ich <b class="m-menge">dienstags</b> arbeite.</div>
 <button class="speak" data-say="Du weißt doch, dass ich dienstags arbeite.">🔊 hören</button></div>
 <div class="rmcard"><b>3 · 😌 Beruhigen</b><br>
 <span class="rm">Das wird schon.</span><span class="rm">Das schaffst du schon.</span><span class="rm">Keine Sorge, das klappt schon.</span>
-<div class="bsp"><span class="wer">So klingt es</span><b class="m-akk">Das</b> <b class="m-verb">schaffst</b> du <b class="m-hoefl">schon</b>.</div>
+<div class="bsp"><span class="wer">So klingt es</span><b class="m-akk">Das</b> <b class="m-verb">schaffst</b> du <b class="m-hoefl"><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von schon" data-wort="schon" data-kurz="Beruhigung: Das wird" data-bsp="Das wird schon klappen.">schon</b></b>.</div>
 <button class="speak" data-say="Das schaffst du schon.">🔊 hören</button></div>
 <div class="rmcard"><b>4 · 🤷 Sich fügen</b><br>
 <span class="rm">Dann eben nicht.</span><span class="rm">Das ist halt so.</span><span class="rm">Dann machen wir es eben morgen.</span>
-<div class="bsp"><span class="wer">So klingt es</span>Dann <b class="m-verb">machen</b> wir es <b class="m-hoefl">eben</b> <b class="m-menge">morgen</b>.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Dann <b class="m-verb">machen</b> wir es <b class="m-hoefl"><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von eben" data-wort="eben" data-kurz="ergeben: Es ist, wie es ist" data-bsp="Dann fahren wir eben mit dem Bus.">eben</b></b> <b class="m-menge">morgen</b>.</div>
 <button class="speak" data-say="Dann machen wir es eben morgen.">🔊 hören</button></div>
 </div>
 <div class="nur-b1">
@@ -698,11 +740,11 @@ a.tab:hover{color:var(--ink);}
 <button class="speak" data-say="Das war ja so gar nicht abgesprochen.">🔊 hören</button></div>
 <div class="rmcard"><b>3 · 🔍 Vermuten</b><br>
 <span class="rm">Er hat wohl verschlafen.</span><span class="rm">Da wird wohl etwas dazwischengekommen sein.</span><span class="rm">Sie ist wohl schon gegangen.</span>
-<div class="bsp"><span class="wer">So klingt es</span><b class="m-menge">Da</b> <b class="m-verb">wird</b> <b class="m-hoefl">wohl</b> etwas <b class="m-verb">dazwischengekommen sein</b>.</div>
+<div class="bsp"><span class="wer">So klingt es</span><b class="m-menge">Da</b> <b class="m-verb">wird</b> <b class="m-hoefl"><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von wohl" data-wort="wohl" data-kurz="Vermutung mit ziemlicher Sicherheit" data-bsp="Er hat wohl den Zug verpasst.">wohl</b></b> etwas <b class="m-verb">dazwischengekommen sein</b>.</div>
 <button class="speak" data-say="Da wird wohl etwas dazwischengekommen sein.">🔊 hören</button></div>
 <div class="rmcard"><b>4 · ⚠️ Nachdrücklich warnen</b><br>
 <span class="rm">Mach das bloß nicht.</span><span class="rm">Vergiss nur den Termin nicht.</span><span class="rm">Sag ihr bloß nichts davon.</span>
-<div class="bsp"><span class="wer">So klingt es</span><b class="m-verb">Vergiss</b> <b class="m-hoefl">bloß</b> <b class="m-akk">den Termin</b> nicht.</div>
+<div class="bsp"><span class="wer">So klingt es</span><b class="m-verb">Vergiss</b> <b class="m-hoefl"><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von bloß" data-wort="bloß" data-kurz="dringliche Warnung" data-bsp="Vergiss bloß den Ausweis nicht!">bloß</b></b> <b class="m-akk">den Termin</b> nicht.</div>
 <button class="speak" data-say="Vergiss bloß den Termin nicht.">🔊 hören</button></div>
 </div>
 <div class="legende">
@@ -718,8 +760,8 @@ a.tab:hover{color:var(--ink);}
 <h2 class="st">Vier Gespräche — <span class="hl">zwei Runden</span></h2>
 <p class="ssub"><b>Runde 1:</b> Lest zu zweit laut und betont die Partikeln bewusst. <b>Runde 2:</b> Auf den Knopf tippen — B verschwindet, ihr antwortet selbst. Die Regieanweisung bleibt als Hilfe.</p>
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-cafe.webp" alt="Zwei Personen an einer Café-Theke"><h4>Dialog 1 · „Wo warst du denn?“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Ihr wart um vier verabredet. Es ist zwanzig nach.</div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Da bist du ja! Wo warst du denn so lange?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Die Bahn ist halt ausgefallen. Ich habe dir doch geschrieben.</div><div class="dcue">🗣️ Erklär es ergeben mit halt — und erinnere mit doch an deine Nachricht.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Da bist du ja! Wo warst du <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von denn" data-wort="denn" data-kurz="macht eine Frage freundlich — nur in Fragen" data-bsp="Wo warst du denn so lange?">denn</b> so lange?</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Die Bahn ist <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von halt" data-wort="halt" data-kurz="dasselbe wie eben, nur südlicher" data-bsp="Das ist halt so.">halt</b> ausgefallen. Ich habe dir doch geschrieben.</div><div class="dcue">🗣️ Erklär es ergeben mit halt — und erinnere mit doch an deine Nachricht.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Geschrieben? Bei mir ist nichts angekommen.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Dann ist die Nachricht wohl hängengeblieben. Sorry.</div><div class="dcue">🗣️ Vermute mit wohl, statt zu behaupten.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Halb so wild. Setz dich, ich hab schon bestellt.</div></div>
@@ -732,7 +774,7 @@ a.tab:hover{color:var(--ink);}
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ich dachte, das passt schon.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Du weißt doch, dass ich morgen damit vor dem Kunden stehe.</div><div class="dcue">🗣️ Erinnere mit doch an etwas, das beide wissen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Stimmt. Soll ich es zurückdrehen?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Lass es ruhig so — aber sag mir das nächste Mal bloß vorher Bescheid.</div><div class="dcue">🗣️ Erlaube mit ruhig, warne mit bloß. Beide in einem Satz.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Lass es ruhig so — <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von aber" data-wort="aber" data-kurz="verstärkt ein Erstaunen" data-bsp="Das war aber lecker!">aber</b> sag mir das nächste Mal bloß vorher Bescheid.</div><div class="dcue">🗣️ Erlaube mit ruhig, warne mit bloß. Beide in einem Satz.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Ich habe die Reihenfolge geändert, so ist es logischer. Das war ja gar nicht abgesprochen. Sag mal, warum sagst du vorher nichts? Ich dachte, das passt schon. Du weißt doch, dass ich morgen damit vor dem Kunden stehe. Stimmt. Soll ich es zurückdrehen? Lass es ruhig so — aber sag mir das nächste Mal bloß vorher Bescheid.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-wohnen.webp" alt="Zwei Personen an einer Wohnungstür"><h4>Dialog 3 · „Komm doch rein“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Dein Nachbar steht mit einer Pflanze vor der Tür — er zieht aus.</div>
@@ -1156,6 +1198,64 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.setAttribute('aria-expanded',auf?'true':'false');
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
+
+/* ---- Markierte Woerter ----
+   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
+   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
+   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
+
+   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
+   den viele verwechseln. */
+(function(){
+ var woerter=[].slice.call(document.querySelectorAll('.wm'));
+ if(!woerter.length) return;
+ var karte=null;
+
+ function zu(){ if(karte){ karte.remove(); karte=null; }
+  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
+
+ function auf(w){
+  var schonOffen=w.classList.contains('offen');
+  zu();
+  if(schonOffen) return;
+  w.classList.add('offen');
+  karte=document.createElement('div');
+  karte.className='wmk';
+  var satz=w.dataset.bsp||'';
+  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
+   + '<b>'+w.dataset.wort+'</b>'
+   + '<span>'+(w.dataset.kurz||'')+'</span>'
+   + (satz?'<em>'+satz+'</em>':'')
+   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
+  document.body.appendChild(karte);
+
+  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
+  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
+  var links=r.left+r.width/2-b.width/2;
+  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
+  var oben=r.bottom+window.pageYOffset+9;
+  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
+   oben=r.top+window.pageYOffset-b.height-9;
+  karte.style.left=links+'px'; karte.style.top=oben+'px';
+
+  karte.querySelector('.wmk-zu').onclick=zu;
+  var ton=karte.querySelector('.wmk-ton');
+  if(ton) ton.onclick=function(){ say(satz); };
+ }
+
+ woerter.forEach(function(w){
+  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
+  w.addEventListener('keydown',function(ev){
+   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
+ });
+ document.addEventListener('click',zu);
+ document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
+ window.addEventListener('resize',zu);
+ /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
+    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
+ document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
+  k.addEventListener('click',zu); });
+})();
 
 /* ---- Bildkarten verdecken ----
    Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau

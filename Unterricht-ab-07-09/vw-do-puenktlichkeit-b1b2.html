@@ -436,6 +436,48 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Markierte Wörter ----------
+   Keine Wortschatzliste mehr, sondern das Wort dort, wo es steht.
+   Gelb unterstrichen: Wort dieser Stunde. Rot gepunktet: Begriff,
+   den viele verwechseln. Beides bleibt lesbar, wenn man es ignoriert —
+   die Markierung liegt unter der Zeile, nicht auf dem Wort. */
+.wm{
+  font-weight:inherit;cursor:pointer;position:relative;
+  border-bottom:3px solid var(--yellow);
+  padding-bottom:1px;transition:background .12s;
+}
+.wm.schwer{border-bottom:3px dotted var(--red);}
+.wm:hover,.wm.offen{background:rgba(255,210,74,.35);border-radius:4px 4px 0 0;}
+.wm.schwer:hover,.wm.schwer.offen{background:rgba(232,48,42,.12);}
+.wm:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.wm::after{
+  content:'';display:inline-block;width:.42em;height:.42em;margin-left:.22em;
+  vertical-align:.35em;border-radius:50%;background:var(--yellow);
+}
+.wm.schwer::after{background:var(--red);}
+
+.wmk{
+  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.2);padding:.85rem 1rem .9rem;
+}
+.wmk b{display:block;font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.25;padding-right:1.4rem;}
+.wmk span{display:block;margin-top:.3rem;font-size:.94rem;line-height:1.5;color:var(--ink-soft);}
+.wmk em{
+  display:block;margin-top:.55rem;padding-left:.7rem;border-left:3px solid var(--teal);
+  font-style:italic;font-size:.93rem;line-height:1.5;
+}
+.wmk-zu{
+  position:absolute;top:.45rem;right:.5rem;border:none;background:transparent;
+  font-size:.95rem;line-height:1;cursor:pointer;color:var(--ink-mute,#7a6a56);padding:.2rem;
+}
+.wmk-ton{
+  margin-top:.6rem;border:2px solid var(--ink);background:var(--sand);color:var(--ink);
+  border-radius:999px;padding:.3rem .75rem;font-family:inherit;font-size:.82rem;
+  font-weight:700;cursor:pointer;
+}
+@media print{ .wm::after{display:none;} .wmk{display:none;} }
+
 /* ---------- Die Ablauftafel ----------
    Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
    und in welcher Aufstellung. */
@@ -672,15 +714,15 @@ a.tab:hover{color:var(--ink);}
 <div class="nur-a2">
 <div class="rmcard"><b>1 · 💬 Meinung sagen</b><br>
 <span class="rm">Ich finde, dass …</span><span class="rm">Für mich ist Pünktlichkeit …</span><span class="rm">Meiner Meinung nach …</span>
-<div class="bsp"><span class="wer">So klingt es</span><b class="m-hoefl">Meiner Meinung nach</b> <b class="m-verb">ist</b> <b class="m-akk">Pünktlichkeit</b> eine Frage der Situation.</div>
+<div class="bsp"><span class="wer">So klingt es</span><b class="m-hoefl">Meiner Meinung nach</b> <b class="m-verb">ist</b> <b class="m-akk"><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Pünktlichkeit" data-wort="die Pünktlichkeit" data-kurz="das genaue Einhalten einer Uhrzeit" data-bsp="Pünktlichkeit ist hier keine Höflichkeit, sondern eine Erwartung.">Pünktlichkeit</b></b> eine Frage der Situation.</div>
 <button class="speak" data-say="Meiner Meinung nach ist Pünktlichkeit eine Frage der Situation.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 🧱 Begründen</b><br>
 <span class="rm">… weil …</span><span class="rm">Zum Beispiel: …</span><span class="rm">Bei mir ist das so, dass …</span>
-<div class="bsp"><span class="wer">So klingt es</span>Ich <b class="m-verb">plane</b> <b class="m-menge">immer zwanzig Minuten</b> Puffer ein, weil <b class="m-akk">die Bahn</b> oft ausfällt.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Ich <b class="m-verb">plane</b> <b class="m-menge">immer zwanzig Minuten</b> <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Puffer" data-wort="der Puffer" data-kurz="die Extrazeit, die man vorsichtshalber einplant" data-bsp="Ich plane immer zwanzig Minuten Puffer ein.">Puffer</b> ein, weil <b class="m-akk">die Bahn</b> oft ausfällt.</div>
 <button class="speak" data-say="Ich plane immer zwanzig Minuten Puffer ein, weil die Bahn oft ausfällt.">🔊 hören</button></div>
 <div class="rmcard"><b>3 · 🤝 Einräumen</b><br>
 <span class="rm">Das stimmt, aber …</span><span class="rm">Da hast du recht, trotzdem …</span><span class="rm">Klar, nur …</span>
-<div class="bsp"><span class="wer">So klingt es</span><b class="m-hoefl">Da hast du recht</b> — trotzdem <b class="m-verb">kommt</b> es <b class="m-menge">auf den Termin</b> an.</div>
+<div class="bsp"><span class="wer">So klingt es</span><b class="m-hoefl">Da hast du recht</b> — trotzdem <b class="m-verb">kommt</b> es <b class="m-menge">auf den <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Termin" data-wort="der Termin" data-kurz="der verabredete Zeitpunkt" data-bsp="Ich habe um halb vier einen Termin beim Zahnarzt.">Termin</b></b> an.</div>
 <button class="speak" data-say="Da hast du recht. Trotzdem kommt es auf den Termin an.">🔊 hören</button></div>
 <div class="rmcard"><b>4 · ✋ Widersprechen</b><br>
 <span class="rm">Das sehe ich anders.</span><span class="rm">Ich glaube nicht, dass …</span><span class="rm">Da bin ich nicht deiner Meinung.</span>
@@ -690,15 +732,15 @@ a.tab:hover{color:var(--ink);}
 <div class="nur-b1">
 <div class="rmcard"><b>1 · 💬 Position beziehen</b><br>
 <span class="rm">Ich vertrete die Auffassung, dass …</span><span class="rm">Aus meiner Sicht spricht vieles dafür, dass …</span><span class="rm">Man muss hier unterscheiden zwischen … und …</span>
-<div class="bsp"><span class="wer">So klingt es</span>Man <b class="m-verb">muss</b> unterscheiden zwischen <b class="m-akk">harten Terminen</b> und <b class="m-akk">privaten Verabredungen</b>.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Man <b class="m-verb">muss</b> unterscheiden zwischen <b class="m-akk">harten Terminen</b> und <b class="m-akk">privaten <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Verabredungen" data-wort="die Verabredung" data-kurz="das private Treffen zu einer festen Zeit" data-bsp="Wir hatten eine Verabredung um sieben, und sie kam um acht.">Verabredungen</b></b>.</div>
 <button class="speak" data-say="Man muss unterscheiden zwischen harten Terminen und privaten Verabredungen.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 🧱 Belegen</b><br>
 <span class="rm">Das zeigt sich daran, dass …</span><span class="rm">Ein Beispiel dafür wäre …</span><span class="rm">Nicht umsonst gibt es dafür einen eigenen Begriff.</span>
-<div class="bsp"><span class="wer">So klingt es</span><b class="m-akk">Das</b> <b class="m-verb">zeigt</b> sich daran, dass es dafür <b class="m-menge">einen eigenen Begriff</b> gibt: das akademische Viertel.</div>
+<div class="bsp"><span class="wer">So klingt es</span><b class="m-akk">Das</b> <b class="m-verb">zeigt</b> sich daran, dass es dafür <b class="m-menge">einen eigenen Begriff</b> gibt: das <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von akademische Viertel" data-wort="das akademische Viertel" data-kurz="die Viertelstunde, um die eine Vorlesung später beginnt" data-bsp="An der Uni beginnt eine Vorlesung um zehn Uhr c. t. — also um Viertel nach.">akademische Viertel</b>.</div>
 <button class="speak" data-say="Das zeigt sich daran, dass es dafür einen eigenen Begriff gibt: das akademische Viertel.">🔊 hören</button></div>
 <div class="rmcard"><b>3 · 🤝 Zugeständnis machen</b><br>
 <span class="rm">Zwar …, aber …</span><span class="rm">Ich gebe zu, dass …</span><span class="rm">Das mag zutreffen, dennoch …</span>
-<div class="bsp"><span class="wer">So klingt es</span><b class="m-hoefl">Zwar</b> <b class="m-verb">kostet</b> Warten <b class="m-akk">Nerven</b>, <b class="m-hoefl">aber</b> daraus <b class="m-verb">folgt</b> noch keine Charakterfrage.</div>
+<div class="bsp"><span class="wer">So klingt es</span><b class="m-hoefl">Zwar</b> <b class="m-verb">kostet</b> <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Warten" data-wort="warten" data-kurz="bleiben, bis jemand oder etwas kommt" data-bsp="Ich habe eine halbe Stunde im Regen auf dich gewartet.">Warten</b> <b class="m-akk">Nerven</b>, <b class="m-hoefl">aber</b> daraus <b class="m-verb">folgt</b> noch keine Charakterfrage.</div>
 <button class="speak" data-say="Zwar kostet Warten Nerven, aber daraus folgt noch keine Charakterfrage.">🔊 hören</button></div>
 <div class="rmcard"><b>4 · ✋ Sachlich widersprechen</b><br>
 <span class="rm">Da muss ich widersprechen.</span><span class="rm">Das trifft in dieser Allgemeinheit nicht zu.</span><span class="rm">Ich halte das für zu kurz gedacht.</span>
@@ -735,7 +777,7 @@ a.tab:hover{color:var(--ink);}
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Und für die nächsten Wochen: Ich lege den Termin ab jetzt zehn Minuten früher in meinen Kalender.</div><div class="dcue">🗣️ Nenn eine konkrete Maßnahme statt eines Versprechens.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Wir sind schon bei Punkt zwei. Entschuldigung. Ich hänge mich an, ohne dass ihr etwas wiederholt. Alles gut. Möchtest du wissen, was zu Punkt eins entschieden wurde? Danke, ich lese es nachher im Protokoll nach. In Ordnung. Und für die nächsten Wochen: Ich lege den Termin ab jetzt zehn Minuten früher in meinen Kalender.">🔊 Dialog vorlesen lassen</button></div>
 
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../vok-bild/die-haltestelle.webp" alt="Eine Bushaltestelle mit einer wartenden Person"><h4>Dialog 3 · „Der Bus, der nie kam“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Du stehst an der Haltestelle. Der Bus fällt aus, dein Termin ist in zwanzig Minuten.</div>
+<div class="dwrap" data-runde="1"><div class="dhead"><img src="../vok-bild/die-haltestelle.webp" alt="Eine Bushaltestelle mit einer wartenden Person"><h4>Dialog 3 · „Der Bus, der nie kam“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Du stehst an der <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Haltestelle" data-wort="die Haltestelle" data-kurz="der Halt von Bus und Straßenbahn" data-bsp="An der Haltestelle stand kein Mensch — der Bus war schon weg.">Haltestelle</b>. Der Bus fällt aus, dein Termin ist in zwanzig Minuten.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Praxis Dr. Weber, Meier am Apparat.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Guten Tag, Demir. Ich habe um halb vier einen Termin und verspäte mich um zehn Minuten.</div><div class="dcue">🗣️ Name, Termin, Zahl. In dieser Reihenfolge, ohne Umschweife.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Das wird knapp. Ab fünfzehn Minuten müssen wir Sie umbuchen.</div></div>
@@ -878,7 +920,7 @@ a.tab:hover{color:var(--ink);}
 <p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B kommt seit Jahren zwanzig Minuten später. A hat es satt und spricht es heute an.</p>
 <div class="nur-a2"><span class="rm">Ich habe eine halbe Stunde gewartet</span><span class="rm">Eine Nachricht hätte gereicht</span><span class="rm">Das stimmt, aber …</span><span class="rm">Was schlägst du vor?</span></div>
 <div class="nur-b1"><span class="rm">Mir geht es nicht um die Minuten</span><span class="rm">Bei mir kommt an, dass …</span><span class="rm">Zwar …, aber …</span><span class="rm">Können wir uns darauf einigen, dass …?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A kritisiert nicht die Verspätung, sondern die fehlende Nachricht. Am Ende steht eine Absprache, kein Urteil.</div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A kritisiert nicht die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Verspätung" data-wort="die Verspätung" data-kurz="die Zeit, die jemand oder etwas später kommt" data-bsp="Der Zug hat zwanzig Minuten Verspätung.">Verspätung</b>, sondern die fehlende Nachricht. Am Ende steht eine Absprache, kein Urteil.</div>
 </div>
 <div class="rmcard">
 <b>2 · Fünf Minuten vor Sitzungsbeginn</b>
@@ -1155,6 +1197,64 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.setAttribute('aria-expanded',auf?'true':'false');
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
+
+/* ---- Markierte Woerter ----
+   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
+   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
+   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
+
+   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
+   den viele verwechseln. */
+(function(){
+ var woerter=[].slice.call(document.querySelectorAll('.wm'));
+ if(!woerter.length) return;
+ var karte=null;
+
+ function zu(){ if(karte){ karte.remove(); karte=null; }
+  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
+
+ function auf(w){
+  var schonOffen=w.classList.contains('offen');
+  zu();
+  if(schonOffen) return;
+  w.classList.add('offen');
+  karte=document.createElement('div');
+  karte.className='wmk';
+  var satz=w.dataset.bsp||'';
+  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
+   + '<b>'+w.dataset.wort+'</b>'
+   + '<span>'+(w.dataset.kurz||'')+'</span>'
+   + (satz?'<em>'+satz+'</em>':'')
+   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
+  document.body.appendChild(karte);
+
+  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
+  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
+  var links=r.left+r.width/2-b.width/2;
+  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
+  var oben=r.bottom+window.pageYOffset+9;
+  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
+   oben=r.top+window.pageYOffset-b.height-9;
+  karte.style.left=links+'px'; karte.style.top=oben+'px';
+
+  karte.querySelector('.wmk-zu').onclick=zu;
+  var ton=karte.querySelector('.wmk-ton');
+  if(ton) ton.onclick=function(){ say(satz); };
+ }
+
+ woerter.forEach(function(w){
+  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
+  w.addEventListener('keydown',function(ev){
+   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
+ });
+ document.addEventListener('click',zu);
+ document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
+ window.addEventListener('resize',zu);
+ /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
+    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
+ document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
+  k.addEventListener('click',zu); });
+})();
 
 /* ---- Bildkarten verdecken ----
    Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau

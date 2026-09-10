@@ -436,6 +436,48 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Markierte Wörter ----------
+   Keine Wortschatzliste mehr, sondern das Wort dort, wo es steht.
+   Gelb unterstrichen: Wort dieser Stunde. Rot gepunktet: Begriff,
+   den viele verwechseln. Beides bleibt lesbar, wenn man es ignoriert —
+   die Markierung liegt unter der Zeile, nicht auf dem Wort. */
+.wm{
+  font-weight:inherit;cursor:pointer;position:relative;
+  border-bottom:3px solid var(--yellow);
+  padding-bottom:1px;transition:background .12s;
+}
+.wm.schwer{border-bottom:3px dotted var(--red);}
+.wm:hover,.wm.offen{background:rgba(255,210,74,.35);border-radius:4px 4px 0 0;}
+.wm.schwer:hover,.wm.schwer.offen{background:rgba(232,48,42,.12);}
+.wm:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.wm::after{
+  content:'';display:inline-block;width:.42em;height:.42em;margin-left:.22em;
+  vertical-align:.35em;border-radius:50%;background:var(--yellow);
+}
+.wm.schwer::after{background:var(--red);}
+
+.wmk{
+  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.2);padding:.85rem 1rem .9rem;
+}
+.wmk b{display:block;font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.25;padding-right:1.4rem;}
+.wmk span{display:block;margin-top:.3rem;font-size:.94rem;line-height:1.5;color:var(--ink-soft);}
+.wmk em{
+  display:block;margin-top:.55rem;padding-left:.7rem;border-left:3px solid var(--teal);
+  font-style:italic;font-size:.93rem;line-height:1.5;
+}
+.wmk-zu{
+  position:absolute;top:.45rem;right:.5rem;border:none;background:transparent;
+  font-size:.95rem;line-height:1;cursor:pointer;color:var(--ink-mute,#7a6a56);padding:.2rem;
+}
+.wmk-ton{
+  margin-top:.6rem;border:2px solid var(--ink);background:var(--sand);color:var(--ink);
+  border-radius:999px;padding:.3rem .75rem;font-family:inherit;font-size:.82rem;
+  font-weight:700;cursor:pointer;
+}
+@media print{ .wm::after{display:none;} .wmk{display:none;} }
+
 /* ---------- Die Ablauftafel ----------
    Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
    und in welcher Aufstellung. */
@@ -693,7 +735,7 @@ a.tab:hover{color:var(--ink);}
 <div class="nur-a2">
 <div class="rmcard"><b>1 · 🤝 Die Sorge aufnehmen</b><br>
 <span class="rm">Ich verstehe die Sorge.</span><span class="rm">Das ist ein wichtiger Punkt.</span><span class="rm">Da haben Sie recht.</span><span class="rm">Das sehe ich auch so.</span>
-<div class="bsp"><span class="wer">So klingt es</span>Ich verstehe die Sorge um den Umsatz, das ist ein wichtiger Punkt.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Ich verstehe die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Sorge" data-wort="die Sorge" data-kurz="die Angst, dass etwas schiefgehen könnte" data-bsp="Die größte Sorge der Geschäfte ist der Umsatz.">Sorge</b> um den <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Umsatz" data-wort="der Umsatz" data-kurz="das gesamte Geld, das ein Geschäft einnimmt" data-bsp="Nach der Sperrung ist der Umsatz zuerst gesunken und dann gestiegen.">Umsatz</b>, das ist ein wichtiger Punkt.</div>
 <button class="speak" data-say="Ich verstehe die Sorge um den Umsatz, das ist ein wichtiger Punkt.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 🧭 Position beziehen</b><br>
 <span class="rm">Ich bin dafür, dass …</span><span class="rm">Ich bin dagegen, weil …</span><span class="rm">Ich finde die Idee gut.</span><span class="rm">Ich hätte da Bedenken.</span>
@@ -715,15 +757,15 @@ a.tab:hover{color:var(--ink);}
 <button class="speak" data-say="Die Sorge um den Umsatz halte ich für berechtigt — sie lässt sich aber überprüfen.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 🧭 Position mit Grenze</b><br>
 <span class="rm">Grundsätzlich dafür — mit einer Ausnahme:</span><span class="rm">Ich vertrete die Position, dass …</span><span class="rm">Für die Kernzone ja, für den Rand nein.</span><span class="rm">Solange es eine Alternative gibt, bin ich dafür.</span>
-<div class="bsp"><span class="wer">So klingt es</span>Grundsätzlich bin ich dafür — vorausgesetzt, Anwohner und Lieferverkehr behalten die Zufahrt.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Grundsätzlich bin ich dafür — vorausgesetzt, <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Anwohner" data-wort="die Anwohner" data-kurz="die Menschen, die in einer Straße wohnen" data-bsp="Die Anwohner bekommen eine Ausnahmegenehmigung.">Anwohner</b> und Lieferverkehr behalten die Zufahrt.</div>
 <button class="speak" data-say="Grundsätzlich bin ich dafür — vorausgesetzt, Anwohner und Lieferverkehr behalten die Zufahrt.">🔊 hören</button></div>
 <div class="rmcard"><b>3 · 🎯 Ziel und Zweck</b><br>
 <span class="rm">Ziel ist nicht weniger Verkehr, sondern mehr Aufenthalt.</span><span class="rm">Das Ganze dient dazu, …</span><span class="rm">Der Sinn der Maßnahme besteht darin, dass …</span><span class="rm">Es geht nicht um Autos, sondern um Fläche.</span>
-<div class="bsp"><span class="wer">So klingt es</span>Die Maßnahme dient nicht dazu, Autos zu ärgern, sondern dazu, Fläche anders zu nutzen.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Maßnahme" data-wort="die Maßnahme" data-kurz="etwas, das man tut, um ein Ziel zu erreichen" data-bsp="Die Maßnahme soll den Verkehr aus dem Viertel herausholen.">Maßnahme</b> dient nicht dazu, Autos zu ärgern, sondern dazu, Fläche anders zu nutzen.</div>
 <button class="speak" data-say="Die Maßnahme dient nicht dazu, Autos zu ärgern, sondern dazu, Fläche anders zu nutzen.">🔊 hören</button></div>
 <div class="rmcard"><b>4 · 💡 Konkret vorschlagen</b><br>
 <span class="rm">Ich schlage eine Testphase von sechs Monaten vor.</span><span class="rm">Denkbar wäre eine Ladezone für den Lieferverkehr.</span><span class="rm">Man könnte die Zahlen vorher und nachher erheben.</span><span class="rm">Anwohner erhalten eine Ausnahmegenehmigung.</span>
-<div class="bsp"><span class="wer">So klingt es</span>Ich schlage eine Testphase von sechs Monaten vor — mit Zahlen vorher und nachher.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Ich schlage eine <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Testphase" data-wort="die Testphase" data-kurz="eine begrenzte Zeit, in der man etwas ausprobiert" data-bsp="Wir starten mit einer Testphase von sechs Monaten.">Testphase</b> von sechs Monaten vor — mit Zahlen vorher und nachher.</div>
 <button class="speak" data-say="Ich schlage eine Testphase von sechs Monaten vor — mit Zahlen vorher und nachher.">🔊 hören</button></div>
 </div>
 <div class="legende">
@@ -759,7 +801,7 @@ a.tab:hover{color:var(--ink);}
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../vok-bild/der-briefkasten.webp" alt="Ein Briefkasten mit einem Brief an einer Hauswand"><h4>Dialog 3 · „Der Brief im Kasten“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Die Stadt hat die Anwohner informiert. Zwei Nachbarn lesen den Brief — und verstehen ihn unterschiedlich.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Haben Sie das auch bekommen? Sechs Monate Sperrung, ab Januar.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ja. Aber lesen Sie den zweiten Absatz: Anwohner bekommen eine Ausnahmegenehmigung, um weiter zufahren zu können.</div><div class="dcue">🗣️ Genau lesen statt reagieren. <b>um … zu</b> erklärt, wozu die Genehmigung da ist — die Struktur steht in fast jedem Amtsbrief.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ach so. Und wo soll ich das Auto dann abstellen?</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ach so. Und wo soll ich das Auto dann <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von abstellen" data-wort="abstellen" data-kurz="etwas irgendwo hinstellen und stehen lassen" data-bsp="Wo soll ich denn mein Auto abstellen?">abstellen</b>?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Im Hof hinter der Nummer 14. Dafür haben sie extra fünf Plätze eingerichtet, damit niemand in die Nebenstraßen ausweicht.</div><div class="dcue">🗣️ <b>damit</b>, weil das Subjekt wechselt: <i>sie richten ein</i> — <i>niemand weicht aus</i>. Und <i>dafür</i> greift die Absicht noch einmal auf.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Das klingt schon anders als das, was ich gehört hatte.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Es lohnt sich, zur Versammlung zu gehen, um die Fragen direkt zu stellen.</div><div class="dcue">🗣️ Ein Vorschlag zum Schluss, wieder mit <b>um … zu</b>. Der Satz beendet das Gespräch nicht, sondern öffnet es.<span class="kl">tippen = Hilfe zeigen</span></div></div>
@@ -771,7 +813,7 @@ a.tab:hover{color:var(--ink);}
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Das wäre für uns tatsächlich machbar.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Und für die Anwohner gibt es eine Genehmigung, damit sie jederzeit in den Hof fahren können.</div><div class="dcue">🗣️ <b>damit</b> mit Subjektwechsel. Und jede Gruppe bekommt etwas — genau das macht einen Kompromiss aus.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Und wer prüft, ob das funktioniert?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Die Verwaltung zählt vorher und nachher, um im Sommer sachlich entscheiden zu können.</div><div class="dcue">🗣️ Am Ende ein Verfahren statt eines Versprechens. Wer sagt, <i>wie</i> überprüft wird, bekommt viel öfter ein Ja.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Verwaltung" data-wort="die Verwaltung" data-kurz="die Behörde, die so etwas plant und umsetzt" data-bsp="Die Verwaltung hat den Vorschlag geprüft.">Verwaltung</b> zählt vorher und nachher, um im Sommer sachlich entscheiden zu können.</div><div class="dcue">🗣️ Am Ende ein Verfahren statt eines Versprechens. Wer sagt, <i>wie</i> überprüft wird, bekommt viel öfter ein Ja.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Entweder die Straße ist offen oder sie ist zu. Etwas dazwischen gibt es nicht. Doch, es gibt etwas dazwischen. Viele Städte sperren nur zwischen zehn und achtzehn Uhr, um den Lieferverkehr morgens durchzulassen. Das wäre für uns tatsächlich machbar. Und für die Anwohner gibt es eine Genehmigung, damit sie jederzeit in den Hof fahren können. Und wer prüft, ob das funktioniert? Die Verwaltung zählt vorher und nachher, um im Sommer sachlich entscheiden zu können.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 2 mit eurer eigenen Straße. Regel: In jeder Antwort muss ein Ziel vorkommen — einmal mit <i>um … zu</i>, einmal mit <i>damit</i>.</div>
@@ -1176,6 +1218,64 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.setAttribute('aria-expanded',auf?'true':'false');
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
+
+/* ---- Markierte Woerter ----
+   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
+   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
+   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
+
+   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
+   den viele verwechseln. */
+(function(){
+ var woerter=[].slice.call(document.querySelectorAll('.wm'));
+ if(!woerter.length) return;
+ var karte=null;
+
+ function zu(){ if(karte){ karte.remove(); karte=null; }
+  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
+
+ function auf(w){
+  var schonOffen=w.classList.contains('offen');
+  zu();
+  if(schonOffen) return;
+  w.classList.add('offen');
+  karte=document.createElement('div');
+  karte.className='wmk';
+  var satz=w.dataset.bsp||'';
+  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
+   + '<b>'+w.dataset.wort+'</b>'
+   + '<span>'+(w.dataset.kurz||'')+'</span>'
+   + (satz?'<em>'+satz+'</em>':'')
+   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
+  document.body.appendChild(karte);
+
+  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
+  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
+  var links=r.left+r.width/2-b.width/2;
+  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
+  var oben=r.bottom+window.pageYOffset+9;
+  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
+   oben=r.top+window.pageYOffset-b.height-9;
+  karte.style.left=links+'px'; karte.style.top=oben+'px';
+
+  karte.querySelector('.wmk-zu').onclick=zu;
+  var ton=karte.querySelector('.wmk-ton');
+  if(ton) ton.onclick=function(){ say(satz); };
+ }
+
+ woerter.forEach(function(w){
+  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
+  w.addEventListener('keydown',function(ev){
+   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
+ });
+ document.addEventListener('click',zu);
+ document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
+ window.addEventListener('resize',zu);
+ /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
+    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
+ document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
+  k.addEventListener('click',zu); });
+})();
 
 /* ---- Bildkarten verdecken ----
    Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau

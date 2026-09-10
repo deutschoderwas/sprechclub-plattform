@@ -436,6 +436,48 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Markierte Wörter ----------
+   Keine Wortschatzliste mehr, sondern das Wort dort, wo es steht.
+   Gelb unterstrichen: Wort dieser Stunde. Rot gepunktet: Begriff,
+   den viele verwechseln. Beides bleibt lesbar, wenn man es ignoriert —
+   die Markierung liegt unter der Zeile, nicht auf dem Wort. */
+.wm{
+  font-weight:inherit;cursor:pointer;position:relative;
+  border-bottom:3px solid var(--yellow);
+  padding-bottom:1px;transition:background .12s;
+}
+.wm.schwer{border-bottom:3px dotted var(--red);}
+.wm:hover,.wm.offen{background:rgba(255,210,74,.35);border-radius:4px 4px 0 0;}
+.wm.schwer:hover,.wm.schwer.offen{background:rgba(232,48,42,.12);}
+.wm:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.wm::after{
+  content:'';display:inline-block;width:.42em;height:.42em;margin-left:.22em;
+  vertical-align:.35em;border-radius:50%;background:var(--yellow);
+}
+.wm.schwer::after{background:var(--red);}
+
+.wmk{
+  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.2);padding:.85rem 1rem .9rem;
+}
+.wmk b{display:block;font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.25;padding-right:1.4rem;}
+.wmk span{display:block;margin-top:.3rem;font-size:.94rem;line-height:1.5;color:var(--ink-soft);}
+.wmk em{
+  display:block;margin-top:.55rem;padding-left:.7rem;border-left:3px solid var(--teal);
+  font-style:italic;font-size:.93rem;line-height:1.5;
+}
+.wmk-zu{
+  position:absolute;top:.45rem;right:.5rem;border:none;background:transparent;
+  font-size:.95rem;line-height:1;cursor:pointer;color:var(--ink-mute,#7a6a56);padding:.2rem;
+}
+.wmk-ton{
+  margin-top:.6rem;border:2px solid var(--ink);background:var(--sand);color:var(--ink);
+  border-radius:999px;padding:.3rem .75rem;font-family:inherit;font-size:.82rem;
+  font-weight:700;cursor:pointer;
+}
+@media print{ .wm::after{display:none;} .wmk{display:none;} }
+
 /* ---------- Die Ablauftafel ----------
    Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
    und in welcher Aufstellung. */
@@ -676,7 +718,7 @@ a.tab:hover{color:var(--ink);}
 <button class="speak" data-say="Ganz schön voll heute, oder?">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 🔓 Offen fragen</b><br>
 <span class="rm">Was haben Sie am Wochenende gemacht?</span><span class="rm">Wie sind Sie hergekommen?</span><span class="rm">Wie gefällt es Ihnen hier?</span>
-<div class="bsp"><span class="wer">So klingt es</span><b class="m-akk">Was</b> <b class="m-verb">haben</b> Sie <b class="m-menge">am Wochenende</b> gemacht?</div>
+<div class="bsp"><span class="wer">So klingt es</span><b class="m-akk">Was</b> <b class="m-verb">haben</b> Sie <b class="m-menge">am <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Wochenende" data-wort="das Wochenende" data-kurz="Samstag und Sonntag — die häufigste Montagsfrage" data-bsp="Und, was haben Sie am Wochenende gemacht?">Wochenende</b></b> gemacht?</div>
 <button class="speak" data-say="Was haben Sie am Wochenende gemacht?">🔊 hören</button></div>
 <div class="rmcard"><b>3 · 🔗 Anschließen</b><br>
 <span class="rm">Ach, wirklich? Und wie war es?</span><span class="rm">Wandern? Wo denn?</span><span class="rm">Das klingt gut — machen Sie das oft?</span>
@@ -690,7 +732,7 @@ a.tab:hover{color:var(--ink);}
 <div class="nur-b1">
 <div class="rmcard"><b>1 · 👋 Ansprechen mit Anlass</b><br>
 <span class="rm">Darf ich fragen, ob hier noch frei ist?</span><span class="rm">Sie sind sicher auch wegen der Tagung hier?</span><span class="rm">Ich habe Sie vorhin schon gesehen —</span>
-<div class="bsp"><span class="wer">So klingt es</span>Sie <b class="m-verb">sind</b> <b class="m-hoefl">sicher</b> auch wegen <b class="m-akk">der Tagung</b> hier?</div>
+<div class="bsp"><span class="wer">So klingt es</span>Sie <b class="m-verb">sind</b> <b class="m-hoefl"><b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von sicher" data-wort="Sicher" data-kurz="Geht immer, überall, mit jedem." data-bsp="Wetter · Anfahrt · Essen · Wochenende · die Situation hier">sicher</b></b> auch wegen <b class="m-akk">der Tagung</b> hier?</div>
 <button class="speak" data-say="Sie sind sicher auch wegen der Tagung hier?">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 🔓 Offen fragen, ohne auszufragen</b><br>
 <span class="rm">Wie sind Sie zu dem Thema gekommen?</span><span class="rm">Was hat Sie hierher verschlagen?</span><span class="rm">Was war für Sie der interessanteste Teil?</span>
@@ -717,7 +759,7 @@ a.tab:hover{color:var(--ink);}
 <section class="section" id="dialoge">
 <h2 class="st">Vier Begegnungen — <span class="hl">zwei Runden</span></h2>
 <p class="ssub"><b>Runde 1:</b> Lest den Dialog zu zweit laut. <b>Runde 2:</b> Auf den Knopf tippen — B verschwindet, und ihr antwortet selbst. Die Regieanweisung bleibt als Hilfe stehen.</p>
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-erste-tage.webp" alt="Eine neue Kollegin wird im Büro begrüßt"><h4>Dialog 1 · „Der erste Tag“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Neu in der Firma. In der Kaffeeküche steht jemand, den du nicht kennst.</div>
+<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-erste-tage.webp" alt="Eine neue Kollegin wird im Büro begrüßt"><h4>Dialog 1 · „Der erste Tag“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Neu in der Firma. In der <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Kaffeeküche" data-wort="die Kaffeeküche" data-kurz="der Raum im Büro mit dem Kaffeeautomaten" data-bsp="In der Kaffeeküche erfährt man mehr als in jedem Meeting.">Kaffeeküche</b> steht jemand, den du nicht kennst.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Morgen! Sie sind neu, oder?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Guten Morgen, ja — seit heute. Darf ich mich vorstellen? Kaya Demir.</div><div class="dcue">🗣️ Grüße, bestätige, stell dich vor. Alles in einem Zug.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ines Kramer, Buchhaltung. Und, gut hergekommen?</div></div>
@@ -729,7 +771,7 @@ a.tab:hover{color:var(--ink);}
 <button class="speak dbtn" data-say="Morgen! Sie sind neu, oder? Guten Morgen, ja — seit heute. Darf ich mich vorstellen? Kaya Demir. Ines Kramer, Buchhaltung. Und, gut hergekommen? Ganz gut, nur die Straßenbahn war voll. Fahren Sie auch mit den Öffis? Immer. Mit dem Auto stehen Sie hier morgens ewig. Gut zu wissen. Ist der Kaffee hier eigentlich zu empfehlen? Ehrlich? Nein. Aber gegenüber gibt es einen guten. Das merke ich mir. Danke — bis später!">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../vok-bild/die-haltestelle.webp" alt="Eine Person wartet an einer Bushaltestelle"><h4>Dialog 2 · „An der Haltestelle“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Der Bus hat Verspätung. Neben dir steht jemand mit einem Hund.</div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Wir warten hier schon eine Viertelstunde, oder?</div><div class="dcue">🗣️ Sprich die gemeinsame Situation an. Das ist immer sicher.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Wir <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von warten" data-wort="warten" data-kurz="bleiben, bis etwas kommt" data-bsp="Wir warten hier schon eine Viertelstunde, oder?">warten</b> hier schon eine Viertelstunde, oder?</div><div class="dcue">🗣️ Sprich die gemeinsame Situation an. Das ist immer sicher.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Achtzehn Minuten. Ich zähle mit.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Auch eine Methode. Ist das immer so auf dieser Linie?</div><div class="dcue">🗣️ Nimm den Scherz auf und stell eine offene Frage zur Lage.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Freitags eigentlich immer. Montags geht es.</div></div>
@@ -745,7 +787,7 @@ a.tab:hover{color:var(--ink);}
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Wir arbeiten zusammen. Sprachkurs klingt spannend, welche Sprache?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Deutsch. Ich bin damals gerade erst hergezogen.</div><div class="dcue">🗣️ Antworte offen. Ein persönliches Detail lädt zur nächsten Frage ein.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ach, und wie war das am Anfang?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Anstrengend und schön gleichzeitig. Vor allem der Small Talk hat mir gefehlt.</div><div class="dcue">🗣️ Antworte ehrlich in zwei Wörtern und häng eine Beobachtung an.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Anstrengend und schön gleichzeitig. Vor allem der <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Small Talk" data-wort="der Small Talk" data-kurz="das kurze, unverbindliche Gespräch" data-bsp="Ein bisschen Small Talk gehört hier einfach dazu.">Small Talk</b> hat mir gefehlt.</div><div class="dcue">🗣️ Antworte ehrlich in zwei Wörtern und häng eine Beobachtung an.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Ist hier noch frei? Ich kenne hier auch fast niemanden. Klar, setzen Sie sich. Woher kennen Sie Timo? Aus dem Sprachkurs, vor drei Jahren. Und Sie? Wir arbeiten zusammen. Sprachkurs klingt spannend, welche Sprache? Deutsch. Ich bin damals gerade erst hergezogen. Ach, und wie war das am Anfang? Anstrengend und schön gleichzeitig. Vor allem der Small Talk hat mir gefehlt.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-heikel.webp" alt="Zwei Personen in einem unangenehmen Gespräch"><h4>Dialog 4 · „Wenn es heikel wird“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Der andere fragt etwas, das dir zu privat ist.</div>
@@ -883,14 +925,14 @@ a.tab:hover{color:var(--ink);}
 <p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Ihr fahrt gemeinsam nach oben und kennt euch nicht. Ihr habt genau eine Minute.</p>
 <div class="nur-a2"><span class="rm">Ganz schön voll heute</span><span class="rm">Auch so früh dran?</span><span class="rm">Arbeiten Sie hier?</span><span class="rm">Schönen Tag noch!</span></div>
 <div class="nur-b1"><span class="rm">Ich habe Sie hier schon mal gesehen</span><span class="rm">Sind Sie auch wegen der Tagung hier?</span><span class="rm">Wie gefällt es Ihnen im Haus?</span><span class="rm">Dann bis bald mal</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Das Gespräch beginnt bei der gemeinsamen Situation, enthält eine offene Frage und endet freundlich, bevor der Fahrstuhl hält.</div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Das Gespräch beginnt bei der gemeinsamen Situation, enthält eine offene Frage und endet freundlich, bevor der <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Fahrstuhl" data-wort="der Fahrstuhl" data-kurz="der Aufzug im Haus" data-bsp="Im Fahrstuhl sagt man wenigstens Guten Morgen.">Fahrstuhl</b> hält.</div>
 </div>
 <div class="rmcard">
 <b>2 · Der erste Tag im Team</b>
 <p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A ist neu, B arbeitet seit zehn Jahren dort. Fünf Minuten in der Kaffeeküche.</p>
 <div class="nur-a2"><span class="rm">Darf ich mich vorstellen?</span><span class="rm">Seit heute</span><span class="rm">Wie lange sind Sie schon hier?</span><span class="rm">Danke für den Tipp</span></div>
 <div class="nur-b1"><span class="rm">Herzlich willkommen im Haus</span><span class="rm">Was machen Sie genau?</span><span class="rm">Wie sind Sie hergekommen?</span><span class="rm">Melden Sie sich, wenn etwas fehlt</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide fragen abwechselnd, keiner verhört den anderen — und mindestens eine Gemeinsamkeit wird gefunden.</div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide fragen abwechselnd, keiner verhört den anderen — und mindestens eine <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Gemeinsamkeit" data-wort="die Gemeinsamkeit" data-kurz="das, was beide teilen" data-bsp="Sobald man eine Gemeinsamkeit findet, läuft das Gespräch von allein.">Gemeinsamkeit</b> wird gefunden.</div>
 </div>
 <div class="rmcard">
 <b>3 · Die heikle Frage</b>
@@ -1162,6 +1204,64 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.setAttribute('aria-expanded',auf?'true':'false');
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
+
+/* ---- Markierte Woerter ----
+   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
+   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
+   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
+
+   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
+   den viele verwechseln. */
+(function(){
+ var woerter=[].slice.call(document.querySelectorAll('.wm'));
+ if(!woerter.length) return;
+ var karte=null;
+
+ function zu(){ if(karte){ karte.remove(); karte=null; }
+  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
+
+ function auf(w){
+  var schonOffen=w.classList.contains('offen');
+  zu();
+  if(schonOffen) return;
+  w.classList.add('offen');
+  karte=document.createElement('div');
+  karte.className='wmk';
+  var satz=w.dataset.bsp||'';
+  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
+   + '<b>'+w.dataset.wort+'</b>'
+   + '<span>'+(w.dataset.kurz||'')+'</span>'
+   + (satz?'<em>'+satz+'</em>':'')
+   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
+  document.body.appendChild(karte);
+
+  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
+  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
+  var links=r.left+r.width/2-b.width/2;
+  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
+  var oben=r.bottom+window.pageYOffset+9;
+  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
+   oben=r.top+window.pageYOffset-b.height-9;
+  karte.style.left=links+'px'; karte.style.top=oben+'px';
+
+  karte.querySelector('.wmk-zu').onclick=zu;
+  var ton=karte.querySelector('.wmk-ton');
+  if(ton) ton.onclick=function(){ say(satz); };
+ }
+
+ woerter.forEach(function(w){
+  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
+  w.addEventListener('keydown',function(ev){
+   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
+ });
+ document.addEventListener('click',zu);
+ document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
+ window.addEventListener('resize',zu);
+ /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
+    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
+ document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
+  k.addEventListener('click',zu); });
+})();
 
 /* ---- Bildkarten verdecken ----
    Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau

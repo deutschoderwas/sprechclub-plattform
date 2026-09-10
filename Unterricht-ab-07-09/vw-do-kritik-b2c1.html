@@ -436,6 +436,48 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Markierte Wörter ----------
+   Keine Wortschatzliste mehr, sondern das Wort dort, wo es steht.
+   Gelb unterstrichen: Wort dieser Stunde. Rot gepunktet: Begriff,
+   den viele verwechseln. Beides bleibt lesbar, wenn man es ignoriert —
+   die Markierung liegt unter der Zeile, nicht auf dem Wort. */
+.wm{
+  font-weight:inherit;cursor:pointer;position:relative;
+  border-bottom:3px solid var(--yellow);
+  padding-bottom:1px;transition:background .12s;
+}
+.wm.schwer{border-bottom:3px dotted var(--red);}
+.wm:hover,.wm.offen{background:rgba(255,210,74,.35);border-radius:4px 4px 0 0;}
+.wm.schwer:hover,.wm.schwer.offen{background:rgba(232,48,42,.12);}
+.wm:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.wm::after{
+  content:'';display:inline-block;width:.42em;height:.42em;margin-left:.22em;
+  vertical-align:.35em;border-radius:50%;background:var(--yellow);
+}
+.wm.schwer::after{background:var(--red);}
+
+.wmk{
+  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.2);padding:.85rem 1rem .9rem;
+}
+.wmk b{display:block;font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.25;padding-right:1.4rem;}
+.wmk span{display:block;margin-top:.3rem;font-size:.94rem;line-height:1.5;color:var(--ink-soft);}
+.wmk em{
+  display:block;margin-top:.55rem;padding-left:.7rem;border-left:3px solid var(--teal);
+  font-style:italic;font-size:.93rem;line-height:1.5;
+}
+.wmk-zu{
+  position:absolute;top:.45rem;right:.5rem;border:none;background:transparent;
+  font-size:.95rem;line-height:1;cursor:pointer;color:var(--ink-mute,#7a6a56);padding:.2rem;
+}
+.wmk-ton{
+  margin-top:.6rem;border:2px solid var(--ink);background:var(--sand);color:var(--ink);
+  border-radius:999px;padding:.3rem .75rem;font-family:inherit;font-size:.82rem;
+  font-weight:700;cursor:pointer;
+}
+@media print{ .wm::after{display:none;} .wmk{display:none;} }
+
 /* ---------- Die Ablauftafel ----------
    Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
    und in welcher Aufstellung. */
@@ -717,7 +759,7 @@ a.tab:hover{color:var(--ink);}
 <section class="section" id="dialoge">
 <h2 class="st">Vier Gespräche — <span class="hl">zwei Runden</span></h2>
 <p class="ssub"><b>Runde 1:</b> Lest den Dialog zu zweit laut. <b>Runde 2:</b> Auf den Knopf tippen — B verschwindet, und ihr antwortet selbst. Die Regieanweisung bleibt als Hilfe stehen.</p>
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-buero.webp" alt="Zwei Kolleginnen am Schreibtisch mit Laptop"><h4>Dialog 1 · „Die Folien kamen zu spät“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Montagmorgen. Die gemeinsame Präsentation lief, aber du hast am Wochenende gelitten.</div>
+<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-buero.webp" alt="Zwei Kolleginnen am Schreibtisch mit Laptop"><h4>Dialog 1 · „Die Folien kamen zu spät“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Montagmorgen. Die gemeinsame <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Präsentation" data-wort="die Präsentation" data-kurz="der Vortrag vor einer Gruppe, meist mit Folien" data-bsp="Nach der Präsentation nehme ich mir immer zehn Minuten für Rückmeldungen.">Präsentation</b> lief, aber du hast am Wochenende gelitten.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Lief doch gut heute, oder?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Inhaltlich ja. Ich würde gern kurz etwas zum Ablauf ansprechen — hast du zehn Minuten?</div><div class="dcue">🗣️ Erst das Positive, dann den Rahmen setzen. Frag nach Zeit, statt loszulegen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Klar, schieß los.</div></div>
@@ -730,7 +772,7 @@ a.tab:hover{color:var(--ink);}
 
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-bewerbung.webp" alt="Zwei Personen sitzen sich mit Unterlagen gegenüber"><h4>Dialog 2 · „Kritik nach oben“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Deine Vorgesetzte gibt Aufgaben weiter, sagt aber nie, wie dringend sie sind.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Sie wollten etwas besprechen?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ja, es geht um die Priorisierung. Mir liegt daran, dass ich Ihre Erwartungen besser treffe.</div><div class="dcue">🗣️ Nenn das Thema und formuliere dein Anliegen als gemeinsames Ziel.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ja, es geht um die Priorisierung. Mir liegt daran, dass ich Ihre <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Erwartungen" data-wort="die Erwartung" data-kurz="das, was man von jemandem annimmt oder verlangt" data-bsp="Ich hatte die Erwartung, die Folien am Mittwoch zu bekommen.">Erwartungen</b> besser treffe.</div><div class="dcue">🗣️ Nenn das Thema und formuliere dein Anliegen als gemeinsames Ziel.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Gibt es damit ein Problem?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">In den letzten drei Wochen kamen vier Aufgaben ohne Termin. Dadurch habe ich zweimal das Falsche zuerst gemacht.</div><div class="dcue">🗣️ Zahlen statt Adjektive. Und die Wirkung auf die Arbeit, nicht auf dein Gefühl.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Das war mir so nicht bewusst.</div></div>
@@ -748,7 +790,7 @@ a.tab:hover{color:var(--ink);}
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ich melde mich früher, wenn es eng wird. Versprochen.</div></div>
 <button class="speak dbtn" data-say="Sorry wegen Samstag, das kam wirklich dazwischen. Passiert. Ich möchte es trotzdem einmal sagen, weil ich es sonst mit mir herumtrage. Oh. Ist es so schlimm? Es waren dreimal in zwei Monaten. Bei mir kommt langsam an, dass ich als Letzte auf der Liste stehe. So ist das überhaupt nicht gemeint! Das glaube ich dir. Deshalb sage ich es ja — damit du weißt, wie es hier ankommt. Ich melde mich früher, wenn es eng wird. Versprochen.">🔊 Dialog vorlesen lassen</button></div>
 
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-weiterbildung.webp" alt="Zwei Personen arbeiten gemeinsam an einem Laptop"><h4>Dialog 4 · „Kritik annehmen“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Jetzt andersherum: Du bekommst eine Rückmeldung, die zuerst wehtut.</div>
+<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-weiterbildung.webp" alt="Zwei Personen arbeiten gemeinsam an einem Laptop"><h4>Dialog 4 · „Kritik annehmen“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Jetzt andersherum: Du bekommst eine <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Rückmeldung" data-wort="die Rückmeldung" data-kurz="das deutsche Wort für Feedback" data-bsp="Darf ich dir eine Rückmeldung zu der Präsentation geben?">Rückmeldung</b>, die zuerst wehtut.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Dein Bericht war zu lang. Die Hälfte hätte gereicht.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Danke, dass du es sagst. An welcher Stelle hast du gemerkt, dass es zu viel wurde?</div><div class="dcue">🗣️ Bedank dich zuerst und frag konkret nach. Das ist die beste Antwort auf Kritik.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ab Kapitel drei. Da kam nichts Neues mehr.</div></div>
@@ -882,14 +924,14 @@ a.tab:hover{color:var(--ink);}
 <p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B unterbricht A regelmäßig vor anderen. A spricht es unter vier Augen an.</p>
 <div class="nur-a2"><span class="rm">Mir ist aufgefallen, dass …</span><span class="rm">Dadurch komme ich nicht zu Ende</span><span class="rm">Ich hätte gern, dass …</span><span class="rm">Passt das für dich?</span></div>
 <div class="nur-b1"><span class="rm">Ich beziehe mich auf das Meeting am Dienstag</span><span class="rm">Bei mir kommt an, dass …</span><span class="rm">Ich unterstelle dir nichts</span><span class="rm">Können wir uns darauf verständigen, dass …?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A nennt eine konkrete Sitzung, beschreibt die Wirkung auf sich selbst und endet mit einer Vereinbarung — nicht mit einem Urteil.</div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A nennt eine konkrete Sitzung, beschreibt die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Wirkung" data-wort="die Wirkung" data-kurz="das, was etwas bei einem anderen auslöst" data-bsp="Beschreib die Wirkung auf dich, nicht die Absicht des anderen.">Wirkung</b> auf sich selbst und endet mit einer Vereinbarung — nicht mit einem Urteil.</div>
 </div>
 <div class="rmcard">
 <b>2 · Kritik nach oben</b>
 <p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B ist die Führungskraft und verteilt Aufgaben ohne Fristen. A spricht das an, ohne die Stelle zu riskieren.</p>
 <div class="nur-a2"><span class="rm">Es geht mir um die Termine</span><span class="rm">Zweimal habe ich das Falsche zuerst gemacht</span><span class="rm">Eine Zeile mit Frist würde reichen</span><span class="rm">Wäre das möglich?</span></div>
 <div class="nur-b1"><span class="rm">Mir liegt daran, Ihre Erwartungen zu treffen</span><span class="rm">In den letzten drei Wochen …</span><span class="rm">Mein Vorschlag wäre ganz klein:</span><span class="rm">Was bräuchten Sie dafür von mir?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A formuliert das Anliegen als gemeinsames Ziel, bringt Zahlen statt Gefühle und macht einen minimalen Vorschlag.</div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A formuliert das <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Anliegen" data-wort="das Anliegen" data-kurz="das, was man mit einem Gespräch erreichen will" data-bsp="Mein Anliegen ist nicht, recht zu haben, sondern die nächste Runde zu verbessern.">Anliegen</b> als gemeinsames Ziel, bringt Zahlen statt Gefühle und macht einen minimalen Vorschlag.</div>
 </div>
 <div class="rmcard">
 <b>3 · Der Freund, der immer absagt</b>
@@ -1160,6 +1202,64 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.setAttribute('aria-expanded',auf?'true':'false');
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
+
+/* ---- Markierte Woerter ----
+   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
+   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
+   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
+
+   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
+   den viele verwechseln. */
+(function(){
+ var woerter=[].slice.call(document.querySelectorAll('.wm'));
+ if(!woerter.length) return;
+ var karte=null;
+
+ function zu(){ if(karte){ karte.remove(); karte=null; }
+  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
+
+ function auf(w){
+  var schonOffen=w.classList.contains('offen');
+  zu();
+  if(schonOffen) return;
+  w.classList.add('offen');
+  karte=document.createElement('div');
+  karte.className='wmk';
+  var satz=w.dataset.bsp||'';
+  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
+   + '<b>'+w.dataset.wort+'</b>'
+   + '<span>'+(w.dataset.kurz||'')+'</span>'
+   + (satz?'<em>'+satz+'</em>':'')
+   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
+  document.body.appendChild(karte);
+
+  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
+  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
+  var links=r.left+r.width/2-b.width/2;
+  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
+  var oben=r.bottom+window.pageYOffset+9;
+  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
+   oben=r.top+window.pageYOffset-b.height-9;
+  karte.style.left=links+'px'; karte.style.top=oben+'px';
+
+  karte.querySelector('.wmk-zu').onclick=zu;
+  var ton=karte.querySelector('.wmk-ton');
+  if(ton) ton.onclick=function(){ say(satz); };
+ }
+
+ woerter.forEach(function(w){
+  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
+  w.addEventListener('keydown',function(ev){
+   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
+ });
+ document.addEventListener('click',zu);
+ document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
+ window.addEventListener('resize',zu);
+ /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
+    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
+ document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
+  k.addEventListener('click',zu); });
+})();
 
 /* ---- Bildkarten verdecken ----
    Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau

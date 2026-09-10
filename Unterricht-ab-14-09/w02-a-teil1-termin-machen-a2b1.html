@@ -436,6 +436,48 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Markierte Wörter ----------
+   Keine Wortschatzliste mehr, sondern das Wort dort, wo es steht.
+   Gelb unterstrichen: Wort dieser Stunde. Rot gepunktet: Begriff,
+   den viele verwechseln. Beides bleibt lesbar, wenn man es ignoriert —
+   die Markierung liegt unter der Zeile, nicht auf dem Wort. */
+.wm{
+  font-weight:inherit;cursor:pointer;position:relative;
+  border-bottom:3px solid var(--yellow);
+  padding-bottom:1px;transition:background .12s;
+}
+.wm.schwer{border-bottom:3px dotted var(--red);}
+.wm:hover,.wm.offen{background:rgba(255,210,74,.35);border-radius:4px 4px 0 0;}
+.wm.schwer:hover,.wm.schwer.offen{background:rgba(232,48,42,.12);}
+.wm:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.wm::after{
+  content:'';display:inline-block;width:.42em;height:.42em;margin-left:.22em;
+  vertical-align:.35em;border-radius:50%;background:var(--yellow);
+}
+.wm.schwer::after{background:var(--red);}
+
+.wmk{
+  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.2);padding:.85rem 1rem .9rem;
+}
+.wmk b{display:block;font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.25;padding-right:1.4rem;}
+.wmk span{display:block;margin-top:.3rem;font-size:.94rem;line-height:1.5;color:var(--ink-soft);}
+.wmk em{
+  display:block;margin-top:.55rem;padding-left:.7rem;border-left:3px solid var(--teal);
+  font-style:italic;font-size:.93rem;line-height:1.5;
+}
+.wmk-zu{
+  position:absolute;top:.45rem;right:.5rem;border:none;background:transparent;
+  font-size:.95rem;line-height:1;cursor:pointer;color:var(--ink-mute,#7a6a56);padding:.2rem;
+}
+.wmk-ton{
+  margin-top:.6rem;border:2px solid var(--ink);background:var(--sand);color:var(--ink);
+  border-radius:999px;padding:.3rem .75rem;font-family:inherit;font-size:.82rem;
+  font-weight:700;cursor:pointer;
+}
+@media print{ .wm::after{display:none;} .wmk{display:none;} }
+
 /* ---------- Die Ablauftafel ----------
    Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
    und in welcher Aufstellung. */
@@ -672,7 +714,7 @@ a.tab:hover{color:var(--ink);}
 <div class="nur-a2">
 <div class="rmcard"><b>1 · 📞 Melden</b><br>
 <span class="rm">Guten Tag, mein Name ist …</span><span class="rm">Hier ist …</span><span class="rm">Ich rufe an wegen …</span>
-<div class="bsp"><span class="wer">So klingt es</span>Guten Tag, <b class="m-hoefl">mein Name ist Kaya Demir</b>. Ich <b class="m-verb">rufe</b> wegen <b class="m-akk">eines Termins</b> an.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Guten Tag, <b class="m-hoefl">mein Name ist Kaya Demir</b>. Ich <b class="m-verb">rufe</b> wegen <b class="m-akk">eines <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Termins" data-wort="der Termin" data-kurz="der verabredete Zeitpunkt" data-bsp="Ich hätte gern einen Termin bei Dr. Weber.">Termins</b></b> an.</div>
 <button class="speak" data-say="Guten Tag, mein Name ist Kaya Demir. Ich rufe wegen eines Termins an.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 🎯 Anliegen sagen</b><br>
 <span class="rm">Ich hätte gern einen Termin.</span><span class="rm">Ich brauche einen Termin für …</span><span class="rm">Es geht um …</span>
@@ -680,7 +722,7 @@ a.tab:hover{color:var(--ink);}
 <button class="speak" data-say="Ich hätte gern einen Termin zur Kontrolle.">🔊 hören</button></div>
 <div class="rmcard"><b>3 · 🗓️ Zeit vorschlagen</b><br>
 <span class="rm">Am Montag hätte ich Zeit.</span><span class="rm">Vormittags wäre gut.</span><span class="rm">Geht es auch später?</span>
-<div class="bsp"><span class="wer">So klingt es</span><b class="m-menge">Am Montag</b> <b class="m-menge">am Vormittag</b> <b class="m-verb">hätte</b> ich <b class="m-akk">Zeit</b>.</div>
+<div class="bsp"><span class="wer">So klingt es</span><b class="m-menge">Am Montag</b> <b class="m-menge">am <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Vormittag" data-wort="der Vormittag" data-kurz="die Zeit zwischen Morgen und Mittag" data-bsp="Am Vormittag hätte ich Zeit.">Vormittag</b></b> <b class="m-verb">hätte</b> ich <b class="m-akk">Zeit</b>.</div>
 <button class="speak" data-say="Am Montag am Vormittag hätte ich Zeit.">🔊 hören</button></div>
 <div class="rmcard"><b>4 · ✅ Bestätigen</b><br>
 <span class="rm">Also Donnerstag um zehn.</span><span class="rm">Was soll ich mitbringen?</span><span class="rm">Vielen Dank!</span>
@@ -694,7 +736,7 @@ a.tab:hover{color:var(--ink);}
 <button class="speak" data-say="Guten Tag, Demir mein Name. Ich bin seit zwei Jahren Patientin bei Ihnen.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 🎯 Anliegen einordnen</b><br>
 <span class="rm">Es handelt sich um eine Nachkontrolle.</span><span class="rm">Mir wurde geraten, mich vorzustellen.</span><span class="rm">Es wäre eher dringend.</span>
-<div class="bsp"><span class="wer">So klingt es</span>Es <b class="m-verb">handelt</b> sich um <b class="m-akk">eine Nachkontrolle</b> — es <b class="m-verb">wäre</b> <b class="m-hoefl">eher dringend</b>.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Es <b class="m-verb">handelt</b> sich um <b class="m-akk">eine Nachkontrolle</b> — es <b class="m-verb">wäre</b> <b class="m-hoefl">eher <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von dringend" data-wort="dringend" data-kurz="sehr eilig, kann nicht warten" data-bsp="Es ist dringend, ich habe seit drei Tagen Schmerzen.">dringend</b></b>.</div>
 <button class="speak" data-say="Es handelt sich um eine Nachkontrolle. Es wäre eher dringend.">🔊 hören</button></div>
 <div class="rmcard"><b>3 · 🗓️ Spielraum zeigen</b><br>
 <span class="rm">Ich bin zeitlich recht flexibel.</span><span class="rm">Vormittags ginge es besser als nachmittags.</span><span class="rm">Auch kurzfristig, wenn jemand absagt.</span>
@@ -722,11 +764,11 @@ a.tab:hover{color:var(--ink);}
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Guten Tag, mein Name ist Kaya Demir. Ich hätte gern einen Termin zur Kontrolle.</div><div class="dcue">🗣️ Grüßen, Name, Anliegen. Alles in einem Atemzug.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Waren Sie schon einmal bei uns?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ja, seit zwei Jahren. Der letzte Termin war im März.</div><div class="dcue">🗣️ Antworte kurz und gib ein Detail dazu — das hilft beim Suchen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Wann würde es Ihnen denn passen?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Am Vormittag wäre gut. Haben Sie diese Woche noch etwas frei?</div><div class="dcue">🗣️ Nenn eine Tageszeit, keine feste Stunde — dann gibt es mehr Auswahl.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Wann würde es Ihnen denn <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von passen" data-wort="passen" data-kurz="zeitlich möglich sein" data-bsp="Donnerstag um zehn würde mir gut passen.">passen</b>?</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Am Vormittag wäre gut. Haben Sie diese Woche noch etwas <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von frei" data-wort="frei" data-kurz="noch nicht vergeben, noch zu haben" data-bsp="Haben Sie am Dienstag noch etwas frei?">frei</b>?</div><div class="dcue">🗣️ Nenn eine Tageszeit, keine feste Stunde — dann gibt es mehr Auswahl.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Donnerstag um zehn hätte ich noch etwas.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Donnerstag, der 24., um zehn — das passt. Was soll ich mitbringen?</div><div class="dcue">🗣️ Wiederhol Tag, Datum, Uhrzeit. Und frag nach den Unterlagen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Nur die Versichertenkarte. Bis Donnerstag!</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Nur die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Versichertenkarte" data-wort="die Versichertenkarte" data-kurz="die Karte der Krankenkasse" data-bsp="Bringen Sie bitte Ihre Versichertenkarte mit.">Versichertenkarte</b>. Bis Donnerstag!</div></div>
 <button class="speak dbtn" data-say="Praxis Dr. Weber, Meier am Apparat, guten Tag. Guten Tag, mein Name ist Kaya Demir. Ich hätte gern einen Termin zur Kontrolle. Waren Sie schon einmal bei uns? Ja, seit zwei Jahren. Der letzte Termin war im März. Wann würde es Ihnen denn passen? Am Vormittag wäre gut. Haben Sie diese Woche noch etwas frei? Donnerstag um zehn hätte ich noch etwas. Donnerstag, der 24., um zehn — das passt. Was soll ich mitbringen? Nur die Versichertenkarte. Bis Donnerstag!">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-zahnarzt.webp" alt="Ein Zahnarzt behandelt eine Patientin"><h4>Dialog 2 · „Es tut weh“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Zahnschmerzen seit dem Wochenende. Der nächste freie Termin ist in acht Wochen.</div>
@@ -886,7 +928,7 @@ a.tab:hover{color:var(--ink);}
 <p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A ruft beim Hausarzt an und braucht einen Kontrolltermin. B schlägt drei Zeiten vor, zwei passen nicht.</p>
 <div class="nur-a2"><span class="rm">Ich hätte gern einen Termin</span><span class="rm">Am Vormittag wäre gut</span><span class="rm">Da kann ich leider nicht</span><span class="rm">Also Donnerstag um zehn</span></div>
 <div class="nur-b1"><span class="rm">Ich bin zeitlich recht flexibel</span><span class="rm">Vormittags ginge es besser</span><span class="rm">Darf ich das kurz wiederholen?</span><span class="rm">Bekomme ich eine Erinnerung?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A nennt eine Tageszeit statt einer festen Stunde, lehnt zweimal freundlich ab und wiederholt am Ende Tag, Datum und Uhrzeit.</div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A nennt eine Tageszeit statt einer festen Stunde, lehnt zweimal freundlich ab und wiederholt am Ende Tag, Datum und <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Uhrzeit" data-wort="die Uhrzeit" data-kurz="die Angabe, wie spät es ist" data-bsp="Welche Uhrzeit würde Ihnen passen?">Uhrzeit</b>.</div>
 </div>
 <div class="rmcard">
 <b>2 · Es ist dringend</b>
@@ -900,7 +942,7 @@ a.tab:hover{color:var(--ink);}
 <p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Niemand geht ran. A spricht eine Nachricht, B hört zu und sagt danach, was gefehlt hat.</p>
 <div class="nur-a2"><span class="rm">Hier spricht …</span><span class="rm">Ich rufe an wegen …</span><span class="rm">Sie erreichen mich unter …</span><span class="rm">Vielen Dank</span></div>
 <div class="nur-b1"><span class="rm">Ich rufe im Auftrag von … an</span><span class="rm">Am liebsten vormittags</span><span class="rm">Ich wiederhole die Nummer</span><span class="rm">Ich bin ab 14 Uhr erreichbar</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Name, Grund, Nummer zweimal, Erreichbarkeit. Fehlt eins davon, ruft niemand zurück — genau das prüft B.</div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Name, Grund, Nummer zweimal, Erreichbarkeit. Fehlt eins davon, ruft niemand zurück — <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von genau" data-wort="Genau" data-kurz="Ein fester Zeitpunkt — mit um." data-bsp="um zehn Uhr · um halb drei · um Viertel nach neun">genau</b> das prüft B.</div>
 </div>
 <h2 class="st">🎴 Sprechkarten</h2>
 <p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
@@ -1165,6 +1207,64 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.setAttribute('aria-expanded',auf?'true':'false');
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
+
+/* ---- Markierte Woerter ----
+   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
+   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
+   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
+
+   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
+   den viele verwechseln. */
+(function(){
+ var woerter=[].slice.call(document.querySelectorAll('.wm'));
+ if(!woerter.length) return;
+ var karte=null;
+
+ function zu(){ if(karte){ karte.remove(); karte=null; }
+  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
+
+ function auf(w){
+  var schonOffen=w.classList.contains('offen');
+  zu();
+  if(schonOffen) return;
+  w.classList.add('offen');
+  karte=document.createElement('div');
+  karte.className='wmk';
+  var satz=w.dataset.bsp||'';
+  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
+   + '<b>'+w.dataset.wort+'</b>'
+   + '<span>'+(w.dataset.kurz||'')+'</span>'
+   + (satz?'<em>'+satz+'</em>':'')
+   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
+  document.body.appendChild(karte);
+
+  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
+  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
+  var links=r.left+r.width/2-b.width/2;
+  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
+  var oben=r.bottom+window.pageYOffset+9;
+  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
+   oben=r.top+window.pageYOffset-b.height-9;
+  karte.style.left=links+'px'; karte.style.top=oben+'px';
+
+  karte.querySelector('.wmk-zu').onclick=zu;
+  var ton=karte.querySelector('.wmk-ton');
+  if(ton) ton.onclick=function(){ say(satz); };
+ }
+
+ woerter.forEach(function(w){
+  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
+  w.addEventListener('keydown',function(ev){
+   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
+ });
+ document.addEventListener('click',zu);
+ document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
+ window.addEventListener('resize',zu);
+ /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
+    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
+ document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
+  k.addEventListener('click',zu); });
+})();
 
 /* ---- Bildkarten verdecken ----
    Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau

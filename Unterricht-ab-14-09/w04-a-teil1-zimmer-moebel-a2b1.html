@@ -436,6 +436,48 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Markierte Wörter ----------
+   Keine Wortschatzliste mehr, sondern das Wort dort, wo es steht.
+   Gelb unterstrichen: Wort dieser Stunde. Rot gepunktet: Begriff,
+   den viele verwechseln. Beides bleibt lesbar, wenn man es ignoriert —
+   die Markierung liegt unter der Zeile, nicht auf dem Wort. */
+.wm{
+  font-weight:inherit;cursor:pointer;position:relative;
+  border-bottom:3px solid var(--yellow);
+  padding-bottom:1px;transition:background .12s;
+}
+.wm.schwer{border-bottom:3px dotted var(--red);}
+.wm:hover,.wm.offen{background:rgba(255,210,74,.35);border-radius:4px 4px 0 0;}
+.wm.schwer:hover,.wm.schwer.offen{background:rgba(232,48,42,.12);}
+.wm:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.wm::after{
+  content:'';display:inline-block;width:.42em;height:.42em;margin-left:.22em;
+  vertical-align:.35em;border-radius:50%;background:var(--yellow);
+}
+.wm.schwer::after{background:var(--red);}
+
+.wmk{
+  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.2);padding:.85rem 1rem .9rem;
+}
+.wmk b{display:block;font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.25;padding-right:1.4rem;}
+.wmk span{display:block;margin-top:.3rem;font-size:.94rem;line-height:1.5;color:var(--ink-soft);}
+.wmk em{
+  display:block;margin-top:.55rem;padding-left:.7rem;border-left:3px solid var(--teal);
+  font-style:italic;font-size:.93rem;line-height:1.5;
+}
+.wmk-zu{
+  position:absolute;top:.45rem;right:.5rem;border:none;background:transparent;
+  font-size:.95rem;line-height:1;cursor:pointer;color:var(--ink-mute,#7a6a56);padding:.2rem;
+}
+.wmk-ton{
+  margin-top:.6rem;border:2px solid var(--ink);background:var(--sand);color:var(--ink);
+  border-radius:999px;padding:.3rem .75rem;font-family:inherit;font-size:.82rem;
+  font-weight:700;cursor:pointer;
+}
+@media print{ .wm::after{display:none;} .wmk{display:none;} }
+
 /* ---------- Die Ablauftafel ----------
    Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
    und in welcher Aufstellung. */
@@ -672,7 +714,7 @@ a.tab:hover{color:var(--ink);}
 <div class="nur-a2">
 <div class="rmcard"><b>1 · 🏠 Das Zimmer nennen</b><br>
 <span class="rm">im Wohnzimmer</span><span class="rm">in der Küche</span><span class="rm">im Flur</span>
-<div class="bsp"><span class="wer">So klingt es</span>Der Fernseher steht im Wohnzimmer.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Der Fernseher steht im <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Wohnzimmer" data-wort="das Wohnzimmer" data-kurz="Raum zum Sitzen, Reden und Fernsehen" data-bsp="Im Wohnzimmer steht ein großes Sofa.">Wohnzimmer</b>.</div>
 <button class="speak" data-say="Der Fernseher steht im Wohnzimmer.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 📍 Die Stelle nennen</b><br>
 <span class="rm">auf dem Tisch</span><span class="rm">unter dem Bett</span><span class="rm">neben dem Sofa</span>
@@ -690,15 +732,15 @@ a.tab:hover{color:var(--ink);}
 <div class="nur-b1">
 <div class="rmcard"><b>1 · 🧭 Die Lage beschreiben</b><br>
 <span class="rm">hinten links</span><span class="rm">gleich rechts neben der Tür</span><span class="rm">auf der anderen Seite</span>
-<div class="bsp"><span class="wer">So klingt es</span>Das Bad liegt hinten links, gleich neben dem Schlafzimmer.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Das Bad liegt hinten links, gleich neben dem <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Schlafzimmer" data-wort="das Schlafzimmer" data-kurz="Raum mit dem Bett" data-bsp="Das Schlafzimmer liegt hinten links.">Schlafzimmer</b>.</div>
 <button class="speak" data-say="Das Bad liegt hinten links, gleich neben dem Schlafzimmer.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 📏 Genauer werden</b><br>
 <span class="rm">zwischen dem Regal und dem Fenster</span><span class="rm">in der hinteren Ecke</span><span class="rm">direkt über der Heizung</span>
-<div class="bsp"><span class="wer">So klingt es</span>Der Router steht in der hinteren Ecke, zwischen dem Regal und dem Fenster.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Der Router steht in der hinteren Ecke, zwischen dem <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Regal" data-wort="das Regal" data-kurz="offene Bretter übereinander, für Bücher oder Kisten" data-bsp="Stell die Bücher bitte ins Regal.">Regal</b> und dem Fenster.</div>
 <button class="speak" data-say="Der Router steht in der hinteren Ecke, zwischen dem Regal und dem Fenster.">🔊 hören</button></div>
 <div class="rmcard"><b>3 · 🔁 Von Wo zu Wohin</b><br>
 <span class="rm">Ich stelle es …</span><span class="rm">Häng es bitte …</span><span class="rm">Das kommt …</span>
-<div class="bsp"><span class="wer">So klingt es</span>Das Bild kommt an die Wand über dem Sofa — nicht neben die Tür.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Das Bild kommt an die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Wand" data-wort="die Wand" data-kurz="die Fläche, die das Zimmer begrenzt" data-bsp="An der Wand hängt ein großes Bild.">Wand</b> über dem <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Sofa" data-wort="das Sofa" data-kurz="langes Sitzmöbel für mehrere Personen" data-bsp="Auf dem Sofa liegt eine Decke.">Sofa</b> — nicht neben die Tür.</div>
 <button class="speak" data-say="Das Bild kommt an die Wand über dem Sofa, nicht neben die Tür.">🔊 hören</button></div>
 <div class="rmcard"><b>4 · 💬 Sich einigen</b><br>
 <span class="rm">Was hältst du davon, wenn …?</span><span class="rm">Mir wäre lieber, …</span><span class="rm">Probieren wir es erst mal …</span>
@@ -717,12 +759,12 @@ a.tab:hover{color:var(--ink);}
 <section class="section" id="dialoge">
 <h2 class="st">Vier Situationen — <span class="hl">zwei Runden</span></h2>
 <p class="ssub"><b>Runde 1:</b> Lest den Dialog zu zweit laut. <b>Runde 2:</b> Deckt die Zeilen von B ab und sprecht frei — die Hinweise reichen.</p>
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-wohnen.webp" alt="Zwei Personen stehen an einer Wohnungstür"><h4>Dialog 1 · „Die neue Wohnung zeigen“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Eine Freundin kommt zum ersten Mal zu Besuch. Du führst sie kurz durch die Wohnung.</div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Oh, schön hell! Wie viele Zimmer habt ihr denn?</div></div>
+<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-wohnen.webp" alt="Zwei Personen stehen an einer Wohnungstür"><h4>Dialog 1 · „Die neue Wohnung zeigen“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Eine Freundin kommt zum ersten Mal zu Besuch. Du führst sie kurz durch die <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von Wohnung" data-wort="die Wohnung" data-kurz="alles zusammen, worin du wohnst — mit allen Zimmern" data-bsp="Unsere Wohnung hat drei Zimmer.">Wohnung</b>.</div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Oh, schön hell! Wie viele <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von Zimmer" data-wort="das Zimmer" data-kurz="ein einzelner Raum mit einer Aufgabe: schlafen, wohnen, arbeiten" data-bsp="Das Zimmer meiner Tochter ist das kleinste.">Zimmer</b> habt ihr denn?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Drei. Hier vorne ist das Wohnzimmer, hinten links das Schlafzimmer.</div><div class="dcue">🗣️ Erst die Zahl, dann die Lage. <b>vorne</b> und <b>hinten links</b> reichen völlig.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Und die Küche?</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Und die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Küche" data-wort="die Küche" data-kurz="Raum zum Kochen" data-bsp="In der Küche haben wir leider wenig Platz.">Küche</b>?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Die Küche liegt gleich rechts neben der Tür. Komm, ich zeig sie dir.</div><div class="dcue">🗣️ <b>liegen</b> für Räume, <b>neben der Tür</b> mit Dativ. Und ein Angebot hinterher.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Habt ihr auch einen Balkon?</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Habt ihr auch einen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Balkon" data-wort="der Balkon" data-kurz="kleiner Platz draußen vor dem Fenster" data-bsp="Auf dem Balkon stehen zwei Stühle und ein Tisch.">Balkon</b>?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ja, auf dem Balkon stehen sogar schon zwei Stühle. Der Tisch fehlt noch.</div><div class="dcue">🗣️ <b>auf</b> dem Balkon — nie <i>in</i>. Und: was schon da ist, was noch fehlt.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Und wo kommt der Fernseher hin?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Der kommt an die Wand über die Kommode. Da ist noch Platz.</div><div class="dcue">🗣️ Jetzt <b>Wohin</b>: <i>an die Wand</i>, <i>über die Kommode</i> — Akkusativ, weil etwas seinen Platz bekommt.<span class="kl">tippen = Hilfe zeigen</span></div></div>
@@ -739,13 +781,13 @@ a.tab:hover{color:var(--ink);}
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Keine Ahnung. Legen wir sie ab jetzt immer aufs Regal, dann finden wir sie.</div><div class="dcue">🗣️ <b>aufs Regal</b> = auf das Regal, Akkusativ — jetzt bewegt sich etwas.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Hast du die Fernbedienung gesehen? Die lag doch vorhin noch auf dem Tisch. Da ist sie nicht. Ich hab schon zweimal geschaut. Dann schau mal unter dem Kissen. Oder zwischen den Sofakissen. Nichts. Vielleicht im Schlafzimmer? Warte — ich glaube, sie liegt noch neben dem Bett auf dem Nachttisch. Ha! Genau da. Wie kommt die denn dahin? Keine Ahnung. Legen wir sie ab jetzt immer aufs Regal, dann finden wir sie.">🔊 Dialog vorlesen lassen</button></div>
 
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../vok-bild/der-schrank.webp" alt="Ein offener Kleiderschrank mit ordentlich aufgehängter Kleidung"><h4>Dialog 3 · „Einräumen nach dem Umzug“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Ihr räumt zusammen einen Schrank ein und müsst euch dauernd absprechen.</div>
+<div class="dwrap" data-runde="1"><div class="dhead"><img src="../vok-bild/der-schrank.webp" alt="Ein offener Kleiderschrank mit ordentlich aufgehängter Kleidung"><h4>Dialog 3 · „Einräumen nach dem Umzug“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Ihr räumt zusammen einen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Schrank" data-wort="der Schrank" data-kurz="Möbelstück mit Türen zum Aufbewahren" data-bsp="Die Handtücher liegen im Schrank ganz oben.">Schrank</b> ein und müsst euch dauernd absprechen.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Wohin mit den Handtüchern?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Leg sie ins Bad, ins Regal über der Waschmaschine.</div><div class="dcue">🗣️ <b>ins</b> Bad, <b>ins</b> Regal — Wohin. Aber <b>über der</b> Waschmaschine: die Waschmaschine bewegt sich ja nicht.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Und die Winterjacken? Die brauchen wir jetzt nicht.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Die kommen in den Keller. Unten stehen noch leere Kisten.</div><div class="dcue">🗣️ <b>in den</b> Keller (Wohin) — <b>unten stehen</b> Kisten (Wo). Beides in zwei Sätzen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Die kommen in den <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Keller" data-wort="der Keller" data-kurz="Raum unter dem Haus für Dinge, die oben keinen Platz haben" data-bsp="Die Winterjacken sind unten im Keller.">Keller</b>. Unten stehen noch leere Kisten.</div><div class="dcue">🗣️ <b>in den</b> Keller (Wohin) — <b>unten stehen</b> Kisten (Wo). Beides in zwei Sätzen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Soll das Bügelbrett auch runter?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Nein, stell es lieber hinter die Tür im Flur. Da stört es nicht.</div><div class="dcue">🗣️ <b>stellen</b> braucht immer ein Objekt und Wohin: <i>stell <u>es</u> hinter die Tür</i>.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Nein, stell es lieber hinter die Tür im <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Flur" data-wort="der Flur" data-kurz="schmaler Raum, von dem die Zimmer abgehen" data-bsp="Die Jacken hängen im Flur an der Garderobe.">Flur</b>. Da stört es nicht.</div><div class="dcue">🗣️ <b>stellen</b> braucht immer ein Objekt und Wohin: <i>stell <u>es</u> hinter die Tür</i>.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Okay. Und dann sind wir durch?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Fast. Die Bilder hängen wir morgen auf — heute reicht es.</div><div class="dcue">🗣️ <b>aufhängen</b> ist trennbar: <i>hängen … auf</i>. Die Vorsilbe geht ans Ende.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Wohin mit den Handtüchern? Leg sie ins Bad, ins Regal über der Waschmaschine. Und die Winterjacken? Die brauchen wir jetzt nicht. Die kommen in den Keller. Unten stehen noch leere Kisten. Soll das Bügelbrett auch runter? Nein, stell es lieber hinter die Tür im Flur. Da stört es nicht. Okay. Und dann sind wir durch? Fast. Die Bilder hängen wir morgen auf — heute reicht es.">🔊 Dialog vorlesen lassen</button></div>
@@ -1163,6 +1205,64 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.setAttribute('aria-expanded',auf?'true':'false');
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
+
+/* ---- Markierte Woerter ----
+   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
+   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
+   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
+
+   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
+   den viele verwechseln. */
+(function(){
+ var woerter=[].slice.call(document.querySelectorAll('.wm'));
+ if(!woerter.length) return;
+ var karte=null;
+
+ function zu(){ if(karte){ karte.remove(); karte=null; }
+  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
+
+ function auf(w){
+  var schonOffen=w.classList.contains('offen');
+  zu();
+  if(schonOffen) return;
+  w.classList.add('offen');
+  karte=document.createElement('div');
+  karte.className='wmk';
+  var satz=w.dataset.bsp||'';
+  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
+   + '<b>'+w.dataset.wort+'</b>'
+   + '<span>'+(w.dataset.kurz||'')+'</span>'
+   + (satz?'<em>'+satz+'</em>':'')
+   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
+  document.body.appendChild(karte);
+
+  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
+  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
+  var links=r.left+r.width/2-b.width/2;
+  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
+  var oben=r.bottom+window.pageYOffset+9;
+  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
+   oben=r.top+window.pageYOffset-b.height-9;
+  karte.style.left=links+'px'; karte.style.top=oben+'px';
+
+  karte.querySelector('.wmk-zu').onclick=zu;
+  var ton=karte.querySelector('.wmk-ton');
+  if(ton) ton.onclick=function(){ say(satz); };
+ }
+
+ woerter.forEach(function(w){
+  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
+  w.addEventListener('keydown',function(ev){
+   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
+ });
+ document.addEventListener('click',zu);
+ document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
+ window.addEventListener('resize',zu);
+ /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
+    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
+ document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
+  k.addEventListener('click',zu); });
+})();
 
 /* ---- Bildkarten verdecken ----
    Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau

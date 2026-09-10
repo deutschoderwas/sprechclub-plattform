@@ -436,6 +436,48 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Markierte Wörter ----------
+   Keine Wortschatzliste mehr, sondern das Wort dort, wo es steht.
+   Gelb unterstrichen: Wort dieser Stunde. Rot gepunktet: Begriff,
+   den viele verwechseln. Beides bleibt lesbar, wenn man es ignoriert —
+   die Markierung liegt unter der Zeile, nicht auf dem Wort. */
+.wm{
+  font-weight:inherit;cursor:pointer;position:relative;
+  border-bottom:3px solid var(--yellow);
+  padding-bottom:1px;transition:background .12s;
+}
+.wm.schwer{border-bottom:3px dotted var(--red);}
+.wm:hover,.wm.offen{background:rgba(255,210,74,.35);border-radius:4px 4px 0 0;}
+.wm.schwer:hover,.wm.schwer.offen{background:rgba(232,48,42,.12);}
+.wm:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.wm::after{
+  content:'';display:inline-block;width:.42em;height:.42em;margin-left:.22em;
+  vertical-align:.35em;border-radius:50%;background:var(--yellow);
+}
+.wm.schwer::after{background:var(--red);}
+
+.wmk{
+  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.2);padding:.85rem 1rem .9rem;
+}
+.wmk b{display:block;font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.25;padding-right:1.4rem;}
+.wmk span{display:block;margin-top:.3rem;font-size:.94rem;line-height:1.5;color:var(--ink-soft);}
+.wmk em{
+  display:block;margin-top:.55rem;padding-left:.7rem;border-left:3px solid var(--teal);
+  font-style:italic;font-size:.93rem;line-height:1.5;
+}
+.wmk-zu{
+  position:absolute;top:.45rem;right:.5rem;border:none;background:transparent;
+  font-size:.95rem;line-height:1;cursor:pointer;color:var(--ink-mute,#7a6a56);padding:.2rem;
+}
+.wmk-ton{
+  margin-top:.6rem;border:2px solid var(--ink);background:var(--sand);color:var(--ink);
+  border-radius:999px;padding:.3rem .75rem;font-family:inherit;font-size:.82rem;
+  font-weight:700;cursor:pointer;
+}
+@media print{ .wm::after{display:none;} .wmk{display:none;} }
+
 /* ---------- Die Ablauftafel ----------
    Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
    und in welcher Aufstellung. */
@@ -693,7 +735,7 @@ a.tab:hover{color:var(--ink);}
 <div class="nur-a2">
 <div class="rmcard"><b>1 · 🙋 Position beziehen</b><br>
 <span class="rm">Meiner Meinung nach …</span><span class="rm">Ich finde, dass …</span><span class="rm">Für mich ist wichtig, dass …</span><span class="rm">Ich bin dafür, weil …</span>
-<div class="bsp"><span class="wer">So klingt es</span>Meiner Meinung nach ist die Anbindung wichtiger als der Preis.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Meiner <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Meinung" data-wort="die Meinung" data-kurz="das, was du über eine Sache denkst" data-bsp="Meiner Meinung nach entscheidet die Anbindung alles.">Meinung</b> nach ist die Anbindung wichtiger als der Preis.</div>
 <button class="speak" data-say="Meiner Meinung nach ist die Anbindung wichtiger als der Preis.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · ✋ Widersprechen</b><br>
 <span class="rm">Das sehe ich anders.</span><span class="rm">Da bin ich nicht deiner Meinung.</span><span class="rm">Das stimmt, aber …</span><span class="rm">Und was ist mit …?</span>
@@ -715,7 +757,7 @@ a.tab:hover{color:var(--ink);}
 <button class="speak" data-say="Entscheidend ist für mich nicht die Höhe der Miete, sondern die Verlässlichkeit der Anbindung.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · ✋ Einwand mit Nomen</b><br>
 <span class="rm">Dabei übersiehst du die Belastung durch den Verkehr.</span><span class="rm">Das gilt nur unter der Voraussetzung, dass …</span><span class="rm">Die Kehrseite dieser Rechnung ist …</span><span class="rm">Genau daran scheitert der Vorschlag.</span>
-<div class="bsp"><span class="wer">So klingt es</span>Dabei übersiehst du die Belastung durch den Verkehr — die trifft in der Stadt jeden, nicht nur die Autofahrer.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Dabei übersiehst du die Belastung durch den <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Verkehr" data-wort="der Verkehr" data-kurz="alles, was auf den Straßen unterwegs ist" data-bsp="Die Belastung durch den Verkehr ist in der Innenstadt am höchsten.">Verkehr</b> — die trifft in der Stadt jeden, nicht nur die Autofahrer.</div>
 <button class="speak" data-say="Dabei übersiehst du die Belastung durch den Verkehr — die trifft in der Stadt jeden, nicht nur die Autofahrer.">🔊 hören</button></div>
 <div class="rmcard"><b>3 · 👍 Zustimmen und weiterdrehen</b><br>
 <span class="rm">Dem stimme ich zu, allerdings …</span><span class="rm">Das trifft zu, greift aber zu kurz.</span><span class="rm">Da gehe ich mit, unter einer Bedingung:</span><span class="rm">Genau daraus folgt für mich das Gegenteil.</span>
@@ -742,12 +784,12 @@ a.tab:hover{color:var(--ink);}
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Meiner Meinung nach ist die Sache klar: Wer nicht fahren kann, ist auf dem Land verloren.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Also, du sagst: Die Abhängigkeit vom Auto ist der Kern. Da gehe ich mit — nur gilt dasselbe in der Stadt für die Miete.</div><div class="dcue">🗣️ Erst zusammenfassen (<i>du sagst …</i>), dann zustimmen, dann drehen. Und <b>die Abhängigkeit</b>: <i>-keit</i>, also feminin.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Die Miete kann ich verhandeln oder umziehen. Einen Bus, der nicht fährt, kann ich nicht verhandeln.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Das trifft zu, greift aber zu kurz. Der Ausbau der Buslinien ist eine politische Entscheidung — die Höhe der Mieten auch.</div><div class="dcue">🗣️ <b>Der Ausbau der Buslinien</b> und <b>die Höhe der Mieten</b>: zweimal Nomen plus Genitiv. Genau die Bauweise, um die es heute geht.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Das trifft zu, greift aber zu kurz. Der Ausbau der Buslinien ist eine politische <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Entscheidung" data-wort="die Entscheidung" data-kurz="die Wahl zwischen zwei Möglichkeiten" data-bsp="Die Entscheidung der Gemeinde fällt im Dezember.">Entscheidung</b> — die Höhe der Mieten auch.</div><div class="dcue">🗣️ <b>Der Ausbau der Buslinien</b> und <b>die Höhe der Mieten</b>: zweimal Nomen plus Genitiv. Genau die Bauweise, um die es heute geht.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Nur wird über die eine seit dreißig Jahren geredet und über die andere jeden Tag.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Da hast du recht. Und trotzdem: Die Schließung des Ladens im Dorf bewegt hier alle. In der Stadt merkt es niemand.</div><div class="dcue">🗣️ <b>Die Schließung des Ladens</b> — Verb zu Nomen, Rest im Genitiv. Und <i>trotzdem</i> hält die eigene Position, ohne unhöflich zu werden.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Da hast du recht. Und trotzdem: Die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Schließung" data-wort="die Schließung" data-kurz="das Ende eines Ladens, einer Praxis oder einer Schule" data-bsp="Die Schließung der Praxis trifft vor allem die Ältesten.">Schließung</b> des Ladens im Dorf bewegt hier alle. In der Stadt merkt es niemand.</div><div class="dcue">🗣️ <b>Die Schließung des Ladens</b> — Verb zu Nomen, Rest im Genitiv. Und <i>trotzdem</i> hält die eigene Position, ohne unhöflich zu werden.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Meiner Meinung nach ist die Sache klar: Wer nicht fahren kann, ist auf dem Land verloren. Also, du sagst: Die Abhängigkeit vom Auto ist der Kern. Da gehe ich mit — nur gilt dasselbe in der Stadt für die Miete. Die Miete kann ich verhandeln oder umziehen. Einen Bus, der nicht fährt, kann ich nicht verhandeln. Das trifft zu, greift aber zu kurz. Der Ausbau der Buslinien ist eine politische Entscheidung — die Höhe der Mieten auch. Nur wird über die eine seit dreißig Jahren geredet und über die andere jeden Tag. Da hast du recht. Und trotzdem: Die Schließung des Ladens im Dorf bewegt hier alle. In der Stadt merkt es niemand.">🔊 Dialog vorlesen lassen</button></div>
 
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-amt.webp" alt="Ein Schalter im Amt, eine Person hinter der Scheibe"><h4>Dialog 2 · „In der Bürgerversammlung“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">A wohnt im Dorf und fordert einen Bus. B arbeitet bei der Gemeinde und muss erklären, was möglich ist.</div>
+<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-amt.webp" alt="Ein Schalter im Amt, eine Person hinter der Scheibe"><h4>Dialog 2 · „In der Bürgerversammlung“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">A wohnt im Dorf und fordert einen Bus. B arbeitet bei der <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Gemeinde" data-wort="die Gemeinde" data-kurz="die kleinste politische Einheit — Dorf oder Stadtteil mit eigener Verwaltung" data-bsp="Die Gemeinde will die Buslinie ausbauen.">Gemeinde</b> und muss erklären, was möglich ist.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Wir brauchen zwei Verbindungen mehr am Tag. Das ist keine große Forderung.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ich verstehe den Wunsch. Die Finanzierung zusätzlicher Fahrten liegt aber bei etwa achtzigtausend Euro im Jahr.</div><div class="dcue">🗣️ <b>Die Finanzierung</b> — <i>-ung</i>, also feminin. Und <i>zusätzlicher Fahrten</i> ist Genitiv Plural ohne Artikel: nur die Adjektivendung <b>-er</b> zeigt den Fall.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Und was kostet es, wenn hier niemand mehr wohnen will?</div></div>
@@ -769,9 +811,9 @@ a.tab:hover{color:var(--ink);}
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Du warst plötzlich so vehement für das Dorf. Das kannte ich gar nicht von dir.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Weil mir während der Diskussion aufgefallen ist, wie wenig ich unsere Nachbarn hier kenne.</div><div class="dcue">🗣️ <b>während der Diskussion</b> — der Genitiv vom Montag. Und <i>wie wenig ich … kenne</i>: indirekter Fragesatz, Verb ans Ende.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Wir kennen niemanden. Und ehrlich gesagt hat mich das bisher auch nicht gestört.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Mich schon. Der Zusammenhalt, von dem alle geredet haben, fehlt mir mehr, als ich dachte.</div><div class="dcue">🗣️ <b>Der Zusammenhalt, von dem …</b> — Relativsatz mit Präposition. Nach <i>von</i> immer der Dativ: <i>von dem</i>.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Mich schon. Der <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Zusammenhalt" data-wort="der Zusammenhalt" data-kurz="das Gefühl, dass die Leute füreinander da sind" data-bsp="Der Zusammenhalt im Dorf ist das stärkste Argument dafür.">Zusammenhalt</b>, von dem alle geredet haben, fehlt mir mehr, als ich dachte.</div><div class="dcue">🗣️ <b>Der Zusammenhalt, von dem …</b> — Relativsatz mit Präposition. Nach <i>von</i> immer der Dativ: <i>von dem</i>.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Dann fangen wir hier an. Wir kennen unsere Nachbarn seit vier Jahren nur vom Sehen.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Genau das war mein Vorschlag. Man braucht für die Veränderung nicht immer einen Umzug.</div><div class="dcue">🗣️ <b>für die Veränderung</b> — nach <i>für</i> steht der Akkusativ, nicht der Genitiv. Nomen heißt nicht automatisch Genitiv.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Genau das war mein <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Vorschlag" data-wort="der Vorschlag" data-kurz="eine Idee, die man in die Runde gibt" data-bsp="Mein Vorschlag wäre ein Bürgerbus zweimal täglich.">Vorschlag</b>. Man braucht für die Veränderung nicht immer einen Umzug.</div><div class="dcue">🗣️ <b>für die Veränderung</b> — nach <i>für</i> steht der Akkusativ, nicht der Genitiv. Nomen heißt nicht automatisch Genitiv.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Du warst plötzlich so vehement für das Dorf. Das kannte ich gar nicht von dir. Weil mir während der Diskussion aufgefallen ist, wie wenig ich unsere Nachbarn hier kenne. Wir kennen niemanden. Und ehrlich gesagt hat mich das bisher auch nicht gestört. Mich schon. Der Zusammenhalt, von dem alle geredet haben, fehlt mir mehr, als ich dachte. Dann fangen wir hier an. Wir kennen unsere Nachbarn seit vier Jahren nur vom Sehen. Genau das war mein Vorschlag. Man braucht für die Veränderung nicht immer einen Umzug.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 1 mit vertauschten Rollen — jeder vertritt die Seite, die er nicht glaubt. Regel: Fass zuerst den anderen zusammen, dann widersprich. Und mindestens zweimal ein Nomen aus einem Verb.</div>
@@ -1176,6 +1218,64 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.setAttribute('aria-expanded',auf?'true':'false');
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
+
+/* ---- Markierte Woerter ----
+   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
+   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
+   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
+
+   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
+   den viele verwechseln. */
+(function(){
+ var woerter=[].slice.call(document.querySelectorAll('.wm'));
+ if(!woerter.length) return;
+ var karte=null;
+
+ function zu(){ if(karte){ karte.remove(); karte=null; }
+  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
+
+ function auf(w){
+  var schonOffen=w.classList.contains('offen');
+  zu();
+  if(schonOffen) return;
+  w.classList.add('offen');
+  karte=document.createElement('div');
+  karte.className='wmk';
+  var satz=w.dataset.bsp||'';
+  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
+   + '<b>'+w.dataset.wort+'</b>'
+   + '<span>'+(w.dataset.kurz||'')+'</span>'
+   + (satz?'<em>'+satz+'</em>':'')
+   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
+  document.body.appendChild(karte);
+
+  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
+  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
+  var links=r.left+r.width/2-b.width/2;
+  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
+  var oben=r.bottom+window.pageYOffset+9;
+  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
+   oben=r.top+window.pageYOffset-b.height-9;
+  karte.style.left=links+'px'; karte.style.top=oben+'px';
+
+  karte.querySelector('.wmk-zu').onclick=zu;
+  var ton=karte.querySelector('.wmk-ton');
+  if(ton) ton.onclick=function(){ say(satz); };
+ }
+
+ woerter.forEach(function(w){
+  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
+  w.addEventListener('keydown',function(ev){
+   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
+ });
+ document.addEventListener('click',zu);
+ document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
+ window.addEventListener('resize',zu);
+ /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
+    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
+ document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
+  k.addEventListener('click',zu); });
+})();
 
 /* ---- Bildkarten verdecken ----
    Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau

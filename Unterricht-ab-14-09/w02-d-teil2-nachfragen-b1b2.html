@@ -436,6 +436,48 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Markierte Wörter ----------
+   Keine Wortschatzliste mehr, sondern das Wort dort, wo es steht.
+   Gelb unterstrichen: Wort dieser Stunde. Rot gepunktet: Begriff,
+   den viele verwechseln. Beides bleibt lesbar, wenn man es ignoriert —
+   die Markierung liegt unter der Zeile, nicht auf dem Wort. */
+.wm{
+  font-weight:inherit;cursor:pointer;position:relative;
+  border-bottom:3px solid var(--yellow);
+  padding-bottom:1px;transition:background .12s;
+}
+.wm.schwer{border-bottom:3px dotted var(--red);}
+.wm:hover,.wm.offen{background:rgba(255,210,74,.35);border-radius:4px 4px 0 0;}
+.wm.schwer:hover,.wm.schwer.offen{background:rgba(232,48,42,.12);}
+.wm:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.wm::after{
+  content:'';display:inline-block;width:.42em;height:.42em;margin-left:.22em;
+  vertical-align:.35em;border-radius:50%;background:var(--yellow);
+}
+.wm.schwer::after{background:var(--red);}
+
+.wmk{
+  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.2);padding:.85rem 1rem .9rem;
+}
+.wmk b{display:block;font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.25;padding-right:1.4rem;}
+.wmk span{display:block;margin-top:.3rem;font-size:.94rem;line-height:1.5;color:var(--ink-soft);}
+.wmk em{
+  display:block;margin-top:.55rem;padding-left:.7rem;border-left:3px solid var(--teal);
+  font-style:italic;font-size:.93rem;line-height:1.5;
+}
+.wmk-zu{
+  position:absolute;top:.45rem;right:.5rem;border:none;background:transparent;
+  font-size:.95rem;line-height:1;cursor:pointer;color:var(--ink-mute,#7a6a56);padding:.2rem;
+}
+.wmk-ton{
+  margin-top:.6rem;border:2px solid var(--ink);background:var(--sand);color:var(--ink);
+  border-radius:999px;padding:.3rem .75rem;font-family:inherit;font-size:.82rem;
+  font-weight:700;cursor:pointer;
+}
+@media print{ .wm::after{display:none;} .wmk{display:none;} }
+
 /* ---------- Die Ablauftafel ----------
    Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
    und in welcher Aufstellung. */
@@ -693,7 +735,7 @@ a.tab:hover{color:var(--ink);}
 <div class="nur-a2">
 <div class="rmcard"><b>1 · 🪞 Spiegeln</b><br>
 <span class="rm">Wenn ich Sie richtig verstehe, …</span><span class="rm">Sie meinen also, dass …</span><span class="rm">Das heißt für mich: …</span>
-<div class="bsp"><span class="wer">So klingt es</span>Wenn ich Sie richtig verstehe, geht es vor allem um die Frist.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Wenn ich Sie richtig verstehe, geht es vor allem um die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Frist" data-wort="die Frist" data-kurz="der letzte mögliche Zeitpunkt" data-bsp="Die Frist läuft am 30. ab.">Frist</b>.</div>
 <button class="speak" data-say="Wenn ich Sie richtig verstehe, geht es vor allem um die Frist.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 📋 Festhalten</b><br>
 <span class="rm">Also halten wir fest: …</span><span class="rm">Ich fasse kurz zusammen: …</span><span class="rm">Wir haben besprochen, dass …</span>
@@ -705,7 +747,7 @@ a.tab:hover{color:var(--ink);}
 <button class="speak" data-say="Einen Punkt haben wir noch nicht geklärt: Wer übernimmt den zweiten Teil?">🔊 hören</button></div>
 <div class="rmcard"><b>4 · 🧾 Absichern</b><br>
 <span class="rm">Könnten Sie mir das bestätigen?</span><span class="rm">Damit ich es schriftlich habe</span><span class="rm">Ich melde mich bis …</span>
-<div class="bsp"><span class="wer">So klingt es</span>Damit ich es schriftlich habe: Könnten Sie mir das kurz per Mail bestätigen?</div>
+<div class="bsp"><span class="wer">So klingt es</span>Damit ich es <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von schriftlich" data-wort="schriftlich" data-kurz="auf Papier oder per Mail, nicht nur gesprochen" data-bsp="Damit ich es schriftlich habe: Schicken Sie mir eine kurze Mail?">schriftlich</b> habe: Könnten Sie mir das kurz per Mail <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von bestätigen" data-wort="bestätigen" data-kurz="schriftlich oder mündlich sagen, dass etwas stimmt" data-bsp="Könnten Sie mir das kurz per Mail bestätigen?">bestätigen</b>?</div>
 <button class="speak" data-say="Damit ich es schriftlich habe: Könnten Sie mir das kurz per Mail bestätigen?">🔊 hören</button></div>
 </div>
 <div class="nur-b1">
@@ -740,7 +782,7 @@ a.tab:hover{color:var(--ink);}
 <p class="ssub"><b>Runde 1:</b> Lest den Dialog zu zweit laut. <b>Runde 2:</b> Deckt die Zeilen von B ab und sprecht frei — die Hinweise reichen.</p>
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../vok-bild/die-kurzpraesentation.webp" alt="Ein Mann präsentiert vor einer kleinen Gruppe"><h4>Dialog 1 · „Am Ende des Meetings“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Alle wollen aufstehen. Genau jetzt ist der richtige Moment für den wichtigsten Satz.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Gut, dann hätten wir das. Danke euch!</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Kurz bevor wir aufhören — darf ich einmal festhalten, was wir besprochen haben?</div><div class="dcue">🗣️ Der Moment ist entscheidend: kurz <u>vor</u> dem Aufstehen, nicht danach.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Kurz bevor wir aufhören — darf ich einmal <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von festhalten" data-wort="festhalten" data-kurz="etwas verbindlich notieren oder aussprechen" data-bsp="Also halten wir fest: Abgabe am 23.">festhalten</b>, was wir besprochen haben?</div><div class="dcue">🗣️ Der Moment ist entscheidend: kurz <u>vor</u> dem Aufstehen, nicht danach.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Klar, mach.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ich schicke die Unterlagen bis Montag, Yara prüft sie bis Mittwoch, Freigabe am Freitag.</div><div class="dcue">🗣️ Wer macht was bis wann — in dieser Reihenfolge, mit Namen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Genau. Ach, und die Grafiken fehlen noch.</div></div>
@@ -749,7 +791,7 @@ a.tab:hover{color:var(--ink);}
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Perfekt. Ich schicke euch nachher eine kurze Zusammenfassung per Mail.</div><div class="dcue">🗣️ Freiwillig anbieten, statt eine Bestätigung zu fordern — so wirkt es nie nach Misstrauen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Gut, dann hätten wir das. Danke euch! Kurz bevor wir aufhören — darf ich einmal festhalten, was wir besprochen haben? Klar, mach. Ich schicke die Unterlagen bis Montag, Yara prüft sie bis Mittwoch, Freigabe am Freitag. Genau. Ach, und die Grafiken fehlen noch. Gut, dass das noch kommt. Wer übernimmt die? Mache ich selbst, bis Dienstag. Perfekt. Ich schicke euch nachher eine kurze Zusammenfassung per Mail.">🔊 Dialog vorlesen lassen</button></div>
 
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-bewerbung.webp" alt="Zwei Personen sitzen sich mit Unterlagen an einem Tisch gegenüber"><h4>Dialog 2 · „Beim Handwerker“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Preis, Termin und Umfang wurden mündlich besprochen. Du willst nichts nachverhandeln — nur festhalten.</div>
+<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-bewerbung.webp" alt="Zwei Personen sitzen sich mit Unterlagen an einem Tisch gegenüber"><h4>Dialog 2 · „Beim Handwerker“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Preis, Termin und Umfang wurden mündlich besprochen. Du willst nichts nachverhandeln — nur <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von festhalten" data-wort="Festhalten" data-kurz="Ihr benennt gemeinsam, was vereinbart ist." data-bsp="Also halten wir fest: Abgabe am 23., Freigabe am 30.">festhalten</b>.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Also, wir kommen Dienstag früh und machen das dann.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Damit ich nichts durcheinanderbringe: Dienstag ab wann genau?</div><div class="dcue">🗣️ Erst präzisieren wie am Dienstag, dann festhalten. Die zwei Schritte gehören zusammen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">So gegen halb acht sind wir da.</div></div>
@@ -762,7 +804,7 @@ a.tab:hover{color:var(--ink);}
 
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-telefonieren.webp" alt="Frau sitzt am Tisch und telefoniert, daneben ein Notizblock"><h4>Dialog 3 · „Am Telefon mit der Behörde“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Ein langes Gespräch mit vielen Details. Am Ende soll klar sein, wer als Nächstes was tut.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Dann warten wir erst mal die Prüfung ab.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Darf ich kurz zusammenfassen? Sie prüfen den Antrag, ich schicke die fehlende Bescheinigung nach.</div><div class="dcue">🗣️ Beide Seiten benennen — nicht nur, was du selbst tust.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Darf ich kurz <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von zusammenfassen" data-wort="zusammenfassen" data-kurz="das Wichtigste in wenigen Sätzen wiedergeben" data-bsp="Ich fasse kurz zusammen, was wir besprochen haben.">zusammenfassen</b>? Sie prüfen den Antrag, ich schicke die fehlende Bescheinigung nach.</div><div class="dcue">🗣️ Beide Seiten benennen — nicht nur, was du selbst tust.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Genau so.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Und bis wann sollte die Bescheinigung bei Ihnen sein?</div><div class="dcue">🗣️ Eine Frist ohne Datum ist keine Frist. Immer nachfragen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Innerhalb von zwei Wochen wäre gut.</div></div>
@@ -771,7 +813,7 @@ a.tab:hover{color:var(--ink);}
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Gut. Wenn ich bis Anfang November nichts höre, melde ich mich noch einmal.</div><div class="dcue">🗣️ Selbst einen Zeitpunkt für die Nachfrage setzen — so kann nichts liegenbleiben.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Dann warten wir erst mal die Prüfung ab. Darf ich kurz zusammenfassen? Sie prüfen den Antrag, ich schicke die fehlende Bescheinigung nach. Genau so. Und bis wann sollte die Bescheinigung bei Ihnen sein? Innerhalb von zwei Wochen wäre gut. Also bis zum 8. Oktober. Und wann höre ich von Ihnen? In der Regel vier Wochen nach Eingang. Gut. Wenn ich bis Anfang November nichts höre, melde ich mich noch einmal.">🔊 Dialog vorlesen lassen</button></div>
 
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-heikel.webp" alt="Zwei Personen sitzen sich in einem Wohnzimmer gegenüber"><h4>Dialog 4 · „Wenn zwei Erinnerungen aufeinandertreffen“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Die Absprache war anders — findet jedenfalls jeder von euch. Ihr müsst klären, ohne dass es um Schuld geht.</div>
+<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-heikel.webp" alt="Zwei Personen sitzen sich in einem Wohnzimmer gegenüber"><h4>Dialog 4 · „Wenn zwei Erinnerungen aufeinandertreffen“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Absprache" data-wort="die Absprache" data-kurz="das, worauf sich zwei Seiten geeinigt haben" data-bsp="Die Absprache war, dass Sie sich bis Freitag melden.">Absprache</b> war anders — findet jedenfalls jeder von euch. Ihr müsst klären, ohne dass es um Schuld geht.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Wir hatten doch gesagt, dass du das übernimmst.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ich hatte es anders in Erinnerung. Lass uns kurz zurückgehen.</div><div class="dcue">🗣️ <b>Ich hatte es anders in Erinnerung</b> — kein Vorwurf, nur ein Unterschied.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Am Montag, im Gespräch mit Sara.</div></div>
@@ -1184,6 +1226,64 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.setAttribute('aria-expanded',auf?'true':'false');
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
+
+/* ---- Markierte Woerter ----
+   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
+   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
+   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
+
+   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
+   den viele verwechseln. */
+(function(){
+ var woerter=[].slice.call(document.querySelectorAll('.wm'));
+ if(!woerter.length) return;
+ var karte=null;
+
+ function zu(){ if(karte){ karte.remove(); karte=null; }
+  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
+
+ function auf(w){
+  var schonOffen=w.classList.contains('offen');
+  zu();
+  if(schonOffen) return;
+  w.classList.add('offen');
+  karte=document.createElement('div');
+  karte.className='wmk';
+  var satz=w.dataset.bsp||'';
+  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
+   + '<b>'+w.dataset.wort+'</b>'
+   + '<span>'+(w.dataset.kurz||'')+'</span>'
+   + (satz?'<em>'+satz+'</em>':'')
+   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
+  document.body.appendChild(karte);
+
+  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
+  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
+  var links=r.left+r.width/2-b.width/2;
+  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
+  var oben=r.bottom+window.pageYOffset+9;
+  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
+   oben=r.top+window.pageYOffset-b.height-9;
+  karte.style.left=links+'px'; karte.style.top=oben+'px';
+
+  karte.querySelector('.wmk-zu').onclick=zu;
+  var ton=karte.querySelector('.wmk-ton');
+  if(ton) ton.onclick=function(){ say(satz); };
+ }
+
+ woerter.forEach(function(w){
+  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
+  w.addEventListener('keydown',function(ev){
+   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
+ });
+ document.addEventListener('click',zu);
+ document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
+ window.addEventListener('resize',zu);
+ /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
+    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
+ document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
+  k.addEventListener('click',zu); });
+})();
 
 /* ---- Bildkarten verdecken ----
    Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau

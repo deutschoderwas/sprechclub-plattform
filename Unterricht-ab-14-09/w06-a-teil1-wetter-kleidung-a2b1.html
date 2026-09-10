@@ -436,6 +436,48 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Markierte Wörter ----------
+   Keine Wortschatzliste mehr, sondern das Wort dort, wo es steht.
+   Gelb unterstrichen: Wort dieser Stunde. Rot gepunktet: Begriff,
+   den viele verwechseln. Beides bleibt lesbar, wenn man es ignoriert —
+   die Markierung liegt unter der Zeile, nicht auf dem Wort. */
+.wm{
+  font-weight:inherit;cursor:pointer;position:relative;
+  border-bottom:3px solid var(--yellow);
+  padding-bottom:1px;transition:background .12s;
+}
+.wm.schwer{border-bottom:3px dotted var(--red);}
+.wm:hover,.wm.offen{background:rgba(255,210,74,.35);border-radius:4px 4px 0 0;}
+.wm.schwer:hover,.wm.schwer.offen{background:rgba(232,48,42,.12);}
+.wm:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.wm::after{
+  content:'';display:inline-block;width:.42em;height:.42em;margin-left:.22em;
+  vertical-align:.35em;border-radius:50%;background:var(--yellow);
+}
+.wm.schwer::after{background:var(--red);}
+
+.wmk{
+  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.2);padding:.85rem 1rem .9rem;
+}
+.wmk b{display:block;font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.25;padding-right:1.4rem;}
+.wmk span{display:block;margin-top:.3rem;font-size:.94rem;line-height:1.5;color:var(--ink-soft);}
+.wmk em{
+  display:block;margin-top:.55rem;padding-left:.7rem;border-left:3px solid var(--teal);
+  font-style:italic;font-size:.93rem;line-height:1.5;
+}
+.wmk-zu{
+  position:absolute;top:.45rem;right:.5rem;border:none;background:transparent;
+  font-size:.95rem;line-height:1;cursor:pointer;color:var(--ink-mute,#7a6a56);padding:.2rem;
+}
+.wmk-ton{
+  margin-top:.6rem;border:2px solid var(--ink);background:var(--sand);color:var(--ink);
+  border-radius:999px;padding:.3rem .75rem;font-family:inherit;font-size:.82rem;
+  font-weight:700;cursor:pointer;
+}
+@media print{ .wm::after{display:none;} .wmk{display:none;} }
+
 /* ---------- Die Ablauftafel ----------
    Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
    und in welcher Aufstellung. */
@@ -680,7 +722,7 @@ a.tab:hover{color:var(--ink);}
 <button class="speak" data-say="Mir ist kalt, ich brauche eine Jacke.">🔊 hören</button></div>
 <div class="rmcard"><b>3 · 🧥 Folge nennen</b><br>
 <span class="rm">deshalb …</span><span class="rm">also nehme ich …</span><span class="rm">dann ziehe ich … an</span><span class="rm">da brauche ich …</span>
-<div class="bsp"><span class="wer">So klingt es</span>Es ist windig, deshalb nehme ich die Mütze mit.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Es ist windig, deshalb nehme ich die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Mütze" data-wort="die Mütze" data-kurz="was im Winter auf den Kopf gehört" data-bsp="Nimm die Mütze mit, es ist windig.">Mütze</b> mit.</div>
 <button class="speak" data-say="Es ist windig, deshalb nehme ich die Mütze mit.">🔊 hören</button></div>
 <div class="rmcard"><b>4 · 🔮 Vorhersage nennen</b><br>
 <span class="rm">Morgen soll es …</span><span class="rm">Am Wochenende wird es …</span><span class="rm">Es soll wärmer werden</span><span class="rm">Angeblich kommt Regen</span>
@@ -718,17 +760,17 @@ a.tab:hover{color:var(--ink);}
 <h2 class="st">Vier Situationen — <span class="hl">zwei Runden</span></h2>
 <p class="ssub"><b>Runde 1:</b> Lest den Dialog zu zweit laut. <b>Runde 2:</b> Klappt die Zeilen zu und spielt ihn frei — mit dem Wetter von heute.</p>
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../vok-bild/der-schrank.webp" alt="Ein offener Kleiderschrank mit ordentlich aufgehängter Kleidung"><h4>Dialog 1 · „Morgens vor dem Schrank“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Ihr wollt gleich los. Einer steht vor dem Schrank und weiß nicht, was er anziehen soll.</div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Wie ist es denn draußen?</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Wie ist es denn <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von draußen" data-wort="draußen" data-kurz="außerhalb der Wohnung" data-bsp="Wollen wir draußen sitzen? Es ist noch warm genug.">draußen</b>?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Elf Grad und windig. Es regnet gerade nicht, soll aber später.</div><div class="dcue">🗣️ Zahl, dann Wind, dann die Vorhersage mit <b>soll</b>. Drei Angaben in zwei kurzen Sätzen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Reicht die dünne Jacke?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ich würde den Mantel nehmen. Bei dem Wind ist die Jacke zu kalt.</div><div class="dcue">🗣️ <b>Ich würde …</b> ist ein Rat, keine Anweisung. Und die Begründung gleich hinterher.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ich würde den <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Mantel" data-wort="der Mantel" data-kurz="die lange, warme Jacke" data-bsp="Bei dem Wetter brauchst du einen Mantel.">Mantel</b> nehmen. Bei dem Wind ist die Jacke zu kalt.</div><div class="dcue">🗣️ <b>Ich würde …</b> ist ein Rat, keine Anweisung. Und die Begründung gleich hinterher.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Und Mütze?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Steck sie in die Tasche. Wenn es zieht, bist du froh.</div><div class="dcue">🗣️ Ein Kompromiss statt eines Ja oder Nein — und <b>es zieht</b> für unangenehmen Durchzug.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Gut, dann können wir.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Moment, ich ziehe mich noch schnell um.</div><div class="dcue">🗣️ <b>sich umziehen</b> mit <i>sich</i> — die Kleidung wechseln, nicht die Wohnung.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Wie ist es denn draußen? Elf Grad und windig. Es regnet gerade nicht, soll aber später. Reicht die dünne Jacke? Ich würde den Mantel nehmen. Bei dem Wind ist die Jacke zu kalt. Und Mütze? Steck sie in die Tasche. Wenn es zieht, bist du froh. Gut, dann können wir. Moment, ich ziehe mich noch schnell um.">🔊 Dialog vorlesen lassen</button></div>
 
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../vok-bild/die-haltestelle.webp" alt="Eine Bushaltestelle mit einer wartenden Person"><h4>Dialog 2 · „Small Talk an der Haltestelle“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Ihr wartet beide auf denselben Bus. Ein Gespräch, das mit dem Wetter anfängt und woanders endet.</div>
+<div class="dwrap" data-runde="1"><div class="dhead"><img src="../vok-bild/die-haltestelle.webp" alt="Eine Bushaltestelle mit einer wartenden Person"><h4>Dialog 2 · „Small Talk an der Haltestelle“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Ihr wartet beide auf denselben Bus. Ein Gespräch, das mit dem <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Wetter" data-wort="das Wetter" data-kurz="wie es gerade draußen ist" data-bsp="Das Wetter soll morgen besser werden.">Wetter</b> anfängt und woanders endet.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ganz schön frisch heute.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ja, und ich habe die Mütze zu Hause vergessen. Ich friere schon die ganze Zeit.</div><div class="dcue">🗣️ Zustimmen und etwas Eigenes dazugeben — genau so wächst Small Talk. <b>frieren</b> statt <i>ich bin kalt</i>.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Der Bus hat auch Verspätung.</div></div>
@@ -1163,6 +1205,64 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.setAttribute('aria-expanded',auf?'true':'false');
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
+
+/* ---- Markierte Woerter ----
+   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
+   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
+   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
+
+   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
+   den viele verwechseln. */
+(function(){
+ var woerter=[].slice.call(document.querySelectorAll('.wm'));
+ if(!woerter.length) return;
+ var karte=null;
+
+ function zu(){ if(karte){ karte.remove(); karte=null; }
+  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
+
+ function auf(w){
+  var schonOffen=w.classList.contains('offen');
+  zu();
+  if(schonOffen) return;
+  w.classList.add('offen');
+  karte=document.createElement('div');
+  karte.className='wmk';
+  var satz=w.dataset.bsp||'';
+  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
+   + '<b>'+w.dataset.wort+'</b>'
+   + '<span>'+(w.dataset.kurz||'')+'</span>'
+   + (satz?'<em>'+satz+'</em>':'')
+   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
+  document.body.appendChild(karte);
+
+  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
+  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
+  var links=r.left+r.width/2-b.width/2;
+  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
+  var oben=r.bottom+window.pageYOffset+9;
+  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
+   oben=r.top+window.pageYOffset-b.height-9;
+  karte.style.left=links+'px'; karte.style.top=oben+'px';
+
+  karte.querySelector('.wmk-zu').onclick=zu;
+  var ton=karte.querySelector('.wmk-ton');
+  if(ton) ton.onclick=function(){ say(satz); };
+ }
+
+ woerter.forEach(function(w){
+  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
+  w.addEventListener('keydown',function(ev){
+   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
+ });
+ document.addEventListener('click',zu);
+ document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
+ window.addEventListener('resize',zu);
+ /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
+    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
+ document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
+  k.addEventListener('click',zu); });
+})();
 
 /* ---- Bildkarten verdecken ----
    Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau

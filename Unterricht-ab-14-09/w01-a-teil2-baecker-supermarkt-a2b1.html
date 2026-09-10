@@ -436,6 +436,48 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Markierte Wörter ----------
+   Keine Wortschatzliste mehr, sondern das Wort dort, wo es steht.
+   Gelb unterstrichen: Wort dieser Stunde. Rot gepunktet: Begriff,
+   den viele verwechseln. Beides bleibt lesbar, wenn man es ignoriert —
+   die Markierung liegt unter der Zeile, nicht auf dem Wort. */
+.wm{
+  font-weight:inherit;cursor:pointer;position:relative;
+  border-bottom:3px solid var(--yellow);
+  padding-bottom:1px;transition:background .12s;
+}
+.wm.schwer{border-bottom:3px dotted var(--red);}
+.wm:hover,.wm.offen{background:rgba(255,210,74,.35);border-radius:4px 4px 0 0;}
+.wm.schwer:hover,.wm.schwer.offen{background:rgba(232,48,42,.12);}
+.wm:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.wm::after{
+  content:'';display:inline-block;width:.42em;height:.42em;margin-left:.22em;
+  vertical-align:.35em;border-radius:50%;background:var(--yellow);
+}
+.wm.schwer::after{background:var(--red);}
+
+.wmk{
+  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.2);padding:.85rem 1rem .9rem;
+}
+.wmk b{display:block;font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.25;padding-right:1.4rem;}
+.wmk span{display:block;margin-top:.3rem;font-size:.94rem;line-height:1.5;color:var(--ink-soft);}
+.wmk em{
+  display:block;margin-top:.55rem;padding-left:.7rem;border-left:3px solid var(--teal);
+  font-style:italic;font-size:.93rem;line-height:1.5;
+}
+.wmk-zu{
+  position:absolute;top:.45rem;right:.5rem;border:none;background:transparent;
+  font-size:.95rem;line-height:1;cursor:pointer;color:var(--ink-mute,#7a6a56);padding:.2rem;
+}
+.wmk-ton{
+  margin-top:.6rem;border:2px solid var(--ink);background:var(--sand);color:var(--ink);
+  border-radius:999px;padding:.3rem .75rem;font-family:inherit;font-size:.82rem;
+  font-weight:700;cursor:pointer;
+}
+@media print{ .wm::after{display:none;} .wmk{display:none;} }
+
 /* ---------- Die Ablauftafel ----------
    Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
    und in welcher Aufstellung. */
@@ -697,11 +739,11 @@ a.tab:hover{color:var(--ink);}
 <button class="speak" data-say="Ach, schade. Haben Sie gar nichts mehr davon?">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 🔎 Nachfragen</b><br>
 <span class="rm">Haben Sie noch welche im Lager?</span><span class="rm">Können Sie nachschauen?</span><span class="rm">Wann kommt die Lieferung?</span>
-<div class="bsp"><span class="wer">So klingt es</span><b class="m-verb">Können</b> Sie <b class="m-hoefl">bitte</b> <b class="m-menge">kurz</b> im Lager <b class="m-verb">nachschauen</b>?</div>
+<div class="bsp"><span class="wer">So klingt es</span><b class="m-verb">Können</b> Sie <b class="m-hoefl">bitte</b> <b class="m-menge">kurz</b> im <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Lager" data-wort="das Lager" data-kurz="der Raum hinter dem Laden mit den Vorräten" data-bsp="Schauen Sie bitte einmal im Lager nach?">Lager</b> <b class="m-verb"><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von nachschauen" data-wort="nachschauen" data-kurz="kurz nachsehen, ob noch etwas da ist" data-bsp="Ich schaue kurz nach, einen Moment bitte.">nachschauen</b></b>?</div>
 <button class="speak" data-say="Können Sie bitte kurz im Lager nachschauen?">🔊 hören</button></div>
 <div class="rmcard"><b>3 · 🔄 Ersatz suchen</b><br>
 <span class="rm">Was ist ähnlich?</span><span class="rm">Was empfehlen Sie?</span><span class="rm">Dann nehme ich …</span>
-<div class="bsp"><span class="wer">So klingt es</span><b class="m-akk">Was</b> <b class="m-verb">empfehlen</b> Sie mir stattdessen?</div>
+<div class="bsp"><span class="wer">So klingt es</span><b class="m-akk">Was</b> <b class="m-verb">empfehlen</b> Sie mir <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von stattdessen" data-wort="stattdessen" data-kurz="an dieser Stelle etwas anderes" data-bsp="Stattdessen nehme ich das dunkle Brot.">stattdessen</b>?</div>
 <button class="speak" data-say="Was empfehlen Sie mir stattdessen?">🔊 hören</button></div>
 <div class="rmcard"><b>4 · ✅ Entscheiden</b><br>
 <span class="rm">Gut, das nehme ich.</span><span class="rm">Dann komme ich morgen wieder.</span><span class="rm">Danke für Ihre Hilfe!</span>
@@ -723,7 +765,7 @@ a.tab:hover{color:var(--ink);}
 <button class="speak" data-say="Was ist der Unterschied zwischen den beiden?">🔊 hören</button></div>
 <div class="rmcard"><b>4 · ✅ Verbindlich abschließen</b><br>
 <span class="rm">Könnten Sie mir eins zurücklegen?</span><span class="rm">Auf welchen Namen?</span><span class="rm">Bis wann muss ich es abholen?</span>
-<div class="bsp"><span class="wer">So klingt es</span><b class="m-verb">Könnten</b> Sie mir <b class="m-menge">eins</b> zurücklegen — bis <b class="m-menge">wann</b> muss ich es abholen?</div>
+<div class="bsp"><span class="wer">So klingt es</span><b class="m-verb">Könnten</b> Sie mir <b class="m-menge">eins</b> <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von zurücklegen" data-wort="zurücklegen" data-kurz="eine Ware für einen Kunden aufheben" data-bsp="Könnten Sie mir eins zurücklegen?">zurücklegen</b> — bis <b class="m-menge">wann</b> muss ich es abholen?</div>
 <button class="speak" data-say="Könnten Sie mir eins zurücklegen? Bis wann muss ich es abholen?">🔊 hören</button></div>
 </div>
 <div class="legende">
@@ -739,7 +781,7 @@ a.tab:hover{color:var(--ink);}
 <h2 class="st">Vier Mal „ist alle“ — <span class="hl">zwei Runden</span></h2>
 <p class="ssub"><b>Runde 1:</b> Lest den Dialog zu zweit laut. <b>Runde 2:</b> Auf den Knopf tippen — B verschwindet, und ihr antwortet selbst. Die Regieanweisung bleibt als Hilfe stehen.</p>
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-cafe.webp" alt="Eine Kundin und ein Verkäufer an einer Bäckertheke"><h4>Dialog 1 · „Keine Brötchen mehr“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Samstag, halb zwölf. Du wolltest sechs Brötchen — der Korb ist leer.</div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Brötchen habe ich leider keine mehr, die sind seit elf aus.</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Brötchen habe ich <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von leider" data-wort="leider" data-kurz="das Wort, mit dem eine Absage anfängt" data-bsp="Leider haben wir das gerade nicht da.">leider</b> keine mehr, die sind seit elf aus.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ach, schade. Backen Sie heute noch mal nach?</div><div class="dcue">🗣️ Zeig kurz die Enttäuschung und stell sofort eine Frage.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Nein, samstags backen wir nur bis zehn.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Verstehe. Was können Sie mir stattdessen empfehlen?</div><div class="dcue">🗣️ Nimm die Absage an und frag nach einer Empfehlung.<span class="kl">tippen = Hilfe zeigen</span></div></div>
@@ -754,7 +796,7 @@ a.tab:hover{color:var(--ink);}
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Moment, ich schaue kurz nach.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Das wäre nett, danke.</div><div class="dcue">🗣️ Bedanke dich, während du wartest.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Tut mir leid, hinten ist auch nichts mehr.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Schade. Wann kommt denn die nächste Lieferung?</div><div class="dcue">🗣️ Frag nach dem Termin — mit „denn“ klingt es freundlich.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Schade. Wann kommt denn die nächste <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Lieferung" data-wort="die Lieferung" data-kurz="die Ware, die neu in den Laden kommt" data-bsp="Die nächste Lieferung kommt am Donnerstag.">Lieferung</b>?</div><div class="dcue">🗣️ Frag nach dem Termin — mit „denn“ klingt es freundlich.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Donnerstag früh, so gegen sieben.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Dann komme ich Donnerstag wieder. Könnten Sie mir zwei Packungen zurücklegen?</div><div class="dcue">🗣️ Nenn deinen Plan und bitte um das Zurücklegen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Klar, auf welchen Namen?</div></div>
@@ -762,16 +804,16 @@ a.tab:hover{color:var(--ink);}
 
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-handel.webp" alt="Eine Kundin und ein Verkäufer im Laden"><h4>Dialog 3 · „Nur noch in Groß“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Es gibt die Sorte — aber nur in der Fünf-Kilo-Packung.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Das haben wir nur noch im Großgebinde, fünf Kilo.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Das ist mir zu viel. Gibt es das auch in einer kleineren Packungsgröße?</div><div class="dcue">🗣️ Sag ehrlich, dass es zu viel ist, und frag nach einer kleineren Größe.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Das ist mir zu viel. Gibt es das auch in einer kleineren <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Packungsgröße" data-wort="die Packungsgröße" data-kurz="die Menge, die in einer Packung ist" data-bsp="Gibt es das auch in einer kleineren Packungsgröße?">Packungsgröße</b>?</div><div class="dcue">🗣️ Sag ehrlich, dass es zu viel ist, und frag nach einer kleineren Größe.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Momentan nicht. Nächste Woche kommt die Kleinpackung wieder.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Und ist das genau dasselbe, nur kleiner?</div><div class="dcue">🗣️ Vergewissere dich, bevor du wartest.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ganz genau dasselbe, ja.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Dann warte ich lieber. Für heute nehme ich das hier als Ersatz.</div><div class="dcue">🗣️ Entscheide für beides: heute und nächste Woche.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Dann warte ich lieber. Für heute nehme ich das hier als <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Ersatz" data-wort="der Ersatz" data-kurz="etwas Ähnliches statt der gewünschten Ware" data-bsp="Als Ersatz nehme ich das Vollkornbrot.">Ersatz</b>.</div><div class="dcue">🗣️ Entscheide für beides: heute und nächste Woche.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Gute Wahl, das ist sehr ähnlich.</div></div>
 <button class="speak dbtn" data-say="Das haben wir nur noch im Großgebinde, fünf Kilo. Das ist mir zu viel. Gibt es das auch in einer kleineren Packungsgröße? Momentan nicht. Nächste Woche kommt die Kleinpackung wieder. Und ist das genau dasselbe, nur kleiner? Ganz genau dasselbe, ja. Dann warte ich lieber. Für heute nehme ich das hier als Ersatz. Gute Wahl, das ist sehr ähnlich.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-kasse.webp" alt="Eine Kundin an einer Kasse"><h4>Dialog 4 · „Falsch gegriffen“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Zu Hause merkst du: Es ist die laktosefreie Milch, du wolltest die normale.</div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Guten Tag. Ich habe gestern hier eingekauft und die falsche Milch erwischt. Kann ich die noch umtauschen?</div><div class="dcue">🗣️ Sag den Grund und stell die Frage. Beides in zwei Sätzen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Guten Tag. Ich habe gestern hier eingekauft und die falsche Milch erwischt. Kann ich die noch <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von umtauschen" data-wort="umtauschen" data-kurz="gekaufte Ware gegen eine andere tauschen" data-bsp="Kann ich das noch umtauschen?">umtauschen</b>?</div><div class="dcue">🗣️ Sag den Grund und stell die Frage. Beides in zwei Sätzen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Haben Sie den Bon noch?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ja, hier ist er. Die Packung ist ungeöffnet.</div><div class="dcue">🗣️ Zeig den Bon und sag gleich, dass nichts geöffnet wurde.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Dann ist das kein Problem. Möchten Sie eine andere oder das Geld zurück?</div></div>
@@ -1185,6 +1227,64 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.setAttribute('aria-expanded',auf?'true':'false');
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
+
+/* ---- Markierte Woerter ----
+   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
+   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
+   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
+
+   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
+   den viele verwechseln. */
+(function(){
+ var woerter=[].slice.call(document.querySelectorAll('.wm'));
+ if(!woerter.length) return;
+ var karte=null;
+
+ function zu(){ if(karte){ karte.remove(); karte=null; }
+  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
+
+ function auf(w){
+  var schonOffen=w.classList.contains('offen');
+  zu();
+  if(schonOffen) return;
+  w.classList.add('offen');
+  karte=document.createElement('div');
+  karte.className='wmk';
+  var satz=w.dataset.bsp||'';
+  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
+   + '<b>'+w.dataset.wort+'</b>'
+   + '<span>'+(w.dataset.kurz||'')+'</span>'
+   + (satz?'<em>'+satz+'</em>':'')
+   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
+  document.body.appendChild(karte);
+
+  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
+  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
+  var links=r.left+r.width/2-b.width/2;
+  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
+  var oben=r.bottom+window.pageYOffset+9;
+  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
+   oben=r.top+window.pageYOffset-b.height-9;
+  karte.style.left=links+'px'; karte.style.top=oben+'px';
+
+  karte.querySelector('.wmk-zu').onclick=zu;
+  var ton=karte.querySelector('.wmk-ton');
+  if(ton) ton.onclick=function(){ say(satz); };
+ }
+
+ woerter.forEach(function(w){
+  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
+  w.addEventListener('keydown',function(ev){
+   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
+ });
+ document.addEventListener('click',zu);
+ document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
+ window.addEventListener('resize',zu);
+ /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
+    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
+ document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
+  k.addEventListener('click',zu); });
+})();
 
 /* ---- Bildkarten verdecken ----
    Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau

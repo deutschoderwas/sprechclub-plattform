@@ -436,6 +436,48 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Markierte Wörter ----------
+   Keine Wortschatzliste mehr, sondern das Wort dort, wo es steht.
+   Gelb unterstrichen: Wort dieser Stunde. Rot gepunktet: Begriff,
+   den viele verwechseln. Beides bleibt lesbar, wenn man es ignoriert —
+   die Markierung liegt unter der Zeile, nicht auf dem Wort. */
+.wm{
+  font-weight:inherit;cursor:pointer;position:relative;
+  border-bottom:3px solid var(--yellow);
+  padding-bottom:1px;transition:background .12s;
+}
+.wm.schwer{border-bottom:3px dotted var(--red);}
+.wm:hover,.wm.offen{background:rgba(255,210,74,.35);border-radius:4px 4px 0 0;}
+.wm.schwer:hover,.wm.schwer.offen{background:rgba(232,48,42,.12);}
+.wm:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.wm::after{
+  content:'';display:inline-block;width:.42em;height:.42em;margin-left:.22em;
+  vertical-align:.35em;border-radius:50%;background:var(--yellow);
+}
+.wm.schwer::after{background:var(--red);}
+
+.wmk{
+  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.2);padding:.85rem 1rem .9rem;
+}
+.wmk b{display:block;font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.25;padding-right:1.4rem;}
+.wmk span{display:block;margin-top:.3rem;font-size:.94rem;line-height:1.5;color:var(--ink-soft);}
+.wmk em{
+  display:block;margin-top:.55rem;padding-left:.7rem;border-left:3px solid var(--teal);
+  font-style:italic;font-size:.93rem;line-height:1.5;
+}
+.wmk-zu{
+  position:absolute;top:.45rem;right:.5rem;border:none;background:transparent;
+  font-size:.95rem;line-height:1;cursor:pointer;color:var(--ink-mute,#7a6a56);padding:.2rem;
+}
+.wmk-ton{
+  margin-top:.6rem;border:2px solid var(--ink);background:var(--sand);color:var(--ink);
+  border-radius:999px;padding:.3rem .75rem;font-family:inherit;font-size:.82rem;
+  font-weight:700;cursor:pointer;
+}
+@media print{ .wm::after{display:none;} .wmk{display:none;} }
+
 /* ---------- Die Ablauftafel ----------
    Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
    und in welcher Aufstellung. */
@@ -672,11 +714,11 @@ a.tab:hover{color:var(--ink);}
 <div class="nur-a2">
 <div class="rmcard"><b>1 · 🔎 Suchen</b><br>
 <span class="rm">Ich suche …</span><span class="rm">Haben Sie …?</span><span class="rm">Gibt es das auch in …?</span><span class="rm">Wo finde ich …?</span>
-<div class="bsp"><span class="wer">So klingt es</span>Ich suche eine Jacke für den Herbst, so in Größe 40.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Ich suche eine Jacke für den Herbst, so in <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Größe" data-wort="die Größe" data-kurz="die Zahl oder der Buchstabe im Etikett" data-bsp="Haben Sie das eine Nummer größer?">Größe</b> 40.</div>
 <button class="speak" data-say="Ich suche eine Jacke für den Herbst, so in Größe 40.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 👕 Anprobieren</b><br>
 <span class="rm">Kann ich das anprobieren?</span><span class="rm">Wo sind die Kabinen?</span><span class="rm">Hätten Sie das eine Nummer größer?</span><span class="rm">Das ist mir zu eng</span>
-<div class="bsp"><span class="wer">So klingt es</span>Kann ich das mal anprobieren? Wo sind die Kabinen?</div>
+<div class="bsp"><span class="wer">So klingt es</span>Kann ich das mal <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von anprobieren" data-wort="anprobieren" data-kurz="vor dem Kauf einmal anziehen" data-bsp="Kann ich das mal anprobieren?">anprobieren</b>? Wo sind die Kabinen?</div>
 <button class="speak" data-say="Kann ich das mal anprobieren? Wo sind die Kabinen?">🔊 hören</button></div>
 <div class="rmcard"><b>3 · 🤔 Entscheiden</b><br>
 <span class="rm">Ich nehme es</span><span class="rm">Ich überlege es mir noch</span><span class="rm">Das passt gut</span><span class="rm">Ich kann mich nicht entscheiden</span>
@@ -684,7 +726,7 @@ a.tab:hover{color:var(--ink);}
 <button class="speak" data-say="Das passt gut — ich nehme es.">🔊 hören</button></div>
 <div class="rmcard"><b>4 · 🔁 Zurückbringen</b><br>
 <span class="rm">Ich möchte das umtauschen</span><span class="rm">Hier ist der Kassenbon</span><span class="rm">Es passt leider doch nicht</span><span class="rm">Geht das noch?</span>
-<div class="bsp"><span class="wer">So klingt es</span>Ich möchte das umtauschen, es passt leider doch nicht.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Ich möchte das <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von umtauschen" data-wort="umtauschen" data-kurz="gegen etwas anderes eintauschen" data-bsp="Ich möchte das gern umtauschen.">umtauschen</b>, es passt leider doch nicht.</div>
 <button class="speak" data-say="Ich möchte das umtauschen, es passt leider doch nicht.">🔊 hören</button></div>
 </div>
 <div class="nur-b1">
@@ -698,7 +740,7 @@ a.tab:hover{color:var(--ink);}
 <button class="speak" data-say="Der Schnitt gefällt mir, aber im Ärmel spannt es ein bisschen.">🔊 hören</button></div>
 <div class="rmcard"><b>3 · 🧾 Nachfragen vor dem Kauf</b><br>
 <span class="rm">Wie lange kann ich das umtauschen?</span><span class="rm">Gilt das auch für reduzierte Ware?</span><span class="rm">Brauche ich den Bon dafür?</span><span class="rm">Bekomme ich Geld zurück oder einen Gutschein?</span>
-<div class="bsp"><span class="wer">So klingt es</span>Wie lange kann ich das umtauschen — und gilt das auch für reduzierte Ware?</div>
+<div class="bsp"><span class="wer">So klingt es</span>Wie lange kann ich das umtauschen — und gilt das auch für <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von reduzierte" data-wort="reduziert" data-kurz="im Preis heruntergesetzt" data-bsp="Die Jacke ist um dreißig Prozent reduziert.">reduzierte</b> Ware?</div>
 <button class="speak" data-say="Wie lange kann ich das umtauschen — und gilt das auch für reduzierte Ware?">🔊 hören</button></div>
 <div class="rmcard"><b>4 · 🧵 Einen Mangel nennen</b><br>
 <span class="rm">Die Naht ist an zwei Stellen offen</span><span class="rm">Der Reißverschluss klemmt</span><span class="rm">Nach dem ersten Waschen hat es …</span><span class="rm">Das war schon beim Kauf so</span>
@@ -730,7 +772,7 @@ a.tab:hover{color:var(--ink);}
 
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../vok-bild/die-umkleidekabine.webp" alt="Eine Umkleidekabine mit Vorhang, Spiegel und Bank"><h4>Dialog 2 · „In der Kabine“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Du stehst vor dem Spiegel, und es passt nicht ganz. Draußen wartet jemand.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Und, passt es?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Der Schnitt gefällt mir, aber im Ärmel ist es mir zu eng.</div><div class="dcue">🗣️ Erst das Positive, dann das Problem. <b>ist es mir zu eng</b> — immer mit <i>mir</i>.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Der Schnitt gefällt mir, aber im Ärmel ist es mir <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von zu eng" data-wort="zu eng" data-kurz="zu schmal geschnitten" data-bsp="Im Ärmel ist es mir zu eng.">zu eng</b>.</div><div class="dcue">🗣️ Erst das Positive, dann das Problem. <b>ist es mir zu eng</b> — immer mit <i>mir</i>.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Soll ich eine Nummer größer holen?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ja bitte. Und gibt es die auch in Dunkelblau?</div><div class="dcue">🗣️ <b>Gibt es das auch in …?</b> — die Formel für jede Variante. Zwei Bitten in einem Zug spart Wege.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">In Dunkelblau leider nur noch 38.</div></div>
@@ -741,7 +783,7 @@ a.tab:hover{color:var(--ink);}
 
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../vok-bild/der-kassenbon.webp" alt="Eine Hand hält einen Kassenbon in einem Laden"><h4>Dialog 3 · „Umtauschen“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Zu Hause hat es doch nicht gepasst. Du bringst es zurück — freundlich und mit Bon.</div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Guten Tag. Ich möchte das gern umtauschen, es passt mir leider doch nicht.</div><div class="dcue">🗣️ Anliegen im ersten Satz, Grund im zweiten Halbsatz. <b>leider</b> macht es weich.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Haben Sie den Kassenbon dabei?</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Haben Sie den <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Kassenbon" data-wort="der Kassenbon" data-kurz="der Beleg über den Kauf" data-bsp="Haben Sie den Kassenbon noch?">Kassenbon</b> dabei?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ja, hier. Gekauft am Samstag, es ist noch alles dran.</div><div class="dcue">🗣️ <b>es ist noch alles dran</b> — gemeint sind die Etiketten. Ein Satz, der viele Rückfragen erspart.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Möchten Sie etwas anderes oder Geld zurück?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Am liebsten dasselbe in 42. Wenn Sie das nicht haben, schaue ich mich noch mal um.</div><div class="dcue">🗣️ Erst der Wunsch, dann die Alternative. So bleibt das Gespräch in Bewegung.<span class="kl">tippen = Hilfe zeigen</span></div></div>
@@ -750,7 +792,7 @@ a.tab:hover{color:var(--ink);}
 <button class="speak dbtn" data-say="Guten Tag. Ich möchte das gern umtauschen, es passt mir leider doch nicht. Haben Sie den Kassenbon dabei? Ja, hier. Gekauft am Samstag, es ist noch alles dran. Möchten Sie etwas anderes oder Geld zurück? Am liebsten dasselbe in 42. Wenn Sie das nicht haben, schaue ich mich noch mal um. In 42 haben wir es. Einen Moment. Super, danke. Das war unkompliziert.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../vok-bild/die-reklamation.webp" alt="Ein Paket steht auf einer Ladentheke"><h4>Dialog 4 · „Da ist etwas kaputt“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Nach zweimal Tragen ist die Naht offen. Das ist kein Umtausch, das ist eine Reklamation — und du sagst das auch so.</div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ich möchte das reklamieren. Die Naht ist an zwei Stellen offen.</div><div class="dcue">🗣️ <b>reklamieren</b> statt <i>umtauschen</i> — das Wort setzt den Ton. Und der Mangel gleich konkret dazu.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ich möchte das <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von reklamieren" data-wort="reklamieren" data-kurz="etwas ist kaputt oder fehlerhaft" data-bsp="Ich möchte das reklamieren, die Naht ist offen.">reklamieren</b>. Die Naht ist an zwei Stellen offen.</div><div class="dcue">🗣️ <b>reklamieren</b> statt <i>umtauschen</i> — das Wort setzt den Ton. Und der Mangel gleich konkret dazu.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Wann haben Sie es denn gekauft?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Vor drei Wochen, hier ist der Bon. Getragen habe ich es zweimal.</div><div class="dcue">🗣️ Zwei Fakten ohne Ausschmückung. Wer sachlich bleibt, wird sachlich behandelt.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Das sieht wirklich nicht gut aus. Ich frage kurz meine Kollegin.</div></div>
@@ -881,7 +923,7 @@ a.tab:hover{color:var(--ink);}
 <p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A arbeitet im Laden, B sucht eine Jacke für den Herbst. Spielt den kompletten Ablauf: begrüßt werden, suchen, anprobieren, eine andere Größe holen lassen, entscheiden, zahlen.</p>
 <div class="nur-a2"><span class="rm">Werden Sie schon beraten?</span><span class="rm">Ich suche eine Jacke für den Herbst</span><span class="rm">Hätten Sie die eine Nummer größer?</span><span class="rm">Ich nehme sie</span></div>
 <div class="nur-b1"><span class="rm">Ich suche etwas Schlichtes, nichts Auffälliges</span><span class="rm">Der Schnitt gefällt mir, aber im Ärmel spannt es</span><span class="rm">Gibt es die auch in Naturfarben?</span><span class="rm">Wie lange kann ich das umtauschen?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat alle vier Momente durchgespielt und dabei <i>passen</i>, <i>stehen</i> oder <i>gefallen</i> mindestens dreimal richtig mit Dativ benutzt. Kein einziges <i>Es passt mich</i>.</div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat alle vier Momente durchgespielt und dabei <i><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von passen" data-wort="passen" data-kurz="die richtige Größe haben" data-bsp="Das Hemd passt mir gut.">passen</b></i>, <i>stehen</i> oder <i>gefallen</i> mindestens dreimal richtig mit Dativ benutzt. Kein einziges <i>Es passt mich</i>.</div>
 </div>
 <div class="rmcard">
 <b>2 · Umtausch — und einmal Nein</b>
@@ -892,7 +934,7 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="rmcard">
 <b>3 · Der echte Mangel</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">An B's Jacke ist nach zweimal Tragen die Naht offen. A ist zunächst skeptisch und vermutet einen Trageschaden. B bleibt sachlich, nennt den Mangel konkret und sagt, was er sich wünscht.</p>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">An B's Jacke ist nach zweimal Tragen die Naht offen. A ist zunächst skeptisch und vermutet einen Trageschaden. B bleibt sachlich, nennt den <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Mangel" data-wort="der Mangel" data-kurz="wenn etwas kaputt oder fehlerhaft ist" data-bsp="Hier ist ein Mangel — die Naht ist offen.">Mangel</b> konkret und sagt, was er sich wünscht.</p>
 <div class="nur-a2"><span class="rm">Ich möchte das reklamieren</span><span class="rm">Die Naht ist an zwei Stellen offen</span><span class="rm">Getragen habe ich es zweimal</span><span class="rm">Mir wäre ein Austausch am liebsten</span></div>
 <div class="nur-b1"><span class="rm">Das war schon beim Kauf so</span><span class="rm">Ich verstehe die Frage, aber es ist normal getragen worden</span><span class="rm">Können Sie das jemandem zeigen, der das beurteilt?</span><span class="rm">Was schlagen Sie vor?</span></div>
 <div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat den Mangel konkret benannt statt allgemein zu klagen, ist sachlich geblieben und hat einen eigenen Wunsch genannt. Das Wort <i>reklamieren</i> kam im ersten Satz.</div>
@@ -1161,6 +1203,64 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.setAttribute('aria-expanded',auf?'true':'false');
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
+
+/* ---- Markierte Woerter ----
+   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
+   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
+   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
+
+   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
+   den viele verwechseln. */
+(function(){
+ var woerter=[].slice.call(document.querySelectorAll('.wm'));
+ if(!woerter.length) return;
+ var karte=null;
+
+ function zu(){ if(karte){ karte.remove(); karte=null; }
+  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
+
+ function auf(w){
+  var schonOffen=w.classList.contains('offen');
+  zu();
+  if(schonOffen) return;
+  w.classList.add('offen');
+  karte=document.createElement('div');
+  karte.className='wmk';
+  var satz=w.dataset.bsp||'';
+  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
+   + '<b>'+w.dataset.wort+'</b>'
+   + '<span>'+(w.dataset.kurz||'')+'</span>'
+   + (satz?'<em>'+satz+'</em>':'')
+   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
+  document.body.appendChild(karte);
+
+  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
+  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
+  var links=r.left+r.width/2-b.width/2;
+  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
+  var oben=r.bottom+window.pageYOffset+9;
+  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
+   oben=r.top+window.pageYOffset-b.height-9;
+  karte.style.left=links+'px'; karte.style.top=oben+'px';
+
+  karte.querySelector('.wmk-zu').onclick=zu;
+  var ton=karte.querySelector('.wmk-ton');
+  if(ton) ton.onclick=function(){ say(satz); };
+ }
+
+ woerter.forEach(function(w){
+  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
+  w.addEventListener('keydown',function(ev){
+   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
+ });
+ document.addEventListener('click',zu);
+ document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
+ window.addEventListener('resize',zu);
+ /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
+    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
+ document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
+  k.addEventListener('click',zu); });
+})();
 
 /* ---- Bildkarten verdecken ----
    Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau

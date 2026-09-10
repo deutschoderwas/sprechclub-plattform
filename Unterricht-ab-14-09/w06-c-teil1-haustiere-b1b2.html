@@ -436,6 +436,48 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Markierte Wörter ----------
+   Keine Wortschatzliste mehr, sondern das Wort dort, wo es steht.
+   Gelb unterstrichen: Wort dieser Stunde. Rot gepunktet: Begriff,
+   den viele verwechseln. Beides bleibt lesbar, wenn man es ignoriert —
+   die Markierung liegt unter der Zeile, nicht auf dem Wort. */
+.wm{
+  font-weight:inherit;cursor:pointer;position:relative;
+  border-bottom:3px solid var(--yellow);
+  padding-bottom:1px;transition:background .12s;
+}
+.wm.schwer{border-bottom:3px dotted var(--red);}
+.wm:hover,.wm.offen{background:rgba(255,210,74,.35);border-radius:4px 4px 0 0;}
+.wm.schwer:hover,.wm.schwer.offen{background:rgba(232,48,42,.12);}
+.wm:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.wm::after{
+  content:'';display:inline-block;width:.42em;height:.42em;margin-left:.22em;
+  vertical-align:.35em;border-radius:50%;background:var(--yellow);
+}
+.wm.schwer::after{background:var(--red);}
+
+.wmk{
+  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.2);padding:.85rem 1rem .9rem;
+}
+.wmk b{display:block;font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.25;padding-right:1.4rem;}
+.wmk span{display:block;margin-top:.3rem;font-size:.94rem;line-height:1.5;color:var(--ink-soft);}
+.wmk em{
+  display:block;margin-top:.55rem;padding-left:.7rem;border-left:3px solid var(--teal);
+  font-style:italic;font-size:.93rem;line-height:1.5;
+}
+.wmk-zu{
+  position:absolute;top:.45rem;right:.5rem;border:none;background:transparent;
+  font-size:.95rem;line-height:1;cursor:pointer;color:var(--ink-mute,#7a6a56);padding:.2rem;
+}
+.wmk-ton{
+  margin-top:.6rem;border:2px solid var(--ink);background:var(--sand);color:var(--ink);
+  border-radius:999px;padding:.3rem .75rem;font-family:inherit;font-size:.82rem;
+  font-weight:700;cursor:pointer;
+}
+@media print{ .wm::after{display:none;} .wmk{display:none;} }
+
 /* ---------- Die Ablauftafel ----------
    Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
    und in welcher Aufstellung. */
@@ -690,7 +732,7 @@ a.tab:hover{color:var(--ink);}
 <div class="nur-b1">
 <div class="rmcard"><b>1 · 📄 Formell vortragen</b><br>
 <span class="rm">Ich möchte Sie um Ihre Zustimmung bitten</span><span class="rm">Ich wende mich an Sie wegen …</span><span class="rm">Vorab habe ich in den Vertrag geschaut</span><span class="rm">Unter welchen Auflagen wäre das möglich?</span>
-<div class="bsp"><span class="wer">So klingt es</span>Ich möchte Sie um Ihre Zustimmung zur Haltung eines Hundes bitten.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Ich möchte Sie um Ihre <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Zustimmung" data-wort="die Zustimmung" data-kurz="dass jemand offiziell ja sagt" data-bsp="Dafür brauche ich die Zustimmung des Vermieters.">Zustimmung</b> zur Haltung eines Hundes bitten.</div>
 <button class="speak" data-say="Ich möchte Sie um Ihre Zustimmung zur Haltung eines Hundes bitten.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 🔍 Den Einwand aufnehmen</b><br>
 <span class="rm">Ich verstehe den Punkt</span><span class="rm">Das ist ein berechtigter Einwand</span><span class="rm">Darf ich fragen, worauf sich das bezieht?</span><span class="rm">Ging es dabei um Lärm oder um etwas anderes?</span>
@@ -698,7 +740,7 @@ a.tab:hover{color:var(--ink);}
 <button class="speak" data-say="Das ist ein berechtigter Einwand — darf ich fragen, worauf er sich genau bezieht?">🔊 hören</button></div>
 <div class="rmcard"><b>3 · 🧩 Auflagen selbst vorschlagen</b><br>
 <span class="rm">Ich schlage folgende Auflagen vor</span><span class="rm">sofern es zu Beschwerden kommt</span><span class="rm">solange niemand im Haus allergisch ist</span><span class="rm">vorausgesetzt, dass die Ruhezeiten eingehalten werden</span>
-<div class="bsp"><span class="wer">So klingt es</span>Ich schlage vor, dass die Erlaubnis gilt, solange es keine Beschwerden gibt.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Ich schlage vor, dass die Erlaubnis gilt, solange es keine <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Beschwerden" data-wort="die Beschwerde" data-kurz="wenn jemand offiziell sagt, dass ihn etwas stört" data-bsp="Es gab eine Beschwerde wegen des Bellens.">Beschwerden</b> gibt.</div>
 <button class="speak" data-say="Ich schlage vor, dass die Erlaubnis gilt, solange es keine Beschwerden gibt.">🔊 hören</button></div>
 <div class="rmcard"><b>4 · ✍️ Verbindlich festhalten</b><br>
 <span class="rm">Ich fasse das schriftlich zusammen</span><span class="rm">Dann gilt ab dem Ersten: …</span><span class="rm">Ich melde mich von mir aus, falls …</span><span class="rm">Sagen Sie Bescheid, falls ich etwas falsch verstanden habe</span>
@@ -717,12 +759,12 @@ a.tab:hover{color:var(--ink);}
 <section class="section" id="dialoge">
 <h2 class="st">Vier Situationen — <span class="hl">zwei Runden</span></h2>
 <p class="ssub"><b>Runde 1:</b> Lest den Dialog zu zweit laut. <b>Runde 2:</b> Klappt die Zeilen zu und spielt ihn frei — mit eurem eigenen Haus und eurem eigenen Tier.</p>
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../vok-bild/die-vermieterin.webp" alt="Eine Frau übergibt an der Wohnungstür einen Schlüssel"><h4>Dialog 1 · „Beim Vermieter fragen“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Du möchtest einen Hund und rufst bei der Vermieterin an. Du fragst nicht nach Erlaubnis, sondern nach Bedingungen.</div>
+<div class="dwrap" data-runde="1"><div class="dhead"><img src="../vok-bild/die-vermieterin.webp" alt="Eine Frau übergibt an der Wohnungstür einen Schlüssel"><h4>Dialog 1 · „Beim Vermieter fragen“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Du möchtest einen Hund und rufst bei der <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Vermieterin" data-wort="die Vermieterin" data-kurz="die Person, der die Wohnung gehört" data-bsp="Ich schreibe der Vermieterin und frage nach.">Vermieterin</b> an. Du fragst nicht nach Erlaubnis, sondern nach Bedingungen.</div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ich würde gern einen Hund halten und wollte das vorher mit Ihnen besprechen.</div><div class="dcue">🗣️ <b>vorher besprechen</b> — das ist der halbe Erfolg. Wer erst fragt, wenn das Tier schon da ist, verhandelt aus einer schlechten Lage.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Um was für einen Hund geht es denn?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Um einen kleinen, ausgewachsen etwa dreißig Zentimeter. Ich habe schon mit den direkten Nachbarn gesprochen.</div><div class="dcue">🗣️ Konkret werden und ungefragt zeigen, dass du an die anderen gedacht hast. Das nimmt dem Gespräch die Hälfte der Einwände.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Um einen kleinen, ausgewachsen etwa dreißig Zentimeter. Ich habe schon mit den direkten <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Nachbarn" data-wort="der Nachbar" data-kurz="die Person, die neben oder über dir wohnt" data-bsp="Ich habe vorher mit den Nachbarn gesprochen.">Nachbarn</b> gesprochen.</div><div class="dcue">🗣️ Konkret werden und ungefragt zeigen, dass du an die anderen gedacht hast. Das nimmt dem Gespräch die Hälfte der Einwände.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Und was sagen die?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Beide sind einverstanden. Unter welchen Auflagen wäre das für Sie möglich?</div><div class="dcue">🗣️ <b>Unter welchen Auflagen</b> statt <i>darf ich</i>. Die Frage macht ein Ja mit Bedingungen leichter als ein Nein.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Beide sind einverstanden. Unter welchen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Auflagen" data-wort="die Auflage" data-kurz="eine Bedingung, die man erfüllen muss" data-bsp="Die Erlaubnis gilt nur mit zwei Auflagen.">Auflagen</b> wäre das für Sie möglich?</div><div class="dcue">🗣️ <b>Unter welchen Auflagen</b> statt <i>darf ich</i>. Die Frage macht ein Ja mit Bedingungen leichter als ein Nein.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Im Treppenhaus an der Leine, und wenn es Beschwerden gibt, reden wir noch mal.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Einverstanden. Ich fasse das kurz schriftlich zusammen und schicke es Ihnen zu.</div><div class="dcue">🗣️ <b>schriftlich zusammenfassen</b> — freundlich, verbindlich, und in einem halben Jahr weiß niemand mehr, was genau vereinbart war.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Ich würde gern einen Hund halten und wollte das vorher mit Ihnen besprechen. Um was für einen Hund geht es denn? Um einen kleinen, ausgewachsen etwa dreißig Zentimeter. Ich habe schon mit den direkten Nachbarn gesprochen. Und was sagen die? Beide sind einverstanden. Unter welchen Auflagen wäre das für Sie möglich? Im Treppenhaus an der Leine, und wenn es Beschwerden gibt, reden wir noch mal. Einverstanden. Ich fasse das kurz schriftlich zusammen und schicke es Ihnen zu.">🔊 Dialog vorlesen lassen</button></div>
@@ -730,8 +772,8 @@ a.tab:hover{color:var(--ink);}
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../bilder/lesen/nachbar.webp" alt="Zwei Wohnungstüren nebeneinander im Hausflur, davor eine Fußmatte"><h4>Dialog 2 · „Der Nachbar hat Bedenken“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Du klingelst beim Nachbarn, bevor der Hund einzieht. Er ist nicht begeistert — und du fragst nach, statt zu beruhigen.</div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ich wollte kurz Bescheid sagen: Bei uns zieht nächste Woche ein Hund ein.</div><div class="dcue">🗣️ Zuerst informieren, nicht überzeugen. Wer es von dir erfährt statt vom Bellen, ist schon halb auf deiner Seite.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Oh. Ehrlich gesagt bin ich da nicht so glücklich drüber.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Das kann ich verstehen. Was genau macht dir Sorgen — der Lärm oder eher das Treppenhaus?</div><div class="dcue">🗣️ Zwei Möglichkeiten anbieten. Das ist leichter zu beantworten als eine offene Frage — und du erfährst sofort, worum es wirklich geht.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Meine Kleine hat ziemlich Angst vor Hunden.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Das kann ich verstehen. Was genau macht dir Sorgen — der <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von Lärm" data-wort="der Lärm" data-kurz="bellen, kratzen, nachts unruhig sein" data-bsp="Er bellt, wenn ihr nicht da seid.">Lärm</b> oder eher das Treppenhaus?</div><div class="dcue">🗣️ Zwei Möglichkeiten anbieten. Das ist leichter zu beantworten als eine offene Frage — und du erfährst sofort, worum es wirklich geht.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Meine Kleine hat ziemlich <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von Angst" data-wort="die Angst" data-kurz="im Treppenhaus, im Aufzug, mit Kindern" data-bsp="Meine Tochter traut sich nicht mehr raus.">Angst</b> vor Hunden.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Danke, dass du das sagst. Dann ist sie im Treppenhaus immer an der Leine, und ich schaue vorher, ob jemand kommt.</div><div class="dcue">🗣️ Kein <i>der tut nichts</i>, sondern ein Angebot, das man nachprüfen kann. Angst wird nicht durch Argumente kleiner, sondern durch Verhalten.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Das wäre schon viel wert.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Und wenn doch etwas ist, klingel einfach. Mir ist lieber, du sagst es mir als der Hausverwaltung.</div><div class="dcue">🗣️ Die Tür offen lassen — und ganz nebenbei den Weg über die Verwaltung unattraktiv machen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
@@ -1158,6 +1200,64 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.setAttribute('aria-expanded',auf?'true':'false');
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
+
+/* ---- Markierte Woerter ----
+   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
+   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
+   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
+
+   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
+   den viele verwechseln. */
+(function(){
+ var woerter=[].slice.call(document.querySelectorAll('.wm'));
+ if(!woerter.length) return;
+ var karte=null;
+
+ function zu(){ if(karte){ karte.remove(); karte=null; }
+  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
+
+ function auf(w){
+  var schonOffen=w.classList.contains('offen');
+  zu();
+  if(schonOffen) return;
+  w.classList.add('offen');
+  karte=document.createElement('div');
+  karte.className='wmk';
+  var satz=w.dataset.bsp||'';
+  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
+   + '<b>'+w.dataset.wort+'</b>'
+   + '<span>'+(w.dataset.kurz||'')+'</span>'
+   + (satz?'<em>'+satz+'</em>':'')
+   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
+  document.body.appendChild(karte);
+
+  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
+  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
+  var links=r.left+r.width/2-b.width/2;
+  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
+  var oben=r.bottom+window.pageYOffset+9;
+  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
+   oben=r.top+window.pageYOffset-b.height-9;
+  karte.style.left=links+'px'; karte.style.top=oben+'px';
+
+  karte.querySelector('.wmk-zu').onclick=zu;
+  var ton=karte.querySelector('.wmk-ton');
+  if(ton) ton.onclick=function(){ say(satz); };
+ }
+
+ woerter.forEach(function(w){
+  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
+  w.addEventListener('keydown',function(ev){
+   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
+ });
+ document.addEventListener('click',zu);
+ document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
+ window.addEventListener('resize',zu);
+ /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
+    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
+ document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
+  k.addEventListener('click',zu); });
+})();
 
 /* ---- Bildkarten verdecken ----
    Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau

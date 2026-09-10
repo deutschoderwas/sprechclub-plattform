@@ -436,6 +436,48 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Markierte Wörter ----------
+   Keine Wortschatzliste mehr, sondern das Wort dort, wo es steht.
+   Gelb unterstrichen: Wort dieser Stunde. Rot gepunktet: Begriff,
+   den viele verwechseln. Beides bleibt lesbar, wenn man es ignoriert —
+   die Markierung liegt unter der Zeile, nicht auf dem Wort. */
+.wm{
+  font-weight:inherit;cursor:pointer;position:relative;
+  border-bottom:3px solid var(--yellow);
+  padding-bottom:1px;transition:background .12s;
+}
+.wm.schwer{border-bottom:3px dotted var(--red);}
+.wm:hover,.wm.offen{background:rgba(255,210,74,.35);border-radius:4px 4px 0 0;}
+.wm.schwer:hover,.wm.schwer.offen{background:rgba(232,48,42,.12);}
+.wm:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.wm::after{
+  content:'';display:inline-block;width:.42em;height:.42em;margin-left:.22em;
+  vertical-align:.35em;border-radius:50%;background:var(--yellow);
+}
+.wm.schwer::after{background:var(--red);}
+
+.wmk{
+  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.2);padding:.85rem 1rem .9rem;
+}
+.wmk b{display:block;font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.25;padding-right:1.4rem;}
+.wmk span{display:block;margin-top:.3rem;font-size:.94rem;line-height:1.5;color:var(--ink-soft);}
+.wmk em{
+  display:block;margin-top:.55rem;padding-left:.7rem;border-left:3px solid var(--teal);
+  font-style:italic;font-size:.93rem;line-height:1.5;
+}
+.wmk-zu{
+  position:absolute;top:.45rem;right:.5rem;border:none;background:transparent;
+  font-size:.95rem;line-height:1;cursor:pointer;color:var(--ink-mute,#7a6a56);padding:.2rem;
+}
+.wmk-ton{
+  margin-top:.6rem;border:2px solid var(--ink);background:var(--sand);color:var(--ink);
+  border-radius:999px;padding:.3rem .75rem;font-family:inherit;font-size:.82rem;
+  font-weight:700;cursor:pointer;
+}
+@media print{ .wm::after{display:none;} .wmk{display:none;} }
+
 /* ---------- Die Ablauftafel ----------
    Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
    und in welcher Aufstellung. */
@@ -693,7 +735,7 @@ a.tab:hover{color:var(--ink);}
 <div class="nur-a2">
 <div class="rmcard"><b>1 · 🚦 Einordnen</b><br>
 <span class="rm">Das ist eher umgangssprachlich</span><span class="rm">Das würde ich so nur unter Freunden sagen</span><span class="rm">Im Beruf geht das auch</span><span class="rm">Das schreibe ich nicht</span>
-<div class="bsp"><span class="wer">So klingt es</span>Das ist eher umgangssprachlich — im Chat ja, in der Mail nicht.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Das ist eher <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von umgangssprachlich" data-wort="umgangssprachlich" data-kurz="so, wie man unter Freunden spricht" data-bsp="Das ist umgangssprachlich, aber nicht falsch.">umgangssprachlich</b> — im <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Chat" data-wort="der Chat" data-kurz="geschriebene Sprache, die wie gesprochene klingt" data-bsp="Im Chat schreibe ich wie ich rede.">Chat</b> ja, in der Mail nicht.</div>
 <button class="speak" data-say="Das ist eher umgangssprachlich — im Chat ja, in der Mail nicht.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 🪶 Abschwächen</b><br>
 <span class="rm">Ich würde eher sagen …</span><span class="rm">Das ist vielleicht etwas zu stark</span><span class="rm">Nicht ganz so scharf</span><span class="rm">Ich sag es mal so:</span>
@@ -738,7 +780,7 @@ a.tab:hover{color:var(--ink);}
 <section class="section" id="dialoge">
 <h2 class="st">Vier Situationen — <span class="hl">zwei Runden</span></h2>
 <p class="ssub"><b>Runde 1:</b> Lest den Dialog zu zweit laut. <b>Runde 2:</b> Klappt die Zeilen zu und spielt ihn frei — mit einer Wendung, die ihr selbst gern benutzt.</p>
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-buero.webp" alt="Zwei Kolleginnen am Schreibtisch mit Laptop"><h4>Dialog 1 · „Passt hier, passt dort nicht“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Ihr schreibt gemeinsam eine Mail an einen Kunden. Einer will eine Wendung benutzen, die unter euch völlig normal ist.</div>
+<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-buero.webp" alt="Zwei Kolleginnen am Schreibtisch mit Laptop"><h4>Dialog 1 · „Passt hier, passt dort nicht“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Ihr schreibt gemeinsam eine Mail an einen Kunden. Einer will eine <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Wendung" data-wort="die Wendung" data-kurz="eine feste Verbindung von Wörtern" data-bsp="Diese Wendung passt hier nicht.">Wendung</b> benutzen, die unter euch völlig normal ist.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ich schreibe einfach: Wir krempeln jetzt die Ärmel hoch und liefern nächste Woche.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Unter uns würde ich das genauso sagen. In der Mail an den Kunden würde ich es umformulieren.</div><div class="dcue">🗣️ Erst zustimmen, dann einschränken. Das nimmt der Korrektur die Schärfe — es geht um den Raum, nicht um den Satz.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Klingt das zu locker?</div></div>
@@ -749,7 +791,7 @@ a.tab:hover{color:var(--ink);}
 
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-bewerbung.webp" alt="Zwei Personen sitzen sich mit Unterlagen an einem Tisch gegenüber"><h4>Dialog 2 · „Im Vorstellungsgespräch“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Du übst mit einer Freundin. Sie hört zu und sagt dir, wo der Ton kippt — in beide Richtungen.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Wenn ein Projekt schwierig wird, dann krempele ich eben die Ärmel hoch.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Das geht. Die ist neutral genug, und sie klingt tatkräftig.</div><div class="dcue">🗣️ Loben, wenn es passt. <b>die Ärmel hochkrempeln</b> ist eine der wenigen Wendungen, die auch im Vorstellungsgespräch gut wirken.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Das geht. Die ist <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von neutral" data-wort="neutral" data-kurz="geht überall, auch im Beruf" data-bsp="Der Plan hat Hand und Fuß.">neutral</b> genug, und sie klingt tatkräftig.</div><div class="dcue">🗣️ Loben, wenn es passt. <b>die Ärmel hochkrempeln</b> ist eine der wenigen Wendungen, die auch im Vorstellungsgespräch gut wirken.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Und dann sage ich: Von unnötigen Meetings lasse ich die Finger.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Da würde ich aufpassen. Das bewertet die Arbeitsweise der Firma, und du kennst sie noch gar nicht.</div><div class="dcue">🗣️ Der Kern der Stunde: nicht die Stilebene ist hier das Problem, sondern dass die Wendung <b>bewertet</b> statt beschreibt.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Wie würdest du es sagen?</div></div>
@@ -762,7 +804,7 @@ a.tab:hover{color:var(--ink);}
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Aber ich will schon deutlich sein.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Dann werde deutlich in der Sache: Ich bitte um eine abschließende Klärung bis zum fünfzehnten.</div><div class="dcue">🗣️ <b>Deutlich</b> und <b>scharf</b> sind nicht dasselbe. Eine Frist ist deutlicher als jede Wendung — und sie wirkt.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Das klingt fast höflich.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Es ist höflich und trotzdem unmissverständlich. Genau darum geht es bei so einem Schreiben.</div><div class="dcue">🗣️ Der Unterschied zwischen mündlich und schriftlich: Gesagtes verfliegt, Geschriebenes bleibt — und wird weitergeleitet.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Es ist höflich und trotzdem unmissverständlich. Genau darum geht es bei so einem <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Schreiben" data-wort="das Schreiben" data-kurz="ein förmlicher Brief, meist an eine Behörde" data-bsp="Ihr Schreiben vom dritten Oktober liegt mir vor.">Schreiben</b>.</div><div class="dcue">🗣️ Der Unterschied zwischen mündlich und schriftlich: Gesagtes verfliegt, Geschriebenes bleibt — und wird weitergeleitet.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Hier steht: Ich habe langsam wirklich die Nase voll von diesem Hin und Her. Ich verstehe den Ärger. Nur liest das jemand, der nichts dafür kann — und der Satz bleibt in der Akte stehen. Aber ich will schon deutlich sein. Dann werde deutlich in der Sache: Ich bitte um eine abschließende Klärung bis zum fünfzehnten. Das klingt fast höflich. Es ist höflich und trotzdem unmissverständlich. Genau darum geht es bei so einem Schreiben.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/amanda-ups.webp" alt="Amanda schaut überrascht"><h4>Dialog 4 · „Es kam anders an“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Du hast eine Wendung benutzt, die jemanden getroffen hat. Du merkst es an der Reaktion und sprichst es an.</div>
@@ -1175,6 +1217,64 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.setAttribute('aria-expanded',auf?'true':'false');
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
+
+/* ---- Markierte Woerter ----
+   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
+   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
+   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
+
+   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
+   den viele verwechseln. */
+(function(){
+ var woerter=[].slice.call(document.querySelectorAll('.wm'));
+ if(!woerter.length) return;
+ var karte=null;
+
+ function zu(){ if(karte){ karte.remove(); karte=null; }
+  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
+
+ function auf(w){
+  var schonOffen=w.classList.contains('offen');
+  zu();
+  if(schonOffen) return;
+  w.classList.add('offen');
+  karte=document.createElement('div');
+  karte.className='wmk';
+  var satz=w.dataset.bsp||'';
+  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
+   + '<b>'+w.dataset.wort+'</b>'
+   + '<span>'+(w.dataset.kurz||'')+'</span>'
+   + (satz?'<em>'+satz+'</em>':'')
+   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
+  document.body.appendChild(karte);
+
+  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
+  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
+  var links=r.left+r.width/2-b.width/2;
+  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
+  var oben=r.bottom+window.pageYOffset+9;
+  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
+   oben=r.top+window.pageYOffset-b.height-9;
+  karte.style.left=links+'px'; karte.style.top=oben+'px';
+
+  karte.querySelector('.wmk-zu').onclick=zu;
+  var ton=karte.querySelector('.wmk-ton');
+  if(ton) ton.onclick=function(){ say(satz); };
+ }
+
+ woerter.forEach(function(w){
+  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
+  w.addEventListener('keydown',function(ev){
+   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
+ });
+ document.addEventListener('click',zu);
+ document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
+ window.addEventListener('resize',zu);
+ /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
+    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
+ document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
+  k.addEventListener('click',zu); });
+})();
 
 /* ---- Bildkarten verdecken ----
    Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau

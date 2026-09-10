@@ -436,6 +436,48 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Markierte Wörter ----------
+   Keine Wortschatzliste mehr, sondern das Wort dort, wo es steht.
+   Gelb unterstrichen: Wort dieser Stunde. Rot gepunktet: Begriff,
+   den viele verwechseln. Beides bleibt lesbar, wenn man es ignoriert —
+   die Markierung liegt unter der Zeile, nicht auf dem Wort. */
+.wm{
+  font-weight:inherit;cursor:pointer;position:relative;
+  border-bottom:3px solid var(--yellow);
+  padding-bottom:1px;transition:background .12s;
+}
+.wm.schwer{border-bottom:3px dotted var(--red);}
+.wm:hover,.wm.offen{background:rgba(255,210,74,.35);border-radius:4px 4px 0 0;}
+.wm.schwer:hover,.wm.schwer.offen{background:rgba(232,48,42,.12);}
+.wm:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.wm::after{
+  content:'';display:inline-block;width:.42em;height:.42em;margin-left:.22em;
+  vertical-align:.35em;border-radius:50%;background:var(--yellow);
+}
+.wm.schwer::after{background:var(--red);}
+
+.wmk{
+  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.2);padding:.85rem 1rem .9rem;
+}
+.wmk b{display:block;font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.25;padding-right:1.4rem;}
+.wmk span{display:block;margin-top:.3rem;font-size:.94rem;line-height:1.5;color:var(--ink-soft);}
+.wmk em{
+  display:block;margin-top:.55rem;padding-left:.7rem;border-left:3px solid var(--teal);
+  font-style:italic;font-size:.93rem;line-height:1.5;
+}
+.wmk-zu{
+  position:absolute;top:.45rem;right:.5rem;border:none;background:transparent;
+  font-size:.95rem;line-height:1;cursor:pointer;color:var(--ink-mute,#7a6a56);padding:.2rem;
+}
+.wmk-ton{
+  margin-top:.6rem;border:2px solid var(--ink);background:var(--sand);color:var(--ink);
+  border-radius:999px;padding:.3rem .75rem;font-family:inherit;font-size:.82rem;
+  font-weight:700;cursor:pointer;
+}
+@media print{ .wm::after{display:none;} .wmk{display:none;} }
+
 /* ---------- Die Ablauftafel ----------
    Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
    und in welcher Aufstellung. */
@@ -672,7 +714,7 @@ a.tab:hover{color:var(--ink);}
 <div class="nur-a2">
 <div class="rmcard"><b>1 · 📣 Anliegen nennen</b><br>
 <span class="rm">Ich möchte mich anmelden.</span><span class="rm">Ich habe einen Termin um …</span><span class="rm">Ich komme wegen …</span>
-<div class="bsp"><span class="wer">So klingt es</span>Guten Tag, ich habe einen Termin um zehn. Ich möchte mich anmelden.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Guten Tag, ich habe einen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Termin" data-wort="der Termin" data-kurz="die feste Zeit, zu der du kommen darfst" data-bsp="Ich habe einen Termin um Viertel nach zehn.">Termin</b> um zehn. Ich möchte mich anmelden.</div>
 <button class="speak" data-say="Guten Tag, ich habe einen Termin um zehn. Ich möchte mich anmelden.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 📄 Unterlagen klären</b><br>
 <span class="rm">Ich habe den Ausweis dabei.</span><span class="rm">Brauchen Sie noch etwas?</span><span class="rm">Das habe ich leider nicht dabei.</span>
@@ -684,21 +726,21 @@ a.tab:hover{color:var(--ink);}
 <button class="speak" data-say="Entschuldigung, das habe ich nicht verstanden. Können Sie mir das bitte aufschreiben?">🔊 hören</button></div>
 <div class="rmcard"><b>4 · ✅ Nächsten Schritt klären</b><br>
 <span class="rm">Was muss ich als Nächstes machen?</span><span class="rm">Wann bekomme ich die Bescheinigung?</span><span class="rm">Muss ich noch einmal kommen?</span>
-<div class="bsp"><span class="wer">So klingt es</span>Und was muss ich als Nächstes machen — bekomme ich die Bescheinigung heute?</div>
+<div class="bsp"><span class="wer">So klingt es</span>Und was muss ich als Nächstes machen — bekomme ich die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Bescheinigung" data-wort="die Bescheinigung" data-kurz="das Papier, das etwas offiziell bestätigt" data-bsp="Am Ende bekommen Sie eine Bescheinigung.">Bescheinigung</b> heute?</div>
 <button class="speak" data-say="Und was muss ich als Nächstes machen? Bekomme ich die Bescheinigung heute?">🔊 hören</button></div>
 </div>
 <div class="nur-b1">
 <div class="rmcard"><b>1 · 📣 Sachlich einsteigen</b><br>
 <span class="rm">Ich bin am ersten März eingezogen …</span><span class="rm">Es geht um die Verlängerung meines …</span><span class="rm">Ich habe online einen Termin gebucht.</span>
-<div class="bsp"><span class="wer">So klingt es</span>Ich bin am ersten März eingezogen und möchte mich innerhalb der Frist anmelden.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Ich bin am ersten März eingezogen und möchte mich innerhalb der <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Frist" data-wort="die Frist" data-kurz="die Zeit, bis zu der etwas erledigt sein muss" data-bsp="Für die Anmeldung gilt eine Frist von zwei Wochen.">Frist</b> anmelden.</div>
 <button class="speak" data-say="Ich bin am ersten März eingezogen und möchte mich innerhalb der Frist anmelden.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 📑 Vollständig auflisten</b><br>
 <span class="rm">Ich habe folgende Unterlagen dabei: …</span><span class="rm">Falls noch etwas fehlt, reiche ich es nach.</span><span class="rm">Ist eine Kopie ausreichend?</span>
-<div class="bsp"><span class="wer">So klingt es</span>Ich habe Pass, Wohnungsgeberbestätigung und das ausgefüllte Formular dabei. Falls noch etwas fehlt, reiche ich es gern nach.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Ich habe Pass, <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Wohnungsgeberbestätigung" data-wort="die Wohnungsgeberbestätigung" data-kurz="das Papier vom Vermieter, dass du dort wohnst" data-bsp="Die Wohnungsgeberbestätigung bekomme ich von meiner Vermieterin.">Wohnungsgeberbestätigung</b> und das ausgefüllte <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Formular" data-wort="das Formular" data-kurz="das Blatt zum Ausfüllen" data-bsp="Können Sie mir beim Formular helfen?">Formular</b> dabei. Falls noch etwas fehlt, reiche ich es gern nach.</div>
 <button class="speak" data-say="Ich habe Pass, Wohnungsgeberbestätigung und das ausgefüllte Formular dabei. Falls noch etwas fehlt, reiche ich es gern nach.">🔊 hören</button></div>
 <div class="rmcard"><b>3 · 🔍 Genau nachfragen</b><br>
 <span class="rm">Können Sie mir sagen, ob …?</span><span class="rm">Habe ich richtig verstanden, dass …?</span><span class="rm">Wer wäre dafür zuständig?</span>
-<div class="bsp"><span class="wer">So klingt es</span>Habe ich richtig verstanden, dass ich den Termin bei der Ausländerbehörde separat buchen muss?</div>
+<div class="bsp"><span class="wer">So klingt es</span>Habe ich richtig verstanden, dass ich den Termin bei der <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Ausländerbehörde" data-wort="die Ausländerbehörde" data-kurz="die Stelle für Aufenthalt und Visum" data-bsp="Für den Aufenthaltstitel bin ich bei der Ausländerbehörde richtig.">Ausländerbehörde</b> separat buchen muss?</div>
 <button class="speak" data-say="Habe ich richtig verstanden, dass ich den Termin bei der Ausländerbehörde separat buchen muss?">🔊 hören</button></div>
 <div class="rmcard"><b>4 · 🤝 Verbindlich abschließen</b><br>
 <span class="rm">Bis wann kann ich mit … rechnen?</span><span class="rm">Bekomme ich das schriftlich?</span><span class="rm">Kann ich Sie bei Rückfragen erreichen?</span>
@@ -718,8 +760,8 @@ a.tab:hover{color:var(--ink);}
 <h2 class="st">Vier Situationen — <span class="hl">zwei Runden</span></h2>
 <p class="ssub"><b>Runde 1:</b> Lest den Dialog zu zweit laut. <b>Runde 2:</b> Deckt die Zeilen von B ab und sprecht frei — die Hinweise reichen.</p>
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="amanda/sz-telefonieren.webp" alt="Frau sitzt am Tisch und telefoniert, daneben ein Notizblock"><h4>Dialog 1 · „Einen Termin bekommen“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Online ist wochenlang nichts frei. Du rufst an.</div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Bürgeramt Mitte, guten Tag.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Guten Tag, Demir mein Name. Ich wollte fragen, ob es kurzfristige Termine für die Anmeldung gibt.</div><div class="dcue">🗣️ Name zuerst. Dann die <b>indirekte Frage</b> mit <i>ob</i> — das Verb <i>gibt</i> steht am Ende.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt"><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Bürgeramt" data-wort="das Bürgeramt" data-kurz="die Stelle, die deine Adresse einträgt" data-bsp="Das Bürgeramt hat dienstags bis achtzehn Uhr auf.">Bürgeramt</b> Mitte, guten Tag.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Guten Tag, Demir mein Name. Ich wollte fragen, ob es kurzfristige Termine für die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Anmeldung" data-wort="die Anmeldung" data-kurz="die Eintragung, wo du wohnst" data-bsp="Ich möchte eine Anmeldung machen.">Anmeldung</b> gibt.</div><div class="dcue">🗣️ Name zuerst. Dann die <b>indirekte Frage</b> mit <i>ob</i> — das Verb <i>gibt</i> steht am Ende.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Online sehen Sie alle freien Termine.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Da ist bis Ende Mai leider nichts frei. Ich bin aber vor zehn Tagen eingezogen.</div><div class="dcue">🗣️ Sachlich bleiben und den Grund nennen — die Frist ist ein guter Grund.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ach so. Dann kommen Sie morgen früh um acht, wir haben eine Warteliste.</div></div>
@@ -729,7 +771,7 @@ a.tab:hover{color:var(--ink);}
 <button class="speak dbtn" data-say="Bürgeramt Mitte, guten Tag. Guten Tag, Demir mein Name. Ich wollte fragen, ob es kurzfristige Termine für die Anmeldung gibt. Online sehen Sie alle freien Termine. Da ist bis Ende Mai leider nichts frei. Ich bin aber vor zehn Tagen eingezogen. Ach so. Dann kommen Sie morgen früh um acht, wir haben eine Warteliste. Sehr gern. Können Sie mir sagen, welche Unterlagen ich mitbringen muss? Pass und die Wohnungsgeberbestätigung. Pass und Wohnungsgeberbestätigung. Vielen Dank, dann bis morgen um acht.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="amanda/sz-amt.webp" alt="Eine Person am Schreibtisch mit Formularen"><h4>Dialog 2 · „Am Schalter“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Du bist dran. Das Formular liegt vor dir, und ein Feld verstehst du nicht.</div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">So, Ihren Ausweis bitte. Und das Formular haben Sie ausgefüllt?</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">So, Ihren <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Ausweis" data-wort="der Ausweis" data-kurz="das Dokument mit deinem Foto und Namen" data-bsp="Bringen Sie bitte Ihren Ausweis oder Ihren Pass mit.">Ausweis</b> bitte. Und das Formular haben Sie ausgefüllt?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Fast. Bei einem Feld war ich unsicher — was muss hier hinein?</div><div class="dcue">🗣️ <b>Fast.</b> ist ehrlich und kurz. Danach die konkrete Frage.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Das ist die frühere Anschrift. Wo haben Sie vorher gewohnt?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">In Istanbul. Muss ich die ganze Adresse schreiben oder reicht die Stadt?</div><div class="dcue">🗣️ Eine Entscheidungsfrage — so bekommst du eine klare Antwort statt einer langen Erklärung.<span class="kl">tippen = Hilfe zeigen</span></div></div>
@@ -750,7 +792,7 @@ a.tab:hover{color:var(--ink);}
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Danke, das beruhigt mich. Bis Donnerstag.</div><div class="dcue">🗣️ Ehrlich sagen, dass es einen erleichtert — das ist normal und macht das Gespräch menschlich.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Ohne die Bestätigung vom Wohnungsgeber kann ich Sie nicht anmelden. Das verstehe ich. Die habe ich zu Hause — kann ich sie nachreichen? Nachreichen geht leider nicht, Sie müssen persönlich kommen. Alles klar. Bekomme ich dann heute noch einen neuen Termin? Ich schaue mal … Donnerstag um elf? Donnerstag um elf passt. Und die Frist — ist das ein Problem? Nein, Sie haben ja heute schon vorgesprochen. Das notiere ich. Danke, das beruhigt mich. Bis Donnerstag.">🔊 Dialog vorlesen lassen</button></div>
 
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="amanda/sz-ankommen.webp" alt="Zwei Personen an einem Empfangstresen"><h4>Dialog 4 · „Falscher Schalter“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Du willst deinen Aufenthaltstitel verlängern — stehst aber beim Bürgeramt.</div>
+<div class="dwrap" data-runde="1"><div class="dhead"><img src="amanda/sz-ankommen.webp" alt="Zwei Personen an einem Empfangstresen"><h4>Dialog 4 · „Falscher Schalter“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Du willst deinen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Aufenthaltstitel" data-wort="der Aufenthaltstitel" data-kurz="die Erlaubnis, in Deutschland zu bleiben" data-bsp="Mein Aufenthaltstitel läuft im März ab.">Aufenthaltstitel</b> verlängern — stehst aber beim Bürgeramt.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Dafür bin ich leider nicht zuständig.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Oh, entschuldigen Sie. Wer ist denn dafür zuständig?</div><div class="dcue">🗣️ Der Satz, der dich weiterbringt. Kurz, freundlich, ohne Vorwurf.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Die Ausländerbehörde, das ist ein anderes Haus.</div></div>
@@ -1163,6 +1205,64 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.setAttribute('aria-expanded',auf?'true':'false');
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
+
+/* ---- Markierte Woerter ----
+   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
+   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
+   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
+
+   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
+   den viele verwechseln. */
+(function(){
+ var woerter=[].slice.call(document.querySelectorAll('.wm'));
+ if(!woerter.length) return;
+ var karte=null;
+
+ function zu(){ if(karte){ karte.remove(); karte=null; }
+  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
+
+ function auf(w){
+  var schonOffen=w.classList.contains('offen');
+  zu();
+  if(schonOffen) return;
+  w.classList.add('offen');
+  karte=document.createElement('div');
+  karte.className='wmk';
+  var satz=w.dataset.bsp||'';
+  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
+   + '<b>'+w.dataset.wort+'</b>'
+   + '<span>'+(w.dataset.kurz||'')+'</span>'
+   + (satz?'<em>'+satz+'</em>':'')
+   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
+  document.body.appendChild(karte);
+
+  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
+  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
+  var links=r.left+r.width/2-b.width/2;
+  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
+  var oben=r.bottom+window.pageYOffset+9;
+  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
+   oben=r.top+window.pageYOffset-b.height-9;
+  karte.style.left=links+'px'; karte.style.top=oben+'px';
+
+  karte.querySelector('.wmk-zu').onclick=zu;
+  var ton=karte.querySelector('.wmk-ton');
+  if(ton) ton.onclick=function(){ say(satz); };
+ }
+
+ woerter.forEach(function(w){
+  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
+  w.addEventListener('keydown',function(ev){
+   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
+ });
+ document.addEventListener('click',zu);
+ document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
+ window.addEventListener('resize',zu);
+ /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
+    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
+ document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
+  k.addEventListener('click',zu); });
+})();
 
 /* ---- Bildkarten verdecken ----
    Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau

@@ -436,6 +436,48 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Markierte Wörter ----------
+   Keine Wortschatzliste mehr, sondern das Wort dort, wo es steht.
+   Gelb unterstrichen: Wort dieser Stunde. Rot gepunktet: Begriff,
+   den viele verwechseln. Beides bleibt lesbar, wenn man es ignoriert —
+   die Markierung liegt unter der Zeile, nicht auf dem Wort. */
+.wm{
+  font-weight:inherit;cursor:pointer;position:relative;
+  border-bottom:3px solid var(--yellow);
+  padding-bottom:1px;transition:background .12s;
+}
+.wm.schwer{border-bottom:3px dotted var(--red);}
+.wm:hover,.wm.offen{background:rgba(255,210,74,.35);border-radius:4px 4px 0 0;}
+.wm.schwer:hover,.wm.schwer.offen{background:rgba(232,48,42,.12);}
+.wm:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.wm::after{
+  content:'';display:inline-block;width:.42em;height:.42em;margin-left:.22em;
+  vertical-align:.35em;border-radius:50%;background:var(--yellow);
+}
+.wm.schwer::after{background:var(--red);}
+
+.wmk{
+  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.2);padding:.85rem 1rem .9rem;
+}
+.wmk b{display:block;font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.25;padding-right:1.4rem;}
+.wmk span{display:block;margin-top:.3rem;font-size:.94rem;line-height:1.5;color:var(--ink-soft);}
+.wmk em{
+  display:block;margin-top:.55rem;padding-left:.7rem;border-left:3px solid var(--teal);
+  font-style:italic;font-size:.93rem;line-height:1.5;
+}
+.wmk-zu{
+  position:absolute;top:.45rem;right:.5rem;border:none;background:transparent;
+  font-size:.95rem;line-height:1;cursor:pointer;color:var(--ink-mute,#7a6a56);padding:.2rem;
+}
+.wmk-ton{
+  margin-top:.6rem;border:2px solid var(--ink);background:var(--sand);color:var(--ink);
+  border-radius:999px;padding:.3rem .75rem;font-family:inherit;font-size:.82rem;
+  font-weight:700;cursor:pointer;
+}
+@media print{ .wm::after{display:none;} .wmk{display:none;} }
+
 /* ---------- Die Ablauftafel ----------
    Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
    und in welcher Aufstellung. */
@@ -676,21 +718,21 @@ a.tab:hover{color:var(--ink);}
 <button class="speak" data-say="Ich habe die Nase voll von diesen Diskussionen.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 👍 Zustimmen und loben</b><br>
 <span class="rm">Das hat Hand und Fuß</span><span class="rm">Ich bin ganz Ohr</span><span class="rm">Da stehe ich voll hinter dir</span><span class="rm">Du hast mir den Rücken gestärkt</span>
-<div class="bsp"><span class="wer">So klingt es</span>Dein Vorschlag hat Hand und Fuß — erzähl weiter, ich bin ganz Ohr.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Dein Vorschlag hat <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Hand" data-wort="die Hand" data-kurz="Hand und Fuß haben — durchdacht und solide sein" data-bsp="Der Vorschlag hat Hand und Fuß.">Hand</b> und Fuß — erzähl weiter, ich bin ganz Ohr.</div>
 <button class="speak" data-say="Dein Vorschlag hat Hand und Fuß — erzähl weiter, ich bin ganz Ohr.">🔊 hören</button></div>
 <div class="rmcard"><b>3 · ⚠️ Warnen</b><br>
 <span class="rm">Davon würde ich die Finger lassen</span><span class="rm">Nimm das nicht auf die leichte Schulter</span><span class="rm">Verlier jetzt nicht den Kopf</span><span class="rm">Da hätte ich Bauchschmerzen</span>
-<div class="bsp"><span class="wer">So klingt es</span>Von dem Angebot würde ich die Finger lassen.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Von dem Angebot würde ich die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Finger" data-wort="der Finger" data-kurz="die Finger von etwas lassen — es nicht anfassen" data-bsp="Von dem Vertrag würde ich die Finger lassen.">Finger</b> lassen.</div>
 <button class="speak" data-say="Von dem Angebot würde ich die Finger lassen.">🔊 hören</button></div>
 <div class="rmcard"><b>4 · 🤔 Zeit erbitten</b><br>
 <span class="rm">Lass es mir durch den Kopf gehen</span><span class="rm">Ich schlafe eine Nacht darüber</span><span class="rm">Ich melde mich morgen</span><span class="rm">Gib mir bis morgen</span>
-<div class="bsp"><span class="wer">So klingt es</span>Ich lasse es mir noch mal durch den Kopf gehen und melde mich morgen.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Ich lasse es mir noch mal durch den <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Kopf" data-wort="der Kopf" data-kurz="den Kopf verlieren — die Ruhe verlieren" data-bsp="Bleib ruhig, verlier jetzt nicht den Kopf.">Kopf</b> gehen und melde mich morgen.</div>
 <button class="speak" data-say="Ich lasse es mir noch mal durch den Kopf gehen und melde mich morgen.">🔊 hören</button></div>
 </div>
 <div class="nur-b1">
 <div class="rmcard"><b>1 · 😤 Feiner genug haben</b><br>
 <span class="rm">Ehrlich gesagt hängt mir das langsam zum Hals heraus</span><span class="rm">Ich merke, dass mir dabei die Geduld ausgeht</span><span class="rm">Das führt zu nichts mehr</span><span class="rm">Ich möchte das nicht noch einmal aufrollen</span>
-<div class="bsp"><span class="wer">So klingt es</span>Ehrlich gesagt hängt mir das Thema langsam zum Hals heraus.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Ehrlich gesagt hängt mir das Thema langsam zum <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Hals" data-wort="der Hals" data-kurz="etwas hängt einem zum Hals heraus — man kann es nicht mehr hören" data-bsp="Dieses Lied hängt mir zum Hals heraus.">Hals</b> heraus.</div>
 <button class="speak" data-say="Ehrlich gesagt hängt mir das Thema langsam zum Hals heraus.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 👍 Genauer loben</b><br>
 <span class="rm">Der Vorschlag hat Hand und Fuß</span><span class="rm">Das ist gut durchdacht</span><span class="rm">Damit hast du mir den Rücken gestärkt</span><span class="rm">Das hat mir sehr geholfen</span>
@@ -702,7 +744,7 @@ a.tab:hover{color:var(--ink);}
 <button class="speak" data-say="Da hätte ich ehrlich gesagt Bauchschmerzen — vor allem wegen der Frist.">🔊 hören</button></div>
 <div class="rmcard"><b>4 · 🤝 Gesicht wahren lassen</b><br>
 <span class="rm">Ohne dass jemand das Gesicht verliert</span><span class="rm">Wir sollten ihm eine Brücke bauen</span><span class="rm">Das würde ich nicht vor allen ansprechen</span><span class="rm">Lassen wir ihm einen Ausweg</span>
-<div class="bsp"><span class="wer">So klingt es</span>Wir sollten das so lösen, dass niemand das Gesicht verliert.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Wir sollten das so lösen, dass niemand das <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Gesicht" data-wort="das Gesicht" data-kurz="das Gesicht verlieren — bloßgestellt werden" data-bsp="Ich wollte nicht, dass er vor allen das Gesicht verliert.">Gesicht</b> verliert.</div>
 <button class="speak" data-say="Wir sollten das so lösen, dass niemand das Gesicht verliert.">🔊 hören</button></div>
 </div>
 <div class="legende">
@@ -732,14 +774,14 @@ a.tab:hover{color:var(--ink);}
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Das verstehe ich. Aber es ist immer noch nicht geklärt.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Dann lass es uns einmal richtig entscheiden, statt es jede Woche anzufassen.</div><div class="dcue">🗣️ Nach dem Ärger sofort ein Vorschlag. Sonst bleibt vom Satz nur die schlechte Laune übrig.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Einverstanden. Freitag, und dann ist es durch.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Gut. Dann krempeln wir am Freitag die Ärmel hoch.</div><div class="dcue">🗣️ <b>die Ärmel hochkrempeln</b> — positiv und tatkräftig. Ein guter Schlusssatz, der die Sache wieder öffnet.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Gut. Dann krempeln wir am Freitag die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Ärmel" data-wort="der Ärmel" data-kurz="die Ärmel hochkrempeln — anfangen zu arbeiten" data-bsp="Jetzt krempeln wir die Ärmel hoch.">Ärmel</b> hoch.</div><div class="dcue">🗣️ <b>die Ärmel hochkrempeln</b> — positiv und tatkräftig. Ein guter Schlusssatz, der die Sache wieder öffnet.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Können wir noch mal über die Sitzordnung reden? Ehrlich gesagt hängt mir das Thema langsam zum Hals heraus. Das verstehe ich. Aber es ist immer noch nicht geklärt. Dann lass es uns einmal richtig entscheiden, statt es jede Woche anzufassen. Einverstanden. Freitag, und dann ist es durch. Gut. Dann krempeln wir am Freitag die Ärmel hoch.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/a-zeigen.webp" alt="Amanda hebt den Zeigefinger"><h4>Dialog 3 · „Eine Warnung unter Freunden“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Ein Freund will einen Vertrag unterschreiben, der dir nicht geheuer ist. Du warnst deutlich, aber ohne zu belehren.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ich glaube, ich unterschreibe das morgen einfach.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Davon würde ich die Finger lassen. Hast du das Kleingedruckte gelesen?</div><div class="dcue">🗣️ <b>die Finger von etwas lassen</b> — eine klare Warnung, die trotzdem freundlich klingt. Und sofort eine Frage hinterher, damit es kein Vorwurf wird.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Nicht ganz, ehrlich gesagt.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Dann nimm das nicht auf die leichte Schulter. Zwei Jahre Bindung sind lang.</div><div class="dcue">🗣️ <b>auf die leichte Schulter nehmen</b> steht fast immer mit <i>nicht</i> — als Warnung. Danach ein konkreter Grund, sonst wirkt es wie Panikmache.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Dann nimm das nicht auf die leichte <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Schulter" data-wort="die Schulter" data-kurz="etwas auf die leichte Schulter nehmen — nicht ernst nehmen" data-bsp="Das solltest du nicht auf die leichte Schulter nehmen.">Schulter</b>. Zwei Jahre Bindung sind lang.</div><div class="dcue">🗣️ <b>auf die leichte Schulter nehmen</b> steht fast immer mit <i>nicht</i> — als Warnung. Danach ein konkreter Grund, sonst wirkt es wie Panikmache.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Du hast recht. Ich schau es mir heute Abend an.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Lass es dir in Ruhe durch den Kopf gehen. Und wenn du willst, lese ich mit.</div><div class="dcue">🗣️ Zeit geben und Hilfe anbieten. So endet eine Warnung als Unterstützung und nicht als Besserwisserei.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Ich glaube, ich unterschreibe das morgen einfach. Davon würde ich die Finger lassen. Hast du das Kleingedruckte gelesen? Nicht ganz, ehrlich gesagt. Dann nimm das nicht auf die leichte Schulter. Zwei Jahre Bindung sind lang. Du hast recht. Ich schau es mir heute Abend an. Lass es dir in Ruhe durch den Kopf gehen. Und wenn du willst, lese ich mit.">🔊 Dialog vorlesen lassen</button></div>
@@ -748,7 +790,7 @@ a.tab:hover{color:var(--ink);}
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Wir müssen das ansprechen, sonst passiert es wieder.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ja — aber so, dass er dabei nicht vor allen das Gesicht verliert.</div><div class="dcue">🗣️ <b>das Gesicht verlieren</b> — genau das Wort für diesen Moment. Es benennt die Sorge, ohne jemanden zu bewerten.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Also lieber unter vier Augen?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Genau. Und danach stärke ich ihm in der Runde den Rücken.</div><div class="dcue">🗣️ <b>jemandem den Rücken stärken</b> — mit Dativ. Ein Kompliment, das man wirklich benutzt, und hier eine echte Zusage.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Genau. Und danach stärke ich ihm in der Runde den <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Rücken" data-wort="der Rücken" data-kurz="jemandem den Rücken stärken — jemanden unterstützen" data-bsp="In der Sitzung hat sie mir den Rücken gestärkt.">Rücken</b>.</div><div class="dcue">🗣️ <b>jemandem den Rücken stärken</b> — mit Dativ. Ein Kompliment, das man wirklich benutzt, und hier eine echte Zusage.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Das ist fair. Machen wir so.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ich rede morgen mit ihm. Verlieren wir jetzt nicht den Kopf, das kriegen wir hin.</div><div class="dcue">🗣️ <b>den Kopf verlieren</b> im Plural-Imperativ. Ein ruhiger Abschluss, der die Sache kleiner macht, als sie sich gerade anfühlt.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Wir müssen das ansprechen, sonst passiert es wieder. Ja — aber so, dass er dabei nicht vor allen das Gesicht verliert. Also lieber unter vier Augen? Genau. Und danach stärke ich ihm in der Runde den Rücken. Das ist fair. Machen wir so. Ich rede morgen mit ihm. Verlieren wir jetzt nicht den Kopf, das kriegen wir hin.">🔊 Dialog vorlesen lassen</button></div>
@@ -1155,6 +1197,64 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.setAttribute('aria-expanded',auf?'true':'false');
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
+
+/* ---- Markierte Woerter ----
+   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
+   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
+   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
+
+   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
+   den viele verwechseln. */
+(function(){
+ var woerter=[].slice.call(document.querySelectorAll('.wm'));
+ if(!woerter.length) return;
+ var karte=null;
+
+ function zu(){ if(karte){ karte.remove(); karte=null; }
+  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
+
+ function auf(w){
+  var schonOffen=w.classList.contains('offen');
+  zu();
+  if(schonOffen) return;
+  w.classList.add('offen');
+  karte=document.createElement('div');
+  karte.className='wmk';
+  var satz=w.dataset.bsp||'';
+  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
+   + '<b>'+w.dataset.wort+'</b>'
+   + '<span>'+(w.dataset.kurz||'')+'</span>'
+   + (satz?'<em>'+satz+'</em>':'')
+   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
+  document.body.appendChild(karte);
+
+  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
+  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
+  var links=r.left+r.width/2-b.width/2;
+  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
+  var oben=r.bottom+window.pageYOffset+9;
+  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
+   oben=r.top+window.pageYOffset-b.height-9;
+  karte.style.left=links+'px'; karte.style.top=oben+'px';
+
+  karte.querySelector('.wmk-zu').onclick=zu;
+  var ton=karte.querySelector('.wmk-ton');
+  if(ton) ton.onclick=function(){ say(satz); };
+ }
+
+ woerter.forEach(function(w){
+  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
+  w.addEventListener('keydown',function(ev){
+   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
+ });
+ document.addEventListener('click',zu);
+ document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
+ window.addEventListener('resize',zu);
+ /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
+    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
+ document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
+  k.addEventListener('click',zu); });
+})();
 
 /* ---- Bildkarten verdecken ----
    Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau

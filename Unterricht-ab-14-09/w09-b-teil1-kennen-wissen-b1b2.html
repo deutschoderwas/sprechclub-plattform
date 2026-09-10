@@ -436,6 +436,48 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Markierte Wörter ----------
+   Keine Wortschatzliste mehr, sondern das Wort dort, wo es steht.
+   Gelb unterstrichen: Wort dieser Stunde. Rot gepunktet: Begriff,
+   den viele verwechseln. Beides bleibt lesbar, wenn man es ignoriert —
+   die Markierung liegt unter der Zeile, nicht auf dem Wort. */
+.wm{
+  font-weight:inherit;cursor:pointer;position:relative;
+  border-bottom:3px solid var(--yellow);
+  padding-bottom:1px;transition:background .12s;
+}
+.wm.schwer{border-bottom:3px dotted var(--red);}
+.wm:hover,.wm.offen{background:rgba(255,210,74,.35);border-radius:4px 4px 0 0;}
+.wm.schwer:hover,.wm.schwer.offen{background:rgba(232,48,42,.12);}
+.wm:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.wm::after{
+  content:'';display:inline-block;width:.42em;height:.42em;margin-left:.22em;
+  vertical-align:.35em;border-radius:50%;background:var(--yellow);
+}
+.wm.schwer::after{background:var(--red);}
+
+.wmk{
+  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.2);padding:.85rem 1rem .9rem;
+}
+.wmk b{display:block;font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.25;padding-right:1.4rem;}
+.wmk span{display:block;margin-top:.3rem;font-size:.94rem;line-height:1.5;color:var(--ink-soft);}
+.wmk em{
+  display:block;margin-top:.55rem;padding-left:.7rem;border-left:3px solid var(--teal);
+  font-style:italic;font-size:.93rem;line-height:1.5;
+}
+.wmk-zu{
+  position:absolute;top:.45rem;right:.5rem;border:none;background:transparent;
+  font-size:.95rem;line-height:1;cursor:pointer;color:var(--ink-mute,#7a6a56);padding:.2rem;
+}
+.wmk-ton{
+  margin-top:.6rem;border:2px solid var(--ink);background:var(--sand);color:var(--ink);
+  border-radius:999px;padding:.3rem .75rem;font-family:inherit;font-size:.82rem;
+  font-weight:700;cursor:pointer;
+}
+@media print{ .wm::after{display:none;} .wmk{display:none;} }
+
 /* ---------- Die Ablauftafel ----------
    Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
    und in welcher Aufstellung. */
@@ -672,7 +714,7 @@ a.tab:hover{color:var(--ink);}
 <div class="nur-a2">
 <div class="rmcard"><b>1 · 👤 Über Personen</b><br>
 <span class="rm">Ich kenne sie aus dem Kurs.</span><span class="rm">Wir haben uns letztes Jahr kennengelernt.</span><span class="rm">Wir treffen uns jeden Freitag.</span><span class="rm">Ich kenne ihn nur vom Sehen.</span>
-<div class="bsp"><span class="wer">So klingt es</span>Wir haben uns im Kurs kennengelernt und treffen uns seitdem jeden Freitag.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Wir haben uns im Kurs kennengelernt und <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von treffen" data-wort="treffen" data-kurz="sich verabredet oder zufällig sehen" data-bsp="Wir treffen uns morgen um vier im Café.">treffen</b> uns seitdem jeden Freitag.</div>
 <button class="speak" data-say="Wir haben uns im Kurs kennengelernt und treffen uns seitdem jeden Freitag.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 💭 Über Informationen</b><br>
 <span class="rm">Ich weiß, dass …</span><span class="rm">Ich weiß nicht, ob …</span><span class="rm">Weißt du, wo …?</span><span class="rm">Das weiß ich leider nicht.</span>
@@ -690,7 +732,7 @@ a.tab:hover{color:var(--ink);}
 <div class="nur-b1">
 <div class="rmcard"><b>1 · 👤 Beziehungen genauer</b><br>
 <span class="rm">Wir kennen uns flüchtig.</span><span class="rm">Wir sind uns einmal begegnet.</span><span class="rm">Ich kenne sie nur beruflich.</span><span class="rm">Wir haben uns aus den Augen verloren.</span>
-<div class="bsp"><span class="wer">So klingt es</span>Wir kennen uns eigentlich nur beruflich — kennengelernt haben wir uns auf einer Fortbildung.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Wir <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von kennen" data-wort="kennen" data-kurz="eine Person oder Sache schon einmal erlebt haben" data-bsp="Ich kenne sie seit dem ersten Kurstag.">kennen</b> uns eigentlich nur beruflich — kennengelernt haben wir uns auf einer Fortbildung.</div>
 <button class="speak" data-say="Wir kennen uns eigentlich nur beruflich — kennengelernt haben wir uns auf einer Fortbildung.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 💭 Wissen einschränken</b><br>
 <span class="rm">Soweit ich weiß, …</span><span class="rm">Ich weiß nur, dass …</span><span class="rm">Genaues weiß ich nicht.</span><span class="rm">Da müsste ich nachfragen.</span>
@@ -723,10 +765,10 @@ a.tab:hover{color:var(--ink);}
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ach, wirklich? Bei wem denn?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Bei Frau Berger. Ich kenne sie noch aus dem Abendkurs, aber ich weiß nicht, ob sie dort noch unterrichtet.</div><div class="dcue">🗣️ <b>kennen</b> mit Objekt (<i>sie</i>), <b>wissen</b> mit <i>ob</i>-Satz. Beide im selben Satz — daran kann man die Regel gut hören.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Sie ist letztes Jahr an die Volkshochschule gewechselt.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Gut zu wissen. Dann treffen wir uns vielleicht mal, wenn ich dort wieder einen Kurs mache.</div><div class="dcue">🗣️ <b>treffen</b> statt <i>kennenlernen</i>, weil man sich schon kennt. Und <b>einen Kurs machen</b> — nicht <i>studieren</i>.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Gut zu <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von wissen" data-wort="wissen" data-kurz="eine Information im Kopf haben" data-bsp="Ich weiß, dass der Kurs um neun anfängt.">wissen</b>. Dann treffen wir uns vielleicht mal, wenn ich dort wieder einen Kurs mache.</div><div class="dcue">🗣️ <b>treffen</b> statt <i>kennenlernen</i>, weil man sich schon kennt. Und <b>einen Kurs machen</b> — nicht <i>studieren</i>.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Das ist Nadia, sie fängt heute bei uns an. Kennt ihr euch schon? Nein, wir haben uns noch nicht kennengelernt. Ich weiß aber, dass wir denselben Kurs besucht haben. Ach, wirklich? Bei wem denn? Bei Frau Berger. Ich kenne sie noch aus dem Abendkurs, aber ich weiß nicht, ob sie dort noch unterrichtet. Sie ist letztes Jahr an die Volkshochschule gewechselt. Gut zu wissen. Dann treffen wir uns vielleicht mal, wenn ich dort wieder einen Kurs mache.">🔊 Dialog vorlesen lassen</button></div>
 
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../bilder/lesen/wohnung.webp" alt="Ein Sofa, eine Zimmerpflanze und eine Stehlampe"><h4>Dialog 2 · „Wo ist der Schlüssel?“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Etwas ist verschwunden. Im Gespräch kommen alle vier Verben vor — legen und liegen, stellen und stehen.</div>
+<div class="dwrap" data-runde="1"><div class="dhead"><img src="../bilder/lesen/wohnung.webp" alt="Ein Sofa, eine Zimmerpflanze und eine Stehlampe"><h4>Dialog 2 · „Wo ist der Schlüssel?“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Etwas ist verschwunden. Im Gespräch kommen alle vier Verben vor — <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von legen" data-wort="legen" data-kurz="etwas irgendwohin tun — waagerecht" data-bsp="Ich lege den Zettel auf den Tisch.">legen</b> und <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von liegen" data-wort="liegen" data-kurz="irgendwo sein — waagerecht" data-bsp="Das Päckchen liegt seit gestern im Flur.">liegen</b>, <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von stellen" data-wort="stellen" data-kurz="etwas irgendwohin tun — senkrecht" data-bsp="Ich stelle die Kiste ins Regal.">stellen</b> und <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von stehen" data-wort="stehen" data-kurz="irgendwo sein — senkrecht" data-bsp="Die Lampe steht neben dem Sofa.">stehen</b>.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Hast du meinen Schlüssel gesehen?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ich habe ihn vorhin auf den Tisch gelegt — er müsste noch dort liegen.</div><div class="dcue">🗣️ Erst die Handlung: <b>gelegt</b> + <i>auf den Tisch</i> (wohin, Akkusativ). Dann der Zustand: <b>liegen</b> + <i>dort</i> (wo).<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Da liegt er nicht. Nur die Post.</div></div>
@@ -738,13 +780,13 @@ a.tab:hover{color:var(--ink);}
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../bilder/lesen/bibliothek.webp" alt="Ein Bücherregal voller Bücher"><h4>Dialog 3 · „Lernen oder studieren?“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Ein Missverständnis im Bewerbungsgespräch — und wie man es in einem Satz auflöst.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Sie haben Deutsch studiert, steht hier?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Nicht ganz. Ich habe Deutsch gelernt — studiert habe ich Betriebswirtschaft, in Kasan.</div><div class="dcue">🗣️ Der Unterschied, der im Lebenslauf zählt. <b>studieren</b> heißt Universität, <b>lernen</b> heißt Kurs oder selbst beigebracht.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ah, gut zu wissen. Und wie lange lernen Sie schon?</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ah, gut zu wissen. Und wie lange <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von lernen" data-wort="lernen" data-kurz="sich etwas neu aneignen" data-bsp="Ich lerne seit zwei Jahren Deutsch.">lernen</b> Sie schon?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Seit drei Jahren. Angefangen habe ich in einem Abendkurs, den Rest habe ich mir selbst beigebracht.</div><div class="dcue">🗣️ <b>sich etwas beibringen</b> — reflexiv mit Dativ. Der eleganteste Weg zu sagen, dass man ohne Lehrer weitergekommen ist.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Das merkt man. Kennen Sie unsere Fachbegriffe schon?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Einige kenne ich, aber ich weiß noch nicht, wie viele bei Ihnen dazukommen.</div><div class="dcue">🗣️ Wieder beide nebeneinander: <b>kennen</b> mit Objekt, <b>wissen</b> mit Nebensatz — und eine ehrliche Antwort noch dazu.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Sie haben Deutsch studiert, steht hier? Nicht ganz. Ich habe Deutsch gelernt — studiert habe ich Betriebswirtschaft, in Kasan. Ah, gut zu wissen. Und wie lange lernen Sie schon? Seit drei Jahren. Angefangen habe ich in einem Abendkurs, den Rest habe ich mir selbst beigebracht. Das merkt man. Kennen Sie unsere Fachbegriffe schon? Einige kenne ich, aber ich weiß noch nicht, wie viele bei Ihnen dazukommen.">🔊 Dialog vorlesen lassen</button></div>
 
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../bilder/lesen/cafe.webp" alt="Ein runder Tisch mit einer Tasse Kaffee und einem Stück Kuchen"><h4>Dialog 4 · „Verabredet“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Zwei verabreden sich — und stolpern dabei fast über <i>treffen</i> und <i>kennenlernen</i>.</div>
+<div class="dwrap" data-runde="1"><div class="dhead"><img src="../bilder/lesen/cafe.webp" alt="Ein runder Tisch mit einer Tasse Kaffee und einem Stück Kuchen"><h4>Dialog 4 · „Verabredet“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Zwei verabreden sich — und stolpern dabei fast über <i>treffen</i> und <i><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von kennenlernen" data-wort="kennenlernen" data-kurz="jemanden zum ersten Mal treffen" data-bsp="Wir haben uns im Kurs kennengelernt.">kennenlernen</b></i>.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Wollen wir uns nächste Woche mal treffen?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Gern. Ich merke mir Mittwoch — kannst du um vier?</div><div class="dcue">🗣️ <b>sich merken</b> mit Dativ: <i>ich merke mir</i>. Es ist eine Entscheidung, kein Zufall — deshalb nicht <i>ich erinnere mich Mittwoch</i>.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Vier passt. Kennst du das Café an der Ecke?</div></div>
@@ -882,14 +924,14 @@ a.tab:hover{color:var(--ink);}
 <p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Etwas ist verschwunden. Beide erinnern sich anders daran, wer es wohin gelegt hat.</p>
 <div class="nur-a2"><span class="rm">Ich habe es auf den Tisch gelegt</span><span class="rm">Da liegt es aber nicht</span><span class="rm">Vielleicht steht es im Regal</span><span class="rm">Ich erinnere mich nicht genau</span></div>
 <div class="nur-b1"><span class="rm">Ich bin sicher, ich habe es dorthin gelegt, wo es sonst auch liegt</span><span class="rm">Kann sein, dass jemand es ins Regal gestellt hat</span><span class="rm">Ich merke mir solche Sachen normalerweise</span><span class="rm">Wenn ich mich richtig erinnere, lag es gestern noch hier</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide haben Bewegung und Zustand sauber getrennt — <i>gelegt</i> mit <i>wohin</i>, <i>lag</i> mit <i>wo</i>. Und <i>sich merken</i> stand mit Dativ, <i>sich erinnern</i> mit <i>an</i>.</div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide haben Bewegung und Zustand sauber getrennt — <i>gelegt</i> mit <i>wohin</i>, <i>lag</i> mit <i>wo</i>. Und <i><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von sich merken" data-wort="sich merken" data-kurz="etwas absichtlich im Kopf behalten" data-bsp="Die Nummer merke ich mir sofort.">sich merken</b></i> stand mit Dativ, <i><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von sich erinnern" data-wort="sich erinnern" data-kurz="etwas aus der Vergangenheit wieder im Kopf haben" data-bsp="Ich erinnere mich gut an diesen Sommer.">sich erinnern</b></i> mit <i>an</i>.</div>
 </div>
 <div class="rmcard">
 <b>3 · Der Lebenslauf</b>
 <p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A führt ein kurzes Gespräch über den Werdegang, B erklärt den Unterschied zwischen dem, was studiert, und dem, was gelernt wurde.</p>
 <div class="nur-a2"><span class="rm">Was haben Sie studiert?</span><span class="rm">Und wie lange lernen Sie schon Deutsch?</span><span class="rm">Kennen Sie unsere Software?</span><span class="rm">Wissen Sie, wie das Programm heißt?</span></div>
 <div class="nur-b1"><span class="rm">Studiert habe ich Betriebswirtschaft, Deutsch habe ich hier gelernt</span><span class="rm">Angefangen habe ich im Abendkurs, den Rest habe ich mir selbst beigebracht</span><span class="rm">Die Software kenne ich aus meiner letzten Stelle</span><span class="rm">Ich weiß allerdings nicht, ob Sie dieselbe Version benutzen</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat <i>studieren</i> und <i>lernen</i> klar getrennt und im letzten Satz beide Verben nebeneinander benutzt: <i>kennen</i> für die Software, <i>wissen</i> für die Information darüber.</div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat <i><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von studieren" data-wort="studieren" data-kurz="an einer Universität ein Fach belegen" data-bsp="Sie studiert Medizin in Bochum.">studieren</b></i> und <i>lernen</i> klar getrennt und im letzten Satz beide Verben nebeneinander benutzt: <i>kennen</i> für die Software, <i>wissen</i> für die Information darüber.</div>
 </div>
 <h2 class="st">🎴 Sprechkarten</h2>
 <p class="ssub">Zieh eine Karte und sprich mindestens vier Sätze am Stück.</p>
@@ -1155,6 +1197,64 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.setAttribute('aria-expanded',auf?'true':'false');
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
+
+/* ---- Markierte Woerter ----
+   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
+   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
+   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
+
+   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
+   den viele verwechseln. */
+(function(){
+ var woerter=[].slice.call(document.querySelectorAll('.wm'));
+ if(!woerter.length) return;
+ var karte=null;
+
+ function zu(){ if(karte){ karte.remove(); karte=null; }
+  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
+
+ function auf(w){
+  var schonOffen=w.classList.contains('offen');
+  zu();
+  if(schonOffen) return;
+  w.classList.add('offen');
+  karte=document.createElement('div');
+  karte.className='wmk';
+  var satz=w.dataset.bsp||'';
+  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
+   + '<b>'+w.dataset.wort+'</b>'
+   + '<span>'+(w.dataset.kurz||'')+'</span>'
+   + (satz?'<em>'+satz+'</em>':'')
+   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
+  document.body.appendChild(karte);
+
+  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
+  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
+  var links=r.left+r.width/2-b.width/2;
+  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
+  var oben=r.bottom+window.pageYOffset+9;
+  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
+   oben=r.top+window.pageYOffset-b.height-9;
+  karte.style.left=links+'px'; karte.style.top=oben+'px';
+
+  karte.querySelector('.wmk-zu').onclick=zu;
+  var ton=karte.querySelector('.wmk-ton');
+  if(ton) ton.onclick=function(){ say(satz); };
+ }
+
+ woerter.forEach(function(w){
+  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
+  w.addEventListener('keydown',function(ev){
+   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
+ });
+ document.addEventListener('click',zu);
+ document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
+ window.addEventListener('resize',zu);
+ /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
+    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
+ document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
+  k.addEventListener('click',zu); });
+})();
 
 /* ---- Bildkarten verdecken ----
    Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau

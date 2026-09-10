@@ -436,6 +436,48 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Markierte Wörter ----------
+   Keine Wortschatzliste mehr, sondern das Wort dort, wo es steht.
+   Gelb unterstrichen: Wort dieser Stunde. Rot gepunktet: Begriff,
+   den viele verwechseln. Beides bleibt lesbar, wenn man es ignoriert —
+   die Markierung liegt unter der Zeile, nicht auf dem Wort. */
+.wm{
+  font-weight:inherit;cursor:pointer;position:relative;
+  border-bottom:3px solid var(--yellow);
+  padding-bottom:1px;transition:background .12s;
+}
+.wm.schwer{border-bottom:3px dotted var(--red);}
+.wm:hover,.wm.offen{background:rgba(255,210,74,.35);border-radius:4px 4px 0 0;}
+.wm.schwer:hover,.wm.schwer.offen{background:rgba(232,48,42,.12);}
+.wm:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.wm::after{
+  content:'';display:inline-block;width:.42em;height:.42em;margin-left:.22em;
+  vertical-align:.35em;border-radius:50%;background:var(--yellow);
+}
+.wm.schwer::after{background:var(--red);}
+
+.wmk{
+  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.2);padding:.85rem 1rem .9rem;
+}
+.wmk b{display:block;font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.25;padding-right:1.4rem;}
+.wmk span{display:block;margin-top:.3rem;font-size:.94rem;line-height:1.5;color:var(--ink-soft);}
+.wmk em{
+  display:block;margin-top:.55rem;padding-left:.7rem;border-left:3px solid var(--teal);
+  font-style:italic;font-size:.93rem;line-height:1.5;
+}
+.wmk-zu{
+  position:absolute;top:.45rem;right:.5rem;border:none;background:transparent;
+  font-size:.95rem;line-height:1;cursor:pointer;color:var(--ink-mute,#7a6a56);padding:.2rem;
+}
+.wmk-ton{
+  margin-top:.6rem;border:2px solid var(--ink);background:var(--sand);color:var(--ink);
+  border-radius:999px;padding:.3rem .75rem;font-family:inherit;font-size:.82rem;
+  font-weight:700;cursor:pointer;
+}
+@media print{ .wm::after{display:none;} .wmk{display:none;} }
+
 /* ---------- Die Ablauftafel ----------
    Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
    und in welcher Aufstellung. */
@@ -715,15 +757,15 @@ a.tab:hover{color:var(--ink);}
 <button class="speak" data-say="Grundsätzlich bin ich dafür — unter der Voraussetzung, dass die Einnahmen zweckgebunden sind.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · ⚔️ Ein Argument angreifen</b><br>
 <span class="rm">Das gilt allerdings nur, wenn …</span><span class="rm">Da wird zweierlei vermischt: …</span><span class="rm">Das Beispiel trägt nicht, weil …</span><span class="rm">Umgekehrt ließe sich sagen, dass …</span>
-<div class="bsp"><span class="wer">So klingt es</span>Das gilt allerdings nur, wenn die Leute wirklich auf den Preis reagieren.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Das gilt allerdings nur, wenn die Leute wirklich auf den <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Preis" data-wort="der Preis" data-kurz="was etwas kostet — und was es steuert" data-bsp="Über den Preis kann man Verhalten steuern.">Preis</b> reagieren.</div>
 <button class="speak" data-say="Das gilt allerdings nur, wenn die Leute wirklich auf den Preis reagieren.">🔊 hören</button></div>
 <div class="rmcard"><b>3 · 🤝 Einlenken</b><br>
 <span class="rm">Das ist ein berechtigter Einwand</span><span class="rm">Da lenke ich ein</span><span class="rm">Den Punkt nehme ich mit</span><span class="rm">Dann müsste man es begrenzen auf …</span>
-<div class="bsp"><span class="wer">So klingt es</span>Das ist ein berechtigter Einwand — dann müsste man es auf Getränke begrenzen.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Das ist ein berechtigter <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Einwand" data-wort="der Einwand" data-kurz="ein Punkt, der gegen etwas spricht" data-bsp="Ein berechtigter Einwand — darauf habe ich keine gute Antwort.">Einwand</b> — dann müsste man es auf Getränke begrenzen.</div>
 <button class="speak" data-say="Das ist ein berechtigter Einwand — dann müsste man es auf Getränke begrenzen.">🔊 hören</button></div>
 <div class="rmcard"><b>4 · 🪞 Den Kern benennen</b><br>
 <span class="rm">Im Kern ist das eine Frage von …</span><span class="rm">Wir reden über zwei verschiedene Dinge</span><span class="rm">Da geht es weniger um … als um …</span><span class="rm">Dahinter steht die Frage, wer entscheidet</span>
-<div class="bsp"><span class="wer">So klingt es</span>Im Kern ist das eine Frage von Gerechtigkeit, nicht von Ernährung.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Im Kern ist das eine Frage von <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Gerechtigkeit" data-wort="die Gerechtigkeit" data-kurz="dass alle die gleichen Möglichkeiten haben" data-bsp="Es geht um Gerechtigkeit: Gutes Essen darf kein Luxus sein.">Gerechtigkeit</b>, nicht von Ernährung.</div>
 <button class="speak" data-say="Im Kern ist das eine Frage von Gerechtigkeit, nicht von Ernährung.">🔊 hören</button></div>
 </div>
 <div class="legende">
@@ -739,7 +781,7 @@ a.tab:hover{color:var(--ink);}
 <h2 class="st">Vier Situationen — <span class="hl">zwei Runden</span></h2>
 <p class="ssub"><b>Runde 1:</b> Lest den Dialog zu zweit laut. <b>Runde 2:</b> Klappt die Zeilen zu und spielt ihn frei — mit eurer eigenen Position.</p>
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../vok-bild/die-meinung.webp" alt="Vier Menschen sitzen im Café zusammen und diskutieren"><h4>Dialog 1 · „Die Zuckersteuer am Küchentisch“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Zwei Freunde, verschiedene Meinungen, kein Publikum. Genau die Situation, in der man am ehrlichsten diskutiert.</div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Eine Steuer auf Limonade — findest du das nicht übergriffig?</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Eine <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Steuer" data-wort="die Steuer" data-kurz="Geld, das der Staat auf etwas erhebt" data-bsp="Auf gezuckerte Getränke soll eine Steuer erhoben werden.">Steuer</b> auf Limonade — findest du das nicht übergriffig?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ich bin dafür, allerdings nur bei Getränken. Bei Lebensmitteln würde ich es nicht machen.</div><div class="dcue">🗣️ Position <u>mit Grenze</u>. Die Einschränkung gleich mitzuliefern nimmt der Gegenseite ihr stärkstes Argument.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Warum ausgerechnet Getränke?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Weil man da viel Zucker trinkt, ohne es zu merken. Bei einem Stück Kuchen weiß jeder Bescheid.</div><div class="dcue">🗣️ Grund plus Beispiel in zwei Sätzen. Der Vergleich macht das Argument anschaulich.<span class="kl">tippen = Hilfe zeigen</span></div></div>
@@ -762,7 +804,7 @@ a.tab:hover{color:var(--ink);}
 
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-heikel.webp" alt="Zwei Personen in einem ernsten Gespräch"><h4>Dialog 3 · „Wenn es persönlich wird“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Dein Gegenüber wird laut und persönlich. Du bleibst ruhig und holst das Gespräch zurück auf die Sache.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Typisch. Immer soll der Staat alles regeln. Ihr wollt uns doch nur bevormunden.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ich verstehe, dass sich das so anfühlt. Trotzdem: Über Kennzeichnung reden wir gerade, nicht über Verbote.</div><div class="dcue">🗣️ Erst das Gefühl anerkennen, dann sachlich korrigieren. <b>Trotzdem</b> hält die Position, ohne den anderen abzuwerten.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ich verstehe, dass sich das so anfühlt. Trotzdem: Über <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Kennzeichnung" data-wort="die Kennzeichnung" data-kurz="die Pflicht, etwas sichtbar anzugeben" data-bsp="Eine klare Kennzeichnung wäre der mildere Weg.">Kennzeichnung</b> reden wir gerade, nicht über Verbote.</div><div class="dcue">🗣️ Erst das Gefühl anerkennen, dann sachlich korrigieren. <b>Trotzdem</b> hält die Position, ohne den anderen abzuwerten.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Das ist doch der erste Schritt zum Verbot.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Das kann man befürchten. Ich glaube allerdings, wir reden über zwei verschiedene Dinge.</div><div class="dcue">🗣️ Die Befürchtung stehen lassen — und den entscheidenden Satz setzen, wenn die Debatte sich verheddert.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Wieso?</div></div>
@@ -777,7 +819,7 @@ a.tab:hover{color:var(--ink);}
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Das ist doch kein Beweis.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Stimmt, das ist ein einzelner Fall. Aber wenn Preise nichts bewirken würden, gäbe es keine Angebote.</div><div class="dcue">🗣️ Die Schwäche selbst benennen und trotzdem weiterargumentieren. Der zweite Satz dreht das Argument um.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Hm. Das ist ein Punkt.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Die Frage ist eher, welche Auswirkung es auf die hat, die ohnehin wenig haben.</div><div class="dcue">🗣️ <b>die Auswirkung</b> — die nüchternste und beste Frage. Und sie führt zum eigentlichen Streitpunkt.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Die Frage ist eher, welche <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Auswirkung" data-wort="die Auswirkung" data-kurz="was eine Maßnahme tatsächlich bewirkt" data-bsp="Welche Auswirkung hätte das auf den Preis?">Auswirkung</b> es auf die hat, die ohnehin wenig haben.</div><div class="dcue">🗣️ <b>die Auswirkung</b> — die nüchternste und beste Frage. Und sie führt zum eigentlichen Streitpunkt.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Da sind wir wieder bei der Gerechtigkeit.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Genau da landet diese Debatte immer.</div><div class="dcue">🗣️ Zu erkennen, wo eine Debatte immer landet, ist mehr wert als jedes einzelne Argument.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Glaubst du wirklich, dass zwanzig Cent mehr jemanden abhalten? Mich schon. Ich nehme im Angebot regelmäßig etwas mit, das ich sonst nicht kaufe. Das ist doch kein Beweis. Stimmt, das ist ein einzelner Fall. Aber wenn Preise nichts bewirken würden, gäbe es keine Angebote. Hm. Das ist ein Punkt. Die Frage ist eher, welche Auswirkung es auf die hat, die ohnehin wenig haben. Da sind wir wieder bei der Gerechtigkeit. Genau da landet diese Debatte immer.">🔊 Dialog vorlesen lassen</button></div>
@@ -901,14 +943,14 @@ a.tab:hover{color:var(--ink);}
 <p class="ssub">Jeder bekommt eine Seite zugeteilt — auch wenn er sie nicht teilt. Danach tauschen. Regel für alle drei: Bevor du widersprichst, sagst du einen Satz, der dem anderen recht gibt.</p>
 <div class="rmcard">
 <b>1 · Zuckersteuer: dafür oder dagegen</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A vertritt die Steuer, B ist dagegen. Beide müssen mindestens einmal einlenken und die eigene Position dabei nachschärfen statt aufgeben. Drei Minuten, dann Rollentausch.</p>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A vertritt die Steuer, B ist dagegen. Beide müssen mindestens einmal <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von einlenken" data-wort="einlenken" data-kurz="im Streit einen Schritt auf den anderen zugehen" data-bsp="Da lenke ich ein — das Argument zieht.">einlenken</b> und die eigene Position dabei nachschärfen statt aufgeben. Drei Minuten, dann Rollentausch.</p>
 <div class="nur-a2"><span class="rm">Ich bin dafür, weil …</span><span class="rm">Das trifft aber die, die wenig haben</span><span class="rm">Zum Beispiel bei Getränken</span><span class="rm">Da haben Sie recht</span></div>
 <div class="nur-b1"><span class="rm">Grundsätzlich dafür, sofern die Einnahmen zurückfließen</span><span class="rm">Das gilt allerdings nur, wenn …</span><span class="rm">Das ist ein berechtigter Einwand</span><span class="rm">Im Kern ist das eine Frage von Gerechtigkeit</span></div>
 <div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide haben Position, Grund, Beispiel und Einschränkung gebracht. Jeder hat mindestens einmal eingelenkt — und niemand hat den anderen für seine Meinung persönlich angegriffen.</div>
 </div>
 <div class="rmcard">
 <b>2 · Der Elternabend</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A ist Elternteil und will Regeln für die Mensa, B findet, das sei Sache der Familien. Ihr müsst am Ende einen Kompromiss formulieren, mit dem beide leben können — und ihn in einem Satz sagen.</p>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A ist Elternteil und will Regeln für die Mensa, B findet, das sei Sache der Familien. Ihr müsst am Ende einen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Kompromiss" data-wort="der Kompromiss" data-kurz="eine Lösung, mit der beide Seiten leben können" data-bsp="Ein Kompromiss wäre: kennzeichnen statt besteuern.">Kompromiss</b> formulieren, mit dem beide leben können — und ihn in einem Satz sagen.</p>
 <div class="nur-a2"><span class="rm">Wir entscheiden nur, was angeboten wird</span><span class="rm">Am Ende essen sie gar nichts</span><span class="rm">Fangen wir mit den Getränken an</span><span class="rm">Damit könnte ich leben</span></div>
 <div class="nur-b1"><span class="rm">Da wird zweierlei vermischt: anbieten und vorschreiben</span><span class="rm">Unter der Voraussetzung, dass …</span><span class="rm">Ich würde es zumindest auf … begrenzen</span><span class="rm">Einigen wir uns darauf, dass …</span></div>
 <div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Am Ende steht ein Kompromiss in genau einem Satz, den beide wiederholen können. Der Unterschied zwischen <i>anbieten</i> und <i>vorschreiben</i> wurde mindestens einmal ausgesprochen.</div>
@@ -1184,6 +1226,64 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.setAttribute('aria-expanded',auf?'true':'false');
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
+
+/* ---- Markierte Woerter ----
+   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
+   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
+   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
+
+   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
+   den viele verwechseln. */
+(function(){
+ var woerter=[].slice.call(document.querySelectorAll('.wm'));
+ if(!woerter.length) return;
+ var karte=null;
+
+ function zu(){ if(karte){ karte.remove(); karte=null; }
+  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
+
+ function auf(w){
+  var schonOffen=w.classList.contains('offen');
+  zu();
+  if(schonOffen) return;
+  w.classList.add('offen');
+  karte=document.createElement('div');
+  karte.className='wmk';
+  var satz=w.dataset.bsp||'';
+  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
+   + '<b>'+w.dataset.wort+'</b>'
+   + '<span>'+(w.dataset.kurz||'')+'</span>'
+   + (satz?'<em>'+satz+'</em>':'')
+   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
+  document.body.appendChild(karte);
+
+  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
+  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
+  var links=r.left+r.width/2-b.width/2;
+  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
+  var oben=r.bottom+window.pageYOffset+9;
+  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
+   oben=r.top+window.pageYOffset-b.height-9;
+  karte.style.left=links+'px'; karte.style.top=oben+'px';
+
+  karte.querySelector('.wmk-zu').onclick=zu;
+  var ton=karte.querySelector('.wmk-ton');
+  if(ton) ton.onclick=function(){ say(satz); };
+ }
+
+ woerter.forEach(function(w){
+  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
+  w.addEventListener('keydown',function(ev){
+   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
+ });
+ document.addEventListener('click',zu);
+ document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
+ window.addEventListener('resize',zu);
+ /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
+    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
+ document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
+  k.addEventListener('click',zu); });
+})();
 
 /* ---- Bildkarten verdecken ----
    Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau

@@ -436,6 +436,48 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Markierte Wörter ----------
+   Keine Wortschatzliste mehr, sondern das Wort dort, wo es steht.
+   Gelb unterstrichen: Wort dieser Stunde. Rot gepunktet: Begriff,
+   den viele verwechseln. Beides bleibt lesbar, wenn man es ignoriert —
+   die Markierung liegt unter der Zeile, nicht auf dem Wort. */
+.wm{
+  font-weight:inherit;cursor:pointer;position:relative;
+  border-bottom:3px solid var(--yellow);
+  padding-bottom:1px;transition:background .12s;
+}
+.wm.schwer{border-bottom:3px dotted var(--red);}
+.wm:hover,.wm.offen{background:rgba(255,210,74,.35);border-radius:4px 4px 0 0;}
+.wm.schwer:hover,.wm.schwer.offen{background:rgba(232,48,42,.12);}
+.wm:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.wm::after{
+  content:'';display:inline-block;width:.42em;height:.42em;margin-left:.22em;
+  vertical-align:.35em;border-radius:50%;background:var(--yellow);
+}
+.wm.schwer::after{background:var(--red);}
+
+.wmk{
+  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.2);padding:.85rem 1rem .9rem;
+}
+.wmk b{display:block;font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.25;padding-right:1.4rem;}
+.wmk span{display:block;margin-top:.3rem;font-size:.94rem;line-height:1.5;color:var(--ink-soft);}
+.wmk em{
+  display:block;margin-top:.55rem;padding-left:.7rem;border-left:3px solid var(--teal);
+  font-style:italic;font-size:.93rem;line-height:1.5;
+}
+.wmk-zu{
+  position:absolute;top:.45rem;right:.5rem;border:none;background:transparent;
+  font-size:.95rem;line-height:1;cursor:pointer;color:var(--ink-mute,#7a6a56);padding:.2rem;
+}
+.wmk-ton{
+  margin-top:.6rem;border:2px solid var(--ink);background:var(--sand);color:var(--ink);
+  border-radius:999px;padding:.3rem .75rem;font-family:inherit;font-size:.82rem;
+  font-weight:700;cursor:pointer;
+}
+@media print{ .wm::after{display:none;} .wmk{display:none;} }
+
 /* ---------- Die Ablauftafel ----------
    Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
    und in welcher Aufstellung. */
@@ -676,11 +718,11 @@ a.tab:hover{color:var(--ink);}
 <button class="speak" data-say="Darf ich kurz nachfragen? Ich möchte nichts falsch machen.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 🎯 Präzisieren</b><br>
 <span class="rm">Welches genau?</span><span class="rm">Was genau meinen Sie?</span><span class="rm">Ab wann gilt das?</span>
-<div class="bsp"><span class="wer">So klingt es</span>Welches Formular genau brauchen Sie — das grüne oder das weiße?</div>
+<div class="bsp"><span class="wer">So klingt es</span>Welches Formular <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von genau" data-wort="genau" data-kurz="Wort, das eine Frage präzise macht" data-bsp="Welches Formular genau brauchen Sie?">genau</b> brauchen Sie — das grüne oder das weiße?</div>
 <button class="speak" data-say="Welches Formular genau brauchen Sie, das grüne oder das weiße?">🔊 hören</button></div>
 <div class="rmcard"><b>3 · 🔁 Zusammenfassen</b><br>
 <span class="rm">Also …</span><span class="rm">Das heißt für mich …</span><span class="rm">Habe ich das richtig verstanden, dass …?</span>
-<div class="bsp"><span class="wer">So klingt es</span>Also: Ich bringe den Ausweis mit und schicke den Rest per Mail. Habe ich das richtig verstanden?</div>
+<div class="bsp"><span class="wer">So klingt es</span>Also: Ich bringe den Ausweis mit und schicke den Rest per Mail. <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Habe ich das richtig verstanden?" data-wort="Habe ich das richtig verstanden?" data-kurz="die Bitte, die eigene Deutung zu bestätigen" data-bsp="Habe ich das richtig verstanden, dass ich beides mitbringen soll?">Habe ich das richtig verstanden?</b></div>
 <button class="speak" data-say="Also: Ich bringe den Ausweis mit und schicke den Rest per Mail. Habe ich das richtig verstanden?">🔊 hören</button></div>
 <div class="rmcard"><b>4 · ✅ Absichern</b><br>
 <span class="rm">Und wenn etwas fehlt?</span><span class="rm">An wen wende ich mich dann?</span><span class="rm">Bis wann muss das da sein?</span>
@@ -690,11 +732,11 @@ a.tab:hover{color:var(--ink);}
 <div class="nur-b1">
 <div class="rmcard"><b>1 · ✋ Elegant ankündigen</b><br>
 <span class="rm">Ich hätte da noch eine Rückfrage</span><span class="rm">Damit ich nichts durcheinanderbringe</span><span class="rm">Bevor wir weitergehen</span>
-<div class="bsp"><span class="wer">So klingt es</span>Bevor wir weitergehen — ich hätte da noch eine Rückfrage, damit ich nichts durcheinanderbringe.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Bevor wir weitergehen — ich hätte da noch eine <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Rückfrage" data-wort="die Rückfrage" data-kurz="eine Frage zu etwas, das gerade gesagt wurde" data-bsp="Ich hätte da noch eine Rückfrage.">Rückfrage</b>, damit ich nichts durcheinanderbringe.</div>
 <button class="speak" data-say="Bevor wir weitergehen: Ich hätte da noch eine Rückfrage, damit ich nichts durcheinanderbringe.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 🎯 Präzise nachhaken</b><br>
 <span class="rm">Darf ich da kurz nachhaken?</span><span class="rm">Der Punkt ist mir noch nicht ganz klar</span><span class="rm">Könnten Sie das kurz erläutern?</span>
-<div class="bsp"><span class="wer">So klingt es</span>Darf ich da kurz nachhaken? Der zweite Punkt ist mir noch nicht ganz klar — könnten Sie ihn kurz erläutern?</div>
+<div class="bsp"><span class="wer">So klingt es</span>Darf ich da kurz <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von nachhaken" data-wort="nachhaken" data-kurz="noch einmal fragen, wenn die Antwort zu vage war" data-bsp="Darf ich da kurz nachhaken?">nachhaken</b>? Der zweite Punkt ist mir noch nicht ganz klar — könnten Sie ihn kurz <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von erläutern" data-wort="erläutern" data-kurz="etwas genauer erklären" data-bsp="Könnten Sie das kurz erläutern?">erläutern</b>?</div>
 <button class="speak" data-say="Darf ich da kurz nachhaken? Der zweite Punkt ist mir noch nicht ganz klar. Könnten Sie ihn kurz erläutern?">🔊 hören</button></div>
 <div class="rmcard"><b>3 · 🔁 Spiegeln statt fragen</b><br>
 <span class="rm">Wenn ich Sie richtig verstehe, …</span><span class="rm">Sie meinen also, dass …</span><span class="rm">Ich fasse kurz zusammen: …</span>
@@ -741,9 +783,9 @@ a.tab:hover{color:var(--ink);}
 
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-telefonieren.webp" alt="Frau sitzt am Tisch und telefoniert, daneben ein Notizblock"><h4>Dialog 3 · „Am Telefon“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Die Verbindung ist schlecht, die Person spricht schnell, und du sollst dir eine Adresse merken.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Kommen Sie einfach in die Werkstraße 14 bei Frau Kröning.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Entschuldigung, könnten Sie bitte etwas langsamer sprechen? Die Verbindung ist nicht gut.</div><div class="dcue">🗣️ Nenn einen äußeren Grund. Dann geht es nicht um dein Deutsch.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Entschuldigung, könnten Sie bitte etwas <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von langsamer sprechen" data-wort="langsamer sprechen" data-kurz="die Bitte, das Tempo zu senken" data-bsp="Könnten Sie bitte etwas langsamer sprechen?">langsamer sprechen</b>? Die Verbindung ist nicht gut.</div><div class="dcue">🗣️ Nenn einen äußeren Grund. Dann geht es nicht um dein Deutsch.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Natürlich. Werkstraße 14.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Werkstraße vierzehn. Und der Name — könnten Sie den bitte buchstabieren?</div><div class="dcue">🗣️ Erst wiederholen, dann die nächste Frage. So merkt der andere, dass es vorangeht.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Werkstraße vierzehn. Und der Name — könnten Sie den bitte <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von buchstabieren" data-wort="buchstabieren" data-kurz="ein Wort Buchstabe für Buchstabe sagen" data-bsp="Könnten Sie den Namen bitte buchstabieren?">buchstabieren</b>?</div><div class="dcue">🗣️ Erst wiederholen, dann die nächste Frage. So merkt der andere, dass es vorangeht.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">K-R-Ö-N-I-N-G.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">K wie Kaufmann, R, Ö wie Ökonom, N, I, N, G. Richtig?</div><div class="dcue">🗣️ Mit Beispielwörtern zurücklesen — so hört man Fehler sofort. Umlaute nennt man am Telefon als eigenen Buchstaben: <b>Ö wie Ökonom</b>.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ganz genau.</div></div>
@@ -1163,6 +1205,64 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.setAttribute('aria-expanded',auf?'true':'false');
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
+
+/* ---- Markierte Woerter ----
+   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
+   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
+   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
+
+   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
+   den viele verwechseln. */
+(function(){
+ var woerter=[].slice.call(document.querySelectorAll('.wm'));
+ if(!woerter.length) return;
+ var karte=null;
+
+ function zu(){ if(karte){ karte.remove(); karte=null; }
+  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
+
+ function auf(w){
+  var schonOffen=w.classList.contains('offen');
+  zu();
+  if(schonOffen) return;
+  w.classList.add('offen');
+  karte=document.createElement('div');
+  karte.className='wmk';
+  var satz=w.dataset.bsp||'';
+  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
+   + '<b>'+w.dataset.wort+'</b>'
+   + '<span>'+(w.dataset.kurz||'')+'</span>'
+   + (satz?'<em>'+satz+'</em>':'')
+   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
+  document.body.appendChild(karte);
+
+  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
+  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
+  var links=r.left+r.width/2-b.width/2;
+  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
+  var oben=r.bottom+window.pageYOffset+9;
+  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
+   oben=r.top+window.pageYOffset-b.height-9;
+  karte.style.left=links+'px'; karte.style.top=oben+'px';
+
+  karte.querySelector('.wmk-zu').onclick=zu;
+  var ton=karte.querySelector('.wmk-ton');
+  if(ton) ton.onclick=function(){ say(satz); };
+ }
+
+ woerter.forEach(function(w){
+  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
+  w.addEventListener('keydown',function(ev){
+   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
+ });
+ document.addEventListener('click',zu);
+ document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
+ window.addEventListener('resize',zu);
+ /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
+    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
+ document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
+  k.addEventListener('click',zu); });
+})();
 
 /* ---- Bildkarten verdecken ----
    Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau

@@ -436,6 +436,48 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Markierte Wörter ----------
+   Keine Wortschatzliste mehr, sondern das Wort dort, wo es steht.
+   Gelb unterstrichen: Wort dieser Stunde. Rot gepunktet: Begriff,
+   den viele verwechseln. Beides bleibt lesbar, wenn man es ignoriert —
+   die Markierung liegt unter der Zeile, nicht auf dem Wort. */
+.wm{
+  font-weight:inherit;cursor:pointer;position:relative;
+  border-bottom:3px solid var(--yellow);
+  padding-bottom:1px;transition:background .12s;
+}
+.wm.schwer{border-bottom:3px dotted var(--red);}
+.wm:hover,.wm.offen{background:rgba(255,210,74,.35);border-radius:4px 4px 0 0;}
+.wm.schwer:hover,.wm.schwer.offen{background:rgba(232,48,42,.12);}
+.wm:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.wm::after{
+  content:'';display:inline-block;width:.42em;height:.42em;margin-left:.22em;
+  vertical-align:.35em;border-radius:50%;background:var(--yellow);
+}
+.wm.schwer::after{background:var(--red);}
+
+.wmk{
+  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.2);padding:.85rem 1rem .9rem;
+}
+.wmk b{display:block;font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.25;padding-right:1.4rem;}
+.wmk span{display:block;margin-top:.3rem;font-size:.94rem;line-height:1.5;color:var(--ink-soft);}
+.wmk em{
+  display:block;margin-top:.55rem;padding-left:.7rem;border-left:3px solid var(--teal);
+  font-style:italic;font-size:.93rem;line-height:1.5;
+}
+.wmk-zu{
+  position:absolute;top:.45rem;right:.5rem;border:none;background:transparent;
+  font-size:.95rem;line-height:1;cursor:pointer;color:var(--ink-mute,#7a6a56);padding:.2rem;
+}
+.wmk-ton{
+  margin-top:.6rem;border:2px solid var(--ink);background:var(--sand);color:var(--ink);
+  border-radius:999px;padding:.3rem .75rem;font-family:inherit;font-size:.82rem;
+  font-weight:700;cursor:pointer;
+}
+@media print{ .wm::after{display:none;} .wmk{display:none;} }
+
 /* ---------- Die Ablauftafel ----------
    Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
    und in welcher Aufstellung. */
@@ -697,7 +739,7 @@ a.tab:hover{color:var(--ink);}
 <button class="speak" data-say="Ich habe den Pullover vor zwei Wochen hier gekauft, hier ist der Bon.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 🔍 Das Problem</b><br>
 <span class="rm">Er ist eingelaufen.</span><span class="rm">Die Naht ist offen.</span><span class="rm">Es funktioniert nicht.</span><span class="rm">Die Farbe ist anders als auf dem Foto.</span>
-<div class="bsp"><span class="wer">So klingt es</span>Er ist beim Waschen eingelaufen, bei 30 Grad wie im Etikett.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Er ist beim Waschen eingelaufen, bei 30 Grad wie im <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Etikett" data-wort="das Etikett" data-kurz="der kleine Zettel mit Größe und Pflegehinweisen" data-bsp="Das Etikett ist noch dran, getragen habe ich es nicht.">Etikett</b>.</div>
 <button class="speak" data-say="Er ist beim Waschen eingelaufen, bei 30 Grad wie im Etikett.">🔊 hören</button></div>
 <div class="rmcard"><b>3 · 🎯 Der Wunsch</b><br>
 <span class="rm">Ich hätte gern einen Ersatz.</span><span class="rm">Ich möchte das Geld zurück.</span><span class="rm">Kann ich es umtauschen?</span><span class="rm">Können Sie es reparieren?</span>
@@ -711,7 +753,7 @@ a.tab:hover{color:var(--ink);}
 <div class="nur-b1">
 <div class="rmcard"><b>1 · 🧾 Sachlich einsteigen</b><br>
 <span class="rm">Ich komme wegen eines Pullovers, gekauft am 28. Oktober.</span><span class="rm">Ich habe den Beleg dabei.</span><span class="rm">Bestellt habe ich online, geliefert am Freitag.</span><span class="rm">Es geht um einen Mangel, nicht um den Geschmack.</span>
-<div class="bsp"><span class="wer">So klingt es</span>Ich komme wegen eines Pullovers vom 28. Oktober — es geht um einen Mangel, nicht um den Geschmack.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Ich komme wegen eines Pullovers vom 28. Oktober — es geht um einen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Mangel" data-wort="der Mangel" data-kurz="ein Fehler an der Ware" data-bsp="Das ist ein Mangel, die Naht ist offen.">Mangel</b>, nicht um den Geschmack.</div>
 <button class="speak" data-say="Ich komme wegen eines Pullovers vom 28. Oktober — es geht um einen Mangel, nicht um den Geschmack.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 🔍 Genau beschreiben</b><br>
 <span class="rm">Gewaschen habe ich ihn genau nach Etikett.</span><span class="rm">Nach dem ersten Waschen war er zwei Größen kleiner.</span><span class="rm">Der Reißverschluss klemmt seit dem ersten Tag.</span><span class="rm">Getragen wurde er nicht, das Etikett ist noch dran.</span>
@@ -744,7 +786,7 @@ a.tab:hover{color:var(--ink);}
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Bei wie viel Grad haben Sie ihn denn gewaschen?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Bei 30, genau wie im Etikett steht. Ich habe mich extra daran gehalten.</div><div class="dcue">🗣️ <b>sich halten an</b> + Akkusativ — reflexiv, wie fast alles heute. Und die Temperatur ist die eine Angabe, auf die es hier ankommt.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Dann ist das ein Mangel. Möchten Sie einen Ersatz oder das Geld zurück?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Am liebsten einen Ersatz in derselben Größe. Wenn es den nicht mehr gibt, hätte ich lieber das Geld als einen Gutschein.</div><div class="dcue">🗣️ Einen ersten und einen zweiten Wunsch nennen. So muss die andere Seite nicht raten — und du bekommst nicht automatisch den Gutschein.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Am liebsten einen Ersatz in derselben Größe. Wenn es den nicht mehr gibt, hätte ich lieber das Geld als einen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Gutschein" data-wort="der Gutschein" data-kurz="ein Zettel, mit dem man später einkaufen kann" data-bsp="Ich hätte lieber das Geld zurück als einen Gutschein.">Gutschein</b>.</div><div class="dcue">🗣️ Einen ersten und einen zweiten Wunsch nennen. So muss die andere Seite nicht raten — und du bekommst nicht automatisch den Gutschein.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Guten Tag, was kann ich für Sie tun? Guten Tag. Ich habe diesen Pullover vor zwei Wochen hier gekauft — hier ist der Bon. Er ist beim ersten Waschen eingelaufen. Bei wie viel Grad haben Sie ihn denn gewaschen? Bei 30, genau wie im Etikett steht. Ich habe mich extra daran gehalten. Dann ist das ein Mangel. Möchten Sie einen Ersatz oder das Geld zurück? Am liebsten einen Ersatz in derselben Größe. Wenn es den nicht mehr gibt, hätte ich lieber das Geld als einen Gutschein.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../vok-bild/die-reklamation.webp" alt="Ein Karton steht neben einer zerbrochenen Tasse"><h4>Dialog 2 · „Beschädigt geliefert“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Eine Bestellung ist kaputt angekommen. B ruft an und beschreibt genau, was passiert ist.</div>
@@ -753,19 +795,19 @@ a.tab:hover{color:var(--ink);}
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Das tut mir leid. Können Sie ein Foto schicken?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Mache ich gleich. Soll ich auch den Karton fotografieren? Der war an einer Ecke eingedrückt.</div><div class="dcue">🗣️ Mitdenken statt nur reagieren. Ein Foto vom Karton hilft dem Händler, den Schaden bei der Post geltend zu machen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Sehr gerne. Wir schicken Ihnen dann Ersatz.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Danke. Muss ich die kaputten Tassen zurückschicken oder kann ich sie entsorgen?</div><div class="dcue">🗣️ Immer fragen, bevor man etwas wegwirft. <b>zurückschicken</b> oder <b>entsorgen</b> — die Antwort spart dir später Diskussionen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Danke. Muss ich die kaputten Tassen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von zurückschicken" data-wort="zurückschicken" data-kurz="eine Bestellung per Post zurückgeben" data-bsp="Ich schicke die Jacke morgen zurück.">zurückschicken</b> oder kann ich sie entsorgen?</div><div class="dcue">🗣️ Immer fragen, bevor man etwas wegwirft. <b>zurückschicken</b> oder <b>entsorgen</b> — die Antwort spart dir später Diskussionen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Kundenservice, guten Tag. Guten Tag, Karim mein Name. Es geht um Bestellung 4471 — zwei von vier Tassen sind zerbrochen angekommen. Das tut mir leid. Können Sie ein Foto schicken? Mache ich gleich. Soll ich auch den Karton fotografieren? Der war an einer Ecke eingedrückt. Sehr gerne. Wir schicken Ihnen dann Ersatz. Danke. Muss ich die kaputten Tassen zurückschicken oder kann ich sie entsorgen?">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../bilder/lesen/paket.webp" alt="Ein Paket steht in einem Aufzug"><h4>Dialog 3 · „Die Retoure“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">B möchte eine Onlinebestellung zurückschicken und fragt in der Filiale nach dem richtigen Weg.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Retoure? Haben Sie ein Etikett dabei?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ja, ich habe es ausgedruckt. Die Jacke ist ungetragen, das Etikett ist noch dran.</div><div class="dcue">🗣️ Sag von allein, dass die Ware in Ordnung ist. Damit ist die häufigste Rückfrage schon beantwortet.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Gut. Dann kleben Sie das bitte auf den Karton.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ist gemacht. Bekomme ich einen Beleg, dass ich es abgegeben habe?</div><div class="dcue">🗣️ Der <b>Einlieferungsbeleg</b> ist das Wichtigste an der ganzen Retoure — ohne ihn kannst du nicht beweisen, dass du geschickt hast.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ist gemacht. Bekomme ich einen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Beleg" data-wort="der Beleg" data-kurz="jedes Papier, das den Kauf beweist" data-bsp="Als Beleg habe ich die Rechnung aus der E-Mail.">Beleg</b>, dass ich es abgegeben habe?</div><div class="dcue">🗣️ Der <b>Einlieferungsbeleg</b> ist das Wichtigste an der ganzen Retoure — ohne ihn kannst du nicht beweisen, dass du geschickt hast.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Natürlich, hier. Damit können Sie die Sendung auch verfolgen.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Wunderbar. Und wie lange dauert es ungefähr, bis das Geld zurückkommt?</div><div class="dcue">🗣️ Nach der Dauer fragen, solange du noch da bist. So weißt du, ab wann sich Nachfragen lohnt.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Retoure? Haben Sie ein Etikett dabei? Ja, ich habe es ausgedruckt. Die Jacke ist ungetragen, das Etikett ist noch dran. Gut. Dann kleben Sie das bitte auf den Karton. Ist gemacht. Bekomme ich einen Beleg, dass ich es abgegeben habe? Natürlich, hier. Damit können Sie die Sendung auch verfolgen. Wunderbar. Und wie lange dauert es ungefähr, bis das Geld zurückkommt?">🔊 Dialog vorlesen lassen</button></div>
 
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-heikel.webp" alt="Zwei Menschen sitzen sich in Sesseln gegenüber und sprechen ernst miteinander"><h4>Dialog 4 · „Wenn der Laden Nein sagt“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Der Umtausch wird abgelehnt. B bleibt ruhig — und bekommt am Ende doch etwas angeboten.</div>
+<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-heikel.webp" alt="Zwei Menschen sitzen sich in Sesseln gegenüber und sprechen ernst miteinander"><h4>Dialog 4 · „Wenn der Laden Nein sagt“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Der <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von Umtausch" data-wort="der Umtausch" data-kurz="sie gefällt dir nicht oder passt nicht" data-bsp="Kein gesetzliches Recht — der Laden entscheidet.">Umtausch</b> wird abgelehnt. B bleibt ruhig — und bekommt am Ende doch etwas angeboten.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Reduzierte Ware nehmen wir grundsätzlich nicht zurück.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Das verstehe ich. Mir geht es aber nicht um den Geschmack — die Naht ist an der Schulter offen.</div><div class="dcue">🗣️ Erst zustimmen, dann den Unterschied benennen. Bei einem <b>Mangel</b> gilt der Satz über reduzierte Ware nämlich nicht.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ach so. Das ist etwas anderes, das hatte ich nicht gesehen.</div></div>
@@ -1176,6 +1218,64 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.setAttribute('aria-expanded',auf?'true':'false');
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
+
+/* ---- Markierte Woerter ----
+   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
+   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
+   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
+
+   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
+   den viele verwechseln. */
+(function(){
+ var woerter=[].slice.call(document.querySelectorAll('.wm'));
+ if(!woerter.length) return;
+ var karte=null;
+
+ function zu(){ if(karte){ karte.remove(); karte=null; }
+  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
+
+ function auf(w){
+  var schonOffen=w.classList.contains('offen');
+  zu();
+  if(schonOffen) return;
+  w.classList.add('offen');
+  karte=document.createElement('div');
+  karte.className='wmk';
+  var satz=w.dataset.bsp||'';
+  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
+   + '<b>'+w.dataset.wort+'</b>'
+   + '<span>'+(w.dataset.kurz||'')+'</span>'
+   + (satz?'<em>'+satz+'</em>':'')
+   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
+  document.body.appendChild(karte);
+
+  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
+  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
+  var links=r.left+r.width/2-b.width/2;
+  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
+  var oben=r.bottom+window.pageYOffset+9;
+  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
+   oben=r.top+window.pageYOffset-b.height-9;
+  karte.style.left=links+'px'; karte.style.top=oben+'px';
+
+  karte.querySelector('.wmk-zu').onclick=zu;
+  var ton=karte.querySelector('.wmk-ton');
+  if(ton) ton.onclick=function(){ say(satz); };
+ }
+
+ woerter.forEach(function(w){
+  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
+  w.addEventListener('keydown',function(ev){
+   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
+ });
+ document.addEventListener('click',zu);
+ document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
+ window.addEventListener('resize',zu);
+ /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
+    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
+ document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
+  k.addEventListener('click',zu); });
+})();
 
 /* ---- Bildkarten verdecken ----
    Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau

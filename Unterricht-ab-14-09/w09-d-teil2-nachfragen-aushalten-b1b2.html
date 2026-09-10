@@ -436,6 +436,48 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Markierte Wörter ----------
+   Keine Wortschatzliste mehr, sondern das Wort dort, wo es steht.
+   Gelb unterstrichen: Wort dieser Stunde. Rot gepunktet: Begriff,
+   den viele verwechseln. Beides bleibt lesbar, wenn man es ignoriert —
+   die Markierung liegt unter der Zeile, nicht auf dem Wort. */
+.wm{
+  font-weight:inherit;cursor:pointer;position:relative;
+  border-bottom:3px solid var(--yellow);
+  padding-bottom:1px;transition:background .12s;
+}
+.wm.schwer{border-bottom:3px dotted var(--red);}
+.wm:hover,.wm.offen{background:rgba(255,210,74,.35);border-radius:4px 4px 0 0;}
+.wm.schwer:hover,.wm.schwer.offen{background:rgba(232,48,42,.12);}
+.wm:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.wm::after{
+  content:'';display:inline-block;width:.42em;height:.42em;margin-left:.22em;
+  vertical-align:.35em;border-radius:50%;background:var(--yellow);
+}
+.wm.schwer::after{background:var(--red);}
+
+.wmk{
+  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.2);padding:.85rem 1rem .9rem;
+}
+.wmk b{display:block;font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.25;padding-right:1.4rem;}
+.wmk span{display:block;margin-top:.3rem;font-size:.94rem;line-height:1.5;color:var(--ink-soft);}
+.wmk em{
+  display:block;margin-top:.55rem;padding-left:.7rem;border-left:3px solid var(--teal);
+  font-style:italic;font-size:.93rem;line-height:1.5;
+}
+.wmk-zu{
+  position:absolute;top:.45rem;right:.5rem;border:none;background:transparent;
+  font-size:.95rem;line-height:1;cursor:pointer;color:var(--ink-mute,#7a6a56);padding:.2rem;
+}
+.wmk-ton{
+  margin-top:.6rem;border:2px solid var(--ink);background:var(--sand);color:var(--ink);
+  border-radius:999px;padding:.3rem .75rem;font-family:inherit;font-size:.82rem;
+  font-weight:700;cursor:pointer;
+}
+@media print{ .wm::after{display:none;} .wmk{display:none;} }
+
 /* ---------- Die Ablauftafel ----------
    Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
    und in welcher Aufstellung. */
@@ -693,7 +735,7 @@ a.tab:hover{color:var(--ink);}
 <div class="nur-a2">
 <div class="rmcard"><b>1 · ❓ Nachfragen</b><br>
 <span class="rm">Wie meinen Sie das genau?</span><span class="rm">Meinen Sie Dienstag oder Donnerstag?</span><span class="rm">Können Sie das noch einmal sagen?</span><span class="rm">Eine kurze Rückfrage:</span>
-<div class="bsp"><span class="wer">So klingt es</span>Eine kurze Rückfrage: Meinen Sie Dienstag oder Donnerstag?</div>
+<div class="bsp"><span class="wer">So klingt es</span>Eine kurze <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Rückfrage" data-wort="die Rückfrage" data-kurz="die Frage, mit der man etwas noch einmal klären will" data-bsp="Eine kurze Rückfrage: Meinen Sie Dienstag oder Donnerstag?">Rückfrage</b>: Meinen Sie Dienstag oder Donnerstag?</div>
 <button class="speak" data-say="Eine kurze Rückfrage: Meinen Sie Dienstag oder Donnerstag?">🔊 hören</button></div>
 <div class="rmcard"><b>2 · ✋ Richtigstellen</b><br>
 <span class="rm">Nicht heute, sondern morgen.</span><span class="rm">Das habe ich nicht gemeint.</span><span class="rm">Darum geht es mir nicht.</span><span class="rm">Da haben wir uns falsch verstanden.</span>
@@ -738,7 +780,7 @@ a.tab:hover{color:var(--ink);}
 <section class="section" id="dialoge">
 <h2 class="st">Vier Situationen — <span class="hl">zwei Runden</span></h2>
 <p class="ssub"><b>Runde 1:</b> Lest den Dialog zu zweit laut. <b>Runde 2:</b> Klappt die Zeilen zu und sprecht frei — nur die Stichwörter bleiben.</p>
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-amt.webp" alt="Ein Schalter im Amt, eine Person hinter der Scheibe"><h4>Dialog 1 · „Beim Amt, dreimal nachgefragt“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">A will einen Termin verschieben, B versteht dreimal etwas anderes. A wird nicht lauter — A baut den Satz jedes Mal neu.</div>
+<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-amt.webp" alt="Ein Schalter im Amt, eine Person hinter der Scheibe"><h4>Dialog 1 · „Beim Amt, dreimal nachgefragt“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">A will einen Termin verschieben, B versteht dreimal etwas anderes. A wird nicht <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von lauter" data-wort="Lauter" data-kurz="hilft nur, wenn es wirklich zu leise war" data-bsp="Sonst wirkt es gereizt — und ändert nichts">lauter</b> — A baut den Satz jedes Mal neu.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ich kann am Dienstag nicht kommen und wollte fragen, ob es auch später geht.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Wie bitte? Sie möchten den Termin heute wahrnehmen?</div><div class="dcue">🗣️ Der Klassiker: B hat nur die Hälfte gehört und rät. Jetzt bloß nicht denselben Satz wiederholen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Um den Termin am Dienstag geht es. Der passt bei mir leider nicht.</div></div>
@@ -753,7 +795,7 @@ a.tab:hover{color:var(--ink);}
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Oh. Dann habe ich zwölf Monate zu viel. Das tut mir leid.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Kein Problem, ich hatte mich unklar ausgedrückt. Beim nächsten Mal sage ich den Zeitraum gleich dazu.</div><div class="dcue">🗣️ B übernimmt die Hälfte der Verantwortung, obwohl A den Fehler gemacht hat — im deutschen Berufsalltag völlig üblich und sehr wirksam.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ich frage nächstes Mal lieber einmal mehr nach, bevor ich anfange.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Genau das ist mein Punkt. Eine Rückfrage kostet zwei Minuten, eine falsche Liste einen halben Tag.</div><div class="dcue">🗣️ <b>Genau das ist mein Punkt.</b> — der Satz, der Zustimmung und Zusammenfassung in einem erledigt.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Genau das ist mein <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Punkt" data-wort="der Punkt" data-kurz="der Kern dessen, worauf jemand hinauswill" data-bsp="Genau das ist mein Punkt — darum geht es mir.">Punkt</b>. Eine Rückfrage kostet zwei Minuten, eine falsche Liste einen halben Tag.</div><div class="dcue">🗣️ <b>Genau das ist mein Punkt.</b> — der Satz, der Zustimmung und Zusammenfassung in einem erledigt.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Die Liste ist fertig. Ich habe alle Kunden aus dem letzten Jahr aufgeschrieben. Da haben wir uns wohl falsch verstanden — gemeint waren die aus diesem Quartal. Oh. Dann habe ich zwölf Monate zu viel. Das tut mir leid. Kein Problem, ich hatte mich unklar ausgedrückt. Beim nächsten Mal sage ich den Zeitraum gleich dazu. Ich frage nächstes Mal lieber einmal mehr nach, bevor ich anfange. Genau das ist mein Punkt. Eine Rückfrage kostet zwei Minuten, eine falsche Liste einen halben Tag.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-restaurant.webp" alt="Ein Kellner nimmt an einem Tisch eine Bestellung auf"><h4>Dialog 3 · „Die Bestellung stimmt nicht“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">A hat etwas anderes bekommen als bestellt. Es geht darum, das freundlich zu klären — und dabei nicht klein beizugeben.</div>
@@ -771,7 +813,7 @@ a.tab:hover{color:var(--ink);}
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Wirklich? Bei mir denke ich immer sofort, es liegt an meinem Akzent.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Manchmal liegt es daran, oft aber nicht. An Zahlen und Namen scheitert es bei allen — deshalb buchstabiert man Namen ja auch.</div><div class="dcue">🗣️ <b>An Zahlen und Namen</b> vorn: Damit wird aus einem persönlichen Problem eine allgemeine Eigenschaft von Gesprächen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Und was machst du, wenn du merkst, dass jemand dir nicht folgt?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ich sage es anders herum und stelle das Wichtigste nach vorn. Meistens reicht das schon.</div><div class="dcue">🗣️ Die ganze Stunde in einem Satz — und du hörst sofort, dass es keine Lernstrategie ist, sondern das, was alle tun.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ich sage es <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von anders herum" data-wort="Anders herum" data-kurz="das Wichtigste an den Satzanfang" data-bsp="Ich kann morgen nicht → Morgen kann ich nicht.">anders herum</b> und stelle das Wichtigste nach vorn. Meistens reicht das schon.</div><div class="dcue">🗣️ Die ganze Stunde in einem Satz — und du hörst sofort, dass es keine Lernstrategie ist, sondern das, was alle tun.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Ich habe heute dreimal etwas erklärt und dreimal kam ein Wie bitte. Vielleicht sollte ich einfach weniger reden. Das kenne ich. Aber ehrlich: Bei mir fragen die Leute genauso oft nach, und ich bin hier geboren. Wirklich? Bei mir denke ich immer sofort, es liegt an meinem Akzent. Manchmal liegt es daran, oft aber nicht. An Zahlen und Namen scheitert es bei allen — deshalb buchstabiert man Namen ja auch. Und was machst du, wenn du merkst, dass jemand dir nicht folgt? Ich sage es anders herum und stelle das Wichtigste nach vorn. Meistens reicht das schon.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 1 mit einem Anliegen aus eurem Alltag. Regel für A: Kein Satz darf zweimal gleich klingen — jedes Mal ein anderes Wort an Position eins. Regel für B: dreimal nachfragen, freundlich, aber hartnäckig.</div>
@@ -1176,6 +1218,64 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.setAttribute('aria-expanded',auf?'true':'false');
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
+
+/* ---- Markierte Woerter ----
+   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
+   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
+   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
+
+   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
+   den viele verwechseln. */
+(function(){
+ var woerter=[].slice.call(document.querySelectorAll('.wm'));
+ if(!woerter.length) return;
+ var karte=null;
+
+ function zu(){ if(karte){ karte.remove(); karte=null; }
+  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
+
+ function auf(w){
+  var schonOffen=w.classList.contains('offen');
+  zu();
+  if(schonOffen) return;
+  w.classList.add('offen');
+  karte=document.createElement('div');
+  karte.className='wmk';
+  var satz=w.dataset.bsp||'';
+  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
+   + '<b>'+w.dataset.wort+'</b>'
+   + '<span>'+(w.dataset.kurz||'')+'</span>'
+   + (satz?'<em>'+satz+'</em>':'')
+   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
+  document.body.appendChild(karte);
+
+  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
+  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
+  var links=r.left+r.width/2-b.width/2;
+  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
+  var oben=r.bottom+window.pageYOffset+9;
+  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
+   oben=r.top+window.pageYOffset-b.height-9;
+  karte.style.left=links+'px'; karte.style.top=oben+'px';
+
+  karte.querySelector('.wmk-zu').onclick=zu;
+  var ton=karte.querySelector('.wmk-ton');
+  if(ton) ton.onclick=function(){ say(satz); };
+ }
+
+ woerter.forEach(function(w){
+  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
+  w.addEventListener('keydown',function(ev){
+   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
+ });
+ document.addEventListener('click',zu);
+ document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
+ window.addEventListener('resize',zu);
+ /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
+    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
+ document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
+  k.addEventListener('click',zu); });
+})();
 
 /* ---- Bildkarten verdecken ----
    Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau

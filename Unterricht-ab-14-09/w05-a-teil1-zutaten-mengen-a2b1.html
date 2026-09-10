@@ -436,6 +436,48 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Markierte Wörter ----------
+   Keine Wortschatzliste mehr, sondern das Wort dort, wo es steht.
+   Gelb unterstrichen: Wort dieser Stunde. Rot gepunktet: Begriff,
+   den viele verwechseln. Beides bleibt lesbar, wenn man es ignoriert —
+   die Markierung liegt unter der Zeile, nicht auf dem Wort. */
+.wm{
+  font-weight:inherit;cursor:pointer;position:relative;
+  border-bottom:3px solid var(--yellow);
+  padding-bottom:1px;transition:background .12s;
+}
+.wm.schwer{border-bottom:3px dotted var(--red);}
+.wm:hover,.wm.offen{background:rgba(255,210,74,.35);border-radius:4px 4px 0 0;}
+.wm.schwer:hover,.wm.schwer.offen{background:rgba(232,48,42,.12);}
+.wm:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.wm::after{
+  content:'';display:inline-block;width:.42em;height:.42em;margin-left:.22em;
+  vertical-align:.35em;border-radius:50%;background:var(--yellow);
+}
+.wm.schwer::after{background:var(--red);}
+
+.wmk{
+  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.2);padding:.85rem 1rem .9rem;
+}
+.wmk b{display:block;font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.25;padding-right:1.4rem;}
+.wmk span{display:block;margin-top:.3rem;font-size:.94rem;line-height:1.5;color:var(--ink-soft);}
+.wmk em{
+  display:block;margin-top:.55rem;padding-left:.7rem;border-left:3px solid var(--teal);
+  font-style:italic;font-size:.93rem;line-height:1.5;
+}
+.wmk-zu{
+  position:absolute;top:.45rem;right:.5rem;border:none;background:transparent;
+  font-size:.95rem;line-height:1;cursor:pointer;color:var(--ink-mute,#7a6a56);padding:.2rem;
+}
+.wmk-ton{
+  margin-top:.6rem;border:2px solid var(--ink);background:var(--sand);color:var(--ink);
+  border-radius:999px;padding:.3rem .75rem;font-family:inherit;font-size:.82rem;
+  font-weight:700;cursor:pointer;
+}
+@media print{ .wm::after{display:none;} .wmk{display:none;} }
+
 /* ---------- Die Ablauftafel ----------
    Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
    und in welcher Aufstellung. */
@@ -676,7 +718,7 @@ a.tab:hover{color:var(--ink);}
 <button class="speak" data-say="Zuerst schneide ich die Zwiebeln.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · ⚖️ Die Menge nennen</b><br>
 <span class="rm">zwei Scheiben</span><span class="rm">ein Stück</span><span class="rm">eine Packung</span><span class="rm">drei Esslöffel</span>
-<div class="bsp"><span class="wer">So klingt es</span>Ich nehme zwei Scheiben Käse.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Ich nehme zwei <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Scheiben" data-wort="die Scheibe" data-kurz="ein flach abgeschnittenes Stück" data-bsp="Ich nehme zwei Scheiben Brot.">Scheiben</b> Käse.</div>
 <button class="speak" data-say="Ich nehme zwei Scheiben Käse.">🔊 hören</button></div>
 <div class="rmcard"><b>3 · 🥕 Die Zutat nennen</b><br>
 <span class="rm">Tomaten</span><span class="rm">Gemüse</span><span class="rm">Öl</span><span class="rm">Nudeln</span>
@@ -690,7 +732,7 @@ a.tab:hover{color:var(--ink);}
 <div class="nur-b1">
 <div class="rmcard"><b>1 · 🔢 Reihenfolge feiner</b><br>
 <span class="rm">Während die Nudeln kochen, …</span><span class="rm">Sobald das Öl heiß ist, …</span><span class="rm">Nachdem du alles geschnitten hast, …</span><span class="rm">Kurz bevor es fertig ist, …</span>
-<div class="bsp"><span class="wer">So klingt es</span>Während die Nudeln kochen, schneide ich das Gemüse.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Während die Nudeln <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von kochen" data-wort="kochen" data-kurz="in Wasser, im Topf — es blubbert" data-bsp="Ich koche die Kartoffeln zwanzig Minuten.">kochen</b>, schneide ich das <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Gemüse" data-wort="das Gemüse" data-kurz="Karotten, Kartoffeln, Zwiebeln und alles in der Art" data-bsp="In die Suppe kommt viel frisches Gemüse.">Gemüse</b>.</div>
 <button class="speak" data-say="Während die Nudeln kochen, schneide ich das Gemüse.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · ⚖️ Menge ungefähr</b><br>
 <span class="rm">eine gute Handvoll</span><span class="rm">etwa 200 Gramm</span><span class="rm">ein bis zwei Löffel</span><span class="rm">je nach Geschmack</span>
@@ -721,7 +763,7 @@ a.tab:hover{color:var(--ink);}
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ich hab alles da. Womit fange ich an?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Zuerst schneidest du zwei Zwiebeln klein. Ganz klein, das ist wichtig.</div><div class="dcue">🗣️ <b>Zuerst</b> + Menge + Zutat + wie klein. Vier Angaben in einem Satz.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Okay, und dann?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Dann gibst du zwei Esslöffel Öl in die Pfanne und brätst die Zwiebeln an.</div><div class="dcue">🗣️ <b>in die Pfanne</b> — etwas kommt hinein, also Akkusativ. Und <i>anbraten</i> ist trennbar: <i>du brätst an</i>.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Dann gibst du zwei Esslöffel Öl in die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Pfanne" data-wort="die Pfanne" data-kurz="flach, für alles, was gebraten wird" data-bsp="Gib etwas Öl in die Pfanne.">Pfanne</b> und brätst die Zwiebeln an.</div><div class="dcue">🗣️ <b>in die Pfanne</b> — etwas kommt hinein, also Akkusativ. Und <i>anbraten</i> ist trennbar: <i>du brätst an</i>.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Wie lange ungefähr?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Etwa drei Minuten. Pass auf, dass sie nicht dunkel werden — sonst schmeckt es bitter.</div><div class="dcue">🗣️ Zeit ungefähr mit <b>etwa</b>. Und die Warnung gleich hinterher, bevor es passiert.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Und wann kommen die Tomaten rein?</div></div>
@@ -730,9 +772,9 @@ a.tab:hover{color:var(--ink);}
 
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-supermarkt.webp" alt="Eine Frau schiebt einen Einkaufswagen durch einen Supermarkt"><h4>Dialog 2 · „Im Supermarkt: Was brauchen wir noch?“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Ihr steht zu zweit im Laden und geht die Zutaten durch. Einer hat den Zettel, einer den Wagen.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Also, wir brauchen noch Nudeln. Wie viel denn?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Eine Packung reicht. Wir sind ja nur zu dritt.</div><div class="dcue">🗣️ <b>Eine Packung</b> — Menge ohne Artikel dahinter. Und die Begründung gleich mit.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Eine <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Packung" data-wort="die Packung" data-kurz="das, worin etwas im Laden verkauft wird" data-bsp="Nimm bitte eine Packung Nudeln mit.">Packung</b> reicht. Wir sind ja nur zu dritt.</div><div class="dcue">🗣️ <b>Eine Packung</b> — Menge ohne Artikel dahinter. Und die Begründung gleich mit.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Und Käse? Da steht nur „Käse“ auf dem Zettel.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Nimm ein Stück, so zweihundert Gramm. Nicht die Scheiben, wir müssen ihn reiben.</div><div class="dcue">🗣️ <b>ein Stück</b> gegen <b>Scheiben</b> — dieselbe Sache, zwei Formen. Der Unterschied entscheidet hier alles.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Nimm ein <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Stück" data-wort="das Stück" data-kurz="ein Teil von etwas Größerem" data-bsp="Schneid mir bitte ein Stück Käse ab.">Stück</b>, so zweihundert Gramm. Nicht die Scheiben, wir müssen ihn reiben.</div><div class="dcue">🗣️ <b>ein Stück</b> gegen <b>Scheiben</b> — dieselbe Sache, zwei Formen. Der Unterschied entscheidet hier alles.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Tomaten haben wir zu Hause, oder?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Nur noch zwei. Nimm lieber ein Kilo mit, dann haben wir genug.</div><div class="dcue">🗣️ <b>ein Kilo</b> — nach Maßen bleibt das Wort im Singular, nie <i>ein Kilos</i>.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Öl?</div></div>
@@ -1163,6 +1205,64 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.setAttribute('aria-expanded',auf?'true':'false');
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
+
+/* ---- Markierte Woerter ----
+   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
+   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
+   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
+
+   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
+   den viele verwechseln. */
+(function(){
+ var woerter=[].slice.call(document.querySelectorAll('.wm'));
+ if(!woerter.length) return;
+ var karte=null;
+
+ function zu(){ if(karte){ karte.remove(); karte=null; }
+  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
+
+ function auf(w){
+  var schonOffen=w.classList.contains('offen');
+  zu();
+  if(schonOffen) return;
+  w.classList.add('offen');
+  karte=document.createElement('div');
+  karte.className='wmk';
+  var satz=w.dataset.bsp||'';
+  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
+   + '<b>'+w.dataset.wort+'</b>'
+   + '<span>'+(w.dataset.kurz||'')+'</span>'
+   + (satz?'<em>'+satz+'</em>':'')
+   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
+  document.body.appendChild(karte);
+
+  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
+  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
+  var links=r.left+r.width/2-b.width/2;
+  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
+  var oben=r.bottom+window.pageYOffset+9;
+  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
+   oben=r.top+window.pageYOffset-b.height-9;
+  karte.style.left=links+'px'; karte.style.top=oben+'px';
+
+  karte.querySelector('.wmk-zu').onclick=zu;
+  var ton=karte.querySelector('.wmk-ton');
+  if(ton) ton.onclick=function(){ say(satz); };
+ }
+
+ woerter.forEach(function(w){
+  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
+  w.addEventListener('keydown',function(ev){
+   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
+ });
+ document.addEventListener('click',zu);
+ document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
+ window.addEventListener('resize',zu);
+ /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
+    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
+ document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
+  k.addEventListener('click',zu); });
+})();
 
 /* ---- Bildkarten verdecken ----
    Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau

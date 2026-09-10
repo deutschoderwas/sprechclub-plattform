@@ -436,6 +436,48 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Markierte Wörter ----------
+   Keine Wortschatzliste mehr, sondern das Wort dort, wo es steht.
+   Gelb unterstrichen: Wort dieser Stunde. Rot gepunktet: Begriff,
+   den viele verwechseln. Beides bleibt lesbar, wenn man es ignoriert —
+   die Markierung liegt unter der Zeile, nicht auf dem Wort. */
+.wm{
+  font-weight:inherit;cursor:pointer;position:relative;
+  border-bottom:3px solid var(--yellow);
+  padding-bottom:1px;transition:background .12s;
+}
+.wm.schwer{border-bottom:3px dotted var(--red);}
+.wm:hover,.wm.offen{background:rgba(255,210,74,.35);border-radius:4px 4px 0 0;}
+.wm.schwer:hover,.wm.schwer.offen{background:rgba(232,48,42,.12);}
+.wm:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.wm::after{
+  content:'';display:inline-block;width:.42em;height:.42em;margin-left:.22em;
+  vertical-align:.35em;border-radius:50%;background:var(--yellow);
+}
+.wm.schwer::after{background:var(--red);}
+
+.wmk{
+  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.2);padding:.85rem 1rem .9rem;
+}
+.wmk b{display:block;font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.25;padding-right:1.4rem;}
+.wmk span{display:block;margin-top:.3rem;font-size:.94rem;line-height:1.5;color:var(--ink-soft);}
+.wmk em{
+  display:block;margin-top:.55rem;padding-left:.7rem;border-left:3px solid var(--teal);
+  font-style:italic;font-size:.93rem;line-height:1.5;
+}
+.wmk-zu{
+  position:absolute;top:.45rem;right:.5rem;border:none;background:transparent;
+  font-size:.95rem;line-height:1;cursor:pointer;color:var(--ink-mute,#7a6a56);padding:.2rem;
+}
+.wmk-ton{
+  margin-top:.6rem;border:2px solid var(--ink);background:var(--sand);color:var(--ink);
+  border-radius:999px;padding:.3rem .75rem;font-family:inherit;font-size:.82rem;
+  font-weight:700;cursor:pointer;
+}
+@media print{ .wm::after{display:none;} .wmk{display:none;} }
+
 /* ---------- Die Ablauftafel ----------
    Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
    und in welcher Aufstellung. */
@@ -697,7 +739,7 @@ a.tab:hover{color:var(--ink);}
 <button class="speak" data-say="Ich bin dafür. Ich rede von 32 Stunden bei gleichem Lohn, vor allem in Büroberufen.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 🔗 Mit Bedingungen arbeiten</b><br>
 <span class="rm">Wenn …, dann …</span><span class="rm">Nur wenn …</span><span class="rm">Falls das nicht klappt, …</span>
-<div class="bsp"><span class="wer">So klingt es</span>Wenn die Meetings wegfallen, dann geht die Rechnung auf. Nur wenn nicht, wird es eng.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Wenn die Meetings wegfallen, dann geht die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Rechnung" data-wort="die Rechnung" data-kurz="die Überlegung, ob etwas aufgeht" data-bsp="Die Rechnung geht nur auf, wenn niemand krank wird.">Rechnung</b> auf. Nur wenn nicht, wird es eng.</div>
 <button class="speak" data-say="Wenn die Meetings wegfallen, dann geht die Rechnung auf. Nur wenn nicht, wird es eng.">🔊 hören</button></div>
 <div class="rmcard"><b>3 · ✋ Kontern</b><br>
 <span class="rm">Das gilt aber nur für …</span><span class="rm">In … sieht das anders aus</span><span class="rm">Ich räume ein, dass …</span>
@@ -705,13 +747,13 @@ a.tab:hover{color:var(--ink);}
 <button class="speak" data-say="Ich räume ein, dass es im Büro funktioniert. In der Pflege sieht das aber anders aus.">🔊 hören</button></div>
 <div class="rmcard"><b>4 · 🏁 Abschließen</b><br>
 <span class="rm">Zusammengefasst: …</span><span class="rm">Als Kompromiss: …</span><span class="rm">Ich bleibe dabei, dass …</span>
-<div class="bsp"><span class="wer">So klingt es</span>Als Kompromiss: erst ein Versuch über ein Jahr, danach entscheiden wir mit Zahlen.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Als <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Kompromiss" data-wort="der Kompromiss" data-kurz="eine Lösung, bei der beide etwas nachgeben" data-bsp="Als Kompromiss: erst ein Versuch, dann entscheiden.">Kompromiss</b>: erst ein <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Versuch" data-wort="der Versuch" data-kurz="der zeitlich begrenzte Test einer Idee" data-bsp="In Island lief der Versuch über vier Jahre.">Versuch</b> über ein Jahr, danach entscheiden wir mit Zahlen.</div>
 <button class="speak" data-say="Als Kompromiss: erst ein Versuch über ein Jahr, danach entscheiden wir mit Zahlen.">🔊 hören</button></div>
 </div>
 <div class="nur-b1">
 <div class="rmcard"><b>1 · 💬 Position mit Rahmen</b><br>
 <span class="rm">Ich schränke gleich ein: …</span><span class="rm">Mir geht es weniger um … als um …</span><span class="rm">Der Kern ist für mich …</span>
-<div class="bsp"><span class="wer">So klingt es</span>Ich schränke gleich ein: Mir geht es weniger um den freien Tag als um die Frage, wer die zusätzlichen Kosten trägt.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Ich schränke gleich ein: Mir geht es weniger um den freien Tag als um die Frage, wer die zusätzlichen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Kosten" data-wort="die Kosten" data-kurz="das Geld, das etwas verursacht" data-bsp="Die Kosten trägt am Ende der Betrieb — oder der Kunde.">Kosten</b> trägt.</div>
 <button class="speak" data-say="Ich schränke gleich ein: Mir geht es weniger um den freien Tag als um die Frage, wer die zusätzlichen Kosten trägt.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 🔗 Irreal argumentieren</b><br>
 <span class="rm">Wenn alle … würden, dann …</span><span class="rm">Angenommen, …</span><span class="rm">Sonst müsste man …</span>
@@ -719,11 +761,11 @@ a.tab:hover{color:var(--ink);}
 <button class="speak" data-say="Angenommen, alle Betriebe würden umstellen, dann bräuchte allein die Pflege zehn Prozent mehr Personal.">🔊 hören</button></div>
 <div class="rmcard"><b>3 · ✋ Die Annahme aufdecken</b><br>
 <span class="rm">Ihr Argument beruht auf der Annahme, dass …</span><span class="rm">Das ist nicht übertragbar auf …</span><span class="rm">Dagegen wende ich ein, dass …</span>
-<div class="bsp"><span class="wer">So klingt es</span>Ihr Argument beruht auf der Annahme, dass sich jede Arbeit verdichten lässt — das gilt für Schichtberufe nicht.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Ihr Argument beruht auf der <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Annahme" data-wort="die Annahme" data-kurz="das, wovon jemand ausgeht, ohne es zu wissen" data-bsp="Ihr Argument beruht auf der Annahme, dass alle im Büro arbeiten.">Annahme</b>, dass sich jede Arbeit <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von verdichten" data-wort="verdichten" data-kurz="dieselbe Arbeit in weniger Zeit unterbringen" data-bsp="Die Arbeit lässt sich nicht endlos verdichten.">verdichten</b> lässt — das gilt für Schichtberufe nicht.</div>
 <button class="speak" data-say="Ihr Argument beruht auf der Annahme, dass sich jede Arbeit verdichten lässt. Das gilt für Schichtberufe nicht.">🔊 hören</button></div>
 <div class="rmcard"><b>4 · 🏁 Abwägen und schließen</b><br>
 <span class="rm">Wenn man beides abwägt, überwiegt …</span><span class="rm">Ich revidiere einen Punkt: …</span><span class="rm">Unter der Voraussetzung, dass …</span>
-<div class="bsp"><span class="wer">So klingt es</span>Wenn man beides abwägt, überwiegt für mich der Nutzen — unter der Voraussetzung, dass man branchenweise entscheidet.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Wenn man beides abwägt, überwiegt für mich der Nutzen — unter der <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Voraussetzung" data-wort="die Voraussetzung" data-kurz="das, was erfüllt sein muss, damit etwas geht" data-bsp="Unter der Voraussetzung, dass genug Personal da ist, funktioniert das.">Voraussetzung</b>, dass man branchenweise entscheidet.</div>
 <button class="speak" data-say="Wenn man beides abwägt, überwiegt für mich der Nutzen, unter der Voraussetzung, dass man branchenweise entscheidet.">🔊 hören</button></div>
 </div>
 <div class="legende">
@@ -747,7 +789,7 @@ a.tab:hover{color:var(--ink);}
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ich schränke gleich ein: Ich rede von Schichtberufen, nicht von Büros.</div><div class="dcue">🗣️ <b>Ich schränke gleich ein</b> verhindert, dass dir gleich das Büroargument entgegengehalten wird.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Wir beginnen mit der Pro-Seite. Wofür steht ihr? Für 32 Stunden bei gleichem Lohn. In den Versuchen blieb die Produktivität gleich. Und ein Beispiel? In Island lief der Versuch vier Jahre — mit weniger Krankheitstagen am Ende. Danke. Und die Contra-Seite? Ich schränke gleich ein: Ich rede von Schichtberufen, nicht von Büros.">🔊 Dialog vorlesen lassen</button></div>
 
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-pflege.webp" alt="Eine Pflegerin begleitet eine ältere Frau mit Rollator"><h4>Dialog 2 · „Phase 2 · Argumente“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Jetzt kommen die Punkte, abwechselnd. Jeder Beitrag braucht eine Branche.</div>
+<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-pflege.webp" alt="Eine Pflegerin begleitet eine ältere Frau mit Rollator"><h4>Dialog 2 · „Phase 2 · Argumente“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Jetzt kommen die Punkte, abwechselnd. Jeder Beitrag braucht eine <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Branche" data-wort="die Branche" data-kurz="der Wirtschaftsbereich, in dem man arbeitet" data-bsp="Das hängt stark von der Branche ab.">Branche</b>.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">In der Pflege muss jede Schicht besetzt sein. Weniger Stunden heißt mehr Personal.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Das räume ich ein. Aber gerade dort kündigen die Leute wegen der Belastung.</div><div class="dcue">🗣️ Erst einräumen, dann kontern. Nie umgekehrt.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Trotzdem gibt es die zusätzlichen Leute nicht.</div></div>
@@ -1176,6 +1218,64 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.setAttribute('aria-expanded',auf?'true':'false');
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
+
+/* ---- Markierte Woerter ----
+   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
+   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
+   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
+
+   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
+   den viele verwechseln. */
+(function(){
+ var woerter=[].slice.call(document.querySelectorAll('.wm'));
+ if(!woerter.length) return;
+ var karte=null;
+
+ function zu(){ if(karte){ karte.remove(); karte=null; }
+  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
+
+ function auf(w){
+  var schonOffen=w.classList.contains('offen');
+  zu();
+  if(schonOffen) return;
+  w.classList.add('offen');
+  karte=document.createElement('div');
+  karte.className='wmk';
+  var satz=w.dataset.bsp||'';
+  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
+   + '<b>'+w.dataset.wort+'</b>'
+   + '<span>'+(w.dataset.kurz||'')+'</span>'
+   + (satz?'<em>'+satz+'</em>':'')
+   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
+  document.body.appendChild(karte);
+
+  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
+  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
+  var links=r.left+r.width/2-b.width/2;
+  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
+  var oben=r.bottom+window.pageYOffset+9;
+  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
+   oben=r.top+window.pageYOffset-b.height-9;
+  karte.style.left=links+'px'; karte.style.top=oben+'px';
+
+  karte.querySelector('.wmk-zu').onclick=zu;
+  var ton=karte.querySelector('.wmk-ton');
+  if(ton) ton.onclick=function(){ say(satz); };
+ }
+
+ woerter.forEach(function(w){
+  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
+  w.addEventListener('keydown',function(ev){
+   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
+ });
+ document.addEventListener('click',zu);
+ document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
+ window.addEventListener('resize',zu);
+ /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
+    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
+ document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
+  k.addEventListener('click',zu); });
+})();
 
 /* ---- Bildkarten verdecken ----
    Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau

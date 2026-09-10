@@ -436,6 +436,48 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Markierte Wörter ----------
+   Keine Wortschatzliste mehr, sondern das Wort dort, wo es steht.
+   Gelb unterstrichen: Wort dieser Stunde. Rot gepunktet: Begriff,
+   den viele verwechseln. Beides bleibt lesbar, wenn man es ignoriert —
+   die Markierung liegt unter der Zeile, nicht auf dem Wort. */
+.wm{
+  font-weight:inherit;cursor:pointer;position:relative;
+  border-bottom:3px solid var(--yellow);
+  padding-bottom:1px;transition:background .12s;
+}
+.wm.schwer{border-bottom:3px dotted var(--red);}
+.wm:hover,.wm.offen{background:rgba(255,210,74,.35);border-radius:4px 4px 0 0;}
+.wm.schwer:hover,.wm.schwer.offen{background:rgba(232,48,42,.12);}
+.wm:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.wm::after{
+  content:'';display:inline-block;width:.42em;height:.42em;margin-left:.22em;
+  vertical-align:.35em;border-radius:50%;background:var(--yellow);
+}
+.wm.schwer::after{background:var(--red);}
+
+.wmk{
+  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.2);padding:.85rem 1rem .9rem;
+}
+.wmk b{display:block;font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.25;padding-right:1.4rem;}
+.wmk span{display:block;margin-top:.3rem;font-size:.94rem;line-height:1.5;color:var(--ink-soft);}
+.wmk em{
+  display:block;margin-top:.55rem;padding-left:.7rem;border-left:3px solid var(--teal);
+  font-style:italic;font-size:.93rem;line-height:1.5;
+}
+.wmk-zu{
+  position:absolute;top:.45rem;right:.5rem;border:none;background:transparent;
+  font-size:.95rem;line-height:1;cursor:pointer;color:var(--ink-mute,#7a6a56);padding:.2rem;
+}
+.wmk-ton{
+  margin-top:.6rem;border:2px solid var(--ink);background:var(--sand);color:var(--ink);
+  border-radius:999px;padding:.3rem .75rem;font-family:inherit;font-size:.82rem;
+  font-weight:700;cursor:pointer;
+}
+@media print{ .wm::after{display:none;} .wmk{display:none;} }
+
 /* ---------- Die Ablauftafel ----------
    Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
    und in welcher Aufstellung. */
@@ -672,7 +714,7 @@ a.tab:hover{color:var(--ink);}
 <div class="nur-a2">
 <div class="rmcard"><b>1 · 💬 Meinung sagen</b><br>
 <span class="rm">Ich finde, dass …</span><span class="rm">Meiner Meinung nach …</span><span class="rm">Für mich ist wichtig, dass …</span>
-<div class="bsp"><span class="wer">So klingt es</span><b class="m-hoefl">Meiner Meinung nach</b> <b class="m-verb">braucht</b> man <b class="m-akk">Ordnung</b> nur da, wo mehrere wohnen.</div>
+<div class="bsp"><span class="wer">So klingt es</span><b class="m-hoefl">Meiner Meinung nach</b> <b class="m-verb">braucht</b> man <b class="m-akk"><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Ordnung" data-wort="die Ordnung" data-kurz="der Zustand, in dem alles an seinem Platz ist" data-bsp="Bei mir muss Ordnung herrschen, sonst kann ich nicht denken.">Ordnung</b></b> nur da, wo mehrere wohnen.</div>
 <button class="speak" data-say="Meiner Meinung nach braucht man Ordnung nur da, wo mehrere wohnen.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 🧱 Begründen</b><br>
 <span class="rm">… weil …</span><span class="rm">Der Grund ist, dass …</span><span class="rm">Zum Beispiel: …</span>
@@ -698,7 +740,7 @@ a.tab:hover{color:var(--ink);}
 <button class="speak" data-say="Das zeigt sich daran, dass Konflikte fast immer in gemeinsamen Räumen entstehen.">🔊 hören</button></div>
 <div class="rmcard"><b>3 · 🤝 Zugeständnis machen</b><br>
 <span class="rm">Zwar …, aber …</span><span class="rm">Ich gebe zu, dass …</span><span class="rm">Das mag zutreffen, dennoch …</span>
-<div class="bsp"><span class="wer">So klingt es</span><b class="m-hoefl">Zwar</b> <b class="m-verb">kostet</b> Aufräumen Zeit, <b class="m-hoefl">aber</b> Suchen <b class="m-verb">kostet</b> Nerven.</div>
+<div class="bsp"><span class="wer">So klingt es</span><b class="m-hoefl">Zwar</b> <b class="m-verb">kostet</b> <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Aufräumen" data-wort="aufräumen" data-kurz="Sachen an ihren Platz zurückbringen" data-bsp="Ich räume immer erst auf, wenn Besuch kommt.">Aufräumen</b> Zeit, <b class="m-hoefl">aber</b> Suchen <b class="m-verb">kostet</b> Nerven.</div>
 <button class="speak" data-say="Zwar kostet Aufräumen Zeit, aber Suchen kostet Nerven.">🔊 hören</button></div>
 <div class="rmcard"><b>4 · ✋ Sachlich widersprechen</b><br>
 <span class="rm">Da muss ich widersprechen.</span><span class="rm">Ich halte das für zu kurz gedacht.</span><span class="rm">Das trifft in dieser Allgemeinheit nicht zu.</span>
@@ -727,7 +769,7 @@ a.tab:hover{color:var(--ink);}
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Damit kann ich leben.</div></div>
 <button class="speak dbtn" data-say="Du, die Küche sieht wieder aus wie ein Schlachtfeld. Da hast du recht, das war gestern meine Schuld. Es ist halt nicht das erste Mal. Stimmt. Nur bin ich vorgestern nach zwölf heimgekommen — das hilft dir trotzdem nicht, ich weiß. Und wie machen wir das jetzt? Mein Vorschlag: Was in der Küche steht, wird am selben Abend gespült. Mein Zimmer bleibt dafür meine Sache. Damit kann ich leben.">🔊 Dialog vorlesen lassen</button></div>
 
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-familie.webp" alt="Eine Familie sitzt zusammen am Tisch"><h4>Dialog 2 · „Der Keller der Eltern“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Deine Mutter möchte den Keller ausräumen. Dort stehen deine alten Sachen.</div>
+<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-familie.webp" alt="Eine Familie sitzt zusammen am Tisch"><h4>Dialog 2 · „Der Keller der Eltern“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Deine Mutter möchte den <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Keller" data-wort="der Keller" data-kurz="der Raum unter dem Haus zum Lagern" data-bsp="Im Keller steht seit fünf Jahren ein Karton, den niemand öffnet.">Keller</b> ausräumen. Dort stehen deine alten Sachen.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Kannst du im Herbst mal deine Kartons durchgehen? Da steht Zeug von 2009.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ich weiß. Ehrlich gesagt schiebe ich das seit Jahren vor mir her.</div><div class="dcue">🗣️ Sei ehrlich, statt eine Ausrede zu suchen. Das entwaffnet.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Wir könnten es zusammen machen, dann geht es schneller.</div></div>
@@ -751,7 +793,7 @@ a.tab:hover{color:var(--ink);}
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Wie findest du hier irgendwas wieder?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ich suche gar nicht, ich tippe die ersten Buchstaben ein.</div><div class="dcue">🗣️ Erklär dein System, statt dich zu entschuldigen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Aber ist das nicht anstrengend?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Für mich nicht. Ich brauche keine Ordnung, ich brauche nur den Überblick.</div><div class="dcue">🗣️ Nenn den Unterschied zwischen Ordnung und Überblick — das ist dein bestes Argument.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Für mich nicht. Ich brauche keine Ordnung, ich brauche nur den <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Überblick" data-wort="der Überblick" data-kurz="das Wissen, wo was ist — auch ohne Ordnung" data-bsp="Ich brauche keine Ordnung, ich brauche nur den Überblick.">Überblick</b>.</div><div class="dcue">🗣️ Nenn den Unterschied zwischen Ordnung und Überblick — das ist dein bestes Argument.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Und wenn die Festplatte kaputtgeht?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Da hast du recht, das wäre ein Problem. Ordner helfen dagegen aber auch nicht — eine Sicherung schon.</div><div class="dcue">🗣️ Gib den Punkt zu und zeig, dass er zu einem anderen Thema gehört.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Wie findest du hier irgendwas wieder? Ich suche gar nicht, ich tippe die ersten Buchstaben ein. Aber ist das nicht anstrengend? Für mich nicht. Ich brauche keine Ordnung, ich brauche nur den Überblick. Und wenn die Festplatte kaputtgeht? Da hast du recht, das wäre ein Problem. Ordner helfen dagegen aber auch nicht — eine Sicherung schon.">🔊 Dialog vorlesen lassen</button></div>
@@ -885,14 +927,14 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="rmcard">
 <b>2 · Aufräumen im Büro</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A führt clean desk ein, B arbeitet seit zehn Jahren mit Stapeln und ist gut darin. Argumentiert sachlich.</p>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A führt clean desk ein, B arbeitet seit zehn Jahren mit <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Stapeln" data-wort="der Stapel" data-kurz="die Dinge, die übereinanderliegen" data-bsp="Auf meinem Schreibtisch wächst ein Stapel, den ich nicht mehr ansehe.">Stapeln</b> und ist gut darin. Argumentiert sachlich.</p>
 <div class="nur-a2"><span class="rm">Es sieht besser aus</span><span class="rm">Alle machen mit</span><span class="rm">Das verstehe ich</span><span class="rm">Können wir es testen?</span></div>
 <div class="nur-b1"><span class="rm">Was ist das eigentliche Ziel?</span><span class="rm">Das leuchtet mir ein, allerdings …</span><span class="rm">Ich halte das für zu kurz gedacht</span><span class="rm">Messen wir es doch</span></div>
 <div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A nennt ein echtes Ziel statt „so ist es eben“. B widerspricht nur dem Teil, dem er wirklich widerspricht.</div>
 </div>
 <div class="rmcard">
 <b>3 · Der Karton im Keller</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A möchte den Keller räumen, B hängt an alten Sachen. Es geht nicht um Platz, es geht ums Loslassen.</p>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A möchte den Keller räumen, B hängt an alten Sachen. Es geht nicht um Platz, es geht ums <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Loslassen" data-wort="loslassen" data-kurz="sich innerlich von etwas trennen" data-bsp="Das Schwerste beim Aufräumen ist nicht das Sortieren, sondern das Loslassen.">Loslassen</b>.</p>
 <div class="nur-a2"><span class="rm">Das brauchst du nicht mehr</span><span class="rm">Wir machen es zusammen</span><span class="rm">Ich verstehe dich</span><span class="rm">Nimm dir Zeit</span></div>
 <div class="nur-b1"><span class="rm">Ich gebe zu, dass …</span><span class="rm">Für mich hängt daran mehr als Papier</span><span class="rm">Ich möchte selbst entscheiden</span><span class="rm">Setzen wir ein Datum</span></div>
 <div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A drängt nicht, B nennt den wahren Grund. Am Ende steht ein Datum — sonst passiert nichts.</div>
@@ -1159,6 +1201,64 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.setAttribute('aria-expanded',auf?'true':'false');
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
+
+/* ---- Markierte Woerter ----
+   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
+   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
+   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
+
+   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
+   den viele verwechseln. */
+(function(){
+ var woerter=[].slice.call(document.querySelectorAll('.wm'));
+ if(!woerter.length) return;
+ var karte=null;
+
+ function zu(){ if(karte){ karte.remove(); karte=null; }
+  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
+
+ function auf(w){
+  var schonOffen=w.classList.contains('offen');
+  zu();
+  if(schonOffen) return;
+  w.classList.add('offen');
+  karte=document.createElement('div');
+  karte.className='wmk';
+  var satz=w.dataset.bsp||'';
+  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
+   + '<b>'+w.dataset.wort+'</b>'
+   + '<span>'+(w.dataset.kurz||'')+'</span>'
+   + (satz?'<em>'+satz+'</em>':'')
+   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
+  document.body.appendChild(karte);
+
+  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
+  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
+  var links=r.left+r.width/2-b.width/2;
+  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
+  var oben=r.bottom+window.pageYOffset+9;
+  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
+   oben=r.top+window.pageYOffset-b.height-9;
+  karte.style.left=links+'px'; karte.style.top=oben+'px';
+
+  karte.querySelector('.wmk-zu').onclick=zu;
+  var ton=karte.querySelector('.wmk-ton');
+  if(ton) ton.onclick=function(){ say(satz); };
+ }
+
+ woerter.forEach(function(w){
+  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
+  w.addEventListener('keydown',function(ev){
+   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
+ });
+ document.addEventListener('click',zu);
+ document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
+ window.addEventListener('resize',zu);
+ /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
+    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
+ document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
+  k.addEventListener('click',zu); });
+})();
 
 /* ---- Bildkarten verdecken ----
    Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau

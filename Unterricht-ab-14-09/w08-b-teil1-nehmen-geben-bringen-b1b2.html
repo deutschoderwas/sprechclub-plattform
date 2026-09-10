@@ -436,6 +436,48 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Markierte Wörter ----------
+   Keine Wortschatzliste mehr, sondern das Wort dort, wo es steht.
+   Gelb unterstrichen: Wort dieser Stunde. Rot gepunktet: Begriff,
+   den viele verwechseln. Beides bleibt lesbar, wenn man es ignoriert —
+   die Markierung liegt unter der Zeile, nicht auf dem Wort. */
+.wm{
+  font-weight:inherit;cursor:pointer;position:relative;
+  border-bottom:3px solid var(--yellow);
+  padding-bottom:1px;transition:background .12s;
+}
+.wm.schwer{border-bottom:3px dotted var(--red);}
+.wm:hover,.wm.offen{background:rgba(255,210,74,.35);border-radius:4px 4px 0 0;}
+.wm.schwer:hover,.wm.schwer.offen{background:rgba(232,48,42,.12);}
+.wm:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.wm::after{
+  content:'';display:inline-block;width:.42em;height:.42em;margin-left:.22em;
+  vertical-align:.35em;border-radius:50%;background:var(--yellow);
+}
+.wm.schwer::after{background:var(--red);}
+
+.wmk{
+  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.2);padding:.85rem 1rem .9rem;
+}
+.wmk b{display:block;font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.25;padding-right:1.4rem;}
+.wmk span{display:block;margin-top:.3rem;font-size:.94rem;line-height:1.5;color:var(--ink-soft);}
+.wmk em{
+  display:block;margin-top:.55rem;padding-left:.7rem;border-left:3px solid var(--teal);
+  font-style:italic;font-size:.93rem;line-height:1.5;
+}
+.wmk-zu{
+  position:absolute;top:.45rem;right:.5rem;border:none;background:transparent;
+  font-size:.95rem;line-height:1;cursor:pointer;color:var(--ink-mute,#7a6a56);padding:.2rem;
+}
+.wmk-ton{
+  margin-top:.6rem;border:2px solid var(--ink);background:var(--sand);color:var(--ink);
+  border-radius:999px;padding:.3rem .75rem;font-family:inherit;font-size:.82rem;
+  font-weight:700;cursor:pointer;
+}
+@media print{ .wm::after{display:none;} .wmk{display:none;} }
+
 /* ---------- Die Ablauftafel ----------
    Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
    und in welcher Aufstellung. */
@@ -680,7 +722,7 @@ a.tab:hover{color:var(--ink);}
 <button class="speak" data-say="Soll ich dir etwas vom Bäcker mitbringen? Ich gehe sowieso.">🔊 hören</button></div>
 <div class="rmcard"><b>3 · 📅 Absprechen</b><br>
 <span class="rm">Wann kann ich es abholen?</span><span class="rm">Wohin soll ich das bringen?</span><span class="rm">Bis wann muss ich es zurückgeben?</span><span class="rm">Wer holt die Kinder ab?</span>
-<div class="bsp"><span class="wer">So klingt es</span>Wann kann ich das Paket abholen — und wohin genau?</div>
+<div class="bsp"><span class="wer">So klingt es</span>Wann kann ich das Paket <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von abholen" data-wort="abholen" data-kurz="etwas oder jemanden von einem Ort mitnehmen" data-bsp="Ich hole das Päckchen morgen in der Filiale ab.">abholen</b> — und wohin genau?</div>
 <button class="speak" data-say="Wann kann ich das Paket abholen — und wohin genau?">🔊 hören</button></div>
 <div class="rmcard"><b>4 · 💛 Sich bedanken</b><br>
 <span class="rm">Danke fürs Mitbringen!</span><span class="rm">Das war lieb, danke.</span><span class="rm">Ich gebe es dir morgen zurück.</span><span class="rm">Sag Bescheid, wenn du es brauchst.</span>
@@ -690,7 +732,7 @@ a.tab:hover{color:var(--ink);}
 <div class="nur-b1">
 <div class="rmcard"><b>1 · 🙏 Bitten, ohne Druck</b><br>
 <span class="rm">Falls du sowieso vorbeikommst, könntest du …</span><span class="rm">Wenn es dir keine Umstände macht, …</span><span class="rm">Hättest du zufällig … dabei?</span><span class="rm">Ich würde es sonst selbst abholen.</span>
-<div class="bsp"><span class="wer">So klingt es</span>Falls du sowieso in die Stadt fährst, könntest du das Paket mitnehmen? Sonst hole ich es selbst.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Falls du sowieso in die Stadt fährst, könntest du das Paket <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von mitnehmen" data-wort="mitnehmen" data-kurz="etwas oder jemanden mit sich nehmen, wenn man geht" data-bsp="Soll ich dir etwas vom Bäcker mitnehmen?">mitnehmen</b>? Sonst hole ich es selbst.</div>
 <button class="speak" data-say="Falls du sowieso in die Stadt fährst, könntest du das Paket mitnehmen? Sonst hole ich es selbst.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 🤝 Anbieten, ohne aufzudrängen</b><br>
 <span class="rm">Ich könnte es dir vorbeibringen.</span><span class="rm">Auf dem Weg nehme ich es gern mit.</span><span class="rm">Ich hole es ab, wenn dir das lieber ist.</span><span class="rm">Sag einfach, was dir besser passt.</span>
@@ -698,7 +740,7 @@ a.tab:hover{color:var(--ink);}
 <button class="speak" data-say="Ich könnte es dir vorbeibringen — oder du holst es ab, wie es dir besser passt.">🔊 hören</button></div>
 <div class="rmcard"><b>3 · 📅 Übergabe klären</b><br>
 <span class="rm">Wann und wo übergeben wir das am besten?</span><span class="rm">Ich lege es dir in den Briefkasten.</span><span class="rm">Gib mir Bescheid, sobald es da ist.</span><span class="rm">Bis wann brauchst du es zurück?</span>
-<div class="bsp"><span class="wer">So klingt es</span>Wann übergeben wir das am besten? Ich könnte es auch bei deiner Nachbarin abgeben.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Wann <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von übergeben" data-wort="übergeben" data-kurz="etwas offiziell in die Hände von jemandem legen" data-bsp="Ich übergebe Ihnen die Unterlagen persönlich.">übergeben</b> wir das am besten? Ich könnte es auch bei deiner Nachbarin abgeben.</div>
 <button class="speak" data-say="Wann übergeben wir das am besten? Ich könnte es auch bei deiner Nachbarin abgeben.">🔊 hören</button></div>
 <div class="rmcard"><b>4 · 💛 Sich revanchieren</b><br>
 <span class="rm">Das rechne ich dir hoch an.</span><span class="rm">Beim nächsten Mal bringe ich etwas mit.</span><span class="rm">Ich gebe es dir zurück, sobald ich es habe.</span><span class="rm">Sag Bescheid, wenn ich etwas für dich tun kann.</span>
@@ -717,7 +759,7 @@ a.tab:hover{color:var(--ink);}
 <section class="section" id="dialoge">
 <h2 class="st">Vier Situationen — <span class="hl">zwei Runden</span></h2>
 <p class="ssub"><b>Runde 1:</b> Lest den Dialog zu zweit laut. <b>Runde 2:</b> Klappt die Zeilen zu und sprecht frei — nur die Stichwörter bleiben.</p>
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-cafe.webp" alt="Ein Barista reicht Amanda zwei Becher über die Theke"><h4>Dialog 1 · „Zwei Kaffee, bitte“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">A geht Kaffee holen und fragt, ob B etwas möchte. Klingt banal — enthält aber drei der vier Verben.</div>
+<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-cafe.webp" alt="Ein Barista reicht Amanda zwei Becher über die Theke"><h4>Dialog 1 · „Zwei Kaffee, bitte“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">A geht Kaffee <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von holen" data-wort="holen" data-kurz="irgendwohin gehen und mit der Sache zurückkommen" data-bsp="Ich hole schnell das Paket von unten.">holen</b> und fragt, ob B etwas möchte. Klingt banal — enthält aber drei der vier Verben.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ich gehe kurz runter zum Café. Soll ich dir was mitbringen?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Oh ja, gern. Bringst du mir einen Cappuccino mit? Ich gebe dir das Geld gleich.</div><div class="dcue">🗣️ <b>mitbringen</b>, weil A sowieso geht. Und <b>geben</b> für das Geld — der andere hat es danach.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Passt schon, das nächste Mal holst du.</div></div>
@@ -739,14 +781,14 @@ a.tab:hover{color:var(--ink);}
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Kann ich Ihnen helfen?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ja, könnten Sie mir bitte die grüne Dose von oben herunterreichen?</div><div class="dcue">🗣️ <b>reichen</b> plus die Richtung <b>herunter</b> — von dort oben zu mir hier unten. Genauer und höflicher geht es nicht.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Natürlich. Die große oder die kleine?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Die große, bitte. Und wissen Sie, ob Sie die auch liefern?</div><div class="dcue">🗣️ <b>liefern</b> ist das Verb für <i>zu mir nach Hause bringen</i>. Die indirekte Frage von gestern passt hier gleich mit.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Die große, bitte. Und wissen Sie, ob Sie die auch <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von liefern" data-wort="liefern" data-kurz="eine Ware zu jemandem bringen" data-bsp="Der Schrank wird nächste Woche geliefert.">liefern</b>?</div><div class="dcue">🗣️ <b>liefern</b> ist das Verb für <i>zu mir nach Hause bringen</i>. Die indirekte Frage von gestern passt hier gleich mit.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ab einem Einkaufswert von fünfzig Euro, ja.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Dann nehme ich sie doch lieber gleich mit.</div><div class="dcue">🗣️ <b>mitnehmen</b>, weil B sowieso hier ist und gleich geht. Bei <i>abholen</i> müsste B noch einmal wiederkommen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Kann ich Ihnen helfen? Ja, könnten Sie mir bitte die grüne Dose von oben herunterreichen? Natürlich. Die große oder die kleine? Die große, bitte. Und wissen Sie, ob Sie die auch liefern? Ab einem Einkaufswert von fünfzig Euro, ja. Dann nehme ich sie doch lieber gleich mit.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-verkaufen.webp" alt="Eine Frau kniet vor Kleidung und einem Karton und tippt auf dem Handy"><h4>Dialog 4 · „Ausmisten“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">A räumt den Schrank aus. B fragt nach — und beide klären, was weggegeben und was zurückgegeben wird.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ich miste gerade aus. Willst du irgendwas davon haben?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Zeig mal. Den blauen Pullover würde ich nehmen, wenn du ihn weggibst.</div><div class="dcue">🗣️ <b>nehmen</b> für B, <b>weggeben</b> für A — dieselbe Sache aus zwei Perspektiven. Genau darum geht es heute.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Zeig mal. Den blauen Pullover würde ich <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von nehmen" data-wort="nehmen" data-kurz="etwas an sich holen — danach hast du es" data-bsp="Ich nehme das grüne, das gefällt mir besser.">nehmen</b>, wenn du ihn weggibst.</div><div class="dcue">🗣️ <b>nehmen</b> für B, <b>weggeben</b> für A — dieselbe Sache aus zwei Perspektiven. Genau darum geht es heute.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Klar, nimm ihn. Der ist mir sowieso zu warm.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Übrigens: Deine Schüssel steht noch bei mir. Ich bringe sie am Wochenende mit.</div><div class="dcue">🗣️ <b>mitbringen</b>, weil B am Wochenende sowieso kommt. Sag es selbst, bevor der andere fragt — das ist die halbe Höflichkeit.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Kein Stress, die brauche ich nicht.</div></div>
@@ -882,7 +924,7 @@ a.tab:hover{color:var(--ink);}
 <p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">B hat sich vor Wochen etwas geliehen und nie zurückgegeben. A spricht es an — freundlich, ohne Vorwurf.</p>
 <div class="nur-a2"><span class="rm">Hast du noch meine Bohrmaschine?</span><span class="rm">Kannst du sie mir mitbringen?</span><span class="rm">Ich hole sie auch gern ab</span><span class="rm">Kein Stress, wann es dir passt</span></div>
 <div class="nur-b1"><span class="rm">Stimmt, die steht noch bei mir — ich hatte sie ganz vergessen</span><span class="rm">Ich bringe sie dir am Wochenende vorbei</span><span class="rm">Oder ich lege sie dir in den Keller, falls du nicht da bist</span><span class="rm">Danke fürs Erinnern, das war mir peinlich</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat nachgefragt, ohne Vorwurf, und B hat sofort einen konkreten Weg genannt — mit <i>vorbeibringen</i> oder <i>zurückgeben</i>. Am Ende stand ein Termin, keine Entschuldigung.</div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat nachgefragt, ohne Vorwurf, und B hat sofort einen konkreten Weg genannt — mit <i>vorbeibringen</i> oder <i><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von zurückgeben" data-wort="zurückgeben" data-kurz="etwas dem Besitzer wiedergeben" data-bsp="Die Jacke gebe ich morgen zurück, sie passt nicht.">zurückgeben</b></i>. Am Ende stand ein Termin, keine Entschuldigung.</div>
 </div>
 <div class="rmcard">
 <b>3 · Der große Einkauf</b>
@@ -1155,6 +1197,64 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.setAttribute('aria-expanded',auf?'true':'false');
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
+
+/* ---- Markierte Woerter ----
+   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
+   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
+   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
+
+   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
+   den viele verwechseln. */
+(function(){
+ var woerter=[].slice.call(document.querySelectorAll('.wm'));
+ if(!woerter.length) return;
+ var karte=null;
+
+ function zu(){ if(karte){ karte.remove(); karte=null; }
+  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
+
+ function auf(w){
+  var schonOffen=w.classList.contains('offen');
+  zu();
+  if(schonOffen) return;
+  w.classList.add('offen');
+  karte=document.createElement('div');
+  karte.className='wmk';
+  var satz=w.dataset.bsp||'';
+  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
+   + '<b>'+w.dataset.wort+'</b>'
+   + '<span>'+(w.dataset.kurz||'')+'</span>'
+   + (satz?'<em>'+satz+'</em>':'')
+   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
+  document.body.appendChild(karte);
+
+  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
+  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
+  var links=r.left+r.width/2-b.width/2;
+  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
+  var oben=r.bottom+window.pageYOffset+9;
+  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
+   oben=r.top+window.pageYOffset-b.height-9;
+  karte.style.left=links+'px'; karte.style.top=oben+'px';
+
+  karte.querySelector('.wmk-zu').onclick=zu;
+  var ton=karte.querySelector('.wmk-ton');
+  if(ton) ton.onclick=function(){ say(satz); };
+ }
+
+ woerter.forEach(function(w){
+  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
+  w.addEventListener('keydown',function(ev){
+   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
+ });
+ document.addEventListener('click',zu);
+ document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
+ window.addEventListener('resize',zu);
+ /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
+    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
+ document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
+  k.addEventListener('click',zu); });
+})();
 
 /* ---- Bildkarten verdecken ----
    Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau

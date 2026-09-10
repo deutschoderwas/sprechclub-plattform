@@ -436,6 +436,48 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Markierte Wörter ----------
+   Keine Wortschatzliste mehr, sondern das Wort dort, wo es steht.
+   Gelb unterstrichen: Wort dieser Stunde. Rot gepunktet: Begriff,
+   den viele verwechseln. Beides bleibt lesbar, wenn man es ignoriert —
+   die Markierung liegt unter der Zeile, nicht auf dem Wort. */
+.wm{
+  font-weight:inherit;cursor:pointer;position:relative;
+  border-bottom:3px solid var(--yellow);
+  padding-bottom:1px;transition:background .12s;
+}
+.wm.schwer{border-bottom:3px dotted var(--red);}
+.wm:hover,.wm.offen{background:rgba(255,210,74,.35);border-radius:4px 4px 0 0;}
+.wm.schwer:hover,.wm.schwer.offen{background:rgba(232,48,42,.12);}
+.wm:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.wm::after{
+  content:'';display:inline-block;width:.42em;height:.42em;margin-left:.22em;
+  vertical-align:.35em;border-radius:50%;background:var(--yellow);
+}
+.wm.schwer::after{background:var(--red);}
+
+.wmk{
+  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.2);padding:.85rem 1rem .9rem;
+}
+.wmk b{display:block;font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.25;padding-right:1.4rem;}
+.wmk span{display:block;margin-top:.3rem;font-size:.94rem;line-height:1.5;color:var(--ink-soft);}
+.wmk em{
+  display:block;margin-top:.55rem;padding-left:.7rem;border-left:3px solid var(--teal);
+  font-style:italic;font-size:.93rem;line-height:1.5;
+}
+.wmk-zu{
+  position:absolute;top:.45rem;right:.5rem;border:none;background:transparent;
+  font-size:.95rem;line-height:1;cursor:pointer;color:var(--ink-mute,#7a6a56);padding:.2rem;
+}
+.wmk-ton{
+  margin-top:.6rem;border:2px solid var(--ink);background:var(--sand);color:var(--ink);
+  border-radius:999px;padding:.3rem .75rem;font-family:inherit;font-size:.82rem;
+  font-weight:700;cursor:pointer;
+}
+@media print{ .wm::after{display:none;} .wmk{display:none;} }
+
 /* ---------- Die Ablauftafel ----------
    Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
    und in welcher Aufstellung. */
@@ -672,15 +714,15 @@ a.tab:hover{color:var(--ink);}
 <div class="nur-a2">
 <div class="rmcard"><b>1 · 💶 Über den Preis</b><br>
 <span class="rm">Die Miete ist hier viel höher.</span><span class="rm">Wegen der Miete suchen wir außerhalb.</span><span class="rm">Das kostet fast das Doppelte.</span><span class="rm">Dafür ist die Wohnung größer.</span>
-<div class="bsp"><span class="wer">So klingt es</span>Wegen der hohen Miete suchen wir außerhalb — dort kostet dieselbe Wohnung fast die Hälfte.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Wegen der hohen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Miete" data-wort="die Miete" data-kurz="das Geld, das man jeden Monat für die Wohnung zahlt" data-bsp="Wegen der hohen Miete suchen wir etwas außerhalb.">Miete</b> suchen wir außerhalb — dort kostet dieselbe Wohnung fast die Hälfte.</div>
 <button class="speak" data-say="Wegen der hohen Miete suchen wir außerhalb — dort kostet dieselbe Wohnung fast die Hälfte.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 🚌 Über den Weg</b><br>
 <span class="rm">Der Bus fährt nur zweimal am Tag.</span><span class="rm">Bis zur Haltestelle sind es zehn Minuten.</span><span class="rm">Ohne Auto geht dort nichts.</span><span class="rm">Ich brauche eine Stunde zur Arbeit.</span>
-<div class="bsp"><span class="wer">So klingt es</span>Bis zur Haltestelle sind es zehn Minuten, und der Bus fährt nur zweimal am Tag.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Bis zur <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Haltestelle" data-wort="die Haltestelle" data-kurz="der Ort, an dem Bus oder Bahn halten" data-bsp="Bis zur nächsten Haltestelle des Dorfes läuft man zwölf Minuten.">Haltestelle</b> sind es zehn Minuten, und der Bus fährt nur zweimal am Tag.</div>
 <button class="speak" data-say="Bis zur Haltestelle sind es zehn Minuten, und der Bus fährt nur zweimal am Tag.">🔊 hören</button></div>
 <div class="rmcard"><b>3 · 👋 Über die Menschen</b><br>
 <span class="rm">Hier kennt mich niemand.</span><span class="rm">Im Dorf grüßt man sich.</span><span class="rm">Die Nachbarn helfen sich.</span><span class="rm">Manchmal ist das auch anstrengend.</span>
-<div class="bsp"><span class="wer">So klingt es</span>Im Dorf grüßt man sich auf der Straße — in der Stadt kennt mich nach zwei Jahren niemand.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Im <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Dorf" data-wort="das Dorf" data-kurz="ein kleiner Ort mit wenigen hundert bis wenigen tausend Menschen" data-bsp="Die Ruhe des Dorfes war am Anfang fast unheimlich.">Dorf</b> grüßt man sich auf der Straße — in der Stadt kennt mich nach zwei Jahren niemand.</div>
 <button class="speak" data-say="Im Dorf grüßt man sich auf der Straße — in der Stadt kennt mich nach zwei Jahren niemand.">🔊 hören</button></div>
 <div class="rmcard"><b>4 · 🥐 Über den Alltag</b><br>
 <span class="rm">Der Bäcker hat zugemacht.</span><span class="rm">Der nächste Arzt ist zwölf Kilometer weg.</span><span class="rm">Alles ist zu Fuß erreichbar.</span><span class="rm">Abends hat hier nichts mehr offen.</span>
@@ -694,15 +736,15 @@ a.tab:hover{color:var(--ink);}
 <button class="speak" data-say="Trotz der niedrigen Miete lebt man dort kaum günstiger — rechnet man das Auto dazu, bleibt von der Ersparnis kaum etwas übrig.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 🚌 Abhängigkeit benennen</b><br>
 <span class="rm">Ohne eigenes Auto ist man dort abgeschnitten.</span><span class="rm">Die Anbindung entscheidet über alles andere.</span><span class="rm">Wer nicht fahren kann, verliert seine Selbstständigkeit.</span><span class="rm">Für Jugendliche und Ältere ist das der Kern.</span>
-<div class="bsp"><span class="wer">So klingt es</span>Wegen der schlechten Anbindung verlieren gerade Jugendliche und Ältere ihre Selbstständigkeit — sie sind auf andere angewiesen.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Wegen der schlechten <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Anbindung" data-wort="die Anbindung" data-kurz="wie gut ein Ort an Bus und Bahn angeschlossen ist" data-bsp="Wegen der schlechten Anbindung brauchen dort alle ein Auto.">Anbindung</b> verlieren gerade Jugendliche und Ältere ihre Selbstständigkeit — sie sind auf andere angewiesen.</div>
 <button class="speak" data-say="Wegen der schlechten Anbindung verlieren gerade Jugendliche und Ältere ihre Selbstständigkeit — sie sind auf andere angewiesen.">🔊 hören</button></div>
 <div class="rmcard"><b>3 · 👋 Nähe und Enge</b><br>
 <span class="rm">Der Zusammenhalt hat auch eine Kehrseite.</span><span class="rm">Man wird schnell zum Gesprächsthema.</span><span class="rm">Anonymität kann auch Freiheit bedeuten.</span><span class="rm">Dazugehören dauert Jahre.</span>
-<div class="bsp"><span class="wer">So klingt es</span>Der Zusammenhalt der Nachbarschaft hat auch eine Kehrseite: Man wird dort schnell zum Gesprächsthema.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Der Zusammenhalt der <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Nachbarschaft" data-wort="die Nachbarschaft" data-kurz="die Menschen und Häuser direkt um dich herum" data-bsp="Der Zusammenhalt der Nachbarschaft war für uns der Hauptgrund.">Nachbarschaft</b> hat auch eine Kehrseite: Man wird dort schnell zum Gesprächsthema.</div>
 <button class="speak" data-say="Der Zusammenhalt der Nachbarschaft hat auch eine Kehrseite: Man wird dort schnell zum Gesprächsthema.">🔊 hören</button></div>
 <div class="rmcard"><b>4 · 🥐 Versorgung beurteilen</b><br>
 <span class="rm">Die Nahversorgung bricht langsam weg.</span><span class="rm">Ein Ort ohne Laden verliert seine Mitte.</span><span class="rm">Der Ärztemangel trifft die Ältesten zuerst.</span><span class="rm">Was fehlt, merkt man erst im Notfall.</span>
-<div class="bsp"><span class="wer">So klingt es</span>Die Versorgung des Dorfes hängt an einem einzigen Laden — fällt der weg, verliert der Ort seine Mitte.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Versorgung" data-wort="die Versorgung" data-kurz="alles, was es vor Ort gibt: Bäcker, Arzt, Supermarkt, Apotheke" data-bsp="Die Versorgung des Dorfes hängt an einem einzigen Laden.">Versorgung</b> des Dorfes hängt an einem einzigen Laden — fällt der weg, verliert der Ort seine Mitte.</div>
 <button class="speak" data-say="Die Versorgung des Dorfes hängt an einem einzigen Laden — fällt der weg, verliert der Ort seine Mitte.">🔊 hören</button></div>
 </div>
 <div class="legende">
@@ -719,7 +761,7 @@ a.tab:hover{color:var(--ink);}
 <p class="ssub"><b>Runde 1:</b> Lest den Dialog zu zweit laut. <b>Runde 2:</b> Klappt die Zeilen zu und sprecht frei — nur die Stichwörter bleiben.</p>
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-vertraege.webp" alt="Zwei Menschen geben sich über einem Tisch die Hand"><h4>Dialog 1 · „Nach der Besichtigung“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">A hat die Wohnung im Dorf gesehen und ist unsicher. B war mit und stellt die Fragen, die zählen.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Also, die Wohnung ist wirklich schön. Und wegen der Miete müsste ich nie wieder rechnen.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Das stimmt. Aber wie kommst du morgens hin? Ich habe während der Besichtigung nur zwei Busse vorbeifahren sehen.</div><div class="dcue">🗣️ <b>wegen der Miete</b> und <b>während der Besichtigung</b> — beide feminin, beide mit dem Artikel <i>der</i>. Am Nomen selbst ändert sich nichts.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Das stimmt. Aber wie kommst du morgens hin? Ich habe während der <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Besichtigung" data-wort="die Besichtigung" data-kurz="der Termin, an dem man sich eine Wohnung ansieht" data-bsp="Während der Besichtigung waren wir zu dreißigst in vier Zimmern.">Besichtigung</b> nur zwei Busse vorbeifahren sehen.</div><div class="dcue">🗣️ <b>wegen der Miete</b> und <b>während der Besichtigung</b> — beide feminin, beide mit dem Artikel <i>der</i>. Am Nomen selbst ändert sich nichts.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Sechs Uhr vierzig und dann erst wieder halb zwölf. Ich müsste mir ein Auto kaufen.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Dann rechne das mit ein. Trotz des niedrigen Preises zahlst du am Ende vielleicht dasselbe wie hier.</div><div class="dcue">🗣️ <b>trotz des Preises</b> — maskulin, also Artikel <i>des</i> <u>und</u> ein <b>-s</b> am Nomen. Zwei Signale, immer zusammen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Daran habe ich nicht gedacht. Versicherung, Sprit, Werkstatt — das sind schnell zweihundert im Monat.</div></div>
@@ -728,7 +770,7 @@ a.tab:hover{color:var(--ink);}
 
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-familie.webp" alt="Eine Familie sitzt zusammen am Küchentisch"><h4>Dialog 2 · „Die Entscheidung am Küchentisch“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">A will aufs Land, B nicht. Es geht nicht um die Miete, sondern um die Kinder — und beide haben gute Gründe.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Mit dem Geld, das wir hier für zwei Zimmer zahlen, hätten wir dort ein Haus mit Garten.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ja. Und wegen der Kita bleiben wir trotzdem. Hier ist sie fünf Minuten weg, dort wären es zwanzig Kilometer.</div><div class="dcue">🗣️ <b>wegen der Kita</b> — und dann das kleine Wort <b>trotzdem</b>, das den Gegensatz trägt. Grund und Gegengrund in einem Zug.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ja. Und wegen der <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Kita" data-wort="die Kita" data-kurz="die Kindertagesstätte, in der kleine Kinder tagsüber betreut werden" data-bsp="Wegen der Kita sind wir doch in der Stadt geblieben.">Kita</b> bleiben wir trotzdem. Hier ist sie fünf Minuten weg, dort wären es zwanzig Kilometer.</div><div class="dcue">🗣️ <b>wegen der Kita</b> — und dann das kleine Wort <b>trotzdem</b>, das den Gegensatz trägt. Grund und Gegengrund in einem Zug.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">In vier Jahren geht sie sowieso zur Schule. Dann ist das kein Argument mehr.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Dann kommt das nächste. Während der Schulzeit brauchst du jemanden, der fährt — und das bin dann immer ich.</div><div class="dcue">🗣️ <b>während der Schulzeit</b> — feminin, Artikel <i>der</i>. Und beachte den Relativsatz <i>der fährt</i>: Verb ganz am Ende, wie immer im Nebensatz.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Das ist ein Punkt. Ich hatte nur den Preis im Kopf.</div></div>
@@ -872,14 +914,14 @@ a.tab:hover{color:var(--ink);}
 <p class="ssub">Einer fragt, einer antwortet. Danach tauschen — und beim zweiten Mal ohne die Sätze unten. Regel: In jeder Runde mindestens drei Sätze mit <i>wegen</i>, <i>trotz</i> oder <i>während</i>.</p>
 <div class="rmcard">
 <b>1 · Die Wohnungsbesichtigung</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A besichtigt eine Wohnung im Dorf, B ist die Vermieterin. A will die unangenehmen Fragen stellen, ohne unhöflich zu wirken.</p>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A besichtigt eine Wohnung im Dorf, B ist die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Vermieterin" data-wort="die Vermieterin" data-kurz="die Person, der die Wohnung gehört und die sie vermietet" data-bsp="Das Haus meiner Vermieterin steht direkt nebenan.">Vermieterin</b>. A will die unangenehmen Fragen stellen, ohne unhöflich zu wirken.</p>
 <div class="nur-a2"><span class="rm">Wie hoch ist die Kaltmiete genau?</span><span class="rm">Wie oft fährt hier der Bus?</span><span class="rm">Wie weit ist es bis zum Supermarkt?</span><span class="rm">Wann könnte ich einziehen?</span></div>
 <div class="nur-b1"><span class="rm">Wegen der Nebenkosten hätte ich noch eine Frage — sind die im Preis enthalten?</span><span class="rm">Wie ist die Anbindung am Wochenende? Während der Woche komme ich sicher zurecht</span><span class="rm">Trotz des günstigen Preises muss ich ehrlich sagen: Der Weg zur Arbeit macht mir Sorgen</span><span class="rm">Gibt es hier eine Kita, oder müsste ich die Kinder jeden Morgen fahren?</span></div>
 <div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A hat mindestens dreimal den Genitiv benutzt und dabei eine kritische Frage gestellt, ohne unhöflich zu werden. B hat konkret geantwortet — mit Zahlen statt mit Adjektiven.</div>
 </div>
 <div class="rmcard">
 <b>2 · Am Küchentisch</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Ein Paar entscheidet über den Umzug. A will aufs Land wegen des Preises, B will bleiben wegen der Arbeit und der Kita. Beide sollen am Ende einen Kompromiss finden.</p>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">Ein Paar entscheidet über den <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Umzug" data-wort="der Umzug" data-kurz="der Wechsel in eine andere Wohnung, mit allem, was man besitzt" data-bsp="Trotz des Umzugs hat sie ihre Stelle in der Stadt behalten.">Umzug</b>. A will aufs Land wegen des Preises, B will bleiben wegen der Arbeit und der Kita. Beide sollen am Ende einen Kompromiss finden.</p>
 <div class="nur-a2"><span class="rm">Wir könnten dort ein Haus mit Garten haben.</span><span class="rm">Die Miete wäre nur halb so hoch.</span><span class="rm">Aber ich brauche ein Auto.</span><span class="rm">Lass uns das mal aufschreiben.</span></div>
 <div class="nur-b1"><span class="rm">Wegen der Miete allein sollten wir das nicht entscheiden — rechnen wir mal alles zusammen</span><span class="rm">Trotz des Gartens würde ich jeden Tag anderthalb Stunden im Auto sitzen</span><span class="rm">Während der ersten Jahre wäre die Kita das größere Problem als die Entfernung</span><span class="rm">Wie wäre eine Kleinstadt? Da hätten wir beides zur Hälfte</span></div>
 <div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>Beide haben mindestens ein Argument der Gegenseite anerkannt (<i>trotz …</i>, <i>da hast du recht</i>) und am Ende einen dritten Weg vorgeschlagen — nicht nur die eigene Position wiederholt.</div>
@@ -1155,6 +1197,64 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.setAttribute('aria-expanded',auf?'true':'false');
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
+
+/* ---- Markierte Woerter ----
+   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
+   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
+   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
+
+   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
+   den viele verwechseln. */
+(function(){
+ var woerter=[].slice.call(document.querySelectorAll('.wm'));
+ if(!woerter.length) return;
+ var karte=null;
+
+ function zu(){ if(karte){ karte.remove(); karte=null; }
+  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
+
+ function auf(w){
+  var schonOffen=w.classList.contains('offen');
+  zu();
+  if(schonOffen) return;
+  w.classList.add('offen');
+  karte=document.createElement('div');
+  karte.className='wmk';
+  var satz=w.dataset.bsp||'';
+  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
+   + '<b>'+w.dataset.wort+'</b>'
+   + '<span>'+(w.dataset.kurz||'')+'</span>'
+   + (satz?'<em>'+satz+'</em>':'')
+   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
+  document.body.appendChild(karte);
+
+  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
+  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
+  var links=r.left+r.width/2-b.width/2;
+  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
+  var oben=r.bottom+window.pageYOffset+9;
+  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
+   oben=r.top+window.pageYOffset-b.height-9;
+  karte.style.left=links+'px'; karte.style.top=oben+'px';
+
+  karte.querySelector('.wmk-zu').onclick=zu;
+  var ton=karte.querySelector('.wmk-ton');
+  if(ton) ton.onclick=function(){ say(satz); };
+ }
+
+ woerter.forEach(function(w){
+  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
+  w.addEventListener('keydown',function(ev){
+   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
+ });
+ document.addEventListener('click',zu);
+ document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
+ window.addEventListener('resize',zu);
+ /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
+    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
+ document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
+  k.addEventListener('click',zu); });
+})();
 
 /* ---- Bildkarten verdecken ----
    Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau

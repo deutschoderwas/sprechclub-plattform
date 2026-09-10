@@ -436,6 +436,48 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Markierte Wörter ----------
+   Keine Wortschatzliste mehr, sondern das Wort dort, wo es steht.
+   Gelb unterstrichen: Wort dieser Stunde. Rot gepunktet: Begriff,
+   den viele verwechseln. Beides bleibt lesbar, wenn man es ignoriert —
+   die Markierung liegt unter der Zeile, nicht auf dem Wort. */
+.wm{
+  font-weight:inherit;cursor:pointer;position:relative;
+  border-bottom:3px solid var(--yellow);
+  padding-bottom:1px;transition:background .12s;
+}
+.wm.schwer{border-bottom:3px dotted var(--red);}
+.wm:hover,.wm.offen{background:rgba(255,210,74,.35);border-radius:4px 4px 0 0;}
+.wm.schwer:hover,.wm.schwer.offen{background:rgba(232,48,42,.12);}
+.wm:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.wm::after{
+  content:'';display:inline-block;width:.42em;height:.42em;margin-left:.22em;
+  vertical-align:.35em;border-radius:50%;background:var(--yellow);
+}
+.wm.schwer::after{background:var(--red);}
+
+.wmk{
+  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.2);padding:.85rem 1rem .9rem;
+}
+.wmk b{display:block;font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.25;padding-right:1.4rem;}
+.wmk span{display:block;margin-top:.3rem;font-size:.94rem;line-height:1.5;color:var(--ink-soft);}
+.wmk em{
+  display:block;margin-top:.55rem;padding-left:.7rem;border-left:3px solid var(--teal);
+  font-style:italic;font-size:.93rem;line-height:1.5;
+}
+.wmk-zu{
+  position:absolute;top:.45rem;right:.5rem;border:none;background:transparent;
+  font-size:.95rem;line-height:1;cursor:pointer;color:var(--ink-mute,#7a6a56);padding:.2rem;
+}
+.wmk-ton{
+  margin-top:.6rem;border:2px solid var(--ink);background:var(--sand);color:var(--ink);
+  border-radius:999px;padding:.3rem .75rem;font-family:inherit;font-size:.82rem;
+  font-weight:700;cursor:pointer;
+}
+@media print{ .wm::after{display:none;} .wmk{display:none;} }
+
 /* ---------- Die Ablauftafel ----------
    Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
    und in welcher Aufstellung. */
@@ -676,7 +718,7 @@ a.tab:hover{color:var(--ink);}
 <button class="speak" data-say="Ich fahre morgen mit der Bahn nach Köln.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 🗺️ Den Weg beschreiben</b><br>
 <span class="rm">Gehen Sie geradeaus</span><span class="rm">an der Ampel links</span><span class="rm">bis zur Kreuzung</span>
-<div class="bsp"><span class="wer">So klingt es</span>Gehen Sie geradeaus bis zur Ampel und dann links.</div>
+<div class="bsp"><span class="wer">So klingt es</span><b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von Gehen" data-wort="gehen" data-kurz="Auf den eigenen Füßen — oder als feste Wendung." data-bsp="Ich gehe zur Arbeit. · Wir gehen ins Kino.">Gehen</b> Sie geradeaus bis zur Ampel und dann links.</div>
 <button class="speak" data-say="Gehen Sie geradeaus bis zur Ampel und dann links.">🔊 hören</button></div>
 <div class="rmcard"><b>3 · 🤝 Sich verabreden</b><br>
 <span class="rm">Kommst du mit?</span><span class="rm">Wir treffen uns um …</span><span class="rm">Ich hole dich ab</span>
@@ -690,7 +732,7 @@ a.tab:hover{color:var(--ink);}
 <div class="nur-b1">
 <div class="rmcard"><b>1 · 🧭 Wohin, womit, wie lange</b><br>
 <span class="rm">Ich bin gegen … unterwegs</span><span class="rm">Es dauert etwa …</span><span class="rm">Ich muss einmal umsteigen</span>
-<div class="bsp"><span class="wer">So klingt es</span>Ich fahre mit dem Regionalzug und muss einmal umsteigen — insgesamt etwa anderthalb Stunden.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Ich fahre mit dem Regionalzug und muss einmal <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von umsteigen" data-wort="umsteigen" data-kurz="in ein anderes Verkehrsmittel wechseln" data-bsp="In Hagen musst du einmal umsteigen.">umsteigen</b> — insgesamt etwa anderthalb Stunden.</div>
 <button class="speak" data-say="Ich fahre mit dem Regionalzug und muss einmal umsteigen — insgesamt etwa anderthalb Stunden.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 🗺️ Den Weg genau erklären</b><br>
 <span class="rm">Am besten nehmen Sie …</span><span class="rm">Das sind ungefähr zehn Minuten</span><span class="rm">Sie können es nicht verfehlen</span>
@@ -720,7 +762,7 @@ a.tab:hover{color:var(--ink);}
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../vok-bild/die-durchsage.webp" alt="Menschen in einer Bahnhofshalle hören einer Durchsage zu"><h4>Dialog 1 · „Am Bahnhof“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Du willst nach Köln und stehst vor der Anzeigetafel. Nichts stimmt mit dem überein, was du gebucht hast.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Kann ich Ihnen helfen? Sie schauen ziemlich ratlos.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ja, gern. Ich möchte nach Köln, aber mein Zug steht nicht auf der Tafel.</div><div class="dcue">🗣️ Erst das Ziel, dann das Problem. In dieser Reihenfolge versteht man dich sofort.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Der ist ausgefallen. Sie können aber über Hagen fahren.</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Der ist ausgefallen. Sie können aber über Hagen <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von fahren" data-wort="fahren" data-kurz="Mit etwas, das Räder hat. Auch: selbst steuern." data-bsp="Ich fahre mit dem Bus. · Sie fährt Auto.">fahren</b>.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Und da muss ich dann umsteigen? Wie lange dauert das insgesamt?</div><div class="dcue">🗣️ Zwei Fragen auf einmal ist in Ordnung — sie gehören zusammen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Einmal umsteigen, etwa anderthalb Stunden.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Das geht. Von welchem Gleis fährt der ab?</div><div class="dcue">🗣️ <b>abfahren</b> ist trennbar: <i>Der Zug fährt von Gleis 4 ab.</i><span class="kl">tippen = Hilfe zeigen</span></div></div>
@@ -734,7 +776,7 @@ a.tab:hover{color:var(--ink);}
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Zu Fuß ist in Ordnung.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Gehen Sie hier geradeaus bis zur Ampel, dann rechts in die Marktstraße.</div><div class="dcue">🗣️ Immer <b>bis zu</b> + Dativ und danach die Richtung. Ein Schritt pro Satz.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Und dann?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Dann immer geradeaus. Sie kommen an einer Kirche vorbei — direkt dahinter ist der Marktplatz.</div><div class="dcue">🗣️ <b>vorbeikommen an</b> + Dativ. Ein Merkpunkt unterwegs hilft mehr als jede Meterangabe.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Dann immer geradeaus. Sie <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von kommen" data-wort="kommen" data-kurz="Die Richtung geht dorthin, wo der Zuhörer ist." data-bsp="Ich komme um acht. · Kommst du mit?">kommen</b> an einer Kirche vorbei — direkt dahinter ist der Marktplatz.</div><div class="dcue">🗣️ <b>vorbeikommen an</b> + Dativ. Ein Merkpunkt unterwegs hilft mehr als jede Meterangabe.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Super, vielen Dank!</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Gern. Sie können es nicht verfehlen.</div><div class="dcue">🗣️ Der freundliche Schlusssatz beim Weg-Erklären. Klingt sicher, auch wenn man selbst unsicher ist.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Entschuldigung, wie komme ich zum Rathaus? Zu Fuß oder mit der Bahn? Zu Fuß sind es etwa zehn Minuten. Zu Fuß ist in Ordnung. Gehen Sie hier geradeaus bis zur Ampel, dann rechts in die Marktstraße. Und dann? Dann immer geradeaus. Sie kommen an einer Kirche vorbei — direkt dahinter ist der Marktplatz. Super, vielen Dank! Gern. Sie können es nicht verfehlen.">🔊 Dialog vorlesen lassen</button></div>
@@ -1163,6 +1205,64 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.setAttribute('aria-expanded',auf?'true':'false');
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
+
+/* ---- Markierte Woerter ----
+   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
+   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
+   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
+
+   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
+   den viele verwechseln. */
+(function(){
+ var woerter=[].slice.call(document.querySelectorAll('.wm'));
+ if(!woerter.length) return;
+ var karte=null;
+
+ function zu(){ if(karte){ karte.remove(); karte=null; }
+  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
+
+ function auf(w){
+  var schonOffen=w.classList.contains('offen');
+  zu();
+  if(schonOffen) return;
+  w.classList.add('offen');
+  karte=document.createElement('div');
+  karte.className='wmk';
+  var satz=w.dataset.bsp||'';
+  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
+   + '<b>'+w.dataset.wort+'</b>'
+   + '<span>'+(w.dataset.kurz||'')+'</span>'
+   + (satz?'<em>'+satz+'</em>':'')
+   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
+  document.body.appendChild(karte);
+
+  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
+  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
+  var links=r.left+r.width/2-b.width/2;
+  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
+  var oben=r.bottom+window.pageYOffset+9;
+  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
+   oben=r.top+window.pageYOffset-b.height-9;
+  karte.style.left=links+'px'; karte.style.top=oben+'px';
+
+  karte.querySelector('.wmk-zu').onclick=zu;
+  var ton=karte.querySelector('.wmk-ton');
+  if(ton) ton.onclick=function(){ say(satz); };
+ }
+
+ woerter.forEach(function(w){
+  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
+  w.addEventListener('keydown',function(ev){
+   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
+ });
+ document.addEventListener('click',zu);
+ document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
+ window.addEventListener('resize',zu);
+ /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
+    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
+ document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
+  k.addEventListener('click',zu); });
+})();
 
 /* ---- Bildkarten verdecken ----
    Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau

@@ -436,6 +436,48 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Markierte Wörter ----------
+   Keine Wortschatzliste mehr, sondern das Wort dort, wo es steht.
+   Gelb unterstrichen: Wort dieser Stunde. Rot gepunktet: Begriff,
+   den viele verwechseln. Beides bleibt lesbar, wenn man es ignoriert —
+   die Markierung liegt unter der Zeile, nicht auf dem Wort. */
+.wm{
+  font-weight:inherit;cursor:pointer;position:relative;
+  border-bottom:3px solid var(--yellow);
+  padding-bottom:1px;transition:background .12s;
+}
+.wm.schwer{border-bottom:3px dotted var(--red);}
+.wm:hover,.wm.offen{background:rgba(255,210,74,.35);border-radius:4px 4px 0 0;}
+.wm.schwer:hover,.wm.schwer.offen{background:rgba(232,48,42,.12);}
+.wm:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.wm::after{
+  content:'';display:inline-block;width:.42em;height:.42em;margin-left:.22em;
+  vertical-align:.35em;border-radius:50%;background:var(--yellow);
+}
+.wm.schwer::after{background:var(--red);}
+
+.wmk{
+  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.2);padding:.85rem 1rem .9rem;
+}
+.wmk b{display:block;font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.25;padding-right:1.4rem;}
+.wmk span{display:block;margin-top:.3rem;font-size:.94rem;line-height:1.5;color:var(--ink-soft);}
+.wmk em{
+  display:block;margin-top:.55rem;padding-left:.7rem;border-left:3px solid var(--teal);
+  font-style:italic;font-size:.93rem;line-height:1.5;
+}
+.wmk-zu{
+  position:absolute;top:.45rem;right:.5rem;border:none;background:transparent;
+  font-size:.95rem;line-height:1;cursor:pointer;color:var(--ink-mute,#7a6a56);padding:.2rem;
+}
+.wmk-ton{
+  margin-top:.6rem;border:2px solid var(--ink);background:var(--sand);color:var(--ink);
+  border-radius:999px;padding:.3rem .75rem;font-family:inherit;font-size:.82rem;
+  font-weight:700;cursor:pointer;
+}
+@media print{ .wm::after{display:none;} .wmk{display:none;} }
+
 /* ---------- Die Ablauftafel ----------
    Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
    und in welcher Aufstellung. */
@@ -701,7 +743,7 @@ a.tab:hover{color:var(--ink);}
 <button class="speak" data-say="Ich kann nicht kommen, weil ich krank bin.">🔊 hören</button></div>
 <div class="rmcard"><b>3 · 🔁 Neuen Termin vorschlagen</b><br>
 <span class="rm">Können wir verschieben?</span><span class="rm">Haben Sie nächste Woche etwas frei?</span><span class="rm">Am Vormittag wäre gut</span>
-<div class="bsp"><span class="wer">So klingt es</span>Können wir den Termin auf nächste Woche verschieben?</div>
+<div class="bsp"><span class="wer">So klingt es</span>Können wir den Termin auf nächste Woche <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von verschieben" data-wort="verschieben" data-kurz="auf einen anderen Tag oder eine andere Zeit legen" data-bsp="Können wir den Termin auf nächste Woche verschieben?">verschieben</b>?</div>
 <button class="speak" data-say="Können wir den Termin auf nächste Woche verschieben?">🔊 hören</button></div>
 <div class="rmcard"><b>4 · ✅ Absichern</b><br>
 <span class="rm">Also Dienstag um neun</span><span class="rm">Vielen Dank für Ihr Verständnis</span><span class="rm">Bis dann</span>
@@ -711,11 +753,11 @@ a.tab:hover{color:var(--ink);}
 <div class="nur-b1">
 <div class="rmcard"><b>1 · 🙇 Entschuldigen mit Bezug</b><br>
 <span class="rm">Ich habe heute um elf einen Termin bei Ihnen</span><span class="rm">Ich rufe an, weil …</span><span class="rm">so kurzfristig</span>
-<div class="bsp"><span class="wer">So klingt es</span>Guten Tag, Demir mein Name. Ich habe heute um elf einen Termin bei Ihnen und muss ihn leider so kurzfristig absagen.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Guten Tag, Demir mein Name. Ich habe heute um elf einen Termin bei Ihnen und muss ihn leider so <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von kurzfristig" data-wort="kurzfristig" data-kurz="sehr kurz vorher" data-bsp="Entschuldigen Sie die kurzfristige Absage.">kurzfristig</b> <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von absagen" data-wort="absagen" data-kurz="sagen, dass man nicht kommt" data-bsp="Ich muss meinen Termin leider absagen.">absagen</b>.</div>
 <button class="speak" data-say="Guten Tag, Demir mein Name. Ich habe heute um elf einen Termin bei Ihnen und muss ihn leider so kurzfristig absagen.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 🤒 Grund knapp halten</b><br>
 <span class="rm">Mir ist etwas dazwischengekommen</span><span class="rm">Ich bin leider verhindert</span><span class="rm">aus gesundheitlichen Gründen</span>
-<div class="bsp"><span class="wer">So klingt es</span>Mir ist beruflich leider etwas dazwischengekommen, das sich nicht verschieben lässt.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Mir ist beruflich leider etwas dazwischengekommen, das sich nicht <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von verschieben" data-wort="Verschieben" data-kurz="Du kommst — nur an einem anderen Tag." data-bsp="Können wir auf nächste Woche verschieben?">verschieben</b> lässt.</div>
 <button class="speak" data-say="Mir ist beruflich leider etwas dazwischengekommen, das sich nicht verschieben lässt.">🔊 hören</button></div>
 <div class="rmcard"><b>3 · 🔁 Selbst einen Vorschlag machen</b><br>
 <span class="rm">Ginge es bei Ihnen …?</span><span class="rm">Ich wäre flexibel</span><span class="rm">Was hätten Sie denn frei?</span>
@@ -742,7 +784,7 @@ a.tab:hover{color:var(--ink);}
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Praxis Dr. Weber, Meier am Apparat, guten Tag.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Guten Tag, mein Name ist Kaya Demir. Ich habe heute um elf einen Termin bei Ihnen.</div><div class="dcue">🗣️ Erst sagen, welchen Termin du meinst. Sonst sucht die Person am Telefon lange.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Einen Moment … ja, hier ist er. Was kann ich für Sie tun?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Es tut mir leid, ich muss den Termin leider absagen. Ich bin krank.</div><div class="dcue">🗣️ Entschuldigung zuerst, Grund gleich danach. Zwei kurze Sätze reichen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Es tut mir leid, ich muss den Termin leider <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von absagen" data-wort="Absagen" data-kurz="Du kommst gar nicht. Der Termin ist weg." data-bsp="Ich muss den Termin leider absagen.">absagen</b>. Ich bin krank.</div><div class="dcue">🗣️ Entschuldigung zuerst, Grund gleich danach. Zwei kurze Sätze reichen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Das ist kein Problem. Möchten Sie gleich einen neuen Termin?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ja, gern. Nächste Woche wäre gut — am liebsten am Vormittag.</div><div class="dcue">🗣️ Nimm das Angebot sofort an. Wer später zurückruft, wartet länger.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Donnerstag um halb zehn hätte ich etwas frei.</div></div>
@@ -752,7 +794,7 @@ a.tab:hover{color:var(--ink);}
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-friseur.webp" alt="Eine Kundin sitzt im Friseursalon und wird frisiert"><h4>Dialog 2 · „Zu spät abgesagt“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Beim Friseur. Dein Termin ist in zwei Stunden — und die Absage kostet jetzt Geld.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Salon Lieb, guten Tag!</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Guten Tag, Demir mein Name. Ich habe heute um vierzehn Uhr einen Termin und muss leider absagen.</div><div class="dcue">🗣️ Sag es direkt. Um den heißen Brei zu reden macht es nicht besser.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Oh, das ist sehr kurzfristig. Da müssen wir Ihnen leider eine Ausfallgebühr berechnen.</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Oh, das ist sehr kurzfristig. Da müssen wir Ihnen leider eine <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Ausfallgebühr" data-wort="die Ausfallgebühr" data-kurz="Geld, das man für eine zu späte Absage zahlt" data-bsp="Bei einer Absage am selben Tag fällt eine Ausfallgebühr an.">Ausfallgebühr</b> berechnen.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Das verstehe ich. Entschuldigen Sie die kurzfristige Absage — mir ist etwas dazwischengekommen.</div><div class="dcue">🗣️ Nicht diskutieren. Verständnis zeigen, dann fragen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Kein Problem, das kommt vor. Wie viel wäre das denn?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Darf ich fragen, wie hoch die Gebühr ist?</div><div class="dcue">🗣️ Höflich nachfragen ist erlaubt — und wichtig, damit du weißt, was kommt.<span class="kl">tippen = Hilfe zeigen</span></div></div>
@@ -764,7 +806,7 @@ a.tab:hover{color:var(--ink);}
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Müller, guten Morgen.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Guten Morgen, Frau Müller, hier ist Kaya Demir. Ich kann heute leider nicht kommen — ich bin krank.</div><div class="dcue">🗣️ Gruß, Name, Sache. Beim Chef geht es besonders schnell.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Oh je. Waren Sie schon beim Arzt?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ich habe um neun einen Termin. Die Krankmeldung schicke ich Ihnen noch heute.</div><div class="dcue">🗣️ Sag von allein, wann das Papier kommt. Dann muss niemand nachfragen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ich habe um neun einen Termin. Die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Krankmeldung" data-wort="die Krankmeldung" data-kurz="das Papier vom Arzt für den Arbeitgeber" data-bsp="Die Krankmeldung schicke ich Ihnen noch heute.">Krankmeldung</b> schicke ich Ihnen noch heute.</div><div class="dcue">🗣️ Sag von allein, wann das Papier kommt. Dann muss niemand nachfragen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Gut. Wissen Sie schon, wie lange es dauert?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Noch nicht genau. Ich melde mich morgen früh wieder bei Ihnen.</div><div class="dcue">🗣️ „Ich melde mich“ plus Zeitpunkt — das ist die höflichste Form von „ich weiß es nicht“.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Alles klar. Gute Besserung!</div></div>
@@ -912,7 +954,7 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="rmcard">
 <b>3 · Ich stehe im Stau</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A ist unterwegs und kommt zwanzig Minuten zu spät. B sagt, dass danach der nächste Patient wartet — es wird knapp.</p>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A ist unterwegs und kommt zwanzig Minuten <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von zu spät" data-wort="Zu spät" data-kurz="Du kommst, aber später. Sag es vorher." data-bsp="Ich komme etwa zwanzig Minuten später.">zu spät</b>. B sagt, dass danach der nächste Patient wartet — es wird knapp.</p>
 <div class="nur-a2"><span class="rm">Ich habe Verspätung</span><span class="rm">Ich brauche noch zwanzig Minuten</span><span class="rm">Geht das trotzdem?</span><span class="rm">Sonst komme ich morgen</span></div>
 <div class="nur-b1"><span class="rm">Ich stecke leider im Stau fest</span><span class="rm">Ich schaffe es voraussichtlich um …</span><span class="rm">Wäre das noch machbar?</span><span class="rm">Sonst nehme ich gern einen anderen Termin</span></div>
 <div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>A nennt eine konkrete Zahl statt „ein bisschen später“, fragt, ob es noch passt, und bietet von sich aus die Alternative an.</div>
@@ -1181,6 +1223,64 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.setAttribute('aria-expanded',auf?'true':'false');
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
+
+/* ---- Markierte Woerter ----
+   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
+   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
+   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
+
+   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
+   den viele verwechseln. */
+(function(){
+ var woerter=[].slice.call(document.querySelectorAll('.wm'));
+ if(!woerter.length) return;
+ var karte=null;
+
+ function zu(){ if(karte){ karte.remove(); karte=null; }
+  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
+
+ function auf(w){
+  var schonOffen=w.classList.contains('offen');
+  zu();
+  if(schonOffen) return;
+  w.classList.add('offen');
+  karte=document.createElement('div');
+  karte.className='wmk';
+  var satz=w.dataset.bsp||'';
+  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
+   + '<b>'+w.dataset.wort+'</b>'
+   + '<span>'+(w.dataset.kurz||'')+'</span>'
+   + (satz?'<em>'+satz+'</em>':'')
+   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
+  document.body.appendChild(karte);
+
+  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
+  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
+  var links=r.left+r.width/2-b.width/2;
+  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
+  var oben=r.bottom+window.pageYOffset+9;
+  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
+   oben=r.top+window.pageYOffset-b.height-9;
+  karte.style.left=links+'px'; karte.style.top=oben+'px';
+
+  karte.querySelector('.wmk-zu').onclick=zu;
+  var ton=karte.querySelector('.wmk-ton');
+  if(ton) ton.onclick=function(){ say(satz); };
+ }
+
+ woerter.forEach(function(w){
+  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
+  w.addEventListener('keydown',function(ev){
+   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
+ });
+ document.addEventListener('click',zu);
+ document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
+ window.addEventListener('resize',zu);
+ /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
+    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
+ document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
+  k.addEventListener('click',zu); });
+})();
 
 /* ---- Bildkarten verdecken ----
    Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau

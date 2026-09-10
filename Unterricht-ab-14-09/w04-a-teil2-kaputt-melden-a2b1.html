@@ -436,6 +436,48 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Markierte Wörter ----------
+   Keine Wortschatzliste mehr, sondern das Wort dort, wo es steht.
+   Gelb unterstrichen: Wort dieser Stunde. Rot gepunktet: Begriff,
+   den viele verwechseln. Beides bleibt lesbar, wenn man es ignoriert —
+   die Markierung liegt unter der Zeile, nicht auf dem Wort. */
+.wm{
+  font-weight:inherit;cursor:pointer;position:relative;
+  border-bottom:3px solid var(--yellow);
+  padding-bottom:1px;transition:background .12s;
+}
+.wm.schwer{border-bottom:3px dotted var(--red);}
+.wm:hover,.wm.offen{background:rgba(255,210,74,.35);border-radius:4px 4px 0 0;}
+.wm.schwer:hover,.wm.schwer.offen{background:rgba(232,48,42,.12);}
+.wm:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.wm::after{
+  content:'';display:inline-block;width:.42em;height:.42em;margin-left:.22em;
+  vertical-align:.35em;border-radius:50%;background:var(--yellow);
+}
+.wm.schwer::after{background:var(--red);}
+
+.wmk{
+  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.2);padding:.85rem 1rem .9rem;
+}
+.wmk b{display:block;font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.25;padding-right:1.4rem;}
+.wmk span{display:block;margin-top:.3rem;font-size:.94rem;line-height:1.5;color:var(--ink-soft);}
+.wmk em{
+  display:block;margin-top:.55rem;padding-left:.7rem;border-left:3px solid var(--teal);
+  font-style:italic;font-size:.93rem;line-height:1.5;
+}
+.wmk-zu{
+  position:absolute;top:.45rem;right:.5rem;border:none;background:transparent;
+  font-size:.95rem;line-height:1;cursor:pointer;color:var(--ink-mute,#7a6a56);padding:.2rem;
+}
+.wmk-ton{
+  margin-top:.6rem;border:2px solid var(--ink);background:var(--sand);color:var(--ink);
+  border-radius:999px;padding:.3rem .75rem;font-family:inherit;font-size:.82rem;
+  font-weight:700;cursor:pointer;
+}
+@media print{ .wm::after{display:none;} .wmk{display:none;} }
+
 /* ---------- Die Ablauftafel ----------
    Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
    und in welcher Aufstellung. */
@@ -693,11 +735,11 @@ a.tab:hover{color:var(--ink);}
 <div class="nur-a2">
 <div class="rmcard"><b>1 · 📣 Melden</b><br>
 <span class="rm">Ich wollte Bescheid geben, dass …</span><span class="rm">Ich möchte einen Schaden melden</span><span class="rm">Bei uns ist etwas kaputt</span>
-<div class="bsp"><span class="wer">So klingt es</span>Guten Tag, ich wollte Bescheid geben, dass bei uns die Heizung nicht warm wird.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Guten Tag, ich wollte Bescheid geben, dass bei uns die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Heizung" data-wort="die Heizung" data-kurz="das Gerät, das die Wohnung warm macht" data-bsp="Die Heizung im Schlafzimmer wird nicht mehr warm.">Heizung</b> nicht warm wird.</div>
 <button class="speak" data-say="Guten Tag, ich wollte Bescheid geben, dass bei uns die Heizung nicht warm wird.">🔊 hören</button></div>
 <div class="rmcard"><b>2 · 🔍 Beschreiben</b><br>
 <span class="rm">Es tropft</span><span class="rm">Es funktioniert nicht mehr</span><span class="rm">Es macht ein Geräusch</span>
-<div class="bsp"><span class="wer">So klingt es</span>Der Wasserhahn im Bad tropft, und zwar ziemlich stark.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Der <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Wasserhahn" data-wort="der Wasserhahn" data-kurz="die Armatur über dem Waschbecken" data-bsp="Am Wasserhahn in der Küche ist etwas locker.">Wasserhahn</b> im Bad tropft, und zwar ziemlich stark.</div>
 <button class="speak" data-say="Der Wasserhahn im Bad tropft, und zwar ziemlich stark.">🔊 hören</button></div>
 <div class="rmcard"><b>3 · 📅 Seit wann</b><br>
 <span class="rm">seit gestern</span><span class="rm">seit einer Woche</span><span class="rm">seit heute Morgen</span>
@@ -742,22 +784,22 @@ a.tab:hover{color:var(--ink);}
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Hausverwaltung Berger, guten Tag.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Guten Tag, Demir, Lindenstraße 12. Ich wollte Bescheid geben, dass unsere Heizung nicht mehr warm wird.</div><div class="dcue">🗣️ Name und Adresse zuerst — dann muss niemand nachfragen. Und nach <b>dass</b> steht <i>wird</i> ganz am Ende.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">In welchem Raum denn?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Im Schlafzimmer. Die anderen Heizungen funktionieren normal.</div><div class="dcue">🗣️ <b>Im</b> Schlafzimmer — Dativ, wie am Montag. Und gleich die nützliche Zusatzinfo.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Im Schlafzimmer. Die anderen Heizungen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von funktionieren" data-wort="funktionieren" data-kurz="arbeiten, wie es soll" data-bsp="Die Klingel funktioniert nicht mehr.">funktionieren</b> normal.</div><div class="dcue">🗣️ <b>Im</b> Schlafzimmer — Dativ, wie am Montag. Und gleich die nützliche Zusatzinfo.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Seit wann ist das so?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Seit Freitag. Wir haben schon entlüftet, das hat nichts gebracht.</div><div class="dcue">🗣️ <b>seit</b> plus Präsens. Und: sag, was du schon versucht hast — das spart einen ganzen Anruf.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Gut, ich gebe das weiter.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Vielen Dank. Bis wann kann ich mit einer Rückmeldung rechnen?</div><div class="dcue">🗣️ Nie ohne diese Frage auflegen. <b>Bis wann</b> macht aus einem Versprechen einen Termin.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Hausverwaltung Berger, guten Tag. Guten Tag, Demir, Lindenstraße 12. Ich wollte Bescheid geben, dass unsere Heizung nicht mehr warm wird. In welchem Raum denn? Im Schlafzimmer. Die anderen Heizungen funktionieren normal. Seit wann ist das so? Seit Freitag. Wir haben schon entlüftet, das hat nichts gebracht. Gut, ich gebe das weiter. Vielen Dank. Bis wann kann ich mit einer Rückmeldung rechnen?">🔊 Dialog vorlesen lassen</button></div>
 
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-wohnen.webp" alt="Zwei Personen stehen an einer Wohnungstür"><h4>Dialog 2 · „Der Handwerker steht vor der Tür“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Der Handwerker kommt und will wissen, was los ist. Du führst ihn hin und erklärst.</div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Guten Tag, Sanitär Weber. Was ist denn kaputt?</div></div>
+<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-wohnen.webp" alt="Zwei Personen stehen an einer Wohnungstür"><h4>Dialog 2 · „Der Handwerker steht vor der Tür“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Der <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Handwerker" data-wort="der Handwerker" data-kurz="Fachmann, der die Reparatur macht" data-bsp="Der Handwerker kommt am Donnerstag zwischen acht und zwölf.">Handwerker</b> kommt und will wissen, was los ist. Du führst ihn hin und erklärst.</div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Guten Tag, Sanitär Weber. Was ist denn <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von kaputt" data-wort="kaputt" data-kurz="ganz oder teilweise nicht mehr zu gebrauchen" data-bsp="Der Aufzug ist seit gestern kaputt.">kaputt</b>?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Kommen Sie rein. Der Wasserhahn im Bad tropft, und unten im Schrank ist alles feucht.</div><div class="dcue">🗣️ Erst hereinbitten, dann beschreiben. Zwei Beobachtungen sind besser als ein Wort.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Tropft es nur, oder läuft es dauernd?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Nachts tropft es, tagsüber läuft es fast durchgehend.</div><div class="dcue">🗣️ Der Unterschied zwischen <b>tropfen</b> und <b>laufen</b> — genau danach wird gefragt.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ich schau mir das an. Haben Sie einen Eimer?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ja, hole ich sofort. Steht der Hauptschalter für das Wasser im Keller?</div><div class="dcue">🗣️ Selbst mitdenken und nachfragen — das mögen Handwerker.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Meistens ja. Das dauert ungefähr eine halbe Stunde.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Gut. Und wer bekommt die Rechnung — ich oder die Verwaltung?</div><div class="dcue">🗣️ Die wichtigste Frage überhaupt, und man muss sie selbst stellen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Gut. Und wer bekommt die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Rechnung" data-wort="die Rechnung" data-kurz="das Papier, auf dem steht, was es kostet" data-bsp="Die Rechnung geht direkt an die Hausverwaltung.">Rechnung</b> — ich oder die Verwaltung?</div><div class="dcue">🗣️ Die wichtigste Frage überhaupt, und man muss sie selbst stellen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Guten Tag, Sanitär Weber. Was ist denn kaputt? Kommen Sie rein. Der Wasserhahn im Bad tropft, und unten im Schrank ist alles feucht. Tropft es nur, oder läuft es dauernd? Nachts tropft es, tagsüber läuft es fast durchgehend. Ich schau mir das an. Haben Sie einen Eimer? Ja, hole ich sofort. Steht der Hauptschalter für das Wasser im Keller? Meistens ja. Das dauert ungefähr eine halbe Stunde. Gut. Und wer bekommt die Rechnung — ich oder die Verwaltung?">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../vok-bild/der-aushang.webp" alt="Eine leere Pinnwand an einer hellen Wand"><h4>Dialog 3 · „Der Aufzug steht still“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Im Treppenhaus triffst du eine Nachbarin. Der Aufzug geht seit Tagen nicht.</div>
@@ -1184,6 +1226,64 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.setAttribute('aria-expanded',auf?'true':'false');
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
+
+/* ---- Markierte Woerter ----
+   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
+   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
+   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
+
+   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
+   den viele verwechseln. */
+(function(){
+ var woerter=[].slice.call(document.querySelectorAll('.wm'));
+ if(!woerter.length) return;
+ var karte=null;
+
+ function zu(){ if(karte){ karte.remove(); karte=null; }
+  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
+
+ function auf(w){
+  var schonOffen=w.classList.contains('offen');
+  zu();
+  if(schonOffen) return;
+  w.classList.add('offen');
+  karte=document.createElement('div');
+  karte.className='wmk';
+  var satz=w.dataset.bsp||'';
+  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
+   + '<b>'+w.dataset.wort+'</b>'
+   + '<span>'+(w.dataset.kurz||'')+'</span>'
+   + (satz?'<em>'+satz+'</em>':'')
+   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
+  document.body.appendChild(karte);
+
+  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
+  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
+  var links=r.left+r.width/2-b.width/2;
+  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
+  var oben=r.bottom+window.pageYOffset+9;
+  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
+   oben=r.top+window.pageYOffset-b.height-9;
+  karte.style.left=links+'px'; karte.style.top=oben+'px';
+
+  karte.querySelector('.wmk-zu').onclick=zu;
+  var ton=karte.querySelector('.wmk-ton');
+  if(ton) ton.onclick=function(){ say(satz); };
+ }
+
+ woerter.forEach(function(w){
+  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
+  w.addEventListener('keydown',function(ev){
+   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
+ });
+ document.addEventListener('click',zu);
+ document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
+ window.addEventListener('resize',zu);
+ /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
+    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
+ document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
+  k.addEventListener('click',zu); });
+})();
 
 /* ---- Bildkarten verdecken ----
    Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau

@@ -436,6 +436,48 @@ body[data-niveau="b1"] .nur-a2{display:none !important;}
 }
 section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
 
+/* ---------- Markierte Wörter ----------
+   Keine Wortschatzliste mehr, sondern das Wort dort, wo es steht.
+   Gelb unterstrichen: Wort dieser Stunde. Rot gepunktet: Begriff,
+   den viele verwechseln. Beides bleibt lesbar, wenn man es ignoriert —
+   die Markierung liegt unter der Zeile, nicht auf dem Wort. */
+.wm{
+  font-weight:inherit;cursor:pointer;position:relative;
+  border-bottom:3px solid var(--yellow);
+  padding-bottom:1px;transition:background .12s;
+}
+.wm.schwer{border-bottom:3px dotted var(--red);}
+.wm:hover,.wm.offen{background:rgba(255,210,74,.35);border-radius:4px 4px 0 0;}
+.wm.schwer:hover,.wm.schwer.offen{background:rgba(232,48,42,.12);}
+.wm:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.wm::after{
+  content:'';display:inline-block;width:.42em;height:.42em;margin-left:.22em;
+  vertical-align:.35em;border-radius:50%;background:var(--yellow);
+}
+.wm.schwer::after{background:var(--red);}
+
+.wmk{
+  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
+  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
+  box-shadow:5px 5px 0 rgba(38,32,25,.2);padding:.85rem 1rem .9rem;
+}
+.wmk b{display:block;font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.25;padding-right:1.4rem;}
+.wmk span{display:block;margin-top:.3rem;font-size:.94rem;line-height:1.5;color:var(--ink-soft);}
+.wmk em{
+  display:block;margin-top:.55rem;padding-left:.7rem;border-left:3px solid var(--teal);
+  font-style:italic;font-size:.93rem;line-height:1.5;
+}
+.wmk-zu{
+  position:absolute;top:.45rem;right:.5rem;border:none;background:transparent;
+  font-size:.95rem;line-height:1;cursor:pointer;color:var(--ink-mute,#7a6a56);padding:.2rem;
+}
+.wmk-ton{
+  margin-top:.6rem;border:2px solid var(--ink);background:var(--sand);color:var(--ink);
+  border-radius:999px;padding:.3rem .75rem;font-family:inherit;font-size:.82rem;
+  font-weight:700;cursor:pointer;
+}
+@media print{ .wm::after{display:none;} .wmk{display:none;} }
+
 /* ---------- Die Ablauftafel ----------
    Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
    und in welcher Aufstellung. */
@@ -680,7 +722,7 @@ a.tab:hover{color:var(--ink);}
 <button class="speak" data-say="Es geht um meine Rechnung vom Oktober. Ich wollte fragen, ob sie schon bezahlt ist.">🔊 hören</button></div>
 <div class="rmcard"><b>3 · ❓ Nachfragen</b><br>
 <span class="rm">Können Sie das bitte wiederholen?</span><span class="rm">Könnten Sie langsamer sprechen?</span><span class="rm">Wie schreibt man das?</span><span class="rm">Habe ich das richtig verstanden?</span>
-<div class="bsp"><span class="wer">So klingt es</span>Könnten Sie das bitte wiederholen? Die Leitung ist nicht gut.</div>
+<div class="bsp"><span class="wer">So klingt es</span>Könnten Sie das bitte wiederholen? Die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Leitung" data-wort="die Leitung" data-kurz="die Verbindung beim Telefonieren" data-bsp="Die Leitung ist sehr schlecht, ich verstehe Sie kaum.">Leitung</b> ist nicht gut.</div>
 <button class="speak" data-say="Könnten Sie das bitte wiederholen? Die Leitung ist nicht gut.">🔊 hören</button></div>
 <div class="rmcard"><b>4 · ✅ Abschließen</b><br>
 <span class="rm">Also, ich schicke es bis Freitag.</span><span class="rm">Vielen Dank für die Auskunft.</span><span class="rm">Schicken Sie mir das schriftlich?</span><span class="rm">Auf Wiederhören.</span>
@@ -730,7 +772,7 @@ a.tab:hover{color:var(--ink);}
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Personalabteilung, Sie sprechen mit Frau Lange.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Guten Tag, Karim mein Name. Ich glaube, ich bin falsch verbunden — bei mir geht es um eine Rechnung.</div><div class="dcue">🗣️ Selbst sagen, dass man falsch ist, statt es die andere Person merken zu lassen. Das spart beiden Zeit und wirkt sehr souverän.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Da sind Sie tatsächlich falsch. Ich verbinde Sie weiter.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Bevor Sie weiterverbinden: Könnten Sie mir sagen, wer dort zuständig ist? Falls die Verbindung abbricht.</div><div class="dcue">🗣️ Der klügste Satz des ganzen Dialogs. <b>zuständig für</b> — und mit dem Namen kannst du beim nächsten Mal direkt anrufen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Bevor Sie <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von weiterverbinden" data-wort="weiterverbinden" data-kurz="einen Anruf an die richtige Person durchstellen" data-bsp="Einen Moment, ich verbinde Sie weiter.">weiterverbinden</b>: Könnten Sie mir sagen, wer dort <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von zuständig" data-wort="zuständig" data-kurz="verantwortlich für genau diese Sache" data-bsp="Können Sie mir sagen, wer dafür zuständig ist?">zuständig</b> ist? Falls die Verbindung abbricht.</div><div class="dcue">🗣️ Der klügste Satz des ganzen Dialogs. <b>zuständig für</b> — und mit dem Namen kannst du beim nächsten Mal direkt anrufen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Das ist Herr Otto, Durchwahl 214.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Otto, 214 — ich notiere es mir. Vielen Dank für Ihre Hilfe.</div><div class="dcue">🗣️ Wiederholen und mitschreiben. So merkst du sofort, wenn du etwas falsch verstanden hast — und die andere Person hört, dass du zuhörst.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Personalabteilung, Sie sprechen mit Frau Lange. Guten Tag, Karim mein Name. Ich glaube, ich bin falsch verbunden — bei mir geht es um eine Rechnung. Da sind Sie tatsächlich falsch. Ich verbinde Sie weiter. Bevor Sie weiterverbinden: Könnten Sie mir sagen, wer dort zuständig ist? Falls die Verbindung abbricht. Das ist Herr Otto, Durchwahl 214. Otto, 214 — ich notiere es mir. Vielen Dank für Ihre Hilfe.">🔊 Dialog vorlesen lassen</button></div>
@@ -739,18 +781,18 @@ a.tab:hover{color:var(--ink);}
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Der nächste freie Termin wäre der 18. um 9:30 Uhr.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Vormittags ist bei mir schwierig — ich arbeite bis 14 Uhr. Hätten Sie auch etwas am Nachmittag?</div><div class="dcue">🗣️ Erst der Grund, dann die Frage. Und beachte <b>hätten Sie</b> im Konjunktiv: eine Bitte, keine Forderung.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Am 20. um 15 Uhr wäre noch etwas frei.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Den 20. um 15 Uhr nehme ich. Können Sie mir den Termin schriftlich bestätigen?</div><div class="dcue">🗣️ Termin wiederholen und bestätigen lassen. Zwei Sekunden Aufwand, und in drei Wochen erinnert sich niemand anders.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Den 20. um 15 Uhr nehme ich. Können Sie mir den Termin <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von schriftlich" data-wort="schriftlich" data-kurz="auf Papier oder per E-Mail, nicht mündlich" data-bsp="Könnten Sie mir das bitte schriftlich schicken?">schriftlich</b> <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von bestätigen" data-wort="bestätigen" data-kurz="sagen, dass etwas richtig ist oder gilt" data-bsp="Können Sie mir den Termin kurz bestätigen?">bestätigen</b>?</div><div class="dcue">🗣️ Termin wiederholen und bestätigen lassen. Zwei Sekunden Aufwand, und in drei Wochen erinnert sich niemand anders.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ich schicke Ihnen eine Mail. Ihre Adresse habe ich?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ich buchstabiere sie sicherheitshalber: N wie Nordpol, Karim, K wie Kaufmann.</div><div class="dcue">🗣️ Buchstabieren, bevor man gefragt wird. Bei fremden Namen ist das keine Übervorsicht, sondern schlicht praktisch.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="Der nächste freie Termin wäre der 18. um 9:30 Uhr. Vormittags ist bei mir schwierig — ich arbeite bis 14 Uhr. Hätten Sie auch etwas am Nachmittag? Am 20. um 15 Uhr wäre noch etwas frei. Den 20. um 15 Uhr nehme ich. Können Sie mir den Termin schriftlich bestätigen? Ich schicke Ihnen eine Mail. Ihre Adresse habe ich? Ich buchstabiere sie sicherheitshalber: N wie Nordpol, Karim, K wie Kaufmann.">🔊 Dialog vorlesen lassen</button></div>
 
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../bilder/lesen/handy.webp" alt="Ein Handy mit zwei Sprechblasen auf dem Bildschirm"><h4>Dialog 4 · „Schlechte Leitung“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Man versteht kaum etwas. B sagt es klar — und bittet um einen Rückruf, statt sich durchzuquälen.</div>
+<div class="dwrap" data-runde="1"><div class="dhead"><img src="../bilder/lesen/handy.webp" alt="Ein Handy mit zwei Sprechblasen auf dem Bildschirm"><h4>Dialog 4 · „Schlechte Leitung“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Man versteht kaum etwas. B sagt es klar — und bittet um einen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Rückruf" data-wort="der Rückruf" data-kurz="wenn jemand später zurückruft" data-bsp="Könnte ich um einen Rückruf bitten?">Rückruf</b>, statt sich durchzuquälen.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">… und dann bräuchten wir noch … formular … bis Freitag …</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Entschuldigung, die Leitung ist sehr schlecht. Ich habe nur <i>Formular</i> und <i>Freitag</i> verstanden.</div><div class="dcue">🗣️ Sag genau, was du verstanden hast. Damit weiß die andere Person, wo sie ansetzen muss — und wiederholt nicht alles von vorn.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ist es jetzt besser? Ich gehe kurz nach draußen.</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Etwas besser, ja. Welches Formular genau brauchen Sie?</div><div class="dcue">🗣️ Sofort die konkrete Frage nachschieben, solange die Verbindung hält. <b>Welches … genau</b> ist am Telefon Gold wert.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Das Formular A2, das schicke ich Ihnen per Mail.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Gut. Falls die Leitung abbricht: Ich bin heute bis 16 Uhr erreichbar, sonst bitte ich um einen Rückruf morgen früh.</div><div class="dcue">🗣️ Für den Abbruch vorsorgen. <b>erreichbar</b> und <b>um einen Rückruf bitten</b> — zwei Wörter, die dir eine zweite Warteschleife ersparen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Gut. Falls die Leitung abbricht: Ich bin heute bis 16 Uhr <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von erreichbar" data-wort="erreichbar" data-kurz="wenn man jemanden antreffen kann" data-bsp="Ich bin heute bis 16 Uhr erreichbar.">erreichbar</b>, sonst bitte ich um einen Rückruf morgen früh.</div><div class="dcue">🗣️ Für den Abbruch vorsorgen. <b>erreichbar</b> und <b>um einen Rückruf bitten</b> — zwei Wörter, die dir eine zweite Warteschleife ersparen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <button class="speak dbtn" data-say="… und dann bräuchten wir noch … formular … bis Freitag … Entschuldigung, die Leitung ist sehr schlecht. Ich habe nur Formular und Freitag verstanden. Ist es jetzt besser? Ich gehe kurz nach draußen. Etwas besser, ja. Welches Formular genau brauchen Sie? Das Formular A2, das schicke ich Ihnen per Mail. Gut. Falls die Leitung abbricht: Ich bin heute bis 16 Uhr erreichbar, sonst bitte ich um einen Rückruf morgen früh.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Setzt euch mit dem Rücken zueinander und spielt Dialog 1 mit euren eigenen Anliegen. Ohne Gesicht ist es wirklich schwerer — und genau deshalb übt man es so.</div>
@@ -1155,6 +1197,64 @@ document.querySelectorAll('.hilfe > button').forEach(function(b){
   b.setAttribute('aria-expanded',auf?'true':'false');
   b.textContent=auf?'✕ Hilfe schließen':text;};
 });
+
+/* ---- Markierte Woerter ----
+   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
+   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
+   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
+
+   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
+   den viele verwechseln. */
+(function(){
+ var woerter=[].slice.call(document.querySelectorAll('.wm'));
+ if(!woerter.length) return;
+ var karte=null;
+
+ function zu(){ if(karte){ karte.remove(); karte=null; }
+  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
+
+ function auf(w){
+  var schonOffen=w.classList.contains('offen');
+  zu();
+  if(schonOffen) return;
+  w.classList.add('offen');
+  karte=document.createElement('div');
+  karte.className='wmk';
+  var satz=w.dataset.bsp||'';
+  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
+   + '<b>'+w.dataset.wort+'</b>'
+   + '<span>'+(w.dataset.kurz||'')+'</span>'
+   + (satz?'<em>'+satz+'</em>':'')
+   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
+  document.body.appendChild(karte);
+
+  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
+  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
+  var links=r.left+r.width/2-b.width/2;
+  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
+  var oben=r.bottom+window.pageYOffset+9;
+  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
+   oben=r.top+window.pageYOffset-b.height-9;
+  karte.style.left=links+'px'; karte.style.top=oben+'px';
+
+  karte.querySelector('.wmk-zu').onclick=zu;
+  var ton=karte.querySelector('.wmk-ton');
+  if(ton) ton.onclick=function(){ say(satz); };
+ }
+
+ woerter.forEach(function(w){
+  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
+  w.addEventListener('keydown',function(ev){
+   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
+ });
+ document.addEventListener('click',zu);
+ document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
+ window.addEventListener('resize',zu);
+ /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
+    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
+ document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
+  k.addEventListener('click',zu); });
+})();
 
 /* ---- Bildkarten verdecken ----
    Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
