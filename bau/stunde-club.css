@@ -1,0 +1,404 @@
+/* ============================================================
+   stunde-club.css — die Stunde im Aussehen von
+   deutschoderwas-club.de
+
+   Vorher trugen die Stunden einen eigenen Look: Fraunces als
+   Serifenschrift, cremefarbener Verlauf, schwarze Rahmen mit
+   harten versetzten Schatten. Fuer sich schoen — aber daneben
+   sah die Website aus wie eine andere Marke.
+
+   Die Werte hier stammen eins zu eins aus index.html, der
+   Startseite des Clubs: dieselben Farben, dieselben Schriften,
+   dieselbe Fahnenleiste oben, derselbe goldene Marker.
+
+     Inter          Fliesstext
+     Space Grotesk  Ueberschriften, Zahlen, Knoepfe
+     #161616        Text
+     #DD0000        Signalfarbe (Augenbraue, wichtige Marken)
+     #FFCE00        Gold (Marker, Hinweise)
+     #1B9BC0        Tuerkis (Knoepfe, aktive Marke)
+     #FFF8E8        warmes Papier fuer Kaesten
+     #EAE6DE        Linien
+
+   Was hier nicht mehr steht, gibt es auf der Seite auch nicht
+   mehr: Wortschatzkarten, Grammatiktafeln, Quiz und Lueckentext
+   sind aus der Stunde raus. Die Stunde ist zum Sprechen da.
+   ============================================================ */
+
+:root{
+  --ink:#161616; --soft:#5B6470; --line:#EAE6DE;
+  --turq:#9FE4F1; --turq-d:#1B9BC0; --teal-ink:#10627A; --mint:#EFFBF8;
+  --red:#DD0000; --red-d:#B30000;
+  --gold:#FFCE00; --gold-mark:#FFD84D; --gold-d:#E0A500;
+  --bg:#FFFFFF; --warm:#FFF8E8; --pink:#FFF1EE;
+  --schatten:0 1px 2px rgba(22,22,22,.04), 0 10px 28px rgba(22,22,22,.05);
+  --schatten-k:0 1px 2px rgba(22,22,22,.05);
+  /* Fuer Bausteine, die noch die alten Namen benutzen. */
+  --cream:#FFFFFF; --cream-warm:#FFF8E8; --paper:#FFFFFF;
+  --ink-soft:#5B6470; --ink-mute:#8C93A0; --sand:#EAE6DE;
+  --teal:#1B9BC0; --teal-soft:#EFFBF8;
+  --yellow:#FFCE00; --yellow-soft:#FFF8E8;
+  --red-soft:#FFF1EE; --green:#4E9E12;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+html,body{max-width:100%;overflow-x:clip;}
+img{height:auto;max-width:100%;}
+body{
+  font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);
+  line-height:1.6;-webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;font-weight:700;letter-spacing:-.02em;line-height:1.12;}
+
+/* Die Fahnenleiste vom Club, ganz oben. */
+.flagbar{
+  height:5px;
+  background:linear-gradient(90deg,#161616 0 25%,var(--red) 25% 50%,var(--gold) 50% 75%,var(--turq) 75% 100%);
+}
+
+.wrapper{max-width:900px;margin:0 auto;padding:2rem 1.25rem 5rem;}
+
+/* ---------- Kopf ---------- */
+.eyebrow{
+  text-align:center;font-size:.72rem;font-weight:700;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--red);margin-bottom:.65rem;
+}
+h1.title{font-size:clamp(1.9rem,4.6vw,3rem);text-align:center;}
+h1.title .hl{
+  background:var(--gold-mark);border-radius:7px;padding:.02em .26em;font-style:italic;
+  -webkit-box-decoration-break:clone;box-decoration-break:clone;
+}
+.subtitle{
+  text-align:center;max-width:38rem;margin:.85rem auto 0;
+  font-size:1.02rem;color:var(--soft);
+}
+.niv-wie{text-align:center;max-width:34rem;margin:.75rem auto 0;font-size:.85rem;color:var(--soft);}
+
+/* ---------- Leiste: Niveau und Sprungmarken ---------- */
+.leiste{
+  position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:.5rem;
+  width:100%;margin:1.1rem 0 1.6rem;padding:.4rem .5rem;
+  background:rgba(255,255,255,.94);backdrop-filter:blur(10px);
+  border:1px solid var(--line);border-radius:14px;box-shadow:var(--schatten-k);
+}
+.nivk{display:flex;gap:.2rem;flex:none;background:#F4F2ED;border-radius:999px;padding:3px;}
+.nivk button{
+  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;
+  border:none;border-radius:999px;padding:.32rem .8rem;background:transparent;color:var(--soft);
+  transition:.15s;white-space:nowrap;
+}
+.nivk button[aria-pressed="true"]{background:var(--ink);color:#fff;}
+.nivk button:focus-visible{outline:3px solid var(--turq-d);outline-offset:2px;}
+.tabs{
+  display:flex;flex-wrap:nowrap;gap:.3rem;overflow-x:auto;overscroll-behavior-x:contain;
+  flex:1 1 auto;min-width:0;margin:0;padding:.1rem 0;
+  scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;
+}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{
+  flex:none;white-space:nowrap;font-family:'Space Grotesk',sans-serif;
+  font-size:.84rem;font-weight:600;color:var(--ink);background:#fff;
+  border:1px solid var(--line);border-radius:999px;padding:.4rem .8rem;cursor:pointer;
+  display:inline-flex;gap:.3rem;align-items:center;transition:.15s;
+}
+.tab:hover{border-color:var(--turq-d);color:var(--teal-ink);}
+.tab.active{background:var(--turq-d);border-color:var(--turq-d);color:#fff;}
+.tabAlles{border-style:dashed;color:var(--soft);}
+.tabAlles[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff;border-style:solid;}
+
+/* ---------- Abschnitte ---------- */
+.section{animation:auf .25s ease;}
+body.schaltet .section[hidden]{display:none !important;}
+@keyframes auf{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+section.section{scroll-margin-top:calc(var(--leiste,58px) + 1rem);}
+/* Ein kurzer Abschnitt wie der Abschluss ist niedriger als das
+   Fenster. Dann kann die Seite gar nicht weit genug scrollen, und
+   der Titel der Stunde bleibt oben stehen — es sah aus, als waere
+   man versehentlich am Anfang gelandet. Mit dieser Mindesthoehe
+   landet jeder Abschnitt gleich weit oben. */
+body.schaltet section.section{min-height:calc(100vh - 9rem);}
+body.schaltet section.section:last-of-type{min-height:0;}
+h2.st{font-size:clamp(1.4rem,3vw,1.9rem);margin:.4rem 0 .35rem;}
+h2.st .hl{
+  background:var(--gold-mark);border-radius:7px;padding:.02em .24em;font-style:italic;
+  -webkit-box-decoration-break:clone;box-decoration-break:clone;
+}
+.ssub{color:var(--soft);margin-bottom:1.1rem;font-size:.97rem;max-width:44rem;}
+
+/* Zeit und Aufstellung, direkt unter der Ueberschrift. */
+.regie{
+  display:inline-flex;align-items:center;gap:.55rem;flex-wrap:wrap;
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:999px;
+  padding:.3rem .85rem;margin:0 0 1.1rem;font-size:.82rem;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;font-family:'Space Grotesk',sans-serif;}
+.regie b{font-weight:500;color:var(--soft);}
+
+/* ---------- Ablauftafel ---------- */
+.takt{display:flex;flex-direction:column;gap:.4rem;margin:1rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.15rem .75rem;align-items:start;
+  background:#fff;border:1px solid var(--line);border-radius:12px;padding:.7rem .85rem;
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.4rem;text-align:center;
+  background:var(--ink);color:#fff;border-radius:8px;padding:.28rem .4rem;
+  font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.8rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.2rem;line-height:1;}
+.takt-t b{display:block;font-family:'Space Grotesk',sans-serif;font-size:1rem;}
+.takt-t span{display:block;font-size:.9rem;line-height:1.45;color:var(--soft);margin-top:.05rem;}
+.takt-t em{display:block;font-style:normal;font-size:.78rem;font-weight:700;color:var(--teal-ink);margin-top:.2rem;}
+
+/* ---------- Ankommen und Abschluss ---------- */
+.ank{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;padding:1rem 1.15rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.16rem;line-height:1.4;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.7rem;background:#fff;border:1px dashed var(--line);
+  font-family:'Inter',sans-serif;font-size:.97rem;font-weight:500;
+}
+.ank.zweit span{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.25rem;
+}
+
+/* ---------- Tippkasten ---------- */
+.tip{
+  background:var(--warm);border:1px solid #F0E4C4;border-left:4px solid var(--gold);
+  border-radius:12px;padding:.8rem 1rem;margin:1.1rem 0 0;font-size:.94rem;line-height:1.6;
+}
+.tip.teal{background:var(--mint);border-color:#CDEEF3;border-left-color:var(--turq-d);}
+
+/* ---------- Dialog ---------- */
+.dwrap{
+  background:#fff;border:1px solid var(--line);border-radius:16px;
+  padding:1rem 1.05rem 1.1rem;margin:0 0 1rem;box-shadow:var(--schatten-k);
+}
+.dhead{display:flex;align-items:center;gap:.65rem;flex-wrap:wrap;margin-bottom:.55rem;}
+.dhead img{width:44px;height:44px;object-fit:cover;border-radius:50%;flex:none;}
+.dhead h4{font-size:1.02rem;flex:1 1 12rem;}
+.rbtn{
+  font-family:'Space Grotesk',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer;
+  border:1px solid var(--turq-d);background:var(--mint);color:var(--teal-ink);
+  border-radius:999px;padding:.32rem .75rem;
+}
+.rbtn:hover{background:var(--turq-d);color:#fff;}
+.dsit{font-size:.9rem;color:var(--soft);margin-bottom:.75rem;}
+.dline{display:grid;grid-template-columns:auto 1fr;gap:.5rem;margin:.4rem 0;align-items:start;}
+.dwho{
+  width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
+  font-family:'Space Grotesk',sans-serif;font-size:.75rem;font-weight:700;color:#fff;flex:none;
+}
+.dwho.a{background:var(--red);}
+.dwho.b{background:var(--turq-d);}
+.dtxt{
+  background:var(--mint);border-radius:4px 14px 14px 14px;padding:.55rem .8rem;
+  font-size:.97rem;line-height:1.55;
+}
+.dline.b{grid-template-columns:1fr auto;}
+.dline.b .dwho{order:2;}
+.dline.b .dtxt{order:1;background:var(--warm);border-radius:14px 4px 14px 14px;}
+.dcue{
+  grid-column:1 / -1;margin:.2rem 0 .3rem;font-size:.85rem;color:var(--soft);
+  background:#fff;border:1px dashed var(--line);border-radius:10px;padding:.4rem .65rem;cursor:pointer;
+}
+.dcue .kl{display:block;font-size:.7rem;color:var(--ink-mute);margin-top:.15rem;}
+.dline .dcue{display:none;}
+.dwrap[data-runde="2"] .dline.b .dtxt{visibility:hidden;}
+.dwrap[data-runde="2"] .dline.b .dcue{display:block;}
+.dline.zeigen .dtxt{visibility:visible !important;}
+img.dbild{max-width:160px;border-radius:10px;margin-top:.4rem;}
+.dbtn{margin-top:.7rem;}
+
+/* ---------- Sprechen-Knopf ---------- */
+.speak{
+  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;
+  border:1px solid var(--line);background:#fff;color:var(--ink);
+  border-radius:999px;padding:.35rem .8rem;
+}
+.speak:hover{border-color:var(--ink);}
+
+/* ---------- 90 Sekunden ---------- */
+.card90{
+  background:#fff;border:1px solid var(--line);border-radius:18px;
+  padding:1.1rem 1.15rem 1.2rem;text-align:center;box-shadow:var(--schatten);
+}
+.card90 img{width:100%;max-width:240px;border-radius:12px;margin:0 auto .8rem;display:block;}
+.card90 .lbl{
+  font-size:.7rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--red);margin-bottom:.3rem;
+}
+.card90 .word{font-family:'Space Grotesk',sans-serif;font-size:1.7rem;font-weight:700;line-height:1.2;}
+.helpwords{display:flex;flex-wrap:wrap;gap:.35rem;justify-content:center;margin:.75rem 0 .9rem;}
+.hw{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:999px;
+  padding:.28rem .7rem;font-size:.85rem;font-weight:500;
+}
+.timer{
+  font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:700;
+  font-variant-numeric:tabular-nums;color:var(--teal-ink);
+}
+.zeit{display:block;}
+.btn{
+  font-family:'Space Grotesk',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;
+  border:1px solid var(--turq-d);background:var(--turq-d);color:#fff;
+  border-radius:999px;padding:.5rem 1.1rem;margin:.25rem .2rem 0;
+}
+.btn.ghost{background:#fff;color:var(--teal-ink);}
+.btn:hover{background:#167f9e;border-color:#167f9e;color:#fff;}
+
+/* ---------- Rollenspiel und Sprechkarten ---------- */
+.rmcard{
+  background:#fff;border:1px solid var(--line);border-radius:14px;
+  padding:.9rem 1rem;margin:0 0 .8rem;
+}
+.rmcard>b{display:block;font-family:'Space Grotesk',sans-serif;font-size:1rem;margin-bottom:.35rem;}
+.rm{
+  display:inline-block;background:var(--mint);border:1px solid #CDEEF3;color:var(--teal-ink);
+  border-radius:999px;padding:.25rem .65rem;margin:.15rem .2rem .15rem 0;font-size:.87rem;font-weight:500;
+}
+.bsp{
+  background:var(--warm);border-left:4px solid var(--gold);border-radius:0 10px 10px 0;
+  padding:.55rem .8rem;margin:.6rem 0 0;font-size:.95rem;line-height:1.55;
+}
+.bsp .wer{
+  display:block;font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.15rem;
+}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:#fff;border-radius:14px;padding:1rem 1.15rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.12rem;line-height:1.4;font-weight:600;margin:0 0 .9rem;
+}
+.deb-seiten{display:grid;gap:.7rem;margin:0 0 .9rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:#fff;border:1px solid var(--line);border-radius:14px;padding:.85rem .95rem;}
+.deb-s b{
+  display:block;font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:800;
+  letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem;
+}
+.deb-s.pro{border-top:4px solid var(--turq-d);}
+.deb-s.pro b{color:var(--teal-ink);}
+.deb-s.con{border-top:4px solid var(--red);}
+.deb-s.con b{color:var(--red);}
+.deb-s ul{margin:0;padding-left:1.05rem;font-size:.94rem;line-height:1.6;}
+.deb-s li{margin:.3rem 0;}
+.deb-s p{margin:0;font-size:.94rem;line-height:1.6;color:var(--soft);}
+.deb-mittel{background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;padding:.85rem 1rem;margin:0 0 .9rem;}
+.deb-mittel b{
+  display:block;font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:800;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--soft);margin-bottom:.5rem;
+}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.35rem;}
+.deb-chips span{
+  background:#fff;border:1px solid #F0E4C4;border-radius:999px;
+  padding:.3rem .7rem;font-size:.88rem;font-weight:500;
+}
+.deb-mehr{border:1px dashed var(--line);border-radius:14px;padding:.85rem 1rem;}
+.deb-mehr b{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.35rem;
+}
+.deb-mehr ul{margin:0;padding-left:1.05rem;font-size:.93rem;line-height:1.6;}
+
+/* ---------- Hausaufgabe ---------- */
+.hagrid{display:grid;gap:.6rem;}
+.ha{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .7rem;align-items:start;
+  background:#fff;border:1px solid var(--line);border-radius:14px;padding:.8rem .9rem;
+}
+.ha .box{
+  grid-row:span 2;width:22px;height:22px;border:2px solid var(--line);border-radius:6px;
+  cursor:pointer;align-self:center;
+}
+.ha.fertig .box{background:var(--turq-d);border-color:var(--turq-d);}
+.ha.fertig .htxt{opacity:.55;text-decoration:line-through;}
+.ha .hi{grid-row:span 2;align-self:center;font-size:1.15rem;}
+.ha .htxt b{display:block;font-family:'Space Grotesk',sans-serif;font-size:.97rem;}
+.ha .htxt{font-size:.92rem;line-height:1.55;color:var(--soft);}
+.hastand{
+  font-family:'Space Grotesk',sans-serif;font-size:.85rem;font-weight:700;
+  color:var(--soft);margin:.7rem 0 0;
+}
+.zeit{
+  display:inline-block;background:var(--mint);border:1px solid #CDEEF3;color:var(--teal-ink);
+  border-radius:999px;padding:.1rem .5rem;font-size:.72rem;font-weight:700;margin-left:.35rem;
+}
+.hilfe{
+  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;
+  border:1px solid var(--line);background:#fff;border-radius:999px;padding:.35rem .8rem;margin:.6rem 0 0;
+}
+.inhalt{
+  display:none;background:var(--warm);border:1px solid #F0E4C4;border-radius:12px;
+  padding:.75rem .9rem;margin:.55rem 0 0;font-size:.93rem;line-height:1.6;
+}
+.inhalt.offen{display:block;}
+
+/* ---------- Markierte Woerter ---------- */
+.wm{
+  cursor:pointer;background:var(--gold-mark);border-radius:5px;padding:.02em .2em;
+  -webkit-box-decoration-break:clone;box-decoration-break:clone;
+}
+.wm.schwer{background:transparent;border-bottom:2px dotted var(--red);border-radius:0;}
+.wm:hover,.wm.offen{background:var(--gold);}
+.wm.schwer:hover,.wm.schwer.offen{background:var(--pink);}
+.wm:focus-visible{outline:3px solid var(--turq-d);outline-offset:2px;}
+.wmk{
+  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
+  background:#fff;border:1px solid var(--line);border-radius:14px;
+  box-shadow:var(--schatten);padding:.8rem .95rem .85rem;
+}
+.wmk b{display:block;font-family:'Space Grotesk',sans-serif;font-size:1.05rem;padding-right:1.4rem;}
+.wmk span{display:block;margin-top:.25rem;font-size:.92rem;line-height:1.5;color:var(--soft);}
+.wmk em{
+  display:block;margin-top:.5rem;padding-left:.65rem;border-left:3px solid var(--turq-d);
+  font-style:italic;font-size:.91rem;line-height:1.5;
+}
+.wmk-zu{
+  position:absolute;top:.4rem;right:.45rem;border:none;background:transparent;
+  font-size:.9rem;line-height:1;cursor:pointer;color:var(--soft);padding:.2rem;
+}
+.wmk-ton{
+  margin-top:.55rem;border:1px solid var(--line);background:#fff;color:var(--ink);
+  border-radius:999px;padding:.28rem .7rem;font-family:'Space Grotesk',sans-serif;
+  font-size:.78rem;font-weight:700;cursor:pointer;
+}
+
+/* ---------- Weiter und zurueck ---------- */
+.weiterzeile{
+  display:flex;gap:.6rem;flex-wrap:wrap;justify-content:space-between;
+  margin:1.8rem 0 .4rem;padding-top:1.1rem;border-top:1px solid var(--line);
+}
+.weiterknopf{
+  font-family:'Space Grotesk',sans-serif;font-size:.92rem;font-weight:700;cursor:pointer;
+  border:1px solid var(--turq-d);background:var(--turq-d);color:#fff;
+  border-radius:999px;padding:.55rem 1.1rem;margin-left:auto;transition:.15s;
+}
+.weiterknopf.zurueck{background:#fff;color:var(--teal-ink);margin-left:0;margin-right:auto;}
+.weiterknopf:hover{background:#167f9e;border-color:#167f9e;color:#fff;}
+
+/* ---------- Niveau-Umschalter ---------- */
+body[data-niveau="a2"] .nur-b1{display:none !important;}
+body[data-niveau="b1"] .nur-a2{display:none !important;}
+
+/* ---------- Fuss ---------- */
+footer{
+  margin-top:3rem;padding-top:1.2rem;border-top:1px solid var(--line);
+  font-size:.85rem;color:var(--soft);text-align:center;
+}
+footer strong{color:var(--ink);}
+
+@media print{
+  body.schaltet .section[hidden]{display:block !important;}
+  .leiste,.weiterzeile,.wmk{display:none !important;}
+  .wm{background:none;border-bottom:2px solid var(--gold-d);}
+}
+@media(max-width:560px){
+  .wrapper{padding:1.5rem 1rem 4rem;}
+  .leiste{border-radius:12px;padding:.35rem .4rem;gap:.4rem;}
+  .nivk button{padding:.3rem .65rem;font-size:.8rem;}
+  .nivk .zusatz{display:none;}
+}

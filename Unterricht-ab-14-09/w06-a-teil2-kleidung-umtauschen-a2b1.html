@@ -8,654 +8,416 @@
   Aufbau und Design wie maengel-melden-b1.html.
 -->
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-
-
-:root{--cream:#FDF6EC;--cream-warm:#FBEDD8;--paper:#FFFFFF;--ink:#262019;--ink-soft:#5C4E3E;--ink-mute:#A8957D;--red:#E8302A;--red-soft:#FCE5E3;--teal:#0FB5A6;--teal-soft:#D7F0EC;--yellow:#FFD24A;--yellow-soft:#FFF1C2;--sand:#F0E2C8;--green:#2E9E5B;}
-*{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}
-body{background:linear-gradient(180deg,#FDE6E0 0%,var(--cream) 14%,var(--cream) 100%);color:var(--ink);font-family:'Outfit',sans-serif;line-height:1.55;min-height:100vh;}
-.wrapper{max-width:1080px;margin:0 auto;padding:2.2rem 1.5rem 5rem;}
-.eyebrow{text-align:center;font-size:.78rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--red);margin-bottom:.7rem;}
-h1.title{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(2rem,5vw,3.6rem);line-height:1.05;text-align:center;letter-spacing:-.01em;}
-h1.title .hl{position:relative;display:inline-block;font-style:italic;padding:.05em .3em;}
-h1.title .hl::before{content:'';position:absolute;inset:0;background:var(--yellow);border-radius:12px;transform:rotate(-2deg);z-index:-1;}
-.subtitle{text-align:center;max-width:640px;margin:.8rem auto 0;font-size:1.05rem;color:var(--ink-soft);}
-.hero-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;margin:1rem auto 0;}
-.hero-tag{background:var(--paper);border:1.5px solid var(--sand);border-radius:999px;padding:.3rem .85rem;font-size:.82rem;font-weight:600;}
-.hero-tag b{color:var(--red);}
-.tabs{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;background:rgba(251,237,216,.94);backdrop-filter:blur(8px);border-radius:20px;padding:.5rem;margin:1.8rem auto;max-width:fit-content;}
-.tab{font-size:.92rem;font-weight:600;border:2px solid transparent;background:var(--paper);color:var(--ink);padding:.5rem 1rem;border-radius:999px;cursor:pointer;transition:.15s;display:inline-flex;gap:.35rem;align-items:center;}
-.tab:hover{border-color:var(--ink);transform:translateY(-1px);}
-.tab.active{background:var(--red);color:#fff;border-color:var(--red);}
-.section{display:none;animation:fade .35s ease;}.section.active{display:block;}
-@keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
-h2.st{font-family:'Fraunces',serif;font-weight:700;font-size:clamp(1.7rem,3.4vw,2.3rem);text-align:center;margin:1.8rem 0 .4rem;}
-.ssub{text-align:center;color:var(--ink-soft);margin-bottom:1.3rem;}
-.scene-wrap{background:var(--paper);border:4px solid var(--paper);border-radius:20px;box-shadow:0 14px 38px rgba(38,32,25,.16);overflow:hidden;margin:1rem 0;}
-.scene-wrap img{width:100%;display:block;}
-.tip{background:var(--yellow-soft);border:2px dashed var(--yellow);border-radius:16px;padding:.9rem 1.2rem;font-size:.95rem;margin:1rem 0;line-height:1.65;}
-.tip strong{color:var(--red);}.tip.teal{background:var(--teal-soft);border-color:var(--teal);}
-.tip u{text-decoration-color:var(--red);text-underline-offset:3px;}
-.qlist{list-style:none;display:grid;gap:.55rem;margin:.6rem 0;}
-.qlist li{background:var(--paper);border:1.5px solid var(--sand);border-left:5px solid var(--teal);border-radius:12px;padding:.7rem 1rem;font-weight:500;}
-/* vocab */
-.vgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:.7rem;margin:1rem 0;}
-@media(max-width:640px){.vgrid{grid-template-columns:1fr;}}
-.vcard{background:var(--paper);border:1.5px solid var(--sand);border-radius:14px;padding:.85rem 1rem;}
-.vcard .w{font-weight:700;font-size:1.05rem;color:var(--ink);}
-.vcard .w .art{color:var(--red);}
-.vcard .ex{font-family:'Fraunces',serif;font-style:italic;color:var(--ink-soft);font-size:.92rem;margin-top:.25rem;}
-.vcard .speak{margin-top:.4rem;background:var(--teal-soft);border:none;color:#0a7d72;font-weight:700;border-radius:999px;padding:.2rem .7rem;font-size:.78rem;cursor:pointer;}
-/* dialog */
-.dwrap{background:var(--paper);border:1.5px solid var(--sand);border-radius:16px;padding:1.1rem 1.2rem;margin:1rem 0;}
-.dwrap h4{font-family:'Fraunces',serif;font-size:1.1rem;margin-bottom:.6rem;color:var(--red);}
-.dline{display:flex;gap:.5rem;margin:.35rem 0;align-items:flex-start;}
-.dwho{flex:none;width:26px;height:26px;border-radius:50%;font-size:.8rem;font-weight:700;display:flex;align-items:center;justify-content:center;color:#fff;}
-.dwho.a{background:var(--red);}.dwho.b{background:var(--teal);}
-.dtxt{background:var(--cream-warm);border-radius:12px;padding:.4rem .7rem;font-size:.96rem;}
-.dbtn{margin-top:.6rem;background:var(--red);color:#fff;border:none;border-radius:999px;padding:.4rem 1rem;font-weight:700;cursor:pointer;font-size:.85rem;}
-/* debate */
-.pcgrid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin:1rem 0;}
-@media(max-width:640px){.pcgrid{grid-template-columns:1fr;}}
-.pcol{border-radius:16px;padding:1rem 1.1rem;border:2px solid;}
-.pcol.pro{background:#EAF7EF;border-color:var(--green);}
-.pcol.con{background:var(--red-soft);border-color:var(--red);}
-.pcol h4{font-family:'Fraunces',serif;font-size:1.15rem;margin-bottom:.5rem;}
-.pcol.pro h4{color:var(--green);}.pcol.con h4{color:var(--red);}
-.pcol ul{list-style:none;display:grid;gap:.4rem;}
-.pcol li{font-size:.94rem;padding-left:1.3rem;position:relative;}
-.pcol.pro li::before{content:'✓';position:absolute;left:0;color:var(--green);font-weight:700;}
-.pcol.con li::before{content:'✓';position:absolute;left:0;color:var(--red);font-weight:700;}
-.rmcard{background:var(--paper);border:1.5px solid var(--sand);border-radius:14px;padding:.9rem 1.1rem;margin:.8rem 0;}
-.rmcard b{color:var(--teal);}
-.rm{display:inline-block;background:var(--teal-soft);color:#0a7d72;border-radius:999px;padding:.2rem .7rem;font-size:.85rem;font-weight:600;margin:.2rem .2rem 0 0;}
-/* 90 sek */
-.card90{background:linear-gradient(135deg,var(--paper),var(--cream-warm));border:2px solid var(--sand);border-radius:20px;padding:1.6rem;text-align:center;max-width:460px;margin:1.2rem auto;box-shadow:0 8px 24px rgba(38,32,25,.08);}
-.card90 .lbl{font-size:.72rem;font-weight:700;color:var(--red);letter-spacing:.12em;text-transform:uppercase;}
-.card90 .word{font-family:'Fraunces',serif;font-weight:900;font-size:2.2rem;margin:.4rem 0;}
-.helpwords{display:flex;flex-wrap:wrap;gap:.35rem;justify-content:center;margin:.7rem 0;}
-.hw{background:var(--yellow-soft);border:1px solid var(--yellow);border-radius:999px;padding:.2rem .7rem;font-size:.85rem;font-weight:600;}
-.timer{font-family:'Fraunces',serif;font-size:2rem;font-weight:700;color:var(--teal);margin:.5rem 0;}
-.btn{background:var(--red);color:#fff;border:none;border-radius:999px;padding:.5rem 1.3rem;font-weight:700;cursor:pointer;font-size:.9rem;font-family:'Outfit';margin:.2rem;}
-.btn.ghost{background:var(--paper);color:var(--ink);border:2px solid var(--sand);}
-/* quiz */
-.quiz-q{background:var(--paper);border:1.5px solid var(--sand);border-radius:14px;padding:.9rem 1.1rem;margin:.7rem 0;}
-.quiz-q .qt{font-weight:600;margin-bottom:.55rem;}
-.quiz-opts{display:grid;gap:.4rem;}
-.qopt{text-align:left;background:var(--cream);border:1.5px solid var(--sand);border-radius:10px;padding:.5rem .8rem;cursor:pointer;font-size:.94rem;font-family:'Outfit';font-weight:500;}
-.qopt:hover{border-color:var(--ink);}
-.qopt.right{background:#EAF7EF;border-color:var(--green);color:var(--green);font-weight:700;}
-.qopt.wrong{background:var(--red-soft);border-color:var(--red);color:var(--red);}
-.qexp{font-size:.86rem;color:var(--ink-soft);margin-top:.5rem;display:none;}
-.qexp.show{display:block;}
-/* gap */
-.gap{background:var(--paper);border:1.5px solid var(--sand);border-radius:14px;padding:1rem 1.1rem;margin:.7rem 0;line-height:2.2;}
-.gap select{font-family:'Outfit';font-weight:600;border:2px solid var(--teal);border-radius:8px;padding:.15rem .4rem;background:var(--teal-soft);color:#0a7d72;font-size:.95rem;}
-.gap select.ok{background:#EAF7EF;border-color:var(--green);color:var(--green);}
-.gap select.no{background:var(--red-soft);border-color:var(--red);color:var(--red);}
-
-.bgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin:1rem 0;}
-@media(max-width:900px){.bgrid{grid-template-columns:repeat(3,1fr);}}
-@media(max-width:600px){.bgrid{grid-template-columns:repeat(2,1fr);}}
-.bcard{background:var(--paper);border:1.5px solid var(--sand);border-radius:16px;overflow:hidden;box-shadow:0 4px 14px rgba(38,32,25,.06);transition:.2s;}
-.bcard:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(38,32,25,.13);}
-.bcard img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block;border-bottom:1.5px solid var(--sand);}
-.bcard .bb{padding:.6rem .7rem .8rem;}
-.bcard .bw{font-weight:700;font-size:.98rem;line-height:1.2;}
-.bcard .bw .art{color:var(--red);}
-.bcard .bex{font-family:'Fraunces',serif;font-style:italic;font-size:.82rem;color:var(--ink-soft);margin-top:.3rem;}
-.bcard .bti{font-size:.78rem;color:var(--ink);background:var(--yellow-soft);border-radius:8px;padding:.3rem .5rem;margin-top:.4rem;line-height:1.4;}
-.bgrid.hide .bcard .bw,.bgrid.hide .bcard .bex,.bgrid.hide .bcard .bti,.bgrid.hide .bcard .speak{opacity:0;pointer-events:none;}
-.bgrid.hide .bcard.auf .bw,.bgrid.hide .bcard.auf .bex,.bgrid.hide .bcard.auf .bti,.bgrid.hide .bcard.auf .speak{opacity:1;pointer-events:auto;}
-.bgrid.hide .bcard{cursor:pointer;}
-.dhead{display:flex;gap:.8rem;align-items:center;margin-bottom:.4rem;flex-wrap:wrap;}
-.dhead img{width:60px;height:60px;border-radius:12px;object-fit:cover;border:1.5px solid var(--sand);flex:none;}
-.dhead h4{margin:0;flex:1;min-width:180px;}
-.dsit{font-size:.9rem;color:var(--ink-soft);font-style:italic;margin-bottom:.7rem;}
-.rbtn{background:var(--teal);color:#fff;border:none;border-radius:999px;padding:.4rem 1rem;font-weight:700;font-size:.82rem;cursor:pointer;font-family:'Outfit';}
-.rbtn.zwei{background:var(--red);}
-.dline{display:flex;gap:.5rem;margin:.4rem 0;align-items:flex-start;}
-.dbild{width:44px;height:44px;border-radius:10px;object-fit:cover;border:1.5px solid var(--sand);flex:none;}
-.dcue{display:none;background:var(--yellow-soft);border:2px dashed var(--yellow);border-radius:12px;padding:.4rem .7rem;font-size:.92rem;cursor:pointer;font-weight:600;}
-.dcue .kl{display:block;font-size:.74rem;font-weight:500;color:var(--ink-mute);margin-top:.15rem;}
-.dwrap[data-runde="2"] .dline.b .dtxt{display:none;}
-.dwrap[data-runde="2"] .dline.b .dcue{display:block;}
-.dwrap[data-runde="2"] .dline.b.zeigen .dtxt{display:block;}
-.dwrap[data-runde="2"] .dline.b.zeigen .dcue{display:none;}
-.bpl{display:grid;gap:.5rem;margin:1rem 0;}
-.bpz{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;background:var(--paper);border:1.5px solid var(--sand);border-radius:14px;padding:.7rem .9rem;}
-.bpz .stk{padding:.3rem .7rem;border-radius:10px;font-weight:700;font-size:.95rem;color:#fff;}
-.bpz .s1{background:#3B5EA8;}.bpz .s2{background:var(--red);}.bpz .s3{background:var(--green);}
-.bpz .wof{margin-left:auto;font-size:.82rem;color:var(--ink-mute);font-style:italic;}
-.hagrid{display:grid;gap:.7rem;margin:1rem 0;}
-.ha{background:var(--paper);border:1.5px solid var(--sand);border-left:5px solid var(--red);border-radius:14px;padding:.9rem 1.1rem;display:flex;gap:.8rem;align-items:flex-start;}
-.ha .hi{font-size:1.5rem;flex:none;}
-.ha h4{font-family:'Fraunces',serif;font-size:1.05rem;margin-bottom:.2rem;}
-.ha p{font-size:.95rem;color:var(--ink-soft);}
-.card90 img{width:160px;height:160px;object-fit:cover;border-radius:16px;border:2px solid var(--sand);margin:.2rem auto .4rem;display:block;}
-.rule{background:var(--paper);border:1.5px solid var(--sand);border-radius:16px;padding:1rem 1.1rem;margin:1rem 0;overflow-x:auto;}
-.rule table{width:100%;border-collapse:collapse;font-size:.93rem;}
-.rule td,.rule th{border:1px solid var(--sand);padding:.45rem .6rem;text-align:left;}
-.rule th{background:var(--cream-warm);font-weight:700;}
-.rule tr:nth-child(4) td{background:var(--yellow-soft);}
-/* ---------- Grammatik: cartoonig & bunt ---------- */
-.gintro{background:linear-gradient(135deg,var(--yellow-soft),var(--teal-soft));border:2.5px solid var(--ink);border-radius:22px;padding:1.1rem 1.3rem;margin:1.2rem 0;box-shadow:5px 5px 0 rgba(38,32,25,.14);font-size:1rem;line-height:1.65;}
-.gintro b{color:var(--red);}
-.gkette{display:grid;gap:.5rem;margin:1.2rem 0;}
-.gstep{display:flex;align-items:center;gap:.7rem;background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;padding:.6rem .9rem;box-shadow:4px 4px 0 rgba(38,32,25,.12);}
-.gstep .gem{font-size:1.7rem;flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:var(--cream-warm);border-radius:50%;border:2px solid var(--ink);}
-.gstep .gw{flex:none;font-weight:800;font-size:.86rem;color:#fff;background:var(--red);border:2px solid var(--ink);border-radius:999px;padding:.22rem .75rem;transform:rotate(-2deg);}
-.gstep.c2 .gw{background:var(--teal);transform:rotate(2deg);}
-.gstep.c3 .gw{background:#3B5EA8;}
-.gstep.c4 .gw{background:var(--green);transform:rotate(2deg);}
-.gstep.c5 .gw{background:#C2481F;}
-.gstep.c6 .gw{background:#7A4FA3;transform:rotate(2deg);}
-.gstep .gs{font-family:'Fraunces',serif;font-size:1.02rem;}
-.gstep .gs u{text-decoration:none;background:var(--yellow);border-radius:6px;padding:.05em .3em;font-family:'Outfit';font-weight:700;font-style:normal;}
-.gpfeil{text-align:center;font-size:1.2rem;color:var(--ink-mute);line-height:.6;}
-.gpaar{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin:1.2rem 0;}
-@media(max-width:640px){.gpaar{grid-template-columns:1fr;}}
-.gk{border:2.5px solid var(--ink);border-radius:20px;padding:1rem 1.1rem;box-shadow:5px 5px 0 rgba(38,32,25,.13);}
-.gk.no{background:var(--red-soft);}
-.gk.ja{background:#EAF7EF;}
-.gk .gkl{font-weight:800;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.4rem;}
-.gk.no .gkl{color:var(--red);}
-.gk.ja .gkl{color:var(--green);}
-.gk .gsatz{font-family:'Fraunces',serif;font-size:1.15rem;line-height:1.5;}
-.gk .gsatz .v{background:var(--yellow);border-radius:7px;padding:.05em .35em;font-family:'Outfit';font-weight:800;font-style:normal;border:2px solid var(--ink);}
-.gchips{display:flex;flex-wrap:wrap;gap:.45rem;margin:1rem 0;justify-content:center;}
-.gchip{background:var(--paper);border:2.5px solid var(--ink);border-radius:999px;padding:.35rem .95rem;font-weight:700;font-size:.95rem;box-shadow:3px 3px 0 rgba(38,32,25,.13);}
-.gchip:nth-child(3n){background:var(--yellow-soft);}
-.gchip:nth-child(3n+1){background:var(--teal-soft);}
-.gbau{background:var(--paper);border:2.5px solid var(--ink);border-radius:20px;padding:1rem 1.1rem;margin:1rem 0;box-shadow:5px 5px 0 rgba(38,32,25,.12);}
-.gbau .gfrage{font-weight:600;margin-bottom:.6rem;}
-.gbau .gteile{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.6rem;}
-.gteil{background:var(--cream-warm);border:2px solid var(--ink);border-radius:12px;padding:.35rem .8rem;font-weight:600;cursor:pointer;font-family:'Outfit';font-size:.95rem;}
-.gteil:hover{background:var(--yellow-soft);}
-.gteil.weg{opacity:.25;pointer-events:none;}
-.gbau .gzeile{min-height:2.6rem;background:var(--cream);border:2px dashed var(--sand);border-radius:12px;padding:.5rem .7rem;font-family:'Fraunces',serif;font-size:1.05rem;display:flex;flex-wrap:wrap;gap:.35rem;align-items:center;}
-.gbau .gzeile.ok{background:#EAF7EF;border-color:var(--green);border-style:solid;}
-.gbau .gzeile.no{background:var(--red-soft);border-color:var(--red);border-style:solid;}
-.gbau .gfuss{display:flex;gap:.5rem;margin-top:.6rem;}
-.gbau .gmini{background:var(--ink);color:#fff;border:none;border-radius:999px;padding:.35rem .9rem;font-weight:700;font-size:.85rem;cursor:pointer;font-family:'Outfit';}
-.gbau .gmini.hell{background:var(--paper);color:var(--ink);border:2px solid var(--ink);}
-.gbau .gtipp{margin-top:.5rem;font-size:.88rem;color:var(--ink-soft);display:none;}
-.gbau .gtipp.show{display:block;}
-.gstory{background:var(--cream-warm);border:2.5px solid var(--ink);border-radius:20px;padding:1.1rem 1.2rem;margin:1.1rem 0;box-shadow:5px 5px 0 rgba(38,32,25,.12);font-family:'Fraunces',serif;font-size:1.05rem;line-height:2.2;}
-.gstory select{font-family:'Outfit';font-weight:700;font-size:.95rem;border:2px solid var(--ink);border-radius:10px;padding:.18rem .4rem;background:var(--paper);margin:0 .15rem;}
-.gstory select.ok{background:#EAF7EF;border-color:var(--green);}
-.gstory select.no{background:var(--red-soft);border-color:var(--red);}
-.gpos{display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem;margin:1rem 0;text-align:center;}
-@media(max-width:640px){.gpos{grid-template-columns:repeat(2,1fr);}}
-.gpos .gz{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.55rem .3rem;box-shadow:4px 4px 0 rgba(38,32,25,.12);}
-.gpos .gz b{display:block;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:.25rem;}
-.gpos .gz span{font-family:'Fraunces',serif;font-size:1.05rem;}
-.gpos .gz.zwei{background:var(--yellow);}
-.gpos .gz.zwei b{color:var(--ink);}
-.gdrei{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin:1.2rem 0;}
-@media(max-width:700px){.gdrei{grid-template-columns:1fr;}}
-.gk.blau{background:#E9EFFA;}
-.gk.gelb{background:var(--yellow-soft);}
-.gk .gem2{font-size:1.6rem;display:block;margin-bottom:.2rem;}
-.gk .gmw{font-family:'Fraunces',serif;font-size:1.3rem;margin-bottom:.15rem;}
-.gk .gmb{font-size:.9rem;color:var(--ink-soft);margin-bottom:.45rem;}
-.gk .gmx{font-size:.97rem;border-top:2px dashed var(--sand);padding-top:.45rem;}
-.gklam{background:var(--paper);border:2.5px solid var(--ink);border-radius:20px;padding:.9rem 1.1rem;margin:.7rem 0;box-shadow:5px 5px 0 rgba(38,32,25,.12);}
-.gklam .gsatz{font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.6;}
-.gklam .gsatz .v{background:var(--yellow);border-radius:7px;padding:.05em .35em;font-family:'Outfit';font-weight:800;border:2px solid var(--ink);}
-.gklam .gsatz .v2{background:var(--teal);color:#fff;}
-.gklam .gbogen{margin-top:.5rem;padding-top:.4rem;border-top:3px dashed var(--red);font-size:.82rem;color:var(--ink-soft);display:flex;justify-content:space-between;gap:.5rem;}
-.gklam .gbogen b{color:var(--red);}
-/* ================= CARTOON-LOOK für die ganze Stunde ================= */
-.hero-tag{border:2px solid var(--ink);box-shadow:3px 3px 0 rgba(38,32,25,.13);padding:.35rem 1rem;font-size:.85rem;}
-.hero-tag:nth-child(2n){transform:rotate(-1.4deg);background:var(--yellow-soft);}
-.hero-tag:nth-child(3n){transform:rotate(1.4deg);background:var(--teal-soft);}
-.tabs{border:2.5px solid var(--ink);box-shadow:5px 5px 0 rgba(38,32,25,.13);background:var(--cream-warm);padding:.55rem;}
-.tab{border:2.5px solid var(--ink);box-shadow:3px 3px 0 rgba(38,32,25,.15);font-weight:700;}
-.tab:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 rgba(38,32,25,.18);}
-.tab.active{background:var(--red);color:#fff;border-color:var(--ink);transform:translate(1px,1px);box-shadow:1px 1px 0 rgba(38,32,25,.2);}
-h2.st{margin-top:2.2rem;}
-h2.st::after{content:'';display:block;width:72px;height:8px;background:var(--yellow);border:2.5px solid var(--ink);border-radius:999px;margin:.5rem auto 0;transform:rotate(-1deg);}
-.scene-wrap{border:3px solid var(--ink);box-shadow:7px 7px 0 rgba(38,32,25,.15);border-radius:22px;}
-.tip{border:2.5px solid var(--ink);box-shadow:5px 5px 0 rgba(38,32,25,.13);border-radius:20px;}
-.tip.teal{background:var(--teal-soft);}
-.qlist li{border:2.5px solid var(--ink);border-left:9px solid var(--teal);border-radius:16px;box-shadow:4px 4px 0 rgba(38,32,25,.12);font-weight:600;}
-.qlist li:nth-child(2n){border-left-color:var(--red);}
-.qlist li:nth-child(3n){border-left-color:var(--yellow);}
-/* Bildwortkarten mit Nummer */
-.bgrid{counter-reset:bk;}
-.bcard{border:2.5px solid var(--ink);border-radius:20px;box-shadow:5px 5px 0 rgba(38,32,25,.14);position:relative;}
-.bcard:hover{transform:translate(-2px,-3px) rotate(-.6deg);box-shadow:8px 9px 0 rgba(38,32,25,.16);}
-.bcard img{border-bottom:2.5px solid var(--ink);}
-.bcard::before{counter-increment:bk;content:counter(bk);position:absolute;top:8px;left:8px;width:30px;height:30px;border-radius:50%;background:var(--red);color:#fff;border:2.5px solid var(--ink);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.9rem;z-index:2;box-shadow:2px 2px 0 rgba(38,32,25,.2);}
-.bcard .bti{border:2px dashed var(--yellow);border-radius:10px;}
-.bcard .speak,.vcard .speak{border:2px solid var(--ink);box-shadow:2px 2px 0 rgba(38,32,25,.15);}
-/* Dialoge als Sprechblasen */
-.dwrap{border:2.5px solid var(--ink);border-radius:22px;box-shadow:6px 6px 0 rgba(38,32,25,.13);}
-.dwrap h4{font-size:1.2rem;}
-.dhead img{border:2.5px solid var(--ink);border-radius:14px;box-shadow:3px 3px 0 rgba(38,32,25,.15);width:64px;height:64px;}
-.rbtn{border:2.5px solid var(--ink);box-shadow:3px 3px 0 rgba(38,32,25,.18);}
-.rbtn:active{transform:translate(2px,2px);box-shadow:0 0 0 rgba(0,0,0,0);}
-.dwho{width:34px;height:34px;font-size:.95rem;border:2.5px solid var(--ink);box-shadow:2px 2px 0 rgba(38,32,25,.18);}
-.dtxt{border:2.5px solid var(--ink);border-radius:16px;padding:.55rem .85rem;box-shadow:3px 3px 0 rgba(38,32,25,.1);position:relative;}
-.dline.a .dtxt{background:var(--red-soft);}
-.dline.b .dtxt{background:var(--teal-soft);}
-.dcue{border:2.5px dashed var(--ink);background:var(--yellow-soft);border-radius:16px;box-shadow:3px 3px 0 rgba(38,32,25,.1);}
-.dbild{width:52px;height:52px;border:2.5px solid var(--ink);border-radius:12px;box-shadow:2px 2px 0 rgba(38,32,25,.15);}
-.dbtn{border:2.5px solid var(--ink);box-shadow:3px 3px 0 rgba(38,32,25,.18);}
-/* Baupläne, Redemittel */
-.bpz{border:2.5px solid var(--ink);border-radius:18px;box-shadow:4px 4px 0 rgba(38,32,25,.12);}
-.bpz .stk{border:2px solid var(--ink);box-shadow:2px 2px 0 rgba(38,32,25,.18);}
-.rmcard{border:2.5px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 rgba(38,32,25,.12);}
-.rm{border:2px solid var(--ink);box-shadow:2px 2px 0 rgba(38,32,25,.14);padding:.25rem .8rem;}
-/* Debatte */
-.pcol{border-width:2.5px;border-color:var(--ink);border-radius:20px;box-shadow:5px 5px 0 rgba(38,32,25,.13);}
-.pcol li{font-weight:500;padding-left:1.6rem;}
-.pcol.pro li::before{content:'👍';}
-.pcol.con li::before{content:'💤';}
-/* 90 Sekunden */
-.card90{border:3px solid var(--ink);border-radius:26px;box-shadow:8px 8px 0 rgba(38,32,25,.15);}
-.card90 img{border:2.5px solid var(--ink);width:180px;height:180px;box-shadow:4px 4px 0 rgba(38,32,25,.15);}
-.card90 .word{font-size:2.4rem;}
-.hw{border:2px solid var(--ink);box-shadow:2px 2px 0 rgba(38,32,25,.14);}
-.timer{border:2.5px solid var(--ink);background:var(--paper);border-radius:16px;display:inline-block;padding:.1rem 1.2rem;box-shadow:4px 4px 0 rgba(38,32,25,.15);}
-.btn{border:2.5px solid var(--ink);box-shadow:4px 4px 0 rgba(38,32,25,.18);}
-.btn:active{transform:translate(3px,3px);box-shadow:0 0 0 rgba(0,0,0,0);}
-.btn.ghost{border-color:var(--ink);}
-/* Quiz & Lücken */
-.quiz-q{border:2.5px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 rgba(38,32,25,.12);}
-.quiz-q .qt{font-size:1.02rem;font-weight:700;}
-.qopt{border:2.5px solid var(--ink);border-radius:14px;box-shadow:3px 3px 0 rgba(38,32,25,.12);font-weight:600;background:var(--paper);}
-.qopt:hover{transform:translate(-1px,-1px);background:var(--yellow-soft);box-shadow:4px 4px 0 rgba(38,32,25,.16);}
-.qopt.right::after{content:' ✅';}
-.qopt.wrong::after{content:' ❌';}
-.qexp.show{background:var(--cream-warm);border:2px dashed var(--ink);border-radius:12px;padding:.5rem .7rem;font-size:.9rem;color:var(--ink);}
-.gap{border:2.5px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 rgba(38,32,25,.12);}
-.gap select{border:2.5px solid var(--ink);border-radius:10px;}
-/* Hausaufgabe */
-.ha{border:2.5px solid var(--ink);border-left:10px solid var(--red);border-radius:18px;box-shadow:5px 5px 0 rgba(38,32,25,.12);align-items:center;}
-.ha:nth-child(2n){border-left-color:var(--teal);}
-.ha:nth-child(3n){border-left-color:var(--yellow);}
-.ha .hi{width:46px;height:46px;border-radius:50%;background:var(--cream-warm);border:2.5px solid var(--ink);display:flex;align-items:center;justify-content:center;box-shadow:3px 3px 0 rgba(38,32,25,.13);}
-.rule{border:2.5px solid var(--ink);border-radius:20px;box-shadow:5px 5px 0 rgba(38,32,25,.12);}
-.rule td,.rule th{border:2px solid var(--sand);}
-.rule th{background:var(--ink);color:#fff;border-color:var(--ink);}
-@media(max-width:640px){
- .tab{font-size:.84rem;padding:.42rem .8rem;}
- .bcard::before{width:26px;height:26px;font-size:.8rem;}
- .card90 .word{font-size:1.9rem;}
-}
-/* Dialog wie ein Chat: A links, B rechts */
-.dline.b{flex-direction:row-reverse;}
-.dtxt{position:relative;max-width:min(660px,78%);}
-.dline.a .dtxt::after{content:'';position:absolute;left:-9px;top:13px;width:13px;height:13px;background:var(--red-soft);border-left:2.5px solid var(--ink);border-bottom:2.5px solid var(--ink);transform:rotate(45deg);border-bottom-left-radius:3px;}
-.dline.b .dtxt::after{content:'';position:absolute;right:-9px;top:13px;width:13px;height:13px;background:var(--teal-soft);border-right:2.5px solid var(--ink);border-top:2.5px solid var(--ink);transform:rotate(45deg);border-top-right-radius:3px;}
-.dcue{max-width:min(660px,78%);}
-/* Antwort-Buchstaben A B C */
-.quiz-opts{counter-reset:qo;}
-.qopt{position:relative;padding:.6rem .9rem .6rem 3rem;min-height:44px;display:flex;align-items:center;}
-.qopt::before{counter-increment:qo;content:counter(qo,upper-alpha);position:absolute;left:.55rem;top:50%;transform:translateY(-50%);width:28px;height:28px;border-radius:50%;background:var(--cream-warm);border:2.5px solid var(--ink);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.82rem;}
-.qopt.right::before{background:var(--green);color:#fff;}
-.qopt.wrong::before{background:var(--red);color:#fff;}
-.qopt.right{background:#EAF7EF;border-color:var(--green);}
-.qopt.wrong{background:var(--red-soft);border-color:var(--red);}
-@media(max-width:700px){
- .tabs{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;max-width:100%;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
- .tabs::-webkit-scrollbar{display:none;}
- .tab{flex:none;}
- .dtxt,.dcue{max-width:84%;}
-}
-footer{text-align:center;color:var(--ink-mute);font-size:.85rem;padding:3rem 1rem 1rem;}
-footer strong{color:var(--ink);}
-
-</style>
-<style>
-
 /* ============================================================
-   ZUSATZ — nur was das Maengel-Design noch nicht kennt.
-   Alles im selben Look: dicker Rahmen, harter Schatten.
-   1. Niveau-Umschalter A2 / B1
-   2. Emoji-Kachel, wo es (noch) kein Foto gibt
-   3. Farbmarkierungen im Beispielsatz
-   4. Hilfe-Knoepfe
-   5. Hausaufgabe zum Abhaken
+   stunde-club.css — die Stunde im Aussehen von
+   deutschoderwas-club.de
+
+   Vorher trugen die Stunden einen eigenen Look: Fraunces als
+   Serifenschrift, cremefarbener Verlauf, schwarze Rahmen mit
+   harten versetzten Schatten. Fuer sich schoen — aber daneben
+   sah die Website aus wie eine andere Marke.
+
+   Die Werte hier stammen eins zu eins aus index.html, der
+   Startseite des Clubs: dieselben Farben, dieselben Schriften,
+   dieselbe Fahnenleiste oben, derselbe goldene Marker.
+
+     Inter          Fliesstext
+     Space Grotesk  Ueberschriften, Zahlen, Knoepfe
+     #161616        Text
+     #DD0000        Signalfarbe (Augenbraue, wichtige Marken)
+     #FFCE00        Gold (Marker, Hinweise)
+     #1B9BC0        Tuerkis (Knoepfe, aktive Marke)
+     #FFF8E8        warmes Papier fuer Kaesten
+     #EAE6DE        Linien
+
+   Was hier nicht mehr steht, gibt es auf der Seite auch nicht
+   mehr: Wortschatzkarten, Grammatiktafeln, Quiz und Lueckentext
+   sind aus der Stunde raus. Die Stunde ist zum Sprechen da.
    ============================================================ */
 
-/* ---------- 1. Niveau-Umschalter ---------- */
-.niv{
-  display:flex;align-items:center;justify-content:center;gap:.7rem;flex-wrap:wrap;
-  background:var(--ink);color:var(--cream);border:2.5px solid var(--ink);
-  border-radius:20px;box-shadow:5px 5px 0 rgba(38,32,25,.2);
-  padding:.6rem 1rem;margin:1.4rem auto 0;max-width:fit-content;
+:root{
+  --ink:#161616; --soft:#5B6470; --line:#EAE6DE;
+  --turq:#9FE4F1; --turq-d:#1B9BC0; --teal-ink:#10627A; --mint:#EFFBF8;
+  --red:#DD0000; --red-d:#B30000;
+  --gold:#FFCE00; --gold-mark:#FFD84D; --gold-d:#E0A500;
+  --bg:#FFFFFF; --warm:#FFF8E8; --pink:#FFF1EE;
+  --schatten:0 1px 2px rgba(22,22,22,.04), 0 10px 28px rgba(22,22,22,.05);
+  --schatten-k:0 1px 2px rgba(22,22,22,.05);
+  /* Fuer Bausteine, die noch die alten Namen benutzen. */
+  --cream:#FFFFFF; --cream-warm:#FFF8E8; --paper:#FFFFFF;
+  --ink-soft:#5B6470; --ink-mute:#8C93A0; --sand:#EAE6DE;
+  --teal:#1B9BC0; --teal-soft:#EFFBF8;
+  --yellow:#FFCE00; --yellow-soft:#FFF8E8;
+  --red-soft:#FFF1EE; --green:#4E9E12;
 }
-.niv .lab{font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.85;}
-.nivk{display:flex;gap:.3rem;background:rgba(255,255,255,.13);border-radius:999px;padding:3px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+html,body{max-width:100%;overflow-x:clip;}
+img{height:auto;max-width:100%;}
+body{
+  font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);
+  line-height:1.6;-webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;font-weight:700;letter-spacing:-.02em;line-height:1.12;}
+
+/* Die Fahnenleiste vom Club, ganz oben. */
+.flagbar{
+  height:5px;
+  background:linear-gradient(90deg,#161616 0 25%,var(--red) 25% 50%,var(--gold) 50% 75%,var(--turq) 75% 100%);
+}
+
+.wrapper{max-width:900px;margin:0 auto;padding:2rem 1.25rem 5rem;}
+
+/* ---------- Kopf ---------- */
+.eyebrow{
+  text-align:center;font-size:.72rem;font-weight:700;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--red);margin-bottom:.65rem;
+}
+h1.title{font-size:clamp(1.9rem,4.6vw,3rem);text-align:center;}
+h1.title .hl{
+  background:var(--gold-mark);border-radius:7px;padding:.02em .26em;font-style:italic;
+  -webkit-box-decoration-break:clone;box-decoration-break:clone;
+}
+.subtitle{
+  text-align:center;max-width:38rem;margin:.85rem auto 0;
+  font-size:1.02rem;color:var(--soft);
+}
+.niv-wie{text-align:center;max-width:34rem;margin:.75rem auto 0;font-size:.85rem;color:var(--soft);}
+
+/* ---------- Leiste: Niveau und Sprungmarken ---------- */
+.leiste{
+  position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:.5rem;
+  width:100%;margin:1.1rem 0 1.6rem;padding:.4rem .5rem;
+  background:rgba(255,255,255,.94);backdrop-filter:blur(10px);
+  border:1px solid var(--line);border-radius:14px;box-shadow:var(--schatten-k);
+}
+.nivk{display:flex;gap:.2rem;flex:none;background:#F4F2ED;border-radius:999px;padding:3px;}
 .nivk button{
-  font-family:'Outfit';font-size:.88rem;font-weight:700;cursor:pointer;
-  border:none;border-radius:999px;padding:.35rem 1.1rem;background:transparent;color:var(--cream);
+  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;
+  border:none;border-radius:999px;padding:.32rem .8rem;background:transparent;color:var(--soft);
   transition:.15s;white-space:nowrap;
 }
-.nivk button[aria-pressed="true"]{background:var(--yellow);color:var(--ink);}
-.nivk button:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
-.niv .wie{font-size:.8rem;opacity:.85;width:100%;text-align:center;}
+.nivk button[aria-pressed="true"]{background:var(--ink);color:#fff;}
+.nivk button:focus-visible{outline:3px solid var(--turq-d);outline-offset:2px;}
+.tabs{
+  display:flex;flex-wrap:nowrap;gap:.3rem;overflow-x:auto;overscroll-behavior-x:contain;
+  flex:1 1 auto;min-width:0;margin:0;padding:.1rem 0;
+  scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;
+}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{
+  flex:none;white-space:nowrap;font-family:'Space Grotesk',sans-serif;
+  font-size:.84rem;font-weight:600;color:var(--ink);background:#fff;
+  border:1px solid var(--line);border-radius:999px;padding:.4rem .8rem;cursor:pointer;
+  display:inline-flex;gap:.3rem;align-items:center;transition:.15s;
+}
+.tab:hover{border-color:var(--turq-d);color:var(--teal-ink);}
+.tab.active{background:var(--turq-d);border-color:var(--turq-d);color:#fff;}
+.tabAlles{border-style:dashed;color:var(--soft);}
+.tabAlles[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff;border-style:solid;}
 
-body[data-niveau="a2"] .nur-b1{display:none !important;}
-body[data-niveau="b1"] .nur-a2{display:none !important;}
-.stufe{
-  display:inline-block;font-size:.68rem;font-weight:800;letter-spacing:.06em;
-  border:2px solid var(--ink);border-radius:999px;padding:1px 8px;margin-left:.35rem;
-  background:var(--sand);color:var(--ink);vertical-align:middle;
+/* ---------- Abschnitte ---------- */
+.section{animation:auf .25s ease;}
+body.schaltet .section[hidden]{display:none !important;}
+@keyframes auf{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+section.section{scroll-margin-top:calc(var(--leiste,58px) + 1rem);}
+/* Ein kurzer Abschnitt wie der Abschluss ist niedriger als das
+   Fenster. Dann kann die Seite gar nicht weit genug scrollen, und
+   der Titel der Stunde bleibt oben stehen — es sah aus, als waere
+   man versehentlich am Anfang gelandet. Mit dieser Mindesthoehe
+   landet jeder Abschnitt gleich weit oben. */
+body.schaltet section.section{min-height:calc(100vh - 9rem);}
+body.schaltet section.section:last-of-type{min-height:0;}
+h2.st{font-size:clamp(1.4rem,3vw,1.9rem);margin:.4rem 0 .35rem;}
+h2.st .hl{
+  background:var(--gold-mark);border-radius:7px;padding:.02em .24em;font-style:italic;
+  -webkit-box-decoration-break:clone;box-decoration-break:clone;
 }
-.stufe.b1{background:var(--teal-soft);}
+.ssub{color:var(--soft);margin-bottom:1.1rem;font-size:.97rem;max-width:44rem;}
 
-/* ---------- 2. Emoji-Kachel statt Foto ---------- */
-.bcard .bem{
-  aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;
-  font-size:clamp(3rem,7vw,5rem);background:var(--cream-warm);
-  border-bottom:2.5px solid var(--ink);
+/* Zeit und Aufstellung, direkt unter der Ueberschrift. */
+.regie{
+  display:inline-flex;align-items:center;gap:.55rem;flex-wrap:wrap;
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:999px;
+  padding:.3rem .85rem;margin:0 0 1.1rem;font-size:.82rem;
 }
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;font-family:'Space Grotesk',sans-serif;}
+.regie b{font-weight:500;color:var(--soft);}
 
-/* ---------- Kleine Illustrationen nicht hochskalieren ----------
-   sz-*.webp sind 260 Pixel breit. Auf volle Breite gezogen werden
-   sie unscharf, deshalb bleiben sie klein und stehen mittig. */
-.scene-wrap.klein{max-width:360px;margin:1rem auto;}
-
-/* ---------- 3. Farbmarkierungen ---------- */
-.m-verb,.m-akk,.m-menge,.m-hoefl{font-weight:800;border-radius:6px;padding:.03em .3em;border:2px solid var(--ink);}
-.m-verb{background:#DCEBFF;}
-.m-akk{background:var(--red-soft);}
-.m-menge{background:var(--teal-soft);}
-.m-hoefl{background:var(--yellow);}
-.legende{
-  display:flex;flex-wrap:wrap;gap:.5rem .9rem;justify-content:center;
-  font-size:.85rem;font-weight:600;margin:1rem 0;
-}
-.legende span{
-  display:inline-flex;align-items:center;gap:.4rem;background:var(--paper);
-  border:2.5px solid var(--ink);border-radius:999px;padding:.25rem .8rem;
-  box-shadow:3px 3px 0 rgba(38,32,25,.13);
-}
-.legende i{width:15px;height:15px;border-radius:5px;border:2px solid var(--ink);display:inline-block;}
-.i-verb{background:#DCEBFF;}
-.i-akk{background:var(--red-soft);}
-.i-menge{background:var(--teal-soft);}
-.i-hoefl{background:var(--yellow);}
-
-/* ---------- 4. Hilfe-Knopf ---------- */
-.hilfe{margin:1rem 0;text-align:center;}
-.hilfe > button{
-  font-family:'Outfit';font-size:.9rem;font-weight:700;cursor:pointer;
-  background:var(--yellow);color:var(--ink);border:2.5px solid var(--ink);
-  border-radius:999px;padding:.45rem 1.1rem;box-shadow:4px 4px 0 rgba(38,32,25,.18);
-}
-.hilfe > button:active{transform:translate(3px,3px);box-shadow:0 0 0 rgba(0,0,0,0);}
-.hilfe > button:focus-visible{outline:3px solid var(--teal);outline-offset:3px;}
-.hilfe .inhalt{
-  display:none;text-align:left;margin-top:.8rem;background:var(--yellow-soft);
-  border:2.5px dashed var(--ink);border-radius:20px;padding:.9rem 1.1rem;
-  box-shadow:5px 5px 0 rgba(38,32,25,.12);font-size:.96rem;line-height:1.7;
-}
-.hilfe.offen .inhalt{display:block;}
-.hilfe .inhalt ul{margin:.4rem 0 0 1.2rem;}
-.hilfe .inhalt li{margin:.25rem 0;}
-
-/* ---------- 5. Hausaufgabe zum Abhaken ---------- */
-.ha{cursor:pointer;text-align:left;width:100%;font-family:'Outfit';color:var(--ink);background:var(--paper);}
-.ha:focus-visible{outline:3px solid var(--teal);outline-offset:3px;}
-.ha .box{
-  flex:none;width:30px;height:30px;border-radius:9px;border:2.5px solid var(--ink);
-  background:var(--cream);display:flex;align-items:center;justify-content:center;
-  font-size:1.1rem;line-height:1;color:transparent;box-shadow:2px 2px 0 rgba(38,32,25,.18);
-}
-.ha .htxt{flex:1;}
-.ha .zeit{
-  display:inline-block;font-size:.7rem;font-weight:800;letter-spacing:.05em;
-  background:var(--cream-warm);border:2px solid var(--ink);border-radius:999px;
-  padding:1px 8px;margin-left:.4rem;vertical-align:middle;
-}
-.ha.fertig{background:#EAF7EF;}
-.ha.fertig .box{background:var(--green);border-color:var(--green);color:#fff;}
-.ha.fertig h4{text-decoration:line-through;text-decoration-thickness:2.5px;opacity:.7;}
-.hastand{
-  text-align:center;font-weight:700;margin-top:1rem;background:var(--paper);
-  border:2.5px solid var(--ink);border-radius:18px;padding:.6rem 1rem;
-  box-shadow:5px 5px 0 rgba(38,32,25,.12);
-}
-.hastand.voll{background:#EAF7EF;}
-
-/* ============================================================
-   EINE DURCHGEHENDE SEITE statt Tab-Wechsel.
-   Julia wollte den Ablauf der ersten Fassung zurueck: alles
-   untereinander, die Leiste oben springt nur hin.
-   ============================================================ */
-.section{display:block;animation:none;}
-.section + .section{
-  margin-top:2.4rem;padding-top:.6rem;   /* h2.st bringt seinen eigenen Abstand mit */
-  border-top:3px dashed var(--sand);
-}
-section.section{scroll-margin-top:calc(var(--leiste,60px) + 1rem);}
-
-/* ---------- Markierte Wörter ----------
-   Keine Wortschatzliste mehr, sondern das Wort dort, wo es steht.
-   Gelb unterstrichen: Wort dieser Stunde. Rot gepunktet: Begriff,
-   den viele verwechseln. Beides bleibt lesbar, wenn man es ignoriert —
-   die Markierung liegt unter der Zeile, nicht auf dem Wort. */
-.wm{
-  font-weight:inherit;cursor:pointer;position:relative;
-  border-bottom:3px solid var(--yellow);
-  padding-bottom:1px;transition:background .12s;
-}
-.wm.schwer{border-bottom:3px dotted var(--red);}
-.wm:hover,.wm.offen{background:rgba(255,210,74,.35);border-radius:4px 4px 0 0;}
-.wm.schwer:hover,.wm.schwer.offen{background:rgba(232,48,42,.12);}
-.wm:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
-.wm::after{
-  content:'';display:inline-block;width:.42em;height:.42em;margin-left:.22em;
-  vertical-align:.35em;border-radius:50%;background:var(--yellow);
-}
-.wm.schwer::after{background:var(--red);}
-
-.wmk{
-  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
-  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
-  box-shadow:5px 5px 0 rgba(38,32,25,.2);padding:.85rem 1rem .9rem;
-}
-.wmk b{display:block;font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.25;padding-right:1.4rem;}
-.wmk span{display:block;margin-top:.3rem;font-size:.94rem;line-height:1.5;color:var(--ink-soft);}
-.wmk em{
-  display:block;margin-top:.55rem;padding-left:.7rem;border-left:3px solid var(--teal);
-  font-style:italic;font-size:.93rem;line-height:1.5;
-}
-.wmk-zu{
-  position:absolute;top:.45rem;right:.5rem;border:none;background:transparent;
-  font-size:.95rem;line-height:1;cursor:pointer;color:var(--ink-mute,#7a6a56);padding:.2rem;
-}
-.wmk-ton{
-  margin-top:.6rem;border:2px solid var(--ink);background:var(--sand);color:var(--ink);
-  border-radius:999px;padding:.3rem .75rem;font-family:inherit;font-size:.82rem;
-  font-weight:700;cursor:pointer;
-}
-@media print{ .wm::after{display:none;} .wmk{display:none;} }
-
-/* ---------- Die Ablauftafel ----------
-   Sechs Leute, sechzig Minuten. Jede Zeile sagt: wie lange, was,
-   und in welcher Aufstellung. */
-.takt{display:flex;flex-direction:column;gap:.5rem;margin:1.2rem 0;}
+/* ---------- Ablauftafel ---------- */
+.takt{display:flex;flex-direction:column;gap:.4rem;margin:1rem 0;}
 .takt-z{
-  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .8rem;align-items:start;
-  background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
-  padding:.7rem .9rem;box-shadow:3px 3px 0 rgba(38,32,25,.12);
+  display:grid;grid-template-columns:auto auto 1fr;gap:.15rem .75rem;align-items:start;
+  background:#fff;border:1px solid var(--line);border-radius:12px;padding:.7rem .85rem;
 }
 .takt-m{
-  grid-row:span 2;align-self:center;min-width:3.6rem;text-align:center;
-  background:var(--ink);color:var(--cream);border-radius:9px;padding:.3rem .4rem;
-  font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums;
+  grid-row:span 2;align-self:center;min-width:3.4rem;text-align:center;
+  background:var(--ink);color:#fff;border-radius:8px;padding:.28rem .4rem;
+  font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.8rem;font-variant-numeric:tabular-nums;
 }
-.takt-z2{grid-row:span 2;align-self:center;font-size:1.35rem;line-height:1;}
-.takt-t b{display:block;font-family:'Fraunces',serif;font-size:1.06rem;font-weight:700;}
-.takt-t span{display:block;font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:.1rem;}
-.takt-t em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--teal,#0FB5A6);margin-top:.25rem;}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.2rem;line-height:1;}
+.takt-t b{display:block;font-family:'Space Grotesk',sans-serif;font-size:1rem;}
+.takt-t span{display:block;font-size:.9rem;line-height:1.45;color:var(--soft);margin-top:.05rem;}
+.takt-t em{display:block;font-style:normal;font-size:.78rem;font-weight:700;color:var(--teal-ink);margin-top:.2rem;}
 
-/* Dieselbe Angabe noch einmal dort, wo man sie braucht. */
-.regie{
-  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
-  background:var(--sand);border-radius:999px;padding:.35rem .9rem;
-  margin:0 0 1.1rem;font-size:.85rem;width:fit-content;
-}
-.regie span{font-weight:800;font-variant-numeric:tabular-nums;}
-.regie b{font-weight:600;color:var(--ink-soft);}
-
-/* Die eine Frage zum Ankommen — gross, damit sie die Runde traegt. */
+/* ---------- Ankommen und Abschluss ---------- */
 .ank{
-  background:var(--paper);border:2.5px solid var(--ink);border-radius:18px;
-  box-shadow:5px 5px 0 rgba(38,32,25,.15);padding:1.1rem 1.2rem;
-  font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.42;font-weight:600;
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;padding:1rem 1.15rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.16rem;line-height:1.4;font-weight:600;
 }
 .ank.zweit{
-  margin-top:.8rem;font-size:1.02rem;font-family:'Outfit',sans-serif;font-weight:500;
-  box-shadow:none;border-width:2px;border-style:dashed;background:transparent;
+  margin-top:.7rem;background:#fff;border:1px dashed var(--line);
+  font-family:'Inter',sans-serif;font-size:.97rem;font-weight:500;
 }
-.ank.zweit span{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
-  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.25rem;}
+.ank.zweit span{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.25rem;
+}
+
+/* ---------- Tippkasten ---------- */
+.tip{
+  background:var(--warm);border:1px solid #F0E4C4;border-left:4px solid var(--gold);
+  border-radius:12px;padding:.8rem 1rem;margin:1.1rem 0 0;font-size:.94rem;line-height:1.6;
+}
+.tip.teal{background:var(--mint);border-color:#CDEEF3;border-left-color:var(--turq-d);}
+
+/* ---------- Dialog ---------- */
+.dwrap{
+  background:#fff;border:1px solid var(--line);border-radius:16px;
+  padding:1rem 1.05rem 1.1rem;margin:0 0 1rem;box-shadow:var(--schatten-k);
+}
+.dhead{display:flex;align-items:center;gap:.65rem;flex-wrap:wrap;margin-bottom:.55rem;}
+.dhead img{width:44px;height:44px;object-fit:cover;border-radius:50%;flex:none;}
+.dhead h4{font-size:1.02rem;flex:1 1 12rem;}
+.rbtn{
+  font-family:'Space Grotesk',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer;
+  border:1px solid var(--turq-d);background:var(--mint);color:var(--teal-ink);
+  border-radius:999px;padding:.32rem .75rem;
+}
+.rbtn:hover{background:var(--turq-d);color:#fff;}
+.dsit{font-size:.9rem;color:var(--soft);margin-bottom:.75rem;}
+.dline{display:grid;grid-template-columns:auto 1fr;gap:.5rem;margin:.4rem 0;align-items:start;}
+.dwho{
+  width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
+  font-family:'Space Grotesk',sans-serif;font-size:.75rem;font-weight:700;color:#fff;flex:none;
+}
+.dwho.a{background:var(--red);}
+.dwho.b{background:var(--turq-d);}
+.dtxt{
+  background:var(--mint);border-radius:4px 14px 14px 14px;padding:.55rem .8rem;
+  font-size:.97rem;line-height:1.55;
+}
+.dline.b{grid-template-columns:1fr auto;}
+.dline.b .dwho{order:2;}
+.dline.b .dtxt{order:1;background:var(--warm);border-radius:14px 4px 14px 14px;}
+.dcue{
+  grid-column:1 / -1;margin:.2rem 0 .3rem;font-size:.85rem;color:var(--soft);
+  background:#fff;border:1px dashed var(--line);border-radius:10px;padding:.4rem .65rem;cursor:pointer;
+}
+.dcue .kl{display:block;font-size:.7rem;color:var(--ink-mute);margin-top:.15rem;}
+.dline .dcue{display:none;}
+.dwrap[data-runde="2"] .dline.b .dtxt{visibility:hidden;}
+.dwrap[data-runde="2"] .dline.b .dcue{display:block;}
+.dline.zeigen .dtxt{visibility:visible !important;}
+img.dbild{max-width:160px;border-radius:10px;margin-top:.4rem;}
+.dbtn{margin-top:.7rem;}
+
+/* ---------- Sprechen-Knopf ---------- */
+.speak{
+  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;
+  border:1px solid var(--line);background:#fff;color:var(--ink);
+  border-radius:999px;padding:.35rem .8rem;
+}
+.speak:hover{border-color:var(--ink);}
+
+/* ---------- 90 Sekunden ---------- */
+.card90{
+  background:#fff;border:1px solid var(--line);border-radius:18px;
+  padding:1.1rem 1.15rem 1.2rem;text-align:center;box-shadow:var(--schatten);
+}
+.card90 img{width:100%;max-width:240px;border-radius:12px;margin:0 auto .8rem;display:block;}
+.card90 .lbl{
+  font-size:.7rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--red);margin-bottom:.3rem;
+}
+.card90 .word{font-family:'Space Grotesk',sans-serif;font-size:1.7rem;font-weight:700;line-height:1.2;}
+.helpwords{display:flex;flex-wrap:wrap;gap:.35rem;justify-content:center;margin:.75rem 0 .9rem;}
+.hw{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:999px;
+  padding:.28rem .7rem;font-size:.85rem;font-weight:500;
+}
+.timer{
+  font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:700;
+  font-variant-numeric:tabular-nums;color:var(--teal-ink);
+}
+.zeit{display:block;}
+.btn{
+  font-family:'Space Grotesk',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;
+  border:1px solid var(--turq-d);background:var(--turq-d);color:#fff;
+  border-radius:999px;padding:.5rem 1.1rem;margin:.25rem .2rem 0;
+}
+.btn.ghost{background:#fff;color:var(--teal-ink);}
+.btn:hover{background:#167f9e;border-color:#167f9e;color:#fff;}
+
+/* ---------- Rollenspiel und Sprechkarten ---------- */
+.rmcard{
+  background:#fff;border:1px solid var(--line);border-radius:14px;
+  padding:.9rem 1rem;margin:0 0 .8rem;
+}
+.rmcard>b{display:block;font-family:'Space Grotesk',sans-serif;font-size:1rem;margin-bottom:.35rem;}
+.rm{
+  display:inline-block;background:var(--mint);border:1px solid #CDEEF3;color:var(--teal-ink);
+  border-radius:999px;padding:.25rem .65rem;margin:.15rem .2rem .15rem 0;font-size:.87rem;font-weight:500;
+}
+.bsp{
+  background:var(--warm);border-left:4px solid var(--gold);border-radius:0 10px 10px 0;
+  padding:.55rem .8rem;margin:.6rem 0 0;font-size:.95rem;line-height:1.55;
+}
+.bsp .wer{
+  display:block;font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.15rem;
+}
 
 /* ---------- Debatte ---------- */
 .deb-these{
-  background:var(--ink);color:var(--cream);border-radius:18px;padding:1.1rem 1.2rem;
-  font-family:'Fraunces',serif;font-size:1.22rem;line-height:1.42;font-weight:600;margin:0 0 1rem;
+  background:var(--ink);color:#fff;border-radius:14px;padding:1rem 1.15rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.12rem;line-height:1.4;font-weight:600;margin:0 0 .9rem;
 }
-.deb-seiten{display:grid;gap:.8rem;margin:0 0 1rem;}
+.deb-seiten{display:grid;gap:.7rem;margin:0 0 .9rem;}
 @media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
-.deb-s{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:.9rem 1rem;}
-.deb-s b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.45rem;}
-.deb-s.pro{border-left:9px solid var(--teal,#0FB5A6);}
-.deb-s.con{border-left:9px solid var(--red,#E8302A);}
-.deb-s ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.6;}
-.deb-s p{margin:0;font-size:.95rem;line-height:1.6;color:var(--ink-soft);}
-.deb-mittel{background:var(--sand);border-radius:16px;padding:.9rem 1rem;margin:0 0 1rem;}
-.deb-mittel b{display:block;font-family:'Fraunces',serif;font-size:1rem;margin-bottom:.55rem;}
-.deb-chips{display:flex;flex-wrap:wrap;gap:.45rem;}
+.deb-s{background:#fff;border:1px solid var(--line);border-radius:14px;padding:.85rem .95rem;}
+.deb-s b{
+  display:block;font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:800;
+  letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem;
+}
+.deb-s.pro{border-top:4px solid var(--turq-d);}
+.deb-s.pro b{color:var(--teal-ink);}
+.deb-s.con{border-top:4px solid var(--red);}
+.deb-s.con b{color:var(--red);}
+.deb-s ul{margin:0;padding-left:1.05rem;font-size:.94rem;line-height:1.6;}
+.deb-s li{margin:.3rem 0;}
+.deb-s p{margin:0;font-size:.94rem;line-height:1.6;color:var(--soft);}
+.deb-mittel{background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;padding:.85rem 1rem;margin:0 0 .9rem;}
+.deb-mittel b{
+  display:block;font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:800;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--soft);margin-bottom:.5rem;
+}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.35rem;}
 .deb-chips span{
-  background:var(--paper);border:2px solid var(--ink);border-radius:999px;
-  padding:.35rem .8rem;font-size:.9rem;font-weight:600;
+  background:#fff;border:1px solid #F0E4C4;border-radius:999px;
+  padding:.3rem .7rem;font-size:.88rem;font-weight:500;
 }
-.deb-mehr{border:2px dashed var(--sand);border-radius:16px;padding:.9rem 1rem;}
-.deb-mehr b{display:block;font-size:.78rem;font-weight:800;letter-spacing:.08em;
-  text-transform:uppercase;color:var(--ink-mute,#7a6a56);margin-bottom:.4rem;}
-.deb-mehr ul{margin:0;padding-left:1.1rem;font-size:.95rem;line-height:1.65;}
-
-/* Die Bilder im Dialog sind Gesichter, keine Poster. */
-.dhead img{width:52px;height:52px;object-fit:cover;border-radius:50%;}
-img.dbild{max-width:180px;border-radius:12px;}
-
-/* ---------- Eine klebende Leiste statt zweier ----------
-   Gemessen am 09.09. auf 390x844: der Niveau-Umschalter (53 px) und
-   die Sprungleiste (60 px) klebten beide oben. 113 Pixel, also jede
-   achte Zeile der Stunde, waren beim Scrollen dauerhaft verdeckt —
-   und die Sprungmarken brachen am rechten Rand einfach ab.
-
-   Jetzt teilen sich beide eine Zeile von rund 48 Pixeln: die zwei
-   Niveau-Knoepfe fest links, die Sprungmarken daneben in einem
-   Streifen, der sich seitlich schieben laesst statt umzubrechen. */
-.leiste{
-  position:sticky;top:0;z-index:60;
-  display:flex;align-items:center;gap:.55rem;
-  width:100%;margin:1rem 0 1.5rem;padding:.4rem .5rem;
-  background:rgba(253,246,236,.94);backdrop-filter:blur(8px);
-  border:2.5px solid var(--ink);border-radius:16px;
-  box-shadow:0 6px 14px rgba(38,32,25,.1);
+.deb-mehr{border:1px dashed var(--line);border-radius:14px;padding:.85rem 1rem;}
+.deb-mehr b{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.35rem;
 }
-.leiste .nivk{flex:none;background:var(--ink);padding:3px;}
-.leiste .nivk button{color:var(--cream);padding:.3rem .8rem;font-size:.84rem;}
-.leiste .nivk button[aria-pressed="true"]{background:var(--yellow);color:var(--ink);}
-.leiste .tabs{
-  position:static;flex:1 1 auto;min-width:0;
-  display:flex;flex-wrap:nowrap;gap:.35rem;overflow-x:auto;overscroll-behavior-x:contain;
-  margin:0;padding:.1rem 0;max-width:none;width:auto;
-  background:none;border:none;border-radius:0;box-shadow:none;backdrop-filter:none;
-  scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;
-}
-.leiste .tabs::-webkit-scrollbar{display:none;}
-.leiste .tab{flex:none;white-space:nowrap;}
-/* ---------- Ein Abschnitt nach dem anderen ----------
-   Sichtbar wird das erst, wenn der Motor die Schaltung uebernommen
-   hat. Ohne JavaScript und beim Drucken steht die Stunde weiterhin
-   vollstaendig da. */
-body.schaltet section.section[hidden]{display:none !important;}
-body.schaltet section.section{margin-top:1.2rem;border-top:none;padding-top:0;}
-.tabAlles{font-family:inherit;cursor:pointer;border:1px dashed var(--ink-mute,#7a6a56);background:transparent;}
-.tabAlles[aria-pressed="true"]{background:var(--ink);color:var(--cream);border-style:solid;}
+.deb-mehr ul{margin:0;padding-left:1.05rem;font-size:.93rem;line-height:1.6;}
 
-/* Am Ende jedes Abschnitts: zurueck und weiter. In der Stunde haelt
-   das den Takt — sonst sucht man die naechste Ueberschrift. */
+/* ---------- Hausaufgabe ---------- */
+.hagrid{display:grid;gap:.6rem;}
+.ha{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .7rem;align-items:start;
+  background:#fff;border:1px solid var(--line);border-radius:14px;padding:.8rem .9rem;
+}
+.ha .box{
+  grid-row:span 2;width:22px;height:22px;border:2px solid var(--line);border-radius:6px;
+  cursor:pointer;align-self:center;
+}
+.ha.fertig .box{background:var(--turq-d);border-color:var(--turq-d);}
+.ha.fertig .htxt{opacity:.55;text-decoration:line-through;}
+.ha .hi{grid-row:span 2;align-self:center;font-size:1.15rem;}
+.ha .htxt b{display:block;font-family:'Space Grotesk',sans-serif;font-size:.97rem;}
+.ha .htxt{font-size:.92rem;line-height:1.55;color:var(--soft);}
+.hastand{
+  font-family:'Space Grotesk',sans-serif;font-size:.85rem;font-weight:700;
+  color:var(--soft);margin:.7rem 0 0;
+}
+.zeit{
+  display:inline-block;background:var(--mint);border:1px solid #CDEEF3;color:var(--teal-ink);
+  border-radius:999px;padding:.1rem .5rem;font-size:.72rem;font-weight:700;margin-left:.35rem;
+}
+.hilfe{
+  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;
+  border:1px solid var(--line);background:#fff;border-radius:999px;padding:.35rem .8rem;margin:.6rem 0 0;
+}
+.inhalt{
+  display:none;background:var(--warm);border:1px solid #F0E4C4;border-radius:12px;
+  padding:.75rem .9rem;margin:.55rem 0 0;font-size:.93rem;line-height:1.6;
+}
+.inhalt.offen{display:block;}
+
+/* ---------- Markierte Woerter ---------- */
+.wm{
+  cursor:pointer;background:var(--gold-mark);border-radius:5px;padding:.02em .2em;
+  -webkit-box-decoration-break:clone;box-decoration-break:clone;
+}
+.wm.schwer{background:transparent;border-bottom:2px dotted var(--red);border-radius:0;}
+.wm:hover,.wm.offen{background:var(--gold);}
+.wm.schwer:hover,.wm.schwer.offen{background:var(--pink);}
+.wm:focus-visible{outline:3px solid var(--turq-d);outline-offset:2px;}
+.wmk{
+  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
+  background:#fff;border:1px solid var(--line);border-radius:14px;
+  box-shadow:var(--schatten);padding:.8rem .95rem .85rem;
+}
+.wmk b{display:block;font-family:'Space Grotesk',sans-serif;font-size:1.05rem;padding-right:1.4rem;}
+.wmk span{display:block;margin-top:.25rem;font-size:.92rem;line-height:1.5;color:var(--soft);}
+.wmk em{
+  display:block;margin-top:.5rem;padding-left:.65rem;border-left:3px solid var(--turq-d);
+  font-style:italic;font-size:.91rem;line-height:1.5;
+}
+.wmk-zu{
+  position:absolute;top:.4rem;right:.45rem;border:none;background:transparent;
+  font-size:.9rem;line-height:1;cursor:pointer;color:var(--soft);padding:.2rem;
+}
+.wmk-ton{
+  margin-top:.55rem;border:1px solid var(--line);background:#fff;color:var(--ink);
+  border-radius:999px;padding:.28rem .7rem;font-family:'Space Grotesk',sans-serif;
+  font-size:.78rem;font-weight:700;cursor:pointer;
+}
+
+/* ---------- Weiter und zurueck ---------- */
 .weiterzeile{
   display:flex;gap:.6rem;flex-wrap:wrap;justify-content:space-between;
-  margin:2rem 0 .4rem;padding-top:1.2rem;border-top:3px dashed var(--sand);
+  margin:1.8rem 0 .4rem;padding-top:1.1rem;border-top:1px solid var(--line);
 }
 .weiterknopf{
-  font-family:'Outfit';font-size:.95rem;font-weight:700;cursor:pointer;
-  border:2.5px solid var(--ink);border-radius:999px;padding:.6rem 1.2rem;
-  background:var(--yellow);color:var(--ink);box-shadow:3px 3px 0 rgba(38,32,25,.18);
-  transition:.12s;margin-left:auto;
+  font-family:'Space Grotesk',sans-serif;font-size:.92rem;font-weight:700;cursor:pointer;
+  border:1px solid var(--turq-d);background:var(--turq-d);color:#fff;
+  border-radius:999px;padding:.55rem 1.1rem;margin-left:auto;transition:.15s;
 }
-.weiterknopf.zurueck{background:var(--paper);margin-left:0;margin-right:auto;}
-.weiterknopf:hover{transform:translate(1px,1px);box-shadow:2px 2px 0 rgba(38,32,25,.18);}
+.weiterknopf.zurueck{background:#fff;color:var(--teal-ink);margin-left:0;margin-right:auto;}
+.weiterknopf:hover{background:#167f9e;border-color:#167f9e;color:#fff;}
+
+/* ---------- Niveau-Umschalter ---------- */
+body[data-niveau="a2"] .nur-b1{display:none !important;}
+body[data-niveau="b1"] .nur-a2{display:none !important;}
+
+/* ---------- Fuss ---------- */
+footer{
+  margin-top:3rem;padding-top:1.2rem;border-top:1px solid var(--line);
+  font-size:.85rem;color:var(--soft);text-align:center;
+}
+footer strong{color:var(--ink);}
+
 @media print{
-  body.schaltet section.section[hidden]{display:block !important;}
-  .leiste,.weiterzeile{display:none !important;}
+  body.schaltet .section[hidden]{display:block !important;}
+  .leiste,.weiterzeile,.wmk{display:none !important;}
+  .wm{background:none;border-bottom:2px solid var(--gold-d);}
 }
-
-/* Der Satz zum Niveau wird einmal gelesen, nicht mitgeschleppt. */
-.niv-wie{
-  margin:.9rem auto 0;max-width:52ch;text-align:center;
-  font-size:.86rem;color:var(--ink-mute,#7a6a56);
-}
-.tab{text-decoration:none;}
-a.tab:hover{color:var(--ink);}
-
-/* ---------- Kleinkram ---------- */
-.bsp{
-  background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;
-  box-shadow:4px 4px 0 rgba(38,32,25,.12);padding:.6rem .9rem;margin:.6rem 0;font-size:.97rem;
-}
-.bsp .wer{
-  display:block;font-size:.7rem;font-weight:800;text-transform:uppercase;
-  letter-spacing:.08em;color:var(--ink-mute);margin-bottom:.15rem;
-}
-.gk .bsp{box-shadow:none;margin:.5rem 0 0;}
 @media(max-width:560px){
-  .leiste{border-radius:14px;padding:.35rem .4rem;gap:.4rem;}
-  .leiste .nivk button{padding:.3rem .65rem;font-size:.82rem;}
-  .leiste .nivk .zusatz{display:none;}
-  .niv-wie{font-size:.82rem;}
+  .wrapper{padding:1.5rem 1rem 4rem;}
+  .leiste{border-radius:12px;padding:.35rem .4rem;gap:.4rem;}
+  .nivk button{padding:.3rem .65rem;font-size:.8rem;}
+  .nivk .zusatz{display:none;}
 }
-
-/* ---- Freigestellte Figuren auf den Wortschatzkarten ----
-   Die Amanda-Bilder sind hoch und schmal (etwa 150x340) und ohne
-   Hintergrund. Der normale Kartenschnitt ist quadratisch und schneidet
-   mit object-fit:cover genau das weg, worauf es ankommt: Haende,
-   Schultern, Gesicht. Mit hoch:true in der JSON wird das Bild ganz
-   gezeigt und steht auf einer warmen Flaeche statt auf Weiss. */
-.bcard.hoch img{
-  object-fit:contain;
-  background:linear-gradient(180deg,var(--cream),var(--sand));
-  padding:.35rem;
-}
-
-/* Die Grammatik-Kette ist auf dem Handy zu breit: das rote Schild und der
-   Satz passen nicht nebeneinander. Auf schmalen Bildschirmen rutscht der
-   Satz deshalb in eine eigene Zeile — sonst schiebt er die ganze Seite
-   nach rechts. */
-@media (max-width:640px){
-  .gstep{flex-wrap:wrap;}
-  .gstep .gw{flex:0 1 auto;white-space:normal;text-align:center;}
-  .gstep .gs{flex:1 1 100%;min-width:0;}
-}
-.gstep .gs{min-width:0;overflow-wrap:anywhere;}
 
 </style>
 </head>
-<body data-niveau="a2"><div class="wrapper">
+<body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
 
 <div class="eyebrow">deutschoderwas · Sprechclub · Woche 6 · Strang A · Teil 2 · Mittwoch, 21. Oktober</div>
 <h1 class="title">Kleidung kaufen: <span class="hl">Größe, Farbe und der Weg zurück</span></h1>
@@ -671,15 +433,12 @@ a.tab:hover{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ablauf">🎬 Ablauf</a>
 <a class="tab" href="#ankommen">👋 Ankommen</a>
-<a class="tab" href="#saetze">💬 Sätze</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
-<a class="tab" href="#grammatik">🧩 Grammatik</a>
-<a class="tab" href="#ueben">✅ Üben</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
-<a class="tab" href="#debatte">⚖️ Debatte</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
-<a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
 <a class="tab" href="#abschluss">🎯 Abschluss</a>
+<a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
 </nav>
 </div>
 
@@ -687,14 +446,12 @@ a.tab:hover{color:var(--ink);}
 <h2 class="st">Sechzig Minuten, <span class="hl">sechs Leute</span></h2>
 <p class="ssub">So läuft die Stunde. Jede Zeile sagt, wie lange, in welcher Aufstellung und wer spricht.</p>
 <div class="takt">
-<div class="takt-z"><span class="takt-m">0–4</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 30 Sekunden</em></div></div>
-<div class="takt-z"><span class="takt-m">4–12</span><span class="takt-z2">💬</span><div class="takt-t"><b>Sätze für heute</b><span>Die Sätze laut lesen, dann zwei selbst bauen.</span><em>erst gemeinsam, dann zwei Freiwillige</em></div></div>
-<div class="takt-z"><span class="takt-m">12–20</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.</span><em>drei Paare</em></div></div>
-<div class="takt-z"><span class="takt-m">20–27</span><span class="takt-z2">✅</span><div class="takt-t"><b>Üben</b><span>Quiz und Lücken zusammen am Bildschirm.</span><em>reihum, jede Person eine Aufgabe</em></div></div>
-<div class="takt-z"><span class="takt-m">27–33</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.</span><em>drei Paare, zwei Runden</em></div></div>
-<div class="takt-z"><span class="takt-m">33–45</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
-<div class="takt-z"><span class="takt-m">45–56</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
-<div class="takt-z"><span class="takt-m">56–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
+<div class="takt-z"><span class="takt-m">0–5</span><span class="takt-z2">👋</span><div class="takt-t"><b>Ankommen</b><span>Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.</span><em>alle sechs, je etwa 40 Sekunden</em></div></div>
+<div class="takt-z"><span class="takt-m">5–15</span><span class="takt-z2">🎬</span><div class="takt-t"><b>Dialog</b><span>Zu zweit lesen. Dann verschwindet B und ihr antwortet selbst.</span><em>drei Paare, dann Rollentausch</em></div></div>
+<div class="takt-z"><span class="takt-m">15–25</span><span class="takt-z2">⏱️</span><div class="takt-t"><b>90 Sekunden</b><span>Ein Wort, 90 Sekunden reden. Der Partner hakt die Zielwörter ab.</span><em>drei Paare, zwei Runden</em></div></div>
+<div class="takt-z"><span class="takt-m">25–40</span><span class="takt-z2">🎭</span><div class="takt-t"><b>Rollenspiel</b><span>Zwei Durchgänge, dazwischen Rollentausch.</span><em>drei Paare</em></div></div>
+<div class="takt-z"><span class="takt-m">40–55</span><span class="takt-z2">⚖️</span><div class="takt-t"><b>Debatte</b><span>Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.</span><em>zwei Dreiergruppen</em></div></div>
+<div class="takt-z"><span class="takt-m">55–60</span><span class="takt-z2">🎯</span><div class="takt-t"><b>Abschluss</b><span>Ein Satz pro Person: Was nimmst du mit?</span><em>alle sechs</em></div></div>
 </div>
 <div class="tip">Wer zu fünft oder zu siebt ist: bei fünf machen eine Dreiergruppe und ein Paar den Dialog, bei sieben spricht in den Paarphasen eine Dreiergruppe — dort dauert jede Runde eine Minute länger.</div>
 </section>
@@ -702,58 +459,10 @@ a.tab:hover{color:var(--ink);}
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
 <p class="ssub">Eine Frage, ein Satz pro Person. Reihum, ohne Kommentar dazwischen — das dauert genau vier Minuten.</p>
-<div class="regie"><span>0–4 Min</span><b>alle sechs, je etwa 30 Sekunden</b></div>
+<div class="regie"><span>0–5 Min</span><b>alle sechs, je etwa 40 Sekunden</b></div>
 <div class="ank">Kaufst du Kleidung lieber im Laden oder online?</div>
 <div class="ank zweit"><span>Wenn noch Zeit ist:</span>Probierst du immer an?</div>
 <div class="tip">Antworte in einem Satz. Wer nicht weiterweiß, fängt mit „Bei mir war das so: …“ an — der Rest kommt dann von allein.</div>
-</section>
-
-<section class="section" id="saetze">
-<h2 class="st">Vier Bausteine, <span class="hl">und der Einkauf läuft</span></h2>
-<p class="ssub">Suchen, anprobieren, entscheiden, zurückbringen. Vier Momente, die in jedem Laden vorkommen — und für jeden ein fertiger Satz.</p>
-<div class="nur-a2">
-<div class="rmcard"><b>1 · 🔎 Suchen</b><br>
-<span class="rm">Ich suche …</span><span class="rm">Haben Sie …?</span><span class="rm">Gibt es das auch in …?</span><span class="rm">Wo finde ich …?</span>
-<div class="bsp"><span class="wer">So klingt es</span>Ich suche eine Jacke für den Herbst, so in <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Größe" data-wort="die Größe" data-kurz="die Zahl oder der Buchstabe im Etikett" data-bsp="Haben Sie das eine Nummer größer?">Größe</b> 40.</div>
-<button class="speak" data-say="Ich suche eine Jacke für den Herbst, so in Größe 40.">🔊 hören</button></div>
-<div class="rmcard"><b>2 · 👕 Anprobieren</b><br>
-<span class="rm">Kann ich das anprobieren?</span><span class="rm">Wo sind die Kabinen?</span><span class="rm">Hätten Sie das eine Nummer größer?</span><span class="rm">Das ist mir zu eng</span>
-<div class="bsp"><span class="wer">So klingt es</span>Kann ich das mal <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von anprobieren" data-wort="anprobieren" data-kurz="vor dem Kauf einmal anziehen" data-bsp="Kann ich das mal anprobieren?">anprobieren</b>? Wo sind die Kabinen?</div>
-<button class="speak" data-say="Kann ich das mal anprobieren? Wo sind die Kabinen?">🔊 hören</button></div>
-<div class="rmcard"><b>3 · 🤔 Entscheiden</b><br>
-<span class="rm">Ich nehme es</span><span class="rm">Ich überlege es mir noch</span><span class="rm">Das passt gut</span><span class="rm">Ich kann mich nicht entscheiden</span>
-<div class="bsp"><span class="wer">So klingt es</span>Das passt gut — ich nehme es.</div>
-<button class="speak" data-say="Das passt gut — ich nehme es.">🔊 hören</button></div>
-<div class="rmcard"><b>4 · 🔁 Zurückbringen</b><br>
-<span class="rm">Ich möchte das umtauschen</span><span class="rm">Hier ist der Kassenbon</span><span class="rm">Es passt leider doch nicht</span><span class="rm">Geht das noch?</span>
-<div class="bsp"><span class="wer">So klingt es</span>Ich möchte das <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von umtauschen" data-wort="umtauschen" data-kurz="gegen etwas anderes eintauschen" data-bsp="Ich möchte das gern umtauschen.">umtauschen</b>, es passt leider doch nicht.</div>
-<button class="speak" data-say="Ich möchte das umtauschen, es passt leider doch nicht.">🔊 hören</button></div>
-</div>
-<div class="nur-b1">
-<div class="rmcard"><b>1 · 🔎 Genauer suchen</b><br>
-<span class="rm">Ich suche etwas Schlichtes, nichts Auffälliges</span><span class="rm">Hätten Sie das auch in Naturfarben?</span><span class="rm">Es sollte waschbar sein</span><span class="rm">Eher figurbetont oder eher weit?</span>
-<div class="bsp"><span class="wer">So klingt es</span>Ich suche etwas Schlichtes für den Alltag — und es sollte waschbar sein.</div>
-<button class="speak" data-say="Ich suche etwas Schlichtes für den Alltag — und es sollte waschbar sein.">🔊 hören</button></div>
-<div class="rmcard"><b>2 · 👀 Beurteilen</b><br>
-<span class="rm">Im Ärmel spannt es</span><span class="rm">Die Länge ist genau richtig</span><span class="rm">Die Farbe ist mir zu grell</span><span class="rm">Der Schnitt gefällt mir, aber …</span>
-<div class="bsp"><span class="wer">So klingt es</span>Der Schnitt gefällt mir, aber im Ärmel spannt es ein bisschen.</div>
-<button class="speak" data-say="Der Schnitt gefällt mir, aber im Ärmel spannt es ein bisschen.">🔊 hören</button></div>
-<div class="rmcard"><b>3 · 🧾 Nachfragen vor dem Kauf</b><br>
-<span class="rm">Wie lange kann ich das umtauschen?</span><span class="rm">Gilt das auch für reduzierte Ware?</span><span class="rm">Brauche ich den Bon dafür?</span><span class="rm">Bekomme ich Geld zurück oder einen Gutschein?</span>
-<div class="bsp"><span class="wer">So klingt es</span>Wie lange kann ich das umtauschen — und gilt das auch für <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von reduzierte" data-wort="reduziert" data-kurz="im Preis heruntergesetzt" data-bsp="Die Jacke ist um dreißig Prozent reduziert.">reduzierte</b> Ware?</div>
-<button class="speak" data-say="Wie lange kann ich das umtauschen — und gilt das auch für reduzierte Ware?">🔊 hören</button></div>
-<div class="rmcard"><b>4 · 🧵 Einen Mangel nennen</b><br>
-<span class="rm">Die Naht ist an zwei Stellen offen</span><span class="rm">Der Reißverschluss klemmt</span><span class="rm">Nach dem ersten Waschen hat es …</span><span class="rm">Das war schon beim Kauf so</span>
-<div class="bsp"><span class="wer">So klingt es</span>Der Reißverschluss klemmt — und das war schon beim Kauf so.</div>
-<button class="speak" data-say="Der Reißverschluss klemmt — und das war schon beim Kauf so.">🔊 hören</button></div>
-</div>
-<div class="legende">
-<span><i class="i-verb"></i> Verb</span>
-<span><i class="i-akk"></i> das Kleidungsstück</span>
-<span><i class="i-menge"></i> die Größe</span>
-<span><i class="i-hoefl"></i> Höflichkeit</span>
-</div>
-<div class="tip">📣 <strong>Sofort anwenden:</strong> Denk an das letzte Kleidungsstück, das du gekauft hast. Sag alle vier Sätze dazu — suchen, anprobieren, entscheiden, zurückbringen. Der dritte ist der, der den meisten fehlt.</div>
 </section>
 
 <section class="section" id="dialoge">
@@ -772,7 +481,7 @@ a.tab:hover{color:var(--ink);}
 
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../vok-bild/die-umkleidekabine.webp" alt="Eine Umkleidekabine mit Vorhang, Spiegel und Bank"><h4>Dialog 2 · „In der Kabine“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Du stehst vor dem Spiegel, und es passt nicht ganz. Draußen wartet jemand.</div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Und, passt es?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Der Schnitt gefällt mir, aber im Ärmel ist es mir <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von zu eng" data-wort="zu eng" data-kurz="zu schmal geschnitten" data-bsp="Im Ärmel ist es mir zu eng.">zu eng</b>.</div><div class="dcue">🗣️ Erst das Positive, dann das Problem. <b>ist es mir zu eng</b> — immer mit <i>mir</i>.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Der Schnitt gefällt mir, aber im Ärmel ist es mir zu eng.</div><div class="dcue">🗣️ Erst das Positive, dann das Problem. <b>ist es mir zu eng</b> — immer mit <i>mir</i>.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Soll ich eine Nummer größer holen?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ja bitte. Und gibt es die auch in Dunkelblau?</div><div class="dcue">🗣️ <b>Gibt es das auch in …?</b> — die Formel für jede Variante. Zwei Bitten in einem Zug spart Wege.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">In Dunkelblau leider nur noch 38.</div></div>
@@ -783,7 +492,7 @@ a.tab:hover{color:var(--ink);}
 
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../vok-bild/der-kassenbon.webp" alt="Eine Hand hält einen Kassenbon in einem Laden"><h4>Dialog 3 · „Umtauschen“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Zu Hause hat es doch nicht gepasst. Du bringst es zurück — freundlich und mit Bon.</div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Guten Tag. Ich möchte das gern umtauschen, es passt mir leider doch nicht.</div><div class="dcue">🗣️ Anliegen im ersten Satz, Grund im zweiten Halbsatz. <b>leider</b> macht es weich.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Haben Sie den <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Kassenbon" data-wort="der Kassenbon" data-kurz="der Beleg über den Kauf" data-bsp="Haben Sie den Kassenbon noch?">Kassenbon</b> dabei?</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Haben Sie den Kassenbon dabei?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ja, hier. Gekauft am Samstag, es ist noch alles dran.</div><div class="dcue">🗣️ <b>es ist noch alles dran</b> — gemeint sind die Etiketten. Ein Satz, der viele Rückfragen erspart.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Möchten Sie etwas anderes oder Geld zurück?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Am liebsten dasselbe in 42. Wenn Sie das nicht haben, schaue ich mich noch mal um.</div><div class="dcue">🗣️ Erst der Wunsch, dann die Alternative. So bleibt das Gespräch in Bewegung.<span class="kl">tippen = Hilfe zeigen</span></div></div>
@@ -792,7 +501,7 @@ a.tab:hover{color:var(--ink);}
 <button class="speak dbtn" data-say="Guten Tag. Ich möchte das gern umtauschen, es passt mir leider doch nicht. Haben Sie den Kassenbon dabei? Ja, hier. Gekauft am Samstag, es ist noch alles dran. Möchten Sie etwas anderes oder Geld zurück? Am liebsten dasselbe in 42. Wenn Sie das nicht haben, schaue ich mich noch mal um. In 42 haben wir es. Einen Moment. Super, danke. Das war unkompliziert.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="dwrap" data-runde="1"><div class="dhead"><img src="../vok-bild/die-reklamation.webp" alt="Ein Paket steht auf einer Ladentheke"><h4>Dialog 4 · „Da ist etwas kaputt“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Nach zweimal Tragen ist die Naht offen. Das ist kein Umtausch, das ist eine Reklamation — und du sagst das auch so.</div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ich möchte das <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von reklamieren" data-wort="reklamieren" data-kurz="etwas ist kaputt oder fehlerhaft" data-bsp="Ich möchte das reklamieren, die Naht ist offen.">reklamieren</b>. Die Naht ist an zwei Stellen offen.</div><div class="dcue">🗣️ <b>reklamieren</b> statt <i>umtauschen</i> — das Wort setzt den Ton. Und der Mangel gleich konkret dazu.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ich möchte das reklamieren. Die Naht ist an zwei Stellen offen.</div><div class="dcue">🗣️ <b>reklamieren</b> statt <i>umtauschen</i> — das Wort setzt den Ton. Und der Mangel gleich konkret dazu.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Wann haben Sie es denn gekauft?</div></div>
 <div class="dline b"><div class="dwho b">B</div><div class="dtxt">Vor drei Wochen, hier ist der Bon. Getragen habe ich es zweimal.</div><div class="dcue">🗣️ Zwei Fakten ohne Ausschmückung. Wer sachlich bleibt, wird sachlich behandelt.<span class="kl">tippen = Hilfe zeigen</span></div></div>
 <div class="dline a"><div class="dwho a">A</div><div class="dtxt">Das sieht wirklich nicht gut aus. Ich frage kurz meine Kollegin.</div></div>
@@ -802,76 +511,6 @@ a.tab:hover{color:var(--ink);}
 <button class="speak dbtn" data-say="Ich möchte das reklamieren. Die Naht ist an zwei Stellen offen. Wann haben Sie es denn gekauft? Vor drei Wochen, hier ist der Bon. Getragen habe ich es zweimal. Das sieht wirklich nicht gut aus. Ich frage kurz meine Kollegin. Gern. Mir wäre ein Austausch am liebsten, es gefällt mir ja. Das bekommen wir hin. Einen Moment bitte. Danke, dass Sie sich das gleich ansehen.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 3 zweimal — einmal geht der Umtausch problemlos, einmal sagt das Personal Nein. Wer zurückbringt, muss beim zweiten Mal freundlich bleiben und trotzdem nachfragen, was möglich wäre.</div>
-</section>
-
-<section class="section" id="grammatik">
-<h2 class="st">🧩 Wem passt was: <span class="hl">der Dativ bei passen, stehen, gefallen</span></h2>
-<p class="ssub">Eine kleine Gruppe von Verben dreht den Satz um: Nicht du bist der Handelnde, sondern die Sache. Und du stehst im Dativ. Genau diese Verben brauchst du im Laden ständig.</p>
-<div class="gintro"><i>Ich mag die Jacke</i> ist normal gebaut — <b>ich</b> bin das Subjekt. Aber <i>Die Jacke <b>gefällt mir</b></i> dreht alles um: Jetzt ist die Jacke das Subjekt, und ich stehe im <b>Dativ</b>. Dieselbe Bauweise haben <b>passen</b>, <b>stehen</b>, <b>gehören</b> und <b>schmecken</b>. Wer das einmal verstanden hat, macht in einer ganzen Wortgruppe keine Fehler mehr.</div>
-<div class="gkette">
-<div class="gstep"><span class="gem">📏</span><span class="gw">passen = die richtige Größe</span><span class="gs">Die Hose passt mir.</span></div>
-<div class="gpfeil">▾</div>
-<div class="gstep c2"><span class="gem">🎨</span><span class="gw">stehen = es sieht gut an dir aus</span><span class="gs">Die Farbe steht dir.</span></div>
-<div class="gpfeil">▾</div>
-<div class="gstep c3"><span class="gem">❤️</span><span class="gw">gefallen = es sagt dir zu</span><span class="gs">Der Schnitt gefällt mir.</span></div>
-<div class="gpfeil">▾</div>
-<div class="gstep c4"><span class="gem">🔑</span><span class="gw">und immer im Dativ</span><span class="gs">mir · dir · ihm · ihr · uns · Ihnen</span></div>
-</div>
-<div class="gpos">
-<div class="gz"><b>Was? (Subjekt)</b><span>Die Jacke</span></div>
-<div class="gz"><b>Verb an zweiter Stelle</b><span>passt</span></div>
-<div class="gz"><b>Wem? (Dativ)</b><span>mir</span></div>
-<div class="gz"><b>Rest</b><span>leider nicht.</span></div>
-</div>
-<h2 class="st">Drei Fragen, <span class="hl">drei verschiedene Verben</span></h2>
-<p class="ssub">Im Laden werden diese drei ständig verwechselt. Sie beantworten aber ganz verschiedene Fragen — lies die Zeilen laut, dann sitzt der Unterschied.</p>
-<div class="gdrei">
-<div class="gk blau"><span class="gem2">📏</span><div class="gmw">passen</div><div class="gmb">die Größe, ganz nüchtern</div><div class="gmx">Die 40 passt mir besser.</div></div>
-<div class="gk gelb"><span class="gem2">🎨</span><div class="gmw">stehen</div><div class="gmb">wie es an dir aussieht</div><div class="gmx">Blau steht dir wirklich gut.</div></div>
-<div class="gk ja"><span class="gem2">❤️</span><div class="gmw">gefallen</div><div class="gmb">ob du es magst — unabhängig von dir</div><div class="gmx">Das Muster gefällt mir nicht.</div></div>
-</div>
-<div class="gchips">
-<span class="gchip">Ist es die richtige Größe? → Passt es dir?</span><span class="gchip">Sieht es gut an dir aus? → Steht es dir?</span><span class="gchip">Magst du es? → Gefällt es dir?</span><span class="gchip">Und die häufigste Antwort: Es passt, aber es steht mir nicht.</span><span class="gchip">Oder umgekehrt: Es gefällt mir sehr, aber es passt nicht.</span>
-</div>
-<h2 class="st">Die Dativformen <span class="hl">auf einen Blick</span></h2>
-<p class="ssub">Sechs Formen, mehr sind es nicht. Lies sie laut, bis sie von selbst kommen — sie funktionieren bei allen Verben dieser Gruppe gleich.</p>
-<div class="gdrei">
-<div class="gk blau"><span class="gem2">🔁</span><div class="gmw">Dieselben Formen überall</div><div class="gmb">bei passen, stehen, gefallen, schmecken, gehören</div><div class="gmx">Es schmeckt mir. Es gehört ihr.</div></div>
-<div class="gk gelb"><span class="gem2">⚠️</span><div class="gmw">Die häufigste Falle</div><div class="gmb">mich statt mir</div><div class="gmx">Es passt mir — nicht: Es passt mich.</div></div>
-<div class="gk ja"><span class="gem2">🙋</span><div class="gmw">Im Laden fast immer Ihnen</div><div class="gmb">die höfliche Form großgeschrieben</div><div class="gmx">Steht Ihnen ausgezeichnet.</div></div>
-</div>
-<div class="gchips">
-<span class="gchip">ich → mir · Die Jacke passt mir.</span><span class="gchip">du → dir · Steht dir gut!</span><span class="gchip">er → ihm · Das gefällt ihm nicht.</span><span class="gchip">sie → ihr · Die Farbe steht ihr.</span><span class="gchip">wir → uns · Das gefällt uns beiden.</span><span class="gchip">Sie (höflich) → Ihnen · Passt es Ihnen?</span>
-</div>
-<h2 class="st">🧱 Bau die Sätze selbst</h2>
-<p class="ssub">Tippe die Teile in der richtigen Reihenfolge an. Denk daran: Die Sache ist das Subjekt, die Person steht im Dativ.</p>
-<div id="gbau"></div>
-<h2 class="st">📖 Und jetzt im Zusammenhang</h2>
-<p class="ssub">Ein Nachmittag im Laden, der zweimal fast schiefgegangen wäre. Wähle für jede Lücke das passende Wort.</p>
-<div class="gstory" id="gstory"></div>
-<div class="hilfe">
-<button type="button">🆘 Woran erkenne ich diese Verben?</button>
-<div class="inhalt">
-<p>An einer einzigen Frage — und die kannst du dir selbst stellen:</p>
-<ul>
-<li><b>Wer tut hier eigentlich etwas?</b> Bei <i>gefallen, passen, stehen</i> tut die <u>Sache</u> etwas, nicht du.</li>
-<li><b>Deshalb steht die Sache vorn:</b> <i>Die Jacke gefällt mir</i>, nicht <i>Ich gefalle die Jacke</i>.</li>
-<li><b>Und du kommst in den Dativ:</b> mir, dir, ihm, ihr, uns, Ihnen.</li>
-<li><b>Die Merkgruppe:</b> gefallen, passen, stehen, gehören, schmecken, helfen, danken — alle mit Dativ.</li>
-</ul>
-<p style="margin-top:.5rem;">Ein Satz mit drei davon zum Auswendiglernen: <b>„Die Jacke gefällt mir, sie passt mir, und die Farbe steht mir auch.“</b> Dreimal <i>mir</i> — nie <i>mich</i>.</p>
-</div>
-</div>
-</section>
-
-<section class="section" id="ueben">
-<h2 class="st">✅ Sitzt es schon?</h2>
-<p class="ssub">8 Fragen. Tippe auf deine Antwort — die Erklärung kommt sofort.</p>
-<div id="quiz"></div>
-<h2 class="st">✍️ Lückentext</h2>
-<p class="ssub">Wähle in jeder Lücke das passende Wort.</p>
-<div class="gap" id="gap"></div>
-<div class="tip teal">📣 <strong>Danach laut:</strong> Jeder nennt reihum ein Kleidungsstück. Der Nachbar sagt sofort drei Sätze dazu: einen mit <i>passen</i>, einen mit <i>stehen</i>, einen mit <i>gefallen</i>. Wer <i>mich</i> statt <i>mir</i> sagt, gibt weiter.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -904,17 +543,6 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde müssen <u>passen, stehen</u> und <u>gefallen</u> je einmal vorkommen — alle drei mit Dativ. Der Partner hört mit und hebt bei einem <i>mich</i> die Hand.</div>
 </section>
 
-<section class="section" id="debatte">
-<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
-<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
-<div class="regie"><span>33–45 Min</span><b>zwei Dreiergruppen</b></div>
-<div class="deb-these">Warum ist es so schwer zu sagen, dass etwas nicht passt?</div>
-<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><p>Sammelt zwei Gründe und ein Beispiel aus eurem Alltag.</p></div><div class="deb-s con"><b>Gruppe B · dagegen</b><p>Sammelt zwei Gegengründe und einen Fall, in dem es schiefgeht.</p></div></div>
-<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
-<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Was hast du gekauft und danach nie getragen — und warum?</li><li>Wie ist das Verkaufsgespräch in deinem Land anders als hier?</li><li>Wann ist Umtausch Kulanz und wann ein Recht?</li><li>Kaufst du anders ein, seit du das weißt?</li><li>Wie reagierst du, wenn ein Laden sich weigert?</li></ul></div>
-<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
-</section>
-
 <section class="section" id="rollenspiele">
 <h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
 <p class="ssub">Einer ist Kundin, einer arbeitet im Laden. Danach tauschen — und beim zweiten Mal ohne Notizen.</p>
@@ -923,7 +551,7 @@ a.tab:hover{color:var(--ink);}
 <p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">A arbeitet im Laden, B sucht eine Jacke für den Herbst. Spielt den kompletten Ablauf: begrüßt werden, suchen, anprobieren, eine andere Größe holen lassen, entscheiden, zahlen.</p>
 <div class="nur-a2"><span class="rm">Werden Sie schon beraten?</span><span class="rm">Ich suche eine Jacke für den Herbst</span><span class="rm">Hätten Sie die eine Nummer größer?</span><span class="rm">Ich nehme sie</span></div>
 <div class="nur-b1"><span class="rm">Ich suche etwas Schlichtes, nichts Auffälliges</span><span class="rm">Der Schnitt gefällt mir, aber im Ärmel spannt es</span><span class="rm">Gibt es die auch in Naturfarben?</span><span class="rm">Wie lange kann ich das umtauschen?</span></div>
-<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat alle vier Momente durchgespielt und dabei <i><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von passen" data-wort="passen" data-kurz="die richtige Größe haben" data-bsp="Das Hemd passt mir gut.">passen</b></i>, <i>stehen</i> oder <i>gefallen</i> mindestens dreimal richtig mit Dativ benutzt. Kein einziges <i>Es passt mich</i>.</div>
+<div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat alle vier Momente durchgespielt und dabei <i>passen</i>, <i>stehen</i> oder <i>gefallen</i> mindestens dreimal richtig mit Dativ benutzt. Kein einziges <i>Es passt mich</i>.</div>
 </div>
 <div class="rmcard">
 <b>2 · Umtausch — und einmal Nein</b>
@@ -934,7 +562,7 @@ a.tab:hover{color:var(--ink);}
 </div>
 <div class="rmcard">
 <b>3 · Der echte Mangel</b>
-<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">An B's Jacke ist nach zweimal Tragen die Naht offen. A ist zunächst skeptisch und vermutet einen Trageschaden. B bleibt sachlich, nennt den <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Mangel" data-wort="der Mangel" data-kurz="wenn etwas kaputt oder fehlerhaft ist" data-bsp="Hier ist ein Mangel — die Naht ist offen.">Mangel</b> konkret und sagt, was er sich wünscht.</p>
+<p style="margin:.4rem 0;font-size:.95rem;color:var(--ink-soft);">An B's Jacke ist nach zweimal Tragen die Naht offen. A ist zunächst skeptisch und vermutet einen Trageschaden. B bleibt sachlich, nennt den Mangel konkret und sagt, was er sich wünscht.</p>
 <div class="nur-a2"><span class="rm">Ich möchte das reklamieren</span><span class="rm">Die Naht ist an zwei Stellen offen</span><span class="rm">Getragen habe ich es zweimal</span><span class="rm">Mir wäre ein Austausch am liebsten</span></div>
 <div class="nur-b1"><span class="rm">Das war schon beim Kauf so</span><span class="rm">Ich verstehe die Frage, aber es ist normal getragen worden</span><span class="rm">Können Sie das jemandem zeigen, der das beurteilt?</span><span class="rm">Was schlagen Sie vor?</span></div>
 <div class="bsp"><span class="wer">✅ Eine gute Runde enthält</span>B hat den Mangel konkret benannt statt allgemein zu klagen, ist sachlich geblieben und hat einen eigenen Wunsch genannt. Das Wort <i>reklamieren</i> kam im ersten Satz.</div>
@@ -946,6 +574,24 @@ a.tab:hover{color:var(--ink);}
 <div class="word" id="wsk" style="font-size:1.25rem;line-height:1.4;">Tippe auf den Knopf.</div>
 <button class="btn" id="sknew">🎴 Karte ziehen</button>
 </div>
+</section>
+
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Zwei Minuten sammeln, dann spricht jede Seite viermal — abwechselnd.</p>
+<div class="regie"><span>40–55 Min</span><b>zwei Dreiergruppen</b></div>
+<div class="deb-these">Kleidung sollte man im Laden kaufen, nicht im Internet.</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><ul><li>Nur im Laden weiß man, ob es passt — Größen sind bei jeder Marke anders.</li><li>Wer anprobiert, schickt nichts zurück; das spart Wege und Verpackung.</li><li>Man kann fragen, und man bekommt sofort eine Antwort.</li></ul></div><div class="deb-s con"><b>Gruppe B · dagegen</b><ul><li>Im Netz ist die Auswahl größer, besonders bei Größen, die es im Laden nie gibt.</li><li>Wer arbeitet, kommt an Ladenöffnungszeiten kaum heran.</li><li>Zu Hause anprobieren ist für viele angenehmer als eine Kabine mit Vorhang.</li></ul></div></div>
+<div class="deb-mittel"><b>Sätze, die eine Debatte tragen</b><div class="deb-chips"><span>Ich sehe das anders, weil …</span><span>Da stimme ich zu, aber …</span><span>Genau das ist der Punkt: …</span><span>Das mag sein — trotzdem …</span><span>Wenn das stimmt, warum dann …?</span><span>Ich bleibe dabei: …</span></div></div>
+<div class="deb-mehr"><b>Wenn die erste Frage durch ist</b><ul><li>Warum ist es so schwer zu sagen, dass etwas nicht passt?</li><li>Was hast du gekauft und danach nie getragen — und warum?</li><li>Wie ist das Verkaufsgespräch in deinem Land anders als hier?</li><li>Wann ist Umtausch Kulanz und wann ein Recht?</li><li>Kaufst du anders ein, seit du das weißt?</li><li>Wie reagierst du, wenn ein Laden sich weigert?</li></ul></div>
+<div class="tip teal">Jede Wortmeldung beginnt mit einem der Sätze oben. Das klingt am Anfang steif — und ist genau das, was in der Prüfung und in der Besprechung zählt.</div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Vier Minuten, sechs Sätze.</p>
+<div class="regie"><span>55–60 Min</span><b>alle sechs</b></div>
+<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
 </section>
 
 <section class="section" id="hausaufgabe">
@@ -1013,13 +659,6 @@ a.tab:hover{color:var(--ink);}
 <div class="tip">🔜 <strong>Nächste Woche, Teil 1:</strong> <u>Unterwegs mit Bus und Bahn.</u> Ticket, Fahrplan, umsteigen — und am Mittwoch nach dem Weg fragen und mit Verspätungen umgehen.</div>
 </section>
 
-<section class="section" id="abschluss">
-<h2 class="st">Zum <span class="hl">Schluss</span></h2>
-<p class="ssub">Vier Minuten, sechs Sätze.</p>
-<div class="regie"><span>56–60 Min</span><b>alle sechs</b></div>
-<div class="ank">Ein Satz von jedem: Welchen Satz aus heute nimmst du mit — und wo wirst du ihn brauchen?</div>
-</section>
-
 <footer>
 <strong>deutschoderwas Sprechclub</strong> · Wetter, Jahreszeit, Kleidung · Teil 2 · A2/B1 · Woche 6 · Montag war Teil 1
 </footer>
@@ -1030,7 +669,7 @@ a.tab:hover{color:var(--ink);}
 ["Sag, was du suchst — <b>Kleidungsstück, Anlass, Größe</b> in einem Satz.","In der Kabine passt etwas nicht. Sag es und bitte um eine andere Größe.","Erkläre den Unterschied zwischen <b>passen</b>, <b>stehen</b> und <b>gefallen</b>.","Bring etwas zurück: <b>Anliegen, Grund, Bon, Wunsch</b>.","Nenne drei konkrete <b>Mängel</b> an Kleidung — und je einen Satz dazu.","Das Personal sagt Nein zum Umtausch. Bleib freundlich und frag weiter.","Sag fünf Sätze mit <b>mir, dir, ihm, ihr, Ihnen</b> — alle mit passen oder gefallen.","Du willst nur schauen. Antworte auf <i>„Werden Sie schon beraten?“</i>","Beschreibe ein Kleidungsstück so, dass jemand es im Laden findet.","Erzähl von etwas, das du gekauft und nie getragen hast — und warum."]
 </script>
 <script type="application/json" id="daten-w90">
-[{"w":"die Größe","b":"../vok-bild/die-groesse.webp","h":["eine Nummer größer","das Etikett","40 oder 42","passen","messen"]},{"w":"die Umkleidekabine","b":"../vok-bild/die-umkleidekabine.webp","h":["der Spiegel","der Vorhang","anprobieren","ganz hinten","warten"]},{"w":"anprobieren","b":"../amanda/sz-kleidung.webp","h":["kann ich mal","die Kabine","der Bügel","noch mal","entscheiden"]},{"w":"passen","b":"../vok-bild/das-hemd.webp","h":["mir","zu eng","genau richtig","der Schnitt","die Länge"]},{"w":"zu eng","b":"../vok-bild/der-aermel.webp","h":["zu weit","der Ärmel","spannen","eine Nummer","zu kurz"]},{"w":"die Beratung","b":"../amanda/sz-verkaufen.webp","h":["werden Sie beraten","ich schaue erst","gern","empfehlen","suchen"]},{"w":"der Kassenbon","b":"../vok-bild/der-kassenbon.webp","h":["aufheben","dabeihaben","der Beleg","das Datum","umtauschen"]},{"w":"umtauschen","b":"../vok-bild/die-retoure.webp","h":["zurückbringen","eine Nummer größer","der Gutschein","die Frist","leider doch nicht"]},{"w":"der Mangel","b":"../vok-bild/die-reklamation.webp","h":["die Naht","der Reißverschluss","reklamieren","konkret","schon beim Kauf"]},{"w":"sich entscheiden","b":"../amanda/sz-kasse.webp","h":["ich nehme es","ich überlege noch","für den blauen","die Kasse","zahlen"]}]
+[{"w":"die Größe","b":"../vok-bild/die-groesse.webp","h":["eine Nummer größer","das Etikett","40 oder 42","passen","messen"]},{"w":"die Umkleidekabine","b":"../vok-bild/die-umkleidekabine.webp","h":["der Spiegel","der Vorhang","anprobieren","ganz hinten","warten"]},{"w":"anprobieren","b":"../amanda/sz-kleidung.webp","h":["kann ich mal","die Kabine","der Bügel","noch mal","entscheiden"]},{"w":"passen","b":"../vok-bild/das-hemd.webp","h":["mir","zu eng","genau richtig","der Schnitt","die Länge"]},{"w":"reduziert","b":"../vok-bild/das-angebot.webp","h":["zu weit","der Ärmel","spannen","eine Nummer","zu kurz"]},{"w":"die Beratung","b":"../amanda/sz-verkaufen.webp","h":["werden Sie beraten","ich schaue erst","gern","empfehlen","suchen"]},{"w":"der Kassenbon","b":"../vok-bild/der-kassenbon.webp","h":["aufheben","dabeihaben","der Beleg","das Datum","umtauschen"]},{"w":"umtauschen","b":"../vok-bild/die-retoure.webp","h":["zurückbringen","eine Nummer größer","der Gutschein","die Frist","leider doch nicht"]},{"w":"der Mangel","b":"../vok-bild/die-reklamation.webp","h":["die Naht","der Reißverschluss","reklamieren","konkret","schon beim Kauf"]},{"w":"die Farbe","b":"../vok-bild/der-mantel.webp","h":["ich nehme es","ich überlege noch","für den blauen","die Kasse","zahlen"]}]
 </script>
 <script type="application/json" id="daten-quiz">
 [{"q":"Welcher Satz ist richtig?","o":["Die Jacke passt mir gut.","Die Jacke passt mich gut.","Ich passe die Jacke gut.","Die Jacke passt für mich gut."],"c":0,"e":"<b>passen</b> steht mit <b>Dativ</b>: <i>mir</i>. Die Jacke ist das Subjekt, du bist die Person, der etwas passt."},{"q":"Was heißt <i>Die Farbe steht dir</i>?","o":["Die Farbe sieht gut an dir aus.","Die Farbe hat die richtige Größe.","Die Farbe gehört dir.","Die Farbe gefällt dir."],"c":0,"e":"<b>stehen</b> beschreibt, wie etwas <u>an dir</u> wirkt. <i>passen</i> ist die Größe, <i>gefallen</i> ist dein Geschmack — drei verschiedene Fragen."},{"q":"Du willst eine andere Größe. Was sagst du?","o":["Hätten Sie das eine Nummer größer?","Ich brauche größer.","Das ist zu klein für ich.","Geben Sie mir größer."],"c":0,"e":"<b>Hätten Sie …?</b> ist die höfliche Bitte, und <b>eine Nummer größer</b> ist die feste Wendung dafür — natürlicher als <i>eine Größe größer</i>."},{"q":"Was ist der Unterschied zwischen umtauschen und reklamieren?","o":["Umtauschen: es passt nicht. Reklamieren: es ist kaputt oder fehlerhaft.","Es ist dasselbe.","Umtauschen geht nur online, reklamieren nur im Laden.","Reklamieren heißt Geld zurück."],"c":0,"e":"Das Wort setzt den Ton des Gesprächs. Bei einem <b>Mangel</b> nennst du ihn konkret — das ist etwas ganz anderes als „gefällt mir doch nicht“."},{"q":"Welche Antwort passt auf <i>Werden Sie schon beraten?</i>","o":["Danke, ich schaue erst mal.","Nein, ich kaufe nichts.","Warum fragen Sie?","Ich bin nur hier."],"c":0,"e":"Ein freundlicher, vollständiger Satz, der keine Begründung braucht. Damit bleibst du in Ruhe und niemand nimmt es dir übel."},{"q":"Welcher Satz nennt einen Mangel konkret?","o":["Die Naht ist am rechten Ärmel offen.","Das Ding taugt nichts.","Die Qualität ist schlecht.","Damit bin ich nicht zufrieden."],"c":0,"e":"Nur der erste Satz beschreibt etwas Nachprüfbares. Die anderen drei sind Urteile — darüber kann man streiten, über eine offene Naht nicht."},{"q":"Welches Verb steht <u>nicht</u> mit Dativ?","o":["kaufen","gefallen","passen","gehören"],"c":0,"e":"<b>kaufen</b> ist normal gebaut: <i>Ich kaufe die Jacke.</i> Die anderen drei drehen den Satz um — die Sache ist das Subjekt, die Person steht im Dativ."},{"q":"Was bedeutet <i>Reduzierte Ware ist vom Umtausch ausgeschlossen</i>?","o":["Heruntergesetzte Sachen nimmt dieser Laden nicht zurück.","Reduzierte Sachen sind besonders günstig.","Man bekommt nur einen Gutschein.","Man muss den Bon aufheben."],"c":0,"e":"Der Satz steht oft an der Kasse. Was im Einzelfall gilt — besonders bei einem echten Mangel — sagt dir der Laden oder eine Beratungsstelle, nicht dieses Schild allein."}]

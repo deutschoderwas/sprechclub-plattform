@@ -35,6 +35,17 @@ const attr = t => String(t == null ? '' : t).replace(/&/g, '&amp;').replace(/"/g
 /* Fuer data-say: Auszeichnung raus, damit die Stimme keine Tags vorliest */
 const nurText = t => String(t || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
 
+/* Die Argumente fuer die Debatte stehen in bau/debatten.json, je
+   Stunde eine These und dreimal dafuer, dreimal dagegen. Sie sind
+   von Hand geschrieben — eine Debatte, in der beide Gruppen nur
+   „Sammelt zwei Gruende" lesen, ist keine Debatte, sondern eine
+   Aufgabe ohne Material. Wer nichts zu sagen weiss, schweigt. */
+const DEBATTEN = (() => {
+  const f = path.join(__dirname, 'debatten.json');
+  try { return JSON.parse(fs.readFileSync(f, 'utf8')); } catch (e) { return {}; }
+})();
+const DEB = DEBATTEN[path.basename(quelle).replace(/\.json$/, '')] || null;
+
 const fehler = [];
 const bilder = new Set();
 
@@ -464,21 +475,17 @@ const abschnitte = [];
    sechs teilt sich gut. Gerechnet ist so, dass jede Person in der
    Stunde auf ungefaehr zwoelf Minuten eigenes Sprechen kommt. */
 const TAKT = [
-  { id:'ankommen',    min:'0–4',   z:'👋', t:'Ankommen',
-    w:'Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.', wer:'alle sechs, je etwa 30 Sekunden' },
-  { id:'saetze',      min:'4–12',  z:'💬', t:'Sätze für heute',
-    w:'Die Sätze laut lesen, dann zwei selbst bauen.', wer:'erst gemeinsam, dann zwei Freiwillige' },
-  { id:'dialoge',     min:'12–20', z:'🎬', t:'Dialog',
-    w:'Zwei lesen vor. Dann alle gleichzeitig, danach Rollentausch.', wer:'drei Paare' },
-  { id:'ueben',       min:'20–27', z:'✅', t:'Üben',
-    w:'Quiz und Lücken zusammen am Bildschirm.', wer:'reihum, jede Person eine Aufgabe' },
-  { id:'challenge',   min:'27–33', z:'⏱️', t:'90 Sekunden',
-    w:'Einer spricht, der andere hakt die Zielwörter ab. Dann Tausch.', wer:'drei Paare, zwei Runden' },
-  { id:'debatte',     min:'33–45', z:'⚖️', t:'Debatte',
-    w:'Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.', wer:'zwei Dreiergruppen' },
-  { id:'rollenspiele',min:'45–56', z:'🎭', t:'Rollenspiel',
+  { id:'ankommen',    min:'0–5',   z:'👋', t:'Ankommen',
+    w:'Eine Frage, reihum ein Satz. Kein Kommentar dazwischen.', wer:'alle sechs, je etwa 40 Sekunden' },
+  { id:'dialoge',     min:'5–15',  z:'🎬', t:'Dialog',
+    w:'Zu zweit lesen. Dann verschwindet B und ihr antwortet selbst.', wer:'drei Paare, dann Rollentausch' },
+  { id:'challenge',   min:'15–25', z:'⏱️', t:'90 Sekunden',
+    w:'Ein Wort, 90 Sekunden reden. Der Partner hakt die Zielwörter ab.', wer:'drei Paare, zwei Runden' },
+  { id:'rollenspiele',min:'25–40', z:'🎭', t:'Rollenspiel',
     w:'Zwei Durchgänge, dazwischen Rollentausch.', wer:'drei Paare' },
-  { id:'abschluss',   min:'56–60', z:'🎯', t:'Abschluss',
+  { id:'debatte',     min:'40–55', z:'⚖️', t:'Debatte',
+    w:'Drei gegen drei. Zwei Minuten sammeln, dann vier Wortmeldungen je Seite.', wer:'zwei Dreiergruppen' },
+  { id:'abschluss',   min:'55–60', z:'🎯', t:'Abschluss',
     w:'Ein Satz pro Person: Was nimmst du mit?', wer:'alle sechs' }
 ];
 
@@ -546,7 +553,7 @@ function ankommen(S) {
    die, die frueher am Anfang standen — abstrakt, streitbar, und nach
    einer halben Stunde Wortschatz und Dialog genau richtig. */
 function debatte(S) {
-  const eig = S.debatte;
+  const eig = DEB || S.debatte;
   let fragen = (eig && eig.fragen) || [];
   if (!fragen.length) {
     (S.einstieg || []).forEach(x => {
@@ -610,35 +617,36 @@ function abschluss() {
 
 function nimm(id, name, html) { if (html) abschnitte.push({ id, name, html }); }
 
-/* Die Reihenfolge ist die Stunde selbst, nicht mehr eine Sammlung
-   von Material. Sie folgt der Tafel in ablauf().
+/* Sechzig Minuten Sprechclub sind sechzig Minuten Sprechen.
 
-   Zwei Abschnitte sind rausgeflogen:
+   Draussen sind deshalb: die Bausteine (Redemittel als Tafel), die
+   Grammatik und der Ueben-Abschnitt mit Quiz und Lueckentext. Das
+   ist gutes Material — aber wer es in der Stunde durchgeht, hat am
+   Ende geschrieben, angeklickt und zugehoert, nur wenig gesprochen.
+   Es steht im Lernbereich, dort kann man es ueben, so oft man will.
 
-     Wortschatz  — acht Bilder und zwoelf Karten, die in der Stunde
-                   nie drankamen. Die Woerter kommen jetzt dort vor,
-                   wo sie gebraucht werden: im Dialog, in den Saetzen
-                   und in den 90 Sekunden. Im Lernbereich stehen sie
-                   ohnehin als Uebung.
-     Konzepte    — die Begriffstafel („Womit stehst du da?"). Gute
-                   Landeskunde, aber in einer Sprechstunde spricht
-                   dabei niemand.
+   Geblieben ist, wobei jemand den Mund aufmacht:
 
-   Die Daten dazu bleiben in der JSON-Datei stehen. Wer sie zurueck
-   will, holt sie mit zwei Zeilen zurueck — geloescht ist nichts. */
-markenSammeln();
+     Ankommen      reihum ein Satz
+     Dialog        zu zweit lesen, dann selbst antworten
+     90 Sekunden   ein Wort, anderthalb Minuten reden
+     Rollenspiel   zwei Durchgaenge mit Rollentausch
+     Debatte       drei gegen drei
+     Abschluss     ein Satz pro Person
+
+   Sechs Abschnitte statt elf, und keiner davon ist eine Uebung.
+   Die Hausaufgabe steht hinten dran — sie ist nach der Stunde.
+
+   Die Daten der entfernten Abschnitte bleiben in den JSON-Dateien
+   stehen. Geloescht ist nichts. */
 nimm('ablauf',       '🎬 Ablauf',        ablauf());
 nimm('ankommen',     '👋 Ankommen',      ankommen(S));
-nimm('wiederholung', '🔁 Wiederholung',  S.wiederholung ? wiederholung(S.wiederholung) : '');
-nimm('saetze',       '💬 Sätze',         S.saetze ? saetze(S.saetze) : '');
 nimm('dialoge',      '🎬 Dialog',        S.dialoge ? dialoge(S.dialoge) : '');
-nimm('grammatik',    '🧩 Grammatik',     S.grammatik ? grammatik(S.grammatik) : '');
-nimm('ueben',        '✅ Üben',          ((S.daten.quiz && S.daten.quiz.length) || (S.daten.gap && S.daten.gap.length)) ? ueben(S.ueben) : '');
 nimm('challenge',    '⏱️ 90 Sekunden',   (S.daten.w90 && S.daten.w90.length) ? challenge(S.challenge) : '');
-nimm('debatte',      '⚖️ Debatte',       debatte(S));
 nimm('rollenspiele', '🎭 Rollenspiel',   S.rollenspiele ? rollenspiele(S.rollenspiele) : '');
-nimm('hausaufgabe',  '📮 Hausaufgabe',   S.hausaufgabe ? hausaufgabe(S.hausaufgabe) : '');
+nimm('debatte',      '⚖️ Debatte',       debatte(S));
 nimm('abschluss',    '🎯 Abschluss',     abschluss());
+nimm('hausaufgabe',  '📮 Hausaufgabe',   S.hausaufgabe ? hausaufgabe(S.hausaufgabe) : '');
 
 /* erster Abschnitt ist beim Laden markiert */
 const nav = `<nav class="tabs">\n` + abschnitte.map((a, i) =>
@@ -681,15 +689,12 @@ const html = `<!DOCTYPE html><html lang="de"><head>
   Aufbau und Design wie maengel-melden-b1.html.
 -->
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-${fs.readFileSync(hier + 'stunde-style1.css', 'utf8')}
-</style>
-<style>
-${fs.readFileSync(hier + 'stunde-style2.css', 'utf8')}
+${fs.readFileSync(hier + 'stunde-club.css', 'utf8')}
 </style>
 </head>
-<body${S.niveau ? ' data-niveau="a2"' : ''}><div class="wrapper">
+<body${S.niveau ? ' data-niveau="a2"' : ''}><div class="flagbar"></div><div class="wrapper">
 
 <div class="eyebrow">${h(S.eyebrow)}</div>
 <h1 class="title">${h(S.titel)}${S.hl ? ' <span class="hl">' + h(S.hl) + '</span>' : ''}</h1>
