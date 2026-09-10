@@ -1,0 +1,1196 @@
+<!DOCTYPE html><html lang="de"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Welches Verb gehört dazu? eine Entscheidung treffen, einen Termin machen · Sprechclub B1/B2 | deutschoderwas</title>
+<!--
+  deutschoderwas · Sprechclub · Di 17.11. 9:00 · Strang B · Teil 1 · B1 ⇄ B2
+  Welches Verb gehört dazu? eine Entscheidung treffen, einen Termin machen — Manche Nomen haben ihr Verb fest dabei. Man &lt;i&gt;trifft&lt;/i&gt; eine Entscheidung, man &lt;i&gt;stellt&lt;/i&gt; eine Frage, man &lt;i&gt;hält&lt;/i&gt; eine Rede. Übersetzen hilft hier nicht — in fast jeder Sprache steht dort ein anderes Verb. Heute lernst du die vier, die fast alles abdecken: &lt;b&gt;machen, treffen, stellen, halten&lt;/b&gt;.
+  Erzeugt von bau/mach-stunde.js aus w10-b1-entscheidung-treffen.json. Nicht von Hand aendern.
+  Aufbau und Design wie maengel-melden-b1.html.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   stunde-club.css — die Stunde im Aussehen von
+   deutschoderwas-club.de
+
+   Vorher trugen die Stunden einen eigenen Look: Fraunces als
+   Serifenschrift, cremefarbener Verlauf, schwarze Rahmen mit
+   harten versetzten Schatten. Fuer sich schoen — aber daneben
+   sah die Website aus wie eine andere Marke.
+
+   Die Werte hier stammen eins zu eins aus index.html, der
+   Startseite des Clubs: dieselben Farben, dieselben Schriften,
+   dieselbe Fahnenleiste oben, derselbe goldene Marker.
+
+     Inter          Fliesstext
+     Space Grotesk  Ueberschriften, Zahlen, Knoepfe
+     #161616        Text
+     #DD0000        Signalfarbe (Augenbraue, wichtige Marken)
+     #FFCE00        Gold (Marker, Hinweise)
+     #1B9BC0        Tuerkis (Knoepfe, aktive Marke)
+     #FFF8E8        warmes Papier fuer Kaesten
+     #EAE6DE        Linien
+
+   Was hier nicht mehr steht, gibt es auf der Seite auch nicht
+   mehr: Wortschatzkarten, Grammatiktafeln, Quiz und Lueckentext
+   sind aus der Stunde raus. Die Stunde ist zum Sprechen da.
+   ============================================================ */
+
+:root{
+  --ink:#161616; --soft:#5B6470; --line:#EAE6DE;
+  --turq:#9FE4F1; --turq-d:#1B9BC0; --teal-ink:#10627A; --mint:#EFFBF8;
+  --red:#DD0000; --red-d:#B30000;
+  --gold:#FFCE00; --gold-mark:#FFD84D; --gold-d:#E0A500;
+  --bg:#FFFFFF; --warm:#FFF8E8; --pink:#FFF1EE;
+  --schatten:0 1px 2px rgba(22,22,22,.04), 0 10px 28px rgba(22,22,22,.05);
+  --schatten-k:0 1px 2px rgba(22,22,22,.05);
+  /* Fuer Bausteine, die noch die alten Namen benutzen. */
+  --cream:#FFFFFF; --cream-warm:#FFF8E8; --paper:#FFFFFF;
+  --ink-soft:#5B6470; --ink-mute:#8C93A0; --sand:#EAE6DE;
+  --teal:#1B9BC0; --teal-soft:#EFFBF8;
+  --yellow:#FFCE00; --yellow-soft:#FFF8E8;
+  --red-soft:#FFF1EE; --green:#4E9E12;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+html,body{max-width:100%;overflow-x:clip;}
+img{height:auto;max-width:100%;}
+body{
+  font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);
+  line-height:1.6;-webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;font-weight:700;letter-spacing:-.02em;line-height:1.12;}
+
+/* Die Fahnenleiste vom Club, ganz oben. */
+.flagbar{
+  height:5px;
+  background:linear-gradient(90deg,#161616 0 25%,var(--red) 25% 50%,var(--gold) 50% 75%,var(--turq) 75% 100%);
+}
+
+.wrapper{max-width:900px;margin:0 auto;padding:2rem 1.25rem 5rem;}
+
+/* ---------- Kopf ---------- */
+.eyebrow{
+  text-align:center;font-size:.72rem;font-weight:700;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--red);margin-bottom:.65rem;
+}
+h1.title{font-size:clamp(1.9rem,4.6vw,3rem);text-align:center;}
+h1.title .hl{
+  background:var(--gold-mark);border-radius:7px;padding:.02em .26em;font-style:italic;
+  -webkit-box-decoration-break:clone;box-decoration-break:clone;
+}
+.subtitle{
+  text-align:center;max-width:38rem;margin:.85rem auto 0;
+  font-size:1.02rem;color:var(--soft);
+}
+.niv-wie{text-align:center;max-width:34rem;margin:.75rem auto 0;font-size:.85rem;color:var(--soft);}
+
+/* ---------- Leiste: Niveau und Sprungmarken ---------- */
+.leiste{
+  position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:.5rem;
+  width:100%;margin:1.1rem 0 1.6rem;padding:.4rem .5rem;
+  background:rgba(255,255,255,.94);backdrop-filter:blur(10px);
+  border:1px solid var(--line);border-radius:14px;box-shadow:var(--schatten-k);
+}
+.nivk{display:flex;gap:.2rem;flex:none;background:#F4F2ED;border-radius:999px;padding:3px;}
+.nivk button{
+  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;
+  border:none;border-radius:999px;padding:.32rem .8rem;background:transparent;color:var(--soft);
+  transition:.15s;white-space:nowrap;
+}
+.nivk button[aria-pressed="true"]{background:var(--ink);color:#fff;}
+.nivk button:focus-visible{outline:3px solid var(--turq-d);outline-offset:2px;}
+.tabs{
+  display:flex;flex-wrap:nowrap;gap:.3rem;overflow-x:auto;overscroll-behavior-x:contain;
+  flex:1 1 auto;min-width:0;margin:0;padding:.1rem 0;
+  scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;
+}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{
+  flex:none;white-space:nowrap;font-family:'Space Grotesk',sans-serif;
+  font-size:.84rem;font-weight:600;color:var(--ink);background:#fff;
+  border:1px solid var(--line);border-radius:999px;padding:.4rem .8rem;cursor:pointer;
+  display:inline-flex;gap:.3rem;align-items:center;transition:.15s;
+}
+.tab:hover{border-color:var(--turq-d);color:var(--teal-ink);}
+.tab.active{background:var(--turq-d);border-color:var(--turq-d);color:#fff;}
+.tabAlles{border-style:dashed;color:var(--soft);}
+.tabAlles[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff;border-style:solid;}
+
+/* ---------- Abschnitte ---------- */
+/* Der Wechsel soll nicht springen. Eine halbe Sekunde, weich
+   auslaufend, und der Inhalt kommt ein kleines Stueck von unten —
+   gerade genug, dass das Auge mitgeht, ohne dass man wartet. */
+.section{animation:auf .5s cubic-bezier(.22,.8,.3,1);}
+body.schaltet .section[hidden]{display:none !important;}
+@keyframes auf{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+.leiste .nivk,.tab,.weiterknopf,.btn,.hilf summary{transition:background .25s ease,color .25s ease,border-color .25s ease;}
+.hilf-i{animation:auf .35s cubic-bezier(.22,.8,.3,1);}
+@media(prefers-reduced-motion:reduce){
+  .section,.hilf-i{animation:none;}
+  html{scroll-behavior:auto;}
+}
+section.section{scroll-margin-top:calc(var(--leiste,58px) + 1rem);}
+/* Ein kurzer Abschnitt wie der Abschluss ist niedriger als das
+   Fenster. Dann kann die Seite gar nicht weit genug scrollen, und
+   der Titel der Stunde bleibt oben stehen — es sah aus, als waere
+   man versehentlich am Anfang gelandet. Mit dieser Mindesthoehe
+   landet jeder Abschnitt gleich weit oben. */
+body.schaltet section.section{min-height:calc(100vh - 9rem);}
+body.schaltet section.section:last-of-type{min-height:0;}
+h2.st{font-size:clamp(1.4rem,3vw,1.9rem);margin:.4rem 0 .35rem;}
+h2.st .hl{
+  background:var(--gold-mark);border-radius:7px;padding:.02em .24em;font-style:italic;
+  -webkit-box-decoration-break:clone;box-decoration-break:clone;
+}
+.ssub{color:var(--soft);margin-bottom:1.1rem;font-size:.97rem;max-width:44rem;}
+
+/* Zeit und Aufstellung, direkt unter der Ueberschrift. */
+.regie{
+  display:inline-flex;align-items:center;gap:.55rem;flex-wrap:wrap;
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:999px;
+  padding:.3rem .85rem;margin:0 0 1.1rem;font-size:.82rem;
+}
+.regie span{font-weight:800;font-variant-numeric:tabular-nums;font-family:'Space Grotesk',sans-serif;}
+.regie b{font-weight:500;color:var(--soft);}
+
+/* ---------- Ablauftafel ---------- */
+.takt{display:flex;flex-direction:column;gap:.4rem;margin:1rem 0;}
+.takt-z{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.15rem .75rem;align-items:start;
+  background:#fff;border:1px solid var(--line);border-radius:12px;padding:.7rem .85rem;
+}
+.takt-m{
+  grid-row:span 2;align-self:center;min-width:3.4rem;text-align:center;
+  background:var(--ink);color:#fff;border-radius:8px;padding:.28rem .4rem;
+  font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.8rem;font-variant-numeric:tabular-nums;
+}
+.takt-z2{grid-row:span 2;align-self:center;font-size:1.2rem;line-height:1;}
+.takt-t b{display:block;font-family:'Space Grotesk',sans-serif;font-size:1rem;}
+.takt-t span{display:block;font-size:.9rem;line-height:1.45;color:var(--soft);margin-top:.05rem;}
+.takt-t em{display:block;font-style:normal;font-size:.78rem;font-weight:700;color:var(--teal-ink);margin-top:.2rem;}
+
+/* ---------- Ankommen und Abschluss ---------- */
+.ank{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;padding:1rem 1.15rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.16rem;line-height:1.4;font-weight:600;
+}
+.ank.zweit{
+  margin-top:.7rem;background:#fff;border:1px dashed var(--line);
+  font-family:'Inter',sans-serif;font-size:.97rem;font-weight:500;
+}
+.ank.zweit span{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.25rem;
+}
+
+/* ---------- Tippkasten ---------- */
+.tip{
+  background:var(--warm);border:1px solid #F0E4C4;border-left:4px solid var(--gold);
+  border-radius:12px;padding:.8rem 1rem;margin:1.1rem 0 0;font-size:.94rem;line-height:1.6;
+}
+.tip.teal{background:var(--mint);border-color:#CDEEF3;border-left-color:var(--turq-d);}
+
+/* Die Anweisung als kurze Schritte statt als Absatz. */
+.schritte{list-style:none;display:flex;flex-direction:column;gap:.35rem;margin:0 0 1.1rem;padding:0;}
+.schritte li{
+  display:grid;grid-template-columns:auto 1fr;gap:.55rem;align-items:start;
+  font-size:.94rem;line-height:1.5;color:var(--soft);
+}
+.schritte li span{
+  flex:none;width:20px;height:20px;border-radius:50%;margin-top:.12rem;
+  background:#F1EFEA;color:var(--ink);display:grid;place-items:center;
+  font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:700;
+}
+.schritte li.regel{color:var(--ink);}
+.schritte li.regel span{background:var(--gold);color:var(--ink);}
+
+/* ---------- Dialog ---------- */
+.dwrap{
+  background:#fff;border:1px solid var(--line);border-radius:16px;
+  padding:1rem 1.05rem 1.1rem;margin:0 0 1rem;box-shadow:var(--schatten-k);
+}
+.dhead{display:flex;align-items:center;gap:.65rem;flex-wrap:wrap;margin-bottom:.55rem;}
+.dhead img{width:44px;height:44px;object-fit:cover;border-radius:50%;flex:none;}
+.dhead h4{font-size:1.02rem;flex:1 1 12rem;}
+.rbtn{
+  font-family:'Space Grotesk',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer;
+  border:1px solid var(--turq-d);background:var(--mint);color:var(--teal-ink);
+  border-radius:999px;padding:.32rem .75rem;
+}
+.rbtn:hover{background:var(--turq-d);color:#fff;}
+.dsit{font-size:.9rem;color:var(--soft);margin-bottom:.75rem;}
+.dline{display:grid;grid-template-columns:auto 1fr;gap:.5rem;margin:.4rem 0;align-items:start;}
+.dwho{
+  width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
+  font-family:'Space Grotesk',sans-serif;font-size:.75rem;font-weight:700;color:#fff;flex:none;
+}
+.dwho.a{background:var(--red);}
+.dwho.b{background:var(--turq-d);}
+.dtxt{
+  background:var(--mint);border-radius:4px 14px 14px 14px;padding:.55rem .8rem;
+  font-size:.97rem;line-height:1.55;
+}
+.dline.b{grid-template-columns:1fr auto;}
+.dline.b .dwho{order:2;}
+.dline.b .dtxt{order:1;background:var(--warm);border-radius:14px 4px 14px 14px;}
+.dcue{
+  grid-column:1 / -1;margin:.2rem 0 .3rem;font-size:.85rem;color:var(--soft);
+  background:#fff;border:1px dashed var(--line);border-radius:10px;padding:.4rem .65rem;cursor:pointer;
+}
+.dcue .kl{display:block;font-size:.7rem;color:var(--ink-mute);margin-top:.15rem;}
+.dline .dcue{display:none;}
+.dwrap[data-runde="2"] .dline.b .dtxt{visibility:hidden;}
+.dwrap[data-runde="2"] .dline.b .dcue{display:block;}
+.dline.zeigen .dtxt{visibility:visible !important;}
+img.dbild{max-width:160px;border-radius:10px;margin-top:.4rem;}
+.dbtn{margin-top:.7rem;}
+
+/* ---------- Sprechen-Knopf ---------- */
+.speak{
+  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;
+  border:1px solid var(--line);background:#fff;color:var(--ink);
+  border-radius:999px;padding:.35rem .8rem;
+}
+.speak:hover{border-color:var(--ink);}
+
+/* ---------- 90 Sekunden ---------- */
+.card90{
+  background:#fff;border:1px solid var(--line);border-radius:18px;
+  padding:1.1rem 1.15rem 1.2rem;text-align:center;box-shadow:var(--schatten);
+}
+/* Das Bild in den 90 Sekunden ist das einzige grosse auf der Seite.
+   Weiche Ecken, ein heller Rand statt einer harten Kante, und es
+   blendet mit dem Wort zusammen ein — kein Springen beim Wechsel. */
+.card90 img{
+  width:100%;max-width:230px;border-radius:14px;margin:0 auto .8rem;display:block;
+  border:1px solid var(--line);animation:auf .45s cubic-bezier(.22,.8,.3,1);
+}
+.card90 .lbl{
+  font-size:.7rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--red);margin-bottom:.3rem;
+}
+.card90 .word{font-family:'Space Grotesk',sans-serif;font-size:1.7rem;font-weight:700;line-height:1.2;}
+.helpwords{display:flex;flex-wrap:wrap;gap:.35rem;justify-content:center;margin:.75rem 0 .9rem;}
+.hw{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:999px;
+  padding:.28rem .7rem;font-size:.85rem;font-weight:500;
+}
+.timer{
+  font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:700;
+  font-variant-numeric:tabular-nums;color:var(--teal-ink);
+}
+.zeit{display:block;}
+.btn{
+  font-family:'Space Grotesk',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;
+  border:1px solid var(--turq-d);background:var(--turq-d);color:#fff;
+  border-radius:999px;padding:.5rem 1.1rem;margin:.25rem .2rem 0;
+}
+.btn.ghost{background:#fff;color:var(--teal-ink);}
+.btn:hover{background:#167f9e;border-color:#167f9e;color:#fff;}
+
+/* ---------- Rollenspiel und Sprechkarten ---------- */
+.rmcard{
+  background:#fff;border:1px solid var(--line);border-radius:14px;
+  padding:.9rem 1rem;margin:0 0 .8rem;
+}
+.rmcard>b{display:block;font-family:'Space Grotesk',sans-serif;font-size:1rem;margin-bottom:.35rem;}
+.rm{
+  display:inline-block;background:var(--mint);border:1px solid #CDEEF3;color:var(--teal-ink);
+  border-radius:999px;padding:.25rem .65rem;margin:.15rem .2rem .15rem 0;font-size:.87rem;font-weight:500;
+}
+.bsp{
+  background:var(--warm);border-left:4px solid var(--gold);border-radius:0 10px 10px 0;
+  padding:.55rem .8rem;margin:.6rem 0 0;font-size:.95rem;line-height:1.55;
+}
+.bsp .wer{
+  display:block;font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.15rem;
+}
+
+/* ---------- Rollenspiel: wer bin ich, was will ich ----------
+   Die Lage stand vorher als ein grauer Satz da. Zwei Leute, die
+   gleich sprechen sollen, mussten daraus selbst herauslesen, wer sie
+   sind. Jetzt stehen die Rollen nebeneinander, in denselben Farben
+   wie im Dialog: A rot, B tuerkis. */
+.rsp{
+  background:#fff;border:1px solid var(--line);border-radius:16px;
+  padding:.9rem 1rem 1rem;margin:0 0 .9rem;box-shadow:var(--schatten-k);
+}
+.rsp-kopf{display:flex;align-items:center;gap:.6rem;margin-bottom:.7rem;}
+.rsp-nr{
+  flex:none;width:26px;height:26px;border-radius:8px;background:var(--ink);color:#fff;
+  display:grid;place-items:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.85rem;
+}
+.rsp-kopf b{font-family:'Space Grotesk',sans-serif;font-size:1.02rem;line-height:1.25;}
+.rsp-rollen{display:grid;gap:.5rem;margin:0 0 .75rem;}
+@media(min-width:560px){ .rsp-rollen{grid-template-columns:1fr 1fr;} }
+.rsp-r{
+  display:grid;grid-template-columns:auto 1fr;gap:.5rem;align-items:start;
+  border-radius:12px;padding:.6rem .75rem;
+}
+.rsp-r span{
+  width:24px;height:24px;border-radius:50%;display:grid;place-items:center;color:#fff;
+  font-family:'Space Grotesk',sans-serif;font-size:.75rem;font-weight:700;
+}
+.rsp-r p{font-size:.93rem;line-height:1.5;}
+.rsp-r.a{background:var(--pink);}
+.rsp-r.a span{background:var(--red);}
+.rsp-r.b{background:var(--mint);}
+.rsp-r.b span{background:var(--turq-d);}
+.rsp-lage{background:#F7F6F3;border-radius:12px;padding:.6rem .8rem;margin:0 0 .75rem;font-size:.93rem;line-height:1.5;}
+.rsp-lage span{
+  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.2rem;
+}
+.rsp-saetze{margin:0 0 .7rem;}
+.rsp-lbl{
+  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.35rem;
+}
+.rsp-ziel{
+  background:var(--warm);border-left:4px solid var(--gold);border-radius:0 10px 10px 0;
+  padding:.55rem .8rem;font-size:.92rem;line-height:1.5;
+}
+.rsp-ziel span{
+  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.15rem;
+}
+
+/* ---------- Anfangshilfe ----------
+   Zugeklappt eine Zeile, aufgeklappt drei Satzanfaenge. Wer sie
+   nicht braucht, sieht fast nichts. */
+.hilf{margin:.8rem 0 0;}
+.hilf summary{
+  cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:.35rem;
+  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;color:var(--teal-ink);
+  background:var(--mint);border:1px solid #CDEEF3;border-radius:999px;padding:.32rem .8rem;
+}
+.hilf summary::-webkit-details-marker{display:none;}
+.hilf[open] summary{background:var(--turq-d);color:#fff;border-color:var(--turq-d);}
+.hilf-i{display:flex;flex-direction:column;gap:.35rem;margin:.55rem 0 0;}
+.hilf-i span{
+  background:#fff;border:1px dashed var(--line);border-radius:10px;
+  padding:.45rem .7rem;font-size:.93rem;line-height:1.5;
+}
+
+/* ---------- Debatte ---------- */
+.deb-these{
+  background:var(--ink);color:#fff;border-radius:14px;padding:1rem 1.15rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.12rem;line-height:1.4;font-weight:600;margin:0 0 .9rem;
+}
+.deb-seiten{display:grid;gap:.7rem;margin:0 0 .9rem;}
+@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
+.deb-s{background:#fff;border:1px solid var(--line);border-radius:14px;padding:.85rem .95rem;}
+.deb-s b{
+  display:block;font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:800;
+  letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem;
+}
+.deb-s.pro{border-top:4px solid var(--turq-d);}
+.deb-s.pro b{color:var(--teal-ink);}
+.deb-s.con{border-top:4px solid var(--red);}
+.deb-s.con b{color:var(--red);}
+.deb-s ul{margin:0;padding-left:1.05rem;font-size:.94rem;line-height:1.6;}
+.deb-s li{margin:.3rem 0;}
+.deb-s p{margin:0;font-size:.94rem;line-height:1.6;color:var(--soft);}
+.deb-mittel{background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;padding:.85rem 1rem;margin:0 0 .9rem;}
+.deb-mittel b{
+  display:block;font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:800;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--soft);margin-bottom:.5rem;
+}
+.deb-chips{display:flex;flex-wrap:wrap;gap:.35rem;}
+.deb-chips span{
+  background:#fff;border:1px solid #F0E4C4;border-radius:999px;
+  padding:.3rem .7rem;font-size:.88rem;font-weight:500;
+}
+.deb-mehr{border:1px dashed var(--line);border-radius:14px;padding:.85rem 1rem;}
+.deb-mehr b{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:.35rem;
+}
+.deb-mehr ul{margin:0;padding-left:1.05rem;font-size:.93rem;line-height:1.6;}
+
+/* ---------- Hausaufgabe ---------- */
+.hagrid{display:grid;gap:.6rem;}
+.ha{
+  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .7rem;align-items:start;
+  background:#fff;border:1px solid var(--line);border-radius:14px;padding:.8rem .9rem;
+}
+.ha .box{
+  grid-row:span 2;width:22px;height:22px;border:2px solid var(--line);border-radius:6px;
+  cursor:pointer;align-self:center;
+}
+.ha.fertig .box{background:var(--turq-d);border-color:var(--turq-d);}
+.ha.fertig .htxt{opacity:.55;text-decoration:line-through;}
+.ha .hi{grid-row:span 2;align-self:center;font-size:1.15rem;}
+.ha .htxt b{display:block;font-family:'Space Grotesk',sans-serif;font-size:.97rem;}
+.ha .htxt{font-size:.92rem;line-height:1.55;color:var(--soft);}
+.hastand{
+  font-family:'Space Grotesk',sans-serif;font-size:.85rem;font-weight:700;
+  color:var(--soft);margin:.7rem 0 0;
+}
+.zeit{
+  display:inline-block;background:var(--mint);border:1px solid #CDEEF3;color:var(--teal-ink);
+  border-radius:999px;padding:.1rem .5rem;font-size:.72rem;font-weight:700;margin-left:.35rem;
+}
+.hilfe{
+  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;
+  border:1px solid var(--line);background:#fff;border-radius:999px;padding:.35rem .8rem;margin:.6rem 0 0;
+}
+.inhalt{
+  display:none;background:var(--warm);border:1px solid #F0E4C4;border-radius:12px;
+  padding:.75rem .9rem;margin:.55rem 0 0;font-size:.93rem;line-height:1.6;
+}
+.inhalt.offen{display:block;}
+
+/* ---------- Markierte Woerter ---------- */
+.wm{
+  cursor:pointer;background:var(--gold-mark);border-radius:5px;padding:.02em .2em;
+  -webkit-box-decoration-break:clone;box-decoration-break:clone;
+}
+.wm.schwer{background:transparent;border-bottom:2px dotted var(--red);border-radius:0;}
+.wm:hover,.wm.offen{background:var(--gold);}
+.wm.schwer:hover,.wm.schwer.offen{background:var(--pink);}
+.wm:focus-visible{outline:3px solid var(--turq-d);outline-offset:2px;}
+.wmk{
+  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
+  background:#fff;border:1px solid var(--line);border-radius:14px;
+  box-shadow:var(--schatten);padding:.8rem .95rem .85rem;
+}
+.wmk b{display:block;font-family:'Space Grotesk',sans-serif;font-size:1.05rem;padding-right:1.4rem;}
+.wmk span{display:block;margin-top:.25rem;font-size:.92rem;line-height:1.5;color:var(--soft);}
+.wmk em{
+  display:block;margin-top:.5rem;padding-left:.65rem;border-left:3px solid var(--turq-d);
+  font-style:italic;font-size:.91rem;line-height:1.5;
+}
+.wmk-zu{
+  position:absolute;top:.4rem;right:.45rem;border:none;background:transparent;
+  font-size:.9rem;line-height:1;cursor:pointer;color:var(--soft);padding:.2rem;
+}
+.wmk-ton{
+  margin-top:.55rem;border:1px solid var(--line);background:#fff;color:var(--ink);
+  border-radius:999px;padding:.28rem .7rem;font-family:'Space Grotesk',sans-serif;
+  font-size:.78rem;font-weight:700;cursor:pointer;
+}
+
+/* ---------- Weiter und zurueck ---------- */
+.weiterzeile{
+  display:flex;gap:.6rem;flex-wrap:wrap;justify-content:space-between;
+  margin:1.8rem 0 .4rem;padding-top:1.1rem;border-top:1px solid var(--line);
+}
+.weiterknopf{
+  font-family:'Space Grotesk',sans-serif;font-size:.92rem;font-weight:700;cursor:pointer;
+  border:1px solid var(--turq-d);background:var(--turq-d);color:#fff;
+  border-radius:999px;padding:.55rem 1.1rem;margin-left:auto;transition:.15s;
+}
+.weiterknopf.zurueck{background:#fff;color:var(--teal-ink);margin-left:0;margin-right:auto;}
+.weiterknopf:hover{background:#167f9e;border-color:#167f9e;color:#fff;}
+
+/* ---------- Niveau-Umschalter ---------- */
+body[data-niveau="a2"] .nur-b1{display:none !important;}
+body[data-niveau="b1"] .nur-a2{display:none !important;}
+
+/* ---------- Fuss ---------- */
+footer{
+  margin-top:3rem;padding-top:1.2rem;border-top:1px solid var(--line);
+  font-size:.85rem;color:var(--soft);text-align:center;
+}
+footer strong{color:var(--ink);}
+
+@media print{
+  body.schaltet .section[hidden]{display:block !important;}
+  .leiste,.weiterzeile,.wmk{display:none !important;}
+  .wm{background:none;border-bottom:2px solid var(--gold-d);}
+}
+@media(max-width:560px){
+  .wrapper{padding:1.5rem 1rem 4rem;}
+  .leiste{border-radius:12px;padding:.35rem .4rem;gap:.4rem;}
+  .nivk button{padding:.3rem .65rem;font-size:.8rem;}
+  .nivk .zusatz{display:none;}
+}
+
+</style>
+</head>
+<body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
+
+<div class="eyebrow">deutschoderwas · Sprechclub · Woche 10 · Strang B · Teil 1 · Dienstag, 17. November</div>
+<h1 class="title">Welches Verb gehört dazu? <span class="hl">eine Entscheidung treffen, einen Termin machen</span></h1>
+
+<p class="subtitle">Manche Nomen haben ihr Verb fest dabei. Man <i>trifft</i> eine Entscheidung, man <i>stellt</i> eine Frage, man <i>hält</i> eine Rede. Übersetzen hilft hier nicht — in fast jeder Sprache steht dort ein anderes Verb. Heute lernst du die vier, die fast alles abdecken: <b>machen, treffen, stellen, halten</b>.</p>
+
+<p class="niv-wie">Gleiches Thema, andere Sätze. Wechsle jederzeit — probier ruhig beide Seiten aus.</p>
+<div class="leiste">
+  <div class="nivk" role="group" aria-label="Niveau wählen">
+    <button type="button" data-niv="a2" aria-pressed="true">B1<span class="zusatz"> · sicherer</span></button>
+    <button type="button" data-niv="b1" aria-pressed="false">B2<span class="zusatz"> · feiner</span></button>
+  </div>
+<nav class="tabs">
+<a class="tab active" href="#ankommen">👋 Ankommen</a>
+<a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
+<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
+<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#abschluss">🎯 Abschluss</a>
+<a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+</nav>
+</div>
+
+<section class="section" id="ankommen">
+<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
+<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
+<div class="nur-a2"><div class="ank">Welche Entscheidung hast du diese Woche getroffen?</div></div><div class="nur-b1"><div class="ank">Bei welchem Nomen bist du dir beim Verb nie sicher?</div></div>
+<details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
+</section>
+
+<section class="section" id="dialoge">
+<h2 class="st">Vier Situationen — <span class="hl">zwei Runden</span></h2>
+<ol class="schritte">
+<li><span>1</span><b>Runde 1:</b> Lest den Dialog zu zweit laut.</li>
+<li><span>2</span><b>Runde 2:</b> Klappt die Zeilen zu und sprecht frei — nur die Stichwörter bleiben.</li>
+</ol>
+<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-amt.webp" alt="Ein Schalter im Amt, dahinter eine Mitarbeiterin"><h4>Dialog 1 · „Im Amt“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">A steht am Schalter und braucht einen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Termin" data-wort="der Termin" data-kurz="ein Tag und eine Uhrzeit, die du fest abmachst" data-bsp="Ich mache einen Termin beim Zahnarzt.">Termin</b>. B arbeitet dort und erklärt, was zuerst kommt.</div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Guten Tag, ich möchte gern einen Termin <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von machen" data-wort="machen" data-kurz="für ganz alltägliche Dinge" data-bsp="einen Termin machen, einen Fehler machen, einen Vorschlag machen">machen</b>.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Gern. Haben Sie den <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Antrag" data-wort="der Antrag" data-kurz="das Papier, mit dem du beim Amt etwas beantragst" data-bsp="Den Antrag stelle ich noch diese Woche.">Antrag</b> schon gestellt? Ohne Antrag kann ich Ihnen keinen Termin geben.</div><div class="dcue">🗣️ Zwei Wendungen direkt hintereinander: den Antrag <b>stellen</b>, den Termin <b>geben</b>. Und beides in einer freundlichen Absage.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Noch nicht. Darf ich dazu eine <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Frage" data-wort="die Frage" data-kurz="was du wissen willst" data-bsp="Darf ich eine Frage stellen?">Frage</b> <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von stellen" data-wort="stellen" data-kurz="wenn es an jemanden geht" data-bsp="eine Frage stellen, einen Antrag stellen, eine Bedingung stellen">stellen</b>?</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Natürlich. Wenn ich Ihnen keine <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Auskunft" data-wort="die Auskunft" data-kurz="die Information, die dir jemand gibt" data-bsp="Am Schalter hat man mir eine falsche Auskunft gegeben.">Auskunft</b> geben kann, sage ich Ihnen, wer zuständig ist.</div><div class="dcue">🗣️ Auskunft <b>geben</b>. Und der zweite Teil ist der freundlichste Satz im Amt: nicht nur nein sagen, sondern weiterschicken.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Das reicht mir schon. Wie lange dauert das ungefähr?</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Zwei bis drei Wochen. Ich gebe Ihnen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Bescheid" data-wort="Bescheid" data-kurz="die kurze Antwort, ob etwas klappt" data-bsp="Ich gebe dir bis Freitag Bescheid.">Bescheid</b>, sobald etwas da ist.</div><div class="dcue">🗣️ Bescheid <b>geben</b> mit <i>sobald</i>. Damit endet fast jedes Gespräch im Amt — merk dir den Satz auswendig.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<button class="speak dbtn" data-say="Guten Tag, ich möchte gern einen Termin machen. Gern. Haben Sie den Antrag schon gestellt? Ohne Antrag kann ich Ihnen keinen Termin geben. Noch nicht. Darf ich dazu eine Frage stellen? Natürlich. Wenn ich Ihnen keine Auskunft geben kann, sage ich Ihnen, wer zuständig ist. Das reicht mir schon. Wie lange dauert das ungefähr? Zwei bis drei Wochen. Ich gebe Ihnen Bescheid, sobald etwas da ist.">🔊 Dialog vorlesen lassen</button></div>
+
+<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-buero.webp" alt="Eine Besprechung am Schreibtisch, zwei Personen mit Unterlagen"><h4>Dialog 2 · „In der Besprechung“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">A hat eine Idee, B ist unsicher. Am Ende muss trotzdem eine <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Entscheidung" data-wort="die Entscheidung" data-kurz="wenn du dich für eine Sache entscheidest" data-bsp="Wir müssen bis Freitag eine Entscheidung treffen.">Entscheidung</b> her.</div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Darf ich einen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Vorschlag" data-wort="der Vorschlag" data-kurz="eine Idee, die du den anderen anbietest" data-bsp="Darf ich einen Vorschlag machen?">Vorschlag</b> machen? Wir fangen diesmal früher an.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Der Vorschlag ist gut, aber ich stelle eine Bedingung: Wir hören dann auch früher auf.</div><div class="dcue">🗣️ Vorschlag <b>machen</b> von A, Bedingung <b>stellen</b> von B. Zwei Nomen, zwei ganz verschiedene Verben — beide in einem Satz.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Einverstanden. Dann <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von treffen" data-wort="treffen" data-kurz="wenn du auswählst" data-bsp="eine Entscheidung treffen, eine Wahl treffen, eine Absprache treffen">treffen</b> wir jetzt die Entscheidung?</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Von mir aus gern. Ich möchte nur vorher wissen, wer den anderen Bescheid sagt.</div><div class="dcue">🗣️ Entscheidung <b>treffen</b>, Bescheid <b>sagen</b>. Und ein kleiner Trick: mit <i>Ich möchte nur vorher wissen</i> bremst man höflich, ohne nein zu sagen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Das übernehme ich. Ich schreibe heute Abend allen.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Perfekt. Dann halte ich morgen kurz die Ansage im Team.</div><div class="dcue">🗣️ Etwas <b>übernehmen</b>, eine Ansage <b>halten</b>. Wer mit <i>Das übernehme ich</i> antwortet, klingt sofort verlässlich.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<button class="speak dbtn" data-say="Darf ich einen Vorschlag machen? Wir fangen diesmal früher an. Der Vorschlag ist gut, aber ich stelle eine Bedingung: Wir hören dann auch früher auf. Einverstanden. Dann treffen wir jetzt die Entscheidung? Von mir aus gern. Ich möchte nur vorher wissen, wer den anderen Bescheid sagt. Das übernehme ich. Ich schreibe heute Abend allen. Perfekt. Dann halte ich morgen kurz die Ansage im Team.">🔊 Dialog vorlesen lassen</button></div>
+
+<div class="dwrap" data-runde="1"><div class="dhead"><img src="../bilder/lesen/nachbar.webp" alt="Zwei Nachbarn sprechen im Treppenhaus miteinander"><h4>Dialog 3 · „Im Treppenhaus“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">A wohnt seit Kurzem im Haus. B spricht die laute Musik am Abend an — ruhig, aber deutlich.</div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Hallo! Störe ich Sie abends mit der Musik?</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ein bisschen, ja. Ab zehn nehmen hier alle <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Rücksicht" data-wort="Rücksicht" data-kurz="wenn du an die anderen denkst" data-bsp="Nach zehn Uhr nehmen wir Rücksicht auf die Nachbarn.">Rücksicht</b>, das ist so abgesprochen.</div><div class="dcue">🗣️ Rücksicht <b>nehmen</b>, und dazu <i>abgesprochen</i>. Kein Vorwurf, nur eine Information — genau so löst man es hier.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Das wusste ich nicht. Danke, dass Sie es sagen.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Kein Problem. Wenn Sie Fragen zum Haus haben, stellen Sie sie ruhig, ich wohne seit zwölf Jahren hier.</div><div class="dcue">🗣️ Fragen <b>stellen</b>, hier sogar als Aufforderung. Und <i>ruhig</i> heißt: trau dich, das ist kein Problem.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Eine hätte ich tatsächlich: Wann kommt die Müllabfuhr?</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Dienstags. Und wenn Sie es mal vergessen, gebe ich Ihnen Bescheid.</div><div class="dcue">🗣️ Wieder Bescheid <b>geben</b> — das freundlichste Angebot unter Nachbarn.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<button class="speak dbtn" data-say="Hallo! Störe ich Sie abends mit der Musik? Ein bisschen, ja. Ab zehn nehmen hier alle Rücksicht, das ist so abgesprochen. Das wusste ich nicht. Danke, dass Sie es sagen. Kein Problem. Wenn Sie Fragen zum Haus haben, stellen Sie sie ruhig, ich wohne seit zwölf Jahren hier. Eine hätte ich tatsächlich: Wann kommt die Müllabfuhr? Dienstags. Und wenn Sie es mal vergessen, gebe ich Ihnen Bescheid.">🔊 Dialog vorlesen lassen</button></div>
+
+<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/amanda-ups.webp" alt="Amanda hält sich erschrocken die Hand vor den Mund"><h4>Dialog 4 · „Der Fehler“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">A hat etwas falsch gemacht und spricht es selbst an. B reagiert — und will vor allem wissen, wie es weitergeht.</div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ich muss etwas sagen: Ich habe bei der Bestellung einen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Fehler" data-wort="der Fehler" data-kurz="etwas, das falsch gelaufen ist" data-bsp="Ich habe einen Fehler gemacht, das tut mir leid.">Fehler</b> gemacht.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Danke, dass du es sagst. Wie groß ist der Schaden?</div><div class="dcue">🗣️ Kein Vorwurf, sondern eine Frage nach vorn. <i>Danke, dass du es sagst</i> ist der Satz, den man selbst hören möchte.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Zwei Kartons zu viel. Ich übernehme die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Verantwortung" data-wort="die Verantwortung" data-kurz="wenn du dafür geradestehst" data-bsp="Für den Fehler übernehme ich die Verantwortung.">Verantwortung</b> dafür.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Gut. Dann treffen wir gemeinsam die Entscheidung, ob wir sie zurückschicken.</div><div class="dcue">🗣️ Verantwortung <b>übernehmen</b>, Entscheidung <b>treffen</b>. Und <i>gemeinsam</i> nimmt den Druck aus dem Gespräch.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ich rufe morgen an und frage nach den Kosten.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Mach das und gib mir danach Bescheid. Dann ist die Sache erledigt.</div><div class="dcue">🗣️ Bescheid <b>geben</b> und ein klarer Schlusssatz. <i>Dann ist die Sache erledigt</i> beendet das Thema, ohne jemanden klein zu machen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
+<button class="speak dbtn" data-say="Ich muss etwas sagen: Ich habe bei der Bestellung einen Fehler gemacht. Danke, dass du es sagst. Wie groß ist der Schaden? Zwei Kartons zu viel. Ich übernehme die Verantwortung dafür. Gut. Dann treffen wir gemeinsam die Entscheidung, ob wir sie zurückschicken. Ich rufe morgen an und frage nach den Kosten. Mach das und gib mir danach Bescheid. Dann ist die Sache erledigt.">🔊 Dialog vorlesen lassen</button></div>
+
+<div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 2 mit einem echten Vorschlag für euren Kurs. Regel: Es müssen ein <i>Vorschlag</i>, eine <i>Bedingung</i> und eine <i>Entscheidung</i> vorkommen.</div>
+</section>
+
+<section class="section" id="challenge">
+<h2 class="st">⏱️ Die 90-Sekunden-Challenge</h2>
+<p class="ssub">Neunzig Sekunden über dich: Welche Entscheidung steht bei dir an, welchen Termin musst du machen, welche Frage willst du endlich stellen?</p>
+<div class="card90">
+<div class="lbl">Dein Wort</div>
+<img id="i90" src="../amanda/sz-heikel.webp" alt="die Entscheidung">
+<div class="word" id="w90">die Entscheidung</div>
+<div class="helpwords" id="hw90"></div>
+<div class="timer" id="t90">1:30</div>
+<div>
+<button class="btn ghost" id="new90">🎲 Neues Wort</button>
+<button class="btn" id="start90">▶︎ Start</button>
+</div>
+</div>
+<div class="hilfe">
+<button type="button">🆘 Mir fällt nichts ein</button>
+<div class="inhalt">
+<p>Vier Sätze, dann trägt dich die Zeit:</p>
+<ul>
+<li><b>Entscheidung:</b> <i>Diese Woche muss ich eine Entscheidung treffen: …</i></li>
+<li><b>Termin:</b> <i>Ich sollte längst einen Termin machen bei …</i></li>
+<li><b>Frage:</b> <i>Eine Frage würde ich gern stellen, aber ich traue mich nicht: …</i></li>
+<li><b>Bescheid:</b> <i>Bis Freitag muss ich jemandem Bescheid geben, ob …</i></li>
+</ul>
+<p style="margin-top:.5rem;">Und wenn du in der Mitte hängst: nimm dasselbe Nomen noch einmal und dreh die Zeit um. <i>Letzte Woche habe ich eine Entscheidung getroffen</i> — schon läuft es weiter.</p>
+</div>
+</div>
+<div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde müssen <u>drei verschiedene</u> Wendungen vorkommen. Wer <i>eine Entscheidung machen</i> sagt, fängt noch einmal von vorn an.</div>
+</section>
+
+<section class="section" id="rollenspiele">
+<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
+<ol class="schritte">
+<li><span>1</span>Einer fragt, einer antwortet.</li>
+<li><span>2</span>Danach tauschen — beim zweiten Mal ohne die Sätze unten.</li>
+<li><span>3</span>Mindestens drei Wendungen von heute pro Runde.</li>
+</ol>
+<div class="rsp">
+<div class="rsp-kopf"><span class="rsp-nr">1</span><b>Termin beim Amt</b></div>
+<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>braucht einen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Termin" data-wort="der Termin" data-kurz="ein Tag und eine Uhrzeit, die du fest abmachst" data-bsp="Ich mache einen Termin beim Zahnarzt.">Termin</b> und weiß nicht, was zuerst kommt.</p></div><div class="rsp-r b"><span>B</span><p>arbeitet dort, kann heute aber nur die halbe <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Auskunft" data-wort="die Auskunft" data-kurz="die Information, die dir jemand gibt" data-bsp="Am Schalter hat man mir eine falsche Auskunft gegeben.">Auskunft</b> geben.</p></div></div>
+<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Ich möchte einen Termin machen</span><span class="rm">Darf ich eine Frage stellen?</span><span class="rm">Muss ich vorher einen Antrag stellen?</span><span class="rm">Können Sie mir Bescheid geben?</span></div><div class="nur-b1"><span class="rm">Ohne Antrag kann ich Ihnen leider keinen Termin geben</span><span class="rm">Dazu kann ich Ihnen keine Auskunft geben, dafür ist Zimmer 12 zuständig</span><span class="rm">Ich gebe Ihnen Bescheid, sobald der Antrag bearbeitet ist</span><span class="rm">Stellen Sie ruhig alle Fragen, dann sparen wir uns den zweiten Weg</span></div></div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>A hat einen <i>Termin gemacht</i>, eine <i><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Frage" data-wort="die Frage" data-kurz="was du wissen willst" data-bsp="Darf ich eine Frage stellen?">Frage</b> gestellt</i> und nach <i><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Bescheid" data-wort="Bescheid" data-kurz="die kurze Antwort, ob etwas klappt" data-bsp="Ich gebe dir bis Freitag Bescheid.">Bescheid</b></i> gefragt. B hat mindestens einmal freundlich weitergeschickt, statt nur nein zu sagen.</div>
+<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
+</div>
+
+<div class="rsp">
+<div class="rsp-kopf"><span class="rsp-nr">2</span><b>Die Entscheidung im Team</b></div>
+<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>macht einen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Vorschlag" data-wort="der Vorschlag" data-kurz="eine Idee, die du den anderen anbietest" data-bsp="Darf ich einen Vorschlag machen?">Vorschlag</b> für die nächste Woche.</p></div><div class="rsp-r b"><span>B</span><p>findet ihn gut, stellt aber eine Bedingung — und am Ende muss jemand die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Entscheidung" data-wort="die Entscheidung" data-kurz="wenn du dich für eine Sache entscheidest" data-bsp="Wir müssen bis Freitag eine Entscheidung treffen.">Entscheidung</b> <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von treffen" data-wort="treffen" data-kurz="wenn du auswählst" data-bsp="eine Entscheidung treffen, eine Wahl treffen, eine Absprache treffen">treffen</b>.</p></div></div>
+<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Darf ich einen Vorschlag machen?</span><span class="rm">Wie wäre es, wenn wir …</span><span class="rm">Treffen wir jetzt die Entscheidung?</span><span class="rm">Ich gebe den anderen Bescheid</span></div><div class="nur-b1"><span class="rm">Ich würde vorschlagen, dass wir es diesmal umdrehen</span><span class="rm">Grundsätzlich gern, allerdings stelle ich eine Bedingung</span><span class="rm">Wer übernimmt die Verantwortung, wenn es nicht klappt?</span><span class="rm">Dann halten wir das so fest und ich sage allen Bescheid</span></div></div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>Ein <i>Vorschlag</i> wurde <i>gemacht</i>, eine <i>Bedingung gestellt</i> und am Ende eine <i>Entscheidung getroffen</i>. Und jemand hat gesagt, wer Bescheid gibt.</div>
+<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
+</div>
+
+<div class="rsp">
+<div class="rsp-kopf"><span class="rsp-nr">3</span><b>Der Fehler</b></div>
+<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>hat etwas falsch gemacht und spricht es von sich aus an.</p></div><div class="rsp-r b"><span>B</span><p>ärgert sich, will aber vor allem wissen, wie es jetzt weitergeht.</p></div></div>
+<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Ich habe einen Fehler gemacht</span><span class="rm">Das tut mir leid</span><span class="rm">Ich übernehme die Verantwortung</span><span class="rm">Ich gebe dir morgen Bescheid</span></div><div class="nur-b1"><span class="rm">Danke, dass du es von dir aus sagst</span><span class="rm">Mich ärgert es, aber davon wird es nicht besser</span><span class="rm">Dann treffen wir gemeinsam die Entscheidung, wie es weitergeht</span><span class="rm">Halt mich auf dem Laufenden, den Rest klären wir Freitag</span></div></div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>A hat den <i><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Fehler" data-wort="der Fehler" data-kurz="etwas, das falsch gelaufen ist" data-bsp="Ich habe einen Fehler gemacht, das tut mir leid.">Fehler</b> gemacht</i> und die <i><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Verantwortung" data-wort="die Verantwortung" data-kurz="wenn du dafür geradestehst" data-bsp="Für den Fehler übernehme ich die Verantwortung.">Verantwortung</b> übernommen</i> — zwei Nomen, zwei verschiedene Verben. B ist beim Thema geblieben und hat nicht über die Person gesprochen.</div>
+<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
+</div>
+
+<h2 class="st">🎴 Sprechkarten</h2>
+<p class="ssub">Zieh eine Karte. Vier Sätze am Stück.</p>
+<div class="card90">
+<div class="lbl">Deine Aufgabe</div>
+<div class="word" id="wsk" style="font-size:1.15rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="sknew">🎴 Karte ziehen</button>
+</div>
+</section>
+
+<section class="section" id="debatte">
+<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
+<p class="ssub">Zwei Gruppen, eine Frage. Abwechselnd sprechen.</p>
+<div class="deb-these">Feste Wendungen lernt man am besten auswendig.</div>
+<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><ul><li>Eine Regel gibt es dafür nicht.</li><li>Ein ganzer Satz sitzt schneller als eine Liste.</li><li>Im Gespräch hat man keine Zeit zum Nachdenken.</li></ul></div><div class="deb-s con"><b>Gruppe B · dagegen</b><ul><li>Auswendig Gelerntes ist schnell wieder weg.</li><li>Wer die Gruppe kennt, ordnet neue Wörter selbst ein.</li><li>Man braucht Beispiele, keine Listen.</li></ul></div></div>
+</section>
+
+<section class="section" id="abschluss">
+<h2 class="st">Zum <span class="hl">Schluss</span></h2>
+<p class="ssub">Ein Satz von jedem.</p>
+<div class="ank">Welchen Satz von heute nimmst du mit — und wo brauchst du ihn?</div>
+<details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Ich nehme mit: …</span><span>Ich will den Satz „…“ benutzen.</span><span>Neu war für mich: …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Ich nehme mit, dass …</span><span>Den Satz „…“ will ich nächste Woche wirklich benutzen.</span><span>Neu war für mich, dass …</span></div></div></details>
+</section>
+
+<section class="section" id="hausaufgabe">
+<h2 class="st">📮 Deine Hausaufgabe bis <span class="hl">Donnerstag</span></h2>
+<p class="ssub">Vier kleine Aufgaben, zusammen etwa 25 Minuten. Am Donnerstag geht es weiter — dann mit stehen und stellen, liegen und legen.</p>
+<div class="tip">💡 <strong>Warum das hilft:</strong> Diese zwölf Wendungen kommen in jedem Gespräch vor, in dem etwas geklärt wird — im Amt, im Beruf, beim Arzt, im Haus. Wer sie sicher hat, klingt nicht nur richtiger, sondern auch verlässlicher.</div>
+<div class="hagrid nur-a2">
+<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">✍️</span><span class="htxt">
+<h4>1. Zwölf Sätze <span class="zeit">7 Min</span></h4>
+<p>Schreib zu jedem der zwölf Nomen von heute einen Satz aus deinem eigenen Leben. Nomen und Verb müssen zusammen darin stehen.</p></span></button>
+<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🔁</span><span class="htxt">
+<h4>2. Dieselben zwölf im Perfekt <span class="zeit">6 Min</span></h4>
+<p>Schreib jeden Satz noch einmal im Perfekt. Achte darauf, dass das Partizip ganz am Ende steht.</p></span></button>
+<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🎙️</span><span class="htxt">
+<h4>3. Deine Woche <span class="zeit">5 Min</span></h4>
+<p>Nimm eine Sprachnachricht auf: Welche Entscheidung hast du diese Woche getroffen, welchen Termin gemacht, welche Frage gestellt?</p></span></button>
+<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">👂</span><span class="htxt">
+<h4>4. Mitschreiben <span class="zeit">7 Min</span></h4>
+<p>Hör irgendwo Deutsch — Podcast, Video, Gespräch — und notier fünf feste Wendungen aus Nomen und Verb, die dir auffallen.</p></span></button>
+</div>
+<div class="hagrid nur-b1">
+<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">📝</span><span class="htxt">
+<h4>1. Eine kurze Mail <span class="zeit">8 Min</span></h4>
+<p>Schreib eine Mail an einen Vermieter: Du machst einen Vorschlag, stellst eine Bedingung und gibst bis wann Bescheid. Höchstens acht Sätze.</p></span></button>
+<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🔎</span><span class="htxt">
+<h4>2. Acht weitere Paare <span class="zeit">7 Min</span></h4>
+<p>Such acht Wendungen, die heute nicht vorkamen (<i>eine Rolle spielen, Abschied nehmen, in Frage kommen, zur Sprache bringen …</i>) und schreib zu jeder einen Satz.</p></span></button>
+<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🎙️</span><span class="htxt">
+<h4>3. Zwei Minuten Besprechung <span class="zeit">6 Min</span></h4>
+<p>Nimm auf, wie du in einer Besprechung einen Vorschlag machst und ihn begründest. Am Ende: die Entscheidung und wer Bescheid gibt.</p></span></button>
+<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🧾</span><span class="htxt">
+<h4>4. Amtsdeutsch übersetzen <span class="zeit">5 Min</span></h4>
+<p>Such einen echten Brief vom Amt oder von einer Versicherung und schreib drei Sätze daraus so um, wie du sie mündlich sagen würdest.</p></span></button>
+</div>
+<p class="hastand" data-ha-stand>0 von 0 Aufgaben geschafft.</p>
+<div class="hilfe nur-a2">
+<button type="button">💡 Beispiel ansehen (Aufgabe 1)</button>
+<div class="inhalt">
+<p>So sehen die Sätze aus:</p>
+<ul>
+<li><i>Am Montag <b>mache</b> ich einen Termin beim Zahnarzt.</i></li>
+<li><i>Im Kurs <b>stelle</b> ich zu selten eine Frage.</i></li>
+<li><i>Nächste Woche <b>treffe</b> ich eine Entscheidung wegen der Wohnung.</i></li>
+<li><i>Ich <b>gebe</b> meiner Chefin am Freitag Bescheid.</i></li>
+<li><i>Nach zehn <b>nehme</b> ich Rücksicht auf die Nachbarn.</i></li>
+</ul>
+<p style="margin-top:.5rem;">Und ein Test, bevor du abschickst: Steht das Nomen direkt vor oder direkt hinter dem Verb? Wenn etwas anderes dazwischenrutscht, außer Zeit oder Ort, stimmt meistens etwas nicht.</p>
+</div>
+</div>
+<div class="hilfe nur-b1">
+<button type="button">💡 Beispiel ansehen (Aufgabe 1)</button>
+<div class="inhalt">
+<p>Das sind die drei Stellen, auf die es ankommt:</p>
+<ul>
+<li><b>Vorschlag:</b> <i>Ich möchte Ihnen einen Vorschlag machen: Wir teilen die Kosten.</i></li>
+<li><b>Bedingung:</b> <i>Eine Bedingung habe ich allerdings: Die Reparatur wird vorher besprochen.</i></li>
+<li><b>Bescheid:</b> <i>Bis Freitag gebe ich Ihnen Bescheid, ob wir uns einig sind.</i></li>
+<li><b>Höflich, aber klar:</b> <i>Ich hoffe, wir treffen dabei eine Entscheidung, mit der beide leben können.</i></li>
+<li><b>Schluss:</b> <i>Für Rückfragen stehe ich Ihnen gern zur Verfügung.</i></li>
+</ul>
+<p style="margin-top:.5rem;">Und ein Hinweis, der viel Ärger spart: Schreib immer dazu, <b>bis wann</b> du Bescheid gibst. Genau das erwarten deutsche Vermieter, Ämter und Firmen — und genau das fehlt in den meisten Mails.</p>
+</div>
+</div>
+<div class="tip"></div>
+<div class="tip"></div>
+</section>
+
+<footer>
+<strong>deutschoderwas Sprechclub</strong> · Welches Verb gehört dazu? · Teil 1 · B1/B2 · Woche 10 · am Donnerstag: stehen und stellen, liegen und legen, sitzen und setzen
+</footer>
+
+</div>
+
+<script type="application/json" id="daten-sk">
+["Erzähl von einer Entscheidung, die du zu lange vor dir hergeschoben hast.","Du machst einen Termin beim Arzt. Sag laut, was du am Telefon sagst.","Stell drei Fragen, die du im Amt stellen würdest, wenn du neu hier wärst.","Mach einen Vorschlag für den nächsten Sprechclub — mit Begründung.","Erklär, was <b>Bescheid geben</b> heißt, ohne das Wort zu benutzen.","Erzähl von einem Fehler, den du gemacht hast, und wie es weiterging.","Wann hast du zuletzt Rücksicht auf jemanden genommen?","Du hältst eine kurze Rede auf einer Feier. Sag die ersten drei Sätze.","Wer trägt in deiner Familie die Verantwortung wofür?","Nenne drei Nomen und sag dazu sofort das richtige Verb."]
+</script>
+<script type="application/json" id="daten-w90">
+[{"w":"die Entscheidung","b":"../amanda/sz-heikel.webp","h":["treffen","sich entscheiden","die Wahl","schwerfallen","überlegen"]},{"w":"der Termin","b":"../vok-bild/der-termin.webp","h":["machen","vereinbaren","absagen","der Kalender","pünktlich"]},{"w":"die Frage","b":"../amanda/a-zeigen.webp","h":["stellen","beantworten","nachfragen","die Rückfrage","sich trauen"]},{"w":"der Antrag","b":"../amanda/sz-amt.webp","h":["stellen","das Amt","das Formular","bearbeiten","die Unterschrift"]},{"w":"die Rede","b":"../vok-bild/die-kurzpraesentation.webp","h":["halten","die Feier","aufgeregt","der Vortrag","zuhören"]},{"w":"der Fehler","b":"../amanda/amanda-ups.webp","h":["machen","zugeben","sich entschuldigen","passieren","korrigieren"]},{"w":"die Auskunft","b":"../vok-bild/die-beratung.webp","h":["geben","zuständig","der Schalter","die Information","weiterhelfen"]},{"w":"der Vorschlag","b":"../vok-bild/der-vorschlag.webp","h":["machen","annehmen","ablehnen","die Idee","begründen"]},{"w":"die Verantwortung","b":"../amanda/sz-buero.webp","h":["übernehmen","tragen","die Schuld","geradestehen","zuständig"]},{"w":"das Wort","b":"../amanda/sz-freunde.webp","h":["halten","versprechen","sich verlassen","zuverlässig","geben"]}]
+</script>
+<script type="application/json" id="daten-quiz">
+[{"q":"Welcher Satz ist richtig?","o":["Wir treffen morgen eine Entscheidung.","Wir machen morgen eine Entscheidung.","Wir stellen morgen eine Entscheidung.","Wir halten morgen eine Entscheidung."],"c":0,"e":"Eine Entscheidung wird <b>getroffen</b> — immer, wenn du aus mehreren Möglichkeiten eine aussuchst. Auch: eine Wahl treffen, eine Absprache treffen."},{"q":"Was passt zu <u>Frage</u>?","o":["stellen","machen","geben","halten"],"c":0,"e":"Eine Frage <b>stellt</b> man — man stellt sie der anderen Person hin. Dieselbe Gruppe: Antrag, Bedingung, Forderung."},{"q":"Welcher Satz stimmt?","o":["Er hat sein Wort gehalten.","Er hat sein Wort gemacht.","Er hat sein Wort gestellt.","Er hat sein Wort genommen."],"c":0,"e":"Sein Wort <b>halten</b> heißt: tun, was man versprochen hat. In derselben Gruppe: eine Rede halten, einen Vortrag halten."},{"q":"Was gehört zu <u>Verantwortung</u>?","o":["übernehmen","machen","stellen","treffen"],"c":0,"e":"Verantwortung <b>übernimmt</b> oder <b>trägt</b> man. Achte auf den Sprung: den Fehler <i>macht</i> man, die Verantwortung dafür <i>übernimmt</i> man."},{"q":"Welcher Satz klingt für deutsche Ohren richtig?","o":["Ich gebe dir morgen Bescheid.","Ich mache dir morgen Bescheid.","Ich gebe dir morgen einen Bescheid.","Ich stelle dir morgen Bescheid."],"c":0,"e":"Bescheid <b>geben</b> oder <b>sagen</b>, und ohne Artikel. Mit Artikel wird <i>der Bescheid</i> zum Brief vom Amt — ganz andere Bedeutung."},{"q":"Wo steht das Partizip?","o":["Ich habe gestern einen Antrag gestellt.","Ich habe gestellt gestern einen Antrag.","Ich habe gestern gestellt einen Antrag.","Gestellt ich habe gestern einen Antrag."],"c":0,"e":"Im Perfekt steht das Partizip ganz am Ende, das Nomen direkt davor. Dazwischen dürfen nur Zeit und Ort stehen."},{"q":"Was passt zu <u>Rücksicht</u>?","o":["nehmen auf","machen für","stellen an","halten für"],"c":0,"e":"Rücksicht <b>nehmen auf</b> plus Akkusativ: <i>auf die Nachbarn</i>, <i>auf das Kind</i>. Und ohne Artikel vor <i>Rücksicht</i>."},{"q":"Welche Wendung ist falsch?","o":["einen Termin treffen","einen Termin machen","einen Termin vereinbaren","einen Termin absagen"],"c":0,"e":"Einen Termin <b>macht</b> oder <b>vereinbart</b> man. <i>Treffen</i> gehört zur Entscheidung — aber man kann sich natürlich zu einem Termin <i>treffen</i>."}]
+</script>
+<script type="application/json" id="daten-gap">
+[{"t":"Wir müssen bis Freitag eine Entscheidung ___.","o":["treffen","machen","stellen","halten"],"a":"treffen"},{"t":"Darf ich Ihnen eine Frage ___?","o":["stellen","machen","geben","halten"],"a":"stellen"},{"t":"Ich ___ dir bis morgen Bescheid.","o":["gebe","mache","stelle","nehme"],"a":"gebe"},{"t":"Für den Fehler ___ ich die Verantwortung.","o":["übernehme","mache","stelle","halte"],"a":"übernehme"},{"t":"Nach zehn Uhr ___ wir Rücksicht auf die Nachbarn.","o":["nehmen","machen","geben","stellen"],"a":"nehmen"},{"t":"Auf der Feier ___ mein Bruder die Rede.","o":["hält","macht","stellt","gibt"],"a":"hält"},{"t":"Den Antrag habe ich schon letzte Woche ___.","o":["gestellt","gemacht","gegeben","getroffen"],"a":"gestellt"},{"t":"Darf ich einen Vorschlag ___?","o":["machen","treffen","stellen","halten"],"a":"machen"}]
+</script>
+<script type="application/json" id="daten-gbau">
+[{"f":"Bau den Satz im Präsens:","t":["Wir","treffen","am","Freitag","eine","Entscheidung"],"l":["Wir","treffen","am","Freitag","eine","Entscheidung"],"e":"Verb an Position zwei, dann die Zeit, dann das Nomen. Das Paar <i>Entscheidung treffen</i> bleibt trotzdem erkennbar."},{"f":"Bau den Satz im Perfekt:","t":["Ich","habe","gestern","einen","Antrag","gestellt"],"l":["Ich","habe","gestern","einen","Antrag","gestellt"],"e":"<i>habe</i> an Position zwei, das Partizip <b>gestellt</b> ganz ans Ende. Das Nomen steht direkt davor."},{"f":"Bau den Satz mit Modalverb:","t":["Ich","möchte","noch","eine","Frage","stellen"],"l":["Ich","möchte","noch","eine","Frage","stellen"],"e":"Mit Modalverb geht der Infinitiv nach hinten — genauso wie das Partizip im Perfekt."},{"f":"Bau den Satz ohne Artikel:","t":["Ich","gebe","dir","am","Freitag","Bescheid"],"l":["Ich","gebe","dir","am","Freitag","Bescheid"],"e":"<b>Bescheid</b> steht ohne Artikel und ganz am Ende — fast so, als wäre es Teil des Verbs."}]
+</script>
+<script type="application/json" id="daten-gstory">
+{"t":"Am Montag wollte ich endlich einen Termin ___. Ich habe angerufen, aber niemand konnte mir eine Auskunft ___. Also habe ich im Amt eine Frage ___ und erfahren, dass ich zuerst einen Antrag ___ muss. Zwei Tage später kam die Mail: Sie geben mir Bescheid, sobald jemand die Entscheidung ___ hat. Am Mittwoch habe ich dann gemerkt, dass ich beim Formular einen Fehler ___ hatte. Ich habe angerufen, mich entschuldigt und die Verantwortung dafür ___. Die Frau am Telefon war freundlich und hat ihr Wort ___: Am Freitag lag der neue Termin im Briefkasten.","o":["machen","geben","gestellt","stellen","getroffen","gemacht","übernommen","gehalten"],"a":[["machen"],["geben"],["gestellt"],["stellen"],["getroffen"],["gemacht"],["übernommen"],["gehalten"]]}
+</script>
+
+<script>
+
+/* ---- Sprungleiste: sie schaltet die Abschnitte wieder um ----
+   Eine Weile stand alles untereinander. Gemessen an der Stunde
+   „Kritik ueben": 28 512 Pixel, auf dem Handy 34 Bildschirme fuer
+   eine Unterrichtsstunde. Man scrollt und scrollt und weiss nicht,
+   wo man ist — und in der Stunde selbst kommt man nie durch.
+
+   Jetzt zeigt die Seite einen Abschnitt. Die Leiste oben waehlt aus,
+   am Ende jedes Abschnitts steht, was als Naechstes kommt. Wer die
+   ganze Stunde am Stueck sehen will (zum Vorbereiten, zum Drucken),
+   klickt auf „Alles". Beim Drucken kommt ohnehin alles mit, und ein
+   Link mit #abschnitt oeffnet genau dort. */
+(function(){
+ var tabs=[].slice.call(document.querySelectorAll('nav.tabs a.tab'));
+ var paare=tabs.map(function(a){return {a:a,sec:document.querySelector(a.getAttribute('href'))};})
+               .filter(function(x){return x.sec;});
+ if(paare.length<2) return;
+ var alles=false, jetzt=paare[0].sec.id;
+
+ /* Ohne JavaScript steht die Stunde weiterhin komplett da — erst
+    hier wird ueberhaupt etwas versteckt. */
+ document.body.classList.add('schaltet');
+
+ var kopf=document.querySelector('.leiste');
+ function hoehe(){ return kopf ? kopf.getBoundingClientRect().height+10 : 66; }
+
+ /* Die aktive Marke in den schmalen Streifen holen — aber nur ihn
+    schieben. scrollIntoView() nahm die ganze Seite mit: der Titel
+    der Stunde rutschte beim Umschalten aus dem Bild. */
+ function markeInsBild(a, weich){
+  var streifen=a.parentNode;
+  if(!streifen || streifen.scrollWidth<=streifen.clientWidth+2) return;
+  /* Gerechnet wird ueber die Rechtecke, nicht ueber offsetLeft: der
+     naechste positionierte Vorfahr ist die Leiste, nicht der Streifen
+     — offsetLeft haette die Marke um die Breite der Niveau-Knoepfe
+     verschoben. */
+  var r=a.getBoundingClientRect(), rs=streifen.getBoundingClientRect();
+  var links=streifen.scrollLeft+(r.left-rs.left)-(rs.width-r.width)/2;
+  links=Math.max(0,Math.min(links,streifen.scrollWidth-streifen.clientWidth));
+  if(Math.abs(links-streifen.scrollLeft)<2) return;
+  /* Beim ersten Aufbau hart setzen. Ein weiches Scrollen im Streifen
+     zog in Chrome die ganze Seite 399 Pixel mit nach unten, weil
+     html{scroll-behavior:smooth} gilt — der Titel der Stunde war
+     dann schon beim Laden aus dem Bild. */
+  if(weich && streifen.scrollTo) streifen.scrollTo({left:links,behavior:'smooth'});
+  else streifen.scrollLeft=links;
+ }
+
+ /* Der Umschalter erscheint nur, wo er wirklich etwas aendert.
+    Vorher stand er auf jeder Seite, tat aber in vier von sieben
+    Abschnitten gar nichts — man tippt, nichts passiert, und denkt,
+    es sei kaputt. Jetzt sagt sein Verschwinden: Hier gibt es keine
+    zwei Fassungen. */
+ var umschalter=document.querySelector('.leiste .nivk');
+ function umschalterZeigen(sec){
+  if(!umschalter) return;
+  var da = !!sec.querySelector('.nur-a2, .nur-b1');
+  umschalter.style.display = da ? '' : 'none';
+ }
+
+ function zeige(id, springen, stumm){
+  var da=paare.filter(function(p){return p.sec.id===id;})[0];
+  if(!da) return;
+  jetzt=id;
+  paare.forEach(function(p){
+   p.sec.hidden = !alles && p.sec.id!==id;
+   p.a.classList.toggle('active', p.sec.id===id);
+  });
+  if(alles) paare.forEach(function(p){ p.sec.hidden=false; });
+  umschalterZeigen(da.sec);
+  markeInsBild(da.a, !!springen);
+  if(springen){
+   var y=da.sec.getBoundingClientRect().top+window.pageYOffset-hoehe();
+   window.scrollTo({top:Math.max(0,y),behavior:'smooth'});
+  }
+  /* Die Marke kommt erst in die Adresse, wenn jemand wirklich
+     umschaltet. Steht sie schon beim Laden drin, springt Chrome
+     nachtraeglich selbst dorthin — sobald die Bilder da sind, zog es
+     die Seite 399 Pixel nach unten und der Titel der Stunde war weg. */
+  if(!stumm){ try{ history.replaceState(null,'','#'+id); }catch(e){} }
+ }
+ window.stundeZeige=zeige;
+
+ tabs.forEach(function(a){
+  a.addEventListener('click',function(ev){
+   var id=(a.getAttribute('href')||'').replace('#','');
+   if(!id) return;
+   ev.preventDefault();
+   if(alles){ alles=false; if(knopfAlles) knopfAlles.setAttribute('aria-pressed','false'); }
+   zeige(id,true);
+  });
+ });
+
+ /* Am Ende jedes Abschnitts: was jetzt drankommt. In der Stunde
+    haelt das den Takt — man klickt weiter, statt zu suchen. */
+ paare.forEach(function(p,i){
+  var naechste=paare[i+1], vorige=paare[i-1];
+  var z=document.createElement('div'); z.className='weiterzeile';
+  if(vorige){
+   var zur=document.createElement('button');
+   zur.type='button'; zur.className='weiterknopf zurueck';
+   zur.innerHTML='← '+vorige.a.textContent.trim();
+   zur.addEventListener('click',function(){ zeige(vorige.sec.id,true); });
+   z.appendChild(zur);
+  }
+  if(naechste){
+   var w=document.createElement('button');
+   w.type='button'; w.className='weiterknopf';
+   w.innerHTML='Weiter: '+naechste.a.textContent.trim()+' →';
+   w.addEventListener('click',function(){ zeige(naechste.sec.id,true); });
+   z.appendChild(w);
+  }
+  if(z.children.length) p.sec.appendChild(z);
+ });
+
+ /* Der Schalter fuer die lange Ansicht sitzt am Ende der Leiste. */
+ var knopfAlles=null;
+ var streifen=document.querySelector('nav.tabs');
+ if(streifen){
+  knopfAlles=document.createElement('button');
+  knopfAlles.type='button'; knopfAlles.className='tab tabAlles';
+  knopfAlles.setAttribute('aria-pressed','false');
+  knopfAlles.textContent='⇕ Alles';
+  knopfAlles.title='Die ganze Stunde am Stück zeigen';
+  knopfAlles.addEventListener('click',function(){
+   alles=!alles;
+   knopfAlles.setAttribute('aria-pressed', alles?'true':'false');
+   if(alles){ paare.forEach(function(p){ p.sec.hidden=false; }); }
+   else zeige(jetzt,true);
+  });
+  streifen.appendChild(knopfAlles);
+ }
+
+ var ausLink=(location.hash||'').replace('#','');
+ var beimLaden=paare.filter(function(p){return p.sec.id===ausLink;}).length ? ausLink : paare[0].sec.id;
+ zeige(beimLaden, false, beimLaden!==ausLink);
+})();
+
+/* ---- Hoehe des klebenden Umschalters messen, damit die
+   Sprungleiste sauber darunter sitzt ---- */
+(function(){
+ var leiste=document.querySelector('.niv');
+ if(!leiste)return;
+ function miss(){document.documentElement.style.setProperty('--leiste',Math.round(leiste.offsetHeight)+'px');}
+ miss();
+ window.addEventListener('resize',miss);
+ if(window.ResizeObserver)new ResizeObserver(miss).observe(leiste);
+ if(document.fonts&&document.fonts.ready)document.fonts.ready.then(miss);
+})();
+
+/* ---- Vorlesen ---- */
+function say(t){try{var u=new SpeechSynthesisUtterance(t);u.lang='de-DE';u.rate=.85;speechSynthesis.cancel();speechSynthesis.speak(u);}catch(e){}}
+document.querySelectorAll('.speak').forEach(function(b){if(b.dataset.say)b.onclick=function(){say(b.dataset.say);};});
+
+/* ---- Niveau-Umschalter ---- */
+var nivk=document.querySelectorAll('.nivk button[data-niv]');
+nivk.forEach(function(b){b.onclick=function(){
+ var n=b.dataset.niv;document.body.setAttribute('data-niveau',n);
+ nivk.forEach(function(x){x.setAttribute('aria-pressed',x.dataset.niv===n?'true':'false');});
+ hazaehlen();
+};});
+
+/* ---- Hilfe-Knoepfe ---- */
+document.querySelectorAll('.hilfe > button').forEach(function(b){
+ var kasten=b.parentElement,text=b.textContent;
+ b.setAttribute('aria-expanded','false');
+ b.onclick=function(){var auf=kasten.classList.toggle('offen');
+  b.setAttribute('aria-expanded',auf?'true':'false');
+  b.textContent=auf?'✕ Hilfe schließen':text;};
+});
+
+/* ---- Markierte Woerter ----
+   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
+   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
+   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
+
+   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
+   den viele verwechseln. */
+(function(){
+ var woerter=[].slice.call(document.querySelectorAll('.wm'));
+ if(!woerter.length) return;
+ var karte=null;
+
+ function zu(){ if(karte){ karte.remove(); karte=null; }
+  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
+
+ function auf(w){
+  var schonOffen=w.classList.contains('offen');
+  zu();
+  if(schonOffen) return;
+  w.classList.add('offen');
+  karte=document.createElement('div');
+  karte.className='wmk';
+  var satz=w.dataset.bsp||'';
+  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
+   + '<b>'+w.dataset.wort+'</b>'
+   + '<span>'+(w.dataset.kurz||'')+'</span>'
+   + (satz?'<em>'+satz+'</em>':'')
+   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
+  document.body.appendChild(karte);
+
+  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
+  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
+  var links=r.left+r.width/2-b.width/2;
+  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
+  var oben=r.bottom+window.pageYOffset+9;
+  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
+   oben=r.top+window.pageYOffset-b.height-9;
+  karte.style.left=links+'px'; karte.style.top=oben+'px';
+
+  karte.querySelector('.wmk-zu').onclick=zu;
+  var ton=karte.querySelector('.wmk-ton');
+  if(ton) ton.onclick=function(){ say(satz); };
+ }
+
+ woerter.forEach(function(w){
+  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
+  w.addEventListener('keydown',function(ev){
+   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
+ });
+ document.addEventListener('click',zu);
+ document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
+ window.addEventListener('resize',zu);
+ /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
+    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
+ document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
+  k.addEventListener('click',zu); });
+})();
+
+/* ---- Bildkarten verdecken ----
+   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
+   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
+   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
+   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
+   Ein einziges fehlendes Element legte die halbe Stunde still. */
+var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
+if(bg&&vb){
+ vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
+  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
+ bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
+}
+
+/* ---- Dialoge: Runde 1 / Runde 2 ---- */
+document.querySelectorAll('.dwrap').forEach(function(d){
+ var b=d.querySelector('.rbtn');
+ b.onclick=function(){
+  var zwei=d.dataset.runde==='1';
+  d.dataset.runde=zwei?'2':'1';
+  b.textContent=zwei?'◀︎ Runde 1 · Text zeigen':'▶︎ Runde 2 · du antwortest';
+  b.classList.toggle('zwei',zwei);
+  d.querySelectorAll('.dline.b').forEach(function(l){l.classList.remove('zeigen');});
+ };
+ d.querySelectorAll('.dcue').forEach(function(c){
+  c.onclick=function(){c.closest('.dline').classList.add('zeigen');};});
+});
+
+/* ---- Hausaufgabe abhaken ---- */
+var hastand=document.querySelector('[data-ha-stand]');
+function hazaehlen(){
+ if(!hastand)return;
+ /* Nach dem Niveau zaehlen, nicht nach offsetParent: beim Laden ist der
+    Hausaufgaben-Abschnitt noch zugeklappt und haette 0 von 0 ergeben. */
+ var niv=document.body.getAttribute('data-niveau');
+ var weg=niv==='a2'?'.nur-b1':'.nur-a2';
+ var da=[].slice.call(document.querySelectorAll('[data-ha]')).filter(function(h){return !h.closest(weg);});
+ var fertig=da.filter(function(h){return h.classList.contains('fertig');}).length;
+ var voll=da.length>0&&fertig===da.length;
+ hastand.textContent=voll?('Alle '+da.length+' Aufgaben geschafft. Stark — bis Mittwoch! 🎉')
+                        :(fertig+' von '+da.length+' Aufgaben geschafft.');
+ hastand.classList.toggle('voll',voll);
+}
+document.querySelectorAll('[data-ha]').forEach(function(h){
+ h.setAttribute('aria-pressed','false');
+ h.onclick=function(){var an=h.classList.toggle('fertig');
+  h.setAttribute('aria-pressed',an?'true':'false');hazaehlen();};
+});
+hazaehlen();
+
+/* ---- Daten aus den JSON-Bloecken im Koerper ----
+   Der Motor ist fuer alle Stunden derselbe; nur die Daten wechseln.
+   Fehlt ein Block, bleibt der Abschnitt einfach leer. */
+function daten(id){
+ var el=document.getElementById('daten-'+id);
+ if(!el)return null;
+ try{return JSON.parse(el.textContent);}catch(e){console.error('Daten "'+id+'" sind kaputt:',e);return null;}
+}
+/* ---- Mischen (Fisher-Yates) ----
+   Ein Vergleich mit Math.random() mischt nicht gleichmaessig, die
+   erste Stelle bleibt zu oft die erste. Deshalb richtig tauschen. */
+function misch(liste){
+ var a=liste.slice();
+ for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}
+ return a;
+}
+
+/* ---- Sprechkarten ---- */
+var SK=daten('sk')||[];
+/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
+   Gepruefte Elemente statt gepruefter Daten. */
+if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
+var lastsk=-1;
+document.getElementById('sknew').onclick=function(){var i;
+ do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
+ document.getElementById('wsk').innerHTML=SK[i];};
+
+}
+
+/* ---- 90 Sekunden ---- */
+var W90=daten('w90')||[];
+if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
+var last90=-1,t90=null,rest=90;
+function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
+function zeige90(i){
+ document.getElementById('w90').textContent=W90[i].w;
+ document.getElementById('i90').src=W90[i].b;
+ document.getElementById('i90').alt=W90[i].w;
+ document.getElementById('hw90').innerHTML=W90[i].h.map(function(x){return '<span class="hw">'+x+'</span>';}).join('');
+}
+document.getElementById('new90').onclick=function(){var i;
+ do{i=Math.floor(Math.random()*W90.length);}while(i===last90&&W90.length>1);last90=i;
+ zeige90(i);clearInterval(t90);rest=90;document.getElementById('t90').textContent=fmt(rest);};
+document.getElementById('start90').onclick=function(){clearInterval(t90);rest=90;
+ var el=document.getElementById('t90');el.textContent=fmt(rest);
+ t90=setInterval(function(){rest--;el.textContent=fmt(rest);
+  if(rest<=0){clearInterval(t90);el.textContent='✅ Fertig!';}},1000);};
+zeige90(0);last90=0;
+
+}
+
+/* ---- Quiz ---- */
+var QUIZ=daten('quiz')||[];
+var qc=document.getElementById('quiz');
+if(qc&&QUIZ.length){
+QUIZ.forEach(function(item){
+ var d=document.createElement('div');d.className='quiz-q';
+ d.innerHTML='<div class="qt">'+item.q+'</div>';
+ var op=document.createElement('div');op.className='quiz-opts';
+ /* Gemischt, sonst stuende die richtige Antwort immer an erster Stelle
+    und man koennte die ganze Runde raten, ohne zu lesen. */
+ var wahl=misch(item.o.map(function(t,i){return {t:t,richtig:i===item.c};}));
+ wahl.forEach(function(w){
+  var b=document.createElement('button');b.className='qopt';b.textContent=w.t;
+  b.onclick=function(){
+   if(d.dataset.done)return;d.dataset.done=1;
+   if(w.richtig){b.classList.add('right');}
+   else{
+    b.classList.add('wrong');
+    op.children[wahl.findIndex(function(x){return x.richtig;})].classList.add('right');
+   }
+   d.querySelector('.qexp').classList.add('show');};
+  op.appendChild(b);});
+ d.appendChild(op);
+ var e=document.createElement('div');e.className='qexp';e.innerHTML='💡 '+item.e;d.appendChild(e);
+ qc.appendChild(d);
+});
+
+}
+
+/* ---- Lueckentext ---- */
+var GAP=daten('gap')||[];
+var g=document.getElementById('gap');
+if(g&&GAP.length){
+GAP.forEach(function(item){
+ var row=document.createElement('div');row.style.margin='.35rem 0';
+ var sel=document.createElement('select');
+ var leer=document.createElement('option');leer.textContent='– wählen –';leer.value='';sel.appendChild(leer);
+ misch(item.o).forEach(function(o){
+  var op=document.createElement('option');op.textContent=o;op.value=o;sel.appendChild(op);});
+ sel.onchange=function(){sel.className=sel.value===item.a?'ok':'no';};
+ var teile=item.t.split('___');
+ row.appendChild(document.createTextNode(teile[0]));row.appendChild(sel);
+ row.appendChild(document.createTextNode(teile[1]||''));
+ g.appendChild(row);
+});
+
+}
+
+/* ---- Satzbauer ---- */
+var GBAU=daten('gbau')||[];
+var gbc=document.getElementById('gbau');
+if(gbc&&GBAU.length){
+{GBAU.forEach(function(item){
+ var d=document.createElement('div');d.className='gbau';
+ d.innerHTML='<div class="gfrage">🧱 '+item.f+'</div>';
+ var teile=document.createElement('div');teile.className='gteile';
+ var zeile=document.createElement('div');zeile.className='gzeile';
+ var gebaut=[];
+ misch(item.t).forEach(function(w){
+  var b=document.createElement('button');b.className='gteil';b.textContent=w;
+  b.onclick=function(){b.classList.add('weg');gebaut.push(w);zeile.classList.remove('ok','no');
+   var s=document.createElement('span');s.textContent=w;zeile.appendChild(s);};
+  teile.appendChild(b);});
+ d.appendChild(teile);d.appendChild(zeile);
+ var fuss=document.createElement('div');fuss.className='gfuss';
+ var pr=document.createElement('button');pr.className='gmini';pr.textContent='✅ prüfen';
+ var nm=document.createElement('button');nm.className='gmini hell';nm.textContent='↻ nochmal';
+ var tp=document.createElement('div');tp.className='gtipp';tp.innerHTML='💡 '+item.e;
+ pr.onclick=function(){var richtig=gebaut.join(' ')===item.l.join(' ');
+  zeile.classList.remove('ok','no');zeile.classList.add(richtig?'ok':'no');tp.classList.add('show');};
+ nm.onclick=function(){gebaut=[];zeile.innerHTML='';zeile.classList.remove('ok','no');tp.classList.remove('show');
+  teile.querySelectorAll('.gteil').forEach(function(b){b.classList.remove('weg');});};
+ fuss.appendChild(pr);fuss.appendChild(nm);d.appendChild(fuss);d.appendChild(tp);
+ gbc.appendChild(d);
+});}
+
+}
+
+/* ---- Lueckengeschichte ---- */
+var GSTORY=daten('gstory');
+var gsc=document.getElementById('gstory');
+if(gsc&&GSTORY){
+{
+ var gsWahl=misch(GSTORY.o);   /* einmal mischen, alle Luecken zeigen dieselbe Reihenfolge */
+ var st=GSTORY.t.split('___');
+ st.forEach(function(txt,i){
+  gsc.appendChild(document.createTextNode(txt));
+  if(i<GSTORY.a.length){
+   var sel=document.createElement('select');
+   var leer=document.createElement('option');leer.textContent='– ? –';leer.value='';sel.appendChild(leer);
+   gsWahl.forEach(function(o){var op=document.createElement('option');op.textContent=o;op.value=o;sel.appendChild(op);});
+   (function(loesung){sel.onchange=function(){sel.className=loesung.indexOf(sel.value)>=0?'ok':'no';};})(GSTORY.a[i]);
+   gsc.appendChild(sel);
+  }
+ });
+}
+
+}
+
+</script>
+</body>
+</html>
