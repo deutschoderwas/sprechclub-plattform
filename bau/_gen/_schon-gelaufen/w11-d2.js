@@ -1,0 +1,412 @@
+'use strict';
+const fs = require('fs');
+const S = {
+  datei: 'Unterricht-ab-14-09/w11-d-teil2-gespraech-beenden-b1b2.html',
+  eyebrow: 'deutschoderwas · Sprechclub · Woche 11 · Strang D · Teil 2 · Donnerstag, 26. November',
+  titel: 'Ein Gespräch beenden —',
+  hl: 'ohne dass es unhöflich wirkt',
+  stufe: 'B1/B2',
+  termin: 'Do 26.11. 17:30 und 19:30 · Strang D · Teil 2 · B1 ⇄ B2',
+  untertitel: 'Anfangen können die meisten. Aufhören ist schwerer: Man will weg, aber nicht unfreundlich sein — und steht dann noch zehn Minuten in der Tür. Dabei sind es nur vier Schritte, und man braucht sie jeden Tag: im Treppenhaus, am Telefon, nach dem Kurs.',
+  fuss: 'Ein Gespräch beenden · Teil 2 · B1/B2 · Woche 11 · danach macht der Sprechclub eine Pause',
+  niveau: { a: 'B1 · sicherer', b: 'B2 · feiner', hinweis: 'Gleiches Thema, andere Sätze. Wechsle jederzeit — probier ruhig beide Seiten aus.' },
+
+  einstieg: [
+    {
+      h2: 'Zehn Minuten',
+      hl: 'in der Tür',
+      ssub: 'Fast jeder kennt das: Das Gespräch ist eigentlich zu Ende, aber keiner traut sich, es zu sagen. Auf Deutsch gibt es dafür feste Sätze, und der wichtigste schiebt die Schuld freundlich auf einen selbst: <b>Ich will dich gar nicht länger aufhalten.</b>',
+      bild: 'amanda/sz-unterwegs.webp',
+      alt: 'Menschen gehen an einem Bahnsteig aneinander vorbei',
+      fragenA2: [
+        'Wie sagst du Tschüss?',
+        'Fällt es dir schwer, ein Gespräch zu beenden?',
+        'Wer redet in deinem Leben am längsten?'
+      ],
+      fragenB1: [
+        'Woran merkst du, dass jemand gehen möchte?',
+        'Was machst du, wenn du selbst nicht wegkommst?',
+        'Wie verabschiedet man sich in deinem Land?'
+      ],
+      tipp: { art: 'teal', text: '🔑 <strong>Die vier Schritte:</strong> <b>1 Signal</b> — ich muss langsam los. <b>2 Danken</b> — schön, dass wir geredet haben. <b>3 Nächster Schritt</b> — ich melde mich. <b>4 Gruß</b> — bis dann. Immer in dieser Reihenfolge.' }
+    },
+    {
+      h2: 'Und der Trick:',
+      hl: 'Nimm die Schuld auf dich',
+      ssub: 'Wer sagt <i>Ich will dich nicht aufhalten</i>, tut so, als wäre die andere Person in Eile. Damit muss niemand zugeben, dass er genug geredet hat — und beide gehen gut auseinander. Das ist der höflichste Satz der deutschen Alltagssprache.',
+      bild: 'amanda/a-willkommen.webp',
+      alt: 'Amanda winkt zum Abschied',
+      fragenA2: [
+        'Sagst du am Ende, wann ihr euch wiederseht?',
+        'Hältst du Kontakt oder verläuft sich das?',
+        'Was sagst du am Telefon zum Schluss?'
+      ],
+      fragenB1: [
+        'Wann ist ein Gespräch für dich zu Ende?',
+        'Wie sagst du ab, ohne die Tür zuzumachen?',
+        'Was ist der Unterschied zwischen höflich und unehrlich?'
+      ],
+      tipp: { art: 'yellow', text: '💡 <strong>Der Satz für jede Situation:</strong> <b>Ich will dich gar nicht länger aufhalten.</b> Oder förmlich: <b>Ich möchte Sie nicht länger aufhalten.</b> Beides beendet jedes Gespräch, ohne jemanden vor den Kopf zu stoßen.' }
+    }
+  ],
+
+  wortschatz: {
+    h2: 'Zwölf Wörter,',
+    hl: 'für die letzten dreißig Sekunden',
+    ssub: 'Sag jedes laut — und häng gleich den Satz dran, in dem du es benutzen würdest.',
+    karten: [
+      { bild: 'amanda/a-willkommen.webp', alt: 'Amanda winkt zum Abschied', art: 'der', wort: 'Abschied', kurz: 'der Moment, in dem man auseinandergeht', bsp: 'Der Abschied war kurz, aber herzlich.', tipp: 'Das Verb ist reflexiv: <b>sich verabschieden von</b> plus Dativ. <i>Ich verabschiede mich <b>von euch</b>.</i> Und <b>Abschied nehmen</b> klingt feierlich — das sagt man eher selten.', say: 'Der Abschied war kurz, aber herzlich.' },
+      { bild: 'amanda/sz-unterwegs.webp', alt: 'Menschen gehen eilig über einen Bahnsteig', art: 'die', wort: 'Eile', kurz: 'wenn du wenig Zeit hast', bsp: 'Ich bin gerade ein bisschen in Eile.', tipp: '<b>in Eile sein</b> oder <b>es eilig haben</b> — beides geht. Und als freundlicher Ausstieg: <i>Ich muss leider los, ich habe es ein bisschen eilig.</i>', say: 'Ich bin gerade ein bisschen in Eile.' },
+      { bild: 'amanda/sz-freunde.webp', alt: 'Zwei Menschen sitzen entspannt beieinander', art: 'der', wort: 'Feierabend', kurz: 'die Zeit nach der Arbeit', bsp: 'Schönen Feierabend noch!', tipp: 'Der Standardgruß am Nachmittag, auch zu Leuten, die man kaum kennt. Und für den Rest: <b>Schönen Abend</b>, <b>Schönes Wochenende</b>, <b>Guten Rutsch</b> zum Jahreswechsel.', say: 'Schönen Feierabend noch!' },
+      { bild: 'vok-bild/der-termin.webp', alt: 'Ein Kalender mit einem markierten Tag', art: 'die', wort: 'Verabredung', kurz: 'wenn ihr etwas fest ausmacht', bsp: 'Machen wir eine Verabredung für nächste Woche?', tipp: 'Das Verb ist <b>sich verabreden mit</b> plus Dativ. Und der Satz, der ein Gespräch wirklich gut beendet: <i>Lass uns mal was ausmachen.</i>', say: 'Machen wir eine Verabredung für nächste Woche?' },
+      { bild: 'amanda/sz-telefonieren.webp', alt: 'Eine Person telefoniert und notiert etwas', art: 'der', wort: 'Kontakt', kurz: 'die Verbindung zu jemandem', bsp: 'Lass uns in Kontakt bleiben.', tipp: 'Drei feste Wendungen: <b>Kontakt aufnehmen</b> (anfangen), <b>in Kontakt bleiben</b> (weitermachen), <b>den Kontakt verlieren</b> (aufhören). Die mittlere brauchst du heute.', say: 'Lass uns in Kontakt bleiben.' },
+      { bild: 'vok-bild/die-telefonnummer.webp', alt: 'Eine Hand tippt eine Nummer ins Handy', art: 'die', wort: 'Nummer', kurz: 'deine Telefonnummer', bsp: 'Gib mir doch mal deine Nummer.', tipp: '<b>Gib mir mal deine Nummer</b> ist im Deutschen völlig normal und harmlos — es heißt nur: Wir bleiben in Verbindung. Und danach: <i>Ich schreib dir.</i>', say: 'Gib mir doch mal deine Nummer.' },
+      { bild: 'bilder/lesen/mail.webp', alt: 'Ein Handy mit einer geöffneten Nachricht', art: 'die', wort: 'Nachricht', kurz: 'die kurze Mitteilung, die du schickst', bsp: 'Ich schicke dir nachher eine Nachricht.', tipp: 'Im Alltag sagt man kürzer: <b>Ich schreib dir.</b> Und wenn es fester klingen soll: <b>Ich melde mich.</b> Beides heißt dasselbe.', say: 'Ich schicke dir nachher eine Nachricht.' },
+      { bild: 'amanda/a-uhr.webp', alt: 'Eine Uhr an der Wand', art: 'die', wort: 'Zeit', kurz: 'wie viel du gerade übrig hast', bsp: 'Ich habe leider gleich keine Zeit mehr.', tipp: 'Zwei nützliche Richtungen: <b>keine Zeit haben</b> (jetzt nicht) und <b>sich Zeit nehmen für</b> (bewusst tun). Und höflich: <i>Danke, dass Sie sich die Zeit genommen haben.</i>', say: 'Ich habe leider gleich keine Zeit mehr.' },
+      { bild: 'amanda/sz-cafe.webp', alt: 'Zwei Menschen unterhalten sich mit Kaffeebechern', art: 'das', wort: 'Gespräch', kurz: 'das, was ihr gerade führt', bsp: 'Danke für das nette Gespräch.', tipp: 'Ein Gespräch <b>führt</b> man. Und <b>Danke für das nette Gespräch</b> ist der Satz, mit dem man in Deutschland fast jeden Kontakt sauber abschließt.', say: 'Danke für das nette Gespräch.' },
+      { bild: 'amanda/a-zeigen.webp', alt: 'Amanda zeigt auf etwas', art: 'die', wort: 'Gelegenheit', kurz: 'die gute Möglichkeit für etwas', bsp: 'Bei Gelegenheit machen wir das mal.', tipp: '<b>Bei Gelegenheit</b> ist ein feiner Trick: Es klingt nach einem Plan, ist aber keiner. Wenn du es wirklich willst, sag lieber einen Tag.', say: 'Bei Gelegenheit machen wir das mal.' },
+      { bild: 'amanda/a-klatschen.webp', alt: 'Amanda klatscht anerkennend', art: 'der', wort: 'Dank', kurz: 'wenn du dich bedankst', bsp: 'Vielen Dank noch mal für alles.', tipp: 'Als Nomen fast nur in festen Wendungen: <b>Vielen Dank</b>, <b>Herzlichen Dank</b>, <b>Besten Dank</b>. Und danach am besten sofort der Gruß — sonst fängt das Gespräch wieder an.', say: 'Vielen Dank noch mal für alles.' },
+      { bild: 'bilder/lesen/strasse.webp', alt: 'Eine Straße mit einer Ampel', art: 'der', wort: 'Weg', kurz: 'die Strecke, die noch vor dir liegt', bsp: 'Ich habe noch einen weiten Weg vor mir.', tipp: 'Der beste Grund, den es gibt: <b>Ich habe noch einen weiten Weg.</b> Niemand fragt nach, und niemand ist beleidigt. Und dazu passt: <i>Komm gut heim.</i>', say: 'Ich habe noch einen weiten Weg vor mir.' }
+    ],
+    spiel: { text: '💡 <strong>Spiel „Raus in dreißig Sekunden“:</strong> Einer redet und redet über ein beliebiges Thema. Der andere muss das Gespräch in dreißig Sekunden freundlich beenden — mit allen vier Schritten. Danach tauschen.' }
+  },
+
+  konzepte: {
+    tab: '🔍 Vier Schritte',
+    zuerst: 'dreier',
+    h2: 'Signal, Dank,',
+    hl: 'nächster Schritt, Gruß',
+    ssub: 'Immer dieselbe Reihenfolge. Wer sie einmal auswendig kann, steht nie wieder zehn Minuten in der Tür.',
+    dreier: [
+      { emoji: '🚪', wort: '1 Signal geben', was: 'freundlich ankündigen', bsp: '<b>Ich will dich gar nicht länger aufhalten.</b> / <b>Ich muss langsam los.</b>' },
+      { emoji: '🙏', wort: '2 Danken', was: 'kurz und ehrlich', bsp: '<b>Danke für das nette Gespräch.</b> / <b>Schön, dass wir uns getroffen haben.</b>' },
+      { emoji: '📅', wort: '3 Nächster Schritt', was: 'damit es weitergeht', bsp: '<b>Ich melde mich.</b> / <b>Lass uns mal was ausmachen.</b>' }
+    ],
+    paare: [
+      {
+        jaLabel: 'So geht es freundlich', ja: 'Ich will dich gar nicht länger aufhalten — danke für das nette Gespräch. Ich melde mich, ja? Bis dann!',
+        jaWarumLabel: 'Warum das funktioniert', jaWarum: 'Alle vier Schritte in drei Sätzen. Der erste schiebt die Eile freundlich auf den anderen, der letzte macht die Tür wieder auf. Niemand muss zugeben, dass er genug geredet hat.',
+        noLabel: 'So wird es unangenehm', no: 'Ja gut, also, ich glaube, ich muss dann mal, also nicht dass du denkst, aber es ist schon spät und …',
+        noWarumLabel: 'Das Problem', noWarum: 'Zu viele Anläufe, keine klare Ansage. Je länger man um das Ende herumredet, desto peinlicher wird es. Ein Satz genügt — und dann wirklich gehen.'
+      },
+      {
+        jaLabel: 'So bleibt die Tür offen', ja: 'Ich melde mich nächste Woche, dann machen wir was aus.',
+        jaWarumLabel: 'Warum das funktioniert', jaWarum: 'Ein Zeitpunkt macht aus einer Floskel eine Zusage. <b>nächste Woche</b> ist konkret genug, um ernst genommen zu werden, und locker genug, um niemanden zu binden.',
+        noLabel: 'So klingt es nach nie', no: 'Wir müssen unbedingt mal wieder was machen, bei Gelegenheit!',
+        noWarumLabel: 'Das Problem', noWarum: 'Das sagen in Deutschland alle, und es heißt fast immer: nichts. Wenn du es ernst meinst, nenn einen Tag. Wenn nicht, ist der Satz trotzdem in Ordnung — dann weiß es auch der andere.'
+      },
+      {
+        jaLabel: 'So klingt es passend', ja: 'Schönen Feierabend noch! — Danke, Ihnen auch.',
+        jaWarumLabel: 'Warum das stimmt', jaWarum: 'Der Gruß richtet sich nach der Tageszeit: <b>Schönen Feierabend</b> am Nachmittag, <b>Schönen Abend</b> danach, <b>Schönes Wochenende</b> am Freitag. Und man gibt ihn immer zurück.',
+        noLabel: 'So klingt es fremd', no: 'Auf Wiedersehen und einen schönen Tag noch wünsche ich Ihnen.',
+        noWarumLabel: 'Das Problem', noWarum: 'Nicht falsch, aber zu viel auf einmal. Im Alltag genügt ein einziger Gruß. Zwei hintereinander klingen, als hätte man sie auswendig gelernt.'
+      }
+    ],
+    hilfe: {
+      knopf: '🆘 Wie komme ich hier raus?',
+      vor: 'Vier Sätze, dann bist du draußen:',
+      punkte: [
+        '<b>Signal:</b> <i>Ich will Sie gar nicht länger aufhalten.</i> Oder: <i>Ich muss langsam los.</i>',
+        '<b>Dank:</b> <i>Danke für das nette Gespräch.</i>',
+        '<b>Nächster Schritt:</b> <i>Ich melde mich</i> — am besten mit einem Tag dabei.',
+        '<b>Gruß:</b> <i>Schönen Feierabend!</i> / <i>Bis dann!</i> / <i>Komm gut heim.</i>'
+      ],
+      nach: 'Und wenn der andere trotzdem weiterredet: Mach einen halben Schritt zurück und schau kurz auf die Uhr. Das versteht in Deutschland jeder — und niemand nimmt es krumm.'
+    },
+    tipp: { art: 'yellow', text: '🎯 <strong>Zu zweit, zwei Minuten:</strong> Einer redet weiter und weiter, der andere versucht, freundlich rauszukommen. Nach einer Minute tauschen. Wer es in vier Sätzen schafft, hat gewonnen.' }
+  },
+
+  saetze: {
+    h2: 'Vier Bausteine',
+    hl: 'für den Schluss',
+    ssub: 'Ankündigen, danken, weitermachen, verabschieden. Such dir aus jedem Kasten einen Satz — mehr brauchst du nie.',
+    akkLabel: 'der Schritt',
+    mengeLabel: 'was du damit erreichst',
+    a2: [
+      { titel: '1 · 🚪 Ankündigen', chips: ['Ich muss langsam los.', 'Ich will dich nicht aufhalten.', 'Ich habe noch einen weiten Weg.', 'Ich muss gleich weiter.'], bsp: 'Ich muss langsam los, ich habe noch einen weiten Weg.', say: 'Ich muss langsam los, ich habe noch einen weiten Weg.' },
+      { titel: '2 · 🙏 Danken', chips: ['Danke für das nette Gespräch.', 'Schön, dass wir uns getroffen haben.', 'Danke fürs Zuhören.', 'Das war nett.'], bsp: 'Danke für das nette Gespräch, das war wirklich schön.', say: 'Danke für das nette Gespräch, das war wirklich schön.' },
+      { titel: '3 · 📅 Weitermachen', chips: ['Ich melde mich.', 'Lass uns mal was ausmachen.', 'Gib mir doch deine Nummer.', 'Wir sehen uns nächste Woche.'], bsp: 'Ich melde mich nächste Woche, dann machen wir was aus.', say: 'Ich melde mich nächste Woche, dann machen wir was aus.' },
+      { titel: '4 · 👋 Verabschieden', chips: ['Bis dann!', 'Schönen Feierabend!', 'Mach es gut!', 'Komm gut heim.'], bsp: 'Bis dann, und komm gut heim!', say: 'Bis dann, und komm gut heim!' }
+    ],
+    b1: [
+      { titel: '1 · 🚪 Weich ankündigen', chips: ['Ich merke gerade, ich muss langsam weiter.', 'Ich will Sie gar nicht länger aufhalten.', 'Bevor ich es vergesse: Ich muss gleich los.', 'Ich habe leider gleich einen Termin.'], bsp: 'Ich will Sie gar nicht länger aufhalten — ich habe gleich noch einen Termin.', say: 'Ich will Sie gar nicht länger aufhalten — ich habe gleich noch einen Termin.' },
+      { titel: '2 · 🙏 Ehrlich danken', chips: ['Danke, dass Sie sich die Zeit genommen haben.', 'Das hat mir wirklich weitergeholfen.', 'Schön, dass wir das mal in Ruhe besprochen haben.', 'Ich nehme einiges mit aus dem Gespräch.'], bsp: 'Danke, dass Sie sich die Zeit genommen haben — das hat mir wirklich weitergeholfen.', say: 'Danke, dass Sie sich die Zeit genommen haben — das hat mir wirklich weitergeholfen.' },
+      { titel: '3 · 📅 Verbindlich weitermachen', chips: ['Ich melde mich bis Freitag.', 'Ich schicke Ihnen das nachher per Mail.', 'Sollen wir gleich einen Termin ausmachen?', 'Falls noch etwas ist, schreiben Sie mir einfach.'], bsp: 'Ich schicke Ihnen das nachher per Mail und melde mich bis Freitag.', say: 'Ich schicke Ihnen das nachher per Mail und melde mich bis Freitag.' },
+      { titel: '4 · 👋 Sauber verabschieden', chips: ['Ihnen noch einen schönen Abend!', 'Wir hören voneinander.', 'Bis Freitag dann.', 'Alles Gute, und grüßen Sie zu Hause.'], bsp: 'Bis Freitag dann — und Ihnen noch einen schönen Abend!', say: 'Bis Freitag dann — und Ihnen noch einen schönen Abend!' }
+    ],
+    tipp: { art: 'teal', text: '📣 <strong>Reihum:</strong> Jeder beendet ein Gespräch in genau vier Sätzen — einer pro Baustein. Die anderen achten nur darauf, ob der nächste Schritt konkret war oder nur eine Floskel.' }
+  },
+
+  dialoge: {
+    h2: 'Vier Situationen —',
+    hl: 'zwei Runden',
+    ssub: '<b>Runde 1:</b> Lest den Dialog zu zweit laut. <b>Runde 2:</b> Klappt die Zeilen zu und sprecht frei — nur die Stichwörter bleiben.',
+    liste: [
+      {
+        bild: 'bilder/lesen/nachbar.webp', alt: 'Zwei Nachbarn stehen im Treppenhaus',
+        titel: 'Im Treppenhaus',
+        situation: 'A und B haben sich verquatscht. A muss weiter, will aber nicht unfreundlich sein.',
+        zeilen: [
+          { wer: 'a', text: 'Oh, schon zwanzig nach. Ich will Sie gar nicht länger aufhalten.' },
+          { wer: 'b', text: 'Ach, ich rede ja auch zu viel. Gehen Sie ruhig.', cue: 'Der Klassiker: A schiebt die Eile freundlich auf B, und B nimmt sie lachend zurück. Genau so läuft das hier.' },
+          { wer: 'a', text: 'War nett, mal in Ruhe zu quatschen.' },
+          { wer: 'b', text: 'Fand ich auch. Kommen Sie doch mal auf einen Kaffee vorbei.', cue: '<b>quatschen</b> ist ganz normales gesprochenes Deutsch für: locker reden. Und B macht die Tür für später auf.' },
+          { wer: 'a', text: 'Gern, nächste Woche? Ich klingele einfach.' },
+          { wer: 'b', text: 'Machen Sie das. Schönen Feierabend noch!', cue: 'Ein <b>konkreter Zeitpunkt</b> macht aus der Floskel eine Verabredung. Und der Gruß passt zur Tageszeit.' }
+        ]
+      },
+      {
+        bild: 'amanda/sz-telefonieren.webp', alt: 'Eine Person telefoniert',
+        titel: 'Am Telefon',
+        situation: 'Das Gespräch ist geklärt, aber es läuft weiter. A beendet es freundlich.',
+        zeilen: [
+          { wer: 'a', text: 'Gut, dann haben wir alles. Ich will Sie nicht länger aufhalten.' },
+          { wer: 'b', text: 'Ja, genau. War ja schnell geklärt.', cue: 'Beide sind erleichtert. <b>War ja schnell geklärt</b> ist die freundliche Zustimmung zum Ende.' },
+          { wer: 'a', text: 'Danke, dass Sie sich die Zeit genommen haben.' },
+          { wer: 'b', text: 'Kein Problem. Ich schicke Ihnen die Bestätigung gleich per Mail.', cue: '<b>sich Zeit nehmen für</b> — und B nennt sofort den nächsten Schritt. So endet ein Telefonat sauber.' },
+          { wer: 'a', text: 'Perfekt. Dann bis Freitag.' },
+          { wer: 'b', text: 'Bis Freitag. Schönen Tag noch!', cue: 'Ein Datum statt eines <i>Wir hören voneinander</i>. Und der Gruß am Schluss, einmal, nicht zweimal.' }
+        ]
+      },
+      {
+        bild: 'amanda/sz-cafe.webp', alt: 'Zwei Menschen unterhalten sich mit Kaffeebechern',
+        titel: 'Nach dem Kurs',
+        situation: 'A und B haben sich im Kurs kennengelernt und würden gern in Kontakt bleiben. A traut sich.',
+        zeilen: [
+          { wer: 'a', text: 'Ich muss gleich los, mein Bus fährt in zehn Minuten.' },
+          { wer: 'b', text: 'Schade, war nett mit dir.', cue: 'Ein echter Grund mit Uhrzeit — das glaubt jeder sofort und niemand fragt nach.' },
+          { wer: 'a', text: 'Fand ich auch. Gib mir doch mal deine Nummer, dann schreib ich dir.' },
+          { wer: 'b', text: 'Klar, gern. Sag Bescheid, wenn du mal Lust auf einen Kaffee hast.', cue: '<b>Gib mir mal deine Nummer</b> ist im Deutschen völlig harmlos. Und <i>Sag Bescheid</i> hält es locker.' },
+          { wer: 'a', text: 'Mache ich. Vielleicht nächste Woche nach dem Kurs?' },
+          { wer: 'b', text: 'Passt. Bis Dienstag dann, komm gut heim!', cue: 'Wieder der konkrete Zeitpunkt — und <b>Komm gut heim</b> ist der wärmste Abschiedsgruß, den es gibt.' }
+        ]
+      },
+      {
+        bild: 'amanda/sz-unterwegs.webp', alt: 'Menschen gehen eilig über einen Bahnsteig',
+        titel: 'Der andere hört nicht auf',
+        situation: 'A muss dringend weiter, B redet aber immer weiter. A wird deutlicher, ohne unfreundlich zu werden.',
+        zeilen: [
+          { wer: 'b', text: 'Und dann hat mein Schwager gesagt, das könne so nicht bleiben, und ich sage …' },
+          { wer: 'a', text: 'Entschuldige, ich muss dich kurz bremsen — mein Zug geht gleich.', cue: '<b>Ich muss dich kurz bremsen</b> ist der freundlichste Weg, jemanden zu unterbrechen. Und dann sofort der Grund.' },
+          { wer: 'b', text: 'Oh, klar. Ich erzähl dir den Rest ein andermal.' },
+          { wer: 'a', text: 'Unbedingt, das will ich hören. Ruf mich am Wochenende an?', cue: 'A macht die Tür auf, statt sie zuzuschlagen. <b>Das will ich hören</b> nimmt B jede Kränkung.' },
+          { wer: 'b', text: 'Mache ich. Lauf, sonst wird es knapp!' },
+          { wer: 'a', text: 'Bis Sonntag! Und grüß deine Frau.', cue: '<b>Grüß deine Frau</b> ist der warme Schlusspunkt. Zwei Wörter, und der Abschied klingt nach Freundschaft statt nach Flucht.' }
+        ]
+      }
+    ],
+    tipp: { art: 'yellow', text: '🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 4. Einer redet absichtlich weiter, der andere kommt raus. Regel: Es müssen alle vier Schritte vorkommen — und niemand darf beleidigt sein.' }
+  },
+
+  grammatik: {
+    h2: '🧩 Die Zukunft steht',
+    hl: 'meistens im Präsens',
+    ssub: 'Fast alle Abschiedssätze reden von später. Trotzdem sagt man auf Deutsch selten <i>werden</i> — man nimmt das Präsens und stellt eine Zeitangabe dazu.',
+    intro: 'Statt <i>Ich werde mich melden</i> sagt man <b>Ich melde mich morgen</b>. Das <b>morgen</b> macht die Zukunft, nicht das Verb. <i>werden</i> nimmt man nur, wenn keine Zeitangabe dabeisteht oder wenn man etwas vermutet.',
+    kette: [
+      { emoji: '🙋', rolle: 'wer', bsp: 'Ich' },
+      { emoji: '🔧', rolle: 'Präsens', bsp: 'melde mich' },
+      { emoji: '🕐', rolle: 'Zeitangabe', bsp: 'morgen' },
+      { emoji: '✅', rolle: 'fertig', bsp: 'kein werden nötig' }
+    ],
+    felder: [
+      { rolle: 'Ich', wort: 'Ich' },
+      { rolle: 'schicke', wort: 'schicke' },
+      { rolle: 'Zeitangabe', wort: 'nachher', hervor: true },
+      { rolle: 'Rest', wort: 'die Mail.' }
+    ],
+    bloecke: [
+      {
+        h2: 'Drei Wege',
+        hl: 'in die Zukunft',
+        ssub: 'Und nur einer davon braucht <i>werden</i>. Genau deshalb hört man es im Alltag so selten.',
+        dreier: [
+          { emoji: '🕐', wort: 'Präsens plus Zeit', was: 'der Normalfall', bsp: 'Ich <b>melde</b> mich <b>morgen</b>. — Wir <b>sehen</b> uns <b>Dienstag</b>.' },
+          { emoji: '🔮', wort: 'werden', was: 'für Vermutungen', bsp: 'Das <b>wird</b> schon <b>klappen</b>. — Er <b>wird</b> wohl <b>zu spät kommen</b>.' },
+          { emoji: '🤝', wort: 'wollen · vorhaben', was: 'für Absichten', bsp: 'Ich <b>will</b> nächste Woche <b>anrufen</b>. — Wir <b>haben vor</b>, uns zu treffen.' }
+        ],
+        chips: ['Ich melde mich', 'Ich schreib dir', 'Ich rufe an', 'Wir sehen uns', 'Ich schicke es', 'bis Freitag', 'nachher', 'nächste Woche', 'am Wochenende', 'gleich', 'demnächst', 'bei Gelegenheit']
+      },
+      {
+        h2: 'Konkret',
+        hl: 'oder unverbindlich?',
+        ssub: 'Beide Sätze sind höflich. Aber nur einer von beiden führt zu einem zweiten Treffen.',
+        paare: [
+          {
+            jaLabel: 'So wird es ein Termin', ja: 'Ich melde mich Freitag, dann machen wir was aus.',
+            jaWarumLabel: 'Warum das wirkt', jaWarum: 'Präsens plus <b>Freitag</b> — das ist eine Zusage, an die man erinnert werden kann. Genau deshalb passiert danach auch wirklich etwas.',
+            noLabel: 'So bleibt es beim Vorsatz', no: 'Wir müssen unbedingt mal wieder was machen, bei Gelegenheit.',
+            noWarumLabel: 'Das Problem', noWarum: 'Das ist die höflichste Art, nichts zu versprechen — und alle wissen das. Es ist nicht unehrlich, aber wenn du es ernst meinst, nenn einen Tag.'
+          }
+        ]
+      }
+    ],
+    bauH2: '🧱 Bau die Sätze selbst',
+    bauSsub: 'Tippe die Teile in der richtigen Reihenfolge an. Achte darauf, wo die Zeitangabe steht.',
+    storyH2: '📖 Und jetzt im Zusammenhang',
+    storySsub: 'Ein Abschied im Treppenhaus, von der ersten bis zur letzten Sekunde. Wähle in jeder Lücke das passende Wort.',
+    hilfe: {
+      knopf: '🆘 Brauche ich werden?',
+      vor: 'Drei Fragen, dann steht der Satz:',
+      punkte: [
+        '<b>Steht eine Zeitangabe dabei?</b> Dann Präsens: <i>Ich melde mich <u>morgen</u>.</i>',
+        '<b>Vermutest du nur?</b> Dann <b>werden</b>: <i>Das wird schon klappen.</i>',
+        '<b>Ist es eine Absicht?</b> Dann <b>wollen</b> oder <b>vorhaben</b>: <i>Ich will nächste Woche anrufen.</i>',
+        '<b>Und im Zweifel:</b> Präsens plus Zeitangabe geht fast immer — und klingt nie falsch.'
+      ],
+      nach: 'Ein Test fürs Gespräch: Sag den Satz einmal ohne <i>werden</i> und schau, ob er noch stimmt. <i>Ich melde mich Freitag</i> — stimmt. Dann lass <i>werden</i> weg, das klingt sofort natürlicher.'
+    }
+  },
+
+  rollenspiele: {
+    h2: '🎭 Drei Situationen',
+    hl: 'zu zweit',
+    ssub: 'Einer will raus, einer redet weiter. Danach tauschen — beim zweiten Mal ohne die Sätze unten. Alle vier Schritte müssen vorkommen.',
+    liste: [
+      {
+        titel: 'Im Treppenhaus',
+        situation: 'A und B haben sich verquatscht. A muss weiter, B hätte noch Zeit und redet gern.',
+        a2: ['Oh, schon so spät — ich will Sie nicht aufhalten', 'War nett, mal in Ruhe zu quatschen', 'Nächste Woche komme ich mal auf einen Kaffee vorbei', 'Schönen Feierabend noch!'],
+        b1: ['Ach, ich rede ja auch zu viel, gehen Sie ruhig', 'Kommen Sie doch mal vorbei, ganz unkompliziert', 'Klingeln Sie einfach, ich bin fast immer da', 'Ihnen auch, und grüßen Sie Ihre Frau'],
+        gut: 'Alle vier Schritte sind gekommen — und beim dritten stand ein konkreter Zeitpunkt, keine Floskel.'
+      },
+      {
+        titel: 'Der Anruf, der nicht endet',
+        situation: 'Am Telefon ist alles geklärt, aber B redet weiter. A beendet das Gespräch freundlich und verbindlich.',
+        a2: ['Gut, dann haben wir alles', 'Ich will Sie nicht länger aufhalten', 'Danke, dass Sie sich die Zeit genommen haben', 'Dann bis Freitag'],
+        b1: ['Ich schicke Ihnen die Bestätigung gleich per Mail', 'Falls noch etwas ist, schreiben Sie mir einfach', 'War ja schnell geklärt, das freut mich', 'Bis Freitag, schönen Tag noch!'],
+        gut: 'Der nächste Schritt war konkret (Mail, Freitag) und stand im Präsens — kein einziges überflüssiges <i>werden</i>.'
+      },
+      {
+        titel: 'Der andere hört nicht auf',
+        situation: 'A muss dringend zum Zug, B ist mitten in einer langen Geschichte. A unterbricht freundlich und lässt die Tür offen.',
+        a2: ['Entschuldige, ich muss dich kurz bremsen', 'Mein Zug geht gleich', 'Das will ich unbedingt hören', 'Ruf mich am Wochenende an?'],
+        b1: ['Oh, klar, ich erzähl dir den Rest ein andermal', 'Lauf, sonst wird es knapp!', 'Ich melde mich Sonntag, dann hast du Ruhe', 'Bis Sonntag, und grüß deine Frau'],
+        gut: 'A hat unterbrochen, ohne zu kränken: erst entschuldigen, dann der Grund, dann ein echtes Interesse am Rest der Geschichte.'
+      }
+    ]
+  },
+
+  challenge: {
+    ssub: 'Neunzig Sekunden ein Gespräch beenden: Immer wenn du fertig bist, fängt der Partner wieder an — und du kommst noch einmal raus.',
+    hilfe: {
+      knopf: '🆘 Mir fällt nichts ein',
+      vor: 'Vier Sätze, dann bist du draußen:',
+      punkte: [
+        '<b>Signal:</b> <i>Ich will dich gar nicht länger aufhalten.</i>',
+        '<b>Dank:</b> <i>Danke für das nette Gespräch.</i>',
+        '<b>Nächster Schritt:</b> <i>Ich melde mich am Wochenende.</i>',
+        '<b>Gruß:</b> <i>Bis dann, komm gut heim!</i>'
+      ],
+      nach: 'Und wenn der andere trotzdem weiterredet, gibt es einen zweiten Satz: <b>Entschuldige, ich muss dich kurz bremsen.</b> Danach den Grund — und wirklich gehen.'
+    },
+    tipp: { art: 'yellow', text: '⏱️ <strong>Spielregel:</strong> In jeder Runde muss der <u>nächste Schritt konkret</u> sein — mit Tag oder Uhrzeit. Wer <i>bei Gelegenheit</i> sagt, fängt noch einmal an.' }
+  },
+
+  ueben: { tipp: { art: 'teal', text: '📣 <strong>Danach laut:</strong> Einer nennt eine Situation, der Nächste beendet sie in vier Sätzen. Reihum, ohne lange zu überlegen.' } },
+
+  hausaufgabe: {
+    h2: '📮 Deine Hausaufgabe bis',
+    hl: 'Montag',
+    ssub: 'Vier kleine Aufgaben, zusammen etwa 25 Minuten. Danach macht der Sprechclub eine Pause — im Lernbereich bleibt alles offen.',
+    warum: { text: '💡 <strong>Warum das hilft:</strong> Ein Gespräch zu beenden ist die unauffälligste Fähigkeit überhaupt — und die, an der man am meisten leidet, wenn sie fehlt. Wer diese vier Sätze hat, redet nicht mehr aus Höflichkeit weiter, sondern geht freundlich. Und wird beim nächsten Mal trotzdem wieder gegrüßt.' },
+    a2: [
+      { emoji: '✍️', titel: 'Fünfmal aufhören', zeit: '6 Min', text: 'Schreib fünf Gesprächsenden, jedes in vier Sätzen: Signal, Dank, nächster Schritt, Gruß. Fünf verschiedene Situationen.' },
+      { emoji: '🕐', titel: 'Zehnmal Zukunft', zeit: '5 Min', text: 'Schreib zehn Sätze über später — alle im Präsens mit Zeitangabe, ohne ein einziges <i>werden</i>.' },
+      { emoji: '🎙️', titel: 'Einmal laut', zeit: '6 Min', text: 'Nimm eine Sprachnachricht auf: Beende ein Telefonat freundlich. Alle vier Schritte, unter dreißig Sekunden.' },
+      { emoji: '👋', titel: 'Grüße sammeln', zeit: '8 Min', text: 'Achte diese Woche darauf, wie sich Leute verabschieden, und notier acht verschiedene Abschiedsgrüße mit der Tageszeit dazu.' }
+    ],
+    b1: [
+      { emoji: '📝', titel: 'Eine Mail beenden', zeit: '7 Min', text: 'Schreib die letzten vier Zeilen von drei verschiedenen Mails: an ein Amt, an eine Nachbarin, an jemanden aus dem Kurs. Achte auf den Ton.' },
+      { emoji: '🚪', titel: 'Freundlich unterbrechen', zeit: '6 Min', text: 'Schreib acht Sätze, mit denen du jemanden höflich bremst — ohne <i>Entschuldigung</i> zweimal zu benutzen.' },
+      { emoji: '🎙️', titel: 'Zwei Minuten dranbleiben', zeit: '6 Min', text: 'Nimm auf, wie du ein Gespräch beendest, obwohl der andere weiterredet. Zweimal aussteigen, beim zweiten Mal deutlicher.' },
+      { emoji: '🔍', titel: 'Floskel oder Zusage?', zeit: '6 Min', text: 'Schreib zehn Abschiedssätze und markier bei jedem, ob er eine echte Zusage ist oder nur höflich. Woran erkennt man den Unterschied?' }
+    ],
+    hilfeA2: {
+      knopf: '💡 Beispiel ansehen (Aufgabe 1)',
+      vor: 'So sieht ein Gesprächsende in vier Sätzen aus:',
+      punkte: [
+        '<b>Signal:</b> <i>Ich will dich gar nicht länger aufhalten.</i>',
+        '<b>Dank:</b> <i>Danke für das nette Gespräch.</i>',
+        '<b>Nächster Schritt:</b> <i>Ich melde mich am Wochenende.</i>',
+        '<b>Gruß:</b> <i>Bis dann, komm gut heim!</i>',
+        '<b>Und am Telefon:</b> <i>Ich schicke Ihnen die Mail gleich. Schönen Tag noch!</i>'
+      ],
+      nach: 'Ein einziger Test genügt: Steht im dritten Satz ein Tag oder eine Uhrzeit? Wenn nicht, ist es eine Floskel — schön, aber es passiert nichts danach.'
+    },
+    hilfeB1: {
+      knopf: '💡 Beispiel ansehen (Aufgabe 1)',
+      vor: 'Dieselben vier Zeilen, drei verschiedene Töne:',
+      punkte: [
+        '<b>Ans Amt:</b> <i>Für Rückfragen stehe ich Ihnen gern zur Verfügung. Mit freundlichen Grüßen …</i>',
+        '<b>An die Nachbarin:</b> <i>Danke noch mal fürs Paket! Wenn Sie etwas brauchen, klingeln Sie einfach. Viele Grüße …</i>',
+        '<b>An jemanden aus dem Kurs:</b> <i>War schön gestern! Nächste Woche nach dem Kurs wieder Kaffee? Bis Dienstag!</i>',
+        '<b>Der Unterschied liegt nicht im Inhalt,</b> sondern in Länge und Gruß.',
+        '<b>Und immer:</b> ein konkreter nächster Schritt statt <i>Wir hören voneinander</i>.'
+      ],
+      nach: 'Ein Hinweis für alle drei: Der letzte Satz bleibt hängen. Wer mit einer offenen Frage endet, bekommt eine Antwort — wer mit einer Floskel endet, meistens nicht.'
+    },
+    abgabe: 'Schick mir bis Montag 12 Uhr deine fünf Gesprächsenden und die Sprachnachricht — ich sage dir bei jedem, ob der nächste Schritt trägt oder nur höflich klingt.',
+    ausblick: 'Und damit macht der Sprechclub eine Pause. Danke, dass du elf Wochen lang dabei warst — im Lernbereich geht es weiter, mit allem, was wir hier gesammelt haben. Bis bald!'
+  },
+
+  daten: {
+    sk: [
+      'Beende ein Gespräch im Treppenhaus in vier Sätzen.',
+      'Am Telefon ist alles geklärt. Sag die letzten drei Sätze.',
+      'Jemand redet und redet. Bremse ihn freundlich.',
+      'Frag jemanden nach der Nummer, ohne dass es komisch wirkt.',
+      'Nenne fünf Abschiedsgrüße und sag, wann man sie benutzt.',
+      'Sag dasselbe zweimal: einmal als Floskel, einmal als echte Zusage.',
+      'Verabschiede dich von jemandem, den du lange nicht siehst.',
+      'Beende ein Gespräch, obwohl du eigentlich gern bleiben würdest.',
+      'Sag fünf Sätze über später — alle ohne <i>werden</i>.',
+      'Wie verabschiedet man sich in deinem Land? Erklär den Unterschied.'
+    ],
+    w90: [
+      { w: 'der Abschied', b: 'amanda/a-willkommen.webp', h: ['sich verabschieden', 'winken', 'tschüss', 'kurz', 'herzlich'] },
+      { w: 'die Eile', b: 'amanda/sz-unterwegs.webp', h: ['es eilig haben', 'der Zug', 'schnell', 'losmüssen', 'knapp'] },
+      { w: 'der Feierabend', b: 'amanda/sz-freunde.webp', h: ['nach der Arbeit', 'schönen', 'wünschen', 'gehen', 'der Abend'] },
+      { w: 'die Verabredung', b: 'vok-bild/der-termin.webp', h: ['sich verabreden', 'ausmachen', 'der Tag', 'treffen', 'fest'] },
+      { w: 'der Kontakt', b: 'amanda/sz-telefonieren.webp', h: ['bleiben', 'aufnehmen', 'verlieren', 'schreiben', 'sich melden'] },
+      { w: 'die Nummer', b: 'vok-bild/die-telefonnummer.webp', h: ['geben', 'speichern', 'anrufen', 'das Handy', 'tauschen'] },
+      { w: 'die Nachricht', b: 'bilder/lesen/mail.webp', h: ['schicken', 'schreiben', 'kurz', 'antworten', 'sich melden'] },
+      { w: 'die Zeit', b: 'amanda/a-uhr.webp', h: ['keine haben', 'sich nehmen', 'die Uhr', 'spät', 'danke'] },
+      { w: 'das Gespräch', b: 'amanda/sz-cafe.webp', h: ['führen', 'nett', 'beenden', 'danke für', 'lang'] },
+      { w: 'der Dank', b: 'amanda/a-klatschen.webp', h: ['vielen Dank', 'sich bedanken', 'herzlich', 'noch mal', 'freundlich'] }
+    ],
+    quiz: [
+      { q: 'Welcher Satz beendet ein Gespräch am freundlichsten?', o: ['Ich will dich gar nicht länger aufhalten.', 'Ich muss jetzt wirklich weg.', 'Du redest aber viel.', 'Sind wir dann fertig?'], c: 0, e: 'Der Satz schiebt die Eile freundlich auf den anderen. Niemand muss zugeben, dass er genug geredet hat.' },
+      { q: 'Was gehört in den dritten Schritt?', o: ['ein konkreter nächster Schritt', 'noch ein Thema', 'eine Entschuldigung', 'der Gruß'], c: 0, e: 'Signal, Dank, nächster Schritt, Gruß. Und der nächste Schritt braucht einen Tag, sonst ist es eine Floskel.' },
+      { q: 'Wie sagt man auf Deutsch am liebsten die Zukunft?', o: ['im Präsens mit Zeitangabe', 'immer mit werden', 'im Perfekt', 'mit sollen'], c: 0, e: '<i>Ich melde mich morgen</i> statt <i>Ich werde mich melden</i>. Das <b>morgen</b> macht die Zukunft, nicht das Verb.' },
+      { q: 'Was bedeutet <u>Bei Gelegenheit machen wir das mal</u>?', o: ['meistens: es passiert nichts', 'wir treffen uns nächste Woche', 'ich habe keine Zeit für dich', 'ruf mich morgen an'], c: 0, e: 'Es ist höflich, aber unverbindlich — und alle wissen das. Wenn du es ernst meinst, nenn einen Tag.' },
+      { q: 'Wann sagt man <u>Schönen Feierabend</u>?', o: ['am späten Nachmittag zum Abschied', 'morgens zur Begrüßung', 'nur zu Freunden', 'am Wochenende'], c: 0, e: 'Der Standardgruß am Nachmittag, auch zu Leuten, die man kaum kennt. Am Freitag heißt es <b>Schönes Wochenende</b>.' },
+      { q: 'Wie unterbrichst du jemanden höflich?', o: ['Entschuldige, ich muss dich kurz bremsen.', 'Jetzt bin ich mal dran.', 'Können wir zum Ende kommen?', 'Das habe ich schon verstanden.'], c: 0, e: 'Erst entschuldigen, dann bremsen, dann sofort den Grund nennen. Und danach die Tür offen lassen.' },
+      { q: 'Welcher Satz ist eine echte Zusage?', o: ['Ich melde mich Freitag.', 'Wir müssen mal wieder was machen.', 'Wir hören voneinander.', 'Man sieht sich!'], c: 0, e: 'Nur beim ersten steht ein Tag. Präsens plus Zeitangabe ist eine Zusage, an die man erinnert werden kann.' },
+      { q: 'Wann braucht man wirklich <u>werden</u>?', o: ['bei einer Vermutung', 'immer für die Zukunft', 'nie', 'nur in der Schrift'], c: 0, e: '<i>Das wird schon klappen.</i> — <b>werden</b> steht für Vermutungen. Für Termine reicht Präsens plus Zeitangabe.' }
+    ],
+    gap: [
+      { t: 'Ich will Sie gar nicht länger ___.', o: ['aufhalten', 'anhalten', 'behalten', 'festhalten'], a: 'aufhalten' },
+      { t: 'Danke für das nette ___.', o: ['Gespräch', 'Abschied', 'Kontakt', 'Dank'], a: 'Gespräch' },
+      { t: 'Ich ___ mich am Wochenende.', o: ['melde', 'werde melden', 'meldete', 'gemeldet'], a: 'melde' },
+      { t: 'Danke, dass Sie sich die ___ genommen haben.', o: ['Zeit', 'Eile', 'Nummer', 'Nachricht'], a: 'Zeit' },
+      { t: 'Lass uns in ___ bleiben.', o: ['Kontakt', 'Eile', 'Gelegenheit', 'Abschied'], a: 'Kontakt' },
+      { t: 'Ich habe noch einen weiten ___ vor mir.', o: ['Weg', 'Gruß', 'Termin', 'Dank'], a: 'Weg' },
+      { t: 'Entschuldige, ich muss dich kurz ___.', o: ['bremsen', 'halten', 'stoppen lassen', 'schneiden'], a: 'bremsen' },
+      { t: 'Komm gut ___!', o: ['heim', 'zurück nach Haus', 'zu Hause', 'nach Hause an'], a: 'heim' }
+    ],
+    gbau: [
+      { f: 'Bau das Signal:', t: ['Ich', 'will', 'dich', 'gar', 'nicht', 'länger', 'aufhalten'], l: ['Ich', 'will', 'dich', 'gar', 'nicht', 'länger', 'aufhalten'], e: 'Der Infinitiv <b>aufhalten</b> steht ganz hinten. Und <i>gar nicht</i> macht den Satz freundlich statt eilig.' },
+      { f: 'Bau den nächsten Schritt:', t: ['Ich', 'melde', 'mich', 'am', 'Wochenende'], l: ['Ich', 'melde', 'mich', 'am', 'Wochenende'], e: 'Präsens plus Zeitangabe — kein <b>werden</b> nötig. Das <i>am Wochenende</i> macht die Zukunft.' },
+      { f: 'Bau den Dank:', t: ['Danke', 'dass', 'Sie', 'sich', 'die', 'Zeit', 'genommen', 'haben'], l: ['Danke', 'dass', 'Sie', 'sich', 'die', 'Zeit', 'genommen', 'haben'], e: 'Nach <b>dass</b> geht das Verb ans Ende — und beim Perfekt steht <i>haben</i> ganz zum Schluss.' },
+      { f: 'Bau die freundliche Unterbrechung:', t: ['Entschuldige', 'ich', 'muss', 'dich', 'kurz', 'bremsen'], l: ['Entschuldige', 'ich', 'muss', 'dich', 'kurz', 'bremsen'], e: 'Erst die Entschuldigung, dann der Grund. <b>bremsen</b> als Infinitiv ganz hinten.' }
+    ],
+    gstory: {
+      t: 'Wir standen zwanzig Minuten im Treppenhaus, und ich kam einfach nicht weg. Irgendwann habe ich gesagt: Ich will Sie gar nicht länger ___. Sie hat gelacht und gemeint, sie rede ja auch zu viel. Dann habe ich mich für das nette ___ bedankt. Ich ___ mich nächste Woche, habe ich gesagt, dann trinken wir mal einen Kaffee. Wichtig war der ___: nicht bei Gelegenheit, sondern Dienstag. Sie hat mir ihre ___ gegeben, und ich habe ihr abends eine kurze ___ geschrieben. Zum Schluss noch der Gruß: Schönen ___ noch! Und sie: Ihnen auch, kommen Sie gut ___.',
+      o: ['aufhalten', 'Gespräch', 'melde', 'Tag', 'Nummer', 'Nachricht', 'Feierabend', 'heim'],
+      a: [['aufhalten'], ['Gespräch'], ['melde'], ['Tag'], ['Nummer'], ['Nachricht'], ['Feierabend'], ['heim']]
+    }
+  }
+};
+fs.writeFileSync(__dirname + '/../stunden/w11-d2-gespraech-beenden.json', JSON.stringify(S, null, 2) + '\n', 'utf8');
+console.log('geschrieben');
