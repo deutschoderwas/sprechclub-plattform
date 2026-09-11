@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Wann hast du zuletzt „ja“ gesagt, obwohl du „nein“ gemeint hast?</div></div><div class="nur-b1"><div class="ank">Gibt es Menschen, bei denen dir ein „nein“ leichtfällt? Was ist bei denen anders?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../amanda/sz-heikel.webp" alt="Zwei Personen sitzen sich im Wohnzimmer gegenüber und führen ein ernstes Gespräch">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Wann hast du zuletzt „ja“ gesagt, obwohl du „nein“ gemeint hast?</li><li>Zu wem kannst du leicht „nein“ sagen — und zu wem fast nie?</li><li>Was passiert, wenn du nie „nein“ sagst?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Gibt es Menschen, bei denen dir ein „nein“ leichtfällt? Was ist bei denen anders?</li><li>Sagt man in deinem Land direkt „nein“ — oder gibt es andere Wege, es klarzumachen?</li><li>Was hat dich ein zu schnelles „ja“ schon einmal gekostet?</li></ol></div></div>
+<div class="tip">🗣️ <strong>Sprecht reihum:</strong> „Neulich habe ich zugesagt, obwohl …“ · „Am schwersten fällt es mir bei …“ · „Danach habe ich mich geärgert, weil …“</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><ol class="ankfr"><li>Wie fühlt es sich an, wenn dir jemand freundlich absagt?</li><li>Was ist schlimmer: ein klares Nein oder ein Ja, das nie eingelöst wird?</li><li>Brauchst du für ein Nein immer einen Grund?</li></ol></div>
+<div class="tip teal">👀 <strong>Zu zweit, eine Minute:</strong> Einer bittet immer weiter um denselben Gefallen, der andere sagt jedes Mal anders <u>nein</u> — freundlich, aber ohne einzuknicken. Dann tauschen.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -590,6 +688,56 @@ footer strong{color:var(--ink);}
 <button class="speak dbtn" data-say="Guten Tag, Kern von der Energieberatung. Wir haben ein Angebot, mit dem Sie jeden Monat sparen. Danke, ich habe daran kein Interesse. Darf ich Ihnen trotzdem in zwei Minuten erklären, worum es geht? Nein. Ich schließe am Telefon grundsätzlich keine Verträge ab. Aber Sie zahlen dann weiter zu viel. Das ist meine Entscheidung. Bitte nehmen Sie meine Nummer aus Ihrer Liste. Auf Wiederhören.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 1 noch einmal — aber A gibt nicht so schnell nach. B darf nur <u>einen</u> Grund nennen und muss ihn wiederholen. Wie lange haltet ihr das durch?</div>
+</section>
+
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 🙏 Erst danken</div>
+<div class="merk"><span>Danke, dass du fragst.</span><button class="speak" data-say="Danke, dass du fragst.">🔊 hören</button></div>
+<div class="merk"><span>Schön, dass du an mich denkst.</span><button class="speak" data-say="Schön, dass du an mich denkst.">🔊 hören</button></div>
+<div class="merk"><span>Das freut mich, dass du mich fragst.</span><button class="speak" data-say="Das freut mich, dass du mich fragst.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🛑 Dann absagen</div>
+<div class="merk"><span>Leider geht das nicht.</span><button class="speak" data-say="Leider geht das nicht.">🔊 hören</button></div>
+<div class="merk"><span>Da muss ich passen.</span><button class="speak" data-say="Da muss ich passen.">🔊 hören</button></div>
+<div class="merk"><span>Ich schaffe das nicht.</span><button class="speak" data-say="Ich schaffe das nicht.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 💬 Kurz begründen</div>
+<div class="merk"><span>Ich habe schon zu viel auf dem Tisch.</span><button class="speak" data-say="Ich habe schon zu viel auf dem Tisch.">🔊 hören</button></div>
+<div class="merk"><span>Ich brauche den Abend für mich.</span><button class="speak" data-say="Ich brauche den Abend für mich.">🔊 hören</button></div>
+<div class="merk"><span>Das ist mir zu viel.</span><button class="speak" data-say="Das ist mir zu viel.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🤝 Etwas anbieten</div>
+<div class="merk"><span>Nächste Woche gern.</span><button class="speak" data-say="Nächste Woche gern.">🔊 hören</button></div>
+<div class="merk"><span>Frag mich noch mal, wenn …</span><button class="speak" data-say="Frag mich noch mal, wenn …">🔊 hören</button></div>
+<div class="merk"><span>Ich kenne jemanden, der …</span><button class="speak" data-say="Ich kenne jemanden, der …">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 🙏 Erst würdigen</div>
+<div class="merk"><span>Ich fühle mich geehrt, dass du an mich denkst.</span><button class="speak" data-say="Ich fühle mich geehrt, dass du an mich denkst.">🔊 hören</button></div>
+<div class="merk"><span>Das ehrt mich.</span><button class="speak" data-say="Das ehrt mich.">🔊 hören</button></div>
+<div class="merk"><span>Ich weiß, dass du dich darauf verlassen hast.</span><button class="speak" data-say="Ich weiß, dass du dich darauf verlassen hast.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🛑 Klar absagen</div>
+<div class="merk"><span>Ich werde das nicht übernehmen.</span><button class="speak" data-say="Ich werde das nicht übernehmen.">🔊 hören</button></div>
+<div class="merk"><span>Da muss ich dich enttäuschen.</span><button class="speak" data-say="Da muss ich dich enttäuschen.">🔊 hören</button></div>
+<div class="merk"><span>Das kommt für mich nicht infrage.</span><button class="speak" data-say="Das kommt für mich nicht infrage.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 💬 Haltung zeigen</div>
+<div class="merk"><span>Ich habe mir vorgenommen, …</span><button class="speak" data-say="Ich habe mir vorgenommen, …">🔊 hören</button></div>
+<div class="merk"><span>Aus Prinzip mache ich das nicht.</span><button class="speak" data-say="Aus Prinzip mache ich das nicht.">🔊 hören</button></div>
+<div class="merk"><span>Ich möchte mich nicht verzetteln.</span><button class="speak" data-say="Ich möchte mich nicht verzetteln.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🤝 Die Tür offen lassen</div>
+<div class="merk"><span>Was ich dir anbieten kann, ist …</span><button class="speak" data-say="Was ich dir anbieten kann, ist …">🔊 hören</button></div>
+<div class="merk"><span>Melde dich gern wieder, sobald …</span><button class="speak" data-say="Melde dich gern wieder, sobald …">🔊 hören</button></div>
+<div class="merk"><span>An meiner Stelle könnte dir X weiterhelfen.</span><button class="speak" data-say="An meiner Stelle könnte dir X weiterhelfen.">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -759,6 +907,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Liebe Nele, danke, dass du an mich ___. Ich freue mich riesig für euch — aber diesmal ___ ich leider absagen. Sechs Stunden Fahrt ___ mir an dem Wochenende einfach zu viel, und ich möchte ehrlich sein statt eine Ausrede zu ___. Was ich dir anbieten ___: Lass uns im Oktober etwas ausmachen, dann ___ ich zu dir. Ich ___ mich, wenn das für dich in Ordnung ist.","o":["denkst","muss","wären","erfinden","kann","komme","freue","würde"],"a":[["denkst"],["muss"],["wären"],["erfinden"],["kann"],["komme"],["freue"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Danke, dass du fragst.","Schön, dass du an mich denkst.","Das freut mich, dass du mich fragst.","Leider geht das nicht.","Da muss ich passen.","Ich schaffe das nicht.","Ich habe schon zu viel auf dem Tisch.","Ich brauche den Abend für mich.","Das ist mir zu viel.","Nächste Woche gern.","Frag mich noch mal, wenn …","Ich kenne jemanden, der …","Ich fühle mich geehrt, dass du an mich denkst.","Das ehrt mich.","Ich weiß, dass du dich darauf verlassen hast.","Ich werde das nicht übernehmen.","Da muss ich dich enttäuschen.","Das kommt für mich nicht infrage.","Ich habe mir vorgenommen, …","Aus Prinzip mache ich das nicht.","Ich möchte mich nicht verzetteln.","Was ich dir anbieten kann, ist …","Melde dich gern wieder, sobald …","An meiner Stelle könnte dir X weiterhelfen."]
 </script>
 
 <script>
@@ -1058,6 +1209,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

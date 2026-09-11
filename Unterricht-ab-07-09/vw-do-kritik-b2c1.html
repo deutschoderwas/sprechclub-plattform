@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Sagst du jemandem, wenn dich etwas stört — oder schluckst du es lieber?</div></div><div class="nur-b1"><div class="ank">Gibt es Situationen, in denen Kritik grundsätzlich nichts bringt? Woran erkennt man sie?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../amanda/sz-buero.webp" alt="Zwei Kolleginnen sitzen am Schreibtisch vor einem Laptop">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Sagst du jemandem, wenn dich etwas stört — oder schluckst du es lieber?</li><li>Von wem nimmst du Kritik gut an? Was macht diese Person anders?</li><li>Was war die nützlichste Rückmeldung, die du je bekommen hast?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Gibt es Situationen, in denen Kritik grundsätzlich nichts bringt? Woran erkennt man sie?</li><li>Ist Kritik im Beruf und im Privaten dasselbe — oder gelten andere Regeln?</li><li>Wie viel Ehrlichkeit verträgt eine Freundschaft?</li></ol></div></div>
+<div class="tip">🗣️ <strong>Sprecht reihum:</strong> „Zuletzt habe ich etwas gesagt, als …“ · „Geschluckt habe ich es, weil …“ · „Am besten hat es funktioniert, als jemand …“</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><ol class="ankfr"><li>Woran merkst du, dass sich jemand angegriffen fühlt?</li><li>Warum hört man auf zuzuhören, sobald das Wort „immer“ fällt?</li><li>Kann man Kritik so verpacken, dass sie gar nicht mehr ankommt?</li></ol></div>
+<div class="tip teal">👀 <strong>Zu zweit, eine Minute:</strong> Einer sagt denselben Vorwurf zweimal — einmal mit <u>„du bist“</u>, einmal mit <u>„ich habe erlebt, dass“</u>. Der andere sagt, wie es sich angefühlt hat. Dann tauschen.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -591,6 +689,56 @@ footer strong{color:var(--ink);}
 <button class="speak dbtn" data-say="Dein Bericht war zu lang. Die Hälfte hätte gereicht. Danke, dass du es sagst. An welcher Stelle hast du gemerkt, dass es zu viel wurde? Ab Kapitel drei. Da kam nichts Neues mehr. Das kann ich nachvollziehen. Ich wollte alles belegen und habe dabei den Leser verloren. Genau das war es. Ich kürze das und schicke es dir morgen noch mal. Schaust du drüber?">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 1 noch einmal — aber A geht sofort in die Verteidigung und bleibt dabei. B darf <u>nur</u> Beobachtungen und Wirkungen sagen, keine Urteile. Wie lange haltet ihr durch?</div>
+</section>
+
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 🚪 Anknüpfen</div>
+<div class="merk"><span>Hast du kurz zehn Minuten?</span><button class="speak" data-say="Hast du kurz zehn Minuten?">🔊 hören</button></div>
+<div class="merk"><span>Darf ich dir etwas rückmelden?</span><button class="speak" data-say="Darf ich dir etwas rückmelden?">🔊 hören</button></div>
+<div class="merk"><span>Es geht um Freitag.</span><button class="speak" data-say="Es geht um Freitag.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 👁️ Beobachten</div>
+<div class="merk"><span>Mir ist aufgefallen, dass …</span><button class="speak" data-say="Mir ist aufgefallen, dass …">🔊 hören</button></div>
+<div class="merk"><span>Am Freitag war es so, dass …</span><button class="speak" data-say="Am Freitag war es so, dass …">🔊 hören</button></div>
+<div class="merk"><span>Ich habe gesehen, dass …</span><button class="speak" data-say="Ich habe gesehen, dass …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 💭 Wirkung nennen</div>
+<div class="merk"><span>Dadurch konnte ich nicht …</span><button class="speak" data-say="Dadurch konnte ich nicht …">🔊 hören</button></div>
+<div class="merk"><span>Das hat bei mir dazu geführt, dass …</span><button class="speak" data-say="Das hat bei mir dazu geführt, dass …">🔊 hören</button></div>
+<div class="merk"><span>Für mich war das schwierig, weil …</span><button class="speak" data-say="Für mich war das schwierig, weil …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🤝 Wunsch äußern</div>
+<div class="merk"><span>Ich hätte sie gern bis …</span><button class="speak" data-say="Ich hätte sie gern bis …">🔊 hören</button></div>
+<div class="merk"><span>Wäre es möglich, dass …?</span><button class="speak" data-say="Wäre es möglich, dass …?">🔊 hören</button></div>
+<div class="merk"><span>Passt das für dich?</span><button class="speak" data-say="Passt das für dich?">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 🚪 Den Rahmen setzen</div>
+<div class="merk"><span>Ich würde gern etwas ansprechen, das mir wichtig ist.</span><button class="speak" data-say="Ich würde gern etwas ansprechen, das mir wichtig ist.">🔊 hören</button></div>
+<div class="merk"><span>Mir liegt daran, dass wir das kurz klären.</span><button class="speak" data-say="Mir liegt daran, dass wir das kurz klären.">🔊 hören</button></div>
+<div class="merk"><span>Ich sage es lieber, als es mit mir herumzutragen.</span><button class="speak" data-say="Ich sage es lieber, als es mit mir herumzutragen.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 👁️ Sachlich beschreiben</div>
+<div class="merk"><span>Meine Wahrnehmung war, dass …</span><button class="speak" data-say="Meine Wahrnehmung war, dass …">🔊 hören</button></div>
+<div class="merk"><span>Aus meiner Sicht verlief es so, dass …</span><button class="speak" data-say="Aus meiner Sicht verlief es so, dass …">🔊 hören</button></div>
+<div class="merk"><span>Ich beziehe mich auf Freitag, 18 Uhr.</span><button class="speak" data-say="Ich beziehe mich auf Freitag, 18 Uhr.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 💭 Wirkung, ohne Vorwurf</div>
+<div class="merk"><span>Dadurch, dass … , war ich gezwungen, …</span><button class="speak" data-say="Dadurch, dass … , war ich gezwungen, …">🔊 hören</button></div>
+<div class="merk"><span>Das hat zur Folge gehabt, dass …</span><button class="speak" data-say="Das hat zur Folge gehabt, dass …">🔊 hören</button></div>
+<div class="merk"><span>Bei mir ist angekommen, dass …</span><button class="speak" data-say="Bei mir ist angekommen, dass …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🤝 Vereinbarung suchen</div>
+<div class="merk"><span>Was bräuchtest du, damit …?</span><button class="speak" data-say="Was bräuchtest du, damit …?">🔊 hören</button></div>
+<div class="merk"><span>Mein Vorschlag wäre, dass wir …</span><button class="speak" data-say="Mein Vorschlag wäre, dass wir …">🔊 hören</button></div>
+<div class="merk"><span>Können wir uns darauf verständigen, dass …?</span><button class="speak" data-say="Können wir uns darauf verständigen, dass …?">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -762,6 +910,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Ich habe Jonas am Montag angesprochen. Zuerst habe ich gefragt, ob er zehn Minuten hat — ich wollte ihn nicht überfallen. Dann kam meine ___: Die Folien kamen Freitagabend um acht. ___, dass sie so spät kamen, konnte ich sie nicht mehr gegenlesen. Ich habe ihm keinen ___ gemacht, sondern nur beschrieben, wie es bei mir angekommen ist. Er hat sich zuerst verteidigt, aber ich bin bei der Sache geblieben. Am Ende habe ich meinen ___ genannt: die Folien bis Mittwochmittag. Und ich habe gefragt, was er dafür von mir braucht. Er hilft mir künftig, ___ er mir am Montag kurz schreibt, wie weit er ist. So haben wir uns darauf ___, dass nichts mehr am Wochenende liegen bleibt.","o":["Beobachtung","Dadurch","Vorwurf","Wunsch","indem","verständigt","sodass","Wirkung"],"a":[["Beobachtung"],["Dadurch"],["Vorwurf"],["Wunsch"],["indem"],["verständigt"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Hast du kurz zehn Minuten?","Darf ich dir etwas rückmelden?","Es geht um Freitag.","Mir ist aufgefallen, dass …","Am Freitag war es so, dass …","Ich habe gesehen, dass …","Dadurch konnte ich nicht …","Das hat bei mir dazu geführt, dass …","Für mich war das schwierig, weil …","Ich hätte sie gern bis …","Wäre es möglich, dass …?","Passt das für dich?","Ich würde gern etwas ansprechen, das mir wichtig ist.","Mir liegt daran, dass wir das kurz klären.","Ich sage es lieber, als es mit mir herumzutragen.","Meine Wahrnehmung war, dass …","Aus meiner Sicht verlief es so, dass …","Ich beziehe mich auf Freitag, 18 Uhr.","Dadurch, dass … , war ich gezwungen, …","Das hat zur Folge gehabt, dass …","Bei mir ist angekommen, dass …","Was bräuchtest du, damit …?","Mein Vorschlag wäre, dass wir …","Können wir uns darauf verständigen, dass …?"]
 </script>
 
 <script>
@@ -1061,6 +1212,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

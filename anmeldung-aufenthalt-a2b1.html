@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,9 +621,10 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
-<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#sprechuebung">⚡ Sprechübung</a>
 <a class="tab" href="#abschluss">🎯 Abschluss</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
 </nav>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Warst du schon einmal beim Bürgeramt?</div></div><div class="nur-b1"><div class="ank">Was würdest du jemandem raten, der morgen zum ersten Mal hingeht?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="amanda/sz-amt.webp" alt="Eine Person am Schreibtisch mit Formularen">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Warst du schon einmal beim Bürgeramt?</li><li>Was war schwierig — die Sprache oder die Formulare?</li><li>Wer hat dir damals geholfen?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Was würdest du jemandem raten, der morgen zum ersten Mal hingeht?</li><li>Wie läuft so etwas in deinem Herkunftsland?</li><li>Woran merkt man, dass man beim falschen Amt gelandet ist?</li></ol></div></div>
+<div class="tip">⚠️ <strong>Wichtig vorweg:</strong> Diese Stunde übt die <u>Sprache</u>, nicht die Rechtslage. Welche Papiere <b>du</b> brauchst, hängt von deiner Stadt, deiner Staatsangehörigkeit und deinem Grund für den Aufenthalt ab. Verbindlich sagt dir das nur das Amt selbst oder eine Beratungsstelle — die Sätze hier helfen dir, genau das zu erfragen.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Wie bekommt man in deiner Stadt einen Termin?</li><li>Wie lange muss man dort warten?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Was tust du, wenn es online wochenlang keinen freien Termin gibt?</li><li>Lohnt es sich, ohne Termin hinzugehen?</li></ol></div></div>
+<div class="tip teal">🔑 <strong>Der nützlichste Satz der ganzen Stunde:</strong> <i>„Können Sie mir sagen, welche Unterlagen ich mitbringen muss?“</i> Damit bekommst du eine Liste — und musst nicht zweimal kommen.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -596,6 +694,56 @@ footer strong{color:var(--ink);}
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 3 noch einmal — aber A bleibt hart und bietet keinen neuen Termin an. B muss trotzdem freundlich bleiben und am Ende wissen, was als Nächstes zu tun ist.</div>
 </section>
 
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 📣 Anliegen nennen</div>
+<div class="merk"><span>Ich möchte mich anmelden.</span><button class="speak" data-say="Ich möchte mich anmelden.">🔊 hören</button></div>
+<div class="merk"><span>Ich habe einen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Termin" data-wort="der Termin" data-kurz="die feste Zeit, zu der du kommen darfst" data-bsp="Ich habe einen Termin um Viertel nach zehn.">Termin</b> um …</span><button class="speak" data-say="Ich habe einen Termin um …">🔊 hören</button></div>
+<div class="merk"><span>Ich komme wegen …</span><button class="speak" data-say="Ich komme wegen …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 📄 Unterlagen klären</div>
+<div class="merk"><span>Ich habe den <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Ausweis" data-wort="der Ausweis" data-kurz="das Dokument mit deinem Foto und Namen" data-bsp="Bringen Sie bitte Ihren Ausweis oder Ihren Pass mit.">Ausweis</b> dabei.</span><button class="speak" data-say="Ich habe den Ausweis dabei.">🔊 hören</button></div>
+<div class="merk"><span>Brauchen Sie noch etwas?</span><button class="speak" data-say="Brauchen Sie noch etwas?">🔊 hören</button></div>
+<div class="merk"><span>Das habe ich leider nicht dabei.</span><button class="speak" data-say="Das habe ich leider nicht dabei.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · ❓ Nachfragen</div>
+<div class="merk"><span>Können Sie das bitte wiederholen?</span><button class="speak" data-say="Können Sie das bitte wiederholen?">🔊 hören</button></div>
+<div class="merk"><span>Können Sie mir das aufschreiben?</span><button class="speak" data-say="Können Sie mir das aufschreiben?">🔊 hören</button></div>
+<div class="merk"><span>Was muss hier ins <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Formular" data-wort="das Formular" data-kurz="das Blatt zum Ausfüllen" data-bsp="Können Sie mir beim Formular helfen?">Formular</b>?</span><button class="speak" data-say="Was muss hier ins Formular?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · ✅ Nächsten Schritt klären</div>
+<div class="merk"><span>Was muss ich als Nächstes machen?</span><button class="speak" data-say="Was muss ich als Nächstes machen?">🔊 hören</button></div>
+<div class="merk"><span>Wann bekomme ich die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Bescheinigung" data-wort="die Bescheinigung" data-kurz="das Papier, das etwas offiziell bestätigt" data-bsp="Am Ende bekommen Sie eine Bescheinigung.">Bescheinigung</b>?</span><button class="speak" data-say="Wann bekomme ich die Bescheinigung?">🔊 hören</button></div>
+<div class="merk"><span>Muss ich noch einmal kommen?</span><button class="speak" data-say="Muss ich noch einmal kommen?">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 📣 Sachlich einsteigen</div>
+<div class="merk"><span>Ich bin am ersten März eingezogen …</span><button class="speak" data-say="Ich bin am ersten März eingezogen …">🔊 hören</button></div>
+<div class="merk"><span>Es geht um die Verlängerung meines …</span><button class="speak" data-say="Es geht um die Verlängerung meines …">🔊 hören</button></div>
+<div class="merk"><span>Ich habe online einen Termin gebucht.</span><button class="speak" data-say="Ich habe online einen Termin gebucht.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 📑 Vollständig auflisten</div>
+<div class="merk"><span>Ich habe folgende Unterlagen dabei: …</span><button class="speak" data-say="Ich habe folgende Unterlagen dabei: …">🔊 hören</button></div>
+<div class="merk"><span>Falls noch etwas fehlt, reiche ich es nach.</span><button class="speak" data-say="Falls noch etwas fehlt, reiche ich es nach.">🔊 hören</button></div>
+<div class="merk"><span>Ist eine Kopie ausreichend?</span><button class="speak" data-say="Ist eine Kopie ausreichend?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🔍 Genau nachfragen</div>
+<div class="merk"><span>Können Sie mir sagen, ob …?</span><button class="speak" data-say="Können Sie mir sagen, ob …?">🔊 hören</button></div>
+<div class="merk"><span>Habe ich richtig verstanden, dass …?</span><button class="speak" data-say="Habe ich richtig verstanden, dass …?">🔊 hören</button></div>
+<div class="merk"><span>Wer wäre dafür zuständig?</span><button class="speak" data-say="Wer wäre dafür zuständig?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🤝 Verbindlich abschließen</div>
+<div class="merk"><span>Bis wann kann ich mit … rechnen?</span><button class="speak" data-say="Bis wann kann ich mit … rechnen?">🔊 hören</button></div>
+<div class="merk"><span>Bekomme ich das schriftlich?</span><button class="speak" data-say="Bekomme ich das schriftlich?">🔊 hören</button></div>
+<div class="merk"><span>Kann ich Sie bei Rückfragen erreichen?</span><button class="speak" data-say="Kann ich Sie bei Rückfragen erreichen?">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
+</section>
+
 <section class="section" id="challenge">
 <h2 class="st">⏱️ Die 90-Sekunden-Challenge</h2>
 <p class="ssub">Ein Wort, anderthalb Minuten, freies Sprechen. Es muss nicht perfekt sein — es muss nur weitergehen.</p>
@@ -644,7 +792,7 @@ footer strong{color:var(--ink);}
 <div class="rsp-kopf"><span class="rsp-nr">2</span><b>Es fehlt ein Papier</b></div>
 <div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>hat sie nicht dabei und darf weder diskutieren noch aufgeben.</p></div><div class="rsp-r b"><span>B</span><p>sagt, ohne die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Wohnungsgeberbestätigung" data-wort="die Wohnungsgeberbestätigung" data-kurz="das Papier vom Vermieter, dass du dort wohnst" data-bsp="Die Wohnungsgeberbestätigung bekomme ich von meiner Vermieterin.">Wohnungsgeberbestätigung</b> geht es nicht.</p></div></div>
 <div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Das verstehe ich.</span><span class="rm">Kann ich das nachreichen?</span><span class="rm">Bekomme ich einen neuen Termin?</span><span class="rm">Ist die Frist ein Problem?</span></div><div class="nur-b1"><span class="rm">Gibt es eine andere Möglichkeit?</span><span class="rm">Falls das nicht geht, komme ich gern noch einmal.</span><span class="rm">Können Sie notieren, dass ich heute da war?</span><span class="rm">Was empfehlen Sie mir?</span></div></div>
-<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>A widerspricht kein einziges Mal, schlägt selbst eine Lösung vor und verlässt den Schalter mit einem konkreten nächsten <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Termin" data-wort="der Termin" data-kurz="die feste Zeit, zu der du kommen darfst" data-bsp="Ich habe einen Termin um Viertel nach zehn.">Termin</b>.</div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>A widerspricht kein einziges Mal, schlägt selbst eine Lösung vor und verlässt den Schalter mit einem konkreten nächsten Termin.</div>
 <details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
 
@@ -665,11 +813,19 @@ footer strong{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="debatte">
-<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
-<p class="ssub">Zwei Gruppen, eine Frage. Abwechselnd sprechen.</p>
-<div class="deb-these">Zum Amt geht man besser allein.</div>
-<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><ul><li>Beim zweiten Mal weiß man, wie es geht.</li><li>Wenn eine Freundin spricht, lernt man nichts.</li><li>Man darf immer nachfragen. Das ist normal.</li></ul></div><div class="deb-s con"><b>Gruppe B · dagegen</b><ul><li>Es geht um Wohnung und Geld. Da ist ein Fehler teuer.</li><li>Zu zweit hört man mehr: einer spricht, einer schreibt mit.</li><li>Amtsdeutsch ist schwer. Auch mit B1 versteht man nicht alles.</li></ul></div></div>
+<section class="section" id="sprechuebung">
+<h2 class="st">Jetzt <span class="hl">ihr</span></h2>
+<p class="ssub">Drei kleine Übungen. Jeder kommt dran.</p>
+<div class="card90">
+<div class="lbl">Dein Satz</div>
+<div class="word" id="wueb" style="font-size:1.1rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="uebnew">🎲 Satz ziehen</button>
+</div>
+<div class="uebs">
+<div class="ueb"><span class="uebn">1</span><div><b>Satz ziehen und weiterreden</b><p>Zieh einen Satz, sag ihn laut — und häng sofort einen zweiten Satz an, der danach kommen würde.</p></div></div>
+<div class="ueb"><span class="uebn">2</span><div><b>Die Kette</b><p>Reihum sagt jeder einen Satz von oben. Kein Satz darf zweimal kommen. Wer nicht weiterweiß, sagt <i>Ich weiß gerade keinen mehr</i> — auch das ist ein Satz.</p></div></div>
+<div class="ueb"><span class="uebn">3</span><div><b>Ohne Hilfe</b><p>Klappt alles zu und spielt Dialog 1 noch einmal — frei, mit euren eigenen Wörtern.</p></div></div>
+</div>
 </section>
 
 <section class="section" id="abschluss">
@@ -767,6 +923,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Zehn Tage nach dem Umzug sitze ich um acht Uhr früh im Bürgeramt und warte auf Nummer 47. Online war bis Ende Mai kein Termin frei, aber am Telefon hat mir jemand gesagt, ___ es eine Warteliste gibt. Als ich dran bin, sage ich zuerst: „Guten Tag, ich möchte ___ anmelden.“ Die Frau am Schalter will den Pass und die Bestätigung von der Vermieterin. Beides habe ich dabei. Bei einem Feld im Formular bin ich unsicher und frage: „Können Sie mir sagen, was hier ___?“ Sie erklärt es in zwei Sätzen, und ich schreibe mit. Am Ende bekomme ich die Meldebescheinigung sofort ausgedruckt — eine ___ gibt es dafür nicht. Bevor ich gehe, frage ich noch, wer für den Aufenthaltstitel ___ ist. „Die Ausländerbehörde“, sagt sie, „und dort sollten Sie den Termin drei Monate vorher buchen, bevor Ihr Titel ___.“ Ich schreibe auch das auf.","o":["dass","mich","hineingehört","Gebühr","zuständig","abläuft","ob","mir"],"a":[["dass"],["mich"],["hineingehört"],["Gebühr"],["zuständig"],["abläuft"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Ich möchte mich anmelden.","Ich habe einen Termin um …","Ich komme wegen …","Ich habe den Ausweis dabei.","Brauchen Sie noch etwas?","Das habe ich leider nicht dabei.","Können Sie das bitte wiederholen?","Können Sie mir das aufschreiben?","Was muss hier ins Formular?","Was muss ich als Nächstes machen?","Wann bekomme ich die Bescheinigung?","Muss ich noch einmal kommen?","Ich bin am ersten März eingezogen …","Es geht um die Verlängerung meines …","Ich habe online einen Termin gebucht.","Ich habe folgende Unterlagen dabei: …","Falls noch etwas fehlt, reiche ich es nach.","Ist eine Kopie ausreichend?","Können Sie mir sagen, ob …?","Habe ich richtig verstanden, dass …?","Wer wäre dafür zuständig?","Bis wann kann ich mit … rechnen?","Bekomme ich das schriftlich?","Kann ich Sie bei Rückfragen erreichen?"]
 </script>
 
 <script>
@@ -1066,6 +1225,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */
