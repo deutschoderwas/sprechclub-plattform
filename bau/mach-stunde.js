@@ -904,6 +904,12 @@ const leiste = `<div class="leiste">\n  ${nivKnoepfe}\n${nav}</div>\n`;
 const datenBloecke = Object.keys(S.daten || {}).filter(k => S.daten[k] && (!Array.isArray(S.daten[k]) || S.daten[k].length))
   .map(k => `<script type="application/json" id="daten-${k}">\n${JSON.stringify(S.daten[k])}\n</script>`).join('\n');
 
+/* Wie weit ist es von dieser Stunde zurueck zur Wurzel? Die Stunden
+   liegen teils in Unterordnern (Unterricht-ab-14-09/…), lektion-konto.js
+   und config.js liegen immer oben. */
+const kontoTiefe = (path.dirname(S.datei) === '.') ? 0 : path.dirname(S.datei).split('/').length;
+const kontoPfad  = kontoTiefe ? '../'.repeat(kontoTiefe) : '';
+
 const html = `<!DOCTYPE html><html lang="de"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>${esc(S.titel)}${S.hl ? ' ' + esc(S.hl) : ''} · Sprechclub ${esc(S.stufe)} | deutschoderwas</title>
@@ -939,6 +945,10 @@ ${datenBloecke}
 <script>
 ${fs.readFileSync(hier + 'stunde-motor.js', 'utf8')}
 </script>
+<!-- Die Seite meldet sich beim Konto: wer ist da, ist die Mitgliedschaft
+     aktiv, und wie weit wurde gelesen. Ohne diese Zeile ist die Stunde
+     frei im Netz erreichbar und niemand sieht, dass sie benutzt wurde. -->
+<script src="${kontoPfad}lektion-konto.js?v=1"></script>
 </body>
 </html>
 `;
