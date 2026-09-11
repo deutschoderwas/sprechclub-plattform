@@ -261,6 +261,32 @@
     });
   });
 
+  /* ---------- Welche Lektionsseiten sind gemacht? ----------
+     Die 381 Lektionsseiten melden sich seit lektion-konto.js selbst
+     in die Tabelle lektion_fortschritt. Hier wird dieser Stand einmal
+     geholt und unter window.LEKTIONSSTAND bereitgelegt, damit der
+     Lernbereich zeigen kann, was schon erledigt ist. Vorher stand
+     dort „fertig\u201c, ohne dass es je jemand gemessen hätte. */
+  window.LEKTIONSSTAND = {};
+  function lektionenHolen() {
+    var s = sb(), u = uid();
+    if (!s || !u) return;
+    try {
+      s.from('lektion_fortschritt')
+        .select('datei,fertig_am,aufrufe,zuletzt_am').eq('user_id', u)
+        .then(function (r) {
+          var rows = (r && r.data) || [];
+          var o = {};
+          rows.forEach(function (z) {
+            o[z.datei] = { fertig: !!z.fertig_am, aufrufe: z.aufrufe || 0, zuletzt: z.zuletzt_am };
+          });
+          window.LEKTIONSSTAND = o;
+          try { window.dispatchEvent(new CustomEvent('lektionsstand-da', { detail: o })); } catch (e) {}
+        }, function () {});
+    } catch (e) {}
+  }
+  window.addEventListener('fortschritt-bereit', lektionenHolen);
+
   /* Für die Startseite und die Lehrkraft-Ansicht:
      FORTSCHRITT.themen() gibt zurück, wie weit welches Thema ist. */
   window.FORTSCHRITT = {

@@ -16,7 +16,7 @@
    gerechnet. Ist eine Datei (noch) nicht da, fehlt einfach die
    Zahl — es steht nie eine falsche da.
 
-   window.LERNSTRUKTUR = {
+  window.LERNSTRUKTUR = {
      tueren(), werkzeuge(), tuerenHtml(fn), werkzeugHtml(fn), stil()
    }
    Beide Seiten geben ihre eigene Klickfunktion mit; das Aussehen
@@ -291,14 +291,20 @@
        elf Mal dieselbe Miniatur untereinander sieht nach Fehler aus.
        Deshalb steht das Bild einmal gross oben, und jede Zeile
        bekommt ihr Zeichen: woran man die Art der Seite erkennt. */
+    /* Seit die Lektionsseiten sich zurückmelden (lektion-konto.js),
+       lässt sich hier zeigen, was schon durchgearbeitet ist. Vorher
+       sahen 381 Seiten immer gleich aus — gemacht wie ungemacht. */
+    function stand(d) { return (window.LEKTIONSSTAND || {})[d] || null; }
     function zeile(x) {
       var a = MEHR_ZEICHEN[x.art] || MEHR_ZEICHEN.lektion;
+      var s = stand(x.d);
+      var fertig = s && s.fertig;
       return '<div class="lm-paar">'
-        + '<a class="lm-z" href="' + E(x.d) + '" target="_blank" rel="noopener">'
+        + '<a class="lm-z' + (fertig ? ' lm-fertig' : '') + '" href="' + E(x.d) + '" target="_blank" rel="noopener">'
         + '<span class="ic" style="background:' + a[1] + '">' + a[0] + '</span>'
         + '<span class="tx"><b>' + E(x.t) + '</b><small>' + E(MEHR_ART[x.art] || 'Lektion')
         + (x.hand ? ' · mit Handout' : '') + '</small></span>'
-        + '<span class="pf">›</span></a>'
+        + (fertig ? '<span class="lm-hk" title="durchgearbeitet">✓</span>' : '<span class="pf">›</span>') + '</a>'
         + (x.ueb ? '<a class="lm-u" href="' + E(x.ueb) + '" target="_blank" rel="noopener">Dazu üben →</a>' : '')
         + '</div>';
     }
@@ -310,7 +316,13 @@
 
     return '<div class="lm-block">'
       + '<h3 class="lm-kopf">' + (o.nr ? '<span class="lm-nr">' + o.nr + '</span>' : '') + 'Mehr zu diesem Bereich</h3>'
-      + '<p class="lm-u2">' + liste.length + ' fertige Seiten zum Lesen, Hören und Üben — von leicht nach schwer.</p>'
+      + '<p class="lm-u2">' + liste.length + ' fertige Seiten zum Lesen, Hören und Üben — von leicht nach schwer.'
+        + (function () {
+            var g = 0;
+            liste.forEach(function (x) { var s = stand(x.d); if (s && s.fertig) g++; });
+            return g ? ' <b style="color:var(--petrol,#1990A4)">' + g + ' davon hast du schon durch.</b>' : '';
+          })()
+        + '</p>'
       + (bild ? '<div class="lm-bild"><img src="' + E(bild) + '" alt="" loading="lazy" onerror="this.parentNode.remove()"></div>' : '')
       + reihe.map(function (st) {
           return '<div class="lm-stufe"><span class="lv">' + E(st) + '</span>'
@@ -336,6 +348,12 @@
       '  font-size:12.5px;font-weight:800;letter-spacing:.3px}',
       '.lm-stufe .anz{margin-left:auto;font-size:12.5px;font-weight:600;color:var(--ink-3,#8A857C)}',
       '.lm-liste{display:flex;flex-direction:column;gap:10px}',
+      /* Durchgearbeitete Seiten: ruhig markiert, nicht ausgegraut —
+         eine gemachte Lektion bleibt zum Wiederholen wertvoll. */
+      '.lm-z.lm-fertig{border-color:var(--petrol,#1990A4)}',
+      '.lm-z.lm-fertig .tx b{color:var(--petrol,#1990A4)}',
+      '.lm-hk{margin-left:auto;flex:none;display:inline-grid;place-items:center;width:24px;height:24px;',
+      '  border-radius:50%;background:var(--petrol,#1990A4);color:#fff;font-size:13px;font-weight:800}',
       '.lm-paar{display:flex;flex-direction:column}',
       '.lm-z{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit;',
       '  background:var(--karte,var(--card,#FFFDF3));border:1.5px solid var(--linie,var(--line,#E7DFC7));',
@@ -360,11 +378,52 @@
     document.head.appendChild(st);
   }
 
+  /* Der Stand kommt aus der Datenbank und damit ein paar hundert
+     Millisekunden nach dem ersten Zeichnen. Statt alles neu zu bauen,
+     werden die schon gezeichneten Zeilen nachträglich markiert. */
+  function nachtragen() {
+    var st = window.LEKTIONSSTAND || {};
+    try {
+      var links = document.querySelectorAll('a.lm-z[href]');
+      for (var i = 0; i < links.length; i++) {
+        var a = links[i];
+        var d = a.getAttribute('href');
+        var s = st[d];
+        if (!s || !s.fertig) continue;
+        if (a.className.indexOf('lm-fertig') >= 0) continue;
+        a.className += ' lm-fertig';
+        var pf = a.querySelector('.pf');
+        var hk = document.createElement('span');
+        hk.className = 'lm-hk'; hk.title = 'durchgearbeitet'; hk.textContent = '✓';
+        if (pf) a.replaceChild(hk, pf); else a.appendChild(hk);
+      }
+      /* Der Satz oben zählt mit, sonst widerspricht er den Haken:
+         „2 davon hast du schon durch“ über fünf Häkchen liest sich
+         wie ein Fehler. */
+      var bloecke = document.querySelectorAll('.lm-block');
+      for (var b = 0; b < bloecke.length; b++) {
+        var satz = bloecke[b].querySelector('.lm-u2');
+        if (!satz) continue;
+        var zeilen = bloecke[b].querySelectorAll('a.lm-z[href]');
+        var g = 0;
+        for (var k = 0; k < zeilen.length; k++) {
+          var v = st[zeilen[k].getAttribute('href')];
+          if (v && v.fertig) g++;
+        }
+        var roh = satz.innerHTML.replace(/\s*<b[^>]*>\d+ davon hast du schon durch\.<\/b>/, '');
+        satz.innerHTML = roh + (g
+          ? ' <b style="color:var(--petrol,#1990A4)">' + g + ' davon hast du schon durch.</b>'
+          : '');
+      }
+    } catch (e) {}
+  }
+  window.addEventListener('lektionsstand-da', nachtragen);
+
   window.LERNSTRUKTUR = {
     mehrHtml: mehrHtml, mehrListe: mehrListe,
     tueren: tueren, werkzeuge: werkzeuge,
     tuerenHtml: tuerenHtml, werkzeugHtml: werkzeugHtml,
     weiterHtml: weiterHtml, merken: merken, zuletzt: zuletzt, vergessen: vergessen,
-    stil: stil
+    stil: stil, nachtragen: nachtragen
   };
 })();
