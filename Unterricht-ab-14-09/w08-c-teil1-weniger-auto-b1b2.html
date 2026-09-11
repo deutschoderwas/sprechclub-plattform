@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Wie kommst du normalerweise zur Arbeit oder zum Kurs?</div></div><div class="nur-b1"><div class="ank">Was wäre für dich der größte Unterschied ohne Auto?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../bilder/lesen/strasse.webp" alt="Eine Kreuzung mit Ampel und Zebrastreifen">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Wie kommst du normalerweise zur Arbeit oder zum Kurs?</li><li>Hast du ein Auto? Und brauchst du es wirklich?</li><li>Wie lange brauchst du zur nächsten Haltestelle?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Was wäre für dich der größte Unterschied ohne Auto?</li><li>Ist ein Auto bei dir Freiheit oder eher eine Last?</li><li>Wie war das in dem Land, in dem du aufgewachsen bist?</li></ol></div></div>
+<div class="tip teal">🔑 <strong>Damit das Gespräch trägt:</strong> Sag immer dazu, <b>wo</b> du wohnst. Der Satz <i>Ich brauche kein Auto</i> bedeutet in Köln etwas völlig anderes als in einem Dorf mit 400 Einwohnern — und ohne diese Angabe reden alle aneinander vorbei.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Was kostet ein Auto bei dir im Monat ungefähr?</li><li>Fährst du lieber Bus oder Rad?</li><li>Gibt es bei dir einen guten Radweg?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Was müsste sich ändern, damit du das Auto stehen lässt?</li><li>Ist es gerecht, Parkplätze in der Stadt teurer zu machen?</li><li>Wer trägt die Kosten, wenn ein Dorf keinen Bus mehr hat?</li></ol></div></div>
+<div class="tip">💡 <strong>Zahlen für Mittwoch:</strong> Ein privates Auto steht im Schnitt über 23 Stunden am Tag ungenutzt. Eine gute Zahl für die Debatte — aber sag dazu, dass sie einen Durchschnitt beschreibt und nicht deinen Nachbarn.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -586,6 +684,64 @@ footer strong{color:var(--ink);}
 <button class="speak dbtn" data-say="Ich habe mein Auto vor zwei Jahren abgeschafft und vermisse es kaum. Das glaube ich dir sofort — in der Stadt. Bei uns fährt der Bus dreimal am Tag, morgens, mittags, abends. Dreimal? Das wusste ich nicht. Und der letzte fährt um 18:40. Wer länger arbeitet, kommt nicht mehr nach Hause. Dann ist das Auto bei euch gar keine Bequemlichkeit. Genau. Deshalb reagieren viele auf dem Land so gereizt, wenn in der Stadt über Parkgebühren geredet wird.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 4 mit euren echten Wohnorten. Regel: In jeder Antwort muss ein Vergleich mit <i>als</i> oder <i>so … wie</i> vorkommen — und mindestens eine Zahl.</div>
+</section>
+
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · ⚖️ Vergleichen</div>
+<div class="merk"><span>Mit dem Rad bin ich schneller.</span><button class="speak" data-say="Mit dem Rad bin ich schneller.">🔊 hören</button></div>
+<div class="merk"><span>Der Bus ist billiger als das Auto.</span><button class="speak" data-say="Der Bus ist billiger als das Auto.">🔊 hören</button></div>
+<div class="merk"><span>Zu Fuß dauert es genauso lange.</span><button class="speak" data-say="Zu Fuß dauert es genauso lange.">🔊 hören</button></div>
+<div class="merk"><span>Das Auto ist bequemer.</span><button class="speak" data-say="Das Auto ist bequemer.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🔒 Einschränken</div>
+<div class="merk"><span>Bei mir ist das so.</span><button class="speak" data-say="Bei mir ist das so.">🔊 hören</button></div>
+<div class="merk"><span>In der Stadt jedenfalls.</span><button class="speak" data-say="In der Stadt jedenfalls.">🔊 hören</button></div>
+<div class="merk"><span>Wenn es nicht regnet.</span><button class="speak" data-say="Wenn es nicht regnet.">🔊 hören</button></div>
+<div class="merk"><span>Ohne Einkauf schon.</span><button class="speak" data-say="Ohne Einkauf schon.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🔢 Zahlen nennen</div>
+<div class="merk"><span>Das dauert zwölf Minuten.</span><button class="speak" data-say="Das dauert zwölf Minuten.">🔊 hören</button></div>
+<div class="merk"><span>Das kostet 49 Euro im Monat.</span><button class="speak" data-say="Das kostet 49 Euro im Monat.">🔊 hören</button></div>
+<div class="merk"><span>Es sind zehn Kilometer.</span><button class="speak" data-say="Es sind zehn Kilometer.">🔊 hören</button></div>
+<div class="merk"><span>Der Bus fährt dreimal am Tag.</span><button class="speak" data-say="Der Bus fährt dreimal am Tag.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🔀 Bedingung setzen</div>
+<div class="merk"><span>Wenn es einen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Radweg" data-wort="der Radweg" data-kurz="der Streifen der Straße, auf dem Räder fahren" data-bsp="Ohne durchgehenden Radweg fahre ich dort nicht.">Radweg</b> gäbe, …</span><button class="speak" data-say="Wenn es einen Radweg gäbe, …">🔊 hören</button></div>
+<div class="merk"><span>Solange der Bus so selten fährt, …</span><button class="speak" data-say="Solange der Bus so selten fährt, …">🔊 hören</button></div>
+<div class="merk"><span>Ohne Auto könnte ich nicht arbeiten.</span><button class="speak" data-say="Ohne Auto könnte ich nicht arbeiten.">🔊 hören</button></div>
+<div class="merk"><span>Mit besseren Verbindungen gern.</span><button class="speak" data-say="Mit besseren Verbindungen gern.">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · ⚖️ Genau vergleichen</div>
+<div class="merk"><span>Im Vergleich zum Auto ist das Rad …</span><button class="speak" data-say="Im Vergleich zum Auto ist das Rad …">🔊 hören</button></div>
+<div class="merk"><span>Doppelt so lange wie mit dem Auto.</span><button class="speak" data-say="Doppelt so lange wie mit dem Auto.">🔊 hören</button></div>
+<div class="merk"><span>Deutlich günstiger als …</span><button class="speak" data-say="Deutlich günstiger als …">🔊 hören</button></div>
+<div class="merk"><span>Nicht ganz so schnell, dafür aber …</span><button class="speak" data-say="Nicht ganz so schnell, dafür aber …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🔒 Präzise einschränken</div>
+<div class="merk"><span>Das gilt für die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Innenstadt" data-wort="die Innenstadt" data-kurz="der zentrale Teil einer Stadt" data-bsp="In der Innenstadt gibt es kaum noch freie Parkplätze.">Innenstadt</b>, nicht für den Kreis.</span><button class="speak" data-say="Das gilt für die Innenstadt, nicht für den Kreis.">🔊 hören</button></div>
+<div class="merk"><span>Unter der Woche jedenfalls.</span><button class="speak" data-say="Unter der Woche jedenfalls.">🔊 hören</button></div>
+<div class="merk"><span>Sobald Kinder dabei sind, kippt die Rechnung.</span><button class="speak" data-say="Sobald Kinder dabei sind, kippt die Rechnung.">🔊 hören</button></div>
+<div class="merk"><span>Für meine Strecke stimmt das, allgemein nicht.</span><button class="speak" data-say="Für meine Strecke stimmt das, allgemein nicht.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🔢 Zahlen einordnen</div>
+<div class="merk"><span>Im Schnitt sind das …</span><button class="speak" data-say="Im Schnitt sind das …">🔊 hören</button></div>
+<div class="merk"><span>Das entspricht ungefähr …</span><button class="speak" data-say="Das entspricht ungefähr …">🔊 hören</button></div>
+<div class="merk"><span>Auf das Jahr gerechnet …</span><button class="speak" data-say="Auf das Jahr gerechnet …">🔊 hören</button></div>
+<div class="merk"><span>Die Zahl stammt von …</span><button class="speak" data-say="Die Zahl stammt von …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🔀 Bedingungen formulieren</div>
+<div class="merk"><span>Vorausgesetzt, es gibt eine Alternative.</span><button class="speak" data-say="Vorausgesetzt, es gibt eine Alternative.">🔊 hören</button></div>
+<div class="merk"><span>Sobald der Takt stimmt, …</span><button class="speak" data-say="Sobald der Takt stimmt, …">🔊 hören</button></div>
+<div class="merk"><span>Ohne verlässlichen Bus wird das nichts.</span><button class="speak" data-say="Ohne verlässlichen Bus wird das nichts.">🔊 hören</button></div>
+<div class="merk"><span>Unter diesen Bedingungen wäre ich dabei.</span><button class="speak" data-say="Unter diesen Bedingungen wäre ich dabei.">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -760,6 +916,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Wir haben am Küchentisch nachgerechnet, ob das zweite Auto weg kann. Meine Frau fährt sechs Kilometer zur Arbeit, und mit dem Rad ist sie morgens sogar ___ als mit dem Auto, weil sie keinen Parkplatz suchen muss. Das Monatsticket kostet 49 Euro und ist damit deutlich ___ als die Versicherung allein. Auf das Jahr gerechnet kommen wir auf über dreitausend Euro — das ist ___ so viel, wie wir gedacht hatten. Schwierig wird es nur dienstags: Da müssen die Kinder zum Sport, und der Bus fährt nicht ___ oft wie in der Stadt. Am ___ wäre es, wenn wir uns für diese eine Fahrt ein Auto ausleihen. Wir probieren es jetzt drei Monate, und danach entscheiden wir neu — vielleicht ist es ___ einfacher, als wir befürchtet haben.","o":["schneller","günstiger","doppelt","so","einfachsten","viel","als","teurer"],"a":[["schneller"],["günstiger"],["doppelt"],["so"],["einfachsten"],["viel"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Mit dem Rad bin ich schneller.","Der Bus ist billiger als das Auto.","Zu Fuß dauert es genauso lange.","Das Auto ist bequemer.","Bei mir ist das so.","In der Stadt jedenfalls.","Wenn es nicht regnet.","Ohne Einkauf schon.","Das dauert zwölf Minuten.","Das kostet 49 Euro im Monat.","Es sind zehn Kilometer.","Der Bus fährt dreimal am Tag.","Wenn es einen Radweg gäbe, …","Solange der Bus so selten fährt, …","Ohne Auto könnte ich nicht arbeiten.","Mit besseren Verbindungen gern.","Im Vergleich zum Auto ist das Rad …","Doppelt so lange wie mit dem Auto.","Deutlich günstiger als …","Nicht ganz so schnell, dafür aber …","Das gilt für die Innenstadt, nicht für den Kreis.","Unter der Woche jedenfalls.","Sobald Kinder dabei sind, kippt die Rechnung.","Für meine Strecke stimmt das, allgemein nicht.","Im Schnitt sind das …","Das entspricht ungefähr …","Auf das Jahr gerechnet …","Die Zahl stammt von …","Vorausgesetzt, es gibt eine Alternative.","Sobald der Takt stimmt, …","Ohne verlässlichen Bus wird das nichts.","Unter diesen Bedingungen wäre ich dabei."]
 </script>
 
 <script>
@@ -1059,6 +1218,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

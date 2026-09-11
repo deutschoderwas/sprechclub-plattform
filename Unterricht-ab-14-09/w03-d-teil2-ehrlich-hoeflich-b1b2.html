@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Welchen dieser drei Sätze hast du selbst schon gesagt?</div></div><div class="nur-b1"><div class="ank">Was ist schlimmer: eine Wahrheit, die verletzt, oder eine Lüge, die schont?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../amanda/sz-heikel.webp" alt="Zwei Personen sitzen sich in einem Wohnzimmer gegenüber">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Welchen dieser drei Sätze hast du selbst schon gesagt?</li><li>Wann ist eine kleine Lüge für dich in Ordnung?</li><li>Ärgert es dich, wenn jemand höflich lügt?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Was ist schlimmer: eine Wahrheit, die verletzt, oder eine Lüge, die schont?</li><li>Wann merkt man selbst, dass man gerade unehrlich höflich ist?</li><li>Was kostet es langfristig, wenn man nie deutlich Nein sagt?</li></ol></div></div>
+<div class="tip teal">🎭 <strong>So läuft die Stunde:</strong> Kein Debattenformat wie am Mittwoch — heute wird <u>gespielt</u>. Jede Szene wird zweimal durchgespielt: einmal mit der höflichen Notlüge, einmal mit der verpackten Wahrheit. Danach sagt die Gruppe, welche Version besser war.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><ol class="ankfr"><li>Sag deinem Partner höflich ab — er sagt, ob er dir glaubt.</li><li>Jetzt dieselbe Absage ehrlich. Was ändert sich?</li><li>Welche Version würdest du selbst lieber hören?</li></ol></div>
+<div class="tip teal">👥 <strong>Zu zweit, zwei Runden:</strong> Einer lädt ein (<u>„Kommst du Samstag?“</u>), der andere sagt ab — erst mit der Notlüge, dann mit der verpackten Wahrheit. Der Einladende sagt, welche Absage besser ankam.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -594,6 +692,56 @@ footer strong{color:var(--ink);}
 <button class="speak dbtn" data-say="Wir müssen echt mal wieder was machen! Das sagen wir jetzt seit einem Jahr. Merkst du das auch? Stimmt eigentlich. Mich stört das ein bisschen, ehrlich gesagt. Ich weiß nur nicht, woran es liegt. Bei mir ist gerade viel. Das glaube ich dir. Ich frage mich nur, ob wir uns das ehrlich sagen sollten. Wahrscheinlich schon. Dann machen wir es so: ein fester Termin im Monat — oder wir lassen es ganz.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt jede Szene zweimal — einmal mit der höflichen Notlüge, einmal ehrlich. Die Gruppe sagt danach, welche Version sie selbst lieber gehört hätte. Oft ist es nicht die, die man erwartet.</div>
+</section>
+
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · ✋ Ankündigen</div>
+<div class="merk"><span>Ich sage es dir lieber gleich</span><button class="speak" data-say="Ich sage es dir lieber gleich">🔊 hören</button></div>
+<div class="merk"><span>Ich will dich nicht <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von hinhalten" data-wort="hinhalten" data-kurz="jemanden warten lassen, ohne zu entscheiden" data-bsp="Sag es lieber gleich, als mich hinzuhalten.">hinhalten</b></span><button class="speak" data-say="Ich will dich nicht hinhalten">🔊 hören</button></div>
+<div class="merk"><span>Ich schenke dir reinen Wein ein</span><button class="speak" data-say="Ich schenke dir reinen Wein ein">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🎯 Klar werden</div>
+<div class="merk"><span>Ich schaffe es nicht</span><button class="speak" data-say="Ich schaffe es nicht">🔊 hören</button></div>
+<div class="merk"><span>Das wird nichts</span><button class="speak" data-say="Das wird nichts">🔊 hören</button></div>
+<div class="merk"><span>Ich kann das nicht übernehmen</span><button class="speak" data-say="Ich kann das nicht übernehmen">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 💙 Das Gefühl anerkennen</div>
+<div class="merk"><span>Ich weiß, dass das blöd ist</span><button class="speak" data-say="Ich weiß, dass das blöd ist">🔊 hören</button></div>
+<div class="merk"><span>Es tut mir leid, dass …</span><button class="speak" data-say="Es tut mir leid, dass …">🔊 hören</button></div>
+<div class="merk"><span>Ich verstehe, wenn du enttäuscht bist</span><button class="speak" data-say="Ich verstehe, wenn du enttäuscht bist">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🚪 Den Weg offen lassen</div>
+<div class="merk"><span>Beim nächsten Mal gern</span><button class="speak" data-say="Beim nächsten Mal gern">🔊 hören</button></div>
+<div class="merk"><span>Was ginge stattdessen?</span><button class="speak" data-say="Was ginge stattdessen?">🔊 hören</button></div>
+<div class="merk"><span>Sag mir früher Bescheid, dann …</span><button class="speak" data-say="Sag mir früher Bescheid, dann …">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · ✋ Den Rahmen setzen</div>
+<div class="merk"><span>Ich möchte dich nicht im Unklaren lassen</span><button class="speak" data-say="Ich möchte dich nicht im Unklaren lassen">🔊 hören</button></div>
+<div class="merk"><span>Bevor du damit planst: …</span><button class="speak" data-say="Bevor du damit planst: …">🔊 hören</button></div>
+<div class="merk"><span>Ich sage es lieber jetzt als in drei Wochen</span><button class="speak" data-say="Ich sage es lieber jetzt als in drei Wochen">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🎯 Ohne Ausflüchte</div>
+<div class="merk"><span>Der ehrliche Grund ist …</span><button class="speak" data-say="Der ehrliche Grund ist …">🔊 hören</button></div>
+<div class="merk"><span>Ich will mich nicht herausreden</span><button class="speak" data-say="Ich will mich nicht herausreden">🔊 hören</button></div>
+<div class="merk"><span>Es liegt nicht an dir, sondern an …</span><button class="speak" data-say="Es liegt nicht an dir, sondern an …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 💙 Verantwortung übernehmen</div>
+<div class="merk"><span>Ich hätte es früher sagen sollen</span><button class="speak" data-say="Ich hätte es früher sagen sollen">🔊 hören</button></div>
+<div class="merk"><span>Das war nicht fair dir gegenüber</span><button class="speak" data-say="Das war nicht fair dir gegenüber">🔊 hören</button></div>
+<div class="merk"><span>Ich verstehe deinen Ärger</span><button class="speak" data-say="Ich verstehe deinen Ärger">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🚪 Etwas anbieten</div>
+<div class="merk"><span>Was ich stattdessen anbieten kann, ist …</span><button class="speak" data-say="Was ich stattdessen anbieten kann, ist …">🔊 hören</button></div>
+<div class="merk"><span>Bei … wäre ich sofort dabei</span><button class="speak" data-say="Bei … wäre ich sofort dabei">🔊 hören</button></div>
+<div class="merk"><span>Damit es nicht wieder passiert: …</span><button class="speak" data-say="Damit es nicht wieder passiert: …">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -767,6 +915,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Drei Wochen lang habe ich Yara ___ gesagt, dass ich es nicht schaffe. Ich wollte sie nicht enttäuschen — und habe sie damit ___ hingehalten. Heute rufe ich endlich an. „Ich sage es dir lieber gleich: Ich schaffe es ___.“ Sie ist ärgerlich, verständlicherweise. Ich versuche gar nicht erst, mich ___ — der ehrliche Grund ist, dass mir alles zu viel wurde. „Ich hätte es dir früher sagen ___“, sage ich, „das war nicht fair.“ Sie schweigt kurz. Dann: „Ja, das war es nicht.“ Ich frage, was stattdessen ginge, und wir finden einen Sonntag. Beim Auflegen denke ich: ___ oder später wäre es sowieso herausgekommen. Und dann wäre die Enttäuschung noch ___ gewesen.","o":["nicht","wochenlang","sollen","herauszureden","Früher","größer","kein","gar"],"a":[["nicht"],["wochenlang"],["nicht"],["herauszureden"],["sollen"],["Früher"],["größer"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Ich sage es dir lieber gleich","Ich will dich nicht hinhalten","Ich schenke dir reinen Wein ein","Ich schaffe es nicht","Das wird nichts","Ich kann das nicht übernehmen","Ich weiß, dass das blöd ist","Es tut mir leid, dass …","Ich verstehe, wenn du enttäuscht bist","Beim nächsten Mal gern","Was ginge stattdessen?","Sag mir früher Bescheid, dann …","Ich möchte dich nicht im Unklaren lassen","Bevor du damit planst: …","Ich sage es lieber jetzt als in drei Wochen","Der ehrliche Grund ist …","Ich will mich nicht herausreden","Es liegt nicht an dir, sondern an …","Ich hätte es früher sagen sollen","Das war nicht fair dir gegenüber","Ich verstehe deinen Ärger","Was ich stattdessen anbieten kann, ist …","Bei … wäre ich sofort dabei","Damit es nicht wieder passiert: …"]
 </script>
 
 <script>
@@ -1066,6 +1217,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

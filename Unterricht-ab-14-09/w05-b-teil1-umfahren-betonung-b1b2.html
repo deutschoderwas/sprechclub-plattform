@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Kennst du zwei deutsche Wörter, die gleich aussehen und verschieden klingen?</div></div><div class="nur-b1"><div class="ank">Wie merkst du beim Zuhören, dass du ein Wort falsch verstanden hast?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../vok-bild/die-kreuzung.webp" alt="Eine Straßenkreuzung mit Fahrbahnmarkierungen von oben">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Kennst du zwei deutsche Wörter, die gleich aussehen und verschieden klingen?</li><li>Hörst du beim Sprechen auf die Betonung, oder kommt sie von allein?</li><li>Gibt es das in deiner Sprache auch?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Wie merkst du beim Zuhören, dass du ein Wort falsch verstanden hast?</li><li>Welche Rolle spielt Betonung in deiner Muttersprache — verändert sie dort auch die Bedeutung?</li><li>Wo hast du zuletzt ein Wort betont, und jemand hat gelacht?</li></ol></div></div>
+<div class="tip teal">🔑 <strong>Die Regel für heute, in einem Satz:</strong> <b>Ist die Vorsilbe wörtlich gemeint, wird sie betont und abgetrennt. Ist sie übertragen gemeint, bleibt sie unbetont und fest.</b> <i>Úmfahren</i> — das Auto fährt etwas um, wörtlich. <i>Umfáhren</i> — man fährt außen herum, das ist schon ein Bild.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Welche trennbaren Verben aus Woche 4 fallen dir noch ein?</li><li>Wo steht die Vorsilbe im Hauptsatz?</li><li>Wie sieht das Perfekt bei anrufen aus?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Warum ist bei verstehen kein ge- im Perfekt?</li><li>Kannst du an einem Verb hören, ob es trennbar ist — ohne es zu kennen?</li><li>Welche Vorsilbe hat dir bisher die meisten Probleme gemacht?</li></ol></div></div>
+<div class="tip">💡 <strong>Sechs Vorsilben, mehr sind es nicht:</strong> <b>um-, über-, unter-, durch-, wider-, wieder-</b>. Nur diese sechs können beides. Alle anderen sind entweder immer trennbar oder nie. Das heißt: Du musst dir nicht Tausende Verben merken, sondern sechs Silben — und bei denen einmal kurz nachdenken.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -594,6 +692,64 @@ footer strong{color:var(--ink);}
 <button class="speak dbtn" data-say="Hast du das verstanden? Irgendwas mit umsteigen. Ich habe gehört: In Hamm úmsteigen, der Anschluss wird erreicht. Und was war das danach mit dem Gleis? Sie hat es zweimal wiederhólt: Gleis sieben statt drei. Gut, dass du zugehört hast. Ich hatte das komplett übersehen. Überhört, meinst du. Übersehen geht nur mit den Augen. Stimmt. Dann los, wir kommen sonst nicht durch. Wir schaffen das schon. Komm.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 1 nach, aber vertauscht absichtlich einmal die Betonung. Der andere muss sofort einhaken und fragen: <i>„Moment — wirklich úmgefahren?“</i> So hört ihr den Unterschied besser als in jeder Erklärung.</div>
+</section>
+
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 🎵 Die Betonung wählen</div>
+<div class="merk"><span>úmfahren · umfáhren</span><button class="speak" data-say="úmfahren · umfáhren">🔊 hören</button></div>
+<div class="merk"><span>ǘbersetzen · übersétzen</span><button class="speak" data-say="ǘbersetzen · übersétzen">🔊 hören</button></div>
+<div class="merk"><span>dúrchschauen · durchscháuen</span><button class="speak" data-say="dúrchschauen · durchscháuen">🔊 hören</button></div>
+<div class="merk"><span>úmschreiben · umschréiben</span><button class="speak" data-say="úmschreiben · umschréiben">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 📍 Die Vorsilbe platzieren</div>
+<div class="merk"><span>trennbar → ans Ende</span><button class="speak" data-say="trennbar → ans Ende">🔊 hören</button></div>
+<div class="merk"><span>fest → bleibt am Verb</span><button class="speak" data-say="fest → bleibt am Verb">🔊 hören</button></div>
+<div class="merk"><span>Ich steige in Köln um.</span><button class="speak" data-say="Ich steige in Köln um.">🔊 hören</button></div>
+<div class="merk"><span>Ich umfahre die Stadt.</span><button class="speak" data-say="Ich umfahre die Stadt.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · ⏮️ Das Perfekt bilden</div>
+<div class="merk"><span>trennbar → ge- in die Mitte</span><button class="speak" data-say="trennbar → ge- in die Mitte">🔊 hören</button></div>
+<div class="merk"><span>fest → gar kein ge-</span><button class="speak" data-say="fest → gar kein ge-">🔊 hören</button></div>
+<div class="merk"><span>úmgestiegen</span><button class="speak" data-say="úmgestiegen">🔊 hören</button></div>
+<div class="merk"><span>übersétzt</span><button class="speak" data-say="übersétzt">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🔗 Mit zu verbinden</div>
+<div class="merk"><span>trennbar → zu in die Mitte</span><button class="speak" data-say="trennbar → zu in die Mitte">🔊 hören</button></div>
+<div class="merk"><span>fest → zu davor</span><button class="speak" data-say="fest → zu davor">🔊 hören</button></div>
+<div class="merk"><span>úmzusteigen</span><button class="speak" data-say="úmzusteigen">🔊 hören</button></div>
+<div class="merk"><span>zu übersétzen</span><button class="speak" data-say="zu übersétzen">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 🎭 Den Unterschied ausspielen</div>
+<div class="merk"><span>Ich habe ihn durchscháut — ich weiß, was er will</span><button class="speak" data-say="Ich habe ihn durchscháut — ich weiß, was er will">🔊 hören</button></div>
+<div class="merk"><span>Ich habe dúrchgeschaut — ich habe hindurchgesehen</span><button class="speak" data-say="Ich habe dúrchgeschaut — ich habe hindurchgesehen">🔊 hören</button></div>
+<div class="merk"><span>Sie hat den Vertrag umschríeben — anders formuliert</span><button class="speak" data-say="Sie hat den Vertrag umschríeben — anders formuliert">🔊 hören</button></div>
+<div class="merk"><span>Sie hat den Vertrag úmgeschrieben — noch mal neu getippt</span><button class="speak" data-say="Sie hat den Vertrag úmgeschrieben — noch mal neu getippt">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🧭 Sich absichern</div>
+<div class="merk"><span>Also im Sinne von …</span><button class="speak" data-say="Also im Sinne von …">🔊 hören</button></div>
+<div class="merk"><span>Ich meine jetzt nicht …</span><button class="speak" data-say="Ich meine jetzt nicht …">🔊 hören</button></div>
+<div class="merk"><span>Um genau zu sein: …</span><button class="speak" data-say="Um genau zu sein: …">🔊 hören</button></div>
+<div class="merk"><span>Anders gesagt: …</span><button class="speak" data-say="Anders gesagt: …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 💬 Umschreiben statt steckenbleiben</div>
+<div class="merk"><span>So ein Ding, mit dem man …</span><button class="speak" data-say="So ein Ding, mit dem man …">🔊 hören</button></div>
+<div class="merk"><span>Das ist, wenn jemand …</span><button class="speak" data-say="Das ist, wenn jemand …">🔊 hören</button></div>
+<div class="merk"><span>Wie soll ich sagen — …</span><button class="speak" data-say="Wie soll ich sagen — …">🔊 hören</button></div>
+<div class="merk"><span>Das Gegenteil von …</span><button class="speak" data-say="Das Gegenteil von …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · ❓ Nachfragen, wenn du unsicher bist</div>
+<div class="merk"><span>Wie meinst du das jetzt?</span><button class="speak" data-say="Wie meinst du das jetzt?">🔊 hören</button></div>
+<div class="merk"><span>Umgefahren oder <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von umfahren" data-wort="umfahren" data-kurz="außen herum · oder etwas umwerfen" data-bsp="Wir umfáhren die Baustelle über die Landstraße.">umfahren</b>?</span><button class="speak" data-say="Umgefahren oder umfahren?">🔊 hören</button></div>
+<div class="merk"><span>Also wirklich oder im übertragenen Sinn?</span><button class="speak" data-say="Also wirklich oder im übertragenen Sinn?">🔊 hören</button></div>
+<div class="merk"><span>Kannst du das anders sagen?</span><button class="speak" data-say="Kannst du das anders sagen?">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -767,6 +923,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Am Freitag wollte ich pünktlich sein, und deshalb ging natürlich einiges schief. Auf der Autobahn stand alles, also habe ich die ganze Innenstadt ___ — außen herum, wohlgemerkt, es ist nichts kaputtgegangen. Dabei habe ich allerdings die richtige Ausfahrt ___ und stand plötzlich in einem Wohngebiet. Das Auto ließ ich stehen und bin mit der Bahn weiter; in Neuss musste ich einmal ___. Die Durchsage war so leise, dass ich sie fast überhört hätte — zum Glück hat die Frau neben mir sie für mich ___. Im Büro sollte ich dann einen Vertrag ___, den vorher noch jemand ins Englische ___ hatte. Ich habe ihn erst einmal in Ruhe ___ und tatsächlich zwei Fehler gefunden. Am Ende war ich zwar zu spät, aber immerhin habe ich niemanden überfahren und nichts umgefahren.","o":["umfahren","übersehen","umsteigen","wiederholt","unterschreiben","übersetzt","durchgelesen","umgeschrieben"],"a":[["umfahren"],["übersehen"],["umsteigen"],["wiederholt"],["unterschreiben"],["übersetzt"],["durchgelesen"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Ich steige in Köln um.","Ich umfahre die Stadt.","Ich habe ihn durchscháut — ich weiß, was er will","Ich habe dúrchgeschaut — ich habe hindurchgesehen","Sie hat den Vertrag umschríeben — anders formuliert","Sie hat den Vertrag úmgeschrieben — noch mal neu getippt","Also im Sinne von …","Ich meine jetzt nicht …","Um genau zu sein: …","Anders gesagt: …","So ein Ding, mit dem man …","Das ist, wenn jemand …","Wie soll ich sagen — …","Das Gegenteil von …","Wie meinst du das jetzt?","Umgefahren oder umfahren?","Also wirklich oder im übertragenen Sinn?","Kannst du das anders sagen?"]
 </script>
 
 <script>
@@ -1066,6 +1225,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

@@ -654,29 +654,114 @@ function regie(id) {
    der Auftrag dazu: ein Satz, reihum, ohne Kommentar. */
 function ankommen(S) {
   neuerAbschnitt();
-  /* Zwei Fragen statt einer: die konkrete fuer die untere Stufe, die
-     offene fuer die obere. Beide stehen laengst in der JSON — vorher
-     wurde nur die A2-Fassung genommen, und der Umschalter tat in
-     diesem Abschnitt nichts. */
-  const holen = (feld, i) => {
-    let x = null;
-    (S.einstieg || []).forEach(e => { if (!x && (e[feld] || []).length > i) x = e[feld][i]; });
-    return x;
-  };
-  const leicht = (S.ankommen && S.ankommen.frage) || holen('fragenA2', 0) || holen('fragen', 0);
-  const schwer = holen('fragenB1', 0) || leicht;
-  if (!leicht) return '';
+  /* Vorher stand hier genau eine Frage — und darunter viel Luft.
+     In jeder Stunde liegen aber sechs Fragen in der JSON: drei im
+     ersten Einstiegsblock (je Stufe) und drei im zweiten. Die wurden
+     nie gezeigt. Jetzt sind es zwei Runden mit je drei nummerierten
+     Fragen, dazu die Sprechaufgabe, die in derselben JSON steht. */
+  const bloecke = S.einstieg || [];
+  const raus = (e, feld) => ((e && e[feld]) || []).filter(Boolean).slice(0, 3);
 
-  const karte = t => `<div class="ank">${h(t)}</div>`;
-  const inhalt = (S.niveau && schwer !== leicht)
-    ? `<div class="nur-a2">${karte(leicht)}</div><div class="nur-b1">${karte(schwer)}</div>`
-    : karte(leicht);
+  const b0 = bloecke[0] || {};
+  let leicht = raus(b0, 'fragenA2'); if (!leicht.length) leicht = raus(b0, 'fragen');
+  let schwer = raus(b0, 'fragenB1'); if (!schwer.length) schwer = leicht;
+  if (!leicht.length && S.ankommen && S.ankommen.frage) { leicht = [S.ankommen.frage]; schwer = leicht; }
+  if (!leicht.length) return '';
 
-  return `<section class="section" id="ankommen">\n`
-    + kopfzeile('Erst mal', 'ankommen', 'Eine Frage, ein Satz pro Person. Reihum.')
-    + inhalt + `\n`
-    + anfangshilfe('ankommen', 'Wie fange ich an?')
-    + `</section>\n`;
+  const liste  = f => `<ol class="ankfr">` + f.map(x => `<li>${h(x)}</li>`).join('') + `</ol>`;
+  /* Beide Stufen nur dann doppelt ausgeben, wenn sie sich wirklich
+     unterscheiden — sonst steht dasselbe zweimal im Quelltext. */
+  const stufig = (a, b) => (S.niveau && a.join('|') !== b.join('|'))
+    ? `<div class="nur-a2">${liste(a)}</div><div class="nur-b1">${liste(b)}</div>`
+    : liste(a);
+  const runde = (klasse, label, inhalt) =>
+    `<div class="ankrunde${klasse}"><span class="ankl">${h(label)}</span>${inhalt}</div>\n`;
+
+  /* Das Bild lag laengst in der JSON und wurde nie benutzt. */
+  const kopfbild = b0.bild
+    ? `<img class="ankbild" src="${attr(bild(b0.bild))}" alt="${attr(b0.alt || '')}">\n`
+    : '';
+
+  let s = `<section class="section" id="ankommen">\n`
+    + kopfzeile('Erst mal', 'ankommen', 'Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.')
+    + kopfbild
+    + runde('', 'Runde 1 · reihum, ein Satz pro Person', stufig(leicht, schwer))
+    + tipp(b0.tipp);
+
+  const b1 = bloecke[1] || {};
+  let l2 = raus(b1, 'fragen');    if (!l2.length) l2 = raus(b1, 'fragenA2');
+  let s2 = raus(b1, 'fragenB1');  if (!s2.length) s2 = l2;
+  if (l2.length) {
+    s += runde(' zwei', 'Runde 2 · zu zweit, fragt euch gegenseitig', stufig(l2, s2))
+       + tipp(b1.tipp);
+  }
+
+  return s + anfangshilfe('ankommen', 'Wie fange ich an?') + `</section>\n`;
+}
+
+/* ---------- 7b Merksaetze ----------
+   Die Bausteine standen frueher als Redemittel-Tafel da und sind beim
+   Umbau auf reines Sprechen rausgeflogen. Das war zu viel: Genau diese
+   Saetze sind das, was ein Lernender beim Baecker wirklich auswendig
+   braucht. Sie kommen zurueck — aber nicht als Tafel zum Lesen,
+   sondern als Liste zum Lautsagen, jeder Satz mit Hoerknopf und
+   danach eine Aufgabe, bei der die Saetze zugedeckt werden. */
+function merksaetze(s3) {
+  if (!s3) return '';
+  neuerAbschnitt();
+  let s = `<section class="section" id="merksaetze">\n`
+    + kopfzeile('Sätze, die', 'sitzen müssen', 'Sag jeden einmal laut.');
+
+  let etwas = false;
+  [['a2', 'nur-a2'], ['b1', 'nur-b1']].forEach(([stufe, klasse]) => {
+    const gruppen = s3[stufe];
+    if (!gruppen || !gruppen.length) return;
+    etwas = true;
+    s += `<div class="${klasse}">\n`;
+    gruppen.forEach(g => {
+      s += `<div class="merkg"><div class="merkt">${h(g.titel)}</div>\n`;
+      (g.chips || []).forEach(c => {
+        s += `<div class="merk"><span>${hm(c)}</span>${sprechKnopf(c)}</div>\n`;
+      });
+      s += `</div>\n`;
+    });
+    s += `</div>\n`;
+  });
+  if (!etwas) return '';
+
+  s += tipp({ art: 'yellow', text: '✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. '
+    + 'Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.' });
+  return s + `</section>\n`;
+}
+
+/* ---------- 7c Sprechuebung ----------
+   Bis hierher hat die Stunde viel gezeigt und wenig verlangt. Dieser
+   Abschnitt verlangt nur: drei kleine Uebungen, in denen jeder in der
+   Runde den Mund aufmacht. Die Karte zieht die Saetze, die oben bei
+   den Merksaetzen stehen — es kommt also nichts Neues dazu, es wird
+   nur benutzt. */
+function sprechuebung(S) {
+  neuerAbschnitt();
+  const hatKarte = S.daten && S.daten.ueb && S.daten.ueb.length;
+  let s = `<section class="section" id="sprechuebung">\n`
+    + kopfzeile('Jetzt', 'ihr', 'Drei kleine Übungen. Jeder kommt dran.');
+
+  if (hatKarte) {
+    s += `<div class="card90">\n<div class="lbl">Dein Satz</div>\n`
+      + `<div class="word" id="wueb" style="font-size:1.1rem;line-height:1.4;">Tippe auf den Knopf.</div>\n`
+      + `<button class="btn" id="uebnew">🎲 Satz ziehen</button>\n</div>\n`;
+  }
+
+  s += `<div class="uebs">\n`
+    + `<div class="ueb"><span class="uebn">1</span><div><b>Satz ziehen und weiterreden</b>`
+    + `<p>Zieh einen Satz, sag ihn laut — und häng sofort einen zweiten Satz an, der danach kommen würde.</p></div></div>\n`
+    + `<div class="ueb"><span class="uebn">2</span><div><b>Die Kette</b>`
+    + `<p>Reihum sagt jeder einen Satz von oben. Kein Satz darf zweimal kommen. Wer nicht weiterweiß, sagt <i>Ich weiß gerade keinen mehr</i> — auch das ist ein Satz.</p></div></div>\n`
+    + `<div class="ueb"><span class="uebn">3</span><div><b>Ohne Hilfe</b>`
+    + `<p>Klappt alles zu und spielt Dialog 1 noch einmal — frei, mit euren eigenen Wörtern.</p></div></div>\n`
+    + `</div>\n`;
+
+  return s + `</section>\n`;
 }
 
 /* ---------- 8 Debatte ----------
@@ -685,6 +770,14 @@ function ankommen(S) {
    die, die frueher am Anfang standen — abstrakt, streitbar, und nach
    einer halben Stunde Wortschatz und Dialog genau richtig. */
 function debatte(S) {
+  /* Eine Debatte ist nicht immer die richtige Aufgabe. Beim Baecker
+     auf A2 ueber „Beim Einkaufen immer Deutsch sprechen" zu streiten,
+     ist zu abstrakt und zu frueh — dort braucht es Saetze und eine
+     Sprechuebung. Deshalb faellt die Debatte weg, wo sie nicht passt:
+     bei allen A2/B1-Stunden, und bei jeder Stunde, die es in ihrer
+     JSON mit ohneDebatte ausdruecklich sagt. */
+  if (S.ohneDebatte) return '';
+  if (/A2/.test(String(S.stufe || ''))) return '';
   neuerAbschnitt();
   const eig = DEB || S.debatte;
   if (!eig) return '';
@@ -751,12 +844,32 @@ function nimm(id, name, html) { if (html) abschnitte.push({ id, name, html }); }
 
    Die Daten der entfernten Abschnitte bleiben in den JSON-Dateien
    stehen. Geloescht ist nichts. */
+/* Die Karte in der Sprechuebung zieht aus genau den Saetzen, die
+   oben bei den Merksaetzen stehen. Nichts Neues, nur benutzt. */
+if (S.saetze) {
+  const pool = [];
+  ['a2', 'b1'].forEach(k => (S.saetze[k] || []).forEach(g => (g.chips || []).forEach(c => {
+    const t = nurText(c).trim();
+    /* Nur ganze Saetze in die Ziehkarte. Bausteine wie „zweihundert
+       Gramm" oder „drei Stueck" stehen oben bei den Merksaetzen unter
+       ihrer Ueberschrift richtig, allein gezogen ergeben sie keine
+       Sprechaufgabe. */
+    const woerter = t.split(/\s+/).length;
+    if (woerter >= 3 && /^[A-ZÄÖÜ]/.test(t)) pool.push(t);
+  })));
+  S.daten.ueb = pool.filter((x, i) => pool.indexOf(x) === i);
+}
+
 markenSammeln();
 nimm('ankommen',     '👋 Ankommen',      ankommen(S));
 nimm('dialoge',      '🎬 Dialog',        S.dialoge ? dialoge(S.dialoge) : '');
+nimm('merksaetze',   '🗣️ Merksätze',     S.saetze ? merksaetze(S.saetze) : '');
 nimm('challenge',    '⏱️ 90 Sekunden',   (S.daten.w90 && S.daten.w90.length) ? challenge(S.challenge) : '');
 nimm('rollenspiele', S.spiele ? '🎲 Spiele' : '🎭 Rollenspiel',   (S.spiele || S.rollenspiele) ? rollenspiele(S.spiele || S.rollenspiele) : '');
 nimm('debatte',      '⚖️ Debatte',       debatte(S));
+/* Wo keine Debatte steht, tritt die Sprechuebung an ihre Stelle —
+   damit die Stunde nicht kuerzer wird, sondern anders. */
+nimm('sprechuebung', '⚡ Sprechübung',    debatte(S) ? '' : sprechuebung(S));
 nimm('abschluss',    '🎯 Abschluss',     abschluss());
 nimm('hausaufgabe',  '📮 Hausaufgabe',   S.hausaufgabe ? hausaufgabe(S.hausaufgabe) : '');
 

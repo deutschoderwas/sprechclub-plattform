@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Wie fühlst du dich, wenn jemand <i>ja, aber</i> sagt?</div></div><div class="nur-b1"><div class="ank">Woran erkennst du, ob ein Einwand echt ist oder nur eine höfliche Absage?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../amanda/sz-buero.webp" alt="Zwei Kolleginnen besprechen etwas an einem Schreibtisch">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Wie fühlst du dich, wenn jemand <i>ja, aber</i> sagt?</li><li>Gibst du dann schnell nach?</li><li>Wann hat dich zuletzt jemand überzeugt?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Woran erkennst du, ob ein Einwand echt ist oder nur eine höfliche Absage?</li><li>Was machst du, wenn dir mitten im Gespräch die Worte fehlen?</li><li>Wo gibst du zu schnell nach, wo zu spät?</li></ol></div></div>
+<div class="tip teal">🔑 <strong>Die vier Werkzeuge:</strong> <b>1 Nachfragen</b> — was genau stört? <b>2 Zustimmen und drehen</b> — der stärkste Zug. <b>3 Beispiel bringen</b> — konkret schlägt allgemein. <b>4 Kompromiss anbieten</b> — wenn nichts anderes geht.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Fragst du nach oder antwortest du sofort?</li><li>Was sagst du, wenn du Zeit brauchst?</li><li>Wann ist eine Pause im Gespräch gut?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Warum hilft eine Rückfrage mehr als eine schnelle Antwort?</li><li>Wie merkst du, dass ihr über zwei verschiedene Dinge redet?</li><li>Wann ist es besser, das Gespräch zu vertagen?</li></ol></div></div>
+<div class="tip">💡 <strong>Der Satz, der immer geht:</strong> <b>Was genau macht Ihnen dabei Sorge?</b> Er klingt freundlich, ist keine Verteidigung, und die Antwort sagt dir, worüber ihr wirklich redet.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -586,6 +684,64 @@ footer strong{color:var(--ink);}
 <button class="speak dbtn" data-say="Ich würde die Woche gern mal anders aufteilen: Montag und Donnerstag tauschen. Du beschwerst dich immer über alles. So schlimm ist es doch nicht. Ich möchte mich nicht beschweren. Bleiben wir kurz bei der Sache: Montag und Donnerstag. Montags weiß ich halt nie, wann ich heimkomme. Verstehe ich. Dann nimm den Donnerstag, ich mache den Montag. Okay? Ja, das kriegen wir hin. Tut mir leid wegen vorhin.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 1 mit einem eigenen Vorschlag. Regel: Der Erste darf erst antworten, nachdem er einmal nachgefragt hat.</div>
+</section>
+
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 🔍 Nachfragen</div>
+<div class="merk"><span>Was genau macht Ihnen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Sorge" data-wort="die Sorge" data-kurz="die Angst, dass etwas nicht klappt" data-bsp="Was genau macht Ihnen dabei Sorge?">Sorge</b>?</span><button class="speak" data-say="Was genau macht Ihnen Sorge?">🔊 hören</button></div>
+<div class="merk"><span>Wie meinen Sie das?</span><button class="speak" data-say="Wie meinen Sie das?">🔊 hören</button></div>
+<div class="merk"><span>Woran denken Sie dabei?</span><button class="speak" data-say="Woran denken Sie dabei?">🔊 hören</button></div>
+<div class="merk"><span>Wo hätten Sie <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Bedenken" data-wort="die Bedenken" data-kurz="die Sorge, dass etwas schiefgeht" data-bsp="Wo hätten Sie denn Bedenken?">Bedenken</b>?</span><button class="speak" data-say="Wo hätten Sie Bedenken?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 👍 Zustimmen</div>
+<div class="merk"><span>Da haben Sie recht.</span><button class="speak" data-say="Da haben Sie recht.">🔊 hören</button></div>
+<div class="merk"><span>Stimmt, das ist ein <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Punkt" data-wort="der Punkt" data-kurz="die einzelne Sache im Gespräch" data-bsp="Diesen Punkt würde ich gern noch klären.">Punkt</b>.</span><button class="speak" data-say="Stimmt, das ist ein Punkt.">🔊 hören</button></div>
+<div class="merk"><span>Das verstehe ich gut.</span><button class="speak" data-say="Das verstehe ich gut.">🔊 hören</button></div>
+<div class="merk"><span>Ihr <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Einwand" data-wort="der Einwand" data-kurz="der Grund, der dagegen spricht" data-bsp="Ihr Einwand ist berechtigt, ich habe darüber nachgedacht.">Einwand</b> ist berechtigt.</span><button class="speak" data-say="Ihr Einwand ist berechtigt.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · ↩️ Drehen</div>
+<div class="merk"><span>Stimmt — und genau deshalb …</span><button class="speak" data-say="Stimmt — und genau deshalb …">🔊 hören</button></div>
+<div class="merk"><span>Aber gerade darum …</span><button class="speak" data-say="Aber gerade darum …">🔊 hören</button></div>
+<div class="merk"><span>Das spricht eigentlich dafür, weil …</span><button class="speak" data-say="Das spricht eigentlich dafür, weil …">🔊 hören</button></div>
+<div class="merk"><span>Bei uns war das so: …</span><button class="speak" data-say="Bei uns war das so: …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🤝 Anbieten</div>
+<div class="merk"><span>Als <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Kompromiss" data-wort="der Kompromiss" data-kurz="wenn beide etwas nachgeben" data-bsp="Als Kompromiss könnten wir es erst mal halbieren.">Kompromiss</b> könnten wir …</span><button class="speak" data-say="Als Kompromiss könnten wir …">🔊 hören</button></div>
+<div class="merk"><span>Wir könnten mit der Hälfte anfangen.</span><button class="speak" data-say="Wir könnten mit der Hälfte anfangen.">🔊 hören</button></div>
+<div class="merk"><span>Probieren wir es einen Monat?</span><button class="speak" data-say="Probieren wir es einen Monat?">🔊 hören</button></div>
+<div class="merk"><span>Was müsste passieren, damit es geht?</span><button class="speak" data-say="Was müsste passieren, damit es geht?">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 🔍 Gezielt nachhaken</div>
+<div class="merk"><span>Wenn ich es richtig verstehe, geht es Ihnen um …</span><button class="speak" data-say="Wenn ich es richtig verstehe, geht es Ihnen um …">🔊 hören</button></div>
+<div class="merk"><span>Ist es eher die Zeit oder eher das Geld?</span><button class="speak" data-say="Ist es eher die Zeit oder eher das Geld?">🔊 hören</button></div>
+<div class="merk"><span>Woran würden Sie merken, dass es funktioniert?</span><button class="speak" data-say="Woran würden Sie merken, dass es funktioniert?">🔊 hören</button></div>
+<div class="merk"><span>Was wäre für Sie das schlimmste Ergebnis?</span><button class="speak" data-say="Was wäre für Sie das schlimmste Ergebnis?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 👍 Anerkennen und sortieren</div>
+<div class="merk"><span>Ihr Einwand ist berechtigt, den hatte ich auch.</span><button class="speak" data-say="Ihr Einwand ist berechtigt, den hatte ich auch.">🔊 hören</button></div>
+<div class="merk"><span>Da sind eigentlich zwei Punkte drin.</span><button class="speak" data-say="Da sind eigentlich zwei Punkte drin.">🔊 hören</button></div>
+<div class="merk"><span>Ich verstehe Ihre <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Zweifel" data-wort="der Zweifel" data-kurz="wenn jemand nicht ganz glaubt, dass es klappt" data-bsp="Ich verstehe Ihre Zweifel, das ging mir zuerst auch so.">Zweifel</b>, das ging mir zuerst genauso.</span><button class="speak" data-say="Ich verstehe Ihre Zweifel, das ging mir zuerst genauso.">🔊 hören</button></div>
+<div class="merk"><span>Zum ersten Punkt würde ich sagen: …</span><button class="speak" data-say="Zum ersten Punkt würde ich sagen: …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · ↩️ Umdrehen mit Beleg</div>
+<div class="merk"><span>Genau deshalb wäre der befristete Weg der sichere.</span><button class="speak" data-say="Genau deshalb wäre der befristete Weg der sichere.">🔊 hören</button></div>
+<div class="merk"><span>Ihr Argument spricht eher für meinen Vorschlag, weil …</span><button class="speak" data-say="Ihr Argument spricht eher für meinen Vorschlag, weil …">🔊 hören</button></div>
+<div class="merk"><span>Wir haben das im Mai probiert, und danach …</span><button class="speak" data-say="Wir haben das im Mai probiert, und danach …">🔊 hören</button></div>
+<div class="merk"><span>Das Risiko liegt eher darin, nichts zu ändern.</span><button class="speak" data-say="Das Risiko liegt eher darin, nichts zu ändern.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🤝 Tür offen lassen</div>
+<div class="merk"><span>Eine feste <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Zusage" data-wort="die Zusage" data-kurz="wenn jemand fest ja sagt" data-bsp="Eine feste Zusage brauche ich heute gar nicht.">Zusage</b> brauche ich heute gar nicht.</span><button class="speak" data-say="Eine feste Zusage brauche ich heute gar nicht.">🔊 hören</button></div>
+<div class="merk"><span>Was müsste erfüllt sein, damit Sie zustimmen könnten?</span><button class="speak" data-say="Was müsste erfüllt sein, damit Sie zustimmen könnten?">🔊 hören</button></div>
+<div class="merk"><span>Lassen Sie uns kurz darüber schlafen.</span><button class="speak" data-say="Lassen Sie uns kurz darüber schlafen.">🔊 hören</button></div>
+<div class="merk"><span>Ich melde mich Freitag noch einmal dazu.</span><button class="speak" data-say="Ich melde mich Freitag noch einmal dazu.">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -637,7 +793,7 @@ footer strong{color:var(--ink);}
 <div class="rsp-kopf"><span class="rsp-nr">2</span><b>Beim Vermieter</b></div>
 <div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>möchte etwas in der Wohnung verändern und braucht das Einverständnis.</p></div><div class="rsp-r b"><span>B</span><p>ist nicht dagegen, hat aber <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Bedenken" data-wort="die Bedenken" data-kurz="die Sorge, dass etwas schiefgeht" data-bsp="Wo hätten Sie denn Bedenken?">Bedenken</b> wegen der anderen Mieter.</p></div></div>
 <div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Wäre das für Sie in Ordnung?</span><span class="rm">Ihr Einwand ist berechtigt</span><span class="rm">Wenn ich dieselbe Farbe nehme — ginge das?</span><span class="rm">Eine feste Zusage brauche ich heute nicht</span></div><div class="nur-b1"><span class="rm">Ja, aber dann sieht es anders aus als im Rest des Hauses</span><span class="rm">Und wer macht das, ein Betrieb oder Sie selbst?</span><span class="rm">Das wäre schon besser, ich müsste es trotzdem prüfen</span><span class="rm">Schicken Sie mir das Angebot, ich sage bis Freitag Bescheid</span></div></div>
-<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>A hat den <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Einwand" data-wort="der Einwand" data-kurz="der Grund, der dagegen spricht" data-bsp="Ihr Einwand ist berechtigt, ich habe darüber nachgedacht.">Einwand</b> anerkannt und sofort eine konkrete Lösung angeboten. Und am Ende blieb die Tür offen, statt auf eine Antwort zu drängen.</div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>A hat den Einwand anerkannt und sofort eine konkrete Lösung angeboten. Und am Ende blieb die Tür offen, statt auf eine Antwort zu drängen.</div>
 <details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
 
@@ -760,6 +916,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Mein Vorschlag lag auf dem Tisch, und dann kam das erste Ja, aber. Früher hätte ich sofort geantwortet. Diesmal habe ich gefragt: Was genau macht Ihnen dabei ___? Die Antwort war eine andere, als ich erwartet hatte. Ich habe gesagt: Ihr Einwand ist ___, darüber habe ich auch nachgedacht. ___ kostet es am Anfang mehr Zeit, ___ sparen wir sie hinterher wieder ein. Danach kam noch ein Einwand, und ich habe gemerkt: Da sind zwei ___ drin. Zum ersten habe ich ein Beispiel gebracht, beim zweiten habe ich einen ___ angeboten. Kurz wurde es persönlich, aber ich habe nur gesagt: Bleiben wir bei der ___. Am Ende hieß es: Eine feste ___ bekommen Sie am Freitag. Das war genug.","o":["Sorge","berechtigt","Zwar","allerdings","Punkte","Kompromiss","Sache","Zusage"],"a":[["Sorge"],["berechtigt"],["Zwar"],["allerdings"],["Punkte"],["Kompromiss"],["Sache"],["Zusage"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Was genau macht Ihnen Sorge?","Wie meinen Sie das?","Woran denken Sie dabei?","Wo hätten Sie Bedenken?","Da haben Sie recht.","Stimmt, das ist ein Punkt.","Das verstehe ich gut.","Ihr Einwand ist berechtigt.","Stimmt — und genau deshalb …","Aber gerade darum …","Das spricht eigentlich dafür, weil …","Bei uns war das so: …","Als Kompromiss könnten wir …","Wir könnten mit der Hälfte anfangen.","Probieren wir es einen Monat?","Was müsste passieren, damit es geht?","Wenn ich es richtig verstehe, geht es Ihnen um …","Ist es eher die Zeit oder eher das Geld?","Woran würden Sie merken, dass es funktioniert?","Was wäre für Sie das schlimmste Ergebnis?","Ihr Einwand ist berechtigt, den hatte ich auch.","Da sind eigentlich zwei Punkte drin.","Ich verstehe Ihre Zweifel, das ging mir zuerst genauso.","Zum ersten Punkt würde ich sagen: …","Genau deshalb wäre der befristete Weg der sichere.","Ihr Argument spricht eher für meinen Vorschlag, weil …","Wir haben das im Mai probiert, und danach …","Das Risiko liegt eher darin, nichts zu ändern.","Eine feste Zusage brauche ich heute gar nicht.","Was müsste erfüllt sein, damit Sie zustimmen könnten?","Lassen Sie uns kurz darüber schlafen.","Ich melde mich Freitag noch einmal dazu."]
 </script>
 
 <script>
@@ -1059,6 +1218,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

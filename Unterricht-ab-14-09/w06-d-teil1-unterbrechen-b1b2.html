@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Wann hast du zuletzt etwas sagen wollen und es nicht gesagt?</div></div><div class="nur-b1"><div class="ank">Woran erkennst du, dass jemand noch nicht fertig ist?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../vok-bild/die-meinung.webp" alt="Vier Menschen sitzen im Café zusammen und diskutieren">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Wann hast du zuletzt etwas sagen wollen und es nicht gesagt?</li><li>Wie unterbricht man in deiner Sprache?</li><li>Ist Unterbrechen bei euch höflich oder unhöflich?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Woran erkennst du, dass jemand noch nicht fertig ist?</li><li>Wie unterscheidet sich Unterbrechen unter Freunden von Unterbrechen im Beruf?</li><li>Warum trauen sich Lernende oft weniger als Muttersprachler, obwohl sie mehr zu sagen hätten?</li></ol></div></div>
+<div class="tip teal">🔑 <strong>Der wichtigste Satz für heute:</strong> <b>„Darf ich da mal kurz einhaken?“</b> Er ist kurz, er kündigt an, dass es kurz wird, und das kleine Wörtchen <u>mal</u> macht ihn beiläufig statt wichtig. Wer diesen Satz sicher hat, kommt in jedes Gespräch hinein.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Merkst du, wenn ein deutscher Satz zu Ende geht?</li><li>Woran erkennt man das — an der Stimme oder an den Wörtern?</li><li>In welcher Situation ist Unterbrechen für dich am schwersten?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Welche Signale zeigen, dass jemand gleich fertig ist?</li><li>Wie verändert es das Gespräch, wenn man erst am Satzende einsteigt?</li><li>Gibt es Situationen, in denen Unterbrechen sogar erwartet wird?</li></ol></div></div>
+<div class="tip">💡 <strong>Zwei Signale, auf die du hören kannst:</strong> Die Stimme geht am Satzende nach <u>unten</u>, und das letzte Verb fällt (<i>… gesprochen</i>, <i>… angerufen</i>, <i>… machen</i>). Wer auf diese beiden Dinge achtet, findet plötzlich Einstiege, wo vorher eine Wand war.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -590,6 +688,64 @@ footer strong{color:var(--ink);}
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 2 mit einem Thema, bei dem ihr euch wirklich auskennt. Regel: Der Einstieg muss ein Anknüpfen sein — der Satz <i>„Ja, aber“</i> ist verboten.</div>
 </section>
 
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 🚪 Einsteigen</div>
+<div class="merk"><span>Darf ich da mal kurz einhaken?</span><button class="speak" data-say="Darf ich da mal kurz einhaken?">🔊 hören</button></div>
+<div class="merk"><span>Kurz dazu:</span><button class="speak" data-say="Kurz dazu:">🔊 hören</button></div>
+<div class="merk"><span>Da würde ich gern <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von anknüpfen" data-wort="anknüpfen" data-kurz="an das anschließen, was jemand gesagt hat" data-bsp="Da würde ich gern anknüpfen.">anknüpfen</b></span><button class="speak" data-say="Da würde ich gern anknüpfen">🔊 hören</button></div>
+<div class="merk"><span>Einen Satz noch dazu</span><button class="speak" data-say="Einen Satz noch dazu">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · ⏱️ Kurz halten</div>
+<div class="merk"><span>Ganz kurz nur:</span><button class="speak" data-say="Ganz kurz nur:">🔊 hören</button></div>
+<div class="merk"><span>In einem Satz:</span><button class="speak" data-say="In einem Satz:">🔊 hören</button></div>
+<div class="merk"><span>Zwei Sachen dazu</span><button class="speak" data-say="Zwei Sachen dazu">🔊 hören</button></div>
+<div class="merk"><span>Das war es schon</span><button class="speak" data-say="Das war es schon">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 📌 Den Platz sichern</div>
+<div class="merk"><span>Ich komme gleich dazu</span><button class="speak" data-say="Ich komme gleich dazu">🔊 hören</button></div>
+<div class="merk"><span>Dazu sage ich noch etwas</span><button class="speak" data-say="Dazu sage ich noch etwas">🔊 hören</button></div>
+<div class="merk"><span>Bevor wir weitergehen …</span><button class="speak" data-say="Bevor wir weitergehen …">🔊 hören</button></div>
+<div class="merk"><span>Einen Moment, ich bin fast fertig</span><button class="speak" data-say="Einen Moment, ich bin fast fertig">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🔄 Zurückgeben</div>
+<div class="merk"><span>Das war es von mir</span><button class="speak" data-say="Das war es von mir">🔊 hören</button></div>
+<div class="merk"><span>Wie seht ihr das?</span><button class="speak" data-say="Wie seht ihr das?">🔊 hören</button></div>
+<div class="merk"><span>Zurück zu dir</span><button class="speak" data-say="Zurück zu dir">🔊 hören</button></div>
+<div class="merk"><span>Sag du weiter</span><button class="speak" data-say="Sag du weiter">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 🚪 Feiner einsteigen</div>
+<div class="merk"><span>Wenn ich da kurz einhaken darf …</span><button class="speak" data-say="Wenn ich da kurz einhaken darf …">🔊 hören</button></div>
+<div class="merk"><span>Ich würde gern an den letzten Punkt anknüpfen</span><button class="speak" data-say="Ich würde gern an den letzten Punkt anknüpfen">🔊 hören</button></div>
+<div class="merk"><span>Dazu hätte ich eine Ergänzung</span><button class="speak" data-say="Dazu hätte ich eine Ergänzung">🔊 hören</button></div>
+<div class="merk"><span>Erlauben Sie mir einen kurzen Einwurf</span><button class="speak" data-say="Erlauben Sie mir einen kurzen Einwurf">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🎯 Den Beitrag rahmen</div>
+<div class="merk"><span>Zwei Punkte dazu, dann bin ich fertig</span><button class="speak" data-say="Zwei Punkte dazu, dann bin ich fertig">🔊 hören</button></div>
+<div class="merk"><span>Ich fasse mich kurz</span><button class="speak" data-say="Ich fasse mich kurz">🔊 hören</button></div>
+<div class="merk"><span>Nur zur Einordnung:</span><button class="speak" data-say="Nur zur Einordnung:">🔊 hören</button></div>
+<div class="merk"><span>Ein Beispiel dazu, dann höre ich auf</span><button class="speak" data-say="Ein Beispiel dazu, dann höre ich auf">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 📌 Souverän Platz halten</div>
+<div class="merk"><span>Darauf komme ich gleich zurück</span><button class="speak" data-say="Darauf komme ich gleich zurück">🔊 hören</button></div>
+<div class="merk"><span>Den Punkt würde ich gern noch zu Ende bringen</span><button class="speak" data-say="Den Punkt würde ich gern noch zu Ende bringen">🔊 hören</button></div>
+<div class="merk"><span>Bevor das Thema wechselt: …</span><button class="speak" data-say="Bevor das Thema wechselt: …">🔊 hören</button></div>
+<div class="merk"><span>Ich hatte dazu noch etwas offen</span><button class="speak" data-say="Ich hatte dazu noch etwas offen">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🤝 Elegant übergeben</div>
+<div class="merk"><span>So weit von meiner Seite</span><button class="speak" data-say="So weit von meiner Seite">🔊 hören</button></div>
+<div class="merk"><span>Ich gebe zurück an …</span><button class="speak" data-say="Ich gebe zurück an …">🔊 hören</button></div>
+<div class="merk"><span>Was meinen Sie dazu?</span><button class="speak" data-say="Was meinen Sie dazu?">🔊 hören</button></div>
+<div class="merk"><span>Damit wäre ich durch</span><button class="speak" data-say="Damit wäre ich durch">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
+</section>
+
 <section class="section" id="challenge">
 <h2 class="st">⏱️ Die 90-Sekunden-Challenge</h2>
 <p class="ssub">Ein Gespräch, anderthalb Minuten, freies Sprechen. Nicht am längsten reden — sondern hineinkommen, kurz bleiben und das Wort wieder abgeben.</p>
@@ -637,7 +793,7 @@ footer strong{color:var(--ink);}
 
 <div class="rsp">
 <div class="rsp-kopf"><span class="rsp-nr">2</span><b>Acht Leute, ein Tisch</b></div>
-<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>erzählt in großer <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Runde" data-wort="die Runde" data-kurz="die Gruppe, die gerade zusammensitzt" data-bsp="In kleiner Runde traue ich mich mehr.">Runde</b> eine lange Geschichte.</p></div><div class="rsp-r b"><span>B</span><p>will nicht dagegenreden, sondern <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von anknüpfen" data-wort="anknüpfen" data-kurz="an das anschließen, was jemand gesagt hat" data-bsp="Da würde ich gern anknüpfen.">anknüpfen</b> — und dann selbst den Faden für zwei Sätze halten.</p></div></div>
+<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>erzählt in großer <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Runde" data-wort="die Runde" data-kurz="die Gruppe, die gerade zusammensitzt" data-bsp="In kleiner Runde traue ich mich mehr.">Runde</b> eine lange Geschichte.</p></div><div class="rsp-r b"><span>B</span><p>will nicht dagegenreden, sondern anknüpfen — und dann selbst den Faden für zwei Sätze halten.</p></div></div>
 <div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Da würde ich gern anknüpfen</span><span class="rm">Zwei Sachen dazu</span><span class="rm">Genau das kenne ich</span><span class="rm">Erzähl mal weiter</span></div><div class="nur-b1"><span class="rm">Ich würde gern an deinen letzten Punkt anknüpfen</span><span class="rm">Zwei Punkte dazu, dann bin ich fertig</span><span class="rm">Ein Beispiel dazu, dann höre ich auf</span><span class="rm">Was meint ihr dazu?</span></div></div>
 <div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>Der Einstieg war ein Anknüpfen, kein Widerspruch — <i>„Ja, aber“</i> ist nicht gefallen. B hat eine Mengenangabe benutzt (<i>zwei Sachen</i>) und sie eingehalten.</div>
 <details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
@@ -762,6 +918,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Lange habe ich in Besprechungen gar nichts gesagt. Nicht, weil ich nichts wusste, sondern weil die ___ nie kam, auf die ich gewartet habe. Irgendwann hat mir eine Kollegin einen einzigen Satz beigebracht: Darf ich da ___ kurz einhaken? Beim ersten Mal war ich sicher, dass alle mich anschauen würden. Es hat niemand geschaut. Der Chef hat nur genickt und gesagt: Ja, bitte. Seitdem steige ich früher ein, meistens am Satzende, wenn die Stimme nach unten geht — daran ___ man es nämlich ziemlich zuverlässig. Zweimal habe ich zu lange ___, und beide Male war das Thema danach durch. Inzwischen kündige ich die Länge an: Zwei Sachen dazu, dann bin ich fertig. Das hält den Platz frei, weil alle wissen, wann es vorbei ist. Und am Ende gebe ich zurück, statt einfach aufzuhören — ein einziger Satz, und die ___ läuft weiter. Am meisten geholfen hat mir aber ein kleines Wort. Solche Wörter wie mal und doch nennt man ___, und ohne sie klingt im Deutschen jede Bitte wie eine Anweisung. Ich hätte nie gedacht, dass drei Buchstaben so viel ___ machen.","o":["Sprechpause","mal","hört","gezögert","Runde","Partikeln","Unterschied","Beitrag"],"a":[["Sprechpause"],["mal"],["hört"],["gezögert"],["Runde"],["Partikeln"],["Unterschied"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Darf ich da mal kurz einhaken?","Da würde ich gern anknüpfen","Einen Satz noch dazu","Ganz kurz nur:","In einem Satz:","Zwei Sachen dazu","Das war es schon","Ich komme gleich dazu","Dazu sage ich noch etwas","Bevor wir weitergehen …","Einen Moment, ich bin fast fertig","Das war es von mir","Wie seht ihr das?","Zurück zu dir","Sag du weiter","Wenn ich da kurz einhaken darf …","Ich würde gern an den letzten Punkt anknüpfen","Dazu hätte ich eine Ergänzung","Erlauben Sie mir einen kurzen Einwurf","Zwei Punkte dazu, dann bin ich fertig","Ich fasse mich kurz","Nur zur Einordnung:","Ein Beispiel dazu, dann höre ich auf","Darauf komme ich gleich zurück","Den Punkt würde ich gern noch zu Ende bringen","Bevor das Thema wechselt: …","Ich hatte dazu noch etwas offen","So weit von meiner Seite","Ich gebe zurück an …","Was meinen Sie dazu?","Damit wäre ich durch"]
 </script>
 
 <script>
@@ -1061,6 +1220,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

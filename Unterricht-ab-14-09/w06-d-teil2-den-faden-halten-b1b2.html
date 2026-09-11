@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Wann hast du zuletzt mitten im Satz den Faden verloren?</div></div><div class="nur-b1"><div class="ank">Warum fällt es so schwer, nach einer Unterbrechung zum eigenen Punkt zurückzukehren?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../vok-bild/der-vorschlag.webp" alt="Notizbuch und Tasse auf einem Schreibtisch">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Wann hast du zuletzt mitten im Satz den Faden verloren?</li><li>Was machst du, wenn dir jemand ins Wort fällt?</li><li>Kommst du danach wieder zurück zu deinem Punkt?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Warum fällt es so schwer, nach einer Unterbrechung zum eigenen Punkt zurückzukehren?</li><li>Wann ist ein Einwurf hilfreich und wann nimmt er dir das Gespräch weg?</li><li>Wie merkt man, ob jemand einen unterbricht oder nur mitdenkt?</li></ol></div></div>
+<div class="tip teal">🔑 <strong>Der wichtigste Satz für heute:</strong> <b>„Darauf komme ich gleich zurück — ich würde den Punkt gern zu Ende bringen.“</b> Er nimmt den Einwurf ernst, ohne ihn zu bedienen, und er sagt der Runde: Ich bin noch nicht fertig. Zwei Sekunden, und der Faden liegt wieder bei dir.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Merkst du beim Sprechen, wo dein Satz endet?</li><li>Was ist leichter: kurze oder lange Sätze?</li><li>Wann verlierst du dich in einem Satz?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Wie verändert die Satzklammer das Zuhören im Deutschen?</li><li>Ist ein langer Satz ein Vorteil oder ein Risiko, wenn man den Faden halten will?</li><li>Was hilft mehr: lange sprechen oder die Struktur ankündigen?</li></ol></div></div>
+<div class="tip">💡 <strong>Die Idee in einem Bild:</strong> Der deutsche Satz ist eine <u>Klammer</u>. Vorne öffnet sie (<i>habe</i>, <i>möchte</i>, <i>fange</i>), hinten schließt sie (<i>gesprochen</i>, <i>sagen</i>, <i>an</i>). Dazwischen darf viel stehen — und solange die Klammer offen ist, gehört dir das Wort.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -585,6 +683,64 @@ footer strong{color:var(--ink);}
 <button class="speak dbtn" data-say="Genau, und deshalb sollten wir gleich das ganze Verfahren ändern, also ich würde vorschlagen … Einen Moment, ich bin mit meinem Punkt noch nicht durch. Entschuldige, ich dachte, du wärst fertig. Kein Problem. Mein zweiter Punkt war die Uhrzeit — und die hängt mit deinem Vorschlag zusammen. Dann sag das zuerst. Mache ich. Danach nehme ich deinen Vorschlag auf, der passt nämlich gut dazu.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 1, aber der Zuhörer darf dreimal unterbrechen. Regel für den Sprechenden: Beide angekündigten Punkte müssen kommen — und der Satz <i>„Ach, ist auch egal“</i> beendet die Runde sofort.</div>
+</section>
+
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 📢 Ankündigen</div>
+<div class="merk"><span>Zwei Punkte dazu, dann bin ich fertig</span><button class="speak" data-say="Zwei Punkte dazu, dann bin ich fertig">🔊 hören</button></div>
+<div class="merk"><span>Ich brauche dafür zwei Minuten</span><button class="speak" data-say="Ich brauche dafür zwei Minuten">🔊 hören</button></div>
+<div class="merk"><span>Ganz kurz die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Gliederung" data-wort="die Gliederung" data-kurz="wie ein Beitrag aufgebaut ist" data-bsp="Ich sage kurz die Gliederung: zwei Punkte.">Gliederung</b>:</span><button class="speak" data-say="Ganz kurz die Gliederung:">🔊 hören</button></div>
+<div class="merk"><span>Eine Sache noch, dann höre ich auf</span><button class="speak" data-say="Eine Sache noch, dann höre ich auf">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🔢 Gliedern</div>
+<div class="merk"><span>Erstens … zweitens …</span><button class="speak" data-say="Erstens … zweitens …">🔊 hören</button></div>
+<div class="merk"><span>Zum einen … zum anderen …</span><button class="speak" data-say="Zum einen … zum anderen …">🔊 hören</button></div>
+<div class="merk"><span>Und der zweite Punkt ist …</span><button class="speak" data-say="Und der zweite Punkt ist …">🔊 hören</button></div>
+<div class="merk"><span>Zuletzt noch:</span><button class="speak" data-say="Zuletzt noch:">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🛡️ Den Einwurf abwehren</div>
+<div class="merk"><span>Darauf komme ich gleich zurück</span><button class="speak" data-say="Darauf komme ich gleich zurück">🔊 hören</button></div>
+<div class="merk"><span>Einen Moment, ich bin fast fertig</span><button class="speak" data-say="Einen Moment, ich bin fast fertig">🔊 hören</button></div>
+<div class="merk"><span>Danke, das nehme ich gleich auf</span><button class="speak" data-say="Danke, das nehme ich gleich auf">🔊 hören</button></div>
+<div class="merk"><span>Lass mich das kurz zu Ende sagen</span><button class="speak" data-say="Lass mich das kurz zu Ende sagen">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🏁 Abschließen</div>
+<div class="merk"><span>Ich fasse zusammen: …</span><button class="speak" data-say="Ich fasse zusammen: …">🔊 hören</button></div>
+<div class="merk"><span>Das waren meine zwei Punkte</span><button class="speak" data-say="Das waren meine zwei Punkte">🔊 hören</button></div>
+<div class="merk"><span>Damit bin ich durch</span><button class="speak" data-say="Damit bin ich durch">🔊 hören</button></div>
+<div class="merk"><span>Wie seht ihr das?</span><button class="speak" data-say="Wie seht ihr das?">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 📢 Präzise ankündigen</div>
+<div class="merk"><span>Ich würde das gern in zwei Schritten sagen</span><button class="speak" data-say="Ich würde das gern in zwei Schritten sagen">🔊 hören</button></div>
+<div class="merk"><span>Dazu habe ich zwei Anmerkungen</span><button class="speak" data-say="Dazu habe ich zwei Anmerkungen">🔊 hören</button></div>
+<div class="merk"><span>Vorweg eine Einordnung, dann der eigentliche Punkt</span><button class="speak" data-say="Vorweg eine Einordnung, dann der eigentliche Punkt">🔊 hören</button></div>
+<div class="merk"><span>Ich fasse mich kurz — zwei Minuten</span><button class="speak" data-say="Ich fasse mich kurz — zwei Minuten">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🧭 Zwischendurch orientieren</div>
+<div class="merk"><span>Damit wäre der erste Punkt erledigt</span><button class="speak" data-say="Damit wäre der erste Punkt erledigt">🔊 hören</button></div>
+<div class="merk"><span>Das führt mich zum zweiten Punkt</span><button class="speak" data-say="Das führt mich zum zweiten Punkt">🔊 hören</button></div>
+<div class="merk"><span>Bevor ich weitergehe, kurz zur Einordnung</span><button class="speak" data-say="Bevor ich weitergehe, kurz zur Einordnung">🔊 hören</button></div>
+<div class="merk"><span>Zurück zum eigentlichen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Faden" data-wort="der Faden" data-kurz="die Linie, an der ein Gedanke entlangläuft" data-bsp="Ich habe kurz den Faden verloren.">Faden</b></span><button class="speak" data-say="Zurück zum eigentlichen Faden">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🛡️ Souverän abwehren</div>
+<div class="merk"><span>Da widerspreche ich gleich — den Gedanken bringe ich kurz zu Ende</span><button class="speak" data-say="Da widerspreche ich gleich — den Gedanken bringe ich kurz zu Ende">🔊 hören</button></div>
+<div class="merk"><span>Ich nehme das gern auf, sobald ich durch bin</span><button class="speak" data-say="Ich nehme das gern auf, sobald ich durch bin">🔊 hören</button></div>
+<div class="merk"><span>Einen Satz noch, dann sind Sie dran</span><button class="speak" data-say="Einen Satz noch, dann sind Sie dran">🔊 hören</button></div>
+<div class="merk"><span>Den <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von Einwand" data-wort="der Einwand" data-kurz="jemand widerspricht, bevor du fertig bist" data-bsp="Darauf komme ich gleich zurück.">Einwand</b> höre ich, ich komme darauf</span><button class="speak" data-say="Den Einwand höre ich, ich komme darauf">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🏁 Sauber abschließen</div>
+<div class="merk"><span>Zusammengefasst: …</span><button class="speak" data-say="Zusammengefasst: …">🔊 hören</button></div>
+<div class="merk"><span>Damit wäre ich am Ende</span><button class="speak" data-say="Damit wäre ich am Ende">🔊 hören</button></div>
+<div class="merk"><span>So weit von meiner Seite</span><button class="speak" data-say="So weit von meiner Seite">🔊 hören</button></div>
+<div class="merk"><span>Jetzt komme ich zu Ihrem Einwand</span><button class="speak" data-say="Jetzt komme ich zu Ihrem Einwand">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -634,7 +790,7 @@ footer strong{color:var(--ink);}
 
 <div class="rsp">
 <div class="rsp-kopf"><span class="rsp-nr">2</span><b>Mitten im Satz raus</b></div>
-<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>erzählt etwas Längeres.</p></div><div class="rsp-r b"><span>B</span><p>unterbricht mit einer Frage, die vom Thema wegführt. A muss zurückfinden — über <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Zusammenfassen" data-wort="zusammenfassen" data-kurz="das Wichtigste noch einmal kurz sagen" data-bsp="Ich fasse kurz zusammen, dann bin ich fertig.">Zusammenfassen</b> oder über die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Gliederung" data-wort="die Gliederung" data-kurz="wie ein Beitrag aufgebaut ist" data-bsp="Ich sage kurz die Gliederung: zwei Punkte.">Gliederung</b>, nicht über die Lautstärke.</p></div></div>
+<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>erzählt etwas Längeres.</p></div><div class="rsp-r b"><span>B</span><p>unterbricht mit einer Frage, die vom Thema wegführt. A muss zurückfinden — über <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Zusammenfassen" data-wort="zusammenfassen" data-kurz="das Wichtigste noch einmal kurz sagen" data-bsp="Ich fasse kurz zusammen, dann bin ich fertig.">Zusammenfassen</b> oder über die Gliederung, nicht über die Lautstärke.</p></div></div>
 <div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Moment, jetzt bin ich aus dem Konzept</span><span class="rm">Mein zweiter Punkt war …</span><span class="rm">Ich fasse kurz zusammen</span><span class="rm">Zurück zum Thema</span></div><div class="nur-b1"><span class="rm">Da bin ich jetzt abgeschweift — zurück zum eigentlichen Punkt</span><span class="rm">Ich fasse zusammen, worauf ich hinauswollte</span><span class="rm">Bevor ich weitergehe, kurz zur Einordnung</span><span class="rm">Das führt mich zurück zu …</span></div></div>
 <div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>A hat den Verlust benannt statt zu verstummen und ist über eine der beiden Techniken zurückgekommen. Die Pause dabei war kürzer als fünf Sekunden.</div>
 <details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
@@ -644,7 +800,7 @@ footer strong{color:var(--ink);}
 <div class="rsp-kopf"><span class="rsp-nr">3</span><b>Der frühe Widerspruch</b></div>
 <div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>trägt einen Vorschlag vor.</p></div><div class="rsp-r b"><span>B</span><p>widerspricht sofort im ersten Satz, noch bevor der Kern gesagt ist. A verschafft sich freundlich einen Satz Zeit und bringt den Kern.</p></div></div>
 <div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Lass mich das kurz zu Ende sagen</span><span class="rm">Das dauert einen Satz</span><span class="rm">Danach bist du dran</span><span class="rm">Und jetzt zu deinem Punkt</span></div><div class="nur-b1"><span class="rm">Da widerspreche ich gleich — den Gedanken bringe ich kurz zu Ende</span><span class="rm">Ich nehme das gern auf, sobald ich durch bin</span><span class="rm">Einen Satz noch, dann sind Sie dran</span><span class="rm">Jetzt komme ich zu Ihrem Einwand</span></div></div>
-<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>A hat den Preis genannt (<i>einen Satz</i>), ihn eingehalten und danach den <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von Einwand" data-wort="der Einwand" data-kurz="jemand widerspricht, bevor du fertig bist" data-bsp="Darauf komme ich gleich zurück.">Einwand</b> von B wirklich aufgegriffen. B hat nach der Ankündigung nicht noch einmal unterbrochen.</div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>A hat den Preis genannt (<i>einen Satz</i>), ihn eingehalten und danach den Einwand von B wirklich aufgegriffen. B hat nach der Ankündigung nicht noch einmal unterbrochen.</div>
 <details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
 
@@ -759,6 +915,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Früher bin ich in Besprechungen nie zu Ende gekommen. Ich fing an, jemand warf etwas ein, ich ging höflich darauf ein — und danach war mein ___ weg. Einmal habe ich mitten im Satz gemerkt, dass ich völlig aus dem ___ war, und dann nur noch gesagt: ist auch egal. Genau der Satz war der Fehler, denn danach hat niemand mehr nachgefragt. Heute mache ich es anders. Ich sage vorher, wie viele Punkte kommen — zwei, mehr nicht —, und ich schreibe mir dazu zwei ___ auf einen Zettel. Wenn jemand dazwischengeht, sage ich freundlich: Darauf komme ich gleich ___. Das klingt nicht schroff, und es funktioniert fast immer. Und wenn ich doch einmal ___ bin, hole ich mich mit einer Zusammenfassung zurück, statt zu verstummen. Am Ende ___ ich kurz zusammen und gebe das Wort ab. Seitdem werde ich seltener unterbrochen — nicht weil ich lauter geworden ___, sondern weil alle wissen, wann ich fertig bin.","o":["Faden","Konzept","Stichwörter","zurück","abgeschweift","fasse","wäre","Geduld"],"a":[["Faden"],["Konzept"],["Stichwörter"],["zurück"],["abgeschweift"],["fasse"],["wäre"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Zwei Punkte dazu, dann bin ich fertig","Ich brauche dafür zwei Minuten","Ganz kurz die Gliederung:","Eine Sache noch, dann höre ich auf","Erstens … zweitens …","Zum einen … zum anderen …","Und der zweite Punkt ist …","Darauf komme ich gleich zurück","Einen Moment, ich bin fast fertig","Danke, das nehme ich gleich auf","Lass mich das kurz zu Ende sagen","Ich fasse zusammen: …","Das waren meine zwei Punkte","Damit bin ich durch","Wie seht ihr das?","Ich würde das gern in zwei Schritten sagen","Dazu habe ich zwei Anmerkungen","Vorweg eine Einordnung, dann der eigentliche Punkt","Ich fasse mich kurz — zwei Minuten","Damit wäre der erste Punkt erledigt","Das führt mich zum zweiten Punkt","Bevor ich weitergehe, kurz zur Einordnung","Zurück zum eigentlichen Faden","Da widerspreche ich gleich — den Gedanken bringe ich kurz zu Ende","Ich nehme das gern auf, sobald ich durch bin","Einen Satz noch, dann sind Sie dran","Den Einwand höre ich, ich komme darauf","Damit wäre ich am Ende","So weit von meiner Seite","Jetzt komme ich zu Ihrem Einwand"]
 </script>
 
 <script>
@@ -1058,6 +1217,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

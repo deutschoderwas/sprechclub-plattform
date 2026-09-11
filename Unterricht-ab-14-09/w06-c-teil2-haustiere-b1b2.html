@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Ist eine Mietwohnung dein Zuhause oder nur eine Wohnung?</div></div><div class="nur-b1"><div class="ank">Wo endet das Recht des Eigentümers und wo beginnt das Recht des Bewohners?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../bilder/lesen/nachbarschaft.webp" alt="Eine Reihe von Häusern mit kleinen Vorgärten">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Ist eine Mietwohnung dein Zuhause oder nur eine Wohnung?</li><li>Was darf man in einer Mietwohnung deiner Meinung nach selbst entscheiden?</li><li>Wie ist das in deinem Heimatland geregelt?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Wo endet das Recht des Eigentümers und wo beginnt das Recht des Bewohners?</li><li>Verändert die Wohndauer diese Grenze — sollte sie es?</li><li>Welche Entscheidungen sind wirklich Privatsache, welche betreffen das ganze Haus?</li></ol></div></div>
+<div class="tip teal">🔑 <strong>Damit die Debatte nicht kippt:</strong> Es gibt in Deutschland kein einfaches Ja und kein einfaches Nein. Gerichte urteilen im <b>Einzelfall</b> und wägen ab: Größe des Tieres, Zustand des Hauses, Rücksicht der Halter, Belastung der Nachbarn. Wer das weiß, argumentiert nicht über Prinzipien, sondern über Umstände — und genau das üben wir heute.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Wessen Argument findest du am stärksten?</li><li>Wer hat am wenigsten Möglichkeiten, sich zu wehren?</li><li>Gibt es einen Kompromiss, mit dem alle leben können?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Welches Argument wird in dieser Debatte am häufigsten überschätzt?</li><li>Wie viel Rücksicht darf man von Menschen verlangen, die nichts davon haben?</li><li>Wann ist ein Kompromiss ein Kompromiss und wann nur ein Nachgeben?</li></ol></div></div>
+<div class="tip">💡 <strong>Ein Werkzeug für heute:</strong> Wer die Gegenseite <u>besser</u> formulieren kann, als sie es selbst tut, gewinnt jede Debatte an Glaubwürdigkeit. Beginn dein Argument deshalb ruhig mit <b>„Der stärkste Einwand gegen meine Position wäre …“</b> — und beantworte ihn dann.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -587,6 +685,64 @@ footer strong{color:var(--ink);}
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 1 mit vertauschten Positionen — jeder vertritt das Gegenteil von dem, was er wirklich denkt. Regel: Jede Antwort muss mit einem Zugeständnis beginnen.</div>
 </section>
 
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 🧭 Position beziehen</div>
+<div class="merk"><span>Ich bin dafür, dass …</span><button class="speak" data-say="Ich bin dafür, dass …">🔊 hören</button></div>
+<div class="merk"><span>Ich halte das für falsch</span><button class="speak" data-say="Ich halte das für falsch">🔊 hören</button></div>
+<div class="merk"><span>Meiner Meinung nach …</span><button class="speak" data-say="Meiner Meinung nach …">🔊 hören</button></div>
+<div class="merk"><span>Ich sehe das anders</span><button class="speak" data-say="Ich sehe das anders">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🤝 Etwas zugeben</div>
+<div class="merk"><span>Da haben Sie recht</span><button class="speak" data-say="Da haben Sie recht">🔊 hören</button></div>
+<div class="merk"><span>Das stimmt schon</span><button class="speak" data-say="Das stimmt schon">🔊 hören</button></div>
+<div class="merk"><span>Den Punkt verstehe ich</span><button class="speak" data-say="Den Punkt verstehe ich">🔊 hören</button></div>
+<div class="merk"><span>Das ist ein berechtigter <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Einwand" data-wort="der Einwand" data-kurz="ein Gegenargument, das jemand nennt" data-bsp="Der stärkste Einwand ist die Lärmbelastung.">Einwand</b></span><button class="speak" data-say="Das ist ein berechtigter Einwand">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · ✋ Einwenden</div>
+<div class="merk"><span>Trotzdem finde ich …</span><button class="speak" data-say="Trotzdem finde ich …">🔊 hören</button></div>
+<div class="merk"><span>Aber was ist mit …?</span><button class="speak" data-say="Aber was ist mit …?">🔊 hören</button></div>
+<div class="merk"><span>Und die anderen im Haus?</span><button class="speak" data-say="Und die anderen im Haus?">🔊 hören</button></div>
+<div class="merk"><span>Das gilt aber nicht für alle</span><button class="speak" data-say="Das gilt aber nicht für alle">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🕊️ Kompromiss anbieten</div>
+<div class="merk"><span>Wie wäre es, wenn …?</span><button class="speak" data-say="Wie wäre es, wenn …?">🔊 hören</button></div>
+<div class="merk"><span>Man könnte doch …</span><button class="speak" data-say="Man könnte doch …">🔊 hören</button></div>
+<div class="merk"><span>Wir könnten es so machen: …</span><button class="speak" data-say="Wir könnten es so machen: …">🔊 hören</button></div>
+<div class="merk"><span>Für diesen Fall eine <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Ausnahme" data-wort="die Ausnahme" data-kurz="ein Fall, für den die Regel nicht gilt" data-bsp="Für Blindenhunde gilt eine Ausnahme.">Ausnahme</b></span><button class="speak" data-say="Für diesen Fall eine Ausnahme">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 🧭 Präzise Position</div>
+<div class="merk"><span>Ich vertrete die Position, dass …</span><button class="speak" data-say="Ich vertrete die Position, dass …">🔊 hören</button></div>
+<div class="merk"><span>Meine Position lässt sich in einem Satz sagen: …</span><button class="speak" data-say="Meine Position lässt sich in einem Satz sagen: …">🔊 hören</button></div>
+<div class="merk"><span>Ich unterscheide dabei zwischen … und …</span><button class="speak" data-say="Ich unterscheide dabei zwischen … und …">🔊 hören</button></div>
+<div class="merk"><span>Grundsätzlich ja, mit einer Ausnahme</span><button class="speak" data-say="Grundsätzlich ja, mit einer Ausnahme">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🎯 Den Gegenpunkt selbst nennen</div>
+<div class="merk"><span>Der stärkste Einwand gegen meine Position wäre …</span><button class="speak" data-say="Der stärkste Einwand gegen meine Position wäre …">🔊 hören</button></div>
+<div class="merk"><span>Man könnte mir entgegenhalten, dass …</span><button class="speak" data-say="Man könnte mir entgegenhalten, dass …">🔊 hören</button></div>
+<div class="merk"><span>Ich sehe durchaus, dass …</span><button class="speak" data-say="Ich sehe durchaus, dass …">🔊 hören</button></div>
+<div class="merk"><span>In einem Punkt gebe ich Ihnen recht</span><button class="speak" data-say="In einem Punkt gebe ich Ihnen recht">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · ⚖️ Abwägen statt streiten</div>
+<div class="merk"><span>Man muss hier zwei Dinge gegeneinander abwägen</span><button class="speak" data-say="Man muss hier zwei Dinge gegeneinander abwägen">🔊 hören</button></div>
+<div class="merk"><span>Das eine wiegt schwerer als das andere, weil …</span><button class="speak" data-say="Das eine wiegt schwerer als das andere, weil …">🔊 hören</button></div>
+<div class="merk"><span>Es kommt auf den <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Einzelfall" data-wort="der Einzelfall" data-kurz="dieser eine Fall, für sich betrachtet" data-bsp="Das wird immer im Einzelfall entschieden.">Einzelfall</b> an</span><button class="speak" data-say="Es kommt auf den Einzelfall an">🔊 hören</button></div>
+<div class="merk"><span>Entscheidend ist für mich, ob …</span><button class="speak" data-say="Entscheidend ist für mich, ob …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🧩 Konkret werden</div>
+<div class="merk"><span>Ich würde es an eine Bedingung knüpfen</span><button class="speak" data-say="Ich würde es an eine Bedingung knüpfen">🔊 hören</button></div>
+<div class="merk"><span>Denkbar wäre eine Regelung, die …</span><button class="speak" data-say="Denkbar wäre eine Regelung, die …">🔊 hören</button></div>
+<div class="merk"><span>An Ihrer Stelle würde ich …</span><button class="speak" data-say="An Ihrer Stelle würde ich …">🔊 hören</button></div>
+<div class="merk"><span>Ein gangbarer Weg wäre …</span><button class="speak" data-say="Ein gangbarer Weg wäre …">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
+</section>
+
 <section class="section" id="challenge">
 <h2 class="st">⏱️ Die 90-Sekunden-Challenge</h2>
 <p class="ssub">Eine Position, anderthalb Minuten, freies Sprechen. Nicht gewinnen — sondern so argumentieren, dass die andere Seite dir am Ende zuhört.</p>
@@ -626,7 +782,7 @@ footer strong{color:var(--ink);}
 </ol>
 <div class="rsp">
 <div class="rsp-kopf"><span class="rsp-nr">1</span><b>Verbot oder Einzelfall?</b></div>
-<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>ist Vermieterin und möchte <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Tierhaltung" data-wort="die Tierhaltung" data-kurz="dass jemand ein Tier bei sich hält" data-bsp="Die Tierhaltung ist im Vertrag nicht geregelt.">Tierhaltung</b> generell ausschließen, weil die letzte Wohnung beschädigt war.</p></div><div class="rsp-r b"><span>B</span><p>ist Mieter und argumentiert für eine Regelung im <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Einzelfall" data-wort="der Einzelfall" data-kurz="dieser eine Fall, für sich betrachtet" data-bsp="Das wird immer im Einzelfall entschieden.">Einzelfall</b>. Zwei Minuten, dann tauschen.</p></div></div>
+<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>ist Vermieterin und möchte <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Tierhaltung" data-wort="die Tierhaltung" data-kurz="dass jemand ein Tier bei sich hält" data-bsp="Die Tierhaltung ist im Vertrag nicht geregelt.">Tierhaltung</b> generell ausschließen, weil die letzte Wohnung beschädigt war.</p></div><div class="rsp-r b"><span>B</span><p>ist Mieter und argumentiert für eine Regelung im Einzelfall. Zwei Minuten, dann tauschen.</p></div></div>
 <div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Ich halte ein Verbot für falsch</span><span class="rm">Das stimmt schon, aber …</span><span class="rm">Und die, die niemanden stören?</span><span class="rm">Wie wäre es, wenn wir es befristen?</span></div><div class="nur-b1"><span class="rm">Ein generelles Verbot trifft auch die Rücksichtsvollen</span><span class="rm">Der stärkste Einwand wäre …</span><span class="rm">Man müsste hier abwägen zwischen …</span><span class="rm">Denkbar wäre eine Regelung, die …</span></div></div>
 <div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>Beide haben mindestens einmal etwas zugegeben, bevor sie widersprochen haben. Es kam mindestens ein Satz im Konjunktiv II vor, und am Ende stand ein konkreter Vorschlag statt einer Wiederholung der Anfangsposition.</div>
 <details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
@@ -759,6 +915,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Die Hausversammlung fing schlecht an. Jemand wollte ein ___ Verbot für alle Tiere, und zwei Parteien standen sofort auf. Dann sagte einer den Satz, der die Sache gedreht hat: Eine Regel für alle ___ auch die treffen, die seit Jahren niemanden stören. Es folgte der übliche ___: Wenn man einmal eine Ausnahme mache, kämen morgen die nächsten. Darauf hat jemand vorgeschlagen, es an einen Bestandsschutz zu knüpfen — wer schon ein Tier hat, behält es. Das war der erste ___ des Abends, weil beide Seiten etwas aufgegeben haben. Am Ende hat die Verwaltung zugesagt, jeden Fall ___ zu prüfen. Und Frau Herbst, die seit zwölf Jahren mit ihrer Katze im zweiten Stock wohnt, hat gesagt, ohne das Tier ___ sie den ganzen Tag allein. Da war es still, und danach hat niemand mehr über Prinzipien geredet. Ich ___ das vorher nicht für möglich gehalten.","o":["generelles","würde","Einwand","Kompromiss","einzeln","wäre","hätte","Ausnahme"],"a":[["generelles"],["würde"],["Einwand"],["Kompromiss"],["einzeln"],["wäre"],["hätte"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Ich bin dafür, dass …","Ich halte das für falsch","Meiner Meinung nach …","Ich sehe das anders","Da haben Sie recht","Das stimmt schon","Den Punkt verstehe ich","Das ist ein berechtigter Einwand","Trotzdem finde ich …","Aber was ist mit …?","Und die anderen im Haus?","Das gilt aber nicht für alle","Wie wäre es, wenn …?","Man könnte doch …","Wir könnten es so machen: …","Für diesen Fall eine Ausnahme","Ich vertrete die Position, dass …","Meine Position lässt sich in einem Satz sagen: …","Ich unterscheide dabei zwischen … und …","Grundsätzlich ja, mit einer Ausnahme","Der stärkste Einwand gegen meine Position wäre …","Man könnte mir entgegenhalten, dass …","Ich sehe durchaus, dass …","In einem Punkt gebe ich Ihnen recht","Man muss hier zwei Dinge gegeneinander abwägen","Das eine wiegt schwerer als das andere, weil …","Es kommt auf den Einzelfall an","Entscheidend ist für mich, ob …","Ich würde es an eine Bedingung knüpfen","Denkbar wäre eine Regelung, die …","An Ihrer Stelle würde ich …","Ein gangbarer Weg wäre …"]
 </script>
 
 <script>
@@ -1058,6 +1217,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

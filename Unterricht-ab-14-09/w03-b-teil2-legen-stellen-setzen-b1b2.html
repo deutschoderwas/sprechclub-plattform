@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Sag einen Satz mit <b>auf den Tisch</b> und einen mit <b>auf dem Tisch</b>.</div></div><div class="nur-b1"><div class="ank">Warum reicht ein einziger Buchstabe, um die Bedeutung zu drehen?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../vok-bild/das-schlafzimmer.webp" alt="Ein aufgeräumtes, helles Schlafzimmer">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Sag einen Satz mit <b>auf den Tisch</b> und einen mit <b>auf dem Tisch</b>.</li><li>Welche der neun Präpositionen benutzt du am häufigsten?</li><li>Gibt es in deiner Sprache auch zwei Formen für Ziel und Ort?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Warum reicht ein einziger Buchstabe, um die Bedeutung zu drehen?</li><li>Wann merkt ein Muttersprachler den Fehler sofort — und wann gar nicht?</li><li>Welche Präposition ist bei dir am unsichersten?</li></ol></div></div>
+<div class="tip teal">🔑 <strong>Die ganze Regel in einem Satz:</strong> Bewegt sich etwas <u>dorthin</u>? → <b>Akkusativ</b>. Ist es <u>schon dort</u>? → <b>Dativ</b>. Und das Verb sagt es dir: <b>legen, stellen, setzen, hängen</b> → Akkusativ. <b>liegen, stehen, sitzen, hängen</b> → Dativ.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><ol class="ankfr"><li>Sag deinem Partner, <b>wohin</b> er etwas legen soll — er sagt danach, <b>wo</b> es liegt.</li><li>Welche Präposition hat bei euch beiden gewackelt?</li><li>Erklärt euch die Regel in einem Satz — ohne Grammatikwörter.</li></ol></div>
+<div class="tip teal">👥 <strong>Zu zweit, zehn Runden:</strong> Einer gibt den Befehl (<u>„Stell die Tasse auf den Tisch.“</u>), der andere meldet die Lage (<u>„Jetzt steht die Tasse auf dem Tisch.“</u>). Ein Fehler = eine Runde extra.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -596,6 +694,56 @@ footer strong{color:var(--ink);}
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 1 noch einmal — aber A widerspricht bei jedem Möbelstück und schlägt einen anderen Ort vor. B muss jedes Mal beide Fälle richtig benutzen.</div>
 </section>
 
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · ➡️ Anweisen (Akkusativ)</div>
+<div class="merk"><span>Stell das bitte auf …</span><button class="speak" data-say="Stell das bitte auf …">🔊 hören</button></div>
+<div class="merk"><span>Leg es in …</span><button class="speak" data-say="Leg es in …">🔊 hören</button></div>
+<div class="merk"><span>Häng es an …</span><button class="speak" data-say="Häng es an …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 📍 Beschreiben (Dativ)</div>
+<div class="merk"><span>Es liegt auf …</span><button class="speak" data-say="Es liegt auf …">🔊 hören</button></div>
+<div class="merk"><span>Es steht in …</span><button class="speak" data-say="Es steht in …">🔊 hören</button></div>
+<div class="merk"><span>Es hängt an …</span><button class="speak" data-say="Es hängt an …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🔁 Umräumen</div>
+<div class="merk"><span>Das kommt lieber …</span><button class="speak" data-say="Das kommt lieber …">🔊 hören</button></div>
+<div class="merk"><span>Stell das doch …</span><button class="speak" data-say="Stell das doch …">🔊 hören</button></div>
+<div class="merk"><span>Nimm es von …</span><button class="speak" data-say="Nimm es von …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · ❓ Nachfragen</div>
+<div class="merk"><span><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Wohin" data-wort="wohin" data-kurz="die Frage nach dem Ziel einer Bewegung" data-bsp="Wohin soll das Regal? — An die Wand.">Wohin</b> damit?</span><button class="speak" data-say="Wohin damit?">🔊 hören</button></div>
+<div class="merk"><span>Wo ist das jetzt?</span><button class="speak" data-say="Wo ist das jetzt?">🔊 hören</button></div>
+<div class="merk"><span><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Woher" data-wort="woher" data-kurz="die Frage nach dem Ausgangspunkt" data-bsp="Woher hast du das? — Aus dem Keller.">Woher</b> hast du das?</span><button class="speak" data-say="Woher hast du das?">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · ➡️ Genau anweisen</div>
+<div class="merk"><span>Am besten stellst du es …</span><button class="speak" data-say="Am besten stellst du es …">🔊 hören</button></div>
+<div class="merk"><span>Das käme gut <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von zwischen" data-wort="zwischen" data-kurz="in der Mitte von zwei Dingen" data-bsp="Ich stelle die Kiste zwischen die Regale. — Sie steht zwischen den Regalen.">zwischen</b> …</span><button class="speak" data-say="Das käme gut zwischen …">🔊 hören</button></div>
+<div class="merk"><span>Häng es auf Augenhöhe an …</span><button class="speak" data-say="Häng es auf Augenhöhe an …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 📍 Genau beschreiben</div>
+<div class="merk"><span>ganz hinten in …</span><button class="speak" data-say="ganz hinten in …">🔊 hören</button></div>
+<div class="merk"><span>schräg gegenüber von …</span><button class="speak" data-say="schräg gegenüber von …">🔊 hören</button></div>
+<div class="merk"><span>direkt <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von über" data-wort="über" data-kurz="höher als etwas, ohne Berührung" data-bsp="Ich hänge die Lampe über den Tisch. — Sie hängt über dem Tisch.">über</b> …</span><button class="speak" data-say="direkt über …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🔁 Etwas umstellen</div>
+<div class="merk"><span>Ich würde es eher … stellen</span><button class="speak" data-say="Ich würde es eher … stellen">🔊 hören</button></div>
+<div class="merk"><span>So steht es zu sehr im Weg</span><button class="speak" data-say="So steht es zu sehr im Weg">🔊 hören</button></div>
+<div class="merk"><span>Dann käme mehr Licht …</span><button class="speak" data-say="Dann käme mehr Licht …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · ❓ Sich vergewissern</div>
+<div class="merk"><span>Meinst du auf oder über …?</span><button class="speak" data-say="Meinst du auf oder über …?">🔊 hören</button></div>
+<div class="merk"><span>Soll es dorthin oder bleibt es …?</span><button class="speak" data-say="Soll es dorthin oder bleibt es …?">🔊 hören</button></div>
+<div class="merk"><span>Habe ich das richtig verstanden, dass …?</span><button class="speak" data-say="Habe ich das richtig verstanden, dass …?">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
+</section>
+
 <section class="section" id="challenge">
 <h2 class="st">⏱️ Die 90-Sekunden-Challenge</h2>
 <p class="ssub">Ein Wort, anderthalb Minuten, freies Sprechen. Es muss nicht perfekt sein — es muss nur weitergehen.</p>
@@ -631,9 +779,9 @@ footer strong{color:var(--ink);}
 <p class="ssub">Zu zweit. Bei jedem Stück muss zuerst der Akkusativ-Satz fallen und danach der Dativ-Satz. Danach tauschen.</p>
 <div class="rsp">
 <div class="rsp-kopf"><span class="rsp-nr">1</span><b>Die Wohnung am Telefon einrichten</b></div>
-<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>steht in der neuen Wohnung, B ist am Telefon und sagt, <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von wohin" data-wort="wohin" data-kurz="die Frage nach dem Ziel einer Bewegung" data-bsp="Wohin soll das Regal? — An die Wand.">wohin</b> alles soll.</p></div><div class="rsp-r b"><span>B</span><p>sieht nichts — also muss jede Angabe genau sein.</p></div></div>
+<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>steht in der neuen Wohnung, B ist am Telefon und sagt, wohin alles soll.</p></div><div class="rsp-r b"><span>B</span><p>sieht nichts — also muss jede Angabe genau sein.</p></div></div>
 <div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Wohin soll das Sofa?</span><span class="rm">Und der Tisch?</span><span class="rm">Steht das jetzt gut?</span><span class="rm">Wo ist noch Platz?</span></div><div class="nur-b1"><span class="rm">Am besten an die Wand gegenüber</span><span class="rm">Zwischen das Fenster und das Regal</span><span class="rm">Dann steht es nicht im Weg</span><span class="rm">Schräg gegenüber vom Eingang</span></div></div>
-<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>Jede Anweisung kommt im Akkusativ, jede Rückmeldung im Dativ — und beide benutzen mindestens einmal <b><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von zwischen" data-wort="zwischen" data-kurz="in der Mitte von zwei Dingen" data-bsp="Ich stelle die Kiste zwischen die Regale. — Sie steht zwischen den Regalen.">zwischen</b></b>.</div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>Jede Anweisung kommt im Akkusativ, jede Rückmeldung im Dativ — und beide benutzen mindestens einmal <b>zwischen</b>.</div>
 <details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
 
@@ -764,6 +912,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Nachmittags kommen die letzten Kartons. Ich stelle das Regal ___ die Wand gegenüber dem Fenster, weil dort morgens kein Licht hinfällt. Als es steht, sieht man erst, wie groß der Raum ist. Die Bücher lege ich ___ das oberste Fach — nein, doch lieber weiter unten, sonst komme ich nicht dran. Den Spiegel hänge ich ___ das Regal, auf Augenhöhe. Die Kisten, die noch übrig sind, schiebe ich ___ das Bett; da stören sie niemanden. Am Abend sitze ich ___ dem Sofa und schaue mich um. Das Regal steht ___ der Wand, der Spiegel hängt ___ dem Regal, die Kisten stehen ___ dem Bett. Alles am Platz — und jedes Mal ein anderer Fall.","o":["an","in","über","unter","auf","an","über","unter","aus"],"a":[["an"],["in"],["über"],["unter"],["auf"],["an"],["über"],["unter"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Stell das bitte auf …","Leg es in …","Häng es an …","Es liegt auf …","Es steht in …","Es hängt an …","Das kommt lieber …","Stell das doch …","Nimm es von …","Wo ist das jetzt?","Woher hast du das?","Am besten stellst du es …","Das käme gut zwischen …","Häng es auf Augenhöhe an …","Ich würde es eher … stellen","So steht es zu sehr im Weg","Dann käme mehr Licht …","Meinst du auf oder über …?","Soll es dorthin oder bleibt es …?","Habe ich das richtig verstanden, dass …?"]
 </script>
 
 <script>
@@ -1063,6 +1214,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

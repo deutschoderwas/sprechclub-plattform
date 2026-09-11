@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Kennst du eine solche feste Wendung aus deiner Sprache?</div></div><div class="nur-b1"><div class="ank">Warum sind feste Wendungen schwerer als einzelne Wörter?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../amanda/sz-heikel.webp" alt="Zwei Menschen sitzen sich in Sesseln gegenüber und sprechen ernst miteinander">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Kennst du eine solche feste Wendung aus deiner Sprache?</li><li>Welche deutsche Wendung hast du zuerst gelernt?</li><li>Was machst du, wenn du eine Wendung nicht verstehst?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Warum sind feste Wendungen schwerer als einzelne Wörter?</li><li>Woran merkst du, dass ein Ausdruck fest ist und nicht wörtlich gemeint?</li><li>Welche Wendung hast du einmal falsch benutzt — und was ist passiert?</li></ol></div></div>
+<div class="tip teal">🔑 <strong>Die Regel des Abends:</strong> Lern nie das Nomen allein und nie das Verb allein — lern immer das <b>Paar</b>. <i>Rücksicht</i> nimmt man, <i>Bescheid</i> gibt man, <i>zur Sprache</i> bringt man. Ein anderes Verb macht den Satz sofort falsch.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Welche Wendung von heute möchtest du diese Woche benutzen?</li><li>Sagst du oft <i>Bescheid</i>?</li><li>Wann hast du zuletzt jemandem recht gegeben?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Klingen feste Wendungen im Beruf anders als privat?</li><li>Kann man zu viele davon benutzen?</li><li>Welche Wendung findest du besonders schön oder besonders seltsam?</li></ol></div></div>
+<div class="tip">💡 <strong>Kleiner Test:</strong> Wenn du das Nomen im Satz nicht mit <i>der, die, das</i> versehen kannst, ist es eine feste Wendung. <i>Ich gebe dir Bescheid</i> — nie <i>den Bescheid</i>. Genau daran erkennst du sie.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -586,6 +684,64 @@ footer strong{color:var(--ink);}
 <button class="speak dbtn" data-say="Wir reden jetzt seit zwanzig Minuten und sind keinen Schritt weiter. Darf ich es auf den Punkt bringen? Es geht doch eigentlich nur um die Frage, wer am Samstag da ist. So gesehen … ja, eigentlich schon. Dann lasst uns kurz Luft holen und der Reihe nach sagen, wer kann. Gute Idee. Ich fange an: Ich kann ab drei. Ich gebe morgen Bescheid, ich muss noch Rücksicht auf meine Schwester nehmen.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 2 mit einem eigenen Thema. Regel: In jeder Antwort muss eine feste Wendung von heute vorkommen — und keine darf zweimal benutzt werden.</div>
+</section>
+
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 📣 Ankündigen</div>
+<div class="merk"><span>Ich gebe dir Bescheid.</span><button class="speak" data-say="Ich gebe dir Bescheid.">🔊 hören</button></div>
+<div class="merk"><span>Ich sage dir Bescheid, sobald …</span><button class="speak" data-say="Ich sage dir Bescheid, sobald …">🔊 hören</button></div>
+<div class="merk"><span>Ich melde mich, wenn ich es weiß.</span><button class="speak" data-say="Ich melde mich, wenn ich es weiß.">🔊 hören</button></div>
+<div class="merk"><span>Gib mir kurz Bescheid.</span><button class="speak" data-say="Gib mir kurz Bescheid.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🗣️ Ansprechen</div>
+<div class="merk"><span>Ich möchte etwas <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von zur Sprache bringen" data-wort="zur Sprache bringen" data-kurz="ein Thema ansprechen, über das bisher niemand geredet hat" data-bsp="Ich möchte das noch einmal zur Sprache bringen.">zur Sprache bringen</b>.</span><button class="speak" data-say="Ich möchte etwas zur Sprache bringen.">🔊 hören</button></div>
+<div class="merk"><span>Darf ich kurz etwas ansprechen?</span><button class="speak" data-say="Darf ich kurz etwas ansprechen?">🔊 hören</button></div>
+<div class="merk"><span>Eine Sache noch:</span><button class="speak" data-say="Eine Sache noch:">🔊 hören</button></div>
+<div class="merk"><span>Können wir kurz darüber reden?</span><button class="speak" data-say="Können wir kurz darüber reden?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🤝 Zustimmen</div>
+<div class="merk"><span>Da gebe ich dir recht.</span><button class="speak" data-say="Da gebe ich dir recht.">🔊 hören</button></div>
+<div class="merk"><span>Das sehe ich auch so.</span><button class="speak" data-say="Das sehe ich auch so.">🔊 hören</button></div>
+<div class="merk"><span>Du hast völlig recht.</span><button class="speak" data-say="Du hast völlig recht.">🔊 hören</button></div>
+<div class="merk"><span>Da ist etwas dran.</span><button class="speak" data-say="Da ist etwas dran.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🔧 Klären</div>
+<div class="merk"><span>Ich bringe das in Ordnung.</span><button class="speak" data-say="Ich bringe das in Ordnung.">🔊 hören</button></div>
+<div class="merk"><span>Das nehme ich in Kauf.</span><button class="speak" data-say="Das nehme ich in Kauf.">🔊 hören</button></div>
+<div class="merk"><span>Ich gebe mir Mühe.</span><button class="speak" data-say="Ich gebe mir Mühe.">🔊 hören</button></div>
+<div class="merk"><span>Nimm dir ruhig Zeit.</span><button class="speak" data-say="Nimm dir ruhig Zeit.">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 📣 Verbindlich ankündigen</div>
+<div class="merk"><span>Ich gebe Ihnen bis Freitag Bescheid.</span><button class="speak" data-say="Ich gebe Ihnen bis Freitag Bescheid.">🔊 hören</button></div>
+<div class="merk"><span>Sobald mir etwas vorliegt, melde ich mich.</span><button class="speak" data-say="Sobald mir etwas vorliegt, melde ich mich.">🔊 hören</button></div>
+<div class="merk"><span>Ich sage rechtzeitig Bescheid, falls sich etwas ändert.</span><button class="speak" data-say="Ich sage rechtzeitig Bescheid, falls sich etwas ändert.">🔊 hören</button></div>
+<div class="merk"><span>Bis dahin brauchen Sie nichts weiter zu tun.</span><button class="speak" data-say="Bis dahin brauchen Sie nichts weiter zu tun.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🗣️ Heikles ansprechen</div>
+<div class="merk"><span>Ich würde gern etwas zur Sprache bringen.</span><button class="speak" data-say="Ich würde gern etwas zur Sprache bringen.">🔊 hören</button></div>
+<div class="merk"><span>Es fällt mir nicht leicht, aber …</span><button class="speak" data-say="Es fällt mir nicht leicht, aber …">🔊 hören</button></div>
+<div class="merk"><span>Darf ich einen Punkt ansprechen, der mich beschäftigt?</span><button class="speak" data-say="Darf ich einen Punkt ansprechen, der mich beschäftigt?">🔊 hören</button></div>
+<div class="merk"><span>Ich sage es lieber jetzt als in drei Wochen.</span><button class="speak" data-say="Ich sage es lieber jetzt als in drei Wochen.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🤝 Zugeben und weiterdenken</div>
+<div class="merk"><span>In diesem Punkt gebe ich Ihnen recht.</span><button class="speak" data-say="In diesem Punkt gebe ich Ihnen recht.">🔊 hören</button></div>
+<div class="merk"><span>Das lässt sich nicht bestreiten — und trotzdem …</span><button class="speak" data-say="Das lässt sich nicht bestreiten — und trotzdem …">🔊 hören</button></div>
+<div class="merk"><span>Da haben Sie völlig recht, deshalb schlage ich vor …</span><button class="speak" data-say="Da haben Sie völlig recht, deshalb schlage ich vor …">🔊 hören</button></div>
+<div class="merk"><span>Ich sehe den Einwand und nehme ihn ernst.</span><button class="speak" data-say="Ich sehe den Einwand und nehme ihn ernst.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🔧 Abwägen und klären</div>
+<div class="merk"><span>Den Nachteil nehme ich bewusst in Kauf.</span><button class="speak" data-say="Den Nachteil nehme ich bewusst in Kauf.">🔊 hören</button></div>
+<div class="merk"><span>Das bringe ich bis Ende der Woche in Ordnung.</span><button class="speak" data-say="Das bringe ich bis Ende der Woche in Ordnung.">🔊 hören</button></div>
+<div class="merk"><span>Ich möchte es lieber <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von auf den Punkt bringen" data-wort="auf den Punkt bringen" data-kurz="in einem Satz sagen, worum es wirklich geht" data-bsp="Sie hat es auf den Punkt gebracht.">auf den Punkt bringen</b>:</span><button class="speak" data-say="Ich möchte es lieber auf den Punkt bringen:">🔊 hören</button></div>
+<div class="merk"><span>Lassen Sie uns kurz <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Luft holen" data-wort="Luft holen" data-kurz="kurz durchatmen, bevor es weitergeht" data-bsp="Hol erst mal Luft, dann erzähl noch mal von vorne.">Luft holen</b> und dann weitersehen.</span><button class="speak" data-say="Lassen Sie uns kurz Luft holen und dann weitersehen.">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -637,7 +793,7 @@ footer strong{color:var(--ink);}
 <div class="rsp-kopf"><span class="rsp-nr">2</span><b>Der Rat unter Freunden</b></div>
 <div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>steht vor einer Entscheidung und hat wenig Zeit.</p></div><div class="rsp-r b"><span>B</span><p>rät — ohne zu bestimmen, was A tun soll.</p></div></div>
 <div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Ich weiß nicht, was ich machen soll</span><span class="rm">Darf ich dir einen Rat geben?</span><span class="rm">Nimm dir zwei Tage Zeit</span><span class="rm">Gib mir Bescheid, wenn du entschieden hast</span></div><div class="nur-b1"><span class="rm">Ich müsste morgen antworten und komme innerlich nicht zur Ruhe</span><span class="rm">Darf ich dir einen Rat geben, oder willst du nur erzählen?</span><span class="rm">Hol erst mal Luft — die zwei Tage wird dir niemand übelnehmen</span><span class="rm">Und was auch immer du entscheidest: Gib mir danach Bescheid</span></div></div>
-<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>B hat gefragt, bevor er geraten hat, und A die Entscheidung gelassen. Es kamen mindestens <i><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von einen Rat geben" data-wort="einen Rat geben" data-kurz="jemandem sagen, was man an seiner Stelle tun würde" data-bsp="Darf ich dir einen Rat geben?">einen Rat geben</b></i>, <i><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Luft holen" data-wort="Luft holen" data-kurz="kurz durchatmen, bevor es weitergeht" data-bsp="Hol erst mal Luft, dann erzähl noch mal von vorne.">Luft holen</b></i> und <i><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Bescheid geben" data-wort="Bescheid geben" data-kurz="jemanden informieren, sobald man etwas weiß" data-bsp="Ich gebe dir Bescheid, sobald der Termin steht.">Bescheid geben</b></i> vor.</div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>B hat gefragt, bevor er geraten hat, und A die Entscheidung gelassen. Es kamen mindestens <i><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von einen Rat geben" data-wort="einen Rat geben" data-kurz="jemandem sagen, was man an seiner Stelle tun würde" data-bsp="Darf ich dir einen Rat geben?">einen Rat geben</b></i>, <i>Luft holen</i> und <i><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Bescheid geben" data-wort="Bescheid geben" data-kurz="jemanden informieren, sobald man etwas weiß" data-bsp="Ich gebe dir Bescheid, sobald der Termin steht.">Bescheid geben</b></i> vor.</div>
 <details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
 
@@ -759,6 +915,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Im Teamgespräch am Donnerstag hat Nadia gesagt, sie möchte etwas zur Sprache ___. Seit August übernimmt sie die Vertretung allein, und das hat sie bisher in Kauf ___. Der Chef war zuerst still und hat dann gesagt: Da muss ich Ihnen recht ___. Nadia hat vorgeschlagen, die Aufgabe ab Dezember zu teilen, und dabei auch Rücksicht auf die Kolleginnen mit kleinen Kindern ___. Am Ende hat jemand gefragt, ob man das nicht kürzer sagen könne — und Nadia hat es in einem Satz auf den Punkt ___: Es geht nicht um mehr Geld, sondern um eine faire Verteilung. Der Chef hat versprochen, den Plan bis Freitag in Ordnung zu ___, und Nadia wollte danach allen ___ geben.","o":["bringen","genommen","geben","gebracht","Bescheid","Luft","gegeben","nehmen"],"a":[["bringen"],["genommen"],["geben"],["genommen"],["gebracht"],["bringen"],["Bescheid"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Ich gebe dir Bescheid.","Ich sage dir Bescheid, sobald …","Ich melde mich, wenn ich es weiß.","Gib mir kurz Bescheid.","Ich möchte etwas zur Sprache bringen.","Darf ich kurz etwas ansprechen?","Eine Sache noch:","Können wir kurz darüber reden?","Da gebe ich dir recht.","Das sehe ich auch so.","Du hast völlig recht.","Da ist etwas dran.","Ich bringe das in Ordnung.","Das nehme ich in Kauf.","Ich gebe mir Mühe.","Nimm dir ruhig Zeit.","Ich gebe Ihnen bis Freitag Bescheid.","Sobald mir etwas vorliegt, melde ich mich.","Ich sage rechtzeitig Bescheid, falls sich etwas ändert.","Bis dahin brauchen Sie nichts weiter zu tun.","Ich würde gern etwas zur Sprache bringen.","Es fällt mir nicht leicht, aber …","Darf ich einen Punkt ansprechen, der mich beschäftigt?","Ich sage es lieber jetzt als in drei Wochen.","In diesem Punkt gebe ich Ihnen recht.","Das lässt sich nicht bestreiten — und trotzdem …","Da haben Sie völlig recht, deshalb schlage ich vor …","Ich sehe den Einwand und nehme ihn ernst.","Den Nachteil nehme ich bewusst in Kauf.","Das bringe ich bis Ende der Woche in Ordnung.","Ich möchte es lieber auf den Punkt bringen:","Lassen Sie uns kurz Luft holen und dann weitersehen."]
 </script>
 
 <script>
@@ -1058,6 +1217,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

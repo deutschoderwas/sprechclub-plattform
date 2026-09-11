@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Wo würdest du <i>ich habe die Nase voll</i> sagen, wo nicht?</div></div><div class="nur-b1"><div class="ank">Woran erkennst du in einer fremden Sprache die Stilebene eines Ausdrucks?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../amanda/sz-heikel.webp" alt="Zwei Personen in einem ernsten Gespräch">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Wo würdest du <i>ich habe die Nase voll</i> sagen, wo nicht?</li><li>Gibt es Wörter, die du nur unter Freunden benutzt?</li><li>Wie merkst du, dass ein Satz zu locker war?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Woran erkennst du in einer fremden Sprache die Stilebene eines Ausdrucks?</li><li>Ist es schlimmer, zu locker oder zu förmlich zu klingen?</li><li>Welche Situation ist für dich am schwersten einzuschätzen?</li></ol></div></div>
+<div class="tip teal">🔑 <strong>Die Frage, die alles entscheidet:</strong> <b>Würde die Person, mit der ich rede, diesen Satz auch zu mir sagen?</b> Wenn ja, passt er. Wenn nein, ist er wahrscheinlich zu locker — oder zu steif. Diese eine Frage ersetzt eine ganze Stiltabelle.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Welche Wendungen über Menschen kennst du?</li><li>Wie fühlt es sich an, wenn jemand so über dich redet?</li><li>Wie könnte man dasselbe freundlicher sagen?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Warum wirken Wendungen über Menschen schärfer als normale Kritik?</li><li>Wann ist ein bildhafter Ausdruck ein Vorteil, wann ein Risiko?</li><li>Wie sagt man dasselbe, ohne die Person zu bewerten?</li></ol></div></div>
+<div class="tip">💡 <strong>Eine Faustregel, die trägt:</strong> <b>Über Sachen darfst du bildhaft reden, über Menschen lieber sachlich.</b> <i>Der Zeitplan hat Hand und Fuß</i> ist ein Kompliment. <i>Du gehst mir auf den Keks</i> ist ein Angriff — auch wenn es lustig klingt, und selbst dann, wenn es stimmt.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -585,6 +683,64 @@ footer strong{color:var(--ink);}
 <button class="speak dbtn" data-say="Ich glaube, mein Satz von vorhin ist anders angekommen, als ich ihn gemeint habe. Es klang schon so, als würdest du mich für langsam halten. Das tut mir leid. Mir ging es um den Ablauf, nicht um dich. Dann sag es doch beim nächsten Mal einfach so. Mache ich. Ich merke, dass so eine Wendung schneller trifft als ein normaler Satz.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 3 mit einem echten Ärgernis aus eurem Alltag. Regel: Der Entwurf darf eine Wendung enthalten — die Endfassung muss ohne auskommen und trotzdem deutlicher sein.</div>
+</section>
+
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 🚦 Einordnen</div>
+<div class="merk"><span>Das ist eher <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von umgangssprachlich" data-wort="umgangssprachlich" data-kurz="so, wie man unter Freunden spricht" data-bsp="Das ist umgangssprachlich, aber nicht falsch.">umgangssprachlich</b></span><button class="speak" data-say="Das ist eher umgangssprachlich">🔊 hören</button></div>
+<div class="merk"><span>Das würde ich so nur unter Freunden sagen</span><button class="speak" data-say="Das würde ich so nur unter Freunden sagen">🔊 hören</button></div>
+<div class="merk"><span>Im Beruf geht das auch</span><button class="speak" data-say="Im Beruf geht das auch">🔊 hören</button></div>
+<div class="merk"><span>Das schreibe ich nicht</span><button class="speak" data-say="Das schreibe ich nicht">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🪶 Abschwächen</div>
+<div class="merk"><span>Ich würde eher sagen …</span><button class="speak" data-say="Ich würde eher sagen …">🔊 hören</button></div>
+<div class="merk"><span>Das ist vielleicht etwas zu stark</span><button class="speak" data-say="Das ist vielleicht etwas zu stark">🔊 hören</button></div>
+<div class="merk"><span>Nicht ganz so scharf</span><button class="speak" data-say="Nicht ganz so scharf">🔊 hören</button></div>
+<div class="merk"><span>Ich sag es mal so:</span><button class="speak" data-say="Ich sag es mal so:">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🔁 In Sachsprache übersetzen</div>
+<div class="merk"><span>Sachlich heißt das: …</span><button class="speak" data-say="Sachlich heißt das: …">🔊 hören</button></div>
+<div class="merk"><span>Anders gesagt: …</span><button class="speak" data-say="Anders gesagt: …">🔊 hören</button></div>
+<div class="merk"><span>Also konkret: …</span><button class="speak" data-say="Also konkret: …">🔊 hören</button></div>
+<div class="merk"><span>Für die Mail würde ich <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von schreiben" data-wort="das Schreiben" data-kurz="ein förmlicher Brief, meist an eine Behörde" data-bsp="Ihr Schreiben vom dritten Oktober liegt mir vor.">schreiben</b>: …</span><button class="speak" data-say="Für die Mail würde ich schreiben: …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🩹 Korrigieren</div>
+<div class="merk"><span>So war das nicht gemeint</span><button class="speak" data-say="So war das nicht gemeint">🔊 hören</button></div>
+<div class="merk"><span>Das klang schärfer, als ich wollte</span><button class="speak" data-say="Das klang schärfer, als ich wollte">🔊 hören</button></div>
+<div class="merk"><span>Ich nehme das zurück</span><button class="speak" data-say="Ich nehme das zurück">🔊 hören</button></div>
+<div class="merk"><span>Lass mich das anders sagen</span><button class="speak" data-say="Lass mich das anders sagen">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 🚦 Genauer einordnen</div>
+<div class="merk"><span>Das gehört eher in ein lockeres Gespräch</span><button class="speak" data-say="Das gehört eher in ein lockeres Gespräch">🔊 hören</button></div>
+<div class="merk"><span>Im Wörterbuch steht dahinter ugs.</span><button class="speak" data-say="Im Wörterbuch steht dahinter ugs.">🔊 hören</button></div>
+<div class="merk"><span>Unter Kollegen ja, beim Kunden nicht</span><button class="speak" data-say="Unter Kollegen ja, beim Kunden nicht">🔊 hören</button></div>
+<div class="merk"><span>Schriftlich würde ich das umformulieren</span><button class="speak" data-say="Schriftlich würde ich das umformulieren">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🪶 Feiner abschwächen</div>
+<div class="merk"><span>Ich würde es etwas vorsichtiger formulieren</span><button class="speak" data-say="Ich würde es etwas vorsichtiger formulieren">🔊 hören</button></div>
+<div class="merk"><span>Das trifft es, klingt aber härter als nötig</span><button class="speak" data-say="Das trifft es, klingt aber härter als nötig">🔊 hören</button></div>
+<div class="merk"><span>Sagen wir es so: …</span><button class="speak" data-say="Sagen wir es so: …">🔊 hören</button></div>
+<div class="merk"><span>Ich möchte niemandem zu nahe treten</span><button class="speak" data-say="Ich möchte niemandem zu nahe treten">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 📄 Für das Schreiben umbauen</div>
+<div class="merk"><span>Ich bitte um eine abschließende Klärung</span><button class="speak" data-say="Ich bitte um eine abschließende Klärung">🔊 hören</button></div>
+<div class="merk"><span>Ich sehe hier noch Klärungsbedarf</span><button class="speak" data-say="Ich sehe hier noch Klärungsbedarf">🔊 hören</button></div>
+<div class="merk"><span>Aus meiner Sicht ist der Punkt offen</span><button class="speak" data-say="Aus meiner Sicht ist der Punkt offen">🔊 hören</button></div>
+<div class="merk"><span>Ich bitte um eine Rückmeldung bis zum …</span><button class="speak" data-say="Ich bitte um eine Rückmeldung bis zum …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🤝 Wirkung klären</div>
+<div class="merk"><span>So war das nicht gemeint — was ist angekommen?</span><button class="speak" data-say="So war das nicht gemeint — was ist angekommen?">🔊 hören</button></div>
+<div class="merk"><span>Ich glaube, das kam anders an</span><button class="speak" data-say="Ich glaube, das kam anders an">🔊 hören</button></div>
+<div class="merk"><span>Darf ich das noch mal anders sagen?</span><button class="speak" data-say="Darf ich das noch mal anders sagen?">🔊 hören</button></div>
+<div class="merk"><span>Mir ging es um die Sache, nicht um dich</span><button class="speak" data-say="Mir ging es um die Sache, nicht um dich">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -634,7 +790,7 @@ footer strong{color:var(--ink);}
 
 <div class="rsp">
 <div class="rsp-kopf"><span class="rsp-nr">2</span><b>Der Entwurf im Ärger</b></div>
-<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>hat sich über eine Behörde geärgert und einen scharfen Entwurf geschrieben.</p></div><div class="rsp-r b"><span>B</span><p>nimmt den Ärger ernst und baut daraus ein <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Schreiben" data-wort="das Schreiben" data-kurz="ein förmlicher Brief, meist an eine Behörde" data-bsp="Ihr Schreiben vom dritten Oktober liegt mir vor.">Schreiben</b>, das deutlicher ist als der Ärger — mit Sache und Frist.</p></div></div>
+<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>hat sich über eine Behörde geärgert und einen scharfen Entwurf geschrieben.</p></div><div class="rsp-r b"><span>B</span><p>nimmt den Ärger ernst und baut daraus ein Schreiben, das deutlicher ist als der Ärger — mit Sache und Frist.</p></div></div>
 <div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Ich habe die Nase voll</span><span class="rm">Aber ich will deutlich sein</span><span class="rm">Sachlich heißt das: …</span><span class="rm">Ich bitte um Klärung bis zum 15.</span></div><div class="nur-b1"><span class="rm">Ich verstehe den Ärger, nur liest das jemand, der nichts dafür kann</span><span class="rm">Deutlich ja, scharf nein</span><span class="rm">Aus meiner Sicht ist der Punkt offen</span><span class="rm">Ich bitte um eine Rückmeldung bis zum …</span></div></div>
 <div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>Die Endfassung enthält keine Wendung und ist trotzdem deutlicher als der Entwurf — weil eine Frist und ein konkretes Anliegen darin stehen. B hat den Ärger anerkannt, bevor er korrigiert hat.</div>
 <details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
@@ -759,6 +915,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Ich hatte mich über die Hausverwaltung geärgert und abends eine Mail geschrieben, in der stand, dass ich langsam die ___ voll habe. Am nächsten Morgen habe ich sie noch mal gelesen und gemerkt: Der ___ stimmte nicht. Nicht der Inhalt — der stimmte — sondern die Art, wie es dastand. Das Ganze war eher ___, und so etwas liest bei einer Verwaltung jemand, der gar nichts dafür kann. Und anders als im Gespräch bleibt es stehen. Also habe ich die Wendung gestrichen und stattdessen geschrieben, dass ich um eine abschließende ___ bis zum fünfzehnten bitte. Das klang fast höflich und war trotzdem deutlicher, weil ein Datum darin stand. Zwei Tage später kam die ___. Seitdem mache ich es immer so: erst schreiben, wie ich es fühle, und am nächsten Morgen den Satz in die ___ übersetzen. Die ___ ist danach jedes Mal eine andere.","o":["Nase","Ton","umgangssprachlich","Klärung","Rückmeldung","Sache","Wirkung","Grenze"],"a":[["Nase"],["Ton"],["umgangssprachlich"],["Klärung"],["Rückmeldung"],["Sache"],["Wirkung"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Das ist eher umgangssprachlich","Das würde ich so nur unter Freunden sagen","Im Beruf geht das auch","Das schreibe ich nicht","Ich würde eher sagen …","Das ist vielleicht etwas zu stark","Nicht ganz so scharf","Ich sag es mal so:","Sachlich heißt das: …","Anders gesagt: …","Also konkret: …","Für die Mail würde ich schreiben: …","So war das nicht gemeint","Das klang schärfer, als ich wollte","Ich nehme das zurück","Lass mich das anders sagen","Das gehört eher in ein lockeres Gespräch","Im Wörterbuch steht dahinter ugs.","Unter Kollegen ja, beim Kunden nicht","Schriftlich würde ich das umformulieren","Ich würde es etwas vorsichtiger formulieren","Das trifft es, klingt aber härter als nötig","Sagen wir es so: …","Ich möchte niemandem zu nahe treten","Ich bitte um eine abschließende Klärung","Ich sehe hier noch Klärungsbedarf","Aus meiner Sicht ist der Punkt offen","Ich bitte um eine Rückmeldung bis zum …","So war das nicht gemeint — was ist angekommen?","Ich glaube, das kam anders an","Darf ich das noch mal anders sagen?","Mir ging es um die Sache, nicht um dich"]
 </script>
 
 <script>
@@ -1058,6 +1217,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

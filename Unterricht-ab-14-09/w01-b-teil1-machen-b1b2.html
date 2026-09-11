@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Was machst du jeden Morgen als Erstes?</div></div><div class="nur-b1"><div class="ank">Warum brauchen Sprachen solche Alleskönner-Verben? Was wäre ohne sie?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../amanda/sz-kueche.webp" alt="Eine Person kocht in einer Küche am Herd">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Was machst du jeden Morgen als Erstes?</li><li>Welche Sätze mit machen benutzt du schon?</li><li>Gibt es in deiner Sprache auch so ein Wort, das alles kann?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Warum brauchen Sprachen solche Alleskönner-Verben? Was wäre ohne sie?</li><li>Klingt es schlechter, wenn man immer machen sagt — oder einfach normal?</li><li>Wo würdest du ein genaueres Verb wählen: im Gespräch oder im Text?</li></ol></div></div>
+<div class="tip">🗣️ <strong>Sprecht reihum:</strong> „Heute Morgen habe ich … gemacht.“ · „Am Wochenende mache ich meistens …“ · „Was ich nie mache, ist …“</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><ol class="ankfr"><li>Was ist der Unterschied zwischen „Musik machen“ und „Musik hören“?</li><li>Was bedeutet „Mach mal!“ — und in welchem Ton?</li><li>Welche Verbindung mit machen hast du zuletzt gelernt?</li></ol></div>
+<div class="tip teal">👀 <strong>Zu zweit, eine Minute:</strong> Sammelt so viele Verbindungen mit <u>machen</u> wie möglich. Wer eine nennt, muss sie sofort in einem Satz benutzen. Wer stockt, gibt ab.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -591,6 +689,64 @@ footer strong{color:var(--ink);}
 <button class="speak dbtn" data-say="Wir müssen noch die Küche sauber machen. Ich mache die Küche, du machst das Bad. Dann sind wir schneller fertig. Und der Flur? Da steht überall was rum. Den mache ich zum Schluss. Erst mal Platz machen, dann putzen. Ich habe die Vase kaputt gemacht, übrigens. Gestern schon. Das macht nichts. Die war sowieso hässlich. Puh. Danke.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 1 noch einmal — aber <u>ohne</u> das Wort machen. Was müsst ihr alles ersetzen? Genau darum geht es am Donnerstag.</div>
+</section>
+
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 🏠 Zu Hause</div>
+<div class="merk"><span><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Frühstück machen" data-wort="Frühstück machen" data-kurz="das Frühstück zubereiten" data-bsp="Ich mache uns schnell Frühstück.">Frühstück machen</b></span><button class="speak" data-say="Frühstück machen">🔊 hören</button></div>
+<div class="merk"><span><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von sauber machen" data-wort="sauber machen" data-kurz="putzen" data-bsp="Ich mache am Samstag die Küche sauber.">sauber machen</b></span><button class="speak" data-say="sauber machen">🔊 hören</button></div>
+<div class="merk"><span>das Bett machen</span><button class="speak" data-say="das Bett machen">🔊 hören</button></div>
+<div class="merk"><span>das Licht anmachen</span><button class="speak" data-say="das Licht anmachen">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 💼 Bei der Arbeit</div>
+<div class="merk"><span><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von einen Termin machen" data-wort="einen Termin machen" data-kurz="einen Termin vereinbaren" data-bsp="Ich mache morgen einen Termin beim Zahnarzt.">einen Termin machen</b></span><button class="speak" data-say="einen Termin machen">🔊 hören</button></div>
+<div class="merk"><span><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von eine Pause machen" data-wort="eine Pause machen" data-kurz="die Arbeit kurz unterbrechen" data-bsp="Lass uns kurz eine Pause machen.">eine Pause machen</b></span><button class="speak" data-say="eine Pause machen">🔊 hören</button></div>
+<div class="merk"><span><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Feierabend machen" data-wort="Feierabend machen" data-kurz="aufhören zu arbeiten" data-bsp="Ich mache heute schon um vier Feierabend.">Feierabend machen</b></span><button class="speak" data-say="Feierabend machen">🔊 hören</button></div>
+<div class="merk"><span>Überstunden machen</span><button class="speak" data-say="Überstunden machen">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🚌 Unterwegs</div>
+<div class="merk"><span><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Platz machen" data-wort="Platz machen" data-kurz="zur Seite gehen, damit jemand durchkommt" data-bsp="Machen Sie bitte Platz, der Wagen muss durch.">Platz machen</b></span><button class="speak" data-say="Platz machen">🔊 hören</button></div>
+<div class="merk"><span><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von einen Ausflug machen" data-wort="einen Ausflug machen" data-kurz="für einen Tag irgendwohin fahren" data-bsp="Sonntags machen wir oft einen Ausflug ins Grüne.">einen Ausflug machen</b></span><button class="speak" data-say="einen Ausflug machen">🔊 hören</button></div>
+<div class="merk"><span><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Urlaub machen" data-wort="Urlaub machen" data-kurz="verreisen und sich erholen" data-bsp="Wir machen dieses Jahr Urlaub an der Ostsee.">Urlaub machen</b></span><button class="speak" data-say="Urlaub machen">🔊 hören</button></div>
+<div class="merk"><span><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Fotos machen" data-wort="Fotos machen" data-kurz="fotografieren" data-bsp="Darf ich hier Fotos machen?">Fotos machen</b></span><button class="speak" data-say="Fotos machen">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 💬 Im Gespräch</div>
+<div class="merk"><span>Mach mal!</span><button class="speak" data-say="Mach mal!">🔊 hören</button></div>
+<div class="merk"><span>Das macht nichts.</span><button class="speak" data-say="Das macht nichts.">🔊 hören</button></div>
+<div class="merk"><span>Mach's gut!</span><button class="speak" data-say="Mach's gut!">🔊 hören</button></div>
+<div class="merk"><span>Was machst du beruflich?</span><button class="speak" data-say="Was machst du beruflich?">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 🏠 Zu Hause, genauer</div>
+<div class="merk"><span>sich etwas zu essen machen</span><button class="speak" data-say="sich etwas zu essen machen">🔊 hören</button></div>
+<div class="merk"><span>es sich gemütlich machen</span><button class="speak" data-say="es sich gemütlich machen">🔊 hören</button></div>
+<div class="merk"><span>Ordnung machen</span><button class="speak" data-say="Ordnung machen">🔊 hören</button></div>
+<div class="merk"><span>die Wäsche machen</span><button class="speak" data-say="die Wäsche machen">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 💼 Im Beruf, gehobener</div>
+<div class="merk"><span>einen Vorschlag machen</span><button class="speak" data-say="einen Vorschlag machen">🔊 hören</button></div>
+<div class="merk"><span>Fortschritte machen</span><button class="speak" data-say="Fortschritte machen">🔊 hören</button></div>
+<div class="merk"><span>einen Fehler machen</span><button class="speak" data-say="einen Fehler machen">🔊 hören</button></div>
+<div class="merk"><span>sich an die Arbeit machen</span><button class="speak" data-say="sich an die Arbeit machen">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🚌 Unterwegs, feiner</div>
+<div class="merk"><span>eine Reise machen</span><button class="speak" data-say="eine Reise machen">🔊 hören</button></div>
+<div class="merk"><span>einen Umweg machen</span><button class="speak" data-say="einen Umweg machen">🔊 hören</button></div>
+<div class="merk"><span>halt machen</span><button class="speak" data-say="halt machen">🔊 hören</button></div>
+<div class="merk"><span>sich auf den Weg machen</span><button class="speak" data-say="sich auf den Weg machen">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 💬 Im Gespräch, idiomatisch</div>
+<div class="merk"><span>Das macht mir nichts aus.</span><button class="speak" data-say="Das macht mir nichts aus.">🔊 hören</button></div>
+<div class="merk"><span>Mach dir keinen Kopf.</span><button class="speak" data-say="Mach dir keinen Kopf.">🔊 hören</button></div>
+<div class="merk"><span>Das macht Sinn. / Das ergibt Sinn.</span><button class="speak" data-say="Das macht Sinn. / Das ergibt Sinn.">🔊 hören</button></div>
+<div class="merk"><span>Ich mache mir Sorgen.</span><button class="speak" data-say="Ich mache mir Sorgen.">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -763,6 +919,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Dienstagmorgen. Ich stehe auf, ___ das Licht an und setze Kaffee auf. Dann ___ ich uns Frühstück — Brötchen, Käse, ein Ei. Um halb acht ___ ich das Fenster auf, weil es in der Küche warm geworden ist. Im Büro ruft die Kollegin an: Ob wir für Freitag ___ Termin machen können? Können wir. Um eins ___ ich eine Pause und gehe kurz raus. Nachmittags komme ich gut voran, und um vier ___ ich Feierabend. Zu Hause ___ ich noch die Küche sauber, dann ist Schluss. Und morgen ___ wir da weiter, wo wir heute aufgehört haben.","o":["mache","einen","machen","auf","an","sauber","Feierabend"],"a":[["mache"],["mache"],["mache"],["einen"],["mache"],["mache"],["mache"],["machen"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Das macht nichts.","Was machst du beruflich?","Das macht mir nichts aus.","Mach dir keinen Kopf.","Das macht Sinn. / Das ergibt Sinn.","Ich mache mir Sorgen."]
 </script>
 
 <script>
@@ -1062,6 +1221,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

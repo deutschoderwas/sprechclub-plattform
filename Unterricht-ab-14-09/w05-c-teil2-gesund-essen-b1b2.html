@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Was denkst du spontan — Steuer ja oder nein?</div></div><div class="nur-b1"><div class="ank">Wo endet die Verantwortung des Einzelnen und wo beginnt die des Staates?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../vok-bild/die-meinung.webp" alt="Vier Menschen sitzen im Café zusammen und diskutieren">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Was denkst du spontan — Steuer ja oder nein?</li><li>Wer sollte entscheiden, was Kinder in der Schule essen?</li><li>Gibt es so etwas in deinem Land?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Wo endet die Verantwortung des Einzelnen und wo beginnt die des Staates?</li><li>Wirkt eine Steuer anders als eine Kennzeichnung — und warum?</li><li>Was wäre für dich ein Zeichen dafür, dass eine solche Maßnahme funktioniert hat?</li></ol></div></div>
+<div class="tip teal">🔑 <strong>Die Formel für heute:</strong> <b>Position + Grund + Beispiel + Einschränkung.</b> <i>„Ich bin dafür, weil … Zum Beispiel … Allerdings nur, wenn …“</i> Vier Teile. Wer die Einschränkung selbst nennt, nimmt der Gegenseite ihr bestes Argument weg.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Was ist dir wichtiger: selbst entscheiden oder klare Regeln?</li><li>Wer hat bei dir zu Hause entschieden, was es gab?</li><li>Was hast du als Kind in der Schule gegessen?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Welcher Wert wiegt für dich schwerer — Freiheit oder Gerechtigkeit?</li><li>Ist es ein Widerspruch, für Kennzeichnung und gegen Verbote zu sein?</li><li>Wann ist ein Verbot die ehrlichere Lösung als ein Appell?</li></ol></div></div>
+<div class="tip">💡 <strong>Der Satz, der jede Debatte verbessert:</strong> <b>„Ich glaube, wir reden über zwei verschiedene Dinge.“</b> Sehr oft streiten zwei Leute gar nicht über dieselbe Frage — der eine über Erwachsene, der andere über Kinder. Wer das ausspricht, gewinnt Zeit und Sympathie.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -594,6 +692,64 @@ footer strong{color:var(--ink);}
 <button class="speak dbtn" data-say="Glaubst du wirklich, dass zwanzig Cent mehr jemanden abhalten? Mich schon. Ich nehme im Angebot regelmäßig etwas mit, das ich sonst nicht kaufe. Das ist doch kein Beweis. Stimmt, das ist ein einzelner Fall. Aber wenn Preise nichts bewirken würden, gäbe es keine Angebote. Hm. Das ist ein Punkt. Die Frage ist eher, welche Auswirkung es auf die hat, die ohnehin wenig haben. Da sind wir wieder bei der Gerechtigkeit. Genau da landet diese Debatte immer.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 1 mit vertauschten Positionen — jeder vertritt das Gegenteil dessen, was er wirklich denkt. Das ist die härteste und mit Abstand nützlichste Übung des Abends.</div>
+</section>
+
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 🎯 Position</div>
+<div class="merk"><span>Ich bin dafür, dass …</span><button class="speak" data-say="Ich bin dafür, dass …">🔊 hören</button></div>
+<div class="merk"><span>Ich bin dagegen, weil …</span><button class="speak" data-say="Ich bin dagegen, weil …">🔊 hören</button></div>
+<div class="merk"><span>Mir ist wichtig, dass …</span><button class="speak" data-say="Mir ist wichtig, dass …">🔊 hören</button></div>
+<div class="merk"><span>Für mich ist entscheidend, ob …</span><button class="speak" data-say="Für mich ist entscheidend, ob …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🧱 Grund</div>
+<div class="merk"><span>weil …</span><button class="speak" data-say="weil …">🔊 hören</button></div>
+<div class="merk"><span>denn …</span><button class="speak" data-say="denn …">🔊 hören</button></div>
+<div class="merk"><span>Der Grund ist einfach: …</span><button class="speak" data-say="Der Grund ist einfach: …">🔊 hören</button></div>
+<div class="merk"><span>Das liegt daran, dass …</span><button class="speak" data-say="Das liegt daran, dass …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🔍 Beispiel</div>
+<div class="merk"><span>Zum Beispiel …</span><button class="speak" data-say="Zum Beispiel …">🔊 hören</button></div>
+<div class="merk"><span>Ich denke da an …</span><button class="speak" data-say="Ich denke da an …">🔊 hören</button></div>
+<div class="merk"><span>Bei uns zu Hause ist es so, dass …</span><button class="speak" data-say="Bei uns zu Hause ist es so, dass …">🔊 hören</button></div>
+<div class="merk"><span>Nehmen wir den Fall, dass …</span><button class="speak" data-say="Nehmen wir den Fall, dass …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🚧 Einschränkung</div>
+<div class="merk"><span>Allerdings nur, wenn …</span><button class="speak" data-say="Allerdings nur, wenn …">🔊 hören</button></div>
+<div class="merk"><span>Das gilt nicht für …</span><button class="speak" data-say="Das gilt nicht für …">🔊 hören</button></div>
+<div class="merk"><span>Ich würde es begrenzen auf …</span><button class="speak" data-say="Ich würde es begrenzen auf …">🔊 hören</button></div>
+<div class="merk"><span>Bei Erwachsenen sehe ich das anders</span><button class="speak" data-say="Bei Erwachsenen sehe ich das anders">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 🎯 Position mit Bedingung</div>
+<div class="merk"><span>Ich halte … für richtig, sofern …</span><button class="speak" data-say="Ich halte … für richtig, sofern …">🔊 hören</button></div>
+<div class="merk"><span>Grundsätzlich dafür — unter der Voraussetzung, dass …</span><button class="speak" data-say="Grundsätzlich dafür — unter der Voraussetzung, dass …">🔊 hören</button></div>
+<div class="merk"><span>Ich würde so weit gehen zu sagen, dass …</span><button class="speak" data-say="Ich würde so weit gehen zu sagen, dass …">🔊 hören</button></div>
+<div class="merk"><span>In der Sache stimme ich zu, im Weg nicht</span><button class="speak" data-say="In der Sache stimme ich zu, im Weg nicht">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · ⚔️ Ein Argument angreifen</div>
+<div class="merk"><span>Das gilt allerdings nur, wenn …</span><button class="speak" data-say="Das gilt allerdings nur, wenn …">🔊 hören</button></div>
+<div class="merk"><span>Da wird zweierlei vermischt: …</span><button class="speak" data-say="Da wird zweierlei vermischt: …">🔊 hören</button></div>
+<div class="merk"><span>Das Beispiel trägt nicht, weil …</span><button class="speak" data-say="Das Beispiel trägt nicht, weil …">🔊 hören</button></div>
+<div class="merk"><span>Umgekehrt ließe sich sagen, dass …</span><button class="speak" data-say="Umgekehrt ließe sich sagen, dass …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🤝 Einlenken</div>
+<div class="merk"><span>Das ist ein berechtigter <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Einwand" data-wort="der Einwand" data-kurz="ein Punkt, der gegen etwas spricht" data-bsp="Ein berechtigter Einwand — darauf habe ich keine gute Antwort.">Einwand</b></span><button class="speak" data-say="Das ist ein berechtigter Einwand">🔊 hören</button></div>
+<div class="merk"><span>Da lenke ich ein</span><button class="speak" data-say="Da lenke ich ein">🔊 hören</button></div>
+<div class="merk"><span>Den Punkt nehme ich mit</span><button class="speak" data-say="Den Punkt nehme ich mit">🔊 hören</button></div>
+<div class="merk"><span>Dann müsste man es begrenzen auf …</span><button class="speak" data-say="Dann müsste man es begrenzen auf …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🪞 Den Kern benennen</div>
+<div class="merk"><span>Im Kern ist das eine Frage von …</span><button class="speak" data-say="Im Kern ist das eine Frage von …">🔊 hören</button></div>
+<div class="merk"><span>Wir reden über zwei verschiedene Dinge</span><button class="speak" data-say="Wir reden über zwei verschiedene Dinge">🔊 hören</button></div>
+<div class="merk"><span>Da geht es weniger um … als um …</span><button class="speak" data-say="Da geht es weniger um … als um …">🔊 hören</button></div>
+<div class="merk"><span>Dahinter steht die Frage, wer entscheidet</span><button class="speak" data-say="Dahinter steht die Frage, wer entscheidet">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -767,6 +923,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Beim Elternabend ging es zwei Stunden lang um das Essen in der Mensa. Eine Mutter fand, man dürfe den Kindern nichts vorschreiben, und sprach von ___ durch die Schule. Ein Vater hielt dagegen: Man schreibe nichts vor, man entscheide nur, was angeboten werde — das sei etwas anderes. ___ ich seine Unterscheidung überzeugend fand, war mir der Ton zu scharf. Irgendwann sagte jemand, die Einnahmen aus einer Zuckersteuer müssten zweckgebunden zurückfließen, und das war für mich der beste ___ des Abends. Die Mutter hat daraufhin ___ und gesagt, bei Getränken könne sie mitgehen. Am Ende haben wir uns auf einen ___ geeinigt: Wasser und ungesüßter Tee bleiben kostenlos, alles andere wird nicht verboten. Es war ___ ein langer Abend, aber zum ersten Mal ist etwas entschieden worden.","o":["Bevormundung","Obwohl","Einwand","eingelenkt","Kompromiss","zwar","trotzdem","Vorschrift"],"a":[["Bevormundung"],["Obwohl"],["Einwand"],["eingelenkt"],["Kompromiss"],["zwar"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Ich bin dafür, dass …","Ich bin dagegen, weil …","Mir ist wichtig, dass …","Für mich ist entscheidend, ob …","Der Grund ist einfach: …","Das liegt daran, dass …","Zum Beispiel …","Ich denke da an …","Bei uns zu Hause ist es so, dass …","Nehmen wir den Fall, dass …","Allerdings nur, wenn …","Das gilt nicht für …","Ich würde es begrenzen auf …","Bei Erwachsenen sehe ich das anders","Ich halte … für richtig, sofern …","Grundsätzlich dafür — unter der Voraussetzung, dass …","Ich würde so weit gehen zu sagen, dass …","In der Sache stimme ich zu, im Weg nicht","Das gilt allerdings nur, wenn …","Da wird zweierlei vermischt: …","Das Beispiel trägt nicht, weil …","Umgekehrt ließe sich sagen, dass …","Das ist ein berechtigter Einwand","Da lenke ich ein","Den Punkt nehme ich mit","Dann müsste man es begrenzen auf …","Im Kern ist das eine Frage von …","Wir reden über zwei verschiedene Dinge","Da geht es weniger um … als um …","Dahinter steht die Frage, wer entscheidet"]
 </script>
 
 <script>
@@ -1066,6 +1225,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

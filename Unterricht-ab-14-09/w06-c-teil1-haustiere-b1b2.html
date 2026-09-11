@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Hast du ein Haustier — oder hättest du gern eins?</div></div><div class="nur-b1"><div class="ank">Wo verläuft für dich die Grenze zwischen Privatsache und Sache des Hauses?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../bilder/lesen/tier.webp" alt="Ein Futternapf, eine Hundeleine und ein Pfotenabdruck">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Hast du ein Haustier — oder hättest du gern eins?</li><li>Welche Tiere sind in deinem Heimatland in Wohnungen normal?</li><li>Wen würdest du zuerst fragen: den Vermieter oder die Nachbarn?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Wo verläuft für dich die Grenze zwischen Privatsache und Sache des Hauses?</li><li>Warum reagieren Menschen bei Tieren oft heftiger als bei Musik oder Besuch?</li><li>Kann ein Vermieter überhaupt beurteilen, ob ein Tier stört?</li></ol></div></div>
+<div class="tip teal">🔑 <strong>Die deutsche Grundregel in einem Satz:</strong> <b>Kleintiere ja, große Tiere fragen.</b> Fische, Hamster, Wellensittiche gelten als Kleintiere und brauchen in der Regel keine Erlaubnis. Bei Hund und Katze sieht es anders aus — dort ist die <u>Zustimmung des Vermieters</u> das Wort, um das sich alles dreht.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Was stört Nachbarn an einem Tier am meisten?</li><li>Was könnte man dagegen tun?</li><li>Wie merkst du, ob sich jemand ärgert?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Wie unterscheidet man einen echten Einwand von einer allgemeinen Abneigung?</li><li>Wann ist ein Nachbar im Recht, auch wenn er unfreundlich klingt?</li><li>Was wäre ein Angebot, das ein Gespräch sofort entspannt?</li></ol></div></div>
+<div class="tip">💡 <strong>Der Satz, der jedes Gespräch öffnet:</strong> <b>„Was genau stört dich — dann finden wir dafür etwas.“</b> Er nimmt den Einwand ernst und macht aus einem Streit über Tiere eine Aufgabe, die zwei Leute gemeinsam lösen. Und du erfährst nebenbei, worum es wirklich geht.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -591,6 +689,64 @@ footer strong{color:var(--ink);}
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 2 mit vertauschten Rollen — einmal seid ihr der Nachbar mit den Bedenken. Regel: Der Satz <i>„Der tut doch nichts“</i> kostet die Runde.</div>
 </section>
 
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 🙋 Das Anliegen sagen</div>
+<div class="merk"><span>Ich würde gern …</span><button class="speak" data-say="Ich würde gern …">🔊 hören</button></div>
+<div class="merk"><span>Ich habe vor, …</span><button class="speak" data-say="Ich habe vor, …">🔊 hören</button></div>
+<div class="merk"><span>Es geht um …</span><button class="speak" data-say="Es geht um …">🔊 hören</button></div>
+<div class="merk"><span>Ich wollte kurz fragen, ob …</span><button class="speak" data-say="Ich wollte kurz fragen, ob …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 👂 Nach dem Einwand fragen</div>
+<div class="merk"><span>Was genau stört dich?</span><button class="speak" data-say="Was genau stört dich?">🔊 hören</button></div>
+<div class="merk"><span>Hättest du Bedenken?</span><button class="speak" data-say="Hättest du Bedenken?">🔊 hören</button></div>
+<div class="merk"><span>Was wäre für dich wichtig?</span><button class="speak" data-say="Was wäre für dich wichtig?">🔊 hören</button></div>
+<div class="merk"><span>Sag mir bitte, wenn etwas ist</span><button class="speak" data-say="Sag mir bitte, wenn etwas ist">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🤝 Etwas anbieten</div>
+<div class="merk"><span>Im Treppenhaus immer an der Leine</span><button class="speak" data-say="Im Treppenhaus immer an der Leine">🔊 hören</button></div>
+<div class="merk"><span>Ich klingele, bevor ich rausgehe</span><button class="speak" data-say="Ich klingele, bevor ich rausgehe">🔊 hören</button></div>
+<div class="merk"><span>Tagsüber ist jemand da</span><button class="speak" data-say="Tagsüber ist jemand da">🔊 hören</button></div>
+<div class="merk"><span>Ich mache den Hof sauber</span><button class="speak" data-say="Ich mache den Hof sauber">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🔒 Absichern</div>
+<div class="merk"><span>Wenn etwas ist, sag mir Bescheid</span><button class="speak" data-say="Wenn etwas ist, sag mir Bescheid">🔊 hören</button></div>
+<div class="merk"><span>Wir schauen in vier Wochen noch mal</span><button class="speak" data-say="Wir schauen in vier Wochen noch mal">🔊 hören</button></div>
+<div class="merk"><span>Ich schreibe Ihnen das kurz</span><button class="speak" data-say="Ich schreibe Ihnen das kurz">🔊 hören</button></div>
+<div class="merk"><span>Passt das so für Sie?</span><button class="speak" data-say="Passt das so für Sie?">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 📄 Formell vortragen</div>
+<div class="merk"><span>Ich möchte Sie um Ihre <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Zustimmung" data-wort="die Zustimmung" data-kurz="dass jemand offiziell ja sagt" data-bsp="Dafür brauche ich die Zustimmung des Vermieters.">Zustimmung</b> bitten</span><button class="speak" data-say="Ich möchte Sie um Ihre Zustimmung bitten">🔊 hören</button></div>
+<div class="merk"><span>Ich wende mich an Sie wegen …</span><button class="speak" data-say="Ich wende mich an Sie wegen …">🔊 hören</button></div>
+<div class="merk"><span>Vorab habe ich in den Vertrag geschaut</span><button class="speak" data-say="Vorab habe ich in den Vertrag geschaut">🔊 hören</button></div>
+<div class="merk"><span>Unter welchen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Auflagen" data-wort="die Auflage" data-kurz="eine Bedingung, die man erfüllen muss" data-bsp="Die Erlaubnis gilt nur mit zwei Auflagen.">Auflagen</b> wäre das möglich?</span><button class="speak" data-say="Unter welchen Auflagen wäre das möglich?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🔍 Den Einwand aufnehmen</div>
+<div class="merk"><span>Ich verstehe den Punkt</span><button class="speak" data-say="Ich verstehe den Punkt">🔊 hören</button></div>
+<div class="merk"><span>Das ist ein berechtigter Einwand</span><button class="speak" data-say="Das ist ein berechtigter Einwand">🔊 hören</button></div>
+<div class="merk"><span>Darf ich fragen, worauf sich das bezieht?</span><button class="speak" data-say="Darf ich fragen, worauf sich das bezieht?">🔊 hören</button></div>
+<div class="merk"><span>Ging es dabei um <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von Lärm" data-wort="der Lärm" data-kurz="bellen, kratzen, nachts unruhig sein" data-bsp="Er bellt, wenn ihr nicht da seid.">Lärm</b> oder um etwas anderes?</span><button class="speak" data-say="Ging es dabei um Lärm oder um etwas anderes?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🧩 Auflagen selbst vorschlagen</div>
+<div class="merk"><span>Ich schlage folgende Auflagen vor</span><button class="speak" data-say="Ich schlage folgende Auflagen vor">🔊 hören</button></div>
+<div class="merk"><span>sofern es zu <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Beschwerden" data-wort="die Beschwerde" data-kurz="wenn jemand offiziell sagt, dass ihn etwas stört" data-bsp="Es gab eine Beschwerde wegen des Bellens.">Beschwerden</b> kommt</span><button class="speak" data-say="sofern es zu Beschwerden kommt">🔊 hören</button></div>
+<div class="merk"><span>solange niemand im Haus allergisch ist</span><button class="speak" data-say="solange niemand im Haus allergisch ist">🔊 hören</button></div>
+<div class="merk"><span>vorausgesetzt, dass die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Ruhezeiten" data-wort="die Ruhezeit" data-kurz="die Zeit, in der es leise sein muss" data-bsp="Nach zweiundzwanzig Uhr ist Ruhezeit.">Ruhezeiten</b> eingehalten werden</span><button class="speak" data-say="vorausgesetzt, dass die Ruhezeiten eingehalten werden">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · ✍️ Verbindlich festhalten</div>
+<div class="merk"><span>Ich fasse das schriftlich zusammen</span><button class="speak" data-say="Ich fasse das schriftlich zusammen">🔊 hören</button></div>
+<div class="merk"><span>Dann gilt ab dem Ersten: …</span><button class="speak" data-say="Dann gilt ab dem Ersten: …">🔊 hören</button></div>
+<div class="merk"><span>Ich melde mich von mir aus, falls …</span><button class="speak" data-say="Ich melde mich von mir aus, falls …">🔊 hören</button></div>
+<div class="merk"><span>Sagen Sie Bescheid, falls ich etwas falsch verstanden habe</span><button class="speak" data-say="Sagen Sie Bescheid, falls ich etwas falsch verstanden habe">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
+</section>
+
 <section class="section" id="challenge">
 <h2 class="st">⏱️ Die 90-Sekunden-Challenge</h2>
 <p class="ssub">Ein Anliegen, anderthalb Minuten, freies Sprechen. Nicht recht haben — sondern so fragen, dass ein Ja mit Bedingungen leichter fällt als ein Nein.</p>
@@ -632,7 +788,7 @@ footer strong{color:var(--ink);}
 <div class="rsp-kopf"><span class="rsp-nr">1</span><b>Das Gespräch mit der Vermieterin</b></div>
 <div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>möchte einen Hund halten und ruft bei der <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Vermieterin" data-wort="die Vermieterin" data-kurz="die Person, der die Wohnung gehört" data-bsp="Ich schreibe der Vermieterin und frage nach.">Vermieterin</b> an.</p></div><div class="rsp-r b"><span>B</span><p>ist die Vermieterin und war mit dem letzten Mieter schlecht gefahren. B sagt nicht nein, aber nennt Bedenken.</p></div></div>
 <div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Ich würde gern einen Hund halten</span><span class="rm">Ich habe vorher mit den Nachbarn gesprochen</span><span class="rm">Im Treppenhaus immer an der Leine</span><span class="rm">Unter welchen Auflagen wäre das möglich?</span></div><div class="nur-b1"><span class="rm">Ich möchte Sie um Ihre Zustimmung bitten</span><span class="rm">Ich schlage folgende Auflagen vor</span><span class="rm">sofern es zu Beschwerden kommt</span><span class="rm">Ich fasse das schriftlich zusammen</span></div></div>
-<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>A hat nach <i><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Auflagen" data-wort="die Auflage" data-kurz="eine Bedingung, die man erfüllen muss" data-bsp="Die Erlaubnis gilt nur mit zwei Auflagen.">Auflagen</b></i> gefragt statt nach <i>Erlaubnis</i>, mindestens zwei konkrete Angebote gemacht und am Ende eine schriftliche Zusammenfassung angeboten. B hat mindestens eine Bedingung mit <i>sofern</i> oder <i>solange</i> formuliert.</div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>A hat nach <i>Auflagen</i> gefragt statt nach <i>Erlaubnis</i>, mindestens zwei konkrete Angebote gemacht und am Ende eine schriftliche Zusammenfassung angeboten. B hat mindestens eine Bedingung mit <i>sofern</i> oder <i>solange</i> formuliert.</div>
 <details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
 
@@ -763,6 +919,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Als wir den Hund holen wollten, habe ich zuerst in den Mietvertrag geschaut. Dort stand ein Satz im Passiv: Hunde ___ nur mit Zustimmung des Vermieters gehalten werden. Also habe ich angerufen und nicht gefragt, ob ich darf, sondern unter welchen ___ es möglich wäre. Die Vermieterin war überraschend entspannt und sagte, die Erlaubnis gelte, ___ es keine Beschwerden gebe. Vorher hatte ich schon bei beiden Nachbarn geklingelt. Die eine hat eine ___ gegen Tierhaare und nimmt deshalb ungern den Aufzug — seitdem gehen wir grundsätzlich die Treppe. Der andere hat eine kleine Tochter, die Angst hat, also ist der Hund im ___ immer an der Leine. Nach vier Wochen habe ich von mir aus noch einmal nachgefragt. Es gab keine einzige ___, und der Hausmeister meinte im Vorbeigehen, so viel ___ habe hier lange keiner genommen.","o":["dürfen","Auflagen","solange","Allergie","Treppenhaus","Beschwerde","Rücksicht","Zustimmung"],"a":[["dürfen"],["Auflagen"],["solange"],["Allergie"],["Treppenhaus"],["Beschwerde"],["Rücksicht"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Ich würde gern …","Ich habe vor, …","Es geht um …","Ich wollte kurz fragen, ob …","Was genau stört dich?","Hättest du Bedenken?","Was wäre für dich wichtig?","Sag mir bitte, wenn etwas ist","Im Treppenhaus immer an der Leine","Ich klingele, bevor ich rausgehe","Tagsüber ist jemand da","Ich mache den Hof sauber","Wenn etwas ist, sag mir Bescheid","Wir schauen in vier Wochen noch mal","Ich schreibe Ihnen das kurz","Passt das so für Sie?","Ich möchte Sie um Ihre Zustimmung bitten","Ich wende mich an Sie wegen …","Vorab habe ich in den Vertrag geschaut","Unter welchen Auflagen wäre das möglich?","Ich verstehe den Punkt","Das ist ein berechtigter Einwand","Darf ich fragen, worauf sich das bezieht?","Ging es dabei um Lärm oder um etwas anderes?","Ich schlage folgende Auflagen vor","Ich fasse das schriftlich zusammen","Dann gilt ab dem Ersten: …","Ich melde mich von mir aus, falls …","Sagen Sie Bescheid, falls ich etwas falsch verstanden habe"]
 </script>
 
 <script>
@@ -1062,6 +1221,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

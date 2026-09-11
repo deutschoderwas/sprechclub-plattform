@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Welche Entscheidung hast du diese Woche getroffen?</div></div><div class="nur-b1"><div class="ank">Bei welchem Nomen bist du dir beim Verb nie sicher?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../amanda/sz-heikel.webp" alt="Zwei Menschen an einem Tisch, vor ihnen liegen Unterlagen">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Welche Entscheidung hast du diese Woche getroffen?</li><li>Wann hast du zuletzt einen Termin gemacht?</li><li>Stellst du im Kurs oft Fragen?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Bei welchem Nomen bist du dir beim Verb nie sicher?</li><li>Warum merkt man solche Fehler sofort, obwohl man sie nicht erklären kann?</li><li>Lernst du Wörter einzeln oder immer im Satz?</li></ol></div></div>
+<div class="tip teal">🔑 <strong>Die kurze Fassung:</strong> Vier Verben decken fast alles ab. <b>machen</b> für Alltägliches, <b>treffen</b> für Entscheidungen, <b>stellen</b> für alles, was an eine andere Person geht, <b>halten</b> für alles, was vor Leuten passiert.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Wem stellst du am meisten Fragen?</li><li>Hast du schon einmal eine Rede gehalten?</li><li>Wer trifft bei euch zu Hause die Entscheidungen?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Welches Bild hilft dir mehr: die Regel oder ein Beispielsatz?</li><li>Gibt es solche festen Paare auch in deiner Sprache?</li><li>Wo im Alltag brauchst du diese Wendungen am häufigsten?</li></ol></div></div>
+<div class="tip">💡 <strong>Ein Merksatz für alles:</strong> <b>Ich mache einen Termin, treffe eine Entscheidung, stelle eine Frage und halte mein Wort.</b> Vier Verben, ein Satz — der reicht als Anker für die ganze Stunde.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -588,6 +686,64 @@ footer strong{color:var(--ink);}
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 2 mit einem echten Vorschlag für euren Kurs. Regel: Es müssen ein <i>Vorschlag</i>, eine <i>Bedingung</i> und eine <i>Entscheidung</i> vorkommen.</div>
 </section>
 
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 💡 Vorschlag machen</div>
+<div class="merk"><span>Darf ich einen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Vorschlag" data-wort="der Vorschlag" data-kurz="eine Idee, die du den anderen anbietest" data-bsp="Darf ich einen Vorschlag machen?">Vorschlag</b> <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von machen" data-wort="machen" data-kurz="für ganz alltägliche Dinge" data-bsp="einen Termin machen, einen Fehler machen, einen Vorschlag machen">machen</b>?</span><button class="speak" data-say="Darf ich einen Vorschlag machen?">🔊 hören</button></div>
+<div class="merk"><span>Ich hätte da eine Idee.</span><button class="speak" data-say="Ich hätte da eine Idee.">🔊 hören</button></div>
+<div class="merk"><span>Wie wäre es, wenn …?</span><button class="speak" data-say="Wie wäre es, wenn …?">🔊 hören</button></div>
+<div class="merk"><span>Mein Vorschlag wäre …</span><button class="speak" data-say="Mein Vorschlag wäre …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · ❓ Frage stellen</div>
+<div class="merk"><span>Darf ich eine <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Frage" data-wort="die Frage" data-kurz="was du wissen willst" data-bsp="Darf ich eine Frage stellen?">Frage</b> <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von stellen" data-wort="stellen" data-kurz="wenn es an jemanden geht" data-bsp="eine Frage stellen, einen Antrag stellen, eine Bedingung stellen">stellen</b>?</span><button class="speak" data-say="Darf ich eine Frage stellen?">🔊 hören</button></div>
+<div class="merk"><span>Eine Frage habe ich noch.</span><button class="speak" data-say="Eine Frage habe ich noch.">🔊 hören</button></div>
+<div class="merk"><span>Können Sie mir eine <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Auskunft" data-wort="die Auskunft" data-kurz="die Information, die dir jemand gibt" data-bsp="Am Schalter hat man mir eine falsche Auskunft gegeben.">Auskunft</b> geben?</span><button class="speak" data-say="Können Sie mir eine Auskunft geben?">🔊 hören</button></div>
+<div class="merk"><span>Wer weiß darüber <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Bescheid" data-wort="Bescheid" data-kurz="die kurze Antwort, ob etwas klappt" data-bsp="Ich gebe dir bis Freitag Bescheid.">Bescheid</b>?</span><button class="speak" data-say="Wer weiß darüber Bescheid?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🎯 Entscheidung treffen</div>
+<div class="merk"><span>Dann <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von treffen" data-wort="treffen" data-kurz="wenn du auswählst" data-bsp="eine Entscheidung treffen, eine Wahl treffen, eine Absprache treffen">treffen</b> wir jetzt eine <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Entscheidung" data-wort="die Entscheidung" data-kurz="wenn du dich für eine Sache entscheidest" data-bsp="Wir müssen bis Freitag eine Entscheidung treffen.">Entscheidung</b>.</span><button class="speak" data-say="Dann treffen wir jetzt eine Entscheidung.">🔊 hören</button></div>
+<div class="merk"><span>Ich entscheide mich für …</span><button class="speak" data-say="Ich entscheide mich für …">🔊 hören</button></div>
+<div class="merk"><span>Wir machen es so.</span><button class="speak" data-say="Wir machen es so.">🔊 hören</button></div>
+<div class="merk"><span>Damit bin ich einverstanden.</span><button class="speak" data-say="Damit bin ich einverstanden.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 📬 Bescheid geben</div>
+<div class="merk"><span>Ich gebe dir Bescheid.</span><button class="speak" data-say="Ich gebe dir Bescheid.">🔊 hören</button></div>
+<div class="merk"><span>Ich melde mich bis Freitag.</span><button class="speak" data-say="Ich melde mich bis Freitag.">🔊 hören</button></div>
+<div class="merk"><span>Ich sage dir morgen Bescheid.</span><button class="speak" data-say="Ich sage dir morgen Bescheid.">🔊 hören</button></div>
+<div class="merk"><span>Ich mache dir einen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Termin" data-wort="der Termin" data-kurz="ein Tag und eine Uhrzeit, die du fest abmachst" data-bsp="Ich mache einen Termin beim Zahnarzt.">Termin</b>.</span><button class="speak" data-say="Ich mache dir einen Termin.">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 💡 Vorschlag mit Begründung</div>
+<div class="merk"><span>Ich würde vorschlagen, dass …</span><button class="speak" data-say="Ich würde vorschlagen, dass …">🔊 hören</button></div>
+<div class="merk"><span>Aus meiner Sicht wäre es sinnvoll, …</span><button class="speak" data-say="Aus meiner Sicht wäre es sinnvoll, …">🔊 hören</button></div>
+<div class="merk"><span>Ein Vorschlag: … — dann sparen wir uns …</span><button class="speak" data-say="Ein Vorschlag: … — dann sparen wir uns …">🔊 hören</button></div>
+<div class="merk"><span>Wenn niemand etwas dagegen hat, …</span><button class="speak" data-say="Wenn niemand etwas dagegen hat, …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · ❓ Gezielt nachfragen</div>
+<div class="merk"><span>Eine Rückfrage hätte ich noch.</span><button class="speak" data-say="Eine Rückfrage hätte ich noch.">🔊 hören</button></div>
+<div class="merk"><span>Darf ich an dieser Stelle eine Frage stellen?</span><button class="speak" data-say="Darf ich an dieser Stelle eine Frage stellen?">🔊 hören</button></div>
+<div class="merk"><span>Wer ist dafür zuständig?</span><button class="speak" data-say="Wer ist dafür zuständig?">🔊 hören</button></div>
+<div class="merk"><span>Können Sie mir dazu eine Auskunft geben?</span><button class="speak" data-say="Können Sie mir dazu eine Auskunft geben?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🎯 Entscheidung mit Bedingung</div>
+<div class="merk"><span>Wir treffen die Entscheidung, sobald …</span><button class="speak" data-say="Wir treffen die Entscheidung, sobald …">🔊 hören</button></div>
+<div class="merk"><span>Ich stelle eine Bedingung: …</span><button class="speak" data-say="Ich stelle eine Bedingung: …">🔊 hören</button></div>
+<div class="merk"><span>Grundsätzlich ja, allerdings …</span><button class="speak" data-say="Grundsätzlich ja, allerdings …">🔊 hören</button></div>
+<div class="merk"><span>Darauf würde ich mich einlassen, wenn …</span><button class="speak" data-say="Darauf würde ich mich einlassen, wenn …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 📬 Verbindlich zusagen</div>
+<div class="merk"><span>Ich gebe Ihnen bis Freitag Bescheid.</span><button class="speak" data-say="Ich gebe Ihnen bis Freitag Bescheid.">🔊 hören</button></div>
+<div class="merk"><span>Darauf können Sie sich verlassen.</span><button class="speak" data-say="Darauf können Sie sich verlassen.">🔊 hören</button></div>
+<div class="merk"><span>Ich übernehme die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Verantwortung" data-wort="die Verantwortung" data-kurz="wenn du dafür geradestehst" data-bsp="Für den Fehler übernehme ich die Verantwortung.">Verantwortung</b> dafür.</span><button class="speak" data-say="Ich übernehme die Verantwortung dafür.">🔊 hören</button></div>
+<div class="merk"><span>Ich halte mein <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Wort" data-wort="das Wort" data-kurz="was du jemandem versprochen hast" data-bsp="Er hält sein Wort, darauf kannst du dich verlassen.">Wort</b>.</span><button class="speak" data-say="Ich halte mein Wort.">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
+</section>
+
 <section class="section" id="challenge">
 <h2 class="st">⏱️ Die 90-Sekunden-Challenge</h2>
 <p class="ssub">Neunzig Sekunden über dich: Welche Entscheidung steht bei dir an, welchen Termin musst du machen, welche Frage willst du endlich stellen?</p>
@@ -627,15 +783,15 @@ footer strong{color:var(--ink);}
 </ol>
 <div class="rsp">
 <div class="rsp-kopf"><span class="rsp-nr">1</span><b>Termin beim Amt</b></div>
-<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>braucht einen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Termin" data-wort="der Termin" data-kurz="ein Tag und eine Uhrzeit, die du fest abmachst" data-bsp="Ich mache einen Termin beim Zahnarzt.">Termin</b> und weiß nicht, was zuerst kommt.</p></div><div class="rsp-r b"><span>B</span><p>arbeitet dort, kann heute aber nur die halbe <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Auskunft" data-wort="die Auskunft" data-kurz="die Information, die dir jemand gibt" data-bsp="Am Schalter hat man mir eine falsche Auskunft gegeben.">Auskunft</b> geben.</p></div></div>
+<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>braucht einen Termin und weiß nicht, was zuerst kommt.</p></div><div class="rsp-r b"><span>B</span><p>arbeitet dort, kann heute aber nur die halbe Auskunft geben.</p></div></div>
 <div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Ich möchte einen Termin machen</span><span class="rm">Darf ich eine Frage stellen?</span><span class="rm">Muss ich vorher einen Antrag stellen?</span><span class="rm">Können Sie mir Bescheid geben?</span></div><div class="nur-b1"><span class="rm">Ohne Antrag kann ich Ihnen leider keinen Termin geben</span><span class="rm">Dazu kann ich Ihnen keine Auskunft geben, dafür ist Zimmer 12 zuständig</span><span class="rm">Ich gebe Ihnen Bescheid, sobald der Antrag bearbeitet ist</span><span class="rm">Stellen Sie ruhig alle Fragen, dann sparen wir uns den zweiten Weg</span></div></div>
-<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>A hat einen <i>Termin gemacht</i>, eine <i><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Frage" data-wort="die Frage" data-kurz="was du wissen willst" data-bsp="Darf ich eine Frage stellen?">Frage</b> gestellt</i> und nach <i><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Bescheid" data-wort="Bescheid" data-kurz="die kurze Antwort, ob etwas klappt" data-bsp="Ich gebe dir bis Freitag Bescheid.">Bescheid</b></i> gefragt. B hat mindestens einmal freundlich weitergeschickt, statt nur nein zu sagen.</div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>A hat einen <i>Termin gemacht</i>, eine <i>Frage gestellt</i> und nach <i>Bescheid</i> gefragt. B hat mindestens einmal freundlich weitergeschickt, statt nur nein zu sagen.</div>
 <details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
 
 <div class="rsp">
 <div class="rsp-kopf"><span class="rsp-nr">2</span><b>Die Entscheidung im Team</b></div>
-<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>macht einen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Vorschlag" data-wort="der Vorschlag" data-kurz="eine Idee, die du den anderen anbietest" data-bsp="Darf ich einen Vorschlag machen?">Vorschlag</b> für die nächste Woche.</p></div><div class="rsp-r b"><span>B</span><p>findet ihn gut, stellt aber eine Bedingung — und am Ende muss jemand die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Entscheidung" data-wort="die Entscheidung" data-kurz="wenn du dich für eine Sache entscheidest" data-bsp="Wir müssen bis Freitag eine Entscheidung treffen.">Entscheidung</b> <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von treffen" data-wort="treffen" data-kurz="wenn du auswählst" data-bsp="eine Entscheidung treffen, eine Wahl treffen, eine Absprache treffen">treffen</b>.</p></div></div>
+<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>macht einen Vorschlag für die nächste Woche.</p></div><div class="rsp-r b"><span>B</span><p>findet ihn gut, stellt aber eine Bedingung — und am Ende muss jemand die Entscheidung treffen.</p></div></div>
 <div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Darf ich einen Vorschlag machen?</span><span class="rm">Wie wäre es, wenn wir …</span><span class="rm">Treffen wir jetzt die Entscheidung?</span><span class="rm">Ich gebe den anderen Bescheid</span></div><div class="nur-b1"><span class="rm">Ich würde vorschlagen, dass wir es diesmal umdrehen</span><span class="rm">Grundsätzlich gern, allerdings stelle ich eine Bedingung</span><span class="rm">Wer übernimmt die Verantwortung, wenn es nicht klappt?</span><span class="rm">Dann halten wir das so fest und ich sage allen Bescheid</span></div></div>
 <div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>Ein <i>Vorschlag</i> wurde <i>gemacht</i>, eine <i>Bedingung gestellt</i> und am Ende eine <i>Entscheidung getroffen</i>. Und jemand hat gesagt, wer Bescheid gibt.</div>
 <details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
@@ -645,7 +801,7 @@ footer strong{color:var(--ink);}
 <div class="rsp-kopf"><span class="rsp-nr">3</span><b>Der Fehler</b></div>
 <div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>hat etwas falsch gemacht und spricht es von sich aus an.</p></div><div class="rsp-r b"><span>B</span><p>ärgert sich, will aber vor allem wissen, wie es jetzt weitergeht.</p></div></div>
 <div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Ich habe einen Fehler gemacht</span><span class="rm">Das tut mir leid</span><span class="rm">Ich übernehme die Verantwortung</span><span class="rm">Ich gebe dir morgen Bescheid</span></div><div class="nur-b1"><span class="rm">Danke, dass du es von dir aus sagst</span><span class="rm">Mich ärgert es, aber davon wird es nicht besser</span><span class="rm">Dann treffen wir gemeinsam die Entscheidung, wie es weitergeht</span><span class="rm">Halt mich auf dem Laufenden, den Rest klären wir Freitag</span></div></div>
-<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>A hat den <i><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Fehler" data-wort="der Fehler" data-kurz="etwas, das falsch gelaufen ist" data-bsp="Ich habe einen Fehler gemacht, das tut mir leid.">Fehler</b> gemacht</i> und die <i><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Verantwortung" data-wort="die Verantwortung" data-kurz="wenn du dafür geradestehst" data-bsp="Für den Fehler übernehme ich die Verantwortung.">Verantwortung</b> übernommen</i> — zwei Nomen, zwei verschiedene Verben. B ist beim Thema geblieben und hat nicht über die Person gesprochen.</div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>A hat den <i><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Fehler" data-wort="der Fehler" data-kurz="etwas, das falsch gelaufen ist" data-bsp="Ich habe einen Fehler gemacht, das tut mir leid.">Fehler</b> gemacht</i> und die <i>Verantwortung übernommen</i> — zwei Nomen, zwei verschiedene Verben. B ist beim Thema geblieben und hat nicht über die Person gesprochen.</div>
 <details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
 
@@ -760,6 +916,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Am Montag wollte ich endlich einen Termin ___. Ich habe angerufen, aber niemand konnte mir eine Auskunft ___. Also habe ich im Amt eine Frage ___ und erfahren, dass ich zuerst einen Antrag ___ muss. Zwei Tage später kam die Mail: Sie geben mir Bescheid, sobald jemand die Entscheidung ___ hat. Am Mittwoch habe ich dann gemerkt, dass ich beim Formular einen Fehler ___ hatte. Ich habe angerufen, mich entschuldigt und die Verantwortung dafür ___. Die Frau am Telefon war freundlich und hat ihr Wort ___: Am Freitag lag der neue Termin im Briefkasten.","o":["machen","geben","gestellt","stellen","getroffen","gemacht","übernommen","gehalten"],"a":[["machen"],["geben"],["gestellt"],["stellen"],["getroffen"],["gemacht"],["übernommen"],["gehalten"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Darf ich einen Vorschlag machen?","Ich hätte da eine Idee.","Wie wäre es, wenn …?","Mein Vorschlag wäre …","Darf ich eine Frage stellen?","Eine Frage habe ich noch.","Können Sie mir eine Auskunft geben?","Wer weiß darüber Bescheid?","Dann treffen wir jetzt eine Entscheidung.","Ich entscheide mich für …","Wir machen es so.","Damit bin ich einverstanden.","Ich gebe dir Bescheid.","Ich melde mich bis Freitag.","Ich sage dir morgen Bescheid.","Ich mache dir einen Termin.","Ich würde vorschlagen, dass …","Aus meiner Sicht wäre es sinnvoll, …","Ein Vorschlag: … — dann sparen wir uns …","Wenn niemand etwas dagegen hat, …","Eine Rückfrage hätte ich noch.","Darf ich an dieser Stelle eine Frage stellen?","Wer ist dafür zuständig?","Können Sie mir dazu eine Auskunft geben?","Wir treffen die Entscheidung, sobald …","Ich stelle eine Bedingung: …","Grundsätzlich ja, allerdings …","Darauf würde ich mich einlassen, wenn …","Ich gebe Ihnen bis Freitag Bescheid.","Darauf können Sie sich verlassen.","Ich übernehme die Verantwortung dafür.","Ich halte mein Wort."]
 </script>
 
 <script>
@@ -1059,6 +1218,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

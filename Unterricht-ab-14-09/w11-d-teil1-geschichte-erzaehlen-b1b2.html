@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Erzählst du gern Geschichten?</div></div><div class="nur-b1"><div class="ank">Woran merkst du, dass jemand gut erzählt?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../amanda/sz-freunde.webp" alt="Zwei Freundinnen sitzen beieinander und erzählen">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Erzählst du gern Geschichten?</li><li>Was ist dir zuletzt Lustiges passiert?</li><li>Wer erzählt in deiner Familie am besten?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Woran merkst du, dass jemand gut erzählt?</li><li>Was fällt dir auf Deutsch dabei schwer?</li><li>Erzählst du in deiner Sprache anders?</li></ol></div></div>
+<div class="tip teal">🔑 <strong>Die vier Schritte:</strong> <b>1 Rahmen</b> — wann und wo. <b>2 Los geht es</b> — was du wolltest. <b>3 Und dann</b> — die Stelle, an der es kippt. <b>4 Pointe</b> — der letzte Satz, kurz.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Was war deine peinlichste Situation?</li><li>Lachst du über dich selbst?</li><li>Erzählst du lieber kurz oder lang?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Wie hältst du Spannung, ohne zu übertreiben?</li><li>Was machst du, wenn niemand lacht?</li><li>Welche Geschichte erzählst du immer wieder?</li></ol></div></div>
+<div class="tip">💡 <strong>Die kleinen Spannungswörter:</strong> <b>plötzlich</b>, <b>auf einmal</b>, <b>und dann</b>, <b>und weißt du was?</b> Vier Stück, und schon hört jeder zu. Mehr braucht es nicht.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -586,6 +684,64 @@ footer strong{color:var(--ink);}
 <button class="speak dbtn" data-say="Ich habe gestern etwas so Peinliches gemacht, ich kann es kaum sagen. Jetzt aber. Raus damit. Ich komme nach Hause, Schlüssel passt nicht, ich klingele also. Bei dir selbst? Macht ein wildfremder Mann auf. Falsche Tür, zwei Stockwerke tiefer. Das ist mir auch schon passiert, ehrlich. Halb so wild.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Erzählt euch gegenseitig eine kleine Panne aus dieser Woche. Regel: Wer zuhört, sagt nur <i>Und?</i>, <i>Echt jetzt?</i> oder <i>Nein!</i> — sonst nichts.</div>
+</section>
+
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 🖼️ Anfangen</div>
+<div class="merk"><span>Ich muss dir was erzählen.</span><button class="speak" data-say="Ich muss dir was erzählen.">🔊 hören</button></div>
+<div class="merk"><span>Letzte Woche im Supermarkt …</span><button class="speak" data-say="Letzte Woche im Supermarkt …">🔊 hören</button></div>
+<div class="merk"><span>Stell dir vor, was mir passiert ist.</span><button class="speak" data-say="Stell dir vor, was mir passiert ist.">🔊 hören</button></div>
+<div class="merk"><span>Am <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Anfang" data-wort="der Anfang" data-kurz="wie es losging" data-bsp="Am Anfang war alles ganz normal.">Anfang</b> war alles ganz normal.</span><button class="speak" data-say="Am Anfang war alles ganz normal.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🚶 Weitererzählen</div>
+<div class="merk"><span>Ich wollte nur schnell …</span><button class="speak" data-say="Ich wollte nur schnell …">🔊 hören</button></div>
+<div class="merk"><span>Und dann …</span><button class="speak" data-say="Und dann …">🔊 hören</button></div>
+<div class="merk"><span>Also, ich stehe da und …</span><button class="speak" data-say="Also, ich stehe da und …">🔊 hören</button></div>
+<div class="merk"><span>Erst habe ich gedacht: …</span><button class="speak" data-say="Erst habe ich gedacht: …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · ⚡ Spannend machen</div>
+<div class="merk"><span>Und plötzlich …</span><button class="speak" data-say="Und plötzlich …">🔊 hören</button></div>
+<div class="merk"><span>Auf einmal …</span><button class="speak" data-say="Auf einmal …">🔊 hören</button></div>
+<div class="merk"><span>Und weißt du was?</span><button class="speak" data-say="Und weißt du was?">🔊 hören</button></div>
+<div class="merk"><span>Du hättest ihr Gesicht sehen sollen!</span><button class="speak" data-say="Du hättest ihr Gesicht sehen sollen!">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🎯 Aufhören</div>
+<div class="merk"><span>Am <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Ende" data-wort="das Ende" data-kurz="wie es ausgegangen ist" data-bsp="Am Ende war alles halb so wild.">Ende</b> war es …</span><button class="speak" data-say="Am Ende war es …">🔊 hören</button></div>
+<div class="merk"><span>Und das war es.</span><button class="speak" data-say="Und das war es.">🔊 hören</button></div>
+<div class="merk"><span>So einfach war das.</span><button class="speak" data-say="So einfach war das.">🔊 hören</button></div>
+<div class="merk"><span>Ich lache heute noch drüber.</span><button class="speak" data-say="Ich lache heute noch drüber.">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 🖼️ Rahmen mit Ton</div>
+<div class="merk"><span>Das musst du dir mal vorstellen: …</span><button class="speak" data-say="Das musst du dir mal vorstellen: …">🔊 hören</button></div>
+<div class="merk"><span>Es war einer von diesen Tagen, an denen …</span><button class="speak" data-say="Es war einer von diesen Tagen, an denen …">🔊 hören</button></div>
+<div class="merk"><span>Ich weiß noch genau, es war ein Dienstag.</span><button class="speak" data-say="Ich weiß noch genau, es war ein Dienstag.">🔊 hören</button></div>
+<div class="merk"><span>Vorweg: Es geht mir gut, nichts Schlimmes.</span><button class="speak" data-say="Vorweg: Es geht mir gut, nichts Schlimmes.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🚶 Szene aufbauen</div>
+<div class="merk"><span>Ich stehe also da und warte, und …</span><button class="speak" data-say="Ich stehe also da und warte, und …">🔊 hören</button></div>
+<div class="merk"><span>Bis dahin war noch alles in Ordnung.</span><button class="speak" data-say="Bis dahin war noch alles in Ordnung.">🔊 hören</button></div>
+<div class="merk"><span>Ich dachte mir noch: Komisch, aber gut.</span><button class="speak" data-say="Ich dachte mir noch: Komisch, aber gut.">🔊 hören</button></div>
+<div class="merk"><span>Und ich, natürlich, mache genau das Falsche.</span><button class="speak" data-say="Und ich, natürlich, mache genau das Falsche.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · ⚡ Kippen lassen</div>
+<div class="merk"><span>Und in dem <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Moment" data-wort="der Moment" data-kurz="der eine kurze Augenblick" data-bsp="In dem Moment ist mir alles klar geworden.">Moment</b> …</span><button class="speak" data-say="Und in dem Moment …">🔊 hören</button></div>
+<div class="merk"><span>Und dann, ganz ruhig, sagt sie: …</span><button class="speak" data-say="Und dann, ganz ruhig, sagt sie: …">🔊 hören</button></div>
+<div class="merk"><span>Ich schwöre dir, ich bin fast gestorben.</span><button class="speak" data-say="Ich schwöre dir, ich bin fast gestorben.">🔊 hören</button></div>
+<div class="merk"><span>Und da ist bei mir der Groschen gefallen.</span><button class="speak" data-say="Und da ist bei mir der Groschen gefallen.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🎯 Landen</div>
+<div class="merk"><span>Am Ende war es nur …</span><button class="speak" data-say="Am Ende war es nur …">🔊 hören</button></div>
+<div class="merk"><span>Und damit war die Sache erledigt.</span><button class="speak" data-say="Und damit war die Sache erledigt.">🔊 hören</button></div>
+<div class="merk"><span>Heute finde ich es lustig. Damals nicht.</span><button class="speak" data-say="Heute finde ich es lustig. Damals nicht.">🔊 hören</button></div>
+<div class="merk"><span>Seitdem schaue ich immer zweimal hin.</span><button class="speak" data-say="Seitdem schaue ich immer zweimal hin.">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -760,6 +916,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Letzte Woche ___ mir etwas Komisches passiert. Es ___ ein ganz normaler Dienstag, und ich ___ eigentlich nur schnell einkaufen. Ich stehe also an der Kasse, gucke aufs Handy, alles wie immer. Und ___ einmal dreht sich die Frau vor mir um und ___ ganz ruhig: Das ist nicht meine Tasche. Ich ___ noch: Wieso ihre Tasche? Bis ich in meinen Wagen geschaut habe. ___ dem Moment ist mir alles klar geworden. ___ Ende hatte ich ihren kompletten Einkauf im Wagen. Sie hat gelacht, ich weniger.","o":["ist","war","wollte","auf","sagt","dachte","In","Am"],"a":[["ist"],["war"],["wollte"],["auf"],["sagt"],["dachte"],["In"],["Am"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Ich muss dir was erzählen.","Letzte Woche im Supermarkt …","Stell dir vor, was mir passiert ist.","Am Anfang war alles ganz normal.","Ich wollte nur schnell …","Und dann …","Also, ich stehe da und …","Erst habe ich gedacht: …","Und plötzlich …","Auf einmal …","Und weißt du was?","Du hättest ihr Gesicht sehen sollen!","Am Ende war es …","Und das war es.","So einfach war das.","Ich lache heute noch drüber.","Das musst du dir mal vorstellen: …","Es war einer von diesen Tagen, an denen …","Ich weiß noch genau, es war ein Dienstag.","Vorweg: Es geht mir gut, nichts Schlimmes.","Ich stehe also da und warte, und …","Bis dahin war noch alles in Ordnung.","Ich dachte mir noch: Komisch, aber gut.","Und ich, natürlich, mache genau das Falsche.","Und in dem Moment …","Und dann, ganz ruhig, sagt sie: …","Ich schwöre dir, ich bin fast gestorben.","Und da ist bei mir der Groschen gefallen.","Am Ende war es nur …","Und damit war die Sache erledigt.","Heute finde ich es lustig. Damals nicht.","Seitdem schaue ich immer zweimal hin."]
 </script>
 
 <script>
@@ -1059,6 +1218,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

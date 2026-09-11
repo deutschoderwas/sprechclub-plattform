@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,9 +621,10 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
-<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#sprechuebung">⚡ Sprechübung</a>
 <a class="tab" href="#abschluss">🎯 Abschluss</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
 </nav>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Was kochst du am häufigsten?</div></div><div class="nur-b1"><div class="ank">Welches Gericht aus deiner Heimat würde hier niemand kennen?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../amanda/sz-kochen.webp" alt="Amanda rührt mit einem Löffel in einem Topf in der Küche">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Was kochst du am häufigsten?</li><li>Wie viele Zutaten brauchst du dafür?</li><li>Wie lange dauert es ungefähr?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Welches Gericht aus deiner Heimat würde hier niemand kennen?</li><li>Was ist der Schritt, bei dem am meisten schiefgehen kann?</li><li>Kochst du nach Rezept oder nach Gefühl — und warum?</li></ol></div></div>
+<div class="tip teal">🔑 <strong>Die Formel für heute:</strong> <b>Reihenfolgewort + Menge + Zutat + Handlung.</b> <i>„Zuerst schneide ich zwei Tomaten klein.“</i> Wenn diese vier Teile drin sind, kann dir jemand folgen — mehr braucht ein Rezept nicht.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Hat dir schon mal jemand etwas auf Deutsch erklärt und du hast nichts verstanden?</li><li>Erklärst du lieber mit Worten oder zeigst du es?</li><li>Wem hast du zuletzt etwas beigebracht?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Woran merkst du, dass eine Erklärung zu schnell war?</li><li>Was hilft mehr: mehr Wörter oder eine klarere Reihenfolge?</li><li>Gibt es in deiner Sprache eine eigene „Rezeptsprache“?</li></ol></div></div>
+<div class="tip">💡 <strong>Erinnerst du dich an Woche 1?</strong> Da haben wir Mengen beim Einkaufen geübt: <i>ein Kilo, eine Flasche, 200 Gramm.</i> Heute kommen die Mengen dazu, die man in der Küche braucht: <b>eine Scheibe, ein Stück, eine Packung, eine Portion.</b> Dieselbe Regel wie damals — nach der Menge kommt kein Artikel: <i>zwei Scheiben Brot</i>, nicht <i>zwei Scheiben das Brot</i>.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -596,6 +694,64 @@ footer strong{color:var(--ink);}
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 1 mit <u>eurem</u> Gericht. Der Anrufer darf zweimal nachfragen: einmal nach der Menge, einmal nach der Zeit. Wer erklärt, muss ohne Zettel auskommen.</div>
 </section>
 
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 🔢 Die Reihenfolge nennen</div>
+<div class="merk"><span>Zuerst …</span><button class="speak" data-say="Zuerst …">🔊 hören</button></div>
+<div class="merk"><span>Dann …</span><button class="speak" data-say="Dann …">🔊 hören</button></div>
+<div class="merk"><span>Danach …</span><button class="speak" data-say="Danach …">🔊 hören</button></div>
+<div class="merk"><span>Zum Schluss …</span><button class="speak" data-say="Zum Schluss …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · ⚖️ Die Menge nennen</div>
+<div class="merk"><span>zwei <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Scheiben" data-wort="die Scheibe" data-kurz="ein flach abgeschnittenes Stück" data-bsp="Ich nehme zwei Scheiben Brot.">Scheiben</b></span><button class="speak" data-say="zwei Scheiben">🔊 hören</button></div>
+<div class="merk"><span>ein <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Stück" data-wort="das Stück" data-kurz="ein Teil von etwas Größerem" data-bsp="Schneid mir bitte ein Stück Käse ab.">Stück</b></span><button class="speak" data-say="ein Stück">🔊 hören</button></div>
+<div class="merk"><span>eine <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Packung" data-wort="die Packung" data-kurz="das, worin etwas im Laden verkauft wird" data-bsp="Nimm bitte eine Packung Nudeln mit.">Packung</b></span><button class="speak" data-say="eine Packung">🔊 hören</button></div>
+<div class="merk"><span>drei Esslöffel</span><button class="speak" data-say="drei Esslöffel">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🥕 Die Zutat nennen</div>
+<div class="merk"><span>Tomaten</span><button class="speak" data-say="Tomaten">🔊 hören</button></div>
+<div class="merk"><span><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Gemüse" data-wort="das Gemüse" data-kurz="Karotten, Kartoffeln, Zwiebeln und alles in der Art" data-bsp="In die Suppe kommt viel frisches Gemüse.">Gemüse</b></span><button class="speak" data-say="Gemüse">🔊 hören</button></div>
+<div class="merk"><span>Öl</span><button class="speak" data-say="Öl">🔊 hören</button></div>
+<div class="merk"><span>Nudeln</span><button class="speak" data-say="Nudeln">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🍳 Die Handlung nennen</div>
+<div class="merk"><span><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von schneiden" data-wort="schneiden" data-kurz="mit dem Messer kleiner machen" data-bsp="Ich schneide die Tomaten in kleine Stücke.">schneiden</b></span><button class="speak" data-say="schneiden">🔊 hören</button></div>
+<div class="merk"><span>anbraten</span><button class="speak" data-say="anbraten">🔊 hören</button></div>
+<div class="merk"><span><b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von kochen" data-wort="kochen" data-kurz="in Wasser, im Topf — es blubbert" data-bsp="Ich koche die Kartoffeln zwanzig Minuten.">kochen</b></span><button class="speak" data-say="kochen">🔊 hören</button></div>
+<div class="merk"><span>umrühren</span><button class="speak" data-say="umrühren">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 🔢 Reihenfolge feiner</div>
+<div class="merk"><span>Während die Nudeln kochen, …</span><button class="speak" data-say="Während die Nudeln kochen, …">🔊 hören</button></div>
+<div class="merk"><span>Sobald das Öl heiß ist, …</span><button class="speak" data-say="Sobald das Öl heiß ist, …">🔊 hören</button></div>
+<div class="merk"><span>Nachdem du alles geschnitten hast, …</span><button class="speak" data-say="Nachdem du alles geschnitten hast, …">🔊 hören</button></div>
+<div class="merk"><span>Kurz bevor es fertig ist, …</span><button class="speak" data-say="Kurz bevor es fertig ist, …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · ⚖️ Menge ungefähr</div>
+<div class="merk"><span>eine gute Handvoll</span><button class="speak" data-say="eine gute Handvoll">🔊 hören</button></div>
+<div class="merk"><span>etwa 200 Gramm</span><button class="speak" data-say="etwa 200 Gramm">🔊 hören</button></div>
+<div class="merk"><span>ein bis zwei Löffel</span><button class="speak" data-say="ein bis zwei Löffel">🔊 hören</button></div>
+<div class="merk"><span>je nach Geschmack</span><button class="speak" data-say="je nach Geschmack">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🧑‍🍳 Die Rezeptsprache</div>
+<div class="merk"><span>Man schneidet …</span><button class="speak" data-say="Man schneidet …">🔊 hören</button></div>
+<div class="merk"><span>Man gibt … dazu</span><button class="speak" data-say="Man gibt … dazu">🔊 hören</button></div>
+<div class="merk"><span>… wird angebraten</span><button class="speak" data-say="… wird angebraten">🔊 hören</button></div>
+<div class="merk"><span>… lässt man kurz ziehen</span><button class="speak" data-say="… lässt man kurz ziehen">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · ⚠️ Der heikle Schritt</div>
+<div class="merk"><span>Pass auf, dass …</span><button class="speak" data-say="Pass auf, dass …">🔊 hören</button></div>
+<div class="merk"><span>Auf keinen Fall …</span><button class="speak" data-say="Auf keinen Fall …">🔊 hören</button></div>
+<div class="merk"><span>Wichtig ist, dass …</span><button class="speak" data-say="Wichtig ist, dass …">🔊 hören</button></div>
+<div class="merk"><span>Sonst wird es …</span><button class="speak" data-say="Sonst wird es …">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
+</section>
+
 <section class="section" id="challenge">
 <h2 class="st">⏱️ Die 90-Sekunden-Challenge</h2>
 <p class="ssub">Ein Gericht, anderthalb Minuten, freies Sprechen. Es geht nicht um schöne Sätze — es geht darum, dass jemand danach kochen könnte.</p>
@@ -634,7 +790,7 @@ footer strong{color:var(--ink);}
 </ol>
 <div class="rsp">
 <div class="rsp-kopf"><span class="rsp-nr">1</span><b>Das Rezept am Telefon</b></div>
-<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>steht in der Küche und will heute Abend <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von kochen" data-wort="kochen" data-kurz="in Wasser, im Topf — es blubbert" data-bsp="Ich koche die Kartoffeln zwanzig Minuten.">kochen</b>.</p></div><div class="rsp-r b"><span>B</span><p>erklärt sein Lieblingsgericht Schritt für Schritt am Telefon. A darf nichts aufschreiben und muss dreimal nachfragen.</p></div></div>
+<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>steht in der Küche und will heute Abend kochen.</p></div><div class="rsp-r b"><span>B</span><p>erklärt sein Lieblingsgericht Schritt für Schritt am Telefon. A darf nichts aufschreiben und muss dreimal nachfragen.</p></div></div>
 <div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Womit fange ich an?</span><span class="rm">Wie viel brauche ich davon?</span><span class="rm">Wie lange muss das kochen?</span><span class="rm">Und was kommt dann?</span></div><div class="nur-b1"><span class="rm">Woran merke ich, dass es fertig ist?</span><span class="rm">Was mache ich, wenn ich das nicht bekomme?</span><span class="rm">Geht das auch ohne Ofen?</span><span class="rm">Kann man das vorbereiten?</span></div></div>
 <div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>B hat alle vier Reihenfolgewörter benutzt und jede Zutat mit einer Menge genannt. A könnte das Gericht danach wirklich kochen.</div>
 <details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
@@ -665,11 +821,19 @@ footer strong{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="debatte">
-<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
-<p class="ssub">Zwei Gruppen, eine Frage. Abwechselnd sprechen.</p>
-<div class="deb-these">Selbst kochen ist immer besser.</div>
-<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><ul><li>Man weiß, was drin ist.</li><li>Frisch kochen ist meistens billiger.</li><li>Beim Kochen lernt man Mengen und Gemüse auf Deutsch.</li></ul></div><div class="deb-s con"><b>Gruppe B · dagegen</b><ul><li>Nach zwölf Stunden Arbeit ist Fertigessen besser als nichts.</li><li>Wer allein kocht, wirft viel weg.</li><li>Nicht jede Küche hat einen Ofen.</li></ul></div></div>
+<section class="section" id="sprechuebung">
+<h2 class="st">Jetzt <span class="hl">ihr</span></h2>
+<p class="ssub">Drei kleine Übungen. Jeder kommt dran.</p>
+<div class="card90">
+<div class="lbl">Dein Satz</div>
+<div class="word" id="wueb" style="font-size:1.1rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="uebnew">🎲 Satz ziehen</button>
+</div>
+<div class="uebs">
+<div class="ueb"><span class="uebn">1</span><div><b>Satz ziehen und weiterreden</b><p>Zieh einen Satz, sag ihn laut — und häng sofort einen zweiten Satz an, der danach kommen würde.</p></div></div>
+<div class="ueb"><span class="uebn">2</span><div><b>Die Kette</b><p>Reihum sagt jeder einen Satz von oben. Kein Satz darf zweimal kommen. Wer nicht weiterweiß, sagt <i>Ich weiß gerade keinen mehr</i> — auch das ist ein Satz.</p></div></div>
+<div class="ueb"><span class="uebn">3</span><div><b>Ohne Hilfe</b><p>Klappt alles zu und spielt Dialog 1 noch einmal — frei, mit euren eigenen Wörtern.</p></div></div>
+</div>
 </section>
 
 <section class="section" id="abschluss">
@@ -767,6 +931,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Meine Nachbarin hat gefragt, wie ich die Suppe mache. Also habe ich es ihr am Telefon erklärt. ___ wäscht man das Gemüse und schneidet es klein — Karotten, Kartoffeln, eine Zwiebel. ___ gibt man zwei Esslöffel Öl in den Topf und brät die Zwiebel kurz ___. Sobald sie glasig ist, kommt das übrige Gemüse dazu. ___ gießt man einen Liter Wasser dazu und lässt alles zwanzig Minuten ___. Zwischendurch sollte man einmal ___, sonst setzt es unten an. ___ Schluss probiert man und gibt Salz dazu, bis es schmeckt. Sie hat es abends gekocht und mir ein Foto geschickt — es sah besser aus als meines.","o":["Zuerst","Dann","an","Danach","kochen","umrühren","Zum","backen"],"a":[["Zuerst"],["Dann"],["an"],["Danach"],["kochen"],["umrühren"],["Zum"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Zum Schluss …","Während die Nudeln kochen, …","Sobald das Öl heiß ist, …","Nachdem du alles geschnitten hast, …","Kurz bevor es fertig ist, …","Man schneidet …","Man gibt … dazu","Pass auf, dass …","Auf keinen Fall …","Wichtig ist, dass …","Sonst wird es …"]
 </script>
 
 <script>
@@ -1066,6 +1233,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

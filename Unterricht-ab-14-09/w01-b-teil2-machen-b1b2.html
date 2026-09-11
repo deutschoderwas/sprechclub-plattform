@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Welche dieser Sätze benutzt du schon: macht nichts, tut mir leid, mach's gut?</div></div><div class="nur-b1"><div class="ank">Warum haben feste Wendungen keine Logik — und warum lernt man sie trotzdem am besten als Ganzes?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../amanda/sz-freunde.webp" alt="Zwei Freunde sitzen mit Kaffee auf einer Bank und unterhalten sich">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Welche dieser Sätze benutzt du schon: macht nichts, tut mir leid, mach's gut?</li><li>Was sagst du, wenn sich jemand bei dir entschuldigt?</li><li>Gibt es in deiner Sprache auch zwei Verben für machen und tun?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Warum haben feste Wendungen keine Logik — und warum lernt man sie trotzdem am besten als Ganzes?</li><li>Woran merkst du, dass jemand eine Wendung wörtlich übersetzt hat?</li><li>Welche deutsche Wendung fandest du am Anfang seltsam?</li></ol></div></div>
+<div class="tip">🗣️ <strong>Sprecht reihum:</strong> „Neulich habe ich gesagt: …“ · „Verstanden habe ich es erst, als …“ · „Eine Wendung, die ich mir nie merken kann, ist …“</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><ol class="ankfr"><li>Nennt euch drei Wendungen mit <b>machen</b>. Welche kennt der andere nicht?</li><li>Erklärt euch gegenseitig: Wann sagt man „tut mir leid“, wann „macht nichts“?</li><li>Welche Wendung würdest du einem Anfänger zuerst beibringen?</li></ol></div>
+<div class="tip teal">👥 <strong>Zu zweit, fünf Runden:</strong> Einer nennt eine Situation („Ich bin zu spät.“), der andere antwortet mit <b>einer</b> Wendung — <u>macht nichts</u>, <u>tut mir leid</u>, <u>mach dir nichts draus</u>. Dann tauschen.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -589,6 +687,56 @@ footer strong{color:var(--ink);}
 <button class="speak dbtn" data-say="Wir würden gern zahlen. Was macht das zusammen? Zusammen oder getrennt? Zusammen, bitte. Ich mache das heute. Achtzehn Euro sechzig. Zwanzig, stimmt so. Danke Ihnen! Vielen Dank, schönen Abend noch! Danke, Ihnen auch. Mach's gut!">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 2 noch einmal — aber A ist deutlich ärgerlicher. B darf nur mit festen Wendungen antworten. Wie weit tragen sie?</div>
+</section>
+
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 🙇 Sich entschuldigen</div>
+<div class="merk"><span>Das <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von tut mir leid." data-wort="das tut mir leid." data-kurz="die Entschuldigung selbst" data-bsp="Das tut mir wirklich leid, das wollte ich nicht.">tut mir leid.</b></span><button class="speak" data-say="Das tut mir leid.">🔊 hören</button></div>
+<div class="merk"><span>Entschuldigung!</span><button class="speak" data-say="Entschuldigung!">🔊 hören</button></div>
+<div class="merk"><span>Das war mein Fehler.</span><button class="speak" data-say="Das war mein Fehler.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🤷 Abwinken</div>
+<div class="merk"><span>Das <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von macht nichts." data-wort="das macht nichts." data-kurz="die Antwort auf eine Entschuldigung: kein Problem" data-bsp="Du bist zu spät? Das macht nichts.">macht nichts.</b></span><button class="speak" data-say="Das macht nichts.">🔊 hören</button></div>
+<div class="merk"><span>Kein Problem.</span><button class="speak" data-say="Kein Problem.">🔊 hören</button></div>
+<div class="merk"><span>Das <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von macht mir nichts aus." data-wort="das macht mir nichts aus." data-kurz="das stört mich nicht" data-bsp="Kälte macht mir nichts aus, ich mag den Winter.">macht mir nichts aus.</b></span><button class="speak" data-say="Das macht mir nichts aus.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 😌 Beruhigen</div>
+<div class="merk"><span><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Mach dir keinen Kopf." data-wort="Mach dir keinen Kopf." data-kurz="mach dir keine Sorgen" data-bsp="Mach dir keinen Kopf, das kriegen wir hin.">Mach dir keinen Kopf.</b></span><button class="speak" data-say="Mach dir keinen Kopf.">🔊 hören</button></div>
+<div class="merk"><span>Das wird schon.</span><button class="speak" data-say="Das wird schon.">🔊 hören</button></div>
+<div class="merk"><span>Wir kriegen das hin.</span><button class="speak" data-say="Wir kriegen das hin.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 👋 Sich verabschieden</div>
+<div class="merk"><span><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Mach's gut!" data-wort="Mach's gut!" data-kurz="der lockere Abschied unter Freunden" data-bsp="Also dann — mach's gut, wir sehen uns!">Mach's gut!</b></span><button class="speak" data-say="Mach's gut!">🔊 hören</button></div>
+<div class="merk"><span>Bis dann!</span><button class="speak" data-say="Bis dann!">🔊 hören</button></div>
+<div class="merk"><span>Wir sehen uns.</span><button class="speak" data-say="Wir sehen uns.">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 🙇 Entschuldigen mit Gewicht</div>
+<div class="merk"><span>Es tut mir aufrichtig leid.</span><button class="speak" data-say="Es tut mir aufrichtig leid.">🔊 hören</button></div>
+<div class="merk"><span>Das hätte mir nicht passieren dürfen.</span><button class="speak" data-say="Das hätte mir nicht passieren dürfen.">🔊 hören</button></div>
+<div class="merk"><span>Ich möchte mich in aller Form entschuldigen.</span><button class="speak" data-say="Ich möchte mich in aller Form entschuldigen.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🤷 Elegant abwinken</div>
+<div class="merk"><span>Das ist doch nicht der Rede wert.</span><button class="speak" data-say="Das ist doch nicht der Rede wert.">🔊 hören</button></div>
+<div class="merk"><span><b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von Machen" data-wort="machen" data-kurz="Etwas entsteht oder verändert sich." data-bsp="Frühstück machen · sauber machen · einen Termin machen">Machen</b> Sie sich darüber keine Gedanken.</span><button class="speak" data-say="Machen Sie sich darüber keine Gedanken.">🔊 hören</button></div>
+<div class="merk"><span>Das hat sich damit erledigt.</span><button class="speak" data-say="Das hat sich damit erledigt.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 😌 Beruhigen, ohne zu verharmlosen</div>
+<div class="merk"><span>Machen Sie sich keine Sorgen.</span><button class="speak" data-say="Machen Sie sich keine Sorgen.">🔊 hören</button></div>
+<div class="merk"><span>Das lässt sich beheben.</span><button class="speak" data-say="Das lässt sich beheben.">🔊 hören</button></div>
+<div class="merk"><span>Ich kümmere mich darum.</span><button class="speak" data-say="Ich kümmere mich darum.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 👋 Verabschieden nach Register</div>
+<div class="merk"><span>Mach's gut! (Freunde)</span><button class="speak" data-say="Mach's gut! (Freunde)">🔊 hören</button></div>
+<div class="merk"><span>Alles Gute! (freundlich, neutral)</span><button class="speak" data-say="Alles Gute! (freundlich, neutral)">🔊 hören</button></div>
+<div class="merk"><span>Ich wünsche Ihnen einen guten Tag. (förmlich)</span><button class="speak" data-say="Ich wünsche Ihnen einen guten Tag. (förmlich)">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -761,6 +909,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Heute Morgen habe ich die Tasse meiner Mitbewohnerin umgeworfen. „Das ___ mir so leid“, habe ich gesagt. Sie hat nur gelacht: „Das ___ nichts, die war sowieso alt.“ Trotzdem war es mir unangenehm. „Mach ___ keinen Kopf“, hat sie gesagt, „so etwas passiert.“ Im Büro ging es weiter: In meiner Präsentation stand eine falsche Zahl, und der Kunde saß im Raum. Meine Chefin hat mich hinterher angesprochen. Ich habe gesagt: „Das hätte mir nicht passieren dürfen, ich korrigiere es heute.“ Sie hat geantwortet: „Machen Sie sich keine ___.“ Am Abend war ich im Café. Beim Zahlen habe ich gefragt: „Was ___ das zusammen?“ Achtzehn sechzig. Zwanzig, stimmt so. Auf dem Heimweg dachte ich: Der Tag hatte zwei Pannen — und beide Male haben zwei Sätze gereicht. Es ___ mir leid. Und: Das macht nichts. Mehr braucht es oft nicht. Ich habe noch zu ___, aber morgen wird es leichter.","o":["tut","macht","dir","Sorgen","tun","mir","Kopf"],"a":[["tut"],["macht"],["dir"],["Sorgen"],["macht"],["tut"],["tun"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Das tut mir leid.","Das war mein Fehler.","Das macht nichts.","Das macht mir nichts aus.","Mach dir keinen Kopf.","Das wird schon.","Wir kriegen das hin.","Wir sehen uns.","Es tut mir aufrichtig leid.","Das hätte mir nicht passieren dürfen.","Ich möchte mich in aller Form entschuldigen.","Das ist doch nicht der Rede wert.","Machen Sie sich darüber keine Gedanken.","Das hat sich damit erledigt.","Machen Sie sich keine Sorgen.","Das lässt sich beheben.","Ich kümmere mich darum.","Mach's gut! (Freunde)","Alles Gute! (freundlich, neutral)","Ich wünsche Ihnen einen guten Tag. (förmlich)"]
 </script>
 
 <script>
@@ -1060,6 +1211,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

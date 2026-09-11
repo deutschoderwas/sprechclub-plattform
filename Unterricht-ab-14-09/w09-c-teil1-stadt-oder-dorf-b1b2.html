@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Wohnst du eher in der Stadt oder eher auf dem Land?</div></div><div class="nur-b1"><div class="ank">Was hat bei deinem letzten Umzug wirklich entschieden — der Preis oder etwas anderes?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../amanda/sz-wohnen.webp" alt="Zwei Nachbarn stehen vor der Wohnungstür und tauschen eine Pflanze">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Wohnst du eher in der Stadt oder eher auf dem Land?</li><li>Wie hoch ist die Miete bei dir ungefähr — im Vergleich zu deinem Heimatland?</li><li>Wie lange brauchst du zum nächsten Supermarkt?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Was hat bei deinem letzten Umzug wirklich entschieden — der Preis oder etwas anderes?</li><li>Ist billige Miete ein Vorteil, wenn man dafür ein Auto braucht?</li><li>Was würde dich dazu bringen, aufs Land zu ziehen?</li></ol></div></div>
+<div class="tip teal">🔑 <strong>Das Wort, das heute alles verbindet:</strong> <b>wegen</b>. Und danach kommt im geschriebenen Deutsch der <b>Genitiv</b>: <i>wegen <u>der</u> Miete, wegen <u>des</u> Lärms, wegen <u>der</u> Kinder</i>. Wer diesen einen Fall beherrscht, klingt in jeder Diskussion sofort erwachsener.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Wie oft fährt bei dir abends der letzte Bus?</li><li>Brauchst du ein Auto — oder hättest du gern eines?</li><li>Was fehlt dir da, wo du wohnst, am meisten?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Ist ein Dorf ohne Bus überhaupt noch günstig, wenn man alles zusammenrechnet?</li><li>Wer entscheidet eigentlich, ob ein Bus fährt — und nach welchen Kriterien?</li><li>Was wäre dir wichtiger: fünf Minuten zur Haltestelle oder fünfzig Quadratmeter mehr?</li></ol></div></div>
+<div class="tip">💡 <strong>Drei Wörter, ein Fall:</strong> <b>wegen</b> (der Grund), <b>trotz</b> (der Gegengrund), <b>während</b> (die Zeit). Alle drei ziehen den Genitiv nach sich — und alle drei brauchst du heute in fast jedem zweiten Satz.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -588,6 +686,64 @@ footer strong{color:var(--ink);}
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 2 mit eurer eigenen Lage. Regel: In jeder Antwort muss ein <b>wegen</b>, <b>trotz</b> oder <b>während</b> im Genitiv vorkommen. Wer den Fall vergisst, fängt den Satz noch einmal an.</div>
 </section>
 
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 💶 Über den Preis</div>
+<div class="merk"><span>Die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Miete" data-wort="die Miete" data-kurz="das Geld, das man jeden Monat für die Wohnung zahlt" data-bsp="Wegen der hohen Miete suchen wir etwas außerhalb.">Miete</b> ist hier viel höher.</span><button class="speak" data-say="Die Miete ist hier viel höher.">🔊 hören</button></div>
+<div class="merk"><span>Wegen der Miete suchen wir außerhalb.</span><button class="speak" data-say="Wegen der Miete suchen wir außerhalb.">🔊 hören</button></div>
+<div class="merk"><span>Das kostet fast das Doppelte.</span><button class="speak" data-say="Das kostet fast das Doppelte.">🔊 hören</button></div>
+<div class="merk"><span>Dafür ist die Wohnung größer.</span><button class="speak" data-say="Dafür ist die Wohnung größer.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🚌 Über den Weg</div>
+<div class="merk"><span>Der Bus fährt nur zweimal am Tag.</span><button class="speak" data-say="Der Bus fährt nur zweimal am Tag.">🔊 hören</button></div>
+<div class="merk"><span>Bis zur <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Haltestelle" data-wort="die Haltestelle" data-kurz="der Ort, an dem Bus oder Bahn halten" data-bsp="Bis zur nächsten Haltestelle des Dorfes läuft man zwölf Minuten.">Haltestelle</b> sind es zehn Minuten.</span><button class="speak" data-say="Bis zur Haltestelle sind es zehn Minuten.">🔊 hören</button></div>
+<div class="merk"><span>Ohne Auto geht dort nichts.</span><button class="speak" data-say="Ohne Auto geht dort nichts.">🔊 hören</button></div>
+<div class="merk"><span>Ich brauche eine Stunde zur Arbeit.</span><button class="speak" data-say="Ich brauche eine Stunde zur Arbeit.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 👋 Über die Menschen</div>
+<div class="merk"><span>Hier kennt mich niemand.</span><button class="speak" data-say="Hier kennt mich niemand.">🔊 hören</button></div>
+<div class="merk"><span>Im <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Dorf" data-wort="das Dorf" data-kurz="ein kleiner Ort mit wenigen hundert bis wenigen tausend Menschen" data-bsp="Die Ruhe des Dorfes war am Anfang fast unheimlich.">Dorf</b> grüßt man sich.</span><button class="speak" data-say="Im Dorf grüßt man sich.">🔊 hören</button></div>
+<div class="merk"><span>Die Nachbarn helfen sich.</span><button class="speak" data-say="Die Nachbarn helfen sich.">🔊 hören</button></div>
+<div class="merk"><span>Manchmal ist das auch anstrengend.</span><button class="speak" data-say="Manchmal ist das auch anstrengend.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🥐 Über den Alltag</div>
+<div class="merk"><span>Der Bäcker hat zugemacht.</span><button class="speak" data-say="Der Bäcker hat zugemacht.">🔊 hören</button></div>
+<div class="merk"><span>Der nächste Arzt ist zwölf Kilometer weg.</span><button class="speak" data-say="Der nächste Arzt ist zwölf Kilometer weg.">🔊 hören</button></div>
+<div class="merk"><span>Alles ist zu Fuß erreichbar.</span><button class="speak" data-say="Alles ist zu Fuß erreichbar.">🔊 hören</button></div>
+<div class="merk"><span>Abends hat hier nichts mehr offen.</span><button class="speak" data-say="Abends hat hier nichts mehr offen.">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 💶 Preise abwägen</div>
+<div class="merk"><span>Rechnet man das Auto dazu, bleibt kaum etwas übrig.</span><button class="speak" data-say="Rechnet man das Auto dazu, bleibt kaum etwas übrig.">🔊 hören</button></div>
+<div class="merk"><span>Die Ersparnis ist nur auf dem Papier eine.</span><button class="speak" data-say="Die Ersparnis ist nur auf dem Papier eine.">🔊 hören</button></div>
+<div class="merk"><span>Der Quadratmeterpreis sagt wenig aus.</span><button class="speak" data-say="Der Quadratmeterpreis sagt wenig aus.">🔊 hören</button></div>
+<div class="merk"><span>Günstig wohnen heißt nicht günstig leben.</span><button class="speak" data-say="Günstig wohnen heißt nicht günstig leben.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🚌 Abhängigkeit benennen</div>
+<div class="merk"><span>Ohne eigenes Auto ist man dort abgeschnitten.</span><button class="speak" data-say="Ohne eigenes Auto ist man dort abgeschnitten.">🔊 hören</button></div>
+<div class="merk"><span>Die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Anbindung" data-wort="die Anbindung" data-kurz="wie gut ein Ort an Bus und Bahn angeschlossen ist" data-bsp="Wegen der schlechten Anbindung brauchen dort alle ein Auto.">Anbindung</b> entscheidet über alles andere.</span><button class="speak" data-say="Die Anbindung entscheidet über alles andere.">🔊 hören</button></div>
+<div class="merk"><span>Wer nicht fahren kann, verliert seine Selbstständigkeit.</span><button class="speak" data-say="Wer nicht fahren kann, verliert seine Selbstständigkeit.">🔊 hören</button></div>
+<div class="merk"><span>Für Jugendliche und Ältere ist das der Kern.</span><button class="speak" data-say="Für Jugendliche und Ältere ist das der Kern.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 👋 Nähe und Enge</div>
+<div class="merk"><span>Der Zusammenhalt hat auch eine Kehrseite.</span><button class="speak" data-say="Der Zusammenhalt hat auch eine Kehrseite.">🔊 hören</button></div>
+<div class="merk"><span>Man wird schnell zum Gesprächsthema.</span><button class="speak" data-say="Man wird schnell zum Gesprächsthema.">🔊 hören</button></div>
+<div class="merk"><span>Anonymität kann auch Freiheit bedeuten.</span><button class="speak" data-say="Anonymität kann auch Freiheit bedeuten.">🔊 hören</button></div>
+<div class="merk"><span>Dazugehören dauert Jahre.</span><button class="speak" data-say="Dazugehören dauert Jahre.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🥐 Versorgung beurteilen</div>
+<div class="merk"><span>Die Nahversorgung bricht langsam weg.</span><button class="speak" data-say="Die Nahversorgung bricht langsam weg.">🔊 hören</button></div>
+<div class="merk"><span>Ein Ort ohne Laden verliert seine Mitte.</span><button class="speak" data-say="Ein Ort ohne Laden verliert seine Mitte.">🔊 hören</button></div>
+<div class="merk"><span>Der Ärztemangel trifft die Ältesten zuerst.</span><button class="speak" data-say="Der Ärztemangel trifft die Ältesten zuerst.">🔊 hören</button></div>
+<div class="merk"><span>Was fehlt, merkt man erst im Notfall.</span><button class="speak" data-say="Was fehlt, merkt man erst im Notfall.">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
+</section>
+
 <section class="section" id="challenge">
 <h2 class="st">⏱️ Die 90-Sekunden-Challenge</h2>
 <p class="ssub">Neunzig Sekunden über deinen Ort: Warum wohnst du dort, was fehlt dir, und was würde dich wegbringen? Mindestens fünfmal Genitiv.</p>
@@ -627,7 +783,7 @@ footer strong{color:var(--ink);}
 </ol>
 <div class="rsp">
 <div class="rsp-kopf"><span class="rsp-nr">1</span><b>Die Wohnungsbesichtigung</b></div>
-<div class="rsp-lage"><span>Die Lage</span>A besichtigt eine Wohnung im <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Dorf" data-wort="das Dorf" data-kurz="ein kleiner Ort mit wenigen hundert bis wenigen tausend Menschen" data-bsp="Die Ruhe des Dorfes war am Anfang fast unheimlich.">Dorf</b>, B ist die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Vermieterin" data-wort="die Vermieterin" data-kurz="die Person, der die Wohnung gehört und die sie vermietet" data-bsp="Das Haus meiner Vermieterin steht direkt nebenan.">Vermieterin</b>. A will die unangenehmen Fragen stellen, ohne unhöflich zu wirken.</div>
+<div class="rsp-lage"><span>Die Lage</span>A besichtigt eine Wohnung im Dorf, B ist die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Vermieterin" data-wort="die Vermieterin" data-kurz="die Person, der die Wohnung gehört und die sie vermietet" data-bsp="Das Haus meiner Vermieterin steht direkt nebenan.">Vermieterin</b>. A will die unangenehmen Fragen stellen, ohne unhöflich zu wirken.</div>
 <div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Wie hoch ist die Kaltmiete genau?</span><span class="rm">Wie oft fährt hier der Bus?</span><span class="rm">Wie weit ist es bis zum Supermarkt?</span><span class="rm">Wann könnte ich einziehen?</span></div><div class="nur-b1"><span class="rm">Wegen der Nebenkosten hätte ich noch eine Frage — sind die im Preis enthalten?</span><span class="rm">Wie ist die Anbindung am Wochenende? Während der Woche komme ich sicher zurecht</span><span class="rm">Trotz des günstigen Preises muss ich ehrlich sagen: Der Weg zur Arbeit macht mir Sorgen</span><span class="rm">Gibt es hier eine Kita, oder müsste ich die Kinder jeden Morgen fahren?</span></div></div>
 <div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>A hat mindestens dreimal den Genitiv benutzt und dabei eine kritische Frage gestellt, ohne unhöflich zu werden. B hat konkret geantwortet — mit Zahlen statt mit Adjektiven.</div>
 <details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
@@ -760,6 +916,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Vor einem Jahr sind wir aufs Land gezogen — wegen ___ Miete, ganz ehrlich. In der Stadt zahlten wir für zwei Zimmer fast neunhundert Euro, hier haben wir ein Haus mit Garten. Trotz ___ langen Wegs zur Arbeit bereue ich es bis heute nicht. Während ___ Woche fährt ein Bus um sechs Uhr vierzig, am Wochenende gar keiner, und statt ___ zweiten Autos haben wir uns zwei alte Fahrräder gekauft. Der Zusammenhalt ___ Nachbarschaft hat mich am meisten überrascht: Als ich krank war, standen zwei Töpfe Suppe vor der Tür. Schwierig ist nur die Versorgung ___ Dorfes — der einzige Laden macht im Januar zu, und wegen ___ Kinder überlegen wir jetzt doch, ob wir in die Kleinstadt ziehen. Die Entscheidung ___ Familie ist also noch nicht gefallen.","o":["der","des","meiner","unserer","dem","die","den","das"],"a":[["der"],["des"],["der"],["des"],["der"],["des"],["der"],["unserer"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Die Miete ist hier viel höher.","Wegen der Miete suchen wir außerhalb.","Das kostet fast das Doppelte.","Dafür ist die Wohnung größer.","Der Bus fährt nur zweimal am Tag.","Bis zur Haltestelle sind es zehn Minuten.","Ohne Auto geht dort nichts.","Ich brauche eine Stunde zur Arbeit.","Hier kennt mich niemand.","Im Dorf grüßt man sich.","Die Nachbarn helfen sich.","Manchmal ist das auch anstrengend.","Der Bäcker hat zugemacht.","Der nächste Arzt ist zwölf Kilometer weg.","Alles ist zu Fuß erreichbar.","Abends hat hier nichts mehr offen.","Rechnet man das Auto dazu, bleibt kaum etwas übrig.","Die Ersparnis ist nur auf dem Papier eine.","Der Quadratmeterpreis sagt wenig aus.","Günstig wohnen heißt nicht günstig leben.","Ohne eigenes Auto ist man dort abgeschnitten.","Die Anbindung entscheidet über alles andere.","Wer nicht fahren kann, verliert seine Selbstständigkeit.","Für Jugendliche und Ältere ist das der Kern.","Der Zusammenhalt hat auch eine Kehrseite.","Man wird schnell zum Gesprächsthema.","Anonymität kann auch Freiheit bedeuten.","Dazugehören dauert Jahre.","Die Nahversorgung bricht langsam weg.","Ein Ort ohne Laden verliert seine Mitte.","Der Ärztemangel trifft die Ältesten zuerst.","Was fehlt, merkt man erst im Notfall."]
 </script>
 
 <script>
@@ -1059,6 +1218,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Sagst du lieber die Wahrheit oder etwas Nettes?</div></div><div class="nur-b1"><div class="ank">Wo verläuft für dich die Grenze zwischen Höflichkeit und Unehrlichkeit?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../vok-bild/der-gesichtsausdruck.webp" alt="Eine lächelnde Frau schaut in die Kamera">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Sagst du lieber die Wahrheit oder etwas Nettes?</li><li>Wann hast du zuletzt etwas Unangenehmes ehrlich gesagt?</li><li>Wie ehrlich antwortet man in deinem Land auf so eine Frage?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Wo verläuft für dich die Grenze zwischen Höflichkeit und Unehrlichkeit?</li><li>Warum tut eine ehrliche Antwort manchmal weniger weh als eine nette?</li><li>Gibt es Situationen, in denen Direktheit respektlos ist?</li></ol></div></div>
+<div class="tip teal">🔑 <strong>Die Formel für heute:</strong> <b>Etwas Positives + ein Weichmacher + der ehrliche Kern.</b> <i>„Die Farbe steht dir gut — die Länge finde ich ehrlich gesagt etwas ungewohnt.“</i> Dieselbe Wahrheit, ganz anderer Ton.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Was ist der Unterschied zwischen „Das ist schlecht“ und „Das finde ich eher schwierig“?</li><li>Welches dieser Wörter benutzt du schon?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Wann wird Abschwächen unehrlich statt höflich?</li><li>Merkt man, wenn jemand zu viele Weichmacher benutzt?</li></ol></div></div>
+<div class="tip">💡 <strong>Die Faustregel:</strong> <b>Ein</b> Weichmacher macht den Satz freundlich. <b>Drei</b> machen ihn unklar. Wenn dein Gegenüber danach nachfragen muss, was du eigentlich meinst, war es einer zu viel.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -594,6 +692,56 @@ footer strong{color:var(--ink);}
 <button class="speak dbtn" data-say="Kommst du Samstag mit zum Konzert? Danke, dass du an mich denkst. Ehrlich gesagt ist das nicht so meine Musik. Ach komm, das wird bestimmt gut! Kann gut sein. Ich hätte an dem Abend trotzdem lieber Ruhe. Schade. Finde ich auch. Wollen wir stattdessen Sonntag Kaffee trinken? Ja, gern! Super. Und erzähl mir am Sonntag, wie es war.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 1 noch einmal — aber A hakt dreimal nach und will eine klare Antwort. B muss ehrlich bleiben, ohne einmal <u>schlecht</u> oder <u>hässlich</u> zu sagen.</div>
+</section>
+
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · ✋ Ankündigen</div>
+<div class="merk"><span>Darf ich ehrlich sein?</span><button class="speak" data-say="Darf ich ehrlich sein?">🔊 hören</button></div>
+<div class="merk"><span><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Ehrlich gesagt" data-wort="ehrlich gesagt" data-kurz="Signal dafür, dass jetzt die eigene Meinung kommt" data-bsp="Ehrlich gesagt hätte ich es anders gemacht.">Ehrlich gesagt</b> …</span><button class="speak" data-say="Ehrlich gesagt …">🔊 hören</button></div>
+<div class="merk"><span>Soll ich dir sagen, was ich denke?</span><button class="speak" data-say="Soll ich dir sagen, was ich denke?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 👍 Anerkennen</div>
+<div class="merk"><span>Die Idee finde ich gut</span><button class="speak" data-say="Die Idee finde ich gut">🔊 hören</button></div>
+<div class="merk"><span>Das ist dir gut gelungen</span><button class="speak" data-say="Das ist dir gut gelungen">🔊 hören</button></div>
+<div class="merk"><span>Da hast du recht</span><button class="speak" data-say="Da hast du recht">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🎯 Den Kern nennen</div>
+<div class="merk"><span>Auf mich wirkt …</span><button class="speak" data-say="Auf mich wirkt …">🔊 hören</button></div>
+<div class="merk"><span>Mir ist … zu …</span><button class="speak" data-say="Mir ist … zu …">🔊 hören</button></div>
+<div class="merk"><span>Ich hätte <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von eher" data-wort="eher" data-kurz="Wort, das eine Aussage abschwächt" data-bsp="Das finde ich eher schwierig.">eher</b> …</span><button class="speak" data-say="Ich hätte eher …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 💡 Einen Weg zeigen</div>
+<div class="merk"><span>Vielleicht ginge auch …</span><button class="speak" data-say="Vielleicht ginge auch …">🔊 hören</button></div>
+<div class="merk"><span>Wie wäre es, wenn …?</span><button class="speak" data-say="Wie wäre es, wenn …?">🔊 hören</button></div>
+<div class="merk"><span>Ich würde …</span><button class="speak" data-say="Ich würde …">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · ✋ Den Rahmen setzen</div>
+<div class="merk"><span>Ich sage es dir, weil …</span><button class="speak" data-say="Ich sage es dir, weil …">🔊 hören</button></div>
+<div class="merk"><span>Ich will nichts <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von beschönigen" data-wort="beschönigen" data-kurz="etwas besser darstellen, als es ist" data-bsp="Ich will nichts beschönigen: Es war knapp.">beschönigen</b></span><button class="speak" data-say="Ich will nichts beschönigen">🔊 hören</button></div>
+<div class="merk"><span>Es ist nur meine Sicht, aber …</span><button class="speak" data-say="Es ist nur meine Sicht, aber …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 👍 Konkret anerkennen</div>
+<div class="merk"><span>Besonders gelungen finde ich …</span><button class="speak" data-say="Besonders gelungen finde ich …">🔊 hören</button></div>
+<div class="merk"><span>Was ich stark finde, ist …</span><button class="speak" data-say="Was ich stark finde, ist …">🔊 hören</button></div>
+<div class="merk"><span>Da merkt man, dass …</span><button class="speak" data-say="Da merkt man, dass …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🎯 Präzise abschwächen</div>
+<div class="merk"><span>Was mich stutzen lässt, ist …</span><button class="speak" data-say="Was mich stutzen lässt, ist …">🔊 hören</button></div>
+<div class="merk"><span>Weniger überzeugt hat mich …</span><button class="speak" data-say="Weniger überzeugt hat mich …">🔊 hören</button></div>
+<div class="merk"><span>Da bin ich <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von nicht ganz" data-wort="nicht ganz" data-kurz="teilweise verneint, nicht vollständig" data-bsp="Da bin ich nicht ganz deiner Meinung.">nicht ganz</b> sicher, ob …</span><button class="speak" data-say="Da bin ich nicht ganz sicher, ob …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 💡 Anbieten statt fordern</div>
+<div class="merk"><span>Wenn du magst, schaue ich …</span><button class="speak" data-say="Wenn du magst, schaue ich …">🔊 hören</button></div>
+<div class="merk"><span>Ein Gedanke wäre …</span><button class="speak" data-say="Ein Gedanke wäre …">🔊 hören</button></div>
+<div class="merk"><span>Entscheiden musst natürlich du</span><button class="speak" data-say="Entscheiden musst natürlich du">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -764,6 +912,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Nach der Präsentation kommt Yara zu mir und fragt, wie ich es fand. Ich fand es lang und stellenweise unklar — aber das sage ich nicht so. Ich fange mit etwas an, das wirklich stimmt: „Der Anfang war stark, man wusste sofort, worum es geht.“ Dann der Kern: „___ mich wirkte der Schluss ___ zu schnell.“ Sie fragt nach, ob ich es schlecht fand. „Nein“, sage ich, „___ gesagt bin ich nur ___ ganz sicher, ob die Zahlen für alle nachvollziehbar waren.“ Sie überlegt kurz. Ich schiebe einen Vorschlag hinterher: „___ ginge auch ein Beispiel statt der letzten Zahl.“ Sie nickt. „Guter Punkt.“ Später denke ich: Derselbe Inhalt, hart gesagt, hätte sie ___ — und dann hätte sie gar nicht mehr zugehört.","o":["Auf","etwas","ehrlich","nicht","Vielleicht","gekränkt","eher","zwischen"],"a":[["Auf"],["etwas"],["ehrlich"],["nicht"],["Vielleicht"],["gekränkt"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Darf ich ehrlich sein?","Ehrlich gesagt …","Soll ich dir sagen, was ich denke?","Die Idee finde ich gut","Das ist dir gut gelungen","Da hast du recht","Auf mich wirkt …","Mir ist … zu …","Ich hätte eher …","Vielleicht ginge auch …","Wie wäre es, wenn …?","Ich würde …","Ich sage es dir, weil …","Ich will nichts beschönigen","Es ist nur meine Sicht, aber …","Besonders gelungen finde ich …","Was ich stark finde, ist …","Da merkt man, dass …","Was mich stutzen lässt, ist …","Weniger überzeugt hat mich …","Da bin ich nicht ganz sicher, ob …","Wenn du magst, schaue ich …","Ein Gedanke wäre …","Entscheiden musst natürlich du"]
 </script>
 
 <script>
@@ -1063,6 +1214,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

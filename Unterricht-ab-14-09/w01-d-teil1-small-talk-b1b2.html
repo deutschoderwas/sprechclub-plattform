@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Fällt dir Small Talk leicht oder schwer?</div></div><div class="nur-b1"><div class="ank">Ist Small Talk oberflächlich — oder ist er die Eintrittskarte für alles Weitere?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../amanda/sz-cafe.webp" alt="Zwei Personen stehen an einer Café-Theke und warten">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Fällt dir Small Talk leicht oder schwer?</li><li>Über welche Themen sprichst du mit Fremden?</li><li>Was ist schlimmer: Stille oder ein falsches Thema?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Ist Small Talk oberflächlich — oder ist er die Eintrittskarte für alles Weitere?</li><li>Welche Themen sind in deinem Land sicher, die hier heikel wären? Und umgekehrt?</li><li>Woran merkst du, dass jemand aus Höflichkeit fragt und nicht aus Interesse?</li></ol></div></div>
+<div class="tip">🗣️ <strong>Sprecht reihum:</strong> „Mit Fremden rede ich über …“ · „Unangenehm wird es, wenn …“ · „Am liebsten sage ich als Erstes …“</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><ol class="ankfr"><li>Warum funktioniert ausgerechnet das Wetter überall als Thema?</li><li>Was passiert, wenn man beim Small Talk zu ernst antwortet?</li><li>Wie lang darf ein Small Talk sein, bevor er anstrengend wird?</li></ol></div>
+<div class="tip teal">👀 <strong>Zu zweit, dreißig Sekunden:</strong> Stellt euch nebeneinander, als wartet ihr auf den Fahrstuhl. Einer fängt an. <u>Keine Pause länger als drei Sekunden.</u> Dann tauschen.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -592,6 +690,56 @@ footer strong{color:var(--ink);}
 <button class="speak dbtn" data-say="Und was verdient man so in Ihrer Branche? Über Zahlen rede ich nicht so gern — aber die Arbeit selbst ist spannend. Verstehe. Was genau machen Sie denn? Ich arbeite in der Logistik, viel Planung. Und Sie, was machen Sie? Ich bin bei einer Versicherung. Nicht ganz so spannend. Das sagen viele über ihren Job — und dann erzählen sie doch die besten Geschichten. Da ist was dran.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 2 noch einmal — aber der andere antwortet nur mit <u>einem Wort</u>. Wie lange haltet ihr das Gespräch am Leben?</div>
+</section>
+
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 👋 Ansprechen</div>
+<div class="merk"><span>Ganz schön voll heute, oder?</span><button class="speak" data-say="Ganz schön voll heute, oder?">🔊 hören</button></div>
+<div class="merk"><span>Guten Morgen — auch so früh dran?</span><button class="speak" data-say="Guten Morgen — auch so früh dran?">🔊 hören</button></div>
+<div class="merk"><span><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Warten" data-wort="warten" data-kurz="bleiben, bis etwas kommt" data-bsp="Wir warten hier schon eine Viertelstunde, oder?">Warten</b> Sie auch schon lange?</span><button class="speak" data-say="Warten Sie auch schon lange?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🔓 Offen fragen</div>
+<div class="merk"><span>Was haben Sie am <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Wochenende" data-wort="das Wochenende" data-kurz="Samstag und Sonntag — die häufigste Montagsfrage" data-bsp="Und, was haben Sie am Wochenende gemacht?">Wochenende</b> gemacht?</span><button class="speak" data-say="Was haben Sie am Wochenende gemacht?">🔊 hören</button></div>
+<div class="merk"><span>Wie sind Sie hergekommen?</span><button class="speak" data-say="Wie sind Sie hergekommen?">🔊 hören</button></div>
+<div class="merk"><span>Wie gefällt es Ihnen hier?</span><button class="speak" data-say="Wie gefällt es Ihnen hier?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🔗 Anschließen</div>
+<div class="merk"><span>Ach, wirklich? Und wie war es?</span><button class="speak" data-say="Ach, wirklich? Und wie war es?">🔊 hören</button></div>
+<div class="merk"><span>Wandern? Wo denn?</span><button class="speak" data-say="Wandern? Wo denn?">🔊 hören</button></div>
+<div class="merk"><span>Das klingt gut — machen Sie das oft?</span><button class="speak" data-say="Das klingt gut — machen Sie das oft?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🪞 Spiegeln</div>
+<div class="merk"><span>Und Sie?</span><button class="speak" data-say="Und Sie?">🔊 hören</button></div>
+<div class="merk"><span>Bei mir war es ähnlich.</span><button class="speak" data-say="Bei mir war es ähnlich.">🔊 hören</button></div>
+<div class="merk"><span>Ach, Sie auch?</span><button class="speak" data-say="Ach, Sie auch?">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 👋 Ansprechen mit Anlass</div>
+<div class="merk"><span>Darf ich fragen, ob hier noch frei ist?</span><button class="speak" data-say="Darf ich fragen, ob hier noch frei ist?">🔊 hören</button></div>
+<div class="merk"><span>Sie sind <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von sicher" data-wort="Sicher" data-kurz="Geht immer, überall, mit jedem." data-bsp="Wetter · Anfahrt · Essen · Wochenende · die Situation hier">sicher</b> auch wegen der Tagung hier?</span><button class="speak" data-say="Sie sind sicher auch wegen der Tagung hier?">🔊 hören</button></div>
+<div class="merk"><span>Ich habe Sie vorhin schon gesehen —</span><button class="speak" data-say="Ich habe Sie vorhin schon gesehen —">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🔓 Offen fragen, ohne auszufragen</div>
+<div class="merk"><span>Wie sind Sie zu dem Thema gekommen?</span><button class="speak" data-say="Wie sind Sie zu dem Thema gekommen?">🔊 hören</button></div>
+<div class="merk"><span>Was hat Sie hierher verschlagen?</span><button class="speak" data-say="Was hat Sie hierher verschlagen?">🔊 hören</button></div>
+<div class="merk"><span>Was war für Sie der interessanteste Teil?</span><button class="speak" data-say="Was war für Sie der interessanteste Teil?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🔗 Anschließen und vertiefen</div>
+<div class="merk"><span>Das würde mich näher interessieren —</span><button class="speak" data-say="Das würde mich näher interessieren —">🔊 hören</button></div>
+<div class="merk"><span>Wie meinen Sie das genau?</span><button class="speak" data-say="Wie meinen Sie das genau?">🔊 hören</button></div>
+<div class="merk"><span>Da bin ich ganz bei Ihnen, weil …</span><button class="speak" data-say="Da bin ich ganz bei Ihnen, weil …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🪞 Etwas von sich geben</div>
+<div class="merk"><span>Bei mir war es umgekehrt: …</span><button class="speak" data-say="Bei mir war es umgekehrt: …">🔊 hören</button></div>
+<div class="merk"><span>Ich kenne das — als ich …</span><button class="speak" data-say="Ich kenne das — als ich …">🔊 hören</button></div>
+<div class="merk"><span>Interessant, ich hätte das anders erwartet.</span><button class="speak" data-say="Interessant, ich hätte das anders erwartet.">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -764,6 +912,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Erster Tag, halb neun, Kaffeeküche. Jemand steht schon da. Ich sage: „Guten Morgen — ganz schön früh, ___?“ Sie lacht und fragt, ob ich neu bin. Ja, seit heute. „Darf ich mich kurz ___? Kaya Demir.“ Dann frage ich: „___ sind Sie hergekommen?“ Mit der Straßenbahn, sagt sie, wie jeden Tag. Ich hake nach: „Und ___ lange fahren Sie?“ Vierzig Minuten. Da haben wir schon eine ___: Ich brauche auch vierzig. Sie fragt, was ich genau mache, ich antworte in zwei Sätzen und gebe zurück: „Und ___?“ So geht das drei Minuten. Über Gehalt oder Miete redet hier niemand — das sind ___ Themen. Aber über die Straßenbahn reden alle.","o":["oder","vorstellen","Wie","wie","Gemeinsamkeit","Sie","heikle","Was"],"a":[["oder"],["vorstellen"],["Wie"],["wie"],["Gemeinsamkeit"],["Sie"],["heikle"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Ganz schön voll heute, oder?","Guten Morgen — auch so früh dran?","Warten Sie auch schon lange?","Was haben Sie am Wochenende gemacht?","Wie sind Sie hergekommen?","Wie gefällt es Ihnen hier?","Ach, wirklich? Und wie war es?","Wandern? Wo denn?","Das klingt gut — machen Sie das oft?","Bei mir war es ähnlich.","Ach, Sie auch?","Darf ich fragen, ob hier noch frei ist?","Sie sind sicher auch wegen der Tagung hier?","Ich habe Sie vorhin schon gesehen —","Wie sind Sie zu dem Thema gekommen?","Was hat Sie hierher verschlagen?","Was war für Sie der interessanteste Teil?","Das würde mich näher interessieren —","Wie meinen Sie das genau?","Da bin ich ganz bei Ihnen, weil …","Bei mir war es umgekehrt: …","Ich kenne das — als ich …","Interessant, ich hätte das anders erwartet."]
 </script>
 
 <script>
@@ -1063,6 +1214,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

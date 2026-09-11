@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Welche trennbaren Verben benutzt du täglich?</div></div><div class="nur-b1"><div class="ank">Wann merkst du beim Zuhören, dass noch eine Vorsilbe kommt?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../vok-bild/anrufen.webp" alt="Ein Mann telefoniert auf dem Sofa">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Welche trennbaren Verben benutzt du täglich?</li><li>Bei welchem vergisst du die Vorsilbe am häufigsten?</li><li>Wie ist das in deiner Sprache — gibt es so etwas auch?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Wann merkst du beim Zuhören, dass noch eine Vorsilbe kommt?</li><li>Warum ist <i>ausmachen</i> so schwer zu übersetzen?</li><li>Welche Vorsilbe verändert die Bedeutung am stärksten?</li></ol></div></div>
+<div class="tip teal">🔑 <strong>Die Regel für heute:</strong> Ist die Vorsilbe <u>betont</u>, ist sie trennbar. <b>ÁN</b>rufen, <b>ÁB</b>holen, <b>ÁUF</b>machen, <b>ÁUS</b>machen, <b>ÉIN</b>kaufen — hörst du den Ton vorn, geht die Silbe im Hauptsatz ans Ende.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Was bedeutet <i>abfahren</i> — und was <i>ankommen</i>?</li><li>Warum passt <i>einsteigen</i> zu <i>hinein</i>?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Bei welchem Verb passt die Richtung überhaupt nicht mehr?</li><li>Kannst du ein Verb erfinden, das es nicht gibt, aber verstanden würde?</li></ol></div></div>
+<div class="tip">💡 <strong>Zwei Paare, die alles zeigen:</strong> <b>anmachen ⇄ ausmachen</b> (Licht an, Licht aus) und <b>aufmachen ⇄ zumachen</b> (Tür auf, Tür zu). Dieselbe Wurzel <i>machen</i>, vier völlig verschiedene Handlungen.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -594,6 +692,56 @@ footer strong{color:var(--ink);}
 <button class="speak dbtn" data-say="Weißt du, wann der Kurs anfängt? Um Viertel nach neun. Im Nebensatz bleibt es zusammen — hörst du? … wann er anfängt. Und wann hört er auf? Halb elf. Danach räumen wir kurz auf, dann machen alle das Licht aus. Muss man sich vorher anmelden? Ja, aber du kannst dich auch heute noch anmelden. Formular ausfüllen, unten abgeben, fertig. Und wenn ich mal fehle? Dann sag bitte vorher ab. Es reicht, kurz anzurufen.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 2 noch einmal — aber diesmal muss jede Antwort von B <u>zwei</u> trennbare Verben enthalten. Wer nur eins schafft, muss den Satz neu bauen.</div>
+</section>
+
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 📞 Kontakt ankündigen</div>
+<div class="merk"><span>Ich rufe dich an</span><button class="speak" data-say="Ich rufe dich an">🔊 hören</button></div>
+<div class="merk"><span>Ich melde mich</span><button class="speak" data-say="Ich melde mich">🔊 hören</button></div>
+<div class="merk"><span>Ich schreibe dir</span><button class="speak" data-say="Ich schreibe dir">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 📦 Etwas erledigen</div>
+<div class="merk"><span>Ich hole … ab</span><button class="speak" data-say="Ich hole … ab">🔊 hören</button></div>
+<div class="merk"><span>Ich gebe … ab</span><button class="speak" data-say="Ich gebe … ab">🔊 hören</button></div>
+<div class="merk"><span>Ich kaufe … ein</span><button class="speak" data-say="Ich kaufe … ein">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🕘 Zeiten nennen</div>
+<div class="merk"><span>… fängt um … an</span><button class="speak" data-say="… fängt um … an">🔊 hören</button></div>
+<div class="merk"><span>… hört um … auf</span><button class="speak" data-say="… hört um … auf">🔊 hören</button></div>
+<div class="merk"><span>… kommt um … an</span><button class="speak" data-say="… kommt um … an">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · ❓ Bitten und fragen</div>
+<div class="merk"><span>Machst du bitte … auf?</span><button class="speak" data-say="Machst du bitte … auf?">🔊 hören</button></div>
+<div class="merk"><span>Kannst du … <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von abholen" data-wort="abholen" data-kurz="etwas oder jemanden von einem Ort mitnehmen" data-bsp="Kannst du das Paket bei der Post abholen?">abholen</b>?</span><button class="speak" data-say="Kannst du … abholen?">🔊 hören</button></div>
+<div class="merk"><span>Rufst du mich … an?</span><button class="speak" data-say="Rufst du mich … an?">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 📅 Verbindlich verabreden</div>
+<div class="merk"><span>Wir machen einen Termin aus</span><button class="speak" data-say="Wir machen einen Termin aus">🔊 hören</button></div>
+<div class="merk"><span>Ich melde mich rechtzeitig</span><button class="speak" data-say="Ich melde mich rechtzeitig">🔊 hören</button></div>
+<div class="merk"><span>Sagen wir es kurzfristig ab?</span><button class="speak" data-say="Sagen wir es kurzfristig ab?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🧩 Im Nebensatz</div>
+<div class="merk"><span>…, dass ich dich anrufe</span><button class="speak" data-say="…, dass ich dich anrufe">🔊 hören</button></div>
+<div class="merk"><span>…, weil der Zug ankommt</span><button class="speak" data-say="…, weil der Zug ankommt">🔊 hören</button></div>
+<div class="merk"><span>…, ob sie <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von einkaufen" data-wort="einkaufen" data-kurz="Lebensmittel oder Dinge besorgen" data-bsp="Ich kaufe auf dem Rückweg noch schnell ein.">einkaufen</b> geht</span><button class="speak" data-say="…, ob sie einkaufen geht">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🔙 Im Rückblick</div>
+<div class="merk"><span>Ich habe … angerufen</span><button class="speak" data-say="Ich habe … angerufen">🔊 hören</button></div>
+<div class="merk"><span>Wir sind … ausgestiegen</span><button class="speak" data-say="Wir sind … ausgestiegen">🔊 hören</button></div>
+<div class="merk"><span>Sie hat … abgegeben</span><button class="speak" data-say="Sie hat … abgegeben">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · ✍️ Mit zu-Infinitiv</div>
+<div class="merk"><span>Ich habe vergessen, … anzurufen</span><button class="speak" data-say="Ich habe vergessen, … anzurufen">🔊 hören</button></div>
+<div class="merk"><span>Es ist schwer, … aufzuhören</span><button class="speak" data-say="Es ist schwer, … aufzuhören">🔊 hören</button></div>
+<div class="merk"><span>Versuch mal, … einzukaufen</span><button class="speak" data-say="Versuch mal, … einzukaufen">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -764,6 +912,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Dienstag, halb sechs. Der Wecker klingelt, und ich stehe tatsächlich ___. In der Küche mache ich zuerst das Radio ___, dann den Kaffee. Um sieben rufe ich meine Schwester an, weil sie heute Geburtstag hat — sie geht nicht ran, also spreche ich auf den Anrufbeantworter. Auf dem Weg zur Arbeit kaufe ich schnell ___, denn abends kommen Gäste. An der Post hole ich das Paket ___, das seit Freitag dort liegt. Im Büro fängt die Besprechung pünktlich an, und danach habe ich vergessen, den Bericht ___. Abends dann: Gäste da, Essen fertig, alle zufrieden. Und um elf mache ich als Letzter das Licht ___.","o":["auf","an","ein","ab","abzugeben","aus","zu","anzurufen"],"a":[["auf"],["an"],["ein"],["ab"],["abzugeben"],["aus"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Ich rufe dich an","Ich melde mich","Ich schreibe dir","Ich hole … ab","Ich gebe … ab","Ich kaufe … ein","Machst du bitte … auf?","Kannst du … abholen?","Rufst du mich … an?","Wir machen einen Termin aus","Ich melde mich rechtzeitig","Sagen wir es kurzfristig ab?","Ich habe … angerufen","Wir sind … ausgestiegen","Sie hat … abgegeben","Ich habe vergessen, … anzurufen","Es ist schwer, … aufzuhören","Versuch mal, … einzukaufen"]
 </script>
 
 <script>
@@ -1063,6 +1214,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Welche dieser vier Bedeutungen kanntest du schon?</div></div><div class="nur-b1"><div class="ank">Woran erkennst du beim Zuhören, welche Bedeutung gemeint ist?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../amanda/sz-medien.webp" alt="Eine Frau sitzt mit Laptop und Handy auf dem Sofa">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Welche dieser vier Bedeutungen kanntest du schon?</li><li>Welche hättest du falsch geraten?</li><li>Gibt es in deiner Sprache auch solche Wortfamilien?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Woran erkennst du beim Zuhören, welche Bedeutung gemeint ist?</li><li>Warum reicht die Vorsilbe allein oft nicht — was verrät noch mehr?</li><li>Welches Verb hat dich schon einmal in eine peinliche Lage gebracht?</li></ol></div></div>
+<div class="tip teal">🔑 <strong>Die Regel für heute:</strong> Nicht die Vorsilbe allein entscheidet, sondern <u>was danach kommt</u>. <i>Ich nehme das Angebot an</i> (akzeptieren) gegen <i>Ich habe fünf Kilo abgenommen</i> (Gewicht). Das Objekt verrät die Bedeutung.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Was heißt <i>Es kommt darauf an</i> in deiner Sprache?</li><li>Welche feste Wendung benutzt du schon oft?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Warum sind gerade diese Wendungen so schwer zu übersetzen?</li><li>Wie merkst du dir, ob es <i>darauf</i>, <i>davon</i> oder <i>damit</i> heißt?</li></ol></div></div>
+<div class="tip">💡 <strong>Der Trick mit da(r)-:</strong> Das kleine <b>da</b> kündigt an, dass gleich ein ganzer Satz kommt. <i>Es kommt <b>darauf</b> an, <u>ob du Zeit hast</u>.</i> Wer das <i>darauf</i> hört, weiß: Der wichtige Teil kommt erst.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -594,6 +692,56 @@ footer strong{color:var(--ink);}
 <button class="speak dbtn" data-say="Sollen wir das Gespräch aufnehmen? Wenn du magst. Ich nehme an, du willst es hinterher abtippen? Genau. Ist dir das unangenehm? Nein, das macht mir nichts aus. Mach nur das Fenster zu, sonst hört man die Straße. Gute Idee. Fangen wir an? Moment, mir fällt gerade ein, dass wir die Namen weglassen sollten. Stimmt, sonst müssen wir sie später alle rauslöschen. Eben. Also: Wir geben nur an, worum es geht, und lassen den Rest weg.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 1 noch einmal — aber A drängt auf eine sofortige Entscheidung. B muss dreimal ausweichen, jedes Mal mit einer anderen Wendung: <u>Es kommt darauf an</u>, <u>Das hängt davon ab</u>, <u>Ich nehme an</u>.</div>
+</section>
+
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 🤔 Vermuten</div>
+<div class="merk"><span>Ich nehme an, dass …</span><button class="speak" data-say="Ich nehme an, dass …">🔊 hören</button></div>
+<div class="merk"><span>Ich gehe davon aus, dass …</span><button class="speak" data-say="Ich gehe davon aus, dass …">🔊 hören</button></div>
+<div class="merk"><span>Vermutlich …</span><button class="speak" data-say="Vermutlich …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 👀 Beobachten</div>
+<div class="merk"><span>Mir ist aufgefallen, dass …</span><button class="speak" data-say="Mir ist aufgefallen, dass …">🔊 hören</button></div>
+<div class="merk"><span>Mir fällt gerade ein, dass …</span><button class="speak" data-say="Mir fällt gerade ein, dass …">🔊 hören</button></div>
+<div class="merk"><span>Ist dir aufgefallen, …?</span><button class="speak" data-say="Ist dir aufgefallen, …?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · ⚖️ Abwägen</div>
+<div class="merk"><span>Es kommt darauf an, ob …</span><button class="speak" data-say="Es kommt darauf an, ob …">🔊 hören</button></div>
+<div class="merk"><span>Das hängt davon ab, wie …</span><button class="speak" data-say="Das hängt davon ab, wie …">🔊 hören</button></div>
+<div class="merk"><span>Das macht mir nichts aus</span><button class="speak" data-say="Das macht mir nichts aus">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · ✅ Zusagen und absagen</div>
+<div class="merk"><span>Ich nehme das Angebot an</span><button class="speak" data-say="Ich nehme das Angebot an">🔊 hören</button></div>
+<div class="merk"><span>Ich gebe es lieber auf</span><button class="speak" data-say="Ich gebe es lieber auf">🔊 hören</button></div>
+<div class="merk"><span>Machen wir einen Termin aus?</span><button class="speak" data-say="Machen wir einen Termin aus?">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 🧠 Vorsichtig vermuten</div>
+<div class="merk"><span>Ich würde <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von annehmen" data-wort="annehmen" data-kurz="akzeptieren — ein Angebot, einen Anruf, eine Einladung" data-bsp="Ich habe das Angebot angenommen.">annehmen</b>, dass …</span><button class="speak" data-say="Ich würde annehmen, dass …">🔊 hören</button></div>
+<div class="merk"><span>Es spricht einiges dafür, dass …</span><button class="speak" data-say="Es spricht einiges dafür, dass …">🔊 hören</button></div>
+<div class="merk"><span>Ich könnte mir vorstellen, dass …</span><button class="speak" data-say="Ich könnte mir vorstellen, dass …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🔍 Beobachtung als Einstieg</div>
+<div class="merk"><span>Mir ist in letzter Zeit aufgefallen, …</span><button class="speak" data-say="Mir ist in letzter Zeit aufgefallen, …">🔊 hören</button></div>
+<div class="merk"><span>Was mir dabei auffällt, ist …</span><button class="speak" data-say="Was mir dabei auffällt, ist …">🔊 hören</button></div>
+<div class="merk"><span>Es fällt auf, dass …</span><button class="speak" data-say="Es fällt auf, dass …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · ⚖️ Differenziert abwägen</div>
+<div class="merk"><span>Das hängt entscheidend davon ab, ob …</span><button class="speak" data-say="Das hängt entscheidend davon ab, ob …">🔊 hören</button></div>
+<div class="merk"><span>Es kommt weniger auf … an als auf …</span><button class="speak" data-say="Es kommt weniger auf … an als auf …">🔊 hören</button></div>
+<div class="merk"><span>Im Grunde macht das keinen Unterschied</span><button class="speak" data-say="Im Grunde macht das keinen Unterschied">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🤝 Verbindlich reagieren</div>
+<div class="merk"><span>Das nehme ich gern an</span><button class="speak" data-say="Das nehme ich gern an">🔊 hören</button></div>
+<div class="merk"><span>Da gebe ich lieber rechtzeitig auf</span><button class="speak" data-say="Da gebe ich lieber rechtzeitig auf">🔊 hören</button></div>
+<div class="merk"><span>Ich gebe Ihnen dazu Bescheid</span><button class="speak" data-say="Ich gebe Ihnen dazu Bescheid">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -764,6 +912,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Am Montag kam die Mail: Sie würden mir die Stelle gern geben. Ich habe sie nicht sofort angenommen, obwohl ich mich gefreut habe. Es kommt nämlich ___ an, ob ich zweimal die Woche im Homeoffice arbeiten kann — und genau dazu stand nichts im Vertrag. Mir ist außerdem ___, dass die Probezeit sechs Monate dauert. Ich ___ an, dass das normal ist, sicher war ich mir aber nicht. Also habe ich am Dienstag angerufen und beides gefragt. Die Antwort war freundlich: Homeoffice geht, Probezeit ist Standard. „Das ___ mir nichts aus“, habe ich gesagt, „dann sage ich zu.“ Am Ende hing alles ___ ab, dass ich einmal nachgefragt habe. Hätte ich das nicht getan, hätte ich vielleicht ___.","o":["darauf","aufgefallen","nehme","macht","davon","abgesagt","damit","angenommen"],"a":[["darauf"],["aufgefallen"],["nehme"],["macht"],["davon"],["abgesagt"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Ich nehme an, dass …","Ich gehe davon aus, dass …","Mir ist aufgefallen, dass …","Mir fällt gerade ein, dass …","Ist dir aufgefallen, …?","Es kommt darauf an, ob …","Das hängt davon ab, wie …","Das macht mir nichts aus","Ich nehme das Angebot an","Ich gebe es lieber auf","Machen wir einen Termin aus?","Ich würde annehmen, dass …","Es spricht einiges dafür, dass …","Ich könnte mir vorstellen, dass …","Mir ist in letzter Zeit aufgefallen, …","Was mir dabei auffällt, ist …","Es fällt auf, dass …","Das hängt entscheidend davon ab, ob …","Es kommt weniger auf … an als auf …","Im Grunde macht das keinen Unterschied","Das nehme ich gern an","Da gebe ich lieber rechtzeitig auf","Ich gebe Ihnen dazu Bescheid"]
 </script>
 
 <script>
@@ -1063,6 +1214,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

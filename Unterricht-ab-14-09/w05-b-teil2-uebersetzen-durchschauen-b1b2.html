@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Welche Entscheidung überlegst du gerade?</div></div><div class="nur-b1"><div class="ank">Fällt es dir leichter, dich durchzusetzen oder nachzugeben?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../amanda/amanda-denk.webp" alt="Amanda überlegt mit der Hand am Kinn">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Welche Entscheidung überlegst du gerade?</li><li>Wer unterstützt dich, wenn etwas schwierig wird?</li><li>Was hast du zuletzt für jemanden übernommen?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Fällt es dir leichter, dich durchzusetzen oder nachzugeben?</li><li>Wie überzeugst du jemanden, der schon eine feste Meinung hat?</li><li>Woran merkst du, dass jemand nur zustimmt, um Ruhe zu haben?</li></ol></div></div>
+<div class="tip teal">🔑 <strong>Die Regel für heute, in einem Satz:</strong> <b>Feste Verben haben nie ein ge-.</b> <i>überlegt, übernommen, unterstützt, überzeugt, widersprochen.</i> Wenn dir das ge- fehlt, klingt der Satz für deutsche Ohren sofort richtig — und mit ge- sofort falsch.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Bei welchem Verb bist du dir mit dem Perfekt am unsichersten?</li><li>Sagst du lieber Präsens, um dem Perfekt auszuweichen?</li><li>Welches lange Wort vermeidest du im Gespräch?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Merkst du selbst, wenn du ein ge- zu viel gesetzt hast?</li><li>Was hilft dir mehr: die Regel oder das Gefühl fürs Wort?</li><li>Welche Nomen zu diesen Verben kennst du schon?</li></ol></div></div>
+<div class="tip">💡 <strong>Ein Trost:</strong> Die Verben von heute sind fast alle <u>fest</u>. Das heißt: Du musst nichts trennen, nichts verschieben und nichts einschieben. Das Wort bleibt, wie es ist — nur das ge- lässt du weg. Von allen Regeln dieser Wochen ist das die bequemste.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -595,6 +693,64 @@ footer strong{color:var(--ink);}
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 2 mit einem Thema aus eurem Alltag. Wer widerspricht, muss dreimal ein Verb von heute benutzen — und einmal den Satz <i>„Da muss man unterscheiden.“</i></div>
 </section>
 
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · ✅ Zusagen</div>
+<div class="merk"><span>Ich übernehme das</span><button class="speak" data-say="Ich übernehme das">🔊 hören</button></div>
+<div class="merk"><span>Das mache ich gern</span><button class="speak" data-say="Das mache ich gern">🔊 hören</button></div>
+<div class="merk"><span>Darum kümmere ich mich</span><button class="speak" data-say="Darum kümmere ich mich">🔊 hören</button></div>
+<div class="merk"><span>Kein Problem</span><button class="speak" data-say="Kein Problem">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🤔 Abwägen</div>
+<div class="merk"><span>Ich überlege noch</span><button class="speak" data-say="Ich überlege noch">🔊 hören</button></div>
+<div class="merk"><span>Da muss ich kurz nachdenken</span><button class="speak" data-say="Da muss ich kurz nachdenken">🔊 hören</button></div>
+<div class="merk"><span>Das kann ich noch nicht sagen</span><button class="speak" data-say="Das kann ich noch nicht sagen">🔊 hören</button></div>
+<div class="merk"><span>Ich melde mich morgen</span><button class="speak" data-say="Ich melde mich morgen">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · ✋ Widersprechen</div>
+<div class="merk"><span>Da bin ich anderer Meinung</span><button class="speak" data-say="Da bin ich anderer Meinung">🔊 hören</button></div>
+<div class="merk"><span>Das sehe ich anders</span><button class="speak" data-say="Das sehe ich anders">🔊 hören</button></div>
+<div class="merk"><span>Ich bin nicht ganz überzeugt</span><button class="speak" data-say="Ich bin nicht ganz überzeugt">🔊 hören</button></div>
+<div class="merk"><span>Da muss ich <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von widersprechen" data-wort="widersprechen" data-kurz="sagen, dass man anderer Meinung ist" data-bsp="Da muss ich Ihnen leider widersprechen.">widersprechen</b></span><button class="speak" data-say="Da muss ich widersprechen">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🤝 Unterstützen</div>
+<div class="merk"><span>Ich unterstütze dich dabei</span><button class="speak" data-say="Ich unterstütze dich dabei">🔊 hören</button></div>
+<div class="merk"><span>Sag Bescheid, wenn du etwas brauchst</span><button class="speak" data-say="Sag Bescheid, wenn du etwas brauchst">🔊 hören</button></div>
+<div class="merk"><span>Ich schaue es mir mit dir an</span><button class="speak" data-say="Ich schaue es mir mit dir an">🔊 hören</button></div>
+<div class="merk"><span>Zusammen kriegen wir das hin</span><button class="speak" data-say="Zusammen kriegen wir das hin">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · ✅ Zusagen mit Bedingung</div>
+<div class="merk"><span>Ich übernehme das, sofern …</span><button class="speak" data-say="Ich übernehme das, sofern …">🔊 hören</button></div>
+<div class="merk"><span>Das ginge, wenn …</span><button class="speak" data-say="Das ginge, wenn …">🔊 hören</button></div>
+<div class="merk"><span>Grundsätzlich gern — allerdings …</span><button class="speak" data-say="Grundsätzlich gern — allerdings …">🔊 hören</button></div>
+<div class="merk"><span>Unter einer Voraussetzung: …</span><button class="speak" data-say="Unter einer Voraussetzung: …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · ⚖️ Unterscheiden</div>
+<div class="merk"><span>Da muss man <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von unterscheiden" data-wort="unterscheiden" data-kurz="einen Unterschied erkennen oder machen" data-bsp="Man muss zwei Dinge unterscheiden.">unterscheiden</b></span><button class="speak" data-say="Da muss man unterscheiden">🔊 hören</button></div>
+<div class="merk"><span>Das eine ist …, das andere …</span><button class="speak" data-say="Das eine ist …, das andere …">🔊 hören</button></div>
+<div class="merk"><span>In dem Punkt stimme ich zu, in dem anderen nicht</span><button class="speak" data-say="In dem Punkt stimme ich zu, in dem anderen nicht">🔊 hören</button></div>
+<div class="merk"><span>Kommt darauf an, ob …</span><button class="speak" data-say="Kommt darauf an, ob …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🎯 Sich durchsetzen</div>
+<div class="merk"><span>Ich bleibe bei meinem Vorschlag</span><button class="speak" data-say="Ich bleibe bei meinem Vorschlag">🔊 hören</button></div>
+<div class="merk"><span>Ich würde darauf bestehen</span><button class="speak" data-say="Ich würde darauf bestehen">🔊 hören</button></div>
+<div class="merk"><span>Das ist mir wichtig, weil …</span><button class="speak" data-say="Das ist mir wichtig, weil …">🔊 hören</button></div>
+<div class="merk"><span>Lassen Sie mich das kurz begründen</span><button class="speak" data-say="Lassen Sie mich das kurz begründen">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🕊️ Nachgeben, ohne zu verlieren</div>
+<div class="merk"><span>Damit kann ich leben</span><button class="speak" data-say="Damit kann ich leben">🔊 hören</button></div>
+<div class="merk"><span>Gut, dann machen wir es so</span><button class="speak" data-say="Gut, dann machen wir es so">🔊 hören</button></div>
+<div class="merk"><span>Das überzeugt mich</span><button class="speak" data-say="Das überzeugt mich">🔊 hören</button></div>
+<div class="merk"><span>Einverstanden — unter einer Bedingung</span><button class="speak" data-say="Einverstanden — unter einer Bedingung">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
+</section>
+
 <section class="section" id="challenge">
 <h2 class="st">⏱️ Die 90-Sekunden-Challenge</h2>
 <p class="ssub">Ein Verb, anderthalb Minuten, freies Sprechen. Die Aufgabe: einmal Präsens, einmal Perfekt — und das ge- an der richtigen Stelle oder gar nicht.</p>
@@ -643,7 +799,7 @@ footer strong{color:var(--ink);}
 <div class="rsp-kopf"><span class="rsp-nr">2</span><b>Zwei Meinungen, ein Tisch</b></div>
 <div class="rsp-lage"><span>Die Lage</span>A und B sind bei einer Sache verschiedener Meinung — Homeoffice, Urlaubsplanung, ein Umzug. Jeder muss den anderen mindestens einmal ernsthaft <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von überzeugen" data-wort="überzeugen" data-kurz="jemanden dazu bringen, etwas zu glauben" data-bsp="Das Argument hat mich überzeugt.">überzeugen</b> wollen und einmal zugestehen, dass ein Punkt stimmt.</div>
 <div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Das sehe ich anders</span><span class="rm">Da bin ich nicht überzeugt</span><span class="rm">Du hast in einem Punkt recht</span><span class="rm">Was schlägst du vor?</span></div><div class="nur-b1"><span class="rm">Da muss ich dir widersprechen</span><span class="rm">Das eine ist …, das andere …</span><span class="rm">Das überzeugt mich tatsächlich</span><span class="rm">Können wir uns darauf einigen, dass …</span></div></div>
-<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>Beide haben widersprochen, ohne persönlich zu werden, und beide haben einmal nachgegeben. <i><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von widersprechen" data-wort="widersprechen" data-kurz="sagen, dass man anderer Meinung ist" data-bsp="Da muss ich Ihnen leider widersprechen.">widersprechen</b></i> stand jedes Mal mit Dativ.</div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>Beide haben widersprochen, ohne persönlich zu werden, und beide haben einmal nachgegeben. <i>widersprechen</i> stand jedes Mal mit Dativ.</div>
 <details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
 
@@ -766,6 +922,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Letzte Woche war im Büro einiges zu entscheiden. Am Montag fragte mein Chef, wer den Bericht schreibt, und ich habe ihn ___ — allerdings nur unter der Bedingung, dass mich jemand bei den Grafiken ___. Am Dienstag kam die alte Idee vom letzten Jahr wieder auf den Tisch, und da musste ich meinem Kollegen deutlich ___. Ich habe zwei Sätze gesagt, warum das damals nicht funktioniert hat, und ihn damit tatsächlich ___. Am Mittwoch habe ich die Zahlen noch einmal ___ und zwei Fehler gefunden, die vorher alle ___ hatten. Es war eine anstrengende Woche, aber ich habe mich am Ende mit meinem Vorschlag ___ und bin ziemlich zufrieden.","o":["übernommen","unterstützt","widersprechen","überzeugt","überprüft","übersehen","durchgesetzt","übertrieben"],"a":[["übernommen"],["unterstützt"],["widersprechen"],["überzeugt"],["überprüft"],["übersehen"],["durchgesetzt"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Ich übernehme das","Das mache ich gern","Darum kümmere ich mich","Ich überlege noch","Da muss ich kurz nachdenken","Das kann ich noch nicht sagen","Ich melde mich morgen","Da bin ich anderer Meinung","Das sehe ich anders","Ich bin nicht ganz überzeugt","Da muss ich widersprechen","Ich unterstütze dich dabei","Sag Bescheid, wenn du etwas brauchst","Ich schaue es mir mit dir an","Zusammen kriegen wir das hin","Ich übernehme das, sofern …","Das ginge, wenn …","Grundsätzlich gern — allerdings …","Unter einer Voraussetzung: …","Da muss man unterscheiden","Das eine ist …, das andere …","In dem Punkt stimme ich zu, in dem anderen nicht","Kommt darauf an, ob …","Ich bleibe bei meinem Vorschlag","Ich würde darauf bestehen","Das ist mir wichtig, weil …","Lassen Sie mich das kurz begründen","Damit kann ich leben","Gut, dann machen wir es so","Das überzeugt mich","Einverstanden — unter einer Bedingung"]
 </script>
 
 <script>
@@ -1065,6 +1224,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

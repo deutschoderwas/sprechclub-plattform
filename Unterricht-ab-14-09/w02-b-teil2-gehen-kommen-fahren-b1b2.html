@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Was antwortest du auf „Wie geht's?“ — ehrlich oder höflich?</div></div><div class="nur-b1"><div class="ank">Warum benutzen Sprachen ausgerechnet Bewegungsverben für abstrakte Dinge?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../amanda/amanda-denk.webp" alt="Amanda überlegt mit dem Finger am Kinn">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Was antwortest du auf „Wie geht's?“ — ehrlich oder höflich?</li><li>Welchen dieser Sätze hast du schon oft gehört, ohne ihn genau zu verstehen?</li><li>Gibt es in deiner Sprache ein Verb, das genauso viel kann?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Warum benutzen Sprachen ausgerechnet Bewegungsverben für abstrakte Dinge?</li><li>Wann merkst du selbst, dass du einen Ausdruck nur nachsprichst, statt ihn zu verstehen?</li><li>Welcher deutsche Ausdruck hat dich am längsten verwirrt?</li></ol></div></div>
+<div class="tip teal">🧭 <strong>Das System dahinter:</strong> <b>gehen</b> = etwas ist möglich oder funktioniert. <b>kommen</b> = etwas entsteht oder hängt von etwas ab. <b>fahren</b> = eine Erfahrung oder eine starke Reaktion.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Was sagst du, wenn es dir wirklich nicht gut geht?</li><li>Fragst du zurück? Wie?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Ab welcher Nähe darf man ehrlich antworten?</li><li>Was wäre in deinem Land unhöflich an der deutschen Kurzantwort?</li></ol></div></div>
+<div class="tip">💡 <strong>Die Stufen der Antwort:</strong> <b>Danke, gut.</b> (immer richtig) · <b>Ganz gut.</b> (neutral) · <b>Es geht.</b> (nicht so gut, aber ich rede nicht darüber) · <b>Nicht so gut, ehrlich gesagt.</b> (jetzt darf gefragt werden).</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -596,6 +694,56 @@ footer strong{color:var(--ink);}
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 3 noch einmal — aber A gibt nicht so schnell auf und fragt dreimal nach. B muss dreimal Nein sagen, jedes Mal mit anderen Worten.</div>
 </section>
 
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · ✅ Zusagen und absagen</div>
+<div class="merk"><span>Das <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von geht." data-wort="das geht." data-kurz="das ist möglich, das ist in Ordnung" data-bsp="Donnerstag um zehn? Ja, das geht.">geht.</b></span><button class="speak" data-say="Das geht.">🔊 hören</button></div>
+<div class="merk"><span>Das geht leider nicht.</span><button class="speak" data-say="Das geht leider nicht.">🔊 hören</button></div>
+<div class="merk"><span>Das wäre möglich.</span><button class="speak" data-say="Das wäre möglich.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🤷 Sich nicht festlegen</div>
+<div class="merk"><span><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Es kommt darauf an." data-wort="Es kommt darauf an." data-kurz="die Antwort hängt von etwas ab" data-bsp="Kommst du mit? — Es kommt darauf an, wann ihr losfahrt.">Es kommt darauf an.</b></span><button class="speak" data-say="Es kommt darauf an.">🔊 hören</button></div>
+<div class="merk"><span>Mal sehen.</span><button class="speak" data-say="Mal sehen.">🔊 hören</button></div>
+<div class="merk"><span>Das weiß ich noch nicht.</span><button class="speak" data-say="Das weiß ich noch nicht.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🎯 Das Thema nennen</div>
+<div class="merk"><span><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Es geht um …" data-wort="Es geht um …" data-kurz="das ist das Thema" data-bsp="In der Mail geht es um den neuen Termin.">Es geht um …</b></span><button class="speak" data-say="Es geht um …">🔊 hören</button></div>
+<div class="merk"><span>Worum geht es?</span><button class="speak" data-say="Worum geht es?">🔊 hören</button></div>
+<div class="merk"><span>Ich rufe an wegen …</span><button class="speak" data-say="Ich rufe an wegen …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 😊 Beruhigen</div>
+<div class="merk"><span>Das <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von kommt vor." data-wort="das kommt vor." data-kurz="das passiert manchmal, das ist nicht schlimm" data-bsp="Entschuldigung, ich habe es vergessen. — Kein Problem, das kommt vor.">kommt vor.</b></span><button class="speak" data-say="Das kommt vor.">🔊 hören</button></div>
+<div class="merk"><span>Kein Problem.</span><button class="speak" data-say="Kein Problem.">🔊 hören</button></div>
+<div class="merk"><span>Das kann passieren.</span><button class="speak" data-say="Das kann passieren.">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · ✅ Zusagen mit Bedingung</div>
+<div class="merk"><span>Das ließe sich einrichten</span><button class="speak" data-say="Das ließe sich einrichten">🔊 hören</button></div>
+<div class="merk"><span>Von meiner Seite spricht nichts dagegen</span><button class="speak" data-say="Von meiner Seite spricht nichts dagegen">🔊 hören</button></div>
+<div class="merk"><span>Das geht, solange …</span><button class="speak" data-say="Das geht, solange …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🤷 Elegant ausweichen</div>
+<div class="merk"><span>Es kommt darauf an, ob …</span><button class="speak" data-say="Es kommt darauf an, ob …">🔊 hören</button></div>
+<div class="merk"><span>Das hängt davon ab, wie …</span><button class="speak" data-say="Das hängt davon ab, wie …">🔊 hören</button></div>
+<div class="merk"><span>Da müsste ich erst schauen</span><button class="speak" data-say="Da müsste ich erst schauen">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🎯 Zum Punkt kommen</div>
+<div class="merk"><span>Worum es mir geht, ist …</span><button class="speak" data-say="Worum es mir geht, ist …">🔊 hören</button></div>
+<div class="merk"><span>Der Punkt ist …</span><button class="speak" data-say="Der Punkt ist …">🔊 hören</button></div>
+<div class="merk"><span>Ich komme gleich zur Sache</span><button class="speak" data-say="Ich komme gleich zur Sache">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 😊 Deeskalieren</div>
+<div class="merk"><span>Das kommt in den besten Familien vor</span><button class="speak" data-say="Das kommt in den besten Familien vor">🔊 hören</button></div>
+<div class="merk"><span>Halb so wild</span><button class="speak" data-say="Halb so wild">🔊 hören</button></div>
+<div class="merk"><span>Damit sind wir bisher gut gefahren</span><button class="speak" data-say="Damit sind wir bisher gut gefahren">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
+</section>
+
 <section class="section" id="challenge">
 <h2 class="st">⏱️ Die 90-Sekunden-Challenge</h2>
 <p class="ssub">Ein Wort, anderthalb Minuten, freies Sprechen. Es muss nicht perfekt sein — es muss nur weitergehen.</p>
@@ -641,7 +789,7 @@ footer strong{color:var(--ink);}
 <div class="rsp-kopf"><span class="rsp-nr">2</span><b>Worum geht es eigentlich?</b></div>
 <div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>redet lange und kommt nicht zum Punkt.</p></div><div class="rsp-r b"><span>B</span><p>muss höflich nachfragen, worum es überhaupt geht — dreimal, immer freundlicher.</p></div></div>
 <div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Worum geht es genau?</span><span class="rm">Und was heißt das für mich?</span><span class="rm">Also willst du, dass …?</span><span class="rm">Habe ich das richtig verstanden?</span></div><div class="nur-b1"><span class="rm">Worauf willst du hinaus?</span><span class="rm">Was ist der Kern der Sache?</span><span class="rm">Wenn ich dich richtig verstehe, geht es dir um …</span><span class="rm">Fassen wir kurz zusammen</span></div></div>
-<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>B unterbricht nicht, sondern fragt nach — und fasst am Ende in einem Satz zusammen, worum es <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von geht." data-wort="das geht." data-kurz="das ist möglich, das ist in Ordnung" data-bsp="Donnerstag um zehn? Ja, das geht.">geht.</b></div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>B unterbricht nicht, sondern fragt nach — und fasst am Ende in einem Satz zusammen, worum es geht.</div>
 <details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
 
@@ -764,6 +912,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Freitagnachmittag, kurz vor vier. Das Telefon klingelt. „Hast du kurz Zeit? Es ___ um das Projekt.“ Ich sage: „Klar, aber nur zehn Minuten — danach ___ es leider nicht mehr.“ Sie fragt, ob wir den Abgabetermin verschieben könnten. Meine Antwort: „Es kommt ___ an, wie viel noch fehlt.“ Sie überlegt und sagt, es fehle eigentlich nur noch der Schluss. „Dann ___ das“, sage ich. Sie entschuldigt sich, dass sie so spät fragt. „Kein Problem, das ___ vor.“ Am Ende will sie noch wissen, wie ich überhaupt ___ die Idee gekommen bin, den Text ganz anders aufzubauen. Ich lache: „Ich habe es einfach ausprobiert — und bin gut ___ gefahren.“ Kein einziger Schritt, und trotzdem sind wir beide ein Stück weitergekommen.","o":["geht","auf","darauf","vor","kommt","damit","um","an"],"a":[["geht"],["geht"],["darauf"],["geht"],["kommt"],["auf"],["damit"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Das geht leider nicht.","Das wäre möglich.","Es kommt darauf an.","Das weiß ich noch nicht.","Es geht um …","Worum geht es?","Ich rufe an wegen …","Das kommt vor.","Das kann passieren.","Das ließe sich einrichten","Von meiner Seite spricht nichts dagegen","Das geht, solange …","Es kommt darauf an, ob …","Das hängt davon ab, wie …","Da müsste ich erst schauen","Worum es mir geht, ist …","Der Punkt ist …","Ich komme gleich zur Sache","Das kommt in den besten Familien vor","Halb so wild","Damit sind wir bisher gut gefahren"]
 </script>
 
 <script>
@@ -1063,6 +1214,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

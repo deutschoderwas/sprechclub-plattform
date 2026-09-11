@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Welchen Vorschlag hast du zuletzt gemacht?</div></div><div class="nur-b1"><div class="ank">Woran merkst du, dass jemand deinen Vorschlag nicht ernst nimmt?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../amanda/sz-buero.webp" alt="Zwei Kolleginnen besprechen etwas an einem Schreibtisch">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Welchen Vorschlag hast du zuletzt gemacht?</li><li>Hat jemand ja gesagt oder nein?</li><li>Fällt es dir leicht, etwas vorzuschlagen?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Woran merkst du, dass jemand deinen Vorschlag nicht ernst nimmt?</li><li>Wie fängst du normalerweise an?</li><li>Wo würdest du gern etwas ändern, sagst es aber nicht?</li></ol></div></div>
+<div class="tip teal">🔑 <strong>Die vier Schritte:</strong> <b>1 Lage</b> — was ist gerade so. <b>2 Vorschlag</b> — ein Satz, konkret. <b>3 Nutzen</b> — was der andere davon hat. <b>4 Frage</b> — was hältst du davon? Immer in dieser Reihenfolge.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Fragst du am Ende nach, was der andere denkt?</li><li>Wie reagierst du, wenn jemand nein sagt?</li><li>Machst du lieber einen Vorschlag oder zwei?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Warum wirkt eine Frage am Ende stärker als eine Feststellung?</li><li>Wann ist es besser, zwei Möglichkeiten anzubieten?</li><li>Wie viel Vorbereitung braucht ein guter Vorschlag?</li></ol></div></div>
+<div class="tip">💡 <strong>Der wirksamste Satz:</strong> <b>Was halten Sie davon?</b> Vier Wörter, und der andere ist im Gespräch statt in der Verteidigung. Sag ihn immer am Ende — auch wenn du dir sicher bist.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -586,6 +684,64 @@ footer strong{color:var(--ink);}
 <button class="speak dbtn" data-say="Können wir mal kurz über die Woche reden? Ich hätte da eine Idee. Klar. Wenn es ums Aufräumen geht — ich weiß, es hakt. Im Moment mache ich die Küche jeden Tag. Teilen wir uns die Woche? Nur weiß ich montags halt nie, wann ich heimkomme. Dann tausch ich Montag gegen Donnerstag. Du hast feste Tage, ich abends frei. Ja, das kriegen wir hin. Schreib es an den Kühlschrank, dann klappt es.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 1 mit einem echten Wunsch aus eurem Leben. Regel: Der eigene Wunsch darf im Vorschlag nicht als Wunsch vorkommen.</div>
+</section>
+
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 🧭 Lage beschreiben</div>
+<div class="merk"><span>Die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Lage" data-wort="die Lage" data-kurz="wie es gerade aussieht" data-bsp="Die Lage ist gerade so: Wir sind zu zweit für drei Schichten.">Lage</b> ist gerade so: …</span><button class="speak" data-say="Die Lage ist gerade so: …">🔊 hören</button></div>
+<div class="merk"><span>Im Moment ist es ja so, dass …</span><button class="speak" data-say="Im Moment ist es ja so, dass …">🔊 hören</button></div>
+<div class="merk"><span>Mir ist aufgefallen, dass …</span><button class="speak" data-say="Mir ist aufgefallen, dass …">🔊 hören</button></div>
+<div class="merk"><span>Wir haben zurzeit das Problem, dass …</span><button class="speak" data-say="Wir haben zurzeit das Problem, dass …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 💡 Vorschlag machen</div>
+<div class="merk"><span>Mein <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Vorschlag" data-wort="der Vorschlag" data-kurz="die Idee, die du anbietest" data-bsp="Ich hätte da einen Vorschlag.">Vorschlag</b> wäre, dass …</span><button class="speak" data-say="Mein Vorschlag wäre, dass …">🔊 hören</button></div>
+<div class="merk"><span>Wie wäre es, wenn …?</span><button class="speak" data-say="Wie wäre es, wenn …?">🔊 hören</button></div>
+<div class="merk"><span>Wir könnten es so machen: …</span><button class="speak" data-say="Wir könnten es so machen: …">🔊 hören</button></div>
+<div class="merk"><span>Ich hätte da eine Idee.</span><button class="speak" data-say="Ich hätte da eine Idee.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🎁 Nutzen nennen</div>
+<div class="merk"><span>Der <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Vorteil" data-wort="der Vorteil" data-kurz="was gut daran ist" data-bsp="Der Vorteil wäre, dass morgens jemand da ist.">Vorteil</b> wäre, dass …</span><button class="speak" data-say="Der Vorteil wäre, dass …">🔊 hören</button></div>
+<div class="merk"><span>Dann hätten Sie …</span><button class="speak" data-say="Dann hätten Sie …">🔊 hören</button></div>
+<div class="merk"><span>Damit sparen wir …</span><button class="speak" data-say="Damit sparen wir …">🔊 hören</button></div>
+<div class="merk"><span>So muss niemand mehr …</span><button class="speak" data-say="So muss niemand mehr …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · ❔ Frage stellen</div>
+<div class="merk"><span>Was halten Sie davon?</span><button class="speak" data-say="Was halten Sie davon?">🔊 hören</button></div>
+<div class="merk"><span>Wäre das für Sie machbar?</span><button class="speak" data-say="Wäre das für Sie machbar?">🔊 hören</button></div>
+<div class="merk"><span>Was meinen Sie?</span><button class="speak" data-say="Was meinen Sie?">🔊 hören</button></div>
+<div class="merk"><span>Sollen wir es probieren?</span><button class="speak" data-say="Sollen wir es probieren?">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 🧭 Lage sachlich benennen</div>
+<div class="merk"><span>Nach meinem Eindruck ist es zurzeit so, dass …</span><button class="speak" data-say="Nach meinem Eindruck ist es zurzeit so, dass …">🔊 hören</button></div>
+<div class="merk"><span>Seit einigen Wochen fällt auf, dass …</span><button class="speak" data-say="Seit einigen Wochen fällt auf, dass …">🔊 hören</button></div>
+<div class="merk"><span>Die Zahlen sagen ja, dass …</span><button class="speak" data-say="Die Zahlen sagen ja, dass …">🔊 hören</button></div>
+<div class="merk"><span>Es gibt da eine Stelle, die immer wieder hakt: …</span><button class="speak" data-say="Es gibt da eine Stelle, die immer wieder hakt: …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 💡 Vorschlag mit Rahmen</div>
+<div class="merk"><span>Ich würde vorschlagen, dass wir zunächst …</span><button class="speak" data-say="Ich würde vorschlagen, dass wir zunächst …">🔊 hören</button></div>
+<div class="merk"><span>Denkbar wäre folgende Lösung: …</span><button class="speak" data-say="Denkbar wäre folgende Lösung: …">🔊 hören</button></div>
+<div class="merk"><span>Ein Vorschlag, ohne dass wir uns festlegen: …</span><button class="speak" data-say="Ein Vorschlag, ohne dass wir uns festlegen: …">🔊 hören</button></div>
+<div class="merk"><span>Man könnte es zunächst befristet versuchen.</span><button class="speak" data-say="Man könnte es zunächst befristet versuchen.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🎁 Nutzen und Preis</div>
+<div class="merk"><span>Der Vorteil läge vor allem darin, dass …</span><button class="speak" data-say="Der Vorteil läge vor allem darin, dass …">🔊 hören</button></div>
+<div class="merk"><span>Für Sie hätte das den Effekt, dass …</span><button class="speak" data-say="Für Sie hätte das den Effekt, dass …">🔊 hören</button></div>
+<div class="merk"><span>Der <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Nachteil" data-wort="der Nachteil" data-kurz="was schlecht daran ist" data-bsp="Der Nachteil ist, dass ich freitags früher weg bin.">Nachteil</b> ist, dass … — den würde ich so auffangen: …</span><button class="speak" data-say="Der Nachteil ist, dass … — den würde ich so auffangen: …">🔊 hören</button></div>
+<div class="merk"><span>Der <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Aufwand" data-wort="der Aufwand" data-kurz="wie viel Arbeit oder Geld nötig ist" data-bsp="Der Aufwand hält sich in Grenzen.">Aufwand</b> hält sich in Grenzen, weil …</span><button class="speak" data-say="Der Aufwand hält sich in Grenzen, weil …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · ❔ Einladen statt drängen</div>
+<div class="merk"><span>Wie sehen Sie das?</span><button class="speak" data-say="Wie sehen Sie das?">🔊 hören</button></div>
+<div class="merk"><span>Wo hätten Sie Bedenken?</span><button class="speak" data-say="Wo hätten Sie Bedenken?">🔊 hören</button></div>
+<div class="merk"><span>Gibt es aus Ihrer Sicht Einwände?</span><button class="speak" data-say="Gibt es aus Ihrer Sicht Einwände?">🔊 hören</button></div>
+<div class="merk"><span>Was müsste erfüllt sein, damit das geht?</span><button class="speak" data-say="Was müsste erfüllt sein, damit das geht?">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -635,7 +791,7 @@ footer strong{color:var(--ink);}
 
 <div class="rsp">
 <div class="rsp-kopf"><span class="rsp-nr">2</span><b>Kartons im Treppenhaus</b></div>
-<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>ärgert sich seit Wochen über die Kartons im Flur.</p></div><div class="rsp-r b"><span>B</span><p>weiß das und kommt einfach nicht dazu. A macht einen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Vorschlag" data-wort="der Vorschlag" data-kurz="die Idee, die du anbietest" data-bsp="Ich hätte da einen Vorschlag.">Vorschlag</b> statt einer Beschwerde.</p></div></div>
+<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>ärgert sich seit Wochen über die Kartons im Flur.</p></div><div class="rsp-r b"><span>B</span><p>weiß das und kommt einfach nicht dazu. A macht einen Vorschlag statt einer Beschwerde.</p></div></div>
 <div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Kommen die Kartons noch weg?</span><span class="rm">Kein Vorwurf, ich hätte eine Idee</span><span class="rm">Ich fahre samstags sowieso zum Wertstoffhof</span><span class="rm">Sie müssten sie nur zusammenfalten</span></div><div class="nur-b1"><span class="rm">Ich weiß, es tut mir leid, ich komme immer erst spät heim</span><span class="rm">Das wäre wirklich nett, was kostet das denn?</span><span class="rm">Bis Freitag kriege ich das hin</span><span class="rm">Wenn Sie mal etwas brauchen, sagen Sie Bescheid</span></div></div>
 <div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>Aus einer Beschwerde ist ein Angebot geworden. Und die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Bedingung" data-wort="die Bedingung" data-kurz="was erfüllt sein muss" data-bsp="Unter einer Bedingung: Wir schauen in vier Wochen noch einmal drauf.">Bedingung</b> war so klein, dass B sofort ja sagen konnte.</div>
 <details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
@@ -760,6 +916,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Ich wollte schon lange etwas ändern, wusste aber nicht, wie ich anfangen soll. Heute habe ich es anders gemacht. Zuerst habe ich die ___ beschrieben: nachmittags ruft kaum jemand an, morgens alle gleichzeitig. Dann kam mein Satz: Mein Vorschlag ___, dass ich eine Stunde früher anfange. Der ___ wäre, dass zur Hauptzeit jemand für die Kunden da ist. Den ___ habe ich selbst genannt, nämlich meinen früheren Feierabend, und gleich gesagt, wie ich ihn auffange. Wir ___ es zunächst zwei Monate testen, habe ich vorgeschlagen. Am Ende habe ich gefragt: Was halten Sie ___? Meine Chefin hat eine ___ gestellt, danach war sie einverstanden. Wir haben es als ___ festgehalten, damit es niemand vergisst.","o":["Lage","wäre","Vorteil","Nachteil","könnten","davon","Bedingung","Absprache"],"a":[["Lage"],["wäre"],["Vorteil"],["Nachteil"],["könnten"],["davon"],["Bedingung"],["Absprache"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Die Lage ist gerade so: …","Im Moment ist es ja so, dass …","Mir ist aufgefallen, dass …","Wir haben zurzeit das Problem, dass …","Mein Vorschlag wäre, dass …","Wie wäre es, wenn …?","Wir könnten es so machen: …","Ich hätte da eine Idee.","Der Vorteil wäre, dass …","Dann hätten Sie …","Damit sparen wir …","So muss niemand mehr …","Was halten Sie davon?","Wäre das für Sie machbar?","Was meinen Sie?","Sollen wir es probieren?","Nach meinem Eindruck ist es zurzeit so, dass …","Seit einigen Wochen fällt auf, dass …","Die Zahlen sagen ja, dass …","Es gibt da eine Stelle, die immer wieder hakt: …","Ich würde vorschlagen, dass wir zunächst …","Denkbar wäre folgende Lösung: …","Ein Vorschlag, ohne dass wir uns festlegen: …","Man könnte es zunächst befristet versuchen.","Der Vorteil läge vor allem darin, dass …","Für Sie hätte das den Effekt, dass …","Der Nachteil ist, dass … — den würde ich so auffangen: …","Der Aufwand hält sich in Grenzen, weil …","Wie sehen Sie das?","Wo hätten Sie Bedenken?","Gibt es aus Ihrer Sicht Einwände?","Was müsste erfüllt sein, damit das geht?"]
 </script>
 
 <script>
@@ -1059,6 +1218,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

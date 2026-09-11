@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Wann hast du zuletzt genickt, ohne wirklich zu verstehen?</div></div><div class="nur-b1"><div class="ank">Warum fühlt sich Nachfragen wie ein Eingeständnis an — und warum ist es keines?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../amanda/a-hoeren.webp" alt="Amanda hört konzentriert mit Kopfhörern zu">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Wann hast du zuletzt genickt, ohne wirklich zu verstehen?</li><li>Fragst du lieber sofort nach oder erst später?</li><li>Bei wem fällt dir Nachfragen am schwersten?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Warum fühlt sich Nachfragen wie ein Eingeständnis an — und warum ist es keines?</li><li>Was kostet ein Missverständnis mehr: die Rückfrage oder das Schweigen?</li><li>Gibt es Situationen, in denen Nachfragen tatsächlich unhöflich ist?</li></ol></div></div>
+<div class="tip teal">🔑 <strong>Der wichtigste Satz der Stunde:</strong> Frag nicht nach der <u>Sprache</u>, sondern nach der <u>Sache</u>. Statt „Ich habe nicht verstanden“ lieber: <b>Welches Formular genau meinen Sie?</b> — dann klingt es nach Sorgfalt, nicht nach Lücke.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Was ist der Unterschied zwischen „Was meinen Sie?“ und „Was genau meinen Sie?“</li><li>Wie fragst du nach, ohne dass es wie Kritik klingt?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Wann macht eine präzise Rückfrage die Situation schwieriger statt leichter?</li><li>Wie fragt man nach, wenn man den Namen einer Sache gar nicht kennt?</li></ol></div></div>
+<div class="tip">💡 <strong>Merk dir die Stufen:</strong> <b>Wie bitte?</b> (ich habe akustisch nichts verstanden) · <b>Noch einmal langsam, bitte.</b> (zu schnell) · <b>Welches genau?</b> (ich habe verstanden, aber es ist mehrdeutig) · <b>Was heißt das für mich?</b> (ich brauche die Folge, nicht das Wort).</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -596,6 +694,56 @@ footer strong{color:var(--ink);}
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 1 noch einmal — aber A antwortet zweimal absichtlich vage („nächste Woche“, „die üblichen Unterlagen“). B muss beide Male präzisieren.</div>
 </section>
 
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · ✋ Ankündigen</div>
+<div class="merk"><span>Eine kurze Frage bitte</span><button class="speak" data-say="Eine kurze Frage bitte">🔊 hören</button></div>
+<div class="merk"><span>Darf ich kurz nachfragen?</span><button class="speak" data-say="Darf ich kurz nachfragen?">🔊 hören</button></div>
+<div class="merk"><span>Moment, ich schreibe mit</span><button class="speak" data-say="Moment, ich schreibe mit">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🎯 Präzisieren</div>
+<div class="merk"><span>Welches <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von genau" data-wort="genau" data-kurz="Wort, das eine Frage präzise macht" data-bsp="Welches Formular genau brauchen Sie?">genau</b>?</span><button class="speak" data-say="Welches genau?">🔊 hören</button></div>
+<div class="merk"><span>Was genau meinen Sie?</span><button class="speak" data-say="Was genau meinen Sie?">🔊 hören</button></div>
+<div class="merk"><span>Ab wann gilt das?</span><button class="speak" data-say="Ab wann gilt das?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🔁 Zusammenfassen</div>
+<div class="merk"><span>Also …</span><button class="speak" data-say="Also …">🔊 hören</button></div>
+<div class="merk"><span>Das heißt für mich …</span><button class="speak" data-say="Das heißt für mich …">🔊 hören</button></div>
+<div class="merk"><span>Habe ich das richtig verstanden, dass …?</span><button class="speak" data-say="Habe ich das richtig verstanden, dass …?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · ✅ Absichern</div>
+<div class="merk"><span>Und wenn etwas fehlt?</span><button class="speak" data-say="Und wenn etwas fehlt?">🔊 hören</button></div>
+<div class="merk"><span>An wen wende ich mich dann?</span><button class="speak" data-say="An wen wende ich mich dann?">🔊 hören</button></div>
+<div class="merk"><span>Bis wann muss das da sein?</span><button class="speak" data-say="Bis wann muss das da sein?">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · ✋ Elegant ankündigen</div>
+<div class="merk"><span>Ich hätte da noch eine <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Rückfrage" data-wort="die Rückfrage" data-kurz="eine Frage zu etwas, das gerade gesagt wurde" data-bsp="Ich hätte da noch eine Rückfrage.">Rückfrage</b></span><button class="speak" data-say="Ich hätte da noch eine Rückfrage">🔊 hören</button></div>
+<div class="merk"><span>Damit ich nichts durcheinanderbringe</span><button class="speak" data-say="Damit ich nichts durcheinanderbringe">🔊 hören</button></div>
+<div class="merk"><span>Bevor wir weitergehen</span><button class="speak" data-say="Bevor wir weitergehen">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🎯 Präzise nachhaken</div>
+<div class="merk"><span>Darf ich da kurz <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von nachhaken" data-wort="nachhaken" data-kurz="noch einmal fragen, wenn die Antwort zu vage war" data-bsp="Darf ich da kurz nachhaken?">nachhaken</b>?</span><button class="speak" data-say="Darf ich da kurz nachhaken?">🔊 hören</button></div>
+<div class="merk"><span>Der Punkt ist mir noch nicht ganz klar</span><button class="speak" data-say="Der Punkt ist mir noch nicht ganz klar">🔊 hören</button></div>
+<div class="merk"><span>Könnten Sie das kurz <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von erläutern" data-wort="erläutern" data-kurz="etwas genauer erklären" data-bsp="Könnten Sie das kurz erläutern?">erläutern</b>?</span><button class="speak" data-say="Könnten Sie das kurz erläutern?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🔁 Spiegeln statt fragen</div>
+<div class="merk"><span>Wenn ich Sie richtig verstehe, …</span><button class="speak" data-say="Wenn ich Sie richtig verstehe, …">🔊 hören</button></div>
+<div class="merk"><span>Sie meinen also, dass …</span><button class="speak" data-say="Sie meinen also, dass …">🔊 hören</button></div>
+<div class="merk"><span>Ich fasse kurz zusammen: …</span><button class="speak" data-say="Ich fasse kurz zusammen: …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · ✅ Verbindlich absichern</div>
+<div class="merk"><span>Damit ich es schriftlich habe</span><button class="speak" data-say="Damit ich es schriftlich habe">🔊 hören</button></div>
+<div class="merk"><span>Wer wäre dafür zuständig?</span><button class="speak" data-say="Wer wäre dafür zuständig?">🔊 hören</button></div>
+<div class="merk"><span>Was passiert, wenn …?</span><button class="speak" data-say="Was passiert, wenn …?">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
+</section>
+
 <section class="section" id="challenge">
 <h2 class="st">⏱️ Die 90-Sekunden-Challenge</h2>
 <p class="ssub">Ein Wort, anderthalb Minuten, freies Sprechen. Es muss nicht perfekt sein — es muss nur weitergehen.</p>
@@ -633,7 +781,7 @@ footer strong{color:var(--ink);}
 <div class="rsp-kopf"><span class="rsp-nr">1</span><b>Der Behördentermin</b></div>
 <div class="rsp-lage"><span>Die Lage</span>A ist Sachbearbeiter und nennt drei Unterlagen, zwei davon mit Wörtern, die B noch nie gehört hat. Am Ende soll B den ganzen Ablauf wiederholen können.</div>
 <div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Welche Unterlagen genau?</span><span class="rm">Wo bekomme ich das?</span><span class="rm">Habe ich das richtig verstanden?</span><span class="rm">Und wenn etwas fehlt?</span></div><div class="nur-b1"><span class="rm">Darf ich da kurz nachhaken?</span><span class="rm">Könnten Sie das kurz erläutern?</span><span class="rm">Wenn ich Sie richtig verstehe, …</span><span class="rm">Wer wäre bei Rückfragen zuständig?</span></div></div>
-<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>B fragt mindestens dreimal nach, benutzt einmal <b>welch- … <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von genau" data-wort="genau" data-kurz="Wort, das eine Frage präzise macht" data-bsp="Welches Formular genau brauchen Sie?">genau</b></b> und fasst am Ende den ganzen Ablauf in einem Satz zusammen.</div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>B fragt mindestens dreimal nach, benutzt einmal <b>welch- … genau</b> und fasst am Ende den ganzen Ablauf in einem Satz zusammen.</div>
 <details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
 
@@ -764,6 +912,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Dienstagvormittag, Zimmer 3 im Amt. Die Sachbearbeiterin erklärt schnell, und nach dem dritten Satz weiß ich nur noch, dass ich irgendetwas mitbringen soll. Also frage ich: „___ Unterlagen genau brauchen Sie?“ Sie nennt drei. Bei einer davon habe ich das Wort noch nie gehört, also hake ich ___: „Und ___ ein Nachweis ist das? Wo bekomme ich den?“ Sie erklärt es, ich schreibe ___. Zum Schluss fasse ich alles zusammen: „Habe ich das richtig verstanden, ___ ich zuerst ins Bürgerbüro gehe und dann wieder zu Ihnen komme?“ Sie nickt. Ich frage noch, wer bei Rückfragen ___ ist, und bekomme einen Namen. Fünf Fragen, zwei Minuten — und ich muss nicht ein zweites Mal kommen. Nachfragen ist die günstigste Versicherung, die es gibt.","o":["Welche","nach","was für","mit","dass","zuständig","welches","genau"],"a":[["Welche"],["nach"],["was für"],["mit"],["dass"],["zuständig"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Eine kurze Frage bitte","Darf ich kurz nachfragen?","Moment, ich schreibe mit","Was genau meinen Sie?","Ab wann gilt das?","Das heißt für mich …","Habe ich das richtig verstanden, dass …?","Und wenn etwas fehlt?","An wen wende ich mich dann?","Bis wann muss das da sein?","Ich hätte da noch eine Rückfrage","Damit ich nichts durcheinanderbringe","Bevor wir weitergehen","Darf ich da kurz nachhaken?","Der Punkt ist mir noch nicht ganz klar","Könnten Sie das kurz erläutern?","Wenn ich Sie richtig verstehe, …","Sie meinen also, dass …","Ich fasse kurz zusammen: …","Damit ich es schriftlich habe","Wer wäre dafür zuständig?","Was passiert, wenn …?"]
 </script>
 
 <script>
@@ -1063,6 +1214,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

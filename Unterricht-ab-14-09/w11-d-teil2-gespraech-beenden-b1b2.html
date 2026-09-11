@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Wie sagst du Tschüss?</div></div><div class="nur-b1"><div class="ank">Woran merkst du, dass jemand gehen möchte?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../amanda/sz-unterwegs.webp" alt="Menschen gehen an einem Bahnsteig aneinander vorbei">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Wie sagst du Tschüss?</li><li>Fällt es dir schwer, ein Gespräch zu beenden?</li><li>Wer redet in deinem Leben am längsten?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Woran merkst du, dass jemand gehen möchte?</li><li>Was machst du, wenn du selbst nicht wegkommst?</li><li>Wie verabschiedet man sich in deinem Land?</li></ol></div></div>
+<div class="tip teal">🔑 <strong>Die vier Schritte:</strong> <b>1 Signal</b> — ich muss langsam los. <b>2 Danken</b> — schön, dass wir geredet haben. <b>3 Nächster Schritt</b> — ich melde mich. <b>4 Gruß</b> — bis dann. Immer in dieser Reihenfolge.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Sagst du am Ende, wann ihr euch wiederseht?</li><li>Hältst du Kontakt oder verläuft sich das?</li><li>Was sagst du am Telefon zum Schluss?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Wann ist ein Gespräch für dich zu Ende?</li><li>Wie sagst du ab, ohne die Tür zuzumachen?</li><li>Was ist der Unterschied zwischen höflich und unehrlich?</li></ol></div></div>
+<div class="tip">💡 <strong>Der Satz für jede Situation:</strong> <b>Ich will dich gar nicht länger aufhalten.</b> Oder förmlich: <b>Ich möchte Sie nicht länger aufhalten.</b> Beides beendet jedes Gespräch, ohne jemanden vor den Kopf zu stoßen.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -588,6 +686,64 @@ footer strong{color:var(--ink);}
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 4. Einer redet absichtlich weiter, der andere kommt raus. Regel: Es müssen alle vier Schritte vorkommen — und niemand darf beleidigt sein.</div>
 </section>
 
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 🚪 Ankündigen</div>
+<div class="merk"><span>Ich muss langsam los.</span><button class="speak" data-say="Ich muss langsam los.">🔊 hören</button></div>
+<div class="merk"><span>Ich will dich nicht aufhalten.</span><button class="speak" data-say="Ich will dich nicht aufhalten.">🔊 hören</button></div>
+<div class="merk"><span>Ich habe noch einen weiten Weg.</span><button class="speak" data-say="Ich habe noch einen weiten Weg.">🔊 hören</button></div>
+<div class="merk"><span>Ich muss gleich weiter.</span><button class="speak" data-say="Ich muss gleich weiter.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🙏 Danken</div>
+<div class="merk"><span><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Danke" data-wort="der Dank" data-kurz="wenn du dich bedankst" data-bsp="Vielen Dank noch mal für alles.">Danke</b> für das nette <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Gespräch" data-wort="das Gespräch" data-kurz="das, was ihr gerade führt" data-bsp="Danke für das nette Gespräch.">Gespräch</b>.</span><button class="speak" data-say="Danke für das nette Gespräch.">🔊 hören</button></div>
+<div class="merk"><span>Schön, dass wir uns getroffen haben.</span><button class="speak" data-say="Schön, dass wir uns getroffen haben.">🔊 hören</button></div>
+<div class="merk"><span>Danke fürs Zuhören.</span><button class="speak" data-say="Danke fürs Zuhören.">🔊 hören</button></div>
+<div class="merk"><span>Das war nett.</span><button class="speak" data-say="Das war nett.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 📅 Weitermachen</div>
+<div class="merk"><span>Ich melde mich.</span><button class="speak" data-say="Ich melde mich.">🔊 hören</button></div>
+<div class="merk"><span>Lass uns mal was ausmachen.</span><button class="speak" data-say="Lass uns mal was ausmachen.">🔊 hören</button></div>
+<div class="merk"><span>Gib mir doch deine <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Nummer" data-wort="die Nummer" data-kurz="deine Telefonnummer" data-bsp="Gib mir doch mal deine Nummer.">Nummer</b>.</span><button class="speak" data-say="Gib mir doch deine Nummer.">🔊 hören</button></div>
+<div class="merk"><span>Wir sehen uns nächste Woche.</span><button class="speak" data-say="Wir sehen uns nächste Woche.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 👋 Verabschieden</div>
+<div class="merk"><span>Bis dann!</span><button class="speak" data-say="Bis dann!">🔊 hören</button></div>
+<div class="merk"><span>Schönen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Feierabend" data-wort="der Feierabend" data-kurz="die Zeit nach der Arbeit" data-bsp="Schönen Feierabend noch!">Feierabend</b>!</span><button class="speak" data-say="Schönen Feierabend!">🔊 hören</button></div>
+<div class="merk"><span>Mach es gut!</span><button class="speak" data-say="Mach es gut!">🔊 hören</button></div>
+<div class="merk"><span>Komm gut heim.</span><button class="speak" data-say="Komm gut heim.">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 🚪 Weich ankündigen</div>
+<div class="merk"><span>Ich merke gerade, ich muss langsam weiter.</span><button class="speak" data-say="Ich merke gerade, ich muss langsam weiter.">🔊 hören</button></div>
+<div class="merk"><span>Ich will Sie gar nicht länger aufhalten.</span><button class="speak" data-say="Ich will Sie gar nicht länger aufhalten.">🔊 hören</button></div>
+<div class="merk"><span>Bevor ich es vergesse: Ich muss gleich los.</span><button class="speak" data-say="Bevor ich es vergesse: Ich muss gleich los.">🔊 hören</button></div>
+<div class="merk"><span>Ich habe leider gleich einen Termin.</span><button class="speak" data-say="Ich habe leider gleich einen Termin.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🙏 Ehrlich danken</div>
+<div class="merk"><span>Danke, dass Sie sich die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Zeit" data-wort="die Zeit" data-kurz="wie viel du gerade übrig hast" data-bsp="Ich habe leider gleich keine Zeit mehr.">Zeit</b> genommen haben.</span><button class="speak" data-say="Danke, dass Sie sich die Zeit genommen haben.">🔊 hören</button></div>
+<div class="merk"><span>Das hat mir wirklich weitergeholfen.</span><button class="speak" data-say="Das hat mir wirklich weitergeholfen.">🔊 hören</button></div>
+<div class="merk"><span>Schön, dass wir das mal in Ruhe besprochen haben.</span><button class="speak" data-say="Schön, dass wir das mal in Ruhe besprochen haben.">🔊 hören</button></div>
+<div class="merk"><span>Ich nehme einiges mit aus dem Gespräch.</span><button class="speak" data-say="Ich nehme einiges mit aus dem Gespräch.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 📅 Verbindlich weitermachen</div>
+<div class="merk"><span>Ich melde mich bis Freitag.</span><button class="speak" data-say="Ich melde mich bis Freitag.">🔊 hören</button></div>
+<div class="merk"><span>Ich schicke Ihnen das nachher per Mail.</span><button class="speak" data-say="Ich schicke Ihnen das nachher per Mail.">🔊 hören</button></div>
+<div class="merk"><span>Sollen wir gleich einen Termin ausmachen?</span><button class="speak" data-say="Sollen wir gleich einen Termin ausmachen?">🔊 hören</button></div>
+<div class="merk"><span>Falls noch etwas ist, schreiben Sie mir einfach.</span><button class="speak" data-say="Falls noch etwas ist, schreiben Sie mir einfach.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 👋 Sauber verabschieden</div>
+<div class="merk"><span>Ihnen noch einen schönen Abend!</span><button class="speak" data-say="Ihnen noch einen schönen Abend!">🔊 hören</button></div>
+<div class="merk"><span>Wir hören voneinander.</span><button class="speak" data-say="Wir hören voneinander.">🔊 hören</button></div>
+<div class="merk"><span>Bis Freitag dann.</span><button class="speak" data-say="Bis Freitag dann.">🔊 hören</button></div>
+<div class="merk"><span>Alles Gute, und grüßen Sie zu Hause.</span><button class="speak" data-say="Alles Gute, und grüßen Sie zu Hause.">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
+</section>
+
 <section class="section" id="challenge">
 <h2 class="st">⏱️ Die 90-Sekunden-Challenge</h2>
 <p class="ssub">Neunzig Sekunden ein Gespräch beenden: Immer wenn du fertig bist, fängt der Partner wieder an — und du kommst noch einmal raus.</p>
@@ -627,7 +783,7 @@ footer strong{color:var(--ink);}
 </ol>
 <div class="rsp">
 <div class="rsp-kopf"><span class="rsp-nr">1</span><b>Im Treppenhaus</b></div>
-<div class="rsp-lage"><span>Die Lage</span>A und B haben sich verquatscht. A muss weiter, B hätte noch <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Zeit" data-wort="die Zeit" data-kurz="wie viel du gerade übrig hast" data-bsp="Ich habe leider gleich keine Zeit mehr.">Zeit</b> und redet gern.</div>
+<div class="rsp-lage"><span>Die Lage</span>A und B haben sich verquatscht. A muss weiter, B hätte noch Zeit und redet gern.</div>
 <div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Oh, schon so spät — ich will Sie nicht aufhalten</span><span class="rm">War nett, mal in Ruhe zu quatschen</span><span class="rm">Nächste Woche komme ich mal auf einen Kaffee vorbei</span><span class="rm">Schönen Feierabend noch!</span></div><div class="nur-b1"><span class="rm">Ach, ich rede ja auch zu viel, gehen Sie ruhig</span><span class="rm">Kommen Sie doch mal vorbei, ganz unkompliziert</span><span class="rm">Klingeln Sie einfach, ich bin fast immer da</span><span class="rm">Ihnen auch, und grüßen Sie Ihre Frau</span></div></div>
 <div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>Alle vier Schritte sind gekommen — und beim dritten stand ein konkreter Zeitpunkt, keine Floskel.</div>
 <details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
@@ -635,7 +791,7 @@ footer strong{color:var(--ink);}
 
 <div class="rsp">
 <div class="rsp-kopf"><span class="rsp-nr">2</span><b>Der Anruf, der nicht endet</b></div>
-<div class="rsp-lage"><span>Die Lage</span>Am Telefon ist alles geklärt, aber B redet weiter. A beendet das <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Gespräch" data-wort="das Gespräch" data-kurz="das, was ihr gerade führt" data-bsp="Danke für das nette Gespräch.">Gespräch</b> freundlich und verbindlich.</div>
+<div class="rsp-lage"><span>Die Lage</span>Am Telefon ist alles geklärt, aber B redet weiter. A beendet das Gespräch freundlich und verbindlich.</div>
 <div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Gut, dann haben wir alles</span><span class="rm">Ich will Sie nicht länger aufhalten</span><span class="rm">Danke, dass Sie sich die Zeit genommen haben</span><span class="rm">Dann bis Freitag</span></div><div class="nur-b1"><span class="rm">Ich schicke Ihnen die Bestätigung gleich per Mail</span><span class="rm">Falls noch etwas ist, schreiben Sie mir einfach</span><span class="rm">War ja schnell geklärt, das freut mich</span><span class="rm">Bis Freitag, schönen Tag noch!</span></div></div>
 <div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>Der nächste Schritt war konkret (Mail, Freitag) und stand im Präsens — kein einziges überflüssiges <i>werden</i>.</div>
 <details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
@@ -760,6 +916,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Wir standen zwanzig Minuten im Treppenhaus, und ich kam einfach nicht weg. Irgendwann habe ich gesagt: Ich will Sie gar nicht länger ___. Sie hat gelacht und gemeint, sie rede ja auch zu viel. Dann habe ich mich für das nette ___ bedankt. Ich ___ mich nächste Woche, habe ich gesagt, dann trinken wir mal einen Kaffee. Wichtig war der ___: nicht bei Gelegenheit, sondern Dienstag. Sie hat mir ihre ___ gegeben, und ich habe ihr abends eine kurze ___ geschrieben. Zum Schluss noch der Gruß: Schönen ___ noch! Und sie: Ihnen auch, kommen Sie gut ___.","o":["aufhalten","Gespräch","melde","Tag","Nummer","Nachricht","Feierabend","heim"],"a":[["aufhalten"],["Gespräch"],["melde"],["Tag"],["Nummer"],["Nachricht"],["Feierabend"],["heim"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Ich muss langsam los.","Ich will dich nicht aufhalten.","Ich habe noch einen weiten Weg.","Ich muss gleich weiter.","Danke für das nette Gespräch.","Schön, dass wir uns getroffen haben.","Danke fürs Zuhören.","Das war nett.","Ich melde mich.","Lass uns mal was ausmachen.","Gib mir doch deine Nummer.","Wir sehen uns nächste Woche.","Mach es gut!","Komm gut heim.","Ich merke gerade, ich muss langsam weiter.","Ich will Sie gar nicht länger aufhalten.","Bevor ich es vergesse: Ich muss gleich los.","Ich habe leider gleich einen Termin.","Danke, dass Sie sich die Zeit genommen haben.","Das hat mir wirklich weitergeholfen.","Schön, dass wir das mal in Ruhe besprochen haben.","Ich nehme einiges mit aus dem Gespräch.","Ich melde mich bis Freitag.","Ich schicke Ihnen das nachher per Mail.","Sollen wir gleich einen Termin ausmachen?","Falls noch etwas ist, schreiben Sie mir einfach.","Ihnen noch einen schönen Abend!","Wir hören voneinander.","Bis Freitag dann.","Alles Gute, und grüßen Sie zu Hause."]
 </script>
 
 <script>
@@ -1059,6 +1218,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

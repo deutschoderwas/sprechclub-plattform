@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Diskutierst du gern — oder gehst du Streit lieber aus dem Weg?</div></div><div class="nur-b1"><div class="ank">Woran merkst du, dass jemand in einer Diskussion ernst genommen wird?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../vok-bild/die-meinung.webp" alt="Vier Menschen sitzen an einem Tisch und diskutieren">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Diskutierst du gern — oder gehst du Streit lieber aus dem Weg?</li><li>Über welches Thema streitest du dich am häufigsten?</li><li>Fällt es dir auf Deutsch schwerer als in deiner Sprache?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Woran merkst du, dass jemand in einer Diskussion ernst genommen wird?</li><li>Ist eine sachliche Formulierung ehrlicher — oder nur höflicher?</li><li>Wann hast du zuletzt deine Meinung wegen eines guten Arguments geändert?</li></ol></div></div>
+<div class="tip teal">🔑 <strong>Der Handgriff von heute:</strong> Nimm das Verb und mach ein Nomen daraus. <i>schließen</i> → <b>die Schließung</b>, <i>ausbauen</i> → <b>der Ausbau</b>, <i>entscheiden</i> → <b>die Entscheidung</b>. Und was danach kommt, steht im Genitiv — genau wie am Montag.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Verstehst du deutsche Briefe von Ämtern?</li><li>Welches deutsche Wort findest du am kompliziertesten?</li><li>Liest du Nachrichten auf Deutsch?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Warum schreiben Behörden so, obwohl es niemand versteht?</li><li>Wo ist die Grenze zwischen präzise und unverständlich?</li><li>Gibt es in deiner Sprache auch eine eigene Amtssprache?</li></ol></div></div>
+<div class="tip">💡 <strong>Die Faustregel:</strong> Ein Nomen macht den Satz sachlich. Drei machen ihn tot. Wenn du beim Vorlesen Luft holen musst, bevor der Satz zu Ende ist, war eines zu viel.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -588,6 +686,64 @@ footer strong{color:var(--ink);}
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 1 mit vertauschten Rollen — jeder vertritt die Seite, die er nicht glaubt. Regel: Fass zuerst den anderen zusammen, dann widersprich. Und mindestens zweimal ein Nomen aus einem Verb.</div>
 </section>
 
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 🙋 Position beziehen</div>
+<div class="merk"><span>Meiner <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Meinung" data-wort="die Meinung" data-kurz="das, was du über eine Sache denkst" data-bsp="Meiner Meinung nach entscheidet die Anbindung alles.">Meinung</b> nach …</span><button class="speak" data-say="Meiner Meinung nach …">🔊 hören</button></div>
+<div class="merk"><span>Ich finde, dass …</span><button class="speak" data-say="Ich finde, dass …">🔊 hören</button></div>
+<div class="merk"><span>Für mich ist wichtig, dass …</span><button class="speak" data-say="Für mich ist wichtig, dass …">🔊 hören</button></div>
+<div class="merk"><span>Ich bin dafür, weil …</span><button class="speak" data-say="Ich bin dafür, weil …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · ✋ Widersprechen</div>
+<div class="merk"><span>Das sehe ich anders.</span><button class="speak" data-say="Das sehe ich anders.">🔊 hören</button></div>
+<div class="merk"><span>Da bin ich nicht deiner Meinung.</span><button class="speak" data-say="Da bin ich nicht deiner Meinung.">🔊 hören</button></div>
+<div class="merk"><span>Das stimmt, aber …</span><button class="speak" data-say="Das stimmt, aber …">🔊 hören</button></div>
+<div class="merk"><span>Und was ist mit …?</span><button class="speak" data-say="Und was ist mit …?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 👍 Zustimmen</div>
+<div class="merk"><span>Da hast du recht.</span><button class="speak" data-say="Da hast du recht.">🔊 hören</button></div>
+<div class="merk"><span>Das ist ein gutes Argument.</span><button class="speak" data-say="Das ist ein gutes Argument.">🔊 hören</button></div>
+<div class="merk"><span>Genau das meine ich.</span><button class="speak" data-say="Genau das meine ich.">🔊 hören</button></div>
+<div class="merk"><span>Das sehe ich auch so.</span><button class="speak" data-say="Das sehe ich auch so.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 📌 Zusammenfassen</div>
+<div class="merk"><span>Also, unterm Strich …</span><button class="speak" data-say="Also, unterm Strich …">🔊 hören</button></div>
+<div class="merk"><span>Am Ende kommt es darauf an, ob …</span><button class="speak" data-say="Am Ende kommt es darauf an, ob …">🔊 hören</button></div>
+<div class="merk"><span>Wir sind uns einig, dass …</span><button class="speak" data-say="Wir sind uns einig, dass …">🔊 hören</button></div>
+<div class="merk"><span>Der Unterschied ist also …</span><button class="speak" data-say="Der Unterschied ist also …">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 🙋 Position mit Nomen</div>
+<div class="merk"><span>Entscheidend ist für mich die Anbindung.</span><button class="speak" data-say="Entscheidend ist für mich die Anbindung.">🔊 hören</button></div>
+<div class="merk"><span>Der springende Punkt ist die Versorgung.</span><button class="speak" data-say="Der springende Punkt ist die Versorgung.">🔊 hören</button></div>
+<div class="merk"><span>Ich halte die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Schließung" data-wort="die Schließung" data-kurz="das Ende eines Ladens, einer Praxis oder einer Schule" data-bsp="Die Schließung der Praxis trifft vor allem die Ältesten.">Schließung</b> für den größten Fehler.</span><button class="speak" data-say="Ich halte die Schließung für den größten Fehler.">🔊 hören</button></div>
+<div class="merk"><span>Aus meiner Sicht überwiegt der <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Zusammenhalt" data-wort="der Zusammenhalt" data-kurz="das Gefühl, dass die Leute füreinander da sind" data-bsp="Der Zusammenhalt im Dorf ist das stärkste Argument dafür.">Zusammenhalt</b>.</span><button class="speak" data-say="Aus meiner Sicht überwiegt der Zusammenhalt.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · ✋ Einwand mit Nomen</div>
+<div class="merk"><span>Dabei übersiehst du die Belastung durch den <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Verkehr" data-wort="der Verkehr" data-kurz="alles, was auf den Straßen unterwegs ist" data-bsp="Die Belastung durch den Verkehr ist in der Innenstadt am höchsten.">Verkehr</b>.</span><button class="speak" data-say="Dabei übersiehst du die Belastung durch den Verkehr.">🔊 hören</button></div>
+<div class="merk"><span>Das gilt nur unter der Voraussetzung, dass …</span><button class="speak" data-say="Das gilt nur unter der Voraussetzung, dass …">🔊 hören</button></div>
+<div class="merk"><span>Die Kehrseite dieser Rechnung ist …</span><button class="speak" data-say="Die Kehrseite dieser Rechnung ist …">🔊 hören</button></div>
+<div class="merk"><span>Genau daran scheitert der <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Vorschlag" data-wort="der Vorschlag" data-kurz="eine Idee, die man in die Runde gibt" data-bsp="Mein Vorschlag wäre ein Bürgerbus zweimal täglich.">Vorschlag</b>.</span><button class="speak" data-say="Genau daran scheitert der Vorschlag.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 👍 Zustimmen und weiterdrehen</div>
+<div class="merk"><span>Dem stimme ich zu, allerdings …</span><button class="speak" data-say="Dem stimme ich zu, allerdings …">🔊 hören</button></div>
+<div class="merk"><span>Das trifft zu, greift aber zu kurz.</span><button class="speak" data-say="Das trifft zu, greift aber zu kurz.">🔊 hören</button></div>
+<div class="merk"><span>Da gehe ich mit, unter einer Bedingung:</span><button class="speak" data-say="Da gehe ich mit, unter einer Bedingung:">🔊 hören</button></div>
+<div class="merk"><span>Genau daraus folgt für mich das Gegenteil.</span><button class="speak" data-say="Genau daraus folgt für mich das Gegenteil.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 📌 Bilanz ziehen</div>
+<div class="merk"><span>Unterm Strich überwiegen die Nachteile.</span><button class="speak" data-say="Unterm Strich überwiegen die Nachteile.">🔊 hören</button></div>
+<div class="merk"><span>Beide Seiten haben denselben blinden Fleck.</span><button class="speak" data-say="Beide Seiten haben denselben blinden Fleck.">🔊 hören</button></div>
+<div class="merk"><span>Die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Entscheidung" data-wort="die Entscheidung" data-kurz="die Wahl zwischen zwei Möglichkeiten" data-bsp="Die Entscheidung der Gemeinde fällt im Dezember.">Entscheidung</b> hängt an einer einzigen Frage.</span><button class="speak" data-say="Die Entscheidung hängt an einer einzigen Frage.">🔊 hören</button></div>
+<div class="merk"><span>Wir reden über zwei verschiedene Lebensphasen.</span><button class="speak" data-say="Wir reden über zwei verschiedene Lebensphasen.">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
+</section>
+
 <section class="section" id="challenge">
 <h2 class="st">⏱️ Die 90-Sekunden-Challenge</h2>
 <p class="ssub">Neunzig Sekunden für eine Seite — und du weißt vorher nicht, welche. Der Partner nennt <i>Stadt</i> oder <i>Dorf</i>, dann läuft die Zeit. Mindestens vier Nomen aus Verben.</p>
@@ -629,7 +785,7 @@ footer strong{color:var(--ink);}
 <div class="rsp-kopf"><span class="rsp-nr">1</span><b>Die Debatte</b></div>
 <div class="rsp-lage"><span>Die Lage</span>A vertritt die Stadt, B das Dorf. Jeder hat zwei Minuten. Wer den anderen unterbricht, verliert dreißig Sekunden.</div>
 <div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Ich bin für die Stadt, weil alles nah ist.</span><span class="rm">Auf dem Land ist es viel ruhiger.</span><span class="rm">Ohne Auto geht dort gar nichts.</span><span class="rm">Dafür kennt man dort seine Nachbarn.</span></div><div class="nur-b1"><span class="rm">Meiner Meinung nach überwiegt die Versorgung — Ärzte, Schulen, Kurse, alles in fünfzehn Minuten</span><span class="rm">Das trifft zu, greift aber zu kurz: Die Belastung durch den Verkehr trägt in der Stadt jeder mit</span><span class="rm">Der Zusammenhalt der Nachbarschaft lässt sich nicht kaufen, und in der Stadt gibt es ihn selten</span><span class="rm">Unterm Strich hängt die Entscheidung an der Lebensphase, nicht am Ort</span></div></div>
-<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>Beide haben den anderen zuerst zusammengefasst, bevor sie widersprochen haben, und mindestens zweimal ein Nomen aus einem Verb benutzt (<i>die Versorgung</i>, <i>die Belastung</i>, <i>die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Entscheidung" data-wort="die Entscheidung" data-kurz="die Wahl zwischen zwei Möglichkeiten" data-bsp="Die Entscheidung der Gemeinde fällt im Dezember.">Entscheidung</b></i>).</div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>Beide haben den anderen zuerst zusammengefasst, bevor sie widersprochen haben, und mindestens zweimal ein Nomen aus einem Verb benutzt (<i>die Versorgung</i>, <i>die Belastung</i>, <i>die Entscheidung</i>).</div>
 <details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
 
@@ -760,6 +916,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"In der Bürgerversammlung am Dienstagabend ging es um die ___ des letzten Dorfladens. Rund achtzig Menschen kamen, mehr als bei jeder ___ der vergangenen Jahre. Die ___ der älteren Bewohner steht dabei im Mittelpunkt: Wer kein Auto hat, muss künftig zwölf Kilometer fahren. Ein Anwohner nannte das lange ___ auf den Bus die eigentliche Zumutung. Die Gemeinde prüft nun die ___ eines Bürgerbusses mit ehrenamtlichen Fahrern, außerdem den ___ der bestehenden Linie um zwei Fahrten täglich. Die ___ dieser Fahrten läge bei achtzigtausend Euro im Jahr. Die ___ des Gemeinderats fällt im Dezember.","o":["Schließung","Veranstaltung","Versorgung","Warten","Einrichtung","Ausbau","Finanzierung","Entscheidung"],"a":[["Schließung"],["Veranstaltung"],["Versorgung"],["Warten"],["Einrichtung"],["Ausbau"],["Finanzierung"],["Entscheidung"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Meiner Meinung nach …","Ich finde, dass …","Für mich ist wichtig, dass …","Ich bin dafür, weil …","Das sehe ich anders.","Da bin ich nicht deiner Meinung.","Das stimmt, aber …","Und was ist mit …?","Da hast du recht.","Das ist ein gutes Argument.","Genau das meine ich.","Das sehe ich auch so.","Also, unterm Strich …","Am Ende kommt es darauf an, ob …","Wir sind uns einig, dass …","Der Unterschied ist also …","Entscheidend ist für mich die Anbindung.","Der springende Punkt ist die Versorgung.","Ich halte die Schließung für den größten Fehler.","Aus meiner Sicht überwiegt der Zusammenhalt.","Dabei übersiehst du die Belastung durch den Verkehr.","Das gilt nur unter der Voraussetzung, dass …","Die Kehrseite dieser Rechnung ist …","Genau daran scheitert der Vorschlag.","Dem stimme ich zu, allerdings …","Das trifft zu, greift aber zu kurz.","Da gehe ich mit, unter einer Bedingung:","Genau daraus folgt für mich das Gegenteil.","Unterm Strich überwiegen die Nachteile.","Beide Seiten haben denselben blinden Fleck.","Die Entscheidung hängt an einer einzigen Frage.","Wir reden über zwei verschiedene Lebensphasen."]
 </script>
 
 <script>
@@ -1059,6 +1218,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Was schmeckt dir hier am besten?</div></div><div class="nur-b1"><div class="ank">Wann sagst du <i>Es gefällt mir</i> und wann <i>Ich mag es</i>?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../vok-bild/der-kaffee.webp" alt="Eine dampfende Tasse Kaffee auf einem Holztisch">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Was schmeckt dir hier am besten?</li><li>Was gefällt dir an deiner Stadt?</li><li>Was magst du gar nicht?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Wann sagst du <i>Es gefällt mir</i> und wann <i>Ich mag es</i>?</li><li>Gibt es in deiner Sprache auch solche umgedrehten Sätze?</li><li>Welcher Satz klingt für dich höflicher — und warum?</li></ol></div></div>
+<div class="tip teal">🔑 <strong>Die Regel des Abends:</strong> Frag dich immer: <b>Wer ist das Subjekt?</b> Bei <i>mögen</i> und <i>finden</i> bist du es. Bei <i>gefallen</i>, <i>schmecken</i> und <i>passen</i> ist es die Sache — und du stehst im Dativ.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Mit wem sprichst du am meisten Deutsch?</li><li>Worüber redest du gern?</li><li>Wem erzählst du, wenn etwas Schönes passiert ist?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Wann sagt man <i>reden</i> statt <i>sprechen</i>?</li><li>Was ist der Unterschied zwischen <i>erzählen</i> und <i>berichten</i>?</li><li>Welche dieser vier Verben benutzt du am seltensten?</li></ol></div></div>
+<div class="tip">💡 <strong>Vier Muster zum Merken:</strong> <b>sagen</b> + Dativ + Akkusativ · <b>sprechen mit</b> + Dativ · <b>sprechen über</b> + Akkusativ · <b>erzählen von</b> + Dativ. Lern sie als Block, nicht als Vokabel.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -586,6 +684,64 @@ footer strong{color:var(--ink);}
 <button class="speak dbtn" data-say="Ich habe den Anfang nicht mitbekommen, worum ging es? Hör mir kurz zu, dann erzähle ich dir schnell, was du verpasst hast. Danke, das ist nett. Es ging darum, welche Verben mit Dativ stehen. Gefallen zum Beispiel, und schmecken. Ah, das kenne ich aus meiner Sprache anders. Mir ging es genauso. Sag Bescheid, wenn du willst, dann üben wir das nachher zusammen.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 1 mit einem Essen, das ihr wirklich mögt. Regel: In jeder Antwort müssen ein Verb mit Dativ und eines mit Akkusativ vorkommen.</div>
+</section>
+
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 😋 Bewerten</div>
+<div class="merk"><span>Das schmeckt mir gut.</span><button class="speak" data-say="Das schmeckt mir gut.">🔊 hören</button></div>
+<div class="merk"><span>Die Farbe gefällt mir.</span><button class="speak" data-say="Die Farbe gefällt mir.">🔊 hören</button></div>
+<div class="merk"><span>Ich mag das sehr.</span><button class="speak" data-say="Ich mag das sehr.">🔊 hören</button></div>
+<div class="merk"><span>Das passt mir nicht.</span><button class="speak" data-say="Das passt mir nicht.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 💬 Meinung sagen</div>
+<div class="merk"><span>Ich finde das gut.</span><button class="speak" data-say="Ich finde das gut.">🔊 hören</button></div>
+<div class="merk"><span>Ich finde es zu teuer.</span><button class="speak" data-say="Ich finde es zu teuer.">🔊 hören</button></div>
+<div class="merk"><span>Mir gefällt die Idee.</span><button class="speak" data-say="Mir gefällt die Idee.">🔊 hören</button></div>
+<div class="merk"><span>Das finde ich schwierig.</span><button class="speak" data-say="Das finde ich schwierig.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🗣️ Gespräch ankündigen</div>
+<div class="merk"><span>Ich spreche mit ihr.</span><button class="speak" data-say="Ich spreche mit ihr.">🔊 hören</button></div>
+<div class="merk"><span>Wir müssen darüber <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von reden" data-wort="reden" data-kurz="sich unterhalten — lockerer als sprechen" data-bsp="Wir haben lange über alles Mögliche geredet.">reden</b>.</span><button class="speak" data-say="Wir müssen darüber reden.">🔊 hören</button></div>
+<div class="merk"><span>Kann ich dich kurz <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von sprechen" data-wort="sprechen" data-kurz="eine Sprache benutzen oder ein Gespräch führen" data-bsp="Ich spreche morgen mit meiner Chefin über den Urlaub.">sprechen</b>?</span><button class="speak" data-say="Kann ich dich kurz sprechen?">🔊 hören</button></div>
+<div class="merk"><span>Ich sage ihm Bescheid.</span><button class="speak" data-say="Ich sage ihm Bescheid.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 📖 Erzählen</div>
+<div class="merk"><span>Erzähl mir davon.</span><button class="speak" data-say="Erzähl mir davon.">🔊 hören</button></div>
+<div class="merk"><span>Ich erzähle dir später mehr.</span><button class="speak" data-say="Ich erzähle dir später mehr.">🔊 hören</button></div>
+<div class="merk"><span>Hör mir kurz zu.</span><button class="speak" data-say="Hör mir kurz zu.">🔊 hören</button></div>
+<div class="merk"><span>Schau dir das mal an.</span><button class="speak" data-say="Schau dir das mal an.">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 😋 Fein bewerten</div>
+<div class="merk"><span>Das sagt mir zu.</span><button class="speak" data-say="Das sagt mir zu.">🔊 hören</button></div>
+<div class="merk"><span>Geschmacklich ist es nicht meins.</span><button class="speak" data-say="Geschmacklich ist es nicht meins.">🔊 hören</button></div>
+<div class="merk"><span>Optisch gefällt es mir, praktisch weniger.</span><button class="speak" data-say="Optisch gefällt es mir, praktisch weniger.">🔊 hören</button></div>
+<div class="merk"><span>Daran könnte ich mich gewöhnen.</span><button class="speak" data-say="Daran könnte ich mich gewöhnen.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 💬 Meinung mit Einschränkung</div>
+<div class="merk"><span>Ich halte das für sinnvoll.</span><button class="speak" data-say="Ich halte das für sinnvoll.">🔊 hören</button></div>
+<div class="merk"><span>Grundsätzlich finde ich es gut, allerdings …</span><button class="speak" data-say="Grundsätzlich finde ich es gut, allerdings …">🔊 hören</button></div>
+<div class="merk"><span>In diesem Punkt sehe ich es anders.</span><button class="speak" data-say="In diesem Punkt sehe ich es anders.">🔊 hören</button></div>
+<div class="merk"><span>Das kommt darauf an, wie man es macht.</span><button class="speak" data-say="Das kommt darauf an, wie man es macht.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🗣️ Gesprächsbedarf anmelden</div>
+<div class="merk"><span>Ich würde das gern einmal mit Ihnen besprechen.</span><button class="speak" data-say="Ich würde das gern einmal mit Ihnen besprechen.">🔊 hören</button></div>
+<div class="merk"><span>Darüber sollten wir in Ruhe reden.</span><button class="speak" data-say="Darüber sollten wir in Ruhe reden.">🔊 hören</button></div>
+<div class="merk"><span>Hätten Sie kurz Zeit für ein Gespräch?</span><button class="speak" data-say="Hätten Sie kurz Zeit für ein Gespräch?">🔊 hören</button></div>
+<div class="merk"><span>Ich melde mich, dann sprechen wir darüber.</span><button class="speak" data-say="Ich melde mich, dann sprechen wir darüber.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 📖 Ausführlich erzählen</div>
+<div class="merk"><span>Ich erzähle es dir von Anfang an.</span><button class="speak" data-say="Ich erzähle es dir von Anfang an.">🔊 hören</button></div>
+<div class="merk"><span>Um es kurz zu machen:</span><button class="speak" data-say="Um es kurz zu machen:">🔊 hören</button></div>
+<div class="merk"><span>Das Spannende daran war, dass …</span><button class="speak" data-say="Das Spannende daran war, dass …">🔊 hören</button></div>
+<div class="merk"><span>Wenn du magst, erzähle ich dir den Rest später.</span><button class="speak" data-say="Wenn du magst, erzähle ich dir den Rest später.">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -760,6 +916,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Gestern war ich zur Besichtigung. Die Wohnung ___ mir auf Anhieb gut: hell, ruhig, dritter Stock. Die Küche ___ ich allerdings zu klein, und ein Abstellraum ___ mir völlig. Der Makler hat mir alles gezeigt und viel erzählt — ich habe ihm eine Weile ___ und dann gefragt, ob man über die Miete noch ___ kann. Er meinte, das müsse ich direkt ___ der Eigentümerin besprechen. Am Abend habe ich meinem Mann ___ der Wohnung erzählt. Ihm ___ vor allem die Lage, mir eher der Schnitt. Heute rufe ich an und spreche ___ die Miete.","o":["gefiel","fand","fehlte","zugehört","reden","mit","von","über"],"a":[["gefiel"],["fand"],["fehlte"],["zugehört"],["reden"],["mit"],["von"],["gefiel"],["über"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Das schmeckt mir gut.","Die Farbe gefällt mir.","Ich mag das sehr.","Das passt mir nicht.","Ich finde das gut.","Ich finde es zu teuer.","Mir gefällt die Idee.","Das finde ich schwierig.","Ich spreche mit ihr.","Wir müssen darüber reden.","Kann ich dich kurz sprechen?","Ich sage ihm Bescheid.","Erzähl mir davon.","Ich erzähle dir später mehr.","Hör mir kurz zu.","Schau dir das mal an.","Das sagt mir zu.","Geschmacklich ist es nicht meins.","Optisch gefällt es mir, praktisch weniger.","Daran könnte ich mich gewöhnen.","Ich halte das für sinnvoll.","Grundsätzlich finde ich es gut, allerdings …","In diesem Punkt sehe ich es anders.","Das kommt darauf an, wie man es macht.","Ich würde das gern einmal mit Ihnen besprechen.","Darüber sollten wir in Ruhe reden.","Hätten Sie kurz Zeit für ein Gespräch?","Ich melde mich, dann sprechen wir darüber.","Ich erzähle es dir von Anfang an.","Um es kurz zu machen:","Das Spannende daran war, dass …","Wenn du magst, erzähle ich dir den Rest später."]
 </script>
 
 <script>
@@ -1059,6 +1218,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

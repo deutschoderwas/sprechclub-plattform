@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Was machst du im Dezember?</div></div><div class="nur-b1"><div class="ank">Was fällt dir an dieser Jahreszeit hier zuerst auf?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../amanda/sz-feste.webp" alt="Menschen sitzen an einem langen Tisch und feiern zusammen">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Was machst du im Dezember?</li><li>Feierst du Weihnachten?</li><li>Wird es bei dir zu Hause auch so früh dunkel?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Was fällt dir an dieser Jahreszeit hier zuerst auf?</li><li>Welches Fest ist in deinem Land das wichtigste?</li><li>Was findest du schön daran, was anstrengend?</li></ol></div></div>
+<div class="tip teal">🔑 <strong>Drei Zeitangaben, die du brauchst:</strong> <b>im Dezember</b> (Monat), <b>am 24.</b> (Tag), <b>an Weihnachten</b> oder <b>zu Weihnachten</b> (Fest). Alle drei kommen in diesen Wochen ständig vor.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Was machst du über die Feiertage?</li><li>Kochst du an Festtagen selbst?</li><li>Wen siehst du im Dezember am häufigsten?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Wie beantwortest du die Frage nach den Feiertagen, wenn du nicht viel erzählen willst?</li><li>Wie viel Familie ist für dich genug?</li><li>Was hast du hier übernommen, was nicht?</li></ol></div></div>
+<div class="tip">💡 <strong>Der Satz für alle Fälle:</strong> <b>Ganz ruhig, mit der Familie</b> — oder <b>Dieses Jahr mache ich es ganz entspannt.</b> Beides ist eine vollständige Antwort, und niemand fragt danach weiter.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -588,6 +686,64 @@ footer strong{color:var(--ink);}
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 1 mit euren echten Plänen. Regel: Die erste Antwort ist kurz wie beim Small Talk, danach fragt der andere einmal nach.</div>
 </section>
 
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 🗣️ Erzählen</div>
+<div class="merk"><span>Über die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Feiertage" data-wort="der Feiertag" data-kurz="ein Tag, an dem die meisten frei haben" data-bsp="Der 25. und der 26. sind beides Feiertage.">Feiertage</b> bin ich zu Hause.</span><button class="speak" data-say="Über die Feiertage bin ich zu Hause.">🔊 hören</button></div>
+<div class="merk"><span>Am 24. sind wir bei meinen Eltern.</span><button class="speak" data-say="Am 24. sind wir bei meinen Eltern.">🔊 hören</button></div>
+<div class="merk"><span>Bei uns gibt es …</span><button class="speak" data-say="Bei uns gibt es …">🔊 hören</button></div>
+<div class="merk"><span>Dieses Jahr mache ich es ganz ruhig.</span><button class="speak" data-say="Dieses Jahr mache ich es ganz ruhig.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · ❓ Fragen</div>
+<div class="merk"><span>Was macht ihr über die Feiertage?</span><button class="speak" data-say="Was macht ihr über die Feiertage?">🔊 hören</button></div>
+<div class="merk"><span>Feiert ihr das auch?</span><button class="speak" data-say="Feiert ihr das auch?">🔊 hören</button></div>
+<div class="merk"><span>Was gibt es bei euch zu <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von essen" data-wort="das Essen" data-kurz="das gemeinsame Essen an den Feiertagen" data-bsp="Beim Essen sitzen wir manchmal drei Stunden am Tisch.">essen</b>?</span><button class="speak" data-say="Was gibt es bei euch zu essen?">🔊 hören</button></div>
+<div class="merk"><span>Wie ist das in deinem Land?</span><button class="speak" data-say="Wie ist das in deinem Land?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🎁 Einladen</div>
+<div class="merk"><span>Komm doch vorbei!</span><button class="speak" data-say="Komm doch vorbei!">🔊 hören</button></div>
+<div class="merk"><span>Hast du am Sonntag Zeit?</span><button class="speak" data-say="Hast du am Sonntag Zeit?">🔊 hören</button></div>
+<div class="merk"><span>Wir freuen uns, wenn du kommst.</span><button class="speak" data-say="Wir freuen uns, wenn du kommst.">🔊 hören</button></div>
+<div class="merk"><span>Bring einfach nichts mit.</span><button class="speak" data-say="Bring einfach nichts mit.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🙏 Absagen</div>
+<div class="merk"><span>Danke für die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Einladung" data-wort="die Einladung" data-kurz="wenn dich jemand zu sich bittet" data-bsp="Ich habe drei Einladungen für dasselbe Wochenende.">Einladung</b>.</span><button class="speak" data-say="Danke für die Einladung.">🔊 hören</button></div>
+<div class="merk"><span>Dieses Mal schaffe ich es leider nicht.</span><button class="speak" data-say="Dieses Mal schaffe ich es leider nicht.">🔊 hören</button></div>
+<div class="merk"><span>Ein andermal sehr gern.</span><button class="speak" data-say="Ein andermal sehr gern.">🔊 hören</button></div>
+<div class="merk"><span>Ich melde mich im Januar.</span><button class="speak" data-say="Ich melde mich im Januar.">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 🗣️ Genauer erzählen</div>
+<div class="merk"><span>Bei uns ist es <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Tradition" data-wort="die Tradition" data-kurz="etwas, das jedes Jahr gleich gemacht wird" data-bsp="Das ist bei uns Tradition, seit ich klein bin.">Tradition</b>, dass …</span><button class="speak" data-say="Bei uns ist es Tradition, dass …">🔊 hören</button></div>
+<div class="merk"><span>Wir machen es jedes Jahr gleich: …</span><button class="speak" data-say="Wir machen es jedes Jahr gleich: …">🔊 hören</button></div>
+<div class="merk"><span>Dieses Jahr wird es anders, weil …</span><button class="speak" data-say="Dieses Jahr wird es anders, weil …">🔊 hören</button></div>
+<div class="merk"><span>Ehrlich gesagt ist mir das alles zu viel.</span><button class="speak" data-say="Ehrlich gesagt ist mir das alles zu viel.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · ❓ Offen fragen</div>
+<div class="merk"><span>Wie läuft das bei euch ab?</span><button class="speak" data-say="Wie läuft das bei euch ab?">🔊 hören</button></div>
+<div class="merk"><span>Gibt es etwas, das ihr jedes Jahr macht?</span><button class="speak" data-say="Gibt es etwas, das ihr jedes Jahr macht?">🔊 hören</button></div>
+<div class="merk"><span>Ist das für dich eher schön oder eher anstrengend?</span><button class="speak" data-say="Ist das für dich eher schön oder eher anstrengend?">🔊 hören</button></div>
+<div class="merk"><span>Was hast du hier übernommen?</span><button class="speak" data-say="Was hast du hier übernommen?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🎁 Herzlich einladen</div>
+<div class="merk"><span>Wir würden uns freuen, wenn du dazukommst.</span><button class="speak" data-say="Wir würden uns freuen, wenn du dazukommst.">🔊 hören</button></div>
+<div class="merk"><span>Es ist ganz unkompliziert, wirklich.</span><button class="speak" data-say="Es ist ganz unkompliziert, wirklich.">🔊 hören</button></div>
+<div class="merk"><span>Du musst überhaupt nichts mitbringen.</span><button class="speak" data-say="Du musst überhaupt nichts mitbringen.">🔊 hören</button></div>
+<div class="merk"><span>Sag einfach kurz Bescheid, ob es passt.</span><button class="speak" data-say="Sag einfach kurz Bescheid, ob es passt.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🙏 Klar absagen</div>
+<div class="merk"><span>Das ist lieb, aber es geht dieses Mal nicht.</span><button class="speak" data-say="Das ist lieb, aber es geht dieses Mal nicht.">🔊 hören</button></div>
+<div class="merk"><span>Ich sage lieber gleich ab, als euch hinzuhalten.</span><button class="speak" data-say="Ich sage lieber gleich ab, als euch hinzuhalten.">🔊 hören</button></div>
+<div class="merk"><span>Im Januar hole ich das nach.</span><button class="speak" data-say="Im Januar hole ich das nach.">🔊 hören</button></div>
+<div class="merk"><span>Ich brauche über die Feiertage wirklich <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Ruhe" data-wort="die Ruhe" data-kurz="wenn nichts sein muss" data-bsp="Ich brauche über die Feiertage vor allem Ruhe.">Ruhe</b>.</span><button class="speak" data-say="Ich brauche über die Feiertage wirklich Ruhe.">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
+</section>
+
 <section class="section" id="challenge">
 <h2 class="st">⏱️ Die 90-Sekunden-Challenge</h2>
 <p class="ssub">Neunzig Sekunden über deinen Dezember: Was machst du, wen siehst du, worauf freust du dich — und was ist dir zu viel?</p>
@@ -627,7 +783,7 @@ footer strong{color:var(--ink);}
 </ol>
 <div class="rsp">
 <div class="rsp-kopf"><span class="rsp-nr">1</span><b>Die Frage in der Kaffeeküche</b></div>
-<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>stellt die übliche Frage nach den <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Feiertagen" data-wort="der Feiertag" data-kurz="ein Tag, an dem die meisten frei haben" data-bsp="Der 25. und der 26. sind beides Feiertage.">Feiertagen</b>.</p></div><div class="rsp-r b"><span>B</span><p>antwortet erst kurz, dann — nach einer Nachfrage — etwas ausführlicher.</p></div></div>
+<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>stellt die übliche Frage nach den Feiertagen.</p></div><div class="rsp-r b"><span>B</span><p>antwortet erst kurz, dann — nach einer Nachfrage — etwas ausführlicher.</p></div></div>
 <div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Was machen Sie über die Feiertage?</span><span class="rm">Fahren Sie weit?</span><span class="rm">Feiern Sie das bei sich auch?</span><span class="rm">Dann wünsche ich Ihnen schöne Tage!</span></div><div class="nur-b1"><span class="rm">Ganz ruhig, zu Hause — und Sie?</span><span class="rm">Wir fahren am 23. los und bleiben bis zum 27.</span><span class="rm">Bei uns ist es anders, aber wir feiern auch</span><span class="rm">Im Januar erzähle ich Ihnen gern mehr davon</span></div></div>
 <div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>Die erste Antwort war kurz, die zweite etwas länger. Und mindestens dreimal kam eine Zeitangabe vor — <i>über</i>, <i>am</i>, <i>bis zum</i>.</div>
 <details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
@@ -643,7 +799,7 @@ footer strong{color:var(--ink);}
 
 <div class="rsp">
 <div class="rsp-kopf"><span class="rsp-nr">3</span><b>Höflich absagen</b></div>
-<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>hat drei <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Einladungen" data-wort="die Einladung" data-kurz="wenn dich jemand zu sich bittet" data-bsp="Ich habe drei Einladungen für dasselbe Wochenende.">Einladungen</b> für dasselbe Wochenende und will niemanden verletzen.</p></div><div class="rsp-r b"><span>B</span><p>rät zu einer klaren, frühen Absage.</p></div></div>
+<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>hat drei Einladungen für dasselbe Wochenende und will niemanden verletzen.</p></div><div class="rsp-r b"><span>B</span><p>rät zu einer klaren, frühen Absage.</p></div></div>
 <div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Ich habe drei Einladungen für dasselbe Wochenende</span><span class="rm">Ist absagen nicht unhöflich?</span><span class="rm">Was schreibe ich denn?</span><span class="rm">Und wenn sie beleidigt sind?</span></div><div class="nur-b1"><span class="rm">Sag zwei ab, und zwar gleich, nicht erst am Freitag</span><span class="rm">Hier gilt ein klares Nein als höflicher als ein vages Vielleicht</span><span class="rm">Danke für die Einladung, dieses Mal schaffe ich es leider nicht — mehr braucht es nicht</span><span class="rm">Die Gastgeber planen mit Zahlen, die sind eher froh</span></div></div>
 <div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>A hat eine Absage laut formuliert, ohne sich lange zu rechtfertigen. Und beide haben verstanden, warum früh besser ist als spät.</div>
 <details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
@@ -760,6 +916,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"___ Dezember verändert sich hier alles. Es wird früh dunkel, und ___ ersten Advent stehen überall Lichter. Wir gehen fast jedes Wochenende ___ den Weihnachtsmarkt, obwohl es kalt ist. ___ 23. kaufe ich alles ein, denn ___ 24. macht wirklich jedes Geschäft zu. ___ Weihnachten sind wir bei meinen Eltern, und ___ die Feiertage bleiben wir dort. Am schönsten ist aber die Woche ___ den Jahren: Da arbeitet fast niemand, und man kommt endlich zur Ruhe.","o":["Im","am","auf","Am","um","An","über","zwischen"],"a":[["Im"],["am"],["auf"],["Am"],["am"],["An"],["über"],["zwischen"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Über die Feiertage bin ich zu Hause.","Am 24. sind wir bei meinen Eltern.","Bei uns gibt es …","Dieses Jahr mache ich es ganz ruhig.","Was macht ihr über die Feiertage?","Feiert ihr das auch?","Was gibt es bei euch zu essen?","Wie ist das in deinem Land?","Komm doch vorbei!","Hast du am Sonntag Zeit?","Wir freuen uns, wenn du kommst.","Bring einfach nichts mit.","Danke für die Einladung.","Dieses Mal schaffe ich es leider nicht.","Ein andermal sehr gern.","Ich melde mich im Januar.","Bei uns ist es Tradition, dass …","Wir machen es jedes Jahr gleich: …","Dieses Jahr wird es anders, weil …","Ehrlich gesagt ist mir das alles zu viel.","Wie läuft das bei euch ab?","Gibt es etwas, das ihr jedes Jahr macht?","Ist das für dich eher schön oder eher anstrengend?","Was hast du hier übernommen?","Wir würden uns freuen, wenn du dazukommst.","Es ist ganz unkompliziert, wirklich.","Du musst überhaupt nichts mitbringen.","Sag einfach kurz Bescheid, ob es passt.","Das ist lieb, aber es geht dieses Mal nicht.","Ich sage lieber gleich ab, als euch hinzuhalten.","Im Januar hole ich das nach.","Ich brauche über die Feiertage wirklich Ruhe."]
 </script>
 
 <script>
@@ -1059,6 +1218,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

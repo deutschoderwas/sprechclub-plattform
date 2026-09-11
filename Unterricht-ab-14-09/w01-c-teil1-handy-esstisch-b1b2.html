@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Liegt dein Handy beim Essen auf dem Tisch?</div></div><div class="nur-b1"><div class="ank">Ist es eine Frage der Höflichkeit oder der Gewohnheit — und wo ist der Unterschied?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../amanda/sz-familie.webp" alt="Eine Familie sitzt gemeinsam mit Kaffee am Tisch">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Liegt dein Handy beim Essen auf dem Tisch?</li><li>Gibt es bei euch zu Hause Regeln dafür?</li><li>Wann darf man ans Handy gehen, auch wenn man am Tisch sitzt?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Ist es eine Frage der Höflichkeit oder der Gewohnheit — und wo ist der Unterschied?</li><li>Gelten für Kinder und Erwachsene dieselben Regeln? Sollten sie?</li><li>Was verändert sich in einem Gespräch, sobald ein Handy sichtbar auf dem Tisch liegt?</li></ol></div></div>
+<div class="tip">🗣️ <strong>Sprecht reihum:</strong> „Bei uns zu Hause …“ · „Was mich stört, ist …“ · „Eine Ausnahme mache ich, wenn …“</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><ol class="ankfr"><li>Merkst du, wenn dir jemand nur halb zuhört? Woran?</li><li>Wie war das vor dem Handy — gab es da andere Störungen bei Tisch?</li><li>Wer setzt in einer Familie die Regeln: die Eltern, alle zusammen, oder niemand?</li></ol></div>
+<div class="tip teal">👀 <strong>Zu zweit, eine Minute:</strong> Einer erzählt etwas, der andere schaut zwischendurch <u>zweimal aufs Handy</u>. Danach sagt der Erzähler, wie es sich angefühlt hat. Dann tauschen.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -592,6 +690,56 @@ footer strong{color:var(--ink);}
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 1 noch einmal — aber diesmal ist B das Kind und A der Elternteil, der die Regel selbst nicht einhält. Wie geht das aus?</div>
 </section>
 
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 📜 Die Regel nennen</div>
+<div class="merk"><span>Bei uns gilt: …</span><button class="speak" data-say="Bei uns gilt: …">🔊 hören</button></div>
+<div class="merk"><span>Beim Essen darf niemand …</span><button class="speak" data-say="Beim Essen darf niemand …">🔊 hören</button></div>
+<div class="merk"><span>Wir haben abgemacht, dass …</span><button class="speak" data-say="Wir haben abgemacht, dass …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🧱 Begründen</div>
+<div class="merk"><span>… weil wir uns unterhalten wollen.</span><button class="speak" data-say="… weil wir uns unterhalten wollen.">🔊 hören</button></div>
+<div class="merk"><span>Der Grund ist einfach: …</span><button class="speak" data-say="Der Grund ist einfach: …">🔊 hören</button></div>
+<div class="merk"><span>Sonst hört niemand mehr zu.</span><button class="speak" data-say="Sonst hört niemand mehr zu.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · ⚠️ Ausnahme zulassen</div>
+<div class="merk"><span>Im <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Notfall" data-wort="der Notfall" data-kurz="die dringende Lage, in der sofort gehandelt werden muss" data-bsp="Im Notfall darf man natürlich rangehen.">Notfall</b> natürlich schon.</span><button class="speak" data-say="Im Notfall natürlich schon.">🔊 hören</button></div>
+<div class="merk"><span>Wenn jemand krank ist, …</span><button class="speak" data-say="Wenn jemand krank ist, …">🔊 hören</button></div>
+<div class="merk"><span>Da machen wir eine <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Ausnahme" data-wort="die Ausnahme" data-kurz="der Fall, in dem die Regel nicht gilt" data-bsp="Bei einem Notfall machen wir eine Ausnahme.">Ausnahme</b>.</span><button class="speak" data-say="Da machen wir eine Ausnahme.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🤝 Durchsetzen</div>
+<div class="merk"><span>Das gilt für alle.</span><button class="speak" data-say="Das gilt für alle.">🔊 hören</button></div>
+<div class="merk"><span>Auch für mich.</span><button class="speak" data-say="Auch für mich.">🔊 hören</button></div>
+<div class="merk"><span>Leg es bitte weg.</span><button class="speak" data-say="Leg es bitte weg.">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 📜 Die Regel als Absprache</div>
+<div class="merk"><span>Wir haben uns darauf verständigt, dass …</span><button class="speak" data-say="Wir haben uns darauf verständigt, dass …">🔊 hören</button></div>
+<div class="merk"><span>Es hat sich bei uns eingebürgert, dass …</span><button class="speak" data-say="Es hat sich bei uns eingebürgert, dass …">🔊 hören</button></div>
+<div class="merk"><span>Bei uns ist es üblich, dass …</span><button class="speak" data-say="Bei uns ist es üblich, dass …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🧱 Mit Wirkung begründen</div>
+<div class="merk"><span>Dadurch, dass …, kommen wir überhaupt ins Gespräch.</span><button class="speak" data-say="Dadurch, dass …, kommen wir überhaupt ins Gespräch.">🔊 hören</button></div>
+<div class="merk"><span>Sonst führt das dazu, dass …</span><button class="speak" data-say="Sonst führt das dazu, dass …">🔊 hören</button></div>
+<div class="merk"><span>Es geht nicht ums Gerät, sondern um …</span><button class="speak" data-say="Es geht nicht ums Gerät, sondern um …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · ⚠️ Die Ausnahme vorwegnehmen</div>
+<div class="merk"><span>Selbstverständlich mit Ausnahme von …</span><button class="speak" data-say="Selbstverständlich mit Ausnahme von …">🔊 hören</button></div>
+<div class="merk"><span>Ausgenommen sind Notfälle.</span><button class="speak" data-say="Ausgenommen sind Notfälle.">🔊 hören</button></div>
+<div class="merk"><span>Das schließt … nicht aus.</span><button class="speak" data-say="Das schließt … nicht aus.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🤝 Ohne Machtwort durchsetzen</div>
+<div class="merk"><span>Die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Regel" data-wort="die Regel" data-kurz="die Vereinbarung, an die sich alle halten" data-bsp="Bei uns gilt die Regel: kein Handy bei Tisch.">Regel</b> gilt für alle, sonst funktioniert sie nicht.</span><button class="speak" data-say="Die Regel gilt für alle, sonst funktioniert sie nicht.">🔊 hören</button></div>
+<div class="merk"><span>Ich halte mich selbst daran.</span><button class="speak" data-say="Ich halte mich selbst daran.">🔊 hören</button></div>
+<div class="merk"><span>Wollen wir es vier Wochen ausprobieren?</span><button class="speak" data-say="Wollen wir es vier Wochen ausprobieren?">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
+</section>
+
 <section class="section" id="challenge">
 <h2 class="st">⏱️ Die 90-Sekunden-Challenge</h2>
 <p class="ssub">Ein Wort, anderthalb Minuten, freies Sprechen. Beschreibe die Regel, den Grund und die Ausnahme.</p>
@@ -632,7 +780,7 @@ footer strong{color:var(--ink);}
 <div class="rsp-kopf"><span class="rsp-nr">1</span><b>Die Handykiste</b></div>
 <div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>will, dass alle Geräte beim Essen weggelegt werden.</p></div><div class="rsp-r b"><span>B</span><p>findet das übertrieben.</p></div></div>
 <div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Bei uns soll gelten: …</span><span class="rm">Der Grund ist …</span><span class="rm">Im Notfall natürlich schon</span><span class="rm">Das gilt für alle</span></div><div class="nur-b1"><span class="rm">Wir haben uns darauf verständigt, dass …</span><span class="rm">Es geht nicht ums Gerät, sondern um …</span><span class="rm">Notfälle sind ausgenommen</span><span class="rm">Wollen wir es vier Wochen ausprobieren?</span></div></div>
-<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>A nennt zuerst den Grund und erst dann die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Regel" data-wort="die Regel" data-kurz="die Vereinbarung, an die sich alle halten" data-bsp="Bei uns gilt die Regel: kein Handy bei Tisch.">Regel</b> — und lässt die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Ausnahme" data-wort="die Ausnahme" data-kurz="der Fall, in dem die Regel nicht gilt" data-bsp="Bei einem Notfall machen wir eine Ausnahme.">Ausnahme</b> selbst zu, bevor B danach fragt.</div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>A nennt zuerst den Grund und erst dann die Regel — und lässt die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Ausnahme" data-wort="die Ausnahme" data-kurz="der Fall, in dem die Regel nicht gilt" data-bsp="Bei einem Notfall machen wir eine Ausnahme.">Ausnahme</b> selbst zu, bevor B danach fragt.</div>
 <details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
 
@@ -760,6 +908,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Bei uns gibt es seit einem Monat eine neue Regel: Beim Abendessen ___ niemand ans Handy gehen. Meine Tochter hat gefragt, warum sie das nicht mehr ___. Ich habe ihr nicht die Regel erklärt, sondern den Grund: Wir wollen uns wenigstens einmal am Tag richtig ___. Sie hat gesagt, sie höre ja zu. Das glaube ich ihr sogar — trotzdem merkt man am Tisch sofort, wenn jemand nur halb da ist. Natürlich gibt es eine ___: Im Notfall geht jeder ran. Aber die Regel ___ für alle, auch für mich. Genau das war der schwierige Teil. Meine Frau sagt, Kinder machen nicht, was man sagt, sondern was man ihnen ___. Sie hat recht. Man ___ als Erwachsener nicht verlangen, was man selbst nicht einhält.","o":["darf","unterhalten","Ausnahme","gilt","vormacht","sollte","muss","darf"],"a":[["darf"],["darf"],["unterhalten"],["Ausnahme"],["gilt"],["vormacht"],["sollte"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Bei uns gilt: …","Beim Essen darf niemand …","Wir haben abgemacht, dass …","Der Grund ist einfach: …","Sonst hört niemand mehr zu.","Im Notfall natürlich schon.","Wenn jemand krank ist, …","Da machen wir eine Ausnahme.","Das gilt für alle.","Auch für mich.","Leg es bitte weg.","Wir haben uns darauf verständigt, dass …","Es hat sich bei uns eingebürgert, dass …","Bei uns ist es üblich, dass …","Dadurch, dass …, kommen wir überhaupt ins Gespräch.","Sonst führt das dazu, dass …","Es geht nicht ums Gerät, sondern um …","Selbstverständlich mit Ausnahme von …","Ausgenommen sind Notfälle.","Das schließt … nicht aus.","Die Regel gilt für alle, sonst funktioniert sie nicht.","Ich halte mich selbst daran.","Wollen wir es vier Wochen ausprobieren?"]
 </script>
 
 <script>
@@ -1059,6 +1210,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

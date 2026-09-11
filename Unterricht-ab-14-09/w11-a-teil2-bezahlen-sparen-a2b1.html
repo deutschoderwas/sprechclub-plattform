@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,9 +621,10 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
-<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#sprechuebung">⚡ Sprechübung</a>
 <a class="tab" href="#abschluss">🎯 Abschluss</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
 </nav>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Zahlst du lieber zusammen oder getrennt?</div></div><div class="nur-b1"><div class="ank">Wie läuft das Bezahlen im Restaurant in deinem Land?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../amanda/sz-restaurant.webp" alt="Ein Restauranttisch mit Tellern und einer Rechnung">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Zahlst du lieber zusammen oder getrennt?</li><li>Wie viel Trinkgeld gibst du?</li><li>Was hast du zuletzt bar bezahlt?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Wie läuft das Bezahlen im Restaurant in deinem Land?</li><li>Was war für dich am Anfang hier ungewohnt beim Geld?</li><li>Wo sparst du, ohne dass es wehtut?</li></ol></div></div>
+<div class="tip teal">🔑 <strong>Die drei Sätze für jedes Restaurant:</strong> <b>Zahlen bitte.</b> — <b>Getrennt, bitte.</b> — <b>Machen Sie zwanzig.</b> (bei 18,50, dann ist das Trinkgeld dabei). Mehr brauchst du wirklich nicht.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Bringst du deine Flaschen zurück?</li><li>Wie viel Pfand ist auf einer Flasche?</li><li>Kaufst du oft im Angebot?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Wie ist das mit Flaschen in deinem Land geregelt?</li><li>Lohnt sich das Sammeln überhaupt?</li><li>Worauf achtest du beim Einkaufen zuerst — Preis oder Qualität?</li></ol></div></div>
+<div class="tip">💡 <strong>Gut zu wissen:</strong> Der Pfandautomat druckt einen Bon. Den gibst du an der Kasse ab, und der Betrag wird vom Einkauf abgezogen — oder du bekommst ihn bar. Der Satz dazu: <b>Ich habe noch einen Pfandbon.</b></div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -586,6 +684,64 @@ footer strong{color:var(--ink);}
 <button class="speak dbtn" data-say="Ich weiß am Monatsende echt nie, wo das Geld geblieben ist. Bei mir war es genauso. Seit ich alles aufschreibe, sehe ich es sofort. Und was ist bei dir am teuersten? Die Miete natürlich. Und dann Essen — das ist echt teurer als gedacht. Selbst kochen ist doch aber billiger als bestellen, oder? Deutlich. Aber nur, wenn man wirklich alles aufbraucht.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 1 mit einer echten Rechnung. Regel: Es müssen ein Betrag, ein Trinkgeld und die Frage nach dem Bon vorkommen.</div>
+</section>
+
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 💶 Nach dem Preis fragen</div>
+<div class="merk"><span>Was kostet das?</span><button class="speak" data-say="Was kostet das?">🔊 hören</button></div>
+<div class="merk"><span>Wie viel macht das zusammen?</span><button class="speak" data-say="Wie viel macht das zusammen?">🔊 hören</button></div>
+<div class="merk"><span>Ist das im <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Angebot" data-wort="das Angebot" data-kurz="die Ware, die diese Woche billiger ist" data-bsp="Der Käse ist diese Woche im Angebot.">Angebot</b>?</span><button class="speak" data-say="Ist das im Angebot?">🔊 hören</button></div>
+<div class="merk"><span>Ist da <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Pfand" data-wort="das Pfand" data-kurz="das Geld, das du für die Flasche zurückbekommst" data-bsp="Auf der Flasche sind fünfundzwanzig Cent Pfand.">Pfand</b> drauf?</span><button class="speak" data-say="Ist da Pfand drauf?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 💳 Sagen, wie du zahlst</div>
+<div class="merk"><span>Mit Karte, bitte.</span><button class="speak" data-say="Mit Karte, bitte.">🔊 hören</button></div>
+<div class="merk"><span>Ich zahle bar.</span><button class="speak" data-say="Ich zahle bar.">🔊 hören</button></div>
+<div class="merk"><span>Zusammen, bitte.</span><button class="speak" data-say="Zusammen, bitte.">🔊 hören</button></div>
+<div class="merk"><span>Getrennt, bitte.</span><button class="speak" data-say="Getrennt, bitte.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · ⚖️ Vergleichen</div>
+<div class="merk"><span>Das ist billiger als …</span><button class="speak" data-say="Das ist billiger als …">🔊 hören</button></div>
+<div class="merk"><span>Der hier ist besser.</span><button class="speak" data-say="Der hier ist besser.">🔊 hören</button></div>
+<div class="merk"><span>Das ist am günstigsten.</span><button class="speak" data-say="Das ist am günstigsten.">🔊 hören</button></div>
+<div class="merk"><span>Ich nehme lieber den kleinen.</span><button class="speak" data-say="Ich nehme lieber den kleinen.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🙋 Nachfragen</div>
+<div class="merk"><span>Wie viel war das noch mal?</span><button class="speak" data-say="Wie viel war das noch mal?">🔊 hören</button></div>
+<div class="merk"><span>Stimmt das so?</span><button class="speak" data-say="Stimmt das so?">🔊 hören</button></div>
+<div class="merk"><span>Da fehlt noch mein Pfandbon.</span><button class="speak" data-say="Da fehlt noch mein Pfandbon.">🔊 hören</button></div>
+<div class="merk"><span>Den Bon bitte.</span><button class="speak" data-say="Den Bon bitte.">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 💶 Genau nachfragen</div>
+<div class="merk"><span>Ist der <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Preis" data-wort="der Preis" data-kurz="wie viel etwas kostet" data-bsp="Der Preis steht klein auf dem Schild.">Preis</b> pro Stück oder pro Kilo?</span><button class="speak" data-say="Ist der Preis pro Stück oder pro Kilo?">🔊 hören</button></div>
+<div class="merk"><span>Gilt das Angebot noch?</span><button class="speak" data-say="Gilt das Angebot noch?">🔊 hören</button></div>
+<div class="merk"><span>Gibt es darauf einen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Rabatt" data-wort="der Rabatt" data-kurz="wie viel Prozent du weniger zahlst" data-bsp="Auf alles zwanzig Prozent Rabatt.">Rabatt</b>?</span><button class="speak" data-say="Gibt es darauf einen Rabatt?">🔊 hören</button></div>
+<div class="merk"><span>Ist das Pfand im Preis enthalten?</span><button class="speak" data-say="Ist das Pfand im Preis enthalten?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 💳 Beim Zahlen klar sein</div>
+<div class="merk"><span>Wir zahlen getrennt, jeder für sich.</span><button class="speak" data-say="Wir zahlen getrennt, jeder für sich.">🔊 hören</button></div>
+<div class="merk"><span>Machen Sie bitte zwanzig.</span><button class="speak" data-say="Machen Sie bitte zwanzig.">🔊 hören</button></div>
+<div class="merk"><span>Könnte ich eine <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Quittung" data-wort="die Quittung" data-kurz="der offizielle Beleg, dass du bezahlt hast" data-bsp="Könnte ich bitte eine Quittung bekommen?">Quittung</b> bekommen?</span><button class="speak" data-say="Könnte ich eine Quittung bekommen?">🔊 hören</button></div>
+<div class="merk"><span>Kann ich in <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Raten" data-wort="die Rate" data-kurz="ein Teil vom Preis, den du jeden Monat zahlst" data-bsp="Ich zahle das Sofa in zwölf Raten ab.">Raten</b> zahlen?</span><button class="speak" data-say="Kann ich in Raten zahlen?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · ⚖️ Begründet vergleichen</div>
+<div class="merk"><span>Auf den Kilopreis gerechnet ist … günstiger.</span><button class="speak" data-say="Auf den Kilopreis gerechnet ist … günstiger.">🔊 hören</button></div>
+<div class="merk"><span>Das lohnt sich nur, wenn …</span><button class="speak" data-say="Das lohnt sich nur, wenn …">🔊 hören</button></div>
+<div class="merk"><span>Unterm Strich kommt … billiger.</span><button class="speak" data-say="Unterm Strich kommt … billiger.">🔊 hören</button></div>
+<div class="merk"><span>Am meisten spare ich bei …</span><button class="speak" data-say="Am meisten spare ich bei …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🙋 Freundlich reklamieren</div>
+<div class="merk"><span>Da stimmt etwas nicht mit dem Betrag.</span><button class="speak" data-say="Da stimmt etwas nicht mit dem Betrag.">🔊 hören</button></div>
+<div class="merk"><span>An der <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Kasse" data-wort="die Kasse" data-kurz="die Stelle, an der du bezahlst" data-bsp="An der Kasse war heute richtig viel los.">Kasse</b> war ein anderer Preis ausgezeichnet.</span><button class="speak" data-say="An der Kasse war ein anderer Preis ausgezeichnet.">🔊 hören</button></div>
+<div class="merk"><span>Könnten Sie das bitte noch mal prüfen?</span><button class="speak" data-say="Könnten Sie das bitte noch mal prüfen?">🔊 hören</button></div>
+<div class="merk"><span>Ich habe den Bon dabei.</span><button class="speak" data-say="Ich habe den Bon dabei.">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -635,7 +791,7 @@ footer strong{color:var(--ink);}
 
 <div class="rsp">
 <div class="rsp-kopf"><span class="rsp-nr">2</span><b>Der falsche Preis</b></div>
-<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>hat an der <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Kasse" data-wort="die Kasse" data-kurz="die Stelle, an der du bezahlst" data-bsp="An der Kasse war heute richtig viel los.">Kasse</b> mehr bezahlt, als am Regal stand.</p></div><div class="rsp-r b"><span>B</span><p>ist die Kassiererin und muss nachschauen.</p></div></div>
+<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>hat an der Kasse mehr bezahlt, als am Regal stand.</p></div><div class="rsp-r b"><span>B</span><p>ist die Kassiererin und muss nachschauen.</p></div></div>
 <div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Da stimmt etwas nicht mit dem Preis</span><span class="rm">Am Regal stand zwei neunundneunzig</span><span class="rm">Hier steht drei neunundvierzig</span><span class="rm">Ich habe den Bon dabei</span></div><div class="nur-b1"><span class="rm">Wissen Sie noch, was dort ausgezeichnet war?</span><span class="rm">Dann bekommen Sie die Differenz zurück</span><span class="rm">Ich schaue kurz nach, einen Moment bitte</span><span class="rm">Ohne Bon kann ich es leider nicht erstatten</span></div></div>
 <div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>A ist ruhig geblieben und hat zwei Beträge genannt. B hat gesagt, was passiert — und beide haben das Wort <i>Bon</i> benutzt.</div>
 <details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
@@ -658,11 +814,19 @@ footer strong{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="debatte">
-<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
-<p class="ssub">Zwei Gruppen, eine Frage. Abwechselnd sprechen.</p>
-<div class="deb-these">Im Restaurant sollte man immer zusammen zahlen.</div>
-<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><ul><li>Es geht schneller für alle.</li><li>Getrennt rechnen kostet die Bedienung Zeit.</li><li>Am Ende gleicht sich das sowieso aus.</li></ul></div><div class="deb-s con"><b>Gruppe B · dagegen</b><ul><li>Nicht jeder hat gleich viel Geld.</li><li>Wer wenig isst, zahlt sonst zu viel.</li><li>Getrennt zahlen ist hier ganz normal.</li></ul></div></div>
+<section class="section" id="sprechuebung">
+<h2 class="st">Jetzt <span class="hl">ihr</span></h2>
+<p class="ssub">Drei kleine Übungen. Jeder kommt dran.</p>
+<div class="card90">
+<div class="lbl">Dein Satz</div>
+<div class="word" id="wueb" style="font-size:1.1rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="uebnew">🎲 Satz ziehen</button>
+</div>
+<div class="uebs">
+<div class="ueb"><span class="uebn">1</span><div><b>Satz ziehen und weiterreden</b><p>Zieh einen Satz, sag ihn laut — und häng sofort einen zweiten Satz an, der danach kommen würde.</p></div></div>
+<div class="ueb"><span class="uebn">2</span><div><b>Die Kette</b><p>Reihum sagt jeder einen Satz von oben. Kein Satz darf zweimal kommen. Wer nicht weiterweiß, sagt <i>Ich weiß gerade keinen mehr</i> — auch das ist ein Satz.</p></div></div>
+<div class="ueb"><span class="uebn">3</span><div><b>Ohne Hilfe</b><p>Klappt alles zu und spielt Dialog 1 noch einmal — frei, mit euren eigenen Wörtern.</p></div></div>
+</div>
 </section>
 
 <section class="section" id="abschluss">
@@ -760,6 +924,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Am Samstag war ich auf dem Markt. Das Gemüse dort ist deutlich billiger ___ im Supermarkt, und frischer ist es auch. Das Brot kostet allerdings genauso viel ___ beim Bäcker. ___ meisten gebe ich sowieso für Fleisch aus, deshalb kaufe ich es nur, wenn es ___ Angebot ist. An der Kasse habe ich gemerkt, dass der Preis höher war als am Regal, aber ich hatte den ___ noch in der Hand, und ich habe die Differenz zurückbekommen. Danach war ich noch am Pfandautomaten: zwanzig Flaschen, fünf Euro ___. Zu Hause habe ich alles aufgeschrieben, denn seit einem Monat führe ich Buch. Selbst kochen ist am ___, das sehe ich jetzt schwarz auf weiß.","o":["als","wie","Am","im","Bon","Pfand","günstigsten","teurer"],"a":[["als"],["wie"],["Am"],["im"],["Bon"],["Pfand"],["günstigsten"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Was kostet das?","Wie viel macht das zusammen?","Ist das im Angebot?","Ist da Pfand drauf?","Mit Karte, bitte.","Ich zahle bar.","Das ist billiger als …","Der hier ist besser.","Das ist am günstigsten.","Ich nehme lieber den kleinen.","Wie viel war das noch mal?","Stimmt das so?","Da fehlt noch mein Pfandbon.","Den Bon bitte.","Ist der Preis pro Stück oder pro Kilo?","Gilt das Angebot noch?","Gibt es darauf einen Rabatt?","Ist das Pfand im Preis enthalten?","Wir zahlen getrennt, jeder für sich.","Machen Sie bitte zwanzig.","Könnte ich eine Quittung bekommen?","Kann ich in Raten zahlen?","Auf den Kilopreis gerechnet ist … günstiger.","Das lohnt sich nur, wenn …","Unterm Strich kommt … billiger.","Am meisten spare ich bei …","Da stimmt etwas nicht mit dem Betrag.","An der Kasse war ein anderer Preis ausgezeichnet.","Könnten Sie das bitte noch mal prüfen?","Ich habe den Bon dabei."]
 </script>
 
 <script>
@@ -1059,6 +1226,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

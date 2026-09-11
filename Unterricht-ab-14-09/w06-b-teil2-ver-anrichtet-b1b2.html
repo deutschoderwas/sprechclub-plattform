@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Hast du dich hier schon mal verlaufen?</div></div><div class="nur-b1"><div class="ank">Welches ver-Verb beschreibt deine letzte Woche am besten?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../amanda/amanda-ups.webp" alt="Amanda schaut überrascht">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Hast du dich hier schon mal verlaufen?</li><li>Wann hast du zuletzt verschlafen?</li><li>Was hast du in letzter Zeit verpasst?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Welches ver-Verb beschreibt deine letzte Woche am besten?</li><li>Gibt es in deiner Sprache auch eine Silbe für „schiefgegangen“?</li><li>Wann ist ein Fehler noch komisch und wann nicht mehr?</li></ol></div></div>
+<div class="tip teal">🔑 <strong>Das Muster für heute:</strong> <b>sich ver- + Verb = die Tätigkeit falsch machen.</b> <i>sich verlaufen</i> = falsch laufen, <i>sich verwählen</i> = falsch wählen, <i>sich verschreiben</i> = falsch schreiben, <i>sich versprechen</i> = falsch sprechen. Das <b>sich</b> gehört zwingend dazu.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Kennst du ein ver-Verb, das nichts mit Fehlern zu tun hat?</li><li>Was hast du schon einmal verkauft?</li><li>Wohin bist du zuletzt verreist?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Woran erkennst du, welches ver- gemeint ist?</li><li>Was ist der Unterschied zwischen <i>sprechen</i>, <i>versprechen</i> und <i>sich versprechen</i>?</li><li>Welche Verben rätst du dir zusammen — und wie oft geht das gut?</li></ol></div></div>
+<div class="tip">💡 <strong>Der Test, der fast immer stimmt:</strong> Steht ein <b>sich</b> dabei, ist es der Fehler. <i>Ich habe mich versprochen</i> = falsch gesprochen. <i>Ich habe es versprochen</i> = ich habe ein Versprechen gegeben. Ein einziges kleines Wort, zwei völlig verschiedene Sätze.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -592,6 +690,64 @@ footer strong{color:var(--ink);}
 <button class="speak dbtn" data-say="Bist du im November hier? Nein, wir verreisen für zwei Wochen. Endlich mal raus. Und was macht ihr mit dem Auto? Das haben wir letzten Monat verkauft. Wir brauchen es kaum noch. Mutig. Mal sehen. Ich will die Zeit nutzen und mein Spanisch verbessern. Und wenn es nicht klappt? Dann habe ich wenigstens nichts verpasst.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 3 mit zwei eigenen Fehlern hintereinander. Jeder Fehler muss ein anderes ver-Verb bekommen — und beide müssen im selben Gespräch korrigiert werden.</div>
+</section>
+
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 😅 Sagen, was war</div>
+<div class="merk"><span>Ich habe mich verlaufen</span><button class="speak" data-say="Ich habe mich verlaufen">🔊 hören</button></div>
+<div class="merk"><span>Ich habe <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von verschlafen" data-wort="verschlafen" data-kurz="zu lange schlafen und deshalb zu spät sein" data-bsp="Ich habe heute verschlafen, tut mir leid.">verschlafen</b></span><button class="speak" data-say="Ich habe verschlafen">🔊 hören</button></div>
+<div class="merk"><span>Ich habe mich verwählt</span><button class="speak" data-say="Ich habe mich verwählt">🔊 hören</button></div>
+<div class="merk"><span>Ich habe den Zug verpasst</span><button class="speak" data-say="Ich habe den Zug verpasst">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🙏 Sich entschuldigen</div>
+<div class="merk"><span>Tut mir leid</span><button class="speak" data-say="Tut mir leid">🔊 hören</button></div>
+<div class="merk"><span>Entschuldigung, das war mein Fehler</span><button class="speak" data-say="Entschuldigung, das war mein Fehler">🔊 hören</button></div>
+<div class="merk"><span>Ich entschuldige mich für die Verspätung</span><button class="speak" data-say="Ich entschuldige mich für die Verspätung">🔊 hören</button></div>
+<div class="merk"><span>Das passiert mir sonst nicht</span><button class="speak" data-say="Das passiert mir sonst nicht">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · ✅ Richtigstellen</div>
+<div class="merk"><span>Ich meinte …</span><button class="speak" data-say="Ich meinte …">🔊 hören</button></div>
+<div class="merk"><span>Da habe ich mich versprochen</span><button class="speak" data-say="Da habe ich mich versprochen">🔊 hören</button></div>
+<div class="merk"><span>Richtig ist …</span><button class="speak" data-say="Richtig ist …">🔊 hören</button></div>
+<div class="merk"><span>Ich korrigiere mich</span><button class="speak" data-say="Ich korrigiere mich">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · ➡️ Weitermachen</div>
+<div class="merk"><span>Ich bin in zehn Minuten da</span><button class="speak" data-say="Ich bin in zehn Minuten da">🔊 hören</button></div>
+<div class="merk"><span>Ich hole es gleich nach</span><button class="speak" data-say="Ich hole es gleich nach">🔊 hören</button></div>
+<div class="merk"><span>Können wir trotzdem …?</span><button class="speak" data-say="Können wir trotzdem …?">🔊 hören</button></div>
+<div class="merk"><span>Was schlagen Sie vor?</span><button class="speak" data-say="Was schlagen Sie vor?">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 🎭 Den Fehler klein halten</div>
+<div class="merk"><span>Da ist mir ein Fehler unterlaufen</span><button class="speak" data-say="Da ist mir ein Fehler unterlaufen">🔊 hören</button></div>
+<div class="merk"><span>Ich fürchte, ich habe mich vertan</span><button class="speak" data-say="Ich fürchte, ich habe mich vertan">🔊 hören</button></div>
+<div class="merk"><span>Das war ein Versehen</span><button class="speak" data-say="Das war ein Versehen">🔊 hören</button></div>
+<div class="merk"><span>Offenbar habe ich mich verhört</span><button class="speak" data-say="Offenbar habe ich mich verhört">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🔧 Selbst bauen</div>
+<div class="merk"><span>rechnen → sich verrechnen</span><button class="speak" data-say="rechnen → sich verrechnen">🔊 hören</button></div>
+<div class="merk"><span>tippen → sich vertippen</span><button class="speak" data-say="tippen → sich vertippen">🔊 hören</button></div>
+<div class="merk"><span>fahren → sich verfahren</span><button class="speak" data-say="fahren → sich verfahren">🔊 hören</button></div>
+<div class="merk"><span>zählen → sich verzählen</span><button class="speak" data-say="zählen → sich verzählen">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🧭 Das andere ver-</div>
+<div class="merk"><span>Wir <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von verreisen" data-wort="verreisen" data-kurz="wegfahren, für längere Zeit" data-bsp="Wir verreisen im November für zwei Wochen.">verreisen</b> im November</span><button class="speak" data-say="Wir verreisen im November">🔊 hören</button></div>
+<div class="merk"><span>Ich habe das Fahrrad verkauft</span><button class="speak" data-say="Ich habe das Fahrrad verkauft">🔊 hören</button></div>
+<div class="merk"><span>Ich möchte mein Deutsch <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von verbessern" data-wort="verbessern" data-kurz="besser machen" data-bsp="Ich möchte mein Deutsch verbessern.">verbessern</b></span><button class="speak" data-say="Ich möchte mein Deutsch verbessern">🔊 hören</button></div>
+<div class="merk"><span>Können wir den Termin verlängern?</span><button class="speak" data-say="Können wir den Termin verlängern?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · ⚖️ Mit oder ohne sich</div>
+<div class="merk"><span>Ich habe es dir versprochen — kein Fehler</span><button class="speak" data-say="Ich habe es dir versprochen — kein Fehler">🔊 hören</button></div>
+<div class="merk"><span>Ich habe mich versprochen — ein Fehler</span><button class="speak" data-say="Ich habe mich versprochen — ein Fehler">🔊 hören</button></div>
+<div class="merk"><span>Der Arzt hat es verschrieben — kein Fehler</span><button class="speak" data-say="Der Arzt hat es verschrieben — kein Fehler">🔊 hören</button></div>
+<div class="merk"><span>Ich habe mich verschrieben — ein Fehler</span><button class="speak" data-say="Ich habe mich verschrieben — ein Fehler">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -765,6 +921,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Der Dienstag fing damit an, dass ich ___ habe — der Wecker war noch auf Sonntag gestellt. Ich bin trotzdem losgerannt und habe den Bus um Viertel nach acht ___. Beim nächsten wollte ich anrufen und Bescheid sagen, habe mich aber ___ und einer wildfremden Frau erklärt, dass ich zu spät komme. In der Stadt bin ich dann falsch abgebogen und habe ___ in den kleinen Gassen verlaufen. Als ich endlich ankam, sagte ich, der Termin sei am Dienstag gewesen — dabei habe ich mich ___, er war am Donnerstag. Immerhin: Beim Rechnen der neuen Termine habe ich mich nicht ___. Und nächste Woche ___ wir sowieso, dann ist erst mal Ruhe.","o":["verschlafen","verpasst","verwählt","mich","versprochen","verrechnet","verreisen","vergessen"],"a":[["verschlafen"],["verpasst"],["verwählt"],["mich"],["versprochen"],["verrechnet"],["verreisen"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Ich habe mich verlaufen","Ich habe verschlafen","Ich habe mich verwählt","Ich habe den Zug verpasst","Tut mir leid","Entschuldigung, das war mein Fehler","Ich entschuldige mich für die Verspätung","Das passiert mir sonst nicht","Ich meinte …","Da habe ich mich versprochen","Richtig ist …","Ich korrigiere mich","Ich bin in zehn Minuten da","Ich hole es gleich nach","Können wir trotzdem …?","Was schlagen Sie vor?","Da ist mir ein Fehler unterlaufen","Ich fürchte, ich habe mich vertan","Das war ein Versehen","Offenbar habe ich mich verhört","Wir verreisen im November","Ich habe das Fahrrad verkauft","Ich möchte mein Deutsch verbessern","Können wir den Termin verlängern?","Ich habe es dir versprochen — kein Fehler","Ich habe mich versprochen — ein Fehler","Der Arzt hat es verschrieben — kein Fehler","Ich habe mich verschrieben — ein Fehler"]
 </script>
 
 <script>
@@ -1064,6 +1223,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

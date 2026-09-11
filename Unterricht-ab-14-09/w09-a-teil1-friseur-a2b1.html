@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,9 +621,10 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
-<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#sprechuebung">⚡ Sprechübung</a>
 <a class="tab" href="#abschluss">🎯 Abschluss</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
 </nav>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Wann warst du zuletzt beim Friseur?</div></div><div class="nur-b1"><div class="ank">Was ist schon einmal schiefgegangen, weil du zu ungenau warst?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../amanda/sz-friseur.webp" alt="Amanda sitzt im Friseurstuhl, die Friseurin kämmt ihr die Haare">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Wann warst du zuletzt beim Friseur?</li><li>Sagst du dort genau, was du möchtest?</li><li>Zeigst du manchmal ein Foto?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Was ist schon einmal schiefgegangen, weil du zu ungenau warst?</li><li>Traust du dich zu sagen, wenn dir etwas nicht gefällt?</li><li>Wie beschreibt man eine Frisur, ohne die Fachwörter zu kennen?</li></ol></div></div>
+<div class="tip teal">🔑 <strong>Die Regel des Tages:</strong> Sag immer <b>eine Zahl</b> oder <b>einen Vergleich</b> dazu. <i>Zwei Zentimeter kürzer.</i> <i>So lang wie jetzt, nur die Spitzen.</i> Ein Adjektiv allein ist beim Friseur zu wenig.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Kaufst du Kleidung lieber im Laden oder online?</li><li>Kennst du deine Größe auf Deutsch?</li><li>Probierst du immer an?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Was fragst du im Laden, bevor du etwas kaufst?</li><li>Wie beschreibst du eine Farbe, die keinen einfachen Namen hat?</li><li>Warum kaufen viele lieber online — und was verliert man dabei?</li></ol></div></div>
+<div class="tip">💡 <strong>Der nützlichste Satz im Laden:</strong> <b>„Haben Sie das auch in …?“</b> Danach setzt du ein: <i>eine Nummer größer</i>, <i>in Blau</i>, <i>in Baumwolle</i>. Ein Satz, drei Situationen.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -586,6 +684,64 @@ footer strong{color:var(--ink);}
 <button class="speak dbtn" data-say="Und, passt es? Fast. Die Schultern sitzen gut, aber die Ärmel sind mir zwei Zentimeter zu lang. Dann probieren Sie mal die 39, die fällt etwas schmaler aus. Die passt tatsächlich besser. Die nehme ich. Sehr gern. Zahlen Sie mit Karte? Ja. Und könnte ich den Kassenbon behalten — falls ich es doch umtauschen möchte?">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 3 mit einem Kleidungsstück, das ihr wirklich sucht. Regel: In jedem Wunsch müssen ein Adjektiv mit Endung und eine Zahl vorkommen.</div>
+</section>
+
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 🎯 Den Wunsch nennen</div>
+<div class="merk"><span>Ich hätte gern …</span><button class="speak" data-say="Ich hätte gern …">🔊 hören</button></div>
+<div class="merk"><span>Ich suche …</span><button class="speak" data-say="Ich suche …">🔊 hören</button></div>
+<div class="merk"><span>Bitte nur die Spitzen.</span><button class="speak" data-say="Bitte nur die Spitzen.">🔊 hören</button></div>
+<div class="merk"><span>Ich möchte einen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Termin" data-wort="der Termin" data-kurz="die vereinbarte Zeit für einen Besuch" data-bsp="Ich hätte gern einen Termin für Donnerstagnachmittag.">Termin</b>.</span><button class="speak" data-say="Ich möchte einen Termin.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 📏 Genauer werden</div>
+<div class="merk"><span>Etwa zwei Zentimeter.</span><button class="speak" data-say="Etwa zwei Zentimeter.">🔊 hören</button></div>
+<div class="merk"><span>In <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Größe" data-wort="die Größe" data-kurz="die Nummer, die zu deinem Körper passt" data-bsp="Haben Sie das auch eine Nummer größer?">Größe</b> 40.</span><button class="speak" data-say="In Größe 40.">🔊 hören</button></div>
+<div class="merk"><span>In Dunkelblau.</span><button class="speak" data-say="In Dunkelblau.">🔊 hören</button></div>
+<div class="merk"><span>Nicht kürzer als bis hier.</span><button class="speak" data-say="Nicht kürzer als bis hier.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · ❓ Nachfragen</div>
+<div class="merk"><span>Haben Sie das auch in Blau?</span><button class="speak" data-say="Haben Sie das auch in Blau?">🔊 hören</button></div>
+<div class="merk"><span>Gibt es das eine Nummer größer?</span><button class="speak" data-say="Gibt es das eine Nummer größer?">🔊 hören</button></div>
+<div class="merk"><span>Wo sind die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Umkleidekabinen" data-wort="die Umkleidekabine" data-kurz="der kleine Raum zum Anprobieren" data-bsp="Entschuldigung, wo sind die Umkleidekabinen?">Umkleidekabinen</b>?</span><button class="speak" data-say="Wo sind die Umkleidekabinen?">🔊 hören</button></div>
+<div class="merk"><span>Was kostet das?</span><button class="speak" data-say="Was kostet das?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · ✅ Entscheiden</div>
+<div class="merk"><span>Das nehme ich.</span><button class="speak" data-say="Das nehme ich.">🔊 hören</button></div>
+<div class="merk"><span>Ich überlege es mir noch.</span><button class="speak" data-say="Ich überlege es mir noch.">🔊 hören</button></div>
+<div class="merk"><span>Das ist mir zu teuer.</span><button class="speak" data-say="Das ist mir zu teuer.">🔊 hören</button></div>
+<div class="merk"><span>Kann ich das umtauschen?</span><button class="speak" data-say="Kann ich das umtauschen?">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 🎯 Genauer Wunsch</div>
+<div class="merk"><span>Ich möchte die Länge behalten und nur nachschneiden lassen.</span><button class="speak" data-say="Ich möchte die Länge behalten und nur nachschneiden lassen.">🔊 hören</button></div>
+<div class="merk"><span>Ich suche etwas Schlichtes für den Alltag.</span><button class="speak" data-say="Ich suche etwas Schlichtes für den Alltag.">🔊 hören</button></div>
+<div class="merk"><span>Am liebsten aus Baumwolle, ohne Kapuze.</span><button class="speak" data-say="Am liebsten aus Baumwolle, ohne Kapuze.">🔊 hören</button></div>
+<div class="merk"><span>Etwas in dieser Richtung, nur dunkler.</span><button class="speak" data-say="Etwas in dieser Richtung, nur dunkler.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 📏 Grenzen setzen</div>
+<div class="merk"><span>Auf keinen Fall kürzer als …</span><button class="speak" data-say="Auf keinen Fall kürzer als …">🔊 hören</button></div>
+<div class="merk"><span>Höchstens zwei Zentimeter.</span><button class="speak" data-say="Höchstens zwei Zentimeter.">🔊 hören</button></div>
+<div class="merk"><span>Bis hierhin, nicht weiter.</span><button class="speak" data-say="Bis hierhin, nicht weiter.">🔊 hören</button></div>
+<div class="merk"><span>Wenn es unsicher ist, lieber weniger.</span><button class="speak" data-say="Wenn es unsicher ist, lieber weniger.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · ❓ Fachlich nachfragen</div>
+<div class="merk"><span>Würde das zu meiner Haarstruktur passen?</span><button class="speak" data-say="Würde das zu meiner Haarstruktur passen?">🔊 hören</button></div>
+<div class="merk"><span>Ist das pflegeleicht?</span><button class="speak" data-say="Ist das pflegeleicht?">🔊 hören</button></div>
+<div class="merk"><span>Läuft das beim Waschen ein?</span><button class="speak" data-say="Läuft das beim Waschen ein?">🔊 hören</button></div>
+<div class="merk"><span>Was würden Sie mir raten?</span><button class="speak" data-say="Was würden Sie mir raten?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · ✅ Zwischendurch korrigieren</div>
+<div class="merk"><span>Vorne ist es mir noch etwas zu lang.</span><button class="speak" data-say="Vorne ist es mir noch etwas zu lang.">🔊 hören</button></div>
+<div class="merk"><span>Könnten Sie da noch einen Zentimeter nehmen?</span><button class="speak" data-say="Könnten Sie da noch einen Zentimeter nehmen?">🔊 hören</button></div>
+<div class="merk"><span>So ist es genau richtig, danke.</span><button class="speak" data-say="So ist es genau richtig, danke.">🔊 hören</button></div>
+<div class="merk"><span>Lassen wir es lieber so.</span><button class="speak" data-say="Lassen wir es lieber so.">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -635,7 +791,7 @@ footer strong{color:var(--ink);}
 
 <div class="rsp">
 <div class="rsp-kopf"><span class="rsp-nr">2</span><b>Im Bekleidungsgeschäft</b></div>
-<div class="rsp-lage"><span>Die Lage</span>A verkauft, B sucht etwas Bestimmtes: <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von Farbe" data-wort="die Farbe" data-kurz="welche genau, nicht nur hell oder dunkel" data-bsp="dunkelblau, nicht schwarz">Farbe</b>, <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Größe" data-wort="die Größe" data-kurz="die Nummer, die zu deinem Körper passt" data-bsp="Haben Sie das auch eine Nummer größer?">Größe</b>, Material stehen schon fest. Es passt fast — nur eine Kleinigkeit stimmt nicht.</div>
+<div class="rsp-lage"><span>Die Lage</span>A verkauft, B sucht etwas Bestimmtes: <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von Farbe" data-wort="die Farbe" data-kurz="welche genau, nicht nur hell oder dunkel" data-bsp="dunkelblau, nicht schwarz">Farbe</b>, Größe, Material stehen schon fest. Es passt fast — nur eine Kleinigkeit stimmt nicht.</div>
 <div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Ich suche ein hellblaues Hemd in Größe 40</span><span class="rm">Haben Sie das auch eine Nummer größer?</span><span class="rm">Wo kann ich das anprobieren?</span><span class="rm">Die Ärmel sind mir zu lang</span></div><div class="nur-b1"><span class="rm">Ich suche ein schlichtes Hemd aus Baumwolle, hellblau, Größe 40</span><span class="rm">Läuft das beim Waschen ein?</span><span class="rm">Könnten Sie es mir vorsichtshalber auch in 41 bereitlegen?</span><span class="rm">Die Schultern sitzen gut, aber die Ärmel sind zwei Zentimeter zu lang</span></div></div>
 <div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>B hat drei Angaben von allein genannt und beim <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Anprobieren" data-wort="anprobieren" data-kurz="etwas anziehen, um zu sehen, ob es passt" data-bsp="Kann ich das in zwei Größen anprobieren?">Anprobieren</b> gesagt, was passt und was nicht. A musste nichts erraten.</div>
 <details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
@@ -658,11 +814,19 @@ footer strong{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="debatte">
-<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
-<p class="ssub">Zwei Gruppen, eine Frage. Abwechselnd sprechen.</p>
-<div class="deb-these">Zum Friseur nimmt man ein Foto mit.</div>
-<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><ul><li>Kurz heißt für jeden etwas anderes.</li><li>Man braucht keine Fachwörter.</li><li>Beide sehen vorher dasselbe.</li></ul></div><div class="deb-s con"><b>Gruppe B · dagegen</b><ul><li>Fremde Haare sind anders als die eigenen.</li><li>Ein Bild sagt nichts über die Pflege danach.</li><li>Ein gutes Gespräch bringt mehr.</li></ul></div></div>
+<section class="section" id="sprechuebung">
+<h2 class="st">Jetzt <span class="hl">ihr</span></h2>
+<p class="ssub">Drei kleine Übungen. Jeder kommt dran.</p>
+<div class="card90">
+<div class="lbl">Dein Satz</div>
+<div class="word" id="wueb" style="font-size:1.1rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="uebnew">🎲 Satz ziehen</button>
+</div>
+<div class="uebs">
+<div class="ueb"><span class="uebn">1</span><div><b>Satz ziehen und weiterreden</b><p>Zieh einen Satz, sag ihn laut — und häng sofort einen zweiten Satz an, der danach kommen würde.</p></div></div>
+<div class="ueb"><span class="uebn">2</span><div><b>Die Kette</b><p>Reihum sagt jeder einen Satz von oben. Kein Satz darf zweimal kommen. Wer nicht weiterweiß, sagt <i>Ich weiß gerade keinen mehr</i> — auch das ist ein Satz.</p></div></div>
+<div class="ueb"><span class="uebn">3</span><div><b>Ohne Hilfe</b><p>Klappt alles zu und spielt Dialog 1 noch einmal — frei, mit euren eigenen Wörtern.</p></div></div>
+</div>
 </section>
 
 <section class="section" id="abschluss">
@@ -760,6 +924,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Am Donnerstag hatte ich um halb vier einen ___ beim Friseur. Ich habe gesagt, dass ich die Länge behalten möchte und nur die Spitzen, etwa zwei ___. Die Friseurin hat noch einmal nachgefragt, und am Ende war es genau richtig. Danach bin ich in den Laden nebenan und habe nach einem ___ Hemd in Größe 40 gefragt. Die Verkäuferin hat mir zwei gebracht, und ich habe sie in der ___ anprobiert. Das erste passte an den Schultern, aber die ___ waren mir zu lang. Das zweite war eine Nummer kleiner und saß perfekt — ich habe ___ genommen. An der Kasse habe ich noch gefragt, ob ich es umtauschen kann, und den ___ eingesteckt.","o":["Termin","Zentimeter","hellblauen","Umkleidekabine","Ärmel","es","Kassenbon","Mantel"],"a":[["Termin"],["Zentimeter"],["hellblauen"],["Umkleidekabine"],["Ärmel"],["es"],["Kassenbon"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Ich hätte gern …","Ich suche …","Bitte nur die Spitzen.","Ich möchte einen Termin.","Etwa zwei Zentimeter.","In Größe 40.","Nicht kürzer als bis hier.","Haben Sie das auch in Blau?","Gibt es das eine Nummer größer?","Wo sind die Umkleidekabinen?","Was kostet das?","Das nehme ich.","Ich überlege es mir noch.","Das ist mir zu teuer.","Kann ich das umtauschen?","Ich möchte die Länge behalten und nur nachschneiden lassen.","Ich suche etwas Schlichtes für den Alltag.","Am liebsten aus Baumwolle, ohne Kapuze.","Etwas in dieser Richtung, nur dunkler.","Auf keinen Fall kürzer als …","Höchstens zwei Zentimeter.","Bis hierhin, nicht weiter.","Wenn es unsicher ist, lieber weniger.","Würde das zu meiner Haarstruktur passen?","Ist das pflegeleicht?","Läuft das beim Waschen ein?","Was würden Sie mir raten?","Vorne ist es mir noch etwas zu lang.","Könnten Sie da noch einen Zentimeter nehmen?","So ist es genau richtig, danke.","Lassen wir es lieber so."]
 </script>
 
 <script>
@@ -1059,6 +1226,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

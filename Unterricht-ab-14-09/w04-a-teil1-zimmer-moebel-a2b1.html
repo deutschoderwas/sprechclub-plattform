@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,9 +621,10 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
-<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#sprechuebung">⚡ Sprechübung</a>
 <a class="tab" href="#abschluss">🎯 Abschluss</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
 </nav>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Wie viele Zimmer hat deine Wohnung?</div></div><div class="nur-b1"><div class="ank">Was würdest du sofort ändern, wenn du dürftest?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../vok-bild/die-ferienwohnung.webp" alt="Ein helles Wohnzimmer mit Sofa und Esstisch, eine Frau steht am Fenster">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Wie viele Zimmer hat deine Wohnung?</li><li>In welchem Zimmer bist du am liebsten?</li><li>Was steht in deinem Wohnzimmer?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Was würdest du sofort ändern, wenn du dürftest?</li><li>Welches Möbelstück hat bei dir schon dreimal den Platz gewechselt?</li><li>Wohnt man in deinem Land eher groß oder eher praktisch?</li></ol></div></div>
+<div class="tip teal">🔑 <strong>Die Formel für heute:</strong> <b>Möbel + Verb + Ortswort + Dativ.</b> <i>„Die Lampe hängt über dem Tisch.“</i> Wenn du diese vier Teile hast, ist der Satz fertig — mehr braucht es nicht.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Was liegt gerade auf deinem Tisch?</li><li>Was hängt bei dir an der Wand?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Gibt es in deiner Sprache auch verschiedene Verben dafür?</li><li>Warum sagt man „Der Teller steht“, aber „Das Besteck liegt“?</li></ol></div></div>
+<div class="tip">💡 <strong>Eselsbrücke:</strong> Was <u>Beine oder einen Fuß</u> hat, <b>steht</b> — Stuhl, Glas, Flasche. Was <u>flach</u> ist, <b>liegt</b> — Buch, Handtuch, Löffel. Was <u>an einem Haken oder Nagel</u> ist, <b>hängt</b> — Bild, Jacke, Lampe.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -594,6 +692,56 @@ footer strong{color:var(--ink);}
 <button class="speak dbtn" data-say="Und? Erzähl mal, wie ist sie? Größer als gedacht. Vom Flur gehen alle Zimmer ab. Ist das Wohnzimmer hell? Sehr. Die Fenster liegen nach Süden, und über der Tür ist noch ein kleines. Wo steht denn dein Schreibtisch? Zwischen dem Fenster und dem Regal. Da habe ich am meisten Licht. Und der Keller? Habt ihr einen? Ja, ein eigenes Abteil. Da stelle ich alles rein, was oben keinen Platz hat.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 2 noch einmal — aber diesmal ist der gesuchte Gegenstand euer eigenes Handy, und ihr dürft nur mit <u>Wo-Sätzen</u> antworten. Wer zeigt statt spricht, gibt ab.</div>
+</section>
+
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 🏠 Das Zimmer nennen</div>
+<div class="merk"><span>im <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Wohnzimmer" data-wort="das Wohnzimmer" data-kurz="Raum zum Sitzen, Reden und Fernsehen" data-bsp="Im Wohnzimmer steht ein großes Sofa.">Wohnzimmer</b></span><button class="speak" data-say="im Wohnzimmer">🔊 hören</button></div>
+<div class="merk"><span>in der <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Küche" data-wort="die Küche" data-kurz="Raum zum Kochen" data-bsp="In der Küche haben wir leider wenig Platz.">Küche</b></span><button class="speak" data-say="in der Küche">🔊 hören</button></div>
+<div class="merk"><span>im <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Flur" data-wort="der Flur" data-kurz="schmaler Raum, von dem die Zimmer abgehen" data-bsp="Die Jacken hängen im Flur an der Garderobe.">Flur</b></span><button class="speak" data-say="im Flur">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 📍 Die Stelle nennen</div>
+<div class="merk"><span>auf dem Tisch</span><button class="speak" data-say="auf dem Tisch">🔊 hören</button></div>
+<div class="merk"><span>unter dem Bett</span><button class="speak" data-say="unter dem Bett">🔊 hören</button></div>
+<div class="merk"><span>neben dem <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Sofa" data-wort="das Sofa" data-kurz="langes Sitzmöbel für mehrere Personen" data-bsp="Auf dem Sofa liegt eine Decke.">Sofa</b></span><button class="speak" data-say="neben dem Sofa">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🪑 Das Verb wählen</div>
+<div class="merk"><span>steht</span><button class="speak" data-say="steht">🔊 hören</button></div>
+<div class="merk"><span>liegt</span><button class="speak" data-say="liegt">🔊 hören</button></div>
+<div class="merk"><span>hängt</span><button class="speak" data-say="hängt">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · ❓ Danach fragen</div>
+<div class="merk"><span>Wo ist …?</span><button class="speak" data-say="Wo ist …?">🔊 hören</button></div>
+<div class="merk"><span>Wo steht …?</span><button class="speak" data-say="Wo steht …?">🔊 hören</button></div>
+<div class="merk"><span>Hast du … gesehen?</span><button class="speak" data-say="Hast du … gesehen?">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 🧭 Die Lage beschreiben</div>
+<div class="merk"><span>hinten links</span><button class="speak" data-say="hinten links">🔊 hören</button></div>
+<div class="merk"><span>gleich rechts neben der Tür</span><button class="speak" data-say="gleich rechts neben der Tür">🔊 hören</button></div>
+<div class="merk"><span>auf der anderen Seite</span><button class="speak" data-say="auf der anderen Seite">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 📏 Genauer werden</div>
+<div class="merk"><span>zwischen dem <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Regal" data-wort="das Regal" data-kurz="offene Bretter übereinander, für Bücher oder Kisten" data-bsp="Stell die Bücher bitte ins Regal.">Regal</b> und dem Fenster</span><button class="speak" data-say="zwischen dem Regal und dem Fenster">🔊 hören</button></div>
+<div class="merk"><span>in der hinteren Ecke</span><button class="speak" data-say="in der hinteren Ecke">🔊 hören</button></div>
+<div class="merk"><span>direkt über der Heizung</span><button class="speak" data-say="direkt über der Heizung">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🔁 Von Wo zu Wohin</div>
+<div class="merk"><span>Ich stelle es …</span><button class="speak" data-say="Ich stelle es …">🔊 hören</button></div>
+<div class="merk"><span>Häng es bitte …</span><button class="speak" data-say="Häng es bitte …">🔊 hören</button></div>
+<div class="merk"><span>Das kommt …</span><button class="speak" data-say="Das kommt …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 💬 Sich einigen</div>
+<div class="merk"><span>Was hältst du davon, wenn …?</span><button class="speak" data-say="Was hältst du davon, wenn …?">🔊 hören</button></div>
+<div class="merk"><span>Mir wäre lieber, …</span><button class="speak" data-say="Mir wäre lieber, …">🔊 hören</button></div>
+<div class="merk"><span>Probieren wir es erst mal …</span><button class="speak" data-say="Probieren wir es erst mal …">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -665,11 +813,19 @@ footer strong{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="debatte">
-<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
-<p class="ssub">Zwei Gruppen, eine Frage. Abwechselnd sprechen.</p>
-<div class="deb-these">In der Mietwohnung darf man alles ändern.</div>
-<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><ul><li>Man wohnt dort und zahlt dafür.</li><li>Wer nichts ändern darf, kommt nie richtig an.</li><li>Fast alles kann man beim Auszug zurückbauen.</li></ul></div><div class="deb-s con"><b>Gruppe B · dagegen</b><ul><li>Löcher in Fliesen kosten am Ende Geld.</li><li>Die Wohnung gehört jemand anderem.</li><li>Manches sehen auch die Nachbarn.</li></ul></div></div>
+<section class="section" id="sprechuebung">
+<h2 class="st">Jetzt <span class="hl">ihr</span></h2>
+<p class="ssub">Drei kleine Übungen. Jeder kommt dran.</p>
+<div class="card90">
+<div class="lbl">Dein Satz</div>
+<div class="word" id="wueb" style="font-size:1.1rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="uebnew">🎲 Satz ziehen</button>
+</div>
+<div class="uebs">
+<div class="ueb"><span class="uebn">1</span><div><b>Satz ziehen und weiterreden</b><p>Zieh einen Satz, sag ihn laut — und häng sofort einen zweiten Satz an, der danach kommen würde.</p></div></div>
+<div class="ueb"><span class="uebn">2</span><div><b>Die Kette</b><p>Reihum sagt jeder einen Satz von oben. Kein Satz darf zweimal kommen. Wer nicht weiterweiß, sagt <i>Ich weiß gerade keinen mehr</i> — auch das ist ein Satz.</p></div></div>
+<div class="ueb"><span class="uebn">3</span><div><b>Ohne Hilfe</b><p>Klappt alles zu und spielt Dialog 1 noch einmal — frei, mit euren eigenen Wörtern.</p></div></div>
+</div>
 </section>
 
 <section class="section" id="abschluss">
@@ -767,6 +923,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Sonntagmorgen, und niemand findet irgendetwas. Zuerst sucht Ben seine Brille. „Die lag doch gestern noch ___ dem Tisch“, ruft er aus dem Wohnzimmer. Ich schaue ___ der Küche nach, weil er dort gefrühstückt hat — nichts. Dann fällt mir ein, dass er abends noch gelesen hat. Tatsächlich: Die Brille liegt neben dem Bett, ___ dem Nachttisch. Kaum ist das geklärt, sucht Mira ihre Turnschuhe. Die stehen ___ Flur, direkt hinter der Tür, wo sie immer stehen. Nur sieht man sie nicht, weil zwei Jacken darüber ___. Am Ende stellen wir alle drei fest: Es fehlt nichts, es ___ nur alles am falschen Platz. Nächste Woche räumen wir auf. Vermutlich.","o":["auf","in","auf","im","hängen","liegt","an","steht"],"a":[["auf"],["in"],["auf"],["im"],["hängen"],["liegt"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Wo ist …?","Wo steht …?","Hast du … gesehen?","Ich stelle es …","Häng es bitte …","Das kommt …","Was hältst du davon, wenn …?","Mir wäre lieber, …","Probieren wir es erst mal …"]
 </script>
 
 <script>
@@ -1066,6 +1225,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

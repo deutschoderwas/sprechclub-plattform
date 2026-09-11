@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Wie geht es dir gerade wirklich?</div></div><div class="nur-b1"><div class="ank">Sagst du ehrlich, wie es dir geht, oder eher <i>ganz gut</i>?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../vok-bild/einschlafen.webp" alt="Eine Person liegt im Bett und schläft ein">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Wie geht es dir gerade wirklich?</li><li>Wann wirst du am Tag müde?</li><li>Was machst du, wenn du gestresst bist?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Sagst du ehrlich, wie es dir geht, oder eher <i>ganz gut</i>?</li><li>Woran merkst du selbst, dass du erschöpft bist?</li><li>Wie fragt man in deinem Land nach dem Befinden?</li></ol></div></div>
+<div class="tip teal">🔑 <strong>Die drei Verben:</strong> <b>sein</b> = so ist es jetzt. <b>werden</b> = es ändert sich gerade. <b>bleiben</b> = es geht so weiter. <i>Ich bin wach — ich werde müde — ich bleibe trotzdem wach.</i></div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Ist dir im Winter oft kalt?</li><li>Wann ist dir langweilig?</li><li>Wann warst du zuletzt richtig entspannt?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Welche dieser Formen vergisst du im Gespräch am häufigsten?</li><li>Wie sagst du, dass es dir schlecht geht, ohne zu klagen?</li><li>Wo im Alltag brauchst du diese Wörter am meisten?</li></ol></div></div>
+<div class="tip">💡 <strong>Vorsicht, Falle:</strong> <b>Mir ist kalt</b> heißt: Ich friere. <b>Ich bin kalt</b> heißt: Ich bin ein kühler Mensch. Dieselbe Falle bei <i>heiß</i> — <b>mir ist heiß</b> statt <i>ich bin heiß</i>.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -586,6 +684,64 @@ footer strong{color:var(--ink);}
 <button class="speak dbtn" data-say="Eine Stunde schon. Mir wird hier langsam langweilig. Und mir ist kalt. Die haben die Heizung wohl aus. Ich bin von diesen Wartezeiten wirklich genervt. Ich auch. Aber aufregen bringt hier nichts, dann wird es nur anstrengender. Stimmt. Bleiben wir einfach ruhig. Genau. Und wenn wir dran sind, sind wir beide wieder wach.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 2 mit eurer eigenen Woche. Regel: Die erste Antwort ist die höfliche, die zweite die ehrliche.</div>
+</section>
+
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 💬 Ehrlich antworten</div>
+<div class="merk"><span>Ich bin ziemlich <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von müde" data-wort="müde" data-kurz="wenn du schlafen willst" data-bsp="Ich bin heute Abend richtig müde.">müde</b>.</span><button class="speak" data-say="Ich bin ziemlich müde.">🔊 hören</button></div>
+<div class="merk"><span>Mir geht es gut, danke.</span><button class="speak" data-say="Mir geht es gut, danke.">🔊 hören</button></div>
+<div class="merk"><span>Ich bin gerade etwas <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von gestresst" data-wort="gestresst" data-kurz="wenn zu viel auf einmal ist" data-bsp="Diese Woche bin ich ziemlich gestresst.">gestresst</b>.</span><button class="speak" data-say="Ich bin gerade etwas gestresst.">🔊 hören</button></div>
+<div class="merk"><span>Mir ist kalt.</span><button class="speak" data-say="Mir ist kalt.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · ❓ Nachfragen</div>
+<div class="merk"><span>Wie geht es dir?</span><button class="speak" data-say="Wie geht es dir?">🔊 hören</button></div>
+<div class="merk"><span>Alles in Ordnung?</span><button class="speak" data-say="Alles in Ordnung?">🔊 hören</button></div>
+<div class="merk"><span>Bist du müde?</span><button class="speak" data-say="Bist du müde?">🔊 hören</button></div>
+<div class="merk"><span>Was ist los?</span><button class="speak" data-say="Was ist los?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🤝 Etwas anbieten</div>
+<div class="merk"><span>Soll ich dir einen Kaffee holen?</span><button class="speak" data-say="Soll ich dir einen Kaffee holen?">🔊 hören</button></div>
+<div class="merk"><span>Setz dich erst mal.</span><button class="speak" data-say="Setz dich erst mal.">🔊 hören</button></div>
+<div class="merk"><span>Kann ich dir helfen?</span><button class="speak" data-say="Kann ich dir helfen?">🔊 hören</button></div>
+<div class="merk"><span>Machen wir eine Pause?</span><button class="speak" data-say="Machen wir eine Pause?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🚪 Höflich abwehren</div>
+<div class="merk"><span>Es geht schon.</span><button class="speak" data-say="Es geht schon.">🔊 hören</button></div>
+<div class="merk"><span>Ich brauche nur kurz Ruhe.</span><button class="speak" data-say="Ich brauche nur kurz Ruhe.">🔊 hören</button></div>
+<div class="merk"><span>Danke, alles gut.</span><button class="speak" data-say="Danke, alles gut.">🔊 hören</button></div>
+<div class="merk"><span>Später vielleicht.</span><button class="speak" data-say="Später vielleicht.">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 💬 Genauer antworten</div>
+<div class="merk"><span>Müde bin ich weniger, eher <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von erschöpft" data-wort="erschöpft" data-kurz="wenn deine Kraft ganz weg ist" data-bsp="Nach der Schicht bin ich völlig erschöpft.">erschöpft</b>.</span><button class="speak" data-say="Müde bin ich weniger, eher erschöpft.">🔊 hören</button></div>
+<div class="merk"><span>Es ist gerade viel, aber es geht.</span><button class="speak" data-say="Es ist gerade viel, aber es geht.">🔊 hören</button></div>
+<div class="merk"><span>Ich merke, dass ich langsam <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von überfordert" data-wort="überfordert" data-kurz="wenn es einfach zu viel für dich ist" data-bsp="Am Anfang war ich mit allem überfordert.">überfordert</b> bin.</span><button class="speak" data-say="Ich merke, dass ich langsam überfordert bin.">🔊 hören</button></div>
+<div class="merk"><span>Im Moment fühle ich mich ziemlich ausgelaugt.</span><button class="speak" data-say="Im Moment fühle ich mich ziemlich ausgelaugt.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · ❓ Wirklich nachfragen</div>
+<div class="merk"><span>Wie geht es dir wirklich?</span><button class="speak" data-say="Wie geht es dir wirklich?">🔊 hören</button></div>
+<div class="merk"><span>Ist das gerade zu viel?</span><button class="speak" data-say="Ist das gerade zu viel?">🔊 hören</button></div>
+<div class="merk"><span>Seit wann geht das schon so?</span><button class="speak" data-say="Seit wann geht das schon so?">🔊 hören</button></div>
+<div class="merk"><span>Willst du darüber reden oder lieber nicht?</span><button class="speak" data-say="Willst du darüber reden oder lieber nicht?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🤝 Konkret helfen</div>
+<div class="merk"><span>Ich kann das übernehmen, wenn du willst.</span><button class="speak" data-say="Ich kann das übernehmen, wenn du willst.">🔊 hören</button></div>
+<div class="merk"><span>Was würde dir jetzt am meisten helfen?</span><button class="speak" data-say="Was würde dir jetzt am meisten helfen?">🔊 hören</button></div>
+<div class="merk"><span>Lass uns kurz rausgehen.</span><button class="speak" data-say="Lass uns kurz rausgehen.">🔊 hören</button></div>
+<div class="merk"><span>Ich melde mich morgen noch mal.</span><button class="speak" data-say="Ich melde mich morgen noch mal.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🚪 Grenzen setzen</div>
+<div class="merk"><span>Darüber möchte ich gerade nicht reden.</span><button class="speak" data-say="Darüber möchte ich gerade nicht reden.">🔊 hören</button></div>
+<div class="merk"><span>Ich brauche heute einfach einen ruhigen Abend.</span><button class="speak" data-say="Ich brauche heute einfach einen ruhigen Abend.">🔊 hören</button></div>
+<div class="merk"><span>Das schaffe ich diese Woche nicht mehr.</span><button class="speak" data-say="Das schaffe ich diese Woche nicht mehr.">🔊 hören</button></div>
+<div class="merk"><span>Können wir das auf Montag schieben?</span><button class="speak" data-say="Können wir das auf Montag schieben?">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -759,6 +915,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Der Tag fing schlecht an: Ich habe verschlafen und ___ erst nach dem zweiten Kaffee richtig wach. Im Bus ___ mir dann auch noch kalt, weil die Heizung aus war. Um zehn hatte ich das Gespräch, vorher war ich furchtbar ___, danach vor allem erleichtert. Am Nachmittag ___ ich langsam müde, aber ich musste noch eine Auswertung fertig machen. Ehrlich gesagt war ich damit ein bisschen ___, es war einfach zu viel auf einmal. Abends im Wartezimmer beim Arzt ___ mir richtig langweilig. Ich war von der Wartezeit ___, habe mich aber nicht aufgeregt. Um neun war ich zu Hause, fix und fertig — und trotzdem ___ mit dem Tag.","o":["wurde","war","aufgeregt","überfordert","genervt","zufrieden","blieb","erschöpft"],"a":[["wurde"],["war"],["aufgeregt"],["wurde"],["überfordert"],["war"],["genervt"],["zufrieden"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Ich bin ziemlich müde.","Mir geht es gut, danke.","Ich bin gerade etwas gestresst.","Mir ist kalt.","Wie geht es dir?","Alles in Ordnung?","Bist du müde?","Was ist los?","Soll ich dir einen Kaffee holen?","Setz dich erst mal.","Kann ich dir helfen?","Machen wir eine Pause?","Es geht schon.","Ich brauche nur kurz Ruhe.","Danke, alles gut.","Müde bin ich weniger, eher erschöpft.","Es ist gerade viel, aber es geht.","Ich merke, dass ich langsam überfordert bin.","Im Moment fühle ich mich ziemlich ausgelaugt.","Wie geht es dir wirklich?","Ist das gerade zu viel?","Seit wann geht das schon so?","Willst du darüber reden oder lieber nicht?","Ich kann das übernehmen, wenn du willst.","Was würde dir jetzt am meisten helfen?","Lass uns kurz rausgehen.","Ich melde mich morgen noch mal.","Darüber möchte ich gerade nicht reden.","Ich brauche heute einfach einen ruhigen Abend.","Das schaffe ich diese Woche nicht mehr.","Können wir das auf Montag schieben?"]
 </script>
 
 <script>
@@ -1058,6 +1217,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

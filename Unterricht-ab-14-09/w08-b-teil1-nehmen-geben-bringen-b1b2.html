@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Was hast du heute schon jemandem gegeben?</div></div><div class="nur-b1"><div class="ank">Wo verwechselst du <i>bringen</i> und <i>holen</i> am häufigsten?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../amanda/sz-restaurant.webp" alt="Ein Kellner bringt einer Frau am Tisch etwas zu essen">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Was hast du heute schon jemandem gegeben?</li><li>Was musst du heute noch irgendwo abholen?</li><li>Bringst du zu Besuch immer etwas mit?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Wo verwechselst du <i>bringen</i> und <i>holen</i> am häufigsten?</li><li>Gibt es in deiner Sprache auch vier verschiedene Verben dafür?</li><li>Welches der vier benutzt du im Alltag am meisten?</li></ol></div></div>
+<div class="tip teal">🔑 <strong>Der Trick des Abends:</strong> Frag dich immer, <b>wo du am Ende bist</b>. Bleibst du dort, wo das Ding hingehört, heißt es <b>bringen</b>. Kommst du zurück, heißt es <b>holen</b>. Genau das ist der ganze Unterschied.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Wer holt bei euch die Pakete ab?</li><li>Was nimmst du immer mit, wenn du aus dem Haus gehst?</li><li>Was hast du zuletzt zurückgegeben?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Wann sagt man <i>herbringen</i> und wann <i>hinbringen</i>?</li><li>Welche Vorsilbe fällt dir am schwersten: ab-, mit- oder weg-?</li><li>Wie erklärst du jemandem den Unterschied zwischen <i>mitnehmen</i> und <i>abholen</i>?</li></ol></div></div>
+<div class="tip">💡 <strong>Merksatz für heute:</strong> <b>hin</b> geht von mir weg, <b>her</b> kommt zu mir. Deshalb sagt man am Telefon <i>Kommst du her?</i>, wenn man selbst zu Hause ist — und <i>Ich komme hin</i>, wenn man losfährt.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -588,6 +686,64 @@ footer strong{color:var(--ink);}
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 1 mit einer eigenen Situation. Regel: In jeder Antwort muss ein anderes der vier Verben vorkommen — nehmen, geben, bringen, holen.</div>
 </section>
 
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 🙏 Bitten</div>
+<div class="merk"><span>Kannst du mir … mitbringen?</span><button class="speak" data-say="Kannst du mir … mitbringen?">🔊 hören</button></div>
+<div class="merk"><span>Gibst du mir bitte …?</span><button class="speak" data-say="Gibst du mir bitte …?">🔊 hören</button></div>
+<div class="merk"><span>Holst du bitte …?</span><button class="speak" data-say="Holst du bitte …?">🔊 hören</button></div>
+<div class="merk"><span>Reichst du mir …?</span><button class="speak" data-say="Reichst du mir …?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🤝 Anbieten</div>
+<div class="merk"><span>Soll ich dir etwas mitbringen?</span><button class="speak" data-say="Soll ich dir etwas mitbringen?">🔊 hören</button></div>
+<div class="merk"><span>Ich kann das gern <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von abholen" data-wort="abholen" data-kurz="etwas oder jemanden von einem Ort mitnehmen" data-bsp="Ich hole das Päckchen morgen in der Filiale ab.">abholen</b>.</span><button class="speak" data-say="Ich kann das gern abholen.">🔊 hören</button></div>
+<div class="merk"><span>Ich bringe es dir vorbei.</span><button class="speak" data-say="Ich bringe es dir vorbei.">🔊 hören</button></div>
+<div class="merk"><span>Nimm ruhig, ich habe genug.</span><button class="speak" data-say="Nimm ruhig, ich habe genug.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 📅 Absprechen</div>
+<div class="merk"><span>Wann kann ich es abholen?</span><button class="speak" data-say="Wann kann ich es abholen?">🔊 hören</button></div>
+<div class="merk"><span>Wohin soll ich das <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von bringen" data-wort="bringen" data-kurz="etwas dorthin mitnehmen, wo jemand anders ist" data-bsp="Ich bringe dir das Buch morgen mit ins Büro.">bringen</b>?</span><button class="speak" data-say="Wohin soll ich das bringen?">🔊 hören</button></div>
+<div class="merk"><span>Bis wann muss ich es <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von zurückgeben" data-wort="zurückgeben" data-kurz="etwas dem Besitzer wiedergeben" data-bsp="Die Jacke gebe ich morgen zurück, sie passt nicht.">zurückgeben</b>?</span><button class="speak" data-say="Bis wann muss ich es zurückgeben?">🔊 hören</button></div>
+<div class="merk"><span>Wer holt die Kinder ab?</span><button class="speak" data-say="Wer holt die Kinder ab?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 💛 Sich bedanken</div>
+<div class="merk"><span>Danke fürs Mitbringen!</span><button class="speak" data-say="Danke fürs Mitbringen!">🔊 hören</button></div>
+<div class="merk"><span>Das war lieb, danke.</span><button class="speak" data-say="Das war lieb, danke.">🔊 hören</button></div>
+<div class="merk"><span>Ich gebe es dir morgen zurück.</span><button class="speak" data-say="Ich gebe es dir morgen zurück.">🔊 hören</button></div>
+<div class="merk"><span>Sag Bescheid, wenn du es brauchst.</span><button class="speak" data-say="Sag Bescheid, wenn du es brauchst.">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 🙏 Bitten, ohne Druck</div>
+<div class="merk"><span>Falls du sowieso vorbeikommst, könntest du …</span><button class="speak" data-say="Falls du sowieso vorbeikommst, könntest du …">🔊 hören</button></div>
+<div class="merk"><span>Wenn es dir keine Umstände macht, …</span><button class="speak" data-say="Wenn es dir keine Umstände macht, …">🔊 hören</button></div>
+<div class="merk"><span>Hättest du zufällig … dabei?</span><button class="speak" data-say="Hättest du zufällig … dabei?">🔊 hören</button></div>
+<div class="merk"><span>Ich würde es sonst selbst abholen.</span><button class="speak" data-say="Ich würde es sonst selbst abholen.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🤝 Anbieten, ohne aufzudrängen</div>
+<div class="merk"><span>Ich könnte es dir vorbeibringen.</span><button class="speak" data-say="Ich könnte es dir vorbeibringen.">🔊 hören</button></div>
+<div class="merk"><span>Auf dem Weg nehme ich es gern mit.</span><button class="speak" data-say="Auf dem Weg nehme ich es gern mit.">🔊 hören</button></div>
+<div class="merk"><span>Ich hole es ab, wenn dir das lieber ist.</span><button class="speak" data-say="Ich hole es ab, wenn dir das lieber ist.">🔊 hören</button></div>
+<div class="merk"><span>Sag einfach, was dir besser passt.</span><button class="speak" data-say="Sag einfach, was dir besser passt.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 📅 Übergabe klären</div>
+<div class="merk"><span>Wann und wo <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von übergeben" data-wort="übergeben" data-kurz="etwas offiziell in die Hände von jemandem legen" data-bsp="Ich übergebe Ihnen die Unterlagen persönlich.">übergeben</b> wir das am besten?</span><button class="speak" data-say="Wann und wo übergeben wir das am besten?">🔊 hören</button></div>
+<div class="merk"><span>Ich lege es dir in den Briefkasten.</span><button class="speak" data-say="Ich lege es dir in den Briefkasten.">🔊 hören</button></div>
+<div class="merk"><span>Gib mir Bescheid, sobald es da ist.</span><button class="speak" data-say="Gib mir Bescheid, sobald es da ist.">🔊 hören</button></div>
+<div class="merk"><span>Bis wann brauchst du es zurück?</span><button class="speak" data-say="Bis wann brauchst du es zurück?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 💛 Sich revanchieren</div>
+<div class="merk"><span>Das rechne ich dir hoch an.</span><button class="speak" data-say="Das rechne ich dir hoch an.">🔊 hören</button></div>
+<div class="merk"><span>Beim nächsten Mal bringe ich etwas mit.</span><button class="speak" data-say="Beim nächsten Mal bringe ich etwas mit.">🔊 hören</button></div>
+<div class="merk"><span>Ich gebe es dir zurück, sobald ich es habe.</span><button class="speak" data-say="Ich gebe es dir zurück, sobald ich es habe.">🔊 hören</button></div>
+<div class="merk"><span>Sag Bescheid, wenn ich etwas für dich tun kann.</span><button class="speak" data-say="Sag Bescheid, wenn ich etwas für dich tun kann.">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
+</section>
+
 <section class="section" id="challenge">
 <h2 class="st">⏱️ Die 90-Sekunden-Challenge</h2>
 <p class="ssub">Neunzig Sekunden: Erzähl, wie eine Sache von A nach B kommt — ein Paket, ein geliehenes Buch, ein Kuchen. Alle vier Verben müssen vorkommen.</p>
@@ -629,7 +785,7 @@ footer strong{color:var(--ink);}
 <div class="rsp-kopf"><span class="rsp-nr">1</span><b>Das Paket organisieren</b></div>
 <div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>erwartet ein Paket, ist aber den ganzen Tag außer Haus.</p></div><div class="rsp-r b"><span>B</span><p>wohnt nebenan und ist da. Klärt gemeinsam, wer was wann macht.</p></div></div>
 <div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Kannst du das Paket für mich annehmen?</span><span class="rm">Ich hole es abends bei dir ab</span><span class="rm">Soll ich dir etwas mitbringen?</span><span class="rm">Danke, das ist lieb von dir</span></div><div class="nur-b1"><span class="rm">Ich nehme es gern an, ich bin sowieso zu Hause</span><span class="rm">Wenn es dir lieber ist, bringe ich es dir abends vorbei</span><span class="rm">Gib mir kurz Bescheid, sobald du zurück bist</span><span class="rm">Beim nächsten Mal bringe ich dir etwas mit, versprochen</span></div></div>
-<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>Beide haben gesagt, wo sie am Ende sind — und deshalb die richtigen Verben benutzt. Es kam mindestens einmal <i><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von abholen" data-wort="abholen" data-kurz="etwas oder jemanden von einem Ort mitnehmen" data-bsp="Ich hole das Päckchen morgen in der Filiale ab.">abholen</b></i> und einmal <i>vorbeibringen</i> vor, und am Ende war klar, wer was tut.</div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>Beide haben gesagt, wo sie am Ende sind — und deshalb die richtigen Verben benutzt. Es kam mindestens einmal <i>abholen</i> und einmal <i>vorbeibringen</i> vor, und am Ende war klar, wer was tut.</div>
 <details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
 
@@ -760,6 +916,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Am Dienstagmorgen hat mir meine Nachbarin geschrieben, dass ein Paket für mich bei ihr liegt. Ich habe geantwortet, dass ich es abends ___. Auf dem Weg ins Büro bin ich am Café vorbei und habe meiner Kollegin einen Kaffee ___. Sie hatte noch meine Schüssel von der Feier, die hat sie mir gleich ___. Mittags kam ein Kollege und wollte den Beamer haben — ich habe ihm gesagt, er soll ihn sich im dritten Stock ___. Nach der Arbeit bin ich bei der Nachbarin vorbei und habe das Paket ___. Die alten Sachen aus dem Schrank habe ich am selben Abend zur Kleiderkammer ___ — die kann jemand anders besser brauchen. Und die Schüssel? Die habe ich am nächsten Tag wieder mit zur Arbeit ___.","o":["abhole","mitgebracht","zurückgegeben","holen","abgeholt","gebracht","genommen","geliefert"],"a":[["abhole"],["mitgebracht"],["zurückgegeben"],["holen"],["abgeholt"],["gebracht"],["genommen"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Kannst du mir … mitbringen?","Gibst du mir bitte …?","Holst du bitte …?","Reichst du mir …?","Soll ich dir etwas mitbringen?","Ich kann das gern abholen.","Ich bringe es dir vorbei.","Nimm ruhig, ich habe genug.","Wann kann ich es abholen?","Wohin soll ich das bringen?","Bis wann muss ich es zurückgeben?","Wer holt die Kinder ab?","Danke fürs Mitbringen!","Das war lieb, danke.","Ich gebe es dir morgen zurück.","Sag Bescheid, wenn du es brauchst.","Falls du sowieso vorbeikommst, könntest du …","Wenn es dir keine Umstände macht, …","Hättest du zufällig … dabei?","Ich würde es sonst selbst abholen.","Ich könnte es dir vorbeibringen.","Auf dem Weg nehme ich es gern mit.","Ich hole es ab, wenn dir das lieber ist.","Sag einfach, was dir besser passt.","Wann und wo übergeben wir das am besten?","Ich lege es dir in den Briefkasten.","Gib mir Bescheid, sobald es da ist.","Bis wann brauchst du es zurück?","Das rechne ich dir hoch an.","Beim nächsten Mal bringe ich etwas mit.","Ich gebe es dir zurück, sobald ich es habe.","Sag Bescheid, wenn ich etwas für dich tun kann."]
 </script>
 
 <script>
@@ -1059,6 +1218,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

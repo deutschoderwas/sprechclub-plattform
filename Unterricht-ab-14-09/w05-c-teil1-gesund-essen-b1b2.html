@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Liest du, was auf der Packung steht?</div></div><div class="nur-b1"><div class="ank">Woran erkennst du, ob ein Produkt wirklich hält, was die Vorderseite verspricht?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../vok-bild/das-fruehstueck.webp" alt="Ein Frühstückstisch mit Brötchen, Ei und einem Marmeladenglas mit Etikett">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Liest du, was auf der Packung steht?</li><li>Worauf achtest du beim Einkaufen zuerst — Preis, Geschmack oder Inhalt?</li><li>Was hast du heute gegessen?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Woran erkennst du, ob ein Produkt wirklich hält, was die Vorderseite verspricht?</li><li>Hat sich dein Einkauf verändert, seit du hier lebst?</li><li>Wie viel Zeit ist dir gutes Essen wert — in Minuten und in Euro?</li></ol></div></div>
+<div class="tip teal">🔑 <strong>Zwei Regeln, die auf jeder Packung gelten:</strong> Die <b>Zutatenliste</b> ist nach Gewicht sortiert — was vorne steht, ist am meisten drin. Und die <b>Nährwerttabelle</b> bezieht sich immer auf <b>100 Gramm</b>, nicht auf die Packung. Damit kannst du schon zwei Drittel aller Werbeversprechen selbst prüfen.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Redest du gern über Essen?</li><li>Gibt es bei euch ein Thema, über das man beim Essen nicht spricht?</li><li>Wer kocht bei euch zu Hause?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Warum wird über Ernährung so leidenschaftlich gestritten?</li><li>Wann wird ein Ratschlag zur Belehrung?</li><li>Wie reagierst du, wenn dir jemand ungefragt sagt, was du essen solltest?</li></ol></div></div>
+<div class="tip">💡 <strong>Für die Debatte am Mittwoch:</strong> Über Essen streitet man selten über Fakten und fast immer über <u>Werte</u> — Freiheit, Verantwortung, Geld, Zeit. Wer das erkennt, argumentiert ruhiger. Merk dir schon mal den Satz: <b>„Da geht es eigentlich gar nicht um Zucker.“</b></div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -594,6 +692,64 @@ footer strong{color:var(--ink);}
 <button class="speak dbtn" data-say="Ich schaffe es einfach nicht, jeden Abend zu kochen. Musst du auch nicht. Ich koche sonntags einmal groß, dann reicht es für drei Tage. Und das schmeckt am dritten Tag noch? Suppe und alles mit Soße ja. Salat eher nicht, das mache ich frisch. Wie viel Zeit brauchst du dafür am Sonntag? Etwa eine Stunde. Im Vergleich zu fünf Abenden ist der Aufwand deutlich kleiner. Gut, das probiere ich diese Woche. Sag mir am Freitag, ob du durchgehalten hast.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 3 mit vertauschten Rollen — einmal seid ihr die Person, die kommentiert, einmal die, die abgrenzt. Achtet darauf, wie unterschiedlich sich beide Seiten anfühlen.</div>
+</section>
+
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 🔢 Zahlen nennen</div>
+<div class="merk"><span>pro hundert Gramm</span><button class="speak" data-say="pro hundert Gramm">🔊 hören</button></div>
+<div class="merk"><span>etwa ein Drittel</span><button class="speak" data-say="etwa ein Drittel">🔊 hören</button></div>
+<div class="merk"><span>jeder Vierte</span><button class="speak" data-say="jeder Vierte">🔊 hören</button></div>
+<div class="merk"><span>im Schnitt</span><button class="speak" data-say="im Schnitt">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · ⚖️ Vergleichen</div>
+<div class="merk"><span>doppelt so viel wie</span><button class="speak" data-say="doppelt so viel wie">🔊 hören</button></div>
+<div class="merk"><span>deutlich weniger als</span><button class="speak" data-say="deutlich weniger als">🔊 hören</button></div>
+<div class="merk"><span>genauso viel wie</span><button class="speak" data-say="genauso viel wie">🔊 hören</button></div>
+<div class="merk"><span>im Vergleich zu</span><button class="speak" data-say="im Vergleich zu">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🧭 Einordnen</div>
+<div class="merk"><span>Das klingt viel, aber …</span><button class="speak" data-say="Das klingt viel, aber …">🔊 hören</button></div>
+<div class="merk"><span>Man muss dazusagen, dass …</span><button class="speak" data-say="Man muss dazusagen, dass …">🔊 hören</button></div>
+<div class="merk"><span>Es kommt darauf an, wie oft …</span><button class="speak" data-say="Es kommt darauf an, wie oft …">🔊 hören</button></div>
+<div class="merk"><span>Entscheidend ist eher …</span><button class="speak" data-say="Entscheidend ist eher …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🎯 Position beziehen</div>
+<div class="merk"><span>Ich finde, dass …</span><button class="speak" data-say="Ich finde, dass …">🔊 hören</button></div>
+<div class="merk"><span>Mir ist wichtig, dass …</span><button class="speak" data-say="Mir ist wichtig, dass …">🔊 hören</button></div>
+<div class="merk"><span>Ich hätte nichts dagegen, wenn …</span><button class="speak" data-say="Ich hätte nichts dagegen, wenn …">🔊 hören</button></div>
+<div class="merk"><span>Für mich ist die Grenze da, wo …</span><button class="speak" data-say="Für mich ist die Grenze da, wo …">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 🔍 Die Angabe prüfen</div>
+<div class="merk"><span>Worauf bezieht sich die Zahl?</span><button class="speak" data-say="Worauf bezieht sich die Zahl?">🔊 hören</button></div>
+<div class="merk"><span>Das ist pro Portion gerechnet, nicht pro hundert Gramm</span><button class="speak" data-say="Das ist pro Portion gerechnet, nicht pro hundert Gramm">🔊 hören</button></div>
+<div class="merk"><span>Wer hat das erhoben?</span><button class="speak" data-say="Wer hat das erhoben?">🔊 hören</button></div>
+<div class="merk"><span>In welchem Zeitraum?</span><button class="speak" data-say="In welchem Zeitraum?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 📈 Entwicklungen beschreiben</div>
+<div class="merk"><span>Je mehr …, desto …</span><button class="speak" data-say="Je mehr …, desto …">🔊 hören</button></div>
+<div class="merk"><span>Der Anteil ist um ein Drittel gestiegen</span><button class="speak" data-say="Der Anteil ist um ein Drittel gestiegen">🔊 hören</button></div>
+<div class="merk"><span>Tendenziell nimmt das zu</span><button class="speak" data-say="Tendenziell nimmt das zu">🔊 hören</button></div>
+<div class="merk"><span>Über die Jahre hat sich …</span><button class="speak" data-say="Über die Jahre hat sich …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🪞 Den Kern benennen</div>
+<div class="merk"><span>Da geht es eigentlich gar nicht um …</span><button class="speak" data-say="Da geht es eigentlich gar nicht um …">🔊 hören</button></div>
+<div class="merk"><span>Im Grunde ist das eine Frage von …</span><button class="speak" data-say="Im Grunde ist das eine Frage von …">🔊 hören</button></div>
+<div class="merk"><span>Der eigentliche Streitpunkt ist …</span><button class="speak" data-say="Der eigentliche Streitpunkt ist …">🔊 hören</button></div>
+<div class="merk"><span>Wir reden über zwei verschiedene Dinge</span><button class="speak" data-say="Wir reden über zwei verschiedene Dinge">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🤝 Zugestehen und trotzdem bleiben</div>
+<div class="merk"><span>Da haben Sie recht — allerdings …</span><button class="speak" data-say="Da haben Sie recht — allerdings …">🔊 hören</button></div>
+<div class="merk"><span>Das gilt allerdings nur, wenn …</span><button class="speak" data-say="Das gilt allerdings nur, wenn …">🔊 hören</button></div>
+<div class="merk"><span>Ich gebe zu, dass …</span><button class="speak" data-say="Ich gebe zu, dass …">🔊 hören</button></div>
+<div class="merk"><span>Dennoch halte ich daran fest, dass …</span><button class="speak" data-say="Dennoch halte ich daran fest, dass …">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -767,6 +923,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Gestern stand ich vor dem Regal und habe zwei Müslis verglichen. Auf beiden Packungen stand vorne etwas von Natur, und beide sahen gleich gesund aus. Also habe ich sie umgedreht und die ___ gelesen. Bei dem einen stand Zucker an zweiter Stelle, bei dem anderen an sechster. In der Tabelle wurde es dann deutlich: 24 Gramm ___ hundert Gramm gegen 11. Das eine enthielt also mehr als doppelt so viel ___ das andere — bei genau derselben Menge. Vorne stand allerdings bei beiden ohne ___, was ja nur heißt, dass keiner dazugegeben wurde. Am Ende habe ich das teurere genommen, obwohl ich weiß: ___ genauer man liest, desto länger steht man im Laden. Aber ich wollte wenigstens einmal wissen, worauf sich die ___ eigentlich bezieht. Nächste Woche nehme ich wahrscheinlich wieder das, was im Angebot ist — und das ist auch in Ordnung.","o":["Zutatenliste","pro","wie","Zuckerzusatz","Je","Angabe","als","Empfehlung"],"a":[["Zutatenliste"],["pro"],["wie"],["Zuckerzusatz"],["Je"],["Angabe"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Das klingt viel, aber …","Man muss dazusagen, dass …","Es kommt darauf an, wie oft …","Entscheidend ist eher …","Ich finde, dass …","Mir ist wichtig, dass …","Ich hätte nichts dagegen, wenn …","Für mich ist die Grenze da, wo …","Worauf bezieht sich die Zahl?","Das ist pro Portion gerechnet, nicht pro hundert Gramm","Wer hat das erhoben?","In welchem Zeitraum?","Je mehr …, desto …","Der Anteil ist um ein Drittel gestiegen","Tendenziell nimmt das zu","Über die Jahre hat sich …","Da geht es eigentlich gar nicht um …","Im Grunde ist das eine Frage von …","Der eigentliche Streitpunkt ist …","Wir reden über zwei verschiedene Dinge","Da haben Sie recht — allerdings …","Das gilt allerdings nur, wenn …","Ich gebe zu, dass …","Dennoch halte ich daran fest, dass …"]
 </script>
 
 <script>
@@ -1066,6 +1225,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

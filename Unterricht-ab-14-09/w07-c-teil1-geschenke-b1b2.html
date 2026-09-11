@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Was hast du zuletzt verschenkt?</div></div><div class="nur-b1"><div class="ank">Woran merkst du, dass ein Geschenk unpassend war?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../vok-bild/die-lieferung.webp" alt="Ein mit Schnur verschnürtes Päckchen liegt auf einer Kommode">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Was hast du zuletzt verschenkt?</li><li>Was bringt man in deinem Heimatland mit, wenn man eingeladen ist?</li><li>Schenkst du lieber etwas Praktisches oder etwas Persönliches?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Woran merkst du, dass ein Geschenk unpassend war?</li><li>Wie viel Geld ist bei euch üblich — und wovon hängt das ab?</li><li>Gibt es Dinge, die man bei euch auf keinen Fall schenkt?</li></ol></div></div>
+<div class="tip teal">🔑 <strong>Der Satz, der beim Schenken immer geht:</strong> <b>„Ich habe dir etwas Kleines mitgebracht.“</b> Das Wort <u>klein</u> ist entscheidend: Es nimmt dem Geschenk den Druck, verpflichtet den anderen zu nichts und funktioniert selbst dann, wenn das Geschenk gar nicht klein ist.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Hast du schon einmal etwas umgetauscht?</li><li>Was hast du dabei gesagt?</li><li>Hebst du Kassenbons auf?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Warum tauschen Geschäfte um, obwohl sie nicht müssen?</li><li>Was ist der Unterschied zwischen umtauschen und reklamieren?</li><li>Wie fragst du nach etwas, auf das du keinen Anspruch hast?</li></ol></div></div>
+<div class="tip">💡 <strong>Drei Fälle, die man nicht verwechseln sollte:</strong> <b>Umtausch im Laden</b> — kein Anspruch, reine Kulanz, deshalb höflich fragen. <b>Onlinekauf</b> — in der Regel vierzehn Tage Widerrufsrecht, das ist ein echtes Recht. <b>Mangel</b> — wenn etwas kaputt oder falsch ist, greift die Gewährleistung, meist zwei Jahre. Das ist keine Rechtsberatung, aber es erklärt, warum du im Laden bitten und beim Mangel fordern kannst.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -584,6 +682,64 @@ footer strong{color:var(--ink);}
 <button class="speak dbtn" data-say="Sollen wir für Kerstin zusammenlegen? Dann können wir ihr etwas Größeres schenken. Gute Idee. An wie viel hattest du gedacht? Ich würde zehn Euro pro Person vorschlagen — und wer mehr geben will, gibt mehr. Und was kaufen wir? Einen Gutschein für den Buchladen. Bei Geld allein hätte ich Bauchschmerzen.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 2 einmal freundlich und einmal so, dass der Kunde auf einem Recht besteht, das er nicht hat. Ihr hört sofort, wie schnell die Kulanz verschwindet.</div>
+</section>
+
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 🎁 Überreichen</div>
+<div class="merk"><span>Ich habe dir etwas Kleines mitgebracht</span><button class="speak" data-say="Ich habe dir etwas Kleines mitgebracht">🔊 hören</button></div>
+<div class="merk"><span>Das ist für dich</span><button class="speak" data-say="Das ist für dich">🔊 hören</button></div>
+<div class="merk"><span>Ich hoffe, du kannst es gebrauchen</span><button class="speak" data-say="Ich hoffe, du kannst es gebrauchen">🔊 hören</button></div>
+<div class="merk"><span>Alles Gute zum <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Geburtstag" data-wort="der Geburtstag" data-kurz="der Tag, an dem jemand geboren wurde" data-bsp="Zum Geburtstag schenke ich ihr Blumen.">Geburtstag</b>!</span><button class="speak" data-say="Alles Gute zum Geburtstag!">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🙏 Sich bedanken</div>
+<div class="merk"><span>Das ist ja lieb, danke!</span><button class="speak" data-say="Das ist ja lieb, danke!">🔊 hören</button></div>
+<div class="merk"><span>Da hast du mir eine <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Freude" data-wort="die Freude" data-kurz="das gute Gefühl, wenn etwas schön ist" data-bsp="Damit machst du ihr eine große Freude.">Freude</b> gemacht</span><button class="speak" data-say="Da hast du mir eine Freude gemacht">🔊 hören</button></div>
+<div class="merk"><span>Das wollte ich schon lange</span><button class="speak" data-say="Das wollte ich schon lange">🔊 hören</button></div>
+<div class="merk"><span>Das wäre doch nicht nötig gewesen</span><button class="speak" data-say="Das wäre doch nicht nötig gewesen">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🤔 Vorher nachfragen</div>
+<div class="merk"><span>Hast du einen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Wunsch" data-wort="der Wunsch" data-kurz="das, was sich jemand von dir wünscht" data-bsp="Hast du einen Wunsch zum Geburtstag?">Wunsch</b>?</span><button class="speak" data-say="Hast du einen Wunsch?">🔊 hören</button></div>
+<div class="merk"><span>Was schenkt ihr denn?</span><button class="speak" data-say="Was schenkt ihr denn?">🔊 hören</button></div>
+<div class="merk"><span>Brauchst du irgendetwas?</span><button class="speak" data-say="Brauchst du irgendetwas?">🔊 hören</button></div>
+<div class="merk"><span>Wäre ein Gutschein okay?</span><button class="speak" data-say="Wäre ein Gutschein okay?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🔄 Umtauschen</div>
+<div class="merk"><span>Kann ich das noch <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von umtauschen" data-wort="umtauschen" data-kurz="etwas zurückbringen und etwas anderes bekommen" data-bsp="Kann ich das noch umtauschen?">umtauschen</b>?</span><button class="speak" data-say="Kann ich das noch umtauschen?">🔊 hören</button></div>
+<div class="merk"><span>Ich habe den Bon dabei</span><button class="speak" data-say="Ich habe den Bon dabei">🔊 hören</button></div>
+<div class="merk"><span>Es passt leider nicht</span><button class="speak" data-say="Es passt leider nicht">🔊 hören</button></div>
+<div class="merk"><span>Geht auch eine andere Größe?</span><button class="speak" data-say="Geht auch eine andere Größe?">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 🎁 Feiner überreichen</div>
+<div class="merk"><span>Eine Kleinigkeit für dich</span><button class="speak" data-say="Eine Kleinigkeit für dich">🔊 hören</button></div>
+<div class="merk"><span>Ich hoffe, ich habe deinen Geschmack getroffen</span><button class="speak" data-say="Ich hoffe, ich habe deinen Geschmack getroffen">🔊 hören</button></div>
+<div class="merk"><span>Falls es nicht passt, liegt der Bon dabei</span><button class="speak" data-say="Falls es nicht passt, liegt der Bon dabei">🔊 hören</button></div>
+<div class="merk"><span>Von uns beiden</span><button class="speak" data-say="Von uns beiden">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🙏 Ehrlich reagieren</div>
+<div class="merk"><span>Darüber freue ich mich wirklich</span><button class="speak" data-say="Darüber freue ich mich wirklich">🔊 hören</button></div>
+<div class="merk"><span>Das ist genau mein Ding</span><button class="speak" data-say="Das ist genau mein Ding">🔊 hören</button></div>
+<div class="merk"><span>Ehrlich gesagt weiß ich noch nicht, wo ich es hintue</span><button class="speak" data-say="Ehrlich gesagt weiß ich noch nicht, wo ich es hintue">🔊 hören</button></div>
+<div class="merk"><span>Darf ich es <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von umtauschen" data-wort="der Umtausch" data-kurz="im Laden, kein Anspruch — Kulanz" data-bsp="Wäre es möglich, das umzutauschen?">umtauschen</b>, wenn es nicht passt?</span><button class="speak" data-say="Darf ich es umtauschen, wenn es nicht passt?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 💶 Über Geld sprechen</div>
+<div class="merk"><span>Wollen wir zusammenlegen?</span><button class="speak" data-say="Wollen wir zusammenlegen?">🔊 hören</button></div>
+<div class="merk"><span>Wie viel gebt ihr ungefähr?</span><button class="speak" data-say="Wie viel gebt ihr ungefähr?">🔊 hören</button></div>
+<div class="merk"><span>Ich würde einen Gutschein vorschlagen</span><button class="speak" data-say="Ich würde einen Gutschein vorschlagen">🔊 hören</button></div>
+<div class="merk"><span><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Geld" data-wort="das Geld" data-kurz="Scheine und Münzen" data-bsp="Bei uns schenkt man zur Hochzeit Geld.">Geld</b> finde ich in dem Fall passender</span><button class="speak" data-say="Geld finde ich in dem Fall passender">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🧾 Reklamieren</div>
+<div class="merk"><span>Der Artikel war beim Auspacken beschädigt</span><button class="speak" data-say="Der Artikel war beim Auspacken beschädigt">🔊 hören</button></div>
+<div class="merk"><span>Ich hätte gern Ersatz</span><button class="speak" data-say="Ich hätte gern Ersatz">🔊 hören</button></div>
+<div class="merk"><span>Das entspricht nicht der Beschreibung</span><button class="speak" data-say="Das entspricht nicht der Beschreibung">🔊 hören</button></div>
+<div class="merk"><span>Ich möchte vom Kauf zurücktreten</span><button class="speak" data-say="Ich möchte vom Kauf zurücktreten">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -758,6 +914,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Meine Schwester hatte Geburtstag, und ich wusste lange nicht, was ich ___ schenken soll. Also habe ich einfach gefragt, ob sie einen ___ hat. Sie wollte eine bestimmte Tasse, und die habe ich online bestellt. Als das ___ kam, war die Tasse allerdings zerbrochen. Ich habe beim Shop angerufen, den Mangel genannt und gesagt, dass ich gern ___ hätte. Zwei Tage später war die neue da. Auf der Feier habe ich ihr dann gesagt, ich hätte ihr etwas ___ mitgebracht — sie hat sich wirklich gefreut. Ihr Freund hatte übrigens einen Pullover geschenkt, der nicht passte. Er hatte den ___ dabei, und im Laden waren sie zum Glück kulant. Am Ende habe ich mir gedacht: Wer vorher fragt, spart sich das meiste. Und ich habe ihr ___ noch am selben Abend gesagt.","o":["ihr","Wunsch","Paket","Ersatz","Kleines","Kassenbon","das","Verschwendung"],"a":[["ihr"],["Wunsch"],["Paket"],["Ersatz"],["Kleines"],["Kassenbon"],["das"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Ich habe dir etwas Kleines mitgebracht","Das ist für dich","Ich hoffe, du kannst es gebrauchen","Alles Gute zum Geburtstag!","Das ist ja lieb, danke!","Da hast du mir eine Freude gemacht","Das wollte ich schon lange","Das wäre doch nicht nötig gewesen","Hast du einen Wunsch?","Was schenkt ihr denn?","Brauchst du irgendetwas?","Wäre ein Gutschein okay?","Kann ich das noch umtauschen?","Ich habe den Bon dabei","Es passt leider nicht","Geht auch eine andere Größe?","Eine Kleinigkeit für dich","Ich hoffe, ich habe deinen Geschmack getroffen","Falls es nicht passt, liegt der Bon dabei","Von uns beiden","Darüber freue ich mich wirklich","Das ist genau mein Ding","Ehrlich gesagt weiß ich noch nicht, wo ich es hintue","Darf ich es umtauschen, wenn es nicht passt?","Wollen wir zusammenlegen?","Wie viel gebt ihr ungefähr?","Ich würde einen Gutschein vorschlagen","Geld finde ich in dem Fall passender","Der Artikel war beim Auspacken beschädigt","Ich hätte gern Ersatz","Das entspricht nicht der Beschreibung","Ich möchte vom Kauf zurücktreten"]
 </script>
 
 <script>
@@ -1057,6 +1216,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,9 +621,10 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
-<a class="tab" href="#debatte">⚖️ Debatte</a>
+<a class="tab" href="#sprechuebung">⚡ Sprechübung</a>
 <a class="tab" href="#abschluss">🎯 Abschluss</a>
 <a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
 </nav>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Wann hast du zuletzt nach dem Weg gefragt?</div></div><div class="nur-b1"><div class="ank">Warum sind Wegbeschreibungen so schwer zu verstehen?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../bilder/lesen/strasse.webp" alt="Eine Straßenkreuzung mit Ampel und Zebrastreifen">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Wann hast du zuletzt nach dem Weg gefragt?</li><li>Fragst du lieber Menschen oder schaust du aufs Handy?</li><li>Was machst du, wenn du die Antwort nicht verstehst?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Warum sind Wegbeschreibungen so schwer zu verstehen?</li><li>Wie merkst du dir einen Weg, den dir jemand erklärt?</li><li>Was ist besser: einmal fragen und viel bekommen, oder dreimal fragen und wenig?</li></ol></div></div>
+<div class="tip teal">🔑 <strong>Der Trick für heute:</strong> Frag nicht <i>„Wie komme ich zum Bahnhof?“</i>, sondern <b>„Ist der Bahnhof in dieser Richtung?“</b> und zeig dabei. Dann bekommst du ein Ja oder ein Nein statt einer Beschreibung mit vier Abbiegungen — und kannst nach hundert Metern einfach noch mal fragen.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Hattest du schon einmal eine große Verspätung?</li><li>Was hast du gemacht?</li><li>Wem sagst du Bescheid, wenn du später kommst?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Was ärgert dich mehr: die Verspätung oder die fehlende Information?</li><li>Wie sagst du im Beruf, dass du zu spät kommst?</li><li>Wann lohnt es sich, jemanden vom Personal zu suchen?</li></ol></div></div>
+<div class="tip">💡 <strong>Zwei Wörter, die dich retten:</strong> <b>der Zugausfall</b> — der Zug fährt gar nicht. <b>der Schienenersatzverkehr</b> — statt des Zuges fährt ein Bus, meistens vor dem Bahnhof. Wenn du diese beiden in einer Durchsage hörst, weißt du sofort, was zu tun ist: raus und nach dem Bus schauen.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -583,6 +681,64 @@ footer strong{color:var(--ink);}
 <button class="speak dbtn" data-say="Hallo, ich bin es. Ich verspäte mich um etwa zwanzig Minuten. Oh, was ist denn los? Mein Zug ist ausgefallen, jetzt fährt ein Ersatzbus. Fang ruhig schon mal an. Alles klar, kein Problem. Bis gleich! Ich melde mich noch mal, wenn ich im Bus sitze.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 2 mit einem echten Weg aus eurer Stadt — und der Erklärende soll absichtlich zu ausführlich sein. Der andere darf nur den ersten Schritt mitnehmen.</div>
+</section>
+
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 🧭 Nach dem Weg fragen</div>
+<div class="merk"><span>Entschuldigung, wo ist …?</span><button class="speak" data-say="Entschuldigung, wo ist …?">🔊 hören</button></div>
+<div class="merk"><span>Ist das in dieser <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von Richtung" data-wort="die Richtung" data-kurz="grob, aber leicht zu merken" data-bsp="Immer geradeaus, dann sehen Sie es schon.">Richtung</b>?</span><button class="speak" data-say="Ist das in dieser Richtung?">🔊 hören</button></div>
+<div class="merk"><span>Ist das <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von zu Fuß" data-wort="zu Fuß" data-kurz="gehen, ohne Fahrzeug" data-bsp="Zu Fuß sind das zehn Minuten.">zu Fuß</b> zu schaffen?</span><button class="speak" data-say="Ist das zu Fuß zu schaffen?">🔊 hören</button></div>
+<div class="merk"><span>Wie lange dauert das ungefähr?</span><button class="speak" data-say="Wie lange dauert das ungefähr?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 👂 Sicher verstehen</div>
+<div class="merk"><span>Noch mal langsam bitte?</span><button class="speak" data-say="Noch mal langsam bitte?">🔊 hören</button></div>
+<div class="merk"><span>Also erst geradeaus, ja?</span><button class="speak" data-say="Also erst geradeaus, ja?">🔊 hören</button></div>
+<div class="merk"><span>An der <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Ampel" data-wort="die Ampel" data-kurz="das Licht, das Rot, Gelb und Grün zeigt" data-bsp="Gehen Sie bis zur Ampel.">Ampel</b> links — richtig?</span><button class="speak" data-say="An der Ampel links — richtig?">🔊 hören</button></div>
+<div class="merk"><span>Gibt es ein <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Schild" data-wort="das Schild" data-kurz="die Tafel, die dir sagt, wo es langgeht" data-bsp="Folgen Sie einfach den Schildern.">Schild</b> dorthin?</span><button class="speak" data-say="Gibt es ein Schild dorthin?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 📱 Bescheid sagen</div>
+<div class="merk"><span>Ich komme etwas später</span><button class="speak" data-say="Ich komme etwas später">🔊 hören</button></div>
+<div class="merk"><span>Ich habe zwanzig Minuten <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Verspätung" data-wort="die Verspätung" data-kurz="wenn etwas später kommt als geplant" data-bsp="Ich habe zwanzig Minuten Verspätung.">Verspätung</b></span><button class="speak" data-say="Ich habe zwanzig Minuten Verspätung">🔊 hören</button></div>
+<div class="merk"><span>Ich sage dir Bescheid, wenn ich losfahre</span><button class="speak" data-say="Ich sage dir Bescheid, wenn ich losfahre">🔊 hören</button></div>
+<div class="merk"><span>Fang schon mal ohne mich an</span><button class="speak" data-say="Fang schon mal ohne mich an">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🔄 Umplanen</div>
+<div class="merk"><span>Was gilt jetzt?</span><button class="speak" data-say="Was gilt jetzt?">🔊 hören</button></div>
+<div class="merk"><span>Fährt hier <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Ersatzverkehr" data-wort="der Ersatzverkehr" data-kurz="ein Bus, der statt des Zuges fährt" data-bsp="Ab hier fährt Ersatzverkehr.">Ersatzverkehr</b>?</span><button class="speak" data-say="Fährt hier Ersatzverkehr?">🔊 hören</button></div>
+<div class="merk"><span>Wann fährt der nächste?</span><button class="speak" data-say="Wann fährt der nächste?">🔊 hören</button></div>
+<div class="merk"><span>Kann ich auch anders fahren?</span><button class="speak" data-say="Kann ich auch anders fahren?">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 🧭 Genauer fragen</div>
+<div class="merk"><span>Können Sie mir sagen, wie ich am besten zu … komme?</span><button class="speak" data-say="Können Sie mir sagen, wie ich am besten zu … komme?">🔊 hören</button></div>
+<div class="merk"><span>Lohnt sich zu Fuß oder nehme ich besser den Bus?</span><button class="speak" data-say="Lohnt sich zu Fuß oder nehme ich besser den Bus?">🔊 hören</button></div>
+<div class="merk"><span>Ist der Weg gut ausgeschildert?</span><button class="speak" data-say="Ist der Weg gut ausgeschildert?">🔊 hören</button></div>
+<div class="merk"><span>Komme ich da mit dem Kinderwagen durch?</span><button class="speak" data-say="Komme ich da mit dem Kinderwagen durch?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🔁 Zurückspiegeln</div>
+<div class="merk"><span>Ich fasse kurz zusammen: …</span><button class="speak" data-say="Ich fasse kurz zusammen: …">🔊 hören</button></div>
+<div class="merk"><span>Habe ich das richtig verstanden, dass …?</span><button class="speak" data-say="Habe ich das richtig verstanden, dass …?">🔊 hören</button></div>
+<div class="merk"><span>Das heißt, ich gehe zuerst …</span><button class="speak" data-say="Das heißt, ich gehe zuerst …">🔊 hören</button></div>
+<div class="merk"><span>Und danach halte ich mich links?</span><button class="speak" data-say="Und danach halte ich mich links?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 📱 Verbindlich Bescheid geben</div>
+<div class="merk"><span>Ich verspäte mich um etwa zwanzig Minuten</span><button class="speak" data-say="Ich verspäte mich um etwa zwanzig Minuten">🔊 hören</button></div>
+<div class="merk"><span>Ich melde mich, sobald ich Genaueres weiß</span><button class="speak" data-say="Ich melde mich, sobald ich Genaueres weiß">🔊 hören</button></div>
+<div class="merk"><span>Sollen wir den Termin verschieben?</span><button class="speak" data-say="Sollen wir den Termin verschieben?">🔊 hören</button></div>
+<div class="merk"><span>Es tut mir leid, es liegt an der Bahn</span><button class="speak" data-say="Es tut mir leid, es liegt an der Bahn">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🧩 Alternativen klären</div>
+<div class="merk"><span>Gibt es eine andere Verbindung?</span><button class="speak" data-say="Gibt es eine andere Verbindung?">🔊 hören</button></div>
+<div class="merk"><span>Wird der Ersatzverkehr angezeigt?</span><button class="speak" data-say="Wird der Ersatzverkehr angezeigt?">🔊 hören</button></div>
+<div class="merk"><span>Gilt meine Fahrkarte auch für die andere Strecke?</span><button class="speak" data-say="Gilt meine Fahrkarte auch für die andere Strecke?">🔊 hören</button></div>
+<div class="merk"><span>Wo finde ich jemanden vom Personal?</span><button class="speak" data-say="Wo finde ich jemanden vom Personal?">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -632,9 +788,9 @@ footer strong{color:var(--ink);}
 
 <div class="rsp">
 <div class="rsp-kopf"><span class="rsp-nr">2</span><b>Zu ausführlich</b></div>
-<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>muss freundlich bremsen und darf am Ende nur den ersten Schritt und ein <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Schild" data-wort="das Schild" data-kurz="die Tafel, die dir sagt, wo es langgeht" data-bsp="Folgen Sie einfach den Schildern.">Schild</b> kennen — mehr braucht es nicht.</p></div><div class="rsp-r b"><span>B</span><p>erklärt absichtlich einen viel zu langen Weg mit fünf Abbiegungen.</p></div></div>
+<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>muss freundlich bremsen und darf am Ende nur den ersten Schritt und ein Schild kennen — mehr braucht es nicht.</p></div><div class="rsp-r b"><span>B</span><p>erklärt absichtlich einen viel zu langen Weg mit fünf Abbiegungen.</p></div></div>
 <div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Noch mal langsam bitte?</span><span class="rm">Also erst hier runter?</span><span class="rm">In diese Richtung?</span><span class="rm">Gibt es ein Schild dorthin?</span></div><div class="nur-b1"><span class="rm">Darf ich kurz nachfragen — der erste Teil?</span><span class="rm">Habe ich das richtig verstanden, dass …?</span><span class="rm">Den Rest frage ich unterwegs noch einmal</span><span class="rm">Ist es ab dort ausgeschildert?</span></div></div>
-<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>A hat unterbrochen, statt höflich alles über sich ergehen zu lassen, und ist am Ende mit genau zwei Informationen losgegangen: erste <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von Richtung" data-wort="die Richtung" data-kurz="grob, aber leicht zu merken" data-bsp="Immer geradeaus, dann sehen Sie es schon.">Richtung</b> und Schild.</div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>A hat unterbrochen, statt höflich alles über sich ergehen zu lassen, und ist am Ende mit genau zwei Informationen losgegangen: erste Richtung und Schild.</div>
 <details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
 
@@ -655,11 +811,19 @@ footer strong{color:var(--ink);}
 </div>
 </section>
 
-<section class="section" id="debatte">
-<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
-<p class="ssub">Zwei Gruppen, eine Frage. Abwechselnd sprechen.</p>
-<div class="deb-these">Bei einer Störung sucht man sich selbst einen Weg.</div>
-<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><ul><li>Der Ersatzbus kommt oft später als die nächste Bahn.</li><li>Mit der App ist man meistens schneller da.</li><li>Am Bahnsteig erfährt man nicht, wie lange es dauert.</li></ul></div><div class="deb-s con"><b>Gruppe B · dagegen</b><ul><li>Wer selbst fährt, bekommt kein Geld zurück.</li><li>Nachts und auf dem Land gibt es keine zweite Linie.</li><li>Mit Koffer und Kind ist der Umweg keine Lösung.</li></ul></div></div>
+<section class="section" id="sprechuebung">
+<h2 class="st">Jetzt <span class="hl">ihr</span></h2>
+<p class="ssub">Drei kleine Übungen. Jeder kommt dran.</p>
+<div class="card90">
+<div class="lbl">Dein Satz</div>
+<div class="word" id="wueb" style="font-size:1.1rem;line-height:1.4;">Tippe auf den Knopf.</div>
+<button class="btn" id="uebnew">🎲 Satz ziehen</button>
+</div>
+<div class="uebs">
+<div class="ueb"><span class="uebn">1</span><div><b>Satz ziehen und weiterreden</b><p>Zieh einen Satz, sag ihn laut — und häng sofort einen zweiten Satz an, der danach kommen würde.</p></div></div>
+<div class="ueb"><span class="uebn">2</span><div><b>Die Kette</b><p>Reihum sagt jeder einen Satz von oben. Kein Satz darf zweimal kommen. Wer nicht weiterweiß, sagt <i>Ich weiß gerade keinen mehr</i> — auch das ist ein Satz.</p></div></div>
+<div class="ueb"><span class="uebn">3</span><div><b>Ohne Hilfe</b><p>Klappt alles zu und spielt Dialog 1 noch einmal — frei, mit euren eigenen Wörtern.</p></div></div>
+</div>
 </section>
 
 <section class="section" id="abschluss">
@@ -757,6 +921,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Letzten Freitag wollte ich zu einem Termin und bin am falschen Bahnhof ausgestiegen. Also habe ich gefragt, ob es in dieser ___ weitergeht. Die Frau sagte: Gehen Sie geradeaus bis zur ___, dann rechts, und danach ist es ausgeschildert. Ich habe es einmal wiederholt, und sie hat genickt. An der Kreuzung bin ich rechts ___, und tatsächlich stand da ein ___ mit einem Pfeil. Zu ___ waren es dann doch fünfzehn Minuten statt zehn, aber ich bin angekommen. Am Bahnsteig stand dann leider nichts mehr auf der Anzeige. In der ___ kam etwas von Ersatzverkehr, also bin ich raus zum Bus. Vorher habe ich noch schnell ___ gesagt, dass ich mich um zwanzig Minuten verspäte. Das war das Beste an dem ganzen Tag: nicht der Weg, sondern dass ich dreimal gefragt habe, statt zu raten.","o":["Richtung","Ampel","abgebogen","Schild","Fuß","Durchsage","Bescheid","Haltestelle"],"a":[["Richtung"],["Ampel"],["abgebogen"],["Schild"],["Fuß"],["Durchsage"],["Bescheid"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Entschuldigung, wo ist …?","Ist das in dieser Richtung?","Ist das zu Fuß zu schaffen?","Wie lange dauert das ungefähr?","Noch mal langsam bitte?","Also erst geradeaus, ja?","An der Ampel links — richtig?","Gibt es ein Schild dorthin?","Ich komme etwas später","Ich habe zwanzig Minuten Verspätung","Ich sage dir Bescheid, wenn ich losfahre","Fang schon mal ohne mich an","Was gilt jetzt?","Fährt hier Ersatzverkehr?","Wann fährt der nächste?","Kann ich auch anders fahren?","Können Sie mir sagen, wie ich am besten zu … komme?","Lohnt sich zu Fuß oder nehme ich besser den Bus?","Ist der Weg gut ausgeschildert?","Komme ich da mit dem Kinderwagen durch?","Ich fasse kurz zusammen: …","Habe ich das richtig verstanden, dass …?","Das heißt, ich gehe zuerst …","Und danach halte ich mich links?","Ich verspäte mich um etwa zwanzig Minuten","Ich melde mich, sobald ich Genaueres weiß","Sollen wir den Termin verschieben?","Es tut mir leid, es liegt an der Bahn","Gibt es eine andere Verbindung?","Wird der Ersatzverkehr angezeigt?","Gilt meine Fahrkarte auch für die andere Strecke?","Wo finde ich jemanden vom Personal?"]
 </script>
 
 <script>
@@ -1056,6 +1223,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

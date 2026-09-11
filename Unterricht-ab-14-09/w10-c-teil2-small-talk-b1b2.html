@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Sagst du manchmal etwas, das du nicht so meinst?</div></div><div class="nur-b1"><div class="ank">Wo hört Höflichkeit auf und wo fängt Unehrlichkeit an?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../amanda/sz-cafe.webp" alt="Zwei Menschen unterhalten sich mit Kaffeebechern in der Hand">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Sagst du manchmal etwas, das du nicht so meinst?</li><li>Wie antwortest du auf <i>Wie geht es dir?</i></li><li>Redest du lieber viel oder wenig mit Fremden?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Wo hört Höflichkeit auf und wo fängt Unehrlichkeit an?</li><li>Was ist unangenehmer: Schweigen oder ein leeres Gespräch?</li><li>Wie viel Anpassung findest du in einem fremden Land normal?</li></ol></div></div>
+<div class="tip teal">🔑 <strong>Für heute wichtig:</strong> Du musst nicht deine echte Meinung vertreten. In der Debatte bekommst du eine Seite zugeteilt — und die Übung besteht genau darin, auch die andere Seite gut zu verteidigen.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Was machst du hier anders als zu Hause?</li><li>Was hast du hier neu gelernt?</li><li>Was möchtest du nicht ändern?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Was hast du dir hier angewöhnt, ohne es zu merken?</li><li>Wo ziehst du eine Grenze und sagst: das mache ich nicht mit?</li><li>Ändert sich das nach ein paar Jahren?</li></ol></div></div>
+<div class="tip">💡 <strong>Ein Satz für jede Debatte:</strong> <b>Da haben Sie recht, und trotzdem …</b> Damit nimmst du dem anderen den Wind aus den Segeln und bleibst trotzdem bei deiner Meinung. Der nützlichste Satz des Abends.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -586,6 +684,64 @@ footer strong{color:var(--ink);}
 <button class="speak dbtn" data-say="Diese Runde am Anfang kostet uns jedes Mal zehn Minuten. Ich sehe das anders. Seit wir das machen, sagen auch die Stillen was. Kann sein. Trotzdem sitzen wir dann länger. Stimmt. Aber wir sparen es hinterher, weil weniger nachgefragt wird. Also fünf Minuten statt zehn? Damit wäre ich einverstanden. Das ist ein fairer Kompromiss.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Gespräch 2 mit einem Beispiel aus eurem eigenen Alltag. Regel: Jeder muss dem anderen mindestens einmal recht geben, bevor er widerspricht.</div>
+</section>
+
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 💬 Meinung sagen</div>
+<div class="merk"><span>Ich finde, …</span><button class="speak" data-say="Ich finde, …">🔊 hören</button></div>
+<div class="merk"><span>Meiner <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Meinung" data-wort="die Meinung" data-kurz="was du über eine Sache denkst" data-bsp="Meiner Meinung nach ist das übertrieben.">Meinung</b> nach …</span><button class="speak" data-say="Meiner Meinung nach …">🔊 hören</button></div>
+<div class="merk"><span>Für mich ist klar: …</span><button class="speak" data-say="Für mich ist klar: …">🔊 hören</button></div>
+<div class="merk"><span>Ich bin dafür, weil …</span><button class="speak" data-say="Ich bin dafür, weil …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🔗 Begründen</div>
+<div class="merk"><span>… weil …</span><button class="speak" data-say="… weil …">🔊 hören</button></div>
+<div class="merk"><span>Der Grund ist einfach: …</span><button class="speak" data-say="Der Grund ist einfach: …">🔊 hören</button></div>
+<div class="merk"><span>Sonst passiert es, dass …</span><button class="speak" data-say="Sonst passiert es, dass …">🔊 hören</button></div>
+<div class="merk"><span>Das merkt man daran, dass …</span><button class="speak" data-say="Das merkt man daran, dass …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 📌 Beispiel bringen</div>
+<div class="merk"><span>Bei mir war das so: …</span><button class="speak" data-say="Bei mir war das so: …">🔊 hören</button></div>
+<div class="merk"><span>Letzte Woche zum Beispiel …</span><button class="speak" data-say="Letzte Woche zum Beispiel …">🔊 hören</button></div>
+<div class="merk"><span>Ich kenne jemanden, der …</span><button class="speak" data-say="Ich kenne jemanden, der …">🔊 hören</button></div>
+<div class="merk"><span>In meinem Haus ist es so, dass …</span><button class="speak" data-say="In meinem Haus ist es so, dass …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · ↔️ Reagieren</div>
+<div class="merk"><span>Da haben Sie recht, aber …</span><button class="speak" data-say="Da haben Sie recht, aber …">🔊 hören</button></div>
+<div class="merk"><span>Das sehe ich anders.</span><button class="speak" data-say="Das sehe ich anders.">🔊 hören</button></div>
+<div class="merk"><span>Stimmt, und trotzdem …</span><button class="speak" data-say="Stimmt, und trotzdem …">🔊 hören</button></div>
+<div class="merk"><span>Wie meinen Sie das genau?</span><button class="speak" data-say="Wie meinen Sie das genau?">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 💬 Meinung mit Einschränkung</div>
+<div class="merk"><span>Grundsätzlich bin ich dafür, allerdings …</span><button class="speak" data-say="Grundsätzlich bin ich dafür, allerdings …">🔊 hören</button></div>
+<div class="merk"><span>Ich neige zu der Meinung, dass …</span><button class="speak" data-say="Ich neige zu der Meinung, dass …">🔊 hören</button></div>
+<div class="merk"><span>In den meisten Fällen würde ich sagen: …</span><button class="speak" data-say="In den meisten Fällen würde ich sagen: …">🔊 hören</button></div>
+<div class="merk"><span>Da bin ich zwiegespalten, aber …</span><button class="speak" data-say="Da bin ich zwiegespalten, aber …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🔗 Sauber begründen</div>
+<div class="merk"><span>Das liegt vor allem daran, dass …</span><button class="speak" data-say="Das liegt vor allem daran, dass …">🔊 hören</button></div>
+<div class="merk"><span>Der entscheidende Punkt ist: …</span><button class="speak" data-say="Der entscheidende Punkt ist: …">🔊 hören</button></div>
+<div class="merk"><span>Man darf dabei nicht vergessen, dass …</span><button class="speak" data-say="Man darf dabei nicht vergessen, dass …">🔊 hören</button></div>
+<div class="merk"><span>Das führt am Ende dazu, dass …</span><button class="speak" data-say="Das führt am Ende dazu, dass …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 📌 Beispiel mit Wirkung</div>
+<div class="merk"><span>Ein Beispiel aus meinem Alltag: …</span><button class="speak" data-say="Ein Beispiel aus meinem Alltag: …">🔊 hören</button></div>
+<div class="merk"><span>Genau das habe ich erlebt, als …</span><button class="speak" data-say="Genau das habe ich erlebt, als …">🔊 hören</button></div>
+<div class="merk"><span>Bei uns in der Firma läuft es so, dass …</span><button class="speak" data-say="Bei uns in der Firma läuft es so, dass …">🔊 hören</button></div>
+<div class="merk"><span>Ich habe lange geglaubt, dass … — bis …</span><button class="speak" data-say="Ich habe lange geglaubt, dass … — bis …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · ↔️ Drehen statt streiten</div>
+<div class="merk"><span>Stimmt — und genau deshalb …</span><button class="speak" data-say="Stimmt — und genau deshalb …">🔊 hören</button></div>
+<div class="merk"><span>Ihr <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Argument" data-wort="das Argument" data-kurz="der Grund, mit dem du deine Meinung erklärst" data-bsp="Das ist ein gutes Argument, aber es gilt nicht überall.">Argument</b> spricht eher für meine Seite, weil …</span><button class="speak" data-say="Ihr Argument spricht eher für meine Seite, weil …">🔊 hören</button></div>
+<div class="merk"><span>Das würde ich sogar unterschreiben, nur folgt daraus …</span><button class="speak" data-say="Das würde ich sogar unterschreiben, nur folgt daraus …">🔊 hören</button></div>
+<div class="merk"><span>Ich verstehe, wie Sie darauf kommen, sehe es aber anders.</span><button class="speak" data-say="Ich verstehe, wie Sie darauf kommen, sehe es aber anders.">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -759,6 +915,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Ich habe lange gedacht, dass Small Talk verlorene Zeit ist, ___ dabei kaum etwas gesagt wird. Inzwischen sehe ich das anders. ___ es nur zwei Minuten sind, entscheiden sie oft, ob man überhaupt angesprochen wird. Bei mir war das so: Ich habe morgens über das Wetter geredet, ___ hat mich die Kollegin mittags mitgenommen. Man könnte sagen, das sei unehrlich. ___ finde ich das nicht, denn niemand verspricht dabei etwas. Es ist reine Höflichkeit, ___ sie macht den Tag leichter. Natürlich kostet es Kraft, wenn man die Sprache noch lernt, ___ lohnt es sich. Und wenn die Stimmung einmal kippt, ___ man einfach das Thema wechselt, ist auch nichts verloren. Am Ende ist es ein Kompromiss, ___ beide Seiten gut leben können.","o":["weil","Obwohl","deshalb","Trotzdem","und","aber","indem","mit dem"],"a":[["weil"],["Obwohl"],["deshalb"],["Trotzdem"],["und"],["aber"],["indem"],["mit dem"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Ich finde, …","Meiner Meinung nach …","Für mich ist klar: …","Ich bin dafür, weil …","Der Grund ist einfach: …","Sonst passiert es, dass …","Das merkt man daran, dass …","Bei mir war das so: …","Letzte Woche zum Beispiel …","Ich kenne jemanden, der …","In meinem Haus ist es so, dass …","Da haben Sie recht, aber …","Das sehe ich anders.","Stimmt, und trotzdem …","Wie meinen Sie das genau?","Grundsätzlich bin ich dafür, allerdings …","Ich neige zu der Meinung, dass …","In den meisten Fällen würde ich sagen: …","Da bin ich zwiegespalten, aber …","Das liegt vor allem daran, dass …","Der entscheidende Punkt ist: …","Man darf dabei nicht vergessen, dass …","Das führt am Ende dazu, dass …","Ein Beispiel aus meinem Alltag: …","Genau das habe ich erlebt, als …","Bei uns in der Firma läuft es so, dass …","Ich habe lange geglaubt, dass … — bis …","Stimmt — und genau deshalb …","Ihr Argument spricht eher für meine Seite, weil …","Das würde ich sogar unterschreiben, nur folgt daraus …","Ich verstehe, wie Sie darauf kommen, sehe es aber anders."]
 </script>
 
 <script>
@@ -1058,6 +1217,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

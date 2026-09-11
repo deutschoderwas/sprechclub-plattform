@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Wie sieht die Innenstadt in deiner Stadt aus?</div></div><div class="nur-b1"><div class="ank">Wem sollte eine Innenstadt in erster Linie dienen?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../vok-bild/die-kreuzung.webp" alt="Eine Kreuzung mit Zebrastreifen zwischen Fachwerkhäusern">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Wie sieht die Innenstadt in deiner Stadt aus?</li><li>Gehst du dort gern hin? Warum oder warum nicht?</li><li>Fährst du mit dem Auto in die Stadt?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Wem sollte eine Innenstadt in erster Linie dienen?</li><li>Was würdest du an eurer Innenstadt ändern?</li><li>Wie ist das in einer Stadt, die du aus deinem Herkunftsland kennst?</li></ol></div></div>
+<div class="tip teal">🔑 <strong>Damit die Debatte trägt:</strong> Es geht heute nicht um Autos abschaffen. Es geht um die Frage: <b>Wofür ist die Fläche da?</b> Wer diese Frage beantwortet, hat automatisch eine Position — und muss niemanden angreifen.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Warst du schon einmal bei einer Bürgerversammlung?</li><li>Wer entscheidet bei euch über solche Fragen?</li><li>Würdest du dort etwas sagen?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Sollten solche Fragen per Abstimmung entschieden werden?</li><li>Wie erreicht man Menschen, die nie zu einer Versammlung kommen?</li><li>Was spricht dafür, eine Maßnahme erst einmal befristet zu testen?</li></ol></div></div>
+<div class="tip">💡 <strong>Ein Satz, der überall funktioniert:</strong> <b>„Ich wäre dafür, das erst einmal ein halbes Jahr zu testen.“</b> Er nimmt jeder Seite die Angst vor der Endgültigkeit — und wird deshalb selten abgelehnt.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -588,6 +686,64 @@ footer strong{color:var(--ink);}
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 2 mit eurer eigenen Straße. Regel: In jeder Antwort muss ein Ziel vorkommen — einmal mit <i>um … zu</i>, einmal mit <i>damit</i>.</div>
 </section>
 
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 🤝 Die Sorge aufnehmen</div>
+<div class="merk"><span>Ich verstehe die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Sorge" data-wort="die Sorge" data-kurz="die Angst, dass etwas schiefgehen könnte" data-bsp="Die größte Sorge der Geschäfte ist der Umsatz.">Sorge</b>.</span><button class="speak" data-say="Ich verstehe die Sorge.">🔊 hören</button></div>
+<div class="merk"><span>Das ist ein wichtiger Punkt.</span><button class="speak" data-say="Das ist ein wichtiger Punkt.">🔊 hören</button></div>
+<div class="merk"><span>Da haben Sie recht.</span><button class="speak" data-say="Da haben Sie recht.">🔊 hören</button></div>
+<div class="merk"><span>Das sehe ich auch so.</span><button class="speak" data-say="Das sehe ich auch so.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🧭 Position beziehen</div>
+<div class="merk"><span>Ich bin dafür, dass …</span><button class="speak" data-say="Ich bin dafür, dass …">🔊 hören</button></div>
+<div class="merk"><span>Ich bin dagegen, weil …</span><button class="speak" data-say="Ich bin dagegen, weil …">🔊 hören</button></div>
+<div class="merk"><span>Ich finde die Idee gut.</span><button class="speak" data-say="Ich finde die Idee gut.">🔊 hören</button></div>
+<div class="merk"><span>Ich hätte da Bedenken.</span><button class="speak" data-say="Ich hätte da Bedenken.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🎯 Das Ziel nennen</div>
+<div class="merk"><span>… damit es ruhiger wird.</span><button class="speak" data-say="… damit es ruhiger wird.">🔊 hören</button></div>
+<div class="merk"><span>… um Platz zu schaffen.</span><button class="speak" data-say="… um Platz zu schaffen.">🔊 hören</button></div>
+<div class="merk"><span>… damit die Kinder sicher sind.</span><button class="speak" data-say="… damit die Kinder sicher sind.">🔊 hören</button></div>
+<div class="merk"><span>… um weniger <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Lärm" data-wort="der Lärm" data-kurz="unangenehm lauter Klang" data-bsp="Der Lärm ist seit der Sperrung deutlich weniger geworden.">Lärm</b> zu haben.</span><button class="speak" data-say="… um weniger Lärm zu haben.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 💡 Vorschlagen</div>
+<div class="merk"><span>Man könnte es testen.</span><button class="speak" data-say="Man könnte es testen.">🔊 hören</button></div>
+<div class="merk"><span>Wie wäre es mit einer Ladezone?</span><button class="speak" data-say="Wie wäre es mit einer Ladezone?">🔊 hören</button></div>
+<div class="merk"><span><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Anwohner" data-wort="die Anwohner" data-kurz="die Menschen, die in einer Straße wohnen" data-bsp="Die Anwohner bekommen eine Ausnahmegenehmigung.">Anwohner</b> sollten eine Ausnahme bekommen.</span><button class="speak" data-say="Anwohner sollten eine Ausnahme bekommen.">🔊 hören</button></div>
+<div class="merk"><span>Vielleicht erst einmal ein halbes Jahr.</span><button class="speak" data-say="Vielleicht erst einmal ein halbes Jahr.">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 🤝 Die Gegenseite ernst nehmen</div>
+<div class="merk"><span>Die Sorge um den <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Umsatz" data-wort="der Umsatz" data-kurz="das gesamte Geld, das ein Geschäft einnimmt" data-bsp="Nach der Sperrung ist der Umsatz zuerst gesunken und dann gestiegen.">Umsatz</b> halte ich für berechtigt.</span><button class="speak" data-say="Die Sorge um den Umsatz halte ich für berechtigt.">🔊 hören</button></div>
+<div class="merk"><span>Ich kann nachvollziehen, dass …</span><button class="speak" data-say="Ich kann nachvollziehen, dass …">🔊 hören</button></div>
+<div class="merk"><span>Für Anwohner ist das eine echte Belastung.</span><button class="speak" data-say="Für Anwohner ist das eine echte Belastung.">🔊 hören</button></div>
+<div class="merk"><span>Dieser Einwand wiegt schwer.</span><button class="speak" data-say="Dieser Einwand wiegt schwer.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 🧭 Position mit Grenze</div>
+<div class="merk"><span>Grundsätzlich dafür — mit einer Ausnahme:</span><button class="speak" data-say="Grundsätzlich dafür — mit einer Ausnahme:">🔊 hören</button></div>
+<div class="merk"><span>Ich vertrete die Position, dass …</span><button class="speak" data-say="Ich vertrete die Position, dass …">🔊 hören</button></div>
+<div class="merk"><span>Für die Kernzone ja, für den Rand nein.</span><button class="speak" data-say="Für die Kernzone ja, für den Rand nein.">🔊 hören</button></div>
+<div class="merk"><span>Solange es eine Alternative gibt, bin ich dafür.</span><button class="speak" data-say="Solange es eine Alternative gibt, bin ich dafür.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · 🎯 Ziel und Zweck</div>
+<div class="merk"><span>Ziel ist nicht weniger Verkehr, sondern mehr Aufenthalt.</span><button class="speak" data-say="Ziel ist nicht weniger Verkehr, sondern mehr Aufenthalt.">🔊 hören</button></div>
+<div class="merk"><span>Das Ganze dient dazu, …</span><button class="speak" data-say="Das Ganze dient dazu, …">🔊 hören</button></div>
+<div class="merk"><span>Der Sinn der <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Maßnahme" data-wort="die Maßnahme" data-kurz="etwas, das man tut, um ein Ziel zu erreichen" data-bsp="Die Maßnahme soll den Verkehr aus dem Viertel herausholen.">Maßnahme</b> besteht darin, dass …</span><button class="speak" data-say="Der Sinn der Maßnahme besteht darin, dass …">🔊 hören</button></div>
+<div class="merk"><span>Es geht nicht um Autos, sondern um Fläche.</span><button class="speak" data-say="Es geht nicht um Autos, sondern um Fläche.">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 💡 Konkret vorschlagen</div>
+<div class="merk"><span>Ich schlage eine <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Testphase" data-wort="die Testphase" data-kurz="eine begrenzte Zeit, in der man etwas ausprobiert" data-bsp="Wir starten mit einer Testphase von sechs Monaten.">Testphase</b> von sechs Monaten vor.</span><button class="speak" data-say="Ich schlage eine Testphase von sechs Monaten vor.">🔊 hören</button></div>
+<div class="merk"><span>Denkbar wäre eine Ladezone für den Lieferverkehr.</span><button class="speak" data-say="Denkbar wäre eine Ladezone für den Lieferverkehr.">🔊 hören</button></div>
+<div class="merk"><span>Man könnte die Zahlen vorher und nachher erheben.</span><button class="speak" data-say="Man könnte die Zahlen vorher und nachher erheben.">🔊 hören</button></div>
+<div class="merk"><span>Anwohner erhalten eine Ausnahmegenehmigung.</span><button class="speak" data-say="Anwohner erhalten eine Ausnahmegenehmigung.">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
+</section>
+
 <section class="section" id="challenge">
 <h2 class="st">⏱️ Die 90-Sekunden-Challenge</h2>
 <p class="ssub">Neunzig Sekunden auf der Bürgerversammlung: Nimm eine Position ein, nenn dein Ziel und mach einen Vorschlag — frei gesprochen, ohne Zettel.</p>
@@ -629,7 +785,7 @@ footer strong{color:var(--ink);}
 <div class="rsp-kopf"><span class="rsp-nr">1</span><b>Sperren oder offen lassen?</b></div>
 <div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>führt ein Geschäft in der Straße und fürchtet um den <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Umsatz" data-wort="der Umsatz" data-kurz="das gesamte Geld, das ein Geschäft einnimmt" data-bsp="Nach der Sperrung ist der Umsatz zuerst gesunken und dann gestiegen.">Umsatz</b>.</p></div><div class="rsp-r b"><span>B</span><p>wohnt dort und möchte die Sperrung — beide haben gute Gründe.</p></div></div>
 <div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Ohne Parkplätze kommen weniger Kunden</span><span class="rm">Ich verstehe Ihre Sorge</span><span class="rm">Ich bin dafür, damit es ruhiger wird</span><span class="rm">Wir könnten es ein halbes Jahr testen</span></div><div class="nur-b1"><span class="rm">Meine Kundschaft kommt zum Teil von weiter weg, um hier gezielt einzukaufen</span><span class="rm">Die Sorge um den Umsatz halte ich für berechtigt — sie lässt sich überprüfen</span><span class="rm">Ich bin dafür, damit Kinder allein zur Schule gehen können</span><span class="rm">Ich schlage eine Testphase vor, um vorher und nachher zu zählen</span></div></div>
-<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>Beide haben die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Sorge" data-wort="die Sorge" data-kurz="die Angst, dass etwas schiefgehen könnte" data-bsp="Die größte Sorge der Geschäfte ist der Umsatz.">Sorge</b> der Gegenseite benannt, bevor sie widersprochen haben. Es kam mindestens ein Ziel mit <i>damit</i> und eines mit <i>um … zu</i> vor — und am Ende ein Vorschlag mit Frist.</div>
+<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>Beide haben die Sorge der Gegenseite benannt, bevor sie widersprochen haben. Es kam mindestens ein Ziel mit <i>damit</i> und eines mit <i>um … zu</i> vor — und am Ende ein Vorschlag mit Frist.</div>
 <details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
 </div>
 
@@ -760,6 +916,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Ab Januar ist unsere Straße für sechs Monate gesperrt. Die Stadt hat das beschlossen, ___ die Kinder allein zur Schule gehen können. Anwohner bekommen eine Ausnahmegenehmigung, ___ weiter in den Hof fahren zu können. Der Bäcker war zuerst dagegen, weil er Sorge um seinen ___ hatte. Auf der Versammlung hat jemand vorgeschlagen, vorher und nachher zu zählen, ___ am Ende alle dieselben Zahlen kennen. Genau das macht die ___ jetzt. Ich selbst bin zur Versammlung gegangen, ___ meine Frage direkt zu stellen — und war überrascht, wie sachlich es zuging. Im Sommer wird neu entschieden, und dann sehen wir, ob aus dem Versuch eine dauerhafte ___ wird.","o":["damit","um","Umsatz","Verwaltung","Maßnahme","Kundschaft","Sorge","Testphase"],"a":[["damit"],["um"],["Umsatz"],["damit"],["Verwaltung"],["um"],["Maßnahme"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Ich verstehe die Sorge.","Das ist ein wichtiger Punkt.","Da haben Sie recht.","Das sehe ich auch so.","Ich bin dafür, dass …","Ich bin dagegen, weil …","Ich finde die Idee gut.","Ich hätte da Bedenken.","Man könnte es testen.","Wie wäre es mit einer Ladezone?","Anwohner sollten eine Ausnahme bekommen.","Vielleicht erst einmal ein halbes Jahr.","Die Sorge um den Umsatz halte ich für berechtigt.","Ich kann nachvollziehen, dass …","Für Anwohner ist das eine echte Belastung.","Dieser Einwand wiegt schwer.","Grundsätzlich dafür — mit einer Ausnahme:","Ich vertrete die Position, dass …","Für die Kernzone ja, für den Rand nein.","Solange es eine Alternative gibt, bin ich dafür.","Ziel ist nicht weniger Verkehr, sondern mehr Aufenthalt.","Das Ganze dient dazu, …","Der Sinn der Maßnahme besteht darin, dass …","Es geht nicht um Autos, sondern um Fläche.","Ich schlage eine Testphase von sechs Monaten vor.","Denkbar wäre eine Ladezone für den Lieferverkehr.","Man könnte die Zahlen vorher und nachher erheben.","Anwohner erhalten eine Ausnahmegenehmigung."]
 </script>
 
 <script>
@@ -1059,6 +1218,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */

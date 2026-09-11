@@ -510,6 +510,99 @@ footer strong{color:var(--ink);}
   .nivk .zusatz{display:none;}
 }
 
+/* ============================================================
+   Ankommen mit Bild, Merksätze, Sprechübung
+   ============================================================
+   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
+   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
+   auf der Seite. Beides kommt hier zurück — die Sätze aber als
+   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
+
+.ankbild{
+  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
+  border-radius:18px; border:1px solid var(--line); object-fit:cover;
+  aspect-ratio:16/9;
+}
+
+.merkg{
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
+}
+.merkt{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
+  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
+}
+.merk{
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  padding:.5rem 0; border-top:1px solid var(--line);
+  font-size:1.02rem; line-height:1.45;
+}
+.merk:first-of-type{ border-top:0; }
+.merk > span{ flex:1 1 14rem; min-width:0; }
+.merk .speak{ flex:0 0 auto; }
+
+.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
+.ueb{
+  display:flex; gap:.8rem; align-items:flex-start;
+  border:1px solid var(--line); border-radius:16px;
+  padding:.85rem 1rem; background:var(--warm);
+}
+.ueb b{
+  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
+  display:block; margin:0 0 .2rem;
+}
+.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
+.uebn{
+  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
+  background:var(--turq-d); color:#fff; font-weight:700;
+  display:grid; place-items:center; font-size:.95rem;
+}
+
+@media (max-width:560px){
+  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
+  .merk{ font-size:.98rem; }
+  .ueb{ padding:.75rem .85rem; }
+}
+
+/* ---------- Ankommen: zwei Fragerunden ----------
+   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
+   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
+   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
+   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
+.ankrunde{
+  background:var(--warm);border:1px solid #F0E4C4;border-radius:14px;
+  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
+}
+.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
+.ankl{
+  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
+}
+.ankrunde.zwei .ankl{color:var(--teal-ink);}
+.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
+.ankfr li{
+  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
+  border-top:1px solid rgba(22,22,22,.07);
+}
+.ankfr li:first-child{border-top:0;padding-top:.15rem;}
+.ankfr li::before{
+  content:counter(ankz);position:absolute;left:0;top:.55rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;
+  background:var(--turq);color:var(--teal-ink);
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
+  display:grid;place-items:center;
+}
+.ankfr li:first-child::before{top:.15rem;}
+.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
+.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
+
+@media (max-width:560px){
+  .ankrunde{padding:.85rem .9rem .9rem;}
+  .ankfr li{font-size:.99rem;padding-left:2rem;}
+  .ankrunde.zwei .ankfr li{font-size:.94rem;}
+}
+
 </style>
 </head>
 <body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
@@ -528,6 +621,7 @@ footer strong{color:var(--ink);}
 <nav class="tabs">
 <a class="tab active" href="#ankommen">👋 Ankommen</a>
 <a class="tab" href="#dialoge">🎬 Dialog</a>
+<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
 <a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
 <a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
 <a class="tab" href="#debatte">⚖️ Debatte</a>
@@ -538,8 +632,12 @@ footer strong{color:var(--ink);}
 
 <section class="section" id="ankommen">
 <h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Eine Frage, ein Satz pro Person. Reihum.</p>
-<div class="nur-a2"><div class="ank">Ist dir das schon einmal passiert — zwei Erinnerungen an dasselbe Gespräch?</div></div><div class="nur-b1"><div class="ank">Warum fühlt sich „Ich fasse kurz zusammen“ für viele unangenehm an?</div></div>
+<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
+<img class="ankbild" src="../vok-bild/das-protokoll.webp" alt="Jemand macht Notizen an einem Tisch">
+<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Ist dir das schon einmal passiert — zwei Erinnerungen an dasselbe Gespräch?</li><li>Schreibst du dir Absprachen auf oder verlässt du dich aufs Gedächtnis?</li><li>Wann hast du zuletzt etwas schriftlich bestätigt bekommen?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Warum fühlt sich „Ich fasse kurz zusammen“ für viele unangenehm an?</li><li>Wann ist eine schriftliche Bestätigung Vertrauen — und wann Misstrauen?</li><li>Wer trägt die Verantwortung dafür, dass eine Absprache klar ist?</li></ol></div></div>
+<div class="tip teal">🔑 <strong>Der wichtigste Satz der Stunde:</strong> <b>Also halten wir fest: …</b> — sechs Wörter, die ein Gespräch in eine Absprache verwandeln. Wer sie sagt, wirkt nicht kleinlich, sondern verlässlich.</div>
+<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><ol class="ankfr"><li>Erzähl deinem Partner in drei Sätzen von deinem Wochenende — er fasst zusammen.</li><li>Stimmt die Zusammenfassung? Was hat gefehlt?</li><li>Wie fühlt es sich an, wenn jemand deine Worte wiederholt?</li></ol></div>
+<div class="tip teal">👥 <strong>Zu zweit:</strong> Der Zuhörer antwortet nur mit <b>„Also halten wir fest: …“</b>. Der Erzähler sagt danach nur <u>„Genau.“</u> oder <u>„Nicht ganz — …“</u>. Dann tauschen.</div>
 <details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
 </section>
 
@@ -594,6 +692,56 @@ footer strong{color:var(--ink);}
 <button class="speak dbtn" data-say="Wir hatten doch gesagt, dass du das übernimmst. Ich hatte es anders in Erinnerung. Lass uns kurz zurückgehen. Am Montag, im Gespräch mit Sara. Genau da hatte ich verstanden, dass Sara den Teil übernimmt und ich nur zuliefere. Hm. Dann haben wir wohl aneinander vorbeigeredet. Sieht so aus. Wichtiger ist jetzt: Wie machen wir es? Übernimm du es, ich helfe beim Rest. Machen wir. Und ab jetzt schreibe ich nach jedem Gespräch drei Zeilen auf.">🔊 Dialog vorlesen lassen</button></div>
 
 <div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 4 noch einmal — aber diesmal darf keiner der beiden das Wort „du“ in einem Vorwurf benutzen. Nur <b>ich hatte verstanden</b> und <b>wir</b>.</div>
+</section>
+
+<section class="section" id="merksaetze">
+<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
+<p class="ssub">Sag jeden einmal laut.</p>
+<div class="nur-a2">
+<div class="merkg"><div class="merkt">1 · 🪞 Spiegeln</div>
+<div class="merk"><span>Wenn ich Sie richtig verstehe, …</span><button class="speak" data-say="Wenn ich Sie richtig verstehe, …">🔊 hören</button></div>
+<div class="merk"><span>Sie meinen also, dass …</span><button class="speak" data-say="Sie meinen also, dass …">🔊 hören</button></div>
+<div class="merk"><span>Das heißt für mich: …</span><button class="speak" data-say="Das heißt für mich: …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 📋 Festhalten</div>
+<div class="merk"><span>Also halten wir fest: …</span><button class="speak" data-say="Also halten wir fest: …">🔊 hören</button></div>
+<div class="merk"><span>Ich fasse kurz zusammen: …</span><button class="speak" data-say="Ich fasse kurz zusammen: …">🔊 hören</button></div>
+<div class="merk"><span>Wir haben besprochen, dass …</span><button class="speak" data-say="Wir haben besprochen, dass …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · ❓ Offenes benennen</div>
+<div class="merk"><span>Was bleibt noch offen?</span><button class="speak" data-say="Was bleibt noch offen?">🔊 hören</button></div>
+<div class="merk"><span>Einen Punkt haben wir noch nicht geklärt</span><button class="speak" data-say="Einen Punkt haben wir noch nicht geklärt">🔊 hören</button></div>
+<div class="merk"><span>Und wenn das nicht klappt?</span><button class="speak" data-say="Und wenn das nicht klappt?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🧾 Absichern</div>
+<div class="merk"><span>Könnten Sie mir das <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von bestätigen" data-wort="bestätigen" data-kurz="schriftlich oder mündlich sagen, dass etwas stimmt" data-bsp="Könnten Sie mir das kurz per Mail bestätigen?">bestätigen</b>?</span><button class="speak" data-say="Könnten Sie mir das bestätigen?">🔊 hören</button></div>
+<div class="merk"><span>Damit ich es <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von schriftlich" data-wort="schriftlich" data-kurz="auf Papier oder per Mail, nicht nur gesprochen" data-bsp="Damit ich es schriftlich habe: Schicken Sie mir eine kurze Mail?">schriftlich</b> habe</span><button class="speak" data-say="Damit ich es schriftlich habe">🔊 hören</button></div>
+<div class="merk"><span>Ich melde mich bis …</span><button class="speak" data-say="Ich melde mich bis …">🔊 hören</button></div>
+</div>
+</div>
+<div class="nur-b1">
+<div class="merkg"><div class="merkt">1 · 🪞 Spiegeln mit Gewichtung</div>
+<div class="merk"><span>Der Kern ist für Sie also …</span><button class="speak" data-say="Der Kern ist für Sie also …">🔊 hören</button></div>
+<div class="merk"><span>Ihnen geht es vor allem um …, weniger um …</span><button class="speak" data-say="Ihnen geht es vor allem um …, weniger um …">🔊 hören</button></div>
+<div class="merk"><span>Habe ich den Schwerpunkt richtig gesetzt?</span><button class="speak" data-say="Habe ich den Schwerpunkt richtig gesetzt?">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">2 · 📋 Verbindlich festhalten</div>
+<div class="merk"><span>Halten wir fest: wer, was, bis wann</span><button class="speak" data-say="Halten wir fest: wer, was, bis wann">🔊 hören</button></div>
+<div class="merk"><span>Auf meiner Seite steht damit …</span><button class="speak" data-say="Auf meiner Seite steht damit …">🔊 hören</button></div>
+<div class="merk"><span>Dann wären wir uns einig</span><button class="speak" data-say="Dann wären wir uns einig">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">3 · ❓ Offenes und Risiken</div>
+<div class="merk"><span>Offen bleibt für mich …</span><button class="speak" data-say="Offen bleibt für mich …">🔊 hören</button></div>
+<div class="merk"><span>Was passiert, wenn …?</span><button class="speak" data-say="Was passiert, wenn …?">🔊 hören</button></div>
+<div class="merk"><span>Für den Fall, dass …</span><button class="speak" data-say="Für den Fall, dass …">🔊 hören</button></div>
+</div>
+<div class="merkg"><div class="merkt">4 · 🧾 Elegant absichern</div>
+<div class="merk"><span>Ich schicke Ihnen nachher eine kurze Zusammenfassung</span><button class="speak" data-say="Ich schicke Ihnen nachher eine kurze Zusammenfassung">🔊 hören</button></div>
+<div class="merk"><span>Widersprechen Sie gern, falls ich etwas falsch notiert habe</span><button class="speak" data-say="Widersprechen Sie gern, falls ich etwas falsch notiert habe">🔊 hören</button></div>
+<div class="merk"><span>Ist das so <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von verbindlich" data-wort="verbindlich" data-kurz="so, dass sich beide daran halten müssen" data-bsp="Ist das jetzt verbindlich oder nur ein Vorschlag?">verbindlich</b>?</span><button class="speak" data-say="Ist das so verbindlich?">🔊 hören</button></div>
+</div>
+</div>
+<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
 </section>
 
 <section class="section" id="challenge">
@@ -764,6 +912,9 @@ footer strong{color:var(--ink);}
 </script>
 <script type="application/json" id="daten-gstory">
 {"t":"Donnerstag, kurz vor fünf. Das Gespräch hat vierzig Minuten gedauert, alle wollen aufstehen. Ich sage: „Bevor wir aufhören — darf ich kurz ___, was wir besprochen haben?“ Niemand widerspricht. Also: „Ich schicke die Unterlagen bis Montag, Yara prüft sie bis Mittwoch. Sie hatten gesagt, ___ die Freigabe am Freitag erfolgt.“ Nicken. „Einen Punkt haben wir noch nicht geklärt: Wer ___ die Grafiken?“ Kurze Stille — genau dafür macht man das. Der Chef sagt, er mache es selbst, bis Dienstag. „Gut, dann ___ wir fest: vier Aufgaben, vier Namen, vier Termine.“ Ich wollte noch fragen, ___ das so schon verbindlich ist, aber die Antwort kommt von allein: „Schick uns das bitte kurz per Mail.“ Genau das hatte ich sowieso vor — dann haben es alle ___.","o":["zusammenfassen","dass","übernimmt","halten","ob","schriftlich","offen","festhalten"],"a":[["zusammenfassen"],["dass"],["übernimmt"],["halten"],["ob"],["schriftlich"]]}
+</script>
+<script type="application/json" id="daten-ueb">
+["Wenn ich Sie richtig verstehe, …","Sie meinen also, dass …","Das heißt für mich: …","Also halten wir fest: …","Ich fasse kurz zusammen: …","Wir haben besprochen, dass …","Was bleibt noch offen?","Einen Punkt haben wir noch nicht geklärt","Und wenn das nicht klappt?","Könnten Sie mir das bestätigen?","Damit ich es schriftlich habe","Ich melde mich bis …","Der Kern ist für Sie also …","Ihnen geht es vor allem um …, weniger um …","Habe ich den Schwerpunkt richtig gesetzt?","Halten wir fest: wer, was, bis wann","Auf meiner Seite steht damit …","Dann wären wir uns einig","Offen bleibt für mich …","Was passiert, wenn …?","Für den Fall, dass …","Ich schicke Ihnen nachher eine kurze Zusammenfassung","Widersprechen Sie gern, falls ich etwas falsch notiert habe","Ist das so verbindlich?"]
 </script>
 
 <script>
@@ -1063,6 +1214,17 @@ function misch(liste){
 }
 
 /* ---- Sprechkarten ---- */
+/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
+   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
+var UEB=daten('ueb')||[];
+if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
+  var uLetzt=-1;
+  document.getElementById('uebnew').onclick=function(){var i;
+    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
+    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
+  };
+}
+
 var SK=daten('sk')||[];
 /* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
    Gepruefte Elemente statt gepruefter Daten. */
