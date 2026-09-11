@@ -73,10 +73,65 @@ function wochentagName(datum) {
   return d[new Date(datum + 'T12:00:00Z').getUTCDay()];
 }
 
+/* Das Modell schreibt in "text" ein fuenf Minuten langes deutsches Skript.
+   Darin kommen Anfuehrungszeichen vor — und wenn es gerade " nimmt statt der
+   deutschen, zerbricht die JSON-Antwort mitten im Satz. Genau daran sind
+   sechzehn Folgen gestorben, immer mit derselben Meldung: Expected ',' or
+   '}' after property value in JSON at position N (line 4 ...). Zeile 4 ist
+   das Skript.
+
+   Deshalb wird hier nicht mehr blind geparst. Schlaegt JSON.parse fehl,
+   laeuft die Antwort einmal durch reparieren(): Das geht Zeichen fuer
+   Zeichen durch und entscheidet bei jedem " im String, ob es wirklich das
+   Ende ist oder mitten im Text steht. Mitten im Text wird daraus ein
+   deutsches Anfuehrungszeichen — das kann JSON nie kaputtmachen und ist im
+   Lesetext ohnehin das richtige. */
+function reparieren(roh) {
+  let out = '', inStr = false, esc = false;
+  const passtDanach = (i) => {
+    let j = i;
+    while (j < roh.length && /\s/.test(roh[j])) j++;
+    const c = roh[j];
+    if (c === undefined || c === ':') return true;          /* Schluessel */
+    if (c === '}' || c === ']') return true;               /* Ende */
+    if (c === ',') {                                       /* naechster Eintrag? */
+      let k = j + 1;
+      while (k < roh.length && /\s/.test(roh[k])) k++;
+      const d = roh[k];
+      return d === '"' || d === '{' || d === '[' || d === undefined;
+    }
+    return false;                                           /* mitten im Satz */
+  };
+  for (let i = 0; i < roh.length; i++) {
+    const c = roh[i];
+    if (esc) { out += c; esc = false; continue; }
+    if (c === '\\') { out += c; esc = true; continue; }
+    if (c === '"') {
+      if (!inStr) { inStr = true; out += c; continue; }
+      if (passtDanach(i + 1)) { inStr = false; out += c; continue; }
+      const vor = out[out.length - 1];
+      out += (vor === undefined || /[\s(\[]/.test(vor)) ? '\u201e' : '\u201c';
+      continue;
+    }
+    if (inStr && (c === '\n' || c === '\r')) { out += '\\n'; continue; }
+    out += c;
+  }
+  return out.replace(/,(\s*[}\]])/g, '$1');            /* haengendes Komma */
+}
+
 function jsonAus(text) {
   const s = text.indexOf('{'), e = text.lastIndexOf('}');
   if (s === -1 || e === -1) throw new Error('Keine JSON-Antwort vom Modell.');
-  return JSON.parse(text.slice(s, e + 1));
+  const roh = text.slice(s, e + 1);
+  try { return JSON.parse(roh); } catch (err) {
+    try {
+      const heil = JSON.parse(reparieren(roh));
+      console.log('JSON war kaputt und wurde repariert:', err.message);
+      return heil;
+    } catch (err2) {
+      throw new Error('JSON kaputt und nicht zu retten: ' + err.message);
+    }
+  }
 }
 
 // ---------------------------------------------------------------
@@ -195,7 +250,9 @@ Der feste Ablauf jeder Folge:
    einem kurzen Beispielsatz.
 5. Kurze Verabschiedung. Julia sagt am Ende immer „Tschüssi".
 
-Du gibst AUSSCHLIESSLICH gültiges JSON zurück, ohne Text davor oder danach.`;
+Du gibst AUSSCHLIESSLICH gültiges JSON zurück, ohne Text davor oder danach.
+Innerhalb der Texte benutzt du für Zitate und hervorgehobene Wörter immer die deutschen
+Anführungszeichen „ und “ — niemals das gerade \"; das zerbricht das JSON.`;
 
 async function skriptSchreiben(level, thema, hintergrund, datum) {
   const L = LAENGE[level];
