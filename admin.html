@@ -1732,10 +1732,18 @@ async function setStatus(id, status){
 
 async function deleteStudent(id){
   const _p=SCHUELER.find(x=>x.id===id); const label=_p?(_p.name||_p.email):'';
-  if(!confirm(`Schüler „${label}" wirklich löschen?\n\nDamit werden Konto, Buchungen, Guthaben-Verlauf und Community-Beiträge unwiderruflich entfernt.`)) return;
+  if(!confirm(`Schüler „${label}" wirklich löschen?\n\nKonto, Buchungen, Guthaben-Verlauf und Community-Beiträge werden unwiderruflich entfernt. Der Zugang ist sofort weg.\n\nAnmelden kann sich diese E-Mail-Adresse erst wieder nach einem neuen Kauf.`)) return;
   const r=await fetch('/api/admin-delete-student',{ method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+await authToken()}, body:JSON.stringify({user_id:id}) });
   const j=await r.json().catch(()=>({}));
-  if(j&&j.ok){ SCHUELER=SCHUELER.filter(x=>x.id!==id); closeStudentCard(); renderSchuelerTable(); }
+  if(j&&j.ok){
+      SCHUELER=SCHUELER.filter(x=>x.id!==id); closeStudentCard(); renderSchuelerTable();
+      /* Sagen, was wirklich passiert ist: frueher meldete die Schnittstelle
+         auch dann Erfolg, wenn das Loeschen blockiert wurde. */
+      var zusatz = j.kaeufe_storniert
+        ? "\n\n" + j.kaeufe_storniert + " Kauf-Eintrag zur\u00FCckgezogen \u2014 Neuanmeldung erst nach einem neuen Kauf."
+        : "";
+      alert("\u2705 \u201E" + (j.name || label) + "\u201C ist gel\u00F6scht.\n\nZugang sofort weg." + zusatz);
+    }
   else alert('⚠️ Konnte nicht löschen: '+((j&&(j.detail||j.error))||'unbekannt'));
 }
 
