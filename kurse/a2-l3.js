@@ -18,16 +18,16 @@ window.LEKTION = {
       { sp: 'Kwame', txt: 'Darf ich meinen Schrank an die Wand im Schlafzimmer stellen?' },
       { sp: 'Frau Schneider', txt: 'Natürlich. Sie dürfen auch Bilder an die Wände hängen — nur bitte keine Löcher in die Fliesen bohren.' },
       { sp: 'Kwame', txt: 'Verstanden. Und was kostet die Wohnung warm?' },
-      { sp: 'Frau Schneider', txt: 'Achthundert Euro warm. Die Kaution sind zwei Kaltmieten.' },
+      { sp: 'Frau Schneider', txt: 'Achthundert Euro warm. Die Kaution beträgt zwei Kaltmieten.' },
       { sp: 'Kwame', txt: 'Gut. Die Unterlagen lege ich heute Abend in Ihren Briefkasten.' }
     ]
   },
   vokabeln: [
     { de: 'die Besichtigung', em: '🔑', bsp: 'Die Besichtigung ist am Samstag um elf.' },
     { de: 'die Vermieterin', em: '🧑‍💼', bsp: 'Die Vermieterin zeigt mir die Wohnung.' },
-    { de: 'die Warmmiete', em: '💶', bsp: 'Die Warmmiete sind achthundert Euro.' },
+    { de: 'die Warmmiete', em: '💶', bsp: 'Die Warmmiete beträgt achthundert Euro.' },
     { de: 'die Nebenkosten', em: '🔥', bsp: 'Heizung, Wasser und Müll sind Nebenkosten.' },
-    { de: 'die Kaution', em: '🏦', bsp: 'Die Kaution sind zwei Kaltmieten.' },
+    { de: 'die Kaution', em: '🏦', bsp: 'Die Kaution beträgt zwei Kaltmieten.' },
     { de: 'der Mietvertrag', em: '📑', bsp: 'Den Mietvertrag unterschreiben wir am Freitag.' },
     { de: 'der Balkon', em: '🌿', bsp: 'Der Balkon geht in den Hof.' },
     { de: 'der Keller', em: '📦', bsp: 'Die Waschmaschine steht im Keller.' },

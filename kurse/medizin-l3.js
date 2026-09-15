@@ -16,7 +16,7 @@ window.LEKTION = {
       { sp: 'Frau Brandt', txt: 'Na dann.' },
       { sp: 'Dr. Osei', txt: 'Häufig sind blaue Flecken an den kleinen Schnitten und ein Druckgefühl in der Schulter. Das klingt nach zwei bis drei Tagen ab. Gelegentlich, etwa bei einer von hundert Operationen, kommt es zu einer Nachblutung. Sollte das eintreten, würden wir es noch im Haus bemerken und sofort reagieren.' },
       { sp: 'Frau Brandt', txt: 'Und wenn Sie da drin was kaputt machen?' },
-      { sp: 'Dr. Osei', txt: 'Sie meinen eine Verletzung der Gallenwege. Die ist selten, etwa einer von tausend Fällen. Träte sie ein, müssten wir den Eingriff erweitern, also von den vier kleinen Schnitten auf einen größeren umsteigen. Genau deshalb steht das auf dem Bogen.' },
+      { sp: 'Dr. Osei', txt: 'Sie meinen eine Verletzung der Gallenwege. Die ist selten, etwa drei bis fünf von tausend Fällen. Träte sie ein, müssten wir den Eingriff erweitern, also von den vier kleinen Schnitten auf einen größeren umsteigen. Genau deshalb steht das auf dem Bogen.' },
       { sp: 'Frau Brandt', txt: 'Das ist mir jetzt trotzdem alles ein bisschen viel.' },
       { sp: 'Dr. Osei', txt: 'Das verstehe ich. Sagen Sie mir doch bitte in Ihren eigenen Worten, was morgen passiert — dann sehe ich, ob ich es verständlich erklärt habe.' },
       { sp: 'Frau Brandt', txt: 'Vier kleine Löcher, die Galle kommt raus, und wenn was blutet oder schiefgeht, machen Sie richtig auf. Und nüchtern bleiben ab Mitternacht.' }
@@ -67,7 +67,7 @@ window.LEKTION = {
           ['selten', 'etwa 1 von 1000', 'Das ist selten. Sollte es eintreten, sind wir darauf vorbereitet.'],
           ['sehr selten', 'weniger als 1 von 10 000', 'Ich muss es erwähnen, weil es dazugehört — gesehen habe ich es hier noch nicht.']
         ],
-        note: 'Drei Dinge machen den Unterschied: <b>Zahl nennen</b>, <b>Einordnung geben</b>, <b>Handlungsplan anhängen</b>. „Selten, etwa einer von tausend — und sollte es passieren, würden wir sofort reagieren." Verboten ist nur eines: das Risiko wegreden („Da kann nichts passieren").'
+        note: 'Drei Dinge machen den Unterschied: <b>Zahl nennen</b>, <b>Einordnung geben</b>, <b>Handlungsplan anhängen</b>. „Selten, etwa drei bis fünf von tausend — und sollte es passieren, würden wir sofort reagieren." Verboten ist nur eines: das Risiko wegreden („Da kann nichts passieren").'
       },
       {
         h: 'Rückversicherung — hat er es wirklich verstanden?',
