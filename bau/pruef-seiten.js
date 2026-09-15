@@ -1,19 +1,30 @@
 /* ============================================================
-   bau/pruef-seiten.js — schaut in jede Lektionsseite hinein
+   bau/pruef-seiten.js — was sich am Quelltext sicher sagen laesst
 
-   Die 395 Seiten im Katalog stammen aus vier Bauphasen und sehen
-   innen sehr verschieden aus. Deshalb wird hier nicht nach einer
-   Bauart gesucht, sondern nach dem, was eine Lektion ausmacht:
+   WICHTIG, aus Erfahrung: Diese Pruefung sieht nur den Quelltext.
+   Die meisten Lektionsseiten bauen ihren Inhalt aber erst beim
+   Oeffnen im Browser auf — der Text steht in JavaScript, die
+   Uebungen sind Datenobjekte, Bilder haengen an Template-Variablen
+   wie ${url}. Der erste Anlauf dieser Datei hat deshalb der Reihe
+   nach gemeldet:
 
-     · Text        — ist überhaupt Inhalt da, oder nur Gerüst?
-     · Wortschatz  — werden Wörter erklärt?
-     · Übungen     — kann man etwas tun, und gibt es Lösungen?
-     · Sprechen    — gibt es einen Sprechanlass?
-     · Bilder      — und zeigen die Verweise auf Dateien, die es gibt?
-     · Abschluss   — endet die Seite, oder hört sie einfach auf?
+     245 "fehlende" Bilder  — es waren Platzhalter wie ${LOGO}
+     198 Seiten "ohne Uebung" — die Uebungen lagen im Skript
+      79 Seiten "fast leer"  — 157 KB Inhalt, nur nicht im HTML
 
-   Jedes Signal wird über mehrere Schreibweisen gesucht, damit eine
-   andere Bauart nicht als Mangel durchgeht.
+   Kein einziger dieser Befunde stimmte. Deshalb prueft diese Datei
+   nur noch, was am Quelltext WIRKLICH entscheidbar ist:
+
+     · gibt es die Datei ueberhaupt?
+     · fehlt der viewport (dann ist die Seite auf dem Handy kaputt)
+     · steht echter Platzhaltertext drin?
+     · fehlt lektion-konto.js (dann zaehlt die Seite keinen Fortschritt)
+     · zeigt ein fester lokaler Bildpfad ins Leere?
+
+   Alles andere — Inhalt, Uebungen, Loesungen, Aussehen auf dem
+   Handy — entscheidet nur der Browser. Dafuer gibt es
+   bau/render-pruef.js; das braucht Playwright und laeuft nicht auf
+   jedem Rechner. Lieber keine Aussage als eine falsche.
 
    Aufruf:  node bau/pruef-seiten.js [--alles] [--csv]
    ============================================================ */
@@ -104,7 +115,10 @@ function fingerabdruck(h) {
     hatViewport: /name="viewport"/i.test(h),
     hatLang: /<html[^>]*\blang=/i.test(h),
     kontoSkript: /lektion-konto\.js/i.test(h),
-    platzhalter: (h.match(/\b(lorem ipsum|TODO|TBD|XXXX|Platzhalter|Blindtext)\b/i) || [])[0] || null,
+    /* „Platzhalter" allein ist kein Befund — in einer Grammatikerklärung
+       zu da-Wörtern ist es der Fachbegriff („steht als Platzhalter").
+       Gesucht wird echter unfertiger Text. */
+    platzhalter: (h.match(/\b(lorem ipsum|TODO|TBD|XXXX|Blindtext|Platzhaltertext|\[\s*Platzhalter\s*\]|\bhier Text\b)/i) || [])[0] || null,
     leereUeberschrift: zaehl(h, /<h[1-4][^>]*>\s*<\/h[1-4]>/gi)
   };
 }
@@ -114,31 +128,23 @@ function bewerte(s, f, datei) {
   const funde = [];
   const melde = (stufe, was) => funde.push({ stufe, was });
 
-  if (f.woerter < 150) melde('schwer', 'fast kein Inhalt — nur ' + f.woerter + ' Wörter Fließtext');
-  else if (f.woerter < 400) melde('mittel', 'sehr dünn — ' + f.woerter + ' Wörter');
 
   if (!f.titel) melde('mittel', 'kein Seitentitel im <title>');
   if (!f.hatViewport) melde('schwer', 'kein viewport — auf dem Handy unlesbar');
   if (!f.hatLang) melde('leicht', '<html> ohne lang-Angabe');
   if (f.platzhalter) melde('schwer', 'Platzhalter im Text: »' + f.platzhalter + '«');
   if (f.leereUeberschrift) melde('mittel', f.leereUeberschrift + ' leere Überschrift(en)');
-  if (f.ueberschriften < 3 && f.woerter > 400) melde('mittel', 'nur ' + f.ueberschriften + ' Überschriften auf ' + f.woerter + ' Wörtern — keine Gliederung');
 
-  /* Übungsseiten ("üben") und Handouts dürfen anders aussehen. */
-  const art = s.art;
-  if (art !== 'handout' && art !== 'üben') {
-    if (!f.uebung) melde('schwer', 'keine einzige Übung — die Seite ist nur zum Lesen');
-    else if (f.uebung < 3) melde('mittel', 'nur ' + f.uebung + ' Übungsstelle(n)');
-    if (f.uebung && !f.loesung) melde('schwer', 'Übungen ohne hinterlegte Lösung — nichts kann sich selbst korrigieren');
-    if (!f.sprechen) melde('mittel', 'kein Sprechanlass — bei einem Sprechclub ist das der Kern');
-  }
-  if (art === 'wortschatz' && f.wortschatz < 10)
-    melde('mittel', 'Wortschatzseite mit nur ' + f.wortschatz + ' Wortstellen');
+  /* Ueber Uebungen, Sprechanlaesse und Textmenge sagt diese Pruefung
+     bewusst nichts — siehe Kopf. Das entscheidet der Browser. */
 
   /* Bilder: zeigt der Verweis auf etwas, das es gibt? */
   const ordner = path.dirname(datei);
   f.bilder.forEach(b => {
     if (/^(https?:|data:|\/\/)/i.test(b)) return;
+    /* ${url}, ${LOGO}, '+k.bild+' und aehnliches sind Bausteine aus dem
+       Skript, keine Adressen. Wer sie prueft, meldet 245 Phantome. */
+    if (/\$\{|\+|`|<%/.test(b)) return;
     const rein = b.split('?')[0].replace(/^\//, '');
     const kandidaten = [path.join(W, ordner, rein), path.join(W, rein)];
     if (!kandidaten.some(p => fs.existsSync(p)))
