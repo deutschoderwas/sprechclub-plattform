@@ -416,6 +416,26 @@
       if (window.lsSet) { try { window.lsSet('niveau', stufe); } catch (e) {} }
       if (window.profile) window.profile.level = stufe;
     } catch (e) {}
+    inDatenbank(R);
+  }
+
+  /* Das Ergebnis steuert jetzt den Kurs — also muss es dorthin, wo der
+     Kurs nachschaut: ins Profil. Bisher lag es nur im Browser dieses
+     einen Geraets. Wer den Test am Handy machte und sich am Rechner
+     anmeldete, stand wieder vor der Frage "wo fange ich an?".
+     Ist niemand angemeldet, passiert hier nichts — mein-weg.js traegt
+     es beim naechsten Anmelden aus localStorage nach. */
+  function inDatenbank(R) {
+    try {
+      var c = window.sb;
+      if (!c || !c.rpc) return;
+      var stufe = String((R && R.placed) || '').toUpperCase().slice(0, 2);
+      if (['A1','A2','B1','B2','C1'].indexOf(stufe) < 0) return;
+      var pct = (R && R.overallPct) != null ? Math.round(R.overallPct) : null;
+      c.rpc('stufe_setzen', { p_stufe: stufe, p_prozent: pct, p_quelle: 'test' })
+       .then(function () { try { if (window.MEINWEG) window.MEINWEG.laden(); } catch (e) {} })
+       .catch(function () {});
+    } catch (e) {}
   }
 
   function sendResult(R) {

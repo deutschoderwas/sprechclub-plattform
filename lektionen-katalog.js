@@ -406,6 +406,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-heikel.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w11-a-teil1-bank-konto-a2b1.html",
+  "t": "Bank und Konto: überweisen, abheben, unterschreiben",
+  "lvl": "A2–B1",
+  "art": "lektion",
+  "b": "bank",
+  "img": "amanda/sz-bank.webp"
+ },
+ {
   "d": "Unterricht-ab-27-07/amt-a2b1.html",
   "t": "Beim Amt & Behördengänge",
   "lvl": "A2–B1",
@@ -473,6 +481,14 @@ window.LEKTIONEN = [
   "b": "bewerbung",
   "ueb": "Unterricht-ab-27-07/Vorbereitung/vorbereitung-bewerbung-a2b1.html",
   "img": "amanda/sz-bewerbung.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/w11-a-teil2-bezahlen-sparen-a2b1.html",
+  "t": "Bezahlen und sparen: zusammen oder getrennt?",
+  "lvl": "A2–B1",
+  "art": "lektion",
+  "b": "bank",
+  "img": "amanda/sz-bank.webp"
  },
  {
   "d": "Unterricht-ab-14-09/w02-a-teil1-termin-machen-a2b1.html",
@@ -1620,6 +1636,13 @@ window.LEKTIONEN = [
   "img": "amanda/sz-familie.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w11-c-teil2-advent-feiertage-b1b2.html",
+  "t": "Die Debatte: Familie oder Erholung?",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": null
+ },
+ {
   "d": "Unterricht-ab-14-09/w08-c-teil2-autofreie-innenstadt-b1b2.html",
   "t": "Die Debatte: Gehört die Innenstadt den Autos oder den Menschen?",
   "lvl": "B1–B2",
@@ -1634,6 +1657,14 @@ window.LEKTIONEN = [
   "art": "lektion",
   "b": "familie",
   "img": "amanda/sz-familie.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/w10-c-teil2-small-talk-b1b2.html",
+  "t": "Die Debatte: höflich oder verlogen?",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "freunde",
+  "img": "amanda/sz-freunde.webp"
  },
  {
   "d": "Unterricht-ab-14-09/w02-c-teil2-geburtstag-feiern-b1b2.html",
@@ -1682,6 +1713,13 @@ window.LEKTIONEN = [
   "art": "lektion",
   "b": "supermarkt",
   "img": "amanda/sz-supermarkt.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/w11-c-teil1-advent-feiertage-b1b2.html",
+  "t": "Die dunkle Jahreszeit: Advent, Feiertage, Familie",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": null
  },
  {
   "d": "Unterricht-ab-14-09/w04-b-teil2-vorsilben-bedeutung-b1b2.html",
@@ -1735,12 +1773,36 @@ window.LEKTIONEN = [
   "img": "amanda/sz-sprachkurs.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w11-d-teil2-gespraech-beenden-b1b2.html",
+  "t": "Ein Gespräch beenden — ohne dass es unhöflich wirkt",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "Unterricht-ab-14-09/w05-d-teil1-missverstaendnis-b1b2.html",
   "t": "Ein Missverständnis aufklären: merken, dass etwas schiefgegangen ist",
   "lvl": "B1–B2",
   "art": "lektion",
   "b": "sprachkurs",
   "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/w11-d-teil1-geschichte-erzaehlen-b1b2.html",
+  "t": "Eine Geschichte erzählen — so, dass alle zuhören",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "rechte",
+  "img": "amanda/sz-rechte.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/w10-d-teil1-vorschlag-aufbauen-b1b2.html",
+  "t": "Einen Vorschlag machen — so, dass jemand ja sagt",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "team",
+  "img": "amanda/sz-buero.webp"
  },
  {
   "d": "Unterricht-ab-27-07/feste-braeuche-b1b2.html",
@@ -1869,6 +1931,14 @@ window.LEKTIONEN = [
   "art": "spiel",
   "b": "sprachkurs",
   "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/w10-d-teil2-einwaende-entkraeften-b1b2.html",
+  "t": "Ja, aber … was du sagst, wenn jemand bremst",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "team",
+  "img": "amanda/sz-buero.webp"
  },
  {
   "d": "Unterricht-ab-14-09/w04-c-teil1-job-wechseln-b1b2.html",
@@ -2283,6 +2353,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-freunde.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w10-b-teil1-entscheidung-treffen-b1b2.html",
+  "t": "Welches Verb gehört dazu? eine Entscheidung treffen, einen Termin machen",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "Unterricht-ab-14-09/w08-c-teil1-weniger-auto-b1b2.html",
   "t": "Weniger Auto — und dann? Bus, Rad, Parkplatz, Land gegen Stadt",
   "lvl": "B1–B2",
@@ -2331,6 +2409,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-wohnen.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w10-b-teil2-wo-sie-stehen-b1b2.html",
+  "t": "Wo sie stehen — stehen und stellen, liegen und legen, sitzen und setzen",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "Unterricht-ab-14-09/w03-b-teil2-legen-stellen-setzen-b1b2.html",
   "t": "Wohin oder wo? Der Fall entscheidet",
   "lvl": "B1–B2",
@@ -2366,6 +2452,22 @@ window.LEKTIONEN = [
   "img": "amanda/sz-buero.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/w11-b-teil1-gefuehle-zeigen-b1b2.html",
+  "t": "Wörter für Gefühle: sich freuen über oder auf?",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/w11-b-teil2-zustaende-beschreiben-b1b2.html",
+  "t": "Wörter für Zustände: müde, erschöpft, genervt",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "Unterricht-ab-14-09/w09-b-teil1-kennen-wissen-b1b2.html",
   "t": "Wörter, die sich ähneln: kennen und wissen, legen und liegen, lernen und studieren",
   "lvl": "B1–B2",
@@ -2380,6 +2482,14 @@ window.LEKTIONEN = [
   "art": "lektion",
   "b": "sprachkurs",
   "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/w10-c-teil1-small-talk-b1b2.html",
+  "t": "Worüber redet man hier? Wetter, Weg, Wochenende — und was besser nicht",
+  "lvl": "B1–B2",
+  "art": "lektion",
+  "b": "freunde",
+  "img": "amanda/sz-freunde.webp"
  },
  {
   "d": "Unterricht-ab-14-09/w02-d-teil2-nachfragen-b1b2.html",
@@ -3228,6 +3338,7 @@ window.BEREICH_MEHR = {
   "Unterricht-ab-14-09/w04-b-teil2-vorsilben-bedeutung-b1b2.html",
   "Unterricht-ab-14-09/w08-b-teil2-feste-wendungen-b1b2.html",
   "Unterricht-ab-14-09/w03-d-teil1-ehrlich-hoeflich-b1b2.html",
+  "Unterricht-ab-14-09/w11-d-teil2-gespraech-beenden-b1b2.html",
   "Unterricht-ab-14-09/w05-d-teil1-missverstaendnis-b1b2.html",
   "Unterricht-ab-14-09/w02-b-teil1-gehen-kommen-fahren-b1b2.html",
   "sprachspielclub-stadtpark-quiz-b1-b2.html",
@@ -3250,10 +3361,14 @@ window.BEREICH_MEHR = {
   "Unterricht-ab-14-09/w06-b-teil1-ver-be-ent-zer-b1b2.html",
   "Unterricht-ab-14-09/w07-b-teil2-wann-sie-passen-b1b2.html",
   "Unterricht-ab-14-09/w06-b-teil2-ver-anrichtet-b1b2.html",
+  "Unterricht-ab-14-09/w10-b-teil1-entscheidung-treffen-b1b2.html",
   "Unterricht-ab-14-09/w04-d-teil2-um-hilfe-bitten-b1b2.html",
   "Unterricht-ab-14-09/w09-d-teil1-umschreiben-b1b2.html",
   "Unterricht-ab-14-09/w03-d-teil2-ehrlich-hoeflich-b1b2.html",
+  "Unterricht-ab-14-09/w10-b-teil2-wo-sie-stehen-b1b2.html",
   "Unterricht-ab-14-09/w03-b-teil2-legen-stellen-setzen-b1b2.html",
+  "Unterricht-ab-14-09/w11-b-teil1-gefuehle-zeigen-b1b2.html",
+  "Unterricht-ab-14-09/w11-b-teil2-zustaende-beschreiben-b1b2.html",
   "Unterricht-ab-14-09/w09-b-teil1-kennen-wissen-b1b2.html",
   "Unterricht-ab-14-09/w09-b-teil2-schmecken-gefallen-b1b2.html",
   "Unterricht-ab-14-09/w02-d-teil2-nachfragen-b1b2.html",
@@ -3323,6 +3438,17 @@ window.BEREICH_MEHR = {
   "Unterricht-ab-07-09/vw-do-kritik-b2c1.html",
   "Unterricht-ab-27-07/meinungsfreiheit-b2c1.html",
   "Unterricht-ab-27-07/dilemma-b2c1.html"
+ ],
+ "bank": [
+  "Unterricht-ab-14-09/w11-a-teil1-bank-konto-a2b1.html",
+  "Unterricht-ab-14-09/w11-a-teil2-bezahlen-sparen-a2b1.html",
+  "bargeld-karte-b1.html",
+  "Unterricht-ab-27-07/sparen-b1b2.html",
+  "geld-konsum-sparen-teil-1-b1-b2.html",
+  "Unterricht-ab-27-07/erben-b2c1.html",
+  "Unterricht-ab-27-07/geld-glueck-b2c1.html",
+  "ueber-geld-spricht-man-nicht-b2-c1.html",
+  "vorbereitung-ueber-geld-b2-c1.html"
  ],
  "arzt": [
   "Unterricht-ab-27-07/arzt-a2b1.html",
@@ -3413,6 +3539,7 @@ window.BEREICH_MEHR = {
   "small-talk-b1.html",
   "beziehungen-dach-teil-1-b1-b2.html",
   "Unterricht-ab-27-07/dating-b1b2.html",
+  "Unterricht-ab-14-09/w10-c-teil2-small-talk-b1b2.html",
   "Unterricht-ab-27-07/freundschaft-b1b2.html",
   "Unterricht-ab-14-09/w07-b-teil1-koerper-redewendungen-b1b2.html",
   "Unterricht-ab-27-07/netzwerken-b1b2.html",
@@ -3420,6 +3547,7 @@ window.BEREICH_MEHR = {
   "Unterricht-ab-14-09/w01-d-teil1-small-talk-b1b2.html",
   "glueck-teil-1-b1-b2.html",
   "Unterricht-ab-14-09/w01-d-teil2-small-talk-b1b2.html",
+  "Unterricht-ab-14-09/w10-c-teil1-small-talk-b1b2.html",
   "wortschatzboost-charaktereigenschaften-b2.html"
  ],
  "medien": [
@@ -3441,19 +3569,12 @@ window.BEREICH_MEHR = {
  "apotheke": [
   "Unterricht-ab-14-09/w03-a-teil2-rezept-apotheke-a2b1.html"
  ],
- "bank": [
-  "bargeld-karte-b1.html",
-  "Unterricht-ab-27-07/sparen-b1b2.html",
-  "geld-konsum-sparen-teil-1-b1-b2.html",
-  "Unterricht-ab-27-07/erben-b2c1.html",
-  "Unterricht-ab-27-07/geld-glueck-b2c1.html",
-  "ueber-geld-spricht-man-nicht-b2-c1.html",
-  "vorbereitung-ueber-geld-b2-c1.html"
- ],
  "team": [
   "vorbereitung-puenktlichkeit-b1.html",
   "puenktlichkeit-debatte-b1-interaktiv.html",
   "Unterricht-ab-14-09/w03-c-teil2-vier-tage-woche-b1b2.html",
+  "Unterricht-ab-14-09/w10-d-teil1-vorschlag-aufbauen-b1b2.html",
+  "Unterricht-ab-14-09/w10-d-teil2-einwaende-entkraeften-b1b2.html",
   "Unterricht-ab-07-09/vw-do-puenktlichkeit-b1b2.html",
   "Unterricht-ab-14-09/w03-c-teil1-vier-tage-woche-b1b2.html",
   "Unterricht-ab-27-07/work-life-b1b2.html",
@@ -3489,6 +3610,7 @@ window.BEREICH_MEHR = {
   "beruf-lernen-teil-1-b1-b2.html"
  ],
  "rechte": [
+  "Unterricht-ab-14-09/w11-d-teil1-geschichte-erzaehlen-b1b2.html",
   "Unterricht-ab-07-09/vw-mi-beschweren-b1b2.html"
  ],
  "schule": [

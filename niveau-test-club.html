@@ -33,15 +33,35 @@ body{margin:0;font-family:'Inter',system-ui,sans-serif;color:#1A1A1A;background:
 <body>
 <header class="ntp-bar">
   <div class="ntp-bar-in">
-    <a class="ntp-logo" href="konto.html#kurse"><img src="logo.PNG" alt="deutschoderwas" onerror="this.style.display='none'"><span>deutschoderwas<small>Niveau-Test</small></span></a>
-    <a class="ntp-back" href="konto.html#kurse">← Zum Club</a>
+    <a class="ntp-logo" href="konto.html#weg"><img src="logo.PNG" alt="deutschoderwas" onerror="this.style.display='none'"><span>deutschoderwas<small>Niveau-Test</small></span></a>
+    <a class="ntp-back" href="konto.html#weg">← Zurück zu meinem Kurs</a>
   </div>
 </header>
 <main class="ntp-main">
   <div class="ntp-eyebrow">Dein Niveau · A1–C1 · Goethe-/telc-Stil</div>
   <div id="niveautest-app"></div>
+  <p style="text-align:center;margin:26px 0 0;font-size:13.5px;color:#6B7280">
+    Dein Ergebnis setzt automatisch die Stufe in deinem Kurs.
+    <a href="konto.html#weg" style="color:#13A89A;font-weight:700">Zurück zu meinem Kurs</a>
+  </p>
 </main>
-<script>window.NT_PAGE = true; window.NIVEAUTEST_SKIP_GATE = true;</script>
+<!-- Der Test steuert jetzt den Kurs. Damit das Ergebnis nicht nur im
+     Browser landet, braucht diese Seite die Anmeldung — dann schreibt
+     niveautest.js die Stufe ueber stufe_setzen ins Profil. -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script>
+window.NT_PAGE = true; window.NIVEAUTEST_SKIP_GATE = true;
+(function () {
+  try {
+    var C = window.SPRECHCLUB_CONFIG;
+    if (window.supabase && C && C.SUPABASE_URL) {
+      window.sb = window.sb || window.supabase.createClient(C.SUPABASE_URL, C.SUPABASE_ANON_KEY,
+        { auth: { persistSession: true, autoRefreshToken: true } });
+    }
+  } catch (e) {}
+})();
+</script>
 <script src="niveautest-data.js"></script>
 <script src="niveautest-items2.js"></script>
 <script src="niveautest-items3.js"></script>

@@ -586,6 +586,10 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFFDF3 0%,#FFFDF3 60%)
     <a href="index.html" class="brand"><img src="logo.PNG" onerror="this.style.display='none'"><span>deutschoderwas&nbsp;club</span></a>
     <div class="nav-sec">Mein Weg</div>
     <button class="navlink active" data-view="dashboard" onclick="go('dashboard')"><span class="ic" data-zeichen="start"></span><span data-i18n="k_start">Mein Bereich</span></button>
+    <!-- Der Kurs: eine Stufe, nummerierte Lektionen, immer ein naechster
+         Schritt. Steht bewusst direkt unter "Mein Bereich" — es ist die
+         Antwort auf "was mache ich jetzt". -->
+    <button class="navlink" data-view="weg" onclick="go('weg')"><span class="ic">🧭</span><span>Mein Kurs</span></button>
 <button class="navlink navlink-comm" data-view="community" onclick="go('community')"><span class="ic" data-zeichen="community"></span><span>Community-Chat</span><span class="badge" id="commBadge" style="display:none">0</span></button>
     <!-- „Mein Lernplan" war der dritte Weg neben Kursbibliothek und
          Lernbereich. Der Weg ist jetzt die Bibliothek; die Ansicht
@@ -878,6 +882,7 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFFDF3 0%,#FFFDF3 60%)
     <section class="view active" id="v-dashboard"></section>
     <section class="view" id="v-kurse"></section>
     <section class="view" id="v-ueben"></section>
+    <section class="view" id="v-weg"></section>
     <section class="view" id="v-lernen"></section>
     <section class="view" id="v-bereiche"></section>
     <section class="view" id="v-kurs"></section>
@@ -1371,16 +1376,16 @@ function collectVocab(){
 }
 
 // ---------- Router ----------
-const VIEWS=['dashboard','lernen','bereiche','kurs','pruefung','schreiben','kurse','ueben','community','dm','lernpfad','szenen','kalender','stunden','materialien','vokabeln','fortschritt','guthaben','abo','nachrichten','amanda','profil','fehler','buddy','fertigkeit','podcast'];
+const VIEWS=['dashboard','weg','lernen','bereiche','kurs','pruefung','schreiben','kurse','ueben','community','dm','lernpfad','szenen','kalender','stunden','materialien','vokabeln','fortschritt','guthaben','abo','nachrichten','amanda','profil','fehler','buddy','fertigkeit','podcast'];
 function go(v){ location.hash=v; }
 function toggleNav(){ document.body.classList.toggle('nav-open'); }
-const VIEW_TITLES={dashboard:['Schülerbereich','Startseite'],lernen:['Lernbereich','Deine Themen'],kurs:['Lernbereich','Dein Kurs'],pruefung:['Prüfung','Prüfungsvorbereitung'],schreiben:['Lernen','Schreibtrainer'],kurse:['Lernen','Kursbibliothek'],kalender:['Live Unterricht','Kalender'],stunden:['Live Unterricht','Meine Stunden'],community:['Community-Chat','Alle Themen'],ueben:['Lernen','Üben'],vokabeln:['Lernen','Vokabeltrainer'],materialien:['Lernen','Materialien'],fortschritt:['Lernen','Fortschritt'],nachrichten:['Nachrichten','Team'],amanda:['Amanda','KI-Sprechpartnerin'],lernpfad:['Lernen','Mein Lernplan'],szenen:['Lernen','Meine Szenen'],fehler:['Lernen','Fehler-Trainer'],buddy:['Lernen','Sprech-Buddy'],guthaben:['Konto','Guthaben'],abo:['Konto','Mein Abo'],profil:['Konto','Profil']};
+const VIEW_TITLES={dashboard:['Schülerbereich','Startseite'],weg:['Lernen','Mein Kurs'],lernen:['Lernbereich','Deine Themen'],kurs:['Lernbereich','Dein Kurs'],pruefung:['Prüfung','Prüfungsvorbereitung'],schreiben:['Lernen','Schreibtrainer'],kurse:['Lernen','Kursbibliothek'],kalender:['Live Unterricht','Kalender'],stunden:['Live Unterricht','Meine Stunden'],community:['Community-Chat','Alle Themen'],ueben:['Lernen','Üben'],vokabeln:['Lernen','Vokabeltrainer'],materialien:['Lernen','Materialien'],fortschritt:['Lernen','Fortschritt'],nachrichten:['Nachrichten','Team'],amanda:['Amanda','KI-Sprechpartnerin'],lernpfad:['Lernen','Mein Lernplan'],szenen:['Lernen','Meine Szenen'],fehler:['Lernen','Fehler-Trainer'],buddy:['Lernen','Sprech-Buddy'],guthaben:['Konto','Guthaben'],abo:['Konto','Mein Abo'],profil:['Konto','Profil']};
 function updateTopbar(v){var t=VIEW_TITLES[v]||['Schülerbereich','']; var s=document.getElementById('tbS'),b=document.getElementById('tbT'); var lang='de'; try{lang=localStorage.getItem('dow_lang')||'de';}catch(e){} var TT=window.__I18N__||{}; function tr(x){var o=TT[x]; return (o&&o[lang]!=null)?o[lang]:x;} if(s){s.setAttribute('data-de',t[0]);s.setAttribute('data-i18n',t[0]);s.textContent=tr(t[0]);} if(b){b.setAttribute('data-de',t[1]);b.setAttribute('data-i18n',t[1]);b.textContent=tr(t[1]);}}
 function routeFromHash(){ const v=(location.hash||'#dashboard').slice(1); show(VIEWS.includes(v)?v:'dashboard'); }
 // Ohne Guthaben/Probestunde/Pass: ALLES gesperrt außer Kalender (und Profil für Konto/Logout).
 // Vor dem Starttag gesperrt — offen bleiben Start, Profil, Nachrichten und Guthaben.
-const VORVERKAUF_ZU=['lernen','bereiche','kurs','schreiben','kurse','ueben','community','lernpfad','szenen','kalender','stunden','materialien','vokabeln','fortschritt','amanda','fehler','buddy','fertigkeit','pruefung'];
-const LOCKED_VIEWS=['dashboard','lernen','bereiche','kurs','schreiben','kurse','ueben','community','dm','lernpfad','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','fehler','buddy','fertigkeit'];
+const VORVERKAUF_ZU=['weg','lernen','bereiche','kurs','schreiben','kurse','ueben','community','lernpfad','szenen','kalender','stunden','materialien','vokabeln','fortschritt','amanda','fehler','buddy','fertigkeit','pruefung'];
+const LOCKED_VIEWS=['dashboard','weg','lernen','bereiche','kurs','schreiben','kurse','ueben','community','dm','lernpfad','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','fehler','buddy','fertigkeit'];
 function show(v){
   if(v==='kalender' && !nochNichtOffen() && typeof nurCommunity==='function' && nurCommunity()){
     zeigeLiveUpgrade(); v='dashboard';
@@ -1395,7 +1400,7 @@ function show(v){
   document.body.classList.remove('nav-open');
   if(LOCKED_VIEWS.includes(v) && !isActive()){ renderLocked(v); window.scrollTo(0,0); return; }
   if(nochNichtOffen() && VORVERKAUF_ZU.includes(v)){ renderVorverkauf(v); window.scrollTo(0,0); return; }
-  ({dashboard:renderDashboard,kurse:(window.renderKurse||renderDashboard),ueben:(window.renderUeben||renderDashboard),lernen:(window.renderLernen||renderDashboard),bereiche:(window.renderBereiche||window.renderLernen||renderDashboard),kurs:(window.renderNiveau||renderDashboard),schreiben:(window.renderSchreiben||renderDashboard),community:(window.renderCommunity||renderDashboard),dm:(window.renderDM||renderDashboard),lernpfad:renderLernpfad,szenen:function(){ if(window.LERNPFAD) LERNPFAD.pfad('v-szenen'); },kalender:renderKalender,stunden:renderStunden,pruefung:(window.renderPruefungen||renderDashboard),materialien:renderMaterialien,vokabeln:(window.renderVokabeln||renderVokabelnAlt),
+  ({dashboard:renderDashboard,weg:(window.renderWeg||renderDashboard),kurse:(window.renderKurse||renderDashboard),ueben:(window.renderUeben||renderDashboard),lernen:(window.renderLernen||renderDashboard),bereiche:(window.renderBereiche||window.renderLernen||renderDashboard),kurs:(window.renderNiveau||renderDashboard),schreiben:(window.renderSchreiben||renderDashboard),community:(window.renderCommunity||renderDashboard),dm:(window.renderDM||renderDashboard),lernpfad:renderLernpfad,szenen:function(){ if(window.LERNPFAD) LERNPFAD.pfad('v-szenen'); },kalender:renderKalender,stunden:renderStunden,pruefung:(window.renderPruefungen||renderDashboard),materialien:renderMaterialien,vokabeln:(window.renderVokabeln||renderVokabelnAlt),
     fortschritt:renderFortschritt,guthaben:renderGuthaben,abo:renderAbo,nachrichten:renderNachrichten,
     amanda:renderAmanda,profil:renderProfil,fehler:(window.renderFehlerTrainer||renderDashboard),buddy:(window.renderBuddy||renderDashboard),fertigkeit:(window.renderFertigkeit||renderDashboard)}[v])();
   if(v==='community') markCommRead();
@@ -1758,6 +1763,7 @@ function renderDashboard(){
     `${vorverkaufKarte()}
      ${isActive()?'':lockBanner()}
      ${challengerBalken()}
+     <div id="wegKarte"></div>
      <div id="startNeu"></div>`;
   let abo='';
   if(passActive()){
@@ -1775,6 +1781,27 @@ function renderDashboard(){
   }catch(e){ console.error('Startseite:',e); }
   try{ if(window.LZ) LZ.zeichneKarte(); }catch(e){}
   try{ dcOnlinePaint(); }catch(e){}
+  /* Die erste Frage jeder Schuelerin ist "was mache ich jetzt". Die
+     beantwortet der Kurs — also steht seine Antwort ganz oben, noch
+     vor allem anderen. Ist die Stufe noch nicht gesetzt, steht hier
+     die Einladung zum Einstufungstest. */
+  try{ wegKarteZeichnen(); }catch(e){}
+}
+window.wegKarteZeichnen=function(){
+  var k=document.getElementById('wegKarte'); if(!k) return;
+  if(!isActive()){ k.innerHTML=''; return; }
+  function malen(){
+    var h = (window.wegWeiterKarte && window.wegWeiterKarte()) || '';
+    if(!h && window.MEINWEG && !MEINWEG.stand().stufe){
+      h = '<div class="mw-dash">'
+        + '<span class="mw-kick">Zuerst das hier</span>'
+        + '<b>Wo fängst du an?</b>'
+        + '<small>Ein kurzer Test setzt deine Stufe — danach steht hier jeden Tag, was dran ist.</small>'
+        + '<a class="mw-btn" href="#weg">Los geht\'s →</a></div>';
+    }
+    k.innerHTML=h;
+  }
+  if(window.MEINWEG && !MEINWEG.stand().geladen){ MEINWEG.laden().then(malen); } else { malen(); }
 }
 function dcOnlinePaint(){
   var el=document.getElementById('dcOnline'); if(!el) return;
@@ -3699,6 +3726,12 @@ window.addEventListener('resize',function(){ clearTimeout(_mhT); _mhT=setTimeout
 <script src="themen.js"></script>
 <script src="lernen.js"></script>
 <script src="lernbereich.js"></script>
+<!-- Der Kurs. lehrplan.js ist erzeugt (bau/mach-lehrplan.js) und haelt die
+     Reihenfolge; mein-weg.js zeichnet sie und merkt sich den Stand in der
+     Datenbank. Muss NACH lernen.js stehen, weil es lernUeben und
+     lernDialog benutzt. -->
+<script src="lehrplan.js?v=1"></script>
+<script src="mein-weg.js?v=1"></script>
 <script src="vokabel-saetze.js"></script>
 <script src="vokabel-saetze-neu.js?v=1"></script>
 <script src="vokabel-saetze-3.js?v=1"></script>
