@@ -33,7 +33,11 @@ raeumen() {
 vorher=$(raeumen)
 [ "$vorher" -gt 0 ] && echo "[git-sicher] $vorher alte Sperre(n) vorher beiseitegeraeumt."
 
-git "$@" 2>&1 | grep -v "unable to unlink\|^warning: unable to"
+# Nur die harmlose Aufraeum-Warnung von git wegfiltern — NICHT die
+# Fehlermeldung "Unable to create index.lock: File exists". Genau die
+# hat hier einmal dafuer gesorgt, dass "git status" still nichts sagte
+# und 140 geaenderte Dateien unsichtbar blieben.
+git "$@" 2>&1 | grep -v "^warning: unable to unlink\|^warning: unable to access"
 ergebnis=${PIPESTATUS[0]}
 
 nachher=$(raeumen)
