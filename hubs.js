@@ -153,10 +153,13 @@
       '.hb-weiter{margin-bottom:16px}',
       /* Band: eine breite Zeile zum Antippen */
       '.hb-band{width:100%;display:flex;align-items:center;gap:14px;text-align:left;font:inherit;cursor:pointer;',
-      '  background:var(--hb-turq);color:#fff;border:none;border-radius:18px;padding:17px 18px;margin-bottom:11px;',
+      /* Dunkler Text auf Tuerkis, nicht weisser: weiss auf #35AFD0 sind
+   nur 2,6:1 Kontrast. Die eigene Markenregel sagt dasselbe. */
+      '  background:var(--hb-turq);color:#0B2F3B;border:none;border-radius:18px;padding:17px 18px;margin-bottom:11px;',
       '  transition:transform .14s ease,box-shadow .14s ease;box-shadow:0 5px 16px rgba(53,175,208,.26)}',
       '.hb-band:hover{transform:translateY(-1px);box-shadow:0 9px 22px rgba(53,175,208,.32)}',
       '.hb-band.ruhig{background:#fff;color:var(--hb-ink);border:1.5px solid var(--hb-line);box-shadow:none}',
+      '.hb-band .hb-band-t small{color:#12414F}',
       '.hb-band.ruhig:hover{border-color:var(--hb-turq)}',
       '.hb-band-em{font-size:26px;flex:0 0 auto;line-height:1}',
       '.hb-band-t{flex:1;min-width:0}',
