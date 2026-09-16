@@ -11,14 +11,14 @@
    etwas beschnitten werden muss.
 
    Farben kommen aus der Marke:
-     Türkis #39CCE3 · Gelb #FFE100 · Grün #77D42A · Rot #DD0000
-     Tinte  #20211F · Creme #FFF8E0
+     Türkis #39CCE3 · Gelb #FFE100 · Grün #77D42A · Rot #E1352C
+     Tinte  #14181B · Creme #F6F9FA
    ============================================================ */
 (function () {
   'use strict';
 
-  var T = '#39CCE3', TD = '#1990A4', G = '#FFE100', GR = '#77D42A',
-      R = '#DD0000', I = '#20211F', C = '#FFF8E0', W = '#FFFDF3';
+  var T = '#39CCE3', TD = '#10627A', G = '#FFE100', GR = '#77D42A',
+      R = '#E1352C', I = '#14181B', C = '#F6F9FA', W = '#FFFFFF';
 
   /* Gemeinsamer Rahmen: cremefarbene Fläche, Tintenstrich,
      alles leicht aus der Achse — wie mit der Hand gezogen. */
@@ -63,7 +63,7 @@
     /* Logistik — Kartons und Pfeil */
     logistik: rahmen(
       mark(18, 72, 124, 12, G)
-      + f('M26 44h44v34H26z', '#F0E2C8') + '<path d="M48 44v34M26 56h44"/>'
+      + f('M26 44h44v34H26z', '#E7ECEE') + '<path d="M48 44v34M26 56h44"/>'
       + f('M78 30h40v22H78z', W) + '<path d="M98 30v22"/>'
       + '<path d="M126 62h20m-7-7 7 7-7 7" stroke="' + TD + '" stroke-width="3"/>'),
 

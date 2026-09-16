@@ -132,7 +132,7 @@
     var lippen;
     if (s.lippen === 'rund') {
       lippen = '<ellipse cx="' + (MUND_X - 4) + '" cy="' + lm + '" rx="7.5" ry="' + Math.max(8, oeff / 2 + 3)
-             + '" fill="#FCEFE4" stroke="#C9455E" stroke-width="6.5"/>'
+             + '" fill="#F6F9FA" stroke="#C9455E" stroke-width="6.5"/>'
              + '<path d="M' + (MUND_X - 12) + ' ' + (lm - 12) + ' q-6 12 0 24" stroke="#C9455E" stroke-width="3.5" fill="none" stroke-linecap="round" opacity=".55"/>';
     } else if (s.lippen === 'zusammen') {
       lippen = '<path d="M' + (MUND_X - 10) + ' ' + lm + ' q10 -1 18 0" stroke="#C9455E" stroke-width="10" stroke-linecap="round" fill="none"/>';
@@ -172,9 +172,9 @@
       + '<path d="M78 16 Q120 2 152 28 Q188 56 190 108 Q191 148 172 168 Q164 178 163 194 L163 248 '
       + 'L74 248 L74 214 Q60 208 58 194 Q57 182 66 176 Q52 172 50 160 Q49 150 60 146 '
       + 'L58 132 Q40 126 34 114 Q30 106 44 100 L56 66 Q62 34 78 16 Z" '
-      + 'fill="#FCEFE4" stroke="#E9D6C4" stroke-width="2" stroke-linejoin="round"/>'
+      + 'fill="#F6F9FA" stroke="#E7ECEE" stroke-width="2" stroke-linejoin="round"/>'
       /* Nasenloch */
-      + '<path d="M42 112 q7 4 12 1" stroke="#DEB79B" stroke-width="2.4" fill="none" stroke-linecap="round"/>'
+      + '<path d="M42 112 q7 4 12 1" stroke="#C7D0D4" stroke-width="2.4" fill="none" stroke-linecap="round"/>'
       /* Mundraum als heller Innenraum */
       + '<path d="M' + MUND_X + ' ' + (OBEN - 2) + ' Q110 ' + (OBEN - 14) + ' 148 ' + (OBEN - 4)
       + ' Q166 ' + (OBEN + 6) + ' 166 ' + (OBEN + 34) + ' L166 ' + (bodenY + 30)
@@ -195,7 +195,7 @@
       + '<path d="M' + (MUND_X + 4) + ' ' + (kY + 2) + ' l0 -9" stroke="#fff" stroke-width="8" stroke-linecap="round"/>'
       /* Unterkiefer */
       + '<path d="M' + (MUND_X + 2) + ' ' + (bodenY + 8) + ' Q112 ' + (bodenY + 20) + ' 158 ' + (bodenY + 6) + '" '
-      + 'fill="none" stroke="#E0BFA6" stroke-width="3" stroke-linecap="round"/>'
+      + 'fill="none" stroke="#C7D0D4" stroke-width="3" stroke-linecap="round"/>'
       + luft + lippen + stimme
       + '</svg>';
   }
@@ -226,7 +226,7 @@
     st.id = 'mbStil';
     st.textContent = [
       '.mb-reihe{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:14px}',
-      '.mb-karte{margin:0;background:#fff;border:1px solid #EBE7DF;border-radius:18px;padding:12px;text-align:center}',
+      '.mb-karte{margin:0;background:#fff;border:1px solid #F6F9FA;border-radius:18px;padding:12px;text-align:center}',
       '.mb-karte svg{display:block;margin:0 auto;max-width:100%;height:auto}',
       '.mb-karte figcaption{margin-top:8px;text-align:left}',
       '.mb-karte figcaption b{display:block;font-size:14px;font-weight:800;margin-bottom:4px;color:#171717}',

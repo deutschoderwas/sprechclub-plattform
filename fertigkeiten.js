@@ -37,7 +37,7 @@
       ]
     },
     lesen: {
-      t: 'Lesen', em: '📖', zei: 'lernen', farbe: '#DD0000',
+      t: 'Lesen', em: '📖', zei: 'lernen', farbe: '#E1352C',
       satz: 'Texte verstehen — Briefe vom Amt, Aushänge, Nachrichten, Anzeigen.',
       ueben: [], pruef: 'lesen',
       karten: [
@@ -280,7 +280,7 @@
   stil.textContent = [
     '#standStreifen{margin:0 0 18px}',
     '.stand-streifen{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}',
-    '.ss-f{display:flex;gap:10px;align-items:center;text-align:left;background:var(--card,#FFFDF8);border:1px solid var(--border,#EAE3D8);border-radius:14px;padding:11px 13px;cursor:pointer;transition:.15s;font:inherit}',
+    '.ss-f{display:flex;gap:10px;align-items:center;text-align:left;background:var(--card,#FFFDF8);border:1px solid var(--border,#E7ECEE);border-radius:14px;padding:11px 13px;cursor:pointer;transition:.15s;font:inherit}',
     '.ss-f:hover{border-color:#12A594;transform:translateY(-1px)}',
     '.ss-ic{font-size:19px;line-height:1}',
     '.ss-t{display:flex;flex-direction:column;min-width:0}',
@@ -289,22 +289,22 @@
     '.ss-t em{font-style:normal;font-size:12px;color:#8A8178;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}',
     '@media(max-width:900px){.stand-streifen{grid-template-columns:repeat(2,1fr)}}',
     '.fe-reiter{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 18px}',
-    '.fe-r{border:1.5px solid var(--border,#EAE3D8);background:#fff;border-radius:40px;padding:9px 16px;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;transition:.15s}',
+    '.fe-r{border:1.5px solid var(--border,#E7ECEE);background:#fff;border-radius:40px;padding:9px 16px;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;transition:.15s}',
     '.fe-r.on{color:#fff}',
     '.fe-karten{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-bottom:26px}',
-    '.fe-k{background:var(--card,#FFFDF8);border:1px solid var(--border,#EAE3D8);border-radius:16px;padding:16px 18px;display:flex;flex-direction:column}',
+    '.fe-k{background:var(--card,#FFFDF8);border:1px solid var(--border,#E7ECEE);border-radius:16px;padding:16px 18px;display:flex;flex-direction:column}',
     '.fe-kt{font-family:"Space Grotesk",inherit;font-weight:700;font-size:16px;margin-bottom:4px}',
     '.fe-ku{color:#8A8178;font-size:13.5px;line-height:1.45;flex:1;margin-bottom:12px}',
     '.fe-kb{border:0;color:#fff;border-radius:30px;padding:9px 15px;font-weight:700;font-size:13.5px;cursor:pointer;align-self:flex-start;font-family:inherit}',
     '.fe-h2{font-family:"Space Grotesk",inherit;font-size:19px;margin:0 0 12px}',
-    '.fe-niv{font-size:12px;background:#F1EADD;border-radius:20px;padding:2px 9px;vertical-align:middle;color:#6B6560}',
+    '.fe-niv{font-size:12px;background:#F6F9FA;border-radius:20px;padding:2px 9px;vertical-align:middle;color:#6B6560}',
     '.fe-themen{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}',
-    '.fe-t{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:center;background:var(--card,#FFFDF8);border:1px solid var(--border,#EAE3D8);border-radius:14px;padding:12px 14px;cursor:pointer;text-align:left;font:inherit;transition:.15s}',
+    '.fe-t{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:center;background:var(--card,#FFFDF8);border:1px solid var(--border,#E7ECEE);border-radius:14px;padding:12px 14px;cursor:pointer;text-align:left;font:inherit;transition:.15s}',
     '.fe-t:hover{border-color:#12A594}',
     '.fe-te{font-size:20px}',
     '.fe-tt{display:flex;flex-direction:column;font-weight:700;font-size:14.5px}',
     '.fe-tt i{font-style:normal;font-weight:400;font-size:12px;color:#8A8178;margin-top:2px}',
-    '.fe-tb{grid-column:1/-1;height:5px;border-radius:20px;background:#EFE8DC;overflow:hidden}',
+    '.fe-tb{grid-column:1/-1;height:5px;border-radius:20px;background:#F6F9FA;overflow:hidden}',
     '.fe-tb i{display:block;height:100%;border-radius:20px}'
   ].join('');
   document.head.appendChild(stil);

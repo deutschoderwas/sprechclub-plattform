@@ -39,7 +39,7 @@
       mk: '<path class="mk" d="M5 12 L25 9.5 L26 17 L6 19.5 Z"/>',
       tn: '<rect class="tu" x="12" y="6.5" width="15" height="18" rx="2.5"/>' +
           '<rect class="tn" x="12" y="6.5" width="15" height="18" rx="2.5"/>' +
-          '<rect class="tn" x="5" y="9.5" width="15" height="18" rx="2.5" fill="#FFFDF3"/>' +
+          '<rect class="tn" x="5" y="9.5" width="15" height="18" rx="2.5" fill="#FFFFFF"/>' +
           '<path class="tn" d="M9 16 H16"/><path class="tn" d="M9 20 H14"/>' };
 
     Z.essen = { titel: 'Essen gehen',

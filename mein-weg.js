@@ -152,10 +152,33 @@
     return (i >= 0 && i < STUFEN.length - 1) ? STUFEN[i + 1] : null;
   }
 
+  /* Was die Startseite braucht, um die grosse Karte zu zeichnen.
+     Vorher fragte start.js window.kursStand() ab — eine Funktion aus
+     weg.js, das gar nicht eingebunden ist. Die Karte zeigte deshalb
+     immer "Fang mit Lektion 1 an", egal wie weit jemand war. */
   window.wegStand = function () {
     if (!STAND.stufe) return { stufe: null };
     var n = naechstes(STAND.stufe), s = stufeStand(STAND.stufe);
-    return { stufe: STAND.stufe, lektion: n ? n.L.nr : null, titel: n ? n.L.t : null, prozent: s.prozent };
+    var st = stufeDaten(STAND.stufe);
+    var bild = null;
+    if (n) {
+      var k = n.L.bau.filter(function (b) { return b.art === 'kurs'; })[0];
+      if (k && k.bild) bild = 'illu/' + k.bild + '.jpg';
+    }
+    return {
+      stufe: STAND.stufe,
+      niveau: STAND.stufe,
+      lektion: n ? n.L.nr : null,
+      nr: n ? n.L.nr : null,
+      titel: n ? n.L.t : null,
+      ziel: n ? n.L.ziel : null,
+      anzahl: st ? st.lektionen.length : 0,
+      prozent: s.prozent,
+      fertig: s.lektionen,
+      angefangen: s.fertig > 0,
+      bild: bild,
+      geschafft: !n
+    };
   };
 
   /* ---------- Stufe setzen ---------- */
@@ -434,7 +457,7 @@
     if (el('mw-stil')) return;
     var s = document.createElement('style'); s.id = 'mw-stil';
     s.textContent = [
-      ':root{--mw-ink:#20211F;--mw-soft:#54594A;--mw-line:#EFE9D8;--mw-karte:#FFFDF3;--mw-turq:#9FE4F1;--mw-turqd:#1990A4;--mw-mint:#EAFBFE;--mw-rot:#DD0000;--mw-gold:#FFE100;--mw-gruen:#4E9E12}',
+      ':root{--mw-ink:#14181B;--mw-soft:#5A6B72;--mw-line:#E7ECEE;--mw-karte:#FFFFFF;--mw-turq:#35AFD0;--mw-turqd:#10627A;--mw-mint:#E6F8FC;--mw-rot:#E1352C;--mw-gold:#FFE100;--mw-gruen:#4E9E12}',
       '.mw-laedt{padding:44px 18px;text-align:center;color:var(--mw-soft)}',
       '.mw-kick{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--mw-turqd)}',
       /* Kopf */
@@ -449,10 +472,10 @@
       '.mw-klein{border:1.5px solid var(--mw-line);background:#fff;border-radius:999px;padding:5px 12px;font-size:12.5px;cursor:pointer;color:var(--mw-soft)}',
       '.mw-klein:hover{border-color:var(--mw-turqd);color:var(--mw-turqd)}',
       /* Weiter-Karte */
-      '.mw-weiter{background:linear-gradient(135deg,#EAFBFE,#FFFDF3);border:2px solid var(--mw-turq);border-radius:20px;padding:22px;margin-bottom:26px}',
+      '.mw-weiter{background:linear-gradient(135deg,#E6F8FC,#FFFFFF);border:2px solid var(--mw-turq);border-radius:20px;padding:22px;margin-bottom:26px}',
       '.mw-weiter h2{font-size:clamp(19px,2.8vw,24px);margin:6px 0 4px;line-height:1.2}',
       '.mw-weiter p{margin:0 0 14px;color:var(--mw-soft)}',
-      '.mw-weiter.geschafft{background:linear-gradient(135deg,#F3FBEA,#FFFDF3);border-color:var(--mw-gruen)}',
+      '.mw-weiter.geschafft{background:linear-gradient(135deg,#F3FBEA,#FFFFFF);border-color:var(--mw-gruen)}',
       '.mw-weiter-bal{display:flex;align-items:center;gap:10px;margin-bottom:14px}',
       '.mw-weiter-bal span{font-size:12.5px;color:var(--mw-soft);white-space:nowrap}',
       '.mw-weiter-u{display:block;margin-top:8px;font-size:12.5px;color:var(--mw-soft)}',
@@ -527,10 +550,10 @@
       '.mw-fk small{color:var(--mw-soft);font-size:12.5px}',
       '.mw-fk span{margin-top:4px;font-size:11.5px;color:var(--mw-turqd);font-weight:600}',
       /* Dashboard-Karte */
-      '.mw-dash{background:linear-gradient(135deg,#EAFBFE,#FFFDF3);border:2px solid var(--mw-turq,#9FE4F1);',
+      '.mw-dash{background:linear-gradient(135deg,#E6F8FC,#FFFFFF);border:2px solid var(--mw-turq,#35AFD0);',
       '  border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:7px}',
       '.mw-dash b{font-size:17px;line-height:1.2}',
-      '.mw-dash small{color:#54594A;font-size:13px}',
+      '.mw-dash small{color:#5A6B72;font-size:13px}',
       '.mw-dash .mw-btn{align-self:flex-start;margin-top:4px}',
       /* Handy */
       '@media(max-width:620px){',

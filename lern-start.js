@@ -54,9 +54,9 @@
     s.textContent = [
       '#v-ueben .ls-kopf{margin-bottom:22px;}',
       '#v-ueben .ls-zuruf{font-family:var(--schrift-kopf,"Shantell Sans",sans-serif);',
-      '  color:var(--petrol,#1990A4);font-size:15px;display:block;margin-bottom:4px;}',
+      '  color:var(--petrol,#10627A);font-size:15px;display:block;margin-bottom:4px;}',
       '#v-ueben .ls-kopf h1{font-size:clamp(26px,4.2vw,38px);margin:0 0 6px;}',
-      '#v-ueben .ls-kopf p{margin:0;color:var(--ink-2,#54594A);font-size:15px;max-width:60ch;}'
+      '#v-ueben .ls-kopf p{margin:0;color:var(--ink-2,#5A6B72);font-size:15px;max-width:60ch;}'
     ].join('');
     document.head.appendChild(s);
   }
@@ -104,8 +104,8 @@
       b.className = 'ls-zurueck';
       b.type = 'button';
       b.textContent = '← Zurück zum Lernbereich';
-      b.style.cssText = 'margin:0 0 16px;border:1.5px solid var(--linie,#E7DFC7);'
-        + 'background:var(--karte,#FFFDF3);border-radius:50px;padding:8px 16px;'
+      b.style.cssText = 'margin:0 0 16px;border:1.5px solid var(--linie,#E7ECEE);'
+        + 'background:var(--karte,#FFFFFF);border-radius:50px;padding:8px 16px;'
         + 'font-family:inherit;font-weight:700;cursor:pointer;';
       b.onclick = function () { renderStart(); };
       ziel.insertBefore(b, ziel.firstChild);

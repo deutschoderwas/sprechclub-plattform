@@ -157,7 +157,7 @@
      Nur was der Lernpfad selbst braucht. Farben, Schriften und Formen
      kommen aus club-stil.css — hier steht bewusst KEINE eigene Farbe. */
   var STIL = `
-  .lernpfad .lp-heute{background:linear-gradient(135deg,#FFFDF3,#FFF3C9);
+  .lernpfad .lp-heute{background:linear-gradient(135deg,#FFFFFF,#F6F9FA);
     border:2.5px solid var(--tinte);border-radius:20px;box-shadow:var(--schatten-tief,4px 5px 0 rgba(32,33,31,.16));
     padding:22px 24px;margin-bottom:20px;display:flex;gap:20px;align-items:center;flex-wrap:wrap}
   .lernpfad .lp-heute .lp-ic{flex:0 0 auto;font-size:40px;line-height:0}

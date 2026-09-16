@@ -46,14 +46,14 @@
      wie auf deutschoderwas-club.de. */
   var CSS = ''
   /* Der Hintergrund: warmes Creme wie draußen, ohne wandernde Farbflecken */
-  + 'body:has(#v-dashboard.active) .club-bg{background:linear-gradient(168deg,#FFFDF9 0%,#FFFBF1 55%,#FFF6E4 100%)}'
+  + 'body:has(#v-dashboard.active) .club-bg{background:linear-gradient(168deg,#FFFDF9 0%,#FFFFFF 55%,#F6F9FA 100%)}'
   + 'body:has(#v-dashboard.active) .club-bg .blob{opacity:.10;filter:blur(96px);animation:none}'
   + 'body:has(#v-dashboard.active) .club-bg .b3{display:none}'
 
   + '#v-dashboard .st{display:flex;flex-direction:column;gap:22px}'
   + '#v-dashboard .st *{box-sizing:border-box}'
   + '.st{--tint:#0F766E;--tint2:#7ED8EA;--ink:#1A1A1A;--weich:#5B6A70;'
-  +     '--rand:#EEE7D8;--karte:#fff;--gold:#FFCE00;--warm:#FFF7E6;--mint:#DFF6F8;'
+  +     '--rand:#F6F9FA;--karte:#fff;--gold:#FFCE00;--warm:#F6F9FA;--mint:#DFF6F8;'
   +     '--schatten:0 4px 14px rgba(26,26,26,.05)}'
 
   /* Gruß — mit Textmarker auf dem, worauf es ankommt */
@@ -83,7 +83,7 @@
   +   'background:linear-gradient(90deg,#D83636 0 33%,#FFCE00 33% 66%,#7ED8EA 66% 100%)}'
   + '.st-kurs .stufe{position:absolute;left:14px;top:14px;z-index:2;background:#fff;color:#0F766E;'
   +   'font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:12.5px;letter-spacing:.06em;'
-  +   'border-radius:999px;padding:6px 14px;border:1px solid #EEE7D8;box-shadow:0 2px 6px rgba(0,0,0,.10)}'
+  +   'border-radius:999px;padding:6px 14px;border:1px solid #F6F9FA;box-shadow:0 2px 6px rgba(0,0,0,.10)}'
   + '.st-kurs .txt{padding:22px 26px 22px;display:flex;flex-direction:column;min-width:0}'
   + '.st-kurs .eyebrow{display:inline-block;align-self:flex-start;color:#0F766E;font-weight:900;'
   +   'font-size:12px;letter-spacing:.1em;text-transform:uppercase;background:#DFF6F8;'
@@ -95,7 +95,7 @@
   + '.st-kurs .fort{margin-top:auto;padding-top:16px}'
   + '.st-kurs .fz{display:flex;justify-content:space-between;font-size:13px;color:var(--weich);margin-bottom:7px;font-weight:600}'
   + '.st-kurs .fz b{color:var(--ink);font-family:"Space Grotesk",sans-serif}'
-  + '.st-bar{height:10px;border-radius:999px;background:#F3ECDD;overflow:hidden;border:1px solid #EDE3CE}'
+  + '.st-bar{height:10px;border-radius:999px;background:#F6F9FA;overflow:hidden;border:1px solid #E7ECEE}'
   + '.st-bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#7ED8EA,#35AFD0);transition:width .5s}'
   + '.st-kurs .akt{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}'
 
@@ -130,7 +130,7 @@
 
   /* Zahlen — auf warmem Creme, damit die Seite atmet */
   + '.st-zahlen{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;background:var(--warm);'
-  +   'border:1px solid #F2E7CE;border-radius:22px;padding:18px 20px}'
+  +   'border:1px solid #E7ECEE;border-radius:22px;padding:18px 20px}'
   + '@media(max-width:760px){.st-zahlen{grid-template-columns:repeat(2,1fr);gap:12px;padding:16px}}'
   + '.st-z{display:flex;flex-direction:column;gap:2px}'
   + '.st-z .l{font-size:12.5px;color:var(--weich);font-weight:700;display:flex;align-items:center;gap:6px}'
@@ -150,11 +150,11 @@
   + '.st-kachel{display:flex;flex-direction:column;text-align:left;background:#fff;border:1px solid var(--rand);'
   +   'border-radius:18px;overflow:hidden;cursor:pointer;padding:0;font-family:inherit;'
   +   'box-shadow:0 1px 3px rgba(22,22,22,.04);transition:transform .16s,box-shadow .16s,border-color .16s}'
-  + '.st-kachel:hover{transform:translateY(-3px);box-shadow:0 14px 34px rgba(26,26,26,.10);border-color:#DFD3BE}'
+  + '.st-kachel:hover{transform:translateY(-3px);box-shadow:0 14px 34px rgba(26,26,26,.10);border-color:#E7ECEE}'
   + '.st-kachel .bd{position:relative;aspect-ratio:16/9;background:linear-gradient(140deg,#7ED8EA,#DFF6F8);overflow:hidden}'
   + '.st-kachel .bd img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}'
   + '.st-kachel:hover .bd img{transform:scale(1.045)}'
-  + '.st-kachel .bd.portraet{background:linear-gradient(150deg,#DFF6F8,#FFF3CC)}'
+  + '.st-kachel .bd.portraet{background:linear-gradient(150deg,#DFF6F8,#F6F9FA)}'
   + '.st-kachel .bd.portraet img{inset:auto;left:50%;top:50%;transform:translate(-50%,-50%);'
   +   'width:106px;height:106px;border-radius:50%;object-fit:cover;object-position:center 22%;'
   +   'border:3px solid #fff;box-shadow:0 6px 18px rgba(22,22,22,.14)}'
@@ -236,7 +236,7 @@
 
   var CSS_POD = ''
     + '.st-pod{display:flex;align-items:center;gap:16px;width:100%;text-align:left;cursor:pointer;'
-    +   'font:inherit;background:#fff;border:1px solid var(--m-line,#EEE7D8);border-radius:20px;'
+    +   'font:inherit;background:#fff;border:1px solid var(--m-line,#F6F9FA);border-radius:20px;'
     +   'padding:12px 18px 12px 12px;margin:0 0 18px;transition:.16s;'
     +   'box-shadow:0 6px 18px rgba(40,53,59,.06)}'
     + '.st-pod:hover{transform:translateY(-2px);box-shadow:0 14px 30px -12px rgba(40,53,59,.3);'
@@ -281,7 +281,7 @@
 
     ziel.innerHTML = ''
       + '<div class="st">'
-      +   gruss(name)
+      +   gruss(name, s)
       +   (k.abo ? '<div class="st-abo">' + k.abo + '</div>' : '')
       +   vokabelBand()
       +   '<div id="lzSlot"></div>'
@@ -342,21 +342,66 @@
       + '</button>';
   }
 
-  function gruss(name){
+  /* Die Punkte stehen in xp_events und werden vom Server gezaehlt
+     (Nachricht +3, Sprachnachricht +5, Korrektur +10, Live-Stunde +15).
+     Sie kommen nach, sobald die Abfrage zurueck ist — die Seite wartet
+     nicht darauf. */
+  function punkteNachtragen(){
+    var c = window.sb, u = window.user;
+    if(!c || !u) return;
+    c.from('xp_events').select('points').eq('user_id', u.id).then(function(r){
+      var n = 0;
+      (r && r.data || []).forEach(function(x){ n += (x.points|0); });
+      if(!n) return;
+      var k = document.getElementById('stPunkte');
+      if(k){ k.textContent = '⭐ ' + n; k.style.display = ''; }
+    }, function(){});
+  }
+
+  function gruss(name, s){
     var h = new Date().getHours();
     var gruesse = h<11 ? ['sn_gm','Guten Morgen'] : (h<18 ? ['sn_gt','Hallo'] : ['sn_ga','Guten Abend']);
-    return '<div class="st-gruss"><div>'
-      + '<h1>' + T(gruesse[0], gruesse[1]) + (name ? ', ' + E(name) : '') + '! 👋</h1>'
+    var streak = (s && s.streak) | 0;
+    var rechts = '<span class="st-punkte" id="stPunkte" style="display:none"></span>';
+    setTimeout(punkteNachtragen, 0);
+    return '<div class="st-gruss">'
+      + '<div><h1>' + T(gruesse[0], gruesse[1]) + (name ? ', ' + E(name) : '') + '! 👋</h1>'
       + '<p>' + T('sn_sub1','Schön, dass du da bist.') + ' '
       +   '<span class="mk-mark">' + T('sn_sub2','Zehn Minuten heute') + '</span> '
-      +   T('sn_sub3','sind mehr wert als zwei Stunden nächste Woche.') + '</p>'
-      + '</div></div>';
+      +   T('sn_sub3','sind mehr wert als zwei Stunden nächste Woche.') + '</p></div>'
+      + rechts
+      + '</div>'
+      + (streak > 1 ? streifen(streak) : '');
+  }
+
+  /* Die Strähne: wie viele Tage am Stück. Steht nur da, wenn es
+     wirklich mehr als einen Tag sind — sonst ist es kein Erfolg,
+     sondern eine Mahnung. */
+  function streifen(tage){
+    return '<div class="st-streak">'
+      + '<span class="st-streak-em">🔥</span>'
+      + '<span class="st-streak-t"><b>' + tage + ' ' + T('sn_streak','Tage am Stück') + '</b>'
+      + '<small>' + T('sn_streak2','Dranbleiben ist das ganze Geheimnis.') + '</small></span>'
+      + '</div>';
   }
 
   /* Weiter im Kurs — die wichtigste Karte der Seite */
   function kursKarte(k){
     var st = null;
-    try{ if(window.kursStand) st = window.kursStand(); }catch(e){}
+    /* Zuerst der echte Lehrplan (mein-weg.js). window.kursStand kam aus
+       weg.js, das gar nicht eingebunden ist — die Karte zeigte deshalb
+       jedem immer "Fang mit Lektion 1 an". */
+    try{
+      if(window.wegStand){
+        var w = window.wegStand();
+        if(w && w.stufe && w.lektion){
+          st = { niveau:w.niveau, nr:w.nr, anzahl:w.anzahl, prozent:w.prozent,
+                 lektion:w.titel, ziel:w.ziel, bild:w.bild, angefangen:w.angefangen,
+                 id:'weg' };
+        }
+      }
+    }catch(e){}
+    if(!st){ try{ if(window.kursStand) st = window.kursStand(); }catch(e){} }
 
     if(!st){
       return '<div class="st-kurs"><div class="bild">'
@@ -367,7 +412,7 @@
         + '<h2>' + T('sn_klos','Fang mit Lektion 1 an') + '</h2>'
         + '<div class="ziel">' + T('sn_klosb','Vierzehn Lektionen pro Stufe: Wendungen, Grammatik, Übungen, ein Gespräch und ein Schreibauftrag.') + '</div>'
         + '<div class="fort"><div class="akt">'
-        + '<button class="st-b st-b1" onclick="go(\'kurs\')">' + T('sn_kstart','Kurs öffnen') + '</button>'
+        + '<button class="st-b st-b1" onclick="go(\'weg\')">' + T('sn_kstart','Kurs öffnen') + '</button>'
         + '</div></div></div></div>';
     }
 

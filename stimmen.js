@@ -439,7 +439,7 @@
     var d = document.createElement('div');
     d.id = 'stimmHinweis';
     d.style.cssText = 'position:fixed;left:12px;right:12px;bottom:calc(80px + env(safe-area-inset-bottom));'
-      + 'z-index:800;background:#fff;border:1px solid #EBE7DF;border-radius:18px;padding:14px 15px;'
+      + 'z-index:800;background:#fff;border:1px solid #F6F9FA;border-radius:18px;padding:14px 15px;'
       + 'box-shadow:0 16px 40px -12px rgba(23,23,23,.42);font:400 13.5px/1.5 Inter,system-ui,sans-serif;'
       + 'max-width:480px;margin:0 auto;color:#171717';
     d.innerHTML =
@@ -448,7 +448,7 @@
       + '<div style="flex:1"><b style="display:block;margin-bottom:4px">Die Stimme klingt blechern?</b>'
       + '<span style="color:#6E6A63">Dein Gerät hat noch die einfache deutsche Stimme. Mit der guten klingt alles fast menschlich:<br>'
       + weg + '</span></div>'
-      + '<button style="border:none;background:none;font-size:19px;color:#A19C93;padding:0 4px;cursor:pointer" '
+      + '<button style="border:none;background:none;font-size:19px;color:#C7D0D4;padding:0 4px;cursor:pointer" '
       + 'onclick="try{localStorage.setItem(\'dow_stimmhinweis\',\'weg\')}catch(e){};this.closest(\'#stimmHinweis\').remove()">×</button>'
       + '</div>';
     document.body.appendChild(d);

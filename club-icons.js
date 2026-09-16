@@ -147,7 +147,7 @@
      eigene Podcast-Seite als auch dieser Bereich im Schülerbereich.
      Neue Folge = ein Eintrag in podcasts.js, sonst nichts.
      ------------------------------------------------------------ */
-  var LVL_COLORS = { A1:'#8BC34A', A2:'#7ED8EA', B1:'#E0A500', B2:'#DD0000', C1:'#7A3E8F' };
+  var LVL_COLORS = { A1:'#8BC34A', A2:'#7ED8EA', B1:'#E0A500', B2:'#E1352C', C1:'#7A3E8F' };
 
   function pcEsc(t){ return String(t==null?'':t).replace(/[<>&"]/g,function(c){
     return ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]); }); }

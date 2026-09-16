@@ -209,18 +209,18 @@
   var CSS =
     '.zeichen{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;line-height:0}' +
     '.zeichen svg{width:1.35em;height:1.35em;display:block;overflow:visible}' +
-    '.zeichen .tn{fill:none;stroke:var(--tinte,#20211F);stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}' +
+    '.zeichen .tn{fill:none;stroke:var(--tinte,#14181B);stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}' +
     '.zeichen .tu{fill:var(--tuerkis,#39CCE3);stroke:none;opacity:.65}' +
     '.zeichen .ge{fill:var(--gelb,#FFE100);stroke:none}' +
-    '.zeichen .ro{fill:none;stroke:var(--rot,#DD0000);stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}' +
-    '.zeichen .pt{fill:var(--tinte,#20211F);stroke:none}' +
+    '.zeichen .ro{fill:none;stroke:var(--rot,#E1352C);stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}' +
+    '.zeichen .pt{fill:var(--tinte,#14181B);stroke:none}' +
     '.zeichen .fu{fill:var(--gruen,#77D42A);stroke:none}' +
     /* Die Markierung liegt hinter allem, leicht schief — wie ein
        Textmarker, der nicht ganz getroffen hat. */
     '.zeichen .mk{fill:var(--gelb,#FFE100);stroke:none;opacity:.55;transform:rotate(-2.5deg);transform-origin:50% 50%}' +
     /* Im aktiven Menüpunkt steht die Tinte auf Türkis — dann muss sie dunkel bleiben */
     '.navlink.active .zeichen .tn{stroke:var(--auf-tuerkis,#063138)}' +
-    '.navlink.active .zeichen .tu{opacity:.9;fill:#FFFDF3}' +
+    '.navlink.active .zeichen .tu{opacity:.9;fill:#FFFFFF}' +
     '.navlink.active .zeichen .mk{opacity:.75}' +
     '@media (prefers-reduced-motion:no-preference){' +
       '.navlink .zeichen svg,.zeichen-hupf svg{transition:transform .18s ease}' +

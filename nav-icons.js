@@ -106,8 +106,8 @@
     + '.sidebar .navlink .ic svg{display:block}'
     + '.sidebar .navlink .ic.f-turq{background:#DFF6F8;color:#12718C}'
     + '.sidebar .navlink .ic.f-rot {background:#FBE3E3;color:#C33030}'
-    + '.sidebar .navlink .ic.f-gold{background:#FFF1C9;color:#B57900}'
-    + '.sidebar .navlink .ic.f-grau{background:#EFEBE2;color:#5B6A70}'
+    + '.sidebar .navlink .ic.f-gold{background:#F6F9FA;color:#B57900}'
+    + '.sidebar .navlink .ic.f-grau{background:#F6F9FA;color:#5B6A70}'
     + '.sidebar .navlink:hover .ic{transform:translateY(-2px) rotate(-4deg);'
     +   'box-shadow:0 6px 14px -6px rgba(40,53,59,.5)}'
     /* Der aktive Eintrag: das Plättchen wird kräftig und bekommt einen Ring */

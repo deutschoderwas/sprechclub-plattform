@@ -27,8 +27,8 @@
     system:     '🔔'
   };
   var FARBE = {
-    antwort:'#EAF3F1', erwaehnung:'#FFF3D6', korrektur:'#EDE7FF',
-    tandem:'#E6F4EA', dm:'#EAF0FA', news:'#FFEDE3', system:'#F1EEE8'
+    antwort:'#EAF3F1', erwaehnung:'#F6F9FA', korrektur:'#EDE7FF',
+    tandem:'#E6F4EA', dm:'#EAF0FA', news:'#F6F9FA', system:'#F1EEE8'
   };
 
   function zeit(t){

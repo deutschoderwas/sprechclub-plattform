@@ -15,7 +15,7 @@
   function injectStyle() {
     if (styled) return; styled = true;
     var css = `
-    #v-challenge .ch-hero{border-radius:18px;padding:24px 26px;color:#fff;position:relative;overflow:hidden;background:linear-gradient(135deg,#7a1f10,#B30000 55%,#DD0000 130%);box-shadow:0 14px 40px rgba(179,0,0,.22);margin-bottom:20px}
+    #v-challenge .ch-hero{border-radius:18px;padding:24px 26px;color:#fff;position:relative;overflow:hidden;background:linear-gradient(135deg,#7a1f10,#B30000 55%,#E1352C 130%);box-shadow:0 14px 40px rgba(179,0,0,.22);margin-bottom:20px}
     #v-challenge .ch-hero::after{content:"";position:absolute;right:-50px;top:-50px;width:230px;height:230px;border-radius:50%;background:radial-gradient(circle,rgba(255,206,0,.35),transparent 70%)}
     #v-challenge .ch-hero .e{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#FFD84D;position:relative}
     #v-challenge .ch-hero h1{font-size:26px;margin:8px 0 4px;color:#fff;position:relative}
@@ -29,20 +29,20 @@
     #v-challenge .ch-meta b{color:#fff;font-family:'Space Grotesk',inherit;font-weight:700}
     #v-challenge .ch-cta{margin-top:18px;position:relative;display:inline-flex;align-items:center;gap:8px;background:#fff;color:#B30000;font-weight:800;font-size:14px;border:none;border-radius:11px;padding:11px 18px;cursor:pointer;font-family:inherit}
     #v-challenge .ch-sec{font-size:13px;font-weight:800;color:#8B8F96;text-transform:uppercase;letter-spacing:.05em;margin:6px 2px 12px}
-    #v-challenge .ch-card{border:1px solid #EEE7D8;border-radius:16px;background:#fff;padding:20px;box-shadow:0 1px 2px rgba(30,25,15,.05);max-width:760px}
+    #v-challenge .ch-card{border:1px solid #F6F9FA;border-radius:16px;background:#fff;padding:20px;box-shadow:0 1px 2px rgba(30,25,15,.05);max-width:760px}
     #v-challenge .ch-dots{display:grid;grid-template-columns:repeat(10,1fr);gap:9px;max-width:520px}
-    #v-challenge .ch-dots .d{aspect-ratio:1;border-radius:9px;background:#F1EEE8;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',inherit;font-weight:700;font-size:12px;color:#B9B36A;border:1px solid #ECE6D6}
+    #v-challenge .ch-dots .d{aspect-ratio:1;border-radius:9px;background:#F1EEE8;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',inherit;font-weight:700;font-size:12px;color:#B9B36A;border:1px solid #E7ECEE}
     #v-challenge .ch-dots .d.on{background:linear-gradient(135deg,#7ED8EA,#35AFD0);color:#10627A;border-color:#35AFD0;box-shadow:0 3px 10px rgba(27,155,192,.25)}
-    #v-challenge .ch-dots .d.goal{background:#FFF7DA;border:1.5px solid #FFCE00;color:#8a6a00}
+    #v-challenge .ch-dots .d.goal{background:#F6F9FA;border:1.5px solid #FFCE00;color:#8a6a00}
     #v-challenge .ch-dots .d.goal.on{background:linear-gradient(135deg,#FFD84D,#FFCE00);color:#7a5c00;border-color:#FFCE00}
     #v-challenge .ch-note{font-size:12.5px;color:#8B8F96;margin:16px 0 0;line-height:1.5}
     #v-challenge .ch-stats{display:flex;gap:12px;flex-wrap:wrap;margin:2px 0 20px;max-width:760px}
-    #v-challenge .ch-stat{flex:1;min-width:150px;border:1px solid #EEE7D8;border-radius:14px;background:#fff;padding:15px 16px;box-shadow:0 1px 2px rgba(30,25,15,.05)}
+    #v-challenge .ch-stat{flex:1;min-width:150px;border:1px solid #F6F9FA;border-radius:14px;background:#fff;padding:15px 16px;box-shadow:0 1px 2px rgba(30,25,15,.05)}
     #v-challenge .ch-stat .k{font-family:'Space Grotesk',inherit;font-weight:700;font-size:26px;color:#22201B;line-height:1}
     #v-challenge .ch-stat .l{font-size:12.5px;color:#8B8F96;margin-top:5px}
     #v-challenge .ch-stat.hl .k{color:#14708B}
     #v-challenge .ch-stat.warn .k{color:#B30000}
-    #v-challenge .ch-lock{text-align:center;padding:40px 22px;border:2px solid #f5b942;background:#fff8ec;border-radius:16px;max-width:520px;margin:8px auto}
+    #v-challenge .ch-lock{text-align:center;padding:40px 22px;border:2px solid #f5b942;background:#FFFFFF;border-radius:16px;max-width:520px;margin:8px auto}
     #v-challenge .ch-lock .ic{font-size:44px;margin-bottom:8px}
     #v-challenge .ch-lock h3{margin:0 0 6px}
     #v-challenge .ch-lock p{color:#6B5B2E;font-size:14px;max-width:400px;margin:0 auto}

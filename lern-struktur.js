@@ -80,14 +80,14 @@
     var pz = pruefungen(), sf = situationen(frei), sb = situationen(ber);
     return [
       {
-        id: 'pruefung', farbe: '#DD0000', zeichen: '🎓',
+        id: 'pruefung', farbe: '#E1352C', zeichen: '🎓',
         titel: 'Für die Prüfung', i18n: 'ls_tuer_pruef',
         text: 'Von A1 bis C1: die Module einzeln üben, Musterprüfungen schreiben, den eigenen Stand prüfen.',
         zahlen: teile(pz ? pz + ' Prüfungen' : '', 'Lesen, Hören, Schreiben, Sprechen'),
         los: 'Prüfung wählen'
       },
       {
-        id: 'freizeit', farbe: '#1990A4', zeichen: '🏡',
+        id: 'freizeit', farbe: '#10627A', zeichen: '🏡',
         titel: 'Für die Freizeit', i18n: 'ls_tuer_frei',
         text: 'Die Orte, an denen du jeden Tag Deutsch brauchst — vom Bäcker über den Arzt bis zum Amt.',
         zahlen: teile(frei.length ? viele(frei.length, 'Bereich', 'Bereiche') : '', sf ? viele(sf, 'Situation mit Amanda', 'Situationen mit Amanda') : ''),
@@ -125,8 +125,8 @@
     s.id = 'lern-struktur-stil';
     s.textContent = [
       '.ls-tueren{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:26px;}',
-      '.ls-tuer{display:block;text-align:left;background:var(--karte,var(--card,#FFFDF3));',
-      '  border:2px solid var(--tinte,var(--ink,#20211F));border-radius:22px;',
+      '.ls-tuer{display:block;text-align:left;background:var(--karte,var(--card,#FFFFFF));',
+      '  border:2px solid var(--tinte,var(--ink,#14181B));border-radius:22px;',
       '  box-shadow:3px 4px 0 rgba(32,33,31,.10);padding:0;overflow:hidden;cursor:pointer;',
       '  font-family:inherit;width:100%;transition:transform .12s,box-shadow .12s;}',
       '.ls-tuer:hover{transform:translateY(-2px);box-shadow:4px 7px 0 rgba(32,33,31,.13);}',
@@ -134,29 +134,29 @@
       '.ls-tuer .inn{padding:18px 20px 20px;display:block;width:100%;box-sizing:border-box;overflow-wrap:break-word;}',
       '.ls-tuer .zn{font-size:30px;line-height:1;display:block;margin-bottom:10px;}',
       '.ls-tuer b{display:block;font-family:var(--schrift-titel,"Caveat Brush",cursive);font-weight:400;',
-      '  font-size:26px;line-height:1.1;margin-bottom:6px;color:var(--tinte,var(--ink,#20211F));}',
-      '.ls-tuer span.u{display:block;color:var(--ink-2,var(--mute,#54594A));font-size:14.5px;line-height:1.5;}',
+      '  font-size:26px;line-height:1.1;margin-bottom:6px;color:var(--tinte,var(--ink,#14181B));}',
+      '.ls-tuer span.u{display:block;color:var(--ink-2,var(--mute,#5A6B72));font-size:14.5px;line-height:1.5;}',
       '.ls-tuer .zahlen{display:block;margin-top:12px;color:var(--ink-3,var(--mute,#8A857C));font-size:13px;}',
-      '.ls-tuer .los{display:inline-block;margin-top:14px;font-weight:700;font-size:14px;color:var(--rot,#DD0000);}',
+      '.ls-tuer .los{display:inline-block;margin-top:14px;font-weight:700;font-size:14px;color:var(--rot,#E1352C);}',
 
       '.ls-werk-t{font-size:13px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;',
       '  color:var(--ink-3,var(--mute,#8A857C));margin:0 0 12px;}',
       '.ls-werk{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;}',
       '.ls-wk{display:flex;gap:11px;align-items:flex-start;text-align:left;width:100%;cursor:pointer;',
-      '  background:var(--karte,var(--card,#FFFDF3));border:1.5px solid var(--linie,var(--line,#E7DFC7));',
+      '  background:var(--karte,var(--card,#FFFFFF));border:1.5px solid var(--linie,var(--line,#E7ECEE));',
       '  border-radius:16px;padding:13px 15px;font-family:inherit;transition:.12s;}',
-      '.ls-wk:hover{border-color:var(--petrol,#1990A4);}',
+      '.ls-wk:hover{border-color:var(--petrol,#10627A);}',
       '.ls-wk .zn{font-size:20px;line-height:1.2;flex:none;}',
-      '.ls-wk b{display:block;font-size:15px;margin-bottom:2px;color:var(--tinte,var(--ink,#20211F));}',
+      '.ls-wk b{display:block;font-size:15px;margin-bottom:2px;color:var(--tinte,var(--ink,#14181B));}',
       '.ls-wk span{display:block;font-size:12.5px;color:var(--ink-3,var(--mute,#8A857C));line-height:1.4;}',
 
       '.ls-weiter{display:flex;align-items:center;gap:12px;width:100%;text-align:left;cursor:pointer;',
-      '  background:var(--gelb-hauch,#FFF6D9);border:2px solid var(--gelb,#FFD24A);border-radius:18px;',
+      '  background:var(--gelb-hauch,#F6F9FA);border:2px solid var(--gelb,#FFD24A);border-radius:18px;',
       '  padding:12px 14px;font-family:inherit;margin-bottom:16px;}',
       '.ls-weiter .zn{font-size:20px;flex:none;}',
-      '.ls-weiter b{display:block;font-size:14px;margin-bottom:1px;color:var(--tinte,var(--ink,#20211F));}',
-      '.ls-weiter .tx > span{display:block;font-size:13px;color:var(--ink-2,var(--mute,#54594A));}',
-      '.ls-weiter .pf{margin-left:auto;color:var(--ink-3,var(--mute,#B4ADA3));font-size:20px;}',
+      '.ls-weiter b{display:block;font-size:14px;margin-bottom:1px;color:var(--tinte,var(--ink,#14181B));}',
+      '.ls-weiter .tx > span{display:block;font-size:13px;color:var(--ink-2,var(--mute,#5A6B72));}',
+      '.ls-weiter .pf{margin-left:auto;color:var(--ink-3,var(--mute,#C7D0D4));font-size:20px;}',
       '@media(max-width:820px){.ls-tueren{grid-template-columns:1fr;gap:12px;margin-bottom:22px;}',
       '  .ls-tuer .inn{padding:15px 16px 17px;}.ls-tuer .zn{font-size:25px;margin-bottom:7px;}',
       '  .ls-tuer b{font-size:23px;}.ls-tuer span.u{font-size:14px;}',
@@ -252,9 +252,9 @@
   };
   var MEHR_STUFEN = ['A1', 'A1–A2', 'A2', 'A1–B1', 'A2–B1', 'B1', 'B1–B2', 'B2', 'B2–C1', 'C1'];
   var MEHR_ZEICHEN = {
-    lektion:    ['📖', '#1990A4'],
+    lektion:    ['📖', '#10627A'],
     wortschatz: ['🔤', '#C9A200'],
-    grammatik:  ['🧩', '#DD0000'],
+    grammatik:  ['🧩', '#E1352C'],
     aussprache: ['🔊', '#4E9E12'],
     spiel:      ['🎲', '#8B4FC7'],
     sprechen:   ['🗣️', '#E0A106'],
@@ -320,7 +320,7 @@
         + (function () {
             var g = 0;
             liste.forEach(function (x) { var s = stand(x.d); if (s && s.fertig) g++; });
-            return g ? ' <b style="color:var(--petrol,#1990A4)">' + g + ' davon hast du schon durch.</b>' : '';
+            return g ? ' <b style="color:var(--petrol,#10627A)">' + g + ' davon hast du schon durch.</b>' : '';
           })()
         + '</p>'
       + (bild ? '<div class="lm-bild"><img src="' + E(bild) + '" alt="" loading="lazy" onerror="this.parentNode.remove()"></div>' : '')
@@ -340,37 +340,37 @@
       '.lm-block{margin-top:26px}',
       '.lm-kopf{display:flex;align-items:center;gap:9px;font-size:17px;margin:0 0 4px}',
       '.lm-nr{display:inline-grid;place-items:center;width:25px;height:25px;border-radius:50%;',
-      '  background:var(--rot,#DD0000);color:#fff;font-size:13px;font-weight:800;flex:none}',
-      '.lm-u2{margin:0 0 14px;font-size:13.5px;line-height:1.5;color:var(--ink-2,var(--text-soft,#54594A))}',
+      '  background:var(--rot,#E1352C);color:#fff;font-size:13px;font-weight:800;flex:none}',
+      '.lm-u2{margin:0 0 14px;font-size:13.5px;line-height:1.5;color:var(--ink-2,var(--text-soft,#5A6B72))}',
       '.lm-stufe{display:flex;align-items:center;gap:10px;margin:18px 0 8px}',
       '.lm-stufe .lv{display:inline-flex;align-items:center;justify-content:center;min-width:38px;height:25px;',
-      '  padding:0 9px;border-radius:40px;background:var(--petrol,var(--tuerkis-dunkel,#1990A4));color:#fff;',
+      '  padding:0 9px;border-radius:40px;background:var(--petrol,var(--tuerkis-dunkel,#10627A));color:#fff;',
       '  font-size:12.5px;font-weight:800;letter-spacing:.3px}',
       '.lm-stufe .anz{margin-left:auto;font-size:12.5px;font-weight:600;color:var(--ink-3,#8A857C)}',
       '.lm-liste{display:flex;flex-direction:column;gap:10px}',
       /* Durchgearbeitete Seiten: ruhig markiert, nicht ausgegraut —
          eine gemachte Lektion bleibt zum Wiederholen wertvoll. */
-      '.lm-z.lm-fertig{border-color:var(--petrol,#1990A4)}',
-      '.lm-z.lm-fertig .tx b{color:var(--petrol,#1990A4)}',
+      '.lm-z.lm-fertig{border-color:var(--petrol,#10627A)}',
+      '.lm-z.lm-fertig .tx b{color:var(--petrol,#10627A)}',
       '.lm-hk{margin-left:auto;flex:none;display:inline-grid;place-items:center;width:24px;height:24px;',
-      '  border-radius:50%;background:var(--petrol,#1990A4);color:#fff;font-size:13px;font-weight:800}',
+      '  border-radius:50%;background:var(--petrol,#10627A);color:#fff;font-size:13px;font-weight:800}',
       '.lm-paar{display:flex;flex-direction:column}',
       '.lm-z{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit;',
-      '  background:var(--karte,var(--card,#FFFDF3));border:1.5px solid var(--linie,var(--line,#E7DFC7));',
+      '  background:var(--karte,var(--card,#FFFFFF));border:1.5px solid var(--linie,var(--line,#E7ECEE));',
       '  border-radius:16px;padding:9px 12px;min-height:66px;transition:.12s}',
-      '.lm-z:hover{border-color:var(--petrol,#1990A4)}',
-      '.lm-bild{border-radius:18px;overflow:hidden;margin:0 0 16px;border:1.5px solid var(--linie,#E7DFC7);',
-      '  background:var(--creme,#FFF8E0)}',
+      '.lm-z:hover{border-color:var(--petrol,#10627A)}',
+      '.lm-bild{border-radius:18px;overflow:hidden;margin:0 0 16px;border:1.5px solid var(--linie,#E7ECEE);',
+      '  background:var(--creme,#F6F9FA)}',
       '.lm-bild img{width:100%;height:150px;object-fit:cover;display:block}',
       '.lm-z .ic{flex:none;width:46px;height:46px;border-radius:14px;display:grid;place-items:center;',
       '  font-size:21px;color:#fff;box-shadow:0 4px 10px rgba(32,33,31,.14)}',
       '.lm-z .tx{flex:1;min-width:0}',
       '.lm-z .tx b{display:block;font-size:14.5px;line-height:1.32}',
       '.lm-z .tx small{display:block;font-size:12.5px;color:var(--ink-3,#8A857C);margin-top:2px}',
-      '.lm-z .pf{color:var(--ink-3,#B4ADA3);font-size:19px;flex:none}',
+      '.lm-z .pf{color:var(--ink-3,#C7D0D4);font-size:19px;flex:none}',
       '.lm-u{display:block;margin:0 0 0 22px;padding:12px 0 6px 34px;font-size:13px;font-weight:700;',
-      '  border-left:2px solid var(--linie,#E7DFC7);min-height:46px;text-decoration:none;',
-      '  color:var(--rot,var(--akt,#DD0000))}',
+      '  border-left:2px solid var(--linie,#E7ECEE);min-height:46px;text-decoration:none;',
+      '  color:var(--rot,var(--akt,#E1352C))}',
       '.lm-u:hover{text-decoration:underline}',
       '@media(max-width:640px){.lm-z{min-height:72px}.lm-bild img{height:126px}',
       '  .lm-u{margin-left:18px;padding-left:30px}}'
@@ -412,7 +412,7 @@
         }
         var roh = satz.innerHTML.replace(/\s*<b[^>]*>\d+ davon hast du schon durch\.<\/b>/, '');
         satz.innerHTML = roh + (g
-          ? ' <b style="color:var(--petrol,#1990A4)">' + g + ' davon hast du schon durch.</b>'
+          ? ' <b style="color:var(--petrol,#10627A)">' + g + ' davon hast du schon durch.</b>'
           : '');
       }
     } catch (e) {}

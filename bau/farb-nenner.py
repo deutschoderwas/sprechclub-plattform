@@ -38,7 +38,13 @@ ZUORDNUNG = [
     ('#EAFBFE', '#E6F8FC', 'Tuerkis, ganz zart'),
 ]
 
-DATEIEN = [os.path.join(W, 'konto.html')] + sorted(glob.glob(os.path.join(W, '*.css')))
+# Auch die .js-Dateien: viele Ansichten bringen ihr eigenes CSS als
+# Zeichenkette mit und setzen dort eigene Variablen (start.js hatte
+# --warm:#FFF7E6 mitten im Skript). In den .js-Dateien steckten 2189
+# Farbwerte — mehr als in allen Stylesheets zusammen.
+DATEIEN = ([os.path.join(W, 'konto.html')]
+           + sorted(glob.glob(os.path.join(W, '*.css')))
+           + sorted(glob.glob(os.path.join(W, '*.js'))))
 
 gesamt = 0
 proFarbe = {}
@@ -62,3 +68,83 @@ print('%d Farbwerte umgestellt in %d Dateien%s' % (gesamt, len(DATEIEN), ' (troc
 for alt, neu, rolle in ZUORDNUNG:
     if proFarbe.get(alt):
         print('  %5d x  %s -> %s   %s' % (proFarbe[alt], alt, neu, rolle))
+
+
+# ============================================================
+#  Zweite Stufe: die vielen einzelnen Cremetoene
+#
+#  Nach der ersten Stufe blieben ueber 60 verschiedene warme
+#  Hell-Toene uebrig, die meisten nur ein- oder zweimal benutzt —
+#  #FFF7E6, #FFFBEC, #FBEDD8, #EFE5CC und so weiter. Jeder fuer
+#  sich unauffaellig, zusammen der Grund, warum nichts zueinander
+#  passt.
+#
+#  Statt sie einzeln zuzuordnen entscheidet hier eine Regel nach
+#  Rolle. In Ruhe gelassen werden:
+#    · Gelb und Gold  — Markenfarben (deutsche Flagge)
+#    · Rosa und Rot   — Warn- und Fehlerfarben
+#  Ersetzt wird nur, was als warme FLAECHE oder LINIE dient.
+# ============================================================
+
+def rgb(h):
+    h = h.lstrip('#')
+    return tuple(int(h[i:i+2], 16) for i in (0, 2, 4))
+
+def rolle(c):
+    """Was ist das fuer eine Farbe? Gibt den Ersatz zurueck oder None."""
+    r, g, b = rgb(c)
+    if not (r >= g >= b and (r - b) >= 12):
+        return None                      # nicht warm
+    hell = (r + g + b) / 3.0
+    if (g - b) > 45 and b < 195:
+        return None                      # Gelb/Gold: Markenfarbe, bleibt
+                                         # (#FFE79A, #F5E4AE und Verwandte —
+                                         #  das sind Akzente, keine Linien)
+    if (r - g) > 15 and (g - b) < 10:
+        return None                      # Rosa/Rot: Warnfarbe, bleibt
+                                         # Erster Anlauf prüfte nur (g-b)<10 und
+                                         # verschonte damit auch neutrale
+                                         # Warmgrautöne wie #EBE7DF, die gar
+                                         # kein Rosa sind.
+    if hell > 246:  return '#FFFFFF'     # Kartenflaeche
+    if hell > 228:  return '#F6F9FA'     # zarte Flaeche
+    if hell > 196:  return '#E7ECEE'     # Linie, Rahmen
+    if hell > 150:  return '#C7D0D4'     # kraeftigere Linie
+    return None                          # dunkle Warmtoene bleiben
+
+def zweite_stufe():
+    import collections
+    gefunden = collections.Counter()
+    for p in DATEIEN:
+        if not os.path.exists(p):
+            continue
+        s = io.open(p, encoding='utf-8').read()
+        for m in set(re.findall(r'#[0-9A-Fa-f]{6}\b', s)):
+            if rolle(m.upper()):
+                gefunden[m.upper()] += 1
+
+    plan = [(c, rolle(c)) for c in sorted(gefunden)]
+    if not plan:
+        print('\nZweite Stufe: nichts mehr zu tun.')
+        return
+
+    print('\n=== Zweite Stufe: %d weitere Cremetoene ===' % len(plan))
+    n = 0
+    for p in DATEIEN:
+        if not os.path.exists(p):
+            continue
+        s = io.open(p, encoding='utf-8').read()
+        vorher = s
+        for alt, neu in plan:
+            muster = re.compile(re.escape(alt) + r'\b', re.I)
+            k = len(muster.findall(s))
+            if k:
+                s = muster.sub(neu, s)
+                n += k
+        if s != vorher and not TROCKEN:
+            io.open(p, 'w', encoding='utf-8').write(s)
+    for alt, neu in plan:
+        print('  %s -> %s' % (alt, neu))
+    print('%d Werte%s' % (n, ' (trocken)' if TROCKEN else ''))
+
+zweite_stufe()

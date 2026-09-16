@@ -235,6 +235,10 @@ function schritt(roh, wo) {
     const m = kursDa(wert);
     if (!m) { fehlt.push(wo + ': Kurslektion ' + wert); return null; }
     b.id = wert; b.t = m.titel; b.u = def.t; b.dauer = m.dauer || null;
+    /* Der Bildname steht in der Lektion selbst (meta.bild) und heisst
+       nicht wie die Datei: kurse/b1-l1.js zeigt auf illu/th-bewerbung.jpg.
+       Die Startseite hat deshalb erst gar kein Bild gefunden. */
+    b.bild = m.bild || null;
     b.lernst = (function () {
       const p = path.join(WURZEL, 'kurse', wert + '.js');
       delete window.LEKTION; delete require.cache[require.resolve(p)]; require(p);

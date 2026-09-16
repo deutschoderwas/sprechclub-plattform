@@ -141,7 +141,7 @@
     #v-community .mfile .fi{width:34px;height:34px;border-radius:7px;background:#EAF3F1;color:var(--brand-2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
     #v-community .mfile b{font-size:12.5px;color:var(--ink)}
     #v-community .mfile small{font-size:11px;color:var(--t3);display:block}
-    #v-community .mimg{margin-top:6px;width:230px;max-width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:10px;border:1px solid var(--line);display:block;cursor:pointer;background:#EFE9D8}
+    #v-community .mimg{margin-top:6px;width:230px;max-width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:10px;border:1px solid var(--line);display:block;cursor:pointer;background:#E7ECEE}
     #v-community .corr{margin-top:7px;border:1px solid var(--brand-line);background:var(--brand-wash);border-radius:10px;padding:10px 12px;max-width:460px}
     #v-community .corr .ch2{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:var(--brand-2);margin-bottom:4px}
     #v-community .corr .cx{font-size:13.5px;color:var(--ink);font-weight:600}
@@ -187,17 +187,17 @@
     @media(max-width:680px){#v-community .comm{grid-template-columns:1fr;height:calc(100dvh - 140px);min-height:460px}#v-community .cs{border-right:none}#v-community .chat{display:none}#v-community .comm.chatauf .cs{display:none}#v-community .comm.chatauf .chat{display:flex}#v-community .ch{padding:10px 10px;font-size:14px}#v-community .ch .ce{font-size:15px;width:20px}#v-community .feed{padding:6px 13px}#v-community .ch-hd{padding:0 12px;gap:8px}#v-community .ch-hd .de{display:none}}
     `;
     var st=document.createElement('style'); st.textContent=css+`
-#v-community .ch.newsch{background:linear-gradient(135deg,#FFF6DC,#FFE7C2);border:1px solid #F0DFA0;color:#7a5c00;font-weight:800;margin:0 0 10px}
+#v-community .ch.newsch{background:linear-gradient(135deg,#F6F9FA,#E7ECEE);border:1px solid #F0DFA0;color:#7a5c00;font-weight:800;margin:0 0 10px}
 #v-community .ch.newsch .nx{font-size:15px;margin-right:3px}
 #v-community .ch.newsch.on{background:linear-gradient(135deg,#161616,#3a3a3a);color:#FFCE00;border-color:#161616}
-#v-community .pinbar{margin:0;border-bottom:1px solid var(--line-2,#F0E5D8);background:#FFFBF0}
+#v-community .pinbar{margin:0;border-bottom:1px solid var(--line-2,#F6F9FA);background:#FFFFFF}
 #v-community .pinbar .ph{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#9A6B00;padding:8px 16px 3px}
 #v-community .pinrow{display:flex;align-items:flex-start;gap:10px;padding:4px 16px 8px;font-size:13.5px}
 #v-community .pinrow .pc{flex:1;min-width:0}
 #v-community .pinrow .pa{font-weight:700;font-size:12px;color:#6B6154}
 #v-community .pinrow .pt{color:#22201B;line-height:1.4;word-break:break-word;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 #v-community .pinrow .punp{border:none;background:none;cursor:pointer;color:#c7a24a;font-size:12px;font-weight:700;font-family:inherit;flex:0 0 auto}
-#v-community .pinrow .punp:hover{color:#DD0000}
+#v-community .pinrow .punp:hover{color:#E1352C}
 #v-community .mh .pinbtn{cursor:pointer;font-size:13px;opacity:.5;margin-left:2px}
 #v-community .mh .pinbtn:hover{opacity:1}
 #v-community .m.pinned .pinbtn{opacity:1}
@@ -210,7 +210,7 @@
 #v-community .msg-actions button{border:none;background:none;cursor:pointer;padding:6px 7px;border-radius:6px;color:#5A6169;display:inline-flex;align-items:center;font-size:13px;line-height:1;font-family:inherit}
 #v-community .msg-actions button:hover{background:#F1EEE8;color:#191B1C}
 #v-community .msg-actions button.ki:hover{background:#F3EEFF;color:#8B5CF6}
-#v-community .msg-actions button.del:hover{background:#FDECEC;color:#DD0000}
+#v-community .msg-actions button.del:hover{background:#FDECEC;color:#E1352C}
 @media(max-width:900px){#v-community .m{flex-wrap:wrap}#v-community .msg-actions{position:static;display:inline-flex;width:100%;margin:3px 0 0 47px;box-shadow:none;border:none;background:none;padding:0;gap:2px}#v-community .msg-actions button{padding:5px 7px;color:#9A978E}#v-community .m:hover .msg-actions{display:inline-flex}}
 .cm-confirm-ov{position:fixed;inset:0;background:rgba(20,20,20,.45);z-index:99999;display:flex;align-items:center;justify-content:center;padding:22px;animation:ccfade .14s ease}
 @keyframes ccfade{from{opacity:0}to{opacity:1}}
@@ -221,8 +221,8 @@
 .cm-confirm .cc-a{display:flex;gap:8px;justify-content:flex-end}
 .cm-confirm .cc-a button{border:none;border-radius:10px;padding:10px 18px;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;transition:.12s}
 .cm-confirm .cc-cancel{background:#F1EEE8;color:#5A5346}
-.cm-confirm .cc-cancel:hover{background:#E7E2D8}
-.cm-confirm .cc-ok{background:#DD0000;color:#fff}
+.cm-confirm .cc-cancel:hover{background:#E7ECEE}
+.cm-confirm .cc-ok{background:#E1352C;color:#fff}
 .cm-confirm .cc-ok:hover{background:#B80000}
 #v-community .cs-srch{padding:8px 10px 4px}
 #v-community .cs-srch input{width:100%;border:1px solid var(--line,#E6E5E0);border-radius:9px;padding:8px 11px;font-family:inherit;font-size:13px;background:#fff;outline:none;-webkit-appearance:none}
@@ -259,7 +259,7 @@
 .kb-h h3{font-family:'Space Grotesk',Inter,sans-serif;font-size:19px;margin:0 0 3px;color:#191B1C}
 .kb-h p{font-size:13px;color:#5A6169;margin:0;line-height:1.5}
 .kb-h .kb-x{margin-left:auto;border:none;background:#F1EEE8;border-radius:9px;width:30px;height:30px;font-size:15px;cursor:pointer;color:#5A6169;flex:none}
-.kb-h .kb-x:hover{background:#E7E2D8}
+.kb-h .kb-x:hover{background:#E7ECEE}
 .kb-b{padding:2px 24px 22px;max-height:62vh;overflow:auto}
 .kb-g{font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#8B929A;padding:18px 0 6px}
 .kb-r{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #F4F3EF}
@@ -278,20 +278,20 @@
 #v-community .replybar{display:flex;align-items:center;gap:9px;background:var(--brand-wash);border:1px solid var(--brand-line);border-radius:10px;padding:7px 11px;margin-bottom:7px;font-size:12.5px;color:var(--brand-ink);font-weight:600}
 #v-community .replybar .rq{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--t2);font-weight:400}
 #v-community .replybar button{border:none;background:none;cursor:pointer;color:var(--t3);font-size:16px;line-height:1;padding:2px 4px}
-#v-community .m.hl{background:#FFF8E1}
+#v-community .m.hl{background:#F6F9FA}
 
 /* ============================================================
    Schulheft-Stil — dieselbe Marke wie deutschoderwas-club.de
    ============================================================ */
 #v-community{
-  --tuerkis:#39CCE3; --tuerkis-dunkel:#1990A4; --auf-tuerkis:#063138;
-  --gelb:#FFE100; --gruen:#77D42A; --rot-s:#DD0000; --tinte:#20211F;
-  --creme:#FFF8E0; --karte:#FFFDF3; --hand:255px 12px 225px 15px/15px 225px 15px 255px;
-  --brand:#39CCE3; --brand-2:#1990A4; --brand-ink:#063138;
-  --brand-wash:#EAFBFE; --brand-line:#9FE4F1;
-  --red:#DD0000; --gold:#C79600;
-  --ink:#20211F; --t1:#20211F; --t2:#54594a; --t3:#8b9088;
-  --surface:#FFFDF3; --surface-2:#FFF8E0; --line:#E7DFC7; --line-2:#EFE9D8;
+  --tuerkis:#39CCE3; --tuerkis-dunkel:#10627A; --auf-tuerkis:#063138;
+  --gelb:#FFE100; --gruen:#77D42A; --rot-s:#E1352C; --tinte:#14181B;
+  --creme:#F6F9FA; --karte:#FFFFFF; --hand:255px 12px 225px 15px/15px 225px 15px 255px;
+  --brand:#39CCE3; --brand-2:#10627A; --brand-ink:#063138;
+  --brand-wash:#E6F8FC; --brand-line:#35AFD0;
+  --red:#E1352C; --gold:#C79600;
+  --ink:#14181B; --t1:#14181B; --t2:#5A6B72; --t3:#8A9AA1;
+  --surface:#FFFFFF; --surface-2:#F6F9FA; --line:#E7ECEE; --line-2:#E7ECEE;
   --fh:'Shantell Sans','Inter',cursive;
 }
 #v-community .pagehead h1{font-family:'Caveat Brush',cursive!important;font-size:clamp(28px,4vw,40px)!important;font-weight:400!important;color:var(--tinte)}
@@ -534,8 +534,8 @@
 }
 
 /* Das Halte-Menü hängt an <body>, deshalb bringt es seine Farben mit. */
-.cm-sheet-ov{--tinte:#20211F;--karte:#FFFDF3;--line:#E7DFC7;--brand-wash:#EAFBFE;
-  --rot-s:#DD0000;--t2:#54594a;--t3:#8b9088;--fh:"Shantell Sans","Inter",cursive;
+.cm-sheet-ov{--tinte:#14181B;--karte:#FFFFFF;--line:#E7ECEE;--brand-wash:#E6F8FC;
+  --rot-s:#E1352C;--t2:#5A6B72;--t3:#8A9AA1;--fh:"Shantell Sans","Inter",cursive;
   position:fixed;inset:0;background:rgba(20,20,20,.42);z-index:99998;
   display:flex;align-items:flex-end;justify-content:center;animation:ccfade .14s ease}
 .cm-sheet{width:100%;max-width:520px;background:var(--karte);border:2.5px solid var(--tinte);

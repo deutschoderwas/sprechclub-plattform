@@ -233,7 +233,7 @@
     s.textContent=[
 
 /* ---- Grundfläche ---- */
-'.ku{--kb:#1F5FD1;--kb2:#12408F;--kr:#DD0000;--kg:#FFCE00;--kt:#12181F;--km:#5E6A78;--kl:#E7EBF0;max-width:1180px;margin:0 auto;padding-bottom:70px;color:#12181F}',
+'.ku{--kb:#1F5FD1;--kb2:#12408F;--kr:#E1352C;--kg:#FFCE00;--kt:#12181F;--km:#5E6A78;--kl:#E7EBF0;max-width:1180px;margin:0 auto;padding-bottom:70px;color:#12181F}',
 '.ku *{box-sizing:border-box}',
 /* Die beiden Vollbilder hängen an <body>, nicht in .ku — ohne diese Zeile
    rechnet der Browser Polster und Rahmen auf die Breite drauf und das
@@ -241,7 +241,7 @@
 '.ku2-ov,.ku2-ov *,.sw-ov,.sw-ov *{box-sizing:border-box}',
 
 /* ---- Knöpfe (auch in den Vollbildern gebraucht) ---- */
-'.ku-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;cursor:pointer;font-family:inherit;font-weight:800;font-size:14.5px;padding:12px 20px;border-radius:13px;background:#DD0000;color:#fff;box-shadow:0 4px 0 #A80000;transition:transform .08s,box-shadow .08s;text-decoration:none}',
+'.ku-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;cursor:pointer;font-family:inherit;font-weight:800;font-size:14.5px;padding:12px 20px;border-radius:13px;background:#E1352C;color:#fff;box-shadow:0 4px 0 #A80000;transition:transform .08s,box-shadow .08s;text-decoration:none}',
 '.ku-btn:active{transform:translateY(3px);box-shadow:0 1px 0 #A80000}',
 '.ku-btn.blau{background:#1F5FD1;box-shadow:0 4px 0 #12408F}',
 '.ku-btn.blau:active{box-shadow:0 1px 0 #12408F}',
@@ -287,11 +287,11 @@
 '.ku-nv .kann li::before{content:"✓";position:absolute;left:2px;top:4px;color:#16a34a;font-weight:800;font-size:13px}',
 '.ku-nv .pillen{display:flex;gap:7px;flex-wrap:wrap;padding:12px 22px 0}',
 '.ku-pill{display:inline-block;font-size:11.5px;font-weight:800;letter-spacing:.2px;padding:5px 11px;border-radius:999px;background:#EEF3FA;color:#12408F}',
-'.ku-pill.gelb{background:#FFF6D6;color:#6B5600}',
+'.ku-pill.gelb{background:#F6F9FA;color:#6B5600}',
 '.ku-pill.grau{background:#F1F4F8;color:#5E6A78}',
 '.ku-nv .fuss{margin-top:auto;padding:14px 22px 18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}',
 '.ku-nv .fuss .ku-bar{flex:1;min-width:120px}',
-'.ku-nv .hinweis{margin:12px 22px 0;background:#FFF8E1;border:1px solid #F3E6B8;border-radius:13px;padding:10px 13px;font-size:12.5px;color:#6B5600;line-height:1.45}',
+'.ku-nv .hinweis{margin:12px 22px 0;background:#F6F9FA;border:1px solid #F3E6B8;border-radius:13px;padding:10px 13px;font-size:12.5px;color:#6B5600;line-height:1.45}',
 '@media(max-width:640px){.ku-nv .oben{padding:16px 16px 10px;gap:12px}.ku-nv .stufe{width:52px;height:52px;flex:0 0 52px;font-size:19px;border-radius:16px}.ku-nv h2{font-size:17.5px}.ku-nv .kann,.ku-nv .pillen{padding-left:16px;padding-right:16px}.ku-nv .fuss{padding:12px 16px 16px}.ku-nv .hinweis{margin-left:16px;margin-right:16px}}',
 
 /* ---- Der Lernweg ---- */
@@ -325,7 +325,7 @@
 '.ku-hero p{margin:0;font-size:14px;line-height:1.55;opacity:.93;max-width:52ch}',
 '.ku-chips{display:flex;gap:7px;flex-wrap:wrap;margin:16px 0 0}',
 '.ku-chip{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.26);border-radius:999px;padding:6px 12px;font-size:12px;font-weight:700;letter-spacing:.1px}',
-'.ku-hero-bild{position:relative;background:#FDF7EC;overflow:hidden}',
+'.ku-hero-bild{position:relative;background:#F6F9FA;overflow:hidden}',
 '.ku-hero-bild img{width:100%;height:100%;object-fit:cover;display:block}',
 '.ku-hero-bild::before{content:"";position:absolute;inset:0;left:-1px;width:56px;background:linear-gradient(90deg,rgba(31,95,209,.95),rgba(31,95,209,0));z-index:2}',
 '.ku-ring{position:absolute;right:13px;bottom:13px;z-index:3;width:60px;height:60px;border-radius:50%;background:conic-gradient(#FFCE00 var(--p,0%),rgba(255,255,255,.55) 0);display:grid;place-items:center;box-shadow:0 3px 10px rgba(0,0,0,.16)}',
@@ -348,21 +348,21 @@
 
 /* ---- Wörter-Karte mit Bild ---- */
 '.ku-kw{display:grid;grid-template-columns:200px 1fr;max-width:600px;margin:0 auto;background:#fff;border:1px solid #E7EBF0;border-radius:20px;overflow:hidden;box-shadow:0 8px 26px rgba(18,24,31,.09)}',
-'.ku-kw-bild{position:relative;background:#FDF7EC;display:grid;place-items:center;padding:16px;border-right:1px solid #F0E7D6}',
+'.ku-kw-bild{position:relative;background:#F6F9FA;display:grid;place-items:center;padding:16px;border-right:1px solid #F6F9FA}',
 '.ku-kw-bild img{width:100%;max-width:172px;border-radius:15px;display:block}',
 '.ku-kw-tx{border:none;background:none;font-family:inherit;text-align:left;cursor:pointer;padding:22px 24px;display:flex;flex-direction:column;justify-content:center;gap:10px;min-height:192px;color:#12181F}',
 '.ku-kw .de{font-size:23px;font-weight:800;line-height:1.22;letter-spacing:-.3px}',
 '.ku-kw .hi{font-size:14px;color:#5E6A78;line-height:1.5}',
 '.ku-kw .bsp{background:#F2F6FD;border-left:3px solid #1F5FD1;border-radius:0 11px 11px 0;padding:10px 14px;font-size:14.5px;color:#12408F;line-height:1.45;font-weight:600}',
 '.ku-kw .tipp{font-size:11px;letter-spacing:.5px;text-transform:uppercase;font-weight:800;color:#9AA6B4;display:flex;align-items:center;gap:6px}',
-'@media(max-width:640px){.ku-kw{grid-template-columns:1fr}.ku-kw-bild{border-right:none;border-bottom:1px solid #F0E7D6;padding:18px}.ku-kw-bild img{max-width:126px}.ku-kw-tx{min-height:0;padding:18px 16px}.ku-kw .de{font-size:20px}}',
+'@media(max-width:640px){.ku-kw{grid-template-columns:1fr}.ku-kw-bild{border-right:none;border-bottom:1px solid #F6F9FA;padding:18px}.ku-kw-bild img{max-width:126px}.ku-kw-tx{min-height:0;padding:18px 16px}.ku-kw .de{font-size:20px}}',
 '.ku-punkte{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;max-width:600px;margin:14px auto 0}',
 '.ku-punkte i{width:7px;height:7px;border-radius:50%;background:#DCE3EC;display:block;transition:.15s}',
 '.ku-punkte i.durch{background:#9EC0F0}',
 '.ku-punkte i.jetzt{background:#1F5FD1;transform:scale(1.4)}',
 
 /* ---- Lektionsliste mit Vorschaubild ---- */
-'.ku-lek .bild{position:relative;width:84px;height:56px;flex:0 0 84px;border-radius:13px;overflow:hidden;background:#FDF7EC}',
+'.ku-lek .bild{position:relative;width:84px;height:56px;flex:0 0 84px;border-radius:13px;overflow:hidden;background:#F6F9FA}',
 '.ku-lek .bild img{width:100%;height:100%;object-fit:cover;display:block}',
 '.ku-lek .bild .marke{position:absolute;left:5px;top:5px;min-width:22px;height:22px;padding:0 5px;border-radius:8px;background:rgba(18,64,143,.92);color:#fff;font-size:11.5px;font-weight:800;display:grid;place-items:center;letter-spacing:-.2px}',
 '.ku-lek.fertig .bild .marke{background:#16a34a}',
@@ -371,7 +371,7 @@
 /* ---- Abschnitt mit Randbild (Sprechen/Schreiben) ---- */
 '.ku-mitbild{display:flex;gap:16px;align-items:center}',
 '.ku-mitbild .txt{flex:1;min-width:0}',
-'.ku-mitbild .bd{width:118px;height:88px;flex:0 0 118px;border-radius:15px;overflow:hidden;background:#FDF7EC}',
+'.ku-mitbild .bd{width:118px;height:88px;flex:0 0 118px;border-radius:15px;overflow:hidden;background:#F6F9FA}',
 '.ku-mitbild .bd img{width:100%;height:100%;object-fit:cover;display:block}',
 '@media(max-width:640px){.ku-mitbild .bd{display:none}}',
 
@@ -408,7 +408,7 @@
 '.ku-gr .bsp button{border:none;background:none;cursor:pointer;font-size:15px;color:#1F5FD1;padding:2px 4px}',
 
 /* Aussprache */
-'.ku-aus{background:#FFF8E1;border:1px solid #F3E6B8;border-radius:15px;padding:14px 16px;font-size:14px;line-height:1.55;color:#6B5600}',
+'.ku-aus{background:#F6F9FA;border:1px solid #F3E6B8;border-radius:15px;padding:14px 16px;font-size:14px;line-height:1.55;color:#6B5600}',
 
 /* ---- Vollbild Übungsrunde ---- */
 '.ku2-ov{position:fixed;inset:0;z-index:9100;background:#F4F6F9;display:none;flex-direction:column;height:100dvh}',
@@ -433,7 +433,7 @@
 '.ku2-o{display:block;width:100%;text-align:left;border:1px solid #E7EBF0;background:#fff;border-radius:15px;padding:14px 16px;font-family:inherit;font-size:15.5px;color:#12181F;cursor:pointer;transition:.12s;line-height:1.35}',
 '.ku2-o:hover{border-color:#1F5FD1;background:#F7FAFF}',
 '.ku2-o.gut{border-color:#16a34a;background:#F1FAF4;color:#0F7738;font-weight:800}',
-'.ku2-o.schlecht{border-color:#DD0000;background:#FFF4F4;color:#7A1414;font-weight:800}',
+'.ku2-o.schlecht{border-color:#E1352C;background:#FFF4F4;color:#7A1414;font-weight:800}',
 '.ku2-o[disabled]{cursor:default}',
 '.ku2-drei{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}',
 '.ku2-drei .ku2-o{text-align:center;font-size:18px;font-weight:800;padding:18px 8px}',
@@ -456,7 +456,7 @@
 '.ku2-p:hover{border-color:#1F5FD1}',
 '.ku2-p.an{border-color:#1F5FD1;background:#EEF3FA;font-weight:700}',
 '.ku2-p.fest{border-color:#16a34a;background:#F1FAF4;color:#0F7738;cursor:default}',
-'.ku2-p.daneben{border-color:#DD0000;background:#FFF4F4}',
+'.ku2-p.daneben{border-color:#E1352C;background:#FFF4F4}',
 
 /* Ordnen */
 '.ku2-ordn{display:grid;gap:8px;margin:0 0 12px}',
@@ -469,7 +469,7 @@
 /* Sprechen */
 '.ku2-ziel{background:#F1FAF4;border:1px solid #CDEBD9;border-radius:14px;padding:13px 15px;font-size:17px;color:#12181F;margin:0 0 16px;line-height:1.4}',
 '.ku2-erk{min-height:24px;font-size:15px;color:#5E6A78;text-align:center;margin:0 0 10px;line-height:1.4}',
-'.ku2-mic.laeuft{background:#DD0000;box-shadow:0 4px 0 #A80000;animation:kupuls 1.1s infinite}',
+'.ku2-mic.laeuft{background:#E1352C;box-shadow:0 4px 0 #A80000;animation:kupuls 1.1s infinite}',
 '@keyframes kupuls{0%,100%{box-shadow:0 4px 0 #A80000,0 0 0 0 rgba(221,0,0,.4)}70%{box-shadow:0 4px 0 #A80000,0 0 0 14px rgba(221,0,0,0)}}',
 
 /* Rückmeldung */
@@ -515,7 +515,7 @@
 '.sw-zeile{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:10px 0 0}',
 '.sw-zaehler{font-size:13.5px;font-weight:800;color:#5E6A78;background:#F1F4F8;border-radius:999px;padding:7px 14px}',
 '.sw-zaehler.gut{background:#F1FAF4;color:#0F7738}',
-'.sw-zaehler.viel{background:#FFF8E1;color:#6B5600}',
+'.sw-zaehler.viel{background:#F6F9FA;color:#6B5600}',
 '.sw-hilfen{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0 0}',
 '.sw-h{border:1px solid #D6E2F3;background:#F5F8FD;color:#12408F;border-radius:999px;padding:7px 13px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;text-align:left;line-height:1.3}',
 '.sw-h:hover{background:#E7EFFB}',
@@ -525,7 +525,7 @@
 '.sw-krit.an .box{background:#16a34a;border-color:#16a34a}',
 '.sw-krit b{display:block;font-size:14px;color:#12181F;margin:0 0 2px}',
 '.sw-krit small{display:block;font-size:12.5px;color:#5E6A78;line-height:1.4}',
-'.sw-falle{background:#FFF4F4;border:1px solid #F6D5D5;border-left:3px solid #DD0000;border-radius:0 12px 12px 0;padding:9px 12px;margin:0 0 7px;font-size:13.5px;color:#7A1414;line-height:1.45}',
+'.sw-falle{background:#FFF4F4;border:1px solid #F6D5D5;border-left:3px solid #E1352C;border-radius:0 12px 12px 0;padding:9px 12px;margin:0 0 7px;font-size:13.5px;color:#7A1414;line-height:1.45}',
 '.sw-muster{background:#F1FAF4;border:1px solid #CDEBD9;border-radius:14px;padding:14px 16px;font-size:15px;line-height:1.65;color:#12181F;white-space:pre-wrap}',
 '.sw-ki{background:#F5F8FD;border:1px solid #D6E2F3;border-radius:14px;padding:14px 16px;font-size:14px;line-height:1.6;color:#12408F;white-space:pre-wrap}',
 
@@ -812,7 +812,7 @@
     /* 3 — Üben */
     if((l.ueb||[]).length){
       teile.push('<section class="ku-ab" id="kuAbUeben">'
-        +abKopf('✏️','Üben',l.ueb.length+' Aufgaben, gemischt — genau das hält am längsten',(st.ueb||0)>=100,'#FFF6E0')
+        +abKopf('✏️','Üben',l.ueb.length+' Aufgaben, gemischt — genau das hält am längsten',(st.ueb||0)>=100,'#F6F9FA')
         +'<span class="ku-bar'+((st.ueb||0)>=100?' voll':'')+'" style="margin:0 0 13px"><i style="width:'+(st.ueb||0)+'%"></i></span>'
         +'<button class="ku-btn blau breit" onclick="kuUebenStarten()">'
         +((st.ueb||0)>0?'Weiter üben →':'Übungsrunde starten →')+'</button>'

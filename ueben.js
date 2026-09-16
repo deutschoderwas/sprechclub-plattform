@@ -222,22 +222,22 @@
     .ub-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
     .ub-niv{display:flex;align-items:center;gap:10px;margin:26px 0 10px;font-size:16px;font-weight:800;color:var(--ink,#2B2B2B)}
     .ub-niv:first-child{margin-top:8px}
-    .ub-niv .lv{display:inline-flex;align-items:center;justify-content:center;min-width:38px;height:26px;padding:0 9px;border-radius:40px;background:var(--rot,#DD0000);color:#fff;font-size:13px;font-weight:800;letter-spacing:.3px}
+    .ub-niv .lv{display:inline-flex;align-items:center;justify-content:center;min-width:38px;height:26px;padding:0 9px;border-radius:40px;background:var(--rot,#E1352C);color:#fff;font-size:13px;font-weight:800;letter-spacing:.3px}
     .ub-niv .anz{margin-left:auto;font-size:13px;font-weight:600;color:var(--mute,#9A948B)}
     .ub-grid[hidden]{display:none}
     .ub-grid+.ub-grid{margin-top:12px}
     .ub-mehrbtn{width:100%;margin-top:12px;border:1.5px solid var(--border,#ECECEC);background:var(--card,#fff);border-radius:40px;padding:13px 18px;font-weight:700;font-size:14px;cursor:pointer;color:var(--ink,#2B2B2B);min-height:48px}
-    .ub-mehrbtn:hover{border-color:var(--rot,#DD0000);color:var(--rot,#DD0000)}
+    .ub-mehrbtn:hover{border-color:var(--rot,#E1352C);color:var(--rot,#E1352C)}
     @media(max-width:640px){.ub-niv{font-size:15px;margin:20px 0 8px}.ub-niv .anz{font-size:12px}}
     .ub-card{background:var(--card,#fff);border:1px solid var(--border,#ECECEC);border-radius:18px;padding:15px 16px;box-shadow:0 6px 16px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:8px;transition:transform .15s,box-shadow .2s}
     .ub-card:hover{transform:translateY(-3px);box-shadow:0 14px 28px rgba(0,0,0,.10)}
     .ub-card .emj{font-size:24px}
     .ub-card .tt{font-weight:800;font-family:'Space Grotesk',sans-serif;line-height:1.15}
-    .ub-card .lv{font-size:11px;font-weight:800;letter-spacing:.04em;background:var(--bg,#FFF7E6);color:var(--soft,#5C5C5C);padding:2px 8px;border-radius:20px;align-self:flex-start}
+    .ub-card .lv{font-size:11px;font-weight:800;letter-spacing:.04em;background:var(--bg,#F6F9FA);color:var(--soft,#5C5C5C);padding:2px 8px;border-radius:20px;align-self:flex-start}
     .ub-pbar{height:8px;border-radius:6px;background:#eee;overflow:hidden}
     .ub-pbar span{display:block;height:100%;background:var(--turq,#2DD4BF)}
-    .ub-go{margin-top:4px;border:none;border-radius:40px;padding:10px;font-weight:800;color:#fff;cursor:pointer;background:var(--primary,#DD0000)}
-    .ub-mix{background:linear-gradient(135deg,var(--primary,#DD0000),var(--accent,#FFCE00));color:#fff;border:none;border-radius:18px;padding:16px 20px;font-weight:800;font-size:16px;cursor:pointer;width:100%;margin-bottom:18px;box-shadow:0 10px 24px rgba(221,0,0,.25)}
+    .ub-go{margin-top:4px;border:none;border-radius:40px;padding:10px;font-weight:800;color:#fff;cursor:pointer;background:var(--primary,#E1352C)}
+    .ub-mix{background:linear-gradient(135deg,var(--primary,#E1352C),var(--accent,#FFCE00));color:#fff;border:none;border-radius:18px;padding:16px 20px;font-weight:800;font-size:16px;cursor:pointer;width:100%;margin-bottom:18px;box-shadow:0 10px 24px rgba(221,0,0,.25)}
     /* Session overlay */
     .ub-ov{position:fixed;inset:0;z-index:4000;background:var(--cream,#FFFCF5);display:none;flex-direction:column}
     .ub-ov.open{display:flex}
@@ -246,7 +246,7 @@
       min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;border-radius:50%}
     .ub-x:hover{background:rgba(32,33,31,.06)}
     .ub-ende{font-size:22px}
-    .ub-prog{flex:1;height:14px;border-radius:10px;background:#e9e4d8;overflow:hidden}
+    .ub-prog{flex:1;height:14px;border-radius:10px;background:#E7ECEE;overflow:hidden}
     .ub-prog span{display:block;height:100%;background:var(--turq,#2DD4BF);transition:width .3s}
     .ub-hearts{font-size:18px;letter-spacing:1px;white-space:nowrap}
     .ub-body{flex:1;overflow-y:auto;padding:8px 18px 20px;max-width:680px;margin:0 auto;width:100%}
@@ -272,7 +272,7 @@
     .ub-build{min-height:54px;border-bottom:2px dashed var(--border,#ECECEC);padding:8px 0;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
     .ub-play{border:none;background:var(--turq,#2DD4BF);color:#fff;border-radius:50%;width:74px;height:74px;font-size:30px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin:6px auto 18px;box-shadow:0 8px 20px rgba(45,212,191,.4);transition:.15s}
     .ub-play:hover{transform:scale(1.06)}
-    .ub-play.playing{background:var(--primary,#DD0000);box-shadow:0 8px 22px rgba(221,0,0,.4);animation:ubpulse 1s infinite}
+    .ub-play.playing{background:var(--primary,#E1352C);box-shadow:0 8px 22px rgba(221,0,0,.4);animation:ubpulse 1s infinite}
     @keyframes ubpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
     /* Kleine Tonknoepfe an jeder Aufgabe: normal und langsam. */
     .ub-ton{display:flex;gap:8px;justify-content:center;margin:-6px 0 16px}
@@ -314,7 +314,7 @@
     .ub-fsatz{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:8px 0 4px}
     .ub-fw{border:2px solid transparent;background:#F3F3F1;border-radius:10px;padding:8px 11px;
       font-size:17px;font-weight:600;cursor:pointer;transition:.12s;min-height:44px}
-    .ub-fw:hover:not(.aus){background:#FFF3CC}
+    .ub-fw:hover:not(.aus){background:#F6F9FA}
     .ub-fw.aus{cursor:default}
     .ub-fw.gut{background:#E7F7EC;border-color:#16a34a}
     .ub-fw.schlecht{background:#FDECEA;border-color:#dc2626}
@@ -335,7 +335,7 @@
     .ub-end{text-align:center;padding:30px 10px}
     .ub-end .em{font-size:60px}
     .ub-end h2{font-family:'Space Grotesk',sans-serif;margin:10px 0}
-    .ub-end .xp{font-size:20px;font-weight:800;color:var(--primary,#DD0000)}
+    .ub-end .xp{font-size:20px;font-weight:800;color:var(--primary,#E1352C)}
     .ub-cele{position:fixed;inset:0;z-index:5000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.35);animation:ubfade .3s}
     .ub-cele .box{background:#fff;border-radius:22px;padding:26px 30px;text-align:center;max-width:300px;box-shadow:0 20px 50px rgba(0,0,0,.3)}
     @keyframes ubfade{from{opacity:0}to{opacity:1}}
@@ -374,11 +374,11 @@
     .ub-mic:hover{filter:brightness(1.05)}
     .ub-mic:disabled{opacity:.5;cursor:default;box-shadow:none}
     .ub-mic.hoert{background:#dc2626;color:#fff;animation:ubpulse 1s infinite;box-shadow:0 8px 20px rgba(220,38,38,.35)}
-    .ub-gehoert{margin:14px auto 0;max-width:520px;background:var(--bg,#FFF7E6);border:2px solid var(--border,#ECECEC);border-radius:16px;padding:12px 15px;text-align:left;font-size:16px;line-height:1.5}
+    .ub-gehoert{margin:14px auto 0;max-width:520px;background:var(--bg,#F6F9FA);border:2px solid var(--border,#ECECEC);border-radius:16px;padding:12px 15px;text-align:left;font-size:16px;line-height:1.5}
     .ub-gehoert .lbl{display:block;font-size:13px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--soft,#5C5C5C);margin-bottom:4px}
     .ub-gehoert.gut{border-color:#16a34a;background:rgba(22,163,74,.07)}
     .ub-gehoert.fast{border-color:#FFCE00;background:rgba(255,206,0,.12)}
-    .ub-gehoert b.fehlt{color:#DD0000;text-decoration:underline;text-decoration-color:#FFCE00;text-decoration-thickness:3px}
+    .ub-gehoert b.fehlt{color:#E1352C;text-decoration:underline;text-decoration-color:#FFCE00;text-decoration-thickness:3px}
     .ub-cmp{display:flex;gap:10px;justify-content:center;margin:14px 0 4px;flex-wrap:wrap}
     .ub-cmp-btn{border:2px solid var(--border,#ECECEC);background:#fff;border-radius:40px;padding:11px 18px;font-weight:700;font-size:15px;cursor:pointer;font-family:inherit}
     .ub-cmp-btn.mine{border-color:#7C3AED;color:#7C3AED}
@@ -396,7 +396,7 @@
     .ub-uebs{margin:10px auto 0;padding:6px 13px;border-radius:999px;background:var(--wash,#F3FBFD);
       max-width:100%;display:inline-flex;align-items:baseline;gap:7px;flex-wrap:wrap;justify-content:center;text-align:center}
     .ub-uebs i{font-style:normal;font-size:13px;opacity:.65;flex:0 0 auto}
-    .ub-uebs b{font-size:17px;font-weight:700;color:var(--ink,#20211F);overflow-wrap:anywhere}
+    .ub-uebs b{font-size:17px;font-weight:700;color:var(--ink,#14181B);overflow-wrap:anywhere}
     .ub-uebs span{font-size:13.5px;color:var(--soft,#5C5C5C);line-height:1.4}
     .ub-uebs.rtl{direction:rtl}
     /* Ausserhalb der Wortkarte steht die Zeile mittig für sich —
@@ -405,10 +405,10 @@
     #ubBody > .ub-uebs{display:flex;width:fit-content;margin-left:auto;margin-right:auto;margin-top:8px}
     @media(max-width:520px){ .ub-uebs b{font-size:16px} }
     .ub-art{display:inline-flex;align-items:center;justify-content:center;padding:3px 13px;border-radius:30px;font-size:15px;font-weight:800;color:#fff;background:var(--af,#2F6FD0)}
-    .ub-satzbox{margin-top:14px;background:var(--bg,#FFF7E6);border:1.5px solid var(--border,#ECECEC);border-radius:14px;padding:12px 14px;font-size:16.5px;line-height:1.55;text-align:left}
-    .ub-satzbox mark{background:#FFE100;padding:1px 4px;border-radius:5px;font-weight:800;color:var(--ink,#20211F)}
+    .ub-satzbox{margin-top:14px;background:var(--bg,#F6F9FA);border:1.5px solid var(--border,#ECECEC);border-radius:14px;padding:12px 14px;font-size:16.5px;line-height:1.55;text-align:left}
+    .ub-satzbox mark{background:#FFE100;padding:1px 4px;border-radius:5px;font-weight:800;color:var(--ink,#14181B)}
     .ub-regel{margin-top:12px;text-align:left;display:flex;flex-direction:column;gap:9px}
-    .ub-regel .z{background:var(--bg,#FFF7E6);border-left:4px solid var(--turq,#2DD4BF);border-radius:0 12px 12px 0;padding:10px 13px}
+    .ub-regel .z{background:var(--bg,#F6F9FA);border-left:4px solid var(--turq,#2DD4BF);border-radius:0 12px 12px 0;padding:10px 13px}
     .ub-regel .z b{display:block;font-size:16.5px;line-height:1.45;font-weight:700}
     .ub-regel .z span{display:block;margin-top:3px;font-size:14px;color:var(--soft,#5C5C5C);line-height:1.45}
     .ub-bed{font-size:19px;line-height:1.45;text-align:center;color:var(--ink,#2B2B2B);font-weight:600;margin:2px 0 16px}
@@ -423,8 +423,8 @@
        er gar nicht erst. */
     .ub-zwei{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
     .ub-zwei>button{flex:1 1 240px;margin-bottom:0}
-    .ub-wdh{background:linear-gradient(135deg,#1990A4,#2DD4BF);color:#fff;border:none;border-radius:18px;padding:16px 20px;font-weight:800;font-size:16px;cursor:pointer;box-shadow:0 10px 24px rgba(25,144,164,.25);min-height:52px}
-    .ub-wmark{display:inline-block;background:#FFE100;color:#20211F;border-radius:20px;padding:2px 10px;font-size:12.5px;font-weight:800;margin-bottom:10px}
+    .ub-wdh{background:linear-gradient(135deg,#10627A,#2DD4BF);color:#fff;border:none;border-radius:18px;padding:16px 20px;font-weight:800;font-size:16px;cursor:pointer;box-shadow:0 10px 24px rgba(25,144,164,.25);min-height:52px}
+    .ub-wmark{display:inline-block;background:#FFE100;color:#14181B;border-radius:20px;padding:2px 10px;font-size:12.5px;font-weight:800;margin-bottom:10px}
     `;
     document.head.appendChild(st);
   }
@@ -437,7 +437,7 @@
   function skillById(id){ return (UEBUNGEN.skills||[]).filter(function(s){return s.id===id;})[0]; }
   // Emoji je Thema (für vibrante Karten)
   var UB_EMOJI={arbeit:'💼',bildung:'📚',einkaufen:'🛒',essen:'🍳',gefuehle:'😊',gesundheit:'🩺',medien:'📱',natur:'🌳',persoenlichkeit:'😎',redewendungen:'💬',reisen:'✈️',stadt:'🚉','starke-adjektive':'💪','typisch-deutsch':'🇩🇪',wohnen:'🛋️',adjektivdeklination:'🧩',genitiv:'🔑','indirekte-rede':'🗣️',konjunktiv2:'💭',konnektoren:'🔗',nebensaetze:'🧷','passiv-praesens':'🔁','passiv-vergangenheit':'🕰️','perfekt-praeteritum':'⏳',relativsaetze:'📎','temporale-nebensaetze':'⏰',wechselpraepositionen:'📍',ch:'🔤',r:'🌀','s-z-ss':'🔊',satzmelodie:'🎵',umlaute:'Ä','v-w-f':'💨',vokale:'🅰️',wortakzent:'📢'};
-  var UB_PAL=[['#DD0000','#FF7A00'],['#2563EB','#2DD4BF'],['#13A89A','#16a34a'],['#FF7A00','#FFCE00'],['#E83E8C','#7C3AED'],['#DD0000','#E83E8C'],['#2563EB','#7C3AED'],['#16a34a','#2DD4BF'],['#7C3AED','#2563EB'],['#FF7A00','#DD0000'],['#2DD4BF','#2563EB'],['#13A89A','#2563EB'],['#DD0000','#FFCE00'],['#FFCE00','#FF7A00'],['#7C3AED','#E83E8C']];
+  var UB_PAL=[['#E1352C','#FF7A00'],['#2563EB','#2DD4BF'],['#13A89A','#16a34a'],['#FF7A00','#FFCE00'],['#E83E8C','#7C3AED'],['#E1352C','#E83E8C'],['#2563EB','#7C3AED'],['#16a34a','#2DD4BF'],['#7C3AED','#2563EB'],['#FF7A00','#E1352C'],['#2DD4BF','#2563EB'],['#13A89A','#2563EB'],['#E1352C','#FFCE00'],['#FFCE00','#FF7A00'],['#7C3AED','#E83E8C']];
   // Passende Lektionsseite je Übungs-Thema (1:1-Verzahnung)
   /* Der Link zur Lektion wurde frueher aus dem Themennamen geraten
      (wortschatz-<id>-b1.html). Von 169 solchen Links fuehrten 118 auf
@@ -503,7 +503,7 @@
         (fael>0?'<button class="ub-wdh" onclick="ubStartWdh()">🔁 Wiederholen · '+fael+(fael===1?' Wort':' Wörter')+' sind heute dran</button>':'')+
       '</div>';
     var pills='<div class="ub-skills">'+UEBUNGEN.skills.map(function(x){
-        var on=x.id===curSkill; return '<button class="ub-skill'+(on?' on':'')+'" style="'+(on?'background:'+(x.color||'#DD0000')+';border-color:'+(x.color||'#DD0000'):'')+'" onclick="ubSetSkill(\''+x.id+'\')">'+x.emoji+' '+E(x.name)+'</button>';
+        var on=x.id===curSkill; return '<button class="ub-skill'+(on?' on':'')+'" style="'+(on?'background:'+(x.color||'#E1352C')+';border-color:'+(x.color||'#E1352C'):'')+'" onclick="ubSetSkill(\''+x.id+'\')">'+x.emoji+' '+E(x.name)+'</button>';
       }).join('')+'</div>';
     /* Nach Niveau geordnet. Vorher lagen alle Themen eines Bereichs in
        einem einzigen Gitter - bei 47 Hoerthemen fand ein Anfaenger
@@ -1313,7 +1313,7 @@
     var foot=document.querySelector('#ubOv .ub-foot');
     var lu=lessonUrl(S.skId,S.thId);
     foot.innerHTML='<button class="ub-btn" onclick="ubAgain()">Nochmal üben</button>'+
-                   (lu?'<a class="ub-btn" href="'+lu+'" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none;background:linear-gradient(135deg,var(--primary,#DD0000),var(--accent,#FFCE00));margin-top:10px">📖 Passende Lektion ansehen</a>':'')+
+                   (lu?'<a class="ub-btn" href="'+lu+'" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none;background:linear-gradient(135deg,var(--primary,#E1352C),var(--accent,#FFCE00));margin-top:10px">📖 Passende Lektion ansehen</a>':'')+
                    '<button class="ub-btn" style="background:#fff;color:var(--ink,#1A1A1A);border:2px solid var(--border,#ECECEC);box-shadow:none;margin-top:10px" onclick="ubClose()">Fertig</button>';
   }
   window.ubAgain=function(){ var foot=document.querySelector('#ubOv .ub-foot'); foot.innerHTML='<button class="ub-btn" id="ubBtn" disabled onclick="ubBtn()">Prüfen</button>';

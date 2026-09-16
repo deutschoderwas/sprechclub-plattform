@@ -8,7 +8,7 @@
    Was nicht existiert, steht nicht drin. Es gibt hier keine
    toten Knöpfe.
 
-   Gebaut am 2026-09-15 21:40
+   Gebaut am 2026-09-16 12:41
    ============================================================ */
 window.LEHRPLAN = {
  "stufen": [
@@ -30,6 +30,7 @@ window.LEHRPLAN = {
        "t": "Hallo! Ich bin …",
        "u": "Die Lektion",
        "dauer": "ca. 15 Min",
+       "bild": "a1-l1",
        "lernst": [
         "Begrüßen & verabschieden",
         "Sich vorstellen",
@@ -83,6 +84,7 @@ window.LEHRPLAN = {
        "t": "Zahlen, Alter & Telefonnummer",
        "u": "Die Lektion",
        "dauer": "ca. 15 Min",
+       "bild": "a1-l2",
        "lernst": [
         "Zahlen 0–100",
         "Wie alt bist du?",
@@ -128,6 +130,7 @@ window.LEHRPLAN = {
        "t": "Meine Familie",
        "u": "Die Lektion",
        "dauer": "ca. 15 Min",
+       "bild": "a1-l3",
        "lernst": [
         "Familienwörter",
         "mein / meine",
@@ -173,6 +176,7 @@ window.LEHRPLAN = {
        "t": "Essen & Trinken",
        "u": "Die Lektion",
        "dauer": "ca. 15 Min",
+       "bild": "th-essen",
        "lernst": [
         "Essen und Getränke benennen",
         "Höflich bestellen",
@@ -226,6 +230,7 @@ window.LEHRPLAN = {
        "t": "Mein Tag und die Uhrzeit",
        "u": "Die Lektion",
        "dauer": "ca. 15 Min",
+       "bild": "th-tag",
        "lernst": [
         "Den Tagesablauf erzählen",
         "Trennbare Verben: aufstehen, anfangen",
@@ -271,6 +276,7 @@ window.LEHRPLAN = {
        "t": "Einkaufen im Supermarkt",
        "u": "Die Lektion",
        "dauer": "ca. 15 Min",
+       "bild": "th-einkauf",
        "lernst": [
         "Lebensmittel im Supermarkt",
         "Plural: die Eier, die Tomaten, die Brötchen",
@@ -464,6 +470,7 @@ window.LEHRPLAN = {
        "t": "Termine machen und absagen",
        "u": "Die Lektion",
        "dauer": "ca. 18 Min",
+       "bild": "th-tag",
        "lernst": [
         "Am Telefon einen Termin vereinbaren",
         "Höflich absagen und verschieben",
@@ -509,6 +516,7 @@ window.LEHRPLAN = {
        "t": "Beim Arzt",
        "u": "Die Lektion",
        "dauer": "ca. 18 Min",
+       "bild": "th-arzt",
        "lernst": [
         "Beschwerden beschreiben",
         "Körperteile benennen",
@@ -554,6 +562,7 @@ window.LEHRPLAN = {
        "t": "Eine Wohnung suchen",
        "u": "Die Lektion",
        "dauer": "ca. 18 Min",
+       "bild": "th-wohnung",
        "lernst": [
         "Bei der Besichtigung fragen",
         "Miete, Nebenkosten, Kaution",
@@ -599,6 +608,7 @@ window.LEHRPLAN = {
        "t": "Reisen und Urlaub",
        "u": "Die Lektion",
        "dauer": "ca. 18 Min",
+       "bild": "th-reise",
        "lernst": [
         "Über Reisepläne sprechen",
         "Wortschatz Zug, Unterkunft, Gepäck",
@@ -644,6 +654,7 @@ window.LEHRPLAN = {
        "t": "Kleidung kaufen und umtauschen",
        "u": "Die Lektion",
        "dauer": "ca. 18 Min",
+       "bild": "th-einkauf",
        "lernst": [
         "Umtauschen und reklamieren",
         "Größe, Farbe, Passform",
@@ -689,6 +700,7 @@ window.LEHRPLAN = {
        "t": "Den Weg finden",
        "u": "Die Lektion",
        "dauer": "ca. 18 Min",
+       "bild": "th-weg",
        "lernst": [
         "Nach dem Weg fragen",
         "Wege erklären",
@@ -984,6 +996,7 @@ window.LEHRPLAN = {
        "t": "Bewerbung und Lebenslauf",
        "u": "Die Lektion",
        "dauer": "ca. 20 Min",
+       "bild": "th-bewerbung",
        "lernst": [
         "Lebenslauf und Anschreiben aufbauen",
         "Höflich fragen mit würde, könnte, hätte",
@@ -1029,6 +1042,7 @@ window.LEHRPLAN = {
        "t": "Der erste Tag im neuen Job",
        "u": "Die Lektion",
        "dauer": "ca. 20 Min",
+       "bild": "th-arbeit",
        "lernst": [
         "Sich im Team vorstellen",
         "Nach Abläufen und Zuständigkeiten fragen",
@@ -1082,6 +1096,7 @@ window.LEHRPLAN = {
        "t": "Ärger mit den Nachbarn",
        "u": "Die Lektion",
        "dauer": "ca. 20 Min",
+       "bild": "th-nachbarn",
        "lernst": [
         "Sich beschweren, ohne zu streiten",
         "Passiv Präsens: werden + Partizip II",
@@ -1135,6 +1150,7 @@ window.LEHRPLAN = {
        "t": "Gesund leben",
        "u": "Die Lektion",
        "dauer": "ca. 20 Min",
+       "bild": "th-arzt",
        "lernst": [
         "Beschwerden und Gewohnheiten beschreiben",
         "Widersprüche mit obwohl ausdrücken",
@@ -1188,6 +1204,7 @@ window.LEHRPLAN = {
        "t": "Nachrichten und soziale Medien",
        "u": "Die Lektion",
        "dauer": "ca. 20 Min",
+       "bild": "th-medien",
        "lernst": [
         "Indirekte Fragen mit ob und W-Wort",
         "Zweifel höflich ausdrücken",
@@ -1241,6 +1258,7 @@ window.LEHRPLAN = {
        "t": "Auf dem Amt",
        "u": "Die Lektion",
        "dauer": "ca. 20 Min",
+       "bild": "th-amt",
        "lernst": [
         "Anliegen auf dem Amt formulieren",
         "Nomen-Verb-Verbindungen wie einen Antrag stellen",
@@ -1606,6 +1624,7 @@ window.LEHRPLAN = {
        "t": "Karriere und Gehalt verhandeln",
        "u": "Die Lektion",
        "dauer": "ca. 22 Min",
+       "bild": "th-arbeit",
        "lernst": [
         "Eine Gehaltsforderung begründen",
         "Einwände annehmen statt abwehren",
@@ -1643,6 +1662,7 @@ window.LEHRPLAN = {
        "t": "Weiterbildung neben dem Beruf",
        "u": "Die Lektion",
        "dauer": "ca. 22 Min",
+       "bild": "th-bildung",
        "lernst": [
         "Ein Beratungsgespräch führen",
         "Förderung und Finanzierung ansprechen",
@@ -1680,6 +1700,7 @@ window.LEHRPLAN = {
        "t": "Künstliche Intelligenz im Alltag",
        "u": "Die Lektion",
        "dauer": "ca. 22 Min",
+       "bild": "th-digital",
        "lernst": [
         "Über Chancen und Risiken von KI sprechen",
         "Regeln und Vorschriften verstehen",
@@ -1725,6 +1746,7 @@ window.LEHRPLAN = {
        "t": "Einen Konflikt klären",
        "u": "Die Lektion",
        "dauer": "ca. 22 Min",
+       "bild": "th-gespraech",
        "lernst": [
         "Ein Klärungsgespräch eröffnen",
         "Konjunktiv II der Vergangenheit: hätte … gemacht",
@@ -1762,6 +1784,7 @@ window.LEHRPLAN = {
        "t": "Konsum und Verantwortung",
        "u": "Die Lektion",
        "dauer": "ca. 22 Min",
+       "bild": "th-wirtschaft",
        "lernst": [
         "Eine Studie wiedergeben und einordnen",
         "Indirekte Rede mit Konjunktiv I",
@@ -1799,6 +1822,7 @@ window.LEHRPLAN = {
        "t": "Etwas überzeugend präsentieren",
        "u": "Die Lektion",
        "dauer": "ca. 22 Min",
+       "bild": "th-rhetorik",
        "lernst": [
         "Eine Präsentation aufbauen und einsteigen",
         "Satzklammer kurz halten",
@@ -2030,6 +2054,7 @@ window.LEHRPLAN = {
        "t": "Forschung verständlich erklären",
        "u": "Die Lektion",
        "dauer": "ca. 25 Min",
+       "bild": "th-wissenschaft",
        "lernst": [
         "Erweiterte Partizipialattribute lesen und bilden",
         "Funktionsverbgefüge wie „in Frage stellen\"",
@@ -2051,6 +2076,7 @@ window.LEHRPLAN = {
        "t": "Politik und Beteiligung",
        "u": "Die Lektion",
        "dauer": "ca. 25 Min",
+       "bild": "th-gespraech",
        "lernst": [
         "sofern · vorausgesetzt, dass · es sei denn",
         "ungeachtet und andere konzessive Mittel",
@@ -2080,6 +2106,7 @@ window.LEHRPLAN = {
        "t": "Arbeitswelt im Wandel",
        "u": "Die Lektion",
        "dauer": "ca. 25 Min",
+       "bild": "th-arbeit",
        "lernst": [
         "Nominalstil in Verbalstil übersetzen — und zurück",
         "Passiversatz: lässt sich, ist zu tun, -bar",
@@ -2125,6 +2152,7 @@ window.LEHRPLAN = {
        "t": "Wie Sprache Wirklichkeit formt",
        "u": "Die Lektion",
        "dauer": "ca. 25 Min",
+       "bild": "th-sprache",
        "lernst": [
         "Modalpartikeln: doch, ja, eben, halt, mal, denn, wohl, schon",
         "Wo im Satz die Partikel steht — und warum sie unbetont bleibt",
@@ -2154,6 +2182,7 @@ window.LEHRPLAN = {
        "t": "Migration und Zugehörigkeit",
        "u": "Die Lektion",
        "dauer": "ca. 25 Min",
+       "bild": "th-migration",
        "lernst": [
         "Erweiterte Attribute in mehreren Ausbaustufen",
         "Genitiv- und Präpositionalattribute richtig anschließen",
@@ -2191,6 +2220,7 @@ window.LEHRPLAN = {
        "t": "Hart verhandeln, fair bleiben",
        "u": "Die Lektion",
        "dauer": "ca. 25 Min",
+       "bild": "th-verhandeln",
        "lernst": [
         "Konjunktiv II als Verhandlungswerkzeug: wäre, könnte, ließe sich, dürfte",
         "Kritik im Konjunktiv II der Vergangenheit",

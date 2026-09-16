@@ -145,7 +145,7 @@
     if (el('hb-stil')) return;
     var s = document.createElement('style'); s.id = 'hb-stil';
     s.textContent = [
-      ':root{--hb-ink:#14181B;--hb-soft:#5A6B72;--hb-line:#E7ECEE;--hb-turq:#35AFD0;--hb-turq-ink:#10627A;--hb-turq-soft:#E6F8FC;--hb-gold:#EBA30B;--hb-gold-soft:#FDF1D6}',
+      ':root{--hb-ink:#14181B;--hb-soft:#5A6B72;--hb-line:#E7ECEE;--hb-turq:#35AFD0;--hb-turq-ink:#10627A;--hb-turq-soft:#E6F8FC;--hb-gold:#EBA30B;--hb-gold-soft:#F6F9FA}',
       '#v-lernen,#v-sprechen,#v-medien{max-width:820px;margin:0 auto}',
       '.hb-kopf{margin:0 0 18px}',
       '.hb-kopf h2{font-size:clamp(24px,4vw,31px);margin:0 0 5px;letter-spacing:-.02em;line-height:1.1}',
