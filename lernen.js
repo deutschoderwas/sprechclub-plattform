@@ -489,7 +489,9 @@
       while(d.firstChild) v.appendChild(d.firstChild);
       return;
     }
-    window.renderLernen();
+    /* Nach einer Uebung gehoert man zurueck in die Themenliste, nicht
+       auf die Sammelseite — hubs.js hat renderLernen uebernommen. */
+    (window.renderLernenThemen || window.renderLernen)();
   };
 
   /* ============================================================
