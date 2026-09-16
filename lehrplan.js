@@ -8,7 +8,7 @@
    Was nicht existiert, steht nicht drin. Es gibt hier keine
    toten Knöpfe.
 
-   Gebaut am 2026-09-15 19:24
+   Gebaut am 2026-09-15 21:40
    ============================================================ */
 window.LEHRPLAN = {
  "stufen": [
