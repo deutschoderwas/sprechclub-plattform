@@ -616,6 +616,10 @@
     try{ await sbc.rpc('community_start'); }catch(e){}
     await ladeKanaele();
     try{ var rs=await sbc.rpc('community_roster'); roster=(rs&&rs.data)||[]; }catch(e){ roster=[]; }
+    /* Die Zahlen rechts — Mitglieder, Beitraege, Themen — standen als
+       drei Punkte da, seit es sie gibt. Die Funktion holte sie richtig
+       aus der Datenbank, nur rief sie niemand auf. Jetzt schon. */
+    try{ await ladeAktivitaet(); }catch(e){}
     try{ var dt=await sbc.rpc('dm_threads'); dmThreads=(dt&&dt.data)||[]; }catch(e){ dmThreads=[]; }
     if(!channels.length){ r.innerHTML='<div class="pagehead"><h1>Community-Chat</h1></div><div class="cm-empty">Noch keine Kanäle.</div>'; return; }
     grpZu=ladeZu();
@@ -803,9 +807,13 @@
     return F[tag % F.length];
   }
 
-  /* Zaehlt, was in den letzten sieben Tagen geschrieben wurde. */
+  /* Zaehlt, was in den letzten sieben Tagen geschrieben wurde.
+     Wird zweimal gerufen: einmal vor dem Zeichnen, damit die Zahlen
+     gleich im HTML stehen, und einmal danach, falls die Antwort
+     langsamer war als die Seite. */
   async function ladeAktivitaet(){
     try{
+      if(!sbc) return;
       var r = await sbc.rpc('community_zahlen');
       var z = (r && r.data && r.data[0]) || null;
       if(!z) return;
