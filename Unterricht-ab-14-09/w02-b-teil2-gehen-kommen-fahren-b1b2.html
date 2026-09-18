@@ -1,1366 +1,242 @@
 <!DOCTYPE html><html lang="de"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Das geht nicht. Wie geht's? Es kommt darauf an. · Sprechclub B1/B2 | deutschoderwas</title>
-<!--
-  deutschoderwas · Sprechclub · Do 24.9. 9:00 · Strang B · Teil 2 · ab B1
-  Das geht nicht. Wie geht's? Es kommt darauf an. — Dieselben drei Verben wie am Dienstag — nur bewegt sich niemand mehr. &lt;b&gt;Gehen&lt;/b&gt;, &lt;b&gt;kommen&lt;/b&gt; und &lt;b&gt;fahren&lt;/b&gt; stecken in den Sätzen, die Deutsche jeden Tag sagen, ohne darüber nachzudenken.
-  Erzeugt von bau/mach-stunde.js aus w02-b2-gehen.json. Nicht von Hand aendern.
-  Aufbau und Design wie maengel-melden-b1.html.
--->
+<title>„Das geht nicht.“ · <span class="hl">Wie geht's?</span> · Teil 2 · Sprechclub B1/B2 | deutschoderwas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ============================================================
-   stunde-club.css — die Stunde im Aussehen von
-   deutschoderwas-club.de
-
-   Vorher trugen die Stunden einen eigenen Look: Fraunces als
-   Serifenschrift, cremefarbener Verlauf, schwarze Rahmen mit
-   harten versetzten Schatten. Fuer sich schoen — aber daneben
-   sah die Website aus wie eine andere Marke.
-
-   Die Werte hier stammen eins zu eins aus index.html, der
-   Startseite des Clubs: dieselben Farben, dieselben Schriften,
-   dieselbe Fahnenleiste oben, derselbe goldene Marker.
-
-     Inter          Fliesstext
-     Space Grotesk  Ueberschriften, Zahlen, Knoepfe
-     #14181B        Text
-     #D42A21        Signalfarbe (Augenbraue, wichtige Marken)
-     #FFCE00        Gold (Marker, Hinweise)
-     #1B9BC0        Tuerkis (Knoepfe, aktive Marke)
-     #F6F9FA        warmes Papier fuer Kaesten
-     #E7ECEE        Linien
-
-   Was hier nicht mehr steht, gibt es auf der Seite auch nicht
-   mehr: Wortschatzkarten, Grammatiktafeln, Quiz und Lueckentext
-   sind aus der Stunde raus. Die Stunde ist zum Sprechen da.
-   ============================================================ */
-
-:root{
-  --ink:#14181B; --soft:#5A6B72; --line:#E7ECEE;
-  --turq:#1B9BC0; --turq-d:#15788F; --teal-ink:#10627A; --mint:#EFFBF8;
-  --red:#D42A21; --red-d:#B30000;
-  --gold:#FFCE00; --gold-mark:#FFD84D; --gold-d:#E0A500;
-  --bg:#FFFFFF; --warm:#F6F9FA; --pink:#FFF1EE;
-  --schatten:0 1px 2px rgba(22,22,22,.04), 0 10px 28px rgba(22,22,22,.05);
-  --schatten-k:0 1px 2px rgba(22,22,22,.05);
-  /* Fuer Bausteine, die noch die alten Namen benutzen. */
-  --cream:#FFFFFF; --cream-warm:#F6F9FA; --paper:#FFFFFF;
-  --ink-soft:#5A6B72; --ink-mute:#8C93A0; --sand:#E7ECEE;
-  --teal:#1B9BC0; --teal-soft:#EFFBF8;
-  --yellow:#FFCE00; --yellow-soft:#F6F9FA;
-  --red-soft:#FFF1EE; --green:#4E9E12;
-}
-*{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;}
-html,body{max-width:100%;overflow-x:clip;}
-img{height:auto;max-width:100%;}
-body{
-  font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);
-  line-height:1.6;-webkit-font-smoothing:antialiased;
-}
-h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;font-weight:700;letter-spacing:-.02em;line-height:1.12;}
-
-/* Die Fahnenleiste vom Club, ganz oben. */
-.flagbar{
-  height:5px;
-  background:linear-gradient(90deg,#14181B 0 25%,var(--red) 25% 50%,var(--gold) 50% 75%,var(--turq) 75% 100%);
-}
-
-.wrapper{max-width:900px;margin:0 auto;padding:2rem 1.25rem 5rem;}
-
-/* ---------- Kopf ---------- */
-.eyebrow{
-  text-align:center;font-size:.72rem;font-weight:700;letter-spacing:.16em;
-  text-transform:uppercase;color:var(--red);margin-bottom:.65rem;
-}
-h1.title{font-size:clamp(1.9rem,4.6vw,3rem);text-align:center;}
-h1.title .hl{
-  background:var(--gold-mark);border-radius:7px;padding:.02em .26em;font-style:italic;
-  -webkit-box-decoration-break:clone;box-decoration-break:clone;
-}
-.subtitle{
-  text-align:center;max-width:38rem;margin:.85rem auto 0;
-  font-size:1.02rem;color:var(--soft);
-}
-.niv-wie{text-align:center;max-width:34rem;margin:.75rem auto 0;font-size:.85rem;color:var(--soft);}
-
-/* ---------- Leiste: Niveau und Sprungmarken ---------- */
-.leiste{
-  position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:.5rem;
-  width:100%;margin:1.1rem 0 1.6rem;padding:.4rem .5rem;
-  background:rgba(255,255,255,.94);backdrop-filter:blur(10px);
-  border:1px solid var(--line);border-radius:14px;box-shadow:var(--schatten-k);
-}
-.nivk{display:flex;gap:.2rem;flex:none;background:#F4F2ED;border-radius:999px;padding:3px;}
-.nivk button{
-  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;
-  border:none;border-radius:999px;padding:.32rem .8rem;background:transparent;color:var(--soft);
-  transition:.15s;white-space:nowrap;
-}
-.nivk button[aria-pressed="true"]{background:var(--ink);color:#fff;}
-.nivk button:focus-visible{outline:3px solid var(--turq-d);outline-offset:2px;}
-.tabs{
-  display:flex;flex-wrap:nowrap;gap:.3rem;overflow-x:auto;overscroll-behavior-x:contain;
-  flex:1 1 auto;min-width:0;margin:0;padding:.1rem 0;
-  scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;
-}
-.tabs::-webkit-scrollbar{display:none;}
-.tab{
-  flex:none;white-space:nowrap;font-family:'Space Grotesk',sans-serif;
-  font-size:.84rem;font-weight:600;color:var(--ink);background:#fff;
-  border:1px solid var(--line);border-radius:999px;padding:.4rem .8rem;cursor:pointer;
-  display:inline-flex;gap:.3rem;align-items:center;transition:.15s;
-}
-.tab:hover{border-color:var(--turq-d);color:var(--teal-ink);}
-.tab.active{background:var(--turq-d);border-color:var(--turq-d);color:#fff;}
-.tabAlles{border-style:dashed;color:var(--soft);}
-.tabAlles[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff;border-style:solid;}
-
-/* ---------- Abschnitte ---------- */
-/* Der Wechsel soll nicht springen. Eine halbe Sekunde, weich
-   auslaufend, und der Inhalt kommt ein kleines Stueck von unten —
-   gerade genug, dass das Auge mitgeht, ohne dass man wartet. */
-.section{animation:auf .5s cubic-bezier(.22,.8,.3,1);}
-body.schaltet .section[hidden]{display:none !important;}
-@keyframes auf{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
-.leiste .nivk,.tab,.weiterknopf,.btn,.hilf summary{transition:background .25s ease,color .25s ease,border-color .25s ease;}
-.hilf-i{animation:auf .35s cubic-bezier(.22,.8,.3,1);}
-@media(prefers-reduced-motion:reduce){
-  .section,.hilf-i{animation:none;}
-  html{scroll-behavior:auto;}
-}
-section.section{scroll-margin-top:calc(var(--leiste,58px) + 1rem);}
-/* Ein kurzer Abschnitt wie der Abschluss ist niedriger als das
-   Fenster. Dann kann die Seite gar nicht weit genug scrollen, und
-   der Titel der Stunde bleibt oben stehen — es sah aus, als waere
-   man versehentlich am Anfang gelandet. Mit dieser Mindesthoehe
-   landet jeder Abschnitt gleich weit oben. */
-body.schaltet section.section{min-height:calc(100vh - 9rem);}
-body.schaltet section.section:last-of-type{min-height:0;}
-h2.st{font-size:clamp(1.4rem,3vw,1.9rem);margin:.4rem 0 .35rem;}
-h2.st .hl{
-  background:var(--gold-mark);border-radius:7px;padding:.02em .24em;font-style:italic;
-  -webkit-box-decoration-break:clone;box-decoration-break:clone;
-}
-.ssub{color:var(--soft);margin-bottom:1.1rem;font-size:.97rem;max-width:44rem;}
-
-/* Zeit und Aufstellung, direkt unter der Ueberschrift. */
-.regie{
-  display:inline-flex;align-items:center;gap:.55rem;flex-wrap:wrap;
-  background:var(--warm);border:1px solid #E7ECEE;border-radius:999px;
-  padding:.3rem .85rem;margin:0 0 1.1rem;font-size:.82rem;
-}
-.regie span{font-weight:800;font-variant-numeric:tabular-nums;font-family:'Space Grotesk',sans-serif;}
-.regie b{font-weight:500;color:var(--soft);}
-
-/* ---------- Ablauftafel ---------- */
-.takt{display:flex;flex-direction:column;gap:.4rem;margin:1rem 0;}
-.takt-z{
-  display:grid;grid-template-columns:auto auto 1fr;gap:.15rem .75rem;align-items:start;
-  background:#fff;border:1px solid var(--line);border-radius:12px;padding:.7rem .85rem;
-}
-.takt-m{
-  grid-row:span 2;align-self:center;min-width:3.4rem;text-align:center;
-  background:var(--ink);color:#fff;border-radius:8px;padding:.28rem .4rem;
-  font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.8rem;font-variant-numeric:tabular-nums;
-}
-.takt-z2{grid-row:span 2;align-self:center;font-size:1.2rem;line-height:1;}
-.takt-t b{display:block;font-family:'Space Grotesk',sans-serif;font-size:1rem;}
-.takt-t span{display:block;font-size:.9rem;line-height:1.45;color:var(--soft);margin-top:.05rem;}
-.takt-t em{display:block;font-style:normal;font-size:.78rem;font-weight:700;color:var(--teal-ink);margin-top:.2rem;}
-
-/* ---------- Ankommen und Abschluss ---------- */
-.ank{
-  background:var(--warm);border:1px solid #E7ECEE;border-radius:14px;padding:1rem 1.15rem;
-  font-family:'Space Grotesk',sans-serif;font-size:1.16rem;line-height:1.4;font-weight:600;
-}
-.ank.zweit{
-  margin-top:.7rem;background:#fff;border:1px dashed var(--line);
-  font-family:'Inter',sans-serif;font-size:.97rem;font-weight:500;
-}
-.ank.zweit span{
-  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
-  color:var(--soft);margin-bottom:.25rem;
-}
-
-/* ---------- Tippkasten ---------- */
-.tip{
-  background:var(--warm);border:1px solid #E7ECEE;border-left:4px solid var(--gold);
-  border-radius:12px;padding:.8rem 1rem;margin:1.1rem 0 0;font-size:.94rem;line-height:1.6;
-}
-.tip.teal{background:var(--mint);border-color:#CDEEF3;border-left-color:var(--turq-d);}
-
-/* Die Anweisung als kurze Schritte statt als Absatz. */
-.schritte{list-style:none;display:flex;flex-direction:column;gap:.35rem;margin:0 0 1.1rem;padding:0;}
-.schritte li{
-  display:grid;grid-template-columns:auto 1fr;gap:.55rem;align-items:start;
-  font-size:.94rem;line-height:1.5;color:var(--soft);
-}
-.schritte li span{
-  flex:none;width:20px;height:20px;border-radius:50%;margin-top:.12rem;
-  background:#F1EFEA;color:var(--ink);display:grid;place-items:center;
-  font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:700;
-}
-.schritte li.regel{color:var(--ink);}
-.schritte li.regel span{background:var(--gold);color:var(--ink);}
-
-/* ---------- Dialog ---------- */
-.dwrap{
-  background:#fff;border:1px solid var(--line);border-radius:16px;
-  padding:1rem 1.05rem 1.1rem;margin:0 0 1rem;box-shadow:var(--schatten-k);
-}
-.dhead{display:flex;align-items:center;gap:.65rem;flex-wrap:wrap;margin-bottom:.55rem;}
-.dhead img{width:44px;height:44px;object-fit:cover;border-radius:50%;flex:none;}
-.dhead h4{font-size:1.02rem;flex:1 1 12rem;}
-.rbtn{
-  font-family:'Space Grotesk',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer;
-  border:1px solid var(--turq-d);background:var(--mint);color:var(--teal-ink);
-  border-radius:999px;padding:.32rem .75rem;
-}
-.rbtn:hover{background:var(--turq-d);color:#fff;}
-.dsit{font-size:.9rem;color:var(--soft);margin-bottom:.75rem;}
-.dline{display:grid;grid-template-columns:auto 1fr;gap:.5rem;margin:.4rem 0;align-items:start;}
-.dwho{
-  width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
-  font-family:'Space Grotesk',sans-serif;font-size:.75rem;font-weight:700;color:#fff;flex:none;
-}
-.dwho.a{background:var(--red);}
-.dwho.b{background:var(--turq-d);}
-.dtxt{
-  background:var(--mint);border-radius:4px 14px 14px 14px;padding:.55rem .8rem;
-  font-size:.97rem;line-height:1.55;
-}
-.dline.b{grid-template-columns:1fr auto;}
-.dline.b .dwho{order:2;}
-.dline.b .dtxt{order:1;background:var(--warm);border-radius:14px 4px 14px 14px;}
-.dcue{
-  grid-column:1 / -1;margin:.2rem 0 .3rem;font-size:.85rem;color:var(--soft);
-  background:#fff;border:1px dashed var(--line);border-radius:10px;padding:.4rem .65rem;cursor:pointer;
-}
-.dcue .kl{display:block;font-size:.7rem;color:var(--ink-mute);margin-top:.15rem;}
-.dline .dcue{display:none;}
-.dwrap[data-runde="2"] .dline.b .dtxt{visibility:hidden;}
-.dwrap[data-runde="2"] .dline.b .dcue{display:block;}
-.dline.zeigen .dtxt{visibility:visible !important;}
-img.dbild{max-width:160px;border-radius:10px;margin-top:.4rem;}
-.dbtn{margin-top:.7rem;}
-
-/* ---------- Sprechen-Knopf ---------- */
-.speak{
-  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;
-  border:1px solid var(--line);background:#fff;color:var(--ink);
-  border-radius:999px;padding:.35rem .8rem;
-}
-.speak:hover{border-color:var(--ink);}
-
-/* ---------- 90 Sekunden ---------- */
-.card90{
-  background:#fff;border:1px solid var(--line);border-radius:18px;
-  padding:1.1rem 1.15rem 1.2rem;text-align:center;box-shadow:var(--schatten);
-}
-/* Das Bild in den 90 Sekunden ist das einzige grosse auf der Seite.
-   Weiche Ecken, ein heller Rand statt einer harten Kante, und es
-   blendet mit dem Wort zusammen ein — kein Springen beim Wechsel. */
-.card90 img{
-  width:100%;max-width:230px;border-radius:14px;margin:0 auto .8rem;display:block;
-  border:1px solid var(--line);animation:auf .45s cubic-bezier(.22,.8,.3,1);
-}
-.card90 .lbl{
-  font-size:.7rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase;
-  color:var(--red);margin-bottom:.3rem;
-}
-.card90 .word{font-family:'Space Grotesk',sans-serif;font-size:1.7rem;font-weight:700;line-height:1.2;}
-.helpwords{display:flex;flex-wrap:wrap;gap:.35rem;justify-content:center;margin:.75rem 0 .9rem;}
-.hw{
-  background:var(--warm);border:1px solid #E7ECEE;border-radius:999px;
-  padding:.28rem .7rem;font-size:.85rem;font-weight:500;
-}
-.timer{
-  font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:700;
-  font-variant-numeric:tabular-nums;color:var(--teal-ink);
-}
-.zeit{display:block;}
-.btn{
-  font-family:'Space Grotesk',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;
-  border:1px solid var(--turq-d);background:var(--turq-d);color:#fff;
-  border-radius:999px;padding:.5rem 1.1rem;margin:.25rem .2rem 0;
-}
-.btn.ghost{background:#fff;color:var(--teal-ink);}
-.btn:hover{background:#10627A;border-color:#10627A;color:#fff;}
-
-/* ---------- Rollenspiel und Sprechkarten ---------- */
-.rmcard{
-  background:#fff;border:1px solid var(--line);border-radius:14px;
-  padding:.9rem 1rem;margin:0 0 .8rem;
-}
-.rmcard>b{display:block;font-family:'Space Grotesk',sans-serif;font-size:1rem;margin-bottom:.35rem;}
-.rm{
-  display:inline-block;background:var(--mint);border:1px solid #CDEEF3;color:var(--teal-ink);
-  border-radius:999px;padding:.25rem .65rem;margin:.15rem .2rem .15rem 0;font-size:.87rem;font-weight:500;
-}
-.bsp{
-  background:var(--warm);border-left:4px solid var(--gold);border-radius:0 10px 10px 0;
-  padding:.55rem .8rem;margin:.6rem 0 0;font-size:.95rem;line-height:1.55;
-}
-.bsp .wer{
-  display:block;font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--soft);margin-bottom:.15rem;
-}
-
-/* ---------- Rollenspiel: wer bin ich, was will ich ----------
-   Die Lage stand vorher als ein grauer Satz da. Zwei Leute, die
-   gleich sprechen sollen, mussten daraus selbst herauslesen, wer sie
-   sind. Jetzt stehen die Rollen nebeneinander, in denselben Farben
-   wie im Dialog: A rot, B tuerkis. */
-.rsp{
-  background:#fff;border:1px solid var(--line);border-radius:16px;
-  padding:.9rem 1rem 1rem;margin:0 0 .9rem;box-shadow:var(--schatten-k);
-}
-.rsp-kopf{display:flex;align-items:center;gap:.6rem;margin-bottom:.7rem;}
-.rsp-nr{
-  flex:none;width:26px;height:26px;border-radius:8px;background:var(--ink);color:#fff;
-  display:grid;place-items:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.85rem;
-}
-.rsp-kopf b{font-family:'Space Grotesk',sans-serif;font-size:1.02rem;line-height:1.25;}
-.rsp-rollen{display:grid;gap:.5rem;margin:0 0 .75rem;}
-@media(min-width:560px){ .rsp-rollen{grid-template-columns:1fr 1fr;} }
-.rsp-r{
-  display:grid;grid-template-columns:auto 1fr;gap:.5rem;align-items:start;
-  border-radius:12px;padding:.6rem .75rem;
-}
-.rsp-r span{
-  width:24px;height:24px;border-radius:50%;display:grid;place-items:center;color:#fff;
-  font-family:'Space Grotesk',sans-serif;font-size:.75rem;font-weight:700;
-}
-.rsp-r p{font-size:.93rem;line-height:1.5;}
-.rsp-r.a{background:var(--pink);}
-.rsp-r.a span{background:var(--red);}
-.rsp-r.b{background:var(--mint);}
-.rsp-r.b span{background:var(--turq-d);}
-.rsp-lage{background:#F7F6F3;border-radius:12px;padding:.6rem .8rem;margin:0 0 .75rem;font-size:.93rem;line-height:1.5;}
-.rsp-lage span{
-  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
-  color:var(--soft);margin-bottom:.2rem;
-}
-.rsp-saetze{margin:0 0 .7rem;}
-.rsp-lbl{
-  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
-  color:var(--soft);margin-bottom:.35rem;
-}
-.rsp-ziel{
-  background:var(--warm);border-left:4px solid var(--gold);border-radius:0 10px 10px 0;
-  padding:.55rem .8rem;font-size:.92rem;line-height:1.5;
-}
-.rsp-ziel span{
-  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
-  color:var(--soft);margin-bottom:.15rem;
-}
-
-/* ---------- Anfangshilfe ----------
-   Zugeklappt eine Zeile, aufgeklappt drei Satzanfaenge. Wer sie
-   nicht braucht, sieht fast nichts. */
-.hilf{margin:.8rem 0 0;}
-.hilf summary{
-  cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:.35rem;
-  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;color:var(--teal-ink);
-  background:var(--mint);border:1px solid #CDEEF3;border-radius:999px;padding:.32rem .8rem;
-}
-.hilf summary::-webkit-details-marker{display:none;}
-.hilf[open] summary{background:var(--turq-d);color:#fff;border-color:var(--turq-d);}
-.hilf-i{display:flex;flex-direction:column;gap:.35rem;margin:.55rem 0 0;}
-.hilf-i span{
-  background:#fff;border:1px dashed var(--line);border-radius:10px;
-  padding:.45rem .7rem;font-size:.93rem;line-height:1.5;
-}
-
-/* ---------- Debatte ---------- */
-.deb-these{
-  background:var(--ink);color:#fff;border-radius:14px;padding:1rem 1.15rem;
-  font-family:'Space Grotesk',sans-serif;font-size:1.12rem;line-height:1.4;font-weight:600;margin:0 0 .9rem;
-}
-.deb-seiten{display:grid;gap:.7rem;margin:0 0 .9rem;}
-@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
-.deb-s{background:#fff;border:1px solid var(--line);border-radius:14px;padding:.85rem .95rem;}
-.deb-s b{
-  display:block;font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:800;
-  letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem;
-}
-.deb-s.pro{border-top:4px solid var(--turq-d);}
-.deb-s.pro b{color:var(--teal-ink);}
-.deb-s.con{border-top:4px solid var(--red);}
-.deb-s.con b{color:var(--red);}
-.deb-s ul{margin:0;padding-left:1.05rem;font-size:.94rem;line-height:1.6;}
-.deb-s li{margin:.3rem 0;}
-.deb-s p{margin:0;font-size:.94rem;line-height:1.6;color:var(--soft);}
-.deb-mittel{background:var(--warm);border:1px solid #E7ECEE;border-radius:14px;padding:.85rem 1rem;margin:0 0 .9rem;}
-.deb-mittel b{
-  display:block;font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:800;
-  letter-spacing:.1em;text-transform:uppercase;color:var(--soft);margin-bottom:.5rem;
-}
-.deb-chips{display:flex;flex-wrap:wrap;gap:.35rem;}
-.deb-chips span{
-  background:#fff;border:1px solid #E7ECEE;border-radius:999px;
-  padding:.3rem .7rem;font-size:.88rem;font-weight:500;
-}
-.deb-mehr{border:1px dashed var(--line);border-radius:14px;padding:.85rem 1rem;}
-.deb-mehr b{
-  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
-  color:var(--soft);margin-bottom:.35rem;
-}
-.deb-mehr ul{margin:0;padding-left:1.05rem;font-size:.93rem;line-height:1.6;}
-
-/* ---------- Hausaufgabe ---------- */
-.hagrid{display:grid;gap:.6rem;}
-.ha{
-  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .7rem;align-items:start;
-  background:#fff;border:1px solid var(--line);border-radius:14px;padding:.8rem .9rem;
-}
-.ha .box{
-  grid-row:span 2;width:22px;height:22px;border:2px solid var(--line);border-radius:6px;
-  cursor:pointer;align-self:center;
-}
-.ha.fertig .box{background:var(--turq-d);border-color:var(--turq-d);}
-.ha.fertig .htxt{opacity:.55;text-decoration:line-through;}
-.ha .hi{grid-row:span 2;align-self:center;font-size:1.15rem;}
-.ha .htxt b{display:block;font-family:'Space Grotesk',sans-serif;font-size:.97rem;}
-.ha .htxt{font-size:.92rem;line-height:1.55;color:var(--soft);}
-.hastand{
-  font-family:'Space Grotesk',sans-serif;font-size:.85rem;font-weight:700;
-  color:var(--soft);margin:.7rem 0 0;
-}
-.zeit{
-  display:inline-block;background:var(--mint);border:1px solid #CDEEF3;color:var(--teal-ink);
-  border-radius:999px;padding:.1rem .5rem;font-size:.72rem;font-weight:700;margin-left:.35rem;
-}
-.hilfe{
-  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;
-  border:1px solid var(--line);background:#fff;border-radius:999px;padding:.35rem .8rem;margin:.6rem 0 0;
-}
-.inhalt{
-  display:none;background:var(--warm);border:1px solid #E7ECEE;border-radius:12px;
-  padding:.75rem .9rem;margin:.55rem 0 0;font-size:.93rem;line-height:1.6;
-}
-.inhalt.offen{display:block;}
-
-/* ---------- Markierte Woerter ---------- */
-.wm{
-  cursor:pointer;background:var(--gold-mark);border-radius:5px;padding:.02em .2em;
-  -webkit-box-decoration-break:clone;box-decoration-break:clone;
-}
-.wm.schwer{background:transparent;border-bottom:2px dotted var(--red);border-radius:0;}
-.wm:hover,.wm.offen{background:var(--gold);}
-.wm.schwer:hover,.wm.schwer.offen{background:var(--pink);}
-.wm:focus-visible{outline:3px solid var(--turq-d);outline-offset:2px;}
-.wmk{
-  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
-  background:#fff;border:1px solid var(--line);border-radius:14px;
-  box-shadow:var(--schatten);padding:.8rem .95rem .85rem;
-}
-.wmk b{display:block;font-family:'Space Grotesk',sans-serif;font-size:1.05rem;padding-right:1.4rem;}
-.wmk span{display:block;margin-top:.25rem;font-size:.92rem;line-height:1.5;color:var(--soft);}
-.wmk em{
-  display:block;margin-top:.5rem;padding-left:.65rem;border-left:3px solid var(--turq-d);
-  font-style:italic;font-size:.91rem;line-height:1.5;
-}
-.wmk-zu{
-  position:absolute;top:.4rem;right:.45rem;border:none;background:transparent;
-  font-size:.9rem;line-height:1;cursor:pointer;color:var(--soft);padding:.2rem;
-}
-.wmk-ton{
-  margin-top:.55rem;border:1px solid var(--line);background:#fff;color:var(--ink);
-  border-radius:999px;padding:.28rem .7rem;font-family:'Space Grotesk',sans-serif;
-  font-size:.78rem;font-weight:700;cursor:pointer;
-}
-
-/* ---------- Weiter und zurueck ---------- */
-.weiterzeile{
-  display:flex;gap:.6rem;flex-wrap:wrap;justify-content:space-between;
-  margin:1.8rem 0 .4rem;padding-top:1.1rem;border-top:1px solid var(--line);
-}
-.weiterknopf{
-  font-family:'Space Grotesk',sans-serif;font-size:.92rem;font-weight:700;cursor:pointer;
-  border:1px solid var(--turq-d);background:var(--turq-d);color:#fff;
-  border-radius:999px;padding:.55rem 1.1rem;margin-left:auto;transition:.15s;
-}
-.weiterknopf.zurueck{background:#fff;color:var(--teal-ink);margin-left:0;margin-right:auto;}
-.weiterknopf:hover{background:#10627A;border-color:#10627A;color:#fff;}
-
-/* ---------- Niveau-Umschalter ---------- */
-body[data-niveau="a2"] .nur-b1{display:none !important;}
-body[data-niveau="b1"] .nur-a2{display:none !important;}
-
-/* ---------- Fuss ---------- */
-footer{
-  margin-top:3rem;padding-top:1.2rem;border-top:1px solid var(--line);
-  font-size:.85rem;color:var(--soft);text-align:center;
-}
+:root{--cream:#FDF6EC;--cream-warm:#FBEDD8;--paper:#FFFFFF;--ink:#262019;--ink-soft:#5C4E3E;--ink-mute:#A8957D;--red:#E8302A;--red-soft:#FCE5E3;--teal:#0FB5A6;--teal-soft:#D7F0EC;--yellow:#FFD24A;--yellow-soft:#FFF1C2;--sand:#F0E2C8;--green:#2E9E5B;}
+*{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}
+body{background:linear-gradient(180deg,#FDE6E0 0%,var(--cream) 14%,var(--cream) 100%);color:var(--ink);font-family:'Inter',sans-serif;line-height:1.55;min-height:100vh;}
+.wrapper{max-width:1080px;margin:0 auto;padding:2.2rem 1.5rem 5rem;}
+.eyebrow{text-align:center;font-size:.78rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--red);margin-bottom:.7rem;}
+h1.title{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(2rem,5vw,3.6rem);line-height:1.05;text-align:center;letter-spacing:-.01em;}
+h1.title .hl{position:relative;display:inline-block;font-style:italic;padding:.05em .3em;}
+h1.title .hl::before{content:'';position:absolute;inset:0;background:var(--yellow);border-radius:12px;transform:rotate(-2deg);z-index:-1;}
+.subtitle{text-align:center;max-width:660px;margin:.8rem auto 0;font-size:1.05rem;color:var(--ink-soft);}
+.hero-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;margin:1rem auto 0;}
+.hero-tag{background:var(--paper);border:1.5px solid var(--sand);border-radius:999px;padding:.3rem .85rem;font-size:.82rem;font-weight:600;}
+.hero-tag b{color:var(--red);}
+.tabs{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;background:rgba(251,237,216,.94);backdrop-filter:blur(8px);border-radius:20px;padding:.5rem;margin:1.8rem auto;max-width:fit-content;}
+.tab{font-size:.92rem;font-weight:600;border:2px solid transparent;background:var(--paper);color:var(--ink);padding:.5rem 1rem;border-radius:999px;cursor:pointer;transition:.15s;display:inline-flex;gap:.35rem;align-items:center;}
+.tab:hover{border-color:var(--ink);transform:translateY(-1px);}
+.tab.active{background:var(--red);color:#fff;border-color:var(--red);}
+.section{display:none;animation:fade .35s ease;}.section.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+h2.st{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(1.7rem,3.4vw,2.3rem);text-align:center;margin:1.8rem 0 .4rem;}
+.ssub{text-align:center;color:var(--ink-soft);margin-bottom:1.3rem;}
+.scene-wrap{background:var(--paper);border:4px solid var(--paper);border-radius:20px;box-shadow:0 14px 38px rgba(38,32,25,.16);overflow:hidden;margin:1rem 0;}
+.scene-wrap img{width:100%;display:block;}
+.tip{background:var(--yellow-soft);border:2px dashed var(--yellow);border-radius:16px;padding:.9rem 1.2rem;font-size:.95rem;margin:1rem 0;line-height:1.65;}
+.tip strong{color:var(--red);}.tip.teal{background:var(--teal-soft);border-color:var(--teal);}
+.tip u{text-decoration-color:var(--red);text-underline-offset:3px;}
+.qlist{list-style:none;display:grid;gap:.55rem;margin:.6rem 0;}
+.qlist li{background:var(--paper);border:1.5px solid var(--sand);border-left:5px solid var(--teal);border-radius:12px;padding:.7rem 1rem;font-weight:500;}
+.vgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:.7rem;margin:1rem 0;}
+@media(max-width:640px){.vgrid{grid-template-columns:1fr;}}
+.vcard{background:var(--paper);border:1.5px solid var(--sand);border-radius:14px;padding:.85rem 1rem;}
+.vcard .w{font-weight:700;font-size:1.05rem;color:var(--ink);}
+.vcard .w .art{color:var(--red);}
+.vcard .ex{font-family:'Space Grotesk',sans-serif;font-style:italic;color:var(--ink-soft);font-size:.92rem;margin-top:.25rem;}
+.vcard .speak{margin-top:.4rem;background:var(--teal-soft);border:none;color:#0a7d72;font-weight:700;border-radius:999px;padding:.2rem .7rem;font-size:.78rem;cursor:pointer;}
+.dwrap{background:var(--paper);border:1.5px solid var(--sand);border-radius:16px;padding:1.1rem 1.2rem;margin:1rem 0;}
+.dwrap h4{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;margin-bottom:.2rem;color:var(--red);}
+.dsit{font-size:.9rem;color:var(--ink-soft);margin-bottom:.7rem;}
+.dline{display:flex;gap:.5rem;margin:.35rem 0;align-items:flex-start;}
+.dwho{flex:none;width:26px;height:26px;border-radius:50%;font-size:.8rem;font-weight:700;display:flex;align-items:center;justify-content:center;color:#fff;}
+.dwho.a{background:var(--red);}.dwho.b{background:var(--teal);}
+.dtxt{background:var(--cream-warm);border-radius:12px;padding:.4rem .7rem;font-size:.96rem;}
+.dline.b .dtxt{background:var(--teal-soft);}
+.dbtn{margin-top:.6rem;background:var(--red);color:#fff;border:none;border-radius:999px;padding:.4rem 1rem;font-weight:700;cursor:pointer;font-size:.85rem;}
+.mk{background:var(--yellow-soft);border-bottom:2px solid var(--yellow);border-radius:4px;padding:.02em .22em;font-weight:600;-webkit-box-decoration-break:clone;box-decoration-break:clone;}
+.mk.g{background:var(--teal-soft);border-bottom-color:var(--teal);}
+.mklegende{font-size:.84rem;color:var(--ink-soft);margin:.2rem 0 1rem;}
+.rsp{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin:1rem 0;}
+@media(max-width:640px){.rsp{grid-template-columns:1fr;}}
+.rcol{border-radius:16px;padding:1rem 1.1rem;border:2px solid;}
+.rcol.a{background:var(--red-soft);border-color:var(--red);}
+.rcol.b{background:var(--teal-soft);border-color:var(--teal);}
+.rcol h4{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;margin-bottom:.4rem;}
+.rcol.a h4{color:var(--red);}.rcol.b h4{color:#0a7d72;}
+.rcol ul{list-style:none;display:grid;gap:.3rem;}
+.rcol li{font-size:.93rem;padding-left:1.1rem;position:relative;}
+.rcol li::before{content:'\203A';position:absolute;left:0;font-weight:700;}
+.pcgrid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin:1rem 0;}
+@media(max-width:640px){.pcgrid{grid-template-columns:1fr;}}
+.pcol{border-radius:16px;padding:1rem 1.1rem;border:2px solid;}
+.pcol.pro{background:#EAF7EF;border-color:var(--green);}
+.pcol.con{background:var(--red-soft);border-color:var(--red);}
+.pcol h4{font-family:'Space Grotesk',sans-serif;font-size:1.15rem;margin-bottom:.5rem;}
+.pcol.pro h4{color:var(--green);}.pcol.con h4{color:var(--red);}
+.pcol ul{list-style:none;display:grid;gap:.4rem;}
+.pcol li{font-size:.94rem;padding-left:1.3rem;position:relative;}
+.pcol li::before{content:'\2713';position:absolute;left:0;font-weight:700;}
+.pcol.pro li::before{color:var(--green);}.pcol.con li::before{color:var(--red);}
+.gramtafel{background:var(--paper);border:2px solid var(--sand);border-radius:16px;padding:1.1rem 1.2rem;margin:1rem 0;}
+.gramtafel table{width:100%;border-collapse:collapse;margin:.5rem 0;font-size:.95rem;}
+.gramtafel td,.gramtafel th{border:1px solid var(--sand);padding:.45rem .6rem;text-align:left;}
+.gramtafel th{background:var(--cream-warm);font-family:'Space Grotesk',sans-serif;}
+.gramtafel td b{color:var(--red);}
+.rmcard{background:var(--paper);border:1.5px solid var(--sand);border-radius:14px;padding:.9rem 1.1rem;margin:.8rem 0;}
+.rmcard b{color:var(--teal);}
+.rm{display:inline-block;background:var(--teal-soft);color:#0a7d72;border-radius:999px;padding:.2rem .7rem;font-size:.85rem;font-weight:600;margin:.2rem .2rem 0 0;}
+.card90{background:linear-gradient(135deg,var(--paper),var(--cream-warm));border:2px solid var(--sand);border-radius:20px;padding:1.6rem;text-align:center;max-width:460px;margin:1.2rem auto;box-shadow:0 8px 24px rgba(38,32,25,.08);}
+.card90 .lbl{font-size:.72rem;font-weight:700;color:var(--red);letter-spacing:.12em;text-transform:uppercase;}
+.card90 .word{font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:2.2rem;margin:.4rem 0;}
+.helpwords{display:flex;flex-wrap:wrap;gap:.35rem;justify-content:center;margin:.7rem 0;}
+.hw{background:var(--yellow-soft);border:1px solid var(--yellow);border-radius:999px;padding:.2rem .7rem;font-size:.85rem;font-weight:600;}
+.timer{font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:700;color:var(--teal);margin:.5rem 0;}
+.btn{background:var(--red);color:#fff;border:none;border-radius:999px;padding:.5rem 1.3rem;font-weight:700;cursor:pointer;font-size:.9rem;font-family:'Inter';margin:.2rem;}
+.btn.ghost{background:var(--paper);color:var(--ink);border:2px solid var(--sand);}
+.quiz-q{background:var(--paper);border:1.5px solid var(--sand);border-radius:14px;padding:.9rem 1.1rem;margin:.7rem 0;}
+.quiz-q .qt{font-weight:600;margin-bottom:.55rem;}
+.quiz-opts{display:grid;gap:.4rem;}
+.qopt{text-align:left;background:var(--cream);border:1.5px solid var(--sand);border-radius:10px;padding:.5rem .8rem;cursor:pointer;font-size:.94rem;font-family:'Inter';font-weight:500;}
+.qopt:hover{border-color:var(--ink);}
+.qopt.right{background:#EAF7EF;border-color:var(--green);color:var(--green);font-weight:700;}
+.qopt.wrong{background:var(--red-soft);border-color:var(--red);color:var(--red);}
+.qexp{font-size:.86rem;color:var(--ink-soft);margin-top:.5rem;display:none;}
+.qexp.show{display:block;}
+.gap{background:var(--paper);border:1.5px solid var(--sand);border-radius:14px;padding:1rem 1.1rem;margin:.7rem 0;line-height:2.2;}
+.gap select{font-family:'Inter';font-weight:600;border:2px solid var(--teal);border-radius:8px;padding:.15rem .4rem;background:var(--teal-soft);color:#0a7d72;font-size:.95rem;}
+.gap select.ok{background:#EAF7EF;border-color:var(--green);color:var(--green);}
+.gap select.no{background:var(--red-soft);border-color:var(--red);color:var(--red);}
+footer{text-align:center;color:var(--ink-mute);font-size:.85rem;padding:3rem 1rem 1rem;}
 footer strong{color:var(--ink);}
-
-@media print{
-  body.schaltet .section[hidden]{display:block !important;}
-  .leiste,.weiterzeile,.wmk{display:none !important;}
-  .wm{background:none;border-bottom:2px solid var(--gold-d);}
-}
-@media(max-width:560px){
-  .wrapper{padding:1.5rem 1rem 4rem;}
-  .leiste{border-radius:12px;padding:.35rem .4rem;gap:.4rem;}
-  .nivk button{padding:.3rem .65rem;font-size:.8rem;}
-  .nivk .zusatz{display:none;}
-}
-
-/* ============================================================
-   Ankommen mit Bild, Merksätze, Sprechübung
-   ============================================================
-   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
-   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
-   auf der Seite. Beides kommt hier zurück — die Sätze aber als
-   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
-
-.ankbild{
-  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
-  border-radius:18px; border:1px solid var(--line); object-fit:cover;
-  aspect-ratio:16/9;
-}
-
-.merkg{
-  border:1px solid var(--line); border-radius:16px;
-  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
-}
-.merkt{
-  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
-  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
-}
-.merk{
-  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
-  padding:.5rem 0; border-top:1px solid var(--line);
-  font-size:1.02rem; line-height:1.45;
-}
-.merk:first-of-type{ border-top:0; }
-.merk > span{ flex:1 1 14rem; min-width:0; }
-.merk .speak{ flex:0 0 auto; }
-
-.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
-.ueb{
-  display:flex; gap:.8rem; align-items:flex-start;
-  border:1px solid var(--line); border-radius:16px;
-  padding:.85rem 1rem; background:var(--warm);
-}
-.ueb b{
-  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
-  display:block; margin:0 0 .2rem;
-}
-.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
-.uebn{
-  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
-  background:var(--turq-d); color:#fff; font-weight:700;
-  display:grid; place-items:center; font-size:.95rem;
-}
-
-@media (max-width:560px){
-  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
-  .merk{ font-size:.98rem; }
-  .ueb{ padding:.75rem .85rem; }
-}
-
-/* ---------- Ankommen: zwei Fragerunden ----------
-   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
-   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
-   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
-   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
-.ankrunde{
-  background:var(--warm);border:1px solid #E7ECEE;border-radius:14px;
-  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
-}
-.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
-.ankl{
-  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
-  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
-}
-.ankrunde.zwei .ankl{color:var(--teal-ink);}
-.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
-.ankfr li{
-  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
-  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
-  border-top:1px solid rgba(22,22,22,.07);
-}
-.ankfr li:first-child{border-top:0;padding-top:.15rem;}
-.ankfr li::before{
-  content:counter(ankz);position:absolute;left:0;top:.55rem;
-  width:1.5rem;height:1.5rem;border-radius:50%;
-  background:var(--turq);color:var(--teal-ink);
-  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
-  display:grid;place-items:center;
-}
-.ankfr li:first-child::before{top:.15rem;}
-.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
-.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
-
-@media (max-width:560px){
-  .ankrunde{padding:.85rem .9rem .9rem;}
-  .ankfr li{font-size:.99rem;padding-left:2rem;}
-  .ankrunde.zwei .ankfr li{font-size:.94rem;}
-}
-
-</style>
-</head>
-<body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
-
-<div class="eyebrow">deutschoderwas · Sprechclub · Woche 2 · Strang B · Teil 2 · Donnerstag, 24. September</div>
-<h1 class="title">Das geht nicht. Wie geht's? <span class="hl">Es kommt darauf an.</span></h1>
-
-<p class="subtitle">Dieselben drei Verben wie am Dienstag — nur bewegt sich niemand mehr. <b>Gehen</b>, <b>kommen</b> und <b>fahren</b> stecken in den Sätzen, die Deutsche jeden Tag sagen, ohne darüber nachzudenken.</p>
-
-<p class="niv-wie">Gleiches Thema, andere Sätze. Wechsle jederzeit — probier ruhig beide Seiten aus.</p>
-<div class="leiste">
-  <div class="nivk" role="group" aria-label="Niveau wählen">
-    <button type="button" data-niv="a2" aria-pressed="true">B1<span class="zusatz"> · sicherer</span></button>
-    <button type="button" data-niv="b1" aria-pressed="false">B2<span class="zusatz"> · feiner</span></button>
-  </div>
+</style></head><body><div class="wrapper">
+<div class="eyebrow">deutschoderwas · Sprechclub · B1/B2</div>
+<h1 class="title">„Das geht nicht.“ · <span class="hl">Wie geht's?</span> · Teil 2</h1>
+<p class="subtitle">Dieselben Verben, ganz andere Bedeutung: „Das geht (nicht)“, „Wie geht’s?“, „Es kommt darauf an“. Redewendungen, die Deutsche ständig benutzen — mit Dialogen, Tafel und Sprechen.</p>
+<div class="hero-tags"><span class="hero-tag">🖼️ <b>Bild</b></span><span class="hero-tag">📖 <b>Wortschatz</b></span><span class="hero-tag">💬 <b>Dialoge</b></span><span class="hero-tag">✏️ <b>Grammatik</b></span><span class="hero-tag">🗣️ <b>Sprechen</b></span><span class="hero-tag">⏱️ <b>90 Sek.</b></span></div>
 <nav class="tabs">
-<a class="tab active" href="#ankommen">👋 Ankommen</a>
-<a class="tab" href="#dialoge">🎬 Dialog</a>
-<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
-<a class="tab" href="#debatte">⚖️ Debatte</a>
-<a class="tab" href="#abschluss">🎯 Abschluss</a>
-<a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<button class="tab active" data-tab="0">🖼️ Einstieg</button>
+<button class="tab" data-tab="1">📖 Wortschatz</button>
+<button class="tab" data-tab="2">💬 Dialoge</button>
+<button class="tab" data-tab="3">✏️ Grammatik</button>
+<button class="tab" data-tab="4">🗣️ Sprechen</button>
+<button class="tab" data-tab="5">⏱️ 90 Sekunden</button>
+<button class="tab" data-tab="6">✅ Üben</button>
 </nav>
-</div>
-
-<section class="section" id="ankommen">
-<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
-<img class="ankbild" src="../amanda/amanda-denk.webp" alt="Amanda überlegt mit dem Finger am Kinn">
-<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Was antwortest du auf „Wie geht's?“ — ehrlich oder höflich?</li><li>Welchen dieser Sätze hast du schon oft gehört, ohne ihn genau zu verstehen?</li><li>Gibt es in deiner Sprache ein Verb, das genauso viel kann?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Warum benutzen Sprachen ausgerechnet Bewegungsverben für abstrakte Dinge?</li><li>Wann merkst du selbst, dass du einen Ausdruck nur nachsprichst, statt ihn zu verstehen?</li><li>Welcher deutsche Ausdruck hat dich am längsten verwirrt?</li></ol></div></div>
-<div class="tip teal">🧭 <strong>Das System dahinter:</strong> <b>gehen</b> = etwas ist möglich oder funktioniert. <b>kommen</b> = etwas entsteht oder hängt von etwas ab. <b>fahren</b> = eine Erfahrung oder eine starke Reaktion.</div>
-<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Was sagst du, wenn es dir wirklich nicht gut geht?</li><li>Fragst du zurück? Wie?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Ab welcher Nähe darf man ehrlich antworten?</li><li>Was wäre in deinem Land unhöflich an der deutschen Kurzantwort?</li></ol></div></div>
-<div class="tip">💡 <strong>Die Stufen der Antwort:</strong> <b>Danke, gut.</b> (immer richtig) · <b>Ganz gut.</b> (neutral) · <b>Es geht.</b> (nicht so gut, aber ich rede nicht darüber) · <b>Nicht so gut, ehrlich gesagt.</b> (jetzt darf gefragt werden).</div>
-<details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
+<section class="section active" data-section="0">
+<h2 class="st">Schau dir das Bild an</h2>
+<p class="ssub">Zwei Leute reden locker im Café. Solche Wendungen hört man dort ständig.</p>
+<div class="scene-wrap"><img src="../amanda/sz-cafe.webp" alt="Zwei Personen unterhalten sich im Café"></div>
+<div class="tip">🗣️ <strong>Zum Einstieg – sprecht reihum:</strong> Beschreibt das Bild: Wer redet mit wem? Worüber sprechen die beiden wohl?</div>
+<h2 class="st">Erste Fragen</h2><ul class="qlist">
+<li>Wie antwortest du auf „Wie geht’s?“ — ehrlich oder höflich?</li>
+<li>Was bedeutet für dich „Das geht (nicht)“?</li>
+<li>Gibt es solche Wendungen auch in deiner Sprache?</li>
+<li>Welche deutschen Redewendungen findest du schwer?</li>
+</ul></section>
+<section class="section" data-section="1"><h2 class="st">Wortschatz</h2><p class="ssub">Tipp auf 🔊, um das Wort zu hören. Lies den Beispielsatz laut.</p><div class="vgrid">
+<div class="vcard"><div class="w">es geht (mir gut) <button class="speak" data-say="es geht (mir gut)">🔊</button></div><div class="ex">„„Wie geht’s?“ — „Danke, es geht.“"</div></div>
+<div class="vcard"><div class="w">das geht (nicht) <button class="speak" data-say="das geht (nicht)">🔊</button></div><div class="ex">„Freitag? Ja, das geht. / Nein, das geht leider nicht."</div></div>
+<div class="vcard"><div class="w">es kommt darauf an <button class="speak" data-say="es kommt darauf an">🔊</button></div><div class="ex">„„Kommst du mit?“ — „Es kommt darauf an, wann.“"</div></div>
+<div class="vcard"><div class="w">das kommt vor <button class="speak" data-say="das kommt vor">🔊</button></div><div class="ex">„Fehler passieren — das kommt vor."</div></div>
+<div class="vcard"><div class="w">gehen (funktionieren) <button class="speak" data-say="gehen (funktionieren)">🔊</button></div><div class="ex">„Mein Handy geht nicht mehr."</div></div>
+<div class="vcard"><div class="w">auf eine Idee kommen <button class="speak" data-say="auf eine Idee kommen">🔊</button></div><div class="ex">„Wie bist du auf die Idee gekommen?"</div></div>
+<div class="vcard"><div class="w">zu weit gehen <button class="speak" data-say="zu weit gehen">🔊</button></div><div class="ex">„Das ist nicht mehr witzig, das geht zu weit."</div></div>
+<div class="vcard"><div class="w">es geht um <button class="speak" data-say="es geht um">🔊</button></div><div class="ex">„In dem Film geht es um eine Familie."</div></div>
+<div class="vcard"><div class="w">drankommen <button class="speak" data-say="drankommen">🔊</button></div><div class="ex">„In der Schule: „Wer kommt als Nächstes dran?“"</div></div>
+<div class="vcard"><div class="w">zurechtkommen <button class="speak" data-say="zurechtkommen">🔊</button></div><div class="ex">„Kommst du mit der neuen Software zurecht?"</div></div>
+</div><div class="tip teal">💡 <strong>Mini-Aufgabe:</strong> Nutze drei Wendungen in eigenen Sätzen über deinen Alltag.</div></section>
+<section class="section" data-section="2"><h2 class="st">Beispieldialoge</h2><p class="ssub">Lest die Dialoge zu zweit mit verteilten Rollen — dann spielt sie mit euren eigenen Worten nach.</p>
+<p class="mklegende"><span class="mk">gelb</span> = wichtiger Begriff · <span class="mk g">türkis</span> = wichtige Wendung / Struktur</p>
+<div class="dwrap"><h4>💬 Dialog 1 · „Wie geht’s?“</h4><div class="dsit">Zwei Bekannte treffen sich zufällig.</div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Hey! <span class="mk g">Wie geht’s dir</span>?</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Danke, <span class="mk g">es geht</span>. Viel Stress gerade. Und dir?</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Auch so lala. Sag mal, <span class="mk g">geht</span> Freitag bei dir?</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Freitag … <span class="mk g">das kommt darauf an</span>, wann genau.</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">So gegen 19 Uhr?</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ja, <span class="mk g">das geht</span>. Wo treffen wir uns?</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt"><span class="mk g">Kommt</span> noch <span class="mk g">darauf an</span> — ich schreib dir.</div></div>
+<button class="speak dbtn" data-say="Hey! Wie geht’s dir? Danke, es geht. Viel Stress gerade. Und dir? Auch so lala. Sag mal, geht Freitag bei dir? Freitag … das kommt darauf an, wann genau. So gegen 19 Uhr? Ja, das geht. Wo treffen wir uns? Kommt noch darauf an — ich schreib dir.">🔊 Dialog vorlesen</button></div>
+<div class="dwrap"><h4>💬 Dialog 2 · Etwas funktioniert nicht</h4><div class="dsit">Im Büro streikt die Technik.</div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Der Drucker <span class="mk">geht</span> wieder nicht.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Das <span class="mk">kommt</span> öfter <span class="mk">vor</span>. Hast du ihn neu gestartet?</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ja, aber <span class="mk g">es geht trotzdem nicht</span>.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Warte, ich schau mal … <span class="mk g">Kommst du</span> mit den Einstellungen <span class="mk">zurecht</span>?</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ehrlich? Nicht so richtig.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Kein Problem. So — jetzt <span class="mk g">geht</span> es wieder.</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Super, danke! <span class="mk g">Wie bist du</span> bloß <span class="mk g">auf die Lösung gekommen</span>?</div></div>
+<button class="speak dbtn" data-say="Der Drucker geht wieder nicht. Das kommt öfter vor. Hast du ihn neu gestartet? Ja, aber es geht trotzdem nicht. Warte, ich schau mal … Kommst du mit den Einstellungen zurecht? Ehrlich? Nicht so richtig. Kein Problem. So — jetzt geht es wieder. Super, danke! Wie bist du bloß auf die Lösung gekommen?">🔊 Dialog vorlesen</button></div>
+<div class="dwrap"><h4>💬 Dialog 3 · Ein Vorschlag</h4><div class="dsit">Ihr überlegt, was ihr am Wochenende macht.</div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Wollen wir wandern gehen?</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Hm, <span class="mk g">das kommt drauf an</span> — wie ist das Wetter?</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Soll schön werden.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Dann <span class="mk g">geht das</span>! Aber bitte nicht zu weit, sonst <span class="mk g">geht es</span> mir am Montag schlecht.</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Keine Sorge. <span class="mk g">Worum</span> <span class="mk g">geht es</span> dir — Natur oder Sport?</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Eher Natur und Ruhe.</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Perfekt, dann <span class="mk g">kommt</span> uns die kleine Runde <span class="mk g">gerade recht</span>.</div></div>
+<button class="speak dbtn" data-say="Wollen wir wandern gehen? Hm, das kommt drauf an — wie ist das Wetter? Soll schön werden. Dann geht das! Aber bitte nicht zu weit, sonst geht es mir am Montag schlecht. Keine Sorge. Worum geht es dir — Natur oder Sport? Eher Natur und Ruhe. Perfekt, dann kommt uns die kleine Runde gerade recht.">🔊 Dialog vorlesen</button></div>
+<div class="tip">🎭 <strong>Jetzt ihr:</strong> Spielt ein kurzes Gespräch mit „Wie geht’s?“, „Das geht (nicht)“ und „Es kommt darauf an“.</div></section>
+<section class="section" data-section="3">
+<h2 class="st">Wendungen mit gehen & kommen</h2><p class="ssub">Diese festen Wendungen bedeuten NICHT „laufen“ oder „ankommen“ — lern sie als Ganzes.</p>
+<div class="gramtafel"><table><tr><th>Wendung</th><th>Bedeutung</th></tr><tr><td><b>Wie geht’s?</b> — Es geht.</td><td>Frage nach dem Befinden / mittelgut</td></tr><tr><td><b>Das geht (nicht).</b></td><td>Das ist (nicht) möglich.</td></tr><tr><td><b>Es kommt darauf an.</b></td><td>Die Antwort hängt von etwas ab.</td></tr><tr><td><b>Das kommt vor.</b></td><td>Das passiert manchmal.</td></tr><tr><td><b>Es geht um …</b></td><td>Das Thema ist …</td></tr><tr><td><b>zurechtkommen mit</b></td><td>klarkommen, es schaffen</td></tr></table></div>
+<div class="tip">✏️ <strong>Sag die Sätze laut — reihum:</strong><ol style="margin:.5rem 0 0 1.2rem;line-height:1.9">
+<li>„Kommst du mit?“ — „___, wie lange es dauert.“ → <span class="mk">Es kommt darauf an</span></li>
+<li>Freitag um 19 Uhr? Ja, ___. → <span class="mk">das geht</span></li>
+<li>Mein Laptop ___ nicht mehr. → <span class="mk">geht</span></li>
+<li>In dem Buch ___ eine Freundschaft. → <span class="mk">geht es um</span></li>
+<li>Kein Problem, Fehler passieren — ___. → <span class="mk">das kommt vor</span></li>
+<li>___ du mit dem neuen Programm ___? → <span class="mk">Kommst … zurecht</span></li>
+</ol></div>
+<div class="rmcard"><b>🗣️ Redemittel</b><div style="margin-top:.5rem">
+<span class="rm">Wie geht’s? — Es geht.</span>
+<span class="rm">Das geht (leider nicht).</span>
+<span class="rm">Es kommt darauf an.</span>
+<span class="rm">Es geht mir um …</span>
+<span class="rm">Damit komme ich (nicht) zurecht.</span>
+</div></div>
 </section>
-
-<section class="section" id="dialoge">
-<h2 class="st">Vier Gespräche — <span class="hl">zwei Runden</span></h2>
-<ol class="schritte">
-<li><span>1</span><b>Runde 1:</b> Lest den Dialog zu zweit laut.</li>
-<li><span>2</span><b>Runde 2:</b> Deckt die Zeilen von B ab und sprecht frei — die Hinweise reichen.</li>
-</ol>
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-buero.webp" alt="Zwei Kolleginnen am Schreibtisch mit Laptop"><h4>Dialog 1 · „Geht das noch heute?“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Eine Kollegin braucht etwas dringend. Du hast eigentlich keine Zeit — aber ein bisschen vielleicht doch.</div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Kannst du das noch heute fertig machen?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Es kommt darauf an, wie lang es ist. Zeig mal.</div><div class="dcue">🗣️ Nicht sofort Ja oder Nein. Erst eine Bedingung nennen — dann hast du Luft.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Zwei Seiten. Aber es müsste bis fünf raus sein.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Bis fünf <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von geht." data-wort="das geht." data-kurz="das ist möglich, das ist in Ordnung" data-bsp="Donnerstag um zehn? Ja, das geht.">geht.</b> Bis vier würde nicht <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von gehen" data-wort="gehen" data-kurz="Etwas funktioniert, ist möglich oder erlaubt." data-bsp="Das geht. · Der Computer geht nicht. · Es geht um Geld.">gehen</b>.</div><div class="dcue">🗣️ <b>Das geht</b> und <b>das geht nicht</b> im selben Atemzug — so klingst du hilfsbereit und trotzdem klar.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Fünf ist super. Worum geht es überhaupt genau?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Es geht um die Zahlen aus dem letzten Quartal.</div><div class="dcue">🗣️ <b>Es geht um</b> + Akkusativ. Der Standardsatz, um ein Thema zu nennen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ah, gut. Sag Bescheid, wenn was fehlt.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Mach ich. Bis fünf hast du es.</div><div class="dcue">🗣️ Am Ende die Zusage wiederholen — dann muss niemand nachfragen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<button class="speak dbtn" data-say="Kannst du das noch heute fertig machen? Es kommt darauf an, wie lang es ist. Zeig mal. Zwei Seiten. Aber es müsste bis fünf raus sein. Bis fünf geht. Bis vier würde nicht gehen. Fünf ist super. Worum geht es überhaupt genau? Es geht um die Zahlen aus dem letzten Quartal. Ah, gut. Sag Bescheid, wenn was fehlt. Mach ich. Bis fünf hast du es.">🔊 Dialog vorlesen lassen</button></div>
-
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-cafe.webp" alt="Zwei Personen an einer Café-Theke"><h4>Dialog 2 · „Wie geht's? — ehrlich“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Ihr trefft euch zufällig. Die Standardantwort wäre „gut“ — aber heute stimmt sie nicht.</div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Hey! Lange nicht gesehen. Wie geht's dir?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ganz ehrlich? Es geht so. Die letzten Wochen waren viel.</div><div class="dcue">🗣️ <b>Es geht so</b> ist die höfliche Art zu sagen: nicht gut, aber ich jammere nicht.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Oh. Willst du erzählen, oder lieber nicht?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Kurz gern. Es geht um die Arbeit — da ist gerade viel in Bewegung.</div><div class="dcue">🗣️ Du bestimmst, wie viel du sagst. <b>Kurz gern</b> setzt freundlich eine Grenze.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Kann ich irgendwas tun?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Lieb von dir. Ich komme darauf zurück, wenn es soweit ist.</div><div class="dcue">🗣️ <b>Auf etwas zurückkommen</b> — annehmen, ohne sofort etwas zu fordern.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Unbedingt. Und sonst?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Sonst läuft's. Und bei dir?</div><div class="dcue">🗣️ Das Gespräch zurückgeben. Sonst redest du zehn Minuten allein.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<button class="speak dbtn" data-say="Hey! Lange nicht gesehen. Wie geht's dir? Ganz ehrlich? Es geht so. Die letzten Wochen waren viel. Oh. Willst du erzählen, oder lieber nicht? Kurz gern. Es geht um die Arbeit — da ist gerade viel in Bewegung. Kann ich irgendwas tun? Lieb von dir. Ich komme darauf zurück, wenn es soweit ist. Unbedingt. Und sonst? Sonst läuft's. Und bei dir?">🔊 Dialog vorlesen lassen</button></div>
-
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-heikel.webp" alt="Zwei Personen sitzen sich in einem Wohnzimmer gegenüber"><h4>Dialog 3 · „Das kommt nicht infrage“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Jemand schlägt etwas vor, das für dich völlig ausgeschlossen ist. Du willst klar sein, ohne unhöflich zu werden.</div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Könntest du am Sonntag einspringen?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Sonntag ist schwierig. Da habe ich meine Familie.</div><div class="dcue">🗣️ Erst weich beginnen. <b>Schwierig</b> ist ein Nein, das noch Raum lässt.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Nur diesmal? Es wäre wirklich eine große Hilfe.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ich verstehe das, aber Sonntag kommt für mich nicht infrage.</div><div class="dcue">🗣️ Jetzt deutlich. <b>Ich verstehe das, aber …</b> nimmt dem Nein die Härte.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Schade. Und Samstag?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Samstag ginge, wenn es nur der Vormittag ist.</div><div class="dcue">🗣️ <b>ginge</b> statt <b>geht</b> — der Konjunktiv macht das Angebot vorsichtiger.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Vormittag reicht völlig. Danke dir!</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Gern. Dann bis Samstag um neun.</div><div class="dcue">🗣️ Mit einer konkreten Uhrzeit schließen — sonst wird aus dem Vormittag der ganze Tag.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<button class="speak dbtn" data-say="Könntest du am Sonntag einspringen? Sonntag ist schwierig. Da habe ich meine Familie. Nur diesmal? Es wäre wirklich eine große Hilfe. Ich verstehe das, aber Sonntag kommt für mich nicht infrage. Schade. Und Samstag? Samstag ginge, wenn es nur der Vormittag ist. Vormittag reicht völlig. Danke dir! Gern. Dann bis Samstag um neun.">🔊 Dialog vorlesen lassen</button></div>
-
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-sprachkurs.webp" alt="Ein Klassenraum, ein Schüler meldet sich"><h4>Dialog 4 · „Wie kommst du darauf?“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Jemand behauptet etwas über dich, das nicht stimmt. Du willst wissen, woher die Idee kommt — ohne Streit.</div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Du willst doch sowieso aufhören mit dem Kurs, oder?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Wie kommst du denn darauf?</div><div class="dcue">🗣️ Ruhig fragen statt sich zu verteidigen. Das <b>denn</b> macht es neugierig statt scharf.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Du warst zweimal nicht da.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Stimmt, aber das hatte andere Gründe. Es kommt darauf an, wie man das liest.</div><div class="dcue">🗣️ Erst zugeben, was stimmt. Dann erst korrigieren.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Also machst du weiter?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Auf jeden Fall. Aufhören kommt für mich nicht infrage.</div><div class="dcue">🗣️ Ein klarer Satz zum Schluss. Sonst bleibt das Gerücht stehen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Gut zu wissen. Sorry, ich hatte das falsch verstanden.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Kein Problem, das <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von kommt vor." data-wort="das kommt vor." data-kurz="das passiert manchmal, das ist nicht schlimm" data-bsp="Entschuldigung, ich habe es vergessen. — Kein Problem, das kommt vor.">kommt vor.</b></div><div class="dcue">🗣️ Der versöhnliche Standardsatz. Damit ist das Thema wirklich beendet.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<button class="speak dbtn" data-say="Du willst doch sowieso aufhören mit dem Kurs, oder? Wie kommst du denn darauf? Du warst zweimal nicht da. Stimmt, aber das hatte andere Gründe. Es kommt darauf an, wie man das liest. Also machst du weiter? Auf jeden Fall. Aufhören kommt für mich nicht infrage. Gut zu wissen. Sorry, ich hatte das falsch verstanden. Kein Problem, das kommt vor.">🔊 Dialog vorlesen lassen</button></div>
-
-<div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 3 noch einmal — aber A gibt nicht so schnell auf und fragt dreimal nach. B muss dreimal Nein sagen, jedes Mal mit anderen Worten.</div>
-</section>
-
-<section class="section" id="merksaetze">
-<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
-<p class="ssub">Sag jeden einmal laut.</p>
-<div class="nur-a2">
-<div class="merkg"><div class="merkt">1 · ✅ Zusagen und absagen</div>
-<div class="merk"><span>Das <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von geht." data-wort="das geht." data-kurz="das ist möglich, das ist in Ordnung" data-bsp="Donnerstag um zehn? Ja, das geht.">geht.</b></span><button class="speak" data-say="Das geht.">🔊 hören</button></div>
-<div class="merk"><span>Das geht leider nicht.</span><button class="speak" data-say="Das geht leider nicht.">🔊 hören</button></div>
-<div class="merk"><span>Das wäre möglich.</span><button class="speak" data-say="Das wäre möglich.">🔊 hören</button></div>
-</div>
-<div class="merkg"><div class="merkt">2 · 🤷 Sich nicht festlegen</div>
-<div class="merk"><span><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Es kommt darauf an." data-wort="Es kommt darauf an." data-kurz="die Antwort hängt von etwas ab" data-bsp="Kommst du mit? — Es kommt darauf an, wann ihr losfahrt.">Es kommt darauf an.</b></span><button class="speak" data-say="Es kommt darauf an.">🔊 hören</button></div>
-<div class="merk"><span>Mal sehen.</span><button class="speak" data-say="Mal sehen.">🔊 hören</button></div>
-<div class="merk"><span>Das weiß ich noch nicht.</span><button class="speak" data-say="Das weiß ich noch nicht.">🔊 hören</button></div>
-</div>
-<div class="merkg"><div class="merkt">3 · 🎯 Das Thema nennen</div>
-<div class="merk"><span><b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Es geht um …" data-wort="Es geht um …" data-kurz="das ist das Thema" data-bsp="In der Mail geht es um den neuen Termin.">Es geht um …</b></span><button class="speak" data-say="Es geht um …">🔊 hören</button></div>
-<div class="merk"><span>Worum geht es?</span><button class="speak" data-say="Worum geht es?">🔊 hören</button></div>
-<div class="merk"><span>Ich rufe an wegen …</span><button class="speak" data-say="Ich rufe an wegen …">🔊 hören</button></div>
-</div>
-<div class="merkg"><div class="merkt">4 · 😊 Beruhigen</div>
-<div class="merk"><span>Das <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von kommt vor." data-wort="das kommt vor." data-kurz="das passiert manchmal, das ist nicht schlimm" data-bsp="Entschuldigung, ich habe es vergessen. — Kein Problem, das kommt vor.">kommt vor.</b></span><button class="speak" data-say="Das kommt vor.">🔊 hören</button></div>
-<div class="merk"><span>Kein Problem.</span><button class="speak" data-say="Kein Problem.">🔊 hören</button></div>
-<div class="merk"><span>Das kann passieren.</span><button class="speak" data-say="Das kann passieren.">🔊 hören</button></div>
-</div>
-</div>
-<div class="nur-b1">
-<div class="merkg"><div class="merkt">1 · ✅ Zusagen mit Bedingung</div>
-<div class="merk"><span>Das ließe sich einrichten</span><button class="speak" data-say="Das ließe sich einrichten">🔊 hören</button></div>
-<div class="merk"><span>Von meiner Seite spricht nichts dagegen</span><button class="speak" data-say="Von meiner Seite spricht nichts dagegen">🔊 hören</button></div>
-<div class="merk"><span>Das geht, solange …</span><button class="speak" data-say="Das geht, solange …">🔊 hören</button></div>
-</div>
-<div class="merkg"><div class="merkt">2 · 🤷 Elegant ausweichen</div>
-<div class="merk"><span>Es kommt darauf an, ob …</span><button class="speak" data-say="Es kommt darauf an, ob …">🔊 hören</button></div>
-<div class="merk"><span>Das hängt davon ab, wie …</span><button class="speak" data-say="Das hängt davon ab, wie …">🔊 hören</button></div>
-<div class="merk"><span>Da müsste ich erst schauen</span><button class="speak" data-say="Da müsste ich erst schauen">🔊 hören</button></div>
-</div>
-<div class="merkg"><div class="merkt">3 · 🎯 Zum Punkt kommen</div>
-<div class="merk"><span>Worum es mir geht, ist …</span><button class="speak" data-say="Worum es mir geht, ist …">🔊 hören</button></div>
-<div class="merk"><span>Der Punkt ist …</span><button class="speak" data-say="Der Punkt ist …">🔊 hören</button></div>
-<div class="merk"><span>Ich komme gleich zur Sache</span><button class="speak" data-say="Ich komme gleich zur Sache">🔊 hören</button></div>
-</div>
-<div class="merkg"><div class="merkt">4 · 😊 Deeskalieren</div>
-<div class="merk"><span>Das kommt in den besten Familien vor</span><button class="speak" data-say="Das kommt in den besten Familien vor">🔊 hören</button></div>
-<div class="merk"><span>Halb so wild</span><button class="speak" data-say="Halb so wild">🔊 hören</button></div>
-<div class="merk"><span>Damit sind wir bisher gut gefahren</span><button class="speak" data-say="Damit sind wir bisher gut gefahren">🔊 hören</button></div>
-</div>
-</div>
-<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
-</section>
-
-<section class="section" id="challenge">
-<h2 class="st">⏱️ Die 90-Sekunden-Challenge</h2>
-<p class="ssub">Ein Wort, anderthalb Minuten, freies Sprechen. Es muss nicht perfekt sein — es muss nur weitergehen.</p>
-<div class="card90">
-<div class="lbl">Dein Wort</div>
-<img id="i90" src="../amanda/amanda-super.webp" alt="Das geht (nicht).">
-<div class="word" id="w90">Das geht (nicht).</div>
-<div class="helpwords" id="hw90"></div>
-<div class="timer" id="t90">1:30</div>
-<div>
-<button class="btn ghost" id="new90">🎲 Neues Wort</button>
-<button class="btn" id="start90">▶︎ Start</button>
-</div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Mir fällt nichts ein</button>
-<div class="inhalt">
-<p>Bau es als kleine Geschichte, dann trägt sich die Zeit von selbst:</p>
-<ul>
-<li>Worum ging es? <b>Es ging um …</b></li>
-<li>Was war die Frage? <b>Es kam darauf an, ob …</b></li>
-<li>Wie hast du reagiert? <b>Ich habe gesagt, dass …</b></li>
-<li>Wie ist es ausgegangen? <b>Am Ende ist es gut angekommen.</b></li>
-</ul>
-<p style="margin-top:.5rem;">Und wenn ein Ausdruck fehlt: sag ihn einfach normal. <b>„Das hängt davon ab“</b> geht überall dort, wo <b>„es kommt darauf an“</b> passt.</p>
-</div>
-</div>
-<div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde muss einmal <u>es geht um</u> und einmal <u>es kommt darauf an</u> vorkommen. Der Partner hebt die Hand, sobald beides da war.</div>
-</section>
-
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei <span class="hl">Gespräche ohne Bewegung</span></h2>
-<p class="ssub">Zu zweit. Alle drei kommen ohne ein einziges Bewegungsverb aus — obwohl in jedem <i>gehen</i>, <i>kommen</i> oder <i>fahren</i> vorkommt. Danach tauschen.</p>
-<div class="rsp">
-<div class="rsp-kopf"><span class="rsp-nr">1</span><b>Geht das bis Freitag?</b></div>
-<div class="rsp-lage"><span>Die Lage</span>A braucht etwas dringend, B hat wenig Zeit. Es soll am Ende eine Zusage geben — aber mit Bedingungen.</div>
-<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Geht das bis Freitag?</span><span class="rm">Es kommt darauf an</span><span class="rm">Das geht leider nicht</span><span class="rm">Bis Montag würde gehen</span></div><div class="nur-b1"><span class="rm">Ließe sich das einrichten?</span><span class="rm">Das hängt davon ab, ob …</span><span class="rm">Von meiner Seite spricht nichts dagegen</span><span class="rm">Unter der Bedingung, dass …</span></div></div>
-<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>B sagt weder sofort ja noch sofort nein, nennt mindestens eine Bedingung und schließt mit einer konkreten Zusage.</div>
-<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
-</div>
-
-<div class="rsp">
-<div class="rsp-kopf"><span class="rsp-nr">2</span><b>Worum geht es eigentlich?</b></div>
-<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>redet lange und kommt nicht zum Punkt.</p></div><div class="rsp-r b"><span>B</span><p>muss höflich nachfragen, worum es überhaupt geht — dreimal, immer freundlicher.</p></div></div>
-<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Worum geht es genau?</span><span class="rm">Und was heißt das für mich?</span><span class="rm">Also willst du, dass …?</span><span class="rm">Habe ich das richtig verstanden?</span></div><div class="nur-b1"><span class="rm">Worauf willst du hinaus?</span><span class="rm">Was ist der Kern der Sache?</span><span class="rm">Wenn ich dich richtig verstehe, geht es dir um …</span><span class="rm">Fassen wir kurz zusammen</span></div></div>
-<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>B unterbricht nicht, sondern fragt nach — und fasst am Ende in einem Satz zusammen, worum es geht.</div>
-<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
-</div>
-
-<div class="rsp">
-<div class="rsp-kopf"><span class="rsp-nr">3</span><b>Da könnte ich aus der Haut fahren</b></div>
-<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>erzählt von etwas, das ihn wirklich geärgert hat.</p></div><div class="rsp-r b"><span>B</span><p>hört zu und beruhigt — ohne das Gefühl kleinzureden.</p></div></div>
-<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Da fahre ich aus der Haut</span><span class="rm">Das kommt jede Woche vor</span><span class="rm">Wie kommt er darauf?</span><span class="rm">Das geht so nicht weiter</span></div><div class="nur-b1"><span class="rm">Das würde mich auch auf die Palme bringen</span><span class="rm">Verstehe ich, dass dich das trifft</span><span class="rm">Womit hat das deiner Meinung nach zu tun?</span><span class="rm">Was wäre für dich eine Lösung?</span></div></div>
-<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>B widerspricht dem Gefühl nicht, stellt eine offene Frage und fragt am Ende nach einer Lösung statt nach Schuld.</div>
-<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
-</div>
-
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte. Vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.15rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
-</section>
-
-<section class="section" id="debatte">
-<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
-<p class="ssub">Zwei Gruppen, eine Frage. Abwechselnd sprechen.</p>
-<div class="deb-these">Wörter mit vielen Bedeutungen soll man meiden.</div>
-<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><ul><li>„Das geht nicht“ kann drei Sachen heißen.</li><li>In einem Vertrag gibt das später Streit.</li><li>Wer Deutsch lernt, versteht es wörtlich und irrt sich.</li></ul></div><div class="deb-s con"><b>Gruppe B · dagegen</b><ul><li>Ohne diese Wörter bleibt vom Alltagsdeutsch fast nichts.</li><li>Aus dem Zusammenhang ist es klar.</li><li>Wer sie meidet, klingt fremd, auch wenn alles stimmt.</li></ul></div></div>
-</section>
-
-<section class="section" id="abschluss">
-<h2 class="st">Zum <span class="hl">Schluss</span></h2>
-<p class="ssub">Ein Satz von jedem.</p>
-<div class="ank">Welchen Satz von heute nimmst du mit — und wo brauchst du ihn?</div>
-<details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Ich nehme mit: …</span><span>Ich will den Satz „…“ benutzen.</span><span>Neu war für mich: …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Ich nehme mit, dass …</span><span>Den Satz „…“ will ich nächste Woche wirklich benutzen.</span><span>Neu war für mich, dass …</span></div></div></details>
-</section>
-
-<section class="section" id="hausaufgabe">
-<h2 class="st">📮 Deine Hausaufgabe bis <span class="hl">nächste Woche</span></h2>
-<p class="ssub">Vier kleine Aufgaben, zusammen etwa 25 Minuten. Tippe eine an, wenn du sie erledigt hast.</p>
-<div class="tip">💡 <strong>Warum das hilft:</strong> Diese Sätze machen den Unterschied zwischen korrektem und natürlichem Deutsch. Wer sie parat hat, klingt sofort weniger nach Lehrbuch.</div>
-<div class="hagrid nur-a2">
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🎙️</span><span class="htxt">
-<h4>1. Vier Situationen, vier Sätze <span class="zeit">6 Min</span></h4>
-<p>Nimm eine Sprachnachricht auf: Beschreib vier Situationen aus deiner Woche und reagier auf jede mit einem der zwölf Sätze.</p></span></button>
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">✍️</span><span class="htxt">
-<h4>2. Es geht um … <span class="zeit">6 Min</span></h4>
-<p>Schreib sechs Sätze mit <b>Es geht um …</b> — jeweils zu einer echten Mail, Nachricht oder einem Gespräch dieser Woche.</p></span></button>
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🎯</span><span class="htxt">
-<h4>3. Es kommt darauf an, ob … <span class="zeit">7 Min</span></h4>
-<p>Schreib fünf Antworten, die mit <b>Es kommt darauf an,</b> anfangen und mit <b>ob</b>, <b>wann</b> oder <b>wie</b> weitergehen.</p></span></button>
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🔁</span><span class="htxt">
-<h4>4. darauf oder auf ihn? <span class="zeit">6 Min</span></h4>
-<p>Schreib acht Sätze: vier über Sachen (<b>darauf, damit, davon</b>) und vier über Menschen (<b>auf ihn, mit ihr, von dir</b>).</p></span></button>
-</div>
-<div class="hagrid nur-b1">
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🎙️</span><span class="htxt">
-<h4>1. Das Gespräch, das schwierig war <span class="zeit">7 Min</span></h4>
-<p>Erzähl in anderthalb Minuten von einem Gespräch, in dem du etwas ablehnen musstest. Benutze mindestens drei der zwölf Sätze.</p></span></button>
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">✍️</span><span class="htxt">
-<h4>2. Zwölf Sätze, zwölf Kontexte <span class="zeit">8 Min</span></h4>
-<p>Schreib zu jedem der zwölf Wortschatzsätze eine Situation, in der er genau passt — je ein Satz reicht.</p></span></button>
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">❓</span><span class="htxt">
-<h4>3. wo(r)- üben <span class="zeit">6 Min</span></h4>
-<p>Schreib sechs Fragen mit <b>worum, worauf, wovon, womit, woran, worüber</b> — und dahinter jeweils die Antwort mit <b>da(r)-</b>.</p></span></button>
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🎧</span><span class="htxt">
-<h4>4. Hör hin <span class="zeit">5 Min</span></h4>
-<p>Hör eine deutsche Podcast-Folge und schreib mit, wie oft <b>es geht um</b> und <b>es kommt darauf an</b> vorkommen. Du wirst überrascht sein.</p></span></button>
-</div>
-<p class="hastand" data-ha-stand>0 von 0 Aufgaben geschafft.</p>
-<div class="hilfe nur-a2">
-<button type="button">💡 Beispiel ansehen (Aufgabe 3)</button>
-<div class="inhalt">
-<p>So sehen die Antworten aus:</p>
-<ul>
-<li>Es kommt darauf an, <b>ob</b> ich früher fertig werde.</li>
-<li>Es kommt darauf an, <b>wann</b> ihr losfahrt.</li>
-<li>Es kommt darauf an, <b>wie</b> lange die Sitzung dauert.</li>
-<li>Es kommt darauf an, <b>wer</b> noch mitkommt.</li>
-<li>Es kommt darauf an, <b>was</b> es kostet.</li>
-</ul>
-<p style="margin-top:.5rem;">In allen fünf Sätzen steht das Verb im zweiten Teil <b>ganz hinten</b> — genau wie nach <i>weil</i> oder <i>dass</i>.</p>
-</div>
-</div>
-<div class="hilfe nur-b1">
-<button type="button">💡 Beispiel ansehen (Aufgabe 3)</button>
-<div class="inhalt">
-<p>Frage und Antwort im Paar:</p>
-<ul>
-<li><b>Worum</b> geht es? — Es geht <b>darum</b>, dass wir zu wenig Zeit haben.</li>
-<li><b>Worauf</b> kommt es an? — Es kommt <b>darauf</b> an, ob alle mitmachen.</li>
-<li><b>Wovon</b> hängt das ab? — Das hängt <b>davon</b> ab, wie viel Geld übrig ist.</li>
-<li><b>Womit</b> fährst du gut? — Ich fahre gut <b>damit</b>, jeden Morgen zu üben.</li>
-<li>Und bei Personen: <b>Auf wen</b> wartest du? — Ich warte <b>auf ihn</b>.</li>
-</ul>
-<p style="margin-top:.5rem;">Merk dir den Tausch: In der Frage <b>wo(r)-</b>, in der Antwort <b>da(r)-</b>. Immer dieselbe Präposition, nur vorn ein anderes Stück.</p>
-</div>
-</div>
-<div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Sprachnachricht bis Sonntag in die WhatsApp-Gruppe. Ich höre jede an und antworte dir persönlich.</div>
-<div class="tip">🔜 <strong>Nächste Woche, Strang B:</strong> <u>STEHEN, LIEGEN, SITZEN — und wohin man Dinge stellt</u> — die nächste Verbfamilie, die im Alltag ständig gebraucht wird.</div>
-</section>
-
-<footer>
-<strong>deutschoderwas Sprechclub</strong> · gehen, kommen, fahren · Teil 2 · B1/B2 · Woche 2 · Dienstag war Teil 1
-</footer>
-
-</div>
-
-<script type="application/json" id="daten-sk">
-["Jemand fragt: „Kommst du am Samstag mit?“ Antworte mit <b>Es kommt darauf an</b>.","Erklär in zwei Sätzen, worum es in deiner letzten Mail <b>ging</b>.","Jemand entschuldigt sich für einen Fehler. Beruhige ihn.","Lehne einen Vorschlag ab, ohne unhöflich zu werden.","Jemand behauptet etwas Falsches über dich. Frag freundlich nach.","Erzähl von etwas, mit dem du <b>gut gefahren</b> bist.","Erzähl von etwas, bei dem du fast <b>aus der Haut gefahren</b> wärst.","Antworte dreimal verschieden auf <b>„Wie geht's?“</b> — höflich, neutral, ehrlich.","Sag, wovon deine Entscheidung <b>abhängt</b>.","Frag jemanden, wie er <b>auf die Idee gekommen</b> ist."]
-</script>
-<script type="application/json" id="daten-w90">
-[{"w":"Das geht (nicht).","b":"../amanda/amanda-super.webp","h":["möglich","die Zusage","die Bedingung","leider","in Ordnung"]},{"w":"Wie geht's?","b":"../amanda/amanda-hallo.webp","h":["danke, gut","es geht so","und dir?","ehrlich","die Begrüßung"]},{"w":"Es geht um …","b":"../vok-bild/die-meinung.webp","h":["das Thema","worum","der Punkt","die Sache","erklären"]},{"w":"Es kommt darauf an.","b":"../amanda/a-schulter.webp","h":["die Bedingung","ob","abhängen von","sich nicht festlegen","mal sehen"]},{"w":"Das kommt vor.","b":"../amanda/sz-buero.webp","h":["der Fehler","kein Problem","verzeihen","passieren","halb so wild"]},{"w":"Wie kommst du darauf?","b":"../amanda/amanda-ups.webp","h":["die Idee","die Vermutung","nachfragen","falsch verstehen","der Grund"]},{"w":"Das kommt nicht infrage.","b":"../amanda/sz-heikel.webp","h":["ablehnen","die Grenze","deutlich","auf keinen Fall","die Alternative"]},{"w":"gut ankommen","b":"../amanda/a-klatschen.webp","h":["der Vorschlag","das Team","gefallen","die Reaktion","das Lob"]},{"w":"auf die Idee kommen","b":"../amanda/amanda-schlau.webp","h":["der Einfall","plötzlich","die Lösung","überlegen","ausprobieren"]},{"w":"aus der Haut fahren","b":"../vok-bild/der-gesichtsausdruck.webp","h":["der Ärger","sich aufregen","die Geduld","ruhig bleiben","durchatmen"]}]
-</script>
-<script type="application/json" id="daten-quiz">
-[{"q":"Wie fragt man richtig nach dem Befinden?","o":["Wie geht es dir?","Wie gehst du?","Wie geht du dich?","Wie geht dir es?"],"c":0,"e":"Der Ausdruck ist unpersönlich: <b>es</b> ist Subjekt, die Person steht im <b>Dativ</b> — <i>mir, dir, ihm, uns, Ihnen</i>."},{"q":"Was bedeutet „Das kommt nicht infrage“?","o":["Das lehne ich völlig ab","Das ist eine gute Frage","Das weiß ich nicht","Darüber müssen wir reden"],"c":0,"e":"Ein sehr deutliches Nein. Gegenüber Vorgesetzten wählt man besser: <b>Das wäre für mich schwierig.</b>"},{"q":"Welches Wort passt: „Es geht ___ den Vertrag.“","o":["um","über","von","auf"],"c":0,"e":"<b>Es geht um</b> + Akkusativ. Die Frage dazu lautet <b>Worum geht es?</b> — nicht „Über was geht es?“."},{"q":"Wie heißt die Frageform zu „Es kommt darauf an“?","o":["Worauf kommt es an?","Auf was kommt es an?","Wo kommt es an?","Worum kommt es an?"],"c":0,"e":"Bei Sachen verschmelzen Frage und Präposition zu <b>wo(r)-</b>: <b>worauf</b>. Das <b>r</b> kommt, weil <i>auf</i> mit einem Vokal beginnt."},{"q":"Was sagst du zu jemandem, der sich für einen Fehler entschuldigt?","o":["Kein Problem, das kommt vor.","Das kommt nicht infrage.","Wie kommst du darauf?","Damit fahre ich gut."],"c":0,"e":"<b>Das kommt vor</b> nimmt die Sache ernst und verzeiht sie gleichzeitig. Der freundlichste der vier Sätze."},{"q":"„Dein Vorschlag ist gut angekommen.“ Was heißt das?","o":["Er hat den anderen gefallen","Er ist per Post gekommen","Er war pünktlich da","Er wurde abgelehnt"],"c":0,"e":"<b>bei jemandem gut ankommen</b> = gefallen. Nicht zu verwechseln mit <b>ankommen</b> im Sinne von „am Ziel sein“."},{"q":"Wann sagt man „darauf“ und wann „auf ihn“?","o":["darauf bei Sachen, auf ihn bei Menschen","Beides ist immer gleich","darauf nur in Fragen","auf ihn nur schriftlich"],"c":0,"e":"Die Regel ist streng: Sachen bekommen <b>da(r)-</b>, Menschen behalten die getrennte Präposition — <i>auf ihn, mit ihr, von dir</i>."},{"q":"Was bedeutet „Damit fahre ich gut“?","o":["Ich mache damit gute Erfahrungen","Ich benutze dafür das Auto","Ich fahre gern schnell","Ich habe damit ein Problem"],"c":0,"e":"<b>gut damit fahren</b> heißt: sich mit einer Methode oder Entscheidung bewährt haben. Verneint: <b>Damit bin ich schlecht gefahren.</b>"}]
-</script>
-<script type="application/json" id="daten-gap">
-[{"t":"Donnerstag um zehn? Ja, das ___.","o":["geht","kommt","fährt","gehe"],"a":"geht"},{"t":"Wie geht es ___? — Danke, gut.","o":["dir","du","dich","deiner"],"a":"dir"},{"t":"In der Mail geht es ___ den Termin.","o":["um","über","auf","von"],"a":"um"},{"t":"Es kommt ___ an, ob ich früher fertig werde.","o":["darauf","auf das","davon","darum"],"a":"darauf"},{"t":"___ geht es in dem Text?","o":["Worum","Um was","Wovon","Worauf"],"a":"Worum"},{"t":"Kein Problem, das ___ vor.","o":["kommt","geht","fährt","kommen"],"a":"kommt"},{"t":"Dein Vorschlag ist beim Team gut ___.","o":["angekommen","gekommen","ankommen","angekommt"],"a":"angekommen"},{"t":"Ich warte auf die Antwort — also warte ich ___.","o":["darauf","auf sie","dafür","daran"],"a":"darauf"}]
-</script>
-<script type="application/json" id="daten-gbau">
-[{"f":"Sag, dass etwas von einer Bedingung abhängt:","t":["Es","kommt","darauf","an,","ob","ich","Zeit","habe"],"l":["Es","kommt","darauf","an,","ob","ich","Zeit","habe"],"e":"<b>darauf</b> kündigt den Nebensatz an, <b>an</b> steht als Vorsilbe davor — und nach <b>ob</b> geht das Verb ganz nach hinten."},{"f":"Nenn das Thema:","t":["In","der","Mail","geht","es","um","den","Termin"],"l":["In","der","Mail","geht","es","um","den","Termin"],"e":"<b>es</b> steht direkt nach dem Verb, nicht am Anfang — der erste Platz ist hier schon besetzt."},{"f":"Beruhige jemanden:","t":["Kein","Problem,","so","etwas","kommt","vor"],"l":["Kein","Problem,","so","etwas","kommt","vor"],"e":"<b>vorkommen</b> ist trennbar — das <b>vor</b> steht ganz am Ende des Satzes."},{"f":"Frag nach der Quelle einer Idee:","t":["Wie","bist","du","denn","darauf","gekommen"],"l":["Wie","bist","du","denn","darauf","gekommen"],"e":"Perfekt mit <b>sein</b>, das Partizip ganz hinten. Das <b>denn</b> macht die Frage neugierig statt vorwurfsvoll."}]
-</script>
-<script type="application/json" id="daten-gstory">
-{"t":"Freitagnachmittag, kurz vor vier. Das Telefon klingelt. „Hast du kurz Zeit? Es ___ um das Projekt.“ Ich sage: „Klar, aber nur zehn Minuten — danach ___ es leider nicht mehr.“ Sie fragt, ob wir den Abgabetermin verschieben könnten. Meine Antwort: „Es kommt ___ an, wie viel noch fehlt.“ Sie überlegt und sagt, es fehle eigentlich nur noch der Schluss. „Dann ___ das“, sage ich. Sie entschuldigt sich, dass sie so spät fragt. „Kein Problem, das ___ vor.“ Am Ende will sie noch wissen, wie ich überhaupt ___ die Idee gekommen bin, den Text ganz anders aufzubauen. Ich lache: „Ich habe es einfach ausprobiert — und bin gut ___ gefahren.“ Kein einziger Schritt, und trotzdem sind wir beide ein Stück weitergekommen.","o":["geht","auf","darauf","vor","kommt","damit","um","an"],"a":[["geht"],["geht"],["darauf"],["geht"],["kommt"],["auf"],["damit"]]}
-</script>
-<script type="application/json" id="daten-ueb">
-["Das geht leider nicht.","Das wäre möglich.","Es kommt darauf an.","Das weiß ich noch nicht.","Es geht um …","Worum geht es?","Ich rufe an wegen …","Das kommt vor.","Das kann passieren.","Das ließe sich einrichten","Von meiner Seite spricht nichts dagegen","Das geht, solange …","Es kommt darauf an, ob …","Das hängt davon ab, wie …","Da müsste ich erst schauen","Worum es mir geht, ist …","Der Punkt ist …","Ich komme gleich zur Sache","Das kommt in den besten Familien vor","Halb so wild","Damit sind wir bisher gut gefahren"]
-</script>
+<section class="section" data-section="4"><h2 class="st">Frei sprechen</h2><p class="ssub">Sprich zu einem Impuls. Der Leitfaden sagt dir, worüber du reden kannst — die Lernhilfen geben dir die Sätze.</p>
+<div class="scene-wrap"><img src="../amanda/sz-sprachkurs.webp" alt="Menschen in einem Sprachkurs"></div>
+<div class="tip teal">👥 <strong>In einer kleinen 2er-Gruppe · ⏱️ ca. 10 Minuten:</strong> Sprecht zuerst zu zweit über die Fragen — erzählt euch gegenseitig davon. Danach berichtet ihr der Gruppe kurz.</div>
+<div class="tip"><strong>📋 Leitfaden — sprich über diese Punkte:</strong><ol style="margin:.5rem 0 0 1.2rem;line-height:1.9">
+<li>Wie antwortest du wirklich auf „Wie geht’s?“</li>
+<li>Was funktioniert bei dir gerade nicht (Technik, Alltag)?</li>
+<li>Wann sagst du „Es kommt darauf an“?</li>
+<li>Welche deutsche Redewendung willst du dir merken?</li>
+</ol></div>
+<div class="rmcard"><b>💬 Lernhilfen / Redemittel</b><div style="margin-top:.5rem">
+<span class="rm">Ehrlich gesagt geht es mir …</span>
+<span class="rm">Bei mir geht … gerade nicht.</span>
+<span class="rm">Das kommt darauf an, ob …</span>
+<span class="rm">Ich möchte mir merken: …</span>
+</div></div><div class="tip teal">👥 <strong>Zu zweit:</strong> Einer erzählt, der andere stellt <u>zwei</u> Nachfragen. Dann tauschen.</div></section>
+<section class="section" data-section="5"><h2 class="st">⏱️ 90-Sekunden-Challenge</h2><p class="ssub">Zieh ein Wort aus der Stunde und sprich <b>90 Sekunden</b> frei darüber. Die Hilfswörter helfen — starte den Timer!</p>
+<div class="card90"><div class="lbl">🎤 Dein Wort</div><div class="word" id="w90">Bereit?</div><div class="helpwords" id="hw90"><span class="hw">Tipp auf „Neues Wort"</span></div><div class="timer" id="t90">1:30</div><div><button class="btn" id="new90">🎲 Neues Wort</button><button class="btn ghost" id="start90">▶️ Timer starten</button></div></div>
+<div class="tip">💡 <strong>So geht's:</strong> Sag, was das Wort bedeutet, gib ein Beispiel aus deinem Leben und eine Meinung dazu. Ziel: die ganzen 90 Sekunden reden.</div></section>
+<section class="section" data-section="6"><h2 class="st">✅ Üben</h2><p class="ssub">Quiz und Lückentext — tippt die Antworten an.</p><div id="quiz"></div><h2 class="st">✍️ Lückentext</h2><p class="ssub">Wähl das passende Wort.</p><div class="gap" id="gap"></div></section>
+</div><footer><strong>deutschoderwas</strong> — Sprechclub · B1/B2 · „Das geht nicht.“ · <span class="hl">Wie geht's?</span> · Teil 2</footer>
 
 <script>
-
-/* ---- Sprungleiste: sie schaltet die Abschnitte wieder um ----
-   Eine Weile stand alles untereinander. Gemessen an der Stunde
-   „Kritik ueben": 28 512 Pixel, auf dem Handy 34 Bildschirme fuer
-   eine Unterrichtsstunde. Man scrollt und scrollt und weiss nicht,
-   wo man ist — und in der Stunde selbst kommt man nie durch.
-
-   Jetzt zeigt die Seite einen Abschnitt. Die Leiste oben waehlt aus,
-   am Ende jedes Abschnitts steht, was als Naechstes kommt. Wer die
-   ganze Stunde am Stueck sehen will (zum Vorbereiten, zum Drucken),
-   klickt auf „Alles". Beim Drucken kommt ohnehin alles mit, und ein
-   Link mit #abschnitt oeffnet genau dort. */
-(function(){
- var tabs=[].slice.call(document.querySelectorAll('nav.tabs a.tab'));
- var paare=tabs.map(function(a){return {a:a,sec:document.querySelector(a.getAttribute('href'))};})
-               .filter(function(x){return x.sec;});
- if(paare.length<2) return;
- var alles=false, jetzt=paare[0].sec.id;
-
- /* Ohne JavaScript steht die Stunde weiterhin komplett da — erst
-    hier wird ueberhaupt etwas versteckt. */
- document.body.classList.add('schaltet');
-
- var kopf=document.querySelector('.leiste');
- function hoehe(){ return kopf ? kopf.getBoundingClientRect().height+10 : 66; }
-
- /* Die aktive Marke in den schmalen Streifen holen — aber nur ihn
-    schieben. scrollIntoView() nahm die ganze Seite mit: der Titel
-    der Stunde rutschte beim Umschalten aus dem Bild. */
- function markeInsBild(a, weich){
-  var streifen=a.parentNode;
-  if(!streifen || streifen.scrollWidth<=streifen.clientWidth+2) return;
-  /* Gerechnet wird ueber die Rechtecke, nicht ueber offsetLeft: der
-     naechste positionierte Vorfahr ist die Leiste, nicht der Streifen
-     — offsetLeft haette die Marke um die Breite der Niveau-Knoepfe
-     verschoben. */
-  var r=a.getBoundingClientRect(), rs=streifen.getBoundingClientRect();
-  var links=streifen.scrollLeft+(r.left-rs.left)-(rs.width-r.width)/2;
-  links=Math.max(0,Math.min(links,streifen.scrollWidth-streifen.clientWidth));
-  if(Math.abs(links-streifen.scrollLeft)<2) return;
-  /* Beim ersten Aufbau hart setzen. Ein weiches Scrollen im Streifen
-     zog in Chrome die ganze Seite 399 Pixel mit nach unten, weil
-     html{scroll-behavior:smooth} gilt — der Titel der Stunde war
-     dann schon beim Laden aus dem Bild. */
-  if(weich && streifen.scrollTo) streifen.scrollTo({left:links,behavior:'smooth'});
-  else streifen.scrollLeft=links;
- }
-
- /* Der Umschalter erscheint nur, wo er wirklich etwas aendert.
-    Vorher stand er auf jeder Seite, tat aber in vier von sieben
-    Abschnitten gar nichts — man tippt, nichts passiert, und denkt,
-    es sei kaputt. Jetzt sagt sein Verschwinden: Hier gibt es keine
-    zwei Fassungen. */
- var umschalter=document.querySelector('.leiste .nivk');
- function umschalterZeigen(sec){
-  if(!umschalter) return;
-  var da = !!sec.querySelector('.nur-a2, .nur-b1');
-  umschalter.style.display = da ? '' : 'none';
- }
-
- function zeige(id, springen, stumm){
-  var da=paare.filter(function(p){return p.sec.id===id;})[0];
-  if(!da) return;
-  jetzt=id;
-  paare.forEach(function(p){
-   p.sec.hidden = !alles && p.sec.id!==id;
-   p.a.classList.toggle('active', p.sec.id===id);
-  });
-  if(alles) paare.forEach(function(p){ p.sec.hidden=false; });
-  umschalterZeigen(da.sec);
-  markeInsBild(da.a, !!springen);
-  if(springen){
-   var y=da.sec.getBoundingClientRect().top+window.pageYOffset-hoehe();
-   window.scrollTo({top:Math.max(0,y),behavior:'smooth'});
-  }
-  /* Die Marke kommt erst in die Adresse, wenn jemand wirklich
-     umschaltet. Steht sie schon beim Laden drin, springt Chrome
-     nachtraeglich selbst dorthin — sobald die Bilder da sind, zog es
-     die Seite 399 Pixel nach unten und der Titel der Stunde war weg. */
-  if(!stumm){ try{ history.replaceState(null,'','#'+id); }catch(e){} }
- }
- window.stundeZeige=zeige;
-
- tabs.forEach(function(a){
-  a.addEventListener('click',function(ev){
-   var id=(a.getAttribute('href')||'').replace('#','');
-   if(!id) return;
-   ev.preventDefault();
-   if(alles){ alles=false; if(knopfAlles) knopfAlles.setAttribute('aria-pressed','false'); }
-   zeige(id,true);
-  });
- });
-
- /* Am Ende jedes Abschnitts: was jetzt drankommt. In der Stunde
-    haelt das den Takt — man klickt weiter, statt zu suchen. */
- paare.forEach(function(p,i){
-  var naechste=paare[i+1], vorige=paare[i-1];
-  var z=document.createElement('div'); z.className='weiterzeile';
-  if(vorige){
-   var zur=document.createElement('button');
-   zur.type='button'; zur.className='weiterknopf zurueck';
-   zur.innerHTML='← '+vorige.a.textContent.trim();
-   zur.addEventListener('click',function(){ zeige(vorige.sec.id,true); });
-   z.appendChild(zur);
-  }
-  if(naechste){
-   var w=document.createElement('button');
-   w.type='button'; w.className='weiterknopf';
-   w.innerHTML='Weiter: '+naechste.a.textContent.trim()+' →';
-   w.addEventListener('click',function(){ zeige(naechste.sec.id,true); });
-   z.appendChild(w);
-  }
-  if(z.children.length) p.sec.appendChild(z);
- });
-
- /* Der Schalter fuer die lange Ansicht sitzt am Ende der Leiste. */
- var knopfAlles=null;
- var streifen=document.querySelector('nav.tabs');
- if(streifen){
-  knopfAlles=document.createElement('button');
-  knopfAlles.type='button'; knopfAlles.className='tab tabAlles';
-  knopfAlles.setAttribute('aria-pressed','false');
-  knopfAlles.textContent='⇕ Alles';
-  knopfAlles.title='Die ganze Stunde am Stück zeigen';
-  knopfAlles.addEventListener('click',function(){
-   alles=!alles;
-   knopfAlles.setAttribute('aria-pressed', alles?'true':'false');
-   if(alles){ paare.forEach(function(p){ p.sec.hidden=false; }); }
-   else zeige(jetzt,true);
-  });
-  streifen.appendChild(knopfAlles);
- }
-
- var ausLink=(location.hash||'').replace('#','');
- var beimLaden=paare.filter(function(p){return p.sec.id===ausLink;}).length ? ausLink : paare[0].sec.id;
- zeige(beimLaden, false, beimLaden!==ausLink);
-})();
-
-/* ---- Hoehe des klebenden Umschalters messen, damit die
-   Sprungleiste sauber darunter sitzt ---- */
-(function(){
- var leiste=document.querySelector('.niv');
- if(!leiste)return;
- function miss(){document.documentElement.style.setProperty('--leiste',Math.round(leiste.offsetHeight)+'px');}
- miss();
- window.addEventListener('resize',miss);
- if(window.ResizeObserver)new ResizeObserver(miss).observe(leiste);
- if(document.fonts&&document.fonts.ready)document.fonts.ready.then(miss);
-})();
-
-/* ---- Vorlesen ---- */
-function say(t){try{var u=new SpeechSynthesisUtterance(t);u.lang='de-DE';u.rate=.85;speechSynthesis.cancel();speechSynthesis.speak(u);}catch(e){}}
-document.querySelectorAll('.speak').forEach(function(b){if(b.dataset.say)b.onclick=function(){say(b.dataset.say);};});
-
-/* ---- Niveau-Umschalter ---- */
-var nivk=document.querySelectorAll('.nivk button[data-niv]');
-nivk.forEach(function(b){b.onclick=function(){
- var n=b.dataset.niv;document.body.setAttribute('data-niveau',n);
- nivk.forEach(function(x){x.setAttribute('aria-pressed',x.dataset.niv===n?'true':'false');});
- hazaehlen();
+document.querySelectorAll('.tab').forEach(function(b){b.onclick=function(){
+ document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('active');});
+ document.querySelectorAll('.section').forEach(function(x){x.classList.remove('active');});
+ b.classList.add('active');document.querySelector('[data-section="'+b.dataset.tab+'"]').classList.add('active');
+ var n=document.querySelector('.tabs');window.scrollTo({top:n.offsetTop-8,behavior:'instant'});
 };});
-
-/* ---- Hilfe-Knoepfe ---- */
-document.querySelectorAll('.hilfe > button').forEach(function(b){
- var kasten=b.parentElement,text=b.textContent;
- b.setAttribute('aria-expanded','false');
- b.onclick=function(){var auf=kasten.classList.toggle('offen');
-  b.setAttribute('aria-expanded',auf?'true':'false');
-  b.textContent=auf?'✕ Hilfe schließen':text;};
-});
-
-/* ---- Markierte Woerter ----
-   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
-   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
-   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
-
-   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
-   den viele verwechseln. */
-(function(){
- var woerter=[].slice.call(document.querySelectorAll('.wm'));
- if(!woerter.length) return;
- var karte=null;
-
- function zu(){ if(karte){ karte.remove(); karte=null; }
-  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
-
- function auf(w){
-  var schonOffen=w.classList.contains('offen');
-  zu();
-  if(schonOffen) return;
-  w.classList.add('offen');
-  karte=document.createElement('div');
-  karte.className='wmk';
-  var satz=w.dataset.bsp||'';
-  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
-   + '<b>'+w.dataset.wort+'</b>'
-   + '<span>'+(w.dataset.kurz||'')+'</span>'
-   + (satz?'<em>'+satz+'</em>':'')
-   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
-  document.body.appendChild(karte);
-
-  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
-  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
-  var links=r.left+r.width/2-b.width/2;
-  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
-  var oben=r.bottom+window.pageYOffset+9;
-  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
-   oben=r.top+window.pageYOffset-b.height-9;
-  karte.style.left=links+'px'; karte.style.top=oben+'px';
-
-  karte.querySelector('.wmk-zu').onclick=zu;
-  var ton=karte.querySelector('.wmk-ton');
-  if(ton) ton.onclick=function(){ say(satz); };
- }
-
- woerter.forEach(function(w){
-  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
-  w.addEventListener('keydown',function(ev){
-   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
- });
- document.addEventListener('click',zu);
- document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
- window.addEventListener('resize',zu);
- /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
-    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
- document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
-  k.addEventListener('click',zu); });
-})();
-
-/* ---- Bildkarten verdecken ----
-   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
-   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
-   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
-   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
-   Ein einziges fehlendes Element legte die halbe Stunde still. */
-var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-if(bg&&vb){
- vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
-  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
- bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
-}
-
-/* ---- Dialoge: Runde 1 / Runde 2 ---- */
-document.querySelectorAll('.dwrap').forEach(function(d){
- var b=d.querySelector('.rbtn');
- b.onclick=function(){
-  var zwei=d.dataset.runde==='1';
-  d.dataset.runde=zwei?'2':'1';
-  b.textContent=zwei?'◀︎ Runde 1 · Text zeigen':'▶︎ Runde 2 · du antwortest';
-  b.classList.toggle('zwei',zwei);
-  d.querySelectorAll('.dline.b').forEach(function(l){l.classList.remove('zeigen');});
- };
- d.querySelectorAll('.dcue').forEach(function(c){
-  c.onclick=function(){c.closest('.dline').classList.add('zeigen');};});
-});
-
-/* ---- Hausaufgabe abhaken ---- */
-var hastand=document.querySelector('[data-ha-stand]');
-function hazaehlen(){
- if(!hastand)return;
- /* Nach dem Niveau zaehlen, nicht nach offsetParent: beim Laden ist der
-    Hausaufgaben-Abschnitt noch zugeklappt und haette 0 von 0 ergeben. */
- var niv=document.body.getAttribute('data-niveau');
- var weg=niv==='a2'?'.nur-b1':'.nur-a2';
- var da=[].slice.call(document.querySelectorAll('[data-ha]')).filter(function(h){return !h.closest(weg);});
- var fertig=da.filter(function(h){return h.classList.contains('fertig');}).length;
- var voll=da.length>0&&fertig===da.length;
- hastand.textContent=voll?('Alle '+da.length+' Aufgaben geschafft. Stark — bis Mittwoch! 🎉')
-                        :(fertig+' von '+da.length+' Aufgaben geschafft.');
- hastand.classList.toggle('voll',voll);
-}
-document.querySelectorAll('[data-ha]').forEach(function(h){
- h.setAttribute('aria-pressed','false');
- h.onclick=function(){var an=h.classList.toggle('fertig');
-  h.setAttribute('aria-pressed',an?'true':'false');hazaehlen();};
-});
-hazaehlen();
-
-/* ---- Daten aus den JSON-Bloecken im Koerper ----
-   Der Motor ist fuer alle Stunden derselbe; nur die Daten wechseln.
-   Fehlt ein Block, bleibt der Abschnitt einfach leer. */
-function daten(id){
- var el=document.getElementById('daten-'+id);
- if(!el)return null;
- try{return JSON.parse(el.textContent);}catch(e){console.error('Daten "'+id+'" sind kaputt:',e);return null;}
-}
-/* ---- Mischen (Fisher-Yates) ----
-   Ein Vergleich mit Math.random() mischt nicht gleichmaessig, die
-   erste Stelle bleibt zu oft die erste. Deshalb richtig tauschen. */
-function misch(liste){
- var a=liste.slice();
- for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}
- return a;
-}
-
-/* ---- Sprechkarten ---- */
-/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
-   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
-var UEB=daten('ueb')||[];
-if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
-  var uLetzt=-1;
-  document.getElementById('uebnew').onclick=function(){var i;
-    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
-    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
-  };
-}
-
-var SK=daten('sk')||[];
-/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
-   Gepruefte Elemente statt gepruefter Daten. */
-if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
-var lastsk=-1;
-document.getElementById('sknew').onclick=function(){var i;
- do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
- document.getElementById('wsk').innerHTML=SK[i];};
-
-}
-
-/* ---- 90 Sekunden ---- */
-var W90=daten('w90')||[];
-if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
-var last90=-1,t90=null,rest=90;
-function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
-function zeige90(i){
+function say(t){try{var u=new SpeechSynthesisUtterance(t);u.lang='de-DE';u.rate=.9;speechSynthesis.cancel();speechSynthesis.speak(u);}catch(e){}}
+document.querySelectorAll('.speak').forEach(function(b){b.onclick=function(){say(b.dataset.say);};});
+var W90=[{"w": "Es kommt darauf an", "h": ["die Antwort", "abhängen", "vielleicht", "die Situation", "wann", "ob"]}, {"w": "Das geht nicht", "h": ["unmöglich", "keine Zeit", "leider", "die Regel", "schade", "anders"]}, {"w": "Wie geht’s?", "h": ["das Befinden", "danke", "gut", "der Stress", "und dir", "antworten"]}, {"w": "es geht um", "h": ["das Thema", "der Film", "wichtig", "erklären", "worum", "handeln"]}, {"w": "zurechtkommen", "h": ["schaffen", "die Technik", "allein", "die Hilfe", "klarkommen", "der Alltag"]}, {"w": "das kommt vor", "h": ["manchmal", "der Fehler", "normal", "passieren", "kein Problem", "selten"]}];var last90=-1,t90=null,rest=90;
+function fmt(s){var m=Math.floor(s/60),r=s%60;return m+":"+(r<10?"0":"")+r;}
+document.getElementById('new90').onclick=function(){var i;do{i=Math.floor(Math.random()*W90.length);}while(i===last90&&W90.length>1);last90=i;
  document.getElementById('w90').textContent=W90[i].w;
- document.getElementById('i90').src=W90[i].b;
- document.getElementById('i90').alt=W90[i].w;
  document.getElementById('hw90').innerHTML=W90[i].h.map(function(x){return '<span class="hw">'+x+'</span>';}).join('');
-}
-document.getElementById('new90').onclick=function(){var i;
- do{i=Math.floor(Math.random()*W90.length);}while(i===last90&&W90.length>1);last90=i;
- zeige90(i);clearInterval(t90);rest=90;document.getElementById('t90').textContent=fmt(rest);};
-document.getElementById('start90').onclick=function(){clearInterval(t90);rest=90;
- var el=document.getElementById('t90');el.textContent=fmt(rest);
- t90=setInterval(function(){rest--;el.textContent=fmt(rest);
-  if(rest<=0){clearInterval(t90);el.textContent='✅ Fertig!';}},1000);};
-zeige90(0);last90=0;
-
-}
-
-/* ---- Quiz ---- */
-var QUIZ=daten('quiz')||[];
-var qc=document.getElementById('quiz');
-if(qc&&QUIZ.length){
-QUIZ.forEach(function(item){
- var d=document.createElement('div');d.className='quiz-q';
- d.innerHTML='<div class="qt">'+item.q+'</div>';
+ clearInterval(t90);rest=90;document.getElementById('t90').textContent=fmt(rest);};
+document.getElementById('start90').onclick=function(){clearInterval(t90);rest=90;var el=document.getElementById('t90');el.textContent=fmt(rest);
+ t90=setInterval(function(){rest--;el.textContent=fmt(rest);if(rest<=0){clearInterval(t90);el.textContent="✅ Fertig!";}},1000);};
+var QUIZ=[{"q": "„Wie geht’s?“ — „Danke, ___.“", "o": ["es geht", "es fährt", "es kommt"], "c": 0, "e": "„Es geht“ = mittelgut."}, {"q": "Freitag? Nein, tut mir leid, ___ leider nicht.", "o": ["das geht", "das kommt", "das fährt"], "c": 0, "e": "„Das geht nicht“ = nicht möglich."}, {"q": "„Kommst du mit?“ — „___.“", "o": ["Es kommt darauf an", "Es geht zu Fuß", "Ich fahre ab"], "c": 0, "e": "Antwort hängt von etwas ab."}, {"q": "In dem Film ___ eine Reise.", "o": ["geht es um", "fährt", "steigt um"], "c": 0, "e": "„Es geht um“ = das Thema ist …"}, {"q": "Fehler passieren — ___.", "o": ["das kommt vor", "das geht weg", "das fährt ab"], "c": 0, "e": "„Das kommt vor“ = passiert manchmal."}];var qc=document.getElementById('quiz');
+QUIZ.forEach(function(item){var d=document.createElement('div');d.className='quiz-q';d.innerHTML='<div class="qt">'+item.q+'</div>';
  var op=document.createElement('div');op.className='quiz-opts';
- /* Gemischt, sonst stuende die richtige Antwort immer an erster Stelle
-    und man koennte die ganze Runde raten, ohne zu lesen. */
- var wahl=misch(item.o.map(function(t,i){return {t:t,richtig:i===item.c};}));
- wahl.forEach(function(w){
-  var b=document.createElement('button');b.className='qopt';b.textContent=w.t;
-  b.onclick=function(){
-   if(d.dataset.done)return;d.dataset.done=1;
-   if(w.richtig){b.classList.add('right');}
-   else{
-    b.classList.add('wrong');
-    op.children[wahl.findIndex(function(x){return x.richtig;})].classList.add('right');
-   }
-   d.querySelector('.qexp').classList.add('show');};
+ item.o.forEach(function(t,i){var b=document.createElement('button');b.className='qopt';b.textContent=t;
+  b.onclick=function(){if(d.dataset.done)return;d.dataset.done=1;if(i===item.c){b.classList.add('right');}else{b.classList.add('wrong');op.children[item.c].classList.add('right');}d.querySelector('.qexp').classList.add('show');};
   op.appendChild(b);});
- d.appendChild(op);
- var e=document.createElement('div');e.className='qexp';e.innerHTML='💡 '+item.e;d.appendChild(e);
- qc.appendChild(d);
-});
-
-}
-
-/* ---- Lueckentext ---- */
-var GAP=daten('gap')||[];
-var g=document.getElementById('gap');
-if(g&&GAP.length){
-GAP.forEach(function(item){
- var row=document.createElement('div');row.style.margin='.35rem 0';
- var sel=document.createElement('select');
- var leer=document.createElement('option');leer.textContent='– wählen –';leer.value='';sel.appendChild(leer);
- misch(item.o).forEach(function(o){
-  var op=document.createElement('option');op.textContent=o;op.value=o;sel.appendChild(op);});
- sel.onchange=function(){sel.className=sel.value===item.a?'ok':'no';};
- var teile=item.t.split('___');
- row.appendChild(document.createTextNode(teile[0]));row.appendChild(sel);
- row.appendChild(document.createTextNode(teile[1]||''));
- g.appendChild(row);
-});
-
-}
-
-/* ---- Satzbauer ---- */
-var GBAU=daten('gbau')||[];
-var gbc=document.getElementById('gbau');
-if(gbc&&GBAU.length){
-{GBAU.forEach(function(item){
- var d=document.createElement('div');d.className='gbau';
- d.innerHTML='<div class="gfrage">🧱 '+item.f+'</div>';
- var teile=document.createElement('div');teile.className='gteile';
- var zeile=document.createElement('div');zeile.className='gzeile';
- var gebaut=[];
- misch(item.t).forEach(function(w){
-  var b=document.createElement('button');b.className='gteil';b.textContent=w;
-  b.onclick=function(){b.classList.add('weg');gebaut.push(w);zeile.classList.remove('ok','no');
-   var s=document.createElement('span');s.textContent=w;zeile.appendChild(s);};
-  teile.appendChild(b);});
- d.appendChild(teile);d.appendChild(zeile);
- var fuss=document.createElement('div');fuss.className='gfuss';
- var pr=document.createElement('button');pr.className='gmini';pr.textContent='✅ prüfen';
- var nm=document.createElement('button');nm.className='gmini hell';nm.textContent='↻ nochmal';
- var tp=document.createElement('div');tp.className='gtipp';tp.innerHTML='💡 '+item.e;
- pr.onclick=function(){var richtig=gebaut.join(' ')===item.l.join(' ');
-  zeile.classList.remove('ok','no');zeile.classList.add(richtig?'ok':'no');tp.classList.add('show');};
- nm.onclick=function(){gebaut=[];zeile.innerHTML='';zeile.classList.remove('ok','no');tp.classList.remove('show');
-  teile.querySelectorAll('.gteil').forEach(function(b){b.classList.remove('weg');});};
- fuss.appendChild(pr);fuss.appendChild(nm);d.appendChild(fuss);d.appendChild(tp);
- gbc.appendChild(d);
-});}
-
-}
-
-/* ---- Lueckengeschichte ---- */
-var GSTORY=daten('gstory');
-var gsc=document.getElementById('gstory');
-if(gsc&&GSTORY){
-{
- var gsWahl=misch(GSTORY.o);   /* einmal mischen, alle Luecken zeigen dieselbe Reihenfolge */
- var st=GSTORY.t.split('___');
- st.forEach(function(txt,i){
-  gsc.appendChild(document.createTextNode(txt));
-  if(i<GSTORY.a.length){
-   var sel=document.createElement('select');
-   var leer=document.createElement('option');leer.textContent='– ? –';leer.value='';sel.appendChild(leer);
-   gsWahl.forEach(function(o){var op=document.createElement('option');op.textContent=o;op.value=o;sel.appendChild(op);});
-   (function(loesung){sel.onchange=function(){sel.className=loesung.indexOf(sel.value)>=0?'ok':'no';};})(GSTORY.a[i]);
-   gsc.appendChild(sel);
-  }
- });
-}
-
-}
-
-</script>
-<!-- Die Seite meldet sich beim Konto: wer ist da, ist die Mitgliedschaft
-     aktiv, und wie weit wurde gelesen. Ohne diese Zeile ist die Stunde
-     frei im Netz erreichbar und niemand sieht, dass sie benutzt wurde. -->
-<script src="../lektion-konto.js?v=1"></script>
-</body>
-</html>
+ d.appendChild(op);var e=document.createElement('div');e.className='qexp';e.innerHTML='💡 '+item.e;d.appendChild(e);qc.appendChild(d);});
+var GAP=[{"t": "„Passt Samstag?“ — „___, ich muss auf den Kalender schauen.“", "o": ["Es kommt darauf an", "Es fährt ab", "Es geht zu Fuß"], "a": "Es kommt darauf an"}, {"t": "Mein Handy ist kaputt, es ___ nicht mehr.", "o": ["geht", "fährt", "kommt"], "a": "geht"}, {"t": "Worum ___ es in der E-Mail?", "o": ["geht", "fährt", "steigt"], "a": "geht"}, {"t": "Keine Sorge, so etwas ___ vor.", "o": ["kommt", "geht", "fährt"], "a": "kommt"}, {"t": "Kommst du mit dem neuen System gut ___?", "o": ["zurecht", "vorbei", "an"], "a": "zurecht"}];var g=document.getElementById('gap');
+GAP.forEach(function(item){var span=document.createElement('div');span.style.margin='.3rem 0';
+ var sel=document.createElement('select');var opt0=document.createElement('option');opt0.textContent='— wählen —';opt0.value='';sel.appendChild(opt0);
+ item.o.slice().sort().forEach(function(o){var op=document.createElement('option');op.textContent=o;op.value=o;sel.appendChild(op);});
+ sel.onchange=function(){if(sel.value===item.a){sel.className='ok';}else if(sel.value===''){sel.className='';}else{sel.className='no';}};
+ span.innerHTML=item.t.replace('___','<b id="slot"></b>');span.querySelector('#slot').replaceWith(sel);g.appendChild(span);});
+</script></body></html>

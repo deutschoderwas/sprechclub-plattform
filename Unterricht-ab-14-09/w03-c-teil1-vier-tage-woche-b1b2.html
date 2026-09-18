@@ -1,1366 +1,244 @@
 <!DOCTYPE html><html lang="de"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Vier-Tage-Woche — für alle? · Sprechclub B1/B2 | deutschoderwas</title>
-<!--
-  deutschoderwas · Sprechclub · Mo 28.9. 17:30 und 19:30 · Strang C · Teil 1 · ab B1
-  Vier-Tage-Woche — für alle? — Vier Tage arbeiten, fünf Tage bezahlt bekommen — das klingt für die einen nach Zukunft und für die anderen nach Rechenfehler. Heute sammeln wir die Wörter, die Zahlen und die Argumente.
-  Erzeugt von bau/mach-stunde.js aus w03-c1-vier-tage.json. Nicht von Hand aendern.
-  Aufbau und Design wie maengel-melden-b1.html.
--->
+<title>Vier-Tage-Woche — <span class="hl">für alle?</span> · Teil 1 · Sprechclub B1/B2 | deutschoderwas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ============================================================
-   stunde-club.css — die Stunde im Aussehen von
-   deutschoderwas-club.de
-
-   Vorher trugen die Stunden einen eigenen Look: Fraunces als
-   Serifenschrift, cremefarbener Verlauf, schwarze Rahmen mit
-   harten versetzten Schatten. Fuer sich schoen — aber daneben
-   sah die Website aus wie eine andere Marke.
-
-   Die Werte hier stammen eins zu eins aus index.html, der
-   Startseite des Clubs: dieselben Farben, dieselben Schriften,
-   dieselbe Fahnenleiste oben, derselbe goldene Marker.
-
-     Inter          Fliesstext
-     Space Grotesk  Ueberschriften, Zahlen, Knoepfe
-     #14181B        Text
-     #D42A21        Signalfarbe (Augenbraue, wichtige Marken)
-     #FFCE00        Gold (Marker, Hinweise)
-     #1B9BC0        Tuerkis (Knoepfe, aktive Marke)
-     #F6F9FA        warmes Papier fuer Kaesten
-     #E7ECEE        Linien
-
-   Was hier nicht mehr steht, gibt es auf der Seite auch nicht
-   mehr: Wortschatzkarten, Grammatiktafeln, Quiz und Lueckentext
-   sind aus der Stunde raus. Die Stunde ist zum Sprechen da.
-   ============================================================ */
-
-:root{
-  --ink:#14181B; --soft:#5A6B72; --line:#E7ECEE;
-  --turq:#1B9BC0; --turq-d:#15788F; --teal-ink:#10627A; --mint:#EFFBF8;
-  --red:#D42A21; --red-d:#B30000;
-  --gold:#FFCE00; --gold-mark:#FFD84D; --gold-d:#E0A500;
-  --bg:#FFFFFF; --warm:#F6F9FA; --pink:#FFF1EE;
-  --schatten:0 1px 2px rgba(22,22,22,.04), 0 10px 28px rgba(22,22,22,.05);
-  --schatten-k:0 1px 2px rgba(22,22,22,.05);
-  /* Fuer Bausteine, die noch die alten Namen benutzen. */
-  --cream:#FFFFFF; --cream-warm:#F6F9FA; --paper:#FFFFFF;
-  --ink-soft:#5A6B72; --ink-mute:#8C93A0; --sand:#E7ECEE;
-  --teal:#1B9BC0; --teal-soft:#EFFBF8;
-  --yellow:#FFCE00; --yellow-soft:#F6F9FA;
-  --red-soft:#FFF1EE; --green:#4E9E12;
-}
-*{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;}
-html,body{max-width:100%;overflow-x:clip;}
-img{height:auto;max-width:100%;}
-body{
-  font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);
-  line-height:1.6;-webkit-font-smoothing:antialiased;
-}
-h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;font-weight:700;letter-spacing:-.02em;line-height:1.12;}
-
-/* Die Fahnenleiste vom Club, ganz oben. */
-.flagbar{
-  height:5px;
-  background:linear-gradient(90deg,#14181B 0 25%,var(--red) 25% 50%,var(--gold) 50% 75%,var(--turq) 75% 100%);
-}
-
-.wrapper{max-width:900px;margin:0 auto;padding:2rem 1.25rem 5rem;}
-
-/* ---------- Kopf ---------- */
-.eyebrow{
-  text-align:center;font-size:.72rem;font-weight:700;letter-spacing:.16em;
-  text-transform:uppercase;color:var(--red);margin-bottom:.65rem;
-}
-h1.title{font-size:clamp(1.9rem,4.6vw,3rem);text-align:center;}
-h1.title .hl{
-  background:var(--gold-mark);border-radius:7px;padding:.02em .26em;font-style:italic;
-  -webkit-box-decoration-break:clone;box-decoration-break:clone;
-}
-.subtitle{
-  text-align:center;max-width:38rem;margin:.85rem auto 0;
-  font-size:1.02rem;color:var(--soft);
-}
-.niv-wie{text-align:center;max-width:34rem;margin:.75rem auto 0;font-size:.85rem;color:var(--soft);}
-
-/* ---------- Leiste: Niveau und Sprungmarken ---------- */
-.leiste{
-  position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:.5rem;
-  width:100%;margin:1.1rem 0 1.6rem;padding:.4rem .5rem;
-  background:rgba(255,255,255,.94);backdrop-filter:blur(10px);
-  border:1px solid var(--line);border-radius:14px;box-shadow:var(--schatten-k);
-}
-.nivk{display:flex;gap:.2rem;flex:none;background:#F4F2ED;border-radius:999px;padding:3px;}
-.nivk button{
-  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;
-  border:none;border-radius:999px;padding:.32rem .8rem;background:transparent;color:var(--soft);
-  transition:.15s;white-space:nowrap;
-}
-.nivk button[aria-pressed="true"]{background:var(--ink);color:#fff;}
-.nivk button:focus-visible{outline:3px solid var(--turq-d);outline-offset:2px;}
-.tabs{
-  display:flex;flex-wrap:nowrap;gap:.3rem;overflow-x:auto;overscroll-behavior-x:contain;
-  flex:1 1 auto;min-width:0;margin:0;padding:.1rem 0;
-  scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;
-}
-.tabs::-webkit-scrollbar{display:none;}
-.tab{
-  flex:none;white-space:nowrap;font-family:'Space Grotesk',sans-serif;
-  font-size:.84rem;font-weight:600;color:var(--ink);background:#fff;
-  border:1px solid var(--line);border-radius:999px;padding:.4rem .8rem;cursor:pointer;
-  display:inline-flex;gap:.3rem;align-items:center;transition:.15s;
-}
-.tab:hover{border-color:var(--turq-d);color:var(--teal-ink);}
-.tab.active{background:var(--turq-d);border-color:var(--turq-d);color:#fff;}
-.tabAlles{border-style:dashed;color:var(--soft);}
-.tabAlles[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff;border-style:solid;}
-
-/* ---------- Abschnitte ---------- */
-/* Der Wechsel soll nicht springen. Eine halbe Sekunde, weich
-   auslaufend, und der Inhalt kommt ein kleines Stueck von unten —
-   gerade genug, dass das Auge mitgeht, ohne dass man wartet. */
-.section{animation:auf .5s cubic-bezier(.22,.8,.3,1);}
-body.schaltet .section[hidden]{display:none !important;}
-@keyframes auf{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
-.leiste .nivk,.tab,.weiterknopf,.btn,.hilf summary{transition:background .25s ease,color .25s ease,border-color .25s ease;}
-.hilf-i{animation:auf .35s cubic-bezier(.22,.8,.3,1);}
-@media(prefers-reduced-motion:reduce){
-  .section,.hilf-i{animation:none;}
-  html{scroll-behavior:auto;}
-}
-section.section{scroll-margin-top:calc(var(--leiste,58px) + 1rem);}
-/* Ein kurzer Abschnitt wie der Abschluss ist niedriger als das
-   Fenster. Dann kann die Seite gar nicht weit genug scrollen, und
-   der Titel der Stunde bleibt oben stehen — es sah aus, als waere
-   man versehentlich am Anfang gelandet. Mit dieser Mindesthoehe
-   landet jeder Abschnitt gleich weit oben. */
-body.schaltet section.section{min-height:calc(100vh - 9rem);}
-body.schaltet section.section:last-of-type{min-height:0;}
-h2.st{font-size:clamp(1.4rem,3vw,1.9rem);margin:.4rem 0 .35rem;}
-h2.st .hl{
-  background:var(--gold-mark);border-radius:7px;padding:.02em .24em;font-style:italic;
-  -webkit-box-decoration-break:clone;box-decoration-break:clone;
-}
-.ssub{color:var(--soft);margin-bottom:1.1rem;font-size:.97rem;max-width:44rem;}
-
-/* Zeit und Aufstellung, direkt unter der Ueberschrift. */
-.regie{
-  display:inline-flex;align-items:center;gap:.55rem;flex-wrap:wrap;
-  background:var(--warm);border:1px solid #E7ECEE;border-radius:999px;
-  padding:.3rem .85rem;margin:0 0 1.1rem;font-size:.82rem;
-}
-.regie span{font-weight:800;font-variant-numeric:tabular-nums;font-family:'Space Grotesk',sans-serif;}
-.regie b{font-weight:500;color:var(--soft);}
-
-/* ---------- Ablauftafel ---------- */
-.takt{display:flex;flex-direction:column;gap:.4rem;margin:1rem 0;}
-.takt-z{
-  display:grid;grid-template-columns:auto auto 1fr;gap:.15rem .75rem;align-items:start;
-  background:#fff;border:1px solid var(--line);border-radius:12px;padding:.7rem .85rem;
-}
-.takt-m{
-  grid-row:span 2;align-self:center;min-width:3.4rem;text-align:center;
-  background:var(--ink);color:#fff;border-radius:8px;padding:.28rem .4rem;
-  font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.8rem;font-variant-numeric:tabular-nums;
-}
-.takt-z2{grid-row:span 2;align-self:center;font-size:1.2rem;line-height:1;}
-.takt-t b{display:block;font-family:'Space Grotesk',sans-serif;font-size:1rem;}
-.takt-t span{display:block;font-size:.9rem;line-height:1.45;color:var(--soft);margin-top:.05rem;}
-.takt-t em{display:block;font-style:normal;font-size:.78rem;font-weight:700;color:var(--teal-ink);margin-top:.2rem;}
-
-/* ---------- Ankommen und Abschluss ---------- */
-.ank{
-  background:var(--warm);border:1px solid #E7ECEE;border-radius:14px;padding:1rem 1.15rem;
-  font-family:'Space Grotesk',sans-serif;font-size:1.16rem;line-height:1.4;font-weight:600;
-}
-.ank.zweit{
-  margin-top:.7rem;background:#fff;border:1px dashed var(--line);
-  font-family:'Inter',sans-serif;font-size:.97rem;font-weight:500;
-}
-.ank.zweit span{
-  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
-  color:var(--soft);margin-bottom:.25rem;
-}
-
-/* ---------- Tippkasten ---------- */
-.tip{
-  background:var(--warm);border:1px solid #E7ECEE;border-left:4px solid var(--gold);
-  border-radius:12px;padding:.8rem 1rem;margin:1.1rem 0 0;font-size:.94rem;line-height:1.6;
-}
-.tip.teal{background:var(--mint);border-color:#CDEEF3;border-left-color:var(--turq-d);}
-
-/* Die Anweisung als kurze Schritte statt als Absatz. */
-.schritte{list-style:none;display:flex;flex-direction:column;gap:.35rem;margin:0 0 1.1rem;padding:0;}
-.schritte li{
-  display:grid;grid-template-columns:auto 1fr;gap:.55rem;align-items:start;
-  font-size:.94rem;line-height:1.5;color:var(--soft);
-}
-.schritte li span{
-  flex:none;width:20px;height:20px;border-radius:50%;margin-top:.12rem;
-  background:#F1EFEA;color:var(--ink);display:grid;place-items:center;
-  font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:700;
-}
-.schritte li.regel{color:var(--ink);}
-.schritte li.regel span{background:var(--gold);color:var(--ink);}
-
-/* ---------- Dialog ---------- */
-.dwrap{
-  background:#fff;border:1px solid var(--line);border-radius:16px;
-  padding:1rem 1.05rem 1.1rem;margin:0 0 1rem;box-shadow:var(--schatten-k);
-}
-.dhead{display:flex;align-items:center;gap:.65rem;flex-wrap:wrap;margin-bottom:.55rem;}
-.dhead img{width:44px;height:44px;object-fit:cover;border-radius:50%;flex:none;}
-.dhead h4{font-size:1.02rem;flex:1 1 12rem;}
-.rbtn{
-  font-family:'Space Grotesk',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer;
-  border:1px solid var(--turq-d);background:var(--mint);color:var(--teal-ink);
-  border-radius:999px;padding:.32rem .75rem;
-}
-.rbtn:hover{background:var(--turq-d);color:#fff;}
-.dsit{font-size:.9rem;color:var(--soft);margin-bottom:.75rem;}
-.dline{display:grid;grid-template-columns:auto 1fr;gap:.5rem;margin:.4rem 0;align-items:start;}
-.dwho{
-  width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
-  font-family:'Space Grotesk',sans-serif;font-size:.75rem;font-weight:700;color:#fff;flex:none;
-}
-.dwho.a{background:var(--red);}
-.dwho.b{background:var(--turq-d);}
-.dtxt{
-  background:var(--mint);border-radius:4px 14px 14px 14px;padding:.55rem .8rem;
-  font-size:.97rem;line-height:1.55;
-}
-.dline.b{grid-template-columns:1fr auto;}
-.dline.b .dwho{order:2;}
-.dline.b .dtxt{order:1;background:var(--warm);border-radius:14px 4px 14px 14px;}
-.dcue{
-  grid-column:1 / -1;margin:.2rem 0 .3rem;font-size:.85rem;color:var(--soft);
-  background:#fff;border:1px dashed var(--line);border-radius:10px;padding:.4rem .65rem;cursor:pointer;
-}
-.dcue .kl{display:block;font-size:.7rem;color:var(--ink-mute);margin-top:.15rem;}
-.dline .dcue{display:none;}
-.dwrap[data-runde="2"] .dline.b .dtxt{visibility:hidden;}
-.dwrap[data-runde="2"] .dline.b .dcue{display:block;}
-.dline.zeigen .dtxt{visibility:visible !important;}
-img.dbild{max-width:160px;border-radius:10px;margin-top:.4rem;}
-.dbtn{margin-top:.7rem;}
-
-/* ---------- Sprechen-Knopf ---------- */
-.speak{
-  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;
-  border:1px solid var(--line);background:#fff;color:var(--ink);
-  border-radius:999px;padding:.35rem .8rem;
-}
-.speak:hover{border-color:var(--ink);}
-
-/* ---------- 90 Sekunden ---------- */
-.card90{
-  background:#fff;border:1px solid var(--line);border-radius:18px;
-  padding:1.1rem 1.15rem 1.2rem;text-align:center;box-shadow:var(--schatten);
-}
-/* Das Bild in den 90 Sekunden ist das einzige grosse auf der Seite.
-   Weiche Ecken, ein heller Rand statt einer harten Kante, und es
-   blendet mit dem Wort zusammen ein — kein Springen beim Wechsel. */
-.card90 img{
-  width:100%;max-width:230px;border-radius:14px;margin:0 auto .8rem;display:block;
-  border:1px solid var(--line);animation:auf .45s cubic-bezier(.22,.8,.3,1);
-}
-.card90 .lbl{
-  font-size:.7rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase;
-  color:var(--red);margin-bottom:.3rem;
-}
-.card90 .word{font-family:'Space Grotesk',sans-serif;font-size:1.7rem;font-weight:700;line-height:1.2;}
-.helpwords{display:flex;flex-wrap:wrap;gap:.35rem;justify-content:center;margin:.75rem 0 .9rem;}
-.hw{
-  background:var(--warm);border:1px solid #E7ECEE;border-radius:999px;
-  padding:.28rem .7rem;font-size:.85rem;font-weight:500;
-}
-.timer{
-  font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:700;
-  font-variant-numeric:tabular-nums;color:var(--teal-ink);
-}
-.zeit{display:block;}
-.btn{
-  font-family:'Space Grotesk',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;
-  border:1px solid var(--turq-d);background:var(--turq-d);color:#fff;
-  border-radius:999px;padding:.5rem 1.1rem;margin:.25rem .2rem 0;
-}
-.btn.ghost{background:#fff;color:var(--teal-ink);}
-.btn:hover{background:#10627A;border-color:#10627A;color:#fff;}
-
-/* ---------- Rollenspiel und Sprechkarten ---------- */
-.rmcard{
-  background:#fff;border:1px solid var(--line);border-radius:14px;
-  padding:.9rem 1rem;margin:0 0 .8rem;
-}
-.rmcard>b{display:block;font-family:'Space Grotesk',sans-serif;font-size:1rem;margin-bottom:.35rem;}
-.rm{
-  display:inline-block;background:var(--mint);border:1px solid #CDEEF3;color:var(--teal-ink);
-  border-radius:999px;padding:.25rem .65rem;margin:.15rem .2rem .15rem 0;font-size:.87rem;font-weight:500;
-}
-.bsp{
-  background:var(--warm);border-left:4px solid var(--gold);border-radius:0 10px 10px 0;
-  padding:.55rem .8rem;margin:.6rem 0 0;font-size:.95rem;line-height:1.55;
-}
-.bsp .wer{
-  display:block;font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--soft);margin-bottom:.15rem;
-}
-
-/* ---------- Rollenspiel: wer bin ich, was will ich ----------
-   Die Lage stand vorher als ein grauer Satz da. Zwei Leute, die
-   gleich sprechen sollen, mussten daraus selbst herauslesen, wer sie
-   sind. Jetzt stehen die Rollen nebeneinander, in denselben Farben
-   wie im Dialog: A rot, B tuerkis. */
-.rsp{
-  background:#fff;border:1px solid var(--line);border-radius:16px;
-  padding:.9rem 1rem 1rem;margin:0 0 .9rem;box-shadow:var(--schatten-k);
-}
-.rsp-kopf{display:flex;align-items:center;gap:.6rem;margin-bottom:.7rem;}
-.rsp-nr{
-  flex:none;width:26px;height:26px;border-radius:8px;background:var(--ink);color:#fff;
-  display:grid;place-items:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.85rem;
-}
-.rsp-kopf b{font-family:'Space Grotesk',sans-serif;font-size:1.02rem;line-height:1.25;}
-.rsp-rollen{display:grid;gap:.5rem;margin:0 0 .75rem;}
-@media(min-width:560px){ .rsp-rollen{grid-template-columns:1fr 1fr;} }
-.rsp-r{
-  display:grid;grid-template-columns:auto 1fr;gap:.5rem;align-items:start;
-  border-radius:12px;padding:.6rem .75rem;
-}
-.rsp-r span{
-  width:24px;height:24px;border-radius:50%;display:grid;place-items:center;color:#fff;
-  font-family:'Space Grotesk',sans-serif;font-size:.75rem;font-weight:700;
-}
-.rsp-r p{font-size:.93rem;line-height:1.5;}
-.rsp-r.a{background:var(--pink);}
-.rsp-r.a span{background:var(--red);}
-.rsp-r.b{background:var(--mint);}
-.rsp-r.b span{background:var(--turq-d);}
-.rsp-lage{background:#F7F6F3;border-radius:12px;padding:.6rem .8rem;margin:0 0 .75rem;font-size:.93rem;line-height:1.5;}
-.rsp-lage span{
-  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
-  color:var(--soft);margin-bottom:.2rem;
-}
-.rsp-saetze{margin:0 0 .7rem;}
-.rsp-lbl{
-  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
-  color:var(--soft);margin-bottom:.35rem;
-}
-.rsp-ziel{
-  background:var(--warm);border-left:4px solid var(--gold);border-radius:0 10px 10px 0;
-  padding:.55rem .8rem;font-size:.92rem;line-height:1.5;
-}
-.rsp-ziel span{
-  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
-  color:var(--soft);margin-bottom:.15rem;
-}
-
-/* ---------- Anfangshilfe ----------
-   Zugeklappt eine Zeile, aufgeklappt drei Satzanfaenge. Wer sie
-   nicht braucht, sieht fast nichts. */
-.hilf{margin:.8rem 0 0;}
-.hilf summary{
-  cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:.35rem;
-  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;color:var(--teal-ink);
-  background:var(--mint);border:1px solid #CDEEF3;border-radius:999px;padding:.32rem .8rem;
-}
-.hilf summary::-webkit-details-marker{display:none;}
-.hilf[open] summary{background:var(--turq-d);color:#fff;border-color:var(--turq-d);}
-.hilf-i{display:flex;flex-direction:column;gap:.35rem;margin:.55rem 0 0;}
-.hilf-i span{
-  background:#fff;border:1px dashed var(--line);border-radius:10px;
-  padding:.45rem .7rem;font-size:.93rem;line-height:1.5;
-}
-
-/* ---------- Debatte ---------- */
-.deb-these{
-  background:var(--ink);color:#fff;border-radius:14px;padding:1rem 1.15rem;
-  font-family:'Space Grotesk',sans-serif;font-size:1.12rem;line-height:1.4;font-weight:600;margin:0 0 .9rem;
-}
-.deb-seiten{display:grid;gap:.7rem;margin:0 0 .9rem;}
-@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
-.deb-s{background:#fff;border:1px solid var(--line);border-radius:14px;padding:.85rem .95rem;}
-.deb-s b{
-  display:block;font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:800;
-  letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem;
-}
-.deb-s.pro{border-top:4px solid var(--turq-d);}
-.deb-s.pro b{color:var(--teal-ink);}
-.deb-s.con{border-top:4px solid var(--red);}
-.deb-s.con b{color:var(--red);}
-.deb-s ul{margin:0;padding-left:1.05rem;font-size:.94rem;line-height:1.6;}
-.deb-s li{margin:.3rem 0;}
-.deb-s p{margin:0;font-size:.94rem;line-height:1.6;color:var(--soft);}
-.deb-mittel{background:var(--warm);border:1px solid #E7ECEE;border-radius:14px;padding:.85rem 1rem;margin:0 0 .9rem;}
-.deb-mittel b{
-  display:block;font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:800;
-  letter-spacing:.1em;text-transform:uppercase;color:var(--soft);margin-bottom:.5rem;
-}
-.deb-chips{display:flex;flex-wrap:wrap;gap:.35rem;}
-.deb-chips span{
-  background:#fff;border:1px solid #E7ECEE;border-radius:999px;
-  padding:.3rem .7rem;font-size:.88rem;font-weight:500;
-}
-.deb-mehr{border:1px dashed var(--line);border-radius:14px;padding:.85rem 1rem;}
-.deb-mehr b{
-  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
-  color:var(--soft);margin-bottom:.35rem;
-}
-.deb-mehr ul{margin:0;padding-left:1.05rem;font-size:.93rem;line-height:1.6;}
-
-/* ---------- Hausaufgabe ---------- */
-.hagrid{display:grid;gap:.6rem;}
-.ha{
-  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .7rem;align-items:start;
-  background:#fff;border:1px solid var(--line);border-radius:14px;padding:.8rem .9rem;
-}
-.ha .box{
-  grid-row:span 2;width:22px;height:22px;border:2px solid var(--line);border-radius:6px;
-  cursor:pointer;align-self:center;
-}
-.ha.fertig .box{background:var(--turq-d);border-color:var(--turq-d);}
-.ha.fertig .htxt{opacity:.55;text-decoration:line-through;}
-.ha .hi{grid-row:span 2;align-self:center;font-size:1.15rem;}
-.ha .htxt b{display:block;font-family:'Space Grotesk',sans-serif;font-size:.97rem;}
-.ha .htxt{font-size:.92rem;line-height:1.55;color:var(--soft);}
-.hastand{
-  font-family:'Space Grotesk',sans-serif;font-size:.85rem;font-weight:700;
-  color:var(--soft);margin:.7rem 0 0;
-}
-.zeit{
-  display:inline-block;background:var(--mint);border:1px solid #CDEEF3;color:var(--teal-ink);
-  border-radius:999px;padding:.1rem .5rem;font-size:.72rem;font-weight:700;margin-left:.35rem;
-}
-.hilfe{
-  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;
-  border:1px solid var(--line);background:#fff;border-radius:999px;padding:.35rem .8rem;margin:.6rem 0 0;
-}
-.inhalt{
-  display:none;background:var(--warm);border:1px solid #E7ECEE;border-radius:12px;
-  padding:.75rem .9rem;margin:.55rem 0 0;font-size:.93rem;line-height:1.6;
-}
-.inhalt.offen{display:block;}
-
-/* ---------- Markierte Woerter ---------- */
-.wm{
-  cursor:pointer;background:var(--gold-mark);border-radius:5px;padding:.02em .2em;
-  -webkit-box-decoration-break:clone;box-decoration-break:clone;
-}
-.wm.schwer{background:transparent;border-bottom:2px dotted var(--red);border-radius:0;}
-.wm:hover,.wm.offen{background:var(--gold);}
-.wm.schwer:hover,.wm.schwer.offen{background:var(--pink);}
-.wm:focus-visible{outline:3px solid var(--turq-d);outline-offset:2px;}
-.wmk{
-  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
-  background:#fff;border:1px solid var(--line);border-radius:14px;
-  box-shadow:var(--schatten);padding:.8rem .95rem .85rem;
-}
-.wmk b{display:block;font-family:'Space Grotesk',sans-serif;font-size:1.05rem;padding-right:1.4rem;}
-.wmk span{display:block;margin-top:.25rem;font-size:.92rem;line-height:1.5;color:var(--soft);}
-.wmk em{
-  display:block;margin-top:.5rem;padding-left:.65rem;border-left:3px solid var(--turq-d);
-  font-style:italic;font-size:.91rem;line-height:1.5;
-}
-.wmk-zu{
-  position:absolute;top:.4rem;right:.45rem;border:none;background:transparent;
-  font-size:.9rem;line-height:1;cursor:pointer;color:var(--soft);padding:.2rem;
-}
-.wmk-ton{
-  margin-top:.55rem;border:1px solid var(--line);background:#fff;color:var(--ink);
-  border-radius:999px;padding:.28rem .7rem;font-family:'Space Grotesk',sans-serif;
-  font-size:.78rem;font-weight:700;cursor:pointer;
-}
-
-/* ---------- Weiter und zurueck ---------- */
-.weiterzeile{
-  display:flex;gap:.6rem;flex-wrap:wrap;justify-content:space-between;
-  margin:1.8rem 0 .4rem;padding-top:1.1rem;border-top:1px solid var(--line);
-}
-.weiterknopf{
-  font-family:'Space Grotesk',sans-serif;font-size:.92rem;font-weight:700;cursor:pointer;
-  border:1px solid var(--turq-d);background:var(--turq-d);color:#fff;
-  border-radius:999px;padding:.55rem 1.1rem;margin-left:auto;transition:.15s;
-}
-.weiterknopf.zurueck{background:#fff;color:var(--teal-ink);margin-left:0;margin-right:auto;}
-.weiterknopf:hover{background:#10627A;border-color:#10627A;color:#fff;}
-
-/* ---------- Niveau-Umschalter ---------- */
-body[data-niveau="a2"] .nur-b1{display:none !important;}
-body[data-niveau="b1"] .nur-a2{display:none !important;}
-
-/* ---------- Fuss ---------- */
-footer{
-  margin-top:3rem;padding-top:1.2rem;border-top:1px solid var(--line);
-  font-size:.85rem;color:var(--soft);text-align:center;
-}
+:root{--cream:#FDF6EC;--cream-warm:#FBEDD8;--paper:#FFFFFF;--ink:#262019;--ink-soft:#5C4E3E;--ink-mute:#A8957D;--red:#E8302A;--red-soft:#FCE5E3;--teal:#0FB5A6;--teal-soft:#D7F0EC;--yellow:#FFD24A;--yellow-soft:#FFF1C2;--sand:#F0E2C8;--green:#2E9E5B;}
+*{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}
+body{background:linear-gradient(180deg,#FDE6E0 0%,var(--cream) 14%,var(--cream) 100%);color:var(--ink);font-family:'Inter',sans-serif;line-height:1.55;min-height:100vh;}
+.wrapper{max-width:1080px;margin:0 auto;padding:2.2rem 1.5rem 5rem;}
+.eyebrow{text-align:center;font-size:.78rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--red);margin-bottom:.7rem;}
+h1.title{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(2rem,5vw,3.6rem);line-height:1.05;text-align:center;letter-spacing:-.01em;}
+h1.title .hl{position:relative;display:inline-block;font-style:italic;padding:.05em .3em;}
+h1.title .hl::before{content:'';position:absolute;inset:0;background:var(--yellow);border-radius:12px;transform:rotate(-2deg);z-index:-1;}
+.subtitle{text-align:center;max-width:660px;margin:.8rem auto 0;font-size:1.05rem;color:var(--ink-soft);}
+.hero-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;margin:1rem auto 0;}
+.hero-tag{background:var(--paper);border:1.5px solid var(--sand);border-radius:999px;padding:.3rem .85rem;font-size:.82rem;font-weight:600;}
+.hero-tag b{color:var(--red);}
+.tabs{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;background:rgba(251,237,216,.94);backdrop-filter:blur(8px);border-radius:20px;padding:.5rem;margin:1.8rem auto;max-width:fit-content;}
+.tab{font-size:.92rem;font-weight:600;border:2px solid transparent;background:var(--paper);color:var(--ink);padding:.5rem 1rem;border-radius:999px;cursor:pointer;transition:.15s;display:inline-flex;gap:.35rem;align-items:center;}
+.tab:hover{border-color:var(--ink);transform:translateY(-1px);}
+.tab.active{background:var(--red);color:#fff;border-color:var(--red);}
+.section{display:none;animation:fade .35s ease;}.section.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+h2.st{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(1.7rem,3.4vw,2.3rem);text-align:center;margin:1.8rem 0 .4rem;}
+.ssub{text-align:center;color:var(--ink-soft);margin-bottom:1.3rem;}
+.scene-wrap{background:var(--paper);border:4px solid var(--paper);border-radius:20px;box-shadow:0 14px 38px rgba(38,32,25,.16);overflow:hidden;margin:1rem 0;}
+.scene-wrap img{width:100%;display:block;}
+.tip{background:var(--yellow-soft);border:2px dashed var(--yellow);border-radius:16px;padding:.9rem 1.2rem;font-size:.95rem;margin:1rem 0;line-height:1.65;}
+.tip strong{color:var(--red);}.tip.teal{background:var(--teal-soft);border-color:var(--teal);}
+.tip u{text-decoration-color:var(--red);text-underline-offset:3px;}
+.qlist{list-style:none;display:grid;gap:.55rem;margin:.6rem 0;}
+.qlist li{background:var(--paper);border:1.5px solid var(--sand);border-left:5px solid var(--teal);border-radius:12px;padding:.7rem 1rem;font-weight:500;}
+.vgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:.7rem;margin:1rem 0;}
+@media(max-width:640px){.vgrid{grid-template-columns:1fr;}}
+.vcard{background:var(--paper);border:1.5px solid var(--sand);border-radius:14px;padding:.85rem 1rem;}
+.vcard .w{font-weight:700;font-size:1.05rem;color:var(--ink);}
+.vcard .w .art{color:var(--red);}
+.vcard .ex{font-family:'Space Grotesk',sans-serif;font-style:italic;color:var(--ink-soft);font-size:.92rem;margin-top:.25rem;}
+.vcard .speak{margin-top:.4rem;background:var(--teal-soft);border:none;color:#0a7d72;font-weight:700;border-radius:999px;padding:.2rem .7rem;font-size:.78rem;cursor:pointer;}
+.dwrap{background:var(--paper);border:1.5px solid var(--sand);border-radius:16px;padding:1.1rem 1.2rem;margin:1rem 0;}
+.dwrap h4{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;margin-bottom:.2rem;color:var(--red);}
+.dsit{font-size:.9rem;color:var(--ink-soft);margin-bottom:.7rem;}
+.dline{display:flex;gap:.5rem;margin:.35rem 0;align-items:flex-start;}
+.dwho{flex:none;width:26px;height:26px;border-radius:50%;font-size:.8rem;font-weight:700;display:flex;align-items:center;justify-content:center;color:#fff;}
+.dwho.a{background:var(--red);}.dwho.b{background:var(--teal);}
+.dtxt{background:var(--cream-warm);border-radius:12px;padding:.4rem .7rem;font-size:.96rem;}
+.dline.b .dtxt{background:var(--teal-soft);}
+.dbtn{margin-top:.6rem;background:var(--red);color:#fff;border:none;border-radius:999px;padding:.4rem 1rem;font-weight:700;cursor:pointer;font-size:.85rem;}
+.mk{background:var(--yellow-soft);border-bottom:2px solid var(--yellow);border-radius:4px;padding:.02em .22em;font-weight:600;-webkit-box-decoration-break:clone;box-decoration-break:clone;}
+.mk.g{background:var(--teal-soft);border-bottom-color:var(--teal);}
+.mklegende{font-size:.84rem;color:var(--ink-soft);margin:.2rem 0 1rem;}
+.rsp{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin:1rem 0;}
+@media(max-width:640px){.rsp{grid-template-columns:1fr;}}
+.rcol{border-radius:16px;padding:1rem 1.1rem;border:2px solid;}
+.rcol.a{background:var(--red-soft);border-color:var(--red);}
+.rcol.b{background:var(--teal-soft);border-color:var(--teal);}
+.rcol h4{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;margin-bottom:.4rem;}
+.rcol.a h4{color:var(--red);}.rcol.b h4{color:#0a7d72;}
+.rcol ul{list-style:none;display:grid;gap:.3rem;}
+.rcol li{font-size:.93rem;padding-left:1.1rem;position:relative;}
+.rcol li::before{content:'\203A';position:absolute;left:0;font-weight:700;}
+.pcgrid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin:1rem 0;}
+@media(max-width:640px){.pcgrid{grid-template-columns:1fr;}}
+.pcol{border-radius:16px;padding:1rem 1.1rem;border:2px solid;}
+.pcol.pro{background:#EAF7EF;border-color:var(--green);}
+.pcol.con{background:var(--red-soft);border-color:var(--red);}
+.pcol h4{font-family:'Space Grotesk',sans-serif;font-size:1.15rem;margin-bottom:.5rem;}
+.pcol.pro h4{color:var(--green);}.pcol.con h4{color:var(--red);}
+.pcol ul{list-style:none;display:grid;gap:.4rem;}
+.pcol li{font-size:.94rem;padding-left:1.3rem;position:relative;}
+.pcol li::before{content:'\2713';position:absolute;left:0;font-weight:700;}
+.pcol.pro li::before{color:var(--green);}.pcol.con li::before{color:var(--red);}
+.gramtafel{background:var(--paper);border:2px solid var(--sand);border-radius:16px;padding:1.1rem 1.2rem;margin:1rem 0;}
+.gramtafel table{width:100%;border-collapse:collapse;margin:.5rem 0;font-size:.95rem;}
+.gramtafel td,.gramtafel th{border:1px solid var(--sand);padding:.45rem .6rem;text-align:left;}
+.gramtafel th{background:var(--cream-warm);font-family:'Space Grotesk',sans-serif;}
+.gramtafel td b{color:var(--red);}
+.rmcard{background:var(--paper);border:1.5px solid var(--sand);border-radius:14px;padding:.9rem 1.1rem;margin:.8rem 0;}
+.rmcard b{color:var(--teal);}
+.rm{display:inline-block;background:var(--teal-soft);color:#0a7d72;border-radius:999px;padding:.2rem .7rem;font-size:.85rem;font-weight:600;margin:.2rem .2rem 0 0;}
+.card90{background:linear-gradient(135deg,var(--paper),var(--cream-warm));border:2px solid var(--sand);border-radius:20px;padding:1.6rem;text-align:center;max-width:460px;margin:1.2rem auto;box-shadow:0 8px 24px rgba(38,32,25,.08);}
+.card90 .lbl{font-size:.72rem;font-weight:700;color:var(--red);letter-spacing:.12em;text-transform:uppercase;}
+.card90 .word{font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:2.2rem;margin:.4rem 0;}
+.helpwords{display:flex;flex-wrap:wrap;gap:.35rem;justify-content:center;margin:.7rem 0;}
+.hw{background:var(--yellow-soft);border:1px solid var(--yellow);border-radius:999px;padding:.2rem .7rem;font-size:.85rem;font-weight:600;}
+.timer{font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:700;color:var(--teal);margin:.5rem 0;}
+.btn{background:var(--red);color:#fff;border:none;border-radius:999px;padding:.5rem 1.3rem;font-weight:700;cursor:pointer;font-size:.9rem;font-family:'Inter';margin:.2rem;}
+.btn.ghost{background:var(--paper);color:var(--ink);border:2px solid var(--sand);}
+.quiz-q{background:var(--paper);border:1.5px solid var(--sand);border-radius:14px;padding:.9rem 1.1rem;margin:.7rem 0;}
+.quiz-q .qt{font-weight:600;margin-bottom:.55rem;}
+.quiz-opts{display:grid;gap:.4rem;}
+.qopt{text-align:left;background:var(--cream);border:1.5px solid var(--sand);border-radius:10px;padding:.5rem .8rem;cursor:pointer;font-size:.94rem;font-family:'Inter';font-weight:500;}
+.qopt:hover{border-color:var(--ink);}
+.qopt.right{background:#EAF7EF;border-color:var(--green);color:var(--green);font-weight:700;}
+.qopt.wrong{background:var(--red-soft);border-color:var(--red);color:var(--red);}
+.qexp{font-size:.86rem;color:var(--ink-soft);margin-top:.5rem;display:none;}
+.qexp.show{display:block;}
+.gap{background:var(--paper);border:1.5px solid var(--sand);border-radius:14px;padding:1rem 1.1rem;margin:.7rem 0;line-height:2.2;}
+.gap select{font-family:'Inter';font-weight:600;border:2px solid var(--teal);border-radius:8px;padding:.15rem .4rem;background:var(--teal-soft);color:#0a7d72;font-size:.95rem;}
+.gap select.ok{background:#EAF7EF;border-color:var(--green);color:var(--green);}
+.gap select.no{background:var(--red-soft);border-color:var(--red);color:var(--red);}
+footer{text-align:center;color:var(--ink-mute);font-size:.85rem;padding:3rem 1rem 1rem;}
 footer strong{color:var(--ink);}
-
-@media print{
-  body.schaltet .section[hidden]{display:block !important;}
-  .leiste,.weiterzeile,.wmk{display:none !important;}
-  .wm{background:none;border-bottom:2px solid var(--gold-d);}
-}
-@media(max-width:560px){
-  .wrapper{padding:1.5rem 1rem 4rem;}
-  .leiste{border-radius:12px;padding:.35rem .4rem;gap:.4rem;}
-  .nivk button{padding:.3rem .65rem;font-size:.8rem;}
-  .nivk .zusatz{display:none;}
-}
-
-/* ============================================================
-   Ankommen mit Bild, Merksätze, Sprechübung
-   ============================================================
-   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
-   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
-   auf der Seite. Beides kommt hier zurück — die Sätze aber als
-   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
-
-.ankbild{
-  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
-  border-radius:18px; border:1px solid var(--line); object-fit:cover;
-  aspect-ratio:16/9;
-}
-
-.merkg{
-  border:1px solid var(--line); border-radius:16px;
-  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
-}
-.merkt{
-  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
-  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
-}
-.merk{
-  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
-  padding:.5rem 0; border-top:1px solid var(--line);
-  font-size:1.02rem; line-height:1.45;
-}
-.merk:first-of-type{ border-top:0; }
-.merk > span{ flex:1 1 14rem; min-width:0; }
-.merk .speak{ flex:0 0 auto; }
-
-.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
-.ueb{
-  display:flex; gap:.8rem; align-items:flex-start;
-  border:1px solid var(--line); border-radius:16px;
-  padding:.85rem 1rem; background:var(--warm);
-}
-.ueb b{
-  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
-  display:block; margin:0 0 .2rem;
-}
-.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
-.uebn{
-  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
-  background:var(--turq-d); color:#fff; font-weight:700;
-  display:grid; place-items:center; font-size:.95rem;
-}
-
-@media (max-width:560px){
-  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
-  .merk{ font-size:.98rem; }
-  .ueb{ padding:.75rem .85rem; }
-}
-
-/* ---------- Ankommen: zwei Fragerunden ----------
-   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
-   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
-   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
-   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
-.ankrunde{
-  background:var(--warm);border:1px solid #E7ECEE;border-radius:14px;
-  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
-}
-.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
-.ankl{
-  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
-  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
-}
-.ankrunde.zwei .ankl{color:var(--teal-ink);}
-.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
-.ankfr li{
-  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
-  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
-  border-top:1px solid rgba(22,22,22,.07);
-}
-.ankfr li:first-child{border-top:0;padding-top:.15rem;}
-.ankfr li::before{
-  content:counter(ankz);position:absolute;left:0;top:.55rem;
-  width:1.5rem;height:1.5rem;border-radius:50%;
-  background:var(--turq);color:var(--teal-ink);
-  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
-  display:grid;place-items:center;
-}
-.ankfr li:first-child::before{top:.15rem;}
-.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
-.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
-
-@media (max-width:560px){
-  .ankrunde{padding:.85rem .9rem .9rem;}
-  .ankfr li{font-size:.99rem;padding-left:2rem;}
-  .ankrunde.zwei .ankfr li{font-size:.94rem;}
-}
-
-</style>
-</head>
-<body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
-
-<div class="eyebrow">deutschoderwas · Sprechclub · Woche 3 · Strang C · Teil 1 · Montag, 28. September</div>
-<h1 class="title">Vier-Tage-Woche — <span class="hl">für alle?</span></h1>
-
-<p class="subtitle">Vier Tage arbeiten, fünf Tage bezahlt bekommen — das klingt für die einen nach Zukunft und für die anderen nach Rechenfehler. Heute sammeln wir die Wörter, die Zahlen und die Argumente.</p>
-
-<p class="niv-wie">Gleiches Thema, andere Sätze. Wechsle jederzeit — probier ruhig beide Seiten aus.</p>
-<div class="leiste">
-  <div class="nivk" role="group" aria-label="Niveau wählen">
-    <button type="button" data-niv="a2" aria-pressed="true">B1<span class="zusatz"> · sicherer</span></button>
-    <button type="button" data-niv="b1" aria-pressed="false">B2<span class="zusatz"> · feiner</span></button>
-  </div>
+</style></head><body><div class="wrapper">
+<div class="eyebrow">deutschoderwas · Sprechclub · B1/B2</div>
+<h1 class="title">Vier-Tage-Woche — <span class="hl">für alle?</span> · Teil 1</h1>
+<p class="subtitle">Weniger arbeiten, gleich viel Lohn — geht das? Heute sammeln wir Wortschatz und Argumente rund um Arbeitszeit, Lohn und Produktivität. Mit Dialogen, Rollenspiel und Sprechen.</p>
+<div class="hero-tags"><span class="hero-tag">🖼️ <b>Bild</b></span><span class="hero-tag">📖 <b>Wortschatz</b></span><span class="hero-tag">💬 <b>Dialoge</b></span><span class="hero-tag">🎭 <b>Rollenspiel</b></span><span class="hero-tag">🗣️ <b>Sprechen</b></span><span class="hero-tag">⏱️ <b>90 Sek.</b></span></div>
 <nav class="tabs">
-<a class="tab active" href="#ankommen">👋 Ankommen</a>
-<a class="tab" href="#dialoge">🎬 Dialog</a>
-<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
-<a class="tab" href="#debatte">⚖️ Debatte</a>
-<a class="tab" href="#abschluss">🎯 Abschluss</a>
-<a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<button class="tab active" data-tab="0">🖼️ Einstieg</button>
+<button class="tab" data-tab="1">📖 Wortschatz</button>
+<button class="tab" data-tab="2">💬 Dialoge</button>
+<button class="tab" data-tab="3">🎭 Rollenspiel</button>
+<button class="tab" data-tab="4">🗣️ Sprechen</button>
+<button class="tab" data-tab="5">⏱️ 90 Sekunden</button>
+<button class="tab" data-tab="6">✅ Üben</button>
 </nav>
-</div>
-
-<section class="section" id="ankommen">
-<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
-<img class="ankbild" src="../amanda/sz-buero.webp" alt="Zwei Kolleginnen am Schreibtisch mit Laptop">
-<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Würdest du lieber vier Tage arbeiten? Was wäre der Haken?</li><li>Wie viele Stunden arbeitest du in der Woche?</li><li>Was würdest du mit dem freien Tag machen?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Funktioniert das in jedem Beruf gleich gut — oder nur in manchen?</li><li>Wäre weniger Zeit oder mehr Geld für dich wichtiger?</li><li>Wer trägt am Ende die Kosten, wenn alle einen Tag weniger arbeiten?</li></ol></div></div>
-<div class="tip teal">📊 <strong>Drei Zahlen für heute:</strong> Eine normale Vollzeitstelle in Deutschland liegt bei <b>38 bis 40 Stunden</b>. Bei der Vier-Tage-Woche sind es je nach Modell <b>32 bis 36</b>. Und in Umfragen sagen regelmäßig <b>über 70 Prozent</b>, sie fänden das gut — solange der Lohn gleich bleibt.</div>
-<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Welches der drei Modelle wäre für dich das beste?</li><li>Kennst du jemanden, der schon so arbeitet?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Warum reden Menschen aneinander vorbei, wenn sie das Modell nicht nennen?</li><li>Welches Modell wäre für deinen Beruf realistisch?</li></ol></div></div>
-<div class="tip">💡 <strong>Für die Debatte am Mittwoch:</strong> Sag immer dazu, <u>welches Modell</u> du meinst. Ein Argument gegen das eine ist oft gar kein Argument gegen das andere — und genau daran scheitern die meisten Diskussionen.</div>
-<details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
+<section class="section active" data-section="0">
+<h2 class="st">Schau dir das Bild an</h2>
+<p class="ssub">Menschen arbeiten im Büro. Wie viele Tage pro Woche sollte man arbeiten?</p>
+<div class="scene-wrap"><img src="../amanda/sz-buero.webp" alt="Menschen bei der Arbeit im Büro"></div>
+<div class="tip">🗣️ <strong>Zum Einstieg – sprecht reihum:</strong> Beschreibt das Bild: Wo arbeiten die Leute? Wirken sie gestresst oder entspannt?</div>
+<h2 class="st">Erste Fragen</h2><ul class="qlist">
+<li>Wie viele Stunden arbeitest du pro Woche?</li>
+<li>Würdest du gern weniger arbeiten — auch bei weniger Lohn?</li>
+<li>Bist du an einem freien Tag mehr wert als an einem müden Arbeitstag?</li>
+<li>In welchem Beruf ist eine Vier-Tage-Woche schwer?</li>
+</ul></section>
+<section class="section" data-section="1"><h2 class="st">Wortschatz</h2><p class="ssub">Tipp auf 🔊, um das Wort zu hören. Lies den Beispielsatz laut.</p><div class="vgrid">
+<div class="vcard"><div class="w"><span class="art">die</span> Arbeitszeit <button class="speak" data-say="die Arbeitszeit">🔊</button></div><div class="ex">„Meine Arbeitszeit ist von 9 bis 17 Uhr."</div></div>
+<div class="vcard"><div class="w"><span class="art">der</span> Lohn <button class="speak" data-say="der Lohn">🔊</button></div><div class="ex">„Bleibt der Lohn gleich?"</div></div>
+<div class="vcard"><div class="w"><span class="art">die</span> Produktivität <button class="speak" data-say="die Produktivität">🔊</button></div><div class="ex">„Kurze Wochen können die Produktivität steigern."</div></div>
+<div class="vcard"><div class="w"><span class="art">die</span> Erholung <button class="speak" data-say="die Erholung">🔊</button></div><div class="ex">„Ein freier Tag bedeutet mehr Erholung."</div></div>
+<div class="vcard"><div class="w">sich erholen <button class="speak" data-say="sich erholen">🔊</button></div><div class="ex">„Am Wochenende erhole ich mich."</div></div>
+<div class="vcard"><div class="w"><span class="art">der</span> Fachkräftemangel <button class="speak" data-say="der Fachkräftemangel">🔊</button></div><div class="ex">„Wegen des Fachkräftemangels fehlt Personal."</div></div>
+<div class="vcard"><div class="w">überlastet sein <button class="speak" data-say="überlastet sein">🔊</button></div><div class="ex">„Viele fühlen sich überlastet."</div></div>
+<div class="vcard"><div class="w"><span class="art">die</span> Vereinbarkeit <button class="speak" data-say="die Vereinbarkeit">🔊</button></div><div class="ex">„Es geht um die Vereinbarkeit von Job und Familie."</div></div>
+<div class="vcard"><div class="w">einführen <button class="speak" data-say="einführen">🔊</button></div><div class="ex">„Manche Firmen führen die Vier-Tage-Woche ein."</div></div>
+<div class="vcard"><div class="w"><span class="art">die</span> Schicht <button class="speak" data-say="die Schicht">🔊</button></div><div class="ex">„In der Pflege arbeitet man in Schichten."</div></div>
+</div><div class="tip teal">💡 <strong>Mini-Aufgabe:</strong> Bilde je einen Satz zu <u>Arbeitszeit</u>, <u>Lohn</u> und <u>Erholung</u> aus deinem Alltag.</div></section>
+<section class="section" data-section="2"><h2 class="st">Beispieldialoge</h2><p class="ssub">Lest die Dialoge zu zweit mit verteilten Rollen — dann spielt sie mit euren eigenen Worten nach.</p>
+<p class="mklegende"><span class="mk">gelb</span> = wichtiger Begriff · <span class="mk g">türkis</span> = wichtige Wendung / Struktur</p>
+<div class="dwrap"><h4>💬 Dialog 1 · Am Kaffeeautomaten</h4><div class="dsit">Zwei Kollegen reden über die Idee einer Vier-Tage-Woche.</div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Hast du gehört? Unsere Firma denkt über die <span class="mk">Vier-Tage-Woche</span> nach.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Echt? Bei gleichem <span class="mk">Lohn</span>?</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ja, die Idee ist: <span class="mk g">gleicher Lohn</span>, mehr <span class="mk">Produktivität</span> an vier Tagen.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ich wäre dabei — mehr <span class="mk">Erholung</span> tut gut.</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Aber <span class="mk g">schaffen wir</span> die Arbeit in vier Tagen?</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Vielleicht, wenn wir <span class="mk g">weniger Meetings</span> machen.</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Da ist was dran. Weniger Zeit, dafür <span class="mk g">konzentrierter</span>.</div></div>
+<button class="speak dbtn" data-say="Hast du gehört? Unsere Firma denkt über die Vier-Tage-Woche nach. Echt? Bei gleichem Lohn? Ja, die Idee ist: gleicher Lohn, mehr Produktivität an vier Tagen. Ich wäre dabei — mehr Erholung tut gut. Aber schaffen wir die Arbeit in vier Tagen? Vielleicht, wenn wir weniger Meetings machen. Da ist was dran. Weniger Zeit, dafür konzentrierter.">🔊 Dialog vorlesen</button></div>
+<div class="dwrap"><h4>💬 Dialog 2 · Nicht in jedem Beruf</h4><div class="dsit">Eine Pflegekraft und eine Büroangestellte vergleichen ihre Jobs.</div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">In der <span class="mk">Pflege</span> ist die Vier-Tage-Woche schwierig.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Warum? Bei uns im Büro ginge das gut.</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Weil Patienten <span class="mk g">jeden Tag</span> da sind. Wir arbeiten in <span class="mk">Schichten</span>.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Stimmt. Und es gibt schon einen <span class="mk">Fachkräftemangel</span>.</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Genau. <span class="mk g">Wer soll</span> die freien Tage <span class="mk g">abdecken</span>?</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Also passt das Modell <span class="mk g">nicht überall</span>.</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Richtig — es <span class="mk g">kommt auf den Beruf an</span>.</div></div>
+<button class="speak dbtn" data-say="In der Pflege ist die Vier-Tage-Woche schwierig. Warum? Bei uns im Büro ginge das gut. Weil Patienten jeden Tag da sind. Wir arbeiten in Schichten. Stimmt. Und es gibt schon einen Fachkräftemangel. Genau. Wer soll die freien Tage abdecken? Also passt das Modell nicht überall. Richtig — es kommt auf den Beruf an.">🔊 Dialog vorlesen</button></div>
+<div class="dwrap"><h4>💬 Dialog 3 · Familie und Arbeit</h4><div class="dsit">Ihr sprecht über die Vereinbarkeit von Job und Familie.</div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ein freier Tag mehr — das wäre super für die <span class="mk g">Familie</span>.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ja, mehr Zeit für die Kinder.</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Und man ist <span class="mk g">ausgeruht</span> statt <span class="mk">überlastet</span>.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Aber manche Chefs glauben: weniger Tage = weniger Arbeit.</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Studien zeigen oft das Gegenteil — mehr <span class="mk">Produktivität</span>.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Es geht eben um die <span class="mk">Vereinbarkeit</span> von Job und Leben.</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Genau darum sollten Firmen es <span class="mk g">ausprobieren</span>.</div></div>
+<button class="speak dbtn" data-say="Ein freier Tag mehr — das wäre super für die Familie. Ja, mehr Zeit für die Kinder. Und man ist ausgeruht statt überlastet. Aber manche Chefs glauben: weniger Tage = weniger Arbeit. Studien zeigen oft das Gegenteil — mehr Produktivität. Es geht eben um die Vereinbarkeit von Job und Leben. Genau darum sollten Firmen es ausprobieren.">🔊 Dialog vorlesen</button></div>
+<div class="tip">🎭 <strong>Jetzt ihr:</strong> Spielt ein Gespräch: Einer findet die Vier-Tage-Woche gut, der andere hat Bedenken (Beruf, Lohn). Baut vier markierte Wörter ein.</div></section>
+<section class="section" data-section="3">
+<h2 class="st">Rollenspiel: Mitarbeiter & Chef</h2><p class="ssub">Zu zweit. Einer schlägt die Vier-Tage-Woche vor, einer ist der Chef. Dann tauschen.</p>
+<div class="rsp"><div class="rcol a"><h4>🧑‍💼 Du bist Mitarbeiter/in</h4><ul>
+<li>Schlag die Vier-Tage-Woche höflich vor.</li>
+<li>Nenne zwei Vorteile (Erholung, Produktivität).</li>
+<li>Sag, wie die Arbeit trotzdem klappt.</li>
+<li>Frag: „Können wir es ausprobieren?“</li>
+</ul></div><div class="rcol b"><h4>👔 Du bist Chef/in</h4><ul>
+<li>Hör zu und frag nach.</li>
+<li>Nenne Bedenken (Kunden, Kosten).</li>
+<li>Frag: „Wie schaffen wir die Arbeit?“</li>
+<li>Biete einen Test-Monat an — oder lehne freundlich ab.</li>
+</ul></div></div>
+<div class="rmcard"><b>🗣️ Redemittel</b> — bau diese Sätze ein:<div style="margin-top:.5rem">
+<span class="rm">Ich würde gern … vorschlagen.</span>
+<span class="rm">Ein großer Vorteil wäre …</span>
+<span class="rm">Ich verstehe Ihre Bedenken, aber …</span>
+<span class="rm">Können wir es einen Monat testen?</span>
+<span class="rm">Es kommt darauf an, ob …</span>
+</div></div><div class="tip teal">🏁 <strong>Abschluss:</strong> Ein Paar spielt vor: Habt ihr euch geeinigt?</div>
 </section>
-
-<section class="section" id="dialoge">
-<h2 class="st">Vier Gespräche — <span class="hl">zwei Runden</span></h2>
-<ol class="schritte">
-<li><span>1</span><b>Runde 1:</b> Lest den Dialog zu zweit laut.</li>
-<li><span>2</span><b>Runde 2:</b> Deckt die Zeilen von B ab und sprecht frei — die Hinweise reichen.</li>
-</ol>
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-buero.webp" alt="Zwei Kolleginnen am Schreibtisch mit Laptop"><h4>Dialog 1 · „In der Kaffeeküche“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Der Betrieb denkt über die Vier-Tage-Woche nach. Zwei Kolleginnen sind unterschiedlich begeistert.</div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Hast du gehört? Sie überlegen, auf vier Tage zu gehen.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Bei gleichem <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Gehalt" data-wort="das Gehalt" data-kurz="das Geld, das man monatlich für die Arbeit bekommt" data-bsp="Das Gehalt bleibt gleich, die Stunden werden weniger.">Gehalt</b> oder bei weniger? Das ist der ganze Unterschied.</div><div class="dcue">🗣️ Sofort das Modell klären. Ohne das reden zwei Leute über zwei verschiedene Dinge.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Gleiches Gehalt, aber 34 Stunden statt 39.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Also fünf Stunden weniger als jetzt — bei genauso vielen Aufgaben?</div><div class="dcue">🗣️ <b>weniger als</b> und <b>genauso viele wie</b>: zwei Vergleiche in einem Satz.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Sie sagen, man schafft dasselbe, wenn man weniger Meetings macht.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Das kann sein. Aber bei uns kommt die Arbeit ja von außen, nicht aus Meetings.</div><div class="dcue">🗣️ Zustimmen und dann einschränken — das wirkt stärker als sofortiger Widerspruch.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Stimmt auch wieder.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ich wäre trotzdem dafür. Nur muss man ehrlich sagen, was wegfällt.</div><div class="dcue">🗣️ Position beziehen und eine Bedingung nennen — genau das brauchst du am Mittwoch.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<button class="speak dbtn" data-say="Hast du gehört? Sie überlegen, auf vier Tage zu gehen. Bei gleichem Gehalt oder bei weniger? Das ist der ganze Unterschied. Gleiches Gehalt, aber 34 Stunden statt 39. Also fünf Stunden weniger als jetzt — bei genauso vielen Aufgaben? Sie sagen, man schafft dasselbe, wenn man weniger Meetings macht. Das kann sein. Aber bei uns kommt die Arbeit ja von außen, nicht aus Meetings. Stimmt auch wieder. Ich wäre trotzdem dafür. Nur muss man ehrlich sagen, was wegfällt.">🔊 Dialog vorlesen lassen</button></div>
-
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-pflege.webp" alt="Eine Pflegerin begleitet eine ältere Frau mit Rollator"><h4>Dialog 2 · „In der Pflege“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Eine Pflegerin und ein Bürokollege reden über dasselbe Thema — und merken, dass ihre Berufe kaum vergleichbar sind.</div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">In der Pflege wäre das doch super, oder?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Theoretisch ja. Nur muss jede <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Schicht" data-wort="die Schicht" data-kurz="ein fester Arbeitsabschnitt am Tag" data-bsp="In der Pflege wird in drei Schichten gearbeitet.">Schicht</b> besetzt sein, auch am fünften Tag.</div><div class="dcue">🗣️ <b>Theoretisch ja, nur …</b> — die höflichste Art, eine Idee einzuschränken.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Dann bräuchte man mehr Leute.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Genau. Und die gibt es nicht — wir haben schon jetzt <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Fachkräftemangel" data-wort="der Fachkräftemangel" data-kurz="es fehlen Menschen mit der nötigen Ausbildung" data-bsp="Wegen des Fachkräftemangels fehlt in vielen Betrieben das Personal.">Fachkräftemangel</b>.</div><div class="dcue">🗣️ Ein Wort, das das ganze Argument trägt. Sag es ruhig direkt.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Also wäre es bei euch unmöglich?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Nicht unmöglich, aber teurer als im Büro. Jemand müsste es bezahlen.</div><div class="dcue">🗣️ <b>teurer als</b> — Komparativ mit <b>als</b>. Und die Folge gleich hinterher.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Das hatte ich so noch nicht gesehen.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Deshalb ärgert es mich, wenn über <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Arbeitszeit" data-wort="die Arbeitszeit" data-kurz="die Stunden, die man für den Beruf aufwendet" data-bsp="Meine Arbeitszeit liegt bei 38 Stunden pro Woche.">Arbeitszeit</b> nur in Büros geredet wird.</div><div class="dcue">🗣️ Persönlich werden ist erlaubt, solange es um die Sache geht.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<button class="speak dbtn" data-say="In der Pflege wäre das doch super, oder? Theoretisch ja. Nur muss jede Schicht besetzt sein, auch am fünften Tag. Dann bräuchte man mehr Leute. Genau. Und die gibt es nicht — wir haben schon jetzt Fachkräftemangel. Also wäre es bei euch unmöglich? Nicht unmöglich, aber teurer als im Büro. Jemand müsste es bezahlen. Das hatte ich so noch nicht gesehen. Deshalb ärgert es mich, wenn über Arbeitszeit nur in Büros geredet wird.">🔊 Dialog vorlesen lassen</button></div>
-
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-it.webp" alt="Eine Frau arbeitet am Computer im Homeoffice"><h4>Dialog 3 · „Der Chef fragt nach“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Der Chef will wissen, was das Team davon hält. Du bist dafür — aber du sollst sagen, was dafür wegfallen müsste.</div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Wie stehen Sie eigentlich zu einer Vier-Tage-Woche?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Grundsätzlich positiv — vorausgesetzt, wir streichen die Hälfte der Meetings.</div><div class="dcue">🗣️ <b>vorausgesetzt, …</b> macht aus Zustimmung eine Bedingung. Sehr nützlich im Beruf.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Warum ausgerechnet die Meetings?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Weil sie am meisten Zeit kosten und am wenigsten Ergebnis bringen.</div><div class="dcue">🗣️ <b>am meisten</b> und <b>am wenigsten</b> — Superlative. Genau die üben wir heute.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Und wenn die Arbeit trotzdem nicht reicht?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Dann würde ich lieber Aufgaben streichen als <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Überstunden" data-wort="die Überstunde" data-kurz="eine Stunde Arbeit über die vereinbarte Zeit hinaus" data-bsp="Am Ende macht man die Stunden als Überstunden doch wieder.">Überstunden</b> machen.</div><div class="dcue">🗣️ <b>lieber … als …</b> — der eleganteste Vergleich in einer Diskussion.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Das klingt vernünftig. Schreiben Sie mir das mal kurz auf?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Mache ich. Drei Punkte, bis Freitag.</div><div class="dcue">🗣️ Zusagen mit Zahl und Datum — dann ist es verbindlich.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<button class="speak dbtn" data-say="Wie stehen Sie eigentlich zu einer Vier-Tage-Woche? Grundsätzlich positiv — vorausgesetzt, wir streichen die Hälfte der Meetings. Warum ausgerechnet die Meetings? Weil sie am meisten Zeit kosten und am wenigsten Ergebnis bringen. Und wenn die Arbeit trotzdem nicht reicht? Dann würde ich lieber Aufgaben streichen als Überstunden machen. Das klingt vernünftig. Schreiben Sie mir das mal kurz auf? Mache ich. Drei Punkte, bis Freitag.">🔊 Dialog vorlesen lassen</button></div>
-
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-handel.webp" alt="Eine Kundin und ein Verkäufer stehen in einem Laden an der Theke"><h4>Dialog 4 · „Im kleinen Betrieb“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Ein Ladeninhaber und eine Angestellte rechnen gemeinsam durch, ob es ginge — und für wen es <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von sich lohnen" data-wort="sich lohnen" data-kurz="den Aufwand oder die Kosten wert sein" data-bsp="Für kleine Betriebe lohnt sich das oft nicht.">sich lohnen</b> würde.</div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Für uns lohnt sich das nie. Wir sind zu dritt.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Bei drei Leuten wäre es tatsächlich schwieriger als in einem großen Betrieb.</div><div class="dcue">🗣️ <b>schwieriger als</b>. Und <b>tatsächlich</b> zeigt, dass du zuhörst statt zu widersprechen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Der Laden muss ja sechs Tage offen sein.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ja. Aber müsste jeder von uns dieselben Tage frei haben?</div><div class="dcue">🗣️ Die Frage, die die Sache öffnet — statt sie zu beenden.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Hm. Wenn wir uns abwechseln würden …</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Dann hätte jeder einen freien Tag, und der Laden bliebe offen.</div><div class="dcue">🗣️ <b>Dann hätte …</b> — die irreale Folge. Am Mittwoch wird das wichtig.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Das müsste man mal durchrechnen.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ich schreibe es auf. Vielleicht lohnt es sich doch.</div><div class="dcue">🗣️ <b>sich lohnen</b> mit <b>es</b> als Subjekt — nie mit einer Person.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<button class="speak dbtn" data-say="Für uns lohnt sich das nie. Wir sind zu dritt. Bei drei Leuten wäre es tatsächlich schwieriger als in einem großen Betrieb. Der Laden muss ja sechs Tage offen sein. Ja. Aber müsste jeder von uns dieselben Tage frei haben? Hm. Wenn wir uns abwechseln würden … Dann hätte jeder einen freien Tag, und der Laden bliebe offen. Das müsste man mal durchrechnen. Ich schreibe es auf. Vielleicht lohnt es sich doch.">🔊 Dialog vorlesen lassen</button></div>
-
-<div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 2 noch einmal — aber tauscht die Berufe. Wer im Büro arbeitet, argumentiert aus der Pflege, und umgekehrt. Am Mittwoch bekommt ihr die Seite ohnehin zugeteilt.</div>
-</section>
-
-<section class="section" id="merksaetze">
-<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
-<p class="ssub">Sag jeden einmal laut.</p>
-<div class="nur-a2">
-<div class="merkg"><div class="merkt">1 · 📊 Vergleichen</div>
-<div class="merk"><span>mehr als …</span><button class="speak" data-say="mehr als …">🔊 hören</button></div>
-<div class="merk"><span>weniger als …</span><button class="speak" data-say="weniger als …">🔊 hören</button></div>
-<div class="merk"><span>genauso viel wie …</span><button class="speak" data-say="genauso viel wie …">🔊 hören</button></div>
-</div>
-<div class="merkg"><div class="merkt">2 · 🔢 Einordnen</div>
-<div class="merk"><span>In den meisten Betrieben …</span><button class="speak" data-say="In den meisten Betrieben …">🔊 hören</button></div>
-<div class="merk"><span>Etwa die Hälfte …</span><button class="speak" data-say="Etwa die Hälfte …">🔊 hören</button></div>
-<div class="merk"><span>Bei uns sind es …</span><button class="speak" data-say="Bei uns sind es …">🔊 hören</button></div>
-</div>
-<div class="merkg"><div class="merkt">3 · 🧷 Einschränken</div>
-<div class="merk"><span>Das gilt vor allem für …</span><button class="speak" data-say="Das gilt vor allem für …">🔊 hören</button></div>
-<div class="merk"><span>In … ist das anders</span><button class="speak" data-say="In … ist das anders">🔊 hören</button></div>
-<div class="merk"><span>Nur wenn …</span><button class="speak" data-say="Nur wenn …">🔊 hören</button></div>
-</div>
-<div class="merkg"><div class="merkt">4 · ➡️ Folgern</div>
-<div class="merk"><span>Das heißt, dass …</span><button class="speak" data-say="Das heißt, dass …">🔊 hören</button></div>
-<div class="merk"><span>Also braucht man …</span><button class="speak" data-say="Also braucht man …">🔊 hören</button></div>
-<div class="merk"><span>Am Ende führt das zu …</span><button class="speak" data-say="Am Ende führt das zu …">🔊 hören</button></div>
-</div>
-</div>
-<div class="nur-b1">
-<div class="merkg"><div class="merkt">1 · 📊 Genau vergleichen</div>
-<div class="merk"><span>um acht Stunden weniger als …</span><button class="speak" data-say="um acht Stunden weniger als …">🔊 hören</button></div>
-<div class="merk"><span>doppelt so viel wie …</span><button class="speak" data-say="doppelt so viel wie …">🔊 hören</button></div>
-<div class="merk"><span>kaum mehr als …</span><button class="speak" data-say="kaum mehr als …">🔊 hören</button></div>
-</div>
-<div class="merkg"><div class="merkt">2 · 🔢 Zahlen einordnen</div>
-<div class="merk"><span>Die Versuche zeigen, dass …</span><button class="speak" data-say="Die Versuche zeigen, dass …">🔊 hören</button></div>
-<div class="merk"><span>Im Schnitt liegt das bei …</span><button class="speak" data-say="Im Schnitt liegt das bei …">🔊 hören</button></div>
-<div class="merk"><span>Die Zahl sagt allerdings nichts darüber, ob …</span><button class="speak" data-say="Die Zahl sagt allerdings nichts darüber, ob …">🔊 hören</button></div>
-</div>
-<div class="merkg"><div class="merkt">3 · 🧷 Präzise einschränken</div>
-<div class="merk"><span>Das gilt nur, solange …</span><button class="speak" data-say="Das gilt nur, solange …">🔊 hören</button></div>
-<div class="merk"><span>In Branchen mit Schichtdienst …</span><button class="speak" data-say="In Branchen mit Schichtdienst …">🔊 hören</button></div>
-<div class="merk"><span>Unter der Voraussetzung, dass …</span><button class="speak" data-say="Unter der Voraussetzung, dass …">🔊 hören</button></div>
-</div>
-<div class="merkg"><div class="merkt">4 · ➡️ Sauber folgern</div>
-<div class="merk"><span>Daraus folgt, dass …</span><button class="speak" data-say="Daraus folgt, dass …">🔊 hören</button></div>
-<div class="merk"><span>Das hätte zur Folge, dass …</span><button class="speak" data-say="Das hätte zur Folge, dass …">🔊 hören</button></div>
-<div class="merk"><span>Umgekehrt hieße das …</span><button class="speak" data-say="Umgekehrt hieße das …">🔊 hören</button></div>
-</div>
-</div>
-<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
-</section>
-
-<section class="section" id="challenge">
-<h2 class="st">⏱️ Die 90-Sekunden-Challenge</h2>
-<p class="ssub">Ein Wort, anderthalb Minuten, freies Sprechen. Es muss nicht perfekt sein — es muss nur weitergehen.</p>
-<div class="card90">
-<div class="lbl">Dein Wort</div>
-<img id="i90" src="../amanda/a-uhr.webp" alt="die Arbeitszeit">
-<div class="word" id="w90">die Arbeitszeit</div>
-<div class="helpwords" id="hw90"></div>
-<div class="timer" id="t90">1:30</div>
-<div>
-<button class="btn ghost" id="new90">🎲 Neues Wort</button>
-<button class="btn" id="start90">▶︎ Start</button>
-</div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Mir fällt nichts ein</button>
-<div class="inhalt">
-<p>Bau es als Rechnung auf, dann trägt sich die Zeit von selbst:</p>
-<ul>
-<li>Wie ist es jetzt? <b>Im Moment arbeite ich …</b></li>
-<li>Was wäre anders? <b>Bei vier Tagen wären es … weniger.</b></li>
-<li>Für wen wäre es gut? <b>Vor allem für …</b></li>
-<li>Wo wird es schwierig? <b>In … ist das schwieriger als …</b></li>
-</ul>
-<p style="margin-top:.5rem;">Und wenn dir eine Zahl fehlt: schätz sie und sag es dazu. <b>„Ungefähr vierzig, denke ich“</b> ist ein vollwertiger Beitrag.</p>
-</div>
-</div>
-<div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde muss einmal ein <u>Komparativ mit als</u> und einmal ein <u>Superlativ</u> vorkommen. Der Partner hebt die Hand, sobald beides da war.</div>
-</section>
-
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei <span class="hl">Gespräche über Arbeitszeit</span></h2>
-<p class="ssub">Zu zweit. Jeder Beitrag muss mindestens einen Vergleich enthalten — mit <b>als</b>, <b>wie</b> oder einem Superlativ. Danach tauschen.</p>
-<div class="rsp">
-<div class="rsp-kopf"><span class="rsp-nr">1</span><b>Der Vorschlag im Team</b></div>
-<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>schlägt die Vier-Tage-Woche vor.</p></div><div class="rsp-r b"><span>B</span><p>findet die Idee gut, will aber wissen, welche Arbeit dafür wegfällt — und lässt nicht locker.</p></div></div>
-<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Ich fände vier Tage besser</span><span class="rm">Wir schaffen dasselbe in weniger Zeit</span><span class="rm">Die Meetings kosten am meisten Zeit</span><span class="rm">Wir könnten es testen</span></div><div class="nur-b1"><span class="rm">Grundsätzlich positiv, vorausgesetzt …</span><span class="rm">Was genau würde wegfallen?</span><span class="rm">Das gilt nur, solange …</span><span class="rm">Lieber Aufgaben streichen als Überstunden</span></div></div>
-<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>A nennt das Modell mit Zahlen, benutzt mindestens zwei Vergleiche und sagt konkret, was gestrichen würde.</div>
-<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
-</div>
-
-<div class="rsp">
-<div class="rsp-kopf"><span class="rsp-nr">2</span><b>Büro gegen Schichtdienst</b></div>
-<div class="rsp-lage"><span>Die Lage</span>A arbeitet im Büro, B in der Pflege. Beide sind grundsätzlich dafür — aber die Rechnung geht in den zwei Berufen völlig verschieden auf.</div>
-<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Bei uns würde das gehen</span><span class="rm">In der Pflege ist das anders</span><span class="rm">Dann bräuchte man mehr Leute</span><span class="rm">Wer bezahlt das?</span></div><div class="nur-b1"><span class="rm">Jede Schicht muss besetzt sein</span><span class="rm">Das wäre teurer als im Büro</span><span class="rm">Der Fachkräftemangel kommt dazu</span><span class="rm">Für wen lohnt es sich am Ende?</span></div></div>
-<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>Beide erkennen an, dass ihr eigenes Argument nur für ihre Branche gilt — und sagen das ausdrücklich.</div>
-<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
-</div>
-
-<div class="rsp">
-<div class="rsp-kopf"><span class="rsp-nr">3</span><b>Der kleine Betrieb</b></div>
-<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>führt einen Laden mit drei Angestellten und sagt zuerst kategorisch Nein.</p></div><div class="rsp-r b"><span>B</span><p>rechnet vor, wie es doch gehen könnte — mit versetzten freien Tagen.</p></div></div>
-<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Für uns lohnt sich das nicht</span><span class="rm">Der Laden muss offen sein</span><span class="rm">Wenn wir uns abwechseln?</span><span class="rm">Das müsste man durchrechnen</span></div><div class="nur-b1"><span class="rm">Bei drei Leuten ist es schwieriger als …</span><span class="rm">Müsste jeder dieselben Tage frei haben?</span><span class="rm">Dann bliebe der Laden trotzdem offen</span><span class="rm">Unter der Voraussetzung, dass …</span></div></div>
-<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>A bleibt nicht beim ersten Nein, sondern lässt sich auf die Rechnung ein — und beide benutzen mindestens einen Superlativ.</div>
-<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
-</div>
-
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte. Vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.15rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
-</section>
-
-<section class="section" id="debatte">
-<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
-<p class="ssub">Zwei Gruppen, eine Frage. Abwechselnd sprechen.</p>
-<div class="deb-these">Die Vier-Tage-Woche soll für alle kommen.</div>
-<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><ul><li>In Versuchen war die Arbeit auch in vier Tagen fertig.</li><li>Ein freier Tag hilft Familien mehr als mehr Geld.</li><li>Wer ausgeruht ist, macht weniger Fehler.</li></ul></div><div class="deb-s con"><b>Gruppe B · dagegen</b><ul><li>In der Pflege und im Handwerk fehlt dann einfach ein Tag.</li><li>Wenn nur Büros das bekommen, ist es ungerecht.</li><li>Vier Tage mit zehn Stunden sind für Eltern schwerer.</li></ul></div></div>
-</section>
-
-<section class="section" id="abschluss">
-<h2 class="st">Zum <span class="hl">Schluss</span></h2>
-<p class="ssub">Ein Satz von jedem.</p>
-<div class="ank">Welchen Satz von heute nimmst du mit — und wo brauchst du ihn?</div>
-<details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Ich nehme mit: …</span><span>Ich will den Satz „…“ benutzen.</span><span>Neu war für mich: …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Ich nehme mit, dass …</span><span>Den Satz „…“ will ich nächste Woche wirklich benutzen.</span><span>Neu war für mich, dass …</span></div></div></details>
-</section>
-
-<section class="section" id="hausaufgabe">
-<h2 class="st">📮 Deine Hausaufgabe bis <span class="hl">Mittwoch</span></h2>
-<p class="ssub">Vier kleine Aufgaben, zusammen etwa 25 Minuten. Am Mittwoch ist die Debatte — Aufgabe 1 ist deine Vorbereitung dafür.</p>
-<div class="tip">💡 <strong>Warum das hilft:</strong> Am Mittwoch bekommst du eine Seite zugeteilt, vielleicht die, die du nicht magst. Wer heute beide Seiten aufschreibt, ist auf jeden Fall vorbereitet.</div>
-<div class="hagrid nur-a2">
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">⚔️</span><span class="htxt">
-<h4>1. Drei Argumente pro Seite <span class="zeit">8 Min</span></h4>
-<p>Schreib drei Argumente für und drei gegen die Vier-Tage-Woche. Zu jedem eine Zahl oder ein Beispiel.</p></span></button>
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🎙️</span><span class="htxt">
-<h4>2. Deine Position <span class="zeit">5 Min</span></h4>
-<p>Nimm eine Sprachnachricht auf: Welches der drei Modelle findest du am besten — und warum? Mit mindestens zwei Vergleichen.</p></span></button>
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">✍️</span><span class="htxt">
-<h4>3. Acht Vergleiche <span class="zeit">6 Min</span></h4>
-<p>Schreib acht Sätze zum Thema Arbeit: vier mit <b>als</b>, vier mit <b>wie</b>. Achte darauf, wo ein <b>-er</b> davorsteht.</p></span></button>
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🏆</span><span class="htxt">
-<h4>4. Fünf Superlative <span class="zeit">6 Min</span></h4>
-<p>Schreib fünf Sätze mit <b>am …sten</b> über deinen Arbeitsalltag: Was kostet am meisten Zeit, was macht am meisten Spaß?</p></span></button>
-</div>
-<div class="hagrid nur-b1">
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">⚔️</span><span class="htxt">
-<h4>1. Die Seite, die du nicht magst <span class="zeit">8 Min</span></h4>
-<p>Schreib drei starke Argumente für die Position, die du <u>ablehnst</u>. Zu jedem einen konkreten Beruf, in dem es stimmt.</p></span></button>
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🎙️</span><span class="htxt">
-<h4>2. Mit Zahlen argumentieren <span class="zeit">7 Min</span></h4>
-<p>Nimm zwei Minuten auf, in denen du mit mindestens drei Zahlen argumentierst — und jede Zahl mit einem Vergleich einordnest.</p></span></button>
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">✍️</span><span class="htxt">
-<h4>3. Branche für Branche <span class="zeit">7 Min</span></h4>
-<p>Schreib zu sechs Berufen je einen Satz: Wo wäre die Vier-Tage-Woche leichter, wo schwerer — und warum genau dort?</p></span></button>
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🎧</span><span class="htxt">
-<h4>4. Hör hin <span class="zeit">5 Min</span></h4>
-<p>Such einen deutschen Beitrag zur Vier-Tage-Woche. Schreib drei Argumente mit, die du heute noch nicht auf dem Blatt hattest.</p></span></button>
-</div>
-<p class="hastand" data-ha-stand>0 von 0 Aufgaben geschafft.</p>
-<div class="hilfe nur-a2">
-<button type="button">💡 Beispiel ansehen (Aufgabe 3)</button>
-<div class="inhalt">
-<p>So sehen die Vergleiche aus:</p>
-<ul>
-<li><b>als:</b> Vier Tage sind kürzer <b>als</b> fünf.</li>
-<li><b>als:</b> Die Belastung ist höher <b>als</b> vorher.</li>
-<li><b>als:</b> Ich arbeite lieber vier Tage <b>als</b> fünf.</li>
-<li><b>wie:</b> Wir schaffen genauso viel <b>wie</b> vorher.</li>
-<li><b>wie:</b> Das ist nicht so einfach <b>wie</b> es klingt.</li>
-</ul>
-<p style="margin-top:.5rem;">Ein einziger Test: <b>Steht ein -er davor? Dann als. Steht ein so davor? Dann wie.</b></p>
-</div>
-</div>
-<div class="hilfe nur-b1">
-<button type="button">💡 Beispiel ansehen (Aufgabe 1)</button>
-<div class="inhalt">
-<p>So könnten die Argumente der Gegenseite aussehen:</p>
-<ul>
-<li><b>In der Pflege:</b> Jede Schicht muss besetzt sein — weniger Stunden heißt hier zwingend mehr Personal.</li>
-<li><b>Im Handwerk:</b> Ein Auftrag dauert so lange, wie er dauert. Verdichten lässt sich das kaum.</li>
-<li><b>Im kleinen Betrieb:</b> Bei drei Angestellten fehlt jeder freie Tag sofort spürbar.</li>
-<li><b>Bei den Kosten:</b> Gleiches Gehalt für weniger Stunden bedeutet höhere Lohnkosten pro Stunde.</li>
-<li><b>Beim Personal:</b> Wegen des Fachkräftemangels gibt es die zusätzlichen Leute schlicht nicht.</li>
-</ul>
-<p style="margin-top:.5rem;">Für Mittwoch gilt: Ein Argument ohne Branche und ohne Zahl überzeugt niemanden. Beides gehört dazu.</p>
-</div>
-</div>
-<div class="tip teal">📬 <strong>Abgabe:</strong> Bring deine Argumente am Mittwoch mit — auf Papier oder im Kopf. Sprachnachrichten wie immer bis Sonntag in die WhatsApp-Gruppe.</div>
-<div class="tip">🔜 <strong>Am Mittwoch, Teil 2:</strong> die <u>Debatte</u>. Zwei Lager, feste Redemittel, und am Ende stimmt die Gruppe ab. Bring dein stärkstes Argument mit.</div>
-</section>
-
-<footer>
-<strong>deutschoderwas Sprechclub</strong> · Vier-Tage-Woche · Teil 1 · B1/B2 · Woche 3 · Mittwoch folgt die Debatte
-</footer>
-
-</div>
-
-<script type="application/json" id="daten-sk">
-["Erklär die drei <b>Modelle</b> der Vier-Tage-Woche in je einem Satz.","Nenn zwei Argumente <b>dafür</b> — mit je einer Zahl.","Nenn zwei Argumente <b>dagegen</b> — mit je einem Beruf.","In welchem Beruf wäre es am <b>schwierigsten</b>? Warum?","Vergleich deinen Arbeitsalltag mit dem vor fünf Jahren.","Sag drei Sätze mit <b>mehr als</b>, <b>weniger als</b>, <b>genauso viel wie</b>.","Was würdest du mit dem <b>freien Tag</b> machen?","Wäre dir <b>Zeit</b> oder <b>Geld</b> wichtiger? Begründe.","Erklär, was <b>Fachkräftemangel</b> mit dieser Debatte zu tun hat.","Nenn drei Dinge, die in deinem Beruf am <b>meisten</b> Zeit kosten."]
-</script>
-<script type="application/json" id="daten-w90">
-[{"w":"die Arbeitszeit","b":"../amanda/a-uhr.webp","h":["die Stunden","die Vollzeit","die Teilzeit","flexibel","die Pause"]},{"w":"das Gehalt","b":"../amanda/sz-buero.webp","h":["das Meeting","der Schreibtisch","die Aufgabe","die Absprache","das Homeoffice"]},{"w":"die Produktivität","b":"../amanda/sz-produktion.webp","h":["das Fließband","die Schicht","die Stückzahl","die Maschine","die Pause"]},{"w":"die Überstunde","b":"../amanda/sz-pflege.webp","h":["die Frühschicht","die Nachtschicht","das Personal","die Belastung","der Dienstplan"]},{"w":"die Schicht","b":"../amanda/sz-pflege.webp","h":["der Auftrag","das Wetter","die Frist","die Kolonne","der Feierabend"]},{"w":"der Fachkräftemangel","b":"../amanda/sz-bau.webp","h":["flexibel","die Erreichbarkeit","der Bildschirm","die Konzentration","die Grenze"]},{"w":"flexibel","b":"../amanda/sz-it.webp","h":["die Öffnungszeit","der Samstag","die Vertretung","die Kasse","der Kunde"]},{"w":"die Erholung","b":"../vok-bild/der-urlaub.webp","h":["das Wochenende","abschalten","der freie Tag","der Urlaub","auftanken"]},{"w":"die Weiterbildung","b":"../amanda/sz-weiterbildung.webp","h":["lernen","die Zeit dafür","der Kurs","sich entwickeln","der Betrieb"]},{"w":"die Belastung","b":"../vok-bild/die-meinung.webp","h":["dafür","dagegen","die Umfrage","das Argument","abstimmen"]}]
-</script>
-<script type="application/json" id="daten-quiz">
-[{"q":"Wie heißt es richtig?","o":["Ich arbeite weniger als früher.","Ich arbeite weniger wie früher.","Ich arbeite wenig als früher.","Ich arbeite weniger so wie früher."],"c":0,"e":"Nach einem Komparativ auf <b>-er</b> steht immer <b>als</b>. <b>wie</b> gehört zur Gleichheit: <i>genauso viel wie</i>."},{"q":"Was ist der Komparativ von „hoch“?","o":["höher","hocher","hoher","hochsten"],"c":0,"e":"<b>hoch – höher – am höchsten</b>. Im Komparativ fällt das <b>c</b> weg und ein Umlaut kommt dazu."},{"q":"Welcher Satz drückt Gleichheit aus?","o":["Wir schaffen genauso viel wie vorher.","Wir schaffen mehr als vorher.","Wir schaffen am meisten.","Wir schaffen weniger als vorher."],"c":0,"e":"<b>(genau)so … wie</b> ist die Form für Gleichheit. Alle anderen drücken einen Unterschied aus."},{"q":"Wie heißt der Superlativ von „viel“?","o":["am meisten","am vielsten","am mehrsten","am meisten viel"],"c":0,"e":"<b>viel – mehr – am meisten</b>. Eine der vier unregelmäßigen Reihen, die man auswendig können sollte."},{"q":"Was bedeutet „Das lohnt sich nicht“?","o":["Der Aufwand ist größer als der Nutzen.","Das ist verboten.","Das ist zu spät.","Das gefällt mir nicht."],"c":0,"e":"<b>sich lohnen</b> heißt: den Aufwand wert sein. Und es steht immer mit einer Sache als Subjekt, nie mit einer Person."},{"q":"Warum ist die Vier-Tage-Woche in der Pflege schwieriger?","o":["Jede Schicht muss besetzt sein","Pflegekräfte wollen nicht","Es ist gesetzlich verboten","Dort gibt es keine Teilzeit"],"c":0,"e":"Wo rund um die Uhr gearbeitet wird, bedeutet weniger Stunden pro Person zwingend <b>mehr Personal</b> — und genau das fehlt."},{"q":"Was ist der Unterschied zwischen Lohn und Gehalt?","o":["Lohn eher nach Stunden, Gehalt monatlich","Lohn ist mehr Geld","Gehalt gibt es nur in Teilzeit","Es gibt keinen Unterschied"],"c":0,"e":"<b>Der Lohn</b> wird meist nach Stunden gerechnet, <b>das Gehalt</b> ist ein fester Monatsbetrag für Angestellte."},{"q":"Welcher Satz ist richtig gebaut?","o":["Für kleine Betriebe lohnt sich das nicht.","Kleine Betriebe lohnen sich das nicht.","Kleine Betriebe lohnt sich nicht das.","Das lohnt kleine Betriebe nicht."],"c":0,"e":"Die Sache ist das Subjekt (<b>das</b>), die Betroffenen kommen mit <b>für</b> dazu: <i>Etwas lohnt sich für jemanden.</i>"}]
-</script>
-<script type="application/json" id="daten-gap">
-[{"t":"Vier Tage sind kürzer ___ fünf.","o":["als","wie","als wie","so"],"a":"als"},{"t":"Wir schaffen genauso viel ___ vorher.","o":["wie","als","so","denn"],"a":"wie"},{"t":"Die Belastung ist ___ als vorher.","o":["höher","hocher","hoch","am höchsten"],"a":"höher"},{"t":"Die Meetings kosten ___ Zeit.","o":["am meisten","am mehrsten","die meiste als","mehr am"],"a":"am meisten"},{"t":"Für kleine Betriebe ___ sich das nicht.","o":["lohnt","lohnen","lohne","gelohnt"],"a":"lohnt"},{"t":"Ich arbeite ___ vier Tage als fünf.","o":["lieber","gerner","mehr gern","am liebsten"],"a":"lieber"},{"t":"In der Pflege wäre es ___ als im Büro.","o":["teurer","teuerer","teuer","am teuersten"],"a":"teurer"},{"t":"Der Betrieb hat die Vier-Tage-Woche ___.","o":["eingeführt","einführt","geeinführt","einzuführen"],"a":"eingeführt"}]
-</script>
-<script type="application/json" id="daten-gbau">
-[{"f":"Vergleich zwei Zahlen:","t":["Vier","Tage","sind","acht","Stunden","weniger","als","fünf"],"l":["Vier","Tage","sind","acht","Stunden","weniger","als","fünf"],"e":"Die Menge steht vor dem Komparativ: <b>acht Stunden weniger</b>. Und danach immer <b>als</b>."},{"f":"Sag, dass etwas gleich bleibt:","t":["Wir","schaffen","genauso","viel","wie","vorher"],"l":["Wir","schaffen","genauso","viel","wie","vorher"],"e":"Bei Gleichheit steht <b>genauso … wie</b>. Das <b>genau</b> verstärkt und ist im Gespräch sehr gebräuchlich."},{"f":"Nenn die Spitze:","t":["Die","Meetings","kosten","am","meisten","Zeit"],"l":["Die","Meetings","kosten","am","meisten","Zeit"],"e":"Der Superlativ heißt <b>am meisten</b> — von <i>viel – mehr – am meisten</i>. Kein Vergleichswort dahinter."},{"f":"Schränk deine Zustimmung ein:","t":["Grundsätzlich","positiv,","vorausgesetzt,","wir","streichen","die","Meetings"],"l":["Grundsätzlich","positiv,","vorausgesetzt,","wir","streichen","die","Meetings"],"e":"<b>vorausgesetzt</b> macht aus einem Ja eine Bedingung — sehr nützlich, wenn du zustimmen willst, aber nicht bedingungslos."}]
-</script>
-<script type="application/json" id="daten-gstory">
-{"t":"Bei uns im Betrieb wurde im Frühjahr gerechnet. Bisher arbeiten wir 39 Stunden, im neuen Modell wären es 34 — also fünf Stunden ___ als jetzt, bei gleichem Gehalt. Die Geschäftsführung sagt, wir würden genauso viel schaffen ___ vorher, wenn wir die Hälfte der Meetings streichen. Die kosten nämlich ___ meisten Zeit und bringen am wenigsten Ergebnis. In der Verwaltung klingt das gut. In der Produktion ist es ___ schwieriger, weil jede Schicht besetzt sein muss. Dort wäre es auch ___ als im Büro, weil man mehr Leute bräuchte — und die gibt es wegen des ___ kaum. Für kleine Abteilungen ___ es sich vielleicht wirklich nicht. Am Ende hieß es: Wir testen es ein halbes Jahr. Und rechnen dann noch einmal nach.","o":["weniger","wie","am","deutlich","teurer","Fachkräftemangels","lohnt","als"],"a":[["weniger"],["wie"],["am"],["deutlich"],["teurer"],["Fachkräftemangels"],["lohnt"]]}
-</script>
-<script type="application/json" id="daten-ueb">
-["In den meisten Betrieben …","Etwa die Hälfte …","Bei uns sind es …","Das gilt vor allem für …","In … ist das anders","Nur wenn …","Das heißt, dass …","Also braucht man …","Am Ende führt das zu …","Die Versuche zeigen, dass …","Im Schnitt liegt das bei …","Die Zahl sagt allerdings nichts darüber, ob …","Das gilt nur, solange …","In Branchen mit Schichtdienst …","Unter der Voraussetzung, dass …","Daraus folgt, dass …","Das hätte zur Folge, dass …","Umgekehrt hieße das …"]
-</script>
+<section class="section" data-section="4"><h2 class="st">Frei sprechen</h2><p class="ssub">Sprich zu einem Impuls. Der Leitfaden sagt dir, worüber du reden kannst — die Lernhilfen geben dir die Sätze.</p>
+<div class="scene-wrap"><img src="../amanda/sz-pflege.webp" alt="Eine Pflegekraft bei der Arbeit"></div>
+<div class="tip teal">👥 <strong>In einer kleinen 2er-Gruppe · ⏱️ ca. 10 Minuten:</strong> Sprecht zuerst zu zweit über die Fragen — erzählt euch gegenseitig davon. Danach berichtet ihr der Gruppe kurz.</div>
+<div class="tip"><strong>📋 Leitfaden — sprich über diese Punkte:</strong><ol style="margin:.5rem 0 0 1.2rem;line-height:1.9">
+<li>Wie sieht deine ideale Arbeitswoche aus?</li>
+<li>Würdest du für einen freien Tag auf etwas Lohn verzichten?</li>
+<li>In welchen Berufen ist weniger Arbeitszeit schwierig?</li>
+<li>Bist du produktiver, wenn du ausgeruht bist?</li>
+</ol></div>
+<div class="rmcard"><b>💬 Lernhilfen / Redemittel</b><div style="margin-top:.5rem">
+<span class="rm">Meine ideale Woche wäre …</span>
+<span class="rm">Für einen freien Tag würde ich (nicht) …</span>
+<span class="rm">Schwierig ist es in Berufen wie …</span>
+<span class="rm">Wenn ich ausgeruht bin, …</span>
+</div></div><div class="tip teal">👥 <strong>Zu zweit:</strong> Einer erzählt, der andere stellt <u>zwei</u> Nachfragen. Dann tauschen.</div></section>
+<section class="section" data-section="5"><h2 class="st">⏱️ 90-Sekunden-Challenge</h2><p class="ssub">Zieh ein Wort aus der Stunde und sprich <b>90 Sekunden</b> frei darüber. Die Hilfswörter helfen — starte den Timer!</p>
+<div class="card90"><div class="lbl">🎤 Dein Wort</div><div class="word" id="w90">Bereit?</div><div class="helpwords" id="hw90"><span class="hw">Tipp auf „Neues Wort"</span></div><div class="timer" id="t90">1:30</div><div><button class="btn" id="new90">🎲 Neues Wort</button><button class="btn ghost" id="start90">▶️ Timer starten</button></div></div>
+<div class="tip">💡 <strong>So geht's:</strong> Sag, was das Wort bedeutet, gib ein Beispiel aus deinem Leben und eine Meinung dazu. Ziel: die ganzen 90 Sekunden reden.</div></section>
+<section class="section" data-section="6"><h2 class="st">✅ Üben</h2><p class="ssub">Quiz und Lückentext — tippt die Antworten an.</p><div id="quiz"></div><h2 class="st">✍️ Lückentext</h2><p class="ssub">Wähl das passende Wort.</p><div class="gap" id="gap"></div></section>
+</div><footer><strong>deutschoderwas</strong> — Sprechclub · B1/B2 · Vier-Tage-Woche — <span class="hl">für alle?</span> · Teil 1</footer>
 
 <script>
-
-/* ---- Sprungleiste: sie schaltet die Abschnitte wieder um ----
-   Eine Weile stand alles untereinander. Gemessen an der Stunde
-   „Kritik ueben": 28 512 Pixel, auf dem Handy 34 Bildschirme fuer
-   eine Unterrichtsstunde. Man scrollt und scrollt und weiss nicht,
-   wo man ist — und in der Stunde selbst kommt man nie durch.
-
-   Jetzt zeigt die Seite einen Abschnitt. Die Leiste oben waehlt aus,
-   am Ende jedes Abschnitts steht, was als Naechstes kommt. Wer die
-   ganze Stunde am Stueck sehen will (zum Vorbereiten, zum Drucken),
-   klickt auf „Alles". Beim Drucken kommt ohnehin alles mit, und ein
-   Link mit #abschnitt oeffnet genau dort. */
-(function(){
- var tabs=[].slice.call(document.querySelectorAll('nav.tabs a.tab'));
- var paare=tabs.map(function(a){return {a:a,sec:document.querySelector(a.getAttribute('href'))};})
-               .filter(function(x){return x.sec;});
- if(paare.length<2) return;
- var alles=false, jetzt=paare[0].sec.id;
-
- /* Ohne JavaScript steht die Stunde weiterhin komplett da — erst
-    hier wird ueberhaupt etwas versteckt. */
- document.body.classList.add('schaltet');
-
- var kopf=document.querySelector('.leiste');
- function hoehe(){ return kopf ? kopf.getBoundingClientRect().height+10 : 66; }
-
- /* Die aktive Marke in den schmalen Streifen holen — aber nur ihn
-    schieben. scrollIntoView() nahm die ganze Seite mit: der Titel
-    der Stunde rutschte beim Umschalten aus dem Bild. */
- function markeInsBild(a, weich){
-  var streifen=a.parentNode;
-  if(!streifen || streifen.scrollWidth<=streifen.clientWidth+2) return;
-  /* Gerechnet wird ueber die Rechtecke, nicht ueber offsetLeft: der
-     naechste positionierte Vorfahr ist die Leiste, nicht der Streifen
-     — offsetLeft haette die Marke um die Breite der Niveau-Knoepfe
-     verschoben. */
-  var r=a.getBoundingClientRect(), rs=streifen.getBoundingClientRect();
-  var links=streifen.scrollLeft+(r.left-rs.left)-(rs.width-r.width)/2;
-  links=Math.max(0,Math.min(links,streifen.scrollWidth-streifen.clientWidth));
-  if(Math.abs(links-streifen.scrollLeft)<2) return;
-  /* Beim ersten Aufbau hart setzen. Ein weiches Scrollen im Streifen
-     zog in Chrome die ganze Seite 399 Pixel mit nach unten, weil
-     html{scroll-behavior:smooth} gilt — der Titel der Stunde war
-     dann schon beim Laden aus dem Bild. */
-  if(weich && streifen.scrollTo) streifen.scrollTo({left:links,behavior:'smooth'});
-  else streifen.scrollLeft=links;
- }
-
- /* Der Umschalter erscheint nur, wo er wirklich etwas aendert.
-    Vorher stand er auf jeder Seite, tat aber in vier von sieben
-    Abschnitten gar nichts — man tippt, nichts passiert, und denkt,
-    es sei kaputt. Jetzt sagt sein Verschwinden: Hier gibt es keine
-    zwei Fassungen. */
- var umschalter=document.querySelector('.leiste .nivk');
- function umschalterZeigen(sec){
-  if(!umschalter) return;
-  var da = !!sec.querySelector('.nur-a2, .nur-b1');
-  umschalter.style.display = da ? '' : 'none';
- }
-
- function zeige(id, springen, stumm){
-  var da=paare.filter(function(p){return p.sec.id===id;})[0];
-  if(!da) return;
-  jetzt=id;
-  paare.forEach(function(p){
-   p.sec.hidden = !alles && p.sec.id!==id;
-   p.a.classList.toggle('active', p.sec.id===id);
-  });
-  if(alles) paare.forEach(function(p){ p.sec.hidden=false; });
-  umschalterZeigen(da.sec);
-  markeInsBild(da.a, !!springen);
-  if(springen){
-   var y=da.sec.getBoundingClientRect().top+window.pageYOffset-hoehe();
-   window.scrollTo({top:Math.max(0,y),behavior:'smooth'});
-  }
-  /* Die Marke kommt erst in die Adresse, wenn jemand wirklich
-     umschaltet. Steht sie schon beim Laden drin, springt Chrome
-     nachtraeglich selbst dorthin — sobald die Bilder da sind, zog es
-     die Seite 399 Pixel nach unten und der Titel der Stunde war weg. */
-  if(!stumm){ try{ history.replaceState(null,'','#'+id); }catch(e){} }
- }
- window.stundeZeige=zeige;
-
- tabs.forEach(function(a){
-  a.addEventListener('click',function(ev){
-   var id=(a.getAttribute('href')||'').replace('#','');
-   if(!id) return;
-   ev.preventDefault();
-   if(alles){ alles=false; if(knopfAlles) knopfAlles.setAttribute('aria-pressed','false'); }
-   zeige(id,true);
-  });
- });
-
- /* Am Ende jedes Abschnitts: was jetzt drankommt. In der Stunde
-    haelt das den Takt — man klickt weiter, statt zu suchen. */
- paare.forEach(function(p,i){
-  var naechste=paare[i+1], vorige=paare[i-1];
-  var z=document.createElement('div'); z.className='weiterzeile';
-  if(vorige){
-   var zur=document.createElement('button');
-   zur.type='button'; zur.className='weiterknopf zurueck';
-   zur.innerHTML='← '+vorige.a.textContent.trim();
-   zur.addEventListener('click',function(){ zeige(vorige.sec.id,true); });
-   z.appendChild(zur);
-  }
-  if(naechste){
-   var w=document.createElement('button');
-   w.type='button'; w.className='weiterknopf';
-   w.innerHTML='Weiter: '+naechste.a.textContent.trim()+' →';
-   w.addEventListener('click',function(){ zeige(naechste.sec.id,true); });
-   z.appendChild(w);
-  }
-  if(z.children.length) p.sec.appendChild(z);
- });
-
- /* Der Schalter fuer die lange Ansicht sitzt am Ende der Leiste. */
- var knopfAlles=null;
- var streifen=document.querySelector('nav.tabs');
- if(streifen){
-  knopfAlles=document.createElement('button');
-  knopfAlles.type='button'; knopfAlles.className='tab tabAlles';
-  knopfAlles.setAttribute('aria-pressed','false');
-  knopfAlles.textContent='⇕ Alles';
-  knopfAlles.title='Die ganze Stunde am Stück zeigen';
-  knopfAlles.addEventListener('click',function(){
-   alles=!alles;
-   knopfAlles.setAttribute('aria-pressed', alles?'true':'false');
-   if(alles){ paare.forEach(function(p){ p.sec.hidden=false; }); }
-   else zeige(jetzt,true);
-  });
-  streifen.appendChild(knopfAlles);
- }
-
- var ausLink=(location.hash||'').replace('#','');
- var beimLaden=paare.filter(function(p){return p.sec.id===ausLink;}).length ? ausLink : paare[0].sec.id;
- zeige(beimLaden, false, beimLaden!==ausLink);
-})();
-
-/* ---- Hoehe des klebenden Umschalters messen, damit die
-   Sprungleiste sauber darunter sitzt ---- */
-(function(){
- var leiste=document.querySelector('.niv');
- if(!leiste)return;
- function miss(){document.documentElement.style.setProperty('--leiste',Math.round(leiste.offsetHeight)+'px');}
- miss();
- window.addEventListener('resize',miss);
- if(window.ResizeObserver)new ResizeObserver(miss).observe(leiste);
- if(document.fonts&&document.fonts.ready)document.fonts.ready.then(miss);
-})();
-
-/* ---- Vorlesen ---- */
-function say(t){try{var u=new SpeechSynthesisUtterance(t);u.lang='de-DE';u.rate=.85;speechSynthesis.cancel();speechSynthesis.speak(u);}catch(e){}}
-document.querySelectorAll('.speak').forEach(function(b){if(b.dataset.say)b.onclick=function(){say(b.dataset.say);};});
-
-/* ---- Niveau-Umschalter ---- */
-var nivk=document.querySelectorAll('.nivk button[data-niv]');
-nivk.forEach(function(b){b.onclick=function(){
- var n=b.dataset.niv;document.body.setAttribute('data-niveau',n);
- nivk.forEach(function(x){x.setAttribute('aria-pressed',x.dataset.niv===n?'true':'false');});
- hazaehlen();
+document.querySelectorAll('.tab').forEach(function(b){b.onclick=function(){
+ document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('active');});
+ document.querySelectorAll('.section').forEach(function(x){x.classList.remove('active');});
+ b.classList.add('active');document.querySelector('[data-section="'+b.dataset.tab+'"]').classList.add('active');
+ var n=document.querySelector('.tabs');window.scrollTo({top:n.offsetTop-8,behavior:'instant'});
 };});
-
-/* ---- Hilfe-Knoepfe ---- */
-document.querySelectorAll('.hilfe > button').forEach(function(b){
- var kasten=b.parentElement,text=b.textContent;
- b.setAttribute('aria-expanded','false');
- b.onclick=function(){var auf=kasten.classList.toggle('offen');
-  b.setAttribute('aria-expanded',auf?'true':'false');
-  b.textContent=auf?'✕ Hilfe schließen':text;};
-});
-
-/* ---- Markierte Woerter ----
-   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
-   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
-   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
-
-   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
-   den viele verwechseln. */
-(function(){
- var woerter=[].slice.call(document.querySelectorAll('.wm'));
- if(!woerter.length) return;
- var karte=null;
-
- function zu(){ if(karte){ karte.remove(); karte=null; }
-  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
-
- function auf(w){
-  var schonOffen=w.classList.contains('offen');
-  zu();
-  if(schonOffen) return;
-  w.classList.add('offen');
-  karte=document.createElement('div');
-  karte.className='wmk';
-  var satz=w.dataset.bsp||'';
-  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
-   + '<b>'+w.dataset.wort+'</b>'
-   + '<span>'+(w.dataset.kurz||'')+'</span>'
-   + (satz?'<em>'+satz+'</em>':'')
-   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
-  document.body.appendChild(karte);
-
-  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
-  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
-  var links=r.left+r.width/2-b.width/2;
-  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
-  var oben=r.bottom+window.pageYOffset+9;
-  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
-   oben=r.top+window.pageYOffset-b.height-9;
-  karte.style.left=links+'px'; karte.style.top=oben+'px';
-
-  karte.querySelector('.wmk-zu').onclick=zu;
-  var ton=karte.querySelector('.wmk-ton');
-  if(ton) ton.onclick=function(){ say(satz); };
- }
-
- woerter.forEach(function(w){
-  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
-  w.addEventListener('keydown',function(ev){
-   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
- });
- document.addEventListener('click',zu);
- document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
- window.addEventListener('resize',zu);
- /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
-    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
- document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
-  k.addEventListener('click',zu); });
-})();
-
-/* ---- Bildkarten verdecken ----
-   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
-   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
-   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
-   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
-   Ein einziges fehlendes Element legte die halbe Stunde still. */
-var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-if(bg&&vb){
- vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
-  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
- bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
-}
-
-/* ---- Dialoge: Runde 1 / Runde 2 ---- */
-document.querySelectorAll('.dwrap').forEach(function(d){
- var b=d.querySelector('.rbtn');
- b.onclick=function(){
-  var zwei=d.dataset.runde==='1';
-  d.dataset.runde=zwei?'2':'1';
-  b.textContent=zwei?'◀︎ Runde 1 · Text zeigen':'▶︎ Runde 2 · du antwortest';
-  b.classList.toggle('zwei',zwei);
-  d.querySelectorAll('.dline.b').forEach(function(l){l.classList.remove('zeigen');});
- };
- d.querySelectorAll('.dcue').forEach(function(c){
-  c.onclick=function(){c.closest('.dline').classList.add('zeigen');};});
-});
-
-/* ---- Hausaufgabe abhaken ---- */
-var hastand=document.querySelector('[data-ha-stand]');
-function hazaehlen(){
- if(!hastand)return;
- /* Nach dem Niveau zaehlen, nicht nach offsetParent: beim Laden ist der
-    Hausaufgaben-Abschnitt noch zugeklappt und haette 0 von 0 ergeben. */
- var niv=document.body.getAttribute('data-niveau');
- var weg=niv==='a2'?'.nur-b1':'.nur-a2';
- var da=[].slice.call(document.querySelectorAll('[data-ha]')).filter(function(h){return !h.closest(weg);});
- var fertig=da.filter(function(h){return h.classList.contains('fertig');}).length;
- var voll=da.length>0&&fertig===da.length;
- hastand.textContent=voll?('Alle '+da.length+' Aufgaben geschafft. Stark — bis Mittwoch! 🎉')
-                        :(fertig+' von '+da.length+' Aufgaben geschafft.');
- hastand.classList.toggle('voll',voll);
-}
-document.querySelectorAll('[data-ha]').forEach(function(h){
- h.setAttribute('aria-pressed','false');
- h.onclick=function(){var an=h.classList.toggle('fertig');
-  h.setAttribute('aria-pressed',an?'true':'false');hazaehlen();};
-});
-hazaehlen();
-
-/* ---- Daten aus den JSON-Bloecken im Koerper ----
-   Der Motor ist fuer alle Stunden derselbe; nur die Daten wechseln.
-   Fehlt ein Block, bleibt der Abschnitt einfach leer. */
-function daten(id){
- var el=document.getElementById('daten-'+id);
- if(!el)return null;
- try{return JSON.parse(el.textContent);}catch(e){console.error('Daten "'+id+'" sind kaputt:',e);return null;}
-}
-/* ---- Mischen (Fisher-Yates) ----
-   Ein Vergleich mit Math.random() mischt nicht gleichmaessig, die
-   erste Stelle bleibt zu oft die erste. Deshalb richtig tauschen. */
-function misch(liste){
- var a=liste.slice();
- for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}
- return a;
-}
-
-/* ---- Sprechkarten ---- */
-/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
-   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
-var UEB=daten('ueb')||[];
-if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
-  var uLetzt=-1;
-  document.getElementById('uebnew').onclick=function(){var i;
-    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
-    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
-  };
-}
-
-var SK=daten('sk')||[];
-/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
-   Gepruefte Elemente statt gepruefter Daten. */
-if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
-var lastsk=-1;
-document.getElementById('sknew').onclick=function(){var i;
- do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
- document.getElementById('wsk').innerHTML=SK[i];};
-
-}
-
-/* ---- 90 Sekunden ---- */
-var W90=daten('w90')||[];
-if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
-var last90=-1,t90=null,rest=90;
-function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
-function zeige90(i){
+function say(t){try{var u=new SpeechSynthesisUtterance(t);u.lang='de-DE';u.rate=.9;speechSynthesis.cancel();speechSynthesis.speak(u);}catch(e){}}
+document.querySelectorAll('.speak').forEach(function(b){b.onclick=function(){say(b.dataset.say);};});
+var W90=[{"w": "die Arbeitszeit", "h": ["die Stunden", "der Tag", "flexibel", "das Büro", "der Feierabend", "die Pause"]}, {"w": "der Lohn", "h": ["das Geld", "der Monat", "gleich", "weniger", "die Miete", "verdienen"]}, {"w": "die Produktivität", "h": ["schaffen", "konzentriert", "die Leistung", "weniger Zeit", "effizient", "die Pause"]}, {"w": "die Erholung", "h": ["der freie Tag", "der Schlaf", "die Familie", "ausruhen", "gesund", "der Stress"]}, {"w": "überlastet sein", "h": ["zu viel", "der Stress", "müde", "krank", "die Pause", "der Druck"]}, {"w": "die Schicht", "h": ["die Pflege", "früh", "spät", "die Nacht", "der Plan", "abdecken"]}];var last90=-1,t90=null,rest=90;
+function fmt(s){var m=Math.floor(s/60),r=s%60;return m+":"+(r<10?"0":"")+r;}
+document.getElementById('new90').onclick=function(){var i;do{i=Math.floor(Math.random()*W90.length);}while(i===last90&&W90.length>1);last90=i;
  document.getElementById('w90').textContent=W90[i].w;
- document.getElementById('i90').src=W90[i].b;
- document.getElementById('i90').alt=W90[i].w;
  document.getElementById('hw90').innerHTML=W90[i].h.map(function(x){return '<span class="hw">'+x+'</span>';}).join('');
-}
-document.getElementById('new90').onclick=function(){var i;
- do{i=Math.floor(Math.random()*W90.length);}while(i===last90&&W90.length>1);last90=i;
- zeige90(i);clearInterval(t90);rest=90;document.getElementById('t90').textContent=fmt(rest);};
-document.getElementById('start90').onclick=function(){clearInterval(t90);rest=90;
- var el=document.getElementById('t90');el.textContent=fmt(rest);
- t90=setInterval(function(){rest--;el.textContent=fmt(rest);
-  if(rest<=0){clearInterval(t90);el.textContent='✅ Fertig!';}},1000);};
-zeige90(0);last90=0;
-
-}
-
-/* ---- Quiz ---- */
-var QUIZ=daten('quiz')||[];
-var qc=document.getElementById('quiz');
-if(qc&&QUIZ.length){
-QUIZ.forEach(function(item){
- var d=document.createElement('div');d.className='quiz-q';
- d.innerHTML='<div class="qt">'+item.q+'</div>';
+ clearInterval(t90);rest=90;document.getElementById('t90').textContent=fmt(rest);};
+document.getElementById('start90').onclick=function(){clearInterval(t90);rest=90;var el=document.getElementById('t90');el.textContent=fmt(rest);
+ t90=setInterval(function(){rest--;el.textContent=fmt(rest);if(rest<=0){clearInterval(t90);el.textContent="✅ Fertig!";}},1000);};
+var QUIZ=[{"q": "Bei der Vier-Tage-Woche soll der ___ gleich bleiben.", "o": ["Lohn", "Regen", "Bus"], "c": 0, "e": "Lohn = das Geld für die Arbeit."}, {"q": "Ein freier Tag bedeutet mehr …", "o": ["Erholung", "Verspätung", "Rechnung"], "c": 0, "e": "Erholung = sich ausruhen."}, {"q": "Wer zu viel arbeitet, ist oft …", "o": ["überlastet", "begeistert", "pünktlich"], "c": 0, "e": "überlastet = zu viel auf einmal."}, {"q": "In der Pflege arbeitet man oft in …", "o": ["Schichten", "Ferien", "Farben"], "c": 0, "e": "Schicht = Arbeitszeit früh/spät/nachts."}, {"q": "Weniger Zeit, aber konzentrierter — das steigert die …", "o": ["Produktivität", "Temperatur", "Lautstärke"], "c": 0, "e": "Produktivität = wie viel man schafft."}];var qc=document.getElementById('quiz');
+QUIZ.forEach(function(item){var d=document.createElement('div');d.className='quiz-q';d.innerHTML='<div class="qt">'+item.q+'</div>';
  var op=document.createElement('div');op.className='quiz-opts';
- /* Gemischt, sonst stuende die richtige Antwort immer an erster Stelle
-    und man koennte die ganze Runde raten, ohne zu lesen. */
- var wahl=misch(item.o.map(function(t,i){return {t:t,richtig:i===item.c};}));
- wahl.forEach(function(w){
-  var b=document.createElement('button');b.className='qopt';b.textContent=w.t;
-  b.onclick=function(){
-   if(d.dataset.done)return;d.dataset.done=1;
-   if(w.richtig){b.classList.add('right');}
-   else{
-    b.classList.add('wrong');
-    op.children[wahl.findIndex(function(x){return x.richtig;})].classList.add('right');
-   }
-   d.querySelector('.qexp').classList.add('show');};
+ item.o.forEach(function(t,i){var b=document.createElement('button');b.className='qopt';b.textContent=t;
+  b.onclick=function(){if(d.dataset.done)return;d.dataset.done=1;if(i===item.c){b.classList.add('right');}else{b.classList.add('wrong');op.children[item.c].classList.add('right');}d.querySelector('.qexp').classList.add('show');};
   op.appendChild(b);});
- d.appendChild(op);
- var e=document.createElement('div');e.className='qexp';e.innerHTML='💡 '+item.e;d.appendChild(e);
- qc.appendChild(d);
-});
-
-}
-
-/* ---- Lueckentext ---- */
-var GAP=daten('gap')||[];
-var g=document.getElementById('gap');
-if(g&&GAP.length){
-GAP.forEach(function(item){
- var row=document.createElement('div');row.style.margin='.35rem 0';
- var sel=document.createElement('select');
- var leer=document.createElement('option');leer.textContent='– wählen –';leer.value='';sel.appendChild(leer);
- misch(item.o).forEach(function(o){
-  var op=document.createElement('option');op.textContent=o;op.value=o;sel.appendChild(op);});
- sel.onchange=function(){sel.className=sel.value===item.a?'ok':'no';};
- var teile=item.t.split('___');
- row.appendChild(document.createTextNode(teile[0]));row.appendChild(sel);
- row.appendChild(document.createTextNode(teile[1]||''));
- g.appendChild(row);
-});
-
-}
-
-/* ---- Satzbauer ---- */
-var GBAU=daten('gbau')||[];
-var gbc=document.getElementById('gbau');
-if(gbc&&GBAU.length){
-{GBAU.forEach(function(item){
- var d=document.createElement('div');d.className='gbau';
- d.innerHTML='<div class="gfrage">🧱 '+item.f+'</div>';
- var teile=document.createElement('div');teile.className='gteile';
- var zeile=document.createElement('div');zeile.className='gzeile';
- var gebaut=[];
- misch(item.t).forEach(function(w){
-  var b=document.createElement('button');b.className='gteil';b.textContent=w;
-  b.onclick=function(){b.classList.add('weg');gebaut.push(w);zeile.classList.remove('ok','no');
-   var s=document.createElement('span');s.textContent=w;zeile.appendChild(s);};
-  teile.appendChild(b);});
- d.appendChild(teile);d.appendChild(zeile);
- var fuss=document.createElement('div');fuss.className='gfuss';
- var pr=document.createElement('button');pr.className='gmini';pr.textContent='✅ prüfen';
- var nm=document.createElement('button');nm.className='gmini hell';nm.textContent='↻ nochmal';
- var tp=document.createElement('div');tp.className='gtipp';tp.innerHTML='💡 '+item.e;
- pr.onclick=function(){var richtig=gebaut.join(' ')===item.l.join(' ');
-  zeile.classList.remove('ok','no');zeile.classList.add(richtig?'ok':'no');tp.classList.add('show');};
- nm.onclick=function(){gebaut=[];zeile.innerHTML='';zeile.classList.remove('ok','no');tp.classList.remove('show');
-  teile.querySelectorAll('.gteil').forEach(function(b){b.classList.remove('weg');});};
- fuss.appendChild(pr);fuss.appendChild(nm);d.appendChild(fuss);d.appendChild(tp);
- gbc.appendChild(d);
-});}
-
-}
-
-/* ---- Lueckengeschichte ---- */
-var GSTORY=daten('gstory');
-var gsc=document.getElementById('gstory');
-if(gsc&&GSTORY){
-{
- var gsWahl=misch(GSTORY.o);   /* einmal mischen, alle Luecken zeigen dieselbe Reihenfolge */
- var st=GSTORY.t.split('___');
- st.forEach(function(txt,i){
-  gsc.appendChild(document.createTextNode(txt));
-  if(i<GSTORY.a.length){
-   var sel=document.createElement('select');
-   var leer=document.createElement('option');leer.textContent='– ? –';leer.value='';sel.appendChild(leer);
-   gsWahl.forEach(function(o){var op=document.createElement('option');op.textContent=o;op.value=o;sel.appendChild(op);});
-   (function(loesung){sel.onchange=function(){sel.className=loesung.indexOf(sel.value)>=0?'ok':'no';};})(GSTORY.a[i]);
-   gsc.appendChild(sel);
-  }
- });
-}
-
-}
-
-</script>
-<!-- Die Seite meldet sich beim Konto: wer ist da, ist die Mitgliedschaft
-     aktiv, und wie weit wurde gelesen. Ohne diese Zeile ist die Stunde
-     frei im Netz erreichbar und niemand sieht, dass sie benutzt wurde. -->
-<script src="../lektion-konto.js?v=1"></script>
-</body>
-</html>
+ d.appendChild(op);var e=document.createElement('div');e.className='qexp';e.innerHTML='💡 '+item.e;d.appendChild(e);qc.appendChild(d);});
+var GAP=[{"t": "Meine ___ ist von 8 bis 16 Uhr.", "o": ["Arbeitszeit", "Freizeit", "Reisezeit"], "a": "Arbeitszeit"}, {"t": "Am Wochenende ___ ich mich richtig.", "o": ["erhole", "koche", "fahre"], "a": "erhole"}, {"t": "Viele Angestellte fühlen sich ___.", "o": ["überlastet", "begeistert", "erkältet"], "a": "überlastet"}, {"t": "Manche Firmen ___ die Vier-Tage-Woche ___.", "o": ["führen … ein", "kaufen … ab", "laden … ein"], "a": "führen … ein"}, {"t": "Es geht um die ___ von Job und Familie.", "o": ["Vereinbarkeit", "Verspätung", "Verabredung"], "a": "Vereinbarkeit"}];var g=document.getElementById('gap');
+GAP.forEach(function(item){var span=document.createElement('div');span.style.margin='.3rem 0';
+ var sel=document.createElement('select');var opt0=document.createElement('option');opt0.textContent='— wählen —';opt0.value='';sel.appendChild(opt0);
+ item.o.slice().sort().forEach(function(o){var op=document.createElement('option');op.textContent=o;op.value=o;sel.appendChild(op);});
+ sel.onchange=function(){if(sel.value===item.a){sel.className='ok';}else if(sel.value===''){sel.className='';}else{sel.className='no';}};
+ span.innerHTML=item.t.replace('___','<b id="slot"></b>');span.querySelector('#slot').replaceWith(sel);g.appendChild(span);});
+</script></body></html>

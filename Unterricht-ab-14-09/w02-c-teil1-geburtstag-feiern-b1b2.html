@@ -1,1365 +1,245 @@
 <!DOCTYPE html><html lang="de"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Muss man Geburtstage eigentlich feiern? · Sprechclub B1/B2 | deutschoderwas</title>
-<!--
-  deutschoderwas · Sprechclub · Mo 21.9. 17:30 und 19:30 · Strang C · Teil 1 · ab B1
-  Muss man Geburtstage eigentlich feiern? — Für die einen ist es der schönste Tag im Jahr, für die anderen eine Pflichtveranstaltung mit Kuchen. Heute sammeln wir die Wörter, die Argumente — und die Sätze, mit denen man höflich absagt.
-  Erzeugt von bau/mach-stunde.js aus w02-c1-geburtstag.json. Nicht von Hand aendern.
-  Aufbau und Design wie maengel-melden-b1.html.
--->
+<title>Geburtstage <span class="hl">feiern</span> · Teil 1 · Sprechclub B1/B2 | deutschoderwas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ============================================================
-   stunde-club.css — die Stunde im Aussehen von
-   deutschoderwas-club.de
-
-   Vorher trugen die Stunden einen eigenen Look: Fraunces als
-   Serifenschrift, cremefarbener Verlauf, schwarze Rahmen mit
-   harten versetzten Schatten. Fuer sich schoen — aber daneben
-   sah die Website aus wie eine andere Marke.
-
-   Die Werte hier stammen eins zu eins aus index.html, der
-   Startseite des Clubs: dieselben Farben, dieselben Schriften,
-   dieselbe Fahnenleiste oben, derselbe goldene Marker.
-
-     Inter          Fliesstext
-     Space Grotesk  Ueberschriften, Zahlen, Knoepfe
-     #14181B        Text
-     #D42A21        Signalfarbe (Augenbraue, wichtige Marken)
-     #FFCE00        Gold (Marker, Hinweise)
-     #1B9BC0        Tuerkis (Knoepfe, aktive Marke)
-     #F6F9FA        warmes Papier fuer Kaesten
-     #E7ECEE        Linien
-
-   Was hier nicht mehr steht, gibt es auf der Seite auch nicht
-   mehr: Wortschatzkarten, Grammatiktafeln, Quiz und Lueckentext
-   sind aus der Stunde raus. Die Stunde ist zum Sprechen da.
-   ============================================================ */
-
-:root{
-  --ink:#14181B; --soft:#5A6B72; --line:#E7ECEE;
-  --turq:#1B9BC0; --turq-d:#15788F; --teal-ink:#10627A; --mint:#EFFBF8;
-  --red:#D42A21; --red-d:#B30000;
-  --gold:#FFCE00; --gold-mark:#FFD84D; --gold-d:#E0A500;
-  --bg:#FFFFFF; --warm:#F6F9FA; --pink:#FFF1EE;
-  --schatten:0 1px 2px rgba(22,22,22,.04), 0 10px 28px rgba(22,22,22,.05);
-  --schatten-k:0 1px 2px rgba(22,22,22,.05);
-  /* Fuer Bausteine, die noch die alten Namen benutzen. */
-  --cream:#FFFFFF; --cream-warm:#F6F9FA; --paper:#FFFFFF;
-  --ink-soft:#5A6B72; --ink-mute:#8C93A0; --sand:#E7ECEE;
-  --teal:#1B9BC0; --teal-soft:#EFFBF8;
-  --yellow:#FFCE00; --yellow-soft:#F6F9FA;
-  --red-soft:#FFF1EE; --green:#4E9E12;
-}
-*{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;}
-html,body{max-width:100%;overflow-x:clip;}
-img{height:auto;max-width:100%;}
-body{
-  font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);
-  line-height:1.6;-webkit-font-smoothing:antialiased;
-}
-h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;font-weight:700;letter-spacing:-.02em;line-height:1.12;}
-
-/* Die Fahnenleiste vom Club, ganz oben. */
-.flagbar{
-  height:5px;
-  background:linear-gradient(90deg,#14181B 0 25%,var(--red) 25% 50%,var(--gold) 50% 75%,var(--turq) 75% 100%);
-}
-
-.wrapper{max-width:900px;margin:0 auto;padding:2rem 1.25rem 5rem;}
-
-/* ---------- Kopf ---------- */
-.eyebrow{
-  text-align:center;font-size:.72rem;font-weight:700;letter-spacing:.16em;
-  text-transform:uppercase;color:var(--red);margin-bottom:.65rem;
-}
-h1.title{font-size:clamp(1.9rem,4.6vw,3rem);text-align:center;}
-h1.title .hl{
-  background:var(--gold-mark);border-radius:7px;padding:.02em .26em;font-style:italic;
-  -webkit-box-decoration-break:clone;box-decoration-break:clone;
-}
-.subtitle{
-  text-align:center;max-width:38rem;margin:.85rem auto 0;
-  font-size:1.02rem;color:var(--soft);
-}
-.niv-wie{text-align:center;max-width:34rem;margin:.75rem auto 0;font-size:.85rem;color:var(--soft);}
-
-/* ---------- Leiste: Niveau und Sprungmarken ---------- */
-.leiste{
-  position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:.5rem;
-  width:100%;margin:1.1rem 0 1.6rem;padding:.4rem .5rem;
-  background:rgba(255,255,255,.94);backdrop-filter:blur(10px);
-  border:1px solid var(--line);border-radius:14px;box-shadow:var(--schatten-k);
-}
-.nivk{display:flex;gap:.2rem;flex:none;background:#F4F2ED;border-radius:999px;padding:3px;}
-.nivk button{
-  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;
-  border:none;border-radius:999px;padding:.32rem .8rem;background:transparent;color:var(--soft);
-  transition:.15s;white-space:nowrap;
-}
-.nivk button[aria-pressed="true"]{background:var(--ink);color:#fff;}
-.nivk button:focus-visible{outline:3px solid var(--turq-d);outline-offset:2px;}
-.tabs{
-  display:flex;flex-wrap:nowrap;gap:.3rem;overflow-x:auto;overscroll-behavior-x:contain;
-  flex:1 1 auto;min-width:0;margin:0;padding:.1rem 0;
-  scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;
-}
-.tabs::-webkit-scrollbar{display:none;}
-.tab{
-  flex:none;white-space:nowrap;font-family:'Space Grotesk',sans-serif;
-  font-size:.84rem;font-weight:600;color:var(--ink);background:#fff;
-  border:1px solid var(--line);border-radius:999px;padding:.4rem .8rem;cursor:pointer;
-  display:inline-flex;gap:.3rem;align-items:center;transition:.15s;
-}
-.tab:hover{border-color:var(--turq-d);color:var(--teal-ink);}
-.tab.active{background:var(--turq-d);border-color:var(--turq-d);color:#fff;}
-.tabAlles{border-style:dashed;color:var(--soft);}
-.tabAlles[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff;border-style:solid;}
-
-/* ---------- Abschnitte ---------- */
-/* Der Wechsel soll nicht springen. Eine halbe Sekunde, weich
-   auslaufend, und der Inhalt kommt ein kleines Stueck von unten —
-   gerade genug, dass das Auge mitgeht, ohne dass man wartet. */
-.section{animation:auf .5s cubic-bezier(.22,.8,.3,1);}
-body.schaltet .section[hidden]{display:none !important;}
-@keyframes auf{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
-.leiste .nivk,.tab,.weiterknopf,.btn,.hilf summary{transition:background .25s ease,color .25s ease,border-color .25s ease;}
-.hilf-i{animation:auf .35s cubic-bezier(.22,.8,.3,1);}
-@media(prefers-reduced-motion:reduce){
-  .section,.hilf-i{animation:none;}
-  html{scroll-behavior:auto;}
-}
-section.section{scroll-margin-top:calc(var(--leiste,58px) + 1rem);}
-/* Ein kurzer Abschnitt wie der Abschluss ist niedriger als das
-   Fenster. Dann kann die Seite gar nicht weit genug scrollen, und
-   der Titel der Stunde bleibt oben stehen — es sah aus, als waere
-   man versehentlich am Anfang gelandet. Mit dieser Mindesthoehe
-   landet jeder Abschnitt gleich weit oben. */
-body.schaltet section.section{min-height:calc(100vh - 9rem);}
-body.schaltet section.section:last-of-type{min-height:0;}
-h2.st{font-size:clamp(1.4rem,3vw,1.9rem);margin:.4rem 0 .35rem;}
-h2.st .hl{
-  background:var(--gold-mark);border-radius:7px;padding:.02em .24em;font-style:italic;
-  -webkit-box-decoration-break:clone;box-decoration-break:clone;
-}
-.ssub{color:var(--soft);margin-bottom:1.1rem;font-size:.97rem;max-width:44rem;}
-
-/* Zeit und Aufstellung, direkt unter der Ueberschrift. */
-.regie{
-  display:inline-flex;align-items:center;gap:.55rem;flex-wrap:wrap;
-  background:var(--warm);border:1px solid #E7ECEE;border-radius:999px;
-  padding:.3rem .85rem;margin:0 0 1.1rem;font-size:.82rem;
-}
-.regie span{font-weight:800;font-variant-numeric:tabular-nums;font-family:'Space Grotesk',sans-serif;}
-.regie b{font-weight:500;color:var(--soft);}
-
-/* ---------- Ablauftafel ---------- */
-.takt{display:flex;flex-direction:column;gap:.4rem;margin:1rem 0;}
-.takt-z{
-  display:grid;grid-template-columns:auto auto 1fr;gap:.15rem .75rem;align-items:start;
-  background:#fff;border:1px solid var(--line);border-radius:12px;padding:.7rem .85rem;
-}
-.takt-m{
-  grid-row:span 2;align-self:center;min-width:3.4rem;text-align:center;
-  background:var(--ink);color:#fff;border-radius:8px;padding:.28rem .4rem;
-  font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.8rem;font-variant-numeric:tabular-nums;
-}
-.takt-z2{grid-row:span 2;align-self:center;font-size:1.2rem;line-height:1;}
-.takt-t b{display:block;font-family:'Space Grotesk',sans-serif;font-size:1rem;}
-.takt-t span{display:block;font-size:.9rem;line-height:1.45;color:var(--soft);margin-top:.05rem;}
-.takt-t em{display:block;font-style:normal;font-size:.78rem;font-weight:700;color:var(--teal-ink);margin-top:.2rem;}
-
-/* ---------- Ankommen und Abschluss ---------- */
-.ank{
-  background:var(--warm);border:1px solid #E7ECEE;border-radius:14px;padding:1rem 1.15rem;
-  font-family:'Space Grotesk',sans-serif;font-size:1.16rem;line-height:1.4;font-weight:600;
-}
-.ank.zweit{
-  margin-top:.7rem;background:#fff;border:1px dashed var(--line);
-  font-family:'Inter',sans-serif;font-size:.97rem;font-weight:500;
-}
-.ank.zweit span{
-  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
-  color:var(--soft);margin-bottom:.25rem;
-}
-
-/* ---------- Tippkasten ---------- */
-.tip{
-  background:var(--warm);border:1px solid #E7ECEE;border-left:4px solid var(--gold);
-  border-radius:12px;padding:.8rem 1rem;margin:1.1rem 0 0;font-size:.94rem;line-height:1.6;
-}
-.tip.teal{background:var(--mint);border-color:#CDEEF3;border-left-color:var(--turq-d);}
-
-/* Die Anweisung als kurze Schritte statt als Absatz. */
-.schritte{list-style:none;display:flex;flex-direction:column;gap:.35rem;margin:0 0 1.1rem;padding:0;}
-.schritte li{
-  display:grid;grid-template-columns:auto 1fr;gap:.55rem;align-items:start;
-  font-size:.94rem;line-height:1.5;color:var(--soft);
-}
-.schritte li span{
-  flex:none;width:20px;height:20px;border-radius:50%;margin-top:.12rem;
-  background:#F1EFEA;color:var(--ink);display:grid;place-items:center;
-  font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:700;
-}
-.schritte li.regel{color:var(--ink);}
-.schritte li.regel span{background:var(--gold);color:var(--ink);}
-
-/* ---------- Dialog ---------- */
-.dwrap{
-  background:#fff;border:1px solid var(--line);border-radius:16px;
-  padding:1rem 1.05rem 1.1rem;margin:0 0 1rem;box-shadow:var(--schatten-k);
-}
-.dhead{display:flex;align-items:center;gap:.65rem;flex-wrap:wrap;margin-bottom:.55rem;}
-.dhead img{width:44px;height:44px;object-fit:cover;border-radius:50%;flex:none;}
-.dhead h4{font-size:1.02rem;flex:1 1 12rem;}
-.rbtn{
-  font-family:'Space Grotesk',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer;
-  border:1px solid var(--turq-d);background:var(--mint);color:var(--teal-ink);
-  border-radius:999px;padding:.32rem .75rem;
-}
-.rbtn:hover{background:var(--turq-d);color:#fff;}
-.dsit{font-size:.9rem;color:var(--soft);margin-bottom:.75rem;}
-.dline{display:grid;grid-template-columns:auto 1fr;gap:.5rem;margin:.4rem 0;align-items:start;}
-.dwho{
-  width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
-  font-family:'Space Grotesk',sans-serif;font-size:.75rem;font-weight:700;color:#fff;flex:none;
-}
-.dwho.a{background:var(--red);}
-.dwho.b{background:var(--turq-d);}
-.dtxt{
-  background:var(--mint);border-radius:4px 14px 14px 14px;padding:.55rem .8rem;
-  font-size:.97rem;line-height:1.55;
-}
-.dline.b{grid-template-columns:1fr auto;}
-.dline.b .dwho{order:2;}
-.dline.b .dtxt{order:1;background:var(--warm);border-radius:14px 4px 14px 14px;}
-.dcue{
-  grid-column:1 / -1;margin:.2rem 0 .3rem;font-size:.85rem;color:var(--soft);
-  background:#fff;border:1px dashed var(--line);border-radius:10px;padding:.4rem .65rem;cursor:pointer;
-}
-.dcue .kl{display:block;font-size:.7rem;color:var(--ink-mute);margin-top:.15rem;}
-.dline .dcue{display:none;}
-.dwrap[data-runde="2"] .dline.b .dtxt{visibility:hidden;}
-.dwrap[data-runde="2"] .dline.b .dcue{display:block;}
-.dline.zeigen .dtxt{visibility:visible !important;}
-img.dbild{max-width:160px;border-radius:10px;margin-top:.4rem;}
-.dbtn{margin-top:.7rem;}
-
-/* ---------- Sprechen-Knopf ---------- */
-.speak{
-  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;
-  border:1px solid var(--line);background:#fff;color:var(--ink);
-  border-radius:999px;padding:.35rem .8rem;
-}
-.speak:hover{border-color:var(--ink);}
-
-/* ---------- 90 Sekunden ---------- */
-.card90{
-  background:#fff;border:1px solid var(--line);border-radius:18px;
-  padding:1.1rem 1.15rem 1.2rem;text-align:center;box-shadow:var(--schatten);
-}
-/* Das Bild in den 90 Sekunden ist das einzige grosse auf der Seite.
-   Weiche Ecken, ein heller Rand statt einer harten Kante, und es
-   blendet mit dem Wort zusammen ein — kein Springen beim Wechsel. */
-.card90 img{
-  width:100%;max-width:230px;border-radius:14px;margin:0 auto .8rem;display:block;
-  border:1px solid var(--line);animation:auf .45s cubic-bezier(.22,.8,.3,1);
-}
-.card90 .lbl{
-  font-size:.7rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase;
-  color:var(--red);margin-bottom:.3rem;
-}
-.card90 .word{font-family:'Space Grotesk',sans-serif;font-size:1.7rem;font-weight:700;line-height:1.2;}
-.helpwords{display:flex;flex-wrap:wrap;gap:.35rem;justify-content:center;margin:.75rem 0 .9rem;}
-.hw{
-  background:var(--warm);border:1px solid #E7ECEE;border-radius:999px;
-  padding:.28rem .7rem;font-size:.85rem;font-weight:500;
-}
-.timer{
-  font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:700;
-  font-variant-numeric:tabular-nums;color:var(--teal-ink);
-}
-.zeit{display:block;}
-.btn{
-  font-family:'Space Grotesk',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;
-  border:1px solid var(--turq-d);background:var(--turq-d);color:#fff;
-  border-radius:999px;padding:.5rem 1.1rem;margin:.25rem .2rem 0;
-}
-.btn.ghost{background:#fff;color:var(--teal-ink);}
-.btn:hover{background:#10627A;border-color:#10627A;color:#fff;}
-
-/* ---------- Rollenspiel und Sprechkarten ---------- */
-.rmcard{
-  background:#fff;border:1px solid var(--line);border-radius:14px;
-  padding:.9rem 1rem;margin:0 0 .8rem;
-}
-.rmcard>b{display:block;font-family:'Space Grotesk',sans-serif;font-size:1rem;margin-bottom:.35rem;}
-.rm{
-  display:inline-block;background:var(--mint);border:1px solid #CDEEF3;color:var(--teal-ink);
-  border-radius:999px;padding:.25rem .65rem;margin:.15rem .2rem .15rem 0;font-size:.87rem;font-weight:500;
-}
-.bsp{
-  background:var(--warm);border-left:4px solid var(--gold);border-radius:0 10px 10px 0;
-  padding:.55rem .8rem;margin:.6rem 0 0;font-size:.95rem;line-height:1.55;
-}
-.bsp .wer{
-  display:block;font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--soft);margin-bottom:.15rem;
-}
-
-/* ---------- Rollenspiel: wer bin ich, was will ich ----------
-   Die Lage stand vorher als ein grauer Satz da. Zwei Leute, die
-   gleich sprechen sollen, mussten daraus selbst herauslesen, wer sie
-   sind. Jetzt stehen die Rollen nebeneinander, in denselben Farben
-   wie im Dialog: A rot, B tuerkis. */
-.rsp{
-  background:#fff;border:1px solid var(--line);border-radius:16px;
-  padding:.9rem 1rem 1rem;margin:0 0 .9rem;box-shadow:var(--schatten-k);
-}
-.rsp-kopf{display:flex;align-items:center;gap:.6rem;margin-bottom:.7rem;}
-.rsp-nr{
-  flex:none;width:26px;height:26px;border-radius:8px;background:var(--ink);color:#fff;
-  display:grid;place-items:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.85rem;
-}
-.rsp-kopf b{font-family:'Space Grotesk',sans-serif;font-size:1.02rem;line-height:1.25;}
-.rsp-rollen{display:grid;gap:.5rem;margin:0 0 .75rem;}
-@media(min-width:560px){ .rsp-rollen{grid-template-columns:1fr 1fr;} }
-.rsp-r{
-  display:grid;grid-template-columns:auto 1fr;gap:.5rem;align-items:start;
-  border-radius:12px;padding:.6rem .75rem;
-}
-.rsp-r span{
-  width:24px;height:24px;border-radius:50%;display:grid;place-items:center;color:#fff;
-  font-family:'Space Grotesk',sans-serif;font-size:.75rem;font-weight:700;
-}
-.rsp-r p{font-size:.93rem;line-height:1.5;}
-.rsp-r.a{background:var(--pink);}
-.rsp-r.a span{background:var(--red);}
-.rsp-r.b{background:var(--mint);}
-.rsp-r.b span{background:var(--turq-d);}
-.rsp-lage{background:#F7F6F3;border-radius:12px;padding:.6rem .8rem;margin:0 0 .75rem;font-size:.93rem;line-height:1.5;}
-.rsp-lage span{
-  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
-  color:var(--soft);margin-bottom:.2rem;
-}
-.rsp-saetze{margin:0 0 .7rem;}
-.rsp-lbl{
-  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
-  color:var(--soft);margin-bottom:.35rem;
-}
-.rsp-ziel{
-  background:var(--warm);border-left:4px solid var(--gold);border-radius:0 10px 10px 0;
-  padding:.55rem .8rem;font-size:.92rem;line-height:1.5;
-}
-.rsp-ziel span{
-  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
-  color:var(--soft);margin-bottom:.15rem;
-}
-
-/* ---------- Anfangshilfe ----------
-   Zugeklappt eine Zeile, aufgeklappt drei Satzanfaenge. Wer sie
-   nicht braucht, sieht fast nichts. */
-.hilf{margin:.8rem 0 0;}
-.hilf summary{
-  cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:.35rem;
-  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;color:var(--teal-ink);
-  background:var(--mint);border:1px solid #CDEEF3;border-radius:999px;padding:.32rem .8rem;
-}
-.hilf summary::-webkit-details-marker{display:none;}
-.hilf[open] summary{background:var(--turq-d);color:#fff;border-color:var(--turq-d);}
-.hilf-i{display:flex;flex-direction:column;gap:.35rem;margin:.55rem 0 0;}
-.hilf-i span{
-  background:#fff;border:1px dashed var(--line);border-radius:10px;
-  padding:.45rem .7rem;font-size:.93rem;line-height:1.5;
-}
-
-/* ---------- Debatte ---------- */
-.deb-these{
-  background:var(--ink);color:#fff;border-radius:14px;padding:1rem 1.15rem;
-  font-family:'Space Grotesk',sans-serif;font-size:1.12rem;line-height:1.4;font-weight:600;margin:0 0 .9rem;
-}
-.deb-seiten{display:grid;gap:.7rem;margin:0 0 .9rem;}
-@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
-.deb-s{background:#fff;border:1px solid var(--line);border-radius:14px;padding:.85rem .95rem;}
-.deb-s b{
-  display:block;font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:800;
-  letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem;
-}
-.deb-s.pro{border-top:4px solid var(--turq-d);}
-.deb-s.pro b{color:var(--teal-ink);}
-.deb-s.con{border-top:4px solid var(--red);}
-.deb-s.con b{color:var(--red);}
-.deb-s ul{margin:0;padding-left:1.05rem;font-size:.94rem;line-height:1.6;}
-.deb-s li{margin:.3rem 0;}
-.deb-s p{margin:0;font-size:.94rem;line-height:1.6;color:var(--soft);}
-.deb-mittel{background:var(--warm);border:1px solid #E7ECEE;border-radius:14px;padding:.85rem 1rem;margin:0 0 .9rem;}
-.deb-mittel b{
-  display:block;font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:800;
-  letter-spacing:.1em;text-transform:uppercase;color:var(--soft);margin-bottom:.5rem;
-}
-.deb-chips{display:flex;flex-wrap:wrap;gap:.35rem;}
-.deb-chips span{
-  background:#fff;border:1px solid #E7ECEE;border-radius:999px;
-  padding:.3rem .7rem;font-size:.88rem;font-weight:500;
-}
-.deb-mehr{border:1px dashed var(--line);border-radius:14px;padding:.85rem 1rem;}
-.deb-mehr b{
-  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
-  color:var(--soft);margin-bottom:.35rem;
-}
-.deb-mehr ul{margin:0;padding-left:1.05rem;font-size:.93rem;line-height:1.6;}
-
-/* ---------- Hausaufgabe ---------- */
-.hagrid{display:grid;gap:.6rem;}
-.ha{
-  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .7rem;align-items:start;
-  background:#fff;border:1px solid var(--line);border-radius:14px;padding:.8rem .9rem;
-}
-.ha .box{
-  grid-row:span 2;width:22px;height:22px;border:2px solid var(--line);border-radius:6px;
-  cursor:pointer;align-self:center;
-}
-.ha.fertig .box{background:var(--turq-d);border-color:var(--turq-d);}
-.ha.fertig .htxt{opacity:.55;text-decoration:line-through;}
-.ha .hi{grid-row:span 2;align-self:center;font-size:1.15rem;}
-.ha .htxt b{display:block;font-family:'Space Grotesk',sans-serif;font-size:.97rem;}
-.ha .htxt{font-size:.92rem;line-height:1.55;color:var(--soft);}
-.hastand{
-  font-family:'Space Grotesk',sans-serif;font-size:.85rem;font-weight:700;
-  color:var(--soft);margin:.7rem 0 0;
-}
-.zeit{
-  display:inline-block;background:var(--mint);border:1px solid #CDEEF3;color:var(--teal-ink);
-  border-radius:999px;padding:.1rem .5rem;font-size:.72rem;font-weight:700;margin-left:.35rem;
-}
-.hilfe{
-  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;
-  border:1px solid var(--line);background:#fff;border-radius:999px;padding:.35rem .8rem;margin:.6rem 0 0;
-}
-.inhalt{
-  display:none;background:var(--warm);border:1px solid #E7ECEE;border-radius:12px;
-  padding:.75rem .9rem;margin:.55rem 0 0;font-size:.93rem;line-height:1.6;
-}
-.inhalt.offen{display:block;}
-
-/* ---------- Markierte Woerter ---------- */
-.wm{
-  cursor:pointer;background:var(--gold-mark);border-radius:5px;padding:.02em .2em;
-  -webkit-box-decoration-break:clone;box-decoration-break:clone;
-}
-.wm.schwer{background:transparent;border-bottom:2px dotted var(--red);border-radius:0;}
-.wm:hover,.wm.offen{background:var(--gold);}
-.wm.schwer:hover,.wm.schwer.offen{background:var(--pink);}
-.wm:focus-visible{outline:3px solid var(--turq-d);outline-offset:2px;}
-.wmk{
-  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
-  background:#fff;border:1px solid var(--line);border-radius:14px;
-  box-shadow:var(--schatten);padding:.8rem .95rem .85rem;
-}
-.wmk b{display:block;font-family:'Space Grotesk',sans-serif;font-size:1.05rem;padding-right:1.4rem;}
-.wmk span{display:block;margin-top:.25rem;font-size:.92rem;line-height:1.5;color:var(--soft);}
-.wmk em{
-  display:block;margin-top:.5rem;padding-left:.65rem;border-left:3px solid var(--turq-d);
-  font-style:italic;font-size:.91rem;line-height:1.5;
-}
-.wmk-zu{
-  position:absolute;top:.4rem;right:.45rem;border:none;background:transparent;
-  font-size:.9rem;line-height:1;cursor:pointer;color:var(--soft);padding:.2rem;
-}
-.wmk-ton{
-  margin-top:.55rem;border:1px solid var(--line);background:#fff;color:var(--ink);
-  border-radius:999px;padding:.28rem .7rem;font-family:'Space Grotesk',sans-serif;
-  font-size:.78rem;font-weight:700;cursor:pointer;
-}
-
-/* ---------- Weiter und zurueck ---------- */
-.weiterzeile{
-  display:flex;gap:.6rem;flex-wrap:wrap;justify-content:space-between;
-  margin:1.8rem 0 .4rem;padding-top:1.1rem;border-top:1px solid var(--line);
-}
-.weiterknopf{
-  font-family:'Space Grotesk',sans-serif;font-size:.92rem;font-weight:700;cursor:pointer;
-  border:1px solid var(--turq-d);background:var(--turq-d);color:#fff;
-  border-radius:999px;padding:.55rem 1.1rem;margin-left:auto;transition:.15s;
-}
-.weiterknopf.zurueck{background:#fff;color:var(--teal-ink);margin-left:0;margin-right:auto;}
-.weiterknopf:hover{background:#10627A;border-color:#10627A;color:#fff;}
-
-/* ---------- Niveau-Umschalter ---------- */
-body[data-niveau="a2"] .nur-b1{display:none !important;}
-body[data-niveau="b1"] .nur-a2{display:none !important;}
-
-/* ---------- Fuss ---------- */
-footer{
-  margin-top:3rem;padding-top:1.2rem;border-top:1px solid var(--line);
-  font-size:.85rem;color:var(--soft);text-align:center;
-}
+:root{--cream:#FDF6EC;--cream-warm:#FBEDD8;--paper:#FFFFFF;--ink:#262019;--ink-soft:#5C4E3E;--ink-mute:#A8957D;--red:#E8302A;--red-soft:#FCE5E3;--teal:#0FB5A6;--teal-soft:#D7F0EC;--yellow:#FFD24A;--yellow-soft:#FFF1C2;--sand:#F0E2C8;--green:#2E9E5B;}
+*{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}
+body{background:linear-gradient(180deg,#FDE6E0 0%,var(--cream) 14%,var(--cream) 100%);color:var(--ink);font-family:'Inter',sans-serif;line-height:1.55;min-height:100vh;}
+.wrapper{max-width:1080px;margin:0 auto;padding:2.2rem 1.5rem 5rem;}
+.eyebrow{text-align:center;font-size:.78rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--red);margin-bottom:.7rem;}
+h1.title{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(2rem,5vw,3.6rem);line-height:1.05;text-align:center;letter-spacing:-.01em;}
+h1.title .hl{position:relative;display:inline-block;font-style:italic;padding:.05em .3em;}
+h1.title .hl::before{content:'';position:absolute;inset:0;background:var(--yellow);border-radius:12px;transform:rotate(-2deg);z-index:-1;}
+.subtitle{text-align:center;max-width:660px;margin:.8rem auto 0;font-size:1.05rem;color:var(--ink-soft);}
+.hero-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;margin:1rem auto 0;}
+.hero-tag{background:var(--paper);border:1.5px solid var(--sand);border-radius:999px;padding:.3rem .85rem;font-size:.82rem;font-weight:600;}
+.hero-tag b{color:var(--red);}
+.tabs{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;background:rgba(251,237,216,.94);backdrop-filter:blur(8px);border-radius:20px;padding:.5rem;margin:1.8rem auto;max-width:fit-content;}
+.tab{font-size:.92rem;font-weight:600;border:2px solid transparent;background:var(--paper);color:var(--ink);padding:.5rem 1rem;border-radius:999px;cursor:pointer;transition:.15s;display:inline-flex;gap:.35rem;align-items:center;}
+.tab:hover{border-color:var(--ink);transform:translateY(-1px);}
+.tab.active{background:var(--red);color:#fff;border-color:var(--red);}
+.section{display:none;animation:fade .35s ease;}.section.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+h2.st{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(1.7rem,3.4vw,2.3rem);text-align:center;margin:1.8rem 0 .4rem;}
+.ssub{text-align:center;color:var(--ink-soft);margin-bottom:1.3rem;}
+.scene-wrap{background:var(--paper);border:4px solid var(--paper);border-radius:20px;box-shadow:0 14px 38px rgba(38,32,25,.16);overflow:hidden;margin:1rem 0;}
+.scene-wrap img{width:100%;display:block;}
+.tip{background:var(--yellow-soft);border:2px dashed var(--yellow);border-radius:16px;padding:.9rem 1.2rem;font-size:.95rem;margin:1rem 0;line-height:1.65;}
+.tip strong{color:var(--red);}.tip.teal{background:var(--teal-soft);border-color:var(--teal);}
+.tip u{text-decoration-color:var(--red);text-underline-offset:3px;}
+.qlist{list-style:none;display:grid;gap:.55rem;margin:.6rem 0;}
+.qlist li{background:var(--paper);border:1.5px solid var(--sand);border-left:5px solid var(--teal);border-radius:12px;padding:.7rem 1rem;font-weight:500;}
+.vgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:.7rem;margin:1rem 0;}
+@media(max-width:640px){.vgrid{grid-template-columns:1fr;}}
+.vcard{background:var(--paper);border:1.5px solid var(--sand);border-radius:14px;padding:.85rem 1rem;}
+.vcard .w{font-weight:700;font-size:1.05rem;color:var(--ink);}
+.vcard .w .art{color:var(--red);}
+.vcard .ex{font-family:'Space Grotesk',sans-serif;font-style:italic;color:var(--ink-soft);font-size:.92rem;margin-top:.25rem;}
+.vcard .speak{margin-top:.4rem;background:var(--teal-soft);border:none;color:#0a7d72;font-weight:700;border-radius:999px;padding:.2rem .7rem;font-size:.78rem;cursor:pointer;}
+.dwrap{background:var(--paper);border:1.5px solid var(--sand);border-radius:16px;padding:1.1rem 1.2rem;margin:1rem 0;}
+.dwrap h4{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;margin-bottom:.2rem;color:var(--red);}
+.dsit{font-size:.9rem;color:var(--ink-soft);margin-bottom:.7rem;}
+.dline{display:flex;gap:.5rem;margin:.35rem 0;align-items:flex-start;}
+.dwho{flex:none;width:26px;height:26px;border-radius:50%;font-size:.8rem;font-weight:700;display:flex;align-items:center;justify-content:center;color:#fff;}
+.dwho.a{background:var(--red);}.dwho.b{background:var(--teal);}
+.dtxt{background:var(--cream-warm);border-radius:12px;padding:.4rem .7rem;font-size:.96rem;}
+.dline.b .dtxt{background:var(--teal-soft);}
+.dbtn{margin-top:.6rem;background:var(--red);color:#fff;border:none;border-radius:999px;padding:.4rem 1rem;font-weight:700;cursor:pointer;font-size:.85rem;}
+.mk{background:var(--yellow-soft);border-bottom:2px solid var(--yellow);border-radius:4px;padding:.02em .22em;font-weight:600;-webkit-box-decoration-break:clone;box-decoration-break:clone;}
+.mk.g{background:var(--teal-soft);border-bottom-color:var(--teal);}
+.mklegende{font-size:.84rem;color:var(--ink-soft);margin:.2rem 0 1rem;}
+.rsp{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin:1rem 0;}
+@media(max-width:640px){.rsp{grid-template-columns:1fr;}}
+.rcol{border-radius:16px;padding:1rem 1.1rem;border:2px solid;}
+.rcol.a{background:var(--red-soft);border-color:var(--red);}
+.rcol.b{background:var(--teal-soft);border-color:var(--teal);}
+.rcol h4{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;margin-bottom:.4rem;}
+.rcol.a h4{color:var(--red);}.rcol.b h4{color:#0a7d72;}
+.rcol ul{list-style:none;display:grid;gap:.3rem;}
+.rcol li{font-size:.93rem;padding-left:1.1rem;position:relative;}
+.rcol li::before{content:'\203A';position:absolute;left:0;font-weight:700;}
+.pcgrid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin:1rem 0;}
+@media(max-width:640px){.pcgrid{grid-template-columns:1fr;}}
+.pcol{border-radius:16px;padding:1rem 1.1rem;border:2px solid;}
+.pcol.pro{background:#EAF7EF;border-color:var(--green);}
+.pcol.con{background:var(--red-soft);border-color:var(--red);}
+.pcol h4{font-family:'Space Grotesk',sans-serif;font-size:1.15rem;margin-bottom:.5rem;}
+.pcol.pro h4{color:var(--green);}.pcol.con h4{color:var(--red);}
+.pcol ul{list-style:none;display:grid;gap:.4rem;}
+.pcol li{font-size:.94rem;padding-left:1.3rem;position:relative;}
+.pcol li::before{content:'\2713';position:absolute;left:0;font-weight:700;}
+.pcol.pro li::before{color:var(--green);}.pcol.con li::before{color:var(--red);}
+.gramtafel{background:var(--paper);border:2px solid var(--sand);border-radius:16px;padding:1.1rem 1.2rem;margin:1rem 0;}
+.gramtafel table{width:100%;border-collapse:collapse;margin:.5rem 0;font-size:.95rem;}
+.gramtafel td,.gramtafel th{border:1px solid var(--sand);padding:.45rem .6rem;text-align:left;}
+.gramtafel th{background:var(--cream-warm);font-family:'Space Grotesk',sans-serif;}
+.gramtafel td b{color:var(--red);}
+.rmcard{background:var(--paper);border:1.5px solid var(--sand);border-radius:14px;padding:.9rem 1.1rem;margin:.8rem 0;}
+.rmcard b{color:var(--teal);}
+.rm{display:inline-block;background:var(--teal-soft);color:#0a7d72;border-radius:999px;padding:.2rem .7rem;font-size:.85rem;font-weight:600;margin:.2rem .2rem 0 0;}
+.card90{background:linear-gradient(135deg,var(--paper),var(--cream-warm));border:2px solid var(--sand);border-radius:20px;padding:1.6rem;text-align:center;max-width:460px;margin:1.2rem auto;box-shadow:0 8px 24px rgba(38,32,25,.08);}
+.card90 .lbl{font-size:.72rem;font-weight:700;color:var(--red);letter-spacing:.12em;text-transform:uppercase;}
+.card90 .word{font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:2.2rem;margin:.4rem 0;}
+.helpwords{display:flex;flex-wrap:wrap;gap:.35rem;justify-content:center;margin:.7rem 0;}
+.hw{background:var(--yellow-soft);border:1px solid var(--yellow);border-radius:999px;padding:.2rem .7rem;font-size:.85rem;font-weight:600;}
+.timer{font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:700;color:var(--teal);margin:.5rem 0;}
+.btn{background:var(--red);color:#fff;border:none;border-radius:999px;padding:.5rem 1.3rem;font-weight:700;cursor:pointer;font-size:.9rem;font-family:'Inter';margin:.2rem;}
+.btn.ghost{background:var(--paper);color:var(--ink);border:2px solid var(--sand);}
+.quiz-q{background:var(--paper);border:1.5px solid var(--sand);border-radius:14px;padding:.9rem 1.1rem;margin:.7rem 0;}
+.quiz-q .qt{font-weight:600;margin-bottom:.55rem;}
+.quiz-opts{display:grid;gap:.4rem;}
+.qopt{text-align:left;background:var(--cream);border:1.5px solid var(--sand);border-radius:10px;padding:.5rem .8rem;cursor:pointer;font-size:.94rem;font-family:'Inter';font-weight:500;}
+.qopt:hover{border-color:var(--ink);}
+.qopt.right{background:#EAF7EF;border-color:var(--green);color:var(--green);font-weight:700;}
+.qopt.wrong{background:var(--red-soft);border-color:var(--red);color:var(--red);}
+.qexp{font-size:.86rem;color:var(--ink-soft);margin-top:.5rem;display:none;}
+.qexp.show{display:block;}
+.gap{background:var(--paper);border:1.5px solid var(--sand);border-radius:14px;padding:1rem 1.1rem;margin:.7rem 0;line-height:2.2;}
+.gap select{font-family:'Inter';font-weight:600;border:2px solid var(--teal);border-radius:8px;padding:.15rem .4rem;background:var(--teal-soft);color:#0a7d72;font-size:.95rem;}
+.gap select.ok{background:#EAF7EF;border-color:var(--green);color:var(--green);}
+.gap select.no{background:var(--red-soft);border-color:var(--red);color:var(--red);}
+footer{text-align:center;color:var(--ink-mute);font-size:.85rem;padding:3rem 1rem 1rem;}
 footer strong{color:var(--ink);}
-
-@media print{
-  body.schaltet .section[hidden]{display:block !important;}
-  .leiste,.weiterzeile,.wmk{display:none !important;}
-  .wm{background:none;border-bottom:2px solid var(--gold-d);}
-}
-@media(max-width:560px){
-  .wrapper{padding:1.5rem 1rem 4rem;}
-  .leiste{border-radius:12px;padding:.35rem .4rem;gap:.4rem;}
-  .nivk button{padding:.3rem .65rem;font-size:.8rem;}
-  .nivk .zusatz{display:none;}
-}
-
-/* ============================================================
-   Ankommen mit Bild, Merksätze, Sprechübung
-   ============================================================
-   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
-   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
-   auf der Seite. Beides kommt hier zurück — die Sätze aber als
-   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
-
-.ankbild{
-  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
-  border-radius:18px; border:1px solid var(--line); object-fit:cover;
-  aspect-ratio:16/9;
-}
-
-.merkg{
-  border:1px solid var(--line); border-radius:16px;
-  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
-}
-.merkt{
-  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
-  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
-}
-.merk{
-  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
-  padding:.5rem 0; border-top:1px solid var(--line);
-  font-size:1.02rem; line-height:1.45;
-}
-.merk:first-of-type{ border-top:0; }
-.merk > span{ flex:1 1 14rem; min-width:0; }
-.merk .speak{ flex:0 0 auto; }
-
-.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
-.ueb{
-  display:flex; gap:.8rem; align-items:flex-start;
-  border:1px solid var(--line); border-radius:16px;
-  padding:.85rem 1rem; background:var(--warm);
-}
-.ueb b{
-  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
-  display:block; margin:0 0 .2rem;
-}
-.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
-.uebn{
-  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
-  background:var(--turq-d); color:#fff; font-weight:700;
-  display:grid; place-items:center; font-size:.95rem;
-}
-
-@media (max-width:560px){
-  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
-  .merk{ font-size:.98rem; }
-  .ueb{ padding:.75rem .85rem; }
-}
-
-/* ---------- Ankommen: zwei Fragerunden ----------
-   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
-   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
-   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
-   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
-.ankrunde{
-  background:var(--warm);border:1px solid #E7ECEE;border-radius:14px;
-  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
-}
-.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
-.ankl{
-  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
-  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
-}
-.ankrunde.zwei .ankl{color:var(--teal-ink);}
-.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
-.ankfr li{
-  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
-  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
-  border-top:1px solid rgba(22,22,22,.07);
-}
-.ankfr li:first-child{border-top:0;padding-top:.15rem;}
-.ankfr li::before{
-  content:counter(ankz);position:absolute;left:0;top:.55rem;
-  width:1.5rem;height:1.5rem;border-radius:50%;
-  background:var(--turq);color:var(--teal-ink);
-  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
-  display:grid;place-items:center;
-}
-.ankfr li:first-child::before{top:.15rem;}
-.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
-.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
-
-@media (max-width:560px){
-  .ankrunde{padding:.85rem .9rem .9rem;}
-  .ankfr li{font-size:.99rem;padding-left:2rem;}
-  .ankrunde.zwei .ankfr li{font-size:.94rem;}
-}
-
-</style>
-</head>
-<body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
-
-<div class="eyebrow">deutschoderwas · Sprechclub · Woche 2 · Strang C · Teil 1 · Montag, 21. September</div>
-<h1 class="title">Muss man Geburtstage <span class="hl">eigentlich feiern?</span></h1>
-
-<p class="subtitle">Für die einen ist es der schönste Tag im Jahr, für die anderen eine Pflichtveranstaltung mit Kuchen. Heute sammeln wir die Wörter, die Argumente — und die Sätze, mit denen man höflich absagt.</p>
-
-<p class="niv-wie">Gleiches Thema, andere Sätze. Wechsle jederzeit — probier ruhig beide Seiten aus.</p>
-<div class="leiste">
-  <div class="nivk" role="group" aria-label="Niveau wählen">
-    <button type="button" data-niv="a2" aria-pressed="true">B1<span class="zusatz"> · sicherer</span></button>
-    <button type="button" data-niv="b1" aria-pressed="false">B2<span class="zusatz"> · feiner</span></button>
-  </div>
+</style></head><body><div class="wrapper">
+<div class="eyebrow">deutschoderwas · Sprechclub · B1/B2</div>
+<h1 class="title">Geburtstage <span class="hl">feiern</span> · Teil 1</h1>
+<p class="subtitle">Einladen, zusagen, sich höflich drücken: Wie redet man über Feiern? Mit Wortschatz, längeren Alltags-Dialogen, Rollenspiel und viel freiem Sprechen.</p>
+<div class="hero-tags"><span class="hero-tag">🖼️ <b>Bild</b></span><span class="hero-tag">📖 <b>Wortschatz</b></span><span class="hero-tag">💬 <b>Dialoge</b></span><span class="hero-tag">🎭 <b>Rollenspiel</b></span><span class="hero-tag">🗣️ <b>Sprechen</b></span><span class="hero-tag">⏱️ <b>90 Sek.</b></span></div>
 <nav class="tabs">
-<a class="tab active" href="#ankommen">👋 Ankommen</a>
-<a class="tab" href="#dialoge">🎬 Dialog</a>
-<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
-<a class="tab" href="#debatte">⚖️ Debatte</a>
-<a class="tab" href="#abschluss">🎯 Abschluss</a>
-<a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<button class="tab active" data-tab="0">🖼️ Einstieg</button>
+<button class="tab" data-tab="1">📖 Wortschatz</button>
+<button class="tab" data-tab="2">💬 Dialoge</button>
+<button class="tab" data-tab="3">🎭 Rollenspiel</button>
+<button class="tab" data-tab="4">🗣️ Sprechen</button>
+<button class="tab" data-tab="5">⏱️ 90 Sekunden</button>
+<button class="tab" data-tab="6">✅ Üben</button>
 </nav>
-</div>
-
-<section class="section" id="ankommen">
-<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
-<img class="ankbild" src="../amanda/sz-feste.webp" alt="Menschen feiern mit Luftballons und stoßen an">
-<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Feierst du deinen Geburtstag? Wie?</li><li>Was war die schönste Feier, an die du dich erinnerst?</li><li>Gibt es in deinem Land einen Tag, der wichtiger ist als der Geburtstag?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Woher kommt eigentlich der Druck, feiern zu müssen?</li><li>Ist eine Einladung ein Geschenk — oder eine Rechnung, die man zurückzahlt?</li><li>Ab welchem Alter wird ein Geburtstag zur Verhandlungssache?</li></ol></div></div>
-<div class="tip teal">🎂 <strong>Gut zu wissen:</strong> In Deutschland lädt das <u>Geburtstagskind</u> ein — und zahlt oft auch. Wer im Büro Geburtstag hat, bringt selbst den Kuchen mit. Das überrascht viele, die neu hier sind.</div>
-<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Gibt es bei euch auch so eine Regel?</li><li>Was schenkt man in deinem Land zum Geburtstag?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Warum halten sich Menschen an Regeln, an die sie nicht glauben?</li><li>Welche kleine deutsche Regel hat dich am meisten überrascht?</li></ol></div></div>
-<div class="tip">💡 <strong>Die sichere Formel:</strong> <b>Herzlichen Glückwunsch zum Geburtstag!</b> — geht immer, bei jedem Alter und in jeder Nähe. Im Brief auch: <b>Alles Gute zum Geburtstag.</b></div>
-<details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
+<section class="section active" data-section="0">
+<h2 class="st">Schau dir das Bild an</h2>
+<p class="ssub">Menschen feiern zusammen. Was gehört für dich zu einem guten Fest?</p>
+<div class="scene-wrap"><img src="../amanda/sz-feste.webp" alt="Menschen feiern zusammen einen Geburtstag"></div>
+<div class="tip">🗣️ <strong>Zum Einstieg – sprecht reihum:</strong> Beschreibt das Bild: Wer feiert? Was machen die Leute? Wie ist die Stimmung?</div>
+<h2 class="st">Erste Fragen</h2><ul class="qlist">
+<li>Wie feierst du deinen Geburtstag — groß oder klein?</li>
+<li>Lädst du gern Leute ein oder ist dir das zu viel?</li>
+<li>Was ist ein Fest, das dir in Erinnerung geblieben ist?</li>
+<li>Gibt es Feiern, zu denen du nicht gern gehst?</li>
+</ul></section>
+<section class="section" data-section="1"><h2 class="st">Wortschatz</h2><p class="ssub">Tipp auf 🔊, um das Wort zu hören. Lies den Beispielsatz laut.</p><div class="vgrid">
+<div class="vcard"><div class="w">feiern <button class="speak" data-say="feiern">🔊</button></div><div class="ex">„Wir feiern am Samstag meinen Geburtstag."</div></div>
+<div class="vcard"><div class="w">einladen <button class="speak" data-say="einladen">🔊</button></div><div class="ex">„Ich lade zehn Leute ein."</div></div>
+<div class="vcard"><div class="w"><span class="art">die</span> Einladung <button class="speak" data-say="die Einladung">🔊</button></div><div class="ex">„Danke für die Einladung!"</div></div>
+<div class="vcard"><div class="w">zusagen <button class="speak" data-say="zusagen">🔊</button></div><div class="ex">„Ich sage gern zu."</div></div>
+<div class="vcard"><div class="w">absagen <button class="speak" data-say="absagen">🔊</button></div><div class="ex">„Ich muss leider absagen."</div></div>
+<div class="vcard"><div class="w">sich drücken <button class="speak" data-say="sich drücken">🔊</button></div><div class="ex">„Ehrlich gesagt möchte ich mich vor der Feier drücken."</div></div>
+<div class="vcard"><div class="w"><span class="art">das</span> Geschenk <button class="speak" data-say="das Geschenk">🔊</button></div><div class="ex">„Was schenken wir ihr zum Geburtstag?"</div></div>
+<div class="vcard"><div class="w">gratulieren <button class="speak" data-say="gratulieren">🔊</button></div><div class="ex">„Ich gratuliere dir herzlich!"</div></div>
+<div class="vcard"><div class="w">anstoßen <button class="speak" data-say="anstoßen">🔊</button></div><div class="ex">„Lasst uns auf dich anstoßen!"</div></div>
+<div class="vcard"><div class="w"><span class="art">die</span> Stimmung <button class="speak" data-say="die Stimmung">🔊</button></div><div class="ex">„Die Stimmung war super."</div></div>
+</div><div class="tip teal">💡 <strong>Mini-Aufgabe:</strong> Sag drei Sätze: Wen lädst du <u>ein</u>, was <u>schenkst</u> du, und wie <u>feierst</u> du am liebsten?</div></section>
+<section class="section" data-section="2"><h2 class="st">Beispieldialoge</h2><p class="ssub">Lest die Dialoge zu zweit mit verteilten Rollen — dann spielt sie mit euren eigenen Worten nach.</p>
+<p class="mklegende"><span class="mk">gelb</span> = wichtiger Begriff · <span class="mk g">türkis</span> = wichtige Wendung / Struktur</p>
+<div class="dwrap"><h4>💬 Dialog 1 · Eine Einladung</h4><div class="dsit">Lena lädt Tom zu ihrer Geburtstagsfeier ein.</div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Du, ich <span class="mk">feiere</span> am Samstag meinen Geburtstag. <span class="mk g">Hast du Lust</span> zu kommen?</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Klar, sehr gern! Danke für die <span class="mk">Einladung</span>. <span class="mk g">Um wie viel Uhr</span>?</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">So ab 19 Uhr bei mir zu Hause.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Perfekt, ich <span class="mk">sage</span> fest <span class="mk">zu</span>. Soll ich etwas mitbringen?</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Nur gute Laune. Getränke und Essen sind da.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Und ein kleines <span class="mk">Geschenk</span> natürlich!</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Das musst du wirklich nicht — aber ich freue mich, dass du <span class="mk g">dabei bist</span>.</div></div>
+<button class="speak dbtn" data-say="Du, ich feiere am Samstag meinen Geburtstag. Hast du Lust zu kommen? Klar, sehr gern! Danke für die Einladung. Um wie viel Uhr? So ab 19 Uhr bei mir zu Hause. Perfekt, ich sage fest zu. Soll ich etwas mitbringen? Nur gute Laune. Getränke und Essen sind da. Und ein kleines Geschenk natürlich! Das musst du wirklich nicht — aber ich freue mich, dass du dabei bist.">🔊 Dialog vorlesen</button></div>
+<div class="dwrap"><h4>💬 Dialog 2 · Sich höflich drücken</h4><div class="dsit">Sven möchte eigentlich nicht zur großen Party.</div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Kommst du Samstag zu meiner Party? Es werden viele Leute da sein.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Oh … <span class="mk g">ehrlich gesagt</span> bin ich in letzter Zeit oft müde.</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Komm doch wenigstens kurz vorbei!</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ich <span class="mk g">will mich nicht drücken</span>, aber große Feiern sind <span class="mk g">nicht so mein Ding</span>.</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Verstehe. <span class="mk g">Kein Problem</span>, dann sehen wir uns ein andermal ruhiger.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ja, gern! Ich <span class="mk">gratuliere</span> dir auf jeden Fall persönlich.</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Das freut mich. Dann <span class="mk g">stoßen wir</span> zu zweit <span class="mk g">an</span>.</div></div>
+<button class="speak dbtn" data-say="Kommst du Samstag zu meiner Party? Es werden viele Leute da sein. Oh … ehrlich gesagt bin ich in letzter Zeit oft müde. Komm doch wenigstens kurz vorbei! Ich will mich nicht drücken, aber große Feiern sind nicht so mein Ding. Verstehe. Kein Problem, dann sehen wir uns ein andermal ruhiger. Ja, gern! Ich gratuliere dir auf jeden Fall persönlich. Das freut mich. Dann stoßen wir zu zweit an.">🔊 Dialog vorlesen</button></div>
+<div class="dwrap"><h4>💬 Dialog 3 · Geschenk und Gratulation</h4><div class="dsit">Zwei Freunde planen ein gemeinsames Geschenk.</div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Was <span class="mk">schenken</span> wir Mia zum Geburtstag?</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Vielleicht zusammen ein <span class="mk g">gemeinsames Geschenk</span>? Ein Konzertticket?</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Gute Idee! Dann <span class="mk g">teilen wir uns</span> die Kosten.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Und wer <span class="mk">gratuliert</span> zuerst?</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Wir <span class="mk">stoßen</span> alle zusammen <span class="mk">an</span> und singen.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Perfekt. Ich hoffe, die <span class="mk">Stimmung</span> wird gut.</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Bestimmt — bei Mia ist immer was los!</div></div>
+<button class="speak dbtn" data-say="Was schenken wir Mia zum Geburtstag? Vielleicht zusammen ein gemeinsames Geschenk? Ein Konzertticket? Gute Idee! Dann teilen wir uns die Kosten. Und wer gratuliert zuerst? Wir stoßen alle zusammen an und singen. Perfekt. Ich hoffe, die Stimmung wird gut. Bestimmt — bei Mia ist immer was los!">🔊 Dialog vorlesen</button></div>
+<div class="tip">🎭 <strong>Jetzt ihr:</strong> Spielt eine Einladung: Einer lädt ein, der andere sagt zu ODER drückt sich höflich. Baut vier markierte Wörter ein.</div></section>
+<section class="section" data-section="3">
+<h2 class="st">Rollenspiel: einladen & reagieren</h2><p class="ssub">Zu zweit. Einer lädt zur Feier ein, der andere reagiert. Dann tauschen.</p>
+<div class="rsp"><div class="rcol a"><h4>🎉 Du lädst ein</h4><ul>
+<li>Sag, was du feierst und wann.</li>
+<li>Lade freundlich ein: „Hast du Lust?“</li>
+<li>Sag, was es gibt (Essen, Musik …).</li>
+<li>Freu dich über die Zusage.</li>
+</ul></div><div class="rcol b"><h4>🙂 Du reagierst</h4><ul>
+<li>Bedanke dich für die Einladung.</li>
+<li>Sag entweder zu — oder drück dich höflich.</li>
+<li>Frag nach (Uhrzeit, mitbringen?).</li>
+<li>Gratuliere auf jeden Fall.</li>
+</ul></div></div>
+<div class="rmcard"><b>🗣️ Redemittel</b> — bau diese Sätze ein:<div style="margin-top:.5rem">
+<span class="rm">Ich feiere am … Hast du Lust?</span>
+<span class="rm">Danke für die Einladung!</span>
+<span class="rm">Ich sage gern zu.</span>
+<span class="rm">Ehrlich gesagt schaffe ich es nicht.</span>
+<span class="rm">Soll ich etwas mitbringen?</span>
+<span class="rm">Ich gratuliere dir herzlich!</span>
+</div></div><div class="tip teal">🏁 <strong>Abschluss:</strong> Wer hat sich am höflichsten gedrückt — und wer am herzlichsten eingeladen?</div>
 </section>
-
-<section class="section" id="dialoge">
-<h2 class="st">Vier Gespräche — <span class="hl">zwei Runden</span></h2>
-<ol class="schritte">
-<li><span>1</span><b>Runde 1:</b> Lest den Dialog zu zweit laut.</li>
-<li><span>2</span><b>Runde 2:</b> Deckt die Zeilen von B ab und sprecht frei — die Hinweise reichen.</li>
-</ol>
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-freunde.webp" alt="Zwei Freunde sitzen mit Kaffee auf einer Bank"><h4>Dialog 1 · „Die Einladung“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Deine Freundin wird vierzig und plant groß. Du freust dich — willst aber wissen, worauf du dich einlässt.</div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Du, ich werde im Oktober vierzig. Ich mache was Größeres — kommst du?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Klar komme ich! Herzlichen Glückwunsch schon mal — oder darf ich das noch gar nicht sagen?</div><div class="dcue">🗣️ Der Aberglaube als Witz — das entspannt sofort und zeigt, dass du die Regel kennst.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Nein, nicht vorher! Aber danke.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Verstanden. Was ist denn geplant — und soll ich was mitbringen?</div><div class="dcue">🗣️ Zwei Fragen, die jeder Gastgeber gern hört. Die zweite besonders.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Nur einen Salat vielleicht. Und gute Laune.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Beides kriege ich hin. Wie viele werdet ihr denn ungefähr?</div><div class="dcue">🗣️ <b>Ich kriege das hin</b> — locker, freundlich, sehr gebräuchlich.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">So dreißig Leute, denke ich.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Oha, richtig groß. Sag Bescheid, wenn du beim Aufbau Hilfe brauchst.</div><div class="dcue">🗣️ Von selbst Hilfe anbieten — das ist der Unterschied zwischen Gast und gutem Gast.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<button class="speak dbtn" data-say="Du, ich werde im Oktober vierzig. Ich mache was Größeres — kommst du? Klar komme ich! Herzlichen Glückwunsch schon mal — oder darf ich das noch gar nicht sagen? Nein, nicht vorher! Aber danke. Verstanden. Was ist denn geplant — und soll ich was mitbringen? Nur einen Salat vielleicht. Und gute Laune. Beides kriege ich hin. Wie viele werdet ihr denn ungefähr? So dreißig Leute, denke ich. Oha, richtig groß. Sag Bescheid, wenn du beim Aufbau Hilfe brauchst.">🔊 Dialog vorlesen lassen</button></div>
-
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-heikel.webp" alt="Zwei Personen sitzen sich in einem Wohnzimmer gegenüber"><h4>Dialog 2 · „Die Absage“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Du bist eingeladen, hast aber keine Kraft. <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Absagen" data-wort="absagen" data-kurz="sagen, dass man nicht kommt" data-bsp="Ich muss leider absagen, aber ich denke an dich.">Absagen</b> ist in Ordnung — nur der Ton muss stimmen.</div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Und, kommst du am Samstag?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ich würde wirklich gern, aber ich schaffe es nicht.</div><div class="dcue">🗣️ <b>würde gern</b> zuerst. Der Wunsch vor der Absage — das ist der ganze Trick.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Schade! Ist alles in Ordnung bei dir?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ja, alles gut. Es ist gerade nur viel, und ich brauche das Wochenende.</div><div class="dcue">🗣️ Ehrlich, aber ohne Details. Du schuldest niemandem eine Krankenakte.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Das verstehe ich. Hauptsache, dir geht es gut.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Danke. Lass uns das nachholen — nächste Woche Kaffee?</div><div class="dcue">🗣️ Der konkrete Ersatzvorschlag. Ohne ihn klingt jede Absage nach Ausrede.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Sehr gern. Dann bis nächste Woche.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Und feier schön! Ich denke an dich.</div><div class="dcue">🗣️ Der Schlusssatz, der die Absage rettet. Nie weglassen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<button class="speak dbtn" data-say="Und, kommst du am Samstag? Ich würde wirklich gern, aber ich schaffe es nicht. Schade! Ist alles in Ordnung bei dir? Ja, alles gut. Es ist gerade nur viel, und ich brauche das Wochenende. Das verstehe ich. Hauptsache, dir geht es gut. Danke. Lass uns das nachholen — nächste Woche Kaffee? Sehr gern. Dann bis nächste Woche. Und feier schön! Ich denke an dich.">🔊 Dialog vorlesen lassen</button></div>
-
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-buero.webp" alt="Zwei Kolleginnen am Schreibtisch mit Laptop"><h4>Dialog 3 · „Im Büro“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Eine Kollegin hat Geburtstag und stellt Kuchen hin. Du bist neu und weißt nicht, was jetzt erwartet wird.</div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Hinten steht Kuchen — von Frau Berger, sie hat heute Geburtstag.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ach so, sie bringt selbst Kuchen mit? Das ist bei uns genau andersherum.</div><div class="dcue">🗣️ Kulturunterschiede offen ansprechen — das ist ein Gesprächsanfang, kein Problem.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ja, hier bringt das Geburtstagskind was mit. Komisch, oder?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ein bisschen. Soll ich ihr denn etwas schenken?</div><div class="dcue">🗣️ Bei Unsicherheit einfach fragen. Niemand nimmt dir das übel.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Nein, wir geben eine Karte rum. Ein Euro für Blumen, wenn du magst.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Mache ich gern. Wo unterschreibe ich?</div><div class="dcue">🗣️ <b>Mache ich gern</b> — kurz und ohne Umstände.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Liegt bei mir. Und geh ruhig <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von gratulieren" data-wort="gratulieren" data-kurz="jemandem Glückwünsche sagen" data-bsp="Ich gratuliere dir ganz herzlich!">gratulieren</b>, sie freut sich.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Dann gehe ich gleich mal rüber. Danke für den Tipp!</div><div class="dcue">🗣️ <b>rübergehen</b> — im Büro das normale Wort für „kurz zu jemandem gehen“.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<button class="speak dbtn" data-say="Hinten steht Kuchen — von Frau Berger, sie hat heute Geburtstag. Ach so, sie bringt selbst Kuchen mit? Das ist bei uns genau andersherum. Ja, hier bringt das Geburtstagskind was mit. Komisch, oder? Ein bisschen. Soll ich ihr denn etwas schenken? Nein, wir geben eine Karte rum. Ein Euro für Blumen, wenn du magst. Mache ich gern. Wo unterschreibe ich? Liegt bei mir. Und geh ruhig gratulieren, sie freut sich. Dann gehe ich gleich mal rüber. Danke für den Tipp!">🔊 Dialog vorlesen lassen</button></div>
-
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../vok-bild/die-familie.webp" alt="Eine Familie sitzt zusammen auf dem Sofa"><h4>Dialog 4 · „„Ich will gar nichts machen““</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Deine Mutter findet, <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von ein runder Geburtstag" data-wort="ein runder Geburtstag" data-kurz="ein Geburtstag mit einer Null am Ende" data-bsp="Nächstes Jahr habe ich einen runden Geburtstag.">ein runder Geburtstag</b> müsse gefeiert werden. Du siehst das anders — und musst es erklären.</div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Du wirst dreißig und machst nichts? Das geht doch nicht.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Doch, das geht. Ich habe dieses Jahr einfach keine Lust auf eine große Feier.</div><div class="dcue">🗣️ Ruhig widersprechen. <b>Doch</b> ist genau das Wort dafür.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Aber die Familie würde sich freuen.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Das weiß ich. Deshalb schlage ich etwas Kleines vor: Kaffee bei euch, nur wir.</div><div class="dcue">🗣️ Nicht nur ablehnen, sondern eine Alternative anbieten. Sonst geht die Diskussion weiter.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Und die Tanten?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Die rufe ich alle an. Aber ich möchte diesmal nicht <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Gastgeber" data-wort="der Gastgeber" data-kurz="wer einlädt und die Feier organisiert" data-bsp="Als Gastgeber hat man den ganzen Abend zu tun.">Gastgeber</b> sein.</div><div class="dcue">🗣️ <b>Ich möchte nicht</b> ist höflicher als <b>ich will nicht</b> — und genauso klar.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Na gut. Kuchen mache dann ich.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Abgemacht. Und deinen Käsekuchen nehme ich sowieso jederzeit.</div><div class="dcue">🗣️ Mit einem netten Satz enden — dann bleibt von der Diskussion nichts hängen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<button class="speak dbtn" data-say="Du wirst dreißig und machst nichts? Das geht doch nicht. Doch, das geht. Ich habe dieses Jahr einfach keine Lust auf eine große Feier. Aber die Familie würde sich freuen. Das weiß ich. Deshalb schlage ich etwas Kleines vor: Kaffee bei euch, nur wir. Und die Tanten? Die rufe ich alle an. Aber ich möchte diesmal nicht Gastgeber sein. Na gut. Kuchen mache dann ich. Abgemacht. Und deinen Käsekuchen nehme ich sowieso jederzeit.">🔊 Dialog vorlesen lassen</button></div>
-
-<div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 4 noch einmal — aber A gibt nicht nach und bringt drei neue Argumente. B muss dreimal ablehnen, jedes Mal freundlicher als davor.</div>
-</section>
-
-<section class="section" id="merksaetze">
-<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
-<p class="ssub">Sag jeden einmal laut.</p>
-<div class="nur-a2">
-<div class="merkg"><div class="merkt">1 · 💌 Einladen</div>
-<div class="merk"><span>Ich lade dich ein</span><button class="speak" data-say="Ich lade dich ein">🔊 hören</button></div>
-<div class="merk"><span>Hast du am … Zeit?</span><button class="speak" data-say="Hast du am … Zeit?">🔊 hören</button></div>
-<div class="merk"><span>Es wäre schön, wenn du kommst</span><button class="speak" data-say="Es wäre schön, wenn du kommst">🔊 hören</button></div>
-</div>
-<div class="merkg"><div class="merkt">2 · ✅ Zusagen</div>
-<div class="merk"><span>Ich komme gern</span><button class="speak" data-say="Ich komme gern">🔊 hören</button></div>
-<div class="merk"><span>Danke für die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Einladung" data-wort="die Einladung" data-kurz="die Bitte, zu einer Feier zu kommen" data-bsp="Danke für die Einladung — ich komme gern.">Einladung</b></span><button class="speak" data-say="Danke für die Einladung">🔊 hören</button></div>
-<div class="merk"><span>Soll ich etwas mitbringen?</span><button class="speak" data-say="Soll ich etwas mitbringen?">🔊 hören</button></div>
-</div>
-<div class="merkg"><div class="merkt">3 · ✋ Absagen</div>
-<div class="merk"><span>Ich würde gern, aber …</span><button class="speak" data-say="Ich würde gern, aber …">🔊 hören</button></div>
-<div class="merk"><span>Es passt leider nicht</span><button class="speak" data-say="Es passt leider nicht">🔊 hören</button></div>
-<div class="merk"><span>Ich denke an dich</span><button class="speak" data-say="Ich denke an dich">🔊 hören</button></div>
-</div>
-<div class="merkg"><div class="merkt">4 · 🔁 Nachholen</div>
-<div class="merk"><span>Lass uns das nachholen</span><button class="speak" data-say="Lass uns das nachholen">🔊 hören</button></div>
-<div class="merk"><span>Nächste Woche vielleicht?</span><button class="speak" data-say="Nächste Woche vielleicht?">🔊 hören</button></div>
-<div class="merk"><span>Ich lade dich ein</span><button class="speak" data-say="Ich lade dich ein">🔊 hören</button></div>
-</div>
-</div>
-<div class="nur-b1">
-<div class="merkg"><div class="merkt">1 · 💌 Einladen mit Rahmen</div>
-<div class="merk"><span>Ich mache etwas Kleines</span><button class="speak" data-say="Ich mache etwas Kleines">🔊 hören</button></div>
-<div class="merk"><span>Ganz ohne Programm</span><button class="speak" data-say="Ganz ohne Programm">🔊 hören</button></div>
-<div class="merk"><span>Sag Bescheid, ob es klappt</span><button class="speak" data-say="Sag Bescheid, ob es klappt">🔊 hören</button></div>
-</div>
-<div class="merkg"><div class="merkt">2 · ✅ Zusagen mit Angebot</div>
-<div class="merk"><span>Sehr gern!</span><button class="speak" data-say="Sehr gern!">🔊 hören</button></div>
-<div class="merk"><span>Ich bringe … mit</span><button class="speak" data-say="Ich bringe … mit">🔊 hören</button></div>
-<div class="merk"><span>Kann ich beim Aufbau helfen?</span><button class="speak" data-say="Kann ich beim Aufbau helfen?">🔊 hören</button></div>
-</div>
-<div class="merkg"><div class="merkt">3 · ✋ Absagen, ohne zu kränken</div>
-<div class="merk"><span>Das trifft sich schlecht</span><button class="speak" data-say="Das trifft sich schlecht">🔊 hören</button></div>
-<div class="merk"><span>Ich hätte wirklich gern</span><button class="speak" data-say="Ich hätte wirklich gern">🔊 hören</button></div>
-<div class="merk"><span>Ich melde mich, sobald …</span><button class="speak" data-say="Ich melde mich, sobald …">🔊 hören</button></div>
-</div>
-<div class="merkg"><div class="merkt">4 · 🔁 Verbindlich nachholen</div>
-<div class="merk"><span>Wollen wir stattdessen …?</span><button class="speak" data-say="Wollen wir stattdessen …?">🔊 hören</button></div>
-<div class="merk"><span>Such dir einen Tag aus</span><button class="speak" data-say="Such dir einen Tag aus">🔊 hören</button></div>
-<div class="merk"><span>Diesmal geht es auf mich</span><button class="speak" data-say="Diesmal geht es auf mich">🔊 hören</button></div>
-</div>
-</div>
-<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
-</section>
-
-<section class="section" id="challenge">
-<h2 class="st">⏱️ Die 90-Sekunden-Challenge</h2>
-<p class="ssub">Ein Wort, anderthalb Minuten, freies Sprechen. Es muss nicht perfekt sein — es muss nur weitergehen.</p>
-<div class="card90">
-<div class="lbl">Dein Wort</div>
-<img id="i90" src="../vok-bild/der-vorschlag.webp" alt="die Einladung">
-<div class="word" id="w90">die Einladung</div>
-<div class="helpwords" id="hw90"></div>
-<div class="timer" id="t90">1:30</div>
-<div>
-<button class="btn ghost" id="new90">🎲 Neues Wort</button>
-<button class="btn" id="start90">▶︎ Start</button>
-</div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Mir fällt nichts ein</button>
-<div class="inhalt">
-<p>Erzähl es als Geschichte, dann trägt sich die Zeit von selbst:</p>
-<ul>
-<li>Wann war das? <b>Letztes Jahr · als ich dreißig wurde</b></li>
-<li>Wer war da? <b>Es waren ungefähr …</b></li>
-<li>Was war anders als geplant? <b>Eigentlich wollte ich …, aber dann …</b></li>
-<li>Wie war es am Ende? <b>Im Nachhinein war ich froh, dass …</b></li>
-</ul>
-<p style="margin-top:.5rem;">Und wenn ein Wort fehlt: beschreib es. <b>„Die Person, die einlädt und alles organisiert“</b> — jeder versteht dich.</p>
-</div>
-</div>
-<div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde muss einmal <u>ich würde gern</u> oder <u>es wäre schön</u> vorkommen. Der Partner hebt die Hand, sobald es da war.</div>
-</section>
-
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei <span class="hl">Einladungen</span></h2>
-<p class="ssub">Zu zweit. Einer lädt ein und lässt nicht sofort locker, einer muss sich entscheiden. Danach tauschen.</p>
-<div class="rsp">
-<div class="rsp-kopf"><span class="rsp-nr">1</span><b>Der runde Geburtstag</b></div>
-<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>wird fünfzig und will <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von groß feiern" data-wort="Groß feiern" data-kurz="Einladen, planen, Gäste bewirten — der Tag gehört den anderen." data-bsp="Ich lade alle ein, die mir wichtig sind.">groß feiern</b>.</p></div><div class="rsp-r b"><span>B</span><p>hat an dem Tag schon etwas vor — es ist aber nichts Wichtiges. B muss entscheiden und begründen.</p></div></div>
-<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Ich würde gern kommen, aber …</span><span class="rm">Ich habe schon etwas vor</span><span class="rm">Kann ich später dazukommen?</span><span class="rm">Ich melde mich bis Freitag</span></div><div class="nur-b1"><span class="rm">Das trifft sich unglücklich</span><span class="rm">Ich versuche, es einzurichten</span><span class="rm">Wäre es schlimm, wenn ich später komme?</span><span class="rm">Ich sage dir bis Freitag verbindlich Bescheid</span></div></div>
-<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>B sagt weder sofort ja noch sofort nein, nennt einen Zeitpunkt für die endgültige Antwort und hält den Ton warm.</div>
-<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
-</div>
-
-<div class="rsp">
-<div class="rsp-kopf"><span class="rsp-nr">2</span><b>Nur Kaffee, versprochen</b></div>
-<div class="rsp-lage"><span>Die Lage</span>A will gar nichts machen, B findet das schade und schlägt etwas ganz Kleines vor. Am Ende soll ein konkreter Plan stehen.</div>
-<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Ich mache dieses Jahr nichts</span><span class="rm">Nur wir zwei?</span><span class="rm">Das könnte ich mir vorstellen</span><span class="rm">Aber ohne Geschenke</span></div><div class="nur-b1"><span class="rm">Ich möchte diesmal nicht Gastgeber sein</span><span class="rm">Etwas ganz Kleines wäre denkbar</span><span class="rm">Unter einer Bedingung: …</span><span class="rm">Dann machen wir es so</span></div></div>
-<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>Beide einigen sich auf etwas Konkretes — Ort, Uhrzeit, wie viele Leute — statt auf ein vages „mal sehen“.</div>
-<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
-</div>
-
-<div class="rsp">
-<div class="rsp-kopf"><span class="rsp-nr">3</span><b>Der Kollege lädt ein</b></div>
-<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>lädt das ganze Team zum Geburtstag ein.</p></div><div class="rsp-r b"><span>B</span><p>ist neu, kennt kaum jemanden und ist unsicher, ob eine Zusage erwartet wird.</p></div></div>
-<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Danke für die Einladung</span><span class="rm">Soll ich etwas mitbringen?</span><span class="rm">Kommen alle aus dem Team?</span><span class="rm">Wie lange geht das ungefähr?</span></div><div class="nur-b1"><span class="rm">Das ist nett, dass du auch mich fragst</span><span class="rm">Ist es eher förmlich oder locker?</span><span class="rm">Ich komme gern für eine Stunde vorbei</span><span class="rm">Gibt es eine Karte, in die ich mich eintragen kann?</span></div></div>
-<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>B fragt nach dem Rahmen, bevor er zusagt, und findet eine Formulierung, mit der ein kurzer Besuch völlig in Ordnung ist.</div>
-<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
-</div>
-
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte. Vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.15rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
-</section>
-
-<section class="section" id="debatte">
-<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
-<p class="ssub">Zwei Gruppen, eine Frage. Abwechselnd sprechen.</p>
-<div class="deb-these">Man muss den Geburtstag nicht feiern.</div>
-<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><ul><li>Ein Fest aus Pflicht macht keinem Freude.</li><li>Feiern kostet Geld und einen ganzen Tag.</li><li>Man kann sich auch an jedem anderen Tag treffen.</li></ul></div><div class="deb-s con"><b>Gruppe B · dagegen</b><ul><li>Die anderen wollen gratulieren.</li><li>Einmal im Jahr sieht man Leute, die man sonst nie trifft.</li><li>Ohne Datum verschiebt man das Treffen ewig.</li></ul></div></div>
-</section>
-
-<section class="section" id="abschluss">
-<h2 class="st">Zum <span class="hl">Schluss</span></h2>
-<p class="ssub">Ein Satz von jedem.</p>
-<div class="ank">Welchen Satz von heute nimmst du mit — und wo brauchst du ihn?</div>
-<details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Ich nehme mit: …</span><span>Ich will den Satz „…“ benutzen.</span><span>Neu war für mich: …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Ich nehme mit, dass …</span><span>Den Satz „…“ will ich nächste Woche wirklich benutzen.</span><span>Neu war für mich, dass …</span></div></div></details>
-</section>
-
-<section class="section" id="hausaufgabe">
-<h2 class="st">📮 Deine Hausaufgabe bis <span class="hl">Mittwoch</span></h2>
-<p class="ssub">Vier kleine Aufgaben, zusammen etwa 25 Minuten. Am Mittwoch ist die Debatte — Aufgabe 1 ist deine Vorbereitung dafür.</p>
-<div class="tip">💡 <strong>Warum das hilft:</strong> Am Mittwoch diskutieren wir dieselbe Frage in zwei Lagern. Wer heute seine Argumente aufschreibt, muss sie am Mittwoch nur noch aussprechen.</div>
-<div class="hagrid nur-a2">
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">⚔️</span><span class="htxt">
-<h4>1. Deine drei Argumente <span class="zeit">8 Min</span></h4>
-<p>Schreib drei Argumente auf: Muss man Geburtstage feiern? Ein Satz pro Argument, dazu ein Beispiel aus deinem Leben.</p></span></button>
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🎙️</span><span class="htxt">
-<h4>2. Die Absage <span class="zeit">5 Min</span></h4>
-<p>Nimm eine Sprachnachricht auf, in der du eine Einladung absagst — mit <b>ich würde gern</b>, einem Grund und einem Nachholvorschlag.</p></span></button>
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">✍️</span><span class="htxt">
-<h4>3. Sechs höfliche Sätze <span class="zeit">6 Min</span></h4>
-<p>Schreib sechs Sätze mit <b>würde</b>, <b>hätte</b>, <b>wäre</b> und <b>könnte</b> — je zwei für Einladen, Zusagen und Absagen.</p></span></button>
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🎁</span><span class="htxt">
-<h4>4. Was schenkt man? <span class="zeit">6 Min</span></h4>
-<p>Schreib fünf Sätze darüber, was man in deinem Land zum Geburtstag schenkt — und was man auf keinen Fall schenkt.</p></span></button>
-</div>
-<div class="hagrid nur-b1">
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">⚔️</span><span class="htxt">
-<h4>1. Pro und Contra <span class="zeit">8 Min</span></h4>
-<p>Schreib drei Argumente <u>für</u> und drei <u>gegen</u> die Pflicht zu feiern. Am Mittwoch bekommst du vielleicht die Seite, die du nicht magst.</p></span></button>
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🎙️</span><span class="htxt">
-<h4>2. Absage mit Gegenwind <span class="zeit">7 Min</span></h4>
-<p>Nimm ein kurzes Gespräch auf, in dem dein Gegenüber die Absage nicht akzeptiert. Bleib freundlich und bleib bei deinem Nein.</p></span></button>
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">✍️</span><span class="htxt">
-<h4>3. Dieselbe Absage, drei Töne <span class="zeit">7 Min</span></h4>
-<p>Schreib dieselbe Absage dreimal: an einen engen Freund, an einen Kollegen, an die eigene Familie. Was ändert sich?</p></span></button>
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🎧</span><span class="htxt">
-<h4>4. Hör hin <span class="zeit">5 Min</span></h4>
-<p>Achte diese Woche darauf, wie oft Deutsche im Gespräch <b>würde</b> und <b>hätte</b> benutzen, ohne dass es um Höflichkeit geht. Schreib drei Beispiele auf.</p></span></button>
-</div>
-<p class="hastand" data-ha-stand>0 von 0 Aufgaben geschafft.</p>
-<div class="hilfe nur-a2">
-<button type="button">💡 Beispiel ansehen (Aufgabe 3)</button>
-<div class="inhalt">
-<p>So sehen die Sätze aus:</p>
-<ul>
-<li><b>Einladen:</b> Es <b>wäre</b> schön, wenn du kommst. · <b>Hättest</b> du am Samstag Zeit?</li>
-<li><b>Zusagen:</b> Ich <b>würde</b> sehr gern kommen. · <b>Könnte</b> ich etwas mitbringen?</li>
-<li><b>Absagen:</b> Ich <b>würde</b> gern, aber es geht nicht. · Ich <b>hätte</b> wirklich gern mitgefeiert.</li>
-<li>Und immer dazu: das kleine Wort <b>gern</b>.</li>
-</ul>
-<p style="margin-top:.5rem;">Ein einziger Test: <b>Steht ein Wunsch im Satz? Dann ist er höflich.</b> Steht nur ein Nein, fehlt noch die Hälfte.</p>
-</div>
-</div>
-<div class="hilfe nur-b1">
-<button type="button">💡 Beispiel ansehen (Aufgabe 1)</button>
-<div class="inhalt">
-<p>So könnten die Argumente aussehen:</p>
-<ul>
-<li><b>Dafür:</b> Feiern schafft Anlässe, sich zu sehen — ohne sie verliert man Menschen aus den Augen.</li>
-<li><b>Dafür:</b> Wer nie feiert, wird irgendwann auch nicht mehr eingeladen.</li>
-<li><b>Dafür:</b> Für Kinder ist der Geburtstag ein Halt im Jahr — Erwachsene brauchen das auch.</li>
-<li><b>Dagegen:</b> Eine Feier aus Pflicht macht alle unglücklich, den Gastgeber zuerst.</li>
-<li><b>Dagegen:</b> Nähe zeigt sich an dreihundert anderen Tagen, nicht an einem.</li>
-</ul>
-<p style="margin-top:.5rem;">Für Mittwoch gilt: Ein Argument ohne Beispiel überzeugt niemanden. Schreib zu jedem einen konkreten Fall dazu.</p>
-</div>
-</div>
-<div class="tip teal">📬 <strong>Abgabe:</strong> Bring deine Argumente am Mittwoch mit — auf Papier oder im Kopf. Sprachnachrichten wie immer bis Sonntag in die WhatsApp-Gruppe.</div>
-<div class="tip">🔜 <strong>Am Mittwoch, Teil 2:</strong> die <u>Debatte</u>. Zwei Lager, feste Redemittel, und am Ende stimmt die Gruppe ab. Bring dein stärkstes Argument mit.</div>
-</section>
-
-<footer>
-<strong>deutschoderwas Sprechclub</strong> · Geburtstage feiern, einladen, sich drücken · Teil 1 · B1/B2 · Woche 2 · Mittwoch folgt die Debatte
-</footer>
-
-</div>
-
-<script type="application/json" id="daten-sk">
-["Lade jemanden zu deinem <b>Geburtstag</b> ein — in drei Sätzen.","Sag eine Einladung ab, ohne <b>„keine Lust“</b> zu sagen.","Deine Mutter besteht auf einer großen Feier. Widersprich freundlich.","Erklär, was man in deinem Land zum Geburtstag <b>schenkt</b>.","Ein Kollege hat Geburtstag. Was sagst du, was tust du?","Erzähl von deinem <b>schönsten</b> Geburtstag.","Erzähl von einer Feier, die <b>anders lief</b> als geplant.","Nenn drei Gründe, warum man Geburtstage feiern <b>sollte</b>.","Nenn drei Gründe, warum das <b>Unsinn</b> ist.","Jemand gratuliert dir <b>zu früh</b>. Reagier."]
-</script>
-<script type="application/json" id="daten-w90">
-[{"w":"die Einladung","b":"../vok-bild/der-vorschlag.webp","h":["einladen","zusagen","absagen","der Termin","die Karte"]},{"w":"feiern","b":"../amanda/sz-feste.webp","h":["die Gäste","die Musik","anstoßen","der Kuchen","der Garten"]},{"w":"gratulieren","b":"../amanda/amanda-jubel.webp","h":["herzlichen Glückwunsch","alles Gute","die Umarmung","die Blumen","die Karte"]},{"w":"das Geschenk","b":"../amanda/sz-verkaufen.webp","h":["auspacken","sich wünschen","der Gutschein","die Überraschung","einpacken"]},{"w":"der Gastgeber","b":"../amanda/sz-kochen.webp","h":["vorbereiten","der Kuchen","aufräumen","die Gäste","der Aufwand"]},{"w":"einladen","b":"../amanda/sz-freunde.webp","h":["die Ausrede","die Absage","keine Lust","die Pflicht","das schlechte Gewissen"]},{"w":"die Familie","b":"../vok-bild/die-familie.webp","h":["die Tante","der Onkel","der Kaffee","die Tradition","das Treffen"]},{"w":"der Anlass","b":"../vok-bild/die-familie.webp","h":["backen","der Tisch","einladen","der Nachmittag","das Stück"]},{"w":"die Ausrede","b":"../amanda/sz-buero.webp","h":["die Kollegen","die Karte","der Kuchen","die Blumen","kurz gratulieren"]},{"w":"die Absage","b":"../amanda/a-warten.webp","h":["leider","würde gern","nachholen","der Grund","das Verständnis"]}]
-</script>
-<script type="application/json" id="daten-quiz">
-[{"q":"Wer bringt in Deutschland im Büro den Kuchen mit?","o":["Das Geburtstagskind selbst","Die Kollegen","Der Chef","Niemand, das ist unüblich"],"c":0,"e":"Anders als in vielen Ländern sorgt das <b>Geburtstagskind</b> selbst für Kuchen. Die Kollegen geben oft eine Karte herum."},{"q":"Wie heißt es richtig?","o":["Ich gratuliere dir zum Geburtstag.","Ich gratuliere dich zum Geburtstag.","Ich gratuliere dir für den Geburtstag.","Ich gratuliere dich für Geburtstag."],"c":0,"e":"<b>gratulieren</b> steht mit <b>Dativ</b>, der Anlass mit <b>zu</b> + Dativ. Zwei Regeln in einem kurzen Satz."},{"q":"Darf man vor dem Geburtstag gratulieren?","o":["Nein, das gilt als Unglück","Ja, immer","Nur bei runden Geburtstagen","Nur schriftlich"],"c":0,"e":"Ein weit verbreiteter Aberglaube: <b>vorher gratulieren bringt Unglück</b>. Fast alle halten sich daran, auch wer nicht abergläubisch ist."},{"q":"Welche Absage klingt am freundlichsten?","o":["Ich würde gern, aber ich schaffe es nicht.","Ich will nicht kommen.","Ich habe keine Lust.","Mal sehen."],"c":0,"e":"Der Konjunktiv <b>würde gern</b> zeigt den Wunsch, bevor das Nein kommt. Genau das nimmt der Absage die Härte."},{"q":"Was ist ein „runder Geburtstag“?","o":["30, 40, 50 …","Ein Geburtstag am Wochenende","Eine Feier im Kreis","Ein Geburtstag ohne Gäste"],"c":0,"e":"Geburtstage mit einer Null am Ende gelten als <b>rund</b> — und werden traditionell größer gefeiert."},{"q":"Was bedeutet „sich vor etwas drücken“?","o":["Etwas vermeiden, das man eigentlich müsste","Jemanden umarmen","Auf einen Knopf drücken","Sich beeilen"],"c":0,"e":"Immer reflexiv und immer mit <b>vor</b> + Dativ. Man gibt damit halb zu, dass man eigentlich gemusst hätte."},{"q":"Worauf stößt man an?","o":["auf dich","für dich","zu dir","mit dir an dich"],"c":0,"e":"<b>anstoßen auf</b> + Akkusativ: <i>auf dich, auf das neue Jahr, auf die Gastgeberin</i>. Und dabei in die Augen schauen."},{"q":"Welche Form gehört zu „sein“?","o":["wäre","würde sein","hätte","könnte sein"],"c":0,"e":"<b>sein</b> und <b>haben</b> bilden eigene Formen: <b>wäre</b> und <b>hätte</b>. „Ich würde sein“ sagt niemand."}]
-</script>
-<script type="application/json" id="daten-gap">
-[{"t":"Ich ___ dir herzlich zum Geburtstag.","o":["gratuliere","gratulieren","gratuliert","gratulierst"],"a":"gratuliere"},{"t":"Ich gratuliere ___ zum Geburtstag.","o":["dir","dich","du","deiner"],"a":"dir"},{"t":"Ich ___ gern kommen, aber es geht nicht.","o":["würde","werde","wurde","will"],"a":"würde"},{"t":"Es ___ schön, wenn du kommst.","o":["wäre","würde","hätte","war"],"a":"wäre"},{"t":"Ich habe mich ___ der Feier gedrückt.","o":["vor","von","für","aus"],"a":"vor"},{"t":"Lasst uns ___ das Geburtstagskind anstoßen!","o":["auf","für","zu","an"],"a":"auf"},{"t":"Ich ___ euch alle zu meinem Geburtstag ein.","o":["lade","lade ein","einlade","ladet"],"a":"lade"},{"t":"Danke für die ___ — ich komme gern.","o":["Einladung","Einlädung","Ladung","Anladung"],"a":"Einladung"}]
-</script>
-<script type="application/json" id="daten-gbau">
-[{"f":"Lade jemanden ein:","t":["Ich","lade","dich","zu","meinem","Geburtstag","ein"],"l":["Ich","lade","dich","zu","meinem","Geburtstag","ein"],"e":"<b>einladen</b> ist trennbar — das <b>ein</b> steht ganz am Ende, hinter dem Ziel."},{"f":"Sag höflich ab:","t":["Ich","würde","wirklich","gern","kommen,","aber","es","geht","nicht"],"l":["Ich","würde","wirklich","gern","kommen,","aber","es","geht","nicht"],"e":"Nach <b>würde</b> steht der Infinitiv am Ende des ersten Satzteils. Und <b>gern</b> ist das Wort, das den Wunsch trägt."},{"f":"Schlag etwas Kleines vor:","t":["Wir","könnten","es","nächste","Woche","nachholen"],"l":["Wir","könnten","es","nächste","Woche","nachholen"],"e":"<b>könnten</b> macht aus einer Forderung einen Vorschlag. Der Infinitiv <b>nachholen</b> steht ganz hinten."},{"f":"Gratuliere richtig:","t":["Ich","gratuliere","dir","ganz","herzlich","zum","Geburtstag"],"l":["Ich","gratuliere","dir","ganz","herzlich","zum","Geburtstag"],"e":"Erst der Dativ (<b>dir</b>), dann der Anlass mit <b>zum</b>. Diese Reihenfolge ändert sich nie."}]
-</script>
-<script type="application/json" id="daten-gstory">
-{"t":"Anfang Oktober schreibt mir Nina: Sie wird vierzig und ___ mich ein. Ich freue mich — und merke im selben Moment, dass ich an dem Wochenende schon etwas vorhabe. Also antworte ich ehrlich: „Ich ___ wirklich gern kommen, aber ich schaffe es nicht.“ Damit es nicht kalt klingt, schreibe ich gleich dazu: „Es ___ schön, wenn wir das nachholen — nächste Woche Kaffee?“ Sie antwortet sofort mit drei Ausrufezeichen. Am Tag selbst rufe ich sie an und ___ ihr herzlich. Sie erzählt, dass dreißig Leute da waren und dass sie als ___ den ganzen Abend gestanden hat. Eine Woche später sitzen wir zu zweit im Café. Kein Programm, kein Kuchenberg. „Ehrlich gesagt“, sagt sie, „war das hier fast schöner.“ Und ich denke: Manchmal ist die ___ das bessere Geschenk.","o":["lädt","würde","wäre","gratuliere","Gastgeberin","Absage","hätte","Einladung"],"a":[["lädt"],["würde"],["wäre"],["gratuliere"],["Gastgeberin"],["Absage"]]}
-</script>
-<script type="application/json" id="daten-ueb">
-["Ich lade dich ein","Hast du am … Zeit?","Es wäre schön, wenn du kommst","Ich komme gern","Danke für die Einladung","Soll ich etwas mitbringen?","Ich würde gern, aber …","Es passt leider nicht","Ich denke an dich","Lass uns das nachholen","Nächste Woche vielleicht?","Ich mache etwas Kleines","Ganz ohne Programm","Sag Bescheid, ob es klappt","Ich bringe … mit","Kann ich beim Aufbau helfen?","Das trifft sich schlecht","Ich hätte wirklich gern","Ich melde mich, sobald …","Wollen wir stattdessen …?","Such dir einen Tag aus","Diesmal geht es auf mich"]
-</script>
+<section class="section" data-section="4"><h2 class="st">Frei sprechen</h2><p class="ssub">Sprich zu einem Impuls. Der Leitfaden sagt dir, worüber du reden kannst — die Lernhilfen geben dir die Sätze.</p>
+<div class="scene-wrap"><img src="../amanda/sz-freunde.webp" alt="Freunde feiern zusammen"></div>
+<div class="tip teal">👥 <strong>In einer kleinen 2er-Gruppe · ⏱️ ca. 10 Minuten:</strong> Sprecht zuerst zu zweit über die Fragen — erzählt euch gegenseitig davon. Danach berichtet ihr der Gruppe kurz.</div>
+<div class="tip"><strong>📋 Leitfaden — sprich über diese Punkte:</strong><ol style="margin:.5rem 0 0 1.2rem;line-height:1.9">
+<li>Wie hast du deinen letzten Geburtstag gefeiert?</li>
+<li>Gehst du gern auf Partys oder lieber in kleiner Runde?</li>
+<li>Was schenkst du am liebsten?</li>
+<li>Gibt es in deinem Land besondere Geburtstags-Bräuche?</li>
+</ol></div>
+<div class="rmcard"><b>💬 Lernhilfen / Redemittel</b><div style="margin-top:.5rem">
+<span class="rm">Meinen letzten Geburtstag habe ich …</span>
+<span class="rm">Ich mag lieber … Feiern, weil …</span>
+<span class="rm">Am liebsten schenke ich …</span>
+<span class="rm">Bei uns feiert man …</span>
+</div></div><div class="tip teal">👥 <strong>Zu zweit:</strong> Einer erzählt, der andere stellt <u>zwei</u> Nachfragen. Dann tauschen.</div></section>
+<section class="section" data-section="5"><h2 class="st">⏱️ 90-Sekunden-Challenge</h2><p class="ssub">Zieh ein Wort aus der Stunde und sprich <b>90 Sekunden</b> frei darüber. Die Hilfswörter helfen — starte den Timer!</p>
+<div class="card90"><div class="lbl">🎤 Dein Wort</div><div class="word" id="w90">Bereit?</div><div class="helpwords" id="hw90"><span class="hw">Tipp auf „Neues Wort"</span></div><div class="timer" id="t90">1:30</div><div><button class="btn" id="new90">🎲 Neues Wort</button><button class="btn ghost" id="start90">▶️ Timer starten</button></div></div>
+<div class="tip">💡 <strong>So geht's:</strong> Sag, was das Wort bedeutet, gib ein Beispiel aus deinem Leben und eine Meinung dazu. Ziel: die ganzen 90 Sekunden reden.</div></section>
+<section class="section" data-section="6"><h2 class="st">✅ Üben</h2><p class="ssub">Quiz und Lückentext — tippt die Antworten an.</p><div id="quiz"></div><h2 class="st">✍️ Lückentext</h2><p class="ssub">Wähl das passende Wort.</p><div class="gap" id="gap"></div></section>
+</div><footer><strong>deutschoderwas</strong> — Sprechclub · B1/B2 · Geburtstage <span class="hl">feiern</span> · Teil 1</footer>
 
 <script>
-
-/* ---- Sprungleiste: sie schaltet die Abschnitte wieder um ----
-   Eine Weile stand alles untereinander. Gemessen an der Stunde
-   „Kritik ueben": 28 512 Pixel, auf dem Handy 34 Bildschirme fuer
-   eine Unterrichtsstunde. Man scrollt und scrollt und weiss nicht,
-   wo man ist — und in der Stunde selbst kommt man nie durch.
-
-   Jetzt zeigt die Seite einen Abschnitt. Die Leiste oben waehlt aus,
-   am Ende jedes Abschnitts steht, was als Naechstes kommt. Wer die
-   ganze Stunde am Stueck sehen will (zum Vorbereiten, zum Drucken),
-   klickt auf „Alles". Beim Drucken kommt ohnehin alles mit, und ein
-   Link mit #abschnitt oeffnet genau dort. */
-(function(){
- var tabs=[].slice.call(document.querySelectorAll('nav.tabs a.tab'));
- var paare=tabs.map(function(a){return {a:a,sec:document.querySelector(a.getAttribute('href'))};})
-               .filter(function(x){return x.sec;});
- if(paare.length<2) return;
- var alles=false, jetzt=paare[0].sec.id;
-
- /* Ohne JavaScript steht die Stunde weiterhin komplett da — erst
-    hier wird ueberhaupt etwas versteckt. */
- document.body.classList.add('schaltet');
-
- var kopf=document.querySelector('.leiste');
- function hoehe(){ return kopf ? kopf.getBoundingClientRect().height+10 : 66; }
-
- /* Die aktive Marke in den schmalen Streifen holen — aber nur ihn
-    schieben. scrollIntoView() nahm die ganze Seite mit: der Titel
-    der Stunde rutschte beim Umschalten aus dem Bild. */
- function markeInsBild(a, weich){
-  var streifen=a.parentNode;
-  if(!streifen || streifen.scrollWidth<=streifen.clientWidth+2) return;
-  /* Gerechnet wird ueber die Rechtecke, nicht ueber offsetLeft: der
-     naechste positionierte Vorfahr ist die Leiste, nicht der Streifen
-     — offsetLeft haette die Marke um die Breite der Niveau-Knoepfe
-     verschoben. */
-  var r=a.getBoundingClientRect(), rs=streifen.getBoundingClientRect();
-  var links=streifen.scrollLeft+(r.left-rs.left)-(rs.width-r.width)/2;
-  links=Math.max(0,Math.min(links,streifen.scrollWidth-streifen.clientWidth));
-  if(Math.abs(links-streifen.scrollLeft)<2) return;
-  /* Beim ersten Aufbau hart setzen. Ein weiches Scrollen im Streifen
-     zog in Chrome die ganze Seite 399 Pixel mit nach unten, weil
-     html{scroll-behavior:smooth} gilt — der Titel der Stunde war
-     dann schon beim Laden aus dem Bild. */
-  if(weich && streifen.scrollTo) streifen.scrollTo({left:links,behavior:'smooth'});
-  else streifen.scrollLeft=links;
- }
-
- /* Der Umschalter erscheint nur, wo er wirklich etwas aendert.
-    Vorher stand er auf jeder Seite, tat aber in vier von sieben
-    Abschnitten gar nichts — man tippt, nichts passiert, und denkt,
-    es sei kaputt. Jetzt sagt sein Verschwinden: Hier gibt es keine
-    zwei Fassungen. */
- var umschalter=document.querySelector('.leiste .nivk');
- function umschalterZeigen(sec){
-  if(!umschalter) return;
-  var da = !!sec.querySelector('.nur-a2, .nur-b1');
-  umschalter.style.display = da ? '' : 'none';
- }
-
- function zeige(id, springen, stumm){
-  var da=paare.filter(function(p){return p.sec.id===id;})[0];
-  if(!da) return;
-  jetzt=id;
-  paare.forEach(function(p){
-   p.sec.hidden = !alles && p.sec.id!==id;
-   p.a.classList.toggle('active', p.sec.id===id);
-  });
-  if(alles) paare.forEach(function(p){ p.sec.hidden=false; });
-  umschalterZeigen(da.sec);
-  markeInsBild(da.a, !!springen);
-  if(springen){
-   var y=da.sec.getBoundingClientRect().top+window.pageYOffset-hoehe();
-   window.scrollTo({top:Math.max(0,y),behavior:'smooth'});
-  }
-  /* Die Marke kommt erst in die Adresse, wenn jemand wirklich
-     umschaltet. Steht sie schon beim Laden drin, springt Chrome
-     nachtraeglich selbst dorthin — sobald die Bilder da sind, zog es
-     die Seite 399 Pixel nach unten und der Titel der Stunde war weg. */
-  if(!stumm){ try{ history.replaceState(null,'','#'+id); }catch(e){} }
- }
- window.stundeZeige=zeige;
-
- tabs.forEach(function(a){
-  a.addEventListener('click',function(ev){
-   var id=(a.getAttribute('href')||'').replace('#','');
-   if(!id) return;
-   ev.preventDefault();
-   if(alles){ alles=false; if(knopfAlles) knopfAlles.setAttribute('aria-pressed','false'); }
-   zeige(id,true);
-  });
- });
-
- /* Am Ende jedes Abschnitts: was jetzt drankommt. In der Stunde
-    haelt das den Takt — man klickt weiter, statt zu suchen. */
- paare.forEach(function(p,i){
-  var naechste=paare[i+1], vorige=paare[i-1];
-  var z=document.createElement('div'); z.className='weiterzeile';
-  if(vorige){
-   var zur=document.createElement('button');
-   zur.type='button'; zur.className='weiterknopf zurueck';
-   zur.innerHTML='← '+vorige.a.textContent.trim();
-   zur.addEventListener('click',function(){ zeige(vorige.sec.id,true); });
-   z.appendChild(zur);
-  }
-  if(naechste){
-   var w=document.createElement('button');
-   w.type='button'; w.className='weiterknopf';
-   w.innerHTML='Weiter: '+naechste.a.textContent.trim()+' →';
-   w.addEventListener('click',function(){ zeige(naechste.sec.id,true); });
-   z.appendChild(w);
-  }
-  if(z.children.length) p.sec.appendChild(z);
- });
-
- /* Der Schalter fuer die lange Ansicht sitzt am Ende der Leiste. */
- var knopfAlles=null;
- var streifen=document.querySelector('nav.tabs');
- if(streifen){
-  knopfAlles=document.createElement('button');
-  knopfAlles.type='button'; knopfAlles.className='tab tabAlles';
-  knopfAlles.setAttribute('aria-pressed','false');
-  knopfAlles.textContent='⇕ Alles';
-  knopfAlles.title='Die ganze Stunde am Stück zeigen';
-  knopfAlles.addEventListener('click',function(){
-   alles=!alles;
-   knopfAlles.setAttribute('aria-pressed', alles?'true':'false');
-   if(alles){ paare.forEach(function(p){ p.sec.hidden=false; }); }
-   else zeige(jetzt,true);
-  });
-  streifen.appendChild(knopfAlles);
- }
-
- var ausLink=(location.hash||'').replace('#','');
- var beimLaden=paare.filter(function(p){return p.sec.id===ausLink;}).length ? ausLink : paare[0].sec.id;
- zeige(beimLaden, false, beimLaden!==ausLink);
-})();
-
-/* ---- Hoehe des klebenden Umschalters messen, damit die
-   Sprungleiste sauber darunter sitzt ---- */
-(function(){
- var leiste=document.querySelector('.niv');
- if(!leiste)return;
- function miss(){document.documentElement.style.setProperty('--leiste',Math.round(leiste.offsetHeight)+'px');}
- miss();
- window.addEventListener('resize',miss);
- if(window.ResizeObserver)new ResizeObserver(miss).observe(leiste);
- if(document.fonts&&document.fonts.ready)document.fonts.ready.then(miss);
-})();
-
-/* ---- Vorlesen ---- */
-function say(t){try{var u=new SpeechSynthesisUtterance(t);u.lang='de-DE';u.rate=.85;speechSynthesis.cancel();speechSynthesis.speak(u);}catch(e){}}
-document.querySelectorAll('.speak').forEach(function(b){if(b.dataset.say)b.onclick=function(){say(b.dataset.say);};});
-
-/* ---- Niveau-Umschalter ---- */
-var nivk=document.querySelectorAll('.nivk button[data-niv]');
-nivk.forEach(function(b){b.onclick=function(){
- var n=b.dataset.niv;document.body.setAttribute('data-niveau',n);
- nivk.forEach(function(x){x.setAttribute('aria-pressed',x.dataset.niv===n?'true':'false');});
- hazaehlen();
+document.querySelectorAll('.tab').forEach(function(b){b.onclick=function(){
+ document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('active');});
+ document.querySelectorAll('.section').forEach(function(x){x.classList.remove('active');});
+ b.classList.add('active');document.querySelector('[data-section="'+b.dataset.tab+'"]').classList.add('active');
+ var n=document.querySelector('.tabs');window.scrollTo({top:n.offsetTop-8,behavior:'instant'});
 };});
-
-/* ---- Hilfe-Knoepfe ---- */
-document.querySelectorAll('.hilfe > button').forEach(function(b){
- var kasten=b.parentElement,text=b.textContent;
- b.setAttribute('aria-expanded','false');
- b.onclick=function(){var auf=kasten.classList.toggle('offen');
-  b.setAttribute('aria-expanded',auf?'true':'false');
-  b.textContent=auf?'✕ Hilfe schließen':text;};
-});
-
-/* ---- Markierte Woerter ----
-   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
-   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
-   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
-
-   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
-   den viele verwechseln. */
-(function(){
- var woerter=[].slice.call(document.querySelectorAll('.wm'));
- if(!woerter.length) return;
- var karte=null;
-
- function zu(){ if(karte){ karte.remove(); karte=null; }
-  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
-
- function auf(w){
-  var schonOffen=w.classList.contains('offen');
-  zu();
-  if(schonOffen) return;
-  w.classList.add('offen');
-  karte=document.createElement('div');
-  karte.className='wmk';
-  var satz=w.dataset.bsp||'';
-  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
-   + '<b>'+w.dataset.wort+'</b>'
-   + '<span>'+(w.dataset.kurz||'')+'</span>'
-   + (satz?'<em>'+satz+'</em>':'')
-   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
-  document.body.appendChild(karte);
-
-  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
-  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
-  var links=r.left+r.width/2-b.width/2;
-  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
-  var oben=r.bottom+window.pageYOffset+9;
-  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
-   oben=r.top+window.pageYOffset-b.height-9;
-  karte.style.left=links+'px'; karte.style.top=oben+'px';
-
-  karte.querySelector('.wmk-zu').onclick=zu;
-  var ton=karte.querySelector('.wmk-ton');
-  if(ton) ton.onclick=function(){ say(satz); };
- }
-
- woerter.forEach(function(w){
-  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
-  w.addEventListener('keydown',function(ev){
-   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
- });
- document.addEventListener('click',zu);
- document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
- window.addEventListener('resize',zu);
- /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
-    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
- document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
-  k.addEventListener('click',zu); });
-})();
-
-/* ---- Bildkarten verdecken ----
-   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
-   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
-   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
-   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
-   Ein einziges fehlendes Element legte die halbe Stunde still. */
-var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-if(bg&&vb){
- vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
-  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
- bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
-}
-
-/* ---- Dialoge: Runde 1 / Runde 2 ---- */
-document.querySelectorAll('.dwrap').forEach(function(d){
- var b=d.querySelector('.rbtn');
- b.onclick=function(){
-  var zwei=d.dataset.runde==='1';
-  d.dataset.runde=zwei?'2':'1';
-  b.textContent=zwei?'◀︎ Runde 1 · Text zeigen':'▶︎ Runde 2 · du antwortest';
-  b.classList.toggle('zwei',zwei);
-  d.querySelectorAll('.dline.b').forEach(function(l){l.classList.remove('zeigen');});
- };
- d.querySelectorAll('.dcue').forEach(function(c){
-  c.onclick=function(){c.closest('.dline').classList.add('zeigen');};});
-});
-
-/* ---- Hausaufgabe abhaken ---- */
-var hastand=document.querySelector('[data-ha-stand]');
-function hazaehlen(){
- if(!hastand)return;
- /* Nach dem Niveau zaehlen, nicht nach offsetParent: beim Laden ist der
-    Hausaufgaben-Abschnitt noch zugeklappt und haette 0 von 0 ergeben. */
- var niv=document.body.getAttribute('data-niveau');
- var weg=niv==='a2'?'.nur-b1':'.nur-a2';
- var da=[].slice.call(document.querySelectorAll('[data-ha]')).filter(function(h){return !h.closest(weg);});
- var fertig=da.filter(function(h){return h.classList.contains('fertig');}).length;
- var voll=da.length>0&&fertig===da.length;
- hastand.textContent=voll?('Alle '+da.length+' Aufgaben geschafft. Stark — bis Mittwoch! 🎉')
-                        :(fertig+' von '+da.length+' Aufgaben geschafft.');
- hastand.classList.toggle('voll',voll);
-}
-document.querySelectorAll('[data-ha]').forEach(function(h){
- h.setAttribute('aria-pressed','false');
- h.onclick=function(){var an=h.classList.toggle('fertig');
-  h.setAttribute('aria-pressed',an?'true':'false');hazaehlen();};
-});
-hazaehlen();
-
-/* ---- Daten aus den JSON-Bloecken im Koerper ----
-   Der Motor ist fuer alle Stunden derselbe; nur die Daten wechseln.
-   Fehlt ein Block, bleibt der Abschnitt einfach leer. */
-function daten(id){
- var el=document.getElementById('daten-'+id);
- if(!el)return null;
- try{return JSON.parse(el.textContent);}catch(e){console.error('Daten "'+id+'" sind kaputt:',e);return null;}
-}
-/* ---- Mischen (Fisher-Yates) ----
-   Ein Vergleich mit Math.random() mischt nicht gleichmaessig, die
-   erste Stelle bleibt zu oft die erste. Deshalb richtig tauschen. */
-function misch(liste){
- var a=liste.slice();
- for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}
- return a;
-}
-
-/* ---- Sprechkarten ---- */
-/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
-   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
-var UEB=daten('ueb')||[];
-if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
-  var uLetzt=-1;
-  document.getElementById('uebnew').onclick=function(){var i;
-    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
-    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
-  };
-}
-
-var SK=daten('sk')||[];
-/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
-   Gepruefte Elemente statt gepruefter Daten. */
-if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
-var lastsk=-1;
-document.getElementById('sknew').onclick=function(){var i;
- do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
- document.getElementById('wsk').innerHTML=SK[i];};
-
-}
-
-/* ---- 90 Sekunden ---- */
-var W90=daten('w90')||[];
-if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
-var last90=-1,t90=null,rest=90;
-function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
-function zeige90(i){
+function say(t){try{var u=new SpeechSynthesisUtterance(t);u.lang='de-DE';u.rate=.9;speechSynthesis.cancel();speechSynthesis.speak(u);}catch(e){}}
+document.querySelectorAll('.speak').forEach(function(b){b.onclick=function(){say(b.dataset.say);};});
+var W90=[{"w": "feiern", "h": ["der Geburtstag", "die Party", "die Musik", "die Gäste", "das Essen", "tanzen"]}, {"w": "einladen", "h": ["die Einladung", "die Gäste", "zu Hause", "die Uhrzeit", "kommen", "gern"]}, {"w": "das Geschenk", "h": ["kaufen", "einpacken", "überraschen", "teuer", "selbst gemacht", "freuen"]}, {"w": "sich drücken", "h": ["keine Lust", "müde", "die Ausrede", "höflich", "zu viel", "allein"]}, {"w": "gratulieren", "h": ["alles Gute", "der Geburtstag", "die Blumen", "umarmen", "herzlich", "feiern"]}, {"w": "die Stimmung", "h": ["gut", "laut", "die Musik", "lachen", "fröhlich", "die Gäste"]}];var last90=-1,t90=null,rest=90;
+function fmt(s){var m=Math.floor(s/60),r=s%60;return m+":"+(r<10?"0":"")+r;}
+document.getElementById('new90').onclick=function(){var i;do{i=Math.floor(Math.random()*W90.length);}while(i===last90&&W90.length>1);last90=i;
  document.getElementById('w90').textContent=W90[i].w;
- document.getElementById('i90').src=W90[i].b;
- document.getElementById('i90').alt=W90[i].w;
  document.getElementById('hw90').innerHTML=W90[i].h.map(function(x){return '<span class="hw">'+x+'</span>';}).join('');
-}
-document.getElementById('new90').onclick=function(){var i;
- do{i=Math.floor(Math.random()*W90.length);}while(i===last90&&W90.length>1);last90=i;
- zeige90(i);clearInterval(t90);rest=90;document.getElementById('t90').textContent=fmt(rest);};
-document.getElementById('start90').onclick=function(){clearInterval(t90);rest=90;
- var el=document.getElementById('t90');el.textContent=fmt(rest);
- t90=setInterval(function(){rest--;el.textContent=fmt(rest);
-  if(rest<=0){clearInterval(t90);el.textContent='✅ Fertig!';}},1000);};
-zeige90(0);last90=0;
-
-}
-
-/* ---- Quiz ---- */
-var QUIZ=daten('quiz')||[];
-var qc=document.getElementById('quiz');
-if(qc&&QUIZ.length){
-QUIZ.forEach(function(item){
- var d=document.createElement('div');d.className='quiz-q';
- d.innerHTML='<div class="qt">'+item.q+'</div>';
+ clearInterval(t90);rest=90;document.getElementById('t90').textContent=fmt(rest);};
+document.getElementById('start90').onclick=function(){clearInterval(t90);rest=90;var el=document.getElementById('t90');el.textContent=fmt(rest);
+ t90=setInterval(function(){rest--;el.textContent=fmt(rest);if(rest<=0){clearInterval(t90);el.textContent="✅ Fertig!";}},1000);};
+var QUIZ=[{"q": "Danke für die ___! Ich komme gern.", "o": ["Einladung", "Rechnung", "Ordnung"], "c": 0, "e": "Einladung = wenn man jemanden zu etwas bittet."}, {"q": "Ich habe keine Lust und finde eine Ausrede — ich ___ mich.", "o": ["drücke", "freue", "koche"], "c": 0, "e": "sich drücken = etwas höflich vermeiden."}, {"q": "Zum Geburtstag ___ man: „Alles Gute!“", "o": ["gratuliert", "fährt", "kocht"], "c": 0, "e": "gratulieren = Glückwünsche sagen."}, {"q": "Ich komme! Ich ___ gern ___.", "o": ["sage … zu", "fahre … ab", "stelle … um"], "c": 0, "e": "zusagen = ja sagen."}, {"q": "Lasst uns auf Mia ___!", "o": ["anstoßen", "aufräumen", "absagen"], "c": 0, "e": "anstoßen = mit Gläsern auf jemanden trinken."}];var qc=document.getElementById('quiz');
+QUIZ.forEach(function(item){var d=document.createElement('div');d.className='quiz-q';d.innerHTML='<div class="qt">'+item.q+'</div>';
  var op=document.createElement('div');op.className='quiz-opts';
- /* Gemischt, sonst stuende die richtige Antwort immer an erster Stelle
-    und man koennte die ganze Runde raten, ohne zu lesen. */
- var wahl=misch(item.o.map(function(t,i){return {t:t,richtig:i===item.c};}));
- wahl.forEach(function(w){
-  var b=document.createElement('button');b.className='qopt';b.textContent=w.t;
-  b.onclick=function(){
-   if(d.dataset.done)return;d.dataset.done=1;
-   if(w.richtig){b.classList.add('right');}
-   else{
-    b.classList.add('wrong');
-    op.children[wahl.findIndex(function(x){return x.richtig;})].classList.add('right');
-   }
-   d.querySelector('.qexp').classList.add('show');};
+ item.o.forEach(function(t,i){var b=document.createElement('button');b.className='qopt';b.textContent=t;
+  b.onclick=function(){if(d.dataset.done)return;d.dataset.done=1;if(i===item.c){b.classList.add('right');}else{b.classList.add('wrong');op.children[item.c].classList.add('right');}d.querySelector('.qexp').classList.add('show');};
   op.appendChild(b);});
- d.appendChild(op);
- var e=document.createElement('div');e.className='qexp';e.innerHTML='💡 '+item.e;d.appendChild(e);
- qc.appendChild(d);
-});
-
-}
-
-/* ---- Lueckentext ---- */
-var GAP=daten('gap')||[];
-var g=document.getElementById('gap');
-if(g&&GAP.length){
-GAP.forEach(function(item){
- var row=document.createElement('div');row.style.margin='.35rem 0';
- var sel=document.createElement('select');
- var leer=document.createElement('option');leer.textContent='– wählen –';leer.value='';sel.appendChild(leer);
- misch(item.o).forEach(function(o){
-  var op=document.createElement('option');op.textContent=o;op.value=o;sel.appendChild(op);});
- sel.onchange=function(){sel.className=sel.value===item.a?'ok':'no';};
- var teile=item.t.split('___');
- row.appendChild(document.createTextNode(teile[0]));row.appendChild(sel);
- row.appendChild(document.createTextNode(teile[1]||''));
- g.appendChild(row);
-});
-
-}
-
-/* ---- Satzbauer ---- */
-var GBAU=daten('gbau')||[];
-var gbc=document.getElementById('gbau');
-if(gbc&&GBAU.length){
-{GBAU.forEach(function(item){
- var d=document.createElement('div');d.className='gbau';
- d.innerHTML='<div class="gfrage">🧱 '+item.f+'</div>';
- var teile=document.createElement('div');teile.className='gteile';
- var zeile=document.createElement('div');zeile.className='gzeile';
- var gebaut=[];
- misch(item.t).forEach(function(w){
-  var b=document.createElement('button');b.className='gteil';b.textContent=w;
-  b.onclick=function(){b.classList.add('weg');gebaut.push(w);zeile.classList.remove('ok','no');
-   var s=document.createElement('span');s.textContent=w;zeile.appendChild(s);};
-  teile.appendChild(b);});
- d.appendChild(teile);d.appendChild(zeile);
- var fuss=document.createElement('div');fuss.className='gfuss';
- var pr=document.createElement('button');pr.className='gmini';pr.textContent='✅ prüfen';
- var nm=document.createElement('button');nm.className='gmini hell';nm.textContent='↻ nochmal';
- var tp=document.createElement('div');tp.className='gtipp';tp.innerHTML='💡 '+item.e;
- pr.onclick=function(){var richtig=gebaut.join(' ')===item.l.join(' ');
-  zeile.classList.remove('ok','no');zeile.classList.add(richtig?'ok':'no');tp.classList.add('show');};
- nm.onclick=function(){gebaut=[];zeile.innerHTML='';zeile.classList.remove('ok','no');tp.classList.remove('show');
-  teile.querySelectorAll('.gteil').forEach(function(b){b.classList.remove('weg');});};
- fuss.appendChild(pr);fuss.appendChild(nm);d.appendChild(fuss);d.appendChild(tp);
- gbc.appendChild(d);
-});}
-
-}
-
-/* ---- Lueckengeschichte ---- */
-var GSTORY=daten('gstory');
-var gsc=document.getElementById('gstory');
-if(gsc&&GSTORY){
-{
- var gsWahl=misch(GSTORY.o);   /* einmal mischen, alle Luecken zeigen dieselbe Reihenfolge */
- var st=GSTORY.t.split('___');
- st.forEach(function(txt,i){
-  gsc.appendChild(document.createTextNode(txt));
-  if(i<GSTORY.a.length){
-   var sel=document.createElement('select');
-   var leer=document.createElement('option');leer.textContent='– ? –';leer.value='';sel.appendChild(leer);
-   gsWahl.forEach(function(o){var op=document.createElement('option');op.textContent=o;op.value=o;sel.appendChild(op);});
-   (function(loesung){sel.onchange=function(){sel.className=loesung.indexOf(sel.value)>=0?'ok':'no';};})(GSTORY.a[i]);
-   gsc.appendChild(sel);
-  }
- });
-}
-
-}
-
-</script>
-<!-- Die Seite meldet sich beim Konto: wer ist da, ist die Mitgliedschaft
-     aktiv, und wie weit wurde gelesen. Ohne diese Zeile ist die Stunde
-     frei im Netz erreichbar und niemand sieht, dass sie benutzt wurde. -->
-<script src="../lektion-konto.js?v=1"></script>
-</body>
-</html>
+ d.appendChild(op);var e=document.createElement('div');e.className='qexp';e.innerHTML='💡 '+item.e;d.appendChild(e);qc.appendChild(d);});
+var GAP=[{"t": "Am Samstag ___ ich meinen 30. Geburtstag.", "o": ["feiere", "fahre", "koche"], "a": "feiere"}, {"t": "Ich möchte zehn Freunde ___.", "o": ["einladen", "abholen", "aufräumen"], "a": "einladen"}, {"t": "Was ___ wir ihr zum Geburtstag?", "o": ["schenken", "fahren", "waschen"], "a": "schenken"}, {"t": "Danke, ich sage gern ___.", "o": ["zu", "ab", "auf"], "a": "zu"}, {"t": "Die ___ auf der Party war richtig gut.", "o": ["Stimmung", "Rechnung", "Ordnung"], "a": "Stimmung"}];var g=document.getElementById('gap');
+GAP.forEach(function(item){var span=document.createElement('div');span.style.margin='.3rem 0';
+ var sel=document.createElement('select');var opt0=document.createElement('option');opt0.textContent='— wählen —';opt0.value='';sel.appendChild(opt0);
+ item.o.slice().sort().forEach(function(o){var op=document.createElement('option');op.textContent=o;op.value=o;sel.appendChild(op);});
+ sel.onchange=function(){if(sel.value===item.a){sel.className='ok';}else if(sel.value===''){sel.className='';}else{sel.className='no';}};
+ span.innerHTML=item.t.replace('___','<b id="slot"></b>');span.querySelector('#slot').replaceWith(sel);g.appendChild(span);});
+</script></body></html>

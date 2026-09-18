@@ -1,1366 +1,241 @@
 <!DOCTYPE html><html lang="de"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>LEGEN, STELLEN, SETZEN — und wo es dann liegt · Sprechclub B1/B2 | deutschoderwas</title>
-<!--
-  deutschoderwas · Sprechclub · Di 29.9. 9:00 · Strang B · Teil 1 · ab B1
-  LEGEN, STELLEN, SETZEN — und wo es dann liegt — Acht Verben, die immer paarweise auftreten. Das eine bewegt etwas, das andere beschreibt, wo es danach ist. Wer das Paar einmal begriffen hat, macht diesen Fehler nie wieder.
-  Erzeugt von bau/mach-stunde.js aus w03-b1-legen.json. Nicht von Hand aendern.
-  Aufbau und Design wie maengel-melden-b1.html.
--->
+<title>LEGEN, STELLEN, <span class="hl">SETZEN, HÄNGEN</span> · Teil 1 · Sprechclub B1/B2 | deutschoderwas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ============================================================
-   stunde-club.css — die Stunde im Aussehen von
-   deutschoderwas-club.de
-
-   Vorher trugen die Stunden einen eigenen Look: Fraunces als
-   Serifenschrift, cremefarbener Verlauf, schwarze Rahmen mit
-   harten versetzten Schatten. Fuer sich schoen — aber daneben
-   sah die Website aus wie eine andere Marke.
-
-   Die Werte hier stammen eins zu eins aus index.html, der
-   Startseite des Clubs: dieselben Farben, dieselben Schriften,
-   dieselbe Fahnenleiste oben, derselbe goldene Marker.
-
-     Inter          Fliesstext
-     Space Grotesk  Ueberschriften, Zahlen, Knoepfe
-     #14181B        Text
-     #D42A21        Signalfarbe (Augenbraue, wichtige Marken)
-     #FFCE00        Gold (Marker, Hinweise)
-     #1B9BC0        Tuerkis (Knoepfe, aktive Marke)
-     #F6F9FA        warmes Papier fuer Kaesten
-     #E7ECEE        Linien
-
-   Was hier nicht mehr steht, gibt es auf der Seite auch nicht
-   mehr: Wortschatzkarten, Grammatiktafeln, Quiz und Lueckentext
-   sind aus der Stunde raus. Die Stunde ist zum Sprechen da.
-   ============================================================ */
-
-:root{
-  --ink:#14181B; --soft:#5A6B72; --line:#E7ECEE;
-  --turq:#1B9BC0; --turq-d:#15788F; --teal-ink:#10627A; --mint:#EFFBF8;
-  --red:#D42A21; --red-d:#B30000;
-  --gold:#FFCE00; --gold-mark:#FFD84D; --gold-d:#E0A500;
-  --bg:#FFFFFF; --warm:#F6F9FA; --pink:#FFF1EE;
-  --schatten:0 1px 2px rgba(22,22,22,.04), 0 10px 28px rgba(22,22,22,.05);
-  --schatten-k:0 1px 2px rgba(22,22,22,.05);
-  /* Fuer Bausteine, die noch die alten Namen benutzen. */
-  --cream:#FFFFFF; --cream-warm:#F6F9FA; --paper:#FFFFFF;
-  --ink-soft:#5A6B72; --ink-mute:#8C93A0; --sand:#E7ECEE;
-  --teal:#1B9BC0; --teal-soft:#EFFBF8;
-  --yellow:#FFCE00; --yellow-soft:#F6F9FA;
-  --red-soft:#FFF1EE; --green:#4E9E12;
-}
-*{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;}
-html,body{max-width:100%;overflow-x:clip;}
-img{height:auto;max-width:100%;}
-body{
-  font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);
-  line-height:1.6;-webkit-font-smoothing:antialiased;
-}
-h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;font-weight:700;letter-spacing:-.02em;line-height:1.12;}
-
-/* Die Fahnenleiste vom Club, ganz oben. */
-.flagbar{
-  height:5px;
-  background:linear-gradient(90deg,#14181B 0 25%,var(--red) 25% 50%,var(--gold) 50% 75%,var(--turq) 75% 100%);
-}
-
-.wrapper{max-width:900px;margin:0 auto;padding:2rem 1.25rem 5rem;}
-
-/* ---------- Kopf ---------- */
-.eyebrow{
-  text-align:center;font-size:.72rem;font-weight:700;letter-spacing:.16em;
-  text-transform:uppercase;color:var(--red);margin-bottom:.65rem;
-}
-h1.title{font-size:clamp(1.9rem,4.6vw,3rem);text-align:center;}
-h1.title .hl{
-  background:var(--gold-mark);border-radius:7px;padding:.02em .26em;font-style:italic;
-  -webkit-box-decoration-break:clone;box-decoration-break:clone;
-}
-.subtitle{
-  text-align:center;max-width:38rem;margin:.85rem auto 0;
-  font-size:1.02rem;color:var(--soft);
-}
-.niv-wie{text-align:center;max-width:34rem;margin:.75rem auto 0;font-size:.85rem;color:var(--soft);}
-
-/* ---------- Leiste: Niveau und Sprungmarken ---------- */
-.leiste{
-  position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:.5rem;
-  width:100%;margin:1.1rem 0 1.6rem;padding:.4rem .5rem;
-  background:rgba(255,255,255,.94);backdrop-filter:blur(10px);
-  border:1px solid var(--line);border-radius:14px;box-shadow:var(--schatten-k);
-}
-.nivk{display:flex;gap:.2rem;flex:none;background:#F4F2ED;border-radius:999px;padding:3px;}
-.nivk button{
-  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;
-  border:none;border-radius:999px;padding:.32rem .8rem;background:transparent;color:var(--soft);
-  transition:.15s;white-space:nowrap;
-}
-.nivk button[aria-pressed="true"]{background:var(--ink);color:#fff;}
-.nivk button:focus-visible{outline:3px solid var(--turq-d);outline-offset:2px;}
-.tabs{
-  display:flex;flex-wrap:nowrap;gap:.3rem;overflow-x:auto;overscroll-behavior-x:contain;
-  flex:1 1 auto;min-width:0;margin:0;padding:.1rem 0;
-  scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;
-}
-.tabs::-webkit-scrollbar{display:none;}
-.tab{
-  flex:none;white-space:nowrap;font-family:'Space Grotesk',sans-serif;
-  font-size:.84rem;font-weight:600;color:var(--ink);background:#fff;
-  border:1px solid var(--line);border-radius:999px;padding:.4rem .8rem;cursor:pointer;
-  display:inline-flex;gap:.3rem;align-items:center;transition:.15s;
-}
-.tab:hover{border-color:var(--turq-d);color:var(--teal-ink);}
-.tab.active{background:var(--turq-d);border-color:var(--turq-d);color:#fff;}
-.tabAlles{border-style:dashed;color:var(--soft);}
-.tabAlles[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff;border-style:solid;}
-
-/* ---------- Abschnitte ---------- */
-/* Der Wechsel soll nicht springen. Eine halbe Sekunde, weich
-   auslaufend, und der Inhalt kommt ein kleines Stueck von unten —
-   gerade genug, dass das Auge mitgeht, ohne dass man wartet. */
-.section{animation:auf .5s cubic-bezier(.22,.8,.3,1);}
-body.schaltet .section[hidden]{display:none !important;}
-@keyframes auf{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
-.leiste .nivk,.tab,.weiterknopf,.btn,.hilf summary{transition:background .25s ease,color .25s ease,border-color .25s ease;}
-.hilf-i{animation:auf .35s cubic-bezier(.22,.8,.3,1);}
-@media(prefers-reduced-motion:reduce){
-  .section,.hilf-i{animation:none;}
-  html{scroll-behavior:auto;}
-}
-section.section{scroll-margin-top:calc(var(--leiste,58px) + 1rem);}
-/* Ein kurzer Abschnitt wie der Abschluss ist niedriger als das
-   Fenster. Dann kann die Seite gar nicht weit genug scrollen, und
-   der Titel der Stunde bleibt oben stehen — es sah aus, als waere
-   man versehentlich am Anfang gelandet. Mit dieser Mindesthoehe
-   landet jeder Abschnitt gleich weit oben. */
-body.schaltet section.section{min-height:calc(100vh - 9rem);}
-body.schaltet section.section:last-of-type{min-height:0;}
-h2.st{font-size:clamp(1.4rem,3vw,1.9rem);margin:.4rem 0 .35rem;}
-h2.st .hl{
-  background:var(--gold-mark);border-radius:7px;padding:.02em .24em;font-style:italic;
-  -webkit-box-decoration-break:clone;box-decoration-break:clone;
-}
-.ssub{color:var(--soft);margin-bottom:1.1rem;font-size:.97rem;max-width:44rem;}
-
-/* Zeit und Aufstellung, direkt unter der Ueberschrift. */
-.regie{
-  display:inline-flex;align-items:center;gap:.55rem;flex-wrap:wrap;
-  background:var(--warm);border:1px solid #E7ECEE;border-radius:999px;
-  padding:.3rem .85rem;margin:0 0 1.1rem;font-size:.82rem;
-}
-.regie span{font-weight:800;font-variant-numeric:tabular-nums;font-family:'Space Grotesk',sans-serif;}
-.regie b{font-weight:500;color:var(--soft);}
-
-/* ---------- Ablauftafel ---------- */
-.takt{display:flex;flex-direction:column;gap:.4rem;margin:1rem 0;}
-.takt-z{
-  display:grid;grid-template-columns:auto auto 1fr;gap:.15rem .75rem;align-items:start;
-  background:#fff;border:1px solid var(--line);border-radius:12px;padding:.7rem .85rem;
-}
-.takt-m{
-  grid-row:span 2;align-self:center;min-width:3.4rem;text-align:center;
-  background:var(--ink);color:#fff;border-radius:8px;padding:.28rem .4rem;
-  font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.8rem;font-variant-numeric:tabular-nums;
-}
-.takt-z2{grid-row:span 2;align-self:center;font-size:1.2rem;line-height:1;}
-.takt-t b{display:block;font-family:'Space Grotesk',sans-serif;font-size:1rem;}
-.takt-t span{display:block;font-size:.9rem;line-height:1.45;color:var(--soft);margin-top:.05rem;}
-.takt-t em{display:block;font-style:normal;font-size:.78rem;font-weight:700;color:var(--teal-ink);margin-top:.2rem;}
-
-/* ---------- Ankommen und Abschluss ---------- */
-.ank{
-  background:var(--warm);border:1px solid #E7ECEE;border-radius:14px;padding:1rem 1.15rem;
-  font-family:'Space Grotesk',sans-serif;font-size:1.16rem;line-height:1.4;font-weight:600;
-}
-.ank.zweit{
-  margin-top:.7rem;background:#fff;border:1px dashed var(--line);
-  font-family:'Inter',sans-serif;font-size:.97rem;font-weight:500;
-}
-.ank.zweit span{
-  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
-  color:var(--soft);margin-bottom:.25rem;
-}
-
-/* ---------- Tippkasten ---------- */
-.tip{
-  background:var(--warm);border:1px solid #E7ECEE;border-left:4px solid var(--gold);
-  border-radius:12px;padding:.8rem 1rem;margin:1.1rem 0 0;font-size:.94rem;line-height:1.6;
-}
-.tip.teal{background:var(--mint);border-color:#CDEEF3;border-left-color:var(--turq-d);}
-
-/* Die Anweisung als kurze Schritte statt als Absatz. */
-.schritte{list-style:none;display:flex;flex-direction:column;gap:.35rem;margin:0 0 1.1rem;padding:0;}
-.schritte li{
-  display:grid;grid-template-columns:auto 1fr;gap:.55rem;align-items:start;
-  font-size:.94rem;line-height:1.5;color:var(--soft);
-}
-.schritte li span{
-  flex:none;width:20px;height:20px;border-radius:50%;margin-top:.12rem;
-  background:#F1EFEA;color:var(--ink);display:grid;place-items:center;
-  font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:700;
-}
-.schritte li.regel{color:var(--ink);}
-.schritte li.regel span{background:var(--gold);color:var(--ink);}
-
-/* ---------- Dialog ---------- */
-.dwrap{
-  background:#fff;border:1px solid var(--line);border-radius:16px;
-  padding:1rem 1.05rem 1.1rem;margin:0 0 1rem;box-shadow:var(--schatten-k);
-}
-.dhead{display:flex;align-items:center;gap:.65rem;flex-wrap:wrap;margin-bottom:.55rem;}
-.dhead img{width:44px;height:44px;object-fit:cover;border-radius:50%;flex:none;}
-.dhead h4{font-size:1.02rem;flex:1 1 12rem;}
-.rbtn{
-  font-family:'Space Grotesk',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer;
-  border:1px solid var(--turq-d);background:var(--mint);color:var(--teal-ink);
-  border-radius:999px;padding:.32rem .75rem;
-}
-.rbtn:hover{background:var(--turq-d);color:#fff;}
-.dsit{font-size:.9rem;color:var(--soft);margin-bottom:.75rem;}
-.dline{display:grid;grid-template-columns:auto 1fr;gap:.5rem;margin:.4rem 0;align-items:start;}
-.dwho{
-  width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
-  font-family:'Space Grotesk',sans-serif;font-size:.75rem;font-weight:700;color:#fff;flex:none;
-}
-.dwho.a{background:var(--red);}
-.dwho.b{background:var(--turq-d);}
-.dtxt{
-  background:var(--mint);border-radius:4px 14px 14px 14px;padding:.55rem .8rem;
-  font-size:.97rem;line-height:1.55;
-}
-.dline.b{grid-template-columns:1fr auto;}
-.dline.b .dwho{order:2;}
-.dline.b .dtxt{order:1;background:var(--warm);border-radius:14px 4px 14px 14px;}
-.dcue{
-  grid-column:1 / -1;margin:.2rem 0 .3rem;font-size:.85rem;color:var(--soft);
-  background:#fff;border:1px dashed var(--line);border-radius:10px;padding:.4rem .65rem;cursor:pointer;
-}
-.dcue .kl{display:block;font-size:.7rem;color:var(--ink-mute);margin-top:.15rem;}
-.dline .dcue{display:none;}
-.dwrap[data-runde="2"] .dline.b .dtxt{visibility:hidden;}
-.dwrap[data-runde="2"] .dline.b .dcue{display:block;}
-.dline.zeigen .dtxt{visibility:visible !important;}
-img.dbild{max-width:160px;border-radius:10px;margin-top:.4rem;}
-.dbtn{margin-top:.7rem;}
-
-/* ---------- Sprechen-Knopf ---------- */
-.speak{
-  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;
-  border:1px solid var(--line);background:#fff;color:var(--ink);
-  border-radius:999px;padding:.35rem .8rem;
-}
-.speak:hover{border-color:var(--ink);}
-
-/* ---------- 90 Sekunden ---------- */
-.card90{
-  background:#fff;border:1px solid var(--line);border-radius:18px;
-  padding:1.1rem 1.15rem 1.2rem;text-align:center;box-shadow:var(--schatten);
-}
-/* Das Bild in den 90 Sekunden ist das einzige grosse auf der Seite.
-   Weiche Ecken, ein heller Rand statt einer harten Kante, und es
-   blendet mit dem Wort zusammen ein — kein Springen beim Wechsel. */
-.card90 img{
-  width:100%;max-width:230px;border-radius:14px;margin:0 auto .8rem;display:block;
-  border:1px solid var(--line);animation:auf .45s cubic-bezier(.22,.8,.3,1);
-}
-.card90 .lbl{
-  font-size:.7rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase;
-  color:var(--red);margin-bottom:.3rem;
-}
-.card90 .word{font-family:'Space Grotesk',sans-serif;font-size:1.7rem;font-weight:700;line-height:1.2;}
-.helpwords{display:flex;flex-wrap:wrap;gap:.35rem;justify-content:center;margin:.75rem 0 .9rem;}
-.hw{
-  background:var(--warm);border:1px solid #E7ECEE;border-radius:999px;
-  padding:.28rem .7rem;font-size:.85rem;font-weight:500;
-}
-.timer{
-  font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:700;
-  font-variant-numeric:tabular-nums;color:var(--teal-ink);
-}
-.zeit{display:block;}
-.btn{
-  font-family:'Space Grotesk',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;
-  border:1px solid var(--turq-d);background:var(--turq-d);color:#fff;
-  border-radius:999px;padding:.5rem 1.1rem;margin:.25rem .2rem 0;
-}
-.btn.ghost{background:#fff;color:var(--teal-ink);}
-.btn:hover{background:#10627A;border-color:#10627A;color:#fff;}
-
-/* ---------- Rollenspiel und Sprechkarten ---------- */
-.rmcard{
-  background:#fff;border:1px solid var(--line);border-radius:14px;
-  padding:.9rem 1rem;margin:0 0 .8rem;
-}
-.rmcard>b{display:block;font-family:'Space Grotesk',sans-serif;font-size:1rem;margin-bottom:.35rem;}
-.rm{
-  display:inline-block;background:var(--mint);border:1px solid #CDEEF3;color:var(--teal-ink);
-  border-radius:999px;padding:.25rem .65rem;margin:.15rem .2rem .15rem 0;font-size:.87rem;font-weight:500;
-}
-.bsp{
-  background:var(--warm);border-left:4px solid var(--gold);border-radius:0 10px 10px 0;
-  padding:.55rem .8rem;margin:.6rem 0 0;font-size:.95rem;line-height:1.55;
-}
-.bsp .wer{
-  display:block;font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--soft);margin-bottom:.15rem;
-}
-
-/* ---------- Rollenspiel: wer bin ich, was will ich ----------
-   Die Lage stand vorher als ein grauer Satz da. Zwei Leute, die
-   gleich sprechen sollen, mussten daraus selbst herauslesen, wer sie
-   sind. Jetzt stehen die Rollen nebeneinander, in denselben Farben
-   wie im Dialog: A rot, B tuerkis. */
-.rsp{
-  background:#fff;border:1px solid var(--line);border-radius:16px;
-  padding:.9rem 1rem 1rem;margin:0 0 .9rem;box-shadow:var(--schatten-k);
-}
-.rsp-kopf{display:flex;align-items:center;gap:.6rem;margin-bottom:.7rem;}
-.rsp-nr{
-  flex:none;width:26px;height:26px;border-radius:8px;background:var(--ink);color:#fff;
-  display:grid;place-items:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.85rem;
-}
-.rsp-kopf b{font-family:'Space Grotesk',sans-serif;font-size:1.02rem;line-height:1.25;}
-.rsp-rollen{display:grid;gap:.5rem;margin:0 0 .75rem;}
-@media(min-width:560px){ .rsp-rollen{grid-template-columns:1fr 1fr;} }
-.rsp-r{
-  display:grid;grid-template-columns:auto 1fr;gap:.5rem;align-items:start;
-  border-radius:12px;padding:.6rem .75rem;
-}
-.rsp-r span{
-  width:24px;height:24px;border-radius:50%;display:grid;place-items:center;color:#fff;
-  font-family:'Space Grotesk',sans-serif;font-size:.75rem;font-weight:700;
-}
-.rsp-r p{font-size:.93rem;line-height:1.5;}
-.rsp-r.a{background:var(--pink);}
-.rsp-r.a span{background:var(--red);}
-.rsp-r.b{background:var(--mint);}
-.rsp-r.b span{background:var(--turq-d);}
-.rsp-lage{background:#F7F6F3;border-radius:12px;padding:.6rem .8rem;margin:0 0 .75rem;font-size:.93rem;line-height:1.5;}
-.rsp-lage span{
-  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
-  color:var(--soft);margin-bottom:.2rem;
-}
-.rsp-saetze{margin:0 0 .7rem;}
-.rsp-lbl{
-  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
-  color:var(--soft);margin-bottom:.35rem;
-}
-.rsp-ziel{
-  background:var(--warm);border-left:4px solid var(--gold);border-radius:0 10px 10px 0;
-  padding:.55rem .8rem;font-size:.92rem;line-height:1.5;
-}
-.rsp-ziel span{
-  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
-  color:var(--soft);margin-bottom:.15rem;
-}
-
-/* ---------- Anfangshilfe ----------
-   Zugeklappt eine Zeile, aufgeklappt drei Satzanfaenge. Wer sie
-   nicht braucht, sieht fast nichts. */
-.hilf{margin:.8rem 0 0;}
-.hilf summary{
-  cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:.35rem;
-  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;color:var(--teal-ink);
-  background:var(--mint);border:1px solid #CDEEF3;border-radius:999px;padding:.32rem .8rem;
-}
-.hilf summary::-webkit-details-marker{display:none;}
-.hilf[open] summary{background:var(--turq-d);color:#fff;border-color:var(--turq-d);}
-.hilf-i{display:flex;flex-direction:column;gap:.35rem;margin:.55rem 0 0;}
-.hilf-i span{
-  background:#fff;border:1px dashed var(--line);border-radius:10px;
-  padding:.45rem .7rem;font-size:.93rem;line-height:1.5;
-}
-
-/* ---------- Debatte ---------- */
-.deb-these{
-  background:var(--ink);color:#fff;border-radius:14px;padding:1rem 1.15rem;
-  font-family:'Space Grotesk',sans-serif;font-size:1.12rem;line-height:1.4;font-weight:600;margin:0 0 .9rem;
-}
-.deb-seiten{display:grid;gap:.7rem;margin:0 0 .9rem;}
-@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
-.deb-s{background:#fff;border:1px solid var(--line);border-radius:14px;padding:.85rem .95rem;}
-.deb-s b{
-  display:block;font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:800;
-  letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem;
-}
-.deb-s.pro{border-top:4px solid var(--turq-d);}
-.deb-s.pro b{color:var(--teal-ink);}
-.deb-s.con{border-top:4px solid var(--red);}
-.deb-s.con b{color:var(--red);}
-.deb-s ul{margin:0;padding-left:1.05rem;font-size:.94rem;line-height:1.6;}
-.deb-s li{margin:.3rem 0;}
-.deb-s p{margin:0;font-size:.94rem;line-height:1.6;color:var(--soft);}
-.deb-mittel{background:var(--warm);border:1px solid #E7ECEE;border-radius:14px;padding:.85rem 1rem;margin:0 0 .9rem;}
-.deb-mittel b{
-  display:block;font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:800;
-  letter-spacing:.1em;text-transform:uppercase;color:var(--soft);margin-bottom:.5rem;
-}
-.deb-chips{display:flex;flex-wrap:wrap;gap:.35rem;}
-.deb-chips span{
-  background:#fff;border:1px solid #E7ECEE;border-radius:999px;
-  padding:.3rem .7rem;font-size:.88rem;font-weight:500;
-}
-.deb-mehr{border:1px dashed var(--line);border-radius:14px;padding:.85rem 1rem;}
-.deb-mehr b{
-  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
-  color:var(--soft);margin-bottom:.35rem;
-}
-.deb-mehr ul{margin:0;padding-left:1.05rem;font-size:.93rem;line-height:1.6;}
-
-/* ---------- Hausaufgabe ---------- */
-.hagrid{display:grid;gap:.6rem;}
-.ha{
-  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .7rem;align-items:start;
-  background:#fff;border:1px solid var(--line);border-radius:14px;padding:.8rem .9rem;
-}
-.ha .box{
-  grid-row:span 2;width:22px;height:22px;border:2px solid var(--line);border-radius:6px;
-  cursor:pointer;align-self:center;
-}
-.ha.fertig .box{background:var(--turq-d);border-color:var(--turq-d);}
-.ha.fertig .htxt{opacity:.55;text-decoration:line-through;}
-.ha .hi{grid-row:span 2;align-self:center;font-size:1.15rem;}
-.ha .htxt b{display:block;font-family:'Space Grotesk',sans-serif;font-size:.97rem;}
-.ha .htxt{font-size:.92rem;line-height:1.55;color:var(--soft);}
-.hastand{
-  font-family:'Space Grotesk',sans-serif;font-size:.85rem;font-weight:700;
-  color:var(--soft);margin:.7rem 0 0;
-}
-.zeit{
-  display:inline-block;background:var(--mint);border:1px solid #CDEEF3;color:var(--teal-ink);
-  border-radius:999px;padding:.1rem .5rem;font-size:.72rem;font-weight:700;margin-left:.35rem;
-}
-.hilfe{
-  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;
-  border:1px solid var(--line);background:#fff;border-radius:999px;padding:.35rem .8rem;margin:.6rem 0 0;
-}
-.inhalt{
-  display:none;background:var(--warm);border:1px solid #E7ECEE;border-radius:12px;
-  padding:.75rem .9rem;margin:.55rem 0 0;font-size:.93rem;line-height:1.6;
-}
-.inhalt.offen{display:block;}
-
-/* ---------- Markierte Woerter ---------- */
-.wm{
-  cursor:pointer;background:var(--gold-mark);border-radius:5px;padding:.02em .2em;
-  -webkit-box-decoration-break:clone;box-decoration-break:clone;
-}
-.wm.schwer{background:transparent;border-bottom:2px dotted var(--red);border-radius:0;}
-.wm:hover,.wm.offen{background:var(--gold);}
-.wm.schwer:hover,.wm.schwer.offen{background:var(--pink);}
-.wm:focus-visible{outline:3px solid var(--turq-d);outline-offset:2px;}
-.wmk{
-  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
-  background:#fff;border:1px solid var(--line);border-radius:14px;
-  box-shadow:var(--schatten);padding:.8rem .95rem .85rem;
-}
-.wmk b{display:block;font-family:'Space Grotesk',sans-serif;font-size:1.05rem;padding-right:1.4rem;}
-.wmk span{display:block;margin-top:.25rem;font-size:.92rem;line-height:1.5;color:var(--soft);}
-.wmk em{
-  display:block;margin-top:.5rem;padding-left:.65rem;border-left:3px solid var(--turq-d);
-  font-style:italic;font-size:.91rem;line-height:1.5;
-}
-.wmk-zu{
-  position:absolute;top:.4rem;right:.45rem;border:none;background:transparent;
-  font-size:.9rem;line-height:1;cursor:pointer;color:var(--soft);padding:.2rem;
-}
-.wmk-ton{
-  margin-top:.55rem;border:1px solid var(--line);background:#fff;color:var(--ink);
-  border-radius:999px;padding:.28rem .7rem;font-family:'Space Grotesk',sans-serif;
-  font-size:.78rem;font-weight:700;cursor:pointer;
-}
-
-/* ---------- Weiter und zurueck ---------- */
-.weiterzeile{
-  display:flex;gap:.6rem;flex-wrap:wrap;justify-content:space-between;
-  margin:1.8rem 0 .4rem;padding-top:1.1rem;border-top:1px solid var(--line);
-}
-.weiterknopf{
-  font-family:'Space Grotesk',sans-serif;font-size:.92rem;font-weight:700;cursor:pointer;
-  border:1px solid var(--turq-d);background:var(--turq-d);color:#fff;
-  border-radius:999px;padding:.55rem 1.1rem;margin-left:auto;transition:.15s;
-}
-.weiterknopf.zurueck{background:#fff;color:var(--teal-ink);margin-left:0;margin-right:auto;}
-.weiterknopf:hover{background:#10627A;border-color:#10627A;color:#fff;}
-
-/* ---------- Niveau-Umschalter ---------- */
-body[data-niveau="a2"] .nur-b1{display:none !important;}
-body[data-niveau="b1"] .nur-a2{display:none !important;}
-
-/* ---------- Fuss ---------- */
-footer{
-  margin-top:3rem;padding-top:1.2rem;border-top:1px solid var(--line);
-  font-size:.85rem;color:var(--soft);text-align:center;
-}
+:root{--cream:#FDF6EC;--cream-warm:#FBEDD8;--paper:#FFFFFF;--ink:#262019;--ink-soft:#5C4E3E;--ink-mute:#A8957D;--red:#E8302A;--red-soft:#FCE5E3;--teal:#0FB5A6;--teal-soft:#D7F0EC;--yellow:#FFD24A;--yellow-soft:#FFF1C2;--sand:#F0E2C8;--green:#2E9E5B;}
+*{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}
+body{background:linear-gradient(180deg,#FDE6E0 0%,var(--cream) 14%,var(--cream) 100%);color:var(--ink);font-family:'Inter',sans-serif;line-height:1.55;min-height:100vh;}
+.wrapper{max-width:1080px;margin:0 auto;padding:2.2rem 1.5rem 5rem;}
+.eyebrow{text-align:center;font-size:.78rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--red);margin-bottom:.7rem;}
+h1.title{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(2rem,5vw,3.6rem);line-height:1.05;text-align:center;letter-spacing:-.01em;}
+h1.title .hl{position:relative;display:inline-block;font-style:italic;padding:.05em .3em;}
+h1.title .hl::before{content:'';position:absolute;inset:0;background:var(--yellow);border-radius:12px;transform:rotate(-2deg);z-index:-1;}
+.subtitle{text-align:center;max-width:660px;margin:.8rem auto 0;font-size:1.05rem;color:var(--ink-soft);}
+.hero-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;margin:1rem auto 0;}
+.hero-tag{background:var(--paper);border:1.5px solid var(--sand);border-radius:999px;padding:.3rem .85rem;font-size:.82rem;font-weight:600;}
+.hero-tag b{color:var(--red);}
+.tabs{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;background:rgba(251,237,216,.94);backdrop-filter:blur(8px);border-radius:20px;padding:.5rem;margin:1.8rem auto;max-width:fit-content;}
+.tab{font-size:.92rem;font-weight:600;border:2px solid transparent;background:var(--paper);color:var(--ink);padding:.5rem 1rem;border-radius:999px;cursor:pointer;transition:.15s;display:inline-flex;gap:.35rem;align-items:center;}
+.tab:hover{border-color:var(--ink);transform:translateY(-1px);}
+.tab.active{background:var(--red);color:#fff;border-color:var(--red);}
+.section{display:none;animation:fade .35s ease;}.section.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+h2.st{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(1.7rem,3.4vw,2.3rem);text-align:center;margin:1.8rem 0 .4rem;}
+.ssub{text-align:center;color:var(--ink-soft);margin-bottom:1.3rem;}
+.scene-wrap{background:var(--paper);border:4px solid var(--paper);border-radius:20px;box-shadow:0 14px 38px rgba(38,32,25,.16);overflow:hidden;margin:1rem 0;}
+.scene-wrap img{width:100%;display:block;}
+.tip{background:var(--yellow-soft);border:2px dashed var(--yellow);border-radius:16px;padding:.9rem 1.2rem;font-size:.95rem;margin:1rem 0;line-height:1.65;}
+.tip strong{color:var(--red);}.tip.teal{background:var(--teal-soft);border-color:var(--teal);}
+.tip u{text-decoration-color:var(--red);text-underline-offset:3px;}
+.qlist{list-style:none;display:grid;gap:.55rem;margin:.6rem 0;}
+.qlist li{background:var(--paper);border:1.5px solid var(--sand);border-left:5px solid var(--teal);border-radius:12px;padding:.7rem 1rem;font-weight:500;}
+.vgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:.7rem;margin:1rem 0;}
+@media(max-width:640px){.vgrid{grid-template-columns:1fr;}}
+.vcard{background:var(--paper);border:1.5px solid var(--sand);border-radius:14px;padding:.85rem 1rem;}
+.vcard .w{font-weight:700;font-size:1.05rem;color:var(--ink);}
+.vcard .w .art{color:var(--red);}
+.vcard .ex{font-family:'Space Grotesk',sans-serif;font-style:italic;color:var(--ink-soft);font-size:.92rem;margin-top:.25rem;}
+.vcard .speak{margin-top:.4rem;background:var(--teal-soft);border:none;color:#0a7d72;font-weight:700;border-radius:999px;padding:.2rem .7rem;font-size:.78rem;cursor:pointer;}
+.dwrap{background:var(--paper);border:1.5px solid var(--sand);border-radius:16px;padding:1.1rem 1.2rem;margin:1rem 0;}
+.dwrap h4{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;margin-bottom:.2rem;color:var(--red);}
+.dsit{font-size:.9rem;color:var(--ink-soft);margin-bottom:.7rem;}
+.dline{display:flex;gap:.5rem;margin:.35rem 0;align-items:flex-start;}
+.dwho{flex:none;width:26px;height:26px;border-radius:50%;font-size:.8rem;font-weight:700;display:flex;align-items:center;justify-content:center;color:#fff;}
+.dwho.a{background:var(--red);}.dwho.b{background:var(--teal);}
+.dtxt{background:var(--cream-warm);border-radius:12px;padding:.4rem .7rem;font-size:.96rem;}
+.dline.b .dtxt{background:var(--teal-soft);}
+.dbtn{margin-top:.6rem;background:var(--red);color:#fff;border:none;border-radius:999px;padding:.4rem 1rem;font-weight:700;cursor:pointer;font-size:.85rem;}
+.mk{background:var(--yellow-soft);border-bottom:2px solid var(--yellow);border-radius:4px;padding:.02em .22em;font-weight:600;-webkit-box-decoration-break:clone;box-decoration-break:clone;}
+.mk.g{background:var(--teal-soft);border-bottom-color:var(--teal);}
+.mklegende{font-size:.84rem;color:var(--ink-soft);margin:.2rem 0 1rem;}
+.rsp{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin:1rem 0;}
+@media(max-width:640px){.rsp{grid-template-columns:1fr;}}
+.rcol{border-radius:16px;padding:1rem 1.1rem;border:2px solid;}
+.rcol.a{background:var(--red-soft);border-color:var(--red);}
+.rcol.b{background:var(--teal-soft);border-color:var(--teal);}
+.rcol h4{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;margin-bottom:.4rem;}
+.rcol.a h4{color:var(--red);}.rcol.b h4{color:#0a7d72;}
+.rcol ul{list-style:none;display:grid;gap:.3rem;}
+.rcol li{font-size:.93rem;padding-left:1.1rem;position:relative;}
+.rcol li::before{content:'\203A';position:absolute;left:0;font-weight:700;}
+.pcgrid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin:1rem 0;}
+@media(max-width:640px){.pcgrid{grid-template-columns:1fr;}}
+.pcol{border-radius:16px;padding:1rem 1.1rem;border:2px solid;}
+.pcol.pro{background:#EAF7EF;border-color:var(--green);}
+.pcol.con{background:var(--red-soft);border-color:var(--red);}
+.pcol h4{font-family:'Space Grotesk',sans-serif;font-size:1.15rem;margin-bottom:.5rem;}
+.pcol.pro h4{color:var(--green);}.pcol.con h4{color:var(--red);}
+.pcol ul{list-style:none;display:grid;gap:.4rem;}
+.pcol li{font-size:.94rem;padding-left:1.3rem;position:relative;}
+.pcol li::before{content:'\2713';position:absolute;left:0;font-weight:700;}
+.pcol.pro li::before{color:var(--green);}.pcol.con li::before{color:var(--red);}
+.gramtafel{background:var(--paper);border:2px solid var(--sand);border-radius:16px;padding:1.1rem 1.2rem;margin:1rem 0;}
+.gramtafel table{width:100%;border-collapse:collapse;margin:.5rem 0;font-size:.95rem;}
+.gramtafel td,.gramtafel th{border:1px solid var(--sand);padding:.45rem .6rem;text-align:left;}
+.gramtafel th{background:var(--cream-warm);font-family:'Space Grotesk',sans-serif;}
+.gramtafel td b{color:var(--red);}
+.rmcard{background:var(--paper);border:1.5px solid var(--sand);border-radius:14px;padding:.9rem 1.1rem;margin:.8rem 0;}
+.rmcard b{color:var(--teal);}
+.rm{display:inline-block;background:var(--teal-soft);color:#0a7d72;border-radius:999px;padding:.2rem .7rem;font-size:.85rem;font-weight:600;margin:.2rem .2rem 0 0;}
+.card90{background:linear-gradient(135deg,var(--paper),var(--cream-warm));border:2px solid var(--sand);border-radius:20px;padding:1.6rem;text-align:center;max-width:460px;margin:1.2rem auto;box-shadow:0 8px 24px rgba(38,32,25,.08);}
+.card90 .lbl{font-size:.72rem;font-weight:700;color:var(--red);letter-spacing:.12em;text-transform:uppercase;}
+.card90 .word{font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:2.2rem;margin:.4rem 0;}
+.helpwords{display:flex;flex-wrap:wrap;gap:.35rem;justify-content:center;margin:.7rem 0;}
+.hw{background:var(--yellow-soft);border:1px solid var(--yellow);border-radius:999px;padding:.2rem .7rem;font-size:.85rem;font-weight:600;}
+.timer{font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:700;color:var(--teal);margin:.5rem 0;}
+.btn{background:var(--red);color:#fff;border:none;border-radius:999px;padding:.5rem 1.3rem;font-weight:700;cursor:pointer;font-size:.9rem;font-family:'Inter';margin:.2rem;}
+.btn.ghost{background:var(--paper);color:var(--ink);border:2px solid var(--sand);}
+.quiz-q{background:var(--paper);border:1.5px solid var(--sand);border-radius:14px;padding:.9rem 1.1rem;margin:.7rem 0;}
+.quiz-q .qt{font-weight:600;margin-bottom:.55rem;}
+.quiz-opts{display:grid;gap:.4rem;}
+.qopt{text-align:left;background:var(--cream);border:1.5px solid var(--sand);border-radius:10px;padding:.5rem .8rem;cursor:pointer;font-size:.94rem;font-family:'Inter';font-weight:500;}
+.qopt:hover{border-color:var(--ink);}
+.qopt.right{background:#EAF7EF;border-color:var(--green);color:var(--green);font-weight:700;}
+.qopt.wrong{background:var(--red-soft);border-color:var(--red);color:var(--red);}
+.qexp{font-size:.86rem;color:var(--ink-soft);margin-top:.5rem;display:none;}
+.qexp.show{display:block;}
+.gap{background:var(--paper);border:1.5px solid var(--sand);border-radius:14px;padding:1rem 1.1rem;margin:.7rem 0;line-height:2.2;}
+.gap select{font-family:'Inter';font-weight:600;border:2px solid var(--teal);border-radius:8px;padding:.15rem .4rem;background:var(--teal-soft);color:#0a7d72;font-size:.95rem;}
+.gap select.ok{background:#EAF7EF;border-color:var(--green);color:var(--green);}
+.gap select.no{background:var(--red-soft);border-color:var(--red);color:var(--red);}
+footer{text-align:center;color:var(--ink-mute);font-size:.85rem;padding:3rem 1rem 1rem;}
 footer strong{color:var(--ink);}
-
-@media print{
-  body.schaltet .section[hidden]{display:block !important;}
-  .leiste,.weiterzeile,.wmk{display:none !important;}
-  .wm{background:none;border-bottom:2px solid var(--gold-d);}
-}
-@media(max-width:560px){
-  .wrapper{padding:1.5rem 1rem 4rem;}
-  .leiste{border-radius:12px;padding:.35rem .4rem;gap:.4rem;}
-  .nivk button{padding:.3rem .65rem;font-size:.8rem;}
-  .nivk .zusatz{display:none;}
-}
-
-/* ============================================================
-   Ankommen mit Bild, Merksätze, Sprechübung
-   ============================================================
-   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
-   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
-   auf der Seite. Beides kommt hier zurück — die Sätze aber als
-   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
-
-.ankbild{
-  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
-  border-radius:18px; border:1px solid var(--line); object-fit:cover;
-  aspect-ratio:16/9;
-}
-
-.merkg{
-  border:1px solid var(--line); border-radius:16px;
-  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
-}
-.merkt{
-  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
-  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
-}
-.merk{
-  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
-  padding:.5rem 0; border-top:1px solid var(--line);
-  font-size:1.02rem; line-height:1.45;
-}
-.merk:first-of-type{ border-top:0; }
-.merk > span{ flex:1 1 14rem; min-width:0; }
-.merk .speak{ flex:0 0 auto; }
-
-.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
-.ueb{
-  display:flex; gap:.8rem; align-items:flex-start;
-  border:1px solid var(--line); border-radius:16px;
-  padding:.85rem 1rem; background:var(--warm);
-}
-.ueb b{
-  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
-  display:block; margin:0 0 .2rem;
-}
-.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
-.uebn{
-  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
-  background:var(--turq-d); color:#fff; font-weight:700;
-  display:grid; place-items:center; font-size:.95rem;
-}
-
-@media (max-width:560px){
-  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
-  .merk{ font-size:.98rem; }
-  .ueb{ padding:.75rem .85rem; }
-}
-
-/* ---------- Ankommen: zwei Fragerunden ----------
-   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
-   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
-   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
-   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
-.ankrunde{
-  background:var(--warm);border:1px solid #E7ECEE;border-radius:14px;
-  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
-}
-.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
-.ankl{
-  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
-  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
-}
-.ankrunde.zwei .ankl{color:var(--teal-ink);}
-.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
-.ankfr li{
-  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
-  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
-  border-top:1px solid rgba(22,22,22,.07);
-}
-.ankfr li:first-child{border-top:0;padding-top:.15rem;}
-.ankfr li::before{
-  content:counter(ankz);position:absolute;left:0;top:.55rem;
-  width:1.5rem;height:1.5rem;border-radius:50%;
-  background:var(--turq);color:var(--teal-ink);
-  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
-  display:grid;place-items:center;
-}
-.ankfr li:first-child::before{top:.15rem;}
-.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
-.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
-
-@media (max-width:560px){
-  .ankrunde{padding:.85rem .9rem .9rem;}
-  .ankfr li{font-size:.99rem;padding-left:2rem;}
-  .ankrunde.zwei .ankfr li{font-size:.94rem;}
-}
-
-</style>
-</head>
-<body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
-
-<div class="eyebrow">deutschoderwas · Sprechclub · Woche 3 · Strang B · Teil 1 · Dienstag, 29. September</div>
-<h1 class="title">LEGEN, STELLEN, SETZEN — <span class="hl">und wo es dann liegt</span></h1>
-
-<p class="subtitle">Acht Verben, die immer paarweise auftreten. Das eine bewegt etwas, das andere beschreibt, wo es danach ist. Wer das Paar einmal begriffen hat, macht diesen Fehler nie wieder.</p>
-
-<p class="niv-wie">Gleiches Thema, andere Sätze. Wechsle jederzeit — probier ruhig beide Seiten aus.</p>
-<div class="leiste">
-  <div class="nivk" role="group" aria-label="Niveau wählen">
-    <button type="button" data-niv="a2" aria-pressed="true">B1<span class="zusatz"> · sicherer</span></button>
-    <button type="button" data-niv="b1" aria-pressed="false">B2<span class="zusatz"> · feiner</span></button>
-  </div>
+</style></head><body><div class="wrapper">
+<div class="eyebrow">deutschoderwas · Sprechclub · B1/B2</div>
+<h1 class="title">LEGEN, STELLEN, <span class="hl">SETZEN, HÄNGEN</span> · Teil 1</h1>
+<p class="subtitle">Etwas hinlegen — und wo es dann liegt. Zu jedem Verb der Bewegung gehört ein Verb der Lage. Mit Wortschatz, Alltags-Dialogen, Grammatik-Tafel und viel Sprechen.</p>
+<div class="hero-tags"><span class="hero-tag">🖼️ <b>Bild</b></span><span class="hero-tag">📖 <b>Wortschatz</b></span><span class="hero-tag">💬 <b>Dialoge</b></span><span class="hero-tag">✏️ <b>Grammatik</b></span><span class="hero-tag">🗣️ <b>Sprechen</b></span><span class="hero-tag">⏱️ <b>90 Sek.</b></span></div>
 <nav class="tabs">
-<a class="tab active" href="#ankommen">👋 Ankommen</a>
-<a class="tab" href="#dialoge">🎬 Dialog</a>
-<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
-<a class="tab" href="#debatte">⚖️ Debatte</a>
-<a class="tab" href="#abschluss">🎯 Abschluss</a>
-<a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
+<button class="tab active" data-tab="0">🖼️ Einstieg</button>
+<button class="tab" data-tab="1">📖 Wortschatz</button>
+<button class="tab" data-tab="2">💬 Dialoge</button>
+<button class="tab" data-tab="3">✏️ Grammatik</button>
+<button class="tab" data-tab="4">🗣️ Sprechen</button>
+<button class="tab" data-tab="5">⏱️ 90 Sekunden</button>
+<button class="tab" data-tab="6">✅ Üben</button>
 </nav>
-</div>
-
-<section class="section" id="ankommen">
-<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
-<img class="ankbild" src="../amanda/sz-wohnen.webp" alt="Zwei Personen an einer Wohnungstür, eine bringt eine Pflanze mit">
-<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Was hast du heute Morgen irgendwohin gelegt oder gestellt?</li><li>Wo liegt gerade dein Handy — und wer hat es dorthin gelegt?</li><li>Gibt es in deiner Sprache auch zwei verschiedene Verben dafür?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Warum ist dieser Unterschied für Deutschsprachige so selbstverständlich?</li><li>Welches Paar bereitet dir die meiste Mühe — und warum ausgerechnet das?</li><li>Wann merkt man beim Zuhören, dass jemand hier durcheinanderkommt?</li></ol></div></div>
-<div class="tip teal">🔑 <strong>Der ganze Unterschied in einem Satz:</strong> Die einen <u>machen</u> etwas — <b>ich lege, stelle, setze, hänge</b>. Die anderen <u>sind</u> einfach — <b>es liegt, steht, sitzt, hängt</b>. Handlung gegen Zustand, mehr nicht.</div>
-<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Steht oder liegt eine Flasche im Kühlschrank? Beides ist möglich — wann was?</li><li>Nenn drei Dinge in diesem Raum, die hängen.</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Warum steht ein Teller im Schrank, liegt aber auf dem Tisch?</li><li>Bei welchen Gegenständen schwanken sogar Muttersprachler?</li></ol></div></div>
-<div class="tip">💡 <strong>Die Faustregel:</strong> Ist es <u>höher als breit</u> → es <b>steht</b>. Ist es <u>flach</u> → es <b>liegt</b>. Hat es einen Haken oder Nagel → es <b>hängt</b>. Hat es einen Po → es <b>sitzt</b>.</div>
-<details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
+<section class="section active" data-section="0">
+<h2 class="st">Schau dir das Bild an</h2>
+<p class="ssub">Jemand räumt die Wohnung ein: Sachen werden gelegt, gestellt, gehängt. Was passiert wohin?</p>
+<div class="scene-wrap"><img src="../amanda/sz-wohnen.webp" alt="Eine Person räumt in der Wohnung Dinge ein"></div>
+<div class="tip">🗣️ <strong>Zum Einstieg – sprecht reihum:</strong> Beschreibt das Bild: Was macht die Person? Was stellt/legt/hängt sie wohin?</div>
+<h2 class="st">Erste Fragen</h2><ul class="qlist">
+<li>Bist du ordentlich oder eher chaotisch zu Hause?</li>
+<li>Wo legst du deinen Schlüssel immer hin?</li>
+<li>Was steht bei dir auf dem Schreibtisch?</li>
+<li>Suchst du oft Dinge, die du verlegt hast?</li>
+</ul></section>
+<section class="section" data-section="1"><h2 class="st">Wortschatz</h2><p class="ssub">Tipp auf 🔊, um das Wort zu hören. Lies den Beispielsatz laut.</p><div class="vgrid">
+<div class="vcard"><div class="w">legen <button class="speak" data-say="legen">🔊</button></div><div class="ex">„Ich lege das Buch auf den Tisch."</div></div>
+<div class="vcard"><div class="w">liegen <button class="speak" data-say="liegen">🔊</button></div><div class="ex">„Das Buch liegt auf dem Tisch."</div></div>
+<div class="vcard"><div class="w">stellen <button class="speak" data-say="stellen">🔊</button></div><div class="ex">„Ich stelle die Tasse in den Schrank."</div></div>
+<div class="vcard"><div class="w">stehen <button class="speak" data-say="stehen">🔊</button></div><div class="ex">„Die Tasse steht im Schrank."</div></div>
+<div class="vcard"><div class="w">setzen <button class="speak" data-say="setzen">🔊</button></div><div class="ex">„Ich setze das Kind auf den Stuhl."</div></div>
+<div class="vcard"><div class="w">sitzen <button class="speak" data-say="sitzen">🔊</button></div><div class="ex">„Das Kind sitzt auf dem Stuhl."</div></div>
+<div class="vcard"><div class="w">hängen <button class="speak" data-say="hängen">🔊</button></div><div class="ex">„Ich hänge die Jacke an den Haken."</div></div>
+<div class="vcard"><div class="w">stecken <button class="speak" data-say="stecken">🔊</button></div><div class="ex">„Ich stecke den Schlüssel in die Tasche."</div></div>
+<div class="vcard"><div class="w"><span class="art">das</span> Regal <button class="speak" data-say="das Regal">🔊</button></div><div class="ex">„Die Bücher stehen im Regal."</div></div>
+<div class="vcard"><div class="w"><span class="art">die</span> Schublade <button class="speak" data-say="die Schublade">🔊</button></div><div class="ex">„Die Gabeln liegen in der Schublade."</div></div>
+</div><div class="tip teal">💡 <strong>Mini-Aufgabe:</strong> Sag drei Sätze: <u>Wohin</u> legst/stellst/hängst du etwas — und <u>wo</u> ist es dann?</div></section>
+<section class="section" data-section="2"><h2 class="st">Beispieldialoge</h2><p class="ssub">Lest die Dialoge zu zweit mit verteilten Rollen — dann spielt sie mit euren eigenen Worten nach.</p>
+<p class="mklegende"><span class="mk">gelb</span> = wichtiger Begriff · <span class="mk g">türkis</span> = wichtige Wendung / Struktur</p>
+<div class="dwrap"><h4>💬 Dialog 1 · Einräumen nach dem Umzug</h4><div class="dsit">Ihr räumt Kisten aus und überlegt, wohin alles kommt.</div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Wohin soll ich die Bücher <span class="mk">stellen</span>?</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt"><span class="mk">Stell</span> sie bitte <span class="mk g">ins Regal</span>, links.</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Und die Teller?</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Die <span class="mk">legen</span> wir <span class="mk g">in die Schublade</span> unten.</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Okay. Wo soll die Lampe <span class="mk">stehen</span>?</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt"><span class="mk g">Auf den Schreibtisch</span> — dann <span class="mk">steht</span> sie schön am Fenster.</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Und die Bilder?</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Die <span class="mk">hängen</span> wir später <span class="mk g">an die Wand</span>.</div></div>
+<button class="speak dbtn" data-say="Wohin soll ich die Bücher stellen? Stell sie bitte ins Regal, links. Und die Teller? Die legen wir in die Schublade unten. Okay. Wo soll die Lampe stehen? Auf den Schreibtisch — dann steht sie schön am Fenster. Und die Bilder? Die hängen wir später an die Wand.">🔊 Dialog vorlesen</button></div>
+<div class="dwrap"><h4>💬 Dialog 2 · „Wo ist bloß …?“</h4><div class="dsit">Morgens sucht ihr Schlüssel und Handy.</div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Wo <span class="mk">liegt</span> denn mein Schlüssel?</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Du hast ihn gestern <span class="mk g">auf den Tisch</span> <span class="mk">gelegt</span>.</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Da <span class="mk">liegt</span> er nicht mehr!</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Schau mal, er <span class="mk">steckt</span> noch <span class="mk g">in der Jacke</span>.</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ah, stimmt. Und mein Handy?</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Das <span class="mk">liegt</span> <span class="mk g">auf dem Sofa</span>, wo du es immer <span class="mk">hinlegst</span>.</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Danke! Ich muss wirklich ordentlicher werden.</div></div>
+<button class="speak dbtn" data-say="Wo liegt denn mein Schlüssel? Du hast ihn gestern auf den Tisch gelegt. Da liegt er nicht mehr! Schau mal, er steckt noch in der Jacke. Ah, stimmt. Und mein Handy? Das liegt auf dem Sofa, wo du es immer hinlegst. Danke! Ich muss wirklich ordentlicher werden.">🔊 Dialog vorlesen</button></div>
+<div class="dwrap"><h4>💬 Dialog 3 · Den Tisch decken</h4><div class="dsit">Vor dem Essen deckt ihr gemeinsam den Tisch.</div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt"><span class="mk">Stell</span> bitte die Gläser <span class="mk g">auf den Tisch</span>.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Mache ich. Wohin mit den Servietten?</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Die <span class="mk">leg</span> <span class="mk g">neben die Teller</span>.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Und wo sollen die Gäste <span class="mk">sitzen</span>?</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt"><span class="mk">Setz</span> Oma bitte <span class="mk g">ans Kopfende</span> — da <span class="mk">sitzt</span> sie bequem.</div></div>
+<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Gut. Die Kerze <span class="mk">stelle</span> ich <span class="mk g">in die Mitte</span>.</div></div>
+<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Perfekt, jetzt sieht der Tisch schön aus!</div></div>
+<button class="speak dbtn" data-say="Stell bitte die Gläser auf den Tisch. Mache ich. Wohin mit den Servietten? Die leg neben die Teller. Und wo sollen die Gäste sitzen? Setz Oma bitte ans Kopfende — da sitzt sie bequem. Gut. Die Kerze stelle ich in die Mitte. Perfekt, jetzt sieht der Tisch schön aus!">🔊 Dialog vorlesen</button></div>
+<div class="tip">🎭 <strong>Jetzt ihr:</strong> Spielt das Einräumen einer Wohnung: Einer fragt „Wohin?“, der andere antwortet mit legen/stellen/hängen. Baut vier markierte Verben ein.</div></section>
+<section class="section" data-section="3">
+<h2 class="st">Grammatik: Bewegung ↔ Lage</h2><p class="ssub">Zu jedem „Tu-Verb“ (Bewegung) gehört ein „Lage-Verb“ (wo etwas ist). Merke die Paare!</p>
+<div class="gramtafel"><table><tr><th>Bewegung (wohin?)</th><th>Lage (wo?)</th></tr><tr><td>etwas <b>legen</b> (Ich lege …)</td><td>es <b>liegt</b></td></tr><tr><td>etwas <b>stellen</b></td><td>es <b>steht</b></td></tr><tr><td>jemanden <b>setzen</b></td><td>er/sie <b>sitzt</b></td></tr><tr><td>etwas <b>hängen</b></td><td>es <b>hängt</b></td></tr><tr><td>etwas <b>stecken</b></td><td>es <b>steckt</b></td></tr></table></div>
+<div class="tip">✏️ <strong>Sag die Sätze laut — reihum:</strong><ol style="margin:.5rem 0 0 1.2rem;line-height:1.9">
+<li>Ich ___ das Buch auf den Tisch. — Jetzt ___ es dort. → <span class="mk">lege</span> / <span class="mk">liegt</span></li>
+<li>Ich ___ die Vase ins Regal. — Sie ___ jetzt im Regal. → <span class="mk">stelle</span> / <span class="mk">steht</span></li>
+<li>Ich ___ das Bild an die Wand. — Es ___ nun an der Wand. → <span class="mk">hänge</span> / <span class="mk">hängt</span></li>
+<li>Ich ___ den Schlüssel in die Tasche. — Er ___ jetzt drin. → <span class="mk">stecke</span> / <span class="mk">steckt</span></li>
+<li>Ich ___ das Kind auf den Stuhl. — Es ___ jetzt dort. → <span class="mk">setze</span> / <span class="mk">sitzt</span></li>
+</ol></div>
+<div class="rmcard"><b>🗣️ Redemittel</b><div style="margin-top:.5rem">
+<span class="rm">Ich lege / stelle / hänge … auf/in/an …</span>
+<span class="rm">Wohin soll ich … stellen?</span>
+<span class="rm">Es liegt / steht / hängt …</span>
+<span class="rm">Stell es bitte ins Regal.</span>
+</div></div>
 </section>
-
-<section class="section" id="dialoge">
-<h2 class="st">Vier Szenen — <span class="hl">zwei Runden</span></h2>
-<ol class="schritte">
-<li><span>1</span><b>Runde 1:</b> Lest den Dialog zu zweit laut.</li>
-<li><span>2</span><b>Runde 2:</b> Deckt die Zeilen von B ab und sprecht frei — die Hinweise reichen.</li>
-</ol>
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-kueche.webp" alt="Eine Person kocht in einer Küche am Herd"><h4>Dialog 1 · „Einkauf einräumen“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Zwei Leute räumen zusammen den Einkauf weg. Es geht schnell — und ständig fällt eines der acht Verben.</div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Wo soll die Milch hin?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Stell sie in den Kühlschrank, ganz nach hinten.</div><div class="dcue">🗣️ Eine Flasche ist aufrecht — also <b>stellen</b>. Und <b>in den</b>, weil sie sich noch bewegt.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Und das Brot?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Das legst du am besten in die Schublade da unten.</div><div class="dcue">🗣️ Brot ist flach — also <b>legen</b>. Die Form entscheidet, nicht das Gefühl.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Wo sind eigentlich die Gläser?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von stehen" data-wort="stehen" data-kurz="aufrecht an einem Ort sein" data-bsp="Die Flasche steht im Kühlschrank.">stehen</b> im oberen Schrank, links.</div><div class="dcue">🗣️ Jetzt Zustand: Sie <b>stehen</b> schon dort. Und <b>im</b>, weil sich nichts bewegt.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Und die Tüte?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Häng sie einfach an den Haken hinter der Tür.</div><div class="dcue">🗣️ Haken → <b>hängen</b>. Und <b>an den</b>, weil sie gerade dorthin kommt.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<button class="speak dbtn" data-say="Wo soll die Milch hin? Stell sie in den Kühlschrank, ganz nach hinten. Und das Brot? Das legst du am besten in die Schublade da unten. Wo sind eigentlich die Gläser? Die stehen im oberen Schrank, links. Und die Tüte? Häng sie einfach an den Haken hinter der Tür.">🔊 Dialog vorlesen lassen</button></div>
-
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-buero.webp" alt="Zwei Kolleginnen am Schreibtisch mit Laptop"><h4>Dialog 2 · „Im Büro etwas suchen“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Eine Kollegin sucht Unterlagen. Du weißt genau, wo sie sind — und musst es präzise sagen.</div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Sag mal, wo <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von liegen" data-wort="liegen" data-kurz="flach an einem Ort sein" data-bsp="Der Brief liegt seit gestern auf dem Tisch.">liegen</b> die Unterlagen vom Montag?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Die liegen in der zweiten Schublade, ganz hinten.</div><div class="dcue">🗣️ Papiere sind flach — <b>liegen</b>. Und <b>in der</b>, weil sie schon dort sind.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Da habe ich schon geschaut.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Dann hat sie jemand woandershin gelegt. Steht der graue Ordner noch im Regal?</div><div class="dcue">🗣️ <b>gelegt</b> mit -t: eine Handlung. Und der Ordner <b>steht</b> — er ist aufrecht.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ja, der steht da.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Schau mal rein. Ich habe letzte Woche etwas hineingesteckt.</div><div class="dcue">🗣️ <b>stecken</b> für enge Öffnungen — zwischen zwei Seiten, in eine Tasche, ins Schloss.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Hier sind sie! Danke.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Leg sie danach bitte wieder in die Schublade zurück.</div><div class="dcue">🗣️ <b>zurücklegen</b> — trennbar, und das <b>zurück</b> wandert ans Ende.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<button class="speak dbtn" data-say="Sag mal, wo liegen die Unterlagen vom Montag? Die liegen in der zweiten Schublade, ganz hinten. Da habe ich schon geschaut. Dann hat sie jemand woandershin gelegt. Steht der graue Ordner noch im Regal? Ja, der steht da. Schau mal rein. Ich habe letzte Woche etwas hineingesteckt. Hier sind sie! Danke. Leg sie danach bitte wieder in die Schublade zurück.">🔊 Dialog vorlesen lassen</button></div>
-
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../vok-bild/die-wand.webp" alt="Eine Frau sitzt in einem fast leeren, hellen Zimmer"><h4>Dialog 3 · „Das Zimmer einrichten“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Ihr richtet gemeinsam ein Zimmer ein. Jeder Vorschlag braucht das richtige Verb — und die richtige Präposition.</div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Wohin kommt das Regal?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Ich würde es an die Wand hinter der Tür <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von stellen" data-wort="stellen" data-kurz="etwas aufrecht irgendwohin bringen" data-bsp="Stell die Flasche bitte in den Kühlschrank.">stellen</b>.</div><div class="dcue">🗣️ <b>an die</b> Wand, weil es dorthin kommt. Und ein Regal <b>steht</b> — also <b>stellen</b>.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Und der Spiegel?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Den hängen wir daneben, auf Augenhöhe.</div><div class="dcue">🗣️ Spiegel an der Wand → <b>hängen</b>. <b>auf Augenhöhe</b> ist eine schöne, genaue Angabe.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Der Teppich?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Der liegt am besten vor dem Bett — der bleibt ja liegen.</div><div class="dcue">🗣️ Ein Teppich ist flach: <b>liegen</b>. Und <b>vor dem</b> Bett, weil er dort schon bleibt.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Und wo <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von setzen" data-wort="setzen" data-kurz="jemanden oder etwas zum Sitzen bringen" data-bsp="Ich setze das Kind auf den Stuhl.">setzen</b> wir uns dann hin?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Die zwei Sessel stellen wir ans Fenster, da sitzt man am besten.</div><div class="dcue">🗣️ Sessel <b>stellen</b>, Menschen <b>sitzen</b>. Beide Verben in einem Satz — genau darum geht es heute.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<button class="speak dbtn" data-say="Wohin kommt das Regal? Ich würde es an die Wand hinter der Tür stellen. Und der Spiegel? Den hängen wir daneben, auf Augenhöhe. Der Teppich? Der liegt am besten vor dem Bett — der bleibt ja liegen. Und wo setzen wir uns dann hin? Die zwei Sessel stellen wir ans Fenster, da sitzt man am besten.">🔊 Dialog vorlesen lassen</button></div>
-
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../vok-bild/der-keller.webp" alt="Ein Kellerraum mit ordentlichen Regalen und Kisten"><h4>Dialog 4 · „Der Keller am Samstag“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Der Keller wird aufgeräumt. Einer sagt, wohin alles soll, der andere findet ständig etwas dazwischen.</div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">So, wo fangen wir an?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Wir stellen erst mal alle Kisten ins Regal, dann sehen wir weiter.</div><div class="dcue">🗣️ Kisten sind aufrecht und stapelbar — <b>stellen</b>. <b>ins</b> Regal, weil sie dorthin kommen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Und die alten Zeitungen?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Die <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von legen" data-wort="legen" data-kurz="etwas flach irgendwohin bringen" data-bsp="Ich lege den Brief auf den Tisch.">legen</b> wir auf den Stapel dort — der kommt am Montag raus.</div><div class="dcue">🗣️ Zeitungen sind flach: <b>legen</b>. Und <b>auf den</b> Stapel, mit Akkusativ.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Hier hängt noch eine Jacke.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Die hängt da seit dem Umzug. Häng sie bitte nach oben in den Flur.</div><div class="dcue">🗣️ Erst Zustand (<b>hängt</b>), dann Handlung (<b>häng</b>). Zweimal dasselbe Wort, zwei Bedeutungen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Und was machen wir mit dem Fahrrad?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Das lassen wir stehen, wo es steht. Da stört es niemanden.</div><div class="dcue">🗣️ <b>stehen lassen</b> — sehr gebräuchlich, und beide Verben bleiben im Infinitiv.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<button class="speak dbtn" data-say="So, wo fangen wir an? Wir stellen erst mal alle Kisten ins Regal, dann sehen wir weiter. Und die alten Zeitungen? Die legen wir auf den Stapel dort — der kommt am Montag raus. Hier hängt noch eine Jacke. Die hängt da seit dem Umzug. Häng sie bitte nach oben in den Flur. Und was machen wir mit dem Fahrrad? Das lassen wir stehen, wo es steht. Da stört es niemanden.">🔊 Dialog vorlesen lassen</button></div>
-
-<div class="tip">🎭 <strong>Und jetzt ihr:</strong> Räumt gemeinsam einen erfundenen Raum ein — zehn Gegenstände. Bei jedem muss zuerst die Handlung kommen und danach der Zustandssatz. Wer beides schafft, bekommt einen Punkt.</div>
-</section>
-
-<section class="section" id="merksaetze">
-<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
-<p class="ssub">Sag jeden einmal laut.</p>
-<div class="nur-a2">
-<div class="merkg"><div class="merkt">1 · 🙏 Bitten</div>
-<div class="merk"><span>Stell bitte …</span><button class="speak" data-say="Stell bitte …">🔊 hören</button></div>
-<div class="merk"><span>Leg das bitte …</span><button class="speak" data-say="Leg das bitte …">🔊 hören</button></div>
-<div class="merk"><span>Häng das bitte auf</span><button class="speak" data-say="Häng das bitte auf">🔊 hören</button></div>
-</div>
-<div class="merkg"><div class="merkt">2 · 📍 Beschreiben</div>
-<div class="merk"><span>Es liegt auf …</span><button class="speak" data-say="Es liegt auf …">🔊 hören</button></div>
-<div class="merk"><span>Es steht in …</span><button class="speak" data-say="Es steht in …">🔊 hören</button></div>
-<div class="merk"><span>Es hängt an …</span><button class="speak" data-say="Es hängt an …">🔊 hören</button></div>
-</div>
-<div class="merkg"><div class="merkt">3 · 🔎 Suchen und finden</div>
-<div class="merk"><span>Wo ist …?</span><button class="speak" data-say="Wo ist …?">🔊 hören</button></div>
-<div class="merk"><span>Hast du … gesehen?</span><button class="speak" data-say="Hast du … gesehen?">🔊 hören</button></div>
-<div class="merk"><span>Ich habe es … hingelegt</span><button class="speak" data-say="Ich habe es … hingelegt">🔊 hören</button></div>
-</div>
-<div class="merkg"><div class="merkt">4 · 🧹 Aufräumen</div>
-<div class="merk"><span>Das kommt in …</span><button class="speak" data-say="Das kommt in …">🔊 hören</button></div>
-<div class="merk"><span>Das gehört auf …</span><button class="speak" data-say="Das gehört auf …">🔊 hören</button></div>
-<div class="merk"><span>Räum das bitte weg</span><button class="speak" data-say="Räum das bitte weg">🔊 hören</button></div>
-</div>
-</div>
-<div class="nur-b1">
-<div class="merkg"><div class="merkt">1 · 🙏 Höflich bitten</div>
-<div class="merk"><span>Könntest du … hinstellen?</span><button class="speak" data-say="Könntest du … hinstellen?">🔊 hören</button></div>
-<div class="merk"><span>Wärst du so nett und …</span><button class="speak" data-say="Wärst du so nett und …">🔊 hören</button></div>
-<div class="merk"><span>Wenn du gerade dabei bist, …</span><button class="speak" data-say="Wenn du gerade dabei bist, …">🔊 hören</button></div>
-</div>
-<div class="merkg"><div class="merkt">2 · 📍 Genau beschreiben</div>
-<div class="merk"><span>ganz hinten in …</span><button class="speak" data-say="ganz hinten in …">🔊 hören</button></div>
-<div class="merk"><span>direkt neben …</span><button class="speak" data-say="direkt neben …">🔊 hören</button></div>
-<div class="merk"><span>auf Augenhöhe an …</span><button class="speak" data-say="auf Augenhöhe an …">🔊 hören</button></div>
-</div>
-<div class="merkg"><div class="merkt">3 · 🔎 Den Weg zurückverfolgen</div>
-<div class="merk"><span>Zuletzt hatte ich es …</span><button class="speak" data-say="Zuletzt hatte ich es …">🔊 hören</button></div>
-<div class="merk"><span>Ich muss es … gelegt haben</span><button class="speak" data-say="Ich muss es … gelegt haben">🔊 hören</button></div>
-<div class="merk"><span>Kann es sein, dass …?</span><button class="speak" data-say="Kann es sein, dass …?">🔊 hören</button></div>
-</div>
-<div class="merkg"><div class="merkt">4 · 🧹 Ordnung verabreden</div>
-<div class="merk"><span>Wir könnten … dort hinstellen</span><button class="speak" data-say="Wir könnten … dort hinstellen">🔊 hören</button></div>
-<div class="merk"><span>Alles, was …, kommt in …</span><button class="speak" data-say="Alles, was …, kommt in …">🔊 hören</button></div>
-<div class="merk"><span>Dann findet es jeder wieder</span><button class="speak" data-say="Dann findet es jeder wieder">🔊 hören</button></div>
-</div>
-</div>
-<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
-</section>
-
-<section class="section" id="challenge">
-<h2 class="st">⏱️ Die 90-Sekunden-Challenge</h2>
-<p class="ssub">Ein Wort, anderthalb Minuten, freies Sprechen. Es muss nicht perfekt sein — es muss nur weitergehen.</p>
-<div class="card90">
-<div class="lbl">Dein Wort</div>
-<img id="i90" src="../amanda/sz-buero.webp" alt="legen">
-<div class="word" id="w90">legen</div>
-<div class="helpwords" id="hw90"></div>
-<div class="timer" id="t90">1:30</div>
-<div>
-<button class="btn ghost" id="new90">🎲 Neues Wort</button>
-<button class="btn" id="start90">▶︎ Start</button>
-</div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Mir fällt nichts ein</button>
-<div class="inhalt">
-<p>Beschreib einen Raum, dann trägt sich die Zeit von selbst:</p>
-<ul>
-<li>Was steht dort? <b>An der Wand steht …</b></li>
-<li>Was liegt dort? <b>Auf dem Tisch liegt …</b></li>
-<li>Was hängt dort? <b>Über dem Sofa hängt …</b></li>
-<li>Und wer hat es dorthin getan? <b>Das habe ich letztes Jahr … .</b></li>
-</ul>
-<p style="margin-top:.5rem;">Und wenn ein Wort fehlt: beschreib die Form. <b>„So ein flaches Ding aus Papier“</b> — jeder versteht dich.</p>
-</div>
-</div>
-<div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde müssen mindestens <u>drei verschiedene</u> der acht Verben vorkommen. Der Partner zählt mit und sagt am Ende, welche es waren.</div>
-</section>
-
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei <span class="hl">Räume zum Einrichten</span></h2>
-<p class="ssub">Zu zweit. Einer sagt, wohin alles soll, einer fragt bei jedem Stück nach. Danach tauschen.</p>
-<div class="rsp">
-<div class="rsp-kopf"><span class="rsp-nr">1</span><b>Die neue Wohnung</b></div>
-<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>ist gerade eingezogen und weiß bei zehn Dingen nicht, wohin.</p></div><div class="rsp-r b"><span>B</span><p>hat zu allem eine Meinung — und begründet sie mit der Form des Gegenstands.</p></div></div>
-<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Wohin kommt das Regal?</span><span class="rm">Und der Spiegel?</span><span class="rm">Wo stelle ich die Lampe hin?</span><span class="rm">Der Teppich auch hierhin?</span></div><div class="nur-b1"><span class="rm">Ich würde es an die Wand stellen</span><span class="rm">Den hängen wir auf Augenhöhe</span><span class="rm">Das käme besser neben das Fenster</span><span class="rm">Sonst steht es zu sehr im Weg</span></div></div>
-<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>Bei jedem Gegenstand fällt beides: der Satz mit der <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von Handlung" data-wort="Handlung" data-kurz="Jemand bewegt etwas. Regelmäßiges Verb, immer mit Akkusativobjekt." data-bsp="Ich lege · stelle · setze · hänge etwas irgendwohin.">Handlung</b> und danach der Satz mit dem <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von Zustand" data-wort="Zustand" data-kurz="Etwas ist irgendwo. Unregelmäßiges Verb, kein Objekt." data-bsp="Es liegt · steht · sitzt · hängt irgendwo.">Zustand</b>.</div>
-<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
-</div>
-
-<div class="rsp">
-<div class="rsp-kopf"><span class="rsp-nr">2</span><b>Wo ist mein …?</b></div>
-<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>sucht drei Dinge und findet keines.</p></div><div class="rsp-r b"><span>B</span><p>weiß bei allen dreien, wo sie sind — und beschreibt es so genau, dass A sie ohne Nachfragen findet.</p></div></div>
-<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Wo ist mein Ausweis?</span><span class="rm">Ich habe ihn gestern hingelegt</span><span class="rm">Auf dem Schreibtisch?</span><span class="rm">Da habe ich schon geschaut</span></div><div class="nur-b1"><span class="rm">Zuletzt hatte ich ihn in der Hand</span><span class="rm">Kann es sein, dass er noch in der Jacke steckt?</span><span class="rm">Ganz hinten in der zweiten Schublade</span><span class="rm">Direkt neben dem grauen Ordner</span></div></div>
-<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>B benutzt bei jeder Beschreibung eine genaue Ortsangabe — ganz hinten, direkt neben, auf Augenhöhe — und nie nur „dort“.</div>
-<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
-</div>
-
-<div class="rsp">
-<div class="rsp-kopf"><span class="rsp-nr">3</span><b>Der Keller muss leer</b></div>
-<div class="rsp-lage"><span>Die Lage</span>A und B räumen einen vollen Keller aus. Alles muss entweder ins Regal, auf den Stapel oder in den Müll — und für jedes Stück braucht es das richtige Verb.</div>
-<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Wohin mit den Kisten?</span><span class="rm">Das legen wir auf den Stapel</span><span class="rm">Die Jacke hängt da seit Jahren</span><span class="rm">Das Fahrrad lassen wir stehen</span></div><div class="nur-b1"><span class="rm">Alles, was flach ist, kommt nach unten</span><span class="rm">Die stellen wir erst mal beiseite</span><span class="rm">Das hat da jahrelang gehangen</span><span class="rm">Das räumen wir zuletzt weg</span></div></div>
-<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>Beide benutzen mindestens einmal das Perfekt — und zwar richtig: <b>gehängt</b> für die Handlung, <b>gehangen</b> für den Zustand.</div>
-<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
-</div>
-
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte. Vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.15rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
-</section>
-
-<section class="section" id="debatte">
-<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
-<p class="ssub">Zwei Gruppen, eine Frage. Abwechselnd sprechen.</p>
-<div class="deb-these">Wohin und wo muss man nicht genau unterscheiden.</div>
-<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><ul><li>„Ich lege das Buch auf dem Tisch“ versteht trotzdem jeder.</li><li>Wer über jeden Fall nachdenkt, spricht nicht mehr flüssig.</li><li>Auch Deutsche machen im Dialekt hier Fehler.</li></ul></div><div class="deb-s con"><b>Gruppe B · dagegen</b><ul><li>Wohin und wo sind zwei verschiedene Sachen.</li><li>Bei einer Wegbeschreibung kommt man sonst falsch an.</li><li>Deutsche hören diesen Fehler sofort.</li></ul></div></div>
-</section>
-
-<section class="section" id="abschluss">
-<h2 class="st">Zum <span class="hl">Schluss</span></h2>
-<p class="ssub">Ein Satz von jedem.</p>
-<div class="ank">Welchen Satz von heute nimmst du mit — und wo brauchst du ihn?</div>
-<details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Ich nehme mit: …</span><span>Ich will den Satz „…“ benutzen.</span><span>Neu war für mich: …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Ich nehme mit, dass …</span><span>Den Satz „…“ will ich nächste Woche wirklich benutzen.</span><span>Neu war für mich, dass …</span></div></div></details>
-</section>
-
-<section class="section" id="hausaufgabe">
-<h2 class="st">📮 Deine Hausaufgabe bis <span class="hl">Donnerstag</span></h2>
-<p class="ssub">Vier kleine Aufgaben, zusammen etwa 25 Minuten. Am Donnerstag kommt der zweite Teil — der Fall entscheidet.</p>
-<div class="tip">💡 <strong>Warum das hilft:</strong> Diese acht Verben kommen jeden Tag vor, meist mehrmals pro Stunde. Wer sie sicher hat, spart sich beim Sprechen jedes Mal eine Denkpause.</div>
-<div class="hagrid nur-a2">
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🎙️</span><span class="htxt">
-<h4>1. Dein Zimmer <span class="zeit">5 Min</span></h4>
-<p>Nimm eine Sprachnachricht auf und beschreib den Raum, in dem du gerade bist — mit mindestens sechs der acht Verben.</p></span></button>
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">✍️</span><span class="htxt">
-<h4>2. Acht Paare <span class="zeit">7 Min</span></h4>
-<p>Schreib zu jedem der vier Paare zwei Sätze: einmal die Handlung, einmal den Zustand. Acht Sätze insgesamt.</p></span></button>
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🔁</span><span class="htxt">
-<h4>3. Alles ins Perfekt <span class="zeit">7 Min</span></h4>
-<p>Setz deine acht Sätze ins Perfekt. Markiere, wo <b>-t</b> steht und wo <b>-en</b> — das ist der ganze Unterschied.</p></span></button>
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🏠</span><span class="htxt">
-<h4>4. Zehn Dinge <span class="zeit">6 Min</span></h4>
-<p>Geh durch deine Wohnung und schreib zehn Gegenstände auf, dahinter das passende Zustandsverb: liegt, steht, hängt oder sitzt.</p></span></button>
-</div>
-<div class="hagrid nur-b1">
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🎙️</span><span class="htxt">
-<h4>1. Der Umzug <span class="zeit">7 Min</span></h4>
-<p>Erzähl in anderthalb Minuten von einem Umzug oder einer Umräumaktion. Benutze mindestens dreimal das Perfekt der Handlungsverben.</p></span></button>
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">✍️</span><span class="htxt">
-<h4>2. gehängt oder gehangen? <span class="zeit">6 Min</span></h4>
-<p>Schreib sechs Satzpaare mit <b>hängen</b> — je einmal als Handlung und einmal als Zustand, beide im Perfekt.</p></span></button>
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🪑</span><span class="htxt">
-<h4>3. setzen und sitzen <span class="zeit">6 Min</span></h4>
-<p>Schreib fünf Sätze mit <b>sich setzen</b> und fünf mit <b>sitzen</b>. Achte darauf, wo das <b>sich</b> steht — und wo es nicht hingehört.</p></span></button>
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🎧</span><span class="htxt">
-<h4>4. Hör hin <span class="zeit">5 Min</span></h4>
-<p>Achte in einem deutschen Video darauf, welches der acht Verben am häufigsten vorkommt. Schreib fünf Sätze mit.</p></span></button>
-</div>
-<p class="hastand" data-ha-stand>0 von 0 Aufgaben geschafft.</p>
-<div class="hilfe nur-a2">
-<button type="button">💡 Beispiel ansehen (Aufgabe 2)</button>
-<div class="inhalt">
-<p>So sehen die Paare aus:</p>
-<ul>
-<li><b>legen:</b> Ich lege den Brief auf den Tisch. — <b>liegen:</b> Der Brief liegt auf dem Tisch.</li>
-<li><b>stellen:</b> Ich stelle die Flasche in den Kühlschrank. — <b>stehen:</b> Die Flasche steht im Kühlschrank.</li>
-<li><b>setzen:</b> Ich setze mich auf den Stuhl. — <b>sitzen:</b> Ich sitze auf dem Stuhl.</li>
-<li><b>hängen:</b> Ich hänge das Bild an die Wand. — <b>hängen:</b> Das Bild hängt an der Wand.</li>
-<li>Merk dir: links immer ein Objekt, rechts nie.</li>
-</ul>
-<p style="margin-top:.5rem;">Ein einziger Test: <b>Kannst du „was?“ fragen? Dann ist es die Handlung.</b></p>
-</div>
-</div>
-<div class="hilfe nur-b1">
-<button type="button">💡 Beispiel ansehen (Aufgabe 2)</button>
-<div class="inhalt">
-<p>Die zwei Perfektformen von hängen:</p>
-<ul>
-<li><b>Handlung:</b> Ich <b>habe</b> das Bild an die Wand <b>gehängt</b>. (regelmäßig, mit -t)</li>
-<li><b>Zustand:</b> Das Bild <b>hat</b> jahrelang an der Wand <b>gehangen</b>. (unregelmäßig, mit -en)</li>
-<li><b>Handlung:</b> Sie <b>hat</b> die Wäsche auf den Balkon <b>gehängt</b>.</li>
-<li><b>Zustand:</b> Die Wäsche <b>hat</b> den ganzen Tag draußen <b>gehangen</b>.</li>
-<li>Beide mit <b>haben</b> — der Unterschied steckt nur im Partizip.</li>
-</ul>
-<p style="margin-top:.5rem;">In Süddeutschland und Österreich hört man beim Zustand auch <b>ist gehangen</b>. Beides gilt als richtig.</p>
-</div>
-</div>
-<div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Sprachnachricht bis Sonntag in die WhatsApp-Gruppe. Ich höre jede an und antworte dir persönlich.</div>
-<div class="tip">🔜 <strong>Am Donnerstag, Teil 2:</strong> <u>Wohin oder wo? Der Fall entscheidet</u> — warum es <i>auf den Tisch</i> heißt, aber <i>auf dem Tisch</i>.</div>
-</section>
-
-<footer>
-<strong>deutschoderwas Sprechclub</strong> · legen, stellen, setzen, hängen · Teil 1 · B1/B2 · Woche 3 · Donnerstag folgt Teil 2
-</footer>
-
-</div>
-
-<script type="application/json" id="daten-sk">
-["Beschreib den Raum, in dem du bist — mit <b>liegen</b>, <b>stehen</b> und <b>hängen</b>.","Sag zu fünf Gegenständen beides: die <b>Handlung</b> und den <b>Zustand</b>.","Jemand fragt: „Wo ist mein Ausweis?“ Antworte genau.","Räum in Gedanken einen Einkauf weg — sag laut, was wohin kommt.","Erklär den Unterschied zwischen <b>gehängt</b> und <b>gehangen</b>.","Bitte jemanden, drei Dinge irgendwohin zu tun.","Erzähl von einem <b>Umzug</b> oder einer Umräumaktion.","Warum steht ein Teller im Schrank, liegt aber auf dem Tisch?","Nenn drei Dinge, die bei dir zu Hause immer am falschen Platz sind.","Sag fünf Sätze mit <b>sich setzen</b> — und fünf mit <b>sitzen</b>."]
-</script>
-<script type="application/json" id="daten-w90">
-[{"w":"legen","b":"../amanda/sz-buero.webp","h":["flach","der Tisch","der Brief","die Schublade","zurücklegen"]},{"w":"liegen","b":"../vok-bild/der-briefkasten.webp","h":["aufrecht","die Flasche","der Schrank","der Kühlschrank","umstellen"]},{"w":"hängen","b":"../vok-bild/der-mantel.webp","h":["der Haken","die Wand","das Bild","die Garderobe","aufhängen"]},{"w":"der Schrank","b":"../vok-bild/der-schrank.webp","h":["die Kleidung","das Fach","einräumen","die Tür","oben und unten"]},{"w":"aufräumen","b":"../vok-bild/der-keller.webp","h":["die Kiste","das Regal","wegräumen","der Stapel","der Platz"]},{"w":"einrichten","b":"../vok-bild/das-schlafzimmer.webp","h":["die Möbel","das Bett","der Teppich","die Lampe","umstellen"]},{"w":"stellen","b":"../amanda/sz-kueche.webp","h":["wo ist","hingelegt","finden","die Schublade","verlegen"]},{"w":"stehen","b":"../vok-bild/das-schlafzimmer.webp","h":["stapeln","das Regal","der Karton","schwer","beschriften"]},{"w":"der Briefkasten","b":"../vok-bild/der-briefkasten.webp","h":["der Brief","hineinstecken","leeren","die Post","der Schlüssel"]},{"w":"setzen","b":"../amanda/sz-wohnen.webp","h":["der Umzug","die Möbel","einräumen","der Karton","sich einleben"]}]
-</script>
-<script type="application/json" id="daten-quiz">
-[{"q":"Wie heißt es richtig?","o":["Ich lege das Buch auf den Tisch.","Ich liege das Buch auf den Tisch.","Ich lege mich das Buch auf den Tisch.","Das Buch legt auf dem Tisch."],"c":0,"e":"<b>legen</b> ist die Handlung und braucht ein Objekt. <b>liegen</b> kann nie ein Objekt haben."},{"q":"Welches Perfekt gehört zur Handlung?","o":["Ich habe das Bild aufgehängt.","Ich habe das Bild aufgehangen.","Ich bin das Bild aufgehängt.","Ich habe das Bild aufhängen."],"c":0,"e":"Die Handlung ist regelmäßig: <b>gehängt</b> mit -t. <b>gehangen</b> gehört zum Zustand."},{"q":"Was passt: „Die Flasche ___ im Kühlschrank.“","o":["steht","stellt","liegt sich","stellt sich"],"c":0,"e":"Eine Flasche ist aufrecht und bewegt sich nicht — also der Zustand <b>stehen</b>."},{"q":"Welcher Satz ist richtig?","o":["Setzen Sie sich bitte.","Sitzen Sie sich bitte.","Setzen Sie bitte.","Sitzen Sie bitte sich."],"c":0,"e":"<b>sich setzen</b> ist die Handlung und braucht das <b>sich</b>. <b>sitzen</b> ist der Zustand und ist nie reflexiv."},{"q":"Wovon hängt ab, welches Verb man nimmt?","o":["Von der Form des Gegenstands","Vom Geschlecht des Nomens","Von der Uhrzeit","Vom Kasus"],"c":0,"e":"Flach → <b>liegen</b>. Aufrecht → <b>stehen</b>. Am Haken → <b>hängen</b>. Die Form entscheidet, nicht die Grammatik."},{"q":"Wie lautet das Perfekt von „sitzen“?","o":["hat gesessen","hat gesetzt","ist gesitzt","hat gesitzen"],"c":0,"e":"<b>sitzen – saß – hat gesessen</b>. Mit <b>gesetzt</b> wäre es die Handlung: <i>Ich habe mich gesetzt.</i>"},{"q":"Welches Verb passt zu einem Schlüssel im Schloss?","o":["stecken","liegen","stehen","sitzen"],"c":0,"e":"<b>stecken</b> ist das fünfte Paar — für alles, was in einer engen Öffnung ist: <i>Der Schlüssel steckt.</i>"},{"q":"Woran erkennt man im Perfekt eine Handlung?","o":["Am -t am Ende","Am -en am Ende","Am Hilfsverb sein","Am Reflexivpronomen"],"c":0,"e":"Alle vier Handlungsverben sind regelmäßig: <b>gelegt, gestellt, gesetzt, gehängt</b> — alle auf <b>-t</b>."}]
-</script>
-<script type="application/json" id="daten-gap">
-[{"t":"Ich ___ das Buch auf den Tisch.","o":["lege","liege","gelegt","liegt"],"a":"lege"},{"t":"Das Buch ___ schon seit gestern dort.","o":["liegt","legt","gelegt","legen"],"a":"liegt"},{"t":"___ die Flasche bitte in den Kühlschrank.","o":["Stell","Steh","Stehe","Gestellt"],"a":"Stell"},{"t":"Die Gläser ___ im oberen Schrank.","o":["stehen","stellen","gestellt","stellt"],"a":"stehen"},{"t":"___ Sie sich bitte.","o":["Setzen","Sitzen","Gesessen","Setzt"],"a":"Setzen"},{"t":"Ich habe das Bild an die Wand ___.","o":["gehängt","gehangen","hängt","hängen"],"a":"gehängt"},{"t":"Das Bild hat jahrelang dort ___.","o":["gehangen","gehängt","gehang","hängen"],"a":"gehangen"},{"t":"Der Schlüssel ___ noch im Schloss.","o":["steckt","stellt","liegt hinein","setzt"],"a":"steckt"}]
-</script>
-<script type="application/json" id="daten-gbau">
-[{"f":"Sag, was du tust:","t":["Ich","lege","den","Brief","auf","den","Tisch"],"l":["Ich","lege","den","Brief","auf","den","Tisch"],"e":"Erst das Objekt (<b>den Brief</b>), dann die Ortsangabe. Bei der Handlung steht das Ziel im Akkusativ."},{"f":"Und jetzt der Zustand:","t":["Der","Brief","liegt","seit","gestern","auf","dem","Tisch"],"l":["Der","Brief","liegt","seit","gestern","auf","dem","Tisch"],"e":"Kein Objekt, und der Ort steht im Dativ: <b>dem</b> Tisch. Genau darum geht es am Donnerstag."},{"f":"Bitte jemanden, etwas aufzuhängen:","t":["Häng","die","Jacke","bitte","an","den","Haken"],"l":["Häng","die","Jacke","bitte","an","den","Haken"],"e":"<b>bitte</b> steht in der Mitte. Und <b>an den</b> Haken mit Akkusativ, weil die Jacke sich noch bewegt."},{"f":"Sag es im Perfekt:","t":["Ich","habe","die","Flasche","in","den","Kühlschrank","gestellt"],"l":["Ich","habe","die","Flasche","in","den","Kühlschrank","gestellt"],"e":"<b>gestellt</b> mit -t: Das ist die Handlung. Der Zustand hieße <i>Die Flasche hat im Kühlschrank gestanden.</i>"}]
-</script>
-<script type="application/json" id="daten-gstory">
-{"t":"Samstagvormittag, wir räumen das Wohnzimmer um. Zuerst ___ ich alle Bücher vom Boden auf den Tisch — flach übereinander, sonst fallen sie um. Dann kommt das Regal an die andere Wand, und Mira ___ die Kisten hinein, eine nach der anderen. Der Spiegel, der bisher neben der Tür ___, soll nach oben. Ich habe ihn also abgenommen und auf Augenhöhe neu ___. Die Jacke, die seit Wochen über dem Stuhl ___, wandert endlich in den Flur. Um zwölf sind wir fertig. Wir ___ uns auf das Sofa und schauen uns um: Jetzt ___ alles da, wo es hingehört — und wir wissen sogar noch, warum.","o":["lege","stellt","hing","gehängt","lag","setzen","steht","stellen"],"a":[["lege"],["stellt"],["hing"],["gehängt"],["lag"],["setzen"],["steht"]]}
-</script>
-<script type="application/json" id="daten-ueb">
-["Stell bitte …","Leg das bitte …","Häng das bitte auf","Es liegt auf …","Es steht in …","Es hängt an …","Wo ist …?","Hast du … gesehen?","Ich habe es … hingelegt","Das kommt in …","Das gehört auf …","Räum das bitte weg","Könntest du … hinstellen?","Wärst du so nett und …","Wenn du gerade dabei bist, …","Zuletzt hatte ich es …","Ich muss es … gelegt haben","Kann es sein, dass …?","Wir könnten … dort hinstellen","Alles, was …, kommt in …","Dann findet es jeder wieder"]
-</script>
+<section class="section" data-section="4"><h2 class="st">Frei sprechen</h2><p class="ssub">Sprich zu einem Impuls. Der Leitfaden sagt dir, worüber du reden kannst — die Lernhilfen geben dir die Sätze.</p>
+<div class="scene-wrap"><img src="../amanda/sz-kueche.webp" alt="Eine Küche mit Regalen und Schränken"></div>
+<div class="tip teal">👥 <strong>In einer kleinen 2er-Gruppe · ⏱️ ca. 10 Minuten:</strong> Sprecht zuerst zu zweit über die Fragen — erzählt euch gegenseitig davon. Danach berichtet ihr der Gruppe kurz.</div>
+<div class="tip"><strong>📋 Leitfaden — sprich über diese Punkte:</strong><ol style="margin:.5rem 0 0 1.2rem;line-height:1.9">
+<li>Beschreibe dein Wohnzimmer: Was steht wo, was hängt an der Wand?</li>
+<li>Wo legst/steckst du wichtige Sachen hin (Schlüssel, Ausweis)?</li>
+<li>Bist du ordentlich? Erzähl von deinem System.</li>
+<li>Was suchst du zu Hause am häufigsten?</li>
+</ol></div>
+<div class="rmcard"><b>💬 Lernhilfen / Redemittel</b><div style="margin-top:.5rem">
+<span class="rm">Bei mir steht … auf …</span>
+<span class="rm">An der Wand hängt …</span>
+<span class="rm">Den Schlüssel lege/stecke ich …</span>
+<span class="rm">Ich bin (nicht) sehr ordentlich, weil …</span>
+</div></div><div class="tip teal">👥 <strong>Zu zweit:</strong> Einer erzählt, der andere stellt <u>zwei</u> Nachfragen. Dann tauschen.</div></section>
+<section class="section" data-section="5"><h2 class="st">⏱️ 90-Sekunden-Challenge</h2><p class="ssub">Zieh ein Wort aus der Stunde und sprich <b>90 Sekunden</b> frei darüber. Die Hilfswörter helfen — starte den Timer!</p>
+<div class="card90"><div class="lbl">🎤 Dein Wort</div><div class="word" id="w90">Bereit?</div><div class="helpwords" id="hw90"><span class="hw">Tipp auf „Neues Wort"</span></div><div class="timer" id="t90">1:30</div><div><button class="btn" id="new90">🎲 Neues Wort</button><button class="btn ghost" id="start90">▶️ Timer starten</button></div></div>
+<div class="tip">💡 <strong>So geht's:</strong> Sag, was das Wort bedeutet, gib ein Beispiel aus deinem Leben und eine Meinung dazu. Ziel: die ganzen 90 Sekunden reden.</div></section>
+<section class="section" data-section="6"><h2 class="st">✅ Üben</h2><p class="ssub">Quiz und Lückentext — tippt die Antworten an.</p><div id="quiz"></div><h2 class="st">✍️ Lückentext</h2><p class="ssub">Wähl das passende Wort.</p><div class="gap" id="gap"></div></section>
+</div><footer><strong>deutschoderwas</strong> — Sprechclub · B1/B2 · LEGEN, STELLEN, <span class="hl">SETZEN, HÄNGEN</span> · Teil 1</footer>
 
 <script>
-
-/* ---- Sprungleiste: sie schaltet die Abschnitte wieder um ----
-   Eine Weile stand alles untereinander. Gemessen an der Stunde
-   „Kritik ueben": 28 512 Pixel, auf dem Handy 34 Bildschirme fuer
-   eine Unterrichtsstunde. Man scrollt und scrollt und weiss nicht,
-   wo man ist — und in der Stunde selbst kommt man nie durch.
-
-   Jetzt zeigt die Seite einen Abschnitt. Die Leiste oben waehlt aus,
-   am Ende jedes Abschnitts steht, was als Naechstes kommt. Wer die
-   ganze Stunde am Stueck sehen will (zum Vorbereiten, zum Drucken),
-   klickt auf „Alles". Beim Drucken kommt ohnehin alles mit, und ein
-   Link mit #abschnitt oeffnet genau dort. */
-(function(){
- var tabs=[].slice.call(document.querySelectorAll('nav.tabs a.tab'));
- var paare=tabs.map(function(a){return {a:a,sec:document.querySelector(a.getAttribute('href'))};})
-               .filter(function(x){return x.sec;});
- if(paare.length<2) return;
- var alles=false, jetzt=paare[0].sec.id;
-
- /* Ohne JavaScript steht die Stunde weiterhin komplett da — erst
-    hier wird ueberhaupt etwas versteckt. */
- document.body.classList.add('schaltet');
-
- var kopf=document.querySelector('.leiste');
- function hoehe(){ return kopf ? kopf.getBoundingClientRect().height+10 : 66; }
-
- /* Die aktive Marke in den schmalen Streifen holen — aber nur ihn
-    schieben. scrollIntoView() nahm die ganze Seite mit: der Titel
-    der Stunde rutschte beim Umschalten aus dem Bild. */
- function markeInsBild(a, weich){
-  var streifen=a.parentNode;
-  if(!streifen || streifen.scrollWidth<=streifen.clientWidth+2) return;
-  /* Gerechnet wird ueber die Rechtecke, nicht ueber offsetLeft: der
-     naechste positionierte Vorfahr ist die Leiste, nicht der Streifen
-     — offsetLeft haette die Marke um die Breite der Niveau-Knoepfe
-     verschoben. */
-  var r=a.getBoundingClientRect(), rs=streifen.getBoundingClientRect();
-  var links=streifen.scrollLeft+(r.left-rs.left)-(rs.width-r.width)/2;
-  links=Math.max(0,Math.min(links,streifen.scrollWidth-streifen.clientWidth));
-  if(Math.abs(links-streifen.scrollLeft)<2) return;
-  /* Beim ersten Aufbau hart setzen. Ein weiches Scrollen im Streifen
-     zog in Chrome die ganze Seite 399 Pixel mit nach unten, weil
-     html{scroll-behavior:smooth} gilt — der Titel der Stunde war
-     dann schon beim Laden aus dem Bild. */
-  if(weich && streifen.scrollTo) streifen.scrollTo({left:links,behavior:'smooth'});
-  else streifen.scrollLeft=links;
- }
-
- /* Der Umschalter erscheint nur, wo er wirklich etwas aendert.
-    Vorher stand er auf jeder Seite, tat aber in vier von sieben
-    Abschnitten gar nichts — man tippt, nichts passiert, und denkt,
-    es sei kaputt. Jetzt sagt sein Verschwinden: Hier gibt es keine
-    zwei Fassungen. */
- var umschalter=document.querySelector('.leiste .nivk');
- function umschalterZeigen(sec){
-  if(!umschalter) return;
-  var da = !!sec.querySelector('.nur-a2, .nur-b1');
-  umschalter.style.display = da ? '' : 'none';
- }
-
- function zeige(id, springen, stumm){
-  var da=paare.filter(function(p){return p.sec.id===id;})[0];
-  if(!da) return;
-  jetzt=id;
-  paare.forEach(function(p){
-   p.sec.hidden = !alles && p.sec.id!==id;
-   p.a.classList.toggle('active', p.sec.id===id);
-  });
-  if(alles) paare.forEach(function(p){ p.sec.hidden=false; });
-  umschalterZeigen(da.sec);
-  markeInsBild(da.a, !!springen);
-  if(springen){
-   var y=da.sec.getBoundingClientRect().top+window.pageYOffset-hoehe();
-   window.scrollTo({top:Math.max(0,y),behavior:'smooth'});
-  }
-  /* Die Marke kommt erst in die Adresse, wenn jemand wirklich
-     umschaltet. Steht sie schon beim Laden drin, springt Chrome
-     nachtraeglich selbst dorthin — sobald die Bilder da sind, zog es
-     die Seite 399 Pixel nach unten und der Titel der Stunde war weg. */
-  if(!stumm){ try{ history.replaceState(null,'','#'+id); }catch(e){} }
- }
- window.stundeZeige=zeige;
-
- tabs.forEach(function(a){
-  a.addEventListener('click',function(ev){
-   var id=(a.getAttribute('href')||'').replace('#','');
-   if(!id) return;
-   ev.preventDefault();
-   if(alles){ alles=false; if(knopfAlles) knopfAlles.setAttribute('aria-pressed','false'); }
-   zeige(id,true);
-  });
- });
-
- /* Am Ende jedes Abschnitts: was jetzt drankommt. In der Stunde
-    haelt das den Takt — man klickt weiter, statt zu suchen. */
- paare.forEach(function(p,i){
-  var naechste=paare[i+1], vorige=paare[i-1];
-  var z=document.createElement('div'); z.className='weiterzeile';
-  if(vorige){
-   var zur=document.createElement('button');
-   zur.type='button'; zur.className='weiterknopf zurueck';
-   zur.innerHTML='← '+vorige.a.textContent.trim();
-   zur.addEventListener('click',function(){ zeige(vorige.sec.id,true); });
-   z.appendChild(zur);
-  }
-  if(naechste){
-   var w=document.createElement('button');
-   w.type='button'; w.className='weiterknopf';
-   w.innerHTML='Weiter: '+naechste.a.textContent.trim()+' →';
-   w.addEventListener('click',function(){ zeige(naechste.sec.id,true); });
-   z.appendChild(w);
-  }
-  if(z.children.length) p.sec.appendChild(z);
- });
-
- /* Der Schalter fuer die lange Ansicht sitzt am Ende der Leiste. */
- var knopfAlles=null;
- var streifen=document.querySelector('nav.tabs');
- if(streifen){
-  knopfAlles=document.createElement('button');
-  knopfAlles.type='button'; knopfAlles.className='tab tabAlles';
-  knopfAlles.setAttribute('aria-pressed','false');
-  knopfAlles.textContent='⇕ Alles';
-  knopfAlles.title='Die ganze Stunde am Stück zeigen';
-  knopfAlles.addEventListener('click',function(){
-   alles=!alles;
-   knopfAlles.setAttribute('aria-pressed', alles?'true':'false');
-   if(alles){ paare.forEach(function(p){ p.sec.hidden=false; }); }
-   else zeige(jetzt,true);
-  });
-  streifen.appendChild(knopfAlles);
- }
-
- var ausLink=(location.hash||'').replace('#','');
- var beimLaden=paare.filter(function(p){return p.sec.id===ausLink;}).length ? ausLink : paare[0].sec.id;
- zeige(beimLaden, false, beimLaden!==ausLink);
-})();
-
-/* ---- Hoehe des klebenden Umschalters messen, damit die
-   Sprungleiste sauber darunter sitzt ---- */
-(function(){
- var leiste=document.querySelector('.niv');
- if(!leiste)return;
- function miss(){document.documentElement.style.setProperty('--leiste',Math.round(leiste.offsetHeight)+'px');}
- miss();
- window.addEventListener('resize',miss);
- if(window.ResizeObserver)new ResizeObserver(miss).observe(leiste);
- if(document.fonts&&document.fonts.ready)document.fonts.ready.then(miss);
-})();
-
-/* ---- Vorlesen ---- */
-function say(t){try{var u=new SpeechSynthesisUtterance(t);u.lang='de-DE';u.rate=.85;speechSynthesis.cancel();speechSynthesis.speak(u);}catch(e){}}
-document.querySelectorAll('.speak').forEach(function(b){if(b.dataset.say)b.onclick=function(){say(b.dataset.say);};});
-
-/* ---- Niveau-Umschalter ---- */
-var nivk=document.querySelectorAll('.nivk button[data-niv]');
-nivk.forEach(function(b){b.onclick=function(){
- var n=b.dataset.niv;document.body.setAttribute('data-niveau',n);
- nivk.forEach(function(x){x.setAttribute('aria-pressed',x.dataset.niv===n?'true':'false');});
- hazaehlen();
+document.querySelectorAll('.tab').forEach(function(b){b.onclick=function(){
+ document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('active');});
+ document.querySelectorAll('.section').forEach(function(x){x.classList.remove('active');});
+ b.classList.add('active');document.querySelector('[data-section="'+b.dataset.tab+'"]').classList.add('active');
+ var n=document.querySelector('.tabs');window.scrollTo({top:n.offsetTop-8,behavior:'instant'});
 };});
-
-/* ---- Hilfe-Knoepfe ---- */
-document.querySelectorAll('.hilfe > button').forEach(function(b){
- var kasten=b.parentElement,text=b.textContent;
- b.setAttribute('aria-expanded','false');
- b.onclick=function(){var auf=kasten.classList.toggle('offen');
-  b.setAttribute('aria-expanded',auf?'true':'false');
-  b.textContent=auf?'✕ Hilfe schließen':text;};
-});
-
-/* ---- Markierte Woerter ----
-   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
-   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
-   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
-
-   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
-   den viele verwechseln. */
-(function(){
- var woerter=[].slice.call(document.querySelectorAll('.wm'));
- if(!woerter.length) return;
- var karte=null;
-
- function zu(){ if(karte){ karte.remove(); karte=null; }
-  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
-
- function auf(w){
-  var schonOffen=w.classList.contains('offen');
-  zu();
-  if(schonOffen) return;
-  w.classList.add('offen');
-  karte=document.createElement('div');
-  karte.className='wmk';
-  var satz=w.dataset.bsp||'';
-  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
-   + '<b>'+w.dataset.wort+'</b>'
-   + '<span>'+(w.dataset.kurz||'')+'</span>'
-   + (satz?'<em>'+satz+'</em>':'')
-   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
-  document.body.appendChild(karte);
-
-  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
-  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
-  var links=r.left+r.width/2-b.width/2;
-  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
-  var oben=r.bottom+window.pageYOffset+9;
-  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
-   oben=r.top+window.pageYOffset-b.height-9;
-  karte.style.left=links+'px'; karte.style.top=oben+'px';
-
-  karte.querySelector('.wmk-zu').onclick=zu;
-  var ton=karte.querySelector('.wmk-ton');
-  if(ton) ton.onclick=function(){ say(satz); };
- }
-
- woerter.forEach(function(w){
-  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
-  w.addEventListener('keydown',function(ev){
-   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
- });
- document.addEventListener('click',zu);
- document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
- window.addEventListener('resize',zu);
- /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
-    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
- document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
-  k.addEventListener('click',zu); });
-})();
-
-/* ---- Bildkarten verdecken ----
-   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
-   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
-   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
-   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
-   Ein einziges fehlendes Element legte die halbe Stunde still. */
-var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-if(bg&&vb){
- vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
-  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
- bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
-}
-
-/* ---- Dialoge: Runde 1 / Runde 2 ---- */
-document.querySelectorAll('.dwrap').forEach(function(d){
- var b=d.querySelector('.rbtn');
- b.onclick=function(){
-  var zwei=d.dataset.runde==='1';
-  d.dataset.runde=zwei?'2':'1';
-  b.textContent=zwei?'◀︎ Runde 1 · Text zeigen':'▶︎ Runde 2 · du antwortest';
-  b.classList.toggle('zwei',zwei);
-  d.querySelectorAll('.dline.b').forEach(function(l){l.classList.remove('zeigen');});
- };
- d.querySelectorAll('.dcue').forEach(function(c){
-  c.onclick=function(){c.closest('.dline').classList.add('zeigen');};});
-});
-
-/* ---- Hausaufgabe abhaken ---- */
-var hastand=document.querySelector('[data-ha-stand]');
-function hazaehlen(){
- if(!hastand)return;
- /* Nach dem Niveau zaehlen, nicht nach offsetParent: beim Laden ist der
-    Hausaufgaben-Abschnitt noch zugeklappt und haette 0 von 0 ergeben. */
- var niv=document.body.getAttribute('data-niveau');
- var weg=niv==='a2'?'.nur-b1':'.nur-a2';
- var da=[].slice.call(document.querySelectorAll('[data-ha]')).filter(function(h){return !h.closest(weg);});
- var fertig=da.filter(function(h){return h.classList.contains('fertig');}).length;
- var voll=da.length>0&&fertig===da.length;
- hastand.textContent=voll?('Alle '+da.length+' Aufgaben geschafft. Stark — bis Mittwoch! 🎉')
-                        :(fertig+' von '+da.length+' Aufgaben geschafft.');
- hastand.classList.toggle('voll',voll);
-}
-document.querySelectorAll('[data-ha]').forEach(function(h){
- h.setAttribute('aria-pressed','false');
- h.onclick=function(){var an=h.classList.toggle('fertig');
-  h.setAttribute('aria-pressed',an?'true':'false');hazaehlen();};
-});
-hazaehlen();
-
-/* ---- Daten aus den JSON-Bloecken im Koerper ----
-   Der Motor ist fuer alle Stunden derselbe; nur die Daten wechseln.
-   Fehlt ein Block, bleibt der Abschnitt einfach leer. */
-function daten(id){
- var el=document.getElementById('daten-'+id);
- if(!el)return null;
- try{return JSON.parse(el.textContent);}catch(e){console.error('Daten "'+id+'" sind kaputt:',e);return null;}
-}
-/* ---- Mischen (Fisher-Yates) ----
-   Ein Vergleich mit Math.random() mischt nicht gleichmaessig, die
-   erste Stelle bleibt zu oft die erste. Deshalb richtig tauschen. */
-function misch(liste){
- var a=liste.slice();
- for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}
- return a;
-}
-
-/* ---- Sprechkarten ---- */
-/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
-   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
-var UEB=daten('ueb')||[];
-if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
-  var uLetzt=-1;
-  document.getElementById('uebnew').onclick=function(){var i;
-    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
-    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
-  };
-}
-
-var SK=daten('sk')||[];
-/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
-   Gepruefte Elemente statt gepruefter Daten. */
-if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
-var lastsk=-1;
-document.getElementById('sknew').onclick=function(){var i;
- do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
- document.getElementById('wsk').innerHTML=SK[i];};
-
-}
-
-/* ---- 90 Sekunden ---- */
-var W90=daten('w90')||[];
-if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
-var last90=-1,t90=null,rest=90;
-function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
-function zeige90(i){
+function say(t){try{var u=new SpeechSynthesisUtterance(t);u.lang='de-DE';u.rate=.9;speechSynthesis.cancel();speechSynthesis.speak(u);}catch(e){}}
+document.querySelectorAll('.speak').forEach(function(b){b.onclick=function(){say(b.dataset.say);};});
+var W90=[{"w": "legen / liegen", "h": ["der Tisch", "flach", "das Buch", "hinlegen", "liegen bleiben", "die Schublade"]}, {"w": "stellen / stehen", "h": ["das Regal", "aufrecht", "die Vase", "hinstellen", "der Schrank", "die Flasche"]}, {"w": "hängen", "h": ["die Wand", "der Haken", "das Bild", "die Jacke", "aufhängen", "der Schrank"]}, {"w": "das Regal", "h": ["die Bücher", "stehen", "die Wand", "einräumen", "voll", "ordnen"]}, {"w": "stecken", "h": ["die Tasche", "der Schlüssel", "das Kabel", "hinein", "die Steckdose", "suchen"]}, {"w": "setzen / sitzen", "h": ["der Stuhl", "das Kind", "bequem", "hinsetzen", "der Tisch", "der Platz"]}];var last90=-1,t90=null,rest=90;
+function fmt(s){var m=Math.floor(s/60),r=s%60;return m+":"+(r<10?"0":"")+r;}
+document.getElementById('new90').onclick=function(){var i;do{i=Math.floor(Math.random()*W90.length);}while(i===last90&&W90.length>1);last90=i;
  document.getElementById('w90').textContent=W90[i].w;
- document.getElementById('i90').src=W90[i].b;
- document.getElementById('i90').alt=W90[i].w;
  document.getElementById('hw90').innerHTML=W90[i].h.map(function(x){return '<span class="hw">'+x+'</span>';}).join('');
-}
-document.getElementById('new90').onclick=function(){var i;
- do{i=Math.floor(Math.random()*W90.length);}while(i===last90&&W90.length>1);last90=i;
- zeige90(i);clearInterval(t90);rest=90;document.getElementById('t90').textContent=fmt(rest);};
-document.getElementById('start90').onclick=function(){clearInterval(t90);rest=90;
- var el=document.getElementById('t90');el.textContent=fmt(rest);
- t90=setInterval(function(){rest--;el.textContent=fmt(rest);
-  if(rest<=0){clearInterval(t90);el.textContent='✅ Fertig!';}},1000);};
-zeige90(0);last90=0;
-
-}
-
-/* ---- Quiz ---- */
-var QUIZ=daten('quiz')||[];
-var qc=document.getElementById('quiz');
-if(qc&&QUIZ.length){
-QUIZ.forEach(function(item){
- var d=document.createElement('div');d.className='quiz-q';
- d.innerHTML='<div class="qt">'+item.q+'</div>';
+ clearInterval(t90);rest=90;document.getElementById('t90').textContent=fmt(rest);};
+document.getElementById('start90').onclick=function(){clearInterval(t90);rest=90;var el=document.getElementById('t90');el.textContent=fmt(rest);
+ t90=setInterval(function(){rest--;el.textContent=fmt(rest);if(rest<=0){clearInterval(t90);el.textContent="✅ Fertig!";}},1000);};
+var QUIZ=[{"q": "Ich ___ das Buch flach auf den Tisch.", "o": ["lege", "stelle", "hänge"], "c": 0, "e": "flach hin = legen (→ es liegt)."}, {"q": "Die Vase steht — vorher habe ich sie ins Regal …", "o": ["gestellt", "gelegt", "gehängt"], "c": 0, "e": "aufrecht = stellen (→ es steht)."}, {"q": "Das Bild ___ jetzt an der Wand.", "o": ["hängt", "liegt", "sitzt"], "c": 0, "e": "an der Wand = hängen."}, {"q": "Der Schlüssel ___ in der Jackentasche.", "o": ["steckt", "steht", "sitzt"], "c": 0, "e": "in etwas hinein = stecken."}, {"q": "„Wohin soll ich die Gläser ___?“", "o": ["stellen", "liegen", "sitzen"], "c": 0, "e": "Gläser aufrecht = stellen."}];var qc=document.getElementById('quiz');
+QUIZ.forEach(function(item){var d=document.createElement('div');d.className='quiz-q';d.innerHTML='<div class="qt">'+item.q+'</div>';
  var op=document.createElement('div');op.className='quiz-opts';
- /* Gemischt, sonst stuende die richtige Antwort immer an erster Stelle
-    und man koennte die ganze Runde raten, ohne zu lesen. */
- var wahl=misch(item.o.map(function(t,i){return {t:t,richtig:i===item.c};}));
- wahl.forEach(function(w){
-  var b=document.createElement('button');b.className='qopt';b.textContent=w.t;
-  b.onclick=function(){
-   if(d.dataset.done)return;d.dataset.done=1;
-   if(w.richtig){b.classList.add('right');}
-   else{
-    b.classList.add('wrong');
-    op.children[wahl.findIndex(function(x){return x.richtig;})].classList.add('right');
-   }
-   d.querySelector('.qexp').classList.add('show');};
+ item.o.forEach(function(t,i){var b=document.createElement('button');b.className='qopt';b.textContent=t;
+  b.onclick=function(){if(d.dataset.done)return;d.dataset.done=1;if(i===item.c){b.classList.add('right');}else{b.classList.add('wrong');op.children[item.c].classList.add('right');}d.querySelector('.qexp').classList.add('show');};
   op.appendChild(b);});
- d.appendChild(op);
- var e=document.createElement('div');e.className='qexp';e.innerHTML='💡 '+item.e;d.appendChild(e);
- qc.appendChild(d);
-});
-
-}
-
-/* ---- Lueckentext ---- */
-var GAP=daten('gap')||[];
-var g=document.getElementById('gap');
-if(g&&GAP.length){
-GAP.forEach(function(item){
- var row=document.createElement('div');row.style.margin='.35rem 0';
- var sel=document.createElement('select');
- var leer=document.createElement('option');leer.textContent='– wählen –';leer.value='';sel.appendChild(leer);
- misch(item.o).forEach(function(o){
-  var op=document.createElement('option');op.textContent=o;op.value=o;sel.appendChild(op);});
- sel.onchange=function(){sel.className=sel.value===item.a?'ok':'no';};
- var teile=item.t.split('___');
- row.appendChild(document.createTextNode(teile[0]));row.appendChild(sel);
- row.appendChild(document.createTextNode(teile[1]||''));
- g.appendChild(row);
-});
-
-}
-
-/* ---- Satzbauer ---- */
-var GBAU=daten('gbau')||[];
-var gbc=document.getElementById('gbau');
-if(gbc&&GBAU.length){
-{GBAU.forEach(function(item){
- var d=document.createElement('div');d.className='gbau';
- d.innerHTML='<div class="gfrage">🧱 '+item.f+'</div>';
- var teile=document.createElement('div');teile.className='gteile';
- var zeile=document.createElement('div');zeile.className='gzeile';
- var gebaut=[];
- misch(item.t).forEach(function(w){
-  var b=document.createElement('button');b.className='gteil';b.textContent=w;
-  b.onclick=function(){b.classList.add('weg');gebaut.push(w);zeile.classList.remove('ok','no');
-   var s=document.createElement('span');s.textContent=w;zeile.appendChild(s);};
-  teile.appendChild(b);});
- d.appendChild(teile);d.appendChild(zeile);
- var fuss=document.createElement('div');fuss.className='gfuss';
- var pr=document.createElement('button');pr.className='gmini';pr.textContent='✅ prüfen';
- var nm=document.createElement('button');nm.className='gmini hell';nm.textContent='↻ nochmal';
- var tp=document.createElement('div');tp.className='gtipp';tp.innerHTML='💡 '+item.e;
- pr.onclick=function(){var richtig=gebaut.join(' ')===item.l.join(' ');
-  zeile.classList.remove('ok','no');zeile.classList.add(richtig?'ok':'no');tp.classList.add('show');};
- nm.onclick=function(){gebaut=[];zeile.innerHTML='';zeile.classList.remove('ok','no');tp.classList.remove('show');
-  teile.querySelectorAll('.gteil').forEach(function(b){b.classList.remove('weg');});};
- fuss.appendChild(pr);fuss.appendChild(nm);d.appendChild(fuss);d.appendChild(tp);
- gbc.appendChild(d);
-});}
-
-}
-
-/* ---- Lueckengeschichte ---- */
-var GSTORY=daten('gstory');
-var gsc=document.getElementById('gstory');
-if(gsc&&GSTORY){
-{
- var gsWahl=misch(GSTORY.o);   /* einmal mischen, alle Luecken zeigen dieselbe Reihenfolge */
- var st=GSTORY.t.split('___');
- st.forEach(function(txt,i){
-  gsc.appendChild(document.createTextNode(txt));
-  if(i<GSTORY.a.length){
-   var sel=document.createElement('select');
-   var leer=document.createElement('option');leer.textContent='– ? –';leer.value='';sel.appendChild(leer);
-   gsWahl.forEach(function(o){var op=document.createElement('option');op.textContent=o;op.value=o;sel.appendChild(op);});
-   (function(loesung){sel.onchange=function(){sel.className=loesung.indexOf(sel.value)>=0?'ok':'no';};})(GSTORY.a[i]);
-   gsc.appendChild(sel);
-  }
- });
-}
-
-}
-
-</script>
-<!-- Die Seite meldet sich beim Konto: wer ist da, ist die Mitgliedschaft
-     aktiv, und wie weit wurde gelesen. Ohne diese Zeile ist die Stunde
-     frei im Netz erreichbar und niemand sieht, dass sie benutzt wurde. -->
-<script src="../lektion-konto.js?v=1"></script>
-</body>
-</html>
+ d.appendChild(op);var e=document.createElement('div');e.className='qexp';e.innerHTML='💡 '+item.e;d.appendChild(e);qc.appendChild(d);});
+var GAP=[{"t": "Bitte ___ die Teller in die Schublade.", "o": ["leg", "steh", "sitz"], "a": "leg"}, {"t": "Die Bücher ___ jetzt ordentlich im Regal.", "o": ["stehen", "legen", "hängen"], "a": "stehen"}, {"t": "Ich ___ die Jacke an den Haken.", "o": ["hänge", "liege", "sitze"], "a": "hänge"}, {"t": "Der Schlüssel ___ noch in der Tür.", "o": ["steckt", "stellt", "legt"], "a": "steckt"}, {"t": "___ das Kind bitte auf den Stuhl.", "o": ["Setz", "Steh", "Lieg"], "a": "Setz"}];var g=document.getElementById('gap');
+GAP.forEach(function(item){var span=document.createElement('div');span.style.margin='.3rem 0';
+ var sel=document.createElement('select');var opt0=document.createElement('option');opt0.textContent='— wählen —';opt0.value='';sel.appendChild(opt0);
+ item.o.slice().sort().forEach(function(o){var op=document.createElement('option');op.textContent=o;op.value=o;sel.appendChild(op);});
+ sel.onchange=function(){if(sel.value===item.a){sel.className='ok';}else if(sel.value===''){sel.className='';}else{sel.className='no';}};
+ span.innerHTML=item.t.replace('___','<b id="slot"></b>');span.querySelector('#slot').replaceWith(sel);g.appendChild(span);});
+</script></body></html>
