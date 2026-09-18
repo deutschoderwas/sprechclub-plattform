@@ -34,7 +34,22 @@
     if (themenAnsicht) themenAnsicht();
     else location.hash = 'lernen';
   };
-  window.lernZurueck = function () { window.renderLernenThemen(); };
+
+  /* Wer ein Thema oeffnet, kommt mit "zurueck" auf die Sammelseite —
+     und zwar in den Reiter, aus dem er gekommen ist. Frueher landete
+     man in der alten, ungeordneten Themenliste: zwei Welten in einem
+     Klick. Deshalb merken wir uns das zuletzt geoeffnete Thema. */
+  var letztesThema = null;
+  if (typeof window.lernThema === 'function') {
+    var themaAuf = window.lernThema;
+    window.lernThema = function (id) { letztesThema = id; return themaAuf(id); };
+  }
+  window.lernZurueck = function () {
+    var t = daten('THEMEN').filter(function (x) { return x.id === letztesThema; })[0];
+    offen.lernen = (t && t.b === 'beruf') ? 'beruf' : 'freizeit';
+    window.renderLernen();
+    try { window.scrollTo(0, 0); } catch (e) {}
+  };
 
   /* Welcher Reiter ist gerade offen — die Sammelseiten merken sich das. */
   var offen = { lernen: 'freizeit', sprechen: 'alltag', medien: 'podcast' };
@@ -88,7 +103,7 @@
       return kachel({
         em: x.em || bereichEmoji(x.id), t: x.t,
         u: x.lvl ? x.lvl : '',
-        wert: n ? n + ' Übungsreihen' : '',
+        wert: n ? menge(n, 'Übungsreihe', 'Übungsreihen') : '',
         tun: "lernThema('" + x.id + "')"
       });
     }).join('') + '</div>';
@@ -100,8 +115,8 @@
     if (!passend.length) return '';
     return '<div class="hb-git">' + passend.map(function (k) {
       return kachel({
-        em: '🎯', t: k.t, u: k.u,
-        wert: k.lektionen.length + ' Lektionen · ' + k.lvl,
+        em: FACHEM[k.id] || '🎯', t: k.t, u: k.u,
+        wert: menge(k.lektionen.length, 'Lektion', 'Lektionen') + ' · ' + k.lvl,
         tun: "location.href='lektion.html?k=" + k.id + "&l=1'"
       });
     }).join('') + '</div>';
@@ -157,7 +172,7 @@
     amt:        ['🏛️', 'Amt & Behörden'],
     unterwegs:  ['🚉', 'Unterwegs & Reisen'],
     menschen:   ['👋', 'Leute kennenlernen'],
-    gefuehle:   ['💬', 'Heikle Gespräche'],
+    gefuehle:   ['💗', 'Heikle Gespräche'],
     familie:    ['👨‍👩‍👧', 'Familie & Kinder'],
     bildung:    ['🎓', 'Schule & Lernen'],
     vertrag:    ['📄', 'Verträge & Bank'],
@@ -168,7 +183,34 @@
     pflege:     ['🩹', 'Pflege & Klinik'],
     handwerk:   ['🔧', 'Handwerk & Baustelle']
   };
-  function bereichEmoji(id) { return (BEREICH[id] || [])[0] || '💬'; }
+  /* Jedes Thema hat sein eigenes Bild. Vorher fielen zwoelf Kacheln
+     auf dieselbe Sprechblase zurueck — das sah aus wie ein Fehler. */
+  var THEMENEM = {
+    essen: '🍽️', einkaufen: '🛒', wohnen: '🏠', gesundheit: '🩺',
+    amt: '🏛️', reisen: '🚆', stadt: '🚌', menschen: '👋',
+    gefuehle: '💗', familie: '👨‍👩‍👧', bildung: '🎓', natur: '🌦️',
+    medien: '📱', kultur: '🎉', strand: '🏖️', redewendungen: '💬',
+    umgangssprache: '😎', 'typisch-deutsch': '🇩🇪', 'starke-adjektive': '✨',
+    redemittel: '🗣️',
+    buero: '💼', bewerbung: '📝', kunden: '📞', pflege: '🩹',
+    handwerk: '🔧', 'ki-arbeitswelt': '🤖',
+    adjektivdeklination: '🧩', genitiv: '🔑', 'indirekte-rede': '💭',
+    konjunktiv2: '🌟', konnektoren: '🔗', nebensaetze: '🪜',
+    nominalisierung: '📦', 'passiv-praesens': '🔄', 'passiv-vergangenheit': '⏪',
+    'perfekt-praeteritum': '🕰️', relativsaetze: '🧵', 'temporale-nebensaetze': '⏱️',
+    wechselpraepositionen: '↔️',
+    ch: '👄', r: '🎸', 's-z-ss': '🐝', satzmelodie: '🎵',
+    umlaute: '💧', 'v-w-f': '🌬️', vokale: '🎤', wortakzent: '🥁'
+  };
+  var FACHEM = {
+    pflege: '🩺', medizin: '🩻', telcmed: '📋',
+    buero: '🗂️', dtz: '🇩🇪', goethetelc: '🏅'
+  };
+  function bereichEmoji(id) {
+    return THEMENEM[id] || (BEREICH[id] || [])[0] || '💬';
+  }
+  /* "1 Uebungsreihen" liest sich wie ein Fehler. */
+  function menge(n, eins, viele) { return n + ' ' + (n === 1 ? eins : viele); }
 
   var SPRECHREITER = [['alltag', 'Alltag'], ['business', 'Beruf']];
 
@@ -227,6 +269,7 @@
   };
 
   /* Der Sprechclub: die nächste Stunde, der Kalender, das Buchen. */
+  var clubVersuche = 0;
   function sprechclubBand() {
     var k = el('hbClub'); if (!k) return;
     k.innerHTML = '<div class="hb-club">'
@@ -240,7 +283,13 @@
       +   '<button class="hb-btn hell" onclick="go(\'stunden\')">Meine Stunden</button>'
       + '</div></div>';
 
-    var c = window.sb; if (!c) return;
+    /* Diese Datei wird gezeichnet, bevor die Anmeldung durch ist.
+       Wer hier einmal aufgibt, zeigt nie eine gebuchte Stunde an. */
+    var c = window.sb;
+    if (!c) {
+      if (clubVersuche++ < 12) { setTimeout(sprechclubBand, 400); }
+      return;
+    }
     c.from('bookings')
       .select('id, classes!inner(starts_at, titel, thema, niveau)')
       .gte('classes.starts_at', new Date().toISOString())
@@ -342,11 +391,13 @@
       /* Reiterchips — wie im App-Entwurf */
       '.hb-reiter{display:flex;gap:9px;margin:0 0 14px;flex-wrap:wrap}',
       '.hb-r{font:inherit;font-weight:700;font-size:15px;cursor:pointer;padding:10px 20px;border-radius:999px;',
+      '  min-height:44px;',
       '  background:#fff;color:var(--hb-ink);border:1.5px solid var(--hb-line);transition:.15s}',
       '.hb-r:hover{border-color:var(--hb-turq)}',
       '.hb-r.on{background:var(--hb-ink);color:#fff;border-color:var(--hb-ink)}',
       /* Kacheln */
-      '.hb-git{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:12px}',
+      '.hb-git{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:12px;',
+      '  margin-bottom:14px}',
       '.hb-k{display:flex;flex-direction:column;gap:3px;text-align:left;font:inherit;color:inherit;cursor:pointer;',
       '  background:#fff;border:1.5px solid var(--hb-line);border-radius:16px;padding:16px;transition:.16s}',
       '.hb-k:hover{border-color:var(--hb-turq);transform:translateY(-1px);box-shadow:0 6px 18px rgba(20,24,27,.06)}',
@@ -378,6 +429,7 @@
       '.hb-club-t small{color:var(--hb-soft);font-size:13.5px}',
       '.hb-club-k{display:flex;gap:9px;flex-wrap:wrap}',
       '.hb-btn{background:var(--hb-ink);color:#fff;border:none;border-radius:999px;padding:11px 20px;',
+      '  min-height:44px;',
       '  font:inherit;font-weight:700;font-size:14.5px;cursor:pointer;white-space:nowrap}',
       '.hb-btn:hover{background:#000}',
       '.hb-btn.hell{background:#fff;color:var(--hb-ink);border:1.5px solid var(--hb-line)}',
@@ -421,7 +473,7 @@
       '  .hb-em{font-size:22px}.hb-kt{font-size:14.5px}.hb-ku{font-size:12px}',
       '  .hb-band{padding:14px 15px;border-radius:16px}',
       '  .hb-kopf h2{font-size:26px}',
-      '  .hb-r{padding:9px 16px;font-size:14.5px}',
+      '  .hb-r{padding:9px 16px;font-size:14.5px;min-height:44px}',
       '  .hb-club{padding:16px}.hb-club-k{width:100%}.hb-btn{flex:1;text-align:center}',
       '  .hb-m-bild{height:96px}',
       '}',

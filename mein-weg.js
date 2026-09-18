@@ -487,6 +487,9 @@
       '.mw-bal{height:6px;border-radius:99px;background:var(--mw-line);overflow:hidden;flex:1}',
       '.mw-bal i{display:block;height:100%;background:var(--mw-turqd);border-radius:99px;transition:width .3s}',
       '.mw-bal.gross{height:9px}',
+      /* In einer Spalte (Karte, Dashboard) darf der Balken nicht
+         schrumpfen — sonst ist er null Pixel hoch und unsichtbar. */
+      '.mw-dash .mw-bal{flex:0 0 auto;height:8px;width:100%;margin:7px 0 3px}',
       /* Liste */
       '.mw-liste-kopf{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:0 0 10px;flex-wrap:wrap}',
       '.mw-liste-kopf h3{margin:0;font-size:17px}',
