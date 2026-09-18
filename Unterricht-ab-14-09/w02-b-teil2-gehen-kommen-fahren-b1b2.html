@@ -100,6 +100,19 @@ h2.st{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(1.7
 .gap select{font-family:'Inter';font-weight:600;border:2px solid var(--teal);border-radius:8px;padding:.15rem .4rem;background:var(--teal-soft);color:#0a7d72;font-size:.95rem;}
 .gap select.ok{background:#EAF7EF;border-color:var(--green);color:var(--green);}
 .gap select.no{background:var(--red-soft);border-color:var(--red);color:var(--red);}
+.boostgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;margin:1rem 0;}
+@media(max-width:640px){.boostgrid{grid-template-columns:repeat(2,1fr);}}
+.boostcard{background:var(--paper);border:1.5px solid var(--sand);border-radius:14px;padding:.9rem .8rem 1rem;text-align:center;transition:.15s;}
+.boostcard .bemoji{font-size:2.4rem;line-height:1;}
+.boostcard .bsit{font-size:.72rem;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.04em;margin:.35rem 0 .25rem;}
+.boostcard .bex{font-size:.95rem;line-height:1.4;}
+.boostcard .speak{margin-top:.45rem;background:var(--teal-soft);border:none;color:#0a7d72;font-weight:700;border-radius:999px;padding:.15rem .6rem;font-size:.75rem;cursor:pointer;}
+.boostgrid.hide .boostcard{cursor:pointer;}
+.boostgrid.hide .boostcard .bex .mk{background:var(--ink);border-color:var(--ink);color:transparent;}
+.boostgrid.hide .boostcard.reveal .bex .mk{background:var(--yellow-soft);border-color:var(--yellow);color:var(--ink);}
+.wgame{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;margin:.4rem 0;}
+.wgame button{background:var(--paper);border:2px solid var(--ink);color:var(--ink);font-family:'Inter';font-weight:700;padding:.4rem 1rem;border-radius:999px;cursor:pointer;font-size:.9rem;}
+.wgame button:hover{background:var(--ink);color:#fff;}
 footer{text-align:center;color:var(--ink-mute);font-size:.85rem;padding:3rem 1rem 1rem;}
 footer strong{color:var(--ink);}
 </style></head><body><div class="wrapper">
@@ -127,7 +140,24 @@ footer strong{color:var(--ink);}
 <li>Gibt es solche Wendungen auch in deiner Sprache?</li>
 <li>Welche deutschen Redewendungen findest du schwer?</li>
 </ul></section>
-<section class="section" data-section="1"><h2 class="st">Wortschatz</h2><p class="ssub">Tipp auf 🔊, um das Wort zu hören. Lies den Beispielsatz laut.</p><div class="vgrid">
+<section class="section" data-section="1"><h2 class="st">Wortschatz</h2>
+<p class="ssub">🚀 <strong>Wortschatz-Boost:</strong> In welcher Situation sagt man welches Verb? Tipp auf „🙈 verdecken“, rate erst das Verb — dann tippe die Karte zum Aufdecken an.</p>
+<div class="wgame"><button type="button" id="boosthide">🙈 Verben verdecken</button></div>
+<div class="boostgrid" id="boostgrid">
+<div class="boostcard"><div class="bemoji">💬</div><div class="bsit">Begrüßung</div><div class="bex">„Wie <span class="mk">geht’s</span>?“ — „Danke, <span class="mk">es geht</span>.“</div><button class="speak" data-say="„Wie geht’s?“ — „Danke, es geht.“">🔊</button></div>
+<div class="boostcard"><div class="bemoji">✅</div><div class="bsit">möglich?</div><div class="bex">Freitag um 7? Ja, <span class="mk">das geht</span>.</div><button class="speak" data-say="Freitag um 7? Ja, das geht.">🔊</button></div>
+<div class="boostcard"><div class="bemoji">❌</div><div class="bsit">nicht möglich</div><div class="bex">Heute <span class="mk">geht</span> es leider <span class="mk">nicht</span>.</div><button class="speak" data-say="Heute geht es leider nicht.">🔊</button></div>
+<div class="boostcard"><div class="bemoji">🤔</div><div class="bsit">hängt ab</div><div class="bex">„Kommst du?“ — „<span class="mk">Es kommt darauf an</span>.“</div><button class="speak" data-say="„Kommst du?“ — „Es kommt darauf an.“">🔊</button></div>
+<div class="boostcard"><div class="bemoji">🔧</div><div class="bsit">funktioniert nicht</div><div class="bex">Mein Handy <span class="mk">geht</span> nicht mehr.</div><button class="speak" data-say="Mein Handy geht nicht mehr.">🔊</button></div>
+<div class="boostcard"><div class="bemoji">🎬</div><div class="bsit">Thema</div><div class="bex">In dem Film <span class="mk">geht es um</span> eine Reise.</div><button class="speak" data-say="In dem Film geht es um eine Reise.">🔊</button></div>
+<div class="boostcard"><div class="bemoji">😬</div><div class="bsit">zu viel</div><div class="bex">Das ist nicht mehr witzig — das <span class="mk">geht zu weit</span>.</div><button class="speak" data-say="Das ist nicht mehr witzig — das geht zu weit.">🔊</button></div>
+<div class="boostcard"><div class="bemoji">💡</div><div class="bsit">Idee</div><div class="bex">Wie <span class="mk">bist</span> du <span class="mk">auf die Idee gekommen</span>?</div><button class="speak" data-say="Wie bist du auf die Idee gekommen?">🔊</button></div>
+<div class="boostcard"><div class="bemoji">🧩</div><div class="bsit">zurechtkommen</div><div class="bex"><span class="mk">Kommst</span> du mit dem Programm <span class="mk">zurecht</span>?</div><button class="speak" data-say="Kommst du mit dem Programm zurecht?">🔊</button></div>
+<div class="boostcard"><div class="bemoji">🙋</div><div class="bsit">drankommen</div><div class="bex">In der Schule: „Wer <span class="mk">kommt</span> als Nächstes <span class="mk">dran</span>?“</div><button class="speak" data-say="In der Schule: „Wer kommt als Nächstes dran?“">🔊</button></div>
+<div class="boostcard"><div class="bemoji">🔁</div><div class="bsit">vorkommen</div><div class="bex">Kein Problem — das <span class="mk">kommt vor</span>.</div><button class="speak" data-say="Kein Problem — das kommt vor.">🔊</button></div>
+<div class="boostcard"><div class="bemoji">🙂</div><div class="bsit">es geht mir gut</div><div class="bex">Nach dem Urlaub <span class="mk">geht es mir</span> richtig gut.</div><button class="speak" data-say="Nach dem Urlaub geht es mir richtig gut.">🔊</button></div>
+</div>
+<p class="ssub">Tipp auf 🔊, um das Wort zu hören. Lies den Beispielsatz laut.</p><div class="vgrid">
 <div class="vcard"><div class="w">es geht (mir gut) <button class="speak" data-say="es geht (mir gut)">🔊</button></div><div class="ex">„„Wie geht’s?“ — „Danke, es geht.“"</div></div>
 <div class="vcard"><div class="w">das geht (nicht) <button class="speak" data-say="das geht (nicht)">🔊</button></div><div class="ex">„Freitag? Ja, das geht. / Nein, das geht leider nicht."</div></div>
 <div class="vcard"><div class="w">es kommt darauf an <button class="speak" data-say="es kommt darauf an">🔊</button></div><div class="ex">„„Kommst du mit?“ — „Es kommt darauf an, wann.“"</div></div>
@@ -239,4 +269,10 @@ GAP.forEach(function(item){var span=document.createElement('div');span.style.mar
  item.o.slice().sort().forEach(function(o){var op=document.createElement('option');op.textContent=o;op.value=o;sel.appendChild(op);});
  sel.onchange=function(){if(sel.value===item.a){sel.className='ok';}else if(sel.value===''){sel.className='';}else{sel.className='no';}};
  span.innerHTML=item.t.replace('___','<b id="slot"></b>');span.querySelector('#slot').replaceWith(sel);g.appendChild(span);});
+
+var bh=document.getElementById('boosthide');
+if(bh){var bg=document.getElementById('boostgrid');
+ bh.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.boostcard').forEach(function(c){c.classList.remove('reveal');});bh.textContent=bg.classList.contains('hide')?'👁️ Verben zeigen':'🙈 Verben verdecken';};
+ bg.querySelectorAll('.boostcard').forEach(function(c){c.addEventListener('click',function(e){if(e.target.closest('.speak'))return;if(bg.classList.contains('hide'))c.classList.toggle('reveal');});});
+}
 </script></body></html>
