@@ -235,6 +235,12 @@
       }).join('');
 
     v.innerHTML = kopf('Sprechen', 'Echte Situationen durchspielen — so oft du willst, ohne Zuschauer.')
+      /* Amanda steht oben, noch vor dem Sprechclub: sie ist rund um
+         die Uhr da, der Club einmal am Abend. Wer sprechen will,
+         soll nicht erst bis morgen warten muessen. */
+      + band({ em: '🎙️', t: 'Mit Amanda sprechen',
+               u: 'Sie hört zu und antwortet sofort — in Julias Stimme',
+               tun: "go('amandasprechen')" })
       + '<div id="hbClub"></div>'
       + reiter('sprechen', SPRECHREITER)
       + '<p class="hb-hin">' + D.length + ' Gespräche in ' + Object.keys(nach).length + ' Bereichen. '
