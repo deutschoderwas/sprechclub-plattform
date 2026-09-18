@@ -115,7 +115,7 @@
   /* Jedes Thema bekommt eine feste Farbe aus der Marke — immer dieselbe,
      damit man ein Thema an seiner Farbe wiedererkennt. */
   var FARBEN=[
-    {a:'#35AFD0', w:'#DFF6F8'},
+    {a:'#1B9BC0', w:'#DFF6F8'},
     {a:'#D83636', w:'#FBE3E3'},
     {a:'#E39A00', w:'#F6F9FA'},
     {a:'#0F766E', w:'#DFF6F8'}

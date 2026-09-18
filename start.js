@@ -96,7 +96,7 @@
   + '.st-kurs .fz{display:flex;justify-content:space-between;font-size:13px;color:var(--weich);margin-bottom:7px;font-weight:600}'
   + '.st-kurs .fz b{color:var(--ink);font-family:"Space Grotesk",sans-serif}'
   + '.st-bar{height:10px;border-radius:999px;background:#F6F9FA;overflow:hidden;border:1px solid #E7ECEE}'
-  + '.st-bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#7ED8EA,#35AFD0);transition:width .5s}'
+  + '.st-bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#7ED8EA,#1B9BC0);transition:width .5s}'
   + '.st-kurs .akt{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}'
 
   /* Knöpfe — Türkis mit hartem Schatten, wie draußen */
@@ -168,7 +168,7 @@
 
   /* Community */
   + '.st-chat{display:flex;align-items:center;gap:20px;border-radius:20px;padding:26px 28px;cursor:pointer;'
-  +   'background:linear-gradient(160deg,#0E7C9A,#35AFD0);color:#fff;border:0;'
+  +   'background:linear-gradient(160deg,#0E7C9A,#1B9BC0);color:#fff;border:0;'
   +   'box-shadow:0 10px 30px rgba(14,124,154,.25);transition:transform .14s,box-shadow .14s}'
   + '.st-chat:hover{transform:translateY(-2px);box-shadow:0 16px 38px rgba(14,124,154,.3)}'
   + '.st-chat .ic{flex:none;width:56px;height:56px;border-radius:16px;background:rgba(255,255,255,.18);'
@@ -240,7 +240,7 @@
     +   'padding:12px 18px 12px 12px;margin:0 0 18px;transition:.16s;'
     +   'box-shadow:0 6px 18px rgba(40,53,59,.06)}'
     + '.st-pod:hover{transform:translateY(-2px);box-shadow:0 14px 30px -12px rgba(40,53,59,.3);'
-    +   'border-color:#35AFD0}'
+    +   'border-color:#1B9BC0}'
     + '.st-pod-bild{position:relative;width:78px;height:78px;flex:none;border-radius:16px;'
     +   'background:#DFF6F8 center/cover no-repeat;overflow:hidden}'
     + '.st-pod-play{position:absolute;inset:0;display:grid;place-items:center;font-size:22px;'

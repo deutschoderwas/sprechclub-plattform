@@ -189,7 +189,7 @@
     var st=document.createElement('style'); st.textContent=css+`
 #v-community .ch.newsch{background:linear-gradient(135deg,#F6F9FA,#E7ECEE);border:1px solid #F0DFA0;color:#7a5c00;font-weight:800;margin:0 0 10px}
 #v-community .ch.newsch .nx{font-size:15px;margin-right:3px}
-#v-community .ch.newsch.on{background:linear-gradient(135deg,#161616,#3a3a3a);color:#FFCE00;border-color:#161616}
+#v-community .ch.newsch.on{background:linear-gradient(135deg,#14181B,#3a3a3a);color:#FFCE00;border-color:#14181B}
 #v-community .pinbar{margin:0;border-bottom:1px solid var(--line-2,#F6F9FA);background:#FFFFFF}
 #v-community .pinbar .ph{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#9A6B00;padding:8px 16px 3px}
 #v-community .pinrow{display:flex;align-items:flex-start;gap:10px;padding:4px 16px 8px;font-size:13.5px}
@@ -197,7 +197,7 @@
 #v-community .pinrow .pa{font-weight:700;font-size:12px;color:#6B6154}
 #v-community .pinrow .pt{color:#22201B;line-height:1.4;word-break:break-word;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 #v-community .pinrow .punp{border:none;background:none;cursor:pointer;color:#c7a24a;font-size:12px;font-weight:700;font-family:inherit;flex:0 0 auto}
-#v-community .pinrow .punp:hover{color:#E1352C}
+#v-community .pinrow .punp:hover{color:#D42A21}
 #v-community .mh .pinbtn{cursor:pointer;font-size:13px;opacity:.5;margin-left:2px}
 #v-community .mh .pinbtn:hover{opacity:1}
 #v-community .m.pinned .pinbtn{opacity:1}
@@ -210,7 +210,7 @@
 #v-community .msg-actions button{border:none;background:none;cursor:pointer;padding:6px 7px;border-radius:6px;color:#5A6169;display:inline-flex;align-items:center;font-size:13px;line-height:1;font-family:inherit}
 #v-community .msg-actions button:hover{background:#F1EEE8;color:#191B1C}
 #v-community .msg-actions button.ki:hover{background:#F3EEFF;color:#8B5CF6}
-#v-community .msg-actions button.del:hover{background:#FDECEC;color:#E1352C}
+#v-community .msg-actions button.del:hover{background:#FEF5F5;color:#D42A21}
 @media(max-width:900px){#v-community .m{flex-wrap:wrap}#v-community .msg-actions{position:static;display:inline-flex;width:100%;margin:3px 0 0 47px;box-shadow:none;border:none;background:none;padding:0;gap:2px}#v-community .msg-actions button{padding:5px 7px;color:#9A978E}#v-community .m:hover .msg-actions{display:inline-flex}}
 .cm-confirm-ov{position:fixed;inset:0;background:rgba(20,20,20,.45);z-index:99999;display:flex;align-items:center;justify-content:center;padding:22px;animation:ccfade .14s ease}
 @keyframes ccfade{from{opacity:0}to{opacity:1}}
@@ -222,7 +222,7 @@
 .cm-confirm .cc-a button{border:none;border-radius:10px;padding:10px 18px;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;transition:.12s}
 .cm-confirm .cc-cancel{background:#F1EEE8;color:#5A5346}
 .cm-confirm .cc-cancel:hover{background:#E7ECEE}
-.cm-confirm .cc-ok{background:#E1352C;color:#fff}
+.cm-confirm .cc-ok{background:#D42A21;color:#fff}
 .cm-confirm .cc-ok:hover{background:#B80000}
 #v-community .cs-srch{padding:8px 10px 4px}
 #v-community .cs-srch input{width:100%;border:1px solid var(--line,#E6E5E0);border-radius:9px;padding:8px 11px;font-family:inherit;font-size:13px;background:#fff;outline:none;-webkit-appearance:none}
@@ -244,7 +244,7 @@
 #v-community .grp>.gh .gx{transition:transform .15s;display:inline-block;font-size:9px;color:#b6b4ac}
 #v-community .grp.zu>.gh .gx{transform:rotate(-90deg)}
 #v-community .grp.zu .glist{display:none}
-#v-community .grp>.gh .gn{margin-left:auto;font-size:10px;font-weight:800;color:#fff;background:#bfbdb5;border-radius:8px;padding:0 5px;min-width:16px;height:15px;display:flex;align-items:center;justify-content:center}
+#v-community .grp>.gh .gn{margin-left:auto;font-size:10px;font-weight:800;color:#fff;background:#757266;border-radius:8px;padding:0 5px;min-width:16px;height:15px;display:flex;align-items:center;justify-content:center}
 #v-community .ch .ce{font-size:13.5px;width:17px;text-align:center;flex:none;line-height:1}
 #v-community .cs-more{margin:14px 9px 0;width:calc(100% - 18px);border:1px dashed var(--line);background:#fff;border-radius:10px;padding:9px 8px;font-family:inherit;font-size:12.5px;font-weight:600;color:var(--brand-2);cursor:pointer}
 #v-community .cs-more:hover{background:var(--brand-wash);border-color:var(--brand-line)}
@@ -285,11 +285,11 @@
    ============================================================ */
 #v-community{
   --tuerkis:#39CCE3; --tuerkis-dunkel:#10627A; --auf-tuerkis:#063138;
-  --gelb:#FFE100; --gruen:#77D42A; --rot-s:#E1352C; --tinte:#14181B;
+  --gelb:#FFE100; --gruen:#77D42A; --rot-s:#D42A21; --tinte:#14181B;
   --creme:#F6F9FA; --karte:#FFFFFF; --hand:255px 12px 225px 15px/15px 225px 15px 255px;
   --brand:#39CCE3; --brand-2:#10627A; --brand-ink:#063138;
-  --brand-wash:#E6F8FC; --brand-line:#35AFD0;
-  --red:#E1352C; --gold:#C79600;
+  --brand-wash:#E6F8FC; --brand-line:#1B9BC0;
+  --red:#D42A21; --gold:#C79600;
   --ink:#14181B; --t1:#14181B; --t2:#5A6B72; --t3:#8A9AA1;
   --surface:#FFFFFF; --surface-2:#F6F9FA; --line:#E7ECEE; --line-2:#E7ECEE;
   --fh:'Shantell Sans','Inter',cursive;
@@ -535,7 +535,7 @@
 
 /* Das Halte-Menü hängt an <body>, deshalb bringt es seine Farben mit. */
 .cm-sheet-ov{--tinte:#14181B;--karte:#FFFFFF;--line:#E7ECEE;--brand-wash:#E6F8FC;
-  --rot-s:#E1352C;--t2:#5A6B72;--t3:#8A9AA1;--fh:"Shantell Sans","Inter",cursive;
+  --rot-s:#D42A21;--t2:#5A6B72;--t3:#8A9AA1;--fh:"Shantell Sans","Inter",cursive;
   position:fixed;inset:0;background:rgba(20,20,20,.42);z-index:99998;
   display:flex;align-items:flex-end;justify-content:center;animation:ccfade .14s ease}
 .cm-sheet{width:100%;max-width:520px;background:var(--karte);border:2.5px solid var(--tinte);
@@ -639,7 +639,7 @@
     return '<div class="pagehead"><h1>Community-Chat</h1></div>'+
       '<div class="gate"><div style="font-size:34px">🔒</div><h3 style="margin:8px 0 6px">Nur für aktive Mitglieder</h3>'+
       '<p style="color:#5A6169;max-width:400px;margin:0 auto 14px">Die Community ist exklusiv für Mitglieder mit aktivem Guthaben oder Pass.</p>'+
-      '<a href="index.html#preise" style="display:inline-block;background:#1B9BC0;color:#fff;font-weight:600;padding:9px 15px;border-radius:9px">Pakete ansehen →</a></div>';
+      '<a href="index.html#preise" style="display:inline-block;background:#B3E6F4;color:#fff;font-weight:600;padding:9px 15px;border-radius:9px">Pakete ansehen →</a></div>';
   }
 
   var GRP={

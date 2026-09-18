@@ -207,7 +207,7 @@
     return '<div class="pagehead"><h1>Community</h1></div>'+
       '<div class="gate"><div style="font-size:34px">🔒</div><h3 style="margin:8px 0 6px">Nur für aktive Mitglieder</h3>'+
       '<p style="color:#5A6169;max-width:400px;margin:0 auto 14px">Die Community ist exklusiv für Mitglieder mit aktivem Guthaben oder Pass.</p>'+
-      '<a href="index.html#preise" style="display:inline-block;background:#1B9BC0;color:#fff;font-weight:600;padding:9px 15px;border-radius:9px">Pakete ansehen →</a></div>';
+      '<a href="index.html#preise" style="display:inline-block;background:#B3E6F4;color:#fff;font-weight:600;padding:9px 15px;border-radius:9px">Pakete ansehen →</a></div>';
   }
 
   var GRP_LABEL={willkommen:'Willkommen',allgemein:'Allgemein',themen:'Themen'};

@@ -71,7 +71,7 @@
       '#apptipp .tx{flex:1;min-width:0}',
       '#apptipp .tx b{display:block;font-size:14px;line-height:1.3;color:var(--tinte,#14181B)}',
       '#apptipp .tx span{display:block;font-size:12.5px;line-height:1.4;color:var(--ink-2,var(--ink2,#5A6B72))}',
-      '#apptipp .los{flex:none;background:var(--rot,var(--akt,#E1352C));color:#fff;border:0;',
+      '#apptipp .los{flex:none;background:var(--rot,var(--akt,#D42A21));color:#fff;border:0;',
       '  border-radius:40px;padding:0 15px;min-height:44px;font:inherit;font-weight:700;font-size:13.5px;',
       '  cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}',
       '#apptipp .zu{flex:none;background:none;border:0;font:inherit;font-size:19px;line-height:1;',

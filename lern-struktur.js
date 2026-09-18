@@ -80,7 +80,7 @@
     var pz = pruefungen(), sf = situationen(frei), sb = situationen(ber);
     return [
       {
-        id: 'pruefung', farbe: '#E1352C', zeichen: '🎓',
+        id: 'pruefung', farbe: '#D42A21', zeichen: '🎓',
         titel: 'Für die Prüfung', i18n: 'ls_tuer_pruef',
         text: 'Von A1 bis C1: die Module einzeln üben, Musterprüfungen schreiben, den eigenen Stand prüfen.',
         zahlen: teile(pz ? pz + ' Prüfungen' : '', 'Lesen, Hören, Schreiben, Sprechen'),
@@ -137,7 +137,7 @@
       '  font-size:26px;line-height:1.1;margin-bottom:6px;color:var(--tinte,var(--ink,#14181B));}',
       '.ls-tuer span.u{display:block;color:var(--ink-2,var(--mute,#5A6B72));font-size:14.5px;line-height:1.5;}',
       '.ls-tuer .zahlen{display:block;margin-top:12px;color:var(--ink-3,var(--mute,#8A857C));font-size:13px;}',
-      '.ls-tuer .los{display:inline-block;margin-top:14px;font-weight:700;font-size:14px;color:var(--rot,#E1352C);}',
+      '.ls-tuer .los{display:inline-block;margin-top:14px;font-weight:700;font-size:14px;color:var(--rot,#D42A21);}',
 
       '.ls-werk-t{font-size:13px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;',
       '  color:var(--ink-3,var(--mute,#8A857C));margin:0 0 12px;}',
@@ -254,7 +254,7 @@
   var MEHR_ZEICHEN = {
     lektion:    ['📖', '#10627A'],
     wortschatz: ['🔤', '#C9A200'],
-    grammatik:  ['🧩', '#E1352C'],
+    grammatik:  ['🧩', '#D42A21'],
     aussprache: ['🔊', '#4E9E12'],
     spiel:      ['🎲', '#8B4FC7'],
     sprechen:   ['🗣️', '#E0A106'],
@@ -340,7 +340,7 @@
       '.lm-block{margin-top:26px}',
       '.lm-kopf{display:flex;align-items:center;gap:9px;font-size:17px;margin:0 0 4px}',
       '.lm-nr{display:inline-grid;place-items:center;width:25px;height:25px;border-radius:50%;',
-      '  background:var(--rot,#E1352C);color:#fff;font-size:13px;font-weight:800;flex:none}',
+      '  background:var(--rot,#D42A21);color:#fff;font-size:13px;font-weight:800;flex:none}',
       '.lm-u2{margin:0 0 14px;font-size:13.5px;line-height:1.5;color:var(--ink-2,var(--text-soft,#5A6B72))}',
       '.lm-stufe{display:flex;align-items:center;gap:10px;margin:18px 0 8px}',
       '.lm-stufe .lv{display:inline-flex;align-items:center;justify-content:center;min-width:38px;height:25px;',
@@ -370,7 +370,7 @@
       '.lm-z .pf{color:var(--ink-3,#C7D0D4);font-size:19px;flex:none}',
       '.lm-u{display:block;margin:0 0 0 22px;padding:12px 0 6px 34px;font-size:13px;font-weight:700;',
       '  border-left:2px solid var(--linie,#E7ECEE);min-height:46px;text-decoration:none;',
-      '  color:var(--rot,var(--akt,#E1352C))}',
+      '  color:var(--rot,var(--akt,#D42A21))}',
       '.lm-u:hover{text-decoration:underline}',
       '@media(max-width:640px){.lm-z{min-height:72px}.lm-bild img{height:126px}',
       '  .lm-u{margin-left:18px;padding-left:30px}}'

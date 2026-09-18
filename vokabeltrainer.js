@@ -491,7 +491,7 @@
 .vt-fuss .lsg em{font-style:normal;font-weight:800}
 .vt-bed{margin:14px 0 4px}
 .vt-bed span{display:block;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
-  color:#0FB5A6;margin-bottom:6px}
+  color:#0A7D72;margin-bottom:6px}
 .vt-bed p{margin:0;font-size:17px;line-height:1.55;color:#2A2721}
 .vt-satzbox.mitlabel{position:relative;padding-top:26px}
 .vt-satzbox.mitlabel::before{content:'Beispiel aus dem Alltag';position:absolute;top:9px;left:16px;

@@ -457,7 +457,7 @@
     if (el('mw-stil')) return;
     var s = document.createElement('style'); s.id = 'mw-stil';
     s.textContent = [
-      ':root{--mw-ink:#14181B;--mw-soft:#5A6B72;--mw-line:#E7ECEE;--mw-karte:#FFFFFF;--mw-turq:#35AFD0;--mw-turqd:#10627A;--mw-mint:#E6F8FC;--mw-rot:#E1352C;--mw-gold:#FFE100;--mw-gruen:#4E9E12}',
+      ':root{--mw-ink:#14181B;--mw-soft:#5A6B72;--mw-line:#E7ECEE;--mw-karte:#FFFFFF;--mw-turq:#1B9BC0;--mw-turqd:#10627A;--mw-mint:#E6F8FC;--mw-rot:#D42A21;--mw-gold:#FFE100;--mw-gruen:#4E9E12}',
       '.mw-laedt{padding:44px 18px;text-align:center;color:var(--mw-soft)}',
       '.mw-kick{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--mw-turqd)}',
       /* Kopf */
@@ -550,7 +550,7 @@
       '.mw-fk small{color:var(--mw-soft);font-size:12.5px}',
       '.mw-fk span{margin-top:4px;font-size:11.5px;color:var(--mw-turqd);font-weight:600}',
       /* Dashboard-Karte */
-      '.mw-dash{background:linear-gradient(135deg,#E6F8FC,#FFFFFF);border:2px solid var(--mw-turq,#35AFD0);',
+      '.mw-dash{background:linear-gradient(135deg,#E6F8FC,#FFFFFF);border:2px solid var(--mw-turq,#1B9BC0);',
       '  border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:7px}',
       '.mw-dash b{font-size:17px;line-height:1.2}',
       '.mw-dash small{color:#5A6B72;font-size:13px}',

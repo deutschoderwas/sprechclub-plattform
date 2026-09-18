@@ -15,7 +15,7 @@
   function injectStyle() {
     if (styled) return; styled = true;
     var css = `
-    #v-challenge .ch-hero{border-radius:18px;padding:24px 26px;color:#fff;position:relative;overflow:hidden;background:linear-gradient(135deg,#7a1f10,#B30000 55%,#E1352C 130%);box-shadow:0 14px 40px rgba(179,0,0,.22);margin-bottom:20px}
+    #v-challenge .ch-hero{border-radius:18px;padding:24px 26px;color:#fff;position:relative;overflow:hidden;background:linear-gradient(135deg,#7a1f10,#B30000 55%,#D42A21 130%);box-shadow:0 14px 40px rgba(179,0,0,.22);margin-bottom:20px}
     #v-challenge .ch-hero::after{content:"";position:absolute;right:-50px;top:-50px;width:230px;height:230px;border-radius:50%;background:radial-gradient(circle,rgba(255,206,0,.35),transparent 70%)}
     #v-challenge .ch-hero .e{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#FFD84D;position:relative}
     #v-challenge .ch-hero h1{font-size:26px;margin:8px 0 4px;color:#fff;position:relative}
@@ -32,7 +32,7 @@
     #v-challenge .ch-card{border:1px solid #F6F9FA;border-radius:16px;background:#fff;padding:20px;box-shadow:0 1px 2px rgba(30,25,15,.05);max-width:760px}
     #v-challenge .ch-dots{display:grid;grid-template-columns:repeat(10,1fr);gap:9px;max-width:520px}
     #v-challenge .ch-dots .d{aspect-ratio:1;border-radius:9px;background:#F1EEE8;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',inherit;font-weight:700;font-size:12px;color:#B9B36A;border:1px solid #E7ECEE}
-    #v-challenge .ch-dots .d.on{background:linear-gradient(135deg,#7ED8EA,#35AFD0);color:#10627A;border-color:#35AFD0;box-shadow:0 3px 10px rgba(27,155,192,.25)}
+    #v-challenge .ch-dots .d.on{background:linear-gradient(135deg,#7ED8EA,#1B9BC0);color:#10627A;border-color:#1B9BC0;box-shadow:0 3px 10px rgba(27,155,192,.25)}
     #v-challenge .ch-dots .d.goal{background:#F6F9FA;border:1.5px solid #FFCE00;color:#8a6a00}
     #v-challenge .ch-dots .d.goal.on{background:linear-gradient(135deg,#FFD84D,#FFCE00);color:#7a5c00;border-color:#FFCE00}
     #v-challenge .ch-note{font-size:12.5px;color:#8B8F96;margin:16px 0 0;line-height:1.5}

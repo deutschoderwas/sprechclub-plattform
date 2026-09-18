@@ -78,7 +78,7 @@
     #v-level .lv-ladder{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
     #v-level .lv-ladder .st{font-size:11.5px;padding:4px 9px;border-radius:7px;background:#F6F9FA;color:#8B8F96;font-weight:600}
     #v-level .lv-ladder .st.on{background:#ECFBF7;color:#14708B;border:1px solid #BCE4F0}
-    #v-level .lv-ladder .st.cur{background:linear-gradient(135deg,#7ED8EA,#35AFD0);color:#10627A;font-weight:800}
+    #v-level .lv-ladder .st.cur{background:linear-gradient(135deg,#7ED8EA,#1B9BC0);color:#10627A;font-weight:800}
     `;
     var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
   }

@@ -112,7 +112,7 @@
     +   'box-shadow:0 6px 14px -6px rgba(40,53,59,.5)}'
     /* Der aktive Eintrag: das Plättchen wird kräftig und bekommt einen Ring */
     + '.sidebar .navlink.active .ic{color:#fff;box-shadow:0 4px 12px -4px rgba(40,53,59,.55)}'
-    + '.sidebar .navlink.active .ic.f-turq{background:#35AFD0}'
+    + '.sidebar .navlink.active .ic.f-turq{background:#1B9BC0}'
     + '.sidebar .navlink.active .ic.f-rot {background:#D83636}'
     + '.sidebar .navlink.active .ic.f-gold{background:#E39A00}'
     + '.sidebar .navlink.active .ic.f-grau{background:#28353B}'

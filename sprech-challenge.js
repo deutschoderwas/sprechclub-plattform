@@ -32,7 +32,7 @@
     .sq-stack{display:flex;align-items:center}
     .sq-stack .av{width:30px;height:30px;border-radius:50%;border:2px solid #FFFCF5;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#3a3a3a;margin-left:-9px;box-shadow:0 1px 2px rgba(0,0,0,.08)}
     .sq-stack .av:first-child{margin-left:0}
-    .sq-stack .more{background:#F6F9FA;color:#7a7365}
+    .sq-stack .more{background:#FDFDFE;color:#7a7365}
     .sq-count{font-size:13px;color:#6B6154}
     .sq-count b{color:#211E18;font-weight:800;font-family:'Space Grotesk',inherit}
     .sq-side{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:8px;min-width:96px}

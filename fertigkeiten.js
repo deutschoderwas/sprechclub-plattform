@@ -37,7 +37,7 @@
       ]
     },
     lesen: {
-      t: 'Lesen', em: '📖', zei: 'lernen', farbe: '#E1352C',
+      t: 'Lesen', em: '📖', zei: 'lernen', farbe: '#D42A21',
       satz: 'Texte verstehen — Briefe vom Amt, Aushänge, Nachrichten, Anzeigen.',
       ueben: [], pruef: 'lesen',
       karten: [

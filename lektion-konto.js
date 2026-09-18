@@ -95,9 +95,9 @@
       '<div style="background:#fff;border-radius:20px;max-width:420px;width:100%;padding:30px 26px;' +
       'text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.3)">' +
       '<div style="font-size:2.6rem;line-height:1;margin-bottom:12px">🔒</div>' +
-      '<h2 style="font-family:\'Space Grotesk\',Inter,sans-serif;font-size:1.35rem;margin:0 0 10px;color:#161616">' +
+      '<h2 style="font-family:\'Space Grotesk\',Inter,sans-serif;font-size:1.35rem;margin:0 0 10px;color:#14181B">' +
       (angemeldet ? 'Deine Mitgliedschaft ist nicht aktiv' : 'Nur für Mitglieder') + '</h2>' +
-      '<p style="margin:0 0 20px;color:#5B6470;font-size:.97rem;line-height:1.6">' +
+      '<p style="margin:0 0 20px;color:#5A6B72;font-size:.97rem;line-height:1.6">' +
       (angemeldet
         ? 'Für die Lernplattform brauchst du eine aktive Mitgliedschaft. Dein Fortschritt bleibt gespeichert und ist sofort wieder da.'
         : 'Diese Lektion gehört zur Lernplattform. Melde dich an oder sieh dir die Mitgliedschaften an.') +

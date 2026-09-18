@@ -217,7 +217,7 @@
       '.nachueb-kopf b{display:block;font-size:14.5px;color:#0F7738}',
       '.nachueb-kopf span{display:block;font-size:12.5px;color:#3C4756}',
       '.nachueb-btn{flex:0 0 auto;border:none;cursor:pointer;font-family:inherit;font-weight:800;',
-        'font-size:13.5px;padding:10px 16px;border-radius:11px;background:#16a34a;color:#fff;',
+        'font-size:13.5px;padding:10px 16px;border-radius:11px;background:#12883E;color:#fff;',
         'box-shadow:0 3px 0 #0F7738}',
       '.nachueb-btn:active{transform:translateY(2px);box-shadow:0 1px 0 #0F7738}',
       '@media(max-width:520px){.nachueb{padding:11px 12px;gap:10px}.nachueb-btn{width:100%}',

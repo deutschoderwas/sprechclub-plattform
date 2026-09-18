@@ -40,7 +40,7 @@
       '#rm .knoepfe{display:flex;flex-direction:column;gap:9px;margin-top:14px}',
       '#rm button.tun{border:0;border-radius:40px;padding:14px 18px;font:inherit;font-weight:700;',
       '  font-size:14.5px;cursor:pointer;min-height:48px}',
-      '#rm .test{background:#E1352C;color:#fff}',
+      '#rm .test{background:#D42A21;color:#fff}',
       '#rm .alle{background:#fff;color:#14181B;border:2px solid #14181B!important}',
       '#rm .alle[disabled]{opacity:.45;cursor:not-allowed}',
       '#rm input{width:100%;padding:12px 14px;border:1.5px solid #E7ECEE;border-radius:12px;',
@@ -48,7 +48,7 @@
       '#rm .warn{font-size:13px;color:#8A857C;margin-top:10px;line-height:1.55}',
       '#rm .erg{margin-top:12px;padding:12px 14px;border-radius:14px;font-size:14px;line-height:1.6}',
       '#rm .erg.gut{background:#E6F8FC;border:1.5px solid #10627A;color:#10627A}',
-      '#rm .erg.schlecht{background:#FDECEB;border:1.5px solid #E1352C;color:#B02B24}'
+      '#rm .erg.schlecht{background:#FDECEB;border:1.5px solid #D42A21;color:#B02B24}'
     ].join('');
     document.head.appendChild(s);
   }

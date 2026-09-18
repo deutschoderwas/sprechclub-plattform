@@ -36,9 +36,9 @@
     #v-fehler .ft-act{margin-top:11px;display:flex;gap:8px;align-items:center}
     #v-fehler .ft-master{font-size:12.5px;font-weight:700;border:1px solid #BCE4F0;background:#fff;color:#10627A;border-radius:9px;padding:7px 13px;cursor:pointer;font-family:inherit}
     #v-fehler .ft-master:hover{background:#ECFBF7}
-    #v-fehler .ft-master.on{background:linear-gradient(135deg,#7ED8EA,#35AFD0);color:#10627A;border-color:transparent}
+    #v-fehler .ft-master.on{background:linear-gradient(135deg,#7ED8EA,#1B9BC0);color:#10627A;border-color:transparent}
     #v-fehler .ft-del{margin-left:auto;font-size:12px;color:#c7c6bf;background:none;border:none;cursor:pointer;font-family:inherit}
-    #v-fehler .ft-del:hover{color:#E1352C}
+    #v-fehler .ft-del:hover{color:#D42A21}
     #v-fehler .ft-empty{text-align:center;padding:36px 22px;border:1px dashed #BCE4F0;border-radius:16px;background:#F1FBF9;max-width:520px;margin:8px auto}
     #v-fehler .ft-empty .ic{font-size:40px;margin-bottom:8px}
     #v-fehler .ft-empty h3{margin:0 0 6px}

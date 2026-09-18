@@ -591,7 +591,7 @@
 '  font-size:21px; line-height:1.7; margin:0 0 14px; word-break:break-word }',
 '.pb-z{ color:#C7D0D4 }',
 '.pb-z.gut{ color:#16a34a }',
-'.pb-z.schlecht{ color:#dc2626; background:#FDE2E2; border-radius:3px }',
+'.pb-z.schlecht{ color:#dc2626; background:#FEF5F5; border-radius:3px }',
 
 '.pb-zeile{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin:10px 0 0 }',
 '.pb-zaehl{ font-size:13px; color:#8A9096 }',

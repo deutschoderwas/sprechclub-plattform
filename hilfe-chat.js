@@ -51,7 +51,7 @@
     '.hc-m{max-width:90%;margin-bottom:10px;padding:10px 13px;border-radius:16px;font-size:14.5px;line-height:1.55}',
     '.hc-m.bot{background:var(--karte,#FFFFFF);border:1.5px solid var(--linie,#E7ECEE);',
     'color:var(--tinte,#14181B);border-bottom-left-radius:6px}',
-    '.hc-m.du{background:var(--rot,#E1352C);color:#fff;margin-left:auto;border-bottom-right-radius:6px;white-space:pre-wrap}',
+    '.hc-m.du{background:var(--rot,#D42A21);color:#fff;margin-left:auto;border-bottom-right-radius:6px;white-space:pre-wrap}',
     '.hc-m.warte{color:var(--text-soft,#5A6B72);font-style:italic;background:none;border:0;padding-left:2px}',
 
     /* Amandas vier Zeichen */
@@ -63,10 +63,10 @@
     'background:linear-gradient(transparent 58%,var(--gelb,#FFE100) 58%);padding:0 1px}',
     '.hc-pkt{margin:3px 0 3px 2px;padding-left:15px;position:relative}',
     '.hc-pkt::before{content:"";position:absolute;left:2px;top:.62em;width:6px;height:6px;border-radius:50%;',
-    'background:var(--rot,#E1352C)}',
+    'background:var(--rot,#D42A21)}',
     '.hc-merk{margin:9px 0 2px;padding:8px 12px;border:1.5px solid var(--gelb,#FFE100);border-radius:12px;',
     'background:#FFFFFF;font-weight:700;color:#6B5A22;display:flex;gap:8px;align-items:flex-start}',
-    '.hc-merk::before{content:"★";color:var(--rot,#E1352C);flex:none;line-height:1.5}',
+    '.hc-merk::before{content:"★";color:var(--rot,#D42A21);flex:none;line-height:1.5}',
 
     '.hc-fuss{border-top:1.5px solid var(--linie,#E7ECEE);padding:10px 11px 11px;background:var(--karte,#FFFFFF)}',
     '.hc-fuss input,.hc-fuss textarea{width:100%;border:1.5px solid var(--linie,#E7ECEE);border-radius:13px;',
@@ -80,9 +80,9 @@
     '.hc-mik{width:42px;height:42px;border:1.5px solid var(--linie,#E7ECEE);background:var(--creme,#F6F9FA);',
     'font-size:18px;line-height:1;padding:0;color:var(--tinte,#14181B)}',
     '.hc-mik:hover{border-color:var(--tuerkis-dunkel,#10627A)}',
-    '.hc-mik.an{background:var(--rot,#E1352C);border-color:var(--rot,#E1352C);color:#fff;animation:hcPuls 1s infinite}',
+    '.hc-mik.an{background:var(--rot,#D42A21);border-color:var(--rot,#D42A21);color:#fff;animation:hcPuls 1s infinite}',
     '@keyframes hcPuls{50%{opacity:.55}}',
-    '.hc-send{background:var(--rot,#E1352C);color:#fff;padding:10px 17px;font-size:14.5px}',
+    '.hc-send{background:var(--rot,#D42A21);color:#fff;padding:10px 17px;font-size:14.5px}',
     '.hc-send:disabled{opacity:.5;cursor:default}',
     '.hc-hin{font-size:11.5px;color:#8C8574;margin-top:8px;line-height:1.45}',
     '@media(prefers-reduced-motion:reduce){.hc-mik.an{animation:none}}',

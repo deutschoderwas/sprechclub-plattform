@@ -212,7 +212,7 @@
     '.zeichen .tn{fill:none;stroke:var(--tinte,#14181B);stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}' +
     '.zeichen .tu{fill:var(--tuerkis,#39CCE3);stroke:none;opacity:.65}' +
     '.zeichen .ge{fill:var(--gelb,#FFE100);stroke:none}' +
-    '.zeichen .ro{fill:none;stroke:var(--rot,#E1352C);stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}' +
+    '.zeichen .ro{fill:none;stroke:var(--rot,#D42A21);stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}' +
     '.zeichen .pt{fill:var(--tinte,#14181B);stroke:none}' +
     '.zeichen .fu{fill:var(--gruen,#77D42A);stroke:none}' +
     /* Die Markierung liegt hinter allem, leicht schief — wie ein

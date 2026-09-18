@@ -36,15 +36,55 @@ ZUORDNUNG = [
     ('#1990A4', '#10627A', 'Tuerkis fuer Text'),
     ('#9FE4F1', '#35AFD0', 'Tuerkis als Flaeche'),
     ('#EAFBFE', '#E6F8FC', 'Tuerkis, ganz zart'),
+
+    # Die dritte Palette: das Club-Design der 395 Lektionsseiten.
+    ('#161616', '#14181B', 'Tinte der Lektionsseiten'),
+    ('#EAE6DE', '#E7ECEE', 'Linie der Lektionsseiten'),
+    ('#F0E4C4', '#E7ECEE', 'Rahmen (durchgehend border:1px solid)'),
+    ('#FFF8E8', '#F6F9FA', 'warmer Grund der Lektionsseiten'),
+    ('#FDF6EC', '#F6F9FA', 'Grund, Fraunges-Welt'),
+    ('#FDF7EC', '#F6F9FA', 'Grund, Poppins-Welt'),
+    ('#167F9E', '#10627A', 'dunkles Tuerkis der Lektionsseiten'),
+    ('#5B6470', '#5A6B72', 'Text weich der Lektionsseiten'),
+
+    # Ein Tuerkis fuer alles. Gemessen gewinnt das der Lektionsseiten:
+    # weisser Text darauf 3,2:1 statt 2,6:1, dunkler Text 5,5:1 statt
+    # 7,0:1 — in beide Richtungen brauchbar, waehrend #35AFD0 mit
+    # weissem Text unlesbar ist. Also zieht die Plattform nach.
+    ('#35AFD0', '#1B9BC0', 'Tuerkisflaeche: auf den Ton der Lektionen'),
 ]
 
 # Auch die .js-Dateien: viele Ansichten bringen ihr eigenes CSS als
 # Zeichenkette mit und setzen dort eigene Variablen (start.js hatte
 # --warm:#FFF7E6 mitten im Skript). In den .js-Dateien steckten 2189
 # Farbwerte — mehr als in allen Stylesheets zusammen.
+def lektionsseiten():
+    """Die Seiten aus lektionen-katalog.js.
+
+    Erster Anlauf wollte die Datei mit Python exec() lesen — sie ist
+    aber JavaScript, also kam nichts zurueck und die 395 Seiten
+    blieben unangetastet. Jetzt werden die Dateinamen mit einem
+    Ausdruck herausgezogen.
+
+    Diese Seiten tragen ihr CSS inline und haben eine eigene, dritte
+    Palette (das "Club-Design": #161616, #EAE6DE, #FFF8E8, #1B9BC0) —
+    zusammen 15648 harte Farbwerte.
+    """
+    katalog = os.path.join(W, 'lektionen-katalog.js')
+    if not os.path.exists(katalog):
+        return []
+    text = io.open(katalog, encoding='utf-8').read()
+    raus = []
+    for name in re.findall(r'"d"\s*:\s*"([^"]+\.html)"', text):
+        p = os.path.join(W, name)
+        if os.path.exists(p):
+            raus.append(p)
+    return raus
+
 DATEIEN = ([os.path.join(W, 'konto.html')]
            + sorted(glob.glob(os.path.join(W, '*.css')))
-           + sorted(glob.glob(os.path.join(W, '*.js'))))
+           + sorted(glob.glob(os.path.join(W, '*.js')))
+           + lektionsseiten())
 
 gesamt = 0
 proFarbe = {}
@@ -100,12 +140,18 @@ def rolle(c):
         return None                      # Gelb/Gold: Markenfarbe, bleibt
                                          # (#FFE79A, #F5E4AE und Verwandte —
                                          #  das sind Akzente, keine Linien)
-    if (r - g) > 15 and (g - b) < 10:
+    if (r - g) >= 12 and (g - b) < 10:
         return None                      # Rosa/Rot: Warnfarbe, bleibt
                                          # Erster Anlauf prüfte nur (g-b)<10 und
                                          # verschonte damit auch neutrale
                                          # Warmgrautöne wie #EBE7DF, die gar
                                          # kein Rosa sind.
+    # Kraeftige Farben sind Akzente, keine Flaechen. #E59B90 (Lachs)
+    # und #EBB489 (Sand) haetten sonst als "Linie" geendet.
+    saettigung = r - b
+    if hell <= 228 and saettigung >= 45:
+        return None
+
     if hell > 246:  return '#FFFFFF'     # Kartenflaeche
     if hell > 228:  return '#F6F9FA'     # zarte Flaeche
     if hell > 196:  return '#E7ECEE'     # Linie, Rahmen

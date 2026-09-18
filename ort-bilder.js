@@ -11,14 +11,14 @@
    etwas beschnitten werden muss.
 
    Farben kommen aus der Marke:
-     Türkis #39CCE3 · Gelb #FFE100 · Grün #77D42A · Rot #E1352C
+     Türkis #39CCE3 · Gelb #FFE100 · Grün #77D42A · Rot #D42A21
      Tinte  #14181B · Creme #F6F9FA
    ============================================================ */
 (function () {
   'use strict';
 
   var T = '#39CCE3', TD = '#10627A', G = '#FFE100', GR = '#77D42A',
-      R = '#E1352C', I = '#14181B', C = '#F6F9FA', W = '#FFFFFF';
+      R = '#D42A21', I = '#14181B', C = '#F6F9FA', W = '#FFFFFF';
 
   /* Gemeinsamer Rahmen: cremefarbene Fläche, Tintenstrich,
      alles leicht aus der Achse — wie mit der Hand gezogen. */

@@ -774,7 +774,7 @@
 '  padding:9px 15px; font-family:"Space Grotesk",sans-serif; font-size:16px; font-weight:800 }',
 '.sp-extra{ display:grid; gap:10px; padding:14px 18px 20px }',
 '@media(min-width:520px){ .sp-extra{ grid-template-columns:1fr 1fr } }',
-'.sp-extra-z{ background:#F4FBFC; border-left:4px solid #35AFD0; border-radius:10px; padding:11px 14px }',
+'.sp-extra-z{ background:#F4FBFC; border-left:4px solid #1B9BC0; border-radius:10px; padding:11px 14px }',
 '.sp-extra-z b{ display:block; font-size:11px; font-weight:800; letter-spacing:.09em;',
 '  text-transform:uppercase; color:#35719A }',
 '.sp-extra-z span{ display:block; font-size:16px; font-weight:700; margin-top:3px }',
@@ -843,7 +843,7 @@
 '  font-size:14px; font-weight:700; text-align:left; transition:border-color .12s, background .12s }',
 '.sp-c-b span{ width:24px; height:24px; flex:none; border-radius:8px; background:#F4F1EA;',
 '  display:grid; place-items:center; font-size:13px; font-weight:800 }',
-'.sp-c-b:hover{ border-color:#35AFD0 }',
+'.sp-c-b:hover{ border-color:#1B9BC0 }',
 '.sp-c-b.an{ border-color:#28353B; background:#FFFCF5 }',
 '.sp-c-b.an span{ background:#28353B; color:#fff }',
 

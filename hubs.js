@@ -145,7 +145,7 @@
     if (el('hb-stil')) return;
     var s = document.createElement('style'); s.id = 'hb-stil';
     s.textContent = [
-      ':root{--hb-ink:#14181B;--hb-soft:#5A6B72;--hb-line:#E7ECEE;--hb-turq:#35AFD0;--hb-turq-ink:#10627A;--hb-turq-soft:#E6F8FC;--hb-gold:#EBA30B;--hb-gold-soft:#F6F9FA}',
+      ':root{--hb-ink:#14181B;--hb-soft:#5A6B72;--hb-line:#E7ECEE;--hb-turq:#1B9BC0;--hb-turq-ink:#10627A;--hb-turq-soft:#E6F8FC;--hb-gold:#EBA30B;--hb-gold-soft:#F6F9FA}',
       '#v-lernen,#v-sprechen,#v-medien{max-width:820px;margin:0 auto}',
       '.hb-kopf{margin:0 0 18px}',
       '.hb-kopf h2{font-size:clamp(24px,4vw,31px);margin:0 0 5px;letter-spacing:-.02em;line-height:1.1}',
@@ -153,7 +153,7 @@
       '.hb-weiter{margin-bottom:16px}',
       /* Band: eine breite Zeile zum Antippen */
       '.hb-band{width:100%;display:flex;align-items:center;gap:14px;text-align:left;font:inherit;cursor:pointer;',
-      /* Dunkler Text auf Tuerkis, nicht weisser: weiss auf #35AFD0 sind
+      /* Dunkler Text auf Tuerkis, nicht weisser: weiss auf #1B9BC0 sind
    nur 2,6:1 Kontrast. Die eigene Markenregel sagt dasselbe. */
       '  background:var(--hb-turq);color:#0B2F3B;border:none;border-radius:18px;padding:17px 18px;margin-bottom:11px;',
       '  transition:transform .14s ease,box-shadow .14s ease;box-shadow:0 5px 16px rgba(53,175,208,.26)}',

@@ -31,7 +31,7 @@
 #dowChatFab:active{transform:translateY(0)}
 #dowChatFab .cf-i{font-size:18px;line-height:1}
 #dowChatFab .cf-n{position:absolute;top:-5px;right:-4px;min-width:21px;height:21px;padding:0 6px;border-radius:999px;
-  background:#E1352C;color:#fff;font-size:11px;font-weight:800;display:none;align-items:center;justify-content:center;
+  background:#D42A21;color:#fff;font-size:11px;font-weight:800;display:none;align-items:center;justify-content:center;
   border:2px solid #fff;box-sizing:border-box}
 #dowChatFab .cf-n.da{display:flex}
 #dowChatFab.weg{display:none}

@@ -149,9 +149,9 @@
     s.textContent = [
       '#v-bereiche{',
       '--flaeche:#FFFFFF;--flaeche-2:#F6F9FA;--kante:#E7ECEE;',
-      '--ink:#1D1B18;--ink-2:#5C574C;--ink-3:#928B7A;',
+      '--ink:#1D1B18;--ink-2:#5C574C;--ink-3:#6E6A5C;',
       '--petrol:#0E7C7B;--petrol-weich:#DCEFEC;',
-      '--brot:#E1352C;--gold:#FFC94A;--gold-weich:#F6F9FA;',
+      '--brot:#D42A21;--gold:#FFC94A;--gold-weich:#F6F9FA;',
       '--wolke:0 1px 2px rgba(29,27,24,.05), 0 8px 24px -12px rgba(29,27,24,.18);',
       'font-family:var(--schrift-text,Inter,system-ui,sans-serif);color:var(--ink);}',
       '#v-bereiche .be-titel{font-family:var(--schrift-titel,"Caveat Brush",cursive);font-weight:400;line-height:1.06;}',

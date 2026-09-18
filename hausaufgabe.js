@@ -50,13 +50,13 @@
     '.ha-datei:hover{border-color:var(--tuerkis-dunkel,#10627A)}',
     '.ha-datei input{display:none}',
     '.ha-datei b{color:var(--tinte,#14181B)}',
-    '.ha-datei .weg{margin-left:auto;color:var(--rot,#E1352C);font-weight:700;font-size:12.5px}',
+    '.ha-datei .weg{margin-left:auto;color:var(--rot,#D42A21);font-weight:700;font-size:12.5px}',
     '.ha-fuss{display:flex;gap:10px;align-items:center;margin-top:16px}',
     '.ha-fuss .hin{font-size:12px;color:#8C8574;line-height:1.4;flex:1}',
-    '.ha-senden{background:var(--rot,#E1352C);color:#fff;border:none;border-radius:50px;',
+    '.ha-senden{background:var(--rot,#D42A21);color:#fff;border:none;border-radius:50px;',
     'padding:11px 22px;font-weight:700;font-size:14.5px;cursor:pointer;font-family:inherit;flex:none}',
     '.ha-senden:disabled{opacity:.5;cursor:default}',
-    '.ha-fehler{margin-top:10px;font-size:13px;color:var(--rot,#E1352C);font-weight:600}',
+    '.ha-fehler{margin-top:10px;font-size:13px;color:var(--rot,#D42A21);font-weight:600}',
     '@media(max-width:560px){.ha-kopf img{height:60px}.ha-leib{padding:14px 16px 18px}.ha-kopf{padding:14px 16px 12px}}'
   ].join('');
   document.head.appendChild(css);

@@ -96,7 +96,7 @@ function styles(){
 '.lz-date{width:100%;max-width:280px;border:1.5px solid #F6F9FA;border-radius:16px;padding:13px 15px;font-size:16px;font-family:inherit;color:#171717;background:#fff;outline:none;margin-bottom:22px}',
 '.lz-date:focus{border-color:#1B9BC0}',
 '.lz-btn{border:none;cursor:pointer;font-family:inherit;font-weight:600;font-size:15.5px;border-radius:99px;padding:15px 30px;display:inline-flex;align-items:center;gap:9px;text-decoration:none;transition:.2s}',
-'.lz-btn.p{background:#1B9BC0;color:#fff;box-shadow:0 10px 26px -14px rgba(27,155,192,.95)}',
+'.lz-btn.p{background:#167E9C;color:#fff;box-shadow:0 10px 26px -14px rgba(27,155,192,.95)}',
 '.lz-btn.p:hover{background:#14708B}',
 '.lz-btn.p:disabled{background:#F6F9FA;color:#9A958C;cursor:not-allowed;box-shadow:none}',
 '.lz-btn.g{background:transparent;color:#6E6A63;padding:15px 10px}',

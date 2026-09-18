@@ -222,12 +222,12 @@
     .ub-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
     .ub-niv{display:flex;align-items:center;gap:10px;margin:26px 0 10px;font-size:16px;font-weight:800;color:var(--ink,#2B2B2B)}
     .ub-niv:first-child{margin-top:8px}
-    .ub-niv .lv{display:inline-flex;align-items:center;justify-content:center;min-width:38px;height:26px;padding:0 9px;border-radius:40px;background:var(--rot,#E1352C);color:#fff;font-size:13px;font-weight:800;letter-spacing:.3px}
+    .ub-niv .lv{display:inline-flex;align-items:center;justify-content:center;min-width:38px;height:26px;padding:0 9px;border-radius:40px;background:var(--rot,#D42A21);color:#fff;font-size:13px;font-weight:800;letter-spacing:.3px}
     .ub-niv .anz{margin-left:auto;font-size:13px;font-weight:600;color:var(--mute,#9A948B)}
     .ub-grid[hidden]{display:none}
     .ub-grid+.ub-grid{margin-top:12px}
     .ub-mehrbtn{width:100%;margin-top:12px;border:1.5px solid var(--border,#ECECEC);background:var(--card,#fff);border-radius:40px;padding:13px 18px;font-weight:700;font-size:14px;cursor:pointer;color:var(--ink,#2B2B2B);min-height:48px}
-    .ub-mehrbtn:hover{border-color:var(--rot,#E1352C);color:var(--rot,#E1352C)}
+    .ub-mehrbtn:hover{border-color:var(--rot,#D42A21);color:var(--rot,#D42A21)}
     @media(max-width:640px){.ub-niv{font-size:15px;margin:20px 0 8px}.ub-niv .anz{font-size:12px}}
     .ub-card{background:var(--card,#fff);border:1px solid var(--border,#ECECEC);border-radius:18px;padding:15px 16px;box-shadow:0 6px 16px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:8px;transition:transform .15s,box-shadow .2s}
     .ub-card:hover{transform:translateY(-3px);box-shadow:0 14px 28px rgba(0,0,0,.10)}
@@ -236,8 +236,8 @@
     .ub-card .lv{font-size:11px;font-weight:800;letter-spacing:.04em;background:var(--bg,#F6F9FA);color:var(--soft,#5C5C5C);padding:2px 8px;border-radius:20px;align-self:flex-start}
     .ub-pbar{height:8px;border-radius:6px;background:#eee;overflow:hidden}
     .ub-pbar span{display:block;height:100%;background:var(--turq,#2DD4BF)}
-    .ub-go{margin-top:4px;border:none;border-radius:40px;padding:10px;font-weight:800;color:#fff;cursor:pointer;background:var(--primary,#E1352C)}
-    .ub-mix{background:linear-gradient(135deg,var(--primary,#E1352C),var(--accent,#FFCE00));color:#fff;border:none;border-radius:18px;padding:16px 20px;font-weight:800;font-size:16px;cursor:pointer;width:100%;margin-bottom:18px;box-shadow:0 10px 24px rgba(221,0,0,.25)}
+    .ub-go{margin-top:4px;border:none;border-radius:40px;padding:10px;font-weight:800;color:#fff;cursor:pointer;background:var(--primary,#D42A21)}
+    .ub-mix{background:linear-gradient(135deg,var(--primary,#D42A21),var(--accent,#FFCE00));color:#fff;border:none;border-radius:18px;padding:16px 20px;font-weight:800;font-size:16px;cursor:pointer;width:100%;margin-bottom:18px;box-shadow:0 10px 24px rgba(221,0,0,.25)}
     /* Session overlay */
     .ub-ov{position:fixed;inset:0;z-index:4000;background:var(--cream,#FFFCF5);display:none;flex-direction:column}
     .ub-ov.open{display:flex}
@@ -272,7 +272,7 @@
     .ub-build{min-height:54px;border-bottom:2px dashed var(--border,#ECECEC);padding:8px 0;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
     .ub-play{border:none;background:var(--turq,#2DD4BF);color:#fff;border-radius:50%;width:74px;height:74px;font-size:30px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin:6px auto 18px;box-shadow:0 8px 20px rgba(45,212,191,.4);transition:.15s}
     .ub-play:hover{transform:scale(1.06)}
-    .ub-play.playing{background:var(--primary,#E1352C);box-shadow:0 8px 22px rgba(221,0,0,.4);animation:ubpulse 1s infinite}
+    .ub-play.playing{background:var(--primary,#D42A21);box-shadow:0 8px 22px rgba(221,0,0,.4);animation:ubpulse 1s infinite}
     @keyframes ubpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
     /* Kleine Tonknoepfe an jeder Aufgabe: normal und langsam. */
     .ub-ton{display:flex;gap:8px;justify-content:center;margin:-6px 0 16px}
@@ -335,7 +335,7 @@
     .ub-end{text-align:center;padding:30px 10px}
     .ub-end .em{font-size:60px}
     .ub-end h2{font-family:'Space Grotesk',sans-serif;margin:10px 0}
-    .ub-end .xp{font-size:20px;font-weight:800;color:var(--primary,#E1352C)}
+    .ub-end .xp{font-size:20px;font-weight:800;color:var(--primary,#D42A21)}
     .ub-cele{position:fixed;inset:0;z-index:5000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.35);animation:ubfade .3s}
     .ub-cele .box{background:#fff;border-radius:22px;padding:26px 30px;text-align:center;max-width:300px;box-shadow:0 20px 50px rgba(0,0,0,.3)}
     @keyframes ubfade{from{opacity:0}to{opacity:1}}
@@ -378,7 +378,7 @@
     .ub-gehoert .lbl{display:block;font-size:13px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--soft,#5C5C5C);margin-bottom:4px}
     .ub-gehoert.gut{border-color:#16a34a;background:rgba(22,163,74,.07)}
     .ub-gehoert.fast{border-color:#FFCE00;background:rgba(255,206,0,.12)}
-    .ub-gehoert b.fehlt{color:#E1352C;text-decoration:underline;text-decoration-color:#FFCE00;text-decoration-thickness:3px}
+    .ub-gehoert b.fehlt{color:#D42A21;text-decoration:underline;text-decoration-color:#FFCE00;text-decoration-thickness:3px}
     .ub-cmp{display:flex;gap:10px;justify-content:center;margin:14px 0 4px;flex-wrap:wrap}
     .ub-cmp-btn{border:2px solid var(--border,#ECECEC);background:#fff;border-radius:40px;padding:11px 18px;font-weight:700;font-size:15px;cursor:pointer;font-family:inherit}
     .ub-cmp-btn.mine{border-color:#7C3AED;color:#7C3AED}
@@ -437,7 +437,7 @@
   function skillById(id){ return (UEBUNGEN.skills||[]).filter(function(s){return s.id===id;})[0]; }
   // Emoji je Thema (für vibrante Karten)
   var UB_EMOJI={arbeit:'💼',bildung:'📚',einkaufen:'🛒',essen:'🍳',gefuehle:'😊',gesundheit:'🩺',medien:'📱',natur:'🌳',persoenlichkeit:'😎',redewendungen:'💬',reisen:'✈️',stadt:'🚉','starke-adjektive':'💪','typisch-deutsch':'🇩🇪',wohnen:'🛋️',adjektivdeklination:'🧩',genitiv:'🔑','indirekte-rede':'🗣️',konjunktiv2:'💭',konnektoren:'🔗',nebensaetze:'🧷','passiv-praesens':'🔁','passiv-vergangenheit':'🕰️','perfekt-praeteritum':'⏳',relativsaetze:'📎','temporale-nebensaetze':'⏰',wechselpraepositionen:'📍',ch:'🔤',r:'🌀','s-z-ss':'🔊',satzmelodie:'🎵',umlaute:'Ä','v-w-f':'💨',vokale:'🅰️',wortakzent:'📢'};
-  var UB_PAL=[['#E1352C','#FF7A00'],['#2563EB','#2DD4BF'],['#13A89A','#16a34a'],['#FF7A00','#FFCE00'],['#E83E8C','#7C3AED'],['#E1352C','#E83E8C'],['#2563EB','#7C3AED'],['#16a34a','#2DD4BF'],['#7C3AED','#2563EB'],['#FF7A00','#E1352C'],['#2DD4BF','#2563EB'],['#13A89A','#2563EB'],['#E1352C','#FFCE00'],['#FFCE00','#FF7A00'],['#7C3AED','#E83E8C']];
+  var UB_PAL=[['#D42A21','#FF7A00'],['#2563EB','#2DD4BF'],['#13A89A','#16a34a'],['#FF7A00','#FFCE00'],['#E83E8C','#7C3AED'],['#D42A21','#E83E8C'],['#2563EB','#7C3AED'],['#16a34a','#2DD4BF'],['#7C3AED','#2563EB'],['#FF7A00','#D42A21'],['#2DD4BF','#2563EB'],['#13A89A','#2563EB'],['#D42A21','#FFCE00'],['#FFCE00','#FF7A00'],['#7C3AED','#E83E8C']];
   // Passende Lektionsseite je Übungs-Thema (1:1-Verzahnung)
   /* Der Link zur Lektion wurde frueher aus dem Themennamen geraten
      (wortschatz-<id>-b1.html). Von 169 solchen Links fuehrten 118 auf
@@ -503,7 +503,7 @@
         (fael>0?'<button class="ub-wdh" onclick="ubStartWdh()">🔁 Wiederholen · '+fael+(fael===1?' Wort':' Wörter')+' sind heute dran</button>':'')+
       '</div>';
     var pills='<div class="ub-skills">'+UEBUNGEN.skills.map(function(x){
-        var on=x.id===curSkill; return '<button class="ub-skill'+(on?' on':'')+'" style="'+(on?'background:'+(x.color||'#E1352C')+';border-color:'+(x.color||'#E1352C'):'')+'" onclick="ubSetSkill(\''+x.id+'\')">'+x.emoji+' '+E(x.name)+'</button>';
+        var on=x.id===curSkill; return '<button class="ub-skill'+(on?' on':'')+'" style="'+(on?'background:'+(x.color||'#D42A21')+';border-color:'+(x.color||'#D42A21'):'')+'" onclick="ubSetSkill(\''+x.id+'\')">'+x.emoji+' '+E(x.name)+'</button>';
       }).join('')+'</div>';
     /* Nach Niveau geordnet. Vorher lagen alle Themen eines Bereichs in
        einem einzigen Gitter - bei 47 Hoerthemen fand ein Anfaenger
@@ -1313,7 +1313,7 @@
     var foot=document.querySelector('#ubOv .ub-foot');
     var lu=lessonUrl(S.skId,S.thId);
     foot.innerHTML='<button class="ub-btn" onclick="ubAgain()">Nochmal üben</button>'+
-                   (lu?'<a class="ub-btn" href="'+lu+'" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none;background:linear-gradient(135deg,var(--primary,#E1352C),var(--accent,#FFCE00));margin-top:10px">📖 Passende Lektion ansehen</a>':'')+
+                   (lu?'<a class="ub-btn" href="'+lu+'" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none;background:linear-gradient(135deg,var(--primary,#D42A21),var(--accent,#FFCE00));margin-top:10px">📖 Passende Lektion ansehen</a>':'')+
                    '<button class="ub-btn" style="background:#fff;color:var(--ink,#1A1A1A);border:2px solid var(--border,#ECECEC);box-shadow:none;margin-top:10px" onclick="ubClose()">Fertig</button>';
   }
   window.ubAgain=function(){ var foot=document.querySelector('#ubOv .ub-foot'); foot.innerHTML='<button class="ub-btn" id="ubBtn" disabled onclick="ubBtn()">Prüfen</button>';
