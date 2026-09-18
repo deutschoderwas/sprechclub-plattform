@@ -50,6 +50,9 @@
   .stift-extra .farbe.on{box-shadow:0 0 0 2px var(--anthrazit);}
   #rad-btn.on{background:var(--anthrazit); color:#fff; border-color:var(--anthrazit);}
   .lekt-stage{position:relative; flex:1; min-height:0;}
+  /* Vollbild-Präsentation: das ganze Präsentations-Feld füllt den Bildschirm (Querformat, schwarze Ränder) */
+  #lekt-stage:fullscreen, #lekt-stage:-webkit-full-screen{ width:100vw !important; height:100vh !important; aspect-ratio:auto !important; max-height:none !important; background:#000; }
+  #lekt-stage:fullscreen #lektion, #lekt-stage:-webkit-full-screen #lektion{ position:absolute !important; inset:0 !important; width:100% !important; height:100% !important; }
   /* Desktop: NUR echte 16:9-Folien-Decks (body.deck169) bekommen den 16:9-Kasten → Folie füllt ihn randlos.
      Tab-/Scroll-Lektionen (Grammatik-Baukasten etc.) behalten die VOLLE Höhe, sonst würden sie abgeschnitten. */
   @media (min-width:1025px){
@@ -367,6 +370,7 @@
       <span class="spacer"></span>
       <button id="follow-btn" class="follow-btn" onclick="reFollow()" title="Zurück zur Stelle der Lehrkraft springen">🔗 Live folgen</button>
       <div class="stift-tools" id="stift-tools">
+        <button id="voll-btn" onclick="lektVoll()" title="Präsentation im Vollbild anzeigen (Querformat)">⛶ Vollbild</button>
         <button id="pres-btn" class="hidden" onclick="openPresEdit()" title="Präsentation dieser Stunde ändern (nur du)">🔁 Präsentation</button>
         <button id="stift-btn" onclick="stiftToggle()">✏️ Stift</button>
         <span class="stift-extra hidden" id="stift-extra">
@@ -1455,6 +1459,23 @@
     open.forEach(p=>p.classList.remove('open'));
   }, true);
   function vcFull(){ const el=document.querySelector('.video-buehne'); if(el && el.requestFullscreen){ el.requestFullscreen(); } else if(api){ api.executeCommand('toggleFullScreen'); } }
+  // Präsentation im Vollbild (Querformat) – das ganze Präsentations-Feld füllt den Bildschirm.
+  function lektVoll(){
+    const el=document.getElementById('lekt-stage'); if(!el) return;
+    const fsEl=document.fullscreenElement||document.webkitFullscreenElement;
+    if(fsEl){ (document.exitFullscreen||document.webkitExitFullscreen).call(document); return; }
+    const req=el.requestFullscreen||el.webkitRequestFullscreen; if(req) req.call(el);
+  }
+  // Nach Vollbild-Wechsel das Folien-Deck (#stage) neu auf die neue Größe skalieren
+  ['fullscreenchange','webkitfullscreenchange'].forEach(function(ev){
+    document.addEventListener(ev, function(){
+      const b=document.getElementById('voll-btn');
+      const on=!!(document.fullscreenElement||document.webkitFullscreenElement);
+      if(b){ b.classList.toggle('on', on); b.textContent = on ? '⛶ Vollbild aus' : '⛶ Vollbild'; }
+      const ifr=document.getElementById('lektion');
+      [40,250,700].forEach(function(t){ setTimeout(function(){ try{ fixDeckStage(ifr); }catch(e){} try{ ifr.contentWindow.dispatchEvent(new Event('resize')); }catch(e){} },t); });
+    });
+  });
   function vcLeave(){
     // Schüler:innen vor dem Verlassen kurz nach Feedback fragen (einmal pro Sitzung)
     if(window._meIsLehrer===false && STUNDE && !window._fbDone){ showFeedback(); return; }
