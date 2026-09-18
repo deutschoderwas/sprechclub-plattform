@@ -1668,11 +1668,11 @@ window.LEKTIONEN = [
  },
  {
   "d": "Unterricht-ab-14-09/w02-c-teil2-geburtstag-feiern-b1b2.html",
-  "t": "Die Debatte: Muss man Geburtstage feiern?",
+  "t": "Die Arena der Ideen: 12 Thesen (Pro & Contra)",
   "lvl": "B1–B2",
   "art": "lektion",
-  "b": "feste",
-  "img": "amanda/sz-feste.webp"
+  "b": "heikel",
+  "img": "amanda/sz-heikel.webp"
  },
  {
   "d": "Unterricht-ab-14-09/w07-c-teil2-geschenke-b1b2.html",
