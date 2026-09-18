@@ -605,10 +605,10 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFFFFF 0%,#FFFFFF 60%)
     <button class="navlink" data-view="medien" onclick="go('medien')"><span class="ic" data-zeichen="material"></span><span data-i18n="nav_medien">Medien</span></button>
     <div class="side-foot">
       <button class="navlink" data-view="guthaben" onclick="go('guthaben')"><span class="ic" data-zeichen="guthaben"></span><span data-i18n="k_credit">Guthaben</span></button>
-      <button class="navlink" data-view="abo" onclick="go('abo')"><span class="ic">💳</span><span data-i18n="nav_abo">Mein Abo</span></button>
+      <button class="navlink" data-view="abo" onclick="go('abo')"><span class="ic" data-zeichen="abo"></span><span data-i18n="nav_abo">Mein Abo</span></button>
       <button class="navlink" data-view="profil" onclick="go('profil')"><span class="ic" data-zeichen="profil"></span><span data-i18n="k_profile">Profil</span></button>
       <a class="navlink" href="#" onclick="return bucheStunde(event)"><span class="ic">➕</span><span data-i18n="k_book1">Stunde buchen</span></a>
-      <button class="navlink" onclick="logout()"><span class="ic">↩️</span><span data-i18n="nav_abmelden">Abmelden</span></button>
+      <button class="navlink" onclick="logout()"><span class="ic" data-zeichen="abmelden"></span><span data-i18n="nav_abmelden">Abmelden</span></button>
     </div>
   </aside>
   <div class="nav-backdrop" onclick="toggleNav()"></div>
@@ -1375,7 +1375,7 @@ function collectVocab(){
 const VIEWS=['dashboard','weg','lernen','sprechen','medien','bereiche','kurs','pruefung','schreiben','kurse','ueben','community','dm','lernpfad','szenen','kalender','stunden','materialien','vokabeln','fortschritt','guthaben','abo','nachrichten','amanda','profil','fehler','buddy','fertigkeit','podcast'];
 function go(v){ location.hash=v; }
 function toggleNav(){ document.body.classList.toggle('nav-open'); }
-const VIEW_TITLES={dashboard:['Schülerbereich','Startseite'],weg:['Lernen','Mein Kurs'],lernen:['Lernen','Dein Lernbereich'],sprechen:['Sprechen','Live und mit Amanda'],medien:['Medien','Podcast und Material'],kurs:['Lernbereich','Dein Kurs'],pruefung:['Prüfung','Prüfungsvorbereitung'],schreiben:['Lernen','Schreibtrainer'],kurse:['Lernen','Kursbibliothek'],kalender:['Live Unterricht','Kalender'],stunden:['Live Unterricht','Meine Stunden'],community:['Community-Chat','Alle Themen'],ueben:['Lernen','Üben'],vokabeln:['Lernen','Vokabeltrainer'],materialien:['Lernen','Materialien'],fortschritt:['Lernen','Fortschritt'],nachrichten:['Nachrichten','Team'],amanda:['Amanda','KI-Sprechpartnerin'],lernpfad:['Lernen','Mein Lernplan'],szenen:['Lernen','Meine Szenen'],fehler:['Lernen','Fehler-Trainer'],buddy:['Lernen','Sprech-Buddy'],guthaben:['Konto','Guthaben'],abo:['Konto','Mein Abo'],profil:['Konto','Profil']};
+const VIEW_TITLES={dashboard:['Schülerbereich','Startseite'],weg:['Lernen','Mein Kurs'],lernen:['Lernen','Dein Lernbereich'],sprechen:['Sprechen','Live und mit Amanda'],medien:['Medien','Podcast und Material'],kurs:['Lernbereich','Dein Kurs'],pruefung:['Prüfung','Prüfungsvorbereitung'],schreiben:['Lernen','Schreibtrainer'],kurse:['Lernen','Kursbibliothek'],kalender:['Live Unterricht','Kalender'],stunden:['Live Unterricht','Meine Stunden'],community:['Community-Chat','Alle Themen'],ueben:['Lernen','Üben'],vokabeln:['Lernen','Vokabeltrainer'],materialien:['Lernen','Materialien'],fortschritt:['Lernen','Fortschritt'],nachrichten:['Nachrichten','Team'],amanda:['Amanda','KI-Sprechpartnerin'],lernpfad:['Lernen','Mein Lernplan'],szenen:['Lernen','Meine Szenen'],fehler:['Lernen','Fehler-Trainer'],buddy:['Lernen','Sprech-Buddy'],guthaben:['Konto','Guthaben'],abo:['Konto','Mein Abo'],profil:['Konto','Profil'],podcast:['Medien','Podcast']};
 function updateTopbar(v){var t=VIEW_TITLES[v]||['Schülerbereich','']; var s=document.getElementById('tbS'),b=document.getElementById('tbT'); var lang='de'; try{lang=localStorage.getItem('dow_lang')||'de';}catch(e){} var TT=window.__I18N__||{}; function tr(x){var o=TT[x]; return (o&&o[lang]!=null)?o[lang]:x;} if(s){s.setAttribute('data-de',t[0]);s.setAttribute('data-i18n',t[0]);s.textContent=tr(t[0]);} if(b){b.setAttribute('data-de',t[1]);b.setAttribute('data-i18n',t[1]);b.textContent=tr(t[1]);}}
 function routeFromHash(){ const v=(location.hash||'#dashboard').slice(1); show(VIEWS.includes(v)?v:'dashboard'); }
 // Ohne Guthaben/Probestunde/Pass: ALLES gesperrt außer Kalender (und Profil für Konto/Logout).
@@ -1398,7 +1398,12 @@ function show(v){
   if(nochNichtOffen() && VORVERKAUF_ZU.includes(v)){ renderVorverkauf(v); window.scrollTo(0,0); return; }
   ({dashboard:renderDashboard,weg:(window.renderWeg||renderDashboard),sprechen:(window.renderSprechen||renderDashboard),medien:(window.renderMedien||renderDashboard),kurse:(window.renderKurse||renderDashboard),ueben:(window.renderUeben||renderDashboard),lernen:(window.renderLernen||renderDashboard),bereiche:(window.renderBereiche||window.renderLernen||renderDashboard),kurs:(window.renderNiveau||renderDashboard),schreiben:(window.renderSchreiben||renderDashboard),community:(window.renderCommunity||renderDashboard),dm:(window.renderDM||renderDashboard),lernpfad:renderLernpfad,szenen:function(){ if(window.LERNPFAD) LERNPFAD.pfad('v-szenen'); },kalender:renderKalender,stunden:renderStunden,pruefung:(window.renderPruefungen||renderDashboard),materialien:renderMaterialien,vokabeln:(window.renderVokabeln||renderVokabelnAlt),
     fortschritt:renderFortschritt,guthaben:renderGuthaben,abo:renderAbo,nachrichten:renderNachrichten,
-    amanda:renderAmanda,profil:renderProfil,fehler:(window.renderFehlerTrainer||renderDashboard),buddy:(window.renderBuddy||renderDashboard),fertigkeit:(window.renderFertigkeit||renderDashboard)}[v])();
+    amanda:renderAmanda,profil:renderProfil,fehler:(window.renderFehlerTrainer||renderDashboard),buddy:(window.renderBuddy||renderDashboard),fertigkeit:(window.renderFertigkeit||renderDashboard)}[v]
+    /* Nicht jede Ansicht hat einen Zeichner — der Podcast zum Beispiel
+       steht als fertiges HTML da. Ohne diesen Rueckfall rief go() hier
+       "undefined()" auf: ein Fehler, und alles danach (Hochscrollen,
+       Ungelesen-Zaehler) blieb liegen. */
+    || function(){})();
   if(v==='community') markCommRead();
   if(v==='dashboard') setTimeout(mcStatus,60);   // Community geöffnet -> Nachrichten gelesen, Badge weg
   window.scrollTo(0,0);
@@ -3854,7 +3859,7 @@ window.addEventListener('resize',function(){ clearTimeout(_mhT); _mhT=setTimeout
      entfernen und alles sieht wieder aus wie vorher. -->
 <link rel="stylesheet" href="lernraum-stil.css?v=2">
 <script src="amanda-figur.js?v=2" defer></script>
-<script src="seitenleiste.js?v=3" defer></script>
+<script src="seitenleiste.js?v=4" defer></script>
 <script src="bereiche.js?v=1" defer></script>
 <script src="bereiche-ansicht.js?v=2" defer></script>
 <script src="hausaufgabe.js?v=6" defer></script>

@@ -335,8 +335,18 @@
 
   /* Von der Startseite aus: Podcast öffnen und ggf. gleich abspielen */
   window.podcastOeffnen = function(id, abspielen){
-    var b = document.querySelector('.navlink[data-view="podcast"]');
-    if(b) b.click();
+    /* Vorher klickte diese Zeile auf einen Menuepunkt, den es nicht
+       mehr gibt — und es geschah nichts. Der Router kennt 'podcast',
+       also fragen wir ihn direkt. */
+    if(window.go) window.go('podcast');
+    else {
+      var s = document.getElementById('v-podcast');
+      if(s){
+        [].forEach.call(document.querySelectorAll('.view.active'), function(v){ v.classList.remove('active'); });
+        s.classList.add('active');
+      }
+    }
+    try { window.scrollTo(0,0); } catch(e){}
     if(!id) return false;
     setTimeout(function(){
       var ep = document.querySelector('.pc-ep[data-id="'+id+'"]');
@@ -348,26 +358,16 @@
   };
 
   function setupPodcast(){
-    // Ankerpunkt: vor „Julia korrigiert"; Rueckfall auf „Sprech-Tandem" bzw. ans Ende des Lernen-Blocks
-    var anker = document.querySelector('.navlink[href="korrektur.html"]')
-             || document.querySelector('.navlink[data-view="buddy"]')
-             || document.querySelector('.navlink[data-view="materialien"]');
-    if(!anker || !anker.parentNode) return;
-    var b = document.querySelector('.navlink[data-view="podcast"]');
-    if(!b){
-      b = document.createElement('button');
-      b.className = 'navlink'; b.setAttribute('data-view','podcast');
-      b.innerHTML = '<span class="ic">🎙️</span>Podcast';
-    }
-    /* Der Knopf kommt immer ins Menü. Vorher stand das Einhängen im
-       selben if wie der Punkt für neue Folgen — wer eine Folge gehört
-       hatte, fand den Podcast ab der nächsten Anmeldung nicht mehr. */
-    if(b && !b.querySelector('.pc-punkt') && pcIstNeu(pcNeueste())){
-      var pt = document.createElement('span');
-      pt.className = 'pc-punkt'; pt.title = 'Neue Folge';
-      b.appendChild(pt);
-    }
-    if(b && !b.parentNode) anker.parentNode.insertBefore(b, anker);
+    /* Frueher haengte diese Funktion einen eigenen Podcast-Knopf in
+       die Seitenleiste und gab auf, wenn sie ihren Ankerpunkt nicht
+       fand. Seit die Leiste nur noch fuenf Ziele hat, war der Anker
+       weg — und damit auch die ganze Podcast-Ansicht. Wer in Medien
+       auf eine Folge tippte, bei dem passierte nichts.
+
+       Jetzt gilt: der Podcast wohnt unter Medien. Die Ansicht wird
+       immer gebaut, der Knopf entfaellt, und der Punkt fuer eine neue
+       Folge sitzt am Medien-Ziel — in der Leiste und in der
+       Reiterleiste am Handy. */
     var sec = document.getElementById('v-podcast');
     if(!sec){
       var anchor = document.getElementById('v-dashboard');
@@ -378,20 +378,12 @@
         anchor.parentNode.appendChild(sec);
       }
     }
-    if(b && sec && !b.dataset.wired){
-      b.dataset.wired = '1';
-      b.addEventListener('click', function(e){
-        e.preventDefault();
-        document.querySelectorAll('.view.active').forEach(function(v){ v.classList.remove('active'); });
-        sec.classList.add('active');
-        document.querySelectorAll('.navlink[data-view]').forEach(function(n){ n.classList.toggle('active', n===b); });
-        window.scrollTo(0,0);
-      });
-    }
-    // Andere Nav-Klicks: Podcast-Ansicht wieder ausblenden (Router kennt sie nicht)
-    document.querySelectorAll('.navlink[data-view]').forEach(function(n){
-      if(n===b || n.dataset.pcw) return; n.dataset.pcw = '1';
-      n.addEventListener('click', function(){ var s=document.getElementById('v-podcast'); if(s) s.classList.remove('active'); if(b) b.classList.remove('active'); });
+    if(!pcIstNeu(pcNeueste())) return;
+    [].forEach.call(document.querySelectorAll('[data-view="medien"],[data-tab="medien"]'), function(z){
+      if(z.querySelector('.pc-punkt')) return;
+      var pt = document.createElement('span');
+      pt.className = 'pc-punkt'; pt.title = 'Neue Folge';
+      z.appendChild(pt);
     });
   }
 

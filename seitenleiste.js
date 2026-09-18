@@ -24,51 +24,70 @@
      alles andere klappt erst auf, wenn er dort ist. */
   /* Was ein Schueler sofort finden muss — mehr steht nicht oben.
      Alles andere klappt erst auf, wenn er dort ist. */
+  /* Dieselben fuenf Ziele wie in der Reiterleiste am Handy und wie
+     in der App: Start, Lernen, Sprechen, Community, Medien. Was
+     tiefer liegt, klappt unter seinem Ziel auf — es macht keine
+     sechste Ordnung daneben auf.
+
+     Die fuenf Knoepfe stehen schon in konto.html; diese Datei sortiert
+     sie nur und haengt die Unterpunkte an. */
   var PLAN = [
-    { view: 'dashboard', text: 'Mein Bereich', zeichen: 'start', kinder: [
-        { view: 'stunden' },
-        { view: 'fortschritt' },
-        /* „Mein Lernplan" stand hier als dritter Weg neben Kursbibliothek
-           und Lernbereich und beantwortete dieselbe Frage. Der Weg ist
-           jetzt die Kursbibliothek; die Ansicht bleibt über #lernpfad
-           erreichbar, aber sie steht nicht mehr als eigenes Ziel im
-           Menü. */
-        { view: 'guthaben' }
+    { view: 'dashboard', zeichen: 'home' },
+    { view: 'lernen', zeichen: 'book', kinder: [
+        { view: 'weg',      text: 'Mein Kurs',            zeichen: 'flag' },
+        { view: 'pruefung', text: 'Prüfungsvorbereitung', zeichen: 'target' },
+        { view: 'vokabeln',    text: 'Vokabeltrainer', zeichen: 'cards' },
+        { view: 'fortschritt', text: 'Mein Stand',     zeichen: 'chart' }
       ] },
-    /* Der Community-Chat war ein Unterpunkt von LIVE-Unterricht und damit
-       hinter einem zugeklappten Pfeil versteckt. Er ist ein eigenes Ziel
-       und steht jetzt als eigener Punkt direkt unter "Mein Bereich". */
-    { view: 'community', text: 'Community-Chat', zeichen: 'community' },
-    { view: 'kalender', text: 'LIVE-Unterricht', zeichen: 'kalender', kinder: [
-        { view: 'materialien' }
+    { view: 'sprechen', zeichen: 'mic', kinder: [
+        { view: 'kalender',    text: 'Sprechclub-Kalender', zeichen: 'clock' },
+        { view: 'stunden',     text: 'Meine Stunden',       zeichen: 'check' },
+        { view: 'materialien', text: 'Material zur Stunde', zeichen: 'layers' }
       ] },
-    /* Dieselben drei Tueren wie auf der Startseite des Lernbereichs
-       und in der App — damit das Menue nicht eine vierte Ordnung
-       daneben aufmacht. */
-    { view: 'ueben', text: 'Lernbereich', i18n: 'sl_lernbereich', zeichen: 'ueben', kinder: [
-        { view: 'pruefung', text: 'Für die Prüfung' },
-        { view: 'bereiche', text: 'Für die Freizeit', i18n: 'sl_tuer_frei', zeichen: 'lernen', tuer: 'freizeit' },
-        { view: 'bereiche', text: 'Für den Beruf', i18n: 'sl_tuer_beruf', zeichen: 'lernen', tuer: 'beruf' },
-        { titel: 'Werkzeuge' },
-        { view: 'kurse', text: 'Kursbibliothek', zeichen: 'material' },
-        { fert: 'hoeren' }, { fert: 'lesen' },
-        { fert: 'schreiben' }, { fert: 'sprechen' },
-        { fert: 'wortschatz' }, { fert: 'grammatik' }
-      ] },
-    { view: 'vokabeln', text: 'Vokabeltrainer', zeichen: 'vokabeln' },
-    { view: 'podcast', text: 'Podcast', zeichen: 'podcast' }
+    { view: 'community', zeichen: 'chat' },
+    { view: 'medien',    zeichen: 'headset' }
     /* Amanda steht NICHT hier: sie hat unten ihr eigenes Feld mit
        Bild. Beide fuehrten an dieselbe Stelle — zweimal dasselbe
        Ziel in einer Leiste ist einmal zu viel. */
   ];
   /* Nachrichten steht nicht mehr in der Leiste: wer Julia etwas sagen
-   will, schreibt in der Community oder fragt Amanda — sie weiss
-   alles. Die Ansicht selbst bleibt erreichbar, damit alte Links
-   und die Hausaufgaben-Bestaetigung weiter funktionieren. */
+     will, schreibt in der Community oder fragt Amanda. Die Ansicht
+     selbst bleibt ueber #nachrichten erreichbar. */
 var FUSS = ['profil'];
 
   function q(w) { return document.querySelector(w); }
   function leiste() { return q('.sidebar'); }
+
+  /* ---------- Zeichen ----------
+     Die Knoepfe in konto.html tragen ein data-zeichen ("start",
+     "lernen" …). Gelesen hat das nie jemand, deshalb stand die
+     Seitenleiste seit dem Umbau ohne Bilder da. Hier kommt dasselbe
+     Zeichen hinein, das die Reiterleiste am Handy benutzt. */
+  var ALT_NEU = { start:'home', lernen:'book', sprechen:'mic',
+                  community:'chat', medien:'headset', material:'headset',
+                  profil:'user', guthaben:'spark', abo:'bookmark',
+                  abmelden:'arrowL' };
+
+  function zeichnen(ic, name, aktiv) {
+    if (!ic) return;
+    name = ALT_NEU[name] || name;
+    if (!name) return;
+    var svg = aktiv && window.ICONF ? window.ICONF(name, 20)
+            : (window.ICON ? window.ICON(name, 20) : '');
+    if (svg) ic.innerHTML = svg;
+  }
+
+  /* Nach jedem Wechsel: der offene Punkt bekommt das gefuellte
+     Zeichen, alle anderen das gestrichene — genau wie am Handy. */
+  function zeichenFrischen() {
+    [].forEach.call(document.querySelectorAll('.sidebar .navlink'), function (b) {
+      var ic = b.querySelector('.ic');
+      if (!ic) return;
+      var n = ic.dataset.zeichen;
+      if (!n) return;
+      zeichnen(ic, n, b.classList.contains('active'));
+    });
+  }
 
   function finde(e) {
     if (e.fert) return q('.sidebar .navlink[data-fert="' + e.fert + '"]');
@@ -89,6 +108,7 @@ var FUSS = ['profil'];
     var ic = document.createElement('span');
     ic.className = 'ic';
     if (e.zeichen) ic.dataset.zeichen = e.zeichen;
+    zeichnen(ic, e.zeichen, false);
     var t = document.createElement('span');
     /* Mit Schluessel kann die Uebersetzung den Text spaeter tauschen;
        ohne stuende er fuer alle Sprachen auf Deutsch da. */
@@ -261,6 +281,7 @@ var FUSS = ['profil'];
       if (g.dataset.handisch === 'zu') { g.classList.remove('auf'); return; }
       g.classList.toggle('auf', !!g.querySelector('.navlink.active'));
     });
+    zeichenFrischen();
   }
 
   function start() {
