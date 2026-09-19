@@ -41,7 +41,11 @@ import { createClient } from '@supabase/supabase-js';
 const SUPA    = process.env.SUPABASE_URL;
 const SERVICE = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const KEY     = process.env.ELEVENLABS_API_KEY;
-const AGENT   = process.env.ELEVEN_AGENT_ID;
+/* Die Kennung des Agenten steht entweder in Vercel oder in der
+   Tabelle einstellungen — je nachdem, ob Julia sie von Hand
+   eingetragen hat oder api/amanda-agent-anlegen.js sie gesetzt
+   hat. Beides ist recht; Vercel gewinnt. */
+const AGENT_ENV = process.env.ELEVEN_AGENT_ID || '';
 
 const GRENZE  = Number(process.env.AMANDA_MINUTEN || 60);
 const GRENZE_PREMIUM = Number(process.env.AMANDA_MINUTEN_PREMIUM || 180);
@@ -72,7 +76,7 @@ function darfSprechen(p) {
 /* ElevenLabs kennt zwei Wege ins Gespraech. WebRTC ist der bessere
    (weniger Verzoegerung, haelt schlechtes Netz besser aus), aber
    nicht jedes Konto hat ihn. Also: erst fragen, dann zurueckfallen. */
-async function ticketHolen() {
+async function ticketHolen(AGENT) {
   const kopf = { 'xi-api-key': KEY, accept: 'application/json' };
 
   const webrtc = await fetch(
@@ -102,10 +106,7 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'method_not_allowed' });
   if (!erlaubteHerkunft(req)) return res.status(403).json({ error: 'forbidden' });
 
-  const fehlt = [];
-  if (!KEY) fehlt.push('ELEVENLABS_API_KEY');
-  if (!AGENT) fehlt.push('ELEVEN_AGENT_ID');
-  if (fehlt.length) return res.status(503).json({ error: 'nicht_eingerichtet', fehlt });
+  if (!KEY) return res.status(503).json({ error: 'nicht_eingerichtet', fehlt: ['ELEVENLABS_API_KEY'] });
   if (!SUPA || !SERVICE) return res.status(500).json({ error: 'supabase_env_missing' });
 
   const token = (req.headers.authorization || '').replace(/^Bearer\s+/i, '');
@@ -115,6 +116,16 @@ export default async function handler(req, res) {
   const { data: ures, error: uerr } = await admin.auth.getUser(token);
   if (uerr || !ures?.user) return res.status(401).json({ error: 'invalid_token' });
   const uid = ures.user.id;
+
+  let AGENT = AGENT_ENV;
+  if (!AGENT) {
+    const { data: e } = await admin
+      .from('einstellungen').select('wert').eq('schluessel', 'amanda_agent_id').single();
+    AGENT = e?.wert || '';
+  }
+  if (!AGENT && String(req.body?.aktion || '') !== 'ende') {
+    return res.status(503).json({ error: 'nicht_eingerichtet', fehlt: ['ELEVEN_AGENT_ID'] });
+  }
 
   // ---- Auflegen: die Sekunden nachtragen -----------------------------
   // Der Browser meldet sich am Ende noch einmal. Kommt die Meldung nie
@@ -167,7 +178,7 @@ export default async function handler(req, res) {
   // ---- Eintrittskarte holen ----------------------------------------
   let karte;
   try {
-    karte = await ticketHolen();
+    karte = await ticketHolen(AGENT);
   } catch (e) {
     return res.status(502).json({ error: 'eleven_fehler', detail: String(e.message || e).slice(0, 220) });
   }

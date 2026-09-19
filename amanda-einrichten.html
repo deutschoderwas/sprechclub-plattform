@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Amanda einrichten</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14181B; --soft:#5A6B72; --line:#E7ECEE; --paper:#FFFFFF; --grund:#F6F9FA;
+    --turq:#1B9BC0; --turq-d:#15788F; --turq-ink:#10627A; --turq-soft:#E6F8FC;
+    --gut:#0A7D72; --gut-soft:#E3F6F3; --schlecht:#D42A21; --schlecht-soft:#FDECEA;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ink:#EDF3F5; --soft:#9DB0B8; --line:#26333A; --paper:#171F24; --grund:#101619;
+      --turq-soft:#0F2E38; --turq-ink:#7FD4EC; --gut-soft:#10302C; --schlecht-soft:#331714;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ink:#EDF3F5; --soft:#9DB0B8; --line:#26333A; --paper:#171F24; --grund:#101619;
+    --turq-soft:#0F2E38; --turq-ink:#7FD4EC; --gut-soft:#10302C; --schlecht-soft:#331714;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--grund);color:var(--ink);
+    font-family:Inter,system-ui,-apple-system,sans-serif;line-height:1.6;
+    padding:28px 16px 60px}
+  .blatt{max-width:620px;margin:0 auto}
+  h1{font-family:'Space Grotesk',Inter,sans-serif;font-size:clamp(25px,5vw,33px);
+    letter-spacing:-.02em;line-height:1.15;margin:0 0 8px;text-wrap:balance}
+  .unter{color:var(--soft);font-size:15.5px;margin:0 0 26px}
+  .karte{background:var(--paper);border:1.5px solid var(--line);border-radius:20px;
+    padding:22px;margin-bottom:14px}
+  .karte h2{font-family:'Space Grotesk',Inter,sans-serif;font-size:18px;margin:0 0 8px}
+  .karte p{margin:0 0 6px;font-size:14.5px;color:var(--soft)}
+  .karte p.stark{color:var(--ink);font-size:15px}
+  .knopf{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    background:var(--ink);color:var(--grund);border:none;border-radius:999px;
+    font:inherit;font-weight:700;font-size:15.5px;padding:14px 28px;min-height:50px;
+    cursor:pointer;transition:.15s;margin-top:10px}
+  .knopf:hover{opacity:.88}
+  .knopf[disabled]{opacity:.45;cursor:default}
+  .wert{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px;
+    background:var(--turq-soft);color:var(--turq-ink);border-radius:10px;
+    padding:9px 13px;display:inline-block;margin-top:8px;word-break:break-all;
+    font-variant-numeric:tabular-nums}
+  .meldung{border-radius:14px;padding:14px 16px;margin-top:14px;font-size:14.5px;display:none}
+  .meldung.an{display:block}
+  .meldung.gut{background:var(--gut-soft);color:var(--gut);border:1.5px solid var(--gut)}
+  .meldung.schlecht{background:var(--schlecht-soft);color:var(--schlecht);border:1.5px solid var(--schlecht)}
+  .meldung.warte{background:var(--turq-soft);color:var(--turq-ink);border:1.5px solid var(--turq)}
+  .meldung b{display:block;margin-bottom:4px}
+  .schritte{list-style:none;padding:0;margin:14px 0 0;display:flex;flex-direction:column;gap:9px}
+  .schritte li{display:flex;gap:11px;align-items:flex-start;font-size:14.5px;color:var(--soft)}
+  .schritte .nr{flex:0 0 auto;width:23px;height:23px;border-radius:999px;
+    background:var(--turq-soft);color:var(--turq-ink);font-weight:800;font-size:12.5px;
+    display:flex;align-items:center;justify-content:center;margin-top:1px}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13.5px;
+    background:var(--turq-soft);color:var(--turq-ink);padding:2px 6px;border-radius:6px}
+  .fuss{color:var(--soft);font-size:13px;margin-top:22px;text-align:center}
+  a{color:var(--turq-ink)}
+</style>
+</head>
+<body>
+<div class="blatt">
+
+  <h1>Amanda einrichten</h1>
+  <p class="unter">Ein Knopf. Der Server legt bei ElevenLabs den Sprech-Agenten an,
+     gibt ihm deine Stimme und merkt sich die Kennung.</p>
+
+  <div class="karte">
+    <h2>Was gleich passiert</h2>
+    <ul class="schritte">
+      <li><span class="nr">1</span><span>Der Server meldet sich bei ElevenLabs mit dem Schlüssel, der schon in Vercel liegt. Du musst ihn nirgends eintippen.</span></li>
+      <li><span class="nr">2</span><span>Er legt einen Agenten „Amanda" an — mit deiner geklonten Stimme und Amandas Anweisung auf Deutsch.</span></li>
+      <li><span class="nr">3</span><span>Die Kennung wird in der Datenbank gemerkt. Danach kann jedes Mitglied im Schülerbereich mit Amanda sprechen.</span></li>
+    </ul>
+    <button class="knopf" id="los">Agenten anlegen</button>
+    <div class="meldung" id="meldung"></div>
+  </div>
+
+  <div class="karte">
+    <h2>Was es kostet</h2>
+    <p class="stark">Acht bis zehn Cent pro Gesprächsminute.</p>
+    <p>Die Grenze steht bei 60 Minuten je Person und Monat, 180 für Premium.
+       Eine Person, die voll ausschöpft, kostet rund 5 € im Monat.</p>
+  </div>
+
+  <p class="fuss">Diese Seite kann nur Julia aufrufen. Sie steht nicht im Menü und nicht bei Google.</p>
+</div>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+(function(){
+  'use strict';
+  var CFG = window.SPRECHCLUB_CONFIG || {};
+  var sb = null;
+  var knopf = document.getElementById('los');
+  var box   = document.getElementById('meldung');
+
+  function sagen(art, titel, text){
+    box.className = 'meldung an ' + art;
+    box.innerHTML = '<b>' + titel + '</b>' + (text || '');
+  }
+
+  try {
+    sb = supabase.createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY);
+  } catch(e){
+    sagen('schlecht', 'Die Verbindung zur Datenbank fehlt.', 'Lade die Seite neu.');
+    knopf.disabled = true;
+  }
+
+  knopf.onclick = function(){
+    knopf.disabled = true;
+    sagen('warte', 'Einen Moment …', 'Der Agent wird angelegt. Das dauert ein paar Sekunden.');
+
+    sb.auth.getSession().then(function(r){
+      var t = r && r.data && r.data.session && r.data.session.access_token;
+      if(!t){
+        sagen('schlecht', 'Du bist nicht angemeldet.',
+          'Melde dich zuerst im <a href="konto.html">Schülerbereich</a> an und komm dann hierher zurück.');
+        knopf.disabled = false;
+        return;
+      }
+      return fetch('/api/amanda-agent-anlegen', {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json', Authorization:'Bearer ' + t },
+        body: JSON.stringify({})
+      }).then(function(res){
+        return res.json().then(function(j){ return { status:res.status, j:j }; });
+      }).then(function(a){
+        var j = a.j || {};
+        if(a.status === 200 && j.ok){
+          if(j.schon_da){
+            sagen('gut', 'Es gibt schon einen Agenten.',
+              'Amanda ist bereits eingerichtet.<div class="wert">' + j.agent_id + '</div>');
+          } else {
+            sagen('gut', 'Fertig — Amanda kann sprechen.',
+              'Der Agent ist angelegt und gemerkt. Geh in den Schülerbereich, auf <b>Sprechen</b>, und tippe oben auf „Mit Amanda sprechen".' +
+              '<div class="wert">' + j.agent_id + '</div>');
+          }
+          return;
+        }
+        if(a.status === 403){
+          sagen('schlecht','Das darf nur Julia.','Dieses Konto hat keine Verwaltungsrechte.');
+        } else if(a.status === 503){
+          sagen('schlecht','Es fehlt noch etwas in Vercel.',
+            'Diese Umgebungsvariablen sind nicht gesetzt: <code>' + (j.fehlt||[]).join('</code>, <code>') + '</code>');
+        } else if(a.status === 502){
+          sagen('schlecht','ElevenLabs hat abgelehnt.',
+            'Antwort: <code>' + String(j.detail||j.error).replace(/</g,'&lt;').slice(0,400) + '</code>');
+        } else {
+          sagen('schlecht','Das hat nicht geklappt.',
+            '<code>' + String(j.error||a.status) + '</code>');
+        }
+        knopf.disabled = false;
+      });
+    }).catch(function(e){
+      sagen('schlecht','Da ist etwas dazwischengekommen.', String(e && e.message || e));
+      knopf.disabled = false;
+    });
+  };
+})();
+</script>
+</body>
+</html>
