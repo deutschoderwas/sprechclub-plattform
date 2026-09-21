@@ -108,14 +108,27 @@
     return false;
   }
 
+  /* Supabase gibt bei rpc() kein echtes Promise zurueck, sondern ein
+     Objekt, das nur .then() kennt. Ein angehaengtes .catch() warf
+     deshalb sofort "catch is not a function" — mitten in wegOeffnen,
+     BEVOR die Seite wechselte. Folge: kein einziger Schritt im Kurs
+     liess sich oeffnen. Promise.resolve() macht daraus ein echtes
+     Promise, und der try-Block sorgt dafuer, dass ein Fehler beim
+     Mitschreiben nie wieder das Oeffnen verhindert. */
+  function still(anfrage) {
+    try { Promise.resolve(anfrage).then(null, function () {}); } catch (e) {}
+  }
+
   function melden(stufe, nr, b, istFertig) {
     var k = stufe + '/' + nr + '/' + schluessel(b);
     if (istFertig) STAND.schritte[k] = true;
     var c = sb(); if (!c) return;
-    c.rpc('schritt_fertig', {
-      p_stufe: stufe, p_lektion: nr, p_schritt: schluessel(b),
-      p_art: b.art, p_sekunden: 0, p_fertig: !!istFertig
-    }).catch(function () {});
+    try {
+      still(c.rpc('schritt_fertig', {
+        p_stufe: stufe, p_lektion: nr, p_schritt: schluessel(b),
+        p_art: b.art, p_sekunden: 0, p_fertig: !!istFertig
+      }));
+    } catch (e) {}
   }
 
   /* ---------- Rechnen ---------- */
@@ -187,7 +200,7 @@
     if (STUFEN.indexOf(stufe) < 0) return;
     STAND.stufe = stufe; STAND.quelle = quelle || 'selbst';
     var c = sb();
-    if (c) c.rpc('stufe_setzen', { p_stufe: stufe, p_prozent: null, p_quelle: quelle || 'selbst' }).catch(function () {});
+    if (c) try { still(c.rpc('stufe_setzen', { p_stufe: stufe, p_prozent: null, p_quelle: quelle || 'selbst' })); } catch (e) {}
     try { if (window.lsSet) window.lsSet('niveau', stufe); } catch (e) {}
     note('Alles klar — dein Kurs startet bei ' + stufe + '.');
     window.renderWeg();
@@ -199,7 +212,7 @@
     var L = st.lektionen.filter(function (x) { return x.nr === nr; })[0]; if (!L) return;
     var b = L.bau[i]; if (!b) return;
 
-    melden(stufe, nr, b, false);   // angefangen
+    try { melden(stufe, nr, b, false); } catch (e) {}   // angefangen — darf nie das Oeffnen blockieren
 
     if (b.art === 'kurs') {
       var t = String(b.id).split('-l');
@@ -446,7 +459,7 @@
         if (r && r.stufe && STUFEN.indexOf(r.stufe) >= 0) {
           STAND.stufe = r.stufe; STAND.quelle = 'test';
           var c = sb();
-          if (c) c.rpc('stufe_setzen', { p_stufe: r.stufe, p_prozent: r.prozent || null, p_quelle: 'test' }).catch(function () {});
+          if (c) try { still(c.rpc('stufe_setzen', { p_stufe: r.stufe, p_prozent: r.prozent || null, p_quelle: 'test' })); } catch (e) {}
         }
       } catch (e) {}
     });

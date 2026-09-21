@@ -58,36 +58,9 @@ var FUSS = ['profil'];
   function q(w) { return document.querySelector(w); }
   function leiste() { return q('.sidebar'); }
 
-  /* ---------- Zeichen ----------
-     Die Knoepfe in konto.html tragen ein data-zeichen ("start",
-     "lernen" …). Gelesen hat das nie jemand, deshalb stand die
-     Seitenleiste seit dem Umbau ohne Bilder da. Hier kommt dasselbe
-     Zeichen hinein, das die Reiterleiste am Handy benutzt. */
-  var ALT_NEU = { start:'home', lernen:'book', sprechen:'mic',
-                  community:'chat', medien:'headset', material:'headset',
-                  profil:'user', guthaben:'spark', abo:'bookmark',
-                  abmelden:'arrowL' };
-
-  function zeichnen(ic, name, aktiv) {
-    if (!ic) return;
-    name = ALT_NEU[name] || name;
-    if (!name) return;
-    var svg = aktiv && window.ICONF ? window.ICONF(name, 20)
-            : (window.ICON ? window.ICON(name, 20) : '');
-    if (svg) ic.innerHTML = svg;
-  }
-
-  /* Nach jedem Wechsel: der offene Punkt bekommt das gefuellte
-     Zeichen, alle anderen das gestrichene — genau wie am Handy. */
-  function zeichenFrischen() {
-    [].forEach.call(document.querySelectorAll('.sidebar .navlink'), function (b) {
-      var ic = b.querySelector('.ic');
-      if (!ic) return;
-      var n = ic.dataset.zeichen;
-      if (!n) return;
-      zeichnen(ic, n, b.classList.contains('active'));
-    });
-  }
+  /* Die Zeichen malt club-theme.css ueber data-view (CSS-Maske in der
+     Textfarbe). Ein zweites System hier drin hat sich mit dem ersten
+     ueberlagert — deshalb gibt es keins mehr. */
 
   function finde(e) {
     if (e.fert) return q('.sidebar .navlink[data-fert="' + e.fert + '"]');
@@ -108,7 +81,6 @@ var FUSS = ['profil'];
     var ic = document.createElement('span');
     ic.className = 'ic';
     if (e.zeichen) ic.dataset.zeichen = e.zeichen;
-    zeichnen(ic, e.zeichen, false);
     var t = document.createElement('span');
     /* Mit Schluessel kann die Uebersetzung den Text spaeter tauschen;
        ohne stuende er fuer alle Sprachen auf Deutsch da. */
@@ -281,7 +253,6 @@ var FUSS = ['profil'];
       if (g.dataset.handisch === 'zu') { g.classList.remove('auf'); return; }
       g.classList.toggle('auf', !!g.querySelector('.navlink.active'));
     });
-    zeichenFrischen();
   }
 
   function start() {
