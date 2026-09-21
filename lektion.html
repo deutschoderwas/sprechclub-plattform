@@ -384,6 +384,11 @@ function boot(d){
   document.getElementById('bPrev').innerHTML=I('arrowL',17)+'<span>Zurück</span>';
   document.getElementById('bPrev').onclick=function(){ if(cur>0){cur--;draw();} };
   document.getElementById('bNext').onclick=function(){ if(cur<steps.length-1){cur++;draw();} };
+  /* Aus dem Kurs kommt man gezielt in einen Teil: ?teil=woerter|hoeren|grammatik|sprechen.
+     Jede Lektion hat dort dieselben vier Teile, und wer "2 Hören" antippt,
+     soll beim Dialog landen, nicht beim Überblick. */
+  var TEIL={woerter:'words',hoeren:'dialog',grammatik:'gram',sprechen:'speak'}[qs.get('teil')||''];
+  if(TEIL){ for(var ti=0;ti<steps.length;ti++){ if(steps[ti].id===TEIL){ cur=ti; break; } } }
   draw();
 }
 function ring(){

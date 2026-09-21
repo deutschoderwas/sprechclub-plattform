@@ -55,7 +55,7 @@
   var offen = { lernen: 'freizeit', sprechen: 'alltag', medien: 'podcast' };
   window.hubReiter = function (welche, wert) {
     offen[welche] = wert;
-    ({ lernen: window.renderLernen, sprechen: window.renderSprechen, medien: window.renderMedien })[welche]();
+    ({ lernen: window.renderLernenHub, sprechen: window.renderSprechen, medien: window.renderMedien })[welche]();
   };
 
   /* ---------- Bausteine ---------- */
@@ -122,7 +122,11 @@
     }).join('') + '</div>';
   }
 
-  window.renderLernen = function () {
+  /* Seit dem Umbau zu EINEM Weg zeichnet mein-weg.js den Bereich Lernen
+     (Kurs mit Bildkarten, jede Lektion: Wörter · Hören · Grammatik ·
+     Gespräch). Die alte Themen-Sammelseite bleibt als renderLernenHub
+     erhalten, steht aber nicht mehr im Menü. */
+  window.renderLernenHub = function () {
     var v = el('v-lernen'); if (!v) return;
     stil();
     var weiter = '';
@@ -378,7 +382,7 @@
     window.open('podcast.html', '_blank', 'noopener');
   };
 
-  window.HUBS = { lernen: window.renderLernen, sprechen: window.renderSprechen, medien: window.renderMedien };
+  window.HUBS = { lernen: window.renderLernenHub, sprechen: window.renderSprechen, medien: window.renderMedien };
 
   /* ---------- Aussehen: derselbe Stil auf Handy und Rechner ---------- */
   function stil() {

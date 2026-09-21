@@ -34,7 +34,7 @@
   var PLAN = [
     { view: 'dashboard', zeichen: 'home' },
     { view: 'lernen', zeichen: 'book', kinder: [
-        { view: 'weg',      text: 'Mein Kurs',            zeichen: 'flag' },
+        /* "Mein Kurs" steht nicht mehr hier: Lernen IST jetzt der Kurs. */
         { view: 'pruefung', text: 'Prüfungsvorbereitung', zeichen: 'target' },
         { view: 'vokabeln',    text: 'Vokabeltrainer', zeichen: 'cards' },
         { view: 'fortschritt', text: 'Mein Stand',     zeichen: 'chart' }
