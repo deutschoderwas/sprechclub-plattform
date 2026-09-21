@@ -930,17 +930,112 @@
   };
 
   /* Ohne Verbindung: korrigieren wie früher, dann ein Schritt weiter */
+  /* ------------------------------------------------------------
+     Pruefen ohne KI
+
+     Wenn weder /api/dialog noch /api/ai-satz antworten, stand hier
+     frueher einfach "Sehr gut!" — auch unter "ein Waser". Wer Fehler
+     macht und gelobt wird, lernt den Fehler. Jetzt wird wenigstens die
+     Schreibweise geprueft: jedes Wort gegen den Wortschatz aller
+     Dialoge (gut 2.600 Woerter). Ist ein Wort unbekannt, aber einem
+     bekannten sehr aehnlich, ist es fast sicher ein Tippfehler.
+     Grammatik kann das nicht — und das sagen wir auch.
+     ------------------------------------------------------------ */
+  var WORTSCHATZ=null;
+  var GRUNDWOERTER=('ich du er sie es wir ihr man mein meine meinen meinem mir mich dir dich uns euch ihnen '
+    +'der die das den dem des ein eine einen einem einer eines kein keine keinen nicht auch noch schon nur sehr '
+    +'und oder aber doch denn weil dass wenn ob als wie was wer wo wann warum wieviel wie viel '
+    +'bin bist ist sind seid war waren habe hast hat haben hatte hätte hätten möchte möchten würde würden '
+    +'kann kannst können muss müssen darf dürfen soll sollen will wollen gern gerne bitte danke ja nein '
+    +'hier dort da heute morgen gestern jetzt dann mal etwas viel wenig mehr gut schlecht groß klein '
+    +'mit ohne für von zu zum zur bei nach aus in im an am auf über unter vor hinter neben zwischen um bis seit '
+    +'hallo tschüss guten tag abend morgen entschuldigung okay ok').split(' ');
+  function wortschatz(){
+    if(WORTSCHATZ) return WORTSCHATZ;
+    var w={};
+    GRUNDWOERTER.forEach(function(x){ if(x) w[x]=1; });
+    (window.DIALOGE||[]).forEach(function(d){
+      (d.schritte||[]).forEach(function(st){
+        [st.amanda,st.beispiel,st.hinweis].concat(st.redemittel||[]).forEach(function(tx){
+          String(tx||'').toLowerCase().replace(/[^a-zäöüß\s-]/g,' ').split(/\s+/).forEach(function(v){ if(v.length>1) w[v]=1; });
+        });
+      });
+    });
+    WORTSCHATZ=w; return w;
+  }
+  var UMLAUT={'a':'ä','ä':'a','o':'ö','ö':'o','u':'ü','ü':'u','s':'ß','ß':'s'};
+  function tippfehler(x,k){
+    if(x===k) return false;
+    var i;
+    if(Math.abs(x.length-k.length)===1){          /* ein Buchstabe zu viel oder zu wenig */
+      var lang=x.length>k.length?x:k, kurz=x.length>k.length?k:x;
+      for(i=0;i<lang.length;i++) if(lang.slice(0,i)+lang.slice(i+1)===kurz) return true;
+      return false;
+    }
+    if(x.length!==k.length) return false;
+    var diff=[]; for(i=0;i<x.length;i++) if(x[i]!==k[i]) diff.push(i);
+    if(diff.length===1) return UMLAUT[x[diff[0]]]===k[diff[0]];           /* fur → für */
+    if(diff.length===2 && diff[1]===diff[0]+1)                              /* wiel → weil */
+      return x[diff[0]]===k[diff[1]] && x[diff[1]]===k[diff[0]];
+    return false;
+  }
+  function schreibweise(satz){
+    var w=wortschatz(), liste=Object.keys(w), funde=[];
+    var woerter=String(satz).split(/\s+/);
+    var neu=woerter.map(function(roh){
+      var kern=roh.replace(/^[^A-Za-zÄÖÜäöüß]+|[^A-Za-zÄÖÜäöüß]+$/g,'');
+      var klein=kern.toLowerCase();
+      if(klein.length<5 || w[klein]) return roh;
+      /* Nur echte Tippfehler anmerken: ein Buchstabe zu wenig oder zu
+         viel (Waser → Wasser), zwei vertauscht (wiel → weil) oder ein
+         fehlender Umlaut (fur → für). Ein ANDERER Buchstabe an einer
+         Stelle ist im Deutschen meist ein anderes, richtiges Wort —
+         Wein/Mein, Bier/Hier, Hagen/Haben. Das lassen wir in Ruhe. */
+      var best=null;
+      for(var i=0;i<liste.length && !best;i++){
+        if(tippfehler(klein,liste[i])) best=liste[i];
+      }
+      if(!best) return roh;
+      /* Beugung ist kein Fehler: Pilzen/Pilze, gehst/geht */
+      if(best.indexOf(klein)===0 || klein.indexOf(best)===0) return roh;
+      var richtig=kern[0]===kern[0].toUpperCase()?best[0].toUpperCase()+best.slice(1):best;
+      funde.push({falsch:kern,richtig:richtig});
+      return roh.replace(kern,richtig);
+    });
+    /* "Ich hätte gern … ein Wasser": die Auslassung aus der Vorlage gehört nicht in den Satz */
+    var satzNeu=neu.join(' ').replace(/\s*(…|\.\.\.)\s*/g,' ').replace(/\s+/g,' ').trim();
+    return {funde:funde, satz:satzNeu};
+  }
+
   function altModus(t,s){
     korrigieren(t,s,function(erg){
       tippt(false);
       if(!G) return;
       G.laeuft=false;
-      if(erg && erg.gut===false && erg.korrigiert){
+      if(!erg){
+        /* Keine KI erreichbar: ehrlich pruefen, was sich pruefen laesst */
+        var p=schreibweise(t);
+        if(!G.ohneKiGesagt){
+          G.ohneKiGesagt=true;
+          anhaengen('<div class="dg-aufg">Die ausführliche Korrektur ist gerade nicht erreichbar. Ich prüfe deine Schreibweise und zeige dir, wie man es sagen kann.</div>');
+        }
+        if(p.funde.length){
+          anhaengen('<div class="dg-korr"><b>'+E(p.satz)+'</b>'
+            +E(p.funde.map(function(f){ return '„'+f.falsch+'" schreibt man „'+f.richtig+'".'; }).join(' '))+'</div>');
+          klang('tipp');
+          try{ if(window.fehlerMerken) window.fehlerMerken({satz:t,richtig:p.satz,hinweis:'Schreibweise',thema:'Rechtschreibung'}); }catch(e){}
+        } else {
+          G.richtig++;
+          anhaengen('<div class="dg-lob">✓ Verstanden.</div>');
+          klang('richtig');
+        }
+        if(s && s.beispiel) anhaengen('<div class="dg-bsp"><em>So kann man es sagen</em>'+E(s.beispiel)+'</div>');
+      } else if(erg.gut===false && erg.korrigiert){
         anhaengen('<div class="dg-korr"><b>'+E(erg.korrigiert)+'</b>'+E(erg.hinweis||'')+'</div>');
         klang('tipp');
       } else {
         G.richtig++;
-        anhaengen('<div class="dg-lob">✓ '+E((erg&&erg.lob)||'Sehr gut!')+'</div>');
+        anhaengen('<div class="dg-lob">✓ '+E(erg.lob||'Sehr gut!')+'</div>');
         klang('richtig');
       }
       runter();
