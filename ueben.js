@@ -666,7 +666,69 @@
      zwei Aufgaben aus einem früheren Thema. So wiederholt sich
      jedes Wort innerhalb einer Runde mindestens zweimal.           */
   var LEICHT={karte:1}, REIHE=['choice','artikel','tippen','gap','order','buchstaben','match','listen','speak','shadow'];
+  /* Die Runde von außen: Merkkarten mit Regel stehen ALLE vorn (nicht
+     nur eine zufällige), und jedes neue Wort wird erst gezeigt, bevor
+     danach gefragt wird. Vorher kam es vor, dass „die Hausordnung“
+     eingetippt werden sollte, ohne dass das Wort je zu sehen war. */
   function baueRunde(sk,th,n){
+    var regeln=(th.exercises||[]).filter(function(e){ return e.type==='karte' && e.regel; }).slice(0,3);
+    var ohne=th;
+    if(regeln.length){ ohne={}; for(var f in th) if(th.hasOwnProperty(f)) ohne[f]=th[f];
+      ohne.exercises=(th.exercises||[]).filter(function(e){ return !(e.type==='karte' && e.regel); }); }
+    return regeln.concat(einfuehren(baueRundeKern(sk,ohne,n), th));
+  }
+
+  /* Neue Wörter zuerst zeigen. Ein Wort gilt als bekannt, wenn es
+     schon einmal richtig war (known) oder im Wiederholungsplan
+     mindestens auf Stufe zwei steht. Höchstens fünf neue Wörter je
+     Runde — mehr behält niemand. Ein unbekanntes Wort ohne Karte
+     wird nicht zum Schreiben abgefragt, sondern zum Erkennen. */
+  var SCHREIBEN_FORM={tippen:1,buchstaben:1,artikel:1};
+  function einfuehren(runde, th){
+    var karten={};
+    (th.exercises||[]).forEach(function(e){ if(e.type==='karte' && !e.regel && e.w && !karten[e.w]) karten[e.w]=e; });
+    var bekannt={};
+    try{ (gGet('known',[])||[]).forEach(function(w){ bekannt[w]=1; });
+      var o=wdhAlle(); for(var k in o) if(o.hasOwnProperty(k) && (o[k].s||0)>=2) bekannt[k]=1; }catch(x){}
+    var gesehen={}, neu=0, raus=[], spaeter=[];
+    function karteAus(e){
+      /* Keine fertige Karte da: aus der Aufgabe selbst eine bauen. */
+      var wort=String(e.w||''); var m=wort.match(/^(der|die|das)\s+(.+)$/i);
+      var info=e.info||e.tip||'';
+      if(!info) return null;
+      return {type:'karte', w:wort, wort:m?m[2]:wort, art:m?m[1].toLowerCase():'', info:info, emoji:e.emoji||'', img:e.img||'', __auto:1};
+    }
+    runde.forEach(function(e){
+      if(e.type==='karte'){ if(e.w) gesehen[e.w]=1; raus.push(e); return; }
+      var w=e.w;
+      if(w && !gesehen[w] && !bekannt[w] && !e.__wdh){
+        var k=karten[w]||karteAus(e);
+        if(k && neu<5){ raus.push(k); gesehen[w]=1; neu++;
+          /* Direkt nach der Karte erst erkennen, schreiben später:
+             sonst schreibt man nur ab, was eben noch dastand. */
+          if(SCHREIBEN_FORM[e.type]){
+            var erk=(th.exercises||[]).filter(function(x){ return x.w===w && x.type==='choice' && runde.indexOf(x)<0 && raus.indexOf(x)<0; })[0];
+            if(erk){ raus.push(erk); spaeter.push(e); return; }
+          }
+        }
+        else if(SCHREIBEN_FORM[e.type]){
+          var alt=(th.exercises||[]).filter(function(x){ return x.w===w && x.type==='choice' && runde.indexOf(x)<0 && raus.indexOf(x)<0; })[0];
+          if(alt){ raus.push(alt); gesehen[w]=1; }
+          return;
+        }
+      }
+      if(w) gesehen[w]=1;
+      raus.push(e);
+    });
+    /* Das Aufgeschobene kommt vor die Wiederholungen am Schluss. */
+    if(spaeter.length){
+      var ende=raus.length; while(ende>0 && raus[ende-1].__wdh) ende--;
+      raus=raus.slice(0,ende).concat(spaeter).concat(raus.slice(ende));
+    }
+    return raus;
+  }
+
+  function baueRundeKern(sk,th,n){
     var alle=(th.exercises||[]).slice();
     if(alle.length<=n) return shuf(alle);
     var nachTyp={};
@@ -1186,6 +1248,7 @@
       /* Fast richtig zählt als richtig — mit Hinweis auf die Schreibweise. */
       var fast=!ok && ziele.some(function(a){ return fastGleich(vv,a); });
       if(fast) ok=true;
+      S.fast=fast;
       sol=(fast?'Fast! So schreibt man es: ':'Richtig: ')+e.answer;
       if(ok&&e.w) markKnown(e.w);
     } else if(e.type==='artikel'){ ok=(ART[S.sel]===String(e.answer).toLowerCase());
@@ -1243,7 +1306,10 @@
       else { fb.className='ub-fb no'; fb.innerHTML='✗ '+E(sol); }
     }
     else if(!selfRated && !sprechMic){
-      if(ok){ S.correct++; addXP(META().xpPerCorrect||10); fb.className='ub-fb ok'; fb.innerHTML='✓ Richtig! +'+(META().xpPerCorrect||10)+' XP'; }
+      if(ok){ S.correct++; addXP(META().xpPerCorrect||10); fb.className='ub-fb ok';
+        fb.innerHTML=(e.type==='tippen'&&S.fast)
+          ? '✓ Fast richtig! Achte auf die Schreibweise: <b>'+E(e.answer)+'</b> +'+(META().xpPerCorrect||10)+' XP'
+          : '✓ Richtig! +'+(META().xpPerCorrect||10)+' XP'; }
       /* Beim Satzbau kostet ein anderer Bau kein Herz: im Deutschen
          sind oft zwei Reihenfolgen richtig, und wir prüfen nur gegen
          eine. Der gemeinte Satz steht daneben. */

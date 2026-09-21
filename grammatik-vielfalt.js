@@ -1295,8 +1295,8 @@
    "type": "karte",
    "regel": true,
    "emoji": "🧭",
-   "wort": "Nach diesen sieben immer Dativ",
-   "info": "Der Artikel dahinter steht im Dativ: dem (männlich und sächlich), der (weiblich), den plus -n (Plural). Vier Verbindungen zieht man dabei fast immer zusammen.",
+   "wort": "aus · bei · mit · nach · seit · von · zu — immer Dativ",
+   "info": "Nach diesen sieben Wörtern steht immer der Dativ: dem (männlich und sächlich), der (weiblich), den plus -n (Plural). Merksatz: Aus, bei, mit, nach, seit, von, zu — fährst immer mit dem Dativ du.",
    "beispiele": [
     {
      "satz": "Ich komme aus der Türkei.",
