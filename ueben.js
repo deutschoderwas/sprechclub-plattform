@@ -684,6 +684,14 @@
      Runde — mehr behält niemand. Ein unbekanntes Wort ohne Karte
      wird nicht zum Schreiben abgefragt, sondern zum Erkennen. */
   var SCHREIBEN_FORM={tippen:1,buchstaben:1,artikel:1};
+  var KARTEN_ALLE=null;
+  function alleKarten(){
+    if(KARTEN_ALLE) return KARTEN_ALLE;
+    KARTEN_ALLE=[];
+    (UEBUNGEN.skills||[]).forEach(function(sk){ (sk.themes||[]).forEach(function(t){
+      (t.exercises||[]).forEach(function(e){ if(e.type==='karte' && !e.regel && e.w) KARTEN_ALLE.push(e); }); }); });
+    return KARTEN_ALLE;
+  }
   function einfuehren(runde, th){
     var karten={};
     (th.exercises||[]).forEach(function(e){ if(e.type==='karte' && !e.regel && e.w && !karten[e.w]) karten[e.w]=e; });
@@ -699,7 +707,7 @@
       return {type:'karte', w:wort, wort:m?m[2]:wort, art:m?m[1].toLowerCase():'', info:info, emoji:e.emoji||'', img:e.img||'', __auto:1};
     }
     runde.forEach(function(e){
-      if(e.type==='karte'){ if(e.w) gesehen[e.w]=1; raus.push(e); return; }
+      if(e.type==='karte'){ if(e.w){ if(gesehen[e.w]) return; gesehen[e.w]=1; } raus.push(e); return; }
       var w=e.w;
       if(w && !gesehen[w] && !bekannt[w] && !e.__wdh){
         var k=karten[w]||karteAus(e);
@@ -886,7 +894,7 @@
     openSession(); return true;
   };
   window.ubStartMix=function(){ var all=[]; (UEBUNGEN.skills||[]).forEach(function(sk){ if(sk.id==='shadowing')return; sk.themes.forEach(function(t){ t.exercises.forEach(function(e){ all.push(e); }); }); });
-    S={skId:'mix',thId:'mix',items:pickItems(all,10),idx:0,correct:0,hearts:META().maxHearts||5,answered:false,sel:null,title:'Schnell-Mix',gewertet:[]};
+    S={skId:'mix',thId:'mix',items:einfuehren(pickItems(all,10),{exercises:all}),idx:0,correct:0,hearts:META().maxHearts||5,answered:false,sel:null,title:'Schnell-Mix',gewertet:[]};
     openSession(); };
 
   /* Ein Mix aus ausgewählten Themen — der Lernbereich baut damit die
@@ -900,7 +908,7 @@
       if(th && th.exercises) th.exercises.forEach(function(e){ all.push(e); });
     });
     if(!all.length) return false;
-    S={skId:'mix',thId:'mix',items:pickItems(all,anzahl||12),idx:0,correct:0,
+    S={skId:'mix',thId:'mix',items:einfuehren(pickItems(all,anzahl||12),{exercises:all}),idx:0,correct:0,
        hearts:META().maxHearts||5,answered:false,sel:null,title:titel||'Gemischte Übungen',gewertet:[]};
     openSession();
     return true;
@@ -911,7 +919,7 @@
   window.ubStartListe=function(titel, items, anzahl){
     var l=(items||[]).filter(function(e){ return e && e.type; });
     if(!l.length) return false;
-    S={skId:'stunde',thId:'stunde',items:pickItems(l,anzahl||l.length),idx:0,correct:0,
+    S={skId:'stunde',thId:'stunde',items:einfuehren(pickItems(l,anzahl||l.length),{exercises:l.concat(alleKarten())}),idx:0,correct:0,
        hearts:META().maxHearts||5,answered:false,sel:null,title:titel||'Nachbereitung',gewertet:[]};
     openSession();
     return true;
@@ -1000,7 +1008,7 @@
     if(e.regel){
       return '<div class="ub-karte">'+
         '<span class="em">'+E(e.emoji||'🧩')+'</span>'+
-        '<div class="wort">'+E(e.wort||'Die Regel')+'</div>'+
+        '<div class="wort">'+E(e.wort||e.w||e.title||'Worum es geht')+'</div>'+
         '<div class="bed">'+E(e.info||'')+'</div>'+
         '<div class="ub-regel">'+(e.beispiele||[]).map(function(b){
           return '<div class="z"><b>'+E(b.satz)+'</b>'+(b.warum?'<span>'+E(b.warum)+'</span>':'')+'</div>';

@@ -524,7 +524,29 @@ function pass(i,x){
   document.getElementById('cnt').textContent=st.filter(function(v){return v.done;}).length+' / '+total+' Übungen';
   rail();
 }
-function miss(i,h){ st[i].fails++; fb(false,'Noch nicht ganz — versuch es nochmal.'+(st[i].fails>=2&&h?'<br><b>Tipp:</b> '+h:'')); }
+/* Niemand soll an einer Aufgabe festhängen: nach dem zweiten Fehler kommt
+   der Tipp, nach dem dritten die Lösung — und es geht weiter. */
+function loesungVon(u){
+  if(u.typ==='mc'||u.typ==='listen'||u.typ==='bild') return (u.optionen||[])[u.richtig]||'';
+  if(u.typ==='gapbank') return (u.loesung||[]).join(' · ');
+  if(u.typ==='order') return u.loesung||'';
+  if(u.typ==='match') return (u.paare||[]).map(function(p){ return p[0]+' = '+p[1]; }).join(' · ');
+  if(u.typ==='type') return u.loesung||u.muster||'';
+  return '';
+}
+function miss(i,h){
+  st[i].fails++;
+  var u=D.uebungen[i], L=loesungVon(u);
+  if(st[i].fails>=3 && L){
+    st[i].done=true;
+    fb(false,'Kein Problem — so ist es richtig: <b>'+esc(L)+'</b>'+(h?'<br><b>Warum:</b> '+h:'')+'<br>Lies es dir einmal laut vor, dann geht es weiter.');
+    document.getElementById('bNext').disabled=false;
+    document.getElementById('cnt').textContent=st.filter(function(v){return v.done;}).length+' / '+total+' Übungen';
+    rail();
+    return;
+  }
+  fb(false,'Noch nicht ganz — versuch es nochmal.'+(st[i].fails>=2&&h?'<br><b>Tipp:</b> '+h:''));
+}
 window.__pick=function(el,i){
   var u=D.uebungen[i], k=+el.getAttribute('data-o');
   if(k===u.richtig){ el.classList.add('ok'); document.querySelectorAll('.o').forEach(function(o){o.disabled=true;}); pass(i); }
