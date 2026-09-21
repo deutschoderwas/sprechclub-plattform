@@ -2721,13 +2721,35 @@ function renderFortschritt(){
 
 // ---------- Guthaben & Verlauf ----------
 function renderGuthaben(){
-  const reasonTxt=r=>{ if(r.startsWith('purchase:'))return'💳 Paket gekauft'; if(r.startsWith('booking:'))return'📅 Stunde gebucht'; if(r.startsWith('cancel:'))return'↩️ Storniert'; if(r==='admin_adjust')return'🛠️ Anpassung'; return r; };
+  /* Technische Kennungen (booking_admin:<id>, rebook_admin:<id>>…) nie
+     roh zeigen — nur, was passiert ist. */
+  const reasonTxt=r=>{ r=String(r||'');
+    if(r.startsWith('purchase')||r.startsWith('kauf'))return'💳 Paket gekauft';
+    if(r.startsWith('abo_gekuendigt'))return'⌛ Verfallen (Abo beendet)';
+    if(r.startsWith('abo'))return'🔄 Abo-Stunden';
+    if(r.startsWith('trial'))return'🎁 Probestunde';
+    if(r.startsWith('challenge'))return'🏆 Challenge-Bonus';
+    if(r.startsWith('migration'))return'📦 Übernommen aus dem alten System';
+    if(r.startsWith('pending_apply'))return'💳 Gutschrift';
+    if(r.startsWith('correction')||r.startsWith('admin_set'))return'🛠️ Korrektur';
+    if(r.startsWith('cancel_teacher'))return'↩️ Abgesagt von Julia — Stunde zurück';
+    if(r.startsWith('rebook'))return'🔁 Stunde umgebucht';
+    if(r.startsWith('booking'))return r.indexOf('_admin')>0?'📅 Stunde gebucht (von Julia)':'📅 Stunde gebucht';
+    if(r.startsWith('cancel'))return r.indexOf('_admin')>0?'↩️ Storniert (von Julia)':'↩️ Storniert';
+    if(r.startsWith('refund'))return'↩️ Gutschrift';
+    if(r.startsWith('admin_adjust')||r.startsWith('adjust'))return'🛠️ Anpassung';
+    if(r.startsWith('pass'))return'🎟️ Pass';
+    return '• Buchung'; };
+  const zeile=l=>`<div class="log"><span>${reasonTxt(l.reason)}<br><span class="muted">${fmtShort(new Date(l.created_at))}</span></span><span class="delta ${l.change>0?'plus':'minus'}">${l.change>0?'+':''}${l.change}</span></div>`;
+  const ERSTE=40;
   document.getElementById('v-guthaben').innerHTML=`
     <div class="pagehead"><h1 data-i18n="gu_h1">Guthaben & Verlauf</h1></div>
     <div class="hero-card"><div><div class="muted" style="font-weight:700;text-transform:uppercase;font-size:11px;letter-spacing:1px" data-i18n="gu_cur">Aktuelles Guthaben</div><h1 style="font-size:40px">${credits} <span style="font-size:18px;font-weight:600">Stunden</span></h1></div>
       <a class="btn btn-primary" href="index.html#pakete"><span data-i18n="gu_buy">Stunden nachkaufen</span></a></div>
     <h2 class="sec"><span data-i18n="gu_hist">Verlauf</span></h2>
-    ${creditLog.length?creditLog.map(l=>`<div class="log"><span>${reasonTxt(l.reason)}<br><span class="muted">${fmtShort(new Date(l.created_at))}</span></span><span class="delta ${l.change>0?'plus':'minus'}">${l.change>0?'+':''}${l.change}</span></div>`).join(''):'<div class="empty">Noch keine Bewegungen.</div>'}`;
+    ${creditLog.length?creditLog.slice(0,ERSTE).map(zeile).join('')
+      +(creditLog.length>ERSTE?`<div id="guMehr" hidden>${creditLog.slice(ERSTE).map(zeile).join('')}</div><button class="btn btn-sm" style="margin-top:12px" onclick="document.getElementById('guMehr').hidden=false;this.remove()">Ältere Einträge zeigen (${creditLog.length-ERSTE})</button>`:'')
+      :'<div class="empty">Noch keine Bewegungen.</div>'}`;
 }
 
 // ---------- Nachrichten ----------
@@ -3725,9 +3747,10 @@ window.addEventListener('resize',function(){ clearTimeout(_mhT); _mhT=setTimeout
 </script>
 <script src="dialoge.js"></script>
 <script src="dialoge-neu.js?v=1"></script>
+<script src="dialog-bilder.js?v=1"></script>
 <script src="dialog-rollen.js"></script>
 <script src="themen.js"></script>
-<script src="lernen.js?v=2"></script>
+<script src="lernen.js?v=3"></script>
 <script src="lernbereich.js"></script>
 <!-- Der Kurs. lehrplan.js ist erzeugt (bau/mach-lehrplan.js) und haelt die
      Reihenfolge; mein-weg.js zeichnet sie und merkt sich den Stand in der

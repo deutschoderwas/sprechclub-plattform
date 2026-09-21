@@ -581,7 +581,7 @@
         +dl.map(function(d){
           var ok=dialogFertig(d.id);
           return '<button class="ln-d" onclick="lernDialog(\''+d.id+'\')">'
-            +'<span class="db">'+(d.em||'💬')+'<img src="bilder/dialog/'+d.id+'-s.jpg" alt="" loading="lazy" onerror="this.remove()"></span>'
+            +'<span class="db">'+(d.em||'💬')+'<img src="bilder/dialog/'+(d.bild||d.id)+'-s.jpg" alt="" loading="lazy" onerror="this.remove()"></span>'
             +'<span class="dt"><b>'+E(d.titel)+'</b><small>'+E(d.lvl)+' · '+E(d.dauer||'')+'</small></span>'
             +(ok?'<span class="ok">✓</span>':'<span style="color:#B9C3D0">→</span>')
             +'</button>';
