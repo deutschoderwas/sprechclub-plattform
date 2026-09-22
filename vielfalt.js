@@ -277,7 +277,7 @@
      gehört, jetzt sieht man ihn. */
   function saetzeAusHoertexten(t) {
     var karte = {};
-    var texte = (t.exercises || []).filter(function (e) { return e.type === 'listen' && e.transcript; });
+    var texte = (t.exercises || []).filter(function (e) { return e.type === 'listen' && e.transcript && !e.__hf; });
     if (!texte.length) return karte;
     (t.words || []).forEach(function (w) {
       var kern = ohneArtikel(eng(w.de || ''));
@@ -516,7 +516,7 @@
     var W = (t.words || []).map(function (w) { return eng(w.de); });
     var kerne = W.map(ohneArtikel).filter(function (k) { return k.length >= 4; });
     if (!kerne.length) return;
-    var texte = (t.exercises || []).filter(function (e) { return e.type === 'listen' && e.transcript; });
+    var texte = (t.exercises || []).filter(function (e) { return e.type === 'listen' && e.transcript && !e.__hf; });
     var gebaut = {};
 
     texte.forEach(function (e) {

@@ -675,7 +675,23 @@
     var ohne=th;
     if(regeln.length){ ohne={}; for(var f in th) if(th.hasOwnProperty(f)) ohne[f]=th[f];
       ohne.exercises=(th.exercises||[]).filter(function(e){ return !(e.type==='karte' && e.regel); }); }
-    return regeln.concat(einfuehren(baueRundeKern(sk,ohne,n), th));
+    return regeln.concat(hoerBloecke(einfuehren(baueRundeKern(sk,ohne,n), th)));
+  }
+
+  /* Alle Fragen zu einer Aufnahme stehen direkt hintereinander, die
+     ursprüngliche Frage zuerst. Das Transkript kommt erst nach der
+     letzten Frage des Blocks — sonst verrät es die nächste Antwort. */
+  function hoerBloecke(l){
+    var raus=[], fertig={};
+    l.forEach(function(e){
+      if(e.type!=='listen' || !e.audioUrl){ raus.push(e); return; }
+      if(fertig[e.audioUrl]) return; fertig[e.audioUrl]=1;
+      var block=l.filter(function(x){ return x.type==='listen' && x.audioUrl===e.audioUrl; })
+        .sort(function(a,b){ return (a.__hf?1:0)-(b.__hf?1:0); });
+      block.forEach(function(x,i){ var k={}; for(var f in x) if(x.hasOwnProperty(f)) k[f]=x[f];
+        k.__blockNr=i+1; k.__blockVon=block.length; raus.push(k); });
+    });
+    return raus;
   }
 
   /* Neue Wörter zuerst zeigen. Ein Wort gilt als bekannt, wenn es
@@ -756,8 +772,15 @@
     var hoerbar = (nachTyp['listen'] || []).length;
     var gesetzt = [];
     if(hoerbar){
-      var e1 = nimm('listen'); if(e1) gesetzt.push(e1);
-      var e2 = hoerbar > 1 ? nimm('listen') : null; if(e2) gesetzt.push(e2);
+      /* Zwei Aufnahmen, und zu jeder alle Fragen hintereinander —
+         so wie beim echten Hörverstehen: einmal hören, mehrere
+         Fragen. hoerBloecke() hält sie später zusammen. */
+      var auds=[];
+      (nachTyp['listen']||[]).forEach(function(e){ if(e.audioUrl && auds.indexOf(e.audioUrl)<0) auds.push(e.audioUrl); });
+      auds.slice(0,2).forEach(function(u){
+        (nachTyp['listen']||[]).forEach(function(e){ if(e.audioUrl===u && frei(e)){ drin.push(e); gesetzt.push(e); } });
+      });
+      if(!auds.length){ var e1 = nimm('listen'); if(e1) gesetzt.push(e1); }
     }
 
     /* 1. Eine Wortkarte zum Anfang — und gleich danach dasselbe Wort
@@ -1158,7 +1181,8 @@
          }).join('')+'</div>';
     } else if(e.type==='listen'){
       if(e.img){ h+='<img class="ub-qimg" src="'+E(e.img)+'" alt="" onerror="this.remove()">'; }
-      h+='<div class="ub-tip" style="margin-bottom:4px">'+E(e.label||'🎧 Hör gut zu – du kannst mehrmals hören')+'</div>'+
+      h+='<div class="ub-tip" style="margin-bottom:4px">'+E(e.label||'🎧 Hör gut zu – du kannst mehrmals hören')
+         +(e.__blockVon>1?' · Frage '+e.__blockNr+' von '+e.__blockVon:'')+'</div>'+
          '<button class="ub-play" onclick="ubPlayUrl(\''+E(e.audioUrl)+'\',this)">▶</button>'+
          '<div class="ub-q">'+E(e.q)+'</div><div class="ub-opts" id="ubOpts">'+
          shuf(e.options.map(function(o,k){return k;})).map(function(k){ return '<button class="ub-opt" data-k="'+k+'" onclick="ubChoose('+k+')">'+E(e.options[k])+'</button>'; }).join('')+'</div>';
@@ -1294,7 +1318,9 @@
       sol=(e.explain||'')+' Richtig heißt es: '+(e.richtig||''); }
     else if(e.type==='listen'){ ok=(S.sel===e.answer); var lopts=document.getElementById('ubOpts');
       Array.prototype.forEach.call(lopts.children,function(b){ var k=+b.dataset.k; b.disabled=true; b.classList.remove('sel'); if(k===e.answer)b.classList.add('right'); else if(k===S.sel)b.classList.add('wrong'); });
-      sol=e.explain?e.explain:'Hör nochmal genau hin.'; }
+      /* Mitten im Block keine Erklärung — sie verrät oft die nächste Antwort. */
+      if(e.__blockVon && e.__blockNr<e.__blockVon) sol='Richtig wäre: '+e.options[e.answer];
+      else sol=e.explain?e.explain:'Hör nochmal genau hin.'; }
 
     S.answered=true; var btn=document.getElementById('ubBtn');
     var selfRated=(e.type==='speak'||e.type==='shadow'||e.type==='karte'||e.type==='schreiben');
@@ -1350,7 +1376,7 @@
     if(e.type==='schreiben' && e.muster){
       fb.innerHTML+='<div class="ub-muster"><b>Ein möglicher Text:</b><br>'+E(e.muster)+'</div>'+tonKnoepfe(e.muster);
     }
-    if(e.type==='listen'){ fb.innerHTML+='<div style="margin-top:10px;padding:11px 13px;background:#fff;border:1px solid var(--border,#ECECEC);border-radius:12px;font-weight:500;color:#333;line-height:1.5">📝 <b>Das hast du gehört:</b><br>'+E(e.transcript)+'</div>'; }
+    if(e.type==='listen' && !(e.__blockVon && e.__blockNr<e.__blockVon)){ fb.innerHTML+='<div style="margin-top:10px;padding:11px 13px;background:#fff;border:1px solid var(--border,#ECECEC);border-radius:12px;font-weight:500;color:#333;line-height:1.5">📝 <b>Das hast du gehört:</b><br>'+E(e.transcript)+'</div>'; }
     if(e.type==='choice' && e.img && /Welches Wort passt|gesucht:/.test(String(e.q||''))){
       fb.innerHTML+='<img class="ub-qimg" style="margin:10px 0 0" src="'+E(e.img)+'" alt="" onerror="this.remove()">';
     }
