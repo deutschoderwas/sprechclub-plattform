@@ -1675,6 +1675,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-heikel.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/ernaehrung-sport-3stufen.html",
+  "t": "Ernährung & Sport — Sprechen mit Drehrad (3 Stufen)",
+  "lvl": "A2–C1",
+  "art": "lektion",
+  "b": "sozial",
+  "img": "amanda/sz-kochen.webp"
+ },
+ {
   "d": "Unterricht-ab-14-09/w07-c-teil2-geschenke-b1b2.html",
   "t": "Die Debatte: Sind Geschenke sinnvoll oder Verschwendung?",
   "lvl": "B1–B2",
