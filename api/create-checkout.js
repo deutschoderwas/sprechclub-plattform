@@ -30,9 +30,9 @@ const PLANS = {
     desc: 'Ganze Lernplattform, Community, Kursbibliothek A1-C2, Vokabeltrainer & taeglicher Podcast. Monatlich kuendbar.' },
   // --- NEU ab 08/2026: Premium zum Seitenpreis (49 € / 37 € im Jahresabo). Das alte 149-€-Premium bleibt fuer Bestandskunden. ---
   premium_month:   { abo: true, interval:'month', stunden: 8, preis: 49,  tier:'premium', label: 'Premium',
-    desc: 'Alles aus Community + Sprechclub: Mo-So um 19 Uhr sprechen in kleinen 2er- und 3er-Gruppen. Monatlich kuendbar.' },
+    desc: 'Alles aus Community + Sprechclub: Mo-Fr um 19 Uhr, Sa-So um 11 Uhr sprechen in kleinen 2er- und 3er-Gruppen. Monatlich kuendbar.' },
   premium_year:    { abo: true, interval:'year',  stunden: 8, preis: 444, tier:'premium', label: 'Premium',
-    desc: 'Alles aus Community + Sprechclub: Mo-So um 19 Uhr sprechen in kleinen 2er- und 3er-Gruppen. Jahresmitgliedschaft (12 Monate, 37 EUR pro Monat).' },
+    desc: 'Alles aus Community + Sprechclub: Mo-Fr um 19 Uhr, Sa-So um 11 Uhr sprechen in kleinen 2er- und 3er-Gruppen. Jahresmitgliedschaft (12 Monate, 37 EUR pro Monat).' },
   premium:         { abo: true, interval:'month', stunden: 8, preis: 149, tier:'premium',  label: 'Premium',
     desc: 'Alles aus Community + 8 LIVE-Stunden/Monat in kleiner Gruppe (bis 6 Personen).' },
 
@@ -55,6 +55,19 @@ const PLANS = {
   pp_e3: { abo: false, stunden: 24, preis: 387, tier:'premiumplus', label: 'Premium Plus · 3 Monate im Voraus', monate: 3 },
   pp_e6: { abo: false, stunden: 48, preis: 594, tier:'premiumplus', label: 'Premium Plus · 6 Monate im Voraus', monate: 6 },
 };
+
+/* Premium: Willkommenspreis (49 EUR / 444 EUR im Jahr = 37 EUR pro Monat) fuer alle, die bis
+   31.10.2026 buchen. Ab 1.11.2026 (Berlin) automatisch der regulaere Preis: 77 EUR / 708 EUR im Jahr
+   (= 59 EUR pro Monat). Bestehende Abos behalten den Preis, zu dem sie abgeschlossen wurden. */
+const PREMIUM_REGULAER_AB = Date.parse('2026-11-01T00:00:00+01:00');
+const PREMIUM_REGULAER = { premium_month: { preis: 77 }, premium_year: { preis: 708, proMonat: 59 } };
+function aktuellerPlan(id){
+  const p = PLANS[id];
+  const r = PREMIUM_REGULAER[id];
+  if (!p || !r || Date.now() < PREMIUM_REGULAER_AB) return p;
+  const desc = r.proMonat ? p.desc.replace('37 EUR pro Monat', r.proMonat + ' EUR pro Monat') : p.desc;
+  return Object.assign({}, p, { preis: r.preis, desc });
+}
 
 /* Bis wann darf nicht gekuendigt werden? Nur bei den Abos mit Bindung. */
 function mindestBis(plan){
@@ -84,7 +97,7 @@ export default async function handler(req, res) {
   try {
     const { packageId, passId, userId, email, embedded, trial } = (req.body || {});
     const id = passId || packageId;
-    const plan = PLANS[id];
+    const plan = aktuellerPlan(id);
     if (!plan) return res.status(400).json({ error: 'unknown_plan' });
     // userId optional: "erst zahlen, dann anmelden" wird per E-Mail zugeordnet (webhook + pending_purchases).
 
@@ -144,7 +157,12 @@ export default async function handler(req, res) {
       if (trialDays > 0) subData.trial_period_days = 7; // nur Neukund:innen bekommen die Gratis-Probestunde
 
       let abodesc = plan.desc || `${plan.stunden} LIVE-Stunden pro Monat · Üben 24/7, Amanda & Community inklusive`;
-      if (zugangAb) {
+      if (plan.tier === 'premium' && zugangAb) {
+        // Vorverkauf: jetzt zahlen, Laufzeit ab 1.11. — naechste Zahlung 1.12. bzw. 1.11. im Folgejahr.
+        abodesc += (plan.interval === 'year')
+          ? ' — Willkommenspreis, bleibt dauerhaft. Der Sprechclub startet am 01.11.2026. Die naechste Zahlung ist erst am 01.11.2027.'
+          : ' — Willkommenspreis, bleibt dauerhaft. Der Sprechclub startet am 01.11.2026. Die naechste Zahlung ist erst am 01.12.2026.';
+      } else if (zugangAb) {
         const dd = zugangAb.split('-');
         abodesc += ` — Start am ${dd[2]}.${dd[1]}.${dd[0]}: Die Laufzeit beginnt an diesem Tag.`;
       }

@@ -87,6 +87,13 @@ ul.liste li > span{flex:1;min-width:0}
   border-radius:18px;padding:18px 22px;font-size:.95rem;color:var(--tinte-2)}
 .fuss b{color:var(--tinte)}
 .meldung{margin-top:14px;text-align:center;font-size:.92rem;color:var(--rot);min-height:1.2em}
+.fahne.spar{background:var(--rot);color:#fff}
+.k.bald{border-color:var(--rot);border-width:2px}
+.alt{display:flex;align-items:center;gap:8px;margin-bottom:2px}
+.alt s{font-family:'Space Grotesk',Georgia,serif;font-weight:700;font-size:1.3rem;color:var(--tinte-3);text-decoration-color:var(--rot);text-decoration-thickness:2.5px}
+.alt .chip{background:var(--gelb);color:var(--tinte);font-weight:800;font-size:12px;padding:3px 9px;border-radius:999px}
+.preis .zahl.gross{font-size:3.2rem}
+.knopf.rot{background:var(--rot);color:#fff;box-shadow:0 6px 16px rgba(232,48,42,.28)}
 </style>
 </head>
 <body>
@@ -130,21 +137,28 @@ ul.liste li > span{flex:1;min-width:0}
 
     <!-- Premium -->
     <div class="k bald">
-      <span class="fahne warte">Start 1. November</span>
+      <span class="fahne spar" id="pFahne">Willkommenspreis · Anmeldung ab 1. Oktober</span>
       <h2>Premium</h2>
       <p class="satz">Endlich sprechen — mit echten Menschen, nicht mit einer App.</p>
 
-      <div class="preis"><span class="zahl">49 €</span><span class="je">im Monat</span></div>
-      <p class="hinweis">Im Jahresabo 37 € im Monat.</p>
+      <div class="wahl" role="group" aria-label="Abrechnung wählen">
+        <button type="button" id="pM" onclick="setzePremium('monat')">Monatlich</button>
+        <button type="button" id="pJ" class="an" onclick="setzePremium('jahr')">Jährlich</button>
+      </div>
+
+      <div class="alt" id="pAltWrap"><s id="pAlt">59 €</s><span class="chip" id="pSpar">−22 € im Monat</span></div>
+      <div class="preis"><span class="zahl gross" id="pZahl">37 €</span><span class="je">im Monat</span></div>
+      <p class="hinweis" id="pHinweis">jährlich abgerechnet (444 €) · Preis bleibt für immer</p>
 
       <ul class="liste">
         <li><span><b>Alles aus der Community</b> ist dabei</span></li>
-        <li><span>Sprechen mit echten Menschen — <b>jeden Abend</b></span></li>
-        <li><span>Eine Lehrkraft ist dabei und hilft</span></li>
+        <li><span>Sprechclub: <b>Mo–Fr 19 Uhr, Sa–So 11 Uhr</b></span></li>
+        <li><span>Zu zweit oder zu dritt, mit einem Partner auf deinem Niveau</span></li>
+        <li><span>Ein Lehrer kommt dazu und verbessert deine Fehler</span></li>
       </ul>
 
-      <button class="knopf rand" onclick="aufDieWarteliste(this)">🔔 Auf die Warteliste</button>
-      <p class="klein">Die Gruppen sind klein — wir melden uns, sobald es losgeht</p>
+      <button class="knopf rand" id="pKnopf" onclick="premiumKnopf(this)">🔔 Auf die Warteliste</button>
+      <p class="klein" id="pKlein">Dein Willkommenspreis bleibt für immer.</p>
     </div>
 
   </div>
@@ -153,7 +167,7 @@ ul.liste li > span{flex:1;min-width:0}
 
   <div class="fuss">
     <b>Du bist dir nicht sicher?</b> Fang mit der Community an. Du hast sofort die ganze Plattform,
-    zahlst monatlich und kannst jederzeit kündigen. Wenn der Sprechclub im November startet,
+    zahlst monatlich und kannst jederzeit kündigen. Wenn der Sprechclub am 1. November startet,
     wechselst du mit einem Klick — alles, was du schon hast, bleibt.
   </div>
 
@@ -203,6 +217,41 @@ async function jetztMitgliedWerden(btn){
 function aufDieWarteliste(btn){
   location.href = '/index.html#warteliste';
 }
+
+var PREMIUM = 'jahr';
+var SPAR = { auf: Date.parse('2026-10-01T00:00:00+02:00'), ende: Date.parse('2026-11-01T00:00:00+01:00') };
+function sparPhase(){ var n = Date.now(); return n < SPAR.auf ? 0 : (n < SPAR.ende ? 1 : 2); }
+function setzePremium(was){
+  PREMIUM = was;
+  var j = (was === 'jahr'), ph = sparPhase(), $ = function(i){ return document.getElementById(i); };
+  $('pM').classList.toggle('an', !j); $('pJ').classList.toggle('an', j);
+  var spar = j ? 37 : 49, reg = j ? 59 : 77;
+  $('pZahl').textContent = (ph < 2 ? spar : reg) + ' €';
+  $('pAlt').textContent = reg + ' €';
+  $('pSpar').textContent = '−' + (reg - spar) + ' € im Monat';
+  $('pAltWrap').style.display = ph < 2 ? '' : 'none';
+  $('pHinweis').textContent = j ? ('jährlich abgerechnet (' + (ph < 2 ? 444 : 708) + ' €)' + (ph < 2 ? ' · Preis bleibt für immer' : ''))
+                                : ('monatlich kündbar' + (ph < 2 ? ' · Preis bleibt für immer' : ''));
+  var k = $('pKnopf'), kl = $('pKlein'), f = $('pFahne');
+  if (ph === 0) { f.textContent = 'Willkommenspreis · Anmeldung ab 1. Oktober'; k.className = 'knopf rand'; k.textContent = '🔔 Auf die Warteliste'; kl.textContent = 'Dein Willkommenspreis bleibt für immer. Du zahlst bei der Anmeldung – die nächste Zahlung kommt erst am ' + (j ? '1. November 2027' : '1. Dezember') + '.'; }
+  else if (ph === 1) { f.textContent = 'Willkommenspreis nur bis 31. Oktober'; k.className = 'knopf rot'; k.textContent = 'Jetzt Premium sichern'; kl.textContent = 'Dein Willkommenspreis bleibt für immer. Du zahlst jetzt – die nächste Zahlung kommt erst am ' + (j ? '1. November 2027' : '1. Dezember') + '.'; }
+  else { f.textContent = 'Sprechclub läuft'; k.className = 'knopf rot'; k.textContent = 'Premium buchen'; kl.textContent = 'Sichere Zahlung über Stripe · monatlich kündbar'; }
+}
+async function premiumKnopf(btn){
+  if (sparPhase() === 0) { aufDieWarteliste(btn); return; }
+  meldung('');
+  if (!/^https?:$/.test(location.protocol)) { meldung('Vorschau — die Bezahlung läuft auf der Live-Seite.'); return; }
+  var alt = btn.textContent; btn.disabled = true; btn.textContent = 'Einen Moment …';
+  try {
+    var r = await fetch('/api/create-checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ passId: PREMIUM === 'jahr' ? 'premium_year' : 'premium_month' }) });
+    var j = await r.json();
+    if (j && j.url) { location.href = j.url; return; }
+  } catch (e) {}
+  btn.disabled = false; btn.textContent = alt;
+  meldung('Das hat gerade nicht geklappt — versuch es bitte gleich noch einmal.');
+}
+setzePremium('jahr');
 </script>
 <script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};</script>
 <script defer src="/_vercel/insights/script.js"></script>

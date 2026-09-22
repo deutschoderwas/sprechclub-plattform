@@ -598,6 +598,12 @@ export default async function handler(req, res) {
       if ((inv.amount_paid || 0) > 0 && inv.subscription) {
         const sub = await stripe.subscriptions.retrieve(inv.subscription);
         const stunden = parseInt(sub.metadata?.stunden || '0', 10);
+        /* Premium-Vorverkauf: Wer vor dem 1.11.2026 bucht, zahlt sofort (damit feststeht,
+           wie viele Anmeldungen es gibt). Die Laufzeit zaehlt aber erst ab 1.11. —
+           die naechste Abbuchung kommt also erst am 1.12.2026 (Jahresabo: 1.11.2027).
+           Gilt fuer ALLE Premium-Kaeufer, auch Bestandsmitglieder und Kaeufer ohne Konto,
+           deshalb hier vor jeder anderen Verzweigung. Nach dem 1.11. passiert nichts. */
+        if ((sub.metadata?.tier || '') === 'premium') await laufzeitAbStart(sub, '2026-11-01');
         let userId = sub.metadata?.userId;
         const plan = sub.metadata?.plan || 'abo';
         let invEmail = (inv.customer_email || '').trim().toLowerCase();
