@@ -1683,6 +1683,38 @@ window.LEKTIONEN = [
   "img": "amanda/sz-kochen.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/ki-im-alltag-3stufen.html",
+  "t": "KI im Alltag — Sprechen mit Drehrad (3 Stufen)",
+  "lvl": "A2–C1",
+  "art": "lektion",
+  "b": "medien",
+  "img": "amanda/sz-it.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/smalltalk-nachbarn-3stufen.html",
+  "t": "Smalltalk mit den Nachbarn — Drehrad (3 Stufen)",
+  "lvl": "A2–C1",
+  "art": "lektion",
+  "b": "sozial",
+  "img": "amanda/sz-freunde.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/geld-sparen-3stufen.html",
+  "t": "Geld & Sparen — Sprechen mit Drehrad (3 Stufen)",
+  "lvl": "A2–C1",
+  "art": "lektion",
+  "b": "bank",
+  "img": "amanda/sz-bank.webp"
+ },
+ {
+  "d": "Unterricht-ab-14-09/social-media-handy-3stufen.html",
+  "t": "Social Media & Handy — Drehrad (3 Stufen)",
+  "lvl": "A2–C1",
+  "art": "lektion",
+  "b": "medien",
+  "img": "amanda/sz-medien.webp"
+ },
+ {
   "d": "Unterricht-ab-14-09/w07-c-teil2-geschenke-b1b2.html",
   "t": "Die Debatte: Sind Geschenke sinnvoll oder Verschwendung?",
   "lvl": "B1–B2",
