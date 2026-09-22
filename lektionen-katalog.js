@@ -1683,6 +1683,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-kochen.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/tabu-ernaehrung-sport-3stufen.html",
+  "t": "Tabu: Ernährung & Sport — Wortschatzspiel (3 Stufen)",
+  "lvl": "A2–C1",
+  "art": "lektion",
+  "b": "sozial",
+  "img": "amanda/sz-kueche.webp"
+ },
+ {
   "d": "Unterricht-ab-14-09/ki-im-alltag-3stufen.html",
   "t": "KI im Alltag — Sprechen mit Drehrad (3 Stufen)",
   "lvl": "A2–C1",
