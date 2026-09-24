@@ -13,7 +13,13 @@ export default async function handler(req, res) {
   const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 
   const now = Date.now();
-  const windowStart = new Date(now - 14 * 3600 * 1000).toISOString();
+  // Rueckblick: frueher 14 Stunden. Das war die Falle — faellt der Generator
+  // einmal laenger aus (Schluessel weg, Guthaben leer), sind die Stunden nach
+  // 14 Stunden fuer immer aus dem Fenster und bekommen NIE eine Nachbereitung.
+  // Jetzt: 21 Tage. Der Lauf holt pro Durchgang zwei Stunden nach, neueste
+  // zuerst, und arbeitet einen Rueckstand so von allein wieder ab.
+  const TAGE = Math.min(60, Math.max(1, Number(req.query && req.query.tage) || Number(process.env.NACHB_TAGE) || 21));
+  const windowStart = new Date(now - TAGE * 24 * 3600 * 1000).toISOString();
   const nowISO = new Date(now).toISOString();
 
   const { data: cls } = await sb.from('classes')
@@ -24,7 +30,7 @@ export default async function handler(req, res) {
   const ended = (cls || []).filter(c => {
     const end = new Date(c.starts_at).getTime() + (c.duration_min || 60) * 60000;
     return end <= now;
-  });
+  }).sort((a, b) => new Date(b.starts_at) - new Date(a.starts_at));   // neueste zuerst
   if (!ended.length) return res.status(200).json({ ok: true, processed: 0, reason: 'keine beendeten Stunden' });
 
   const ids = ended.map(c => c.id);
@@ -57,13 +63,46 @@ export default async function handler(req, res) {
     if (results.length && Date.now() - t0 > 40000) break;
     try {
       const r = await runNachbereitung(sb, { classId: c.id, source: 'tafel' });
-      results.push({ classId: c.id, title: c.title, ok: r.ok, error: r.error, counts: r.counts });
+      results.push({ classId: c.id, title: c.title, ok: r.ok, error: r.error, detail: r.detail, counts: r.counts });
     } catch (e) {
       results.push({ classId: c.id, title: c.title, ok: false, error: e.message });
     }
   }
 
-  return res.status(200).json({ ok: true, processed: results.filter(r => r.ok).length, eligible: eligible.length, results });
+  const geschafft = results.filter(r => r.ok).length;
+
+  // Stiller Ausfall war das eigentliche Problem: zwei Wochen lang hat niemand
+  // gemerkt, dass keine Nachbereitung mehr entsteht. Wenn ein Lauf nur noch
+  // Fehler liefert, geht deshalb einmal taeglich eine Warnung an Julia raus.
+  if (!geschafft && results.length) {
+    try { await alarmAnJulia(sb, results, eligible.length); } catch (e) {}
+  }
+
+  return res.status(200).json({ ok: true, processed: geschafft, eligible: eligible.length, results });
+}
+
+// Hoechstens eine Warnmail pro Tag — der Lauf kommt alle 15 Minuten wieder.
+async function alarmAnJulia(sb, results, offen) {
+  if (!process.env.BREVO_API_KEY) return;
+  const tag = new Date().toISOString().slice(0, 10);
+  const { error } = await sb.from('email_log').insert({ kind: 'nachb_alarm', ref: tag });
+  if (error) return;   // heute schon gewarnt
+  const grund = results.map(r => r.error + (r.detail ? ' (' + r.detail + ')' : '')).filter(Boolean)[0] || 'unbekannt';
+  const hinweis = /anthropic/i.test(grund)
+    ? 'Die Anfrage an Claude wird abgelehnt. Bitte in console.anthropic.com das Guthaben und den API-Schluessel pruefen.'
+    : 'Bitte den Lauf /api/auto-nachbereitung von Hand aufrufen, dort steht der genaue Fehler.';
+  await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      sender: { name: 'deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
+      to: [{ email: process.env.ADMIN_EMAIL || 'deutschoderwas@gmail.com', name: 'Julia' }],
+      subject: '\u26a0\ufe0f Die Nachbereitung wird gerade nicht erstellt',
+      htmlContent: '<p>Hallo Julia,</p><p>der automatische Lauf konnte f\u00fcr <b>' + offen
+        + '</b> Stunde(n) keine Nachbereitung erstellen.</p><p>Fehler: <code>' + String(grund).slice(0, 300)
+        + '</code></p><p>' + hinweis + '</p><p>Solange das so bleibt, sehen die Sch\u00fcler im Konto nur \u201efolgt in K\u00fcrze\u201c.</p>',
+    }),
+  });
 }
 
 // ===== gemeinsame Logik (identisch in api/generate-nachbereitung.js) =====

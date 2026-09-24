@@ -2,7 +2,10 @@
 // Wird von vercel.json crons täglich aufgerufen. Ruft die bestehenden Endpoints serverseitig auf.
 export default async function handler(req, res) {
   const base = process.env.SITE_URL || 'https://www.deutschoderwas-club.de';
-  const eps = ['send-reminders', 'send-birthdays', 'send-miss-you', 'send-masterclass', 'send-register-reminder', 'monatsstunden'];
+  // 'auto-nachbereitung' ist hier das Sicherheitsnetz: Der 15-Minuten-Lauf
+  // macht die Arbeit, aber faellt der einmal aus, greift spaetestens dieser
+  // taegliche Aufruf und holt die liegengebliebenen Stunden nach.
+  const eps = ['send-reminders', 'send-birthdays', 'send-miss-you', 'send-masterclass', 'send-register-reminder', 'monatsstunden', 'auto-nachbereitung'];
   // Abgleich der Mitgliedschaften mit Stripe — braucht den internen Schlüssel.
   // freischalten?alle=1 ist das Sicherheitsnetz: Wer bezahlt hat und
   // trotzdem nicht bestätigt ist, kommt hier hinein. Niemand soll je
