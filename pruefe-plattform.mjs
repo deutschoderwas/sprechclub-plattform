@@ -46,7 +46,10 @@ const PRUEFUNGEN = [
    'club-zeichen.js fehlt — dann bleiben die Menüpunkte ohne Symbol.'],
   ['konto.html', 'Zeichendatei ist eingebunden', /club-zeichen\.js/, 1,
    'Ohne sie bleiben alle data-zeichen-Felder leer.'],
-  ['konto.html', 'Alle 15 Menüpunkte haben ein Zeichen', /data-zeichen=/g, 15,
+  // Das Menü steht seit dem Umbau in seitenleiste.js und setzt die
+  // Zeichen zur Laufzeit (ic.dataset.zeichen). In konto.html stehen
+  // deshalb nur noch die festen — geprüft wird jetzt die Quelle.
+  ['seitenleiste.js', 'Jeder Menüpunkt hat ein Zeichen', /zeichen:\s*'/g, 11,
    'Ein Menüpunkt hat sein Zeichen verloren — dort ist jetzt eine Lücke.'],
 
   // ---------- Der Lernstand ----------

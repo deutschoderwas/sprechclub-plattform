@@ -100,7 +100,7 @@
     return n;
   }
   function uebungenZahl(b){
-    var n=aufgaben('wortschatz',b.ws)+aufgaben('hoeren',b.ho);
+    var n=aufgaben('wortschatz',b.ws)+aufgaben('hoeren',b.ho)+aufgaben('lesen-schreiben',b.ls);
     var f=berufsfeld(b.beruf); if(f&&f.ueb) n+=f.ueb.length;
     return n;
   }
@@ -113,6 +113,7 @@
     d.forEach(function(x){ teile.push(dialogFertig(x.id)?100:0); });
     (b.ws||[]).forEach(function(t){ teile.push(themaBest('wortschatz',t)); });
     (b.ho||[]).forEach(function(t){ teile.push(themaBest('hoeren',t)); });
+    (b.ls||[]).forEach(function(t){ teile.push(themaBest('lesen-schreiben',t)); });
     if(!teile.length) return 0;
     var s=0; teile.forEach(function(x){ s+=x; });
     return Math.round(s/teile.length);
@@ -537,7 +538,23 @@
       blockHoeren += '</div></div>';
     }
 
-    h += blockWoerter + blockHoeren + blockSprechen;
+    /* Lesen und Schreiben: dieselbe Situation, nur schriftlich.
+       Ohne eigene Schrittnummer — es ist ein Angebot, keine Pflicht. */
+    var lsListe = (b.ls||[]).filter(function(t){ return !!themaVon('lesen-schreiben',t); });
+    var blockLesen = '';
+    if(lsListe.length){
+      blockLesen = '<div class="be-block"><h3 class="be-kopf3">Lesen &amp; Schreiben dazu</h3>' +
+           '<p class="hin">Derselbe Ort auf Papier: der Zettel, das Formular, die Nachricht, die du hier schreiben musst.</p>' +
+           '<div class="be-knoepfe">';
+      lsListe.forEach(function(t){
+        var th=themaVon('lesen-schreiben',t), n=(th.exercises||[]).length, best=themaBest('lesen-schreiben',t);
+        blockLesen += '<button class="be-b" type="button" onclick="bereichUeben(\'lesen-schreiben\',\''+E(t)+'\')">' +
+             E(th.title||t) + ' <span class="be-zahl">'+n+(best?' \u00b7 '+best+' %':'')+'</span></button>';
+      });
+      blockLesen += '</div></div>';
+    }
+
+    h += blockWoerter + blockHoeren + blockLesen + blockSprechen;
 
     /* Bausteine */
     var bau = (b.hilf||[]);
