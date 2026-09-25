@@ -98,7 +98,10 @@ function reparieren(roh) {
       let k = j + 1;
       while (k < roh.length && /\s/.test(roh[k])) k++;
       const d = roh[k];
-      return d === '"' || d === '{' || d === '[' || d === undefined;
+      /* ']' und '}' gehoeren dazu: bei einem haengenden Komma am Listenende
+         ("a","b",] ) hielt die Pruefung das schliessende Zeichen sonst faelsch-
+         licherweise fuer mitten im Satz und zerlegte die ganze Antwort. */
+      return d === '"' || d === '{' || d === '[' || d === ']' || d === '}' || d === undefined;
     }
     return false;                                           /* mitten im Satz */
   };

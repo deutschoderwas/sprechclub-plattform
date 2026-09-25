@@ -180,11 +180,8 @@ async function runNachbereitung(sb, { classId, source = 'tafel', pdfText } = {})
     return { ok: false, error: 'anthropic_fetch', detail: e.message };
   }
 
-  let clean = aiText.replace(/^\s*```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '').trim();
-  let parsed = null;
-  try { parsed = JSON.parse(clean); }
-  catch (e) { const m = clean.match(/\{[\s\S]*\}/); if (m) { try { parsed = JSON.parse(m[0]); } catch (e2) {} } }
-  if (!parsed) return { ok: false, error: 'parse_failed', detail: aiText.slice(0, 300) };
+  const parsed = jsonAus(aiText);
+  if (!parsed) return { ok: false, error: 'parse_failed', detail: aiText.slice(0, 600) };
 
   (Array.isArray(parsed.vocab) ? parsed.vocab : []).forEach(addV);
   const vocab = [...vmap.values()];
@@ -472,5 +469,63 @@ REGELN:
 - "exercises": 8-12 abwechslungsreiche Übungen/Tests (type "choice" mit 3 Optionen, "answer"=Index 0-basiert; und "gap"). Viele Tests!
 - "speaking": 2-4 freie Sprech-/Schreibaufgaben mit Beispielantwort.
 - "errors": 2-5 echte Fehlerkorrekturen, wenn die Quelle Fehler zeigt; sonst [].
+- WICHTIG fuer das JSON: Benutze im Text NIEMALS das gerade Anfuehrungszeichen \" — es zerbricht die Antwort mitten im Satz. Schreib Zitate und hervorgehobene Woerter entweder ganz ohne Anfuehrungszeichen oder mit den deutschen Zeichen \u201e und \u201c.
 - Deutsch, freundlich, klar. Nur reines JSON.`;
+}
+
+/* ---------- JSON, das ein Modell geschrieben hat, sicher lesen ----------
+   Claude setzt in deutschem Text gern Anfuehrungszeichen: „gehen" — das
+   oeffnende ist deutsch, das schliessende aber das gerade ". Und genau
+   dieses Zeichen beendet in JSON den Text mitten im Satz. Daran sind seit
+   dem 10.09. ALLE Nachbereitungen gestorben (Fehler: parse_failed).
+
+   reparieren() geht Zeichen fuer Zeichen durch und entscheidet bei jedem "
+   im String, ob es wirklich das Ende ist oder mitten im Text steht. Mitten
+   im Text wird daraus ein deutsches Anfuehrungszeichen — das kann JSON nie
+   kaputtmachen und ist im Lesetext ohnehin das richtige.
+   (Wortgleich aus api/generate-podcast.js, wo derselbe Fehler auftrat.) */
+function reparieren(roh) {
+  let out = '', inStr = false, esc = false;
+  const passtDanach = (i) => {
+    let j = i;
+    while (j < roh.length && /\s/.test(roh[j])) j++;
+    const c = roh[j];
+    if (c === undefined || c === ':') return true;
+    if (c === '}' || c === ']') return true;
+    if (c === ',') {
+      let k = j + 1;
+      while (k < roh.length && /\s/.test(roh[k])) k++;
+      const d = roh[k];
+      /* ']' und '}' gehoeren dazu: bei einem haengenden Komma am Listenende
+         ("a","b",] ) hielt die Pruefung das schliessende Zeichen sonst faelsch-
+         licherweise fuer mitten im Satz und zerlegte die ganze Antwort. */
+      return d === '"' || d === '{' || d === '[' || d === ']' || d === '}' || d === undefined;
+    }
+    return false;
+  };
+  for (let i = 0; i < roh.length; i++) {
+    const c = roh[i];
+    if (esc) { out += c; esc = false; continue; }
+    if (c === '\\') { out += c; esc = true; continue; }
+    if (c === '"') {
+      if (!inStr) { inStr = true; out += c; continue; }
+      if (passtDanach(i + 1)) { inStr = false; out += c; continue; }
+      const vor = out[out.length - 1];
+      out += (vor === undefined || /[\s(\[]/.test(vor)) ? '\u201e' : '\u201c';
+      continue;
+    }
+    if (inStr && (c === '\n' || c === '\r')) { out += '\\n'; continue; }
+    out += c;
+  }
+  return out.replace(/,(\s*[}\]])/g, '$1');
+}
+
+function jsonAus(text) {
+  const ohneZaun = String(text || '').replace(/^\s*```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '').trim();
+  const s = ohneZaun.indexOf('{'), e = ohneZaun.lastIndexOf('}');
+  if (s === -1 || e === -1) return null;
+  const roh = ohneZaun.slice(s, e + 1);
+  try { return JSON.parse(roh); } catch (err) {
+    try { return JSON.parse(reparieren(roh)); } catch (err2) { return null; }
+  }
 }
