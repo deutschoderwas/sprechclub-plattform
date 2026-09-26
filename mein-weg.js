@@ -380,16 +380,19 @@
         + '<span class="mw-stufe-n">' + s.lektionen.length + ' Lektionen · Ziel: ' + E(s.pruefung) + '</span>'
         + '</button>';
     }).join('');
+    /* Ein Klick reicht. Der Test ist ein Angebot, keine Tuer:
+       wer sein Niveau kennt, soll nicht erst zehn Minuten testen
+       muessen, um den Lernbereich zu sehen. Falsch gewaehlt ist
+       kein Schaden — die Stufe laesst sich jederzeit aendern. */
     return '<div class="lw-kopf"><h2>Lernen</h2><p>Ein Weg, Lektion für Lektion. Jede Lektion: Wörter, Hören, Grammatik, Gespräch.</p></div>'
       + '<div class="mw-start">'
       + '<div class="mw-start-kopf">'
-      + '<span class="mw-kick">Zuerst das hier</span>'
       + '<h2>Wo fängst du an?</h2>'
-      + '<p>Der Einstufungstest dauert ein paar Minuten. Danach steht hier deine erste Lektion — und jeden Tag, was dran ist.</p>'
-      + '<a class="mw-btn gross" href="niveau-test-club.html">Einstufungstest starten →</a>'
+      + '<p>Tipp einfach dein Niveau an — danach steht hier deine erste Lektion und jeden Tag, was dran ist. Du kannst es später jederzeit ändern.</p>'
       + '</div>'
-      + '<div class="mw-oder"><span>oder du weißt es schon</span></div>'
       + '<div class="mw-stufen">' + karten + '</div>'
+      + '<div class="mw-oder"><span>oder du bist dir nicht sicher</span></div>'
+      + '<p class="mw-testhin"><a href="niveau-test-club.html">Einstufungstest machen</a> — ein paar Minuten, dann wählen wir die Stufe für dich.</p>'
       + '</div>';
   }
 
@@ -703,6 +706,9 @@
       '.mw-start-kopf p{color:var(--mw-soft);margin:0 0 18px}',
       '.mw-oder{display:flex;align-items:center;gap:14px;color:var(--mw-soft);font-size:13px;margin:0 0 18px}',
       '.mw-oder::before,.mw-oder::after{content:"";flex:1;height:1px;background:var(--mw-line)}',
+      '.mw-oder{margin:22px 0 12px}',
+      '.mw-testhin{margin:0;font-size:14px;color:var(--mw-soft);line-height:1.5}',
+      '.mw-testhin a{color:inherit;font-weight:600;text-decoration:underline;text-underline-offset:3px}',
       '.mw-stufen{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:12px}',
       '.mw-stufe{text-align:left;border:1.5px solid var(--mw-line);background:var(--mw-karte);border-radius:16px;',
       '  padding:16px;cursor:pointer;font:inherit;color:inherit;display:flex;flex-direction:column;gap:3px}',
