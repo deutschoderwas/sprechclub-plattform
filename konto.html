@@ -1918,8 +1918,14 @@ function renderKalender(){
    Alle anderen sehen hier, woran es liegt, und kommen direkt zur Preisseite. */
 function darfBuchen(){
   /* Genau die Bedingung, an der das Buchen später wirklich hängt (kalBook),
-     damit der Hinweis nicht etwas anderes verspricht als der Knopf tut. */
-  try{ return credits>0; }catch(e){ return false; }
+     damit der Hinweis nicht etwas anderes verspricht als der Knopf tut.
+     Ab 01.11.: PREMIUM bucht ohne Guthaben & ohne Platzlimit. */
+  try{
+    if(credits>0) return true;
+    if(profile && ['premium','premium_plus'].indexOf(profile.tier)>=0
+       && (profile.status==='aktiv' || !profile.status)) return true;
+    return false;
+  }catch(e){ return false; }
 }
 function buchbarHinweis(){
   if(darfBuchen()) return '';
