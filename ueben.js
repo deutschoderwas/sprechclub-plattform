@@ -130,6 +130,61 @@
   function markKnown(de){ if(!de)return; try{ var k=gGet('known',[])||[]; if(k.indexOf(de)<0){ k.push(de); gSet('known',k); } }catch(e){} }
   function themeKey(sk,th){ return sk+'|'+th; }
 
+  /* ---------- Der Stand geht sofort in die Datenbank ----------
+     Frueher lag das Ergebnis je Thema nur im Browser und wurde
+     alle paar Sekunden als ganzer Klumpen gespiegelt. Wer das
+     Geraet wechselte, fing bei null an. Jetzt schreibt jede
+     beendete Runde ihre eigene Zeile: beste Runde, Anzahl der
+     Versuche, Zeitpunkt. Scheitert das (kein Netz, nicht
+     angemeldet), laeuft das Ueben unveraendert weiter — der
+     Browser-Stand bleibt als Zwischenspeicher bestehen. */
+  function standSpeichern(skId, thId, pct){
+    try{
+      var sb = window.sb, u = window.user && window.user.id;
+      if(!sb || !u || thId === 'mix') return;
+      var st = load(), key = themeKey(skId, thId);
+      var eintrag = st.themes[key] || {};
+      var versuche = (eintrag.runs || 0);
+      sb.from('ueben_stand').upsert({
+        user_id: u, skill: skId, thema: thId,
+        best: Math.max(pct, eintrag.best || 0),
+        versuche: versuche,
+        zuletzt: new Date().toISOString()
+      }, { onConflict: 'user_id,skill,thema' }).then(function(){}, function(){});
+    }catch(e){}
+  }
+
+  /* Beim Start holen, was auf anderen Geraeten passiert ist, und
+     mit dem Browser-Stand zusammenfuehren: die hoehere Zahl
+     gewinnt. So sieht ein Schueler auf dem Handy dieselben
+     Prozente wie am Rechner. */
+  function standHolen(){
+    try{
+      var sb = window.sb, u = window.user && window.user.id;
+      if(!sb || !u) return;
+      sb.from('ueben_stand').select('skill,thema,best,versuche').eq('user_id', u)
+        .then(function(r){
+          var rows = (r && r.data) || [];
+          if(!rows.length) return;
+          var st = load(), geaendert = false;
+          rows.forEach(function(z){
+            var key = themeKey(z.skill, z.thema);
+            var hier = st.themes[key] || {};
+            if((z.best || 0) > (hier.best || 0)){
+              st.themes[key] = { best: z.best, runs: Math.max(z.versuche || 0, hier.runs || 0) };
+              geaendert = true;
+            }
+          });
+          if(geaendert){ save(st); try{ window.dispatchEvent(new CustomEvent('ub:stand-da')); }catch(e){} }
+        }, function(){});
+    }catch(e){}
+  }
+  (function warten(n){
+    if(window.sb && window.user && window.user.id){ standHolen(); return; }
+    if((n||0) > 120) return;
+    setTimeout(function(){ warten((n||0)+1); }, 500);
+  })(0);
+
   // ---------- Audio ---------------------------------------------------------
   var curAudio=null, curBtn=null;
   function stopAudio(){ try{ if(curAudio){ curAudio.pause(); curAudio.currentTime=0; } }catch(e){}
@@ -1399,7 +1454,12 @@
     S.ended=true;
     var total=S.items.length; var pct=Math.min(100,Math.round(S.correct/total*100));
     // Themen-Fortschritt (beste Runde) speichern
-    if(S.thId!=='mix'){ var st=load(); var key=themeKey(S.skId,S.thId); var prev=(st.themes[key]||{}).best||0; if(pct>prev){ st.themes[key]={best:pct}; save(st); } }
+    if(S.thId!=='mix'){
+      var st=load(); var key=themeKey(S.skId,S.thId); var alt=st.themes[key]||{}; var prev=alt.best||0;
+      st.themes[key]={ best: Math.max(pct, prev), runs: (alt.runs||0)+1 };
+      save(st);
+      standSpeichern(S.skId, S.thId, pct);
+    }
     // Der Lernpfad hoert mit: welche Runde ist gerade fertig geworden?
     try { window.dispatchEvent(new CustomEvent('ub:fertig', { detail:{
       skId:S.skId, thId:S.thId, titel:S.title||'', richtig:S.correct, gesamt:total, prozent:pct }})); } catch(e){}

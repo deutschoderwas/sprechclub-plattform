@@ -52,6 +52,12 @@ const PRUEFUNGEN = [
   ['seitenleiste.js', 'Jeder Menüpunkt hat ein Zeichen', /zeichen:\s*'/g, 11,
    'Ein Menüpunkt hat sein Zeichen verloren — dort ist jetzt eine Lücke.'],
 
+  // ---------- Der Uebungsstand je Thema ----------
+  ['ueben.js', 'Jede Runde geht in die Datenbank', /from\('ueben_stand'\)\.upsert/, 1,
+   'Ohne das lebt das Ergebnis wieder nur im Browser und ist beim Geraetewechsel weg.'],
+  ['ueben.js', 'Der Stand wird beim Start geholt', /from\('ueben_stand'\)\.select/, 1,
+   'Ohne das sieht ein Schueler auf dem zweiten Geraet null Prozent.'],
+
   // ---------- Der Lernstand ----------
   ['fortschritt.js', 'Das Mitschreiben existiert', /window\.lsSet\s*=\s*neu/, 1,
    'Ohne diese Zeile klinkt sich nichts ein — der Fortschritt bleibt wieder im Browser.'],
