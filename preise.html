@@ -173,7 +173,33 @@ ul.liste li > span{flex:1;min-width:0}
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
 <script>
+/* Wer eingeloggt ist, soll auch als diese Person kaufen.
+   Vorher ging von dieser Seite NUR die Paket-Kennung an den Server —
+   ohne userId und ohne E-Mail. Ein Community-Mitglied, das hier auf
+   Premium wechselt, galt damit als anonymer Neukauf: Die Buchung wurde
+   allein ueber die bei Stripe eingetippte Adresse zugeordnet. Wer dort
+   eine andere Adresse nimmt als im Konto, landete in pending_purchases
+   statt im eigenen Profil. */
+var SB = null, ICH = null;
+(async function(){
+  try{
+    var C = window.SPRECHCLUB_CONFIG;
+    if(!C || typeof supabase === 'undefined') return;
+    SB = supabase.createClient(C.SUPABASE_URL, C.SUPABASE_ANON_KEY);
+    var r = await SB.auth.getSession();
+    var u = r && r.data && r.data.session && r.data.session.user;
+    if(u) ICH = { id: u.id, email: u.email };
+  }catch(e){}
+})();
+function kaufDaten(passId){
+  var d = { passId: passId };
+  if(ICH){ d.userId = ICH.id; d.email = ICH.email; }
+  return d;
+}
+
 /* Preise kommen aus der Server-Definition in api/create-checkout.js:
    community_month 16 € im Monat, community_year 144 € im Jahr (das sind 12 € im Monat). */
 var ABRECHNUNG = 'monat';
@@ -205,7 +231,7 @@ async function jetztMitgliedWerden(btn){
   try {
     var r = await fetch('/api/create-checkout', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ passId: id })
+      body: JSON.stringify(kaufDaten(id))
     });
     var j = await r.json();
     if (j && j.url) { location.href = j.url; return; }
@@ -244,7 +270,7 @@ async function premiumKnopf(btn){
   var alt = btn.textContent; btn.disabled = true; btn.textContent = 'Einen Moment …';
   try {
     var r = await fetch('/api/create-checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ passId: PREMIUM === 'jahr' ? 'premium_year' : 'premium_month' }) });
+      body: JSON.stringify(kaufDaten(PREMIUM === 'jahr' ? 'premium_year' : 'premium_month')) });
     var j = await r.json();
     if (j && j.url) { location.href = j.url; return; }
   } catch (e) {}
