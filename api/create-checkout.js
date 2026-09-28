@@ -109,7 +109,14 @@ export default async function handler(req, res) {
     if (embedded) {
       // Eingebettete Bezahlung direkt auf deutschoderwas-club.de (Stripe Embedded Checkout)
       common.ui_mode = 'embedded';
-      common.return_url = `${site}/konto.html?bezahlt=1&session_id={CHECKOUT_SESSION_ID}`;
+      /* Nach der Zahlung dorthin, wo es weitergeht: Wer noch kein Konto hat
+         (Community/Premium ohne userId), muss sich zuerst registrieren —
+         sonst landet er im Schuelerbereich, zu dem er noch keinen Zugang
+         hat. Wer eingeloggt gekauft hat, geht zurueck ins Konto.
+         Dieselbe Regel wie bei success_url unten. */
+      common.return_url = (plan.tier && !userId)
+        ? `${site}/index.html?register=1&sid={CHECKOUT_SESSION_ID}`
+        : `${site}/konto.html?bezahlt=1&session_id={CHECKOUT_SESSION_ID}`;
     } else {
       // Community/Premium (tier): nach Zahlung direkt zur Registrierung mit der bezahlten E-Mail.
       // Neu-Kaeufer ohne Konto -> Registrierung. Wer schon eingeloggt ist

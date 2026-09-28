@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://js.stripe.com/v3/"></script>
 <style>
 /* ============================================================
    Preise im Schuelerbereich-Look. Zwei Pakete, mehr gibt es nicht:
@@ -94,6 +95,24 @@ ul.liste li > span{flex:1;min-width:0}
 .alt .chip{background:var(--gelb);color:var(--tinte);font-weight:800;font-size:12px;padding:3px 9px;border-radius:999px}
 .preis .zahl.gross{font-size:3.2rem}
 .knopf.rot{background:var(--rot);color:#fff;box-shadow:0 6px 16px rgba(232,48,42,.28)}
+
+/* ---- Bezahlfenster: Stripe eingebettet, damit niemand die Seite verlaesst ---- */
+.bz-hg{position:fixed;inset:0;background:rgba(29,27,24,.55);backdrop-filter:blur(3px);
+  display:none;align-items:flex-start;justify-content:center;z-index:900;padding:22px 14px;overflow:auto}
+.bz-hg.auf{display:flex}
+.bz{background:var(--karte);border:1px solid var(--linie);border-radius:20px;width:100%;max-width:620px;
+  box-shadow:0 22px 60px rgba(29,27,24,.22);overflow:hidden}
+.bz-kopf{display:flex;align-items:center;gap:12px;padding:15px 20px;border-bottom:1px solid var(--linie-hell)}
+.bz-kopf b{font-family:'Space Grotesk',Inter,sans-serif;font-size:17px;flex:1}
+.bz-zu{border:1px solid var(--linie);background:#fff;color:var(--tinte-2);border-radius:10px;
+  width:34px;height:34px;font-size:19px;line-height:1;cursor:pointer;flex:none}
+.bz-zu:hover{background:var(--creme)}
+.bz-koerper{padding:14px 16px 20px;min-height:220px}
+.bz-laedt{display:flex;align-items:center;justify-content:center;gap:10px;height:200px;color:var(--tinte-3);font-size:15px}
+.bz-punkt{width:9px;height:9px;border-radius:50%;background:var(--tuerkis);animation:bzp 1s infinite alternate}
+@keyframes bzp{to{opacity:.25;transform:translateY(-4px)}}
+@media (prefers-reduced-motion:reduce){.bz-punkt{animation:none}}
+@media(max-width:560px){.bz-hg{padding:0}.bz{border-radius:0;min-height:100vh;max-width:none}}
 </style>
 </head>
 <body>
@@ -200,6 +219,71 @@ function kaufDaten(passId){
   return d;
 }
 
+/* ---- Bezahlung bleibt auf dieser Seite ----
+   Vorher sprang der Knopf direkt auf checkout.stripe.com. Jetzt oeffnet
+   sich Stripe in einem Fenster auf deutschoderwas-club.de — genau wie auf
+   der Startseite. Geht das eingebettete Fenster aus irgendeinem Grund
+   nicht auf (kein Stripe-Schluessel, Skript geblockt), faellt der Knopf
+   automatisch auf die gehostete Stripe-Seite zurueck: lieber ein Sprung
+   als ein Kauf, der gar nicht zustande kommt. */
+var _bz = null;
+function bezahlenZu(){
+  try{ if(_bz){ _bz.destroy(); _bz = null; } }catch(e){}
+  var h = document.getElementById('bzHg');
+  if(h) h.classList.remove('auf');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', function(e){ if(e.key === 'Escape') bezahlenZu(); });
+/* Das Bezahlfenster steht am Ende der Seite, dieses Skript weiter oben —
+   beim Ausfuehren gibt es #bzHg also noch gar nicht. Deshalb erst dann
+   anmelden, wenn die Seite fertig ist. */
+function bzKlickAus(){
+  var h = document.getElementById('bzHg');
+  if(h) h.addEventListener('click', function(e){ if(e.target === this) bezahlenZu(); });
+}
+if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bzKlickAus);
+else bzKlickAus();
+
+async function bezahlen(passId, knopf, alterText){
+  meldung('');
+  if (!/^https?:$/.test(location.protocol)) { meldung('Vorschau — die Bezahlung läuft auf der Live-Seite.'); zurueck(knopf, alterText); return; }
+  var pk = (window.SPRECHCLUB_CONFIG && window.SPRECHCLUB_CONFIG.STRIPE_PK) || '';
+  var daten = kaufDaten(passId);
+
+  // 1) Versuch: eingebettet auf dieser Seite
+  if (pk && typeof Stripe !== 'undefined') {
+    try {
+      var r = await fetch('/api/create-checkout', { method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(Object.assign({ embedded:true }, daten)) });
+      var j = await r.json();
+      if (j && j.clientSecret) {
+        var hg = document.getElementById('bzHg');
+        document.getElementById('bzFeld').innerHTML = '';
+        document.getElementById('bzLaedt').style.display = '';
+        hg.classList.add('auf');
+        document.body.style.overflow = 'hidden';
+        try{ if(_bz){ _bz.destroy(); _bz = null; } }catch(e){}
+        _bz = await Stripe(j.publishableKey || pk).initEmbeddedCheckout({ clientSecret: j.clientSecret });
+        _bz.mount('#bzFeld');
+        document.getElementById('bzLaedt').style.display = 'none';
+        zurueck(knopf, alterText);
+        return;
+      }
+    } catch (e) { /* weiter zum Rueckfall */ }
+  }
+
+  // 2) Rueckfall: die gehostete Stripe-Seite
+  try {
+    var r2 = await fetch('/api/create-checkout', { method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(daten) });
+    var j2 = await r2.json();
+    if (j2 && j2.url) { location.href = j2.url; return; }
+  } catch (e) {}
+  zurueck(knopf, alterText);
+  meldung('Das hat gerade nicht geklappt — versuch es bitte gleich noch einmal.');
+}
+function zurueck(knopf, alterText){ if(knopf){ knopf.disabled = false; knopf.textContent = alterText; } }
+
 /* Preise kommen aus der Server-Definition in api/create-checkout.js:
    community_month 16 € im Monat, community_year 144 € im Jahr (das sind 12 € im Monat). */
 var ABRECHNUNG = 'monat';
@@ -228,16 +312,7 @@ async function jetztMitgliedWerden(btn){
   var alt = btn.textContent;
   btn.disabled = true; btn.textContent = 'Einen Moment …';
   var id = (ABRECHNUNG === 'jahr') ? 'community_year' : 'community_month';
-  try {
-    var r = await fetch('/api/create-checkout', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(kaufDaten(id))
-    });
-    var j = await r.json();
-    if (j && j.url) { location.href = j.url; return; }
-  } catch (e) {}
-  btn.disabled = false; btn.textContent = alt;
-  meldung('Das hat gerade nicht geklappt — versuch es bitte gleich noch einmal.');
+  await bezahlen(id, btn, alt);
 }
 
 function aufDieWarteliste(btn){
@@ -268,18 +343,23 @@ async function premiumKnopf(btn){
   meldung('');
   if (!/^https?:$/.test(location.protocol)) { meldung('Vorschau — die Bezahlung läuft auf der Live-Seite.'); return; }
   var alt = btn.textContent; btn.disabled = true; btn.textContent = 'Einen Moment …';
-  try {
-    var r = await fetch('/api/create-checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(kaufDaten(PREMIUM === 'jahr' ? 'premium_year' : 'premium_month')) });
-    var j = await r.json();
-    if (j && j.url) { location.href = j.url; return; }
-  } catch (e) {}
-  btn.disabled = false; btn.textContent = alt;
-  meldung('Das hat gerade nicht geklappt — versuch es bitte gleich noch einmal.');
+  await bezahlen(PREMIUM === 'jahr' ? 'premium_year' : 'premium_month', btn, alt);
 }
 setzePremium('jahr');
 </script>
 <script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};</script>
 <script defer src="/_vercel/insights/script.js"></script>
+<div class="bz-hg" id="bzHg" role="dialog" aria-modal="true" aria-labelledby="bzTitel">
+  <div class="bz">
+    <div class="bz-kopf">
+      <b id="bzTitel">Sichere Bezahlung</b>
+      <button class="bz-zu" onclick="bezahlenZu()" aria-label="Schliessen">&times;</button>
+    </div>
+    <div class="bz-koerper">
+      <div class="bz-laedt" id="bzLaedt"><span class="bz-punkt"></span> Einen Moment, die Bezahlung wird geladen …</div>
+      <div id="bzFeld"></div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
