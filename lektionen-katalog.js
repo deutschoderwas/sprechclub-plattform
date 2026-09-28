@@ -1723,6 +1723,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-it.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/grammatik-perfekt-reisen-urlaub-3stufen.html",
+  "t": "Grammatik: Perfekt – haben/sein + Partizip II (Reisen & Urlaub · 3 Stufen)",
+  "lvl": "A2–C1",
+  "art": "grammatik",
+  "b": "sozial",
+  "img": "amanda/sz-freunde.webp"
+ },
+ {
   "d": "Unterricht-ab-14-09/wortschatzboost-verben-ver-3stufen.html",
   "t": "Wortschatzboost: Verben mit ver- (3 Stufen)",
   "lvl": "A2–C1",
