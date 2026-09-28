@@ -1922,7 +1922,9 @@ function darfBuchen(){
      Ab 01.11.: PREMIUM bucht ohne Guthaben & ohne Platzlimit. */
   try{
     if(credits>0) return true;
-    if(profile && ['premium','premium_plus'].indexOf(profile.tier)>=0
+    // Premium-Sonderregel gilt erst ab 01.11.2026 (davor braucht auch Premium Guthaben).
+    var premiumAbJetzt = new Date() >= new Date('2026-11-01T00:00:00+01:00');
+    if(premiumAbJetzt && profile && ['premium','premium_plus'].indexOf(profile.tier)>=0
        && (profile.status==='aktiv' || !profile.status)) return true;
     return false;
   }catch(e){ return false; }
