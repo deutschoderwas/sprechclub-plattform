@@ -1707,6 +1707,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-sprachkurs.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/grammatik-nebensaetze-social-media-handy-3stufen.html",
+  "t": "Grammatik: Nebensätze weil/dass/obwohl (Social Media & Handy · 3 Stufen)",
+  "lvl": "A2–C1",
+  "art": "grammatik",
+  "b": "medien",
+  "img": "amanda/sz-it.webp"
+ },
+ {
   "d": "Unterricht-ab-14-09/wortschatzboost-verben-ver-3stufen.html",
   "t": "Wortschatzboost: Verben mit ver- (3 Stufen)",
   "lvl": "A2–C1",
