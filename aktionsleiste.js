@@ -57,10 +57,16 @@
         'font-weight:700;font-size:14.5px;line-height:1;box-shadow:0 1px 0 rgba(0,0,0,.08)}',
       '.aktleiste:hover{filter:brightness(1.04)}',
       '.aktleiste:focus-visible{outline:3px solid #06403A;outline-offset:-3px}',
+      /* Bei Arabisch und Persisch stellt die Seite die ganze Richtung auf
+         rtl. Ohne diese Verankerung kippt die Bahn mit: Die Stuecke lagen
+         dann bei -182 px statt bei 0, und die Leiste wirkte leer.
+         Die Bahn laeuft IMMER von links nach rechts — rechtslaeufig ist
+         nur der Text in den einzelnen Stuecken. */
+      '.aktleiste,.aktleiste-bahn{direction:ltr}',
       '.aktleiste-bahn{display:flex;width:max-content;padding:10px 0;',
         'animation:aktlauf 34s linear infinite}',
       '.aktleiste:hover .aktleiste-bahn,.aktleiste:focus-within .aktleiste-bahn{animation-play-state:paused}',
-      '.aktleiste-stk{padding-right:64px;white-space:nowrap}',
+      '.aktleiste-stk{padding-right:64px;white-space:nowrap;unicode-bidi:isolate}',
       '@keyframes aktlauf{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}',
       '@media (max-width:560px){.aktleiste{font-size:13px}.aktleiste-bahn{animation-duration:26s}',
         '.aktleiste-stk{padding-right:44px}}',
@@ -99,7 +105,11 @@
     a.href = ZIEL;
     a.setAttribute('role', 'region');
     a.setAttribute('aria-label', TEXT[l]);
-    if (RTL[l]) a.setAttribute('dir', 'rtl');
+    /* Arabisch und Persisch NICHT an der ganzen Leiste auf rtl stellen:
+       Die Bahn ist ein Flex-Element, und in rtl laufen die Stuecke dann
+       nach rechts, waehrend die Animation nach links schiebt — die Leiste
+       wirkte fast leer. Deshalb bleibt die Bahn immer ltr, und nur der
+       Text selbst wird rechtslaeufig gesetzt. */
 
     var bahn = document.createElement('div');
     bahn.className = 'aktleiste-bahn';
@@ -109,6 +119,7 @@
     for (var i = 0; i < 4; i++) {
       var sp = document.createElement('span');
       sp.className = 'aktleiste-stk';
+      if (RTL[l]) sp.setAttribute('dir', 'rtl');
       sp.textContent = TEXT[l];
       bahn.appendChild(sp);
     }
@@ -124,8 +135,10 @@
       if (a.getAttribute('data-l') === n) return;
       a.setAttribute('data-l', n);
       a.setAttribute('aria-label', TEXT[n]);
-      if (RTL[n]) a.setAttribute('dir', 'rtl'); else a.removeAttribute('dir');
-      Array.prototype.forEach.call(a.querySelectorAll('.aktleiste-stk'), function (s) { s.textContent = TEXT[n]; });
+      Array.prototype.forEach.call(a.querySelectorAll('.aktleiste-stk'), function (s) {
+        if (RTL[n]) s.setAttribute('dir', 'rtl'); else s.removeAttribute('dir');
+        s.textContent = TEXT[n];
+      });
       kopfzeileSchieben(a);
     }).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
     a.setAttribute('data-l', l);
