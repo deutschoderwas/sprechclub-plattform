@@ -52,6 +52,16 @@ const PRUEFUNGEN = [
   ['seitenleiste.js', 'Jeder Menüpunkt hat ein Zeichen', /zeichen:\s*'/g, 11,
    'Ein Menüpunkt hat sein Zeichen verloren — dort ist jetzt eine Lücke.'],
 
+  // ---------- Der Podcast ----------
+  ['hubs.js', 'Nur veroeffentlichte Folgen', /\.eq\('status',\s*'live'\)/, 1,
+   'Ohne den Filter stehen Entwuerfe und Fehlschlaege in der Liste — Folgen ohne Ton.'],
+  ['hubs.js', 'Nur Folgen mit Tondatei', /\.not\('datei',\s*'is',\s*null\)/, 1,
+   'Eine Folge ohne Datei fuehrt beim Antippen ins Nichts.'],
+  ['hubs.js', 'Nach Niveau geordnet', /pc-gruppe-kopf/, 1,
+   'Ohne Gruppierung liegen alle Niveaus wieder in einer Liste.'],
+  ['hubs.js', 'Gehoert wird gemerkt', /from\('podcast_gehoert'\)/g, 2,
+   'Ohne das weiss niemand, was neu ist und was schon gehoert.'],
+
   // ---------- Der Uebungsstand je Thema ----------
   ['ueben.js', 'Jede Runde geht in die Datenbank', /from\('ueben_stand'\)\.upsert/, 1,
    'Ohne das lebt das Ergebnis wieder nur im Browser und ist beim Geraetewechsel weg.'],

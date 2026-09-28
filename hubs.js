@@ -342,32 +342,167 @@
     medienLaden();
   };
 
+  /* ============================================================
+     Der Podcast: geordnet statt gestapelt
+
+     Vorher lag hier eine flache Liste der 40 neuesten Zeilen —
+     alle Niveaus gemischt, und weil nicht nach Status gefiltert
+     wurde, standen auch Entwuerfe und Fehlschlaege drin, die gar
+     keine Tondatei haben. Wer daraufklickte, landete im Nichts.
+
+     Jetzt: nur was wirklich abspielbar ist, nach Niveau geordnet,
+     das eigene zuerst und offen, die anderen zum Aufklappen. Jede
+     Folge zeigt Thema, Dauer und Datum; was neu ist, ist markiert,
+     was man schon geoeffnet hat, auch.
+
+     Faellt die Datenbank aus, bleibt die Seite stehen und sagt es.
+     ============================================================ */
+  var STUFEN_ORD = ['A1', 'A2', 'B1', 'B2', 'C1'];
+  var pcGehoert = {};        // id -> true
+  var pcOffeneStufe = null;  // welche Niveaugruppe ist aufgeklappt
+
+  function meineStufe() {
+    try {
+      if (window.MEINWEG && MEINWEG.stand && MEINWEG.stand().stufe) return MEINWEG.stand().stufe;
+    } catch (e) {}
+    try { if (window.profile && window.profile.stufe) return window.profile.stufe; } catch (e) {}
+    try { if (window.wegStand && wegStand().stufe) return wegStand().stufe; } catch (e) {}
+    try {
+      var n = window.lsGet && lsGet('niveau', null);
+      if (n && STUFEN_ORD.indexOf(n) >= 0) return n;
+    } catch (e) {}
+    return null;
+  }
+
+  function pcDatum(d) {
+    try {
+      var x = new Date(d + 'T12:00:00');
+      if (isNaN(x)) return '';
+      return x.toLocaleDateString('de-DE', { day: 'numeric', month: 'long' });
+    } catch (e) { return ''; }
+  }
+  function pcNeu(d) {
+    try { return (Date.now() - new Date(d + 'T12:00:00').getTime()) < 21 * 864e5; } catch (e) { return false; }
+  }
+
+  /* Was schon gehoert wurde — einmal holen, still scheitern. */
+  function gehoertHolen(dann) {
+    var c = window.sb, u = window.user && window.user.id;
+    if (!c || !u) { dann(); return; }
+    try {
+      c.from('podcast_gehoert').select('podcast_id').eq('user_id', u)
+        .then(function (r) {
+          ((r && r.data) || []).forEach(function (z) { pcGehoert[z.podcast_id] = true; });
+          dann();
+        }, function () { dann(); });
+    } catch (e) { dann(); }
+  }
+  function gehoertMerken(id) {
+    if (!id || pcGehoert[id]) return;
+    pcGehoert[id] = true;
+    var c = window.sb, u = window.user && window.user.id;
+    if (!c || !u) return;
+    try {
+      c.from('podcast_gehoert')
+        .upsert({ user_id: u, podcast_id: id, gehoert_am: new Date().toISOString() },
+                { onConflict: 'user_id,podcast_id' })
+        .then(function () {}, function () {});
+    } catch (e) {}
+  }
+
+  function folgeZeile(x) {
+    var marken = '';
+    if (pcGehoert[x.id])      marken += '<span class="pc-mark fertig">gehört</span>';
+    else if (pcNeu(x.datum))  marken += '<span class="pc-mark neu">neu</span>';
+    return '<button class="pc-zeile" onclick="hubPodcast(\'' + E(x.id) + '\')">'
+      + '<span class="pc-play" aria-hidden="true">▶</span>'
+      + '<span class="pc-txt">'
+      +   '<b>' + E(x.titel || 'Folge') + '</b>'
+      +   (x.thema ? '<small>' + E(x.thema) + '</small>' : '')
+      + '</span>'
+      + '<span class="pc-meta">' + marken
+      +   (x.dauer ? '<span class="pc-dauer">' + E(x.dauer) + '</span>' : '')
+      +   '<span class="pc-tag">' + E(pcDatum(x.datum)) + '</span>'
+      + '</span></button>';
+  }
+
+  function gruppeHtml(stufe, liste, auf, eigene) {
+    var kopfText = eigene ? 'Dein Niveau · ' + stufe : stufe;
+    return '<section class="pc-gruppe' + (auf ? ' auf' : '') + '">'
+      + '<button class="pc-gruppe-kopf" onclick="hubPodcastStufe(\'' + E(stufe) + '\')" '
+      +   'aria-expanded="' + (auf ? 'true' : 'false') + '">'
+      +   '<b>' + E(kopfText) + '</b>'
+      +   '<span class="pc-anzahl">' + liste.length + (liste.length === 1 ? ' Folge' : ' Folgen') + '</span>'
+      +   '<span class="pc-pfeil" aria-hidden="true">' + (auf ? '▾' : '▸') + '</span>'
+      + '</button>'
+      + (auf ? '<div class="pc-liste">' + liste.map(folgeZeile).join('') + '</div>' : '')
+      + '</section>';
+  }
+
+  window.hubPodcastStufe = function (stufe) {
+    pcOffeneStufe = (pcOffeneStufe === stufe) ? null : stufe;
+    podcastZeichnen();
+  };
+
+  var pcFolgen = null;   // null = noch nicht geladen
+  var pcFehler = false;
+
+  function podcastZeichnen() {
+    var ziel = el('hbMedien'); if (!ziel) return;
+    if (pcFehler) { ziel.innerHTML = leer('Der Podcast lässt sich gerade nicht laden. Versuch es später noch einmal.'); return; }
+    if (pcFolgen === null) { ziel.innerHTML = leer('Einen Moment …'); return; }
+    if (!pcFolgen.length) { ziel.innerHTML = leer('Noch keine Folge veröffentlicht.'); return; }
+
+    var nach = {};
+    pcFolgen.forEach(function (x) {
+      var s = (x.level || '—').toUpperCase();
+      (nach[s] = nach[s] || []).push(x);
+    });
+
+    var meine = meineStufe();
+    var stufen = Object.keys(nach).sort(function (a, b) {
+      var ia = STUFEN_ORD.indexOf(a), ib = STUFEN_ORD.indexOf(b);
+      return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
+    });
+    if (meine && nach[meine]) {
+      stufen = [meine].concat(stufen.filter(function (s) { return s !== meine; }));
+    }
+    if (pcOffeneStufe === null) pcOffeneStufe = (meine && nach[meine]) ? meine : stufen[0];
+
+    var offeneZahl = pcFolgen.length;
+    var neueZahl = pcFolgen.filter(function (x) { return !pcGehoert[x.id] && pcNeu(x.datum); }).length;
+
+    ziel.innerHTML =
+      '<p class="pc-summe">' + offeneZahl + (offeneZahl === 1 ? ' Folge' : ' Folgen')
+        + ' · jede mit Text zum Mitlesen'
+        + (neueZahl ? ' · <b>' + neueZahl + ' neu für dich</b>' : '') + '</p>'
+      + stufen.map(function (s) {
+          return gruppeHtml(s, nach[s], s === pcOffeneStufe, s === meine);
+        }).join('')
+      + (meine ? '' : '<p class="pc-fuss">Wenn du deine Stufe im Lernbereich festlegst, steht sie hier oben.</p>');
+  }
+
   function medienLaden() {
     var ziel = el('hbMedien'); if (!ziel) return;
 
     if (offen.medien === 'podcast') {
+      if (pcFolgen !== null || pcFehler) { podcastZeichnen(); return; }
       var c = window.sb;
       if (!c) { ziel.innerHTML = leer('Der Podcast lädt, sobald du angemeldet bist.'); return; }
-      c.from('podcasts').select('id,titel,level,dauer,kurz,bild,datum')
-        .order('datum', { ascending: false }).limit(40)
+      ziel.innerHTML = leer('Einen Moment …');
+      /* Nur veroeffentlichte Folgen mit Tondatei — Entwuerfe und
+         Fehlschlaege haben im Schuelerbereich nichts verloren. */
+      c.from('podcasts').select('id,titel,level,dauer,thema,kurz,bild,datum')
+        .eq('status', 'live').not('datei', 'is', null)
+        .order('datum', { ascending: false }).limit(200)
         .then(function (r) {
-          var f = (r && r.data) || [];
-          if (!f.length) { ziel.innerHTML = leer('Noch keine Folge veröffentlicht.'); return; }
-          ziel.innerHTML = '<div class="hb-git med">' + f.map(function (x) {
-            return '<button class="hb-m" onclick="hubPodcast(\'' + E(x.id) + '\')">'
-              + '<span class="hb-m-bild"' + (x.bild ? ' style="background-image:url(\'' + E(x.bild) + '\')"' : '') + '>'
-              + (x.bild ? '' : '🎧') + '</span>'
-              + '<span class="hb-m-u">'
-              +   '<span class="hb-m-dauer">' + E(x.dauer || '') + '</span>'
-              +   '<b>' + E(x.titel) + '</b>'
-              +   '<small>' + E(x.level || '') + (x.kurz ? ' · ' + E(x.kurz).slice(0, 40) : '') + '</small>'
-              + '</span></button>';
-          }).join('') + '</div>';
-        }, function () { ziel.innerHTML = leer('Der Podcast lässt sich gerade nicht laden.'); });
+          pcFolgen = ((r && r.data) || []).filter(function (x) { return x && x.id; });
+          gehoertHolen(podcastZeichnen);
+        }, function () { pcFehler = true; podcastZeichnen(); });
       return;
     }
 
-    /* Reels und Videos: noch nicht gefüllt — ehrlich sagen statt
+    /* Reels und Videos: noch nicht gefuellt — ehrlich sagen statt
        leere Kacheln zeigen. */
     var was = offen.medien === 'reels' ? 'Reels' : 'Videos';
     ziel.innerHTML = '<div class="hb-bald">'
@@ -378,8 +513,10 @@
       + '</div>';
   }
   window.hubPodcast = function (id) {
+    try { gehoertMerken(id); } catch (e) {}
+    try { podcastZeichnen(); } catch (e) {}
     if (window.podcastOeffnen) return window.podcastOeffnen(id, true);
-    window.open('podcast.html', '_blank', 'noopener');
+    window.open('podcast.html#' + encodeURIComponent(id || ''), '_blank', 'noopener');
   };
 
   window.HUBS = { lernen: window.renderLernenHub, sprechen: window.renderSprechen, medien: window.renderMedien };
@@ -476,6 +613,39 @@
       '.hb-bald b{font-size:17px}',
       '.hb-bald small{color:var(--hb-soft);font-size:13.5px;max-width:42ch;line-height:1.5}',
       '.hb-bald .hb-btn{margin-top:8px}',
+
+      /* ---- Podcast: nach Niveau geordnet ---- */
+      '.pc-summe{color:var(--hb-soft);font-size:14px;margin:0 0 14px}',
+      '.pc-summe b{color:var(--hb-ink);font-weight:650}',
+      '.pc-gruppe{background:#fff;border:1.5px solid var(--hb-line);border-radius:16px;',
+      '  margin:0 0 10px;overflow:hidden}',
+      '.pc-gruppe.auf{border-color:#D7DEE2}',
+      '.pc-gruppe-kopf{display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;',
+      '  font:inherit;text-align:left;padding:15px 17px;cursor:pointer;color:var(--hb-ink)}',
+      '.pc-gruppe-kopf:hover{background:#FAFBFC}',
+      '.pc-gruppe-kopf b{font-size:16px;flex:1;letter-spacing:-.01em}',
+      '.pc-anzahl{color:var(--hb-soft);font-size:13.5px}',
+      '.pc-pfeil{color:var(--hb-soft);font-size:13px;width:14px;text-align:center}',
+      '.pc-liste{border-top:1px solid var(--hb-line)}',
+      '.pc-zeile{display:flex;align-items:center;gap:13px;width:100%;background:none;border:none;',
+      '  font:inherit;text-align:left;padding:13px 17px;cursor:pointer;color:var(--hb-ink);',
+      '  border-bottom:1px solid #F1F4F6}',
+      '.pc-zeile:last-child{border-bottom:none}',
+      '.pc-zeile:hover{background:#FAFBFC}',
+      '.pc-play{flex:0 0 32px;height:32px;border-radius:50%;background:var(--hb-ink);color:#fff;',
+      '  display:flex;align-items:center;justify-content:center;font-size:11px;padding-left:2px}',
+      '.pc-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}',
+      '.pc-txt b{font-size:15px;font-weight:600;line-height:1.3}',
+      '.pc-txt small{color:var(--hb-soft);font-size:13px;line-height:1.35;',
+      '  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+      '.pc-meta{flex:0 0 auto;display:flex;align-items:center;gap:8px;color:var(--hb-soft);font-size:12.5px}',
+      '.pc-dauer{font-variant-numeric:tabular-nums}',
+      '.pc-tag{display:none}',
+      '.pc-mark{font-size:11.5px;font-weight:650;border-radius:999px;padding:3px 9px;letter-spacing:.01em}',
+      '.pc-mark.neu{background:#FDECEC;color:#B3261E}',
+      '.pc-mark.fertig{background:#EDF6F0;color:#1F7A47}',
+      '.pc-fuss{color:var(--hb-soft);font-size:13.5px;margin:14px 0 0;line-height:1.5}',
+      '@media(min-width:560px){.pc-tag{display:inline}}',
       /* Handy: Kacheln zu zweit, wie im App-Entwurf */
       '@media(max-width:620px){',
       '  .hb-git{grid-template-columns:1fr 1fr;gap:10px}',
