@@ -466,7 +466,13 @@ export default async function handler(req, res) {
   }
 
   // ---- Vorverkauf: Zugang erst ab einem Datum, Laufzeit beginnt dann ----
-  const START_AB = { community: '2026-09-01', premium: '2026-09-01' };
+  /* MUSS mit START_AB in api/create-checkout.js uebereinstimmen.
+     Hier stand bis zuletzt fuer beide der 01.09.2026 — ein Datum aus der
+     Vergangenheit. Dadurch blieb tier_ab leer, die fertige Vorverkaufs-
+     Karte mit dem Countdown erschien nie, und die Monatsstunden liefen
+     31 Tage nach dem Kauf ab statt ab dem Starttag.
+     community: null = ab sofort nutzbar. */
+  const START_AB = { community: null, premium: '2026-11-01', premiumplus: '2027-02-01' };
   function startDatum(tier){
     const d = START_AB[tier];
     if (!d) return null;
