@@ -2160,7 +2160,11 @@ function kalGrenze(){
 }
 function kalWeekChange(d){ var min=kalGrenze(); kalWeek+=d; if(kalWeek<min)kalWeek=min; loadKalender(); }
 function kalBook(id){
-  if(credits<1){ showNoCredit(); return; }
+  /* Frueher stand hier hart credits<1. Premium bucht ab 01.11.2026 aber
+     ohne Guthaben — und wurde deshalb schon vom eigenen Knopf abgewiesen,
+     obwohl book_class in der Datenbank es laengst erlaubt haette.
+     darfBuchen() kennt genau diese Regel. */
+  if(!darfBuchen()){ showNoCredit(); return; }
   const c=kalCache.find(x=>String(x.id)===String(id));
   const start=c?new Date(c.starts_at):null;
   const title=c?esc(c.topic||c.title||'Unterricht'):'Unterricht';
@@ -2171,10 +2175,19 @@ function kalBook(id){
     <h3>Buchung bestätigen?</h3>
     <p class="hint">Möchtest du diese Stunde verbindlich buchen?</p>
     <div class="det"><b>${title}</b><span>${when}${sub?' · '+sub:''}</span></div>
-    <p class="hint">Storno kostenlos bis 6 Stunden vorher. Dein Guthaben wird erst nach der Teilnahme abgezogen.</p>
+    <p class="hint">Storno kostenlos bis 6 Stunden vorher.${ohneGuthaben()?'':' Dein Guthaben wird erst nach der Teilnahme abgezogen.'}</p>
     <div class="acts"><button class="btn btn-ghost" onclick="closeCfm()">Abbrechen</button><button class="btn btn-primary" id="cfmGo">Buchung bestätigen</button></div>`;
   document.getElementById('cfmGo').onclick=()=>doBook(id);
   document.getElementById('cfmModal').classList.add('open');
+}
+/* Premium bucht ab dem Starttag ohne Abzug — dann darf im Bestaetigungs-
+   fenster auch nichts von Guthaben stehen. */
+function ohneGuthaben(){
+  try{
+    if(!(new Date() >= new Date('2026-11-01T00:00:00+01:00'))) return false;
+    return !!(profile && ['premium','premium_plus'].indexOf(profile.tier)>=0
+              && (profile.status==='aktiv' || !profile.status));
+  }catch(e){ return false; }
 }
 function closeCfm(){ document.getElementById('cfmModal').classList.remove('open'); }
 function showNoCredit(){
