@@ -1755,6 +1755,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-sprachkurs.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/wortschatzboost-verben-ent-3stufen.html",
+  "t": "Wortschatzboost: Verben mit ent- (untrennbar · 3 Stufen)",
+  "lvl": "A2–C1",
+  "art": "grammatik",
+  "b": "sprachkurs",
+  "img": "amanda/sz-sprachkurs.webp"
+ },
+ {
   "d": "Unterricht-ab-14-09/ki-im-alltag-3stufen.html",
   "t": "KI im Alltag — Sprechen mit Drehrad (3 Stufen)",
   "lvl": "A2–C1",
