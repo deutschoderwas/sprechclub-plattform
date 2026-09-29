@@ -59,8 +59,14 @@
   /* Die Fläche, in die gerendert wird. Auf der Plattform ist das
      die Ansicht „Kurs"; im Test reicht irgendein Kasten. */
   function flaeche(){
-    return el('v-kurs') || el('v-niveau') || el('v-lernen')
-      || document.querySelector('.view.active') || document.body;
+    /* show() setzt die aktive Ansicht, BEVOR es den Zeichner ruft. Wenn
+       also gerade eine Ansicht offen ist, die zu dieser Datei gehoert,
+       ist sie das richtige Ziel. Vorher stand v-kurs immer vorn — der
+       Schreibtrainer landete deshalb jedes Mal dort, und #schreiben war
+       eine leere Seite. */
+    var akt = document.querySelector('.view.active');
+    if (akt && /^v-(kurs|niveau|lernen|schreiben)$/.test(akt.id)) return akt;
+    return el('v-kurs') || el('v-niveau') || el('v-lernen') || akt || document.body;
   }
   function hoch(){ try{ window.scrollTo(0,0); }catch(e){} }
 
