@@ -1795,6 +1795,14 @@ window.LEKTIONEN = [
   "img": "amanda/sz-it.webp"
  },
  {
+  "d": "Unterricht-ab-14-09/reisen-urlaub-3stufen.html",
+  "t": "Reisen & Urlaub — Sprechen mit Drehrad (3 Stufen)",
+  "lvl": "A2–C1",
+  "art": "lektion",
+  "b": "sozial",
+  "img": "amanda/sz-freunde.webp"
+ },
+ {
   "d": "Unterricht-ab-14-09/smalltalk-nachbarn-3stufen.html",
   "t": "Smalltalk mit den Nachbarn — Drehrad (3 Stufen)",
   "lvl": "A2–C1",
