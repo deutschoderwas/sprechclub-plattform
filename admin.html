@@ -1593,7 +1593,7 @@ function renderSchuelerTable(){
     let head = '';
     if (byName){
       const L = (nameKey(p)[0]||'#').toUpperCase();
-      if (L !== lastLetter){ lastLetter = L; head = `<tr class="alpha"><td colspan="5" style="background:#FFF8E0;font-weight:800;color:#DD0000;letter-spacing:.05em;padding:8px 10px">${esc(L)}</td></tr>`; }
+      if (L !== lastLetter){ lastLetter = L; head = `<tr class="alpha"><td colspan="6" style="background:#FFF8E0;font-weight:800;color:#DD0000;letter-spacing:.05em;padding:8px 10px">${esc(L)}</td></tr>`; }
     }
     const nivo = p.level || p.target_level || '';
     return head + `<tr onclick="openStudentCard('${p.id}')" style="cursor:pointer${(brauchtStunden(p)&&p.credits<=1)?';background:#FFF1C2':''}" onmouseover="this.style.outline='2px solid #7ED8EA'" onmouseout="this.style.outline='none'">
@@ -1603,9 +1603,10 @@ function renderSchuelerTable(){
       <td>${statusLabel(st)}${p.is_challenger?' <span class="pill" style="background:#FFF6DC;color:#C79600;font-weight:800">🏆 Challenger</span>':''}${((st==='pause'||st==='urlaub')&&p.inactive_until)?` <span class="muted" style="font-size:11px">bis ${p.inactive_until.split('-').reverse().join('.')}</span>`:''}</td>
       <td>${brauchtStunden(p)
         ? `<b style="font-size:16px">${p.credits}</b> <span class="muted" style="font-size:12px">Std.</span>${p.credits<=1?' <span class="pill">niedrig</span>':''}`
-        : `<span class="muted" style="font-size:12px" title="Zahlt monatlich für die Plattform und bucht keine Einzelstunden">nicht nötig</span>`}</td></tr>`;
+        : `<span class="muted" style="font-size:12px" title="Zahlt monatlich für die Plattform und bucht keine Einzelstunden">nicht nötig</span>`}</td>
+      <td><button class="btn btn-ghost" title="Fortschritts-Akte — Lernmaterial, Vokabeln, Stunden" onclick="openFortschritt('${p.id}', event)" style="padding:4px 9px;font-size:13px">📈</button></td></tr>`;
   }).join('');
-  document.getElementById('schuelerTable').innerHTML = `<p class="muted" style="margin:0 0 6px">Tipp: Auf einen Schüler klicken, um die Schülerkarte zu öffnen.</p><table><tr><th>Name</th><th>E-Mail</th><th>Niveau</th><th>Status</th><th>Guthaben</th></tr>` + rowsHtml + '</table>';
+  document.getElementById('schuelerTable').innerHTML = `<p class="muted" style="margin:0 0 6px">Tipp: Auf einen Schüler klicken, um die Schülerkarte zu öffnen.</p><table><tr><th>Name</th><th>E-Mail</th><th>Niveau</th><th>Status</th><th>Guthaben</th><th>Akte</th></tr>` + rowsHtml + '</table>';
 }
 
 // ---------- Schülerkarte (Tutorbird-Stil) ----------
@@ -1623,6 +1624,7 @@ async function openStudentCard(id){
       <button onclick="closeStudentCard()" style="background:none;border:none;color:#fff;font-size:22px;cursor:pointer;line-height:1">✕</button>
     </div>
     <div style="padding:18px 22px;max-height:70vh;overflow:auto">
+      <button class="btn" onclick="openFortschritt('${p.id}')" style="width:100%;margin:0 0 14px;background:linear-gradient(135deg,#2DD4BF,#14B8A6);color:#06403A;font-weight:800;border:none">📈 Fortschritts-Akte öffnen</button>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
         <div class="field" style="margin:0"><label>Niveau (aktuell)</label><input id="cLevel" value="${esc(p.level||'')}" placeholder="z.B. B1" list="levellist"></div>
         <div class="field" style="margin:0"><label>Unterricht seit</label><input id="cStarted" type="date" value="${esc(p.started_at||'')}"></div>
@@ -1722,6 +1724,301 @@ async function openStudentCard(id){
     }).join('');
   });
 }
+// ---------- Fortschritts-Akte (reine Leseansicht) ----------
+/* Julia wollte sehen, "wie fortschrittlich sie schon sind und was sie machen an
+   Lernmaterial und welche Stunde". Absichtlich nur lesend: die Akte zeigt
+   denselben Stand wie der Schuelerbereich, gibt aber niemandem die Moeglichkeit,
+   im Namen eines Schuelers zu buchen, zu schreiben oder etwas zu loeschen. */
+const AKTE_STUFE = ['neu', 'wackelig', 'im Training', 'sitzt', 'sitzt gut', 'sicher'];
+const AKTE_QUELLE = { kurs:'Kurs', live:'Live-Stunde', st:'Stunde', ws:'Wortschatz', a1:'A1-Kurs', a2:'A2-Kurs' };
+const AKTE_SKILL = { wortschatz:'Wortschatz', hoeren:'Hören', lesen:'Lesen', schreiben:'Schreiben', sprechen:'Sprechen', grammatik:'Grammatik', stunde:'Stunde' };
+
+function schliesseAkte(){ const o = document.getElementById('akteOverlay'); if (o) o.remove(); }
+
+function akteDauer(sek){
+  const s = Math.max(0, Math.round(Number(sek) || 0));
+  if (s < 60) return s + ' Sek.';
+  const m = Math.round(s / 60);
+  if (m < 60) return m + ' Min.';
+  return Math.floor(m / 60) + ' Std. ' + (m % 60) + ' Min.';
+}
+function akteDatum(x){
+  if (!x) return '—';
+  try { return new Date(x).toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit', year:'numeric' }); }
+  catch(e){ return '—'; }
+}
+function akteTag(x){
+  return new Intl.DateTimeFormat('en-CA', { timeZone:'Europe/Berlin', year:'numeric', month:'2-digit', day:'2-digit' }).format(new Date(x));
+}
+function akteSeit(x){
+  if (!x) return '';
+  /* Kalendertage, nicht 24-Stunden-Bloecke: eine Buchung von gestern Abend
+     darf nicht als "heute" durchgehen. */
+  const a = Date.parse(akteTag(x) + 'T00:00:00Z');
+  const b = Date.parse(akteTag(new Date()) + 'T00:00:00Z');
+  const t = Math.round((b - a) / 86400000);
+  if (t <= 0) return 'heute';
+  if (t === 1) return 'gestern';
+  if (t < 7)  return 'vor ' + t + ' Tagen';
+  if (t < 60) return 'vor ' + Math.max(1, Math.floor(t / 7)) + ' Wochen';
+  return 'vor ' + Math.floor(t / 30) + ' Monaten';
+}
+/* Dateinamen wie "Unterricht-ab-14-09/w04-a-teil1-zimmer-moebel-a2b1.html"
+   sind fuer die Werkstatt gemacht, nicht fuer Julias Augen. */
+function akteName(datei){
+  let s = String(datei || '').split('/').pop().replace(/\.html?$/i, '');
+  let niveau = '', woche = '';
+  s = s.replace(/[-_]((?:a1|a2|b1|b2|c1|c2)(?:[-_]?(?:a1|a2|b1|b2|c1|c2))?)$/i, (m, lv) => {
+    niveau = lv.toUpperCase().replace(/[-_]/g, '/').replace(/^([ABC]\d)([ABC]\d)$/, '$1/$2');
+    return '';
+  });
+  s = s.replace(/^w(\d{1,2})[-_]([a-z])[-_]/i, (m, w, strang) => { woche = 'W' + Number(w) + '·' + strang.toUpperCase(); return ''; });
+  s = s.replace(/[-_]/g, ' ').trim();
+  s = s.charAt(0).toUpperCase() + s.slice(1);
+  return { titel: s || String(datei || ''), niveau: niveau, woche: woche };
+}
+function akteKachel(zahl, text, farbe, unten){
+  /* "2 Std. 8 Min." ist dreimal so lang wie "12" und wuerde die Kachel sonst
+     ueber drei Zeilen zerreissen. */
+  const gross = String(zahl).length > 7 ? '16px' : (String(zahl).length > 4 ? '19px' : '23px');
+  return '<div style="background:' + (farbe || '#FFF8E0') + ';border-radius:14px;padding:11px 13px;min-width:0">'
+    + '<div style="font-size:' + gross + ';font-weight:800;color:#1A1A1A;line-height:1.2">' + zahl + '</div>'
+    + '<div style="font-size:12.5px;font-weight:700;color:#4B5563;margin-top:2px">' + text + '</div>'
+    + (unten ? '<div class="muted" style="font-size:11px;margin-top:2px">' + unten + '</div>' : '')
+    + '</div>';
+}
+function akteBlock(titel, inhalt, hinweis){
+  return '<div style="border:1px solid var(--border);border-radius:16px;padding:14px 16px;margin-bottom:12px">'
+    + '<div style="font-weight:800;color:#1A1A1A;margin-bottom:' + (hinweis ? '2px' : '8px') + '">' + titel + '</div>'
+    + (hinweis ? '<div class="muted" style="font-size:12px;margin-bottom:8px">' + hinweis + '</div>' : '')
+    + inhalt + '</div>';
+}
+function akteLeer(text){ return '<div class="muted" style="font-size:13px">' + text + '</div>'; }
+function akteZeile(inhalt, blass){
+  return '<div style="border-top:1px solid var(--border);padding:6px 0;font-size:13px' + (blass ? ';opacity:.6' : '') + '">' + inhalt + '</div>';
+}
+
+async function openFortschritt(id, ev){
+  if (ev && ev.stopPropagation) ev.stopPropagation();
+  const p = SCHUELER.find(x => x.id === id); if (!p) return;
+  const ov = document.createElement('div'); ov.id = 'akteOverlay';
+  ov.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(26,26,26,.55);display:flex;align-items:flex-start;justify-content:center;padding:22px 12px;overflow:auto';
+  ov.onclick = (e) => { if (e.target === ov) schliesseAkte(); };
+  ov.innerHTML = '<div style="background:#fff;border-radius:22px;max-width:880px;width:100%;box-shadow:0 24px 60px rgba(0,0,0,.32);overflow:hidden">'
+    + '<div style="background:linear-gradient(135deg,#14B8A6,#0F766E);color:#fff;padding:17px 22px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px">'
+    +   '<div><div style="font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.85;font-weight:800">Fortschritts-Akte</div>'
+    +     '<div style="font-size:21px;font-weight:800;margin-top:2px">' + esc(p.name || 'Ohne Name') + '</div>'
+    +     '<div style="opacity:.85;font-size:13px">' + esc(p.email || '') + '</div></div>'
+    +   '<button onclick="schliesseAkte()" aria-label="Schließen" style="background:none;border:none;color:#fff;font-size:22px;cursor:pointer;line-height:1">✕</button>'
+    + '</div>'
+    + '<div id="akteBody" style="padding:16px 20px;max-height:76vh;overflow:auto"><div class="muted">Lädt …</div></div>'
+    + '<div style="padding:12px 20px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center">'
+    +   '<span class="muted" style="font-size:11.5px">🔒 Nur-Lesen-Ansicht — du siehst den Lernstand, änderst aber nichts am Konto.</span>'
+    +   '<button class="btn btn-ghost" onclick="schliesseAkte()">Schließen</button>'
+    + '</div></div>';
+  document.body.appendChild(ov);
+
+  const antw = await Promise.all([
+    sb.from('lektion_fortschritt').select('datei,aufrufe,sekunden,fertig_am,zuerst_am,zuletzt_am').eq('user_id', id),
+    sb.from('lernstand').select('schluessel,wert,aktualisiert_am').eq('user_id', id),
+    sb.from('ueben_stand').select('skill,thema,best,versuche,zuletzt').eq('user_id', id),
+    sb.from('bookings').select('status,attendance,created_at,classes(title,starts_at)').eq('user_id', id),
+    sb.from('vokabel_status').select('vok_id,stufe,faellig_am,richtig,falsch,letzte,quelle').eq('user_id', id),
+    sb.from('exercise_progress').select('phase,score,total,completed,updated_at,classes(title,starts_at)').eq('user_id', id),
+    sb.from('korrekturen').select('typ,aufgabe,status,created_at,answered_at').eq('user_id', id)
+  ]);
+  const body = document.getElementById('akteBody');
+  if (!body) return;   // Akte wurde inzwischen geschlossen
+
+  const nimm = (r) => (r && !r.error && Array.isArray(r.data)) ? r.data : [];
+  const lektionen = nimm(antw[0]);
+  const stand     = nimm(antw[1]);
+  const ueben     = nimm(antw[2]);
+  const buchungen = nimm(antw[3]).filter(r => r.classes);
+  const vokabeln  = nimm(antw[4]);
+  const uebungen  = nimm(antw[5]);
+  const korrektur = nimm(antw[6]);
+  /* Wenn eine Tabelle wegen Rechten zu ist, soll das dastehen und nicht als
+     "hat nichts gemacht" durchgehen. */
+  const fehler = antw.map((r, i) => (r && r.error) ? ['Lernmaterial','Lernstand','Übungsstand','Buchungen','Vokabeln','Aufgaben','Korrekturen'][i] : null).filter(Boolean);
+
+  const S = {}; stand.forEach(r => { S[r.schluessel] = r.wert; });
+  const ub   = (S.ub && typeof S.ub === 'object') ? S.ub : {};
+  const lz   = (S.lz && typeof S.lz === 'object') ? S.lz : {};
+  const lern = (S.lern && typeof S.lern === 'object') ? S.lern : {};
+  const xp = Number(ub.xp) || 0;
+  const streak = Number(ub.streak) || 0;
+
+  const lekFertig = lektionen.filter(r => r.fertig_am).length;
+  const lernzeit = lektionen.reduce((s, r) => s + (Number(r.sekunden) || 0), 0);
+  const heuteISO = new Intl.DateTimeFormat('en-CA', { timeZone:'Europe/Berlin', year:'numeric', month:'2-digit', day:'2-digit' }).format(new Date());
+  const vokSitzt = vokabeln.filter(v => (Number(v.stufe) || 0) >= 3).length;
+  const vokFaellig = vokabeln.filter(v => !v.faellig_am || String(v.faellig_am) <= heuteISO).length;
+  const jetzt = Date.now();
+  const gewesen = buchungen.filter(r => r.attendance === 'present').length;
+  const verpasst = buchungen.filter(r => r.attendance === 'absent').length;
+  const kommend = buchungen.filter(r => r.status === 'booked' && new Date(r.classes.starts_at).getTime() > jetzt).length;
+  const aufgabenFertig = uebungen.filter(r => r.completed).length;
+
+  /* Letzte Aktivitaet: das aussagekraeftigste Feld der ganzen Akte, denn es
+     sagt, ob jemand ueberhaupt noch dabei ist. Darum aus allen Quellen. */
+  const zeiten = []
+    .concat(lektionen.map(r => r.zuletzt_am))
+    .concat(stand.map(r => r.aktualisiert_am))
+    .concat(ueben.map(r => r.zuletzt))
+    .concat(vokabeln.map(r => r.letzte))
+    .concat(uebungen.map(r => r.updated_at))
+    .concat(buchungen.map(r => r.created_at))
+    .filter(Boolean).map(x => new Date(x).getTime()).filter(t => Number.isFinite(t));
+  const letzteAkt = zeiten.length ? new Date(Math.max.apply(null, zeiten)) : null;
+
+  let html = '';
+
+  if (fehler.length){
+    html += '<div style="background:#FEF3C7;border:1px solid #FCD34D;border-radius:12px;padding:10px 13px;margin-bottom:12px;font-size:13px">'
+      + '⚠️ Nicht lesbar (Rechte): ' + esc(fehler.join(', ')) + ' — der Rest der Akte stimmt.</div>';
+  }
+
+  html += '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px">'
+    + gruppenBadge(p)
+    + (lz.n ? '<span class="pill" style="background:#Eef;color:#2563EB;font-weight:700">Lernziel ' + esc(String(lz.n)) + '</span>' : '')
+    + (p.level ? '<span class="pill" style="background:#E0F2FE;color:#0369A1;font-weight:700">Niveau ' + esc(p.level) + '</span>' : '')
+    + (lz.b ? '<span class="pill" style="background:#F3E8FF;color:#7E22CE;font-weight:700">Schwerpunkt ' + esc(String(lz.b)) + '</span>' : '')
+    + '<span class="pill" style="background:' + (letzteAkt && (jetzt - letzteAkt.getTime()) < 14 * 86400000 ? '#DCFCE7;color:#15803D' : '#FEE2E2;color:#B91C1C') + ';font-weight:700">'
+    + (letzteAkt ? 'Zuletzt aktiv ' + akteSeit(letzteAkt) : 'Noch nie im Lernbereich') + '</span>'
+    + '</div>';
+
+  html += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:9px;margin-bottom:14px">'
+    + akteKachel(xp.toLocaleString('de-DE'), 'XP gesammelt', '#FFF8E0', streak ? '🔥 ' + streak + ' Tage Serie' : 'keine Serie')
+    + akteKachel(lektionen.length, 'Lernmaterial geöffnet', '#F2FBFA', lekFertig + (lekFertig === 1 ? ' als fertig markiert' : ' als fertig markiert'))
+    + akteKachel(akteDauer(lernzeit), 'Lernzeit im Material', '#F7F4FF', lektionen.length ? 'zuletzt ' + akteSeit(lektionen.map(r => r.zuletzt_am).sort().reverse()[0]) : '—')
+    + akteKachel(vokabeln.length, vokabeln.length === 1 ? 'Vokabel im Training' : 'Vokabeln im Training', '#FFF1F5', vokSitzt + ' sitzen · ' + vokFaellig + ' fällig')
+    + akteKachel(gewesen, gewesen === 1 ? 'Stunde besucht' : 'Stunden besucht', '#E8F6FF', verpasst + ' verpasst · ' + kommend + ' kommend')
+    + akteKachel(aufgabenFertig, aufgabenFertig === 1 ? 'Aufgabe erledigt' : 'Aufgaben erledigt', '#EFFBF0', 'Vor-/Nachbereitung')
+    + '</div>';
+
+  // ---- Lernmaterial ----
+  const lekSort = lektionen.slice().sort((a, b) => new Date(b.zuletzt_am || 0) - new Date(a.zuletzt_am || 0));
+  html += akteBlock('📚 Lernmaterial',
+    lekSort.length
+      ? lekSort.slice(0, 80).map(r => {
+          const n = akteName(r.datei);
+          return akteZeile(
+            (r.fertig_am ? '<span title="fertig">✅</span> ' : '<span title="angefangen" style="opacity:.45">○</span> ')
+            + '<a href="/' + encodeURI(r.datei) + '" target="_blank" rel="noopener" style="color:#0F766E;font-weight:700;text-decoration:none">' + esc(n.titel) + '</a>'
+            + (n.niveau ? ' <span class="pill" style="background:#Eef;color:#2563EB;font-weight:700;font-size:10.5px">' + esc(n.niveau) + '</span>' : '')
+            + (n.woche ? ' <span class="pill" style="background:#F1F5F9;color:#475569;font-weight:700;font-size:10.5px">' + esc(n.woche) + '</span>' : '')
+            + ' <span class="muted">· ' + akteDauer(r.sekunden) + ' · ' + (Number(r.aufrufe) || 0) + '× offen · zuletzt ' + akteDatum(r.zuletzt_am) + '</span>',
+            !r.fertig_am);
+        }).join('') + (lekSort.length > 80 ? '<div class="muted" style="font-size:12px;padding-top:6px">… und ' + (lekSort.length - 80) + ' weitere</div>' : '')
+      : akteLeer('Hat noch kein Lernmaterial geöffnet.'),
+    'Was der Schüler selbst im Lernbereich aufgemacht hat — ✅ heißt „als fertig markiert“.');
+
+  // ---- Üben & Quiz ----
+  const themen = (ub.themes && typeof ub.themes === 'object') ? ub.themes : {};
+  const themenListe = Object.keys(themen).map(k => {
+    const teil = k.split('|');
+    return { skill: teil[0] || '', thema: teil[1] || '', best: Number((themen[k] || {}).best) || 0 };
+  }).sort((a, b) => b.best - a.best);
+  ueben.forEach(r => {
+    if (!themenListe.some(t => t.skill === r.skill && t.thema === r.thema)) {
+      themenListe.push({ skill: r.skill || '', thema: r.thema || '', best: Number(r.best) || 0 });
+    }
+  });
+  html += akteBlock('🎯 Übungen &amp; Quiz',
+    themenListe.length
+      ? '<div style="display:flex;flex-wrap:wrap;gap:6px">' + themenListe.map(t => {
+          const farbe = t.best >= 90 ? '#DCFCE7;color:#15803D' : (t.best >= 70 ? '#FEF9C3;color:#A16207' : '#FEE2E2;color:#B91C1C');
+          return '<span class="pill" style="background:' + farbe + ';font-weight:700">'
+            + esc(AKTE_SKILL[t.skill] || t.skill) + (t.thema && t.thema !== t.skill ? ' · ' + esc(t.thema) : '')
+            + ' ' + t.best + ' %</span>';
+        }).join('') + '</div>'
+      : akteLeer('Noch keine Übung abgeschlossen.'),
+    'Bestes Ergebnis pro Thema. Grün ab 90 %, gelb ab 70 %, rot darunter.');
+
+  // ---- Vokabeln ----
+  if (vokabeln.length){
+    const fach = [0,0,0,0,0,0];
+    vokabeln.forEach(v => { const st = Math.min(5, Math.max(0, Number(v.stufe) || 0)); fach[st]++; });
+    const quellen = {};
+    vokabeln.forEach(v => { const q = v.quelle || '—'; quellen[q] = (quellen[q] || 0) + 1; });
+    html += akteBlock('🧠 Vokabeln',
+      '<div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px">'
+      + fach.map((n, i) => n ? '<span class="pill" style="background:' + (i >= 3 ? '#DCFCE7;color:#15803D' : (i >= 1 ? '#FEF9C3;color:#A16207' : '#FEE2E2;color:#B91C1C')) + ';font-weight:700">'
+          + esc(AKTE_STUFE[i]) + ': ' + n + '</span>' : '').join('')
+      + '</div>'
+      + '<div class="muted" style="font-size:12.5px">Heute zur Wiederholung fällig: <b style="color:#1A1A1A">' + vokFaellig + '</b>'
+      + ' · Richtig/falsch insgesamt: ' + vokabeln.reduce((s, v) => s + (Number(v.richtig) || 0), 0) + ' / ' + vokabeln.reduce((s, v) => s + (Number(v.falsch) || 0), 0)
+      + '<br>Woher: ' + Object.keys(quellen).sort((a, b) => quellen[b] - quellen[a]).map(q => esc(AKTE_QUELLE[q] || q) + ' ' + quellen[q]).join(' · ') + '</div>',
+      'Leitner-Fächer: je höher das Fach, desto länger sitzt das Wort schon.');
+  } else {
+    html += akteBlock('🧠 Vokabeln', akteLeer('Hat den Vokabeltrainer noch nicht benutzt.'));
+  }
+
+  // ---- Dialoge ----
+  const dlg = (lern.dlg && typeof lern.dlg === 'object') ? lern.dlg : {};
+  const dlgKeys = Object.keys(dlg).sort((a, b) => String((dlg[b] || {}).am || '').localeCompare(String((dlg[a] || {}).am || '')));
+  html += akteBlock('🗣️ Geübte Dialoge',
+    dlgKeys.length
+      ? '<div style="display:flex;flex-wrap:wrap;gap:6px">' + dlgKeys.map(k =>
+          '<span class="pill" style="background:#E8F6FF;color:#0369A1;font-weight:700">' + esc(String(k).replace(/[-_]/g, ' ')) + ' <span style="opacity:.7">' + esc(akteDatum((dlg[k] || {}).am)) + '</span></span>').join('') + '</div>'
+      : akteLeer('Noch keinen Dialog geübt.'),
+    dlgKeys.length ? dlgKeys.length + ' Dialoge · Schwerpunkt zuletzt: ' + esc(String(lern.zuletzt || '—')) : '');
+
+  // ---- Stunden ----
+  const bkSort = buchungen.slice().sort((a, b) => new Date(b.classes.starts_at) - new Date(a.classes.starts_at));
+  const stdFmt = new Intl.DateTimeFormat('de-DE', { timeZone:'Europe/Berlin', weekday:'short', day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
+  html += akteBlock('📅 Stunden',
+    bkSort.length
+      ? bkSort.slice(0, 25).map(r => {
+          const c = r.classes;
+          const vorbei = new Date(c.starts_at).getTime() < jetzt;
+          let marke = '<span class="muted">📅 gebucht</span>';
+          if (r.status === 'cancelled') marke = '<span style="color:#B91C1C">↩️ storniert</span>';
+          else if (r.attendance === 'present') marke = '<span style="color:#15803D;font-weight:700">✅ war da</span>';
+          else if (r.attendance === 'absent') marke = '<span style="color:#B91C1C;font-weight:700">❌ nicht da</span>';
+          else if (vorbei) marke = '<span style="color:#A16207">🟡 nicht eingetragen</span>';
+          return akteZeile('<b style="color:#1A1A1A">' + stdFmt.format(new Date(c.starts_at)) + '</b> · ' + esc(c.title || '') + ' · ' + marke, r.status === 'cancelled');
+        }).join('') + (bkSort.length > 25 ? '<div class="muted" style="font-size:12px;padding-top:6px">… und ' + (bkSort.length - 25) + ' weitere</div>' : '')
+      : akteLeer('Hat noch keine Stunde gebucht.'),
+    gewesen + ' besucht · ' + verpasst + ' verpasst · ' + kommend + ' kommend · ' + bkSort.length + ' Buchungen insgesamt');
+
+  // ---- Aufgaben zur Stunde ----
+  const epSort = uebungen.filter(r => r.completed).sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+  if (epSort.length){
+    const phase = { pre:'Vorbereitung', live:'im Unterricht', post:'Nachbereitung' };
+    html += akteBlock('📘 Aufgaben zur Stunde',
+      epSort.slice(0, 25).map(r => akteZeile(
+        esc((r.classes && r.classes.title) || 'Aufgabe')
+        + ' <span class="muted">· ' + esc(phase[r.phase] || r.phase || '')
+        + ((r.score != null && r.total != null) ? ' · ' + r.score + '/' + r.total : '')
+        + ' · ' + akteDatum(r.updated_at) + '</span>')).join(''),
+      epSort.length + ' erledigt');
+  }
+
+  // ---- Korrekturen ----
+  if (korrektur.length){
+    html += akteBlock('✍️ Eingeschickte Texte',
+      korrektur.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 15).map(r => akteZeile(
+        esc(r.aufgabe || r.typ || 'Text')
+        + ' <span class="muted">· ' + akteDatum(r.created_at) + ' · '
+        + (r.answered_at ? 'korrigiert' : '<b style="color:#B45309">wartet auf Korrektur</b>') + '</span>')).join(''),
+      korrektur.length + ' insgesamt');
+  }
+
+  // ---- Niveau-Test ----
+  if (S.niveau || S.pruefLetzte){
+    html += akteBlock('🧪 Einstufung &amp; Prüfungstraining',
+      '<div class="muted" style="font-size:13px">'
+      + (S.niveau ? 'Selbst eingestuft: <b style="color:#1A1A1A">' + esc(String(S.niveau)) + '</b>' : '')
+      + (S.niveau && S.pruefLetzte ? ' · ' : '')
+      + (S.pruefLetzte ? 'Letztes Prüfungstraining: <b style="color:#1A1A1A">' + esc(String(S.pruefLetzte).toUpperCase()) + '</b>' : '')
+      + '</div>');
+  }
+
+  body.innerHTML = html;
+}
+
 async function saveStudentCard(id){
   const msg=document.getElementById('cSaveMsg'); if(msg) msg.textContent='⏳ …';
   const level=document.getElementById('cLevel').value.trim()||null;
