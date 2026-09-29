@@ -2002,7 +2002,10 @@ async function loadKalender(){
     kalClubs.map(c=>{const on=kalClub===c.slug; const col=c.color||'#7ED8EA';
       return `<button class="kpill ${on?'active':''}" style="${on?('background:'+col+';border-color:'+col+';color:#fff'):''}" onclick="setKalClub('${c.slug}')">${c.emoji||''} ${esc(c.name)}</button>`;}).join('')+'</div>';
   const LEVELS=['alle','A2','B1','B2','C1'];
-  const lvlPills='<div class="kal-pills kal-levels">'+LEVELS.map(l=>`<button class="kpill lvl ${kalLevel===l?'active':''}" onclick="setKalLevel('${l}')">${l==='alle'?'Alle Niveaus':l}</button>`).join('')+'</div>';
+  /* Wochenansicht: gleicher Grund wie in kalRenderMonth — ohne Niveaus
+     wuerde der Filter den Kalender leerraeumen, statt ihn zu ordnen. */
+  const hatNiveau=(kalCache||[]).some(function(c){return String(c.level||'').trim();});
+  const lvlPills=!hatNiveau?'':'<div class="kal-pills kal-levels">'+LEVELS.map(l=>`<button class="kpill lvl ${kalLevel===l?'active':''}" onclick="setKalLevel('${l}')">${l==='alle'?'Alle Niveaus':l}</button>`).join('')+'</div>';
   let legend=''; if(kalClub==='alle'){ legend='<div class="cal-legend">'+kalClubs.map(c=>`<span class="lg"><span class="dot" style="background:${c.color||'#7ED8EA'}"></span>${esc(c.name)}</span>`).join('')+'</div>'; }
   const satEnd=new Date(from); satEnd.setDate(satEnd.getDate()+5);
   const wc=`<div class="kal-week"><button onclick="kalWeekChange(-1)">←</button><span>${from.toLocaleDateString('de-DE',{day:'numeric',month:'short'})} – ${satEnd.toLocaleDateString('de-DE',{day:'numeric',month:'short',year:'numeric'})}</span><button onclick="kalWeekChange(1)">→</button></div>`;
