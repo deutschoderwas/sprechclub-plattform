@@ -55,6 +55,23 @@ body{background:radial-gradient(1100px 460px at 84% -12%,#FFF6E6 0%,#FAF8F2 60%)
 .tabs button{border:1.5px solid var(--border);background:#fff;border-radius:11px;padding:9px 15px;font-size:13.5px;font-weight:600;color:#57616B;transition:.15s}
 .tabs button:hover{background:#F6F3EC;color:#191B1C}
 .tabs button.active{background:#EAF8F5;color:#0A3F39;border-color:#BFE9E2}
+/* Zwei Ebenen: oben der Bereich, darunter seine Reiter. Zehn gleich laute
+   Knoepfe nebeneinander sagen nicht, was zusammengehoert. */
+.bereiche{display:flex;gap:2px;flex-wrap:wrap;margin:18px 0 0;border-bottom:2px solid var(--border)}
+.bereiche button{border:none;background:none;padding:11px 14px;font-weight:800;font-size:15px;color:#8A9199;
+  cursor:pointer;font-family:inherit;border-bottom:3px solid transparent;margin-bottom:-2px;transition:.15s}
+.bereiche button:hover{color:#0A3F39}
+.bereiche button.active{color:#0A3F39;border-bottom-color:#2DD4BF}
+.st-karten{display:grid;grid-template-columns:repeat(auto-fit,minmax(232px,1fr));gap:11px;margin-bottom:16px}
+.st-karte{border:1.5px solid var(--border);border-radius:16px;padding:14px 16px;background:#fff;
+  display:flex;flex-direction:column;gap:3px}
+.st-karte .zahl{font-size:30px;font-weight:800;line-height:1.05}
+.st-karte .was{font-weight:700;font-size:14px;color:#1A1A1A}
+.st-karte .dazu{font-size:12.5px;color:#6B7280;flex:1}
+.st-karte button{margin-top:9px;align-self:flex-start;border:none;border-radius:10px;padding:6px 13px;
+  font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;background:#F1F5F4;color:#0A3F39}
+.st-karte button:hover{background:#DDF3EF}
+@media(max-width:600px){ .bereiche button{padding:10px 10px;font-size:14px} }
 /* Karten / Tabellen / Buttons */
 .card{border-radius:16px;box-shadow:0 4px 14px rgba(20,20,20,.05)}
 table{border-radius:16px;box-shadow:0 4px 14px rgba(20,20,20,.05);border:1px solid var(--border)}
@@ -101,20 +118,10 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--turq)}
     <div><a class="btn btn-primary" href="admin-kurse.html">🎓 Kurse verwalten</a> <button class="btn btn-ghost" onclick="rundmailOeffnen()">✉️ Rundmail</button> <a class="btn btn-ghost" href="index.html">Zur Seite</a> <button class="btn btn-ghost" onclick="logout()">Abmelden</button></div>
   </div>
 
-  <div class="tabs">
-    <button id="tabP" onclick="show('plan')">📅 Lehrerplan</button>
-    <button id="tabK" class="active" onclick="show('klassen')">Stunden & Anwesenheit</button>
-    <button id="tabN" onclick="show('neu')">Stunde anlegen</button>
-    <button id="tabL" onclick="show('lehrer')">👩‍🏫 Lehrer</button>
-    <button id="tabS" onclick="show('schueler')">Schüler & Guthaben</button>
-    <button id="tabLeads" onclick="show('leads')">📋 Leads<span id="leadsBdg" style="display:none;background:#DD0000;color:#fff;border-radius:20px;padding:1px 7px;font-size:11px;margin-left:4px">0</span></button>
-    <button id="tabM" onclick="show('nachrichten')">Nachrichten</button>
-    <button id="tabB" onclick="show('bewertungen')">Bewertungen</button>
-    <button id="tabMat" onclick="show('material')">📚 Materialien</button>
-    <button id="tabC" onclick="show('community')">💬 Community</button>
-    <a class="btn btn-primary" href="admin-korrektur.html" style="padding:8px 18px;font-size:13px">✍️ Korrekturen<span id="korrBdg" style="display:none;background:#fff;color:#DD0000;border-radius:20px;padding:1px 7px;font-size:11px;margin-left:2px">0</span></a>
-  </div>
+  <div class="bereiche" id="bereiche"></div>
+  <div class="tabs" id="reiter"></div>
 
+  <div id="start" style="display:none"></div>
   <div id="plan" style="display:none"></div>
   <div id="klassen"></div>
   <div id="lehrer" style="display:none"></div>
@@ -193,7 +200,7 @@ async function init(){
 let isAdminUser=false;
 let myTeacherId=null;
 async function enter(u){
-  const { data } = await sb.from('profiles').select('is_admin,is_teacher').eq('id', u.id).single();
+  const { data } = await sb.from('profiles').select('is_admin,is_teacher,name').eq('id', u.id).single();
   if (!data || (!data.is_admin && !data.is_teacher)){ document.getElementById('gateMsg').textContent='Dieses Konto hat keine Admin- oder Lehrer-Rechte.'; return; }
   me = u; isAdminUser = !!data.is_admin;
   document.getElementById('gate').style.display='none';
@@ -203,23 +210,14 @@ async function enter(u){
   myTeacherId = myT ? myT.id : null;
   window.sb = sb; window.user = u;
   sb.from('korrekturen').select('id').eq('status','offen').limit(200).then(function(r){
-    var n=(r&&r.data)?r.data.length:0, b=document.getElementById('korrBdg');
-    if(b&&n){ b.textContent=n; b.style.display='inline-block'; }
+    setzeAbzeichen('korrBdg', (r && r.data) ? r.data.length : 0);
   }).catch(function(){});
-  window.profile = { name: (myT && myT.name) || (isAdminUser ? 'Team' : 'Lehrkraft') };
-  if (!isAdminUser){
-    // Lehrer-Ansicht: keine Guthaben-Verwaltung, keine Bewertungen, Fokus auf eigenen Plan
-    document.getElementById('tabS').style.display='none';
-    document.getElementById('tabLeads').style.display='none';
-    document.getElementById('tabB').style.display='none';
-    document.getElementById('tabN').style.display='none';
-    document.getElementById('tabMat').style.display='none';
-    document.getElementById('tabL').style.display='none';
-    document.querySelector('h1').textContent='deutschoderwas club · Lehrkraft';
-    show('plan');
-  } else {
-    loadKlassen();
-  }
+  window.profile = { name: (data && data.name) || (myT && myT.name) || (isAdminUser ? 'Team' : 'Lehrkraft') };
+  /* Was eine Lehrkraft nicht sehen darf, steht als nurAdmin in BEREICHE und
+     taucht deshalb gar nicht erst auf - es muss hier nichts mehr versteckt
+     werden. */
+  if (!isAdminUser) document.querySelector('h1').textContent='deutschoderwas club · Lehrkraft';
+  show(isAdminUser ? 'start' : 'plan');
 }
 
 // Login mit E-Mail + Passwort (bleibt in der App gespeichert)
@@ -254,27 +252,226 @@ async function login(){
 }
 async function logout(){ await sb.auth.signOut(); location.reload(); }
 
+/* ---------- Startseite: was liegen geblieben ist ----------
+   Die Frage beim Aufmachen ist nie "welchen Reiter will ich", sondern "was
+   muss ich heute tun". Genau darauf antwortet diese Seite - und jede Kachel
+   fuehrt dorthin, wo man es erledigt. Keine Kachel ohne Weg. */
+const ST_UHR = new Intl.DateTimeFormat('de-DE', { timeZone:'Europe/Berlin', hour:'2-digit', minute:'2-digit' });
+const ST_TAG = new Intl.DateTimeFormat('de-DE', { timeZone:'Europe/Berlin', weekday:'short', day:'2-digit', month:'2-digit' });
+function stBerlinTag(x){
+  return new Intl.DateTimeFormat('en-CA', { timeZone:'Europe/Berlin', year:'numeric', month:'2-digit', day:'2-digit' }).format(new Date(x));
+}
+/* "1 offene Korrekturen" liest sich wie ein Fehler — und ist auch einer. */
+function stWort(n, ein, viele){ return n === 1 ? ein : viele; }
+/* Das kurze Datumsformat endet selbst auf einen Punkt ("Sa., 19.09."),
+   davor stand im Satz noch einer. */
+function stDatum(x){ return String(ST_TAG.format(new Date(x))).replace(/\.$/, ''); }
+function stKarte(zahl, was, dazu, farbe, knopf, ziel){
+  return '<div class="st-karte">'
+    + '<div class="zahl" style="color:' + farbe + '">' + zahl + '</div>'
+    + '<div class="was">' + was + '</div>'
+    + '<div class="dazu">' + dazu + '</div>'
+    + (knopf ? '<button onclick="' + ziel + '">' + knopf + '</button>' : '')
+    + '</div>';
+}
+async function ladeStart(){
+  const host = document.getElementById('start'); if(!host) return;
+  host.innerHTML = '<div class="card"><p class="muted">Lädt …</p></div>';
+  const jetzt = new Date();
+  const iso = (ms) => new Date(ms).toISOString();
+  const vor21 = iso(jetzt.getTime() - 21*86400000);
+  const in21  = iso(jetzt.getTime() + 21*86400000);
+
+  /* Bewusst getrennte Abfragen statt verschachtelter: die Verknuepfungen
+     zwischen classes, class_notes und class_materials muessen dafuer nicht
+     als Fremdschluessel deklariert sein, und ein fehlendes Recht laesst nur
+     eine Kachel blass werden statt die ganze Seite. */
+  const antw = await Promise.all([
+    sb.from('classes').select('id,title,level,starts_at,teacher_id').gte('starts_at', iso(jetzt.getTime()-2*86400000)).lte('starts_at', iso(jetzt.getTime()+2*86400000)).eq('is_cancelled', false),
+    sb.from('classes').select('id,title,starts_at').gte('starts_at', vor21).lt('starts_at', iso(jetzt.getTime())).eq('is_cancelled', false),
+    sb.from('classes').select('id,title,starts_at,material_pre,material_live').gt('starts_at', iso(jetzt.getTime())).lte('starts_at', in21).eq('is_cancelled', false),
+    sb.from('class_notes').select('class_id,post_content'),
+    sb.from('class_materials').select('class_id'),
+    isAdminUser ? sb.from('leads').select('id,status,name,created_at') : Promise.resolve({ data: [] }),
+    sb.from('messages').select('id,user_id,created_at').eq('sender','student').eq('read', false),
+    sb.from('korrekturen').select('id').eq('status','offen')
+  ]);
+  const nimm = (r) => (r && !r.error && Array.isArray(r.data)) ? r.data : [];
+  const nah        = nimm(antw[0]);
+  const vergangen  = nimm(antw[1]);
+  const kommend    = nimm(antw[2]);
+  const notizen    = nimm(antw[3]);
+  const materialien= nimm(antw[4]);
+  const leads      = nimm(antw[5]);
+  const nachrichten= nimm(antw[6]);
+  const korrekturen= nimm(antw[7]);
+
+  const heuteTag = stBerlinTag(jetzt);
+  const heute = nah.filter(c => stBerlinTag(c.starts_at) === heuteTag)
+                   .sort((a,b) => new Date(a.starts_at) - new Date(b.starts_at));
+
+  /* Nachbereitung gilt als da, sobald post_content wirklich Inhalt hat -
+     eine leere Zeile oder ein JSON-null zaehlt nicht. */
+  const hatNachb = {};
+  notizen.forEach(n => {
+    const p = n.post_content;
+    const voll = p != null && !(typeof p === 'object' && Object.keys(p).length === 0) && String(p) !== 'null';
+    if (voll) hatNachb[n.class_id] = true;
+  });
+  const ohneNachb = vergangen.filter(c => !hatNachb[c.id])
+                             .sort((a,b) => new Date(b.starts_at) - new Date(a.starts_at));
+
+  const hatMaterial = {};
+  materialien.forEach(m => { hatMaterial[m.class_id] = true; });
+  const ohneMaterial = kommend.filter(c => !hatMaterial[c.id] && !(c.material_live||'').trim() && !(c.material_pre||'').trim())
+                              .sort((a,b) => new Date(a.starts_at) - new Date(b.starts_at));
+
+  const leadsNeu = leads.filter(l => (l.status||'neu') === 'neu');
+
+  let html = '<div class="card" style="margin-bottom:14px"><h3 style="margin:0 0 3px">Guten Tag, ' + esc((window.profile && window.profile.name) || 'Julia') + '.</h3>'
+    + '<p class="muted" style="margin:0">' + ST_TAG.format(jetzt) + ' · '
+    + (heute.length ? (heute.length === 1 ? 'eine Stunde heute' : heute.length + ' Stunden heute') : 'heute keine Stunde')
+    + '</p></div>';
+
+  html += '<div class="st-karten">';
+  html += stKarte(heute.length, heute.length === 1 ? 'Stunde heute' : 'Stunden heute',
+    heute.length ? 'Die nächste um ' + ST_UHR.format(new Date(heute[0].starts_at)) + ' Uhr.' : 'Heute steht nichts im Plan.',
+    heute.length ? '#0F766E' : '#9CA3AF', 'Zu den Stunden', "show('klassen')");
+  html += stKarte(ohneNachb.length, stWort(ohneNachb.length, 'Nachbereitung fehlt', 'Nachbereitungen fehlen'),
+    ohneNachb.length ? 'Letzte 3 Wochen. Älteste: ' + esc(stDatum(ohneNachb[ohneNachb.length-1].starts_at)) + '.' : 'Alle Stunden der letzten 3 Wochen sind nachbereitet.',
+    ohneNachb.length ? '#B45309' : '#15803D', 'Stunden ansehen', "show('klassen')");
+  html += stKarte(nachrichten.length, stWort(nachrichten.length, 'ungelesene Nachricht', 'ungelesene Nachrichten'),
+    nachrichten.length ? 'Schüler warten auf Antwort.' : 'Nichts offen.',
+    nachrichten.length ? '#B91C1C' : '#15803D', 'Nachrichten öffnen', "show('nachrichten')");
+  html += stKarte(korrekturen.length, stWort(korrekturen.length, 'offene Korrektur', 'offene Korrekturen'),
+    korrekturen.length ? 'Eingeschickte Texte ohne Rückmeldung.' : 'Alles korrigiert.',
+    korrekturen.length ? '#B91C1C' : '#15803D', 'Zu den Korrekturen', "location.href='admin-korrektur.html'");
+  if (isAdminUser){
+    html += stKarte(leadsNeu.length, stWort(leadsNeu.length, 'neuer Lead', 'neue Leads'),
+      leadsNeu.length ? 'Noch niemand hat sie angeschrieben.' : 'Keine unbearbeiteten Anfragen.',
+      leadsNeu.length ? '#DD0000' : '#15803D', 'Leads öffnen', "show('leads')");
+    html += stKarte(ohneMaterial.length, stWort(ohneMaterial.length, 'Stunde ohne Material', 'Stunden ohne Material'),
+      ohneMaterial.length ? 'In den nächsten 3 Wochen. Nächste: ' + esc(stDatum(ohneMaterial[0].starts_at)) + '.' : 'Alle kommenden Stunden haben Material.',
+      ohneMaterial.length ? '#B45309' : '#15803D', 'Stunden ansehen', "show('klassen')");
+  }
+  html += '</div>';
+
+  if (heute.length){
+    html += '<div class="card"><h3 style="margin:0 0 8px">Heute</h3>'
+      + heute.map(c => '<div style="border-top:1px solid var(--border);padding:7px 0;font-size:14px">'
+          + '<b>' + ST_UHR.format(new Date(c.starts_at)) + ' Uhr</b> · ' + esc(c.title||'')
+          + (c.level ? ' <span class="pill" style="background:#Eef;color:#2563EB;font-weight:700">' + esc(c.level) + '</span>' : '')
+          + '</div>').join('')
+      + '</div>';
+  }
+  if (ohneNachb.length){
+    html += '<div class="card"><h3 style="margin:0 0 3px">Diese Stunden haben noch keine Nachbereitung</h3>'
+      + '<p class="muted" style="margin:0 0 8px;font-size:13px">Die Nachbereitung wird automatisch erstellt. Steht hier etwas älter als ein Tag, hat der Automat ein Problem.</p>'
+      + ohneNachb.slice(0, 12).map(c => '<div style="border-top:1px solid var(--border);padding:7px 0;font-size:14px">'
+          + '<b>' + ST_TAG.format(new Date(c.starts_at)) + '</b> · ' + esc(c.title||'') + '</div>').join('')
+      + (ohneNachb.length > 12 ? '<div class="muted" style="font-size:12px;padding-top:6px">… und ' + (ohneNachb.length-12) + ' weitere</div>' : '')
+      + '</div>';
+  }
+  host.innerHTML = html;
+  setzeAbzeichen('leadsBdg', leadsNeu.length);
+  setzeAbzeichen('korrBdg', korrekturen.length);
+}
+
+/* ---------- Navigation in zwei Ebenen ----------
+   Vorher standen zehn gleich aussehende Reiter nebeneinander, dazu ein Link,
+   und jeder neue Reiter brauchte drei Aenderungen an drei Stellen. Jetzt
+   steht die ganze Navigation in EINER Tabelle: Bereich, Reiter, was beim
+   Oeffnen geladen wird. Ein neuer Reiter ist eine neue Zeile. */
+const BEREICHE = [
+  { id:'start', name:'🏠 Start', reiter:[
+      { id:'start', name:'\u00dcberblick', laden:function(){ ladeStart(); } } ] },
+  { id:'unterricht', name:'📅 Unterricht', reiter:[
+      { id:'klassen', name:'Stunden & Anwesenheit', laden:function(){ loadKlassen(); } },
+      { id:'plan',    name:'Lehrerplan',            laden:function(){ loadPlan(); } },
+      { id:'neu',     name:'Stunde anlegen',        nurAdmin:true } ] },
+  { id:'menschen', name:'👥 Menschen', reiter:[
+      { id:'schueler', name:'Sch\u00fcler & Guthaben', nurAdmin:true, laden:function(){ loadSchueler(); } },
+      { id:'lehrer',   name:'Lehrkr\u00e4fte',         nurAdmin:true, laden:function(){ loadLehrer(); } },
+      { id:'leads',    name:'📋 Leads', nurAdmin:true, abzeichen:'leadsBdg', laden:function(){ loadLeads(); } } ] },
+  { id:'inhalte', name:'📚 Inhalte', reiter:[
+      { id:'material', name:'Materialien', nurAdmin:true, laden:function(){ loadMaterial(); } },
+      { id:'korrektur', name:'\u270D\uFE0F Korrekturen', href:'admin-korrektur.html', abzeichen:'korrBdg' },
+      { id:'kurse',     name:'🎓 Kurse',        href:'admin-kurse.html', nurAdmin:true } ] },
+  { id:'austausch', name:'💬 Austausch', reiter:[
+      { id:'nachrichten', name:'Nachrichten', laden:function(){ loadNachrichten(); } },
+      { id:'community',   name:'Community',   laden:function(){ if(window.renderCommunity) window.renderCommunity(); } },
+      { id:'bewertungen', name:'Bewertungen', nurAdmin:true, laden:function(){ loadBewertungen(); } } ] }
+];
+/* Alle Kaesten, die show() ein- und ausblendet - aus der Tabelle abgeleitet,
+   damit hier nie einer fehlt. */
+function alleReiter(){ return BEREICHE.reduce(function(a,b){ return a.concat(b.reiter); }, []); }
+function darfSehen(r){ return !r.nurAdmin || isAdminUser; }
+function reiterVon(id){ return alleReiter().filter(function(r){ return r.id===id; })[0] || null; }
+function bereichVon(id){
+  for (const b of BEREICHE) if (b.reiter.some(function(r){ return r.id===id; })) return b;
+  return BEREICHE[0];
+}
+
+function zeichneBereiche(aktiv){
+  const box = document.getElementById('bereiche'); if(!box) return;
+  box.innerHTML = BEREICHE.filter(function(b){ return b.reiter.some(darfSehen); })
+    .map(function(b){
+      /* Fuehrt der Bereich nur noch auf eine eigene Seite (bei einer
+         Lehrkraft ist unter Inhalte nur die Korrektur-Seite übrig),
+         sagt der Pfeil das vorher — sonst wirkt der Sprung wie ein
+         Fehlklick. */
+      const nurLink = b.reiter.filter(darfSehen).every(function(r){ return !!r.href; });
+      return '<button class="' + (b.id===aktiv.id?'active':'') + '" onclick="oeffneBereich(\'' + b.id + '\')">' + b.name + (nurLink ? ' \u2197' : '') + '</button>';
+    }).join('');
+}
+function zeichneReiter(bereich, aktivId){
+  const box = document.getElementById('reiter'); if(!box) return;
+  const sichtbar = bereich.reiter.filter(darfSehen);
+  /* Ein einziger Reiter im Bereich braucht keine Reiterleiste. */
+  box.style.display = sichtbar.length > 1 ? 'flex' : 'none';
+  box.innerHTML = sichtbar.map(function(r){
+    const bdg = r.abzeichen ? '<span id="' + r.abzeichen + '" style="display:none;background:#DD0000;color:#fff;border-radius:20px;padding:1px 7px;font-size:11px;margin-left:5px">0</span>' : '';
+    return r.href
+      ? '<button onclick="location.href=\'' + r.href + '\'">' + r.name + ' \u2197' + bdg + '</button>'
+      : '<button class="' + (r.id===aktivId?'active':'') + '" onclick="show(\'' + r.id + '\')">' + r.name + bdg + '</button>';
+  }).join('');
+  zeichneAbzeichen();
+}
+function oeffneBereich(bid){
+  const b = BEREICHE.filter(function(x){ return x.id===bid; })[0] || BEREICHE[0];
+  const sichtbar = b.reiter.filter(darfSehen);
+  /* Ein Bereich, der beim Anklicken sofort auf eine andere Seite springt,
+     fuehlt sich wie ein Fehlklick an. Deshalb zuerst ein Reiter, der hier
+     bleibt — und nur wenn es keinen gibt, der Link. */
+  const erster = sichtbar.filter(function(r){ return !r.href; })[0] || sichtbar[0];
+  if (erster) show(erster.id);
+}
 function show(id){
-  ['plan','klassen','neu','lehrer','schueler','nachrichten','bewertungen','material','community','leads'].forEach(x=>document.getElementById(x).style.display = x===id?'block':'none');
-  document.getElementById('tabP').classList.toggle('active', id==='plan');
-  document.getElementById('tabK').classList.toggle('active', id==='klassen');
-  document.getElementById('tabN').classList.toggle('active', id==='neu');
-  document.getElementById('tabL').classList.toggle('active', id==='lehrer');
-  document.getElementById('tabS').classList.toggle('active', id==='schueler');
-  document.getElementById('tabM').classList.toggle('active', id==='nachrichten');
-  document.getElementById('tabB').classList.toggle('active', id==='bewertungen');
-  document.getElementById('tabMat').classList.toggle('active', id==='material');
-  document.getElementById('tabC').classList.toggle('active', id==='community');
-  document.getElementById('tabLeads').classList.toggle('active', id==='leads');
-  if (id==='plan') loadPlan();
-  if (id==='klassen') loadKlassen();
-  if (id==='lehrer') loadLehrer();
-  if (id==='schueler') loadSchueler();
-  if (id==='nachrichten') loadNachrichten();
-  if (id==='bewertungen') loadBewertungen();
-  if (id==='material') loadMaterial();
-  if (id==='community' && window.renderCommunity) window.renderCommunity();
-  if (id==='leads') loadLeads();
+  const r = reiterVon(id);
+  if (!r || !darfSehen(r)) return;
+  if (r.href){ location.href = r.href; return; }
+  const b = bereichVon(id);
+  alleReiter().forEach(function(x){
+    if (x.href) return;
+    const el = document.getElementById(x.id);
+    if (el) el.style.display = (x.id===id) ? 'block' : 'none';
+  });
+  zeichneBereiche(b);
+  zeichneReiter(b, id);
+  if (r.laden) r.laden();
+}
+/* Die Zahlen an den Reitern (offene Leads, offene Korrekturen) werden beim
+   Neuzeichnen der Leiste jedes Mal neu gesetzt - sonst waeren sie nach dem
+   ersten Bereichswechsel weg. */
+let ABZEICHEN = {};
+function setzeAbzeichen(id, n){ ABZEICHEN[id] = n; zeichneAbzeichen(); }
+function zeichneAbzeichen(){
+  Object.keys(ABZEICHEN).forEach(function(k){
+    const el = document.getElementById(k); if(!el) return;
+    const n = ABZEICHEN[k];
+    if (n > 0){ el.textContent = n; el.style.display = 'inline-block'; }
+    else el.style.display = 'none';
+  });
 }
 
 // ---------- Leads (Warteliste) ----------
@@ -293,9 +490,7 @@ async function loadLeads(){
   leadsBadge();
 }
 function leadsBadge(){
-  const b=document.getElementById('leadsBdg'); if(!b) return;
-  const neu=LEADS.filter(l=>l.status==='neu').length;
-  if(neu>0){ b.style.display='inline-block'; b.textContent=neu; } else b.style.display='none';
+  setzeAbzeichen('leadsBdg', LEADS.filter(l => (l.status||'neu')==='neu').length);
 }
 window.leadFilter=function(v){ LEAD_FILTER=v; renderLeads(); };
 function leadRows(){
