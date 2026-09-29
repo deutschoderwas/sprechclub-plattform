@@ -1461,6 +1461,22 @@ async function loadSchueler(){
       </div>
       <div class="muted" id="createMsg" style="margin-top:8px"></div>
     </div>
+    <div style="background:#FFF6DC;border:1px solid #F0DFA0;border-radius:14px;padding:13px 15px;margin-bottom:14px">
+      <b>🔑 Mitgliedschaft von Hand setzen</b>
+      <div class="muted" style="font-size:12.5px;margin:3px 0 9px">Für alle, die nicht über Stripe bezahlt haben — Überweisung, Tausch, Kulanz. Der Stripe-Weg bleibt davon unberührt.</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:end">
+        <div class="field" style="margin:0;min-width:230px;flex:1"><label>E-Mail des Schülers</label><input id="tarifMail" type="email" placeholder="mail@beispiel.de"></div>
+        <div class="field" style="margin:0"><label>Mitgliedschaft</label><select id="tarifWahl">
+          <option value="premium">PREMIUM (Live ab 01.11.)</option>
+          <option value="community">COMMUNITY</option>
+          <option value="premium_plus">PREMIUM PLUS (ab 01.02.2027)</option>
+          <option value="">keine (zurücknehmen)</option>
+        </select></div>
+        <div class="field" style="margin:0;min-width:180px;flex:1"><label>Grund (fürs Protokoll)</label><input id="tarifGrund" placeholder="z.B. per Überweisung bezahlt"></div>
+        <button class="btn" onclick="setzeTarif()" style="background:#2DD4BF;color:#06403A;font-weight:800">Setzen</button>
+      </div>
+      <div class="muted" id="tarifMsg" style="margin-top:8px"></div>
+    </div>
     <div id="grpPills" style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px"></div>
     <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px">
       <input id="schuelerSuche" placeholder="🔎 Name oder E-Mail suchen" oninput="renderSchuelerTable()" style="flex:1;min-width:220px">
@@ -1724,6 +1740,42 @@ async function openStudentCard(id){
     }).join('');
   });
 }
+/* ---------- Mitgliedschaft von Hand ----------
+   Bewusst über die E-Mail und nicht über ein Auswahlfeld: Julia hat die
+   E-Mail vor sich, wenn jemand ihr schreibt oder überweist. Die Datenbank
+   schreibt jede Änderung mit (tarif_log), damit später nachvollziehbar
+   bleibt, warum jemand Premium ist, ohne dass eine Stripe-Zahlung existiert. */
+const TARIF_NAME = { premium:'PREMIUM', premium_plus:'PREMIUM PLUS', community:'COMMUNITY' };
+async function setzeTarif(){
+  const msg = document.getElementById('tarifMsg');
+  const mail = (document.getElementById('tarifMail').value || '').trim();
+  const tier = document.getElementById('tarifWahl').value || null;
+  const grund = (document.getElementById('tarifGrund').value || '').trim() || null;
+  if (!mail){ msg.textContent = '⚠️ Bitte eine E-Mail eintragen.'; return; }
+  msg.textContent = '⏳ …';
+  const { data, error } = await sb.rpc('admin_set_tier', { p_email: mail, p_tier: tier, p_grund: grund });
+  if (error){ msg.innerHTML = '<span style="color:#B91C1C">⚠️ ' + esc(error.message) + '</span>'; return; }
+  if (!data || !data.ok){
+    msg.innerHTML = (data && data.error === 'unbekannte_email')
+      ? '<span style="color:#B91C1C">⚠️ Unter dieser E-Mail gibt es kein Konto. Schreibweise prüfen — oder den Schüler oben erst anlegen.</span>'
+      : '<span style="color:#B91C1C">⚠️ Hat nicht geklappt.</span>';
+    return;
+  }
+  const wer = data.name || mail;
+  const vorher = data.vorher ? (TARIF_NAME[data.vorher] || data.vorher) : 'ohne Mitgliedschaft';
+  const nachher = tier ? (TARIF_NAME[tier] || tier) : 'ohne Mitgliedschaft';
+  msg.innerHTML = '<span style="color:#15803D;font-weight:700">✓ ' + esc(wer) + ': ' + esc(vorher) + ' → ' + esc(nachher) + '</span>'
+    + (data.ab ? ' <span class="muted">· Live-Zugang ab ' + esc(String(data.ab).split('-').reverse().join('.')) + '</span>' : '');
+  document.getElementById('tarifMail').value = '';
+  document.getElementById('tarifGrund').value = '';
+  /* Nur die Zeile im Speicher nachziehen und die Tabelle neu zeichnen.
+     Ein volles loadSchueler() wuerde den ganzen Reiter neu bauen und damit
+     genau die Erfolgsmeldung wegwischen, die Julia gerade lesen will. */
+  const eintrag = SCHUELER.find(x => x.id === data.id);
+  if (eintrag) eintrag.tier = tier;
+  if (typeof renderSchuelerTable === 'function') renderSchuelerTable();
+}
+
 // ---------- Fortschritts-Akte (reine Leseansicht) ----------
 /* Julia wollte sehen, "wie fortschrittlich sie schon sind und was sie machen an
    Lernmaterial und welche Stunde". Absichtlich nur lesend: die Akte zeigt
