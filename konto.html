@@ -1022,6 +1022,23 @@ function planInfo(){
   for(const e of log){ const m=/^(?:abo|trial|kauf):(.+)$/.exec((e&&e.reason)||''); if(m&&MAP[m[1]]) return MAP[m[1]]; }
   return { label:'Abo', stunden:null };
 }
+/* Die drei Daten des Sprechclub-Starts stehen ab hier an EINER Stelle.
+   Vorher lag der 1. November als Zeichenkette an vier Stellen im Code —
+   einmal geaendert und dreimal vergessen, und schon widerspricht sich die
+   Seite selbst. */
+const SC_ANMELDUNG_AB = new Date('2026-10-01T00:00:00+02:00');   // Anmeldung offen
+const SC_START        = new Date('2026-11-01T00:00:00+01:00');   // erste LIVE-Stunde
+const SC_PLAN         = 'Mo\u2013Fr 19\u201320 Uhr \u00b7 Sa und So 11 Uhr \u00b7 dazu Mo\u2013Do 9 Uhr';
+function scAnmeldungOffen(){ return new Date() >= SC_ANMELDUNG_AB; }
+function scGestartet(){ return new Date() >= SC_START; }
+/* Premium heisst: bezahlt und nicht stillgelegt. Ob der Unterricht schon
+   laeuft, ist eine andere Frage \u2014 dafuer gibt es scGestartet(). */
+function istPremium(){
+  try { return !!(profile && ['premium','premium_plus'].indexOf(profile.tier) >= 0
+                  && (profile.status === 'aktiv' || !profile.status)); }
+  catch(e){ return false; }
+}
+
 // ---- Vorverkauf: gekauft, aber erst ab einem Datum nutzbar ----
 function startAb(){
   const d=(profile&&profile.tier_ab)||null;
@@ -1083,7 +1100,7 @@ function nurCommunity(){ return (profile&&profile.tier)==='community' && !(credi
 function darfLive(){
   if(nochNichtOffen()) return false;              // Vorverkauf: Start noch nicht erreicht
   if(credits>0||passActive()) return true;
-  if((profile&&profile.tier)==='premium') return true;
+  if(istPremium()) return true;
   if(nurCommunity()) return false;
   return (profile&&profile.status)==='aktiv';   // Bestandsschüler ohne Tarif-Kennzeichnung
 }
@@ -1104,12 +1121,18 @@ function zeigeLiveUpgrade(){
     +'<h2 id="lupT">Der Sprechclub startet am 1. November</h2>'
     +'<p class="lup-lead">Deine Community-Mitgliedschaft gilt für die <b>ganze Plattform</b>. Der LIVE-Unterricht gehört zu Premium — und der geht am <b>1. November</b> los.</p>'
     +'<ul class="lup-list">'
-      +'<li><span>🗓️</span><span><b>Mo bis So um 19 Uhr</b> — wie ein Sprachcafé, du kommst einfach dazu.</span></li>'
+      +'<li><span>🗓️</span><span><b>'+SC_PLAN+'</b> — wie ein Sprachcafé, du kommst einfach dazu.</span></li>'
       +'<li><span>👥</span><span><b>Kleine 2er- und 3er-Gruppen</b> — jeder kommt wirklich zum Reden.</span></li>'
       +'<li><span>💛</span><span><b>Alles aus deiner Community bleibt</b> — Kurse, Vokabeltrainer, Podcast, Chat und Amanda.</span></li>'
     +'</ul>'
-    +'<p class="lup-lead" style="font-size:14px;opacity:.85">Die Plätze sind begrenzt, deshalb läuft es über die Warteliste. Wir melden uns bei dir, sobald es losgeht.</p>'
-    +'<button class="lup-go" onclick="zurWartelisteLive(this)">🔔 Auf die Warteliste</button>'
+    /* Bis zum 30.09. gibt es nichts zu kaufen, da fuehrt der Weg auf die
+       Warteliste. Ab dem 01.10. ist die Anmeldung offen — dann waere ein
+       Wartelisten-Knopf eine Einladung, die ins Leere geht. */
+    +(scAnmeldungOffen()
+        ? '<p class="lup-lead" style="font-size:14px;opacity:.9">Die Anmeldung ist offen. Bis zum <b>30. Oktober</b> gilt der Frühbucherrabatt — du zahlst jetzt und die nächste Abbuchung kommt erst im Dezember.</p>'
+          +'<a class="lup-go" href="/preise" style="display:block;text-align:center;text-decoration:none">🎉 Jetzt Premium sichern</a>'
+        : '<p class="lup-lead" style="font-size:14px;opacity:.85">Die Plätze sind begrenzt, deshalb läuft es über die Warteliste. Wir melden uns bei dir, sobald es losgeht.</p>'
+          +'<button class="lup-go" onclick="zurWartelisteLive(this)">🔔 Auf die Warteliste</button>')
     +'<button class="lup-later" onclick="schliesseLiveUpgrade()">Vielleicht später</button>'
     +'</div>';
   document.body.appendChild(d);
@@ -1923,14 +1946,33 @@ function darfBuchen(){
   try{
     if(credits>0) return true;
     // Premium-Sonderregel gilt erst ab 01.11.2026 (davor braucht auch Premium Guthaben).
-    var premiumAbJetzt = new Date() >= new Date('2026-11-01T00:00:00+01:00');
-    if(premiumAbJetzt && profile && ['premium','premium_plus'].indexOf(profile.tier)>=0
-       && (profile.status==='aktiv' || !profile.status)) return true;
+    if(scGestartet() && istPremium()) return true;
     return false;
   }catch(e){ return false; }
 }
 function buchbarHinweis(){
   if(darfBuchen()) return '';
+  /* Wer Premium schon bezahlt hat, hat kein Stunden-Problem \u2014 sein Unterricht
+     hat nur noch nicht angefangen. Dem hier ein Abo anzubieten waere falsch. */
+  if(istPremium() && !scGestartet()){
+    return '<div class="kal-hinweis">'
+      + '<span class="ic">🗓️</span>'
+      + '<span class="tx"><b>Dein Sprechclub startet am 1. November.</b>'
+      + '<span>Ab dann buchst du hier so viele Stunden, wie du m\u00f6chtest \u2014 ohne Guthaben. '
+      + SC_PLAN + '.</span></span>'
+      + '</div>';
+  }
+  /* Community ist kein Mangel an Stunden, sondern ein anderes Paket.
+     Die Stunden-Meldung waere hier schlicht die falsche Auskunft. */
+  if(typeof nurCommunity === 'function' && nurCommunity()){
+    return '<div class="kal-hinweis">'
+      + '<span class="ic">🗣️</span>'
+      + '<span class="tx"><b>Der LIVE-Sprechclub gehört zu Premium.</b>'
+      + '<span>Deine Mitgliedschaft gilt für die ganze Plattform — der Sprechclub startet am 1. November: '
+      + SC_PLAN + '.</span></span>'
+      + '<a class="st-b st-b1" href="/preise">' + (scAnmeldungOffen() ? 'Jetzt Premium sichern' : 'Premium ansehen') + ' →</a>'
+      + '</div>';
+  }
   return '<div class="kal-hinweis">'
     + '<span class="ic">🎟️</span>'
     + '<span class="tx"><b data-i18n="kl_ohne1">Zum Buchen brauchst du freie Stunden.</b>'
@@ -2192,9 +2234,8 @@ function kalBook(id){
    fenster auch nichts von Guthaben stehen. */
 function ohneGuthaben(){
   try{
-    if(!(new Date() >= new Date('2026-11-01T00:00:00+01:00'))) return false;
-    return !!(profile && ['premium','premium_plus'].indexOf(profile.tier)>=0
-              && (profile.status==='aktiv' || !profile.status));
+    if(!scGestartet()) return false;
+    return istPremium();
   }catch(e){ return false; }
 }
 function closeCfm(){ document.getElementById('cfmModal').classList.remove('open'); }
@@ -3049,7 +3090,7 @@ window.MEIN_ABO = null;
 const ABO_INHALT = {
   community: ['Alle Kurse und Lernbereiche', 'Vokabeltrainer, Podcast und Hörtraining',
               'Community-Chat mit Korrekturen vom Team', 'Amanda, deine KI-Sprechpartnerin'],
-  premium:   ['Alles aus der Community-Mitgliedschaft', 'LIVE-Sprechclub, Mo bis So um 19 Uhr',
+  premium:   ['Alles aus der Community-Mitgliedschaft', 'LIVE-Sprechclub: ' + SC_PLAN,
               'Kleine 2er- und 3er-Gruppen', 'Persönliche Nachbereitung nach jeder Stunde']
 };
 
