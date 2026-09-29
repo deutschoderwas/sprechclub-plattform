@@ -1446,7 +1446,7 @@ function bdayLabel(p){ if(!p.birthday) return '<span class="muted">–</span>'; 
 async function authToken(){ const { data } = await sb.auth.getSession(); return data?.session?.access_token || ''; }
 
 async function loadSchueler(){
-  const { data } = await sb.from('profiles').select('id,name,email,credits,status,tier,birthday,inactive_until,level,notes,started_at,target_level,native_language,goal,is_admin,is_teacher,is_challenger,challenge_start,created_at').limit(2000);
+  const { data } = await sb.from('profiles').select('id,name,email,credits,status,tier,birthday,inactive_until,level,notes,started_at,target_level,native_language,goal,is_admin,is_teacher,is_challenger,challenge_start,created_at,pass_until,stufe').limit(2000);
   SCHUELER = data || [];
   document.getElementById('schueler').innerHTML = `
     <div class="card" style="margin-bottom:16px;background:#FFFCF5">
@@ -1461,6 +1461,7 @@ async function loadSchueler(){
       </div>
       <div class="muted" id="createMsg" style="margin-top:8px"></div>
     </div>
+    <div id="grpPills" style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px"></div>
     <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px">
       <input id="schuelerSuche" placeholder="🔎 Name oder E-Mail suchen" oninput="renderSchuelerTable()" style="flex:1;min-width:220px">
       <select id="schuelerSort" onchange="renderSchuelerTable()">
@@ -1470,16 +1471,14 @@ async function loadSchueler(){
         <option value="bday">Geburtstag (Monat/Tag)</option>
       </select>
       <select id="schuelerStatus" onchange="renderSchuelerTable()">
-        <option value="laufend" selected>🟢 Aktiv &amp; Urlaub (Voreinstellung)</option>
-        <option value="">Alle Status</option>
-        <option value="registriert">nur Registriert (kein Paket)</option>
+        <option value="laufend" selected>Läuft (aktiv &amp; Urlaub)</option>
+        <option value="">Jeder Status</option>
         <option value="aktiv">nur Aktiv</option>
-        <option value="tier_community">nur Community</option>
-        <option value="tier_premium">nur Premium</option>
         <option value="pause">nur Pause</option>
         <option value="urlaub">nur Urlaub</option>
+        <option value="registriert">nur Registriert</option>
         <option value="beendet">nur Beendet</option>
-        <option value="archiv">🗄️ nur Archivierte</option>
+        <option value="archiv">nur Archiviert</option>
       </select>
       <label class="muted" style="display:flex;align-items:center;gap:6px;cursor:pointer">
         <input type="checkbox" id="schuelerLowOnly" onchange="renderSchuelerTable()"> nur ≤ 1 Stunde
@@ -1493,7 +1492,38 @@ async function loadSchueler(){
     <div id="schuelerTable"></div>`;
   renderSchuelerTable();
 }
-function tierBadge(p){if(p.tier==='community')return ' <span class="pill" style="background:#DFF6F8;color:#0F766E;font-weight:800">Community</span>';if(p.tier==='premium')return ' <span class="pill" style="background:#FFF0CC;color:#8A6608;font-weight:800">⭐ Premium</span>';return '';}
+/* ---------- Eine Gruppe pro Schueler, sichtbar als Abzeichen ----------
+   Frueher stand bei fast jedem "Aktiv" - ein Wort, das nichts unterscheidet.
+   Jetzt sagt das Abzeichen, WAS jemand ist, und der Status daneben nur noch,
+   wenn er vom Normalfall abweicht (Pause, Urlaub, beendet).
+
+   Reihenfolge ist Absicht: Team zuerst, dann die bezahlten Mitgliedschaften,
+   dann die Altschueler mit Guthaben. Wer nichts davon ist, hat entweder nie
+   angefangen oder ist raus. */
+var GRUPPEN = {
+  team:        { kurz:'Team',          bg:'#EDE9FE', fg:'#5B21B6' },
+  premium:     { kurz:'PREMIUM',       bg:'#FFE8B0', fg:'#7A5200' },
+  community:   { kurz:'COMMUNITY',     bg:'#DFF6F8', fg:'#0F766E' },
+  alt:         { kurz:'Alte Schüler',  bg:'#E2EBC9', fg:'#3F6212' },
+  registriert: { kurz:'Registriert',   bg:'#E5E7EB', fg:'#4B5563' },
+  beendet:     { kurz:'Beendet',       bg:'#F1F1F1', fg:'#6B7280' }
+};
+function passLaeuft(p){ try{ return !!(p.pass_until && new Date(p.pass_until) > new Date()); }catch(e){ return false; } }
+function gruppeVon(p){
+  if (p.is_admin || p.is_teacher) return 'team';
+  var st = p.status || 'aktiv';
+  if (st === 'beendet' || st === 'archiv' || st === 'geloescht' || st === 'inaktiv') return 'beendet';
+  if (p.tier === 'premium' || p.tier === 'premium_plus') return 'premium';
+  if (p.tier === 'community') return 'community';
+  if ((p.credits || 0) > 0 || passLaeuft(p)) return 'alt';
+  if (st === 'registriert' || st === 'probeschuler') return 'registriert';
+  return 'alt';   /* aktiver Altschueler, Guthaben gerade aufgebraucht */
+}
+function gruppenBadge(p){
+  var g = GRUPPEN[gruppeVon(p)]; if(!g) return '';
+  return ' <span class="pill" style="background:'+g.bg+';color:'+g.fg+';font-weight:800;letter-spacing:.02em">'+g.kurz+'</span>';
+}
+function tierBadge(p){ return gruppenBadge(p); }
 /* Wer Live-Unterricht nimmt, braucht Stunden auf dem Konto. Bei allen
    anderen sagt eine 0 gar nichts: Community-Mitglieder buchen keine
    Einzelstunden, sie zahlen monatlich für die Plattform. Das Team
@@ -1506,7 +1536,28 @@ function brauchtStunden(p){
   if (OHNE_STUNDEN.indexOf(p.tier) >= 0) return false;
   return true;
 }
+var SCHUELER_GRUPPE = 'alle';
+function setSchuelerGruppe(g){ SCHUELER_GRUPPE = g; renderSchuelerTable(); }
+function zeichneGruppenPillen(){
+  var box = document.getElementById('grpPills'); if(!box) return;
+  var zaehler = {}; (SCHUELER||[]).forEach(function(p){ var g=gruppeVon(p); zaehler[g]=(zaehler[g]||0)+1; });
+  var teile = ['alle'].concat(Object.keys(GRUPPEN));
+  box.innerHTML = teile.map(function(g){
+    var an = SCHUELER_GRUPPE===g;
+    var d = GRUPPEN[g];
+    var txt = (g==='alle') ? 'Alle' : d.kurz;
+    var n = (g==='alle') ? (SCHUELER||[]).length : (zaehler[g]||0);
+    var bg = an ? (d?d.bg:'#1A1A1A') : '#fff';
+    var fg = an ? (d?d.fg:'#fff') : '#5C5346';
+    var rand = an ? (d?d.fg:'#1A1A1A') : '#E7DFCD';
+    return '<button type="button" onclick="setSchuelerGruppe(\''+g+'\')" '
+      + 'style="cursor:pointer;font:inherit;font-size:13px;font-weight:800;padding:6px 13px;border-radius:999px;'
+      + 'background:'+bg+';color:'+fg+';border:1.5px solid '+rand+'">'
+      + txt + ' <span style="opacity:.7;font-weight:600">' + n + '</span></button>';
+  }).join('');
+}
 function renderSchuelerTable(){
+  zeichneGruppenPillen();
   const q = (document.getElementById('schuelerSuche')?.value||'').toLowerCase().trim();
   const mode = document.getElementById('schuelerSort')?.value||'name';
   const stf = document.getElementById('schuelerStatus')?.value||'';
@@ -1514,7 +1565,11 @@ function renderSchuelerTable(){
   let rows = SCHUELER.filter(p => !q || (p.name||'').toLowerCase().includes(q) || (p.email||'').toLowerCase().includes(q));
   if (stf!=='archiv') rows = rows.filter(p => (p.status||'') !== 'archiv');
   if (stf==='laufend'){ rows = rows.filter(p => ['aktiv','urlaub'].includes(p.status||'aktiv')); }
-  else if (stf){ if(stf==='tier_community') rows=rows.filter(p=>p.tier==='community'); else if(stf==='tier_premium') rows=rows.filter(p=>p.tier==='premium'); else rows = rows.filter(p => (p.status||'aktiv')===stf); }
+  else if (stf){ rows = rows.filter(p => (p.status||'aktiv')===stf); }
+  /* Gruppe und Status sind zwei verschiedene Fragen: WAS jemand ist und WIE es
+     ihm gerade geht. Frueher steckten beide in einer Auswahl, dann liess sich
+     "alle Premium, auch die in Pause" gar nicht erst hinschreiben. */
+  if (SCHUELER_GRUPPE !== 'alle') rows = rows.filter(p => gruppeVon(p) === SCHUELER_GRUPPE);
   if (lowOnly) rows = rows.filter(p => brauchtStunden(p) && p.credits<=1);
   rows = [...rows];
   if (mode==='credits') rows.sort((a,b)=> a.credits-b.credits || nameKey(a).localeCompare(nameKey(b),'de'));
@@ -1528,7 +1583,10 @@ function renderSchuelerTable(){
   if (info) info.textContent = `${rows.length} von ${SCHUELER.length} · ${low} Live-Schüler mit ≤ 1 Stunde · ${mitAbo} mit Mitgliedschaft${bdayToday?` · 🎂 ${bdayToday} heute Geburtstag`:''}`;
   const byName = (mode==='name');
   let lastLetter = '';
-  const statusLabel = (st)=>{ const o=STATUS_OPT.find(x=>x[0]===st)||STATUS_OPT[0]; return `<span class="pill" style="background:${STATUS_BG[st]||'#eee'};color:#1A1A1A;font-weight:700">${o[1]}</span>`; };
+  /* 'Aktiv' stand frueher bei fast jedem und sagte damit nichts. Was jemand
+     IST, steht jetzt im Gruppen-Abzeichen neben dem Namen; hier erscheint
+     nur noch, was davon abweicht. */
+  const statusLabel = (st)=>{ if(st==='aktiv') return ''; const o=STATUS_OPT.find(x=>x[0]===st)||STATUS_OPT[0]; return `<span class="pill" style="background:${STATUS_BG[st]||'#eee'};color:#1A1A1A;font-weight:700">${o[1]}</span>`; };
   const rowsHtml = rows.map(p=>{
     const st = p.status||'aktiv';
     const staff = p.is_admin||p.is_teacher;
