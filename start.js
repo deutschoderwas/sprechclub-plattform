@@ -567,7 +567,7 @@
       + '<span class="tx">'
       +   '<span class="eb">' + T('sn_ccom','Community-Chat') + ' <span class="an"><i></i><span id="dcOnline">live</span></span></span>'
       +   '<h3>' + T('sn_ctitel','Schreib mit anderen — zu jedem Thema') + '</h3>'
-      +   '<p>' + T('sn_ctext','Nach Stufe von A1 bis C2, nach Ziel wie Beruf, Pflege oder Prüfung — und einfach zum Plaudern. Julia liest täglich mit.') + '</p>'
+      +   '<p>' + T('sn_ctext','Nach Stufe von A1 bis C2, nach Ziel wie Beruf, Pflege oder Prüfung — und einfach zum Plaudern. Dein Lehrer liest täglich mit.') + '</p>'
       + '</span>'
       + '<span class="st-b st-b3">' + T('sn_cgo','Chat öffnen →') + '</span>'
       + '</div>';
@@ -864,7 +864,7 @@
           if(feedEl){
             feedEl.innerHTML = strom.length
               ? ('<div class="sf-k">' + strom.map(function(m){ return postHTML(m, false); }).join('') + '</div>')
-              : ('<div class="sf-k"><div class="sf-leer">' + T('sf_keine','Hier ist noch nichts geschrieben worden. Sobald Julia oder jemand aus dem Club etwas postet, steht es hier.') + '</div></div>');
+              : ('<div class="sf-k"><div class="sf-leer">' + T('sf_keine','Hier ist noch nichts geschrieben worden. Sobald dein Lehrer oder jemand aus dem Club etwas postet, steht es hier.') + '</div></div>');
           }
           tickerFuellen(oben);
         };
@@ -1125,7 +1125,21 @@
       +   (guthabenZeigen(k)
            ? feld(T('sn_zguth','Guthaben'), c, T('sn_zguthd','Stunden frei'))
            : feld(T('sf_club','Sprechclub'), T('sf_unbegrenzt','unbegrenzt'), T('sf_impremium','im Premium enthalten'), true))
-      +   feld(T('sn_zserie','Lernserie'), s.streak||0, (s.streak===1?T('sn_zwoche','Woche'):T('sn_zwochen','Wochen')) + ' ' + T('sn_zamstueck','am Stück'))
+      +   (function(){
+           /* Die Lernserie zaehlte Wochen mit gebuchter Live-Stunde.
+              Im Selbstlernbereich, der vor dem Sprechclub startet,
+              stand sie damit bei jedem auf 0. Der Vokabeltrainer
+              zaehlt die Tage am Stueck — das ist die Serie, die ein
+              Selbstlerner meint. Wer keine Woerter uebt, aber Stunden
+              besucht, sieht weiter seine Wochen. */
+           var tage = 0;
+           try{ if(window.vokabelStand) tage = window.vokabelStand().serie||0; }catch(e){}
+           if(tage > 0)
+             return feld(T('sn_zserie','Lernserie'), tage,
+               (tage===1?T('sf_tag','Tag'):T('sf_tage2','Tage')) + ' ' + T('sn_zamstueck','am Stück'));
+           return feld(T('sn_zserie','Lernserie'), s.streak||0,
+             (s.streak===1?T('sn_zwoche','Woche'):T('sn_zwochen','Wochen')) + ' ' + T('sn_zamstueck','am Stück'));
+         })()
       +   feld(T('sn_zlive','Live-Stunden'), (s.past||[]).length, T('sn_zbesucht','besucht'))
       +   feld(T('sn_zvok','Vokabeln'), s.known||0, T('sn_zgelernt','gelernt'))
       + '</div></div>';
