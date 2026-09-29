@@ -70,6 +70,17 @@
   }
   function hoch(){ try{ window.scrollTo(0,0); }catch(e){} }
 
+  /* Die Zeichner setzten frueher v.className='ku' und loeschten damit
+     die Klassen "view" und "active" der Ansicht. Danach fand der Router
+     die Ansicht nicht mehr: #schreiben blieb leer, und die Seite hing
+     ohne aktive Ansicht da. Diese Hilfe setzt "ku", behaelt aber die
+     Ansichtsklassen. */
+  function kuKlasse(v){
+    if (v && v.id && /^v-/.test(v.id)) v.className = 'view active ku';
+    else if (v) v.className = 'ku';
+    return v;
+  }
+
   /* ---------- Speicher und Fortschritt ---------- */
   /* Alles unter einem Schlüssel „kurs": {a1:{1:{...},2:{...}}, niveau:'A1'} */
   function stand(){ var s=J('kurs',null)||{}; s.a1=s.a1||{}; return s; }
@@ -607,7 +618,7 @@
     var v=flaeche(); if(!v) return;
     var alle=niveaus();
     if(!alle.length){
-      v.className='ku'; v.innerHTML='<div class="ku-leer">Die Niveaus werden geladen …</div>'; return;
+      kuKlasse(v); v.innerHTML='<div class="ku-leer">Die Niveaus werden geladen …</div>'; return;
     }
     var jetzt=niveauGemerkt(), n=niveauVon(jetzt), p=niveauProzent(jetzt);
     var kopf='<div class="ku-kopf"><h1>Wo stehst du?</h1>'
@@ -618,7 +629,7 @@
       +'<div class="ku-z"><b>'+p+' %</b><span>geschafft</span></div>'
       +'<div class="ku-z"><b>'+(n&&n.ziel?E(n.ziel.split('·')[0].replace(/\s+$/,'')):'—')+'</b><span>dein Ziel</span></div>'
       +'</div></div>';
-    v.className='ku';
+    kuKlasse(v);
     v.innerHTML=kopf+'<div class="ku-nvliste">'+alle.map(niveauKarte).join('')+'</div>';
     hoch();
   };
@@ -692,7 +703,7 @@
     nivSetzen(id); id=KURSNIV;
     var v=flaeche(); if(!v) return;
     var L=lektionen(id);
-    v.className='ku';
+    kuKlasse(v);
     if(!L.length){
       v.innerHTML='<button class="ku-zurueck" onclick="renderNiveau()">← Alle Niveaus</button>'
         +'<div class="ku-leer">Der '+E(id)+'-Kurs wird geladen. Lade die Seite bitte neu.</div>';
@@ -857,7 +868,7 @@
     }
 
     var vor=lektionVon(l.nr+1);
-    v.className='ku';
+    kuKlasse(v);
     v.innerHTML='<button class="ku-zurueck" onclick="renderKurs()">← Alle Lektionen</button>'
       +kopf+leiste+teile.join('')
       +(vor?'<div style="text-align:center;margin:22px 0 0">'
@@ -1656,7 +1667,7 @@
   window.renderSchreiben=function(){
     stil();
     var v=flaeche(); if(!v) return;
-    v.className='ku';
+    kuKlasse(v);
     var alle=aufgaben();
     if(!alle.length){
       v.innerHTML='<div class="ku-leer">Der Schreibtrainer wird geladen …</div>'; return;

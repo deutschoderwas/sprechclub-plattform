@@ -84,7 +84,7 @@
       acceptNode: function(n){
         var p = n.parentNode;
         if(!p || SKIP[p.nodeName]) return NodeFilter.FILTER_REJECT;
-        if(p.closest && p.closest('.sidebar, nav.sidebar, .dow-icw')) return NodeFilter.FILTER_REJECT;
+        if(p.closest && p.closest('.sidebar, nav.sidebar, nav.cl-tabs, .cl-tabs, .dow-icw')) return NodeFilter.FILTER_REJECT;
         return hasEmoji(n.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
       }
     });
