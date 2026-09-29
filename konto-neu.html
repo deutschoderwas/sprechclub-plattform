@@ -1335,6 +1335,7 @@ async function load(){
   bookings = (bk||[]).map(b=>{ if(b&&b.starts_at){ const s=String(b.starts_at).replace(' ','T'); b.starts_at=s.replace(/([+-]\d{2})$/,'$1:00'); } return b; }); creditLog = (cl||[]); messages = (msg||[]); ratings = (rt||[]);
   progress = {}; (prog||[]).forEach(p=>progress[p.class_id+'|'+p.phase]=p);
 
+  window.bookings = bookings;
   // KI-Material für gebuchte Stunden
   const ids = [...new Set(bookings.filter(b=>b.status==='booked').map(b=>b.class_id))];
   materials = {}; postNotes = {};
@@ -1422,6 +1423,11 @@ function computeStats(){
   stats = { now, booked, past, upcoming, streak, points, rank, next, rankProg,
             completedPhases, known, perLevel, currentLevel,
             vocabTotal: collectVocab().length };
+  /* stats, bookings und materials stehen als let auf oberster Ebene und
+     landen damit NICHT auf window — dieselbe Falle wie frueher beim
+     profile. mein-bereich.js liest sie von dort und saehe sonst bei
+     jedem Schueler eine leere Akte. */
+  window.stats = stats; window.bookings = bookings; window.materials = materials;
 }
 
 function collectVocab(){
@@ -1438,7 +1444,7 @@ function collectVocab(){
 const VIEWS=['dashboard','weg','lernen','sprechen','medien','bereiche','kurs','pruefung','schreiben','kurse','ueben','community','dm','lernpfad','szenen','kalender','stunden','materialien','vokabeln','fortschritt','guthaben','abo','nachrichten','amanda','profil','fehler','buddy','fertigkeit','podcast','amandasprechen'];
 function go(v){ location.hash=v; }
 function toggleNav(){ document.body.classList.toggle('nav-open'); }
-const VIEW_TITLES={dashboard:['Schülerbereich','Startseite'],weg:['Lernen','Mein Kurs'],lernen:['Lernen','Dein Lernbereich'],sprechen:['Sprechen','Live und mit Amanda'],medien:['Medien','Podcast und Material'],kurs:['Lernbereich','Dein Kurs'],pruefung:['Prüfung','Prüfungsvorbereitung'],schreiben:['Lernen','Schreibtrainer'],kurse:['Lernen','Kursbibliothek'],kalender:['Live Unterricht','Kalender'],stunden:['Live Unterricht','Meine Stunden'],community:['Community-Chat','Alle Themen'],ueben:['Lernen','Üben'],vokabeln:['Lernen','Vokabeltrainer'],materialien:['Lernen','Materialien'],fortschritt:['Lernen','Fortschritt'],nachrichten:['Nachrichten','Team'],amanda:['Amanda','KI-Sprechpartnerin'],lernpfad:['Lernen','Mein Lernplan'],szenen:['Lernen','Meine Szenen'],fehler:['Lernen','Fehler-Trainer'],buddy:['Lernen','Sprech-Buddy'],guthaben:['Konto','Guthaben'],abo:['Konto','Mein Abo'],profil:['Konto','Profil'],podcast:['Medien','Podcast'],amandasprechen:['Sprechen','Mit Amanda']};
+const VIEW_TITLES={dashboard:['Schülerbereich','Startseite'],weg:['Lernen','Mein Kurs'],lernen:['Lernen','Dein Lernbereich'],sprechen:['Sprechen','Live und mit Amanda'],medien:['Medien','Podcast und Material'],kurs:['Lernbereich','Dein Kurs'],pruefung:['Prüfung','Prüfungsvorbereitung'],schreiben:['Lernen','Schreibtrainer'],kurse:['Lernen','Kursbibliothek'],kalender:['Live Unterricht','Kalender'],stunden:['Live Unterricht','Meine Stunden'],community:['Community-Chat','Alle Themen'],ueben:['Lernen','Üben'],vokabeln:['Lernen','Vokabeltrainer'],materialien:['Lernen','Materialien'],fortschritt:['Schülerbereich','Mein Bereich'],nachrichten:['Nachrichten','Team'],amanda:['Amanda','KI-Sprechpartnerin'],lernpfad:['Lernen','Mein Lernplan'],szenen:['Lernen','Meine Szenen'],fehler:['Lernen','Fehler-Trainer'],buddy:['Lernen','Sprech-Buddy'],guthaben:['Konto','Guthaben'],abo:['Konto','Mein Abo'],profil:['Konto','Profil'],podcast:['Medien','Podcast'],amandasprechen:['Sprechen','Mit Amanda']};
 function updateTopbar(v){var t=VIEW_TITLES[v]||['Schülerbereich','']; var s=document.getElementById('tbS'),b=document.getElementById('tbT'); var lang='de'; try{lang=localStorage.getItem('dow_lang')||'de';}catch(e){} var TT=window.__I18N__||{}; function tr(x){var o=TT[x]; return (o&&o[lang]!=null)?o[lang]:x;} if(s){s.setAttribute('data-de',t[0]);s.setAttribute('data-i18n',t[0]);s.textContent=tr(t[0]);} if(b){b.setAttribute('data-de',t[1]);b.setAttribute('data-i18n',t[1]);b.textContent=tr(t[1]);}}
 function routeFromHash(){ const v=(location.hash||'#dashboard').slice(1); show(VIEWS.includes(v)?v:'dashboard'); }
 // Ohne Guthaben/Probestunde/Pass: ALLES gesperrt außer Kalender (und Profil für Konto/Logout).
@@ -1465,7 +1471,7 @@ function show(v){
     if(_zu){ renderSprechclubZu(v); window.scrollTo(0,0); return; }
   }
   ({dashboard:renderDashboard,weg:(window.renderWeg||renderDashboard),sprechen:(window.renderSprechen||renderDashboard),medien:(window.renderMedien||renderDashboard),kurse:(window.renderKurse||renderDashboard),ueben:(window.renderUeben||renderDashboard),lernen:(window.renderLernen||renderDashboard),bereiche:(window.renderBereiche||window.renderLernen||renderDashboard),kurs:(window.renderNiveau||renderDashboard),schreiben:(window.renderSchreiben||renderDashboard),community:(window.renderCommunity||renderDashboard),dm:(window.renderDM||renderDashboard),lernpfad:renderLernpfad,szenen:function(){ if(window.LERNPFAD) LERNPFAD.pfad('v-szenen'); },kalender:renderKalender,stunden:renderStunden,pruefung:(window.renderPruefungen||renderDashboard),materialien:renderMaterialien,vokabeln:(window.renderVokabeln||renderVokabelnAlt),
-    fortschritt:renderFortschritt,guthaben:renderGuthaben,abo:renderAbo,nachrichten:renderNachrichten,
+    fortschritt:(window.renderMeinBereich||renderFortschritt),guthaben:renderGuthaben,abo:renderAbo,nachrichten:renderNachrichten,
     amanda:renderAmanda,amandasprechen:(window.renderSprechenAmanda||renderDashboard),profil:renderProfil,fehler:(window.renderFehlerTrainer||renderDashboard),buddy:(window.renderBuddy||renderDashboard),fertigkeit:(window.renderFertigkeit||renderDashboard)}[v]
     /* Nicht jede Ansicht hat einen Zeichner — der Podcast zum Beispiel
        steht als fertiges HTML da. Ohne diesen Rueckfall rief go() hier
@@ -2853,7 +2859,9 @@ function renderFortschritt(){
     {id:'levelup',em:'🪜',name:'Aufgestiegen',cond:LEVELS.indexOf(s.currentLevel)>=2,need:'Niveau B1 erreicht'},
   ];
   const got=defs.filter(d=>d.cond).length;
-  document.getElementById('v-fortschritt').innerHTML=`
+  /* Steht „Mein Bereich" schon da, haengen sich die Abzeichen unten
+     hinein statt die ganze Seite zu ueberschreiben. */
+  (document.getElementById('mbAbzeichen') || document.getElementById('v-fortschritt')).innerHTML=`
     <div class="pagehead"><h1 data-i18n="fo_h1">Abzeichen & Fortschritt</h1><p>${got} von ${defs.length} Abzeichen freigeschaltet · Rang: <b>${s.rank.name}</b> · ${s.points} Punkte</p></div>
     <div class="rankbar"><div class="top"><span class="rank">${s.rank.name}</span><span class="muted">${s.next?('noch '+(s.next.min-s.points)+' Punkte bis '+s.next.name):'Maximaler Rang 🎉'}</span></div><div class="bar"><span style="width:${s.rankProg}%"></span></div></div>
     <div class="grid3" style="margin:14px 0">
@@ -4013,6 +4021,7 @@ window.addEventListener('resize',function(){ clearTimeout(_mhT); _mhT=setTimeout
 <script src="lernpfad-b1.js"></script>
 <script src="lernpfad-weg.js?v=1"></script>
 <script src="start.js?v=2"></script>
+<script src="mein-bereich.js?v=1" defer></script>
 <!-- Der eine Weg. Muss NACH kurs.js und start.js stehen: er stellt
      kursStand, kursOeffnen und kursUebersicht auf die Kursbibliothek um. -->
 <script src="weg.js?v=1"></script>
@@ -4209,6 +4218,58 @@ window.__I18N__=Object.assign(window.__I18N__||{},{"nav_start": {"en": "Home", "
 "sc_zu_k":{"en": "What Premium gives you", "es": "Qué incluye Premium", "ru": "Что даёт Premium", "uk": "Що дає Premium", "tr": "Premium ne sunuyor", "it": "Cosa offre Premium", "fa": "پریمیوم چه دارد"},
 "sc_zu_p":{"en": "The live lessons start on 1 November — Mon–Fri in the evening, Mon–Thu in the morning and at the weekend. Small groups, fixed topics.", "es": "Las clases en vivo empiezan el 1 de noviembre — de lunes a viernes por la tarde, de lunes a jueves por la mañana y el fin de semana. Grupos pequeños, temas fijos.", "ru": "Живые занятия начинаются 1 ноября — пн–пт вечером, пн–чт утром и по выходным. Маленькие группы, заданные темы.", "uk": "Живі заняття починаються 1 листопада — пн–пт увечері, пн–чт зранку та у вихідні. Малі групи, задані теми.", "tr": "Canlı dersler 1 Kasım'da başlıyor — Pzt–Cum akşam, Pzt–Per sabah ve hafta sonu. Küçük gruplar, belirli konular.", "it": "Le lezioni dal vivo iniziano il 1° novembre — lun–ven la sera, lun–gio la mattina e nel fine settimana. Gruppi piccoli, temi fissi.", "fa": "کلاس‌های زنده از ۱ نوامبر شروع می‌شوند — دوشنبه تا جمعه عصر، دوشنبه تا پنجشنبه صبح و آخر هفته. گروه‌های کوچک، موضوع‌های مشخص."},
 "sc_zu_t":{"en": "The speaking club is part of Premium", "es": "El club de conversación forma parte de Premium", "ru": "Разговорный клуб входит в Premium", "uk": "Розмовний клуб входить у Premium", "tr": "Konuşma kulübü Premium'a dahildir", "it": "Il club di conversazione fa parte di Premium", "fa": "باشگاه گفت‌وگو بخشی از پریمیوم است"},
+"mb_alleLektionen":{"en": "All lessons →", "es": "Todas las lecciones →", "ru": "Все уроки →", "uk": "Усі уроки →", "tr": "Tüm dersler →", "it": "Tutte le lezioni →", "fa": "همه درس‌ها ←"},
+"mb_allesmat":{"en": "All materials →", "es": "Todos los materiales →", "ru": "Все материалы →", "uk": "Усі матеріали →", "tr": "Tüm materyaller →", "it": "Tutti i materiali →", "fa": "همه منابع ←"},
+"mb_allestunden":{"en": "All lessons →", "es": "Todas las clases →", "ru": "Все занятия →", "uk": "Усі заняття →", "tr": "Tüm dersler →", "it": "Tutte le lezioni →", "fa": "همه کلاس‌ها ←"},
+"mb_bis":{"en": "until", "es": "hasta", "ru": "до", "uk": "до", "tr": "kadar", "it": "fino al", "fa": "تا"},
+"mb_dabei":{"en": "you were there", "es": "estuviste", "ru": "ты был", "uk": "ти був", "tr": "katıldın", "it": "c'eri", "fa": "حاضر بودی"},
+"mb_durch":{"en": "done", "es": "hecho", "ru": "пройдено", "uk": "пройдено", "tr": "tamam", "it": "fatto", "fa": "تمام"},
+"mb_fehler":{"en": "My reminders", "es": "Mis recordatorios", "ru": "Мои памятки", "uk": "Мої пам'ятки", "tr": "Notlarım", "it": "I miei promemoria", "fa": "یادداشت‌های من"},
+"mb_feleer":{"en": "No reminders collected yet. Every correction you keep lands here.", "es": "Aún no has guardado recordatorios. Cada corrección que guardes aparece aquí.", "ru": "Памяток пока нет. Каждое исправление, которое ты сохранишь, попадёт сюда.", "uk": "Пам'яток поки немає. Кожне виправлення, яке ти збережеш, потрапить сюди.", "tr": "Henüz not toplamadın. Sakladığın her düzeltme buraya gelir.", "it": "Non hai ancora salvato promemoria. Ogni correzione che tieni finisce qui.", "fa": "هنوز یادداشتی جمع نشده. هر تصحیحی که نگه داری اینجا می‌آید."},
+"mb_fert":{"en": "My skills", "es": "Mis destrezas", "ru": "Мои навыки", "uk": "Мої навички", "tr": "Becerilerim", "it": "Le mie competenze", "fa": "مهارت‌های من"},
+"mb_fleer":{"en": "Soon this will show where you stand in listening, reading, writing and speaking — as soon as you have done the first exercises.", "es": "Aquí verás pronto cómo vas en comprensión auditiva, lectura, escritura y expresión oral — en cuanto hagas los primeros ejercicios.", "ru": "Здесь скоро будет видно, как у тебя с аудированием, чтением, письмом и речью — как только сделаешь первые упражнения.", "uk": "Тут скоро буде видно, як у тебе з аудіюванням, читанням, письмом і мовленням — щойно зробиш перші вправи.", "tr": "Dinleme, okuma, yazma ve konuşmada nerede olduğun burada görünecek — ilk alıştırmaları yapar yapmaz.", "it": "Qui vedrai presto come vai in ascolto, lettura, scrittura e parlato — appena avrai fatto i primi esercizi.", "fa": "به‌زودی اینجا می‌بینی در شنیدن، خواندن، نوشتن و گفتن کجا ایستاده‌ای — به‌محض اینکه اولین تمرین‌ها را انجام دهی."},
+"mb_gebucht":{"en": "booked", "es": "reservada", "ru": "забронировано", "uk": "заброньовано", "tr": "ayrıldı", "it": "prenotata", "fa": "رزرو شده"},
+"mb_geschafft":{"en": "done", "es": "completado", "ru": "пройдено", "uk": "пройдено", "tr": "tamamlandı", "it": "completato", "fa": "انجام‌شده"},
+"mb_h1":{"en": "your area", "es": "tu espacio", "ru": "твой раздел", "uk": "твій розділ", "tr": "senin alanın", "it": "la tua area", "fa": "بخش تو"},
+"mb_korrigiert":{"en": "corrected", "es": "corregido", "ru": "проверено", "uk": "перевірено", "tr": "düzeltildi", "it": "corretto", "fa": "تصحیح‌شده"},
+"mb_kurs":{"en": "Where I stand in the course", "es": "Dónde voy en el curso", "ru": "Где я в курсе", "uk": "Де я в курсі", "tr": "Kursta neredeyim", "it": "A che punto sono nel corso", "fa": "جایگاه من در دوره"},
+"mb_kursleer":{"en": "You haven't started the course yet. Fourteen lessons per level are waiting for you.", "es": "Todavía no has empezado el curso. Catorce lecciones por nivel te esperan.", "ru": "Ты ещё не начал курс. По четырнадцать уроков на каждом уровне ждут тебя.", "uk": "Ти ще не почав курс. По чотирнадцять уроків на кожному рівні чекають на тебе.", "tr": "Kursa henüz başlamadın. Her seviyede on dört ders seni bekliyor.", "it": "Non hai ancora iniziato il corso. Quattordici lezioni per livello ti aspettano.", "fa": "هنوز دوره را شروع نکرده‌ای. در هر سطح چهارده درس منتظر توست."},
+"mb_ladet":{"en": "Loading …", "es": "Cargando …", "ru": "Загружается …", "uk": "Завантажується …", "tr": "Yükleniyor …", "it": "Caricamento …", "fa": "در حال بارگذاری …"},
+"mb_lektion":{"en": "Lesson", "es": "Lección", "ru": "Урок", "uk": "Урок", "tr": "Ders", "it": "Lezione", "fa": "درس"},
+"mb_lektionen":{"en": "Last worked on", "es": "Lo último que hiciste", "ru": "Последнее", "uk": "Останнє", "tr": "Son çalıştıkların", "it": "Ultimi lavori", "fa": "آخرین کارها"},
+"mb_lleer":{"en": "No lesson opened yet. There are over a hundred in the course library.", "es": "Aún no has abierto ninguna lección. Hay más de cien en la biblioteca.", "ru": "Ты ещё не открывал уроки. В библиотеке их больше ста.", "uk": "Ти ще не відкривав уроки. У бібліотеці їх понад сто.", "tr": "Henüz ders açmadın. Kurs kitaplığında yüzden fazla var.", "it": "Non hai ancora aperto nessuna lezione. Nella libreria ce ne sono più di cento.", "fa": "هنوز درسی باز نکرده‌ای. در کتابخانه بیش از صد درس هست."},
+"mb_mat":{"en": "Material from my lessons", "es": "Material de mis clases", "ru": "Материалы с моих занятий", "uk": "Матеріали з моїх занять", "tr": "Derslerimden materyaller", "it": "Materiale delle mie lezioni", "fa": "منابع کلاس‌های من"},
+"mb_matleer":{"en": "As soon as you have attended a lesson, the worksheet, vocabulary and follow-up will be here.", "es": "En cuanto asistas a una clase, aquí estarán la ficha, el vocabulario y el repaso.", "ru": "Как только ты побываешь на занятии, здесь появятся рабочий лист, слова и разбор.", "uk": "Щойно ти побуваєш на занятті, тут з'являться робочий аркуш, слова і розбір.", "tr": "Bir derse katılır katılmaz çalışma kâğıdı, kelimeler ve ders sonrası burada olur.", "it": "Appena avrai seguito una lezione, qui troverai la scheda, il lessico e il ripasso.", "fa": "به‌محض اینکه در کلاسی شرکت کنی، برگه تمرین، واژگان و مرور اینجا خواهد بود."},
+"mb_nichtgeladen":{"en": "Could not be loaded right now.", "es": "No se ha podido cargar ahora.", "ru": "Сейчас не загрузилось.", "uk": "Зараз не завантажилось.", "tr": "Şu anda yüklenemedi.", "it": "Non è stato possibile caricarlo ora.", "fa": "الان بارگذاری نشد."},
+"mb_oeffnen":{"en": "Open", "es": "Abrir", "ru": "Открыть", "uk": "Відкрити", "tr": "Aç", "it": "Apri", "fa": "باز کردن"},
+"mb_punkte":{"en": "points", "es": "puntos", "ru": "очков", "uk": "очок", "tr": "puan", "it": "punti", "fa": "امتیاز"},
+"mb_sitzt":{"en": "got it", "es": "dominado", "ru": "усвоено", "uk": "засвоєно", "tr": "oturdu", "it": "acquisito", "fa": "یاد گرفتی"},
+"mb_sub":{"en": "Everything you have done here, in one place.", "es": "Todo lo que has hecho aquí, en un solo sitio.", "ru": "Всё, что ты здесь сделал, в одном месте.", "uk": "Усе, що ти тут зробив, в одному місці.", "tr": "Burada yaptığın her şey tek bir yerde.", "it": "Tutto quello che hai fatto qui, in un unico posto.", "fa": "هر چه اینجا انجام داده‌ای، یک‌جا."},
+"mb_texte":{"en": "My texts", "es": "Mis textos", "ru": "Мои тексты", "uk": "Мої тексти", "tr": "Metinlerim", "it": "I miei testi", "fa": "متن‌های من"},
+"mb_tleer":{"en": "You haven't sent a text for correction yet. The writing trainer has 76 tasks with real exam criteria.", "es": "Todavía no has enviado ningún texto para corregir. En el entrenador de escritura hay 76 tareas con criterios reales de examen.", "ru": "Ты ещё не отправлял текст на проверку. В тренажёре письма 76 заданий с настоящими экзаменационными критериями.", "uk": "Ти ще не надсилав текст на перевірку. У тренажері письма 76 завдань зі справжніми екзаменаційними критеріями.", "tr": "Henüz düzeltilmek üzere metin göndermedin. Yazma antrenöründe gerçek sınav ölçütleriyle 76 görev var.", "it": "Non hai ancora inviato un testo da correggere. Nell'allenatore di scrittura ci sono 76 compiti con criteri d'esame reali.", "fa": "هنوز متنی برای تصحیح نفرستاده‌ای. در تمرین نوشتن ۷۶ تکلیف با معیارهای واقعی آزمون هست."},
+"mb_ueben":{"en": "Practise →", "es": "Practicar →", "ru": "Тренироваться →", "uk": "Тренуватися →", "tr": "Alıştırma →", "it": "Esercitati →", "fa": "تمرین ←"},
+"mb_unt":{"en": "My lessons", "es": "Mis clases", "ru": "Мои занятия", "uk": "Мої заняття", "tr": "Derslerim", "it": "Le mie lezioni", "fa": "کلاس‌های من"},
+"mb_untleer":{"en": "You haven't attended a lesson yet. The speaking club has the next dates.", "es": "Todavía no has asistido a ninguna clase. En el club de conversación están las próximas fechas.", "ru": "Ты ещё не был на занятии. Ближайшие даты — в разговорном клубе.", "uk": "Ти ще не був на занятті. Найближчі дати — у розмовному клубі.", "tr": "Henüz bir derse katılmadın. Yaklaşan tarihler konuşma kulübünde.", "it": "Non hai ancora seguito una lezione. Le prossime date sono nel club di conversazione.", "fa": "هنوز در کلاسی شرکت نکرده‌ای. تاریخ‌های بعدی در باشگاه گفت‌وگوست."},
+"mb_verpasst":{"en": "missed", "es": "te la perdiste", "ru": "пропущено", "uk": "пропущено", "tr": "kaçırdın", "it": "persa", "fa": "از دست رفت"},
+"mb_von":{"en": "of", "es": "de", "ru": "из", "uk": "з", "tr": "/", "it": "di", "fa": "از"},
+"mb_wartet":{"en": "waiting for correction", "es": "esperando corrección", "ru": "ждёт проверки", "uk": "чекає на перевірку", "tr": "düzeltme bekliyor", "it": "in attesa di correzione", "fa": "در انتظار تصحیح"},
+"mb_wfaellig":{"en": "due today", "es": "para hoy", "ru": "на сегодня", "uk": "на сьогодні", "tr": "bugün sırada", "it": "per oggi", "fa": "سررسید امروز"},
+"mb_wgelernt":{"en": "you know", "es": "dominadas", "ru": "усвоено", "uk": "засвоєно", "tr": "biliyorsun", "it": "le sai", "fa": "بلدی"},
+"mb_wgesamt":{"en": "in the trainer", "es": "en el entrenador", "ru": "в тренажёре", "uk": "у тренажері", "tr": "antrenörde", "it": "nell'allenatore", "fa": "در تمرین"},
+"mb_wleer":{"en": "No words in the trainer yet. It fills up from your lessons and classes by itself.", "es": "Aún no hay palabras en el entrenador. Se llena solo con tus lecciones y clases.", "ru": "В тренажёре пока нет слов. Он сам наполняется из твоих уроков и занятий.", "uk": "У тренажері поки немає слів. Він сам наповнюється з твоїх уроків і занять.", "tr": "Antrenörde henüz kelime yok. Derslerinden kendiliğinden dolar.", "it": "Non ci sono ancora parole nell'allenatore. Si riempie da solo dalle tue lezioni.", "fa": "هنوز واژه‌ای در تمرین نیست. خودش از درس‌ها و کلاس‌هایت پر می‌شود."},
+"mb_wneu":{"en": "never practised", "es": "sin practicar", "ru": "ещё не учил", "uk": "ще не вчив", "tr": "hiç çalışılmadı", "it": "mai esercitate", "fa": "هرگز تمرین‌نشده"},
+"mb_woerter":{"en": "My words", "es": "Mis palabras", "ru": "Мои слова", "uk": "Мої слова", "tr": "Kelimelerim", "it": "Le mie parole", "fa": "واژه‌های من"},
+"mb_zserie":{"en": "days in a row", "es": "días seguidos", "ru": "дней подряд", "uk": "днів поспіль", "tr": "gün üst üste", "it": "giorni di fila", "fa": "روز پیاپی"},
+"mb_zstunden":{"en": "lessons attended", "es": "clases asistidas", "ru": "занятий посещено", "uk": "занять відвідано", "tr": "derse katıldın", "it": "lezioni seguite", "fa": "کلاس شرکت‌کرده"},
+"mb_zubib":{"en": "To the course library →", "es": "A la biblioteca →", "ru": "В библиотеку →", "uk": "До бібліотеки →", "tr": "Kurs kitaplığına →", "it": "Alla libreria →", "fa": "به کتابخانه ←"},
+"mb_zueb":{"en": "exercises solved", "es": "ejercicios resueltos", "ru": "упражнений решено", "uk": "вправ розв'язано", "tr": "alıştırma çözdün", "it": "esercizi risolti", "fa": "تمرین حل‌شده"},
+"mb_zufehler":{"en": "To the mistake trainer →", "es": "Al entrenador de errores →", "ru": "К тренажёру ошибок →", "uk": "До тренажера помилок →", "tr": "Hata antrenörüne →", "it": "All'allenatore errori →", "fa": "به تمرین خطا ←"},
+"mb_zufert":{"en": "To the skills →", "es": "A las destrezas →", "ru": "К навыкам →", "uk": "До навичок →", "tr": "Becerilere →", "it": "Alle competenze →", "fa": "به مهارت‌ها ←"},
+"mb_zumkal":{"en": "To the weekly plan →", "es": "Al plan semanal →", "ru": "К расписанию →", "uk": "До розкладу →", "tr": "Haftalık plana →", "it": "Al piano settimanale →", "fa": "به برنامه هفتگی ←"},
+"mb_zumkurs":{"en": "To the course →", "es": "Al curso →", "ru": "К курсу →", "uk": "До курсу →", "tr": "Kursa →", "it": "Al corso →", "fa": "به دوره ←"},
+"mb_zumschreiben":{"en": "To the writing trainer →", "es": "Al entrenador de escritura →", "ru": "К тренажёру письма →", "uk": "До тренажера письма →", "tr": "Yazma antrenörüne →", "it": "All'allenatore di scrittura →", "fa": "به تمرین نوشتن ←"},
+"mb_zumtrainer":{"en": "To the vocabulary →", "es": "Al vocabulario →", "ru": "К словам →", "uk": "До слів →", "tr": "Kelimelere →", "it": "Al lessico →", "fa": "به واژگان ←"},
+"mb_zwoerter":{"en": "words learned", "es": "palabras aprendidas", "ru": "слов выучено", "uk": "слів вивчено", "tr": "kelime öğrendin", "it": "parole imparate", "fa": "واژه یادگرفته"},
 "sf_60":{"en": "60 minutes", "es": "60 minutos", "ru": "60 минут", "uk": "60 хвилин", "tr": "60 dakika", "it": "60 minuti", "fa": "۶۰ دقیقه"},
 "sf_alle":{"en": "All →", "es": "Todos →", "ru": "Все →", "uk": "Усі →", "tr": "Tümü →", "it": "Tutti →", "fa": "همه ←"},
 "sf_allefolgen":{"en": "All episodes →", "es": "Todos los episodios →", "ru": "Все выпуски →", "uk": "Усі випуски →", "tr": "Tüm bölümler →", "it": "Tutti gli episodi →", "fa": "همه قسمت‌ها ←"},
