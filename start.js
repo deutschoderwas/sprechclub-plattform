@@ -259,7 +259,7 @@
 
   function stil(){
     if(document.getElementById('startStil')) return;
-    var s=document.createElement('style'); s.id='startStil'; s.textContent=CSS+CSS_POD;
+    var s=document.createElement('style'); s.id='startStil'; s.textContent=CSS+CSS_POD+CSS_FEED;
     document.head.appendChild(s);
   }
 
@@ -272,6 +272,15 @@
   /* ---------- Die Seite ---------- */
   var STARTSEITE = {};
 
+  /* ============================================================
+     Die Startseite als Strom — nach dem Entwurf, den Julia
+     ausgesucht hat: in der Mitte, was es Neues gibt und wo sie
+     stehengeblieben ist; rechts, was heute ansteht.
+
+     Zuerst wird gezeichnet, was schon im Speicher liegt. Was aus
+     der Datenbank kommt (Beitraege, buchbare Stunden), traegt sich
+     danach nach — die Seite steht also sofort und zappelt nicht.
+     ============================================================ */
   STARTSEITE.zeichne = function(ziel, k){
     if(!ziel) return;
     stil();
@@ -280,22 +289,54 @@
     var name = (k.name||'').split(' ')[0];
 
     ziel.innerHTML = ''
-      + '<div class="st">'
+      + '<div class="sf">'
       +   gruss(name, s)
       +   (k.abo ? '<div class="st-abo">' + k.abo + '</div>' : '')
-      +   vokabelBand()
       +   '<div id="lzSlot"></div>'
-      +   '<div class="st-oben">' + kursKarte(k) + '<div class="st-rechts">' + liveKarte(k) + '</div></div>'
-      +   podcastKarte()
-      +   zahlen(k, s)
-      +   '<div class="st-titel"><span class="tag">' + T('sn_tag','Dein Übungsplatz') + '</span>'
-      +   '<h2>' + T('sn_weiter','Weitermachen') + '</h2></div>'
-      +   kacheln(k, s)
-      +   chatBand()
-      /* Die Handy-App ist vorübergehend ausgeblendet — sie kommt zurück,
-         wenn die Plattform fertig ist. Zum Wiedereinschalten den Streifen
-         unten in appStreifen() wieder einhängen. */
+      +   '<div class="sf-buehne">'
+      +     '<div class="sf-mitte">'
+      +       '<div class="sf-reiter">'
+      +         '<button class="jetzt">' + T('sf_fuerdich','Für dich') + '</button>'
+      +         '<button onclick="go(\'community\')">' + T('sf_neueste','Alle Beiträge') + '</button>'
+      +         '<button onclick="go(\'nachrichten\')">' + T('k_msg','Nachrichten') + '</button>'
+      +       '</div>'
+      +       '<div id="sfAnschlag"></div>'
+      +       weiterKarte()
+      +       '<div id="sfFeed"><div class="sf-k"><div class="sf-leer">' + T('sf_ladet','Wird geladen …') + '</div></div></div>'
+      +       '<div class="st-titel"><span class="tag">' + T('sn_tag','Dein Übungsplatz') + '</span>'
+      +         '<h2>' + T('sn_weiter','Weitermachen') + '</h2></div>'
+      +       kacheln(k, s)
+      +     '</div>'
+      +     '<aside class="sf-rand">'
+      +       termineHTML(k)
+      +       '<div class="sf-k"><div class="sf-kopf"><h2>' + T('sf_imclub','Gerade im Club') + '</h2>'
+      +         '<span class="sf-live"><i></i><span id="dcOnline">live</span></span></div>'
+      +         '<div class="sf-tick" id="sfTick"><div>' + T('sf_ladet','Wird geladen …') + '</div></div></div>'
+      +       heuteHTML(k, s)
+      +       vierZahlen(k, s)
+      +       podcastRand()
+      +       begleiter()
+      +     '</aside>'
+      +   '</div>'
       + '</div>';
+
+    /* Und der Menuepunkt „Guthaben“ verschwindet unter derselben
+       Bedingung: wer ab dem 1. November unbegrenzt bucht und keine
+       Reststunden mehr hat, braucht ihn nicht. */
+    try{
+      var gknopf = document.querySelector('.sidebar .navlink[data-view="guthaben"]');
+      /* Mit Vorrang: die Stilblaetter setzen auf .sidebar .navlink ein
+         display:flex !important, gegen das eine schlichte Zuweisung
+         nicht ankaeme. */
+      if(gknopf){
+        if(guthabenZeigen(k)) gknopf.style.removeProperty('display');
+        else gknopf.style.setProperty('display','none','important');
+      }
+    }catch(e){}
+
+    /* Was aus dem Netz kommt, traegt sich nach. */
+    try{ stromLaden(); }catch(e){ console.error('Strom:', e); }
+    try{ termineLaden(k); }catch(e){ console.error('Termine:', e); }
   };
 
   /* Julias Podcast. Zeigt die angefangene Folge zum Weiterhören,
@@ -555,6 +596,540 @@
     }, 40);
     return false;
   };
+
+
+  /* ---------- Aussehen der neuen Startseite ---------- */
+  var CSS_FEED = ''
+  + '#v-dashboard .sf{display:flex;flex-direction:column;gap:18px}'
+  + '#v-dashboard .sf *{box-sizing:border-box}'
+  + '.sf{--tint:#10627A;--tint2:#1B9BC0;--ink:#14181B;--leise:#5A6B72;'
+  +     '--linie:#E7ECEE;--linie2:#F1F5F6;--karte:#fff;--gruen:#0F7B5A;--rot:#D42A21;--gold:#C9A200}'
+
+  /* Zwei Spalten: der Strom in der Mitte, der Rand rechts */
+  + '.sf-buehne{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:18px;align-items:start}'
+  + '.sf-mitte{display:flex;flex-direction:column;gap:14px;min-width:0}'
+  /* Nicht klebend: der Rand ist mit sechs Karten hoeher als der
+     Bildschirm. Klebte er oben fest, kaeme man an die unteren zwei
+     (Podcast und Begleiter) beim Scrollen gar nicht heran. */
+  + '.sf-rand{display:flex;flex-direction:column;gap:14px}'
+  + '@media(max-width:1100px){.sf-buehne{grid-template-columns:1fr}}'
+
+  /* Die Karte, aus der alles gebaut ist */
+  + '.sf-k{background:var(--karte);border:1px solid var(--linie);border-radius:16px;overflow:hidden}'
+  + '.sf-kopf{display:flex;align-items:center;justify-content:space-between;gap:10px;'
+  +   'padding:12px 15px;border-bottom:1px solid var(--linie2)}'
+  + '.sf-kopf h2{margin:0;font-family:"Space Grotesk",system-ui,sans-serif;font-size:14.5px;font-weight:700;color:var(--ink);letter-spacing:-.01em}'
+  + '.sf-kopf a{font-size:12.5px;font-weight:700;color:var(--tint);text-decoration:none;white-space:nowrap}'
+  + '.sf-kopf a:hover{text-decoration:underline}'
+  + '.sf-leib{padding:14px 15px}'
+
+  /* Reiter über dem Strom */
+  + '.sf-reiter{display:flex;gap:2px;border-bottom:1px solid var(--linie);margin-bottom:2px;overflow-x:auto;scrollbar-width:none}'
+  + '.sf-reiter::-webkit-scrollbar{display:none}'
+  + '.sf-reiter button{border:none;background:none;font-family:inherit;font-size:14px;font-weight:600;'
+  +   'color:var(--leise);padding:9px 13px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}'
+  + '.sf-reiter button.jetzt{color:var(--tint);border-bottom-color:var(--tint)}'
+  + '.sf-reiter button:hover{color:var(--ink)}'
+
+  /* Ein Beitrag */
+  + '.sf-post{padding:14px 15px;border-bottom:1px solid var(--linie2)}'
+  + '.sf-post:last-child{border-bottom:none}'
+  + '.sf-pkopf{display:flex;align-items:flex-start;gap:9px;margin-bottom:8px}'
+  + '.sf-av{width:34px;height:34px;border-radius:50%;flex:0 0 34px;display:flex;align-items:center;'
+  +   'justify-content:center;color:#fff;font-size:12px;font-weight:700;letter-spacing:.02em}'
+  + '.sf-wer{font-size:13.5px;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:6px;flex-wrap:wrap}'
+  + '.sf-wann{font-size:11.5px;color:var(--leise);margin-top:1px}'
+  + '.sf-raum{margin-left:auto;font-size:11.5px;font-weight:600;color:var(--leise);'
+  +   'background:#F6F9FA;border:1px solid var(--linie);border-radius:999px;padding:3px 9px;white-space:nowrap}'
+  + '.sf-post h3{margin:0 0 5px;font-family:"Space Grotesk",system-ui,sans-serif;font-size:15.5px;'
+  +   'font-weight:700;color:var(--ink);line-height:1.3;letter-spacing:-.01em}'
+  + '.sf-post p{margin:0;font-size:14px;line-height:1.55;color:#3D4A50;white-space:pre-wrap;overflow-wrap:anywhere}'
+  + '.sf-mehr{border:none;background:none;font-family:inherit;font-size:12.5px;font-weight:700;'
+  +   'color:var(--tint);cursor:pointer;padding:6px 0 0}'
+  + '.sf-pfuss{display:flex;align-items:center;gap:14px;margin-top:10px;font-size:12.5px;color:var(--leise);flex-wrap:wrap}'
+  + '.sf-tag-team{font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;'
+  +   'background:#E6F8FC;color:var(--tint);border-radius:4px;padding:2px 5px}'
+  + '.sf-tag-ki{font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;'
+  +   'background:#F1ECFD;color:#6D28D9;border-radius:4px;padding:2px 5px}'
+
+  /* Der angeheftete Beitrag */
+  + '.sf-k.sf-fest{border-color:#BDE7F2}'
+  + '.sf-band{background:#E6F8FC;color:var(--tint);font-size:11.5px;font-weight:800;'
+  +   'letter-spacing:.03em;padding:7px 15px;border-bottom:1px solid #BDE7F2}'
+  + '.sf-zustell{margin-top:9px;padding-top:9px;border-top:1px solid var(--linie2);'
+  +   'font-size:11.5px;color:var(--leise)}'
+
+  /* Da warst du zuletzt */
+  + '.sf-weiter{display:flex;gap:13px;align-items:center;flex-wrap:wrap}'
+  + '.sf-wbild{width:64px;height:64px;border-radius:12px;object-fit:cover;flex:0 0 64px;background:#F6F9FA}'
+  + '.sf-wtx{flex:1;min-width:180px}'
+  + '.sf-wtx b{font-size:15px;color:var(--ink);display:block}'
+  + '.sf-wtx small{display:block;font-size:12.5px;color:var(--leise);margin-top:2px}'
+  + '.sf-bal{height:6px;border-radius:999px;background:#F1F5F6;overflow:hidden;margin-top:7px}'
+  + '.sf-bal i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--tint2),var(--tint))}'
+
+  /* Zeilen im rechten Rand */
+  + '.sf-zeile{display:flex;align-items:center;gap:10px;padding:10px 15px;border-bottom:1px solid var(--linie2)}'
+  + '.sf-zeile:last-child{border-bottom:none}'
+  + '.sf-zeile .tx{flex:1;min-width:0}'
+  + '.sf-zeile .tx b{display:block;font-size:13.5px;font-weight:700;color:var(--ink);line-height:1.3}'
+  + '.sf-zeile .tx span{display:block;font-size:12px;color:var(--leise);margin-top:1px}'
+  + '.sf-nr{width:30px;height:30px;border-radius:9px;background:#F6F9FA;border:1px solid var(--linie);'
+  +   'display:flex;align-items:center;justify-content:center;font-size:14px;flex:0 0 30px}'
+  + '.sf-datum{width:38px;flex:0 0 38px;text-align:center;background:#F6F9FA;border:1px solid var(--linie);'
+  +   'border-radius:9px;padding:3px 0}'
+  + '.sf-datum .t{display:block;font-size:9.5px;font-weight:800;letter-spacing:.06em;color:var(--rot);text-transform:uppercase}'
+  + '.sf-datum .z{display:block;font-size:16px;font-weight:700;color:var(--ink);line-height:1.1;font-variant-numeric:tabular-nums}'
+  + '.sf-tun{border:1px solid var(--linie);background:#fff;border-radius:999px;font-family:inherit;'
+  +   'font-size:12px;font-weight:700;color:var(--ink);padding:5px 11px;cursor:pointer;white-space:nowrap}'
+  + '.sf-tun:hover{border-color:var(--tint);color:var(--tint)}'
+  + '.sf-tun.voll{background:var(--tint);border-color:var(--tint);color:#fff}'
+  + '.sf-tun.voll:hover{background:#0C4F63;color:#fff}'
+  + '.sf-dabei{display:inline-block;font-size:11px;font-weight:700;color:var(--gruen);'
+  +   'background:#E8F6F1;border-radius:999px;padding:2px 8px;margin-top:2px}'
+
+  /* Gerade im Club */
+  + '.sf-tick{padding:4px 15px 12px;display:flex;flex-direction:column;gap:7px}'
+  + '.sf-tick div{font-size:12.5px;color:var(--leise);line-height:1.4}'
+  + '.sf-tick b{color:var(--ink);font-weight:600}'
+  + '.sf-live{font-size:11.5px;color:var(--gruen);font-weight:700;display:flex;align-items:center;gap:5px}'
+  + '.sf-live i{width:7px;height:7px;border-radius:50%;background:var(--gruen);display:inline-block}'
+
+  /* Vier Zahlen, jetzt im Rand */
+  + '.sf-vier{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--linie2)}'
+  + '.sf-vier div{background:#fff;padding:11px 13px}'
+  + '.sf-vier .l{font-size:11.5px;color:var(--leise);font-weight:600}'
+  + '.sf-vier .v{font-size:21px;font-weight:700;color:var(--ink);line-height:1.15;font-variant-numeric:tabular-nums;'
+  +   'overflow-wrap:break-word;'
+  +   'font-family:"Space Grotesk",system-ui,sans-serif}'
+  + '.sf-vier .d{font-size:11px;color:var(--leise)}'
+  /* „unbegrenzt“ ist ein Wort, keine Zahl — in 21px brach es mitten durch. */
+  + '.sf-vier .v.wort{font-size:16px;line-height:1.3;letter-spacing:-.005em}'
+
+  + '.sf-leer{padding:14px 15px;font-size:13px;color:var(--leise);line-height:1.5}'
+  + '@media(max-width:640px){.sf-rand{gap:12px}.sf-post{padding:12px 13px}.sf-kopf,.sf-leib{padding-left:13px;padding-right:13px}}'
+
+  /* Das Begruessungsband schob den Strom 380 Pixel nach unten — beim
+     Aufmachen sah man fast nur Amanda. Sie bleibt, nur kleiner: der
+     erste Beitrag steht jetzt im Blick, ohne zu scrollen. */
+  + '#v-dashboard .am-band{padding:10px 18px 0;margin-bottom:14px;border-radius:18px}'
+  + '#v-dashboard .am-band .am-fig{height:104px}'
+  + '#v-dashboard .am-band .am-tx{padding-bottom:12px}'
+  + '#v-dashboard .st-gruss h1{font-size:clamp(21px,2.4vw,27px);line-height:1.15}'
+  + '#v-dashboard .st-gruss p{font-size:14px;margin-top:3px}'
+  + '#v-dashboard .st-abo{margin-bottom:2px}'
+  /* Am Handy stand Amanda in einer eigenen Zeile unter dem Gruss und
+     kostete allein 180 Pixel. Jetzt steht sie klein daneben, wie am
+     Rechner — der erste Beitrag ist damit ohne Scrollen zu sehen. */
+  + '@media(max-width:640px){'
+  +   '#v-dashboard .am-band{grid-template-columns:auto 1fr;padding:10px 14px 0;gap:12px;align-items:end}'
+  +   '#v-dashboard .am-band .am-fig{height:72px;order:0;justify-self:start}'
+  +   '#v-dashboard .am-band .am-tx{padding-bottom:10px}'
+  +   '#v-dashboard .st-gruss h1{font-size:20px}'
+  +   '#v-dashboard .st-gruss p{font-size:13px;margin-top:2px}}'
+  ;
+
+  /* ---------- kleine Helfer ---------- */
+
+  /* Julias Beiträge sind so geschrieben: erste Zeile die Überschrift,
+     danach eine Leerzeile und der Text. Chatzeilen haben das nicht —
+     die bekommen dann eben keine Überschrift statt einer erfundenen. */
+  function teile(text){
+    var t = String(text||'').replace(/\r/g,'').trim();
+    if(!t) return { titel:'', text:'' };
+    var bruch = t.indexOf('\n');
+    if(bruch < 0) return { titel:'', text:t };
+    var kopf = t.slice(0, bruch).trim(), rest = t.slice(bruch+1).trim();
+    /* Nur wenn die erste Zeile kurz genug ist, um eine Überschrift zu sein. */
+    if(kopf.length <= 90 && rest) return { titel:kopf, text:rest };
+    return { titel:'', text:t };
+  }
+
+  function kuerzen(t, max){
+    t = String(t||'');
+    if(t.length <= max) return { text:t, lang:false };
+    var schnitt = t.slice(0, max);
+    var luecke = schnitt.lastIndexOf(' ');
+    if(luecke > max*0.6) schnitt = schnitt.slice(0, luecke);
+    return { text:schnitt + ' …', lang:true };
+  }
+
+  var AV_FARBEN = ['#10627A','#B45309','#3949AB','#9333EA','#0F7B5A','#C2410C','#6D28D9','#1B9BC0'];
+  function avFarbe(name){
+    var n = String(name||'?'), summe = 0;
+    for(var i=0;i<n.length;i++) summe += n.charCodeAt(i);
+    return AV_FARBEN[summe % AV_FARBEN.length];
+  }
+  function initialen(name){
+    var teile2 = String(name||'?').trim().split(/\s+/).filter(Boolean);
+    if(!teile2.length) return '?';
+    if(teile2.length === 1) return teile2[0].slice(0,2).toUpperCase();
+    return (teile2[0][0] + teile2[1][0]).toUpperCase();
+  }
+  function avatar(name, gross){
+    var g = gross ? 34 : 26;
+    return '<div class="sf-av" style="background:' + avFarbe(name) + (gross?'':';width:26px;height:26px;flex:0 0 26px;font-size:10px') + '">'
+      + E(initialen(name)) + '</div>';
+  }
+
+  /* „vor 2 Stunden", „gestern" — ohne Bibliothek, mit echten Abständen. */
+  function wann(iso){
+    var d = new Date(iso);
+    if(isNaN(d)) return '';
+    var min = Math.round((Date.now() - d.getTime())/60000);
+    if(min < 2)    return T('sf_jetzt','gerade eben');
+    if(min < 60)   return T('sf_vormin','vor') + ' ' + min + ' ' + T('sf_min','Minuten');
+    var std = Math.round(min/60);
+    if(std < 24)   return T('sf_vormin','vor') + ' ' + std + ' ' + (std===1?T('sf_std1','Stunde'):T('sf_std','Stunden'));
+    var tage = Math.round(std/24);
+    if(tage === 1) return T('sf_gestern','gestern');
+    if(tage < 8)   return T('sf_vormin','vor') + ' ' + tage + ' ' + T('sf_tage','Tagen');
+    return d.toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'2-digit'});
+  }
+
+  /* ---------- Der angeheftete Beitrag und der Strom ---------- */
+
+  function postHTML(m, fest){
+    var teil  = teile(m.body);
+    var lang  = kuerzen(teil.text, fest ? 460 : 300);
+    var team  = m._team;
+    var ki    = m._ki;
+    var kanal = m._kanal || {};
+    return '<div class="sf-post"' + (fest?' style="padding-top:13px"':'') + '>'
+      + '<div class="sf-pkopf">'
+      +   avatar(m.author_name, true)
+      +   '<div><div class="sf-wer">' + E(m.author_name || T('sf_jemand','Jemand aus dem Club'))
+      +     (team ? ' <span class="sf-tag-team">Team</span>' : '')
+      +     (ki   ? ' <span class="sf-tag-ki">KI</span>' : '')
+      +   '</div><div class="sf-wann">' + wann(m.created_at) + '</div></div>'
+      +   (kanal.name ? '<span class="sf-raum">' + E((kanal.emoji||'') + ' ' + kanal.name) + '</span>' : '')
+      + '</div>'
+      + (teil.titel ? '<h3>' + E(teil.titel) + '</h3>' : '')
+      + '<p>' + E(lang.text) + '</p>'
+      + (lang.lang ? '<button class="sf-mehr" onclick="go(\'community\')">' + T('sf_ganz','Ganzen Beitrag lesen →') + '</button>' : '')
+      + '<div class="sf-pfuss">'
+      +   (m._herzen ? '<span>💛 ' + m._herzen + '</span>' : '')
+      +   (m._antworten ? '<span>💬 ' + m._antworten + ' ' + (m._antworten===1?T('sf_antw1','Antwort'):T('sf_antw','Antworten')) + '</span>' : '')
+      + '</div>'
+      + '</div>';
+  }
+
+  /* Holt Beiträge, Reaktionen und Antworten in drei Abfragen statt in
+     einer pro Beitrag. Läuft nach dem ersten Zeichnen — die Seite steht
+     also schon, bevor das Netz antwortet. */
+  function stromLaden(){
+    var c = window.sb;
+    var festEl = document.getElementById('sfAnschlag');
+    var feedEl = document.getElementById('sfFeed');
+    if(!c || (!festEl && !feedEl)) return;
+
+    var KANAELE = {};
+    c.from('community_channels').select('slug,name,emoji,team_only').eq('is_active', true)
+      .then(function(r){
+        (r && r.data || []).forEach(function(k){ KANAELE[k.slug] = k; });
+        return c.from('community_messages')
+                .select('id,channel,user_id,body,author_name,created_at,pinned_at,antwort_auf')
+                .is('deleted_at', null).eq('kind','text')
+                .order('created_at', {ascending:false}).limit(60);
+      })
+      .then(function(r){
+        var alle = (r && r.data || []).filter(function(m){
+          return m.body && String(m.body).trim() && KANAELE[m.channel];
+        });
+        alle.forEach(function(m){
+          m._kanal = KANAELE[m.channel] || {};
+          m._team  = /^julia/i.test(m.author_name||'');
+          m._ki    = /^(amanda|mila|tom)\b/i.test(m.author_name||'');
+        });
+        /* Antworten zählen, aber selbst nicht im Strom stehen. */
+        var zaehler = {};
+        alle.forEach(function(m){ if(m.antwort_auf) zaehler[m.antwort_auf] = (zaehler[m.antwort_auf]||0)+1; });
+        var oben = alle.filter(function(m){ return !m.antwort_auf; });
+        oben.forEach(function(m){ m._antworten = zaehler[m.id] || 0; });
+
+        var ids = oben.slice(0,16).map(function(m){ return m.id; });
+        var fertig = function(herzen){
+          oben.forEach(function(m){ m._herzen = herzen[m.id] || 0; });
+          var fest = oben.filter(function(m){ return m.pinned_at; })
+                         .sort(function(a,b){ return new Date(b.pinned_at) - new Date(a.pinned_at); })[0];
+          /* Der angeheftete Beitrag steht oben und nicht noch einmal im Strom. */
+          var strom = oben.filter(function(m){ return !fest || m.id !== fest.id; }).slice(0, 6);
+
+          if(festEl){
+            festEl.innerHTML = fest
+              ? ('<div class="sf-k sf-fest"><div class="sf-band">📣 ' + T('sf_fest','Angeheftet · wichtig') + '</div>'
+                 + postHTML(fest, true) + '</div>')
+              : '';
+          }
+          if(feedEl){
+            feedEl.innerHTML = strom.length
+              ? ('<div class="sf-k">' + strom.map(function(m){ return postHTML(m, false); }).join('') + '</div>')
+              : ('<div class="sf-k"><div class="sf-leer">' + T('sf_keine','Hier ist noch nichts geschrieben worden. Sobald Julia oder jemand aus dem Club etwas postet, steht es hier.') + '</div></div>');
+          }
+          tickerFuellen(oben);
+        };
+
+        if(!ids.length){ fertig({}); return; }
+        c.from('community_reactions').select('message_id').in('message_id', ids)
+          .then(function(rr){
+            var h = {};
+            (rr && rr.data || []).forEach(function(x){ h[x.message_id] = (h[x.message_id]||0)+1; });
+            fertig(h);
+          })
+          .catch(function(){ fertig({}); });
+      })
+      .catch(function(e){
+        if(feedEl) feedEl.innerHTML = '<div class="sf-k"><div class="sf-leer">'
+          + T('sf_feedweg','Die Beiträge konnten gerade nicht geladen werden. Lade die Seite bitte neu.') + '</div></div>';
+      });
+  }
+
+  /* „Gerade im Club" — nur was wirklich passiert ist. Keine erfundenen
+     Namen, keine erfundenen Zahlen: die letzten echten Beiträge und
+     wie viele gerade wirklich online sind. */
+  function tickerFuellen(beitraege){
+    var el = document.getElementById('sfTick');
+    if(!el) return;
+    var letzte = (beitraege||[]).slice(0, 3);
+    if(!letzte.length){
+      el.innerHTML = '<div>' + T('sf_ruhig','Gerade ist es ruhig im Club.') + '</div>';
+      return;
+    }
+    el.innerHTML = letzte.map(function(m){
+      var teil = teile(m.body);
+      var kurz = kuerzen(teil.titel || teil.text, 54).text;
+      return '<div><b>' + E(m.author_name || T('sf_jemand','Jemand aus dem Club')) + '</b> — ' + E(kurz)
+           + ' <span style="opacity:.7">· ' + wann(m.created_at) + '</span></div>';
+    }).join('');
+  }
+
+  function onlineZahl(){
+    var n = 0;
+    try{ n = Object.keys(window.CLUB_ONLINE||{}).length; }catch(e){}
+    return n;
+  }
+
+  /* ---------- Nächste Termine ---------- */
+
+  function terminZeile(start, titel, gebucht, klick){
+    var d = new Date(start);
+    var tag = d.toLocaleDateString('de-DE',{weekday:'short'}).replace('.','');
+    var zeit = (typeof window.fmtTimeK==='function') ? window.fmtTimeK(d)
+             : d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
+    return '<div class="sf-zeile">'
+      + '<div class="sf-datum"><span class="t">' + E(tag) + '</span><span class="z">'
+      +   String(d.getDate()).padStart(2,'0') + '</span></div>'
+      + '<div class="tx"><b>' + E(zeit) + ' · ' + E(titel) + '</b>'
+      +   (gebucht ? '<span class="sf-dabei">' + T('sf_dabei','du bist dabei') + '</span>'
+                   : '<span>' + T('sf_60','60 Minuten') + '</span>') + '</div>'
+      + (gebucht ? '' : '<button class="sf-tun" onclick="' + klick + '">' + T('sf_buchen','Buchen') + '</button>')
+      + '</div>';
+  }
+
+  function termineHTML(k){
+    var s = k.stats || {upcoming:[]};
+    var eigene = (s.upcoming||[]).slice(0,3);
+    var inhalt = eigene.map(function(n){
+      return terminZeile(n.starts_at, n.title || T('sf_stunde','Sprechclub'), true, '');
+    }).join('');
+    return '<div class="sf-k" id="sfTermine">'
+      + '<div class="sf-kopf"><h2>' + T('sf_termine','Nächste Termine') + '</h2>'
+      +   '<a href="#kalender" onclick="go(\'kalender\');return false">' + T('sf_alle','Alle →') + '</a></div>'
+      + '<div id="sfTerminListe">' + (inhalt || '<div class="sf-leer">' + T('sf_ladet','Wird geladen …') + '</div>') + '</div>'
+      + '</div>';
+  }
+
+  /* Die buchbaren Stunden kommen aus derselben Quelle wie der Wochenplan,
+     damit Feiertage und abgesagte Stunden auch hier nicht auftauchen. */
+  function termineLaden(k){
+    var c = window.sb, ziel = document.getElementById('sfTerminListe');
+    if(!c || !ziel) return;
+    var s = k.stats || {upcoming:[]};
+    var eigene = (s.upcoming||[]).slice(0,3);
+    var von = new Date(), bis = new Date(Date.now() + 14*86400000);
+    c.rpc('week_classes', { p_from: von.toISOString(), p_to: bis.toISOString() })
+      .then(function(r){
+        var alle = (r && r.data || []).filter(function(x){
+          return new Date(x.starts_at) > von && (x.capacity == null || x.capacity > 0);
+        }).sort(function(a,b){ return new Date(a.starts_at) - new Date(b.starts_at); });
+
+        var meine = {};
+        eigene.forEach(function(n){ meine[n.class_id || n.id] = true; });
+
+        var zeilen = [], gezeigt = {};
+        eigene.forEach(function(n){
+          zeilen.push({ zeit:new Date(n.starts_at), html:terminZeile(n.starts_at, n.title || T('sf_stunde','Sprechclub'), true, '') });
+          gezeigt[n.class_id || n.id] = true;
+        });
+        alle.forEach(function(x){
+          if(zeilen.length >= 4) return;
+          if(gezeigt[x.id] || meine[x.id]) return;
+          gezeigt[x.id] = true;
+          zeilen.push({ zeit:new Date(x.starts_at),
+            html:terminZeile(x.starts_at, x.title || x.topic || T('sf_stunde','Sprechclub'), false, 'go(\'kalender\')') });
+        });
+        zeilen.sort(function(a,b){ return a.zeit - b.zeit; });
+        ziel.innerHTML = zeilen.length
+          ? zeilen.map(function(z2){ return z2.html; }).join('')
+          : '<div class="sf-leer">' + T('sf_keintermin','Gerade stehen keine Termine an.') + '</div>';
+      })
+      .catch(function(){
+        if(!ziel.innerHTML || /…/.test(ziel.textContent||''))
+          ziel.innerHTML = '<div class="sf-leer">' + T('sf_keintermin','Gerade stehen keine Termine an.') + '</div>';
+      });
+  }
+
+  /* ---------- Heute dran ---------- */
+
+  function heuteHTML(k, s){
+    var zeilen = [];
+    var v = null;
+    try{ if(window.vokabelStand) v = window.vokabelStand(); }catch(e){}
+    if(v && v.faellig > 0){
+      zeilen.push('<div class="sf-zeile"><div class="sf-nr">🧠</div>'
+        + '<div class="tx"><b>' + v.faellig + ' ' + T('sf_wfaellig','Wörter fällig') + '</b>'
+        + '<span>' + T('sf_etwa','etwa') + ' ' + Math.max(2, Math.round(v.faellig*0.5)) + ' ' + T('sf_minuten','Minuten') + '</span></div>'
+        + '<button class="sf-tun voll" onclick="go(\'vokabeln\')">' + T('sf_los','Los') + '</button></div>');
+    } else if(v && v.neu > 0){
+      zeilen.push('<div class="sf-zeile"><div class="sf-nr">🧠</div>'
+        + '<div class="tx"><b>' + v.neu + ' ' + T('sf_wneu','neue Wörter warten') + '</b>'
+        + '<span>' + T('sf_wneub','Zehn Minuten reichen für den Anfang.') + '</span></div>'
+        + '<button class="sf-tun voll" onclick="go(\'vokabeln\')">' + T('sf_los','Los') + '</button></div>');
+    }
+    /* Offene Nachbereitung: eine besuchte Stunde, deren Übungen noch
+       nicht fertig sind. Kommt aus denselben Daten wie „Meine Stunden". */
+    try{
+      var offen = (s.past||[]).filter(function(b){
+        var p = (window.progress || {})[(b.class_id||b.id) + '|post'];
+        return !(p && p.completed);
+      })[0];
+      if(offen){
+        var d = new Date(offen.starts_at);
+        zeilen.push('<div class="sf-zeile"><div class="sf-nr">📝</div>'
+          + '<div class="tx"><b>' + T('sf_nachb','Nachbereitung') + ' ' + d.toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'}) + '</b>'
+          + '<span>' + E(offen.title||'') + '</span></div>'
+          + '<button class="sf-tun" onclick="go(\'stunden\')">' + T('sf_oeffnen','Öffnen') + '</button></div>');
+      }
+    }catch(e){}
+
+    if(!zeilen.length){
+      zeilen.push('<div class="sf-leer">' + T('sf_nichtsdran','Heute steht nichts offen. Wenn du trotzdem Lust hast: der Übungsplatz wartet.') + '</div>');
+    }
+    return '<div class="sf-k"><div class="sf-kopf"><h2>' + T('sf_heute','Heute dran') + '</h2></div>'
+      + zeilen.join('') + '</div>';
+  }
+
+  /* ---------- Zuletzt im Podcast ---------- */
+
+  function podcastRand(){
+    var liste = [];
+    try{
+      liste = (window.PODCASTS || []).slice().sort(function(a,b){
+        return String(b.datum||'').localeCompare(String(a.datum||''));
+      }).slice(0,3);
+    }catch(e){}
+    if(!liste.length) return '';
+    return '<div class="sf-k"><div class="sf-kopf"><h2>' + T('sf_podcast','Zuletzt im Podcast') + '</h2>'
+      + '<a href="#medien" onclick="go(\'medien\');return false">' + T('sf_allefolgen','Alle Folgen →') + '</a></div>'
+      + liste.map(function(f){
+          var unten = [f.dauer, f.thema || f.level].filter(Boolean).join(' · ');
+          return '<div class="sf-zeile"><div class="sf-nr">🎧</div>'
+            + '<div class="tx"><b>' + E(f.titel || f.title || '') + '</b>'
+            + (unten ? '<span>' + E(unten) + '</span>' : '') + '</div>'
+            + '<button class="sf-tun" onclick="go(\'medien\')">' + T('sf_hoeren','Hören') + '</button></div>';
+        }).join('')
+      + '</div>';
+  }
+
+  /* ---------- Deine Begleiter ----------
+     Alle drei sind KI und stehen genau so da. Jeder führt an eine
+     Stelle, die es wirklich gibt — sonst wäre es Kulisse. */
+  function begleiter(){
+    var B = [
+      ['AM','#6D28D9','Amanda', T('sf_bam','Übt Gespräche mit dir — jederzeit'), "go('amanda')"],
+      ['MI','#7C3AED','Mila',   T('sf_bmi','Erinnert dich an fällige Wörter'),   "go('vokabeln')"],
+      ['TO','#8B5CF6','Tom',    T('sf_bto','Sammelt deine Korrekturen'),         "go('fehler')"]
+    ];
+    return '<div class="sf-k"><div class="sf-kopf"><h2>' + T('sf_begleiter','Deine Begleiter') + '</h2></div>'
+      + B.map(function(b){
+          return '<div class="sf-zeile">'
+            + '<div class="sf-av" style="background:' + b[1] + ';width:30px;height:30px;flex:0 0 30px;font-size:11px">' + b[0] + '</div>'
+            + '<div class="tx"><b>' + E(b[2]) + ' <span class="sf-tag-ki">KI</span></b><span>' + b[3] + '</span></div>'
+            + '<button class="sf-tun" onclick="' + b[4] + '">' + T('sf_oeffnen','Öffnen') + '</button></div>';
+        }).join('')
+      + '</div>';
+  }
+
+  /* ---------- Da warst du zuletzt ---------- */
+
+  function weiterKarte(){
+    var st = null;
+    try{
+      if(window.wegStand){
+        var w = window.wegStand();
+        if(w && w.stufe && w.lektion){
+          st = { niveau:w.niveau, nr:w.nr, anzahl:w.anzahl, prozent:w.prozent,
+                 lektion:w.titel, ziel:w.ziel, bild:w.bild, angefangen:w.angefangen, weg:w.weg };
+        }
+      }
+    }catch(e){}
+    if(!st){ try{ if(window.kursStand) st = window.kursStand(); }catch(e){} }
+
+    if(!st){
+      return '<div class="sf-k"><div class="sf-kopf"><h2>' + T('sf_anfang','Fang hier an') + '</h2></div>'
+        + '<div class="sf-leib"><div class="sf-weiter">'
+        + '<img class="sf-wbild" src="bilder/thema/menschen.jpg" alt="" loading="lazy" onerror="this.onerror=null;this.src=\'' + ersatzBild() + '\'">'
+        + '<div class="sf-wtx"><b>' + T('sn_klos','Fang mit Lektion 1 an') + '</b>'
+        + '<small>' + T('sn_klosb','Vierzehn Lektionen pro Stufe: Wendungen, Grammatik, Übungen, ein Gespräch und ein Schreibauftrag.') + '</small></div>'
+        + '<button class="sf-tun voll" onclick="go(\'weg\')">' + T('sn_kstart','Kurs öffnen') + '</button>'
+        + '</div></div></div>';
+    }
+
+    var weiter = st.angefangen ? ['sn_kweiter','Weitermachen'] : ['sn_kstart2','Los geht’s'];
+    return '<div class="sf-k">'
+      + '<div class="sf-kopf"><h2>' + T('sf_zuletzt','Da warst du zuletzt') + '</h2>'
+      +   '<a href="#lernen" onclick="kursUebersicht(\'' + E(st.weg || st.niveau) + '\');return false">' + T('sf_zumkurs','Alle Lektionen →') + '</a></div>'
+      + '<div class="sf-leib"><div class="sf-weiter">'
+      +   '<img class="sf-wbild" src="' + E(st.bild || kursBild(st.niveau, st.id)) + '" alt="" loading="lazy"'
+      +        ' onerror="this.onerror=null;this.src=\'' + ersatzBild() + '\'">'
+      +   '<div class="sf-wtx"><b>' + E(st.lektion) + '</b>'
+      +     '<small>' + E(st.niveau||'') + ' · ' + T('sn_kvon1','Lektion') + ' ' + st.nr + ' ' + T('sn_kvon2','von') + ' ' + st.anzahl
+      +       (st.ziel ? ' — ' + E(st.ziel) : '') + '</small>'
+      +     '<div class="sf-bal"><i style="width:' + Math.max(2, st.prozent||0) + '%"></i></div></div>'
+      +   '<button class="sf-tun voll" onclick="kursOeffnen(' + st.nr + ',\'' + E(st.weg || st.niveau) + '\')">' + T(weiter[0], weiter[1]) + '</button>'
+      + '</div></div></div>';
+  }
+
+  /* ---------- Vier Zahlen, jetzt im Rand ---------- */
+
+  /* Ab dem 1. November gibt es kein Guthaben mehr: Premium bucht
+     unbegrenzt, ohne Stunden abzuziehen. Wer noch Reststunden aus der
+     alten Zeit hat, sieht sie weiter — verloren geht nichts. */
+  function guthabenZeigen(k){
+    var c = (k.credits==null ? 0 : k.credits);
+    if(c > 0) return true;
+    try{
+      if(window.scGestartet && window.scGestartet() &&
+         window.istPremium && window.istPremium()) return false;
+    }catch(e){}
+    return true;
+  }
+
+  function vierZahlen(k, s){
+    var c = (k.credits==null ? 0 : k.credits);
+    function feld(l, v2, d, wort){ return '<div><div class="l">' + l + '</div>'
+      + '<div class="v' + (wort?' wort':'') + '">' + v2 + '</div><div class="d">' + d + '</div></div>'; }
+    return '<div class="sf-k"><div class="sf-kopf"><h2>' + T('sf_stand','Dein Stand') + '</h2>'
+      + '<a href="#fortschritt" onclick="go(\'fortschritt\');return false">' + T('sf_mehr','Mehr →') + '</a></div>'
+      + '<div class="sf-vier">'
+      +   (guthabenZeigen(k)
+           ? feld(T('sn_zguth','Guthaben'), c, T('sn_zguthd','Stunden frei'))
+           : feld(T('sf_club','Sprechclub'), T('sf_unbegrenzt','unbegrenzt'), T('sf_impremium','im Premium enthalten'), true))
+      +   feld(T('sn_zserie','Lernserie'), s.streak||0, (s.streak===1?T('sn_zwoche','Woche'):T('sn_zwochen','Wochen')) + ' ' + T('sn_zamstueck','am Stück'))
+      +   feld(T('sn_zlive','Live-Stunden'), (s.past||[]).length, T('sn_zbesucht','besucht'))
+      +   feld(T('sn_zvok','Vokabeln'), s.known||0, T('sn_zgelernt','gelernt'))
+      + '</div></div>';
+  }
 
   window.STARTSEITE = STARTSEITE;
 
