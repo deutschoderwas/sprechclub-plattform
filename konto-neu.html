@@ -1446,10 +1446,6 @@ function routeFromHash(){ const v=(location.hash||'#dashboard').slice(1); show(V
 const VORVERKAUF_ZU=['weg','lernen','sprechen','medien','bereiche','kurs','schreiben','kurse','ueben','community','lernpfad','szenen','kalender','stunden','materialien','vokabeln','fortschritt','amanda','fehler','buddy','fertigkeit','pruefung'];
 const LOCKED_VIEWS=['dashboard','weg','lernen','sprechen','medien','bereiche','kurs','schreiben','kurse','ueben','community','dm','lernpfad','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','fehler','buddy','fertigkeit'];
 function show(v){
-  if(v==='kalender' && !nochNichtOffen() && typeof nurCommunity==='function' && nurCommunity()){
-    zeigeLiveUpgrade(); v='dashboard';
-    if((location.hash||'').slice(1)!=='dashboard'){ location.hash='dashboard'; return; }
-  }
   VIEWS.forEach(x=>{var _e=document.getElementById('v-'+x); if(_e) _e.classList.toggle('active',x===v);});
   document.querySelectorAll('.navlink[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));
   // Der Stufenkurs hat keinen eigenen Menüpunkt mehr — er gehört zum
@@ -1457,8 +1453,17 @@ function show(v){
   if(v==='kurs'){ var _lb=document.querySelector('.navlink[data-view="bereiche"]'); if(_lb) _lb.classList.add('active'); }
   try{updateTopbar(v);}catch(e){}
   document.body.classList.remove('nav-open');
+  try{ sprechclubMarkieren(); }catch(e){}
   if(LOCKED_VIEWS.includes(v) && !isActive()){ renderLocked(v); window.scrollTo(0,0); return; }
   if(nochNichtOffen() && VORVERKAUF_ZU.includes(v)){ renderVorverkauf(v); window.scrollTo(0,0); return; }
+  /* Der Sprechclub ist Premium. Frueher sprang die Seite hier zurueck
+     auf die Startseite — wer auf „Wochenplan“ tippte, landete ohne
+     Erklaerung woanders. Jetzt bleibt er stehen und liest, was Premium
+     bringt. */
+  if(SPRECHCLUB_ZU.includes(v)){
+    var _zu = false; try{ _zu = nurCommunity(); }catch(e){}
+    if(_zu){ renderSprechclubZu(v); window.scrollTo(0,0); return; }
+  }
   ({dashboard:renderDashboard,weg:(window.renderWeg||renderDashboard),sprechen:(window.renderSprechen||renderDashboard),medien:(window.renderMedien||renderDashboard),kurse:(window.renderKurse||renderDashboard),ueben:(window.renderUeben||renderDashboard),lernen:(window.renderLernen||renderDashboard),bereiche:(window.renderBereiche||window.renderLernen||renderDashboard),kurs:(window.renderNiveau||renderDashboard),schreiben:(window.renderSchreiben||renderDashboard),community:(window.renderCommunity||renderDashboard),dm:(window.renderDM||renderDashboard),lernpfad:renderLernpfad,szenen:function(){ if(window.LERNPFAD) LERNPFAD.pfad('v-szenen'); },kalender:renderKalender,stunden:renderStunden,pruefung:(window.renderPruefungen||renderDashboard),materialien:renderMaterialien,vokabeln:(window.renderVokabeln||renderVokabelnAlt),
     fortschritt:renderFortschritt,guthaben:renderGuthaben,abo:renderAbo,nachrichten:renderNachrichten,
     amanda:renderAmanda,amandasprechen:(window.renderSprechenAmanda||renderDashboard),profil:renderProfil,fehler:(window.renderFehlerTrainer||renderDashboard),buddy:(window.renderBuddy||renderDashboard),fertigkeit:(window.renderFertigkeit||renderDashboard)}[v]
@@ -1472,6 +1477,42 @@ function show(v){
   window.scrollTo(0,0);
 }
 const LOCK_LABELS={dashboard:'Start',lernen:'Lernbereich',bereiche:'Freizeit & Beruf',kurs:'Dein Kurs',schreiben:'Schreibtrainer',kurse:'Kursbibliothek',ueben:'Üben',community:'Community-Chat',lernpfad:'Mein Lernplan',stunden:'Meine Stunden',materialien:'Material',vokabeln:'Vokabeln',fortschritt:'Fortschritt',guthaben:'Guthaben',nachrichten:'Nachrichten',amanda:'Amanda'};
+/* ============================================================
+   Der Sprechclub ist Premium.
+
+   Gesperrt sind nur die beiden Punkte, die wirklich der LIVE-Unterricht
+   sind: Wochenplan und Meine Stunden. Gespraeche ueben, Amanda und das
+   Sprech-Tandem gehoeren zum Selbstlernen und bleiben fuer die
+   Community offen — sie sind in der Community-Mitgliedschaft versprochen.
+
+   nurCommunity() laesst jeden durch, der Guthaben, einen laufenden Pass
+   oder gebuchte Stunden hat. Bestandsschueler merken von der Sperre
+   also nichts.
+   ============================================================ */
+const SPRECHCLUB_ZU = ['kalender','stunden'];
+
+function sprechclubMarkieren(){
+  var zu = false;
+  try{ zu = nurCommunity(); }catch(e){}
+  document.querySelectorAll('.sidebar .navlink[data-live="1"]').forEach(function(b){
+    b.classList.toggle('cl-zu', zu);
+  });
+}
+
+function renderSprechclubZu(v){
+  const ziel = document.getElementById('v-'+v);
+  if(!ziel) return;
+  ziel.innerHTML =
+    '<div class="pagehead"><h1>\u{1F451} <span data-i18n="sc_zu_h">Sprechclub</span></h1></div>'
+   +'<div class="card" style="text-align:center;border:2px solid #1B9BC0;background:#F6FCFE;max-width:580px;margin:0 auto">'
+   +  '<div style="font-size:44px;line-height:1;margin-bottom:8px">\u{1F5E3}\uFE0F</div>'
+   +  '<h3 style="margin-bottom:8px"><span data-i18n="sc_zu_t">Der Sprechclub geh\u00f6rt zu Premium</span></h3>'
+   +  '<p class="muted" style="margin-bottom:6px"><span data-i18n="sc_zu_p">Der LIVE-Unterricht startet am 1. November \u2014 Mo\u2013Fr abends, Mo\u2013Do morgens und am Wochenende. Kleine Gruppen, feste Themen.</span></p>'
+   +  '<p class="muted" style="margin-bottom:16px"><span data-i18n="sc_zu_b">Alles aus deiner Mitgliedschaft bleibt dir: Kurse, Vokabeltrainer, Podcast, Chat und Amanda.</span></p>'
+   +  '<button class="btn btn-primary" onclick="zeigeLiveUpgrade()"><span data-i18n="sc_zu_k">Was Premium bringt</span></button>'
+   +'</div>';
+}
+
 function renderLocked(v){
   const label=LOCK_LABELS[v]||'Dieser Bereich';
   document.getElementById('v-'+v).innerHTML=
@@ -4163,6 +4204,11 @@ window.__I18N__=Object.assign(window.__I18N__||{},{"nav_start": {"en": "Home", "
 "sf_unbegrenzt":{"en": "unlimited", "es": "sin límite", "ru": "без ограничений", "uk": "без обмежень", "tr": "sınırsız", "it": "illimitato", "fa": "نامحدود"},
 "sf_tag":{"en": "day", "es": "día", "ru": "день", "uk": "день", "tr": "gün", "it": "giorno", "fa": "روز"},
 "sf_tage2":{"en": "days", "es": "días", "ru": "дней", "uk": "днів", "tr": "gün", "it": "giorni", "fa": "روز"},
+"sc_zu_b":{"en": "Everything in your membership stays yours: courses, vocabulary trainer, podcast, chat and Amanda.", "es": "Todo lo de tu membresía sigue siendo tuyo: cursos, vocabulario, pódcast, chat y Amanda.", "ru": "Всё из твоего членства остаётся: курсы, тренажёр слов, подкаст, чат и Аманда.", "uk": "Усе з твого членства залишається: курси, тренажер слів, подкаст, чат і Аманда.", "tr": "Üyeliğindeki her şey sende kalıyor: kurslar, kelime antrenörü, podcast, sohbet ve Amanda.", "it": "Tutto ciò che è nel tuo abbonamento resta tuo: corsi, lessico, podcast, chat e Amanda.", "fa": "هر چه در عضویت توست باقی می‌ماند: دوره‌ها، تمرین واژگان، پادکست، گفت‌وگو و آماندا."},
+"sc_zu_h":{"en": "Speaking club", "es": "Club de conversación", "ru": "Разговорный клуб", "uk": "Розмовний клуб", "tr": "Konuşma kulübü", "it": "Club di conversazione", "fa": "باشگاه گفت‌وگو"},
+"sc_zu_k":{"en": "What Premium gives you", "es": "Qué incluye Premium", "ru": "Что даёт Premium", "uk": "Що дає Premium", "tr": "Premium ne sunuyor", "it": "Cosa offre Premium", "fa": "پریمیوم چه دارد"},
+"sc_zu_p":{"en": "The live lessons start on 1 November — Mon–Fri in the evening, Mon–Thu in the morning and at the weekend. Small groups, fixed topics.", "es": "Las clases en vivo empiezan el 1 de noviembre — de lunes a viernes por la tarde, de lunes a jueves por la mañana y el fin de semana. Grupos pequeños, temas fijos.", "ru": "Живые занятия начинаются 1 ноября — пн–пт вечером, пн–чт утром и по выходным. Маленькие группы, заданные темы.", "uk": "Живі заняття починаються 1 листопада — пн–пт увечері, пн–чт зранку та у вихідні. Малі групи, задані теми.", "tr": "Canlı dersler 1 Kasım'da başlıyor — Pzt–Cum akşam, Pzt–Per sabah ve hafta sonu. Küçük gruplar, belirli konular.", "it": "Le lezioni dal vivo iniziano il 1° novembre — lun–ven la sera, lun–gio la mattina e nel fine settimana. Gruppi piccoli, temi fissi.", "fa": "کلاس‌های زنده از ۱ نوامبر شروع می‌شوند — دوشنبه تا جمعه عصر، دوشنبه تا پنجشنبه صبح و آخر هفته. گروه‌های کوچک، موضوع‌های مشخص."},
+"sc_zu_t":{"en": "The speaking club is part of Premium", "es": "El club de conversación forma parte de Premium", "ru": "Разговорный клуб входит в Premium", "uk": "Розмовний клуб входить у Premium", "tr": "Konuşma kulübü Premium'a dahildir", "it": "Il club di conversazione fa parte di Premium", "fa": "باشگاه گفت‌وگو بخشی از پریمیوم است"},
 "sf_60":{"en": "60 minutes", "es": "60 minutos", "ru": "60 минут", "uk": "60 хвилин", "tr": "60 dakika", "it": "60 minuti", "fa": "۶۰ دقیقه"},
 "sf_alle":{"en": "All →", "es": "Todos →", "ru": "Все →", "uk": "Усі →", "tr": "Tümü →", "it": "Tutti →", "fa": "همه ←"},
 "sf_allefolgen":{"en": "All episodes →", "es": "Todos los episodios →", "ru": "Все выпуски →", "uk": "Усі випуски →", "tr": "Tüm bölümler →", "it": "Tutti gli episodi →", "fa": "همه قسمت‌ها ←"},
