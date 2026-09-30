@@ -1158,7 +1158,11 @@ function renderVorverkauf(v){
 }
 // Live-Unterricht: nur laufende Alt-Abos, Guthaben oder die neue Premium-Mitgliedschaft.
 // Reine Community-Mitglieder bekommen das Upgrade-Fenster.
-function nurCommunity(){ return (profile&&profile.tier)==='community' && !(credits>0) && !passActive(); }
+function istLeitung(){ return !!(profile && (profile.is_admin || profile.is_teacher)); }
+/* Julia und die Lehrkraefte sehen Wochenplan und Kalender immer — sie
+   muessen den Unterricht ja vorbereiten, egal welchen Tarif sie haben. */
+function nurCommunity(){ if(istLeitung()) return false;
+  return (profile&&profile.tier)==='community' && !(credits>0) && !passActive(); }
 function darfLive(){
   if(nochNichtOffen()) return false;              // Vorverkauf: Start noch nicht erreicht
   if(credits>0||passActive()) return true;
@@ -2093,6 +2097,7 @@ function darfBuchen(){
        weiter wie bisher. Gesperrt ist nur, wer im Vorverkauf gekauft hat:
        fuer den ist der Kalender ohnehin zu (nochNichtOffen), und diese
        Zeile ist der zweite Riegel am Knopf selbst. */
+    if(istLeitung()) return true;
     if(nochNichtOffen()) return false;
     if(credits>0) return true;
     // Premium-Sonderregel (buchen ohne Guthaben) gilt erst ab 01.11.2026.
