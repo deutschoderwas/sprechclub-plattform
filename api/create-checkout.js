@@ -44,11 +44,11 @@ const PLANS = {
     desc: 'Ganze Lernplattform, Community, Kursbibliothek A1-C2, Vokabeltrainer & taeglicher Podcast. Monatlich kuendbar.' },
   // --- NEU ab 08/2026: Premium zum Seitenpreis (49 € / 37 € im Jahresabo). Das alte 149-€-Premium bleibt fuer Bestandskunden. ---
   premium_month:   { abo: true, interval:'month', stunden: 8, preis: 49,  tier:'premium', label: 'Premium',
-    desc: 'Alles aus Community + Sprechclub: Mo-Fr um 19 Uhr, Sa-So um 11 Uhr sprechen in kleinen 2er- und 3er-Gruppen. Monatlich kuendbar.' },
+    desc: 'Alles aus Community + Sprechclub: Mo-Fr um 19 Uhr, Sa-So um 11 Uhr mit echten Menschen Deutsch sprechen, zu spannenden Themen, mit Lehrer. Monatlich kuendbar.' },
   premium_year:    { abo: true, interval:'year',  stunden: 8, preis: 444, tier:'premium', label: 'Premium',
-    desc: 'Alles aus Community + Sprechclub: Mo-Fr um 19 Uhr, Sa-So um 11 Uhr sprechen in kleinen 2er- und 3er-Gruppen. Jahresmitgliedschaft (12 Monate, 37 EUR pro Monat).' },
+    desc: 'Alles aus Community + Sprechclub: Mo-Fr um 19 Uhr, Sa-So um 11 Uhr mit echten Menschen Deutsch sprechen, zu spannenden Themen, mit Lehrer. Jahresmitgliedschaft (12 Monate, 37 EUR pro Monat).' },
   premium:         { abo: true, interval:'month', stunden: 8, preis: 149, tier:'premium',  label: 'Premium',
-    desc: 'Alles aus Community + 8 LIVE-Stunden/Monat in kleiner Gruppe (bis 6 Personen).' },
+    desc: 'Alles aus Community + 8 LIVE-Stunden/Monat: sprechen mit echten Menschen, mit Lehrer.' },
 
   /* --- Premium Plus: der geschlossene Sprechclub bei Julia persoenlich ---
      8 Stunden im Monat. Drei Laufzeiten, und zu jeder zwei Zahlweisen:

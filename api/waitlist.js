@@ -24,7 +24,14 @@ export default async function handler(req, res) {
   const schwierigkeiten = String(b.schwierigkeiten || '').trim().slice(0, 2000);
   const mehr = String(b.mehr || '').trim().slice(0, 2000);
 
-  if (!name || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+  /* Der Newsletter-Kasten auf der Startseite fragt nur die Adresse ab —
+     einen Namen zu verlangen kostet dort mehr Eintragungen, als er wert
+     ist. Fuer die Warteliste bleibt der Name Pflicht wie bisher. */
+  const quelle = (String(b.quelle || '').trim().toLowerCase() === 'newsletter')
+    ? 'newsletter' : 'warteliste';
+  const nurMail = quelle === 'newsletter';
+
+  if ((!name && !nurMail) || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
     return res.status(400).json({ ok: false, error: 'bad_request' });
   }
 
@@ -35,7 +42,7 @@ export default async function handler(req, res) {
       const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
       const { error } = await sb.from('leads').insert({
         name, email, whatsapp: whatsapp || null, tarif: tarif || null, niveau: niveau || null,
-        schwierigkeiten: schwierigkeiten || null, mehr: mehr || null, quelle: 'warteliste',
+        schwierigkeiten: schwierigkeiten || null, mehr: mehr || null, quelle,
       });
       gespeichert = !error;
     } catch (e) { gespeichert = false; }
@@ -46,9 +53,11 @@ export default async function handler(req, res) {
   let inBrevo = false;
   try {
     const listen = [];
-    if (process.env.BREVO_WAITLIST_LIST_ID) listen.push(Number(process.env.BREVO_WAITLIST_LIST_ID));
+    if (nurMail && process.env.BREVO_NEWSLETTER_LIST_ID) listen.push(Number(process.env.BREVO_NEWSLETTER_LIST_ID));
+    else if (process.env.BREVO_WAITLIST_LIST_ID) listen.push(Number(process.env.BREVO_WAITLIST_LIST_ID));
     else if (process.env.BREVO_LIST_ID) listen.push(Number(process.env.BREVO_LIST_ID));
-    const vorname = name.split(/\s+/)[0] || name;
+    // Ohne Namen nimmt Brevo den Teil vor dem @ — besser als ein leeres Feld.
+    const vorname = (name.split(/\s+/)[0] || name) || email.split('@')[0];
     const r = await fetch('https://api.brevo.com/v3/contacts', {
       method: 'POST',
       headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
@@ -56,7 +65,7 @@ export default async function handler(req, res) {
         email,
         updateEnabled: true,
         attributes: Object.assign(
-          { VORNAME: vorname, NAME: name, QUELLE: 'warteliste' },
+          { VORNAME: vorname, NAME: name || vorname, QUELLE: quelle },
           niveau ? { NIVEAU: niveau } : {},
           tarif ? { TARIF: tarif } : {},
           whatsapp ? { WHATSAPP: whatsapp } : {}
