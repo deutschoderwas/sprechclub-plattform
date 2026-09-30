@@ -44,9 +44,9 @@ const PLANS = {
     desc: 'Ganze Lernplattform, Community, Kursbibliothek A1-C2, Vokabeltrainer & taeglicher Podcast. Monatlich kuendbar.' },
   // --- NEU ab 08/2026: Premium zum Seitenpreis (49 € / 37 € im Jahresabo). Das alte 149-€-Premium bleibt fuer Bestandskunden. ---
   premium_month:   { abo: true, interval:'month', stunden: 8, preis: 49,  tier:'premium', label: 'Premium',
-    desc: 'Alles aus Community + Sprechclub: Mo-Fr um 19 Uhr, Sa-So um 11 Uhr mit echten Menschen Deutsch sprechen, zu spannenden Themen, mit Lehrer. Monatlich kuendbar.' },
+    desc: 'Alles aus Community + Sprechclub: Mo-Fr um 9 und um 19 Uhr, Sa-So um 11 Uhr mit echten Menschen Deutsch sprechen, zu spannenden Themen, mit Lehrer. Monatlich kuendbar.' },
   premium_year:    { abo: true, interval:'year',  stunden: 8, preis: 468, tier:'premium', label: 'Premium',
-    desc: 'Alles aus Community + Sprechclub: Mo-Fr um 19 Uhr, Sa-So um 11 Uhr mit echten Menschen Deutsch sprechen, zu spannenden Themen, mit Lehrer. Jahresmitgliedschaft (12 Monate, 39 EUR pro Monat).' },
+    desc: 'Alles aus Community + Sprechclub: Mo-Fr um 9 und um 19 Uhr, Sa-So um 11 Uhr mit echten Menschen Deutsch sprechen, zu spannenden Themen, mit Lehrer. Jahresmitgliedschaft (12 Monate, 39 EUR pro Monat).' },
   premium:         { abo: true, interval:'month', stunden: 8, preis: 149, tier:'premium',  label: 'Premium',
     desc: 'Alles aus Community + 8 LIVE-Stunden/Monat: sprechen mit echten Menschen, mit Lehrer.' },
 
