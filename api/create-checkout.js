@@ -45,8 +45,8 @@ const PLANS = {
   // --- NEU ab 08/2026: Premium zum Seitenpreis (49 € / 37 € im Jahresabo). Das alte 149-€-Premium bleibt fuer Bestandskunden. ---
   premium_month:   { abo: true, interval:'month', stunden: 8, preis: 49,  tier:'premium', label: 'Premium',
     desc: 'Alles aus Community + Sprechclub: Mo-Fr um 19 Uhr, Sa-So um 11 Uhr mit echten Menschen Deutsch sprechen, zu spannenden Themen, mit Lehrer. Monatlich kuendbar.' },
-  premium_year:    { abo: true, interval:'year',  stunden: 8, preis: 444, tier:'premium', label: 'Premium',
-    desc: 'Alles aus Community + Sprechclub: Mo-Fr um 19 Uhr, Sa-So um 11 Uhr mit echten Menschen Deutsch sprechen, zu spannenden Themen, mit Lehrer. Jahresmitgliedschaft (12 Monate, 37 EUR pro Monat).' },
+  premium_year:    { abo: true, interval:'year',  stunden: 8, preis: 468, tier:'premium', label: 'Premium',
+    desc: 'Alles aus Community + Sprechclub: Mo-Fr um 19 Uhr, Sa-So um 11 Uhr mit echten Menschen Deutsch sprechen, zu spannenden Themen, mit Lehrer. Jahresmitgliedschaft (12 Monate, 39 EUR pro Monat).' },
   premium:         { abo: true, interval:'month', stunden: 8, preis: 149, tier:'premium',  label: 'Premium',
     desc: 'Alles aus Community + 8 LIVE-Stunden/Monat: sprechen mit echten Menschen, mit Lehrer.' },
 
@@ -70,16 +70,21 @@ const PLANS = {
   pp_e6: { abo: false, stunden: 48, preis: 594, tier:'premiumplus', label: 'Premium Plus · 6 Monate im Voraus', monate: 6 },
 };
 
-/* Premium: Willkommenspreis (49 EUR / 444 EUR im Jahr = 37 EUR pro Monat) fuer alle, die bis
-   31.10.2026 buchen. Ab 1.11.2026 (Berlin) automatisch der regulaere Preis: 77 EUR / 708 EUR im Jahr
-   (= 59 EUR pro Monat). Bestehende Abos behalten den Preis, zu dem sie abgeschlossen wurden. */
+/* Premium: Der regulaere Preis ist 99 EUR im Monat bzw. 1199 EUR im Jahr.
+   Im Oktober 2026 gibt es den Startrabatt fuer die Ersten:
+     Monatsabo  49 EUR   (rund die Haelfte von 99 EUR)
+     Jahresabo 468 EUR   (= 39 EUR pro Monat, rund 60 Prozent unter 1199 EUR)
+   Wer bis zum Ende des 31.10.2026 bucht, behaelt diesen Preis dauerhaft —
+   das Abo bekommt seinen eigenen Preis mit (price_data), spaetere
+   Aenderungen hier erreichen es nicht mehr.
+   Ab dem 1.11.2026 (Berliner Zeit) gilt fuer NEUE Abos der Normalpreis. */
 const PREMIUM_REGULAER_AB = Date.parse('2026-11-01T00:00:00+01:00');
-const PREMIUM_REGULAER = { premium_month: { preis: 77 }, premium_year: { preis: 708, proMonat: 59 } };
+const PREMIUM_REGULAER = { premium_month: { preis: 99 }, premium_year: { preis: 1199, proMonat: 100 } };
 function aktuellerPlan(id){
   const p = PLANS[id];
   const r = PREMIUM_REGULAER[id];
   if (!p || !r || Date.now() < PREMIUM_REGULAER_AB) return p;
-  const desc = r.proMonat ? p.desc.replace('37 EUR pro Monat', r.proMonat + ' EUR pro Monat') : p.desc;
+  const desc = r.proMonat ? p.desc.replace('39 EUR pro Monat', r.proMonat + ' EUR pro Monat') : p.desc;
   return Object.assign({}, p, { preis: r.preis, desc });
 }
 
