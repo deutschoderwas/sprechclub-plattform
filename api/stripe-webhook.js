@@ -431,6 +431,71 @@ async function sendCommunityWelcome(email, name, abDatum) {
   } catch (e) { console.error('sendCommunityWelcome', e); }
 }
 
+async function sendVerlaengerung(email, name, tier, inv) {
+  try {
+    if (!email || !process.env.BREVO_API_KEY) return;
+    const site = process.env.SITE_URL || 'https://www.deutschoderwas-club.de';
+    const vorname = ((name || '').trim().split(' ')[0]) || '';
+    const hallo = vorname ? `Hallo ${vorname},` : 'Hallo,';
+    const cent = Number(inv && inv.amount_paid) || 0;
+    /* Das Eurozeichen als HTML-Entitaet: die Mail traegt keinen
+       Zeichensatz im Kopf, ein direktes Zeichen kam als Salat an. */
+    const waehrung = String((inv && inv.currency) || 'eur').toLowerCase();
+    const zeichen = (waehrung === 'eur') ? '&euro;' : waehrung.toUpperCase();
+    const betrag = cent ? ((cent / 100).toFixed(2).replace('.', ',') + ' ' + zeichen) : '';
+    const PORTAL = 'https://billing.stripe.com/p/login/cNi8wP2DQcez5av6Yd5Rm00';
+    const istPremium = (tier === 'premium');
+    const summe = betrag
+      ? `<div style="background:#fff;border-left:4px solid #7ED8EA;border-radius:10px;padding:10px 14px;margin:6px 0;font-size:14px"><b>Gezahlt:</b> ${betrag}</div>`
+      : '';
+    const nutzen = istPremium
+      ? `<p style="font-size:16px;line-height:1.6;margin:0 0 14px">Nutz sie auch diesen Monat: die ganze Lernplattform von A1 bis C2, Vokabeltrainer, t&auml;glicher Podcast, die Community und Amanda rund um die Uhr. Und vor allem der <b>Sprechclub</b> &ndash; t&auml;glich von Montag bis Sonntag. Such dir im Wochenplan eine Stunde aus und sprich.</p>`
+      : `<p style="font-size:16px;line-height:1.6;margin:0 0 14px">Nutz sie auch diesen Monat: die Kursbibliothek von A1 bis C2, der Vokabeltrainer, der t&auml;gliche Podcast, die Community und Amanda rund um die Uhr &ndash; alles ist f&uuml;r dich offen.</p>`;
+    const knopf = istPremium
+      ? `<a href="${site}/schuelerbereich#kalender" style="display:inline-block;background:linear-gradient(135deg,#7ED8EA,#35AFD0);color:#10627A;font-weight:700;font-size:16px;text-decoration:none;padding:14px 30px;border-radius:999px">Stunde im Sprechclub aussuchen</a>`
+      : `<a href="${site}/schuelerbereich" style="display:inline-block;background:linear-gradient(135deg,#7ED8EA,#35AFD0);color:#10627A;font-weight:700;font-size:16px;text-decoration:none;padding:14px 30px;border-radius:999px">Zum Sch&uuml;lerbereich</a>`;
+    const html = `<!DOCTYPE html><html lang="de"><head><meta charset="utf-8"></head><body style="margin:0;background:#FFF8E0;font-family:'Inter','Segoe UI',system-ui,sans-serif;color:#1A1A1A">
+  <table role="presentation" width="100%" style="padding:24px 12px"><tr><td align="center">
+    <table role="presentation" width="600" style="max-width:600px;width:100%;background:#FFFCF5;border:1px solid #F0E5D8;border-radius:20px;overflow:hidden">
+      <tr><td style="padding:24px 32px 8px">
+        <span style="font-weight:700;font-size:22px">deutsch<span style="color:#35AFD0">oderwas</span></span>
+      </td></tr>
+      <tr><td style="padding:0 32px"><div style="height:3px;background:linear-gradient(135deg,#7ED8EA,#35AFD0);border-radius:999px"></div></td></tr>
+      <tr><td style="padding:22px 32px 4px">
+        <span style="font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#DD0000">Zahlung best&auml;tigt</span>
+        <h1 style="font-size:26px;line-height:1.2;margin:8px 0 14px">Deine Mitgliedschaft l&auml;uft weiter &#128153;</h1>
+        <p style="font-size:16px;line-height:1.6;margin:0 0 12px">${hallo}</p>
+        <p style="font-size:16px;line-height:1.6;margin:0 0 14px">deine Zahlung ist angekommen, alles l&auml;uft ganz normal weiter &ndash; du musst nichts tun.</p>
+        ${summe}
+        ${nutzen}
+      </td></tr>
+      <tr><td align="center" style="padding:14px 32px 4px">${knopf}</td></tr>
+      <tr><td style="padding:12px 32px 4px">
+        <p style="font-size:13px;line-height:1.6;color:#6B7280;margin:0">Deine Mitgliedschaft verl&auml;ngert sich automatisch &ndash; jederzeit k&uuml;ndbar. <a href="${PORTAL}" style="color:#35AFD0">Mitgliedschaft verwalten</a></p>
+      </td></tr>
+      <tr><td style="padding:14px 32px 22px">
+        <p style="font-size:16px;line-height:1.6;margin:0">Bis bald!<br><strong>Julia</strong> &#128153;</p>
+      </td></tr>
+      <tr><td style="background:#1A1A1A;padding:18px 32px;text-align:center">
+        <p style="font-size:12px;color:#b9b9b9;margin:0">deutschoderwas &middot; <a href="https://deutschoderwas.de/#impressum" style="color:#FFCE00;text-decoration:none">Impressum</a></p>
+      </td></tr>
+    </table>
+  </td></tr></table></body></html>`;
+    const r = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sender: { name: 'deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
+        replyTo: { name: 'Julia', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
+        to: [{ email, name: vorname || undefined }],
+        subject: 'Zahlung bestätigt – deine Mitgliedschaft läuft weiter',
+        htmlContent: html,
+      }),
+    });
+    if (!r.ok) console.error('verlaengerung brevo', r.status, await r.text());
+  } catch (e) { console.error('sendVerlaengerung', e); }
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
   if (!process.env.STRIPE_SECRET_KEY || !process.env.STRIPE_WEBHOOK_SECRET) {
@@ -689,22 +754,42 @@ export default async function handler(req, res) {
           // Community: ganze Plattform frei (status=aktiv), ABER keine Live-Stunden & kein pass_until (kein Buchen).
           const dk = 'inv_' + inv.id;
           const { data: cex } = await sb.from('credit_log').select('id').eq('stripe_session_id', dk).maybeSingle();
-          const ersteZahlung = !cex;
+          /* "Erste Zahlung" hing frueher an der Rechnungsnummer. Die ist aber
+             jeden Monat eine neue, also war jede Verlaengerung eine "erste
+             Zahlung" und die Willkommensmail ging jeden Monat erneut raus.
+             Stripe sagt es selbst: subscription_create steht nur auf der
+             allerersten Rechnung eines Abos, jede Verlaengerung ist
+             subscription_cycle. (cex bleibt als Schutz gegen doppelt
+             zugestellte Ereignisse derselben Rechnung.) */
+          const ersteZahlung = (inv.billing_reason === 'subscription_create');
           if (!cex) await sb.from('credit_log').insert({ user_id: userId, change: 0, reason: 'abo:' + plan, stripe_session_id: dk });
           const abCom = await startFuer(userId, 'community');
           await sb.from('profiles').update({ status: 'aktiv', tier: 'community', tier_ab: abCom }).eq('id', userId);
           await laufzeitAbStart(sub, abCom);
-          // Nur beim ersten Mal begruessen, nicht bei jeder Verlaengerung.
+          /* Beim ersten Mal begruessen. Bei jeder Verlaengerung stattdessen
+             eine Zahlungsbestaetigung, die daran erinnert, die Plattform
+             auch wirklich zu nutzen. */
+          const { data: cp } = await sb.from('profiles').select('email,name').eq('id', userId).maybeSingle();
           if (ersteZahlung) {
-            const { data: cp } = await sb.from('profiles').select('email,name').eq('id', userId).maybeSingle();
             await sendCommunityWelcome((cp && cp.email) || invEmail, cp && cp.name, abCom);
+          } else {
+            await sendVerlaengerung((cp && cp.email) || invEmail, cp && cp.name, 'community', inv);
           }
         } else {
           // Premium + alte Pässe: Stunden gutschreiben (grant setzt auch pass_until fürs Buchen).
           // Beim Vorverkauf laufen die Stunden erst ab dem Starttag ab (Wartezeit wird draufgelegt).
           const abPrem = (tier === 'premium') ? await startFuer(userId, 'premium') : null;
           await grant(userId, stunden, 'abo:' + plan, 'inv_' + inv.id, 31 + tageBis(abPrem));
-          await sendPaymentMail(sub, inv);
+          /* Premium beim ersten Mal: die gewohnte Stunden-Mail. Ab der ersten
+             Verlaengerung stattdessen die Zahlungsbestaetigung mit dem Hinweis,
+             sich im Wochenplan eine Stunde auszusuchen. Alte Paesse behalten
+             ihre Stunden-Mail, dort ist sie die eigentliche Nachricht. */
+          if (tier === 'premium' && inv.billing_reason !== 'subscription_create') {
+            const { data: pp } = await sb.from('profiles').select('email,name').eq('id', userId).maybeSingle();
+            await sendVerlaengerung((pp && pp.email) || invEmail, pp && pp.name, 'premium', inv);
+          } else {
+            await sendPaymentMail(sub, inv);
+          }
           if (tier === 'premium') {
             await sb.from('profiles').update({ status: 'aktiv', tier: 'premium', tier_ab: abPrem }).eq('id', userId);
             await laufzeitAbStart(sub, abPrem);
