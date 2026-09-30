@@ -1,1376 +1,192 @@
-<!DOCTYPE html><html lang="de"><head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Richtigstellen, ohne dass jemand das Gesicht verliert · Sprechclub B1/B2 | deutschoderwas</title>
-<!--
-  deutschoderwas · Sprechclub · Do 15.10. 17:30 und 19:30 · Strang D · Teil 2 · B1 ⇄ B2
-  Richtigstellen, ohne dass jemand das Gesicht verliert — Am Dienstag ging es um Missverständnisse, an denen niemand schuld war. Heute wird es unangenehmer: Jemand liegt sachlich falsch, du weißt es besser — und es hören andere zu. Es gibt eine Art, das zu sagen, nach der beide weiterarbeiten können.
-  Erzeugt von bau/mach-stunde.js aus w05-d2-missverstaendnis.json. Nicht von Hand aendern.
-  Aufbau und Design wie maengel-melden-b1.html.
--->
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-<style>
-/* ============================================================
-   stunde-club.css — die Stunde im Aussehen von
-   deutschoderwas-club.de
+<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Richtigstellen, ohne das Gesicht zu verlieren · Sprechclub · 3 Stufen | deutschoderwas</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet"><style>
 
-   Vorher trugen die Stunden einen eigenen Look: Fraunces als
-   Serifenschrift, cremefarbener Verlauf, schwarze Rahmen mit
-   harten versetzten Schatten. Fuer sich schoen — aber daneben
-   sah die Website aus wie eine andere Marke.
-
-   Die Werte hier stammen eins zu eins aus index.html, der
-   Startseite des Clubs: dieselben Farben, dieselben Schriften,
-   dieselbe Fahnenleiste oben, derselbe goldene Marker.
-
-     Inter          Fliesstext
-     Space Grotesk  Ueberschriften, Zahlen, Knoepfe
-     #14181B        Text
-     #D42A21        Signalfarbe (Augenbraue, wichtige Marken)
-     #FFCE00        Gold (Marker, Hinweise)
-     #1B9BC0        Tuerkis (Knoepfe, aktive Marke)
-     #F6F9FA        warmes Papier fuer Kaesten
-     #E7ECEE        Linien
-
-   Was hier nicht mehr steht, gibt es auf der Seite auch nicht
-   mehr: Wortschatzkarten, Grammatiktafeln, Quiz und Lueckentext
-   sind aus der Stunde raus. Die Stunde ist zum Sprechen da.
-   ============================================================ */
-
-:root{
-  --ink:#14181B; --soft:#5A6B72; --line:#E7ECEE;
-  --turq:#1B9BC0; --turq-d:#15788F; --teal-ink:#10627A; --mint:#EFFBF8;
-  --red:#D42A21; --red-d:#B30000;
-  --gold:#FFCE00; --gold-mark:#FFD84D; --gold-d:#E0A500;
-  --bg:#FFFFFF; --warm:#F6F9FA; --pink:#FFF1EE;
-  --schatten:0 1px 2px rgba(22,22,22,.04), 0 10px 28px rgba(22,22,22,.05);
-  --schatten-k:0 1px 2px rgba(22,22,22,.05);
-  /* Fuer Bausteine, die noch die alten Namen benutzen. */
-  --cream:#FFFFFF; --cream-warm:#F6F9FA; --paper:#FFFFFF;
-  --ink-soft:#5A6B72; --ink-mute:#8C93A0; --sand:#E7ECEE;
-  --teal:#1B9BC0; --teal-soft:#EFFBF8;
-  --yellow:#FFCE00; --yellow-soft:#F6F9FA;
-  --red-soft:#FFF1EE; --green:#4E9E12;
-}
 *{box-sizing:border-box;margin:0;padding:0;}
+:root{--cream:#FDF6EC;--cream-warm:#FBEDD8;--paper:#FFFFFF;--ink:#262019;--ink-soft:#5C4E3E;--ink-mute:#A8957D;
+--red:#E8302A;--red-soft:#FCE5E3;--teal:#35AFD0;--teal-soft:#CFEEF7;--yellow:#FFD24A;--yellow-soft:#FFF1C2;--sand:#F0E2C8;
+--einfach:#35AFD0;--einfach-s:#CFEEF7;--komplexer:#E0A400;--komplexer-s:#FFF1C2;--schwierig:#E8302A;--schwierig-s:#FCE5E3;
+--accent:var(--einfach);--accent-s:var(--einfach-s);}
 html{scroll-behavior:smooth;}
-html,body{max-width:100%;overflow-x:clip;}
-img{height:auto;max-width:100%;}
-body{
-  font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);
-  line-height:1.6;-webkit-font-smoothing:antialiased;
-}
-h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;font-weight:700;letter-spacing:-.02em;line-height:1.12;}
-
-/* Die Fahnenleiste vom Club, ganz oben. */
-.flagbar{
-  height:5px;
-  background:linear-gradient(90deg,#14181B 0 25%,var(--red) 25% 50%,var(--gold) 50% 75%,var(--turq) 75% 100%);
-}
-
-.wrapper{max-width:900px;margin:0 auto;padding:2rem 1.25rem 5rem;}
-
-/* ---------- Kopf ---------- */
-.eyebrow{
-  text-align:center;font-size:.72rem;font-weight:700;letter-spacing:.16em;
-  text-transform:uppercase;color:var(--red);margin-bottom:.65rem;
-}
-h1.title{font-size:clamp(1.9rem,4.6vw,3rem);text-align:center;}
-h1.title .hl{
-  background:var(--gold-mark);border-radius:7px;padding:.02em .26em;font-style:italic;
-  -webkit-box-decoration-break:clone;box-decoration-break:clone;
-}
-.subtitle{
-  text-align:center;max-width:38rem;margin:.85rem auto 0;
-  font-size:1.02rem;color:var(--soft);
-}
-.niv-wie{text-align:center;max-width:34rem;margin:.75rem auto 0;font-size:.85rem;color:var(--soft);}
-
-/* ---------- Leiste: Niveau und Sprungmarken ---------- */
-.leiste{
-  position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:.5rem;
-  width:100%;margin:1.1rem 0 1.6rem;padding:.4rem .5rem;
-  background:rgba(255,255,255,.94);backdrop-filter:blur(10px);
-  border:1px solid var(--line);border-radius:14px;box-shadow:var(--schatten-k);
-}
-.nivk{display:flex;gap:.2rem;flex:none;background:#F4F2ED;border-radius:999px;padding:3px;}
-.nivk button{
-  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;
-  border:none;border-radius:999px;padding:.32rem .8rem;background:transparent;color:var(--soft);
-  transition:.15s;white-space:nowrap;
-}
-.nivk button[aria-pressed="true"]{background:var(--ink);color:#fff;}
-.nivk button:focus-visible{outline:3px solid var(--turq-d);outline-offset:2px;}
-.tabs{
-  display:flex;flex-wrap:nowrap;gap:.3rem;overflow-x:auto;overscroll-behavior-x:contain;
-  flex:1 1 auto;min-width:0;margin:0;padding:.1rem 0;
-  scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;
-}
-.tabs::-webkit-scrollbar{display:none;}
-.tab{
-  flex:none;white-space:nowrap;font-family:'Space Grotesk',sans-serif;
-  font-size:.84rem;font-weight:600;color:var(--ink);background:#fff;
-  border:1px solid var(--line);border-radius:999px;padding:.4rem .8rem;cursor:pointer;
-  display:inline-flex;gap:.3rem;align-items:center;transition:.15s;
-}
-.tab:hover{border-color:var(--turq-d);color:var(--teal-ink);}
-.tab.active{background:var(--turq-d);border-color:var(--turq-d);color:#fff;}
-.tabAlles{border-style:dashed;color:var(--soft);}
-.tabAlles[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff;border-style:solid;}
-
-/* ---------- Abschnitte ---------- */
-/* Der Wechsel soll nicht springen. Eine halbe Sekunde, weich
-   auslaufend, und der Inhalt kommt ein kleines Stueck von unten —
-   gerade genug, dass das Auge mitgeht, ohne dass man wartet. */
-.section{animation:auf .5s cubic-bezier(.22,.8,.3,1);}
-body.schaltet .section[hidden]{display:none !important;}
-@keyframes auf{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
-.leiste .nivk,.tab,.weiterknopf,.btn,.hilf summary{transition:background .25s ease,color .25s ease,border-color .25s ease;}
-.hilf-i{animation:auf .35s cubic-bezier(.22,.8,.3,1);}
-@media(prefers-reduced-motion:reduce){
-  .section,.hilf-i{animation:none;}
-  html{scroll-behavior:auto;}
-}
-section.section{scroll-margin-top:calc(var(--leiste,58px) + 1rem);}
-/* Ein kurzer Abschnitt wie der Abschluss ist niedriger als das
-   Fenster. Dann kann die Seite gar nicht weit genug scrollen, und
-   der Titel der Stunde bleibt oben stehen — es sah aus, als waere
-   man versehentlich am Anfang gelandet. Mit dieser Mindesthoehe
-   landet jeder Abschnitt gleich weit oben. */
-body.schaltet section.section{min-height:calc(100vh - 9rem);}
-body.schaltet section.section:last-of-type{min-height:0;}
-h2.st{font-size:clamp(1.4rem,3vw,1.9rem);margin:.4rem 0 .35rem;}
-h2.st .hl{
-  background:var(--gold-mark);border-radius:7px;padding:.02em .24em;font-style:italic;
-  -webkit-box-decoration-break:clone;box-decoration-break:clone;
-}
-.ssub{color:var(--soft);margin-bottom:1.1rem;font-size:.97rem;max-width:44rem;}
-
-/* Zeit und Aufstellung, direkt unter der Ueberschrift. */
-.regie{
-  display:inline-flex;align-items:center;gap:.55rem;flex-wrap:wrap;
-  background:var(--warm);border:1px solid #E7ECEE;border-radius:999px;
-  padding:.3rem .85rem;margin:0 0 1.1rem;font-size:.82rem;
-}
-.regie span{font-weight:800;font-variant-numeric:tabular-nums;font-family:'Space Grotesk',sans-serif;}
-.regie b{font-weight:500;color:var(--soft);}
-
-/* ---------- Ablauftafel ---------- */
-.takt{display:flex;flex-direction:column;gap:.4rem;margin:1rem 0;}
-.takt-z{
-  display:grid;grid-template-columns:auto auto 1fr;gap:.15rem .75rem;align-items:start;
-  background:#fff;border:1px solid var(--line);border-radius:12px;padding:.7rem .85rem;
-}
-.takt-m{
-  grid-row:span 2;align-self:center;min-width:3.4rem;text-align:center;
-  background:var(--ink);color:#fff;border-radius:8px;padding:.28rem .4rem;
-  font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.8rem;font-variant-numeric:tabular-nums;
-}
-.takt-z2{grid-row:span 2;align-self:center;font-size:1.2rem;line-height:1;}
-.takt-t b{display:block;font-family:'Space Grotesk',sans-serif;font-size:1rem;}
-.takt-t span{display:block;font-size:.9rem;line-height:1.45;color:var(--soft);margin-top:.05rem;}
-.takt-t em{display:block;font-style:normal;font-size:.78rem;font-weight:700;color:var(--teal-ink);margin-top:.2rem;}
-
-/* ---------- Ankommen und Abschluss ---------- */
-.ank{
-  background:var(--warm);border:1px solid #E7ECEE;border-radius:14px;padding:1rem 1.15rem;
-  font-family:'Space Grotesk',sans-serif;font-size:1.16rem;line-height:1.4;font-weight:600;
-}
-.ank.zweit{
-  margin-top:.7rem;background:#fff;border:1px dashed var(--line);
-  font-family:'Inter',sans-serif;font-size:.97rem;font-weight:500;
-}
-.ank.zweit span{
-  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
-  color:var(--soft);margin-bottom:.25rem;
-}
-
-/* ---------- Tippkasten ---------- */
-.tip{
-  background:var(--warm);border:1px solid #E7ECEE;border-left:4px solid var(--gold);
-  border-radius:12px;padding:.8rem 1rem;margin:1.1rem 0 0;font-size:.94rem;line-height:1.6;
-}
-.tip.teal{background:var(--mint);border-color:#CDEEF3;border-left-color:var(--turq-d);}
-
-/* Die Anweisung als kurze Schritte statt als Absatz. */
-.schritte{list-style:none;display:flex;flex-direction:column;gap:.35rem;margin:0 0 1.1rem;padding:0;}
-.schritte li{
-  display:grid;grid-template-columns:auto 1fr;gap:.55rem;align-items:start;
-  font-size:.94rem;line-height:1.5;color:var(--soft);
-}
-.schritte li span{
-  flex:none;width:20px;height:20px;border-radius:50%;margin-top:.12rem;
-  background:#F1EFEA;color:var(--ink);display:grid;place-items:center;
-  font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:700;
-}
-.schritte li.regel{color:var(--ink);}
-.schritte li.regel span{background:var(--gold);color:var(--ink);}
-
-/* ---------- Dialog ---------- */
-.dwrap{
-  background:#fff;border:1px solid var(--line);border-radius:16px;
-  padding:1rem 1.05rem 1.1rem;margin:0 0 1rem;box-shadow:var(--schatten-k);
-}
-.dhead{display:flex;align-items:center;gap:.65rem;flex-wrap:wrap;margin-bottom:.55rem;}
-.dhead img{width:44px;height:44px;object-fit:cover;border-radius:50%;flex:none;}
-.dhead h4{font-size:1.02rem;flex:1 1 12rem;}
-.rbtn{
-  font-family:'Space Grotesk',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer;
-  border:1px solid var(--turq-d);background:var(--mint);color:var(--teal-ink);
-  border-radius:999px;padding:.32rem .75rem;
-}
-.rbtn:hover{background:var(--turq-d);color:#fff;}
-.dsit{font-size:.9rem;color:var(--soft);margin-bottom:.75rem;}
-.dline{display:grid;grid-template-columns:auto 1fr;gap:.5rem;margin:.4rem 0;align-items:start;}
-.dwho{
-  width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
-  font-family:'Space Grotesk',sans-serif;font-size:.75rem;font-weight:700;color:#fff;flex:none;
-}
-.dwho.a{background:var(--red);}
-.dwho.b{background:var(--turq-d);}
-.dtxt{
-  background:var(--mint);border-radius:4px 14px 14px 14px;padding:.55rem .8rem;
-  font-size:.97rem;line-height:1.55;
-}
-.dline.b{grid-template-columns:1fr auto;}
-.dline.b .dwho{order:2;}
-.dline.b .dtxt{order:1;background:var(--warm);border-radius:14px 4px 14px 14px;}
-.dcue{
-  grid-column:1 / -1;margin:.2rem 0 .3rem;font-size:.85rem;color:var(--soft);
-  background:#fff;border:1px dashed var(--line);border-radius:10px;padding:.4rem .65rem;cursor:pointer;
-}
-.dcue .kl{display:block;font-size:.7rem;color:var(--ink-mute);margin-top:.15rem;}
-.dline .dcue{display:none;}
-.dwrap[data-runde="2"] .dline.b .dtxt{visibility:hidden;}
-.dwrap[data-runde="2"] .dline.b .dcue{display:block;}
-.dline.zeigen .dtxt{visibility:visible !important;}
-img.dbild{max-width:160px;border-radius:10px;margin-top:.4rem;}
-.dbtn{margin-top:.7rem;}
-
-/* ---------- Sprechen-Knopf ---------- */
-.speak{
-  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;
-  border:1px solid var(--line);background:#fff;color:var(--ink);
-  border-radius:999px;padding:.35rem .8rem;
-}
-.speak:hover{border-color:var(--ink);}
-
-/* ---------- 90 Sekunden ---------- */
-.card90{
-  background:#fff;border:1px solid var(--line);border-radius:18px;
-  padding:1.1rem 1.15rem 1.2rem;text-align:center;box-shadow:var(--schatten);
-}
-/* Das Bild in den 90 Sekunden ist das einzige grosse auf der Seite.
-   Weiche Ecken, ein heller Rand statt einer harten Kante, und es
-   blendet mit dem Wort zusammen ein — kein Springen beim Wechsel. */
-.card90 img{
-  width:100%;max-width:230px;border-radius:14px;margin:0 auto .8rem;display:block;
-  border:1px solid var(--line);animation:auf .45s cubic-bezier(.22,.8,.3,1);
-}
-.card90 .lbl{
-  font-size:.7rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase;
-  color:var(--red);margin-bottom:.3rem;
-}
-.card90 .word{font-family:'Space Grotesk',sans-serif;font-size:1.7rem;font-weight:700;line-height:1.2;}
-.helpwords{display:flex;flex-wrap:wrap;gap:.35rem;justify-content:center;margin:.75rem 0 .9rem;}
-.hw{
-  background:var(--warm);border:1px solid #E7ECEE;border-radius:999px;
-  padding:.28rem .7rem;font-size:.85rem;font-weight:500;
-}
-.timer{
-  font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:700;
-  font-variant-numeric:tabular-nums;color:var(--teal-ink);
-}
-.zeit{display:block;}
-.btn{
-  font-family:'Space Grotesk',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;
-  border:1px solid var(--turq-d);background:var(--turq-d);color:#fff;
-  border-radius:999px;padding:.5rem 1.1rem;margin:.25rem .2rem 0;
-}
-.btn.ghost{background:#fff;color:var(--teal-ink);}
-.btn:hover{background:#10627A;border-color:#10627A;color:#fff;}
-
-/* ---------- Rollenspiel und Sprechkarten ---------- */
-.rmcard{
-  background:#fff;border:1px solid var(--line);border-radius:14px;
-  padding:.9rem 1rem;margin:0 0 .8rem;
-}
-.rmcard>b{display:block;font-family:'Space Grotesk',sans-serif;font-size:1rem;margin-bottom:.35rem;}
-.rm{
-  display:inline-block;background:var(--mint);border:1px solid #CDEEF3;color:var(--teal-ink);
-  border-radius:999px;padding:.25rem .65rem;margin:.15rem .2rem .15rem 0;font-size:.87rem;font-weight:500;
-}
-.bsp{
-  background:var(--warm);border-left:4px solid var(--gold);border-radius:0 10px 10px 0;
-  padding:.55rem .8rem;margin:.6rem 0 0;font-size:.95rem;line-height:1.55;
-}
-.bsp .wer{
-  display:block;font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--soft);margin-bottom:.15rem;
-}
-
-/* ---------- Rollenspiel: wer bin ich, was will ich ----------
-   Die Lage stand vorher als ein grauer Satz da. Zwei Leute, die
-   gleich sprechen sollen, mussten daraus selbst herauslesen, wer sie
-   sind. Jetzt stehen die Rollen nebeneinander, in denselben Farben
-   wie im Dialog: A rot, B tuerkis. */
-.rsp{
-  background:#fff;border:1px solid var(--line);border-radius:16px;
-  padding:.9rem 1rem 1rem;margin:0 0 .9rem;box-shadow:var(--schatten-k);
-}
-.rsp-kopf{display:flex;align-items:center;gap:.6rem;margin-bottom:.7rem;}
-.rsp-nr{
-  flex:none;width:26px;height:26px;border-radius:8px;background:var(--ink);color:#fff;
-  display:grid;place-items:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.85rem;
-}
-.rsp-kopf b{font-family:'Space Grotesk',sans-serif;font-size:1.02rem;line-height:1.25;}
-.rsp-rollen{display:grid;gap:.5rem;margin:0 0 .75rem;}
-@media(min-width:560px){ .rsp-rollen{grid-template-columns:1fr 1fr;} }
-.rsp-r{
-  display:grid;grid-template-columns:auto 1fr;gap:.5rem;align-items:start;
-  border-radius:12px;padding:.6rem .75rem;
-}
-.rsp-r span{
-  width:24px;height:24px;border-radius:50%;display:grid;place-items:center;color:#fff;
-  font-family:'Space Grotesk',sans-serif;font-size:.75rem;font-weight:700;
-}
-.rsp-r p{font-size:.93rem;line-height:1.5;}
-.rsp-r.a{background:var(--pink);}
-.rsp-r.a span{background:var(--red);}
-.rsp-r.b{background:var(--mint);}
-.rsp-r.b span{background:var(--turq-d);}
-.rsp-lage{background:#F7F6F3;border-radius:12px;padding:.6rem .8rem;margin:0 0 .75rem;font-size:.93rem;line-height:1.5;}
-.rsp-lage span{
-  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
-  color:var(--soft);margin-bottom:.2rem;
-}
-.rsp-saetze{margin:0 0 .7rem;}
-.rsp-lbl{
-  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
-  color:var(--soft);margin-bottom:.35rem;
-}
-.rsp-ziel{
-  background:var(--warm);border-left:4px solid var(--gold);border-radius:0 10px 10px 0;
-  padding:.55rem .8rem;font-size:.92rem;line-height:1.5;
-}
-.rsp-ziel span{
-  display:block;font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
-  color:var(--soft);margin-bottom:.15rem;
-}
-
-/* ---------- Anfangshilfe ----------
-   Zugeklappt eine Zeile, aufgeklappt drei Satzanfaenge. Wer sie
-   nicht braucht, sieht fast nichts. */
-.hilf{margin:.8rem 0 0;}
-.hilf summary{
-  cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:.35rem;
-  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;color:var(--teal-ink);
-  background:var(--mint);border:1px solid #CDEEF3;border-radius:999px;padding:.32rem .8rem;
-}
-.hilf summary::-webkit-details-marker{display:none;}
-.hilf[open] summary{background:var(--turq-d);color:#fff;border-color:var(--turq-d);}
-.hilf-i{display:flex;flex-direction:column;gap:.35rem;margin:.55rem 0 0;}
-.hilf-i span{
-  background:#fff;border:1px dashed var(--line);border-radius:10px;
-  padding:.45rem .7rem;font-size:.93rem;line-height:1.5;
-}
-
-/* ---------- Debatte ---------- */
-.deb-these{
-  background:var(--ink);color:#fff;border-radius:14px;padding:1rem 1.15rem;
-  font-family:'Space Grotesk',sans-serif;font-size:1.12rem;line-height:1.4;font-weight:600;margin:0 0 .9rem;
-}
-.deb-seiten{display:grid;gap:.7rem;margin:0 0 .9rem;}
-@media(min-width:640px){ .deb-seiten{grid-template-columns:1fr 1fr;} }
-.deb-s{background:#fff;border:1px solid var(--line);border-radius:14px;padding:.85rem .95rem;}
-.deb-s b{
-  display:block;font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:800;
-  letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem;
-}
-.deb-s.pro{border-top:4px solid var(--turq-d);}
-.deb-s.pro b{color:var(--teal-ink);}
-.deb-s.con{border-top:4px solid var(--red);}
-.deb-s.con b{color:var(--red);}
-.deb-s ul{margin:0;padding-left:1.05rem;font-size:.94rem;line-height:1.6;}
-.deb-s li{margin:.3rem 0;}
-.deb-s p{margin:0;font-size:.94rem;line-height:1.6;color:var(--soft);}
-.deb-mittel{background:var(--warm);border:1px solid #E7ECEE;border-radius:14px;padding:.85rem 1rem;margin:0 0 .9rem;}
-.deb-mittel b{
-  display:block;font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:800;
-  letter-spacing:.1em;text-transform:uppercase;color:var(--soft);margin-bottom:.5rem;
-}
-.deb-chips{display:flex;flex-wrap:wrap;gap:.35rem;}
-.deb-chips span{
-  background:#fff;border:1px solid #E7ECEE;border-radius:999px;
-  padding:.3rem .7rem;font-size:.88rem;font-weight:500;
-}
-.deb-mehr{border:1px dashed var(--line);border-radius:14px;padding:.85rem 1rem;}
-.deb-mehr b{
-  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
-  color:var(--soft);margin-bottom:.35rem;
-}
-.deb-mehr ul{margin:0;padding-left:1.05rem;font-size:.93rem;line-height:1.6;}
-
-/* ---------- Hausaufgabe ---------- */
-.hagrid{display:grid;gap:.6rem;}
-.ha{
-  display:grid;grid-template-columns:auto auto 1fr;gap:.2rem .7rem;align-items:start;
-  background:#fff;border:1px solid var(--line);border-radius:14px;padding:.8rem .9rem;
-}
-.ha .box{
-  grid-row:span 2;width:22px;height:22px;border:2px solid var(--line);border-radius:6px;
-  cursor:pointer;align-self:center;
-}
-.ha.fertig .box{background:var(--turq-d);border-color:var(--turq-d);}
-.ha.fertig .htxt{opacity:.55;text-decoration:line-through;}
-.ha .hi{grid-row:span 2;align-self:center;font-size:1.15rem;}
-.ha .htxt b{display:block;font-family:'Space Grotesk',sans-serif;font-size:.97rem;}
-.ha .htxt{font-size:.92rem;line-height:1.55;color:var(--soft);}
-.hastand{
-  font-family:'Space Grotesk',sans-serif;font-size:.85rem;font-weight:700;
-  color:var(--soft);margin:.7rem 0 0;
-}
-.zeit{
-  display:inline-block;background:var(--mint);border:1px solid #CDEEF3;color:var(--teal-ink);
-  border-radius:999px;padding:.1rem .5rem;font-size:.72rem;font-weight:700;margin-left:.35rem;
-}
-.hilfe{
-  font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;
-  border:1px solid var(--line);background:#fff;border-radius:999px;padding:.35rem .8rem;margin:.6rem 0 0;
-}
-.inhalt{
-  display:none;background:var(--warm);border:1px solid #E7ECEE;border-radius:12px;
-  padding:.75rem .9rem;margin:.55rem 0 0;font-size:.93rem;line-height:1.6;
-}
-.inhalt.offen{display:block;}
-
-/* ---------- Markierte Woerter ---------- */
-.wm{
-  cursor:pointer;background:var(--gold-mark);border-radius:5px;padding:.02em .2em;
-  -webkit-box-decoration-break:clone;box-decoration-break:clone;
-}
-.wm.schwer{background:transparent;border-bottom:2px dotted var(--red);border-radius:0;}
-.wm:hover,.wm.offen{background:var(--gold);}
-.wm.schwer:hover,.wm.schwer.offen{background:var(--pink);}
-.wm:focus-visible{outline:3px solid var(--turq-d);outline-offset:2px;}
-.wmk{
-  position:absolute;z-index:80;max-width:min(20rem,calc(100vw - 20px));
-  background:#fff;border:1px solid var(--line);border-radius:14px;
-  box-shadow:var(--schatten);padding:.8rem .95rem .85rem;
-}
-.wmk b{display:block;font-family:'Space Grotesk',sans-serif;font-size:1.05rem;padding-right:1.4rem;}
-.wmk span{display:block;margin-top:.25rem;font-size:.92rem;line-height:1.5;color:var(--soft);}
-.wmk em{
-  display:block;margin-top:.5rem;padding-left:.65rem;border-left:3px solid var(--turq-d);
-  font-style:italic;font-size:.91rem;line-height:1.5;
-}
-.wmk-zu{
-  position:absolute;top:.4rem;right:.45rem;border:none;background:transparent;
-  font-size:.9rem;line-height:1;cursor:pointer;color:var(--soft);padding:.2rem;
-}
-.wmk-ton{
-  margin-top:.55rem;border:1px solid var(--line);background:#fff;color:var(--ink);
-  border-radius:999px;padding:.28rem .7rem;font-family:'Space Grotesk',sans-serif;
-  font-size:.78rem;font-weight:700;cursor:pointer;
-}
-
-/* ---------- Weiter und zurueck ---------- */
-.weiterzeile{
-  display:flex;gap:.6rem;flex-wrap:wrap;justify-content:space-between;
-  margin:1.8rem 0 .4rem;padding-top:1.1rem;border-top:1px solid var(--line);
-}
-.weiterknopf{
-  font-family:'Space Grotesk',sans-serif;font-size:.92rem;font-weight:700;cursor:pointer;
-  border:1px solid var(--turq-d);background:var(--turq-d);color:#fff;
-  border-radius:999px;padding:.55rem 1.1rem;margin-left:auto;transition:.15s;
-}
-.weiterknopf.zurueck{background:#fff;color:var(--teal-ink);margin-left:0;margin-right:auto;}
-.weiterknopf:hover{background:#10627A;border-color:#10627A;color:#fff;}
-
-/* ---------- Niveau-Umschalter ---------- */
-body[data-niveau="a2"] .nur-b1{display:none !important;}
-body[data-niveau="b1"] .nur-a2{display:none !important;}
-
-/* ---------- Fuss ---------- */
-footer{
-  margin-top:3rem;padding-top:1.2rem;border-top:1px solid var(--line);
-  font-size:.85rem;color:var(--soft);text-align:center;
-}
-footer strong{color:var(--ink);}
-
-@media print{
-  body.schaltet .section[hidden]{display:block !important;}
-  .leiste,.weiterzeile,.wmk{display:none !important;}
-  .wm{background:none;border-bottom:2px solid var(--gold-d);}
-}
-@media(max-width:560px){
-  .wrapper{padding:1.5rem 1rem 4rem;}
-  .leiste{border-radius:12px;padding:.35rem .4rem;gap:.4rem;}
-  .nivk button{padding:.3rem .65rem;font-size:.8rem;}
-  .nivk .zusatz{display:none;}
-}
-
-/* ============================================================
-   Ankommen mit Bild, Merksätze, Sprechübung
-   ============================================================
-   Der Einstieg stand ohne jedes Bild da. Und die Sätze, die man
-   beim Bäcker wirklich auswendig braucht, standen gar nicht mehr
-   auf der Seite. Beides kommt hier zurück — die Sätze aber als
-   Liste zum Lautsagen, nicht als Tafel zum Lesen. */
-
-.ankbild{
-  display:block; width:100%; max-width:620px; margin:0 auto 1.1rem;
-  border-radius:18px; border:1px solid var(--line); object-fit:cover;
-  aspect-ratio:16/9;
-}
-
-.merkg{
-  border:1px solid var(--line); border-radius:16px;
-  padding:.85rem 1rem 1rem; margin:0 0 .85rem; background:var(--bg);
-}
-.merkt{
-  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:600;
-  font-size:1rem; color:var(--teal-ink); margin:0 0 .6rem;
-}
-.merk{
-  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
-  padding:.5rem 0; border-top:1px solid var(--line);
-  font-size:1.02rem; line-height:1.45;
-}
-.merk:first-of-type{ border-top:0; }
-.merk > span{ flex:1 1 14rem; min-width:0; }
-.merk .speak{ flex:0 0 auto; }
-
-.uebs{ display:grid; gap:.7rem; margin:1rem 0 0; }
-.ueb{
-  display:flex; gap:.8rem; align-items:flex-start;
-  border:1px solid var(--line); border-radius:16px;
-  padding:.85rem 1rem; background:var(--warm);
-}
-.ueb b{
-  font-family:'Space Grotesk',system-ui,sans-serif; font-size:1rem;
-  display:block; margin:0 0 .2rem;
-}
-.ueb p{ margin:0; font-size:.97rem; line-height:1.5; color:var(--soft); }
-.uebn{
-  flex:0 0 1.9rem; height:1.9rem; border-radius:50%;
-  background:var(--turq-d); color:#fff; font-weight:700;
-  display:grid; place-items:center; font-size:.95rem;
-}
-
-@media (max-width:560px){
-  .ankbild{ aspect-ratio:4/3; border-radius:14px; }
-  .merk{ font-size:.98rem; }
-  .ueb{ padding:.75rem .85rem; }
-}
-
-/* ---------- Ankommen: zwei Fragerunden ----------
-   Statt einer Frage und viel Leerraum stehen hier sechs Fragen, die
-   laengst in der JSON lagen: Runde 1 reihum (warm), Runde 2 zu zweit
-   (weiss, gestrichelt). Die Ziffern sind Aufgabennummern, keine
-   Deko — jede Ziffer ist eine Frage, die jemand beantwortet. */
-.ankrunde{
-  background:var(--warm);border:1px solid #E7ECEE;border-radius:14px;
-  padding:.95rem 1.1rem 1rem;margin-top:.9rem;
-}
-.ankrunde.zwei{background:#fff;border:1px dashed var(--line);}
-.ankl{
-  display:block;font-size:.7rem;font-weight:800;letter-spacing:.11em;
-  text-transform:uppercase;color:var(--soft);margin-bottom:.45rem;
-}
-.ankrunde.zwei .ankl{color:var(--teal-ink);}
-.ankfr{list-style:none;margin:0;padding:0;counter-reset:ankz;}
-.ankfr li{
-  counter-increment:ankz;position:relative;padding:.55rem 0 .55rem 2.2rem;
-  font-family:'Space Grotesk',sans-serif;font-size:1.06rem;line-height:1.42;font-weight:600;
-  border-top:1px solid rgba(22,22,22,.07);
-}
-.ankfr li:first-child{border-top:0;padding-top:.15rem;}
-.ankfr li::before{
-  content:counter(ankz);position:absolute;left:0;top:.55rem;
-  width:1.5rem;height:1.5rem;border-radius:50%;
-  background:var(--turq);color:var(--teal-ink);
-  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:800;
-  display:grid;place-items:center;
-}
-.ankfr li:first-child::before{top:.15rem;}
-.ankrunde.zwei .ankfr li{font-family:'Inter',sans-serif;font-size:.98rem;font-weight:500;}
-.ankrunde.zwei .ankfr li::before{background:var(--mint);border:1px solid var(--line);}
-
-@media (max-width:560px){
-  .ankrunde{padding:.85rem .9rem .9rem;}
-  .ankfr li{font-size:.99rem;padding-left:2rem;}
-  .ankrunde.zwei .ankfr li{font-size:.94rem;}
-}
-
-</style>
-</head>
-<body data-niveau="a2"><div class="flagbar"></div><div class="wrapper">
-
-<div class="eyebrow">deutschoderwas · Sprechclub · Woche 5 · Strang D · Teil 2 · Donnerstag, 15. Oktober</div>
-<h1 class="title">Richtigstellen, <span class="hl">ohne dass jemand das Gesicht verliert</span></h1>
-
-<p class="subtitle">Am Dienstag ging es um Missverständnisse, an denen niemand schuld war. Heute wird es unangenehmer: Jemand liegt sachlich falsch, du weißt es besser — und es hören andere zu. Es gibt eine Art, das zu sagen, nach der beide weiterarbeiten können.</p>
-
-<p class="niv-wie">Gleiches Thema, andere Sätze. Wechsle jederzeit — probier ruhig beide Seiten aus.</p>
-<div class="leiste">
-  <div class="nivk" role="group" aria-label="Niveau wählen">
-    <button type="button" data-niv="a2" aria-pressed="true">B1<span class="zusatz"> · sicherer</span></button>
-    <button type="button" data-niv="b1" aria-pressed="false">B2<span class="zusatz"> · feiner</span></button>
-  </div>
-<nav class="tabs">
-<a class="tab active" href="#ankommen">👋 Ankommen</a>
-<a class="tab" href="#dialoge">🎬 Dialog</a>
-<a class="tab" href="#merksaetze">🗣️ Merksätze</a>
-<a class="tab" href="#challenge">⏱️ 90 Sekunden</a>
-<a class="tab" href="#rollenspiele">🎭 Rollenspiel</a>
-<a class="tab" href="#debatte">⚖️ Debatte</a>
-<a class="tab" href="#abschluss">🎯 Abschluss</a>
-<a class="tab" href="#hausaufgabe">📮 Hausaufgabe</a>
-</nav>
-</div>
-
-<section class="section" id="ankommen">
-<h2 class="st">Erst mal <span class="hl">ankommen</span></h2>
-<p class="ssub">Zwei Runden. Erst reihum, dann zu zweit. Ein Satz genügt.</p>
-<img class="ankbild" src="../amanda/sz-buero.webp" alt="Zwei Personen besprechen etwas an einem Schreibtisch">
-<div class="ankrunde"><span class="ankl">Runde 1 · reihum, ein Satz pro Person</span><div class="nur-a2"><ol class="ankfr"><li>Sagst du in so einer Situation etwas?</li><li>Macht es einen Unterschied, ob andere zuhören?</li><li>Wie fühlt es sich an, selbst korrigiert zu werden?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Wann ist Schweigen in so einem Moment schon fast unehrlich?</li><li>Was ändert sich, wenn die Person über dir steht?</li><li>Woran merkst du, dass jemand eine Korrektur gut aufgenommen hat?</li></ol></div></div>
-<div class="tip teal">🔑 <strong>Die Formel für heute:</strong> <b>Die Sache korrigieren, die Person schützen.</b> <i>„Da bin ich mir nicht ganz sicher — ich habe den 12. im Kopf. Sollen wir kurz nachsehen?“</i> Die Zahl wird richtiggestellt, und niemand steht als jemand da, der sich geirrt hat.</div>
-<div class="ankrunde zwei"><span class="ankl">Runde 2 · zu zweit, fragt euch gegenseitig</span><div class="nur-a2"><ol class="ankfr"><li>Erinnerst du dich an eine Korrektur, die dir unangenehm war?</li><li>Was hätte die Person anders machen können?</li><li>Korrigierst du lieber unter vier Augen?</li></ol></div><div class="nur-b1"><ol class="ankfr"><li>Ist Gesichtswahrung in deiner Kultur wichtiger oder unwichtiger als hier?</li><li>Wann ist Rücksicht auf das Gesicht schädlich — weil die Sache wichtiger ist?</li><li>Wie korrigierst du jemanden, der es nicht hören will?</li></ol></div></div>
-<div class="tip">💡 <strong>Zwei Regeln, die fast alles entscheiden:</strong> <b>Erstens:</b> Kleinigkeiten unter vier Augen, Sicherheitsrelevantes sofort. <b>Zweitens:</b> Je mehr Menschen zuhören, desto weicher die Form — aber die Sache muss trotzdem gesagt werden. Weich in der Form heißt nicht unklar in der Sache.</div>
-<details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ich habe einmal …</span><span>Ich glaube, das ist …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Bei mir war das so: …</span><span>Ehrlich gesagt habe ich das noch nie …</span><span>Mir fällt spontan ein Fall ein, in dem …</span></div></div></details>
-</section>
-
-<section class="section" id="dialoge">
-<h2 class="st">Vier Situationen — <span class="hl">zwei Runden</span></h2>
-<ol class="schritte">
-<li><span>1</span><b>Runde 1:</b> Lest den Dialog zu zweit laut.</li>
-<li><span>2</span><b>Runde 2:</b> Klappt die Zeilen zu und spielt ihn frei — mit einer eigenen falschen Angabe.</li>
-</ol>
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../vok-bild/die-kurzpraesentation.webp" alt="Ein Mann präsentiert vor einer kleinen Gruppe"><h4>Dialog 1 · „Die falsche Zahl in der Besprechung“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Jemand nennt vor der ganzen Runde ein falsches Datum. Gleich wird darüber abgestimmt.</div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Gut, dann halten wir den 21. als Termin fest.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Eine <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Ergänzung" data-wort="die Ergänzung" data-kurz="etwas, das man hinzufügt" data-bsp="Eine Ergänzung dazu, wenn ich darf.">Ergänzung</b>, wenn ich darf: Ich kann mich irren, aber ich habe den 12. im Kopf.</div><div class="dcue">🗣️ <b>Ergänzung</b> statt Widerspruch, und sofort <b>ich kann mich irren</b>. Zwei Weichmacher, bevor überhaupt die Zahl fällt.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Bist du sicher? Ich habe hier den 21. stehen.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Nicht ganz sicher, deshalb frage ich. Das war lange auch mein <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Stand" data-wort="der Stand" data-kurz="die aktuelle Fassung oder Lage" data-bsp="Ist das noch der aktuelle Stand?">Stand</b> — geändert wurde es erst letzte Woche.</div><div class="dcue">🗣️ <b>Das war lange auch mein Stand</b> schützt das Gesicht: Der andere hatte nicht unrecht, er hatte die ältere Fassung.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Davon wusste ich nichts.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Sollen wir kurz <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von nachsehen" data-wort="nachsehen" data-kurz="prüfen, was wirklich stimmt" data-bsp="Sollen wir kurz nachsehen?">nachsehen</b>, bevor wir es beschließen?</div><div class="dcue">🗣️ <b>nachsehen</b> — jetzt entscheidet das Dokument, nicht einer von euch. Damit verliert niemand.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Ja, mach mal auf. — Tatsächlich, der 12.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Gut, dass wir es vorher gemerkt haben.</div><div class="dcue">🗣️ <b>Wir</b>, nicht <i>ich</i>. Ein Wort, und aus einer Korrektur wird eine gemeinsame Rettung.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<button class="speak dbtn" data-say="Gut, dann halten wir den 21. als Termin fest. Eine Ergänzung, wenn ich darf: Ich kann mich irren, aber ich habe den 12. im Kopf. Bist du sicher? Ich habe hier den 21. stehen. Nicht ganz sicher, deshalb frage ich. Das war lange auch mein Stand — geändert wurde es erst letzte Woche. Davon wusste ich nichts. Sollen wir kurz nachsehen, bevor wir es beschließen? Ja, mach mal auf. — Tatsächlich, der 12. Gut, dass wir es vorher gemerkt haben.">🔊 Dialog vorlesen lassen</button></div>
-
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/sz-heikel.webp" alt="Zwei Personen in einem ernsten Gespräch"><h4>Dialog 2 · „Unter vier Augen“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Ein Kollege hat einer Kundin gestern etwas Falsches erklärt. Du sprichst ihn hinterher allein an.</div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Hast du kurz zwei Minuten? Nichts Schlimmes, ich möchte nur etwas ansprechen.</div><div class="dcue">🗣️ <b>Nichts Schlimmes</b> gleich vorweg — sonst denkt der andere die ganzen zwei Minuten an das Schlimmste.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Klar, was gibt es?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Gestern bei der Kundin ging es um die Frist. Da war von vier Wochen die Rede, ich glaube, es sind zwei.</div><div class="dcue">🗣️ <b>Da war von … die Rede</b> — ohne Subjekt. Niemand hat es gesagt, es <i>war die Rede</i>. Sehr nützliche Form.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Oh. Das habe ich falsch im Kopf gehabt.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Kann passieren, das war lange auch anders. Sollen wir sie kurz anrufen?</div><div class="dcue">🗣️ Erst entlasten, dann sofort zur Lösung. Über den Fehler wird nicht weiter geredet.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Mache ich gleich. Danke, dass du es mir gesagt hast.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Sag mir bitte auch Bescheid, wenn dir bei mir etwas auffällt.</div><div class="dcue">🗣️ Die Tür in beide Richtungen öffnen — damit wird aus einer Korrektur eine Abmachung unter Gleichen.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<button class="speak dbtn" data-say="Hast du kurz zwei Minuten? Nichts Schlimmes, ich möchte nur etwas ansprechen. Klar, was gibt es? Gestern bei der Kundin ging es um die Frist. Da war von vier Wochen die Rede, ich glaube, es sind zwei. Oh. Das habe ich falsch im Kopf gehabt. Kann passieren, das war lange auch anders. Sollen wir sie kurz anrufen? Mache ich gleich. Danke, dass du es mir gesagt hast. Sag mir bitte auch Bescheid, wenn dir bei mir etwas auffällt.">🔊 Dialog vorlesen lassen</button></div>
-
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../amanda/amanda-super.webp" alt="Amanda zeigt den Daumen nach oben"><h4>Dialog 3 · „Selbst korrigiert werden“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Diesmal liegst du falsch, und jemand sagt es dir — vor anderen. Wie du reagierst, entscheidet mehr als der Fehler selbst.</div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Das stimmt so nicht. Die Regel gilt seit Januar nicht mehr.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Wirklich? Dann hatte ich einen veralteten Stand. Danke, gut zu wissen.</div><div class="dcue">🗣️ <b>einen veralteten Stand</b> statt <i>ich lag falsch</i> — sachlich richtig und für dich leichter zu sagen. Und ein Dank statt einer Verteidigung.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Steht in der Rundmail von Januar.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Die habe ich offenbar überhört. Ich schaue sie nachher nach.</div><div class="dcue">🗣️ <b>überhört</b>, fest, ohne ge-. Und ein konkreter nächster Schritt — damit ist das Thema beendet.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Kein Problem, das ging vielen so.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Da hatte ich unrecht, das gebe ich zu. Dann ziehe ich meinen Vorschlag zurück.</div><div class="dcue">🗣️ <b>zugeben</b> und <b>zurückziehen</b> — klar und ohne Drumherum. In deutschen Teams gewinnt man damit, statt zu verlieren.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Der Rest von dem Vorschlag war aber gut.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Dann bringe ich ihn nächste Woche noch mal — mit dem richtigen Stand.</div><div class="dcue">🗣️ Nicht beleidigt abtauchen, sondern wiederkommen. Genau das merken sich die Leute.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<button class="speak dbtn" data-say="Das stimmt so nicht. Die Regel gilt seit Januar nicht mehr. Wirklich? Dann hatte ich einen veralteten Stand. Danke, gut zu wissen. Steht in der Rundmail von Januar. Die habe ich offenbar überhört. Ich schaue sie nachher nach. Kein Problem, das ging vielen so. Da hatte ich unrecht, das gebe ich zu. Dann ziehe ich meinen Vorschlag zurück. Der Rest von dem Vorschlag war aber gut. Dann bringe ich ihn nächste Woche noch mal — mit dem richtigen Stand.">🔊 Dialog vorlesen lassen</button></div>
-
-<div class="dwrap" data-runde="1"><div class="dhead"><img src="../vok-bild/die-uhrzeit.webp" alt="Eine Wanduhr an einer hellen Wand"><h4>Dialog 4 · „Der falsche Zeitpunkt“</h4><button class="rbtn">▶︎ Runde 2 · du antwortest</button></div><div class="dsit">Du merkst mitten in der Präsentation, dass eine Zahl nicht stimmt — aber es hängt nichts daran. Du wartest ab und sprichst es danach an.</div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Gute Präsentation. Eine Kleinigkeit ist mir aufgefallen, magst du sie hören?</div><div class="dcue">🗣️ Erst das Lob, dann die Frage um Erlaubnis. Wer gefragt wird, hört ganz anders zu.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Immer her damit.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Auf Folie sieben stand eine Zahl aus dem Vorjahr. Es hat niemand gemerkt, aber beim nächsten Mal fällt es vielleicht auf.</div><div class="dcue">🗣️ <b>Es hat niemand gemerkt</b> nimmt die Angst. Und der Blick nach vorn statt zurück.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Warum hast du nichts gesagt?</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Es hing nichts daran, und mittendrin wäre es unangenehm gewesen. Bei einer Frist hätte ich sofort unterbrochen.</div><div class="dcue">🗣️ Die eigene Entscheidung offenlegen — und die Grenze nennen, ab der du doch sofort etwas sagst.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<div class="dline a"><div class="dwho a">A</div><div class="dtxt">Das finde ich fair.</div></div>
-<div class="dline b"><div class="dwho b">B</div><div class="dtxt">Schick mir die Folien, ich schaue kurz drüber.</div><div class="dcue">🗣️ Mit einem Angebot schließen. So wird aus der Korrektur eine Zusammenarbeit.<span class="kl">tippen = Hilfe zeigen</span></div></div>
-<button class="speak dbtn" data-say="Gute Präsentation. Eine Kleinigkeit ist mir aufgefallen, magst du sie hören? Immer her damit. Auf Folie sieben stand eine Zahl aus dem Vorjahr. Es hat niemand gemerkt, aber beim nächsten Mal fällt es vielleicht auf. Warum hast du nichts gesagt? Es hing nichts daran, und mittendrin wäre es unangenehm gewesen. Bei einer Frist hätte ich sofort unterbrochen. Das finde ich fair. Schick mir die Folien, ich schaue kurz drüber.">🔊 Dialog vorlesen lassen</button></div>
-
-<div class="tip">🎭 <strong>Und jetzt ihr:</strong> Spielt Dialog 1 zweimal — einmal vor Publikum (die anderen hören zu), einmal unter vier Augen. Achtet darauf, wie sich eure eigene Wortwahl verändert, ohne dass ihr es vorher besprecht.</div>
-</section>
-
-<section class="section" id="merksaetze">
-<h2 class="st">Sätze, die <span class="hl">sitzen müssen</span></h2>
-<p class="ssub">Sag jeden einmal laut.</p>
-<div class="nur-a2">
-<div class="merkg"><div class="merkt">1 · 🔔 Ankündigen</div>
-<div class="merk"><span>Nur ein kurzer <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Einwurf" data-wort="der Einwurf" data-kurz="eine kurze Bemerkung mitten im Gespräch" data-bsp="Nur ein kurzer Einwurf, dann rede ich nicht mehr rein.">Einwurf</b></span><button class="speak" data-say="Nur ein kurzer Einwurf">🔊 hören</button></div>
-<div class="merk"><span>Eine <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Ergänzung" data-wort="die Ergänzung" data-kurz="etwas, das man hinzufügt" data-bsp="Eine Ergänzung dazu, wenn ich darf.">Ergänzung</b> dazu</span><button class="speak" data-say="Eine Ergänzung dazu">🔊 hören</button></div>
-<div class="merk"><span>Bevor wir weitermachen</span><button class="speak" data-say="Bevor wir weitermachen">🔊 hören</button></div>
-<div class="merk"><span>Darf ich kurz?</span><button class="speak" data-say="Darf ich kurz?">🔊 hören</button></div>
-</div>
-<div class="merkg"><div class="merkt">2 · 🪞 Sich selbst einräumen</div>
-<div class="merk"><span>Ich kann mich irren</span><button class="speak" data-say="Ich kann mich irren">🔊 hören</button></div>
-<div class="merk"><span>Vielleicht habe ich es falsch im Kopf</span><button class="speak" data-say="Vielleicht habe ich es falsch im Kopf">🔊 hören</button></div>
-<div class="merk"><span>Korrigiere mich, wenn ich danebenliege</span><button class="speak" data-say="Korrigiere mich, wenn ich danebenliege">🔊 hören</button></div>
-<div class="merk"><span>Ich bin mir nicht ganz sicher</span><button class="speak" data-say="Ich bin mir nicht ganz sicher">🔊 hören</button></div>
-</div>
-<div class="merkg"><div class="merkt">3 · 🎯 Die Sache nennen</div>
-<div class="merk"><span>Ich habe den 12. im Kopf</span><button class="speak" data-say="Ich habe den 12. im Kopf">🔊 hören</button></div>
-<div class="merk"><span>In der neuen Fassung steht …</span><button class="speak" data-say="In der neuen Fassung steht …">🔊 hören</button></div>
-<div class="merk"><span>Das war der alte <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Stand" data-wort="der Stand" data-kurz="die aktuelle Fassung oder Lage" data-bsp="Ist das noch der aktuelle Stand?">Stand</b></span><button class="speak" data-say="Das war der alte Stand">🔊 hören</button></div>
-<div class="merk"><span>Meine Notiz sagt etwas anderes</span><button class="speak" data-say="Meine Notiz sagt etwas anderes">🔊 hören</button></div>
-</div>
-<div class="merkg"><div class="merkt">4 · 🔍 Gemeinsam prüfen</div>
-<div class="merk"><span>Sollen wir kurz <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von nachsehen" data-wort="nachsehen" data-kurz="prüfen, was wirklich stimmt" data-bsp="Sollen wir kurz nachsehen?">nachsehen</b>?</span><button class="speak" data-say="Sollen wir kurz nachsehen?">🔊 hören</button></div>
-<div class="merk"><span>Wer hat die aktuelle Fassung?</span><button class="speak" data-say="Wer hat die aktuelle Fassung?">🔊 hören</button></div>
-<div class="merk"><span>Können wir das vorher klären?</span><button class="speak" data-say="Können wir das vorher klären?">🔊 hören</button></div>
-<div class="merk"><span>Ich schaue nach und melde mich</span><button class="speak" data-say="Ich schaue nach und melde mich">🔊 hören</button></div>
-</div>
-</div>
-<div class="nur-b1">
-<div class="merkg"><div class="merkt">1 · 🔔 Ankündigen vor Publikum</div>
-<div class="merk"><span>Eine Ergänzung, wenn ich darf</span><button class="speak" data-say="Eine Ergänzung, wenn ich darf">🔊 hören</button></div>
-<div class="merk"><span>Ich hake da nur kurz ein</span><button class="speak" data-say="Ich hake da nur kurz ein">🔊 hören</button></div>
-<div class="merk"><span>Ein Punkt noch, bevor wir beschließen</span><button class="speak" data-say="Ein Punkt noch, bevor wir beschließen">🔊 hören</button></div>
-<div class="merk"><span>Dazu habe ich einen anderen Stand</span><button class="speak" data-say="Dazu habe ich einen anderen Stand">🔊 hören</button></div>
-</div>
-<div class="merkg"><div class="merkt">2 · 🕊️ Die Person schützen</div>
-<div class="merk"><span>Das war lange auch mein Stand</span><button class="speak" data-say="Das war lange auch mein Stand">🔊 hören</button></div>
-<div class="merk"><span>Die alte Fassung sagte genau das</span><button class="speak" data-say="Die alte Fassung sagte genau das">🔊 hören</button></div>
-<div class="merk"><span>Das ist erst seit Kurzem anders</span><button class="speak" data-say="Das ist erst seit Kurzem anders">🔊 hören</button></div>
-<div class="merk"><span>Das haben mehrere so verstanden</span><button class="speak" data-say="Das haben mehrere so verstanden">🔊 hören</button></div>
-</div>
-<div class="merkg"><div class="merkt">3 · ✋ Deutlich werden</div>
-<div class="merk"><span>Bevor wir das beschließen, muss ich …</span><button class="speak" data-say="Bevor wir das beschließen, muss ich …">🔊 hören</button></div>
-<div class="merk"><span>Da würde ich <b class="wm schwer" tabindex="0" role="button" aria-label="Bedeutung von widersprechen" data-wort="widersprechen" data-kurz="am deutlichsten — wenn es wirklich darauf ankommt" data-bsp="Das stimmt so nicht, und das müssen wir vorher klären.">widersprechen</b>, und zwar deutlich</span><button class="speak" data-say="Da würde ich widersprechen, und zwar deutlich">🔊 hören</button></div>
-<div class="merk"><span>Das halte ich für einen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Irrtum" data-wort="der Irrtum" data-kurz="eine falsche Annahme, kein Fehler aus Absicht" data-bsp="Das war ein Irrtum, kein Vorwurf an irgendjemanden.">Irrtum</b></span><button class="speak" data-say="Das halte ich für einen Irrtum">🔊 hören</button></div>
-<div class="merk"><span>Darauf würde ich bestehen</span><button class="speak" data-say="Darauf würde ich bestehen">🔊 hören</button></div>
-</div>
-<div class="merkg"><div class="merkt">4 · 🤲 Selbst korrigiert werden</div>
-<div class="merk"><span>Da hatte ich unrecht, danke</span><button class="speak" data-say="Da hatte ich unrecht, danke">🔊 hören</button></div>
-<div class="merk"><span>Das gebe ich zu</span><button class="speak" data-say="Das gebe ich zu">🔊 hören</button></div>
-<div class="merk"><span>Gut, dass Sie das sagen</span><button class="speak" data-say="Gut, dass Sie das sagen">🔊 hören</button></div>
-<div class="merk"><span>Dann ziehe ich das zurück</span><button class="speak" data-say="Dann ziehe ich das zurück">🔊 hören</button></div>
-</div>
-</div>
-<div class="tip">✅ <strong>Und jetzt zu zweit:</strong> Deckt die Sätze zu. Einer nennt den Schritt, der andere sagt den Satz aus dem Kopf. Danach tauschen.</div>
-</section>
-
-<section class="section" id="challenge">
-<h2 class="st">⏱️ Die 90-Sekunden-Challenge</h2>
-<p class="ssub">Eine falsche Angabe, anderthalb Minuten, freies Sprechen. Nicht recht behalten — sondern so korrigieren, dass ihr danach noch zusammenarbeiten könnt.</p>
-<div class="card90">
-<div class="lbl">Dein Wort</div>
-<img id="i90" src="../amanda/a-zeigen.webp" alt="richtigstellen">
-<div class="word" id="w90">richtigstellen</div>
-<div class="helpwords" id="hw90"></div>
-<div class="timer" id="t90">1:30</div>
-<div>
-<button class="btn ghost" id="new90">🎲 Neues Wort</button>
-<button class="btn" id="start90">▶︎ Start</button>
-</div>
-</div>
-<div class="hilfe">
-<button type="button">🆘 Mir fällt nichts ein</button>
-<div class="inhalt">
-<p>Geh die vier Bausteine entlang, dann trägt dich die Zeit:</p>
-<ul>
-<li>Ankündigen: <b>Eine Ergänzung, wenn ich darf … / Nur ein kurzer Einwurf …</b></li>
-<li>Sich selbst einräumen: <b>Ich kann mich irren, aber …</b></li>
-<li>Die Sache nennen: <b>Ich habe … im Kopf. / In der neuen Fassung steht …</b></li>
-<li>Gemeinsam prüfen: <b>Sollen wir kurz nachsehen?</b></li>
-</ul>
-<p style="margin-top:.5rem;">Und wenn dir mitten im Satz auffällt, dass es zu hart klingt: Sag es einfach. <b>„Das klang jetzt schärfer, als ich es meine.“</b> Eine Selbstkorrektur wirkt souverän, nicht schwach.</p>
-</div>
-</div>
-<div class="tip">⏱️ <strong>Spielregel:</strong> In jeder Runde muss ein <u>Satz ohne Täter</u> vorkommen (Passiv, man oder es) und mindestens ein <u>Weichmacher</u>. Jeder Satz, der mit <i>Sie haben</i> oder <i>Du hast</i> beginnt, kostet einen Punkt.</div>
-</section>
-
-<section class="section" id="rollenspiele">
-<h2 class="st">🎭 Drei Situationen <span class="hl">zu zweit</span></h2>
-<ol class="schritte">
-<li><span>1</span>Einer liegt falsch, einer korrigiert.</li>
-<li><span>2</span>Danach tauschen — und beim zweiten Mal ohne Notizen.</li>
-<li class="regel"><span>!</span>Regel für alle drei: Kein Satz darf mit <i>„Sie haben“</i> oder <i>„Du hast“</i> anfangen.</li>
-</ol>
-<div class="rsp">
-<div class="rsp-kopf"><span class="rsp-nr">1</span><b>Die Zahl in der Besprechung</b></div>
-<div class="rsp-rollen"><div class="rsp-r a"><span>A</span><p>nennt vor der Runde eine falsche Zahl, über die gleich entschieden wird.</p></div><div class="rsp-r b"><span>B</span><p>korrigiert — vor Publikum, also weich in der Form und klar in der Sache. Zwei Minuten.</p></div></div>
-<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Dann halten wir den 21. fest</span><span class="rm">Eine Ergänzung, wenn ich darf</span><span class="rm">Ich kann mich irren, aber …</span><span class="rm">Sollen wir kurz nachsehen?</span></div><div class="nur-b1"><span class="rm">Dazu habe ich einen anderen Stand</span><span class="rm">Das war lange auch mein Stand</span><span class="rm">Bevor wir das beschließen, …</span><span class="rm">Gut, dass wir es vorher gemerkt haben</span></div></div>
-<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>Kein Satz begann mit <i>Sie haben</i>. B hat sich selbst einmal einen <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Irrtum" data-wort="der Irrtum" data-kurz="eine falsche Annahme, kein Fehler aus Absicht" data-bsp="Das war ein Irrtum, kein Vorwurf an irgendjemanden.">Irrtum</b> eingeräumt, und die Entscheidung fiel am Ende durch Nachsehen — nicht durch Rechthaben.</div>
-<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
-</div>
-
-<div class="rsp">
-<div class="rsp-kopf"><span class="rsp-nr">2</span><b>Diesmal liegst du falsch</b></div>
-<div class="rsp-lage"><span>Die Lage</span>B wird von A vor anderen korrigiert und liegt tatsächlich falsch. B muss es <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von zugeben" data-wort="zugeben" data-kurz="einen eigenen Fehler einräumen" data-bsp="Da hatte ich unrecht, das gebe ich zu.">zugeben</b>, ohne sich klein zu machen — und darf einen Teil seines Vorschlags retten.</div>
-<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Das stimmt so nicht mehr</span><span class="rm">Dann hatte ich einen veralteten Stand</span><span class="rm">Danke, gut zu wissen</span><span class="rm">Da hatte ich unrecht</span></div><div class="nur-b1"><span class="rm">Die Rundmail habe ich offenbar überhört</span><span class="rm">Das gebe ich zu, dann ziehe ich das zurück</span><span class="rm">Der Rest des Vorschlags bleibt aber</span><span class="rm">Ich bringe ihn nächste Woche noch mal</span></div></div>
-<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>B hat sich nicht verteidigt und sich auch nicht klein gemacht. Der Fehler wurde in einem Satz zugegeben, und danach ging es sofort um die Sache weiter.</div>
-<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
-</div>
-
-<div class="rsp">
-<div class="rsp-kopf"><span class="rsp-nr">3</span><b>Zwei Zeitpunkte</b></div>
-<div class="rsp-lage"><span>Die Lage</span>Dieselbe falsche Angabe, zwei Durchgänge: einmal korrigiert B sofort mitten in der Präsentation, einmal erst hinterher <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von unter vier Augen" data-wort="unter vier Augen" data-kurz="allein, ohne Zuhörer" data-bsp="Können wir das kurz unter vier Augen klären?">unter vier Augen</b>. Danach sagt ihr euch, welcher <b class="wm wichtig" tabindex="0" role="button" aria-label="Bedeutung von Zeitpunkt" data-wort="der Zeitpunkt" data-kurz="der Moment, in dem man etwas sagt" data-bsp="Ich sage es später, das ist nicht der richtige Zeitpunkt.">Zeitpunkt</b> hier richtig war und warum.</div>
-<div class="rsp-saetze"><span class="rsp-lbl">Sätze, die dir helfen</span><div class="nur-a2"><span class="rm">Nur ein kurzer Einwurf</span><span class="rm">Eine Kleinigkeit ist mir aufgefallen</span><span class="rm">Es hing nichts daran</span><span class="rm">Magst du es hören?</span></div><div class="nur-b1"><span class="rm">Bevor wir das beschließen, muss ich …</span><span class="rm">Mittendrin wäre es unangenehm gewesen</span><span class="rm">Bei einer Frist hätte ich sofort unterbrochen</span><span class="rm">Lassen wir das auf sich beruhen</span></div></div>
-<div class="rsp-ziel"><span>🎯 Geschafft, wenn</span>Beide konnten begründen, warum der eine Zeitpunkt hier besser war als der andere — und dabei die Grenze benennen: Bei Fristen, Geld und Sicherheit wird sofort unterbrochen.</div>
-<details class="hilf"><summary>🆘 Und wenn B nein sagt?</summary><div class="nur-a2"><div class="hilf-i"><span>Das verstehe ich. Aber …</span><span>Kann ich bitte fragen: …?</span><span>Was kann ich jetzt machen?</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Das verstehe ich — trotzdem bleibe ich dabei: …</span><span>Darf ich kurz nachfragen: …?</span><span>Wer kann das denn entscheiden?</span></div></div></details>
-</div>
-
-<h2 class="st">🎴 Sprechkarten</h2>
-<p class="ssub">Zieh eine Karte. Vier Sätze am Stück.</p>
-<div class="card90">
-<div class="lbl">Deine Aufgabe</div>
-<div class="word" id="wsk" style="font-size:1.15rem;line-height:1.4;">Tippe auf den Knopf.</div>
-<button class="btn" id="sknew">🎴 Karte ziehen</button>
-</div>
-</section>
-
-<section class="section" id="debatte">
-<h2 class="st">Drei gegen <span class="hl">drei</span></h2>
-<p class="ssub">Zwei Gruppen, eine Frage. Abwechselnd sprechen.</p>
-<div class="deb-these">Einen Fehler sagt man, auch wenn es nicht der eigene ist.</div>
-<div class="deb-seiten"><div class="deb-s pro"><b>Gruppe A · dafür</b><ul><li>Wer schweigt und es weiß, macht mit.</li><li>Später kommt heraus, dass man es wusste.</li><li>Man kann es sachlich sagen, ohne Namen.</li></ul></div><div class="deb-s con"><b>Gruppe B · dagegen</b><ul><li>Es ist nicht immer die eigene Aufgabe.</li><li>Manche Fehler sind zu klein für ein Gespräch.</li><li>Wer ständig korrigiert, gilt als schwierig.</li></ul></div></div>
-</section>
-
-<section class="section" id="abschluss">
-<h2 class="st">Zum <span class="hl">Schluss</span></h2>
-<p class="ssub">Ein Satz von jedem.</p>
-<div class="ank">Welchen Satz von heute nimmst du mit — und wo brauchst du ihn?</div>
-<details class="hilf"><summary>🆘 Wie fange ich an?</summary><div class="nur-a2"><div class="hilf-i"><span>Ich nehme mit: …</span><span>Ich will den Satz „…“ benutzen.</span><span>Neu war für mich: …</span></div></div><div class="nur-b1"><div class="hilf-i"><span>Ich nehme mit, dass …</span><span>Den Satz „…“ will ich nächste Woche wirklich benutzen.</span><span>Neu war für mich, dass …</span></div></div></details>
-</section>
-
-<section class="section" id="hausaufgabe">
-<h2 class="st">📮 Deine Hausaufgabe bis <span class="hl">nächsten Dienstag</span></h2>
-<p class="ssub">Vier kleine Aufgaben, zusammen etwa 25 Minuten. Nächste Woche geht es ums Unterbrechen — darum, in ein Gespräch hineinzukommen und den Faden zu halten.</p>
-<div class="tip">💡 <strong>Warum das hilft:</strong> Sätze ohne Täter sind nicht nur bei Korrekturen nützlich. Sie stehen in jedem Amtsbrief, jeder Reklamation und jeder Mail, in der es unangenehm wird. Wer sie bauen kann, klingt im Deutschen sofort erwachsener — und trifft schärfer, gerade weil er weicher formuliert.</div>
-<div class="hagrid nur-a2">
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🎙️</span><span class="htxt">
-<h4>1. Dreimal korrigieren <span class="zeit">6 Min</span></h4>
-<p>Nimm eine Sprachnachricht auf: Korrigiere dieselbe falsche Angabe dreimal — einmal fragend, einmal ergänzend, einmal widersprechend. Sag am Ende, welche Fassung du selbst am liebsten hören würdest.</p></span></button>
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🫥</span><span class="htxt">
-<h4>2. Sätze ohne Täter <span class="zeit">6 Min</span></h4>
-<p>Bau diese Sätze um, sodass keine Person mehr vorkommt: <i>Sie haben die alte Zahl genommen. / Du hast die Frist falsch notiert. / Der Kollege hat die Mail nicht gelesen. / Sie haben das Formular vergessen. / Du hast mir nichts gesagt.</i></p></span></button>
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🪶</span><span class="htxt">
-<h4>3. Weichmacher einsetzen <span class="zeit">5 Min</span></h4>
-<p>Schreib sechs Sätze mit <i>wohl, offenbar, vermutlich, womöglich, nicht ganz, eher</i>. Lies sie danach einmal mit und einmal ohne das Wort — der Unterschied ist hörbar.</p></span></button>
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">⏰</span><span class="htxt">
-<h4>4. Der Zeitpunkt <span class="zeit">5 Min</span></h4>
-<p>Schreib vier Situationen auf und entscheide bei jeder: sofort ansprechen oder später unter vier Augen? Schreib dazu, was den Ausschlag gibt.</p></span></button>
-</div>
-<div class="hagrid nur-b1">
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🎙️</span><span class="htxt">
-<h4>1. Beide Seiten <span class="zeit">8 Min</span></h4>
-<p>Nimm ein Gespräch auf, in dem du beide Rollen sprichst: Einer korrigiert vor Publikum, der andere nimmt es an. Kein Satz darf mit <i>Sie haben</i> beginnen, und beide müssen einmal etwas zugeben.</p></span></button>
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">✍️</span><span class="htxt">
-<h4>2. Die heikle Mail <span class="zeit">8 Min</span></h4>
-<p>Schreib eine Mail von etwa 130 Wörtern, in der du eine falsche Angabe eines Kollegen richtigstellst — und zwar so, dass er sie an seine Kundin weitergeben kann, ohne sich zu blamieren.</p></span></button>
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🔍</span><span class="htxt">
-<h4>3. Passiv sammeln <span class="zeit">5 Min</span></h4>
-<p>Such in einem deutschen Text — Amtsbrief, Nachrichten, Arbeitsvertrag — acht Passivsätze. Schreib zu jedem, ob ein Täter genannt wird und warum wohl nicht.</p></span></button>
-<button type="button" class="ha" data-ha><span class="box">✓</span><span class="hi">🪞</span><span class="htxt">
-<h4>4. Selbst korrigiert werden <span class="zeit">4 Min</span></h4>
-<p>Schreib auf, wie du reagierst, wenn du vor anderen korrigiert wirst und recht behalten möchtest. Formuliere danach die Fassung, die du eigentlich sagen willst.</p></span></button>
-</div>
-<p class="hastand" data-ha-stand>0 von 0 Aufgaben geschafft.</p>
-<div class="hilfe nur-a2">
-<button type="button">💡 Beispiel ansehen (Aufgabe 2)</button>
-<div class="inhalt">
-<p>So verschwindet die Person aus dem Satz:</p>
-<ul>
-<li>Sie haben die alte Zahl genommen. → <b>Da wurde wohl mit einer alten Zahl gerechnet.</b></li>
-<li>Du hast die Frist falsch notiert. → <b>Bei der Frist ist offenbar etwas durcheinandergekommen.</b></li>
-<li>Der Kollege hat die Mail nicht gelesen. → <b>Die Mail ist vermutlich untergegangen.</b></li>
-<li>Sie haben das Formular vergessen. → <b>Das Formular fehlt noch.</b></li>
-<li>Du hast mir nichts gesagt. → <b>Bei mir ist dazu nichts angekommen.</b></li>
-</ul>
-<p style="margin-top:.5rem;">Ein einziger Test: <b>Steht im Satz ein „Sie“, „du“ oder ein Name als Verursacher?</b> Wenn ja, bau ihn um. Es geht auch ohne — immer.</p>
-</div>
-</div>
-<div class="hilfe nur-b1">
-<button type="button">💡 Beispiel ansehen (Aufgabe 2)</button>
-<div class="inhalt">
-<p>So ist eine Mail gebaut, die korrigiert und trotzdem schützt:</p>
-<ul>
-<li><b>Der freundliche Einstieg:</b> etwas Konkretes, das gut war — kein Lob auf Vorrat.</li>
-<li><b>Die Sache im Passiv:</b> <i>In der Auskunft von gestern wurde noch mit vier Wochen gerechnet.</i></li>
-<li><b>Die Erklärung, die entlastet:</b> <i>Das war bis letzte Woche auch korrekt.</i></li>
-<li><b>Der fertige Satz zum Weitergeben:</b> Formuliere ihm die Mail an die Kundin gleich mit — das ist die eigentliche Hilfe.</li>
-<li><b>Der Schluss ohne Belehrung:</b> kein <i>bitte künftig darauf achten</i>. Ein einziger solcher Satz macht alles davor zunichte.</li>
-</ul>
-<p style="margin-top:.5rem;">Die Probe: <b>Könnte der Kollege deine Mail seiner Kundin weiterleiten, ohne dass es ihm peinlich ist?</b> Wenn ja, hast du es richtig gemacht.</p>
-</div>
-</div>
-<div class="tip teal">📬 <strong>Abgabe:</strong> Schick deine Sprachnachricht und die umgebauten Sätze bis Sonntagabend. Ich achte darauf, ob wirklich kein Täter mehr im Satz steht — er schleicht sich gern durch die Hintertür wieder hinein.</div>
-<div class="tip">🔜 <strong>Nächste Woche, Teil 1:</strong> <u>Unterbrechen — und selbst zu Wort kommen.</u> Wie kommst du in ein Gespräch hinein, in dem alle schneller sprechen als du? Und wie hältst du den Faden, wenn dir jemand ins Wort fällt?</div>
-</section>
-
-<footer>
-<strong>deutschoderwas Sprechclub</strong> · Ein Missverständnis aufklären · Teil 2 · B1/B2 · Woche 5 · Dienstag war Teil 1
-</footer>
-
-</div>
-
-<script type="application/json" id="daten-sk">
-["Korrigiere eine falsche Zahl <b>fragend</b> — so, dass der andere sich selbst korrigiert.","Dieselbe Korrektur als <b>Ergänzung</b> vor Publikum.","Dieselbe Korrektur <b>deutlich</b>, weil eine Frist daran hängt.","Bau drei Vorwurfssätze in Sätze <b>ohne Täter</b> um.","Du wirst vor anderen korrigiert und liegst falsch. Reagiere.","Sag, wann du <b>sofort</b> unterbrichst und wann du wartest.","Erklär die Wendung <b>unter vier Augen</b> und wann man sie benutzt.","Sag drei Sätze mit <b>wohl, offenbar, vermutlich</b>.","Formuliere einen Satz, der jemanden entlastet: <b>Das war lange auch mein Stand.</b>","Beende einen Streit, ohne nachzugeben und ohne zu gewinnen."]
-</script>
-<script type="application/json" id="daten-w90">
-[{"w":"richtigstellen","b":"../amanda/a-zeigen.webp","h":["die Zahl","kurz","sachlich","die Ergänzung","vorher"]},{"w":"sich irren","b":"../amanda/amanda-denk.webp","h":["ich kann mich irren","der Irrtum","unsicher","im Kopf haben","einräumen"]},{"w":"der Stand","b":"../vok-bild/das-protokoll.webp","h":["aktuell","veraltet","die Fassung","geändert","nachsehen"]},{"w":"unter vier Augen","b":"../amanda/sz-heikel.webp","h":["allein","kurz","klären","hinterher","schützen"]},{"w":"der Einwurf","b":"../amanda/a-hoeren.webp","h":["kurz","einhaken","die Besprechung","unterbrechen","darf ich"]},{"w":"nachsehen","b":"../vok-bild/die-unterlagen.webp","h":["prüfen","gemeinsam","die Unterlagen","sicher sein","kurz"]},{"w":"die Ergänzung","b":"../vok-bild/die-kurzpraesentation.webp","h":["hinzufügen","wenn ich darf","vor der Runde","statt Widerspruch","der Punkt"]},{"w":"der Irrtum","b":"../amanda/amanda-ups.webp","h":["keine Absicht","milder als Fehler","vorbehalten","passieren","klären"]},{"w":"zugeben","b":"../amanda/amanda-super.webp","h":["unrecht haben","zurückziehen","danke","offen","stark"]},{"w":"der Zeitpunkt","b":"../vok-bild/die-uhrzeit.webp","h":["sofort","später","vor der Entscheidung","mittendrin","abwarten"]}]
-</script>
-<script type="application/json" id="daten-quiz">
-[{"q":"Welche Korrektur schützt das Gesicht am besten?","o":["Ich kann mich irren — ich habe den 12. im Kopf. Sollen wir nachsehen?","Nein, das ist falsch, es ist der 12.","Da liegen Sie leider völlig daneben.","Das hatte ich doch längst gesagt."],"c":0,"e":"Drei Dinge auf einmal: ein eingeräumter eigener Irrtum, die eigene Version, und die Entscheidung trifft das Dokument. Niemand muss sich verteidigen."},{"q":"Wie bildet man das Passiv?","o":["werden plus Partizip","sein plus Partizip","haben plus Infinitiv","würde plus Partizip"],"c":0,"e":"<b>Die Zahl wurde geändert.</b> Und wenn du den Täter doch nennen willst: mit <b>von</b> plus Dativ — <i>von der Zentrale geändert</i>."},{"q":"Welcher Satz enthält keinen Täter?","o":["Da wurde wohl mit einer alten Zahl gerechnet.","Sie haben die alte Zahl genommen.","Der Kollege hat sich vertan.","Du hattest die falsche Fassung."],"c":0,"e":"Nur im ersten Satz kommt keine Person vor. Genau deshalb muss sich niemand rechtfertigen — und man kommt sofort zur Sache."},{"q":"Wann korrigierst du sofort, auch wenn andere zuhören?","o":["wenn es um Frist, Geld oder Sicherheit geht","wenn du dir ganz sicher bist","wenn die Person unter dir steht","immer, sonst vergisst du es"],"c":0,"e":"Rücksicht auf das Gesicht ist wichtig — aber nicht wichtiger als eine Frist. Bei allem anderen gilt: weiche Form, und die Sache trotzdem klar."},{"q":"Was bedeutet <i>etwas auf sich beruhen lassen</i>?","o":["eine Sache nicht weiterverfolgen","eine Sache schriftlich festhalten","jemandem recht geben","später darauf zurückkommen"],"c":0,"e":"Damit beendest du einen Streit, ohne nachzugeben und ohne zu gewinnen. Manchmal ist das die reifste Lösung."},{"q":"Welcher Satz entlastet den anderen am meisten?","o":["Das war lange auch mein Stand — geändert wurde es erst letzte Woche.","Das steht doch längst in der Rundmail.","Das hätten Sie wissen müssen.","Das wusste eigentlich jeder."],"c":0,"e":"Der andere hatte nicht unrecht — er hatte die <b>ältere Fassung</b>. Damit gibt es keinen Fehler mehr, nur einen Zeitpunkt."},{"q":"Welches Wort macht aus einer Feststellung eine Vermutung?","o":["offenbar","eindeutig","selbstverständlich","zweifellos"],"c":0,"e":"<b>offenbar, wohl, vermutlich, womöglich</b> sind die Weichmacher. Die anderen drei Wörter machen einen Satz härter, nicht weicher."},{"q":"Wie reagierst du am besten, wenn du selbst korrigiert wirst und falsch lagst?","o":["Dann hatte ich einen veralteten Stand. Danke, gut zu wissen.","Das habe ich so nie behauptet.","Das hat mir niemand gesagt.","Dann ist die Information eben schlecht verteilt worden."],"c":0,"e":"Sachlich, ohne Verteidigung, mit Dank. In deutschen Teams gewinnt man mit einem zugegebenen Fehler mehr, als man mit einem verteidigten je gewinnen könnte."}]
-</script>
-<script type="application/json" id="daten-gap">
-[{"t":"Ich kann mich ___, aber ich habe den 12. im Kopf.","o":["irren","irre","geirrt","irrt"],"a":"irren"},{"t":"Da ___ wohl mit einer alten Zahl gerechnet.","o":["wurde","hat","ist","war"],"a":"wurde"},{"t":"Können wir das kurz ___ vier Augen klären?","o":["unter","zwischen","auf","in"],"a":"unter"},{"t":"Eine ___ dazu, wenn ich darf.","o":["Ergänzung","Ergänzen","Ergänzt","Ergänzer"],"a":"Ergänzung"},{"t":"Ist das noch der aktuelle ___?","o":["Stand","Standen","Ständer","Stehen"],"a":"Stand"},{"t":"Da hatte ich unrecht, das ___ ich zu.","o":["gebe","gibt","gegeben","geben"],"a":"gebe"},{"t":"Ich beharre nicht ___, aber ich würde es prüfen.","o":["darauf","davon","damit","dafür"],"a":"darauf"},{"t":"Die Rundmail ist bei mir ___ untergegangen.","o":["offenbar","eindeutig","zweifellos","selbstverständlich"],"a":"offenbar"}]
-</script>
-<script type="application/json" id="daten-gbau">
-[{"f":"Korrigiere, ohne jemanden zu nennen:","t":["Da","wurde","wohl","eine","alte","Zahl","genommen"],"l":["Da","wurde","wohl","eine","alte","Zahl","genommen"],"e":"Passiv: <b>wurde</b> an zweiter Stelle, Partizip <i>genommen</i> ganz am Ende. Und <b>wohl</b> macht aus der Feststellung eine Vermutung."},{"f":"Räum dir selbst einen Irrtum ein:","t":["Ich","kann","mich","irren","aber","ich","habe","den","12.","im","Kopf"],"l":["Ich","kann","mich","irren","aber","ich","habe","den","12.","im","Kopf"],"e":"<b>sich irren</b> braucht immer das <i>mich</i>. Und der Satz vor dem <i>aber</i> nimmt der Korrektur dahinter die Härte."},{"f":"Kündige eine Korrektur vor Publikum an:","t":["Eine","Ergänzung","dazu","wenn","ich","darf"],"l":["Eine","Ergänzung","dazu","wenn","ich","darf"],"e":"<b>Ergänzung</b> statt Widerspruch, und <i>wenn ich darf</i> als Bitte um Erlaubnis. Zwei Formeln, die vor Publikum fast immer funktionieren."},{"f":"Schlag vor, gemeinsam zu prüfen:","t":["Sollen","wir","kurz","nachsehen","bevor","wir","es","beschließen"],"l":["Sollen","wir","kurz","nachsehen","bevor","wir","es","beschließen"],"e":"Die Frage macht aus zwei Meinungen eine gemeinsame Prüfung. Im <b>bevor</b>-Satz steht das Verb ganz hinten."}]
-</script>
-<script type="application/json" id="daten-gstory">
-{"t":"In der Besprechung am Dienstag wäre fast der falsche Termin beschlossen worden. Jemand nannte den 21., und alle nickten. Ich war ___ geworden, weil ich eine andere Zahl im Kopf hatte, wollte aber niemanden vor der Runde bloßstellen. Also habe ich gesagt: „Eine ___ dazu, wenn ich darf — ich kann mich ___, aber ich habe den 12. im Kopf.“ Dann kam der Satz, auf den es ankam: Das sei lange auch mein ___ gewesen, geändert worden sei es erst vergangene Woche. Damit hatte niemand etwas falsch gemacht. Wir haben kurz ___, und tatsächlich stand dort der 12. Später hat der Kollege zu mir gesagt, er sei froh gewesen, dass ich nicht einfach „das ist falsch“ gerufen hätte. Die Zahl ___ am Ende korrigiert, und weitergearbeitet haben wir trotzdem miteinander.","o":["stutzig","Ergänzung","irren","Stand","nachgesehen","wurde","zugegeben","Irrtum"],"a":[["stutzig"],["Ergänzung"],["irren"],["Stand"],["nachgesehen"],["wurde"]]}
-</script>
-<script type="application/json" id="daten-ueb">
-["Nur ein kurzer Einwurf","Eine Ergänzung dazu","Bevor wir weitermachen","Darf ich kurz?","Ich kann mich irren","Vielleicht habe ich es falsch im Kopf","Korrigiere mich, wenn ich danebenliege","Ich bin mir nicht ganz sicher","Ich habe den 12. im Kopf","In der neuen Fassung steht …","Das war der alte Stand","Meine Notiz sagt etwas anderes","Sollen wir kurz nachsehen?","Wer hat die aktuelle Fassung?","Können wir das vorher klären?","Ich schaue nach und melde mich","Eine Ergänzung, wenn ich darf","Ich hake da nur kurz ein","Ein Punkt noch, bevor wir beschließen","Dazu habe ich einen anderen Stand","Das war lange auch mein Stand","Die alte Fassung sagte genau das","Das ist erst seit Kurzem anders","Das haben mehrere so verstanden","Bevor wir das beschließen, muss ich …","Da würde ich widersprechen, und zwar deutlich","Das halte ich für einen Irrtum","Darauf würde ich bestehen","Da hatte ich unrecht, danke","Das gebe ich zu","Gut, dass Sie das sagen","Dann ziehe ich das zurück"]
-</script>
-
-<script>
-
-/* ---- Sprungleiste: sie schaltet die Abschnitte wieder um ----
-   Eine Weile stand alles untereinander. Gemessen an der Stunde
-   „Kritik ueben": 28 512 Pixel, auf dem Handy 34 Bildschirme fuer
-   eine Unterrichtsstunde. Man scrollt und scrollt und weiss nicht,
-   wo man ist — und in der Stunde selbst kommt man nie durch.
-
-   Jetzt zeigt die Seite einen Abschnitt. Die Leiste oben waehlt aus,
-   am Ende jedes Abschnitts steht, was als Naechstes kommt. Wer die
-   ganze Stunde am Stueck sehen will (zum Vorbereiten, zum Drucken),
-   klickt auf „Alles". Beim Drucken kommt ohnehin alles mit, und ein
-   Link mit #abschnitt oeffnet genau dort. */
-(function(){
- var tabs=[].slice.call(document.querySelectorAll('nav.tabs a.tab'));
- var paare=tabs.map(function(a){return {a:a,sec:document.querySelector(a.getAttribute('href'))};})
-               .filter(function(x){return x.sec;});
- if(paare.length<2) return;
- var alles=false, jetzt=paare[0].sec.id;
-
- /* Ohne JavaScript steht die Stunde weiterhin komplett da — erst
-    hier wird ueberhaupt etwas versteckt. */
- document.body.classList.add('schaltet');
-
- var kopf=document.querySelector('.leiste');
- function hoehe(){ return kopf ? kopf.getBoundingClientRect().height+10 : 66; }
-
- /* Die aktive Marke in den schmalen Streifen holen — aber nur ihn
-    schieben. scrollIntoView() nahm die ganze Seite mit: der Titel
-    der Stunde rutschte beim Umschalten aus dem Bild. */
- function markeInsBild(a, weich){
-  var streifen=a.parentNode;
-  if(!streifen || streifen.scrollWidth<=streifen.clientWidth+2) return;
-  /* Gerechnet wird ueber die Rechtecke, nicht ueber offsetLeft: der
-     naechste positionierte Vorfahr ist die Leiste, nicht der Streifen
-     — offsetLeft haette die Marke um die Breite der Niveau-Knoepfe
-     verschoben. */
-  var r=a.getBoundingClientRect(), rs=streifen.getBoundingClientRect();
-  var links=streifen.scrollLeft+(r.left-rs.left)-(rs.width-r.width)/2;
-  links=Math.max(0,Math.min(links,streifen.scrollWidth-streifen.clientWidth));
-  if(Math.abs(links-streifen.scrollLeft)<2) return;
-  /* Beim ersten Aufbau hart setzen. Ein weiches Scrollen im Streifen
-     zog in Chrome die ganze Seite 399 Pixel mit nach unten, weil
-     html{scroll-behavior:smooth} gilt — der Titel der Stunde war
-     dann schon beim Laden aus dem Bild. */
-  if(weich && streifen.scrollTo) streifen.scrollTo({left:links,behavior:'smooth'});
-  else streifen.scrollLeft=links;
- }
-
- /* Der Umschalter erscheint nur, wo er wirklich etwas aendert.
-    Vorher stand er auf jeder Seite, tat aber in vier von sieben
-    Abschnitten gar nichts — man tippt, nichts passiert, und denkt,
-    es sei kaputt. Jetzt sagt sein Verschwinden: Hier gibt es keine
-    zwei Fassungen. */
- var umschalter=document.querySelector('.leiste .nivk');
- function umschalterZeigen(sec){
-  if(!umschalter) return;
-  var da = !!sec.querySelector('.nur-a2, .nur-b1');
-  umschalter.style.display = da ? '' : 'none';
- }
-
- function zeige(id, springen, stumm){
-  var da=paare.filter(function(p){return p.sec.id===id;})[0];
-  if(!da) return;
-  jetzt=id;
-  paare.forEach(function(p){
-   p.sec.hidden = !alles && p.sec.id!==id;
-   p.a.classList.toggle('active', p.sec.id===id);
-  });
-  if(alles) paare.forEach(function(p){ p.sec.hidden=false; });
-  umschalterZeigen(da.sec);
-  markeInsBild(da.a, !!springen);
-  if(springen){
-   var y=da.sec.getBoundingClientRect().top+window.pageYOffset-hoehe();
-   window.scrollTo({top:Math.max(0,y),behavior:'smooth'});
-  }
-  /* Die Marke kommt erst in die Adresse, wenn jemand wirklich
-     umschaltet. Steht sie schon beim Laden drin, springt Chrome
-     nachtraeglich selbst dorthin — sobald die Bilder da sind, zog es
-     die Seite 399 Pixel nach unten und der Titel der Stunde war weg. */
-  if(!stumm){ try{ history.replaceState(null,'','#'+id); }catch(e){} }
- }
- window.stundeZeige=zeige;
-
- tabs.forEach(function(a){
-  a.addEventListener('click',function(ev){
-   var id=(a.getAttribute('href')||'').replace('#','');
-   if(!id) return;
-   ev.preventDefault();
-   if(alles){ alles=false; if(knopfAlles) knopfAlles.setAttribute('aria-pressed','false'); }
-   zeige(id,true);
-  });
- });
-
- /* Am Ende jedes Abschnitts: was jetzt drankommt. In der Stunde
-    haelt das den Takt — man klickt weiter, statt zu suchen. */
- paare.forEach(function(p,i){
-  var naechste=paare[i+1], vorige=paare[i-1];
-  var z=document.createElement('div'); z.className='weiterzeile';
-  if(vorige){
-   var zur=document.createElement('button');
-   zur.type='button'; zur.className='weiterknopf zurueck';
-   zur.innerHTML='← '+vorige.a.textContent.trim();
-   zur.addEventListener('click',function(){ zeige(vorige.sec.id,true); });
-   z.appendChild(zur);
-  }
-  if(naechste){
-   var w=document.createElement('button');
-   w.type='button'; w.className='weiterknopf';
-   w.innerHTML='Weiter: '+naechste.a.textContent.trim()+' →';
-   w.addEventListener('click',function(){ zeige(naechste.sec.id,true); });
-   z.appendChild(w);
-  }
-  if(z.children.length) p.sec.appendChild(z);
- });
-
- /* Der Schalter fuer die lange Ansicht sitzt am Ende der Leiste. */
- var knopfAlles=null;
- var streifen=document.querySelector('nav.tabs');
- if(streifen){
-  knopfAlles=document.createElement('button');
-  knopfAlles.type='button'; knopfAlles.className='tab tabAlles';
-  knopfAlles.setAttribute('aria-pressed','false');
-  knopfAlles.textContent='⇕ Alles';
-  knopfAlles.title='Die ganze Stunde am Stück zeigen';
-  knopfAlles.addEventListener('click',function(){
-   alles=!alles;
-   knopfAlles.setAttribute('aria-pressed', alles?'true':'false');
-   if(alles){ paare.forEach(function(p){ p.sec.hidden=false; }); }
-   else zeige(jetzt,true);
-  });
-  streifen.appendChild(knopfAlles);
- }
-
- var ausLink=(location.hash||'').replace('#','');
- var beimLaden=paare.filter(function(p){return p.sec.id===ausLink;}).length ? ausLink : paare[0].sec.id;
- zeige(beimLaden, false, beimLaden!==ausLink);
-})();
-
-/* ---- Hoehe des klebenden Umschalters messen, damit die
-   Sprungleiste sauber darunter sitzt ---- */
-(function(){
- var leiste=document.querySelector('.niv');
- if(!leiste)return;
- function miss(){document.documentElement.style.setProperty('--leiste',Math.round(leiste.offsetHeight)+'px');}
- miss();
- window.addEventListener('resize',miss);
- if(window.ResizeObserver)new ResizeObserver(miss).observe(leiste);
- if(document.fonts&&document.fonts.ready)document.fonts.ready.then(miss);
-})();
-
-/* ---- Vorlesen ---- */
-function say(t){try{var u=new SpeechSynthesisUtterance(t);u.lang='de-DE';u.rate=.85;speechSynthesis.cancel();speechSynthesis.speak(u);}catch(e){}}
-document.querySelectorAll('.speak').forEach(function(b){if(b.dataset.say)b.onclick=function(){say(b.dataset.say);};});
-
-/* ---- Niveau-Umschalter ---- */
-var nivk=document.querySelectorAll('.nivk button[data-niv]');
-nivk.forEach(function(b){b.onclick=function(){
- var n=b.dataset.niv;document.body.setAttribute('data-niveau',n);
- nivk.forEach(function(x){x.setAttribute('aria-pressed',x.dataset.niv===n?'true':'false');});
- hazaehlen();
-};});
-
-/* ---- Hilfe-Knoepfe ---- */
-document.querySelectorAll('.hilfe > button').forEach(function(b){
- var kasten=b.parentElement,text=b.textContent;
- b.setAttribute('aria-expanded','false');
- b.onclick=function(){var auf=kasten.classList.toggle('offen');
-  b.setAttribute('aria-expanded',auf?'true':'false');
-  b.textContent=auf?'✕ Hilfe schließen':text;};
-});
-
-/* ---- Markierte Woerter ----
-   Statt einer Wortschatzliste am Anfang steht das Wort dort, wo es
-   gebraucht wird — angestrichen. Antippen zeigt Artikel, Bedeutung
-   und einen Satz. Wer das Wort kennt, liest darueber hinweg.
-
-   Gelb heisst: Wort dieser Stunde. Rot gepunktet heisst: Begriff,
-   den viele verwechseln. */
-(function(){
- var woerter=[].slice.call(document.querySelectorAll('.wm'));
- if(!woerter.length) return;
- var karte=null;
-
- function zu(){ if(karte){ karte.remove(); karte=null; }
-  woerter.forEach(function(w){ w.classList.remove('offen'); }); }
-
- function auf(w){
-  var schonOffen=w.classList.contains('offen');
-  zu();
-  if(schonOffen) return;
-  w.classList.add('offen');
-  karte=document.createElement('div');
-  karte.className='wmk';
-  var satz=w.dataset.bsp||'';
-  karte.innerHTML='<button class="wmk-zu" aria-label="Schließen">✕</button>'
-   + '<b>'+w.dataset.wort+'</b>'
-   + '<span>'+(w.dataset.kurz||'')+'</span>'
-   + (satz?'<em>'+satz+'</em>':'')
-   + (satz?'<button class="wmk-ton" type="button">🔊 vorlesen</button>':'');
-  document.body.appendChild(karte);
-
-  /* Unter dem Wort, aber nie ueber den Rand hinaus. */
-  var r=w.getBoundingClientRect(), b=karte.getBoundingClientRect();
-  var links=r.left+r.width/2-b.width/2;
-  links=Math.max(10,Math.min(links,window.innerWidth-b.width-10));
-  var oben=r.bottom+window.pageYOffset+9;
-  if(r.bottom+b.height+18>window.innerHeight && r.top>b.height+18)
-   oben=r.top+window.pageYOffset-b.height-9;
-  karte.style.left=links+'px'; karte.style.top=oben+'px';
-
-  karte.querySelector('.wmk-zu').onclick=zu;
-  var ton=karte.querySelector('.wmk-ton');
-  if(ton) ton.onclick=function(){ say(satz); };
- }
-
- woerter.forEach(function(w){
-  w.addEventListener('click',function(ev){ ev.stopPropagation(); auf(w); });
-  w.addEventListener('keydown',function(ev){
-   if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); auf(w); } });
- });
- document.addEventListener('click',zu);
- document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') zu(); });
- window.addEventListener('resize',zu);
- /* Beim Abschnittswechsel schliessen — die Karte haengt am Koerper,
-    nicht am Abschnitt, und wuerde sonst allein stehen bleiben. */
- document.querySelectorAll('nav.tabs a.tab, .weiterknopf').forEach(function(k){
-  k.addEventListener('click',zu); });
-})();
-
-/* ---- Bildkarten verdecken ----
-   Steht nur im Wortschatz-Abschnitt, und den gibt es seit dem Umbau
-   nicht mehr in jeder Stunde. Ohne diese Abfrage brach der Motor an
-   dieser Stelle ab — und mit ihm alles, was danach kommt: die zweite
-   Dialogrunde, die Sprechkarten, die 90 Sekunden, Quiz und Lueckentext.
-   Ein einziges fehlendes Element legte die halbe Stunde still. */
-var bg=document.getElementById('bgrid'),vb=document.getElementById('verdecken');
-if(bg&&vb){
- vb.onclick=function(){bg.classList.toggle('hide');bg.querySelectorAll('.bcard').forEach(function(c){c.classList.remove('auf');});
-  vb.textContent=bg.classList.contains('hide')?'👁️ Wörter zeigen':'🙈 Wörter verdecken';};
- bg.querySelectorAll('.bcard').forEach(function(c){c.addEventListener('click',function(){if(bg.classList.contains('hide'))c.classList.toggle('auf');});});
-}
-
-/* ---- Dialoge: Runde 1 / Runde 2 ---- */
-document.querySelectorAll('.dwrap').forEach(function(d){
- var b=d.querySelector('.rbtn');
- b.onclick=function(){
-  var zwei=d.dataset.runde==='1';
-  d.dataset.runde=zwei?'2':'1';
-  b.textContent=zwei?'◀︎ Runde 1 · Text zeigen':'▶︎ Runde 2 · du antwortest';
-  b.classList.toggle('zwei',zwei);
-  d.querySelectorAll('.dline.b').forEach(function(l){l.classList.remove('zeigen');});
- };
- d.querySelectorAll('.dcue').forEach(function(c){
-  c.onclick=function(){c.closest('.dline').classList.add('zeigen');};});
-});
-
-/* ---- Hausaufgabe abhaken ---- */
-var hastand=document.querySelector('[data-ha-stand]');
-function hazaehlen(){
- if(!hastand)return;
- /* Nach dem Niveau zaehlen, nicht nach offsetParent: beim Laden ist der
-    Hausaufgaben-Abschnitt noch zugeklappt und haette 0 von 0 ergeben. */
- var niv=document.body.getAttribute('data-niveau');
- var weg=niv==='a2'?'.nur-b1':'.nur-a2';
- var da=[].slice.call(document.querySelectorAll('[data-ha]')).filter(function(h){return !h.closest(weg);});
- var fertig=da.filter(function(h){return h.classList.contains('fertig');}).length;
- var voll=da.length>0&&fertig===da.length;
- hastand.textContent=voll?('Alle '+da.length+' Aufgaben geschafft. Stark — bis Mittwoch! 🎉')
-                        :(fertig+' von '+da.length+' Aufgaben geschafft.');
- hastand.classList.toggle('voll',voll);
-}
-document.querySelectorAll('[data-ha]').forEach(function(h){
- h.setAttribute('aria-pressed','false');
- h.onclick=function(){var an=h.classList.toggle('fertig');
-  h.setAttribute('aria-pressed',an?'true':'false');hazaehlen();};
-});
-hazaehlen();
-
-/* ---- Daten aus den JSON-Bloecken im Koerper ----
-   Der Motor ist fuer alle Stunden derselbe; nur die Daten wechseln.
-   Fehlt ein Block, bleibt der Abschnitt einfach leer. */
-function daten(id){
- var el=document.getElementById('daten-'+id);
- if(!el)return null;
- try{return JSON.parse(el.textContent);}catch(e){console.error('Daten "'+id+'" sind kaputt:',e);return null;}
-}
-/* ---- Mischen (Fisher-Yates) ----
-   Ein Vergleich mit Math.random() mischt nicht gleichmaessig, die
-   erste Stelle bleibt zu oft die erste. Deshalb richtig tauschen. */
-function misch(liste){
- var a=liste.slice();
- for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}
- return a;
-}
-
-/* ---- Sprechkarten ---- */
-/* Die Sprechuebung zieht aus denselben Saetzen, die oben bei den
-   Merksaetzen stehen. Gleicher Mechanismus wie bei den Sprechkarten. */
-var UEB=daten('ueb')||[];
-if(UEB.length && document.getElementById('uebnew') && document.getElementById('wueb')){
-  var uLetzt=-1;
-  document.getElementById('uebnew').onclick=function(){var i;
-    do{ i=Math.floor(Math.random()*UEB.length); }while(UEB.length>1 && i===uLetzt);
-    uLetzt=i; document.getElementById('wueb').textContent=UEB[i];
-  };
-}
-
-var SK=daten('sk')||[];
-/* Auch hier: die Daten koennen da sein, der Abschnitt nicht.
-   Gepruefte Elemente statt gepruefter Daten. */
-if(SK.length && document.getElementById('sknew') && document.getElementById('wsk')){
-var lastsk=-1;
-document.getElementById('sknew').onclick=function(){var i;
- do{i=Math.floor(Math.random()*SK.length);}while(i===lastsk&&SK.length>1);lastsk=i;
- document.getElementById('wsk').innerHTML=SK[i];};
-
-}
-
-/* ---- 90 Sekunden ---- */
-var W90=daten('w90')||[];
-if(W90.length && document.getElementById('new90') && document.getElementById('w90')){
-var last90=-1,t90=null,rest=90;
-function fmt(s){var m=Math.floor(s/60),r=s%60;return m+':'+(r<10?'0':'')+r;}
-function zeige90(i){
- document.getElementById('w90').textContent=W90[i].w;
- document.getElementById('i90').src=W90[i].b;
- document.getElementById('i90').alt=W90[i].w;
- document.getElementById('hw90').innerHTML=W90[i].h.map(function(x){return '<span class="hw">'+x+'</span>';}).join('');
-}
-document.getElementById('new90').onclick=function(){var i;
- do{i=Math.floor(Math.random()*W90.length);}while(i===last90&&W90.length>1);last90=i;
- zeige90(i);clearInterval(t90);rest=90;document.getElementById('t90').textContent=fmt(rest);};
-document.getElementById('start90').onclick=function(){clearInterval(t90);rest=90;
- var el=document.getElementById('t90');el.textContent=fmt(rest);
- t90=setInterval(function(){rest--;el.textContent=fmt(rest);
-  if(rest<=0){clearInterval(t90);el.textContent='✅ Fertig!';}},1000);};
-zeige90(0);last90=0;
-
-}
-
-/* ---- Quiz ---- */
-var QUIZ=daten('quiz')||[];
-var qc=document.getElementById('quiz');
-if(qc&&QUIZ.length){
-QUIZ.forEach(function(item){
- var d=document.createElement('div');d.className='quiz-q';
- d.innerHTML='<div class="qt">'+item.q+'</div>';
- var op=document.createElement('div');op.className='quiz-opts';
- /* Gemischt, sonst stuende die richtige Antwort immer an erster Stelle
-    und man koennte die ganze Runde raten, ohne zu lesen. */
- var wahl=misch(item.o.map(function(t,i){return {t:t,richtig:i===item.c};}));
- wahl.forEach(function(w){
-  var b=document.createElement('button');b.className='qopt';b.textContent=w.t;
-  b.onclick=function(){
-   if(d.dataset.done)return;d.dataset.done=1;
-   if(w.richtig){b.classList.add('right');}
-   else{
-    b.classList.add('wrong');
-    op.children[wahl.findIndex(function(x){return x.richtig;})].classList.add('right');
-   }
-   d.querySelector('.qexp').classList.add('show');};
-  op.appendChild(b);});
- d.appendChild(op);
- var e=document.createElement('div');e.className='qexp';e.innerHTML='💡 '+item.e;d.appendChild(e);
- qc.appendChild(d);
-});
-
-}
-
-/* ---- Lueckentext ---- */
-var GAP=daten('gap')||[];
-var g=document.getElementById('gap');
-if(g&&GAP.length){
-GAP.forEach(function(item){
- var row=document.createElement('div');row.style.margin='.35rem 0';
- var sel=document.createElement('select');
- var leer=document.createElement('option');leer.textContent='– wählen –';leer.value='';sel.appendChild(leer);
- misch(item.o).forEach(function(o){
-  var op=document.createElement('option');op.textContent=o;op.value=o;sel.appendChild(op);});
- sel.onchange=function(){sel.className=sel.value===item.a?'ok':'no';};
- var teile=item.t.split('___');
- row.appendChild(document.createTextNode(teile[0]));row.appendChild(sel);
- row.appendChild(document.createTextNode(teile[1]||''));
- g.appendChild(row);
-});
-
-}
-
-/* ---- Satzbauer ---- */
-var GBAU=daten('gbau')||[];
-var gbc=document.getElementById('gbau');
-if(gbc&&GBAU.length){
-{GBAU.forEach(function(item){
- var d=document.createElement('div');d.className='gbau';
- d.innerHTML='<div class="gfrage">🧱 '+item.f+'</div>';
- var teile=document.createElement('div');teile.className='gteile';
- var zeile=document.createElement('div');zeile.className='gzeile';
- var gebaut=[];
- misch(item.t).forEach(function(w){
-  var b=document.createElement('button');b.className='gteil';b.textContent=w;
-  b.onclick=function(){b.classList.add('weg');gebaut.push(w);zeile.classList.remove('ok','no');
-   var s=document.createElement('span');s.textContent=w;zeile.appendChild(s);};
-  teile.appendChild(b);});
- d.appendChild(teile);d.appendChild(zeile);
- var fuss=document.createElement('div');fuss.className='gfuss';
- var pr=document.createElement('button');pr.className='gmini';pr.textContent='✅ prüfen';
- var nm=document.createElement('button');nm.className='gmini hell';nm.textContent='↻ nochmal';
- var tp=document.createElement('div');tp.className='gtipp';tp.innerHTML='💡 '+item.e;
- pr.onclick=function(){var richtig=gebaut.join(' ')===item.l.join(' ');
-  zeile.classList.remove('ok','no');zeile.classList.add(richtig?'ok':'no');tp.classList.add('show');};
- nm.onclick=function(){gebaut=[];zeile.innerHTML='';zeile.classList.remove('ok','no');tp.classList.remove('show');
-  teile.querySelectorAll('.gteil').forEach(function(b){b.classList.remove('weg');});};
- fuss.appendChild(pr);fuss.appendChild(nm);d.appendChild(fuss);d.appendChild(tp);
- gbc.appendChild(d);
-});}
-
-}
-
-/* ---- Lueckengeschichte ---- */
-var GSTORY=daten('gstory');
-var gsc=document.getElementById('gstory');
-if(gsc&&GSTORY){
-{
- var gsWahl=misch(GSTORY.o);   /* einmal mischen, alle Luecken zeigen dieselbe Reihenfolge */
- var st=GSTORY.t.split('___');
- st.forEach(function(txt,i){
-  gsc.appendChild(document.createTextNode(txt));
-  if(i<GSTORY.a.length){
-   var sel=document.createElement('select');
-   var leer=document.createElement('option');leer.textContent='– ? –';leer.value='';sel.appendChild(leer);
-   gsWahl.forEach(function(o){var op=document.createElement('option');op.textContent=o;op.value=o;sel.appendChild(op);});
-   (function(loesung){sel.onchange=function(){sel.className=loesung.indexOf(sel.value)>=0?'ok':'no';};})(GSTORY.a[i]);
-   gsc.appendChild(sel);
-  }
- });
-}
-
-}
-
-</script>
-<!-- Die Seite meldet sich beim Konto: wer ist da, ist die Mitgliedschaft
-     aktiv, und wie weit wurde gelesen. Ohne diese Zeile ist die Stunde
-     frei im Netz erreichbar und niemand sieht, dass sie benutzt wurde. -->
-<script src="../lektion-konto.js?v=1"></script>
-</body>
-</html>
+body{background:linear-gradient(180deg,#FDE6E0 0%,var(--cream) 14%,var(--cream) 100%);color:var(--ink);font-family:'Inter',sans-serif;line-height:1.55;}
+body[data-level=komplexer]{--accent:var(--komplexer);--accent-s:var(--komplexer-s);}
+body[data-level=schwierig]{--accent:var(--schwierig);--accent-s:var(--schwierig-s);}
+h1,h2,h3,.sn,.rmh,.ch2,.ch,.rh,.title,.section-title{font-family:'Space Grotesk',sans-serif;}
+.wrap{max-width:900px;margin:0 auto;padding:2rem 1.2rem 5rem;}
+.en{display:block;font-size:.8rem;color:var(--ink-mute);font-style:italic;margin-top:.15rem;}
+.mk,strong.mk{background:var(--yellow-soft);padding:.03em .3em;border-radius:5px;font-weight:700;color:var(--ink);}
+/* HERO */
+.eyebrow{text-align:center;font-size:.76rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--red);margin-bottom:.7rem;}
+.title-wrap{text-align:center;}
+.title{font-weight:600;font-size:clamp(2rem,5vw,3.6rem);line-height:1.05;color:var(--ink);}
+.title .hl{position:relative;display:inline-block;font-style:italic;padding:.05em .35em;}
+.title .hl::before{content:'';position:absolute;inset:0;background:var(--yellow);border-radius:12px;transform:rotate(-2deg);z-index:-1;}
+.subtitle{text-align:center;max-width:680px;margin:.8rem auto 0;font-size:1.05rem;color:var(--ink-soft);}
+.hero-photo{display:block;width:100%;max-width:720px;margin:1.4rem auto 0;border-radius:24px;border:4px solid var(--paper);box-shadow:0 16px 40px rgba(38,32,25,.18);aspect-ratio:16/9;object-fit:cover;}
+.hero-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;margin:1.1rem auto 0;}
+.hero-tag{background:var(--paper);border:1.5px solid var(--sand);border-radius:999px;padding:.35rem .9rem;font-size:.85rem;font-weight:600;}
+.hero-tag b{color:var(--red);}
+/* NIVEAU-Schalter (sticky) */
+.bar{position:sticky;top:0;z-index:60;background:rgba(251,237,216,.94);backdrop-filter:blur(8px);border-radius:18px;padding:.6rem .6rem;margin:1.6rem 0;}
+.bar .lab{text-align:center;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:.4rem;}
+.levelswitch{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;}
+.levelswitch button{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.95rem;border:2px solid var(--sand);background:var(--paper);color:var(--ink);padding:.5rem 1.1rem;border-radius:999px;cursor:pointer;line-height:1.1;text-align:center;}
+.levelswitch button small{display:block;font-weight:600;font-size:.72rem;color:var(--ink-mute);}
+.levelswitch button[data-lvl=einfach].on{background:var(--teal);border-color:var(--teal);color:#fff;}
+.levelswitch button[data-lvl=komplexer].on{background:var(--yellow);border-color:var(--yellow);color:#7a4f05;}
+.levelswitch button[data-lvl=schwierig].on{background:var(--red);border-color:var(--red);color:#fff;}
+/* Intro */
+.intro{background:var(--teal-soft);border:2px solid var(--teal);border-radius:18px;padding:1.1rem 1.3rem;margin:1.2rem 0;}
+.intro h3{font-size:1.15rem;margin-bottom:.3rem;} .intro ol{margin:.4rem 0 0 1.1rem;} .intro li{margin:.35rem 0;}
+.roleset{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.7rem;}
+.roleset span{background:var(--paper);border:1.5px solid var(--sand);border-radius:10px;padding:.35rem .8rem;font-weight:700;font-size:.85rem;}
+/* STEP */
+.step{background:var(--paper);border:1.5px solid var(--sand);border-left:6px solid var(--accent);border-radius:20px;padding:1.4rem 1.6rem;margin:1.4rem 0;box-shadow:0 6px 20px rgba(38,32,25,.06);}
+.shd{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.ico{width:54px;height:54px;flex:0 0 auto;border-radius:16px;background:var(--accent-s);display:grid;place-items:center;font-size:28px;}
+.sn{font-size:.72rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.1em;}
+.shd h2{font-size:clamp(1.3rem,2.6vw,1.7rem);letter-spacing:-.01em;line-height:1.1;color:var(--ink);}
+.tmr{margin-left:auto;display:flex;align-items:center;gap:.4rem;background:var(--cream-warm);border:1.5px solid var(--sand);border-radius:12px;padding:.35rem .5rem;}
+.tmr .td{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.05rem;min-width:52px;text-align:center;}
+.tmr button{border:none;background:var(--red);color:#fff;border-radius:8px;padding:.35rem .6rem;font-weight:700;cursor:pointer;font-size:.8rem;}
+.tmr .tr{background:var(--paper);color:var(--ink-soft);border:1px solid var(--sand);}
+.meta{display:grid;gap:.5rem;margin:1rem 0;background:var(--cream-warm);border-radius:14px;padding:.8rem 1.1rem;font-size:.98rem;}
+.meta b{color:var(--red);}
+.lead{font-size:.95rem;color:var(--ink-soft);margin:.2rem 0 .9rem;}
+/* Level-Umschaltung */
+.leveled{margin-top:.4rem;}
+.lvlchip{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;margin-bottom:.9rem;}
+.lvlchip .lc{font-size:.72rem;color:var(--ink-mute);font-weight:700;}
+.lvlchip button{border:1.5px solid var(--sand);background:var(--paper);border-radius:999px;padding:.3rem .8rem;font-size:.8rem;font-weight:700;cursor:pointer;}
+.lvlchip button.e.on{background:var(--einfach-s);border-color:var(--einfach);}
+.lvlchip button.k.on{background:var(--komplexer-s);border-color:var(--komplexer);}
+.lvlchip button.s.on{background:var(--schwierig-s);border-color:var(--schwierig);}
+.leveled .lpb{display:none;}
+.leveled[data-lvl=einfach] .lpb[data-lvl=einfach],.leveled[data-lvl=komplexer] .lpb[data-lvl=komplexer],.leveled[data-lvl=schwierig] .lpb[data-lvl=schwierig]{display:inline;}
+/* Bild */
+.bild{margin:.4rem 0 1rem;text-align:center;} .bild img{width:100%;max-width:520px;border-radius:18px;border:3px solid var(--paper);box-shadow:0 10px 26px rgba(38,32,25,.14);}
+.bild figcaption{font-size:.86rem;color:var(--ink-soft);margin-top:.5rem;}
+.taskbox{background:var(--teal-soft);border:1.5px solid #a9dcea;border-radius:14px;padding:.8rem 1.1rem;font-size:1rem;}
+.thumb{width:78px;height:78px;flex:0 0 auto;object-fit:cover;border-radius:14px;border:2px solid var(--paper);box-shadow:0 4px 12px rgba(38,32,25,.1);}
+.thumb.emo{display:grid;place-items:center;font-size:34px;background:var(--accent-s);}
+/* Situations-/Übungskarten */
+.sit,.qcard{display:flex;gap:.9rem;align-items:center;background:var(--cream-warm);border:1.5px solid var(--sand);border-radius:16px;padding:.85rem 1.1rem;margin:.6rem 0;}
+.sittext{flex:1;min-width:0;}
+.sithead{font-size:1rem;} .model{margin-top:.25rem;font-size:1.02rem;font-weight:600;font-family:'Space Grotesk',sans-serif;font-style:italic;color:var(--ink);}
+.drow{background:var(--cream-warm);border:1.5px solid var(--sand);border-radius:16px;padding:.85rem 1.1rem;margin:.6rem 0;display:grid;grid-template-columns:1fr auto;gap:.6rem;align-items:center;}
+.da{font-size:1rem;} .drow .rev{background:var(--red);color:#fff;border:none;border-radius:999px;padding:.4rem .9rem;font-weight:700;cursor:pointer;font-size:.82rem;}
+.solwrap{grid-column:1 / -1;display:none;background:var(--paper);border:1.5px dashed var(--accent);border-radius:12px;padding:.6rem .9rem;font-family:'Space Grotesk',sans-serif;font-style:italic;font-size:1.02rem;}
+.drow.shown .solwrap{display:block;}
+.say{background:var(--paper);border:1.5px solid var(--sand);border-radius:999px;padding:.05em .5em;margin-left:.4em;cursor:pointer;font-size:.85rem;font-style:normal;}
+.mini{background:var(--yellow-soft);border:2px dashed var(--yellow);border-radius:14px;padding:.8rem 1.1rem;margin:.8rem 0 0;font-size:.96rem;}
+.cheat{background:var(--paper);border:1.5px solid var(--sand);border-radius:14px;padding:.9rem 1.2rem;}
+.ch2{font-weight:700;color:var(--red);margin:.7rem 0 .25rem;} .cheat .ex{font-style:italic;color:var(--ink-soft);}
+.qth{font-size:.72rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;} .q{font-size:1.02rem;margin-top:.15rem;font-family:'Space Grotesk',sans-serif;font-style:italic;}
+.rmbox{background:var(--teal-soft);border:1.5px solid #a9dcea;border-radius:16px;padding:.9rem 1.1rem;margin:.8rem 0 0;}
+.rmh{font-weight:700;margin-bottom:.4rem;color:#0a6e86;} .rmbox ul{list-style:none;display:grid;gap:.4rem;} .rmbox li{font-size:1rem;}
+.scenehead{background:var(--ink);color:#fff;border-radius:14px;padding:.8rem 1.1rem;font-size:.98rem;margin-bottom:.7rem;} .scenehead b{color:var(--yellow);}
+.roles{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;}
+.role{border-radius:16px;padding:.9rem 1.1rem;border:1.5px solid var(--sand);}
+.role.pro{background:var(--teal-soft);} .role.con{background:var(--yellow-soft);}
+.role .rh{font-weight:700;font-size:1rem;margin-bottom:.3rem;} .role ul{margin-left:1rem;} .role li{margin:.3rem 0;font-size:.95rem;}
+.role .lvsub{font-size:.68rem;font-weight:700;color:var(--accent);margin:.6rem 0 .15rem;text-transform:uppercase;letter-spacing:.06em;}
+@media(max-width:600px){.roles{grid-template-columns:1fr;}}
+.these{background:var(--ink);color:#fff;border-radius:14px;padding:.8rem 1.1rem;font-size:1rem;margin:.6rem 0;} .these b{color:var(--yellow);}
+.pcrow{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;} .col{border-radius:14px;padding:.8rem 1rem;}
+.col.pro{background:var(--teal-soft);} .col.con{background:var(--red-soft);}
+.col .ch{font-weight:700;margin-bottom:.3rem;} .col ul{margin-left:1rem;} .col li{font-size:.95rem;margin:.2rem 0;}
+@media(max-width:600px){.pcrow{grid-template-columns:1fr;}}
+.bcard{background:var(--accent-s);border-radius:14px;padding:1rem 1.2rem;font-size:1.1rem;margin:.6rem 0;font-weight:700;font-family:'Space Grotesk',sans-serif;}
+.tip{background:var(--yellow-soft);border:2px dashed var(--yellow);border-radius:16px;padding:.9rem 1.2rem;margin-top:1rem;font-size:.96rem;line-height:1.7;}
+.tip strong{color:var(--red);}
+.foot{text-align:center;color:var(--ink-mute);font-size:.85rem;margin-top:2.5rem;}
+.foot b{color:var(--ink);}
+
+.leveled .blk{display:none;}
+.leveled[data-lvl=einfach] .blk[data-lvl=einfach],.leveled[data-lvl=komplexer] .blk[data-lvl=komplexer],.leveled[data-lvl=schwierig] .blk[data-lvl=schwierig]{display:block;}
+.vgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;margin:.4rem 0;}
+@media(max-width:760px){.vgrid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:480px){.vgrid{grid-template-columns:1fr;}}
+.vcard{background:var(--cream-warm);border:1.5px solid var(--sand);border-radius:14px;padding:.7rem .9rem;}
+.vcard .vw{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.05rem;}
+.vcard .vm{color:var(--red);font-weight:600;font-size:.82rem;margin:.15rem 0 .35rem;}
+.vcard .vx{font-style:italic;color:var(--ink-soft);font-size:.86rem;}
+/* Drehrad */
+.wheeltimerbar{display:flex;align-items:center;gap:.7rem;justify-content:center;margin-top:.2rem;}
+.wheeltimerbar #wtTime{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.5rem;color:var(--red);min-width:64px;text-align:center;}
+.spinbtn.wt{padding:.45rem 1.1rem;font-size:.95rem;background:var(--ink);}
+.wheelwrap{display:flex;flex-direction:column;align-items:center;gap:.8rem;margin:.6rem 0 0;}
+.wheelbox{position:relative;width:340px;max-width:86vw;aspect-ratio:1;}
+.wheelbox svg{width:100%;height:100%;transition:transform 4s cubic-bezier(.17,.67,.14,1);}
+.wheelptr{position:absolute;top:-6px;left:50%;transform:translateX(-50%);font-size:2rem;z-index:3;filter:drop-shadow(0 2px 2px rgba(0,0,0,.25));}
+.wheelhub{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:54px;height:54px;border-radius:50%;background:#fff;border:3px solid var(--red);display:grid;place-items:center;font-size:1.4rem;z-index:2;}
+.spinbtn{background:var(--red);color:#fff;border:none;border-radius:999px;padding:.7rem 1.6rem;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.05rem;cursor:pointer;box-shadow:0 6px 16px rgba(232,48,42,.3);}
+.spinbtn:disabled{opacity:.5;cursor:default;}
+.wheelout{background:var(--paper);border:2px solid var(--accent);border-radius:16px;padding:1rem 1.2rem;font-family:'Space Grotesk',sans-serif;font-size:1.15rem;text-align:center;min-height:64px;display:flex;align-items:center;justify-content:center;width:100%;max-width:560px;}
+.wheelout .num{display:inline-block;background:var(--accent-s);color:var(--ink);border-radius:999px;padding:.1em .6em;font-size:.8rem;margin-right:.5em;}
+
+.vcard .wphoto{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:14px;border:3px solid var(--paper);box-shadow:0 4px 12px rgba(58,49,42,.14);margin-bottom:.35rem;}
+.memogrid{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin:.6rem 0;}@media(max-width:640px){.memogrid{grid-template-columns:repeat(3,1fr);}}
+.memohead{display:flex;justify-content:space-between;font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--ink-soft);font-size:.9rem;}
+.memocard{position:relative;aspect-ratio:1;border-radius:14px;border:2px solid var(--sand);background:var(--paper);cursor:pointer;display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 3px 10px rgba(58,49,42,.06);font-size:1.8rem;padding:2px;}
+.memocard .mnum{position:absolute;top:3px;left:5px;font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:.8rem;color:var(--accent);background:#fff;border-radius:8px;padding:0 .3rem;box-shadow:0 1px 3px rgba(0,0,0,.12);z-index:2;}
+.memocard .mq{font-size:1.8rem;}.memocard:not(.hidden) .mq{display:none;}
+.memocard .inner{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.memocard .mcap{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.72rem;color:var(--ink);text-align:center;margin-top:2px;line-height:1.05;}
+.memocard .mw{font-family:'Caveat',cursive;font-size:1.5rem;font-weight:700;color:var(--ink);text-align:center;line-height:1.05;padding:2px;}
+.memocard img{width:100%;height:100%;object-fit:cover;border-radius:10px;}
+.memocard.hidden{background:var(--accent-s);color:var(--accent);}.memocard.hidden .inner{display:none;}
+.memocard.match{border-color:#2F9E44;background:#EBFBEE;cursor:default;animation:pop .3s;}
+.memocard.wrong{border-color:var(--red);animation:shake .4s;}
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.08)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.memowin{margin-top:.6rem;text-align:center;background:#EBFBEE;border-radius:14px;padding:1rem;font-family:'Space Grotesk',sans-serif;font-weight:700;}
+.challstart,.challend{text-align:center;padding:1rem;}
+.cbig{font-family:'Space Grotesk',sans-serif;font-size:3rem;font-weight:800;color:var(--accent);}
+.challend .cbig{font-size:2.4rem;}
+.challbar{display:flex;justify-content:space-between;align-items:center;font-family:'Space Grotesk',sans-serif;font-weight:800;margin-bottom:.5rem;}
+.challtime{color:var(--red);font-size:1.3rem;}.challtime.calm{color:var(--accent);}
+.challnext{font-size:.85rem;padding:.35rem .7rem;}
+.challimg{width:100%;max-height:230px;object-fit:cover;border-radius:14px;margin-bottom:.5rem;display:block;}
+.challfrage{font-family:'Caveat',cursive;font-size:1.9rem;font-weight:700;text-align:center;color:var(--ink);margin:.2rem 0 .5rem;line-height:1.15;}
+.challhilf{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;}
+.hchip{background:var(--accent-s);color:var(--accent);border-radius:999px;padding:.28rem .75rem;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.92rem;}
+.qbtn{background:var(--accent);color:#fff;border:none;border-radius:12px;padding:.6rem 1.2rem;font-family:'Space Grotesk',sans-serif;font-weight:700;cursor:pointer;}
+.qbtn.ghost{background:transparent;color:var(--ink-soft);border:2px solid var(--sand);}
+/*MEMOFIX*/.memocard .inner{padding:4px;box-sizing:border-box;gap:2px;}.memocard .inner img{width:100%;height:auto;flex:1 1 auto;min-height:0;object-fit:cover;border-radius:8px;}.memocard .mcap{flex:0 0 auto;margin-top:0;font-size:.72rem;line-height:1.05;}/*BRANDFIX*/
+:root{
+ --cream:#FFF8E0;--cream-warm:#FDEFC7;--paper:#FFFCF5;--sand:#F0E5D8;--rahmen:#F0E5D8;
+ --ink:#1A1A1A;--ink-soft:#6B7280;--ink-mute:#9AA0AA;
+ --accent:#2DD4BF;--accent-2:#14B8A6;--accent-s:#A7F3D0;
+ --red:#DD0000;--gold:#FFCE00;--yellow-soft:#FFF3C4;
+}
+body{font-family:'Inter','Segoe UI',system-ui,sans-serif !important;background:#FFF8E0 !important;color:#1A1A1A;}
+h1,h2,h3,.title,.sn,.qth,.dh,.memohead,.challbar,.cbig,.memowin{font-family:'Space Grotesk','Inter',sans-serif !important;}
+/* Handschrift raus – wirkt „KI"; stattdessen klare Marke */
+.lead,.story,.pechmeter,.challfrage,.memocard .mw,.vx,.bcard{font-family:'Inter','Segoe UI',sans-serif !important;}
+.lead{font-size:1.05rem !important;color:var(--ink-soft) !important;}
+.challfrage{font-size:1.25rem !important;font-weight:600 !important;color:var(--ink) !important;font-family:'Space Grotesk','Inter',sans-serif !important;}
+.memocard .mw{font-size:1rem !important;font-weight:700 !important;font-family:'Space Grotesk','Inter',sans-serif !important;}
+/* weiche, professionelle Karten statt Comic-Rahmen + harte Schatten */
+.step{border:1px solid var(--sand) !important;box-shadow:0 10px 30px rgba(26,26,26,.06) !important;border-radius:20px !important;background:#FFFCF5;}
+.panel{border:1px solid var(--sand) !important;box-shadow:0 6px 16px rgba(26,26,26,.06) !important;border-radius:16px !important;background:#FFFCF5 !important;}
+.story{border:1px solid var(--sand) !important;box-shadow:0 6px 16px rgba(26,26,26,.06) !important;border-radius:18px !important;background:#FFFCF5 !important;font-size:1.05rem !important;line-height:1.6 !important;color:var(--ink) !important;}
+.story b{background:var(--accent-s) !important;box-shadow:none !important;}
+.pechmeter{background:#FFFCF5 !important;border:1px solid var(--sand) !important;color:var(--ink) !important;font-size:1rem !important;border-radius:14px !important;}
+.vcard{background:#FFFCF5 !important;border:1px solid var(--sand) !important;border-radius:16px !important;box-shadow:0 4px 14px rgba(26,26,26,.05) !important;}
+.vcard .wphoto{border:1px solid var(--sand) !important;box-shadow:0 4px 12px rgba(26,26,26,.08) !important;}
+.gqtile,.dlgbox,.qcard,.rmbox{border:1px solid var(--sand) !important;border-radius:14px !important;box-shadow:0 3px 10px rgba(26,26,26,.05) !important;background:#FFFCF5 !important;}
+.memocard{border:1px solid var(--sand) !important;box-shadow:0 3px 10px rgba(26,26,26,.05) !important;}
+.challimg{border:1px solid var(--sand) !important;}
+.hchip{background:var(--accent-s) !important;color:#06403A !important;}
+/* Buttons = Türkis (Signatur), dunkler Text */
+.bigbtn,.qbtn,.ts,.tr,.rev,.wheelspin,.spinbtn{background:linear-gradient(135deg,#2DD4BF,#14B8A6) !important;color:#06403A !important;border:none !important;box-shadow:0 4px 12px rgba(20,184,166,.22) !important;text-shadow:none !important;}
+.qbtn.ghost{background:transparent !important;color:#14B8A6 !important;border:2px solid var(--sand) !important;box-shadow:none !important;}
+.rev{font-weight:700;}
+/* Level-Umschalter dezenter */
+.levelswitch button.on,.lvlchip button.on{outline:2px solid var(--accent) !important;}
+.weichbox{background:var(--cream-warm,#FFF4D6);border:1.5px solid var(--rahmen,#F0E5D8);border-radius:14px;padding:.7rem .8rem;margin:.6rem 0 1rem}.weichbox .wh{font-weight:700;margin-bottom:.5rem;font-size:.95rem}.wchip{display:inline-block;background:#fff;border:1.5px solid #2DD4BF;color:#06403A;border-radius:999px;padding:.25rem .7rem;margin:.2rem .3rem .2rem 0;font-weight:600;font-size:.92rem}.revgrid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}@media(max-width:640px){.revgrid{grid-template-columns:1fr}}.revcard{background:#FFFCF5;border:1.5px solid var(--rahmen,#F0E5D8);border-radius:16px;padding:.9rem}.revbad{font-weight:700;color:#B4322C;margin-bottom:.6rem;font-size:1.02rem}.revbtn{background:#2DD4BF;color:#06403A;border:none;border-radius:999px;padding:.45rem .9rem;font-weight:700;cursor:pointer;font-size:.9rem;font-family:inherit}.revbtn:hover{filter:brightness(.96)}.revgood{display:none;margin-top:.7rem;padding-top:.7rem;border-top:1.5px dashed var(--rahmen,#F0E5D8);font-weight:600;color:#0B7A6E;font-size:1.05rem}.revcard.shown .revgood{display:block}.revcard.shown .revbtn{display:none}.rmwrap{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}@media(max-width:640px){.rmwrap{grid-template-columns:1fr}.scgrid{grid-template-columns:1fr}}.rmcat{background:#FFFCF5;border:1.5px solid var(--rahmen,#F0E5D8);border-left:5px solid #999;border-radius:14px;padding:.7rem .85rem}.rmcat-h{font-weight:800;font-size:1rem;margin-bottom:.45rem}.rmcat ul{margin:0;padding-left:1.05rem}.rmcat li{margin:.3rem 0;line-height:1.5}.rmcat mark,.sitchunk mark{padding:.06em .32em;border-radius:6px;font-weight:700;color:#1A1A1A}.tip mark.mk{background:#FFE9A8;padding:.05em .35em;border-radius:6px;font-weight:700}.rm-op{border-left-color:#2DD4BF}.rm-op mark{background:#A7F3D0}.rm-agree{border-left-color:#34B36B}.rm-agree mark{background:#BBF7D0}.rm-dis{border-left-color:#EF6461}.rm-dis mark{background:#FBD5D0}.rm-soft{border-left-color:#F4B942}.rm-soft mark{background:#FFE9A8}.rm-crit{border-left-color:#9B72CF}.rm-crit mark{background:#E7D8F7}.rm-no{border-left-color:#F0873B}.rm-no mark{background:#FFD9B0}.rm-dip{border-left-color:#3AA6C4}.rm-dip mark{background:#CFE8F5}.scgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.8rem}@media(max-width:900px){.scgrid{grid-template-columns:1fr 1fr}}.sitchunk{background:#FFFCF5;border:1.5px solid var(--rahmen,#F0E5D8);border-radius:16px;padding:.7rem;text-align:left}.sitchunk .wphoto{width:100%;height:110px;object-fit:cover;border-radius:12px;margin-bottom:.5rem;display:block}.sitchunk .wpic{font-size:2rem;text-align:center;margin-bottom:.4rem}.sc-h{font-weight:800;font-size:.82rem;letter-spacing:.02em;text-transform:uppercase;color:#06403A;margin-bottom:.4rem}.sitchunk ul{margin:0;padding-left:1rem}.sitchunk li{margin:.3rem 0;line-height:1.4;font-size:.95rem}.sitchunk mark{background:#A7F3D0}.qz-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem}.qz-head{font-weight:800}.qz-score{font-weight:700;color:#0B7A6E}.qz-q{font-weight:700;margin:.2rem 0 .6rem;font-size:1.05rem}.qz-opt{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--rahmen,#F0E5D8);border-radius:12px;padding:.6rem .8rem;margin:.35rem 0;font-family:inherit;font-size:1rem;cursor:pointer;font-weight:600}.qz-opt:hover{border-color:#2DD4BF}.qz-opt.ok{background:#BBF7D0;border-color:#34B36B}.qz-opt.no{background:#FBD5D0;border-color:#EF6461}.qz-ex{margin-top:.5rem;background:var(--cream-warm,#FFF4D6);border-radius:10px;padding:.5rem .7rem;font-weight:600}.deckbox{text-align:center}.dk-sit{background:#2DD4BF;color:#06403A;font-weight:800;font-size:1.12rem;border-radius:14px;padding:.8rem 1rem;margin-bottom:.8rem}.dk-cols{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;text-align:left}@media(max-width:640px){.dk-cols{grid-template-columns:1fr}}.dk-e,.dk-h{background:#FFFCF5;border:1.5px solid var(--rahmen,#F0E5D8);border-radius:14px;padding:.7rem}.dk-e{border-top:5px solid #EF6461}.dk-h{border-top:5px solid #34B36B}.dk-lab{font-weight:800;font-size:.92rem;margin-bottom:.5rem}.dk-lab.e{color:#B4322C}.dk-lab.h{color:#0B7A6E}.dk-chips{margin-bottom:.5rem}.dkrev{background:#FFCE00;color:#3a2f00;border:none;border-radius:999px;padding:.35rem .8rem;font-weight:700;cursor:pointer;font-size:.85rem;font-family:inherit}.dk-model{display:none;margin-top:.5rem;font-weight:700;color:#0B7A6E;line-height:1.4}.dk-next{margin-top:.9rem}.rollgrid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}@media(max-width:640px){.rollgrid{grid-template-columns:1fr}}.rollcard{background:#FFFCF5;border:1.5px solid var(--rahmen,#F0E5D8);border-radius:16px;padding:.8rem;text-align:left}.rc-top{font-weight:800;font-size:1.05rem;margin-bottom:.4rem}.rc-sc{font-weight:600;margin-bottom:.6rem;line-height:1.4}.rc-roles{display:flex;flex-direction:column;gap:.35rem}.rc-a,.rc-b{border-radius:10px;padding:.4rem .6rem;font-weight:600;font-size:.92rem}.rc-a{background:#DBF3FA}.rc-b{background:#D8F5E6}.pzhead{display:flex;justify-content:space-between;font-weight:700;margin-bottom:.6rem;color:#0B7A6E}.pzgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.6rem}.pzcard{position:relative;min-height:82px;border-radius:14px;display:flex;align-items:center;justify-content:center;padding:.6rem;cursor:pointer;text-align:center;font-weight:600;color:#06403A;border:2px solid transparent;background:#2DD4BF;transition:background .15s}.pzcard .pznum{position:absolute;top:4px;left:8px;font-size:.72rem;opacity:.65;font-weight:700}.pzcard .pzq{font-size:1.7rem}.pzcard .pztext{display:none;font-size:.92rem;line-height:1.32}.pzcard:not(.hidden){background:#FFFCF5;border-color:var(--rahmen,#F0E5D8)}.pzcard:not(.hidden) .pzq{display:none}.pzcard:not(.hidden) .pztext{display:block}.pzcard.match{background:#BBF7D0;border-color:#34B36B;cursor:default}.pzcard.wrong{background:#FBD5D0;border-color:#EF6461}.rc-photo{width:100%;height:130px;object-fit:cover;border-radius:12px;margin-bottom:.55rem;display:block}.rollrev{background:#FFCE00;color:#3a2f00;border:none;border-radius:999px;padding:.42rem .85rem;font-weight:700;cursor:pointer;font-size:.85rem;font-family:inherit;margin-top:.6rem}.roll-dia{display:none;margin-top:.6rem;background:var(--cream-warm,#FFF4D6);border-radius:12px;padding:.65rem .8rem}.rollcard.open .roll-dia{display:block}.rollcard.open .rollrev{display:none}.roll-dia .dia-h{font-weight:800;font-size:.85rem;margin-bottom:.45rem;color:#06403A}.roll-dia p{margin:.3rem 0;line-height:1.42;font-size:.95rem}.dlg{background:#FFFCF5;border:1.5px solid var(--rahmen,#F0E5D8);border-radius:16px;padding:1rem 1.1rem;margin:.8rem 0}.dlg h4{font-family:'Space Grotesk',sans-serif;font-size:1.05rem;margin-bottom:.15rem;color:#06403A}.dlg .sit{font-size:.88rem;color:#6B7280;margin-bottom:.6rem}.dline{display:flex;gap:.5rem;margin:.35rem 0;align-items:flex-start}.dwho{flex:none;width:26px;height:26px;border-radius:50%;font-size:.78rem;font-weight:700;display:flex;align-items:center;justify-content:center}.dwho.a{background:#2DD4BF;color:#06403A}.dwho.b{background:#F4B942;color:#3a2f00}.dtxt{background:#FFF8E0;border-radius:12px;padding:.4rem .7rem;font-size:.96rem}.dbtn{margin-top:.6rem}.dtxt .mkw{background:#FFD24A;border-radius:5px;padding:.02em .26em;font-weight:800;color:#3a2f00}.dtxt .mkp{background:#A7F3D0;border-radius:5px;padding:.02em .26em;font-weight:800;color:#06403A}.mklegende{font-size:.86rem;color:#6B7280;margin:.2rem 0 .8rem}.mklegende .mkw{background:#FFD24A;border-radius:5px;padding:.02em .26em;font-weight:800;color:#3a2f00}.mklegende .mkp{background:#A7F3D0;border-radius:5px;padding:.02em .26em;font-weight:800;color:#06403A}.gapbox{background:#FFFCF5;border:1.5px solid var(--rahmen,#F0E5D8);border-radius:16px;padding:1rem 1.1rem;line-height:2.6}.gaprow{margin:.2rem 0}.gapbox select{font-family:inherit;font-weight:600;border:1.5px solid #2DD4BF;border-radius:8px;padding:.15rem .4rem;background:#fff;color:#06403A}.gapbox select.ok{background:#BBF7D0;border-color:#34B36B}.gapbox select.no{background:#FBD5D0;border-color:#EF6461}</style></head><body data-level="einfach"><div class="wrap"><div class="eyebrow">deutschoderwas · Sprechclub · B1/B2 · 3 Stufen</div><div class="title-wrap"><h1 class="title">Richtigstellen, <span class="hl">ohne das Gesicht zu verlieren</span></h1></div><img class="hero-photo" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260929_173848_3cadb63d-53e6-47d1-b964-fa48f36c2b5f.png" alt="Etwas in einer Besprechung richtigstellen"><div class="hero-tags"><span class="hero-tag">🗣️ <b>Chunks</b></span><span class="hero-tag">💬 <b>Dialoge</b></span><span class="hero-tag">🧩 <b>Puzzle</b></span><span class="hero-tag">🎡 <b>Drehrad</b></span><span class="hero-tag">🎭 <b>Rollenspiel</b></span></div><div class="bar"><div class="lab">Niveau wählen · pick your level</div><div class="levelswitch"><button data-lvl="einfach" class="on">🟦 einfach<small>B1</small></button><button data-lvl="komplexer">🟨 komplexer<small>B1 / B2</small></button><button data-lvl="schwierig">🟥 schwierig<small>B2</small></button></div></div><div class="intro"><h3>👋 So funktioniert’s</h3><div class="en" style="margin:-2px 0 8px">How this works.</div><ol><li><b>Zu zweit oder in kleinen Gruppen.</b></li><li><b>Niveau oben wählen</b> (🟦 B1 / 🟨 B1·B2 / 🟥 B2).</li><li>Der Reihe nach durchgehen und <b>so viel wie möglich sprechen</b>.</li></ol></div><section class="step"><div class="shd"><div class="ico">🤝</div><div><div class="sn">Schritt 1 von 9</div><h2>Aufwärmen</h2></div><div class="tmr" data-min="4"><span class="td">04:00</span><button class="ts">▶︎ Start</button><button class="tr">⟳</button></div></div><div class="meta"><div>🎯 <b>Ziel:</b> Ins Thema kommen.<div class="en">Warm up.</div></div><div>👥 <b>So geht’s:</b> Lest die Fragen laut und antwortet frei.<div class="en">Read aloud, answer freely.</div></div></div><div class="leveled" data-lvl="einfach"><div class="lvlchip"><span class="lc">Diese Übung / this task:</span><button data-l="einfach" class="e">🟦 einfach</button><button data-l="komplexer" class="k">🟨 komplexer</button><button data-l="schwierig" class="s">🟥 schwierig</button></div><div class="qcard"><div class="sittext"><div class="qth">✋ Richtigstellen</div><div class="q"><span class="lpb" data-lvl="einfach">„Sagst du es, wenn jemand etwas Falsches sagt?“</span><span class="lpb" data-lvl="komplexer">„Wie korrigierst du, ohne zu belästigen?“</span><span class="lpb" data-lvl="schwierig">„Wie stellt man richtig, ohne dass jemand das Gesicht verliert?“</span> <span class="lpb" data-lvl="einfach"><button class="say" data-say="Sagst du es, wenn jemand etwas Falsches sagt?" title="Vorlesen / listen">🔊</button></span><span class="lpb" data-lvl="komplexer"><button class="say" data-say="Wie korrigierst du, ohne zu belästigen?" title="Vorlesen / listen">🔊</button></span><span class="lpb" data-lvl="schwierig"><button class="say" data-say="Wie stellt man richtig, ohne dass jemand das Gesicht verliert?" title="Vorlesen / listen">🔊</button></span></div></div></div><div class="qcard"><div class="sittext"><div class="qth">😐 Korrigiert werden</div><div class="q"><span class="lpb" data-lvl="einfach">„Wie fühlst du dich, wenn man dich korrigiert?“</span><span class="lpb" data-lvl="komplexer">„Nimmst du Korrekturen leicht an?“</span><span class="lpb" data-lvl="schwierig">„Wie reagiert man souverän, wenn man sich geirrt hat?“</span> <span class="lpb" data-lvl="einfach"><button class="say" data-say="Wie fühlst du dich, wenn man dich korrigiert?" title="Vorlesen / listen">🔊</button></span><span class="lpb" data-lvl="komplexer"><button class="say" data-say="Nimmst du Korrekturen leicht an?" title="Vorlesen / listen">🔊</button></span><span class="lpb" data-lvl="schwierig"><button class="say" data-say="Wie reagiert man souverän, wenn man sich geirrt hat?" title="Vorlesen / listen">🔊</button></span></div></div></div><div class="qcard"><div class="sittext"><div class="qth">👥 Vor der Gruppe</div><div class="q"><span class="lpb" data-lvl="einfach">„Korrigierst du lieber sofort oder später?“</span><span class="lpb" data-lvl="komplexer">„Vor allen oder unter vier Augen?“</span><span class="lpb" data-lvl="schwierig">„Wann ist der richtige Zeitpunkt für eine Korrektur?“</span> <span class="lpb" data-lvl="einfach"><button class="say" data-say="Korrigierst du lieber sofort oder später?" title="Vorlesen / listen">🔊</button></span><span class="lpb" data-lvl="komplexer"><button class="say" data-say="Vor allen oder unter vier Augen?" title="Vorlesen / listen">🔊</button></span><span class="lpb" data-lvl="schwierig"><button class="say" data-say="Wann ist der richtige Zeitpunkt für eine Korrektur?" title="Vorlesen / listen">🔊</button></span></div></div></div><div class="mini">🗣️ <b>Sprecht abwechselnd:</b> Wie fair wird bei euch korrigiert? <span class="en">How fair are corrections around you?</span></div></div><div class="tip">💡 Heute: etwas richtigstellen — höflich, im richtigen Moment, ohne jemanden bloszustellen.</div></section><section class="step"><div class="shd"><div class="ico">🗣️</div><div><div class="sn">Schritt 2 von 9</div><h2>Chunks im Kontext</h2></div><div class="tmr" data-min="7"><span class="td">07:00</span><button class="ts">▶︎ Start</button><button class="tr">⟳</button></div></div><div class="meta"><div>🎯 <b>Ziel:</b> Richtigstellen, ohne bloszustellen.<div class="en">Correct without embarrassing.</div></div><div>👥 <b>So geht’s:</b> Lest die Chunks laut. Eine Person sagt etwas Falsches, die andere stellt höflich richtig.<div class="en">Read aloud; one is wrong, the other corrects kindly.</div></div></div><div class="leveled" data-lvl="einfach"><div class="lvlchip"><span class="lc">Diese Übung / this task:</span><button data-l="einfach" class="e">🟦 einfach</button><button data-l="komplexer" class="k">🟨 komplexer</button><button data-l="schwierig" class="s">🟥 schwierig</button></div><div class="blk" data-lvl="einfach"><div class="scgrid"><div class="sitchunk"><img class="wphoto" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260929_173848_3cadb63d-53e6-47d1-b964-fa48f36c2b5f.png" alt="Sanft einhaken"><div class="sc-h">Sanft einhaken</div><ul><li><mark>Darf ich kurz?</mark><button class="say" data-say="Darf ich kurz?" title="Vorlesen / listen">🔊</button></li><li><mark>Ich hake da nur kurz ein.</mark><button class="say" data-say="Ich hake da nur kurz ein." title="Vorlesen / listen">🔊</button></li><li><mark>Eine Ergänzung, wenn ich darf.</mark><button class="say" data-say="Eine Ergänzung, wenn ich darf." title="Vorlesen / listen">🔊</button></li></ul></div><div class="sitchunk"><img class="wphoto" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260930_094415_bee78712-4c38-4d44-acac-521a84f58b05.png" alt="Unsicherheit signalisieren"><div class="sc-h">Unsicherheit signalisieren</div><ul><li><mark>Ich bin mir nicht ganz sicher.</mark><button class="say" data-say="Ich bin mir nicht ganz sicher." title="Vorlesen / listen">🔊</button></li><li><mark>Ich kann mich irren.</mark><button class="say" data-say="Ich kann mich irren." title="Vorlesen / listen">🔊</button></li></ul></div><div class="sitchunk"><img class="wphoto" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260930_094244_0c2f5ebf-0d07-4deb-938b-592bbf083afb.png" alt="Anderen Stand nennen"><div class="sc-h">Anderen Stand nennen</div><ul><li><mark>Dazu habe ich einen anderen Stand.</mark><button class="say" data-say="Dazu habe ich einen anderen Stand." title="Vorlesen / listen">🔊</button></li><li><mark>Ich habe den 12. im Kopf.</mark><button class="say" data-say="Ich habe den 12. im Kopf." title="Vorlesen / listen">🔊</button></li></ul></div><div class="sitchunk"><img class="wphoto" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260930_094441_c3226177-2fb9-43c5-87e8-c1f3f4b30e8a.png" alt="Eigenen Irrtum zugeben"><div class="sc-h">Eigenen Irrtum zugeben</div><ul><li><mark>Da hatte ich unrecht, danke.</mark><button class="say" data-say="Da hatte ich unrecht, danke." title="Vorlesen / listen">🔊</button></li><li><mark>Das gebe ich zu.</mark><button class="say" data-say="Das gebe ich zu." title="Vorlesen / listen">🔊</button></li></ul></div></div></div><div class="blk" data-lvl="komplexer"><div class="scgrid"><div class="sitchunk"><img class="wphoto" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260929_173848_3cadb63d-53e6-47d1-b964-fa48f36c2b5f.png" alt="Höflich richtigstellen"><div class="sc-h">Höflich richtigstellen</div><ul><li><mark>Das halte ich für einen Irrtum.</mark><button class="say" data-say="Das halte ich für einen Irrtum." title="Vorlesen / listen">🔊</button></li><li><mark>Das war der alte Stand.</mark><button class="say" data-say="Das war der alte Stand." title="Vorlesen / listen">🔊</button></li></ul></div><div class="sitchunk"><img class="wphoto" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260930_094333_12a3942d-e345-48bb-a606-2b2fe5986759.png" alt="Aktualität betonen"><div class="sc-h">Aktualität betonen</div><ul><li><mark>Das ist erst seit Kurzem anders.</mark><button class="say" data-say="Das ist erst seit Kurzem anders." title="Vorlesen / listen">🔊</button></li><li><mark>Die alte Fassung sagte genau das.</mark><button class="say" data-say="Die alte Fassung sagte genau das." title="Vorlesen / listen">🔊</button></li></ul></div><div class="sitchunk"><img class="wphoto" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260930_094415_bee78712-4c38-4d44-acac-521a84f58b05.png" alt="Vor der Entscheidung einhaken"><div class="sc-h">Vor der Entscheidung einhaken</div><ul><li><mark>Bevor wir das beschließen, muss ich …</mark><button class="say" data-say="Bevor wir das beschließen, muss ich ..." title="Vorlesen / listen">🔊</button></li><li><mark>Ein Punkt noch, bevor wir beschließen.</mark><button class="say" data-say="Ein Punkt noch, bevor wir beschließen." title="Vorlesen / listen">🔊</button></li></ul></div><div class="sitchunk"><img class="wphoto" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260930_094244_0c2f5ebf-0d07-4deb-938b-592bbf083afb.png" alt="Wenn mehrere es falsch haben"><div class="sc-h">Wenn mehrere es falsch haben</div><ul><li><mark>Das haben mehrere so verstanden.</mark><button class="say" data-say="Das haben mehrere so verstanden." title="Vorlesen / listen">🔊</button></li><li><mark>Das war lange auch mein Stand.</mark><button class="say" data-say="Das war lange auch mein Stand." title="Vorlesen / listen">🔊</button></li></ul></div></div></div><div class="blk" data-lvl="schwierig"><div class="scgrid"><div class="sitchunk"><img class="wphoto" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260930_094441_c3226177-2fb9-43c5-87e8-c1f3f4b30e8a.png" alt="Schärfe abmildern"><div class="sc-h">Schärfe abmildern</div><ul><li><mark>Das klang schärfer, als ich es meine.</mark><button class="say" data-say="Das klang schärfer, als ich es meine." title="Vorlesen / listen">🔊</button></li><li><mark>Nicht als Kritik gemeint, aber …</mark><button class="say" data-say="Nicht als Kritik gemeint, aber ..." title="Vorlesen / listen">🔊</button></li></ul></div><div class="sitchunk"><img class="wphoto" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260929_173848_3cadb63d-53e6-47d1-b964-fa48f36c2b5f.png" alt="Auf Korrektheit bestehen"><div class="sc-h">Auf Korrektheit bestehen</div><ul><li><mark>Darauf würde ich bestehen.</mark><button class="say" data-say="Darauf würde ich bestehen." title="Vorlesen / listen">🔊</button></li><li><mark>Bevor wir weitermachen, …</mark><button class="say" data-say="Bevor wir weitermachen, ..." title="Vorlesen / listen">🔊</button></li></ul></div><div class="sitchunk"><img class="wphoto" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260930_094415_bee78712-4c38-4d44-acac-521a84f58b05.png" alt="Elegant zurückrudern"><div class="sc-h">Elegant zurückrudern</div><ul><li><mark>Dann ziehe ich das zurück.</mark><button class="say" data-say="Dann ziehe ich das zurück." title="Vorlesen / listen">🔊</button></li><li><mark>Gut, dass Sie das sagen.</mark><button class="say" data-say="Gut, dass Sie das sagen." title="Vorlesen / listen">🔊</button></li></ul></div><div class="sitchunk"><img class="wphoto" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260930_094244_0c2f5ebf-0d07-4deb-938b-592bbf083afb.png" alt="Unter vier Augen"><div class="sc-h">Unter vier Augen</div><ul><li><mark>Können wir das kurz unter vier Augen klären?</mark><button class="say" data-say="Können wir das kurz unter vier Augen klären?" title="Vorlesen / listen">🔊</button></li><li><mark>Nur zwischen uns: …</mark><button class="say" data-say="Nur zwischen uns: ..." title="Vorlesen / listen">🔊</button></li></ul></div></div></div></div><div class="tip">💡 Erst weich einhaken, dann den anderen Stand nennen — nie triumphieren. 🔁</div></section><section class="step"><div class="shd"><div class="ico">💬</div><div><div class="sn">Schritt 3 von 9</div><h2>Beispieldialoge</h2></div><div class="tmr" data-min="7"><span class="td">07:00</span><button class="ts">▶︎ Start</button><button class="tr">⟳</button></div></div><div class="meta"><div>🎯 <b>Ziel:</b> Hören, wie man fair richtigstellt.<div class="en">Hear how to correct fairly.</div></div><div>👥 <b>So geht’s:</b> Lest die Dialoge zu zweit — dann mit eigenen Worten nachspielen.<div class="en">Read in pairs, then improvise.</div></div></div><p class="mklegende"><mark class="mkw">gelb</mark> = wichtiger Begriff · <mark class="mkp">türkis</mark> = wichtige Wendung / Struktur</p><div class="dlg"><h4>💬 Die falsche Zahl in der Besprechung</h4><div class="sit">In der Runde nennt jemand ein falsches Datum.</div><div class="dline a"><div class="dwho a">A</div><div class="dtxt">Wir liefern also am 20., wie besprochen.</div></div><div class="dline b"><div class="dwho b">B</div><div class="dtxt"><mark class="mkp">Darf ich kurz</mark>? <mark class="mkp">Dazu habe ich einen anderen Stand</mark> — <mark class="mkw">ich habe den 12. im Kopf</mark>.</div></div><div class="dline a"><div class="dwho a">A</div><div class="dtxt">Bist du sicher?</div></div><div class="dline b"><div class="dwho b">B</div><div class="dtxt"><mark class="mkp">Ich kann mich irren</mark>, aber <mark class="mkp">die aktuelle Fassung sagt</mark> den 12.</div></div><div class="dline a"><div class="dwho a">A</div><div class="dtxt">Stimmt — <mark class="mkw">das war der alte Stand</mark>. Danke fürs Aufpassen.</div></div><button class="say dbtn" data-say="Wir liefern also am 20., wie besprochen. Darf ich kurz? Dazu habe ich einen anderen Stand — ich habe den 12. im Kopf. Bist du sicher? Ich kann mich irren, aber die aktuelle Fassung sagt den 12. Stimmt — das war der alte Stand. Danke fürs Aufpassen.">🔊 Dialog vorlesen</button></div><div class="dlg"><h4>💬 Unter vier Augen</h4><div class="sit">Du korrigierst lieber leise, nicht vor allen.</div><div class="dline a"><div class="dwho a">A</div><div class="dtxt">Hast du kurz Zeit — <mark class="mkp">unter vier Augen</mark>?</div></div><div class="dline b"><div class="dwho b">B</div><div class="dtxt">Klar, was gibt es?</div></div><div class="dline a"><div class="dwho a">A</div><div class="dtxt"><mark class="mkp">Nur zwischen uns</mark>: in der Folie ist eine Zahl falsch.</div></div><div class="dline b"><div class="dwho b">B</div><div class="dtxt">Oh, gut, dass du es sagst — nicht vor allen.</div></div><div class="dline a"><div class="dwho a">A</div><div class="dtxt"><mark class="mkp">Nicht als Kritik gemeint</mark>, nur damit es stimmt.</div></div><button class="say dbtn" data-say="Hast du kurz Zeit — unter vier Augen? Klar, was gibt es? Nur zwischen uns: in der Folie ist eine Zahl falsch. Oh, gut, dass du es sagst — nicht vor allen. Nicht als Kritik gemeint, nur damit es stimmt.">🔊 Dialog vorlesen</button></div><div class="dlg"><h4>💬 Selbst korrigiert werden</h4><div class="sit">Jemand korrigiert dich — bleib souverän.</div><div class="dline a"><div class="dwho a">A</div><div class="dtxt">Das stimmt so nicht — der Termin ist der 12.</div></div><div class="dline b"><div class="dwho b">B</div><div class="dtxt"><mark class="mkw">Da hatte ich unrecht</mark>, danke.</div></div><div class="dline a"><div class="dwho a">A</div><div class="dtxt">Kein Problem, <mark class="mkp">das haben mehrere so verstanden</mark>.</div></div><div class="dline b"><div class="dwho b">B</div><div class="dtxt"><mark class="mkp">Dann ziehe ich das zurück</mark> und wir nehmen den 12.</div></div><div class="dline a"><div class="dwho a">A</div><div class="dtxt">Super, dann sind wir uns einig.</div></div><button class="say dbtn" data-say="Das stimmt so nicht — der Termin ist der 12. Da hatte ich unrecht, danke. Kein Problem, das haben mehrere so verstanden. Dann ziehe ich das zurück und wir nehmen den 12. Super, dann sind wir uns einig.">🔊 Dialog vorlesen</button></div><div class="tip">💡 Tipp: erst vorlesen (🔊), dann selbst richtigstellen.</div></section><section class="step"><div class="shd"><div class="ico">🧩</div><div><div class="sn">Schritt 4 von 9</div><h2>Satz-Puzzle</h2></div><div class="tmr" data-min="6"><span class="td">06:00</span><button class="ts">▶︎ Start</button><button class="tr">⟳</button></div></div><div class="meta"><div>🎯 <b>Ziel:</b> Korrektur-Sätze zusammensetzen.<div class="en">Match the correction phrases.</div></div><div>👥 <b>So geht’s:</b> Deckt zwei Karten auf. Passen Anfang und Ende? Dann laut vorlesen! Passt es nicht, tippt zum Umdrehen.<div class="en">Flip two; if they fit, read aloud.</div></div></div><div class="leveled" data-lvl="einfach"><div class="lvlchip"><span class="lc">Diese Übung / this task:</span><button data-l="einfach" class="e">🟦 einfach</button><button data-l="komplexer" class="k">🟨 komplexer</button><button data-l="schwierig" class="s">🟥 schwierig</button></div><div class="blk" data-lvl="einfach"><div class="puzzleboard" data-pairs='[{&quot;a&quot;: &quot;Darf ich kurz&quot;, &quot;b&quot;: &quot;einhaken?&quot;}, {&quot;a&quot;: &quot;Dazu habe ich&quot;, &quot;b&quot;: &quot;einen anderen Stand.&quot;}, {&quot;a&quot;: &quot;Ich kann mich irren,&quot;, &quot;b&quot;: &quot;aber ich habe den 12. im Kopf.&quot;}, {&quot;a&quot;: &quot;Da hatte ich unrecht,&quot;, &quot;b&quot;: &quot;danke.&quot;}, {&quot;a&quot;: &quot;Das halte ich&quot;, &quot;b&quot;: &quot;für einen Irrtum.&quot;}]'><div class="pzhead"><span class="pzmv">0 Züge</span><span class="pzfound">0 / 5 Sätze</span></div><div class="pzgrid"></div><div class="pzwin" style="display:none"></div></div></div><div class="blk" data-lvl="komplexer"><div class="puzzleboard" data-pairs='[{&quot;a&quot;: &quot;Darf ich kurz&quot;, &quot;b&quot;: &quot;einhaken?&quot;}, {&quot;a&quot;: &quot;Dazu habe ich&quot;, &quot;b&quot;: &quot;einen anderen Stand.&quot;}, {&quot;a&quot;: &quot;Ich kann mich irren,&quot;, &quot;b&quot;: &quot;aber ich habe den 12. im Kopf.&quot;}, {&quot;a&quot;: &quot;Da hatte ich unrecht,&quot;, &quot;b&quot;: &quot;danke.&quot;}, {&quot;a&quot;: &quot;Das halte ich&quot;, &quot;b&quot;: &quot;für einen Irrtum.&quot;}, {&quot;a&quot;: &quot;Bevor wir das beschließen,&quot;, &quot;b&quot;: &quot;muss ich kurz etwas sagen.&quot;}, {&quot;a&quot;: &quot;Das war der alte Stand —&quot;, &quot;b&quot;: &quot;jetzt gilt der 12.&quot;}]'><div class="pzhead"><span class="pzmv">0 Züge</span><span class="pzfound">0 / 7 Sätze</span></div><div class="pzgrid"></div><div class="pzwin" style="display:none"></div></div></div><div class="blk" data-lvl="schwierig"><div class="puzzleboard" data-pairs='[{&quot;a&quot;: &quot;Darf ich kurz&quot;, &quot;b&quot;: &quot;einhaken?&quot;}, {&quot;a&quot;: &quot;Dazu habe ich&quot;, &quot;b&quot;: &quot;einen anderen Stand.&quot;}, {&quot;a&quot;: &quot;Ich kann mich irren,&quot;, &quot;b&quot;: &quot;aber ich habe den 12. im Kopf.&quot;}, {&quot;a&quot;: &quot;Da hatte ich unrecht,&quot;, &quot;b&quot;: &quot;danke.&quot;}, {&quot;a&quot;: &quot;Das halte ich&quot;, &quot;b&quot;: &quot;für einen Irrtum.&quot;}, {&quot;a&quot;: &quot;Bevor wir das beschließen,&quot;, &quot;b&quot;: &quot;muss ich kurz etwas sagen.&quot;}, {&quot;a&quot;: &quot;Das war der alte Stand —&quot;, &quot;b&quot;: &quot;jetzt gilt der 12.&quot;}, {&quot;a&quot;: &quot;Das klang schärfer,&quot;, &quot;b&quot;: &quot;als ich es meine.&quot;}, {&quot;a&quot;: &quot;Können wir das kurz&quot;, &quot;b&quot;: &quot;unter vier Augen klären?&quot;}]'><div class="pzhead"><span class="pzmv">0 Züge</span><span class="pzfound">0 / 9 Sätze</span></div><div class="pzgrid"></div><div class="pzwin" style="display:none"></div></div></div></div><div class="tip">💡 Merkt euch die Anfänge — damit stellt ihr fair richtig.</div></section><section class="step"><div class="shd"><div class="ico">🎡</div><div><div class="sn">Schritt 5 von 9</div><h2>Drehrad — Frage-Glücksrad</h2></div><div class="tmr" data-min="8"><span class="td">08:00</span><button class="ts">▶︎ Start</button><button class="tr">⟳</button></div></div><div class="meta"><div>🎯 <b>Ziel:</b> Über Korrigieren & Feedback sprechen.<div class="en">Speak about correcting & feedback.</div></div><div>👥 <b>So geht’s:</b> Eine Person dreht, spricht 1 Min. Dann die nächste.<div class="en">Spin, speak 1 min, then next.</div></div></div><div class="leveled" data-lvl="einfach" id="wheelSec"><div class="lvlchip"><span class="lc">Diese Übung / this task:</span><button data-l="einfach" class="e">🟦 einfach</button><button data-l="komplexer" class="k">🟨 komplexer</button><button data-l="schwierig" class="s">🟥 schwierig</button></div><div class="wheelwrap"><div class="wheelbox"><div class="wheelptr">🔻</div><svg id="wheelSvg" viewBox="0 0 200 200"></svg><div class="wheelhub">🎡</div></div><button class="spinbtn" id="spinBtn">🎡 Drehen / spin</button><div class="wheelout" id="wheelOut">Dreh das Rad und sprich mind. 1 Minute! <span class="en">Spin and speak for at least 1 minute!</span></div><div class="wheeltimerbar"><span id="wtTime">1:00</span><button class="spinbtn wt" id="wtBtn">▶︎ 1-Min-Timer</button></div></div></div></section><section class="step"><div class="shd"><div class="ico">🎯</div><div><div class="sn">Schritt 6 von 9</div><h2>Quiz — fair richtigstellen</h2></div><div class="tmr" data-min="6"><span class="td">06:00</span><button class="ts">▶︎ Start</button><button class="tr">⟳</button></div></div><div class="meta"><div>🎯 <b>Ziel:</b> Die richtigen Wendungen wählen.<div class="en">Choose the right phrase.</div></div><div>👥 <b>So geht’s:</b> Lest die Frage, tippt gemeinsam, lest die Erklärung laut.<div class="en">Answer together, read the explanation.</div></div></div><div class="leveled" data-lvl="einfach"><div class="lvlchip"><span class="lc">Diese Übung / this task:</span><button data-l="einfach" class="e">🟦 einfach</button><button data-l="komplexer" class="k">🟨 komplexer</button><button data-l="schwierig" class="s">🟥 schwierig</button></div><div class="blk" data-lvl="einfach"><div class="quizbox" data-q='[{&quot;q&quot;: &quot;Sanft einhaken: „___ ich kurz?“&quot;, &quot;opts&quot;: [&quot;Darf&quot;, &quot;Muss&quot;, &quot;Soll&quot;], &quot;correct&quot;: 0, &quot;e&quot;: &quot;Darf ich kurz? = höfliches Einhaken.&quot;}, {&quot;q&quot;: &quot;Anderen Stand nennen: „Dazu habe ich einen anderen ___.“&quot;, &quot;opts&quot;: [&quot;Stand&quot;, &quot;Stein&quot;, &quot;Start&quot;], &quot;correct&quot;: 0, &quot;e&quot;: &quot;einen anderen Stand haben = anderen Informationsstand.&quot;}, {&quot;q&quot;: &quot;Eigenen Fehler zugeben: „Da hatte ich ___.“&quot;, &quot;opts&quot;: [&quot;unrecht&quot;, &quot;Uhrzeit&quot;, &quot;Urlaub&quot;], &quot;correct&quot;: 0, &quot;e&quot;: &quot;unrecht haben = to be wrong.&quot;}, {&quot;q&quot;: &quot;Unsicherheit: „Ich kann mich ___.“&quot;, &quot;opts&quot;: [&quot;irren&quot;, &quot;eilen&quot;, &quot;einigen&quot;], &quot;correct&quot;: 0, &quot;e&quot;: &quot;sich irren = to be mistaken.&quot;}]'><div class="qz-top"><span class="qz-head">🎯 Was sagt man?</span><span class="qz-score"></span></div><div class="qz-body"></div></div></div><div class="blk" data-lvl="komplexer"><div class="quizbox" data-q='[{&quot;q&quot;: &quot;Sanft einhaken: „___ ich kurz?“&quot;, &quot;opts&quot;: [&quot;Darf&quot;, &quot;Muss&quot;, &quot;Soll&quot;], &quot;correct&quot;: 0, &quot;e&quot;: &quot;Darf ich kurz? = höfliches Einhaken.&quot;}, {&quot;q&quot;: &quot;Anderen Stand nennen: „Dazu habe ich einen anderen ___.“&quot;, &quot;opts&quot;: [&quot;Stand&quot;, &quot;Stein&quot;, &quot;Start&quot;], &quot;correct&quot;: 0, &quot;e&quot;: &quot;einen anderen Stand haben = anderen Informationsstand.&quot;}, {&quot;q&quot;: &quot;Eigenen Fehler zugeben: „Da hatte ich ___.“&quot;, &quot;opts&quot;: [&quot;unrecht&quot;, &quot;Uhrzeit&quot;, &quot;Urlaub&quot;], &quot;correct&quot;: 0, &quot;e&quot;: &quot;unrecht haben = to be wrong.&quot;}, {&quot;q&quot;: &quot;Unsicherheit: „Ich kann mich ___.“&quot;, &quot;opts&quot;: [&quot;irren&quot;, &quot;eilen&quot;, &quot;einigen&quot;], &quot;correct&quot;: 0, &quot;e&quot;: &quot;sich irren = to be mistaken.&quot;}, {&quot;q&quot;: &quot;Höflich einordnen: „Das war der ___ Stand.“&quot;, &quot;opts&quot;: [&quot;alte&quot;, &quot;laute&quot;, &quot;kalte&quot;], &quot;correct&quot;: 0, &quot;e&quot;: &quot;der alte Stand = die frühere Information.&quot;}, {&quot;q&quot;: &quot;Vor der Entscheidung: „___ wir das beschließen, muss ich …“&quot;, &quot;opts&quot;: [&quot;Bevor&quot;, &quot;Nachdem&quot;, &quot;Seit&quot;], &quot;correct&quot;: 0, &quot;e&quot;: &quot;Bevor wir beschließen … = rechtzeitig einhaken.&quot;}]'><div class="qz-top"><span class="qz-head">🎯 Was sagt man?</span><span class="qz-score"></span></div><div class="qz-body"></div></div></div><div class="blk" data-lvl="schwierig"><div class="quizbox" data-q='[{&quot;q&quot;: &quot;Sanft einhaken: „___ ich kurz?“&quot;, &quot;opts&quot;: [&quot;Darf&quot;, &quot;Muss&quot;, &quot;Soll&quot;], &quot;correct&quot;: 0, &quot;e&quot;: &quot;Darf ich kurz? = höfliches Einhaken.&quot;}, {&quot;q&quot;: &quot;Anderen Stand nennen: „Dazu habe ich einen anderen ___.“&quot;, &quot;opts&quot;: [&quot;Stand&quot;, &quot;Stein&quot;, &quot;Start&quot;], &quot;correct&quot;: 0, &quot;e&quot;: &quot;einen anderen Stand haben = anderen Informationsstand.&quot;}, {&quot;q&quot;: &quot;Eigenen Fehler zugeben: „Da hatte ich ___.“&quot;, &quot;opts&quot;: [&quot;unrecht&quot;, &quot;Uhrzeit&quot;, &quot;Urlaub&quot;], &quot;correct&quot;: 0, &quot;e&quot;: &quot;unrecht haben = to be wrong.&quot;}, {&quot;q&quot;: &quot;Unsicherheit: „Ich kann mich ___.“&quot;, &quot;opts&quot;: [&quot;irren&quot;, &quot;eilen&quot;, &quot;einigen&quot;], &quot;correct&quot;: 0, &quot;e&quot;: &quot;sich irren = to be mistaken.&quot;}, {&quot;q&quot;: &quot;Höflich einordnen: „Das war der ___ Stand.“&quot;, &quot;opts&quot;: [&quot;alte&quot;, &quot;laute&quot;, &quot;kalte&quot;], &quot;correct&quot;: 0, &quot;e&quot;: &quot;der alte Stand = die frühere Information.&quot;}, {&quot;q&quot;: &quot;Vor der Entscheidung: „___ wir das beschließen, muss ich …“&quot;, &quot;opts&quot;: [&quot;Bevor&quot;, &quot;Nachdem&quot;, &quot;Seit&quot;], &quot;correct&quot;: 0, &quot;e&quot;: &quot;Bevor wir beschließen … = rechtzeitig einhaken.&quot;}, {&quot;q&quot;: &quot;Schärfe abmildern: „Das ___ schärfer, als ich es meine.“&quot;, &quot;opts&quot;: [&quot;klang&quot;, &quot;klingt bald&quot;, &quot;klopfte&quot;], &quot;correct&quot;: 0, &quot;e&quot;: &quot;Das klang schärfer … = das kam härter rüber.&quot;}, {&quot;q&quot;: &quot;Diskret: „Können wir das ___ vier Augen klären?“&quot;, &quot;opts&quot;: [&quot;unter&quot;, &quot;über&quot;, &quot;vor&quot;], &quot;correct&quot;: 0, &quot;e&quot;: &quot;unter vier Augen = privat, zu zweit.&quot;}]'><div class="qz-top"><span class="qz-head">🎯 Was sagt man?</span><span class="qz-score"></span></div><div class="qz-body"></div></div></div></div><div class="tip">💡 Richtige Antwort danach laut nachsprechen.</div></section><section class="step"><div class="shd"><div class="ico">🎭</div><div><div class="sn">Schritt 7 von 9</div><h2>Rollenspiel — fair richtigstellen</h2></div><div class="tmr" data-min="8"><span class="td">08:00</span><button class="ts">▶︎ Start</button><button class="tr">⟳</button></div></div><div class="meta"><div>🎯 <b>Ziel:</b> Eine echte Szene spielen.<div class="en">Act out a real scene.</div></div><div>👥 <b>So geht’s:</b> Wählt eine Karte, übernehmt die Rollen, spielt die Szene. Erst selbst — dann Beispiel-Dialog aufklappen!<div class="en">Play it first, then reveal.</div></div></div><div class="blk" data-lvl="einfach"><div class="rollgrid"><div class="rollcard"><img class="rc-photo" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260929_173848_3cadb63d-53e6-47d1-b964-fa48f36c2b5f.png" alt="📊 Falsche Zahl"><div class="rc-top">📊 Falsche Zahl</div><div class="rc-sc">In der Besprechung nennt A ein falsches Datum.</div><div class="rc-roles"><span class="rc-a">🅰️ A — nennt die Zahl</span><span class="rc-b">🅱️ B — stellt höflich richtig</span></div><button class="rollrev">💬 Beispiel-Dialog zeigen</button><div class="roll-dia"><div class="dia-h">💬 So könnte es laufen:</div><p><b>A:</b> Wir liefern am 20.</p><p><b>B:</b> Darf ich kurz? Dazu habe ich einen anderen Stand — der 12.</p><p><b>A:</b> Sicher?</p><p><b>B:</b> Ich kann mich irren, aber die aktuelle Fassung sagt den 12.</p></div></div><div class="rollcard"><img class="rc-photo" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260930_094441_c3226177-2fb9-43c5-87e8-c1f3f4b30e8a.png" alt="🙏 Selbst geirrt"><div class="rc-top">🙏 Selbst geirrt</div><div class="rc-sc">A wird korrigiert und reagiert souverän.</div><div class="rc-roles"><span class="rc-a">🅰️ B — korrigiert</span><span class="rc-b">🅱️ A — nimmt es an</span></div><button class="rollrev">💬 Beispiel-Dialog zeigen</button><div class="roll-dia"><div class="dia-h">💬 So könnte es laufen:</div><p><b>B:</b> Das stimmt so nicht — der Termin ist der 12.</p><p><b>A:</b> Da hatte ich unrecht, danke.</p><p><b>B:</b> Kein Problem.</p><p><b>A:</b> Dann ziehe ich das zurück.</p></div></div><div class="rollcard"><img class="rc-photo" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260930_094415_bee78712-4c38-4d44-acac-521a84f58b05.png" alt="🤫 Unter vier Augen"><div class="rc-top">🤫 Unter vier Augen</div><div class="rc-sc">A korrigiert B lieber leise.</div><div class="rc-roles"><span class="rc-a">🅰️ A — diskret</span><span class="rc-b">🅱️ B — dankbar</span></div><button class="rollrev">💬 Beispiel-Dialog zeigen</button><div class="roll-dia"><div class="dia-h">💬 So könnte es laufen:</div><p><b>A:</b> Hast du kurz Zeit, unter vier Augen?</p><p><b>B:</b> Klar.</p><p><b>A:</b> Nur zwischen uns: in der Folie ist ein Fehler.</p><p><b>B:</b> Gut, dass du es sagst — nicht vor allen.</p></div></div></div></div><div class="blk" data-lvl="komplexer"><div class="rollgrid"><div class="rollcard"><img class="rc-photo" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260929_173848_3cadb63d-53e6-47d1-b964-fa48f36c2b5f.png" alt="⏳ Der richtige Zeitpunkt"><div class="rc-top">⏳ Der richtige Zeitpunkt</div><div class="rc-sc">Rechtzeitig einhaken, bevor beschlossen wird.</div><div class="rc-roles"><span class="rc-a">🅰️ A — will schnell beschließen</span><span class="rc-b">🅱️ B — hält kurz an</span></div><button class="rollrev">💬 Beispiel-Dialog zeigen</button><div class="roll-dia"><div class="dia-h">💬 So könnte es laufen:</div><p><b>A:</b> Gut, dann beschließen wir das so.</p><p><b>B:</b> Ein Punkt noch, bevor wir beschließen — die Zahl stimmt nicht.</p><p><b>A:</b> Oh, danke.</p><p><b>B:</b> Das war der alte Stand, jetzt gilt der neue.</p></div></div><div class="rollcard"><img class="rc-photo" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260930_094333_12a3942d-e345-48bb-a606-2b2fe5986759.png" alt="🔄 Neuer Stand"><div class="rc-top">🔄 Neuer Stand</div><div class="rc-sc">Etwas hat sich kürzlich geändert.</div><div class="rc-roles"><span class="rc-a">🅰️ A — hat alte Info</span><span class="rc-b">🅱️ B — aktualisiert</span></div><button class="rollrev">💬 Beispiel-Dialog zeigen</button><div class="roll-dia"><div class="dia-h">💬 So könnte es laufen:</div><p><b>A:</b> Laut Regel geht das nicht.</p><p><b>B:</b> Das war lange auch mein Stand — aber das ist erst seit Kurzem anders.</p><p><b>A:</b> Ach, wirklich?</p><p><b>B:</b> Ja, die neue Fassung erlaubt es.</p></div></div><div class="rollcard"><img class="rc-photo" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260930_094244_0c2f5ebf-0d07-4deb-938b-592bbf083afb.png" alt="👥 Mehrere lagen falsch"><div class="rc-top">👥 Mehrere lagen falsch</div><div class="rc-sc">Nicht nur einer hat es falsch verstanden.</div><div class="rc-roles"><span class="rc-a">🅰️ A — verteidigt sich</span><span class="rc-b">🅱️ B — nimmt Druck raus</span></div><button class="rollrev">💬 Beispiel-Dialog zeigen</button><div class="roll-dia"><div class="dia-h">💬 So könnte es laufen:</div><p><b>A:</b> Wieso wusste ich das nicht?</p><p><b>B:</b> Das haben mehrere so verstanden — nicht nur du.</p><p><b>A:</b> Okay, dann korrigieren wir es zusammen.</p><p><b>B:</b> Genau, dann steht es sauber.</p></div></div></div></div><div class="blk" data-lvl="schwierig"><div class="rollgrid"><div class="rollcard"><img class="rc-photo" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260930_094441_c3226177-2fb9-43c5-87e8-c1f3f4b30e8a.png" alt="😐 Zu scharf geraten"><div class="rc-top">😐 Zu scharf geraten</div><div class="rc-sc">Deine Korrektur kam härter rüber als gewollt.</div><div class="rc-roles"><span class="rc-a">🅰️ A — fühlt sich angegriffen</span><span class="rc-b">🅱️ B — rudert zurück</span></div><button class="rollrev">💬 Beispiel-Dialog zeigen</button><div class="roll-dia"><div class="dia-h">💬 So könnte es laufen:</div><p><b>A:</b> Das klang, als wäre ich inkompetent.</p><p><b>B:</b> Das klang schärfer, als ich es meine — tut mir leid.</p><p><b>A:</b> Danke.</p><p><b>B:</b> Nicht als Kritik gemeint, mir ging es nur um die Zahl.</p></div></div><div class="rollcard"><img class="rc-photo" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260929_173848_3cadb63d-53e6-47d1-b964-fa48f36c2b5f.png" alt="💪 Auf Korrektheit bestehen"><div class="rc-top">💪 Auf Korrektheit bestehen</div><div class="rc-sc">Ein Fehler muss raus — bleib höflich, aber fest.</div><div class="rc-roles"><span class="rc-a">🅰️ A — will weitermachen</span><span class="rc-b">🅱️ B — besteht darauf</span></div><button class="rollrev">💬 Beispiel-Dialog zeigen</button><div class="roll-dia"><div class="dia-h">💬 So könnte es laufen:</div><p><b>A:</b> Lass uns einfach weitermachen.</p><p><b>B:</b> Bevor wir weitermachen — darauf würde ich bestehen.</p><p><b>A:</b> Ist das so wichtig?</p><p><b>B:</b> Ja, sonst beschließen wir etwas Falsches.</p></div></div><div class="rollcard"><img class="rc-photo" src="https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260930_094415_bee78712-4c38-4d44-acac-521a84f58b05.png" alt="🧑‍💼 Chef korrigieren"><div class="rc-top">🧑‍💼 Chef korrigieren</div><div class="rc-sc">Der/die Vorgesetzte irrt sich — diplomatisch bleiben.</div><div class="rc-roles"><span class="rc-a">🅰️ Chef/in — sicher</span><span class="rc-b">🅱️ Du — höflich richtig</span></div><button class="rollrev">💬 Beispiel-Dialog zeigen</button><div class="roll-dia"><div class="dia-h">💬 So könnte es laufen:</div><p><b>Chef:</b> Das haben wir immer so gemacht.</p><p><b>Du:</b> Da habe ich einen anderen Stand — darf ich das kurz zeigen?</p><p><b>Chef:</b> Bitte.</p><p><b>Du:</b> Die aktuelle Vorgabe ist anders — gut, dass wir es vor der Entscheidung sehen.</p></div></div></div></div><div class="tip">💡 Ablauf: weich einhaken → anderen Stand nennen → nie triumphieren → gemeinsam festhalten.</div></section><section class="step"><div class="shd"><div class="ico">⏱️</div><div><div class="sn">Schritt 8 von 9</div><h2>90-Sekunden-Challenge</h2></div><div class="tmr" data-min="8"><span class="td">08:00</span><button class="ts">▶︎ Start</button><button class="tr">⟳</button></div></div><div class="meta"><div>🎯 <b>Ziel:</b> 90 Sekunden frei sprechen.<div class="en">Talk for 90 seconds.</div></div><div>👥 <b>So geht’s:</b> Eine Person zieht ein Thema und spricht 90 Sek. Dann wechseln. 10 Themen!<div class="en">Pick a topic, talk 90s, switch.</div></div></div><div class="leveled" data-lvl="einfach"><div class="lvlchip"><span class="lc">Diese Übung / this task:</span><button data-l="einfach" class="e">🟦 einfach</button><button data-l="komplexer" class="k">🟨 komplexer</button><button data-l="schwierig" class="s">🟥 schwierig</button></div><div class="blk" data-lvl="einfach"><div class="challboard" data-topics='[{&quot;img&quot;: &quot;https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260929_173848_3cadb63d-53e6-47d1-b964-fa48f36c2b5f.png&quot;, &quot;frage&quot;: &quot;Wie korrigierst du jemanden in einer Besprechung, ohne ihn bloszustellen?&quot;, &quot;hilf&quot;: [&quot;einhaken&quot;, &quot;der Stand&quot;, &quot;höflich&quot;, &quot;der Irrtum&quot;]}, {&quot;img&quot;: &quot;https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260930_094441_c3226177-2fb9-43c5-87e8-c1f3f4b30e8a.png&quot;, &quot;frage&quot;: &quot;Wie reagierst du, wenn du selbst korrigiert wirst?&quot;, &quot;hilf&quot;: [&quot;unrecht&quot;, &quot;zugeben&quot;, &quot;danke&quot;, &quot;souverän&quot;]}, {&quot;img&quot;: &quot;https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260930_094415_bee78712-4c38-4d44-acac-521a84f58b05.png&quot;, &quot;frage&quot;: &quot;Vor allen oder unter vier Augen — was ist besser? Begründe.&quot;, &quot;hilf&quot;: [&quot;vor allen&quot;, &quot;unter vier Augen&quot;, &quot;das Gesicht&quot;, &quot;diskret&quot;]}, {&quot;img&quot;: &quot;https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260930_094244_0c2f5ebf-0d07-4deb-938b-592bbf083afb.png&quot;, &quot;frage&quot;: &quot;Erzähle von einer Korrektur, die gut (oder schlecht) lief.&quot;, &quot;hilf&quot;: [&quot;korrigieren&quot;, &quot;der Ton&quot;, &quot;fair&quot;, &quot;das Beispiel&quot;]}, {&quot;img&quot;: &quot;https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260930_094333_12a3942d-e345-48bb-a606-2b2fe5986759.png&quot;, &quot;frage&quot;: &quot;Wie sagst du, dass sich etwas kürzlich geändert hat?&quot;, &quot;hilf&quot;: [&quot;der alte Stand&quot;, &quot;seit Kurzem&quot;, &quot;aktuell&quot;, &quot;die Fassung&quot;]}, {&quot;img&quot;: &quot;https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260929_173848_3cadb63d-53e6-47d1-b964-fa48f36c2b5f.png&quot;, &quot;frage&quot;: &quot;Wie häkst du rechtzeitig ein, bevor etwas Falsches beschlossen wird?&quot;, &quot;hilf&quot;: [&quot;bevor&quot;, &quot;der Punkt&quot;, &quot;kurz&quot;, &quot;beschließen&quot;]}, {&quot;img&quot;: &quot;https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260930_094441_c3226177-2fb9-43c5-87e8-c1f3f4b30e8a.png&quot;, &quot;frage&quot;: &quot;Wie entschärfst du eine Korrektur, die zu hart klang?&quot;, &quot;hilf&quot;: [&quot;schärfer&quot;, &quot;nicht als Kritik&quot;, &quot;abmildern&quot;, &quot;gemeint&quot;]}, {&quot;img&quot;: &quot;https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260930_094415_bee78712-4c38-4d44-acac-521a84f58b05.png&quot;, &quot;frage&quot;: &quot;Wie korrigierst du deinen Chef, ohne unhöflich zu sein?&quot;, &quot;hilf&quot;: [&quot;diplomatisch&quot;, &quot;der Stand&quot;, &quot;darf ich&quot;, &quot;zeigen&quot;]}, {&quot;img&quot;: &quot;https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260930_094244_0c2f5ebf-0d07-4deb-938b-592bbf083afb.png&quot;, &quot;frage&quot;: &quot;Warum fällt es vielen schwer, Fehler zuzugeben?&quot;, &quot;hilf&quot;: [&quot;der Stolz&quot;, &quot;das Gesicht&quot;, &quot;der Fehler&quot;, &quot;souverän&quot;]}, {&quot;img&quot;: &quot;https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260929_173848_3cadb63d-53e6-47d1-b964-fa48f36c2b5f.png&quot;, &quot;frage&quot;: &quot;Wie schafft man eine Kultur, in der Korrekturen normal sind?&quot;, &quot;hilf&quot;: [&quot;die Kultur&quot;, &quot;offen&quot;, &quot;ohne Angst&quot;, &quot;das Vertrauen&quot;]}]'><div class="challstart"><div class="cbig">90</div><p class="lead">Sekunden. Sprich <b>ohne Pause</b> über das Thema! Bild, Thema und Hilfswörter helfen dir.</p><button class="qbtn" data-go="1">▶ Los geht’s</button></div><div class="challgame" style="display:none"><div class="challbar"><span class="challtime">90s</span><button class="qbtn ghost challnext">⏭ Anderes Thema</button></div><img class="challimg" src="" alt=""><div class="challfrage"></div><div class="challhilf"></div></div><div class="challend" style="display:none"></div></div></div><div class="blk" data-lvl="komplexer"><div class="challboard" data-topics='[{&quot;img&quot;: &quot;https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260929_173848_3cadb63d-53e6-47d1-b964-fa48f36c2b5f.png&quot;, &quot;frage&quot;: &quot;Wie korrigierst du jemanden in einer Besprechung, ohne ihn bloszustellen?&quot;, &quot;hilf&quot;: [&quot;einhaken&quot;, &quot;der Stand&quot;, &quot;höflich&quot;, &quot;der Irrtum&quot;]}, {&quot;img&quot;: &quot;https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260930_094441_c3226177-2fb9-43c5-87e8-c1f3f4b30e8a.png&quot;, &quot;frage&quot;: &quot;Wie reagierst du, wenn du selbst korrigiert wirst?&quot;, &quot;hilf&quot;: [&quot;unrecht&quot;, &quot;zugeben&quot;, &quot;danke&quot;, &quot;souverän&quot;]}, {&quot;img&quot;: &quot;https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260930_094415_bee78712-4c38-4d44-acac-521a84f58b05.png&quot;, &quot;frage&quot;: &quot;Vor allen oder unter vier Augen — was ist besser? Begründe.&quot;, &quot;hilf&quot;: [&quot;vor allen&quot;, &quot;unter vier Augen&quot;, &quot;das Gesicht&quot;, &quot;diskret&quot;]}, {&quot;img&quot;: &quot;https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260930_094244_0c2f5ebf-0d07-4deb-938b-592bbf083afb.png&quot;, &quot;frage&quot;: &quot;Erzähle von einer Korrektur, die gut (oder schlecht) lief.&quot;, &quot;hilf&quot;: [&quot;korrigieren&quot;, &quot;der Ton&quot;, &quot;fair&quot;, &quot;das Beispiel&quot;]}, {&quot;img&quot;: &quot;https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260930_094333_12a3942d-e345-48bb-a606-2b2fe5986759.png&quot;, &quot;frage&quot;: &quot;Wie sagst du, dass sich etwas kürzlich geändert hat?&quot;, &quot;hilf&quot;: [&quot;der alte Stand&quot;, &quot;seit Kurzem&quot;, &quot;aktuell&quot;, &quot;die Fassung&quot;]}, {&quot;img&quot;: &quot;https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260929_173848_3cadb63d-53e6-47d1-b964-fa48f36c2b5f.png&quot;, &quot;frage&quot;: &quot;Wie häkst du rechtzeitig ein, bevor etwas Falsches beschlossen wird?&quot;, &quot;hilf&quot;: [&quot;bevor&quot;, &quot;der Punkt&quot;, &quot;kurz&quot;, &quot;beschließen&quot;]}, {&quot;img&quot;: &quot;https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260930_094441_c3226177-2fb9-43c5-87e8-c1f3f4b30e8a.png&quot;, &quot;frage&quot;: &quot;Wie entschärfst du eine Korrektur, die zu hart klang?&quot;, &quot;hilf&quot;: [&quot;schärfer&quot;, &quot;nicht als Kritik&quot;, &quot;abmildern&quot;, &quot;gemeint&quot;]}, {&quot;img&quot;: &quot;https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260930_094415_bee78712-4c38-4d44-acac-521a84f58b05.png&quot;, &quot;frage&quot;: &quot;Wie korrigierst du deinen Chef, ohne unhöflich zu sein?&quot;, &quot;hilf&quot;: [&quot;diplomatisch&quot;, &quot;der Stand&quot;, &quot;darf ich&quot;, &quot;zeigen&quot;]}, {&quot;img&quot;: &quot;https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260930_094244_0c2f5ebf-0d07-4deb-938b-592bbf083afb.png&quot;, &quot;frage&quot;: &quot;Warum fällt es vielen schwer, Fehler zuzugeben?&quot;, &quot;hilf&quot;: [&quot;der Stolz&quot;, &quot;das Gesicht&quot;, &quot;der Fehler&quot;, &quot;souverän&quot;]}, {&quot;img&quot;: &quot;https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260929_173848_3cadb63d-53e6-47d1-b964-fa48f36c2b5f.png&quot;, &quot;frage&quot;: &quot;Wie schafft man eine Kultur, in der Korrekturen normal sind?&quot;, &quot;hilf&quot;: [&quot;die Kultur&quot;, &quot;offen&quot;, &quot;ohne Angst&quot;, &quot;das Vertrauen&quot;]}]'><div class="challstart"><div class="cbig">90</div><p class="lead">Sekunden. Sprich <b>ohne Pause</b> über das Thema! Bild, Thema und Hilfswörter helfen dir.</p><button class="qbtn" data-go="1">▶ Los geht’s</button></div><div class="challgame" style="display:none"><div class="challbar"><span class="challtime">90s</span><button class="qbtn ghost challnext">⏭ Anderes Thema</button></div><img class="challimg" src="" alt=""><div class="challfrage"></div><div class="challhilf"></div></div><div class="challend" style="display:none"></div></div></div><div class="blk" data-lvl="schwierig"><div class="challboard" data-topics='[{&quot;img&quot;: &quot;https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260929_173848_3cadb63d-53e6-47d1-b964-fa48f36c2b5f.png&quot;, &quot;frage&quot;: &quot;Wie korrigierst du jemanden in einer Besprechung, ohne ihn bloszustellen?&quot;, &quot;hilf&quot;: [&quot;einhaken&quot;, &quot;der Stand&quot;, &quot;höflich&quot;, &quot;der Irrtum&quot;]}, {&quot;img&quot;: &quot;https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260930_094441_c3226177-2fb9-43c5-87e8-c1f3f4b30e8a.png&quot;, &quot;frage&quot;: &quot;Wie reagierst du, wenn du selbst korrigiert wirst?&quot;, &quot;hilf&quot;: [&quot;unrecht&quot;, &quot;zugeben&quot;, &quot;danke&quot;, &quot;souverän&quot;]}, {&quot;img&quot;: &quot;https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260930_094415_bee78712-4c38-4d44-acac-521a84f58b05.png&quot;, &quot;frage&quot;: &quot;Vor allen oder unter vier Augen — was ist besser? Begründe.&quot;, &quot;hilf&quot;: [&quot;vor allen&quot;, &quot;unter vier Augen&quot;, &quot;das Gesicht&quot;, &quot;diskret&quot;]}, {&quot;img&quot;: &quot;https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260930_094244_0c2f5ebf-0d07-4deb-938b-592bbf083afb.png&quot;, &quot;frage&quot;: &quot;Erzähle von einer Korrektur, die gut (oder schlecht) lief.&quot;, &quot;hilf&quot;: [&quot;korrigieren&quot;, &quot;der Ton&quot;, &quot;fair&quot;, &quot;das Beispiel&quot;]}, {&quot;img&quot;: &quot;https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260930_094333_12a3942d-e345-48bb-a606-2b2fe5986759.png&quot;, &quot;frage&quot;: &quot;Wie sagst du, dass sich etwas kürzlich geändert hat?&quot;, &quot;hilf&quot;: [&quot;der alte Stand&quot;, &quot;seit Kurzem&quot;, &quot;aktuell&quot;, &quot;die Fassung&quot;]}, {&quot;img&quot;: &quot;https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260929_173848_3cadb63d-53e6-47d1-b964-fa48f36c2b5f.png&quot;, &quot;frage&quot;: &quot;Wie häkst du rechtzeitig ein, bevor etwas Falsches beschlossen wird?&quot;, &quot;hilf&quot;: [&quot;bevor&quot;, &quot;der Punkt&quot;, &quot;kurz&quot;, &quot;beschließen&quot;]}, {&quot;img&quot;: &quot;https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260930_094441_c3226177-2fb9-43c5-87e8-c1f3f4b30e8a.png&quot;, &quot;frage&quot;: &quot;Wie entschärfst du eine Korrektur, die zu hart klang?&quot;, &quot;hilf&quot;: [&quot;schärfer&quot;, &quot;nicht als Kritik&quot;, &quot;abmildern&quot;, &quot;gemeint&quot;]}, {&quot;img&quot;: &quot;https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260930_094415_bee78712-4c38-4d44-acac-521a84f58b05.png&quot;, &quot;frage&quot;: &quot;Wie korrigierst du deinen Chef, ohne unhöflich zu sein?&quot;, &quot;hilf&quot;: [&quot;diplomatisch&quot;, &quot;der Stand&quot;, &quot;darf ich&quot;, &quot;zeigen&quot;]}, {&quot;img&quot;: &quot;https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260930_094244_0c2f5ebf-0d07-4deb-938b-592bbf083afb.png&quot;, &quot;frage&quot;: &quot;Warum fällt es vielen schwer, Fehler zuzugeben?&quot;, &quot;hilf&quot;: [&quot;der Stolz&quot;, &quot;das Gesicht&quot;, &quot;der Fehler&quot;, &quot;souverän&quot;]}, {&quot;img&quot;: &quot;https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260929_173848_3cadb63d-53e6-47d1-b964-fa48f36c2b5f.png&quot;, &quot;frage&quot;: &quot;Wie schafft man eine Kultur, in der Korrekturen normal sind?&quot;, &quot;hilf&quot;: [&quot;die Kultur&quot;, &quot;offen&quot;, &quot;ohne Angst&quot;, &quot;das Vertrauen&quot;]}]'><div class="challstart"><div class="cbig">90</div><p class="lead">Sekunden. Sprich <b>ohne Pause</b> über das Thema! Bild, Thema und Hilfswörter helfen dir.</p><button class="qbtn" data-go="1">▶ Los geht’s</button></div><div class="challgame" style="display:none"><div class="challbar"><span class="challtime">90s</span><button class="qbtn ghost challnext">⏭ Anderes Thema</button></div><img class="challimg" src="" alt=""><div class="challfrage"></div><div class="challhilf"></div></div><div class="challend" style="display:none"></div></div></div></div><div class="tip">💡 Erzähle mit Beispiel und nutze die Chunks — kein Ein-Satz-Antwort. 🔥</div></section><section class="step"><div class="shd"><div class="ico">✍️</div><div><div class="sn">Schritt 9 von 9</div><h2>Lückentext</h2></div><div class="tmr" data-min="5"><span class="td">05:00</span><button class="ts">▶︎ Start</button><button class="tr">⟳</button></div></div><div class="meta"><div>🎯 <b>Ziel:</b> Das richtige Wort wählen.<div class="en">Pick the right word.</div></div><div>👥 <b>So geht’s:</b> Lest den Satz und wählt das passende Wort. Grün = richtig.<div class="en">Choose the right word.</div></div></div><div class="leveled" data-lvl="einfach"><div class="lvlchip"><span class="lc">Diese Übung / this task:</span><button data-l="einfach" class="e">🟦 einfach</button><button data-l="komplexer" class="k">🟨 komplexer</button><button data-l="schwierig" class="s">🟥 schwierig</button></div><div class="gapbox"><div class="gaprow"><select data-a="Darf"><option value="">— wählen —</option><option value="Darf">Darf</option><option value="Muss">Muss</option><option value="Soll">Soll</option></select> ich kurz einhaken?</div><div class="gaprow">Dazu habe ich einen anderen <select data-a="Stand"><option value="">— wählen —</option><option value="Stand">Stand</option><option value="Start">Start</option><option value="Stein">Stein</option></select>.</div><div class="gaprow">Da hatte ich <select data-a="unrecht"><option value="">— wählen —</option><option value="Uhrzeit">Uhrzeit</option><option value="Urlaub">Urlaub</option><option value="unrecht">unrecht</option></select>, danke.</div><div class="gaprow">Das war der <select data-a="alte"><option value="">— wählen —</option><option value="alte">alte</option><option value="kalte">kalte</option><option value="laute">laute</option></select> Stand.</div><div class="gaprow">Das klang <select data-a="schärfer"><option value="">— wählen —</option><option value="schwerer">schwerer</option><option value="schärfer">schärfer</option><option value="schöner">schöner</option></select>, als ich es meine.</div><div class="gaprow">Können wir das <select data-a="unter"><option value="">— wählen —</option><option value="unter">unter</option><option value="vor">vor</option><option value="über">über</option></select> vier Augen klären?</div></div></div><div class="tip">💡 Sagt den ganzen Satz danach laut.</div></section><div class="foot"><b>deutsch</b>oderwas · Sprechclub · Richtigstellen, ohne das Gesicht zu verlieren · B1/B2 · 3 Stufen</div></div><script>var WHEEL={"einfach": [["✋ Einhaken", "Wie sagst du höflich, dass etwas falsch ist?"], ["📊 Zahl", "Jemand nennt eine falsche Zahl — was tust du?"], ["🙏 Zugeben", "Fällt es dir leicht, Fehler zuzugeben?"], ["😐 Korrigiert", "Wie fühlst du dich, wenn man dich korrigiert?"], ["👥 Vor Gruppe", "Vor allen oder unter vier Augen?"], ["⏰ Timing", "Wann ist der richtige Moment?"], ["🗣️ Ton", "Wie wichtig ist der Ton beim Korrigieren?"], ["🤝 Danke", "Sagst du danke, wenn man dich korrigiert?"], ["📝 Notiz", "Schreibst du Korrekturen auf?"], ["😊 Fair", "Wird bei euch fair korrigiert?"]], "komplexer": [["🧑‍💼 Chef", "Wie korrigierst du deinen Chef?"], ["🔄 Neuer Stand", "Wie sagst du, dass sich etwas geändert hat?"], ["👥 Mehrere", "Was, wenn mehrere es falsch verstanden haben?"], ["⏳ Rechtzeitig", "Wie häkst du vor einer Entscheidung ein?"], ["🤫 Diskret", "Wann klärst du unter vier Augen?"], ["💪 Bestehen", "Wann bestehst du auf einer Korrektur?"], ["😐 Zu hart", "Wie entschärfst du eine harte Korrektur?"], ["🧠 Souverän", "Wie bleibt man souverän, wenn man sich irrt?"], ["📱 Schriftlich", "Korrigierst du lieber mündlich oder schriftlich?"], ["🌟 Beispiel", "Eine Korrektur, die gut lief?"]], "schwierig": [["🏛️ Kultur", "Wie schafft man eine offene Fehlerkultur?"], ["⚖️ Recht", "Wann muss man auf einer Korrektur bestehen?"], ["🧠 Stolz", "Warum fällt Zugeben schwer?"], ["👥 Hierarchie", "Wie korrigiert man über Hierarchien hinweg?"], ["🌍 Kultur-Unterschied", "Wird überall gleich korrigiert?"], ["💡 Feedback", "Was ist gutes Feedback?"], ["🎭 Rolle", "Spiele eine schwierige Korrektur."], ["📉 Fehlerangst", "Wie nimmt man Menschen die Angst vor Fehlern?"], ["🧑‍🏫 Lehren", "Wie bringt man Schülern faires Korrigieren bei?"], ["🌟 Fazit", "Dein wichtigster Tipp zum Richtigstellen?"]]};var wheelRot=0,spinning=false;function setSec(sec,lv){sec.setAttribute("data-lvl",lv);sec.querySelectorAll(".lvlchip button").forEach(function(b){b.classList.toggle("on",b.getAttribute("data-l")===lv);});if(sec.id==="wheelSec")renderWheel(lv);}function setAll(lv){document.querySelectorAll(".leveled").forEach(function(s){setSec(s,lv);});document.querySelectorAll(".levelswitch button").forEach(function(b){b.classList.toggle("on",b.getAttribute("data-lvl")===lv);});document.body.setAttribute("data-level",lv);}document.querySelectorAll(".levelswitch button").forEach(function(b){b.addEventListener("click",function(){setAll(b.getAttribute("data-lvl"));});});document.addEventListener("click",function(e){var c=e.target.closest(".lvlchip button");if(c){e.stopPropagation();setSec(c.closest(".leveled"),c.getAttribute("data-l"));return;}var sp=e.target.closest(".say");if(sp){var t=sp.getAttribute("data-say");try{speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(t);u.lang="de-DE";u.rate=.95;speechSynthesis.speak(u);}catch(x){}return;}var ts=e.target.closest(".ts");if(ts){startT(ts.closest(".tmr"));return;}var tr=e.target.closest(".tr");if(tr){resetT(tr.closest(".tmr"));return;}});var timers=new Map();function fmt(s){return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");}function startT(t){var d=t.querySelector(".td");var st=timers.get(t);if(st&&st.iv){clearInterval(st.iv);st.iv=null;t.querySelector(".ts").textContent="▶︎ Start";return;}var rest=(st&&st.rest!=null)?st.rest:parseInt(t.getAttribute("data-min"),10)*60;var iv=setInterval(function(){rest--;d.textContent=fmt(Math.max(rest,0));if(rest<=0){clearInterval(iv);d.textContent="✅ fertig";timers.set(t,{rest:0,iv:null});t.querySelector(".ts").textContent="▶︎ Start";}else{timers.set(t,{rest:rest,iv:iv});}},1000);timers.set(t,{rest:rest,iv:iv});t.querySelector(".ts").textContent="⏸ Pause";}function resetT(t){var st=timers.get(t);if(st&&st.iv)clearInterval(st.iv);var m=parseInt(t.getAttribute("data-min"),10);t.querySelector(".td").textContent=fmt(m*60);timers.set(t,{rest:m*60,iv:null});t.querySelector(".ts").textContent="▶︎ Start";}var COLORS=["#35AFD0","#FFD24A","#E8302A","#8ED0E0","#F4B942","#F07167","#0FB5A6","#FBC02D","#EF6461","#3AA6C4"];function curLv(){var s=document.getElementById("wheelSec");return s?s.getAttribute("data-lvl"):"einfach";}function renderWheel(lv){var data=WHEEL[lv];var svg=document.getElementById("wheelSvg");if(!svg)return;var n=data.length,seg=360/n,cx=100,cy=100,r=98;var out="";for(var i=0;i<n;i++){var a0=(i*seg-90)*Math.PI/180,a1=((i+1)*seg-90)*Math.PI/180;var x0=cx+r*Math.cos(a0),y0=cy+r*Math.sin(a0),x1=cx+r*Math.cos(a1),y1=cy+r*Math.sin(a1);out+="<path d=\"M"+cx+","+cy+" L"+x0.toFixed(2)+","+y0.toFixed(2)+" A"+r+","+r+" 0 0 1 "+x1.toFixed(2)+","+y1.toFixed(2)+" Z\" fill=\""+COLORS[i%COLORS.length]+"\" stroke=\"#fff\" stroke-width=\"1\"/>";var am=(i*seg+seg/2-90)*Math.PI/180,tr2=r*0.66,tx=cx+tr2*Math.cos(am),ty=cy+tr2*Math.sin(am);var em=data[i][0].split(" ")[0];out+="<text x=\""+tx.toFixed(1)+"\" y=\""+ty.toFixed(1)+"\" font-size=\"16\" text-anchor=\"middle\" dominant-baseline=\"central\">"+em+"</text>";}svg.innerHTML=out;svg.style.transition="none";wheelRot=0;svg.style.transform="rotate(0deg)";document.getElementById("wheelOut").innerHTML="Dreh das Rad und sprich mind. 1 Minute! <span class=\"en\">Spin and speak for at least 1 minute!</span>";}document.getElementById("spinBtn").onclick=function(){if(spinning)return;var lv=curLv();var data=WHEEL[lv];var n=data.length,seg=360/n;var i=Math.floor(Math.random()*n);var svg=document.getElementById("wheelSvg");spinning=true;var target=360*5 - (i*seg+seg/2);wheelRot+=(360*5)+((360-((wheelRot+ (i*seg+seg/2))%360))%360);svg.style.transition="transform 4s cubic-bezier(.17,.67,.14,1)";svg.style.transform="rotate("+wheelRot+"deg)";var out=document.getElementById("wheelOut");out.innerHTML="🎡 …";setTimeout(function(){out.innerHTML="<span class=\"num\">"+data[i][0]+"</span> "+data[i][1];spinning=false;wtRun();},4100);};var wt=null;function wtShow(x){document.getElementById("wtTime").textContent=Math.floor(x/60)+":"+String(x%60).padStart(2,"0");}function wtRun(){if(wt)clearInterval(wt);var r=60;wtShow(60);document.getElementById("wtBtn").textContent="⏸";wt=setInterval(function(){r--;wtShow(Math.max(r,0));if(r<=0){clearInterval(wt);wt=null;document.getElementById("wtBtn").textContent="✅ fertig";}},1000);}document.getElementById("wtBtn").onclick=function(){if(wt){clearInterval(wt);wt=null;this.textContent="▶︎ 1-Min-Timer";}else{wtRun();}};setAll("einfach");renderWheel("einfach");</script>
+<script>function shuf(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}document.querySelectorAll(".memoboard").forEach(function(bd){var pairs=JSON.parse(bd.getAttribute("data-pairs"));var grid=bd.querySelector(".memogrid");var mv=bd.querySelector(".memomv"),fd=bd.querySelector(".memofound"),win=bd.querySelector(".memowin");var N=pairs.length;function build(){grid.innerHTML="";win.style.display="none";var cards=[];pairs.forEach(function(p,i){cards.push({id:i,type:"img",img:p.img,w:p.w});cards.push({id:i,type:"word",w:p.w});});shuf(cards);var open=[],found=0,moves=0,lock=false;mv.textContent="0 Züge";fd.textContent="0 / "+N+" Paare";cards.forEach(function(c,ci){var el=document.createElement("div");el.className="memocard hidden";var inner=c.type==="img"?('<div class="inner"><img src="'+c.img+'" alt=""><div class="mcap">'+c.w+'</div></div>'):('<div class="inner mw">'+c.w+'</div>');el.innerHTML='<span class="mnum">'+(ci+1)+'</span><span class="mq">❓</span>'+inner;el.onclick=function(){if(lock||el.classList.contains("match")||!el.classList.contains("hidden"))return;el.classList.remove("hidden");open.push({el:el,c:c});if(open.length===2){moves++;mv.textContent=moves+" Züge";if(open[0].c.id===open[1].c.id){open.forEach(function(o){o.el.classList.add("match");});found++;fd.textContent=found+" / "+N+" Paare";open=[];if(found===N){win.style.display="block";win.innerHTML="🎉 Alle Paare! In "+moves+" Zügen. <button class='qbtn' style='margin-top:.5rem'>↺ Nochmal</button>";win.querySelector("button").onclick=build;}}else{lock=true;var pr=open;setTimeout(function(){pr.forEach(function(o){o.el.classList.add("wrong");});},50);setTimeout(function(){pr.forEach(function(o){o.el.classList.remove("wrong");o.el.classList.add("hidden");});open=[];lock=false;},850);}}};grid.appendChild(el);});}build();});document.querySelectorAll(".challboard").forEach(function(bd){var topics=JSON.parse(bd.getAttribute("data-topics"));var start=bd.querySelector(".challstart"),game=bd.querySelector(".challgame"),end=bd.querySelector(".challend");var tE=bd.querySelector(".challtime"),img=bd.querySelector(".challimg"),fr=bd.querySelector(".challfrage"),hl=bd.querySelector(".challhilf");var timer,left,pool,idx=0;function load(){if(!pool||idx>=pool.length){pool=shuf(topics.slice());idx=0;}var t=pool[idx++];img.src=t.img;fr.textContent=t.frage;hl.innerHTML=t.hilf.map(function(w){return '<span class="hchip">'+w+'</span>';}).join("");clearInterval(timer);left=90;tE.textContent="90s";tE.classList.add("calm");start.style.display="none";end.style.display="none";game.style.display="block";timer=setInterval(function(){left--;tE.textContent=left+"s";if(left<=10)tE.classList.remove("calm");if(left<=0){clearInterval(timer);done();}},1000);}function done(){clearInterval(timer);game.style.display="none";end.style.display="block";end.innerHTML="<div class='cbig'>⏰</div><p class='lead'>Zeit um — super gesprochen! 👏</p><button class='qbtn'>Nächstes Thema →</button>";end.querySelector("button").onclick=load;}start.querySelector("[data-go]").onclick=load;bd.querySelector(".challnext").onclick=load;});</script>
+<script>document.addEventListener("click",function(e){var b=e.target.closest(".revbtn");if(b){b.closest(".revcard").classList.add("shown");}});</script>
+<script>document.querySelectorAll(".quizbox").forEach(function(qb){var items=JSON.parse(qb.getAttribute("data-q"));var idx=0,score=0;var body=qb.querySelector(".qz-body"),sc=qb.querySelector(".qz-score");sc.textContent="0 / "+items.length;function render(){var it=items[idx];body.innerHTML="";var q=document.createElement("div");q.className="qz-q";q.textContent=(idx+1)+". "+it.q;body.appendChild(q);it.opts.forEach(function(o,i){var b=document.createElement("button");b.className="qz-opt";b.textContent=o;b.onclick=function(){if(qb.dataset.lock)return;qb.dataset.lock=1;if(i===it.correct){b.classList.add("ok");score++;}else{b.classList.add("no");body.querySelectorAll(".qz-opt")[it.correct].classList.add("ok");}sc.textContent=score+" / "+items.length;var ex=document.createElement("div");ex.className="qz-ex";ex.textContent="✅ "+it.e;body.appendChild(ex);var nx=document.createElement("button");nx.className="qbtn";nx.style.marginTop=".6rem";nx.textContent=idx<items.length-1?"Nächste Frage →":"↺ Nochmal";nx.onclick=function(){qb.dataset.lock="";if(idx<items.length-1){idx++;}else{idx=0;score=0;sc.textContent="0 / "+items.length;}render();};body.appendChild(nx);};body.appendChild(b);});}render();});document.querySelectorAll(".deckbox").forEach(function(db){var sits=JSON.parse(db.getAttribute("data-sit"));var pool,idx=0;var sit=db.querySelector(".dk-sit"),eh=db.querySelector(".dk-e"),ho=db.querySelector(".dk-h");function sh(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}function chips(a){return "<div class=\"dk-chips\">"+a.map(function(w){return "<span class=\"hchip\">"+w+"</span>";}).join("")+"</div>";}function model(t){return "<button class=\"dkrev\">💡 Beispiel zeigen</button><div class=\"dk-model\">✅ „"+t+"“</div>";}function load(){if(!pool||idx>=pool.length){pool=sh(sits.slice());idx=0;}var s=pool[idx++];sit.innerHTML="📍 "+s.sit;eh.innerHTML="<div class=\"dk-lab e\">1️⃣ Sag es EHRLICH (direkt & klar)</div>"+chips(s.eh)+model(s.em);ho.innerHTML="<div class=\"dk-lab h\">2️⃣ Sag es HÖFLICH (freundlich verpackt)</div>"+chips(s.hh)+model(s.hm);}db.querySelector(".dk-next").onclick=load;db.addEventListener("click",function(e){var r=e.target.closest(".dkrev");if(r){var m=r.nextElementSibling;m.style.display="block";r.style.display="none";}});load();});</script>
+<script>document.querySelectorAll(".puzzleboard").forEach(function(bd){var pairs=JSON.parse(bd.getAttribute("data-pairs"));var grid=bd.querySelector(".pzgrid"),mv=bd.querySelector(".pzmv"),fd=bd.querySelector(".pzfound"),win=bd.querySelector(".pzwin");var N=pairs.length;function sh(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}function build(){grid.innerHTML="";win.style.display="none";var cards=[];pairs.forEach(function(p,i){cards.push({id:i,part:"a",t:p.a});cards.push({id:i,part:"b",t:p.b});});sh(cards);var open=[],found=0,moves=0,pending=null;mv.textContent="0 Züge";fd.textContent="0 / "+N+" Sätze";cards.forEach(function(c,ci){var el=document.createElement("div");el.className="pzcard hidden";el.innerHTML="<span class=\"pznum\">"+(ci+1)+"</span><span class=\"pzq\">🧩</span><div class=\"pztext\">"+c.t+"</div>";el.onclick=function(){if(pending){pending.forEach(function(o){o.el.classList.remove("wrong");o.el.classList.add("hidden");});pending=null;open=[];return;}if(el.classList.contains("match")||!el.classList.contains("hidden"))return;el.classList.remove("hidden");open.push({el:el,c:c});if(open.length===2){moves++;mv.textContent=moves+" Züge";if(open[0].c.id===open[1].c.id&&open[0].c.part!==open[1].c.part){open.forEach(function(o){o.el.classList.add("match");});found++;fd.textContent=found+" / "+N+" Sätze";open=[];if(found===N){win.style.display="block";win.innerHTML="🎉 Alle Sätze zusammengesetzt! In "+moves+" Zügen. <button class='qbtn' style='margin-top:.5rem'>↺ Nochmal</button>";win.querySelector("button").onclick=build;}}else{open.forEach(function(o){o.el.classList.add("wrong");});pending=open;open=[];}}};grid.appendChild(el);});}build();});</script>
+<script>document.addEventListener("click",function(e){var b=e.target.closest(".rollrev");if(b){b.closest(".rollcard").classList.add("open");}});</script>
+<script>document.querySelectorAll(".gapbox select[data-a]").forEach(function(s){s.onchange=function(){s.className=s.value===""?"":(s.value===s.getAttribute("data-a")?"ok":"no");};});</script></body></html>
