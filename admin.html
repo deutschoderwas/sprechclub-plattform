@@ -126,6 +126,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--turq)}
   <div id="klassen"></div>
   <div id="lehrer" style="display:none"></div>
   <div id="nachrichten" style="display:none"></div>
+  <div id="kiteam" style="display:none"></div>
   <div id="bewertungen" style="display:none"></div>
   <div id="community" style="display:none"><div id="v-community"></div></div>
   <div id="leads" style="display:none"></div>
@@ -400,7 +401,8 @@ const BEREICHE = [
   { id:'austausch', name:'💬 Austausch', reiter:[
       { id:'nachrichten', name:'Nachrichten', laden:function(){ loadNachrichten(); } },
       { id:'community',   name:'Community',   laden:function(){ if(window.renderCommunity) window.renderCommunity(); } },
-      { id:'bewertungen', name:'Bewertungen', nurAdmin:true, laden:function(){ loadBewertungen(); } } ] }
+      { id:'bewertungen', name:'Bewertungen', nurAdmin:true, laden:function(){ loadBewertungen(); } },
+      { id:'kiteam',      name:'🤖 KI-Team',  nurAdmin:true, laden:function(){ ladeKiTeam(); } } ] }
 ];
 /* Alle Kaesten, die show() ein- und ausblendet - aus der Tabelle abgeleitet,
    damit hier nie einer fehlt. */
@@ -2443,6 +2445,74 @@ try{window.__jkMO.observe(document.body,{childList:true,subtree:true});}catch(e)
 if(typeof window.show==='function'){var _sh=window.show;window.show=function(w){var rr=_sh.apply(this,arguments);if(w==='schueler'){setTimeout(inject,150);setTimeout(inject,700);}return rr;};}
 setTimeout(function(){var tbl=document.getElementById('schuelerTable');if(tbl&&document.getElementById('schueler')&&document.getElementById('schueler').offsetParent!==null)inject();},1000);
 })();
+/* ============================================================
+   Das KI-Team
+
+   Amanda, Mila und Tom schreiben nach Plan in die Kanaele. Ihre
+   Beitraege stehen vorher hier: jeder einzeln sichtbar, jeder
+   abschaltbar. Der Inhalt kommt aus dem eigenen Material — die
+   Spalte „woher" sagt bei jedem Beitrag, aus welcher Podcastfolge.
+
+   Der Job im Hintergrund schaut alle 15 Minuten nach, was faellig
+   ist. Was hier auf „aus" steht, wird nie geschrieben.
+   ============================================================ */
+async function ladeKiTeam(){
+  const kasten = document.getElementById('kiteam');
+  kasten.innerHTML = '<div class="card"><p class="muted">Wird geladen …</p></div>';
+
+  const { data, error } = await sb.from('ki_beitraege')
+    .select('id,wer,channel,body,geplant_fuer,status,quelle,veroeffentlicht_am')
+    .order('geplant_fuer');
+
+  if (error){
+    kasten.innerHTML = '<div class="card"><p>Die Warteschlange konnte nicht geladen werden.</p></div>';
+    return;
+  }
+  const reihen = data || [];
+  const offen  = reihen.filter(r => r.status === 'geplant').length;
+  const raus   = reihen.filter(r => r.status === 'veroeffentlicht').length;
+  const aus    = reihen.filter(r => r.status === 'aus').length;
+
+  function wann(iso){
+    const d = new Date(iso);
+    return d.toLocaleDateString('de-DE',{weekday:'short',day:'2-digit',month:'2-digit'})
+         + ' · ' + d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
+  }
+  function esc2(x){ return String(x==null?'':x).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+  kasten.innerHTML =
+    '<div class="pagehead"><h1>\u{1F916} Das KI-Team</h1>'
+  + '<p>Amanda, Mila und Tom schreiben nach Plan in die Kan\u00e4le. Jeder Beitrag tr\u00e4gt im Chat ein KI-Schild \u2014 '
+  + 'niemand h\u00e4lt sie f\u00fcr Mitsch\u00fcler. Die Inhalte kommen aus deinen eigenen Podcastfolgen.</p></div>'
+  + '<div class="card" style="margin-bottom:14px"><b>' + offen + ' geplant</b> \u00b7 ' + raus + ' ver\u00f6ffentlicht \u00b7 ' + aus + ' aus</div>'
+  + (reihen.length
+      ? '<div class="card" style="padding:0;overflow:hidden">'
+        + reihen.map(function(r){
+            const tot = r.status !== 'geplant';
+            return '<div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-bottom:1px solid #F1F5F6'
+              + (tot ? ';opacity:.55' : '') + '">'
+              + '<div style="flex:0 0 116px;font-size:12.5px;color:#5A6B72">'
+              +   '<b style="display:block;color:#14181B">' + esc2(r.wer) + '</b>'
+              +   wann(r.geplant_fuer) + '<br>#' + esc2(r.channel) + '</div>'
+              + '<div style="flex:1;min-width:0;font-size:13.5px;line-height:1.5;white-space:pre-wrap">' + esc2(r.body) + '</div>'
+              + '<div style="flex:0 0 120px;text-align:right">'
+              +   (r.status === 'geplant'
+                    ? '<button class="btn btn-sm" onclick="kiSchalten(\'' + r.id + '\',\'aus\')">Nicht senden</button>'
+                    : r.status === 'aus'
+                      ? '<button class="btn btn-sm" onclick="kiSchalten(\'' + r.id + '\',\'geplant\')">Doch senden</button>'
+                      : '<span class="muted" style="font-size:12px">ver\u00f6ffentlicht</span>')
+              + '</div></div>';
+          }).join('')
+        + '</div>'
+      : '<div class="card"><p class="muted">Die Warteschlange ist leer.</p></div>');
+}
+
+async function kiSchalten(id, neu){
+  const { error } = await sb.from('ki_beitraege').update({ status: neu }).eq('id', id);
+  if (error){ alert('Konnte nicht ge\u00e4ndert werden.'); return; }
+  ladeKiTeam();
+}
+
 </script>
 </body>
 </html>

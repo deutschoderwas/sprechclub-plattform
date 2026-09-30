@@ -1094,11 +1094,21 @@
     var p=null; for(var i=0;i<curMsgs.length;i++){ if(curMsgs[i].id===m.antwort_auf){ p=curMsgs[i]; break; } }
     return '<div class="quote" data-goto="'+E(m.antwort_auf)+'"><b>'+E(p?String(p.author_name||'Mitglied').split(' ')[0]:'Antwort')+'</b><span class="qt">'+E(p?kurzText(p):'Ältere Nachricht — im Verlauf nachlesen')+'</span></div>';
   }
+  /* Wer im Chat schreibt, muss erkennbar sein. Amanda, Mila und Tom
+     sind KI-Begleiter und tragen das Schild an jedem Beitrag — nicht
+     nur auf der Startseite. Ohne das waere es Taeuschung. */
+  function schild(name){
+    var n = String(name||'');
+    if(/^(amanda|mila|tom)\b/i.test(n)) return '<span class="m-ki">KI</span>';
+    if(/^julia/i.test(n))               return '<span class="m-team">Team</span>';
+    return '';
+  }
+
   function msgHtml(m,istAntwort){
     var vn=vorname(m.author_name);
     var meins=!!(m.user_id&&ME&&m.user_id===ME.id);
     return '<div class="m'+(m.pinned_at?' pinned':'')+(istAntwort?' m-a':'')+(meins?' me':'')+'" data-id="'+E(m.id)+'" data-u="'+E(m.user_id||'')+'" data-t="'+E(m.created_at||'')+'"><div class="ava '+avClass(m.author_name)+'">'+E(initials(vn))+'</div>'+
-      '<div class="mb"><div class="mh"><span class="w">'+E(vn)+'</span><time>'+timeStr(m.created_at)+'</time>'+(m.pinned_at?'<span class="mh-pin" title="Angepinnt">'+svg(IC.pin,'ico-sm')+'</span>':'')+'</div>'+
+      '<div class="mb"><div class="mh"><span class="w">'+E(vn)+'</span>'+schild(m.author_name)+'<time>'+timeStr(m.created_at)+'</time>'+(m.pinned_at?'<span class="mh-pin" title="Angepinnt">'+svg(IC.pin,'ico-sm')+'</span>':'')+'</div>'+
       (istAntwort?'':quoteHtml(m))+bodyHtml(m)+rcHtml(m.id)+'<div data-corrslot="'+E(m.id)+'">'+corrsFor(m.id)+'</div><span class="mzeit">'+timeStr(m.created_at)+'</span></div>'+
       msgActions(m)+'</div>';
   }
