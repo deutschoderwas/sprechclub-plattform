@@ -551,7 +551,7 @@ export default async function handler(req, res) {
 
       // Amanda Plus (über Stripe-Payment-Link, kein Club-Konto): Zugangs-Mail senden & fertig.
       const isAmanda = s.metadata?.product === 'amanda'
-        || (!userId && (s.amount_total === 999 || s.amount_subtotal === 999));
+        || (!userId && !s.metadata?.plan && (s.amount_total === 999 || s.amount_subtotal === 999));
       if (isAmanda) {
         await sendAmandaAccess(s);
         return res.status(200).json({ received: true, amanda: true });
