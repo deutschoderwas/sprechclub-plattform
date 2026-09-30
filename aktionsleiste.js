@@ -22,17 +22,17 @@
   /* Elf Sprachen, wie der Rest der Seite. Fehlt eine, nimmt die
      Leiste Deutsch — lieber ein deutscher Satz als eine leere Leiste. */
   var TEXT = {
-    de: '🎉 Frühbucher für den Sprechclub · ab 39 € im Monat statt 99 € · nur bis 31. Oktober · Jetzt Platz sichern',
-    en: '🎉 Early bird for the Speaking Club · from 39 € a month instead of 99 € · only until 31 October · Secure your place',
-    ru: '🎉 Ранняя запись в разговорный клуб · от 39 € в месяц вместо 99 € · только до 31 октября · Займи место',
-    uk: '🎉 Рання реєстрація до розмовного клубу · від 39 € на місяць замість 99 € · лише до 31 жовтня · Займи місце',
-    tr: '🎉 Konuşma Kulübü erken kayıt · 99 € yerine ayda 39 €\'dan · sadece 31 Ekim\'e kadar · Yerini ayırt',
-    es: '🎉 Precio anticipado del club de conversación · desde 39 € al mes en vez de 99 € · solo hasta el 31 de octubre · Reserva tu plaza',
-    fr: '🎉 Tarif préférentiel du club de conversation · à partir de 39 € par mois au lieu de 99 € · jusqu\'au 31 octobre seulement · Réserve ta place',
-    it: '🎉 Early bird per il club di conversazione · da 39 € al mese invece di 99 € · solo fino al 31 ottobre · Assicurati il posto',
-    ar: '🎉 التسجيل المبكر لنادي المحادثة · من 39 يورو شهريًا بدل 99 · حتى 31 أكتوبر فقط · احجز مكانك',
-    fa: '🎉 ثبت‌نام زودهنگام باشگاه گفت‌وگو · از ماهی ۳۹ یورو به‌جای ۹۹ · فقط تا ۳۱ اکتبر · جایت را رزرو کن',
-    zh: '🎉 口语俱乐部早鸟价 · 每月 39 欧元起，而不是 99 · 仅至 10 月 31 日 · 锁定你的名额'
+    de: '🎉 Frühbucher für den Sprechclub · bis zu 60 % Rabatt · ab 39 € im Monat statt 99 € · nur bis 31. Oktober',
+    en: '🎉 Early bird for the Speaking Club · up to 60 % off · from 39 € a month instead of 99 € · only until 31 October',
+    ru: '🎉 Ранняя запись в разговорный клуб · скидка до 60 % · от 39 € в месяц вместо 99 € · только до 31 октября',
+    uk: '🎉 Рання реєстрація до розмовного клубу · знижка до 60 % · від 39 € на місяць замість 99 € · лише до 31 жовтня',
+    tr: "🎉 Konuşma Kulübü erken kayıt · %60’a varan indirim · 99 € yerine ayda 39 € · sadece 31 Ekim’e kadar",
+    es: '🎉 Precio anticipado del club de conversación · hasta 60 % de descuento · desde 39 € al mes en vez de 99 € · solo hasta el 31 de octubre',
+    fr: "🎉 Tarif préférentiel du club de conversation · jusqu’à 60 % de réduction · à partir de 39 € par mois au lieu de 99 € · jusqu’au 31 octobre",
+    it: '🎉 Early bird per il club di conversazione · fino al 60 % di sconto · da 39 € al mese invece di 99 € · solo fino al 31 ottobre',
+    ar: '🎉 التسجيل المبكر لنادي المحادثة · خصم حتى 60 % · من 39 يورو شهريًا بدل 99 · حتى 31 أكتوبر فقط',
+    fa: '🎉 ثبت‌نام زودهنگام باشگاه گفت‌وگو · تا ۶۰ درصد تخفیف · از ماهی ۳۹ یورو به‌جای ۹۹ · فقط تا ۳۱ اکتبر',
+    zh: '🎉 口语俱乐部早鸟价 · 最高享 6 折 · 每月 39 欧元起，而不是 99 · 仅至 10 月 31 日'
 
   };
   var RTL = { ar: 1, fa: 1 };

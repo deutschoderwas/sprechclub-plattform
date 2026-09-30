@@ -332,13 +332,16 @@ function setzePremium(was){
   var spar = j ? 39 : 49, reg = 99, nov = j ? 83 : 99;
   $('pZahl').textContent = (ph < 2 ? spar : nov) + ' €';
   $('pAlt').textContent = reg + ' €';
-  $('pSpar').textContent = '−' + (reg - spar) + ' € im Monat';
+  /* Rabatt in Prozent, aus den Preisen gerechnet. Abgerundet, damit die
+     Zahl nie groesser ist als der echte Nachlass. */
+  var proz = Math.floor((1 - spar / reg) * 100);
+  $('pSpar').textContent = '−' + proz + ' %';
   $('pAltWrap').style.display = ph < 2 ? '' : 'none';
   $('pHinweis').textContent = j ? ('jährlich abgerechnet (' + (ph < 2 ? 468 : 999) + ' €)' + (ph < 2 ? ' · Preis bleibt für immer' : ''))
                                 : ('monatlich kündbar' + (ph < 2 ? ' · Preis bleibt für immer' : ''));
   var k = $('pKnopf'), kl = $('pKlein'), f = $('pFahne');
-  if (ph === 0) { f.textContent = 'Willkommenspreis · Anmeldung ab 1. Oktober'; k.className = 'knopf rand'; k.textContent = '🔔 Auf die Warteliste'; kl.textContent = 'Dein Willkommenspreis bleibt für immer. Du zahlst bei der Anmeldung – die nächste Zahlung kommt erst am ' + (j ? '1. November 2027' : '1. Dezember') + '.'; }
-  else if (ph === 1) { f.textContent = 'Willkommenspreis nur bis 31. Oktober'; k.className = 'knopf rot'; k.textContent = 'Jetzt Premium sichern'; kl.textContent = 'Dein Willkommenspreis bleibt für immer. Du zahlst jetzt – die nächste Zahlung kommt erst am ' + (j ? '1. November 2027' : '1. Dezember') + '.'; }
+  if (ph === 0) { f.textContent = 'Bis zu 60 % Rabatt · Anmeldung ab 1. Oktober'; k.className = 'knopf rand'; k.textContent = '🔔 Auf die Warteliste'; kl.textContent = 'Dein Willkommenspreis bleibt für immer. Du zahlst bei der Anmeldung – die nächste Zahlung kommt erst am ' + (j ? '1. November 2027' : '1. Dezember') + '.'; }
+  else if (ph === 1) { f.textContent = proz + ' % Rabatt · nur bis 31. Oktober'; k.className = 'knopf rot'; k.textContent = 'Jetzt Premium sichern'; kl.textContent = 'Dein Willkommenspreis bleibt für immer. Du zahlst jetzt – die nächste Zahlung kommt erst am ' + (j ? '1. November 2027' : '1. Dezember') + '.'; }
   else { f.textContent = 'Sprechclub läuft'; k.className = 'knopf rot'; k.textContent = 'Premium buchen'; kl.textContent = 'Sichere Zahlung über Stripe · monatlich kündbar'; }
 }
 async function premiumKnopf(btn){
