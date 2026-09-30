@@ -120,10 +120,25 @@ export default async function handler(req, res) {
     if (!plan) return res.status(400).json({ error: 'unknown_plan' });
     // userId optional: "erst zahlen, dann anmelden" wird per E-Mail zugeordnet (webhook + pending_purchases).
 
+    /* Die Kasse soll nach deutschoderwas aussehen und nicht nach einem
+       anonymen Bezahlfenster: Markenbild am Produkt, Sprache nach dem
+       Browser der Kaeuferin, und ein Satz ueber dem Bezahlknopf. Logo,
+       Farben und Schriftart der Kasse stellt Julia im Stripe-Konto ein
+       (Einstellungen - Unternehmen - Branding), das geht nicht ueber
+       die Schnittstelle. */
+    const MARKENBILD = `${site}/start-bilder/stripe-sprechclub.jpg`;
     const common = {
       customer_email: email || undefined,
       client_reference_id: userId || undefined,
       allow_promotion_codes: true,
+      locale: 'auto',
+      custom_text: {
+        submit: {
+          message: plan.tier
+            ? 'Gleich nach der Zahlung legst du dein Passwort fest und kannst sofort loslegen.'
+            : 'Deine Stunden stehen sofort nach der Zahlung in deinem Konto.'
+        }
+      },
     };
     if (embedded) {
       // Eingebettete Bezahlung direkt auf deutschoderwas-club.de (Stripe Embedded Checkout)
@@ -202,7 +217,7 @@ export default async function handler(req, res) {
             currency: 'eur',
             unit_amount: plan.preis * 100,
             recurring: { interval: plan.interval || 'month' },
-            product_data: { name: `deutschoderwas Club – ${plan.label}`, description: abodesc },
+            product_data: { name: `deutschoderwas Club – ${plan.label}`, description: abodesc, images: [MARKENBILD] },
           },
         }],
         subscription_data: subData,
@@ -219,7 +234,7 @@ export default async function handler(req, res) {
           price_data: {
             currency: 'eur',
             unit_amount: plan.preis * 100,
-            product_data: { name: `deutschoderwas Club – ${plan.label}`, description: `${plan.stunden} LIVE-Stunden` },
+            product_data: { name: `deutschoderwas Club – ${plan.label}`, description: `${plan.stunden} LIVE-Stunden`, images: [MARKENBILD] },
           },
         }],
         payment_intent_data: { metadata: { userId, plan: id, credits: String(plan.stunden) } },
