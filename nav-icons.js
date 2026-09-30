@@ -54,11 +54,30 @@
     'index.html':'haus'
   };
 
-  /* Welche Farbe das Plättchen bekommt. Nicht bunt um der Farbe willen:
-     Rot ist alles, was drängt — Termin, Prüfung, Fehler, Korrektur.
-     Türkis ist das ruhige Lernen, Gold das Sammeln und Erreichen,
-     Grau der Verwaltungskram. Nebeneinander ergibt das von selbst
-     einen Wechsel und keine türkise Wand. */
+  /* Die Farbe folgt der Rubrik, nicht dem einzelnen Eintrag — eine
+     Rubrik, eine Farbe. Vorher hatte jeder Eintrag seine eigene, und
+     die Leiste sah zerwürfelt aus.
+
+       Überblick          grau    — ruhige Navigation ganz oben
+       Selbstlernbereich  türkis  — das große, ruhige Lernen
+       Podcast            gold    — zum Zuhören und Mitnehmen
+       Sprechclub         rot     — live, mit Termin
+
+     Gezählt werden die Zwischenüberschriften in ihrer Reihenfolge, nicht
+     ihr Text — so stimmt es auch in den anderen zehn Sprachen.
+     ZU_FARBE bleibt als Notnagel fuer Eintraege ausserhalb der Leiste. */
+  var RUBRIK_FARBEN = ['grau','turq','gold','rot'];
+  function rubrikenAusmessen(){
+    var leisten = document.querySelectorAll('.sidebar, nav.sidebar');
+    Array.prototype.forEach.call(leisten, function(sb){
+      var i = 0;
+      Array.prototype.forEach.call(sb.querySelectorAll('.cl-grp, .navlink'), function(el){
+        if(el.classList.contains('cl-grp')){ i++; return; }
+        el.setAttribute('data-rubrik-farbe',
+          RUBRIK_FARBEN[Math.min(i, RUBRIK_FARBEN.length - 1)]);
+      });
+    });
+  }
   var ZU_FARBE = {
     dashboard:'gold',  kalender:'rot',    stunden:'rot',    kurs:'turq',
     pruefung:'rot',    ueben:'turq',      lernen:'turq',    vokabeln:'gold',
@@ -88,12 +107,16 @@
     return null;
   }
   function farbe(el){
-    var v = el.getAttribute('data-view');
-    if(v && ZU_FARBE[v]) return ZU_FARBE[v];
+    /* Zwei Eintraege haengen nicht an einer Rubrik und behalten ihre
+       eigene Bedeutung: Buchen draengt, Abmelden ist Verwaltung. */
     var t = (el.textContent||'').toLowerCase();
-    if(t.indexOf('julia')>=0) return 'rot';
     if(t.indexOf('buchen')>=0 || t.indexOf('book')>=0) return 'rot';
     if(t.indexOf('abmelden')>=0 || t.indexOf('log out')>=0) return 'grau';
+    var r = el.getAttribute('data-rubrik-farbe');
+    if(r) return r;
+    var v = el.getAttribute('data-view');
+    if(v && ZU_FARBE[v]) return ZU_FARBE[v];
+    if(t.indexOf('julia')>=0) return 'rot';
     return 'turq';
   }
 
@@ -133,6 +156,7 @@
 
   function malen(){
     stilSetzen();
+    rubrikenAusmessen();
     var n = document.querySelectorAll('.sidebar .navlink, nav.sidebar .navlink');
     if(!n.length) n = document.querySelectorAll('.navlink');
     Array.prototype.forEach.call(n, function(el){
