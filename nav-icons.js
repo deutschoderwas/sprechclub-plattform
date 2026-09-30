@@ -36,7 +36,12 @@
     tuer:      '<path d="M14.4 3.6H6.6a2 2 0 0 0-2 2v12.8a2 2 0 0 0 2 2h7.8"/><path d="M17.8 15.4 21.2 12l-3.4-3.4M9.6 12h11.6"/>',
     chat:      '<path d="M20.8 11.4a7.4 7.4 0 0 1-7.4 7.4H8.2l-4 2.8v-3.5a7.4 7.4 0 0 1 9.2-13 7.4 7.4 0 0 1 7.4 6.3z"/>',
     welle:     '<path d="M4 12h2.6l2-6 3 13 3-9.4 1.8 2.4H20"/>',
-    ziel:      '<circle cx="12" cy="12" r="8.4"/><circle cx="12" cy="12" r="4.2"/><circle cx="12" cy="12" r="1"/>'
+    ziel:      '<circle cx="12" cy="12" r="8.4"/><circle cx="12" cy="12" r="4.2"/><circle cx="12" cy="12" r="1"/>',
+    orte:      '<path d="M12 21.2s6.8-5.6 6.8-10.8a6.8 6.8 0 1 0-13.6 0C5.2 15.6 12 21.2 12 21.2z"/><circle cx="12" cy="10.2" r="2.6"/>',
+    regler:    '<path d="M5.4 3.6v5.2M5.4 14.4v6M12 3.6v3.2M12 12.4v8M18.6 3.6v8.6M18.6 17.8v2.6"/><circle cx="5.4" cy="11.6" r="2.3"/><circle cx="12" cy="9.6" r="2.3"/><circle cx="18.6" cy="15" r="2.3"/>',
+    wuerfel:   '<rect x="3.6" y="3.6" width="16.8" height="16.8" rx="3.8"/><circle cx="8.6" cy="8.6" r="1.15"/><circle cx="15.4" cy="8.6" r="1.15"/><circle cx="8.6" cy="15.4" r="1.15"/><circle cx="15.4" cy="15.4" r="1.15"/>',
+    blasen:    '<path d="M3.4 9.4a4.6 4.6 0 0 1 4.6-4.6h3.8a4.6 4.6 0 0 1 0 9.2H8.6l-3.4 2.4v-2.9a4.6 4.6 0 0 1-1.8-3.7z"/><path d="M15.4 11.6a4.4 4.4 0 0 1 3.6 6.9v2.3l-2.9-1.7h-1.5"/>',
+    stern:     '<path d="m12 3.6 2.6 5.3 5.8.85-4.2 4.1 1 5.75-5.2-2.7-5.2 2.7 1-5.75-4.2-4.1 5.8-.85z"/>'
   };
 
   /* Welches Symbol gehört zu welchem Eintrag */
@@ -46,7 +51,10 @@
     lernen:'kompass', vokabeln:'karten', fehler:'buch', buddy:'zweipersonen',
     materialien:'ordner', fortschritt:'pokal', nachrichten:'brief',
     amanda:'mikro', lernpfad:'leiter', guthaben:'karte', profil:'person',
-    community:'chat', podcast:'welle', schreiben:'stift', kurse:'buch'
+    community:'chat', podcast:'welle', schreiben:'stift', kurse:'buch',
+    /* Diese sechs zeigten vorher noch das rohe Emoji — als einzige. */
+    bereiche:'orte', fertigkeit:'regler', szenen:'wuerfel',
+    sprechen:'blasen', amandasprechen:'mikro', abo:'stern'
   };
   var ZU_LINK = {
     'korrektur.html':'stift',
