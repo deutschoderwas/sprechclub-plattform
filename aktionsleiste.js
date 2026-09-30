@@ -16,23 +16,23 @@
 
   /* --- Das Einzige, was man normalerweise anfasst --- */
   var START = '2026-10-01T00:00:00+02:00';   // ab wann die Leiste erscheint
-  var ENDE  = '2026-10-31T00:00:00+01:00';   // wann sie wieder verschwindet (= Ende des 30.10.)
+  var ENDE  = '2026-11-01T00:00:00+01:00';   // wann sie wieder verschwindet (= Ende des 31.10.)
   var ZIEL  = '/preise';                     // wohin der Klick fuehrt
 
   /* Elf Sprachen, wie der Rest der Seite. Fehlt eine, nimmt die
      Leiste Deutsch — lieber ein deutscher Satz als eine leere Leiste. */
   var TEXT = {
-    de: '🎉 Frühbucherrabatt für den Sprechclub · 1. bis 30. Oktober · Jetzt registrieren und dauerhaft sparen',
-    en: '🎉 Early-bird price for the Speaking Club · 1–30 October · Register now and save for good',
-    ru: '🎉 Скидка для ранних участников разговорного клуба · 1–30 октября · Зарегистрируйся и экономь навсегда',
-    uk: '🎉 Знижка для перших учасників розмовного клубу · 1–30 жовтня · Зареєструйся й заощаджуй назавжди',
-    tr: '🎉 Konuşma Kulübü için erken kayıt indirimi · 1–30 Ekim · Şimdi kaydol, kalıcı olarak tasarruf et',
-    es: '🎉 Precio anticipado para el Club de Conversación · 1 al 30 de octubre · Regístrate ahora y ahorra para siempre',
-    fr: '🎉 Tarif préférentiel pour le Club de Conversation · 1er au 30 octobre · Inscris-toi et économise pour toujours',
-    it: '🎉 Prezzo early bird per il Club di Conversazione · 1–30 ottobre · Iscriviti ora e risparmia per sempre',
-    ar: '🎉 سعر التسجيل المبكر لنادي المحادثة · من 1 إلى 30 أكتوبر · سجّل الآن ووفّر إلى الأبد',
-    fa: '🎉 قیمت ویژه ثبت‌نام زودهنگام باشگاه گفتگو · ۱ تا ۳۰ اکتبر · همین حالا ثبت‌نام کن و همیشه صرفه‌جویی کن',
-    zh: '🎉 口语俱乐部早鸟价 · 10月1日至30日 · 立即注册，永久省钱'
+    de: '🎉 Frühbucherrabatt für den Sprechclub · 1. bis 31. Oktober · Jetzt registrieren und dauerhaft sparen',
+    en: '🎉 Early-bird price for the Speaking Club · 1–31 October · Register now and save for good',
+    ru: '🎉 Скидка для ранних участников разговорного клуба · 1–31 октября · Зарегистрируйся и экономь навсегда',
+    uk: '🎉 Знижка для перших учасників розмовного клубу · 1–31 жовтня · Зареєструйся й заощаджуй назавжди',
+    tr: '🎉 Konuşma Kulübü için erken kayıt indirimi · 1–31 Ekim · Şimdi kaydol, kalıcı olarak tasarruf et',
+    es: '🎉 Precio anticipado para el Club de Conversación · 1 al 31 de octubre · Regístrate ahora y ahorra para siempre',
+    fr: '🎉 Tarif préférentiel pour le Club de Conversation · 1er au 31 octobre · Inscris-toi et économise pour toujours',
+    it: '🎉 Prezzo early bird per il Club di Conversazione · 1–31 ottobre · Iscriviti ora e risparmia per sempre',
+    ar: '🎉 سعر التسجيل المبكر لنادي المحادثة · من 1 إلى 31 أكتوبر · سجّل الآن ووفّر إلى الأبد',
+    fa: '🎉 قیمت ویژه ثبت‌نام زودهنگام باشگاه گفتگو · ۱ تا ۳۱ اکتبر · همین حالا ثبت‌نام کن و همیشه صرفه‌جویی کن',
+    zh: '🎉 口语俱乐部早鸟价 · 10月1日至31日 · 立即注册，永久省钱'
   };
   var RTL = { ar: 1, fa: 1 };
 
