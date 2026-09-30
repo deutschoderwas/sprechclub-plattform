@@ -53,7 +53,9 @@
     s.id = 'aktionsleisteCSS';
     s.textContent = [
       '.aktleiste{position:sticky;top:0;z-index:70;display:block;overflow:hidden;',
-        'background:linear-gradient(135deg,#2DD4BF,#14B8A6);color:#06403A;',
+        /* Das Tuerkis aus dem Logo (Farbton 193 Grad), nicht das gruenliche
+   #2DD4BF - Julia: "die Leiste laeuft gruen statt tuerkis wie mein Logo". */
+        'background:linear-gradient(135deg,#7ED8EA,#35AFD0);color:#06403A;',
         'text-decoration:none;font-family:Inter,"Segoe UI",system-ui,sans-serif;',
         'font-weight:700;font-size:14.5px;line-height:1;box-shadow:0 1px 0 rgba(0,0,0,.08)}',
       '.aktleiste:hover{filter:brightness(1.04)}',
