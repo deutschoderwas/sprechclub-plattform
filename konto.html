@@ -1127,7 +1127,7 @@ function vorverkaufKarte(){
 function renderVorverkauf(v){
   const label=LOCK_LABELS[v]||'Dieser Bereich';
   document.getElementById('v-'+v).innerHTML=
-    `<div class="pagehead"><h1>${label}</h1><p>Noch ${tageBisStart()} ${tageBisStart()===1?'Tag':'Tage'} — dann geht es los.</p></div>`
+    `<div class="pagehead"><h1>${label}</h1><p>Noch ${tageBisStart()} ${tageBisStart()===1?'Tag':'Tage'} — dann geht es los. Alles andere im Lernbereich kannst du schon jetzt benutzen.</p></div>`
     + vorverkaufKarte();
 }
 // Live-Unterricht: nur laufende Alt-Abos, Guthaben oder die neue Premium-Mitgliedschaft.
@@ -1449,7 +1449,12 @@ function updateTopbar(v){var t=VIEW_TITLES[v]||['Schülerbereich','']; var s=doc
 function routeFromHash(){ const v=(location.hash||'#dashboard').slice(1); show(VIEWS.includes(v)?v:'dashboard'); }
 // Ohne Guthaben/Probestunde/Pass: ALLES gesperrt außer Kalender (und Profil für Konto/Logout).
 // Vor dem Starttag gesperrt — offen bleiben Start, Profil, Nachrichten und Guthaben.
-const VORVERKAUF_ZU=['weg','lernen','sprechen','medien','bereiche','kurs','schreiben','kurse','ueben','community','lernpfad','szenen','kalender','stunden','materialien','vokabeln','fortschritt','amanda','fehler','buddy','fertigkeit','pruefung'];
+const /* Vorverkauf: Wer Premium vor dem 1.11. kauft, zahlt sofort und darf die
+   Lernplattform AB SOFORT benutzen. Gesperrt ist bis zum Start nur das,
+   was es ohne Sprechclub gar nicht gibt: der Wochenplan und die eigenen
+   Stunden. Vorher standen hier 22 Ansichten — damit war der gesamte
+   Lernbereich bis zum 1. November zu, obwohl er bezahlt und fertig ist. */
+VORVERKAUF_ZU=['kalender','stunden'];
 const LOCKED_VIEWS=['dashboard','weg','lernen','sprechen','medien','bereiche','kurs','schreiben','kurse','ueben','community','dm','lernpfad','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','fehler','buddy','fertigkeit'];
 function show(v){
   VIEWS.forEach(x=>{var _e=document.getElementById('v-'+x); if(_e) _e.classList.toggle('active',x===v);});
@@ -1482,7 +1487,7 @@ function show(v){
   if(v==='dashboard') setTimeout(mcStatus,60);   // Community geöffnet -> Nachrichten gelesen, Badge weg
   window.scrollTo(0,0);
 }
-const LOCK_LABELS={dashboard:'Start',lernen:'Lernbereich',bereiche:'Freizeit & Beruf',kurs:'Dein Kurs',schreiben:'Schreibtrainer',kurse:'Kursbibliothek',ueben:'Üben',community:'Community-Chat',lernpfad:'Mein Lernplan',stunden:'Meine Stunden',materialien:'Material',vokabeln:'Vokabeln',fortschritt:'Fortschritt',guthaben:'Guthaben',nachrichten:'Nachrichten',amanda:'Amanda'};
+const LOCK_LABELS={kalender:'Wochenplan',dashboard:'Start',lernen:'Lernbereich',bereiche:'Freizeit & Beruf',kurs:'Dein Kurs',schreiben:'Schreibtrainer',kurse:'Kursbibliothek',ueben:'Üben',community:'Community-Chat',lernpfad:'Mein Lernplan',stunden:'Meine Stunden',materialien:'Material',vokabeln:'Vokabeln',fortschritt:'Fortschritt',guthaben:'Guthaben',nachrichten:'Nachrichten',amanda:'Amanda'};
 /* ============================================================
    Der Sprechclub ist Premium.
 

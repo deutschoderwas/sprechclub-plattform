@@ -473,14 +473,27 @@ export default async function handler(req, res) {
      31 Tage nach dem Kauf ab statt ab dem Starttag.
      community: null = ab sofort nutzbar. */
   const START_AB = { community: null, premium: '2026-11-01', premiumplus: '2027-02-01' };
+  /* Mitternacht in Berlin, ohne Sommerzeit-Falle. Der 1. November liegt
+     in der Winterzeit; mit festem '+02:00' war Mitternacht eine Stunde zu
+     frueh und die naechste Abbuchung landete am 30.11. um 23 Uhr. */
+  function berlinMitternacht(iso){
+    for (const versatz of ['+01:00', '+02:00']) {
+      const d = new Date(iso + 'T00:00:00' + versatz);
+      const gezeigt = new Intl.DateTimeFormat('sv-SE', {
+        timeZone: 'Europe/Berlin', dateStyle: 'short', timeStyle: 'short'
+      }).format(d);
+      if (gezeigt === iso + ' 00:00') return d;
+    }
+    return new Date(iso + 'T00:00:00+01:00');
+  }
   function startDatum(tier){
     const d = START_AB[tier];
     if (!d) return null;
-    return (new Date(d + 'T00:00:00+02:00') > new Date()) ? d : null;
+    return (berlinMitternacht(d) > new Date()) ? d : null;
   }
   function tageBis(iso){
     if (!iso) return 0;
-    const ms = new Date(iso + 'T00:00:00+02:00') - new Date();
+    const ms = berlinMitternacht(iso) - new Date();
     return ms > 0 ? Math.ceil(ms / 86400000) : 0;
   }
   // Wer schon Unterricht hat, wird NICHT ausgesperrt: Bestandsschueler bekommen
@@ -502,15 +515,27 @@ export default async function handler(req, res) {
     } catch (e) { return iso; }
   }
 
+  /* Einen Monat bzw. ein Jahr weiter — auf dem Datum gerechnet, nicht auf
+     dem Zeitstempel. setMonth() auf einem 31. rutscht in den uebernaechsten
+     Monat: aus dem 31.10. plus ein Monat wurde der 2. Dezember statt des
+     1. Dezember. Hier kommt aus 2026-11-01 sauber 2026-12-01 bzw. fuer das
+     Jahresabo 2027-11-01. */
+  function einePeriodeSpaeter(iso, interval){
+    const [j, m, t] = iso.split('-').map(Number);
+    const [J, M] = (interval === 'year')
+      ? [j + 1, m]
+      : (m === 12 ? [j + 1, 1] : [j, m + 1]);
+    return J + '-' + String(M).padStart(2, '0') + '-' + String(t).padStart(2, '0');
+  }
+
   // Erste Rechnung ist bezahlt -> naechste Abbuchung erst eine Periode NACH dem Starttag.
   async function laufzeitAbStart(sub, iso){
     if (!sub || !iso) return;
     try {
-      const start = new Date(iso + 'T00:00:00+02:00');
+      const start = berlinMitternacht(iso);
       if (start <= new Date()) return;
       const interval = sub.items?.data?.[0]?.price?.recurring?.interval || 'month';
-      const ende = new Date(start);
-      if (interval === 'year') ende.setFullYear(ende.getFullYear() + 1); else ende.setMonth(ende.getMonth() + 1);
+      const ende = berlinMitternacht(einePeriodeSpaeter(iso, interval));
       const jetztEnde = sub.current_period_end ? new Date(sub.current_period_end * 1000) : null;
       if (jetztEnde && ende <= jetztEnde) return;   // nichts zu verschieben
       await stripe.subscriptions.update(sub.id, {

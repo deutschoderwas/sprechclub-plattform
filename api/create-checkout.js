@@ -10,10 +10,24 @@ import { createClient } from '@supabase/supabase-js';
 // Community laeuft ab sofort. Premium startet am 1. November, Premium
 // Plus am 1. Februar 2027 — bis dahin gibt es dort nur die Warteliste.
 const START_AB = { community: null, premium: '2026-11-01', premiumplus: '2027-02-01' };
+/* Mitternacht in Berlin, ohne Sommerzeit-Falle.
+   Vorher stand hier fest '+02:00'. Der 1. November liegt aber in der
+   Winterzeit — Mitternacht war damit eine Stunde zu frueh, und die
+   naechste Abbuchung landete am 30.11. um 23 Uhr statt am 1.12. */
+function berlinMitternacht(iso){
+  for (const versatz of ['+01:00', '+02:00']) {
+    const d = new Date(iso + 'T00:00:00' + versatz);
+    const gezeigt = new Intl.DateTimeFormat('sv-SE', {
+      timeZone: 'Europe/Berlin', dateStyle: 'short', timeStyle: 'short'
+    }).format(d);
+    if (gezeigt === iso + ' 00:00') return d;
+  }
+  return new Date(iso + 'T00:00:00+01:00');
+}
 function startDatum(tier){
   const d = START_AB[tier];
   if (!d) return null;
-  return (new Date(d + 'T00:00:00+02:00') > new Date()) ? d : null;   // schon vorbei -> sofort nutzbar
+  return (berlinMitternacht(d) > new Date()) ? d : null;   // schon vorbei -> sofort nutzbar
 }
 
 // Server-seitige Paket-Definition (Quelle der Wahrheit für Preise – nie dem Client vertrauen).
