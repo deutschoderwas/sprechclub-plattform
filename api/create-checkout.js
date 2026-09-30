@@ -79,7 +79,7 @@ const PLANS = {
    Aenderungen hier erreichen es nicht mehr.
    Ab dem 1.11.2026 (Berliner Zeit) gilt fuer NEUE Abos der Normalpreis. */
 const PREMIUM_REGULAER_AB = Date.parse('2026-11-01T00:00:00+01:00');
-const PREMIUM_REGULAER = { premium_month: { preis: 99 }, premium_year: { preis: 1199, proMonat: 100 } };
+const PREMIUM_REGULAER = { premium_month: { preis: 99 }, premium_year: { preis: 999, proMonat: 83 } };
 function aktuellerPlan(id){
   const p = PLANS[id];
   const r = PREMIUM_REGULAER[id];

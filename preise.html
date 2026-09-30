@@ -326,12 +326,15 @@ function setzePremium(was){
   PREMIUM = was;
   var j = (was === 'jahr'), ph = sparPhase(), $ = function(i){ return document.getElementById(i); };
   $('pM').classList.toggle('an', !j); $('pJ').classList.toggle('an', j);
-  var spar = j ? 39 : 49, reg = 99;
-  $('pZahl').textContent = (ph < 2 ? spar : reg) + ' €';
+  /* reg = durchgestrichener Normalpreis pro Monat (immer 99 €, damit die
+     beworbenen 50 % und 60 % aufgehen). nov = was ab dem 1.11. wirklich
+     verlangt wird: monatlich 99 €, im Jahresabo 83 € (999 € / 12). */
+  var spar = j ? 39 : 49, reg = 99, nov = j ? 83 : 99;
+  $('pZahl').textContent = (ph < 2 ? spar : nov) + ' €';
   $('pAlt').textContent = reg + ' €';
   $('pSpar').textContent = '−' + (reg - spar) + ' € im Monat';
   $('pAltWrap').style.display = ph < 2 ? '' : 'none';
-  $('pHinweis').textContent = j ? ('jährlich abgerechnet (' + (ph < 2 ? 468 : 1199) + ' €)' + (ph < 2 ? ' · Preis bleibt für immer' : ''))
+  $('pHinweis').textContent = j ? ('jährlich abgerechnet (' + (ph < 2 ? 468 : 999) + ' €)' + (ph < 2 ? ' · Preis bleibt für immer' : ''))
                                 : ('monatlich kündbar' + (ph < 2 ? ' · Preis bleibt für immer' : ''));
   var k = $('pKnopf'), kl = $('pKlein'), f = $('pFahne');
   if (ph === 0) { f.textContent = 'Willkommenspreis · Anmeldung ab 1. Oktober'; k.className = 'knopf rand'; k.textContent = '🔔 Auf die Warteliste'; kl.textContent = 'Dein Willkommenspreis bleibt für immer. Du zahlst bei der Anmeldung – die nächste Zahlung kommt erst am ' + (j ? '1. November 2027' : '1. Dezember') + '.'; }
