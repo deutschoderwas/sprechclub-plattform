@@ -22,17 +22,17 @@
   /* Elf Sprachen, wie der Rest der Seite. Fehlt eine, nimmt die
      Leiste Deutsch — lieber ein deutscher Satz als eine leere Leiste. */
   var TEXT = {
-    de: '🎉 Frühbucher für den Sprechclub · ab 37 € im Monat statt 59 € · nur bis 31. Oktober · Jetzt Platz sichern',
-    en: '🎉 Early bird for the Speaking Club · from 37 € a month instead of 59 € · only until 31 October · Secure your place',
-    ru: '🎉 Ранняя запись в разговорный клуб · от 37 € в месяц вместо 59 € · только до 31 октября · Займи место',
-    uk: '🎉 Рання реєстрація до розмовного клубу · від 37 € на місяць замість 59 € · лише до 31 жовтня · Займи місце',
-    tr: '🎉 Konuşma Kulübü erken kayıt · 59 € yerine ayda 37 €\'dan · sadece 31 Ekim\'e kadar · Yerini ayırt',
-    es: '🎉 Precio anticipado del club de conversación · desde 37 € al mes en vez de 59 € · solo hasta el 31 de octubre · Reserva tu plaza',
-    fr: '🎉 Tarif préférentiel du club de conversation · à partir de 37 € par mois au lieu de 59 € · jusqu\'au 31 octobre seulement · Réserve ta place',
-    it: '🎉 Early bird per il club di conversazione · da 37 € al mese invece di 59 € · solo fino al 31 ottobre · Assicurati il posto',
-    ar: '🎉 التسجيل المبكر لنادي المحادثة · من 37 يورو شهريًا بدل 59 · حتى 31 أكتوبر فقط · احجز مكانك',
-    fa: '🎉 ثبت‌نام زودهنگام باشگاه گفت‌وگو · از ماهی ۳۷ یورو به‌جای ۵۹ · فقط تا ۳۱ اکتبر · جایت را رزرو کن',
-    zh: '🎉 口语俱乐部早鸟价 · 每月 37 欧元起，而不是 59 · 仅至 10 月 31 日 · 锁定你的名额'
+    de: '🎉 Frühbucher für den Sprechclub · ab 39 € im Monat statt 99 € · nur bis 31. Oktober · Jetzt Platz sichern',
+    en: '🎉 Early bird for the Speaking Club · from 39 € a month instead of 99 € · only until 31 October · Secure your place',
+    ru: '🎉 Ранняя запись в разговорный клуб · от 39 € в месяц вместо 99 € · только до 31 октября · Займи место',
+    uk: '🎉 Рання реєстрація до розмовного клубу · від 39 € на місяць замість 99 € · лише до 31 жовтня · Займи місце',
+    tr: '🎉 Konuşma Kulübü erken kayıt · 99 € yerine ayda 39 €\'dan · sadece 31 Ekim\'e kadar · Yerini ayırt',
+    es: '🎉 Precio anticipado del club de conversación · desde 39 € al mes en vez de 99 € · solo hasta el 31 de octubre · Reserva tu plaza',
+    fr: '🎉 Tarif préférentiel du club de conversation · à partir de 39 € par mois au lieu de 99 € · jusqu\'au 31 octobre seulement · Réserve ta place',
+    it: '🎉 Early bird per il club di conversazione · da 39 € al mese invece di 99 € · solo fino al 31 ottobre · Assicurati il posto',
+    ar: '🎉 التسجيل المبكر لنادي المحادثة · من 39 يورو شهريًا بدل 99 · حتى 31 أكتوبر فقط · احجز مكانك',
+    fa: '🎉 ثبت‌نام زودهنگام باشگاه گفت‌وگو · از ماهی ۳۹ یورو به‌جای ۹۹ · فقط تا ۳۱ اکتبر · جایت را رزرو کن',
+    zh: '🎉 口语俱乐部早鸟价 · 每月 39 欧元起，而不是 99 · 仅至 10 月 31 日 · 锁定你的名额'
 
   };
   var RTL = { ar: 1, fa: 1 };
@@ -84,15 +84,30 @@
      Korrektur laegen Leiste und Kopfzeile beim Scrollen uebereinander.
      Deshalb messen wir die Leiste und schieben jede klebende Kopfzeile
      genau um diese Hoehe nach unten. */
+  /* Die Leiste steht ganz oben im Dokument. Eine Kopfzeile, die selbst
+     oben klebt, wuerde sie sonst verdecken — deshalb wird sie um die
+     Hoehe der Leiste nach unten geschoben.
+
+     Frueher galt das nur fuer position:sticky. Die Kopfzeile dieser Seite
+     steht aber auf position:fixed, blieb also liegen und hat die Leiste
+     komplett ueberdeckt: sie war im Dokument da, aber niemand sah sie.
+     Bei fixed muss zusaetzlich der Seiteninhalt Platz bekommen, sonst
+     rutscht er unter die Kopfzeile. */
   function kopfzeileSchieben(leiste) {
     var h = leiste.offsetHeight;
-    ['nav.nav', '.nav', 'header'].forEach(function (w) {
+    var fest = false;
+    ['nav.nav', '.nav', 'header', '.topbar'].forEach(function (w) {
       Array.prototype.forEach.call(document.querySelectorAll(w), function (el) {
-        if (el === leiste || leiste.contains(el)) return;
+        if (el === leiste || leiste.contains(el) || el.contains(leiste)) return;
         var c = getComputedStyle(el);
-        if (c.position === 'sticky' && parseInt(c.top, 10) === 0) el.style.top = h + 'px';
+        var oben = parseInt(c.top, 10);
+        if ((c.position === 'sticky' || c.position === 'fixed') && (oben === 0 || isNaN(oben))) {
+          el.style.top = h + 'px';
+          if (c.position === 'fixed') fest = true;
+        }
       });
     });
+    if (fest) document.body.style.paddingTop = h + 'px';
   }
 
   function bauen() {
