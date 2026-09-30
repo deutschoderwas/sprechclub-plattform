@@ -2204,7 +2204,8 @@ async function loadKalender(){
   const hatNiveau=(kalCache||[]).some(function(c){return String(c.level||'').trim();});
   const lvlPills=!hatNiveau?'':'<div class="kal-pills kal-levels">'+LEVELS.map(l=>`<button class="kpill lvl ${kalLevel===l?'active':''}" onclick="setKalLevel('${l}')">${l==='alle'?'Alle Niveaus':l}</button>`).join('')+'</div>';
   let legend=''; if(kalClub==='alle'){ legend='<div class="cal-legend">'+kalClubs.map(c=>`<span class="lg"><span class="dot" style="background:${c.color||'#7ED8EA'}"></span>${esc(c.name)}</span>`).join('')+'</div>'; }
-  const satEnd=new Date(from); satEnd.setDate(satEnd.getDate()+5);
+  /* Die Woche laeuft Mo bis So — die Beschriftung endete frueher am Samstag. */
+  const satEnd=new Date(from); satEnd.setDate(satEnd.getDate()+6);
   const wc=`<div class="kal-week"><button onclick="kalWeekChange(-1)">←</button><span>${from.toLocaleDateString('de-DE',{day:'numeric',month:'short'})} – ${satEnd.toLocaleDateString('de-DE',{day:'numeric',month:'short',year:'numeric'})}</span><button onclick="kalWeekChange(1)">→</button></div>`;
   let grid;
   if(!list.length){
@@ -2223,7 +2224,7 @@ async function loadKalender(){
       const isT=d.toDateString()===today;
       const head=`<div class="calcol-head ${isT?'today':''}"><b>${d.toLocaleDateString('de-DE',{weekday:'long'})}</b><span>${d.toLocaleDateString('de-DE',{day:'numeric',month:'short'})}</span>${isT?'<em>heute</em>':''}</div>`;
       const body=arr.length?arr.map(kalEv).join(''):'<div class="calcol-empty">–</div>';
-      return `<div class="calcol ${isT?'today':''}">${head}${body}</div>`;
+      return `<div class="calcol ${isT?'today':''} ${arr.length?'':'leer'}">${head}${body}</div>`;
     }).join('')+'</div>';
   }
   const tzHint='<div class="muted" style="text-align:center;font-size:12px;font-weight:600;margin:2px 0 8px">🕒 <span data-i18n="kl_tz">Alle Zeiten in deutscher Zeit (Berlin)</span></div>'
@@ -2250,7 +2251,7 @@ function kalEv(c){
   const noPrep = (c.club==='sprachspielclub') ? `<div class="ev-note" style="margin-top:6px;font-size:12px;color:var(--text-soft);font-weight:600">✨ Keine Vorbereitung nötig</div>` : '';
   const _cap=Number(c.capacity)||0, _free=Math.max(0,_cap-(Number(c.booked)||0));
   let seats='';
-  if(_cap>0 && !past){ const _cls=_free<=0?'full':(_free<=2?'low':'ok'); const _lbl=_free<=0?'ausgebucht':(_free===1?'noch 1 Platz frei':('noch '+_free+' von '+_cap+' Plätzen frei')); seats=`<div class="ev-seats ${_cls}">🎟️ ${_lbl}</div>`; }
+  if(_cap>0 && !past){ const _cls=_free<=0?'full':(_free<=2?'low':'ok'); const _lbl=_free<=0?'ausgebucht':(_free===1?'1 Platz frei':(_free+' Plätze frei')); seats=`<div class="ev-seats ${_cls}">🎟️ ${_lbl}</div>`; }
   return `<div class="ev" style="--c:${color};background:${color}14"><div class="ev-top"><span class="ev-time">${fmtTimeK(start)}–${fmtTimeK(end)}</span><span class="ev-club" style="background:${color}">${esc(c.club_name||'')}</span></div><div class="ev-title">${titleLine}</div><div class="ev-lvlrow">${lvlBadge}</div>${c.teacher_name?`<div style="font-size:12px;color:#555;font-weight:600;margin-top:3px">👩‍🏫 ${esc(c.teacher_name)}</div>`:''}${seats}${btn}${matBtn}${noPrep}</div>`;
 }
 /* ===== Kalender: Monatsansicht + .ics-Export (deutschoderwas) ===== */
@@ -4115,6 +4116,26 @@ window.addEventListener('resize',function(){ clearTimeout(_mhT); _mhT=setTimeout
 <link rel="stylesheet" href="startseite-stil.css?v=2">
 <link rel="stylesheet" href="module-stil.css?v=2">
 <link rel="stylesheet" href="app-stil.css?v=2">
+<style id="wpKlar">
+/* Wochenplan uebersichtlicher: leere Tage treten zurueck, der Kopf jeder
+   Spalte steht in drei klaren Zeilen, das Niveau ist auf einen Blick da. */
+.calcol.leer{background:transparent;border-style:dashed;border-color:#E3EAEC;box-shadow:none}
+.calcol.leer .calcol-head{opacity:.5;border-bottom-color:#EEF2F4}
+.calcol.leer .calcol-empty{font-size:15px}
+.calcol-head b{display:block;font-size:14px;line-height:1.25}
+.calcol-head span{display:block;font-size:12px;color:var(--text-soft,#5A6B72);margin-top:1px}
+.calcol-head em{display:inline-block;margin-top:4px;font-style:normal;font-size:10.5px;font-weight:800;
+  padding:1px 7px;border-radius:999px;background:var(--tuerkis-dunkel,#10627A);color:#fff}
+.ev-lvl{font-size:11.5px;font-weight:800;padding:2px 8px;border-radius:999px;letter-spacing:.02em;white-space:nowrap}
+.ev-seats{margin-top:6px;font-size:11.5px;font-weight:700;white-space:nowrap}
+/* Im Kalender ist „Meine Stunden“ nur eine Zusammenfassung — sie darf nicht
+   den halben Bildschirm nehmen, bevor der Wochenplan anfaengt. */
+#v-kalender .ms-karte{display:block;min-height:0}
+#v-kalender .ms-karte .bild{display:none}
+#v-kalender .ms-karte .txt{padding:16px 20px}
+#v-kalender .ms-karte h2{font-size:20px;margin:0 0 4px}
+@media(max-width:900px){.calcol.leer{display:none}}
+</style>
 <link rel="stylesheet" href="amanda-figur.css?v=4">
 <!-- Die Handschrift aus dem Lernraum-Entwurf. Diese eine Zeile
      entfernen und alles sieht wieder aus wie vorher. -->
