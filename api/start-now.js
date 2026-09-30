@@ -24,9 +24,18 @@ export default async function handler(req, res) {
 
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-  // laufende Testphase finden
+  /* Laufende Testphase finden — aber NIEMALS ein Community- oder
+     Premium-Abo anfassen.
+
+     Der Vorverkauf schiebt die naechste Abbuchung ueber trial_end nach
+     hinten (api/stripe-webhook.js, laufzeitAbStart). Bei Stripe steht so
+     ein Abo damit auf 'trialing'. Ohne die Pruefung unten haette dieser
+     Aufruf es fuer eine echte Testphase gehalten, trial_end auf 'now'
+     gesetzt und damit SOFORT ein zweites Mal abgebucht — beim Jahresabo
+     444 Euro. Nur die alten Stundenpaesse haben ueberhaupt eine
+     Probestunde, und die tragen kein metadata.tier. */
   const subs = await stripe.subscriptions.list({ customer, status: 'trialing', limit: 5 });
-  const sub = (subs.data || [])[0];
+  const sub = (subs.data || []).find(s => !(s.metadata && s.metadata.tier));
   if (!sub) return res.status(400).json({ error: 'keine_testphase' });
 
   // Testphase sofort beenden -> sofortige Abbuchung -> invoice.paid bucht Stunden

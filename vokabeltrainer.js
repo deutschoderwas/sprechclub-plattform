@@ -1264,6 +1264,11 @@
 
   /* ================= Einstieg ================= */
   window.renderVokabeln = async function () {
+    /* Ohne Zugang wird hier nicht gezeichnet. Die Seite hat an dieser
+       Stelle schon die Sperrseite stehen; frueher hat der Trainer sie
+       ueberschrieben, sobald er geladen war, und ein Konto ohne Zugang
+       sah die Woerter trotzdem. */
+    if (window.zugangGesperrt && window.zugangGesperrt('vokabeln')) return;
     stil();
     var ziel = document.getElementById('v-vokabeln');
     if (!ziel) return;
@@ -1290,6 +1295,7 @@
      nicht immer der hier. Also: sobald die Ansicht offen ist und
      noch nicht unsere Uebersicht zeigt, zeichnen wir sie. */
   function nachziehen() {
+    if (window.zugangGesperrt && window.zugangGesperrt('vokabeln')) return;
     var v = document.getElementById('v-vokabeln');
     if (!v || !v.classList.contains('active')) return;
     if (v.querySelector('.vp')) return;

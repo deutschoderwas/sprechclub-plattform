@@ -1355,10 +1355,13 @@
     var s=stand(); s.dabei[gruppenId]=heute(); speichern(s);
   };
 
-  /* Falls die Ansicht schon offen war, als diese Datei geladen wurde */
+  /* Falls die Ansicht schon offen war, als diese Datei geladen wurde.
+     Ohne Zugang wird nicht gezeichnet — sonst ueberschriebe das hier die
+     Sperrseite, die konto.html gerade gesetzt hat. */
   if(document.readyState!=='loading'){
     var v=el('v-vokabeln');
-    if(v && v.classList.contains('active')) setTimeout(zeichne, 60);
+    var zu = !!(window.zugangGesperrt && window.zugangGesperrt('vokabeln'));
+    if(v && v.classList.contains('active') && !zu) setTimeout(zeichne, 60);
   }
 
 })();

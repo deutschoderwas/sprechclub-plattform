@@ -1079,16 +1079,42 @@ function istPremium(){
 function startAb(){
   const d=(profile&&profile.tier_ab)||null;
   if(!d) return null;
-  const dt=new Date(String(d).slice(0,10)+'T00:00:00+02:00');
-  return isNaN(dt) ? null : dt;
+  /* Mitternacht in Berlin, ohne Sommerzeit-Falle. Hier stand fest
+     '+02:00' — der 1. November liegt aber in der Winterzeit, also war das
+     der 31.10. um 23 Uhr. Folge: die Karte auf dem Dashboard schrieb
+     „oeffnet am 31. Oktober", waehrend der Rest der Seite „1. November"
+     sagte, und die Sperre fiel eine Stunde zu frueh. */
+  const iso = String(d).slice(0,10);
+  for (const v of ['+01:00','+02:00']) {
+    const dt = new Date(iso + 'T00:00:00' + v);
+    if (isNaN(dt)) continue;
+    let gezeigt;
+    try {
+      gezeigt = new Intl.DateTimeFormat('sv-SE',
+        { timeZone:'Europe/Berlin', dateStyle:'short', timeStyle:'short' }).format(dt);
+    } catch(e) { return dt; }
+    if (gezeigt === iso + ' 00:00') return dt;
+  }
+  const rueck = new Date(iso + 'T00:00:00+01:00');
+  return isNaN(rueck) ? null : rueck;
 }
 function nochNichtOffen(){
   const d=startAb();
   if(!(d && d>new Date())) return false;
-  // Sicherheitsnetz: Wer Guthaben, einen laufenden Pass oder gebuchte Stunden hat,
-  // ist Bestandsschueler und sieht IMMER alles — egal was im Profil steht.
-  if(credits>0) return false;
-  try{ if(passActive()) return false; }catch(e){}
+  /* Sicherheitsnetz fuer Bestandsschueler — aber nur mit Merkmalen, die
+     der Kauf selbst NICHT erzeugt.
+
+     Guthaben und pass_until standen hier frueher mit drin. Beides legt der
+     Webhook aber genau beim Vorverkaufskauf an (8 Stunden, Pass bis nach
+     dem Start). Damit war das Netz fuer jeden Premium-Kaeufer sofort
+     gespannt, die Vorverkaufs-Sperre griff nie, und die 8 Novemberstunden
+     liessen sich schon im Oktober verbrauchen.
+
+     Wer wirklich Bestandsschueler ist, bekommt vom Server ohnehin gar kein
+     tier_ab (startFuer() in api/stripe-webhook.js) — fuer den ist diese
+     Funktion schon eine Zeile weiter oben zu Ende. Als Netz bleiben
+     deshalb nur echte Buchungen: wer eine gebuchte Stunde hat, muss sie
+     auch sehen koennen. */
   try{ if(stats && stats.upcoming && stats.upcoming.length>0) return false; }catch(e){}
   try{ if(bookings && bookings.some(function(b){return b.status==='booked';})) return false; }catch(e){}
   return true;
@@ -1143,6 +1169,11 @@ function darfLive(){
 function bucheStunde(e){
   if(e&&e.preventDefault)e.preventDefault();
   if(nurCommunity()){ zeigeLiveUpgrade(); return false; }
+  /* Wer Premium schon bezahlt hat, der Club aber noch nicht laeuft, wurde
+     hier bisher auf /preise geschickt — raus aus der Plattform, hin zur
+     Verkaufsseite, obwohl er gerade gekauft hat. Jetzt fuehrt der Knopf
+     auf den Wochenplan, und dort steht der Countdown. */
+  if(istPremium() && !scGestartet()){ go('kalender'); return false; }
   if(credits>0||passActive()||darfLive()){ go('kalender'); } else { location.href='/preise'; }
   return false;
 }
@@ -1455,7 +1486,7 @@ const /* Vorverkauf: Wer Premium vor dem 1.11. kauft, zahlt sofort und darf die
    Stunden. Vorher standen hier 22 Ansichten — damit war der gesamte
    Lernbereich bis zum 1. November zu, obwohl er bezahlt und fertig ist. */
 VORVERKAUF_ZU=['kalender','stunden'];
-const LOCKED_VIEWS=['dashboard','weg','lernen','sprechen','medien','bereiche','kurs','schreiben','kurse','ueben','community','dm','lernpfad','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','fehler','buddy','fertigkeit'];
+const LOCKED_VIEWS=['szenen','pruefung','amandasprechen','kalender','dashboard','weg','lernen','sprechen','medien','bereiche','kurs','schreiben','kurse','ueben','community','dm','lernpfad','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','fehler','buddy','fertigkeit'];
 function show(v){
   VIEWS.forEach(x=>{var _e=document.getElementById('v-'+x); if(_e) _e.classList.toggle('active',x===v);});
   document.querySelectorAll('.navlink[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));
@@ -1487,7 +1518,7 @@ function show(v){
   if(v==='dashboard') setTimeout(mcStatus,60);   // Community geöffnet -> Nachrichten gelesen, Badge weg
   window.scrollTo(0,0);
 }
-const LOCK_LABELS={kalender:'Wochenplan',dashboard:'Start',lernen:'Lernbereich',bereiche:'Freizeit & Beruf',kurs:'Dein Kurs',schreiben:'Schreibtrainer',kurse:'Kursbibliothek',ueben:'Üben',community:'Community-Chat',lernpfad:'Mein Lernplan',stunden:'Meine Stunden',materialien:'Material',vokabeln:'Vokabeln',fortschritt:'Fortschritt',guthaben:'Guthaben',nachrichten:'Nachrichten',amanda:'Amanda'};
+const LOCK_LABELS={kalender:'Wochenplan',szenen:'Sprachspiele',pruefung:'Prüfungstraining',amandasprechen:'Mit Amanda sprechen',weg:'Mein Kurs',sprechen:'Sprechen',medien:'Podcast & Hören',dm:'Nachrichten',fehler:'Meine Fehler',buddy:'Sprech-Tandem',fertigkeit:'Fertigkeiten',dashboard:'Start',lernen:'Lernbereich',bereiche:'Freizeit & Beruf',kurs:'Dein Kurs',schreiben:'Schreibtrainer',kurse:'Kursbibliothek',ueben:'Üben',community:'Community-Chat',lernpfad:'Mein Lernplan',stunden:'Meine Stunden',materialien:'Material',vokabeln:'Vokabeln',fortschritt:'Fortschritt',guthaben:'Guthaben',nachrichten:'Nachrichten',amanda:'Amanda'};
 /* ============================================================
    Der Sprechclub ist Premium.
 
@@ -1524,8 +1555,33 @@ function renderSprechclubZu(v){
    +'</div>';
 }
 
+/* Einige Bereiche fuellen sich selbst nach, wenn ihr Modul fertig geladen
+   hat — der Vokabeltrainer zum Beispiel. Die Sperrseite wurde dadurch
+   Sekundenbruchteile spaeter wieder ueberschrieben, und ein Konto ohne
+   Zugang sah den Inhalt trotzdem. Deshalb wird sie zweimal nachgesetzt,
+   solange dieselbe Ansicht noch offen ist. */
+/* Module, die sich selbst in eine Ansicht zeichnen (vokabeltrainer.js,
+   vokabeln.js), muessen die Zugangsregel kennen — sonst ueberschreiben sie
+   die Sperrseite, sobald sie fertig geladen haben. Sie fragen hier nach. */
+window.zugangGesperrt = function(v){
+  try{ return LOCKED_VIEWS.includes(v) && !isActive(); }catch(e){ return false; }
+};
+function renderLockedNachsetzen(v){
+  [350, 1400].forEach(function(ms){
+    setTimeout(function(){
+      try{
+        var el = document.getElementById('v-'+v);
+        if(!el || !el.classList.contains('active')) return;
+        if(!LOCKED_VIEWS.includes(v) || isActive()) return;
+        if(el.querySelector('[data-i18n="lk_h3"]')) return;   // Sperrseite steht noch
+        renderLocked(v);
+      }catch(e){}
+    }, ms);
+  });
+}
 function renderLocked(v){
   const label=LOCK_LABELS[v]||'Dieser Bereich';
+  renderLockedNachsetzen(v);
   document.getElementById('v-'+v).innerHTML=
     `<div class="pagehead"><h1>${label} 🔒</h1></div>
      <div class="card" style="text-align:center;border:2px solid #f5b942;background:#FFFFFF;max-width:560px;margin:0 auto">
@@ -2032,8 +2088,14 @@ function darfBuchen(){
      damit der Hinweis nicht etwas anderes verspricht als der Knopf tut.
      Ab 01.11.: PREMIUM bucht ohne Guthaben & ohne Platzlimit. */
   try{
+    /* Bestandsschueler haben auch im Oktober Unterricht — 67 Stunden
+       stehen vor dem 1.11. im Kalender. Wer Guthaben hat, bucht also
+       weiter wie bisher. Gesperrt ist nur, wer im Vorverkauf gekauft hat:
+       fuer den ist der Kalender ohnehin zu (nochNichtOffen), und diese
+       Zeile ist der zweite Riegel am Knopf selbst. */
+    if(nochNichtOffen()) return false;
     if(credits>0) return true;
-    // Premium-Sonderregel gilt erst ab 01.11.2026 (davor braucht auch Premium Guthaben).
+    // Premium-Sonderregel (buchen ohne Guthaben) gilt erst ab 01.11.2026.
     if(scGestartet() && istPremium()) return true;
     return false;
   }catch(e){ return false; }

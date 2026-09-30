@@ -545,6 +545,33 @@ export default async function handler(req, res) {
     } catch (e) { console.error('laufzeit-ab-start', e && e.message); }
   }
 
+  /* Wer als Community-Mitglied auf Premium wechselt, kauft bei Stripe ein
+     ZWEITES Abo — einen Tarifwechsel gibt es hier nicht. Ohne diese Zeilen
+     laeuft das alte Community-Abo einfach weiter, und die Person zahlt ab
+     dem naechsten Monat 16 Euro PLUS 49 Euro. Premium enthaelt Community
+     vollstaendig, das alte Abo hat also keinen Zweck mehr.
+
+     Gekuendigt wird zum Periodenende (cancel_at_period_end), nicht sofort:
+     der laufende Monat ist bezahlt und bleibt bestehen. Nichts wird
+     erstattet, nichts abgeschnitten.
+
+     Vorsicht an zwei Stellen: das gerade bezahlte Premium-Abo selbst darf
+     es nie treffen (deshalb ausserSub), und ein schon gekuendigtes Abo
+     wird nicht noch einmal angefasst. */
+  async function altesCommunityAboBeenden(kundeId, ausserSub){
+    if (!kundeId) return;
+    try {
+      const liste = await stripe.subscriptions.list({ customer: kundeId, status: 'active', limit: 20 });
+      for (const a of (liste.data || [])) {
+        if (a.id === ausserSub) continue;
+        if ((a.metadata && a.metadata.tier) !== 'community') continue;
+        if (a.cancel_at_period_end) continue;
+        await stripe.subscriptions.update(a.id, { cancel_at_period_end: true });
+        console.log('community-abo zum Periodenende gekuendigt:', a.id, 'wegen Premium', ausserSub);
+      }
+    } catch (e) { console.error('altes-community-abo', e && e.message); }
+  }
+
   // Stripe-Kundennummer am Profil merken — wird fürs Kündigungs-Portal gebraucht.
   // Kauf per E-Mail parken, wenn (noch) kein Konto existiert -> wird bei Registrierung gutgeschrieben.
   async function addPending(sb2, email, stunden, plan, makeStatus, isTrial, ref) {
@@ -625,8 +652,17 @@ export default async function handler(req, res) {
       }
     } else if (event.type === 'invoice.paid') {
       const inv = event.data.object;
-      // Nur echte Zahlungen (die 0-€-Rechnung der Testphase überspringen)
-      if ((inv.amount_paid || 0) > 0 && inv.subscription) {
+      /* Frueher galt hier nur amount_paid > 0. Das hat die 0-Euro-Rechnung
+         der Testphase uebersprungen — richtig — aber eben auch jede
+         Rechnung, die durch einen Gutschein ueber 100 % auf null faellt.
+         Die Person hatte dann ein laufendes Abo bei Stripe und auf der
+         Plattform keinen Tarif, keine Stunden, keine Mail.
+         Jetzt zaehlt nicht der Betrag, sondern ob es eine Testphase ist:
+         eine Abo-Rechnung ohne Testphase wird verbucht, auch bei 0 Euro. */
+      const istProbe = (inv.billing_reason === 'subscription_create'
+                        && (inv.amount_due || 0) === 0
+                        && !(inv.discount || (inv.total_discount_amounts || []).length));
+      if (((inv.amount_paid || 0) > 0 || !istProbe) && inv.subscription) {
         const sub = await stripe.subscriptions.retrieve(inv.subscription);
         const stunden = parseInt(sub.metadata?.stunden || '0', 10);
         /* Premium-Vorverkauf: Wer vor dem 1.11.2026 bucht, zahlt sofort (damit feststeht,
@@ -672,6 +708,7 @@ export default async function handler(req, res) {
           if (tier === 'premium') {
             await sb.from('profiles').update({ status: 'aktiv', tier: 'premium', tier_ab: abPrem }).eq('id', userId);
             await laufzeitAbStart(sub, abPrem);
+            await altesCommunityAboBeenden(inv.customer, sub.id);
           } else if (userId) {
             // Aus Probeschüler wird zahlendes Mitglied -> Status auf aktiv (nur wenn vorher Probeschüler)
             const { data: pr } = await sb.from('profiles').select('status').eq('id', userId).maybeSingle();
