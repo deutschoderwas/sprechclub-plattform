@@ -28,8 +28,12 @@ export default async function handler(req, res) {
   const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
   const ab = new Date(Date.now() - TAGE * 86400000).toISOString();
 
+  /* is('mail_at', null) ist der wichtigste Filter hier: wer die
+     Kampagne schon bekommen hat, bekommt die Willkommensmail nicht
+     hinterher. Ohne ihn gingen am 01.10. 73 Mails doppelt raus. */
   const { data: leads, error } = await sb.from('leads')
     .select('id,name,email,created_at')
+    .is('mail_at', null)
     .gte('created_at', ab)
     .order('created_at', { ascending: false })
     .limit(300);

@@ -102,6 +102,36 @@ export function willkommenHtml(vorname) {
 /* Schickt die Mail genau einmal. `ref` ist die Lead-Nummer, sonst die
    Adresse — email_log laesst keinen zweiten Eintrag zu, und ohne
    Eintrag geht keine Mail raus. */
+/* Jeder Mensch auf der Liste gehoert auch in Brevo - sonst erreicht
+   ihn die naechste Rundmail nicht. Ueber api/waitlist.js passiert das
+   schon beim Eintragen; dieser Weg hier faengt alle anderen ab: aus
+   dem Google-Formular nachgetragene, von Hand angelegte, importierte. */
+export async function brevoListe(lead) {
+  if (!process.env.BREVO_API_KEY) return false;
+  const email = String(lead && lead.email || '').trim().toLowerCase();
+  if (!email) return false;
+  const liste = Number(process.env.BREVO_WAITLIST_LIST_ID || process.env.BREVO_LIST_ID || 0);
+  const name = String(lead.name || '').trim();
+  const vorname = (name.split(/\s+/)[0] || name) || email.split('@')[0];
+  try {
+    const r = await fetch('https://api.brevo.com/v3/contacts', {
+      method: 'POST',
+      headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email,
+        updateEnabled: true,
+        attributes: Object.assign(
+          { VORNAME: vorname, NAME: name || vorname, QUELLE: String(lead.quelle || 'warteliste') },
+          lead.niveau ? { NIVEAU: lead.niveau } : {},
+          lead.whatsapp ? { WHATSAPP: String(lead.whatsapp).replace(/\D/g, '') } : {}
+        ),
+        listIds: liste ? [liste] : undefined,
+      }),
+    });
+    return r.ok || r.status === 204;
+  } catch (e) { return false; }
+}
+
 export async function willkommenSenden(sb, lead) {
   const email = String(lead && lead.email || '').trim().toLowerCase();
   if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return { ok: false, grund: 'keine_adresse' };
@@ -111,10 +141,20 @@ export async function willkommenSenden(sb, lead) {
      zweimal eintraegt — einmal auf der Seite, einmal im Formular —
      bekommt die Mail trotzdem nur ein einziges Mal. */
   const ref = email.slice(0, 120);
+  /* Steht in der Lead-Liste schon ein mail_at, hat die Person bereits
+     eine Mail von uns - dann nichts schicken, egal was im Log steht. */
+  try {
+    const { data: da } = await sb.from('leads').select('mail_at').ilike('email', email).not('mail_at', 'is', null).limit(1);
+    if (da && da.length) return { ok: false, grund: 'schon_geschickt' };
+  } catch (e) { /* im Zweifel weiter - das Log faengt Doppelte ohnehin ab */ }
   const { error: logErr } = await sb.from('email_log').insert({ kind: 'lead_willkommen', ref });
   if (logErr) return { ok: false, grund: 'schon_geschickt' };
 
   const vorname = (String(lead.name || '').trim().split(/\s+/)[0]) || email.split('@')[0];
+
+  /* Erst auf die Liste, dann die Mail. Wer die Willkommensmail bekommt,
+     soll auch die naechste Rundmail bekommen. */
+  await brevoListe(lead);
 
   try {
     const r = await fetch('https://api.brevo.com/v3/smtp/email', {
@@ -139,5 +179,11 @@ export async function willkommenSenden(sb, lead) {
     await sb.from('email_log').delete().eq('kind', 'lead_willkommen').eq('ref', ref);
     return { ok: false, grund: 'netz', detail: String(e).slice(0, 160) };
   }
+  /* Zwei Markierungen, die nichts voneinander wissen, verschicken
+     dieselbe Mail zweimal - genau das ist am 01.10. passiert. Deshalb
+     setzt der Versand jetzt BEIDE: den Eintrag in email_log und
+     leads.mail_at. */
+  try { await sb.from('leads').update({ mail_at: new Date().toISOString() }).ilike('email', email); }
+  catch (e) { /* die Mail ist raus, das Log steht - mehr muss nicht klappen */ }
   return { ok: true };
 }
