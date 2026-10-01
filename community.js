@@ -560,6 +560,121 @@
 .cm-sheet .cs-akt .ico{width:20px;height:20px;flex:none;stroke:currentColor;stroke-width:1.7;fill:none;
   stroke-linecap:round;stroke-linejoin:round}
 
+/* ============================================================
+   MESSENGER-SCHLIFF
+   Darueber lag bis hierher eine Aufkleber-Optik: ueberall 2,5 px
+   schwarze Rahmen und harte versetzte Schatten. Das sieht nach
+   Bastelbogen aus, nicht nach einem Messenger, den man den ganzen
+   Tag offen hat. Dieser Block setzt die Flaechen zurueck auf
+   weiches Papier, echte Sprechblasen und eine ruhige Kanalliste
+   — in den Markenfarben, auf allen Bildschirmgroessen gleich.
+   ============================================================ */
+#v-community .comm{
+  border:1px solid #E7E3DA !important;border-radius:16px !important;
+  background:#fff !important;box-shadow:0 1px 2px rgba(20,24,27,.04),0 14px 34px rgba(20,24,27,.07) !important}
+#v-community .cs{border-right:1px solid #EFEBE2 !important;background:#FCFAF5 !important}
+#v-community .ms{border-left:1px solid #EFEBE2 !important;background:#FCFAF5 !important}
+#v-community .cs-h{border-bottom:1px solid #EFEBE2 !important}
+#v-community .ch-hd{border-bottom:1px solid #EFEBE2 !important;background:#fff !important}
+
+/* Kanalliste: ruhige Zeilen, der aktive Kanal nur sanft getoent. */
+#v-community .ch{border:none !important;border-radius:10px !important}
+#v-community .ch:hover{background:#F2EFE7 !important}
+#v-community .ch.on{background:#DFF4F9 !important;border:none !important;color:#063138 !important;font-weight:700}
+#v-community .ch .cn{border:none !important;box-shadow:none !important}
+#v-community .ch.newsch{border:1px solid #F0DFA0 !important;box-shadow:none !important}
+#v-community .cs-more{border:1px solid #DCD6CA !important;box-shadow:none !important;border-radius:11px !important}
+
+/* Der Verlauf liegt auf hellem Papier, ohne Punktraster. */
+#v-community .feed{background:#FBF8F2 !important;padding:10px 16px 14px !important}
+#v-community .thr{background:none !important;border:none !important;box-shadow:none !important;
+  padding:0 !important;margin:0 0 4px !important;border-radius:0 !important}
+#v-community .thr-a{margin:2px 0 8px 16px !important;padding-left:12px !important;
+  border-left:2px solid #E7E3DA !important}
+
+/* Echte Sprechblasen — auch am grossen Bildschirm, nicht nur am Handy. */
+#v-community .feed .m{display:flex !important;flex-wrap:nowrap;gap:8px;align-items:flex-start;
+  padding:2px 0 !important;margin:0 !important;background:none !important}
+#v-community .feed .m:hover{background:none !important}
+#v-community .feed .m .ava{width:30px;height:30px;font-size:11.5px;border:none !important;
+  margin-top:3px;box-shadow:none !important}
+#v-community .feed .mb{flex:0 1 auto;max-width:min(78%,560px);min-width:0;
+  background:#fff !important;border:1px solid #ECE8E0 !important;border-radius:16px 16px 16px 5px !important;
+  padding:7px 12px 5px !important;box-shadow:0 1px 1.5px rgba(20,24,27,.05) !important}
+#v-community .feed .mt{font-size:14.5px;line-height:1.5}
+
+/* Eigene Beitraege rechts, in Markentuerkis. */
+#v-community .feed .m.me{flex-direction:row-reverse}
+#v-community .feed .m.me .ava{display:none}
+#v-community .feed .m.me .mb{background:#DFF4F9 !important;border-color:#C7E9F1 !important;
+  border-radius:16px 16px 5px 16px !important;box-shadow:0 1px 1.5px rgba(16,98,122,.08) !important}
+#v-community .feed .m.me .mh{display:none}
+#v-community .feed .m.folge{padding-top:0 !important;margin-top:-1px !important}
+#v-community .feed .m.folge .mh{display:none}
+#v-community .feed .m.folge .ava{visibility:hidden;height:0;margin:0}
+
+#v-community .feed .mh{gap:7px;margin-bottom:1px}
+#v-community .feed .mh .w{font-size:13px !important}
+#v-community .feed .mh time{display:none}
+#v-community .feed .mzeit{display:block;text-align:right;font-size:10.5px;color:#9AA3A8;
+  margin-top:2px;line-height:1;font-variant-numeric:tabular-nums}
+#v-community .feed .m.me .mzeit{color:#3E8294}
+
+/* Zustand beim Senden — man soll sehen, ob etwas raus ist. */
+#v-community .feed .m.m-sendet .mb{opacity:.72}
+#v-community .feed .m.m-sendet .mzeit::after{content:" · sendet"}
+#v-community .feed .m.m-fehler .mb{border-color:#E8B4B0 !important;background:#FFF6F5 !important}
+#v-community .feed .m.m-fehler .mzeit{color:#D42A21;font-weight:700}
+#v-community .feed .m.m-fehler .mzeit::after{content:" · nicht gesendet"}
+
+/* Tagestrenner als ruhige Pille statt Linie mit Schrift. */
+#v-community .dsep{margin:14px 0 8px !important}
+#v-community .dsep::before,#v-community .dsep::after{background:#EDE8DE !important;height:1px !important}
+
+/* Reaktionen leichter. */
+#v-community .rc span{border:1px solid #E7E3DA !important;box-shadow:none !important;background:#fff !important}
+#v-community .rc span.on{background:#DFF4F9 !important;border-color:#C7E9F1 !important;color:#063138 !important}
+
+/* Schreibfeld: ein Feld, ein Rahmen. Vorher lagen zwei ineinander. */
+#v-community .cmp{background:#fff !important;border-top:1px solid #EFEBE2 !important;padding:10px 16px 14px !important}
+#v-community .cmp-box{border:1px solid #DDD8CE !important;border-radius:22px !important;
+  box-shadow:none !important;background:#fff !important;padding:3px 5px !important}
+#v-community .cmp-box:focus-within{border-color:#39CCE3 !important;box-shadow:0 0 0 3px rgba(57,204,227,.18) !important}
+#v-community .cse{border-radius:50% !important;background:#10627A !important;color:#fff !important;
+  border:none !important;box-shadow:none !important;width:36px;height:36px}
+#v-community .cse:hover{background:#0B4E60 !important}
+#v-community .ct{border:none !important;box-shadow:none !important}
+
+/* Die Pille "neue Nachrichten" gehoert zum selben Stil. */
+#v-community .neupille{border:none !important;background:#10627A !important;color:#fff !important;
+  box-shadow:0 6px 18px rgba(16,98,122,.3) !important}
+
+/* Angepinntes oben: ein ruhiger Streifen, keine zweite Karte. */
+#v-community .pinbar{background:#FFFCF2 !important;border-bottom:1px solid #F0E6CE !important}
+
+/* Reaktionsleiste und "Antworten" standen unter JEDER Nachricht fest
+   eingeblendet. Das ist der zweite Grund, warum der Verlauf nicht nach
+   Messenger aussieht: ein Drittel der Flaeche sind Knoepfe. Am grossen
+   Bildschirm erscheinen sie jetzt erst, wenn die Maus ueber der
+   Nachricht liegt; am Handy bleibt das Halte-Menue der Weg dorthin. */
+@media(hover:hover) and (min-width:681px){
+  #v-community .feed .schnell{opacity:0;max-height:0;overflow:hidden;margin:0 !important;
+    padding:0 !important;border-top:none !important;min-height:0 !important;
+    transition:opacity .12s ease,max-height .12s ease}
+  #v-community .feed .thr:hover .schnell,
+  #v-community .feed .schnell:focus-within{opacity:1;max-height:46px;margin:2px 0 6px 38px !important}
+}
+@media(max-width:680px){
+  #v-community .feed .schnell{opacity:0;max-height:0;overflow:hidden;margin:0 !important;padding:0 !important}
+}
+
+@media(max-width:680px){
+  #v-community .feed{padding:8px 11px 14px !important;background:#FBF8F2 !important}
+  #v-community .feed .mb{max-width:84%;padding:7px 11px 5px !important}
+  #v-community .cmp{padding:8px 10px calc(10px + env(safe-area-inset-bottom)) !important;
+    border-top:1px solid #EFEBE2 !important}
+}
+
 `; document.head.appendChild(st);
   }
 
@@ -714,7 +829,7 @@
   function shellHtml(){
     return '<div class="pagehead"><h1>Community-Chat</h1><p>Schreib mit anderen Mitgliedern — nach Stufe, Thema und Ziel sortiert.</p></div>'+
       '<div class="comm">'+
-        '<div class="cs"><div class="cs-h"><b>Community</b><div class="st"><i></i><span id="cmMitgl"></span><span id="cmOnline">'+countOnline()+'</span> online</div></div>'+
+        '<div class="cs"><div class="cs-h"><b>Community</b><div class="st"><i></i><span id="cmMitgl">'+(((window.__commAkt||{}).mitglieder)?((window.__commAkt||{}).mitglieder+' Mitglieder \u00b7 '):'')+'</span><span id="cmOnline">'+countOnline()+'</span> online</div></div>'+
           '<div class="cs-srch"><input type="search" id="cmSearch" placeholder="Suchen …" autocomplete="off"></div>'+
           '<div class="cs-l">'+sideHtml()+'</div></div>'+
         '<div class="chat" id="cmChat"></div>'+
