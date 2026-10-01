@@ -198,6 +198,23 @@ async function sendTrialWelcome(s) {
 
 
 // Zahlungsbestätigung bei echter Abbuchung (invoice.paid): erkennt den ECHTEN Tarif aus den Abo-Metadaten.
+/* Der Club ist eine Webseite, aber auf dem Handy fuehlt er sich wie eine
+   App an, sobald man ihn auf den Startbildschirm legt: eigenes Symbol,
+   kein Browserrahmen, ein Tippen statt Adresse eintippen. Wer das
+   einmal gemacht hat, kommt deutlich oefter zurueck - deshalb steht der
+   Hinweis in jeder Willkommensmail, fuer iPhone und Android getrennt. */
+const APP_BLOCK = `
+      <tr><td style="padding:16px 32px 4px">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F2FBFD;border:1px solid #C7E9F1;border-radius:16px">
+          <tr><td style="padding:16px 18px">
+            <p style="margin:0 0 8px;font-weight:700;font-size:15.5px;color:#1A1A1A">&#128241; Leg dir den Club auf den Startbildschirm</p>
+            <p style="margin:0 0 10px;font-size:14.5px;line-height:1.6;color:#3f4650">Dann hast du ihn wie eine App: eigenes Symbol, kein Browserrahmen, ein Tippen und du bist drin.</p>
+            <p style="margin:0 0 6px;font-size:14px;line-height:1.6;color:#3f4650"><b>iPhone:</b> Seite in Safari &ouml;ffnen, unten auf das Teilen-Symbol tippen, dann <b>&bdquo;Zum Home-Bildschirm&ldquo;</b>.</p>
+            <p style="margin:0;font-size:14px;line-height:1.6;color:#3f4650"><b>Android:</b> Seite in Chrome &ouml;ffnen, oben rechts auf die drei Punkte, dann <b>&bdquo;App installieren&ldquo;</b> oder &bdquo;Zum Startbildschirm hinzuf&uuml;gen&ldquo;.</p>
+          </td></tr>
+        </table>
+      </td></tr>`;
+
 async function sendPaymentMail(sub, inv) {
   try {
     const userId = sub.metadata?.userId;
@@ -233,6 +250,7 @@ async function sendPaymentMail(sub, inv) {
       <tr><td style="padding:12px 32px 4px">
         <p style="font-size:13px;line-height:1.6;color:#6B7280;margin:0">Dein Abo verlängert sich automatisch monatlich – jederzeit kündbar. <a href="${PORTAL}" style="color:#35AFD0">Abo verwalten / kündigen</a></p>
       </td></tr>
+      ${APP_BLOCK}
       <tr><td style="padding:14px 32px 22px">
         <p style="font-size:16px;line-height:1.6;margin:0">Ich freue mich riesig, dich bei uns im Club zu sehen!<br><strong>Julia</strong> 💛</p>
       </td></tr>
@@ -407,6 +425,7 @@ async function sendCommunityWelcome(email, name, abDatum) {
       <tr><td style="padding:12px 32px 4px">
         <p style="font-size:13px;line-height:1.6;color:#6B7280;margin:0">Deine Mitgliedschaft verl&auml;ngert sich automatisch &ndash; jederzeit k&uuml;ndbar. <a href="${PORTAL}" style="color:#35AFD0">Mitgliedschaft verwalten</a></p>
       </td></tr>
+      ${APP_BLOCK}
       <tr><td style="padding:14px 32px 22px">
         <p style="font-size:16px;line-height:1.6;margin:0">Viel Freude beim Lernen!<br><strong>Julia</strong> &#128153;</p>
       </td></tr>

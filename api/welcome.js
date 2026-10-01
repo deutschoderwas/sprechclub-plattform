@@ -58,6 +58,16 @@ async function sendWelcome(email, name) {
           </p>
         </div>
       </td></tr>
+      <tr><td style="padding:16px 32px 4px">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F2FBFD;border:1px solid #C7E9F1;border-radius:16px">
+          <tr><td style="padding:16px 18px">
+            <p style="margin:0 0 8px;font-weight:700;font-size:15.5px;color:#1A1A1A">&#128241; Leg dir den Club auf den Startbildschirm</p>
+            <p style="margin:0 0 10px;font-size:14.5px;line-height:1.6;color:#3f4650">Dann hast du ihn wie eine App: eigenes Symbol, kein Browserrahmen, ein Tippen und du bist drin.</p>
+            <p style="margin:0 0 6px;font-size:14px;line-height:1.6;color:#3f4650"><b>iPhone:</b> Seite in Safari &ouml;ffnen, unten auf das Teilen-Symbol tippen, dann <b>&bdquo;Zum Home-Bildschirm&ldquo;</b>.</p>
+            <p style="margin:0;font-size:14px;line-height:1.6;color:#3f4650"><b>Android:</b> Seite in Chrome &ouml;ffnen, oben rechts auf die drei Punkte, dann <b>&bdquo;App installieren&ldquo;</b> oder &bdquo;Zum Startbildschirm hinzuf&uuml;gen&ldquo;.</p>
+          </td></tr>
+        </table>
+      </td></tr>
       <tr><td style="padding:16px 32px 22px">
         <p style="font-size:15px;line-height:1.6;margin:0">Bis bald im Club &amp; viel Spaß beim Deutschlernen,<br><strong>Julia</strong> 💛</p>
       </td></tr>
