@@ -69,7 +69,7 @@
           if(i) pc.crossOrigin=''; document.head.appendChild(pc);
         });
         var fl=document.createElement('link'); fl.id='dowFonts'; fl.rel='stylesheet';
-        fl.href='https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Caveat+Brush&family=Shantell+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap';
+        fl.href='https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap';
         document.head.appendChild(fl);
       }
     }catch(e){}
@@ -292,9 +292,9 @@
   --red:#D42A21; --gold:#C79600;
   --ink:#14181B; --t1:#14181B; --t2:#5A6B72; --t3:#8A9AA1;
   --surface:#FFFFFF; --surface-2:#F6F9FA; --line:#E7ECEE; --line-2:#E7ECEE;
-  --fh:'Shantell Sans','Inter',cursive;
+  --fh:'Space Grotesk','Inter',sans-serif;
 }
-#v-community .pagehead h1{font-family:'Caveat Brush',cursive!important;font-size:clamp(28px,4vw,40px)!important;font-weight:400!important;color:var(--tinte)}
+#v-community .pagehead h1{font-family:'Space Grotesk','Inter',sans-serif!important;font-size:clamp(22px,3vw,30px)!important;font-weight:700!important;letter-spacing:-.01em;color:var(--tinte)}
 #v-community .pagehead p{color:var(--t2)}
 
 /* Rahmen und Spalten */
@@ -378,7 +378,7 @@
 #v-community .ct{color:var(--t2)!important;border-radius:10px!important}
 #v-community .ct:hover{background:var(--brand-wash)!important;color:var(--auf-tuerkis)!important}
 #v-community .ct.rec{background:var(--rot-s)!important;color:#fff!important}
-#v-community .chint{font-family:'Caveat',cursive!important;font-size:14px!important;color:var(--t3)}
+#v-community .chint{font-size:11.5px!important;color:var(--t3)}
 
 /* Mitgliederspalte */
 #v-community .ms h4{font-family:var(--fh)!important;font-weight:700!important;color:var(--tuerkis-dunkel)!important}
@@ -389,7 +389,8 @@
 #v-community .dsep{font-family:var(--fh)!important;font-weight:700!important;color:var(--tuerkis-dunkel)!important}
 #v-community .dsep::before,#v-community .dsep::after{background:var(--line)!important}
 
-#v-community .cm-empty{font-family:'Caveat',cursive;font-size:17px;color:var(--t3)}
+#v-community .cm-empty{font-family:'Inter',sans-serif;font-size:14px;color:var(--t2);line-height:1.6;max-width:320px}
+#v-community .cm-empty b{display:block;font-family:'Space Grotesk','Inter',sans-serif;font-size:16px;color:var(--t1);margin-bottom:4px}
 
 /* ============================================================
    Ruhe im Layout — nichts springt, nichts wackelt
@@ -535,7 +536,7 @@
 
 /* Das Halte-Menü hängt an <body>, deshalb bringt es seine Farben mit. */
 .cm-sheet-ov{--tinte:#14181B;--karte:#FFFFFF;--line:#E7ECEE;--brand-wash:#E6F8FC;
-  --rot-s:#D42A21;--t2:#5A6B72;--t3:#8A9AA1;--fh:"Shantell Sans","Inter",cursive;
+  --rot-s:#D42A21;--t2:#5A6B72;--t3:#8A9AA1;--fh:'Space Grotesk','Inter',sans-serif;
   position:fixed;inset:0;background:rgba(20,20,20,.42);z-index:99998;
   display:flex;align-items:flex-end;justify-content:center;animation:ccfade .14s ease}
 .cm-sheet{width:100%;max-width:520px;background:var(--karte);border:2.5px solid var(--tinte);
@@ -713,7 +714,7 @@
   function shellHtml(){
     return '<div class="pagehead"><h1>Community-Chat</h1><p>Schreib mit anderen Mitgliedern — nach Stufe, Thema und Ziel sortiert.</p></div>'+
       '<div class="comm">'+
-        '<div class="cs"><div class="cs-h"><b>Community</b><div class="st"><i></i><span id="cmMitglieder">…</span> Mitglieder · <span id="cmOnline">'+countOnline()+'</span> online</div></div>'+
+        '<div class="cs"><div class="cs-h"><b>Community</b><div class="st"><i></i><span id="cmMitgl"></span><span id="cmOnline">'+countOnline()+'</span> online</div></div>'+
           '<div class="cs-srch"><input type="search" id="cmSearch" placeholder="Suchen …" autocomplete="off"></div>'+
           '<div class="cs-l">'+sideHtml()+'</div></div>'+
         '<div class="chat" id="cmChat"></div>'+
@@ -759,7 +760,7 @@
        Namen stehen nur noch an den Beiträgen, die jemand schreibt.
        Die Zahlen kommen echt aus der Datenbank (RPC community_zahlen). */
     var f = window.__commAkt || {};
-    var mg = (f.mitglieder == null) ? '…' : f.mitglieder;
+    var mg = (f.mitglieder == null) ? '' : f.mitglieder;
     var wo = (f.woche == null) ? '…' : f.woche;
     var th = (f.themen == null) ? '…' : f.themen;
     var heute = amandaFrage();
@@ -769,12 +770,13 @@
       +   '<div class="akt-gross" id="aktMitglieder">' + mg + '</div>'
       +   '<div class="akt-hin">Alle lernen hier Deutsch — genau wie du.</div>'
       + '</div>'
-      + '<div class="akt">'
-      +   '<h4>Diese Woche</h4>'
-      +   '<div class="akt-z"><b id="aktWoche">' + wo + '</b><span>' + (wo===1?'Beitrag':'Beiträge') + '</span></div>'
-      +   '<div class="akt-z"><b id="aktThemen">' + th + '</b><span>' + (th===1?'Thema':'Themen') + '</span></div>'
-      +   '<div class="akt-hin">Schreib etwas — jede Frage hilft auch den anderen.</div>'
-      + '</div>'
+      + (((wo===0||wo==='…') && (th===0||th==='…')) ? ''
+         : '<div class="akt">'
+         +   '<h4>Diese Woche</h4>'
+         +   (wo ? '<div class="akt-z"><b id="aktWoche">' + wo + '</b><span>' + (wo===1?'Beitrag':'Beiträge') + '</span></div>' : '')
+         +   (th ? '<div class="akt-z"><b id="aktThemen">' + th + '</b><span>' + (th===1?'Thema':'Themen') + '</span></div>' : '')
+         +   '<div class="akt-hin">Schreib etwas — jede Frage hilft auch den anderen.</div>'
+         + '</div>')
       + '<div class="akt amanda">'
       +   '<h4>Amandas Frage des Tages</h4>'
       +   '<p class="akt-frage">' + E(heute) + '</p>'
@@ -822,7 +824,7 @@
       if(m) m.textContent = z.mitglieder;
       if(c) c.textContent = z.beitraege_woche;
       if(d) d.textContent = z.themen_woche;
-      var k=q('#cmMitglieder'); if(k) k.textContent = z.mitglieder;
+      var k=q('#cmMitgl'); if(k) k.textContent = z.mitglieder ? (z.mitglieder+' Mitglieder \u00b7 ') : '';
     }catch(e){}
   }
 
@@ -1180,7 +1182,7 @@
 
   function renderFeed(rows){
     var box=q('#cmFeed'); if(!box) return;
-    if(!rows.length){ box.innerHTML='<div class="cm-empty">Noch keine Nachrichten — schreib die erste! ✍️</div>'; }
+    if(!rows.length){ box.innerHTML='<div class="cm-empty"><b>Hier hat noch niemand geschrieben.</b>Sei die Erste — eine Frage, ein Satz über deinen Tag, irgendetwas. Die anderen trauen sich dann auch.</div>'; }
     else{
       var st=baueStraenge(rows), out='', last='';
       st.wurzeln.forEach(function(m){
