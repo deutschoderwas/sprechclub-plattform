@@ -39,16 +39,16 @@ const PLANS = {
   sparpass:         { abo: false, stunden: 30, preis: 399, label: 'Spar Pass' },
   // --- Neues Modell: Community (ohne Live-Buchung) + Premium (mit 8 Live-Stunden) ---
   community_year:  { abo: true, interval:'year',  stunden: 0, preis: 144, tier:'community', label: 'Community',
-    desc: 'Ganze Lernplattform, Community, Kursbibliothek A1-C2, Vokabeltrainer & taeglicher Podcast. Jahresmitgliedschaft (12 Monate).' },
+    desc: 'Die ganze Lernplattform: Kursbibliothek A1–C2, Vokabeltrainer, täglicher Podcast und Community. Jahresmitgliedschaft (12 Monate).' },
   community_month: { abo: true, interval:'month', stunden: 0, preis: 16,  tier:'community', label: 'Community',
-    desc: 'Ganze Lernplattform, Community, Kursbibliothek A1-C2, Vokabeltrainer & taeglicher Podcast. Monatlich kuendbar.' },
+    desc: 'Die ganze Lernplattform: Kursbibliothek A1–C2, Vokabeltrainer, täglicher Podcast und Community. Monatlich kündbar.' },
   // --- NEU ab 08/2026: Premium zum Seitenpreis (49 € / 37 € im Jahresabo). Das alte 149-€-Premium bleibt fuer Bestandskunden. ---
   premium_month:   { abo: true, interval:'month', stunden: 8, preis: 49,  tier:'premium', label: 'Premium',
-    desc: 'Alles aus Community + Sprechclub: taeglich von Montag bis Sonntag mit echten Menschen Deutsch sprechen, zu spannenden Themen, mit Lehrer. Monatlich kuendbar.' },
+    desc: 'Alles aus Community + Sprechclub: täglich von Montag bis Sonntag mit echten Menschen Deutsch sprechen, zu spannenden Themen. Monatlich kündbar.' },
   premium_year:    { abo: true, interval:'year',  stunden: 8, preis: 468, tier:'premium', label: 'Premium',
-    desc: 'Alles aus Community + Sprechclub: taeglich von Montag bis Sonntag mit echten Menschen Deutsch sprechen, zu spannenden Themen, mit Lehrer. Jahresmitgliedschaft (12 Monate, 39 EUR pro Monat).' },
+    desc: 'Alles aus Community + Sprechclub: täglich von Montag bis Sonntag mit echten Menschen Deutsch sprechen, zu spannenden Themen. Jahresmitgliedschaft (12 Monate, 39 € pro Monat).' },
   premium:         { abo: true, interval:'month', stunden: 8, preis: 149, tier:'premium',  label: 'Premium',
-    desc: 'Alles aus Community + 8 LIVE-Stunden/Monat: sprechen mit echten Menschen, mit Lehrer.' },
+    desc: 'Alles aus Community + 8 LIVE-Stunden im Monat: sprechen mit echten Menschen.' },
 
   /* --- Premium Plus: der geschlossene Sprechclub bei Julia persoenlich ---
      8 Stunden im Monat. Drei Laufzeiten, und zu jeder zwei Zahlweisen:
@@ -59,11 +59,11 @@ const PLANS = {
      mindest_bis und blenden das Kuendigen bis dahin aus. Wer die ganze
      Laufzeit sofort zahlt, hat das Thema ohnehin nicht. */
   pp_m1: { abo: true, interval:'month', stunden: 8, preis: 149, tier:'premiumplus', label: 'Premium Plus · monatlich',
-    monate: 1, desc: 'Geschlossener Sprechclub mit Julia persoenlich. 8 Stunden im Monat. Monatlich kuendbar.' },
+    monate: 1, desc: 'Geschlossener Sprechclub mit Julia persönlich. 8 Stunden im Monat. Monatlich kündbar.' },
   pp_m3: { abo: true, interval:'month', stunden: 8, preis: 129, tier:'premiumplus', label: 'Premium Plus · 3 Monate',
-    monate: 3, desc: 'Geschlossener Sprechclub mit Julia persoenlich. 8 Stunden im Monat. Mindestlaufzeit 3 Monate, danach monatlich kuendbar.' },
+    monate: 3, desc: 'Geschlossener Sprechclub mit Julia persönlich. 8 Stunden im Monat. Mindestlaufzeit 3 Monate, danach monatlich kündbar.' },
   pp_m6: { abo: true, interval:'month', stunden: 8, preis: 99,  tier:'premiumplus', label: 'Premium Plus · 6 Monate',
-    monate: 6, desc: 'Geschlossener Sprechclub mit Julia persoenlich. 8 Stunden im Monat. Mindestlaufzeit 6 Monate, danach monatlich kuendbar.' },
+    monate: 6, desc: 'Geschlossener Sprechclub mit Julia persönlich. 8 Stunden im Monat. Mindestlaufzeit 6 Monate, danach monatlich kündbar.' },
 
   pp_e1: { abo: false, stunden: 8,  preis: 149, tier:'premiumplus', label: 'Premium Plus · 1 Monat im Voraus', monate: 1 },
   pp_e3: { abo: false, stunden: 24, preis: 387, tier:'premiumplus', label: 'Premium Plus · 3 Monate im Voraus', monate: 3 },
@@ -134,9 +134,13 @@ export default async function handler(req, res) {
       locale: 'auto',
       custom_text: {
         submit: {
+          /* Wichtigster Satz der ganzen Kasse: der Zugang wird ueber die
+             E-Mail-Adresse zugeordnet. Wer hier mit einer anderen Adresse
+             zahlt als er sich spaeter anmeldet, steht vor einer leeren
+             Plattform - genau das soll dieser Hinweis verhindern. */
           message: plan.tier
-            ? 'Gleich nach der Zahlung legst du dein Passwort fest und kannst sofort loslegen.'
-            : 'Deine Stunden stehen sofort nach der Zahlung in deinem Konto.'
+            ? 'Melde dich anschließend mit genau der E-Mail-Adresse an, mit der du hier bezahlst. Direkt nach der Zahlung hast du den vollen Zugang zur Plattform.'
+            : 'Zahle mit der E-Mail-Adresse deines Kontos — deine Stunden stehen sofort danach darin bereit.'
         }
       },
     };
@@ -201,8 +205,8 @@ export default async function handler(req, res) {
       if (plan.tier === 'premium' && zugangAb) {
         // Vorverkauf: jetzt zahlen, Laufzeit ab 1.11. — naechste Zahlung 1.12. bzw. 1.11. im Folgejahr.
         abodesc += (plan.interval === 'year')
-          ? ' — Willkommenspreis, bleibt dauerhaft. Der Sprechclub startet am 01.11.2026. Die naechste Zahlung ist erst am 01.11.2027.'
-          : ' — Willkommenspreis, bleibt dauerhaft. Der Sprechclub startet am 01.11.2026. Die naechste Zahlung ist erst am 01.12.2026.';
+          ? ' — Willkommenspreis, bleibt dauerhaft. Der Sprechclub startet am 01.11.2026, die nächste Zahlung ist erst am 01.11.2027.'
+          : ' — Willkommenspreis, bleibt dauerhaft. Der Sprechclub startet am 01.11.2026, die nächste Zahlung ist erst am 01.12.2026.';
       } else if (zugangAb) {
         const dd = zugangAb.split('-');
         abodesc += ` — Start am ${dd[2]}.${dd[1]}.${dd[0]}: Die Laufzeit beginnt an diesem Tag.`;
