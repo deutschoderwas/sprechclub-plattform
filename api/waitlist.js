@@ -6,6 +6,7 @@
 // Kein Login nötig. Die Liste selbst läuft weiter über das Google-Formular.
 
 import { createClient } from '@supabase/supabase-js';
+import { willkommenSenden } from './_lead-willkommen-mail.js';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -36,7 +37,7 @@ export default async function handler(req, res) {
   }
 
   // 1) In die Lead-Liste schreiben (erscheint im Admin-Bereich unter Leads)
-  let gespeichert = false;
+  let gespeichert = false, willkommen = false;
   if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
     try {
       const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
@@ -45,6 +46,12 @@ export default async function handler(req, res) {
         schwierigkeiten: schwierigkeiten || null, mehr: mehr || null, quelle,
       });
       gespeichert = !error;
+      /* Und sofort die Willkommensmail: frueher lag ein neuer Lead so
+         lange still, bis jemand Zeit hatte. Scheitert sie hier, holt
+         api/lead-willkommen.js sie nach — der Eintrag in der Liste darf
+         davon nie abhaengen. */
+      try { const r = await willkommenSenden(sb, { name, email }); willkommen = !!(r && r.ok); }
+      catch (e) { willkommen = false; }
     } catch (e) { gespeichert = false; }
   }
 
