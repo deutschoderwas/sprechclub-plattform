@@ -128,6 +128,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--turq)}
   <div id="nachrichten" style="display:none"></div>
   <div id="kiteam" style="display:none"></div>
   <div id="bewertungen" style="display:none"></div>
+  <div id="kontakt" style="display:none"></div>
   <div id="community" style="display:none"><div id="v-community"></div></div>
   <div id="leads" style="display:none"></div>
 
@@ -474,6 +475,147 @@ async function ladeCommunityKarte(){
     + '</div>';
 }
 
+
+/* ============================================================
+   Angeschrieben? — eine Liste fuer beide Quellen
+   ------------------------------------------------------------
+   Vorher lag die Warteliste an drei Orten: im Google-Formular, in
+   der leads-Tabelle und im Kopf. Niemand konnte sagen, ob WIRKLICH
+   jeder eine Nachricht bekommen hat. Die Ansicht leads_kontakt fasst
+   beide Quellen zu einer Zeile pro Mensch zusammen und zeigt, was
+   dieser Mensch bekommen hat: Mail, WhatsApp, oder nichts.
+
+   Der WhatsApp-Knopf oeffnet das Gespraech MIT fertigem Text und
+   traegt im selben Moment whatsapp_at ein. Dadurch steht der Stand
+   in der Datenbank statt im Browser - auch morgen, auch am Handy.
+   ============================================================ */
+let KONTAKT = [], KONTAKT_FILTER = 'alle';
+
+const KONTAKT_TEXT = (v) =>
+  'Hallo ' + (v || 'du') + ' \u{1F44B}\n\n' +
+  'kurze Nachricht von mir: Die Anmeldungen für den Sprechclub sind seit heute offen — ' +
+  'du kannst dir ab sofort deinen Platz sichern.\n\n' +
+  'Start ist der 1. November. Die Lernplattform ist ab der Anmeldung sofort für dich da.\n\n' +
+  'Bis zum 31. Oktober zahlst du 39 € im Monat statt 99 € (im Jahresabo) oder 49 € monatlich kündbar. ' +
+  'Der Preis bleibt dir für immer, auch wenn der Club später teurer wird.\n\n' +
+  'https://www.deutschoderwas-club.de/#preise\n\n' +
+  'Fragen? Schreib mir einfach hier \u{1F499}\nJulia';
+
+/* Nummern stehen im Formular in jeder denkbaren Schreibweise.
+   Fuer wa.me braucht es Ziffern mit Landesvorwahl, sonst oeffnet
+   sich ein leeres Fenster. */
+function kontaktNummer(roh) {
+  let s = String(roh || '').replace(/±/g, '+').trim();
+  const plus = s.startsWith('+');
+  const d = s.replace(/\D/g, '');
+  if (!d || d.length < 9) return '';
+  if (plus) return d;
+  if (d.startsWith('00')) return d.slice(2);
+  if (d.startsWith('0')) return '49' + d.slice(1);
+  return d;
+}
+function kontaktTag(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  return isNaN(d) ? '' : d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: '2-digit' });
+}
+
+async function ladeKontakt() {
+  const host = document.getElementById('kontakt'); if (!host) return;
+  host.innerHTML = '<div class="card"><p class="muted">Lädt …</p></div>';
+  const { data, error } = await sb.from('leads_kontakt').select('*').order('seit', { ascending: false });
+  if (error) { host.innerHTML = '<div class="card"><p class="muted">Die Liste lässt sich nicht laden: ' + esc(error.message) + '</p></div>'; return; }
+  KONTAKT = data || [];
+  zeichneKontakt();
+}
+
+function zeichneKontakt() {
+  const host = document.getElementById('kontakt'); if (!host) return;
+  const alle = KONTAKT;
+  const offenWa = alle.filter(z => z.nummer_da && !z.hat_whatsapp && !z.gekauft);
+  const offenMail = alle.filter(z => !z.hat_mail);
+  const ohneNummer = alle.filter(z => !z.nummer_da);
+  const gekauft = alle.filter(z => z.gekauft);
+  setzeAbzeichen('kontaktBdg', offenWa.length);
+
+  const kachel = (zahl, was, ton) =>
+    '<div style="flex:1;min-width:130px;background:#fff;border:1px solid var(--border,#ECECEC);border-radius:14px;padding:13px 15px">'
+    + '<div style="font-family:\'Space Grotesk\',sans-serif;font-size:26px;font-weight:700;color:' + ton + '">' + zahl + '</div>'
+    + '<div style="font-size:12.5px;color:#5A6B72;line-height:1.35">' + was + '</div></div>';
+
+  let gefiltert = alle;
+  if (KONTAKT_FILTER === 'wa') gefiltert = offenWa;
+  else if (KONTAKT_FILTER === 'mail') gefiltert = offenMail;
+  else if (KONTAKT_FILTER === 'ohne') gefiltert = ohneNummer;
+  else if (KONTAKT_FILTER === 'gekauft') gefiltert = gekauft;
+
+  const knopf = (id, text, n) =>
+    '<button onclick="kontaktFilter(\'' + id + '\')" class="btn' + (KONTAKT_FILTER === id ? '' : ' btn-ghost') + '" '
+    + 'style="font-size:13px;padding:7px 14px">' + text + ' <b>' + n + '</b></button>';
+
+  const zeile = (z) => {
+    const nr = kontaktNummer(z.whatsapp);
+    const name = z.name || z.email.split('@')[0];
+    const wa = nr
+      ? (z.hat_whatsapp
+          ? '<span style="color:#1F7A3D;font-weight:700;font-size:13px">✓ ' + kontaktTag(z.whatsapp_at) + '</span>'
+          : '<button class="btn" style="background:#25D366;color:#06403A;font-size:13px;padding:7px 13px;font-weight:800" '
+            + 'onclick="kontaktWhatsApp(\'' + esc(z.email) + '\',\'' + nr + '\',\'' + esc(String(name).split(' ')[0]).replace(/'/g, "\\'") + '\')">WhatsApp ↗</button>')
+      : '<span class="muted" style="font-size:12.5px">keine Nummer</span>';
+    return '<tr>'
+      + '<td><b>' + esc(name) + '</b>' + (z.gekauft ? ' <span style="background:#E9F6EC;color:#1F7A3D;border-radius:20px;padding:1px 8px;font-size:11px;font-weight:800">gebucht</span>' : '')
+      + '<div class="muted" style="font-size:12px">' + esc(z.email) + '</div></td>'
+      + '<td style="font-size:12.5px;color:#5A6B72">' + esc(z.quellen || '') + '<div class="muted" style="font-size:11.5px">seit ' + kontaktTag(z.seit) + '</div></td>'
+      + '<td style="text-align:center">' + (z.hat_mail
+          ? '<span style="color:#1F7A3D;font-weight:700;font-size:13px">✓ ' + kontaktTag(z.mail_at) + '</span>'
+          : '<span style="color:#D42A21;font-weight:700;font-size:13px">offen</span>') + '</td>'
+      + '<td style="text-align:right">' + wa + '</td>'
+      + '</tr>';
+  };
+
+  host.innerHTML =
+    '<div class="pagehead"><h1>\u{1F4E3} Angeschrieben?</h1>'
+    + '<p class="muted">Jeder Mensch von der Webseite und aus dem Google-Formular, einmal. Hier steht, was er bekommen hat.</p></div>'
+    + '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">'
+    +   kachel(alle.length, 'Menschen auf der Liste', '#14181B')
+    +   kachel(alle.filter(z => z.hat_mail).length, 'haben die Mail bekommen', '#1F7A3D')
+    +   kachel(offenWa.length, 'warten noch auf WhatsApp', offenWa.length ? '#D42A21' : '#1F7A3D')
+    +   kachel(ohneNummer.length, 'ohne Nummer — nur per Mail erreichbar', '#9A6B00')
+    +   kachel(gekauft.length, 'haben gebucht', '#10627A')
+    + '</div>'
+    + '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">'
+    +   knopf('alle', 'Alle', alle.length)
+    +   knopf('wa', 'Noch kein WhatsApp', offenWa.length)
+    +   knopf('mail', 'Noch keine Mail', offenMail.length)
+    +   knopf('ohne', 'Ohne Nummer', ohneNummer.length)
+    +   knopf('gekauft', 'Gebucht', gekauft.length)
+    + '</div>'
+    + '<div class="card" style="padding:0;overflow:auto">'
+    + '<table style="width:100%;border-collapse:collapse;font-size:14px">'
+    + '<thead><tr style="text-align:left;background:#FAF8F3">'
+    +   '<th style="padding:10px 14px">Name</th><th style="padding:10px 14px">Quelle</th>'
+    +   '<th style="padding:10px 14px;text-align:center">Mail</th><th style="padding:10px 14px;text-align:right">WhatsApp</th>'
+    + '</tr></thead><tbody>'
+    + (gefiltert.length ? gefiltert.map(zeile).join('') : '<tr><td colspan="4" style="padding:18px 14px" class="muted">Hier ist gerade niemand — das ist die gute Nachricht.</td></tr>')
+    + '</tbody></table></div>';
+}
+
+function kontaktFilter(f) { KONTAKT_FILTER = f; zeichneKontakt(); }
+
+/* Oeffnet das Gespraech und merkt sich den Versand sofort. Der Eintrag
+   geht auch dann raus, wenn das Fenster blockiert wird - lieber einmal
+   zu viel markiert als eine Person doppelt angeschrieben. */
+async function kontaktWhatsApp(email, nr, vorname) {
+  const url = 'https://wa.me/' + nr + '?text=' + encodeURIComponent(KONTAKT_TEXT(vorname));
+  window.open(url, '_blank', 'noopener');
+  const jetzt = new Date().toISOString();
+  const z = KONTAKT.filter(x => x.email === email)[0];
+  if (z) { z.whatsapp_at = jetzt; z.hat_whatsapp = true; }
+  zeichneKontakt();
+  try { await sb.from('leads').update({ whatsapp_at: jetzt }).ilike('email', email); }
+  catch (e) { /* die Liste zeigt es trotzdem an, beim naechsten Laden wird es sichtbar */ }
+}
+
 /* ---------- Navigation in zwei Ebenen ----------
    Vorher standen zehn gleich aussehende Reiter nebeneinander, dazu ein Link,
    und jeder neue Reiter brauchte drei Aenderungen an drei Stellen. Jetzt
@@ -489,7 +631,8 @@ const BEREICHE = [
   { id:'menschen', name:'👥 Menschen', reiter:[
       { id:'schueler', name:'Sch\u00fcler & Guthaben', nurAdmin:true, laden:function(){ loadSchueler(); } },
       { id:'lehrer',   name:'Lehrkr\u00e4fte',         nurAdmin:true, laden:function(){ loadLehrer(); } },
-      { id:'leads',    name:'📋 Leads', nurAdmin:true, abzeichen:'leadsBdg', laden:function(){ loadLeads(); } } ] },
+      { id:'leads',    name:'📋 Leads', nurAdmin:true, abzeichen:'leadsBdg', laden:function(){ loadLeads(); } },
+      { id:'kontakt',  name:'📣 Angeschrieben?', nurAdmin:true, abzeichen:'kontaktBdg', laden:function(){ ladeKontakt(); } } ] },
   { id:'inhalte', name:'📚 Inhalte', reiter:[
       { id:'material', name:'Materialien', nurAdmin:true, laden:function(){ loadMaterial(); } },
       { id:'korrektur', name:'\u270D\uFE0F Korrekturen', href:'admin-korrektur.html', abzeichen:'korrBdg' },
