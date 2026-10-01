@@ -4219,25 +4219,88 @@ body nav.cl-tabs > button.cl-mitte > .ic::after{content:"";position:absolute;ins
   body .tb-bc .t{font-size:17px}
 }
 
-/* Der Chat ist der Ort, an den die Leute zurueckkommen sollen. Er
-   bekommt deshalb einen weichen Tuerkis-Kreis hinter dem Zeichen —
-   sichtbar, aber ruhiger als der grosse Buchen-Knopf in der Mitte. */
-body nav.cl-tabs > button.cl-chat{color:#10627A !important;font-weight:700 !important}
-body nav.cl-tabs > button.cl-chat::after{content:"";position:absolute;left:50%;bottom:14px;
-  width:34px;height:34px;margin-left:-17px;border-radius:50%;background:#E6F8FC;z-index:0}
-body nav.cl-tabs > button.cl-chat.active::after{background:#10627A}
-body nav.cl-tabs > button.cl-chat.active{color:#10627A !important}
-body nav.cl-tabs > button.cl-chat.active > .ic{background-color:#fff !important}
-body nav.cl-tabs > button.cl-chat > .ic{position:relative;z-index:1}
-body nav.cl-tabs > button.cl-chat > span:not(.ic){position:relative;z-index:1}
-body nav.cl-tabs .clbdg{z-index:3}
+/* ============================================================
+   Die Leiste unten im Gesicht von deutschoderwas
+   ------------------------------------------------------------
+   Oben die vier Markenfarben als feine Kante — dasselbe Band wie
+   am Kopf der Seite. Wer die Leiste sieht, weiss sofort, wo er ist.
+   Darunter warmes Weiss statt kaltem Grau, und die aktive Taste
+   bekommt ein tuerkises Kissen hinter dem Zeichen, das weich
+   aufgeht. Buchen bleibt der erhabene Kreis, der Chat traegt sein
+   Kissen dauerhaft.
+   ============================================================ */
+body nav.cl-tabs{
+  background:rgba(255,253,249,.95) !important;
+  -webkit-backdrop-filter:saturate(1.7) blur(20px);backdrop-filter:saturate(1.7) blur(20px);
+  border-top:none !important;
+  box-shadow:0 -10px 30px rgba(20,24,27,.09) !important;
+  padding:10px 5px calc(7px + env(safe-area-inset-bottom)) !important}
+body nav.cl-tabs::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;
+  background:linear-gradient(90deg,#14181B 0 25%,#D42A21 25% 50%,#FFE100 50% 75%,#10627A 75% 100%)}
 
-/* Eine Zeile pro Beschriftung, damit alle Zeichen auf einer Linie stehen.
-   "Mein Bereich" ist das laengste Wort und bekommt etwas kleinere Schrift,
-   statt umzubrechen oder abgeschnitten zu werden. */
+body nav.cl-tabs > button{color:#6E7B82 !important;font-weight:600 !important;
+  font-size:10.5px !important;gap:5px !important;padding:2px 1px !important;
+  overflow:visible !important;transition:color .18s ease}
+/* overflow:hidden hat den weissen Rand des Buchen-Knopfes auf die
+   eckige Tastenflaeche zugeschnitten — aus dem Kreis wurde ein Kasten. */
+/* club-theme.css faerbt jede aktive Navigationszeile tuerkis ein — das
+   ist fuer die Seitenleiste richtig, in der Leiste unten wuerde es die
+   ganze Taste zukleistern. Hier zaehlt nur das Kissen hinter dem Zeichen. */
+body nav.cl-tabs > button.navlink,
+body nav.cl-tabs > button.navlink.active,
+body nav.cl-tabs > button.cl-mitte{background:none !important;background-image:none !important;
+  box-shadow:none !important}
+body nav.cl-tabs > button > .ic{position:relative;z-index:1;
+  transition:transform .2s cubic-bezier(.2,.8,.3,1.3)}
+body nav.cl-tabs > button > span:not(.ic):not(.clbdg){position:relative;z-index:1}
+
+/* Das Kissen liegt bei jeder Taste bereit und wird nur bei der
+   aktiven sichtbar — so wandert es weich mit, statt zu springen. */
+body nav.cl-tabs > button.navlink{position:relative}
+body nav.cl-tabs > button.navlink::after{content:"";position:absolute;left:50%;bottom:15px;
+  width:46px;height:32px;margin-left:-23px;border-radius:999px;background:#E6F8FC;
+  opacity:0;transform:scale(.7);z-index:0;
+  transition:opacity .2s ease,transform .24s cubic-bezier(.2,.8,.3,1.4)}
+body nav.cl-tabs > button.navlink.active::after{opacity:1;transform:scale(1);
+  background:#CFF1F9;box-shadow:none}
+body nav.cl-tabs > button.navlink.active{color:#10627A !important;font-weight:800 !important}
+body nav.cl-tabs > button.navlink.active > .ic{transform:translateY(-1px)}
+body nav.cl-tabs > button:active > .ic{transform:scale(.88)}
+
+/* Der Chat ist der Ort, an den die Leute zurueckkommen sollen:
+   sein Kissen ist immer da, im aktiven Zustand wird es gefuellt. */
+body nav.cl-tabs > button.cl-chat{color:#10627A !important;font-weight:700 !important}
+/* Ruhend nur ein tuerkiser Ring — gefuellt ist das Kissen immer der
+   aktiven Taste vorbehalten, sonst sieht der Chat dauernd aus, als
+   waere man schon darin. */
+body nav.cl-tabs > button.cl-chat::after{opacity:1;transform:scale(1);
+  background:transparent;box-shadow:inset 0 0 0 1.5px #9FDDEC}
+body nav.cl-tabs > button.cl-chat.active::after{
+  background:linear-gradient(145deg,#39CCE3,#10627A);
+  box-shadow:0 7px 16px rgba(16,98,122,.3)}
+body nav.cl-tabs > button.cl-chat.active > .ic{background-color:#FFFFFF !important}
+body nav.cl-tabs > button.cl-chat.active{font-weight:800 !important}
+
+/* Buchen: der eine Knopf, der aus der Leiste heraussteht. */
+body nav.cl-tabs > button.cl-mitte{top:-18px;color:#10627A !important;font-weight:800 !important}
+body nav.cl-tabs > button.cl-mitte > .ic{
+  width:52px !important;height:52px !important;flex:0 0 52px !important;
+  background-image:linear-gradient(145deg,#39CCE3 0%,#1B9BC0 48%,#10627A 100%) !important;
+  background-color:#10627A !important;
+  box-shadow:0 10px 24px rgba(16,98,122,.4),0 0 0 4px rgba(255,253,249,.96) !important}
+body nav.cl-tabs > button.cl-mitte:active > .ic{transform:scale(.95)}
+
+/* Ungelesene Nachrichten: Markenrot mit weissem Rand, damit die Zahl
+   auf dem gefuellten Kissen genauso gut zu lesen ist wie daneben. */
+body nav.cl-tabs .clbdg{background:#D42A21 !important;font-weight:800 !important;
+  box-shadow:0 0 0 2.5px #FFFDF9 !important;z-index:4}
+
+/* Eine Zeile pro Beschriftung, damit alle Zeichen auf einer Linie
+   stehen. "Mein Bereich" ist das laengste Wort und bekommt etwas
+   kleinere Schrift, statt umzubrechen oder abgeschnitten zu werden. */
 body nav.cl-tabs > button > span:not(.ic):not(.clbdg){display:block;width:100%;
-  line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-body nav.cl-tabs > button[data-view="fortschritt"]{font-size:9px !important;letter-spacing:-.2px}
+  line-height:1.4;padding-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body nav.cl-tabs > button[data-view="fortschritt"]{font-size:9.5px !important;letter-spacing:-.2px}
 
 @media(max-width:900px){
   body nav.cl-tabs{display:flex !important}
