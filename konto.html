@@ -2232,6 +2232,16 @@ function kalFokus(roh){
        steht nur die Form, dahinter die eigentliche Frage. */
     fokus = (vor.length>=12) ? vor : (nach || vor);
   }
+  /* Ist es immer noch ein ganzer Satz, nehmen wir nur den ersten Teil:
+     "Weniger Auto — und dann? Bus, Rad, Parkplatz" wird "Weniger Auto".
+     Eine Frage, die auf ? endet, bleibt ganz — sie IST der Fokus. */
+  if(fokus.length>34){
+    var tz=['—','–','?','.',';'];
+    for(var k=0;k<tz.length;k++){
+      var p=fokus.indexOf(tz[k]);
+      if(p>=12 && p<fokus.length-1){ fokus=fokus.slice(0,p).trim(); break; }
+    }
+  }
   if(fokus.length>62) fokus=fokus.slice(0,60).replace(/[\s,;:·–-]+$/,'')+'…';
   return { art:art, fokus:fokus, teil:teil };
 }
@@ -4371,6 +4381,135 @@ body nav.cl-tabs > button[data-view="fortschritt"]{font-size:9.5px !important;le
 .cl-amanda .tx span{font-size:.76rem;color:#6B7A80;line-height:1.25;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 </style>
+<style id="kal-neu">
+/* ============================================================
+   Wochenkalender — Rhythmus statt Raster
+   Drei Dinge waren vorher im Weg: die Niveau-Schildchen (jetzt weg),
+   der ganze Stundentitel in der Karte (jetzt nur noch der Fokus) und
+   sieben gleich graue Spalten. Die Uhrzeit faerbt jetzt die Karte:
+   morgens Gold, mittags Tuerkis, abends tiefes Petrol.
+   ============================================================ */
+#kalBody{--k-frueh:#EBA30B;--k-tag:#1B9BC0;--k-abend:#10627A}
+
+.calweek{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;align-items:start}
+
+.calcol{background:#fff;border:1px solid #EAF0F2;border-radius:18px;padding:9px 9px 11px;
+  display:flex;flex-direction:column;gap:9px;min-width:0;
+  box-shadow:0 1px 2px rgba(16,98,122,.04),0 8px 22px -14px rgba(16,98,122,.3)}
+.calcol.leer{background:#FCFDFD;border-style:dashed;border-color:#EDF2F4;box-shadow:none}
+
+.calcol-head{position:relative;text-align:left;padding:4px 4px 10px;border-bottom:1px solid #F0F4F6}
+.calcol-head b{display:block;font-family:'Space Grotesk',Inter,sans-serif;font-size:14px;font-weight:800;
+  letter-spacing:-.01em;text-transform:none;line-height:1.15;color:#14181B}
+.calcol-head span{font-size:11.5px;color:#7C8E95;font-weight:600;font-variant-numeric:tabular-nums}
+.calcol-head em{position:absolute;right:2px;top:2px;font-style:normal;font-size:9.5px;font-weight:900;
+  letter-spacing:.06em;text-transform:uppercase;background:linear-gradient(135deg,#1B9BC0,#10627A);
+  color:#fff;padding:2px 8px;border-radius:999px;box-shadow:0 2px 8px rgba(16,98,122,.3)}
+
+/* Heute: die Spalte traegt Farbe, nicht nur einen Rahmen */
+.calcol.today{border-color:transparent;
+  background:linear-gradient(180deg,#EAF9FC 0%,#FFFFFF 42%);
+  box-shadow:0 2px 4px rgba(16,98,122,.07),0 16px 34px -18px rgba(16,98,122,.5)}
+.calcol.today .calcol-head{border-bottom-color:#CFEAF1}
+.calcol.today .calcol-head b{color:#0C4F62}
+
+.calcol-empty{color:#DCE6E9;text-align:center;font-size:17px;padding:10px 0 4px;letter-spacing:.2em}
+
+/* ---- die Stundenkarte ---- */
+.calcol .ev,.ag-events .ev{position:relative;overflow:hidden;background:#fff;
+  border:1px solid #EAF0F2;border-left:0;border-radius:14px;padding:11px 12px 11px 14px;
+  display:flex;flex-direction:column;gap:0;box-shadow:0 1px 2px rgba(16,98,122,.05);
+  transition:transform .18s cubic-bezier(.22,1,.36,1),box-shadow .18s ease,border-color .18s ease}
+/* der farbige Streifen links: die Tageszeit */
+.calcol .ev::before,.ag-events .ev::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;
+  background:var(--kc,#1B9BC0);transition:width .18s cubic-bezier(.22,1,.36,1)}
+.ev[data-zeit="frueh"]{--kc:#EBA30B;--kcs:#FDF3DF}
+.ev[data-zeit="tag"]{--kc:#1B9BC0;--kcs:#E6F8FC}
+.ev[data-zeit="abend"]{--kc:#10627A;--kcs:#E3F1F5}
+.calcol .ev:hover,.ag-events .ev:hover{transform:translateY(-3px);border-color:#DCE8EC;
+  box-shadow:0 2px 6px rgba(16,98,122,.08),0 18px 30px -16px rgba(16,98,122,.55)}
+.calcol .ev:hover::before{width:7px}
+.ev.vorbei{opacity:.55;filter:saturate(.5)}
+
+.ev-top{display:flex;align-items:center;justify-content:space-between;gap:7px;margin-bottom:5px}
+.ev-time{font-family:'Space Grotesk',Inter,sans-serif;font-size:15px;font-weight:800;letter-spacing:-.02em;
+  color:var(--kc,#1B9BC0);font-variant-numeric:tabular-nums;white-space:nowrap}
+
+.ev-kick{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-bottom:4px}
+.ev-art{font-size:9px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--kc,#1B9BC0);background:var(--kcs,#E6F8FC);padding:2px 6px;border-radius:999px;white-space:nowrap}
+.ev-teil{font-size:9px;font-weight:800;letter-spacing:.03em;color:#9AA9B0;
+  border:1px solid #EDF2F4;padding:2px 5px;border-radius:999px;white-space:nowrap}
+
+.ev-title{font-size:14px;font-weight:800;line-height:1.3;letter-spacing:-.01em;color:#14181B;
+  margin:0 0 7px;text-wrap:balance;hyphens:auto}
+.ev-wer{font-size:11.5px;font-weight:600;color:#7C8E95;margin:-3px 0 8px}
+.ev-note{font-size:11px;font-weight:700;color:#8A9AA1;margin-top:7px;text-align:center}
+
+.ev-seats{margin:0;font-size:10.5px;font-weight:800;letter-spacing:.01em;padding:3px 8px;border-radius:999px;
+  white-space:nowrap;display:inline-flex;align-items:center;gap:4px}
+.ev-seats::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor}
+.ev-seats.ok{background:#EAF7EC;color:#2F7D32}
+.ev-seats.low{background:#FDF3DF;color:#A9760A}
+.ev-seats.full{background:#FBECEB;color:#B02B24}
+
+/* ---- Knoepfe ---- */
+.calcol .ev-btn,.ag-events .ev-btn{margin-top:0;border:none;border-radius:11px;padding:9px 10px;
+  font-size:12.5px;font-weight:800;font-family:inherit;cursor:pointer;text-align:center;display:block;width:100%;
+  transition:transform .14s ease,box-shadow .16s ease,filter .16s ease}
+.calcol .ev-btn.book,.ag-events .ev-btn.book{background:linear-gradient(135deg,#1B9BC0 0%,#10627A 100%);color:#fff;
+  box-shadow:0 6px 14px -6px rgba(16,98,122,.75)}
+.calcol .ev-btn.book:hover{transform:translateY(-1px);box-shadow:0 10px 20px -8px rgba(16,98,122,.8);filter:brightness(1.06)}
+.calcol .ev-btn.book:active{transform:translateY(0) scale(.985)}
+.calcol .ev-btn.meet,.ag-events .ev-btn.meet{background:linear-gradient(135deg,#2DE0D4,#1B9BC0);color:#06403A}
+.calcol .ev-btn.mine{background:#EAF7EC;color:#2F7D32}
+.calcol .ev-btn.off{background:#F4F7F8;color:#9BAAB1;cursor:default}
+.calcol .ev-btn.mat,.ag-events .ev-btn.mat{margin-top:6px;background:#fff;color:#10627A;
+  border:1px solid #DCE8EC;font-weight:700;box-shadow:none}
+.calcol .ev-btn.mat:hover{background:#F4FBFD;border-color:#BFDFE8}
+.calcol .ev-btn.ics{margin-top:6px;background:#fff;color:#7C8E95;border:1px solid #EAF0F2;font-weight:700}
+
+/* ---- Wochenkopf ---- */
+.kal-week{display:flex;align-items:center;justify-content:center;gap:12px;margin:10px 0 4px}
+.kal-week span{font-family:'Space Grotesk',Inter,sans-serif;font-weight:800;font-size:16px;letter-spacing:-.02em;color:#14181B}
+.kal-week button{width:38px;height:38px;padding:0;border-radius:50%;border:1px solid #E7ECEE;background:#fff;
+  color:#10627A;font-size:15px;font-weight:800;cursor:pointer;line-height:1;
+  transition:background .15s ease,border-color .15s ease,transform .15s ease}
+.kal-week button:hover{background:#10627A;border-color:#10627A;color:#fff;transform:scale(1.06)}
+.kal-levels,.kal-pills.kal-levels{display:none !important}
+
+/* ---- die Woche baut sich auf ---- */
+@keyframes kalRein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.calweek>.calcol{animation:kalRein .42s cubic-bezier(.22,1,.36,1) both}
+.calweek>.calcol:nth-child(1){animation-delay:.00s}
+.calweek>.calcol:nth-child(2){animation-delay:.045s}
+.calweek>.calcol:nth-child(3){animation-delay:.09s}
+.calweek>.calcol:nth-child(4){animation-delay:.135s}
+.calweek>.calcol:nth-child(5){animation-delay:.18s}
+.calweek>.calcol:nth-child(6){animation-delay:.225s}
+.calweek>.calcol:nth-child(7){animation-delay:.27s}
+@media (prefers-reduced-motion:reduce){
+  .calweek>.calcol{animation:none}
+  .calcol .ev,.calcol .ev-btn,.calcol .ev::before{transition:none}
+}
+
+/* ---- Handy: die meisten schauen hier drauf ---- */
+@media(max-width:1100px){.calweek{grid-template-columns:repeat(3,1fr);gap:10px}}
+@media(max-width:760px){
+  .calweek{grid-template-columns:1fr;gap:10px}
+  .calcol{flex-direction:row;flex-wrap:wrap;align-items:stretch;padding:10px 11px 12px;gap:8px}
+  .calcol.leer{display:none}
+  .calcol-empty{display:none}
+  .calcol-head{flex:1 0 100%;display:flex;align-items:baseline;gap:8px;padding:2px 2px 8px}
+  .calcol-head b{display:inline;font-size:15px}
+  .calcol-head em{position:static;margin-left:auto}
+  .calcol .ev{flex:1 1 100%}
+  .ev-title{font-size:15px}
+  .ev-time{font-size:16px}
+  .calcol .ev-btn{padding:11px 12px;font-size:13.5px}
+}
+</style>
+
 <script src="amanda-figur.js?v=2" defer></script>
 <script src="bereiche.js?v=1" defer></script>
 <script src="bereiche-ansicht.js?v=2" defer></script>
