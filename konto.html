@@ -589,7 +589,7 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFFFFF 0%,#FFFFFF 60%)
     <button class="cl-buch" onclick="return bucheStunde(event)">🗓️ <span data-i18n="k_book3">Sprechclub buchen</span></button>
 
     <button class="navlink" data-view="dashboard" onclick="go('dashboard')"><span class="ic">🏠</span><span><span data-i18n="nav_start">Start</span></span></button>
-    <button class="navlink" data-view="community" onclick="go('community')"><span class="ic">📣</span><span data-i18n="nv_news">Neuigkeiten</span><span class="badge" id="commBadge" style="display:none">0</span></button>
+    <button class="navlink" data-view="community" onclick="go('community')"><span class="ic">💬</span><span data-i18n="nv_news">Chat</span><span class="badge" id="commBadge" style="display:none">0</span></button>
     <button class="navlink" data-view="fortschritt" onclick="go('fortschritt')"><span class="ic">🎒</span><span data-i18n="nv_mein">Mein Bereich</span></button>
     <button class="navlink" data-view="nachrichten" onclick="go('nachrichten')"><span class="ic">💬</span><span><span data-i18n="k_msg">Nachrichten</span></span></button>
 
@@ -1414,6 +1414,7 @@ async function renderCommBadge(){
   }
   if(count>0){ b.style.display='inline-block'; b.textContent=count>99?'99+':count; } else b.style.display='none';
   var mb=document.getElementById('mtabBdg'); if(mb){ if(count>0){ mb.style.display='flex'; mb.textContent=count>99?'99+':count; } else mb.style.display='none'; }
+  var tb=document.getElementById('clTabBdg'); if(tb){ if(count>0){ tb.style.display='block'; tb.textContent=count>99?'99+':count; } else tb.style.display='none'; }
   try{ if(window.ChatKnopf) ChatKnopf.setzen(count); }catch(e){}
 }
 // Community als gelesen markieren -> Badge weg
@@ -4200,7 +4201,7 @@ body nav.cl-tabs{display:none;position:fixed;left:0;right:0;bottom:0;z-index:120
   justify-content:space-around;align-items:flex-end;gap:0}
 body nav.cl-tabs > button{display:flex !important;flex-direction:column !important;
   align-items:center !important;justify-content:flex-end;gap:3px !important;
-  flex:1 1 0 !important;min-width:0;max-width:22%;
+  flex:1 1 0 !important;min-width:0;max-width:17.5%;
   background:none !important;border:none !important;border-radius:12px !important;
   font-family:inherit;font-size:10px !important;font-weight:600;line-height:1.15;
   color:#7C858C;padding:4px 1px !important;margin:0 !important;
@@ -4215,7 +4216,13 @@ body nav.cl-tabs > button > .ic{
   -webkit-mask-position:center;mask-position:center;
   -webkit-mask-size:22px 22px;mask-size:22px 22px}
 body nav.cl-tabs > button.navlink.active{color:#10627A !important;background:none !important}
-body nav.cl-tabs > button.cl-mitte{position:relative;top:-16px;color:#10627A !important;max-width:24%}
+body nav.cl-tabs > button.cl-mitte{position:relative;top:-16px;color:#10627A !important;max-width:19%}
+/* Ungelesene Nachrichten direkt auf der Chat-Taste — das ist das, was
+   Leute in einen Messenger zurueckholt. */
+body nav.cl-tabs > button.cl-chat{position:relative}
+body nav.cl-tabs .clbdg{position:absolute;top:0;left:50%;margin-left:4px;min-width:16px;height:16px;
+  padding:0 4px;border-radius:9px;background:#DD0000;color:#fff;font-size:9.5px;font-weight:800;
+  line-height:16px;text-align:center;box-shadow:0 0 0 2px #fff}
 body nav.cl-tabs > button.cl-mitte > .ic{
   width:46px !important;height:46px !important;flex:0 0 46px !important;border-radius:50%;
   background-color:var(--turq-ink,#10627A) !important;
@@ -4283,7 +4290,7 @@ body nav.cl-tabs > button.cl-mitte > .ic::after{content:"";position:absolute;ins
 window.__I18N__=Object.assign(window.__I18N__||{},{"nav_start": {"en": "Home", "es": "Inicio", "ru": "Главная", "uk": "Головна", "tr": "Ana sayfa", "it": "Home", "fa": "خانه"}, "nav_lernen": {"en": "Learn", "es": "Aprender", "ru": "Учёба", "uk": "Навчання", "tr": "Öğren", "it": "Impara", "fa": "یادگیری"}, "nav_sprechen": {"en": "Speak", "es": "Hablar", "ru": "Говорить", "uk": "Говорити", "tr": "Konuş", "it": "Parla", "fa": "صحبت"}, "nav_community": {"en": "Community", "es": "Comunidad", "ru": "Сообщество", "uk": "Спільнота", "tr": "Topluluk", "it": "Community", "fa": "انجمن"}, "nav_medien": {"en": "Media", "es": "Medios", "ru": "Медиа", "uk": "Медіа", "tr": "Medya", "it": "Media", "fa": "رسانه"}, "nav_abo": {"en": "My plan", "es": "Mi suscripción", "ru": "Моя подписка", "uk": "Моя підписка", "tr": "Aboneliğim", "it": "Il mio abbonamento", "fa": "اشتراک من"}, "nav_abmelden": {"en": "Log out", "es": "Salir", "ru": "Выйти", "uk": "Вийти", "tr": "Çıkış", "it": "Esci", "fa": "خروج"}});</script>
 
 <script>/* Navigation — die neuen Menuepunkte in allen Sprachen */window.__I18N__=Object.assign(window.__I18N__||{},{
-"nv_news":{"en":"News","es":"Novedades","ru":"Новости","uk":"Новини","tr":"Haberler","it":"Novità","fa":"تازه‌ها"},
+"nv_news":{"en":"Chat","es":"Chat","ru":"Чат","uk":"Чат","tr":"Sohbet","it":"Chat","fa":"گفتگو"}, "nv_tab_chat":{"en":"Chat","es":"Chat","ru":"Чат","uk":"Чат","tr":"Sohbet","it":"Chat","fa":"گفتگو"},
 "nv_mein":{"en":"My area","es":"Mi espacio","ru":"Мой раздел","uk":"Мій розділ","tr":"Benim alanım","it":"La mia area","fa":"بخش من"},
 "nv_grp_lernen":{"en":"Self-study","es":"Autoaprendizaje","ru":"Самостоятельно","uk":"Самостійно","tr":"Kendi kendine öğrenme","it":"Studio autonomo","fa":"خودآموز"},
 "nv_grp_podcast":{"en":"Podcast","es":"Pódcast","ru":"Подкаст","uk":"Подкаст","tr":"Podcast","it":"Podcast","fa":"پادکست"},
@@ -4427,6 +4434,7 @@ window.__I18N__=Object.assign(window.__I18N__||{},{"nav_start": {"en": "Home", "
 <nav class="cl-tabs" id="clTabs">
   <button class="navlink" data-view="dashboard" onclick="go('dashboard')"><span class="ic">🏠</span><span data-i18n="nav_start">Start</span></button>
   <button class="navlink" data-view="bereiche" onclick="go('bereiche')"><span class="ic">🗺️</span><span data-i18n="nv_tab_themen">Themen</span></button>
+  <button class="navlink cl-chat" data-view="community" onclick="go('community')"><span class="ic">💬</span><span data-i18n="nv_tab_chat">Chat</span><span class="clbdg" id="clTabBdg" style="display:none">0</span></button>
   <button class="cl-mitte" onclick="return bucheStunde(event)"><span class="ic">🗓️</span><span data-i18n="nv_tab_buchen">Buchen</span></button>
   <button class="navlink" data-view="amanda" onclick="go('amanda')"><span class="ic">🤖</span>Amanda</button>
   <button class="navlink" data-view="fortschritt" onclick="go('fortschritt')"><span class="ic">🎒</span><span data-i18n="nv_mein">Mein Bereich</span></button>
