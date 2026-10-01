@@ -2178,7 +2178,7 @@ async function loadKalender(){
   /* Wochenansicht: gleicher Grund wie in kalRenderMonth — ohne Niveaus
      wuerde der Filter den Kalender leerraeumen, statt ihn zu ordnen. */
   const hatNiveau=(kalCache||[]).some(function(c){return String(c.level||'').trim();});
-  const lvlPills=!hatNiveau?'':'<div class="kal-pills kal-levels">'+LEVELS.map(l=>`<button class="kpill lvl ${kalLevel===l?'active':''}" onclick="setKalLevel('${l}')">${l==='alle'?'Alle Niveaus':l}</button>`).join('')+'</div>';
+  const lvlPills='';  /* Niveaus werden im Kalender nicht mehr gezeigt */
   let legend=''; if(kalClub==='alle'){ legend='<div class="cal-legend">'+kalClubs.map(c=>`<span class="lg"><span class="dot" style="background:${c.color||'#7ED8EA'}"></span>${esc(c.name)}</span>`).join('')+'</div>'; }
   /* Die Woche laeuft Mo bis So — die Beschriftung endete frueher am Samstag. */
   const satEnd=new Date(from); satEnd.setDate(satEnd.getDate()+6);
@@ -2207,29 +2207,64 @@ async function loadKalender(){
     + (kalWeek<0 ? '<div class="kal-rueckblick"><span data-i18n="kl_frueher">Das ist eine vergangene Woche. Du kannst nachsehen, was lief — buchen geht hier nicht mehr.</span></div>' : '');
   document.getElementById('kalBody').innerHTML=lvlPills+wc+tzHint+grid;
 }
-const KAL_LVL_COLOR={'A2':'#B45309','A2/B1':'#15803D','B1':'#1D4ED8','B1/B2':'#0891B2','B2':'#7C3AED','B2/C1':'#7C3AED','C1':'#BE185D','ab A2':'#B45309','ab B1':'#BE185D','ab B2':'#7C3AED'};
-function kalLvlColor(l){ return KAL_LVL_COLOR[l]||'#6B7280'; }
-/* Die Stunden ab November haben bewusst kein Niveau mehr. Ohne diese
-   Abfrage stand dort ein leeres, farbiges Schildchen. */
-function lvlBadge(l){ if(!String(l||'').trim()) return ''; var c=kalLvlColor(l); return '<span class="level-pill" style="background:'+c+'14;color:'+c+';border:1.5px solid '+c+'66;font-weight:800">'+esc(l||'')+'</span>'; }
+/* Niveaus werden nirgends mehr angezeigt — weder im Kalender noch bei
+   den gebuchten Stunden. Die Funktion bleibt, weil zwei Ansichten sie
+   aufrufen; sie gibt jetzt einfach nichts mehr zurueck. */
+function lvlBadge(){ return ''; }
+
+/* Aus dem langen Stundentitel wird das, was ein Lernender wissen will:
+   die Art der Stunde und der Fokus. Aus
+   "Freies Sprechen · Zug faellt aus: Anzeige lesen, Ersatz finden · Teil 1"
+   wird Art "Freies Sprechen", Fokus "Zug faellt aus", Teil "1".
+   Die Aufzaehlung dahinter stand frueher mit im Kalender und hat jede
+   Karte sechs Zeilen hoch gemacht. */
+function kalFokus(roh){
+  var s=String(roh||'').trim();
+  var teil='';
+  s=s.replace(/\s*[·|-]\s*Teil\s*(\d+)\s*$/i,function(_,n){teil=n;return '';}).trim();
+  var stuecke=s.split('·').map(function(x){return x.trim();}).filter(Boolean);
+  var art = stuecke.length>1 ? stuecke[0] : '';
+  var fokus = stuecke.length>1 ? stuecke.slice(1).join(' · ') : s;
+  var i=fokus.indexOf(':');
+  if(i>0){
+    var vor=fokus.slice(0,i).trim(), nach=fokus.slice(i+1).trim();
+    /* "Debatte: Gehoert die Innenstadt den Autos?" — vor dem Doppelpunkt
+       steht nur die Form, dahinter die eigentliche Frage. */
+    fokus = (vor.length>=12) ? vor : (nach || vor);
+  }
+  if(fokus.length>62) fokus=fokus.slice(0,60).replace(/[\s,;:·–-]+$/,'')+'…';
+  return { art:art, fokus:fokus, teil:teil };
+}
+/* Morgens, mittags, abends — damit die Woche einen Rhythmus hat und
+   man die Uhrzeit sieht, bevor man liest. */
+function kalTageszeit(d){ var h=d.getHours(); return h<12?'frueh':(h<17?'tag':'abend'); }
+
 function kalEv(c){
-  const start=new Date(c.starts_at); const end=new Date(start.getTime()+((c.duration_min||60)*60000)); const free=c.capacity-(c.booked||0); const past=start<new Date(); const color=c.club_color||'#7ED8EA';
-  const lc=kalLvlColor(c.level);
+  const start=new Date(c.starts_at); const end=new Date(start.getTime()+((c.duration_min||60)*60000));
+  const free=c.capacity-(c.booked||0); const past=start<new Date();
+  const zeit=kalTageszeit(start);
+  const f=kalFokus(c.topic||c.title);
   let btn;
   if(c.mine){ btn=dowJoinBtn({class_id:c.id,starts_at:c.starts_at,title:c.title,level:c.level},'ev-btn meet')||`<span class="ev-btn mine">✓ Gebucht</span>`; }
   else if(past){ btn=`<span class="ev-btn off">vorbei</span>`; }
   else if(free<=0){ btn=`<span class="ev-btn off">ausgebucht</span>`; }
   else{ btn=`<button class="ev-btn book" onclick="kalBook('${c.id}')">Buchen</button>`; }
-  const titleLine = esc(c.topic || c.title);
-  const lvlBadge = `<span class="ev-lvl" style="border:1.5px solid ${lc};color:${lc}">${esc(c.level)}</span>`;
-  // Nur für gebuchte Stunden: Material/Präsentation des Unterrichts (erscheint, sobald Material hinterlegt ist)
-  const matBtn = (c.has_material && isActive()) ? `<button class="ev-btn mat" onclick="openClassMaterial('${c.id}',${c.mine?1:0})">📚 Material des Unterrichts</button>` : '';
-  const noPrep = (c.club==='sprachspielclub') ? `<div class="ev-note" style="margin-top:6px;font-size:12px;color:var(--text-soft);font-weight:600">✨ Keine Vorbereitung nötig</div>` : '';
+  const matBtn = (c.has_material && isActive()) ? `<button class="ev-btn mat" onclick="openClassMaterial('${c.id}',${c.mine?1:0})">📚 Material</button>` : '';
+  const noPrep = (c.club==='sprachspielclub') ? `<div class="ev-note">✨ Keine Vorbereitung nötig</div>` : '';
   const _cap=Number(c.capacity)||0, _free=Math.max(0,_cap-(Number(c.booked)||0));
   let seats='';
-  if(_cap>0 && !past){ const _cls=_free<=0?'full':(_free<=2?'low':'ok'); const _lbl=_free<=0?'ausgebucht':(_free===1?'1 Platz frei':(_free+' Plätze frei')); seats=`<div class="ev-seats ${_cls}">🎟️ ${_lbl}</div>`; }
-  return `<div class="ev" style="--c:${color};background:${color}14"><div class="ev-top"><span class="ev-time">${fmtTimeK(start)}–${fmtTimeK(end)}</span><span class="ev-club" style="background:${color}">${esc(c.club_name||'')}</span></div><div class="ev-title">${titleLine}</div><div class="ev-lvlrow">${lvlBadge}</div>${c.teacher_name?`<div style="font-size:12px;color:#555;font-weight:600;margin-top:3px">👩‍🏫 ${esc(c.teacher_name)}</div>`:''}${seats}${btn}${matBtn}${noPrep}</div>`;
+  if(_cap>0 && !past){ const _cls=_free<=0?'full':(_free<=2?'low':'ok'); const _lbl=_free<=0?'ausgebucht':(_free===1?'1 Platz frei':(_free+' frei')); seats=`<div class="ev-seats ${_cls}">${_lbl}</div>`; }
+  const kicker = f.art ? `<span class="ev-art">${esc(f.art)}</span>` : '';
+  const teil = f.teil ? `<span class="ev-teil">Teil ${esc(f.teil)}</span>` : '';
+  return `<div class="ev ${past?'vorbei':''}" data-zeit="${zeit}">`
+    + `<div class="ev-top"><span class="ev-time">${fmtTimeK(start)}</span>${seats}</div>`
+    + (kicker||teil ? `<div class="ev-kick">${kicker}${teil}</div>` : '')
+    + `<div class="ev-title">${esc(f.fokus)}</div>`
+    + (c.teacher_name?`<div class="ev-wer">${esc(c.teacher_name)}</div>`:'')
+    + btn + matBtn + noPrep
+    + `</div>`;
 }
+
 /* ===== Kalender: Monatsansicht + .ics-Export (deutschoderwas) ===== */
 function kalPad(n){return String(n).padStart(2,'0');}
 function kalDtUtc(d){return ''+d.getUTCFullYear()+kalPad(d.getUTCMonth()+1)+kalPad(d.getUTCDate())+'T'+kalPad(d.getUTCHours())+kalPad(d.getUTCMinutes())+'00Z';}
@@ -2262,8 +2297,7 @@ function kalMonthChange(d){ var min=kalMonatGrenze(); kalMonth=Math.max(min,kalM
 function kalClubPills(){return '<div class="kal-pills"><button class="kpill '+(kalClub==='alle'?'active':'')+'" onclick="setKalClub(\'alle\')">📅 Alle Clubs</button>'+kalClubs.map(function(c){var on=kalClub===c.slug;var col=c.color||'#7ED8EA';return '<button class="kpill '+(on?'active':'')+'" style="'+(on?('background:'+col+';border-color:'+col+';color:#fff'):'')+'" onclick="setKalClub(\''+c.slug+'\')">'+(c.emoji||'')+' '+esc(c.name)+'</button>';}).join('')+'</div>';}
 /* Haette die Woche keine Stunde mit Niveau, wuerde jeder Klick auf A2/B1/...
    den ganzen Kalender leerraeumen. Dann zeigen wir den Filter gar nicht erst. */
-function kalLevelPills(){try{ if(!(kalCache||[]).some(function(c){return String(c.level||'').trim();})) return ''; }catch(e){}
-return '<div class="kal-levels">'+['alle','A2','B1','B2','C1'].map(function(l){var on=kalLevel===l;return '<button class="kpill lvl '+(on?'active':'')+'" onclick="setKalLevel(\''+l+'\')">'+(l==='alle'?'Alle Niveaus':l)+'</button>';}).join('')+'</div>';}
+function kalLevelPills(){ return ''; }  /* Niveaus werden im Kalender nicht mehr gezeigt */
 function kalLegend(){if(kalClub!=='alle')return '';return '<div class="cal-legend">'+kalClubs.map(function(c){return '<span class="lg"><span class="dot" style="background:'+(c.color||'#7ED8EA')+'"></span>'+esc(c.name)+'</span>';}).join('')+'</div>';}
 function kalDayKey(d){return d.getFullYear()+'-'+kalPad(d.getMonth()+1)+'-'+kalPad(d.getDate());}
 async function loadKalMonth(){
