@@ -2245,15 +2245,41 @@ function kalFokus(roh){
   if(fokus.length>62) fokus=fokus.slice(0,60).replace(/[\s,;:·–-]+$/,'')+'…';
   return { art:art, fokus:fokus, teil:teil };
 }
-/* Morgens, mittags, abends — damit die Woche einen Rhythmus hat und
-   man die Uhrzeit sieht, bevor man liest. */
-function kalTageszeit(d){ var h=d.getHours(); return h<12?'frueh':(h<17?'tag':'abend'); }
+/* Jede Art von Stunde hat ihre eigene Farbe. Vorher faerbte die
+   Uhrzeit die Karte — morgens Gold, abends Petrol. Das sah huebsch aus,
+   sagte aber nichts: die Uhrzeit steht ja daneben. Die Art der Stunde
+   steht sonst nirgends ausser in der kleinen Pille, und genau die
+   unterscheidet die Stunden voneinander. Neue Arten bekommen ueber die
+   Zeichensumme automatisch eine eigene Farbe aus derselben Palette. */
+var KAL_ART=[
+  [/kein unterricht|feiertag/i,        '#8A9AA1', '#F2F5F6'],
+  [/sprechclub$|^sprechclub/i,         '#10627A', '#E3F1F5'],
+  [/freie?s? sprechen|sprechen/i,      '#1B9BC0', '#E4F6FB'],
+  [/wortschatz/i,                      '#C07D06', '#FDF3DE'],
+  [/grammatik/i,                       '#2F7D32', '#E9F6EC'],
+  [/aussprache|phonetik/i,             '#B4541F', '#FBEEE6'],
+  [/spiel|quiz|rate/i,                 '#D42A21', '#FBEAE9'],
+  [/debatt|diskussion|streit/i,        '#7A4BB5', '#F1EBFA'],
+  [/schreib/i,                         '#0E7490', '#E0F4F8'],
+  [/h\u00f6ren|aussprache\u00fcbung/i,   '#6B7A2E', '#F1F5E2']
+];
+var KAL_REST=[['#10627A','#E3F1F5'],['#1B9BC0','#E4F6FB'],['#C07D06','#FDF3DE'],
+              ['#2F7D32','#E9F6EC'],['#B4541F','#FBEEE6'],['#7A4BB5','#F1EBFA']];
+function kalArtFarbe(art, titel){
+  var t=String(art||'')+' '+String(titel||'');
+  for(var i=0;i<KAL_ART.length;i++){ if(KAL_ART[i][0].test(t)) return {c:KAL_ART[i][1], s:KAL_ART[i][2]}; }
+  var quelle=String(art||titel||'');
+  if(!quelle) return {c:KAL_REST[0][0], s:KAL_REST[0][1]};
+  var n=0; for(var k=0;k<quelle.length;k++) n=(n+quelle.charCodeAt(k))%997;
+  var p=KAL_REST[n%KAL_REST.length];
+  return {c:p[0], s:p[1]};
+}
 
 function kalEv(c){
   const start=new Date(c.starts_at); const end=new Date(start.getTime()+((c.duration_min||60)*60000));
   const free=c.capacity-(c.booked||0); const past=start<new Date();
-  const zeit=kalTageszeit(start);
   const f=kalFokus(c.topic||c.title);
+  const farbe=kalArtFarbe(f.art, f.fokus);
   let btn;
   if(c.mine){ btn=dowJoinBtn({class_id:c.id,starts_at:c.starts_at,title:c.title,level:c.level},'ev-btn meet')||`<span class="ev-btn mine">✓ Gebucht</span>`; }
   else if(past){ btn=`<span class="ev-btn off">vorbei</span>`; }
@@ -2273,7 +2299,7 @@ function kalEv(c){
   if(_cap>0 && !past && _free<=0){ seats=`<div class="ev-seats full">ausgebucht</div>`; }
   const kicker = f.art ? `<span class="ev-art">${esc(f.art)}</span>` : '';
   const teil = f.teil ? `<span class="ev-teil">Teil ${esc(f.teil)}</span>` : '';
-  return `<div class="ev ${past?'vorbei':''}" data-zeit="${zeit}">`
+  return `<div class="ev ${past?'vorbei':''}" style="--kc:${farbe.c};--kcs:${farbe.s}">`
     + `<div class="ev-top"><span class="ev-time">${fmtTimeK(start)}</span>${seats}</div>`
     + (kicker||teil ? `<div class="ev-kick">${kicker}${teil}</div>` : '')
     + `<div class="ev-title">${esc(f.fokus)}</div>`
@@ -4430,9 +4456,6 @@ body nav.cl-tabs > button[data-view="fortschritt"]{font-size:9.5px !important;le
 /* der farbige Streifen links: die Tageszeit */
 .calcol .ev::before,.ag-events .ev::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;
   background:var(--kc,#1B9BC0);transition:width .18s cubic-bezier(.22,1,.36,1)}
-.ev[data-zeit="frueh"]{--kc:#EBA30B;--kcs:#FDF3DF}
-.ev[data-zeit="tag"]{--kc:#1B9BC0;--kcs:#E6F8FC}
-.ev[data-zeit="abend"]{--kc:#10627A;--kcs:#E3F1F5}
 .calcol .ev:hover,.ag-events .ev:hover{transform:translateY(-3px);border-color:#DCE8EC;
   box-shadow:0 2px 6px rgba(16,98,122,.08),0 18px 30px -16px rgba(16,98,122,.55)}
 .calcol .ev:hover::before{width:7px}
