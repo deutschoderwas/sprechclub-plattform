@@ -691,6 +691,159 @@
     border-top:1px solid #EFEBE2 !important}
 }
 
+/* ============================================================
+   MESSENGER — Themenliste und feste Handy-Flaeche
+   Die Liste zeigt Themen so, wie WhatsApp Gespraeche zeigt:
+   Zeichen, Name, letzte Nachricht, Zeit, Ungelesen-Zahl.
+   ============================================================ */
+#v-community .cs-l{padding:0 !important;overflow-x:hidden}
+#v-community .ch{display:flex !important;align-items:center;gap:12px;width:100%;
+  padding:9px 14px !important;margin:0 !important;border:none !important;
+  border-bottom:1px solid #F1EDE4 !important;border-radius:0 !important;
+  background:#fff !important;box-shadow:none !important;cursor:pointer;text-align:left;
+  font-family:inherit;min-height:64px;transform:none !important}
+#v-community .ch:hover{background:#F7F4EC !important}
+#v-community .ch.on{background:#E6F8FC !important}
+#v-community .ch .ce{width:46px !important;height:46px;flex:none;border-radius:50% !important;
+  background:#F1FAFC;border:1px solid #DCEFF4;display:flex;align-items:center;justify-content:center;
+  font-size:22px !important;line-height:1}
+#v-community .ch .chx{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+#v-community .ch .chtop{display:flex;align-items:baseline;gap:8px}
+#v-community .ch .nm2{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font-family:var(--fh);font-weight:600;font-size:15.5px;color:#14181B}
+#v-community .ch .cht{flex:none;font-size:11.5px;color:#8A9AA1;font-variant-numeric:tabular-nums}
+#v-community .ch .chbot{display:flex;align-items:center;gap:8px}
+#v-community .ch .chp{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font-size:13.5px;color:#6B7C84;font-weight:400}
+#v-community .ch .chp i{font-style:normal;color:#9AA7AC}
+#v-community .ch .cn{flex:none;margin:0 !important;background:#10627A !important;color:#fff !important;
+  font-size:11px;font-weight:700;min-width:20px;height:20px;padding:0 6px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center}
+#v-community .ch.neu .nm2{font-weight:700}
+#v-community .ch.neu .chp{color:#14181B}
+#v-community .ch .pd{margin-right:2px}
+#v-community .cg{padding:13px 14px 6px;font-size:11px;font-weight:700;letter-spacing:.05em;
+  text-transform:uppercase;color:#8A9AA1;background:#FBF8F2}
+#v-community .cs-h{background:#fff !important}
+#v-community .cs-srch{padding:8px 12px !important;background:#fff}
+#v-community .cs-srch input{width:100%;border:1px solid #E7E3DA;background:#F7F4EC;border-radius:999px;
+  padding:9px 14px;font-family:inherit;font-size:14px;color:#14181B;outline:none}
+#v-community .cs-srch input:focus{border-color:#39CCE3;background:#fff}
+
+@media(max-width:900px){
+  /* Der Chat ist am Handy eine feste Flaeche zwischen Kopfzeile und
+     Tableiste. Nichts scrollt mit, das Schreibfeld steht immer sichtbar
+     ueber der Tableiste. Die Hoehen misst passeHoehe() aus den echten
+     Leisten — frueher war die Rechnung geraten und das Schreibfeld lag
+     hinter der Tableiste. */
+  body.cm-voll{overflow:hidden !important}
+  body.cm-voll .content-inner{padding:0 !important}
+  #v-community.active.cm-fest{position:fixed !important;left:0 !important;right:0 !important;
+    top:var(--cm-oben,56px) !important;bottom:var(--cm-unten,64px) !important;
+    width:auto !important;max-width:none !important;
+    z-index:58;overflow:hidden !important;background:#FBF8F2;animation:none !important}
+  #v-community.active.cm-fest.cm-tast{bottom:auto !important;height:var(--cm-hoehe,62vh) !important}
+  #v-community .pagehead{display:none !important}
+  #v-community .comm{display:block !important;height:100% !important;width:100% !important;
+    max-width:100% !important;min-height:0 !important;border:none !important;border-radius:0 !important;
+    box-shadow:none !important;overflow:hidden !important}
+  #v-community .ms{display:none !important}
+
+  /* Erst die Themen, dann das Gespraech. */
+  #v-community .cs{display:flex !important;flex-direction:column !important;
+    height:100% !important;width:100% !important;max-width:100% !important;min-width:0 !important;
+    border:none !important;background:#fff !important;overflow:hidden !important}
+  #v-community .comm.chatauf .cs{display:none !important}
+  #v-community .cs-h{flex:0 0 auto;padding:10px 14px 8px !important;border-bottom:1px solid #F1EDE4 !important}
+  #v-community .cs-l{flex:1 1 auto !important;flex-direction:column !important;flex-wrap:nowrap !important;
+    overflow-y:auto !important;overflow-x:hidden !important;min-height:0 !important;
+    padding:0 !important;-webkit-overflow-scrolling:touch}
+  #v-community .ch{width:100% !important;white-space:normal !important;flex:0 0 auto !important}
+  #v-community .cg{display:block !important}
+  #v-community .cs-more{display:none !important}
+
+  #v-community .chat{display:none !important}
+  #v-community .comm.chatauf .chat{display:flex !important;flex-direction:column !important;
+    height:100% !important;min-height:0 !important;width:100% !important;max-width:100% !important}
+  #v-community .ch-hd{flex:0 0 auto !important;height:52px !important;padding:0 10px 0 2px !important;
+    gap:4px !important;background:#fff !important}
+  #v-community .ch-hd .bk{display:inline-flex !important;align-items:center;justify-content:center;
+    width:36px;height:36px;flex:none}
+  #v-community .ch-hd .de{display:none !important}
+  #v-community .ch-hd .ti{min-width:0;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+    font-size:16px !important}
+  #v-community .ch-guide{margin:8px 12px 0 !important;font-size:12px !important}
+  #v-community .pinbar{flex:0 0 auto !important}
+  #v-community .pinbar .ph{padding:7px 12px 2px !important}
+  #v-community .pinrow{padding:0 12px 9px !important;gap:8px}
+  #v-community .pinrow .punp{flex:none}
+  #v-community .feed{flex:1 1 auto !important;min-height:0 !important;
+    overflow-y:auto !important;overflow-x:hidden !important;
+    padding:10px 10px 12px !important;-webkit-overflow-scrolling:touch}
+  #v-community .feed .mb{max-width:86% !important}
+  #v-community .cmp{flex:0 0 auto !important;background:#fff !important;
+    padding:7px 9px 9px !important;border-top:1px solid #EFEBE2 !important}
+  #v-community .cmp-box{border-radius:22px !important}
+  #v-community .ct{font-size:16px !important}
+}
+
+/* ---- Feinschliff nach dem ersten Blick am Handy ----
+   Das Schreibfeld hatte zwei Rahmen ineinander, die Pinnleiste nahm ein
+   Viertel des Bildschirms, und Zeit und Ungelesen-Zahl lagen uebereinander. */
+#v-community .cmp-in{border:none !important;border-radius:0 !important;
+  box-shadow:none !important;background:none !important;padding:0 !important}
+#v-community .cmp-box{padding:3px 4px 3px 8px !important}
+#v-community .chint{display:none !important}
+
+#v-community .ch{min-height:70px !important}
+#v-community .ch .chx{gap:5px}
+#v-community .ch .cn{min-width:19px;height:19px;font-size:10.5px}
+
+#v-community .pinbar .ph{padding:7px 14px 1px !important;font-size:10px !important}
+#v-community .pinrow{display:flex;align-items:flex-start;gap:8px;padding:0 14px 8px}
+#v-community .pinrow .pc{flex:1;min-width:0}
+#v-community .pinrow .pa{font-size:11.5px;font-weight:700;color:#9A6B00;margin-bottom:1px}
+#v-community .pinrow .pt{font-size:12.5px;line-height:1.45;color:#5A4A2A;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+#v-community .pinrow .punp{flex:none;border:none;background:none;cursor:pointer;
+  font-size:11.5px;font-weight:700;color:#9A6B00;padding:2px 0 0}
+
+@media(max-width:900px){
+  #v-community .feed .mt{font-size:14.5px !important;line-height:1.45 !important}
+  #v-community .feed .mh .w{font-size:12.5px !important}
+  #v-community .feed .ava{width:28px !important;height:28px !important;font-size:11px !important}
+  #v-community .cs-h b{font-size:15px}
+  #v-community .mailhaken{margin:6px 2px 0 !important;padding:6px 9px !important;font-size:11.5px !important}
+}
+
+/* Zeit und Ungelesen-Zahl stehen rechts untereinander — wie im Messenger.
+   Vorher lagen sie in den Textzeilen und ueberdeckten sich. */
+#v-community .ch .chx{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0}
+#v-community .ch .chr{display:flex;flex-direction:column;align-items:flex-end;gap:6px;
+  flex:none;min-width:42px;padding-top:2px}
+#v-community .ch .chtop,#v-community .ch .chbot{display:contents}
+#v-community .cs-l{padding-bottom:14px !important}
+
+/* Die Ungelesen-Zahl stand absolut positioniert und legte sich auf die
+   Uhrzeit. Sie gehoert in den Fluss der rechten Spalte. */
+#v-community .ch .cn{position:static !important;top:auto !important;right:auto !important;
+  left:auto !important;bottom:auto !important;transform:none !important}
+#v-community .ch .chr{min-height:40px;justify-content:flex-start}
+
+/* Am grossen Bildschirm braucht die Themenliste mehr Platz, sonst stehen
+   dort nur abgeschnittene Namen. */
+@media(min-width:901px){
+  #v-community .comm{grid-template-columns:302px 1fr 244px !important}
+  #v-community .ch{min-height:62px !important;padding:8px 12px !important}
+  #v-community .ch .ce{width:40px !important;height:40px;font-size:19px !important}
+  #v-community .ch .nm2{font-size:14.5px}
+  #v-community .ch .chp{font-size:12.5px}
+  #v-community .ch .chr{min-width:40px;min-height:34px}
+}
+@media(min-width:901px) and (max-width:1180px){
+  #v-community .comm{grid-template-columns:284px 1fr !important}
+}
+
 `; document.head.appendChild(st);
   }
 
@@ -755,7 +908,8 @@
     try{ var dt=await sbc.rpc('dm_threads'); dmThreads=(dt&&dt.data)||[]; }catch(e){ dmThreads=[]; }
     if(!channels.length){ r.innerHTML='<div class="pagehead"><h1>Community-Chat</h1></div><div class="cm-empty">Noch keine Kanäle.</div>'; return; }
     grpZu=ladeZu();
-    if(zielSlug&&chanBy(zielSlug)){ var zc=chanBy(zielSlug); if(!zc.gefolgt){ zc.gefolgt=true; try{ sbc.rpc('community_folgen',{p_channel:zielSlug,p_gefolgt:true,p_stumm:null}); }catch(e){} } cur=zielSlug; zielSlug=null; }
+    var direkt=false;
+    if(zielSlug&&chanBy(zielSlug)){ var zc=chanBy(zielSlug); if(!zc.gefolgt){ zc.gefolgt=true; try{ sbc.rpc('community_folgen',{p_channel:zielSlug,p_gefolgt:true,p_stumm:null}); }catch(e){} } cur=zielSlug; zielSlug=null; direkt=true; }
     var meine=channels.filter(function(c){ return c.gefolgt; });
     if(!meine.length) meine=channels;
     var akt=chanBy(cur);
@@ -764,7 +918,11 @@
     bindSidebar();
     subscribeBadges();
     if(!window.__cmPresence){ window.__cmPresence=true; window.addEventListener('club-presence',function(){ try{paintPresence();}catch(e){} }); }
-    await openChannel(cur);
+    hoeheUeberwachen();
+    /* Am Handy beginnt man in der Themenliste. Ein Thema oeffnet sich
+       erst beim Antippen — oder sofort, wenn ein Link darauf zeigt. */
+    if(istHandy() && !direkt){ passeHoehe(); }
+    else { await openChannel(cur); }
   }
 
   function gateHtml(){
@@ -784,11 +942,28 @@
   };
   var GRP_ORDER=['start','stufe','lernen','ziel','austausch','challenge'];
 
+  /* Kurze Zeitangabe wie im Messenger: heute die Uhrzeit, gestern
+     "Gestern", in dieser Woche der Wochentag, sonst das Datum. */
+  function kurzZeit(iso){
+    if(!iso) return '';
+    var d=new Date(iso); if(isNaN(d)) return '';
+    var n=new Date();
+    if(d.toDateString()===n.toDateString()) return d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
+    var g=new Date(n.getTime()-86400000);
+    if(d.toDateString()===g.toDateString()) return 'Gestern';
+    if((n-d)<6*86400000) return ['So','Mo','Di','Mi','Do','Fr','Sa'][d.getDay()];
+    return d.toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'});
+  }
   function chanRow(c){
     var n=c.ungelesen||0;
-    return '<button class="ch'+(mode==='channel'&&c.slug===cur?' on':'')+'" data-ch="'+E(c.slug)+'">'+
-      '<span class="ce">'+E(c.emoji||'#')+'</span><span class="nm2">'+E(c.name)+'</span>'+
-      (n>0?'<span class="cn">'+(n>99?'99+':n)+'</span>':'')+'</button>';
+    var vor = c.letzter_text
+      ? ((c.letzter_name?E(vorname(c.letzter_name))+': ':'')+E(String(c.letzter_text).replace(/\s+/g,' ').slice(0,90)))
+      : '<i>'+E(c.description||'Noch keine Nachricht')+'</i>';
+    return '<button class="ch'+(mode==='channel'&&c.slug===cur?' on':'')+(n>0?' neu':'')+'" data-ch="'+E(c.slug)+'">'+
+      '<span class="ce">'+E(c.emoji||'#')+'</span>'+
+      '<span class="chx"><span class="nm2">'+E(c.name)+'</span><span class="chp">'+vor+'</span></span>'+
+      '<span class="chr"><span class="cht">'+E(kurzZeit(c.letzte))+'</span>'+(n>0?'<span class="cn">'+(n>99?'99+':n)+'</span>':'')+'</span>'+
+      '</button>';
   }
   function dmRow(t){
     return '<button class="ch'+(mode==='dm'&&dmActive&&dmActive.id===t.partner_id?' on':'')+'" data-dm="'+E(t.partner_id)+'" data-nm="'+E(t.name)+'">'+
@@ -800,29 +975,18 @@
     return channels.filter(function(c){ return (c.grp||'austausch')===g && c.slug!=='club-news' && c.gefolgt; });
   }
   function sideHtml(){
-    var h='';
-    var news=chanBy('club-news');
-    if(news&&news.gefolgt!==false){
-      var nUn=news.ungelesen||0;
-      h+='<button class="ch newsch'+(mode==='channel'&&cur==='club-news'?' on':'')+'" data-ch="club-news"><span class="nx">📣</span><span class="nm2">'+E(news.name)+'</span>'+(nUn>0?'<span class="cn">'+(nUn>99?'99+':nUn)+'</span>':'')+'</button>';
-    }
-    GRP_ORDER.forEach(function(g){
-      var list=meineKanaele(g); if(!list.length) return;
-      var un=0; list.forEach(function(c){ un+=(c.ungelesen||0); });
-      h+='<div class="grp'+(grpZu[g]?' zu':'')+'" data-grp="'+g+'">'+
-           '<button class="gh" data-gtog="'+g+'"><span class="gx">▾</span>'+E(GRP[g].t)+
-           '<span class="gn" style="'+(un>0?'':'display:none')+'">'+(un>99?'99+':un)+'</span></button>'+
-           '<div class="glist">'+list.map(chanRow).join('')+'</div>'+
-         '</div>';
+    /* Eine Liste, keine Ordner: oben das Thema, in dem zuletzt etwas
+       passiert ist. Genau so, wie man es aus WhatsApp kennt. */
+    var list=channels.slice().sort(function(a,b){
+      var x=a.letzte?Date.parse(a.letzte):0, y=b.letzte?Date.parse(b.letzte):0;
+      if(x!==y) return y-x;
+      return (a.sort_order||99)-(b.sort_order||99);
     });
-    if(h===''||!channels.some(function(c){return c.gefolgt;})){
-      h+='<div style="padding:14px 10px;font-size:12.5px;color:var(--t2);line-height:1.55">Such dir deine Themen aus — dann siehst du hier nur, was dich wirklich interessiert.</div>';
-    }
-    h+='<button class="cs-more" id="cmMore">＋ Themen entdecken</button>';
+    var h=list.map(chanRow).join('');
     if(dmThreads.length){
-      h+='<div class="grp" data-grp="dm"><button class="gh" data-gtog="dm"><span class="gx">▾</span>Direktnachrichten</button><div class="glist">'+dmThreads.map(dmRow).join('')+'</div></div>';
+      h+='<div class="cg">Direktnachrichten</div>'+dmThreads.map(dmRow).join('');
     }
-    return h;
+    return h||'<div class="cm-empty">Noch keine Themen.</div>';
   }
   function paintSidebar(){
     var l=q('.cs-l'); if(!l) return;
@@ -972,8 +1136,8 @@
         grpZu[g]=zu; speichereZu(grpZu);
       });
     });
-    var mb=r.querySelector('#cmMore'); if(mb) mb.addEventListener('click',openBrowser);
-    var si=r.querySelector('#cmSearch'); if(si){ si.addEventListener('input',function(){ clearTimeout(_searchTimer); var v=si.value; _searchTimer=setTimeout(function(){ communitySearch(v); },250); }); }
+    var mb=r.querySelector('#cmMore'); if(mb) mb.parentNode.removeChild(mb);
+    var si=r.querySelector('#cmSearch'); if(si&&!si.__cmAn){ si.__cmAn=1; si.addEventListener('input',function(){ clearTimeout(_searchTimer); var v=si.value; _searchTimer=setTimeout(function(){ communitySearch(v); },250); }); }
   }
   function refreshSideActive(){
     var r=root(); if(!r) return;
@@ -1010,6 +1174,8 @@
   /* Kanal zu: Liste wieder zeigen und den Verlaufseintrag aufloesen. */
   function kanalZu(){
     var w=q('.comm'); if(w) w.classList.remove('chatauf');
+    try{ paintSidebar(); }catch(e){}
+    setTimeout(passeHoehe,40);
     if(window.zurueckErledigt) zurueckErledigt('kanal');
   }
 
@@ -1645,8 +1811,10 @@
   function updateBadge(slug){
     var btn=q('.ch[data-ch="'+slug+'"]'); if(!btn) return;
     var c=chanBy(slug), b=btn.querySelector('.cn'), n=(c&&c.ungelesen)||0;
+    btn.classList.toggle('neu', n>0);
     if(n<=0){ if(b)b.remove(); return; }
-    if(!b){ b=document.createElement('span'); b.className='cn'; btn.appendChild(b); }
+    /* Die Zahl gehoert in die rechte Spalte, unter die Uhrzeit. */
+    if(!b){ b=document.createElement('span'); b.className='cn'; (btn.querySelector('.chr')||btn).appendChild(b); }
     b.textContent=n>99?'99+':n;
   }
   function subscribeBadges(){
@@ -1655,7 +1823,12 @@
       var m=p.new; if(!m||m.deleted_at||m.user_id===ME.id||(mode==='channel'&&m.channel===cur)) return;
       var c=chanBy(m.channel); if(!c) return;
       c.ungelesen=(c.ungelesen||0)+1; c.gesamt=(c.gesamt||0)+1;
-      updateBadge(m.channel); updateGroupCounts();
+      /* Das Thema rutscht nach oben und zeigt die neue Vorschau — wie im Messenger. */
+      c.letzte=m.created_at||new Date().toISOString();
+      c.letzter_text=(m.kind==='audio')?'Sprachnachricht':((m.kind==='image')?'Bild':(m.body||''));
+      c.letzter_name=m.author_name||'Mitglied';
+      try{ paintSidebar(); }catch(e){ updateBadge(m.channel); }
+      updateGroupCounts();
     }).subscribe();
   }
   /* Holt alles, was seit der letzten bekannten Nachricht geschrieben
@@ -1767,19 +1940,32 @@
   /* ============================================================
      Handy: Höhe, neue Nachrichten, Halte-Menü
      ============================================================ */
-  function istHandy(){ try{ return window.innerWidth<=680; }catch(e){ return false; } }
+  function istHandy(){ try{ return window.matchMedia('(max-width:900px)').matches; }catch(e){ return window.innerWidth<=900; } }
 
   /* Früher stand hier eine feste Rechnung (100dvh minus 140 Pixel). Sobald
      die Tastatur aufging, stimmte sie nicht mehr und das Schreibfeld rutschte
      aus dem Bild. Jetzt messen wir das wirklich sichtbare Fenster. */
   function passeHoehe(){
-    var w=q('.comm'); if(!w) return;
-    if(!istHandy()){ if(w.style.height) w.style.height=''; return; }
+    var r=root(); if(!r) return;
+    var w=q('.comm'); if(w&&w.style.height) w.style.height='';
+    var an = istHandy() && r.classList.contains('active');
+    document.body.classList.toggle('cm-voll', an);
+    r.classList.toggle('cm-fest', an);
+    if(!an){ r.classList.remove('cm-tast'); return; }
+    /* Die Leisten werden gemessen, nicht geraten: oben die Kopfzeile,
+       unten die Tableiste. Dazwischen steht der Chat fest. */
+    var tb=document.querySelector('.topbar'), oben=0;
+    try{ if(tb && getComputedStyle(tb).display!=='none') oben=Math.max(0,Math.round(tb.getBoundingClientRect().bottom)); }catch(e){}
+    var nav=document.getElementById('clTabs'), unten=0;
+    try{ if(nav && getComputedStyle(nav).display!=='none') unten=Math.round(nav.getBoundingClientRect().height); }catch(e){}
+    r.style.setProperty('--cm-oben', oben+'px');
+    r.style.setProperty('--cm-unten', unten+'px');
+    /* Tastatur offen: die Tableiste liegt dann darunter. Dann zaehlt
+       das wirklich sichtbare Fenster, damit das Schreibfeld sichtbar bleibt. */
     var vv=window.visualViewport;
-    var vh=vv?vv.height:window.innerHeight, vtop=vv?vv.offsetTop:0;
-    var oben=w.getBoundingClientRect().top;
-    var h=Math.max(320, Math.round(vh-(oben-vtop)-8));
-    if(w.style.height!==h+'px') w.style.height=h+'px';
+    var tast = vv ? ((window.innerHeight - vv.height) > 140) : false;
+    r.classList.toggle('cm-tast', tast);
+    if(tast && vv) r.style.setProperty('--cm-hoehe', Math.max(220, Math.round(vv.height - oben))+'px');
   }
   var _hoeheAn=false;
   function hoeheUeberwachen(){
@@ -1796,6 +1982,7 @@
     }
     window.addEventListener('resize',nach);
     window.addEventListener('orientationchange',nach);
+    window.addEventListener('hashchange',nach);
     try{ var vv=window.visualViewport; if(vv){ vv.addEventListener('resize',nach); vv.addEventListener('scroll',nach); } }catch(e){}
     passeHoehe();
   }
