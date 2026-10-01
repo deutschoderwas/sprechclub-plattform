@@ -558,7 +558,7 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFFFFF 0%,#FFFFFF 60%)
     <button class="cl-buch" onclick="return bucheStunde(event)">🗓️ <span data-i18n="k_book3">Sprechclub buchen</span></button>
 
     <button class="navlink" data-view="dashboard" onclick="go('dashboard')"><span class="ic">🏠</span><span><span data-i18n="nav_start">Start</span></span></button>
-    <button class="navlink" data-view="community" onclick="go('community')"><span class="ic">💬</span><span data-i18n="nv_news">Chat</span><span class="badge" id="commBadge" style="display:none">0</span></button>
+    <button class="navlink" data-view="community" onclick="go('community')"><span class="ic">💬</span><span data-i18n="nv_news">Community-Chat</span><span class="badge" id="commBadge" style="display:none">0</span></button>
     <button class="navlink" data-view="fortschritt" onclick="go('fortschritt')"><span class="ic">🎒</span><span data-i18n="nv_mein">Mein Bereich</span></button>
     <button class="navlink" data-view="nachrichten" onclick="go('nachrichten')"><span class="ic">💬</span><span><span data-i18n="k_msg">Nachrichten</span></span></button>
 
@@ -1289,11 +1289,13 @@ async function init(){
 // communityOeffne wartet selbst, bis die Kanalliste geladen ist.
 function kanalAusLink(){
   try{
-    const slug = new URLSearchParams(location.search).get('kanal');
+    const par = new URLSearchParams(location.search);
+    const slug = par.get('kanal');
     if(!slug) return;
+    const msg = par.get('nachricht') || null;
     history.replaceState(null,'',location.pathname+location.hash);
     const holen = (n) => {
-      if (window.communityOeffne) return window.communityOeffne(slug);
+      if (window.communityOeffne) return window.communityOeffne(slug, msg);
       if (n > 0) setTimeout(() => holen(n-1), 300);   // community.js noch nicht so weit
     };
     holen(20);
@@ -1449,9 +1451,14 @@ function collectVocab(){
 const VIEWS=['dashboard','weg','lernen','sprechen','medien','bereiche','kurs','pruefung','schreiben','kurse','ueben','community','dm','lernpfad','szenen','kalender','stunden','materialien','vokabeln','fortschritt','guthaben','abo','nachrichten','amanda','profil','fehler','buddy','fertigkeit','podcast','amandasprechen'];
 function go(v){ location.hash=v; }
 function toggleNav(){ document.body.classList.toggle('nav-open'); }
-const VIEW_TITLES={dashboard:['Schülerbereich','Startseite'],weg:['Lernen','Mein Kurs'],lernen:['Lernen','Dein Lernbereich'],sprechen:['Sprechen','Live und mit Amanda'],medien:['Medien','Podcast und Material'],kurs:['Lernbereich','Dein Kurs'],pruefung:['Prüfung','Prüfungsvorbereitung'],schreiben:['Lernen','Schreibtrainer'],kurse:['Lernen','Kursbibliothek'],kalender:['Live Unterricht','Kalender'],stunden:['Live Unterricht','Meine Stunden'],community:['Community','Chat'],ueben:['Lernen','Üben'],vokabeln:['Lernen','Vokabeltrainer'],materialien:['Lernen','Materialien'],fortschritt:['Schülerbereich','Mein Bereich'],nachrichten:['Nachrichten','Team'],amanda:['Amanda','KI-Sprechpartnerin'],lernpfad:['Lernen','Mein Lernplan'],szenen:['Lernen','Meine Szenen'],fehler:['Lernen','Fehler-Trainer'],buddy:['Lernen','Sprech-Buddy'],guthaben:['Konto','Guthaben'],abo:['Konto','Mein Abo'],profil:['Konto','Profil'],podcast:['Medien','Podcast'],amandasprechen:['Sprechen','Mit Amanda']};
+const VIEW_TITLES={dashboard:['Schülerbereich','Startseite'],weg:['Lernen','Mein Kurs'],lernen:['Lernen','Dein Lernbereich'],sprechen:['Sprechen','Live und mit Amanda'],medien:['Medien','Podcast und Material'],kurs:['Lernbereich','Dein Kurs'],pruefung:['Prüfung','Prüfungsvorbereitung'],schreiben:['Lernen','Schreibtrainer'],kurse:['Lernen','Kursbibliothek'],kalender:['Live Unterricht','Kalender'],stunden:['Live Unterricht','Meine Stunden'],community:['Community-Chat','Deine Themen'],ueben:['Lernen','Üben'],vokabeln:['Lernen','Vokabeltrainer'],materialien:['Lernen','Materialien'],fortschritt:['Schülerbereich','Mein Bereich'],nachrichten:['Nachrichten','Team'],amanda:['Amanda','KI-Sprechpartnerin'],lernpfad:['Lernen','Mein Lernplan'],szenen:['Lernen','Meine Szenen'],fehler:['Lernen','Fehler-Trainer'],buddy:['Lernen','Sprech-Buddy'],guthaben:['Konto','Guthaben'],abo:['Konto','Mein Abo'],profil:['Konto','Profil'],podcast:['Medien','Podcast'],amandasprechen:['Sprechen','Mit Amanda']};
 function updateTopbar(v){var t=VIEW_TITLES[v]||['Schülerbereich','']; var s=document.getElementById('tbS'),b=document.getElementById('tbT'); var lang='de'; try{lang=localStorage.getItem('dow_lang')||'de';}catch(e){} var TT=window.__I18N__||{}; function tr(x){var o=TT[x]; return (o&&o[lang]!=null)?o[lang]:x;} if(s){s.setAttribute('data-de',t[0]);s.setAttribute('data-i18n',t[0]);s.textContent=tr(t[0]);} if(b){b.setAttribute('data-de',t[1]);b.setAttribute('data-i18n',t[1]);b.textContent=tr(t[1]);}}
-function routeFromHash(){ const v=(location.hash||'#dashboard').slice(1); show(VIEWS.includes(v)?v:'dashboard'); }
+function routeFromHash(){ let v=(location.hash||'#dashboard').slice(1);
+  /* Nach aussen heisst der Bereich "Chat". #chat fuehrt deshalb auf
+     dieselbe Ansicht wie das alte #community — Links aus alten Mails
+     funktionieren weiter. */
+  if(v==='chat') v='community';
+  show(VIEWS.includes(v)?v:'dashboard'); }
 // Ohne Guthaben/Probestunde/Pass: ALLES gesperrt außer Kalender (und Profil für Konto/Logout).
 // Vor dem Starttag gesperrt — offen bleiben Start, Profil, Nachrichten und Guthaben.
 const /* Vorverkauf: Wer Premium vor dem 1.11. kauft, zahlt sofort und darf die
@@ -3862,13 +3869,13 @@ function renderMobileHome(){
     +'<div class="mh-row"><span class="tile'+(serie>0?' hot':'')+'">'+I('spark',22)+'</span>'
     +'<span class="rt">'+(serie>0?('Serie: '+serie+' '+(serie===1?'Woche':'Wochen')+' am Stück'):'Starte eine Serie!')+'</span></div>'
     +(cont?'<h2 class="mh-h2">Weiterlernen</h2>'+cont:'')
-    +'<h2 class="mh-h2">Deine Community</h2>'
+    +'<h2 class="mh-h2">Dein Community-Chat</h2>'
     +'<a class="mh-comm" id="mhComm" href="#community" onclick="go(\'community\')">'
     +'<span class="ch">'+I('chat',19)+'<b>Im Club ist was los</b><span class="liv"><span class="dot"></span><span id="mhOnline">live</span></span></span>'
     +'<p class="csub">Echte Menschen, die Deutsch lernen wie du — und dein Lehrer, der persönlich antwortet.</p>'
     +'<span class="avs" id="mhAvs"></span>'
     +'<span class="msgs" id="mhMsgs"><span class="m"><span class="ma" style="background:#C7D0D4">·</span><span class="mt"><span class="mx">Nachrichten werden geladen …</span></span></span></span>'
-    +'<span class="cf">'+I('chat',16)+'<span>Zur Community</span><span class="ar">'+I('arrowR',17)+'</span></span></a>'
+    +'<span class="cf">'+I('chat',16)+'<span>Zum Community-Chat</span><span class="ar">'+I('arrowR',17)+'</span></span></a>'
     +'<a class="mh-cta" href="sprechen.html"><span class="tl">'+I('mic',21)+'</span>'
     +'<span class="tx"><b>Sprechen üben</b><span>Ernstfall-Szenarien &amp; Nachsprechen</span></span><span class="ar">'+I('arrowR',19)+'</span></a>'
     +(karten?'<h2 class="mh-h2">Für deinen Beruf</h2><div class="mh-two">'+karten+'</div>':'')
@@ -3878,7 +3885,7 @@ function renderMobileHome(){
     +'<a class="mh-tile b" href="aussprache.html"><span class="tl">'+I('speaker',20)+'</span><b>Aussprache</b></a></div>'
     +'<div class="mh-usp">'
     +'<span>'+I('book',14)+'Kurse A1–C2</span><span>'+I('mic',14)+'Aussprache</span><span>'+I('headset',14)+'Podcast</span>'
-    +'<span>'+I('chat',14)+'Community</span><span>'+I('speaker',14)+'Aussprache</span><span>'+I('target',14)+'Prüfungen</span>'
+    +'<span>'+I('chat',14)+'Community-Chat</span><span>'+I('speaker',14)+'Aussprache</span><span>'+I('target',14)+'Prüfungen</span>'
     +'<span>'+I('cards',14)+'Vokabeltrainer</span></div>'
     +'<div class="mh-note">'+I('spark',17)+'<span>Kalender, Buchungen und dein Guthaben verwaltest du am Computer — dort hast du den vollen Überblick.</span></div>';
   try{ loadCommTeaser(); }catch(e){}
@@ -3927,7 +3934,7 @@ window.addEventListener('resize',function(){ clearTimeout(_mhT); _mhT=setTimeout
 </div></nav>
 <script>
 (function(){
-  var M=[['dashboard','home','Start'],['lernen','book','Lernen'],['sprechen','mic','Sprechen'],['community','chat','Community'],['medien','headset','Medien']];
+  var M=[['dashboard','home','Start'],['lernen','book','Lernen'],['sprechen','mic','Sprechen'],['community','chat','Community-Chat'],['medien','headset','Medien']];
   function paint(){
     var v=(location.hash||'#dashboard').slice(1);
     M.forEach(function(m){
@@ -4279,7 +4286,7 @@ body nav.cl-tabs > button[data-view="fortschritt"]{font-size:9px !important;lett
 window.__I18N__=Object.assign(window.__I18N__||{},{"nav_start": {"en": "Home", "es": "Inicio", "ru": "Главная", "uk": "Головна", "tr": "Ana sayfa", "it": "Home", "fa": "خانه"}, "nav_lernen": {"en": "Learn", "es": "Aprender", "ru": "Учёба", "uk": "Навчання", "tr": "Öğren", "it": "Impara", "fa": "یادگیری"}, "nav_sprechen": {"en": "Speak", "es": "Hablar", "ru": "Говорить", "uk": "Говорити", "tr": "Konuş", "it": "Parla", "fa": "صحبت"}, "nav_community": {"en": "Community", "es": "Comunidad", "ru": "Сообщество", "uk": "Спільнота", "tr": "Topluluk", "it": "Community", "fa": "انجمن"}, "nav_medien": {"en": "Media", "es": "Medios", "ru": "Медиа", "uk": "Медіа", "tr": "Medya", "it": "Media", "fa": "رسانه"}, "nav_abo": {"en": "My plan", "es": "Mi suscripción", "ru": "Моя подписка", "uk": "Моя підписка", "tr": "Aboneliğim", "it": "Il mio abbonamento", "fa": "اشتراک من"}, "nav_abmelden": {"en": "Log out", "es": "Salir", "ru": "Выйти", "uk": "Вийти", "tr": "Çıkış", "it": "Esci", "fa": "خروج"}});</script>
 
 <script>/* Navigation — die neuen Menuepunkte in allen Sprachen */window.__I18N__=Object.assign(window.__I18N__||{},{
-"nv_news":{"en":"Chat","es":"Chat","ru":"Чат","uk":"Чат","tr":"Sohbet","it":"Chat","fa":"گفتگو"}, "nv_tab_chat":{"en":"Chat","es":"Chat","ru":"Чат","uk":"Чат","tr":"Sohbet","it":"Chat","fa":"گفتگو"},
+"nv_news":{"en":"Community chat","es":"Chat de la comunidad","ru":"Чат сообщества","uk":"Чат спільноти","tr":"Topluluk sohbeti","it":"Chat della community","fa":"گفتگوی انجمن"}, "nv_tab_chat":{"en":"Chat","es":"Chat","ru":"Чат","uk":"Чат","tr":"Sohbet","it":"Chat","fa":"گفتگو"},
 "nv_mein":{"en":"My area","es":"Mi espacio","ru":"Мой раздел","uk":"Мій розділ","tr":"Benim alanım","it":"La mia area","fa":"بخش من"},
 "nv_grp_lernen":{"en":"Self-study","es":"Autoaprendizaje","ru":"Самостоятельно","uk":"Самостійно","tr":"Kendi kendine öğrenme","it":"Studio autonomo","fa":"خودآموز"},
 "nv_grp_podcast":{"en":"Podcast","es":"Pódcast","ru":"Подкаст","uk":"Подкаст","tr":"Podcast","it":"Podcast","fa":"پادکست"},

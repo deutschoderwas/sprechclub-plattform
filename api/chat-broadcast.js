@@ -62,7 +62,8 @@ export default async function handler(req, res) {
   if (!empfaenger.length) return res.status(200).json({ ok: true, empfaenger: 0 });
 
   const site = process.env.SITE_URL || 'https://www.deutschoderwas-club.de';
-  const link = `${site}/konto.html?kanal=${encodeURIComponent(msg.channel)}#community`;
+  // Der Knopf fuehrt in den Chat und direkt auf diesen Beitrag.
+  const link = `${site}/konto.html?kanal=${encodeURIComponent(msg.channel)}&nachricht=${encodeURIComponent(msg.id)}#chat`;
   const chName = (ch?.emoji ? ch.emoji + ' ' : '') + (ch?.name || msg.channel);
   const wer = msg.author_name || me.name || 'Julia';
   const text = msg.kind === 'text' ? String(msg.body || '') : '📎 Ein Bild oder eine Sprachnachricht';
@@ -79,7 +80,7 @@ export default async function handler(req, res) {
   </td></tr>
   <tr><td style="padding:0 30px"><div style="height:3px;background:linear-gradient(135deg,#7ED8EA,#35AFD0);border-radius:999px"></div></td></tr>
   <tr><td style="padding:20px 30px 0">
-    <span style="display:inline-block;font-weight:600;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#35AFD0;margin-bottom:10px">Neu im Chat &middot; ${esc(chName)}</span>
+    <span style="display:inline-block;font-weight:600;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#35AFD0;margin-bottom:10px">Neu im Community-Chat &middot; ${esc(chName)}</span>
     <p style="margin:0 0 14px;font-size:14px;color:#6B7280"><b style="color:#1A1A1A">${esc(wer)}</b> schreibt:</p>
   </td></tr>
   <tr><td style="padding:0 30px">
@@ -88,10 +89,10 @@ export default async function handler(req, res) {
     </table>
   </td></tr>
   <tr><td align="center" style="padding:22px 30px 6px">
-    <a href="${esc(link)}" style="display:inline-block;background:#10627A;color:#FFFFFF;font-weight:700;font-size:16px;text-decoration:none;padding:14px 30px;border-radius:999px">Im Chat antworten</a>
+    <a href="${esc(link)}" style="display:inline-block;background:#10627A;color:#FFFFFF;font-weight:700;font-size:16px;text-decoration:none;padding:14px 30px;border-radius:999px">Zum Community-Chat &rarr;</a>
   </td></tr>
   <tr><td style="padding:10px 30px 24px">
-    <p style="margin:0;font-size:13.5px;line-height:1.6;color:#6B7280;text-align:center">Du bist angemeldet? Dann landest du mit einem Klick direkt im Kanal und kannst sofort mitschreiben.</p>
+    <p style="margin:0;font-size:13.5px;line-height:1.6;color:#6B7280;text-align:center">Ein Klick bringt dich direkt zu dieser Nachricht im Community-Chat — angemeldet kannst du sofort antworten.</p>
   </td></tr>
   <tr><td style="background:#1A1A1A;padding:22px 30px">
     <p style="font-size:13px;line-height:1.6;color:#FFFCF5;margin:0 0 8px;font-weight:600">deutschoderwas &middot; Julia Karackov</p>
@@ -103,7 +104,7 @@ export default async function handler(req, res) {
   // Brevo nimmt pro Aufruf bis zu 1000 Versionen; wir gehen in 300er-Schritten,
   // damit eine einzelne schlechte Adresse nicht den ganzen Versand kippt.
   const sender = { name: 'deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' };
-  const betreff = `Neu im Chat: ${chName}`;
+  const betreff = `Neu im Community-Chat: ${chName}`;
   let verschickt = 0, fehler = 0;
 
   for (let i = 0; i < empfaenger.length; i += 300) {

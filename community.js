@@ -11,7 +11,7 @@
   var channels = [], roster = [], dmThreads = [], cur = null, mode = 'channel', dmActive = null, curMsgs = [];
   var isTeam = false, isAdmin = false, isChallenger = false, myName = 'Mitglied';
   var reax = {}, corr = {}, savedCorr = {};
-  var replyTo = null, zielSlug = null;
+  var replyTo = null, zielSlug = null, zielMsg = null;
   var chan = null, badgeChan = null;
   /* Robustheit: Wir merken uns, wie weit der Verlauf geladen ist und
      wann die letzte Nachricht kam. Nach jedem Verbindungsabbruch —
@@ -844,6 +844,13 @@
   #v-community .comm{grid-template-columns:284px 1fr !important}
 }
 
+/* Der Beitrag aus der Mail leuchtet kurz auf, damit man ihn im Verlauf
+   sofort findet. Danach verschwindet die Markierung von selbst. */
+#v-community .feed .m .mb{transition:box-shadow .45s ease,background .45s ease}
+#v-community .feed .m.hl{background:none !important}
+#v-community .feed .m.hl .mb{box-shadow:0 0 0 3px rgba(255,206,0,.6) !important;
+  background:#FFFCF2 !important}
+
 `; document.head.appendChild(st);
   }
 
@@ -928,7 +935,7 @@
   function gateHtml(){
     return '<div class="pagehead"><h1>Community-Chat</h1></div>'+
       '<div class="gate"><div style="font-size:34px">🔒</div><h3 style="margin:8px 0 6px">Nur für aktive Mitglieder</h3>'+
-      '<p style="color:#5A6169;max-width:400px;margin:0 auto 14px">Die Community ist exklusiv für Mitglieder mit aktivem Guthaben oder Pass.</p>'+
+      '<p style="color:#5A6169;max-width:400px;margin:0 auto 14px">Der Community-Chat ist nur für Mitglieder mit aktivem Guthaben oder Pass.</p>'+
       '<a href="index.html#preise" style="display:inline-block;background:#B3E6F4;color:#fff;font-weight:600;padding:9px 15px;border-radius:9px">Pakete ansehen →</a></div>';
   }
 
@@ -1009,7 +1016,7 @@
   function shellHtml(){
     return '<div class="pagehead"><h1>Community-Chat</h1><p>Schreib mit anderen Mitgliedern — nach Stufe, Thema und Ziel sortiert.</p></div>'+
       '<div class="comm">'+
-        '<div class="cs"><div class="cs-h"><b>Community</b><div class="st"><i></i><span id="cmMitgl">'+(((window.__commAkt||{}).mitglieder)?((window.__commAkt||{}).mitglieder+' Mitglieder \u00b7 '):'')+'</span><span id="cmOnline">'+countOnline()+'</span> online</div></div>'+
+        '<div class="cs"><div class="cs-h"><b>Community-Chat</b><div class="st"><i></i><span id="cmMitgl">'+(((window.__commAkt||{}).mitglieder)?((window.__commAkt||{}).mitglieder+' Mitglieder \u00b7 '):'')+'</span><span id="cmOnline">'+countOnline()+'</span> online</div></div>'+
           '<div class="cs-srch"><input type="search" id="cmSearch" placeholder="Suchen …" autocomplete="off"></div>'+
           '<div class="cs-l">'+sideHtml()+'</div></div>'+
         '<div class="chat" id="cmChat"></div>'+
@@ -1223,6 +1230,21 @@
     renderFeed(rows);
     renderPinned();
     subscribe(slug);
+    zeigeZielNachricht();
+  }
+
+  /* Aus der Benachrichtigungsmail kommt man mit einer Nachrichten-Nummer
+     im Link. Dann soll genau dieser Beitrag im Bild stehen und kurz
+     aufleuchten — sonst sucht man ihn im Verlauf. */
+  function zeigeZielNachricht(){
+    if(!zielMsg) return;
+    var id=zielMsg; zielMsg=null;
+    setTimeout(function(){
+      var el=q('.m[data-id="'+id+'"]'); if(!el) return;
+      try{ el.scrollIntoView({block:'center',behavior:'smooth'}); }catch(e){ try{ el.scrollIntoView(); }catch(e2){} }
+      el.classList.add('hl');
+      setTimeout(function(){ el.classList.remove('hl'); }, 4200);
+    }, 120);
   }
 
   // ---------- Medien ----------
@@ -2075,8 +2097,8 @@
   window.renderCommunity=renderCommunity;
 
   // Von außen (z. B. aus einer Benachrichtigung) einen Kanal öffnen
-  window.communityOeffne=function(slug){
-    zielSlug=slug;
+  window.communityOeffne=function(slug,msgId){
+    zielSlug=slug; zielMsg=msgId||null;
     try{ if(window.go) window.go('community'); }catch(e){}
     setTimeout(function(){
       if(!zielSlug) return;
