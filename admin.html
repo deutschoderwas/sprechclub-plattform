@@ -490,6 +490,7 @@ async function ladeCommunityKarte(){
    in der Datenbank statt im Browser - auch morgen, auch am Handy.
    ============================================================ */
 let KONTAKT = [], KONTAKT_FILTER = 'alle';
+let KONTAKT_BREVO = { drin: null, abgemeldet: null, stand: 'laedt' };
 
 const KONTAKT_TEXT = (v) =>
   'Hallo ' + (v || 'du') + ' \u{1F44B}\n\n' +
@@ -527,6 +528,7 @@ async function ladeKontakt() {
   if (error) { host.innerHTML = '<div class="card"><p class="muted">Die Liste lässt sich nicht laden: ' + esc(error.message) + '</p></div>'; return; }
   KONTAKT = data || [];
   zeichneKontakt();
+  if (KONTAKT_BREVO.stand !== 'da') ladeBrevoStand();
 }
 
 function zeichneKontakt() {
@@ -534,73 +536,219 @@ function zeichneKontakt() {
   const alle = KONTAKT;
   const offenWa = alle.filter(z => z.nummer_da && !z.hat_whatsapp && !z.gekauft);
   const offenMail = alle.filter(z => !z.hat_mail);
+  const ohneBrevo = alle.filter(z => brevoStand(z.email) === 'fehlt');
   const ohneNummer = alle.filter(z => !z.nummer_da);
   const gekauft = alle.filter(z => z.gekauft);
   setzeAbzeichen('kontaktBdg', offenWa.length);
 
   const kachel = (zahl, was, ton) =>
-    '<div style="flex:1;min-width:130px;background:#fff;border:1px solid var(--border,#ECECEC);border-radius:14px;padding:13px 15px">'
-    + '<div style="font-family:\'Space Grotesk\',sans-serif;font-size:26px;font-weight:700;color:' + ton + '">' + zahl + '</div>'
+    '<div style="flex:1 1 140px;min-width:140px;background:#fff;border:1px solid var(--border,#ECECEC);border-radius:14px;padding:12px 14px">'
+    + '<div style="font-family:\'Space Grotesk\',sans-serif;font-size:25px;font-weight:700;color:' + ton + '">' + zahl + '</div>'
     + '<div style="font-size:12.5px;color:#5A6B72;line-height:1.35">' + was + '</div></div>';
 
   let gefiltert = alle;
   if (KONTAKT_FILTER === 'wa') gefiltert = offenWa;
   else if (KONTAKT_FILTER === 'mail') gefiltert = offenMail;
+  else if (KONTAKT_FILTER === 'brevo') gefiltert = ohneBrevo;
   else if (KONTAKT_FILTER === 'ohne') gefiltert = ohneNummer;
   else if (KONTAKT_FILTER === 'gekauft') gefiltert = gekauft;
 
   const knopf = (id, text, n) =>
     '<button onclick="kontaktFilter(\'' + id + '\')" class="btn' + (KONTAKT_FILTER === id ? '' : ' btn-ghost') + '" '
-    + 'style="font-size:13px;padding:7px 14px">' + text + ' <b>' + n + '</b></button>';
+    + 'style="font-size:13px;padding:7px 13px">' + text + ' <b>' + n + '</b></button>';
 
-  const zeile = (z) => {
+  const pille = (text, farbe, grund) =>
+    '<span style="display:inline-block;background:' + grund + ';color:' + farbe + ';border-radius:20px;'
+    + 'padding:2px 9px;font-size:11.5px;font-weight:800;white-space:nowrap">' + text + '</span>';
+
+  const brevoPille = (z) => {
+    const s = brevoStand(z.email);
+    if (s === 'drin') return pille('Brevo ✓', '#1F7A3D', '#E9F6EC');
+    if (s === 'abgemeldet') return pille('Brevo abgemeldet', '#9A6B00', '#FFF4D6');
+    if (s === 'fehlt') return pille('nicht in Brevo', '#D42A21', '#FDECEA');
+    if (s === 'laedt') return pille('Brevo …', '#5A6B72', '#F2F4F5');
+    return '';
+  };
+
+  /* Eine Karte pro Mensch statt einer breiten Tabelle: am Handy
+     laesst sich eine Tabelle mit vier Spalten nicht lesen, und die
+     meisten Knoepfe drueckt Julia unterwegs. */
+  const karte = (z) => {
     const nr = kontaktNummer(z.whatsapp);
     const name = z.name || z.email.split('@')[0];
-    const wa = nr
-      ? (z.hat_whatsapp
-          ? '<span style="color:#1F7A3D;font-weight:700;font-size:13px">✓ ' + kontaktTag(z.whatsapp_at) + '</span>'
-          : '<button class="btn" style="background:#25D366;color:#06403A;font-size:13px;padding:7px 13px;font-weight:800" '
-            + 'onclick="kontaktWhatsApp(\'' + esc(z.email) + '\',\'' + nr + '\',\'' + esc(String(name).split(' ')[0]).replace(/'/g, "\\'") + '\')">WhatsApp ↗</button>')
-      : '<span class="muted" style="font-size:12.5px">keine Nummer</span>';
-    return '<tr>'
-      + '<td><b>' + esc(name) + '</b>' + (z.gekauft ? ' <span style="background:#E9F6EC;color:#1F7A3D;border-radius:20px;padding:1px 8px;font-size:11px;font-weight:800">gebucht</span>' : '')
-      + '<div class="muted" style="font-size:12px">' + esc(z.email) + '</div></td>'
-      + '<td style="font-size:12.5px;color:#5A6B72">' + esc(z.quellen || '') + '<div class="muted" style="font-size:11.5px">seit ' + kontaktTag(z.seit) + '</div></td>'
-      + '<td style="text-align:center">' + (z.hat_mail
-          ? '<span style="color:#1F7A3D;font-weight:700;font-size:13px">✓ ' + kontaktTag(z.mail_at) + '</span>'
-          : '<span style="color:#D42A21;font-weight:700;font-size:13px">offen</span>') + '</td>'
-      + '<td style="text-align:right">' + wa + '</td>'
-      + '</tr>';
+    const vn = String(name).split(' ')[0].replace(/'/g, "\\'");
+    const e = esc(z.email).replace(/'/g, "\\'");
+
+    const mailZeile = z.hat_mail
+      ? pille('Mail ✓ ' + kontaktTag(z.mail_at), '#1F7A3D', '#E9F6EC')
+      : pille('keine Mail', '#D42A21', '#FDECEA');
+    const waZeile = !z.nummer_da
+      ? pille('keine Nummer', '#5A6B72', '#F2F4F5')
+      : (z.hat_whatsapp
+          ? pille('WhatsApp ✓ ' + kontaktTag(z.whatsapp_at), '#1F7A3D', '#E9F6EC')
+          : pille('kein WhatsApp', '#D42A21', '#FDECEA'));
+
+    let knoepfe = '';
+    if (!z.hat_mail) {
+      knoepfe += '<button class="btn" style="background:#10627A;color:#fff;font-size:13px;padding:8px 14px;font-weight:800" '
+        + 'onclick="kontaktMail(\'' + e + '\', this)">✉️ Mail schicken</button>';
+    }
+    if (nr && !z.hat_whatsapp) {
+      knoepfe += '<button class="btn" style="background:#25D366;color:#06403A;font-size:13px;padding:8px 14px;font-weight:800" '
+        + 'onclick="kontaktWhatsApp(\'' + e + '\',\'' + nr + '\',\'' + esc(vn) + '\')">💬 WhatsApp ↗</button>';
+      knoepfe += '<button class="btn btn-ghost" style="font-size:13px;padding:8px 13px" '
+        + 'onclick="kontaktErledigt(\'' + e + '\')">✓ war schon</button>';
+    }
+    if (z.nummer_da && z.hat_whatsapp && nr) {
+      knoepfe += '<button class="btn btn-ghost" style="font-size:13px;padding:8px 13px" '
+        + 'onclick="kontaktWhatsAppNochmal(\'' + nr + '\',\'' + esc(vn) + '\')">Chat öffnen</button>';
+    }
+
+    return '<div style="background:#fff;border:1px solid var(--border,#ECECEC);border-radius:14px;padding:13px 15px;margin-bottom:10px">'
+      + '<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:baseline">'
+      +   '<b style="font-size:15.5px">' + esc(name) + '</b>'
+      +   (z.niveau ? '<span class="muted" style="font-size:12px">' + esc(z.niveau) + '</span>' : '')
+      +   (z.gekauft ? pille('gebucht', '#1F7A3D', '#E9F6EC') : '')
+      +   '<span class="muted" style="font-size:11.5px;margin-left:auto">seit ' + kontaktTag(z.seit) + '</span>'
+      + '</div>'
+      + '<div style="margin:5px 0 9px;font-size:13px;word-break:break-all">'
+      +   '<a href="mailto:' + esc(z.email) + '" style="color:#10627A">' + esc(z.email) + '</a>'
+      +   (z.whatsapp ? '<span class="muted"> · ' + esc(z.whatsapp) + '</span>' : '')
+      +   '<div class="muted" style="font-size:11.5px">' + esc(z.quellen || '') + '</div>'
+      + '</div>'
+      + '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:' + (knoepfe ? '10px' : '0') + '">'
+      +   mailZeile + waZeile + brevoPille(z)
+      + '</div>'
+      + (knoepfe ? '<div style="display:flex;flex-wrap:wrap;gap:7px">' + knoepfe + '</div>' : '')
+      + '</div>';
   };
+
+  const offeneMailsHier = gefiltert.filter(z => !z.hat_mail && z.email && z.email.indexOf('@') > 0);
 
   host.innerHTML =
     '<div class="pagehead"><h1>\u{1F4E3} Angeschrieben?</h1>'
-    + '<p class="muted">Jeder Mensch von der Webseite und aus dem Google-Formular, einmal. Hier steht, was er bekommen hat.</p></div>'
+    + '<p class="muted">Jeder Mensch von der Webseite und aus dem Google-Formular, einmal. Hier steht, was er bekommen hat — und von hier aus schreibst du ihn an.</p></div>'
     + '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">'
     +   kachel(alle.length, 'Menschen auf der Liste', '#14181B')
     +   kachel(alle.filter(z => z.hat_mail).length, 'haben die Mail bekommen', '#1F7A3D')
     +   kachel(offenWa.length, 'warten noch auf WhatsApp', offenWa.length ? '#D42A21' : '#1F7A3D')
-    +   kachel(ohneNummer.length, 'ohne Nummer — nur per Mail erreichbar', '#9A6B00')
+    +   kachel(KONTAKT_BREVO.stand === 'da' ? ohneBrevo.length : '…', 'fehlen in Brevo', ohneBrevo.length ? '#D42A21' : '#1F7A3D')
     +   kachel(gekauft.length, 'haben gebucht', '#10627A')
     + '</div>'
     + '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">'
     +   knopf('alle', 'Alle', alle.length)
-    +   knopf('wa', 'Noch kein WhatsApp', offenWa.length)
-    +   knopf('mail', 'Noch keine Mail', offenMail.length)
+    +   knopf('wa', 'Kein WhatsApp', offenWa.length)
+    +   knopf('mail', 'Keine Mail', offenMail.length)
+    +   knopf('brevo', 'Nicht in Brevo', KONTAKT_BREVO.stand === 'da' ? ohneBrevo.length : '…')
     +   knopf('ohne', 'Ohne Nummer', ohneNummer.length)
     +   knopf('gekauft', 'Gebucht', gekauft.length)
     + '</div>'
-    + '<div class="card" style="padding:0;overflow:auto">'
-    + '<table style="width:100%;border-collapse:collapse;font-size:14px">'
-    + '<thead><tr style="text-align:left;background:#FAF8F3">'
-    +   '<th style="padding:10px 14px">Name</th><th style="padding:10px 14px">Quelle</th>'
-    +   '<th style="padding:10px 14px;text-align:center">Mail</th><th style="padding:10px 14px;text-align:right">WhatsApp</th>'
-    + '</tr></thead><tbody>'
-    + (gefiltert.length ? gefiltert.map(zeile).join('') : '<tr><td colspan="4" style="padding:18px 14px" class="muted">Hier ist gerade niemand — das ist die gute Nachricht.</td></tr>')
-    + '</tbody></table></div>';
+    + (offeneMailsHier.length > 1
+        ? '<div class="card" style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px">'
+          + '<div style="flex:1 1 220px;font-size:13.5px">In dieser Auswahl haben <b>' + offeneMailsHier.length + '</b> noch keine Mail. '
+          + '<span class="muted">Sie bekommen dieselbe Willkommensmail wie alle neuen Leads — niemand doppelt.</span></div>'
+          + '<button class="btn" style="background:#10627A;color:#fff;font-weight:800" onclick="kontaktMailAlle(this)">✉️ Alle anschreiben</button>'
+          + '</div>'
+        : '')
+    + '<div id="kontaktListe">'
+    + (gefiltert.length ? gefiltert.map(karte).join('') : '<div class="card"><p class="muted">Hier ist gerade niemand — das ist die gute Nachricht.</p></div>')
+    + '</div>';
 }
 
 function kontaktFilter(f) { KONTAKT_FILTER = f; zeichneKontakt(); }
+
+/* ---------- Brevo: wer steht in der Warteliste? ----------
+   Die Antwort kommt vom Server, weil der Brevo-Schluessel nichts im
+   Browser zu suchen hat. Bis sie da ist, zeigen die Pillen "..." —
+   die Liste selbst wartet nicht darauf. */
+async function kontaktRuf(body) {
+  const r = await fetch('/api/lead-kontakt', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + await authToken() },
+    body: JSON.stringify(body),
+  });
+  return await r.json().catch(() => ({}));
+}
+
+async function ladeBrevoStand() {
+  try {
+    const j = await kontaktRuf({ aktion: 'brevo' });
+    if (j && j.ok) KONTAKT_BREVO = { drin: new Set(j.drin || []), abgemeldet: new Set(j.abgemeldet || []), stand: 'da' };
+    else KONTAKT_BREVO = { drin: null, abgemeldet: null, stand: 'nein' };
+  } catch (e) { KONTAKT_BREVO = { drin: null, abgemeldet: null, stand: 'nein' }; }
+  zeichneKontakt();
+}
+
+function brevoStand(email) {
+  const b = KONTAKT_BREVO;
+  if (b.stand === 'laedt') return 'laedt';
+  if (b.stand !== 'da') return 'unbekannt';
+  const m = String(email || '').toLowerCase();
+  if (b.abgemeldet.has(m)) return 'abgemeldet';
+  if (b.drin.has(m)) return 'drin';
+  return 'fehlt';
+}
+
+/* ---------- Mail aus dem Admin heraus ----------
+   Derselbe Weg wie die Automatik: erst in die Brevo-Liste, dann die
+   Mail, dann mail_at. Zweimal klicken schadet nicht - email_log
+   laesst die zweite Mail nicht durch. */
+async function kontaktMail(email, btn) {
+  const z = KONTAKT.filter(x => String(x.email).toLowerCase() === String(email).toLowerCase())[0];
+  const wer = (z && z.name) || email;
+  if (!confirm('Die Willkommensmail an ' + wer + ' schicken?\n\n' + email)) return;
+  if (btn) { btn.disabled = true; btn.textContent = 'schickt …'; }
+  try {
+    const j = await kontaktRuf({ aktion: 'mail', email });
+    const r = (j && j.ergebnis && j.ergebnis[0]) || {};
+    if (r.ok) {
+      if (z) { z.mail_at = new Date().toISOString(); z.hat_mail = true; }
+      if (KONTAKT_BREVO.stand === 'da') KONTAKT_BREVO.drin.add(String(email).toLowerCase());
+      zeichneKontakt();
+    } else if (r.grund === 'schon_geschickt') {
+      if (z) { z.hat_mail = true; z.mail_at = z.mail_at || new Date().toISOString(); }
+      zeichneKontakt();
+      alert(wer + ' hatte die Mail schon — es ist keine zweite rausgegangen.');
+    } else {
+      alert('Die Mail ging nicht raus: ' + (r.grund || j.error || 'unbekannt'));
+      if (btn) { btn.disabled = false; btn.innerHTML = '✉️ Mail schicken'; }
+    }
+  } catch (e) {
+    alert('Fehler: ' + e.message);
+    if (btn) { btn.disabled = false; btn.innerHTML = '✉️ Mail schicken'; }
+  }
+}
+
+async function kontaktMailAlle(btn) {
+  const alle = KONTAKT;
+  let gefiltert = alle;
+  if (KONTAKT_FILTER === 'wa') gefiltert = alle.filter(z => z.nummer_da && !z.hat_whatsapp && !z.gekauft);
+  else if (KONTAKT_FILTER === 'mail') gefiltert = alle.filter(z => !z.hat_mail);
+  else if (KONTAKT_FILTER === 'brevo') gefiltert = alle.filter(z => brevoStand(z.email) === 'fehlt');
+  else if (KONTAKT_FILTER === 'ohne') gefiltert = alle.filter(z => !z.nummer_da);
+  else if (KONTAKT_FILTER === 'gekauft') gefiltert = alle.filter(z => z.gekauft);
+  const offen = gefiltert.filter(z => !z.hat_mail && z.email && z.email.indexOf('@') > 0).slice(0, 60);
+  if (!offen.length) return;
+  if (!confirm('Die Willkommensmail an ' + offen.length + ' Menschen schicken?\n\nWer sie schon hat, bekommt keine zweite.')) return;
+  if (btn) { btn.disabled = true; btn.textContent = 'schickt …'; }
+  try {
+    const j = await kontaktRuf({ aktion: 'mail-alle', emails: offen.map(z => z.email) });
+    const liste = (j && j.ergebnis) || [];
+    for (const r of liste) {
+      const z = KONTAKT.filter(x => String(x.email).toLowerCase() === r.email)[0];
+      if (!z) continue;
+      if (r.ok || r.grund === 'schon_geschickt') { z.hat_mail = true; z.mail_at = z.mail_at || new Date().toISOString(); }
+      if (r.ok && KONTAKT_BREVO.stand === 'da') KONTAKT_BREVO.drin.add(r.email);
+    }
+    zeichneKontakt();
+    const schief = liste.filter(r => !r.ok && r.grund !== 'schon_geschickt');
+    alert((j.geschickt || 0) + ' von ' + offen.length + ' Mails sind raus.'
+      + (schief.length ? '\n\nNicht geklappt bei:\n' + schief.map(r => r.email + ' (' + r.grund + ')').join('\n').slice(0, 600) : ''));
+  } catch (e) {
+    alert('Fehler: ' + e.message);
+  }
+  if (btn) { btn.disabled = false; btn.innerHTML = '✉️ Alle anschreiben'; }
+}
 
 /* Oeffnet das Gespraech und merkt sich den Versand sofort. Der Eintrag
    geht auch dann raus, wenn das Fenster blockiert wird - lieber einmal
@@ -614,6 +762,23 @@ async function kontaktWhatsApp(email, nr, vorname) {
   zeichneKontakt();
   try { await sb.from('leads').update({ whatsapp_at: jetzt }).ilike('email', email); }
   catch (e) { /* die Liste zeigt es trotzdem an, beim naechsten Laden wird es sichtbar */ }
+}
+
+/* Noch einmal hineinschauen, ohne etwas zu markieren oder Text einzusetzen. */
+function kontaktWhatsAppNochmal(nr) {
+  window.open('https://wa.me/' + nr, '_blank', 'noopener');
+}
+
+/* Fuer alle, die Julia schon auf anderem Weg erreicht hat: abhaken,
+   ohne etwas zu verschicken. */
+async function kontaktErledigt(email) {
+  const z = KONTAKT.filter(x => String(x.email).toLowerCase() === String(email).toLowerCase())[0];
+  if (!confirm('"' + ((z && z.name) || email) + '" als per WhatsApp angeschrieben markieren?\n\nEs wird nichts verschickt.')) return;
+  const jetzt = new Date().toISOString();
+  if (z) { z.whatsapp_at = jetzt; z.hat_whatsapp = true; }
+  zeichneKontakt();
+  try { await sb.from('leads').update({ whatsapp_at: jetzt }).ilike('email', email); }
+  catch (e) { alert('Konnte nicht gespeichert werden: ' + e.message); }
 }
 
 /* ---------- Navigation in zwei Ebenen ----------
