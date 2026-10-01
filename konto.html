@@ -2257,6 +2257,9 @@ function kalEv(c){
   let btn;
   if(c.mine){ btn=dowJoinBtn({class_id:c.id,starts_at:c.starts_at,title:c.title,level:c.level},'ev-btn meet')||`<span class="ev-btn mine">✓ Gebucht</span>`; }
   else if(past){ btn=`<span class="ev-btn off">vorbei</span>`; }
+  /* Feiertage stehen mit Platzzahl 0 im Kalender — "ausgebucht" waere
+     dort das falsche Wort. */
+  else if((Number(c.capacity)||0)===0){ btn=`<span class="ev-btn off">kein Unterricht</span>`; }
   else if(free<=0){ btn=`<span class="ev-btn off">ausgebucht</span>`; }
   else{ btn=`<button class="ev-btn book" onclick="kalBook('${c.id}')">Buchen</button>`; }
   const matBtn = (c.has_material && isActive()) ? `<button class="ev-btn mat" onclick="openClassMaterial('${c.id}',${c.mine?1:0})">📚 Material</button>` : '';
