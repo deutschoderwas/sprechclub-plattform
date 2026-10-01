@@ -2234,5 +2234,97 @@ document.addEventListener('DOMContentLoaded',function(){var bj=document.getEleme
 html.rmk .nend .mark:not(.gemalt){color:#FFD84D !important}
 html.rmk .nend .mark{transition:background-size .65s cubic-bezier(.2,.7,.3,1),color .2s ease .3s}
 </style>
+<style id="preise-schoener">
+/* ============================================================
+   Preise im Look der Seite /preise — Julia: "So ist das schoener."
+   Reine Optik: kein Markup, kein Skript, keine Uebersetzung wird
+   angefasst. Dadurch bleiben alle elf Sprachen erhalten.
+   ============================================================ */
+#preise{
+  --pz-karte:#FFFFFF; --pz-tinte:#1D1B18; --pz-tinte2:#5C5346; --pz-tinte3:#8B8271;
+  --pz-linie:#E7DFCD; --pz-linie-h:#EFE9DC;
+  --pz-tuerkis:#0E7C7B; --pz-tuerkis-h:#4FB3AE; --pz-gelb:#FFC94A; --pz-rot:#E8302A;
+  scroll-margin-top:86px;
+}
+
+/* ---- Kopf ---- */
+#preise .sec-head{text-align:center;max-width:760px;margin:0 auto 24px}
+#preise .sec-tag{color:var(--pz-tuerkis);letter-spacing:.16em;justify-content:center}
+#preise .sec-head h2{font-family:'Space Grotesk',Georgia,serif;font-weight:600;
+  font-size:clamp(1.9rem,4.6vw,2.8rem);line-height:1.12;text-wrap:balance;
+  /* eigener Stapelraum, sonst rutscht der gelbe Marker hinter den Seitenhintergrund */
+  isolation:isolate}
+#preise .sec-head h2 .hl-t{position:relative;display:inline-block;font-style:italic;
+  padding:.04em .26em;color:var(--pz-tinte)!important;-webkit-text-fill-color:var(--pz-tinte)!important}
+#preise .sec-head h2 .hl-t::before{content:'';position:absolute;inset:0;background:var(--pz-gelb);
+  border-radius:11px;transform:rotate(-1.6deg);z-index:-1}
+#preise .sec-head p{max-width:52ch;margin:12px auto 0;color:var(--pz-tinte2);font-size:1.03rem}
+
+/* ---- Monatlich / Jaehrlich ---- */
+#preise .np-jahr{background:var(--pz-linie-h)!important;border:0!important;box-shadow:none!important;
+  padding:4px!important;gap:4px!important}
+#preise .np-jahr button{font-weight:700;font-size:13.5px;color:var(--pz-tinte2);padding:9px 24px}
+#preise .np-jahr button.an{background:var(--pz-karte)!important;color:var(--pz-tinte)!important;
+  box-shadow:0 2px 7px rgba(29,27,24,.09)!important}
+#preise .np-spar{background:var(--pz-gelb);color:var(--pz-tinte)}
+
+/* ---- Karten ---- */
+#preise .np-grid>.np-card{background:var(--pz-karte)!important;border-radius:20px!important;
+  padding:28px 26px 24px!important;box-shadow:0 8px 24px rgba(29,27,24,.07)!important;
+  transform:none!important;overflow:visible}
+#preise .np-grid>.np-card:first-child{border:2px solid var(--pz-tuerkis)!important}
+#preise .np-card.np-feat{border:2px solid var(--pz-rot)!important;
+  box-shadow:0 8px 24px rgba(232,48,42,.10)!important}
+
+/* ---- Faehnchen oben links statt mittig ---- */
+#preise .np-badge{left:22px!important;transform:none!important;top:-13px!important;
+  font-size:11.5px!important;font-weight:800!important;letter-spacing:.06em;text-transform:uppercase;
+  padding:5px 12px!important;box-shadow:none!important}
+#preise .np-grid>.np-card:first-child .np-badge{background:var(--pz-tuerkis)!important;color:#fff!important}
+#preise .np-card.np-feat .np-badge{background:var(--pz-rot)!important;color:#fff!important}
+
+/* ---- Kopf der Karte: Preis unter den Namen, nicht daneben ---- */
+#preise .np-kopf{flex-direction:column;align-items:stretch;gap:0}
+#preise .np-kl,#preise .np-kr{width:100%;flex:none;text-align:left}
+#preise .np-name{font-family:'Space Grotesk',Georgia,serif!important;font-weight:600!important;
+  font-size:1.6rem!important;color:var(--pz-tinte)!important}
+#preise .np-tag{font-size:.96rem;color:var(--pz-tinte2);margin:4px 0 0;min-height:0}
+#preise .np-kr .np-hero{justify-content:flex-start;margin-top:16px;gap:9px}
+#preise .np-num{font-family:'Space Grotesk',Georgia,serif!important;font-weight:700!important;
+  font-size:2.5rem!important;line-height:1;color:var(--pz-tinte)!important}
+#preise .np-card.np-feat .np-num{font-size:3.2rem!important}
+#preise .np-unit{color:var(--pz-tinte3);font-size:.95rem;font-weight:500}
+#preise .np-kr .np-total{text-align:left;color:var(--pz-tinte3);font-size:.87rem;font-weight:500;
+  margin-top:6px;white-space:normal}
+#preise .np-alt{justify-content:flex-start}
+#preise .np-trenn{background:var(--pz-linie);margin:18px 0 0}
+
+/* ---- Vorteile: Punkte statt Haken, eine Spalte ---- */
+#preise .np-liste.np-zwei-sp{grid-template-columns:1fr!important;gap:10px!important;margin-top:16px!important}
+#preise .np-liste li{padding-left:18px!important;font-size:.95rem!important;line-height:1.5;
+  color:var(--pz-tinte)!important;font-weight:400}
+#preise .np-liste li::before{content:''!important;left:0;top:.58em;width:7px!important;height:7px!important;
+  border-radius:50%;background:var(--pz-tuerkis-h)!important;color:transparent!important;
+  font-size:0!important;display:block!important}
+#preise .np-card.np-feat .np-liste li::before{background:var(--pz-gelb)!important}
+
+/* ---- Knoepfe ---- */
+#preise .np-btn{border-radius:999px!important;font-size:16px!important;font-weight:700!important;
+  padding:14px 20px!important;transition:transform .12s,box-shadow .15s}
+#preise .np-btn:hover{transform:translateY(-1px)}
+#preise .np-grid>.np-card:first-child .np-btn-kauf{background:var(--pz-tuerkis)!important;color:#fff!important;
+  border:0!important;box-shadow:0 6px 16px rgba(14,124,123,.28)!important}
+#preise .np-grid>.np-card:first-child .np-btn-kauf:hover{background:#0b6a69!important;color:#fff!important;
+  transform:translateY(-1px)!important}
+#preise .np-card.np-feat .np-btn-kauf{background:var(--pz-rot)!important;color:#fff!important;
+  box-shadow:0 6px 16px rgba(232,48,42,.28)!important}
+#preise .np-fein{color:var(--pz-tinte3);font-weight:500;font-size:.83rem}
+#preise .np-tagespreis{background:#FFF3D6;border-color:#F0DFB0}
+
+/* Jede Karte nur so hoch wie ihr Inhalt — sonst klafft unter der
+   kuerzeren Karte eine leere Flaeche bis zum Knopf. */
+#preise .np-grid{align-items:start!important}
+#preise .np-kaufen{margin-top:20px!important;padding-top:0!important}
+</style>
 </body>
 </html>

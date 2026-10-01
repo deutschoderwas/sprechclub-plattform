@@ -62,7 +62,7 @@ function mailCommunity(hallo) {
       absaetze: [
         hallo,
         'du stehst seit ein paar Tagen auf der Warteliste &ndash; und jetzt kann ich dir endlich schreiben: <b>die Community ist offen.</b> Ab sofort, ohne Wartezeit.',
-        KASTEN('Die ganze Kursbibliothek <b>A1 bis C2</b><br>Vokabeltrainer, t&auml;glicher Podcast und &Uuml;bungen<br><b>Community-Chat</b> mit den anderen Lernenden<br><b>Amanda</b> beantwortet dir rund um die Uhr jede Frage'),
+        KASTEN('Die ganze Kursbibliothek <b>A1 bis C1</b><br>Vokabeltrainer, t&auml;glicher Podcast und &Uuml;bungen<br><b>Community-Chat</b> mit den anderen Lernenden<br><b>Amanda</b> beantwortet dir rund um die Uhr jede Frage'),
         '<b>12 &euro; im Monat</b> bei j&auml;hrlicher Zahlung, 16 &euro; wenn du monatlich zahlst. K&uuml;ndbar, wann du willst.',
       ],
       knopf: '&#128155; Jetzt Mitglied werden',
@@ -82,7 +82,7 @@ function mailPremium(hallo) {
         hallo,
         'kurze Nachricht zu deinem Platz auf der Warteliste: <b>Premium startet am 1. November.</b> Du stehst drauf, ich melde mich rechtzeitig bei dir &ndash; du musst nichts tun.',
         'Eins wollte ich dir aber schon jetzt sagen: alles, was in Premium drin ist &ndash; au&szlig;er dem Sprechen am Abend &ndash; gibt es <b>ab sofort</b> in der Community.',
-        KASTEN('Kursbibliothek <b>A1 bis C2</b>, Vokabeltrainer, Podcast<br>Community-Chat und <b>Amanda</b> rund um die Uhr<br><b>12 &euro; im Monat</b> &middot; jederzeit k&uuml;ndbar'),
+        KASTEN('Kursbibliothek <b>A1 bis C1</b>, Vokabeltrainer, Podcast<br>Community-Chat und <b>Amanda</b> rund um die Uhr<br><b>12 &euro; im Monat</b> &middot; jederzeit k&uuml;ndbar'),
         'Im November wechselst du mit einem Klick zu Premium &ndash; und alles, was du bis dahin gelernt hast, bleibt.',
       ],
       knopf: '&#128155; Jetzt in der Community anfangen',
