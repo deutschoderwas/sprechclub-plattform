@@ -4212,6 +4212,26 @@ body nav.cl-tabs > button.cl-mitte > .ic::after{content:"";position:absolute;ins
   body .tb-bc .t{font-size:17px}
 }
 
+/* Der Chat ist der Ort, an den die Leute zurueckkommen sollen. Er
+   bekommt deshalb einen weichen Tuerkis-Kreis hinter dem Zeichen —
+   sichtbar, aber ruhiger als der grosse Buchen-Knopf in der Mitte. */
+body nav.cl-tabs > button.cl-chat{color:#10627A !important;font-weight:700 !important}
+body nav.cl-tabs > button.cl-chat::after{content:"";position:absolute;left:50%;bottom:14px;
+  width:34px;height:34px;margin-left:-17px;border-radius:50%;background:#E6F8FC;z-index:0}
+body nav.cl-tabs > button.cl-chat.active::after{background:#10627A}
+body nav.cl-tabs > button.cl-chat.active{color:#10627A !important}
+body nav.cl-tabs > button.cl-chat.active > .ic{background-color:#fff !important}
+body nav.cl-tabs > button.cl-chat > .ic{position:relative;z-index:1}
+body nav.cl-tabs > button.cl-chat > span:not(.ic){position:relative;z-index:1}
+body nav.cl-tabs .clbdg{z-index:3}
+
+/* Eine Zeile pro Beschriftung, damit alle Zeichen auf einer Linie stehen.
+   "Mein Bereich" ist das laengste Wort und bekommt etwas kleinere Schrift,
+   statt umzubrechen oder abgeschnitten zu werden. */
+body nav.cl-tabs > button > span:not(.ic):not(.clbdg){display:block;width:100%;
+  line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body nav.cl-tabs > button[data-view="fortschritt"]{font-size:9px !important;letter-spacing:-.2px}
+
 @media(max-width:900px){
   body nav.cl-tabs{display:flex !important}
   /* Die alte Leiste .mtabs (Start/Lernen/Sprechen/Community/Medien) lag
@@ -4392,6 +4412,7 @@ window.__I18N__=Object.assign(window.__I18N__||{},{"nav_start": {"en": "Home", "
 "sf_wneub":{"en": "Ten minutes are enough to start.", "es": "Diez minutos bastan para empezar.", "ru": "Десяти минут хватит для начала.", "uk": "Десяти хвилин вистачить для початку.", "tr": "Başlamak için on dakika yeter.", "it": "Dieci minuti bastano per iniziare.", "fa": "برای شروع ده دقیقه کافی است."},
 "sf_zuletzt":{"en": "Where you left off", "es": "Donde lo dejaste", "ru": "Ты остановился здесь", "uk": "Ти зупинився тут", "tr": "Kaldığın yer", "it": "Dove eri rimasto", "fa": "جایی که ماندی"},
 "sf_zumkurs":{"en": "All lessons →", "es": "Todas las lecciones →", "ru": "Все уроки →", "uk": "Усі уроки →", "tr": "Tüm dersler →", "it": "Tutte le lezioni →", "fa": "همه درس‌ها ←"},
+"nv_tab_ueben":{"en":"Practice","es":"Practicar","ru":"Практика","uk":"Практика","tr":"Alıştırma","it":"Esercizi","fa":"تمرین"},
 "nv_tab_themen":{"en":"Topics","es":"Temas","ru":"Темы","uk":"Теми","tr":"Konular","it":"Temi","fa":"موضوع‌ها"},
 "nv_tab_buchen":{"en":"Book","es":"Reservar","ru":"Запись","uk":"Запис","tr":"Rezervasyon","it":"Prenota","fa":"رزرو"},
 "nv_am_titel":{"en":"Ask me anything","es":"Pregúntame lo que quieras","ru":"Спроси меня о чём угодно","uk":"Запитай мене про що завгодно","tr":"Bana bir şey sor","it":"Chiedimi quello che vuoi","fa":"هر چه می‌خواهی از من بپرس"},
@@ -4402,7 +4423,7 @@ window.__I18N__=Object.assign(window.__I18N__||{},{"nav_start": {"en": "Home", "
 <!-- App-Leiste: am Handy fuehlt sich der Club damit wie eine App an. -->
 <nav class="cl-tabs" id="clTabs">
   <button class="navlink" data-view="dashboard" onclick="go('dashboard')"><span class="ic">🏠</span><span data-i18n="nav_start">Start</span></button>
-  <button class="navlink" data-view="bereiche" onclick="go('bereiche')"><span class="ic">🗺️</span><span data-i18n="nv_tab_themen">Themen</span></button>
+  <button class="navlink" data-view="ueben" onclick="go('ueben')"><span class="ic">📐</span><span data-i18n="nv_tab_ueben">Üben</span></button>
   <button class="navlink cl-chat" data-view="community" onclick="go('community')"><span class="ic">💬</span><span data-i18n="nv_tab_chat">Chat</span><span class="clbdg" id="clTabBdg" style="display:none">0</span></button>
   <button class="cl-mitte" onclick="return bucheStunde(event)"><span class="ic">🗓️</span><span data-i18n="nv_tab_buchen">Buchen</span></button>
   <button class="navlink" data-view="amanda" onclick="go('amanda')"><span class="ic">🤖</span>Amanda</button>
