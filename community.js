@@ -652,6 +652,22 @@
 /* Angepinntes oben: ein ruhiger Streifen, keine zweite Karte. */
 #v-community .pinbar{background:#FFFCF2 !important;border-bottom:1px solid #F0E6CE !important}
 
+/* Der Mail-Haken fuer Julia. Er sitzt unter dem Schreibfeld, ist aber
+   nur fuer Team sichtbar und faellt nach jedem Senden von selbst
+   wieder zurueck. */
+#v-community .mailhaken{display:flex;align-items:center;gap:8px;margin:7px 2px 0;padding:7px 11px;
+  border:1px solid #F0E6CE;background:#FFFCF2;border-radius:11px;cursor:pointer;
+  font-size:12.5px;color:#6B6154;line-height:1.35}
+#v-community .mailhaken input{width:16px;height:16px;flex:none;accent-color:#10627A;cursor:pointer}
+#v-community .mailhaken b{color:#1A1A1A}
+#v-community .mailhaken[data-stand]{border-color:#C7E9F1;background:#F2FBFD}
+#v-community .mailhaken[data-stand] span{visibility:hidden}
+#v-community .mailhaken[data-stand]::after{position:absolute;margin-left:26px;font-weight:600;color:#10627A}
+#v-community .mailhaken{position:relative}
+#v-community .mailhaken[data-stand="sendet"]::after{content:"Mail geht raus …"}
+#v-community .mailhaken[data-stand="fertig"]::after{content:"Verschickt an " attr(data-zahl)}
+#v-community .mailhaken[data-stand="fehler"]::after{content:"Mail konnte nicht verschickt werden";color:#D42A21}
+
 /* Reaktionsleiste und "Antworten" standen unter JEDER Nachricht fest
    eingeblendet. Das ist der zweite Grund, warum der Verlauf nicht nach
    Messenger aussieht: ein Drittel der Flaeche sind Knoepfe. Am grossen
@@ -1404,7 +1420,9 @@
       '<button class="ct" id="cMic" title="Sprachnachricht">'+svg(IC.mic)+'</button>'+
       '<input type="file" id="cFile" accept="image/*" style="display:none">'+
       '<button class="cse" id="cSend" title="Senden">'+svg(IC.send,'ico-sm')+'</button>'+
-      '</div></div><div class="chint">'+svg(IC.mic,'ico-sm')+'Sprachnachricht aufnehmen · <b style="color:var(--t2)">Enter</b> senden · <b style="color:var(--t2)">Shift+Enter</b> neue Zeile</div>';
+      '</div></div>'+
+      (isTeam ? '<label class="mailhaken"><input type="checkbox" id="cMail"><span>Wichtig: auch per <b>E-Mail</b> an alle Mitglieder schicken</span></label>' : '')+
+      '<div class="chint">'+svg(IC.mic,'ico-sm')+'Sprachnachricht aufnehmen · <b style="color:var(--t2)">Enter</b> senden · <b style="color:var(--t2)">Shift+Enter</b> neue Zeile</div>';
     var inp=q('#cInp'),send=q('#cSend'),mic=q('#cMic'),img=q('#cImg'),file=q('#cFile'),emo=q('#cEmo'),pick=q('#cmEmo2');
     if(inp){
       inp.addEventListener('keydown',function(e){ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); doSend(); } });
@@ -1485,6 +1503,13 @@
         for(var i=0;i<curMsgs.length;i++){ if(curMsgs[i].id===tmp){ curMsgs[i].id=res.data.id; break; } }
       }
       notifyAdmin(cur, row && row.body);
+      /* Der Haken "auch per Mail" gilt immer nur fuer diese eine
+         Nachricht - danach ist er wieder aus, damit nicht versehentlich
+         jeder Halbsatz im Postfach aller Mitglieder landet. */
+      try{
+        var hk=q('#cMail');
+        if(hk && hk.checked && isTeam && res.data && res.data.id){ hk.checked=false; perMailSchicken(res.data.id); }
+      }catch(e){}
       return true;
     }catch(e){
       node=q('[data-id="'+tmp+'"]');
@@ -1554,6 +1579,31 @@
      und die Glocke bei allen aktiven Mitgliedern. Die Glocke braucht
      keinen Versanddienst; sie schreibt nur eine Zeile in die Tabelle
      `benachrichtigungen`, auf die benachrichtigungen.js live hört. */
+  /* Schickt eine bereits gespeicherte Nachricht zusaetzlich als E-Mail
+     an alle aktiven Mitglieder. Der Server prueft Rechte und verhindert
+     ueber email_log, dass dieselbe Nachricht zweimal rausgeht. */
+  async function perMailSchicken(messageId){
+    var hinweis=q('.mailhaken');
+    if(hinweis) hinweis.setAttribute('data-stand','sendet');
+    try{
+      var sess=await sbc.auth.getSession();
+      var tok=sess&&sess.data&&sess.data.session&&sess.data.session.access_token;
+      if(!tok) throw new Error('kein Token');
+      var r=await fetch('/api/chat-broadcast',{method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok},
+        body:JSON.stringify({message_id:messageId})});
+      var d=await r.json().catch(function(){ return {}; });
+      if(!r.ok||!d.ok) throw new Error(d.error||'Fehler');
+      if(hinweis){
+        hinweis.setAttribute('data-stand','fertig');
+        hinweis.setAttribute('data-zahl', d.already_sent ? 'schon verschickt' : ((d.verschickt||0)+' Mitglieder'));
+      }
+    }catch(e){
+      if(hinweis) hinweis.setAttribute('data-stand','fehler');
+    }
+    setTimeout(function(){ var h=q('.mailhaken'); if(h){ h.removeAttribute('data-stand'); h.removeAttribute('data-zahl'); } },6000);
+  }
+
   async function notifyAdmin(channel, text){
     try{ var s=await sbc.auth.getSession(); var tok=s&&s.data&&s.data.session&&s.data.session.access_token; if(!tok) return;
       var kopf={'Content-Type':'application/json','Authorization':'Bearer '+tok};
