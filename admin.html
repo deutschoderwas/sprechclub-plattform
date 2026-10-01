@@ -373,9 +373,105 @@ async function ladeStart(){
       + (ohneNachb.length > 12 ? '<div class="muted" style="font-size:12px;padding-top:6px">… und ' + (ohneNachb.length-12) + ' weitere</div>' : '')
       + '</div>';
   }
-  host.innerHTML = html;
+  host.innerHTML = '<div id="commKarte"></div>' + html;
   setzeAbzeichen('leadsBdg', leadsNeu.length);
   setzeAbzeichen('korrBdg', korrekturen.length);
+  ladeCommunityKarte();
+}
+
+/* ---------- Der Schubs in den Community-Chat ----------
+   Der Chat lebt nur, wenn auch jemand vom Team etwas schreibt. Nur:
+   im Lehrerbereich sieht man ihn nicht, solange man nicht zweimal
+   klickt — und dann vergisst man ihn. Diese Karte steht deshalb ganz
+   oben auf der Startseite und sagt zwei Dinge klar: wie lange der
+   eigene letzte Satz her ist, und was seitdem passiert ist. */
+function commZeit(iso){
+  if(!iso) return '';
+  const d = new Date(iso), n = new Date();
+  if (d.toDateString() === n.toDateString()) return 'heute ' + ('0'+d.getHours()).slice(-2) + ':' + ('0'+d.getMinutes()).slice(-2);
+  const g = new Date(n.getTime() - 86400000);
+  if (d.toDateString() === g.toDateString()) return 'gestern';
+  return d.toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit' });
+}
+function commOeffnen(slug){
+  try{ if (slug && window.communityOeffne) window.communityOeffne(slug); }catch(e){}
+  show('community');
+}
+async function ladeCommunityKarte(){
+  const box = document.getElementById('commKarte'); if(!box) return;
+  const meId = (window.user && window.user.id) || null;
+  const vor30 = new Date(Date.now() - 30*86400000).toISOString();
+  let msgs = [], kan = [];
+  try{
+    const antw = await Promise.all([
+      sb.from('community_messages').select('id,channel,user_id,author_name,body,kind,created_at')
+        .is('deleted_at', null).gte('created_at', vor30).order('created_at', { ascending:false }).limit(400),
+      sb.from('community_channels').select('slug,name,emoji').eq('is_active', true)
+    ]);
+    msgs = (antw[0] && antw[0].data) || [];
+    kan  = (antw[1] && antw[1].data) || [];
+  }catch(e){ return; }
+  if (!kan.length) return;
+
+  const nameVon = {}; kan.forEach(function(c){ nameVon[c.slug] = (c.emoji ? c.emoji + ' ' : '') + c.name; });
+  const mein = msgs.filter(function(m){ return m.user_id === meId; })[0] || null;
+  const grenze = mein ? Date.parse(mein.created_at) : 0;
+  const seit = msgs.filter(function(m){ return m.user_id !== meId && Date.parse(m.created_at) > grenze; });
+  const tage = mein ? Math.floor((Date.now() - grenze) / 86400000) : null;
+  setzeAbzeichen('commBdg', seit.length);
+  if (AKT_BEREICH) zeichneBereiche(AKT_BEREICH);
+
+  /* Die drei Themen, in denen zuletzt etwas passiert ist — mit einem
+     Klick landet man direkt darin, nicht erst in der Liste. */
+  const gesehen = {}, themen = [];
+  msgs.forEach(function(m){
+    if (gesehen[m.channel] || !nameVon[m.channel]) return;
+    gesehen[m.channel] = 1;
+    themen.push({ slug:m.channel, name:nameVon[m.channel], wer:(m.author_name||'Jemand').split(' ')[0],
+                  text:(m.kind === 'text' ? String(m.body||'') : 'Sprachnachricht oder Bild').replace(/\s+/g,' ').slice(0,70),
+                  zeit:commZeit(m.created_at), eigen:(m.user_id === meId) });
+  });
+
+  let ton, kopf, unten;
+  if (!mein){
+    ton = { rand:'#D42A21', flaeche:'#FFF6F5', label:'#B3241C' };
+    kopf = 'Du hast im Community-Chat noch nichts geschrieben.';
+    unten = 'Der erste Satz vom Team ist der wichtigste — danach trauen sich die anderen.';
+  } else if (tage >= 3){
+    ton = { rand:'#E0A800', flaeche:'#FFFCF2', label:'#9A6B00' };
+    kopf = 'Dein letzter Satz ist ' + tage + ' Tage her.';
+    unten = 'Eine Frage, ein Tipp, ein Satz über deinen Tag — mehr braucht es nicht.';
+  } else {
+    ton = { rand:'#1B9BC0', flaeche:'#F2FBFD', label:'#10627A' };
+    kopf = (tage === 0) ? 'Du warst heute schon im Chat.' : 'Du hast ' + (tage === 1 ? 'gestern' : 'vor ' + tage + ' Tagen') + ' geschrieben.';
+    unten = 'Schau trotzdem kurz rein — eine Antwort vom Team hält ein Gespräch am Laufen.';
+  }
+
+  box.innerHTML =
+    '<div style="border:2px solid ' + ton.rand + ';background:' + ton.flaeche + ';border-radius:16px;padding:16px 18px;margin-bottom:16px">'
+    + '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px">'
+    +   '<span style="font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:' + ton.label + '">\u{1F4AC} Community-Chat</span>'
+    +   (seit.length ? '<span style="background:#D42A21;color:#fff;border-radius:20px;padding:1px 9px;font-size:11px;font-weight:800">'
+          + seit.length + ' neu' + (mein ? ' seit deinem letzten Satz' : '') + '</span>' : '')
+    + '</div>'
+    + '<div style="font-size:17px;font-weight:700;color:#14181B;margin-bottom:4px">' + esc(kopf) + '</div>'
+    + '<p style="margin:0 0 12px;font-size:14px;color:#5A6B72;line-height:1.5">' + esc(unten) + '</p>'
+    + (themen.length
+        ? '<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px">'
+          + themen.slice(0,3).map(function(t){
+              return '<button onclick="commOeffnen(\'' + t.slug + '\')" style="display:flex;align-items:center;gap:10px;width:100%;text-align:left;'
+                + 'border:1px solid #E7E3DA;background:#fff;border-radius:11px;padding:9px 12px;cursor:pointer;font-family:inherit">'
+                + '<span style="font-weight:700;font-size:13.5px;color:#14181B;white-space:nowrap">' + esc(t.name) + '</span>'
+                + '<span style="flex:1;min-width:0;font-size:13px;color:#6B7C84;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'
+                +   esc(t.wer) + ': ' + esc(t.text) + '</span>'
+                + '<span style="font-size:11.5px;color:#9AA7AC;white-space:nowrap">' + esc(t.zeit) + '</span>'
+                + '</button>';
+            }).join('')
+          + '</div>'
+        : '')
+    + '<button onclick="commOeffnen()" style="background:#10627A;color:#fff;border:none;border-radius:999px;'
+    +   'padding:11px 22px;font-family:inherit;font-size:14.5px;font-weight:700;cursor:pointer">Jetzt etwas schreiben \u2192</button>'
+    + '</div>';
 }
 
 /* ---------- Navigation in zwei Ebenen ----------
@@ -400,7 +496,7 @@ const BEREICHE = [
       { id:'kurse',     name:'🎓 Kurse',        href:'admin-kurse.html', nurAdmin:true } ] },
   { id:'austausch', name:'💬 Austausch', reiter:[
       { id:'nachrichten', name:'Nachrichten', laden:function(){ loadNachrichten(); } },
-      { id:'community',   name:'Community',   laden:function(){ if(window.renderCommunity) window.renderCommunity(); } },
+      { id:'community',   name:'Community',   abzeichen:'commBdg', laden:function(){ if(window.renderCommunity) window.renderCommunity(); } },
       { id:'bewertungen', name:'Bewertungen', nurAdmin:true, laden:function(){ loadBewertungen(); } },
       { id:'kiteam',      name:'🤖 KI-Team',  nurAdmin:true, laden:function(){ ladeKiTeam(); } } ] }
 ];
@@ -423,7 +519,11 @@ function zeichneBereiche(aktiv){
          sagt der Pfeil das vorher — sonst wirkt der Sprung wie ein
          Fehlklick. */
       const nurLink = b.reiter.filter(darfSehen).every(function(r){ return !!r.href; });
-      return '<button class="' + (b.id===aktiv.id?'active':'') + '" onclick="oeffneBereich(\'' + b.id + '\')">' + b.name + (nurLink ? ' \u2197' : '') + '</button>';
+      /* Ein roter Punkt am Bereich, solange im Chat etwas auf das Team
+         wartet — sonst klickt dort niemand hinein. */
+      const punkt = (b.id==='austausch' && (ABZEICHEN.commBdg||0) > 0)
+        ? '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#D42A21;margin-left:6px;vertical-align:middle"></span>' : '';
+      return '<button class="' + (b.id===aktiv.id?'active':'') + '" onclick="oeffneBereich(\'' + b.id + '\')">' + b.name + (nurLink ? ' \u2197' : '') + punkt + '</button>';
     }).join('');
 }
 function zeichneReiter(bereich, aktivId){
@@ -458,10 +558,12 @@ function show(id){
     const el = document.getElementById(x.id);
     if (el) el.style.display = (x.id===id) ? 'block' : 'none';
   });
+  AKT_BEREICH = b;
   zeichneBereiche(b);
   zeichneReiter(b, id);
   if (r.laden) r.laden();
 }
+let AKT_BEREICH = null;
 /* Die Zahlen an den Reitern (offene Leads, offene Korrekturen) werden beim
    Neuzeichnen der Leiste jedes Mal neu gesetzt - sonst waeren sie nach dem
    ersten Bereichswechsel weg. */
