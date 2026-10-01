@@ -2263,7 +2263,11 @@ function kalEv(c){
   const noPrep = (c.club==='sprachspielclub') ? `<div class="ev-note">✨ Keine Vorbereitung nötig</div>` : '';
   const _cap=Number(c.capacity)||0, _free=Math.max(0,_cap-(Number(c.booked)||0));
   let seats='';
-  if(_cap>0 && !past){ const _cls=_free<=0?'full':(_free<=2?'low':'ok'); const _lbl=_free<=0?'ausgebucht':(_free===1?'1 Platz frei':(_free+' frei')); seats=`<div class="ev-seats ${_cls}">${_lbl}</div>`; }
+  /* Die Platzzahl ist eine interne Grenze (20), keine Information fuer
+     Lernende: "6 Plaetze frei" macht Druck und sieht nach Mangel aus,
+     obwohl man so viele Stunden buchen darf, wie man moechte. Sichtbar
+     wird sie nur, wenn eine Stunde wirklich voll ist. */
+  if(_cap>0 && !past && _free<=0){ seats=`<div class="ev-seats full">ausgebucht</div>`; }
   const kicker = f.art ? `<span class="ev-art">${esc(f.art)}</span>` : '';
   const teil = f.teil ? `<span class="ev-teil">Teil ${esc(f.teil)}</span>` : '';
   return `<div class="ev ${past?'vorbei':''}" data-zeit="${zeit}">`
