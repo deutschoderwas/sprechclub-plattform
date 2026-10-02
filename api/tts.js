@@ -192,7 +192,7 @@ export default async function handler(req, res) {
   // Bewusst abgeschaltet -> die Seite nimmt die Gerätestimme.
   if (ANBIETER === 'aus') return res.status(503).json({ error: 'tts_aus' });
 
-  const anb = ANBIETERLISTE[ANBIETER];
+  let anb = ANBIETERLISTE[ANBIETER];
   if (!anb) {
     return res.status(500).json({
       error: 'tts_anbieter_unbekannt',
@@ -200,7 +200,16 @@ export default async function handler(req, res) {
     });
   }
 
-  const key = anb.schluessel();
+  let key = anb.schluessel();
+  /* Fehlt der Schluessel des eingestellten Anbieters, nehmen wir den
+     naechsten, fuer den einer da ist. Vorher gab der Dienst hier auf,
+     die Seite fiel auf die Sprachausgabe des Handys zurueck — und
+     Amanda klang wie ein Navigationsgeraet, obwohl ein anderer
+     Anbieter einsatzbereit war. */
+  if (!key) {
+    const ersatz = Object.values(ANBIETERLISTE).find(a => a.schluessel());
+    if (ersatz) { anb = ersatz; key = anb.schluessel(); }
+  }
   if (!key) return res.status(503).json({ error: 'tts_key_missing', anbieter: anb.name });
   if (!SUPA || !SERVICE) return res.status(500).json({ error: 'supabase_env_missing' });
 
