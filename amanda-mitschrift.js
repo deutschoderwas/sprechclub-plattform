@@ -185,6 +185,7 @@
   var ART = {
     sprechen:   { name: 'Gesprochen',    kurz: 'gesprochen',    klasse: 'sp' },
     unterricht: { name: 'Im Unterricht', kurz: 'im Unterricht', klasse: 'un' },
+    tafel:      { name: 'Von der Tafel', kurz: 'von der Tafel', klasse: 'tf' },
     chat:       { name: 'Geschrieben',   kurz: 'geschrieben',   klasse: 'ch' }
   };
   function art(a) { return ART[a] || ART.chat; }
@@ -311,6 +312,7 @@
       '.amm-pille.sp{background:var(--amm-teal-soft,#DCEFEC);color:var(--amm-teal-d,#0E7C7B)}',
       '.amm-pille.ch{background:#F2F4F5;color:#5C574C}',
       '.amm-pille.un{background:#FFF1D6;color:#B4690E}',
+      '.amm-pille.tf{background:#EAF3FF;color:#1D4ED8}',
       '.amm-zeit{font-size:12px;color:#8A9AA1;font-variant-numeric:tabular-nums}',
       '.amm-z{display:flex;flex-direction:column;gap:2px;border-radius:12px;',
       '  padding:9px 12px;margin-bottom:7px;background:var(--amm-creme,#F6F9FA)}',

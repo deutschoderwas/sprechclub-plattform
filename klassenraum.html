@@ -289,6 +289,16 @@
   body.sharing .video-card{ width:100%; align-self:stretch; flex:1 1 auto; display:flex; flex-direction:column; }
   body.sharing .video-buehne{ height:auto !important; flex:1 1 auto; min-height:40vh; }
 
+  /* Die Mitschrift mitnehmen: eine Zeile unter jeder Tafel, fuer
+     ALLE sichtbar — auch fuer Schueler, die oben nur mitlesen. */
+  .tf-save{display:flex; align-items:center; gap:8px; flex-wrap:wrap; padding:9px 14px 11px; border-top:1px solid var(--rahmen);}
+  .tf-s-b{flex:1 1 auto; min-width:150px; font-family:'Inter'; font-size:.82rem; font-weight:700; cursor:pointer; background:#fff; color:var(--anthrazit); border:1px solid var(--rahmen); border-radius:999px; padding:8px 15px; min-height:40px;}
+  .tf-s-b:hover{border-color:var(--tuerkis); background:#F7FCFB;}
+  .tf-s-b:disabled{opacity:.5; cursor:default;}
+  .tf-s-b.fass{background:var(--tuerkis); border-color:var(--tuerkis); color:var(--auf-tuerkis);}
+  .tf-s-b.fass:hover{filter:brightness(.97); background:var(--tuerkis);}
+  .tf-s-info{font-size:.76rem; color:var(--weich); line-height:1.4; flex:1 1 100%;}
+  .tf-s-info.gut{color:#0F766E; font-weight:600;}
   /* Live-Tafel – jetzt groß */
   .tafel{background:var(--creme-hell); border:1px solid var(--rahmen); border-radius:18px; box-shadow:0 4px 18px rgba(0,0,0,.05); display:flex; flex-direction:column; overflow:hidden; flex:1; min-height:0;}
   .tafel-kopf{padding:11px 16px 9px; border-bottom:1px solid var(--rahmen); display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
@@ -475,6 +485,11 @@
           <div id="notiz" class="rich" contenteditable="true" spellcheck="true" lang="de" autocapitalize="sentences" autocorrect="on" data-ph="Hier mitschreiben – wichtige Wörter gelb markieren (🖊️), Fehler rot korrigieren (🔴), Pfeil für falsch → richtig …"></div>
         </div>
       </div>
+      <div class="tf-save">
+        <button type="button" class="tf-s-b" onclick="tafelSpeichern('notiz')">&#128190; Für mich speichern</button>
+        <button type="button" class="tf-s-b fass" onclick="tafelFassen('notiz')">&#10024; Zusammenfassen</button>
+        <span class="tf-s-info" id="tf-info-notiz">Die Mitschrift kommt in deinen Bereich — nur du siehst sie.</span>
+      </div>
       <div class="status" id="status">Live · gespeichert ✓</div>
     </div>
     <!-- Gruppen-Notiz: erscheint nur in Breakout-Gruppen; ALLE dürfen schreiben -->
@@ -498,6 +513,11 @@
           <div class="block-titel">✍️ Alle in der Gruppe dürfen hier schreiben</div>
           <div id="gnotes" class="rich" contenteditable="true" spellcheck="true" lang="de" data-ph="Hier gemeinsam schreiben – jede/r in der Gruppe kann tippen …"></div>
         </div>
+      </div>
+      <div class="tf-save">
+        <button type="button" class="tf-s-b" onclick="tafelSpeichern('gnotes')">&#128190; Für mich speichern</button>
+        <button type="button" class="tf-s-b fass" onclick="tafelFassen('gnotes')">&#10024; Zusammenfassen</button>
+        <span class="tf-s-info" id="tf-info-gnotes">Was ihr hier schreibt, ist nach der Stunde weg — außer du speicherst es.</span>
       </div>
     </div>
   </aside>
@@ -1615,6 +1635,74 @@
     }catch(e){ warte.remove(); amandaMsg('bot','Die Verbindung hat nicht geklappt. Frag mich bitte gleich noch einmal.'); }
     window._amLaeuft=false; if(btn) btn.disabled=false;
   }
+  /* ---- Die Mitschrift fuer sich behalten ----
+     Was an der Tafel steht — und erst recht, was eine Gruppe
+     gemeinsam schreibt — ist nach der Stunde weg. Die Klassen-Tafel
+     gehoert der Lehrkraft, die Gruppen-Notiz der Gruppe; keine von
+     beiden gehoert dem einzelnen Schueler. Mit diesen zwei Knoepfen
+     nimmt er sie mit: einmal wortwoertlich in seine Mitschrift,
+     einmal von Amanda zusammengefasst. Beides landet in
+     amanda_mitschrift und ist nur fuer ihn sichtbar (RLS). */
+  function tafelFeld(welche){ return document.getElementById(welche==='gnotes' ? 'gnotes' : 'notiz'); }
+  function tafelText(welche){
+    const el=tafelFeld(welche); if(!el) return '';
+    return (el.innerText||'').replace(/\n{3,}/g,'\n\n').trim();
+  }
+  function tafelInfo(welche, text, gut){
+    const s=document.getElementById('tf-info-'+welche); if(!s) return;
+    s.textContent=text; s.classList.toggle('gut', !!gut);
+  }
+  async function tafelAngemeldet(){
+    try{ const { data:{ session } }=await sb.auth.getSession(); return !!session; }catch(e){ return false; }
+  }
+
+  async function tafelSpeichern(welche){
+    const text=tafelText(welche);
+    if(!text){ tafelInfo(welche,'Da steht noch nichts, was ich speichern könnte.'); return; }
+    if(!window.AmandaMitschrift || !(await tafelAngemeldet())){
+      tafelInfo(welche,'Dafür musst du angemeldet sein — dann gehört die Mitschrift zu deinem Konto.'); return;
+    }
+    /* Lange Tafeln in Stuecke teilen, damit nichts stillschweigend
+       abgeschnitten wird. Geschnitten wird an einem Zeilenende. */
+    const stuecke=[]; let rest=text;
+    while(rest.length>3500){
+      let schnitt=rest.lastIndexOf('\n',3500);
+      if(schnitt<1200) schnitt=3500;
+      stuecke.push(rest.slice(0,schnitt).trim()); rest=rest.slice(schnitt);
+    }
+    stuecke.push(rest.trim());
+    stuecke.filter(Boolean).forEach(t=>{
+      try{ window.AmandaMitschrift.notiz('du', t, { art:'tafel' }); }catch(e){}
+    });
+    try{ window.AmandaMitschrift.spuelen(); }catch(e){}
+    tafelInfo(welche,'Gespeichert ✓ — du findest es in deinem Bereich unter „Deine Mitschrift".', true);
+  }
+
+  async function tafelFassen(welche){
+    const text=tafelText(welche);
+    if(!text){ tafelInfo(welche,'Da steht noch nichts, was ich zusammenfassen könnte.'); return; }
+    const p=document.getElementById('sh-panel');
+    if(p && !p.classList.contains('open')) toggleSprechhilfen();
+    amandaMsg('du','Fass mir bitte meine Mitschrift aus dieser Stunde zusammen.');
+    const log=document.getElementById('am-log');
+    const warte=document.createElement('div');
+    warte.className='am-m warte'; warte.textContent='Amanda liest deine Mitschrift …';
+    if(log){ log.appendChild(warte); log.scrollTop=log.scrollHeight; }
+    try{
+      const kopf=await amandaKopf();
+      const r=await fetch('/api/support-chat',{ method:'POST', headers:kopf, body: JSON.stringify({
+        seite:'zusammenfassung',
+        verlauf:[{ wer:'du', text:'Das ist meine Mitschrift aus der Stunde. Fass sie für mich zusammen:\n\n'+text.slice(0,6000) }]
+      })});
+      const j=await r.json(); warte.remove();
+      amandaMsg('bot',(j && j.text) || 'Das hat gerade nicht geklappt. Versuch es bitte gleich noch einmal.');
+      tafelInfo(welche,'Die Zusammenfassung steht bei Amanda — und bleibt in deiner Mitschrift.', true);
+    }catch(e){
+      warte.remove();
+      amandaMsg('bot','Die Verbindung hat nicht geklappt. Versuch es bitte gleich noch einmal.');
+    }
+  }
+
   /* ---- Reinsprechen statt tippen ----
      Mitten im Unterricht ist Tippen der langsamste Weg. Der Knopf
      nimmt auf, api/hoeren macht Text daraus, und die Frage geht

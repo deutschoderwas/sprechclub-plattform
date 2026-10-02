@@ -14,7 +14,7 @@ import { createClient } from '@supabase/supabase-js';
 
 const MODELL = process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-6';
 
-function system(kontext, imUnterricht) {
+function system(kontext, imUnterricht, zusammenfassen) {
   return `Du bist Amanda — die Lehrerin im „deutschoderwas club", einer Lernplattform fuer Deutsch als Fremdsprache von Julia Karackov. Du bist rund um die Uhr da und beantwortest ALLES.
 
 WAS DU BEANTWORTEST — ohne Ausnahme:
@@ -94,7 +94,7 @@ WAS DU SICHER WEISST:
 WANN JULIA ETWAS SEHEN MUSS:
 Nur bei Dingen, die nur sie entscheiden oder nachsehen kann: Geld zurueck, Rechnungen, Sonderfaelle, Beschwerden, technische Fehler, Absprachen zu Terminen. Dann sagst du, dass du es an Julia weitergegeben hast — und setzt in deine Antwort ganz am Ende die Zeile [FUER_JULIA]. Diese Zeile sieht die Person nie, sie wird entfernt. Bei allen anderen Fragen setzt du sie NICHT — Julia bekommt sonst hundert E-Mails am Tag.
 
-${kontext}${imUnterricht ? UNTERRICHT : ''}`;
+${kontext}${imUnterricht ? UNTERRICHT : ''}${zusammenfassen ? ZUSAMMENFASSUNG : ''}`;
 }
 
 // Mitten in der laufenden Stunde gelten andere Regeln als im Chat
@@ -111,6 +111,23 @@ Diese Frage kommt aus einer laufenden Stunde. Jemand spricht gerade, und der Sch
 - Keine Begruessung, keine Rueckfrage, kein "Gerne". Der erste Satz ist schon die Antwort.
 - Keine Aufzaehlung, keine zweite Erklaerung, keine Nebenbemerkung, kein Emoji.
 Wer mehr wissen will, fragt nach. Deine Aufgabe hier ist: in fuenf Sekunden verstanden.`;
+
+// Am Ende der Stunde will jemand seine eigene Mitschrift mitnehmen.
+// Was er bekommt, muss aus SEINER Stunde stammen — nicht aus deinem
+// Allgemeinwissen. Eine erfundene Regel in einer Zusammenfassung
+// merkt niemand, und genau deshalb ist sie gefaehrlich.
+const ZUSAMMENFASSUNG = `
+
+EINE MITSCHRIFT ZUSAMMENFASSEN — und jetzt gilt das hier vor allem anderen:
+Du bekommst die Tafel-Mitschrift aus einer Unterrichtsstunde. Du fasst sie fuer den Schueler zusammen, so wie eine Lehrerin am Ende der Stunde das Wichtigste an die Tafel schreibt.
+- Erste Zeile: worum es in der Stunde ging. Ein Satz.
+- Dann hoechstens sechs Punkte mit "· ". Jeder Punkt eine Sache: ein Wort, eine Wendung, eine Regel. Das Wort selbst in *Sternchen*.
+- Stand ein Beispielsatz an der Tafel, nimm ihn mit — als Zeile mit "> ".
+- Wurden Fehler korrigiert, dann EINE Zeile mit "! ": was man sich davon merken soll.
+- Du erfindest NICHTS dazu. Was nicht in der Mitschrift steht, kommt nicht vor. Lieber drei Punkte als sechs mit erfundenen zweien.
+- Ist die Mitschrift zu kurz oder unverstaendlich, sag genau das in einem Satz, statt etwas zu bauen.
+- Keine Begruessung, keine Rueckfrage, keine Schlussformel.
+Der Schueler liest das spaeter wieder, vielleicht in einer Woche. Es muss dann noch stimmen.`;
 
 async function mailAnJulia({ frage, antwort, name, email, seite, angemeldet }) {
   if (!process.env.BREVO_API_KEY) return false;
@@ -174,7 +191,8 @@ export default async function handler(req, res) {
     } catch { /* ohne Anmeldung weiter */ }
   }
 
-  const imUnterricht = String(seite || '') === 'unterricht';
+  const imUnterricht   = String(seite || '') === 'unterricht';
+  const zusammenfassen = String(seite || '') === 'zusammenfassung';
   const kontext = angemeldet
     ? `Die Person ist angemeldet. Sie heisst ${name || 'unbekannt'} und hat aktuell ${guthaben ?? '?'} Stunden Guthaben. Diese Zahl darfst du nennen.`
     : 'Die Person ist NICHT angemeldet — vermutlich jemand, der die Plattform noch nicht kennt. Sprich sie mit "Sie" an und erklaere gern, wie der Club funktioniert.';
@@ -190,8 +208,8 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: MODELL,
-        max_tokens: imUnterricht ? 320 : 900,
-        system: system(kontext, imUnterricht),
+        max_tokens: imUnterricht ? 320 : (zusammenfassen ? 700 : 900),
+        system: system(kontext, imUnterricht, zusammenfassen),
         messages: verlauf
           .map(z => ({ role: z.wer === 'bot' ? 'assistant' : 'user', content: String(z.text || '').slice(0, 900) }))
           .filter(m => m.content),
