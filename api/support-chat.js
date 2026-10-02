@@ -14,7 +14,7 @@ import { createClient } from '@supabase/supabase-js';
 
 const MODELL = process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-6';
 
-function system(kontext) {
+function system(kontext, imUnterricht) {
   return `Du bist Amanda — die Lehrerin im „deutschoderwas club", einer Lernplattform fuer Deutsch als Fremdsprache von Julia Karackov. Du bist rund um die Uhr da und beantwortest ALLES.
 
 WAS DU BEANTWORTEST — ohne Ausnahme:
@@ -93,8 +93,23 @@ WAS DU SICHER WEISST:
 WANN JULIA ETWAS SEHEN MUSS:
 Nur bei Dingen, die nur sie entscheiden oder nachsehen kann: Geld zurueck, Rechnungen, Sonderfaelle, Beschwerden, technische Fehler, Absprachen zu Terminen. Dann sagst du, dass du es an Julia weitergegeben hast — und setzt in deine Antwort ganz am Ende die Zeile [FUER_JULIA]. Diese Zeile sieht die Person nie, sie wird entfernt. Bei allen anderen Fragen setzt du sie NICHT — Julia bekommt sonst hundert E-Mails am Tag.
 
-${kontext}`;
+${kontext}${imUnterricht ? UNTERRICHT : ''}`;
 }
+
+// Mitten in der laufenden Stunde gelten andere Regeln als im Chat
+// am Abend: der Schueler hoert der Lehrerin zu und liest nebenbei
+// mit. Eine Antwort, die er lesen muss, kostet ihn den Anschluss.
+const UNTERRICHT = `
+
+IM UNTERRICHT — und jetzt gilt das hier vor allem anderen:
+Diese Frage kommt aus einer laufenden Stunde. Jemand spricht gerade, und der Schueler schaut nur kurz auf dein Fenster. Also:
+- HOECHSTENS drei Zeilen. Zwei sind besser.
+- Zeile 1: die Antwort in EINEM kurzen Satz. Das Wort, um das es geht, in *Sternchen*.
+- Zeile 2: EIN Beispielsatz mit "> ". Kurz, aus dem Alltag.
+- Zeile 3 nur, wenn sie wirklich traegt: der Merksatz mit "! ". Sonst weglassen.
+- Keine Begruessung, keine Rueckfrage, kein "Gerne". Der erste Satz ist schon die Antwort.
+- Keine Aufzaehlung, keine zweite Erklaerung, keine Nebenbemerkung, kein Emoji.
+Wer mehr wissen will, fragt nach. Deine Aufgabe hier ist: in fuenf Sekunden verstanden.`;
 
 async function mailAnJulia({ frage, antwort, name, email, seite, angemeldet }) {
   if (!process.env.BREVO_API_KEY) return false;
@@ -158,6 +173,7 @@ export default async function handler(req, res) {
     } catch { /* ohne Anmeldung weiter */ }
   }
 
+  const imUnterricht = String(seite || '') === 'unterricht';
   const kontext = angemeldet
     ? `Die Person ist angemeldet. Sie heisst ${name || 'unbekannt'} und hat aktuell ${guthaben ?? '?'} Stunden Guthaben. Diese Zahl darfst du nennen.`
     : 'Die Person ist NICHT angemeldet — vermutlich jemand, der die Plattform noch nicht kennt. Sprich sie mit "Sie" an und erklaere gern, wie der Club funktioniert.';
@@ -173,8 +189,8 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: MODELL,
-        max_tokens: 900,
-        system: system(kontext),
+        max_tokens: imUnterricht ? 320 : 900,
+        system: system(kontext, imUnterricht),
         messages: verlauf
           .map(z => ({ role: z.wer === 'bot' ? 'assistant' : 'user', content: String(z.text || '').slice(0, 900) }))
           .filter(m => m.content),
