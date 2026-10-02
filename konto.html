@@ -1317,7 +1317,7 @@ async function maybeStartNow(session){
 
 async function load(){
   const [{ data:prof }, { data:bk }, { data:cl }, { data:msg }, { data:rt }, { data:prog }, { data:chs }] = await Promise.all([
-    sb.from('profiles').select('credits,name,goal,target_level,native_language,pass_until,birthday,status,tier,tier_ab,is_admin,is_teacher').eq('id',user.id).single(),
+    sb.from('profiles').select('credits,name,goal,target_level,level,stufe,native_language,pass_until,birthday,status,tier,tier_ab,is_admin,is_teacher').eq('id',user.id).single(),
     sb.rpc('my_bookings'),
     sb.from('credit_log').select('*').order('created_at',{ascending:false}),
     sb.from('messages').select('*').order('created_at'),
@@ -3588,6 +3588,8 @@ function renderProfil(){
     <div class="card">
       <div class="field"><label>Name</label><input id="pName" value="${esc(profile.name||'')}" placeholder="Wie heißt du?"></div>
       <div class="field"><label>Mein Lernziel</label><textarea id="pGoal" placeholder="z.B. Ich will fließend im Job sprechen / die B2-Prüfung schaffen">${esc(profile.goal||'')}</textarea></div>
+      <div class="field"><label>Mein aktuelles Niveau 📊</label><select id="pLevel"><option value="">— wählen —</option>${LEVELS.map(l=>`<option ${(profile.level||'')===l?'selected':''}>${l}</option>`).join('')}</select>
+        <p class="muted" style="margin:6px 0 0">Damit deine Lehrerin dich in der passenden Gruppe einteilen kann. Noch unsicher? <a href="niveau-test.html" style="color:var(--primary);font-weight:700">Mach den Einstufungstest →</a></p></div>
       <div class="field"><label>Mein Zielniveau 🎯</label><select id="pTarget"><option value="">— wählen —</option>${LEVELS.map(l=>`<option ${profile.target_level===l?'selected':''}>${l}</option>`).join('')}</select></div>
       <div class="field"><label>Meine Muttersprache</label>
         <select id="pNative">${nativeOptionen()}</select>
@@ -3615,12 +3617,14 @@ async function saveProfil(){
     p_goal:document.getElementById('pGoal').value.trim()||null,
     p_target_level:document.getElementById('pTarget').value||null,
     p_native_language:nativeWert(),
-    p_birthday:bday
+    p_birthday:bday,
+    p_level:(document.getElementById('pLevel')||{}).value||null
   });
   if(error){ toast('Konnte nicht speichern.'); return; }
   profile.name=document.getElementById('pName').value.trim();
   profile.goal=document.getElementById('pGoal').value.trim()||null;
   profile.target_level=document.getElementById('pTarget').value||null;
+  profile.level=(document.getElementById('pLevel')||{}).value||profile.level;
   profile.native_language=nativeWert();
   profile.birthday=bday;
   computeStats(); toast('Profil gespeichert ✓');

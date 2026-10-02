@@ -224,6 +224,12 @@
   .bo-niv{ background:var(--tuerkis) !important; color:var(--auf-tuerkis) !important; border-color:var(--tuerkis) !important; }
   .bo-grp.mixed{ outline:2px dashed #E8A13A; }
   .bo-grp-h .lvtag{ font-size:.7rem; font-weight:700; color:var(--weich); }
+  /* HILFE-Knopf in der Gruppe (nur Schüler) */
+  .gn-help{ margin-left:auto; background:var(--rot); color:#fff; border:none; border-radius:999px; padding:7px 14px; font-family:'Inter'; font-weight:800; font-size:.82rem; cursor:pointer; box-shadow:0 3px 10px rgba(221,0,0,.3); white-space:nowrap; }
+  .gn-help:hover{ filter:brightness(1.05); }
+  .gn-help:disabled{ opacity:.7; cursor:default; background:var(--tuerkis); box-shadow:none; }
+  @keyframes gnhelp{0%,100%{box-shadow:0 3px 10px rgba(221,0,0,.3);}50%{box-shadow:0 3px 16px rgba(221,0,0,.6);}}
+  .gn-help:not(:disabled){ animation:gnhelp 1.8s ease-in-out infinite; }
   /* Präsentation ändern (Admin-Modal) */
   .pres-overlay{ position:fixed; inset:0; z-index:85; background:rgba(26,26,26,.55); display:none; align-items:center; justify-content:center; padding:20px; }
   .pres-overlay.open{ display:flex; }
@@ -472,6 +478,7 @@
       <div class="tafel-kopf">
         <span class="badge" style="background:var(--tuerkis);color:var(--auf-tuerkis)">👥 GRUPPE</span>
         <h3 id="gnotes-title">📝 Gruppen-Notiz</h3>
+        <button id="gn-help" class="gn-help" style="display:none" onclick="callTeacher()" title="Lehrer in die Gruppe holen">🆘 HILFE</button>
         <div class="tf-tools" id="gn-tools">
           <button onmousedown="cmd(event,'bold')" title="Fett"><b>F</b></button>
           <button id="pen-g2" onmousedown="togglePen(event,'#16A34A')" title="Grüner Stift – an/aus" style="color:#16A34A"><b>A</b></button>
@@ -1231,6 +1238,7 @@
     const g=window._currentGroup||0; if(!g) return;
     try{ if(window._boCh) window._boCh.send({ type:'broadcast', event:'help', payload:{ group:g, name:(window._meName||'Schüler:in') } }); }catch(e){}
     const b=document.getElementById('bo-call'); if(b){ b.textContent='✓ Lehrer gerufen'; b.disabled=true; setTimeout(()=>{ b.textContent='🔔 Lehrer rufen'; b.disabled=false; }, 8000); }
+    const h=document.getElementById('gn-help'); if(h){ h.textContent='✓ Lehrer kommt…'; h.disabled=true; setTimeout(()=>{ h.textContent='🆘 HILFE'; h.disabled=false; }, 8000); }
   }
   // Lehrer bekommt den Hilferuf: Alarm-Banner + Markierung im Gruppen-Panel.
   function onHelpCall(p){
@@ -1247,6 +1255,7 @@
   function updateGroupNotes(){ const g=window._currentGroup||0; if(g>0) gnotesEnter(g); else gnotesLeave(); }
   async function gnotesEnter(g){
     document.body.classList.add('ingroup');
+    const hb=document.getElementById('gn-help'); if(hb) hb.style.display = istLehrer ? 'none' : 'inline-block';
     const el=document.getElementById('gnotes'); if(!el || !sb) return;
     const title=document.getElementById('gnotes-title'); if(title) title.textContent='📝 Gruppen-Notiz · Gruppe '+g;
     if(window._gnGroup===g && window._gnCh) return;
@@ -1267,7 +1276,7 @@
       .subscribe();
   }
   function gnotesUnsub(){ if(window._gnCh){ try{ sb.removeChannel(window._gnCh); }catch(e){} window._gnCh=null; } }
-  function gnotesLeave(){ document.body.classList.remove('ingroup'); gnotesUnsub(); window._gnGroup=0; }
+  function gnotesLeave(){ document.body.classList.remove('ingroup'); gnotesUnsub(); window._gnGroup=0; const hb=document.getElementById('gn-help'); if(hb) hb.style.display='none'; }
   (function(){ const el=document.getElementById('gnotes'); if(!el) return; let tb, td;
     el.addEventListener('input', ()=>{ const g=window._gnGroup; if(!g||g<=0||!sb) return;
       const notes=el.innerHTML; window._gnLast=notes;

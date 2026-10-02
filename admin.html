@@ -1229,15 +1229,31 @@ async function planAtt(id){
   if(error){ box.innerHTML='<span class="muted" style="color:#c00">Fehler: '+error.message+'</span>'; return; }
   const rows=data||[];
   if(!rows.length){ box.innerHTML='<div class="muted" style="background:var(--bg);border-radius:10px;padding:10px 12px">Für diese Stunde hat noch niemand gebucht.</div>'; return; }
+  // Niveau der gebuchten Schüler laden (level vom Lehrer/Schüler > stufe aus Einstufungstest > target_level)
+  const lv={};
+  try{
+    const uids=[...new Set(rows.map(r=>r.user_id).filter(Boolean))];
+    if(uids.length){ const { data:pf } = await sb.from('profiles').select('id,level,stufe,target_level').in('id',uids); (pf||[]).forEach(p=>{ lv[p.id]=p.level||p.stufe||p.target_level||null; }); }
+  }catch(e){}
   box.innerHTML = `<div style="background:var(--bg);border-radius:10px;padding:10px 12px">
-    <b style="font-size:13px">✅ Anwesenheit — wer war da?</b>
-    <p class="muted" style="margin:3px 0 8px">Diese Schüler haben die Stunde gebucht. Tippe „Da" oder „Fehlt".</p>
+    <b style="font-size:13px">✅ Anwesenheit & Niveau — wer war da?</b>
+    <p class="muted" style="margin:3px 0 8px">Diese Schüler haben die Stunde gebucht. Das farbige Badge zeigt ihr Niveau (gelb A2/B1 · blau B1/B2 · grün B2/C1 · grau kein Test).</p>
     ${rows.map(r=>`<div class="tn" style="display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);padding:5px 0">
+      ${nivBadge(lv[r.user_id])}
       <span style="flex:1">👤 ${esc(r.name||'')} <span class="muted">${esc(r.email||'')}</span></span>
       <button class="btn ${r.attendance==='present'?'btn-primary':'btn-ghost'}" style="padding:4px 12px;font-size:12px;${r.attendance==='present'?'background:#13A89A':''}" onclick="markAttP('${id}','${r.user_id}',true)">Da</button>
       <button class="btn ${r.attendance==='absent'?'btn-primary':'btn-ghost'}" style="padding:4px 12px;font-size:12px" onclick="markAttP('${id}','${r.user_id}',false)">Fehlt</button>
     </div>`).join('')}
   </div>`;
+}
+// Niveau-Badge (gleiche Farblogik wie die Gruppeneinteilung im Klassenraum)
+function nivBand(v){ const s=String(v||'').toUpperCase();
+  if(/A2\s*\/\s*B1/.test(s)) return 'g'; if(/B1\s*\/\s*B2/.test(s)) return 'b'; if(/B2\s*\/\s*C1/.test(s)) return 'n';
+  const m=s.match(/[ABC][12]/); const t=m?m[0]:''; if(t==='A1'||t==='A2') return 'g'; if(t==='B1') return 'b'; if(t==='B2'||t==='C1'||t==='C2') return 'n'; return 'x'; }
+function nivBadge(v){
+  const C={ g:['#FFF2C2','#7A5B00','#E8C34D','A2/B1'], b:['#D9E8FF','#0B4C8C','#6FA8E8','B1/B2'], n:['#D7F2DF','#176B36','#5FBE7E','B2/C1'], x:['#ECECEC','#777','#CFCFCF','kein Test'] };
+  const c=C[nivBand(v)]; const m=String(v||'').toUpperCase().match(/[ABC][12](?:\s*\/\s*[ABC][12])?/); const t=m?m[0].replace(/\s+/g,''):'–';
+  return `<span title="${c[3]}" style="display:inline-block;min-width:30px;text-align:center;font-weight:800;font-size:11px;line-height:1;padding:4px 7px;border-radius:999px;background:${c[0]};color:${c[1]};border:1px solid ${c[2]};white-space:nowrap">${t}</span>`;
 }
 async function markAttP(classId,userId,present){
   const { error }=await sb.rpc('mark_attendance',{ p_class_id:classId, p_user_id:userId, p_present:present });
