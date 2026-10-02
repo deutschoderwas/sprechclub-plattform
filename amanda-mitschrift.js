@@ -180,6 +180,15 @@
     return tage;
   }
 
+  /* Woher eine Zeile kommt: gesprochen, im Chat geschrieben oder
+     mitten im Unterricht gefragt. */
+  var ART = {
+    sprechen:   { name: 'Gesprochen',    kurz: 'gesprochen',    klasse: 'sp' },
+    unterricht: { name: 'Im Unterricht', kurz: 'im Unterricht', klasse: 'un' },
+    chat:       { name: 'Geschrieben',   kurz: 'geschrieben',   klasse: 'ch' }
+  };
+  function art(a) { return ART[a] || ART.chat; }
+
   /* ---------- Als Textdatei ---------- */
   function alsText(zeilen) {
     var tage = ordnen(zeilen);
@@ -191,7 +200,7 @@
       aus.push('========================================');
       tag.bloecke.forEach(function (b) {
         aus.push('');
-        aus.push('— ' + zeit(b.von) + ' · ' + (b.art === 'sprechen' ? 'gesprochen' : 'geschrieben') + ' —');
+        aus.push('— ' + zeit(b.von) + ' · ' + art(b.art).kurz + ' —');
         b.zeilen.forEach(function (z) {
           aus.push((z.wer === 'amanda' ? 'Amanda: ' : 'Du: ') + z.text);
         });
@@ -238,8 +247,8 @@
 
       html += tage.map(function (tag, i) {
         var bloecke = tag.bloecke.slice().reverse().map(function (b) {
-          var kopf = '<div class="amm-bk"><span class="amm-pille ' + (b.art === 'sprechen' ? 'sp' : 'ch') + '">'
-            + (b.art === 'sprechen' ? 'Gesprochen' : 'Geschrieben') + '</span>'
+          var kopf = '<div class="amm-bk"><span class="amm-pille ' + art(b.art).klasse + '">'
+            + art(b.art).name + '</span>'
             + '<span class="amm-zeit">' + zeit(b.von) + '</span></div>';
           var inhalt = b.zeilen.map(function (z) {
             return '<div class="amm-z ' + (z.wer === 'amanda' ? 'am' : 'du') + '">'
@@ -301,6 +310,7 @@
       '  border-radius:999px;padding:4px 9px}',
       '.amm-pille.sp{background:var(--amm-teal-soft,#DCEFEC);color:var(--amm-teal-d,#0E7C7B)}',
       '.amm-pille.ch{background:#F2F4F5;color:#5C574C}',
+      '.amm-pille.un{background:#FFF1D6;color:#B4690E}',
       '.amm-zeit{font-size:12px;color:#8A9AA1;font-variant-numeric:tabular-nums}',
       '.amm-z{display:flex;flex-direction:column;gap:2px;border-radius:12px;',
       '  padding:9px 12px;margin-bottom:7px;background:var(--amm-creme,#F6F9FA)}',

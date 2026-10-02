@@ -8,6 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
+<script src="amanda-mitschrift.js?v=1"></script>
 <style>
   :root{
     --tuerkis:#2DD4BF; --tuerkis-dunkel:#14B8A6; --tuerkis-soft:#A7F3D0;
@@ -98,10 +99,19 @@
   .rx-fly{position:absolute; bottom:6%; font-size:2rem; will-change:transform,opacity; animation:rxfly 2.4s ease-out forwards;}
   @keyframes rxfly{0%{opacity:0; transform:translateY(0) scale(.6);}15%{opacity:1;}100%{opacity:0; transform:translateY(-170px) scale(1.25);}}
   /* Sprechhilfen (Redemittel) */
-  .sh-btn{position:fixed; left:14px; bottom:14px; z-index:60; background:var(--tuerkis); color:var(--auf-tuerkis); border:none; border-radius:999px; padding:11px 16px; font-family:'Inter'; font-weight:800; font-size:.85rem; box-shadow:0 6px 18px rgba(0,0,0,.18); cursor:pointer;}
+  /* Amanda muss man im Unterricht sofort finden — darum so gross
+     wie der Notizen-Knopf und mit ihrem Gesicht statt eines Roboters. */
+  .sh-btn{display:flex; align-items:center; gap:9px; position:fixed; left:14px; bottom:14px; z-index:70; background:var(--tuerkis); color:var(--auf-tuerkis); border:none; border-radius:999px; padding:8px 20px 8px 8px; font-family:'Inter'; font-weight:800; font-size:.92rem; box-shadow:0 8px 22px rgba(0,0,0,.22); cursor:pointer;}
+  .sh-btn img{width:36px; height:36px; border-radius:999px; object-fit:cover; object-position:center 12%; background:#fff; flex:0 0 auto; display:block;}
+  .sh-btn:hover{filter:brightness(.97);}
+  .sh-btn:active{transform:translateY(1px);}
+  .am-chips{display:flex; flex-wrap:wrap; gap:6px; margin:2px 0 6px;}
+  .am-chips button{font-family:'Inter'; font-size:.78rem; font-weight:700; cursor:pointer; background:#fff; color:var(--anthrazit); border:1px solid var(--rahmen); border-radius:999px; padding:7px 12px; min-height:34px;}
+  .am-chips button:hover{border-color:var(--tuerkis); background:#F7FCFB;}
   .sh-panel{position:fixed; left:14px; bottom:64px; z-index:60; width:min(370px,92vw); max-height:64vh; overflow:auto; background:#fff; border:1px solid var(--rahmen); border-radius:16px; box-shadow:0 16px 44px rgba(0,0,0,.20); padding:14px 16px; display:none;}
   .sh-panel.open{display:block;}
-  .sh-panel h4{font-family:'Space Grotesk'; font-size:1rem; margin:0;}
+  .sh-panel h4{display:flex; align-items:center; gap:8px; font-family:'Space Grotesk'; font-size:1rem; margin:0;}
+  .am-kopfbild{width:28px; height:28px; border-radius:999px; object-fit:cover; object-position:center 12%; background:var(--tuerkis-hauch,#DCEFEC); flex:0 0 auto;}
   .am-panel{display:flex; flex-direction:column; gap:8px; max-height:70vh;}
   .am-hint{font-size:.78rem; color:var(--anthrazit); opacity:.7;}
   .am-log{flex:1; min-height:120px; max-height:42vh; overflow:auto; display:flex; flex-direction:column; gap:7px; padding:4px 2px;}
@@ -188,6 +198,19 @@
   @keyframes helppulse{0%,100%{box-shadow:0 8px 24px rgba(221,0,0,.35);}50%{box-shadow:0 8px 30px rgba(221,0,0,.65);}}
   .help-alert.show{ animation:helppulse 1.2s ease-in-out infinite; }
   .bo-grp.needhelp{ outline:2px solid var(--rot); border-radius:10px; }
+  /* Niveau-Farben für die Gruppeneinteilung */
+  .lvbadge{ display:inline-block; min-width:30px; text-align:center; font-family:'Inter'; font-weight:800; font-size:.72rem; line-height:1; padding:4px 7px; border-radius:999px; border:1px solid; white-space:nowrap; }
+  .lv-g{ background:#FFF2C2; color:#7A5B00; border-color:#E8C34D; }  /* A2/B1 gelb */
+  .lv-b{ background:#D9E8FF; color:#0B4C8C; border-color:#6FA8E8; }  /* B1/B2 blau */
+  .lv-n{ background:#D7F2DF; color:#176B36; border-color:#5FBE7E; }  /* B2/C1 gruen */
+  .lv-x{ background:#ECECEC; color:#777; border-color:#CFCFCF; }      /* kein Test grau */
+  .bo-legend{ display:flex; flex-wrap:wrap; gap:6px; margin:4px 0 10px; }
+  .bo-legend .lvbadge{ font-size:.68rem; }
+  .bo-list{ margin-top:4px; }
+  .bo-p .bo-nm{ flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .bo-niv{ background:var(--tuerkis) !important; color:var(--auf-tuerkis) !important; border-color:var(--tuerkis) !important; }
+  .bo-grp.mixed{ outline:2px dashed #E8A13A; }
+  .bo-grp-h .lvtag{ font-size:.7rem; font-weight:700; color:var(--weich); }
   /* Präsentation ändern (Admin-Modal) */
   .pres-overlay{ position:fixed; inset:0; z-index:85; background:rgba(26,26,26,.55); display:none; align-items:center; justify-content:center; padding:20px; }
   .pres-overlay.open{ display:flex; }
@@ -938,8 +961,8 @@
       setTimeout(()=>{ try{ dframe.updateInputSettings({ audio:{ processor:{ type:'noise-cancellation' } } }); }catch(e){} }, 1800); });
     // Qualität nachsteuern, wenn jemand spricht / kommt / geht
     dframe.on('active-speaker-change', (ev)=>{ try{ dailyQuality(ev && ev.activeSpeaker && ev.activeSpeaker.peerId); }catch(e){} });
-    dframe.on('participant-left', ()=>{ renderGrid(); dailyQuality(); });
-    dframe.on('participant-joined', (ev)=>{ renderGrid(); dailyQuality();
+    dframe.on('participant-left', ()=>{ renderGrid(); dailyQuality(); if(istLehrer && typeof boRenderTeacher==='function') boRenderTeacher(); });
+    dframe.on('participant-joined', (ev)=>{ renderGrid(); dailyQuality(); if(istLehrer && typeof boLoadLevels==='function') boLoadLevels();
       // Event-/Bühnen-Modus: neue Teilnehmer kommen stummgeschaltet rein (nur Lehrer schaltet stumm).
       try{ if(window._eventMode && window._meIsLehrer && ev && ev.participant && !ev.participant.local){ const o={}; o[ev.participant.session_id]={ setAudio:false }; dframe.updateParticipants(o); } }catch(e){}
     });
@@ -1070,8 +1093,45 @@
     }
     if(istLehrer) boRenderTeacher();
   }
-  function toggleBoPanel(){ const p=document.getElementById('bo-panel'); if(p){ boRenderTeacher(); p.classList.toggle('open'); } }
+  function toggleBoPanel(){ const p=document.getElementById('bo-panel'); if(p){ boRenderTeacher(); if(typeof boLoadLevels==='function') boLoadLevels(); p.classList.toggle('open'); } }
   function boParticipants(){ try{ const ps=dframe.participants(); return Object.values(ps).filter(x=>!x.local).map(x=>({ id:x.user_id||x.session_id, name:(x.user_name&&String(x.user_name).trim())||'Teilnehmer:in' })); }catch(e){ return []; } }
+  // ===== Niveau-Farben: Stufe (A1..C1) -> Band (gelb A2/B1, blau B1/B2, gruen B2/C1, grau kein Test) =====
+  window._boLevels = window._boLevels || {};
+  const BO_BANDS = { g:{label:'A2/B1',cls:'lv-g'}, b:{label:'B1/B2',cls:'lv-b'}, n:{label:'B2/C1',cls:'lv-n'}, x:{label:'kein Test',cls:'lv-x'} };
+  const BO_ORDER = ['g','b','n','x'];
+  function boBand(stufe){ const s=String(stufe||'').toUpperCase().trim(); if(s==='A1'||s==='A2') return 'g'; if(s==='B1') return 'b'; if(s==='B2'||s==='C1'||s==='C2') return 'n'; return 'x'; }
+  function boLv(id){ return window._boLevels ? window._boLevels[id] : null; }
+  function boBadge(id){ const st=boLv(id); const m=BO_BANDS[boBand(st)]; const t=st?String(st).toUpperCase():'–'; return `<span class="lvbadge ${m.cls}" title="${m.label}">${t}</span>`; }
+  function boLegendHtml(){ return `<div class="bo-legend"><span class="lvbadge lv-g">A2/B1</span><span class="lvbadge lv-b">B1/B2</span><span class="lvbadge lv-n">B2/C1</span><span class="lvbadge lv-x">kein Test</span></div>`; }
+  // Stufen der anwesenden Schueler:innen aus den Profilen nachladen (einmal pro Person) und Panel neu zeichnen.
+  async function boLoadLevels(){
+    if(!sb) return;
+    try{
+      const ids=[...new Set(boParticipants().map(p=>p.id).filter(Boolean))];
+      const miss=ids.filter(id=>!(id in window._boLevels));
+      if(miss.length){
+        const { data } = await sb.from('profiles').select('id,stufe').in('id', miss);
+        (data||[]).forEach(r=>{ window._boLevels[r.id]=r.stufe||null; });
+        miss.forEach(id=>{ if(!(id in window._boLevels)) window._boLevels[id]=null; });
+      }
+    }catch(e){ console.warn('Niveaus laden', e); }
+    if(istLehrer) boRenderTeacher();
+  }
+  // Automatisch nach Niveau zuteilen: gleiche Baender zusammen, Gruppen mischen NIE zwei Baender.
+  function boNiveau(){
+    const el=document.getElementById('bo-size'); const size=Math.max(2, parseInt((el&&el.value)||window._boSize||'2',10));
+    window._boSize=size;
+    const ppl=boParticipants();
+    const byBand={ g:[], b:[], n:[], x:[] };
+    ppl.forEach(pp=>{ byBand[boBand(boLv(pp.id))].push(pp); });
+    window._boAssign={}; let g=1;
+    BO_ORDER.forEach(band=>{
+      let c=0;
+      byBand[band].forEach(pp=>{ window._boAssign[pp.id]=g; c++; if(c>=size){ g++; c=0; } });
+      if(c>0) g++;   // neues Band beginnt in neuer Gruppe
+    });
+    boRenderTeacher();
+  }
   function boZufall(){
     const el=document.getElementById('bo-size'); const size=Math.max(2, parseInt((el&&el.value)||'2',10));
     window._boSize=size;
@@ -1106,25 +1166,31 @@
       let html='<div class="bo-active">🟢 Gruppen laufen</div>';
       Object.keys(groups).sort((a,b)=>a-b).forEach(g=>{
         const needs = window._helpGroups && window._helpGroups.has(String(g));
-        html+=`<div class="bo-grp${needs?' needhelp':''}"><div class="bo-grp-h"><b>Gruppe ${esc(g)}</b>${needs?' <span title="braucht Hilfe">🔔</span>':''}<button onclick="boHop(${esc(g)})">👀 ansehen</button></div><div class="bo-mem">${groups[g].map(id=>esc(nameOf(id))).join(', ')}</div></div>`;
+        const bands = [...new Set(groups[g].map(id=>boBand(boLv(id))).filter(bd=>bd!=='x'))];
+        const mixed = bands.length>1;
+        const mem = groups[g].map(id=>`${boBadge(id)} ${esc(nameOf(id))}`).join('&nbsp;&nbsp; ');
+        html+=`<div class="bo-grp${needs?' needhelp':''}${mixed?' mixed':''}"><div class="bo-grp-h"><b>Gruppe ${esc(g)}</b>${needs?' <span title="braucht Hilfe">🔔</span>':''}${mixed?' <span class="lvtag" title="gemischte Niveaus">⚠️ gemischt</span>':''}<button onclick="boHop(${esc(g)})">👀 ansehen</button></div><div class="bo-mem">${mem}</div></div>`;
       });
       html+=`<div class="bo-row"><label>Gruppengröße</label><input id="bo-size-live" type="number" min="2" max="8" value="${esc(window._boSize||2)}"><button onclick="boMix()">🔀 Neu mischen</button></div>`;
       html+=`<div class="bo-row"><button onclick="boHop(0)">🏠 Hauptraum</button><button class="bo-end" onclick="boEnd()">⏹️ Alle zurückholen</button></div>`;
       body.innerHTML=html; return;
     }
-    // Aufgeräumt: erst „Größe + Zufällig + Start", die Einzel-Zuordnung ist einklappbar (für große Runden übersichtlich).
+    // Übersichtlich: Niveau-Legende, Auto-Knöpfe (Nach Niveau / Zufällig), dann alle Schüler nach Niveau sortiert
+    // mit Farb-Badge + kleiner Gruppennummer zum manuellen Feinjustieren.
     const n=ppl.length;
     const assigned=Object.values(window._boAssign||{}).filter(g=>g>0);
     const nGroups=assigned.length ? new Set(assigned).size : 0;
+    const size=esc(window._boSize||2);
     let html=`<div class="bo-hint">👥 ${n} ${n===1?'Person':'Personen'} im Raum</div>`;
-    html+=`<div class="bo-row"><label>Gruppengröße</label><input id="bo-size" type="number" min="2" max="8" value="${esc(window._boSize||2)}"><button onclick="boZufall()">🎲 Zufällig zuteilen</button></div>`;
-    if(!n) html+='<div class="bo-hint">Noch keine Schüler im Raum.</div>';
+    html+=boLegendHtml();
+    html+=`<div class="bo-row"><label>Gruppe à</label><input id="bo-size" type="number" min="2" max="8" value="${size}"><button class="bo-niv" onclick="boNiveau()">🎯 Nach Niveau</button><button onclick="boZufall()">🎲 Zufällig</button></div>`;
+    if(!n){ html+='<div class="bo-hint">Noch keine Schüler im Raum.</div>'; body.innerHTML=html; return; }
+    const sorted=[...ppl].sort((a,b)=>{ const d=BO_ORDER.indexOf(boBand(boLv(a.id)))-BO_ORDER.indexOf(boBand(boLv(b.id))); return d!==0?d:String(a.name).localeCompare(String(b.name)); });
+    html+='<div class="bo-list">';
+    sorted.forEach(pp=>{ const cur=window._boAssign[pp.id]||''; html+=`<div class="bo-p">${boBadge(pp.id)}<span class="bo-nm">${esc(pp.name)}</span><input type="number" min="1" max="12" value="${esc(cur)}" placeholder="–" title="Gruppen-Nr." onchange="boSet('${esc(pp.id)}',this.value)"></div>`; });
+    html+='</div>';
     if(nGroups) html+=`<div class="bo-hint">➜ <b>${nGroups} Gruppen</b> vorbereitet — jetzt starten:</div>`;
     html+=`<div class="bo-row"><button class="bo-start" onclick="boStart()">▶️ Gruppen starten</button></div>`;
-    html+=`<div class="bo-row"><button onclick="boToggleManual()">${window._boManual?'▾ Manuell zuordnen ausblenden':'▸ Manuell zuordnen (optional)'}</button></div>`;
-    if(window._boManual){
-      ppl.forEach(pp=>{ const cur=window._boAssign[pp.id]||''; html+=`<div class="bo-p"><span>${esc(pp.name)}</span><input type="number" min="1" max="12" value="${esc(cur)}" placeholder="–" onchange="boSet('${esc(pp.id)}',this.value)"></div>`; });
-    }
     body.innerHTML=html;
   }
   function boToggleManual(){ window._boManual=!window._boManual; boRenderTeacher(); }
@@ -1451,10 +1517,21 @@
   }
   // ---- Amanda-Chat (ersetzt die Sprechhilfen) ----
   window._amVerlauf = window._amVerlauf || [];
-  function amandaMsg(wer,text){
+  function amandaMsg(wer,text,still){
     const log=document.getElementById('am-log'); if(!log) return;
     const d=document.createElement('div'); d.className='am-m '+(wer==='bot'?'bot':'du');
     d.textContent=text; log.appendChild(d); log.scrollTop=log.scrollHeight;
+    /* Was Amanda im Unterricht erklaert, soll der Schueler spaeter
+       nachlesen koennen — es landet in seiner Mitschrift. */
+    if(!still && window.AmandaMitschrift){
+      try{ window.AmandaMitschrift.notiz(wer==='bot'?'amanda':'du', text, { art:'unterricht' }); }catch(e){}
+    }
+  }
+  /* Ein Anfang in der Zeile, damit im Unterricht niemand lange tippt. */
+  function amandaVorlage(anfang){
+    const feld=document.getElementById('am-in'); if(!feld) return;
+    feld.value=anfang; feld.focus();
+    try{ feld.setSelectionRange(feld.value.length, feld.value.length); }catch(e){}
   }
   async function amandaSend(){
     const feld=document.getElementById('am-in'); if(!feld) return;
@@ -1481,7 +1558,7 @@
     p.classList.toggle('open');
     if(p.classList.contains('open')){
       const log=document.getElementById('am-log');
-      if(log && !window._amVerlauf.length){ amandaMsg('bot','Hallo! Ich bin Amanda, deine KI-Tutorin. Frag mich alles — z. B. den Unterschied zwischen „kennen“ und „wissen“.'); }
+      if(log && !window._amVerlauf.length){ amandaMsg('bot','Hallo! Ich bin Amanda, deine KI-Tutorin. Frag mich alles — z. B. den Unterschied zwischen „kennen“ und „wissen“.', true); }
       const feld=document.getElementById('am-in');
       if(feld){ feld.onkeydown=e=>{ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); amandaSend(); } }; setTimeout(()=>feld.focus(),50); }
     }
@@ -1909,11 +1986,16 @@
 </div>
 
 <!-- Sprechhilfen (Redemittel) – für alle einblendbar -->
-<button id="sh-btn" class="sh-btn" onclick="toggleSprechhilfen()" title="Amanda, deine KI-Tutorin, fragen">🤖 Amanda fragen</button>
+<button id="sh-btn" class="sh-btn" onclick="toggleSprechhilfen()" title="Amanda, deine KI-Tutorin, fragen"><img src="amanda/amanda-hallo.webp" alt="" onerror="this.remove()">Amanda fragen</button>
 <div id="sh-panel" class="sh-panel am-panel">
   <button class="sh-close" onclick="toggleSprechhilfen()" title="Schließen">✕</button>
-  <h4>🤖 Amanda fragen</h4>
-  <div class="am-hint">Stell Amanda jederzeit eine Frage — Grammatik, ein Wort, ein Satz zum Prüfen.</div>
+  <h4><img class="am-kopfbild" src="amanda/amanda-hallo.webp" alt="" onerror="this.remove()">Amanda fragen</h4>
+  <div class="am-hint">Stell Amanda jederzeit eine Frage — Grammatik, ein Wort, ein Satz zum Prüfen. Die Stunde läuft dabei weiter.</div>
+  <div class="am-chips">
+    <button type="button" onclick="amandaVorlage('Was bedeutet das Wort ')">Was bedeutet …?</button>
+    <button type="button" onclick="amandaVorlage('Ist dieser Satz richtig: ')">Satz prüfen</button>
+    <button type="button" onclick="amandaVorlage('Sag mir ein Beispiel mit ')">Beispiel bitte</button>
+  </div>
   <div id="am-log" class="am-log"></div>
   <div class="am-reihe">
     <textarea id="am-in" rows="2" placeholder="Deine Frage an Amanda …"></textarea>
