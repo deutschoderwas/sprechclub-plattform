@@ -3133,6 +3133,11 @@ function amZeigen(wer, text, still){
   else d.textContent = text;
   lauf.appendChild(d); lauf.scrollTop = lauf.scrollHeight;
   amVerlauf.push({ wer: wer, text: text });
+  /* Alles, was hier steht, bleibt erhalten — ausser der festen
+     Begruessung (still), die bei jedem Seitenaufbau neu kommt. */
+  if (!still && window.AmandaMitschrift) {
+    try { window.AmandaMitschrift.notiz(wer === 'bot' ? 'amanda' : 'du', text, { art: 'chat' }); } catch (e) {}
+  }
   // Wer gesprochen gefragt hat, bekommt gesprochen geantwortet.
   if (wer === 'bot' && !still && (amVorlesenAn || amPerStimme)) {
     setTimeout(function(){ amSprich(text, hoer); }, 120);
@@ -3263,6 +3268,8 @@ function amKannAnwenden(){
   const versprechen = document.getElementById('amVersprechen');
 
   if(mik) mik.style.display = k.hoeren ? '' : 'none';
+  const cta = document.getElementById('amSprechCta');
+  if(cta) cta.hidden = !k.sprechen;
   if(feld) feld.placeholder = k.hoeren ? 'Deine Frage — tippen oder sprechen …' : 'Deine Frage an Amanda …';
   if(schalter) schalter.style.display = k.vorlesen ? '' : 'none';
   if(!k.vorlesen){
@@ -3311,6 +3318,20 @@ function renderAmanda(){
         <label class="af-schalter"><input type="checkbox" id="amAuto"> Antworten vorlesen</label>
       </div>
     </div>
+
+    <div class="af-sprech" id="amSprechCta" hidden>
+      <img src="${bild('hoeren')}" alt="" onerror="this.style.display='none'">
+      <div class="tx">
+        <b>Lieber reden als tippen?</b>
+        <span>Amanda hört zu und antwortet sofort — mit Stimme, ohne Warten.</span>
+      </div>
+      <button type="button" onclick="go('amandasprechen')"><span aria-hidden="true">&#127897;&#65039;</span> Sprechen</button>
+    </div>
+
+    <details class="af-mit" id="amMit">
+      <summary><b>Deine Mitschrift</b><span>alles, was du mit Amanda besprochen hast</span></summary>
+      <div class="af-mit-in" id="amMitIn"></div>
+    </details>
     ${prompts}`;
 
   const lauf=document.getElementById('amLauf');
@@ -3338,6 +3359,13 @@ function renderAmanda(){
   const mik=document.getElementById('amMik'); if(mik) mik.onclick=amMikro;
   const feld=document.getElementById('amText');
   if(feld) feld.addEventListener('keydown',e=>{ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); amSenden(); } });
+
+  /* Die Mitschrift wird erst geholt, wenn sie jemand aufklappt —
+     niemand soll auf Zeilen von letzter Woche warten. */
+  const mitBox=document.getElementById('amMit');
+  if(mitBox) mitBox.addEventListener('toggle',()=>{
+    if(mitBox.open && window.AmandaMitschrift) window.AmandaMitschrift.zeichnen('amMitIn',{neu:true});
+  });
 
   /* Zuerst alles zeigen, dann nachziehen, sobald die Antwort da ist —
      so blinkt nichts und die Seite wartet auf nichts. */
@@ -4110,7 +4138,8 @@ window.addEventListener('resize',function(){ clearTimeout(_mhT); _mhT=setTimeout
 
 <!-- Amanda spricht. Laedt selbst nichts nach, solange niemand auf den
      Knopf tippt — der ElevenLabs-Werkzeugkasten ist ein Megabyte gross. -->
-<script src="amanda-stimme.js?v=1"></script>
+<script src="amanda-mitschrift.js?v=1"></script>
+<script src="amanda-stimme.js?v=2"></script>
 <script src="vokabel-saetze.js"></script>
 <script src="vokabel-saetze-neu.js?v=1"></script>
 <script src="vokabel-saetze-3.js?v=1"></script>
@@ -4256,7 +4285,7 @@ window.addEventListener('resize',function(){ clearTimeout(_mhT); _mhT=setTimeout
 #v-kalender .ms-karte h2{font-size:20px;margin:0 0 4px}
 @media(max-width:900px){.calcol.leer{display:none}}
 </style>
-<link rel="stylesheet" href="amanda-figur.css?v=4">
+<link rel="stylesheet" href="amanda-figur.css?v=5">
 <!-- Die Handschrift aus dem Lernraum-Entwurf. Diese eine Zeile
      entfernen und alles sieht wieder aus wie vorher. -->
 <link rel="stylesheet" href="lernraum-stil.css?v=2">

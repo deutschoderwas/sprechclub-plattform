@@ -123,13 +123,16 @@ async function init(){
   sb = supabase.createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY);
   const { data:{ session } } = await sb.auth.getSession();
   if(!session){ app.innerHTML='<div class="center">Bitte zuerst einloggen, um deine Nachbereitung zu sehen.<br><br><a href="index.html?login=1">Zum Login →</a></div>'; return; }
-  const [{ data:c }, { data:cn }] = await Promise.all([
+  const [{ data:c }, { data:cn }, { data:sn }] = await Promise.all([
     sb.from('classes').select('title,level,topic,starts_at').eq('id',id).maybeSingle(),
-    sb.from('class_notes').select('post_content').eq('class_id',id).maybeSingle()
+    sb.from('class_notes').select('post_content').eq('class_id',id).maybeSingle(),
+    sb.from('student_nachbereitung').select('post_content').eq('class_id',id).eq('user_id',session.user.id).maybeSingle()
   ]);
   if(!c){ app.innerHTML='<div class="center">Stunde nicht gefunden.</div>'; return; }
-  if(!cn || !cn.post_content){ app.innerHTML='<div class="center">📋 Die Nachbereitung für diese Stunde ist noch nicht fertig.<br>Schau später nochmal vorbei.<br><br><a href="konto.html#stunden">← Zu meinen Stunden</a></div>'; return; }
-  render(id, c, cn.post_content);
+  // Eigene (pro Gruppe personalisierte) Version bevorzugen, sonst die gemeinsame
+  const pc = (sn && sn.post_content) ? sn.post_content : (cn && cn.post_content);
+  if(!pc){ app.innerHTML='<div class="center">📋 Die Nachbereitung für diese Stunde ist noch nicht fertig.<br>Schau später nochmal vorbei.<br><br><a href="konto.html#stunden">← Zu meinen Stunden</a></div>'; return; }
+  render(id, c, pc);
 }
 
 function render(id, c, pc){
@@ -138,6 +141,14 @@ function render(id, c, pc){
 
   // Kernwörter für die Markierungen
   const vocabWords = (pc.vocab||[]).map(v=>v.de).filter(Boolean);
+
+  // 0 · Deine Gruppe (nur in der persönlichen Version vorhanden)
+  if(pc.gruppe && (pc.gruppe.text || (pc.gruppe.punkte && pc.gruppe.punkte.length))){
+    const g = pc.gruppe;
+    let h = `<div class="kern"><h2>👥 Aus deiner Gruppe${g.nr?` (Gruppe ${esc(String(g.nr))})`:''}</h2>${g.text?`<p>${hlText(g.text, vocabWords)}</p>`:''}</div>`;
+    if(g.punkte && g.punkte.length) h += `<div class="card a-gold"><h2>✍️ Eure Notizen & Korrekturen</h2><ul class="satz-list">`+g.punkte.map(s=>`<li>${hlText(s, vocabWords)}</li>`).join('')+`</ul></div>`;
+    tabs.push({ label:'👥 Deine Gruppe', html:h });
+  }
 
   // 1 · Zusammenfassung — mit „Das Wichtigste auf einen Blick"
   if(pc.thema || (pc.saetze && pc.saetze.length) || (pc.vocab && pc.vocab.length)){

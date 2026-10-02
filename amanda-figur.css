@@ -242,3 +242,69 @@
   cursor:pointer; user-select:none;
 }
 .af-schalter input{ width:16px; height:16px; accent-color:var(--tuerkis-dunkel,#10627A); cursor:pointer; }
+
+/* ============================================================
+   Einladung zum Sprechen + die Mitschrift
+   ------------------------------------------------------------
+   Unter dem Chat steht jetzt zweierlei: der Weg zum echten
+   Gespraech (nur sichtbar, wenn Sprechen wirklich freigeschaltet
+   ist — api/kann.js sagt es) und alles, was bisher gesagt wurde.
+
+   Gehalten im Lernraum-Ton: haarfeine Linie, Licht statt
+   versetztem Klotz, Petrol als Akzent.
+   ============================================================ */
+.af-sprech{
+  display:grid; grid-template-columns:auto 1fr auto; gap:14px; align-items:center;
+  margin-top:16px; padding:14px 18px;
+  background:
+    radial-gradient(130% 150% at 0% 0%, var(--tuerkis-hauch,#DCEFEC) 0%, rgba(220,239,236,0) 60%),
+    linear-gradient(170deg,var(--creme,#F6F9FA),var(--karte,#FFFFFF));
+  border:1px solid var(--linie,#E7ECEE); border-radius:18px;
+  box-shadow:var(--schatten,0 1px 2px rgba(29,27,24,.05),0 8px 24px -12px rgba(29,27,24,.18));
+}
+.af-sprech img{ height:74px; width:auto; display:block; }
+.af-sprech .tx{ min-width:0; display:flex; flex-direction:column; gap:3px; }
+.af-sprech .tx b{
+  font-family:var(--schrift-titel,'Caveat Brush',cursive); font-weight:400;
+  font-size:22px; line-height:1.1; color:var(--tinte,#1D1B18);
+}
+.af-sprech .tx span{ font-size:13.5px; color:var(--text-soft,#5C574C); line-height:1.5; }
+.af-sprech button{
+  font:inherit; font-weight:700; font-size:15px; cursor:pointer;
+  display:inline-flex; align-items:center; gap:8px;
+  padding:12px 22px; min-height:48px; border-radius:12px; color:#fff;
+  background:var(--rot,#D42A21); border:1px solid transparent;
+  box-shadow:0 6px 18px -10px rgba(212,42,33,.8);
+  transition:background .15s, box-shadow .15s, transform .1s;
+}
+.af-sprech button:hover{ background:#B4231B; box-shadow:0 10px 24px -12px rgba(212,42,33,.9); }
+.af-sprech button:active{ transform:translateY(1px); }
+@media(max-width:640px){
+  .af-sprech{ grid-template-columns:auto 1fr; padding:14px; }
+  .af-sprech img{ height:60px; }
+  .af-sprech button{ grid-column:1 / -1; width:100%; justify-content:center; }
+}
+
+.af-mit{
+  margin-top:16px; background:var(--karte,#FFFFFF);
+  border:1px solid var(--linie,#E7ECEE); border-radius:18px; overflow:hidden;
+}
+.af-mit[open]{
+  box-shadow:var(--schatten,0 1px 2px rgba(29,27,24,.05),0 8px 24px -12px rgba(29,27,24,.18));
+}
+.af-mit>summary{
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  cursor:pointer; list-style:none; padding:15px 18px; min-height:54px;
+}
+.af-mit>summary::-webkit-details-marker{ display:none; }
+.af-mit>summary b{
+  font-family:var(--schrift-titel,'Caveat Brush',cursive); font-weight:400; font-size:21px;
+}
+.af-mit>summary span{ font-size:13px; color:var(--text-soft,#5C574C); }
+.af-mit>summary::after{
+  content:"+"; margin-left:auto; font-size:20px; font-weight:700;
+  color:var(--tuerkis-dunkel,#0E7C7B);
+}
+.af-mit[open]>summary::after{ content:"\2013"; }
+.af-mit[open]>summary{ border-bottom:1px solid var(--linie,#E7ECEE); }
+.af-mit-in{ padding:16px 18px 18px; }

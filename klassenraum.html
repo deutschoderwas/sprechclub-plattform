@@ -102,6 +102,17 @@
   .sh-panel{position:fixed; left:14px; bottom:64px; z-index:60; width:min(370px,92vw); max-height:64vh; overflow:auto; background:#fff; border:1px solid var(--rahmen); border-radius:16px; box-shadow:0 16px 44px rgba(0,0,0,.20); padding:14px 16px; display:none;}
   .sh-panel.open{display:block;}
   .sh-panel h4{font-family:'Space Grotesk'; font-size:1rem; margin:0;}
+  .am-panel{display:flex; flex-direction:column; gap:8px; max-height:70vh;}
+  .am-hint{font-size:.78rem; color:var(--anthrazit); opacity:.7;}
+  .am-log{flex:1; min-height:120px; max-height:42vh; overflow:auto; display:flex; flex-direction:column; gap:7px; padding:4px 2px;}
+  .am-m{max-width:88%; padding:8px 11px; border-radius:14px; font-size:.9rem; line-height:1.45; white-space:pre-wrap; word-break:break-word;}
+  .am-m.du{align-self:flex-end; background:var(--tuerkis); color:var(--auf-tuerkis); border-bottom-right-radius:4px;}
+  .am-m.bot{align-self:flex-start; background:#F3F4F6; color:var(--anthrazit); border-bottom-left-radius:4px;}
+  .am-m.warte{align-self:flex-start; background:#F3F4F6; color:var(--anthrazit); opacity:.7; font-style:italic;}
+  .am-reihe{display:flex; gap:7px; align-items:flex-end;}
+  .am-reihe textarea{flex:1; resize:none; border:1px solid var(--rahmen); border-radius:12px; padding:8px 10px; font-family:'Inter'; font-size:.9rem; line-height:1.4;}
+  .am-send{border:none; background:var(--tuerkis); color:var(--auf-tuerkis); border-radius:12px; padding:9px 14px; font-family:'Inter'; font-weight:800; font-size:.85rem; cursor:pointer;}
+  .am-send:disabled{opacity:.5; cursor:default;}
   .sh-close{float:right; border:none; background:transparent; cursor:pointer; font-size:1.1rem; color:var(--weich); line-height:1;}
   .sh-cat{font-size:.72rem; font-weight:800; text-transform:uppercase; letter-spacing:.04em; color:var(--rot); margin:13px 0 6px;}
   .sh-chip{display:inline-block; background:var(--creme); border:1px solid var(--rahmen); border-radius:10px; padding:7px 10px; margin:0 6px 6px 0; font-size:.88rem; color:var(--anthrazit);}
@@ -372,6 +383,7 @@
       <div class="stift-tools" id="stift-tools">
         <button id="voll-btn" onclick="lektVoll()" title="Präsentation im Vollbild anzeigen (Querformat)">⛶ Vollbild</button>
         <button id="pres-btn" class="hidden" onclick="openPresEdit()" title="Präsentation dieser Stunde ändern (nur du)">🔁 Präsentation</button>
+        <button id="vc-share2" onclick="vcShare()" title="Bildschirm / Präsentation teilen">🖥️ Teilen</button>
         <button id="stift-btn" onclick="stiftToggle()">✏️ Stift</button>
         <span class="stift-extra hidden" id="stift-extra">
           <button class="farbe" data-c="#DD0000" style="background:#DD0000" onclick="stiftFarbe('#DD0000')" title="Rot"></button>
@@ -424,6 +436,15 @@
       <div class="tafel-kopf">
         <span class="badge" style="background:var(--tuerkis);color:var(--auf-tuerkis)">👥 GRUPPE</span>
         <h3 id="gnotes-title">📝 Gruppen-Notiz</h3>
+        <div class="tf-tools" id="gn-tools">
+          <button onmousedown="cmd(event,'bold')" title="Fett"><b>F</b></button>
+          <button id="pen-g2" onmousedown="togglePen(event,'#16A34A')" title="Grüner Stift – an/aus" style="color:#16A34A"><b>A</b></button>
+          <button id="pen-r2" onmousedown="togglePen(event,'#DD0000')" title="Roter Stift – an/aus" style="color:#DD0000"><b>A</b></button>
+          <button id="mk-g2" class="mark-g" onmousedown="toggleMarker(event,'#FFCE00')" title="Gelb markieren – an/aus">🖊️</button>
+          <button id="mk-r2" class="mark-r" onmousedown="toggleMarker(event,'#FF9B9B')" title="Rot markieren – an/aus">🔴</button>
+          <button onmousedown="unmark(event)" title="Markierung entfernen">⌫</button>
+          <button onmousedown="pfeil(event)" title="Pfeil → einfügen"><b>→</b></button>
+        </div>
       </div>
       <div class="tafel-body">
         <div class="block" style="flex:1">
@@ -477,7 +498,6 @@
         <button onclick="startTimer(60)">60s</button>
         <button onclick="startTimer(90)">90s</button>
         <button onclick="stopTimer()" title="Timer stoppen">⏹</button>
-        <button onclick="toggleImpuls()" style="margin-left:auto" title="Wort oder Bild an alle senden">🖼 Impuls</button>
       </div>
     </div>
   </aside>
@@ -527,8 +547,8 @@
   // Marker als An/Aus-Modus: an = jedes markierte Wort wird hervorgehoben
   let markerActive=false, markerColor='#FFCE00';
   function updateMarkerBtns(){
-    document.getElementById('mk-g').classList.toggle('on', markerActive && markerColor==='#FFCE00');
-    document.getElementById('mk-r').classList.toggle('on', markerActive && markerColor==='#FF9B9B');
+    ['mk-g','mk-g2'].forEach(i=>{const b=document.getElementById(i); if(b) b.classList.toggle('on', markerActive && markerColor==='#FFCE00');});
+    ['mk-r','mk-r2'].forEach(i=>{const b=document.getElementById(i); if(b) b.classList.toggle('on', markerActive && markerColor==='#FF9B9B');});
   }
   function toggleMarker(ev,color){
     ev.preventDefault();
@@ -544,8 +564,8 @@
   // Farbige Stifte (Textfarbe) – an/aus, gleicher Knopf schaltet wieder auf normal
   let penActive=false, penColor=null;
   function updatePenBtns(){
-    document.getElementById('pen-g').classList.toggle('on', penActive && penColor==='#16A34A');
-    document.getElementById('pen-r').classList.toggle('on', penActive && penColor==='#DD0000');
+    ['pen-g','pen-g2'].forEach(i=>{const b=document.getElementById(i); if(b) b.classList.toggle('on', penActive && penColor==='#16A34A');});
+    ['pen-r','pen-r2'].forEach(i=>{const b=document.getElementById(i); if(b) b.classList.toggle('on', penActive && penColor==='#DD0000');});
   }
   function togglePen(ev,color){
     ev.preventDefault();
@@ -579,6 +599,8 @@
     ed.addEventListener('input', liveFeedback);
     autoMark(ed);
   });
+  // Gruppen-Notiz: gleiche Marker-als-du-tippst-Funktion wie bei der Haupt-Tafel
+  (function(){ const g=document.getElementById('gnotes'); if(g) autoMark(g); })();
 
   // ---- Auto-Korrektur häufiger deutscher Tippfehler (nur Mitschrift „notiz") ----
   const TYPOS = {
@@ -892,15 +914,32 @@
       return j;                    // { url, token, owner, name }
     }catch(e){ console.warn('Daily-Raum fehlgeschlagen', e); return null; }
   }
+  // Empfangsqualität je nach Gruppengröße: viele Kameras → nur aktiver Sprecher scharf, Rest klein.
+  function dailyQuality(activeId){
+    if(!dframe) return;
+    try{
+      const ps=dframe.participants();
+      const remote=Object.keys(ps).filter(k=>k!=='local');
+      if(remote.length<=6){ dframe.updateReceiveSettings({ '*':{ video:{ quality:'high' } } }); return; }
+      const rs={ '*':{ video:{ quality:'low' } } };
+      if(activeId && ps[activeId] && !ps[activeId].local){ rs[activeId]={ video:{ quality:'high' } }; }
+      dframe.updateReceiveSettings(rs);
+    }catch(e){}
+  }
   function starteDaily(url, token, owner){
     window._provider='daily';
     const parent=document.getElementById('jitsi'); if(parent){ parent.innerHTML='<div class="dgrid" id="dgrid"></div>'; }
     // Eigenes Raster statt Standard-UI → wir können IMMER alle Teilnehmer (inkl. sich selbst) zeigen.
     dframe = window.DailyIframe.createCallObject({ subscribeToTracksAutomatically:true });
     dframe.on('joined-meeting', (ev)=>{ window._inCall=true; renderGrid(); if(ev&&ev.participants&&ev.participants.local) dailySyncButtons(ev.participants.local); setTimeout(checkMic,2500); setTimeout(()=>{ if(typeof applySavedBg==='function') applySavedBg(); }, 1800);
-      // Bessere Bildqualität: Videos der anderen in höchster Stufe empfangen
-      setTimeout(()=>{ try{ dframe.updateReceiveSettings({ '*':{ video:{ quality:'high' } } }); }catch(e){} }, 1500); });
-    dframe.on('participant-joined', (ev)=>{ renderGrid();
+      // Bildqualität clever steuern: aktiver Sprecher scharf, Rest klein (spart Leistung bei vielen Kameras)
+      setTimeout(()=>dailyQuality(), 1500);
+      // Geräuschunterdrückung: Hintergrundlärm/Tastatur/Hall aus dem Mikro filtern (Krisp)
+      setTimeout(()=>{ try{ dframe.updateInputSettings({ audio:{ processor:{ type:'noise-cancellation' } } }); }catch(e){} }, 1800); });
+    // Qualität nachsteuern, wenn jemand spricht / kommt / geht
+    dframe.on('active-speaker-change', (ev)=>{ try{ dailyQuality(ev && ev.activeSpeaker && ev.activeSpeaker.peerId); }catch(e){} });
+    dframe.on('participant-left', ()=>{ renderGrid(); dailyQuality(); });
+    dframe.on('participant-joined', (ev)=>{ renderGrid(); dailyQuality();
       // Event-/Bühnen-Modus: neue Teilnehmer kommen stummgeschaltet rein (nur Lehrer schaltet stumm).
       try{ if(window._eventMode && window._meIsLehrer && ev && ev.participant && !ev.participant.local){ const o={}; o[ev.participant.session_id]={ setAudio:false }; dframe.updateParticipants(o); } }catch(e){}
     });
@@ -1130,6 +1169,8 @@
     const title=document.getElementById('gnotes-title'); if(title) title.textContent='📝 Gruppen-Notiz · Gruppe '+g;
     if(window._gnGroup===g && window._gnCh) return;
     gnotesUnsub(); window._gnGroup=g; window._gnLast='';
+    // Gruppen-Zugehörigkeit merken (für die individuelle Nachbereitung nach der Stunde)
+    try{ const { data:{ user } }=await sb.auth.getUser(); if(user){ sb.from('class_group_members').upsert({ class_id:STUNDE, user_id:user.id, grp:g, name:(window._meName||null), updated_at:new Date().toISOString() },{ onConflict:'class_id,user_id' }).then(({error})=>{ if(error) console.warn('Gruppen-Zuordnung', error); }); } }catch(e){}
     // aktuellen Stand aus der DB laden (für Nachzügler / Reload)
     try{ const { data } = await sb.from('group_notes').select('notes').eq('class_id',STUNDE).eq('grp',g).maybeSingle(); const v=(data&&data.notes)||''; window._gnLast=v; if(document.activeElement!==el) el.innerHTML=v; }catch(e){}
     // Live-Sync per Broadcast (wie Breakout/Handmeldung/Stift – unabhängig von RLS, kommt sofort bei ALLEN an)
@@ -1157,7 +1198,7 @@
   function dailySyncButtons(p){
     const mic=document.getElementById('vc-mic'); if(mic){ const on=!!p.audio; mic.textContent=on?'🎤 Mikro an':'🔇 Mikro aus'; mic.classList.toggle('muted', !on); }
     const cam=document.getElementById('vc-cam'); if(cam){ const on=!!p.video; cam.textContent=on?'📷 Kamera an':'🚫 Kamera aus'; cam.classList.toggle('muted', !on); }
-    const sh=document.getElementById('vc-share'); if(sh){ const on=!!p.screen; sh.textContent=on?'🟢 Teilen beenden':'🖥️ Teilen'; sh.classList.toggle('on', on); if(window._onShareChange) window._onShareChange(on); }
+    { const on=!!p.screen; ['vc-share','vc-share2'].forEach(i=>{const sh=document.getElementById(i); if(sh){ sh.textContent=on?'🟢 Teilen beenden':'🖥️ Teilen'; sh.classList.toggle('on', on); }}); if(window._onShareChange) window._onShareChange(on); }
   }
   function dailyLeftMsg(){
     const el=document.getElementById('jitsi'); if(el) el.innerHTML='<div style="color:#fff;padding:24px;text-align:center;font-family:Inter;font-size:.9rem">Du hast den Unterricht verlassen.<br><a href="konto.html" style="color:#2DD4BF;font-weight:700">Zurück zu Meine Stunden</a></div>';
@@ -1209,7 +1250,7 @@
     // eigene Knöpfe mit dem aktuellen Status synchron halten
     api.addEventListener('audioMuteStatusChanged', e=>{ const b=document.getElementById('vc-mic'); if(b){ b.textContent = e.muted ? '🔇 Mikro aus' : '🎤 Mikro an'; b.classList.toggle('muted', e.muted); } });
     api.addEventListener('videoMuteStatusChanged', e=>{ const b=document.getElementById('vc-cam'); if(b){ b.textContent = e.muted ? '🚫 Kamera aus' : '📷 Kamera an'; b.classList.toggle('muted', e.muted); } });
-    api.addEventListener('screenSharingStatusChanged', e=>{ const b=document.getElementById('vc-share'); if(b){ b.textContent = e.on ? '🟢 Teilen beenden' : '🖥️ Teilen'; b.classList.toggle('on', e.on); } if(window._onShareChange) window._onShareChange(e.on); });
+    api.addEventListener('screenSharingStatusChanged', e=>{ ['vc-share','vc-share2'].forEach(i=>{const b=document.getElementById(i); if(b){ b.textContent = e.on ? '🟢 Teilen beenden' : '🖥️ Teilen'; b.classList.toggle('on', e.on); }}); if(window._onShareChange) window._onShareChange(e.on); });
     api.addEventListener('readyToClose', ()=>{ window._inCall=false; document.getElementById('jitsi').innerHTML='<div style="color:#fff;padding:24px;text-align:center;font-family:Inter;font-size:.9rem">Du hast den Unterricht verlassen.<br><a href="konto.html" style="color:#2DD4BF;font-weight:700">Zurück zu Meine Stunden</a></div>'; });
     // Immer Kachelansicht – man sieht sich selbst und alle Teilnehmer
     // Immer Kachelansicht (Meet-Stil): man sieht sich selbst UND alle Teilnehmer.
@@ -1408,9 +1449,42 @@
     html += SPRECHHILFEN.map(([cat,arr])=>`<div class="sh-cat">${esc(cat)}</div>`+arr.map(p=>`<span class="sh-chip">${esc(p)}</span>`).join('')).join('');
     body.innerHTML = html;
   }
+  // ---- Amanda-Chat (ersetzt die Sprechhilfen) ----
+  window._amVerlauf = window._amVerlauf || [];
+  function amandaMsg(wer,text){
+    const log=document.getElementById('am-log'); if(!log) return;
+    const d=document.createElement('div'); d.className='am-m '+(wer==='bot'?'bot':'du');
+    d.textContent=text; log.appendChild(d); log.scrollTop=log.scrollHeight;
+  }
+  async function amandaSend(){
+    const feld=document.getElementById('am-in'); if(!feld) return;
+    const frage=(feld.value||'').trim(); if(!frage || window._amLaeuft) return;
+    feld.value='';
+    amandaMsg('du',frage); window._amVerlauf.push({wer:'du',text:frage});
+    window._amLaeuft=true;
+    const btn=document.getElementById('am-send'); if(btn) btn.disabled=true;
+    const log=document.getElementById('am-log');
+    const warte=document.createElement('div'); warte.className='am-m warte'; warte.textContent='Amanda schreibt …';
+    if(log){ log.appendChild(warte); log.scrollTop=log.scrollHeight; }
+    const kopf={'Content-Type':'application/json'};
+    try{ const { data:{ session } }=await sb.auth.getSession(); if(session) kopf.Authorization='Bearer '+session.access_token; }catch(e){}
+    try{
+      const r=await fetch('/api/support-chat',{ method:'POST', headers:kopf, body: JSON.stringify({ verlauf: window._amVerlauf.slice(-12), seite:'amanda' }) });
+      const j=await r.json(); warte.remove();
+      const text=(j && j.text) || 'Da ist gerade etwas schiefgegangen. Frag mich bitte gleich noch einmal.';
+      amandaMsg('bot',text); window._amVerlauf.push({wer:'bot',text});
+    }catch(e){ warte.remove(); amandaMsg('bot','Die Verbindung hat nicht geklappt. Frag mich bitte gleich noch einmal.'); }
+    window._amLaeuft=false; if(btn) btn.disabled=false;
+  }
   function toggleSprechhilfen(){
     const p=document.getElementById('sh-panel'); if(!p) return;
-    renderSprechhilfen(); p.classList.toggle('open');   // bei jedem Öffnen frisch aus der Lektion lesen
+    p.classList.toggle('open');
+    if(p.classList.contains('open')){
+      const log=document.getElementById('am-log');
+      if(log && !window._amVerlauf.length){ amandaMsg('bot','Hallo! Ich bin Amanda, deine KI-Tutorin. Frag mich alles — z. B. den Unterschied zwischen „kennen“ und „wissen“.'); }
+      const feld=document.getElementById('am-in');
+      if(feld){ feld.onkeydown=e=>{ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); amandaSend(); } }; setTimeout(()=>feld.focus(),50); }
+    }
   }
 
   // ---- Sprech-Timer (Lehrer startet, alle sehen den Countdown) ----
@@ -1835,11 +1909,16 @@
 </div>
 
 <!-- Sprechhilfen (Redemittel) – für alle einblendbar -->
-<button id="sh-btn" class="sh-btn" onclick="toggleSprechhilfen()" title="Nützliche Sätze zum Sprechen">💬 Sprechhilfen</button>
-<div id="sh-panel" class="sh-panel">
+<button id="sh-btn" class="sh-btn" onclick="toggleSprechhilfen()" title="Amanda, deine KI-Tutorin, fragen">🤖 Amanda fragen</button>
+<div id="sh-panel" class="sh-panel am-panel">
   <button class="sh-close" onclick="toggleSprechhilfen()" title="Schließen">✕</button>
-  <h4>💬 Sprechhilfen</h4>
-  <div id="sh-body"></div>
+  <h4>🤖 Amanda fragen</h4>
+  <div class="am-hint">Stell Amanda jederzeit eine Frage — Grammatik, ein Wort, ein Satz zum Prüfen.</div>
+  <div id="am-log" class="am-log"></div>
+  <div class="am-reihe">
+    <textarea id="am-in" rows="2" placeholder="Deine Frage an Amanda …"></textarea>
+    <button id="am-send" class="am-send" onclick="amandaSend()">Fragen</button>
+  </div>
 </div>
 
 <!-- Mini-Feedback beim Verlassen -->
