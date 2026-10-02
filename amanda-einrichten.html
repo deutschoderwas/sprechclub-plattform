@@ -78,6 +78,8 @@
       <li><span class="nr">3</span><span>Die Kennung wird in der Datenbank gemerkt. Danach kann jedes Mitglied im Schülerbereich mit Amanda sprechen.</span></li>
     </ul>
     <button class="knopf" id="los">Agenten anlegen</button>
+      <button class="knopf" id="auffrischen" style="background:#fff;color:#14181B;border:1.5px solid #E7ECEE;margin-top:10px">Anweisung auffrischen</button>
+      <p class="klein" style="margin-top:8px;color:#6B7A80;font-size:13.5px">Amandas Haltung steht bei ElevenLabs fest. Wenn wir sie hier im Code verbessern, bekommt der bestehende Agent davon nichts mit — ein Klick auf „Anweisung auffrischen" gibt sie ihm.</p>
     <div class="meldung" id="meldung"></div>
   </div>
 
@@ -99,6 +101,8 @@
   var CFG = window.SPRECHCLUB_CONFIG || {};
   var sb = null;
   var knopf = document.getElementById('los');
+  var auffrischen = document.getElementById('auffrischen');
+  if(auffrischen) auffrischen.onclick = function(){ window.__AUFFRISCHEN__ = true; knopf.click(); };
   var box   = document.getElementById('meldung');
 
   function sagen(art, titel, text){
@@ -128,12 +132,17 @@
       return fetch('/api/amanda-agent-anlegen', {
         method:'POST',
         headers:{ 'Content-Type':'application/json', Authorization:'Bearer ' + t },
-        body: JSON.stringify({})
+        body: JSON.stringify(window.__AUFFRISCHEN__ ? { aktualisieren: true } : {})
       }).then(function(res){
         return res.json().then(function(j){ return { status:res.status, j:j }; });
       }).then(function(a){
         var j = a.j || {};
         if(a.status === 200 && j.ok){
+          if(j.aktualisiert){
+            sagen('gut', 'Amanda ist auf dem neuesten Stand.',
+              'Der Agent hat die neue Anweisung bekommen — ab dem nächsten Gespräch erklärt sie wie eine Lehrerin.<div class="wert">' + j.agent_id + '</div>');
+            return;
+          }
           if(j.schon_da){
             sagen('gut', 'Es gibt schon einen Agenten.',
               'Amanda ist bereits eingerichtet.<div class="wert">' + j.agent_id + '</div>');

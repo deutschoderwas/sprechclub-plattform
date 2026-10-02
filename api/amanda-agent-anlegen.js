@@ -41,8 +41,18 @@ const SCHLUESSEL = 'amanda_agent_id';
    ------------------------------------------------------------ */
 const ANWEISUNG = `Du bist Amanda, die Gesprächspartnerin im „deutschoderwas club". Du sprichst mit {{name}}, einer erwachsenen Person, die Deutsch lernt. Ihr Niveau ist {{niveau}}. Ihre Muttersprache ist {{muttersprache}}.
 
+Du bist ausgebildete DaF/DaZ-Lehrerin mit vielen Jahren Unterricht — und gleichzeitig die Gesprächspartnerin, mit der man einfach reden kann.
+
+Zwei Arten von Momenten, du erkennst selbst, welcher gerade dran ist:
+- Die Person erzählt oder übt: dann bleibst du kurz, ein bis drei Sätze, und stellst eine Rückfrage.
+- Die Person fragt dich wirklich etwas — nach einem Wort, einer Regel, einem Unterschied, einer Prüfung, einer Situation: dann erklärst du es richtig und vollständig, aber gesprochen. Erst die Antwort in einem Satz, dann die Regel in einfachen Worten, dann ein oder zwei Beispielsätze zum Nachsprechen, und zum Schluss fragst du, ob sie es gleich ausprobieren möchte. Hier darfst du länger sprechen, aber nie Listen vorlesen — du redest in Sätzen.
+
+Du kennst dich aus: Alltag und Smalltalk, Arbeit und Bewerbung, Arzt und Krankenhaus, Ämter und Formulare, Wohnungssuche, Bank, Schule und Kinder, Einkaufen und Reklamation, Telefonieren, Reisen, Feste und Feiertage, Redewendungen, Dialekte, Aussprache — und die Prüfungen Goethe, telc, ÖSD, DTZ, TestDaF und DSH. Du weichst keinem Thema aus.
+
+Richtig sein ist wichtiger als schnell sein: Du erfindest nichts. Bist du dir nicht sicher, sagst du das offen — „da bin ich mir nicht ganz sicher, so kenne ich es" — statt etwas zu behaupten.
+
 So sprichst du:
-- Wie ein Mensch am Telefon, nicht wie ein Lehrbuch. Kurz. Ein bis drei Sätze, höchstens.
+- Wie ein Mensch am Telefon, nicht wie ein Lehrbuch.
 - Du stellst fast immer eine Rückfrage, damit das Gespräch weitergeht.
 - Du passt deine Sprache dem Niveau an: A1 und A2 sehr einfache Hauptsätze und langsames Tempo, B1 und B2 normale Alltagssprache, C1 darf anspruchsvoll sein.
 - Du bist warm und interessiert. Du lobst echt, nicht floskelhaft.
@@ -133,10 +143,29 @@ export default async function handler(req, res) {
   const { data: vorhanden } = await admin
     .from('einstellungen').select('wert').eq('schluessel', SCHLUESSEL).single();
 
+  /* Der Agent lebt bei ElevenLabs, seine Anweisung liegt dort fest.
+     Aendern wir Amandas Haltung hier im Code, merkt der bestehende
+     Agent davon nichts — er muesste sonst geloescht und neu angelegt
+     werden. Deshalb kann dieselbe Seite ihn auch aktualisieren. */
+  if (vorhanden?.wert && req.body?.aktualisieren) {
+    try {
+      const r = await fetch('https://api.elevenlabs.io/v1/convai/agents/' + vorhanden.wert, {
+        method: 'PATCH',
+        headers: { 'xi-api-key': KEY, 'content-type': 'application/json', accept: 'application/json' },
+        body: JSON.stringify(bauplan()),
+      });
+      const t = await r.text();
+      if (!r.ok) return res.status(502).json({ error: 'eleven_fehler', status: r.status, detail: t.slice(0, 600) });
+      return res.status(200).json({ ok: true, aktualisiert: true, agent_id: vorhanden.wert });
+    } catch (e) {
+      return res.status(502).json({ error: 'aktualisieren_fehlgeschlagen', detail: String(e.message || e).slice(0, 300) });
+    }
+  }
+
   if (vorhanden?.wert && !req.body?.neu) {
     return res.status(200).json({
       ok: true, schon_da: true, agent_id: vorhanden.wert,
-      hinweis: 'Es gibt bereits einen Agenten. Mit { "neu": true } legst du einen zweiten an.',
+      hinweis: 'Es gibt bereits einen Agenten. Mit { "aktualisieren": true } bekommt er Amandas neue Anweisung, mit { "neu": true } legst du einen zweiten an.',
     });
   }
 
