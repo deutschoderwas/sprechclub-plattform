@@ -18,9 +18,13 @@
    zum Einstufungstest. Was noch fehlt, steht als „kommt noch" da —
    ehrlich statt als leere Kachel.
 
-   Die Minutenangaben sind die veröffentlichten Werte. Geprüft am
-   27.07.2026 sind B2 (Goethe) und DTZ; die übrigen tragen „ca." und
-   werden in Schritt 4 einzeln gegengeprüft.
+   Die Minutenangaben sind die veröffentlichten Werte. Geprüft sind
+   B2 (Goethe) und DTZ (27.07.2026) sowie B1 (04.10.2026, gegen die
+   Durchführungsbestimmungen des Goethe-Instituts: Lesen 65 und
+   Schreiben 60 exakt, Hören und Sprechen stehen dort selbst mit
+   „circa"). Die übrigen tragen weiter „ca." und sind noch nicht
+   gegengeprüft — lieber ein ehrliches „ca." als eine erfundene
+   Genauigkeit.
    ============================================================ */
 (function(){
   'use strict';
@@ -60,9 +64,11 @@
     { id:'b1', name:'Zertifikat B1', anbieter:'Goethe · telc · ÖSD', niveau:'B1',
       bild:'buero', kurs:'goethetelc', muster:'B1',
       fuer:'Einbürgerung, Ausbildung, viele Arbeitgeber. Die wichtigste Hürde.',
-      module:[ {id:'lesen',n:'Lesen',m:'ca. 65'}, {id:'hoeren',n:'Hören',m:'ca. 40'},
-               {id:'schreiben',n:'Schreiben',m:'ca. 60'}, {id:'sprechen',n:'Sprechen',m:'ca. 15'} ],
-      modular:true },
+      module:[ {id:'lesen',n:'Lesen',m:'65'}, {id:'hoeren',n:'Hören',m:'ca. 40'},
+               {id:'schreiben',n:'Schreiben',m:'60'}, {id:'sprechen',n:'Sprechen',m:'ca. 15'} ],
+      modular:true, geprueft:true,
+      hinweis:'Sprechen ca. 15 Minuten zu zweit, ca. 10 Minuten allein — dazu 15 Minuten Vorbereitung. '
+             +'Die schriftlichen Module dauern zusammen etwa 165 Minuten.' },
 
     { id:'b2', name:'Goethe-Zertifikat B2', anbieter:'Goethe · telc', niveau:'B2',
       bild:'bewerbung', kurs:'goethetelc', muster:'B2', geprueft:true,
@@ -525,6 +531,11 @@
     var hinweis = p.modular
       ? '<p class="pf-hinw">Diese Prüfung ist modular: Du kannst die Teile einzeln ablegen '
         + 'und einzeln wiederholen.</p>' : '';
+    /* hinweis und punkte standen bisher in der Tabelle, wurden aber nirgends
+       gezeigt — die Punkteverteilung des DTZ zum Beispiel war geschrieben
+       und unsichtbar. Genau das will jemand wissen, der sich vorbereitet. */
+    if(p.hinweis) hinweis += '<p class="pf-hinw">'+E(p.hinweis)+'</p>';
+    if(p.punkte)  hinweis += '<p class="pf-hinw">'+E(p.punkte)+'</p>';
     var zu = ZUSATZ[p.id] ? zusatzBlock(ZUSATZ[p.id]) : '';
     return hinweis + '<div class="pf-mods">'+karten+'</div>' + zu;
   }
