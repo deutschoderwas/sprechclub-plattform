@@ -27,9 +27,14 @@ export default async function handler(req, res) {
     .gte('starts_at', windowStart).lte('starts_at', nowISO)
     .eq('is_cancelled', false);
 
+  // Zehn Minuten Luft nach dem Stundenende. Der Lauf um Punkt kam
+  // bisher in derselben Sekunde, in der die Stunde endete — die Tafel
+  // war teils noch nicht fertig gespeichert, und die Lehrkraft schreibt
+  // nach dem Verabschieden oft noch zwei Zeilen nach.
+  const PUFFER = 10 * 60 * 1000;
   const ended = (cls || []).filter(c => {
     const end = new Date(c.starts_at).getTime() + (c.duration_min || 60) * 60000;
-    return end <= now;
+    return end + PUFFER <= now;
   }).sort((a, b) => new Date(b.starts_at) - new Date(a.starts_at));   // neueste zuerst
   if (!ended.length) return res.status(200).json({ ok: true, processed: 0, reason: 'keine beendeten Stunden' });
 
@@ -82,7 +87,13 @@ export default async function handler(req, res) {
   // Stiller Ausfall war das eigentliche Problem: zwei Wochen lang hat niemand
   // gemerkt, dass keine Nachbereitung mehr entsteht. Wenn ein Lauf nur noch
   // Fehler liefert, geht deshalb einmal taeglich eine Warnung an Julia raus.
-  if (!geschafft && results.length) {
+  // Der Fehlalarm war das zweite Problem: ein einzelner Aussetzer — Claude
+  // ueberlastet, Zeitlimit — hat sofort die Warnmail ausgeloest, obwohl der
+  // naechste Lauf 15 Minuten spaeter laengst durchlief. Die Mail nimmt sich
+  // aber nicht zurueck, und Julia steht da mit "geht nicht", waehrend es
+  // laengst geht. Jetzt wird erst gewarnt, wenn dieselbe Stunde ein zweites
+  // Mal gescheitert ist.
+  if (!geschafft && results.length && await zweiterFehlschlag(sb, results)) {
     try { await alarmAnJulia(sb, results, eligible.length); } catch (e) {}
   }
 
@@ -107,6 +118,23 @@ async function laufMerken(sb, results, offen, dauer, ausloeser) {
       ausloeser: ausloeser,
     })));
   } catch (e) { /* Mitschreiben darf den Lauf nie aufhalten */ }
+}
+
+// Zaehlt im Protokoll nach, ob dieselbe Stunde heute schon einmal
+// gescheitert ist. Der eigene Fehlversuch steht dort bereits — zwei
+// Eintraege heissen also: zweimal hintereinander nicht geschafft.
+async function zweiterFehlschlag(sb, results) {
+  try {
+    const ids = results.filter(r => !r.ok && r.classId).map(r => r.classId);
+    if (!ids.length) return true;          // ohne Stunde lieber einmal zu viel warnen
+    const seit = new Date(Date.now() - 6 * 3600 * 1000).toISOString();
+    const { data } = await sb.from('nachb_laeufe')
+      .select('class_id').in('class_id', ids)
+      .eq('ergebnis', 'fehler').gte('gestartet', seit);
+    const zahl = {};
+    (data || []).forEach(z => { zahl[z.class_id] = (zahl[z.class_id] || 0) + 1; });
+    return Object.keys(zahl).some(k => zahl[k] >= 2);
+  } catch (e) { return true; }             // im Zweifel warnen
 }
 
 // Hoechstens eine Warnmail pro Tag — der Lauf kommt alle 15 Minuten wieder.
