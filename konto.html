@@ -2075,23 +2075,66 @@ function premiumWartetAufStart(){
   }catch(e){ return false; }
 }
 
+function scTageText(){
+  /* Kalendertage zaehlen, nicht 24-Stunden-Bloecke. In der Nacht zum
+     25. Oktober wird die Uhr zurueckgestellt — mit der Millisekunden-
+     Rechnung stand deshalb zwischen Mitternacht und ein Uhr jede Nacht
+     ein Tag zu viel da, also genau in dem Moment, in dem die Zahl
+     umspringen soll. Darum beide Daten auf ihren Kalendertag in Berlin
+     bringen und den Abstand in ganzen Tagen nehmen. */
+  const tag = function(d){
+    try { return new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Berlin' }).format(d); }
+    catch(e){ return d.toISOString().slice(0, 10); }
+  };
+  const heute = Date.parse(tag(new Date()) + 'T00:00:00Z');
+  const ziel  = Date.parse(tag(SC_START)   + 'T00:00:00Z');
+  const tage  = Math.max(0, Math.round((ziel - heute) / 86400000));
+  return tage ? 'noch ' + tage + (tage === 1 ? ' Tag' : ' Tage') : '';
+}
+
 function scStartKarte(){
-  const tage = Math.max(0, Math.ceil((SC_START - new Date()) / 86400000));
   return '<div class="sc-start">'
     + '<span class="sc-ic" aria-hidden="true">🗓️</span>'
     + '<h2>Der LIVE-Unterricht startet am 1. November.</h2>'
     + '<p>Bis dahin gibt es hier nichts zu buchen. Ab dem 1. November stehen alle Termine '
     + 'an dieser Stelle — ' + SC_PLAN + ' — und du buchst so viele Stunden, '
     + 'wie du möchtest, ohne Guthaben.</p>'
-    + (tage ? '<p class="sc-tage">noch ' + tage + (tage === 1 ? ' Tag' : ' Tage') + '</p>' : '')
+    + '<p class="sc-tage" id="scTage">' + scTageText() + '</p>'
     + '</div>';
+}
+
+/* Der Zaehler stellt sich selbst.
+
+   Viele lassen den Schuelerbereich tagelang offen — am Handy ist der Tab
+   einfach noch da. Ohne das hier stuende am Morgen die Zahl von gestern,
+   und das waere schlimmer als gar keine Zahl: man glaubt ihr ja.
+
+   Gestellt wird kurz nach Mitternacht, und zur Sicherheit spaetestens
+   nach einer Stunde — ein Rechner, der zwischendurch geschlafen hat,
+   verschlaeft sonst seinen eigenen Mitternachtstermin. Ist der 1.
+   November erreicht, verschwindet die Karte und der Kalender erscheint,
+   ohne dass jemand neu laden muss. */
+let scUhr = null;
+function scTagesUhr(){
+  clearTimeout(scUhr); scUhr = null;
+  const el = document.getElementById('scTage');
+  if(!el) return;                                  // Karte ist nicht mehr da
+  if(!premiumWartetAufStart()){ renderKalender(); return; }   // der Start ist erreicht
+  el.textContent = scTageText();
+  const jetzt = new Date();
+  const mitternacht = new Date(jetzt);
+  mitternacht.setHours(24, 0, 20, 0);              // 20 Sekunden nach Mitternacht
+  const bis = Math.min(mitternacht - jetzt, 3600000);
+  scUhr = setTimeout(scTagesUhr, Math.max(30000, bis));
 }
 
 function renderKalender(){
   if(premiumWartetAufStart()){
     document.getElementById('v-kalender').innerHTML = meineStundenKarte() + scStartKarte();
+    scTagesUhr();
     return;
   }
+  clearTimeout(scUhr); scUhr = null;
   document.getElementById('v-kalender').innerHTML =
       meineStundenKarte()
     + '<div class="kal-trenner">'
