@@ -32,7 +32,7 @@ export default async function handler(req, res) {
      Kampagne schon bekommen hat, bekommt die Willkommensmail nicht
      hinterher. Ohne ihn gingen am 01.10. 73 Mails doppelt raus. */
   const { data: leads, error } = await sb.from('leads')
-    .select('id,name,email,created_at')
+    .select('id,name,email,created_at,status')
     .is('mail_at', null)
     .gte('created_at', ab)
     .order('created_at', { ascending: false })
@@ -47,14 +47,33 @@ export default async function handler(req, res) {
     .select('ref').eq('kind', 'lead_willkommen').in('ref', adressen);
   const hat = new Set((schon || []).map(z => z.ref));
 
-  let geschickt = 0, fehler = 0;
+  let geschickt = 0, fehler = 0, kaputt = 0, geprueft = 0;
   const gesehen = new Set();
+  const kaputteIds = [];
   for (const l of leads) {
+    /* Schon als unzustellbar gekennzeichnet: nicht noch einmal
+       versuchen. Sonst stehen dieselben vier Adressen alle zehn
+       Minuten wieder in der Bilanz. */
+    if (l.status === 'adresse_pruefen') continue;
     const mail = String(l.email || '').trim().toLowerCase();
     if (!mail || hat.has(mail) || gesehen.has(mail)) continue;
     gesehen.add(mail);
+    geprueft++;
     const r = await willkommenSenden(sb, l);
-    if (r.ok) geschickt++; else if (r.grund !== 'schon_geschickt') fehler++;
+    if (r.ok) geschickt++;
+    /* Eine Adresse mit Leerzeichen oder ohne Endung wird nie zustellbar.
+       Das ist kein Fehler des Laufs, sondern ein Tippfehler bei der
+       Anmeldung — und dahinter steht ein Mensch, der auf der Warteliste
+       sitzt und nie etwas hoeren wird. Also einmal kennzeichnen, damit
+       Julia ihn im Lead-Bereich sieht und die Adresse geradeziehen kann. */
+    else if (r.grund === 'keine_adresse') { kaputt++; kaputteIds.push(l.id); }
+    else if (r.grund !== 'schon_geschickt') fehler++;
   }
-  return res.status(200).json({ ok: true, geprueft: leads.length, geschickt, fehler });
+
+  if (kaputteIds.length) {
+    try { await sb.from('leads').update({ status: 'adresse_pruefen' }).in('id', kaputteIds); }
+    catch (e) { /* Kennzeichnen darf den Lauf nicht aufhalten */ }
+  }
+
+  return res.status(200).json({ ok: true, geprueft, geschickt, fehler, adresse_pruefen: kaputt });
 }

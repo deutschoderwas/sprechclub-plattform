@@ -888,7 +888,7 @@ function zeichneAbzeichen(){
 
 // ---------- Leads (Warteliste) ----------
 let LEADS=[], LEAD_FILTER='offen';
-const LEAD_STATUS=[['neu','🆕 Neu'],['kontaktiert','✉️ Kontaktiert'],['probestunde','🎟️ Probestunde'],['gewonnen','🎉 Gewonnen'],['abgelehnt','⚪ Kein Interesse']];
+const LEAD_STATUS=[['neu','🆕 Neu'],['kontaktiert','✉️ Kontaktiert'],['probestunde','🎟️ Probestunde'],['gewonnen','🎉 Gewonnen'],['abgelehnt','⚪ Kein Interesse'],['adresse_pruefen','⚠️ Adresse prüfen']];
 const LEAD_BG={neu:'#FEF3C7',kontaktiert:'#DBEAFE',probestunde:'#FCE7F3',gewonnen:'#DCFCE7',abgelehnt:'#F1F1F1'};
 const LEAD_FMT=new Intl.DateTimeFormat('de-DE',{timeZone:'Europe/Berlin',day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
 
@@ -906,7 +906,7 @@ function leadsBadge(){
 }
 window.leadFilter=function(v){ LEAD_FILTER=v; renderLeads(); };
 function leadRows(){
-  if(LEAD_FILTER==='offen') return LEADS.filter(l=>['neu','kontaktiert','probestunde'].includes(l.status));
+  if(LEAD_FILTER==='offen') return LEADS.filter(l=>['neu','kontaktiert','probestunde','adresse_pruefen'].includes(l.status));
   if(LEAD_FILTER==='alle') return LEADS;
   return LEADS.filter(l=>l.status===LEAD_FILTER);
 }
