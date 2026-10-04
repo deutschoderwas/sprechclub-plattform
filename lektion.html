@@ -299,6 +299,36 @@ h2 .ic{color:var(--acc-d)}
 .tonb:hover{color:var(--ink);border-color:var(--ink3)}
 .tonb.aus{color:var(--line);}
 
+/* ---------- Wortschatz als Bildkarten ---------- */
+.wgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:16px}
+@media(min-width:700px){.wgrid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:1100px){.wgrid{grid-template-columns:repeat(4,1fr);gap:14px}}
+.wk{display:flex;flex-direction:column;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:17px;padding:0;overflow:hidden;cursor:pointer;font-family:inherit;color:var(--ink);transition:border-color .18s,transform .16s,box-shadow .18s;animation:up .4s cubic-bezier(.16,1,.3,1) both}
+.wk:hover{border-color:var(--ink3);transform:translateY(-2px);box-shadow:0 10px 26px rgba(23,23,23,.07)}
+.wb{position:relative;aspect-ratio:4/3;background:var(--acc-soft);display:flex;align-items:center;justify-content:center;font-size:40px;overflow:hidden}
+.wb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .45s}
+.wb img.da{opacity:1}
+.wk .wt{padding:11px 13px 13px;display:flex;gap:9px;align-items:flex-start}
+.wk .wd{flex:1;min-width:0;display:block}
+.wk .de{display:block;font-size:15px;font-weight:600;letter-spacing:-.01em;line-height:1.3;overflow-wrap:anywhere;hyphens:auto}
+.wk .ex{display:block;font-size:12.5px;color:var(--ink2);margin-top:3px;line-height:1.45}
+.wk .sp{width:30px;height:30px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--ink3);display:flex;align-items:center;justify-content:center;flex:none;transition:.2s}
+.wk:hover .sp{color:var(--acc-d);border-color:var(--acc-line)}
+.wk .sp.on{background:var(--acc);border-color:var(--acc);color:#fff}
+
+/* ---------- Bild-Auswahl in den Uebungen ---------- */
+.bwahl{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:16px}
+@media(min-width:760px){.bwahl{grid-template-columns:repeat(4,1fr)}}
+.bw{position:relative;aspect-ratio:1;border:2px solid var(--line);border-radius:15px;overflow:hidden;background:var(--acc-soft);cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;font-size:34px;transition:border-color .16s,transform .14s}
+.bw:hover{border-color:var(--ink3)}
+.bw img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .4s}
+.bw img.da{opacity:1}
+.bw .bu{position:absolute;left:0;right:0;bottom:0;background:rgba(23,23,23,.74);color:#fff;font-size:12.5px;font-weight:600;padding:6px 8px;text-align:center}
+.bw.ok{border-color:#1F9D63;box-shadow:0 0 0 3px rgba(31,157,99,.16)}
+.bw.no{border-color:#DD0000;animation:wack .4s}
+@keyframes wack{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.ex-extra{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--acc-d);background:var(--acc-soft);border-radius:999px;padding:4px 10px;margin-left:8px}
+
 </style>
 </head>
 <body>
@@ -535,6 +565,145 @@ function jubeln(){
 var D=null,steps=[],cur=0,st=[],first=0,total=0;
 function esc(x){ return String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function qo(x){ return esc(x).replace(/'/g,"\\'"); }
+/* ---------- Mehr \u00dcben ----------
+   Neun Aufgaben sind zu wenig, um ein Wort wirklich zu behalten.
+   Aus dem, was in der Lektion ohnehin steht \u2014 Vokabeln,
+   Beispiels\u00e4tze, Merks\u00e4tze, Dialog \u2014 entstehen hier weitere
+   Aufgaben: Bild zuordnen, L\u00fccke f\u00fcllen, Satz bauen, h\u00f6ren.
+   Sie h\u00e4ngen hinten an und gelten fuer jede Lektion. */
+function mischen(liste, saat){
+  var a=liste.slice(), n=saat||7;
+  for(var i=a.length-1;i>0;i--){
+    n=(n*9301+49297)%233280;
+    var j=Math.floor(n/233280*(i+1));
+    var t=a[i]; a[i]=a[j]; a[j]=t;
+  }
+  return a;
+}
+function kernwort(de){
+  return String(de||'')
+    .replace(/^(der|die|das|den|dem|ein|eine)\s+/i,'')
+    .split(/[,/(]/)[0]
+    .replace(/[\s\u2026.!?:]+$/,'')
+    .trim();
+}
+/* Nur Nomen lassen sich eindeutig fotografieren. Eine Wendung wie
+   \u201eTsch\u00fcss!\u201c sieht auf einem Foto genauso aus wie \u201eHallo!\u201c \u2014 dann
+   waere die Bildaufgabe nicht l\u00f6sbar, sondern Gl\u00fccksache. */
+function istNomen(v){ return /^(der|die|das)\s+\S/i.test(String((v&&v.de)||'')); }
+function extraUebungen(d){
+  var raus=[], V=(d.vokabeln||[]).filter(function(v){ return v && v.de; });
+
+  /* a) Welches Bild passt? \u2014 nur mit Nomen, und nur ab vier davon */
+  var N=V.filter(istNomen);
+  if(N.length>=4){
+    [0,1].forEach(function(runde){
+      var pool=mischen(N, 11+runde*13).slice(0,4);
+      if(pool.length<4) return;
+      var ziel=pool[runde%4];
+      raus.push({
+        typ:'bildwahl', extra:true,
+        frage:'Welches Bild passt zu \u201e'+ziel.de+'\u201c?',
+        optionen:pool.map(function(v){ return v.de; }),
+        richtig:pool.indexOf(ziel),
+        hinweis:ziel.bsp||''
+      });
+    });
+  }
+
+  /* b) Das Wort im Beispielsatz \u2014 L\u00fccke mit vier Auswahlm\u00f6glichkeiten */
+  var mitBsp=V.filter(function(v){
+    var k=kernwort(v.de);
+    if(!v.bsp || k.length<3) return false;
+    var i=v.bsp.toLowerCase().indexOf(k.toLowerCase());
+    if(i<0) return false;
+    /* Was uebrig bleibt, muss noch ein Satz sein \u2014 sonst steht da nur die Luecke */
+    return (v.bsp.slice(0,i)+v.bsp.slice(i+k.length)).replace(/[^A-Za-z\u00c4\u00d6\u00dc\u00e4\u00f6\u00fc\u00df]/g,'').length>=3;
+  });
+  mischen(mitBsp, 29).slice(0,2).forEach(function(v,n){
+    var k=kernwort(v.de), i=v.bsp.toLowerCase().indexOf(k.toLowerCase());
+    var satz=v.bsp.slice(0,i)+'\u2026\u2026'+v.bsp.slice(i+k.length);
+    var andere=mischen(V.filter(function(x){ return x!==v; }), 41+n).slice(0,3).map(function(x){ return kernwort(x.de); });
+    var opt=mischen([k].concat(andere), 53+n);
+    raus.push({
+      typ:'mc', extra:true,
+      frage:'Welches Wort fehlt?  '+satz,
+      optionen:opt, richtig:opt.indexOf(k),
+      hinweis:'Das Wort hei\u00dft vollst\u00e4ndig: '+v.de
+    });
+  });
+
+  /* c) Satz bauen \u2014 aus den S\u00e4tzen, die man nach der Lektion kann */
+  var saetze=((d.zusammenfassung&&d.zusammenfassung.kernsaetze)||[])
+    .concat(((d.dialog&&d.dialog.lines)||[]).map(function(l){ return l.txt; }))
+    .filter(function(x){
+      if(!x || x.indexOf('/')>=0 || x.indexOf('\u2026')>=0 || x.indexOf('...')>=0) return false;
+      var w=String(x).trim().split(/\s+/);
+      return w.length>=3 && w.length<=7;
+    });
+  mischen(saetze, 67).slice(0,2).forEach(function(satz,n){
+    var w=satz.trim().split(/\s+/);
+    raus.push({
+      typ:'order', extra:true,
+      frage:'Bau den Satz!',
+      woerter:mischen(w, 71+n*5),
+      loesung:satz,
+      hinweis:'Das Verb steht an zweiter Stelle \u2014 au\u00dfer in der Frage.'
+    });
+  });
+
+  /* d) Was antwortest du? \u2014 aus dem Dialog der Lektion */
+  var zeilen=((d.dialog&&d.dialog.lines)||[]).map(function(l){ return l.txt; }).filter(function(x){
+    return x && x.trim().split(/\s+/).length<=9;
+  });
+  if(zeilen.length>=4){
+    var k=1+Math.floor(zeilen.length/3);
+    var frage=zeilen[k-1], antwort=zeilen[k];
+    var falsch=mischen(zeilen.filter(function(x){ return x!==antwort && x!==frage; }), 59).slice(0,2);
+    if(antwort && falsch.length===2){
+      var opt=mischen([antwort].concat(falsch), 61);
+      raus.push({
+        typ:'mc', extra:true,
+        frage:'Jemand sagt: \u201e'+frage+'\u201c  \u2014 Was passt als Antwort?',
+        optionen:opt, richtig:opt.indexOf(antwort),
+        hinweis:'Schau noch einmal in den Dialog der Lektion.'
+      });
+    }
+  }
+
+  /* e) Wendung und Situation zusammenbringen \u2014 nur mit eindeutigen Paaren */
+  var gesehen={}, paare=[];
+  V.forEach(function(v){
+    if(!v.bsp) return;
+    var r=v.bsp.trim();
+    if(gesehen[r.toLowerCase()]) { gesehen[r.toLowerCase()]='doppelt'; return; }
+    gesehen[r.toLowerCase()]=v.de;
+    paare.push([v.de, r]);
+  });
+  paare=paare.filter(function(pp){ return gesehen[pp[1].toLowerCase()]!=='doppelt'; });
+  if(paare.length>=4){
+    raus.push({
+      typ:'match', extra:true,
+      frage:'Was geh\u00f6rt zusammen?',
+      paare:mischen(paare, 73).slice(0,5),
+      hinweis:'Lies beide Seiten einmal laut \u2014 dann h\u00f6rst du, was passt.'
+    });
+  }
+
+  /* f) H\u00f6ren und wiedererkennen */
+  if(saetze.length>=3){
+    var drei=mischen(saetze, 83).slice(0,3);
+    var ziel=drei[0], opt=mischen(drei, 97);
+    raus.push({
+      typ:'listen', extra:true,
+      audio:ziel, frage:'H\u00f6r zu: Welchen Satz h\u00f6rst du?',
+      optionen:opt, richtig:opt.indexOf(ziel),
+      hinweis:'H\u00f6r noch einmal \u2014 achte auf das erste Wort.'
+    });
+  }
+
+  return raus;
+}
 function boot(d){
   D=d;
   document.title=D.meta.titel+' – deutschoderwas club';
@@ -544,6 +713,7 @@ function boot(d){
   if(D.dialog) steps.push({id:'dialog',ic:'headset',nm:'Dialog'});
   if(D.vokabeln&&D.vokabeln.length) steps.push({id:'words',ic:'cards',nm:'Wortschatz'});
   if(D.grammatik) steps.push({id:'gram',ic:'grammar',nm:'Grammatik'});
+  try{ D.uebungen=(D.uebungen||[]).concat(extraUebungen(D)); }catch(e){}
   if(D.uebungen&&D.uebungen.length){ total=D.uebungen.length; D.uebungen.forEach(function(u,i){ steps.push({id:'ex',ic:'puzzle',nm:'Übungen',ex:i}); st.push({done:false,fails:0}); }); }
   if(D.zusammenfassung) steps.push({id:'recap',ic:'bookmark',nm:'Merkblatt'});
   if(D.sprechen) steps.push({id:'speak',ic:'mic',nm:'Sprechen'});
@@ -582,6 +752,7 @@ function draw(){
     : s.id==='gram'?vGram() : s.id==='ex'?vEx(s.ex) : s.id==='recap'?vRecap()
     : s.id==='speak'?vSpeak() : (saveDone(),setTimeout(jubeln,260),vFin());
   if(s.id==='speak'){ try{ adStart(); }catch(e){} }
+  if(s.id==='words'||s.id==='ex'){ try{ wbHolen(); }catch(e){} }
   var p=document.getElementById('bPrev'), n=document.getElementById('bNext');
   p.style.visibility=cur===0?'hidden':'visible';
   n.style.display=s.id==='fin'?'none':'';
@@ -629,17 +800,67 @@ window.__playAll=function(){
     speak(t,null,function(){ setTimeout(nx,300); }, sp);
   })();
 };
+/* Ein Wort merkt man sich \u00fcber ein Bild, nicht \u00fcber ein Emoji.
+   Die Karten zeigen deshalb echte Fotos; sie kommen von /api/wortbild
+   und werden dort einmal pro Wort geholt und gemerkt. Solange noch
+   keins da ist \u2014 oder wenn keins zu finden war \u2014 bleibt das Emoji
+   stehen, die Lektion funktioniert in jedem Fall. */
 function vWords(){
   var w=D.vokabeln.map(function(v,i){
-    var tile=v.bild?'<img src="'+bild(v.bild,160)+'" alt="">':(v.em||'');
-    return '<div class="w" style="animation-delay:'+(i*30)+'ms" onclick="__say(this.querySelector(\'.sp\'),\''+qo(v.de)+'\')">'
-      +'<span class="tile">'+tile+'</span><div class="wt"><div class="de">'+esc(v.de)+'</div>'
+    var innen = v.bild ? '<img class="da" src="'+bild(v.bild,400)+'" alt="">' : esc(v.em||'\ud83d\udcd6');
+    return '<button class="wk" style="animation-delay:'+(i*28)+'ms" data-wort="'+esc(v.de)+'"'
+      +' onclick="__say(this.querySelector(\'.sp\'),\''+qo(v.de)+'\')">'
+      +'<span class="wb">'+innen+'</span>'
+      +'<span class="wt"><span class="wd"><span class="de">'+esc(v.de)+'</span>'
       +trZ(v.de)
-      +(v.bsp?'<div class="ex">'+esc(v.bsp)+'</div>':'')+'</div>'
-      +'<span class="sp">'+I('speaker',15)+'</span></div>';
+      +(v.bsp?'<span class="ex">'+esc(v.bsp)+'</span>':'')+'</span>'
+      +'<span class="sp">'+I('speaker',14)+'</span></span></button>';
   }).join('');
-  return '<div class="card"><h2>'+I('cards',19)+'Wortschatz</h2><p class="sub">'+D.vokabeln.length+' neue Wörter und Wendungen. Tippe an, hör zu, sprich laut nach.</p>'
-    +'<div class="words">'+w+'</div></div>';
+  var n=D.vokabeln.length;
+  return '<div class="card"><h2>'+I('cards',19)+'Wortschatz</h2>'
+    +'<p class="sub">'+n+' neue'+(n===1?'s Wort':' W\u00f6rter')+' und Wendungen. Tippe eine Karte an, h\u00f6r zu, sprich laut nach.</p>'
+    +'<div class="wgrid">'+w+'</div></div>';
+}
+
+/* ---------- Echte Fotos zu den W\u00f6rtern ----------
+   Ein Aufruf pro Lektion, nicht einer pro Wort. Was zur\u00fcckkommt,
+   gilt fuer die ganze Sitzung \u2014 auch fuer die Bild\u00fcbungen. */
+var WB = { bilder:{}, geholt:false, laeuft:false };
+function wbSchluessel(w){
+  return String(w||'').trim().toLowerCase().replace(/^(der|die|das|den|dem|des|ein|eine|einen)\s+/,'').replace(/\s+/g,' ');
+}
+function wbVon(wort){
+  var t = WB.bilder[wbSchluessel(wort)];
+  return (t && t.url) || '';
+}
+function wbMalen(){
+  document.querySelectorAll('.wb[data-fehlt], .wk .wb').forEach(function(){});
+  document.querySelectorAll('.wk').forEach(function(k){
+    var kasten=k.querySelector('.wb'); if(!kasten || kasten.querySelector('img')) return;
+    var u=wbVon(k.getAttribute('data-wort')); if(!u) return;
+    var im=document.createElement('img'); im.alt=''; im.loading='lazy';
+    im.onload=function(){ im.classList.add('da'); };
+    im.onerror=function(){ im.remove(); };
+    im.src=u; kasten.appendChild(im);
+  });
+  document.querySelectorAll('.bw[data-wort]').forEach(function(b){
+    if(b.querySelector('img')) return;
+    var u=wbVon(b.getAttribute('data-wort')); if(!u) return;
+    var im=document.createElement('img'); im.alt=''; im.loading='lazy';
+    im.onload=function(){ im.classList.add('da'); };
+    im.onerror=function(){ im.remove(); };
+    im.src=u; b.insertBefore(im, b.firstChild);
+  });
+}
+function wbHolen(){
+  if(WB.geholt || WB.laeuft) { wbMalen(); return; }
+  if(!D.vokabeln || !D.vokabeln.length) return;
+  WB.laeuft=true;
+  var liste=D.vokabeln.slice(0,24).map(function(v){ return { wort:v.de, en:v.en||'' }; });
+  fetch('/api/wortbild',{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({woerter:liste}) })
+    .then(function(r){ return r.json(); })
+    .then(function(j){ if(j&&j.bilder) WB.bilder=j.bilder; WB.geholt=true; WB.laeuft=false; wbMalen(); })
+    .catch(function(){ WB.laeuft=false; });
 }
 function vGram(){
   var b=(D.grammatik.blocks||[]).map(function(x){
@@ -653,13 +874,20 @@ var E={ord:[],gaps:[],ml:null,md:0};
 function vEx(i){
   E={ord:[],gaps:[],ml:null,md:0};
   var u=D.uebungen[i], s=st[i], inner='';
-  var head='<div class="exhead"><span class="exn">Übung '+(i+1)+' von '+total+'</span>'+(s.done?'<span class="exdone">'+I('check',13)+'gelöst</span>':'')+'</div>';
+  var head='<div class="exhead"><span class="exn">Übung '+(i+1)+' von '+total+(u.extra?'</span><span class="ex-extra">\u00dcben bis es sitzt':'')+'</span>'+(s.done?'<span class="exdone">'+I('check',13)+'gelöst</span>':'')+'</div>';
   if(u.typ==='mc'||u.typ==='listen'||u.typ==='bild'){
     var pre='';
     if(u.typ==='listen') pre='<div class="playbar"><button class="playbtn" onclick="__say(this,\''+qo(u.audio)+'\')">'+I('speaker',17)+'</button><span class="pl">Anhören</span></div>';
     if(u.typ==='bild') pre='<img class="exim" src="'+bild(u.bild,700)+'" alt="">';
     inner='<p class="qq">'+esc(u.frage)+'</p>'+pre
       +'<div class="opts'+(u.typ==='bild'?' two':'')+'">'+u.optionen.map(function(o,k){return '<button class="o" data-o="'+k+'" onclick="__pick(this,'+i+')">'+esc(o)+'</button>';}).join('')+'</div>';
+  } else if(u.typ==='bildwahl'){
+    inner='<p class="qq">'+esc(u.frage)+'</p>'
+      +'<div class="bwahl">'+u.optionen.map(function(o,k){
+          var v=(D.vokabeln||[]).filter(function(x){ return x.de===o; })[0];
+          return '<button class="bw" data-wort="'+esc(o)+'" data-o="'+k+'" onclick="__pick(this,'+i+')"'
+            +' aria-label="Bild '+(k+1)+'">'+esc((v&&v.em)||'\ud83d\uddbc\ufe0f')+'</button>';
+        }).join('')+'</div>';
   } else if(u.typ==='gapbank'){
     var pr=u.text.split('___'), gi=0, tx='';
     pr.forEach(function(p,k){ tx+=esc(p); if(k<pr.length-1){ tx+='<span class="blank" data-g="'+gi+'" onclick="__clr(this)"></span>'; gi++; } });
@@ -681,7 +909,7 @@ function vEx(i){
       +(u.muster?'<p class="hintline">Beispiel: <b>'+esc(u.muster)+'</b></p>':'')
       +'<input class="inp" id="inp" autocomplete="off" placeholder="Deine Antwort …" onkeydown="if(event.key===\'Enter\')__chk('+i+')">';
   }
-  var btn=(u.typ==='mc'||u.typ==='listen'||u.typ==='bild'||u.typ==='match')?''
+  var btn=(u.typ==='mc'||u.typ==='listen'||u.typ==='bild'||u.typ==='bildwahl'||u.typ==='match')?''
     :'<div style="margin-top:18px"><button class="btn btn-p" onclick="__chk('+i+')">Prüfen</button></div>';
   return '<div class="card">'+head+inner+btn+'<div class="fb" id="fb"></div></div>';
 }
@@ -699,7 +927,7 @@ function pass(i,x){
 /* Niemand soll an einer Aufgabe festhängen: nach dem zweiten Fehler kommt
    der Tipp, nach dem dritten die Lösung — und es geht weiter. */
 function loesungVon(u){
-  if(u.typ==='mc'||u.typ==='listen'||u.typ==='bild') return (u.optionen||[])[u.richtig]||'';
+  if(u.typ==='mc'||u.typ==='listen'||u.typ==='bild'||u.typ==='bildwahl') return (u.optionen||[])[u.richtig]||'';
   if(u.typ==='gapbank') return (u.loesung||[]).join(' · ');
   if(u.typ==='order') return u.loesung||'';
   if(u.typ==='match') return (u.paare||[]).map(function(p){ return p[0]+' = '+p[1]; }).join(' · ');
@@ -722,7 +950,7 @@ function miss(i,h){
 }
 window.__pick=function(el,i){
   var u=D.uebungen[i], k=+el.getAttribute('data-o');
-  if(k===u.richtig){ el.classList.add('ok'); document.querySelectorAll('.o').forEach(function(o){o.disabled=true;}); pass(i); }
+  if(k===u.richtig){ el.classList.add('ok'); document.querySelectorAll('.o,.bw').forEach(function(o){o.disabled=true;}); pass(i); }
   else{ el.classList.add('no'); setTimeout(function(){el.classList.remove('no');},650); miss(i,u.hinweis); }
 };
 window.__put=function(el){
