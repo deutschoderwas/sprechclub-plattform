@@ -187,7 +187,12 @@
      Gebaut wird alles mit textContent — es kommt nie HTML aus der
      Antwort in die Seite. */
   function fett(ziel, text) {
-    var teile = String(text).split(/\*([^*\n]+)\*/);
+    /* Amandas Zeichen kennen nur EIN Sternchen. Rutscht ihr trotzdem
+       einmal "**Dativ**" heraus, soll der Lernende nicht die Sternchen
+       im Text sehen — hier wird es stillschweigend geradegezogen. Der
+       Server tut das auch; zwei Netze sind hier billiger als ein Loch. */
+    var teile = String(text).replace(/\*\*([^*\n]+)\*\*/g, '*$1*')
+                            .split(/\*([^*\n]+)\*/);
     for (var i = 0; i < teile.length; i++) {
       if (!teile[i]) continue;
       if (i % 2) { var b = document.createElement('b'); b.textContent = teile[i]; ziel.appendChild(b); }

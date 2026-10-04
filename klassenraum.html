@@ -1569,7 +1569,10 @@
   /* Amandas vier Zeichen in ein Element malen — dieselben wie im
      Schuelerbereich: *fett*, "> " Beispiel, "· " Punkt, "! " Merksatz. */
   function amandaFett(ziel, text){
-    String(text).split(/(\*[^*\n]+\*)/).forEach(function(teil){
+    /* Doppelte Sternchen geradeziehen: "**Dativ**" wird "*Dativ*".
+       Sonst stuenden die uebrigen Sterne sichtbar im Satz. */
+    String(text).replace(/\*\*([^*\n]+)\*\*/g, '*$1*')
+                .split(/(\*[^*\n]+\*)/).forEach(function(teil){
       if(/^\*[^*\n]+\*$/.test(teil)){
         const b=document.createElement('b'); b.textContent=teil.slice(1,-1); ziel.appendChild(b);
       } else if(teil){ ziel.appendChild(document.createTextNode(teil)); }

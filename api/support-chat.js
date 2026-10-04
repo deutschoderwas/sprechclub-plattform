@@ -33,7 +33,7 @@ WIE DU ANTWORTEST:
 
 WIE DU ES ZEIGST — das ist wichtig, denn Text allein bleibt nicht haengen:
 Du darfst diese vier Zeichen benutzen, sonst nichts:
-- *Sternchen* um ein Wort machen es fett. Nutze das fuer genau das Wort, um das es geht.
+- *Sternchen* um ein Wort machen es fett. Nutze das fuer genau das Wort, um das es geht. GENAU EIN Sternchen auf jeder Seite — niemals zwei. „**Dativ**" ist falsch, der Lernende sieht dann die Sternchen im Text stehen. Richtig ist „*Dativ*". Auch keine Rauten fuer Ueberschriften und keine Spiegelstriche: es gibt nur diese vier Zeichen.
 - Eine Zeile, die mit "> " beginnt, wird als Beispielsatz hervorgehoben. Gib fast immer mindestens einen Beispielsatz — ein Satz aus dem echten Leben sagt mehr als eine Regel.
 - Eine Zeile, die mit "· " beginnt, ist ein Aufzaehlungspunkt. Hoechstens drei, nur wenn es wirklich eine Liste ist.
 - Eine Zeile, die mit "! " beginnt, ist der Merksatz — die eine Sache, die haengenbleiben soll. Hoechstens einer pro Antwort.
@@ -52,6 +52,10 @@ Antwort:
 > Ich *kenne* diesen Film.
 > Ich *weiss*, wann der Film anfaengt.
 ! kennen + wen/was · wissen + dass/ob/wann
+
+DEIN EIGENES DEUTSCH:
+Was du schreibst, wird nachgemacht — du bist fuer diese Menschen das Vorbild. Ein falscher Artikel in deiner eigenen Antwort ist schlimmer als gar keine Antwort, denn er sieht aus wie gelernte Wahrheit. Lies deinen Satz noch einmal, bevor du ihn abschickst: stimmen Artikel, Fall und Endung? Nennst du einen Fachbegriff („die rheinische Verlaufsform", „der Konjunktiv II", „das Partizip"), dann steht sein Artikel richtig da.
+Nenne nur Alternativen, die an dieser Stelle wirklich passen. Lieber eine als drei, von denen zwei danebenliegen.
 
 WENN JEMAND FRAGT, OB EIN SATZ RICHTIG IST:
 Das ist die heikelste Frage, die du bekommst — und die, bei der du am meisten Schaden anrichtest, wenn du dich irrst. Vier Schritte, immer:
@@ -128,6 +132,25 @@ Du bekommst die Tafel-Mitschrift aus einer Unterrichtsstunde. Du fasst sie fuer 
 - Ist die Mitschrift zu kurz oder unverstaendlich, sag genau das in einem Satz, statt etwas zu bauen.
 - Keine Begruessung, keine Rueckfrage, keine Schlussformel.
 Der Schueler liest das spaeter wieder, vielleicht in einer Woche. Es muss dann noch stimmen.`;
+
+/* Amandas Zeichen kennen nur EIN Sternchen. Trotzdem rutscht ihr immer
+   wieder gewoehnliches Markdown heraus — "**Dativ**", eine Raute als
+   Ueberschrift, ein Spiegelstrich als Punkt. Die Oberflaeche malt nur die
+   vier vereinbarten Zeichen, alles andere steht als nackter Stern im Text
+   und sieht aus wie ein Fehler. Also hier gerade ziehen, bevor es
+   jemand zu sehen bekommt. Die Anweisung sagt es ihr auch — aber eine
+   Anweisung ist eine Bitte, das hier ist eine Zusage. */
+function zeichenGeradeZiehen(t) {
+  return String(t || '')
+    .replace(/\*\*([^*\n]+)\*\*/g, '*$1*')      // **fett** -> *fett*
+    .replace(/__([^_\n]+)__/g, '*$1*')            // __fett__ -> *fett*
+    .replace(/^\s{0,3}#{1,6}\s+/gm, '')           // ## Ueberschrift -> normale Zeile
+    .replace(/^\s{0,3}[-*]\s+/gm, '\u00b7 ')      // - Punkt / * Punkt -> · Punkt
+    .replace(/^\s{0,3}\d+\.\s+/gm, '\u00b7 ')    // 1. Punkt -> · Punkt
+    .replace(/\*{3,}/g, '*')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+}
 
 async function mailAnJulia({ frage, antwort, name, email, seite, angemeldet }) {
   if (!process.env.BREVO_API_KEY) return false;
@@ -225,6 +248,7 @@ export default async function handler(req, res) {
   // Die Zeile bekommt niemand zu sehen — sie ist das Signal fuer die E-Mail.
   let fuerJulia = /\[FUER_JULIA\]/i.test(antwort);
   antwort = antwort.replace(/\[FUER_JULIA\]/gi, '').replace(/\n{3,}/g, '\n\n').trim();
+  antwort = zeichenGeradeZiehen(antwort);
 
   if (!antwort) {
     antwort = 'Da bin ich gerade überfragt — ich habe deine Frage aber an Julia weitergegeben. Sie meldet sich per E-Mail bei dir.';
