@@ -21,7 +21,27 @@ export default async function handler(req, res) {
   const { data: me } = await sb.from('profiles').select('is_admin,is_teacher').eq('id', caller.id).maybeSingle();
   if (!me || !(me.is_admin || me.is_teacher)) return res.status(403).json({ ok: false, error: 'not_admin' });
 
+  const t0 = Date.now();
   const result = await runNachbereitung(sb, { classId, source, pdfText });
+
+  // Auch der Lauf von Hand wird mitgeschrieben — sonst fehlt in der
+  // Uebersicht genau der Versuch, den jemand gestartet hat, weil der
+  // automatische nicht wollte.
+  try {
+    const { data: c } = await sb.from('classes').select('title,starts_at').eq('id', classId).maybeSingle();
+    await sb.from('nachb_laeufe').insert({
+      class_id: classId,
+      titel: (c && c.title) || null,
+      beginn: (c && c.starts_at) || null,
+      ergebnis: result.ok ? 'ok' : 'fehler',
+      fehler: result.ok ? null : String(result.error || 'unbekannt').slice(0, 200),
+      detail: result.detail ? String(result.detail).slice(0, 2000) : null,
+      quelle: result.source || source || null,
+      dauer_ms: Date.now() - t0,
+      ausloeser: 'hand',
+    });
+  } catch (e) { /* Mitschreiben darf die Nachbereitung nie aufhalten */ }
+
   return res.status(200).json(result);
 }
 

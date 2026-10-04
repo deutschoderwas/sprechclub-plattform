@@ -63,13 +63,21 @@ export default async function handler(req, res) {
     if (results.length && Date.now() - t0 > 40000) break;
     try {
       const r = await runNachbereitung(sb, { classId: c.id, source: 'tafel' });
-      results.push({ classId: c.id, title: c.title, ok: r.ok, error: r.error, detail: r.detail, counts: r.counts });
+      results.push({ classId: c.id, title: c.title, beginn: c.starts_at, ok: r.ok, error: r.error, detail: r.detail, counts: r.counts, source: r.source });
     } catch (e) {
-      results.push({ classId: c.id, title: c.title, ok: false, error: e.message });
+      results.push({ classId: c.id, title: c.title, beginn: c.starts_at, ok: false, error: e.message });
     }
   }
 
   const geschafft = results.filter(r => r.ok).length;
+
+  // Jeder Versuch wird mitgeschrieben — und zwar hier, nicht nur in der
+  // Antwort. Genau daran ist die Fehlersuche bisher gescheitert: der Lauf
+  // antwortet IMMER mit HTTP 200 und traegt den Fehler nur in den
+  // Antworttext. Den loescht Supabase nach ein paar Stunden, und in den
+  // Vercel-Logs taucht er nie auf, weil 200 kein Fehler ist. Hinterher war
+  // deshalb nicht mehr zu sagen, woran ein Lauf gescheitert war.
+  await laufMerken(sb, results, eligible.length, Date.now() - t0, 'auto');
 
   // Stiller Ausfall war das eigentliche Problem: zwei Wochen lang hat niemand
   // gemerkt, dass keine Nachbereitung mehr entsteht. Wenn ein Lauf nur noch
@@ -79,6 +87,26 @@ export default async function handler(req, res) {
   }
 
   return res.status(200).json({ ok: true, processed: geschafft, eligible: eligible.length, results });
+}
+
+// Ein Satz pro Versuch, mehr nicht. Laeufe ohne offene Stunde schreiben
+// nichts — sonst stuenden hier 96 leere Zeilen am Tag.
+async function laufMerken(sb, results, offen, dauer, ausloeser) {
+  if (!results || !results.length) return;
+  try {
+    await sb.from('nachb_laeufe').insert(results.map(r => ({
+      class_id: r.classId || null,
+      titel: r.title || null,
+      beginn: r.beginn || null,
+      ergebnis: r.ok ? 'ok' : 'fehler',
+      fehler: r.ok ? null : String(r.error || 'unbekannt').slice(0, 200),
+      detail: r.detail ? String(r.detail).slice(0, 2000) : null,
+      quelle: r.source || null,
+      offen: offen,
+      dauer_ms: dauer,
+      ausloeser: ausloeser,
+    })));
+  } catch (e) { /* Mitschreiben darf den Lauf nie aufhalten */ }
 }
 
 // Hoechstens eine Warnmail pro Tag — der Lauf kommt alle 15 Minuten wieder.
