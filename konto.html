@@ -2048,7 +2048,50 @@ function fmtTimeK(d){ return _berlinT.format(d); }
 /* Live Unterricht — eine Seite für alles:
    oben die eigenen gebuchten Stunden, darunter der Kalender zum Buchen. */
 /* Live Unterricht — oben die Karte zu den eigenen Stunden, darunter der Kalender. */
+/* ============================================================
+   Premium wartet auf den 1. November
+
+   Im Kalender stehen schon Oktober-Termine — die gehoeren den
+   Bestandsschuelern, die ihre Stunden einzeln bezahlt haben. Wer
+   Premium im Vorverkauf gekauft hat, kann sie nicht buchen, hat sie
+   aber bisher trotzdem gesehen: eine Liste voller Stunden, die sich
+   nicht buchen lassen, und darueber ein kleiner Hinweis. Das liest
+   sich wie ein Fehler, nicht wie ein Starttermin.
+
+   Bis zum 1. November sieht Premium deshalb nur noch das Datum.
+
+   Eine Ausnahme bleibt: wer Guthaben oder eine gebuchte Stunde hat,
+   ist Bestandsschueler und darf seine bezahlten Stunden im Oktober
+   natuerlich weiter nutzen. Dem den Kalender wegzunehmen waere
+   schlicht Diebstahl an bezahlter Zeit.
+   ============================================================ */
+function premiumWartetAufStart(){
+  try{
+    if(istLeitung()) return false;              // Julia und die Lehrkraefte sehen alles
+    if(!istPremium() || scGestartet()) return false;
+    if(credits > 0) return false;
+    if(bookings && bookings.some(function(b){ return b.status === 'booked'; })) return false;
+    return true;
+  }catch(e){ return false; }
+}
+
+function scStartKarte(){
+  const tage = Math.max(0, Math.ceil((SC_START - new Date()) / 86400000));
+  return '<div class="sc-start">'
+    + '<span class="sc-ic" aria-hidden="true">🗓️</span>'
+    + '<h2>Der LIVE-Unterricht startet am 1. November.</h2>'
+    + '<p>Bis dahin gibt es hier nichts zu buchen. Ab dem 1. November stehen alle Termine '
+    + 'an dieser Stelle — ' + SC_PLAN + ' — und du buchst so viele Stunden, '
+    + 'wie du möchtest, ohne Guthaben.</p>'
+    + (tage ? '<p class="sc-tage">noch ' + tage + (tage === 1 ? ' Tag' : ' Tage') + '</p>' : '')
+    + '</div>';
+}
+
 function renderKalender(){
+  if(premiumWartetAufStart()){
+    document.getElementById('v-kalender').innerHTML = meineStundenKarte() + scStartKarte();
+    return;
+  }
   document.getElementById('v-kalender').innerHTML =
       meineStundenKarte()
     + '<div class="kal-trenner">'
@@ -4507,6 +4550,34 @@ body nav.cl-tabs > button[data-view="fortschritt"]{font-size:9.5px !important;le
 .cl-amanda .tx b{font-size:.86rem;color:var(--turq-ink,#10627A);line-height:1.2}
 .cl-amanda .tx span{font-size:.76rem;color:#6B7A80;line-height:1.25;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+</style>
+<style id="sc-start-stil">
+/* Die Karte, die bis zum 1. November an der Stelle des Kalenders steht. */
+.sc-start{
+  display:flex; flex-direction:column; align-items:center; gap:10px; text-align:center;
+  margin-top:16px; padding:34px 22px 30px;
+  background:
+    radial-gradient(130% 80% at 50% 0%, var(--tuerkis-hauch,#DCEFEC) 0%, rgba(220,239,236,0) 62%),
+    linear-gradient(170deg, var(--creme,#F6F9FA), var(--karte,#fff));
+  border:1px solid var(--linie,#E7ECEE); border-radius:18px;
+  box-shadow:var(--schatten, 0 1px 2px rgba(29,27,24,.05), 0 8px 24px -12px rgba(29,27,24,.18));
+}
+.sc-start .sc-ic{ font-size:34px; line-height:1; }
+.sc-start h2{
+  font-family:var(--schrift-titel,'Caveat Brush',cursive); font-weight:400;
+  font-size:clamp(26px,4.4vw,34px); line-height:1.08; margin:0; max-width:20ch;
+  color:var(--tinte,#1D1B18);
+}
+.sc-start p{
+  margin:0; max-width:46ch; font-size:15px; line-height:1.6;
+  color:var(--text-soft,#5C574C);
+}
+.sc-start .sc-tage{
+  margin-top:4px; font-size:13px; font-weight:700; letter-spacing:.04em;
+  text-transform:uppercase; color:var(--tuerkis-dunkel,#0E7C7B);
+  font-variant-numeric:tabular-nums;
+}
+@media(max-width:620px){ .sc-start{ padding:26px 16px 24px; border-radius:16px; } }
 </style>
 <style id="kal-neu">
 /* ============================================================
