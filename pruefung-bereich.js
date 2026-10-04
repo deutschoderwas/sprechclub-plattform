@@ -18,13 +18,18 @@
    zum Einstufungstest. Was noch fehlt, steht als „kommt noch" da —
    ehrlich statt als leere Kachel.
 
-   Die Minutenangaben sind die veröffentlichten Werte. Geprüft sind
-   B2 (Goethe) und DTZ (27.07.2026) sowie B1 (04.10.2026, gegen die
-   Durchführungsbestimmungen des Goethe-Instituts: Lesen 65 und
-   Schreiben 60 exakt, Hören und Sprechen stehen dort selbst mit
-   „circa"). Die übrigen tragen weiter „ca." und sind noch nicht
-   gegengeprüft — lieber ein ehrliches „ca." als eine erfundene
-   Genauigkeit.
+   Die Minutenangaben sind gegen die Durchführungsbestimmungen des
+   Goethe-Instituts geprüft: B2 und DTZ am 27.07.2026, A1, A2, B1 und
+   C1 am 04.10.2026. Wo dort selbst „circa" steht, steht es hier auch
+   — beim Hören zum Beispiel, weil die Länge der Aufnahme entscheidet.
+
+   Bei C1 waren zwei Werte falsch: Lesen stand mit 70 statt 65
+   Minuten, Sprechen mit 15 statt 20. Wer danach geübt hat, hat sich
+   fünf Minuten zu knapp eingeteilt.
+
+   Ungeprüft bleiben die drei Fachkurse (telc Medizin, Pflege, Büro);
+   sie tragen weiter „ca.". Lieber ein ehrliches „ca." als eine
+   erfundene Genauigkeit.
    ============================================================ */
 (function(){
   'use strict';
@@ -44,14 +49,20 @@
     { id:'sd1', name:'Start Deutsch 1', anbieter:'Goethe · telc', niveau:'A1',
       bild:'menschen', stufe:'A1',
       fuer:'Ehegattennachzug und der erste Nachweis, dass du Deutsch kannst.',
-      module:[ {id:'hoeren',n:'Hören',m:'ca. 20'}, {id:'lesen',n:'Lesen',m:'ca. 25'},
-               {id:'schreiben',n:'Schreiben',m:'ca. 20'}, {id:'sprechen',n:'Sprechen',m:'ca. 15'} ] },
+      module:[ {id:'hoeren',n:'Hören',m:'ca. 20'}, {id:'lesen',n:'Lesen',m:'25'},
+               {id:'schreiben',n:'Schreiben',m:'20'}, {id:'sprechen',n:'Sprechen',m:'15'} ],
+      geprueft:true,
+      hinweis:'Schriftlich zusammen 65 Minuten. Gesprochen wird in der Gruppe mit bis zu vier '
+             +'Teilnehmenden, 15 Minuten für alle drei Teile.' },
 
     { id:'sd2', name:'Start Deutsch 2', anbieter:'Goethe · telc', niveau:'A2',
       bild:'wohnen', stufe:'A2', muster:'A2',
       fuer:'Aufenthaltstitel, erste Arbeit, der Schritt nach dem Anfang.',
-      module:[ {id:'hoeren',n:'Hören',m:'ca. 30'}, {id:'lesen',n:'Lesen',m:'ca. 30'},
-               {id:'schreiben',n:'Schreiben',m:'ca. 30'}, {id:'sprechen',n:'Sprechen',m:'ca. 15'} ] },
+      module:[ {id:'hoeren',n:'Hören',m:'ca. 30'}, {id:'lesen',n:'Lesen',m:'30'},
+               {id:'schreiben',n:'Schreiben',m:'30'}, {id:'sprechen',n:'Sprechen',m:'15'} ],
+      geprueft:true,
+      hinweis:'Schriftlich zusammen 90 Minuten. Sprechen 15 Minuten zu zweit, 10 Minuten allein — '
+             +'ohne Vorbereitungszeit, die Aufgabe kommt erst in der Prüfung.' },
 
     { id:'dtz', name:'DTZ', anbieter:'Deutsch-Test für Zuwanderer', niveau:'A2–B1',
       bild:'amt', kurs:'dtz', muster:'B1', geprueft:true,
@@ -80,9 +91,10 @@
     { id:'c1', name:'Goethe-Zertifikat C1', anbieter:'Goethe · telc Hochschule', niveau:'C1',
       bild:'typisch-deutsch', kurs:'goethetelc', muster:'C1',
       fuer:'Universität, Führungsposition, anspruchsvolle Fachberufe.',
-      module:[ {id:'lesen',n:'Lesen',m:'ca. 70'}, {id:'hoeren',n:'Hören',m:'ca. 40'},
-               {id:'schreiben',n:'Schreiben',m:'ca. 75'}, {id:'sprechen',n:'Sprechen',m:'ca. 15'} ],
-      modular:true },
+      module:[ {id:'lesen',n:'Lesen',m:'65'}, {id:'hoeren',n:'Hören',m:'ca. 40'},
+               {id:'schreiben',n:'Schreiben',m:'75'}, {id:'sprechen',n:'Sprechen',m:'ca. 20'} ],
+      modular:true, geprueft:true,
+      hinweis:'Sprechen ca. 20 Minuten zu zweit, 15 Minuten allein — dazu 20 Minuten Vorbereitung.' },
 
     { id:'telcmed', name:'telc Medizin', anbieter:'Fachsprachprüfung', niveau:'B2–C1',
       bild:'gesundheit', kurs:'telcmed', fach:true,
