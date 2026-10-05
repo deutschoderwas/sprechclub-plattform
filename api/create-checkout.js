@@ -90,7 +90,14 @@ function aktuellerPlan(id){
   const p = PLANS[id];
   const r = PREMIUM_REGULAER[id];
   if (!p || !r || Date.now() < PREMIUM_REGULAER_AB) return p;
-  const desc = r.proMonat ? p.desc.replace('39 EUR pro Monat', r.proMonat + ' EUR pro Monat') : p.desc;
+  /* Im Text steht "39 € pro Monat" mit Eurozeichen — gesucht wurde
+     bis zum 05.10.2026 nach "39 EUR pro Monat". Das Ersetzen lief ins
+     Leere: ab dem 1. November haette im Stripe-Fenster "39 € pro
+     Monat" gestanden, waehrend 999 € abgebucht werden. Jetzt wird die
+     Zahl gesucht, egal wie die Waehrung danebensteht. */
+  const desc = r.proMonat
+    ? p.desc.replace(/39\s*(?:\u20ac|EUR)\s*pro Monat/, r.proMonat + ' \u20ac pro Monat')
+    : p.desc;
   return Object.assign({}, p, { preis: r.preis, desc });
 }
 
