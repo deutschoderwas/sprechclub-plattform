@@ -44,3 +44,17 @@ create table if not exists public.lead_mails (
 alter table public.lead_mails enable row level security;
 create policy "Admin liest geschriebene Mails" on public.lead_mails
   for select using (exists (select 1 from public.profiles p where p.id = auth.uid() and p.is_admin));
+
+-- 4) Nachrichten: Lehrkraefte lesen nicht mehr mit.
+--    Bis heute galt neben "jeder sieht seine eigenen" eine zweite
+--    Leseregel: is_teacher(). Policies sind ODER-verknuepft, also
+--    konnte jede der drei Lehrkraefte jede Nachricht an jede
+--    Schuelerin lesen — auch persoenliche Absprachen und die
+--    Handynummer aus einer Absage. Nachrichten sind hier Post von
+--    Julia an eine einzelne Person, kein Gruppenchat.
+--    Schreiben duerfen Lehrkraefte weiterhin.
+--    (DROP POLICY laeuft ueber die Schnittstelle in eine Zeitsperre,
+--     deshalb auf 'false' gesetzt und umbenannt statt geloescht.)
+alter policy "Lehrer lesen Nachrichten" on public.messages using (false);
+alter policy "Lehrer lesen Nachrichten" on public.messages
+  rename to "Lehrkraefte lesen keine Nachrichten (abgeschaltet 05.10.2026)";

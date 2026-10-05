@@ -295,7 +295,7 @@ async function ladeStart(){
     sb.from('class_notes').select('class_id,post_content'),
     sb.from('class_materials').select('class_id'),
     isAdminUser ? sb.from('leads').select('id,status,name,created_at') : Promise.resolve({ data: [] }),
-    sb.from('messages').select('id,user_id,created_at').eq('sender','student').eq('read', false),
+    isAdminUser ? sb.from('messages').select('id,user_id,created_at').eq('sender','student').eq('read', false) : Promise.resolve({ data: [] }),
     sb.from('korrekturen').select('id').eq('status','offen')
   ]);
   const nimm = (r) => (r && !r.error && Array.isArray(r.data)) ? r.data : [];
@@ -342,7 +342,7 @@ async function ladeStart(){
   html += stKarte(ohneNachb.length, stWort(ohneNachb.length, 'Nachbereitung fehlt', 'Nachbereitungen fehlen'),
     ohneNachb.length ? 'Letzte 3 Wochen. Älteste: ' + esc(stDatum(ohneNachb[ohneNachb.length-1].starts_at)) + '.' : 'Alle Stunden der letzten 3 Wochen sind nachbereitet.',
     ohneNachb.length ? '#B45309' : '#15803D', 'Stunden ansehen', "show('klassen')");
-  html += stKarte(nachrichten.length, stWort(nachrichten.length, 'ungelesene Nachricht', 'ungelesene Nachrichten'),
+  if (isAdminUser) html += stKarte(nachrichten.length, stWort(nachrichten.length, 'ungelesene Nachricht', 'ungelesene Nachrichten'),
     nachrichten.length ? 'Schüler warten auf Antwort.' : 'Nichts offen.',
     nachrichten.length ? '#B91C1C' : '#15803D', 'Nachrichten öffnen', "show('nachrichten')");
   html += stKarte(korrekturen.length, stWort(korrekturen.length, 'offene Korrektur', 'offene Korrekturen'),
@@ -803,7 +803,9 @@ const BEREICHE = [
       { id:'korrektur', name:'\u270D\uFE0F Korrekturen', href:'admin-korrektur.html', abzeichen:'korrBdg' },
       { id:'kurse',     name:'🎓 Kurse',        href:'admin-kurse.html', nurAdmin:true } ] },
   { id:'austausch', name:'💬 Austausch', reiter:[
-      { id:'nachrichten', name:'Nachrichten', laden:function(){ loadNachrichten(); } },
+      /* Nur Julia: Nachrichten sind Post von ihr an eine einzelne Person,
+         kein Gruppenchat. Die Leseregel in der Datenbank sagt dasselbe. */
+      { id:'nachrichten', name:'Nachrichten', nurAdmin:true, laden:function(){ loadNachrichten(); } },
       { id:'community',   name:'Community',   abzeichen:'commBdg', laden:function(){ if(window.renderCommunity) window.renderCommunity(); } },
       { id:'bewertungen', name:'Bewertungen', nurAdmin:true, laden:function(){ loadBewertungen(); } },
       { id:'kiteam',      name:'🤖 KI-Team',  nurAdmin:true, laden:function(){ ladeKiTeam(); } } ] }
