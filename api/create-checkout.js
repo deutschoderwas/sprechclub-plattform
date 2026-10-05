@@ -32,11 +32,17 @@ function startDatum(tier){
 
 // Server-seitige Paket-Definition (Quelle der Wahrheit für Preise – nie dem Client vertrauen).
 const PLANS = {
-  // --- Bestandskunden: alte LIVE-Stundenpaesse (bleiben aktiv, neu nicht mehr buchbar) ---
-  testpass:         { abo: true,  interval:'month', stunden: 4,  preis: 79,  label: 'Ab und zu Pass' },
-  gelegenheitspass: { abo: true,  interval:'month', stunden: 8,  preis: 139, label: 'Gelegenheitspass' },
-  allinclusive:     { abo: true,  interval:'month', stunden: 12, preis: 189, label: 'Profi-Pass' },
-  sparpass:         { abo: false, stunden: 30, preis: 399, label: 'Spar Pass' },
+  /* --- Alte LIVE-Stundenpaesse ---
+     Es gibt sie seit dem 05.10.2026 nicht mehr. Laufende Abos bleiben
+     davon unberuehrt, die laufen bei Stripe weiter. Hier stehen sie
+     nur noch, damit eine alte Bestellung zuzuordnen bleibt — und mit
+     alt:true, damit niemand sie ueber einen alten Link doch noch
+     kauft. Vorher stand im Kommentar "neu nicht mehr buchbar",
+     gestimmt hat das nicht: wer die Kennung schickte, bekam sie. */
+  testpass:         { alt: true, abo: true,  interval:'month', stunden: 4,  preis: 79,  label: 'Ab und zu Pass' },
+  gelegenheitspass: { alt: true, abo: true,  interval:'month', stunden: 8,  preis: 139, label: 'Gelegenheitspass' },
+  allinclusive:     { alt: true, abo: true,  interval:'month', stunden: 12, preis: 189, label: 'Profi-Pass' },
+  sparpass:         { alt: true, abo: false, stunden: 30, preis: 399, label: 'Spar Pass' },
   // --- Neues Modell: Community (ohne Live-Buchung) + Premium (mit 8 Live-Stunden) ---
   community_year:  { abo: true, interval:'year',  stunden: 0, preis: 144, tier:'community', label: 'Community',
     desc: 'Die ganze Lernplattform: Kursbibliothek A1–C1, Vokabeltrainer, täglicher Podcast und Community. Jahresmitgliedschaft (12 Monate).' },
@@ -118,6 +124,8 @@ export default async function handler(req, res) {
     const id = passId || packageId;
     const plan = aktuellerPlan(id);
     if (!plan) return res.status(400).json({ error: 'unknown_plan' });
+    if (plan.alt) return res.status(400).json({ error: 'plan_abgelaufen',
+      hinweis: 'Diesen Pass gibt es nicht mehr. Die aktuellen Preise stehen auf deutschoderwas-club.de/preise.' });
     // userId optional: "erst zahlen, dann anmelden" wird per E-Mail zugeordnet (webhook + pending_purchases).
 
     /* Die Kasse soll nach deutschoderwas aussehen und nicht nach einem

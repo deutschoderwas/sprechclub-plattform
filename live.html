@@ -190,11 +190,17 @@ footer a{color:var(--accent);text-decoration:none}
 
 <section class="section" id="pakete">
   <div class="section-head">
-    <span class="section-tag">Flexible Preise</span>
-    <h2>So <span class="highlight">flexibel</span> wie du willst</h2>
-    <p>Eine Mitgliedschaft, alles inklusive: <b>LIVE-Unterricht mit echter Lehrkraft</b> in kleinen Gruppen – plus Lernplattform A2–C1, KI-Tutorin Amanda rund um die Uhr & Community. Starte mit <b>1 LIVE-Stunde gratis</b> – innerhalb 7 Tagen, jederzeit kündbar.</p>
+    <span class="section-tag">Mitgliedschaft</span>
+    <h2>Einmal dabei — <span class="highlight">alles</span> dabei</h2>
+    <p>Eine Mitgliedschaft, alles inklusive: <b>LIVE-Unterricht mit echter Lehrkraft</b> in kleinen Gruppen – plus Lernplattform A1–C1, KI-Tutorin Amanda rund um die Uhr und die Community.</p>
   </div>
-  <div class="pakete-grid" id="paketeGrid"></div>
+  <div style="max-width:520px;margin:0 auto;background:var(--card,#fff);border:2px solid #DD0000;border-radius:18px;padding:26px 24px;text-align:center">
+    <div id="livePreisFahne" style="display:inline-block;background:#DD0000;color:#fff;font-weight:700;font-size:13px;border-radius:999px;padding:6px 14px;margin-bottom:14px">Frühbucher · nur bis 31. Oktober</div>
+    <div style="font-family:'Space Grotesk',sans-serif;font-size:34px;font-weight:700;line-height:1.1">39 €<span style="font-size:17px;font-weight:600;color:var(--text-soft)"> /Monat</span></div>
+    <div style="font-size:14px;color:var(--text-soft);margin-top:6px">im Jahresabo · sonst 49 € im Monat, monatlich kündbar</div>
+    <div style="font-size:13.5px;color:var(--text-soft);margin-top:10px">Der Preis bleibt dir erhalten, auch wenn der Club später teurer wird.</div>
+    <a class="btn btn-primary" style="margin-top:18px;display:inline-block;text-decoration:none" href="/preise">Preise ansehen und Platz sichern</a>
+  </div>
   <p style="text-align:center;color:var(--text-soft);font-size:13px;margin-top:18px">Sichere Zahlung über Stripe · Fragen? <a id="waLink" href="#" style="color:var(--primary);font-weight:700">Schreib mir auf WhatsApp</a></p>
 </section>
 
@@ -395,23 +401,11 @@ function renderSchedule(weekStart){
     return `<div class="cal-day">${head}${evs}</div>`;
   }).join('') + '</div>';
 }
-function renderPakete(){
-  document.getElementById('paketeGrid').innerHTML = CFG.PAKETE.map(p=>{
-    const benefits = (p.benefits||[]).map(b=>`<li style="display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--text-soft);text-align:left"><span style="color:var(--primary);font-weight:800">✓</span><span>${b}</span></li>`).join('');
-    const cta = p.abo ? 'Gratis-Probestunde starten' : 'Kaufen';
-    const action = p.typ==='pass' ? `buyPass('${p.id}')` : `buy('${p.id}')`;
-    const perMonth = p.abo ? `<span style="font-size:15px;color:var(--text-soft);font-weight:600"> /Monat</span>` : '';
-    return `
-    <div class="paket ${p.beliebt?'beliebt':''}">
-      <div class="tier">${p.label}</div>
-      <div class="preis">${p.preis} €${perMonth}</div>
-      <div class="hinweis">${p.hinweis}</div>
-      <ul style="list-style:none;padding:0;margin:6px 0 4px;display:flex;flex-direction:column;gap:7px">${benefits}</ul>
-      <button class="btn btn-primary" style="margin-top:auto" onclick="${action}">${cta}</button>
-      ${p.fussnote?`<div style="font-size:10px;line-height:1.4;color:var(--text-soft);opacity:.85;margin-top:8px;text-align:left">${p.fussnote}</div>`:''}
-    </div>`;
-  }).join('');
-}
+/* Die Preiskaesten kamen fruher aus CFG.PAKETE. Diese Paesse gibt es
+   nicht mehr; der Preis steht jetzt einmal im HTML und sonst nur auf
+   preise.html. Die Funktion bleibt als leere Huelle, damit kein
+   Aufruf ins Leere laeuft. */
+function renderPakete(){}
 
 async function book(id){
   if (!user) return openLogin();
