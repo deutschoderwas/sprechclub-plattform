@@ -98,5 +98,107 @@ export default async function handler(req, res) {
     return res.status(200).json({ ok: true, geschickt, gesamt: adressen.length, ergebnis });
   }
 
+  /* ---------- Eine persoenliche Mail, von Hand geschrieben ----------
+     Bisher oeffnete der Admin nur einen Entwurf im eigenen Mail-
+     programm. Was dann wirklich rausging — und ob ueberhaupt — stand
+     nirgends; die Notiz behauptete trotzdem "persoenlich geschrieben".
+     Auf diesem Weg geht die Mail ueber dieselbe Leitung wie die
+     Willkommensmail, und der Wortlaut bleibt in lead_mails nachlesbar. */
+  if (aktion === 'frei') {
+    const email = String(body.email || '').trim().toLowerCase();
+    const betreff = String(body.betreff || '').trim().slice(0, 200);
+    const text = String(body.text || '').trim().slice(0, 8000);
+    if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return res.status(400).json({ error: 'keine_adresse' });
+    if (!betreff || !text) return res.status(400).json({ error: 'leer' });
+    if (!process.env.BREVO_API_KEY) return res.status(200).json({ ok: false, grund: 'kein_brevo_schluessel' });
+
+    const { data: lead } = await sb.from('leads').select('id,name,email').ilike('email', email).limit(1).maybeSingle();
+    const name = String((lead && lead.name) || '').trim();
+
+    try {
+      const r = await fetch('https://api.brevo.com/v3/smtp/email', {
+        method: 'POST',
+        headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sender: { name: 'Julia \u00b7 deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
+          replyTo: { email: process.env.ADMIN_EMAIL || 'deutschoderwas@gmail.com', name: 'Julia' },
+          to: [{ email, name: name.slice(0, 120) || email }],
+          subject: betreff,
+          htmlContent: briefHtml(text),
+          textContent: text,
+        }),
+      });
+      if (!r.ok) {
+        const t = await r.text();
+        await sb.from('lead_mails').insert({ lead_id: (lead && lead.id) || null, email, betreff, text, weg: 'plattform', fehler: t.slice(0, 300) });
+        return res.status(200).json({ ok: false, grund: 'brevo_' + r.status, detail: t.slice(0, 200) });
+      }
+    } catch (e) {
+      await sb.from('lead_mails').insert({ lead_id: (lead && lead.id) || null, email, betreff, text, weg: 'plattform', fehler: String(e && e.message || e).slice(0, 300) });
+      return res.status(200).json({ ok: false, grund: 'netzwerk' });
+    }
+
+    await sb.from('lead_mails').insert({ lead_id: (lead && lead.id) || null, email, betreff, text, weg: 'plattform' });
+    try { await sb.from('email_log').insert({ kind: 'lead_persoenlich', ref: (email + '|' + new Date().toISOString()).slice(0, 180) }); } catch (e) {}
+    return res.status(200).json({ ok: true });
+  }
+
+  /* Wer lieber im eigenen Programm schreibt, haelt wenigstens fest,
+     womit er angefangen hat. "Entwurf geoeffnet" ist ehrlicher als
+     "geschickt" — ob abgeschickt wurde, weiss nur Julias Postfach. */
+  if (aktion === 'notiert') {
+    const email = String(body.email || '').trim().toLowerCase();
+    if (!email) return res.status(400).json({ error: 'keine_adresse' });
+    const { data: lead } = await sb.from('leads').select('id').ilike('email', email).limit(1).maybeSingle();
+    await sb.from('lead_mails').insert({
+      lead_id: (lead && lead.id) || null, email,
+      betreff: String(body.betreff || '').slice(0, 200),
+      text: String(body.text || '').slice(0, 8000),
+      weg: 'entwurf',
+    });
+    return res.status(200).json({ ok: true });
+  }
+
+  /* Was an diese Adresse schon geschrieben wurde */
+  if (aktion === 'verlauf') {
+    const email = String(body.email || '').trim().toLowerCase();
+    if (!email) return res.status(400).json({ error: 'keine_adresse' });
+    const { data } = await sb.from('lead_mails')
+      .select('betreff,text,weg,fehler,gesendet_at')
+      .ilike('email', email)
+      .order('gesendet_at', { ascending: false })
+      .limit(20);
+    return res.status(200).json({ ok: true, mails: data || [] });
+  }
+
   return res.status(400).json({ error: 'unbekannte_aktion' });
+}
+
+/* Ein schlichter Briefbogen in den Farben der Marke. Der Text kommt
+   von Hand, also bleibt er Absatz fuer Absatz so stehen, wie er
+   geschrieben wurde — nichts wird umformatiert. */
+function briefHtml(text) {
+  const sicher = String(text || '')
+    .replace(/[<>&]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c]));
+  const absaetze = sicher.split(/\n{2,}/).map(
+    (a) => '<p style="font-size:16px;line-height:1.65;margin:0 0 16px">' + a.replace(/\n/g, '<br>') + '</p>'
+  ).join('');
+  return `<!DOCTYPE html><html lang="de"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background:#FFF8E0;font-family:'Inter','Segoe UI',system-ui,sans-serif;color:#1A1A1A">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF8E0;padding:24px 12px"><tr><td align="center">
+<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#FFFCF5;border:1px solid #F0E5D8;border-radius:20px;overflow:hidden">
+  <tr><td style="padding:24px 32px 8px">
+    <span style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:22px;color:#1A1A1A">deutsch<span style="color:#35AFD0">oderwas</span></span>
+    <span style="display:block;font-size:12px;color:#6B7280;margin-top:2px">Deutsch lernen mit Spa&szlig; &amp; Leichtigkeit</span>
+  </td></tr>
+  <tr><td style="padding:0 32px"><div style="height:3px;background:linear-gradient(135deg,#7ED8EA,#35AFD0);border-radius:999px"></div></td></tr>
+  <tr><td style="padding:24px 32px 8px">${absaetze}</td></tr>
+  <tr><td style="padding:8px 32px 28px;border-top:1px solid #F0E5D8">
+    <p style="font-size:12.5px;line-height:1.6;color:#6B7280;margin:14px 0 0">
+      deutschoderwas &middot; Julia Karackov &middot; Wiesenstra&szlig;e 38, 58119 Hagen &middot;
+      <a href="mailto:deutschoderwas@gmail.com" style="color:#0F766E">deutschoderwas@gmail.com</a>
+    </p>
+  </td></tr>
+</table></td></tr></table></body></html>`;
 }

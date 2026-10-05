@@ -25,3 +25,22 @@ create table if not exists public.wort_bilder (
 );
 alter table public.wort_bilder enable row level security;
 -- Keine Policy: nur der Server (service_role) liest und schreibt hier.
+
+-- 3) Was Julia einem Lead persoenlich geschrieben hat.
+--    Der Knopf "Persoenlich antworten" oeffnete nur einen Entwurf im
+--    Mailprogramm und schrieb danach "persoenlich geschrieben" in die
+--    Notiz — obwohl niemand wusste, was rausging oder ob ueberhaupt.
+--    Hier steht ab jetzt der Wortlaut, mit Datum und Weg.
+create table if not exists public.lead_mails (
+  id          uuid primary key default gen_random_uuid(),
+  lead_id     uuid,
+  email       text not null,
+  betreff     text,
+  text        text,
+  weg         text not null default 'plattform',   -- 'plattform' | 'entwurf'
+  fehler      text,
+  gesendet_at timestamptz not null default now()
+);
+alter table public.lead_mails enable row level security;
+create policy "Admin liest geschriebene Mails" on public.lead_mails
+  for select using (exists (select 1 from public.profiles p where p.id = auth.uid() and p.is_admin));
