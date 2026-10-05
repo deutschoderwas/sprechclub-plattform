@@ -122,6 +122,8 @@ export default async function handler(req, res) {
   if (!senden) return res.status(200).json({ ok: true, vorschau: true, ...bilanz, beispiele: offen.slice(0, 5).map((o) => o.email) });
   if (!process.env.BREVO_API_KEY) return res.status(200).json({ ok: false, grund: 'kein_brevo_schluessel', ...bilanz });
 
+  const tage = tageBisEnde();
+  const betreff = 'Noch ' + tage + ' Tage — und ich würde mich freuen, dich dabei zu haben';
   let geschickt = 0, fehler = 0;
   const schiefgelaufen = [];
   for (const o of offen) {
@@ -138,12 +140,28 @@ export default async function handler(req, res) {
           sender: { name: 'Julia · deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
           replyTo: { email: process.env.ADMIN_EMAIL || 'deutschoderwas@gmail.com', name: 'Julia' },
           to: [{ email: o.email, name: o.vorname }],
-          subject: 'Noch ' + tageBisEnde() + ' Tage — und ich würde mich freuen, dich dabei zu haben',
+          subject: betreff,
           htmlContent: erinnerungHtml(o.vorname),
           tags: [KENNUNG],
         }),
       });
-      if (r.ok) { geschickt++; }
+      if (r.ok) {
+        geschickt++;
+        /* email_log haelt nur fest, DASS sie raus ist. Damit Julia im
+           Lead-Bereich sieht, wann und mit welchem Betreff, kommt der
+           Versand auch in lead_mails — dieselbe Ablage wie bei einer
+           von Hand geschriebenen Mail. */
+        try {
+          await sb.from('lead_mails').insert({
+            lead_id: o.id, email: o.email, weg: 'erinnerung', betreff: betreff,
+            text: 'Erinnerung an alle ohne Premium, automatisch verschickt.\n\n'
+                + 'Inhalt: die Geschichte vom Schweigen im Alltag, was der Club bietet, '
+                + 'Frühbucherpreis 39 € im Jahresabo / 49 € monatlich bis zum 31. Oktober '
+                + '(damals noch ' + tage + ' Tage), und der Hinweis, die Nachricht zu '
+                + 'ignorieren, falls man sich inzwischen angemeldet hat.',
+          });
+        } catch (e) { /* der Vermerk darf den Versand nicht aufhalten */ }
+      }
       else {
         fehler++;
         const t = await r.text();

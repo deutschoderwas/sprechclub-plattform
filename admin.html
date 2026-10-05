@@ -890,6 +890,7 @@ function zeichneAbzeichen(){
 
 // ---------- Leads (Warteliste) ----------
 let LEADS=[], LEAD_FILTER='offen';
+let LEAD_POST={};
 const LEAD_STATUS=[['neu','🆕 Neu'],['kontaktiert','✉️ Kontaktiert'],['probestunde','🎟️ Probestunde'],['gewonnen','🎉 Gewonnen'],['abgelehnt','⚪ Kein Interesse'],['adresse_pruefen','⚠️ Adresse prüfen']];
 const LEAD_BG={neu:'#FEF3C7',kontaktiert:'#DBEAFE',probestunde:'#FCE7F3',gewonnen:'#DCFCE7',abgelehnt:'#F1F1F1'};
 const LEAD_FMT=new Intl.DateTimeFormat('de-DE',{timeZone:'Europe/Berlin',day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
@@ -900,6 +901,21 @@ async function loadLeads(){
   const { data, error } = await sb.from('leads').select('*').order('created_at',{ascending:false}).limit(1000);
   if (error){ host.innerHTML='<div class="card">Fehler: '+esc(error.message)+'</div>'; return; }
   LEADS=data||[];
+  /* Was an diese Menschen schon rausging — damit auf jeder Karte steht,
+     wann sie zuletzt Post bekommen haben, ohne dass man etwas aufklappen
+     muss. */
+  LEAD_POST={};
+  try{
+    const { data:post } = await sb.from('lead_mails')
+      .select('email,weg,betreff,gesendet_at')
+      .order('gesendet_at',{ascending:false})
+      .limit(2000);
+    (post||[]).forEach(function(m){
+      const k=String(m.email||'').toLowerCase();
+      if(!LEAD_POST[k]) LEAD_POST[k]=[];
+      LEAD_POST[k].push(m);
+    });
+  }catch(e){}
   renderLeads();
   leadsBadge();
 }
@@ -945,6 +961,7 @@ function leadKarte(l){
       ${l.tarif?`<span class="pill" style="background:#FFF0CC;color:#8A6608;font-weight:700">${esc(l.tarif)}</span>`:''}
       ${l.niveau?`<span class="pill" style="background:#DFF6F8;color:#0F766E;font-weight:700">${esc(l.niveau)}</span>`:''}
       ${leadMailPille(l)}
+      ${leadPostPille(l)}
       <span class="muted" style="margin-left:auto">${LEAD_FMT.format(new Date(l.created_at))}</span>
     </div>
     <div style="margin:8px 0;display:flex;gap:14px;flex-wrap:wrap;font-size:14px">
@@ -1152,6 +1169,23 @@ window.leadMailEntwurf = async function(id){
   leadMailVerlauf(l.email);
 };
 
+/* Was zuletzt an diese Adresse rausging: die Erinnerung, eine
+   persoenlich geschriebene Mail oder ein Entwurf. Datum und Uhrzeit
+   stehen dabei, damit nachvollziehbar ist, wann es war. */
+function leadPostPille(l){
+  const liste = LEAD_POST[String(l.email||'').toLowerCase()];
+  if(!liste || !liste.length) return '';
+  const m = liste[0];
+  const wann = new Date(m.gesendet_at).toLocaleString('de-DE',
+    { day:'2-digit', month:'2-digit', year:'2-digit', hour:'2-digit', minute:'2-digit' });
+  const art = m.weg==='erinnerung' ? '\ud83d\udce3 Erinnerung'
+            : (m.weg==='entwurf' ? '\u270d\ufe0f Entwurf' : '\u2709\ufe0f pers\u00f6nlich');
+  const mehr = liste.length>1 ? ' (+'+(liste.length-1)+')' : '';
+  return '<span title="'+esc(m.betreff||'')+'" style="display:inline-block;background:#EEF4FB;color:#1A4E79;'
+    + 'border-radius:20px;padding:2px 9px;font-size:11.5px;font-weight:800;white-space:nowrap">'
+    + art + ' ' + wann + mehr + '</span>';
+}
+
 /* Dieselbe Pruefung wie auf dem Server: ohne @, mit Leerzeichen oder
    ohne Endung wird eine Adresse nie zustellbar. */
 function leadAdresseOk(mail){
@@ -1230,7 +1264,9 @@ window.erinnerungSenden = async function(btn){
   if(j && j.ok){
     info.innerHTML = '<b style="color:#1F7A3D">' + (j.geschickt||0) + ' Mails sind raus.</b>'
       + (j.fehler ? ' <span style="color:#B3241C">' + j.fehler + ' nicht — ' + esc((j.schiefgelaufen||[]).map(x=>x.email).join(', ')).slice(0,200) + '</span>' : '')
-      + '<br><span style="color:#6B7280">Niemand bekommt sie ein zweites Mal, auch wenn du nochmal drückst.</span>';
+      + '<br><span style="color:#6B7280">Niemand bekommt sie ein zweites Mal, auch wenn du nochmal drückst. '
+      + 'Auf jeder Karte steht jetzt, wann sie rausging.</span>';
+    loadLeads();
   } else {
     info.innerHTML = '<span style="color:#B3241C">Das hat nicht geklappt: ' + esc((j && (j.grund||j.error)) || 'unbekannt') + '</span>';
   }
