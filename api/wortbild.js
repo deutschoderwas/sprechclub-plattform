@@ -20,6 +20,12 @@
 
 const ARTIKEL = /^(der|die|das|den|dem|des|ein|eine|einen)\s+/i;
 
+/* Die erste Fassung hat alles genommen, was Openverse ausspuckte — zu
+   "Suppe" kam eine Schallplattenhuelle, zu "Lebenslauf" ein Gemaelde.
+   Diese Treffer liegen noch im Cache. Alles, was vor diesem Zeitpunkt
+   geholt wurde, wird deshalb ignoriert und neu gesucht. */
+const AB = '2026-10-05T07:00:00Z';
+
 function schluessel(w) {
   return String(w || '').trim().toLowerCase().replace(ARTIKEL, '').replace(/\s+/g, ' ').slice(0, 80);
 }
@@ -167,7 +173,10 @@ export default async function handler(req, res) {
   const bekannt = new Map();
   if (sb) {
     try {
-      const { data } = await sb.from('wort_bilder').select('wort,url,autor,quelle,leer,such_en').in('wort', keys);
+      const { data } = await sb.from('wort_bilder')
+        .select('wort,url,autor,quelle,leer,such_en,geholt_at')
+        .in('wort', keys)
+        .gte('geholt_at', AB);
       (data || []).forEach((r) => bekannt.set(r.wort, r));
     } catch (e) {}
   }
