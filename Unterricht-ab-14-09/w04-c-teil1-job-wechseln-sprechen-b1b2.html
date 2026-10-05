@@ -55,6 +55,18 @@ h2.st em{font-style:italic;}
 .rolecard .ort{font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--red);}
 .rolecard .lage{font-family:'Space Grotesk';font-weight:700;font-size:1.08rem;margin:.3rem 0 .6rem;}
 .rolecard .rr{font-size:.95rem;margin:.2rem 0;}.rolecard .rr b{color:var(--red);}
+mark{background:var(--gelb-s);padding:.05em .28em;border-radius:5px;font-weight:600;color:var(--ink);}
+.exbar{display:flex;gap:.4rem;flex-wrap:wrap;align-items:center;margin:.8rem 0 .2rem;}
+.exbar .lv{font-family:'Inter';font-weight:700;font-size:.82rem;border:1.5px solid var(--sand);background:var(--paper);color:var(--ink);padding:.35rem .7rem;border-radius:999px;cursor:pointer;}
+.exbar .lv.on[data-l=e]{background:var(--gelb);border-color:var(--gelb);color:#5a3d00;}
+.exbar .lv.on[data-l=m]{background:var(--blau);border-color:var(--blau);color:#fff;}
+.exbar .lv.on[data-l=h]{background:var(--gruen);border-color:var(--gruen);color:#fff;}
+.exdlg{display:none;margin-top:.6rem;}
+.exdlg.show{display:grid;gap:.5rem;animation:slidein .35s ease;}
+.exbubble{max-width:85%;padding:.6rem .9rem;border-radius:14px;font-size:.96rem;line-height:1.4;}
+.exbubble.a{align-self:flex-start;background:var(--cream);border:1.5px solid var(--sand);border-bottom-left-radius:4px;}
+.exbubble.b{align-self:flex-end;background:var(--blau-s);border:1.5px solid var(--blau);border-bottom-right-radius:4px;}
+.exbubble .who{display:block;font-size:.68rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:.1rem;}
 .pcgrid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin:1rem 0;}
 @media(max-width:620px){.pcgrid{grid-template-columns:1fr;}}
 .pcol{border-radius:16px;padding:1rem 1.1rem;border:2px solid;}
@@ -113,6 +125,14 @@ footer b{color:var(--ink);}
   <p class="ssub">Tippt eine Situation an und spielt sie zu zweit (die dritte Person hört zu und gibt danach einen Tipp). Dann die nächste.<span class="en">Tap a situation and act it out in pairs; the third person gives a tip.</span></p>
   <div class="slist" id="roleList"></div>
   <div class="rolecard" id="roleCard"></div>
+  <div class="exbar">
+    <button class="btn" id="exToggle" onclick="toggleEx()">💬 Beispieldialog zeigen</button>
+    <span style="font-size:.8rem;color:var(--ink-mute)">Niveau:</span>
+    <button class="lv on" data-l="e" onclick="exSet('e')">🟨 A2/B1</button>
+    <button class="lv" data-l="m" onclick="exSet('m')">🟦 B1/B2</button>
+    <button class="lv" data-l="h" onclick="exSet('h')">🟩 B2/C1</button>
+  </div>
+  <div class="exdlg" id="exDlg"></div>
   <div class="controls"><button class="btn" onclick="randomRole()">🎲 Zufällige Situation</button></div>
 </div></section>
 
@@ -167,8 +187,38 @@ var ROLES=[
  {kurz:"🔄 Gegenangebot",ort:"Chef will dich halten",lage:"Du hast gekündigt, dein Chef macht ein Gegenangebot.",a:"A: Du bist der Chef und versuchst, die Person zu halten.",b:"B: Du überlegst, ob das Gegenangebot etwas ändert.",w:"Was müsste sich ändern, damit …? · Ich biete dir … · Ich bleibe nur, wenn …"}
 ];
 var rIdx=-1;
-function showRole(i){rIdx=i;var s=ROLES[i];document.getElementById('roleCard').innerHTML='<div class="ort">'+s.ort+'</div><div class="lage">'+s.lage+'</div><div class="rr"><b>A —</b> '+s.a+'</div><div class="rr"><b>B —</b> '+s.b+'</div><div class="rr" style="color:var(--ink-mute);font-size:.84rem;margin-top:.5rem"><b>Ideen:</b> '+s.w+'</div>';document.querySelectorAll('.sbtn').forEach(function(b,j){b.classList.toggle('on',j===i);});}
+function showRole(i){rIdx=i;var s=ROLES[i];document.getElementById('roleCard').innerHTML='<div class="ort">'+s.ort+'</div><div class="lage">'+s.lage+'</div><div class="rr"><b>A —</b> '+s.a+'</div><div class="rr"><b>B —</b> '+s.b+'</div><div class="rr" style="color:var(--ink-mute);font-size:.84rem;margin-top:.5rem"><b>Ideen:</b> '+s.w+'</div>';document.querySelectorAll('.sbtn').forEach(function(b,j){b.classList.toggle('on',j===i);});var box=document.getElementById('exDlg');if(box){box.classList.remove('show');box.innerHTML='';}var t=document.getElementById('exToggle');if(t)t.textContent='💬 Beispieldialog zeigen';}
 function randomRole(){var i;do{i=Math.floor(Math.random()*ROLES.length);}while(i===rIdx&&ROLES.length>1);showRole(i);}
+var exLvl='e';
+var EXDLG=[
+ {e:[["A","Ich möchte mit Ihnen sprechen. Ich <mark>kündige</mark>."],["B","Oh. Warum denn?"],["A","Ich habe <mark>eine neue Stelle gefunden</mark>."],["B","Schade. Wann ist Ihr <mark>letzter Tag</mark>?"]],
+  m:[["A","Ich habe eine Entscheidung getroffen: Ich <mark>möchte kündigen</mark>."],["B","Das überrascht mich. Darf ich nach dem Grund fragen?"],["A","Ich habe ein Angebot, das <mark>besser zu meinen Zielen passt</mark>."],["B","Verstehe. Sprechen wir über die <mark>Kündigungsfrist</mark>."]],
+  h:[["A","Ich wollte Ihnen persönlich sagen, dass ich mich <mark>entschlossen habe zu gehen</mark>."],["B","Das bedaure ich sehr. Gibt es etwas, das Sie umstimmen könnte?"],["A","Ich schätze die Zeit hier, aber ich <mark>möchte mich beruflich weiterentwickeln</mark>."],["B","Das respektiere ich. Regeln wir die <mark>Übergabe</mark> fair."]]},
+ {e:[["A","Warum möchten Sie <mark>bei uns arbeiten</mark>?"],["B","Ich finde die Stelle sehr interessant."],["A","Was können Sie gut?"],["B","Ich bin <mark>zuverlässig</mark> und arbeite gern im Team."]],
+  m:[["A","Warum passen Sie <mark>zu dieser Stelle</mark>?"],["B","Ich bringe <mark>drei Jahre Erfahrung</mark> mit und lerne schnell."],["A","Was ist Ihre größte Stärke?"],["B","Ich <mark>behalte auch unter Stress den Überblick</mark>."]],
+  h:[["A","Was <mark>reizt Sie an dieser Position</mark> besonders?"],["B","Vor allem die Möglichkeit, <mark>Verantwortung zu übernehmen</mark>."],["A","Und wo sehen Sie Ihre Schwächen?"],["B","Ich bin manchmal zu gründlich — <mark>daran arbeite ich bewusst</mark>."]]},
+ {e:[["A","Ich <mark>möchte den Job wechseln</mark>."],["B","Oh, und das Geld?"],["A","Am Anfang vielleicht weniger, aber <mark>ich bin glücklicher</mark>."],["B","Lass uns zusammen <mark>überlegen</mark>."]],
+  m:[["A","Mir ist der Wechsel wichtig, auch wenn er <mark>Risiken</mark> hat."],["B","Ich verstehe dich, aber ich <mark>mache mir Sorgen ums Geld</mark>."],["A","Das nehme ich ernst. Wir <mark>planen es gemeinsam</mark>."],["B","Gut, dann schauen wir uns die Zahlen an."]],
+  h:[["A","Der Wechsel <mark>betrifft uns beide</mark> — deshalb rede ich zuerst mit dir."],["B","Danke. Was würde sich konkret <mark>für uns ändern</mark>?"],["A","Kurzfristig weniger Sicherheit, langfristig <mark>bessere Perspektiven</mark>."],["B","Dann lass uns einen <mark>Plan B</mark> festlegen, dann trage ich es mit."]]},
+ {e:[["A","Ich <mark>weiß nicht</mark>, ob ich bleiben soll."],["B","Was gefällt dir nicht?"],["A","Die Arbeit ist okay, aber <mark>langweilig</mark>."],["B","<mark>An deiner Stelle</mark> würde ich mich umsehen."]],
+  m:[["A","Ich bin <mark>hin- und hergerissen</mark> — bleiben oder wechseln?"],["B","Was spricht dafür zu bleiben?"],["A","Das Team ist super, aber ich <mark>entwickle mich nicht weiter</mark>."],["B","Dann sprich erst mit dem Chef, <mark>bevor du kündigst</mark>."]],
+  h:[["A","Ich hätte gern deine ehrliche Meinung — <mark>soll ich wechseln</mark>?"],["B","Kommt drauf an: Ist es der Job oder <mark>die Phase</mark>?"],["A","Ich glaube, es ist <mark>echter Stillstand</mark>."],["B","Dann würde ich den Schritt wagen — aber <mark>gut vorbereitet</mark>."]]},
+ {e:[["A","Ich möchte über mein <mark>Gehalt</mark> sprechen."],["B","Okay. Was stellen Sie sich vor?"],["A","Ich würde gern <mark>mehr verdienen</mark>."],["B","Ich schaue, was <mark>möglich</mark> ist."]],
+  m:[["A","Ich arbeite zwei Jahre hier und <mark>übernehme mehr Aufgaben</mark>."],["B","Das stimmt. Aber das Budget ist knapp."],["A","Ich wünsche mir <mark>eine faire Anpassung</mark>."],["B","Lassen Sie uns eine <mark>Lösung</mark> finden."]],
+  h:[["A","Angesichts meiner <mark>Ergebnisse</mark> halte ich eine Anpassung für angemessen."],["B","Ich verstehe Ihren Punkt, doch die Spielräume sind begrenzt."],["A","Vielleicht finden wir eine Lösung <mark>über Zulagen oder Zusatztage</mark>."],["B","Das klingt nach einem <mark>fairen Kompromiss</mark>."]]},
+ {e:[["A","Ich habe eine <mark>Absage</mark> bekommen."],["B","Oh nein, das tut mir leid."],["A","Ich bin <mark>enttäuscht</mark>."],["B","<mark>Beim nächsten Mal</mark> klappt es bestimmt."]],
+  m:[["A","Die Firma hat <mark>jemand anderen genommen</mark>."],["B","Mist. Weißt du, woran es lag?"],["A","Nicht genau — vielleicht <mark>die Erfahrung</mark>."],["B","Kopf hoch, <mark>du lernst aus jedem Gespräch</mark>."]],
+  h:[["A","Trotz gutem Gespräch kam leider <mark>eine Absage</mark>."],["B","Ärgerlich. Hast du nach <mark>Feedback</mark> gefragt?"],["A","Ja, sie fanden mich zu <mark>überqualifiziert</mark>."],["B","Dann war es vielleicht <mark>nicht die richtige Stelle</mark>."]]},
+ {e:[["A","Ich habe ein <mark>Angebot</mark>."],["B","Super! Nimmst du es?"],["A","Vielleicht. Es ist <mark>weiter weg</mark>."],["B","Was ist dir <mark>wichtiger</mark>?"]],
+  m:[["A","Das Angebot ist gut, aber ich bin <mark>unsicher</mark>."],["B","Was spricht dagegen?"],["A","<mark>Einerseits</mark> mehr Geld, <mark>andererseits</mark> ein langer Weg."],["B","Schreib dir <mark>Pro und Contra</mark> auf."]],
+  h:[["A","Inhaltlich überzeugt es mich, nur die <mark>Rahmenbedingungen</mark> zögern mich."],["B","Was würde den Ausschlag geben?"],["A","Wenn sie <mark>Homeoffice</mark> ermöglichen, sage ich zu."],["B","Dann <mark>verhandle genau das</mark>, bevor du entscheidest."]]},
+ {e:[["A","Bitte <mark>bleiben Sie</mark>."],["B","Warum sollte ich?"],["A","Ich biete Ihnen <mark>mehr Gehalt</mark>."],["B","Ich <mark>überlege es mir</mark>."]],
+  m:[["A","Ich möchte Sie <mark>gern halten</mark> — was müsste sich ändern?"],["B","Mehr <mark>Verantwortung</mark> und flexiblere Zeiten."],["A","Das lässt sich einrichten."],["B","Dann <mark>denke ich ernsthaft darüber nach</mark>."]],
+  h:[["A","Ihr Weggang wäre ein großer Verlust — ich mache Ihnen ein <mark>Gegenangebot</mark>."],["B","Das ehrt mich, aber Geld allein <mark>ändert meine Gründe nicht</mark>."],["A","Was bräuchten Sie, um zu bleiben?"],["B","Eine echte <mark>Entwicklungsperspektive</mark> — sonst bleibe ich dabei."]]}
+];
+function renderEx(){var box=document.getElementById('exDlg');var d=(EXDLG[rIdx]&&EXDLG[rIdx][exLvl])||[];box.innerHTML=d.map(function(l){return '<div class="exbubble '+(l[0]==='A'?'a':'b')+'"><span class="who">'+l[0]+'</span>'+l[1]+'</div>';}).join('');}
+function toggleEx(){var box=document.getElementById('exDlg');var t=document.getElementById('exToggle');if(box.classList.contains('show')){box.classList.remove('show');t.textContent='💬 Beispieldialog zeigen';}else{renderEx();box.classList.add('show');t.textContent='🙈 Beispieldialog ausblenden';}}
+function exSet(l){exLvl=l;document.querySelectorAll('.exbar .lv').forEach(function(b){b.classList.toggle('on',b.dataset.l===l);});if(document.getElementById('exDlg').classList.contains('show'))renderEx();}
 (function(){var h=document.getElementById('roleList');ROLES.forEach(function(s,i){var b=document.createElement('button');b.className='sbtn';b.textContent=s.kurz;b.addEventListener('click',function(){showRole(i);});h.appendChild(b);});showRole(0);})();
 
 document.querySelectorAll('.tab').forEach(function(t){t.addEventListener('click',function(){document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('active');});document.querySelectorAll('.section').forEach(function(x){x.classList.remove('active');});t.classList.add('active');document.querySelector('.section[data-section="'+t.dataset.tab+'"]').classList.add('active');window.scrollTo({top:0,behavior:'smooth'});});});

@@ -87,18 +87,51 @@ async function beiUnsplash(q) {
   } catch (e) { return null; }
 }
 
-/* Openverse braucht keinen Schluessel. Damit funktionieren die Bilder
-   auch dann, wenn bei Unsplash nichts hinterlegt ist. */
+/* Wikipedia zeigt zu jedem Stichwort genau das Bild, das die Sache
+   erklaert: zu "Suppe" einen Teller Suppe, zu "Vorstellungsgespraech"
+   zwei Menschen am Tisch. Kein Schluessel noetig, und wenn es zu einem
+   Wort kein Bild gibt, kommt eben keins \u2014 das ist ehrlicher als
+   irgendein Treffer. */
+async function beiWikipedia(w) {
+  if (!w) return null;
+  const titel = w.charAt(0).toUpperCase() + w.slice(1);
+  try {
+    const r = await fetch(
+      'https://de.wikipedia.org/w/api.php?action=query&prop=pageimages&piprop=thumbnail'
+      + '&pithumbsize=700&redirects=1&format=json&formatversion=2&origin=*&titles=' + encodeURIComponent(titel),
+      { headers: { 'User-Agent': 'deutschoderwas/1.0 (Lernbilder; deutschoderwas.de)' } }
+    );
+    if (!r.ok) return null;
+    const j = await r.json();
+    const seite = j && j.query && j.query.pages && j.query.pages[0];
+    const u = seite && seite.thumbnail && seite.thumbnail.source;
+    if (!u || seite.missing) return null;
+    return { url: u, autor: '', quelle: 'Wikipedia', lizenz: 'CC' };
+  } catch (e) { return null; }
+}
+
+/* Openverse sucht im Titel, nicht im Bild. Darum kam zu "Suppe" eine
+   Schallplatte und zu "Lebenslauf" ein Gemaelde \u2014 ein falsches Bild
+   ist beim Lernen schlimmer als gar keins. Deshalb nur Fotos, und nur
+   wenn das gesuchte Wort auch wirklich im Titel steht. */
+function titelPasst(titel, q) {
+  const t = String(titel || '').toLowerCase();
+  const woerter = String(q || '').toLowerCase().split(/\s+/).filter(function (x) { return x.length > 2; });
+  if (!woerter.length) return false;
+  return woerter.every(function (w) {
+    return new RegExp('(^|[^a-z])' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '([^a-z]|$)').test(t);
+  });
+}
 async function beiOpenverse(q) {
   if (!q) return null;
   try {
     const r = await fetch(
-      'https://api.openverse.org/v1/images/?page_size=1&license_type=all-cc&mature=false&q=' + encodeURIComponent(q),
+      'https://api.openverse.org/v1/images/?page_size=4&license_type=all-cc&mature=false&category=photograph&q=' + encodeURIComponent(q),
       { headers: { 'User-Agent': 'deutschoderwas/1.0 (Lernbilder)' } }
     );
     if (!r.ok) return null;
     const j = await r.json();
-    const t = j && j.results && j.results[0];
+    const t = (j && j.results || []).filter(function (x) { return titelPasst(x.title, q); })[0];
     if (!t) return null;
     return {
       url: t.thumbnail || t.url,
@@ -162,6 +195,7 @@ export default async function handler(req, res) {
     const q = en || e.wort;
     let t = await beiUnsplash(q);
     if (!t && en && en !== e.wort) t = await beiUnsplash(e.wort);
+    if (!t) t = await beiWikipedia(e.wort);
     if (!t) t = await beiOpenverse(q);
     if (t && t.url) {
       bilder[k] = { url: t.url, autor: t.autor, quelle: t.quelle };
