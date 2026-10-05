@@ -928,6 +928,7 @@ function renderLeads(){
     <div style="display:flex;gap:8px;flex-wrap:wrap">
       <button class="btn btn-ghost" onclick="leadsCsv()">⬇️ Als CSV herunterladen</button>
       <button class="btn btn-ghost" onclick="loadLeads()">🔄 Neu laden</button>
+      <button class="btn" style="background:#10627A;color:#fff;font-weight:800" onclick="erinnerungFenster()">✉️ Erinnerung an alle ohne Premium</button>
     </div>
   </div>
   <div id="leadListe">${rows.length?rows.map(leadKarte).join(''):'<div class="card muted">Keine Leads in dieser Kategorie.</div>'}</div>`;
@@ -1170,6 +1171,69 @@ window.leadAdresse = async function(id){
   l.email = neu; l.status = 'neu';
   renderLeads(); leadsBadge();
   alert('Gespeichert. Die Willkommensmail geht beim nächsten Lauf raus (alle 10 Minuten) — oder sofort über den Knopf auf der Karte.');
+};
+/* ---------- Die Erinnerung an alle, die noch warten ----------
+   Erst zaehlen, dann schicken. Die Vorschau sagt, wer sie bekommt und
+   wer uebersprungen wird — Premium-Mitglieder, Abgemeldete und alle,
+   die sie schon haben. Gesendet wird erst nach dem zweiten Klick. */
+async function erinnerungRuf(aktion){
+  const r = await fetch('/api/lead-erinnerung', {
+    method:'POST',
+    headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer ' + await authToken() },
+    body: JSON.stringify({ aktion })
+  });
+  return await r.json().catch(()=>({}));
+}
+window.erinnerungFenster = async function(){
+  const alt=document.getElementById('er-fenster'); if(alt) alt.remove();
+  const k=document.createElement('div');
+  k.id='er-fenster';
+  k.style.cssText='position:fixed;inset:0;z-index:999;background:rgba(26,26,26,.45);display:flex;align-items:center;justify-content:center;padding:18px';
+  k.innerHTML = `<div style="background:#fff;border-radius:18px;max-width:560px;width:100%;max-height:92vh;overflow:auto;box-shadow:0 24px 60px rgba(0,0,0,.25)">
+    <div style="padding:18px 22px;border-bottom:1px solid #eee;display:flex;align-items:center;gap:10px">
+      <b style="font-size:17px;flex:1">✉️ Erinnerung an alle ohne Premium</b>
+      <button onclick="document.getElementById('er-fenster').remove()" style="border:1px solid #ddd;background:#fff;border-radius:9px;width:32px;height:32px;cursor:pointer;font-size:16px">✕</button>
+    </div>
+    <div style="padding:18px 22px" id="er-inhalt">
+      <div class="muted">Zähle, wer sie bekommt …</div>
+    </div>
+  </div>`;
+  document.body.appendChild(k);
+  k.addEventListener('click', function(e){ if(e.target===k) k.remove(); });
+
+  const j = await erinnerungRuf('vorschau');
+  const z = document.getElementById('er-inhalt'); if(!z) return;
+  if(!j || !j.ok){ z.innerHTML = '<div style="color:#B3241C">Das hat nicht geklappt: ' + esc((j && (j.grund||j.error)) || 'unbekannt') + '</div>'; return; }
+  const zeile = (wert, text, farbe) => '<div style="display:flex;gap:10px;align-items:baseline;padding:7px 0;border-bottom:1px solid #f2f2f2">'
+    + '<b style="font-size:18px;min-width:46px;color:' + (farbe||'#1A1A1A') + '">' + wert + '</b><span style="font-size:14px">' + text + '</span></div>';
+  z.innerHTML =
+      zeile(j.offen, 'bekommen die Mail', '#1F7A3D')
+    + zeile(j.premium_uebersprungen, 'haben Premium — bekommen <b>nichts</b>')
+    + zeile(j.abgemeldet_uebersprungen, 'haben sich abgemeldet — übersprungen')
+    + zeile(j.schon_bekommen, 'haben diese Mail schon')
+    + '<div style="font-size:13px;color:#6B7280;margin-top:12px">Im Text steht: „Bis zum 31. Oktober — also noch <b>' + j.tage_bis_ende + ' Tage</b>“. Die Zahl wird beim Verschicken ausgerechnet.</div>'
+    + (j.beispiele && j.beispiele.length ? '<div style="font-size:12.5px;color:#6B7280;margin-top:8px">Zum Beispiel: ' + j.beispiele.map(esc).join(', ') + ' …</div>' : '')
+    + '<div id="er-info" style="font-size:13.5px;margin-top:14px"></div>'
+    + '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">'
+    +   '<button class="btn btn-primary" onclick="erinnerungSenden(this)">Jetzt an ' + j.offen + ' schicken</button>'
+    +   '<button class="btn btn-ghost" onclick="document.getElementById(\'er-fenster\').remove()">Abbrechen</button>'
+    + '</div>';
+};
+window.erinnerungSenden = async function(btn){
+  if(!confirm('Die Erinnerung jetzt verschicken? Wer Premium hat, bekommt nichts.')) return;
+  const info=document.getElementById('er-info');
+  if(btn){ btn.disabled=true; btn.textContent='schickt …'; }
+  if(info){ info.textContent='Das dauert einen Moment — bitte das Fenster offen lassen.'; info.style.color='#6B7280'; }
+  const j = await erinnerungRuf('senden');
+  if(btn){ btn.disabled=false; btn.textContent='Nochmal versuchen'; }
+  if(!info) return;
+  if(j && j.ok){
+    info.innerHTML = '<b style="color:#1F7A3D">' + (j.geschickt||0) + ' Mails sind raus.</b>'
+      + (j.fehler ? ' <span style="color:#B3241C">' + j.fehler + ' nicht — ' + esc((j.schiefgelaufen||[]).map(x=>x.email).join(', ')).slice(0,200) + '</span>' : '')
+      + '<br><span style="color:#6B7280">Niemand bekommt sie ein zweites Mal, auch wenn du nochmal drückst.</span>';
+  } else {
+    info.innerHTML = '<span style="color:#B3241C">Das hat nicht geklappt: ' + esc((j && (j.grund||j.error)) || 'unbekannt') + '</span>';
+  }
 };
 window.leadsCsv=function(){
   const kopf=['Datum','Name','E-Mail','WhatsApp','Tarif','Niveau','Status','Schwierigkeiten','Mehr','Notiz'];

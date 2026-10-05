@@ -102,6 +102,7 @@ export function erinnerungHtml(vorname, jetzt) {
   </td></tr>
 
   <tr><td style="padding:22px 32px 6px">
+    <p style="font-size:15px;line-height:1.6;margin:0 0 16px;color:#5A6B72">Und falls du dich in der Zwischenzeit schon angemeldet hast: Dann ignorier diese Nachricht einfach &mdash; und ich freue mich bald auf dich.</p>
     <p style="font-size:16px;line-height:1.65;margin:0 0 6px">Ich w&uuml;rde mich freuen, dich im Club zu sehen.</p>
     <p style="font-size:16px;line-height:1.65;margin:0">Herzliche Gr&uuml;&szlig;e<br><strong>Julia</strong></p>
   </td></tr>
