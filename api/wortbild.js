@@ -96,24 +96,47 @@ async function beiUnsplash(q) {
 /* Wikipedia zeigt zu jedem Stichwort genau das Bild, das die Sache
    erklaert: zu "Suppe" einen Teller Suppe, zu "Vorstellungsgespraech"
    zwei Menschen am Tisch. Kein Schluessel noetig, und wenn es zu einem
-   Wort kein Bild gibt, kommt eben keins \u2014 das ist ehrlicher als
-   irgendein Treffer. */
-async function beiWikipedia(w) {
-  if (!w) return null;
-  const titel = w.charAt(0).toUpperCase() + w.slice(1);
-  try {
-    const r = await fetch(
-      'https://de.wikipedia.org/w/api.php?action=query&prop=pageimages&piprop=thumbnail'
-      + '&pithumbsize=700&redirects=1&format=json&formatversion=2&origin=*&titles=' + encodeURIComponent(titel),
-      { headers: { 'User-Agent': 'deutschoderwas/1.0 (Lernbilder; deutschoderwas.de)' } }
-    );
-    if (!r.ok) return null;
-    const j = await r.json();
-    const seite = j && j.query && j.query.pages && j.query.pages[0];
-    const u = seite && seite.thumbnail && seite.thumbnail.source;
-    if (!u || seite.missing) return null;
-    return { url: u, autor: '', quelle: 'Wikipedia', lizenz: 'CC' };
-  } catch (e) { return null; }
+   Wort kein Bild gibt, kommt eben keins — das ist ehrlicher als
+   irgendein Treffer.
+
+   Wichtig ist die Buendelung: die MediaWiki-Schnittstelle beantwortet
+   bis zu 50 Stichwoerter in einer Anfrage. Einzeln gefragt kommt nach
+   ein paar Dutzend Anfragen "429 Too Many Requests" zurueck — und
+   jedes Wort, das dabei ins Leere laeuft, haette sonst fuer immer als
+   "kein Bild" im Cache gestanden. */
+async function beiWikipediaViele(woerter) {
+  const treffer = {};
+  if (!woerter.length) return { treffer, gelaufen: false };
+  const gross = (w) => w.charAt(0).toUpperCase() + w.slice(1);
+  const titel = woerter.map(gross);
+  let gelaufen = false;
+  for (let i = 0; i < titel.length; i += 40) {
+    const teil = titel.slice(i, i + 40);
+    try {
+      const r = await fetch(
+        'https://de.wikipedia.org/w/api.php?action=query&prop=pageimages&piprop=thumbnail'
+        + '&pithumbsize=700&redirects=1&format=json&formatversion=2&titles=' + encodeURIComponent(teil.join('|')),
+        { headers: { 'User-Agent': 'deutschoderwas/1.0 (Lernbilder; deutschoderwas.de)' } }
+      );
+      if (!r.ok) continue;                       // 429 o.ae.: nichts merken, spaeter neu
+      const j = await r.json();
+      const q = (j && j.query) || {};
+      /* Wikipedia leitet um und schreibt gross: beide Wege zurueck-
+         verfolgen, sonst landet das Bild unter einem anderen Namen. */
+      const zurueck = {};
+      (q.normalized || []).forEach((n) => { zurueck[n.to] = n.from; });
+      (q.redirects || []).forEach((n) => { zurueck[n.to] = n.from; });
+      gelaufen = true;
+      for (const p of (q.pages || [])) {
+        let t = p.title;
+        for (let tiefe = 0; tiefe < 4 && zurueck[t]; tiefe++) t = zurueck[t];
+        const wort = t.charAt(0).toLowerCase() + t.slice(1);
+        const u = p.thumbnail && p.thumbnail.source;
+        if (!p.missing && u) treffer[wort] = { url: u, autor: '', quelle: 'Wikipedia', lizenz: 'CC' };
+      }
+    } catch (e) { /* ein misslungener Block bleibt einfach offen */ }
+  }
+  return { treffer, gelaufen };
 }
 
 /* Openverse sucht im Titel, nicht im Bild. Darum kam zu "Suppe" eine
@@ -196,7 +219,10 @@ export default async function handler(req, res) {
   const ohneEn = offen.filter((k) => !gefragt.get(k).en && !(bekannt.get(k) || {}).such_en);
   const uebersetzt = await insEnglische(ohneEn.map((k) => gefragt.get(k).wort));
 
-  // 3. Suchen und merken
+  // 3. Wikipedia zuerst, und zwar fuer alle offenen Woerter auf einmal
+  const wiki = await beiWikipediaViele(offen.map((k) => gefragt.get(k).wort));
+
+  // 4. Was dann noch fehlt, einzeln suchen
   const neu = [];
   await Promise.all(offen.map(async (k) => {
     const e = gefragt.get(k);
@@ -204,12 +230,15 @@ export default async function handler(req, res) {
     const q = en || e.wort;
     let t = await beiUnsplash(q);
     if (!t && en && en !== e.wort) t = await beiUnsplash(e.wort);
-    if (!t) t = await beiWikipedia(e.wort);
+    if (!t) t = wiki.treffer[e.wort] || wiki.treffer[String(e.wort).toLowerCase()] || null;
     if (!t) t = await beiOpenverse(q);
     if (t && t.url) {
       bilder[k] = { url: t.url, autor: t.autor, quelle: t.quelle };
       neu.push({ wort: k, url: t.url, autor: t.autor, quelle: t.quelle, lizenz: t.lizenz || '', such_en: en || null, leer: false });
-    } else {
+    } else if (wiki.gelaufen) {
+      /* Nur merken, dass nichts zu finden war, wenn wirklich gesucht
+         wurde. Nach einem abgewiesenen Aufruf bliebe das Wort sonst
+         fuer immer ohne Bild, obwohl es eins gaebe. */
       neu.push({ wort: k, url: null, leer: true, such_en: en || null });
     }
   }));
