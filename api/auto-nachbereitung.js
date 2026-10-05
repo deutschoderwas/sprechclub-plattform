@@ -22,8 +22,9 @@ export default async function handler(req, res) {
   const windowStart = new Date(now - TAGE * 24 * 3600 * 1000).toISOString();
   const nowISO = new Date(now).toISOString();
 
+  const base = process.env.SITE_URL || process.env.PUBLIC_BASE_URL || ('https://' + ((req.headers && (req.headers['x-forwarded-host'] || req.headers.host)) || 'www.deutschoderwas-club.de'));
   const { data: cls } = await sb.from('classes')
-    .select('id,title,starts_at,duration_min,is_cancelled')
+    .select('id,title,starts_at,duration_min,is_cancelled,material_live')
     .gte('starts_at', windowStart).lte('starts_at', nowISO)
     .eq('is_cancelled', false);
 
@@ -39,25 +40,31 @@ export default async function handler(req, res) {
   if (!ended.length) return res.status(200).json({ ok: true, processed: 0, reason: 'keine beendeten Stunden' });
 
   const ids = ended.map(c => c.id);
-  const [{ data: notes }, { data: gnotes }] = await Promise.all([
+  const [{ data: notes }, { data: gnotes }, { data: mats }] = await Promise.all([
     sb.from('class_notes').select('class_id,notes,post_content').in('class_id', ids),
     sb.from('group_notes').select('class_id,notes').in('class_id', ids),
+    sb.from('class_materials').select('class_id,content').in('class_id', ids),
   ]);
   const byId = {};
   (notes || []).forEach(n => { byId[n.class_id] = n; });
+  const matUrl = {};
+  (mats || []).forEach(m => { const u = m && m.content && m.content.lesson_url; if (u) matUrl[m.class_id] = String(u); });
   const grpLen = {};
   (gnotes || []).forEach(g => {
     const plain = String(g.notes || '').replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').trim();
     grpLen[g.class_id] = (grpLen[g.class_id] || 0) + plain.length;
   });
 
-  // Auslöser: Live-Tafel-Mitschrift ODER Gruppenchats vorhanden (mind. 20 Zeichen) und noch keine Nachbereitung.
+  // Auslöser: Live-Tafel-Mitschrift ODER Gruppenchats (mind. 20 Zeichen) ODER eine verlinkte Lektion/Präsentation
+  // (dann wird die Nachbereitung aus dem Lektionsinhalt erstellt – wichtig für Spiel-/Sprech-Stunden ohne Tafeltext) –
+  // und noch keine Nachbereitung.
   const eligible = ended.filter(c => {
     const n = byId[c.id];
     if (n && n.post_content) return false;
     const tafelLen = String((n && n.notes) || '').replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').trim().length;
     const gLen = grpLen[c.id] || 0;
-    return tafelLen >= 20 || gLen >= 20;
+    const hasPres = !!((c.material_live && String(c.material_live).trim()) || matUrl[c.id]);
+    return tafelLen >= 20 || gLen >= 20 || hasPres;
   });
   if (!eligible.length) return res.status(200).json({ ok: true, processed: 0, reason: 'nichts Offenes' });
 
@@ -69,6 +76,17 @@ export default async function handler(req, res) {
     try {
       const r = await runNachbereitung(sb, { classId: c.id, source: 'tafel' });
       results.push({ classId: c.id, title: c.title, beginn: c.starts_at, ok: r.ok, error: r.error, detail: r.detail, counts: r.counts, source: r.source });
+      // Additiv: individuelle Nachbereitung pro Kleingruppe anstoßen (schreibt student_nachbereitung;
+      // ändert NICHT die gemeinsame Nachbereitung). Nur wenn es Gruppen-Zuordnungen gibt, passiert etwas.
+      if (r.ok) {
+        try {
+          await fetch(base + '/api/gruppen-nachbereitung', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json', 'x-cron-secret': process.env.CRON_SECRET || '' },
+            body: JSON.stringify({ classId: c.id }),
+          });
+        } catch (e) { /* pro-Gruppe ist Zusatz – darf den Lauf nie aufhalten */ }
+      }
     } catch (e) {
       results.push({ classId: c.id, title: c.title, beginn: c.starts_at, ok: false, error: e.message });
     }
