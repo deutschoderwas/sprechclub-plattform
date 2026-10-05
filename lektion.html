@@ -641,6 +641,32 @@ function extraUebungen(d){
       var w=String(x).trim().split(/\s+/);
       return w.length>=3 && w.length<=7;
     });
+  /* Steht ein Satz im Dialog zweimal, standen zwei gleiche Antworten
+     zur Auswahl \u2014 eine davon galt als falsch. Das ist keine Aufgabe,
+     das ist eine Falle. */
+  saetze = (function(liste){
+    var da={}, raus=[];
+    liste.forEach(function(x){
+      var k=String(x).toLowerCase().replace(/\s+/g,' ').replace(/[.!?,]/g,'').trim();
+      if(da[k]) return;
+      da[k]=1; raus.push(x);
+    });
+    return raus;
+  })(saetze);
+  /* Ein Gedankenstrich wird beim Zerlegen zu einem eigenen Baustein.
+     "Gerne: vier \u2013 sieben \u2013 zwei." ergaebe zwei gleich aussehende
+     Striche zum Einsortieren und keinen Satzbau zum Lernen. */
+  saetze = saetze.filter(function(x){
+    var t=String(x).trim();
+    /* Nur ein einziger Satz, und keiner mit Komma: "Gut gemeint ist
+       nicht gut gemacht" laesst sich nur auf eine Art bauen, "Stopp.
+       Sie stocken. Was machen Sie jetzt?" dagegen auf mehrere \u2014 und
+       die Pruefung kennt nur eine. Wer richtig baut und "falsch"
+       liest, lernt das Falsche. */
+    if(/[,;:]/.test(t)) return false;
+    if((t.replace(/[.!?]+$/,'').match(/[.!?]/g)||[]).length) return false;
+    return t.split(/\s+/).every(function(w){ return /[A-Za-z\u00c4\u00d6\u00dc\u00e4\u00f6\u00fc\u00df]/.test(w); });
+  });
   mischen(saetze, 67).slice(0,2).forEach(function(satz,n){
     var w=satz.trim().split(/\s+/);
     raus.push({
@@ -702,7 +728,21 @@ function extraUebungen(d){
     });
   }
 
-  return raus;
+  /* Letzte Pruefung vor der Ausgabe: eine Auswahl, in der dieselbe
+     Antwort zweimal steht, ist nicht loesbar \u2014 lieber eine Aufgabe
+     weniger als eine, an der jemand verzweifelt. */
+  return raus.filter(function(u){
+    if(u.optionen){
+      var k=u.optionen.map(function(x){ return String(x).toLowerCase().replace(/\s+/g,' ').replace(/[.!?,]/g,'').trim(); });
+      if(new Set(k).size !== k.length) return false;
+      if(u.richtig==null || u.richtig<0 || u.optionen.length<3) return false;
+    }
+    if(u.paare){
+      var r=u.paare.map(function(x){ return String(x[1]).toLowerCase().trim(); });
+      if(new Set(r).size !== r.length) return false;
+    }
+    return true;
+  });
 }
 function boot(d){
   D=d;
