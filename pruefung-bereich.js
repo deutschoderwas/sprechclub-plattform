@@ -27,9 +27,17 @@
    Minuten, Sprechen mit 15 statt 20. Wer danach geübt hat, hat sich
    fünf Minuten zu knapp eingeteilt.
 
-   Ungeprüft bleiben die drei Fachkurse (telc Medizin, Pflege, Büro);
-   sie tragen weiter „ca.". Lieber ein ehrliches „ca." als eine
-   erfundene Genauigkeit.
+   Die beiden Fachprüfungen sind am 05.10.2026 gegen telc geprüft:
+   telc Deutsch B2·C1 Medizin Fachsprachprüfung (schriftlich 80 Min
+   ohne Pause, mündlich 65 Min als Einzelprüfung) und telc Deutsch
+   B1·B2 Pflege (schriftlich 115 Min, Sprechen ca. 16 Min zu zweit).
+   Beiden fehlte vorher der halbe Prüfungsablauf: bei Medizin der
+   komplette schriftliche Teil, bei Pflege standen Kursthemen da,
+   wo die Prüfungsteile hingehören.
+
+   Büro & Logistik hat gar keine Prüfung. Deshalb steht dort jetzt
+   „Übungszeit" statt „Prüfungsdauer", und Musterprüfung und
+   Bildschirmtraining fallen weg.
    ============================================================ */
 (function(){
   'use strict';
@@ -97,25 +105,48 @@
       hinweis:'Sprechen ca. 20 Minuten zu zweit, 15 Minuten allein — dazu 20 Minuten Vorbereitung.' },
 
     { id:'telcmed', name:'telc Medizin', anbieter:'Fachsprachprüfung', niveau:'B2–C1',
-      bild:'gesundheit', kurs:'telcmed', fach:true,
+      bild:'gesundheit', kurs:'telcmed', fach:true, geprueft:true, dauer:'ca. 2 Std 25 Min',
       fuer:'Die Fachsprachprüfung auf dem Weg zur Approbation.',
-      module:[ {id:'anamnese',n:'Anamnesegespräch',m:'ca. 20'},
-               {id:'doku',n:'Dokumentation',m:'ca. 20'},
-               {id:'fall',n:'Fallvorstellung',m:'ca. 20'} ] },
+      module:[ {id:'hoeren',n:'Hören',m:'ca. 30',
+                 t:'Drei Teile: Visite, Übergabe, Telefonat — Klinikalltag im Ohr.'},
+               {id:'lesen',n:'Lesen und Sprachbausteine',m:'50',
+                 t:'Arztbriefe, Befunde, Fachartikel — dazu die Grammatik im Text.'},
+               {id:'anamnese',n:'Arzt-Patienten-Gespräch',m:'ca. 20',
+                 t:'Das Erstgespräch mit dem Patienten, in Alltagssprache.'},
+               {id:'doku',n:'Kurzarztbrief',m:'ca. 20',
+                 t:'Das Gehörte schriftlich festhalten — knapp und korrekt.'},
+               {id:'fall',n:'Arzt-Arzt-Gespräch',m:'ca. 20',
+                 t:'Den Fall der Kollegin vorstellen, in Fachsprache.'} ],
+      hinweis:'Diese Prüfung hat zwei Hälften. Schriftlich zusammen 80 Minuten ohne Pause — '
+             +'erst Hören, dann Lesen und Sprachbausteine. Danach der mündliche Teil: '
+             +'65 Minuten als Einzelprüfung mit 5 Minuten Vorbereitung. Darin sprichst du mit '
+             +'dem Patienten, schreibst den Kurzarztbrief und stellst den Fall der Kollegin vor. '
+             +'Einzelne Module kann man hier nicht ablegen — alles an einem Termin.' },
 
     { id:'pflege', name:'Deutsch für die Pflege', anbieter:'telc B1·B2 Pflege', niveau:'B1–B2',
-      bild:'pflege', kurs:'pflege', fach:true,
+      bild:'pflege', kurs:'pflege', fach:true, geprueft:true, dauer:'ca. 2 Std 10 Min',
       fuer:'Anerkennung als Pflegefachkraft — Übergabe, Angehörige, Dokumentation.',
-      module:[ {id:'uebergabe',n:'Schichtübergabe',m:'ca. 20'},
-               {id:'angehoerige',n:'Mit Angehörigen sprechen',m:'ca. 20'},
-               {id:'doku',n:'Dokumentation',m:'ca. 20'} ] },
+      module:[ {id:'hoeren',n:'Hören',m:'25',
+                 t:'Übergabe, Visite, Telefon — vier Teile aus dem Dienstalltag.'},
+               {id:'lesen',n:'Lesen und Sprachbausteine',m:'60',
+                 t:'Pflegeberichte, Dienstpläne, Medikamentenpläne — dazu die Grammatik im Text.'},
+               {id:'schreiben',n:'Schreiben',m:'30',
+                 t:'Ein Pflegebericht. Punkte gibt es für Vollständigkeit, nicht für schöne Sätze.'},
+               {id:'sprechen',n:'Sprechen',m:'ca. 16',
+                 t:'Drei Teile zu zweit: Übergabe, Gespräch mit Angehörigen, Beratung.'} ],
+      hinweis:'Eine Prüfung, zwei Niveaus: ob am Ende B1 oder B2 auf dem Zertifikat steht, '
+             +'entscheidet dein Ergebnis. Schriftlich zusammen 115 Minuten. Sprechen ca. 16 Minuten '
+             +'zu zweit — dazu 20 Minuten Vorbereitung. Einzelne Module kann man hier nicht ablegen.' },
 
     { id:'buero', name:'Deutsch für Büro & Logistik', anbieter:'ohne Prüfung', niveau:'A2–B2',
       bild:'kunden', kurs:'buero', fach:true, ohnePruefung:true,
       fuer:'Telefon, E-Mail, Kundengespräch — für den Arbeitsalltag, nicht für ein Zertifikat.',
       module:[ {id:'telefon',n:'Am Telefon',m:'ca. 20'},
                {id:'mail',n:'E-Mail und Schriftverkehr',m:'ca. 20'},
-               {id:'kunden',n:'Kundengespräch',m:'ca. 20'} ] }
+               {id:'kunden',n:'Kundengespräch',m:'ca. 20'} ],
+      hinweis:'Hier gibt es keine Prüfung und kein Zertifikat — die Minuten sind Übungszeit, '
+             +'kein Prüfungstakt. Wenn du am Ende ein Papier brauchst, ist das Zertifikat B1 oder B2 '
+             +'der passende Weg: die Bürolektionen zahlen direkt darauf ein.' }
   ];
 
   /* ---------- Welche Lektion gehört zu welchem Modul ----------
@@ -141,9 +172,9 @@
       fall:     [ [3,'Teil 3 — das Arzt-Arzt-Gespräch'], [6,'Die komplette Prüfungssimulation'] ]
     },
     pflege: {
-      uebergabe:   [ [1,'Die Schichtübergabe'], [5,'Notfall im Dienst'] ],
-      angehoerige: [ [2,'Die Körperpflege — mit dem Bewohner sprechen'], [3,'Angehörige informieren'], [6,'Konflikt im Team ansprechen'] ],
-      doku:        [ [4,'Die Pflegedokumentation'] ]
+      hoeren:    [ [1,'Die Schichtübergabe'], [5,'Notfall im Dienst'] ],
+      schreiben: [ [4,'Die Pflegedokumentation'] ],
+      sprechen:  [ [2,'Die Körperpflege — mit dem Bewohner sprechen'], [3,'Angehörige informieren'], [6,'Konflikt im Team ansprechen'] ]
     },
     buero: {
       telefon: [ [1,'Am Telefon — professionell reagieren'], [5,'Termine koordinieren'] ],
@@ -349,11 +380,30 @@
       k:'Die Prüfung läuft jetzt am Rechner. Tippen, wie sie es verlangt.' }
   ];
 
+  /* Ohne Prüfung ergeben Musterprüfung und Bildschirmtraining keinen Sinn —
+     und „Prüfungsteile" heißen die drei Bereiche dann auch nicht. */
+  var OHNE_TITEL = {
+    module:  ['Die drei Bereiche','Jeden Bereich einzeln üben — mit den Lektionen, die dazugehören.'],
+    material:['Wortschatz & Grammatik','Der Wortschatz, der im Büroalltag wirklich vorkommt.'],
+    bereit:  ['Wo stehst du?','Eine ehrliche Einschätzung, Bereich für Bereich.']
+  };
+  function bereicheVon(p){
+    if(!p.ohnePruefung) return BEREICHE;
+    var raus = { muster:1, bildschirm:1 };
+    return BEREICHE.filter(function(b){ return !raus[b.id]; }).map(function(b){
+      var t = OHNE_TITEL[b.id];
+      return t ? { id:b.id, z:b.z, f:b.f, t:t[0], k:t[1] } : b;
+    });
+  }
+
   function gesamtProzent(p){
     var g=0; p.module.forEach(function(m){ g+=modulProzent(p,m); });
     return Math.round(g/Math.max(1,p.module.length));
   }
   function gesamtDauer(p){
+    /* Wo die Vorbereitungszeit zur Prüfungszeit zählt, ergibt die Summe
+       der Teile nicht die Zeit, die man wirklich dort sitzt. */
+    if(p.dauer) return p.dauer;
     var min=0, ca=false;
     p.module.forEach(function(m){
       var z=String(m.m).match(/\d+/); if(z) min+=parseInt(z[0],10);
@@ -372,7 +422,7 @@
   function bereichStand(p, b){
     if(b.id==='module'){
       var pr=gesamtProzent(p);
-      return { text:p.module.length+' Teile · '+pr+' %', bar:pr };
+      return { text:p.module.length+(p.ohnePruefung?' Bereiche · ':' Teile · ')+pr+' %', bar:pr };
     }
     if(b.id==='muster'){
       var da = p.muster && window.PRUEFUNG && window.PRUEFUNG[p.muster];
@@ -387,10 +437,13 @@
     var p=pruefungVon(id); if(!p) return;
     var v=document.getElementById('v-pruefung'); if(!v) return;
     S('pruefLetzte', id);
-    var offen = bereich || 'module';
+    var liste = bereicheVon(p);
+    var offen = bereich || 'module', daIst = false;
+    for(var bi=0;bi<liste.length;bi++) if(liste[bi].id===offen) daIst = true;
+    if(!daIst) offen = 'module';
     var welt = farbwelt(p), pr = gesamtProzent(p);
 
-    var schritte = BEREICHE.map(function(b){
+    var schritte = liste.map(function(b){
       var st=bereichStand(p,b);
       return '<button class="pf-st pf-f-'+b.f+(b.id===offen?' an':'')+(st.leer?' leer':'')+'" '
         + 'onclick="pruefungOeffnen(\'' + E(p.id) + '\',\'' + b.id + '\')">'
@@ -401,7 +454,7 @@
     }).join('');
 
     var b=null;
-    for(var i=0;i<BEREICHE.length;i++) if(BEREICHE[i].id===offen) b=BEREICHE[i];
+    for(var i=0;i<liste.length;i++) if(liste[i].id===offen) b=liste[i];
 
     v.innerHTML =
         '<div class="pf-hero pf-n-'+welt+'">'
@@ -425,8 +478,8 @@
       +     '</div>'
       +     '<div class="pf-hfak">'
       +       '<div class="pf-hf"><span>Niveau</span><b>'+E(p.niveau)+'</b></div>'
-      +       '<div class="pf-hf"><span>'+(p.module.length===4?'Module':'Teile')+'</span><b>'+p.module.length+'</b></div>'
-      +       '<div class="pf-hf"><span>Prüfungsdauer</span><b>'+E(gesamtDauer(p))+'</b></div>'
+      +       '<div class="pf-hf"><span>'+(p.ohnePruefung?'Bereiche':(p.module.length===4?'Module':'Teile'))+'</span><b>'+p.module.length+'</b></div>'
+      +       '<div class="pf-hf"><span>'+(p.ohnePruefung?'Übungszeit':'Prüfungsdauer')+'</span><b>'+E(gesamtDauer(p))+'</b></div>'
       +       '<div class="pf-hf"><span>Abschluss</span><b>'
       +         (p.ohnePruefung?'ohne Zertifikat':(p.modular?'einzeln möglich':'ein Termin'))+'</b></div>'
       +       '<div class="pf-hf"><span>Lektionen</span><b>'+E(lektionZahlP(p))+'</b></div>'
@@ -436,9 +489,10 @@
       + '<div class="pf-body">'
       +   '<nav class="pf-rail"><h3>Deine Vorbereitung</h3>'
       +     '<div class="pf-rail-l">'+schritte+'</div>'
-      +     '<div class="pf-termin"><span>⏳ Dein Termin</span><b>Noch nicht eingetragen</b>'
+      +     (p.ohnePruefung ? '' :
+            '<div class="pf-termin"><span>⏳ Dein Termin</span><b>Noch nicht eingetragen</b>'
       +       '<em>Trag ihn ein — dann rechne ich dir aus, was pro Woche dran ist.</em>'
-      +       '<button onclick="go(\'lernpfad\')">Termin eintragen</button></div>'
+      +       '<button onclick="go(\'lernpfad\')">Termin eintragen</button></div>')
       +   '</nav>'
       +   '<div class="pf-inhalt">'
       +     '<div class="pf-kopfzeile"><h2>'+E(b?b.t:'')+'</h2><p>'+E(b?b.k:'')+'</p></div>'
@@ -499,7 +553,7 @@
       var pr  = modulProzent(p,m);
       var lek = (LEKTIONEN[p.kurs]||{})[m.id] || [];
       var st  = MODUL_STIL[m.id] || { z:'📝', f:'turq' };
-      var txt = MODUL_TEXT[m.id] || '';
+      var txt = m.t || MODUL_TEXT[m.id] || '';
       var inhalt;
 
       var tr = trainingVon(p, m);
@@ -626,9 +680,13 @@
 
   /* 5 — Bist du bereit? */
   function bereitBlock(p){
+    var einl = p.ohnePruefung
+      ? 'Am Ende steht hier eine ehrliche Einschätzung: wie sicher du in jedem Bereich schon bist — '
+        + 'und was du als Nächstes üben solltest.'
+      : 'Am Ende steht hier eine ehrliche Einschätzung: Punkteprognose aus deinen '
+        + 'Trainingsergebnissen, Modul für Modul — und die klare Ansage, wenn eines noch nicht reicht.';
     var inhalt='<div class="pf-bereit">'
-      +'<p>Am Ende steht hier eine ehrliche Einschätzung: Punkteprognose aus deinen '
-      +'Trainingsergebnissen, Modul für Modul — und die klare Ansage, wenn eines noch nicht reicht.</p>'
+      +'<p>'+einl+'</p>'
       +'<div class="pf-bereit-m">'
       + p.module.map(function(m){ return '<span class="pf-bereit-z"><b>'+E(m.n)+'</b><span>noch kein Ergebnis</span></span>'; }).join('')
       +'</div></div>';
