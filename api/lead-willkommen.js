@@ -70,10 +70,22 @@ export default async function handler(req, res) {
     else if (r.grund !== 'schon_geschickt') fehler++;
   }
 
+  /* Supabase wirft bei einem abgelehnten Update nichts \u2014 es gibt den
+     Fehler zurueck. Ein try/catch sieht davon nichts, und genau das ist
+     hier passiert: ein CHECK auf leads.status kannte 'adresse_pruefen'
+     nicht, das Update wurde still verworfen, und dieselben vier
+     Adressen standen alle zehn Minuten wieder in der Bilanz.
+     Jetzt steht ein solcher Fehler in der Antwort. */
+  let kennzeichnenFehler = null;
   if (kaputteIds.length) {
-    try { await sb.from('leads').update({ status: 'adresse_pruefen' }).in('id', kaputteIds); }
-    catch (e) { /* Kennzeichnen darf den Lauf nicht aufhalten */ }
+    try {
+      const { error: uErr } = await sb.from('leads').update({ status: 'adresse_pruefen' }).in('id', kaputteIds);
+      if (uErr) kennzeichnenFehler = uErr.message;
+    } catch (e) { kennzeichnenFehler = String(e && e.message || e); }
   }
 
-  return res.status(200).json({ ok: true, geprueft, geschickt, fehler, adresse_pruefen: kaputt });
+  return res.status(200).json({
+    ok: true, geprueft, geschickt, fehler, adresse_pruefen: kaputt,
+    ...(kennzeichnenFehler ? { kennzeichnen_fehler: kennzeichnenFehler } : {}),
+  });
 }

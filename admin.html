@@ -906,6 +906,7 @@ function leadsBadge(){
 }
 window.leadFilter=function(v){ LEAD_FILTER=v; renderLeads(); };
 function leadRows(){
+  if(LEAD_FILTER==='ohnemail') return LEADS.filter(l=>!l.mail_at);
   if(LEAD_FILTER==='offen') return LEADS.filter(l=>['neu','kontaktiert','probestunde','adresse_pruefen'].includes(l.status));
   if(LEAD_FILTER==='alle') return LEADS;
   return LEADS.filter(l=>l.status===LEAD_FILTER);
@@ -918,9 +919,9 @@ function renderLeads(){
   host.innerHTML=`
   <div class="card" style="background:#F4FBFA;border:1px solid #cde">
     <b>📋 Leads aus der Warteliste</b>
-    <span class="muted" style="margin-left:8px">${LEADS.length} gesamt · ${zahl('neu')} neu · ${zahl('gewonnen')} gewonnen</span>
+    <span class="muted" style="margin-left:8px">${LEADS.length} gesamt · ${LEADS.filter(l=>l.mail_at).length} haben die Willkommensmail · ${LEADS.filter(l=>!l.mail_at).length} noch nicht · ${zahl('gewonnen')} gewonnen</span>
     <div style="display:flex;gap:6px;flex-wrap:wrap;margin:10px 0">
-      ${knopf('offen','🔥 Offen')}${knopf('neu','🆕 Neu')}${knopf('kontaktiert','✉️ Kontaktiert')}${knopf('probestunde','🎟️ Probestunde')}${knopf('gewonnen','🎉 Gewonnen')}${knopf('abgelehnt','⚪ Abgelehnt')}${knopf('alle','Alle')}
+      ${knopf('offen','🔥 Offen')}${knopf('ohnemail','✉️ ohne Mail')}${knopf('neu','🆕 Neu')}${knopf('kontaktiert','✉️ Kontaktiert')}${knopf('probestunde','🎟️ Probestunde')}${knopf('gewonnen','🎉 Gewonnen')}${knopf('abgelehnt','⚪ Abgelehnt')}${knopf('alle','Alle')}
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
       <button class="btn btn-ghost" onclick="leadsCsv()">⬇️ Als CSV herunterladen</button>
@@ -940,12 +941,21 @@ function leadKarte(l){
       <b style="font-size:16px">${esc(l.name||'–')}</b>
       ${l.tarif?`<span class="pill" style="background:#FFF0CC;color:#8A6608;font-weight:700">${esc(l.tarif)}</span>`:''}
       ${l.niveau?`<span class="pill" style="background:#DFF6F8;color:#0F766E;font-weight:700">${esc(l.niveau)}</span>`:''}
+      ${leadMailPille(l)}
       <span class="muted" style="margin-left:auto">${LEAD_FMT.format(new Date(l.created_at))}</span>
     </div>
     <div style="margin:8px 0;display:flex;gap:14px;flex-wrap:wrap;font-size:14px">
       <a href="mailto:${esc(l.email)}">✉️ ${esc(l.email)}</a>
       ${waLink?`<a href="https://wa.me/${waLink}" target="_blank" rel="noopener">💬 ${esc(l.whatsapp)}</a>`:''}
     </div>
+    ${leadAdresseOk(l.email) ? '' : `<div style="background:#FDECEA;border:1px solid #F6CFCB;border-radius:10px;padding:10px 12px;margin-bottom:8px;font-size:13.5px">
+      <b style="color:#B3241C">⚠️ Diese Adresse ist nicht zustellbar.</b> Da steckt ein Tippfehler aus dem Formular — ein Leerzeichen oder eine fehlende Endung.
+      Dahinter steht ein Mensch, der auf der Warteliste sitzt und nie etwas hört. Zieh sie gerade, dann geht die Mail beim nächsten Lauf raus:
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+        <input id="le_${l.id}" value="${esc(l.email)}" style="flex:1;min-width:220px;padding:7px 10px;border:1px solid #ccc;border-radius:8px">
+        <button class="btn btn-primary" onclick="leadAdresse('${l.id}')">✓ Adresse speichern</button>
+      </div>
+    </div>`}
     ${l.schwierigkeiten?`<div style="background:#FFF8E0;border-radius:10px;padding:8px 11px;font-size:14px;margin-bottom:6px"><b>Wo hakt es:</b> ${esc(l.schwierigkeiten)}</div>`:''}
     ${l.mehr?`<div class="muted" style="font-size:13.5px;margin-bottom:6px">${esc(l.mehr)}</div>`:''}
     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px">
@@ -955,8 +965,96 @@ function leadKarte(l){
       <input id="ln_${l.id}" value="${esc(l.notiz||'')}" placeholder="Notiz (z.B. am 22.8. angeschrieben)" style="flex:1;min-width:200px;padding:7px 10px;border:1px solid #ccc;border-radius:8px">
       <button class="btn btn-primary" onclick="leadSave('${l.id}')">💾 Speichern</button>
     </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px">
+      ${(l.mail_at || !leadAdresseOk(l.email)) ? '' : `<button class="btn" style="background:#10627A;color:#fff;font-weight:800;font-size:13px;padding:8px 14px" onclick="leadMail('${l.id}', this)">✉️ Willkommensmail schicken</button>`}
+      <button class="btn btn-ghost" style="font-size:13px;padding:8px 13px" onclick="leadAntwort('${l.id}')">✍️ Persönlich antworten</button>
+      ${l.mail_at ? `<span class="muted" style="font-size:12.5px">Die Willkommensmail ist raus — persönlich antworten geht trotzdem.</span>` : ''}
+    </div>
   </div>`;
 }
+
+/* Ob jemand schon geschrieben wurde, stand bisher nur in der Tabelle.
+   Im Admin war davon nichts zu sehen — man musste raten. */
+function leadMailPille(l){
+  const grund = l.mail_at ? '#E9F6EC' : '#FDECEA';
+  const farbe = l.mail_at ? '#1F7A3D' : '#D42A21';
+  const text  = l.mail_at ? ('✉️ Mail ✓ ' + kontaktTag(l.mail_at)) : '✉️ noch keine Mail';
+  return '<span style="display:inline-block;background:'+grund+';color:'+farbe+';border-radius:20px;'
+    + 'padding:2px 9px;font-size:11.5px;font-weight:800;white-space:nowrap">'+text+'</span>';
+}
+
+/* Dieselbe Mail und derselbe Weg wie in der Automatik und im
+   Kontakt-Bereich: erst Brevo, dann die Mail, dann mail_at.
+   email_log laesst keine zweite durch, zweimal klicken schadet nicht. */
+window.leadMail = async function(id, btn){
+  const l = LEADS.find(x => x.id === id); if(!l) return;
+  const wer = l.name || l.email;
+  if(!confirm('Die Willkommensmail an ' + wer + ' schicken?\n\n' + l.email)) return;
+  if(btn){ btn.disabled = true; btn.textContent = 'schickt …'; }
+  try{
+    const r = await fetch('/api/lead-kontakt', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer ' + await authToken() },
+      body: JSON.stringify({ aktion:'mail', email:l.email })
+    });
+    const j = await r.json().catch(()=>({}));
+    const e = (j && j.ergebnis && j.ergebnis[0]) || {};
+    if(e.ok || e.grund === 'schon_geschickt'){
+      l.mail_at = l.mail_at || new Date().toISOString();
+      if((l.status||'neu') === 'neu'){
+        l.status = 'kontaktiert';
+        try{ await sb.from('leads').update({ status:'kontaktiert' }).eq('id', id); }catch(x){}
+      }
+      renderLeads(); leadsBadge();
+      if(e.grund === 'schon_geschickt') alert(wer + ' hatte die Mail schon — es ist keine zweite rausgegangen.');
+    } else {
+      alert('Die Mail ging nicht raus: ' + (e.grund || j.error || 'unbekannt'));
+      if(btn){ btn.disabled = false; btn.innerHTML = '✉️ Willkommensmail schicken'; }
+    }
+  }catch(err){
+    alert('Fehler: ' + err.message);
+    if(btn){ btn.disabled = false; btn.innerHTML = '✉️ Willkommensmail schicken'; }
+  }
+};
+
+/* Die Willkommensmail ist fuer alle gleich. Wer im Formular geschrieben
+   hat, wo es hakt, hat aber eine Antwort darauf verdient — deshalb hier
+   ein fertiger Entwurf im eigenen Mailprogramm, mit genau dem Satz
+   dieser Person darin. Abschicken bleibt Julias Entscheidung. */
+window.leadAntwort = function(id){
+  const l = LEADS.find(x => x.id === id); if(!l) return;
+  const vn = String(l.name || '').trim().split(' ')[0] || 'du';
+  const zeilen = [];
+  zeilen.push('Hallo ' + vn + ',');
+  zeilen.push('');
+  zeilen.push('danke, dass du dich beim Sprechclub gemeldet hast — ich habe deine Nachricht gelesen.');
+  if(l.schwierigkeiten){
+    zeilen.push('');
+    zeilen.push('Du schreibst: „' + String(l.schwierigkeiten).trim() + '“');
+    zeilen.push('Genau daran arbeiten wir im Club — im Sprechclub redest du vom ersten Tag an, und zwischen den Stunden übst du mit Amanda, so oft du willst.');
+  }
+  if(l.niveau) zeilen.push('Für ' + l.niveau + ' passt das gut: du bekommst den Kurs auf deinem Niveau und die Sprechrunden dazu.');
+  zeilen.push('');
+  zeilen.push('Der LIVE-Unterricht startet am 1. November, die Lernplattform ist ab der Anmeldung sofort für dich da.');
+  zeilen.push('');
+  zeilen.push('Wenn du magst, antworte mir einfach auf diese Mail — ich sage dir gern, was für dich am meisten bringt.');
+  zeilen.push('');
+  zeilen.push('Herzliche Grüße');
+  zeilen.push('Julia');
+  const link = 'mailto:' + encodeURIComponent(l.email)
+    + '?subject=' + encodeURIComponent('Deine Nachricht an den Sprechclub')
+    + '&body=' + encodeURIComponent(zeilen.join('\n'));
+  window.open(link, '_blank');
+  /* Wer angeschrieben wurde, soll nicht in "Neu" stehen bleiben. */
+  if((l.status||'neu') === 'neu'){
+    l.status = 'kontaktiert';
+    const heute = new Date().toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'});
+    l.notiz = (l.notiz ? l.notiz + ' · ' : '') + 'am ' + heute + ' persönlich geschrieben';
+    sb.from('leads').update({ status:l.status, notiz:l.notiz }).eq('id', id).then(function(){
+      renderLeads(); leadsBadge();
+    }, function(){});
+  }
+};
 window.leadSave=async function(id){
   const st=document.getElementById('ls_'+id).value;
   const nz=document.getElementById('ln_'+id).value;
@@ -964,6 +1062,26 @@ window.leadSave=async function(id){
   if(error) return alert('Fehler: '+error.message);
   const l=LEADS.find(x=>x.id===id); if(l){ l.status=st; l.notiz=nz; }
   renderLeads(); leadsBadge();
+};
+/* Dieselbe Pruefung wie auf dem Server: ohne @, mit Leerzeichen oder
+   ohne Endung wird eine Adresse nie zustellbar. */
+function leadAdresseOk(mail){
+  return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(mail||'').trim());
+}
+window.leadAdresse = async function(id){
+  const l = LEADS.find(x => x.id === id); if(!l) return;
+  const feld = document.getElementById('le_' + id); if(!feld) return;
+  const neu = String(feld.value||'').trim().toLowerCase();
+  if(!leadAdresseOk(neu)) return alert('Diese Adresse stimmt auch noch nicht — prüf bitte @ und die Endung.');
+  if(neu === String(l.email||'').trim().toLowerCase()) return alert('Das ist dieselbe Adresse wie vorher.');
+  /* Zurueck auf "neu": nur dann nimmt die Automatik sie beim naechsten
+     Lauf wieder mit. Bleibt sie auf "Adresse pruefen", wird sie
+     uebersprungen — und die korrigierte Adresse bekaeme nie eine Mail. */
+  const { error } = await sb.from('leads').update({ email:neu, status:'neu' }).eq('id', id);
+  if(error) return alert('Fehler: ' + error.message);
+  l.email = neu; l.status = 'neu';
+  renderLeads(); leadsBadge();
+  alert('Gespeichert. Die Willkommensmail geht beim nächsten Lauf raus (alle 10 Minuten) — oder sofort über den Knopf auf der Karte.');
 };
 window.leadsCsv=function(){
   const kopf=['Datum','Name','E-Mail','WhatsApp','Tarif','Niveau','Status','Schwierigkeiten','Mehr','Notiz'];
