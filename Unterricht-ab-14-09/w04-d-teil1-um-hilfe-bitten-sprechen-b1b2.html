@@ -1,0 +1,272 @@
+<!DOCTYPE html><html lang="de"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Sprechclub · Um Hilfe bitten — reden & spielen · B1/B2 | deutschoderwas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#F6F3EC;--paper:#fff;--ink:#241d16;--ink-soft:#5c4e3e;--ink-mute:#897a64;--red:#D42A21;--red-soft:#FCE5E3;--sand:#E8E0D2;--teal:#0A7D72;--teal-s:#D7F0EC;--gelb:#E0A400;--gelb-s:#FFF1C2;--blau:#2F72C9;--blau-s:#DBE8FB;--gruen:#2E9E5B;--gruen-s:#E2F5E9;--accent:var(--gelb);--accent-s:var(--gelb-s);}
+*{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}
+body{background:linear-gradient(180deg,#F0E7DF 0%,var(--cream) 16%);color:var(--ink);font-family:'Inter',sans-serif;line-height:1.55;min-height:100vh;}
+body[data-level=komplexer]{--accent:var(--blau);--accent-s:var(--blau-s);}
+body[data-level=schwierig]{--accent:var(--gruen);--accent-s:var(--gruen-s);}
+.wrap{max-width:940px;margin:0 auto;padding:2rem 1.3rem 5rem;}
+.eyebrow{text-align:center;font-size:.76rem;font-weight:700;letter-spacing:.17em;text-transform:uppercase;color:var(--red);margin-bottom:.6rem;}
+h1.title{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(2rem,5vw,3.2rem);line-height:1.06;text-align:center;}
+h1.title .hl{position:relative;display:inline-block;font-style:italic;padding:.03em .3em;}
+h1.title .hl::before{content:'';position:absolute;inset:0;background:var(--accent);border-radius:12px;transform:rotate(-2deg);z-index:-1;transition:background .3s;}
+.subtitle{text-align:center;max-width:640px;margin:.8rem auto 0;font-size:1.04rem;color:var(--ink-soft);}
+.en{display:block;font-size:.8rem;color:var(--ink-mute);font-weight:400;font-style:italic;margin-top:.2rem;}
+.levelbar{display:flex;flex-direction:column;align-items:center;gap:.35rem;margin:1.2rem auto .2rem;}
+.levelbar .lab{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-mute);}
+.levelsw{display:inline-flex;gap:.4rem;background:var(--paper);border:1.5px solid var(--sand);border-radius:999px;padding:.3rem;box-shadow:0 4px 14px rgba(36,29,22,.07);}
+.levelsw button{font-family:'Inter';font-weight:700;font-size:.9rem;border:none;background:transparent;color:var(--ink);padding:.45rem 1rem;border-radius:999px;cursor:pointer;transition:.18s;}
+.levelsw button:hover{background:var(--cream);}
+.levelsw button.on[data-l=einfach]{background:var(--gelb);color:#5a3d00;}
+.levelsw button.on[data-l=komplexer]{background:var(--blau);color:#fff;}
+.levelsw button.on[data-l=schwierig]{background:var(--gruen);color:#fff;}
+.tabs{position:sticky;top:0;z-index:40;display:flex;flex-wrap:wrap;justify-content:center;gap:.45rem;background:rgba(246,243,236,.93);backdrop-filter:blur(8px);border-radius:18px;padding:.5rem;margin:1rem auto;}
+.tab{font-family:'Inter';font-size:.9rem;font-weight:600;border:2px solid transparent;background:var(--paper);color:var(--ink);padding:.55rem .95rem;border-radius:999px;cursor:pointer;transition:.16s;box-shadow:0 2px 8px rgba(36,29,22,.05);}
+.tab:hover{transform:translateY(-2px);}
+.tab.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+body[data-level=einfach] .tab.active{color:#5a3d00;}
+.section{display:none;}
+.section.active{display:block;animation:slidein .4s cubic-bezier(.2,.7,.3,1);}
+@keyframes slidein{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+.card{background:var(--paper);border:1.5px solid var(--sand);border-radius:22px;padding:1.5rem 1.4rem;box-shadow:0 14px 36px rgba(36,29,22,.09);}
+h2.st{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(1.35rem,3vw,1.9rem);margin:.2rem 0 .3rem;}
+h2.st em{font-style:italic;}
+.ssub{color:var(--ink-soft);margin-bottom:1rem;font-size:.98rem;}
+.lv{display:none;}
+body[data-level=einfach] .lv[data-lvl=einfach],body[data-level=komplexer] .lv[data-lvl=komplexer],body[data-level=schwierig] .lv[data-lvl=schwierig]{display:block;animation:fade .3s ease;}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.qgrid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;}
+@media(max-width:680px){.qgrid{grid-template-columns:1fr;}}
+.task{display:flex;gap:.6rem;align-items:flex-start;background:var(--cream);border:1.5px solid var(--sand);border-radius:13px;padding:.65rem .85rem;cursor:pointer;transition:.15s;animation:pop .35s backwards;}
+.task:hover{border-color:var(--accent);transform:translateY(-1px);}
+.task.done{background:var(--accent-s);border-color:var(--accent);}
+.task .ic{flex:0 0 20px;height:20px;border-radius:999px;background:#fff;border:1.5px solid var(--sand);display:grid;place-items:center;font-size:.72rem;margin-top:.1rem;}
+.task.done .ic::after{content:'✓';color:var(--accent);font-weight:800;}
+.task .tt{font-size:.98rem;}
+@keyframes pop{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+.controls{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.9rem;align-items:center;}
+.btn{background:var(--accent);color:#fff;border:none;border-radius:999px;padding:.6rem 1.3rem;font-weight:700;cursor:pointer;font-family:'Inter';font-size:.92rem;transition:.16s;}
+body[data-level=einfach] .btn{color:#5a3d00;}
+.btn:hover{filter:brightness(1.05);transform:translateY(-1px);}
+.btn.ghost{background:var(--paper);color:var(--ink);border:1.5px solid var(--sand);}
+.tip{background:var(--gelb-s);border:2px dashed var(--gelb);border-radius:14px;padding:.85rem 1.1rem;font-size:.92rem;margin-top:1rem;line-height:1.6;}
+.tip.teal{background:var(--teal-s);border-color:var(--teal);}
+mark{background:var(--accent-s);padding:.05em .28em;border-radius:5px;font-weight:600;color:var(--ink);}
+.rmbox{border-radius:16px;padding:1rem 1.1rem;border:1.5px solid var(--sand);background:var(--paper);margin:.6rem 0;}
+.rmbox h4{font-family:'Space Grotesk';font-size:1.05rem;margin-bottom:.5rem;}
+.rmbox.ask{background:var(--gelb-s);border-color:var(--gelb);}
+.rmbox.ans{background:var(--teal-s);border-color:var(--teal);}
+.rmbox ul{list-style:none;display:grid;gap:.4rem;}
+.rmbox li{font-size:.98rem;line-height:1.4;padding-left:1.1rem;position:relative;}
+.rmbox li::before{content:'„';position:absolute;left:0;font-weight:800;color:var(--ink-mute);}
+.challenge{text-align:center;background:linear-gradient(135deg,var(--accent-s),var(--paper));border:1.5px solid var(--accent);border-radius:18px;padding:1.4rem;margin:.4rem 0;}
+.challenge .prompt{font-family:'Space Grotesk';font-weight:700;font-size:1.3rem;line-height:1.4;min-height:2.6em;display:flex;align-items:center;justify-content:center;}
+.timer{font-family:'Space Grotesk';font-weight:700;font-size:2.6rem;color:var(--red);margin:.3rem 0;}
+.timer.run{color:var(--gruen);}
+.slist{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:.45rem;margin:.6rem 0 1rem;}
+.sbtn{background:var(--cream);border:1.5px solid var(--sand);border-radius:12px;padding:.6rem .75rem;font-family:'Inter';font-weight:600;font-size:.9rem;color:var(--ink);cursor:pointer;text-align:left;transition:.14s;}
+.sbtn:hover{border-color:var(--accent);transform:translateY(-2px);}
+.sbtn.on{background:var(--accent);border-color:var(--accent);color:#fff;}
+body[data-level=einfach] .sbtn.on{color:#5a3d00;}
+.rolecard{background:var(--cream);border:1.5px solid var(--sand);border-left:5px solid var(--accent);border-radius:14px;padding:1rem 1.1rem;}
+.rolecard .ort{font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--red);}
+.rolecard .lage{font-family:'Space Grotesk';font-weight:700;font-size:1.08rem;margin:.3rem 0 .6rem;}
+.rolecard .rr{font-size:.95rem;margin:.2rem 0;}.rolecard .rr b{color:var(--red);}
+.exdlg{display:none;margin-top:.7rem;}
+.exdlg.show{display:grid;gap:.5rem;animation:slidein .35s ease;}
+.exbubble{max-width:85%;padding:.6rem .9rem;border-radius:14px;font-size:.96rem;line-height:1.4;}
+.exbubble.a{align-self:flex-start;background:var(--paper);border:1.5px solid var(--sand);border-bottom-left-radius:4px;}
+.exbubble.b{align-self:flex-end;background:var(--accent-s);border:1.5px solid var(--accent);border-bottom-right-radius:4px;}
+.exbubble .who{display:block;font-size:.68rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:.1rem;}
+.pcgrid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin:1rem 0;}
+@media(max-width:620px){.pcgrid{grid-template-columns:1fr;}}
+.pcol{border-radius:16px;padding:1rem 1.1rem;border:2px solid;}
+.pcol.pro{background:var(--gruen-s);border-color:var(--gruen);}
+.pcol.con{background:var(--red-soft);border-color:var(--red);}
+.pcol h4{font-family:'Space Grotesk';margin-bottom:.4rem;}
+.pcol ul{list-style:none;display:grid;gap:.35rem;}
+.pcol li{font-size:.94rem;padding-left:1.2rem;position:relative;}
+.pcol li::before{content:'›';position:absolute;left:0;font-weight:800;}
+footer{text-align:center;color:var(--ink-mute);font-size:.84rem;padding:2.4rem 1rem 1rem;}
+footer b{color:var(--ink);}
+</style></head>
+<body data-level="einfach"><div class="wrap">
+<div class="eyebrow">deutschoderwas · Sprechclub · Reden & Rollenspiele</div>
+<h1 class="title">Um Hilfe <span class="hl">bitten</span></h1>
+<p class="subtitle">Höflich um Hilfe bitten, Hilfe anbieten, annehmen oder freundlich ablehnen — und sich bedanken. Mit Redemitteln, Rollenspielen, 1-Minute-Challenge und Debatte.</p>
+
+<div class="levelbar">
+  <span class="lab">Niveau wählen · pick your level</span>
+  <div class="levelsw">
+    <button data-l="einfach" class="on" onclick="setLevel('einfach')">🟨 A2/B1</button>
+    <button data-l="komplexer" onclick="setLevel('komplexer')">🟦 B1/B2</button>
+    <button data-l="schwierig" onclick="setLevel('schwierig')">🟩 B2/C1</button>
+  </div>
+</div>
+
+<nav class="tabs">
+  <button class="tab active" data-tab="0">🔥 Aufwärmen</button>
+  <button class="tab" data-tab="1">💬 Fragen</button>
+  <button class="tab" data-tab="2">🔑 Redemittel</button>
+  <button class="tab" data-tab="3">⏱️ 1-Minute</button>
+  <button class="tab" data-tab="4">🎭 Rollenspiele</button>
+  <button class="tab" data-tab="5">⚖️ Debatte</button>
+</nav>
+
+<section class="section active" data-section="0"><div class="card">
+  <h2 class="st">🔥 Aufwärmen</h2>
+  <p class="ssub">Tippt eine Karte an und sprecht reihum. Die Fragen passen sich eurem Niveau an.<span class="en">Tap a card and speak in turns. Questions adapt to your level.</span></p>
+  <div class="qgrid" id="t-aufw"></div>
+</div></section>
+
+<section class="section" data-section="1"><div class="card">
+  <h2 class="st">💬 Fragen & <em>Austausch</em></h2>
+  <p class="ssub">Redet frei miteinander — fragen, antworten, nachfragen.<span class="en">Talk freely — ask, answer, follow up.</span></p>
+  <div class="qgrid" id="t-fragen"></div>
+  <div class="controls"><button class="btn" onclick="rnd('fragen')">🎲 Zufallsfrage</button></div>
+</div></section>
+
+<section class="section" data-section="2"><div class="card">
+  <h2 class="st">🔑 <em>Redemittel</em></h2>
+  <p class="ssub">So bittest du um Hilfe und so antwortest du. Wichtiges ist <mark>markiert</mark>. Oben das Niveau umschalten.<span class="en">How to ask for help and how to answer. Key parts are highlighted.</span></p>
+  <div class="lv" data-lvl="einfach">
+    <div class="rmbox ask"><h4>🙋 Um Hilfe bitten</h4><ul><li><mark>Kannst du</mark> mir helfen?“</li><li><mark>Entschuldigung</mark>, ich habe eine Frage.“</li><li>Ich <mark>verstehe das nicht</mark>.“</li><li><mark>Hilfst du mir</mark> kurz?“</li></ul></div>
+    <div class="rmbox ans"><h4>💬 Auf eine Bitte antworten</h4><ul><li><mark>Ja, klar!</mark>“</li><li><mark>Natürlich</mark>, gern.“</li><li><mark>Tut mir leid</mark>, ich habe keine Zeit.“</li><li><mark>Moment</mark>, ich komme.“</li></ul></div>
+  </div>
+  <div class="lv" data-lvl="komplexer">
+    <div class="rmbox ask"><h4>🙋 Um Hilfe bitten</h4><ul><li><mark>Könntest du</mark> mir bitte helfen?“</li><li><mark>Würde es dir etwas ausmachen</mark>, mir zu helfen?“</li><li>Ich komme hier <mark>nicht weiter</mark>.“</li><li><mark>Hättest du kurz Zeit</mark> für mich?“</li></ul></div>
+    <div class="rmbox ans"><h4>💬 Auf eine Bitte antworten</h4><ul><li><mark>Klar, mache ich</mark> gern.“</li><li><mark>Kein Problem</mark>, zeig mal.“</li><li><mark>Leider</mark> gerade schwierig — <mark>später</mark>?“</li><li><mark>Da kann ich dir leider nicht helfen</mark>, aber frag mal …“</li></ul></div>
+  </div>
+  <div class="lv" data-lvl="schwierig">
+    <div class="rmbox ask"><h4>🙋 Um Hilfe bitten</h4><ul><li><mark>Wäre es möglich</mark>, dass du mir dabei hilfst?“</li><li><mark>Ich wollte fragen, ob</mark> du mir unter die Arme greifen könntest.“</li><li>Ich bräuchte da <mark>einen kleinen Gefallen</mark>.“</li><li><mark>Darf ich dich kurz um Unterstützung bitten</mark>?“</li></ul></div>
+    <div class="rmbox ans"><h4>💬 Auf eine Bitte antworten</h4><ul><li><mark>Selbstverständlich</mark>, lass mich sehen.“</li><li><mark>Sehr gern</mark> — worum geht es genau?“</li><li><mark>Ich fürchte, da bin ich überfragt</mark>.“</li><li><mark>Im Moment passt es schlecht</mark>, aber ich melde mich.“</li></ul></div>
+  </div>
+  <div class="tip">💡 <strong>Übung zu zweit:</strong> Eine Person bittet um Hilfe, die andere antwortet — einmal zusagen, einmal höflich ablehnen.<span class="en">One asks for help, the other answers — once yes, once a polite no.</span></div>
+</div></section>
+
+<section class="section" data-section="3"><div class="card">
+  <h2 class="st">⏱️ 1-Minute-<em>Challenge</em></h2>
+  <p class="ssub">Eine Person spricht <strong>eine Minute ohne Pause</strong> zum Thema. Timer starten!<span class="en">Speak for one minute without stopping. Start the timer!</span></p>
+  <div class="challenge">
+    <div class="prompt" id="chPrompt">Klick auf „Neues Thema" 🎤</div>
+    <div class="timer" id="chTimer">1:00</div>
+    <div class="controls" style="justify-content:center">
+      <button class="btn" id="chStart" onclick="chToggle()">▶︎ Start</button>
+      <button class="btn ghost" onclick="chNew()">🎲 Neues Thema</button>
+    </div>
+  </div>
+</div></section>
+
+<section class="section" data-section="4"><div class="card">
+  <h2 class="st">🎭 <em>Rollenspiele</em></h2>
+  <p class="ssub">Tippt eine Situation an und spielt sie zu zweit. Mit <strong>Beispieldialog zum Aufklappen</strong> (Niveau oben umschalten, Wichtiges ist markiert).<span class="en">Tap a situation and act it out. Click to reveal an example dialogue.</span></p>
+  <div class="slist" id="roleList"></div>
+  <div class="rolecard" id="roleCard"></div>
+  <div class="controls">
+    <button class="btn" id="exToggle" onclick="toggleEx()">💬 Beispieldialog zeigen</button>
+    <button class="btn ghost" onclick="randomRole()">🎲 Zufällige Situation</button>
+  </div>
+  <div class="exdlg" id="exDlg"></div>
+</div></section>
+
+<section class="section" data-section="5"><div class="card">
+  <h2 class="st">⚖️ <em>Debatte</em></h2>
+  <p class="ssub">Die Frage: <b>Sollte man Fremden immer helfen, wenn sie darum bitten?</b> Zwei Gruppen, jede bekommt eine Seite zugelost.<span class="en">Two teams, each gets a side.</span></p>
+  <div class="pcgrid">
+    <div class="pcol pro"><h4>🤝 Immer helfen</h4><ul>
+      <li>Eine Gesellschaft lebt von gegenseitiger Hilfe.</li>
+      <li>Heute ich, morgen brauche vielleicht ich Hilfe.</li>
+      <li>Kleine Gesten kosten wenig und bedeuten viel.</li>
+      <li>Wegschauen macht einsam und kalt.</li></ul></div>
+    <div class="pcol con"><h4>🛑 Nicht immer</h4><ul>
+      <li>Man muss auch auf sich selbst achten.</li>
+      <li>Nicht jede Bitte ist ehrlich gemeint.</li>
+      <li>Zu viel Helfen kann andere unselbstständig machen.</li>
+      <li>Manchmal ist ein freundliches Nein das Richtige.</li></ul></div>
+  </div>
+  <div class="tip">🎲 Drei Minuten Argumente sammeln, dann abwechselnd sprechen — immer ein Satz.</div>
+</div></section>
+
+<footer><b>deutsch</b>oderwas · Sprechclub · Um Hilfe bitten · B1/B2</footer>
+</div>
+<script>
+var curLevel='einfach';
+var Q={
+ aufw:{
+  einfach:["Bittest du gern um Hilfe oder lieber nicht?","Wen fragst du, wenn du Hilfe brauchst?","Hast du heute schon jemandem geholfen?","Was sagst du, wenn du etwas nicht verstehst?"],
+  komplexer:["Fällt es dir leicht, um Hilfe zu bitten? Warum (nicht)?","Erzähl von einer Situation, in der dir jemand geholfen hat.","Hilfst du lieber oder lässt du dir helfen?","Wie fragt man höflich einen Fremden um Hilfe?"],
+  schwierig:["Warum ist es manchen unangenehm, um Hilfe zu bitten?","Ist Hilfe annehmen eine Stärke oder eine Schwäche?","Wann sollte man Hilfe lieber ablehnen?","Wie viel Hilfe ist gesund — wann wird es zu viel?"]
+ },
+ fragen:{
+  einfach:["Wann hast du zuletzt um Hilfe gebeten?","Wer hilft dir im Alltag am meisten?","Hilfst du Fremden auf der Straße?","Wie sagst du Danke?"],
+  komplexer:["Gibt es etwas, wobei du nie um Hilfe bitten würdest?","Wie reagierst du, wenn dir jemand Hilfe anbietet?","Hast du schon mal Hilfe abgelehnt? Warum?","Fällt es dir schwer, Nein zu sagen, wenn jemand dich bittet?"],
+  schwierig:["Macht zu viel Hilfe Menschen unselbstständig?","Hat sich Hilfsbereitschaft durch das Internet verändert?","Wann ist Hilfe eher Einmischung?","Sollte Hilfe immer freiwillig sein?"]
+ }
+};
+var done={aufw:{},fragen:{}};
+function render(key){var h=document.getElementById('t-'+key);h.innerHTML='';Q[key][curLevel].forEach(function(t,i){var d=document.createElement('div');d.className='task'+(done[key][curLevel+i]?' done':'');d.innerHTML='<span class="ic"></span><span class="tt">'+t+'</span>';d.addEventListener('click',function(){done[key][curLevel+i]=!done[key][curLevel+i];d.classList.toggle('done');});h.appendChild(d);});}
+function renderAll(){render('aufw');render('fragen');}
+function rnd(key){var cards=document.querySelectorAll('#t-'+key+' .task');if(!cards.length)return;cards.forEach(function(c){c.style.outline='';});var i=Math.floor(Math.random()*cards.length);cards[i].style.outline='3px solid var(--accent)';cards[i].scrollIntoView({block:'nearest'});}
+renderAll();
+
+var CH=["Eine Situation, in der mir jemand geholfen hat.","Warum es mir (nicht) leichtfällt, um Hilfe zu bitten.","Der hilfsbereiteste Mensch, den ich kenne.","Wie man in meinem Land um Hilfe bittet.","Eine Situation, in der ich jemandem geholfen habe.","Soll man immer helfen, wenn man gefragt wird?"];
+var chI=-1,chT=60,chRun=false,chTick=null;
+function chNew(){var i;do{i=Math.floor(Math.random()*CH.length);}while(i===chI&&CH.length>1);chI=i;document.getElementById('chPrompt').textContent=CH[i];chStop();document.getElementById('chTimer').textContent='1:00';chT=60;}
+function fmt(s){var m=Math.floor(s/60),x=s%60;return m+':'+(x<10?'0':'')+x;}
+function chToggle(){if(chRun)chStop();else chStart();}
+function chStart(){if(chI<0)chNew();chRun=true;document.getElementById('chStart').textContent='⏸ Pause';document.getElementById('chTimer').classList.add('run');chTick=setInterval(function(){chT--;document.getElementById('chTimer').textContent=fmt(chT);if(chT<=0){chStop();document.getElementById('chTimer').textContent='⏰ Zeit!';}},1000);}
+function chStop(){chRun=false;clearInterval(chTick);document.getElementById('chStart').textContent='▶︎ Start';document.getElementById('chTimer').classList.remove('run');}
+
+var ROLES=[
+ {kurz:"📦 Nachbar: Kiste",ort:"An der Haustür",lage:"Eine schwere Kiste muss hoch — du fragst eine Nachbarin.",a:"A: Bitte höflich um Hilfe beim Tragen.",b:"B: Reagiere und hilf mit.",w:"Kannst du …? · zu schwer · tragen · danke!"},
+ {kurz:"💻 Kollegin: PC",ort:"Im Büro",lage:"Dein Computer macht Probleme.",a:"A: Bitte eine Kollegin um Hilfe und beschreibe das Problem.",b:"B: Frag nach und hilf.",w:"Könntest du …? · funktioniert nicht · zeig mal"},
+ {kurz:"🧭 Weg fragen",ort:"Auf der Straße",lage:"Du hast dich verlaufen.",a:"A: Sprich jemanden an und frag nach dem Weg.",b:"B: Erkläre den Weg freundlich.",w:"Entschuldigung … · geradeaus · links · weit?"},
+ {kurz:"🏛️ Amt: Formular",ort:"Beim Amt",lage:"Du verstehst ein Formular nicht.",a:"A: Bitte um Erklärung und frag konkret nach.",b:"B: Erkläre geduldig.",w:"Ich verstehe … nicht · Könnten Sie …? · was bedeutet …?"},
+ {kurz:"🚚 Freund: Umzug",ort:"Am Telefon",lage:"Du ziehst um und brauchst Hilfe.",a:"A: Bitte einen Freund um Hilfe am Wochenende.",b:"B: Prüfe deine Zeit und antworte.",w:"Hättest du Zeit …? · Samstag · dafür sind Freunde da"},
+ {kurz:"🧓 Hilfe anbieten",ort:"Am Bahnhof",lage:"Eine ältere Person trägt schwer.",a:"A: Biete höflich deine Hilfe an.",b:"B: Nimm die Hilfe dankend an.",w:"Kann ich Ihnen helfen? · gern · vielen Dank"},
+ {kurz:"🙅 Hilfe ablehnen",ort:"Unter Freunden",lage:"Jemand bittet um etwas, das du nicht kannst.",a:"A: Bitte um einen Gefallen.",b:"B: Lehne freundlich ab und biete eine Alternative.",w:"Könntest du …? · tut mir leid · frag doch mal …"},
+ {kurz:"🙏 Bedanken",ort:"Nach der Hilfe",lage:"Jemand hat dir geholfen.",a:"A: Bedanke dich herzlich.",b:"B: Reagiere bescheiden.",w:"Vielen Dank! · gern geschehen · ich revanchiere mich"}
+];
+var EXDLG=[
+ {einfach:[["A","<mark>Entschuldigung</mark>, kannst du mir kurz helfen?"],["B","Klar, was ist los?"],["A","Die Kiste ist <mark>zu schwer</mark> für mich."],["B","Kein Problem, ich <mark>trage</mark> sie."]],
+  komplexer:[["A","<mark>Hättest du kurz Zeit</mark>? Ich komme mit der Kiste nicht hoch."],["B","Na klar, <mark>warte</mark>, ich fasse mit an."],["A","Das ist <mark>super nett</mark> von dir."],["B","Gern — <mark>zu zweit</mark> geht das viel leichter."]],
+  schwierig:[["A","<mark>Würde es dir etwas ausmachen</mark>, mir kurz zur Hand zu gehen?"],["B","<mark>Selbstverständlich</mark>, worum geht's?"],["A","Die Kiste ist sperrig — allein <mark>schaffe ich das nicht</mark>."],["B","<mark>Kein Thema</mark>, lass uns zusammen anpacken."]]},
+ {einfach:[["A","Kannst du mir am <mark>Computer</mark> helfen?"],["B","Was <mark>funktioniert nicht</mark>?"],["A","Ich <mark>finde die Datei nicht</mark>."],["B","Zeig mal, ich <mark>helfe dir</mark>."]],
+  komplexer:[["A","<mark>Könntest du</mark> mir kurz am Rechner helfen?"],["B","Klar, <mark>woran hakt's</mark>?"],["A","Das Programm <mark>stürzt immer ab</mark>."],["B","Lass uns <mark>gemeinsam</mark> draufschauen."]],
+  schwierig:[["A","<mark>Darf ich dich kurz um Unterstützung bitten</mark>? Der PC spinnt."],["B","<mark>Sehr gern</mark> — was genau passiert?"],["A","Sobald ich speichere, <mark>friert alles ein</mark>."],["B","Verstehe. <mark>Probieren wir</mark> mal etwas aus."]]},
+ {einfach:[["A","<mark>Entschuldigung</mark>, wo ist der Bahnhof?"],["B","<mark>Geradeaus</mark> und dann links."],["A","Ist es <mark>weit</mark>?"],["B","Nein, <mark>fünf Minuten</mark>."]],
+  komplexer:[["A","<mark>Entschuldigen Sie</mark>, könnten Sie mir den Weg zeigen?"],["B","Gern — <mark>am besten</mark> gehen Sie hier entlang."],["A","Und wie <mark>finde ich</mark> den Eingang?"],["B","Einfach den <mark>Schildern folgen</mark>."]],
+  schwierig:[["A","<mark>Dürfte ich Sie kurz stören</mark>? Ich habe mich verlaufen."],["B","Kein Problem, <mark>wohin möchten Sie</mark>?"],["A","Zum Rathaus — ich <mark>finde mich hier nicht zurecht</mark>."],["B","<mark>Kommen Sie</mark>, ich beschreibe es Ihnen."]]},
+ {einfach:[["A","Ich <mark>verstehe das Formular nicht</mark>."],["B","Welche <mark>Frage</mark> meinen Sie?"],["A","Was bedeutet <mark>hier</mark> das Wort?"],["B","Das heißt: <mark>Ihr Geburtsdatum</mark>."]],
+  komplexer:[["A","<mark>Könnten Sie mir</mark> das kurz erklären?"],["B","Natürlich, <mark>worum geht es</mark>?"],["A","Ich bin <mark>nicht sicher</mark>, was ich eintragen soll."],["B","<mark>Kein Problem</mark>, ich zeige es Ihnen."]],
+  schwierig:[["A","<mark>Wäre es möglich</mark>, dass Sie mir beim Ausfüllen helfen?"],["B","<mark>Gern</mark> — nehmen wir es Schritt für Schritt durch."],["A","Diese Stelle <mark>ist mir unklar</mark>."],["B","Das lässt sich <mark>leicht klären</mark>, keine Sorge."]]},
+ {einfach:[["A","<mark>Hilfst du mir</mark> beim Umzug?"],["B","Wann <mark>ziehst du um</mark>?"],["A","Am <mark>Samstag</mark>."],["B","Okay, ich <mark>komme</mark>."]],
+  komplexer:[["A","<mark>Hättest du am Samstag Zeit</mark>, mir beim Umzug zu helfen?"],["B","Vormittags schwierig — <mark>nachmittags</mark>?"],["A","<mark>Passt</mark>! Ich bin so froh."],["B","Klar, <mark>dafür sind Freunde da</mark>."]],
+  schwierig:[["A","Ich bräuchte <mark>einen großen Gefallen</mark>: Hilfe beim Umzug."],["B","<mark>Sag mir einfach, wann</mark> — ich richte es ein."],["A","Das wäre <mark>eine riesige Entlastung</mark>."],["B","<mark>Mach dir keinen Stress</mark>, wir kriegen das hin."]]},
+ {einfach:[["A","<mark>Kann ich Ihnen helfen</mark>?"],["B","Oh, <mark>ja gern</mark>."],["A","Ich <mark>trage</mark> die Tasche."],["B","<mark>Vielen Dank</mark>!"]],
+  komplexer:[["A","<mark>Darf ich Ihnen</mark> die Treppe hoch helfen?"],["B","Das wäre <mark>sehr freundlich</mark>."],["A","<mark>Nehmen Sie</mark> meinen Arm."],["B","<mark>Ganz herzlichen Dank</mark>."]],
+  schwierig:[["A","<mark>Soll ich Ihnen behilflich sein</mark>?"],["B","Wenn es <mark>keine Umstände macht</mark> — gern."],["A","<mark>Überhaupt nicht</mark>, dafür bin ich da."],["B","Sie sind <mark>ein Schatz</mark>, vielen Dank."]]},
+ {einfach:[["A","<mark>Kannst du</mark> mir Geld leihen?"],["B","<mark>Tut mir leid</mark>, das geht nicht."],["A","Okay, <mark>kein Problem</mark>."],["B","Aber ich <mark>helfe dir anders</mark>."]],
+  komplexer:[["A","<mark>Könntest du</mark> das für mich übernehmen?"],["B","<mark>Leider</mark> schaffe ich das zeitlich nicht."],["A","Schade, aber <mark>verständlich</mark>."],["B","<mark>Frag doch mal</mark> Ben, der hat mehr Zeit."]],
+  schwierig:[["A","<mark>Wäre es möglich</mark>, dass du einspringst?"],["B","Ich würde gern, aber ich bin <mark>völlig ausgelastet</mark>."],["A","Danke, dass du <mark>ehrlich</mark> bist."],["B","<mark>Sehr gern</mark> ein andermal, versprochen."]]},
+ {einfach:[["A","<mark>Danke</mark> für deine Hilfe!"],["B","<mark>Gern geschehen</mark>."],["A","Das war <mark>sehr nett</mark>."],["B","<mark>Kein Problem</mark>, jederzeit."]],
+  komplexer:[["A","<mark>Vielen Dank</mark>, du hast mir sehr geholfen."],["B","<mark>Nichts zu danken</mark>!"],["A","Ich <mark>revanchiere mich</mark> bestimmt."],["B","<mark>Nur zu gern</mark> — das machen Freunde."]],
+  schwierig:[["A","<mark>Ich weiß gar nicht, wie ich dir danken soll</mark>."],["B","<mark>Ach was</mark>, das war selbstverständlich."],["A","Du hast mir <mark>den Tag gerettet</mark>."],["B","<mark>Jederzeit wieder</mark> — melde dich einfach."]]}
+];
+var rIdx=-1;
+function showRole(i){rIdx=i;var s=ROLES[i];document.getElementById('roleCard').innerHTML='<div class="ort">'+s.ort+'</div><div class="lage">'+s.lage+'</div><div class="rr"><b>A —</b> '+s.a+'</div><div class="rr"><b>B —</b> '+s.b+'</div><div class="rr" style="color:var(--ink-mute);font-size:.84rem;margin-top:.5rem"><b>Ideen:</b> '+s.w+'</div>';document.querySelectorAll('.sbtn').forEach(function(b,j){b.classList.toggle('on',j===i);});var box=document.getElementById('exDlg');box.classList.remove('show');box.innerHTML='';document.getElementById('exToggle').textContent='💬 Beispieldialog zeigen';}
+function randomRole(){var i;do{i=Math.floor(Math.random()*ROLES.length);}while(i===rIdx&&ROLES.length>1);showRole(i);}
+function renderEx(){var box=document.getElementById('exDlg');var d=(EXDLG[rIdx]&&EXDLG[rIdx][curLevel])||[];box.innerHTML=d.map(function(l){return '<div class="exbubble '+(l[0]==='A'?'a':'b')+'"><span class="who">'+l[0]+'</span>'+l[1]+'</div>';}).join('');}
+function toggleEx(){var box=document.getElementById('exDlg');var t=document.getElementById('exToggle');if(box.classList.contains('show')){box.classList.remove('show');t.textContent='💬 Beispieldialog zeigen';}else{renderEx();box.classList.add('show');t.textContent='🙈 Beispieldialog ausblenden';}}
+(function(){var h=document.getElementById('roleList');ROLES.forEach(function(s,i){var b=document.createElement('button');b.className='sbtn';b.textContent=s.kurz;b.addEventListener('click',function(){showRole(i);});h.appendChild(b);});showRole(0);})();
+
+function setLevel(l){curLevel=l;document.body.dataset.level=l;document.querySelectorAll('.levelsw button').forEach(function(b){b.classList.toggle('on',b.dataset.l===l);});renderAll();if(document.getElementById('exDlg').classList.contains('show'))renderEx();}
+
+document.querySelectorAll('.tab').forEach(function(t){t.addEventListener('click',function(){document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('active');});document.querySelectorAll('.section').forEach(function(x){x.classList.remove('active');});t.classList.add('active');document.querySelector('.section[data-section="'+t.dataset.tab+'"]').classList.add('active');window.scrollTo({top:0,behavior:'smooth'});});});
+</script>
+<script src="../lektion-konto.js?v=1"></script>
+</body></html>
