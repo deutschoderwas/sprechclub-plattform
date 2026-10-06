@@ -71,7 +71,10 @@ export default async function handler(req, res) {
     titel: 'Neu in ' + chName,
     text: vorschau ? wer + ': ' + vorschau + (String(text || '').length > 90 ? ' …' : '')
                    : wer + ' hat etwas geschrieben.',
-    link: '/community.html?k=' + encodeURIComponent(channel),
+    // community.html war eine tote Zweitoberflaeche: Kanaele sichtbar,
+    // Beitraege immer leer. Der echte Chat haengt in konto.html und
+    // liest den Kanal aus ?kanal=, nicht aus ?k=.
+    link: '/konto.html?kanal=' + encodeURIComponent(channel) + '#community',
     von_name: wer,
     kanal: channel
   }));
