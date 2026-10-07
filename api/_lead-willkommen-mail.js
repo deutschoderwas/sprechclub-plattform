@@ -110,7 +110,15 @@ export async function brevoListe(lead) {
   if (!process.env.BREVO_API_KEY) return false;
   const email = String(lead && lead.email || '').trim().toLowerCase();
   if (!email) return false;
-  const liste = Number(process.env.BREVO_WAITLIST_LIST_ID || process.env.BREVO_LIST_ID || 0);
+  /* Fuer 83 der 186 Leads war hier 0 herausgekommen, weil weder
+     BREVO_WAITLIST_LIST_ID noch BREVO_LIST_ID gesetzt sind. Der
+     Kontakt wurde dann ohne Liste angelegt — in Brevo vorhanden,
+     aber von keiner Kampagne erreichbar. Deshalb steht die Liste
+     jetzt als Standard im Code; die Einstellung kann sie weiter
+     ueberschreiben, aber sie muss nicht mehr da sein.
+     14 = "Sprechclub Interessenten". */
+  const LISTE_STANDARD = 14;
+  const liste = Number(process.env.BREVO_WAITLIST_LIST_ID || process.env.BREVO_LIST_ID || LISTE_STANDARD);
   const name = String(lead.name || '').trim();
   const vorname = (name.split(/\s+/)[0] || name) || email.split('@')[0];
   try {

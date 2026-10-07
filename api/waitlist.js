@@ -59,10 +59,14 @@ export default async function handler(req, res) {
   //    ab der Sekunde E-Mails bekommen kann. Scheitert das, laeuft der Rest weiter.
   let inBrevo = false;
   try {
+    /* Ohne gesetzte Einstellung blieb diese Liste leer und der Kontakt
+       landete in Brevo ohne Liste — vorhanden, aber von keiner Kampagne
+       erreichbar. 14 = "Sprechclub Interessenten", 10 = Newsletter. */
+    const LISTE_WARTELISTE = 14;
+    const LISTE_NEWSLETTER = 10;
     const listen = [];
-    if (nurMail && process.env.BREVO_NEWSLETTER_LIST_ID) listen.push(Number(process.env.BREVO_NEWSLETTER_LIST_ID));
-    else if (process.env.BREVO_WAITLIST_LIST_ID) listen.push(Number(process.env.BREVO_WAITLIST_LIST_ID));
-    else if (process.env.BREVO_LIST_ID) listen.push(Number(process.env.BREVO_LIST_ID));
+    if (nurMail) listen.push(Number(process.env.BREVO_NEWSLETTER_LIST_ID || LISTE_NEWSLETTER));
+    else listen.push(Number(process.env.BREVO_WAITLIST_LIST_ID || process.env.BREVO_LIST_ID || LISTE_WARTELISTE));
     // Ohne Namen nimmt Brevo den Teil vor dem @ — besser als ein leeres Feld.
     const vorname = (name.split(/\s+/)[0] || name) || email.split('@')[0];
     const r = await fetch('https://api.brevo.com/v3/contacts', {

@@ -34,3 +34,25 @@ select cron.schedule(
        body := '{}'::jsonb
      ) $$
 );
+
+-- ------------------------------------------------------------
+-- 07.10.2026 — kein Lead ohne Brevo-Liste
+--
+-- 83 von 186 Leads standen in Brevo als Kontakt, aber in keiner Liste:
+-- die Liste kam aus BREVO_WAITLIST_LIST_ID, und die ist nicht gesetzt.
+-- Betroffen vor allem die Leads aus dem Google-Formular. Der Standard
+-- steht jetzt im Code (Liste 14), dieser Job traegt die Altlast nach
+-- und bleibt als Sicherheitsnetz.
+alter table public.leads add column if not exists brevo_liste_at timestamptz;
+comment on column public.leads.brevo_liste_at is
+  'Wann dieser Lead nachweislich in der Brevo-Liste stand (api/leads-brevo-abgleich.js). NULL = noch nicht geprueft.';
+
+select cron.schedule(
+  'leads-brevo-abgleich-stuendlich',
+  '40 * * * *',
+  $$ select net.http_post(
+       url := 'https://www.deutschoderwas-club.de/api/leads-brevo-abgleich',
+       headers := '{"Content-Type":"application/json"}'::jsonb,
+       body := '{}'::jsonb
+     ) $$
+);
