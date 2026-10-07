@@ -856,19 +856,52 @@ export default async function handler(req, res) {
         const dk = 'subdel_' + sub.id;
         const { data: already } = await sb.from('credit_log').select('id').eq('stripe_session_id', dk).maybeSingle();
         if (!already) {
-          const { data: p } = await sb.from('profiles').select('credits,email,name').eq('id', userId).maybeSingle();
+          const { data: p } = await sb.from('profiles').select('credits,email,name,pass_until').eq('id', userId).maybeSingle();
           const cur = p?.credits || 0;
           if (cur > 0) {
             await sb.from('credit_log').insert({ user_id: userId, change: -cur, reason: 'abo_gekuendigt_verfall', stripe_session_id: dk });
           }
           // Guthaben auf 0, Mitgliedschaft beenden
-          const delTier = sub.metadata?.tier || '';
-          const endPatch = { credits: 0, pass_until: new Date().toISOString() };
-          // Neues Modell (Community/Premium): Mitgliedschaft endet -> Plattform-Zugang schliessen.
-          if (delTier === 'community' || delTier === 'premium') endPatch.status = 'inaktiv';
-          await sb.from('profiles').update(endPatch).eq('id', userId);
+          /* Frueher stand hier: nur schliessen, wenn sub.metadata.tier
+             'community' oder 'premium' ist. Bei Premium Plus, bei den
+             alten Paessen und bei jedem von Hand in Stripe angelegten
+             Abo fehlt dieses Feld — die Person blieb dann auf 'aktiv'
+             und behielt den vollen Zugang, obwohl sie gekuendigt hatte.
+             Jetzt gilt Julias Regel ohne Ausnahme: Zugang nur, solange
+             ein gueltiges Abo oder Guthaben da ist.
+
+             Zwei Gruende sprechen weiter dagegen zu schliessen, und die
+             werden vorher geprueft: ein ZWEITES laufendes Abo (wer vom
+             Monats- aufs Jahresabo wechselt, kuendigt das alte) und ein
+             Pass, der noch laeuft. */
+          let nochGueltig = null;
+          if (p?.pass_until && new Date(p.pass_until) > new Date()) {
+            nochGueltig = 'pass_until ' + String(p.pass_until).slice(0, 10);
+          }
+          if (!nochGueltig && sub.customer && process.env.STRIPE_SECRET_KEY) {
+            try {
+              const andere = await stripe.subscriptions.list({ customer: sub.customer, status: 'all', limit: 20 });
+              const lebt = (andere.data || []).find(a =>
+                a.id !== sub.id && ['active', 'trialing', 'past_due'].includes(a.status));
+              if (lebt) nochGueltig = 'zweites Abo ' + lebt.id + ' (' + lebt.status + ')';
+            } catch (e) { console.error('zweitabo pruefen', e && e.message); }
+          }
+
+          const endPatch = nochGueltig
+            ? {}
+            : { credits: 0, pass_until: new Date().toISOString(), status: 'inaktiv', tier: null };
+          if (nochGueltig) console.log('abo beendet, Zugang bleibt:', nochGueltig);
+          if (Object.keys(endPatch).length) {
+            const { error: eErr } = await sb.from('profiles').update(endPatch).eq('id', userId);
+            if (eErr) console.error('zugang schliessen', eErr.message);
+            else await sb.from('zugang_log').insert({
+              user_id: userId, email: p?.email, aktion: 'zugang_geschlossen',
+              grund: 'Abo gekuendigt (Stripe: customer.subscription.deleted)',
+              vorher: { credits: cur, pass_until: p?.pass_until || null }, nachher: endPatch
+            });
+          }
           // „Schade, dass du gehst" – Abschieds-/Feedback-Mail
-          if (p?.email) await sendGoodbyeMail(p.email, p.name);
+          if (!nochGueltig && p?.email) await sendGoodbyeMail(p.email, p.name);
         }
       }
     }
