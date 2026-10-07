@@ -16,7 +16,7 @@
 //  landet, wird in der naechsten Runde nachgetragen.
 //
 //  Geplant mit pg_cron:
-//    40 * * * *  ->  POST /api/leads-brevo-abgleich
+//    */10 * * * *  ->  POST /api/leads-brevo-abgleich
 //
 //  Zwei Dinge macht er bewusst NICHT:
 //  - Niemanden aus einer Liste entfernen. Er traegt nur nach.
@@ -30,7 +30,11 @@
 import { createClient } from '@supabase/supabase-js';
 
 const LISTE = Number(process.env.BREVO_WAITLIST_LIST_ID || process.env.BREVO_LIST_ID || 14);
-const PRO_RUNDE = Number(process.env.BREVO_ABGLEICH_PRO_RUNDE || 60);
+/* 60 pro Runde waren zu viel: zwei Brevo-Anfragen pro Lead, und die
+   Funktion lief in die Zeitgrenze, ohne einen einzigen Lead zu merken.
+   20 laufen sicher durch; alle zehn Minuten ist der Rueckstand in gut
+   anderthalb Stunden weg. */
+const PRO_RUNDE = Number(process.env.BREVO_ABGLEICH_PRO_RUNDE || 20);
 
 export default async function handler(req, res) {
   if (!process.env.BREVO_API_KEY) return res.status(200).json({ ok: false, grund: 'BREVO_API_KEY fehlt' });
