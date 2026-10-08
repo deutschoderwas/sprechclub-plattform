@@ -109,7 +109,7 @@
    {
     "type": "listen",
     "label": "📢 Durchsage im Bürgeramt",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062316_8c95ec2a-d381-4d58-a06a-874ea238644c.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062316_8c95ec2a-d381-4d58-a06a-874ea238644c.mp3",
     "q": "Bis wann muss man ohne Termin eine Nummer ziehen?",
     "options": [
      "Bis zwölf Uhr",
@@ -124,7 +124,7 @@
    {
     "type": "listen",
     "label": "📞 Mailbox: Es fehlt noch etwas",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062317_100ffb0c-d423-42c5-b3b5-51d1dba71e64.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062317_100ffb0c-d423-42c5-b3b5-51d1dba71e64.mp3",
     "q": "Was passiert, wenn das Papier nicht bis Freitag da ist?",
     "options": [
      "Der Vorgang wird geschlossen",
@@ -139,7 +139,7 @@
    {
     "type": "listen",
     "label": "🪟 Am Schalter: Kopie reicht nicht",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062316_ddf96d70-eb05-4eec-8d33-90b0c952b592.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062316_ddf96d70-eb05-4eec-8d33-90b0c952b592.mp3",
     "q": "Warum klappt die Anmeldung heute nicht?",
     "options": [
      "Er hat nur eine Kopie dabei",
@@ -154,7 +154,7 @@
    {
     "type": "listen",
     "label": "☕ Unter Nachbarn: Wie war es beim Amt?",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062317_5fe1a6e2-5aa8-4a81-a3bd-572a7b494fe6.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062317_5fe1a6e2-5aa8-4a81-a3bd-572a7b494fe6.mp3",
     "q": "Was muss der Mann noch nachreichen?",
     "options": [
      "Einen Nachweis über sein Einkommen",
@@ -483,7 +483,7 @@
    {
     "type": "listen",
     "label": "📢 Ansage am Telefon",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062316_f26a942b-2daf-46f8-a876-25f667dab4bf.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062316_f26a942b-2daf-46f8-a876-25f667dab4bf.mp3",
     "q": "Wie lange wartet man im Schnitt?",
     "options": [
      "Etwa sieben Minuten",
@@ -498,7 +498,7 @@
    {
     "type": "listen",
     "label": "📞 Mailbox: Ihre Karte ist gesperrt",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062316_bb9dca0f-e2e9-4ff5-aa26-3a5f4d4aadf9.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062316_bb9dca0f-e2e9-4ff5-aa26-3a5f4d4aadf9.mp3",
     "q": "Warum wurde die Karte gesperrt?",
     "options": [
      "Die Geheimzahl war zweimal falsch",
@@ -513,7 +513,7 @@
    {
     "type": "listen",
     "label": "🪟 Am Tresen: ein Konto eröffnen",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062316_54a7cd05-3245-475e-8cb8-960ac4152b9e.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062316_54a7cd05-3245-475e-8cb8-960ac4152b9e.mp3",
     "q": "Wann kostet das Konto nichts?",
     "options": [
      "Ab tausendzweihundert Euro Gehalt im Monat",
@@ -528,7 +528,7 @@
    {
     "type": "listen",
     "label": "☕ Unter Freundinnen: Was bucht da ab?",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062316_388fa21f-2035-4b0f-bd9b-071dbc76ef51.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062316_388fa21f-2035-4b0f-bd9b-071dbc76ef51.mp3",
     "q": "Wie lange kann man eine Lastschrift zurückholen?",
     "options": [
      "Acht Wochen lang",
@@ -857,7 +857,7 @@
    {
     "type": "listen",
     "label": "📢 Durchsage auf dem Gelände",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_073607_5fb75be9-bff9-4963-99b7-5e94bb4340b4.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_073607_5fb75be9-bff9-4963-99b7-5e94bb4340b4.mp3",
     "q": "Wann kommt die Materiallieferung?",
     "options": [
      "Erst um vierzehn Uhr am Nachmittag",
@@ -872,7 +872,7 @@
    {
     "type": "listen",
     "label": "📞 Mailbox: Frost, der Beton wartet",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_073607_f77ab594-7d8b-47f4-8125-76fa4b04b3b4.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_073607_f77ab594-7d8b-47f4-8125-76fa4b04b3b4.mp3",
     "q": "Was soll Herr Demir morgen früh trotzdem machen?",
     "options": [
      "Um sieben in den Container kommen und aufräumen",
@@ -887,7 +887,7 @@
    {
     "type": "listen",
     "label": "🪟 Am Tresen: Die Lieferung kommt an",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_073607_baaa74a2-53c8-4ce0-8522-e1c53c8c2e6d.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_073607_baaa74a2-53c8-4ce0-8522-e1c53c8c2e6d.mp3",
     "q": "Warum soll der Fahrer nicht vorne an der Einfahrt abladen?",
     "options": [
      "Weil dort die Absperrung im Weg steht",
@@ -902,7 +902,7 @@
    {
     "type": "listen",
     "label": "☕ Privat: Zwei Monate hinterher",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_073607_1fae3531-c669-44a5-ac5f-8ed91209c397.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_073607_1fae3531-c669-44a5-ac5f-8ed91209c397.mp3",
     "q": "Warum liegt die Baustelle hinter dem Plan?",
     "options": [
      "Wegen wochenlangem Regen und danach dem Frost",
@@ -1231,7 +1231,7 @@
    {
     "type": "listen",
     "label": "📢 Durchsage auf der Jobmesse",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_073607_28ed843f-3dba-4aec-9cd9-6859d52382f9.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_073607_28ed843f-3dba-4aec-9cd9-6859d52382f9.mp3",
     "q": "Was soll man zum Stand hinten links mitbringen?",
     "options": [
      "Den fertigen Lebenslauf auf Papier",
@@ -1246,7 +1246,7 @@
    {
     "type": "listen",
     "label": "📞 Mailbox: Der Termin wird verschoben",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_073607_df7f7775-e522-4482-9205-d527dbb728b9.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_073607_df7f7775-e522-4482-9205-d527dbb728b9.mp3",
     "q": "Warum findet das Gespräch nicht am Dienstag statt?",
     "options": [
      "Die Werkstattleiterin ist noch krank",
@@ -1261,7 +1261,7 @@
    {
     "type": "listen",
     "label": "🪑 Am Tresen: Ohne Termin vorgestellt",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_073824_ab03a84f-fdc0-4e63-8d20-671bde692a1a.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_073824_ab03a84f-fdc0-4e63-8d20-671bde692a1a.mp3",
     "q": "Was ist dem Betrieb im Moment am wichtigsten?",
     "options": [
      "Dass sie einmal zur Probe mitarbeitet",
@@ -1276,7 +1276,7 @@
    {
     "type": "listen",
     "label": "☕ Unter Freundinnen: Wieder eine Absage",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_073824_4c97d79d-9d0a-466a-b3c9-2b1fe9bce8d3.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_073824_4c97d79d-9d0a-466a-b3c9-2b1fe9bce8d3.mp3",
     "q": "Was will sie beim nächsten Gespräch anders machen?",
     "options": [
      "Sie fragt zuerst nach dem Verdienst",
@@ -1605,7 +1605,7 @@
    {
     "type": "listen",
     "label": "📢 Ansage in der Warteschleife",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_073824_cd70adf7-0db6-4022-9149-58f2cb3eaf4f.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_073824_cd70adf7-0db6-4022-9149-58f2cb3eaf4f.mp3",
     "q": "Wann sieht die Buchhaltung eine Zahlung von heute?",
     "options": [
      "Noch am selben Tag bis dreizehn Uhr",
@@ -1620,7 +1620,7 @@
    {
     "type": "listen",
     "label": "📞 Mailbox: Bitte noch nicht zahlen",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_073824_c6963f99-a618-40bb-b2e6-56be86ad00e1.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_073824_c6963f99-a618-40bb-b2e6-56be86ad00e1.mp3",
     "q": "Was stimmt an der Rechnung nicht?",
     "options": [
      "Die Menge auf der Rechnung ist zu hoch",
@@ -1635,7 +1635,7 @@
    {
     "type": "listen",
     "label": "🪟 Am Tresen: Mahnung, aber bezahlt",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_073824_23143509-4939-4809-96d8-4c420c4e98d8.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_073824_23143509-4939-4809-96d8-4c420c4e98d8.mp3",
     "q": "Warum wurde die Zahlung nicht gefunden?",
     "options": [
      "Weil im Verwendungszweck die Nummer fehlt",
@@ -1650,7 +1650,7 @@
    {
     "type": "listen",
     "label": "☕ Privat: Es wird wieder spät",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_073824_670ec816-e242-488c-b74b-cd8ac9daaa64.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_073824_670ec816-e242-488c-b74b-cd8ac9daaa64.mp3",
     "q": "Warum kann niemand anders die Arbeit machen?",
     "options": [
      "Weil die Belege nur er selbst kennt",
@@ -1979,7 +1979,7 @@
    {
     "type": "listen",
     "label": "📢 Durchsage im Haus",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074039_eb75ba62-7fb0-4487-b482-1dd9ef777f8c.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074039_eb75ba62-7fb0-4487-b482-1dd9ef777f8c.mp3",
     "q": "Warum findet die Besprechung woanders statt?",
     "options": [
      "Weil unten neben der Küche mehr Platz ist",
@@ -1994,7 +1994,7 @@
    {
     "type": "listen",
     "label": "📞 Mailbox: Termin verschieben",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074039_2eb76630-4864-4ff2-9cc4-5f1c7803d72a.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074039_2eb76630-4864-4ff2-9cc4-5f1c7803d72a.mp3",
     "q": "Warum soll der Termin verschoben werden?",
     "options": [
      "Weil Frau Sander am Mittwoch verhindert ist",
@@ -2009,7 +2009,7 @@
    {
     "type": "listen",
     "label": "🪟 Am Tresen: Bürobedarf",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074040_630559a1-9651-4e57-8cdf-427c6b3f9781.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074040_630559a1-9651-4e57-8cdf-427c6b3f9781.mp3",
     "q": "Was muss passieren, wenn es mit der Bestellung eilt?",
     "options": [
      "Die Chefin muss die Bestellung abzeichnen",
@@ -2024,7 +2024,7 @@
    {
     "type": "listen",
     "label": "☕ Privat: Zwei Vertretungen",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074039_c3a29e56-d97a-4510-85b8-c209959c45d7.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074039_c3a29e56-d97a-4510-85b8-c209959c45d7.mp3",
     "q": "Was macht sie mit der Post der Kolleginnen?",
     "options": [
      "Sie schickt sie an die Kolleginnen weiter",
@@ -2353,7 +2353,7 @@
    {
     "type": "listen",
     "label": "📢 Ansage: Störungsstelle der Stadtwerke",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074039_d2d15c28-db95-415a-bca7-67ff4271dbf9.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074039_d2d15c28-db95-415a-bca7-67ff4271dbf9.mp3",
     "q": "Was soll man bei Gasgeruch tun?",
     "options": [
      "Sofort raus und von draußen anrufen",
@@ -2368,7 +2368,7 @@
    {
     "type": "listen",
     "label": "📞 Mailbox: Der Termin fällt aus",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074039_f5e65c78-4286-4bba-b4b0-644bedb65535.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074039_f5e65c78-4286-4bba-b4b0-644bedb65535.mp3",
     "q": "Warum verschiebt die Firma den Termin?",
     "options": [
      "Wegen einem Rohrbruch in der Nachbarstraße",
@@ -2383,7 +2383,7 @@
    {
     "type": "listen",
     "label": "🪟 Am Tresen: Die Sicherung fliegt raus",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074253_65d06b5f-45e3-436b-8701-c9bde2f616dd.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074253_65d06b5f-45e3-436b-8701-c9bde2f616dd.mp3",
     "q": "Wann fliegt die Sicherung meistens raus?",
     "options": [
      "Wenn in der Küche die Waschmaschine läuft",
@@ -2398,7 +2398,7 @@
    {
     "type": "listen",
     "label": "☕ Privat: Die Heizung gluckert",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074252_1e1f8d81-a258-41af-b769-ddc7ca167ff8.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074252_1e1f8d81-a258-41af-b769-ddc7ca167ff8.mp3",
     "q": "Was soll man tun, wenn es nach dem Entlüften nicht besser wird?",
     "options": [
      "Den Kundendienst holen, weil Druck fehlt",
@@ -2727,7 +2727,7 @@
    {
     "type": "listen",
     "label": "📢 Durchsage in der Schule",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074253_749819ed-24f6-4a97-9ffd-392ba40ea8a7.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074253_749819ed-24f6-4a97-9ffd-392ba40ea8a7.mp3",
     "q": "Wo sollen die Kinder bis zur Abfahrt warten?",
     "options": [
      "In ihren Klassenräumen bei den Lehrerinnen",
@@ -2742,7 +2742,7 @@
    {
     "type": "listen",
     "label": "📞 Mailbox: Heute holt die Oma",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074253_fb91c194-1dd3-47cd-9c78-fb6f012e14a6.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074253_fb91c194-1dd3-47cd-9c78-fb6f012e14a6.mp3",
     "q": "Was fehlt heute noch für die Oma?",
     "options": [
      "Die Unterschrift der Mutter auf der Liste",
@@ -2757,7 +2757,7 @@
    {
     "type": "listen",
     "label": "🚪 An der Tür: Die Eingewöhnung",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074253_eb73153c-b86a-48f7-abce-515b4330957f.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074253_eb73153c-b86a-48f7-abce-515b4330957f.mp3",
     "q": "Was macht der Vater morgen anders?",
     "options": [
      "Er verlässt den Raum für kurze Zeit",
@@ -2772,7 +2772,7 @@
    {
     "type": "listen",
     "label": "☕ In der Pause: Streit um den Bagger",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074252_e7ce9eee-28b2-4585-a999-31eb9aadc46a.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074252_e7ce9eee-28b2-4585-a999-31eb9aadc46a.mp3",
     "q": "Wie endete der Streit um den Bagger?",
     "options": [
      "Die Kinder haben ihn allein gelöst",
@@ -3101,7 +3101,7 @@
    {
     "type": "listen",
     "label": "📢 Durchsage auf dem Hof",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074509_ba6354b5-3e8c-49fd-9468-79d74d8c32d0.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074509_ba6354b5-3e8c-49fd-9468-79d74d8c32d0.mp3",
     "q": "Wohin sollen die Fahrer mit ihren Paletten?",
     "options": [
      "Zur Rampe sieben hinten am Zaun",
@@ -3116,7 +3116,7 @@
    {
     "type": "listen",
     "label": "📞 Mailbox: Die Tour ändert sich",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074509_6c61aeec-52ca-48f1-baff-c34f19e9cf49.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074509_6c61aeec-52ca-48f1-baff-c34f19e9cf49.mp3",
     "q": "Warum fährt er zuerst nach Gera?",
     "options": [
      "In Erfurt kann er erst später entladen",
@@ -3131,7 +3131,7 @@
    {
     "type": "listen",
     "label": "🪟 An der Warenannahme: kein Platz",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074509_c5ae8249-88cb-4ca9-bab2-7b8477d162f7.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074509_c5ae8249-88cb-4ca9-bab2-7b8477d162f7.mp3",
     "q": "Warum ist der Fahrer zu spät gekommen?",
     "options": [
      "Er hat auf der Fahrt im Stau gestanden",
@@ -3146,7 +3146,7 @@
    {
     "type": "listen",
     "label": "☕ Privat: Der Empfänger war nicht da",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074509_5c22780e-097d-4304-8023-941f37db8546.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074509_5c22780e-097d-4304-8023-941f37db8546.mp3",
     "q": "Warum konnte er das Paket nicht beim Nachbarn lassen?",
     "options": [
      "Der Nachbar wollte nicht unterschreiben",
@@ -3475,7 +3475,7 @@
    {
     "type": "listen",
     "label": "📢 Ansage beim Elternabend",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062316_2bcb796f-c486-4d22-82fc-4a96094e19c0.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062316_2bcb796f-c486-4d22-82fc-4a96094e19c0.mp3",
     "q": "Was passiert ohne die Abholvollmacht?",
     "options": [
      "Das Kind bleibt bis zum Abend da",
@@ -3490,7 +3490,7 @@
    {
     "type": "listen",
     "label": "📞 Mailbox: Mia hat Fieber",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062316_745216fd-86a2-4bc3-80e6-24106efbf0c1.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062316_745216fd-86a2-4bc3-80e6-24106efbf0c1.mp3",
     "q": "Wann darf Mia wieder in die Kita?",
     "options": [
      "Wenn der Arzt einen Zettel schreibt",
@@ -3505,7 +3505,7 @@
    {
     "type": "listen",
     "label": "🩺 Am Tresen: Termin beim Kinderarzt",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062317_30ba3f48-1cc3-4a39-b85b-1f9326ca5de8.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062317_30ba3f48-1cc3-4a39-b85b-1f9326ca5de8.mp3",
     "q": "Warum nimmt die Mutter den Dienstag nicht?",
     "options": [
      "Sie muss an diesem Tag arbeiten",
@@ -3520,7 +3520,7 @@
    {
     "type": "listen",
     "label": "☕ Privat: Wer holt Emil ab?",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062316_0a1be477-4ad4-4ec2-8e06-c105f56e1ddb.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062316_0a1be477-4ad4-4ec2-8e06-c105f56e1ddb.mp3",
     "q": "Warum kann die Oma Emil nicht abholen?",
     "options": [
      "Sie ist morgen selbst nicht zu Hause",
@@ -3849,7 +3849,7 @@
    {
     "type": "listen",
     "label": "📢 Ansage zum Sommerfest im Hof",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062638_4d569692-ed6c-4790-b81c-e565d84be10a.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062638_4d569692-ed6c-4790-b81c-e565d84be10a.mp3",
     "q": "Was muss jeder Gast selbst mitbringen?",
     "options": [
      "Das Fleisch für den Grill",
@@ -3864,7 +3864,7 @@
    {
     "type": "listen",
     "label": "📞 Mailbox: Absage für Samstag",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062638_d9959547-6300-4aca-852d-d5fad4b10b6c.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062638_d9959547-6300-4aca-852d-d5fad4b10b6c.mp3",
     "q": "Unter welcher Bedingung kommt Nadja doch noch?",
     "options": [
      "Wenn ihre Tochter bis Samstag gesund ist",
@@ -3879,7 +3879,7 @@
    {
     "type": "listen",
     "label": "🏛️ Am Schalter: Hochzeit im Mai",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062638_5c76b7ac-4547-4468-b4be-29e99f9f774b.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062638_5c76b7ac-4547-4468-b4be-29e99f9f774b.mp3",
     "q": "Warum nehmen die beiden den kleinen Saal?",
     "options": [
      "Der große Saal kostet zusätzlich Geld",
@@ -3894,7 +3894,7 @@
    {
     "type": "listen",
     "label": "☕ Privat: Kann ich etwas mitbringen?",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062638_776e0eb8-757e-4067-b82b-83cc399b0367.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062638_776e0eb8-757e-4067-b82b-83cc399b0367.mp3",
     "q": "Was soll die Freundin am Ende mitbringen?",
     "options": [
      "Einen Nachtisch und ein Spielzeug",
@@ -4223,7 +4223,7 @@
    {
     "type": "listen",
     "label": "📢 Ansage im Salon",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074510_fc97b5c9-2229-439f-a4b6-7f69fe6bff14.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074510_fc97b5c9-2229-439f-a4b6-7f69fe6bff14.mp3",
     "q": "Warum soll man für eine Farbe zwei Stunden einplanen?",
     "options": [
      "Weil die Farbe eine Einwirkzeit braucht",
@@ -4238,7 +4238,7 @@
    {
     "type": "listen",
     "label": "📞 Mailbox: Eine helle Stelle",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074509_5c622a43-1923-4296-b1cc-6f25ba944b73.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074509_5c622a43-1923-4296-b1cc-6f25ba944b73.mp3",
     "q": "Was gefällt der Kundin nicht?",
     "options": [
      "Die Farbe ist ihr insgesamt zu dunkel",
@@ -4253,7 +4253,7 @@
    {
     "type": "listen",
     "label": "🪟 Am Tresen: Nur die Spitzen",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074723_97783ed5-1be5-488a-8d5a-7c4201af57df.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074723_97783ed5-1be5-488a-8d5a-7c4201af57df.mp3",
     "q": "Warum bekommt die Kundin heute keine Farbe?",
     "options": [
      "Weil Frau Yildiz heute keine Zeit mehr hat",
@@ -4268,7 +4268,7 @@
    {
     "type": "listen",
     "label": "☕ Privat: Der erste Tag",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074723_ea23295f-1363-4d07-8867-93ea5a6f260f.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074723_ea23295f-1363-4d07-8867-93ea5a6f260f.mp3",
     "q": "Was passiert im Salon mit dem Trinkgeld?",
     "options": [
      "Jede behält das Trinkgeld für sich allein",
@@ -4597,7 +4597,7 @@
    {
     "type": "listen",
     "label": "📢 Durchsage im Markt",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074723_5cfabcb5-dfb4-404b-8ca5-0ca8d344bf8e.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074723_5cfabcb5-dfb4-404b-8ca5-0ca8d344bf8e.mp3",
     "q": "Bis wann gilt der halbe Preis an der Frischetheke?",
     "options": [
      "Heute noch bis achtzehn Uhr am Abend",
@@ -4612,7 +4612,7 @@
    {
     "type": "listen",
     "label": "📞 Mailbox: Schicht getauscht",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074723_32436579-7c07-4a36-b451-58faaf36745d.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074723_32436579-7c07-4a36-b451-58faaf36745d.mp3",
     "q": "Was soll Frau Nowak am Montag als Erstes tun?",
     "options": [
      "Zuerst die Ware im Trockenbereich einräumen",
@@ -4627,7 +4627,7 @@
    {
     "type": "listen",
     "label": "🪟 Am Tresen: Der Wasserkocher ist kaputt",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074723_719adc25-aee4-4fee-b904-b24d41873750.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074723_719adc25-aee4-4fee-b904-b24d41873750.mp3",
     "q": "Was passiert zuerst mit dem kaputten Gerät?",
     "options": [
      "Es wird zuerst von der Firma geprüft",
@@ -4642,7 +4642,7 @@
    {
     "type": "listen",
     "label": "☕ Privat: Nach der Inventur",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074723_58555dd9-2b59-4017-9398-42205ffb6d35.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074723_58555dd9-2b59-4017-9398-42205ffb6d35.mp3",
     "q": "Woher kommt der fehlende Betrag zum Teil?",
     "options": [
      "Von Ware, die zu lange im Regal lag",
@@ -4971,7 +4971,7 @@
    {
     "type": "listen",
     "label": "📢 Ansage vor der Schicht",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074936_94da0ae4-a78f-44db-bbd8-4c850891db63.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074936_94da0ae4-a78f-44db-bbd8-4c850891db63.mp3",
     "q": "Warum sollen Fehler sofort gemeldet werden?",
     "options": [
      "Ein später Fehler kostet einen ganzen Tag",
@@ -4986,7 +4986,7 @@
    {
     "type": "listen",
     "label": "📞 Mailbox: Bitte einmal unter vier Augen",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074936_fbc3b6e3-8f16-43f6-81fb-27be04db4c27.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074936_fbc3b6e3-8f16-43f6-81fb-27be04db4c27.mp3",
     "q": "Was möchte Herr Kollmann in dem Gespräch?",
     "options": [
      "Er will verstehen, wie es passiert ist",
@@ -5001,7 +5001,7 @@
    {
     "type": "listen",
     "label": "🔧 Am Tresen: Das schaffe ich nicht",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074936_5a03c03e-4088-4554-832d-69026a4f6de6.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074936_5a03c03e-4088-4554-832d-69026a4f6de6.mp3",
     "q": "Unter welcher Bedingung sagt er doch zu?",
     "options": [
      "Wenn ein Kollege ihm dabei hilft",
@@ -5016,7 +5016,7 @@
    {
     "type": "listen",
     "label": "🛋️ Zu Hause: Ich frage nach mehr Gehalt",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074936_4f945c49-5201-4012-834f-6b1f16e89b33.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074936_4f945c49-5201-4012-834f-6b1f16e89b33.mp3",
     "q": "Was will sie tun, wenn der Chef Nein sagt?",
     "options": [
      "Sie fragt, was sich dafür ändern muss",
@@ -5345,7 +5345,7 @@
    {
     "type": "listen",
     "label": "📢 Durchsage im Frühstücksraum",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074936_982229f0-e23d-486e-aea6-1eb74e3900d1.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074936_982229f0-e23d-486e-aea6-1eb74e3900d1.mp3",
     "q": "Warum endet das Frühstück heute früher?",
     "options": [
      "Im Saal fängt eine Tagung an",
@@ -5360,7 +5360,7 @@
    {
     "type": "listen",
     "label": "📞 Mailbox: Das Zimmer wird getauscht",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074936_424a63fc-f092-4f79-ab47-269adbe81d40.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074936_424a63fc-f092-4f79-ab47-269adbe81d40.mp3",
     "q": "Was bietet das Hotel der Frau an?",
     "options": [
      "Ein größeres Zimmer ohne mehr Kosten",
@@ -5375,7 +5375,7 @@
    {
     "type": "listen",
     "label": "🛎️ An der Rezeption: Abreise",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075151_99102d90-841d-4cf9-b4cd-b94a6c4aef8c.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075151_99102d90-841d-4cf9-b4cd-b94a6c4aef8c.mp3",
     "q": "Was streicht die Rezeption von der Rechnung?",
     "options": [
      "Die Getränke aus der Minibar kommen weg",
@@ -5390,7 +5390,7 @@
    {
     "type": "listen",
     "label": "☕ Privat: Beschwerde von Zimmer drei",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075150_eda09474-9a5b-4703-91ed-de3637d26bc7.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075150_eda09474-9a5b-4703-91ed-de3637d26bc7.mp3",
     "q": "Was bekommt der Gast wegen der Beschwerde?",
     "options": [
      "Am letzten Abend ein Essen ohne Kosten",
@@ -5719,7 +5719,7 @@
    {
     "type": "listen",
     "label": "📢 Ansage vor der Begehung",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075151_e84b5184-d5e4-4e3f-b1fe-89d26d780d73.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075151_e84b5184-d5e4-4e3f-b1fe-89d26d780d73.mp3",
     "q": "Was braucht man, um auf das Gelände zu dürfen?",
     "options": [
      "Helm und Weste vom Container am Eingang",
@@ -5734,7 +5734,7 @@
    {
     "type": "listen",
     "label": "📞 Mailbox: Der Prüfbericht ist da",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075150_c9a9c624-6f3b-4b58-94db-a644abd68c28.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075150_c9a9c624-6f3b-4b58-94db-a644abd68c28.mp3",
     "q": "Was beanstandet der Prüfer?",
     "options": [
      "Zwei Maße an der Treppe sind ihm zu knapp",
@@ -5749,7 +5749,7 @@
    {
     "type": "listen",
     "label": "🪟 Am Schalter: Zeichnungen abgeben",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075151_9e1f61ad-de79-4428-9c9e-7391f5ea45d4.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075151_9e1f61ad-de79-4428-9c9e-7391f5ea45d4.mp3",
     "q": "Warum kann die Freigabe heute nicht erteilt werden?",
     "options": [
      "Der zuständige Kollege ist erst ab Dienstag da",
@@ -5764,7 +5764,7 @@
    {
     "type": "listen",
     "label": "☕ Privat: Schon wieder eine Änderung",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075150_95e9749e-0cd0-417a-a4b9-8fb85480227a.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075150_95e9749e-0cd0-417a-a4b9-8fb85480227a.mp3",
     "q": "Warum schreibt er die Änderung als Nachtrag auf?",
     "options": [
      "Damit die zusätzliche Arbeit auch bezahlt wird",
@@ -6093,7 +6093,7 @@
    {
     "type": "listen",
     "label": "📢 Ansage am Servicetelefon",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075407_49e3697e-77f1-4b23-a3e5-2a89ac22eebc.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075407_49e3697e-77f1-4b23-a3e5-2a89ac22eebc.mp3",
     "q": "Was soll man bei einem neuen Kennwort tun?",
     "options": [
      "Es selbst im Netz ändern, ohne ein Ticket",
@@ -6108,7 +6108,7 @@
    {
     "type": "listen",
     "label": "📞 Mailbox: Der Zugang fehlt noch",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075407_40fe7f13-11f7-4b1e-b07a-4cd872d248e2.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075407_40fe7f13-11f7-4b1e-b07a-4cd872d248e2.mp3",
     "q": "Warum ist der Zugang noch nicht eingerichtet?",
     "options": [
      "Weil die Freigabe von der Chefin noch fehlt",
@@ -6123,7 +6123,7 @@
    {
     "type": "listen",
     "label": "🪟 Am Tresen: Der Rechner startet nicht",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075407_1b02992d-b36c-4cb3-8451-64e791732d9d.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075407_1b02992d-b36c-4cb3-8451-64e791732d9d.mp3",
     "q": "Warum muss sich der Mann keine Sorgen um seine Dateien machen?",
     "options": [
      "Weil alle Dateien in der Sicherung liegen",
@@ -6138,7 +6138,7 @@
    {
     "type": "listen",
     "label": "☕ Privat: Die Frist am Freitag",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075408_5dbb6a5f-92ef-4821-b6fe-13a6cb104c7c.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075408_5dbb6a5f-92ef-4821-b6fe-13a6cb104c7c.mp3",
     "q": "Was hat sich das Team wegen der Frist überlegt?",
     "options": [
      "Jeden Morgen kurz zu besprechen, wer was schafft",
@@ -6467,7 +6467,7 @@
    {
     "type": "listen",
     "label": "📢 Durchsage im Supermarkt",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062638_829e4aa0-0770-4ce0-999f-59948c629e35.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062638_829e4aa0-0770-4ce0-999f-59948c629e35.mp3",
     "q": "Wann kann man keine Flaschen mehr zurückgeben?",
     "options": [
      "Ab sechs Uhr am Abend",
@@ -6482,7 +6482,7 @@
    {
     "type": "listen",
     "label": "📞 Mailbox: Die Milch war schlecht",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062638_7460b4be-b77b-4847-a9da-2c4c63b731c3.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062638_7460b4be-b77b-4847-a9da-2c4c63b731c3.mp3",
     "q": "Was muss die Kundin mitbringen?",
     "options": [
      "Die Packung und den Bon",
@@ -6497,7 +6497,7 @@
    {
     "type": "listen",
     "label": "🛒 An der Kasse: Karte oder bar",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062848_3b743ae2-bf87-4853-85aa-c070d247cb43.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062848_3b743ae2-bf87-4853-85aa-c070d247cb43.mp3",
     "q": "Warum zahlt der Kunde nicht mit Karte?",
     "options": [
      "Sein Einkauf ist zu billig dafür",
@@ -6512,7 +6512,7 @@
    {
     "type": "listen",
     "label": "☕ Privat: Die Kiste mit den Flaschen",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062848_4b320871-bb5c-4a42-b73e-a24c22af41a3.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062848_4b320871-bb5c-4a42-b73e-a24c22af41a3.mp3",
     "q": "Was ist beim letzten Mal passiert?",
     "options": [
      "Der Automat hat die Flaschen nicht genommen",
@@ -6841,7 +6841,7 @@
    {
     "type": "listen",
     "label": "🛍️ Im Laden: eine Nummer größer",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260825_195740_b262384a-63ac-424c-b18b-e8494262d8af.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260825_195740_b262384a-63ac-424c-b18b-e8494262d8af.mp3",
     "q": "Was braucht die Kundin?",
     "options": [
      "Die gleiche Hose in Größe 40",
@@ -6856,7 +6856,7 @@
    {
     "type": "listen",
     "label": "🔄 An der Kasse: umtauschen",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260825_195740_ec8bfa71-008c-42bb-a07c-37b631b30d64.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260825_195740_ec8bfa71-008c-42bb-a07c-37b631b30d64.mp3",
     "q": "Warum kann der Kunde die Jacke gerade nicht umtauschen?",
     "options": [
      "Er hat den Kassenbon nicht dabei",
@@ -6871,7 +6871,7 @@
    {
     "type": "listen",
     "label": "📢 Durchsage im Kaufhaus",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260825_195740_927cb8f4-3fac-4a89-99c7-1e42de0f2f23.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260825_195740_927cb8f4-3fac-4a89-99c7-1e42de0f2f23.mp3",
     "q": "Was ist heute reduziert?",
     "options": [
      "Alle Winterjacken im zweiten Stock",
@@ -6886,7 +6886,7 @@
    {
     "type": "listen",
     "label": "💬 Zwei Freundinnen beim Einkaufen",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260825_195740_9d710087-1f65-4be9-986a-f6bcb385f3dd.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260825_195740_9d710087-1f65-4be9-986a-f6bcb385f3dd.mp3",
     "q": "Was rät die Freundin?",
     "options": [
      "Das Kleid nehmen, es steht ihr gut",
@@ -7215,7 +7215,7 @@
    {
     "type": "listen",
     "label": "📢 Durchsage für die Küche",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075408_feaa1948-cb0e-4281-a636-5dd7d7a0d048.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075408_feaa1948-cb0e-4281-a636-5dd7d7a0d048.mp3",
     "q": "Warum geht die Lieferung mit dem Fisch zurück?",
     "options": [
      "Die Ware war bei der Ankunft zu warm",
@@ -7230,7 +7230,7 @@
    {
     "type": "listen",
     "label": "📞 Mailbox: Bitte die Spätschicht",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075407_4ee5af9c-bc86-4a97-a47d-67cc11446179.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075407_4ee5af9c-bc86-4a97-a47d-67cc11446179.mp3",
     "q": "Was muss Amina in der Küche noch machen?",
     "options": [
      "Sie muss nur noch die Beilagen machen",
@@ -7245,7 +7245,7 @@
    {
     "type": "listen",
     "label": "🪟 An der Durchreiche: Tisch vier",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075622_70b9849d-a60b-4e8b-9aea-8488e544d996.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075622_70b9849d-a60b-4e8b-9aea-8488e544d996.mp3",
     "q": "Was bekommt die Frau statt Kuchen?",
     "options": [
      "Sie bekommt zum Schluss etwas Obst",
@@ -7260,7 +7260,7 @@
    {
     "type": "listen",
     "label": "☕ Privat: Reklamation vom Gast",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075622_0bef1bc9-31c9-47e0-9802-00f9a4005acf.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075622_0bef1bc9-31c9-47e0-9802-00f9a4005acf.mp3",
     "q": "Warum kam der Teller zurück in die Küche?",
     "options": [
      "Das Fleisch war dem Gast zu roh",
@@ -7589,7 +7589,7 @@
    {
     "type": "listen",
     "label": "📢 Durchsage in der Halle",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075622_e2af5951-bdc2-4034-9b3c-09fae739c243.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075622_e2af5951-bdc2-4034-9b3c-09fae739c243.mp3",
     "q": "Warum ist die Rampe zwei gesperrt?",
     "options": [
      "Weil dort Öl auf dem Boden liegt",
@@ -7604,7 +7604,7 @@
    {
     "type": "listen",
     "label": "📞 Mailbox: Der Schein läuft ab",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075622_23f8c1c8-fdbc-48b9-82e5-01aa5ddf5e9f.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075622_23f8c1c8-fdbc-48b9-82e5-01aa5ddf5e9f.mp3",
     "q": "Was passiert, wenn Herr Osei die Schulung nicht macht?",
     "options": [
      "Er darf ab Juni keinen Stapler mehr fahren",
@@ -7619,7 +7619,7 @@
    {
     "type": "listen",
     "label": "🪟 Am Tresen: Zwei Paletten fehlen",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075623_0e61e743-d888-411a-8f34-93bbb4d33275.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075623_0e61e743-d888-411a-8f34-93bbb4d33275.mp3",
     "q": "Warum nimmt der Lagerarbeiter die Lieferung nur mit Vorbehalt an?",
     "options": [
      "Weil zwei Paletten weniger da sind als angemeldet",
@@ -7634,7 +7634,7 @@
    {
     "type": "listen",
     "label": "☕ Privat: Die neue Stelle",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075622_2b3a6c41-886b-4931-99eb-83b3490ee247.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075622_2b3a6c41-886b-4931-99eb-83b3490ee247.mp3",
     "q": "Was machen im Lager vor allem die neuen Kollegen?",
     "options": [
      "Zurückgeschickte Ware auspacken, prüfen und wieder einlagern",
@@ -7963,7 +7963,7 @@
    {
     "type": "listen",
     "label": "📢 Ansage am Feldrand",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075836_3f32f126-58d3-4237-985d-09ea6a25eae0.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075836_3f32f126-58d3-4237-985d-09ea6a25eae0.mp3",
     "q": "Warum fangen die Helfer heute später an?",
     "options": [
      "Die Erdbeeren sind noch ganz nass",
@@ -7978,7 +7978,7 @@
    {
     "type": "listen",
     "label": "📞 Mailbox: Hagel angesagt",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075836_1fb29138-b0eb-4a14-a8c4-daabd4275684.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075836_1fb29138-b0eb-4a14-a8c4-daabd4275684.mp3",
     "q": "Bis wann soll Herr Nowak absagen, wenn er nicht kann?",
     "options": [
      "Noch heute am Abend",
@@ -7993,7 +7993,7 @@
    {
     "type": "listen",
     "label": "🥛 Im Hofladen: Milch am Automaten",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075836_cce09862-07a4-4279-ae1e-c0d524eb3b5d.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075836_cce09862-07a4-4279-ae1e-c0d524eb3b5d.mp3",
     "q": "Was kostet eine Flasche im Hofladen?",
     "options": [
      "Zwei Euro, dann gehört sie ihm",
@@ -8008,7 +8008,7 @@
    {
     "type": "listen",
     "label": "☕ Unter Nachbarn: Spargelzeit",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075836_58ac1056-9530-491b-855b-02a3c8ed61f5.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075836_58ac1056-9530-491b-855b-02a3c8ed61f5.mp3",
     "q": "Wer melkt, wenn Mareks Bruder krank ist?",
     "options": [
      "Die Mutter, sie steht dann früh auf",
@@ -8337,7 +8337,7 @@
    {
     "type": "listen",
     "label": "📢 Durchsage in der Ambulanz",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075836_7e833ba1-0f3d-4fb8-9821-cc1d4f6a52ba.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075836_7e833ba1-0f3d-4fb8-9821-cc1d4f6a52ba.mp3",
     "q": "Wonach richtet sich heute die Reihenfolge?",
     "options": [
      "Danach, wie dringend der Fall ist",
@@ -8352,7 +8352,7 @@
    {
     "type": "listen",
     "label": "📞 Mailbox: Vor der Blutabnahme",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075836_9f574c17-a033-4745-b6a1-02d9e848b765.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075836_9f574c17-a033-4745-b6a1-02d9e848b765.mp3",
     "q": "Was darf Herr Novak vor dem Termin?",
     "options": [
      "Nur Wasser trinken, sonst nichts",
@@ -8367,7 +8367,7 @@
    {
     "type": "listen",
     "label": "🪑 An der Anmeldung: Termin beim Hautarzt",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080051_253f8145-f51e-4621-bf18-357f89db4932.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080051_253f8145-f51e-4621-bf18-357f89db4932.mp3",
     "q": "Warum soll der Patient die Überweisung trotzdem mitbringen?",
     "options": [
      "Damit die Praxis seine Vorgeschichte kennt",
@@ -8382,7 +8382,7 @@
    {
     "type": "listen",
     "label": "☕ Unter Kolleginnen: Der Herr wartet",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080051_69ab8e2a-0786-4ba3-880a-1d7a0e0e8040.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080051_69ab8e2a-0786-4ba3-880a-1d7a0e0e8040.mp3",
     "q": "Warum musste der Patient so lange warten?",
     "options": [
      "Ein Gespräch vor einem Eingriff dauerte länger",
@@ -8711,7 +8711,7 @@
    {
     "type": "listen",
     "label": "📢 Durchsage in der Halle",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080051_82c36c09-44ad-40a6-9e38-22bce3cb0f34.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080051_82c36c09-44ad-40a6-9e38-22bce3cb0f34.mp3",
     "q": "Wohin sollen die fertigen Werkstücke kommen?",
     "options": [
      "Direkt zur Qualitätskontrolle, nicht auf den Tisch",
@@ -8726,7 +8726,7 @@
    {
     "type": "listen",
     "label": "📞 Mailbox: Die Teile sind durchgefallen",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080051_b9a7806e-d188-4465-a38e-6ba1a15a1fbf.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080051_b9a7806e-d188-4465-a38e-6ba1a15a1fbf.mp3",
     "q": "Warum sind die Teile Ausschuss?",
     "options": [
      "Das Maß an der Bohrung ist zu groß",
@@ -8741,7 +8741,7 @@
    {
     "type": "listen",
     "label": "🪟 Am Tresen: Werkzeug aus dem Lager",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080051_587d3e5c-c76a-40db-97e2-78a34cbb1a9b.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080051_587d3e5c-c76a-40db-97e2-78a34cbb1a9b.mp3",
     "q": "Was bekommt er nur gegen Unterschrift?",
     "options": [
      "Das Werkzeug zum ganz genauen Messen",
@@ -8756,7 +8756,7 @@
    {
     "type": "listen",
     "label": "☕ Privat: Der Neue und die Späne",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080051_de4b8edd-6713-4455-9431-32a658cfe79d.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080051_de4b8edd-6713-4455-9431-32a658cfe79d.mp3",
     "q": "Woran hat sich der neue Kollege geschnitten?",
     "options": [
      "An der scharfen Kante von dem Werkstück",
@@ -9085,7 +9085,7 @@
    {
     "type": "listen",
     "label": "📢 Durchsage im Pflegeheim",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080305_868b8c6e-1289-4b98-8927-177f150dbeeb.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080305_868b8c6e-1289-4b98-8927-177f150dbeeb.mp3",
     "q": "Warum ist die Übergabe heute nicht im Dienstzimmer?",
     "options": [
      "Dort wird gerade der Boden erneuert",
@@ -9100,7 +9100,7 @@
    {
     "type": "listen",
     "label": "📞 Mailbox: Einspringen im Nachtdienst",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080305_4a63a6a6-f3cd-4375-9f95-8bec1a204a8f.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080305_4a63a6a6-f3cd-4375-9f95-8bec1a204a8f.mp3",
     "q": "Was bekommt Frau Cetin, wenn sie einspringt?",
     "options": [
      "Einen freien Tag in der nächsten Woche",
@@ -9115,7 +9115,7 @@
    {
     "type": "listen",
     "label": "🪑 Am Empfang: Auskunft über die Tante",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080305_ba82342a-2693-4903-b1e4-ecde909d6ffd.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080305_ba82342a-2693-4903-b1e4-ecde909d6ffd.mp3",
     "q": "Warum bekommt die Nichte keine Auskunft?",
     "options": [
      "In der Akte steht nur ihr Bruder",
@@ -9130,7 +9130,7 @@
    {
     "type": "listen",
     "label": "☕ In der Pause: Die Nacht bei Herrn Palm",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080305_e4545311-d05a-4921-b7fb-a5353f6418f9.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080305_e4545311-d05a-4921-b7fb-a5353f6418f9.mp3",
     "q": "Warum hat Herr Palm in der Nacht geklingelt?",
     "options": [
      "Er lag unbequem und hatte Schmerzen",
@@ -9459,7 +9459,7 @@
    {
     "type": "listen",
     "label": "📢 Durchsage im Polizeirevier",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062848_15b0e92b-5206-4e5b-8a85-760c5b7a2e9e.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062848_15b0e92b-5206-4e5b-8a85-760c5b7a2e9e.mp3",
     "q": "Was braucht man für die Anzeige im Internet?",
     "options": [
      "Eine gezogene Nummer vom Eingang",
@@ -9474,7 +9474,7 @@
    {
     "type": "listen",
     "label": "📞 Mailbox: Ihre Anzeige ist aufgenommen",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062848_5789da6c-380e-4e7a-8ae6-0ba3cbc6a64c.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062848_5789da6c-380e-4e7a-8ae6-0ba3cbc6a64c.mp3",
     "q": "Was soll Frau Novak mit dem Aktenzeichen tun?",
     "options": [
      "Es bei der Wache abholen lassen",
@@ -9489,7 +9489,7 @@
    {
     "type": "listen",
     "label": "🪟 Am Tresen: Das Rad ist weg",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062848_12dc0e4b-95b2-4b55-aba3-d0f5151f282b.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062848_12dc0e4b-95b2-4b55-aba3-d0f5151f282b.mp3",
     "q": "Was passiert mit der fehlenden Rahmennummer?",
     "options": [
      "Sie kann später nachgereicht werden",
@@ -9504,7 +9504,7 @@
    {
     "type": "listen",
     "label": "☕ Privat: Wie war es auf der Wache?",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062848_fe061d39-779d-43e5-9bc5-8c448f18487e.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062848_fe061d39-779d-43e5-9bc5-8c448f18487e.mp3",
     "q": "Unter welcher Bedingung zahlt die Versicherung?",
     "options": [
      "Wenn die Nachbarin als Zeugin aussagt",
@@ -9833,7 +9833,7 @@
    {
     "type": "listen",
     "label": "📢 Durchsage in der Postfiliale",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_063253_e16afea0-c343-4f70-8487-2f20fe8b0f96.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_063253_e16afea0-c343-4f70-8487-2f20fe8b0f96.mp3",
     "q": "Was braucht man am Schalter drei unbedingt?",
     "options": [
      "Eine Quittung von der Kasse",
@@ -9848,7 +9848,7 @@
    {
     "type": "listen",
     "label": "📞 Mailbox: Ihr Einschreiben liegt hier",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_063253_28adde6f-7c05-43e5-85d2-d4372886ebd1.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_063253_28adde6f-7c05-43e5-85d2-d4372886ebd1.mp3",
     "q": "Was passiert nach Dienstag mit dem Einschreiben?",
     "options": [
      "Es wartet dort noch eine Woche",
@@ -9863,7 +9863,7 @@
    {
     "type": "listen",
     "label": "🪟 Am Schalter: Karte weg, Nummer da",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_063253_c66f0fcb-fc3d-40cc-a2f3-dab50c265ee1.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_063253_c66f0fcb-fc3d-40cc-a2f3-dab50c265ee1.mp3",
     "q": "Warum klappt die Abholung trotzdem?",
     "options": [
      "Er hat das Porto schon bezahlt",
@@ -9878,7 +9878,7 @@
    {
     "type": "listen",
     "label": "☕ Privat: Das Paket in der Packstation",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_063253_a0e6db10-56ef-4269-8fbb-7b6651e1cf1c.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_063253_a0e6db10-56ef-4269-8fbb-7b6651e1cf1c.mp3",
     "q": "Wie lange bleibt das Paket in der Packstation?",
     "options": [
      "Vier Tage, dann geht es zurück",
@@ -10207,7 +10207,7 @@
    {
     "type": "listen",
     "label": "📢 Durchsage in der Halle",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080305_f67c87cc-b12a-4354-a84c-4d28dce1acb2.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080305_f67c87cc-b12a-4354-a84c-4d28dce1acb2.mp3",
     "q": "Was sollen die Mitarbeiter bis zur Reparatur machen?",
     "options": [
      "An der Anlage sechs die Nacharbeit erledigen",
@@ -10222,7 +10222,7 @@
    {
     "type": "listen",
     "label": "📞 Mailbox: Die Unterweisung läuft ab",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080305_ea5771d3-c1da-432d-b435-8970b4668eab.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080305_ea5771d3-c1da-432d-b435-8970b4668eab.mp3",
     "q": "Was passiert, wenn Frau Nowak den Termin nicht macht?",
     "options": [
      "Sie darf ab nächster Woche nicht an die Anlage",
@@ -10237,7 +10237,7 @@
    {
     "type": "listen",
     "label": "🪟 Am Tresen: Eine Störung melden",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080519_c1490050-b0dd-4f0b-b0c4-afa097a545af.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080519_c1490050-b0dd-4f0b-b0c4-afa097a545af.mp3",
     "q": "Was soll der Mitarbeiter mit den zwanzig Teilen machen?",
     "options": [
      "Sie rot ablegen und die Stückzahl ins Buch schreiben",
@@ -10252,7 +10252,7 @@
    {
     "type": "listen",
     "label": "☕ Privat: Nachtschicht und Takt",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080519_2eca2f5e-5dcc-4664-a025-15ca8bf176bd.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080519_2eca2f5e-5dcc-4664-a025-15ca8bf176bd.mp3",
     "q": "Wie viel Zeit hat er für ein Teil?",
     "options": [
      "Neunzig Sekunden, dann kommt schon das nächste",
@@ -10581,7 +10581,7 @@
    {
     "type": "listen",
     "label": "📢 Durchsage in der Halle",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080519_5d8c0ae1-b074-485b-8817-f91e4fd8980b.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080519_5d8c0ae1-b074-485b-8817-f91e4fd8980b.mp3",
     "q": "Was gilt für die Zeit der Versammlung?",
     "options": [
      "Sie zählt als normale Arbeitszeit",
@@ -10596,7 +10596,7 @@
    {
     "type": "listen",
     "label": "📞 Mailbox: Das Papier vom Arzt fehlt",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080519_1e4534fe-230f-4846-a8e0-4146bcf3c80a.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080519_1e4534fe-230f-4846-a8e0-4146bcf3c80a.mp3",
     "q": "Wie soll Herr Nowak das Papier schicken?",
     "options": [
      "Auf dem Postweg an den Betrieb",
@@ -10611,7 +10611,7 @@
    {
     "type": "listen",
     "label": "🪟 Am Schalter: Urlaub in der Probezeit",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080519_adb91bdc-39d6-4ebb-899b-018ac5d560bb.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080519_adb91bdc-39d6-4ebb-899b-018ac5d560bb.mp3",
     "q": "Wann darf sie den Urlaub in der Probezeit nehmen?",
     "options": [
      "Wenn der Betrieb damit einverstanden ist",
@@ -10626,7 +10626,7 @@
    {
     "type": "listen",
     "label": "🥪 In der Pause: Die Stunden fehlen",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080519_798370f7-799f-458d-a71f-6b1f7d9d06fe.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080519_798370f7-799f-458d-a71f-6b1f7d9d06fe.mp3",
     "q": "Was möchte er lieber für seine Überstunden?",
     "options": [
      "Freie Zeit statt mehr Geld",
@@ -10955,7 +10955,7 @@
    {
     "type": "listen",
     "label": "📢 Durchsage im Bürohaus",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080733_23e76902-8f0a-45d6-904d-d4de3ede28ca.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080733_23e76902-8f0a-45d6-904d-d4de3ede28ca.mp3",
     "q": "Wann kann man die Räume wieder benutzen?",
     "options": [
      "Am Montag, weil der Teppich erst trocknen muss",
@@ -10970,7 +10970,7 @@
    {
     "type": "listen",
     "label": "📞 Mailbox: Bitte einspringen",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080733_7b1dcf7b-8a8f-4145-834c-8a230e27bc8a.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080733_7b1dcf7b-8a8f-4145-834c-8a230e27bc8a.mp3",
     "q": "Wo bekommt Frau Sadiku den Schlüssel?",
     "options": [
      "Im Büro, morgen früh um sieben Uhr",
@@ -10985,7 +10985,7 @@
    {
     "type": "listen",
     "label": "🪟 Am Tresen: Material abholen",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080733_eb5e0c1f-cbd6-4631-929e-10f7d0c70d1f.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080733_eb5e0c1f-cbd6-4631-929e-10f7d0c70d1f.mp3",
     "q": "Was bekommt sie heute noch nicht?",
     "options": [
      "Das Papier, denn es kommt erst am Donnerstag",
@@ -11000,7 +11000,7 @@
    {
     "type": "listen",
     "label": "☕ Privat: Das neue Objekt",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080733_acb68d13-a39c-4fab-a6a5-5d018510a69a.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080733_acb68d13-a39c-4fab-a6a5-5d018510a69a.mp3",
     "q": "Was macht der Chef nächste Woche?",
     "options": [
      "Er kommt selbst zur Abnahme und schaut nach",
@@ -11329,7 +11329,7 @@
    {
     "type": "listen",
     "label": "📢 Durchsage im Wartebereich",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080733_d558ecbf-483f-47ea-a9a8-5f1e01948752.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080733_d558ecbf-483f-47ea-a9a8-5f1e01948752.mp3",
     "q": "Was sollen Menschen mit einer Frist jetzt tun?",
     "options": [
      "Am Empfang kurz Bescheid sagen",
@@ -11344,7 +11344,7 @@
    {
     "type": "listen",
     "label": "📞 Mailbox: Termin beim Amt",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080733_7bcbe1fa-2f28-4a1d-918d-686eef30bbf3.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080733_7bcbe1fa-2f28-4a1d-918d-686eef30bbf3.mp3",
     "q": "Was braucht Frau Klose, damit sie im Amt für ihn sprechen darf?",
     "options": [
      "Die Vollmacht mit seiner Unterschrift",
@@ -11359,7 +11359,7 @@
    {
     "type": "listen",
     "label": "🪟 Am Tresen: ein Brief vom Amt",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080939_52d1d7f2-07f7-4358-be26-aa188a26f9ea.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080939_52d1d7f2-07f7-4358-be26-aa188a26f9ea.mp3",
     "q": "Wie viel Zeit bleibt dem Mann noch für den Widerspruch?",
     "options": [
      "Noch elf Tage ab heute",
@@ -11374,7 +11374,7 @@
    {
     "type": "listen",
     "label": "☕ Unter Kolleginnen: nach dem Hausbesuch",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080939_46d8596c-39f3-4826-b471-6b6e0b5ab298.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080939_46d8596c-39f3-4826-b471-6b6e0b5ab298.mp3",
     "q": "Was haben die Beraterin und die Frau beim Hausbesuch geschafft?",
     "options": [
      "Sie haben zusammen den Antrag angefangen",
@@ -11703,7 +11703,7 @@
    {
     "type": "listen",
     "label": "📢 Durchsage auf dem Flohmarkt",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_063253_2bb370ce-6466-477d-8f71-4d475ec4a198.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_063253_2bb370ce-6466-477d-8f71-4d475ec4a198.mp3",
     "q": "Was passiert, wenn jemand seinen Müll liegen lässt?",
     "options": [
      "Er darf beim nächsten Mal nicht kommen",
@@ -11718,7 +11718,7 @@
    {
     "type": "listen",
     "label": "📞 Mailbox: Angebot für das Fahrrad",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_063253_eb2c6470-e430-4326-bf78-b4e1618fa908.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_063253_eb2c6470-e430-4326-bf78-b4e1618fa908.mp3",
     "q": "Womit begründet er sein niedrigeres Angebot?",
     "options": [
      "Er muss neue Reifen dafür kaufen",
@@ -11733,7 +11733,7 @@
    {
     "type": "listen",
     "label": "🧺 Am Stand: zwei Lampen, ein Preis",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_063519_8ace8e1e-a252-44a7-9924-f6d03f3af9cf.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_063519_8ace8e1e-a252-44a7-9924-f6d03f3af9cf.mp3",
     "q": "Wie viel zahlt die Kundin am Ende für beide Lampen?",
     "options": [
      "Fünfunddreißig Euro, wie sie vorgeschlagen hat",
@@ -11748,7 +11748,7 @@
    {
     "type": "listen",
     "label": "☕ Privat: Das Sofa in die Anzeige",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_063519_2432af95-b293-4056-9f6c-1ca0e45f213d.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_063519_2432af95-b293-4056-9f6c-1ca0e45f213d.mp3",
     "q": "Was soll unbedingt in die Anzeige?",
     "options": [
      "Dass das Sofa durch die Tür passt",
@@ -12077,7 +12077,7 @@
    {
     "type": "listen",
     "label": "📢 Durchsage im Autohaus",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_063519_103e5a89-44de-40a6-8dc3-7b52b1c38117.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_063519_103e5a89-44de-40a6-8dc3-7b52b1c38117.mp3",
     "q": "Ab wann kann man ein Auto nach der Inspektion abholen?",
     "options": [
      "Erst ab sechzehn Uhr am Nachmittag",
@@ -12092,7 +12092,7 @@
    {
     "type": "listen",
     "label": "📞 Mailbox: Die Bremsen sind runter",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_063519_c0ffee89-2b18-4713-b142-c1ce6a91153b.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_063519_c0ffee89-2b18-4713-b142-c1ce6a91153b.mp3",
     "q": "Was passiert, wenn Frau Krüger nicht zurückruft?",
     "options": [
      "Das Auto bleibt bis zum nächsten Tag stehen",
@@ -12107,7 +12107,7 @@
    {
     "type": "listen",
     "label": "🪟 Am Tresen: Der Wagen soll zum TÜV",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_063519_7245dca2-3f5d-43b9-9739-72a32fb4e618.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_063519_7245dca2-3f5d-43b9-9739-72a32fb4e618.mp3",
     "q": "Was passiert, wenn ein Mangel gefunden wird?",
     "options": [
      "Es gibt keine Plakette und man kommt noch einmal",
@@ -12122,7 +12122,7 @@
    {
     "type": "listen",
     "label": "☕ Privat: Winterreifen und Kulanz",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_063519_e06d1c76-1d26-415f-8b16-f90983fdb27e.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_063519_e06d1c76-1d26-415f-8b16-f90983fdb27e.mp3",
     "q": "Warum hat die Werkstatt bei ihr einen Reifen getauscht?",
     "options": [
      "Er war von innen kaputt, gezahlt hat sie nichts",
@@ -12451,7 +12451,7 @@
    {
     "type": "listen",
     "label": "📢 Ansage: Praxis geschlossen",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_063737_fd78a962-9bf0-4ec4-9f5e-f3a5aad5a85a.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_063737_fd78a962-9bf0-4ec4-9f5e-f3a5aad5a85a.mp3",
     "q": "Was soll man bei starken Schmerzen tun?",
     "options": [
      "Sofort beim zahnärztlichen Notdienst anrufen",
@@ -12466,7 +12466,7 @@
    {
     "type": "listen",
     "label": "📞 Mailbox: Ihr Termin wird verschoben",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_063737_d93a2e41-a407-4dcf-ae91-da21df9fd94e.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_063737_d93a2e41-a407-4dcf-ae91-da21df9fd94e.mp3",
     "q": "Wann wäre der neue Termin?",
     "options": [
      "Am Donnerstag um halb zehn",
@@ -12481,7 +12481,7 @@
    {
     "type": "listen",
     "label": "🪟 Am Empfang: Karte und Kontrolle",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_063737_19483e2f-a468-4089-85a3-3682a4469bba.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_063737_19483e2f-a468-4089-85a3-3682a4469bba.mp3",
     "q": "Wie lange muss der Mann noch warten?",
     "options": [
      "Ungefähr zehn Minuten im Wartezimmer",
@@ -12496,7 +12496,7 @@
    {
     "type": "listen",
     "label": "☕ Privat: Halb so schlimm",
-    "audioUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_063737_718029f0-4b2c-4095-8154-1d4b8dd053ce.mp3",
+    "audioUrl": "https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_063737_718029f0-4b2c-4095-8154-1d4b8dd053ce.mp3",
     "q": "Was musste er selbst bezahlen?",
     "options": [
      "Nur die weiße Farbe der Füllung",

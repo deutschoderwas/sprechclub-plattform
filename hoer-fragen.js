@@ -8,7 +8,7 @@
    Format je Aufnahme: [Frage, [Optionen], Index richtig, Erklärung] */
 (function () {
   var F = {
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260722_071923_497106db-1b75-4525-b1af-9d527030fdbd.wav": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260722_071923_497106db-1b75-4525-b1af-9d527030fdbd.wav": [
 [
 "Seit wann gibt es die Zahnschmerzen?",
 [
@@ -30,7 +30,7 @@
 "Im Text: „besonders wenn ich etwas Kaltes trinke“ — also bei kalten Getränken."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260722_071925_203fa970-cc7e-4f8e-8bc1-e821ac6c89b6.wav": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260722_071925_203fa970-cc7e-4f8e-8bc1-e821ac6c89b6.wav": [
 [
 "Was passiert laut dem Text mit einfachen, wiederholenden Aufgaben?",
 [
@@ -52,7 +52,7 @@
 "Im Text: „doch gleichzeitig entstehen neue Berufe“ — also neue Berufe."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260820_074636_f65102c1-a958-481c-a5ab-0d661d125ca8.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260820_074636_f65102c1-a958-481c-a5ab-0d661d125ca8.mp3": [
 [
 "Wann ist der alte Termin?",
 [
@@ -74,7 +74,7 @@
 "Im Text: „einen neuen Termin nächste Woche“ — also nächste Woche."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260820_074636_ffa446d9-1c49-4328-85a2-a8d3787fccbd.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260820_074636_ffa446d9-1c49-4328-85a2-a8d3787fccbd.mp3": [
 [
 "Was soll die Kundin zu den Tabletten trinken?",
 [
@@ -96,7 +96,7 @@
 "Im Text: „Wenn Sie müde werden, ist das eine normale Nebenwirkung.“ — also Müdigkeit."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260820_074636_e44f427a-2756-494d-9278-1dff6e2a0b12.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260820_074636_e44f427a-2756-494d-9278-1dff6e2a0b12.mp3": [
 [
 "Wann schläft das Baby?",
 [
@@ -118,7 +118,7 @@
 "Im Text: „Guten Abend, Frau Nowak.“ — sie hört die laute Musik."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260820_074636_27adf16e-ebaa-4827-91c1-e0c04779bc2e.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260820_074636_27adf16e-ebaa-4827-91c1-e0c04779bc2e.mp3": [
 [
 "In welchem Stock wohnt Familie Sanchez?",
 [
@@ -140,7 +140,7 @@
 "Im Text: „Am Freitag sind wir den ganzen Tag zu Hause.“ — also am Freitag."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260820_074636_89aa6483-338e-4479-b857-4bc1974cfdab.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260820_074636_89aa6483-338e-4479-b857-4bc1974cfdab.mp3": [
 [
 "Wie viel kostet alles zusammen?",
 [
@@ -162,7 +162,7 @@
 "Im Text: „Möchten Sie den Kassenbon?“ — er fragt nach dem Kassenbon."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260820_074636_3550896c-745d-4cc7-8664-6db1beada997.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260820_074636_3550896c-745d-4cc7-8664-6db1beada997.mp3": [
 [
 "Wann hat der Kunde die Jacke gekauft?",
 [
@@ -184,7 +184,7 @@
 "Im Text: „Haben Sie den Kassenbon dabei?“ — also den Kassenbon."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260820_074636_6108584a-f350-41e1-a684-426e71f86d46.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260820_074636_6108584a-f350-41e1-a684-426e71f86d46.mp3": [
 [
 "Wann ist der Termin?",
 [
@@ -206,7 +206,7 @@
 "Im Text: „brauche einen Termin für die Anmeldung“ — also für die Anmeldung."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260820_074636_d27992ac-a290-42ea-82db-ef1e12131ea7.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260820_074636_d27992ac-a290-42ea-82db-ef1e12131ea7.mp3": [
 [
 "Wie weit ist der Antrag am Anfang?",
 [
@@ -228,7 +228,7 @@
 "Im Text: „Haben Sie einen Kugelschreiber?“ — also einen Kugelschreiber."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260820_165859_c72beff6-b767-4a7f-bebd-25382f1dea3d.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260820_165859_c72beff6-b767-4a7f-bebd-25382f1dea3d.mp3": [
 [
 "Wen ruft Herr Yilmaz an?",
 [
@@ -250,7 +250,7 @@
 "Im Text: „Morgen bringe ich die Krankmeldung mit.“ — also die Krankmeldung."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260820_165859_45794f2b-c25d-4a53-ad91-e3dcfdd84a84.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260820_165859_45794f2b-c25d-4a53-ad91-e3dcfdd84a84.mp3": [
 [
 "Wann ist nächste Woche Feierabend?",
 [
@@ -272,7 +272,7 @@
 "Im Text: „Die Maschine läuft länger, deshalb …“ — das ist der Grund."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260820_165900_40b06e21-65be-43d0-b726-19b915ae9c5e.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260820_165900_40b06e21-65be-43d0-b726-19b915ae9c5e.mp3": [
 [
 "Wann fährt der Zug laut Fahrplan ab?",
 [
@@ -294,7 +294,7 @@
 "Im Text: „Der Zug fährt heute von Gleis acht, nicht von Gleis fünf.“ — also Gleis acht."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260820_165859_d63896a5-b1f6-4514-83c6-03d95e5796a7.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260820_165859_d63896a5-b1f6-4514-83c6-03d95e5796a7.mp3": [
 [
 "Bis wohin fährt dieser Bus?",
 [
@@ -316,7 +316,7 @@
 "Im Text: „fährt dieser Bus zum Krankenhaus?“ — sie möchte zum Krankenhaus."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260820_165859_911f1932-2f75-4827-9794-020b26cf2763.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260820_165859_911f1932-2f75-4827-9794-020b26cf2763.mp3": [
 [
 "Was trinkt die Frau?",
 [
@@ -338,7 +338,7 @@
 "Im Text: „Guten Abend, was möchten Sie bestellen?“ — also am Abend."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260820_165859_c8fe3bc8-3f93-4e47-97a5-d4092967e32f.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260820_165859_c8fe3bc8-3f93-4e47-97a5-d4092967e32f.mp3": [
 [
 "Was möchte der Mann am Anfang?",
 [
@@ -360,7 +360,7 @@
 "Im Text: „Ich hatte die Suppe.“ — also die Suppe."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260820_165900_8d82df0c-f63e-4bd9-83a1-5076dae453d8.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260820_165900_8d82df0c-f63e-4bd9-83a1-5076dae453d8.mp3": [
 [
 "Warum hat Tom am Samstag keine Zeit?",
 [
@@ -382,7 +382,7 @@
 "Im Text: „dann Sonntag um drei am Freibad?“ — also am Freibad."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260820_165859_c43803b5-a847-4081-b218-16d33478be19.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260820_165859_c43803b5-a847-4081-b218-16d33478be19.mp3": [
 [
 "Wie ist das Wetter am Vormittag?",
 [
@@ -404,7 +404,7 @@
 "Im Text: „Die Temperatur liegt bei sechzehn Grad.“ — also sechzehn Grad."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260821_081944_54fa390a-5232-497f-8537-330181242442.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260821_081944_54fa390a-5232-497f-8537-330181242442.mp3": [
 [
 "Wie viel kostet der Kaffee?",
 [
@@ -426,7 +426,7 @@
 "Im Text: „Guten Morgen, was darf es sein?“ — also am Morgen."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260821_081944_78d9e18b-389c-4054-82fc-126c36a74aee.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260821_081944_78d9e18b-389c-4054-82fc-126c36a74aee.mp3": [
 [
 "Was sagt der Verkäufer über die Brötchen?",
 [
@@ -448,7 +448,7 @@
 "Im Text: „Und bitte eine Tüte dazu.“ — also eine Tüte."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260821_081944_1d16c3ba-722e-487f-b916-3e02263ee1da.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260821_081944_1d16c3ba-722e-487f-b916-3e02263ee1da.mp3": [
 [
 "Was soll die Kundin zeigen?",
 [
@@ -470,7 +470,7 @@
 "Im Text: „für Sie ist es ohne Gebühr“ — es kostet also nichts."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260821_081944_78d3cef4-c84b-45ce-be03-2321d15d9353.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260821_081944_78d3cef4-c84b-45ce-be03-2321d15d9353.mp3": [
 [
 "Was soll die Mitarbeiterin machen?",
 [
@@ -492,7 +492,7 @@
 "Im Text: „geboren am 3. Mai 1990“ — also am 3. Mai 1990."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260821_081944_ab814982-937a-4b80-b647-87e2c6f16735.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260821_081944_ab814982-937a-4b80-b647-87e2c6f16735.mp3": [
 [
 "Was soll die Frau aufschreiben?",
 [
@@ -514,7 +514,7 @@
 "Im Text: „Sechzehn Euro neunundneunzig.“ — also 16,99 €."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260821_081944_f0a95e5e-07be-47ae-abfd-95ae0050bf84.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260821_081944_f0a95e5e-07be-47ae-abfd-95ae0050bf84.mp3": [
 [
 "Wer war nicht da?",
 [
@@ -536,7 +536,7 @@
 "Im Text: „Die Karte lege ich in Ihren Briefkasten.“ — also in den Briefkasten."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260821_081944_1850ecc1-5158-4c25-b8c0-955b646de0ed.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260821_081944_1850ecc1-5158-4c25-b8c0-955b646de0ed.mp3": [
 [
 "Warum geht Mittwoch nicht?",
 [
@@ -558,7 +558,7 @@
 "Im Text: „einen Termin zum Schneiden“ — also die Haare schneiden."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260821_081944_2cc70206-1ca2-432b-9618-4a275bbdc7aa.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260821_081944_2cc70206-1ca2-432b-9618-4a275bbdc7aa.mp3": [
 [
 "Wie viel soll die Friseurin abschneiden?",
 [
@@ -580,7 +580,7 @@
 "Im Text: „Nein danke, heute keine Farbe.“ — sie möchte keine Farbe."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260821_101058_18e0ce27-13de-4618-a76e-e657eae94495.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260821_101058_18e0ce27-13de-4618-a76e-e657eae94495.mp3": [
 [
 "Seit wann funktioniert das Internet nicht?",
 [
@@ -602,7 +602,7 @@
 "Im Text: „Ich habe ihn schon aus- und wieder eingeschaltet.“ — also neu gestartet."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260821_101058_88da1c4a-bb84-401c-b443-298fbc804cce.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260821_101058_88da1c4a-bb84-401c-b443-298fbc804cce.mp3": [
 [
 "Wann ist das Datenvolumen leer?",
 [
@@ -624,7 +624,7 @@
 "Im Text: „ich habe einen Vertrag bei Ihnen“ — also einen Vertrag."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260821_101058_821c13bc-f3e1-4332-ac81-91045c7cc1cf.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260821_101058_821c13bc-f3e1-4332-ac81-91045c7cc1cf.mp3": [
 [
 "In welche Klasse geht Mila?",
 [
@@ -646,7 +646,7 @@
 "Im Text: „Ich schicke morgen eine Entschuldigung mit.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260821_101058_07b2f71a-a542-47b6-a1e6-49642beb62e6.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260821_101058_07b2f71a-a542-47b6-a1e6-49642beb62e6.mp3": [
 [
 "Wann sind die Kinder zurück?",
 [
@@ -668,7 +668,7 @@
 "Im Text: „Wir fahren um acht Uhr mit dem Bus los“ — also mit dem Bus."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260821_101058_0cef6e50-9fad-43f7-88dd-c25cbada5947.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260821_101058_0cef6e50-9fad-43f7-88dd-c25cbada5947.mp3": [
 [
 "Wann macht das Auto ein lautes Geräusch?",
 [
@@ -690,7 +690,7 @@
 "Im Text: „Können Sie den Wagen bis morgen hierlassen?“ — also bis morgen."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260821_101058_d6f10a3b-432c-4a3b-a467-ac0fe1f96eea.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260821_101058_d6f10a3b-432c-4a3b-a467-ac0fe1f96eea.mp3": [
 [
 "Wo steht das Auto?",
 [
@@ -712,7 +712,7 @@
 "Im Text: „ein Wagen kommt in dreißig Minuten“ — also in dreißig Minuten."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260821_101058_dc534431-d9b0-4574-a7e5-478b2f2bb779.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260821_101058_dc534431-d9b0-4574-a7e5-478b2f2bb779.mp3": [
 [
 "Was ist das Problem mit der Jeans?",
 [
@@ -734,7 +734,7 @@
 "Im Text: „Und, passt die Jeans?“ — sie probiert eine Jeans an."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260821_101058_e08d9611-62f9-436f-a039-6fff203b96df.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260821_101058_e08d9611-62f9-436f-a039-6fff203b96df.mp3": [
 [
 "Was ist das Problem mit dem Pullover?",
 [
@@ -1284,7 +1284,7 @@
 "Im Text: „Natürlich, ich spreche langsamer.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_131442_c95f4cdc-ce28-4601-870d-70f364ebb589.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_131442_c95f4cdc-ce28-4601-870d-70f364ebb589.mp3": [
 [
 "Von welcher Firma ist Frau Weber?",
 [
@@ -1306,7 +1306,7 @@
 "Im Text: „Bitte kommen Sie … in unser Büro.“ — also im Büro der Firma."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_131443_75500bf0-73e8-4f43-afaa-29e30eab5ec8.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_131443_75500bf0-73e8-4f43-afaa-29e30eab5ec8.mp3": [
 [
 "Wann ist das Teammeeting?",
 [
@@ -1328,7 +1328,7 @@
 "Im Text: „Das Meeting dauert ungefähr eine Stunde.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_131444_6e99fd47-20ca-4fc1-b74f-3d9437c6df27.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_131444_6e99fd47-20ca-4fc1-b74f-3d9437c6df27.mp3": [
 [
 "Wer ist heute krank?",
 [
@@ -1350,7 +1350,7 @@
 "Im Text: „Rufen Sie mich bitte schnell zurück.“ — er soll zurückrufen."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_131446_e3563af5-b4af-41c0-8495-8d4e94129d8f.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_131446_e3563af5-b4af-41c0-8495-8d4e94129d8f.mp3": [
 [
 "Wen sucht die Firma?",
 [
@@ -1372,7 +1372,7 @@
 "Im Text: „Ihre Bewerbung können Sie … per E-Mail schicken.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_131447_ad1e78cb-847a-49df-99f2-d5cc49c4c4ee.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_131447_ad1e78cb-847a-49df-99f2-d5cc49c4c4ee.mp3": [
 [
 "Wann ist die Präsentation?",
 [
@@ -1394,7 +1394,7 @@
 "Im Text: „hier ist Lena aus dem Marketing“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260707_060857_dbb7b186-efd0-42d6-b8ee-84c317c4aa54.wav": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260707_060857_dbb7b186-efd0-42d6-b8ee-84c317c4aa54.wav": [
 [
 "Was hat Frau Berger besonders gefallen?",
 [
@@ -1416,7 +1416,7 @@
 "Im Text: „Bitte melden Sie sich bis Freitag bei mir.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141417_26fd009a-3daa-4cf5-a550-87b6089c4662.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141417_26fd009a-3daa-4cf5-a550-87b6089c4662.mp3": [
 [
 "Warum fällt der Deutschunterricht aus?",
 [
@@ -1438,7 +1438,7 @@
 "Im Text: „Der Unterricht beginnt erst um neun Uhr mit Mathematik.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141418_09ac171b-4c5b-469a-912c-ce5ed5b1e5fe.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141418_09ac171b-4c5b-469a-912c-ce5ed5b1e5fe.mp3": [
 [
 "Wann ist die Deutschprüfung?",
 [
@@ -1460,7 +1460,7 @@
 "Im Text: „in Raum zwölf“ — also Raum zwölf."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141419_f2e7c133-682e-4d8b-afb2-16cfbdd1c1be.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141419_f2e7c133-682e-4d8b-afb2-16cfbdd1c1be.mp3": [
 [
 "Wie heißt das Buch?",
 [
@@ -1482,7 +1482,7 @@
 "Im Text: „Wenn Sie es länger brauchen, rufen Sie uns bitte an.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141421_40b63495-7443-4e0e-9dcd-99558eb24cec.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141421_40b63495-7443-4e0e-9dcd-99558eb24cec.mp3": [
 [
 "Wie oft findet der Kurs statt?",
 [
@@ -1504,7 +1504,7 @@
 "Im Text: „hier ist die Sprachschule Aktiv“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141422_778c7085-6008-4403-aeaa-c710ef8cf0f5.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141422_778c7085-6008-4403-aeaa-c710ef8cf0f5.mp3": [
 [
 "Wie viel kostet ein Kilo Äpfel?",
 [
@@ -1526,7 +1526,7 @@
 "Im Text: „Das Angebot gilt nur bis achtzehn Uhr.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141424_3c27a784-0a87-4996-9d7a-4e8df2030e5c.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141424_3c27a784-0a87-4996-9d7a-4e8df2030e5c.mp3": [
 [
 "Wann schließt das Geschäft?",
 [
@@ -1548,7 +1548,7 @@
 "Im Text: „Wir öffnen morgen wieder um acht Uhr.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141426_cd030c30-c272-4d87-8a04-57d3add681f2.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141426_cd030c30-c272-4d87-8a04-57d3add681f2.mp3": [
 [
 "Wo kann man die Karte abholen?",
 [
@@ -1570,7 +1570,7 @@
 "Im Text: „Bringen Sie bitte Ihren Ausweis mit.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141427_18ed08b0-71d2-4a8e-b152-86aa71e6dbea.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141427_18ed08b0-71d2-4a8e-b152-86aa71e6dbea.mp3": [
 [
 "Wo kann man das Paket abholen?",
 [
@@ -1592,7 +1592,7 @@
 "Im Text: „Sie können es ab morgen … abholen.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260720_051331_d9be7ee3-812a-46f3-977a-b636865a574a.wav": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260720_051331_d9be7ee3-812a-46f3-977a-b636865a574a.wav": [
 [
 "Warum meldet sich die Sparkasse?",
 [
@@ -1614,7 +1614,7 @@
 "Im Text: „Achten Sie außerdem beim Einkaufen auf Rabatte und Schnäppchen.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141429_65070025-e0b2-4973-b484-d4fa42fe8ff9.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141429_65070025-e0b2-4973-b484-d4fa42fe8ff9.mp3": [
 [
 "Für wie viele Personen ist der Tisch?",
 [
@@ -1636,7 +1636,7 @@
 "Im Text: „Wenn sich etwas ändert, rufen Sie uns bitte an.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141431_aba534b5-a0ec-4fc0-ad2a-69259d2fbaa1.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141431_aba534b5-a0ec-4fc0-ad2a-69259d2fbaa1.mp3": [
 [
 "Wie lange braucht man für die Suppe?",
 [
@@ -1658,7 +1658,7 @@
 "Im Text: „Für eine schnelle Tomatensuppe …“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141432_cfc04ffc-e139-445e-b5eb-7d7c4ff41913.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141432_cfc04ffc-e139-445e-b5eb-7d7c4ff41913.mp3": [
 [
 "Was ist heute im Angebot?",
 [
@@ -1680,7 +1680,7 @@
 "Im Text: „leckeren Apfelkuchen“ — er ist also lecker."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141434_a7df1816-b0ae-49f8-86c6-a40d1b043087.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141434_a7df1816-b0ae-49f8-86c6-a40d1b043087.mp3": [
 [
 "Woher kommt das Gemüse?",
 [
@@ -1702,7 +1702,7 @@
 "Im Text: „Die Erdbeeren sind besonders süß.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141509_6486c979-29c6-415e-8f31-96a6871202b4.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141509_6486c979-29c6-415e-8f31-96a6871202b4.mp3": [
 [
 "Was hat die Person bekommen?",
 [
@@ -1724,7 +1724,7 @@
 "Im Text: „Lass uns heute Abend zusammen feiern.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141511_a79cde95-724f-4d3e-8fec-087ba171c5a9.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141511_a79cde95-724f-4d3e-8fec-087ba171c5a9.mp3": [
 [
 "Wie fühlt sich Tom?",
 [
@@ -1746,7 +1746,7 @@
 "Im Text: „Vielleicht können wir später reden?“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141513_6272bb3c-6f33-417d-8eb2-b0436d86995e.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141513_6272bb3c-6f33-417d-8eb2-b0436d86995e.mp3": [
 [
 "Wann ist die Prüfung?",
 [
@@ -1768,7 +1768,7 @@
 "Im Text: „Drück mir die Daumen!“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141515_7879c8df-275f-47c1-84d9-b49015171224.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141515_7879c8df-275f-47c1-84d9-b49015171224.mp3": [
 [
 "Zu welcher Tageszeit hört man die Nachricht?",
 [
@@ -1790,7 +1790,7 @@
 "Im Text: „Sie haben es sich verdient.“ — das ist der letzte Satz."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141517_4c603008-dbd7-4661-b4d2-a8e46fc5708d.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141517_4c603008-dbd7-4661-b4d2-a8e46fc5708d.mp3": [
 [
 "Wer ruft an?",
 [
@@ -1812,7 +1812,7 @@
 "Im Text: „Bitte bringen Sie Ihre Versichertenkarte mit.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141518_3128c88c-4a79-4b1c-b15c-d0e3501fdeb7.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141518_3128c88c-4a79-4b1c-b15c-d0e3501fdeb7.mp3": [
 [
 "Bis wann kann man das Medikament heute abholen?",
 [
@@ -1834,7 +1834,7 @@
 "Im Text: „hier ist die Apotheke am Markt“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141520_28f59a2f-85c0-4947-8fdb-886b2136aeb0.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141520_28f59a2f-85c0-4947-8fdb-886b2136aeb0.mp3": [
 [
 "Wie viel Wasser soll man am besten trinken?",
 [
@@ -1856,7 +1856,7 @@
 "Im Text: „machen Sie einen kurzen Spaziergang“ — also kurz."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141522_99f76e89-5896-4f5b-b124-aebb35c78990.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141522_99f76e89-5896-4f5b-b124-aebb35c78990.mp3": [
 [
 "Wann ist der Termin?",
 [
@@ -1878,7 +1878,7 @@
 "Im Text: „sagen Sie bitte rechtzeitig ab“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141524_99b03b27-425c-4285-92b6-5c201f6cfc99.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141524_99b03b27-425c-4285-92b6-5c201f6cfc99.mp3": [
 [
 "Warum gibt es kein Internet?",
 [
@@ -1900,7 +1900,7 @@
 "Im Text: „hier ist Ihr Internetanbieter“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141526_78fe169a-65b5-40d8-ac1f-75ae607223d0.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141526_78fe169a-65b5-40d8-ac1f-75ae607223d0.mp3": [
 [
 "Wann sollte der Film zuerst beginnen?",
 [
@@ -1922,7 +1922,7 @@
 "Im Text: „Davor zeigen wir die Nachrichten.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141527_9d5e17f7-e6d3-4909-af61-07ca0af828f0.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141527_9d5e17f7-e6d3-4909-af61-07ca0af828f0.mp3": [
 [
 "Von wann ist das Foto?",
 [
@@ -1944,7 +1944,7 @@
 "Im Text: „Schreib mir bitte kurz, ob es dir gefällt.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141529_9288adcc-2680-4181-9ebc-bcf0fe46a4e7.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141529_9288adcc-2680-4181-9ebc-bcf0fe46a4e7.mp3": [
 [
 "Bis wann hat der Laden geöffnet?",
 [
@@ -1966,7 +1966,7 @@
 "Im Text: „hier ist der Handyladen Tech-Point“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260720_051329_de935e5d-2cf7-4389-8d90-e8dc06eb1bf4.wav": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260720_051329_de935e5d-2cf7-4389-8d90-e8dc06eb1bf4.wav": [
 [
 "Wann ist Lena gestern eingeschlafen?",
 [
@@ -1988,7 +1988,7 @@
 "Im Text: „Ich habe gestern viel zu lange durch mein Handy gescrollt“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141531_4a83b092-fc47-4b7c-b556-1fe009d70aae.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141531_4a83b092-fc47-4b7c-b556-1fe009d70aae.mp3": [
 [
 "Was kann es am Abend geben?",
 [
@@ -2010,7 +2010,7 @@
 "Im Text: „Vergessen Sie den Sonnenschutz nicht!“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141533_e558e787-2089-404f-8299-c199dc45a6dd.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141533_e558e787-2089-404f-8299-c199dc45a6dd.mp3": [
 [
 "Wo hört man die Durchsage?",
 [
@@ -2032,7 +2032,7 @@
 "Im Text: „Die Natur dankt es Ihnen.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141535_d874e54e-76dd-4b0e-8900-fe687b9c640b.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141535_d874e54e-76dd-4b0e-8900-fe687b9c640b.mp3": [
 [
 "Wovor warnt die Durchsage?",
 [
@@ -2054,7 +2054,7 @@
 "Im Text: „Heute Nachmittag kommt ein starker Sturm.“ — also heute Nachmittag."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141538_249639fa-f373-4682-aea9-c673040455be.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141538_249639fa-f373-4682-aea9-c673040455be.mp3": [
 [
 "Welche Tonne soll man rausstellen?",
 [
@@ -2076,7 +2076,7 @@
 "Im Text: „stellen Sie die blaue Tonne am Morgen raus“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141613_f4f85cd9-fa6b-4470-aea7-328bc360a4c4.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141613_f4f85cd9-fa6b-4470-aea7-328bc360a4c4.mp3": [
 [
 "Wen stellt die Person vor?",
 [
@@ -2098,7 +2098,7 @@
 "Im Text: „Du wirst sie mögen!“ — das ist der letzte Satz."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141615_459c628a-f3c1-4d81-969a-35a90c424b20.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141615_459c628a-f3c1-4d81-969a-35a90c424b20.mp3": [
 [
 "Über wen spricht die Person?",
 [
@@ -2120,7 +2120,7 @@
 "Im Text: „Ich empfehle ihn gern.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141617_8178e245-cf21-499f-aac7-8fd71e5349e1.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141617_8178e245-cf21-499f-aac7-8fd71e5349e1.mp3": [
 [
 "Was macht der Bruder auf Partys?",
 [
@@ -2142,7 +2142,7 @@
 "Im Text: „er ist ein sehr guter Zuhörer“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141619_fe98c156-5446-4994-9b7e-ad2b4f3d7199.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141619_fe98c156-5446-4994-9b7e-ad2b4f3d7199.mp3": [
 [
 "Wer mag die offene Art der Chefin?",
 [
@@ -2164,7 +2164,7 @@
 "Im Text: „hat immer gute Ideen“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141621_74f8d056-fc7d-4e6d-975e-e7ce9911ca79.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141621_74f8d056-fc7d-4e6d-975e-e7ce9911ca79.mp3": [
 [
 "Was glaubt die Person über die Prüfung?",
 [
@@ -2186,7 +2186,7 @@
 "Im Text: „Du hast viel gelernt“ — deshalb keine Sorgen."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141622_416e028f-afbb-4eb3-a095-c95777e9733d.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141622_416e028f-afbb-4eb3-a095-c95777e9733d.mp3": [
 [
 "Wo ist die Person gerade?",
 [
@@ -2208,7 +2208,7 @@
 "Im Text: „In zwanzig Minuten bin ich im Büro.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141624_af60518d-59cd-4374-bfcb-371aa4a9b89d.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141624_af60518d-59cd-4374-bfcb-371aa4a9b89d.mp3": [
 [
 "Wann war das Essen?",
 [
@@ -2230,7 +2230,7 @@
 "Im Text: „Wir müssen da unbedingt nochmal hingehen.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141625_1dbf050e-dc1e-4e1b-8752-d08846bd54c2.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141625_1dbf050e-dc1e-4e1b-8752-d08846bd54c2.mp3": [
 [
 "Wann sehen sich die Personen wieder?",
 [
@@ -2252,7 +2252,7 @@
 "Im Text: „Schönen Abend noch und bis dann!“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141627_fae580e4-5e90-44ec-8f00-7d1962e7b21c.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141627_fae580e4-5e90-44ec-8f00-7d1962e7b21c.mp3": [
 [
 "Wohin fliegen die Passagiere?",
 [
@@ -2274,7 +2274,7 @@
 "Im Text: „startet heute pünktlich um vierzehn Uhr“ — also um 14 Uhr."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141630_dd722fe2-8190-4b73-b6aa-a8b9c5369dd8.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141630_dd722fe2-8190-4b73-b6aa-a8b9c5369dd8.mp3": [
 [
 "Für welches Gleis ist die Information?",
 [
@@ -2296,7 +2296,7 @@
 "Im Text: „Der Zug nach München“ — also nach München."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141632_3fb1d78b-9643-4b3a-8280-21cc9479c14c.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141632_3fb1d78b-9643-4b3a-8280-21cc9479c14c.mp3": [
 [
 "Ab wann ist das Zimmer reserviert?",
 [
@@ -2318,7 +2318,7 @@
 "Im Text: „Das Frühstück gibt es von sieben bis zehn Uhr.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141634_dcb88cfd-fd7d-4ff7-9f96-2000aa34cb12.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141634_dcb88cfd-fd7d-4ff7-9f96-2000aa34cb12.mp3": [
 [
 "Wohin fährt der Zug?",
 [
@@ -2340,7 +2340,7 @@
 "Im Text: „fährt heute nicht von Gleis fünf, sondern von Gleis acht“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260707_060858_63b0afda-1303-46dc-abae-fc28ae54988b.wav": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260707_060858_63b0afda-1303-46dc-abae-fc28ae54988b.wav": [
 [
 "Was haben sie in Kroatien besichtigt?",
 [
@@ -2362,7 +2362,7 @@
 "Im Text: „Nächstes Jahr fahren wir bestimmt wieder dorthin.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141636_81f76dca-a447-487a-9ce4-d43a9ecc214a.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141636_81f76dca-a447-487a-9ce4-d43a9ecc214a.mp3": [
 [
 "Warum fährt der Bus eine andere Strecke?",
 [
@@ -2384,7 +2384,7 @@
 "Im Text: „Bitte steigen Sie am Rathaus aus.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141638_f04316df-09d2-4cbc-bf55-02b51b10c7fe.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141638_f04316df-09d2-4cbc-bf55-02b51b10c7fe.mp3": [
 [
 "Wie lang ist der Stau?",
 [
@@ -2406,7 +2406,7 @@
 "Im Text: „Fahren Sie wenn möglich über die Landstraße.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141640_91ea26c2-da52-4799-8ed8-36b4b953db0b.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141640_91ea26c2-da52-4799-8ed8-36b4b953db0b.mp3": [
 [
 "Was ist mit dem Parkhaus in der Stadtmitte?",
 [
@@ -2428,7 +2428,7 @@
 "Im Text: „Von dort fahren Busse ins Zentrum.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141641_6db2e7eb-6748-49e7-a297-74628eb07da5.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141641_6db2e7eb-6748-49e7-a297-74628eb07da5.mp3": [
 [
 "Was sollen die Fahrgäste nach der Oper nehmen?",
 [
@@ -2450,7 +2450,7 @@
 "Im Text: „Information für die Fahrgäste der Straßenbahn“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141713_82708b77-2d2f-47d5-95d6-88f842f77f38.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141713_82708b77-2d2f-47d5-95d6-88f842f77f38.mp3": [
 [
 "Wann hat die Person den Film gesehen?",
 [
@@ -2472,7 +2472,7 @@
 "Im Text: „die Bilder wunderschön“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141715_354f9505-c01f-422c-ad35-4c26d1585023.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141715_354f9505-c01f-422c-ad35-4c26d1585023.mp3": [
 [
 "Wo war der Urlaub?",
 [
@@ -2494,7 +2494,7 @@
 "Im Text: „das Wetter herrlich“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141717_bc2b4e3d-2f78-4ed5-9466-0a36a76fb764.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141717_bc2b4e3d-2f78-4ed5-9466-0a36a76fb764.mp3": [
 [
 "Wo hat die Person gegessen?",
 [
@@ -2516,7 +2516,7 @@
 "Im Text: „der Service war super freundlich“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141719_5384e8ec-12e2-4c24-a18d-2a0edce36961.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141719_5384e8ec-12e2-4c24-a18d-2a0edce36961.mp3": [
 [
 "Was ist passiert?",
 [
@@ -2538,7 +2538,7 @@
 "Im Text: „Wir müssen das unbedingt feiern!“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141721_3bcf9a6b-0c5c-4824-8a20-07a2ff3ac773.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141721_3bcf9a6b-0c5c-4824-8a20-07a2ff3ac773.mp3": [
 [
 "Wo hört man die Durchsage?",
 [
@@ -2560,7 +2560,7 @@
 "Im Text: „Frühstück mit Brötchen, Käse und Marmelade“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141724_9aa8e987-51cc-425f-b614-9dc0fd2f9396.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141724_9aa8e987-51cc-425f-b614-9dc0fd2f9396.mp3": [
 [
 "Wann ist der Termin?",
 [
@@ -2582,7 +2582,7 @@
 "Im Text: „Hallo, hier ist Herr Wagner.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141725_8711b62e-1758-4bcb-b892-99fcefaba601.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141725_8711b62e-1758-4bcb-b892-99fcefaba601.mp3": [
 [
 "Wohin kommt das Papier?",
 [
@@ -2604,7 +2604,7 @@
 "Im Text: „Vielen Dank fürs Mitmachen!“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141727_29bb824c-d51a-419a-a20a-6e73e7bdb0ea.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141727_29bb824c-d51a-419a-a20a-6e73e7bdb0ea.mp3": [
 [
 "Um wie viel Uhr trifft man sich?",
 [
@@ -2626,7 +2626,7 @@
 "Im Text: „Danach gehen wir noch gemütlich ein Bier trinken.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141728_19d87096-ac68-48a7-8bf1-f528f67c7516.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141728_19d87096-ac68-48a7-8bf1-f528f67c7516.mp3": [
 [
 "An welchem Tag kommt der Handwerker?",
 [
@@ -2648,7 +2648,7 @@
 "Im Text: „zwischen neun und zwölf Uhr zu Hause“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141731_32862194-4f09-44dc-8dfd-d24649b94a93.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141731_32862194-4f09-44dc-8dfd-d24649b94a93.mp3": [
 [
 "An welchem Tag kommt die Lieferung?",
 [
@@ -2670,7 +2670,7 @@
 "Im Text: „zwischen zehn und vierzehn Uhr geliefert“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141732_9303697e-8855-4322-9b2e-f370fc311c66.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141732_9303697e-8855-4322-9b2e-f370fc311c66.mp3": [
 [
 "Wann ist die Besichtigung?",
 [
@@ -2692,7 +2692,7 @@
 "Im Text: „die Wohnung in der Gartenstraße“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_141734_a9d672b8-4e0e-4d2f-bfe4-c1d1bdd96256.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141734_a9d672b8-4e0e-4d2f-bfe4-c1d1bdd96256.mp3": [
 [
 "Wie heißt der Nachbar?",
 [
@@ -2714,7 +2714,7 @@
 "Im Text: „es kann etwas laut werden“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260713_070217_004f2125-4fb1-4899-a4db-a02857716b9f.wav": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260713_070217_004f2125-4fb1-4899-a4db-a02857716b9f.wav": [
 [
 "Ab wann ist eigentlich Ruhezeit?",
 [
@@ -2736,7 +2736,7 @@
 "Im Text: „die Musik war gestern sehr laut“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260707_060902_59335e78-591b-42e2-8eff-876090c5a763.wav": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260707_060902_59335e78-591b-42e2-8eff-876090c5a763.wav": [
 [
 "Worauf hat die Person heute keine Lust?",
 [
@@ -2758,7 +2758,7 @@
 "Im Text: „Echt jetzt? Ich bin platt!“ — sie ist also sehr überrascht."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260713_070220_97a09030-8c29-4896-bd0c-d85e42aaddcc.wav": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260713_070220_97a09030-8c29-4896-bd0c-d85e42aaddcc.wav": [
 [
 "Warum hat der Mann den Zug noch bekommen?",
 [
@@ -2780,7 +2780,7 @@
 "Im Text: „Die Chefin hat so kompliziert geredet, ich habe nur Bahnhof verstanden.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062316_8c95ec2a-d381-4d58-a06a-874ea238644c.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062316_8c95ec2a-d381-4d58-a06a-874ea238644c.mp3": [
 [
 "Zu welchem Schalter soll die Nummer B41?",
 [
@@ -2802,7 +2802,7 @@
 "Im Text: „Ab dreizehn Uhr werden heute nur noch Kundinnen und Kunden mit Termin bedient.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062317_100ffb0c-d423-42c5-b3b5-51d1dba71e64.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062317_100ffb0c-d423-42c5-b3b5-51d1dba71e64.mp3": [
 [
 "Welches Dokument fehlt noch?",
 [
@@ -2824,7 +2824,7 @@
 "Im Text: „Sie können sie einfach in den Briefkasten neben dem Eingang werfen.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062316_ddf96d70-eb05-4eec-8d33-90b0c952b592.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062316_ddf96d70-eb05-4eec-8d33-90b0c952b592.mp3": [
 [
 "Wohin soll die Person morgen gehen?",
 [
@@ -2846,7 +2846,7 @@
 "Im Text: „Eine Gebühr fällt dafür nicht an.“ — es kostet also nichts."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062317_5fe1a6e2-5aa8-4a81-a3bd-572a7b494fe6.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062317_5fe1a6e2-5aa8-4a81-a3bd-572a7b494fe6.mp3": [
 [
 "Wann kommt der Bescheid?",
 [
@@ -2868,7 +2868,7 @@
 "Im Text: „Meine Nachbarin geht mit, sie hat eine Vollmacht von mir.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062316_f26a942b-2daf-46f8-a876-25f667dab4bf.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062316_f26a942b-2daf-46f8-a876-25f667dab4bf.mp3": [
 [
 "Welche Taste wählt man für eine Kartensperre?",
 [
@@ -2890,7 +2890,7 @@
 "Im Text: „Unsere Filiale in der Bahnhofstraße bleibt am Freitag geschlossen.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062316_bb9dca0f-e2e9-4ff5-aa26-3a5f4d4aadf9.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062316_bb9dca0f-e2e9-4ff5-aa26-3a5f4d4aadf9.mp3": [
 [
 "Wann kommt die neue Karte?",
 [
@@ -2912,7 +2912,7 @@
 "Im Text: „bitte bringen Sie Ihren Ausweis mit“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062316_54a7cd05-3245-475e-8cb8-960ac4152b9e.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062316_54a7cd05-3245-475e-8cb8-960ac4152b9e.mp3": [
 [
 "Was kostet das Girokonto normalerweise?",
 [
@@ -2934,7 +2934,7 @@
 "Im Text: „Abheben am fremden Automaten kostet allerdings extra.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062316_388fa21f-2035-4b0f-bd9b-071dbc76ef51.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062316_388fa21f-2035-4b0f-bd9b-071dbc76ef51.mp3": [
 [
 "Was vermutet die zweite Person?",
 [
@@ -2956,7 +2956,7 @@
 "Im Text: „schau vorher im Verwendungszweck nach, wer da abbucht“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_073607_5fb75be9-bff9-4963-99b7-5e94bb4340b4.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_073607_5fb75be9-bff9-4963-99b7-5e94bb4340b4.mp3": [
 [
 "Ab wann wird der Kran umgesetzt?",
 [
@@ -2978,7 +2978,7 @@
 "Im Text: „Der Weg zwischen der Halle und dem Container ist bis Mittag gesperrt“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_073607_f77ab594-7d8b-47f4-8125-76fa4b04b3b4.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_073607_f77ab594-7d8b-47f4-8125-76fa4b04b3b4.mp3": [
 [
 "Warum kann man den Beton nicht einbringen?",
 [
@@ -3000,7 +3000,7 @@
 "Im Text: „einen Baustopp bis Donnerstag angeordnet“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_073607_baaa74a2-53c8-4ce0-8522-e1c53c8c2e6d.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_073607_baaa74a2-53c8-4ce0-8522-e1c53c8c2e6d.mp3": [
 [
 "Was liefert der Fahrer?",
 [
@@ -3022,7 +3022,7 @@
 "Im Text: „aber abnehmen muss der Polier“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_073607_1fae3531-c669-44a5-ac5f-8ed91209c397.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_073607_1fae3531-c669-44a5-ac5f-8ed91209c397.mp3": [
 [
 "Wann muss die Person morgen aufstehen?",
 [
@@ -3044,7 +3044,7 @@
 "Im Text: „wir schaffen den Rohbau bis Ostern, mehr nicht“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_073607_28ed843f-3dba-4aec-9cd9-6859d52382f9.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_073607_28ed843f-3dba-4aec-9cd9-6859d52382f9.mp3": [
 [
 "Bis wann kann man heute die Unterlagen prüfen lassen?",
 [
@@ -3066,7 +3066,7 @@
 "Im Text: „Ab siebzehn Uhr beginnen die Vorträge zum Vorstellungsgespräch.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_073607_df7f7775-e522-4482-9205-d527dbb728b9.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_073607_df7f7775-e522-4482-9205-d527dbb728b9.mp3": [
 [
 "Wann ist das Vorstellungsgespräch jetzt?",
 [
@@ -3088,7 +3088,7 @@
 "Im Text: „Bringen Sie bitte Ihr letztes Arbeitszeugnis mit.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_073824_ab03a84f-fdc0-4e63-8d20-671bde692a1a.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_073824_ab03a84f-fdc0-4e63-8d20-671bde692a1a.mp3": [
 [
 "Welche Unterlage kommt noch aus dem Heimatland?",
 [
@@ -3110,7 +3110,7 @@
 "Im Text: „dann um sieben Uhr am Hintereingang“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_073824_4c97d79d-9d0a-466a-b3c9-2b1fe9bce8d3.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_073824_4c97d79d-9d0a-466a-b3c9-2b1fe9bce8d3.mp3": [
 [
 "Warum hat sie eine Absage bekommen?",
 [
@@ -3132,7 +3132,7 @@
 "Im Text: „Zweitausendachthundert brutto.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_073824_cd70adf7-0db6-4022-9149-58f2cb3eaf4f.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_073824_cd70adf7-0db6-4022-9149-58f2cb3eaf4f.mp3": [
 [
 "Bis wann ist die Buchhaltung diese Woche erreichbar?",
 [
@@ -3154,7 +3154,7 @@
 "Im Text: „Fragen zu offenen Rechnungen schicken Sie bitte schriftlich, mit der Rechnungsnummer im Betreff.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_073824_c6963f99-a618-40bb-b2e6-56be86ad00e1.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_073824_c6963f99-a618-40bb-b2e6-56be86ad00e1.mp3": [
 [
 "Wie viel ist auf der Rechnung zu viel?",
 [
@@ -3176,7 +3176,7 @@
 "Im Text: „Ich frage bei Möller nach einer Gutschrift.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_073824_23143509-4939-4809-96d8-4c420c4e98d8.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_073824_23143509-4939-4809-96d8-4c420c4e98d8.mp3": [
 [
 "Wann hat die Person überwiesen?",
 [
@@ -3198,7 +3198,7 @@
 "Im Text: „Ich kläre das, die Mahnung ist erledigt.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_073824_670ec816-e242-488c-b74b-cd8ac9daaa64.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_073824_670ec816-e242-488c-b74b-cd8ac9daaa64.mp3": [
 [
 "Wie viele Kontoauszüge fehlen noch?",
 [
@@ -3220,7 +3220,7 @@
 "Im Text: „Ab dem Ersten wird es ruhiger“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074039_eb75ba62-7fb0-4487-b482-1dd9ef777f8c.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074039_eb75ba62-7fb0-4487-b482-1dd9ef777f8c.mp3": [
 [
 "Wo findet die Besprechung jetzt statt?",
 [
@@ -3242,7 +3242,7 @@
 "Im Text: „Bitte bringen Sie die Tagesordnung selbst mit“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074039_2eb76630-4864-4ff2-9cc4-5f1c7803d72a.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074039_2eb76630-4864-4ff2-9cc4-5f1c7803d72a.mp3": [
 [
 "Wann war der ursprüngliche Termin?",
 [
@@ -3264,7 +3264,7 @@
 "Im Text: „Können wir auf nächste Woche Dienstag gehen“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074040_630559a1-9651-4e57-8cdf-427c6b3f9781.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074040_630559a1-9651-4e57-8cdf-427c6b3f9781.mp3": [
 [
 "Was braucht der Kunde?",
 [
@@ -3286,7 +3286,7 @@
 "Im Text: „nur noch einmal im Monat, immer zum Ersten“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074039_c3a29e56-d97a-4510-85b8-c209959c45d7.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074039_c3a29e56-d97a-4510-85b8-c209959c45d7.mp3": [
 [
 "Warum wird es nächste Woche eng?",
 [
@@ -3308,7 +3308,7 @@
 "Im Text: „die Telefone leite ich weiter“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074039_d2d15c28-db95-415a-bca7-67ff4271dbf9.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074039_d2d15c28-db95-415a-bca7-67ff4271dbf9.mp3": [
 [
 "Was soll man bei einem Stromausfall im Haus zuerst tun?",
 [
@@ -3330,7 +3330,7 @@
 "Im Text: „Ist die ganze Straße dunkel, drücken Sie die Eins.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074039_f5e65c78-4286-4bba-b4b0-644bedb65535.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074039_f5e65c78-4286-4bba-b4b0-644bedb65535.mp3": [
 [
 "Welchen neuen Termin schlägt die Firma vor?",
 [
@@ -3352,7 +3352,7 @@
 "Im Text: „stellen Sie bis dahin nichts vor den Heizkörper im Flur“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074253_65d06b5f-45e3-436b-8701-c9bde2f616dd.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074253_65d06b5f-45e3-436b-8701-c9bde2f616dd.mp3": [
 [
 "Wann kann die Firma kommen?",
 [
@@ -3374,7 +3374,7 @@
 "Im Text: „Die Anfahrt neunundvierzig Euro“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074252_1e1f8d81-a258-41af-b769-ddc7ca167ff8.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074252_1e1f8d81-a258-41af-b769-ddc7ca167ff8.mp3": [
 [
 "Was ist das Problem mit der Heizung?",
 [
@@ -3396,7 +3396,7 @@
 "Im Text: „Bei mir hat er nur zehn Minuten gebraucht“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074253_749819ed-24f6-4a97-9ffd-392ba40ea8a7.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074253_749819ed-24f6-4a97-9ffd-392ba40ea8a7.mp3": [
 [
 "Wann fährt der Bus los?",
 [
@@ -3418,7 +3418,7 @@
 "Im Text: „Wer sein Essen vergessen hat, meldet sich bitte im Sekretariat.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074253_fb91c194-1dd3-47cd-9c78-fb6f012e14a6.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074253_fb91c194-1dd3-47cd-9c78-fb6f012e14a6.mp3": [
 [
 "Was schickt die Mutter heute an die Kita?",
 [
@@ -3440,7 +3440,7 @@
 "Im Text: „Ich komme morgen früh vorbei und unterschreibe das.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074253_eb73153c-b86a-48f7-abce-515b4330957f.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074253_eb73153c-b86a-48f7-abce-515b4330957f.mp3": [
 [
 "Wie war die Nacht bei Lasse?",
 [
@@ -3462,7 +3462,7 @@
 "Im Text: „Heute bleiben Sie noch die ganze Zeit im Raum“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074252_e7ce9eee-28b2-4585-a999-31eb9aadc46a.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074252_e7ce9eee-28b2-4585-a999-31eb9aadc46a.mp3": [
 [
 "Was hat die Erzieherin während des Streits gemacht?",
 [
@@ -3484,7 +3484,7 @@
 "Im Text: „Mache ich noch vor dem Elterngespräch.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074509_ba6354b5-3e8c-49fd-9468-79d74d8c32d0.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074509_ba6354b5-3e8c-49fd-9468-79d74d8c32d0.mp3": [
 [
 "Warum sind die Rampen drei und vier gesperrt?",
 [
@@ -3506,7 +3506,7 @@
 "Im Text: „Wer ohne Lieferschein kommt, wird nicht entladen.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074509_6c61aeec-52ca-48f1-baff-c34f19e9cf49.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074509_6c61aeec-52ca-48f1-baff-c34f19e9cf49.mp3": [
 [
 "Ab wann kann Marek in Erfurt entladen?",
 [
@@ -3528,7 +3528,7 @@
 "Im Text: „mach die Pause gleich nach der ersten Entladestelle“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074509_c5ae8249-88cb-4ca9-bab2-7b8477d162f7.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074509_c5ae8249-88cb-4ca9-bab2-7b8477d162f7.mp3": [
 [
 "Wie viele Paletten hat der Fahrer dabei?",
 [
@@ -3550,7 +3550,7 @@
 "Im Text: „Wie lange denn? — Eine gute Stunde.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074509_5c22780e-097d-4304-8023-941f37db8546.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074509_5c22780e-097d-4304-8023-941f37db8546.mp3": [
 [
 "Was hat der Fahrer am Ende mit dem Paket gemacht?",
 [
@@ -3572,7 +3572,7 @@
 "Im Text: „Um acht war ich zu Hause.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062316_2bcb796f-c486-4d22-82fc-4a96094e19c0.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062316_2bcb796f-c486-4d22-82fc-4a96094e19c0.mp3": [
 [
 "Wie lange ist die Kita im Sommer zu?",
 [
@@ -3594,7 +3594,7 @@
 "Im Text: „Bitte bis Freitag abgeben.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062316_745216fd-86a2-4bc3-80e6-24106efbf0c1.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062316_745216fd-86a2-4bc3-80e6-24106efbf0c1.mp3": [
 [
 "Was soll Frau Yilmaz tun?",
 [
@@ -3616,7 +3616,7 @@
 "Im Text: „Wir haben es auch bei Ihrem Mann versucht.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062317_30ba3f48-1cc3-4a39-b85b-1f9326ca5de8.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062317_30ba3f48-1cc3-4a39-b85b-1f9326ca5de8.mp3": [
 [
 "Welchen Termin nimmt die Mutter?",
 [
@@ -3638,7 +3638,7 @@
 "Im Text: „Bringen Sie bitte das gelbe Heft mit“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062316_0a1be477-4ad4-4ec2-8e06-c105f56e1ddb.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062316_0a1be477-4ad4-4ec2-8e06-c105f56e1ddb.mp3": [
 [
 "Wen soll die Person fragen?",
 [
@@ -3660,7 +3660,7 @@
 "Im Text: „Die kommt allein nach Hause, sie hat ja den Schlüssel.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062638_4d569692-ed6c-4790-b81c-e565d84be10a.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062638_4d569692-ed6c-4790-b81c-e565d84be10a.mp3": [
 [
 "Ab wann ist der Grill an?",
 [
@@ -3682,7 +3682,7 @@
 "Im Text: „Getränke gibt es gegen eine kleine Spende“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062638_d9959547-6300-4aca-852d-d5fad4b10b6c.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062638_d9959547-6300-4aca-852d-d5fad4b10b6c.mp3": [
 [
 "Warum sagt Nadja für Samstag ab?",
 [
@@ -3704,7 +3704,7 @@
 "Im Text: „ich bringe es nächste Woche vorbei“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062638_5c76b7ac-4547-4468-b4be-29e99f9f774b.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062638_5c76b7ac-4547-4468-b4be-29e99f9f774b.mp3": [
 [
 "Was brauchen die beiden für die Anmeldung?",
 [
@@ -3726,7 +3726,7 @@
 "Im Text: „In den kleinen Saal passen zehn“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062638_776e0eb8-757e-4067-b82b-83cc399b0367.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062638_776e0eb8-757e-4067-b82b-83cc399b0367.mp3": [
 [
 "Was sollen die Gäste Jonas schenken?",
 [
@@ -3748,7 +3748,7 @@
 "Im Text: „wir sparen für sein Fahrrad“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074510_fc97b5c9-2229-439f-a4b6-7f69fe6bff14.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074510_fc97b5c9-2229-439f-a4b6-7f69fe6bff14.mp3": [
 [
 "An welchem Tag hat der Salon immer Ruhetag?",
 [
@@ -3770,7 +3770,7 @@
 "Im Text: „Wir haben heute geöffnet bis achtzehn Uhr.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074509_5c622a43-1923-4296-b1cc-6f25ba944b73.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074509_5c622a43-1923-4296-b1cc-6f25ba944b73.mp3": [
 [
 "Wann war Frau Berger beim Färben?",
 [
@@ -3792,7 +3792,7 @@
 "Im Text: „morgen Vormittag … am liebsten vor elf Uhr“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074723_97783ed5-1be5-488a-8d5a-7c4201af57df.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074723_97783ed5-1be5-488a-8d5a-7c4201af57df.mp3": [
 [
 "Um wie viel Uhr ist ein Termin frei?",
 [
@@ -3814,7 +3814,7 @@
 "Im Text: „bei Frau Yildiz“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074723_ea23295f-1363-4d07-8867-93ea5a6f260f.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074723_ea23295f-1363-4d07-8867-93ea5a6f260f.mp3": [
 [
 "Was hat sie am ersten Tag gemacht?",
 [
@@ -3836,7 +3836,7 @@
 "Im Text: „eine Kundin hat mir Trinkgeld gegeben, fünf Euro“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074723_5cfabcb5-dfb4-404b-8ca5-0ca8d344bf8e.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074723_5cfabcb5-dfb4-404b-8ca5-0ca8d344bf8e.mp3": [
 [
 "Warum schließt der Markt morgen früher?",
 [
@@ -3858,7 +3858,7 @@
 "Im Text: „bitte gehen Sie dort mit kleineren Einkäufen hin“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074723_32436579-7c07-4a36-b451-58faaf36745d.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074723_32436579-7c07-4a36-b451-58faaf36745d.mp3": [
 [
 "Warum ändert sich der Schichtplan?",
 [
@@ -3880,7 +3880,7 @@
 "Im Text: „die Frühschicht ab sechs Uhr“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074723_719adc25-aee4-4fee-b904-b24d41873750.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074723_719adc25-aee4-4fee-b904-b24d41873750.mp3": [
 [
 "Was bekommt der Kunde nach der Prüfung?",
 [
@@ -3902,7 +3902,7 @@
 "Im Text: „Das dauert etwa zwei Wochen.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074723_58555dd9-2b59-4017-9398-42205ffb6d35.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074723_58555dd9-2b59-4017-9398-42205ffb6d35.mp3": [
 [
 "Bis wann wurde bei der Inventur gezählt?",
 [
@@ -3924,7 +3924,7 @@
 "Im Text: „Jetzt gibt es jede Woche eine Kontrolle an der Frischetheke.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074936_94da0ae4-a78f-44db-bbd8-4c850891db63.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074936_94da0ae4-a78f-44db-bbd8-4c850891db63.mp3": [
 [
 "Wem soll man Fehler beim Packen melden?",
 [
@@ -3946,7 +3946,7 @@
 "Im Text: „Ab Montag hängt dafür ein neuer Zettel neben der Waage.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074936_fbc3b6e3-8f16-43f6-81fb-27be04db4c27.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074936_fbc3b6e3-8f16-43f6-81fb-27be04db4c27.mp3": [
 [
 "Wann möchte Herr Kollmann am liebsten sprechen?",
 [
@@ -3968,7 +3968,7 @@
 "Im Text: „Es geht um die Sache mit der Bestellung letzte Woche.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074936_5a03c03e-4088-4554-832d-69026a4f6de6.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074936_5a03c03e-4088-4554-832d-69026a4f6de6.mp3": [
 [
 "Warum schafft er die Arbeit zuerst nicht?",
 [
@@ -3990,7 +3990,7 @@
 "Im Text: „Danke, dass du das gleich sagst und nicht erst um sechs.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074936_4f945c49-5201-4012-834f-6b1f16e89b33.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074936_4f945c49-5201-4012-834f-6b1f16e89b33.mp3": [
 [
 "Wann will sie nach mehr Gehalt fragen?",
 [
@@ -4012,7 +4012,7 @@
 "Im Text: „Erst, was ich im letzten Jahr übernommen habe, dann meine Zahl.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074936_982229f0-e23d-486e-aea6-1eb74e3900d1.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074936_982229f0-e23d-486e-aea6-1eb74e3900d1.mp3": [
 [
 "Was bekommt man, wenn man später aufsteht?",
 [
@@ -4034,7 +4034,7 @@
 "Im Text: „Die Zimmer werden ab elf Uhr gereinigt.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_074936_424a63fc-f092-4f79-ab47-269adbe81d40.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_074936_424a63fc-f092-4f79-ab47-269adbe81d40.mp3": [
 [
 "Welches Problem gibt es mit dem gebuchten Zimmer?",
 [
@@ -4056,7 +4056,7 @@
 "Im Text: „Das Frühstück beginnt bei uns schon um halb sieben.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075151_99102d90-841d-4cf9-b4cd-b94a6c4aef8c.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075151_99102d90-841d-4cf9-b4cd-b94a6c4aef8c.mp3": [
 [
 "Welche Zimmernummer hat der Gast?",
 [
@@ -4078,7 +4078,7 @@
 "Im Text: „in den Gepäckraum links neben dem Aufzug“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075150_eda09474-9a5b-4703-91ed-de3637d26bc7.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075150_eda09474-9a5b-4703-91ed-de3637d26bc7.mp3": [
 [
 "Worüber hat sich der Gast beschwert?",
 [
@@ -4100,7 +4100,7 @@
 "Im Text: „Morgen sind wir voll, alle Zimmer sind ausgebucht.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075151_e84b5184-d5e4-4e3f-b1fe-89d26d780d73.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075151_e84b5184-d5e4-4e3f-b1fe-89d26d780d73.mp3": [
 [
 "Wann beginnt die Begehung?",
 [
@@ -4122,7 +4122,7 @@
 "Im Text: „Der Kran läuft heute den ganzen Tag, bleiben Sie bitte auf den gelben Wegen.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075150_c9a9c624-6f3b-4b58-94db-a644abd68c28.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075150_c9a9c624-6f3b-4b58-94db-a644abd68c28.mp3": [
 [
 "Wann schickt Herr Bergmann die Stellungnahme?",
 [
@@ -4144,7 +4144,7 @@
 "Im Text: „Den Abgabetermin am Freitag halten wir trotzdem.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075151_9e1f61ad-de79-4428-9c9e-7391f5ea45d4.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075151_9e1f61ad-de79-4428-9c9e-7391f5ea45d4.mp3": [
 [
 "Was bringt die Person zum Schalter?",
 [
@@ -4166,7 +4166,7 @@
 "Im Text: „Unterschreiben Sie hier bitte den Eingang.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075150_95e9749e-0cd0-417a-a4b9-8fb85480227a.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075150_95e9749e-0cd0-417a-a4b9-8fb85480227a.mp3": [
 [
 "Wie lange dauerte der Termin beim Kunden?",
 [
@@ -4188,7 +4188,7 @@
 "Im Text: „Der wievielte? — Der vierte.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075407_49e3697e-77f1-4b23-a3e5-2a89ac22eebc.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075407_49e3697e-77f1-4b23-a3e5-2a89ac22eebc.mp3": [
 [
 "Was ist von dem Ausfall betroffen?",
 [
@@ -4210,7 +4210,7 @@
 "Im Text: „Wir rechnen mit einer Lösung bis vierzehn Uhr.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075407_40fe7f13-11f7-4b1e-b07a-4cd872d248e2.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075407_40fe7f13-11f7-4b1e-b07a-4cd872d248e2.mp3": [
 [
 "Wofür braucht Frau Demir einen Zugang?",
 [
@@ -4232,7 +4232,7 @@
 "Im Text: „ab Donnerstag bin ich im Urlaub“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075407_1b02992d-b36c-4cb3-8451-64e791732d9d.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075407_1b02992d-b36c-4cb3-8451-64e791732d9d.mp3": [
 [
 "Wann war beim Rechner zuletzt alles in Ordnung?",
 [
@@ -4254,7 +4254,7 @@
 "Im Text: „Kommen Sie um sechzehn Uhr wieder.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075408_5dbb6a5f-92ef-4821-b6fe-13a6cb104c7c.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075408_5dbb6a5f-92ef-4821-b6fe-13a6cb104c7c.mp3": [
 [
 "An welchem Tag ist die Frist?",
 [
@@ -4276,7 +4276,7 @@
 "Im Text: „Zweimal am Tag ruft er an.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062638_829e4aa0-0770-4ce0-999f-59948c629e35.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062638_829e4aa0-0770-4ce0-999f-59948c629e35.mp3": [
 [
 "Warum schließt der Supermarkt heute früher?",
 [
@@ -4298,7 +4298,7 @@
 "Im Text: „Die Kasse drei ist heute nur für Kunden mit wenigen Waren geöffnet.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062638_7460b4be-b77b-4847-a9da-2c4c63b731c3.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062638_7460b4be-b77b-4847-a9da-2c4c63b731c3.mp3": [
 [
 "Was war mit der Milch?",
 [
@@ -4320,7 +4320,7 @@
 "Im Text: „Kommen Sie einfach zur Information neben der Kasse eins.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062848_3b743ae2-bf87-4853-85aa-c070d247cb43.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062848_3b743ae2-bf87-4853-85aa-c070d247cb43.mp3": [
 [
 "Wie viel kostet der Einkauf?",
 [
@@ -4342,7 +4342,7 @@
 "Im Text: „Ja, eine kleine bitte.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062848_4b320871-bb5c-4a42-b73e-a24c22af41a3.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062848_4b320871-bb5c-4a42-b73e-a24c22af41a3.mp3": [
 [
 "Was war letzte Woche mit dem Automaten?",
 [
@@ -4364,7 +4364,7 @@
 "Im Text: „Der Bon gilt übrigens nur in diesem Markt“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260825_195740_b262384a-63ac-424c-b18b-e8494262d8af.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260825_195740_b262384a-63ac-424c-b18b-e8494262d8af.mp3": [
 [
 "Warum passt die Hose nicht?",
 [
@@ -4386,7 +4386,7 @@
 "Im Text: „In Blau hätten wir noch eine.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260825_195740_ec8bfa71-008c-42bb-a07c-37b631b30d64.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260825_195740_ec8bfa71-008c-42bb-a07c-37b631b30d64.mp3": [
 [
 "Was ist das Problem mit der Jacke?",
 [
@@ -4408,7 +4408,7 @@
 "Im Text: „den habe ich zu Hause liegen lassen“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260825_195740_927cb8f4-3fac-4a89-99c7-1e42de0f2f23.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260825_195740_927cb8f4-3fac-4a89-99c7-1e42de0f2f23.mp3": [
 [
 "Um wie viel Prozent sind die Jacken reduziert?",
 [
@@ -4430,7 +4430,7 @@
 "Im Text: „Das Angebot gilt nur heute bis achtzehn Uhr.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260825_195740_9d710087-1f65-4be9-986a-f6bcb385f3dd.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260825_195740_9d710087-1f65-4be9-986a-f6bcb385f3dd.mp3": [
 [
 "Was denkt die Kundin zuerst?",
 [
@@ -4452,7 +4452,7 @@
 "Im Text: „Die Farbe passt super zu dir.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075408_feaa1948-cb0e-4281-a636-5dd7d7a0d048.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075408_feaa1948-cb0e-4281-a636-5dd7d7a0d048.mp3": [
 [
 "Wann beginnt die Hygieneschulung?",
 [
@@ -4474,7 +4474,7 @@
 "Im Text: „nehmt für heute Abend die Hähnchenbrust aus dem Kühlraum“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075407_4ee5af9c-bc86-4a97-a47d-67cc11446179.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075407_4ee5af9c-bc86-4a97-a47d-67cc11446179.mp3": [
 [
 "Warum kann Tobias heute nicht arbeiten?",
 [
@@ -4496,7 +4496,7 @@
 "Im Text: „Du müsstest um sechzehn Uhr da sein“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075622_70b9849d-a60b-4e8b-9aea-8488e544d996.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075622_70b9849d-a60b-4e8b-9aea-8488e544d996.mp3": [
 [
 "Was verträgt die Dame nicht?",
 [
@@ -4518,7 +4518,7 @@
 "Im Text: „wir machen den Salat ohne das Öl“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075622_0bef1bc9-31c9-47e0-9802-00f9a4005acf.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075622_0bef1bc9-31c9-47e0-9802-00f9a4005acf.mp3": [
 [
 "Was hat die Bedienung gemacht?",
 [
@@ -4540,7 +4540,7 @@
 "Im Text: „Der schaut nur, ob wir die Kühlkette einhalten.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075622_e2af5951-bdc2-4034-9b3c-09fae739c243.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075622_e2af5951-bdc2-4034-9b3c-09fae739c243.mp3": [
 [
 "Wann kommt der Lastwagen aus Hamburg?",
 [
@@ -4562,7 +4562,7 @@
 "Im Text: „Bis dahin kommissionieren Sie bitte die Aufträge für den Süden.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075622_23f8c1c8-fdbc-48b9-82e5-01aa5ddf5e9f.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075622_23f8c1c8-fdbc-48b9-82e5-01aa5ddf5e9f.mp3": [
 [
 "Wann ist die Schulung?",
 [
@@ -4584,7 +4584,7 @@
 "Im Text: „Bringen Sie bitte den alten Schein und Ihren Ausweis mit.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075623_0e61e743-d888-411a-8f34-93bbb4d33275.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075623_0e61e743-d888-411a-8f34-93bbb4d33275.mp3": [
 [
 "Zu welcher Rampe soll der Fahrer?",
 [
@@ -4606,7 +4606,7 @@
 "Im Text: „Unterschreiben Sie hier bitte auch.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075622_2b3a6c41-886b-4931-99eb-83b3490ee247.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075622_2b3a6c41-886b-4931-99eb-83b3490ee247.mp3": [
 [
 "Wie viele Kilometer läuft sie am Tag?",
 [
@@ -4628,7 +4628,7 @@
 "Im Text: „Der piept, wenn du zu langsam bist.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075836_3f32f126-58d3-4237-985d-09ea6a25eae0.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075836_3f32f126-58d3-4237-985d-09ea6a25eae0.mp3": [
 [
 "Wann fangen die Helfer heute an?",
 [
@@ -4650,7 +4650,7 @@
 "Im Text: „Der Anhänger steht am unteren Feld, dort treffen wir uns nachher.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075836_1fb29138-b0eb-4a14-a8c4-daabd4275684.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075836_1fb29138-b0eb-4a14-a8c4-daabd4275684.mp3": [
 [
 "Wann fangen sie morgen an?",
 [
@@ -4672,7 +4672,7 @@
 "Im Text: „Wir wollen die Äpfel vom unteren Feld holen“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075836_cce09862-07a4-4279-ae1e-c0d524eb3b5d.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075836_cce09862-07a4-4279-ae1e-c0d524eb3b5d.mp3": [
 [
 "Wo bekommt man die Milch?",
 [
@@ -4694,7 +4694,7 @@
 "Im Text: „Ein Liter kostet einen Euro zehn.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075836_58ac1056-9530-491b-855b-02a3c8ed61f5.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075836_58ac1056-9530-491b-855b-02a3c8ed61f5.mp3": [
 [
 "Wie wird bei der Spargelernte bezahlt?",
 [
@@ -4716,7 +4716,7 @@
 "Im Text: „Machst du auch den Stall? — Nur abends.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075836_7e833ba1-0f3d-4fb8-9821-cc1d4f6a52ba.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075836_7e833ba1-0f3d-4fb8-9821-cc1d4f6a52ba.mp3": [
 [
 "Wie lange wartet man im Moment?",
 [
@@ -4738,7 +4738,7 @@
 "Im Text: „Wer eine Überweisung dabei hat, gibt sie bitte am Schalter ab.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_075836_9f574c17-a033-4745-b6a1-02d9e848b765.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_075836_9f574c17-a033-4745-b6a1-02d9e848b765.mp3": [
 [
 "An welchem Tag ist die Blutabnahme?",
 [
@@ -4760,7 +4760,7 @@
 "Im Text: „Den Befund besprechen wir dann in der Sprechstunde am Montag.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080051_253f8145-f51e-4621-bf18-357f89db4932.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080051_253f8145-f51e-4621-bf18-357f89db4932.mp3": [
 [
 "Wann ist der Termin beim Hautarzt?",
 [
@@ -4782,7 +4782,7 @@
 "Im Text: „denken Sie an Ihre Karte“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080051_69ab8e2a-0786-4ba3-880a-1d7a0e0e8040.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080051_69ab8e2a-0786-4ba3-880a-1d7a0e0e8040.mp3": [
 [
 "Wie lange wartet der Herr schon?",
 [
@@ -4804,7 +4804,7 @@
 "Im Text: „Und ruf im Labor an, seine Werte sind immer noch nicht da.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080051_82c36c09-44ad-40a6-9e38-22bce3cb0f34.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080051_82c36c09-44ad-40a6-9e38-22bce3cb0f34.mp3": [
 [
 "Bis wann steht die große Fräse still?",
 [
@@ -4826,7 +4826,7 @@
 "Im Text: „Die neuen Schutzbrillen liegen ab heute im Schrank am Eingang.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080051_b9a7806e-d188-4465-a38e-6ba1a15a1fbf.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080051_b9a7806e-d188-4465-a38e-6ba1a15a1fbf.mp3": [
 [
 "Wie viele Teile sind durchgefallen?",
 [
@@ -4848,7 +4848,7 @@
 "Im Text: „Schau dir bitte gleich früh die Zeichnung noch einmal genau an, bevor du die Maschine anstellst.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080051_587d3e5c-c76a-40db-97e2-78a34cbb1a9b.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080051_587d3e5c-c76a-40db-97e2-78a34cbb1a9b.mp3": [
 [
 "Welche Größe haben die Fräser?",
 [
@@ -4870,7 +4870,7 @@
 "Im Text: „der andere kommt am Donnerstag“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080051_de4b8edd-6713-4455-9431-32a658cfe79d.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080051_de4b8edd-6713-4455-9431-32a658cfe79d.mp3": [
 [
 "Was trug der Neue beim Wegräumen der Späne nicht?",
 [
@@ -4892,7 +4892,7 @@
 "Im Text: „Eine halbe Stunde standen wir da.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080305_868b8c6e-1289-4b98-8927-177f150dbeeb.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080305_868b8c6e-1289-4b98-8927-177f150dbeeb.mp3": [
 [
 "Wo findet die Übergabe heute statt?",
 [
@@ -4914,7 +4914,7 @@
 "Im Text: „beginnt trotzdem pünktlich um sechs Uhr dreißig“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080305_4a63a6a6-f3cd-4375-9f95-8bec1a204a8f.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080305_4a63a6a6-f3cd-4375-9f95-8bec1a204a8f.mp3": [
 [
 "Wer ist im Nachtdienst ausgefallen?",
 [
@@ -4936,7 +4936,7 @@
 "Im Text: „Sagen Sie mir bitte bis heute achtzehn Uhr Bescheid“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080305_ba82342a-2693-4903-b1e4-ecde909d6ffd.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080305_ba82342a-2693-4903-b1e4-ecde909d6ffd.mp3": [
 [
 "Wer steht in der Akte als Auskunftsperson?",
 [
@@ -4958,7 +4958,7 @@
 "Im Text: „sprechen Sie am besten heute mit ihr“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080305_e4545311-d05a-4921-b7fb-a5353f6418f9.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080305_e4545311-d05a-4921-b7fb-a5353f6418f9.mp3": [
 [
 "Wie oft hat Herr Palm geklingelt?",
 [
@@ -4980,7 +4980,7 @@
 "Im Text: „Sag es in der Übergabe noch mal laut“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062848_15b0e92b-5206-4e5b-8a85-760c5b7a2e9e.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062848_15b0e92b-5206-4e5b-8a85-760c5b7a2e9e.mp3": [
 [
 "Was soll man am Eingang tun?",
 [
@@ -5002,7 +5002,7 @@
 "Im Text: „Das Fundbüro … hat heute bis sechzehn Uhr geöffnet.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062848_5789da6c-380e-4e7a-8ae6-0ba3cbc6a64c.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062848_5789da6c-380e-4e7a-8ae6-0ba3cbc6a64c.mp3": [
 [
 "Wie lautet das Aktenzeichen?",
 [
@@ -5024,7 +5024,7 @@
 "Im Text: „Falls sich ein Zeuge meldet, rufen wir Sie an.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062848_12dc0e4b-95b2-4b55-aba3-d0f5151f282b.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062848_12dc0e4b-95b2-4b55-aba3-d0f5151f282b.mp3": [
 [
 "Wo stand das Fahrrad?",
 [
@@ -5046,7 +5046,7 @@
 "Im Text: „Danach bekommen Sie eine Bestätigung.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_062848_fe061d39-779d-43e5-9bc5-8c448f18487e.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_062848_fe061d39-779d-43e5-9bc5-8c448f18487e.mp3": [
 [
 "Wie lange hat die Anzeige gedauert?",
 [
@@ -5068,7 +5068,7 @@
 "Im Text: „Eine Nachbarin hat den Mann gesehen, sie geht morgen als Zeugin hin.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_063253_e16afea0-c343-4f70-8487-2f20fe8b0f96.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_063253_e16afea0-c343-4f70-8487-2f20fe8b0f96.mp3": [
 [
 "Wofür ist die Kasse zwei heute geöffnet?",
 [
@@ -5090,7 +5090,7 @@
 "Im Text: „Formulare für einen Nachsendeauftrag liegen am Eingang bereit.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_063253_28adde6f-7c05-43e5-85d2-d4372886ebd1.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_063253_28adde6f-7c05-43e5-85d2-d4372886ebd1.mp3": [
 [
 "Seit wann liegt das Einschreiben in der Filiale?",
 [
@@ -5112,7 +5112,7 @@
 "Im Text: „braucht Ihre Frau eine Vollmacht von Ihnen“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_063253_c66f0fcb-fc3d-40cc-a2f3-dab50c265ee1.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_063253_c66f0fcb-fc3d-40cc-a2f3-dab50c265ee1.mp3": [
 [
 "Was hat der Kunde verloren?",
 [
@@ -5134,7 +5134,7 @@
 "Im Text: „das Porto ist schon bezahlt, Sie zahlen nichts“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_063253_a0e6db10-56ef-4269-8fbb-7b6651e1cf1c.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_063253_a0e6db10-56ef-4269-8fbb-7b6651e1cf1c.mp3": [
 [
 "Wo ist die Packstation?",
 [
@@ -5156,7 +5156,7 @@
 "Im Text: „Ich bekomme einen Code aufs Handy, damit geht die Klappe auf.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080305_f67c87cc-b12a-4354-a84c-4d28dce1acb2.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080305_f67c87cc-b12a-4354-a84c-4d28dce1acb2.mp3": [
 [
 "Warum steht die Anlage vier still?",
 [
@@ -5178,7 +5178,7 @@
 "Im Text: „wir rechnen mit ungefähr zwei Stunden“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080305_ea5771d3-c1da-432d-b435-8970b4668eab.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080305_ea5771d3-c1da-432d-b435-8970b4668eab.mp3": [
 [
 "Wie lange dauert die Unterweisung?",
 [
@@ -5200,7 +5200,7 @@
 "Im Text: „Bringen Sie bitte Ihren Gehörschutz mit“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080519_c1490050-b0dd-4f0b-b0c4-afa097a545af.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080519_c1490050-b0dd-4f0b-b0c4-afa097a545af.mp3": [
 [
 "Was ist das Problem an der Anlage sieben?",
 [
@@ -5222,7 +5222,7 @@
 "Im Text: „Seit ungefähr einer halben Stunde.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080519_2eca2f5e-5dcc-4664-a025-15ca8bf176bd.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080519_2eca2f5e-5dcc-4664-a025-15ca8bf176bd.mp3": [
 [
 "Wie viel Zulage bekommt er?",
 [
@@ -5244,7 +5244,7 @@
 "Im Text: „Und die Übergabe morgens? — Fünf Minuten“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080519_5d8c0ae1-b074-485b-8817-f91e4fd8980b.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080519_5d8c0ae1-b074-485b-8817-f91e4fd8980b.mp3": [
 [
 "Wo findet die Versammlung statt?",
 [
@@ -5266,7 +5266,7 @@
 "Im Text: „Thema sind die neuen Schichtpläne und die Zuschläge am Wochenende.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080519_1e4534fe-230f-4846-a8e0-4146bcf3c80a.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080519_1e4534fe-230f-4846-a8e0-4146bcf3c80a.mp3": [
 [
 "Ab welchem Tag braucht man das Papier vom Arzt?",
 [
@@ -5288,7 +5288,7 @@
 "Im Text: „sonst können wir den Lohn nicht weiterzahlen“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080519_adb91bdc-39d6-4ebb-899b-018ac5d560bb.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080519_adb91bdc-39d6-4ebb-899b-018ac5d560bb.mp3": [
 [
 "Was sagt ihr Chef über den Urlaub?",
 [
@@ -5310,7 +5310,7 @@
 "Im Text: „Dann wird der Rest ausgezahlt.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080519_798370f7-799f-458d-a71f-6b1f7d9d06fe.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080519_798370f7-799f-458d-a71f-6b1f7d9d06fe.mp3": [
 [
 "Wie viele Überstunden fehlen ihm?",
 [
@@ -5332,7 +5332,7 @@
 "Im Text: „Ich frag morgen im Büro nach.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080733_23e76902-8f0a-45d6-904d-d4de3ede28ca.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080733_23e76902-8f0a-45d6-904d-d4de3ede28ca.mp3": [
 [
 "Bis wann soll man die Sachen wegräumen?",
 [
@@ -5354,7 +5354,7 @@
 "Im Text: „Die Toiletten im zweiten Stock sind am Freitag geschlossen.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080733_7b1dcf7b-8a8f-4145-834c-8a230e27bc8a.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080733_7b1dcf7b-8a8f-4145-834c-8a230e27bc8a.mp3": [
 [
 "Warum soll Frau Sadiku einspringen?",
 [
@@ -5376,7 +5376,7 @@
 "Im Text: „die Schlüsselübergabe ist um sieben Uhr“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080733_eb5e0c1f-cbd6-4631-929e-10f7d0c70d1f.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080733_eb5e0c1f-cbd6-4631-929e-10f7d0c70d1f.mp3": [
 [
 "Welches Mittel soll sie gegen Kalk nehmen?",
 [
@@ -5398,7 +5398,7 @@
 "Im Text: „nur ein Verschluss auf einen Eimer“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080733_acb68d13-a39c-4fab-a6a5-5d018510a69a.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080733_acb68d13-a39c-4fab-a6a5-5d018510a69a.mp3": [
 [
 "Wie viele Etagen soll die Person in drei Stunden putzen?",
 [
@@ -5420,7 +5420,7 @@
 "Im Text: „Nur den Stundenzettel vergesse ich immer.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080733_d558ecbf-483f-47ea-a9a8-5f1e01948752.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080733_d558ecbf-483f-47ea-a9a8-5f1e01948752.mp3": [
 [
 "Bis wann geht die offene Sprechstunde heute?",
 [
@@ -5442,7 +5442,7 @@
 "Im Text: „weil eine Kollegin zu einem Hausbesuch fährt“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080733_7bcbe1fa-2f28-4a1d-918d-686eef30bbf3.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080733_7bcbe1fa-2f28-4a1d-918d-686eef30bbf3.mp3": [
 [
 "Wann ist der Termin beim Amt?",
 [
@@ -5464,7 +5464,7 @@
 "Im Text: „Wir treffen uns eine Viertelstunde vorher vor dem Eingang.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080939_52d1d7f2-07f7-4358-be26-aa188a26f9ea.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080939_52d1d7f2-07f7-4358-be26-aa188a26f9ea.mp3": [
 [
 "Von wem ist der Bescheid?",
 [
@@ -5486,7 +5486,7 @@
 "Im Text: „Bringen Sie bitte alle Briefe mit, auch die alten.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_080939_46d8596c-39f3-4826-b471-6b6e0b5ab298.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_080939_46d8596c-39f3-4826-b471-6b6e0b5ab298.mp3": [
 [
 "Was konnte die Beraterin beim Hausbesuch zuerst nur tun?",
 [
@@ -5508,7 +5508,7 @@
 "Im Text: „rufe morgen die Kollegin vom Netzwerk an“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_063253_2bb370ce-6466-477d-8f71-4d475ec4a198.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_063253_2bb370ce-6466-477d-8f71-4d475ec4a198.mp3": [
 [
 "Bis wann müssen die Fahrzeuge vom Gelände?",
 [
@@ -5530,7 +5530,7 @@
 "Im Text: „Die Standgebühr kassieren wir wie immer direkt am Stand“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_063253_eb2c6470-e430-4326-bf78-b4e1618fa908.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_063253_eb2c6470-e430-4326-bf78-b4e1618fa908.mp3": [
 [
 "Wie viel bietet Marco für das Fahrrad?",
 [
@@ -5552,7 +5552,7 @@
 "Im Text: „Abholen könnte ich es am Samstagvormittag“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_063519_8ace8e1e-a252-44a7-9924-f6d03f3af9cf.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_063519_8ace8e1e-a252-44a7-9924-f6d03f3af9cf.mp3": [
 [
 "Was soll eine Lampe allein kosten?",
 [
@@ -5574,7 +5574,7 @@
 "Im Text: „Sagen wir fünfunddreißig, dann nehme ich sie sofort mit.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_063519_2432af95-b293-4056-9f6c-1ca0e45f213d.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_063519_2432af95-b293-4056-9f6c-1ca0e45f213d.mp3": [
 [
 "Welchen Preis will sie in die Anzeige schreiben?",
 [
@@ -5596,7 +5596,7 @@
 "Im Text: „Nur Abholung, ich schleppe das nicht durch die halbe Stadt.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_063519_103e5a89-44de-40a6-8dc3-7b52b1c38117.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_063519_103e5a89-44de-40a6-8dc3-7b52b1c38117.mp3": [
 [
 "Warum dauert heute alles länger?",
 [
@@ -5618,7 +5618,7 @@
 "Im Text: „Wer einen Ersatzwagen bestellt hat, meldet sich bitte am Tresen zwei.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_063519_c0ffee89-2b18-4713-b142-c1ce6a91153b.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_063519_c0ffee89-2b18-4713-b142-c1ce6a91153b.mp3": [
 [
 "Was muss am Wagen gemacht werden?",
 [
@@ -5640,7 +5640,7 @@
 "Im Text: „mit den Bremsen werden es etwa vierhundertneunzig“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_063519_7245dca2-3f5d-43b9-9739-72a32fb4e618.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_063519_7245dca2-3f5d-43b9-9739-72a32fb4e618.mp3": [
 [
 "Was ist dem Kunden aufgefallen?",
 [
@@ -5662,7 +5662,7 @@
 "Im Text: „Hundertfünfunddreißig Euro“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_063519_e06d1c76-1d26-415f-8b16-f90983fdb27e.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_063519_e06d1c76-1d26-415f-8b16-f90983fdb27e.mp3": [
 [
 "Wann bekommt die Person ihre Winterreifen?",
 [
@@ -5684,7 +5684,7 @@
 "Im Text: „Meine sind doch erst drei Jahre alt.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_063737_fd78a962-9bf0-4ec4-9f5e-f3a5aad5a85a.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_063737_fd78a962-9bf0-4ec4-9f5e-f3a5aad5a85a.mp3": [
 [
 "Wann ist die Praxis wieder da?",
 [
@@ -5706,7 +5706,7 @@
 "Im Text: „Die Nummer finden Sie auf unserer Internetseite.“"
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_063737_d93a2e41-a407-4dcf-ae91-da21df9fd94e.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_063737_d93a2e41-a407-4dcf-ae91-da21df9fd94e.mp3": [
 [
 "Wann war der alte Termin?",
 [
@@ -5728,7 +5728,7 @@
 "Im Text: „sie kostet neunundsechzig Euro“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_063737_19483e2f-a468-4089-85a3-3682a4469bba.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_063737_19483e2f-a468-4089-85a3-3682a4469bba.mp3": [
 [
 "Um wie viel Uhr hat Herr Yilmaz einen Termin?",
 [
@@ -5750,7 +5750,7 @@
 "Im Text: „das letzte Mal war im Herbst“."
 ]
 ],
-"https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260826_063737_718029f0-4b2c-4095-8154-1d4b8dd053ce.mp3": [
+"https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260826_063737_718029f0-4b2c-4095-8154-1d4b8dd053ce.mp3": [
 [
 "Wie lange war die Lippe dick?",
 [
