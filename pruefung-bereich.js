@@ -99,10 +99,21 @@
     { id:'c1', name:'Goethe-Zertifikat C1', anbieter:'Goethe · telc Hochschule', niveau:'C1',
       bild:'typisch-deutsch', kurs:'goethetelc', muster:'C1',
       fuer:'Universität, Führungsposition, anspruchsvolle Fachberufe.',
-      module:[ {id:'lesen',n:'Lesen',m:'65'}, {id:'hoeren',n:'Hören',m:'ca. 40'},
-               {id:'schreiben',n:'Schreiben',m:'75'}, {id:'sprechen',n:'Sprechen',m:'ca. 20'} ],
+      /* Die allgemeinen Modultexte sind fuer A1/A2 geschrieben ("Anzeigen,
+         Schilder, Texte"). Auf C1 lasen sie sich wie aus einer anderen
+         Pruefung — deshalb hier eigene. */
+      module:[ {id:'lesen',n:'Lesen',m:'65',
+                 t:'Vier Teile, 30 Aufgaben: Lueckentext, Sachartikel, Saetze einsetzen, Fachleute zuordnen.'},
+               {id:'hoeren',n:'Hören',m:'ca. 40',
+                 t:'Vortrag, Gespraech unter Fachleuten, Radiobeitrag — vieles hoerst du nur einmal.'},
+               {id:'schreiben',n:'Schreiben',m:'75',
+                 t:'Ein Text zu einer Grafik und eine formelle Nachricht — gewertet wird auch der Stil.'},
+               {id:'sprechen',n:'Sprechen',m:'ca. 20',
+                 t:'Ein Kurzvortrag mit Nachfragen und eine Diskussion, in der du deine Position halten musst.'} ],
       modular:true, geprueft:true,
-      hinweis:'Sprechen ca. 20 Minuten zu zweit, 15 Minuten allein — dazu 20 Minuten Vorbereitung.' },
+      hinweis:'Sprechen ca. 20 Minuten zu zweit, 15 Minuten allein — dazu 20 Minuten Vorbereitung. '
+             +'Lesen: 65 Minuten fuer 30 Aufgaben, davon 5 Minuten fuer den Antwortbogen; '
+             +'bestanden ab 18 richtigen Aufgaben.' },
 
     { id:'telcmed', name:'telc Medizin', anbieter:'Fachsprachprüfung', niveau:'B2–C1',
       bild:'gesundheit', kurs:'telcmed', fach:true, geprueft:true, dauer:'ca. 2 Std 25 Min',
