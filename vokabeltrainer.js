@@ -1306,4 +1306,70 @@
   if (document.readyState === 'complete') setTimeout(nachziehen, 300);
   else window.addEventListener('load', function () { setTimeout(nachziehen, 300); });
   setTimeout(nachziehen, 1200);
+
+  /* ------------------------------------------------------------
+     window.vokabelStand — die Zahl, die der ganze Rest der Plattform liest
+
+     vokabeln.js (der alte Trainer) definiert diese Funktion aus dem
+     localStorage-Schluessel 'vok'. Diese Datei laedt NACH vokabeln.js und
+     uebernimmt die Ansicht (window.renderVokabeln) — die Funktion aber
+     liess sie stehen. Folge: Startseite, Seitenleiste, "Mein Bereich" und
+     der Stand-Streifen lasen einen Trainer aus, den niemand mehr benutzt,
+     und zeigten dauerhaft "0 Woerter gelernt", "0 Tage am Stueck" und
+     "Heute steht nichts offen" — auch bei 200 faelligen Woertern.
+     ------------------------------------------------------------ */
+  function standNachAussen() {
+    var pool  = (window.VOK_POOL || []);
+    var heute = new Date().toISOString().slice(0, 10);
+    var gelernt = 0, faellig = 0, neu = 0;
+
+    if (pool.length) {
+      pool.forEach(function (v) {
+        var b = BEKANNT[v.id];
+        if (!b) { neu++; return; }
+        gelernt++;
+        if (b.faellig && b.faellig <= heute) faellig++;
+      });
+    } else {
+      /* Der Pool wird erst beim Oeffnen des Trainers geladen. Bis dahin
+         zaehlen wir aus dem, was wir haben — besser eine richtige Zahl
+         fuer die gelernten Woerter als ueberall eine 0. */
+      Object.keys(BEKANNT).forEach(function (k) {
+        gelernt++;
+        var b = BEKANNT[k];
+        if (b && b.faellig && b.faellig <= heute) faellig++;
+      });
+    }
+
+    var letzter = STAND.tag || STAND.letzter_tag || null;
+    var pause = null;
+    if (letzter) {
+      pause = Math.round((new Date(heute) - new Date(letzter)) / 86400000);
+      if (!isFinite(pause) || pause < 0) pause = null;
+    }
+    return {
+      gesamt:     pool.length || gelernt,
+      neu:        neu,
+      faellig:    faellig,
+      gelernt:    gelernt,
+      heute:      STAND.heute || 0,
+      ziel:       STAND.ziel  || 20,
+      serie:      STAND.serie || 0,
+      letzterTag: letzter,
+      pauseTage:  pause,
+      erinnern:   (pause != null && pause >= 2)
+    };
+  }
+  window.vokabelStand = standNachAussen;
+
+  /* Die Zahlen muessen stehen, BEVOR jemand den Trainer oeffnet — die
+     Startseite fragt sie beim allerersten Blick ab. Vorher wurde der
+     Stand erst beim Betreten der Vokabelansicht geholt, und wer nie
+     hineinging, sah ueberall Nullen und Gedankenstriche. */
+  (function vorladen(versuch) {
+    versuch = versuch || 0;
+    var c = null; try { c = sb(); } catch (e) {}
+    if (!c) { if (versuch < 12) setTimeout(function () { vorladen(versuch + 1); }, 800); return; }
+    try { ladeStand(); } catch (e) {}
+  })();
 })();

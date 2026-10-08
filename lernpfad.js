@@ -48,6 +48,22 @@
 
   var NIVEAUS = ['A1', 'A2', 'B1', 'B2', 'C1'];
 
+  /* 38 der 130 Gespraeche tragen eine Zwischenstufe: 'A2–B1' (19),
+     'B1–B2' (15), 'A1–A2' (2), 'B2–C1' (2). Die fielen hier stumm
+     heraus und waren im Lernpfad unsichtbar, obwohl sie im Hub
+     "Gespraeche ueben" auftauchten. Wir sortieren sie auf die UNTERE
+     Stufe ein: wer auf A2 steht, darf ein A2–B1-Gespraech versuchen,
+     umgekehrt waere es eine Ueberforderung. */
+  function stufeVon(lvl) {
+    var roh = String(lvl || 'A1').toUpperCase().trim();
+    if (NIVEAUS.indexOf(roh) >= 0) return roh;
+    var teile = roh.split(/[–—-]/).map(function (x) { return x.trim(); });
+    for (var i = 0; i < teile.length; i++) {
+      if (NIVEAUS.indexOf(teile[i]) >= 0) return teile[i];
+    }
+    return 'A1';
+  }
+
   /* ---------- Fortschritt ----------
      Bewusst hinter einer kleinen Schicht, damit später der Wechsel
      auf die Datenbank eine einzige Stelle betrifft. */
@@ -63,7 +79,23 @@
     sichere: function (o) {
       try { localStorage.setItem(this.schluessel(), JSON.stringify(o)); } catch (e) {}
     },
-    fertig: function (szeneId) { return !!this.lade()[szeneId]; },
+    /* setzeFertig wird von der Produktion nie gerufen — die Gespraeche
+       laufen ueber lernen.js, und das fuehrt seinen EIGENEN Speicher
+       (Schluessel 'lern', dialogMerken()). Folge: "0 von 35 geschafft",
+       kein einziger Haken, "Dein Auftrag fuer heute" ewig dieselbe
+       Szene, auch nach dreissig gefuehrten Gespraechen.
+       Statt einen zweiten Schreibweg zu bauen, lesen wir beide Quellen.
+       Dann zaehlt jedes Gespraech, egal ueber welchen Weg es lief. */
+    ausLernen: function () {
+      try {
+        var s = (window.lsGet ? window.lsGet('lern', null)
+                              : JSON.parse(localStorage.getItem('ub_lern') || 'null'));
+        return (s && s.dlg) || {};
+      } catch (e) { return {}; }
+    },
+    fertig: function (szeneId) {
+      return !!(this.lade()[szeneId] || this.ausLernen()[szeneId]);
+    },
     setzeFertig: function (szeneId) {
       var o = this.lade();
       o[szeneId] = new Date().toISOString();
@@ -91,7 +123,7 @@
       KAPITEL.forEach(function (k) { w[n][k.id] = []; });
     });
     quelle.forEach(function (d) {
-      var n = String(d.lvl || 'A1').toUpperCase();
+      var n = stufeVon(d.lvl);
       if (!w[n]) return;
       w[n][kapitelVon(d)].push(d);
     });
@@ -251,10 +283,47 @@
     '</div>';
   }
 
+  /* Wie viele Tage am Stueck wurde geuebt? Gezaehlt rueckwaerts ab
+     heute (oder ab gestern, damit der heutige Tag die Serie nicht
+     bricht, solange er noch laeuft). */
+  function serieAusTagen() {
+    var tage = {};
+    try {
+      var o = speicher.lade();
+      Object.keys(o).forEach(function (k) {
+        var v = o[k];
+        var d = (v && v.am) || (typeof v === 'string' ? v : null);
+        if (d) tage[String(d).slice(0, 10)] = 1;
+      });
+      var l = speicher.ausLernen();
+      Object.keys(l).forEach(function (k) {
+        var d = l[k] && l[k].am;
+        if (d) tage[String(d).slice(0, 10)] = 1;
+      });
+    } catch (e) { return 0; }
+
+    function schluessel(d) {
+      return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2)
+           + '-' + ('0' + d.getDate()).slice(-2);
+    }
+    var jetzt = new Date();
+    var start = tage[schluessel(jetzt)] ? 0 : 1;   /* heute noch nicht geuebt: ab gestern zaehlen */
+    var n = 0;
+    for (var i = start; i < 400; i++) {
+      var d = new Date(jetzt.getTime() - i * 86400000);
+      if (tage[schluessel(d)]) n++; else break;
+    }
+    return n;
+  }
+
   function standHtml(niveau) {
     var s = stand(niveau);
-    var serie = 0;
-    try { serie = Number(localStorage.getItem('lp_serie') || 0) || 0; } catch (e) {}
+    /* 'lp_serie' wurde nur gelesen, nie geschrieben — die Kachel stand
+       dauerhaft auf "0 Tage in Folge". Die Tage stecken laengst in den
+       gefuehrten Gespraechen: lernen.js merkt sich zu jedem das Datum.
+       Daraus rechnen wir die Serie aus, statt eine Zahl zu pflegen,
+       die niemand setzt. */
+    var serie = serieAusTagen();
     return '<div class="lp-reihe">' +
       '<div class="stat"><b>' + s.fertig + '/' + s.gesamt + '</b><span>Szenen geschafft</span></div>' +
       '<div class="stat"><b>' + s.prozent + '%</b><span>von ' + E(niveau) + '</span></div>' +
