@@ -108,10 +108,26 @@
       + 'onerror="this.style.display=\'none\';this.nextSibling.style.display=\'flex\'">'
       + '<span class="vt-em" style="display:none">' + (v.em || '🔤') + '</span></span>';
   }
+  /* 897 der 1043 Woerter haben kein Foto — aber alle ein Emoji. Bisher
+     sassen sie deshalb alle auf demselben hellgruenen Grund, und weil es
+     nur 338 verschiedene Emojis gibt, sahen viele Karten identisch aus:
+     ⚖️ steht fuer 27 verschiedene Woerter, 🔁 fuer 21.
+
+     Die Karte traegt jetzt die Artikelfarbe — blau der, pink die, gruen
+     das. Das ist die uebliche Farbmethodik im DaF-Unterricht: der Artikel
+     praegt sich mit dem Wort zusammen ein, statt getrennt gelernt zu
+     werden. Nebenbei unterscheiden sich die Karten endlich voneinander.
+
+     Verraten wird dabei nichts: die Artikelabfrage ("der, die oder das?")
+     zeigt gar kein Bild, sondern nur Wort und Beispielsatz. */
   function bildEmoji(v, gr) {
     if (hatBild(v)) return bild(v, gr);
     if (!v.em) return wortKarte(v, gr);
-    return '<span class="vt-bild ' + (gr || '') + '"><span class="vt-em" style="display:flex">' + v.em + '</span></span>';
+    var f = v.artikel && ART_FARBE[v.artikel];
+    if (!f) return '<span class="vt-bild ' + (gr || '') + '"><span class="vt-em" style="display:flex">' + v.em + '</span></span>';
+    return '<span class="vt-bild ' + (gr || '') + ' vt-art" style="--tk:' + f + '">'
+      + '<span class="vt-em" style="display:flex">' + v.em + '</span>'
+      + '<span class="vt-art-tag">' + esc(v.artikel) + '</span></span>';
   }
 
   // Zu welchen Wörtern gibt es ein echtes Bild? (vok-bild/index.js)
@@ -531,6 +547,12 @@
 @keyframes vtFall{to{transform:translateY(105vh) rotate(720deg);opacity:.15}}
 
 /* Wortkarte statt Bild, wenn nichts da ist */
+.vt-bild.vt-art{background:linear-gradient(135deg,color-mix(in srgb,var(--tk) 9%,#fff),color-mix(in srgb,var(--tk) 22%,#fff));
+  position:relative}
+.vt-art-tag{position:absolute;left:12px;bottom:10px;font-family:'Space Grotesk',system-ui,sans-serif;
+  font-size:15px;font-weight:700;color:var(--tk);opacity:.8;letter-spacing:.3px;line-height:1}
+.vt-bild.gr .vt-art-tag{font-size:19px;left:16px;bottom:14px}
+.vt-bild.mini .vt-art-tag{display:none}
 .vt-bild.vt-typo{background:linear-gradient(135deg,color-mix(in srgb,var(--tk) 12%,#fff),color-mix(in srgb,var(--tk) 26%,#fff));
   box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--tk) 30%,transparent)}
 .vt-typo-b{font-family:'Space Grotesk',system-ui,sans-serif;font-size:64px;font-weight:700;color:var(--tk);line-height:1}
