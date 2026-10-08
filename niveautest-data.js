@@ -17,7 +17,7 @@
   window.NIVEAUTEST.HERO_PHOTO = 'julia-niveau.jpg';
   window.NIVEAUTEST.HERO_BUBBLE = 'Welches Deutschniveau habe ich eigentlich?';
   // (KI-Illustration als Fallback, falls das Foto fehlt)
-  window.NIVEAUTEST.HERO_IMG = 'https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/hf_20260620_080132_e735a515-f746-403e-afde-b9d556b5bc74.png';
+  window.NIVEAUTEST.HERO_IMG = 'https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/medien/hf_20260620_080132_e735a515-f746-403e-afde-b9d556b5bc74.webp';
 
   // Reihenfolge der Stufen + numerischer Index
   window.NIVEAUTEST.LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1'];
