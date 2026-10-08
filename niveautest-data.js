@@ -81,7 +81,7 @@
   };
 
   // KI-Audioclips (URLs werden nach Generierung eingesetzt)
-  var CDN = 'https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/';
+  var CDN = 'https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/';
   window.NIVEAUTEST.AUDIO = {
     a1_lena:       { url: CDN + 'hf_20260620_080101_b5e2a295-ac78-4276-901f-1cef4317bfb1.mp3', script: 'Hallo! Ich heiße Lena. Ich komme aus Spanien und wohne jetzt in Hamburg. Ich bin Studentin und lerne seit einem Jahr Deutsch.' },
     a1_zug:        { url: CDN + 'hf_20260620_080104_b8e094a4-3141-46c7-b639-d8b9fc4c8a29.mp3', script: 'Achtung am Gleis drei. Der Intercity nach München, Abfahrt um halb neun, fährt heute mit fünf Minuten Verspätung ab. Wir bitten um Ihr Verständnis.' },
@@ -163,7 +163,7 @@
   ];
 
   // ---- Szenen-Bilder (Lesen/Hören) den Aufgaben zuordnen ----
-  var SCENE_CDN='https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/';
-  var SCENE_IMG={"a1l1": "hf_20260620_155348_07247045-0b5c-426f-a1ff-4f2fd4373018.png", "a1l2": "hf_20260620_155405_1983e5fd-33a0-461c-8fce-7cf99529928c.png", "a2l1": "hf_20260620_155407_34729899-9009-4b51-a7b6-fa22f3c2c4f2.png", "a2l2": "hf_20260620_155409_514fed7f-25a8-4afa-a2c1-3e09a39787ef.png", "b1l1": "hf_20260620_155411_b7351be0-7600-4411-ad55-a7a17156241f.png", "b1l2": "hf_20260620_155412_4c16e89b-3915-4c1e-beba-3db94df94745.png", "b2l1": "hf_20260620_155427_81b6c55c-0ee9-43d4-9a28-3b09f9f78494.png", "b2l2": "hf_20260620_155428_cafe9805-a4b0-45f9-b7f3-0407ea05b7d8.png", "c1l1": "hf_20260620_155430_4adb1a34-b9c6-43b6-ab06-1f213a16833e.png", "c1l2": "hf_20260620_155432_98b18d1c-5642-412c-83f7-786973bdfab6.png", "a1h1": "hf_20260620_155434_5a4ced6e-28fd-42ab-97db-b696e79a0747.png", "a1h2": "hf_20260620_155435_264947c2-2892-4131-9b6d-c33cfa370eb2.png", "a2h1": "hf_20260620_155501_8220df7a-d22a-48fc-87bc-e5ba30f5ee03.png", "a2h2": "hf_20260620_155503_8c6b0b00-aae6-4d00-bd42-b98a23d84669.png", "b1h1": "hf_20260620_155505_2736a64e-a1bb-4e60-b9ea-546f305bb965.png", "b1h2": "hf_20260620_155507_31fe0686-d9bf-408e-bc0c-f46beb0e6728.png", "b2h1": "hf_20260620_155509_f5dce10c-883e-4a77-966e-2928a556c90e.png", "c1h1": "hf_20260620_155510_4208d9aa-19b7-483d-b9c0-5ef1271dacb8.png"};
+  var SCENE_CDN='https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/medien/';
+  var SCENE_IMG={"a1l1": "hf_20260620_155348_07247045-0b5c-426f-a1ff-4f2fd4373018.webp", "a1l2": "hf_20260620_155405_1983e5fd-33a0-461c-8fce-7cf99529928c.webp", "a2l1": "hf_20260620_155407_34729899-9009-4b51-a7b6-fa22f3c2c4f2.webp", "a2l2": "hf_20260620_155409_514fed7f-25a8-4afa-a2c1-3e09a39787ef.webp", "b1l1": "hf_20260620_155411_b7351be0-7600-4411-ad55-a7a17156241f.webp", "b1l2": "hf_20260620_155412_4c16e89b-3915-4c1e-beba-3db94df94745.webp", "b2l1": "hf_20260620_155427_81b6c55c-0ee9-43d4-9a28-3b09f9f78494.webp", "b2l2": "hf_20260620_155428_cafe9805-a4b0-45f9-b7f3-0407ea05b7d8.webp", "c1l1": "hf_20260620_155430_4adb1a34-b9c6-43b6-ab06-1f213a16833e.webp", "c1l2": "hf_20260620_155432_98b18d1c-5642-412c-83f7-786973bdfab6.webp", "a1h1": "hf_20260620_155434_5a4ced6e-28fd-42ab-97db-b696e79a0747.webp", "a1h2": "hf_20260620_155435_264947c2-2892-4131-9b6d-c33cfa370eb2.webp", "a2h1": "hf_20260620_155501_8220df7a-d22a-48fc-87bc-e5ba30f5ee03.webp", "a2h2": "hf_20260620_155503_8c6b0b00-aae6-4d00-bd42-b98a23d84669.webp", "b1h1": "hf_20260620_155505_2736a64e-a1bb-4e60-b9ea-546f305bb965.webp", "b1h2": "hf_20260620_155507_31fe0686-d9bf-408e-bc0c-f46beb0e6728.webp", "b2h1": "hf_20260620_155509_f5dce10c-883e-4a77-966e-2928a556c90e.webp", "c1h1": "hf_20260620_155510_4208d9aa-19b7-483d-b9c0-5ef1271dacb8.webp"};
   window.NIVEAUTEST.ITEMS.forEach(function(q){ if(SCENE_IMG[q.id]) q.img = SCENE_CDN + SCENE_IMG[q.id]; });
 })();

@@ -7,7 +7,7 @@
 (function () {
   var D = window.NIVEAUTEST;
   if (!D || !D.ITEMS || !D.AUDIO) return;
-  var CDN = 'https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/';
+  var CDN = 'https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/';
   var IMG = {
     ubahn:     CDN + 'hf_20260621_111452_f49dcf84-b3d6-4938-bce4-9ca9f7351e5e.png',
     arzt:      CDN + 'hf_20260621_111453_63e52fab-65b2-46d4-a440-5bc3c55b0ceb.png',

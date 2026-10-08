@@ -515,7 +515,7 @@
   }
 
   // ---------- Shadowing-Daten (native Audios, aufsteigend A1 -> C1) --------
-  var SHADOW_CDN='https://d8j0ntlcm91z4.cloudfront.net/user_38tIQPWpEsaUmk18tYN8mskaaAF/';
+  var SHADOW_CDN='https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/';
   var SHADOW_ITEMS=[
     {type:'shadow',level:'A1',text:'Guten Morgen! Wie geht es dir heute?',audioUrl:SHADOW_CDN+'hf_20260621_105327_201627b4-0d95-4575-9fab-263b70d5b1d7.mp3',tip:'Freundlich und melodisch sprechen.'},
     {type:'shadow',level:'A1',text:'Ich hätte gern einen Kaffee, bitte.',audioUrl:SHADOW_CDN+'hf_20260621_105329_b71adfc9-726a-45c7-9164-8e1fa702f15e.mp3',tip:'Höflicher Ton – „hätte" mit langem ä.'},
