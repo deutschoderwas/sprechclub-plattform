@@ -103,17 +103,17 @@
          Schilder, Texte"). Auf C1 lasen sie sich wie aus einer anderen
          Pruefung — deshalb hier eigene. */
       module:[ {id:'lesen',n:'Lesen',m:'65',
-                 t:'Vier Teile, 30 Aufgaben: Lueckentext, Sachartikel, Saetze einsetzen, Fachleute zuordnen.'},
+                 t:'Vier Teile, 30 Aufgaben: Lückentext, Sachartikel, Sätze einsetzen, Fachleute zuordnen.'},
                {id:'hoeren',n:'Hören',m:'ca. 40',
-                 t:'Vortrag, Gespraech unter Fachleuten, Radiobeitrag — vieles hoerst du nur einmal.'},
+                 t:'Vortrag, Gespräch unter Fachleuten, Radiobeitrag — vieles hörst du nur einmal.'},
                {id:'schreiben',n:'Schreiben',m:'75',
-                 t:'Ein Text zu einer Grafik und eine formelle Nachricht — gewertet wird auch der Stil.'},
+                 t:'Ein Diskussionsbeitrag im Forum und eine formelle E-Mail — gewertet wird auch der Ton.'},
                {id:'sprechen',n:'Sprechen',m:'ca. 20',
                  t:'Ein Kurzvortrag mit Nachfragen und eine Diskussion, in der du deine Position halten musst.'} ],
       modular:true, geprueft:true,
       hinweis:'Sprechen ca. 20 Minuten zu zweit, 15 Minuten allein — dazu 20 Minuten Vorbereitung. '
-             +'Lesen: 65 Minuten fuer 30 Aufgaben, davon 5 Minuten fuer den Antwortbogen; '
-             +'bestanden ab 18 richtigen Aufgaben.' },
+             +'Lesen: 65 Minuten für 30 Aufgaben, davon 5 für den Antwortbogen; bestanden ab 18 richtigen. '
+             +'Schreiben: 75 Minuten für zwei Texte, bewertet von zwei Prüfenden unabhängig voneinander.' },
 
     { id:'telcmed', name:'telc Medizin', anbieter:'Fachsprachprüfung', niveau:'B2–C1',
       bild:'gesundheit', kurs:'telcmed', fach:true, geprueft:true, dauer:'ca. 2 Std 25 Min',
