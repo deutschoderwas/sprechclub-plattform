@@ -342,10 +342,18 @@
       var st = t.closest('[data-lp-start]');
       if (st) {
         var id = st.getAttribute('data-lp-start');
-        // Die Szene selbst bauen wir als Nächstes. Bis dahin führt der
-        // Knopf dorthin, wo der Dialog heute schon läuft.
+        /* Hier stand ein Rueckfall auf den allgemeinen Amanda-Chat, weil
+           die Szene "als Naechstes" gebaut werden sollte. oeffneSzene und
+           oeffneDialog gibt es aber nirgends — also landeten ALLE 92
+           Szenen-Knoepfe im Textchat, ohne jeden Bezug zur angetippten
+           Szene. Wer "In der Baeckerei" antippte, bekam ein leeres
+           Chatfenster.
+
+           window.lernDialog(id) liegt seit jeher daneben (lernen.js) und
+           erwartet genau diese IDs: data-lp-start ist d.id aus
+           window.DIALOGE, und lernDialog sucht in derselben Liste. */
+        if (typeof window.lernDialog === 'function') { window.lernDialog(id); return; }
         if (typeof window.oeffneSzene === 'function') { window.oeffneSzene(id); return; }
-        if (typeof window.oeffneDialog === 'function') { window.oeffneDialog(id); return; }
         if (typeof window.go === 'function') { window.go('amanda'); return; }
       }
     });

@@ -1776,10 +1776,16 @@ function isActive(){
   const s = (profile && profile.status) || '';
   if (GESPERRT.indexOf(s) >= 0) return false;
   const tier = (profile && profile.tier) || '';
-  if (['community','premium','premium_plus'].indexOf(tier) >= 0 && (s === 'aktiv' || s === '')) return true;
+  /* "pause" gehoert hier dazu. Julia kann den Status im Admin setzen
+     ("⏸️ Pause", mit Datum), und der Stripe-Webhook behandelt ihn als
+     "hat Zugang" — nur diese Funktion kannte ihn nicht. Folge: eine
+     zahlende Premium-Schuelerin in Pause sah ueberall "Such dir ein
+     Stundenpaket aus" und wurde nach 12 Sekunden auf /preise geworfen. */
+  if (['community','premium','premium_plus'].indexOf(tier) >= 0
+      && (s === 'aktiv' || s === '' || s === 'urlaub' || s === 'pause')) return true;
   if (credits > 0 || passActive()) return true;
   if (stats && stats.upcoming && stats.upcoming.length > 0) return true;
-  return s === 'aktiv' || s === 'urlaub';
+  return s === 'aktiv' || s === 'urlaub' || s === 'pause';
 }
 function lockBanner(){
   return `<div class="card" style="border:2px solid #f5b942;background:#FFFFFF;margin-bottom:14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
@@ -4033,7 +4039,7 @@ window.kbOpen=function(id){
   }
   mods=mods.join('');
   document.getElementById('v-kurse').innerHTML=
-    '<button class="kb-back" onclick="go(&#39;lernen&#39;)"><span>←</span> <span data-i18n="kb_back">Zurück zur Bibliothek</span></button>'
+    '<button class="kb-back" onclick="go(&#39;kurse&#39;)"><span>←</span> <span data-i18n="kb_back">Zurück zur Bibliothek</span></button>'
     +'<div class="kb-dhero">'
     +(_dimg?'<img class="dim" src="'+_dimg+'" alt="">':'')
     +'<span class="dovl" style="background:'+(_dimg?(KB_OV[cat.id]||''):cat.g)+'"></span>'

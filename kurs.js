@@ -1640,8 +1640,15 @@
     var tok=null;
     try{ tok=(window.SB&&window.SB.session&&window.SB.session.access_token)||window.__TOKEN__||null; }catch(e){}
     if(tok) return fertig(tok);
-    if(window.supabase && window.supabase.auth && window.supabase.auth.getSession){
-      window.supabase.auth.getSession().then(function(r){
+    /* Hier stand window.supabase — das ist aber die UMD-BIBLIOTHEK, nicht
+       der angemeldete Client. Der heisst window.sb (konto.html). Deshalb
+       kam nie ein Token zurueck, und jede Schuelerin las nach dem
+       Abschicken ihres Textes "Eine Bewertung von mir bekommst du, sobald
+       du angemeldet bist." — auch angemeldet. lernen.js macht es im
+       selben Repo richtig. */
+    var client = window.sb || window.SBCLIENT || window.supabase;
+    if(client && client.auth && client.auth.getSession){
+      client.auth.getSession().then(function(r){
         var t=r&&r.data&&r.data.session&&r.data.session.access_token;
         fertig(t||null);
       }).catch(function(){ fertig(null); });

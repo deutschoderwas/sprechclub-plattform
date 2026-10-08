@@ -197,25 +197,62 @@
   /* ---------- Fortschritt ----------
  — bis die Module echte Inhalte haben, zählt
      der Fortschritt der dahinterliegenden Lektionen. */
+  /* Die Trainingsdateien sind unter 'A1'..'B2' abgelegt. Drei Pruefungen
+     tragen aber einen Bereich als Niveau: DTZ 'A2–B1', Pflege 'B1–B2',
+     telc Medizin 'B2–C1'. Fuer die fand lesenVorhanden('A2–B1') nichts —
+     das komplette, fertige Training war fuer sie unerreichbar, obwohl
+     LESEN_B1 und Co. geladen danebenlagen.
+     Wir nehmen das obere Niveau (darauf zielt die Pruefung) und fallen
+     auf das untere zurueck, wenn es das obere nicht gibt. */
+  function trainingNiveau(p){
+    var roh = String((p && p.niveau) || '').trim();
+    if (!/[–-]/.test(roh)) return roh;
+    var teile = roh.split(/[–-]/).map(function(x){ return x.trim(); });
+    var oben = teile[teile.length - 1], unten = teile[0];
+    var da = function(n){
+      return (window.lesenVorhanden && window.lesenVorhanden(n))
+          || (window.hoerenVorhanden && window.hoerenVorhanden(n))
+          || (window.schreibenVorhanden && window.schreibenVorhanden(n))
+          || (window.sprechenVorhanden && window.sprechenVorhanden(n));
+    };
+    if (da(oben)) return oben;
+    if (da(unten)) return unten;
+    return oben;
+  }
+
   function modulProzent(p, mod){
     try{
       /* Wo es echte Aufgaben gibt, zaehlt das echte Ergebnis.
          Bisher ist das nur Lesen A1 — der Rest faellt auf den
          Fortschritt der dahinterliegenden Lektionen zurueck. */
-      if(mod && mod.id==='lesen' && window.lesenVorhanden && window.lesenVorhanden(p.niveau)){
-        var lp = window.lesenProzent(p.niveau);
+      var nv = trainingNiveau(p);
+      if(mod && mod.id==='lesen' && window.lesenVorhanden && window.lesenVorhanden(nv)){
+        var lp = window.lesenProzent(nv);
         if(lp!=null) return lp;
       }
-      if(mod && mod.id==='hoeren' && window.hoerenVorhanden && window.hoerenVorhanden(p.niveau)){
-        var hp = window.hoerenProzent(p.niveau);
+      if(mod && mod.id==='hoeren' && window.hoerenVorhanden && window.hoerenVorhanden(nv)){
+        var hp = window.hoerenProzent(nv);
         if(hp!=null) return hp;
       }
-      if(mod && mod.id==='schreiben' && window.schreibenVorhanden && window.schreibenVorhanden(p.niveau)){
-        var sp = window.schreibenProzent(p.niveau);
+      if(mod && mod.id==='schreiben' && window.schreibenVorhanden && window.schreibenVorhanden(nv)){
+        var sp = window.schreibenProzent(nv);
         if(sp!=null) return sp;
       }
-      if(p.stufe && window.kursStand){
-        var st=window.kursStand(p.stufe);
+      /* Sprechen fehlte hier als Einziges — window.sprechenProzent gibt es
+         laengst. Folge: Sprechen stand bei B1 und B2 ewig auf 0 %, und
+         "Als Naechstes dran" bewarb es endlos mit "51 Aufgaben warten",
+         auch wenn alle 51 schon gemacht waren. */
+      if(mod && mod.id==='sprechen' && window.sprechenVorhanden && window.sprechenVorhanden(nv)){
+        var gp = window.sprechenProzent(nv);
+        if(gp!=null) return gp;
+      }
+      /* p.stufe haben nur A1 und A2. DTZ, C1, Medizin, Pflege und Buero
+         tragen ihren Kurs in p.kurs — und genau unter diesem Schluessel
+         speichert lektion.html den Fortschritt. Ohne den Rueckfall standen
+         fuenf von neun Pruefungsseiten dauerhaft auf 0 %. */
+      var kursSchluessel = p.stufe || p.kurs;
+      if(kursSchluessel && window.kursStand){
+        var st=window.kursStand(kursSchluessel);
         if(st) return st.prozent;
       }
     }catch(e){}
@@ -242,28 +279,30 @@
   }
 
   function trainingVon(p, m){
-    if(m.id==='lesen' && window.lesenVorhanden && window.lesenVorhanden(p.niveau)){
-      return { klick:"lesenStart('"+E(p.niveau)+"')", knopf:'Lesen trainieren',
-               anzahl:aufgabenZahl((window.lesenDaten && window.lesenDaten(p.niveau)) || window.LESEN_A1),
+    if(m.id==='lesen' && window.lesenVorhanden && window.lesenVorhanden(trainingNiveau(p))){
+      return { klick:"lesenStart('"+E(trainingNiveau(p))+"')", knopf:'Lesen trainieren',
+               anzahl:aufgabenZahl((window.lesenDaten && window.lesenDaten(trainingNiveau(p))) || window.LESEN_A1),
                was:'Vier Stufen: erst der Wortschatz, dann die Strategie, '
                  + 'dann die Aufgabentypen, zuletzt die ganze Prüfung mit Uhr.' };
     }
-    if(m.id==='hoeren' && window.hoerenVorhanden && window.hoerenVorhanden(p.niveau)){
-      return { klick:"hoerenStart('"+E(p.niveau)+"')", knopf:'Hören trainieren',
-               anzahl:aufgabenZahl((window.hoerenDaten && window.hoerenDaten(p.niveau)) || window.HOEREN_A1),
+    if(m.id==='hoeren' && window.hoerenVorhanden && window.hoerenVorhanden(trainingNiveau(p))){
+      return { klick:"hoerenStart('"+E(trainingNiveau(p))+"')", knopf:'Hören trainieren',
+               anzahl:aufgabenZahl((window.hoerenDaten && window.hoerenDaten(trainingNiveau(p))) || window.HOEREN_A1),
                was:'Vier Stufen: erst Zahlen und Zeiten, dann die Signalwörter, '
                  + 'dann Gespräche, Durchsagen und Ansagen, zuletzt die ganze Prüfung.' };
     }
-    if(m.id==='sprechen' && window.sprechenVorhanden && window.sprechenVorhanden(p.niveau)){
-      return { klick:"sprechenStart('"+E(p.niveau)+"')", knopf:'Sprechen trainieren',
-               anzahl:aufgabenZahl((window.sprechenDaten && window.sprechenDaten(p.niveau)) || window.SPRECHEN_A1),
+    if(m.id==='sprechen' && window.sprechenVorhanden && window.sprechenVorhanden(trainingNiveau(p))){
+      return { klick:"sprechenStart('"+E(trainingNiveau(p))+"')", knopf:'Sprechen trainieren',
+               anzahl:aufgabenZahl((window.sprechenDaten && window.sprechenDaten(trainingNiveau(p))) || window.SPRECHEN_A1),
                was:'Vier Stufen: erst die Sätze über dich, dann Fragen und Bitten bauen, '
                  + 'dann die echten Prüfungskarten mit Aufnahme und Musterlösung, '
                  + 'zuletzt alle drei Teile mit Uhr.' };
     }
-    if(m.id==='schreiben' && window.schreibenVorhanden && window.schreibenVorhanden(p.niveau)){
-      return { klick:"schreibenStart('"+E(p.niveau)+"')", knopf:'Schreiben trainieren',
-               anzahl:aufgabenZahl(window.SCHREIBEN_A1),
+    if(m.id==='schreiben' && window.schreibenVorhanden && window.schreibenVorhanden(trainingNiveau(p))){
+      return { klick:"schreibenStart('"+E(trainingNiveau(p))+"')", knopf:'Schreiben trainieren',
+               /* Stand fest auf SCHREIBEN_A1: A2, B1 und B2 zeigten alle
+                  "51 Aufgaben" statt 54, 60 und 60. */
+               anzahl:aufgabenZahl((window.schreibenDaten && window.schreibenDaten(trainingNiveau(p))) || window.SCHREIBEN_A1),
                was:'Vier Stufen: erst die Wörter im Formular, dann die Bausteine einer '
                  + 'Mitteilung, dann echte Formulare und Nachrichten mit Korrektur, '
                  + 'zuletzt beides zusammen mit Uhr.' };
@@ -428,8 +467,17 @@
       var da = p.muster && window.PRUEFUNG && window.PRUEFUNG[p.muster];
       return { text: da ? 'bereit zum Ansehen' : 'in Vorbereitung', leer:!da };
     }
-    if(b.id==='material') return { text:'Lernbereich & Vokabeln' };
+    /* material war der einzige Bereich ohne leer-Flag — die Schrittleiste
+       zeigte ihn deshalb als erledigt, obwohl dort fuer alle neun
+       Pruefungen derselbe Platzhaltersatz steht. */
+    if(b.id==='material') return { text:'Wortschatz & Grammatik', leer:true };
     if(b.id==='video')    return { text:'in Vorbereitung', leer:true };
+    /* Das Bildschirmtraining ist fertig und zaehlt mit — es fiel nur in
+       den Standardzweig und blieb auch nach 100 % grau. */
+    if(b.id==='bildschirm' && window.bildschirmProzent){
+      var bp = window.bildschirmProzent();
+      if(bp!=null) return { text: bp>0 ? bp+' % geschafft' : 'bereit zum Üben', bar:bp, leer:false };
+    }
     return { text:'noch kein Ergebnis', leer:true };
   }
 
