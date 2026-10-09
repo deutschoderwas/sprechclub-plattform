@@ -1,0 +1,49 @@
+-- ============================================================
+-- 2026-10-09  Kurs "Alltag & Integration" mit Inhalt gefuellt
+--
+-- Vorher: 6 Module, 17 Lektionen — aber jede Lektion hatte nur
+-- 150 bis 175 Zeichen Inhalt. Das war der Lehrplan, nicht der
+-- Unterricht: ein Kann-Ziel, ein Grammatikthema, ein Wortschatz-
+-- stichwort. Kein Video, kein Dialog, keine Uebung.
+-- Zusammen mit dem kaputten Start-Knopf (siehe Commit vom 08.10.)
+-- hiess das: die Kursbibliothek war eine leere Huelle.
+--
+-- Jetzt: alle 17 Lektionen ausgeschrieben, zusammen rund 114.000
+-- Zeichen. Jede Lektion nach demselben Aufbau:
+--   Dein Ziel · Die Situation · Der Dialog · Wortschatz (mit Artikel)
+--   Grammatik im Fokus · Tipp/Achtung · Uebungen mit Loesung zum
+--   Aufklappen · Deine Aufgabe (immer etwas zum Lautsprechen)
+--
+-- Die Texte liegen in public.course_lessons.content als HTML und
+-- benutzen die Bausteine, die am 08.10. in kurs.html dazukamen:
+--   .ziel .dialog .tipp .achtung .uebung  und <details> fuer Loesungen
+-- ============================================================
+
+-- Geschrieben hat sie die Edge Function "lektion-text" (inzwischen
+-- stillgelegt, antwortet nur noch mit 410). Ueber die normale
+-- SQL-Verbindung brachen Texte ab 6 kB staendig im Timeout ab.
+
+-- Stand pruefen:
+--   select m.sort_order as modul, l.sort_order as nr, l.title,
+--          length(l.content) as zeichen
+--   from public.course_lessons l
+--   join public.course_modules m on m.id = l.module_id
+--   order by m.sort_order, l.sort_order;
+--   -- erwartet: 17 Zeilen, jede zwischen 3.600 und 7.700 Zeichen
+
+-- Inhaltlicher Ueberblick:
+--   Modul 0  Start & sicher sprechen      Kursaufbau · 7 Rettungssaetze, Buchstabieren
+--   Modul 1  Behoerden & Aemter           Termin am Telefon · Schalter · Amtsbrief in einer Minute
+--   Modul 2  Arzt & Apotheke              Termin · Beschwerden beschreiben · Apotheke
+--   Modul 3  Wohnen                       Besichtigung · Mietvertrag · Maengel & Nachbarn
+--   Modul 4  Einkaufen & Dienstleistungen Supermarkt · Umtausch vs. Reklamation · Vertrag & Kuendigung
+--   Modul 5  Souveraen kommunizieren      Telefonieren · Small Talk · Widersprechen
+
+-- NOCH OFFEN fuer diesen Kurs:
+--   - kein einziges Video (course_lessons.video_url ist ueberall leer).
+--     Die Lektionen funktionieren ohne, aber ein Dialog-Video pro
+--     Lektion waere der naechste grosse Sprung.
+--   - keine Arbeitsblaetter (attachment_url ebenfalls leer).
+--   - is_free_preview steht nur bei den zwei Lektionen in Modul 0.
+--     Ueberlegen, ob eine weitere Lektion als Schaufenster offen sein
+--     sollte — Modul 1, Lektion 1 waere ein guter Kandidat.
