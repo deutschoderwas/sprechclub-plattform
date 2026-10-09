@@ -29,7 +29,17 @@
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 
-const TIERS = ['community', 'premium', 'premium_plus'];
+const TIERS = ['community', 'premium', 'premiumplus', 'premium_plus'];
+// 'premiumplus' heisst die Stufe im Checkout, 'premium_plus' stand an
+// aelteren Stellen. Beide pruefen, sonst faellt der erste Premium-Plus-
+// Gast durch den naechtlichen Abgleich und behaelt den Zugang ewig.
+
+// Wie lange darf ein alter Schueler ohne Guthaben noch im aktiven
+// Bestand stehen, bevor er ins Archiv rutscht? Der Zugang ist sofort zu
+// (das entscheidet has_full_access in der Datenbank) — diese Frist
+// betrifft nur das Verschieben ins Archiv, damit niemand ueber Nacht
+// aus Julias Listen verschwindet, nur weil gerade die Stunden alle sind.
+const ARCHIV_NACH_TAGEN = 14;
 const LAEUFT = ['active', 'trialing', 'past_due'];   // past_due: Zahlung hakt, Abo lebt noch
 
 export default async function handler(req, res) {
@@ -116,14 +126,63 @@ export default async function handler(req, res) {
     }
   }
 
+  /* --- 4b. Alte Schueler: Zugang nur mit Guthaben
+     Die alten Schueler haben kein Abo, sie kaufen Stundenpakete. Fuer sie
+     gilt: kein Guthaben, kein Zugang — und nach einer Schonfrist ab ins
+     Archiv. Den Zugang selbst sperrt schon has_full_access(); hier geht es
+     nur darum, dass der Bestand ehrlich bleibt und niemand als aktives
+     Mitglied gezaehlt wird, der seit Wochen nichts mehr hat.
+     Ausgenommen: Team, wer noch einen bezahlten Zeitraum (pass_until) hat,
+     und wer noch eine gebuchte Stunde vor sich hat. */
+  bericht.archiviert = [];
+  try {
+    const grenze = new Date(Date.now() - ARCHIV_NACH_TAGEN * 86400000).toISOString();
+    const { data: alte } = await sb.from('profiles')
+      .select('id, name, email, credits, pass_until, is_admin, is_teacher, status, tier')
+      .is('tier', null).eq('status', 'aktiv');
+
+    for (const a of (alte || [])) {
+      if (a.is_admin || a.is_teacher) continue;
+      if ((a.credits || 0) > 0) continue;
+      if (a.pass_until && new Date(a.pass_until) > new Date()) continue;
+
+      const { data: offen } = await sb.from('bookings')
+        .select('class_id, classes!inner(starts_at)')
+        .eq('user_id', a.id).eq('status', 'booked')
+        .gt('classes.starts_at', new Date().toISOString()).limit(1);
+      if (offen && offen.length) continue;
+
+      // Seit wann steht das Guthaben auf null? Letzte Bewegung im credit_log.
+      const { data: letzte } = await sb.from('credit_log')
+        .select('created_at').eq('user_id', a.id)
+        .order('created_at', { ascending: false }).limit(1);
+      const seit = (letzte && letzte[0] && letzte[0].created_at) || null;
+      if (seit && seit > grenze) continue;   // Schonfrist laeuft noch
+
+      if (!trocken) {
+        await sb.from('profiles').update({ status: 'archiv' }).eq('id', a.id);
+        await sb.from('zugang_log').insert({
+          user_id: a.id, email: a.email, aktion: 'archiviert',
+          grund: 'alter Schueler ohne Guthaben seit ' + (seit ? seit.slice(0, 10) : 'unbekannt'),
+          vorher: { status: 'aktiv', credits: a.credits || 0 },
+          nachher: { status: 'archiv', quelle: 'pruefe-mitgliedschaften' }
+        }).then(() => {}, () => {});   // Protokoll darf den Lauf nicht stoppen
+      }
+      bericht.archiviert.push({ name: a.name || a.email, email: a.email, letzte_bewegung: seit ? seit.slice(0, 10) : '—' });
+    }
+  } catch (e) {
+    bericht.fehler.push({ name: 'alte Schueler', fehler: String((e && e.message) || e) });
+  }
+
   // --- 5. Julia Bescheid geben, wenn etwas passiert ist
-  const wichtig = bericht.gesperrt.length || bericht.entsperrt.length || bericht.fehler.length;
+  const wichtig = bericht.gesperrt.length || bericht.entsperrt.length || bericht.archiviert.length || bericht.fehler.length;
   if (wichtig && !trocken && process.env.BREVO_API_KEY) {
     const zeile = (x) => `<li>${x.name}${x.email ? ' (' + x.email + ')' : ''}${x.letztes_abo ? ' — Abo: ' + x.letztes_abo : ''}${x.vorher ? ' — war: ' + x.vorher : ''}</li>`;
     const html =
       `<p>Der nächtliche Abgleich mit Stripe hat etwas gefunden.</p>` +
       (bericht.gesperrt.length ? `<p><b>Zugang geschlossen (kein laufendes Abo mehr):</b></p><ul>${bericht.gesperrt.map(zeile).join('')}</ul>` : '') +
       (bericht.entsperrt.length ? `<p><b>Wieder geöffnet (Abo läuft doch):</b></p><ul>${bericht.entsperrt.map(zeile).join('')}</ul>` : '') +
+      (bericht.archiviert.length ? `<p><b>Ins Archiv verschoben (alter Schüler ohne Guthaben):</b></p><ul>${bericht.archiviert.map(x => `<li>${x.name} (${x.email}) — letzte Guthaben-Bewegung: ${x.letzte_bewegung}</li>`).join('')}</ul>` : '') +
       (bericht.ohne_stripe.length ? `<p><b>Ohne Stripe-Kunde — bitte selbst ansehen:</b></p><ul>${bericht.ohne_stripe.map(zeile).join('')}</ul>` : '') +
       (bericht.fehler.length ? `<p><b>Fehler beim Prüfen:</b></p><ul>${bericht.fehler.map(x => `<li>${x.name}: ${x.fehler}</li>`).join('')}</ul>` : '') +
       `<p style="color:#666;font-size:13px">${bericht.geprueft} Mitgliedschaften geprüft.</p>`;
@@ -134,7 +193,7 @@ export default async function handler(req, res) {
         body: JSON.stringify({
           sender: { name: 'deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
           to: [{ email: process.env.ADMIN_EMAIL || 'deutschoderwas@gmail.com', name: 'Julia' }],
-          subject: 'Mitgliedschaften: ' + bericht.gesperrt.length + ' geschlossen, ' + bericht.entsperrt.length + ' geöffnet',
+          subject: 'Mitgliedschaften: ' + bericht.gesperrt.length + ' geschlossen, ' + bericht.entsperrt.length + ' geöffnet, ' + bericht.archiviert.length + ' archiviert',
           htmlContent: html
         })
       });

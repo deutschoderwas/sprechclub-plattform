@@ -1,0 +1,78 @@
+-- ============================================================
+-- 2026-10-09  Zugang nur noch mit Grund
+--
+-- Was kaputt war: has_full_access() hatte ganz vorn den Zweig
+--     coalesce(p.status,'') in ('aktiv','urlaub')
+-- Dieser eine Zweig hat alle anderen Bedingungen wertlos gemacht.
+-- Wer aus irgendeinem Grund auf 'aktiv' stand, hatte vollen Zugang —
+-- ohne laufendes Abo, ohne Guthaben, ohne alles. Die Pruefungen
+-- darunter (tier, credits, pass_until) wurden nie erreicht.
+--
+-- Praktisch hiess das: drei alte Schueler ohne jedes Guthaben hatten
+-- weiter Zugang zur ganzen Plattform, und jeder gekuendigte Account,
+-- den der Stripe-Abgleich aus irgendeinem Grund nicht erwischt,
+-- haette ihn behalten.
+-- ============================================================
+
+-- 1) Neue Regel: jeder Zugang braucht einen Grund
+--    Team | laufende Mitgliedschaft | Guthaben | bezahlter Zeitraum |
+--    noch anstehende gebuchte Stunde
+--    (Funktionsdefinition steht in der Datenbank, hier nur die Regel.)
+--
+--    Wirkung am 09.10.2026 geprueft: 78 Profile mit Zugang vorher,
+--    75 nachher. Es verlieren genau drei den Zugang, alle drei alte
+--    Schueler mit 0 Guthaben, ohne bezahlten Zeitraum und ohne
+--    anstehende Stunde:
+--      hetavakoli68@gmail.com     (Kim)
+--      ermolaeva.brixen@gmail.com (Ermolaeva Irina)
+--      kasia507@wp.pl             (Kasia)
+--    Kaufen sie Stunden, sind sie sofort wieder drin — Guthaben > 0
+--    oeffnet die Tuer ohne weiteres Zutun.
+
+-- 2) book_class(): zwei Korrekturen
+--    - 'premiumplus' ergaenzt. Im Checkout heisst die Stufe so, in der
+--      Funktion stand nur 'premium_plus'. Der erste Premium-Plus-Gast
+--      waere nicht erkannt worden und haette trotz Abo Guthaben
+--      gebraucht. (Betrifft noch niemanden, Premium Plus startet
+--      01.02.2027 — aber genau solche Dinge faellt einem spaeter auf
+--      die Fuesse.)
+--    - coalesce(status,'aktiv') ist weg: ein leerer Status galt damit
+--      als aktiv. Jetzt muss 'aktiv' wirklich dastehen.
+--    Damit gilt fuer die Sprechclub-Buchung: ab 01.11.2026 buchen
+--    Premium und Premium Plus ohne Guthaben, aber nur solange der
+--    Status 'aktiv' ist. Wer kuendigt, wird vom Webhook bzw. vom
+--    naechtlichen Stripe-Abgleich auf 'inaktiv' gesetzt und kann ab
+--    dann nicht mehr buchen. Alle anderen brauchen Guthaben.
+
+-- 3) Alte Schueler wandern automatisch ins Archiv
+--    api/pruefe-mitgliedschaften.js (laeuft jede Nacht ueber
+--    /api/daily um 6 Uhr) hat einen zweiten Teil bekommen:
+--    tier ist null, Status 'aktiv', Guthaben 0, kein laufender
+--    pass_until, keine anstehende gebuchte Stunde, kein Team
+--    -> Status 'archiv', Eintrag in zugang_log, Zeile in Julias
+--       naechtlicher Mail.
+--    Schonfrist ARCHIV_NACH_TAGEN = 14: der Zugang ist sofort zu
+--    (das macht has_full_access), ins Archiv geht es erst 14 Tage
+--    nach der letzten Guthaben-Bewegung. So verschwindet niemand ueber
+--    Nacht aus den Listen, nur weil gerade die Stunden alle sind.
+--    Auf 0 setzen, wenn es sofort passieren soll.
+
+-- 4) api/abo-abgleich.js wurde nach _to_delete verschoben.
+--    Der Job war nie verdrahtet — weder in daily.js noch in pg_cron —
+--    und machte dasselbe wie pruefe-mitgliedschaften.js, das wirklich
+--    laeuft. Zwei naechtliche Jobs, die beide an Status und Guthaben
+--    schreiben, sind eine schlechte Idee.
+
+-- Nachsehen, wer gerade Zugang hat und warum:
+--   select coalesce(tier,'(alter Schueler)') as tier, status,
+--          count(*) as anzahl,
+--          count(*) filter (where credits > 0)            as mit_guthaben,
+--          count(*) filter (where pass_until > now())     as mit_zeitraum
+--   from public.profiles
+--   where coalesce(status,'') not in
+--         ('beendet','archiv','inaktiv','geloescht','registriert','probeschuler')
+--   group by 1,2 order by 3 desc;
+
+-- Nachsehen, wen die Automatik geschlossen hat:
+--   select created_at, email, aktion, grund from public.zugang_log
+--   order by created_at desc limit 50;
