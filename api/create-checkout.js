@@ -109,6 +109,97 @@ function mindestBis(plan){
   return d.toISOString().slice(0, 10);
 }
 
+/* ------------------------------------------------------------------
+   Kurse aus der Kursbibliothek
+
+   kurse.html und kurs.html schicken seit jeher { courseId, userId,
+   email }. Gelesen wurde hier aber nur passId/packageId — jede dieser
+   Anfragen lief in "unknown_plan" und kam als HTTP 400 zurueck. Die
+   Seite zeigte dann nur "Konnte den Kurs nicht starten."
+
+   Folge: Es konnte nie jemand einen Kurs starten. Die Tabelle
+   enrollments war am 09.10.2026 komplett leer, und von den 17
+   Lektionen in "Alltag & Integration" waren fuer alle ausser den
+   zwei Gratis-Vorschauen gesperrt — auch fuer zahlende Mitglieder.
+
+   Regeln hier:
+   - Gratiskurs (price_cents 0)  -> sofort freischalten
+   - Mitglied mit gueltigem Zugang -> sofort freischalten, denn die
+     Kursbibliothek ist ausdruecklich Teil von Community und Premium
+     ("Die ganze Lernplattform: Kursbibliothek A1-C1 ...")
+   - sonst -> Stripe-Einmalkauf; freigeschaltet wird im Webhook
+------------------------------------------------------------------ */
+const ZUGANG_STATUS = ['aktiv', 'urlaub', 'pause'];
+const ZUGANG_TIER = ['community', 'premium', 'premiumplus'];
+
+async function kursCheckout(req, res, stripe, site) {
+  const { courseId, userId, email } = (req.body || {});
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY)
+    return res.status(500).json({ error: 'supabase_not_configured' });
+  if (!userId) return res.status(401).json({ error: 'nicht_angemeldet' });
+
+  const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+
+  const { data: kurs, error: kursFehler } = await sb
+    .from('courses')
+    .select('id, slug, title, price_cents, is_published, thumbnail_url')
+    .eq('id', courseId)
+    .maybeSingle();
+  if (kursFehler) return res.status(500).json({ error: 'kurs_lesen_fehlgeschlagen' });
+  if (!kurs || !kurs.is_published) return res.status(404).json({ error: 'kurs_nicht_gefunden' });
+
+  async function freischalten(quelle, sitzung) {
+    const { error } = await sb.rpc('grant_enrollment', {
+      p_user_id: userId, p_course_id: kurs.id, p_source: quelle, p_session: sitzung || null,
+    });
+    if (error) throw new Error('grant_enrollment: ' + error.message);
+  }
+
+  const preis = Number(kurs.price_cents || 0);
+  if (preis <= 0) {
+    await freischalten('gratis', null);
+    return res.status(200).json({ enrolled: true, slug: kurs.slug });
+  }
+
+  const { data: profil } = await sb
+    .from('profiles')
+    .select('status, tier, is_admin, is_teacher, pass_until, credits')
+    .eq('id', userId)
+    .maybeSingle();
+  const mitglied = !!profil && (
+    profil.is_admin || profil.is_teacher ||
+    (ZUGANG_TIER.includes(profil.tier || '') && ZUGANG_STATUS.includes(profil.status || '')) ||
+    (profil.pass_until && new Date(profil.pass_until) > new Date())
+  );
+  if (mitglied) {
+    await freischalten('mitgliedschaft', null);
+    return res.status(200).json({ enrolled: true, slug: kurs.slug, grund: 'mitgliedschaft' });
+  }
+
+  const sitzung = await stripe.checkout.sessions.create({
+    mode: 'payment',
+    customer_email: email || undefined,
+    client_reference_id: userId,
+    allow_promotion_codes: true,
+    locale: 'auto',
+    line_items: [{
+      quantity: 1,
+      price_data: {
+        currency: 'eur',
+        unit_amount: preis,
+        product_data: {
+          name: kurs.title,
+          images: kurs.thumbnail_url ? [kurs.thumbnail_url] : undefined,
+        },
+      },
+    }],
+    metadata: { kurs_id: kurs.id, kurs_slug: kurs.slug, user_id: userId },
+    success_url: `${site}/kurs.html?kurs=${encodeURIComponent(kurs.slug)}&kauf=ok`,
+    cancel_url: `${site}/kurse.html`,
+  });
+  return res.status(200).json({ url: sitzung.url });
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'method_not_allowed' });
   if (!process.env.STRIPE_SECRET_KEY) return res.status(500).json({ error: 'stripe_not_configured' });
@@ -125,6 +216,15 @@ export default async function handler(req, res) {
     }
   }
   const site = process.env.SITE_URL || 'https://www.deutschoderwas-club.de';
+
+  // Kursbibliothek: eigener Weg, eigene Preise aus der Datenbank.
+  if (req.body && req.body.courseId) {
+    try { return await kursCheckout(req, res, stripe, site); }
+    catch (e) {
+      console.error('kursCheckout', e);
+      return res.status(500).json({ error: 'kurs_checkout_fehlgeschlagen' });
+    }
+  }
 
   try {
     const { packageId, passId, userId, email, embedded, trial } = (req.body || {});

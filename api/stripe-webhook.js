@@ -685,6 +685,26 @@ export default async function handler(req, res) {
       const s = event.data.object;
       let userId = s.client_reference_id || s.metadata?.userId;
 
+      /* Kurskauf aus der Kursbibliothek. Die Kasse dafuer legt
+         api/create-checkout.js mit metadata.kurs_id an. Gratiskurse und
+         Mitglieder werden dort direkt freigeschaltet und kommen hier
+         gar nicht an — hier landet nur der echte Einmalkauf. */
+      if (s.metadata?.kurs_id) {
+        const kursUser = userId || s.metadata?.user_id;
+        if (!kursUser) {
+          console.error('Kurskauf ohne Nutzer', s.id, s.metadata?.kurs_slug);
+          return res.status(200).json({ received: true, kurs: 'ohne_nutzer' });
+        }
+        const { error } = await sb.rpc('grant_enrollment', {
+          p_user_id: kursUser,
+          p_course_id: s.metadata.kurs_id,
+          p_source: 'kauf',
+          p_session: s.id,
+        });
+        if (error) console.error('grant_enrollment', error.message);
+        return res.status(200).json({ received: true, kurs: s.metadata.kurs_slug || s.metadata.kurs_id });
+      }
+
       // Amanda Plus (über Stripe-Payment-Link, kein Club-Konto): Zugangs-Mail senden & fertig.
       const isAmanda = s.metadata?.product === 'amanda'
         || (!userId && !s.metadata?.plan && (s.amount_total === 999 || s.amount_subtotal === 999));
