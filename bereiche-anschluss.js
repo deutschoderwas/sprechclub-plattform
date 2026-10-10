@@ -226,6 +226,31 @@
   };
   Object.keys(AUSSPRACHE2).forEach(function (id) { dazu(id, 'hilf', AUSSPRACHE2[id]); });
 
+  /* Die neun Themen aus aussprache-plus.js — B1, B2, C1.
+     Ohne diesen Block stehen sie nur im Fertigkeiten-Raum und
+     tauchen in keinem Bereich auf. */
+  var AUSSPRACHE3 = {
+    'buero':         ['pausen-b1', 'rueckfrage-b1', 'endsilben-b2', 'sprechtempo-b2'],
+    'amt':           ['pausen-b1', 'rueckfrage-b1', 'ng-nk-b1', 'sprechtempo-b2', 'register-c1'],
+    'arzt':          ['rueckfrage-b1', 'sprechtempo-b2'],
+    'sprachkurs':    ['pausen-b1', 'rueckfrage-b1', 'ch-ks-b2'],
+    'ankommen':      ['rueckfrage-b1'],
+    'bank':          ['ng-nk-b1', 'sprechtempo-b2'],
+    'wohnen':        ['ng-nk-b1'],
+    'it':            ['endsilben-b2'],
+    'ingenieur':     ['endsilben-b2'],
+    'medien':        ['endsilben-b2', 'ironie-c1', 'varianten-c1'],
+    'rechte':        ['endsilben-b2', 'register-c1'],
+    'supermarkt':    ['ch-ks-b2'],
+    'vertraege':     ['register-c1'],
+    'team':          ['register-c1', 'ironie-c1'],
+    'heikel':        ['pausen-b1', 'register-c1', 'ironie-c1'],
+    'freunde':       ['ironie-c1'],
+    'reise':         ['varianten-c1'],
+    'unterwegs':     ['varianten-c1']
+  };
+  Object.keys(AUSSPRACHE3).forEach(function (id) { dazu(id, 'hilf', AUSSPRACHE3[id]); });
+
 
   /* ---------- 8. Lesen und Schreiben an den Ort haengen ----------
      20 Themen, die es laengst gibt und die bisher nur im
