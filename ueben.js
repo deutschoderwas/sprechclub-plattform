@@ -205,13 +205,19 @@
   }catch(e){} }
   window.ubSpeakSlow=speakSlow;
   /* Zwei kleine Knoepfe: normal und langsam. Fuer jeden Satz, den man hoeren koennen sollte. */
+  /* Text fuer ein onclick-Attribut entschaerfen: Anfuehrungszeichen und
+     Zeilenumbrueche wuerden es zerreissen. */
+  function vorleseText(text){
+    var t=String(text||'').replace(/<[^>]+>/g,'').replace(/_{2,}/g,' … ').replace(/\s+/g,' ').trim();
+    return t.replace(/[„“”"]/g,'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/[\r\n]+/g,' ');
+  }
   function tonKnoepfe(text){
     if(!text) return '';
     var t=String(text).replace(/<[^>]+>/g,'').replace(/_{2,}/g,' … ').replace(/\s+/g,' ').trim();
     if(!t) return '';
     /* Der Text landet in einem onclick-Attribut: Anfuehrungszeichen und
        Zeilenumbrueche wuerden es zerreissen, also vorher entschaerfen. */
-    var q=t.replace(/[„“”"]/g,'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/[\r\n]+/g,' ');
+    var q=vorleseText(t);
     return '<div class="ub-ton">'+
       '<button class="ub-play ub-ton-b" title="Vorlesen" onclick="ubSpeak(\''+q+'\')">🔊</button>'+
       '<button class="ub-play ub-ton-b" title="Langsam vorlesen" onclick="ubSpeakSlow(\''+q+'\')">🐢</button>'+
@@ -252,7 +258,14 @@
     }).catch(function(){ alert('Bitte erlaube den Mikrofon-Zugriff, um dich aufzunehmen.'); });
   };
   function shadowCmp(){ var c=document.getElementById('ubCmp'); if(!c||!S)return; var e=S.items[S.idx];
-    c.innerHTML='<div class="ub-cmp"><button class="ub-cmp-btn" onclick="ubPlayUrl(\''+E(e.audioUrl)+'\',this)">🔊 Original</button>'+
+    /* Nicht jeder Shadowing-Satz hat eine Aufnahme. Ohne audioUrl stand
+       hier ein Knopf „Original", der auf undefined zeigte und nichts tat.
+       Dann liest stattdessen die Stimme des Geraets vor — dieselbe
+       Loesung, die der Satz oben im Bild auch schon benutzt. */
+    var orig = e.audioUrl
+      ? '<button class="ub-cmp-btn" onclick="ubPlayUrl(\''+E(e.audioUrl)+'\',this)">🔊 Original</button>'
+      : '<button class="ub-cmp-btn" onclick="ubSpeak(\''+vorleseText(e.text||e.word||'')+'\')">🔊 Vorlesen</button>';
+    c.innerHTML='<div class="ub-cmp">'+orig+
       '<button class="ub-cmp-btn mine" onclick="ubPlayMine(this)">🎧 Deine Aufnahme</button></div>'+
       '<div class="ub-tip">Klingt es ähnlich? Wiederhol ruhig ein paar Mal – dann unten auf „Fertig".</div>'; }
 
@@ -1243,13 +1256,17 @@
          shuf(e.options.map(function(o,k){return k;})).map(function(k){ return '<button class="ub-opt" data-k="'+k+'" onclick="ubChoose('+k+')">'+E(e.options[k])+'</button>'; }).join('')+'</div>';
     } else if(e.type==='shadow'){
       h+='<div class="ub-q" style="text-align:center">🗣️ Shadowing – hör zu &amp; sprich nach</div>';
-      h+='<button class="ub-play" onclick="ubPlayUrl(\''+E(e.audioUrl)+'\',this)">▶</button>';
+      /* Mit Aufnahme der ▶-Knopf, ohne Aufnahme die Stimme des Geraets —
+         sonst stand hier ein Knopf, der auf undefined zeigte. */
+      if(e.audioUrl){ h+='<button class="ub-play" onclick="ubPlayUrl(\''+E(e.audioUrl)+'\',this)">▶</button>'; }
+      else { h+=tonKnoepfe(e.text); }
       h+='<div class="ub-word" style="font-size:22px;line-height:1.32">'+E(e.text)+'</div>';
       if(e.tip) h+='<div class="ub-tip">💡 '+E(e.tip)+'</div>';
       h+='<div style="text-align:center;margin-top:6px"><button class="ub-recbtn" id="ubRecBtn" onclick="ubRecToggle()">🎙️ Aufnehmen</button></div><div id="ubCmp"></div>';
       h+=micHtml(e.text);
       btn.disabled=false; btn.textContent='Fertig 👍';
-      setTimeout(function(){ window.ubPlayUrl(e.audioUrl, document.querySelector('#ubBody .ub-play')); },300);
+      if(e.audioUrl){ setTimeout(function(){ window.ubPlayUrl(e.audioUrl, document.querySelector('#ubBody .ub-play')); },300); }
+      else { setTimeout(function(){ speak(e.text); },300); }
     }
     h+='<div class="ub-fb" id="ubFb"></div>';
     /* Kommt die Aufgabe aus einem früheren Thema, steht das dabei —
