@@ -89,7 +89,10 @@
     ['funktionsverbgefuege', ['nominalstil', 'praepositionen-gehoben'], 'in Betracht ziehen, zur Verfügung stellen — die Sprache der Ämter und Verträge.'],
     ['gerundivum', ['partizipialattribut', 'passiv-ersatz'], 'der zu prüfende Antrag — vier Wörter statt acht, und es steht in jedem Bescheid.'],
     ['uneingeleitete-nebensaetze', ['konjunktiv2-vergangenheit'], 'Sollten Sie Fragen haben — der Bedingungssatz ohne wenn, mit dem Verb vorn.'],
-    ['korrelate', ['verben-mit-praeposition'], 'Ich freue mich darauf, dass — das kleine Wort, das dem Nebensatz den Platz freihält.']
+    ['korrelate', ['verben-mit-praeposition'], 'Ich freue mich darauf, dass — das kleine Wort, das dem Nebensatz den Platz freihält.'],
+    ['partikeln-c1', ['modalpartikeln'], 'wohl, durchaus, ohnehin, allerdings — dieselbe Aussage, eine andere Haltung.'],
+    ['attribute-umformen-c1', ['partizipialattribut', 'gerundivum'], 'Relativsatz zu Attribut und zurück — die Umformung, die jede C1-Pruefung verlangt.'],
+    ['feine-konnektoren-c1', ['konnektoren', 'zweiteilige-konnektoren'], 'es sei denn, zumal, geschweige denn, sofern — Verbindungen, die eine Bedingung oder Steigerung mittragen.']
   ];
 
   var NR = {}, INFO = {};
@@ -154,7 +157,10 @@
     'funktionsverbgefuege': 'Funktionsverbgefüge',
     'gerundivum': 'Partizip mit zu',
     'uneingeleitete-nebensaetze': 'Nebensätze ohne wenn',
-    'korrelate': 'Korrelate'
+    'korrelate': 'Korrelate',
+    'partikeln-c1': 'Partikeln mit Haltung',
+    'attribute-umformen-c1': 'Attribute umformen',
+    'feine-konnektoren-c1': 'feine Konnektoren'
   };
   function titelSammeln() {
     if (!window.UEBUNGEN || !window.UEBUNGEN.skills) return;
