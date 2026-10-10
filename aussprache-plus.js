@@ -66,9 +66,9 @@
     { type:'gap', text:'Bei einer Aufzählung bleibt die Stimme oben und sinkt erst beim ___ Glied.', answer:'letzten', alts:['letzten','letzte'], explain:'Brot, Milch, Butter und Eier ↘. Das Absinken ist das Zeichen: Jetzt ist die Liste zu Ende.' },
     { type:'gap', text:'Der Einschub zwischen zwei Kommas wird ___ gesprochen.', answer:'leiser', alts:['leiser','leise','flacher'], explain:'Er ist eine Nebenbemerkung, und die Stimme zeigt das. Danach nimmt sie die Hauptlinie wieder auf, als wäre nichts gewesen.' },
 
-    { type:'fehler', satz:'Ich habe gestern | mit meinem Chef über das neue | Projekt gesprochen.', falsch:'über das neue | Projekt', richtig:'Ich habe gestern | mit meinem Chef | über das neue Projekt gesprochen.', explain:'„das neue Projekt“ ist eine Gruppe — zwischen Adjektiv und Nomen wird nicht geatmet. Die Pause gehört vor die Präpositionalgruppe, nicht in sie hinein.' },
-    { type:'fehler', satz:'Der Kollege, | der das macht | ist heute krank.', falsch:'der das macht | ist', richtig:'Der Kollege, | der das macht, | ist heute krank.', explain:'Ein Einschub braucht zwei Pausen, nicht eine. Fällt die zweite weg, klebt der Relativsatz am Hauptsatz und der Zuhörer verliert den Faden.' },
-    { type:'fehler', satz:'Ich möchte | einen Termin | am Dienstag | um | zehn Uhr.', falsch:'um | zehn Uhr', richtig:'Ich möchte einen Termin | am Dienstag um zehn Uhr.', explain:'Fünf Pausen in einem kurzen Satz klingen wie ein Telegramm. Präposition und Zeit gehören zusammen: „um zehn Uhr“ ist eine Gruppe.' },
+    { type:'fehler', satz:'Ich habe gestern | mit meinem Chef über das neue | Projekt gesprochen.', falsch:'|', falschIdx:10, richtig:'Ich habe gestern | mit meinem Chef | über das neue Projekt gesprochen.', explain:'„das neue Projekt“ ist eine Gruppe — zwischen Adjektiv und Nomen wird nicht geatmet. Die Pause gehört vor die Präpositionalgruppe, nicht in sie hinein.' },
+    { type:'fehler', satz:'Der Kollege, | der das macht | ist heute krank.', falsch:'ist', richtig:'Der Kollege, | der das macht, | ist heute krank.', explain:'Ein Einschub braucht zwei Pausen, nicht eine. Fällt die zweite weg, klebt der Relativsatz am Hauptsatz und der Zuhörer verliert den Faden.' },
+    { type:'fehler', satz:'Ich möchte | einen Termin | am Dienstag | um | zehn Uhr.', falsch:'|', falschIdx:10, richtig:'Ich möchte einen Termin | am Dienstag um zehn Uhr.', explain:'Fünf Pausen in einem kurzen Satz klingen wie ein Telegramm. Präposition und Zeit gehören zusammen: „um zehn Uhr“ ist eine Gruppe.' },
 
     { type:'speak', word:'Am Montag habe ich einen Termin beim Arzt.', tip:'Nach „Am Montag“ kurz stehen bleiben, dann den Rest in einem Zug.' },
     { type:'speak', word:'Ich wollte fragen, ob der Termin noch steht.', tip:'Nach „fragen“ atmen. Die Stimme bleibt dort oben — es kommt ja noch etwas.' },
@@ -113,8 +113,8 @@
     { type:'gap', text:'W-Fragen wie „Wann kommen Sie?“ ___ am Ende normalerweise ab.', answer:'sinken', alts:['sinken','fallen'], explain:'Das Fragewort steht schon vorn, die Melodie muss die Frage nicht mehr anzeigen. Deshalb darf sie fallen.' },
     { type:'gap', text:'Für eine höfliche Bitte nimmst du „___ Sie bitte …“.', answer:'Könnten', alts:['Könnten','könnten','Könnten','könnten'], explain:'Der Konjunktiv macht aus der Forderung eine Bitte. „Können Sie“ ist schon höflich, „könnten Sie“ noch etwas weicher.' },
 
-    { type:'fehler', satz:'Was? Sagen Sie das noch mal.', falsch:'Was? Sagen Sie das noch mal.', richtig:'Entschuldigung, könnten Sie das noch einmal sagen?', explain:'Grammatisch ist beides richtig. Aber „Was?“ plus Imperativ klingt wie eine Anweisung. Mit Entschuldigung und Konjunktiv wird daraus eine Bitte.' },
-    { type:'fehler', satz:'Ich verstehe nicht. Sprechen Sie langsam!', falsch:'Sprechen Sie langsam!', richtig:'Könnten Sie bitte etwas langsamer sprechen?', explain:'Der Imperativ mit Ausrufezeichen befiehlt. Und „langsam“ klingt absolut — „etwas langsamer“ ist eine kleine Bitte, die jeder gern erfüllt.' },
+    { type:'fehler', satz:'Was? Sagen Sie das noch mal.', falsch:'Was', richtig:'Entschuldigung, könnten Sie das noch einmal sagen?', explain:'Grammatisch ist beides richtig. Aber „Was?“ plus Imperativ klingt wie eine Anweisung. Mit Entschuldigung und Konjunktiv wird daraus eine Bitte.' },
+    { type:'fehler', satz:'Ich verstehe nicht. Sprechen Sie langsam!', falsch:'langsam', richtig:'Könnten Sie bitte etwas langsamer sprechen?', explain:'Der Imperativ mit Ausrufezeichen befiehlt. Und „langsam“ klingt absolut — „etwas langsamer“ ist eine kleine Bitte, die jeder gern erfüllt.' },
     { type:'fehler', satz:'Sie meinen also dass der Termin abgesagt ist.', falsch:'ist.', richtig:'Sie meinen also, dass der Termin abgesagt ist?', explain:'Als Aussage mit Punkt legst du dem anderen Worte in den Mund. Mit Fragezeichen und steigender Stimme lässt du ihm die Möglichkeit, dich zu korrigieren.' },
 
     { type:'speak', word:'Wie bitte?', tip:'Deutlich steigend. Übertreib die Melodie beim Üben — im Gespräch wird sie von allein kleiner.' },
@@ -206,7 +206,7 @@
     { type:'gap', text:'Verben auf -ieren betonen die Silbe ___.', answer:'ier', alts:['ier','-ier','IER','ieren'], explain:'telefonÍEren, funktionÍEren, diskutÍEren. Egal wie lang das Wort ist, der Ton sitzt dort.' },
     { type:'gap', text:'Bei „Tourismus“ liegt der Ton auf der Silbe ___ -mus.', answer:'vor', alts:['vor','davor'], explain:'tourÍSmus. Die Nachsilbe -ismus schiebt den Ton nach vorn, direkt vor sich selbst.' },
 
-    { type:'fehler', satz:'Wir brauchen mehr INformation über die SItuation.', falsch:'INformation … SItuation', richtig:'Wir brauchen mehr InformatiÓN über die SituatiÓN.', explain:'Beide Wörter enden auf -tion, beide betonen die letzte Silbe. Vorn betont klingen sie wie aus dem Englischen übernommen.' },
+    { type:'fehler', satz:'Wir brauchen mehr INformation über die SItuation.', falsch:'INformation', richtig:'Wir brauchen mehr InformatiÓN über die SituatiÓN.', explain:'Beide Wörter enden auf -tion, beide betonen die letzte Silbe. Vorn betont klingen sie wie aus dem Englischen übernommen.' },
     { type:'fehler', satz:'Ich muss das Gerät noch REparieren.', falsch:'REparieren', richtig:'Ich muss das Gerät noch reparÍEren.', explain:'-ieren zieht den Ton auf sich. Das gilt für hunderte Verben, die du täglich brauchst.' },
     { type:'fehler', satz:'Sie hat an der UNiversität studiert.', falsch:'UNiversität', richtig:'Sie hat an der UniversitÄT studiert.', explain:'-tät ist betont. Und „studiert“ ebenfalls hinten: stu-DÍERT.' },
 
@@ -253,9 +253,9 @@
     { type:'gap', text:'Das stärkste Mittel zur Hervorhebung ist die ___ vor dem wichtigen Wort.', answer:'Pause', alts:['Pause','kleine Pause'], explain:'Sie macht Platz. Der Zuhörer merkt, dass jetzt etwas kommt, und hört genauer hin.' },
     { type:'gap', text:'Beim Buchstabieren sagt man für ü: „U-___“.', answer:'Umlaut', alts:['Umlaut','umlaut'], explain:'Ebenso A-Umlaut und O-Umlaut. Für ß sagt man „Eszett“ oder „scharfes S“.' },
 
-    { type:'fehler', satz:'Meine Nummer ist null eins sieben drei vier acht neun zwei eins.', falsch:'ohne Blöcke', richtig:'Meine Nummer ist null-eins-sieben – drei-vier – acht-neun – zwo-eins.', explain:'Dieselben Ziffern, aber in Blöcken. Grammatisch ändert sich nichts, verständlich wird es erst so.' },
-    { type:'fehler', satz:'Ich heiße Karackov, also weiter im Text.', falsch:'also weiter im Text', richtig:'Ich heiße Karackov – ich buchstabiere: K wie Kaufmann, A wie Anton …', explain:'Einen fremden Namen hört niemand beim ersten Mal. Gleich buchstabieren ist freundlich, nicht übergenau.' },
-    { type:'fehler', satz:'Der Termin ist am vierzehntenzehntenzweitausendsechsundzwanzig.', falsch:'ohne Pausen', richtig:'Der Termin ist am vierzehnten – Zehnten – zweitausendsechsundzwanzig.', explain:'Datum in drei Blöcken: Tag, Monat, Jahr. Jeder Block bekommt seine kleine Pause.' },
+    { type:'fehler', satz:'Meine Nummer ist null eins sieben drei vier acht neun zwei eins.', falsch:'zwei', richtig:'Meine Nummer ist null-eins-sieben – drei-vier – acht-neun – zwo-eins.', explain:'Am Telefon sagt man „zwo“, damit es sich nicht mit „drei“ verwechselt. Und dieselben Ziffern gehören in Blöcke mit kleinen Pausen — grammatisch ändert sich nichts, verständlich wird es erst so.' },
+    { type:'fehler', satz:'Mein Name ist Karackov, bitte notieren Sie das.', falsch:'Karackov', richtig:'Mein Name ist Karackov – ich buchstabiere: K wie Kaufmann, A wie Anton …', explain:'Einen fremden Namen hört niemand beim ersten Mal. Gleich buchstabieren ist freundlich, nicht übergenau.' },
+    { type:'fehler', satz:'Der Termin ist am vierzehntenzehntenzweitausendsechsundzwanzig.', falsch:'vierzehntenzehntenzweitausendsechsundzwanzig', richtig:'Der Termin ist am vierzehnten – Zehnten – zweitausendsechsundzwanzig.', explain:'Datum in drei Blöcken: Tag, Monat, Jahr. Jeder Block bekommt seine kleine Pause.' },
 
     { type:'speak', word:'Meine Nummer ist null-eins-sieben – drei-vier – acht-neun – zwo-eins.', tip:'Nach jedem Block kurz anhalten. Nicht schneller werden, wenn es flüssig läuft.' },
     { type:'speak', word:'Ich heiße Karackov: K wie Kaufmann, A wie Anton, R wie Richard.', tip:'Ruhig und gleichmäßig. Jeder Buchstabe bekommt dieselbe Zeit.' },
@@ -300,9 +300,9 @@
     { type:'gap', text:'„wachsen“ klingt wie „___“.', answer:'waksen', alts:['waksen'], explain:'Das chs gehört zum Stamm wachs-. Deshalb verschmilzt es.' },
     { type:'gap', text:'Die Testfrage: Gehört das s zum ___ oder ist es eine Endung?', answer:'Stamm', alts:['Stamm','stamm'], explain:'Zum Stamm heißt ks. Endung heißt Reibelaut. Eine Frage, zwei Antworten, fertig.' },
 
-    { type:'fehler', satz:'Wir treffen uns um sech-Uhr.', falsch:'sech', richtig:'Wir treffen uns um sechs Uhr.', explain:'Das s gehört dazu und wird zusammen mit dem ch zu ks gesprochen: „seks Uhr“. Weglassen geht nicht.' },
+    { type:'fehler', satz:'Wir treffen uns um sech Uhr.', falsch:'sech', richtig:'Wir treffen uns um sechs Uhr.', explain:'Das s gehört dazu und wird zusammen mit dem ch zu ks gesprochen: „seks Uhr“. Weglassen geht nicht.' },
     { type:'fehler', satz:'Was machs du am Wochenende?', falsch:'machs', richtig:'Was machst du am Wochenende?', explain:'Die Endung ist -st, nicht -s. Und sie bleibt hörbar getrennt: mach-st, nicht „maks“.' },
-    { type:'fehler', satz:'Die erwachsene Kinder brauchen keine Hilfe.', falsch:'erwachsene Kinder', richtig:'Die erwachsenen Kinder brauchen keine Hilfe.', explain:'Nach „die“ im Plural steht -en. Und beim Sprechen: erwaksenen, mit ks in der Mitte.' },
+    { type:'fehler', satz:'Die erwachsene Kinder brauchen keine Hilfe.', falsch:'erwachsene', richtig:'Die erwachsenen Kinder brauchen keine Hilfe.', explain:'Nach „die“ im Plural steht -en. Und beim Sprechen: erwaksenen, mit ks in der Mitte.' },
 
     { type:'speak', word:'sechs — sechzehn', tip:'Erst ks, dann Reibelaut. Direkt hintereinander, damit der Unterschied sitzt.' },
     { type:'speak', word:'der Fuchs, der Lachs, das Wachs', tip:'Dreimal ks am Ende. Kurz und fest, kein Reibelaut.' },
@@ -346,9 +346,9 @@
     { type:'gap', text:'Die drei Regler des Registers sind Tempo, Endungen und ___.', answer:'Pausen', alts:['Pausen','pausen'], explain:'Mehr braucht es nicht. Mit diesen drei klingt derselbe Wortlaut förmlich oder locker.' },
     { type:'gap', text:'Wer immer sehr deutlich artikuliert, wirkt im Privaten ___.', answer:'steif', alts:['steif','distanziert','förmlich'], explain:'Deutlichkeit ist ein Werkzeug für bestimmte Situationen — kein Zeichen von besserem Deutsch.' },
 
-    { type:'fehler', satz:'Guten Tag, ham Sie meinen Antrag schon bearbeitet?', falsch:'ham Sie', richtig:'Guten Tag, haben Sie meinen Antrag schon bearbeitet?', explain:'Grammatisch ist „ham“ nichts Falsches, es ist gesprochene Umgangssprache. Beim Amt passt es nicht — dort gehört die vollständige Form hin.' },
-    { type:'fehler', satz:'Hey Mama, ich würde dich bitten, mir das Brot zu reichen.', falsch:'ich würde dich bitten', richtig:'Hey Mama, gibst du mir mal das Brot?', explain:'Hier stimmt das Register in die andere Richtung nicht. Der Konjunktiv am Küchentisch klingt ironisch oder gekränkt — beides war nicht gemeint.' },
-    { type:'fehler', satz:'In meinem Bewerbungsgespräch hab ich gesagt, dass ich das schon mal gemacht hab.', falsch:'hab … hab', richtig:'Im Bewerbungsgespräch habe ich gesagt, dass ich das bereits gemacht habe.', explain:'Zweimal „hab“ ohne Endung, dazu „schon mal“ — alles locker. Im Gespräch selbst kostet das Punkte, die nichts mit Sprachniveau zu tun haben.' },
+    { type:'fehler', satz:'Guten Tag, ham Sie meinen Antrag schon bearbeitet?', falsch:'ham', richtig:'Guten Tag, haben Sie meinen Antrag schon bearbeitet?', explain:'Grammatisch ist „ham“ nichts Falsches, es ist gesprochene Umgangssprache. Beim Amt passt es nicht — dort gehört die vollständige Form hin.' },
+    { type:'fehler', satz:'Hey Mama, ich würde dich bitten, mir das Brot zu reichen.', falsch:'würde', richtig:'Hey Mama, gibst du mir mal das Brot?', explain:'Hier stimmt das Register in die andere Richtung nicht. Der Konjunktiv am Küchentisch klingt ironisch oder gekränkt — beides war nicht gemeint.' },
+    { type:'fehler', satz:'In meinem Bewerbungsgespräch hab ich gesagt, dass ich das schon mal gemacht hab.', falsch:'hab', falschIdx:3, richtig:'Im Bewerbungsgespräch habe ich gesagt, dass ich das bereits gemacht habe.', explain:'Zweimal „hab“ ohne Endung, dazu „schon mal“ — alles locker. Im Gespräch selbst kostet das Punkte, die nichts mit Sprachniveau zu tun haben.' },
 
     { type:'speak', word:'Haben Sie die Unterlagen bereits erhalten?', tip:'Alle Endungen vollständig, Tempo ruhig. Das ist das förmliche Register.' },
     { type:'speak', word:'Habt ihr die Sachen schon bekommen?', tip:'Derselbe Inhalt, locker. Kürzer, schneller, wärmer.' },
@@ -393,9 +393,9 @@
     { type:'gap', text:'Das subjektive „sollen“ gibt eine fremde ___ wieder.', answer:'Behauptung', alts:['Behauptung','Aussage'], explain:'„Das soll er gesagt haben“ — ich berichte, ich übernehme nicht. Grammatik und Betonung arbeiten hier zusammen.' },
     { type:'gap', text:'Wenn Melodie und Wortlaut sich widersprechen, gilt die ___.', answer:'Melodie', alts:['Melodie','melodie'], explain:'Das ist die wichtigste Hörregel dieses Themas — und sie bewahrt dich davor, auf Ironie ernst zu antworten.' },
 
-    { type:'fehler', satz:'A: „Na super.“ (flach, fallend) — B: „Ja, ich freue mich auch!“', falsch:'Ich freue mich auch', richtig:'B: „Was ist passiert?“', explain:'A hat sich geärgert. Die flache, fallende Melodie widerspricht dem Wort „super“. Wer wörtlich antwortet, verfehlt das Gespräch.' },
-    { type:'fehler', satz:'Er ist ANGEBLICH krank, aber ich glaube ihm voll und ganz.', falsch:'ich glaube ihm voll und ganz', richtig:'Er ist angeblich krank — ich glaube ihm voll und ganz.', explain:'Betontes „angeblich“ und voller Glaube passen nicht zusammen. Wenn du ihm glaubst, lass das Distanzwort unbetont oder weg.' },
-    { type:'fehler', satz:'Das war dann wohl eine LÖSUNG, und alle waren damit sehr zufrieden.', falsch:'alle waren damit sehr zufrieden', richtig:'Das war dann wohl eine Lösung — immerhin waren alle zufrieden.', explain:'Der Ton auf „Lösung“ setzt Anführungszeichen und nimmt dem Wort die Geltung. Danach kann keine ungebrochene Zustimmung folgen.' },
+    { type:'fehler', satz:'Sie sagte flach und müde „Na super“ und war offensichtlich begeistert.', falsch:'begeistert', richtig:'Sie sagte flach und müde „Na super“ und war offensichtlich verärgert.', explain:'Flach und fallend widerspricht dem Wort „super“ — und wenn Melodie und Wortlaut sich widersprechen, gilt die Melodie. Wer hier wörtlich antwortet, verfehlt das Gespräch.' },
+    { type:'fehler', satz:'Er ist ANGEBLICH krank, aber ich glaube ihm voll und ganz.', falsch:'ANGEBLICH', richtig:'Er ist angeblich krank — ich glaube ihm voll und ganz.', explain:'Betontes „angeblich“ und voller Glaube passen nicht zusammen. Wenn du ihm glaubst, lass das Distanzwort unbetont oder weg.' },
+    { type:'fehler', satz:'Das war dann wohl eine LÖSUNG, und alle waren damit sehr zufrieden.', falsch:'zufrieden', richtig:'Das war dann wohl eine Lösung — immerhin waren alle zufrieden.', explain:'Der Ton auf „Lösung“ setzt Anführungszeichen und nimmt dem Wort die Geltung. Danach kann keine ungebrochene Zustimmung folgen.' },
 
     { type:'speak', word:'Er ist angeblich krank.', tip:'„angeblich“ betonen und leicht dehnen. Hör, ob der Zweifel ankommt.' },
     { type:'speak', word:'Toll.', tip:'Zweimal: einmal flach und fallend, einmal steigend und offen. Ein Wort, zwei Bedeutungen.' },
@@ -440,9 +440,9 @@
     { type:'gap', text:'Österreichisch für Januar ist ___.', answer:'Jänner', alts:['Jänner','Jaenner','jänner'], explain:'Und Februar heißt dort oft Feber. Beide stehen in amtlichen Texten.' },
     { type:'gap', text:'„Velo“ ist schweizerisch für ___.', answer:'Fahrrad', alts:['Fahrrad','das Fahrrad','Rad'], explain:'Aus dem Französischen. Wie Billett, Trottoir und Coiffeur — der französische Einfluss ist dort stark.' },
 
-    { type:'fehler', satz:'In der Schweiz sagt man Straße mit ß.', falsch:'mit ß', richtig:'In der Schweiz schreibt man Strasse mit ss.', explain:'Das ß kommt in der Schweizer Rechtschreibung nicht vor. Gesprochen klingt es gleich — geschrieben ist es ein sicheres Erkennungszeichen.' },
-    { type:'fehler', satz:'„Sackerl“ ist ein österreichischer Dialekt und daher falsch.', falsch:'und daher falsch', richtig:'„Sackerl“ ist österreichischer Standard und völlig korrekt.', explain:'Standardvariante heißt: offizielles, korrektes Hochdeutsch dieses Landes. Es gibt nicht ein richtiges Deutsch und drei Abweichungen.' },
-    { type:'fehler', satz:'Er geht ins Spital, also ist er in Deutschland.', falsch:'in Deutschland', richtig:'Er geht ins Spital — das sagt man in Österreich und der Schweiz.', explain:'In Deutschland wäre es das Krankenhaus. Solche Wörter sagen dir, mit welcher Variante du es zu tun hast.' },
+    { type:'fehler', satz:'In der Schweiz sagt man Straße mit ß.', falsch:'Straße', richtig:'In der Schweiz schreibt man Strasse mit ss.', explain:'Das ß kommt in der Schweizer Rechtschreibung nicht vor. Gesprochen klingt es gleich — geschrieben ist es ein sicheres Erkennungszeichen.' },
+    { type:'fehler', satz:'„Sackerl“ ist ein österreichischer Dialekt und daher falsch.', falsch:'Dialekt', richtig:'„Sackerl“ ist österreichischer Standard und völlig korrekt.', explain:'Standardvariante heißt: offizielles, korrektes Hochdeutsch dieses Landes. Es gibt nicht ein richtiges Deutsch und drei Abweichungen.' },
+    { type:'fehler', satz:'Er geht ins Spital, also ist er in Deutschland.', falsch:'Deutschland', richtig:'Er geht ins Spital — das sagt man in Österreich und der Schweiz.', explain:'In Deutschland wäre es das Krankenhaus. Solche Wörter sagen dir, mit welcher Variante du es zu tun hast.' },
 
     { type:'speak', word:'der König, wenig, fertig, richtig', tip:'Deutscher Standard: alle vier mit -ich am Ende.' },
     { type:'speak', word:'Grüß Gott — Moin — Grüezi — Guten Tag', tip:'Vier Begrüßungen, vier Regionen. Die letzte passt überall.' },
