@@ -1,0 +1,739 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sprechclub · deutschoderwas</title>
+<meta name="description" content="Jeden Tag eine Stunde Deutsch sprechen — mit echten Menschen, in kleinen Gruppen, von A2 bis C1. Du darfst zuhören, bis du so weit bist.">
+<link rel="canonical" href="https://deutschoderwas.de/sprechclub">
+<meta property="og:title" content="Sprechclub · deutschoderwas">
+<meta property="og:description" content="Jeden Tag eine Stunde Deutsch sprechen — mit echten Menschen, in kleinen Gruppen, von A2 bis C1.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://deutschoderwas.de/sprechclub">
+<meta property="og:image" content="https://deutschoderwas.de/sprechclub-stunde-1.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://js.stripe.com/v3/"></script>
+<style>
+/* ============================================================
+   sprechclub.html — die Verkaufsseite fuer den Sprechclub
+
+   Eine Seite, ein Angebot, ein Knopf. Wer hier landet, soll
+   nicht zwischen Community, Premium und Premium Plus waehlen
+   muessen — er soll wissen, was im Sprechclub passiert, dass
+   er dort nicht blossgestellt wird, was es kostet, und dann
+   buchen koennen.
+
+   Aufgebaut auf den drei Gruenden, aus denen Leute zoegern:
+   Angst vorm Sprechen, Unklarheit ueber den Ablauf, der Preis.
+   In dieser Reihenfolge stehen auch die Abschnitte.
+
+   Farben und Schriften aus dem Markenhandbuch (deutschoderwas-
+   brand): Creme-Grund, Tuerkis als Signaturfarbe, Rot und Gold
+   nur als Akzent. Space Grotesk fuer Ueberschriften, Inter fuer
+   den Text.
+   ============================================================ */
+:root{
+  --creme:#FFF8E0; --karte:#FFFCF5; --weiss:#FFFFFF;
+  --tinte:#1A1A1A; --weich:#6B7280; --rahmen:#F0E5D8;
+  --tuerkis:#2DD4BF; --tuerkis-d:#14B8A6; --tuerkis-text:#0F766E;
+  --auf-tuerkis:#06403A; --tuerkis-soft:#A7F3D0;
+  --rot:#DD0000; --rot-d:#B30000; --gold:#FFCE00;
+  --wolke:0 8px 26px rgba(26,26,26,.07);
+  --wolke-tief:0 14px 40px rgba(26,26,26,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--creme); color:var(--tinte);
+  font-family:'Inter',"Segoe UI",system-ui,sans-serif;
+  font-size:17px; line-height:1.65; -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.h{font-family:'Space Grotesk','Inter',sans-serif;font-weight:700;line-height:1.18;text-wrap:balance}
+a{color:var(--tuerkis-text)}
+img{max-width:100%;display:block}
+
+.huelle{max-width:960px;margin:0 auto;padding:0 18px}
+section{padding:58px 0}
+section + section{border-top:1px solid var(--rahmen)}
+.augenbraue{
+  font-size:.78rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--rot);margin-bottom:12px;
+}
+h2{font-size:clamp(1.6rem,4.2vw,2.15rem);margin-bottom:10px}
+.unter{color:var(--weich);max-width:62ch;margin-bottom:28px}
+
+/* ---------- Knoepfe ---------- */
+.knopf{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  background:linear-gradient(135deg,var(--tuerkis),var(--tuerkis-d));
+  color:var(--auf-tuerkis);font-family:'Inter',sans-serif;font-weight:700;font-size:1.05rem;
+  border:0;border-radius:999px;padding:17px 34px;cursor:pointer;
+  box-shadow:0 6px 18px rgba(45,212,191,.34); transition:.16s; text-decoration:none;
+  min-height:56px; text-align:center;
+}
+.knopf:hover{background:var(--tuerkis-d);transform:translateY(-1px)}
+.knopf:disabled{opacity:.6;cursor:default;transform:none}
+.knopf:focus-visible,a:focus-visible,summary:focus-visible,.um-knopf:focus-visible{
+  outline:3px solid var(--tuerkis-text);outline-offset:3px}
+.leise{
+  display:inline-block;color:var(--tinte);font-weight:600;text-decoration:none;
+  border-bottom:2px solid var(--gold);padding-bottom:2px;
+}
+.unterknopf{font-size:.88rem;color:var(--weich);margin-top:12px}
+
+/* ---------- Kopf ---------- */
+.kopf{padding:26px 0 0}
+.marke{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.15rem;text-decoration:none;color:var(--tinte)}
+.marke i{font-style:normal;color:var(--tuerkis-d)}
+
+.held{padding:40px 0 56px}
+.held h1{font-size:clamp(2rem,6.4vw,3.2rem);margin-bottom:18px}
+.held h1 em{font-style:normal;color:var(--rot)}
+.held p.gross{font-size:clamp(1.05rem,2.6vw,1.2rem);color:var(--weich);max-width:58ch;margin-bottom:28px}
+.held-knoepfe{display:flex;flex-wrap:wrap;gap:16px;align-items:center}
+.fakten{
+  display:flex;flex-wrap:wrap;gap:8px 10px;margin-top:30px;
+  font-size:.88rem;color:var(--weich);
+}
+.fakten span{
+  background:var(--weiss);border:1px solid var(--rahmen);border-radius:999px;
+  padding:7px 15px;font-weight:600;color:var(--tinte);
+}
+
+/* ---------- Karten ---------- */
+.gitter{display:grid;gap:16px}
+@media(min-width:720px){ .gitter.zwei{grid-template-columns:1fr 1fr} }
+.karte{
+  background:var(--karte);border:1px solid var(--rahmen);border-radius:18px;
+  padding:24px;box-shadow:var(--wolke);
+}
+.karte h3{font-size:1.1rem;margin-bottom:7px}
+.karte p{color:var(--weich);font-size:.97rem}
+.karte .zeichen{font-size:1.5rem;line-height:1;margin-bottom:12px;display:block}
+
+/* ---------- Ablauf ---------- */
+.schritte{list-style:none;display:grid;gap:4px;margin-top:6px}
+.schritt{display:grid;grid-template-columns:86px 1fr;gap:16px;padding:16px 0;border-bottom:1px solid var(--rahmen)}
+.schritt:last-child{border-bottom:0}
+.schritt .uhr{
+  font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.9rem;
+  color:var(--tuerkis-text);padding-top:3px;font-variant-numeric:tabular-nums;
+  white-space:nowrap;
+}
+.schritt h3{font-size:1.05rem;margin-bottom:4px}
+.schritt p{color:var(--weich);font-size:.97rem}
+.bilder{display:grid;gap:14px;margin-top:30px}
+@media(min-width:720px){ .bilder{grid-template-columns:1fr 1fr} }
+.bilder figure{background:var(--weiss);border:1px solid var(--rahmen);border-radius:16px;overflow:hidden;box-shadow:var(--wolke)}
+.bilder img{width:100%;height:auto}
+.bilder figcaption{font-size:.84rem;color:var(--weich);padding:11px 15px 14px}
+
+/* ---------- Wochenplan ---------- */
+#planGitter{display:grid;gap:12px}
+@media(min-width:620px){ #planGitter{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))} }
+.tag{background:var(--weiss);border:1px solid var(--rahmen);border-radius:16px;padding:16px 17px}
+.tag h3{font-size:.95rem;margin-bottom:11px;display:flex;align-items:baseline;gap:8px}
+.tag h3 small{font-weight:500;color:var(--weich);font-family:'Inter',sans-serif;font-size:.8rem}
+.stunde{
+  display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;
+  padding:7px 0;border-top:1px solid var(--rahmen);font-size:.9rem;
+}
+.tag .stunde:first-of-type{border-top:0}
+.stunde b{font-variant-numeric:tabular-nums;font-weight:700;font-size:.95rem}
+.stunde .niv{
+  background:var(--tuerkis-soft);color:var(--auf-tuerkis);border-radius:999px;
+  padding:1px 9px;font-size:.74rem;font-weight:700;
+}
+.stunde .frei{color:var(--weich);font-size:.8rem;margin-left:auto}
+.stunde .voll{color:var(--rot-d);font-weight:700}
+#planNotiz{color:var(--weich);font-size:.9rem;margin-top:18px}
+
+/* ---------- Preis ---------- */
+.preisfeld{
+  background:var(--weiss);border:2px solid var(--tuerkis);border-radius:24px;
+  padding:clamp(24px,4vw,38px);box-shadow:var(--wolke-tief);max-width:560px;
+}
+.fahne{
+  display:table;background:var(--gold);color:var(--tinte);
+  font-size:.78rem;font-weight:700;letter-spacing:.04em;
+  border-radius:999px;padding:6px 14px;margin:0 0 18px;
+}
+.um{display:inline-flex;background:var(--creme);border:1px solid var(--rahmen);border-radius:999px;padding:4px;margin-bottom:22px}
+.um-knopf{
+  border:0;background:transparent;border-radius:999px;padding:9px 20px;cursor:pointer;
+  font-family:'Inter',sans-serif;font-weight:700;font-size:.92rem;color:var(--weich);
+}
+.um-knopf.an{background:var(--tinte);color:#fff}
+.zahlzeile{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.zahl{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(2.6rem,9vw,3.6rem);line-height:1}
+.je{color:var(--weich);font-weight:600}
+.alt{color:var(--weich);margin-top:8px;font-size:.95rem}
+.alt s{color:#9CA3AF}
+.spar{background:var(--rot);color:#fff;border-radius:999px;padding:2px 11px;font-size:.78rem;font-weight:700;margin-left:6px}
+.dabei{list-style:none;margin:24px 0;display:grid;gap:11px}
+.dabei li{display:grid;grid-template-columns:26px 1fr;gap:8px;align-items:start;font-size:.98rem}
+.dabei .hk{color:var(--tuerkis-text);font-weight:800}
+.rechnung{
+  background:var(--creme);border:1px dashed var(--rahmen);border-radius:14px;
+  padding:16px 18px;font-size:.93rem;color:var(--weich);margin:22px 0;
+}
+.rechnung b{color:var(--tinte)}
+#startHinweis{
+  background:var(--tuerkis-soft);border-radius:14px;padding:14px 17px;
+  font-size:.92rem;color:var(--auf-tuerkis);margin-top:20px;font-weight:500;
+}
+#meldung{color:var(--rot-d);font-weight:600;min-height:1.4em;margin-top:12px;font-size:.93rem}
+
+/* ---------- Fragen ---------- */
+details{
+  background:var(--weiss);border:1px solid var(--rahmen);border-radius:14px;
+  margin-bottom:10px;overflow:hidden;
+}
+summary{
+  cursor:pointer;list-style:none;padding:17px 20px;font-weight:700;
+  display:flex;justify-content:space-between;gap:14px;align-items:center;
+}
+summary::-webkit-details-marker{display:none}
+summary::after{content:'+';font-size:1.4rem;color:var(--tuerkis-text);font-weight:600;line-height:1}
+details[open] summary::after{content:'–'}
+details p{padding:0 20px 19px;color:var(--weich);font-size:.97rem}
+
+/* ---------- Abschluss ---------- */
+.abschluss{background:var(--tinte);color:#fff;border-radius:24px;padding:clamp(28px,5vw,46px);text-align:center;margin:10px 0 0}
+.abschluss h2{color:#fff}
+.abschluss p{color:#D1D5DB;max-width:50ch;margin:0 auto 26px}
+.abschluss .knopf{font-size:1.1rem}
+footer{padding:46px 0 60px;font-size:.84rem;color:var(--weich);text-align:center}
+footer a{color:var(--weich)}
+
+/* ---------- Stripe-Fenster ---------- */
+.bz-hg{position:fixed;inset:0;background:rgba(26,26,26,.55);display:none;z-index:90;padding:18px;overflow:auto}
+.bz-hg.auf{display:flex;align-items:flex-start;justify-content:center}
+.bz{background:#fff;border-radius:18px;max-width:560px;width:100%;margin:auto;overflow:hidden}
+.bz-kopf{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--rahmen)}
+.bz-kopf b{font-family:'Space Grotesk',sans-serif}
+.bz-zu{border:0;background:transparent;font-size:1.5rem;cursor:pointer;line-height:1;padding:4px 8px;color:var(--weich)}
+#bzFeld{padding:8px}
+#bzLaedt{padding:40px 20px;text-align:center;color:var(--weich)}
+
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  .knopf:hover{transform:none}
+}
+</style>
+</head>
+<body>
+
+<div class="huelle kopf">
+  <a class="marke" href="/">deutsch<i>oderwas</i></a>
+</div>
+
+<!-- ================= Held ================= -->
+<header class="huelle held">
+  <div class="augenbraue">Der Sprechclub</div>
+  <h1>Endlich sprechen — auch wenn du dich <em>nicht traust</em>.</h1>
+  <p class="gross">
+    Jeden Tag eine Stunde Deutsch mit echten Menschen. In kleinen Gruppen,
+    zu Themen, über die man wirklich reden will. Und du darfst zuhören,
+    so lange du brauchst — niemand ruft dich auf.
+  </p>
+  <div class="held-knoepfe">
+    <button class="knopf" onclick="zumPreis()">Platz sichern</button>
+    <a class="leise" href="#ablauf">Erst ansehen, wie eine Stunde abläuft</a>
+  </div>
+  <div class="fakten">
+    <span>Täglich, auch am Wochenende</span>
+    <span>Kleine Gruppen</span>
+    <span>A2 bis C1</span>
+    <span>Monatlich kündbar</span>
+  </div>
+</header>
+
+<!-- ================= Angst ================= -->
+<section id="angst">
+  <div class="huelle">
+    <div class="augenbraue">Keine Sorge</div>
+    <h2>Du musst nichts sagen, bevor du willst</h2>
+    <p class="unter">
+      Der häufigste Satz, den wir hören: „Ich verstehe alles, aber wenn ich
+      reden soll, ist mein Kopf leer.“ Deshalb ist der Sprechclub so gebaut,
+      dass dir das nicht passieren kann.
+    </p>
+    <div class="gitter zwei">
+      <div class="karte">
+        <span class="zeichen">🙈</span>
+        <h3>Die Kamera darf aus bleiben</h3>
+        <p>Niemand muss sich zeigen. Viele machen sie in der dritten oder vierten
+           Stunde von allein an — weil sie dann wollen, nicht weil sie müssen.</p>
+      </div>
+      <div class="karte">
+        <span class="zeichen">👂</span>
+        <h3>Nur zuhören ist erlaubt</h3>
+        <p>Du kannst eine ganze Stunde dabei sein und kein Wort sagen. Das ist
+           kein Schummeln, das ist der erste Schritt. Zuhören in einer echten
+           Gruppe bringt mehr als jede App.</p>
+      </div>
+      <div class="karte">
+        <span class="zeichen">✋</span>
+        <h3>Niemand wird aufgerufen</h3>
+        <p>Es gibt kein Reihum, kein Vorlesen, keine Abfrage. Wer etwas sagen
+           will, sagt es. Die Lehrkraft sorgt dafür, dass auch die Leisen
+           zu Wort kommen — aber sie zwingt niemanden.</p>
+      </div>
+      <div class="karte">
+        <span class="zeichen">💬</span>
+        <h3>Korrekturen kommen leise</h3>
+        <p>Niemand wird mitten im Satz unterbrochen. Was du falsch sagst,
+           schreibt die Lehrkraft in den Chat — du liest es in Ruhe und
+           nimmst es mit.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= Ablauf ================= -->
+<section id="ablauf">
+  <div class="huelle">
+    <div class="augenbraue">Was dich erwartet</div>
+    <h2>So läuft eine Stunde ab</h2>
+    <p class="unter">
+      Sechzig Minuten, immer derselbe Rhythmus. Du weißt vom ersten Mal an,
+      was kommt — und das allein nimmt schon viel Druck heraus.
+    </p>
+    <ol class="schritte">
+      <li class="schritt">
+        <div class="uhr">0–5 Min</div>
+        <div>
+          <h3>Ankommen</h3>
+          <p>Du klickst auf den Link, bist im Raum. Begrüßung, kurzes Hallo in
+             die Runde. Wer zu spät kommt, kommt einfach dazu.</p>
+        </div>
+      </li>
+      <li class="schritt">
+        <div class="uhr">5–15 Min</div>
+        <div>
+          <h3>Warm werden</h3>
+          <p>Eine leichte Frage an alle, zu der jeder etwas sagen kann —
+             ein Satz reicht. Hier merkst du, dass die anderen genauso
+             unsicher anfangen wie du.</p>
+        </div>
+      </li>
+      <li class="schritt">
+        <div class="uhr">15–25 Min</div>
+        <div>
+          <h3>Wörter für heute</h3>
+          <p>Die Lehrkraft zeigt die Wendungen, die du für das Thema brauchst,
+             mit Beispielsätzen. Du musst nichts vorher gelernt haben.</p>
+        </div>
+      </li>
+      <li class="schritt">
+        <div class="uhr">25–50 Min</div>
+        <div>
+          <h3>Sprechen</h3>
+          <p>Der Hauptteil. Diskussion, Rollenspiel oder Spiel — oft in
+             Kleingruppen zu zweit oder zu dritt, weil vor drei Leuten zu
+             sprechen leichter ist als vor fünfzehn.</p>
+        </div>
+      </li>
+      <li class="schritt">
+        <div class="uhr">50–60 Min</div>
+        <div>
+          <h3>Sammeln und mitnehmen</h3>
+          <p>Zurück in die große Runde, die wichtigsten Korrekturen aus dem
+             Chat durchgehen, drei Sätze zum Merken. Danach bist du fertig.</p>
+        </div>
+      </li>
+    </ol>
+
+    <div class="bilder">
+      <figure>
+        <img src="sprechclub-stunde-1.jpg" alt="Bildschirm aus einer Sprechclub-Stunde: das Thema „Die 4 Mahlzeiten in Deutschland“ mit Erklärkarten, daneben die Videokacheln der Gruppe." loading="lazy" width="1600" height="726">
+        <figcaption>Eine echte Stunde: Thema Mahlzeiten. Die Gesichter der Teilnehmer sind hier unkenntlich gemacht.</figcaption>
+      </figure>
+      <figure>
+        <img src="sprechclub-stunde-2.jpg" alt="Bildschirm aus einer Sprechclub-Stunde: die Frage „Ordnung oder Chaos – Was ist dein Stil?“ mit Illustration, daneben die Videokacheln der Gruppe." loading="lazy" width="1600" height="661">
+        <figcaption>Und noch eine: Ordnung oder Chaos. Jeden Tag ein anderes Thema.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ================= Wochenplan ================= -->
+<section id="plan">
+  <div class="huelle">
+    <div class="augenbraue">Die Termine</div>
+    <h2>Du findest eine Zeit, die passt</h2>
+    <p class="unter">
+      Morgens, nach Feierabend oder am Wochenende. Das hier sind die echten
+      Termine der nächsten Tage — direkt aus dem Stundenplan, nicht aus
+      einer Broschüre.
+    </p>
+    <div id="planGitter"></div>
+    <p id="planNotiz">Der Plan wird gerade geladen …</p>
+  </div>
+</section>
+
+<!-- ================= Preis ================= -->
+<section id="preis">
+  <div class="huelle">
+    <div class="augenbraue">Was es kostet</div>
+    <h2>Ein Preis, alles drin</h2>
+    <p class="unter">
+      Keine Stundenpakete, die verfallen, kein Nachkaufen. Eine
+      Mitgliedschaft, und der Sprechclub steht dir jeden Tag offen.
+    </p>
+
+    <div class="preisfeld">
+      <div class="fahne" id="pFahne">Startpreis · nur bis 31. Oktober</div>
+
+      <div class="um" role="group" aria-label="Abrechnung wählen">
+        <button class="um-knopf" id="pM" onclick="setzePremium('monat')" type="button">Monatlich</button>
+        <button class="um-knopf an" id="pJ" onclick="setzePremium('jahr')" type="button">Jährlich</button>
+      </div>
+
+      <div class="zahlzeile">
+        <span class="zahl" id="pZahl">39 €</span>
+        <span class="je">im Monat</span>
+      </div>
+      <p class="alt" id="pAlt"></p>
+
+      <ul class="dabei">
+        <li><span class="hk">✓</span><span><b>Sprechclub jeden Tag</b> — such dir aus dem Plan aus, was passt</span></li>
+        <li><span class="hk">✓</span><span><b>8 Live-Stunden im Monat</b> sind enthalten</span></li>
+        <li><span class="hk">✓</span><span>Eine Lehrkraft ist dabei und korrigiert dich</span></li>
+        <li><span class="hk">✓</span><span>Dazu die ganze Lernplattform: Kursbibliothek A1–C1, Vokabeltrainer, Podcast</span></li>
+        <li><span class="hk">✓</span><span>Amanda, die KI-Tutorin, beantwortet dir jede Frage</span></li>
+      </ul>
+
+      <div class="rechnung" id="pRechnung"></div>
+
+      <button class="knopf" id="pKnopf" style="width:100%" onclick="premiumKnopf(this)">Jetzt Mitglied werden</button>
+      <p class="unterknopf" id="pKlein">Sichere Zahlung über Stripe · monatlich kündbar</p>
+      <p id="meldung" role="status"></p>
+
+      <div id="startHinweis"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= Fragen ================= -->
+<section id="fragen">
+  <div class="huelle">
+    <div class="augenbraue">Bevor du buchst</div>
+    <h2>Was andere vorher wissen wollten</h2>
+    <div style="margin-top:24px">
+      <details>
+        <summary>Mein Deutsch ist zu schlecht dafür.</summary>
+        <p>Ab A2 bist du richtig. Das heißt: Du kannst einfache Sätze bilden und
+           verstehst, worum es geht. Alles andere kommt im Club. Es gibt Stunden
+           für A2/B1 und für B1/B2 — du siehst beim Buchen, welche gerade welche ist,
+           und kannst jederzeit wechseln.</p>
+      </details>
+      <details>
+        <summary>Muss ich wirklich sprechen?</summary>
+        <p>Nein. Du darfst zuhören, so lange du willst, und die Kamera aus lassen.
+           Die meisten sagen in der ersten Stunde zwei, drei Sätze — und merken,
+           dass nichts Schlimmes passiert.</p>
+      </details>
+      <details>
+        <summary>Was, wenn ich eine Woche keine Zeit habe?</summary>
+        <p>Dann gehst du eben nicht hin. Du buchst jede Stunde einzeln, es gibt
+           keine Anwesenheitspflicht und niemand fragt nach. In der Mitgliedschaft
+           sind 8 Live-Stunden im Monat enthalten — nutzt du weniger, ist das
+           deine Entscheidung.</p>
+      </details>
+      <details>
+        <summary>Kann ich kündigen?</summary>
+        <p>Im Monatsabo jederzeit zum Ende des Monats, mit einem Klick in deinem
+           Konto. Beim Jahresabo läuft die Mitgliedschaft zwölf Monate. Nach der
+           Kündigung hast du bis zum Ende des bezahlten Zeitraums Zugang — danach
+           endet er, ohne dass du etwas tun musst.</p>
+      </details>
+      <details>
+        <summary>Brauche ich eine Kamera und ein Mikrofon?</summary>
+        <p>Ein Mikrofon brauchst du, wenn du sprechen willst — Kopfhörer mit Mikro
+           reichen völlig. Eine Kamera ist nie Pflicht. Es läuft im Browser, du
+           musst nichts installieren.</p>
+      </details>
+      <details>
+        <summary>Was ist der Unterschied zur Community?</summary>
+        <p>Die Community ist die Lernplattform allein: Kurse, Vokabeln, Podcast,
+           Chat — ohne Live-Stunden. Der Sprechclub ist genau das, was dazukommt,
+           wenn du Mitglied auf dieser Seite wirst. Die ganze Plattform ist
+           mit drin.</p>
+      </details>
+      <details>
+        <summary>Mit wie vielen Leuten sitze ich da?</summary>
+        <p>Pro Stunde sind höchstens 20 Plätze zu vergeben, meist ist die Runde
+           deutlich kleiner. Gesprochen wird ohnehin viel in Kleingruppen zu
+           zweit oder zu dritt.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ================= Abschluss ================= -->
+<section>
+  <div class="huelle">
+    <div class="abschluss">
+      <h2>Der erste Satz ist der schwerste</h2>
+      <p>Danach wird es jedes Mal leichter. Und du musst ihn nicht heute sagen —
+         nur heute anfangen, dabei zu sein.</p>
+      <button class="knopf" onclick="zumPreis()">Platz im Sprechclub sichern</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="huelle">
+    <p><a href="/">deutschoderwas.de</a> · <a href="/preise">Alle Mitgliedschaften</a> · <a href="/agb.html">AGB</a> · <a href="/datenschutz.html">Datenschutz</a></p>
+    <p style="margin-top:10px">deutschoderwas · Julia Karackov · Wiesenstraße 38, 58119 Hagen · deutschoderwas@gmail.com · USt-ID: DE676677898</p>
+  </div>
+</footer>
+
+<!-- ================= Stripe-Fenster ================= -->
+<div class="bz-hg" id="bzHg" role="dialog" aria-modal="true" aria-labelledby="bzTitel">
+  <div class="bz">
+    <div class="bz-kopf">
+      <b id="bzTitel">Sichere Bezahlung</b>
+      <button class="bz-zu" onclick="bezahlenZu()" aria-label="Fenster schließen">&times;</button>
+    </div>
+    <div id="bzLaedt">Einen Moment, die Bezahlung wird geladen …</div>
+    <div id="bzFeld"></div>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script>
+/* ============================================================
+   Preis und Phase
+
+   Bis zum 31.10.2026 gilt der Startpreis: 49 EUR im Monat oder
+   468 EUR im Jahr (= 39 EUR pro Monat). Wer bis dahin bucht,
+   behaelt ihn dauerhaft — das Abo bekommt seinen eigenen Preis
+   mit, spaetere Aenderungen erreichen es nicht mehr.
+   Ab dem 1.11. gilt fuer neue Abos der Normalpreis: 99 EUR im
+   Monat, 999 EUR im Jahr (= 83 EUR pro Monat).
+
+   Der Sprechclub selbst oeffnet fuer Premium am 1. November.
+   Davor steht das als Hinweis unter dem Knopf — wer das erst
+   nach dem Kauf erfaehrt, fuehlt sich hereingelegt, und zu
+   Recht. Die Lernplattform ist sofort da.
+
+   Beide Daten stehen auch im Server (api/create-checkout.js).
+   Aendert sich dort etwas, muss es hier mit.
+   ============================================================ */
+var START_ENDE = Date.parse('2026-11-01T00:00:00+01:00');  // Startpreis laeuft bis dahin
+var CLUB_START = Date.parse('2026-11-01T00:00:00+01:00');  // ab dann buchbar
+
+function startpreisLaeuft(){ return Date.now() < START_ENDE; }
+function clubOffen(){ return Date.now() >= CLUB_START; }
+
+var PREMIUM = 'jahr';
+
+function setzePremium(was){
+  PREMIUM = was;
+  var j = (was === 'jahr'), spar = startpreisLaeuft();
+  var $ = function(i){ return document.getElementById(i); };
+
+  $('pM').classList.toggle('an', !j);
+  $('pJ').classList.toggle('an', j);
+  $('pM').setAttribute('aria-pressed', String(!j));
+  $('pJ').setAttribute('aria-pressed', String(j));
+
+  /* proMonat = was pro Monat herauskommt. jahrGesamt = was einmal
+     im Jahr abgebucht wird. Verglichen wird immer gegen 99 EUR,
+     den regulaeren Monatspreis — das ist der Preis, den man sonst
+     zahlen wuerde, und derselbe Vergleich wie auf /preise.
+     (Gegen die 83 EUR des spaeteren Jahresabos zu rechnen waere
+     zwar auch wahr, versteht aber niemand beim Ueberfliegen.) */
+  var proMonat   = spar ? (j ? 39 : 49) : (j ? 83 : 99);
+  var jahrGesamt = spar ? 468 : 999;
+  var regulaer   = 99;
+
+  $('pZahl').textContent = proMonat + ' €';
+
+  if (spar) {
+    var proz = Math.floor((1 - proMonat / regulaer) * 100);
+    $('pAlt').innerHTML = 'statt <s>' + regulaer + ' €</s> im Monat'
+      + '<span class="spar">−' + proz + ' %</span>'
+      + (j ? '<br>einmal im Jahr abgerechnet: ' + jahrGesamt + ' €' : '')
+      + '<br><b>Dieser Preis bleibt für dich dauerhaft.</b>';
+    $('pFahne').textContent = 'Startpreis · nur bis 31. Oktober';
+    $('pFahne').style.display = '';
+  } else {
+    $('pAlt').innerHTML = j ? 'jährlich abgerechnet (' + jahrGesamt + ' €)' : 'monatlich kündbar';
+    $('pFahne').style.display = 'none';
+  }
+
+  /* Die Rechnung gegen die Einzelstunde. Sie ist das staerkste
+     Argument und steht deshalb direkt ueber dem Knopf. */
+  var proStunde = (proMonat / 8).toFixed(2).replace('.', ',');
+  $('pRechnung').innerHTML =
+    'Das sind <b>' + proStunde + ' € pro Live-Stunde</b> '
+    + 'bei acht Stunden im Monat. Eine einzelne Unterrichtsstunde kostet '
+    + 'üblicherweise 25 bis 40 €.';
+
+  $('pKlein').textContent = j
+    ? 'Sichere Zahlung über Stripe · 12 Monate Laufzeit'
+    : 'Sichere Zahlung über Stripe · monatlich kündbar';
+
+  var h = $('startHinweis');
+  if (!clubOffen()) {
+    h.innerHTML = '<b>Wichtig, damit du es vorher weißt:</b> Der Sprechclub öffnet am '
+      + '<b>1. November</b>. Die Lernplattform kannst du ab sofort nutzen — Kurse, '
+      + 'Vokabeltrainer, Podcast. Deine Live-Stunden verfallen in der Wartezeit nicht.';
+    h.style.display = '';
+  } else {
+    h.style.display = 'none';
+  }
+}
+
+function zumPreis(){
+  var z = document.getElementById('preis');
+  if (z) z.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+/* ============================================================
+   Wochenplan — die echten Termine
+
+   Fest ins HTML geschrieben waere der Plan nach drei Wochen
+   falsch, und eine Uhrzeit, zu der niemand da ist, kostet mehr
+   Vertrauen als sie bringt. /api/wochenplan gibt nur Tag, Zeit,
+   Niveau und freie Plaetze heraus — keine Raumlinks, keine Namen.
+
+   Geht der Abruf schief, verschwindet der Abschnitt lieber ganz,
+   statt eine leere Tabelle zu zeigen.
+   ============================================================ */
+(function ladePlan(){
+  var gitter = document.getElementById('planGitter');
+  var notiz  = document.getElementById('planNotiz');
+  var raus   = function(){
+    var a = document.getElementById('plan');
+    if (a) a.style.display = 'none';
+  };
+  if (!/^https?:$/.test(location.protocol)) {
+    notiz.textContent = 'Vorschau — der Stundenplan wird auf der Live-Seite geladen.';
+    return;
+  }
+  fetch('/api/wochenplan?tage=7').then(function(r){ return r.json(); }).then(function(d){
+    var t = (d && d.termine) || [];
+    if (!t.length) { raus(); return; }
+
+    /* Nach Tag buendeln, Reihenfolge wie geliefert (schon sortiert). */
+    var folge = [], nach = {};
+    t.forEach(function(e){
+      var s = e.tag + '|' + e.datum;
+      if (!nach[s]) { nach[s] = []; folge.push(s); }
+      nach[s].push(e);
+    });
+
+    gitter.innerHTML = folge.map(function(s){
+      var teile = s.split('|');
+      return '<div class="tag"><h3>' + esc(teile[0]) + ' <small>' + esc(teile[1]) + '</small></h3>'
+        + nach[s].map(function(e){
+            var voll = e.frei <= 0;
+            return '<div class="stunde">'
+              + '<b>' + esc(e.zeit) + '</b>'
+              + (e.niveau ? '<span class="niv">' + esc(e.niveau) + '</span>' : '')
+              + '<span class="frei' + (voll ? ' voll' : '') + '">'
+              + (voll ? 'ausgebucht' : e.frei + ' frei') + '</span>'
+              + '</div>';
+          }).join('')
+        + '</div>';
+    }).join('');
+
+    notiz.textContent = 'Alle Zeiten in deutscher Zeit. Der Plan geht weiter — '
+      + 'hier stehen nur die nächsten sieben Tage.';
+  }).catch(raus);
+
+  function esc(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+      return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+    });
+  }
+})();
+
+/* ============================================================
+   Bezahlung — wie auf der Preisseite
+
+   Stripe oeffnet eingebettet in einem Fenster auf dieser Seite.
+   Geht das nicht auf (kein Schluessel, Skript geblockt), faellt
+   der Knopf auf die gehostete Stripe-Seite zurueck: lieber ein
+   Sprung als ein Kauf, der gar nicht zustande kommt.
+   ============================================================ */
+function meldung(text){ document.getElementById('meldung').textContent = text || ''; }
+function zurueck(knopf, alterText){ if (knopf){ knopf.disabled = false; knopf.textContent = alterText; } }
+
+var _bz = null;
+function bezahlenZu(){
+  try { if (_bz) { _bz.destroy(); _bz = null; } } catch(e){}
+  document.getElementById('bzHg').classList.remove('auf');
+  document.body.style.overflow = '';
+}
+document.getElementById('bzHg').addEventListener('click', function(e){
+  if (e.target === this) bezahlenZu();
+});
+document.addEventListener('keydown', function(e){
+  if (e.key === 'Escape') bezahlenZu();
+});
+
+async function bezahlen(passId, knopf, alterText){
+  meldung('');
+  if (!/^https?:$/.test(location.protocol)) {
+    meldung('Vorschau — die Bezahlung läuft auf der Live-Seite.');
+    zurueck(knopf, alterText); return;
+  }
+  var pk = (window.SPRECHCLUB_CONFIG && window.SPRECHCLUB_CONFIG.STRIPE_PK) || '';
+
+  // 1) Eingebettet auf dieser Seite
+  if (pk && typeof Stripe !== 'undefined') {
+    try {
+      var r = await fetch('/api/create-checkout', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ embedded:true, passId:passId })
+      });
+      var j = await r.json();
+      if (j && j.clientSecret) {
+        document.getElementById('bzFeld').innerHTML = '';
+        document.getElementById('bzLaedt').style.display = '';
+        document.getElementById('bzHg').classList.add('auf');
+        document.body.style.overflow = 'hidden';
+        try { if (_bz) { _bz.destroy(); _bz = null; } } catch(e){}
+        _bz = await Stripe(j.publishableKey || pk).initEmbeddedCheckout({ clientSecret: j.clientSecret });
+        _bz.mount('#bzFeld');
+        document.getElementById('bzLaedt').style.display = 'none';
+        zurueck(knopf, alterText);
+        return;
+      }
+    } catch (e) { /* weiter zum Rueckfall */ }
+  }
+
+  // 2) Rueckfall: die gehostete Stripe-Seite
+  try {
+    var r2 = await fetch('/api/create-checkout', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ passId:passId })
+    });
+    var j2 = await r2.json();
+    if (j2 && j2.url) { location.href = j2.url; return; }
+  } catch (e) {}
+  zurueck(knopf, alterText);
+  meldung('Das hat gerade nicht geklappt — versuch es bitte gleich noch einmal.');
+}
+
+async function premiumKnopf(btn){
+  meldung('');
+  var alt = btn.textContent;
+  btn.disabled = true; btn.textContent = 'Einen Moment …';
+  await bezahlen(PREMIUM === 'jahr' ? 'premium_year' : 'premium_month', btn, alt);
+}
+
+setzePremium('jahr');
+</script>
+<script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
