@@ -1251,7 +1251,12 @@
       if(e.img){ h+='<img class="ub-qimg" src="'+E(e.img)+'" alt="" onerror="this.remove()">'; }
       h+='<div class="ub-tip" style="margin-bottom:4px">'+E(e.label||'🎧 Hör gut zu – du kannst mehrmals hören')
          +(e.__blockVon>1?' · Frage '+e.__blockNr+' von '+e.__blockVon:'')+'</div>'+
-         '<button class="ub-play" onclick="ubPlayUrl(\''+E(e.audioUrl)+'\',this)">▶</button>'+
+         /* Mit Aufnahme der ▶-Knopf, ohne Aufnahme liest die Stimme des
+            Geraets das Transkript vor. Vorher stand hier ein Knopf auf
+            undefined — dieselbe Luecke wie beim Shadowing. */
+         (e.audioUrl
+           ? '<button class="ub-play" onclick="ubPlayUrl(\''+E(e.audioUrl)+'\',this)">▶</button>'
+           : tonKnoepfe(e.transcript || e.q))+
          '<div class="ub-q">'+E(e.q)+'</div><div class="ub-opts" id="ubOpts">'+
          shuf(e.options.map(function(o,k){return k;})).map(function(k){ return '<button class="ub-opt" data-k="'+k+'" onclick="ubChoose('+k+')">'+E(e.options[k])+'</button>'; }).join('')+'</div>';
     } else if(e.type==='shadow'){
