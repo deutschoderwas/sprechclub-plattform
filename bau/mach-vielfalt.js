@@ -46,7 +46,14 @@ require(path.join(wurzel, 'uebungen.js'));
 ['hoer-neu.js', 'hoeren-a1-neu.js', 'aussprache-neu.js', 'hoeren-b2-neu.js',
  'hoeren-c1-neu.js', 'wortschatz-neu.js', 'grammatik-reihenfolge.js',
  'wortschatz-a1-neu.js', 'grammatik-neu.js', 'grammatik-c1-neu.js', 'grammatik-b2c1-mehr.js',
- 'lesen-schreiben-neu.js', 'wortschatz-plus.js'].forEach(f => {
+ 'lesen-schreiben-neu.js', 'wortschatz-plus.js',
+ /* Die Dateien vom Oktober 2026. Ohne sie bekamen ihre Themen keine
+    zusaetzlichen Formen — der Generator kannte sie schlicht nicht.
+    themen-zusammenfuehren.js laeuft hier nicht mit, deshalb steht
+    grammatik-c1-plus.js mit zwei ids drin, die es schon gibt; die
+    Schluessel sind dieselben, die Aufgaben landen am selben Platz. */
+ 'lesen-schreiben-plus.js', 'grammatik-c1-plus.js', 'aussprache-plus.js',
+ 'hoeren-b2c1-plus.js'].forEach(f => {
   try { require(path.join(wurzel, f)); } catch (e) {}
 });
 const U = global.window.UEBUNGEN;
