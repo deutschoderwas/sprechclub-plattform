@@ -37,6 +37,7 @@
 //  dann den Textchat, der wie bisher laeuft.
 // ============================================================
 import { createClient } from '@supabase/supabase-js';
+import { hatVollzugang, ZUGANG_SPALTEN } from './_zugang.js';
 
 const SUPA    = process.env.SUPABASE_URL;
 const SERVICE = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -63,15 +64,11 @@ function erlaubteHerkunft(req) {
   return /deutschoderwas-club\.de|deutschoderwas\.de|localhost|127\.0\.0\.1|vercel\.app/i.test(o);
 }
 
-/* Darf diese Person ueberhaupt sprechen? Dieselbe Regel wie ueberall:
-   aktives Abo oder laufender Pass. */
-function darfSprechen(p) {
-  if (!p) return false;
-  if (p.is_admin || p.is_teacher) return true;
-  if (p.status && /aktiv|active|trial/i.test(p.status)) return true;
-  if (p.pass_until && new Date(p.pass_until) > new Date()) return true;
-  return false;
-}
+/* Die Zugangsregel steht seit dem 12.10.2026 in api/_zugang.js und
+   gilt fuer beide Amanda-Wege. Vorher stand hier eine eigene, zu
+   weite Fassung: Sie liess jeden mit status 'aktiv' sprechen — auch
+   Altschueler ohne Guthaben, die auf der Plattform sonst nichts
+   mehr duerfen. Amanda kostet pro Minute. */
 
 /* ElevenLabs kennt zwei Wege ins Gespraech. WebRTC ist der bessere
    (weniger Verzoegerung, haelt schlechtes Netz besser aus), aber
@@ -154,11 +151,11 @@ export default async function handler(req, res) {
 
   const { data: prof } = await admin
     .from('profiles')
-    .select('name, level, stufe, native_language, status, tier, pass_until, is_admin, is_teacher')
+    .select('name, level, stufe, native_language, ' + ZUGANG_SPALTEN)
     .eq('id', uid)
     .single();
 
-  if (!darfSprechen(prof)) return res.status(402).json({ error: 'kein_zugang' });
+  if (!(await hatVollzugang(admin, uid, prof))) return res.status(402).json({ error: 'kein_zugang' });
 
   // ---- Minutengrenze ------------------------------------------------
   const grenze = /premium/i.test(prof?.tier || '') ? GRENZE_PREMIUM : GRENZE;

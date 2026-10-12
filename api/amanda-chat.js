@@ -10,6 +10,7 @@
 //  wenn wirklich etwas falsch war — mitten im Gespräch, ohne es zu bremsen.
 // ============================================================
 import { createClient } from '@supabase/supabase-js';
+import { hatVollzugang } from './_zugang.js';
 
 const MODEL = process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-6';
 
@@ -98,6 +99,15 @@ export default async function handler(req, res) {
   const admin = createClient(url, service);
   const { data: ures, error: uerr } = await admin.auth.getUser(token);
   if (uerr || !ures?.user) return res.status(401).json({ error: 'invalid_token' });
+
+  /* Bis zum 12.10.2026 stand hier nichts weiter: Ein gueltiger Login
+     genuegte, und damit konnte jeder angemeldete Mensch mit Amanda
+     schreiben — auch Altschueler ohne Guthaben und Leute, die sich
+     nur registriert hatten. Jede Nachricht kostet bei Anthropic Geld.
+     Dieselbe Regel wie beim Sprechen und wie in has_full_access(). */
+  if (!(await hatVollzugang(admin, ures.user.id))) {
+    return res.status(402).json({ error: 'kein_zugang' });
+  }
 
   let { verlauf, level, l1, thema } = req.body || {};
   if (!Array.isArray(verlauf)) verlauf = [];
