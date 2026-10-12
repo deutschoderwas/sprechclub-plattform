@@ -131,6 +131,8 @@ export default async function handler(req, res) {
   // Der Browser meldet sich am Ende noch einmal. Kommt die Meldung nie
   // an (Netz weg, Tab zu), rechnet amanda_monat_sekunden die laufende
   // Zeit trotzdem mit — niemand entkommt der Grenze durch Wegklicken.
+  // Seit dem 12.10.2026 aber hoechstens 15 Minuten statt einer vollen
+  // Stunde, und beim naechsten Start wird die alte Zeile geschlossen.
   if (String(req.body?.aktion || '') === 'ende') {
     const id = Number(req.body?.gespraech || 0);
     const sek = Math.max(0, Math.min(3600, Number(req.body?.sekunden || 0)));
@@ -182,6 +184,21 @@ export default async function handler(req, res) {
   } catch (e) {
     return res.status(502).json({ error: 'eleven_fehler', detail: String(e.message || e).slice(0, 220) });
   }
+
+  /* Liegengebliebene Gespraeche schliessen, bevor ein neues anfaengt.
+     Meldet der Browser das Ende nie (Netz weg, Tab zu, Absturz), bleibt
+     die Zeile offen und zaehlt weiter mit. Wer jetzt ein neues Gespraech
+     beginnt, spricht sicher nicht mehr im alten — also wird es beendet.
+     Ohne diese Zeilen sammelten sich die offenen Gespraeche an: am
+     11.10.2026 hatte eine Schuelerin drei davon und war damit fuer den
+     Rest des Monats gesperrt, nach 14 Sekunden echtem Gespraech. */
+  try {
+    await admin
+      .from('amanda_gespraeche')
+      .update({ beendet: new Date().toISOString(), abgebrochen: true })
+      .eq('user_id', uid)
+      .is('beendet', null);
+  } catch (e) { /* nicht schlimm — amanda_monat_sekunden deckelt jetzt bei 15 Minuten */ }
 
   // ---- Gespraech eroeffnen (die Sekunden traegt der Browser nach) ----
   let zeile = null;
