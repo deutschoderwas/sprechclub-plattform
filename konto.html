@@ -1468,6 +1468,13 @@ const /* Vorverkauf: Wer Premium vor dem 1.11. kauft, zahlt sofort und darf die
    Lernbereich bis zum 1. November zu, obwohl er bezahlt und fertig ist. */
 VORVERKAUF_ZU=['kalender','stunden'];
 const LOCKED_VIEWS=['szenen','pruefung','amandasprechen','kalender','dashboard','weg','lernen','sprechen','medien','bereiche','kurs','schreiben','kurse','ueben','community','dm','lernpfad','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','fehler','buddy','fertigkeit'];
+/* Diese beiden Ansichten bleiben auch gesperrten Altschuelern offen:
+   die Materialien und der Stundenplan mit dem Material der Stunden,
+   die sie gebucht hatten. Alles andere aus LOCKED_VIEWS ist zu —
+   Lernbereich, Community, Amanda. Die Datenbank sieht es genauso
+   (RLS auf materials mit ist_altschueler(), und "Material sichtbar
+   fuer Gebuchte" auf class_materials). */
+const ALTSCHUELER_OFFEN=['materialien','stunden'];
 function show(v){
   VIEWS.forEach(x=>{var _e=document.getElementById('v-'+x); if(_e) _e.classList.toggle('active',x===v);});
   document.querySelectorAll('.navlink[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));
@@ -1477,7 +1484,7 @@ function show(v){
   try{updateTopbar(v);}catch(e){}
   document.body.classList.remove('nav-open');
   try{ sprechclubMarkieren(); }catch(e){}
-  if(LOCKED_VIEWS.includes(v) && !isActive()){ renderLocked(v); window.scrollTo(0,0); return; }
+  if(LOCKED_VIEWS.includes(v) && !isActive() && !(ALTSCHUELER_OFFEN.includes(v) && istAltschueler())){ renderLocked(v); window.scrollTo(0,0); return; }
   if(nochNichtOffen() && VORVERKAUF_ZU.includes(v)){ renderVorverkauf(v); window.scrollTo(0,0); return; }
   /* Der Sprechclub ist Premium. Frueher sprang die Seite hier zurueck
      auf die Startseite — wer auf „Wochenplan“ tippte, landete ohne
@@ -1545,7 +1552,7 @@ function renderSprechclubZu(v){
    vokabeln.js), muessen die Zugangsregel kennen — sonst ueberschreiben sie
    die Sperrseite, sobald sie fertig geladen haben. Sie fragen hier nach. */
 window.zugangGesperrt = function(v){
-  try{ return LOCKED_VIEWS.includes(v) && !isActive(); }catch(e){ return false; }
+  try{ return LOCKED_VIEWS.includes(v) && !isActive() && !(ALTSCHUELER_OFFEN.includes(v) && istAltschueler()); }catch(e){ return false; }
 };
 function renderLockedNachsetzen(v){
   [350, 1400].forEach(function(ms){
@@ -1553,7 +1560,7 @@ function renderLockedNachsetzen(v){
       try{
         var el = document.getElementById('v-'+v);
         if(!el || !el.classList.contains('active')) return;
-        if(!LOCKED_VIEWS.includes(v) || isActive()) return;
+        if(!LOCKED_VIEWS.includes(v) || isActive() || (ALTSCHUELER_OFFEN.includes(v) && istAltschueler())) return;
         if(el.querySelector('[data-i18n="lk_h3"]')) return;   // Sperrseite steht noch
         renderLocked(v);
       }catch(e){}
@@ -1785,7 +1792,22 @@ function isActive(){
       && (s === 'aktiv' || s === '' || s === 'urlaub' || s === 'pause')) return true;
   if (credits > 0 || passActive()) return true;
   if (stats && stats.upcoming && stats.upcoming.length > 0) return true;
-  return s === 'aktiv' || s === 'urlaub' || s === 'pause';
+  /* Hier stand bis zum 12.10.2026 noch ein Rueckfall auf
+     s === 'aktiv' || 'urlaub' || 'pause'. Der widersprach dem
+     Kommentar darueber und has_full_access() in der Datenbank: Eine
+     Altschuelerin ohne Guthaben kam damit in den Lernbereich hinein,
+     fand dort aber leere Listen, weil die Datenbank sie nicht
+     durchliess. Jetzt sagen beide dasselbe. */
+  return false;
+}
+
+/* Wer schon einmal eine Stunde gebucht hat, behaelt die Materialien
+   und das Material seiner Stunden — auch ohne Guthaben. Julias Regel
+   vom 12.10.2026. In der Datenbank heisst dieselbe Pruefung
+   ist_altschueler(). */
+function istAltschueler(){
+  try { return Array.isArray(bookings) && bookings.some(b => b && b.status === 'booked'); }
+  catch(e){ return false; }
 }
 function lockBanner(){
   return `<div class="card" style="border:2px solid #f5b942;background:#FFFFFF;margin-bottom:14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
@@ -2380,7 +2402,7 @@ function kalEv(c){
   else if((Number(c.capacity)||0)===0){ btn=`<span class="ev-btn off">kein Unterricht</span>`; }
   else if(free<=0){ btn=`<span class="ev-btn off">ausgebucht</span>`; }
   else{ btn=`<button class="ev-btn book" onclick="kalBook('${c.id}')">Buchen</button>`; }
-  const matBtn = (c.has_material && isActive()) ? `<button class="ev-btn mat" onclick="openClassMaterial('${c.id}',${c.mine?1:0})">📚 Material</button>` : '';
+  const matBtn = (c.has_material && (isActive() || c.mine)) ? `<button class="ev-btn mat" onclick="openClassMaterial('${c.id}',${c.mine?1:0})">📚 Material</button>` : '';
   const noPrep = (c.club==='sprachspielclub') ? `<div class="ev-note">✨ Keine Vorbereitung nötig</div>` : '';
   const _cap=Number(c.capacity)||0, _free=Math.max(0,_cap-(Number(c.booked)||0));
   let seats='';
@@ -2470,7 +2492,9 @@ function kalRenderMonth(){
 function selectKalDay(k){kalSelDay=k;kalRenderMonth();}
 
 async function openClassMaterial(classId, booked){
-  if(!isActive()){ toast('Material gibt es mit aktivem Guthaben — ich bring dich zu den Paketen 😊'); setTimeout(()=>{ location.href='live.html#pakete'; }, 900); return; }
+  /* Das Material der eigenen gebuchten Stunde bleibt offen, auch ohne
+     Guthaben — nur fremdes Material haengt am Paket. */
+  if(!isActive() && !booked){ toast('Material gibt es mit aktivem Guthaben — ich bring dich zu den Paketen 😊'); setTimeout(()=>{ location.href='live.html#pakete'; }, 900); return; }
   let m=materials[classId];
   if(!m){
     const {data}=await sb.from('class_materials').select('content').eq('class_id',classId).maybeSingle();
