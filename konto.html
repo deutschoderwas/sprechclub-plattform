@@ -1792,13 +1792,14 @@ function isActive(){
       && (s === 'aktiv' || s === '' || s === 'urlaub' || s === 'pause')) return true;
   if (credits > 0 || passActive()) return true;
   if (stats && stats.upcoming && stats.upcoming.length > 0) return true;
-  /* Hier stand bis zum 12.10.2026 noch ein Rueckfall auf
-     s === 'aktiv' || 'urlaub' || 'pause'. Der widersprach dem
-     Kommentar darueber und has_full_access() in der Datenbank: Eine
-     Altschuelerin ohne Guthaben kam damit in den Lernbereich hinein,
-     fand dort aber leere Listen, weil die Datenbank sie nicht
-     durchliess. Jetzt sagen beide dasselbe. */
-  return false;
+  /* Ein alter Schueler mit 0 Guthaben behaelt den Zugang, solange sein
+     Status aktiv ist — Julias Regel vom 13.10.2026. Zu ist erst, wer
+     im Archiv steht; dorthin schiebt ihn der naechtliche Lauf nach 14
+     Tagen ohne Guthabenbewegung, und die GESPERRT-Liste oben faengt
+     ihn dann ab. (Am 12.10. stand hier kurz ein hartes return false:
+     kein Guthaben, kein Zugang. Das griff zu frueh.)
+     Dieselbe Zeile steht in has_full_access() in der Datenbank. */
+  return s === 'aktiv' || s === 'urlaub' || s === 'pause';
 }
 
 /* Wer schon einmal eine Stunde gebucht hat, behaelt die Materialien
