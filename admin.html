@@ -118,6 +118,17 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--turq)}
     <div><a class="btn btn-primary" href="admin-kurse.html">🎓 Kurse verwalten</a> <button class="btn btn-ghost" onclick="rundmailOeffnen()">✉️ Rundmail</button> <a class="btn btn-ghost" href="index.html">Zur Seite</a> <button class="btn btn-ghost" onclick="logout()">Abmelden</button></div>
   </div>
 
+  <!-- Einmalige Richtigstellung an die 27, die "8 LIVE-Stunden" in der
+       Bestaetigungsmail stehen hatten. Verschwindet von allein, sobald
+       alle sie haben. Siehe api/korrektur-premium-mail.js. -->
+  <div class="card" id="korrKarte" style="display:none;border:2px solid #FFCE00;background:#FFFCF5;margin-bottom:14px;padding:16px 18px">
+    <b>✉️ Korrektur-Mail an Premium-Mitglieder</b>
+    <p class="muted" id="korrText" style="margin:6px 0 12px">Wird geprüft …</p>
+    <button class="btn btn-ghost" onclick="korrPruefen()">Wer bekäme sie?</button>
+    <button class="btn btn-primary" id="korrSenden" onclick="korrSenden()" style="display:none">Jetzt verschicken</button>
+    <div id="korrErgebnis" class="muted" style="margin-top:10px;white-space:pre-wrap"></div>
+  </div>
+
   <div class="bereiche" id="bereiche"></div>
   <div class="tabs" id="reiter"></div>
 
@@ -3234,6 +3245,57 @@ async function kiSchalten(id, neu){
   ladeKiTeam();
 }
 
+</script>
+
+<script>
+/* ---- Korrektur-Mail (einmalig, Oktober 2026) -------------------------
+   Der Endpunkt laesst nur Admins durch und merkt sich jeden Versand.
+   Zweimal klicken schadet also nicht: Wer die Mail hat, bekommt sie
+   nicht noch einmal. Die Karte blendet sich aus, sobald niemand mehr
+   offen ist. */
+async function korrRuf(pfad){
+  const { data:{ session } } = await sb.auth.getSession();
+  if(!session) throw new Error('nicht angemeldet');
+  const r = await fetch(pfad, { method:'POST',
+    headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+session.access_token } });
+  return r.json();
+}
+async function korrPruefen(){
+  const z = document.getElementById('korrErgebnis');
+  z.textContent = 'Einen Moment …';
+  try{
+    const d = await korrRuf('/api/korrektur-premium-mail?trocken=1');
+    if(d.error){ z.textContent = 'Fehler: '+d.error; return; }
+    document.getElementById('korrSenden').style.display = d.offen > 0 ? '' : 'none';
+    z.textContent = d.offen + ' offen, ' + d.schon_verschickt + ' schon verschickt'
+      + (d.adressen && d.adressen.length ? '\n\n' + d.adressen.join('\n') : '');
+    if(d.offen === 0) document.getElementById('korrText').textContent = 'Alle haben die Korrektur bekommen.';
+  }catch(e){ z.textContent = 'Fehler: '+e.message; }
+}
+async function korrSenden(){
+  if(!confirm('Die Korrektur-Mail jetzt wirklich verschicken?')) return;
+  const z = document.getElementById('korrErgebnis');
+  const k = document.getElementById('korrSenden');
+  k.disabled = true; z.textContent = 'Wird verschickt …';
+  try{
+    const d = await korrRuf('/api/korrektur-premium-mail');
+    if(d.error){ z.textContent = 'Fehler: '+d.error; k.disabled = false; return; }
+    z.textContent = d.anzahl + ' verschickt'
+      + (d.fehler && d.fehler.length ? '\n\nFehler bei:\n' + d.fehler.map(f=>f.email+' — '+(f.text||f.status)).join('\n') : '')
+      + (d.verschickt && d.verschickt.length ? '\n\n' + d.verschickt.join('\n') : '');
+    k.style.display = 'none';
+  }catch(e){ z.textContent = 'Fehler: '+e.message; k.disabled = false; }
+}
+/* Beim Laden einmal nachsehen, ob noch jemand offen ist. */
+setTimeout(function(){
+  korrRuf('/api/korrektur-premium-mail?trocken=1').then(function(d){
+    if(d && !d.error && d.offen > 0){
+      document.getElementById('korrKarte').style.display = '';
+      document.getElementById('korrText').textContent =
+        d.offen + ' Premium-Mitglieder haben die falsche Bestätigung bekommen ("8 LIVE-Stunden" statt unbegrenzt). Die Richtigstellung ist fertig und wartet.';
+    }
+  }).catch(function(){});
+}, 1200);
 </script>
 </body>
 </html>

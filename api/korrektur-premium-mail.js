@@ -103,10 +103,6 @@ function html(vorname) {
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'method_not_allowed' });
 
-  const geheim = process.env.CRON_SECRET;
-  if (!geheim || req.headers['x-intern'] !== geheim) {
-    return res.status(401).json({ error: 'nicht_erlaubt' });
-  }
   if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
     return res.status(500).json({ error: 'supabase_env_missing' });
   }
@@ -115,6 +111,26 @@ export default async function handler(req, res) {
   const trocken = !!(req.query && req.query.trocken);
   const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY,
     { auth: { persistSession: false } });
+
+  /* Zwei Wege herein, beide gleich eng:
+     · x-intern mit dem CRON_SECRET (vom Server aus)
+     · Authorization: Bearer <Session> einer angemeldeten Admin-Person
+       — damit Julia im Admin-Bereich einen Knopf hat und nirgends
+       einen Schluessel eintippen muss. */
+  const geheim = process.env.CRON_SECRET;
+  let erlaubt = !!geheim && req.headers['x-intern'] === geheim;
+  if (!erlaubt) {
+    const token = String(req.headers.authorization || '').replace(/^Bearer\s+/i, '');
+    if (token) {
+      const { data: u } = await sb.auth.getUser(token);
+      if (u && u.user) {
+        const { data: prof } = await sb.from('profiles')
+          .select('is_admin').eq('id', u.user.id).maybeSingle();
+        erlaubt = !!(prof && prof.is_admin);
+      }
+    }
+  }
+  if (!erlaubt) return res.status(401).json({ error: 'nicht_erlaubt' });
 
   const { data: leute, error } = await sb
     .from('profiles')
