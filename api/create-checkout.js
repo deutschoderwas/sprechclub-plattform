@@ -49,6 +49,14 @@ const PLANS = {
   community_month: { abo: true, interval:'month', stunden: 0, preis: 16,  tier:'community', label: 'Community',
     desc: 'Die ganze Lernplattform: Kursbibliothek A1–C1, Vokabeltrainer, täglicher Podcast und Community. Monatlich kündbar.' },
   // --- NEU ab 08/2026: Premium zum Seitenpreis (49 € / 37 € im Jahresabo). Das alte 149-€-Premium bleibt fuer Bestandskunden. ---
+  /* ACHTUNG, stunden: 8 ist hier KEINE Stundenzahl fuers Buchen.
+     Premium bucht ab tier_ab unbegrenzt — book_class fragt dann gar
+     nicht nach Guthaben. Das Feld steuert nur noch zwei Dinge:
+     pass_until (Zugang zur Lernplattform) und das Amanda-Minuten-
+     budget. Wer es auf 0 setzt, nimmt den Premium-Mitgliedern
+     versehentlich den Plattformzugang. Guthaben bekommen sie seit
+     dem 13.10.2026 keines mehr: apply_pending_purchases ueberspringt
+     die Gutschrift fuer alle premium-Plaene. */
   premium_month:   { abo: true, interval:'month', stunden: 8, preis: 49,  tier:'premium', label: 'Premium',
     desc: 'Alles aus Community + Sprechclub: täglich von Montag bis Sonntag mit echten Menschen Deutsch sprechen, zu spannenden Themen. Monatlich kündbar.' },
   premium_year:    { abo: true, interval:'year',  stunden: 8, preis: 468, tier:'premium', label: 'Premium',

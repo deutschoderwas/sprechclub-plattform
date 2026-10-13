@@ -219,7 +219,15 @@ async function sendPaymentMail(sub, inv) {
   try {
     const userId = sub.metadata?.userId;
     const stunden = parseInt(sub.metadata?.stunden || '0', 10);
-    if (!userId || !stunden) return; // kein Club-Abo (z. B. Amanda) -> keine Stunden-Mail
+    const tier = String(sub.metadata?.tier || '');
+    /* Premium und Premium Plus sind Mitgliedschaften mit unbegrenztem
+       Buchen ab dem Starttag — keine Stundenpakete. Bis zum 13.10.2026
+       stand in dieser Mail trotzdem "8 LIVE-Stunden", weil der Plan
+       intern stunden:8 trug. 27 Leute haben diese falsche Mail
+       bekommen. */
+    const abo = /premium/.test(tier);
+    const abDatum = tier === 'premiumplus' ? '1. Februar 2027' : '1. November 2026';
+    if (!userId || (!stunden && !abo)) return; // kein Club-Abo (z. B. Amanda) -> keine Mail
     const email = inv.customer_email; if (!email) return;
     if (!process.env.BREVO_API_KEY) return;
     const name = ((inv.customer_name || '').trim().split(' ')[0]) || '';
@@ -241,8 +249,11 @@ async function sendPaymentMail(sub, inv) {
         <span style="font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#DD0000">Zahlung erfolgreich</span>
         <h1 style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:26px;line-height:1.2;margin:8px 0 14px;color:#1A1A1A">Deine Stunden sind da! 🎉</h1>
         <p style="font-size:16px;line-height:1.6;margin:0 0 12px">${hallo}</p>
-        <p style="font-size:16px;line-height:1.6;margin:0 0 14px">wie schön, dass du dabei bist! 💛 Deine Zahlung ist angekommen und ich hab dir gerade deine <b>${stunden} LIVE-Stunden</b> gutgeschrieben. Jetzt kann's losgehen – such dir im Stundenplan aus, worauf du Lust hast, und buch deine erste Stunde.</p>
-        <div style="background:#fff;border-left:4px solid #7ED8EA;border-radius:10px;padding:10px 14px;margin:6px 0 4px;font-size:14px"><b>Dein Tarif:</b> ${label} · ${stunden} LIVE-Stunden / Monat</div>
+        <p style="font-size:16px;line-height:1.6;margin:0 0 14px">wie schön, dass du dabei bist! 💛 Deine Zahlung ist angekommen.</p>
+        <p style="font-size:16px;line-height:1.6;margin:0 0 14px">${abo
+          ? `Deine Mitgliedschaft startet am <b>${abDatum}</b>. Ab dann buchst du im Sprechclub <b>so viele Stunden, wie du willst</b> – ohne Guthaben, ohne Limit. Du kannst dir deine Stunden ab dem ${abDatum} <b>schon jetzt</b> im Stundenplan aussuchen und reservieren. Die Lernplattform mit Kursen, Vokabeltrainer und Podcast steht dir ab sofort offen.`
+          : `Ich hab dir gerade deine <b>${stunden} LIVE-Stunden</b> gutgeschrieben. Jetzt kann's losgehen – such dir im Stundenplan aus, worauf du Lust hast, und buch deine erste Stunde.`}</p>
+        <div style="background:#fff;border-left:4px solid #7ED8EA;border-radius:10px;padding:10px 14px;margin:6px 0 4px;font-size:14px"><b>Dein Tarif:</b> ${label} · ${abo ? `unbegrenzt buchen ab ${abDatum}` : `${stunden} LIVE-Stunden / Monat`}</div>
       </td></tr>
       <tr><td align="center" style="padding:14px 32px 4px">
         <a href="${BOOK}" style="display:inline-block;background:linear-gradient(135deg,#7ED8EA,#35AFD0);color:#10627A;font-weight:700;font-size:16px;text-decoration:none;padding:14px 30px;border-radius:999px">📅 Jetzt Stunde buchen</a>
@@ -534,13 +545,23 @@ export default async function handler(req, res) {
   const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 
   // Stunden gutschreiben — idempotent über credit_log.stripe_session_id (dedupeKey).
+  /* ohneGuthaben: Nur Altschueler rechnen noch mit Credits ab. Wer eine
+     Mitgliedschaft hat (Community, Premium, Premium Plus), bucht nicht
+     ueber Guthaben — Premium ab tier_ab unbegrenzt, Community gar nicht
+     live. Trotzdem braucht der Aufruf passDays, denn daran haengt
+     pass_until und damit der Zugang zur Lernplattform. Deshalb nimmt
+     grant jetzt change=0 an und setzt dann nur den Pass.
+     (13.10.2026 — vorher bekamen eingeloggte Premium-Kaeufer hier
+     8 Stunden Guthaben und konnten damit im Oktober buchen.) */
   async function grant(userId, change, reason, dedupeKey, passDays) {
-    if (!userId || !change) return;
+    if (!userId) return;
+    if (!change && !passDays) return;
     const { data: exists } = await sb.from('credit_log').select('id').eq('stripe_session_id', dedupeKey).maybeSingle();
     if (exists) return; // schon verbucht
-    await sb.from('credit_log').insert({ user_id: userId, change, reason, stripe_session_id: dedupeKey });
+    await sb.from('credit_log').insert({ user_id: userId, change: change || 0, reason, stripe_session_id: dedupeKey });
     const { data: p } = await sb.from('profiles').select('credits,pass_until').eq('id', userId).maybeSingle();
-    const patch = { credits: (p?.credits || 0) + change };
+    const patch = {};
+    if (change) patch.credits = (p?.credits || 0) + change;
     if (passDays) {
       const base = (p?.pass_until && new Date(p.pass_until) > new Date()) ? new Date(p.pass_until) : new Date();
       base.setDate(base.getDate() + passDays);
@@ -818,7 +839,11 @@ export default async function handler(req, res) {
           // Premium + alte Pässe: Stunden gutschreiben (grant setzt auch pass_until fürs Buchen).
           // Beim Vorverkauf laufen die Stunden erst ab dem Starttag ab (Wartezeit wird draufgelegt).
           const abPrem = (tier === 'premium') ? await startFuer(userId, 'premium') : null;
-          await grant(userId, stunden, 'abo:' + plan, 'inv_' + inv.id, 31 + tageBis(abPrem));
+          /* Mitgliedschaft: kein Guthaben, nur der Pass. Altpaesse
+             (testpass, gelegenheitspass, allinclusive, sparpass) haben
+             kein tier und bekommen ihre Stunden wie bisher. */
+          const istAbo = /premium/.test(String(tier || ''));
+          await grant(userId, istAbo ? 0 : stunden, 'abo:' + plan, 'inv_' + inv.id, 31 + tageBis(abPrem));
           /* Premium beim ersten Mal: die gewohnte Stunden-Mail. Ab der ersten
              Verlaengerung stattdessen die Zahlungsbestaetigung mit dem Hinweis,
              sich im Wochenplan eine Stunde auszusuchen. Alte Paesse behalten

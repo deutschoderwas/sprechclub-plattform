@@ -1,0 +1,55 @@
+-- 2026-10-13 — Premium ist eine Mitgliedschaft, kein Stundenpaket
+--
+-- Julias Regel, woertlich:
+--   "Alte Schueler: wie immer, bei Buchung Credit weg, bei Stornierung
+--    des Unterrichts Credit gutgeschrieben. Bei PREMIUM Schuelern KEINE
+--    Credits. Buchung des Unterrichts ab dem 01.11 moeglich und
+--    UNLIMITED Abo, buchen so oft sie moechten."
+--
+-- Was falsch lief:
+--   Stripe schickt pro Abo zwei Rechnungsereignisse. Der Webhook legte
+--   fuer jedes eine Zeile in pending_purchases an, je mit stunden = 8.
+--   apply_pending_purchases buchte beide gut -> 16 Credits pro Person
+--   bei 27 Leuten. Mit diesem Guthaben konnten sie im Oktober buchen,
+--   obwohl die Mitgliedschaft erst am 1. November beginnt. In der
+--   Bestaetigungsmail stand ausserdem "8 LIVE-Stunden".
+--   Gebucht hat vor dem 1. November niemand — nachgesehen am 13.10.
+--
+-- Drei Aenderungen hier, zwei weitere in api/ (stripe-webhook.js:
+-- grant() und sendPaymentMail):
+--
+-- 1. apply_pending_purchases schreibt fuer premium-Plaene kein Guthaben
+--    mehr gut. pass_until bleibt — daran haengt der Zugang zur
+--    Lernplattform, nicht das Buchen.
+-- 2. book_class entscheidet ueber tier_ab und ueber den Termin der
+--    Stunde, nicht ueber das heutige Datum:
+--      Stunde vor tier_ab   -> Buchung abgelehnt, auch mit Guthaben
+--      Stunde ab tier_ab    -> unbegrenzt, ohne Guthaben
+--    Mitglieder ohne tier_ab (das alte 149-Euro-Premium) behalten die
+--    alte Regel, damit sich fuer sie nichts aendert.
+-- 3. Die 16 Credits der 27 Konten auf 0, mit Eintrag im credit_log.
+--
+-- Stornierung musste nicht angefasst werden: cancel_booking schreibt
+-- nur gut, wenn buchung_offen() eine echte Abbuchung findet. Premium
+-- bucht ohne Abbuchung, bekommt also auch nichts zurueck.
+
+-- (1) und (2) stehen im Repo-Verlauf; hier die einmalige Korrektur (3),
+--     am 13.10.2026 gelaufen, 27 Zeilen:
+--
+-- with betroffen as (
+--   select id, coalesce(credits,0) as alt from profiles
+--   where tier in ('premium','premiumplus','premium_plus')
+--     and tier_ab = '2026-11-01' and coalesce(credits,0) <> 0
+-- ), log as (
+--   insert into credit_log (user_id, change, reason)
+--   select id, -alt, 'korrektur:premium-ohne-guthaben (...)' from betroffen
+--   returning user_id
+-- )
+-- update profiles p set credits = 0 from betroffen b where p.id = b.id;
+
+-- Stand danach:
+--   Altschueler ohne Abo              60 Leute, 29 mit Guthaben (296)
+--   Mitgliedschaft ab 01.11.2026      27 Leute, 0 mit Guthaben
+--   Community                         19 Leute, 0 mit Guthaben
+--   altes Premium ohne Startdatum      3 Leute, 43 Credits — unangetastet,
+--                                      das ist der alte 149-Euro-Tarif

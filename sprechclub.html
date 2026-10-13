@@ -401,7 +401,7 @@ footer a{color:var(--weich)}
 
       <ul class="dabei">
         <li><span class="hk">✓</span><span><b>Sprechclub jeden Tag</b> — such dir aus dem Plan aus, was passt</span></li>
-        <li><span class="hk">✓</span><span><b>8 Live-Stunden im Monat</b> sind enthalten</span></li>
+        <li><span class="hk">✓</span><span><b>So oft du willst</b> — kein Stundenlimit, kein Guthaben</span></li>
         <li><span class="hk">✓</span><span>Eine Lehrkraft ist dabei und korrigiert dich</span></li>
         <li><span class="hk">✓</span><span>Dazu die ganze Lernplattform: Kursbibliothek A1–C1, Vokabeltrainer, Podcast</span></li>
         <li><span class="hk">✓</span><span>Amanda, die KI-Tutorin, beantwortet dir jede Frage</span></li>
@@ -440,9 +440,9 @@ footer a{color:var(--weich)}
       <details>
         <summary>Was, wenn ich eine Woche keine Zeit habe?</summary>
         <p>Dann gehst du eben nicht hin. Du buchst jede Stunde einzeln, es gibt
-           keine Anwesenheitspflicht und niemand fragt nach. In der Mitgliedschaft
-           sind 8 Live-Stunden im Monat enthalten — nutzt du weniger, ist das
-           deine Entscheidung.</p>
+           keine Anwesenheitspflicht und niemand fragt nach. Es gibt kein
+           Stundenkonto, das verfällt — in einer ruhigen Woche kommst du gar
+           nicht, in einer guten jeden Tag.</p>
       </details>
       <details>
         <summary>Kann ich kündigen?</summary>
@@ -570,11 +570,16 @@ function setzePremium(was){
 
   /* Die Rechnung gegen die Einzelstunde. Sie ist das staerkste
      Argument und steht deshalb direkt ueber dem Knopf. */
-  var proStunde = (proMonat / 8).toFixed(2).replace('.', ',');
+  /* Premium ist unbegrenzt — es gibt keine Stundenzahl, durch die man
+     teilen koennte. Deshalb rechnen wir gegen das, was zwei Stunden im
+     Monat einzeln kosten wuerden: Wer zweimal im Monat kommt, zahlt
+     schon weniger als sonst, und ab der dritten Stunde wird es nur
+     noch guenstiger. */
+  var zweiStunden = 50;
   $('pRechnung').innerHTML =
-    'Das sind <b>' + proStunde + ' € pro Live-Stunde</b> '
-    + 'bei acht Stunden im Monat. Eine einzelne Unterrichtsstunde kostet '
-    + 'üblicherweise 25 bis 40 €.';
+    'Zwei Einzelstunden im Monat kosten woanders schon <b>' + zweiStunden + ' bis 80 €</b>. '
+    + 'Hier zahlst du ' + proMonat + ' € — und kommst so oft du willst, '
+    + 'jeden Tag von Montag bis Sonntag.';
 
   $('pKlein').textContent = j
     ? 'Sichere Zahlung über Stripe · 12 Monate Laufzeit'
@@ -582,9 +587,10 @@ function setzePremium(was){
 
   var h = $('startHinweis');
   if (!clubOffen()) {
-    h.innerHTML = '<b>Wichtig, damit du es vorher weißt:</b> Der Sprechclub öffnet am '
-      + '<b>1. November</b>. Die Lernplattform kannst du ab sofort nutzen — Kurse, '
-      + 'Vokabeltrainer, Podcast. Deine Live-Stunden verfallen in der Wartezeit nicht.';
+    h.innerHTML = '<b>Wichtig, damit du es vorher weißt:</b> Deine Mitgliedschaft startet am '
+      + '<b>1. November</b>. Stunden ab diesem Tag kannst du dir <b>ab sofort</b> im '
+      + 'Stundenplan aussuchen und reservieren — Stunden davor nicht. Die Lernplattform '
+      + 'mit Kursen, Vokabeltrainer und Podcast steht dir ab sofort offen.';
     h.style.display = '';
   } else {
     h.style.display = 'none';
