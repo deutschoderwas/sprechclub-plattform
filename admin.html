@@ -2376,7 +2376,7 @@ function bdayLabel(p){ if(!p.birthday) return '<span class="muted">–</span>'; 
 async function authToken(){ const { data } = await sb.auth.getSession(); return data?.session?.access_token || ''; }
 
 async function loadSchueler(){
-  const { data } = await sb.from('profiles').select('id,name,email,credits,status,tier,tier_ab,birthday,inactive_until,level,notes,started_at,target_level,native_language,goal,is_admin,is_teacher,alt_schueler,created_at,pass_until,stufe,abo_start,abo_ende,abo_gekuendigt_am,abo_stripe_status,abo_plan,abo_geprueft_am').limit(2000);
+  const { data } = await sb.from('profiles').select('id,name,email,credits,status,tier,tier_ab,birthday,inactive_until,level,notes,started_at,target_level,native_language,goal,is_admin,is_teacher,alt_schueler,created_at,pass_until,stufe,amanda_minuten,abo_start,abo_ende,abo_gekuendigt_am,abo_stripe_status,abo_plan,abo_geprueft_am').limit(2000);
   SCHUELER = data || [];
   document.getElementById('schueler').innerHTML = `
     <div class="card" style="margin-bottom:16px;background:#FFFCF5">
@@ -2467,6 +2467,72 @@ var GRUPPEN = {
    zuletzt geschaut wurde — eine Angabe von vorgestern ist eine andere
    Auskunft als eine von heute Nacht. */
 function dt(x){ try{ if(!x) return ''; var d=new Date(x); if(isNaN(d)) return ''; return String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+d.getFullYear(); }catch(e){ return ''; } }
+/* ---------- Amandas Monatsminuten, pro Schuelerin ----------
+   Amanda kostet pro Minute echtes Geld, deshalb gibt es eine Grenze:
+   60 Minuten im Monat, Premium 180. Die stand bisher nur global in
+   Vercel - Julia konnte also nur fuer ALLE mehr erlauben oder fuer
+   niemanden. Am 14.10.2026 stand eine Altschuelerin bei genau 60,0 von
+   60 Minuten und kam vier Tage nicht mehr hinein; fuer sie sah das aus,
+   als waere Amanda kaputt.
+   Das Feld hier gilt nur fuer diese eine Person. Leer = normale Regel.
+   0 = fuer diese Person kein Amanda. Jede Aenderung steht in
+   zugang_log, damit nachvollziehbar bleibt, wer was bekommen hat. */
+function amandaBlock(p){
+  if (p.is_admin || p.is_teacher) return '';
+  var normal = /premium/i.test(p.tier || '') ? 180 : 60;
+  var eigen = (p.amanda_minuten === null || p.amanda_minuten === undefined) ? '' : String(p.amanda_minuten);
+  return '<div style="border:1px solid #F0E5D8;background:#FFFCF5;border-radius:14px;padding:12px 14px;margin:0 0 14px">'
+    + '<div style="font-weight:800;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:#6B7280;margin-bottom:8px">Amanda &middot; Minuten im Monat</div>'
+    + '<div id="amandaStand" class="muted" style="font-size:13px;margin-bottom:8px">Verbrauch wird geholt &hellip;</div>'
+    + '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">'
+    +   '<input id="cAmanda" type="number" min="0" max="1200" step="10" value="' + eigen + '" placeholder="' + normal + ' (normal)" style="width:130px">'
+    +   '<button class="btn btn-ghost" onclick="saveAmandaMinuten(\'' + p.id + '\')" style="padding:6px 12px">Setzen</button>'
+    +   '<span class="muted" id="cAmandaMsg" style="font-size:13px"></span>'
+    + '</div>'
+    + '<div class="muted" style="font-size:12px;margin-top:6px">Leer lassen = normale Regel (' + normal + ' Minuten). 0 = kein Amanda. Eine Minute kostet rund 8 bis 10 Cent.</div>'
+    + '</div>';
+}
+
+async function saveAmandaMinuten(id){
+  var feld = document.getElementById('cAmanda');
+  var msg = document.getElementById('cAmandaMsg');
+  if (!feld) return;
+  var roh = String(feld.value || '').trim();
+  var wert = null;
+  if (roh !== '') {
+    wert = parseInt(roh, 10);
+    if (!Number.isFinite(wert) || wert < 0 || wert > 1200) { if (msg) msg.textContent = '\u26a0\ufe0f Zahl von 0 bis 1200'; return; }
+  }
+  if (msg) msg.textContent = '\u23f3 ...';
+  var r = await sb.rpc('admin_set_amanda_minuten', { p_user_id: id, p_minuten: wert });
+  if (r.error) { if (msg) msg.textContent = '\u26a0\ufe0f ' + r.error.message; return; }
+  var p = SCHUELER.find(function(x){ return x.id === id; }); if (p) p.amanda_minuten = wert;
+  if (msg) msg.textContent = (wert === null) ? '\u2713 wieder normal' : ('\u2713 ' + wert + ' Minuten');
+  amandaStandHolen(id);
+}
+
+/* Was sie in diesem Monat schon verbraucht hat. Ohne diese Zahl ist das
+   Feld oben eine Entscheidung im Blindflug. */
+async function amandaStandHolen(id){
+  var el = document.getElementById('amandaStand');
+  if (!el) return;
+  try {
+    var jetzt = new Date();
+    var monatsStart = new Date(Date.UTC(jetzt.getUTCFullYear(), jetzt.getUTCMonth(), 1)).toISOString();
+    var r = await sb.from('amanda_gespraeche').select('sekunden').eq('user_id', id).gte('gestartet', monatsStart);
+    if (r.error) { el.textContent = 'Verbrauch nicht abrufbar.'; return; }
+    var reihen = r.data || [];
+    var sek = reihen.reduce(function(a, g){ return a + (g.sekunden || 0); }, 0);
+    var p = SCHUELER.find(function(x){ return x.id === id; }) || {};
+    var grenze = (p.amanda_minuten === null || p.amanda_minuten === undefined)
+      ? (/premium/i.test(p.tier || '') ? 180 : 60) : p.amanda_minuten;
+    var min = Math.round(sek / 6) / 10;
+    var voll = grenze > 0 && min >= grenze;
+    el.innerHTML = 'Diesen Monat <b>' + min + '</b> von ' + grenze + ' Minuten in ' + reihen.length + ' Gespr\u00e4chen'
+      + (voll ? ' &middot; <b style="color:#B30000">aufgebraucht, Amanda ist f\u00fcr sie zu</b>' : '');
+  } catch (e) { el.textContent = 'Verbrauch nicht abrufbar.'; }
+}
+
 function aboBlock(p){
   var istAbo = ['community','premium','premium_plus','premiumplus'].indexOf(p.tier)>=0;
   var hatDaten = !!(p.abo_stripe_status || p.abo_ende || p.abo_start);
@@ -2637,6 +2703,7 @@ async function openStudentCard(id){
         <div class="field" id="cInactiveWrap" style="margin:0;display:${(st==='pause'||st==='urlaub')?'block':'none'}"><label>Pause/Urlaub bis</label><input id="cInactive" type="date" value="${esc(p.inactive_until||'')}"></div>
       </div>
       ${aboBlock(p)}
+      ${amandaBlock(p)}
       <datalist id="levellist"><option>A1</option><option>A2</option><option>B1</option><option>B2</option><option>C1</option><option>C2</option></datalist>
       <label style="display:flex;align-items:center;gap:10px;margin:4px 0 12px;padding:11px 14px;background:#F4F1EA;border:1px solid #E3DCCE;border-radius:12px;cursor:pointer;font-weight:700"><input type="checkbox" id="cAlt" ${p.alt_schueler?'checked':''} style="width:18px;height:18px;accent-color:#5b5b5b">Alte Schüler<span class="muted" style="font-weight:500;font-size:12.5px">— war schon vor dem Sprechclub dabei</span></label>
       <div class="muted" style="margin:8px 0 14px;font-size:13px">🎂 Geburtstag: ${bdayLabel(p)} · 🎯 Ziel: ${esc(p.target_level||'—')} · 🗣️ Muttersprache: ${esc(p.native_language||'—')}</div>
@@ -2673,6 +2740,10 @@ async function openStudentCard(id){
     </div>
   </div>`;
   document.body.appendChild(ov);
+
+  /* Amandas Minutenstand nachladen - die Karte zeigt sonst nur das
+     Eingabefeld, und Julia muesste raten, wo die Schuelerin steht. */
+  amandaStandHolen(id);
 
   // Guthaben-Verlauf laden
   sb.from('credit_log').select('change,reason,created_at').eq('user_id',id).order('created_at',{ascending:false}).limit(12).then(({data})=>{

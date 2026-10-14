@@ -151,14 +151,26 @@ export default async function handler(req, res) {
 
   const { data: prof } = await admin
     .from('profiles')
-    .select('name, level, stufe, native_language, ' + ZUGANG_SPALTEN)
+    .select('name, level, stufe, native_language, amanda_minuten, ' + ZUGANG_SPALTEN)
     .eq('id', uid)
     .single();
 
   if (!(await hatVollzugang(admin, uid, prof))) return res.status(402).json({ error: 'kein_zugang' });
 
   // ---- Minutengrenze ------------------------------------------------
-  const grenze = /premium/i.test(prof?.tier || '') ? GRENZE_PREMIUM : GRENZE;
+  /* profiles.amanda_minuten gewinnt vor allem anderen. Grund: die
+     globale Zahl liess Julia nur die Wahl zwischen "fuer alle mehr" und
+     "fuer niemanden mehr". Am 14.10.2026 stand eine Altschuelerin mit
+     genau 60,0 von 60 Minuten vier Tage lang vor einer geschlossenen
+     Tuer, und das sah fuer sie aus, als waere Amanda kaputt. Jetzt kann
+     Julia ihr in der Schuelerkarte mehr geben, ohne die Rechnung fuer
+     alle anderen zu erhoehen.
+     0 ist erlaubt und heisst: fuer diese Person kein Amanda. Nur ein
+     leeres Feld bedeutet "normale Regel". */
+  const eigene = Number(prof?.amanda_minuten);
+  const grenze = Number.isFinite(eigene) && prof?.amanda_minuten !== null
+    ? Math.max(0, eigene)
+    : (/premium/i.test(prof?.tier || '') ? GRENZE_PREMIUM : GRENZE);
   let verbraucht = 0;
   try {
     const { data } = await admin.rpc('amanda_monat_sekunden', { p_user: uid });
