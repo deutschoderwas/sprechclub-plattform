@@ -107,21 +107,30 @@ async function runNachbereitung(sb, { classId, source = 'tafel', pdfText } = {})
 
   const prompt = buildPrompt(cls, srcText, [...vmap.values()], mode);
   let aiText = '';
+  let abbruch = '';
   try {
     const r = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'x-api-key': process.env.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
-      body: JSON.stringify({ model: MODEL, max_tokens: 8000, messages: [{ role: 'user', content: prompt }] }),
+      /* 8000 war zu knapp — siehe api/auto-nachbereitung.js. */
+      body: JSON.stringify({ model: MODEL, max_tokens: 16000, messages: [{ role: 'user', content: prompt }] }),
     });
     const j = await r.json();
     if (!r.ok) return { ok: false, error: 'anthropic_error', detail: (j && j.error && j.error.message) || ('HTTP ' + r.status) };
     aiText = (j.content || []).map(b => b.text || '').join('').trim();
+    abbruch = (j && j.stop_reason) || '';
   } catch (e) {
     return { ok: false, error: 'anthropic_fetch', detail: e.message };
   }
 
   const parsed = jsonAus(aiText);
-  if (!parsed) return { ok: false, error: 'parse_failed', detail: aiText.slice(0, 600) };
+  if (!parsed) {
+    /* Der Anfang der Antwort sieht immer gesund aus; der Fehler steht am
+       Ende. Also Abbruchgrund, Laenge und Schluss berichten. */
+    return { ok: false, error: 'parse_failed', detail:
+      '[' + (abbruch || 'kein_grund') + ' · ' + aiText.length + ' Zeichen] ANFANG: '
+      + aiText.slice(0, 180) + ' … SCHLUSS: ' + aiText.slice(-260) };
+  }
 
   (Array.isArray(parsed.vocab) ? parsed.vocab : []).forEach(addV);
   const vocab = [...vmap.values()];
@@ -460,12 +469,50 @@ function reparieren(roh) {
   return out.replace(/,(\s*[}\]])/g, '$1');
 }
 
+/* ---------- Letzte Rettung: eine abgeschnittene Antwort ----------
+   Laeuft die Antwort in das Token-Limit, fehlt am Ende alles: die
+   schliessenden Klammern, oft mitten im Wort. Fuer die Schuelerin ist
+   eine Nachbereitung mit 14 statt 18 Vokabeln aber unendlich viel
+   besser als keine. Also wird bis zum letzten vollstaendig
+   geschlossenen Element zurueckgeschnitten und von Hand zugemacht —
+   vom spaetesten Schnitt zum fruehesten, damit so viel wie moeglich
+   erhalten bleibt. */
+function retten(roh) {
+  let inStr = false, esc = false;
+  const stapel = [];        /* was noch offen ist */
+  const kandidaten = [];    /* Stellen, an denen ein Element fertig war */
+  for (let i = 0; i < roh.length; i++) {
+    const c = roh[i];
+    if (esc) { esc = false; continue; }
+    if (c === '\\') { esc = true; continue; }
+    if (c === '"') { inStr = !inStr; continue; }
+    if (inStr) continue;
+    if (c === '{' || c === '[') stapel.push(c === '{' ? '}' : ']');
+    else if (c === '}' || c === ']') {
+      stapel.pop();
+      /* Erster Versuch war hier zu eng: nur Schnitte direkt unter dem
+         Wurzelobjekt. Abgeschnitten wird aber mitten in einer Liste —
+         dann muss ausser der Liste auch das Wurzelobjekt zugemacht
+         werden. Deshalb wird jetzt gemerkt, WAS noch offen ist. */
+      if (stapel.length) kandidaten.push({ bis: i, zu: stapel.slice().reverse().join('') });
+    }
+  }
+  for (let k = kandidaten.length - 1; k >= 0; k--) {
+    const kandidat = roh.slice(0, kandidaten[k].bis + 1).replace(/,\s*$/, '') + kandidaten[k].zu;
+    try { return JSON.parse(kandidat); } catch (e) {}
+    try { return JSON.parse(reparieren(kandidat)); } catch (e) {}
+  }
+  return null;
+}
+
 function jsonAus(text) {
   const ohneZaun = String(text || '').replace(/^\s*```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '').trim();
   const s = ohneZaun.indexOf('{'), e = ohneZaun.lastIndexOf('}');
   if (s === -1 || e === -1) return null;
   const roh = ohneZaun.slice(s, e + 1);
   try { return JSON.parse(roh); } catch (err) {
-    try { return JSON.parse(reparieren(roh)); } catch (err2) { return null; }
+    try { return JSON.parse(reparieren(roh)); } catch (err2) {
+      try { return retten(roh) || retten(reparieren(roh)); } catch (err3) { return null; }
+    }
   }
 }

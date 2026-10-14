@@ -28,7 +28,7 @@
 // ============================================================
 
 /* Diese Status sind zu, egal wie viel Guthaben noch dasteht. */
-const GESPERRT = ['beendet', 'archiv', 'inaktiv', 'geloescht', 'registriert', 'probeschuler'];
+const GESPERRT = ['beendet', 'archiv', 'inaktiv', 'geloescht', 'registriert', 'probeschuler', 'gekuendigt'];
 const ZUGANG_TIER = ['community', 'premium', 'premiumplus', 'premium_plus'];
 const ZUGANG_STATUS = ['aktiv', 'urlaub', 'pause'];
 
@@ -72,5 +72,14 @@ export async function hatVollzugang(admin, uid, prof) {
     .limit(1);
   if (b && b.length) return true;
 
-  return false;
+  /* 14.10.2026 — diese Zeile hat gefehlt, und das war ein echter Schaden.
+     Am 13.10. hat Julia die Regel zurueckgenommen: "wenn ALTE Schueler
+     guthaben auf 0 haben bitte nicht den Zugang blockieren, erst wenn sie
+     im Archiv sind und NICHT aktiv". Nachgezogen wurden damals
+     has_full_access() in der Datenbank und isActive() in konto.html —
+     diese Datei nicht. Folge: ein alter Schueler mit 0 Guthaben und
+     Status 'aktiv' kam ueberall hin, nur bei Amanda bekam er
+     'kein_zugang'. Fuer ihn sah das aus wie "Amanda ist kaputt".
+     Dieselbe Zeile steht in has_full_access() und in isActive(). */
+  return ZUGANG_STATUS.includes(status);
 }
