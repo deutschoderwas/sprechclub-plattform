@@ -1772,12 +1772,12 @@ async function openMaterial(path,a){
    änderst, ändere immer beide.
 
    gesperrt   beendet, archiv, inaktiv, geloescht, registriert,
-              probeschuler → kein Zugang, egal wie viel Guthaben noch
-              auf dem Konto steht
+              probeschuler, gekuendigt → kein Zugang, egal wie viel
+              Guthaben noch auf dem Konto steht
    Zugang     Alt-Schüler mit Guthaben, gültigem Pass oder einer noch
               bevorstehenden Stunde · Community und Premium mit Status
               aktiv · Lehrkräfte und Admin immer                        */
-const GESPERRT = ['beendet','archiv','inaktiv','geloescht','registriert','probeschuler'];
+const GESPERRT = ['beendet','archiv','inaktiv','geloescht','registriert','probeschuler','gekuendigt'];
 function isActive(){
   if(profile && (profile.is_admin || profile.is_teacher)) return true;
   const s = (profile && profile.status) || '';
@@ -1807,7 +1807,15 @@ function isActive(){
    vom 12.10.2026. In der Datenbank heisst dieselbe Pruefung
    ist_altschueler(). */
 function istAltschueler(){
-  try { return Array.isArray(bookings) && bookings.some(b => b && b.status === 'booked'); }
+  try {
+    /* Zwei Wege hinein, genau wie in ist_altschueler() in der
+       Datenbank: wer schon einmal gebucht hat, und wer bezahlt hat
+       und dessen Abo abgelaufen ist (Status 'gekuendigt'). Der
+       zweite Weg ist fuer Community-Mitglieder wichtig, die nie eine
+       Stunde gebucht haben — ihnen bleiben die Materialien. */
+    if (profile && profile.status === 'gekuendigt') return true;
+    return Array.isArray(bookings) && bookings.some(b => b && b.status === 'booked');
+  }
   catch(e){ return false; }
 }
 function lockBanner(){

@@ -2369,14 +2369,14 @@ async function loadBewertungen(){
 
 let SCHUELER = [];
 function nameKey(p){ return (p.name && p.name.trim()) ? p.name.trim() : (p.email||''); }
-const STATUS_OPT = [['registriert','🆕 Registriert (kein Paket)'],['aktiv','🟢 Aktiv'],['pause','⏸️ Pause'],['urlaub','🏖️ Urlaub'],['beendet','⚪ Beendet'],['archiv','🗄️ Archiviert (ausgeblendet)']];
-const STATUS_BG = { registriert:'#E5E7EB', aktiv:'#DCFCE7', pause:'#FEF3C7', urlaub:'#DBEAFE', beendet:'#F1F1F1', archiv:'#E8E2DA' };
+const STATUS_OPT = [['registriert','🆕 Registriert (kein Paket)'],['aktiv','🟢 Aktiv'],['pause','⏸️ Pause'],['urlaub','🏖️ Urlaub'],['gekuendigt','🔚 Gekündigt (Abo abgelaufen)'],['beendet','⚪ Beendet'],['archiv','🗄️ Archiviert (ausgeblendet)']];
+const STATUS_BG = { registriert:'#E5E7EB', aktiv:'#DCFCE7', pause:'#FEF3C7', urlaub:'#DBEAFE', gekuendigt:'#FFE4E4', beendet:'#F1F1F1', archiv:'#E8E2DA' };
 function todayMMDD(){ const p=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Berlin',month:'2-digit',day:'2-digit'}).formatToParts(new Date()).reduce((a,x)=>(a[x.type]=x.value,a),{}); return `${p.month}-${p.day}`; }
 function bdayLabel(p){ if(!p.birthday) return '<span class="muted">–</span>'; const [y,m,d]=p.birthday.split('-'); const isToday=p.birthday.slice(5)===todayMMDD(); return `${d}.${m}.${y}${isToday?' 🎂':''}`; }
 async function authToken(){ const { data } = await sb.auth.getSession(); return data?.session?.access_token || ''; }
 
 async function loadSchueler(){
-  const { data } = await sb.from('profiles').select('id,name,email,credits,status,tier,birthday,inactive_until,level,notes,started_at,target_level,native_language,goal,is_admin,is_teacher,alt_schueler,created_at,pass_until,stufe').limit(2000);
+  const { data } = await sb.from('profiles').select('id,name,email,credits,status,tier,tier_ab,birthday,inactive_until,level,notes,started_at,target_level,native_language,goal,is_admin,is_teacher,alt_schueler,created_at,pass_until,stufe,abo_start,abo_ende,abo_gekuendigt_am,abo_stripe_status,abo_plan,abo_geprueft_am').limit(2000);
   SCHUELER = data || [];
   document.getElementById('schueler').innerHTML = `
     <div class="card" style="margin-bottom:16px;background:#FFFCF5">
@@ -2423,6 +2423,7 @@ async function loadSchueler(){
         <option value="pause">nur Pause</option>
         <option value="urlaub">nur Urlaub</option>
         <option value="registriert">nur Registriert</option>
+        <option value="gekuendigt">nur Gekündigt</option>
         <option value="beendet">nur Beendet</option>
         <option value="archiv">nur Archiviert</option>
       </select>
@@ -2452,12 +2453,70 @@ var GRUPPEN = {
   community:   { kurz:'COMMUNITY',     bg:'#DFF6F8', fg:'#0F766E' },
   alt:         { kurz:'Alte Schüler',  bg:'#E2EBC9', fg:'#3F6212' },
   registriert: { kurz:'Registriert',   bg:'#E5E7EB', fg:'#4B5563' },
+  gekuendigt:  { kurz:'GEKÜNDIGT',     bg:'#FFE4E4', fg:'#B30000' },
   beendet:     { kurz:'Beendet',       bg:'#F1F1F1', fg:'#6B7280' }
 };
+
+/* ---------- Was ist mit dem Abo dieses Schuelers? ----------
+   Julia, 13.10.2026: "unter jedem Schueler muss ich sehen von wann bis
+   wann sein Abo geht, ob er sie gekuendigt hat".
+
+   Die Zahlen kommen nicht aus der Plattform, sondern vom naechtlichen
+   Lauf /api/pruefe-mitgliedschaften, der sie bei Stripe abholt und in
+   profiles.abo_* schreibt. Deshalb steht hier auch immer dabei, WANN
+   zuletzt geschaut wurde — eine Angabe von vorgestern ist eine andere
+   Auskunft als eine von heute Nacht. */
+function dt(x){ try{ if(!x) return ''; var d=new Date(x); if(isNaN(d)) return ''; return String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+d.getFullYear(); }catch(e){ return ''; } }
+function aboBlock(p){
+  var istAbo = ['community','premium','premium_plus','premiumplus'].indexOf(p.tier)>=0;
+  var hatDaten = !!(p.abo_stripe_status || p.abo_ende || p.abo_start);
+  if (!istAbo && !hatDaten && p.status!=='gekuendigt') return '';
+
+  var z = [];
+  var name = p.tier==='community' ? 'Community'
+           : (p.tier ? 'Premium'
+           : (p.status==='gekuendigt' ? 'abgelaufen' : '—'));
+  z.push(['Mitgliedschaft', name + (p.abo_plan ? ' <span class="muted">('+esc(p.abo_plan)+')</span>' : '')]);
+
+  if (p.abo_start || p.abo_ende){
+    var vorbei = p.status==='gekuendigt';
+    z.push([vorbei ? 'Lief' : 'Läuft',
+      p.abo_start ? (dt(p.abo_start) + ' – ' + (dt(p.abo_ende)||'?')) : ('bis ' + dt(p.abo_ende))]);
+  }
+  if (p.tier_ab){
+    var spaeter = new Date(p.tier_ab) > new Date();
+    z.push(['Buchen möglich', (spaeter?'erst ab ':'ab ') + dt(p.tier_ab)]);
+  }
+  if (p.abo_gekuendigt_am){
+    z.push(['Gekündigt am', '<b style="color:#B30000">'+dt(p.abo_gekuendigt_am)+'</b>'
+      + (p.abo_ende ? ' <span class="muted">— Zugang bis '+dt(p.abo_ende)+', danach zu</span>' : '')]);
+  }
+  if (p.status==='gekuendigt'){
+    z.push(['Jetzt', '<b style="color:#B30000">Abo abgelaufen · kein Zugang</b> <span class="muted">Materialien bleiben sichtbar</span>']);
+  }
+  if (p.abo_stripe_status){
+    var klar = { active:'läuft', trialing:'Testphase', past_due:'Zahlung offen', canceled:'bei Stripe beendet',
+                 unpaid:'nicht bezahlt', incomplete:'nicht abgeschlossen', kein_abo:'kein Abo bei Stripe' };
+    z.push(['Bei Stripe', esc(klar[p.abo_stripe_status] || p.abo_stripe_status)]);
+  }
+  z.push(['Zuletzt geprüft', p.abo_geprueft_am
+    ? dt(p.abo_geprueft_am)
+    : '<span class="muted">noch nie — der nächtliche Lauf holt das</span>']);
+
+  return '<div style="border:1px solid #F0E5D8;background:#FFFCF5;border-radius:14px;padding:12px 14px;margin:0 0 14px">'
+    + '<div style="font-weight:800;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:#6B7280;margin-bottom:8px">Abo</div>'
+    + z.map(function(r){ return '<div style="display:flex;gap:10px;font-size:14px;line-height:1.7"><div style="min-width:132px;color:#6B7280">'+r[0]+'</div><div>'+r[1]+'</div></div>'; }).join('')
+    + '</div>';
+}
 function passLaeuft(p){ try{ return !!(p.pass_until && new Date(p.pass_until) > new Date()); }catch(e){ return false; } }
 function gruppeVon(p){
   if (p.is_admin || p.is_teacher) return 'team';
   var st = p.status || 'aktiv';
+  /* Julia, 13.10.2026: "wenn sie nicht mehr bezahlen und das Abo
+     ablaeuft dann muessen sie auch das Abzeichen verlieren". Also steht
+     'gekuendigt' VOR der tier-Abfrage — sonst traegt jemand weiter
+     PREMIUM, obwohl das Abo abgelaufen ist. */
+  if (st === 'gekuendigt') return 'gekuendigt';
   if (st === 'beendet' || st === 'archiv' || st === 'geloescht' || st === 'inaktiv') return 'beendet';
   if (p.tier === 'premium' || p.tier === 'premium_plus') return 'premium';
   if (p.tier === 'community') return 'community';
@@ -2577,6 +2636,7 @@ async function openStudentCard(id){
         <div class="field" style="margin:0"><label>Status</label><select id="cStatus" onchange="document.getElementById('cInactiveWrap').style.display=(this.value==='pause'||this.value==='urlaub')?'block':'none'">${STATUS_OPT.map(([v,l])=>`<option value="${v}"${v===st?' selected':''}>${l}</option>`).join('')}</select></div>
         <div class="field" id="cInactiveWrap" style="margin:0;display:${(st==='pause'||st==='urlaub')?'block':'none'}"><label>Pause/Urlaub bis</label><input id="cInactive" type="date" value="${esc(p.inactive_until||'')}"></div>
       </div>
+      ${aboBlock(p)}
       <datalist id="levellist"><option>A1</option><option>A2</option><option>B1</option><option>B2</option><option>C1</option><option>C2</option></datalist>
       <label style="display:flex;align-items:center;gap:10px;margin:4px 0 12px;padding:11px 14px;background:#F4F1EA;border:1px solid #E3DCCE;border-radius:12px;cursor:pointer;font-weight:700"><input type="checkbox" id="cAlt" ${p.alt_schueler?'checked':''} style="width:18px;height:18px;accent-color:#5b5b5b">Alte Schüler<span class="muted" style="font-weight:500;font-size:12.5px">— war schon vor dem Sprechclub dabei</span></label>
       <div class="muted" style="margin:8px 0 14px;font-size:13px">🎂 Geburtstag: ${bdayLabel(p)} · 🎯 Ziel: ${esc(p.target_level||'—')} · 🗣️ Muttersprache: ${esc(p.native_language||'—')}</div>
