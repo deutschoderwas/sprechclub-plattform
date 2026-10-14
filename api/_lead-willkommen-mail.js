@@ -16,8 +16,17 @@
 const esc = (s) => String(s == null ? '' : s)
   .replace(/[<>&]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c]));
 
-export function willkommenHtml(vorname) {
+/* Der Fruehbucherpreis laeuft bis zum 31. Oktober 2026. Danach darf
+   in dieser Mail kein Rabatt mehr stehen — sie geht automatisch an
+   jeden neuen Lead, und eine Mail, die einen abgelaufenen Rabatt
+   verspricht, ist ein gebrochenes Versprechen. Deshalb entscheidet
+   das Datum, nicht ein Mensch. */
+export const RABATT_ENDE = Date.parse('2026-11-01T00:00:00+01:00');
+export const rabattLaeuft = (jetzt = Date.now()) => jetzt < RABATT_ENDE;
+
+export function willkommenHtml(vorname, jetzt = Date.now()) {
   const v = esc(vorname || 'du');
+  const rabatt = rabattLaeuft(jetzt);
   return `<!DOCTYPE html><html lang="de"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Die Türen sind offen</title></head>
 <body style="margin:0;padding:0;background:#FFF8E0;font-family:'Inter','Segoe UI',system-ui,sans-serif;color:#1A1A1A">
@@ -38,16 +47,18 @@ export function willkommenHtml(vorname) {
     </h1>
     <p style="font-size:16px;line-height:1.65;margin:0 0 16px">Hallo ${v},</p>
     <p style="font-size:16px;line-height:1.65;margin:0 0 16px">danke, dass du dich eingetragen hast. Eine gute Nachricht gleich vorweg: Du stehst auf keiner Warteliste mehr. Du kannst dir deinen Platz im Sprechclub ab sofort holen.</p>
-    <p style="font-size:16px;line-height:1.65;margin:0 0 16px">Richtig los geht es am <strong>1. November</strong>. Die Lernplattform ist ab deiner Anmeldung sofort f&uuml;r dich offen &ndash; Kurse von A1 bis C1, &Uuml;bungen, der Chat mit den anderen.</p>
+    <p style="font-size:16px;line-height:1.65;margin:0 0 16px">${rabatt
+      ? 'Der Unterricht startet am <strong>1. November</strong>. Die Lernplattform ist ab deiner Anmeldung sofort f&uuml;r dich offen &ndash; Kurse von A1 bis C1, &Uuml;bungen, der Chat mit den anderen.'
+      : 'Der Unterricht l&auml;uft t&auml;glich von Montag bis Sonntag, und die Lernplattform ist ab deiner Anmeldung sofort f&uuml;r dich offen &ndash; Kurse von A1 bis C1, &Uuml;bungen, der Chat mit den anderen.'}</p>
     <p style="font-size:16px;line-height:1.65;margin:0 0 4px">Warum ich den Club &uuml;berhaupt mache: Ich sehe seit Jahren dasselbe. Meine Sch&uuml;ler verstehen fast alles, machen einen Kurs nach dem anderen &ndash; und im Gespr&auml;ch kommt trotzdem kein Satz raus. Nicht weil sie zu wenig k&ouml;nnen. Sondern weil ihnen im Alltag die Sprechpraxis fehlt. Genau daf&uuml;r ist der Club da: t&auml;glich von Montag bis Sonntag, du suchst dir aus, wann. Kleine Gruppen, Themen aus dem echten Leben, vorbereiten musst du nichts.</p>
   </td></tr>
 
   <tr><td style="padding:18px 32px 0">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF3D6;border-left:5px solid #FFCE00;border-radius:12px">
       <tr><td style="padding:16px 18px">
-        <p style="font-size:16px;line-height:1.6;margin:0;color:#1A1A1A">
-          Melde dich am besten <strong>jetzt</strong> an: Als Willkommensgeschenk bekommst du
-          <strong>50&nbsp;% auf den Monatspreis</strong> oder <strong>60&nbsp;% auf den Jahrespreis</strong>.
+        <p style="font-size:16px;line-height:1.6;margin:0;color:#1A1A1A">${rabatt
+          ? 'Melde dich am besten <strong>jetzt</strong> an: Als Willkommensgeschenk bekommst du <strong>50&nbsp;% auf den Monatspreis</strong> oder <strong>60&nbsp;% auf den Jahrespreis</strong> &ndash; <strong>nur bis zum 31.&nbsp;Oktober</strong>. Der Unterricht startet am 1.&nbsp;November, der Rabatt gilt aber nur f&uuml;r Anmeldungen bis zum 31.&nbsp;Oktober.'
+          : 'Du kannst dir deinen Platz ab sofort holen &ndash; der Unterricht l&auml;uft t&auml;glich, und die Lernplattform ist sofort offen.'}
         </p>
       </td></tr>
     </table>
@@ -56,17 +67,19 @@ export function willkommenHtml(vorname) {
   <tr><td style="padding:14px 32px 4px">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFFFFF;border:2px solid #DD0000;border-radius:16px">
       <tr><td style="padding:20px 22px" align="center">
-        <span style="display:inline-block;background:#DD0000;color:#FFFFFF;font-weight:700;font-size:13px;border-radius:999px;padding:6px 14px;margin-bottom:12px">Fr&uuml;hbucher &middot; nur bis 31. Oktober</span>
+        ${rabatt
+          ? '<span style="display:inline-block;background:#DD0000;color:#FFFFFF;font-weight:700;font-size:13px;border-radius:999px;padding:6px 14px;margin-bottom:12px">Fr&uuml;hbucher &middot; nur bis 31. Oktober</span>'
+          : '<span style="display:inline-block;background:#A7F3D0;color:#06403A;font-weight:700;font-size:13px;border-radius:999px;padding:6px 14px;margin-bottom:12px">Premium &middot; unbegrenzt sprechen</span>'}
         <div style="margin:6px 0 2px">
-          <span style="font-size:19px;color:#9a9a9a;text-decoration:line-through">99 &euro;</span>
-          <span style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:44px;color:#1A1A1A;margin-left:8px">39 &euro;</span>
+          ${rabatt ? '<span style="font-size:19px;color:#9a9a9a;text-decoration:line-through">99 &euro;</span>' : ''}
+          <span style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:44px;color:#1A1A1A;margin-left:8px">${rabatt ? '39' : '83'} &euro;</span>
           <span style="font-size:15px;color:#6B7280">im Monat</span>
         </div>
-        <p style="font-size:14px;color:#6B7280;margin:4px 0 14px">im Jahresabo &ndash; oder 49 &euro; im Monat, monatlich k&uuml;ndbar</p>
+        <p style="font-size:14px;color:#6B7280;margin:4px 0 14px">im Jahresabo &ndash; oder ${rabatt ? '49' : '99'} &euro; im Monat, monatlich k&uuml;ndbar</p>
         <p style="font-size:14.5px;line-height:1.75;margin:0;text-align:left">
-          &#10003;&nbsp; Dein Preis bleibt f&uuml;r immer<br>
+          ${rabatt ? '&#10003;&nbsp; Dein Preis bleibt f&uuml;r immer<br>' : '&#10003;&nbsp; So oft buchen, wie du willst<br>'}
           &#10003;&nbsp; Die Lernplattform ist sofort offen<br>
-          &#10003;&nbsp; N&auml;chste Zahlung erst am 1. Dezember &ndash; im Jahresabo erst in einem Jahr
+          &#10003;&nbsp; T&auml;glich Stunden von Montag bis Sonntag
         </p>
       </td></tr>
     </table>
@@ -77,7 +90,7 @@ export function willkommenHtml(vorname) {
   </td></tr>
 
   <tr><td style="padding:14px 32px 0">
-    <p style="font-size:16px;line-height:1.65;margin:0 0 16px">Ab dem 1. November kostet Premium f&uuml;r neue Mitglieder 99 &euro; im Monat. Was du jetzt zahlst, zahlst du auch in zwei Jahren noch.</p>
+    ${rabatt ? '<p style="font-size:16px;line-height:1.65;margin:0 0 16px">Ab dem 1. November kostet Premium f&uuml;r neue Mitglieder 99 &euro; im Monat. Was du jetzt zahlst, zahlst du auch in zwei Jahren noch.</p>' : ''}
     <p style="font-size:16px;line-height:1.65;margin:0 0 16px">Wenn du Fragen hast, antworte einfach auf diese Mail. Ich lese sie selbst.</p>
   </td></tr>
 
