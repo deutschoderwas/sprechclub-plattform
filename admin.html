@@ -902,6 +902,7 @@ function zeichneAbzeichen(){
 // ---------- Leads (Warteliste) ----------
 let LEADS=[], LEAD_FILTER='offen';
 let LEAD_POST={};
+let LEAD_KONTO={};
 const LEAD_STATUS=[['neu','🆕 Neu'],['kontaktiert','✉️ Kontaktiert'],['probestunde','🎟️ Probestunde'],['gewonnen','🎉 Gewonnen'],['abgelehnt','⚪ Kein Interesse'],['adresse_pruefen','⚠️ Adresse prüfen']];
 const LEAD_BG={neu:'#FEF3C7',kontaktiert:'#DBEAFE',probestunde:'#FCE7F3',gewonnen:'#DCFCE7',abgelehnt:'#F1F1F1'};
 const LEAD_FMT=new Intl.DateTimeFormat('de-DE',{timeZone:'Europe/Berlin',day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
@@ -916,6 +917,19 @@ async function loadLeads(){
      wann sie zuletzt Post bekommen haben, ohne dass man etwas aufklappen
      muss. */
   LEAD_POST={};
+  /* Julia, 14.10.2026: "vermerken, wer sich schon registriert und ein Abo
+     abgeschlossen hat, bitte im Admin markieren und danach auch filtern".
+     Verbunden wird ueber die Adresse — eine andere Verbindung zwischen
+     Lead und Konto gibt es nicht. */
+  LEAD_KONTO={};
+  try{
+    const { data:kk } = await sb.from('profiles')
+      .select('email,tier,status,created_at,is_admin,is_teacher').limit(3000);
+    (kk||[]).forEach(function(k){
+      const key=String(k.email||'').toLowerCase().trim();
+      if(key) LEAD_KONTO[key]=k;
+    });
+  }catch(e){}
   try{
     const { data:post } = await sb.from('lead_mails')
       .select('email,weg,betreff,gesendet_at')
@@ -938,6 +952,9 @@ function leadRows(){
   if(LEAD_FILTER==='ohnemail') return LEADS.filter(l=>!l.mail_at);
   if(LEAD_FILTER==='offen') return LEADS.filter(l=>['neu','kontaktiert','probestunde','adresse_pruefen'].includes(l.status));
   if(LEAD_FILTER==='alle') return LEADS;
+  if(LEAD_FILTER==='mitabo')     return LEADS.filter(l=>{ const k=leadKonto(l); return !!(k && k.tier); });
+  if(LEAD_FILTER==='registriert')return LEADS.filter(l=>{ const k=leadKonto(l); return !!k && !k.tier; });
+  if(LEAD_FILTER==='ohnekonto')  return LEADS.filter(l=>!leadKonto(l));
   return LEADS.filter(l=>l.status===LEAD_FILTER);
 }
 function renderLeads(){
@@ -948,9 +965,9 @@ function renderLeads(){
   host.innerHTML=`
   <div class="card" style="background:#F4FBFA;border:1px solid #cde">
     <b>📋 Leads aus der Warteliste</b>
-    <span class="muted" style="margin-left:8px">${LEADS.length} gesamt · ${LEADS.filter(l=>l.mail_at).length} haben die Willkommensmail · ${LEADS.filter(l=>!l.mail_at).length} noch nicht · ${zahl('gewonnen')} gewonnen</span>
+    <span class="muted" style="margin-left:8px">${LEADS.length} gesamt · ${LEADS.filter(l=>l.mail_at).length} haben die Willkommensmail · ${LEADS.filter(l=>!l.mail_at).length} noch nicht · <b>${LEADS.filter(l=>{const k=leadKonto(l); return !!(k&&k.tier);}).length} mit Abo</b> · ${LEADS.filter(l=>{const k=leadKonto(l); return !!k&&!k.tier;}).length} registriert ohne Abo · ${LEADS.filter(l=>!leadKonto(l)).length} ohne Konto</span>
     <div style="display:flex;gap:6px;flex-wrap:wrap;margin:10px 0">
-      ${knopf('offen','🔥 Offen')}${knopf('ohnemail','✉️ ohne Mail')}${knopf('neu','🆕 Neu')}${knopf('kontaktiert','✉️ Kontaktiert')}${knopf('probestunde','🎟️ Probestunde')}${knopf('gewonnen','🎉 Gewonnen')}${knopf('abgelehnt','⚪ Abgelehnt')}${knopf('alle','Alle')}
+      ${knopf('offen','🔥 Offen')}${knopf('ohnemail','✉️ ohne Mail')}${knopf('mitabo','🎉 hat Abo')}${knopf('registriert','👤 registriert, kein Abo')}${knopf('ohnekonto','🕗 noch kein Konto')}${knopf('neu','🆕 Neu')}${knopf('kontaktiert','✉️ Kontaktiert')}${knopf('probestunde','🎟️ Probestunde')}${knopf('gewonnen','🎉 Gewonnen')}${knopf('abgelehnt','⚪ Abgelehnt')}${knopf('alle','Alle')}
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
       <button class="btn btn-ghost" onclick="leadsCsv()">⬇️ Als CSV herunterladen</button>
@@ -972,6 +989,7 @@ function leadKarte(l){
       ${l.tarif?`<span class="pill" style="background:#FFF0CC;color:#8A6608;font-weight:700">${esc(l.tarif)}</span>`:''}
       ${l.niveau?`<span class="pill" style="background:#DFF6F8;color:#0F766E;font-weight:700">${esc(l.niveau)}</span>`:''}
       ${leadMailPille(l)}
+      ${leadKontoPille(l)}
       ${leadPostPille(l)}
       <span class="muted" style="margin-left:auto">${LEAD_FMT.format(new Date(l.created_at))}</span>
     </div>
@@ -1002,6 +1020,25 @@ function leadKarte(l){
       ${l.mail_at ? `<span class="muted" style="font-size:12.5px">Die Willkommensmail ist raus — persönlich antworten geht trotzdem.</span>` : ''}
     </div>
   </div>`;
+}
+
+/* Das Konto zu einem Lead — ueber die Adresse, klein geschrieben.
+   Steht hier nichts, hat der Mensch sich noch nicht registriert. */
+function leadKonto(l){
+  try{ return LEAD_KONTO[String(l.email||'').toLowerCase().trim()] || null; }catch(e){ return null; }
+}
+/* Und was daraus auf der Karte steht. Drei Zustaende, drei Farben:
+   hat bezahlt, hat ein Konto aber kein Abo, hat noch gar nichts. */
+function leadKontoPille(l){
+  const k=leadKonto(l);
+  if(!k) return '<span class="pill" style="background:#F1F1F1;color:#6B7280;font-weight:700" title="Noch kein Konto auf der Plattform">🕗 kein Konto</span>';
+  if(k.is_admin || k.is_teacher) return '<span class="pill" style="background:#EDE9FE;color:#5B21B6;font-weight:700">Team</span>';
+  if(k.tier){
+    const name = k.tier==='community' ? 'Community' : 'Premium';
+    const wann = k.created_at ? (' · seit '+LEAD_FMT.format(new Date(k.created_at))) : '';
+    return '<span class="pill" style="background:#DCFCE7;color:#15803D;font-weight:800" title="Hat ein Abo'+esc(wann)+'">🎉 '+esc(name)+'</span>';
+  }
+  return '<span class="pill" style="background:#FEF3C7;color:#8A6608;font-weight:700" title="Konto angelegt, aber kein Abo">👤 registriert</span>';
 }
 
 /* Ob jemand schon geschrieben wurde, stand bisher nur in der Tabelle.

@@ -34,6 +34,29 @@ export default async function handler(req, res) {
   const nowISO = new Date(now).toISOString();
 
   const base = process.env.SITE_URL || process.env.PUBLIC_BASE_URL || ('https://' + ((req.headers && (req.headers['x-forwarded-host'] || req.headers.host)) || 'www.deutschoderwas-club.de'));
+
+  /* ---------- Huckepack: die Willkommensmail fuer neue Leads ----------
+     Julia, 14.10.2026: "Es ist sehr sehr wichtig immer unser docs
+     dokument und die webseiten eintraege zu kontrollieren und eine
+     Willkommensmail zu schicken."
+
+     Nachgesehen am 14.10.2026: Die Leads aus dem Google-Formular landen
+     sofort in der Tabelle (Eintrag 13.10. 20:21 -> Lead 20:21), die
+     Willkommensmail ging aber erst am naechsten Morgen um 06:00 raus —
+     bei allen fuenf zuletzt geprueften Leads auf die Sekunde. Wer sich
+     abends eintraegt, wartet also bis zu zwoelf Stunden auf das erste
+     Wort von uns.
+
+     Grund: /api/lead-willkommen haengt am taeglichen Lauf. Vercel laesst
+     auf diesem Tarif nur EINEN Cron-Eintrag zu, und der ist vergeben.
+     Dieser Endpunkt hier wird aber alle 15 Minuten angestossen — also
+     faehrt die Lead-Mail ab jetzt huckepack mit. Sie braucht keinen
+     Schluessel, verschickt nur an Leads ohne mail_at und ist damit von
+     sich aus doppelsicher. Angestossen, nicht abgewartet: sie darf die
+     Nachbereitung nie aufhalten. */
+  try {
+    fetch(base + '/api/lead-willkommen', { signal: AbortSignal.timeout(4000) }).catch(() => {});
+  } catch (e) { /* nie der Grund, dass eine Nachbereitung ausfaellt */ }
   const { data: cls } = await sb.from('classes')
     .select('id,title,starts_at,duration_min,is_cancelled,material_live')
     .gte('starts_at', windowStart).lte('starts_at', nowISO)
