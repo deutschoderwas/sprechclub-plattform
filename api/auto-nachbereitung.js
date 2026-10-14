@@ -39,6 +39,19 @@ export default async function handler(req, res) {
   }).sort((a, b) => new Date(b.starts_at) - new Date(a.starts_at));   // neueste zuerst
   if (!ended.length) return res.status(200).json({ ok: true, processed: 0, reason: 'keine beendeten Stunden' });
 
+  /* ---------- Erst den Rueckstand bei der individuellen Nachbereitung ----------
+     student_nachbereitung war am 14.10.2026 vollstaendig leer — kein
+     einziger Datensatz, obwohl es 40 Gruppen-Zuordnungen und 48
+     Gruppennotizen gab. Der Grund liegt in der Reihenfolge: angestossen
+     wurde die individuelle Nachbereitung NUR in derselben Sekunde, in
+     der die gemeinsame frisch entstanden ist. Schlug dieser eine Anstoss
+     fehl — Zeitlimit des Elternlaufs, fehlendes CRON_SECRET, was auch
+     immer —, bekam die Stunde nie wieder eine Chance: beim naechsten
+     Lauf galt sie als fertig und fiel aus der Auswahl.
+     Deshalb jetzt ein eigener Nachholer, der vor der teuren Arbeit
+     laeuft: eine Stunde pro Durchgang, aelteste zuerst. */
+  await rueckstandGruppen(sb, base, ended);
+
   const ids = ended.map(c => c.id);
   const [{ data: notes }, { data: gnotes }, { data: mats }] = await Promise.all([
     sb.from('class_notes').select('class_id,notes,post_content').in('class_id', ids),
@@ -78,15 +91,7 @@ export default async function handler(req, res) {
       results.push({ classId: c.id, title: c.title, beginn: c.starts_at, ok: r.ok, error: r.error, detail: r.detail, counts: r.counts, source: r.source });
       // Additiv: individuelle Nachbereitung pro Kleingruppe anstoßen (schreibt student_nachbereitung;
       // ändert NICHT die gemeinsame Nachbereitung). Nur wenn es Gruppen-Zuordnungen gibt, passiert etwas.
-      if (r.ok) {
-        try {
-          await fetch(base + '/api/gruppen-nachbereitung', {
-            method: 'POST',
-            headers: { 'content-type': 'application/json', 'x-cron-secret': process.env.CRON_SECRET || '' },
-            body: JSON.stringify({ classId: c.id }),
-          });
-        } catch (e) { /* pro-Gruppe ist Zusatz – darf den Lauf nie aufhalten */ }
-      }
+      if (r.ok) await gruppenAnstossen(sb, base, c);
     } catch (e) {
       results.push({ classId: c.id, title: c.title, beginn: c.starts_at, ok: false, error: e.message });
     }
@@ -116,6 +121,74 @@ export default async function handler(req, res) {
   }
 
   return res.status(200).json({ ok: true, processed: geschafft, eligible: eligible.length, results });
+}
+
+/* Stoesst die individuelle Nachbereitung an UND schaut, was dabei
+   herauskam. Vorher stand hier ein fetch ohne Blick auf die Antwort,
+   in try{}catch{} — ein 401 oder 500 war damit unsichtbar. Genau so
+   bleibt ein Fehler jahrelang unentdeckt. */
+async function gruppenAnstossen(sb, base, c) {
+  let stand = '?', text = '';
+  try {
+    const r = await fetch(base + '/api/gruppen-nachbereitung', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'x-cron-secret': process.env.CRON_SECRET || '' },
+      body: JSON.stringify({ classId: c.id }),
+      signal: AbortSignal.timeout(45000),
+    });
+    stand = String(r.status);
+    text = (await r.text()).slice(0, 300);
+    if (r.ok) {
+      const j = JSON.parse(text || '{}');
+      /* 'no_group_members' ist kein Fehler: viele Stunden haben keine
+         Kleingruppen. Nur echte Fehlschlaege werden vermerkt. */
+      if (j && j.ok === false && j.error === 'no_group_members') return;
+      if (j && j.ok) {
+        try {
+          await sb.from('nachb_laeufe').insert({
+            class_id: c.id, titel: c.title, beginn: c.starts_at,
+            ergebnis: 'ok', quelle: 'gruppen', ausloeser: 'gruppen',
+            detail: text,
+          });
+        } catch (e) {}
+        return;
+      }
+    }
+  } catch (e) {
+    text = String((e && e.message) || e).slice(0, 300);
+  }
+  try {
+    await sb.from('nachb_laeufe').insert({
+      class_id: c.id, titel: c.title, beginn: c.starts_at,
+      ergebnis: 'fehler', fehler: ('gruppen_' + stand).slice(0, 200),
+      detail: text, quelle: 'gruppen', ausloeser: 'gruppen',
+    });
+  } catch (e) {}
+}
+
+/* Holt den Rueckstand bei der individuellen Nachbereitung nach: Stunden
+   mit Kleingruppen und fertiger gemeinsamer Nachbereitung, fuer die
+   noch keine einzige Zeile in student_nachbereitung steht. Eine pro
+   Lauf — damit der Rueckstand abgearbeitet wird, ohne je einen frischen
+   Lauf zu verdraengen. */
+async function rueckstandGruppen(sb, base, ended) {
+  try {
+    const ids = ended.map(c => c.id);
+    if (!ids.length) return;
+    const [{ data: mit }, { data: fertig }, { data: schon }] = await Promise.all([
+      sb.from('class_group_members').select('class_id').in('class_id', ids),
+      sb.from('class_notes').select('class_id,post_content').in('class_id', ids),
+      sb.from('student_nachbereitung').select('class_id').in('class_id', ids),
+    ]);
+    const hatGruppen = new Set((mit || []).map(m => m.class_id));
+    const hatGemeinsame = new Set((fertig || []).filter(n => n.post_content).map(n => n.class_id));
+    const hatEigene = new Set((schon || []).map(z => z.class_id));
+    const offen = ended
+      .filter(c => hatGruppen.has(c.id) && hatGemeinsame.has(c.id) && !hatEigene.has(c.id))
+      .sort((a, b) => new Date(a.starts_at) - new Date(b.starts_at));   /* aelteste zuerst */
+    if (!offen.length) return;
+    await gruppenAnstossen(sb, base, offen[0]);
+  } catch (e) { /* Nachholen darf den Lauf nie aufhalten */ }
 }
 
 // Ein Satz pro Versuch, mehr nicht. Laeufe ohne offene Stunde schreiben
